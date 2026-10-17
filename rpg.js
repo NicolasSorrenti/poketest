@@ -84,8 +84,11 @@ function render(){
  $('places').replaceChildren();
  for(const [id,[name,detail]] of Object.entries(places)){const b=document.createElement('button');b.textContent=name;b.className=id===state.location?'selected':'';b.onclick=()=>{state.location=id;state.selected=null;persist();say('Narrator',detail)};$('places').append(b)}
  $('placeTitle').textContent=places[state.location][0];$('placeDetail').textContent=places[state.location][1];
- const bg=state.location==='shop'?"linear-gradient(0deg,#090b18bb,#090b1830),url('/rpg-assets/card-shop-day.png')":'';$('scene').style.backgroundImage=bg;
- const portrait=state.selected==='reina'?"/rpg-assets/reina.png":null;$('portrait').style.backgroundImage=portrait?"url('"+portrait+"')":'none';
+ const backgrounds={home:'home.jpg',shop:state.slot===2?'card-shop-evening.png':'card-shop-day.png',arcade:'arcade.jpg',park:'park.jpg',cafe:'cafe.jpg',center:'center.jpg',library:'library.jpg'};
+ const bg=backgrounds[state.location];
+ $('scene').style.backgroundImage=bg?"linear-gradient(0deg,#090b18bb,#090b1830),url('/rpg-assets/"+bg+"')":'';
+ const portrait=state.selected&&cast[state.selected]?'/rpg-assets/'+state.selected+'.png':null;
+ $('portrait').style.backgroundImage=portrait?"url('"+portrait+"')":'none';
  $('speaker').textContent=scene.speaker;$('line').textContent=scene.line;
  $('choices').replaceChildren();for(const [label,action] of scene.choices){const b=document.createElement('button');b.textContent=label;b.disabled=action.startsWith('talk:')&&!!state.talked[atKey(action.slice(5))];b.onclick=()=>act(action);$('choices').append(b)}
  $('people').replaceChildren();const people=currentPeople();for(const id of people){const c=cast[id],b=document.createElement('button');b.className='sidebtn';b.textContent=c.name+' · '+c.style;b.onclick=()=>selectPerson(id);$('people').append(b)}if(!people.length)$('people').textContent='No major characters at this location right now.';
