@@ -559,7 +559,7 @@ const settings={level:3,personality:'balanced',side:1,seed:47};
  assert.ok(AI.knockoutTempoBonus(act,o,strong)>=500,
   'Knocking out the last opposing Pokémon is also a game win');
  o.opponent.bench=[{id:IDS.hit,energies:[],damage:0,status:null}];
- o.opponent.active.energies=[IDS.fight];o.opponent.active.damage=0;
+ o.opponent.active={id:IDS.hit,energies:[IDS.fight],damage:0,status:null};
  o.self.bench=[{id:IDS.machop,energies:[],damage:0,status:null}];
  assert.equal(AI.knockoutTempoBonus(act,o,strong),0,
   'Do not treat a non-KO attack as an earned Prize');
