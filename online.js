@@ -234,8 +234,9 @@
  function setTarget(type,payload,title,benchOnly=false){preview.hide();targetMode={type,payload,title,benchOnly};render();}
  function cancelTarget(){targetMode=null;selectedHand=null;preview.hide();render();}
  function pokemonNode(u,ownerRelative,slot){
-  const b=document.createElement('button');b.className='poke'+(u.damage>=Number(card(u.id).hp)?' broken':'');
-  const c=card(u.id),src=picture(u.id),attached=Array.isArray(u.energies)?u.energies:[];
+  const hidden=Boolean(u.secretPlanFaceDown);
+  const c=hidden?{name:'Face-down Pokémon',hp:'10',types:['Colorless'],supertype:'Pokémon',subtypes:['Basic'],attacks:[]}:card(u.id),src=hidden?'neo_card_back.svg':picture(u.id),attached=Array.isArray(u.energies)?u.energies:[];
+  const b=document.createElement('button');b.className='poke'+(u.damage>=Number(c.hp)?' broken':'');
   b.classList.add(...[feedback.unitClass(ownerRelative===0?current.you:1-current.you,slot)].filter(Boolean));
   b.innerHTML=quick.energyStack({...u,energies:attached},card)+`<span class="pokemon-face">`+(src?`<img loading="lazy" alt="" src="${esc(src)}">`:`<div class="empty">${esc(c.name)}</div>`)+`</span>`+
    `<strong>${esc(c.name)}</strong>`+ux.vitals(u,c)+`<span class="stats">${attached.length} energy attached</span>`;
@@ -390,7 +391,7 @@
    });
   }else $('attacks').innerHTML='<span class="hint">Choose an Active Pokémon</span>';
   if(v.phase==='game'&&!v.over&&yourTurn&&!v.pendingDecision&&you.active){
-   [you.active,...you.bench].forEach((u,i)=>{const c=card(u.id);(c.abilities||[]).forEach(a=>{if(a.name)$('powers').append(btn(`✦ ${a.name} (${i===0?'Active':'Bench '+i})`,()=>send(command('use_power',{slot:i-1}))));});});
+   [you.active,...you.bench].forEach((u,i)=>{if(u?.secretPlanFaceDown){$('powers').append(btn(`🎴 Reveal Secret Plan (${i===0?'Active':'Bench '+i})`,()=>send(command('reveal_secret',{slot:i-1}))));return;}const c=card(u.id);(c.abilities||[]).forEach(a=>{if(a.name)$('powers').append(btn(`✦ ${a.name} (${i===0?'Active':'Bench '+i})`,()=>send(command('use_power',{slot:i-1}))));});});
   }
   const actionsDisabled=watching()||!yourTurn||v.phase!=='game'||!!v.pendingDecision||v.over;
   $('retreatBtn').disabled=actionsDisabled||!you.bench.length;

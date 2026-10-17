@@ -16,6 +16,7 @@ const isBaby=(g,u)=>['neo-theme','online-preview'].includes(g.format)&&u&&['Elek
 const SET_NAMES=['base1','base2','base3','base4','base5','gym1','gym2','neo1','neo2','neo3','neo4','basep'];
 function historicalCards(){return SET_NAMES.flatMap(s=>require('./cards/'+s+'.json'));}
 const CATALOG=new Map(historicalCards().map(c=>[c.id,c]));
+const SECRET_BASIC=Object.freeze({id:'secret-plan-facedown',name:'Face-down Pokémon',supertype:'Pokémon',subtypes:['Basic'],types:['Colorless'],hp:'10',attacks:[],abilities:[],retreatCost:[],weaknesses:[],resistances:[]});
 function fail(message){throw Error(message);}
 function requireInt(v,name){if(!Number.isSafeInteger(v))fail(`Invalid ${name}`);return v;}
 function randomRaw(g,n){
@@ -54,6 +55,7 @@ function familyCandidates(g,side,restriction){
   return [{id,index:i,name:c.name}];
  });
 }
+function publicName(g,u){return u?.secretPlanFaceDown?'Face-down Pokémon':card(g,u.id).name;}
 function exactAttackSubject(program,c){
  const kinds=['bench-both-recoil','recoil','coin-recoil','switch-self','coin-recoil-bonus','own-counters','flail-counters','minus-counters','coin-self-confuse','coin-times-confuse','coin-status-recoil','drain','leech-seed','coin-shield','damage-shield','coin-attack-lock','coin-heal-one','water-extra','extra-energy','energy-coins','discard-all-self-energy','once-per-unit','swords-dance','thunderstorm','reactive-shield','recover-discard','recoil-coin-shield','optional-switch-self','rampage','vanish','conversion2','wildfire','energy-conversion','rapid-evolution','afternoon-nap'];
  if(kinds.includes(program.kind)&&program.subject!==undefined&&program.subject!==c.name)fail('Attack effect subject does not match its user');
@@ -71,6 +73,7 @@ function extraAttackEnergy(g,unit,attack,type){
  return Math.max(0,cards.length-required.length);
 }
 function effectiveCard(g,u){
+ if(u?.secretPlanFaceDown)return SECRET_BASIC;
  const printed=card(g,u.id);
  if(isClassicRules(g)&&u.gymShapeshiftCard){
   const mimicked=card(g,u.gymShapeshiftCard);
@@ -116,6 +119,16 @@ function createGame({decks,names=['Player 1','Player 2'],seed=1,format='unrestri
   game.players.push(p);setupHand(game,p);
  }
  return game;
+}
+function revealSecretPlan(g,side,slot){
+ const p=g.players[side],u=located(p,slot);if(!u?.secretPlanFaceDown)fail('No face-down Secret Plan Pokémon in that slot');
+ const actual=card(g,u.id);u.secretPlanFaceDown=false;
+ log(g,`${p.name} revealed ${actual.name} from Secret Plan.`);
+ if(!isBasicPokemon(actual)){
+  p.discard.push(u.id,...u.under,...u.energies,...u.attachedTrainers.map(t=>t.id));
+  if(slot===-1)p.active=null;else p.bench.splice(slot,1);
+  return false;
+ }return true;
 }
 function located(p,slot){return slot===-1?p.active:p.bench[slot];}
 function safeSlot(p,slot){requireInt(slot,'slot');if(slot< -1||slot>=p.bench.length)fail('Invalid Pokémon slot');const pokemon=located(p,slot);if(!pokemon)fail('Missing Pokémon');return pokemon;}
@@ -179,7 +192,7 @@ function finalChoice(g,plan,stage,actor,options,{min=1,max=min,optional=false,la
 function planFinalAttack(g,side,attackIndex,program,plan={side,attackIndex,data:{}}){
  const p=g.players[side],f=g.players[1-side],u=p.active,a=effectiveCard(g,u).attacks[attackIndex],kind=program.kind, data=plan.data;
  const energyOptions=()=>u.energies.map((id,i)=>({id:`energy:${i}`,label:`${i+1}: ${card(g,id).name}`}));
- const benchOptions=(owner)=>owner.bench.map((x,i)=>({id:`bench:${i}`,label:card(g,x.id).name}));
+ const benchOptions=(owner)=>owner.bench.map((x,i)=>({id:`bench:${i}`,label:publicName(g,x)}));
  const finish=()=>resolveAttack(g,side,attackIndex, data.target, data.energyPicks,{...data,finalApproved:true});
  if(['barrier','destiny-bond','third-eye','scavenge'].includes(kind)&&!data.energyPicks){
   if(!u.energies.length)fail('An attached Energy is required for this attack');
@@ -206,7 +219,7 @@ function planFinalAttack(g,side,attackIndex,program,plan={side,attackIndex,data:
   finalChoice(g,plan,'opponent-attack',side,options,{label:`${a.name}: choose the Defending Pokémon's attack`});return;
  }
  if(['stare'].includes(kind)&&!Object.hasOwn(data,'target')){
-  const options=[{id:'bench:-1',label:`Active ${card(g,f.active.id).name}`},...benchOptions(f)];
+  const options=[{id:'bench:-1',label:`Active ${publicName(g,f.active)}`},...benchOptions(f)];
   finalChoice(g,plan,'target-pokemon',side,options,{label:'Stare: choose one opposing Pokémon'});return;
  }
  if(kind==='magnetic-lines'&&f.active.energies.some(id=>card(g,id).subtypes?.includes('Basic')||/^(Grass|Fire|Water|Lightning|Psychic|Fighting) Energy$/.test(card(g,id).name))&&f.bench.length){
@@ -268,7 +281,7 @@ function themeAttackPlan(g,plan){
   g.pendingAction={kind:'theme_attack',plan:{...plan,stage}};return true;
  };
  const energy=(owner,slot=-1)=>located(owner,slot).energies.map((id,i)=>({id:`energy:${i}`,label:card(g,id).name}));
- const bench=(owner)=>owner.bench.map((x,i)=>({id:`bench:${i}`,label:card(g,x.id).name}));
+ const bench=(owner)=>owner.bench.map((x,i)=>({id:`bench:${i}`,label:publicName(g,x)}));
  const top=(ids,pred)=>ids.flatMap((id,i)=>pred(card(g,id))?[{id:`deck:${i}`,label:card(g,id).name}]:[]);
  const activeOptions=()=>[{id:'slot:-1',label:'Active: '+card(g,f.active.id).name},...f.bench.map((x,i)=>({id:`slot:${i}`,label:'Bench: '+card(g,x.id).name}))];
  // Announce Confusion/Smokescreen checks *before* attack-specific coin flips.
@@ -358,6 +371,14 @@ function performAction(g,side,cmd){
    else if(!handled&&pending.after==='advance')advanceTurn(g);
    return;
   }
+  if(pending.kind==='chaos_redirect'){
+   const owner=g.players[pending.originalSide];
+   if(!owner.discard.includes(pending.cardId))fail('Redirected Trainer left its owner’s discard pile');
+   g.pendingDecision=null;g.pendingAction=null;
+   if(answer.decline||!answer.selected.length){log(g,`Chaos Gym: ${owner.name} lost ${card(g,pending.cardId).name}; opponent declined.`);return;}
+   log(g,`Chaos Gym: ${g.players[side].name} will use ${card(g,pending.cardId).name}.`);
+   CLASSIC_TRAINERS.startProxy(g,side,pending.cardId,classicHelpers());return;
+  }
   if(pending.kind==='classic_trainer'){g.pendingDecision=null;g.pendingAction=null;CLASSIC_TRAINERS.answer(g,pending.plan,answer,classicHelpers());return;}
   if(pending.kind==='classic_power'){g.pendingDecision=null;g.pendingAction=null;CLASSIC_POWERS.answer(g,pending.plan,answer,classicHelpers());return;}
   if(pending.kind==='gym_charity'){
@@ -379,6 +400,11 @@ function performAction(g,side,cmd){
     log(g,`${owner.name} activated Koga's Ninja Trick and switched before the attack.`);
    }
    performAction(g,pending.side,{type:'attack',payload:{attackIndex:pending.attackIndex}});return;
+  }
+  if(pending.kind==='psyduck_esp_copy'){
+   g.pendingDecision=null;g.pendingAction=null;const copyIndex=Number(answer.selected[0]?.slice(7));
+   if(!Number.isInteger(copyIndex)||!card(g,g.players[1-pending.side].active.id).attacks?.[copyIndex])fail('Invalid ESP copied attack');
+   resolveAttack(g,pending.side,pending.attackIndex,undefined,undefined,{...pending.extra,psyduckCopyIndex:copyIndex,preRoll:pending.roll,confusionChecked:true,attackPenaltyChecked:true});return;
   }
   if(pending.kind==='sabrina_esp'){
    g.pendingDecision=null;g.pendingAction=null;
@@ -478,7 +504,7 @@ function performAction(g,side,cmd){
    if(pending.stage==='cycle-energy'){
     const energyIndex=Number(selection.slice(7));
     if(!enemy.active.energies[energyIndex]||!enemy.bench.length)fail('Energy Cycle source changed');
-    g.nextDecisionId++;g.pendingDecision=makeDecision({id:`neoCycleTarget:${g.nextDecisionId}`,actor:pending.side,kind:'pokemon-target',label:'Energy Cycle: choose the receiving Benched Pokémon',options:enemy.bench.map((x,i)=>({id:`bench:${i}`,label:card(g,x.id).name})),min:1,max:1});
+    g.nextDecisionId++;g.pendingDecision=makeDecision({id:`neoCycleTarget:${g.nextDecisionId}`,actor:pending.side,kind:'pokemon-target',label:'Energy Cycle: choose the receiving Benched Pokémon',options:enemy.bench.map((x,i)=>({id:`bench:${i}`,label:publicName(g,x)})),min:1,max:1});
     g.pendingAction={...pending,stage:'cycle-target',energyIndex};return;
    }
    const details={...(pending.preRoll?{preRoll:pending.preRoll}:{} )};
@@ -599,6 +625,10 @@ function performAction(g,side,cmd){
   g.pendingDecision=makeDecision({id:`stadium:${g.nextDecisionId}`,actor:side,kind:'energy-stadium',label:'Energy Stadium: recover a Basic Energy',options:choices,min:0,max:1,optional:true});
   g.pendingAction={kind:'energy_stadium',side};return;
  }
+ if(type==='reveal_secret'){
+  requireInt(v.slot,'Secret Plan slot');if(![-1,...p.bench.map((_,i)=>i)].includes(v.slot))fail('Invalid Secret Plan slot');
+  revealSecretPlan(g,side,v.slot);if(!p.active)completeKnockouts(g,'trainer');return;
+ }
  if(type==='bench'){
   const c=handCard(g,p,v.handIndex);if(!isBasicPokemon(c))fail('Cannot Bench a non-Basic Pokémon');if(p.bench.length>=(g.stadium&&card(g,g.stadium.id).name==='Narrow Gym'?4:5))fail('Bench full');
   const incoming=unit(p.hand.splice(v.handIndex,1)[0],g.round);p.bench.push(incoming);
@@ -630,6 +660,7 @@ function performAction(g,side,cmd){
  }
  if(type==='evolve'){
   const c=handCard(g,p,v.handIndex),u=safeSlot(p,v.slot);
+  if(u.secretPlanFaceDown){if(!revealSecretPlan(g,side,v.slot)){if(!p.active)completeKnockouts(g,'trainer');return;}}
   if(!canEvolve(c,card(g,u.id))||((u.playedTurn>=g.round||p.turnPlays.includes(v.slot))&&!(u.giovanniEvolveUntil>g.turnSerial&&c.name.startsWith("Giovanni's "))))fail('Illegal evolution');
   if((c.abilities||[]).length&&!isClassicRules(g))fail('Evolution has an unported on-play Power');
   if(isClassicRules(g)&&CLASSIC_POWERS.powerInPlay(g,'Prehistoric Power'))fail('Prehistoric Power prevents evolution');
@@ -638,7 +669,7 @@ function performAction(g,side,cmd){
   log(g,`${p.name} evolved into ${c.name}.`);if(isClassicRules(g))CLASSIC_POWERS.played(g,side,v.slot,classicHelpers());return;
  }
  if(type==='retreat'){
-  const u=safeSlot(p,-1);requireInt(v.slot,'Bench slot');if(!p.bench[v.slot])fail('Invalid retreat target');
+  const u=safeSlot(p,-1);if(u.secretPlanFaceDown&&!revealSecretPlan(g,side,-1)){completeKnockouts(g,'trainer');return;}requireInt(v.slot,'Bench slot');if(!p.bench[v.slot])fail('Invalid retreat target');
   if(u.status==='Asleep'||u.status==='Paralyzed'||(p.confusedRetreatFailed&&u.status==='Confused')||hasActiveEffect(u,'noRetreat',g)&&jawClampLocks(g,side))fail('Cannot retreat');
   const cost=retreatCost(g,side,u);
   if(u.energies.length<cost)fail('Insufficient retreat Energy');
@@ -653,7 +684,21 @@ function performAction(g,side,cmd){
  if(type==='play_trainer'){
   if(p.trainerLockedUntil>g.turnSerial)fail('Trainer cards are blocked this turn');
   if(isClassicRules(g)&&CLASSIC_POWERS.powerInPlay(g,'Hay Fever'))fail('Dark Vileplume prevents Trainers');
-  if(isClassicRules(g)){CLASSIC_TRAINERS.start(g,side,v.handIndex,classicHelpers());return;}
+  if(isClassicRules(g)){
+   const played=handCard(g,p,v.handIndex);
+   if(played.supertype!=='Trainer'||!CLASSIC_TRAINERS.SUPPORTED.has(played.name))fail('Unsupported Trainer');
+   if(g.stadium&&card(g,g.stadium.id).name==='Chaos Gym'&&!played.subtypes?.includes('Stadium')){
+    if(next(g,2)===0){
+     const id=p.hand.splice(v.handIndex,1)[0];p.discard.push(id);
+     g.nextDecisionId++;
+     g.pendingDecision=makeDecision({id:`chaos:${g.nextDecisionId}`,actor:1-side,kind:'chaos-redirect',label:`Chaos Gym: ${played.name} failed its coin flip. Play this Trainer with YOUR cards and Pokémon?`,options:[{id:'choice:use',label:`Use ${played.name}`}],min:0,max:1,optional:true});
+     g.pendingAction={kind:'chaos_redirect',cardId:id,originalSide:side};
+     log(g,`Chaos Gym: ${played.name} flipped tails.`);return;
+    }
+    log(g,`Chaos Gym: ${played.name} flipped heads; played normally.`);
+   }
+   CLASSIC_TRAINERS.start(g,side,v.handIndex,classicHelpers());return;
+  }
   const c=handCard(g,p,v.handIndex);if(c.supertype!=='Trainer')fail('Not a Trainer card');
   const targetType=['Potion','Switch','Gust of Wind','Energy Removal'].includes(c.name);
   if(targetType&&v.target===undefined){
@@ -696,7 +741,7 @@ function performAction(g,side,cmd){
   if(isClassicRules(g)&&f.active?.attachedTrainers?.some(t=>card(g,t.id).name==="Koga's Ninja Trick")&&
      f.active.gymNinjaPromptSerial!==g.turnSerial&&f.bench.length){
    g.nextDecisionId++;
-   g.pendingDecision=makeDecision({id:`gymNinja:${g.nextDecisionId}`,actor:1-side,kind:'gym-ninja',label:'Koga’s Ninja Trick: switch before the opponent’s attack?',options:f.bench.map((x,i)=>({id:`bench:${i}`,label:card(g,x.id).name})),min:0,max:1,optional:true});
+   g.pendingDecision=makeDecision({id:`gymNinja:${g.nextDecisionId}`,actor:1-side,kind:'gym-ninja',label:'Koga’s Ninja Trick: switch before the opponent’s attack?',options:f.bench.map((x,i)=>({id:`bench:${i}`,label:publicName(g,x)})),min:0,max:1,optional:true});
    g.pendingAction={kind:'gym_ninja_trick',side,defender:1-side,attackIndex:index};return;
   }
  if(program.kind==='gym:min-twenty-damage'&&u.damage<20)fail('Attack requires at least two damage counters');
@@ -725,7 +770,7 @@ function performAction(g,side,cmd){
   }
   if(program.kind==='gym:alert'){
    if(!p.bench.length)fail('Alert requires a Benched Pokémon to switch with');
-   g.nextDecisionId++;g.pendingDecision=makeDecision({id:`gymAlert:${g.nextDecisionId}`,actor:side,kind:'pokemon-target',label:'Alert: choose your new Active Pokémon',options:p.bench.map((x,i)=>({id:`bench:${i}`,label:card(g,x.id).name})),min:1,max:1});
+   g.nextDecisionId++;g.pendingDecision=makeDecision({id:`gymAlert:${g.nextDecisionId}`,actor:side,kind:'pokemon-target',label:'Alert: choose your new Active Pokémon',options:p.bench.map((x,i)=>({id:`bench:${i}`,label:publicName(g,x)})),min:1,max:1});
    g.pendingAction={kind:'gym_alert',side,attackIndex:index};return;
   }
   if(program.kind==='gym:energy-loop'){
@@ -736,7 +781,7 @@ function performAction(g,side,cmd){
   if(program.kind==='gym:bench-select'){
    const max=Math.min(program.maxBench,f.bench.length),min=program.benchMode==='optional'?0:Math.min(max,program.benchMode==='one'?1:2);
    if(program.benchMode==='one'&&!f.bench.length)fail('Stretch Vine requires an opponent Benched Pokémon');
-   if(max){g.nextDecisionId++;g.pendingDecision=makeDecision({id:`gymbench:${g.nextDecisionId}`,actor:side,kind:'pokemon-target',label:`${a.name}: choose opponent Benched Pokémon`,options:f.bench.map((x,i)=>({id:`bench:${i}`,label:card(g,x.id).name})),min,max,optional:min===0});g.pendingAction={kind:'attack_gym_bench',side,attackIndex:index};return;}
+   if(max){g.nextDecisionId++;g.pendingDecision=makeDecision({id:`gymbench:${g.nextDecisionId}`,actor:side,kind:'pokemon-target',label:`${a.name}: choose opponent Benched Pokémon`,options:f.bench.map((x,i)=>({id:`bench:${i}`,label:publicName(g,x)})),min,max,optional:min===0});g.pendingAction={kind:'attack_gym_bench',side,attackIndex:index};return;}
   }
   if(['gym:search-basic-energy','gym:search-fire-attach','gym:charge-lightning','gym:jellyfish-search'].includes(program.kind)){
    const fromDiscard=program.kind==='gym:charge-lightning',source=fromDiscard?p.discard:p.deck;
@@ -753,7 +798,7 @@ function performAction(g,side,cmd){
    g.pendingAction={kind:'neo_hydro',side,attackIndex:index};return;
   }
   if(['neo:mud-splash','neo:dragon-tornado'].includes(program.kind)&&f.bench.length&&program.kind==='neo:mud-splash'){
-   g.nextDecisionId++;g.pendingDecision=makeDecision({id:`neoBench:${g.nextDecisionId}`,actor:side,kind:'pokemon-target',label:'Mud Splash: choose an opponent Benched Pokémon',options:f.bench.map((x,i)=>({id:`bench:${i}`,label:card(g,x.id).name})),min:1,max:1});
+   g.nextDecisionId++;g.pendingDecision=makeDecision({id:`neoBench:${g.nextDecisionId}`,actor:side,kind:'pokemon-target',label:'Mud Splash: choose an opponent Benched Pokémon',options:f.bench.map((x,i)=>({id:`bench:${i}`,label:publicName(g,x)})),min:1,max:1});
    g.pendingAction={kind:'neo_attack_choice',stage:'bench',side,attackIndex:index};return;
   }
   if(['neo:fireworks','discovery:energy-cycle','discovery:hatch','discovery:magic-dust'].includes(program.kind)){
@@ -832,7 +877,7 @@ function performAction(g,side,cmd){
     g.pendingAction={kind:'attack_family',side,attackIndex:index};return;}
   }
   if(program.kind==='bench-up-to-three'&&f.bench.length>3){g.nextDecisionId++;
-   g.pendingDecision=makeDecision({id:`benchmulti:${g.nextDecisionId}`,actor:side,kind:'pokemon-target',label:`${a.name}: choose exactly 3 Benched Pokémon`,options:f.bench.map((u,i)=>({id:`bench:${i}`,label:card(g,u.id).name})),min:3,max:3});
+   g.pendingDecision=makeDecision({id:`benchmulti:${g.nextDecisionId}`,actor:side,kind:'pokemon-target',label:`${a.name}: choose exactly 3 Benched Pokémon`,options:f.bench.map((u,i)=>({id:`bench:${i}`,label:publicName(g,u)})),min:3,max:3});
    g.pendingAction={kind:'attack_bench_multi',side,attackIndex:index};return;}
   if(program.kind==='energy-discard'||program.kind==='recover-discard'){
    const quantity=program.kind==='recover-discard'?1:program.quantity;
@@ -849,19 +894,19 @@ function performAction(g,side,cmd){
   if(['bench-target','switch-attacker','switch-self','target-any','target-any-coin','drag-off'].includes(program.kind)){
    const owner=program.kind==='switch-self'?p:f;
    if(['target-any','target-any-coin'].includes(program.kind)){
-    g.nextDecisionId++;g.pendingDecision=makeDecision({id:`attack:${g.nextDecisionId}`,actor:side,kind:'pokemon-target',label:`${a.name}: choose a target`,options:[{id:'bench:-1',label:`Active: ${card(g,f.active.id).name}`},...f.bench.map((x,i)=>({id:`bench:${i}`,label:card(g,x.id).name}))],min:1,max:1});
+    g.nextDecisionId++;g.pendingDecision=makeDecision({id:`attack:${g.nextDecisionId}`,actor:side,kind:'pokemon-target',label:`${a.name}: choose a target`,options:[{id:'bench:-1',label:`Active: ${publicName(g,f.active)}`},...f.bench.map((x,i)=>({id:`bench:${i}`,label:publicName(g,x)}))],min:1,max:1});
     g.pendingAction={kind:'attack_target',side,attackIndex:index};return;
    }
    if(owner.bench.length){
     g.nextDecisionId++;
-    g.pendingDecision=makeDecision({id:`attack:${g.nextDecisionId}`,actor:side,kind:'pokemon-target',label:`${a.name}: choose Pokémon`,options:owner.bench.map((x,i)=>({id:`bench:${i}`,label:card(g,x.id).name})),min:1,max:1});
+    g.pendingDecision=makeDecision({id:`attack:${g.nextDecisionId}`,actor:side,kind:'pokemon-target',label:`${a.name}: choose Pokémon`,options:owner.bench.map((x,i)=>({id:`bench:${i}`,label:publicName(g,x)})),min:1,max:1});
     g.pendingAction={kind:'attack_target',side,attackIndex:index};return;
    }
   }
   resolveAttack(g,side,index);return;
  }
  if(type==='end_turn'){finishTurn(g);return;}
- if(type==='use_power'){if(!isClassicRules(g))fail('Pokémon Powers must be migrated to the headless effect runner');CLASSIC_POWERS.begin(g,side,v,classicHelpers());return;}
+ if(type==='use_power'){if(!isClassicRules(g))fail('Pokémon Powers must be migrated to the headless effect runner');const actor=safeSlot(p,v.slot);if(actor.secretPlanFaceDown&&!revealSecretPlan(g,side,v.slot)){if(!p.active)completeKnockouts(g,'trainer');return;}CLASSIC_POWERS.begin(g,side,v,classicHelpers());return;}
  fail(`Command not available in headless duel: ${type}`);
 }
 // All effects of one announced attack execute on one cloned, transactional state.
@@ -968,6 +1013,23 @@ function resolveAttack(g,side,index,chosenBench,energyPicks,extra={}){
  }
  const coreContext={selfWater:u.energies.filter(id=>card(g,id).name==='Water Energy').length,selfLightning:u.energies.filter(id=>card(g,id).name==='Lightning Energy').length,selfCounters:Math.floor(u.damage/10),defenderCounters:Math.floor(f.active.damage/10),benchCount:p.bench.length,enemyEnergy:f.active.energies.length,enemyRemainingHP:Math.max(0,maxHP(g,f.active)-f.active.damage),selfEnergy:u.energies.length,enemyBench:f.bench.length,topFireCount:p.deck.slice(-5).filter(id=>card(g,id).name==='Fire Energy').length,selfPoisoned:u.status==='Poisoned',nidokingOnBench:p.bench.some(x=>card(g,x.id).name==="Giovanni's Nidoking"),nightSpirits:allPokemon(p).filter(x=>["Sabrina's Gastly","Sabrina's Haunter","Sabrina's Gengar"].includes(card(g,x.id).name)).length,enemyMaxHP:maxHP(g,f.active),enemyFighting:effectiveCard(g,f.active).types?.includes('Fighting'),selfFireCards:u.energies.filter(id=>card(g,id).name==='Fire Energy').length,bellossomCount:allPokemon(p).filter(x=>card(g,x.id).name==='Bellossom').length,ownPokemonCount:allPokemon(p).length,discardEnergyCount:p.discard.filter(id=>isEnergy(card(g,id))).length,enemyBaby:['Elekid','Magby','Tyrogue','Igglybuff','Cleffa','Pichu','Smoochum'].includes(effectiveCard(g,f.active).name),enemyBasic:effectiveCard(g,f.active).subtypes?.includes('Basic'),damagedPreviousTurn:u.lastAttackImpact?.serial===g.turnSerial-1&&u.lastAttackImpact.damage>0,extraEnergies:(type)=>extraAttackEnergy(g,u,a,type),teamNameCount:(names,region)=> (region==='bench'?p.bench:allPokemon(p)).filter(x=>names.includes(card(g,x.id).name)).length,allNamedCount:(names)=>g.players.flatMap(allPokemon).filter(x=>names.includes(card(g,x.id).name)).length,enemyBenchCount:f.bench.length,darkDefender:card(g,f.active.id).name.startsWith('Dark '),topFiveEnergyCount:p.deck.slice(-5).filter(id=>isEnergy(card(g,id))).length,discardAmount:extra.theme?.sources?.length||0,flameHeads:extra.theme?.roll?.flips?.filter(Boolean).length||0};
  let roll=extra.preRoll||ATTACK.resolve(program,()=>next(g,2)===1,coreContext);
+ if(program.kind==='gym:psyduck-esp'&&roll.gymPsyduckHeads===3){
+  const copyable=(card(g,f.active.id).attacks||[]).flatMap((attack,i)=>{
+   const script=ATTACK.compile(attack);
+   // Effects that involve new targets, payments, mode choices, or copied
+   // attacks need a separate decision chain and must not execute as flat damage.
+   return script&&['flat','status','coin-status','coin-times','coin-bonus','coin-status-split','coin-failure','draw-one','defender-counters','own-counters','flail-counters','minus-counters','bench-count','coin-times-short','ignore-weakness'].includes(script.kind)?[{id:`attack:${i}`,label:attack.name}]:[];
+  });
+  if(extra.psyduckCopyIndex===undefined){
+   if(copyable.length){g.nextDecisionId++;g.pendingDecision=makeDecision({id:`psyduck:${g.nextDecisionId}`,actor:side,kind:'opponent-attack',label:`Misty's Psyduck ESP: 3 heads! Copy a Defending Pokémon attack`,options:copyable,min:1,max:1});g.pendingAction={kind:'psyduck_esp_copy',side,attackIndex:index,roll,extra};return;}
+   fail('ESP copied attacks need an additional interactive handler; no legal copy in this matchup');
+  }
+  if(!copyable.some(o=>o.id===`attack:${extra.psyduckCopyIndex}`))fail('Copied attack requires an interactive effect handler');
+  const copied=ATTACK.compile(card(g,f.active.id).attacks[extra.psyduckCopyIndex]);
+  const effect=ATTACK.resolve(copied,()=>next(g,2)===1,coreContext);
+  roll={...effect,flips:[...roll.flips,...(effect.flips||[])],gymPsyduckHeads:3};
+ }
+
  // Sabrina's ESP gives a single optional reroll of all flips of one attack.
  if(isClassicRules(g)&&roll.flips?.length&&!extra.gymESPChecked&&u.attachedTrainers.some(t=>card(g,t.id).name==="Sabrina's ESP")){
   g.nextDecisionId++;
@@ -1063,7 +1125,7 @@ function resolveAttack(g,side,index,chosenBench,energyPicks,extra={}){
   g.nextDecisionId++;
   g.pendingDecision=makeDecision({id:`flee:${g.nextDecisionId}`,actor:1-side,kind:'flee',
    label:"Misty's Tentacruel: switch after taking damage and avoid other attack effects?",
-   options:f.bench.map((x,i)=>({id:`bench:${i}`,label:card(g,x.id).name})),min:1,max:1,optional:true});
+   options:f.bench.map((x,i)=>({id:`bench:${i}`,label:publicName(g,x)})),min:1,max:1,optional:true});
   g.pendingAction={kind:'flee_reaction',side,attackIndex:index,extra:{...extra,preRoll:roll,fleeChecked:true}};
   return;
  }
@@ -1383,14 +1445,14 @@ function resolveAttack(g,side,index,chosenBench,energyPicks,extra={}){
  // With Bench splash damage, ALL KOs are collected before choosing replacements.
  if(program.kind==='ram'&&g.ramSwitchRequired){delete g.ramSwitchRequired;
   // Delay KO cleanup until the defender has picked its forced switch.
-  g.nextDecisionId++;g.pendingDecision=makeDecision({id:`switch:${g.nextDecisionId}`,actor:1-side,kind:'pokemon-target',label:'Ram: choose your replacement Pokémon',options:f.bench.map((x,i)=>({id:`bench:${i}`,label:card(g,x.id).name})),min:1,max:1});
+  g.nextDecisionId++;g.pendingDecision=makeDecision({id:`switch:${g.nextDecisionId}`,actor:1-side,kind:'pokemon-target',label:'Ram: choose your replacement Pokémon',options:f.bench.map((x,i)=>({id:`bench:${i}`,label:publicName(g,x)})),min:1,max:1});
   g.pendingAction={kind:'ram_switch',owner:1-side};return;
  }
  if(isClassicRules(g))g.attackContext={side,serial:g.turnSerial};
  if(g.benchGuardQueue?.length&&promptBenchGuard(g,g.benchGuardQueue))return;
  if(knockOuts(g,'checkup'))return;
  if(roll.dragonTornado&&f.active&&f.bench.length&&!jawClampLocks(g,1-side)&&f.active.damage<maxHP(g,f.active)){
-  g.nextDecisionId++;g.pendingDecision=makeDecision({id:`neoTornado:${g.nextDecisionId}`,actor:side,kind:'pokemon-target',label:'Dragon Tornado: choose an opposing replacement',options:f.bench.map((x,i)=>({id:`bench:${i}`,label:card(g,x.id).name})),min:1,max:1});
+  g.nextDecisionId++;g.pendingDecision=makeDecision({id:`neoTornado:${g.nextDecisionId}`,actor:side,kind:'pokemon-target',label:'Dragon Tornado: choose an opposing replacement',options:f.bench.map((x,i)=>({id:`bench:${i}`,label:publicName(g,x)})),min:1,max:1});
   g.pendingAction={kind:'neo_dragon_switch',side};return;
  }
  if(roll.returnDefenderToDeck&&f.active&&!jawClampLocks(g,1-side)){
@@ -1423,7 +1485,7 @@ function resolveAttack(g,side,index,chosenBench,energyPicks,extra={}){
   g.pendingPromotions=[side];g.promotionAfter='checkup';finishPromotions(g);return;
  }
  if(roll.optionalSwitch&&p.active&&p.bench.length&&!jawClampLocks(g,side)){
-  g.nextDecisionId++;g.pendingDecision=makeDecision({id:`optswitch:${g.nextDecisionId}`,actor:side,kind:'pokemon-target',label:'You may switch your Active Pokémon',options:p.bench.map((x,i)=>({id:`bench:${i}`,label:card(g,x.id).name})),min:1,max:1,optional:true});
+  g.nextDecisionId++;g.pendingDecision=makeDecision({id:`optswitch:${g.nextDecisionId}`,actor:side,kind:'pokemon-target',label:'You may switch your Active Pokémon',options:p.bench.map((x,i)=>({id:`bench:${i}`,label:publicName(g,x)})),min:1,max:1,optional:true});
   g.pendingAction={kind:'optional_attack_switch',owner:side};return;
  }
  if(roll.forceSwitch&&program.kind!=='ram'&&!jawClampLocks(g,roll.forceSwitch==='switch-self'?side:1-side)){
@@ -1431,7 +1493,7 @@ function resolveAttack(g,side,index,chosenBench,energyPicks,extra={}){
   if(owner.active&&owner.bench.length){
    if(roll.forceSwitch==='switch-defender'&&owner.bench.length>1){
     g.nextDecisionId++;
-    g.pendingDecision=makeDecision({id:`switch:${g.nextDecisionId}`,actor:1-side,kind:'pokemon-target',label:'Choose your replacement Active Pokémon',options:owner.bench.map((x,i)=>({id:`bench:${i}`,label:card(g,x.id).name})),min:1,max:1});
+    g.pendingDecision=makeDecision({id:`switch:${g.nextDecisionId}`,actor:1-side,kind:'pokemon-target',label:'Choose your replacement Active Pokémon',options:owner.bench.map((x,i)=>({id:`bench:${i}`,label:publicName(g,x)})),min:1,max:1});
     g.pendingAction={kind:'attack_switch',owner:1-side};return;
    }
    const i=roll.forceSwitch==='switch-defender'?0:chosenBench;
@@ -1491,6 +1553,9 @@ function calculateDamage(attacker,target,base,defendingUnit=null,{ignoreWeakness
 // Resolve both sides simultaneously before requiring promotions; needed for
 // Poison and recoil KOs. Pending decisions belong to the defending owner.
 function knockOuts(g,after){
+ // Face-down Secret Plan cards reveal BEFORE KO/prize evaluation. A revealed
+ // non-Basic was never a real Pokémon and cannot award a Prize.
+ for(let side=0;side<2;side++){const owner=g.players[side];for(let index=owner.bench.length-1;index>=-1;index--){const u=index===-1?owner.active:owner.bench[index];if(u?.secretPlanFaceDown&&(u.damage>0||u.status||u.poison||u.poisonDamage))revealSecretPlan(g,side,index);}}
  // Final Beam reacts to an attack Knock Out before either side leaves play.
  // Resolve it before collecting both sides' KOs so retaliation can KO the
  // attacking Pokémon in the same checkpoint.
@@ -1608,13 +1673,13 @@ function finishPromotions(g){
   if(!p.bench.length)fail('No Pokémon available to promote');
   if(p.bench.length===1){p.active=p.bench.shift();STATUS.clearConditions(p.active);g.pendingPromotions.shift();continue;}
   g.nextDecisionId++;
-  g.pendingDecision=makeDecision({id:`promotion:${g.nextDecisionId}`,actor:side,kind:'pokemon-target',label:'Choose your replacement Active Pokémon',options:p.bench.map((x,i)=>({id:`bench:${i}`,label:card(g,x.id).name})),min:1,max:1});
+  g.pendingDecision=makeDecision({id:`promotion:${g.nextDecisionId}`,actor:side,kind:'pokemon-target',label:'Choose your replacement Active Pokémon',options:p.bench.map((x,i)=>({id:`bench:${i}`,label:x.secretPlanFaceDown?'Face-down Pokémon':card(g,x.id).name})),min:1,max:1});
   g.pendingAction={kind:'promote',side};return;
  }
  const after=g.promotionAfter;
  g.pendingPromotions=null;g.promotionAfter=null;
  if(after==='checkup')finishTurn(g);
- else advanceTurn(g);
+ else if(after!=='trainer')advanceTurn(g);
 }
 function finishTurn(g){
  if(g.over)return;
@@ -1679,7 +1744,18 @@ function reduce(game,actor,command){
   const next=structuredClone(game);
   const visible=describePublicAction(next,actor,cmd);
   if(next.format==='online-preview'){(next.matchFeed ||= []).push({seq:(next.feedSeq=(next.feedSeq||0)+1),kind:'action',type:cmd.type,side:actor,...visible});if(next.matchFeed.length>150)next.matchFeed.shift();}
+  const hiddenBefore=next.players.flatMap((p,owner)=>[-1,...p.bench.map((_,i)=>i)].flatMap(slot=>{
+   const u=located(p,slot);return u?.secretPlanFaceDown?[{owner,serial:u.secretPlanSerial,originalId:u.id,active:slot===-1,energy:u.energies.join('|'),tools:u.attachedTrainers.map(t=>t.id).join('|'),damage:u.damage,status:u.status}]:[];
+  }));
   performAction(next,actor,cmd);
+  if(['attack','play_trainer','use_power','choose'].includes(cmd.type))for(const hidden of hiddenBefore){
+   const p=next.players[hidden.owner];const index=[-1,...p.bench.map((_,i)=>i)].find(i=>{
+    const u=located(p,i);return u?.secretPlanFaceDown&&u.secretPlanSerial===hidden.serial;
+   });
+   if(index===undefined)continue;
+   const u=located(p,index),affected=(index===-1)!==hidden.active||u.energies.join('|')!==hidden.energy||u.attachedTrainers.map(t=>t.id).join('|')!==hidden.tools||u.damage!==hidden.damage||u.status!==hidden.status;
+   if(affected){revealSecretPlan(next,hidden.owner,index);if(!p.active&&!next.pendingDecision)completeKnockouts(next,'trainer');}
+  }
   next.events.push({side:actor,type:cmd.type,payload:structuredClone(cmd.payload),visible});
   return {ok:true,game:next};
  }catch(e){return {ok:false,error:e.message};}

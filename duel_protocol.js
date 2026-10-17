@@ -2,7 +2,7 @@
 const {decisionForViewer}=require('./decision_core');
 const CLASSIC_POWERS=require('./classic_power_core');
 // Transport-agnostic definitions: the same command is used for local, CPU, and online play.
-const ACTIONS=Object.freeze(['setup_select','setup_undo','setup_confirm','bench','evolve','attach_energy','play_trainer','use_stadium','attack','retreat','use_power','choose','end_turn','concede']);
+const ACTIONS=Object.freeze(['setup_select','setup_undo','setup_confirm','bench','evolve','attach_energy','play_trainer','use_stadium','attack','retreat','use_power','reveal_secret','choose','end_turn','concede']);
 const KNOWN=new Set(ACTIONS);
 function validateCommand(input){
  if(!input||typeof input!=='object'||Array.isArray(input))throw Error('Command must be an object');
@@ -13,9 +13,10 @@ function validateCommand(input){
  return Object.freeze({type,payload:Object.freeze({...payload}),...(requestId===undefined?{}:{requestId})});
 }
 // Never serialize the authoritative game object directly to a client.
+function maskSecret(u,own){if(!u)return null;const copy=structuredClone(u);if(copy.secretPlanFaceDown){if(own)copy.secretPlanCard=copy.id;copy.id='gym2-107';copy.under=[];}return copy;}
 function projectPlayer(player,own,hideField=false){
  if(!player)return null;
- const base={name:player.name,active:hideField?null:player.active?structuredClone(player.active):null,bench:hideField?[]:structuredClone(player.bench||[]),handCount:(player.hand||[]).length,deckCount:(player.deck||[]).length,prizeCount:(player.prizes||[]).length,discard:[...(player.discard||[])]};
+ const base={name:player.name,active:hideField?null:maskSecret(player.active,own),bench:hideField?[]:(player.bench||[]).map(u=>maskSecret(u,own)),handCount:(player.hand||[]).length,deckCount:(player.deck||[]).length,prizeCount:(player.prizes||[]).length,discard:[...(player.discard||[])]};
  if(own){base.hand=[...(player.hand||[])];base.prizesCount=(player.prizes||[]).length;}
  return base;
 }

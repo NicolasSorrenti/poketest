@@ -87,6 +87,7 @@ specs['gym2-89|Bubbles']='coin-lock-self-next';
 specs['gym2-91|Frostbite']='no-retreat';
 specs['gym2-94|Psyscan']='peek-opponent-hand';
 specs['gym2-99|Random ESP']='random-esp';
+specs['gym2-90|ESP']='psyduck-esp';
 
 specs['gym1-20|Rock Slide']='bench-select';
 specs['gym1-21|Tunneling']='bench-select';
@@ -156,7 +157,7 @@ const supported=new Set([
  'two-coin-double-status','coin-bench-all','coin-bonus-recoil','ten-per-self-counter','recoil-twenty',
  'self-twenty-coin-poison','min-twenty-damage','if-defender-damaged-plus-twenty','coin-self-counters-twenty',
  'tails-one-hundred-self','heads-bonus-paralysis','matching-energy-counts','shield-ten','bench-select','search-basic-energy','search-fire-attach','charge-lightning','jellyfish-search',
- 'blank-powers','blaze-grass-bench','clamp','coin-all-shield','coin-discard-fire','coin-draw-two','coin-lock-self-next','coin-lock-trainers','detonate','disable-self-next','discard-all-self','double-heads-bonus','double-heads-hit','double-poison','full-speed-charge','group-therapy','healing-pollen','karate-chop','kerzap','lava-burst','lie-low','love-lariat','mega-drain','mega-thrash','naptime','night-spirits','peek-opponent-hand','pendulum-curse','poison-power','poison-spore','pulled-punch','random-esp','self-poison','self-sleep','shuffle-own-deck','single-use-coin','spiral-dive','three-coin-bonus','thunder-flare','two-coins-confuse','wake-defender'
+ 'blank-powers','blaze-grass-bench','clamp','coin-all-shield','coin-discard-fire','coin-draw-two','coin-lock-self-next','coin-lock-trainers','detonate','disable-self-next','discard-all-self','double-heads-bonus','double-heads-hit','double-poison','full-speed-charge','group-therapy','healing-pollen','karate-chop','kerzap','lava-burst','lie-low','love-lariat','mega-drain','mega-thrash','naptime','night-spirits','peek-opponent-hand','pendulum-curse','poison-power','poison-spore','pulled-punch','random-esp','psyduck-esp','self-poison','self-sleep','shuffle-own-deck','single-use-coin','spiral-dive','three-coin-bonus','thunder-flare','two-coins-confuse','wake-defender'
 ]);
 const signatures=new Map();
 for(const card of gym)for(const attack of card.attacks||[]){const kind=specs[card.id+'|'+attack.name];if(kind&&supported.has(kind)){
@@ -265,6 +266,7 @@ function resolve(p,flip,c={}){
   case 'gym:coin-all-shield':return {damage:n,shield:roll()?{allEffects:true}:null,flips:arr};
   case 'gym:coin-lock-self-next':return {damage:n,disableThisAttack:!roll(),flips:arr};
   case 'gym:peek-opponent-hand':return {damage:n,peekOpponentHand:true,flips:arr};
+  case 'gym:psyduck-esp':{const heads=[roll(),roll(),roll()].filter(Boolean).length;return {damage:heads===2?20:0,draw:heads===1?1:0,gymPsyduckHeads:heads,flips:arr};}
   case 'gym:random-esp':{const a=roll();return {damage:a?n:0,status:a?'Confused':null,selfStatus:a?null:'Confused',flips:arr};}
 
   case 'gym:ignore-resistance':return {damage:n,ignoreResistance:true,flips:arr};

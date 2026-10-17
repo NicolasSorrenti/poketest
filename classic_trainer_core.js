@@ -12,13 +12,14 @@ const fossilEvolution=c=>c.evolvesFrom==='Mysterious Fossil'||(['Omanyte','Kabut
 const basicEnergy=c=>/^(Grass|Fire|Water|Lightning|Psychic|Fighting) Energy$/.test(c.name)&&isEnergy(c);
 const pokemon=c=>c.supertype==='Pokémon';
 const all=p=>[p.active,...p.bench].filter(Boolean);
+const publicName=u=>u?.secretPlanFaceDown?'Face-down Pokémon':get(u.id).name;
 const slot=(p,n)=>n===-1?p.active:p.bench[n];
 const n=v=>{if(!Number.isInteger(v))throw Error('Noninteger selection');return v;};
 const chosen=(d,k)=>d[k]!==undefined;
 const nums=(d,k)=>d[k].map(x=>n(Number(x.slice(x.indexOf(':')+1))));
 const options=(entries,prefix='n')=>entries.map(({i,label})=>({id:`${prefix}:${i}`,label}));
 const zone=(ids,pred=()=>true)=>ids.flatMap((id,i)=>pred(get(id),i)?[{i,label:get(id).name}]:[]);
-const targets=(p,pred=()=>true)=>[-1,...p.bench.map((_,i)=>i)].flatMap(i=>slot(p,i)&&pred(slot(p,i),i)?[{i,label:(i===-1?'Active: ':'Bench: ')+get(slot(p,i).id).name}]:[]);
+const targets=(p,pred=()=>true)=>[-1,...p.bench.map((_,i)=>i)].flatMap(i=>slot(p,i)&&pred(slot(p,i),i)?[{i,label:(i===-1?'Active: ':'Bench: ')+publicName(slot(p,i))}]:[]);
 function held(p,id,index){if(p.hand[index]!==id)throw Error('Trainer in hand changed during selection');}
 function choice(g,plan,key,actor,items,{min=1,max=min,optional=false,label=key}={}){
  if(!items.length&&min>0)throw Error('No legal choices for '+label);
@@ -38,6 +39,10 @@ function prompt(g,plan,helpers){
  const side=plan.side,p=g.players[side],f=g.players[1-side],d=plan.data,name=get(plan.cardId).name;
  if(!plan.proxy)held(p,plan.cardId,plan.handIndex);
  // Additional Gym Trainer effects; all hidden-card choices belong to their owner.
+ if(name==="Lt. Surge's Secret Plan"&&!chosen(d,'hidden')){
+  if(p.bench.length>=5)throw Error('Bench full for Secret Plan');
+  return select(g,plan,'hidden',side,options(zone(p.hand,(c,i)=>i!==plan.handIndex)),{label:'Select a hand card to place face down as a Basic Pokémon'});
+ }
  if(name==='Recall'&&!p.active?.under?.length)throw Error('Recall requires an evolved Active Pokémon');
  if(name==="Sabrina's ESP"&&!chosen(d,'target'))return select(g,plan,'target',side,options(targets(p,u=>get(u.id).name.startsWith("Sabrina's ")),'slot'),{label:'Attach Sabrina’s ESP to a Sabrina Pokémon'});
  if(name==="Koga's Ninja Trick"&&!chosen(d,'target')){
@@ -60,7 +65,7 @@ function prompt(g,plan,helpers){
  if(name==='Narrow Gym'){
   for(const actor of [1-side,side]){
    const owner=g.players[actor],key='bounce'+actor;
-   if(owner.bench.length>4&&!chosen(d,key))return select(g,plan,key,actor,options(owner.bench.map((u,i)=>({i,label:get(u.id).name})),'bench'),{label:'Narrow Gym: return one of your Benched Pokémon to hand'});
+   if(owner.bench.length>4&&!chosen(d,key))return select(g,plan,key,actor,options(owner.bench.map((u,i)=>({i,label:publicName(u)})),'bench'),{label:'Narrow Gym: return one of your Benched Pokémon to hand'});
   }
  }
  if(name==="Misty's Wish"){
@@ -146,11 +151,11 @@ function prompt(g,plan,helpers){
   if(cannotSwitch(g,side))d.ownSwitch=[];
   if(cannotSwitch(g,1-side))d.enemySwitch=[];
   if(!chosen(d,'ownSwitch')){
-   if(p.bench.length)return single('ownSwitch',1-side,options(p.bench.map((u,i)=>({i,label:get(u.id).name})),'bench'),'Opponent chooses your replacement');
+   if(p.bench.length)return single('ownSwitch',1-side,options(p.bench.map((u,i)=>({i,label:publicName(u)})),'bench'),'Opponent chooses your replacement');
    d.ownSwitch=[];
   }
   if(!chosen(d,'enemySwitch')){
-   if(f.bench.length)return single('enemySwitch',side,options(f.bench.map((u,i)=>({i,label:get(u.id).name})),'bench'),'Choose opponent replacement');
+   if(f.bench.length)return single('enemySwitch',side,options(f.bench.map((u,i)=>({i,label:publicName(u)})),'bench'),'Choose opponent replacement');
    d.enemySwitch=[];
   }
  }
@@ -186,7 +191,7 @@ function prompt(g,plan,helpers){
  // Minion of Team Rocket is an immediate-turn-ending Trainer on any tails.
  if(name==='Minion of Team Rocket'){
   if(!chosen(d,'flips'))d.flips=[helpers.flip(g),helpers.flip(g)];
-  if(d.flips.every(Boolean)&&f.bench.length&&!chosen(d,'bench'))return single('bench',side,options(f.bench.map((u,i)=>({i,label:get(u.id).name})),'bench'),'Choose an opponent Benched Pokémon to return to hand');
+  if(d.flips.every(Boolean)&&f.bench.length&&!chosen(d,'bench'))return single('bench',side,options(f.bench.map((u,i)=>({i,label:publicName(u)})),'bench'),'Choose an opponent Benched Pokémon to return to hand');
  }
  // Misty's Wrath: choose exactly two of the available top seven cards.
  if(name==="Misty's Wrath"&&!chosen(d,'keep')){
@@ -269,11 +274,11 @@ function prompt(g,plan,helpers){
   if(cannotSwitch(g,1-side))d.enemySwitch=[];
   if(cannotSwitch(g,side))d.ownSwitch=[];
   if(!chosen(d,'enemySwitch')){
-   if(f.bench.length)return single('enemySwitch',1-side,options(f.bench.map((u,i)=>({i,label:get(u.id).name})),'bench'),'Opponent chooses a replacement');
+   if(f.bench.length)return single('enemySwitch',1-side,options(f.bench.map((u,i)=>({i,label:publicName(u)})),'bench'),'Opponent chooses a replacement');
    d.enemySwitch=[];
   }
   if(!chosen(d,'ownSwitch')){
-   if(p.bench.length)return single('ownSwitch',side,options(p.bench.map((u,i)=>({i,label:get(u.id).name})),'bench'),'Choose your replacement');
+   if(p.bench.length)return single('ownSwitch',side,options(p.bench.map((u,i)=>({i,label:publicName(u)})),'bench'),'Choose your replacement');
    d.ownSwitch=[];
   }
  }
@@ -307,8 +312,8 @@ function prompt(g,plan,helpers){
  if(name==='Recycle'&&!chosen(d,'recover')&&helpers.flip(g))return single('recover',side,disc(p),'Put a card from discard on your deck',true);
  if(name==='Gust of Wind'&&cannotSwitch(g,1-side))d.target=[];
  if(name==='Switch'&&cannotSwitch(g,side))d.target=[];
- if(name==='Gust of Wind'&&!chosen(d,'target'))return single('target',side,options(f.bench.map((u,i)=>({i,label:get(u.id).name})),'bench'),'Choose opponent replacement');
- if(name==='Switch'&&!chosen(d,'target'))return single('target',side,options(p.bench.map((u,i)=>({i,label:get(u.id).name})),'bench'),'Choose your replacement');
+ if(name==='Gust of Wind'&&!chosen(d,'target'))return single('target',side,options(f.bench.map((u,i)=>({i,label:publicName(u)})),'bench'),'Choose opponent replacement');
+ if(name==='Switch'&&!chosen(d,'target'))return single('target',side,options(p.bench.map((u,i)=>({i,label:publicName(u)})),'bench'),'Choose your replacement');
  if(['Potion','Super Potion','Scoop Up','Devolution Spray','Defender','Pokémon Center'].includes(name)&&!chosen(d,'target')&&name!=='Pokémon Center')return single('target',side,own(u=>name==='Potion'?u.damage>0:name==='Super Potion'?u.damage>0&&u.energies.length>0:name==='Devolution Spray'?u.under.length>0:true),'Choose one of your Pokémon');
  if(name==='Energy Removal'&&!chosen(d,'target'))return single('target',side,enemy(u=>u.energies.length>0&&!u.attachedTrainers.some(t=>get(t.id).name==="Brock's Protection")),'Choose opposing Pokémon');
  if(name==='Super Energy Removal'){
@@ -322,7 +327,7 @@ function prompt(g,plan,helpers){
  }
  if(name==='Super Potion'&&chosen(d,'target')&&!chosen(d,'ownEnergy'))return single('ownEnergy',side,options(zone(slot(p,nums(d,'target')[0]).energies)),'Discard one attached Energy');
  if(name==='Nightly Garbage Run'&&!chosen(d,'recover')){const a=disc(p,c=>pokemon(c)||basicEnergy(c));if(!a.length)throw Error('No eligible cards');return multi('recover',side,a,1,Math.min(3,a.length),'Choose up to 3 cards');}
- if(name==='Mr. Fuji'&&!chosen(d,'target'))return single('target',side,options(p.bench.map((u,i)=>({i,label:get(u.id).name})),'bench'),'Choose a Benched Pokémon');
+ if(name==='Mr. Fuji'&&!chosen(d,'target'))return single('target',side,options(p.bench.map((u,i)=>({i,label:publicName(u)})),'bench'),'Choose a Benched Pokémon');
  if(name==='Pokémon Flute'&&!chosen(d,'recover'))return single('recover',side,disc(f,isBasicPokemon),'Choose opponent Basic Pokémon');
  if(name==='Revive'&&!chosen(d,'recover'))return single('recover',side,disc(p,isBasicPokemon),'Choose Basic Pokémon');
  if(name==="Rocket's Sneak Attack"&&!chosen(d,'oppHand')){const a=options(zone(f.hand,c=>c.supertype==='Trainer'),'hand');if(a.length)return single('oppHand',side,a,'Choose opponent Trainer to shuffle away');d.oppHand=[];}
@@ -363,7 +368,7 @@ function commit(g,plan,h){
  if(!plan.proxy)held(p,plan.cardId,plan.handIndex);
  const pick=k=>nums(d,k)[0],picks=k=>nums(d,k),extract=(owner,k)=>take(owner.discard,picks(k));
  const cardInHand=plan.proxy?plan.cardId:p.hand.splice(plan.handIndex,1)[0];
- const isStadium=['No Removal Gym',"The Rocket's Training Gym",'Resistance Gym',"Rocket's Minefield Gym",'Narrow Gym','Pewter City Gym','Cerulean City Gym','Vermilion City Gym','Celadon City Gym','Fuchsia City Gym','Saffron City Gym','Cinnabar City Gym','Viridian City Gym','Rocket\'s Hideout','Energy Stadium'].includes(name);
+ const isStadium=['No Removal Gym',"The Rocket's Training Gym",'Resistance Gym',"Rocket's Minefield Gym",'Narrow Gym','Pewter City Gym','Cerulean City Gym','Vermilion City Gym','Celadon City Gym','Fuchsia City Gym','Saffron City Gym','Cinnabar City Gym','Viridian City Gym','Rocket\'s Hideout','Energy Stadium','Chaos Gym'].includes(name);
  if(isStadium){
   if(g.stadium&&get(g.stadium.id).name===name)throw Error('This Stadium is already in play');
   if(g.stadium){const old=g.players[g.stadium.owner];old.discard.push(old.stadium);delete old.stadium;}
@@ -374,6 +379,14 @@ function commit(g,plan,h){
  if(['Computer Search','Item Finder',"Imposter Oak's Revenge",'Energy Retrieval'].includes(name))p.discard.push(...take(p.hand,picks('cost').map(i=>i>plan.handIndex?i-1:i)));
  if(name==='Maintenance')p.deck.push(...take(p.hand,picks('cost').map(i=>i>plan.handIndex?i-1:i)));
  switch(name){
+  case 'Chaos Gym':break;
+  case "Lt. Surge's Secret Plan":{
+   if(p.bench.length>=5)throw Error('Bench full for Secret Plan');
+   const before=pick('hidden');const index=plan.proxy?before:before>plan.handIndex?before-1:before;
+   if(!p.hand[index])throw Error('Secret Plan card selection changed');
+   const hidden=h.unit(p.hand.splice(index,1)[0],g.round);hidden.secretPlanFaceDown=true;hidden.secretPlanOwner=plan.side;hidden.secretPlanSerial=(g.nextSecretPlanSerial=(g.nextSecretPlanSerial||0)+1);
+   p.bench.push(hidden);break;
+  }
   case "Sabrina's Psychic Control":{
    if(d.coin[0]==='heads'&&d.copy?.length){
     const copiedId=f.discard[pick('copy')];
@@ -622,6 +635,10 @@ function start(g,side,handIndex,h){const p=g.players[side],c=get(p.hand[handInde
  if(c.name==='Mail from Bill'&&p.hand.length>=5)throw Error('Mail from Bill requires at most 4 cards in hand (including itself)');
  const plan={side,handIndex,cardId:c.id,data:{}};return prompt(g,plan,h);
 }
+function startProxy(g,side,cardId,h){
+ const c=get(cardId);if(c.supertype!=='Trainer'||c.subtypes?.includes('Stadium')||!SUPPORTED.has(c.name))throw Error('Unsupported redirected Trainer');
+ return prompt(g,{side,handIndex:g.players[side].hand.length,cardId,proxy:true,data:{}},h);
+}
 function answer(g,plan,response,h){
  if(!plan||!plan.await)throw Error('Trainer choice is missing');
  const data={...plan.data,[plan.await]:response.decline?[]:[...response.selected]};
@@ -635,5 +652,5 @@ const SUPPORTED=new Set(['Energy Ark','Fossil Egg','Hyper Devolution Spray','Dou
  'Charity','Brock\'s Protection','Narrow Gym','Misty\'s Wish','Blaine\'s Quiz #2','Tickling Machine','Recall',"Sabrina's ESP","Koga's Ninja Trick","Blaine's Quiz #3",
  'Pewter City Gym','Cerulean City Gym','Vermilion City Gym','Celadon City Gym',
  'Fuchsia City Gym','Saffron City Gym','Cinnabar City Gym','Viridian City Gym',
- "Sabrina's Psychic Control",'Berry','Counterattack Claws','Energy Stadium','Mail from Bill',"Rocket's Hideout",'Heal Powder','Pokémon Breeder Fields']);
-module.exports={SUPPORTED,start,answer};
+ "Sabrina's Psychic Control",'Berry','Counterattack Claws','Energy Stadium','Chaos Gym',"Lt. Surge's Secret Plan",'Mail from Bill',"Rocket's Hideout",'Heal Powder','Pokémon Breeder Fields']);
+module.exports={SUPPORTED,start,startProxy,answer};

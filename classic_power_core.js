@@ -9,11 +9,11 @@ const CARDS=new Map(SETS.flatMap(s=>require('./cards/'+s+'.json')).map(c=>[c.id,
 const card=id=>{const c=CARDS.get(id);if(!c)throw Error('Unknown Classic card '+id);return c;};
 const own=p=>[p.active,...p.bench].filter(Boolean);
 const pokemon=(p,slot)=>slot===-1?p.active:p.bench[slot];
-const slotList=(p,pred=()=>true)=>[-1,...p.bench.map((_,i)=>i)].flatMap(i=>pokemon(p,i)&&pred(pokemon(p,i),i)?[{id:'slot:'+i,label:(i===-1?'Active ':'Bench ')+card(pokemon(p,i).id).name}]:[]);
+const slotList=(p,pred=()=>true)=>[-1,...p.bench.map((_,i)=>i)].flatMap(i=>pokemon(p,i)&&pred(pokemon(p,i),i)?[{id:'slot:'+i,label:(i===-1?'Active ':'Bench ')+(pokemon(p,i).secretPlanFaceDown?'Face-down Pokémon':card(pokemon(p,i).id).name)}]:[]);
 const indices=(arr,pred=()=>true,prefix='index')=>arr.flatMap((id,i)=>pred(card(id),i)?[{id:`${prefix}:${i}`,label:card(id).name}]:[]);
 const basicEnergy=c=>isEnergy(c)&&/^(Grass|Fire|Water|Lightning|Psychic|Fighting) Energy$/.test(c.name);
 const healthy=u=>u&&u.status!=='Asleep'&&u.status!=='Confused'&&u.status!=='Paralyzed';
-function powerNames(u){return (card(u.id).abilities||[]).filter(x=>x.name).map(x=>x.name);}
+function powerNames(u){return u?.secretPlanFaceDown?[]:(card(u.id).abilities||[]).filter(x=>x.name).map(x=>x.name);}
 function live(g,u,name){
  if(!u||!powerNames(u).includes(name)||u.powerSuppressedUntil>g.turnSerial)return false;
  if(name!=='Toxic Gas'&&g.powerBlankUntil>g.turnSerial)return false;
