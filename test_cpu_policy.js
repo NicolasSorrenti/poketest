@@ -636,6 +636,35 @@ const settings={level:3,personality:'balanced',side:1,seed:47};
  assert.throws(()=>local.create({advancedTactics:'yes'}),/boolean/);
  assert.throws(()=>local.create({advancedTactics:true,difficulty:2}),/require Expert or Champion/);
 }
+{
+ for(let level=1;level<=5;level++){
+  const normal=AI.configuration({level}),calibrated=AI.configuration({level,graduatedNoise:true});
+  assert.equal(normal.skill,AI.SKILLS[level]);
+  assert.equal(calibrated.skill,AI.CALIBRATED_SKILLS[level]);
+  if(level<5){
+   assert.ok(calibrated.skill.temperature>normal.skill.temperature);
+   assert.ok(calibrated.skill.sampleWindow>normal.skill.sampleWindow);
+  }
+  if(level>1){
+   assert.ok(AI.CALIBRATED_SKILLS[level].temperature<
+    AI.CALIBRATED_SKILLS[level-1].temperature,
+    'Worse skills must have greater decision uncertainty under calibrated rules');
+  }
+ }
+ assert.equal(AI.CALIBRATED_SKILLS[5],AI.SKILLS[5],
+  'Champions remain entirely deterministic and are not artificially buffed');
+ assert.throws(()=>AI.configuration({graduatedNoise:'yes'}),/graduated-noise/);
+ const {parse,audit}=require('./benchmark_cpu_tiers');
+ const result=audit(parse(['--pairs','1','--max-turns','6','--decks','blackout',
+  '--graduated-noise']));
+ assert.equal(result.graduatedNoise,true);
+ assert.equal(result.totalGames,8);
+ const {arena,argumentsOf}=require('./benchmark_cpu');
+ const comparison=arena(argumentsOf(['--pairs','1','--max-turns','6','--left-level','4',
+  '--right-level','3','--left-graduated-noise','true','--right-graduated-noise','true']));
+ assert.equal(comparison.baseline.graduatedNoise,true);
+ assert.equal(comparison.challenger.graduatedNoise,true);
+}
 let duels=0,decisions=0,attacks=0,energy=0,evolutions=0,trainer=0;
 for(let seed=1;seed<=4;seed++){
  let game=createGame({decks:[deck,deck],seed:seed*1789,format:'classic'});
