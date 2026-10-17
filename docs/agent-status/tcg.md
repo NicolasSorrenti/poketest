@@ -27,9 +27,11 @@ A recognized attack signature or a handler name is **not** proof of complete his
 | **v0.66** | **Ecogym** non-Colorless Energy returned on opponent-caused non-KO discards, including staged Trainer choices, Colorless exclusions and Stadium replacement | [39044285607](https://github.com/NicolasSorrenti/poketest/actions/runs/39044285607) | [39044285605](https://github.com/NicolasSorrenti/poketest/actions/runs/39044285605) |
 | **v0.67** | Face-up Prizes displayed on correct local/online Prize rail for Player 1, Player 2 and spectators. Ecogym tested through Dragonair's Hyper Beam and Koga's Muk's one-Energy automatic and multi-Energy defender-owned Power choice; corrected reactive discard provenance. | [39044947944](https://github.com/NicolasSorrenti/poketest/actions/runs/39044947944) | [39044947981](https://github.com/NicolasSorrenti/poketest/actions/runs/39044947981) |
 
+| **v0.68** | Two EXP.ALL holders, defender-owned choice and single Tool consumption, Focus Band saving versus EXP.ALL KO, Bench Focus Band splash damage, simultaneous Double-KO Prizes and promotions | [39045253800](https://github.com/NicolasSorrenti/poketest/actions/runs/39045253800) | [39045253794](https://github.com/NicolasSorrenti/poketest/actions/runs/39045253794) |
+
 The initial four milestones were pushed through commits `04ec8653df`, `f67e9ffe8b`, `84ab669080` and `8203947574`, followed by focused test and fix commits, including `8a082eb684`, `d726b28848`, `ac5475a463`, `5993873239`, and `88a7007255`. Other agents' RPG work was preserved; updates used forward-only `main` changes with no force-push.
 
-**Latest test chain:** `npm test` executes **150 sequential Node test commands**, including `test_neo_batch_v061.js` through `test_neo_batch_v067.js`. The `TCG Gameplay Regression` workflow runs it separately from the broader Node/RPG regression workflow.
+**Latest test chain:** `npm test` executes **151 sequential Node test commands**, including `test_neo_batch_v061.js` through `test_neo_batch_v068.js`. The `TCG Gameplay Regression` workflow runs it separately from the broader Node/RPG regression workflow.
 
 ## Coverage accounting (do not overclaim)
 
@@ -42,7 +44,7 @@ The initial four milestones were pushed through commits `04ec8653df`, `f67e9ffe8
 ## Known risks and unresolved interactions
 
 1. **Ecogym corner cases:** opponent-caused discards through Trainer, Dragonair attack, and Koga's Muk Power now have verified tests. Simultaneous compound discards on evolving/devolving or indistinguishable identical Pokémon, and Energy originally owned by a different player, require per-card instance tracking beyond the tested matching by surviving host. **Card-Flip Game:** face-up Prize data projects to both browser seats and spectators and its online/local Prize rail placement has a regression guard; actual cross-browser rendering/reconnect still lacks full browser automation.
-2. Focus Band, EXP.ALL and Berry effects need additional tests for simultaneous double KOs, multiple holders, KO while Poisoned, defensive Power interactions, and attacker-induced replacement.
+2. Focus Band / EXP.ALL now have tests for simultaneous Active KOs, Benched Focus Band, both coin outcomes, two EXP.ALL holders and exactly one selected Basic Energy. Remaining unverified cases include Poison-related KO timing, multiple simultaneous Bench KOs, defensive Pokémon Power suppression and attacker-induced replacement.
 3. Copied attacks (Sketch / Super Metronome / Gym copying) still exclude certain nested choices, payment/redirection chains, and opponent-controlled decisions.
 4. Rainbow Energy named-type modifiers and Recycle Energy mixed discard/retrieval transactions still need a card-instance-level audit.
 5. Multi-Stadium replacement timing, some special Gym evolution exceptions, and older Trainer/Pokémon Power suppressed-status interactions still have edge cases.
@@ -51,7 +53,7 @@ The initial four milestones were pushed through commits `04ec8653df`, `f67e9ffe8
 
 ## Next priorities
 
-1. Expand attack-copy decision tests and reactive simultaneous multi-KO scenarios, with Focus Band / EXP.ALL / Stadium interactions; test multi-copy attack cost choices.
+1. Expand attack-copy decisions for Super Metronome, Sketch and Gym effects, including nested target/payment chains; test several reactive Pokémon Powers under multi-KO + Stadium constraints.
 2. Extend Ecogym to rare duplicate-host and ownership-transfer paths with identity-based energy tracing; verify no false returns from Knock Outs and same-player costs.
 3. Run genuine two-browser acceptance for online face-up Prizes and Prize selection across reconnect/save/load, including Card-Flip Game and Here Comes Team Rocket! interactions.
 4. Re-run dedicated TCG, combined Node and CPU/multiplayer suites after fixes, and update this document only with reproducible pass/fail evidence.
