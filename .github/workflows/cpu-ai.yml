@@ -44,3 +44,7 @@ jobs:
       - run: node benchmark_cpu_tiers.js --pairs 40 --max-turns 120 --seed 71839 --decks blackout,brushfire
       - run: node benchmark_cpu.js --pairs 40 --max-turns 120 --seed 45401 --left-level 5 --right-level 5 --left-opponent-response true --right-opponent-response false
       - run: node benchmark_cpu.js --pairs 30 --max-turns 120 --seed 55401 --left-level 5 --right-level 5 --left-opponent-response true --right-opponent-response false --left-deck brushfire --right-deck brushfire
+      - run: node benchmark_cpu.js --pairs 30 --max-turns 120 --seed 28401 --left-level 5 --right-level 5 --left-prize-race true --left-knockout-tempo true --left-opponent-response true
+      - run: node benchmark_cpu.js --pairs 30 --max-turns 120 --seed 38401 --left-level 5 --right-level 5 --left-prize-race true --left-knockout-tempo true --left-opponent-response true --left-deck brushfire --right-deck brushfire
+      - run: node benchmark_cpu.js --pairs 30 --max-turns 120 --seed 48401 --left-level 5 --right-level 4 --left-prize-race true --left-knockout-tempo true --left-opponent-response true
+      - run: node benchmark_cpu.js --pairs 30 --max-turns 120 --seed 58401 --left-level 5 --right-level 4 --left-prize-race true --left-knockout-tempo true --left-opponent-response true --left-deck brushfire --right-deck brushfire
