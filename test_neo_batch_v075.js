@@ -34,12 +34,12 @@ function triple(g){
  choose(g,['attack:0']);
  assert.equal(g.pendingDecision?.actor,0,'Attacking Psyduck player pays copied attack cost');
  assert.equal(g.pendingAction?.kind,'psyduck_esp_payment');
- assert.deepEqual(g.pendingDecision.options.map(x=>x.id),['energy:1','energy:2']);
+ assert.deepEqual(g.pendingDecision.options.map(x=>x.id),['energy:0','energy:1','energy:2','energy:3'],'Fire Spin can discard ANY attached Energy, including Psychic');
  const d=g.pendingDecision;
  const unauthorized=applyCommand(g,1,{type:'choose',payload:{decisionId:d.id,selected:['energy:1','energy:2']}});
  assert.equal(unauthorized.ok,false,'Defending player cannot choose which of Psyduck Energy to discard');
  const underpay=applyCommand(g,0,{type:'choose',payload:{decisionId:d.id,selected:['energy:1']}});
- assert.equal(underpay.ok,false,'Fire Spin requires 2 additional attached Fire Energy');
+ assert.equal(underpay.ok,false,'Fire Spin requires 2 additional attached Energy cards');
  assert.equal(g.players[0].active.energies.length,4,'Invalid choice cannot discard an Energy card');
  choose(g,['energy:1','energy:2']);
  assert.equal(g.players[0].discard.filter(id=>id==='base1-98').length,2,'Both additional Fire Energy paid exactly once');
@@ -72,5 +72,21 @@ function triple(g){
  assert.equal(g.players[0].discard.includes('base5-17'),true);
  assert.equal(g.players[0].discard.includes('base1-98'),true);
  assert.equal(g.players[1].active.damage,100);
+}
+{
+ const g=game('gym2-1',['base1-101','base5-17','base1-98','base1-98','base1-96']);
+ triple(g);
+ const firestorm=require('./headless_duel').CATALOG.get('gym2-1').attacks.findIndex(a=>a.name==='Firestorm');
+ assert.ok(firestorm>=0,'Blaine Arcanine has Firestorm');
+ assert.ok(g.pendingDecision.options.some(o=>o.id==='attack:'+firestorm));
+ choose(g,['attack:'+firestorm]);
+ assert.equal(g.pendingAction.kind,'psyduck_esp_payment');
+ assert.deepEqual(g.pendingDecision.options.map(o=>o.id),['energy:1','energy:2','energy:3'],'Firestorm accepts Rainbow as Fire but NOT Psychic or Double Colorless');
+ const bad=applyCommand(g,0,{type:'choose',payload:{decisionId:g.pendingDecision.id,selected:['energy:0','energy:2','energy:3']}});
+ assert.equal(bad.ok,false,'Non-Fire Psychic cannot pay copied Firestorm');
+ choose(g,['energy:1','energy:2','energy:3']);
+ assert.deepEqual(g.players[0].active.energies,['base1-101','base1-96'],'Copied Firestorm discards exactly 3 typed Energy cards');
+ assert.ok(g.players[0].discard.includes('base5-17'),'Rainbow is a legal Fire discard');
+ assert.ok(g.players[1].discard.includes('gym2-1'),'Copied Firestorm deals lethal 120 to Blaine Arcanine');
 }
 console.log('PASS v0.75 Psyduck ESP paid Fire Spin, Rainbow eligibility, copy ownership, and no free reroll');
