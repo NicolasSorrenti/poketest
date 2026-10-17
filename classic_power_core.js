@@ -76,11 +76,11 @@ function powerPlan(g,plan,h){
   if(options.length){if(choose('evolution',options,'Energy Evolution: optional Eevee evolution',{min:0,max:1,optional:true}))return;}
   else d.evolution=[];
  }
- if(name==='Revive Fossil'){
-  if(p.bench.length>=5)throw Error('Fossil requires Bench space');
+ if(name==='Revive Fossil'||name==='Revive Friends'){
+  if(p.bench.length>=5)throw Error('Fossil revival requires Bench space');
   if(!have(plan,'coin'))d.coin=h.flip(g);
   if(d.coin&&!have(plan,'fossil')){
-   const options=indices(p.deck,c=>['Omanyte','Kabuto','Aerodactyl'].includes(c.name)&&c.subtypes?.includes('Stage 1'),'deck');
+   const options=indices(p.deck,c=>name==='Revive Friends'?c.name==='Kabuto':(['Omanyte','Kabuto','Aerodactyl'].includes(c.name)&&c.subtypes?.includes('Stage 1')),'deck');
    if(options.length){if(choose('fossil',options,'Fossil: optionally Bench a Fossil Pokémon',{min:0,max:1,optional:true}))return;}
    else d.fossil=[];
   }
@@ -168,7 +168,7 @@ function doPower(g,plan,h){
     u.under.unshift(u.id);u.id=take(p.deck,[idx])[0];u.playedTurn=g.round;STATUS.clearConditions(u);h.clearBenchEffects(u);}
    p.deck=h.shuffle(g,p.deck);break;
   }
-  case 'Revive Fossil':{if(d.coin&&selected(plan,'fossil').length){const idx=s('fossil'),id=p.deck[idx];if(!['Omanyte','Kabuto','Aerodactyl'].includes(card(id).name))throw Error('Illegal Fossil search');
+  case 'Revive Fossil':case 'Revive Friends':{if(d.coin&&selected(plan,'fossil').length){const idx=s('fossil'),id=p.deck[idx];if(name==='Revive Friends'?card(id).name!=='Kabuto':!['Omanyte','Kabuto','Aerodactyl'].includes(card(id).name))throw Error('Illegal Fossil search');
    p.bench.push(h.unit(take(p.deck,[idx])[0],g.round));}if(d.coin)p.deck=h.shuffle(g,p.deck);break;}
   case 'Shapeshift':{
    if(u.gymShapeshiftCard){p.discard.push(u.gymShapeshiftCard);delete u.gymShapeshiftCard;}
@@ -230,10 +230,10 @@ function doPower(g,plan,h){
  }
  h.log(g,`${p.name} activated ${name}.`);
 }
-const ONCE=new Set(['Fragrance Trap','Soak Up','Natural Healing','Playful Punch','Emerge','Gather Fire','Heal','Step In','Curse','Shift','Evolutionary Light','Matter Exchange','Pollen Stench','Long Distance Hypnosis','Trickery','Peek','Revive Fossil','[Search]','[Tell]']);
-const ACTIVATED=new Set(['Shapeshift','Fragrance Trap','Soak Up','Natural Healing','Playful Punch','Emerge','Energy Charge','Rain Dance','Energy Trans','Gather Fire','Energy Burn','Damage Swap','Curse','Strange Behavior','Heal','Step In','Cowardice','Evolutionary Light','Matter Exchange','Pollen Stench','Long Distance Hypnosis','Trickery','Shift','Peek','Buzzap','Revive Fossil','[Search]','[Tell]']);
+const ONCE=new Set(['Fragrance Trap','Soak Up','Natural Healing','Playful Punch','Emerge','Gather Fire','Heal','Step In','Curse','Shift','Evolutionary Light','Matter Exchange','Pollen Stench','Long Distance Hypnosis','Trickery','Peek','Revive Fossil','Revive Friends','[Search]','[Tell]']);
+const ACTIVATED=new Set(['Shapeshift','Fragrance Trap','Soak Up','Natural Healing','Playful Punch','Emerge','Energy Charge','Rain Dance','Energy Trans','Gather Fire','Energy Burn','Damage Swap','Curse','Strange Behavior','Heal','Step In','Cowardice','Evolutionary Light','Matter Exchange','Pollen Stench','Long Distance Hypnosis','Trickery','Shift','Peek','Buzzap','Revive Fossil','Revive Friends','[Search]','[Tell]']);
 const ONPLAY=new Set(['Call the Boss','Summon Minions','Sneak Attack','Reel In','[Increase]','[Engage]','Tag Team']);
-const PASSIVE=new Set(['Rebirth','Energy Drain','Scram','Shock Blast','Gaseous Form','Healing Fire','Fortitude','Pollen Defense','Restless Sleep','Strange Barrier','Prehistoric Power','Toxic Gas','Hay Fever','Invisible Wall','Kabuto Armor','Transparency','Transform','Thick Skinned','Retreat Aid','Sticky Goo','Clairvoyance','Frenzy','Strikes Back','Sinkhole','Final Beam','Hydroelectric Power','Anger','Energy Evolution','[Normal]','Magma Pool','Hot Plate','Psylink','Flee','Bench Guard','Shell Armor','Photosynthesis','Relaxing Scent','Rebellion']);
+const PASSIVE=new Set(['Rebirth','Energy Drain','Scram','Shock Blast','Gaseous Form','Healing Fire','Fortitude','Pollen Defense','Restless Sleep','Strange Barrier','Prehistoric Power','Toxic Gas','Hay Fever','Invisible Wall','Kabuto Armor','Transparency','Transform','Thick Skinned','Retreat Aid','Sticky Goo','Clairvoyance','Frenzy','Strikes Back','Sinkhole','Final Beam','Hydroelectric Power','Anger','Frog Song','Energy Evolution','[Normal]','Magma Pool','Hot Plate','Psylink','Flee','Bench Guard','Shell Armor','Photosynthesis','Relaxing Scent','Rebellion']);
 const UNSUPPORTED=new Set();
 function begin(g,side,payload,h){
  const slot=payload.slot;if(!Number.isInteger(slot))throw Error('Power requires a Pokémon slot');const u=pokemon(g.players[side],slot);if(!u)throw Error('Missing Pokémon');
