@@ -11,6 +11,8 @@ const CLASSIC=require('./classic_format');
 const CLASSIC_TRAINERS=require('./classic_trainer_core');
 const CLASSIC_POWERS=require('./classic_power_core');
 const isClassicRules=g=>['classic','theme-expanded','gym-theme','gym-expanded','neo-theme','online-preview'].includes(g.format);
+const ATTACH_ONLY_TRAINERS=new Set(['PlusPower','Defender','Berry','Counterattack Claws','Charity',"Brock's Protection","Koga's Ninja Trick","Sabrina's ESP",'Clefairy Doll','Mysterious Fossil']);
+const protectedEnergy=u=>Boolean(u?.attachedTrainers?.some(t=>t.id==='gym2-101'));
 const isBaby=(g,u)=>['neo-theme','online-preview'].includes(g.format)&&u&&!u.secretPlanFaceDown&&['Elekid','Magby','Tyrogue','Igglybuff','Cleffa','Pichu','Smoochum'].includes(CATALOG.get(u.id)?.name);
 
 const SET_NAMES=['base1','base2','base3','base4','base5','gym1','gym2','neo1','neo2','neo3','neo4','basep'];
@@ -222,7 +224,7 @@ function planFinalAttack(g,side,attackIndex,program,plan={side,attackIndex,data:
   const options=[{id:'bench:-1',label:`Active ${publicName(g,f.active)}`},...benchOptions(f)];
   finalChoice(g,plan,'target-pokemon',side,options,{label:'Stare: choose one opposing Pokémon'});return;
  }
- if(kind==='magnetic-lines'&&f.active.energies.some(id=>card(g,id).subtypes?.includes('Basic')||/^(Grass|Fire|Water|Lightning|Psychic|Fighting) Energy$/.test(card(g,id).name))&&f.bench.length){
+ if(kind==='magnetic-lines'&&!protectedEnergy(f.active)&&f.active.energies.some(id=>card(g,id).subtypes?.includes('Basic')||/^(Grass|Fire|Water|Lightning|Psychic|Fighting) Energy$/.test(card(g,id).name))&&f.bench.length){
   if(!Object.hasOwn(data,'enemyEnergyIndex')){
    const options=f.active.energies.flatMap((id,i)=>/^(Grass|Fire|Water|Lightning|Psychic|Fighting) Energy$/.test(card(g,id).name)?[{id:`energy:${i}`,label:card(g,id).name}]:[]);
    finalChoice(g,plan,'magnetic-energy',side,options,{label:'Choose a Basic Energy to move'});return;
@@ -707,6 +709,10 @@ function performAction(g,side,cmd){
    if(g.stadium&&card(g,g.stadium.id).name==='Chaos Gym'&&!played.subtypes?.includes('Stadium')){
     if(next(g,2)===0){
      const id=p.hand.splice(v.handIndex,1)[0];p.discard.push(id);
+     // Official WotC ruling: an attached Trainer cannot be reused after a
+     // Chaos Gym tails. It would need to remain in play and in its owner's
+     // discard simultaneously. Never create a phantom attachment.
+     if(ATTACH_ONLY_TRAINERS.has(played.name)){log(g,`Chaos Gym: ${played.name} flipped tails; attached Trainer discarded without reuse.`);return;}
      g.nextDecisionId++;
      g.pendingDecision=makeDecision({id:`chaos:${g.nextDecisionId}`,actor:1-side,kind:'chaos-redirect',label:`Chaos Gym: ${played.name} failed its coin flip. Play this Trainer with YOUR cards and Pokémon?`,options:[{id:'choice:use',label:`Use ${played.name}`}],min:0,max:1,optional:true});
      g.pendingAction={kind:'chaos_redirect',cardId:id,originalSide:side};
@@ -824,7 +830,7 @@ function performAction(g,side,cmd){
     g.nextDecisionId++;g.pendingDecision=makeDecision({id:`neoFireworks:${g.nextDecisionId}`,actor:side,kind:'energy-discard',label:'Fireworks: choose an attached Energy to discard',options:u.energies.map((id,i)=>({id:`energy:${i}`,label:card(g,id).name})),min:1,max:1});
     g.pendingAction={kind:'neo_attack_choice',stage:'fireworks',side,attackIndex:index,preRoll};return;
    }
-   if(program.kind==='discovery:energy-cycle'&&preRoll.energyCycle&&f.active.energies.length&&f.bench.length){
+   if(program.kind==='discovery:energy-cycle'&&preRoll.energyCycle&&!protectedEnergy(f.active)&&f.active.energies.length&&f.bench.length){
     g.nextDecisionId++;g.pendingDecision=makeDecision({id:`neoCycle:${g.nextDecisionId}`,actor:side,kind:'energy-target',label:'Energy Cycle: choose an opposing Energy',options:f.active.energies.map((id,i)=>({id:`energy:${i}`,label:card(g,id).name})),min:1,max:1});
     g.pendingAction={kind:'neo_attack_choice',stage:'cycle-energy',side,attackIndex:index,preRoll};return;
    }
@@ -940,7 +946,7 @@ function resolveAttack(g,side,index,chosenBench,energyPicks,extra={}){
  if(!f.active)fail('No Defending Pokémon');
  if(program.kind==='neo:mud-splash'&&f.bench.length&&(chosenBench===undefined||!f.bench[chosenBench]))fail('Mud Splash requires a valid Bench target');
  if(program.kind==='discovery:magic-dust'&&extra.preRoll?.magicDust&&!['Asleep','Confused','Paralyzed','Poisoned'].includes(extra.neoStatus))fail('Magic Dust needs a status choice');
- if(program.kind==='discovery:energy-cycle'&&extra.preRoll?.energyCycle&&f.active.energies.length&&f.bench.length&&(!Number.isInteger(extra.neoCycleEnergy)||!Number.isInteger(extra.neoCycleBench)||!f.active.energies[extra.neoCycleEnergy]||!f.bench[extra.neoCycleBench]))fail('Energy Cycle requires legal source and destination');
+ if(program.kind==='discovery:energy-cycle'&&extra.preRoll?.energyCycle&&!protectedEnergy(f.active)&&f.active.energies.length&&f.bench.length&&(!Number.isInteger(extra.neoCycleEnergy)||!Number.isInteger(extra.neoCycleBench)||!f.active.energies[extra.neoCycleEnergy]||!f.bench[extra.neoCycleBench]))fail('Energy Cycle requires legal source and destination');
  // Exact-matched final Classic attack programs must have completed every
  // required choice. The caller cannot inject an unvalidated final effect.
  if(GYM_LAST.planned(program.kind)&&!extra.gymLastApproved)fail('Complete Gym attack choices first');
@@ -1059,7 +1065,7 @@ function resolveAttack(g,side,index,chosenBench,energyPicks,extra={}){
  }
  // A heads-only Energy discard is chosen by the attacking player, with the
  // coin cached across the decision. No hidden opponent cards are exposed.
- if(program.kind==='gym:removal-beam'&&roll.discardEnemyEnergy&&f.active.energies.length>1&&!Number.isInteger(extra.enemyEnergyIndex)){
+ if(program.kind==='gym:removal-beam'&&roll.discardEnemyEnergy&&!protectedEnergy(f.active)&&f.active.energies.length>1&&!Number.isInteger(extra.enemyEnergyIndex)){
   g.nextDecisionId++;g.pendingDecision=makeDecision({id:`gymRemoval:${g.nextDecisionId}`,actor:side,kind:'energy-discard',label:`${a.name}: choose opposing Energy to discard`,options:f.active.energies.map((id,i)=>({id:`energy:${i}`,label:card(g,id).name})),min:1,max:1});
   g.pendingAction={kind:'gym_removal',side,attackIndex:index,preRoll:roll};return;
  }
@@ -1380,7 +1386,7 @@ function resolveAttack(g,side,index,chosenBench,energyPicks,extra={}){
  if(roll.jawClamp){f.active.noRetreat={expires:g.turnSerial+2};f.active.noSwitch={expires:g.turnSerial+2,sourceId:u.id};}
  if(roll.charCounter&&(!shield?.allEffects||roll.ignoreDefendingEffects)&&!f.active.charCounter)f.active.charCounter=true;
  if(roll.discardSelfEnergyOnTails){const e=extra.neoDiscardIndex??0;if(!u.energies[e])fail('Fireworks Energy selection invalid');p.discard.push(u.energies.splice(e,1)[0]);}
- if(roll.energyCycle&&f.active.energies.length&&f.bench.length){f.bench[extra.neoCycleBench].energies.push(f.active.energies.splice(extra.neoCycleEnergy,1)[0]);}
+ if(roll.energyCycle&&!protectedEnergy(f.active)&&f.active.energies.length&&f.bench.length){f.bench[extra.neoCycleBench].energies.push(f.active.energies.splice(extra.neoCycleEnergy,1)[0]);}
  if(roll.hatch){u.damage=0;if(extra.neoHatchIndex!==undefined&&extra.neoHatchIndex!==null){const evolution=card(g,p.deck[extra.neoHatchIndex]);if(evolution.evolvesFrom!=='Metapod')fail('Invalid Hatch evolution');u.under.unshift(u.id);u.id=p.deck.splice(extra.neoHatchIndex,1)[0];u.playedTurn=g.round;STATUS.clearConditions(u);clearBenchEffects(u);}p.deck=shuffle(g,p.deck);}
  if(roll.magicDust&&(!shield?.allEffects||roll.ignoreDefendingEffects))applyCondition(g,f.active,extra.neoStatus);
  if(roll.blankPowers)g.powerBlankUntil=g.turnSerial+3; // Sputter lasts through the end of this player's next turn
@@ -1416,7 +1422,7 @@ function resolveAttack(g,side,index,chosenBench,energyPicks,extra={}){
     target.damage+=10;target.powerSuppressedUntil=g.turnSerial+2;break;
    }
    case 'magnetic-lines':{
-    if(f.bench.length&&extra.enemyEnergyIndex!==undefined){
+    if(f.bench.length&&!protectedEnergy(f.active)&&extra.enemyEnergyIndex!==undefined){
      if(!f.active.energies[extra.enemyEnergyIndex]||!Number.isInteger(extra.target)||!f.bench[extra.target])fail('Invalid Magnetic Lines move');
      f.bench[extra.target].energies.push(f.active.energies.splice(extra.enemyEnergyIndex,1)[0]);
     }break;
@@ -1705,11 +1711,8 @@ function finishPromotions(g){
 function finishTurn(g){
  if(g.over)return;
  const cur=g.players[g.turn];
- for(const u of allPokemon(cur)){
-  const retained=[];
-  for(const t of u.attachedTrainers){if(card(g,t.id).name==='Charity')cur.hand.push(t.id);else retained.push(t);}
-  u.attachedTrainers=retained;
- }
+ // Do NOT return Charity here. Poison/Char Checkup can still Knock Out the
+ // attached Pokémon at end of turn; in that case Charity must be discarded.
  if(cur.tickleHand&&cur.tickleRestoreTurn<=g.turnSerial){cur.hand.push(...cur.tickleHand);delete cur.tickleHand;delete cur.tickleRestoreTurn;}
  // Neo Genesis Char counters persist on Pokémon even when they move to the Bench.
  for(const owner of g.players)for(const target of allPokemon(owner))if(target.charCounter&&next(g,2)===0){target.damage+=20;log(g,`${card(g,target.id).name} takes 20 Char damage.`);}
@@ -1726,6 +1729,15 @@ function finishTurn(g){
 }
 function advanceTurn(g){
  if(g.over)return;
+ // Checkup, Knock Outs and any required promotion have already finished.
+ // A surviving Charity returns to its owner now; one on a Knocked Out
+ // Pokémon was discarded alongside it and must never return to hand.
+ const leaving=g.players[g.turn];
+ for(const u of allPokemon(leaving)){
+  const retained=[];
+  for(const t of u.attachedTrainers){if(card(g,t.id).name==='Charity')leaving.hand.push(t.id);else retained.push(t);}
+  u.attachedTrainers=retained;
+ }
  g.turn=1-g.turn;g.turnSerial++;if(g.turn===0)g.round++;
  for(const owner of g.players)for(const x of allPokemon(owner)){
   const retained=[];for(const t of x.attachedTrainers){if(t.expires!==undefined&&t.expires<=g.turnSerial)owner.discard.push(t.id);else retained.push(t);}x.attachedTrainers=retained;
@@ -1765,10 +1777,20 @@ function reduce(game,actor,command){
   const next=structuredClone(game);
   const visible=describePublicAction(next,actor,cmd);
   if(next.format==='online-preview'){(next.matchFeed ||= []).push({seq:(next.feedSeq=(next.feedSeq||0)+1),kind:'action',type:cmd.type,side:actor,...visible});if(next.matchFeed.length>150)next.matchFeed.shift();}
+  const activeBefore=next.players.map(p=>p.active);
   const hiddenBefore=next.players.flatMap((p,owner)=>[-1,...p.bench.map((_,i)=>i)].flatMap(slot=>{
    const u=located(p,slot);return u?.secretPlanFaceDown?[{owner,serial:u.secretPlanSerial,originalId:u.id,active:slot===-1,energy:u.energies.join('|'),tools:u.attachedTrainers.map(t=>t.id).join('|'),damage:u.damage,status:u.status}]:[];
   }));
   performAction(next,actor,cmd);
+  // Koga's Ninja Trick must be discarded whenever its Active leaves for the
+  // Bench, regardless of who initiated the switch (Trainer, attack, retreat,
+  // reaction, or a multi-step opponent decision).
+  if(isClassicRules(next))for(let side=0;side<2;side++){
+   const old=activeBefore[side],owner=next.players[side];
+   if(!old||!owner.bench.includes(old))continue;
+   const tricks=old.attachedTrainers.filter(t=>card(next,t.id).name==="Koga's Ninja Trick");
+   if(tricks.length){old.attachedTrainers=old.attachedTrainers.filter(t=>!tricks.includes(t));owner.discard.push(...tricks.map(t=>t.id));log(next,`Koga's Ninja Trick was discarded when ${publicName(next,old)} moved to the Bench.`);}
+  }
   if(['attack','play_trainer','use_power','choose'].includes(cmd.type))for(const hidden of hiddenBefore){
    const p=next.players[hidden.owner];const index=[-1,...p.bench.map((_,i)=>i)].find(i=>{
     const u=located(p,i);return u?.secretPlanFaceDown&&u.secretPlanSerial===hidden.serial;

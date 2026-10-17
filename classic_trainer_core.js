@@ -5,6 +5,8 @@
 const {makeDecision}=require('./decision_core');
 const {isBasicPokemon,isEnergy,canEvolve}=require('./core_rules');
 const STATUS=require('./special_conditions_core');
+// Chaos Gym cannot pass attached Trainers to the other player (WotC ruling).
+const ATTACH_ONLY=new Set(['PlusPower','Defender','Berry','Counterattack Claws','Charity',"Brock's Protection","Koga's Ninja Trick","Sabrina's ESP",'Mysterious Fossil','Clefairy Doll']);
 const SETS=['base1','base2','base3','base4','base5','gym1','gym2','neo1','neo2','neo3','neo4'];
 const CATALOG=new Map(SETS.flatMap(s=>require('./cards/'+s+'.json')).map(c=>[c.id,c]));
 const get=id=>{const c=CATALOG.get(id);if(!c)throw Error('Unknown Classic card: '+id);return c;};
@@ -444,14 +446,14 @@ function commit(g,plan,h){
    if(d.coin[0]==='heads'){
     if(f.tickleHand?.length)throw Error('Opponent already has a Tickling Machine set-aside hand');
     f.tickleHand=f.hand.splice(0);f.tickleRestoreTurn=g.turnSerial+1;
-   }else {g.tickleEndsTurn=true;}
+   }else if(!plan.proxy){g.tickleEndsTurn=true;}
    break;
   }
   case 'Minion of Team Rocket':{
    if(d.flips.every(Boolean)){
     if(d.bench?.length){const i=pick('bench'),u=f.bench[i];if(!u)throw Error('Minion target is missing');
      f.bench.splice(i,1);f.hand.push(u.id,...u.under,...u.energies,...u.attachedTrainers.map(t=>t.id));}
-   }else h.finishTurn(g); // A tails result ends the turn; no attack is possible.
+   }else if(!plan.proxy)h.finishTurn(g); // A virtual Chaos Gym use never ends the original player's turn.
    break;
   }
   case "Misty's Duel":{
@@ -636,7 +638,7 @@ function start(g,side,handIndex,h){const p=g.players[side],c=get(p.hand[handInde
  const plan={side,handIndex,cardId:c.id,data:{}};return prompt(g,plan,h);
 }
 function startProxy(g,side,cardId,h){
- const c=get(cardId);if(c.supertype!=='Trainer'||c.subtypes?.includes('Stadium')||!SUPPORTED.has(c.name))throw Error('Unsupported redirected Trainer');
+ const c=get(cardId);if(c.supertype!=='Trainer'||c.subtypes?.includes('Stadium')||ATTACH_ONLY.has(c.name)||!SUPPORTED.has(c.name))throw Error('Unsupported redirected Trainer');
  return prompt(g,{side,handIndex:g.players[side].hand.length,cardId,proxy:true,data:{}},h);
 }
 function answer(g,plan,response,h){
