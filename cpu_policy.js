@@ -38,7 +38,9 @@ function configuration(raw={}){
  if(typeof prizeRace!=='boolean')throw Error('Invalid CPU Prize-race setting');
  const knockoutTempo=raw.knockoutTempo??false;
  if(typeof knockoutTempo!=='boolean')throw Error('Invalid CPU knockout-tempo setting');
- return {level,personality,seed:raw.seed??1,side,planning,evolutionTempo,prizeRace,knockoutTempo,skill:SKILLS[level],style:PERSONALITIES[personality]};
+ const opponentResponse=raw.opponentResponse??false;
+ if(typeof opponentResponse!=='boolean')throw Error('Invalid CPU opponent-response setting');
+ return {level,personality,seed:raw.seed??1,side,planning,evolutionTempo,prizeRace,knockoutTempo,opponentResponse,skill:SKILLS[level],style:PERSONALITIES[personality]};
 }
 // Seeded independent of the engine's private deck order and future RNG state.
 function rng(seed){let x=(seed>>>0)||0x6d2b79f5;return ()=>{
@@ -463,6 +465,30 @@ function prizeRaceBonus(action,o,cfg){
 // Distinguish a *secured Prize* from nominal damage, while preserving the
 // critical need to establish a backup before attacking. Full, guaranteed KO
 // urgency is an optional Champion skill feature until matchups prove value.
+// Public, bounded one-ply reply estimate: avoid yielding a free Prize when a
+// ready Benched Pokémon can weather the *currently affordable* opposing attack.
+// Opponent hidden hands, future Energy draws and RNG are never read.
+function opponentResponseBonus(action,o,cfg){
+ if(!cfg.opponentResponse||cfg.level<4||o.phase!=='game'||!o.self.active||!o.opponent.active)
+  return 0;
+ const p=o.self,q=o.opponent;
+ if(action.type!=='retreat')return 0;
+ if(['Asleep','Paralyzed'].includes(q.active.status))return 0;
+ const attacker=p.active,next=p.bench[action.payload.slot];
+ if(!next)return 0;
+ const now=strongestAffordableAttack(q.active,attacker);
+ const after=strongestAffordableAttack(q.active,next);
+ const threat=now>=hpRemaining(attacker)&&now>0;
+ if(!threat||after>=hpRemaining(next))return 0;
+ const currentKO=(attacker.effectiveAttacks||card(attacker.id)?.attacks||[])
+  .some(a=>canPayEnergy(a.cost||[],energyPool(attacker))&&knockoutChance(a,attacker,q.active)>=.75);
+ if(currentKO)return 0;
+ const replacement=strongestAffordableAttack(next,q.active);
+ if(!replacement)return 0; // Do not flee into a passive Bench that cannot defend itself.
+ const lostEnergy=Math.min(attacker.energies?.length||0,(card(attacker.id)?.retreatCost||[]).length);
+ const advantage=Math.max(0,replacement-strongestAffordableAttack(attacker,q.active))*.25;
+ return Math.max(0,270+advantage-lostEnergy*22)*cfg.style.survival;
+}
 function knockoutTempoBonus(a,o,cfg){
  if(!cfg.knockoutTempo||cfg.level<4||o.phase!=='game'||!o.self.active||!o.opponent.active)return 0;
  if(a.type!=='attack')return 0;
@@ -717,7 +743,7 @@ function chooseAction(game,raw={},memo={}){
  const actions=candidates(o,cfg,used);if(!actions.length)return null;
  const random=rng(cfg.seed+game.turnSerial*7919+(game.events?.length||0)*17011+cfg.side*31);
  const ranked=actions.map((action,i)=>({action,
-  score:score(action,o,cfg,used)+planningBonus(action,o,cfg)+prizeRaceBonus(action,o,cfg)+knockoutTempoBonus(action,o,cfg),tie:i}))
+  score:score(action,o,cfg,used)+planningBonus(action,o,cfg)+prizeRaceBonus(action,o,cfg)+knockoutTempoBonus(action,o,cfg)+opponentResponseBonus(action,o,cfg),tie:i}))
   .sort((a,b)=>b.score-a.score||a.tie-b.tie);
  // Rank all visible options before competence-sensitive choice noise. A larger
  // *evaluation budget* should NOT widen the random window: doing so previously
@@ -738,11 +764,11 @@ function chooseAction(game,raw={},memo={}){
  }
  return null;
 }
-function driveSide(initial,{side=1,level=3,personality='balanced',seed=1,planning,evolutionTempo,prizeRace,knockoutTempo,limit=200}={}){
+function driveSide(initial,{side=1,level=3,personality='balanced',seed=1,planning,evolutionTempo,prizeRace,knockoutTempo,opponentResponse,limit=200}={}){
  let game=initial,steps=0;const commands=[],memo={trainers:0,powers:0,powerKeys:new Set(),stadium:false};
  while(!game.over&&steps<limit){
   const beforeTurn=game.turnSerial;
-  const next=chooseAction(game,{side,level,personality,seed,planning,evolutionTempo,prizeRace,knockoutTempo},memo);
+  const next=chooseAction(game,{side,level,personality,seed,planning,evolutionTempo,prizeRace,knockoutTempo,opponentResponse},memo);
   if(!next){
    if(game.pendingDecision?.actor===side)throw Error('CPU unresolved choice: '+JSON.stringify({decision:game.pendingDecision,pendingAction:game.pendingAction}));
    break;
@@ -762,4 +788,4 @@ function driveSide(initial,{side=1,level=3,personality='balanced',seed=1,plannin
 }
 function driveBot(game,limit=200,config={}){return driveSide(game,{...config,side:1,limit});}
 function propose(game,config={}){return chooseAction(game,{...config,side:1});}
-module.exports={SKILLS,PERSONALITIES,configuration,observation,candidates,score,knockoutChance,planningBonus,evolutionTempoPenalty,prizeRaceBonus,knockoutTempoBonus,chooseAction,driveSide,driveBot,propose};
+module.exports={SKILLS,PERSONALITIES,configuration,observation,candidates,score,knockoutChance,planningBonus,evolutionTempoPenalty,prizeRaceBonus,knockoutTempoBonus,opponentResponseBonus,chooseAction,driveSide,driveBot,propose};
