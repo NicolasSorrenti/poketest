@@ -42,6 +42,7 @@ function priorFireSpin(g){
  g.players[0].hand=['neo2-11'];send(g,0,'bench',{handIndex:0});
  const newSmeargle=g.players[0].bench.find(x=>x.id==='neo2-11');
  assert.equal(newSmeargle.neo50Observed,undefined);
+ newSmeargle.energies=['base1-99','base1-99']; // Isolate witness legality from Sketch's printed two-unit cost.
  send(g,0,'retreat',{slot:1});
  const before=g.players[1].active.damage;
  send(g,0,'attack',{attackIndex:0});
