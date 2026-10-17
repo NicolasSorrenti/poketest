@@ -137,6 +137,46 @@ const settings={level:3,personality:'balanced',side:1,seed:47};
   AI.score({type:'attack',payload:{attackIndex:0}},o,champion,{}),
   'A wounded Magikarp must recognize Flail damage counters instead of rating it as printed flat 10');
 }
+{
+ // Regression: once-per-turn flags are deliberately hidden from publicView,
+ // but remain available in the current player's own state. Losing them forced
+ // hundreds of guaranteed-failing reducer probes in every arena.
+ const game=createGame({decks:[deck,deck],seed:41,format:'classic'});
+ game.players[1].energyUsed=true;game.players[1].retreated=true;
+ let o=AI.observation(game,1);
+ assert.equal(o.self.energyUsed,true);
+ assert.equal(o.self.retreated,true);
+ assert.equal(o.opponent.hand,undefined);
+ o.phase='game';o.turn=1;
+ o.self.active={id:IDS.rat,energies:[IDS.fight],damage:0};
+ o.self.bench=[{id:IDS.machop,energies:[],damage:0}];
+ o.self.hand=[IDS.fight];
+ o.opponent.active={id:IDS.hit,energies:[IDS.fight],damage:0};
+ let proposed=AI.candidates(o,AI.configuration({level:5,side:1}),{powerKeys:new Set()});
+ assert.ok(!proposed.some(a=>a.type==='attach_energy'),
+  'No second Energy attachment after one was used this turn');
+ assert.ok(!proposed.some(a=>a.type==='retreat'),
+  'No second retreat after one was used this turn');
+ o.self.energyUsed=false;o.self.retreated=false;
+ proposed=AI.candidates(o,AI.configuration({level:5,side:1}),{powerKeys:new Set()});
+ assert.ok(proposed.some(a=>a.type==='attach_energy'));
+ assert.ok(proposed.some(a=>a.type==='retreat'));
+}
+{
+ let inspected=0;
+ for(let seed=30;seed<140&&inspected<12;seed++){
+  const game=createGame({decks:[deck,deck],seed,format:'classic'});
+  const hand=game.players[1].hand;
+  if(hand.filter(id=>['base1-7','base1-61','base1-52'].includes(id)).length<2)continue;
+  const first=AI.chooseAction(game,{side:1,level:5,seed:7});
+  assert.equal(first.command.type,'setup_select');
+  const next=AI.chooseAction(first.game,{side:1,level:5,seed:7});
+  assert.equal(next.command.type,'setup_select',
+   'Champion should place a backup Basic during setup instead of immediately confirming');
+  inspected++;
+ }
+ assert.ok(inspected>=5,'Opening Bench test must exercise at least five multi-Basic hands');
+}
 let duels=0,decisions=0,attacks=0,energy=0,evolutions=0,trainer=0;
 for(let seed=1;seed<=4;seed++){
  let game=createGame({decks:[deck,deck],seed:seed*1789,format:'classic'});
