@@ -77,10 +77,32 @@
   feedback.reset();opponentActivity.clear();combat.reset();lobbyDeckDraft=null;token=data.token;roomCode=data.code;chatSeq=-1;seenChatSeq=-1;lastCoinSeq=null;lastKoFeedSeq=null;sessionStorage.setItem('neoOnlineToken',token);sessionStorage.setItem('neoOnlineRoom',roomCode);
   current=data;render();
  }catch(e){$('startupError').textContent=e.message;}finally{busy=false;}}
- async function lobbyAction(path,payload={}){if(busy||!current||watching())return;busy=true;$('lobbyError').textContent='';try{
-  const updated=await api(path,{method:'POST',body:JSON.stringify({code:roomCode,revision:current.revision,...payload})});
-  current=updated;if(path==='deck')lobbyDeckDraft=null;render();
- }catch(e){$('lobbyError').textContent=e.message;await refresh();}finally{busy=false;}}
+ async function lobbyAction(path,payload={}){
+  if(busy||!current||watching())return;
+  busy=true;$('lobbyError').textContent='';
+  try{
+   const submit=revision=>api(path,{method:'POST',body:JSON.stringify({code:roomCode,revision,...payload})});
+   let updated;
+   try{updated=await submit(current.revision);}
+   catch(error){
+    if(!/Stale match revision/i.test(error.message))throw error;
+    // Both players often click Ready at the same moment. Rebase the intended
+    // lobby action on the current authoritative revision; do not lose the click.
+    const fresh=await api('state?code='+encodeURIComponent(roomCode));
+    current=fresh;renderChat(fresh);
+    const alreadyReady=path==='ready'&&fresh.players?.[side()]?.ready===payload.ready;
+    updated=alreadyReady||(path==='start'&&fresh.started)?fresh:await submit(fresh.revision);
+   }
+   current=updated;if(path==='deck')lobbyDeckDraft=null;render();
+  }catch(error){
+   $('lobbyError').textContent=error.message;
+   // Never call refresh() here: it intentionally ignores requests while busy.
+   try{
+    const fresh=await api('state?code='+encodeURIComponent(roomCode));
+    current=fresh;renderChat(fresh);render();
+   }catch(syncError){$('lobbyError').textContent+=' · Unable to refresh room: '+syncError.message;}
+  }finally{busy=false;}
+ }
  function clearChoiceUi(){
   const box=$('decisionBox'),dock=$('choiceDock');if(box.parentElement!==dock)dock.append(box);
   $('choiceModal').classList.add('hidden');$('choiceModal').setAttribute('aria-hidden','true');
