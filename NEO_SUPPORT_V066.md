@@ -1,0 +1,3 @@
+# v0.66 — Ecogym rules
+
+Ecogym is a persistent Stadium. When the *other* player causes an attached non-Colorless Energy card to be discarded from a **surviving** Pokémon via attack, Power or Trainer, Ecogym returns the discarded card to its owner's hand. KO-discarded Energy and self-discarded Energy are not recovered. Colorless-only DCE, Recycle, Potion and Full Heal Energy are excluded. One post-reducer reconciliation hook audits attached card losses and actual newly discarded card identity for the authoritative CPU/online game state, including multi-stage decisions. Follow-up work: rare Trainer/Power transformations and exact effects with multiple identical Pokémon/attachments remain additional edge cases.

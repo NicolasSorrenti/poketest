@@ -2243,6 +2243,7 @@ function reduce(game,actor,command){
    if(affected){revealSecretPlan(next,hidden.owner,index);if(!p.active&&!next.pendingDecision)completeKnockouts(next,'trainer');}
   }
   returnRecycledEnergy(game,next);
+  returnEcogymEnergy(game,next,actor,cmd);
   next.events.push({side:actor,type:cmd.type,payload:structuredClone(cmd.payload),visible});
   return {ok:true,game:next};
  }catch(e){return {ok:false,error:e.message};}
@@ -2250,6 +2251,50 @@ function reduce(game,actor,command){
 // Neo Genesis Recycle Energy returns to its owner's hand when discarded from
 // an attached Pokémon. Compare the pre/post authoritative transaction: this
 // covers retreat, attacks, Trainer discards, and KOs without per-card branches.
+// Neo Genesis Ecogym: return Energy discarded from a surviving Pokémon
+// by the OTHER player's attack / Power / Trainer, excluding KO and any
+// Colorless-only Energy. This runs after each authoritative command/decision.
+function returnEcogymEnergy(before,after,actor,cmd){
+ const stadium=before.stadium||after.stadium;
+ if(!stadium||card(before,stadium.id).name!=='Ecogym')return;
+ const pending=before.pendingAction;
+ const source=cmd.type==='choose'&&pending?
+  pending.plan?.side??pending.defenderSide??pending.side??actor:actor;
+ // Every returned Energy must have been ATTACHED to a surviving Pokémon
+ // before the current action, not newly discarded from a Knocked Out card.
+ for(let ownerSide=0;ownerSide<2;ownerSide++){
+  if(source===ownerSide)continue;
+  const prev=before.players[ownerSide],now=after.players[ownerSide];
+  const beforeUnits=allPokemon(prev),afterUnits=allPokemon(now),matched=new Set();
+  const lost=[];
+  for(const previous of beforeUnits){
+   const signature=u=>u.id+'|'+u.under.join('|');
+   const candidates=afterUnits.flatMap((u,i)=>!matched.has(i)&&signature(u)===signature(previous)?[{u,i}]:[]);
+   if(!candidates.length)continue; // KO: do NOT recover its Energy.
+   const overlap=unit=>previous.energies.filter(id=>unit.energies.includes(id)).length;
+   candidates.sort((a,b)=>overlap(b.u)-overlap(a.u));
+   const chosen=candidates[0];matched.add(chosen.i);
+   const remaining=[...chosen.u.energies];
+   for(const id of previous.energies){
+    const index=remaining.indexOf(id);
+    if(index>=0)remaining.splice(index,1);
+    else if(isEnergy(card(before,id))&&!['Double Colorless Energy','Recycle Energy','Full Heal Energy','Potion Energy'].includes(card(before,id).name))
+     lost.push(id);
+   }
+  }
+  // Avoid effects triggered by transfers to deck or hand and conserve cards
+  // by matching only increased DISCARDED occurrences for each concrete ID.
+  const oldCount=id=>prev.discard.filter(x=>x===id).length;
+  const newCount=id=>now.discard.filter(x=>x===id).length;
+  for(const id of lost){
+   if(newCount(id)<=oldCount(id))continue;
+   const index=now.discard.lastIndexOf(id);
+   if(index<0)continue;
+   now.hand.push(now.discard.splice(index,1)[0]);
+   log(after,'Ecogym returned '+card(before,id).name+' to '+now.name+'\'s hand.');
+  }
+ }
+}
 function returnRecycledEnergy(before,after){
  for(let side=0;side<2;side++){
   const old=before.players[side],now=after.players[side];

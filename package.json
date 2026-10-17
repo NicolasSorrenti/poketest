@@ -1,6 +1,6 @@
 {
   "name": "neo-campus-tcg",
-  "version": "0.65.0-neo-prize-reveals",
+  "version": "0.66.0-neo-ecogym",
   "private": true,
   "description": "Neo Genesis and Neo Discovery: 19 authentic attack entries, 14 entire playable printings, interactive choices and defensive reactions",
   "scripts": {
