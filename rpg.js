@@ -1,6 +1,6 @@
 'use strict';
 (()=>{
-const $=id=>document.getElementById(id),KEY='neoHarborRpgV1',STORY=window.NeoHarborStory,SCHEDULES=window.NeoRpgSchedules,WORLD=window.NeoRpgWorld,BRIDGE=window.NeoRpgDuelBridge;
+const $=id=>document.getElementById(id),KEY='neoHarborRpgV1',STORY=window.NeoHarborStory,SCHEDULES=window.NeoRpgSchedules,WORLD=window.NeoRpgWorld,ARC=window.NeoRpgRivalArc,BRIDGE=window.NeoRpgDuelBridge;
 const periods=['Morning','Afternoon','Evening'];
 const places={
  home:['Your Apartment','Your base during the championship season.'],
@@ -26,7 +26,7 @@ const eventCards=[{day:7,slot:1,place:'arcade',title:'Arcade Friendly Cup',rewar
 
 function eligibleStories(){return STORY.available(state);}
 function startStory(id){
- if(state.activeStory||state.activeEncounter||state.pendingDuel)return;
+ if(state.activeStory||state.activeEncounter||state.activeArc||state.pendingDuel)return;
  const e=eligibleStories().find(e=>e.id===id);if(!e)return;
  state.selected=e.npc;state.activeStory={id:e.id,phase:'lines',index:0,choice:null};persist();render();
 }
@@ -68,7 +68,7 @@ function finishStory(){
 
 function timeFlash(beforeDay,beforeSlot){const overlay=document.createElement('div');overlay.className='notice-pop';const heading=document.createElement('b');heading.textContent=state.day>90?'Season complete':state.day!==beforeDay?'A NEW DAY BEGINS':'TIME PASSES';const body=document.createElement('span');body.textContent=state.day>90?'Day 90 has ended.':('Day '+state.day+' · '+periods[state.slot]);overlay.append(heading,body);document.body.append(overlay);overlay.addEventListener('animationend',()=>overlay.remove());}
 
-function defaults(){return {day:1,slot:0,location:'home',metReina:false,reinaTrust:0,reinaDuels:0,results:[],flags:{intro:false},journal:['The 90-day season begins.'],pendingDuel:null,bonds:{},talked:{},hungOut:{},eventsDone:{},points:0,credits:80,playerDeck:'blackout',selected:null,ended:false,storyDone:{},storyMissed:{},relationships:{},routeOutcomes:{},partner:null,activeStory:null,activeEncounter:null,activityDone:{},encountersDone:{},focus:75,insight:0,reputation:0,preparation:0,lastDuelReceipt:null,scene:null}}
+function defaults(){return {day:1,slot:0,location:'home',metReina:false,reinaTrust:0,reinaDuels:0,results:[],flags:{intro:false},journal:['The 90-day season begins.'],pendingDuel:null,bonds:{},talked:{},hungOut:{},eventsDone:{},points:0,credits:80,playerDeck:'blackout',selected:null,ended:false,storyDone:{},storyMissed:{},relationships:{},routeOutcomes:{},partner:null,activeStory:null,activeEncounter:null,activeArc:null,arcFlags:{},arcOutcomes:{},activityDone:{},encountersDone:{},focus:75,insight:0,reputation:0,preparation:0,lastDuelReceipt:null,scene:null}}
 let state;try{state=JSON.parse(localStorage.getItem(KEY))||defaults();if(!Number.isInteger(state.day)||state.day<1||state.day>91)throw Error('Invalid save');}catch{state=defaults()}
 for(const [k,v] of Object.entries(defaults()))if(state[k]===undefined)state[k]=v;
 if(!places[state.location])state.location='home';
@@ -79,6 +79,7 @@ if(!state.pendingDuel?.id||!cast[state.pendingDuel?.npc])state.pendingDuel=null;
 for(const id of Object.keys(cast)){if(!state.bonds[id])state.bonds[id]={affection:0,trust:0,duels:0};}
 STORY.normalize(state);
 WORLD.hydrate(state);
+ARC.hydrate(state);
 for(const id of Object.keys(cast)){const old=state.bonds[id],current=state.relationships[id];
  if(!state.flags['newStoryMigrated_'+id]){for(const key of ['affection','trust','duels'])current[key]=Math.max(current[key]||0,old[key]||0);
  state.flags['newStoryMigrated_'+id]=true;}
@@ -98,7 +99,7 @@ function say(speaker,line,choices=[]){scene={speaker,line,choices};state.scene=s
 function currentPeople(){if(state.day>90)return [];const regular=SCHEDULES.peopleAt(state.day,state.slot,state.location,eligibleStories());
 for(const e of eligibleStories())if(!regular.includes(e.npc))regular.push(e.npc);
 return regular;}
-function selectPerson(id){if(state.activeStory||state.activeEncounter||!cast[id]||!currentPeople().includes(id))return;const c=cast[id],first=!state['met_'+id]&&!((id==='reina')&&state.metReina);state['met_'+id]=true;if(id==='reina')state.metReina=true;state.selected=id;persist();say(c.name,first?c.intro:c.repeat,options(id));}
+function selectPerson(id){if(state.activeStory||state.activeEncounter||state.activeArc||!cast[id]||!currentPeople().includes(id))return;const c=cast[id],first=!state['met_'+id]&&!((id==='reina')&&state.metReina);state['met_'+id]=true;if(id==='reina')state.metReina=true;state.selected=id;persist();say(c.name,first?c.intro:c.repeat,options(id));}
 function options(id){const key=atKey(id),spentToday=!!state.hungOut[state.day+':'+id];return [
  ['Ask about their routine · free','where:'+id],
  [state.talked[key]?'Talk again · free (bond already earned)':'Talk · free · +1 affection','talk:'+id],
@@ -117,7 +118,7 @@ function showEncounter(){
  return {speaker:name,line:decision.reply,choices:[['Continue · ⏳ 1 period','encounterFinish']]};
 }
 function startEncounter(id){
- if(state.activeStory||state.activeEncounter||state.pendingDuel||state.day>90)return;
+ if(state.activeStory||state.activeEncounter||state.activeArc||state.pendingDuel||state.day>90)return;
  const e=WORLD.availableEncounters(state,currentPeople()).find(x=>x.id===id);if(!e)return;
  state.activeEncounter={id,phase:'choice',choice:null};state.selected=e.npc||null;persist();render();
 }
@@ -139,12 +140,61 @@ function finishEncounter(){
  say(e.npc?cast[e.npc].name:'Narrator',report.summary);
 }
 function performActivity(id){
- if(state.activeStory||state.activeEncounter||state.pendingDuel||state.day>90)return;
+ if(state.activeStory||state.activeEncounter||state.activeArc||state.pendingDuel||state.day>90)return;
  let result;try{result=WORLD.doActivity(state,id,currentPeople());}
  catch(err){$('notice').textContent=err.message;return;}
  const place=state.location;
  log('Activity completed at '+places[place][0]+': '+result.summary);
  advance();persist();say(result.person?cast[result.person].name:'Narrator',result.summary+(result.person?' You also made a good impression.':''));
+}
+
+
+function startArc(id){
+ if(state.activeStory||state.activeEncounter||state.activeArc||state.pendingDuel||state.day>90)return;
+ const e=ARC.available(state,currentPeople()).find(x=>x.id===id);if(!e)return;
+ state.activeArc={id,phase:'lines',index:0,choice:null};state.selected='reina';persist();render();
+}
+function showArc(){
+ const a=state.activeArc,e=a&&ARC.byId(a.id);
+ if(!e){state.activeArc=null;persist();return null;}
+ if(a.phase==='lines'){
+  const lines=ARC.linesFor(state,a.id),line=lines[Math.min(a.index,lines.length-1)];
+  return {speaker:line[0]==='You'?'You':line[0],line:line[1],choices:[[a.index<lines.length-1?'Continue ›':'Respond ›','arcNext']]};
+ }
+ if(a.phase==='choice')return {speaker:cast.reina.name,line:e.duel?'Do you want to play the match now?':'How will you answer?',choices:e.choices.map((choice,i)=>[choice.label,'arcChoice:'+i])};
+ return {speaker:cast.reina.name,line:e.choices[a.choice].reply,choices:[['Finish conversation · ⏳ 1 period','arcFinish']]};
+}
+function advanceArc(){
+ const a=state.activeArc;if(!a||a.phase!=='lines')return;
+ const lines=ARC.linesFor(state,a.id);a.index++;
+ if(a.index>=lines.length)a.phase='choice';
+ persist();render();
+}
+function chooseArc(raw){
+ const a=state.activeArc;if(!a||a.phase!=='choice')return;
+ const e=ARC.byId(a.id),index=Number(raw),choice=e?.choices[index];
+ if(!Number.isInteger(index)||!choice)return;
+ if(choice.decline){
+  state.activeArc=null;state.selected=null;persist();
+  return say(cast.reina.name,'Then we will find another evening. I want you at your best.');
+ }
+ if(choice.duel){
+  if(e.id!=='reina_rival_trial')return;
+  startDuel('reina',null,e.id);
+  return;
+ }
+ a.phase='response';a.choice=index;persist();render();
+}
+function finishArc(){
+ const a=state.activeArc;if(!a||a.phase!=='response')return;
+ let report;try{report=ARC.finish(state,a.id,a.choice,currentPeople());}
+ catch(err){$('notice').textContent=err.message;return;}
+ const id=a.id;
+ state.activeArc=null;
+ log('A meaningful conversation with '+cast.reina.name+' brought the rivalry forward.');
+ if(report.ending)log('A personal chapter reached its conclusion.');
+ advance();persist();
+ say(cast.reina.name,report.text);
 }
 
 function scheduleEvent(){return eventCards.find(e=>e.day===state.day&&e.slot===state.slot&&e.place===state.location&&!state.eventsDone[e.day+':'+e.title]);}
@@ -155,7 +205,11 @@ function act(action){
  if(type==='storyFinish')return finishStory();
  if(type==='encounterChoice')return chooseEncounter(id);
  if(type==='encounterFinish')return finishEncounter();
- if(state.activeStory||state.pendingDuel||state.activeEncounter)return;
+ if(type==='arcNext')return advanceArc();
+ if(type==='arcChoice')return chooseArc(id);
+ if(type==='arcFinish')return finishArc();
+ if(state.activeStory||state.pendingDuel||state.activeEncounter||state.activeArc)return;
+ if(type==='arc')return startArc(id);
  if(type==='encounter')return startEncounter(id);
  if(type==='townActivity')return performActivity(id);
  if(type==='calendar')return openCalendar();
@@ -176,7 +230,14 @@ function act(action){
  if(type==='hang'){if(state.hungOut[state.day+':'+id])return say(c.name,'I enjoyed our time today. Let us make plans another day.',options(id));state.hungOut[state.day+':'+id]=true;bond.affection+=2;bond.trust++;state.relationships[id].affection+=2;state.relationships[id].trust++;log('Spent time with '+c.name+'.');advance();state.selected=null;return say(c.name,'That was a lovely way to spend part of the day. See you around.');}
 }
 function duelUrl(duel){return '/classic_live.html?rpg=1&duelId='+encodeURIComponent(duel.id)+'&deck='+encodeURIComponent(duel.playerDeck)+'&opponent='+encodeURIComponent(duel.opponent);}
-function startDuel(id,exhibition=null){if(state.activeStory||state.activeEncounter||state.pendingDuel||state.day>90||!cast[id]||(!exhibition&&!currentPeople().includes(id)))return;const c=cast[id];state.pendingDuel={id:'npc-'+id+'-'+state.day+'-'+state.slot+'-'+state.results.length,npc:id,day:state.day,slot:state.slot,opponent:c.deck,playerDeck:state.playerDeck,resolved:false,eventKey:exhibition?exhibition.day+':'+exhibition.title:null,eventReward:exhibition?exhibition.reward:0,eventTitle:exhibition?exhibition.title:null};persist();render();$('duel').hidden=false;$('battle').src=duelUrl(state.pendingDuel);}
+function startDuel(id,exhibition=null,arcEpisode=null){
+ if(state.activeStory||state.activeEncounter||(state.activeArc&&state.activeArc.id!==arcEpisode)||state.pendingDuel||state.day>90||!cast[id]||(!exhibition&&!currentPeople().includes(id)))return;
+ if(arcEpisode&&(!state.activeArc||state.activeArc.phase!=='choice'||!ARC.available(state,currentPeople()).some(e=>e.id===arcEpisode)))return;
+ const c=cast[id];
+ state.pendingDuel={id:'npc-'+id+'-'+state.day+'-'+state.slot+'-'+state.results.length,npc:id,day:state.day,slot:state.slot,opponent:c.deck,playerDeck:state.playerDeck,resolved:false,eventKey:exhibition?exhibition.day+':'+exhibition.title:null,eventReward:exhibition?exhibition.reward:0,eventTitle:exhibition?exhibition.title:null,arcEpisode:arcEpisode||null};
+ if(arcEpisode)state.activeArc=null;
+ persist();render();$('duel').hidden=false;$('battle').src=duelUrl(state.pendingDuel);
+}
 window.addEventListener('message',ev=>{
  const duel=state.pendingDuel;
  if(!BRIDGE.accepts(ev,location.origin,$('battle').contentWindow,duel))return;
@@ -184,10 +245,12 @@ window.addEventListener('message',ev=>{
  if(!receipt)return;
  for(const note of receipt.notes)log(note);
  const preparationNote=WORLD.afterDuel(state,receipt);if(preparationNote)log(preparationNote);
+ const personalOutcome=duel.arcEpisode?ARC.settleDuel(state,duel.arcEpisode,receipt):null;
+ if(personalOutcome)log('A special rivalry challenge reached its result.');
  state.lastDuelReceipt=receipt;state.pendingDuel=null;
  sessionStorage.removeItem(BRIDGE.sessionKey(duel.id));
  advance();$('duel').hidden=true;$('battle').src='about:blank';
- const c=cast[duel.npc];say(c.name,receipt.outcome==='Victory'?c.duelWin:receipt.outcome==='Draw'?'A hard-fought draw. Let us play again.':c.duelLose);
+ const c=cast[duel.npc];say(c.name,personalOutcome|| (receipt.outcome==='Victory'?c.duelWin:receipt.outcome==='Draw'?'A hard-fought draw. Let us play again.':c.duelLose));
 });
 function openCalendar(){
  const root=$('calendarEntries');root.replaceChildren();
@@ -204,7 +267,7 @@ function makeAvatar(id,size=''){
  return img;
 }
 function render(){
- const ended=state.day>90,locked=!!state.activeStory||!!state.activeEncounter||!!state.pendingDuel;
+ const ended=state.day>90,locked=!!state.activeStory||!!state.activeEncounter||!!state.activeArc||!!state.pendingDuel;
  const receipt=state.lastDuelReceipt;
  $('duelReceipt').hidden=!receipt;
  if(receipt){
@@ -236,11 +299,12 @@ function render(){
  $('scene').style.backgroundImage="linear-gradient(0deg,#090b18ec 0%,#090b1860 80%),url('/rpg-assets/"+bgFiles[state.location]+"')";
  const showingStory=state.activeStory?STORY.byId(state.activeStory.id):null;
  const showingEncounter=state.activeEncounter?WORLD.byEncounter(state.activeEncounter.id):null;
- const portraitId=showingStory?.npc||showingEncounter?.npc||state.selected,portraitRoot=$('portrait');portraitRoot.replaceChildren();
+ const showingArc=state.activeArc?ARC.byId(state.activeArc.id):null;
+ const portraitId=showingStory?.npc||showingEncounter?.npc||(showingArc?'reina':null)||state.selected,portraitRoot=$('portrait');portraitRoot.replaceChildren();
  if(portraitId&&cast[portraitId])portraitRoot.append(makeAvatar(portraitId));
  $('homeBanner').hidden=state.location!=='home'||!!portraitId;
  $('homeBanner').textContent='YOUR APARTMENT  ·  DAY '+state.day+'  ·  '+periods[state.slot]+' — Prepare your deck, review your plans or rest.';
- let shown=showingStory?renderStory():showingEncounter?showEncounter():scene;
+ let shown=showingStory?renderStory():showingEncounter?showEncounter():showingArc?showArc():scene;
  $('speaker').textContent=shown?.speaker||'Narrator';$('line').textContent=shown?.line||'The town is waiting.';$('choices').replaceChildren();
  for(const [label,action] of shown.choices||[]){
   const b=document.createElement('button');b.className='choice'+(action==='storyFinish'?' finish':'');b.textContent=label;
@@ -284,7 +348,15 @@ function render(){
   const b=document.createElement('button');b.className='event-btn';b.disabled=locked;b.textContent='✦  '+e.title+' · ⏳ 1 period';
   const small=document.createElement('small');small.textContent=cast[e.npc].name+' · limited-time encounter';b.append(small);b.onclick=()=>startStory(e.id);$('storyEvents').append(b);
  }
- if(!stories.length){const x=document.createElement('p');x.className='empty-note';x.textContent='No special story encounter right now.';$('storyEvents').append(x);}
+ const personalEpisodes=ARC.available(state,currentPeople());
+ for(const episode of personalEpisodes){
+  const b=document.createElement('button');b.className='event-btn arc-episode';b.disabled=locked;
+  const title=document.createElement('strong');title.textContent='♜  '+episode.title+' · ⏳ 1 period';
+  const hint=document.createElement('small');hint.textContent=cast.reina.name+' · an optional rivalry chapter';
+  b.append(title,hint);b.onclick=()=>act('arc:'+episode.id);
+  $('storyEvents').append(b);
+ }
+ if(!stories.length&&!personalEpisodes.length){const x=document.createElement('p');x.className='empty-note';x.textContent='No special story encounter right now.';$('storyEvents').append(x);}
 
  $('lifeStats').replaceChildren();
  const lifeGauges=[['FOCUS',state.focus,100,'Focus determines which activities you can perform'],['INSIGHT',state.insight,99,'Lessons learned from activities'],['REPUTATION',state.reputation,100,'How familiar the town is with your name'],['DUEL PREP',state.preparation,3,'A modest bonus after your next winning match']];
@@ -330,7 +402,7 @@ function render(){
  $('journal').replaceChildren();const stats=document.createElement('p');stats.className='stats';stats.textContent='🏆 '+state.points+' circuit points   ·   ◈ '+state.credits+' credits';$('journal').append(stats);
  for(const e of eventCards.filter(e=>e.day>=state.day).slice(0,2)){const p=document.createElement('p');p.textContent='DAY '+e.day+' · '+e.title+' ('+periods[e.slot]+')';$('journal').append(p)}
  for(const note of state.journal.slice(0,3)){const p=document.createElement('p');p.textContent='• '+note;$('journal').append(p)}
- $('notice').textContent=state.activeStory?'Story in progress: complete this scene to continue.':state.activeEncounter?'Local encounter in progress — make your decision.':state.pendingDuel?'Your duel is in progress.':'Travel & talk are free · ⏳ actions advance time';
+ $('notice').textContent=state.activeStory?'Story in progress: complete this scene to continue.':state.activeArc?'A private rivalry chapter is in progress.':state.activeEncounter?'Local encounter in progress — make your decision.':state.pendingDuel?'Your duel is in progress.':'Travel & talk are free · ⏳ actions advance time';
  $('deckPicker').disabled=locked||ended;
  if($('deckPicker')?.options.length)$('deckPicker').value=state.playerDeck;
 }
@@ -338,7 +410,7 @@ function render(){
 $('quickNext').onclick=()=>act('rest');$('quickHome').onclick=()=>act('home');$('calendarBtn').onclick=openCalendar;$('calendarClose').onclick=()=>$('calendarDialog').close();
 $('save').onclick=()=>{persist();$('notice').textContent='Campaign saved in this browser.'};
 $('dismissReceipt').onclick=()=>{state.lastDuelReceipt=null;persist();render();};
-document.addEventListener('keydown',e=>{if((e.key===' '||e.code==='Space')&&state.activeStory?.phase==='lines'&&!['INPUT','TEXTAREA','SELECT','BUTTON'].includes(e.target?.tagName)){e.preventDefault();act('storyNext');}});
+document.addEventListener('keydown',e=>{if((e.key===' '||e.code==='Space')&&!['INPUT','TEXTAREA','SELECT','BUTTON'].includes(e.target?.tagName)){if(state.activeStory?.phase==='lines'){e.preventDefault();act('storyNext');}else if(state.activeArc?.phase==='lines'){e.preventDefault();act('arcNext');}}});
 async function initDecks(){try{const res=await fetch('/api/classic/decks');if(!res.ok)throw Error('Could not load decks');const data=await res.json(),select=$('deckPicker');for(const d of data.decks.filter(x=>x.id!=='custom')){const o=document.createElement('option');o.value=d.id;o.textContent=d.name;select.append(o)}if([...select.options].some(o=>o.value===state.playerDeck))select.value=state.playerDeck;else{select.value='blackout';state.playerDeck='blackout'}select.onchange=()=>{if(state.pendingDuel||state.activeStory||state.ended){select.value=state.playerDeck;return;}state.playerDeck=select.value;persist()};}catch(e){$('notice').textContent='Deck list unavailable: '+e.message;}}
 persist();render();initDecks();if(state.pendingDuel){$('duel').hidden=false;$('battle').src=duelUrl(state.pendingDuel);}
 })();

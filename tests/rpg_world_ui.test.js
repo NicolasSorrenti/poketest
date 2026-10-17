@@ -2,7 +2,7 @@
 const test=require('node:test');
 const assert=require('node:assert/strict');
 const fs=require('node:fs'),path=require('node:path');
-const Story=require('../rpg_story'),Schedules=require('../rpg_schedules'),World=require('../rpg_world'),Bridge=require('../rpg_duel_bridge');
+const Story=require('../rpg_story'),Schedules=require('../rpg_schedules'),World=require('../rpg_world'),Arc=require('../rpg_rival_arc'),Bridge=require('../rpg_duel_bridge');
 const js=fs.readFileSync(path.join(__dirname,'..','rpg.js'),'utf8');
 const html=fs.readFileSync(path.join(__dirname,'..','rpg.html'),'utf8');
 const ids=[...html.matchAll(/id="([^"]+)"/g)].map(x=>x[1]);
@@ -27,7 +27,7 @@ function launch(initial){
  const doc={getElementById(id){if(!elements[id])throw Error('Missing '+id);return elements[id];},
   createElement(tag){return new FakeNode(tag);},body:new FakeNode('body'),
   addEventListener(name,cb){listeners['document:'+name]=cb;}};
- const win={NeoHarborStory:Story,NeoRpgSchedules:Schedules,NeoRpgWorld:World,NeoRpgDuelBridge:Bridge,
+ const win={NeoHarborStory:Story,NeoRpgSchedules:Schedules,NeoRpgWorld:World,NeoRpgRivalArc:Arc,NeoRpgDuelBridge:Bridge,
   addEventListener(name,cb){listeners[name]=cb;}};
  const local={getItem(k){return saved[k]||null;},setItem(k,v){saved[k]=String(v);}};
  const session={removeItem(){}};
@@ -89,4 +89,64 @@ test('duel battle result applies one preparation bonus only once',()=>{
  assert.equal(r.state().slot,1);
  r.listeners.message(event);
  assert.equal(r.state().results.length,1);
+});
+
+
+test('a scheduled rivalry chapter plays multiple lines and saves its personal choices',()=>{
+ const r=launch({day:14,slot:2,location:'center',results:[{id:'earlier',npc:'reina',won:false,day:3}]});
+ const episode=r.elements.storyEvents.children.find(x=>x.className.includes('arc-episode'));
+ assert.ok(episode,'optional Reina chapter is visible after a previous match');
+ episode.onclick();
+ for(let i=0;i<3;i++)r.elements.choices.children[0].onclick();
+ assert.equal(r.state().activeArc.phase,'choice');
+ r.elements.choices.children[0].onclick();
+ assert.equal(r.state().activeArc.phase,'response');
+ r.elements.choices.children[0].onclick();
+ const state=r.state();
+ assert.ok(state.arcFlags.reina_rival_1);
+ assert.equal(state.activeArc,null);
+ assert.equal(state.day,15);
+ assert.equal(state.slot,0);
+});
+
+test('a private rivalry challenge launches the Classic duel and records a defeat branch once',()=>{
+ const r=launch({day:58,slot:2,location:'center',
+  arcFlags:{reina_rival_1:{day:14},reina_rival_2:{day:36}},
+  results:[{id:'old-1',npc:'reina',won:false,day:6},{id:'old-2',npc:'reina',won:false,day:12}],
+  insight:3});
+ const episode=r.elements.storyEvents.children.find(x=>x.className.includes('arc-episode'));
+ assert.ok(episode,'the trial unlocks through preparation even without a prior win');
+ episode.onclick();
+ for(let i=0;i<3;i++)r.elements.choices.children[0].onclick();
+ assert.equal(r.state().activeArc.phase,'choice');
+ r.elements.choices.children[0].onclick();
+ const pending=r.state().pendingDuel;
+ assert.ok(pending);
+ assert.equal(pending.arcEpisode,'reina_rival_trial');
+ const event={data:Bridge.message(pending.id,1),origin:r.loc.origin,source:r.elements.battle.contentWindow};
+ r.listeners.message(event);
+ const state=r.state();
+ assert.equal(state.arcFlags.reina_rival_trial.outcome,'Defeat');
+ assert.equal(state.activeArc,null);
+ assert.equal(state.results.length,3);
+ assert.equal(state.day,59);
+ assert.equal(state.slot,0);
+ r.listeners.message(event);
+ assert.equal(r.state().results.length,3);
+});
+
+
+test('in-progress rivalry dialogue resumes at the same line after save and reload',()=>{
+ const first=launch({day:14,slot:2,location:'center',results:[{id:'early',npc:'reina',won:false,day:3}]});
+ const episode=first.elements.storyEvents.children.find(x=>x.className.includes('arc-episode'));
+ assert.ok(episode);episode.onclick();
+ first.elements.choices.children[0].onclick();
+ const state=first.state();
+ assert.equal(state.activeArc.phase,'lines');
+ assert.equal(state.activeArc.index,1);
+ const restored=launch(state);
+ assert.equal(restored.state().activeArc.index,1);
+ assert.ok(restored.elements.line.textContent.includes('match'));
+ restored.elements.choices.children[0].onclick();
+ assert.equal(restored.state().activeArc.index,2);
 });

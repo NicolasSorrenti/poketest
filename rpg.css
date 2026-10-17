@@ -44,3 +44,8 @@
 .town-activity:not(:disabled):hover,.encounter-btn:not(:disabled):hover{background:#583c63;border-color:#faaabe}
 .world-section,.encounter-section{border-left:2px solid #b07598;padding-left:10px}
 @media(max-width:700px){.life-stats{grid-template-columns:repeat(2,minmax(0,1fr))}.world-section,.encounter-section{border-left:0;padding-left:2px}}
+
+/* Optional rivalry route */
+.arc-episode{background:linear-gradient(110deg,#5e3038,#242844);border-color:#f0a887;box-shadow:inset 3px 0 0 #f3bd91}
+.arc-episode strong{font:800 15px 'Barlow Condensed',sans-serif;color:#ffdfbb}
+.arc-episode small{font:500 11px 'Inter',sans-serif;color:#e4bcaa;margin-top:5px}
