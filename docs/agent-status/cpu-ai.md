@@ -34,6 +34,10 @@ The original classic_bot.js tried a fixed first-legal sequence, attached Energy 
 
 GitHub Actions CPU AI regression additionally runs the existing Classic local CPU suite. First CI passes exposed and we corrected CPU-side dead-end choices for Strange Behavior, Double Colorless retreat payments, and unsupported Super Energy Removal target conditions. These CPU-side preflights are not substitutes for authoritative rules-agent legality fixes. All three CI workflows passed on the verified commit noted above.
 
+## Coordination note on concurrent rules work
+
+- After the verified green run above, new Base→Neo rules commits landed on main. A later PR-merge TCG regression run for the AI branch failed at `test_neo_batch_v067.js:62`: expected a defender-owned Energy discard choice for Koga's Muk reactive Power. The CPU agent did not modify that rule or test; ownership belongs to the historical rules agent. CPU-only regression remains green. Re-run full suite when the rules fix lands; do not merge based solely on the earlier green result.
+
 ## Known limitations and next work
 
 1. Verify green CI on all affected and full regression suites. 
