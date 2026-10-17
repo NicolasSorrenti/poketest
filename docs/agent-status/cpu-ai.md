@@ -71,12 +71,23 @@ GitHub Actions CPU AI regression additionally runs the existing Classic local CP
 - The 100-game 60-turn Blackout baseline: Champion 35–20 Beginner, 45 time-limited results. **The mixed-deck Brushfire/Blackout series was 17–26 with seven nondecisive**; deck matchups matter greatly.
 - CPU regression passed at commit `051dcc2` alongside 450 seeded arena matches; complete full-suite status must be checked on the same PR head after doc updates.
 
+## Tactical search milestone — evaluated, not overclaimed
+
+- Added a deterministic, bounded **two-card tactical forecast** for Energy attachments and evolutions, with a real historical Machop → Machoke → third Fighting Energy example. The forecast computes potential damage and KO probability using only the player's own revealed hand, the public battlefield, and printed attacks; it does **not** call `reduce` for future exploration or inspect private opposing cards, random state or future deck draws. A new midgame test checks decision invariance when opponent hidden cards and the future RNG state change.
+- Added `--left-planning` / `--right-planning` paired A/B benchmark switches, allowing equal-level Championship comparisons instead of assuming an extra feature is beneficial. Paired 120-turn **Champion with planning vs Champion without** was **40–40** across 80 Blackout matches and **19–21** across 40 Brushfire matches. No improvement was demonstrated; the forecast also increased decision latency.
+- Therefore **planning is experimental and OFF by default** on all levels (including Champion), available only via explicit `planning:true` in the CPU policy and tournament CLI. Do not turn it on in the RPG or live service based only on unit tests. A regression locks down the effective default and the CLI's truthful planning metadata.
+- Implemented visible **recoil self-KO risk** in skilled attack valuation, with a historical Machoke Submission regression: an avoidable non-Prize self-KO loses to a safer move, while Beginner can still choose raw damage.
+- Implemented **late deck exhaustion safeguards**: Expert/Champion will not use Bill with 2 or fewer cards remaining or Oak with 7 or fewer, where routine extra draws risk eliminating their next-turn draw. Beginner is deliberately less disciplined. Tested at the real action-candidate level.
+- The 120-turn **Champion vs Expert** Blackout mirror after these safeguards was **20–30**; **Casual vs Beginner** was **24–26**, both without experimental planning. These fixed-seed head-to-head runs still do not prove tier ordering. The entire regression workflow now contains **570** paired, seat-swapped CPU matches across 60-/120-turn horizons and two same-level planner A/B tests.
+- All three suites (CPU, full TCG and Node/RPG) were green at `6b5cc4e`. A subsequent benchmark reporting regression correction is being checked. One transient full-suite red earlier in this milestone came from concurrently added `test_neo_batch_v072.js` Prize/KO rules; this branch did not modify its engine implementation and later full suites recovered.
+- Next genuinely promising research: diagnose **which actions differ on expert losses**, design stronger opponent-reply/Prize-race evaluation and mandatory multi-stage Trainer target planning, run multiple new *seed sets* with fewer censored games. Prefer demonstrable win-rate gains over increasing simulation complexity.
+
 ## Known limitations and next work
 
 1. Verify green CI on all affected and full regression suites. 
 2. Add safe effect-specific multi-choice, retreat payment and Trainer discard/search targeting heuristics.
 3. Benchmark many paired matches across multiple decks and report confidence intervals, latency, missed KOs and mistake diagnostics. Current tests do not establish ordered competitive skill strength.
-4. Add bounded same-turn planning, then evaluate hidden-information ISMCTS against the heuristic baseline within a CPU time budget.
+4. Validate tactical search against same-level controlled baselines before enabling it; test hidden-information ISMCTS only within a fixed CPU time budget.
 5. Coordinate profile assignment with RPG and UI owners. Do not rewrite story content.
 
 Champion is presently the strongest greedy heuristic configuration, not a validated optimal or tournament-level player.
