@@ -270,3 +270,15 @@ button.attack-action:disabled .attack-warning{color:#b6b2a3}
 #roomDeckHint.unsaved{color:#ffd994;font-weight:700}
 .lobby-seat.mine{border-color:#48bdaa;box-shadow:0 0 0 1px #48bdaa55}
 @media(max-width:520px){.room-deck-controls{grid-template-columns:1fr}.room-deck-heading{flex-wrap:wrap}}
+
+/* Card-Flip Game and other permanent Prize reveal effects. */
+.prize-rail .prize-back.prize-face-up,
+.prize-grid .prize-back.prize-face-up {
+ background: #f9eed0 !important;
+ color: #3b2f24 !important;
+ border: 1px solid #9e855e !important;
+ text-shadow: none !important;
+ font-weight: 700;
+ white-space: normal;
+ line-height: 1.1;
+}

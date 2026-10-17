@@ -62,11 +62,11 @@
   const v=current?.view;if(!v)return;
   const groups=$('prizeRail').querySelectorAll('.prize-group');
   for(let owner=0;owner<2;owner++){
-   const grid=groups[owner]?.querySelector('.prize-grid');if(!grid)continue;
+   const grid=groups[1-owner]?.querySelector('.prize-grid');if(!grid)continue;
    for(const {index,id} of v.players[owner]?.revealedPrizes||[]){
     const el=grid.children[index];if(!el||!id)continue;
     const name=card(id).name;
-    el.classList.add('prize-face-up');el.title='Face-up Prize: '+name;el.textContent=name;
+    el.classList.add('prize-face-up');el.title='Face-up Prize: '+name;el.setAttribute('aria-label','Face-up Prize '+(index+1)+': '+name);el.textContent=name;
     el.style.fontSize='10px';el.style.overflow='hidden';el.style.overflowWrap='anywhere';
    }
   }

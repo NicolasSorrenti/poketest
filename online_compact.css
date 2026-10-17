@@ -137,3 +137,15 @@ body.duel-active #duel>#error:not(.hidden){grid-row:2;max-height:45px;overflow:h
  body.duel-active .stage .active-with-attacks{grid-template-columns:minmax(0,1fr) 59px minmax(0,1fr)}
  body.duel-active .stage .active-zone .poke{width:55px}
 }
+
+/* Card-Flip Game and other permanent Prize reveal effects. */
+.prize-rail .prize-back.prize-face-up,
+.prize-grid .prize-back.prize-face-up {
+ background: #f9eed0 !important;
+ color: #3b2f24 !important;
+ border: 1px solid #9e855e !important;
+ text-shadow: none !important;
+ font-weight: 700;
+ white-space: normal;
+ line-height: 1.1;
+}

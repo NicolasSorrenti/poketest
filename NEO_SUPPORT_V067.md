@@ -1,0 +1,3 @@
+# v0.67 — multiplayer/public Prize reveal UI
+
+The permanent face-up Prize state introduced with Card-Flip Game is now rendered in both local CPU and online multiplayer interfaces. The Prize rail displays the opponent first and the active viewer's prizes second; the mapping is seat-dependent for online Player 2 and consistent for spectator views. Face-up cards have readable names, accessible labels, and retain the correct index after Prize selection. The server continues to expose only genuinely revealed Prize card IDs; unrevealed cards remain masked. Automated tests cover seat 0, seat 1 and spectator public projections. Full visual/browser acceptance still requires a browser session.

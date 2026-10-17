@@ -143,6 +143,23 @@
  }
  function pendingPrizeChoice(){const d=current?.view?.pendingDecision;return !watching()&&d?.kind==='prize-card'&&d.actor===side()?d:null;}
  function choosePrize(id){const d=pendingPrizeChoice();if(!d||busy||!d.options?.some(o=>o.id===id))return;send(command('choose',{decisionId:d.id,selected:[id]}));}
+ function renderFaceUpPrizes(){
+  if(!current?.view)return;
+  const groups=$('prizeRail').querySelectorAll('.prize-group');
+  // The rail orders opponent's Prizes first, regardless of which seat owns
+  // this browser; spectators are presented from seat 0's perspective.
+  for(const [rail,player] of [[0,1-side()],[1,side()]]){
+   const grid=groups[rail]?.querySelector('.prize-grid');if(!grid)continue;
+   for(const {index,id} of current.view.players[player]?.revealedPrizes||[]){
+    const el=grid.children[index];if(!el||!id)continue;
+    const name=card(id).name;
+    el.classList.add('prize-face-up');el.title='Face-up Prize: '+name;
+    el.setAttribute('aria-label','Face-up Prize '+(index+1)+': '+name);
+    el.textContent=name;el.style.fontSize='10px';
+    el.style.overflow='hidden';el.style.overflowWrap='anywhere';
+   }
+  }
+ }
  function renderPrizes(ownCount,opponentCount){
   const d=pendingPrizeChoice();if(!d)return;
   const section=$('prizeRail').querySelectorAll('.prize-group')[1];if(!section)return;
@@ -394,7 +411,7 @@
   $('energyStatus').textContent=watching()?'Spectating':current.me.energyUsed?'Energy attached this turn':'Energy attachment available';
   $('myDeckCount').querySelector('b').textContent=you.deckCount;$('oppDeckCount').querySelector('b').textContent=cpu.deckCount;
   $('myDiscardBtn').querySelector('b').textContent=you.discard.length;$('oppDiscardBtn').querySelector('b').textContent=cpu.discard.length;
-  renderPrizes(you.prizeCount,cpu.prizeCount);renderPrizeFallback();renderPresence();renderCoin(v);renderKnockOut(v);
+  renderPrizes(you.prizeCount,cpu.prizeCount);renderFaceUpPrizes();renderPrizeFallback();renderPresence();renderCoin(v);renderKnockOut(v);
   ux.renderGuide($('turnCoach'),{view:v,me:side(),energyUsed:current.me.energyUsed,targetMode,card,setupConfirmed:current.setupConfirmed});
   setZone('enemyActive',cpu,-1);setZone('enemyBench',cpu,0);setZone('myActive',you,-1);setZone('myBench',you,0);
   $('handAmount').textContent=`(${you.handCount||0}${watching()?' hidden':''})`;renderHandPeek(you.hand);$('hand').textContent='';(you.hand||[]).forEach((id,i)=>$('hand').append(handCard(id,i,v.phase==='setup')));
