@@ -1,6 +1,6 @@
 'use strict';
 (()=>{
-const $=id=>document.getElementById(id),KEY='neoHarborRpgV1',STORY=window.NeoHarborStory,SCHEDULES=window.NeoRpgSchedules,WORLD=window.NeoRpgWorld,BRIDGE=window.NeoRpgDuelBridge;
+const $=id=>document.getElementById(id),KEY='neoHarborRpgV1',STORY=window.NeoHarborStory,SCHEDULES=window.NeoRpgSchedules,WORLD=window.NeoRpgWorld,ARC=window.NeoRpgRivalArc,BRIDGE=window.NeoRpgDuelBridge;
 const periods=['Morning','Afternoon','Evening'];
 const places={
  home:['Your Apartment','Your base during the championship season.'],
@@ -26,7 +26,7 @@ const eventCards=[{day:7,slot:1,place:'arcade',title:'Arcade Friendly Cup',rewar
 
 function eligibleStories(){return STORY.available(state);}
 function startStory(id){
- if(state.activeStory||state.activeEncounter||state.pendingDuel)return;
+ if(state.activeStory||state.activeEncounter||state.activeArc||state.pendingDuel)return;
  const e=eligibleStories().find(e=>e.id===id);if(!e)return;
  state.selected=e.npc;state.activeStory={id:e.id,phase:'lines',index:0,choice:null};persist();render();
 }
@@ -68,7 +68,7 @@ function finishStory(){
 
 function timeFlash(beforeDay,beforeSlot){const overlay=document.createElement('div');overlay.className='notice-pop';const heading=document.createElement('b');heading.textContent=state.day>90?'Season complete':state.day!==beforeDay?'A NEW DAY BEGINS':'TIME PASSES';const body=document.createElement('span');body.textContent=state.day>90?'Day 90 has ended.':('Day '+state.day+' · '+periods[state.slot]);overlay.append(heading,body);document.body.append(overlay);overlay.addEventListener('animationend',()=>overlay.remove());}
 
-function defaults(){return {day:1,slot:0,location:'home',metReina:false,reinaTrust:0,reinaDuels:0,results:[],flags:{intro:false},journal:['The 90-day season begins.'],pendingDuel:null,bonds:{},talked:{},hungOut:{},eventsDone:{},points:0,credits:80,playerDeck:'blackout',selected:null,ended:false,storyDone:{},storyMissed:{},relationships:{},routeOutcomes:{},partner:null,activeStory:null,activeEncounter:null,activityDone:{},encountersDone:{},focus:75,insight:0,reputation:0,preparation:0,lastDuelReceipt:null,scene:null}}
+function defaults(){return {day:1,slot:0,location:'home',metReina:false,reinaTrust:0,reinaDuels:0,results:[],flags:{intro:false},journal:['The 90-day season begins.'],pendingDuel:null,bonds:{},talked:{},hungOut:{},eventsDone:{},points:0,credits:80,playerDeck:'blackout',selected:null,ended:false,storyDone:{},storyMissed:{},relationships:{},routeOutcomes:{},partner:null,activeStory:null,activeEncounter:null,activeArc:null,arcFlags:{},arcOutcomes:{},activityDone:{},encountersDone:{},focus:75,insight:0,reputation:0,preparation:0,lastDuelReceipt:null,scene:null}}
 let state;try{state=JSON.parse(localStorage.getItem(KEY))||defaults();if(!Number.isInteger(state.day)||state.day<1||state.day>91)throw Error('Invalid save');}catch{state=defaults()}
 for(const [k,v] of Object.entries(defaults()))if(state[k]===undefined)state[k]=v;
 if(!places[state.location])state.location='home';
@@ -79,6 +79,7 @@ if(!state.pendingDuel?.id||!cast[state.pendingDuel?.npc])state.pendingDuel=null;
 for(const id of Object.keys(cast)){if(!state.bonds[id])state.bonds[id]={affection:0,trust:0,duels:0};}
 STORY.normalize(state);
 WORLD.hydrate(state);
+ARC.hydrate(state);
 for(const id of Object.keys(cast)){const old=state.bonds[id],current=state.relationships[id];
  if(!state.flags['newStoryMigrated_'+id]){for(const key of ['affection','trust','duels'])current[key]=Math.max(current[key]||0,old[key]||0);
  state.flags['newStoryMigrated_'+id]=true;}
@@ -98,7 +99,7 @@ function say(speaker,line,choices=[]){scene={speaker,line,choices};state.scene=s
 function currentPeople(){if(state.day>90)return [];const regular=SCHEDULES.peopleAt(state.day,state.slot,state.location,eligibleStories());
 for(const e of eligibleStories())if(!regular.includes(e.npc))regular.push(e.npc);
 return regular;}
-function selectPerson(id){if(state.activeStory||state.activeEncounter||!cast[id]||!currentPeople().includes(id))return;const c=cast[id],first=!state['met_'+id]&&!((id==='reina')&&state.metReina);state['met_'+id]=true;if(id==='reina')state.metReina=true;state.selected=id;persist();say(c.name,first?c.intro:c.repeat,options(id));}
+function selectPerson(id){if(state.activeStory||state.activeEncounter||state.activeArc||!cast[id]||!currentPeople().includes(id))return;const c=cast[id],first=!state['met_'+id]&&!((id==='reina')&&state.metReina);state['met_'+id]=true;if(id==='reina')state.metReina=true;state.selected=id;persist();say(c.name,first?c.intro:c.repeat,options(id));}
 function options(id){const key=atKey(id),spentToday=!!state.hungOut[state.day+':'+id];return [
  ['Ask about their routine · free','where:'+id],
  [state.talked[key]?'Talk again · free (bond already earned)':'Talk · free · +1 affection','talk:'+id],
@@ -117,7 +118,7 @@ function showEncounter(){
  return {speaker:name,line:decision.reply,choices:[['Continue · ⏳ 1 period','encounterFinish']]};
 }
 function startEncounter(id){
- if(state.activeStory||state.activeEncounter||state.pendingDuel||state.day>90)return;
+ if(state.activeStory||state.activeEncounter||state.activeArc||state.pendingDuel||state.day>90)return;
  const e=WORLD.availableEncounters(state,currentPeople()).find(x=>x.id===id);if(!e)return;
  state.activeEncounter={id,phase:'choice',choice:null};state.selected=e.npc||null;persist();render();
 }
@@ -139,7 +140,7 @@ function finishEncounter(){
  say(e.npc?cast[e.npc].name:'Narrator',report.summary);
 }
 function performActivity(id){
- if(state.activeStory||state.activeEncounter||state.pendingDuel||state.day>90)return;
+ if(state.activeStory||state.activeEncounter||state.activeArc||state.pendingDuel||state.day>90)return;
  let result;try{result=WORLD.doActivity(state,id,currentPeople());}
  catch(err){$('notice').textContent=err.message;return;}
  const place=state.location;
