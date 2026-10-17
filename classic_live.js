@@ -44,7 +44,7 @@
  }catch(e){fail(e);}finally{busy=false;render();}}
  async function start(){if(busy)return;busy=true;$('startupError').textContent='';try{
   const response=await api('create',{method:'POST',body:JSON.stringify({deck:$('deck').value,opponent:$('opponent').value,...($('deck').value==='custom'?{customDeck:JSON.parse(localStorage.getItem('neoCampusCustomGymDeck')||'null')}: {})})});
-  feedback.reset();opponentActivity.clear();combat.reset();token=response.token;sessionStorage.setItem('neoClassicLiveToken',token);current=response;
+  feedback.reset();opponentActivity.clear();combat.reset();token=response.token;sessionStorage.setItem(new URLSearchParams(location.search).get('rpg')==='1'?'neoRpgDuelToken':'neoClassicLiveToken',token);current=response;
   selectedHand=null;targetMode=null;decisionSelection.clear();handOpen=false;powersOpen=false;logOpen=false;lastCoinSeq=null;lastKoMessage="";render();
  }catch(e){$('startupError').textContent=e.message;}finally{busy=false;}}
 
@@ -93,7 +93,7 @@
   $('choiceModal').classList.add('hidden');$('choiceModal').setAttribute('aria-hidden','true');
   $('fieldChoiceBar').classList.add('hidden');modalDecisionId=null;lastFieldDecisionId=null;
  }
- function newDuel(){clearChoiceUi();opponentActivity.clear();combat.reset();feedback.reset();preview.hide();token=null;current=null;selectedHand=null;targetMode=null;handOpen=false;powersOpen=false;logOpen=false;document.body.classList.remove('duel-active','cpu-match');sessionStorage.removeItem('neoClassicLiveToken');render();}
+ function newDuel(){clearChoiceUi();opponentActivity.clear();combat.reset();feedback.reset();preview.hide();token=null;current=null;selectedHand=null;targetMode=null;handOpen=false;powersOpen=false;logOpen=false;document.body.classList.remove('duel-active','cpu-match');sessionStorage.removeItem(rpgMode?'neoRpgDuelToken':'neoClassicLiveToken');render();}
  function setTarget(type,payload,title,benchOnly=false){preview.hide();setHandOpen(false);targetMode={type,payload,title,benchOnly};render();}
  function cancelTarget(){targetMode=null;selectedHand=null;preview.hide();render();}
  function pokemonNode(u,side,slot){
@@ -271,8 +271,11 @@
      $('deck').value=params.get('deck')||'blackout';
      $('opponent').value=params.get('opponent')||'brushfire';
    }
-   token=sessionStorage.getItem('neoClassicLiveToken');if(token){try{current=await api('state');}catch{token=null;sessionStorage.removeItem('neoClassicLiveToken');}}
+   token=sessionStorage.getItem(rpgMode?'neoRpgDuelToken':'neoClassicLiveToken');if(token){try{current=await api('state');}catch{token=null;sessionStorage.removeItem('neoClassicLiveToken');}}
    if(rpgMode && !current) await start();
+   if(rpgMode && current?.view?.over && Number.isInteger(current.winner)){
+     window.parent.postMessage({type:'neo-rpg-duel-finished',winner:current.winner},location.origin);
+   }
    render();
   }catch(e){$('startupError').textContent=e.message||String(e);}
  }
