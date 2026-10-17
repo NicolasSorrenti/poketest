@@ -134,3 +134,19 @@ test('a private rivalry challenge launches the Classic duel and records a defeat
  r.listeners.message(event);
  assert.equal(r.state().results.length,3);
 });
+
+
+test('in-progress rivalry dialogue resumes at the same line after save and reload',()=>{
+ const first=launch({day:14,slot:2,location:'center',results:[{id:'early',npc:'reina',won:false,day:3}]});
+ const episode=first.elements.storyEvents.children.find(x=>x.className.includes('arc-episode'));
+ assert.ok(episode);episode.onclick();
+ first.elements.choices.children[0].onclick();
+ const state=first.state();
+ assert.equal(state.activeArc.phase,'lines');
+ assert.equal(state.activeArc.index,1);
+ const restored=launch(state);
+ assert.equal(restored.state().activeArc.index,1);
+ assert.ok(restored.elements.line.textContent.includes('match'));
+ restored.elements.choices.children[0].onclick();
+ assert.equal(restored.state().activeArc.index,2);
+});
