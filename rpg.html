@@ -1,1 +1,118 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Neo Harbor | Neo Campus RPG</title><link rel="stylesheet" href="/rpg.css"></head><body><div id="app"><header><div class="logo">NEO <em>HARBOR</em><small>POKÉMON TCG · SUMMER CIRCUIT</small></div><div class="clock"><b id="day">DAY 01 / 90</b><span id="period">MORNING</span><div class="time-track" id="timeTrack"></div></div><button id="save">SAVE</button></header><nav id="places"></nav><main><div class="scene" id="scene"><div class="scene-title"><span class="where-label" id="whereLabel">YOU ARE HERE</span><strong id="placeTitle"></strong><span id="placeDetail"></span></div><div id="portrait" class="portrait"></div><div class="dialogue" id="dialogue"><b id="speaker"></b><p id="line"></p><div id="choices"></div></div></div><aside><h2>IN TOWN</h2><div id="people"></div><h2>YOUR DECK</h2><label class="decklabel" for="deckPicker">Active duel deck</label><select id="deckPicker" aria-label="Your current Pokémon deck"></select><h2>YOUR DAY <small>• activities marked ⏳ advance time</small></h2><div id="activities"></div><h2>STORY OPPORTUNITIES</h2><div id="storyEvents"></div><h2>JOURNAL</h2><div id="journal"></div><div class="note" id="notice"></div><div class="time-help">Travel, conversation and deck editing are free. A duel or hangout uses one time period. At the end of Evening, the next day begins.</div></aside></main><footer><span>NEO HARBOR · RPG PROTOTYPE</span><span>Actions advance time · Reading and traveling are free</span></footer></div><div id="duel" hidden><div class="duelhead"><b>NEO CAMPUS · LIVE DUEL</b><span>Return to town when your duel finishes</span></div><iframe id="battle" title="Neo Campus Pokémon TCG Duel"></iframe></div><script src="/rpg.js"></script></body></html>
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#111224">
+<title>Neo Harbor — TCG RPG</title>
+<link rel="stylesheet" href="/rpg.css">
+</head>
+<body>
+<div id="app">
+  <header class="topbar">
+    <div class="brand">
+      <div class="brand-top">NEO <em>HARBOR</em></div>
+      <div class="brand-sub">THE POKÉMON TCG SEASON · A STORY IN 90 DAYS</div>
+    </div>
+    <section class="season-widget" aria-label="Campaign progress">
+      <div class="season-line"><span id="chapterLabel">CHAPTER I · NEW FACES</span><span id="weekdayLabel">MON · WEEK 1</span></div>
+      <div class="season-progress"><span id="campaignFill"></span></div>
+      <small>YOUR 90-DAY CHAMPIONSHIP SEASON</small>
+    </section>
+    <section class="clock" aria-label="Game date and time">
+      <div class="date-line"><b id="day">DAY 01 / 90</b><span id="period">MORNING</span></div>
+      <div class="time-track" id="timeTrack"></div>
+      <small id="timeHint">Next: Afternoon · ⏳</small>
+    </section>
+    <button id="save" class="save-btn" type="button" title="Save your campaign">▣ SAVE</button>
+  </header>
+
+  <div class="utilitybar">
+    <div class="utility-left"><span class="live-dot"></span><span>NEO HARBOR · TOWN EXPLORATION</span><span class="utility-sep">/</span><span id="notice" aria-live="polite">Travel & talk are free · ⏳ actions advance time</span></div>
+    <div class="utility-actions">
+      <button id="calendarBtn" class="toolbar-btn" type="button">▦ CALENDAR</button>
+      <button id="quickHome" class="toolbar-btn" type="button">⌂ GO HOME</button>
+      <button id="quickNext" class="time-advance" type="button">▶ NEXT PERIOD · ⏳</button>
+    </div>
+  </div>
+
+  <main class="layout">
+    <aside class="locations-panel">
+      <div class="panel-label">NEIGHBORHOODS</div>
+      <h2>Explore the town</h2>
+      <p>Choose where to go. Traveling does not consume time.</p>
+      <nav id="places" aria-label="Town locations"></nav>
+      <div class="legend">
+        <strong>HOW TIME WORKS</strong>
+        <div><span>→</span> Travel and short chats <b>FREE</b></div>
+        <div><span>⏳</span> Hangouts and duels <b>1 PERIOD</b></div>
+        <div><span>☾</span> After evening comes <b>NEW DAY</b></div>
+      </div>
+    </aside>
+
+    <section class="stage-panel">
+      <div id="scene" class="scene">
+        <div class="scene-head">
+          <span id="whereLabel" class="here-label">⌂ YOU ARE HOME</span>
+          <strong id="placeTitle">Your Apartment</strong>
+          <span id="placeDetail">Your base during the championship season.</span>
+        </div>
+        <div class="home-banner" id="homeBanner">YOUR APARTMENT — Prepare, plan or rest.</div>
+        <div id="portrait" class="portrait" aria-label="Character illustration"></div>
+        <div id="dialogue" class="dialogue" aria-live="polite">
+          <div class="dialogue-title"><span id="speaker">Narrator</span><span class="vn-label">NEO HARBOR / STORY</span></div>
+          <p id="line"></p>
+          <div id="choices" class="choice-list"></div>
+        </div>
+      </div>
+      <div class="scene-foot">
+        <span>LOCATION SCENE · INTERACTIVE VISUAL NOVEL</span>
+        <span>Press SPACE to advance story dialogue</span>
+      </div>
+      <div class="campaign-complete" id="endSeason" hidden></div>
+    </section>
+
+    <aside class="sidebar">
+      <section class="side-section">
+        <div class="sidebar-title"><span>WHO'S HERE</span><small>AVAILABLE NOW</small></div>
+        <div id="people" class="people-list"></div>
+      </section>
+      <section class="side-section story-section">
+        <div class="sidebar-title"><span>✦ STORY OPPORTUNITIES</span><small>TIME-SENSITIVE</small></div>
+        <div id="storyEvents" class="event-list"></div>
+      </section>
+      <section class="side-section">
+        <div class="sidebar-title"><span>YOUR DAY</span><small>⏳ = USES TIME</small></div>
+        <div id="activities" class="activity-list"></div>
+      </section>
+      <section class="side-section">
+        <div class="sidebar-title"><span>YOUR DECK</span><small>CHOOSE FOR NEXT DUEL</small></div>
+        <label class="decklabel" for="deckPicker">ACTIVE 60-CARD DECK</label>
+        <select id="deckPicker"></select>
+      </section>
+      <section class="side-section">
+        <div class="sidebar-title"><span>SEASON JOURNAL</span><small>NO SPOILERS</small></div>
+        <div id="journal"></div>
+      </section>
+    </aside>
+  </main>
+  <footer>NEO HARBOR · 90 DAYS TO MAKE YOUR MARK <span>CHARACTERS HAVE THEIR OWN LIVES · CHOICES MATTER</span></footer>
+</div>
+
+<div id="timeFlash" class="time-flash" role="status" aria-live="polite"></div>
+
+<dialog id="calendarDialog" class="modal">
+ <div class="modal-heading"><h2>▦ Circuit Calendar</h2><button id="calendarClose" type="button">✕ Close</button></div>
+ <p>Known official events. Some personal encounters are discovered by exploring at different times.</p>
+ <div id="calendarEntries"></div>
+</dialog>
+
+<div id="duel" hidden>
+ <div class="duelhead"><strong>NEO CAMPUS · OFFICIAL TCG DUEL ENGINE</strong><span>The RPG clock advances after the match finishes.</span></div>
+ <iframe id="battle" title="Neo Campus TCG Duel"></iframe>
+</div>
+
+<script src="/rpg_story.js"></script>
+<script src="/rpg.js"></script>
+</body>
+</html>
