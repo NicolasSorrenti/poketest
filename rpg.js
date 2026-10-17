@@ -126,7 +126,7 @@ function act(action){
  if(type==='flirt'){if(!state.talked['flirt:'+key]){state.talked['flirt:'+key]=true;bond.affection++;state.relationships[id].affection++;state.relationships[id].attraction++;}persist();return say(c.name,c.flirt,options(id));}
  if(type==='hang'){if(state.hungOut[state.day+':'+id])return say(c.name,'I enjoyed our time today. Let us make plans another day.',options(id));state.hungOut[state.day+':'+id]=true;bond.affection+=2;bond.trust++;state.relationships[id].affection+=2;state.relationships[id].trust++;log('Spent time with '+c.name+'.');advance();state.selected=null;return say(c.name,'That was a lovely way to spend part of the day. See you around.');}
 }
-function duelUrl(duel){return '/classic_live.html?rpg=1&deck='+encodeURIComponent(duel.playerDeck)+'&opponent='+encodeURIComponent(duel.opponent);}
+function duelUrl(duel){return '/classic_live.html?rpg=1&deck='+encodeURIComponent(duel.playerDeck)+'&opponent='+encodeURIComponent(duel.opponent)+'&rpgMatch='+encodeURIComponent(duel.id);}
 function registerTournament(id){
  try{const entry=CIRCUIT.register(state,id);persist();say('Circuit Office','Registration confirmed for '+CIRCUIT.current(state).event.name+'. Be at the Community Center for your scheduled match.');}
  catch(error){$('notice').textContent=error.message;}
@@ -145,7 +145,7 @@ function startDuel(id,exhibition=null,tournament=null){
   eventTitle:exhibition?exhibition.title:null,tournamentId:tournament?tournament.event.id:null,tournamentRound:tournament?tournament.number:null};
  persist();$('duel').hidden=false;$('battle').src=duelUrl(state.pendingDuel);
 }
-window.addEventListener('message',ev=>{if(ev.origin!==location.origin||ev.source!==$('battle').contentWindow)return;const msg=ev.data,duel=state.pendingDuel;if(!msg||msg.type!=='neo-rpg-duel-finished'||!duel||duel.resolved||!Number.isInteger(msg.winner))return;duel.resolved=true;const won=msg.winner===0,c=cast[duel.npc],bond=state.bonds[duel.npc];state.results.push({id:duel.id,npc:duel.npc,won,day:duel.day});bond.duels++;bond.trust+=won?2:1;state.relationships[duel.npc].duels++;state.relationships[duel.npc].trust+=won?2:1;state.relationships[duel.npc].respect+=won?2:1;state.points+=won?3:1;state.credits+=won?15:5;
+window.addEventListener('message',ev=>{if(ev.origin!==location.origin||ev.source!==$('battle').contentWindow)return;const msg=ev.data,duel=state.pendingDuel;if(!msg||msg.type!=='neo-rpg-duel-finished'||!duel||duel.resolved||msg.matchId!==duel.id||![0,1].includes(msg.winner))return;duel.resolved=true;const won=msg.winner===0,c=cast[duel.npc],bond=state.bonds[duel.npc];state.results.push({id:duel.id,npc:duel.npc,won,day:duel.day});bond.duels++;bond.trust+=won?2:1;state.relationships[duel.npc].duels++;state.relationships[duel.npc].trust+=won?2:1;state.relationships[duel.npc].respect+=won?2:1;state.points+=won?3:1;state.credits+=won?15:5;
 let tournamentMessage='';
 if(duel.tournamentId){
  try{
