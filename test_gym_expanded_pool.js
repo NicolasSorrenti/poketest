@@ -12,8 +12,8 @@ const {isBasicPokemon,isEnergy,countCards}=require('./core_rules');
 const {server}=require('./server');
 (async()=>{
  const service=new ClassicLocalService(),all=service.cardPool();
- assert.equal(all.length,705+new Set([...require('./neo_genesis_decks').neoIds,...require('./neo_discovery_decks').neoIds,...require('./neo_bonus_pool').ids,...require('./neo_destiny_decks').neoIds,...require('./neo_v040_pool').ids,...require('./neo_v046_pool').ids]).size,'Historical sets through Neo Destiny must be available');
- assert.equal(new Set(all.map(c=>c.id)).size,705+new Set([...require('./neo_genesis_decks').neoIds,...require('./neo_discovery_decks').neoIds,...require('./neo_bonus_pool').ids,...require('./neo_destiny_decks').neoIds,...require('./neo_v040_pool').ids,...require('./neo_v046_pool').ids]).size);
+ assert.equal(all.length,705+new Set([...require('./neo_genesis_decks').neoIds,...require('./neo_discovery_decks').neoIds,...require('./neo_bonus_pool').ids,...require('./neo_destiny_decks').neoIds,...require('./neo_v040_pool').ids,...require('./neo_v046_pool').ids,...require('./neo_v047_pool').ids]).size,'Historical sets through Neo Destiny must be available');
+ assert.equal(new Set(all.map(c=>c.id)).size,705+new Set([...require('./neo_genesis_decks').neoIds,...require('./neo_discovery_decks').neoIds,...require('./neo_bonus_pool').ids,...require('./neo_destiny_decks').neoIds,...require('./neo_v040_pool').ids,...require('./neo_v046_pool').ids,...require('./neo_v047_pool').ids]).size);
  const gym=all.filter(x=>['gym1','gym2'].includes(x.set));
  assert.equal(gym.length,264);assert.equal(FORMAT.FULL_GYM_IDS.length,264);
  const unlocked=gym.filter(c=>!RETAIL.gymIds.includes(c.id));
@@ -51,7 +51,7 @@ const {server}=require('./server');
  assert.throws(()=>service.create({deck:'custom',opponent:'blackout',customDeck:LAB.gym_new_voltage.slice(1)}),/exactly 60/);
  assert.throws(()=>service.create({deck:'blackout',opponent:'custom'}),/CPU deck/);
  assert.throws(()=>service.create({deck:'blackout',opponent:'brushfire',customDeck:LAB.gym_new_voltage}),/Unexpected/);
- const forged=[...LAB.gym_new_voltage];forged[0]='neo1-1';
+ const forged=[...LAB.gym_new_voltage];forged[0]='basep-1';
  assert.equal(verify(forged,all).valid,false);
  assert.throws(()=>service.create({deck:'custom',opponent:'blackout',customDeck:forged}),/Invalid deck/);
  const tooMany=[...LAB.gym_new_voltage];tooMany[4]='gym2-37';tooMany[5]='gym2-37';tooMany[6]='gym2-37';
@@ -64,7 +64,7 @@ const {server}=require('./server');
  const port=server.address().port;
  async function request(path,method='GET',body){const result=await fetch(`http://127.0.0.1:${port}${path}`,{method,headers:{'Content-Type':'application/json'},...(body?{body:JSON.stringify(body)}:{})});return {status:result.status,data:await result.json()};}
  try{
-  const pool=await request('/api/classic/card-pool');assert.equal(pool.status,200);assert.equal(pool.data.cards.length,705+new Set([...require('./neo_genesis_decks').neoIds,...require('./neo_discovery_decks').neoIds,...require('./neo_bonus_pool').ids,...require('./neo_destiny_decks').neoIds,...require('./neo_v040_pool').ids,...require('./neo_v046_pool').ids]).size);
+  const pool=await request('/api/classic/card-pool');assert.equal(pool.status,200);assert.equal(pool.data.cards.length,705+new Set([...require('./neo_genesis_decks').neoIds,...require('./neo_discovery_decks').neoIds,...require('./neo_bonus_pool').ids,...require('./neo_destiny_decks').neoIds,...require('./neo_v040_pool').ids,...require('./neo_v046_pool').ids,...require('./neo_v047_pool').ids]).size);
   const list=await request('/api/classic/decklist?id=gym_new_voltage');assert.equal(list.status,200);assert.equal(list.data.cards.length,60);
   const invalid=await request('/api/classic/decklist?id=does_not_exist');assert.equal(invalid.status,400);
   const newMatch=await request('/api/classic/create','POST',{deck:'custom',opponent:'blackout',customDeck:LAB.gym_new_garden,seed:678});

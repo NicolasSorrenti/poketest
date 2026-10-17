@@ -29,7 +29,7 @@ for(const id of ids){const card=pool.find(c=>c.id===id);assert.ok(card&&card.sup
  const deck=[...G.list('cold_fusion')],at=deck.findIndex(c=>c.startsWith('neo'));deck[at]=id;
  const legal=FORMAT.validateDeck(deck,CATALOG,{neo:true,gymFull:true});assert.ok(legal.valid,id+' '+legal.errors.join('; '));
 }
-assert.equal(FORMAT.isAllowed('neo1-1',{neo:true}),false,'Ampharos requires complete Flaaffy line before enabling');
+assert.equal(FORMAT.isAllowed('neo1-1',{neo:true}),true,'Ampharos is now available with its complete Mareep/Flaaffy line');
 // Cleffa Eeeeeeek conserves all hand cards and refills to seven.
 {
  const g=match('neo1-20',{hand:['base1-91','base1-95','base1-98'],deck:['base1-3','base1-46','base1-58','neo1-69'],energy:[E.Grass]});

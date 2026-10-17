@@ -521,6 +521,32 @@ function performAction(g,side,cmd){
    return;
   }
   if(pending.kind==='neo_hydro'){resolveAttack(g,pending.side,pending.attackIndex,undefined,undefined,{hydroBoost:selection==='boost:yes'});return;}
+  if(pending.kind==='neo47_attack'){
+   const owner=g.players[pending.side],target=owner.active,stage=pending.stage;
+   if(!target)fail('Neo attack Pokémon left Active before selection');
+   if(stage==='static'){
+    const ids=answer.selected.map(id=>Number(id.slice(5)));
+    g.pendingDecision=null;g.pendingAction=null;
+    resolveAttack(g,pending.side,pending.attackIndex,undefined,undefined,{neo47Search:ids});return;
+   }
+   if(stage==='move-energy'){
+    const ix=Number(answer.selected[0]?.slice(7));
+    if(!Number.isInteger(ix)||card(g,target.energies[ix])?.name!=='Lightning Energy')fail('Illegal Lightning Energy choice');
+    if(owner.bench.length){
+     g.nextDecisionId++;g.pendingDecision=makeDecision({id:`neo47Bench:${g.nextDecisionId}`,actor:pending.side,kind:'pokemon-target',label:'Electric Current: choose your Benched Pokémon',options:owner.bench.map((u,i)=>({id:`bench:${i}`,label:publicName(g,u)})),min:1,max:1});
+     g.pendingAction={...pending,stage:'move-bench',energyIndex:ix};return;
+    }
+    g.pendingDecision=null;g.pendingAction=null;
+    resolveAttack(g,pending.side,pending.attackIndex,undefined,undefined,{neo47EnergyIndex:ix});return;
+   }
+   if(stage==='move-bench'){
+    const ix=Number(answer.selected[0]?.slice(6));
+    if(!Number.isInteger(ix)||!owner.bench[ix])fail('Illegal Electric Current recipient');
+    g.pendingDecision=null;g.pendingAction=null;
+    resolveAttack(g,pending.side,pending.attackIndex,undefined,undefined,{neo47EnergyIndex:pending.energyIndex,neo47BenchIndex:ix});return;
+   }
+   fail('Unknown Neo v0.47 attack decision');
+  }
   if(pending.kind==='neo_attack_choice'){
    const owner=g.players[pending.side],enemy=g.players[1-pending.side];
    if(pending.stage==='cycle-energy'){
@@ -779,6 +805,22 @@ function performAction(g,side,cmd){
    if(hasActiveEffect(u,'attackPenalty',g)&&next(g,2)===0){finishTurn(g);return;}
    GYM_LAST.run(g,side,index,program,{data:{}},gymLastHelpers());return;
   }
+  if(program.kind==='neo47:static-electricity'){
+   const mareepCount=g.players.reduce((n,owner)=>n+allPokemon(owner).filter(v=>!v.secretPlanFaceDown&&card(g,v.id).name==='Mareep').length,0);
+   const eligible=p.deck.flatMap((id,i)=>card(g,id).name==='Lightning Energy'?[i]:[]);
+   if(eligible.length&&mareepCount){
+    g.nextDecisionId++;g.pendingDecision=makeDecision({id:`neo47Static:${g.nextDecisionId}`,actor:side,kind:'card-search',label:`Static Electricity: attach up to ${mareepCount} Lightning Energy card(s) to the attacker`,options:eligible.map(i=>({id:`card:${i}`,label:`${card(g,p.deck[i]).name} (${i+1})`})),min:0,max:Math.min(mareepCount,eligible.length),optional:true});
+    g.pendingAction={kind:'neo47_attack',stage:'static',side,attackIndex:index};return;
+   }
+   resolveAttack(g,side,index,undefined,undefined,{neo47Search:[]});return;
+  }
+  if(program.kind==='neo47:electric-current'){
+   const choices=u.energies.flatMap((id,i)=>card(g,id).name==='Lightning Energy'?[i]:[]);
+   if(!choices.length)fail('Electric Current requires attached Lightning Energy');
+   g.nextDecisionId++;g.pendingDecision=makeDecision({id:`neo47Current:${g.nextDecisionId}`,actor:side,kind:'energy-target',label:'Electric Current: choose a Lightning Energy card to move or discard',options:choices.map(i=>({id:`energy:${i}`,label:`Lightning Energy (${i+1})`})),min:1,max:1});
+   g.pendingAction={kind:'neo47_attack',stage:'move-energy',side,attackIndex:index};return;
+  }
+  if(program.kind==='neo47:discharge'&&!u.energies.some(id=>card(g,id).name==='Lightning Energy'))fail('Discharge requires attached Lightning Energy');
   if(program.kind.startsWith('theme:')){themeAttackPlan(g,{side,attackIndex:index,data:{}});return;}
   if(FINAL_KINDS.has(program.kind)){
    // Historical attack order: Confusion/Smokescreen is checked BEFORE any
@@ -951,6 +993,17 @@ function resolveAttack(g,side,index,chosenBench,energyPicks,extra={}){
  if(program.kind==='neo:mud-splash'&&f.bench.length&&(chosenBench===undefined||!f.bench[chosenBench]))fail('Mud Splash requires a valid Bench target');
  if(program.kind==='discovery:magic-dust'&&extra.preRoll?.magicDust&&!['Asleep','Confused','Paralyzed','Poisoned'].includes(extra.neoStatus))fail('Magic Dust needs a status choice');
  if(program.kind==='discovery:energy-cycle'&&extra.preRoll?.energyCycle&&!protectedEnergy(f.active)&&f.active.energies.length&&f.bench.length&&(!Number.isInteger(extra.neoCycleEnergy)||!Number.isInteger(extra.neoCycleBench)||!f.active.energies[extra.neoCycleEnergy]||!f.bench[extra.neoCycleBench]))fail('Energy Cycle requires legal source and destination');
+ if(program.kind==='neo47:static-electricity'){
+  const count=g.players.reduce((n,owner)=>n+allPokemon(owner).filter(v=>!v.secretPlanFaceDown&&card(g,v.id).name==='Mareep').length,0);
+  const ids=extra.neo47Search;
+  if(!Array.isArray(ids)||ids.length>count||new Set(ids).size!==ids.length||ids.some(i=>!Number.isInteger(i)||i<0||i>=p.deck.length||card(g,p.deck[i]).name!=='Lightning Energy'))fail('Invalid Static Electricity Energy selection');
+ }
+ if(program.kind==='neo47:electric-current'){
+  const ix=extra.neo47EnergyIndex;
+  if(!Number.isInteger(ix)||card(g,u.energies[ix])?.name!=='Lightning Energy')fail('Invalid Electric Current Lightning Energy');
+  if(p.bench.length&&(!Number.isInteger(extra.neo47BenchIndex)||!p.bench[extra.neo47BenchIndex]))fail('Electric Current requires a valid Bench target');
+ }
+ if(program.kind==='neo47:discharge'&&!u.energies.some(id=>card(g,id).name==='Lightning Energy'))fail('Discharge needs a Lightning Energy card to discard');
  // Exact-matched final Classic attack programs must have completed every
  // required choice. The caller cannot inject an unvalidated final effect.
  if(GYM_LAST.planned(program.kind)&&!extra.gymLastApproved)fail('Complete Gym attack choices first');
@@ -1386,6 +1439,19 @@ function resolveAttack(g,side,index,chosenBench,energyPicks,extra={}){
  if(roll.lockTrainers)f.trainerLockedUntil=g.turnSerial+2;
  if(roll.splashNamed)for(const owner of g.players)for(const x of allPokemon(owner))if(roll.splashNamed.names.includes(card(g,x.id).name)){if(x===owner.active)x.damage+=roll.splashNamed.amount;else hitBench(owner,x,roll.splashNamed.amount);}
  if(roll.reactiveReduction)u.reactiveShield={sourceId:f.active.id,reduce:roll.reactiveReduction,expires:g.turnSerial+2};
+ if(roll.neo47Static){
+  for(const ix of [...extra.neo47Search].sort((a,b)=>b-a))u.energies.push(p.deck.splice(ix,1)[0]);
+  p.deck=shuffle(g,p.deck);
+  log(g,`Static Electricity attached ${extra.neo47Search.length} Lightning Energy card(s).`);
+ }
+ if(roll.neo47DiscardLightning){
+  const left=[];for(const id of u.energies){if(card(g,id).name==='Lightning Energy')p.discard.push(id);else left.push(id);}u.energies=left;
+ }
+ if(roll.neo47MoveLightning){
+  const moved=u.energies.splice(extra.neo47EnergyIndex,1)[0];
+  if(p.bench.length)p.bench[extra.neo47BenchIndex].energies.push(moved);
+  else p.discard.push(moved);
+ }
  if(roll.discardAllSelfEnergy){p.discard.push(...u.energies);u.energies=[];}
  if(roll.placeCounters)f.active.damage+=10*roll.placeCounters;
  if(roll.millOpponent)for(let i=0;i<roll.millOpponent&&f.deck.length;i++)f.discard.push(f.deck.pop());
