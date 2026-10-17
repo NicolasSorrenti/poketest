@@ -237,8 +237,28 @@ function planFinalAttack(g,side,attackIndex,program,plan={side,attackIndex,data:
   finalChoice(g,plan,'prophecy-order',side,top.map((id,i)=>({id:`top:${i}`,label:`${card(g,id).name} (${i+1})`})),{min:top.length,max:top.length,label:'Arrange cards from TOP to BOTTOM'});return;
  }
  if(['copy-attack','amnesia'].includes(kind)&&!Object.hasOwn(data,'copyIndex')){
-  const options=(card(g,f.active.id).attacks||[]).map((x,i)=>({id:`attack:${i}`,label:x.name}));
+  // Never offer a copied attack which our reducer cannot actually execute.
+  // Amnesia only disables an attack and can name any printed attack.
+  const omitted=new Set(['copy-attack','mirror-move','drag-off',...FINAL_KINDS]);
+  const options=(card(g,f.active.id).attacks||[]).flatMap((x,i)=>{
+   const script=ATTACK.compile(x);
+   if(kind==='copy-attack'&&(!script||omitted.has(script.kind)))return [];
+   return [{id:`attack:${i}`,label:x.name}];
+  });
   finalChoice(g,plan,'opponent-attack',side,options,{label:`${a.name}: choose the Defending Pokémon's attack`});return;
+ }
+ if(kind==='copy-attack'&&Object.hasOwn(data,'copyIndex')&&!Object.hasOwn(data,'target')){
+  const copied=ATTACK.compile(card(g,f.active.id).attacks[data.copyIndex]);
+  const wants=new Set(['bench-target','switch-self','switch-attacker','target-any','target-any-coin']);
+  if(copied&&wants.has(copied.kind)){
+   const owner=copied.kind==='switch-self'?p:f;
+   if(owner.bench.length){
+    const options=benchOptions(owner);
+    if(copied.kind==='target-any'||copied.kind==='target-any-coin')options.unshift({id:'bench:-1',label:'Active: '+publicName(g,f.active)});
+    finalChoice(g,plan,'target-bench',side,options,{label:`${a.name}: choose target for copied ${card(g,f.active.id).attacks[data.copyIndex].name}`});return;
+   }
+   if(copied.kind==='target-any'||copied.kind==='target-any-coin'){data.target=-1;}
+  }
  }
  if(['stare'].includes(kind)&&!Object.hasOwn(data,'target')){
   const options=[{id:'bench:-1',label:`Active ${publicName(g,f.active)}`},...benchOptions(f)];
@@ -470,7 +490,11 @@ function performAction(g,side,cmd){
   }
   if(pending.kind==='psyduck_esp_bench'){
    const index=Number(answer.selected[0]?.slice(6));
-   if(!Number.isInteger(index)||!g.players[1-pending.side].bench[index])fail('Illegal ESP Bench selection');
+   const defender=g.players[1-pending.side];
+   const chosenAttack=card(g,defender.active.id).attacks[pending.extra.psyduckCopyIndex];
+   const script=ATTACK.compile(chosenAttack);
+   const targetOwner=script?.kind==='switch-self'?g.players[pending.side]:defender;
+   if(!Number.isInteger(index)||!targetOwner.bench[index])fail('Illegal ESP Bench selection');
    g.pendingDecision=null;g.pendingAction=null;
    resolveAttack(g,pending.side,pending.attackIndex,index,undefined,{...pending.extra,preRoll:pending.roll,confusionChecked:true,attackPenaltyChecked:true});return;
   }
@@ -1366,11 +1390,19 @@ function resolveAttack(g,side,index,chosenBench,energyPicks,extra={}){
  if(program.kind==='gym:removal-beam'&&roll.discardEnemyEnergy&&f.active.energies.length&&(!Number.isInteger(extra.enemyEnergyIndex)&&f.active.energies.length>1||Number.isInteger(extra.enemyEnergyIndex)&&!f.active.energies[extra.enemyEnergyIndex]))fail('Invalid Gym Energy choice');
  if(program.kind==='copy-attack'){
   const chosen=card(g,f.active.id).attacks[extra.copyIndex],copiedProgram=ATTACK.compile(chosen);
-  const copyNeedsChoices=new Set(['bench-target','target-any','target-any-coin','switch-attacker','switch-self','drag-off','copy-attack','mirror-move',...FINAL_KINDS]);
-  if(copiedProgram&&copyNeedsChoices.has(copiedProgram.kind))fail('Copied attack requires a separate interactive effect handler');
-  if(!copiedProgram)fail('Copied attack needs a separate effect handler');
-  // Metronome ignores all printed costs and prerequisite discards, but resolves
-  // the copied attack with the user's own type, Energy, and damage counters.
+  const unsupported=new Set(['drag-off','copy-attack','mirror-move',...FINAL_KINDS]);
+  if(!copiedProgram||unsupported.has(copiedProgram.kind))fail('Copied attack requires a separate interactive effect handler');
+  const pickedTarget=new Set(['bench-target','target-any','target-any-coin','switch-attacker','switch-self']);
+  if(pickedTarget.has(copiedProgram.kind)){
+   const targetOwner=copiedProgram.kind==='switch-self'?p:f;
+   if(targetOwner.bench.length){
+    if(!Number.isInteger(chosenBench)||!targetOwner.bench[chosenBench])fail('Copied attack requires a legal Bench target');
+   }else if(copiedProgram.kind==='target-any'||copiedProgram.kind==='target-any-coin'){
+    if(chosenBench!==-1)fail('Copied any-Pokémon attack needs its Active target');
+   }
+  }
+  // Classic Metronome waives both Energy and extra use costs according to
+  // its printed text. The substituted attack uses the copier's own type.
   roll=ATTACK.resolve(copiedProgram,()=>next(g,2)===1,coreContext);
  }
  if(program.kind==='mirror-move'){const impact=u.lastAttackImpact;roll={damage:impact.damage||0,status:impact.status||null,flips:[],ignoreWR:true};}
