@@ -121,6 +121,20 @@ GitHub Actions CPU AI regression additionally runs the existing Classic local CP
 - Added an experimental `graduatedNoise` five-tier skill profile and a complete mirrored audit switch (`benchmark_cpu_tiers.js --graduated-noise`). Two 640-match cohorts tested progressive legal decision uncertainty. The milder profile moved lower wins to **30.6%, 13.8%, 41.9%, 54.1%** (tiers 1→4 respectively), while a steeper profile measured **43.8%, 15.6%, 29.4%, 50.3%**. The top level still barely outperforms Expert. This setting remains **disabled by default**; adding noise alone is inadequate to reach ≤5%.
 - Continuing: build a genuinely stronger Champion evaluation of Trainer combinations and future Prize tempo, examine loss transcripts/decision mistakes, and use matched large seeded tournaments across multiple deck archetypes before marking tier separation complete.
 
+## Hand-only two-turn Energy valuation — tested three-deck A/B
+
+- Added a bounded optional `energyHorizon` heuristic for Expert/Champion: evaluates an Energy attachment using only the player's **own currently visible hand**, the public defending Pokémon, affordable attacks and a discounted second attachment on a future turn. Does not simulate future draws, search the opponent hand, use reducer outcomes or see upcoming random flips.
+- The policy biases toward productive Active development, keeps a ready replacement viable when the current Active is under a known threat, and penalizes excess investment in an unready Pokémon. `planning`, `evolutionTempo`, `prizeRace`, `knockoutTempo`, `opponentResponse` and `graduatedNoise` remain independent switches.
+- Focused regression with Machoke/Fighting Energy verifies that a known third Energy may enable Karate Chop after another attachment, that removing the additional Energy from the CPU's hand decreases the forecast, and that attack-status/RNG expectations never alter the publicly determined forecast. The CPU policy and full local service regressions passed.
+- Matched same-level Champion **200-game headless A/B** with 120-turn cap:
+  - Blackout: `energyHorizon` **43–36**, one draw/timeout
+  - Brushfire: **26–34**, no draw
+  - Overgrowth: **30–28**, two draws/timeouts
+  - **Combined 99–98 decisive (50.25%), three draws/timeouts**. **No measurable advantage** over the unmodified Champion, and likely archetype-sensitive.
+- Remains **OFF by default** and not enabled through `advancedTactics` in the live service. It can be evaluated using `benchmark_cpu.js --left-energy-horizon true --right-energy-horizon false`. Do not assume this is evidence for the requested 95% skill separation.
+- Code commit `c3c2ad2`: all three GitHub workflows **green**, including CPU 200-game A/B and other coverage, TCG gameplay and Node/RPG regressions.
+- The empirical 5% lower-tier upset threshold remains unmet. Higher-skill ability to prioritize sensible attacks, Trainers, Prize tempo and long-term survival needs a materially different model/decision policy to achieve meaningful separation in this stochastic game.
+
 ## Known limitations and next work
 
 1. Verify green CI on all affected and full regression suites. 
