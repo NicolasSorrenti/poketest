@@ -1,0 +1,34 @@
+name: RPG Regression Suite
+
+on:
+  pull_request:
+    paths:
+      - 'rpg*.js'
+      - 'rpg.html'
+      - 'rpg.css'
+      - 'tests/rpg_*.test.js'
+      - 'package.json'
+      - '.github/workflows/rpg-regression.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'rpg*.js'
+      - 'rpg.html'
+      - 'rpg.css'
+      - 'tests/rpg_*.test.js'
+      - 'package.json'
+      - '.github/workflows/rpg-regression.yml'
+
+jobs:
+  node-rpg:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Validate RPG story, schedules, world and duel integration
+        run: npm run test:rpg
