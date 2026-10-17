@@ -15,6 +15,16 @@ const SKILLS=Object.freeze({
   4:Object.freeze({name:'Expert',temperature:2,attention:30,sampleWindow:3,trainers:4,bench:4}),
   5:Object.freeze({name:'Champion',temperature:0,attention:100,sampleWindow:1,trainers:6,bench:4})
 });
+// An independently testable difficulty calibration: mistakes result from a
+// broader, noisier choice among *legal* actions, never extra cards, forced
+// concedes or favorable RNG for the other player.
+const CALIBRATED_SKILLS=Object.freeze({
+ 1:Object.freeze({...SKILLS[1],temperature:220,sampleWindow:20}),
+ 2:Object.freeze({...SKILLS[2],temperature:100,sampleWindow:14}),
+ 3:Object.freeze({...SKILLS[3],temperature:40,sampleWindow:9}),
+ 4:Object.freeze({...SKILLS[4],temperature:12,sampleWindow:5}),
+ 5:SKILLS[5]
+});
 const PERSONALITIES=Object.freeze({
  balanced:Object.freeze({damage:1,survival:1,setup:1,control:1,risk:0}),
  aggressive:Object.freeze({damage:1.3,survival:.75,setup:.9,control:.9,risk:.15}),
@@ -40,7 +50,10 @@ function configuration(raw={}){
  if(typeof knockoutTempo!=='boolean')throw Error('Invalid CPU knockout-tempo setting');
  const opponentResponse=raw.opponentResponse??false;
  if(typeof opponentResponse!=='boolean')throw Error('Invalid CPU opponent-response setting');
- return {level,personality,seed:raw.seed??1,side,planning,evolutionTempo,prizeRace,knockoutTempo,opponentResponse,skill:SKILLS[level],style:PERSONALITIES[personality]};
+ const graduatedNoise=raw.graduatedNoise??false;
+ if(typeof graduatedNoise!=='boolean')throw Error('Invalid graduated-noise setting');
+ return {level,personality,seed:raw.seed??1,side,planning,evolutionTempo,prizeRace,knockoutTempo,opponentResponse,
+  graduatedNoise,skill:(graduatedNoise?CALIBRATED_SKILLS:SKILLS)[level],style:PERSONALITIES[personality]};
 }
 // Seeded independent of the engine's private deck order and future RNG state.
 function rng(seed){let x=(seed>>>0)||0x6d2b79f5;return ()=>{
@@ -764,11 +777,11 @@ function chooseAction(game,raw={},memo={}){
  }
  return null;
 }
-function driveSide(initial,{side=1,level=3,personality='balanced',seed=1,planning,evolutionTempo,prizeRace,knockoutTempo,opponentResponse,limit=200}={}){
+function driveSide(initial,{side=1,level=3,personality='balanced',seed=1,planning,evolutionTempo,prizeRace,knockoutTempo,opponentResponse,graduatedNoise,limit=200}={}){
  let game=initial,steps=0;const commands=[],memo={trainers:0,powers:0,powerKeys:new Set(),stadium:false};
  while(!game.over&&steps<limit){
   const beforeTurn=game.turnSerial;
-  const next=chooseAction(game,{side,level,personality,seed,planning,evolutionTempo,prizeRace,knockoutTempo,opponentResponse},memo);
+  const next=chooseAction(game,{side,level,personality,seed,planning,evolutionTempo,prizeRace,knockoutTempo,opponentResponse,graduatedNoise},memo);
   if(!next){
    if(game.pendingDecision?.actor===side)throw Error('CPU unresolved choice: '+JSON.stringify({decision:game.pendingDecision,pendingAction:game.pendingAction}));
    break;
@@ -788,4 +801,4 @@ function driveSide(initial,{side=1,level=3,personality='balanced',seed=1,plannin
 }
 function driveBot(game,limit=200,config={}){return driveSide(game,{...config,side:1,limit});}
 function propose(game,config={}){return chooseAction(game,{...config,side:1});}
-module.exports={SKILLS,PERSONALITIES,configuration,observation,candidates,score,knockoutChance,planningBonus,evolutionTempoPenalty,prizeRaceBonus,knockoutTempoBonus,opponentResponseBonus,chooseAction,driveSide,driveBot,propose};
+module.exports={SKILLS,CALIBRATED_SKILLS,PERSONALITIES,configuration,observation,candidates,score,knockoutChance,planningBonus,evolutionTempoPenalty,prizeRaceBonus,knockoutTempoBonus,opponentResponseBonus,chooseAction,driveSide,driveBot,propose};
