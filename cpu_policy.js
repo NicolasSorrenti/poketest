@@ -317,15 +317,15 @@ function score(a,o,cfg,used){
  }
  if(type==='attach_energy'){
   const unit=slotUnit(p,v.slot),value=energyValue(unit,p.hand[v.handIndex]);
-  if(cfg.level<3)return 110+value*style.setup+(v.slot===-1?20:0);
+  if(cfg.level===1)return 110+value*style.setup+(v.slot===-1?20:0);
   // One-step public-state projection: evaluate the attacks unlocked by the
   // Energy without calling reduce() to peek at future flips or hidden cards.
   const before=strongestAffordableAttack(unit,q.active);
   const after=damageAfterAttachment(unit,p.hand[v.handIndex],q.active);
   const improvement=Math.max(0,after-before);
   const ko=after>=hpRemaining(q.active)&&before<hpRemaining(q.active);
-  const future=(improvement*.85+(ko?65:0))*style.damage;
-  const saturation=before>0&&improvement===0?35:0;
+  const future=(improvement*(cfg.level===2?.50:.85)+(ko?(cfg.level===2?30:65):0))*style.damage;
+  const saturation=before>0&&improvement===0?(cfg.level===2?14:35):0;
   return 110+value*style.setup+(v.slot===-1?18:0)+future-saturation;
  }
  if(type==='attack'){
@@ -386,11 +386,20 @@ function score(a,o,cfg,used){
   const newDamage=strongestAffordableAttack(to,q.active);
   const lethalOwn=oldDamage>=hpRemaining(q.active)&&hpRemaining(q.active)>0;
   const counter=strongestAffordableAttack(q.active,before);
+  const counterTo=strongestAffordableAttack(q.active,to);
   const threatened=counter>=hpRemaining(before)&&counter>0;
-  const foresight=cfg.level>=3?(threatened?130*style.survival:0)
-   -(lethalOwn?220:0)+(newDamage-oldDamage)*.9-(newDamage===0&&oldDamage>0?55:0):0;
-  return (before.status?180:45)+(gain>0?gain:0)+
-   ((hpRemaining(before)<30)?40:0)*style.survival-(before.energies?.length||0)*15+foresight;
+  const alternativeSurvives=counterTo<hpRemaining(to);
+  // A defensive swap is useful only when it *actually* shelters the Active
+  // from a visible affordable knockout. Avoid abandoning a ready attacker for
+  // a Bench Pokémon that is equally easy to knock out.
+  const rescue=threatened&&alternativeSurvives?105*style.survival:
+   threatened&&!alternativeSurvives?-45:0;
+  const foresight=cfg.level>=3?rescue-
+   (lethalOwn?300:0)+(newDamage-oldDamage)*1.05-
+   (newDamage===0&&oldDamage>0?70:0)-(oldDamage>0?oldDamage*.25:0):0;
+  return (before.status?180:45)+(gain>0?Math.min(30,gain):0)+
+   ((hpRemaining(before)<30)&&alternativeSurvives?23:0)*style.survival-
+   (before.energies?.length||0)*18+foresight;
  }
  if(type==='use_power')return 85*style.setup;
  if(type==='use_stadium')return 85;
