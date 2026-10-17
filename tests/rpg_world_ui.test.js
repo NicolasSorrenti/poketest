@@ -2,7 +2,7 @@
 const test=require('node:test');
 const assert=require('node:assert/strict');
 const fs=require('node:fs'),path=require('node:path');
-const Story=require('../rpg_story'),Schedules=require('../rpg_schedules'),World=require('../rpg_world'),Bridge=require('../rpg_duel_bridge');
+const Story=require('../rpg_story'),Schedules=require('../rpg_schedules'),World=require('../rpg_world'),Arc=require('../rpg_rival_arc'),Bridge=require('../rpg_duel_bridge');
 const js=fs.readFileSync(path.join(__dirname,'..','rpg.js'),'utf8');
 const html=fs.readFileSync(path.join(__dirname,'..','rpg.html'),'utf8');
 const ids=[...html.matchAll(/id="([^"]+)"/g)].map(x=>x[1]);
@@ -27,7 +27,7 @@ function launch(initial){
  const doc={getElementById(id){if(!elements[id])throw Error('Missing '+id);return elements[id];},
   createElement(tag){return new FakeNode(tag);},body:new FakeNode('body'),
   addEventListener(name,cb){listeners['document:'+name]=cb;}};
- const win={NeoHarborStory:Story,NeoRpgSchedules:Schedules,NeoRpgWorld:World,NeoRpgDuelBridge:Bridge,
+ const win={NeoHarborStory:Story,NeoRpgSchedules:Schedules,NeoRpgWorld:World,NeoRpgRivalArc:Arc,NeoRpgDuelBridge:Bridge,
   addEventListener(name,cb){listeners[name]=cb;}};
  const local={getItem(k){return saved[k]||null;},setItem(k,v){saved[k]=String(v);}};
  const session={removeItem(){}};
