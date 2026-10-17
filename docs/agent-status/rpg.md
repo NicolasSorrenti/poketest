@@ -36,8 +36,9 @@ The RPG/VN agent owns `rpg.js`, `rpg_story.js`, `rpg_schedules.js`, `rpg_world.j
 ## Tests and QA
 - Added `tests/rpg_world.test.js` (11 tests), `tests/rpg_world_ui.test.js` (8 controller smoke tests) and `tests/rpg_rival_arc.test.js` (10 route tests).
 - `npm run test:rpg` runs 40 focused regression tests including the existing 11 story/schedule checks; `.github/workflows/rpg-regression.yml` now runs it on relevant PRs and main pushes.
-- **40/40 scenarios passed** in isolated JavaScript execution of actual source/test contents through a test shim; syntax, graph consistency, DOM ID bindings and all 16 encounter reachability windows also checked. This is **not** a claim of a completed native Node test run or a real-browser Render playthrough.
-- Need follow-up testing: `npm run test:rpg` in an actual checkout, mobile browser responsiveness, real TCG completed duel end-to-end, performance/save behavior across 90 days, and missing art files if the user has not committed the art ZIP.
+- **40/40 focused scenarios passed**, first in isolated JavaScript execution and then in the **native Node GitHub Actions RPG Regression Suite** on PR #15. All four rival episode windows and all 16 optional encounter windows are reachable; DOM IDs, script serving and save flows were checked.
+- The broader **Node regression**, **RPG Chromium smoke** and **TCG Gameplay Regression** checks on PR #15 also passed after modernizing the legacy RPG flow/save test fixtures to load the real set of client modules.
+- Follow-up testing: a longer manual/Render playthrough across 90 days, mobile touch and narrow-screen usability, several live completed duels in varied locations, and confirming production art is installed where the browser expects it.
 
 ## Integration contracts
 - The browser loads `rpg_story.js` → `rpg_schedules.js` → `rpg_world.js` → `rpg_rival_arc.js` → `rpg_duel_bridge.js` → `rpg.js`.
