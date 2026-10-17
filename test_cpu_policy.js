@@ -382,9 +382,11 @@ const settings={level:3,personality:'balanced',side:1,seed:47};
   'Mature CPU recognizes a guaranteed KO lost by premature evolution');
  assert.ok(AI.score(att,o,ch,{})>AI.score(ev,o,ch,{}),
   'Champion must claim the knockout rather than strand its Active');
- assert.ok(AI.score(ev,o,baseline,{})>AI.score(att,o,baseline,{}),
-  'Comparison baseline deliberately retains the previous naive evolution preference');
+ // The legacy policy already knows about immediate KO bonuses. Remove that
+ // bonus to isolate the genuine flaw: evolving gives up ordinary attack tempo.
  o.opponent.active={id:IDS.hit,damage:0,energies:[],status:null};
+ assert.ok(AI.score(ev,o,baseline,{})>AI.score(att,o,baseline,{}),
+  'Comparison baseline retains the previous naive non-KO evolution preference');
  o.self.active.energies=[IDS.fight,IDS.fight];
  o.self.hand=['base1-34',IDS.fight];
  assert.equal(AI.evolutionTempoPenalty(o,-1,'base1-34',ch),0,
