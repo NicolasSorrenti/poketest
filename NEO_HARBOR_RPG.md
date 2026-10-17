@@ -39,3 +39,41 @@ This branch is a prototype and has not yet passed live browser integration testi
 - Current RPG progress remains client-side localStorage. The full story, romance milestones, card economy, spoiler-protected server event gating and finale remain unimplemented.
 - The image archive was delivered separately and has not been pushed to GitHub.
 - Match return, reload and Render integration still require an actual browser end-to-end test.
+
+
+## 0.4 — Living Town UI & Connected Narrative
+
+### Player-facing UI
+- The home location now has a large **YOU ARE HOME** state and a sleep-until-morning action.
+- The header prominently shows day, weekday, week, chapter, the 90-day campaign progress bar, and the three time periods.
+- Persistent **NEXT PERIOD** and **GO HOME** actions; free travel is separated from ⏳ time-consuming actions.
+- A calendar dialog shows announced circuit exhibitions (no hidden character-story spoilers).
+- Illustrated portrait panels and location backdrops use \`rpg-assets/{character}.png\` and location images supplied by the separate art ZIP; missing portraits fall back to initials.
+- The responsive 3-panel design shows locations, VN dialogue and people/actions with portrait thumbnails.
+
+### Authored VN foundations
+- 32 connected authored character scenes (four per heroine) live in \`rpg_story.js\`, separate from the town controller.
+- Each scene includes multiple dialogue beats, choices, a recorded outcome, relationship consequences and limited-time availability.
+- Later scenes depend on earlier scenes and minimum affinity, so dates and choices matter; missed windows cannot be replayed during the same season.
+- A single exclusive romance commitment is possible when its character-route conditions have been earned; friendship remains viable.
+- Story progress persists through reload while a scene is in progress; rewards apply **once**, on scene completion.
+- Existing \`neoHarborRpgV1\` browser saves are migrated conservatively; previous affection/trust and collections of past matches are retained.
+- No plot spoilers are printed in the UI changelog or player calendar.
+
+### Circuit activity correction
+- Announced **exhibition** events now launch a real Classic CPU duel rather than award automatic circuit points.
+- Results are applied to the campaign once, with extra exhibition points only upon a victory.
+- These are single-match exhibitions, **not** genuine elimination brackets or a complete championship.
+
+### QA
+- \`tests/rpg_story.test.js\` covers story graph validity, prerequisites, scene expiry, duplicate reward protection and mutually exclusive commitments.
+- The story module passed all five equivalent isolated scenario checks.
+- The new interface passed scripted DOM smoke checks for home display, free travel, sleep/day rollover, multi-step scene completion and a completed duel callback.
+- JavaScript syntax and HTML element bindings were checked.
+- **Not yet verified:** a full real-browser playthrough with assets and an actual completed Node-backed duel on Render.
+
+### Outstanding work
+- Real tournament brackets, collection economy, historical NPC signature decks and full championship/ending resolution.
+- All final illustrated portraits must be committed from the separately delivered asset ZIP; the GitHub source only references their paths. See the art-pack readme for installation.
+- Story definitions currently ship to the browser as static JS. Server-authoritative spoiler protection and persistent server-side saves remain future work.
+- The existing Classic engine's per-card implementation and AI limitations are unchanged.
