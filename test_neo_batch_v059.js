@@ -52,7 +52,11 @@ function snapshots(g,side){const p=g.players[side];return [...p.deck,...p.hand,.
 {
  const g=game();g.players[0].hand=['base1-71','neo1-105','base1-99'];g.players[0].deck=['base1-98'];
  send(g,0,'play_trainer',{handIndex:0});
- if(g.pendingDecision){const d=g.pendingDecision;send(g,d.actor,'choose',{decisionId:d.id,selected:d.options.slice(0,d.max).map(x=>x.id)});}
+ for(let step=0;step<5&&g.pendingDecision;step++){
+  const d=g.pendingDecision;
+  send(g,d.actor,'choose',{decisionId:d.id,selected:d.options.slice(0,d.min).map(x=>x.id)});
+ }
+ assert.equal(g.pendingDecision,null,'Complete Computer Search including its deck search');
  assert.equal(g.players[0].discard.includes('neo1-105'),true,'Hand-discarded Recycle Energy must NOT bounce');
 }
 console.log('PASS v0.59: Recycle from play via retreat, KO, Energy Removal and Pokémon Center; hand discard untouched');
