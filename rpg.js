@@ -140,8 +140,8 @@ function startDuel(id,exhibition=null,tournament=null){
  if(state.playerDeck==='custom'&&!state.collection.customDeck){$('notice').textContent='Save a collection-built 60-card deck first.';return;}
  if(state.playerDeck==='custom')localStorage.setItem('neoCampusCustomGymDeck',JSON.stringify(state.collection.customDeck));
  const c=cast[id],eventKey=exhibition?exhibition.day+':'+exhibition.title:null;
- state.pendingDuel={id:'npc-'+id+'-'+state.day+'-'+state.slot+'-'+state.results.length,npc:id,day:state.day,slot:state.slot,
-  opponent:c.deck,playerDeck:state.playerDeck,resolved:false,eventKey,eventReward:exhibition?exhibition.reward:0,
+ state.pendingDuel={id:'npc-'+id+'-'+state.day+'-'+state.slot+'-'+state.results.length+'-'+Math.random().toString(36).slice(2,10),npc:id,day:state.day,slot:state.slot,
+  opponent:WORLD.deckFor(id,state.day)||c.deck,playerDeck:state.playerDeck,resolved:false,eventKey,eventReward:exhibition?exhibition.reward:0,
   eventTitle:exhibition?exhibition.title:null,tournamentId:tournament?tournament.event.id:null,tournamentRound:tournament?tournament.number:null};
  persist();$('duel').hidden=false;$('battle').src=duelUrl(state.pendingDuel);
 }
