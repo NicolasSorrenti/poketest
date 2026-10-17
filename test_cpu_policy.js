@@ -289,7 +289,9 @@ const settings={level:3,personality:'balanced',side:1,seed:47};
  const hidden=structuredClone(g);
  const enemy=hidden.players[0];
  if(enemy.deck.length&&enemy.hand.length)[enemy.hand[0],enemy.deck[0]]=[enemy.deck[0],enemy.hand[0]];
- assert.equal(AI.planningBonus(evolve,o,champion),
+ assert.deepEqual(AI.observation(hidden,1),AI.observation(g,1),
+  'The planner observation must remain unchanged by opposing hidden-hand swaps');
+ assert.equal(AI.planningBonus(evolve,structuredClone(o),champion),
   AI.planningBonus(evolve,o,champion),'Forecast must be pure and deterministic');
 }
 let duels=0,decisions=0,attacks=0,energy=0,evolutions=0,trainer=0;
