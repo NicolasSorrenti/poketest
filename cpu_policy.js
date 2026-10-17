@@ -5,6 +5,7 @@
 const {reduce,CATALOG}=require('./headless_duel');
 const {publicView}=require('./duel_protocol');
 const {isBasicPokemon,isEnergy,canEvolve,canPayEnergy}=require('./core_rules');
+const ATTACK=require('./attack_effects_core');
 const POWERS=require('./classic_power_core');
 
 const SKILLS=Object.freeze({
@@ -98,6 +99,24 @@ function setupValue(unit){
  const attacks=c?.attacks||[];
  return (Number(c?.hp)||40)*.3+Math.max(0,30-Math.min(...attacks.map(a=>(a.cost||[]).length),5)*10)+attacks.length*4;
 }
+function hasExoticEnergy(unit){
+ // Special abilities can change printed Energy costs. Let the authoritative
+ // reducer decide these instead of excluding them with a simple card-name pool.
+ const c=card(unit?.id);
+ return !!(unit?.buzzapTypes||unit?.energyBurnUntil||unit?.gymShapeshiftCard||
+  (c?.abilities||[]).some(x=>['Transform','Photosynthesis','Energy Burn'].includes(x.name)));
+}
+function eligibleAttack(o,active,attack,index){
+ if(!attack||!active||!ATTACK.compile(attack))return false;
+ if(['Asleep','Paralyzed'].includes(active.status))return false;
+ if(active.amnesia?.index===index||active.gymAttackCooldown?.index===index)return false;
+ if(active.gymAttackOnce?.includes(index))return false;
+ if(!hasExoticEnergy(active)&&!canPayEnergy(attack.cost||[],energyPool(active)))return false;
+ const script=ATTACK.compile(attack);
+ if(['bench-target','switch-attacker','fascinate'].includes(script.kind)&&!o.opponent.bench.length)return false;
+ if(script.kind==='switch-self'&&!o.self.bench.length)return false;
+ return true;
+}
 function powerOpportunity(o,slot,name){
  const p=o.self,u=slotUnit(p,slot);
  if(!u)return false;
@@ -172,15 +191,22 @@ function candidates(o,cfg,used){
  if(p.bench.length<cfg.skill.bench)for(let i=0;i<p.hand.length;i++)if(isBasicPokemon(card(p.hand[i])))options.push(command('bench',{handIndex:i}));
  for(let i=0;i<p.hand.length;i++){
   const c=card(p.hand[i]);
-  if(c?.evolvesFrom||c?.subtypes?.includes('Basic')&&['Pikachu','Clefairy','Electabuzz','Magmar','Jigglypuff','Jynx','Hitmonchan','Hitmonlee','Hitmontop'].includes(c.name))
-   for(const slot of slots(p))if(slotUnit(p,slot)&&canEvolve(c,card(slotUnit(p,slot).id)))options.push(command('evolve',{handIndex:i,slot}));
+  if(c?.supertype==='Pokémon'&&(c.evolvesFrom||
+    ['Pikachu','Clefairy','Electabuzz','Magmar','Jigglypuff','Jynx','Hitmonchan','Hitmonlee','Hitmontop'].includes(c.name)))
+   for(const slot of slots(p)){
+    const target=slotUnit(p,slot);
+    if(target&&canEvolve(c,card(target.id))&&target.playedTurn<o.round)
+     options.push(command('evolve',{handIndex:i,slot}));
+   }
   if(!p.energyUsed&&isEnergy(c))for(const slot of slots(p))options.push(command('attach_energy',{handIndex:i,slot}));
   if(c?.supertype==='Trainer'&&used.trainers<cfg.skill.trainers&&trainerOpportunity(o,c.name))options.push(command('play_trainer',{handIndex:i}));
  }
  if(p.active){
   const effective=p.active.effectiveAttacks||card(p.active.id)?.attacks||[];
-  for(let attackIndex=0;attackIndex<effective.length;attackIndex++)options.push(command('attack',{attackIndex}));
-  if(!p.retreated)for(let slot=0;slot<p.bench.length;slot++)options.push(command('retreat',{slot}));
+  for(let attackIndex=0;attackIndex<effective.length;attackIndex++)
+   if(eligibleAttack(o,p.active,effective[attackIndex],attackIndex))options.push(command('attack',{attackIndex}));
+  if(!p.retreated&&!['Asleep','Paralyzed'].includes(p.active.status))
+   for(let slot=0;slot<p.bench.length;slot++)options.push(command('retreat',{slot}));
  }
  if(used.powers<Math.max(1,cfg.level)&&p.active)for(const slot of slots(p)){
   const u=slotUnit(p,slot);
@@ -199,6 +225,7 @@ function candidates(o,cfg,used){
 function choiceValue(option,decision,o){
  const id=option.id,label=option.label||'',kind=decision.kind||'',ctx=decision.label||'';
  if(/^prize:/.test(id))return 1;
+ if(/^count:/.test(id))return /draw/i.test(ctx)?Number(id.slice(6))*20:0;
  if(/^energy:/.test(id)&&/discard|retreat|pay/i.test(ctx))return /Double Colorless|Rainbow/i.test(label)?-15:10;
  if(/^bench:/.test(id)||/^slot:/.test(id)){
   const n=Number(id.split(':')[1]),own=/your|friendly|own|promot|receiv|retreat/i.test(ctx)&&!/opponent|opposing|enemy/i.test(ctx);
@@ -221,9 +248,20 @@ function score(a,o,cfg,used){
  }
  if(type==='choose'){
   if(v.decline)return -30;
-  return 120+v.selected.reduce((n,id)=>n+Math.max(0,choiceValue(o.decision.options.find(x=>x.id===id)||{id},o.decision,o)),0);
+  const d=o.decision,ctx=d.label||'';
+  const ownDiscard=/discard|pay|cost|return .*deck/i.test(ctx)&&
+   !/opponent|opposing|enemy/i.test(ctx);
+  const beneficialPick=/recover|search|draw|attach|opposing|opponent|reveal|bench/i.test(ctx);
+  const value=v.selected.reduce((n,id)=>n+choiceValue(d.options.find(x=>x.id===id)||{id},d,o),0);
+  return 120+value+(beneficialPick?v.selected.length*8:0)-(ownDiscard?v.selected.length*28:0);
  }
- if(type==='bench')return (p.bench.length?43:100)+setupValue({id:p.hand[v.handIndex]})*.32*style.setup;
+ if(type==='bench'){
+  // Before attacking, build a survivable replacement. This matters even with
+  // a cheap attacker already online; the duel can end when Bench is empty.
+  const backup=p.bench.length===0?cfg.level>=3?125:45:p.bench.length===1?cfg.level>=3?70:20:0;
+  return (p.bench.length?43:100)+backup*style.setup+
+   setupValue({id:p.hand[v.handIndex]})*.32*style.setup;
+ }
  if(type==='evolve'){
   const target=slotUnit(p,v.slot),after=card(p.hand[v.handIndex]);
   return 165*style.setup+(Number(after?.hp)||0)*.35+((v.slot===-1)?15:0)-(target?.damage||0)*.1;
@@ -235,19 +273,26 @@ function score(a,o,cfg,used){
  if(type==='attack'){
   const attack=(p.active.effectiveAttacks||card(p.active.id)?.attacks||[])[v.attackIndex];
   const damage=estimatedDamage(attack,p.active,q.active),hp=hpRemaining(q.active);
-  const lethal=damage>=hp&&hp>0;
   const uncertain=/flip (?:a |one |\\d+ )?coins?|heads|tails/i.test(attack?.text||'');
-  // Personality is independent from competence: risk-takers value high-upside
-  // uncertainty, while defensive profiles shade the same legal attack down.
+  // An apparent coin-dependent KO is not guaranteed. Skilled AI discounts
+  // the expected effect instead of treating a high-roll as certain lethal.
+  const accuracy=cfg.level>=3&&uncertain?.55:1;
+  const lethal=damage>=hp&&hp>0;
   const riskPreference=uncertain?style.risk*40:0;
-  return 120+damage*style.damage*.9+(lethal?110:0)+riskPreference+
-   (/Poison|Paraly|Sleep|Confus/i.test(attack?.text||'')?12:0)-
-   (/Discard.*Energy attached to/i.test(attack?.text||'')?20:0);
+  const direct=damage*accuracy*style.damage;
+  const statusValue=/Poison|Paraly|Sleep|Confus/i.test(attack?.text||'')?16:0;
+  const fixedCost=/Discard.*Energy attached to/i.test(attack?.text||'')?30:0;
+  return 150+direct*.9+(lethal?Math.round(135*accuracy):0)+riskPreference+
+   statusValue-fixedCost;
  }
  if(type==='play_trainer'){
   const name=card(p.hand[v.handIndex])?.name||'';
-  if(name==='Bill')return 175+(p.handCount<=3?15:0);
-  if(name==='Professor Oak')return p.handCount<=3?210:p.handCount<=5?130:15;
+  if(name==='Bill')return p.deckCount<=2?30:155+(p.handCount<=3?26:0);
+  if(name==='Professor Oak'){
+   if(p.deckCount<=1)return 10;
+   // Discarding a full hand to draw seven cards is not always an upgrade.
+   return p.handCount<=2?225:p.handCount<=4?172:cfg.level>=3?50:110;
+  }
   if(name==='Gust of Wind')return (q.bench.some(u=>hpRemaining(u)<=estimatedDamage((card(p.active?.id)?.attacks||[])[0],p.active,u))?190:60)*style.control;
   if(/Energy Removal|Lass|Rocket|Scoop/i.test(name))return (q.active?.energies?.length?175:65)*style.control;
   if(/Potion|Center|Heal/i.test(name))return (p.active?.damage||0)>=20?160*style.survival:35;
