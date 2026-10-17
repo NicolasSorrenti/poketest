@@ -113,6 +113,20 @@ const settings={level:3,personality:'balanced',side:1,seed:47};
  assert.ok(AI.score(gust,o,experienced,{})<valueWithGust,
   'Gust utility must depend on a genuinely vulnerable opponent Bench');
 }
+{
+ const {NPC_PROFILES,profileForNpc}=require('./cpu_profiles');
+ const {ClassicLocalService}=require('./classic_local_service');
+ assert.equal(Object.keys(NPC_PROFILES).length,8);
+ assert.deepEqual(profileForNpc('reina'),{level:4,personality:'aggressive'});
+ assert.deepEqual(profileForNpc('akari'),{level:5,personality:'tactical'});
+ assert.throws(()=>profileForNpc('unknown'),/Unknown CPU NPC/);
+ const service=new ClassicLocalService();
+ const first=service.create({npc:'reina',seed:41,deck:'blackout',opponent:'brushfire'});
+ assert.deepEqual(first.cpu,{level:4,personality:'aggressive',npc:'reina'});
+ const second=service.create({npc:'reina',difficulty:1,personality:'defensive',seed:42});
+ assert.deepEqual(second.cpu,{level:1,personality:'defensive',npc:'reina'},
+  'An RPG NPC identity must not constrain independent skill and temperament overrides');
+}
 let duels=0,decisions=0,attacks=0,energy=0,evolutions=0,trainer=0;
 for(let seed=1;seed<=4;seed++){
  let game=createGame({decks:[deck,deck],seed:seed*1789,format:'classic'});
