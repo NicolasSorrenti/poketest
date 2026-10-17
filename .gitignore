@@ -1,0 +1,9 @@
+# Generated from the verified Neo Harbor art ZIP at build/start time.
+# Keep the one ZIP in asset-packs/ tracked; do not commit expanded binary files.
+rpg-assets/characters/
+rpg-assets/events/cg/
+rpg-assets/locations/panoramas/
+rpg-assets/ui/
+rpg-assets/manifest.art-expansion.json
+rpg-assets/checksums.json
+rpg-assets/ART_EXPANSION_README.md
