@@ -364,6 +364,41 @@ const settings={level:3,personality:'balanced',side:1,seed:47};
  assert.equal(report.challenger.planning,false);
  assert.throws(()=>argumentsOf(['--left-planning','maybe']),/Planning/);
 }
+{
+ // Evolving a ready Machop into an Energy-starved Machoke throws away Low Kick
+ // and can lose a Prize race. A Champion should attack first, but may evolve
+ // after sufficient Energy is available to preserve its damage output.
+ const g=createGame({decks:[deck,deck],seed:12098,format:'classic'});
+ const o=AI.observation(g,1);o.phase='game';o.turn=1;o.round=4;o.turnSerial=6;
+ o.self.active={id:IDS.machop,energies:[IDS.fight],damage:0,playedTurn:2,status:null};
+ o.self.bench=[{id:IDS.hit,energies:[],damage:0,playedTurn:2,status:null}];
+ o.self.hand=['base1-34'];o.self.energyUsed=false;
+ o.opponent.active={id:IDS.rat,damage:10,energies:[],status:null};
+ const ch=AI.configuration({side:1,level:5,evolutionTempo:true});
+ const baseline=AI.configuration({side:1,level:5,evolutionTempo:false});
+ const ev={type:'evolve',payload:{handIndex:0,slot:-1}};
+ const att={type:'attack',payload:{attackIndex:0}};
+ assert.ok(AI.evolutionTempoPenalty(o,-1,'base1-34',ch)>180,
+  'Mature CPU recognizes a guaranteed KO lost by premature evolution');
+ assert.ok(AI.score(att,o,ch,{})>AI.score(ev,o,ch,{}),
+  'Champion must claim the knockout rather than strand its Active');
+ assert.ok(AI.score(ev,o,baseline,{})>AI.score(att,o,baseline,{}),
+  'Comparison baseline deliberately retains the previous naive evolution preference');
+ o.opponent.active={id:IDS.hit,damage:0,energies:[],status:null};
+ o.self.active.energies=[IDS.fight,IDS.fight];
+ o.self.hand=['base1-34',IDS.fight];
+ assert.equal(AI.evolutionTempoPenalty(o,-1,'base1-34',ch),0,
+  'Evolution is safe when an Energy in the current hand unlocks a good attack this turn');
+ o.self.hand=['base1-34'];
+ assert.ok(AI.evolutionTempoPenalty(o,-1,'base1-34',ch)>0);
+ o.self.active.energies=[IDS.fight,IDS.fight,IDS.fight];
+ assert.equal(AI.evolutionTempoPenalty(o,-1,'base1-34',ch),0,
+  'Do not penalize evolution that already has enough attached Energy');
+ o.self.active.energies=[IDS.fight];o.self.active.status='Asleep';
+ assert.equal(AI.evolutionTempoPenalty(o,-1,'base1-34',ch),0,
+  'An evolution that cures a blocking condition should remain viable');
+ assert.throws(()=>AI.configuration({evolutionTempo:'yes'}),/evolution-tempo/);
+}
 let duels=0,decisions=0,attacks=0,energy=0,evolutions=0,trainer=0;
 for(let seed=1;seed<=4;seed++){
  let game=createGame({decks:[deck,deck],seed:seed*1789,format:'classic'});
