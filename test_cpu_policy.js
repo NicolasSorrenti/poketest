@@ -206,6 +206,20 @@ const settings={level:3,personality:'balanced',side:1,seed:47};
  assert.ok(favorable>dangerous+90,
   'Do not retreat into an equally exposed replacement when an attack can KO it');
 }
+{
+ const attacker={id:IDS.hit,damage:0,energies:[]},defender={id:'base1-46',damage:20,energies:[]};
+ const times={damage:'20x',text:'Flip 2 coins. This attack does 20 damage times the number of heads.'};
+ const failure={damage:'30',text:'Flip a coin. If tails, this attack does nothing.'};
+ const bonus={damage:'20+',text:'Flip a coin. If heads, this attack does 20 damage plus 20 more damage; if tails, this attack does 20 damage.'};
+ assert.equal(AI.knockoutChance(times,attacker,defender),.25,
+  'Two heads needed in two independent fair coin flips');
+ assert.equal(AI.knockoutChance(failure,attacker,defender),.5,
+  'A zero-damage tails result must not be treated as a guaranteed KO');
+ assert.equal(AI.knockoutChance(bonus,attacker,defender),.5,
+  'Only the +20 bonus outcome reaches 30 remaining HP');
+ assert.equal(AI.knockoutChance({damage:'30',text:''},attacker,defender),1,
+  'A deterministic affordable 30-damage attack is a certain KO');
+}
 let duels=0,decisions=0,attacks=0,energy=0,evolutions=0,trainer=0;
 for(let seed=1;seed<=4;seed++){
  let game=createGame({decks:[deck,deck],seed:seed*1789,format:'classic'});
