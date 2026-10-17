@@ -36,7 +36,11 @@
  function clearError(){$('error').textContent='';$('error').classList.add('hidden');}
  async function send(action){if(!current||busy)return;busy=true;clearError();try{
   const result=await api('action',{method:'POST',body:JSON.stringify({revision:current.revision,command:action})});
-  preview.hide();current=result;if(action.type!=='choose')setHandOpen(false);selectedHand=null;targetMode=null;decisionSelection.clear();render();
+  preview.hide();current=result;
+  if(new URLSearchParams(location.search).get('rpg')==='1' && current?.view?.over && Number.isInteger(current.winner)){
+    window.parent.postMessage({type:'neo-rpg-duel-finished',winner:current.winner},location.origin);
+  }
+  if(action.type!=='choose')setHandOpen(false);selectedHand=null;targetMode=null;decisionSelection.clear();render();
  }catch(e){fail(e);}finally{busy=false;render();}}
  async function start(){if(busy)return;busy=true;$('startupError').textContent='';try{
   const response=await api('create',{method:'POST',body:JSON.stringify({deck:$('deck').value,opponent:$('opponent').value,...($('deck').value==='custom'?{customDeck:JSON.parse(localStorage.getItem('neoCampusCustomGymDeck')||'null')}: {})})});
@@ -261,7 +265,14 @@
    $('opponent').value='brushfire';
    if(localStorage.getItem('neoCampusCustomGymDeck'))$('deck').value='custom';
    await Promise.all(['base1','base2','base3','base4','base5','gym1','gym2','neo1','neo2','neo3','neo4'].map(async set=>{const r=await fetch(`/cards/${set}.json`);if(!r.ok)throw Error(`Cannot load ${set}`);const arr=await r.json();for(const c of arr)cards.set(c.id,c);}));
+   const rpgMode=new URLSearchParams(location.search).get('rpg')==='1';
+   if(rpgMode){
+     const params=new URLSearchParams(location.search);
+     $('deck').value=params.get('deck')||'blackout';
+     $('opponent').value=params.get('opponent')||'brushfire';
+   }
    token=sessionStorage.getItem('neoClassicLiveToken');if(token){try{current=await api('state');}catch{token=null;sessionStorage.removeItem('neoClassicLiveToken');}}
+   if(rpgMode && !current) await start();
    render();
   }catch(e){$('startupError').textContent=e.message||String(e);}
  }
