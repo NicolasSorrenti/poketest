@@ -36,7 +36,9 @@ function configuration(raw={}){
  if(typeof evolutionTempo!=='boolean')throw Error('Invalid CPU evolution-tempo setting');
  const prizeRace=raw.prizeRace??false;
  if(typeof prizeRace!=='boolean')throw Error('Invalid CPU Prize-race setting');
- return {level,personality,seed:raw.seed??1,side,planning,evolutionTempo,prizeRace,skill:SKILLS[level],style:PERSONALITIES[personality]};
+ const knockoutTempo=raw.knockoutTempo??false;
+ if(typeof knockoutTempo!=='boolean')throw Error('Invalid CPU knockout-tempo setting');
+ return {level,personality,seed:raw.seed??1,side,planning,evolutionTempo,prizeRace,knockoutTempo,skill:SKILLS[level],style:PERSONALITIES[personality]};
 }
 // Seeded independent of the engine's private deck order and future RNG state.
 function rng(seed){let x=(seed>>>0)||0x6d2b79f5;return ()=>{
@@ -458,6 +460,26 @@ function prizeRaceBonus(action,o,cfg){
  }
  return 0;
 }
+// Distinguish a *secured Prize* from nominal damage, while preserving the
+// critical need to establish a backup before attacking. Full, guaranteed KO
+// urgency is an optional Champion skill feature until matchups prove value.
+function knockoutTempoBonus(a,o,cfg){
+ if(!cfg.knockoutTempo||cfg.level<4||o.phase!=='game'||!o.self.active||!o.opponent.active)return 0;
+ if(a.type!=='attack')return 0;
+ const p=o.self,q=o.opponent;
+ const atk=(p.active.effectiveAttacks||card(p.active.id)?.attacks||[])[a.payload.attackIndex];
+ if(!atk)return 0;
+ const chance=knockoutChance(atk,p.active,q.active);
+ if(!chance)return 0;
+ const lastPrize=p.prizeCount===1,lastOpponent=q.bench.length===0;
+ if(lastPrize||lastOpponent)return 550*chance;
+ // If attacking would strand us with zero Pokémon after the counter-KO, build
+ // backup first, except when this KO wins outright.
+ if(!p.bench.length&&p.hand.some(id=>isBasicPokemon(card(id))))return 0;
+ // Don't spend a turn in endless preparation when a certain Prize is available.
+ const vulnerability=strongestAffordableAttack(q.active,p.active)>=hpRemaining(p.active);
+ return chance*(vulnerability?230:125);
+}
 function score(a,o,cfg,used){
  const p=o.self,q=o.opponent,style=cfg.style,{type,payload:v}=a;
  if(type==='setup_confirm')return 115+p.bench.length*10;
@@ -694,7 +716,7 @@ function chooseAction(game,raw={},memo={}){
  const actions=candidates(o,cfg,used);if(!actions.length)return null;
  const random=rng(cfg.seed+game.turnSerial*7919+(game.events?.length||0)*17011+cfg.side*31);
  const ranked=actions.map((action,i)=>({action,
-  score:score(action,o,cfg,used)+planningBonus(action,o,cfg)+prizeRaceBonus(action,o,cfg),tie:i}))
+  score:score(action,o,cfg,used)+planningBonus(action,o,cfg)+prizeRaceBonus(action,o,cfg)+knockoutTempoBonus(action,o,cfg),tie:i}))
   .sort((a,b)=>b.score-a.score||a.tie-b.tie);
  // Rank all visible options before competence-sensitive choice noise. A larger
  // *evaluation budget* should NOT widen the random window: doing so previously
@@ -715,11 +737,11 @@ function chooseAction(game,raw={},memo={}){
  }
  return null;
 }
-function driveSide(initial,{side=1,level=3,personality='balanced',seed=1,planning,evolutionTempo,prizeRace,limit=200}={}){
+function driveSide(initial,{side=1,level=3,personality='balanced',seed=1,planning,evolutionTempo,prizeRace,knockoutTempo,limit=200}={}){
  let game=initial,steps=0;const commands=[],memo={trainers:0,powers:0,powerKeys:new Set(),stadium:false};
  while(!game.over&&steps<limit){
   const beforeTurn=game.turnSerial;
-  const next=chooseAction(game,{side,level,personality,seed,planning,evolutionTempo,prizeRace},memo);
+  const next=chooseAction(game,{side,level,personality,seed,planning,evolutionTempo,prizeRace,knockoutTempo},memo);
   if(!next){
    if(game.pendingDecision?.actor===side)throw Error('CPU unresolved choice: '+JSON.stringify({decision:game.pendingDecision,pendingAction:game.pendingAction}));
    break;
@@ -739,4 +761,4 @@ function driveSide(initial,{side=1,level=3,personality='balanced',seed=1,plannin
 }
 function driveBot(game,limit=200,config={}){return driveSide(game,{...config,side:1,limit});}
 function propose(game,config={}){return chooseAction(game,{...config,side:1});}
-module.exports={SKILLS,PERSONALITIES,configuration,observation,candidates,score,knockoutChance,planningBonus,evolutionTempoPenalty,prizeRaceBonus,chooseAction,driveSide,driveBot,propose};
+module.exports={SKILLS,PERSONALITIES,configuration,observation,candidates,score,knockoutChance,planningBonus,evolutionTempoPenalty,prizeRaceBonus,knockoutTempoBonus,chooseAction,driveSide,driveBot,propose};
