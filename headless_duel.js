@@ -1,7 +1,7 @@
 'use strict';
 // Server-side duel slice. Serializable, deterministic and independent of browser/CPU.
 // Unported attack/Power effects are REJECTED, not silently treated as plain damage.
-const {isBasicPokemon,isEnergy,canEvolve,canPayEnergy,legalAttachment,validateDeck}=require('./core_rules');
+const {isBasicPokemon,isBasicEnergy,isEnergy,canEvolve,canPayEnergy,legalAttachment,validateDeck}=require('./core_rules');
 const {makeDecision,validateAnswer}=require('./decision_core');
 const {validateCommand}=require('./duel_protocol');
 const crypto=require('node:crypto');
