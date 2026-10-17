@@ -90,6 +90,10 @@
         <div id="activities" class="activity-list"></div>
       </section>
       <section class="side-section">
+        <div class="sidebar-title"><span>◈ COLLECTION & SHOP</span><small>REAL OWNED CARDS</small></div>
+        <div id="collectionPanel"></div>
+      </section>
+      <section class="side-section">
         <div class="sidebar-title"><span>YOUR DECK</span><small>CHOOSE FOR NEXT DUEL</small></div>
         <label class="decklabel" for="deckPicker">ACTIVE 60-CARD DECK</label>
         <select id="deckPicker"></select>
@@ -115,6 +119,23 @@
  <div id="calendarEntries"></div>
 </dialog>
 
+<dialog id="marketDialog" class="modal market-dialog">
+ <div class="modal-heading"><h2>◈ Card Shop & Deck Workshop</h2><button id="marketClose" type="button">✕ Close</button></div>
+ <p>Cards purchased here belong to your RPG collection. Travel is free; shopping costs credits, not time.</p>
+ <div id="marketStatus" role="status" aria-live="polite"></div>
+ <div class="market-section" id="marketShop">
+  <h3>Today's Cards</h3>
+  <button id="marketBuyPack" type="button" class="time-advance">Open an 8-card bundle · 18 credits</button>
+  <div id="packReveal"></div>
+  <div id="marketSingles"></div>
+ </div>
+ <div class="market-section">
+  <h3>Your 60-card Deck <span id="draftCount"></span></h3>
+  <p>Owned copies only. Choose cards from your collection; Basic Energy is exempt from the four-copy limit.</p>
+  <button id="marketSaveDeck" type="button" class="time-advance">Save collection-built deck</button>
+  <div id="marketCards"></div>
+ </div>
+</dialog>
 <div id="duel" hidden>
  <div class="duelhead"><strong>NEO CAMPUS · OFFICIAL TCG DUEL ENGINE</strong><span>The RPG clock advances after the match finishes.</span></div>
  <iframe id="battle" title="Neo Campus TCG Duel"></iframe>
@@ -123,6 +144,7 @@
 <script src="/rpg_story.js"></script>
 <script src="/rpg_world.js"></script>
 <script src="/rpg_circuit.js"></script>
+<script src="/rpg_market.js"></script>
 <script src="/rpg.js"></script>
 </body>
 </html>
