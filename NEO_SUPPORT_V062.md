@@ -1,0 +1,3 @@
+# Neo v0.62 — Berry timing
+
+Gold Berry and Miracle Berry are added to curated Neo decks with full Pokémon Tool attachment restrictions. Both players may elect to use Berry, Gold Berry and Miracle Berry in the between-turn checkup window, with owner-authored optional decisions. A decline is not repeated in the same window. At the start of EVERY turn, all eligible Berry Tools on both players' Active and Benched Pokémon resolve mandatorily before the first draw. The existing Berry mechanism is also corrected for the opponent's attached Berry. Simultaneous KO/reactive timing still warrants further edge-case testing.

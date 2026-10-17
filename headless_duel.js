@@ -7,11 +7,12 @@ const {validateCommand}=require('./duel_protocol');
 const crypto=require('node:crypto');
 const ATTACK=require('./attack_effects_core');
 const STATUS=require('./special_conditions_core');
+const BERRIES=require('./neo_berry_rules');
 const CLASSIC=require('./classic_format');
 const CLASSIC_TRAINERS=require('./classic_trainer_core');
 const CLASSIC_POWERS=require('./classic_power_core');
 const isClassicRules=g=>['classic','theme-expanded','gym-theme','gym-expanded','neo-theme','online-preview'].includes(g.format);
-const ATTACH_ONLY_TRAINERS=new Set(['PlusPower','Defender','Berry','Counterattack Claws','Focus Band','EXP.ALL','Charity',"Brock's Protection","Koga's Ninja Trick","Sabrina's ESP",'Clefairy Doll','Mysterious Fossil']);
+const ATTACH_ONLY_TRAINERS=new Set(['PlusPower','Defender','Berry','Counterattack Claws','Focus Band','EXP.ALL','Gold Berry','Miracle Berry','Charity',"Brock's Protection","Koga's Ninja Trick","Sabrina's ESP",'Clefairy Doll','Mysterious Fossil']);
 const protectedEnergy=u=>Boolean(u?.attachedTrainers?.some(t=>t.id==='gym2-101'));
 const isBaby=(g,u)=>['neo-theme','online-preview'].includes(g.format)&&u&&!u.secretPlanFaceDown&&['Elekid','Magby','Tyrogue','Igglybuff','Cleffa','Pichu','Smoochum'].includes(CATALOG.get(u.id)?.name);
 
@@ -397,6 +398,13 @@ function performAction(g,side,cmd){
    if(answer.decline||!answer.selected.length){log(g,`Chaos Gym: ${owner.name} lost ${card(g,pending.cardId).name}; opponent declined.`);return;}
    log(g,`Chaos Gym: ${g.players[side].name} will use ${card(g,pending.cardId).name}.`);
    CLASSIC_TRAINERS.startProxy(g,side,pending.cardId,classicHelpers());return;
+  }
+  if(pending.kind==='neo_berry'){
+   BERRIES.resolve(g,pending,answer,berryHelpers());
+   g.pendingDecision=null;g.pendingAction=null;
+   if(BERRIES.between(g,berryHelpers()))return;
+   if(!knockOuts(g,'advance'))advanceTurn(g);
+   return;
   }
   if(pending.kind==='neo_exp_all'){
    const owner=g.players[pending.defenderSide],victim=owner.active;
@@ -799,7 +807,7 @@ function performAction(g,side,cmd){
   const cost=retreatCost(g,side,u);
   const total=u.energies.reduce((n,id)=>n+retreatUnits(g,u,id),0);
   if(total<cost)fail('Insufficient retreat Energy');
-  if(u.energies.some(id=>(card(g,id).subtypes||[]).includes('Special')&&!['Double Colorless Energy','Full Heal Energy','Potion Energy','Metal Energy','Darkness Energy','Recycle Energy','Rainbow Energy','Miracle Energy'].includes(card(g,id).name))||u.attachedTrainers.some(t=>!['Berry','Counterattack Claws','Focus Band','EXP.ALL',"Brock's Protection","Koga's Ninja Trick","Sabrina's ESP","Charity"].includes(card(g,t.id).name)))fail('Retreat modifiers require an effect handler');
+  if(u.energies.some(id=>(card(g,id).subtypes||[]).includes('Special')&&!['Double Colorless Energy','Full Heal Energy','Potion Energy','Metal Energy','Darkness Energy','Recycle Energy','Rainbow Energy','Miracle Energy'].includes(card(g,id).name))||u.attachedTrainers.some(t=>!['Berry','Counterattack Claws','Focus Band','EXP.ALL','Gold Berry','Miracle Berry',"Brock's Protection","Koga's Ninja Trick","Sabrina's ESP","Charity"].includes(card(g,t.id).name)))fail('Retreat modifiers require an effect handler');
   if(cost&&total>cost&&u.energies.length>1){
    g.nextDecisionId++;
    g.pendingDecision=makeDecision({id:`retreat:${g.nextDecisionId}`,actor:side,kind:'energy-discard',label:`Choose Energy cards providing at least ${cost} retreat units`,options:u.energies.map((id,i)=>({id:`energy:${i}`,label:card(g,id).name})),min:1,max:Math.min(cost,u.energies.length)});
@@ -1138,7 +1146,7 @@ function resolveAttack(g,side,index,chosenBench,energyPicks,extra={}){
  }
 
  if(!canPayEnergy(a.cost||[],attackPool(g,u)) && !(isClassicRules(g)&&card(g,u.id).name==='Ditto'&&CLASSIC_POWERS.enabled(g,u,'Transform')&&u.energies.reduce((count,id)=>count+(card(g,id).name==='Double Colorless Energy'?2:1),0)>=(a.cost||[]).length))fail('Insufficient attack Energy');
- if((program.kind!=='neo46:plunder'&&f.active.attachedTrainers.some(t=>!['Defender','PlusPower','Berry','Counterattack Claws','Focus Band','EXP.ALL',"Brock's Protection","Koga's Ninja Trick","Sabrina's ESP","Charity"].includes(card(g,t.id).name)))||f.active.energies.some(id=>(card(g,id).subtypes||[]).includes('Special')&&!['Double Colorless Energy','Full Heal Energy','Potion Energy','Metal Energy','Darkness Energy','Recycle Energy','Rainbow Energy','Miracle Energy'].includes(card(g,id).name)))fail('Damage or Energy modifiers require effect handlers');
+ if((program.kind!=='neo46:plunder'&&f.active.attachedTrainers.some(t=>!['Defender','PlusPower','Berry','Counterattack Claws','Focus Band','EXP.ALL','Gold Berry','Miracle Berry',"Brock's Protection","Koga's Ninja Trick","Sabrina's ESP","Charity"].includes(card(g,t.id).name)))||f.active.energies.some(id=>(card(g,id).subtypes||[]).includes('Special')&&!['Double Colorless Energy','Full Heal Energy','Potion Energy','Metal Energy','Darkness Energy','Recycle Energy','Rainbow Energy','Miracle Energy'].includes(card(g,id).name)))fail('Damage or Energy modifiers require effect handlers');
  const usesChoice=['bench-target','switch-attacker','switch-self','target-any','target-any-coin','drag-off'].includes(program.kind);
  if(usesChoice){const owner=program.kind==='switch-self'?p:f;
   if(['target-any','target-any-coin'].includes(program.kind)){if(!Number.isInteger(chosenBench)||chosenBench< -1||chosenBench>=f.bench.length)fail('Invalid opponent target');}
@@ -2098,6 +2106,7 @@ function finishPromotions(g){
  if(after==='checkup')finishTurn(g);
  else if(after!=='trainer')advanceTurn(g);
 }
+const berryHelpers=()=>({card,maxHP,STATUS,log,makeDecision});
 function finishTurn(g){
  if(g.over)return;
  const cur=g.players[g.turn];
@@ -2129,6 +2138,7 @@ function finishTurn(g){
    log(g,`${card(g,target.id).name} took ${count*10} Darkness Energy recoil.`);
   }
  }
+ if(BERRIES.between(g,berryHelpers()))return;
  if(!knockOuts(g,'advance'))advanceTurn(g);
 }
 function advanceTurn(g){
@@ -2147,10 +2157,8 @@ function advanceTurn(g){
   const retained=[];for(const t of x.attachedTrainers){if(t.expires!==undefined&&t.expires<=g.turnSerial)owner.discard.push(t.id);else retained.push(t);}x.attachedTrainers=retained;
   if(x.energyBurnUntil<=g.turnSerial)delete x.energyBurnUntil;
  }
- const p=g.players[g.turn];for(const x of allPokemon(p)){
-  const idx=x.attachedTrainers.findIndex(t=>card(g,t.id).name==='Berry');
-  if(idx>=0&&x.damage>=20){x.damage-=20;p.discard.push(x.attachedTrainers.splice(idx,1)[0].id);}
- }p.energyUsed=false;p.retreated=false;p.confusedRetreatFailed=false;p.turnPlays=[];p.blaineRemaining=0;delete p.blaineTarget;
+ BERRIES.start(g,berryHelpers());
+ const p=g.players[g.turn];p.energyUsed=false;p.retreated=false;p.confusedRetreatFailed=false;p.turnPlays=[];p.blaineRemaining=0;delete p.blaineTarget;
  draw(g,g.turn,1,true);if(!g.over)log(g,`${p.name}'s turn.`);
 }
 // Public action captions are captured BEFORE a card leaves the hand or an Active
