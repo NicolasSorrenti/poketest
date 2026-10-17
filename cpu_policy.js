@@ -91,6 +91,25 @@ function setupValue(unit){
  const attacks=c?.attacks||[];
  return (Number(c?.hp)||40)*.3+Math.max(0,30-Math.min(...attacks.map(a=>(a.cost||[]).length),5)*10)+attacks.length*4;
 }
+function powerOpportunity(o,slot,name){
+ const p=o.self,u=slotUnit(p,slot);
+ if(!u)return false;
+ const damaged=slots(p).map(i=>slotUnit(p,i)).filter(x=>x&&x.damage>=10);
+ if(name==='Strange Behavior')return u.damage+10<(Number(card(u.id)?.hp)||0)&&damaged.some(x=>x!==u);
+ if(name==='Damage Swap')return damaged.some(x=>slots(p).some(i=>{
+  const to=slotUnit(p,i);return to&&to!==x&&to.damage+10<(Number(card(to.id)?.hp)||0);
+ }));
+ if(name==='Curse')return o.opponent.bench.some(x=>x.damage>=10)&&o.opponent.active||o.opponent.active?.damage>=10&&o.opponent.bench.length>0;
+ if(name==='Natural Healing')return u.damage>0;
+ if(name==='Heal')return damaged.length>0;
+ if(name==='Rain Dance')return p.hand.some(id=>card(id)?.name==='Water Energy')&&slots(p).some(i=>card(slotUnit(p,i)?.id)?.types?.includes('Water'));
+ if(name==='Downpour')return p.hand.some(id=>card(id)?.name==='Water Energy');
+ if(name==='Energy Trans'||name==='Gather Fire')return slots(p).some(i=>i!==slot&&slotUnit(p,i)?.energies?.some(id=>card(id)?.name===(name==='Gather Fire'?'Fire Energy':'Grass Energy')));
+ if(name==='Step In')return slot>=0;
+ if(name==='Matter Exchange')return p.hand.length>0;
+ if(name==='Cowardice'||name==='Buzzap')return false; // unsafe irreversible options need a dedicated scorer
+ return true;
+}
 function candidates(o,cfg,used){
  if(o.over||o.decision?.waitingFor!==undefined)return [];
  const p=o.self,turn=o.turn===cfg.side,options=[];
@@ -131,7 +150,7 @@ function candidates(o,cfg,used){
   if(!u)continue;
   const powerNames=(card(u.id)?.abilities||[]).filter(x=>x.name).map(x=>x.name);
   for(let powerIndex=0;powerIndex<powerNames.length;powerIndex++){
-   if(!POWERS.ACTIVATED.has(powerNames[powerIndex]))continue;
+   if(!POWERS.ACTIVATED.has(powerNames[powerIndex])||!powerOpportunity(o,slot,powerNames[powerIndex]))continue;
    const id=slot+':'+powerIndex;
    if(!used.powerKeys.has(id))options.push(command('use_power',{slot,powerIndex}));
   }
