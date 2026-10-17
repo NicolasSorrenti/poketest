@@ -44,7 +44,7 @@ function unit(id,round=0){return {id,under:[],energies:[],attachedTrainers:[],da
 function allPokemon(p){return [p.active,...p.bench].filter(Boolean);}
 function hasActiveEffect(u,key,g){return Boolean(u&&u[key]&&u[key].expires>g.turnSerial);}
 function clearBenchEffects(u){
- for(const key of ['shield','attackPenalty','noRetreat','attackLock','reactiveShield','swordsDance','amnesia','mirrorShell','destinyBond','lastAttackImpact','screech','noSwitch','gymGiantGrowth','gymInkSpurt','gymShadowImages','gymFireWall','gymCrosscounter','neo48Growl','neo48Slime','neo48PollenShieldUntil','neo48Endure','neo48MeanLook','neo48EndureUsed','neo48SlimeUntil','neo48CrunchUntil'])delete u[key];
+ for(const key of ['shield','attackPenalty','noRetreat','attackLock','reactiveShield','swordsDance','amnesia','mirrorShell','destinyBond','lastAttackImpact','screech','noSwitch','gymGiantGrowth','gymInkSpurt','gymShadowImages','gymFireWall','gymCrosscounter','neo48Growl','neo48Slime','neo48PollenShieldUntil','neo48Endure','neo48MeanLook','neo48EndureUsed','neo48SlimeUntil','neo48CrunchUntil','neo49LockOn','neo49LockTarget','neo49Pursuit','neo49CounterUntil','neo49PoisonUntil'])delete u[key];
 }
 function familyCandidates(g,side,restriction){
  const p=g.players[side];return p.deck.flatMap((id,i)=>{
@@ -522,6 +522,11 @@ function performAction(g,side,cmd){
    return;
   }
   if(pending.kind==='neo_hydro'){resolveAttack(g,pending.side,pending.attackIndex,undefined,undefined,{hydroBoost:selection==='boost:yes'});return;}
+  if(pending.kind==='neo49_select'){
+   const data={...pending.data};data[pending.stage]=[...answer.selected];
+   g.pendingDecision=null;g.pendingAction=null;
+   resolveAttack(g,pending.side,pending.attackIndex,undefined,undefined,{...pending.extra,neo49Data:data,preRoll:pending.roll,confusionChecked:true,attackPenaltyChecked:true});return;
+  }
   if(pending.kind==='neo48_select'){
    g.pendingDecision=null;g.pendingAction=null;
    resolveAttack(g,pending.side,pending.attackIndex,undefined,undefined,{...pending.extra,neo48Choices:[...answer.selected],neo48Answered:true,preRoll:pending.roll,confusionChecked:true,attackPenaltyChecked:true});return;
@@ -725,6 +730,10 @@ function performAction(g,side,cmd){
   const u=safeSlot(p,-1);if(u.secretPlanFaceDown&&!revealSecretPlan(g,side,-1)){completeKnockouts(g,'trainer');return;}requireInt(v.slot,'Bench slot');if(!p.bench[v.slot])fail('Invalid retreat target');
   if(u.neo48MeanLook&&g.players[1-side].active?.neo48MeanLook===u.neo48MeanLook)fail('Mean Look prevents retreat');
   if(u.status==='Asleep'||u.status==='Paralyzed'||(p.confusedRetreatFailed&&u.status==='Confused')||hasActiveEffect(u,'noRetreat',g)&&jawClampLocks(g,side))fail('Cannot retreat');
+  if(u.neo49Pursuit?.expires>g.turnSerial && g.players[1-side].active?.id===u.neo49Pursuit.sourceId){
+   u.damage+=10;delete u.neo49Pursuit;log(g,'Pursuit deals 10 damage when retreat is attempted.');
+   if(u.damage>=maxHP(g,u)){knockOuts(g,'trainer');return;}
+  }
   const cost=retreatCost(g,side,u);
   if(u.energies.length<cost)fail('Insufficient retreat Energy');
   if(u.energies.some(id=>(card(g,id).subtypes||[]).includes('Special')&&!['Double Colorless Energy','Full Heal Energy','Potion Energy','Metal Energy','Darkness Energy'].includes(card(g,id).name))||u.attachedTrainers.some(t=>!['Berry','Counterattack Claws',"Brock's Protection","Koga's Ninja Trick","Sabrina's ESP","Charity"].includes(card(g,t.id).name)))fail('Retreat modifiers require an effect handler');
@@ -1097,7 +1106,7 @@ function resolveAttack(g,side,index,chosenBench,energyPicks,extra={}){
   const prior=f.active;f.active=f.bench.splice(chosenBench,1,prior)[0];
   STATUS.clearConditions(prior);clearBenchEffects(prior);
  }
- const coreContext={selfWater:u.energies.filter(id=>card(g,id).name==='Water Energy').length,selfLightning:u.energies.filter(id=>card(g,id).name==='Lightning Energy').length,selfCounters:Math.floor(u.damage/10),defenderCounters:Math.floor(f.active.damage/10),benchCount:p.bench.length,enemyEnergy:f.active.energies.length,enemyRemainingHP:Math.max(0,maxHP(g,f.active)-f.active.damage),selfEnergy:u.energies.length,enemyBench:f.bench.length,topFireCount:p.deck.slice(-5).filter(id=>card(g,id).name==='Fire Energy').length,selfPoisoned:u.status==='Poisoned',nidokingOnBench:p.bench.some(x=>card(g,x.id).name==="Giovanni's Nidoking"),nightSpirits:allPokemon(p).filter(x=>["Sabrina's Gastly","Sabrina's Haunter","Sabrina's Gengar"].includes(card(g,x.id).name)).length,enemyMaxHP:maxHP(g,f.active),enemyFighting:effectiveCard(g,f.active).types?.includes('Fighting'),selfFireCards:u.energies.filter(id=>card(g,id).name==='Fire Energy').length,bellossomCount:allPokemon(p).filter(x=>card(g,x.id).name==='Bellossom').length,ownPokemonCount:allPokemon(p).length,discardEnergyCount:p.discard.filter(id=>isEnergy(card(g,id))).length,enemyBaby:['Elekid','Magby','Tyrogue','Igglybuff','Cleffa','Pichu','Smoochum'].includes(effectiveCard(g,f.active).name),enemyBasic:effectiveCard(g,f.active).subtypes?.includes('Basic'),damagedPreviousTurn:u.lastAttackImpact?.serial===g.turnSerial-1&&u.lastAttackImpact.damage>0,extraEnergies:(type)=>extraAttackEnergy(g,u,a,type),teamNameCount:(names,region)=> (region==='bench'?p.bench:allPokemon(p)).filter(x=>names.includes(card(g,x.id).name)).length,allNamedCount:(names)=>g.players.flatMap(allPokemon).filter(x=>names.includes(card(g,x.id).name)).length,enemyBenchCount:f.bench.length,darkDefender:card(g,f.active.id).name.startsWith('Dark '),topFiveEnergyCount:p.deck.slice(-5).filter(id=>isEnergy(card(g,id))).length,discardAmount:extra.theme?.sources?.length||0,flameHeads:extra.theme?.roll?.flips?.filter(Boolean).length||0};
+ const coreContext={neo49Locked:Boolean(u.neo49LockOn?.expires>g.turnSerial&&f.active.neo49LockTarget?.side===side&&f.active.neo49LockTarget?.sourceId===u.id&&u.neo49LockOn.targetId===f.active.id),neo49Fossils:p.bench.filter(x=>['Omanyte','Omastar','Kabuto','Kabutops'].includes(card(g,x.id).name)).length,totalPokemon:g.players.reduce((n,owner)=>n+allPokemon(owner).length,0),selfWater:u.energies.filter(id=>card(g,id).name==='Water Energy').length,selfLightning:u.energies.filter(id=>card(g,id).name==='Lightning Energy').length,selfCounters:Math.floor(u.damage/10),defenderCounters:Math.floor(f.active.damage/10),benchCount:p.bench.length,enemyEnergy:f.active.energies.length,enemyRemainingHP:Math.max(0,maxHP(g,f.active)-f.active.damage),selfEnergy:u.energies.length,enemyBench:f.bench.length,topFireCount:p.deck.slice(-5).filter(id=>card(g,id).name==='Fire Energy').length,selfPoisoned:u.status==='Poisoned',nidokingOnBench:p.bench.some(x=>card(g,x.id).name==="Giovanni's Nidoking"),nightSpirits:allPokemon(p).filter(x=>["Sabrina's Gastly","Sabrina's Haunter","Sabrina's Gengar"].includes(card(g,x.id).name)).length,enemyMaxHP:maxHP(g,f.active),enemyFighting:effectiveCard(g,f.active).types?.includes('Fighting'),selfFireCards:u.energies.filter(id=>card(g,id).name==='Fire Energy').length,bellossomCount:allPokemon(p).filter(x=>card(g,x.id).name==='Bellossom').length,ownPokemonCount:allPokemon(p).length,discardEnergyCount:p.discard.filter(id=>isEnergy(card(g,id))).length,enemyBaby:['Elekid','Magby','Tyrogue','Igglybuff','Cleffa','Pichu','Smoochum'].includes(effectiveCard(g,f.active).name),enemyBasic:effectiveCard(g,f.active).subtypes?.includes('Basic'),damagedPreviousTurn:u.lastAttackImpact?.serial===g.turnSerial-1&&u.lastAttackImpact.damage>0,extraEnergies:(type)=>extraAttackEnergy(g,u,a,type),teamNameCount:(names,region)=> (region==='bench'?p.bench:allPokemon(p)).filter(x=>names.includes(card(g,x.id).name)).length,allNamedCount:(names)=>g.players.flatMap(allPokemon).filter(x=>names.includes(card(g,x.id).name)).length,enemyBenchCount:f.bench.length,darkDefender:card(g,f.active.id).name.startsWith('Dark '),topFiveEnergyCount:p.deck.slice(-5).filter(id=>isEnergy(card(g,id))).length,discardAmount:extra.theme?.sources?.length||0,flameHeads:extra.theme?.roll?.flips?.filter(Boolean).length||0};
  let roll=extra.preRoll||ATTACK.resolve(program,()=>next(g,2)===1,coreContext);
  if(program.kind.startsWith('neo48:')){
   const kind=program.kind.slice(6),pickables=[];
@@ -1138,6 +1147,44 @@ function resolveAttack(g,side,index,chosenBench,energyPicks,extra={}){
   extra.neo48Choices=choices;
  }
 
+ if(program.kind.startsWith('neo49:')){
+  const kind=program.kind.slice(6),data=extra.neo49Data||{};
+  const prompt=(stage,actor,options,{min=1,max=min,label=stage,optional=min===0}={})=>{
+   g.nextDecisionId++;g.pendingDecision=makeDecision({id:`neo49:${g.nextDecisionId}`,actor,kind:'neo-attack-choice',label,options,min,max,optional});
+   g.pendingAction={kind:'neo49_select',stage,side,attackIndex:index,roll,extra,data};
+  };
+  const bench=(owner)=>owner.bench.map((v,i)=>({id:`bench:${i}`,label:publicName(g,v)}));
+  const basic=(deck)=>deck.flatMap((id,i)=>isEnergy(card(g,id))&&['Grass Energy','Fire Energy','Water Energy','Lightning Energy','Psychic Energy','Fighting Energy'].includes(card(g,id).name)?[{id:`deck:${i}`,label:card(g,id).name}]:[]);
+  if(kind==='rapid-spin'){
+   if(f.bench.length&&!data.enemy){prompt('enemy',1-side,bench(f),{label:'Rapid Spin: defending player chooses their replacement'});return;}
+   if(p.bench.length&&!data.own){prompt('own',side,bench(p),{label:'Rapid Spin: attacker chooses their replacement'});return;}
+  }
+  if(kind==='baton-pass'&&p.bench.length&&!data.own){prompt('own',side,bench(p),{label:'Baton Pass: choose your replacement to receive all Energy'});return;}
+  if(kind==='fire-wind'&&f.bench.length&&!data.enemy){prompt('enemy',side,bench(f),{label:'Fire Wind: choose opposing Benched target'});return;}
+  if(kind==='sweet-scent'){
+   const owner=roll.neo49SweetScent==='self'?p:f;
+   const options=[...(owner.active?.damage?[{id:'slot:-1',label:'Active: '+publicName(g,owner.active)}]:[]),...owner.bench.flatMap((v,i)=>v.damage?[{id:`slot:${i}`,label:'Bench: '+publicName(g,v)}]:[])];
+   if(options.length&&!data.heal){prompt('heal',side,options,{label:'Sweet Scent: choose a damaged Pokémon to heal'});return;}
+  }
+  if(kind==='squaredance'&&roll.neo49Heads){const opts=basic(p.deck);if(opts.length&&!data.search){prompt('search',side,opts,{min:0,max:Math.min(roll.neo49Heads,opts.length),label:'Squaredance: take up to one Basic Energy for each heads'});return;}}
+  if(kind==='belly-drum'&&u.damage+30<maxHP(g,u)){const opts=basic(p.deck);if(opts.length&&!data.search){prompt('search',side,opts,{min:0,max:Math.min(2,opts.length),label:'Belly Drum: attach up to 2 Basic Energy cards'});return;}}
+  if(kind==='pilfer'&&roll.neo49Pilfer&&p.discard.length&&!data.discard){prompt('discard',side,p.discard.map((id,i)=>({id:`discard:${i}`,label:card(g,id).name})),{min:0,max:1,label:'Pilfer: optionally shuffle one discard card into your deck'});return;}
+  const picks=(field,prefix,owner)=>{
+   const items=data[field]||[],ids=items.map(id=>Number(id.slice(prefix.length)));
+   if(new Set(ids).size!==ids.length||ids.some(i=>!Number.isInteger(i)||i< (prefix==='slot:'?-1:0)||i>=(owner||[]).length))fail('Invalid Neo v0.49 choice');
+   return ids;
+  };
+  if(kind==='rapid-spin'){
+   if(f.bench.length&&(!data.enemy||picks('enemy','bench:',f.bench).length!==1))fail('Rapid Spin requires defender replacement');
+   if(p.bench.length&&(!data.own||picks('own','bench:',p.bench).length!==1))fail('Rapid Spin requires attacker replacement');
+  }
+  if(kind==='baton-pass'&&p.bench.length&&(!data.own||picks('own','bench:',p.bench).length!==1))fail('Baton Pass requires one Bench recipient');
+  if(kind==='fire-wind'&&f.bench.length&&(!data.enemy||picks('enemy','bench:',f.bench).length!==1))fail('Fire Wind requires one Bench target');
+  if(kind==='sweet-scent'&&data.heal){const owner=roll.neo49SweetScent==='self'?p:f;const targets=[owner.active,...owner.bench];const i=Number(data.heal[0]?.slice(5));if(!Number.isInteger(i)||i< -1||i>=owner.bench.length||!(i===-1?owner.active:owner.bench[i]).damage)fail('Illegal Sweet Scent heal');}
+  if(['squaredance','belly-drum'].includes(kind)&&data.search){const choices=picks('search','deck:',p.deck);if(choices.length>(kind==='belly-drum'?2:roll.neo49Heads)||choices.some(i=>!basic(p.deck).some(o=>o.id===`deck:${i}`)))fail('Illegal Neo Basic Energy search');}
+  if(kind==='pilfer'&&data.discard){const choices=picks('discard','discard:',p.discard);if(choices.length>1)fail('Pilfer can shuffle only one discard card');}
+  extra.neo49Data=data;
+ }
  if(program.kind==='gym:psyduck-esp'&&roll.gymPsyduckHeads===3){
   const copyable=(card(g,f.active.id).attacks||[]).flatMap((attack,i)=>{
    const script=ATTACK.compile(attack);
@@ -1279,7 +1326,7 @@ function resolveAttack(g,side,index,chosenBench,energyPicks,extra={}){
   return;
  }
  if(extra.fleeBenchIndex!==undefined&&(!Number.isInteger(extra.fleeBenchIndex)||!f.bench[extra.fleeBenchIndex]))fail('Invalid Flee replacement');
- const priorDefDamage=f.active.damage,priorDefStatus=f.active.status;
+ const priorDefender=f.active,priorDefDamage=f.active.damage,priorDefStatus=f.active.status;
  if(isClassicRules(g)&&f.active.gymShadowImages){
   if(next(g,2)===0){dmg=0;log(g,`Shadow Images prevented attack damage to ${card(g,f.active.id).name}.`);}
   else if(dmg>0)delete f.active.gymShadowImages;
@@ -1335,6 +1382,11 @@ function resolveAttack(g,side,index,chosenBench,energyPicks,extra={}){
  }};
  // Neo multi-target attacks resolve through the existing Bench-damage helper
  // so Bench Guard, Relaxing Scent and other general Bench effects are honored.
+ if(roll.neo49FireWind&&f.bench.length){const i=Number(extra.neo49Data.enemy[0].slice(6));hitBench(f,f.bench[i],10*roll.neo49FireWind);}
+ if(dmg>0&&f.active.neo49CounterUntil>g.turnSerial&&next(g,2)===1){
+  const retaliation=calculateDamage(effectiveCard(g,f.active),c,dmg,u);u.damage+=retaliation;log(g,`Wobbuffet Counter dealt ${retaliation} attack damage.`);
+ }
+ if(dmg>0&&f.active.neo49PoisonUntil>g.turnSerial){applyCondition(g,u,'Poisoned');for(const victim of p.bench)hitBench(p,victim,10);log(g,'Kakuna Secrete Poison retaliated.');}
  if(roll.neo48Trample)for(const owner of g.players)for(const victim of owner.bench)if(next(g,2)===1)hitBench(owner,victim,30);
  if(roll.neo48Zzzap)for(const owner of g.players)for(const victim of allPokemon(owner))if(!victim.secretPlanFaceDown&&(card(g,victim.id).abilities||[]).length){if(owner.active===victim)victim.damage+=20;else hitBench(owner,victim,20);}
  if(roll.neo48Shockwave){if(roll.neo48ShockwaveDamage){f.active.damage+=10;for(const victim of f.bench)hitBench(f,victim,10);}roll.forceSwitch='switch-defender';}
@@ -1425,6 +1477,20 @@ function resolveAttack(g,side,index,chosenBench,energyPicks,extra={}){
  // Gym-specific effects with strict card conservation. Damage and shields
  // resolve first; KO handling stays in the existing common pipeline.
  if(u.id==='gym2-22'&&a.name==='Lie Low')u.gymLieLowSerial=g.turnSerial;
+ if(roll.neo49LockOn){u.neo49LockOn={expires:g.turnSerial+3,targetId:f.active.id};f.active.neo49LockTarget={side,sourceId:u.id};}
+ if(roll.neo49Counter)u.neo49CounterUntil=g.turnSerial+2;
+ if(roll.neo49SecretePoison)u.neo49PoisonUntil=g.turnSerial+2;
+ if(roll.neo49Pursuit)f.active.neo49Pursuit={sourceId:u.id,expires:g.turnSerial+2};
+ if(roll.neo49BellyDrum)u.damage+=30;
+ if(roll.neo49SweetScent&&extra.neo49Data?.heal){const sideTarget=roll.neo49SweetScent==='self'?p:f,i=Number(extra.neo49Data.heal[0].slice(5));const target=i===-1?sideTarget.active:sideTarget.bench[i];target.damage=Math.max(0,target.damage-20);}
+ if(program.kind==='neo49:squaredance'){for(const i of (extra.neo49Data?.search||[]).map(id=>Number(id.slice(5))).sort((a,b)=>b-a))p.hand.push(p.deck.splice(i,1)[0]);p.deck=shuffle(g,p.deck);}
+ if(roll.neo49BellyDrum&&u.damage<maxHP(g,u)){for(const i of (extra.neo49Data?.search||[]).map(id=>Number(id.slice(5))).sort((a,b)=>b-a))u.energies.push(p.deck.splice(i,1)[0]);p.deck=shuffle(g,p.deck);}
+ if(roll.neo49Rapid){
+  const switchActive=(owner,index)=>{const old=owner.active;owner.active=owner.bench.splice(index,1,old)[0];STATUS.clearConditions(old);clearBenchEffects(old);};
+  if(f.bench.length)switchActive(f,Number(extra.neo49Data.enemy[0].slice(6)));
+  if(p.bench.length)switchActive(p,Number(extra.neo49Data.own[0].slice(6)));
+ }
+ if(roll.neo49Baton&&p.bench.length){const i=Number(extra.neo49Data.own[0].slice(6));const previous=u;const chosen=p.bench[i];chosen.energies.push(...previous.energies);previous.energies=[];p.active=p.bench.splice(i,1,previous)[0];STATUS.clearConditions(previous);clearBenchEffects(previous);}
  if(roll.neo48MeanLook){const key=`${side}:${g.turnSerial}:${u.id}`;u.neo48MeanLook=key;f.active.neo48MeanLook=key;}
  if(roll.neo48PollenShield)u.neo48PollenShieldUntil=g.turnSerial+2;
  if(roll.neo48Growl)u.neo48Growl={expires:g.turnSerial+2,sourceId:f.active.id};
@@ -1601,7 +1667,7 @@ function resolveAttack(g,side,index,chosenBench,energyPicks,extra={}){
  }
  // Track damage/status on a Pokémon so Mirror Move can reproduce what the
  // opponent's attack actually did, rather than its printed base damage.
- if(f.active&&(dmg>0||f.active.status!==priorDefStatus))f.active.lastAttackImpact={serial:g.turnSerial,damage:f.active.damage-priorDefDamage,status:f.active.status!==priorDefStatus?f.active.status:null};
+ if(priorDefender&&(dmg>0||priorDefender.status!==priorDefStatus))priorDefender.lastAttackImpact={serial:g.turnSerial,damage:priorDefender.damage-priorDefDamage,status:priorDefender.status!==priorDefStatus?priorDefender.status:null};
  if(f.active&&hasActiveEffect(f.active,'mirrorShell',g)&&dmg>0){
   u.damage+=calculateDamage(card(g,f.active.id),c,dmg,u);
   log(g,`${card(g,f.active.id).name} reflected ${dmg} attack damage.`);
@@ -1638,6 +1704,14 @@ function resolveAttack(g,side,index,chosenBench,energyPicks,extra={}){
  if(roll.returnDefenderToDeck&&f.active&&!jawClampLocks(g,1-side)){
   const returned=f.active;f.deck=shuffle(g,[...f.deck,returned.id,...returned.under,...returned.energies,...returned.attachedTrainers.map(x=>x.id)]);
   f.active=null;g.pendingPromotions=[1-side];g.promotionAfter='checkup';finishPromotions(g);return;
+ }
+ if(roll.neo49Pilfer!==undefined&&p.active===u){
+  const picked=(extra.neo49Data?.discard||[]).map(x=>Number(x.slice(8)));
+  const cards=[u.id,...u.under,...u.energies,...u.attachedTrainers.map(x=>x.id)];
+  if(roll.neo49Pilfer&&picked.length)cards.push(p.discard.splice(picked[0],1)[0]);
+  p.deck=shuffle(g,[...p.deck,...cards]);p.active=null;
+  if(!p.bench.length){g.over=true;g.winner=1-side;return;}
+  g.pendingPromotions=[side];g.promotionAfter='checkup';finishPromotions(g);return;
  }
  if(roll.vanishSelf&&p.active){
   const returned=p.active;p.discard.push(...returned.under,...returned.energies,...returned.attachedTrainers.map(x=>x.id));p.deck=shuffle(g,[...p.deck,returned.id]);p.active=null;
