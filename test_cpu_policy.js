@@ -536,6 +536,42 @@ const settings={level:3,personality:'balanced',side:1,seed:47};
  assert.throws(()=>argumentsOf(['--target-upset-rate','0.8']),/upset rate/);
  assert.ok(wilson(0,10).upper>.05,'Ten undefeated games cannot prove a <=5% upset rate');
 }
+{
+ const g=createGame({decks:[deck,deck],seed:541,format:'classic'});
+ const o=AI.observation(g,1);o.phase='game';o.turn=1;
+ o.self.active={id:IDS.hit,energies:[IDS.fight],damage:0,status:null};
+ o.opponent.active={id:IDS.rat,energies:[],damage:10,status:null};
+ o.opponent.bench=[{id:IDS.machop,energies:[],damage:0,status:null}];
+ o.self.hand=[IDS.machop];o.self.bench=[];
+ const act={type:'attack',payload:{attackIndex:0}};
+ const strong=AI.configuration({side:1,level:5,knockoutTempo:true});
+ const old=AI.configuration({side:1,level:5,knockoutTempo:false});
+ assert.equal(AI.knockoutTempoBonus(act,o,strong),0,
+  'First build a backup if a knockout cannot finish the duel and otherwise leaves an empty Bench');
+ o.self.bench=[{id:IDS.machop,energies:[],damage:0,status:null}];
+ assert.ok(AI.knockoutTempoBonus(act,o,strong)>=120,
+  'Secured Prize should beat optional development once a safe backup is established');
+ assert.equal(AI.knockoutTempoBonus(act,o,old),0);
+ o.self.bench=[];o.self.prizeCount=1;
+ assert.ok(AI.knockoutTempoBonus(act,o,strong)>=500,
+  'Immediate game-winning final Prize takes priority even without any backup');
+ o.self.prizeCount=4;o.opponent.bench=[];
+ assert.ok(AI.knockoutTempoBonus(act,o,strong)>=500,
+  'Knocking out the last opposing Pokémon is also a game win');
+ o.opponent.bench=[{id:IDS.hit,energies:[],damage:0,status:null}];
+ o.opponent.active.energies=[IDS.fight];o.opponent.active.damage=0;
+ o.self.bench=[{id:IDS.machop,energies:[],damage:0,status:null}];
+ assert.equal(AI.knockoutTempoBonus(act,o,strong),0,
+  'Do not treat a non-KO attack as an earned Prize');
+ assert.equal(AI.configuration({level:5}).knockoutTempo,false);
+ assert.throws(()=>AI.configuration({knockoutTempo:'yes'}),/knockout-tempo/);
+ const {argumentsOf,arena}=require('./benchmark_cpu');
+ const opts=argumentsOf(['--pairs','1','--max-turns','4','--left-level','5',
+  '--right-level','5','--left-knockout-tempo','true','--right-knockout-tempo','false']);
+ const report=arena(opts);
+ assert.equal(report.baseline.knockoutTempo,true);
+ assert.equal(report.challenger.knockoutTempo,false);
+}
 let duels=0,decisions=0,attacks=0,energy=0,evolutions=0,trainer=0;
 for(let seed=1;seed<=4;seed++){
  let game=createGame({decks:[deck,deck],seed:seed*1789,format:'classic'});
