@@ -1904,7 +1904,7 @@ function finishRetreat(g,side,slot,picks){
  if((p.confusedRetreatFailed&&u.status==='Confused')||!p.bench[slot]||new Set(picks).size!==picks.length||picks.some(i=>!Number.isInteger(i)||i<0||i>=u.energies.length))fail('Illegal retreat payment');
  const contribution=picks.map(i=>retreatUnits(g,u,u.energies[i]));
  const total=contribution.reduce((n,v)=>n+v,0);
- if(cost===0&&picks.length||cost>0&&(!picks.length||total<cost||contribution.some(v=>total-v>=cost)))fail('Invalid or excessive retreat Energy payment');
+ if(cost===0&&picks.length||cost>0&&(!picks.length||total<cost||contribution.some(v=>total-v>=cost)))fail('Wrong number or excessive retreat Energy payment');
  for(const i of [...picks].sort((a,b)=>b-a))p.discard.push(u.energies.splice(i,1)[0]);
  if(u.status==='Confused'&&next(g,2)===0){p.confusedRetreatFailed=true;log(g,`${p.name} failed to retreat due to Confusion.`);return;}
  p.active=p.bench.splice(slot,1,u)[0];STATUS.clearConditions(u);clearBenchEffects(u);if(isClassicRules(g))CLASSIC_POWERS.movedToBench(g,side,u,p.active,classicHelpers());p.retreated=true;log(g,`${p.name} retreated.`);
