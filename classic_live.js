@@ -3,6 +3,10 @@
 // Every button sends a typed command to the same server-side Classic reducer.
 (()=>{
  const $=id=>document.getElementById(id);
+ const BRIDGE=window.NeoRpgDuelBridge,search=new URLSearchParams(location.search);
+ const requestedRpgMode=search.get('rpg')==='1',rpgContext=BRIDGE.context(location.search),rpgMode=!!rpgContext;
+ const tokenStorageKey=BRIDGE.storageKey(rpgContext);
+ function reportRpgResult(){if(!current?.view?.over)return;const msg=BRIDGE.finishedMessage(rpgContext,current);if(msg)window.parent.postMessage(msg,location.origin);}
  const cards=new Map();
  const quick=window.NeoDuelUI;
  const ux=window.NeoExperienceUI;
@@ -37,14 +41,12 @@
  async function send(action){if(!current||busy)return;busy=true;clearError();try{
   const result=await api('action',{method:'POST',body:JSON.stringify({revision:current.revision,command:action})});
   preview.hide();current=result;
-  if(new URLSearchParams(location.search).get('rpg')==='1' && current?.view?.over && Number.isInteger(current.winner)){
-    window.parent.postMessage({type:'neo-rpg-duel-finished',winner:current.winner},location.origin);
-  }
+  reportRpgResult();
   if(action.type!=='choose')setHandOpen(false);selectedHand=null;targetMode=null;decisionSelection.clear();render();
  }catch(e){fail(e);}finally{busy=false;render();}}
  async function start(){if(busy)return;busy=true;$('startupError').textContent='';try{
   const response=await api('create',{method:'POST',body:JSON.stringify({deck:$('deck').value,opponent:$('opponent').value,...($('deck').value==='custom'?{customDeck:JSON.parse(localStorage.getItem('neoCampusCustomGymDeck')||'null')}: {})})});
-  feedback.reset();opponentActivity.clear();combat.reset();token=response.token;sessionStorage.setItem(new URLSearchParams(location.search).get('rpg')==='1'?'neoRpgDuelToken':'neoClassicLiveToken',token);current=response;
+  feedback.reset();opponentActivity.clear();combat.reset();token=response.token;sessionStorage.setItem(tokenStorageKey,token);current=response;
   selectedHand=null;targetMode=null;decisionSelection.clear();handOpen=false;powersOpen=false;logOpen=false;lastCoinSeq=null;lastKoMessage="";render();
  }catch(e){$('startupError').textContent=e.message;}finally{busy=false;}}
 
@@ -93,7 +95,7 @@
   $('choiceModal').classList.add('hidden');$('choiceModal').setAttribute('aria-hidden','true');
   $('fieldChoiceBar').classList.add('hidden');modalDecisionId=null;lastFieldDecisionId=null;
  }
- function newDuel(){clearChoiceUi();opponentActivity.clear();combat.reset();feedback.reset();preview.hide();token=null;current=null;selectedHand=null;targetMode=null;handOpen=false;powersOpen=false;logOpen=false;document.body.classList.remove('duel-active','cpu-match');sessionStorage.removeItem(rpgMode?'neoRpgDuelToken':'neoClassicLiveToken');render();}
+ function newDuel(){if(rpgMode)return;clearChoiceUi();opponentActivity.clear();combat.reset();feedback.reset();preview.hide();token=null;current=null;selectedHand=null;targetMode=null;handOpen=false;powersOpen=false;logOpen=false;document.body.classList.remove('duel-active','cpu-match');sessionStorage.removeItem(tokenStorageKey);render();}
  function setTarget(type,payload,title,benchOnly=false){preview.hide();setHandOpen(false);targetMode={type,payload,title,benchOnly};render();}
  function cancelTarget(){targetMode=null;selectedHand=null;preview.hide();render();}
  function pokemonNode(u,side,slot){
@@ -260,22 +262,21 @@
  }
  async function init(){
   try{
+   if(requestedRpgMode&&!rpgContext)throw Error('Missing or invalid RPG duel identifier. Return to Neo Harbor and try again.');
+   if(rpgMode)$('reset').hidden=true;
    const data=await api('decks');for(const id of ['deck','opponent']){
     $(id).textContent='';for(const x of data.decks.filter(row=>id!=='opponent'||row.id!=='custom')){const option=document.createElement('option');option.value=x.id;option.textContent=x.name;$(id).append(option);}}
    $('opponent').value='brushfire';
    if(localStorage.getItem('neoCampusCustomGymDeck'))$('deck').value='custom';
    await Promise.all(['base1','base2','base3','base4','base5','gym1','gym2','neo1','neo2','neo3','neo4'].map(async set=>{const r=await fetch(`/cards/${set}.json`);if(!r.ok)throw Error(`Cannot load ${set}`);const arr=await r.json();for(const c of arr)cards.set(c.id,c);}));
-   const rpgMode=new URLSearchParams(location.search).get('rpg')==='1';
    if(rpgMode){
      const params=new URLSearchParams(location.search);
      $('deck').value=params.get('deck')||'blackout';
      $('opponent').value=params.get('opponent')||'brushfire';
    }
-   token=sessionStorage.getItem(rpgMode?'neoRpgDuelToken':'neoClassicLiveToken');if(token){try{current=await api('state');}catch{token=null;sessionStorage.removeItem('neoClassicLiveToken');}}
+   token=sessionStorage.getItem(tokenStorageKey);if(token){try{current=await api('state');}catch{token=null;sessionStorage.removeItem(tokenStorageKey);}}
    if(rpgMode && !current) await start();
-   if(rpgMode && current?.view?.over && Number.isInteger(current.winner)){
-     window.parent.postMessage({type:'neo-rpg-duel-finished',winner:current.winner},location.origin);
-   }
+   if(rpgMode)reportRpgResult();
    render();
   }catch(e){$('startupError').textContent=e.message||String(e);}
  }
