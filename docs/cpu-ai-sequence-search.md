@@ -75,6 +75,26 @@ To reproduce the strongest original A/B:
 node benchmark_cpu.js --pairs 40 --max-turns 120 --seed 33197 --left-level 5 --right-level 5 --left-action-discipline true --right-action-discipline false
 ```
 
+## Champion versus Expert after promoting resource discipline
+
+A separate 200-game, three-deck, seat-swapped tournament compared the new
+default Champion (level 5, `actionDiscipline:true`) with unchanged Expert
+(level 4):
+
+| Equal deck | Champion wins | Expert wins | Draws |
+| --- | ---: | ---: | ---: |
+| Blackout (seed 93197) | 45 | 35 | 0 |
+| Brushfire (seed 103197) | 38 | 22 | 0 |
+| Overgrowth (seed 113197) | 33 | 27 | 0 |
+| **Total** | **116** | **84** | **0** |
+
+Champion won **58% of decisive games**, which is an improved ordering compared
+with the earlier audits (Expert sometimes beat Champion more than half the
+time). It is **nowhere near the required 95% upper/lower difficulty separation**.
+Additional true strategy competence, Trainer sequences, cross-archetype
+evaluation and multiple independent seed cohorts are needed. The match
+results are all legal games and are never forced by the benchmark.
+
 ## Verification and follow-up
 
 The sequence tests and 80-scenario live service regressions pass, and a short
