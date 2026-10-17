@@ -879,6 +879,26 @@ const settings={level:3,personality:'balanced',side:1,seed:47};
  assert.equal(report.illegalActions,0,
   'The historical Neo Genesis format must allow legal Cold Fusion tournament games');
 }
+{
+ const g=createGame({decks:[deck,deck],seed:118809,format:'classic'});
+ g.pendingAction={kind:'classic_trainer',plan:{side:1,cardId:'neo1-101',data:{}}};
+ const o=AI.observation(g,1);o.phase='game';o.turn=1;
+ o.self.active={id:IDS.hit,damage:40,energies:[IDS.fight],status:null};
+ o.self.bench=[{id:IDS.machop,damage:10,energies:[],status:null}];
+ o.opponent.active={id:IDS.hit,damage:50,energies:[IDS.fight],status:null};
+ o.decision={actor:1,id:'classic-trainer:11',label:'Choose Pokémon to heal',
+   kind:'healTarget',min:1,max:1,options:[
+    {id:'slot:-1',label:'Hitmonchan'},{id:'slot:0',label:'Machop'}]};
+ const champ=AI.configuration({level:5,side:1,trainerTactics:true});
+ const choose=x=>({type:'choose',payload:{decisionId:o.decision.id,selected:[x]}});
+ assert.equal(o.pendingTrainerName,'Moo-Moo Milk');
+ assert.ok(AI.score(choose('slot:-1'),o,champ,{})>
+  AI.score(choose('slot:0'),o,champ,{}),
+  'Moo-Moo Milk must heal the most damaged OWN Pokémon, not compare opposing cards');
+ g.pendingAction.plan.side=0;
+ assert.equal(AI.observation(g,1).pendingTrainerName,null,
+  'Opponent Trainer card identity must not leak via own-plan metadata');
+}
 let duels=0,decisions=0,attacks=0,energy=0,evolutions=0,trainer=0;
 for(let seed=1;seed<=4;seed++){
  let game=createGame({decks:[deck,deck],seed:seed*1789,format:'classic'});
