@@ -820,6 +820,31 @@ const settings={level:3,personality:'balanced',side:1,seed:47};
  assert.equal(output.baseline.trainerTactics,true);
  assert.equal(output.challenger.trainerTactics,false);
 }
+{
+ const g=createGame({decks:[deck,deck],seed:18819,format:'classic'});
+ g.pendingAction={kind:'classic_trainer',plan:{side:1,cardId:'base1-90',
+  data:{target:['slot:-1']}}};
+ const o=AI.observation(g,1);o.phase='game';o.turn=1;
+ o.self.active={id:IDS.hit,energies:[IDS.fight,'base1-102'],damage:30,status:null};
+ o.self.bench=[{id:IDS.machop,energies:[IDS.fight],damage:10,status:null}];
+ o.opponent.active={id:IDS.hit,energies:[IDS.fight],damage:0,status:null};
+ assert.equal(o.pendingTrainerName,'Super Potion');
+ o.decision={id:'classic-trainer:200',actor:1,label:'Discard one attached Energy',
+   kind:'ownEnergy',min:1,max:1,options:[
+    {id:'n:0',label:'Fighting Energy'},{id:'n:1',label:'Water Energy'}]};
+ const champ=AI.configuration({level:5,side:1,trainerTactics:true});
+ const choose=id=>({type:'choose',payload:{decisionId:o.decision.id,selected:[id]}});
+ assert.ok(AI.score(choose('n:1'),o,champ,{})>AI.score(choose('n:0'),o,champ,{}),
+  'Super Potion must discard spare Water before necessary Fighting on Hitmonchan');
+ o.decision={...o.decision,kind:'target',label:'Choose one of your Pokémon',
+  options:[{id:'slot:-1',label:'Hitmonchan'},{id:'slot:0',label:'Machop'}]};
+ assert.ok(AI.score(choose('slot:-1'),o,champ,{})>AI.score(choose('slot:0'),o,champ,{}),
+  'Super Potion should heal the more critically damaged Active');
+ const unseen=structuredClone(g);unseen.pendingAction.plan.side=0;
+ const hidden=AI.observation(unseen,1);
+ assert.equal(hidden.pendingTrainerName,null,
+  'AI must not observe another player’s Trainer plan through its healing heuristic');
+}
 let duels=0,decisions=0,attacks=0,energy=0,evolutions=0,trainer=0;
 for(let seed=1;seed<=4;seed++){
  let game=createGame({decks:[deck,deck],seed:seed*1789,format:'classic'});
