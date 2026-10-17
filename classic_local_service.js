@@ -5,6 +5,7 @@ const crypto=require('node:crypto');
 const {createGame,reduce,CATALOG}=require('./headless_duel');
 const {publicView,publicActivity}=require('./duel_protocol');
 const {driveBot,configuration}=require('./classic_bot');
+const {profileForNpc}=require('./cpu_profiles');
 const {list}=require('./authentic_decks');
 const {LAB}=require('./classic_live_decks');
 const RETAIL=require('./retail_theme_decks');
@@ -32,11 +33,12 @@ class ClassicLocalService {
   this.sessions=new Map();this.now=now;this.ttlMs=ttlMs;this.maxSessions=maxSessions;
  }
  prune(){for(const [token,r] of this.sessions)if(this.now()-r.updated>this.ttlMs)this.sessions.delete(token);}
- create({deck='blackout',opponent='brushfire',customDeck,seed,difficulty=3,personality='balanced',aiSeed=1}={}){
+ create({deck='blackout',opponent='brushfire',customDeck,seed,difficulty,personality,aiSeed=1,npc}={}){
   this.prune();if(this.sessions.size>=this.maxSessions)throw Error('Too many active duels');
   if(!DECKS[deck]||!DECKS[opponent])throw Error('Unknown Classic deck');
   if(seed!==undefined&&(!Number.isSafeInteger(seed)||seed<0||seed>0xffffffff))throw Error('Invalid seed');
-  const cpuConfig=configuration({level:difficulty,personality,seed:aiSeed});
+  const defaults=npc===undefined?{level:3,personality:'balanced'}:profileForNpc(npc);
+  const cpuConfig=configuration({level:difficulty??defaults.level,personality:personality??defaults.personality,seed:aiSeed});
   if(deck==='custom'&&(!Array.isArray(customDeck)||customDeck.length!==60||!customDeck.every(id=>typeof id==='string'&&id.length<=40)))throw Error('Custom deck must contain exactly 60 card IDs');
   if(deck!=='custom'&&customDeck!==undefined)throw Error('Unexpected custom deck');
   if(opponent==='custom')throw Error('CPU deck must be a preset');
@@ -46,12 +48,12 @@ class ClassicLocalService {
   const format=[...playerCards,...cpuCards].some(id=>['neo1','neo2','neo3','neo4'].some(set=>id.startsWith(set+'-')))?(expanded?'online-preview':'neo-theme'):expanded?'gym-expanded':RETAIL.meta[deck]?.gym||RETAIL.meta[opponent]?.gym?'gym-theme':[...playerCards,...cpuCards].some(id=>id.startsWith('base4'))?'theme-expanded':'classic';
   let game=createGame({decks:[playerCards,cpuCards],names:['You','Classic CPU'],format,seed:seed??crypto.randomBytes(4).readUInt32BE(0)});
   game=driveBot(game,200,cpuConfig).game;
-  const token=crypto.randomBytes(24).toString('base64url'),session={game,revision:0,updated:this.now(),token,deck,opponent,cpuConfig};
+  const token=crypto.randomBytes(24).toString('base64url'),session={game,revision:0,updated:this.now(),token,deck,opponent,cpuConfig,npc:npc??null};
   this.sessions.set(token,session);return {token,...this.response(session)};
  }
  session(token){this.prune();const s=this.sessions.get(token);if(!s)throw Error('Unknown or expired session');s.updated=this.now();return s;}
  response(s){const g=s.game,view=publicView(g,0);
-  return {revision:s.revision,view,activity:publicActivity(g),format:g.format,winner:g.winner,turnSerial:g.turnSerial,cpu:{level:s.cpuConfig?.level??3,personality:s.cpuConfig?.personality??'balanced'},
+  return {revision:s.revision,view,activity:publicActivity(g),format:g.format,winner:g.winner,turnSerial:g.turnSerial,cpu:{level:s.cpuConfig?.level??3,personality:s.cpuConfig?.personality??'balanced',npc:s.npc??null},
    you:{energyUsed:!!g.players[0].energyUsed,retreated:!!g.players[0].retreated,stadiumUsed:g.players[0].stadiumUsedTurn===g.turnSerial},
    lastActions:g.events.slice(-8).map(e=>({side:e.side,type:e.type})),
    counts:g.players.map(p=>countCards(p))};
