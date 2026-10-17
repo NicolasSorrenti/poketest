@@ -34,7 +34,7 @@ function duel(opts,number,swap,decks){
  const roleForSide=swap?[1,0]:[0,1];
  const source=swap?[decks[1],decks[0]]:decks;
  let game=createGame({decks:source,format:'classic',seed:opts.seed+number*11+101});
- const logs=[],stats={actions:0,attacks:0,attachments:0,evolutions:0,trainers:0,choices:0,decisionsMs:0,illegalActions:0,byRole:[{},{},]};
+ const logs=[],stats={actions:0,attacks:0,attachments:0,evolutions:0,trainers:0,choices:0,decisionsMs:0,illegalActions:0,rejectedProposals:0,probedCandidates:0,byRole:[{},{}]};
  const start=performance.now();
  for(let side=0;side<2;side++){
   const r=driveSide(game,{...profile[roleForSide[side]],side,limit:200});
@@ -48,6 +48,8 @@ function duel(opts,number,swap,decks){
   stats.decisionsMs+=performance.now()-startDecision;
   if(!r.steps){stats.stalled=true;break;}
   game=r.game;stats.actions+=r.steps;logs.push(...r.commands);
+  stats.rejectedProposals+=r.commands.reduce((n,a)=>n+(a.rejectedCandidates||0),0);
+  stats.probedCandidates+=r.commands.reduce((n,a)=>n+(a.probedCandidates||0),0);
   for(const {command} of r.commands){
    const role=roleForSide[side],key=command.type;
    stats.byRole[role][key]=(stats.byRole[role][key]||0)+1;
@@ -80,9 +82,10 @@ function arena(opts){
   winRateConclusive:conclusive.length?wins/conclusive.length:null,confidence95Conclusive:wilson(wins,conclusive.length),
   meanDecisionMs:totals.actions?totals.decisionsMs/totals.actions:null,
   averageTurns:totals.turnSerial/matches.length,totalActions:totals.actions,
-  illegalActions:totals.illegalActions,attacks:totals.attacks,attachments:totals.attachments,
+  illegalActions:totals.illegalActions,rejectedProposals:totals.rejectedProposals,probedCandidates:totals.probedCandidates,
+  attacks:totals.attacks,attachments:totals.attachments,
   evolutions:totals.evolutions,trainers:totals.trainers,
-  caveats:['Confidence interval excludes timeouts/draws','Same-deck paired games are not evidence of universal strength','Unported rule effects can distort outcomes']};
+  caveats:['Confidence interval excludes timeouts/draws','Same-deck paired games are not evidence of universal strength','Unported rule effects can distort outcomes','Illegal actions means executed invalid actions, not rejected legality probes']};
  if(opts.logs)fs.writeFileSync(opts.logs,JSON.stringify({report,matches},null,2));
  return report;
 }
