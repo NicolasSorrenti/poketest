@@ -12,3 +12,25 @@
 @media(max-width:1400px){.topbar{gap:14px;padding:14px}.layout{grid-template-columns:205px minmax(430px,1fr) 265px;gap:10px;padding:10px}.scene{min-height:600px}.sidebar{max-height:none}}
 @media(max-width:1050px){.topbar{grid-template-columns:1fr minmax(250px,1fr) auto}.season-widget{grid-column:1 / -1;grid-row:2}.layout{grid-template-columns:185px 1fr}.sidebar{grid-column:1 / -1;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:4px 25px}.scene{min-height:600px;height:650px}.utilitybar{flex-wrap:wrap}}
 @media(max-width:700px){.topbar{display:flex;align-items:stretch;flex-direction:column;gap:12px}.clock{order:2}.season-widget{order:1}.save-btn{position:absolute;right:14px;top:14px}.brand{padding-right:90px}.utilitybar{padding:10px;gap:10px}.utility-left{font-size:10px}.utility-actions{width:100%;display:grid;grid-template-columns:1fr 1fr 1.3fr}.toolbar-btn,.time-advance{font-size:11px;padding:10px 5px}.layout{display:flex;flex-direction:column;padding:9px}.locations-panel{padding:13px}.locations-panel>p,.legend{display:none}.locations-panel h2{margin-bottom:12px}#places{display:flex;overflow-x:auto}.place{flex:none;min-width:140px}.scene{height:580px;min-height:580px}.scene-head{top:14px;left:13px}.portrait{width:85%;right:-10%;bottom:170px}.dialogue{bottom:10px;left:8px;right:8px;padding:12px;max-height:55%}.dialogue p{font-size:13px}.dialogue-title #speaker{font-size:20px}.sidebar{display:block}.scene-foot span:last-child{display:none}footer span{display:none}.home-banner{font-size:15px;width:92%}}
+
+/* Autonomous RPG milestones: world bulletins, multi-round tournaments, card economy. */
+#circuitPanel,#townBulletin,#collectionPanel{display:grid;gap:7px}
+.circuit-progress{color:#f5b89b;font-weight:700;margin:0 0 5px;font-size:13px}
+.bulletin-line{border-left:2px solid #ab698b;padding:4px 7px;font-size:11px;color:#bdc8db;line-height:1.5;margin:0}
+.collection-summary{font:700 13px 'Barlow Condensed';color:#efbcb6;margin:0}
+.market-dialog{max-width:min(850px,97vw);max-height:92vh;overflow:auto}
+.market-section{margin:17px 0;border:1px solid #3b4359;border-radius:12px;padding:14px;background:#151e30}
+.market-section h3{font:800 22px 'Barlow Condensed';color:#f5bdc0;margin:0 0 10px}
+#marketStatus{color:#faacb9;min-height:28px;margin:10px 0;font-weight:600;font-size:13px}
+#packReveal{display:flex;flex-wrap:wrap;gap:5px;color:#ffdbb3;margin:10px 0}
+.market-card{display:flex;justify-content:space-between;align-items:center;gap:10px;border-bottom:1px solid #323b4f;padding:7px 2px}
+.market-card-name{display:grid;gap:4px;min-width:0;font-size:13px;color:#f2e1e1}
+.market-card-name small{color:#a9b6c8;font-size:11px}
+.market-card-actions{display:flex;align-items:center;gap:6px;flex:none}
+.market-card button{padding:6px 11px;font-weight:700}
+.market-card button:disabled{opacity:.32}
+#marketCards{max-height:350px;overflow-y:auto}
+#marketSingles{display:grid;gap:5px}
+#marketSingles button{text-align:left;width:100%;background:#24324a;border-color:#48516a}
+#draftCount{font:700 13px 'Barlow Condensed';color:#fff4bd}
+@media(max-width:700px){.market-dialog{padding:12px}.market-card{align-items:flex-start;flex-direction:column}.market-card-actions{width:100%;justify-content:flex-end}}
