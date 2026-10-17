@@ -230,7 +230,14 @@ function act(action){
  if(type==='hang'){if(state.hungOut[state.day+':'+id])return say(c.name,'I enjoyed our time today. Let us make plans another day.',options(id));state.hungOut[state.day+':'+id]=true;bond.affection+=2;bond.trust++;state.relationships[id].affection+=2;state.relationships[id].trust++;log('Spent time with '+c.name+'.');advance();state.selected=null;return say(c.name,'That was a lovely way to spend part of the day. See you around.');}
 }
 function duelUrl(duel){return '/classic_live.html?rpg=1&duelId='+encodeURIComponent(duel.id)+'&deck='+encodeURIComponent(duel.playerDeck)+'&opponent='+encodeURIComponent(duel.opponent);}
-function startDuel(id,exhibition=null){if(state.activeStory||state.activeEncounter||state.pendingDuel||state.day>90||!cast[id]||(!exhibition&&!currentPeople().includes(id)))return;const c=cast[id];state.pendingDuel={id:'npc-'+id+'-'+state.day+'-'+state.slot+'-'+state.results.length,npc:id,day:state.day,slot:state.slot,opponent:c.deck,playerDeck:state.playerDeck,resolved:false,eventKey:exhibition?exhibition.day+':'+exhibition.title:null,eventReward:exhibition?exhibition.reward:0,eventTitle:exhibition?exhibition.title:null};persist();render();$('duel').hidden=false;$('battle').src=duelUrl(state.pendingDuel);}
+function startDuel(id,exhibition=null,arcEpisode=null){
+ if(state.activeStory||state.activeEncounter||(state.activeArc&&state.activeArc.id!==arcEpisode)||state.pendingDuel||state.day>90||!cast[id]||(!exhibition&&!currentPeople().includes(id)))return;
+ if(arcEpisode&&(!state.activeArc||state.activeArc.phase!=='choice'||!ARC.available(state,currentPeople()).some(e=>e.id===arcEpisode)))return;
+ const c=cast[id];
+ state.pendingDuel={id:'npc-'+id+'-'+state.day+'-'+state.slot+'-'+state.results.length,npc:id,day:state.day,slot:state.slot,opponent:c.deck,playerDeck:state.playerDeck,resolved:false,eventKey:exhibition?exhibition.day+':'+exhibition.title:null,eventReward:exhibition?exhibition.reward:0,eventTitle:exhibition?exhibition.title:null,arcEpisode:arcEpisode||null};
+ if(arcEpisode)state.activeArc=null;
+ persist();render();$('duel').hidden=false;$('battle').src=duelUrl(state.pendingDuel);
+}
 window.addEventListener('message',ev=>{
  const duel=state.pendingDuel;
  if(!BRIDGE.accepts(ev,location.origin,$('battle').contentWindow,duel))return;
@@ -238,10 +245,12 @@ window.addEventListener('message',ev=>{
  if(!receipt)return;
  for(const note of receipt.notes)log(note);
  const preparationNote=WORLD.afterDuel(state,receipt);if(preparationNote)log(preparationNote);
+ const personalOutcome=duel.arcEpisode?ARC.settleDuel(state,duel.arcEpisode,receipt):null;
+ if(personalOutcome)log('A special rivalry challenge reached its result.');
  state.lastDuelReceipt=receipt;state.pendingDuel=null;
  sessionStorage.removeItem(BRIDGE.sessionKey(duel.id));
  advance();$('duel').hidden=true;$('battle').src='about:blank';
- const c=cast[duel.npc];say(c.name,receipt.outcome==='Victory'?c.duelWin:receipt.outcome==='Draw'?'A hard-fought draw. Let us play again.':c.duelLose);
+ const c=cast[duel.npc];say(c.name,personalOutcome|| (receipt.outcome==='Victory'?c.duelWin:receipt.outcome==='Draw'?'A hard-fought draw. Let us play again.':c.duelLose));
 });
 function openCalendar(){
  const root=$('calendarEntries');root.replaceChildren();
