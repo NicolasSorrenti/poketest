@@ -47,8 +47,18 @@ function observation(game,side){
  // visible to the acting player and never reveal the opponent's private cards.
  const self={...view.players[side],energyUsed:!!game.players[side].energyUsed,
   retreated:!!game.players[side].retreated};
+ // Only expose decisions previously made BY this CPU in its own Trainer flow.
+ // The full pending action can include hidden draws and must never be projected.
+ const ownedPlan=game.pendingAction?.kind==='classic_trainer'&&
+  game.pendingAction.plan?.side===side?game.pendingAction.plan:null;
+ const selectedIndex=key=>{
+  const x=ownedPlan?.data?.[key]?.[0];
+  if(typeof x!=='string'||!/^slot:-?\\d+$/.test(x))return null;
+  return Number(x.slice(5));
+ };
  return {phase:view.phase,turn:view.turn,round:view.round,turnSerial:game.turnSerial,over:view.over,
   self,opponent:view.players[1-side],stadium:view.stadium,
+  pendingTrainerTarget:selectedIndex('target'),pendingTrainerSource:selectedIndex('source'),
   decision:view.pendingDecision,setupReady:!!game.setupReady[side]};
 }
 const card=id=>CATALOG.get(id);
@@ -329,9 +339,31 @@ function energyDenialValue(unit,defender,isActive){
  const potential=Math.min(15,future*4);
  return (isActive?1.3:.7)*(denied+ready+potential)+(isActive?32:0);
 }
+function energyRemovalChoiceValue(unit,defender,energyIndex,enemy){
+ if(!unit||!unit.energies?.[energyIndex])return 0;
+ const before=strongestAffordableAttack(unit,defender);
+ const after={...unit,energies:unit.energies.filter((_,i)=>i!==energyIndex)};
+ const remaining=strongestAffordableAttack(after,defender);
+ const denied=Math.max(0,before-remaining);
+ const removed=energyPool({energies:[unit.energies[energyIndex]]}).length;
+ const preventedKO=before>=hpRemaining(defender)&&remaining<hpRemaining(defender);
+ const control=denied*2+(preventedKO?130:0)+removed*7;
+ return enemy?control:-control;
+}
 function choiceValue(option,decision,o,cfg){
  const id=option.id,label=option.label||'',kind=decision.kind||'',ctx=decision.label||'';
  if(/^prize:/.test(id))return 1;
+ if(/^n:\\d+$/.test(id)&&cfg?.level>=3){
+  const index=Number(id.slice(2));
+  if(/^Choose opposing Energy to discard$/i.test(ctx)&&o.pendingTrainerTarget!==null){
+   const unit=slotUnit(o.opponent,o.pendingTrainerTarget);
+   return energyRemovalChoiceValue(unit,o.self.active,index,true);
+  }
+  if(/^Discard one of your attached Energy$/i.test(ctx)&&o.pendingTrainerSource!==null){
+   const unit=slotUnit(o.self,o.pendingTrainerSource);
+   return energyRemovalChoiceValue(unit,o.opponent.active,index,false);
+  }
+ }
  if(/^count:/.test(id))return /draw/i.test(ctx)?Number(id.slice(6))*20:0;
  if(/^energy:/.test(id)&&/discard|retreat|pay/i.test(ctx))return /Double Colorless|Rainbow/i.test(label)?-15:10;
  if(/^bench:/.test(id)||/^slot:/.test(id)){
