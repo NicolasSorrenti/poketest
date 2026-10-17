@@ -867,6 +867,18 @@ const settings={level:3,personality:'balanced',side:1,seed:47};
  o.self.deckCount=2;
  assert.ok(value(0)<pass,'Avoid gambling on cards when the deck is nearly exhausted');
 }
+{
+ const {arena,argumentsOf}=require('./benchmark_cpu');
+ const report=arena(argumentsOf(['--pairs','1','--max-turns','5','--seed','141019',
+  '--left-level','5','--right-level','5','--left-deck','cold_fusion',
+  '--right-deck','cold_fusion','--left-trainer-tactics','true']));
+ assert.equal(report.totalMatches,2);
+ assert.equal(report.baseline.deck,'cold_fusion');
+ assert.equal(report.challenger.deck,'cold_fusion');
+ assert.equal(report.baseline.trainerTactics,true);
+ assert.equal(report.illegalActions,0,
+  'The historical Neo Genesis format must allow legal Cold Fusion tournament games');
+}
 let duels=0,decisions=0,attacks=0,energy=0,evolutions=0,trainer=0;
 for(let seed=1;seed<=4;seed++){
  let game=createGame({decks:[deck,deck],seed:seed*1789,format:'classic'});
