@@ -29,9 +29,12 @@ A recognized attack signature or a handler name is **not** proof of complete his
 
 | **v0.68** | Two EXP.ALL holders, defender-owned choice and single Tool consumption, Focus Band saving versus EXP.ALL KO, Bench Focus Band splash damage, simultaneous Double-KO Prizes and promotions | [39045253800](https://github.com/NicolasSorrenti/poketest/actions/runs/39045253800) | [39045253794](https://github.com/NicolasSorrenti/poketest/actions/runs/39045253794) |
 
+| **v0.69** | Super Metronome and Sketch copy additional audited effect families: shield, healing, coin draw, Energy-coin attacks, basic locks and conditions; Super Metronome hides unpayable additional discard costs and consumes its turn on heads with no eligible targets | [39046656398](https://github.com/NicolasSorrenti/poketest/actions/runs/39046656398) | [39046656344](https://github.com/NicolasSorrenti/poketest/actions/runs/39046656344) |
+| **v0.70** | Actual prior-turn Sketch witness history verified with live Charizard Fire Spin, Benched Smeargle promotion, waived Fire Spin extra Energy discard, late witness, switched attacker, stale turn | [39046733590](https://github.com/NicolasSorrenti/poketest/actions/runs/39046733590) | [39046733585](https://github.com/NicolasSorrenti/poketest/actions/runs/39046733585) |
+
 The initial four milestones were pushed through commits `04ec8653df`, `f67e9ffe8b`, `84ab669080` and `8203947574`, followed by focused test and fix commits, including `8a082eb684`, `d726b28848`, `ac5475a463`, `5993873239`, and `88a7007255`. Other agents' RPG work was preserved; updates used forward-only `main` changes with no force-push.
 
-**Latest test chain:** `npm test` executes **151 sequential Node test commands**, including `test_neo_batch_v061.js` through `test_neo_batch_v068.js`. The `TCG Gameplay Regression` workflow runs it separately from the broader Node/RPG regression workflow.
+**Latest test chain:** `npm test` executes **153 sequential Node test commands**, including `test_neo_batch_v061.js` through `test_neo_batch_v070.js`. The `TCG Gameplay Regression` workflow runs it separately from the broader Node/RPG regression workflow.
 
 ## Coverage accounting (do not overclaim)
 
@@ -45,7 +48,7 @@ The initial four milestones were pushed through commits `04ec8653df`, `f67e9ffe8
 
 1. **Ecogym corner cases:** opponent-caused discards through Trainer, Dragonair attack, and Koga's Muk Power now have verified tests. Simultaneous compound discards on evolving/devolving or indistinguishable identical Pokémon, and Energy originally owned by a different player, require per-card instance tracking beyond the tested matching by surviving host. **Card-Flip Game:** face-up Prize data projects to both browser seats and spectators and its online/local Prize rail placement has a regression guard; actual cross-browser rendering/reconnect still lacks full browser automation.
 2. Focus Band / EXP.ALL now have tests for simultaneous Active KOs, Benched Focus Band, both coin outcomes, two EXP.ALL holders and exactly one selected Basic Energy. Remaining unverified cases include Poison-related KO timing, multiple simultaneous Bench KOs, defensive Pokémon Power suppression and attacker-induced replacement.
-3. Copied attacks (Sketch / Super Metronome / Gym copying) still exclude certain nested choices, payment/redirection chains, and opponent-controlled decisions.
+3. **Attack copying:** Super Metronome and Sketch now have focused actual decision, shield/heal/draw and witness-history regression tests. Still unsupported: unclassified effects, deeply nested targeting/redirection, copied subattacks needing opponent decisions, and some special Gym copy modes. The whitelist is intentionally conservative and the copied-printing pool is not represented as fully authenticated.
 4. Rainbow Energy named-type modifiers and Recycle Energy mixed discard/retrieval transactions still need a card-instance-level audit.
 5. Multi-Stadium replacement timing, some special Gym evolution exceptions, and older Trainer/Pokémon Power suppressed-status interactions still have edge cases.
 6. The CI suite exercises the shared authoritative reducer but does **not** certify a full two-browser live multiplayer session or independently verify a Render deployment.
@@ -53,7 +56,7 @@ The initial four milestones were pushed through commits `04ec8653df`, `f67e9ffe8
 
 ## Next priorities
 
-1. Expand attack-copy decisions for Super Metronome, Sketch and Gym effects, including nested target/payment chains; test several reactive Pokémon Powers under multi-KO + Stadium constraints.
+1. Expand the audited copied-attack whitelist only after implementing full nested targets, discards and opposing player choices; test real Super Metronome and Sketch matches across both Neo Discovery Smeargle printings.
 2. Extend Ecogym to rare duplicate-host and ownership-transfer paths with identity-based energy tracing; verify no false returns from Knock Outs and same-player costs.
 3. Run genuine two-browser acceptance for online face-up Prizes and Prize selection across reconnect/save/load, including Card-Flip Game and Here Comes Team Rocket! interactions.
 4. Re-run dedicated TCG, combined Node and CPU/multiplayer suites after fixes, and update this document only with reproducible pass/fail evidence.
