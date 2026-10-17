@@ -228,7 +228,10 @@ function driveSide(initial,{side=1,level=3,personality='balanced',seed=1,limit=2
  while(!game.over&&steps<limit){
   const beforeTurn=game.turnSerial;
   const next=chooseAction(game,{side,level,personality,seed},memo);
-  if(!next)break;
+  if(!next){
+   if(game.pendingDecision?.actor===side)throw Error('CPU unresolved choice: '+JSON.stringify({decision:game.pendingDecision,pendingAction:game.pendingAction}));
+   break;
+  }
   const a=next.command,signature=a.type+':'+JSON.stringify(a.payload);
   if(a.type==='play_trainer')memo.trainers++;
   if(a.type==='use_power'){memo.powers++;memo.powerKeys.add(a.payload.slot+':'+a.payload.powerIndex);}
