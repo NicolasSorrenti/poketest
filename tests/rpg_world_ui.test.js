@@ -90,3 +90,47 @@ test('duel battle result applies one preparation bonus only once',()=>{
  r.listeners.message(event);
  assert.equal(r.state().results.length,1);
 });
+
+
+test('a scheduled rivalry chapter plays multiple lines and saves its personal choices',()=>{
+ const r=launch({day:14,slot:2,location:'center',results:[{id:'earlier',npc:'reina',won:false,day:3}]});
+ const episode=r.elements.storyEvents.children.find(x=>x.className.includes('arc-episode'));
+ assert.ok(episode,'optional Reina chapter is visible after a previous match');
+ episode.onclick();
+ for(let i=0;i<3;i++)r.elements.choices.children[0].onclick();
+ assert.equal(r.state().activeArc.phase,'choice');
+ r.elements.choices.children[0].onclick();
+ assert.equal(r.state().activeArc.phase,'response');
+ r.elements.choices.children[0].onclick();
+ const state=r.state();
+ assert.ok(state.arcFlags.reina_rival_1);
+ assert.equal(state.activeArc,null);
+ assert.equal(state.day,15);
+ assert.equal(state.slot,0);
+});
+
+test('a private rivalry challenge launches the Classic duel and records a defeat branch once',()=>{
+ const r=launch({day:58,slot:2,location:'center',
+  arcFlags:{reina_rival_1:{day:14},reina_rival_2:{day:36}},
+  results:[{id:'old-1',npc:'reina',won:false,day:6},{id:'old-2',npc:'reina',won:false,day:12}],
+  insight:3});
+ const episode=r.elements.storyEvents.children.find(x=>x.className.includes('arc-episode'));
+ assert.ok(episode,'the trial unlocks through preparation even without a prior win');
+ episode.onclick();
+ for(let i=0;i<3;i++)r.elements.choices.children[0].onclick();
+ assert.equal(r.state().activeArc.phase,'choice');
+ r.elements.choices.children[0].onclick();
+ const pending=r.state().pendingDuel;
+ assert.ok(pending);
+ assert.equal(pending.arcEpisode,'reina_rival_trial');
+ const event={data:Bridge.message(pending.id,1),origin:r.loc.origin,source:r.elements.battle.contentWindow};
+ r.listeners.message(event);
+ const state=r.state();
+ assert.equal(state.arcFlags.reina_rival_trial.outcome,'Defeat');
+ assert.equal(state.activeArc,null);
+ assert.equal(state.results.length,3);
+ assert.equal(state.day,59);
+ assert.equal(state.slot,0);
+ r.listeners.message(event);
+ assert.equal(r.state().results.length,3);
+});
