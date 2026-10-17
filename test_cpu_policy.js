@@ -634,6 +634,7 @@ const settings={level:3,personality:'balanced',side:1,seed:47};
  assert.equal(ordinary.cpu.advancedTactics,false,
   'Existing casual matches must preserve prior CPU policy by default');
  assert.throws(()=>local.create({advancedTactics:'yes'}),/boolean/);
+ assert.throws(()=>local.create({advancedTactics:true,difficulty:2}),/require Expert or Champion/);
 }
 let duels=0,decisions=0,attacks=0,energy=0,evolutions=0,trainer=0;
 for(let seed=1;seed<=4;seed++){
