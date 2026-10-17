@@ -162,6 +162,43 @@ function prompt(g,plan,helpers){
   }
  }
 
+
+ // Neo v0.54: Trainer decisions are owner-specific and transactional.
+ if(name==='Energy Charge'){
+  if(!chosen(d,'chargeHeads'))d.chargeHeads=[helpers.flip(g)];
+  if(d.chargeHeads[0]&&!chosen(d,'recycle')){
+   const items=disc(p,c=>isEnergy(c));
+   if(items.length)return multi('recycle',side,items,0,Math.min(2,items.length),'Energy Charge: shuffle up to two Energy cards',true);
+   d.recycle=[];
+  }
+ }
+ if(name==='Ruin Wall'){
+  if(p.bench.length>=5)throw Error('Ruin Wall cannot be played with a full Bench');
+  if(!chosen(d,'ruinUnown')){
+   const items=deck(c=>c.supertype==='Pokémon'&&c.name.startsWith('Unown')&&c.subtypes?.includes('Basic'));
+   if(items.length)return multi('ruinUnown',side,items,0,1,'Ruin Wall: search for an Unown Basic',true);
+   d.ruinUnown=[];
+  }
+ }
+ if(name==='Old Rod'){
+  if(!chosen(d,'rodFlips'))d.rodFlips=[helpers.flip(g),helpers.flip(g)];
+  if(!chosen(d,'oldCard')){
+   const bothHeads=d.rodFlips.every(Boolean),bothTails=d.rodFlips.every(x=>!x);
+   const items=bothHeads?disc(p,c=>c.supertype==='Pokémon'):bothTails?disc(p,c=>c.supertype==='Trainer'):[];
+   if(items.length)return single('oldCard',side,items,'Old Rod: recover a card from discard',true);
+   d.oldCard=[];
+  }
+ }
+ if(name==="Team Rocket's Evil Deeds"){
+  if(!chosen(d,'evilCard')){
+   const items=options(zone(f.hand),'hand');
+   if(items.length)return single('evilCard',side,items,'Evil Deeds: select a card in opponent hand');
+   d.evilCard=[];
+  }
+  if(!chosen(d,'evilDraw')){
+   return single('evilDraw',1-side,[0,1,2].map(n=>({id:'count:'+n,label:'Draw '+n+' card(s)'})),'Evil Deeds: opponent chooses cards to draw');
+  }
+ }
  // Neo Genesis theme-deck Trainers (curated card pool only).
  if(name==='Moo-Moo Milk'&&!chosen(d,'healTarget'))return single('healTarget',side,own(u=>u.damage>0),'Choose Pokémon to heal');
  if(name==='Pokémon March'){
@@ -381,6 +418,45 @@ function commit(g,plan,h){
  if(['Computer Search','Item Finder',"Imposter Oak's Revenge",'Energy Retrieval'].includes(name))p.discard.push(...take(p.hand,picks('cost').map(i=>i>plan.handIndex?i-1:i)));
  if(name==='Maintenance')p.deck.push(...take(p.hand,picks('cost').map(i=>i>plan.handIndex?i-1:i)));
  switch(name){
+
+  case 'Arcade Game':{
+   p.deck=h.shuffle(g,p.deck);
+   const revealed=[];for(let i=0;i<3&&p.deck.length;i++)revealed.push(p.deck.pop());
+   const matched=revealed.find(id=>revealed.filter(x=>get(x).name===get(id).name).length>=2);
+   const gained=matched?revealed.filter(id=>get(id).name===get(matched).name):[];
+   const remaining=revealed.filter(id=>!gained.includes(id));
+   p.hand.push(...gained);p.deck=h.shuffle(g,[...p.deck,...remaining]);
+   h.log(g,'Arcade Game revealed '+revealed.map(id=>get(id).name).join(', ')+'.');
+   break;
+  }
+  case 'Energy Charge':{
+   if(d.chargeHeads?.[0])p.deck=h.shuffle(g,[...p.deck,...take(p.discard,picks('recycle'))]);
+   break;
+  }
+  case 'Ruin Wall':{
+   if(d.ruinUnown?.length){
+    if(p.bench.length>=5)throw Error('Ruin Wall Bench full');
+    const i=pick('ruinUnown'),id=p.deck[i],candidate=get(id);
+    if(candidate.supertype!=='Pokémon'||!candidate.name.startsWith('Unown')||!candidate.subtypes?.includes('Basic'))throw Error('Invalid Ruin Wall search');
+    p.bench.push(h.unit(take(p.deck,[i])[0],g.round));
+   }
+   p.deck=h.shuffle(g,p.deck);break;
+  }
+  case 'Old Rod':{
+   if(d.oldCard?.length){
+    const id=p.discard[pick('oldCard')],c=get(id),bothHeads=d.rodFlips.every(Boolean),bothTails=d.rodFlips.every(x=>!x);
+    if(!(bothHeads&&c.supertype==='Pokémon'||bothTails&&c.supertype==='Trainer'))throw Error('Illegal Old Rod recovery');
+    p.hand.push(...take(p.discard,picks('oldCard')));
+   }break;
+  }
+  case "Team Rocket's Evil Deeds":{
+   if(d.evilCard?.length){
+    const i=pick('evilCard');if(!f.hand[i])throw Error('Stale Evil Deeds opponent hand');
+    f.deck=h.shuffle(g,[...f.deck,...take(f.hand,[i])]);
+   }
+   const count=pick('evilDraw');if(!Number.isInteger(count)||count<0||count>2)throw Error('Invalid Evil Deeds draw');
+   h.draw(g,1-plan.side,count);break;
+  }
   case 'Chaos Gym':break;
   case "Lt. Surge's Secret Plan":{
    if(p.bench.length>=5)throw Error('Bench full for Secret Plan');
@@ -647,7 +723,7 @@ function answer(g,plan,response,h){
  const data={...plan.data,[plan.await]:response.decline?[]:[...response.selected]};
  return prompt(g,{...plan,data,await:null},h);
 }
-const SUPPORTED=new Set(['Energy Ark','Fossil Egg','Hyper Devolution Spray','Double Gust',"Bill's Teleporter",'Professor Elm','Moo-Moo Milk','Pokémon March','Super Rod','Bill','Professor Oak','Impostor Professor Oak',"Imposter Oak's Revenge",'Lass','Maintenance','Computer Search','Energy Search',"The Boss's Way",'Poké Ball','Pokémon Trader','Item Finder','Energy Retrieval','Nightly Garbage Run','Recycle','Pokédex','Gambler','Digger','Full Heal','Potion','Super Potion','Pokémon Center','Switch','Gust of Wind','Energy Removal','Super Energy Removal','Defender','PlusPower','Goop Gas Attack','Here Comes Team Rocket!',"Rocket's Sneak Attack",'Pokémon Flute','Revive','Mr. Fuji','Scoop Up','Devolution Spray','Pokémon Breeder','Challenge!','Sleep!',
+const SUPPORTED=new Set(['Arcade Game','Energy Charge','Ruin Wall','Old Rod',"Team Rocket's Evil Deeds",'Energy Ark','Fossil Egg','Hyper Devolution Spray','Double Gust',"Bill's Teleporter",'Professor Elm','Moo-Moo Milk','Pokémon March','Super Rod','Bill','Professor Oak','Impostor Professor Oak',"Imposter Oak's Revenge",'Lass','Maintenance','Computer Search','Energy Search',"The Boss's Way",'Poké Ball','Pokémon Trader','Item Finder','Energy Retrieval','Nightly Garbage Run','Recycle','Pokédex','Gambler','Digger','Full Heal','Potion','Super Potion','Pokémon Center','Switch','Gust of Wind','Energy Removal','Super Energy Removal','Defender','PlusPower','Goop Gas Attack','Here Comes Team Rocket!',"Rocket's Sneak Attack",'Pokémon Flute','Revive','Mr. Fuji','Scoop Up','Devolution Spray','Pokémon Breeder','Challenge!','Sleep!',
  'Brock',"Brock's Training Method",'Misty','Lt. Surge','Secret Mission','Erika',"Erika's Perfume",'Koga','Sabrina',"Sabrina's Gaze",'Blaine',"Blaine's Gamble",'Fervor','Max Revive','Giovanni','Warp Point',
  "Blaine's Last Resort","Erika's Kindness",'Good Manners','Master Ball',"Giovanni's Last Resort","Misty's Tears","Erika's Maids","The Rocket's Trap","Rocket's Secret Experiment",
  'No Removal Gym',"The Rocket's Training Gym",'Resistance Gym',"Rocket's Minefield Gym",'Transparent Walls',

@@ -1,0 +1,3 @@
+# Neo v0.54 — Trainer milestone
+
+Five additional trainer printings are implemented in the authoritative shared CPU/online rules engine: Arcade Game (3-card reveal, matching-name recovery), Energy Charge (coin and optional recycle of up to 2 Energy), Ruin Wall (owner-selected Unown Basic deck search to Bench), Old Rod (two-coin branching recovery), and Team Rocket's Evil Deeds (opponent hand targeting and opponent-selected 0–2 redraw). Server decisions preserve player ownership and avoid hidden-zone leaks through public logs. Cards are registered in curated Neo decks, with focused interaction tests. Remaining Neo Trainers and historical timing corner cases are not yet certified.
