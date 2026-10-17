@@ -108,6 +108,18 @@ GitHub Actions CPU AI regression additionally runs the existing Classic local CP
 - Remaining tasks: distinguish truly guaranteed KOs from protective effects and redirected attacks, avoid speculative retreats, benchmark across different Gym and Neo deck themes, and measure independent seeds and strategic decisions over a larger statistically informative sample.
 - PR #11 remains draft; PR #9 is already merged into `main`. No historical rules, RPG story or duel UI code was changed during these experiments.
 
+## 95%-win target and graded tactical response (latest continuation)
+
+- Explicit user acceptance target: **lower difficulty wins no more than 5% of decisive games against each adjacent higher difficulty**. Draws/timeouts are separately reported. `benchmark_cpu.js` now includes a 5% upset target, observed pass/fail, and **Wilson 95% upper-bound** statistical verification; `benchmark_cpu_tiers.js` audits all four adjacent matchups across equal-theme decks with swapped starting positions and independent seeded cohorts. `--strict` can fail a run if calibration is not verified, but is intentionally not activated while this is an unfinished milestone.
+- First 240-game independent audit (15 pairs × two decks): lower-level win rates **43.3% (1 vs 2), 33.9% (2 vs 3), 51.7% (3 vs 4), 56.7% (4 vs 5)**. The old difficulty hierarchy is far from target; higher levels even lose more often in the top two tiers. This is an explicit **unmet requirement**, not a pass.
+- CI now performs a **larger 640-game adjacent-tier audit**, 40 pairs per deck, allowing a meaningful 5% confidence ceiling if there were almost no lower-tier wins. The full CPU CI matrix has grown to cover this audit and A/B experimental matchups.
+- Added opt-in `knockoutTempo` tactical evaluation: prioritize a guaranteed KO, especially match wins, but build essential Backup Pokémon before risking the last one. Separate 140-game comparison: **70–68** with two draws, no clear evidence of skill improvement.
+- Added opt-in `opponentResponse`: bounded one-ply counterattack check with **visible** opposing Energy, projected damage, own powered Bench, opponent statuses and no private deck/hand reads. Avoid moving to a passive/unpowered replacement; never flee if the current Active can take a near-certain KO. Separate 140-game comparison: **74–66**; not enough evidence to enable it automatically.
+- Combined `prizeRace` + `knockoutTempo` + `opponentResponse` A/B on two decks: **64–56** vs identical Champion policy, and **63–57** vs Expert. Modest and **far below 95%**. All tactical experiments therefore remain disabled by default.
+- Exposed these combined, public-state-only experimental tactics to the actual authoritative local duel service via `ClassicLocalService.create({difficulty:5,advancedTactics:true})`, also permitted at level 4. Requests at levels 1–3 reject the switch rather than claiming to enable a disabled feature. The standard CPU and established NPC difficulty defaults are unchanged; regressions cover this contract.
+- Added `docs/cpu-ai-calibration.md` with reproducible commands, fairness constraints, statistical acceptance and exact results. Never manipulate random flips, private opponent data or historical game rules merely to make win rates cross 95%.
+- Continuing: build a genuinely stronger Champion evaluation of Trainer combinations and future Prize tempo, examine loss transcripts/decision mistakes, and use matched large seeded tournaments across multiple deck archetypes before marking tier separation complete.
+
 ## Known limitations and next work
 
 1. Verify green CI on all affected and full regression suites. 
