@@ -665,6 +665,39 @@ const settings={level:3,personality:'balanced',side:1,seed:47};
  assert.equal(comparison.baseline.graduatedNoise,true);
  assert.equal(comparison.challenger.graduatedNoise,true);
 }
+{
+ // Live combat option forecasts only cards already in the CPU hand: attaching
+ // a second Fighting Energy to Machoke permits a third Energy next turn, which
+ // unlocks Karate Chop. No guessed top-deck or future coin result is involved.
+ const g=createGame({decks:[deck,deck],seed:555,format:'classic'});
+ const o=AI.observation(g,1);o.phase='game';o.turn=1;o.round=5;
+ o.self.active={id:'base1-34',damage:0,status:null,energies:[IDS.fight],playedTurn:2};
+ o.self.bench=[];
+ o.self.hand=[IDS.fight,IDS.fight];
+ o.self.energyUsed=false;
+ o.opponent.active={id:IDS.hit,damage:0,energies:[IDS.fight],status:null};
+ const action={type:'attach_energy',payload:{handIndex:0,slot:-1}};
+ const cfg=AI.configuration({side:1,level:5,energyHorizon:true});
+ const normal=AI.configuration({side:1,level:5});
+ const future=AI.energyHorizonBonus(action,o,cfg);
+ assert.ok(future>AI.energyHorizonBonus(action,o,normal),
+  'Champion must recognize a second Energy plus known hand Energy unlocks a future attack');
+ const withTwo=structuredClone(o);
+ withTwo.self.hand=[IDS.fight];
+ assert.ok(AI.energyHorizonBonus(action,withTwo,cfg)<future,
+  'Do not hallucinate a third future Energy card absent from own hand');
+ const status=structuredClone(o);status.opponent.active.status='Paralyzed';
+ assert.equal(AI.energyHorizonBonus(action,status,cfg),
+  AI.energyHorizonBonus(action,o,cfg),
+  'Forecast must never use a future opponent RNG outcome');
+ assert.equal(AI.configuration({level:5}).energyHorizon,false);
+ assert.throws(()=>AI.configuration({energyHorizon:'yes'}),/energy-horizon/);
+ const {arena,argumentsOf}=require('./benchmark_cpu');
+ const result=arena(argumentsOf(['--pairs','1','--max-turns','4','--left-level','5',
+  '--right-level','5','--left-energy-horizon','true','--right-energy-horizon','false']));
+ assert.equal(result.baseline.energyHorizon,true);
+ assert.equal(result.challenger.energyHorizon,false);
+}
 let duels=0,decisions=0,attacks=0,energy=0,evolutions=0,trainer=0;
 for(let seed=1;seed<=4;seed++){
  let game=createGame({decks:[deck,deck],seed:seed*1789,format:'classic'});
