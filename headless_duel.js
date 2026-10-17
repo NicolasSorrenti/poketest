@@ -484,12 +484,14 @@ function performAction(g,side,cmd){
    const opponent=g.players[1-pending.side];
    if(!Number.isInteger(copyIndex)||!card(g,opponent.active.id).attacks?.[copyIndex])fail('Invalid ESP copied attack');
    const copied=ATTACK.compile(card(g,opponent.active.id).attacks[copyIndex]);
-   if(['bench-target','switch-attacker','switch-self'].includes(copied?.kind)){
+   if(['bench-target','switch-attacker','switch-self','target-any','target-any-coin'].includes(copied?.kind)){
     const targetOwner=copied.kind==='switch-self'?g.players[pending.side]:opponent;
-    if(targetOwner.bench.length){
+    const selectable=targetOwner.bench.map((u,i)=>({id:`bench:${i}`,label:publicName(g,u)}));
+    if(['target-any','target-any-coin'].includes(copied.kind))selectable.unshift({id:'bench:-1',label:'Active: '+publicName(g,opponent.active)});
+    if(selectable.length){
      g.nextDecisionId++;
-     const label=copied.kind==='bench-target'?"Misty's Psyduck ESP: choose opposing Benched Pokémon":copied.kind==='switch-self'?"Misty's Psyduck ESP: choose your replacement Active Pokémon":"Misty's Psyduck ESP: choose an opposing Pokémon to switch in";
-     g.pendingDecision=makeDecision({id:`psyduckTarget:${g.nextDecisionId}`,actor:pending.side,kind:'pokemon-target',label,options:targetOwner.bench.map((u,i)=>({id:`bench:${i}`,label:publicName(g,u)})),min:1,max:1});
+     const label=copied.kind==='bench-target'?"Misty's Psyduck ESP: choose opposing Benched Pokémon":copied.kind==='switch-self'?"Misty's Psyduck ESP: choose your replacement Active Pokémon":"Misty's Psyduck ESP: choose the copied attack target";
+     g.pendingDecision=makeDecision({id:`psyduckTarget:${g.nextDecisionId}`,actor:pending.side,kind:'pokemon-target',label,options:selectable,min:1,max:1});
      g.pendingAction={kind:'psyduck_esp_bench',side:pending.side,attackIndex:pending.attackIndex,roll:pending.roll,extra:{...pending.extra,psyduckCopyIndex:copyIndex}};return;
     }
    }
@@ -501,7 +503,7 @@ function performAction(g,side,cmd){
    const chosenAttack=card(g,defender.active.id).attacks[pending.extra.psyduckCopyIndex];
    const script=ATTACK.compile(chosenAttack);
    const targetOwner=script?.kind==='switch-self'?g.players[pending.side]:defender;
-   if(!Number.isInteger(index)||!targetOwner.bench[index])fail('Illegal ESP Bench selection');
+   if(!Number.isInteger(index)||!(index===-1&&['target-any','target-any-coin'].includes(script?.kind)&&defender.active)&&!targetOwner.bench[index])fail('Illegal ESP Bench selection');
    g.pendingDecision=null;g.pendingAction=null;
    resolveAttack(g,pending.side,pending.attackIndex,index,undefined,{...pending.extra,preRoll:pending.roll,confusionChecked:true,attackPenaltyChecked:true});return;
   }
@@ -1366,7 +1368,7 @@ function resolveAttack(g,side,index,chosenBench,energyPicks,extra={}){
    const script=ATTACK.compile(attack);
    // Effects that involve new targets, payments, mode choices, or copied
    // attacks need a separate decision chain and must not execute as flat damage.
-   return script&&(script.kind!=='bench-target'||f.bench.length>0)&&['bench-target','flat','status','coin-status','coin-times','coin-bonus','coin-status-split','coin-failure','draw-one','defender-counters','own-counters','flail-counters','minus-counters','bench-count','coin-times-short','ignore-weakness','coin-recoil-bonus','recoil','coin-recoil','bench-own','bench-both-recoil','bench-splash-coin','switch-self','switch-attacker','switch-defender'].includes(script.kind)?[{id:`attack:${i}`,label:attack.name}]:[];
+   return script&&(script.kind!=='bench-target'||f.bench.length>0)&&['bench-target','target-any','target-any-coin','flat','status','coin-status','coin-times','coin-bonus','coin-status-split','coin-failure','draw-one','defender-counters','own-counters','flail-counters','minus-counters','bench-count','coin-times-short','ignore-weakness','coin-recoil-bonus','recoil','coin-recoil','bench-own','bench-both-recoil','bench-splash-coin','switch-self','switch-attacker','switch-defender','coin-shield','damage-shield','coin-attack-lock','coin-heal-one','drain','leech-seed','coin-draw','energy-coins'].includes(script.kind)?[{id:`attack:${i}`,label:attack.name}]:[];
   });
   if(extra.psyduckCopyIndex===undefined){
    if(copyable.length){g.nextDecisionId++;g.pendingDecision=makeDecision({id:`psyduck:${g.nextDecisionId}`,actor:side,kind:'opponent-attack',label:`Misty's Psyduck ESP: 3 heads! Copy a Defending Pokémon attack`,options:copyable,min:1,max:1});g.pendingAction={kind:'psyduck_esp_copy',side,attackIndex:index,roll,extra};return;}
@@ -1374,9 +1376,10 @@ function resolveAttack(g,side,index,chosenBench,energyPicks,extra={}){
   }
   if(!copyable.some(o=>o.id===`attack:${extra.psyduckCopyIndex}`))fail('Copied attack requires an interactive effect handler');
   const copied=ATTACK.compile(card(g,f.active.id).attacks[extra.psyduckCopyIndex]);
-  if(['bench-target','switch-attacker','switch-self'].includes(copied.kind)){
+  if(['bench-target','switch-attacker','switch-self','target-any','target-any-coin'].includes(copied.kind)){
    const replacement=copied.kind==='switch-self'?p:f;
-   if(replacement.bench.length&&(!Number.isInteger(chosenBench)||!replacement.bench[chosenBench]))fail('Copied attack needs a legal Bench choice');
+   if(replacement.bench.length&&(!Number.isInteger(chosenBench)||!replacement.bench[chosenBench])&&!(chosenBench===-1&&['target-any','target-any-coin'].includes(copied.kind)))fail('Copied attack needs a legal Bench choice');
+   if(['target-any','target-any-coin'].includes(copied.kind)&&!replacement.bench.length&&chosenBench!==-1)fail('Copied attack needs its Active target');
   }
   const effect=ATTACK.resolve(copied,()=>next(g,2)===1,coreContext);
   roll={...effect,flips:[...roll.flips,...(effect.flips||[])],gymPsyduckHeads:3};
