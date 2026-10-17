@@ -12,3 +12,14 @@
 @media(max-width:1400px){.topbar{gap:14px;padding:14px}.layout{grid-template-columns:205px minmax(430px,1fr) 265px;gap:10px;padding:10px}.scene{min-height:600px}.sidebar{max-height:none}}
 @media(max-width:1050px){.topbar{grid-template-columns:1fr minmax(250px,1fr) auto}.season-widget{grid-column:1 / -1;grid-row:2}.layout{grid-template-columns:185px 1fr}.sidebar{grid-column:1 / -1;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:4px 25px}.scene{min-height:600px;height:650px}.utilitybar{flex-wrap:wrap}}
 @media(max-width:700px){.topbar{display:flex;align-items:stretch;flex-direction:column;gap:12px}.clock{order:2}.season-widget{order:1}.save-btn{position:absolute;right:14px;top:14px}.brand{padding-right:90px}.utilitybar{padding:10px;gap:10px}.utility-left{font-size:10px}.utility-actions{width:100%;display:grid;grid-template-columns:1fr 1fr 1.3fr}.toolbar-btn,.time-advance{font-size:11px;padding:10px 5px}.layout{display:flex;flex-direction:column;padding:9px}.locations-panel{padding:13px}.locations-panel>p,.legend{display:none}.locations-panel h2{margin-bottom:12px}#places{display:flex;overflow-x:auto}.place{flex:none;min-width:140px}.scene{height:580px;min-height:580px}.scene-head{top:14px;left:13px}.portrait{width:85%;right:-10%;bottom:170px}.dialogue{bottom:10px;left:8px;right:8px;padding:12px;max-height:55%}.dialogue p{font-size:13px}.dialogue-title #speaker{font-size:20px}.sidebar{display:block}.scene-foot span:last-child{display:none}footer span{display:none}.home-banner{font-size:15px;width:92%}}
+
+/* Integration feedback: compact progress result, sightings, and accessible action focus. */
+[hidden]{display:none!important}
+.town-pulse{margin-top:10px;padding:11px;background:#111b2c;border:1px solid #35445a;border-radius:9px;color:#bac5d4}
+.town-pulse:empty{display:none}
+.town-pulse strong{font:800 11px 'Barlow Condensed',sans-serif;letter-spacing:1px;color:#ffadc4}
+.town-pulse p{margin:7px 0 0;font:500 11px/1.5 'Inter',sans-serif;color:#b8c4d4}
+.duel-report{position:absolute;z-index:5;top:141px;left:25px;max-width:calc(100% - 50px);background:linear-gradient(95deg,#252640f5,#50304bf0);border:1px solid #e6a6c4;border-radius:7px;padding:10px 13px;color:#ffdbdf;font:800 12px 'Barlow Condensed',sans-serif;letter-spacing:.6px;box-shadow:0 9px 25px #0009}
+button:focus-visible,a:focus-visible,select:focus-visible{outline:3px solid #ffb5d4;outline-offset:3px}
+@media(max-width:700px){.duel-report{left:13px;top:125px;font-size:11px;max-width:calc(100% - 26px)}}
+@media(prefers-reduced-motion:reduce){.notice-pop{animation-duration:.01ms}}
