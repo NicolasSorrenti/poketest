@@ -2025,7 +2025,13 @@ function knockOuts(g,after){
    if(CLASSIC_POWERS.enabled(g,victim,'Energy Drain')&&victim.gymDrainSerial!==g.turnSerial){
     victim.gymDrainSerial=g.turnSerial;
     if(next(g,2)===1&&attacker?.energies.length){
-     if(attacker.energies.length===1)g.players[attacking.side].discard.push(attacker.energies.pop());
+     if(attacker.energies.length===1){
+      const removed=attacker.energies.pop();
+      g.players[attacking.side].discard.push(removed);
+      // Energy Drain is the defending player's Power, even when automatic.
+      // The invoking attacker's seat must not be mistaken for the discarder.
+      (g.ecogymDiscardCauses ||= []).push({owner:attacking.side,source:defenderSide,id:removed});
+     }
      else{g.nextDecisionId++;g.pendingDecision=makeDecision({id:`energyDrain:${g.nextDecisionId}`,actor:defenderSide,kind:'energy-discard',label:'Koga’s Muk: choose Energy to discard from attacking Pokémon',options:attacker.energies.map((id,i)=>({id:`energy:${i}`,label:card(g,id).name})),min:1,max:1});
       g.pendingAction={kind:'gym_energy_drain',attackerSide:attacking.side,defenderSide,after};return true;}
     }
@@ -2255,6 +2261,8 @@ function reduce(game,actor,command){
 // by the OTHER player's attack / Power / Trainer, excluding KO and any
 // Colorless-only Energy. This runs after each authoritative command/decision.
 function returnEcogymEnergy(before,after,actor,cmd){
+ const causes=after.ecogymDiscardCauses||[];
+ delete after.ecogymDiscardCauses;
  const stadium=before.stadium||after.stadium;
  if(!stadium||card(before,stadium.id).name!=='Ecogym')return;
  const pending=before.pendingAction;
@@ -2263,7 +2271,7 @@ function returnEcogymEnergy(before,after,actor,cmd){
  // Every returned Energy must have been ATTACHED to a surviving Pokémon
  // before the current action, not newly discarded from a Knocked Out card.
  for(let ownerSide=0;ownerSide<2;ownerSide++){
-  if(source===ownerSide)continue;
+  if(source===ownerSide&&!causes.some(z=>z.owner===ownerSide&&z.source!==ownerSide))continue;
   const prev=before.players[ownerSide],now=after.players[ownerSide];
   const beforeUnits=allPokemon(prev),afterUnits=allPokemon(now),matched=new Set();
   const lost=[];
@@ -2287,6 +2295,7 @@ function returnEcogymEnergy(before,after,actor,cmd){
   const oldCount=id=>prev.discard.filter(x=>x===id).length;
   const newCount=id=>now.discard.filter(x=>x===id).length;
   for(const id of lost){
+   if(source===ownerSide&&!causes.some(z=>z.owner===ownerSide&&z.source!==ownerSide&&z.id===id))continue;
    if(newCount(id)<=oldCount(id))continue;
    const index=now.discard.lastIndexOf(id);
    if(index<0)continue;
