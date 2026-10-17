@@ -80,8 +80,13 @@ for(const id of require('./neo_v062_pool').ids){assert.equal(FORMAT.isAllowed(id
  assert.equal(g.pendingDecision.actor,0);choice(g,['slot:-1']);
  assert.equal(g.players[0].active.attachedTrainers[0].id,'neo1-93');
  g.players[0].hand=['neo1-94'];
+ send(g,0,'play_trainer',{handIndex:0});
+ assert.ok(g.pendingDecision.options.every(x=>x.id!=='slot:-1'),'Tool holder excluded from subsequent attachment choices');
+ choice(g,['slot:0']);
+ assert.equal(g.players[0].bench[0].attachedTrainers[0].id,'neo1-94');
+ g.players[0].hand=['neo1-93'];
  const rejected=applyCommand(g,0,{type:'play_trainer',payload:{handIndex:0}});
- assert.equal(rejected.ok,false,'Only one Pokémon Tool may be attached');
- assert.equal(g.players[0].hand[0],'neo1-94','Rejected tool play retains hand');
+ assert.equal(rejected.ok,false,'No Pokémon accepts a second Pokémon Tool');
+ assert.equal(g.players[0].hand[0],'neo1-93','Rejected tool play keeps hand');
 }
 console.log('PASS v0.62: Berry/Gold/Miracle start-turn and between-turn timing, status, threshold, owner choices, Tool restrictions');
