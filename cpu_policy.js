@@ -299,8 +299,21 @@ function choiceValue(option,decision,o){
   const n=Number(id.split(':')[1]),own=/your|friendly|own|promot|receiv|retreat/i.test(ctx)&&!/opponent|opposing|enemy/i.test(ctx);
   const target=slotUnit(own?o.self:o.opponent,n);
   if(!target)return 0;
-  if(/promot|retreat|switch.*your/i.test(ctx))return setupValue(target)+energyValue(target,'base1-97')+hpRemaining(target)/3;
-  if(/damage|attack|gust|opposing/i.test(ctx))return 110-hpRemaining(target);
+  if(/promot|retreat|switch.*your/i.test(ctx)){
+   const damage=strongestAffordableAttack(target,o.opponent.active);
+   const incoming=strongestAffordableAttack(o.opponent.active,target);
+   const survives=hpRemaining(target)>incoming;
+   // Pick a ready attacker that can survive the public opposing Active, not
+   // whichever Bench Pokémon appears largest or needs imaginary Fighting Energy.
+   return setupValue(target)*.5+damage*1.6+hpRemaining(target)*.4+
+    (damage>=hpRemaining(o.opponent.active)&&hpRemaining(o.opponent.active)>0?125:0)+
+    (survives?32:-65);
+  }
+  if(/damage|attack|gust|opposing|opponent/i.test(ctx)){
+   const damage=strongestAffordableAttack(o.self.active,target);
+   const lethal=damage>=hpRemaining(target)&&hpRemaining(target)>0;
+   return 100-hpRemaining(target)+damage*.8+(lethal?225:0);
+  }
   return own?setupValue(target):110-hpRemaining(target);
  }
  if(/^hand:|^deck:/.test(id))return /Energy/i.test(label)?20:40;
