@@ -43,9 +43,9 @@
 ## Quality gates and tests
 
 - Command: \`npm run test:rpg\` (Node built-in test runner, test files \`tests/rpg_story.test.js\`, \`tests/rpg_systems.test.js\` and \`tests/rpg_ui.test.js\`).
-- Current test cases: 23 (17 unit/logic, 6 simulated controller smoke). Story registry contains 44 events, with validated links and windows. Module-source scenarios and isolated simulated DOM checks have passed.
+- Current test cases: 25 (19 unit/logic, 6 simulated controller smoke). Story registry contains 44 events, with validated links and windows. Module-source scenarios and isolated simulated DOM checks have passed.
 - Syntax checked for RPG/duel-bridge JS, exact HTML IDs and server script whitelist.
-- **Execution caveat:** this agent's runtime cannot clone GitHub through the shell, so the Node command and live Render browser run have *not* been executed here. The 23 authored assertions were exercised in a JavaScript evaluator against fetched connector sources, including a mock DOM with asynchronous catalog loading. Verify with \`npm run test:rpg\` and a real browser before calling the milestone production stable.
+- **Execution caveat:** this agent's runtime cannot clone GitHub through the shell, so the Node command and live Render browser run have *not* been executed here. The 25 authored assertions were exercised in a JavaScript evaluator against fetched connector sources, including a mock DOM with asynchronous catalog loading. Verify with \`npm run test:rpg\` and a real browser before calling the milestone production stable.
 - Essential manual checks: first launch, home sleep/day rollover, entering late-game shop, opening a paid bundle, editing/playing an owned custom deck, a full two-match Cup, losing another Cup, returning after reload mid-story and mid-duel, finishing day 90 and starting NG+.
 - Avoid changing existing multiplayer or the standalone Classic deck-builder storage.
 
