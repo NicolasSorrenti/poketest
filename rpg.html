@@ -136,6 +136,14 @@
   <div id="marketCards"></div>
  </div>
 </dialog>
+<dialog id="finaleDialog" class="modal finale-dialog">
+ <div class="modal-heading"><h2 id="finaleTitle">The Season Ends</h2><button id="finaleClose" type="button">✕ Close</button></div>
+ <p id="finaleCompetitive"></p><p id="finaleRelationship"></p>
+ <h3 id="finaleQuestion">What comes next?</h3>
+ <div id="finaleChoices"></div>
+ <p id="finaleClosing"></p>
+ <button id="finaleNewGame" class="time-advance" type="button" hidden>New Game+ · Retain your cards</button>
+</dialog>
 <div id="duel" hidden>
  <div class="duelhead"><strong>NEO CAMPUS · OFFICIAL TCG DUEL ENGINE</strong><span>The RPG clock advances after the match finishes.</span></div>
  <iframe id="battle" title="Neo Campus TCG Duel"></iframe>
@@ -145,6 +153,7 @@
 <script src="/rpg_world.js"></script>
 <script src="/rpg_circuit.js"></script>
 <script src="/rpg_market.js"></script>
+<script src="/rpg_finale.js"></script>
 <script src="/rpg.js"></script>
 </body>
 </html>
