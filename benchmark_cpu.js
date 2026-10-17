@@ -9,17 +9,18 @@ const {driveSide,configuration}=require('./cpu_policy');
 const {ClassicLocalService}=require('./classic_local_service');
 
 function argumentsOf(argv){
- const opts={pairs:8,maxTurns:90,seed:7391,leftLevel:5,rightLevel:1,personality:'balanced',leftDeck:'blackout',rightDeck:'blackout',leftPlanning:null,rightPlanning:null,leftEvolutionTempo:null,rightEvolutionTempo:null,leftPrizeRace:null,rightPrizeRace:null,targetUpsetRate:0.05,logs:null};
+ const opts={pairs:8,maxTurns:90,seed:7391,leftLevel:5,rightLevel:1,personality:'balanced',leftDeck:'blackout',rightDeck:'blackout',leftPlanning:null,rightPlanning:null,leftEvolutionTempo:null,rightEvolutionTempo:null,leftPrizeRace:null,rightPrizeRace:null,leftKnockoutTempo:null,rightKnockoutTempo:null,targetUpsetRate:0.05,logs:null};
  const keys={'--pairs':'pairs','--max-turns':'maxTurns','--seed':'seed','--left-level':'leftLevel','--right-level':'rightLevel',
   '--personality':'personality','--left-deck':'leftDeck','--right-deck':'rightDeck',
   '--left-planning':'leftPlanning','--right-planning':'rightPlanning',
   '--left-evolution-tempo':'leftEvolutionTempo','--right-evolution-tempo':'rightEvolutionTempo',
   '--left-prize-race':'leftPrizeRace','--right-prize-race':'rightPrizeRace',
+  '--left-knockout-tempo':'leftKnockoutTempo','--right-knockout-tempo':'rightKnockoutTempo',
   '--target-upset-rate':'targetUpsetRate','--logs':'logs'};
  for(let i=0;i<argv.length;i++){
   const k=keys[argv[i]];if(!k||i===argv.length-1)throw Error('Unknown or incomplete option '+argv[i]);
   const value=argv[++i];
-  if(['leftPlanning','rightPlanning','leftEvolutionTempo','rightEvolutionTempo','leftPrizeRace','rightPrizeRace'].includes(k)){
+  if(['leftPlanning','rightPlanning','leftEvolutionTempo','rightEvolutionTempo','leftPrizeRace','rightPrizeRace','leftKnockoutTempo','rightKnockoutTempo'].includes(k)){
    if(!['true','false'].includes(value))throw Error('Planning must be true or false');
    opts[k]=value==='true';
   }else opts[k]=['pairs','maxTurns','seed','leftLevel','rightLevel','targetUpsetRate'].includes(k)?Number(value):value;
@@ -27,8 +28,8 @@ function argumentsOf(argv){
  if(!Number.isInteger(opts.pairs)||opts.pairs<1||opts.pairs>1000)throw Error('pairs must be between 1 and 1000');
  if(!Number.isInteger(opts.maxTurns)||opts.maxTurns<1||opts.maxTurns>1000)throw Error('Invalid max-turns');
  if(!Number.isFinite(opts.targetUpsetRate)||opts.targetUpsetRate<0||opts.targetUpsetRate>=.5)throw Error('Invalid target upset rate');
- configuration({level:opts.leftLevel,personality:opts.personality,planning:opts.leftPlanning??undefined,evolutionTempo:opts.leftEvolutionTempo??undefined,prizeRace:opts.leftPrizeRace??undefined});
- configuration({level:opts.rightLevel,personality:opts.personality,planning:opts.rightPlanning??undefined,evolutionTempo:opts.rightEvolutionTempo??undefined,prizeRace:opts.rightPrizeRace??undefined});
+ configuration({level:opts.leftLevel,personality:opts.personality,planning:opts.leftPlanning??undefined,evolutionTempo:opts.leftEvolutionTempo??undefined,prizeRace:opts.leftPrizeRace??undefined,knockoutTempo:opts.leftKnockoutTempo??undefined});
+ configuration({level:opts.rightLevel,personality:opts.personality,planning:opts.rightPlanning??undefined,evolutionTempo:opts.rightEvolutionTempo??undefined,prizeRace:opts.rightPrizeRace??undefined,knockoutTempo:opts.rightKnockoutTempo??undefined});
  return opts;
 }
 function wilson(wins,n,z=1.96){
@@ -38,8 +39,8 @@ function wilson(wins,n,z=1.96){
  return {lower:Math.max(0,mid-half),upper:Math.min(1,mid+half)};
 }
 function duel(opts,number,swap,decks){
- const profile=[{level:opts.leftLevel,personality:opts.personality,planning:opts.leftPlanning??undefined,evolutionTempo:opts.leftEvolutionTempo??undefined,prizeRace:opts.leftPrizeRace??undefined,seed:opts.seed+number*4001+13},
-                {level:opts.rightLevel,personality:opts.personality,planning:opts.rightPlanning??undefined,evolutionTempo:opts.rightEvolutionTempo??undefined,prizeRace:opts.rightPrizeRace??undefined,seed:opts.seed+number*4001+31}];
+ const profile=[{level:opts.leftLevel,personality:opts.personality,planning:opts.leftPlanning??undefined,evolutionTempo:opts.leftEvolutionTempo??undefined,prizeRace:opts.leftPrizeRace??undefined,knockoutTempo:opts.leftKnockoutTempo??undefined,seed:opts.seed+number*4001+13},
+                {level:opts.rightLevel,personality:opts.personality,planning:opts.rightPlanning??undefined,evolutionTempo:opts.rightEvolutionTempo??undefined,prizeRace:opts.rightPrizeRace??undefined,knockoutTempo:opts.rightKnockoutTempo??undefined,seed:opts.seed+number*4001+31}];
  const roleForSide=swap?[1,0]:[0,1];
  const source=swap?[decks[1],decks[0]]:decks;
  let game=createGame({decks:source,format:'classic',seed:opts.seed+number*11+101});
@@ -96,11 +97,13 @@ function arena(opts){
  const report={baseline:{level:opts.leftLevel,deck:opts.leftDeck,
     planning:configuration({level:opts.leftLevel,planning:opts.leftPlanning??undefined}).planning,
     evolutionTempo:configuration({level:opts.leftLevel,evolutionTempo:opts.leftEvolutionTempo??undefined}).evolutionTempo,
-    prizeRace:configuration({level:opts.leftLevel,prizeRace:opts.leftPrizeRace??undefined}).prizeRace},
+    prizeRace:configuration({level:opts.leftLevel,prizeRace:opts.leftPrizeRace??undefined}).prizeRace,
+    knockoutTempo:configuration({level:opts.leftLevel,knockoutTempo:opts.leftKnockoutTempo??undefined}).knockoutTempo},
   challenger:{level:opts.rightLevel,deck:opts.rightDeck,
     planning:configuration({level:opts.rightLevel,planning:opts.rightPlanning??undefined}).planning,
     evolutionTempo:configuration({level:opts.rightLevel,evolutionTempo:opts.rightEvolutionTempo??undefined}).evolutionTempo,
-    prizeRace:configuration({level:opts.rightLevel,prizeRace:opts.rightPrizeRace??undefined}).prizeRace},
+    prizeRace:configuration({level:opts.rightLevel,prizeRace:opts.rightPrizeRace??undefined}).prizeRace,
+    knockoutTempo:configuration({level:opts.rightLevel,knockoutTempo:opts.rightKnockoutTempo??undefined}).knockoutTempo},
   personality:opts.personality,pairs:opts.pairs,totalMatches:matches.length,conclusiveMatches:conclusive.length,
   wins,losses,drawsOrTimeouts:matches.length-conclusive.length,
   deckOutLossesByRole:[0,1].map(role=>matches.filter(x=>x.endReason==='deckout'&&x.winner===1-role).length),
