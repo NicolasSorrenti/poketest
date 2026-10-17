@@ -28,10 +28,10 @@ test('new game, free travel, NPC challenge, duel result, reload and second duel'
  const store=new Map(),sessions=new Map();let app=boot(store,sessions),s=app.read();
  assert.equal(s.day,1);assert.equal(s.slot,0);assert.equal(s.location,'home');
  assert.match(app.ids.whereLabel.textContent,/HOME/);
- click(app.ids.places,'The Lucky Draw');s=app.read();assert.equal(s.location,'shop');assert.equal(s.slot,0);
+ click(app.ids.places,'Pixel Palace');s=app.read();assert.equal(s.location,'arcade');assert.equal(s.slot,0);
  app.ids.quickNext.onclick();s=app.read();assert.equal(s.slot,1);
- assert.ok(app.ids.people.children.some(x=>label(x).includes('Reina Kurogane')));
- click(app.ids.people,'Reina Kurogane');
+ assert.ok(app.ids.people.children.some(x=>label(x).includes('Yuna Hoshino')));
+ click(app.ids.people,'Yuna Hoshino');
  click(app.ids.choices,'Challenge to a duel');
  s=app.read();const first=s.pendingDuel;assert.ok(first.id);assert.match(app.ids.battle.src,/duelId=/);
  app.send(BRIDGE.message('stale-duel',0));assert.equal(app.read().results.length,0);
@@ -41,9 +41,9 @@ test('new game, free travel, NPC challenge, duel result, reload and second duel'
  assert.match(app.ids.receiptDetails.textContent,/\+3 circuit points/);
  assert.equal(app.ids.duelReceipt.hidden,false);
  app=boot(store,sessions);s=app.read();
- assert.equal(s.slot,2);assert.equal(s.location,'shop');assert.equal(s.results.length,1);
+ assert.equal(s.slot,2);assert.equal(s.location,'arcade');assert.equal(s.results.length,1);
  assert.equal(s.lastDuelReceipt.outcome,'Victory');
- click(app.ids.people,'Reina Kurogane');click(app.ids.choices,'Challenge to a duel');
+ click(app.ids.people,'Yuna Hoshino');click(app.ids.choices,'Challenge to a duel');
  s=app.read();const second=s.pendingDuel;assert.notEqual(second.id,first.id);
  app.send(BRIDGE.message(first.id,0));assert.equal(app.read().results.length,1);
  app.send(BRIDGE.message(second.id,1));s=app.read();

@@ -1,0 +1,41 @@
+name: RPG Chromium smoke
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'rpg*'
+      - 'classic_live*'
+      - 'rpg-assets/**'
+      - 'server.js'
+      - 'tests/rpg_browser_smoke.js'
+      - '.github/workflows/rpg-browser.yml'
+  pull_request:
+    paths:
+      - 'rpg*'
+      - 'classic_live*'
+      - 'server.js'
+      - 'tests/rpg_browser_smoke.js'
+      - '.github/workflows/rpg-browser.yml'
+jobs:
+  browser-smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install isolated browser test dependency
+        run: npm install --no-save --ignore-scripts playwright@1.56.1
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+      - name: Run full RPG browser loop
+        run: node tests/rpg_browser_smoke.js
+      - name: Preserve screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: rpg-chromium-screenshots
+          path: artifacts/rpg-browser/*.png
+          if-no-files-found: ignore
+          retention-days: 7

@@ -165,6 +165,15 @@ function retreatCost(g,side,u){
   (effectiveCard(g,u).subtypes||[]).some(t=>t==='Baby'||t==='Basic')?1:0;
  return Math.max(0,base-aids-gymSave)+sticky+(g.stadium&&card(g,g.stadium.id).name==="The Rocket's Training Gym"?1:0)+broken;
 }
+// Retreat pays printed Colorless energy units, not number of Energy cards.
+// Historical Double Colorless/Miracle cards each provide two units; ordinary
+// Energy cards (including Rainbow and Recycle) provide exactly one.
+function retreatUnits(g,u,id){
+ if(isClassicRules(g)&&CLASSIC_POWERS.enabled(g,u,'Photosynthesis'))return 1;
+ if(u.buzzapTypes?.[id])return 2;
+ const name=card(g,id).name;
+ return name==='Double Colorless Energy'||name==='Miracle Energy'?2:1;
+}
 function jawClampLocks(g,side){const u=g.players[side].active;return Boolean(u?.noSwitch?.expires>g.turnSerial&&g.players[1-side].active?.id===u.noSwitch.sourceId);}
 function allowTurn(g,side){if(g.phase!=='game'||g.over)fail('Duel is not active');if(side!==g.turn)fail('Not your turn');}
 function specialEnergyCount(g,u,name){return u.energies.filter(id=>card(g,id).name===name+' Energy').length;}
@@ -766,14 +775,15 @@ function performAction(g,side,cmd){
    if(u.damage>=maxHP(g,u)){knockOuts(g,'trainer');return;}
   }
   const cost=retreatCost(g,side,u);
-  if(u.energies.length<cost)fail('Insufficient retreat Energy');
-  if(u.energies.some(id=>(card(g,id).subtypes||[]).includes('Special')&&!['Double Colorless Energy','Full Heal Energy','Potion Energy','Metal Energy','Darkness Energy'].includes(card(g,id).name))||u.attachedTrainers.some(t=>!['Berry','Counterattack Claws',"Brock's Protection","Koga's Ninja Trick","Sabrina's ESP","Charity"].includes(card(g,t.id).name)))fail('Retreat modifiers require an effect handler');
-  if(cost&&u.energies.length>cost){
+  const total=u.energies.reduce((n,id)=>n+retreatUnits(g,u,id),0);
+  if(total<cost)fail('Insufficient retreat Energy');
+  if(u.energies.some(id=>(card(g,id).subtypes||[]).includes('Special')&&!['Double Colorless Energy','Full Heal Energy','Potion Energy','Metal Energy','Darkness Energy','Recycle Energy','Rainbow Energy','Miracle Energy'].includes(card(g,id).name))||u.attachedTrainers.some(t=>!['Berry','Counterattack Claws',"Brock's Protection","Koga's Ninja Trick","Sabrina's ESP","Charity"].includes(card(g,t.id).name)))fail('Retreat modifiers require an effect handler');
+  if(cost&&total>cost&&u.energies.length>1){
    g.nextDecisionId++;
-   g.pendingDecision=makeDecision({id:`retreat:${g.nextDecisionId}`,actor:side,kind:'energy-discard',label:`Select ${cost} Energy card(s) for retreat`,options:u.energies.map((id,i)=>({id:`energy:${i}`,label:card(g,id).name})),min:cost,max:cost,optional:true});
+   g.pendingDecision=makeDecision({id:`retreat:${g.nextDecisionId}`,actor:side,kind:'energy-discard',label:`Choose Energy cards providing at least ${cost} retreat units`,options:u.energies.map((id,i)=>({id:`energy:${i}`,label:card(g,id).name})),min:1,max:Math.min(cost,u.energies.length)});
    g.pendingAction={kind:'retreat_energy',side,slot:v.slot};return;
   }
-  finishRetreat(g,side,v.slot,Array.from({length:cost},(_,i)=>i));return;
+  finishRetreat(g,side,v.slot,Array.from({length:cost?u.energies.length:0},(_,i)=>i));return;
  }
  if(type==='play_trainer'){
   if(p.trainerLockedUntil>g.turnSerial)fail('Trainer cards are blocked this turn');
@@ -1106,7 +1116,7 @@ function resolveAttack(g,side,index,chosenBench,energyPicks,extra={}){
  }
 
  if(!canPayEnergy(a.cost||[],attackPool(g,u)) && !(isClassicRules(g)&&card(g,u.id).name==='Ditto'&&CLASSIC_POWERS.enabled(g,u,'Transform')&&u.energies.reduce((count,id)=>count+(card(g,id).name==='Double Colorless Energy'?2:1),0)>=(a.cost||[]).length))fail('Insufficient attack Energy');
- if((program.kind!=='neo46:plunder'&&f.active.attachedTrainers.some(t=>!['Defender','PlusPower','Berry','Counterattack Claws',"Brock's Protection","Koga's Ninja Trick","Sabrina's ESP","Charity"].includes(card(g,t.id).name)))||f.active.energies.some(id=>(card(g,id).subtypes||[]).includes('Special')&&!['Double Colorless Energy','Full Heal Energy','Potion Energy','Metal Energy','Darkness Energy'].includes(card(g,id).name)))fail('Damage or Energy modifiers require effect handlers');
+ if((program.kind!=='neo46:plunder'&&f.active.attachedTrainers.some(t=>!['Defender','PlusPower','Berry','Counterattack Claws',"Brock's Protection","Koga's Ninja Trick","Sabrina's ESP","Charity"].includes(card(g,t.id).name)))||f.active.energies.some(id=>(card(g,id).subtypes||[]).includes('Special')&&!['Double Colorless Energy','Full Heal Energy','Potion Energy','Metal Energy','Darkness Energy','Recycle Energy','Rainbow Energy','Miracle Energy'].includes(card(g,id).name)))fail('Damage or Energy modifiers require effect handlers');
  const usesChoice=['bench-target','switch-attacker','switch-self','target-any','target-any-coin','drag-off'].includes(program.kind);
  if(usesChoice){const owner=program.kind==='switch-self'?p:f;
   if(['target-any','target-any-coin'].includes(program.kind)){if(!Number.isInteger(chosenBench)||chosenBench< -1||chosenBench>=f.bench.length)fail('Invalid opponent target');}
@@ -1891,7 +1901,10 @@ function playTrainer(g,side,index,target,expectedId,energyIndex){const p=g.playe
 }
 function finishRetreat(g,side,slot,picks){
  const p=g.players[side],u=safeSlot(p,-1),cost=retreatCost(g,side,u);
- if((p.confusedRetreatFailed&&u.status==='Confused')||!p.bench[slot]||picks.length!==cost||new Set(picks).size!==picks.length||picks.some(i=>!Number.isInteger(i)||i<0||i>=u.energies.length))fail('Illegal retreat payment');
+ if((p.confusedRetreatFailed&&u.status==='Confused')||!p.bench[slot]||new Set(picks).size!==picks.length||picks.some(i=>!Number.isInteger(i)||i<0||i>=u.energies.length))fail('Illegal retreat payment');
+ const contribution=picks.map(i=>retreatUnits(g,u,u.energies[i]));
+ const total=contribution.reduce((n,v)=>n+v,0);
+ if(cost===0&&picks.length||cost>0&&(!picks.length||total<cost||contribution.some(v=>total-v>=cost)))fail('Wrong number or excessive retreat Energy payment');
  for(const i of [...picks].sort((a,b)=>b-a))p.discard.push(u.energies.splice(i,1)[0]);
  if(u.status==='Confused'&&next(g,2)===0){p.confusedRetreatFailed=true;log(g,`${p.name} failed to retreat due to Confusion.`);return;}
  p.active=p.bench.splice(slot,1,u)[0];STATUS.clearConditions(u);clearBenchEffects(u);if(isClassicRules(g))CLASSIC_POWERS.movedToBench(g,side,u,p.active,classicHelpers());p.retreated=true;log(g,`${p.name} retreated.`);

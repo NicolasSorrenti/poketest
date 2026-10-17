@@ -1,0 +1,3 @@
+# Neo v0.60 — Energy-unit retreat payments
+
+Retreat costs are paid in Energy **units**, rather than one attached card per symbol. Double Colorless and Miracle Energy each provide two Colorless units, while ordinary Basic, Recycle and Rainbow Energy supply one. When several payment sets are possible, the controlling player selects attached cards; minimal-payment legality is validated transactionally. This affects the same CPU/online engine and prevents discarding unnecessary Energy. Regression tests cover DCE, Miracle, either valid payment, underpayment, and one-cost overpayment. Special Power substitutions and rare historical Energy modifiers still require auditing.
