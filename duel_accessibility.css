@@ -1,0 +1,9 @@
+/* Shared CPU and multiplayer interaction language: visual feedback without changing rules. */
+:root{--duel-focus:#ffc0d5;--duel-outline:rgba(255,192,213,.28)}
+button,select,input{transition:background-color .15s ease,border-color .15s ease,box-shadow .15s ease,transform .15s ease}
+button:focus-visible,select:focus-visible,input:focus-visible,a:focus-visible{outline:3px solid var(--duel-focus)!important;outline-offset:3px}
+button:not(:disabled):active{transform:translateY(1px)}
+button:disabled{cursor:not-allowed}
+#duelFeedback:not(:empty),#opponentActivityStatus:not(:empty){border-radius:8px}
+.stage .territory{transition:border-color .16s ease,box-shadow .16s ease}
+@media(prefers-reduced-motion:reduce){button,select,input,.stage .territory{transition:none!important;animation-duration:.01ms!important}}
