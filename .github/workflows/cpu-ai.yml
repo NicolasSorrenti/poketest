@@ -23,6 +23,9 @@ jobs:
       - run: node --check cpu_policy.js
       - run: node test_cpu_policy.js
       - run: node test_classic_live_service.js
+      - run: node benchmark_cpu.js --pairs 40 --max-turns 120 --seed 62531 --left-level 5 --right-level 5 --left-turn-search true --right-turn-search false
+      - run: node benchmark_cpu.js --pairs 30 --max-turns 120 --seed 72531 --left-level 5 --right-level 5 --left-turn-search true --right-turn-search false --left-deck brushfire --right-deck brushfire
+      - run: node benchmark_cpu.js --pairs 30 --max-turns 120 --seed 82531 --left-level 5 --right-level 5 --left-turn-search true --right-turn-search false --left-deck overgrowth --right-deck overgrowth
       - run: node benchmark_cpu.js --pairs 50 --max-turns 60 --left-level 5 --right-level 1
       - run: node benchmark_cpu.js --pairs 25 --max-turns 60 --left-level 5 --right-level 1 --left-deck brushfire --right-deck blackout
       - run: node benchmark_cpu.js --pairs 25 --max-turns 60 --left-level 5 --right-level 4
