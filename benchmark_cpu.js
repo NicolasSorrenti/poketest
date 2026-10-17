@@ -34,7 +34,7 @@ function duel(opts,number,swap,decks){
  const roleForSide=swap?[1,0]:[0,1];
  const source=swap?[decks[1],decks[0]]:decks;
  let game=createGame({decks:source,format:'classic',seed:opts.seed+number*11+101});
- const logs=[],stats={actions:0,attacks:0,attachments:0,evolutions:0,trainers:0,choices:0,decisionsMs:0,illegalActions:0};
+ const logs=[],stats={actions:0,attacks:0,attachments:0,evolutions:0,trainers:0,choices:0,decisionsMs:0,illegalActions:0,byRole:[{},{},]};
  const start=performance.now();
  for(let side=0;side<2;side++){
   const r=driveSide(game,{...profile[roleForSide[side]],side,limit:200});
@@ -49,6 +49,8 @@ function duel(opts,number,swap,decks){
   if(!r.steps){stats.stalled=true;break;}
   game=r.game;stats.actions+=r.steps;logs.push(...r.commands);
   for(const {command} of r.commands){
+   const role=roleForSide[side],key=command.type;
+   stats.byRole[role][key]=(stats.byRole[role][key]||0)+1;
    if(command.type==='attack')stats.attacks++;
    if(command.type==='attach_energy')stats.attachments++;
    if(command.type==='evolve')stats.evolutions++;
@@ -60,7 +62,8 @@ function duel(opts,number,swap,decks){
  stats.elapsedMs=performance.now()-start;
  stats.turnSerial=game.turnSerial;
  const winner=game.over&&game.winner!==null?roleForSide[game.winner]:null;
- return {seed:opts.seed+number*11+101,swap,winner,finished:game.over,stats,logs};
+ return {seed:opts.seed+number*11+101,swap,winner,finished:game.over,
+  endReason:/cannot draw at the start of turn/i.test(game.message?.[0]||'')?'deckout':game.over?'victory':'timeout',stats,logs};
 }
 function arena(opts){
  const service=new ClassicLocalService(),decks=[service.decklist(opts.leftDeck),service.decklist(opts.rightDeck)];
@@ -72,6 +75,8 @@ function arena(opts){
  const report={baseline:{level:opts.leftLevel,deck:opts.leftDeck},challenger:{level:opts.rightLevel,deck:opts.rightDeck},
   personality:opts.personality,pairs:opts.pairs,totalMatches:matches.length,conclusiveMatches:conclusive.length,
   wins,losses,drawsOrTimeouts:matches.length-conclusive.length,
+  deckOutLossesByRole:[0,1].map(role=>matches.filter(x=>x.endReason==='deckout'&&x.winner===1-role).length),
+  actionCountsByRole:[0,1].map(role=>matches.reduce((acc,m)=>{for(const [k,v] of Object.entries(m.stats.byRole[role]))acc[k]=(acc[k]||0)+v;return acc;},{})),
   winRateConclusive:conclusive.length?wins/conclusive.length:null,confidence95Conclusive:wilson(wins,conclusive.length),
   meanDecisionMs:totals.actions?totals.decisionsMs/totals.actions:null,
   averageTurns:totals.turnSerial/matches.length,totalActions:totals.actions,
