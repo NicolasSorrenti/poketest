@@ -1,6 +1,6 @@
 'use strict';
 (()=>{
-const $=id=>document.getElementById(id),KEY='neoHarborRpgV1',STORY=window.NeoHarborStory,BRIDGE=window.NeoRpgDuelBridge;
+const $=id=>document.getElementById(id),KEY='neoHarborRpgV1',STORY=window.NeoHarborStory,SCHEDULES=window.NeoRpgSchedules,BRIDGE=window.NeoRpgDuelBridge;
 const periods=['Morning','Afternoon','Evening'];
 const places={
  home:['Your Apartment','Your base during the championship season.'],
@@ -93,11 +93,12 @@ state.selected=null;
 const missed=STORY.recordExpiry(state);if(missed.length)log('Some opportunities in town passed while you were busy.');
 persist();timeFlash(beforeDay,beforeSlot);}
 function say(speaker,line,choices=[]){scene={speaker,line,choices};state.scene=scene;persist();render();}
-function currentPeople(){if(state.day>90)return [];const weekday=(state.day-1)%7;const regular=Object.entries(cast).filter(([id,c])=>state.day>=(c.start||1)&&c.locs.includes(state.location)&&c.slots.includes(state.slot)&&c.days.includes(weekday)).map(([id])=>id);
+function currentPeople(){if(state.day>90)return [];const regular=SCHEDULES.peopleAt(state.day,state.slot,state.location,eligibleStories());
 for(const e of eligibleStories())if(!regular.includes(e.npc))regular.push(e.npc);
 return regular;}
 function selectPerson(id){if(state.activeStory||!cast[id]||!currentPeople().includes(id))return;const c=cast[id],first=!state['met_'+id]&&!((id==='reina')&&state.metReina);state['met_'+id]=true;if(id==='reina')state.metReina=true;state.selected=id;persist();say(c.name,first?c.intro:c.repeat,options(id));}
 function options(id){const key=atKey(id),spentToday=!!state.hungOut[state.day+':'+id];return [
+ ['Ask about their routine · free','where:'+id],
  [state.talked[key]?'Talk again · free (bond already earned)':'Talk · free · +1 affection','talk:'+id],
  [spentToday?'Already spent time today · free':'Spend time together · ⏳ 1 period · +2 affection / +1 trust','hang:'+id],
  ['Challenge to a duel · ⏳ 1 period · earn points, credits & trust','duel:'+id],
@@ -113,6 +114,7 @@ function act(action){
  if(state.activeStory||state.pendingDuel)return;
  if(type==='calendar')return openCalendar();
  if(type==='home'){state.location='home';state.selected=null;persist();return say('Narrator','Back home. The championship posters on the wall remind you why you came.');}
+ if(type==='where'){const c=cast[id],visit=SCHEDULES.nextVisit(id,state.day,state.slot,STORY.events);return say('Narrator',c.name+(visit?' is usually around '+places[visit.place][0]+' on day '+visit.day+', '+periods[visit.slot]+'.':' has no announced public visits in the coming week.'),options(id));}
  if(type==='sleep'){if(state.location!=='home')return;const n=3-state.slot;advance(n);return say('Narrator','You wake up to a new day in Neo Harbor.');}
  if(type==='close'){state.selected=null;persist();return say('Narrator','The town has a rhythm of its own. You are beginning to hear it.');}
  if(type==='duel')return startDuel(id||state.selected,false);
