@@ -23,7 +23,7 @@ function boot(saved=new Map(),sessions=new Map()){
  return {ids,listeners,saved,sessions,location,read:()=>JSON.parse(saved.get(KEY)),send:payload=>listeners.message({origin:location.origin,source:ids.battle.contentWindow,data:payload})};
 }
 function label(x){return [x.textContent,...x.children.map(label)].filter(Boolean).join(' ');}
-function click(root,part){const b=root.children.find(x=>label(x).includes(part));assert.ok(b,'Missing control: '+part+' in '+root.children.map(label).join(' | '));assert.equal(b.disabled,true,'Control disabled: '+part);b.onclick();}
+function click(root,part){const b=root.children.find(x=>label(x).includes(part));assert.ok(b,'Missing control: '+part+' in '+root.children.map(label).join(' | '));assert.notEqual(b.disabled,true,'Control disabled: '+part);b.onclick();}
 test('new game, free travel, NPC challenge, duel result, reload and second duel',()=>{
  const store=new Map(),sessions=new Map();let app=boot(store,sessions),s=app.read();
  assert.equal(s.day,1);assert.equal(s.slot,0);assert.equal(s.location,'home');
