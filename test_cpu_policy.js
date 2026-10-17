@@ -350,6 +350,20 @@ const settings={level:3,personality:'balanced',side:1,seed:47};
  assert.deepEqual(after?.command,first.command,
   'Midgame forecast must ignore unrevealed opposing hand/deck and future flips');
 }
+{
+ const {argumentsOf,arena}=require('./benchmark_cpu');
+ const normal=argumentsOf(['--pairs','1','--max-turns','4','--left-level','5','--right-level','5']);
+ const defaultReport=arena(normal);
+ assert.equal(defaultReport.baseline.planning,false,
+  'The benchmark must truthfully report that unproven planning is off by default');
+ assert.equal(defaultReport.challenger.planning,false);
+ const experimental=argumentsOf(['--pairs','1','--max-turns','4','--left-level','5',
+  '--right-level','5','--left-planning','true','--right-planning','false']);
+ const report=arena(experimental);
+ assert.equal(report.baseline.planning,true);
+ assert.equal(report.challenger.planning,false);
+ assert.throws(()=>argumentsOf(['--left-planning','maybe']),/Planning/);
+}
 let duels=0,decisions=0,attacks=0,energy=0,evolutions=0,trainer=0;
 for(let seed=1;seed<=4;seed++){
  let game=createGame({decks:[deck,deck],seed:seed*1789,format:'classic'});
