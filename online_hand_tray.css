@@ -1,0 +1,124 @@
+/* v0.39 — online-only floating hand. Field and BOTH Benches get priority. */
+body.duel-active #duel:not(.hidden){grid-template-rows:auto auto minmax(0,1fr) 54px}
+body.duel-active .below{position:relative;z-index:540;overflow:visible}
+body.duel-active .below .main-column{display:flex;flex-direction:row;align-items:stretch;gap:7px;height:54px}
+body.duel-active .below .main-column>.panel{display:flex;align-items:center;min-width:0;overflow:visible;padding:0 7px;background:#10283ceF;border:1px solid #4c7892;box-shadow:0 -5px 18px #0006}
+body.duel-active .below .hand-panel{flex:0 1 39%;max-width:480px;position:relative;border-color:#51b5b1!important}
+body.duel-active .below .turn-actions-panel{flex:1;min-width:0;position:relative;justify-content:flex-end}
+body.duel-active .hand-toggle{display:flex;align-items:center;gap:9px;width:100%;height:44px;text-align:left;min-height:0!important;padding:3px 12px;border-color:transparent;background:transparent;overflow:visible;position:relative}
+body.duel-active .hand-toggle:hover{background:#265366}
+body.duel-active .hand-toggle-label{font-size:clamp(11px,1.4vw,15px);font-weight:900;white-space:nowrap}
+body.duel-active .hand-chevron{margin-left:auto;font-size:20px;color:#9af4cf;transition:transform .15s}
+body.duel-active .tray-open .hand-chevron{transform:rotate(180deg)}
+body.duel-active .hand-peek{position:relative;display:block;flex:0 0 94px;height:33px;pointer-events:none}
+body.duel-active .peek-card{position:absolute;bottom:-6px;left:26px;width:34px;height:48px;border-radius:4px;border:1px solid #a8dbe0;overflow:hidden;background:#285579;box-shadow:0 2px 12px #000d;transform-origin:bottom center;display:grid;place-items:center;font-size:14px}
+body.duel-active .peek-card img{width:100%;height:100%;object-fit:cover}
+body.duel-active .peek-card-0{left:2px;transform:rotate(-16deg)}
+body.duel-active .peek-card-1{left:28px;z-index:2;transform:translateY(-5px)}
+body.duel-active .peek-card-2{left:54px;transform:rotate(16deg)}
+body.duel-active .hand-peek-empty{font-size:10px;color:#adc8d5;white-space:nowrap}
+body.duel-active .hand-tray-drawer,body.duel-active .power-drawer{position:fixed;bottom:62px;z-index:610;background:linear-gradient(160deg,#13344beF,#071928FA);border:2px solid #69c6bf;border-radius:17px;box-shadow:0 0 0 100vmax #0006,0 8px 45px #000d;padding:13px;display:flex;flex-direction:column;gap:9px}
+body.duel-active .hand-tray-drawer{left:50%;transform:translateX(-50%);width:min(860px,calc(100vw - 18px));max-height:min(420px,70dvh)}
+body.duel-active .tray-heading{display:flex;align-items:center;gap:11px;flex-wrap:wrap;color:#c6f8ef}
+body.duel-active .tray-heading strong{font-size:12px;letter-spacing:.12em}
+body.duel-active .tray-heading .hint{font-size:11px}
+body.duel-active .tray-heading button{margin-left:auto;padding:2px 9px;min-height:28px}
+body.duel-active .below .hand{display:flex;justify-content:flex-start;align-items:flex-start;gap:8px;width:100%;height:auto;min-height:155px;max-height:calc(min(420px,70dvh) - 80px);overflow-x:auto;overflow-y:auto;flex-wrap:nowrap;padding:8px 5px 12px;overscroll-behavior:contain}
+body.duel-active .below .handcard{min-width:99px;width:99px;flex-shrink:0;padding:4px;min-height:144px}
+body.duel-active .below .handcard img{height:112px}
+body.duel-active .below .handcard strong{font-size:10px}
+body.duel-active .below #cardActions{margin:0;flex:none}
+body.duel-active .below .turn-actions{display:flex;align-items:center;justify-content:flex-end;gap:6px;max-width:100%;width:100%}
+body.duel-active .below .turn-actions button{font-size:11px;white-space:nowrap;min-height:38px;padding:6px clamp(7px,1vw,13px)}
+body.duel-active .below .turn-actions #endBtn{background:#1a8a78;border-color:#5ae8c2;font-weight:900}
+body.duel-active .power-drawer{right:10px;width:min(410px,calc(100vw - 20px));max-height:min(350px,65dvh);overflow:auto}
+body.duel-active .power-drawer #powers{display:flex;flex-wrap:wrap;max-height:none;overflow:visible}
+body.duel-active .power-drawer .actions{margin-top:4px}
+body.duel-active .power-drawer .actions button{font-size:12px;min-height:35px}
+/* Give the original field the height previously allocated to the hand. */
+body.duel-active .stage .territory .field-row{display:grid;grid-template-rows:minmax(0,1fr) minmax(0,1fr);gap:3px;align-items:center;padding:2px 8px;min-height:0}
+body.duel-active .stage .territory .field-row .zone{min-height:0;max-height:100%;display:flex;flex-direction:column;justify-content:center}
+body.duel-active .stage .territory .field-row .pokemon-strip{min-height:0;flex-shrink:1}
+body.duel-active .stage .territory .field-row .zone h3{flex:none}
+body.duel-active .stage .territory .field-row .poke{min-height:0;flex-shrink:1}
+body.duel-active .stage .territory .field-row .empty{padding:9px;min-width:50px}
+@media(max-width:780px){
+ body.duel-active #duel:not(.hidden){grid-template-rows:auto auto minmax(0,1fr) 52px}
+ body.duel-active .below .main-column{height:52px;gap:4px}
+ body.duel-active .below .hand-panel{flex:0 0 41%}
+ body.duel-active .below .main-column>.panel{padding:0 3px}
+ body.duel-active .hand-toggle{padding:3px 4px;gap:3px}
+ body.duel-active .hand-peek{flex-basis:68px;transform:scale(.75);transform-origin:left center}
+ body.duel-active .hand-toggle-label{font-size:11px}
+ body.duel-active .hand-chevron{font-size:15px}
+ body.duel-active .below .turn-actions{gap:3px}
+ body.duel-active .below .turn-actions button{min-height:35px;font-size:10px;padding:5px 6px}
+ body.duel-active .stage .territory .field-row{padding:1px 4px}
+ body.duel-active .stage .territory .field-row .zone h3{font-size:8px;margin-bottom:1px}
+ body.duel-active .stage .territory .field-row .poke .pokemon-face{height:clamp(36px,7.3dvh,64px)}
+ body.duel-active .stage .territory .field-row .poke:not(:has(.energy-peeks)) .pokemon-face{margin-top:8px}
+ body.duel-active .hand-tray-drawer,body.duel-active .power-drawer{bottom:58px}
+ body.duel-active .below .hand{min-height:140px}
+ body.duel-active .below .handcard{min-width:86px;width:86px}
+ body.duel-active .below .handcard img{height:100px}
+}
+@media(max-width:435px){
+ body.duel-active .below .hand-panel{flex:0 0 37%}
+ body.duel-active .hand-peek{flex-basis:55px;transform:scale(.62)}
+ body.duel-active .below .turn-actions button{font-size:9px;padding:5px 4px}
+ body.duel-active .below .turn-actions button#retreatBtn{font-size:0}
+ body.duel-active .below .turn-actions button#retreatBtn::before{content:'⇆';font-size:17px}
+ body.duel-active .stage .territory .field-row .poke .pokemon-face{height:clamp(35px,6.5dvh,56px)}
+}
+@media(prefers-reduced-motion:reduce){body.duel-active .hand-chevron{transition:none}}
+
+/* The Prize selection is always accessible even if the tiny on-field card is covered. */
+body.duel-active .prize-choice-panel{position:fixed;top:48px;left:50%;transform:translateX(-50%);z-index:850;max-width:calc(100vw - 20px);width:max-content;background:#183e4cf5;border:2px solid #9bfbd0;border-radius:12px;box-shadow:0 8px 36px #000c;display:flex;flex-direction:column;align-items:center;gap:5px;padding:10px 14px;color:#e9fff8;text-align:center;font-size:12px}
+body.duel-active .prize-choices{display:flex;justify-content:center;gap:6px;flex-wrap:wrap}
+body.duel-active .prize-option{min-width:40px;min-height:38px;padding:5px 7px;background:#21635d;border:2px solid #98f6d0;font-size:14px;font-weight:900}
+body.duel-active .prize-awaiting{position:relative;z-index:5}
+body.duel-active .prize-select{position:relative;z-index:10;pointer-events:auto!important;color:#fff!important;text-shadow:0 1px 3px #000,0 0 6px #000;font-weight:900;border:2px solid #9dfbd7!important;background:#1d5b66 url('neo_card_back.svg') center/100% 100% no-repeat!important}
+body.duel-active .prize-back.prize-select:disabled{opacity:.55}
+body.duel-active .hand-tray-drawer.hidden,body.duel-active .power-drawer.hidden{display:none!important}
+@media(max-width:700px){body.duel-active .prize-choice-panel{top:53px;padding:6px 10px}body.duel-active .prize-choices{gap:4px}body.duel-active .prize-option{min-width:36px;min-height:32px;font-size:12px}}
+/* v0.39: arrange each side as Bench + Active (or Active + Bench), not two
+   competing columns. The Active Pokémon meet at the central battle line. */
+body.duel-active .stage .territory .field-row,
+body.duel-active .stage .territory .field-row.bottom{
+ grid-template-columns:minmax(0,1fr);
+ grid-template-rows:minmax(0,1fr) minmax(0,1.2fr);
+}
+body.duel-active .stage .territory .field-row .zone{width:100%;align-items:center}
+body.duel-active .stage .territory .field-row .pokemon-strip{max-width:100%;justify-content:center}
+body.duel-active .stage .territory .active-zone .active-with-attacks{width:100%}
+body.duel-active .stage .territory .bench-zone .pokemon-strip{flex-wrap:nowrap}
+@media(min-width:1000px) and (min-height:780px){
+ body.duel-active .stage .poke{width:clamp(100px,9vw,125px);max-height:185px}
+ body.duel-active .stage .poke .pokemon-face{height:clamp(80px,11dvh,104px)}
+ body.duel-active .stage .active-with-attacks{grid-template-columns:minmax(0,1fr) 125px minmax(0,1fr)}
+ body.duel-active .stage .active-with-attacks .active-slot{max-width:125px}
+}
+@media(max-width:435px){
+ body.duel-active .stage .territory .bench-zone .pokemon-strip{gap:2px}
+ body.duel-active .stage .territory .bench-zone .poke{width:min(55px,calc((100vw - 76px)/5 - 2px))}
+}
+/* A long explanatory coach must never push the battlefield below the fold. */
+@media(max-width:780px){
+ body.duel-active .stage .turn-coach{display:flex;flex-wrap:nowrap;gap:5px;max-height:44px;min-height:35px;overflow:hidden;padding:3px 7px}
+ body.duel-active .stage .coach-message{display:block;flex:1 1 auto;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+ body.duel-active .stage .coach-message strong{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:11px}
+ body.duel-active .stage .coach-message span{display:none}
+ body.duel-active .stage .coach-chips{display:none}
+ body.duel-active .stage .territory .field-row.bottom{grid-template-rows:minmax(0,1.8fr) minmax(0,1fr)}
+ body.duel-active .stage .territory .active-with-attacks .inline-attack-panel{align-self:center}
+}
+@media(max-width:780px){
+ /* Compact Bench cards without hiding their name and HP below the trainer bar. */
+ body.duel-active .stage .bench-zone .poke{max-height:82px;min-height:0;overflow:hidden;gap:1px;padding:2px}
+ body.duel-active .stage .bench-zone .poke .pokemon-face{height:39px}
+ body.duel-active .stage .bench-zone .poke:not(:has(.energy-peeks)) .pokemon-face{margin-top:2px}
+ body.duel-active .stage .bench-zone .poke .energy-peeks{height:10px}
+ body.duel-active .stage .bench-zone .poke .attached-energy{height:10px}
+ body.duel-active .stage .bench-zone .poke strong{font-size:8px;line-height:1.05}
+ body.duel-active .stage .bench-zone .poke .hp-count{font-size:8px;line-height:1.1}
+}
