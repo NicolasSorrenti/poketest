@@ -82,4 +82,24 @@ function copied(g,name){
  assert.equal(g.players[0].active.id,'base1-5');
  choose(g,'bench:0');assert.equal(g.players[0].active.id,'base1-46');
 }
+{
+ let copiedESP=false;
+ for(let seed=0;seed<30000&&!copiedESP;seed++){
+  const g=game('base2-35',[],['base1-46','base1-58']);
+  g.format='gym-expanded';g.rngState=seed;
+  g.players[0].active=U('gym2-90',{energies:['base1-101']});
+  const attempt=applyCommand(g,0,{type:'attack',payload:{attackIndex:0}});
+  if(!attempt.ok||g.pendingAction?.kind!=='psyduck_esp_copy')continue;
+  const teleport=CATALOG.get('base2-35').attacks.findIndex(x=>x.name==='Teleport');
+  assert.ok(g.pendingDecision.options.some(x=>x.id==='attack:'+teleport));
+  choose(g,'attack:'+teleport);
+  assert.equal(g.pendingAction?.kind,'psyduck_esp_bench','ESP copied Teleport prompts attacking player Bench');
+  assert.deepEqual(g.pendingDecision.options.map(x=>x.id),['bench:0','bench:1']);
+  choose(g,'bench:1');
+  assert.equal(g.players[0].active.id,'base1-58','Misty Psyduck Teleport uses OWN Bench, not empty opponent Bench');
+  assert.equal(g.players[1].active.id,'base2-35');
+  copiedESP=true;
+ }
+ assert.ok(copiedESP,'ESP copied Teleport needs three heads');
+}
 console.log('PASS v0.71: historical Metronome choice chains Lure, Teleport, Dark Mind, Flitter, Whirlwind, actor checks and illegal-target rollback');
