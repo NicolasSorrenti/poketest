@@ -224,7 +224,7 @@ function retreatFeasible(o,active){
  const otherDiscount=gym==='Cerulean City Gym'?1:0;
  return available+discounted+otherDiscount>=printed;
 }
-function trainerOpportunity(o,name){
+function trainerOpportunity(o,name,cfg){
  const p=o.self,q=o.opponent;
  const own=[p.active,...p.bench].filter(Boolean),enemy=[q.active,...q.bench].filter(Boolean);
  const removable=enemy.some(u=>u.energies?.length>0&&!u.attachedTrainers?.some(t=>card(t.id)?.name==="Brock's Protection"));
@@ -235,7 +235,8 @@ function trainerOpportunity(o,name){
  if(name==='Switch')return p.bench.length>0;
  if(name==='Gust of Wind')return q.bench.length>0;
  if(name==='Pokémon Center')return own.some(u=>u.damage>=10);
- if(name==='Professor Oak'||name==='Bill')return p.deckCount>0;
+ if(name==='Bill')return p.deckCount>(cfg.level>=4?2:0);
+ if(name==='Professor Oak')return p.deckCount>(cfg.level>=4?7:0);
  return true;
 }
 function candidates(o,cfg,used){
@@ -287,7 +288,7 @@ function candidates(o,cfg,used){
      options.push(command('evolve',{handIndex:i,slot}));
    }
   if(!p.energyUsed&&isEnergy(c))for(const slot of slots(p))options.push(command('attach_energy',{handIndex:i,slot}));
-  if(c?.supertype==='Trainer'&&used.trainers<cfg.skill.trainers&&trainerOpportunity(o,c.name))options.push(command('play_trainer',{handIndex:i}));
+  if(c?.supertype==='Trainer'&&used.trainers<cfg.skill.trainers&&trainerOpportunity(o,c.name,cfg))options.push(command('play_trainer',{handIndex:i}));
  }
  if(p.active){
   const effective=p.active.effectiveAttacks||card(p.active.id)?.attacks||[];
