@@ -29,10 +29,10 @@
  function locationFor(id,character,state,slot=state.slot){
   if(state.day<(character.start||1)||state.day>90)return null;
   const weekDay=weekday(state.day);
-  if(!character.days.includes(weekDay))return null;
-  // The posted tournament calendar takes precedence over ordinary routines.
+  // The posted tournament calendar takes precedence over ordinary rest days.
   if(CIRCUIT_DAYS.includes(state.day)&&slot===1&&(id!=='kaede'||state.day>=40))return 'center';
   if([88,89,90].includes(state.day)&&slot===2&&(id!=='kaede'||state.day>=40))return 'center';
+  if(!character.days.includes(weekDay))return null;
   if(!character.slots.includes(slot))return null;
   // NPCs do not teleport between every possible location. One stop per period.
   // The locations rotate over the week in a consistent and learnable pattern.
