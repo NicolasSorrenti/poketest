@@ -198,6 +198,21 @@ function finishArc(){
  say(cast.reina.name,report.text);
 }
 
+
+function enterTournament(id){
+ if(state.activeStory||state.activeEncounter||state.activeArc||state.activeTournament||state.pendingDuel||state.day>90)return;
+ let session;try{session=TOURN.begin(state,id);}
+ catch(err){$('notice').textContent=err.message;return;}
+ const cup=TOURN.cups.find(x=>x.id===id);
+ log('Entered the '+cup.title+' bracket.');
+ persist();say('Tournament Board',cup.title+': your eight-player bracket has been drawn. Your opening opponent is '+cast[session.opponents[0]].name+'. Win to advance; a loss ends your run. The session uses one time period in total.');
+}
+function nextTournamentRound(){
+ const next=TOURN.nextMatch(state);
+ if(!next||state.pendingDuel||state.activeStory||state.activeEncounter||state.activeArc)return;
+ startDuel(next.opponent,null,null,next.tournamentId);
+}
+
 function scheduleEvent(){return eventCards.find(e=>e.day===state.day&&e.slot===state.slot&&e.place===state.location&&!state.eventsDone[e.day+':'+e.title]);}
 function act(action){
  const [type,id]=action.split(':');
@@ -209,7 +224,8 @@ function act(action){
  if(type==='arcNext')return advanceArc();
  if(type==='arcChoice')return chooseArc(id);
  if(type==='arcFinish')return finishArc();
- if(state.activeStory||state.pendingDuel||state.activeEncounter||state.activeArc)return;
+ if(type==='tournamentNext')return nextTournamentRound();
+ if(state.activeStory||state.pendingDuel||state.activeEncounter||state.activeArc||state.activeTournament)return;
  if(type==='arc')return startArc(id);
  if(type==='encounter')return startEncounter(id);
  if(type==='townActivity')return performActivity(id);
@@ -219,7 +235,7 @@ function act(action){
  if(type==='sleep'){if(state.location!=='home')return;const n=3-state.slot;advance(n);return say('Narrator','You wake up to a new day in Neo Harbor.');}
  if(type==='close'){state.selected=null;persist();return say('Narrator','The town has a rhythm of its own. You are beginning to hear it.');}
  if(type==='duel')return startDuel(id||state.selected,false);
- if(type==='event'){const e=scheduleEvent();if(!e)return;const opponents={7:'yuna',14:'reina',21:'hana',30:'reina',42:'kaede',60:'akari',75:'camila',88:'reina',90:'shiori'};return startDuel(opponents[e.day]||'reina',e);}
+ if(type==='event'){const e=scheduleEvent();if(!e)return;const cup=TOURN.cupForDay(e.day);if(cup)return enterTournament(cup.id);const opponents={7:'yuna',14:'reina',21:'hana',42:'kaede',75:'camila',88:'reina'};return startDuel(opponents[e.day]||'reina',e);}
  if(type==='work')return performActivity('shop_shift');
  if(type==='practice')return state.location==='library'?performActivity('library_research'):state.location==='center'?performActivity('center_scrimmage'):performActivity('home_reflect');
  if(type==='rest'){if(state.day>90)return;advance();return say('Narrator','You take a break. Other lives in the town carry on.');}
