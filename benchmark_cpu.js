@@ -71,9 +71,18 @@ function duel(opts,number,swap,decks){
  }
  stats.elapsedMs=performance.now()-start;
  stats.turnSerial=game.turnSerial;
+ stats.finalPrizesByRole=[0,1].map(role=>game.players[roleForSide.indexOf(role)].prizes.length);
+ stats.finalDeckByRole=[0,1].map(role=>game.players[roleForSide.indexOf(role)].deck.length);
  const winner=game.over&&game.winner!==null?roleForSide[game.winner]:null;
+ // Diagnose wins from authoritative public end state; avoid inferring one
+ // player's performance from game length alone.
+ const endReason=!game.over?'timeout':
+  /cannot draw at the start of turn/i.test(game.message?.[0]||'')?'deckout':
+  winner!==null&&game.players[game.winner].prizes.length===0?'prizes':
+  winner!==null&&!game.players[1-game.winner].active&&
+    !game.players[1-game.winner].bench.length?'no-pokemon':'other';
  return {seed:opts.seed+number*11+101,swap,winner,finished:game.over,
-  endReason:/cannot draw at the start of turn/i.test(game.message?.[0]||'')?'deckout':game.over?'victory':'timeout',stats,logs};
+  endReason,stats,logs};
 }
 function arena(opts){
  const service=new ClassicLocalService(),decks=[service.decklist(opts.leftDeck),service.decklist(opts.rightDeck)];
@@ -93,6 +102,9 @@ function arena(opts){
   personality:opts.personality,pairs:opts.pairs,totalMatches:matches.length,conclusiveMatches:conclusive.length,
   wins,losses,drawsOrTimeouts:matches.length-conclusive.length,
   deckOutLossesByRole:[0,1].map(role=>matches.filter(x=>x.endReason==='deckout'&&x.winner===1-role).length),
+  winCausesByRole:[0,1].map(role=>Object.fromEntries(['prizes','no-pokemon','deckout','other']
+   .map(reason=>[reason,matches.filter(x=>x.winner===role&&x.endReason===reason).length]))),
+  meanFinalPrizesByRole:[0,1].map(role=>matches.reduce((n,m)=>n+m.stats.finalPrizesByRole[role],0)/matches.length),
   actionCountsByRole:[0,1].map(role=>matches.reduce((acc,m)=>{for(const [k,v] of Object.entries(m.stats.byRole[role]))acc[k]=(acc[k]||0)+v;return acc;},{})),
   openingBenchByRole:[0,1].map(role=>({
    mean:matches.reduce((total,m)=>total+m.stats.openingBenchByRole[role],0)/matches.length,
