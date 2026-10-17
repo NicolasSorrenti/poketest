@@ -86,7 +86,13 @@
    session.bonusCredits=wonRounds*6;
    state.points=(state.points||0)+session.bonusPoints;
    state.credits=(state.credits||0)+session.bonusCredits;
-   session.champion=winner(receipt.npc,session.opponents[2],cup.day,2);
+   let finalist=receipt.npc;
+   if(session.round===0){
+    finalist=winner(receipt.npc,session.opponents[1],cup.day,1);
+    session.fixtures.push({round:1,players:[receipt.npc,session.opponents[1]],winner:finalist});
+   }
+   session.champion=session.round===2?receipt.npc:winner(finalist,session.opponents[2],cup.day,2);
+   if(session.round<2)session.fixtures.push({round:2,players:[finalist,session.opponents[2]],winner:session.champion});
   }
   state.eventsDone[cup.day+':'+cup.title]={won:session.outcome==='champion',day:cup.day,roundsWon:session.matches.filter(x=>x.outcome==='Victory').length};
   state.activeTournament=null;
