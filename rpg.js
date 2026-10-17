@@ -267,7 +267,7 @@ function makeAvatar(id,size=''){
  return img;
 }
 function render(){
- const ended=state.day>90,locked=!!state.activeStory||!!state.activeEncounter||!!state.pendingDuel;
+ const ended=state.day>90,locked=!!state.activeStory||!!state.activeEncounter||!!state.activeArc||!!state.pendingDuel;
  const receipt=state.lastDuelReceipt;
  $('duelReceipt').hidden=!receipt;
  if(receipt){
@@ -299,11 +299,12 @@ function render(){
  $('scene').style.backgroundImage="linear-gradient(0deg,#090b18ec 0%,#090b1860 80%),url('/rpg-assets/"+bgFiles[state.location]+"')";
  const showingStory=state.activeStory?STORY.byId(state.activeStory.id):null;
  const showingEncounter=state.activeEncounter?WORLD.byEncounter(state.activeEncounter.id):null;
- const portraitId=showingStory?.npc||showingEncounter?.npc||state.selected,portraitRoot=$('portrait');portraitRoot.replaceChildren();
+ const showingArc=state.activeArc?ARC.byId(state.activeArc.id):null;
+ const portraitId=showingStory?.npc||showingEncounter?.npc||(showingArc?'reina':null)||state.selected,portraitRoot=$('portrait');portraitRoot.replaceChildren();
  if(portraitId&&cast[portraitId])portraitRoot.append(makeAvatar(portraitId));
  $('homeBanner').hidden=state.location!=='home'||!!portraitId;
  $('homeBanner').textContent='YOUR APARTMENT  ·  DAY '+state.day+'  ·  '+periods[state.slot]+' — Prepare your deck, review your plans or rest.';
- let shown=showingStory?renderStory():showingEncounter?showEncounter():scene;
+ let shown=showingStory?renderStory():showingEncounter?showEncounter():showingArc?showArc():scene;
  $('speaker').textContent=shown?.speaker||'Narrator';$('line').textContent=shown?.line||'The town is waiting.';$('choices').replaceChildren();
  for(const [label,action] of shown.choices||[]){
   const b=document.createElement('button');b.className='choice'+(action==='storyFinish'?' finish':'');b.textContent=label;
@@ -347,7 +348,15 @@ function render(){
   const b=document.createElement('button');b.className='event-btn';b.disabled=locked;b.textContent='✦  '+e.title+' · ⏳ 1 period';
   const small=document.createElement('small');small.textContent=cast[e.npc].name+' · limited-time encounter';b.append(small);b.onclick=()=>startStory(e.id);$('storyEvents').append(b);
  }
- if(!stories.length){const x=document.createElement('p');x.className='empty-note';x.textContent='No special story encounter right now.';$('storyEvents').append(x);}
+ const personalEpisodes=ARC.available(state,currentPeople());
+ for(const episode of personalEpisodes){
+  const b=document.createElement('button');b.className='event-btn arc-episode';b.disabled=locked;
+  const title=document.createElement('strong');title.textContent='♜  '+episode.title+' · ⏳ 1 period';
+  const hint=document.createElement('small');hint.textContent=cast.reina.name+' · an optional rivalry chapter';
+  b.append(title,hint);b.onclick=()=>act('arc:'+episode.id);
+  $('storyEvents').append(b);
+ }
+ if(!stories.length&&!personalEpisodes.length){const x=document.createElement('p');x.className='empty-note';x.textContent='No special story encounter right now.';$('storyEvents').append(x);}
 
  $('lifeStats').replaceChildren();
  const lifeGauges=[['FOCUS',state.focus,100,'Focus determines which activities you can perform'],['INSIGHT',state.insight,99,'Lessons learned from activities'],['REPUTATION',state.reputation,100,'How familiar the town is with your name'],['DUEL PREP',state.preparation,3,'A modest bonus after your next winning match']];
@@ -393,7 +402,7 @@ function render(){
  $('journal').replaceChildren();const stats=document.createElement('p');stats.className='stats';stats.textContent='🏆 '+state.points+' circuit points   ·   ◈ '+state.credits+' credits';$('journal').append(stats);
  for(const e of eventCards.filter(e=>e.day>=state.day).slice(0,2)){const p=document.createElement('p');p.textContent='DAY '+e.day+' · '+e.title+' ('+periods[e.slot]+')';$('journal').append(p)}
  for(const note of state.journal.slice(0,3)){const p=document.createElement('p');p.textContent='• '+note;$('journal').append(p)}
- $('notice').textContent=state.activeStory?'Story in progress: complete this scene to continue.':state.activeEncounter?'Local encounter in progress — make your decision.':state.pendingDuel?'Your duel is in progress.':'Travel & talk are free · ⏳ actions advance time';
+ $('notice').textContent=state.activeStory?'Story in progress: complete this scene to continue.':state.activeArc?'A private rivalry chapter is in progress.':state.activeEncounter?'Local encounter in progress — make your decision.':state.pendingDuel?'Your duel is in progress.':'Travel & talk are free · ⏳ actions advance time';
  $('deckPicker').disabled=locked||ended;
  if($('deckPicker')?.options.length)$('deckPicker').value=state.playerDeck;
 }
@@ -401,7 +410,7 @@ function render(){
 $('quickNext').onclick=()=>act('rest');$('quickHome').onclick=()=>act('home');$('calendarBtn').onclick=openCalendar;$('calendarClose').onclick=()=>$('calendarDialog').close();
 $('save').onclick=()=>{persist();$('notice').textContent='Campaign saved in this browser.'};
 $('dismissReceipt').onclick=()=>{state.lastDuelReceipt=null;persist();render();};
-document.addEventListener('keydown',e=>{if((e.key===' '||e.code==='Space')&&state.activeStory?.phase==='lines'&&!['INPUT','TEXTAREA','SELECT','BUTTON'].includes(e.target?.tagName)){e.preventDefault();act('storyNext');}});
+document.addEventListener('keydown',e=>{if((e.key===' '||e.code==='Space')&&!['INPUT','TEXTAREA','SELECT','BUTTON'].includes(e.target?.tagName)){if(state.activeStory?.phase==='lines'){e.preventDefault();act('storyNext');}else if(state.activeArc?.phase==='lines'){e.preventDefault();act('arcNext');}}});
 async function initDecks(){try{const res=await fetch('/api/classic/decks');if(!res.ok)throw Error('Could not load decks');const data=await res.json(),select=$('deckPicker');for(const d of data.decks.filter(x=>x.id!=='custom')){const o=document.createElement('option');o.value=d.id;o.textContent=d.name;select.append(o)}if([...select.options].some(o=>o.value===state.playerDeck))select.value=state.playerDeck;else{select.value='blackout';state.playerDeck='blackout'}select.onchange=()=>{if(state.pendingDuel||state.activeStory||state.ended){select.value=state.playerDeck;return;}state.playerDeck=select.value;persist()};}catch(e){$('notice').textContent='Deck list unavailable: '+e.message;}}
 persist();render();initDecks();if(state.pendingDuel){$('duel').hidden=false;$('battle').src=duelUrl(state.pendingDuel);}
 })();
