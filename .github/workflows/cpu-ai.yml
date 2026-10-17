@@ -33,3 +33,22 @@ jobs:
       - run: node benchmark_cpu.js --pairs 25 --max-turns 120 --left-level 2 --right-level 1
       - run: node benchmark_cpu.js --pairs 40 --max-turns 120 --left-level 5 --right-level 5 --left-planning true --right-planning false
       - run: node benchmark_cpu.js --pairs 20 --max-turns 120 --left-level 5 --right-level 5 --left-planning true --right-planning false --left-deck brushfire --right-deck brushfire
+      - run: node benchmark_cpu.js --pairs 40 --max-turns 120 --left-level 5 --right-level 5 --left-evolution-tempo true --right-evolution-tempo false
+      - run: node benchmark_cpu.js --pairs 30 --max-turns 120 --left-level 5 --right-level 5 --left-evolution-tempo true --right-evolution-tempo false --left-deck brushfire --right-deck brushfire
+      - run: node benchmark_cpu.js --pairs 40 --max-turns 120 --left-level 5 --right-level 5 --left-prize-race true --right-prize-race false
+      - run: node benchmark_cpu.js --pairs 30 --max-turns 120 --left-level 5 --right-level 5 --left-prize-race true --right-prize-race false --left-deck brushfire --right-deck brushfire
+      - run: node benchmark_cpu.js --pairs 30 --max-turns 120 --seed 17891 --left-level 5 --right-level 5 --left-prize-race true --right-prize-race false --left-deck overgrowth --right-deck overgrowth
+      - run: node benchmark_cpu.js --pairs 30 --max-turns 120 --seed 27891 --left-level 5 --right-level 5 --left-prize-race true --right-prize-race false --left-deck zap --right-deck zap
+      - run: node benchmark_cpu.js --pairs 40 --max-turns 120 --seed 84531 --left-level 5 --right-level 5 --left-knockout-tempo true --right-knockout-tempo false
+      - run: node benchmark_cpu.js --pairs 30 --max-turns 120 --seed 94531 --left-level 5 --right-level 5 --left-knockout-tempo true --right-knockout-tempo false --left-deck brushfire --right-deck brushfire
+      - run: node benchmark_cpu_tiers.js --pairs 40 --max-turns 120 --seed 71839 --decks blackout,brushfire
+      - run: node benchmark_cpu_tiers.js --pairs 40 --max-turns 120 --seed 71839 --decks blackout,brushfire --graduated-noise
+      - run: node benchmark_cpu.js --pairs 40 --max-turns 120 --seed 45401 --left-level 5 --right-level 5 --left-opponent-response true --right-opponent-response false
+      - run: node benchmark_cpu.js --pairs 30 --max-turns 120 --seed 55401 --left-level 5 --right-level 5 --left-opponent-response true --right-opponent-response false --left-deck brushfire --right-deck brushfire
+      - run: node benchmark_cpu.js --pairs 30 --max-turns 120 --seed 28401 --left-level 5 --right-level 5 --left-prize-race true --left-knockout-tempo true --left-opponent-response true
+      - run: node benchmark_cpu.js --pairs 30 --max-turns 120 --seed 38401 --left-level 5 --right-level 5 --left-prize-race true --left-knockout-tempo true --left-opponent-response true --left-deck brushfire --right-deck brushfire
+      - run: node benchmark_cpu.js --pairs 30 --max-turns 120 --seed 48401 --left-level 5 --right-level 4 --left-prize-race true --left-knockout-tempo true --left-opponent-response true
+      - run: node benchmark_cpu.js --pairs 30 --max-turns 120 --seed 58401 --left-level 5 --right-level 4 --left-prize-race true --left-knockout-tempo true --left-opponent-response true --left-deck brushfire --right-deck brushfire
+      - run: node benchmark_cpu.js --pairs 40 --max-turns 120 --seed 21409 --left-level 5 --right-level 5 --left-energy-horizon true --right-energy-horizon false
+      - run: node benchmark_cpu.js --pairs 30 --max-turns 120 --seed 31409 --left-level 5 --right-level 5 --left-energy-horizon true --right-energy-horizon false --left-deck brushfire --right-deck brushfire
+      - run: node benchmark_cpu.js --pairs 30 --max-turns 120 --seed 41409 --left-level 5 --right-level 5 --left-energy-horizon true --right-energy-horizon false --left-deck overgrowth --right-deck overgrowth

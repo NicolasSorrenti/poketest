@@ -33,12 +33,15 @@ class ClassicLocalService {
   this.sessions=new Map();this.now=now;this.ttlMs=ttlMs;this.maxSessions=maxSessions;
  }
  prune(){for(const [token,r] of this.sessions)if(this.now()-r.updated>this.ttlMs)this.sessions.delete(token);}
- create({deck='blackout',opponent='brushfire',customDeck,seed,difficulty,personality,aiSeed=1,npc}={}){
+ create({deck='blackout',opponent='brushfire',customDeck,seed,difficulty,personality,aiSeed=1,npc,advancedTactics=false}={}){
   this.prune();if(this.sessions.size>=this.maxSessions)throw Error('Too many active duels');
   if(!DECKS[deck]||!DECKS[opponent])throw Error('Unknown Classic deck');
   if(seed!==undefined&&(!Number.isSafeInteger(seed)||seed<0||seed>0xffffffff))throw Error('Invalid seed');
+  if(typeof advancedTactics!=='boolean')throw Error('advancedTactics must be a boolean');
   const defaults=npc===undefined?{level:3,personality:'balanced'}:profileForNpc(npc);
-  const cpuConfig=configuration({level:difficulty??defaults.level,personality:personality??defaults.personality,seed:aiSeed});
+  if(advancedTactics&&(difficulty??defaults.level)<4)throw Error('Advanced tactics require Expert or Champion level');
+  const cpuConfig=configuration({level:difficulty??defaults.level,personality:personality??defaults.personality,seed:aiSeed,
+   prizeRace:advancedTactics,knockoutTempo:advancedTactics,opponentResponse:advancedTactics});
   if(deck==='custom'&&(!Array.isArray(customDeck)||customDeck.length!==60||!customDeck.every(id=>typeof id==='string'&&id.length<=40)))throw Error('Custom deck must contain exactly 60 card IDs');
   if(deck!=='custom'&&customDeck!==undefined)throw Error('Unexpected custom deck');
   if(opponent==='custom')throw Error('CPU deck must be a preset');
@@ -53,7 +56,8 @@ class ClassicLocalService {
  }
  session(token){this.prune();const s=this.sessions.get(token);if(!s)throw Error('Unknown or expired session');s.updated=this.now();return s;}
  response(s){const g=s.game,view=publicView(g,0);
-  return {revision:s.revision,view,activity:publicActivity(g),format:g.format,winner:g.winner,turnSerial:g.turnSerial,cpu:{level:s.cpuConfig?.level??3,personality:s.cpuConfig?.personality??'balanced',npc:s.npc??null},
+  return {revision:s.revision,view,activity:publicActivity(g),format:g.format,winner:g.winner,turnSerial:g.turnSerial,cpu:{level:s.cpuConfig?.level??3,personality:s.cpuConfig?.personality??'balanced',npc:s.npc??null,
+    advancedTactics:!!s.cpuConfig?.knockoutTempo},
    you:{energyUsed:!!g.players[0].energyUsed,retreated:!!g.players[0].retreated,stadiumUsed:g.players[0].stadiumUsedTurn===g.turnSerial},
    lastActions:g.events.slice(-8).map(e=>({side:e.side,type:e.type})),
    counts:g.players.map(p=>countCards(p))};

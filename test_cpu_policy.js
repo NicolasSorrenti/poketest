@@ -134,9 +134,9 @@ const settings={level:3,personality:'balanced',side:1,seed:47};
  assert.throws(()=>profileForNpc('unknown'),/Unknown CPU NPC/);
  const service=new ClassicLocalService();
  const first=service.create({npc:'reina',seed:41,deck:'blackout',opponent:'brushfire'});
- assert.deepEqual(first.cpu,{level:4,personality:'aggressive',npc:'reina'});
+ assert.deepEqual(first.cpu,{level:4,personality:'aggressive',npc:'reina',advancedTactics:false});
  const second=service.create({npc:'reina',difficulty:1,personality:'defensive',seed:42});
- assert.deepEqual(second.cpu,{level:1,personality:'defensive',npc:'reina'},
+ assert.deepEqual(second.cpu,{level:1,personality:'defensive',npc:'reina',advancedTactics:false},
   'An RPG NPC identity must not constrain independent skill and temperament overrides');
 }
 {
@@ -363,6 +363,340 @@ const settings={level:3,personality:'balanced',side:1,seed:47};
  assert.equal(report.baseline.planning,true);
  assert.equal(report.challenger.planning,false);
  assert.throws(()=>argumentsOf(['--left-planning','maybe']),/Planning/);
+}
+{
+ // Evolving a ready Machop into an Energy-starved Machoke throws away Low Kick
+ // and can lose a Prize race. A Champion should attack first, but may evolve
+ // after sufficient Energy is available to preserve its damage output.
+ const g=createGame({decks:[deck,deck],seed:12098,format:'classic'});
+ const o=AI.observation(g,1);o.phase='game';o.turn=1;o.round=4;o.turnSerial=6;
+ o.self.active={id:IDS.machop,energies:[IDS.fight],damage:0,playedTurn:2,status:null};
+ o.self.bench=[{id:IDS.hit,energies:[],damage:0,playedTurn:2,status:null}];
+ o.self.hand=['base1-34'];o.self.energyUsed=false;
+ o.opponent.active={id:IDS.rat,damage:10,energies:[],status:null};
+ const ch=AI.configuration({side:1,level:5,evolutionTempo:true});
+ const baseline=AI.configuration({side:1,level:5,evolutionTempo:false});
+ const ev={type:'evolve',payload:{handIndex:0,slot:-1}};
+ const att={type:'attack',payload:{attackIndex:0}};
+ assert.ok(AI.evolutionTempoPenalty(o,-1,'base1-34',ch)>180,
+  'Mature CPU recognizes a guaranteed KO lost by premature evolution');
+ assert.ok(AI.score(att,o,ch,{})>AI.score(ev,o,ch,{}),
+  'Champion must claim the knockout rather than strand its Active');
+ // The legacy policy already knows about immediate KO bonuses. Remove that
+ // bonus to isolate the genuine flaw: evolving gives up ordinary attack tempo.
+ o.opponent.active={id:IDS.hit,damage:0,energies:[],status:null};
+ assert.ok(AI.score(ev,o,baseline,{})>AI.score(att,o,baseline,{}),
+  'Comparison baseline retains the previous naive non-KO evolution preference');
+ o.self.active.energies=[IDS.fight,IDS.fight];
+ o.self.hand=['base1-34',IDS.fight];
+ assert.equal(AI.evolutionTempoPenalty(o,-1,'base1-34',ch),0,
+  'Evolution is safe when an Energy in the current hand unlocks a good attack this turn');
+ o.self.hand=['base1-34'];
+ assert.ok(AI.evolutionTempoPenalty(o,-1,'base1-34',ch)>0);
+ o.self.active.energies=[IDS.fight,IDS.fight,IDS.fight];
+ assert.equal(AI.evolutionTempoPenalty(o,-1,'base1-34',ch),0,
+  'Do not penalize evolution that already has enough attached Energy');
+ o.self.active.energies=[IDS.fight];o.self.active.status='Asleep';
+ assert.equal(AI.evolutionTempoPenalty(o,-1,'base1-34',ch),0,
+  'An evolution that cures a blocking condition should remain viable');
+ assert.throws(()=>AI.configuration({evolutionTempo:'yes'}),/evolution-tempo/);
+}
+{
+ // Energy Removal has a staged choice. Against a powered Active Hitmonchan
+ // and a weak Bench Rattata, removing Energy from the active attacker should
+ // take priority even though the Bench has fewer remaining HP.
+ const g=createGame({decks:[deck,deck],seed:777,format:'classic'});
+ const o=AI.observation(g,1);o.phase='game';o.turn=1;
+ o.self.active={id:IDS.machop,damage:0,energies:[IDS.fight],status:null};
+ o.opponent.active={id:IDS.hit,damage:0,energies:[IDS.fight],status:null};
+ o.opponent.bench=[{id:IDS.rat,damage:0,energies:[IDS.fight],status:null}];
+ o.decision={id:'classic-trainer:1',kind:'target',actor:1,
+  label:'Choose opposing Pokémon',min:1,max:1,optional:false,
+  options:[{id:'slot:-1',label:'Active: Hitmonchan'},
+   {id:'slot:0',label:'Bench: Rattata'}]};
+ const active={type:'choose',payload:{decisionId:'classic-trainer:1',selected:['slot:-1']}};
+ const bench={type:'choose',payload:{decisionId:'classic-trainer:1',selected:['slot:0']}};
+ const champion=AI.configuration({level:5,side:1});
+ const novice=AI.configuration({level:1,side:1});
+ assert.ok(AI.score(active,o,champion,{})>AI.score(bench,o,champion,{}),
+  'Skilled Energy Removal targets the currently attacking threat');
+ assert.ok(AI.score(bench,o,novice,{})>AI.score(active,o,novice,{}),
+  'Novice may instead target the weaker-looking Benched Pokémon');
+ o.opponent.active.energies=[];
+ assert.ok(AI.score(bench,o,champion,{})>AI.score(active,o,champion,{}),
+  'An opponent Bench attacker with Energy is the right target when Active has none');
+ assert.equal(AI.candidates(o,champion,{powerKeys:new Set()}).filter(x=>x.type==='choose').length,2,
+  'Target selection still uses the same authoritative choice-command interface');
+}
+{
+ // The second Energy Removal decision must choose the Energy that actually
+ // disables the target's affordable attack, not the first Energy in its list.
+ const game=createGame({decks:[deck,deck],seed:887,format:'classic'});
+ game.pendingAction={kind:'classic_trainer',plan:{side:1,
+  data:{target:['slot:-1'],source:['slot:-1']}}};
+ const o=AI.observation(game,1);
+ assert.equal(o.pendingTrainerTarget,-1);
+ assert.equal(o.pendingTrainerSource,-1);
+ o.phase='game';o.turn=1;
+ o.self.active={id:IDS.hit,energies:[IDS.fight,'base1-102'],damage:0,status:null};
+ o.opponent.active={id:IDS.hit,energies:[IDS.fight,'base1-102'],damage:0,status:null};
+ o.decision={id:'classic-trainer:4',kind:'enemyEnergy',actor:1,
+  label:'Choose opposing Energy to discard',min:1,max:1,optional:false,
+  options:[{id:'n:0',label:'Fighting Energy'},{id:'n:1',label:'Water Energy'}]};
+ const champion=AI.configuration({side:1,level:5});
+ const choose=i=>({type:'choose',payload:{decisionId:o.decision.id,selected:['n:'+i]}});
+ assert.ok(AI.score(choose(0),o,champion,{})>AI.score(choose(1),o,champion,{}),
+  'Removing Fighting must be better than irrelevant Water on enemy Hitmonchan');
+ o.decision={...o.decision,kind:'ownEnergy',label:'Discard one of your attached Energy'};
+ assert.ok(AI.score(choose(1),o,champion,{})>AI.score(choose(0),o,champion,{}),
+  'Super Energy Removal should pay spare Water instead of essential Fighting');
+ const opposite=structuredClone(game);opposite.pendingAction.plan.side=0;
+ const hidden=AI.observation(opposite,1);
+ assert.equal(hidden.pendingTrainerTarget,null);
+ assert.equal(hidden.pendingTrainerSource,null);
+ assert.equal(hidden.opponent.hand,undefined);
+}
+{
+ const g=createGame({decks:[deck,deck],seed:241,format:'classic'});
+ const o=AI.observation(g,1);o.phase='game';o.turn=1;
+ o.self.prizeCount=1;o.opponent.prizeCount=4;
+ o.self.active={id:IDS.machop,damage:0,energies:[IDS.fight],status:null};
+ o.self.bench=[];o.self.hand=[IDS.fight];
+ o.opponent.active={id:IDS.rat,damage:10,energies:[],status:null};
+ o.opponent.bench=[{id:IDS.hit,damage:0,energies:[],status:null}];
+ const race=AI.configuration({side:1,level:5,prizeRace:true});
+ const old=AI.configuration({side:1,level:5,prizeRace:false});
+ const attack={type:'attack',payload:{attackIndex:0}};
+ assert.ok(AI.prizeRaceBonus(attack,o,race)>=500,
+  'Guaranteed last Prize from Low Kick must dominate optional setup');
+ assert.equal(AI.prizeRaceBonus(attack,o,old),0,
+  'Baseline remains available for blinded controlled comparison');
+ o.self.prizeCount=4;o.opponent.prizeCount=1;
+ o.opponent.active={id:IDS.hit,damage:0,energies:[IDS.fight],status:null};
+ o.self.active={id:IDS.rat,damage:20,energies:[IDS.fight],status:null};
+ o.self.bench=[{id:IDS.hit,damage:0,energies:[IDS.fight],status:null}];
+ let retreat={type:'retreat',payload:{slot:0}};
+ assert.ok(AI.prizeRaceBonus(retreat,o,race)>=100,
+  'When the opponent needs one Prize, a safe retreat prevents a known loss');
+ o.opponent.active.status='Asleep';
+ assert.equal(AI.prizeRaceBonus(retreat,o,race),0,
+  'An Asleep enemy with a powered attack is not an immediate attack threat');
+ o.opponent.active.status=null;
+ o.self.bench[0]={id:IDS.rat,damage:20,energies:[],status:null};
+ assert.equal(AI.prizeRaceBonus(retreat,o,race),0,
+  'Do not flee into another Pokémon that loses to the same public counterattack');
+ assert.throws(()=>AI.configuration({prizeRace:'yes'}),/Prize-race/);
+ assert.equal(AI.configuration({level:5}).prizeRace,false,
+  'Experimental game-tree evaluation remains disabled by default');
+}
+{
+ const {argumentsOf,arena}=require('./benchmark_cpu');
+ const opts=argumentsOf(['--pairs','1','--max-turns','4','--left-level','5','--right-level','5',
+   '--left-prize-race','true','--right-prize-race','false']);
+ const result=arena(opts);
+ assert.equal(result.baseline.prizeRace,true);
+ assert.equal(result.challenger.prizeRace,false);
+ assert.throws(()=>argumentsOf(['--left-prize-race','maybe']),/Planning/);
+}
+{
+ const {arena,argumentsOf}=require('./benchmark_cpu');
+ const result=arena(argumentsOf(['--pairs','2','--max-turns','8','--seed','87002',
+  '--left-level','5','--right-level','5','--left-prize-race','true','--right-prize-race','false']));
+ assert.equal(result.totalMatches,4);
+ assert.equal(result.prizeRace,undefined);
+ assert.equal(result.baseline.prizeRace,true);
+ assert.equal(result.challenger.prizeRace,false);
+ assert.equal(result.winCausesByRole.length,2);
+ assert.equal(result.meanFinalPrizesByRole.length,2);
+ for(let role=0;role<2;role++){
+  assert.equal(Object.values(result.winCausesByRole[role]).reduce((n,x)=>n+x,0),
+   role===0?result.wins:result.losses,
+   'Win reasons must account for all conclusive results without inventing new wins');
+  assert.ok(result.meanFinalPrizesByRole[role]>=0&&result.meanFinalPrizesByRole[role]<=6);
+ }
+}
+{
+ const {arena,argumentsOf,wilson}=require('./benchmark_cpu');
+ const report=arena(argumentsOf(['--pairs','3','--seed','21987',
+  '--max-turns','12','--left-level','5','--right-level','4','--target-upset-rate','0.05']));
+ assert.equal(report.upsetTarget.higherLevel,5);
+ assert.equal(report.upsetTarget.lowerLevel,4);
+ assert.equal(report.upsetTarget.targetMaximum,0.05);
+ assert.equal(report.upsetTarget.applicable,true);
+ assert.equal(report.upsetTarget.totalMatchUpsetRate,report.losses/report.totalMatches);
+ assert.equal(report.upsetTarget.decisiveUpsetRate,
+  report.conclusiveMatches?report.losses/report.conclusiveMatches:null);
+ assert.equal(report.upsetTarget.statisticallyVerified,
+  report.conclusiveMatches>0&&wilson(report.losses,report.conclusiveMatches).upper<=.05);
+ const same=arena(argumentsOf(['--pairs','1','--max-turns','3','--left-level','5','--right-level','5']));
+ assert.equal(same.upsetTarget.applicable,false,
+  'Unranked same-skill comparisons must not be counted as lower-level upsets');
+ assert.equal(same.upsetTarget.statisticallyVerified,false);
+ assert.throws(()=>argumentsOf(['--target-upset-rate','-0.1']),/upset rate/);
+ assert.throws(()=>argumentsOf(['--target-upset-rate','0.8']),/upset rate/);
+ assert.ok(wilson(0,10).upper>.05,'Ten undefeated games cannot prove a <=5% upset rate');
+}
+{
+ const g=createGame({decks:[deck,deck],seed:541,format:'classic'});
+ const o=AI.observation(g,1);o.phase='game';o.turn=1;
+ o.self.active={id:IDS.hit,energies:[IDS.fight],damage:0,status:null};
+ o.opponent.active={id:IDS.rat,energies:[],damage:10,status:null};
+ o.opponent.bench=[{id:IDS.machop,energies:[],damage:0,status:null}];
+ o.self.hand=[IDS.machop];o.self.bench=[];
+ const act={type:'attack',payload:{attackIndex:0}};
+ const strong=AI.configuration({side:1,level:5,knockoutTempo:true});
+ const old=AI.configuration({side:1,level:5,knockoutTempo:false});
+ assert.equal(AI.knockoutTempoBonus(act,o,strong),0,
+  'First build a backup if a knockout cannot finish the duel and otherwise leaves an empty Bench');
+ o.self.bench=[{id:IDS.machop,energies:[],damage:0,status:null}];
+ assert.ok(AI.knockoutTempoBonus(act,o,strong)>=120,
+  'Secured Prize should beat optional development once a safe backup is established');
+ assert.equal(AI.knockoutTempoBonus(act,o,old),0);
+ o.self.bench=[];o.self.prizeCount=1;
+ assert.ok(AI.knockoutTempoBonus(act,o,strong)>=500,
+  'Immediate game-winning final Prize takes priority even without any backup');
+ o.self.prizeCount=4;o.opponent.bench=[];
+ assert.ok(AI.knockoutTempoBonus(act,o,strong)>=500,
+  'Knocking out the last opposing Pokémon is also a game win');
+ o.opponent.bench=[{id:IDS.hit,energies:[],damage:0,status:null}];
+ o.opponent.active={id:IDS.hit,energies:[IDS.fight],damage:0,status:null};
+ o.self.bench=[{id:IDS.machop,energies:[],damage:0,status:null}];
+ assert.equal(AI.knockoutTempoBonus(act,o,strong),0,
+  'Do not treat a non-KO attack as an earned Prize');
+ assert.equal(AI.configuration({level:5}).knockoutTempo,false);
+ assert.throws(()=>AI.configuration({knockoutTempo:'yes'}),/knockout-tempo/);
+ const {argumentsOf,arena}=require('./benchmark_cpu');
+ const opts=argumentsOf(['--pairs','1','--max-turns','4','--left-level','5',
+  '--right-level','5','--left-knockout-tempo','true','--right-knockout-tempo','false']);
+ const report=arena(opts);
+ assert.equal(report.baseline.knockoutTempo,true);
+ assert.equal(report.challenger.knockoutTempo,false);
+}
+{
+ const {parse,audit}=require('./benchmark_cpu_tiers');
+ const opts=parse(['--pairs','1','--max-turns','8','--seed','31819','--decks','blackout,brushfire']);
+ const result=audit(opts);
+ assert.equal(result.aggregatedAdjacent.length,4);
+ assert.equal(result.perDeck.length,8);
+ assert.equal(result.totalGames,16);
+ for(const row of result.aggregatedAdjacent){
+  assert.equal(row.total,row.higherWins+row.lowerWins+row.draws);
+  assert.equal(row.decisive,row.higherWins+row.lowerWins);
+  assert.ok(row.confidence95.upper>=row.lowerWinRateDecisive||row.decisive===0);
+ }
+ assert.throws(()=>parse(['--target','0.75']),/target/);
+ assert.throws(()=>parse(['--decks',',']),/deck list/);
+}
+{
+ const g=createGame({decks:[deck,deck],seed:8719,format:'classic'});
+ const o=AI.observation(g,1);o.phase='game';o.turn=1;o.round=5;
+ o.self.active={id:IDS.rat,energies:[IDS.fight],damage:20,status:null};
+ o.self.bench=[{id:IDS.hit,energies:[IDS.fight],damage:0,status:null}];
+ o.opponent.active={id:IDS.hit,energies:[IDS.fight],damage:0,status:null};
+ const retreat={type:'retreat',payload:{slot:0}};
+ const champ=AI.configuration({level:5,side:1,opponentResponse:true});
+ assert.ok(AI.opponentResponseBonus(retreat,o,champ)>=220,
+  'Replace a soon-KOed Active with a survivable ready attacker using visible opponent attacks');
+ o.opponent.active.status='Asleep';
+ assert.equal(AI.opponentResponseBonus(retreat,o,champ),0,
+  'Asleep opponent cannot attack in next immediate response');
+ o.opponent.active.status=null;
+ o.self.bench[0]={id:IDS.hit,energies:[],damage:0,status:null};
+ assert.equal(AI.opponentResponseBonus(retreat,o,champ),0,
+  'Cannot award defensive retreat credit to a passive unpowered Bench');
+ o.self.bench[0]={id:IDS.hit,energies:[IDS.fight],damage:0,status:null};
+ o.opponent.active.damage=60;
+ assert.equal(AI.opponentResponseBonus(retreat,o,champ),0,
+  'Do not retreat instead of taking an immediate knockout');
+ const old=AI.configuration({level:5,side:1});
+ assert.equal(AI.opponentResponseBonus(retreat,o,old),0);
+ assert.equal(AI.configuration({level:5}).opponentResponse,false,
+  'Unverified opponent-response feature must stay opt-in');
+ assert.throws(()=>AI.configuration({opponentResponse:'yes'}),/opponent-response/);
+ const {arena,argumentsOf}=require('./benchmark_cpu');
+ const x=arena(argumentsOf(['--pairs','1','--max-turns','4','--left-level','5',
+  '--right-level','5','--left-opponent-response','true','--right-opponent-response','false']));
+ assert.equal(x.baseline.opponentResponse,true);
+ assert.equal(x.challenger.opponentResponse,false);
+}
+{
+ const {ClassicLocalService}=require('./classic_local_service');
+ const local=new ClassicLocalService();
+ const experimental=local.create({deck:'blackout',opponent:'blackout',seed:781,
+  difficulty:5,advancedTactics:true});
+ assert.equal(experimental.cpu.advancedTactics,true,
+  'Real local Champion games must expose the opt-in setting to callers');
+ const stored=local.session(experimental.token);
+ assert.equal(stored.cpuConfig.prizeRace,true);
+ assert.equal(stored.cpuConfig.knockoutTempo,true);
+ assert.equal(stored.cpuConfig.opponentResponse,true);
+ const ordinary=local.create({deck:'blackout',opponent:'blackout',seed:782});
+ assert.equal(ordinary.cpu.advancedTactics,false,
+  'Existing casual matches must preserve prior CPU policy by default');
+ assert.throws(()=>local.create({advancedTactics:'yes'}),/boolean/);
+ assert.throws(()=>local.create({advancedTactics:true,difficulty:2}),/require Expert or Champion/);
+}
+{
+ for(let level=1;level<=5;level++){
+  const normal=AI.configuration({level}),calibrated=AI.configuration({level,graduatedNoise:true});
+  assert.equal(normal.skill,AI.SKILLS[level]);
+  assert.equal(calibrated.skill,AI.CALIBRATED_SKILLS[level]);
+  if(level<5){
+   assert.ok(calibrated.skill.temperature>normal.skill.temperature);
+   assert.ok(calibrated.skill.sampleWindow>normal.skill.sampleWindow);
+  }
+  if(level>1){
+   assert.ok(AI.CALIBRATED_SKILLS[level].temperature<
+    AI.CALIBRATED_SKILLS[level-1].temperature,
+    'Worse skills must have greater decision uncertainty under calibrated rules');
+  }
+ }
+ assert.equal(AI.CALIBRATED_SKILLS[5],AI.SKILLS[5],
+  'Champions remain entirely deterministic and are not artificially buffed');
+ assert.throws(()=>AI.configuration({graduatedNoise:'yes'}),/graduated-noise/);
+ const {parse,audit}=require('./benchmark_cpu_tiers');
+ const result=audit(parse(['--pairs','1','--max-turns','6','--decks','blackout',
+  '--graduated-noise']));
+ assert.equal(result.graduatedNoise,true);
+ assert.equal(result.totalGames,8);
+ const {arena,argumentsOf}=require('./benchmark_cpu');
+ const comparison=arena(argumentsOf(['--pairs','1','--max-turns','6','--left-level','4',
+  '--right-level','3','--left-graduated-noise','true','--right-graduated-noise','true']));
+ assert.equal(comparison.baseline.graduatedNoise,true);
+ assert.equal(comparison.challenger.graduatedNoise,true);
+}
+{
+ // Live combat option forecasts only cards already in the CPU hand: attaching
+ // a second Fighting Energy to Machoke permits a third Energy next turn, which
+ // unlocks Karate Chop. No guessed top-deck or future coin result is involved.
+ const g=createGame({decks:[deck,deck],seed:555,format:'classic'});
+ const o=AI.observation(g,1);o.phase='game';o.turn=1;o.round=5;
+ o.self.active={id:'base1-34',damage:0,status:null,energies:[IDS.fight],playedTurn:2};
+ o.self.bench=[];
+ o.self.hand=[IDS.fight,IDS.fight];
+ o.self.energyUsed=false;
+ o.opponent.active={id:IDS.hit,damage:0,energies:[IDS.fight],status:null};
+ const action={type:'attach_energy',payload:{handIndex:0,slot:-1}};
+ const cfg=AI.configuration({side:1,level:5,energyHorizon:true});
+ const normal=AI.configuration({side:1,level:5});
+ const future=AI.energyHorizonBonus(action,o,cfg);
+ assert.ok(future>AI.energyHorizonBonus(action,o,normal),
+  'Champion must recognize a second Energy plus known hand Energy unlocks a future attack');
+ const withTwo=structuredClone(o);
+ withTwo.self.hand=[IDS.fight];
+ assert.ok(AI.energyHorizonBonus(action,withTwo,cfg)<future,
+  'Do not hallucinate a third future Energy card absent from own hand');
+ const status=structuredClone(o);status.opponent.active.status='Paralyzed';
+ assert.equal(AI.energyHorizonBonus(action,status,cfg),
+  AI.energyHorizonBonus(action,o,cfg),
+  'Forecast must never use a future opponent RNG outcome');
+ assert.equal(AI.configuration({level:5}).energyHorizon,false);
+ assert.throws(()=>AI.configuration({energyHorizon:'yes'}),/energy-horizon/);
+ const {arena,argumentsOf}=require('./benchmark_cpu');
+ const result=arena(argumentsOf(['--pairs','1','--max-turns','4','--left-level','5',
+  '--right-level','5','--left-energy-horizon','true','--right-energy-horizon','false']));
+ assert.equal(result.baseline.energyHorizon,true);
+ assert.equal(result.challenger.energyHorizon,false);
 }
 let duels=0,decisions=0,attacks=0,energy=0,evolutions=0,trainer=0;
 for(let seed=1;seed<=4;seed++){

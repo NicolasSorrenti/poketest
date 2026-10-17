@@ -15,6 +15,16 @@ const SKILLS=Object.freeze({
   4:Object.freeze({name:'Expert',temperature:2,attention:30,sampleWindow:3,trainers:4,bench:4}),
   5:Object.freeze({name:'Champion',temperature:0,attention:100,sampleWindow:1,trainers:6,bench:4})
 });
+// An independently testable difficulty calibration: mistakes result from a
+// broader, noisier choice among *legal* actions, never extra cards, forced
+// concedes or favorable RNG for the other player.
+const CALIBRATED_SKILLS=Object.freeze({
+ 1:Object.freeze({...SKILLS[1],temperature:900,sampleWindow:36}),
+ 2:Object.freeze({...SKILLS[2],temperature:240,sampleWindow:24}),
+ 3:Object.freeze({...SKILLS[3],temperature:85,sampleWindow:13}),
+ 4:Object.freeze({...SKILLS[4],temperature:35,sampleWindow:7}),
+ 5:SKILLS[5]
+});
 const PERSONALITIES=Object.freeze({
  balanced:Object.freeze({damage:1,survival:1,setup:1,control:1,risk:0}),
  aggressive:Object.freeze({damage:1.3,survival:.75,setup:.9,control:.9,risk:.15}),
@@ -32,7 +42,20 @@ function configuration(raw={}){
  // Opt-in until blinded paired tournaments demonstrate a strength gain.
  const planning=raw.planning??false;
  if(typeof planning!=='boolean')throw Error('Invalid CPU planning setting');
- return {level,personality,seed:raw.seed??1,side,planning,skill:SKILLS[level],style:PERSONALITIES[personality]};
+ const evolutionTempo=raw.evolutionTempo??false;
+ if(typeof evolutionTempo!=='boolean')throw Error('Invalid CPU evolution-tempo setting');
+ const prizeRace=raw.prizeRace??false;
+ if(typeof prizeRace!=='boolean')throw Error('Invalid CPU Prize-race setting');
+ const knockoutTempo=raw.knockoutTempo??false;
+ if(typeof knockoutTempo!=='boolean')throw Error('Invalid CPU knockout-tempo setting');
+ const opponentResponse=raw.opponentResponse??false;
+ if(typeof opponentResponse!=='boolean')throw Error('Invalid CPU opponent-response setting');
+ const graduatedNoise=raw.graduatedNoise??false;
+ if(typeof graduatedNoise!=='boolean')throw Error('Invalid graduated-noise setting');
+ const energyHorizon=raw.energyHorizon??false;
+ if(typeof energyHorizon!=='boolean')throw Error('Invalid energy-horizon setting');
+ return {level,personality,seed:raw.seed??1,side,planning,evolutionTempo,prizeRace,knockoutTempo,opponentResponse,
+  graduatedNoise,energyHorizon,skill:(graduatedNoise?CALIBRATED_SKILLS:SKILLS)[level],style:PERSONALITIES[personality]};
 }
 // Seeded independent of the engine's private deck order and future RNG state.
 function rng(seed){let x=(seed>>>0)||0x6d2b79f5;return ()=>{
@@ -45,8 +68,18 @@ function observation(game,side){
  // visible to the acting player and never reveal the opponent's private cards.
  const self={...view.players[side],energyUsed:!!game.players[side].energyUsed,
   retreated:!!game.players[side].retreated};
+ // Only expose decisions previously made BY this CPU in its own Trainer flow.
+ // The full pending action can include hidden draws and must never be projected.
+ const ownedPlan=game.pendingAction?.kind==='classic_trainer'&&
+  game.pendingAction.plan?.side===side?game.pendingAction.plan:null;
+ const selectedIndex=key=>{
+  const x=ownedPlan?.data?.[key]?.[0];
+  if(typeof x!=='string'||!/^slot:-?\d+$/.test(x))return null;
+  return Number(x.slice(5));
+ };
  return {phase:view.phase,turn:view.turn,round:view.round,turnSerial:game.turnSerial,over:view.over,
   self,opponent:view.players[1-side],stadium:view.stadium,
+  pendingTrainerTarget:selectedIndex('target'),pendingTrainerSource:selectedIndex('source'),
   decision:view.pendingDecision,setupReady:!!game.setupReady[side]};
 }
 const card=id=>CATALOG.get(id);
@@ -245,7 +278,7 @@ function candidates(o,cfg,used){
  if(o.decision){
   if(o.decision.actor!==cfg.side)return [];
   const d=o.decision;
-  const sorted=[...d.options].sort((a,b)=>choiceValue(b,d,o)-choiceValue(a,d,o)||a.id.localeCompare(b.id));
+  const sorted=[...d.options].sort((a,b)=>choiceValue(b,d,o,cfg)-choiceValue(a,d,o,cfg)||a.id.localeCompare(b.id));
   // Card costs and mandatory multi-pick effects must be solvable at every skill.
   // Skill changes ranking, never the legal number of choices considered.
   const sizes=new Set([d.min,d.max,Math.min(d.max,Math.max(1,d.min)),Math.min(d.max,Math.max(2,d.min))]);
@@ -311,15 +344,55 @@ function candidates(o,cfg,used){
  options.push(command('end_turn'));
  return options;
 }
-function choiceValue(option,decision,o){
+function energyDenialValue(unit,defender,isActive){
+ if(!unit||!unit.energies?.length)return -100;
+ const before=strongestAffordableAttack(unit,defender);
+ const future=(unit.effectiveAttacks||card(unit.id)?.attacks||[]).reduce((max,a)=>
+  Math.max(max,(a.cost||[]).length),0);
+ let denied=0;
+ for(let i=0;i<unit.energies.length;i++){
+  const after={...unit,energies:unit.energies.filter((_,j)=>j!==i)};
+  const remaining=strongestAffordableAttack(after,defender);
+  denied=Math.max(denied,Math.max(0,before-remaining)+
+   ((before>=hpRemaining(defender)&&remaining<hpRemaining(defender))?100:0));
+ }
+ const ready=before>0?28:0;
+ const potential=Math.min(15,future*4);
+ return (isActive?1.3:.7)*(denied+ready+potential)+(isActive?32:0);
+}
+function energyRemovalChoiceValue(unit,defender,energyIndex,enemy){
+ if(!unit||!unit.energies?.[energyIndex])return 0;
+ const before=strongestAffordableAttack(unit,defender);
+ const after={...unit,energies:unit.energies.filter((_,i)=>i!==energyIndex)};
+ const remaining=strongestAffordableAttack(after,defender);
+ const denied=Math.max(0,before-remaining);
+ const removed=energyPool({energies:[unit.energies[energyIndex]]}).length;
+ const preventedKO=before>=hpRemaining(defender)&&remaining<hpRemaining(defender);
+ const control=denied*2+(preventedKO?130:0)+removed*7;
+ return enemy?control:-control;
+}
+function choiceValue(option,decision,o,cfg){
  const id=option.id,label=option.label||'',kind=decision.kind||'',ctx=decision.label||'';
  if(/^prize:/.test(id))return 1;
+ if(/^n:\d+$/.test(id)&&cfg?.level>=3){
+  const index=Number(id.slice(2));
+  if(/^Choose opposing Energy to discard$/i.test(ctx)&&o.pendingTrainerTarget!==null){
+   const unit=slotUnit(o.opponent,o.pendingTrainerTarget);
+   return energyRemovalChoiceValue(unit,o.self.active,index,true);
+  }
+  if(/^Discard one of your attached Energy$/i.test(ctx)&&o.pendingTrainerSource!==null){
+   const unit=slotUnit(o.self,o.pendingTrainerSource);
+   return energyRemovalChoiceValue(unit,o.opponent.active,index,false);
+  }
+ }
  if(/^count:/.test(id))return /draw/i.test(ctx)?Number(id.slice(6))*20:0;
  if(/^energy:/.test(id)&&/discard|retreat|pay/i.test(ctx))return /Double Colorless|Rainbow/i.test(label)?-15:10;
  if(/^bench:/.test(id)||/^slot:/.test(id)){
   const n=Number(id.split(':')[1]),own=/your|friendly|own|promot|receiv|retreat/i.test(ctx)&&!/opponent|opposing|enemy/i.test(ctx);
   const target=slotUnit(own?o.self:o.opponent,n);
   if(!target)return 0;
+  if(cfg?.level>=3&&/^slot:/.test(id)&&/^Choose opposing Pokémon$/i.test(ctx))
+   return energyDenialValue(target,o.self.active,n===-1);
   if(/promot|retreat|switch.*your/i.test(ctx)){
    const damage=strongestAffordableAttack(target,o.opponent.active);
    const incoming=strongestAffordableAttack(o.opponent.active,target);
@@ -340,6 +413,158 @@ function choiceValue(option,decision,o){
  if(/^hand:|^deck:/.test(id))return /Energy/i.test(label)?20:40;
  if(/draw|recover|search|attach|heal/i.test(ctx))return 15;
  return 0;
+}
+// Evolving can strand the Active without enough Energy to attack. Compute the
+// available attack value before/after evolution from only revealed combatants,
+// then check the player's own hand for a SAME-TURN usable Energy solution.
+function evolutionTempoPenalty(o,slot,evolutionId,cfg){
+ if(!cfg.evolutionTempo||cfg.level<3||slot!==-1)return 0;
+ const before=o.self.active,nextCard=card(evolutionId);
+ if(!before||!nextCard)return 0;
+ const after={...before,id:evolutionId};
+ const current=strongestAffordableAttack(before,o.opponent.active);
+ if(current<=0)return 0;
+ const promoted=strongestAffordableAttack(after,o.opponent.active);
+ if(promoted>=current)return 0;
+ // If one legal Energy attachment can restore a useful attack this turn,
+ // evolution is not necessarily a tempo sacrifice.
+ const canRefuel=!o.self.energyUsed&&o.self.hand.some(id=>
+  isEnergy(card(id))&&damageAfterAttachment(after,id,o.opponent.active)>=current);
+ if(canRefuel)return 0;
+ const currentKO=current>=hpRemaining(o.opponent.active)&&hpRemaining(o.opponent.active)>0;
+ const counterBefore=strongestAffordableAttack(o.opponent.active,before);
+ const counterAfter=strongestAffordableAttack(o.opponent.active,after);
+ const getsSafer=counterBefore>=hpRemaining(before)&&counterAfter<hpRemaining(after);
+ // Safety (larger HP pool and curing a disabling status) can outweigh tempo.
+ // Otherwise delaying evolution one turn preserves pressure on the Prize race.
+ const isDisabled=['Asleep','Paralyzed'].includes(before.status);
+ return getsSafer||isDisabled?0:
+  Math.round((promoted===0?142:60)+(currentKO&&promoted<hpRemaining(o.opponent.active)?110:0));
+}
+// Conservative one-ply opponent response and visible Prize-race incentives.
+// No reducer rollouts, opponent concealed hand, unknown future Energy or RNG.
+function prizeRaceBonus(action,o,cfg){
+ if(!cfg.prizeRace||cfg.level<4||o.phase!=='game'||!o.self.active||!o.opponent.active)return 0;
+ const own=o.self,enemy=o.opponent;
+ const urgent=own.prizeCount===1||enemy.bench.length===0;
+ if(action.type==='attack'){
+  const moves=own.active.effectiveAttacks||card(own.active.id)?.attacks||[];
+  const attack=moves[action.payload.attackIndex];if(!attack)return 0;
+  const ko=knockoutChance(attack,own.active,enemy.active);
+  // An actual knockout that takes our final Prize or eliminates their last
+  // Pokémon must dominate speculative development, retreat or Trainer play.
+  const victory=urgent?550*ko:0;
+  const theirWin=enemy.prizeCount===1&&
+   strongestAffordableAttack(enemy.active,own.active)>=hpRemaining(own.active);
+  // Even without winning outright, trading Prizes before a likely loss helps.
+  const trade=(!urgent&&theirWin?100*ko:0)+(!urgent?45*ko:0);
+  return (victory+trade)*cfg.style.damage;
+ }
+ if(action.type==='retreat'&&enemy.prizeCount===1){
+  const old=own.active,alternate=own.bench[action.payload.slot];
+  if(!alternate)return 0;
+  // Sleeping/Paralyzed Pokémon cannot immediately attack. An omniscient
+  // "potential attack" should not provoke a desperate unnecessary retreat.
+  if(['Asleep','Paralyzed'].includes(enemy.active.status))return 0;
+  const outgoing=strongestAffordableAttack(enemy.active,old);
+  const incoming=strongestAffordableAttack(enemy.active,alternate);
+  const deadly=outgoing>=hpRemaining(old)&&outgoing>0;
+  const escape=incoming<hpRemaining(alternate);
+  const myKO=strongestAffordableAttack(old,enemy.active)>=hpRemaining(enemy.active);
+  // If the next visible enemy attack takes their last Prize, a genuinely
+  // safe replacement may be more valuable than taking nonlethal damage.
+  return deadly&&escape&&!myKO?125*cfg.style.survival:0;
+ }
+ return 0;
+}
+// Distinguish a *secured Prize* from nominal damage, while preserving the
+// critical need to establish a backup before attacking. Full, guaranteed KO
+// urgency is an optional Champion skill feature until matchups prove value.
+// Public, bounded one-ply reply estimate: avoid yielding a free Prize when a
+// ready Benched Pokémon can weather the *currently affordable* opposing attack.
+// Opponent hidden hands, future Energy draws and RNG are never read.
+function opponentResponseBonus(action,o,cfg){
+ if(!cfg.opponentResponse||cfg.level<4||o.phase!=='game'||!o.self.active||!o.opponent.active)
+  return 0;
+ const p=o.self,q=o.opponent;
+ if(action.type!=='retreat')return 0;
+ if(['Asleep','Paralyzed'].includes(q.active.status))return 0;
+ const attacker=p.active,next=p.bench[action.payload.slot];
+ if(!next)return 0;
+ const now=strongestAffordableAttack(q.active,attacker);
+ const after=strongestAffordableAttack(q.active,next);
+ const threat=now>=hpRemaining(attacker)&&now>0;
+ if(!threat||after>=hpRemaining(next))return 0;
+ const currentKO=(attacker.effectiveAttacks||card(attacker.id)?.attacks||[])
+  .some(a=>canPayEnergy(a.cost||[],energyPool(attacker))&&knockoutChance(a,attacker,q.active)>=.75);
+ if(currentKO)return 0;
+ const replacement=strongestAffordableAttack(next,q.active);
+ if(!replacement)return 0; // Do not flee into a passive Bench that cannot defend itself.
+ const lostEnergy=Math.min(attacker.energies?.length||0,(card(attacker.id)?.retreatCost||[]).length);
+ const advantage=Math.max(0,replacement-strongestAffordableAttack(attacker,q.active))*.25;
+ return Math.max(0,270+advantage-lostEnergy*22)*cfg.style.survival;
+}
+function knockoutTempoBonus(a,o,cfg){
+ if(!cfg.knockoutTempo||cfg.level<4||o.phase!=='game'||!o.self.active||!o.opponent.active)return 0;
+ if(a.type!=='attack')return 0;
+ const p=o.self,q=o.opponent;
+ const atk=(p.active.effectiveAttacks||card(p.active.id)?.attacks||[])[a.payload.attackIndex];
+ if(!atk)return 0;
+ const chance=knockoutChance(atk,p.active,q.active);
+ if(!chance)return 0;
+ const lastPrize=p.prizeCount===1,lastOpponent=q.bench.length===0;
+ if(lastPrize||lastOpponent)return 550*chance;
+ // If attacking would strand us with zero Pokémon after the counter-KO, build
+ // backup first, except when this KO wins outright.
+ if(!p.bench.length&&p.hand.some(id=>isBasicPokemon(card(id))))return 0;
+ // Don't spend a turn in endless preparation when a certain Prize is available.
+ const vulnerability=!['Asleep','Paralyzed'].includes(q.active.status)&&
+  strongestAffordableAttack(q.active,p.active)>=hpRemaining(p.active);
+ return chance*(vulnerability?230:125);
+}
+// Estimate what additional cards ALREADY in the player's own hand could unlock
+// after the current Energy attachment. No future draw is assumed, no opponent
+// hidden cards are accessed, and no engine reducer/coin oracle is consulted.
+function horizonAttackValue(unit,defender,hand,remaining=1){
+ if(!unit||!defender)return 0;
+ const immediate=projectedAttackValue(unit,defender);
+ if(remaining===0)return immediate;
+ const seen=new Set();
+ let best=immediate;
+ for(const id of hand){
+  if(seen.has(id)||!isEnergy(card(id)))continue;
+  seen.add(id);
+  const after={...unit,energies:[...(unit.energies||[]),id]};
+  // A card requires another turn's Energy attachment. Discount those future
+  // outcomes to avoid preferring a speculative combination to today's KO.
+  const next=projectedAttackValue(after,defender);
+  best=Math.max(best,immediate+(next-immediate)*.48);
+ }
+ return best;
+}
+function energyHorizonBonus(action,o,cfg){
+ if(!cfg.energyHorizon||cfg.level<4||o.phase!=='game'||action.type!=='attach_energy')
+  return 0;
+ const p=o.self,q=o.opponent,v=action.payload,u=slotUnit(p,v.slot);
+ if(!u||!q.active)return 0;
+ const attachedId=p.hand[v.handIndex];
+ if(!isEnergy(card(attachedId)))return 0;
+ const after={...u,energies:[...(u.energies||[]),attachedId]};
+ const futureHand=p.hand.filter((_,i)=>i!==v.handIndex);
+ const before=horizonAttackValue(u,q.active,futureHand);
+ const changed=horizonAttackValue(after,q.active,futureHand);
+ const direct=projectedAttackValue(after,q.active)-projectedAttackValue(u,q.active);
+ // Reward immediate Energy unlocks, but value two-card lines only insofar as
+ // they are possible with cards that are ALREADY visible in our own hand.
+ const expected=Math.max(0,changed-before)*1.15+Math.max(0,direct)*.35;
+ const enemyReady=!['Asleep','Paralyzed'].includes(q.active.status)&&
+  strongestAffordableAttack(q.active,u)>=hpRemaining(u);
+ // A Bench attacker is useful as a replacement when the Active is visibly
+ // exposed. Otherwise minimize speculative Energy sunk on remote Bench.
+ const activeBias=v.slot===-1?35:enemyReady?22:-34;
+ const weakDefense=enemyReady&&v.slot===-1&&p.bench.length>0?-30:0;
+ const surplus=direct===0&&changed-before<=1?-35:0;
+ return Math.max(-85,Math.min(160,expected+activeBias+weakDefense+surplus))*cfg.style.setup;
 }
 function score(a,o,cfg,used){
  const p=o.self,q=o.opponent,style=cfg.style,{type,payload:v}=a;
@@ -373,7 +598,7 @@ function score(a,o,cfg,used){
   const ownDiscard=/discard|pay|cost|return .*deck/i.test(ctx)&&
    !/opponent|opposing|enemy/i.test(ctx);
   const beneficialPick=/recover|search|draw|attach|opposing|opponent|reveal|bench/i.test(ctx);
-  const value=v.selected.reduce((n,id)=>n+choiceValue(d.options.find(x=>x.id===id)||{id},d,o),0);
+  const value=v.selected.reduce((n,id)=>n+choiceValue(d.options.find(x=>x.id===id)||{id},d,o,cfg),0);
   return 120+value+(beneficialPick?v.selected.length*8:0)-(ownDiscard?v.selected.length*28:0);
  }
  if(type==='bench'){
@@ -385,7 +610,8 @@ function score(a,o,cfg,used){
  }
  if(type==='evolve'){
   const target=slotUnit(p,v.slot),after=card(p.hand[v.handIndex]);
-  return 165*style.setup+(Number(after?.hp)||0)*.35+((v.slot===-1)?15:0)-(target?.damage||0)*.1;
+  return 165*style.setup+(Number(after?.hp)||0)*.35+((v.slot===-1)?15:0)-
+   (target?.damage||0)*.1-evolutionTempoPenalty(o,v.slot,p.hand[v.handIndex],cfg);
  }
  if(type==='attach_energy'){
   const unit=slotUnit(p,v.slot),value=energyValue(unit,p.hand[v.handIndex]);
@@ -576,7 +802,7 @@ function chooseAction(game,raw={},memo={}){
  const actions=candidates(o,cfg,used);if(!actions.length)return null;
  const random=rng(cfg.seed+game.turnSerial*7919+(game.events?.length||0)*17011+cfg.side*31);
  const ranked=actions.map((action,i)=>({action,
-  score:score(action,o,cfg,used)+planningBonus(action,o,cfg),tie:i}))
+  score:score(action,o,cfg,used)+planningBonus(action,o,cfg)+prizeRaceBonus(action,o,cfg)+knockoutTempoBonus(action,o,cfg)+opponentResponseBonus(action,o,cfg)+energyHorizonBonus(action,o,cfg),tie:i}))
   .sort((a,b)=>b.score-a.score||a.tie-b.tie);
  // Rank all visible options before competence-sensitive choice noise. A larger
  // *evaluation budget* should NOT widen the random window: doing so previously
@@ -597,11 +823,11 @@ function chooseAction(game,raw={},memo={}){
  }
  return null;
 }
-function driveSide(initial,{side=1,level=3,personality='balanced',seed=1,planning,limit=200}={}){
+function driveSide(initial,{side=1,level=3,personality='balanced',seed=1,planning,evolutionTempo,prizeRace,knockoutTempo,opponentResponse,graduatedNoise,energyHorizon,limit=200}={}){
  let game=initial,steps=0;const commands=[],memo={trainers:0,powers:0,powerKeys:new Set(),stadium:false};
  while(!game.over&&steps<limit){
   const beforeTurn=game.turnSerial;
-  const next=chooseAction(game,{side,level,personality,seed,planning},memo);
+  const next=chooseAction(game,{side,level,personality,seed,planning,evolutionTempo,prizeRace,knockoutTempo,opponentResponse,graduatedNoise,energyHorizon},memo);
   if(!next){
    if(game.pendingDecision?.actor===side)throw Error('CPU unresolved choice: '+JSON.stringify({decision:game.pendingDecision,pendingAction:game.pendingAction}));
    break;
@@ -621,4 +847,4 @@ function driveSide(initial,{side=1,level=3,personality='balanced',seed=1,plannin
 }
 function driveBot(game,limit=200,config={}){return driveSide(game,{...config,side:1,limit});}
 function propose(game,config={}){return chooseAction(game,{...config,side:1});}
-module.exports={SKILLS,PERSONALITIES,configuration,observation,candidates,score,knockoutChance,planningBonus,chooseAction,driveSide,driveBot,propose};
+module.exports={SKILLS,CALIBRATED_SKILLS,PERSONALITIES,configuration,observation,candidates,score,knockoutChance,planningBonus,evolutionTempoPenalty,prizeRaceBonus,knockoutTempoBonus,opponentResponseBonus,energyHorizonBonus,chooseAction,driveSide,driveBot,propose};
