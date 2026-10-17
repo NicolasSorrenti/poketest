@@ -284,7 +284,8 @@ const settings={level:3,personality:'balanced',side:1,seed:47};
  assert.equal(AI.planningBonus(evolve,o,noPlan),0,
   'The baseline policy must remain independently benchmarkable');
  assert.equal(AI.configuration({side:1,level:3}).planning,false);
- assert.equal(AI.configuration({side:1,level:5}).planning,true);
+ assert.equal(AI.configuration({side:1,level:5}).planning,false,
+  'Unproven planning experiment must remain opt-in on production difficulty');
  assert.throws(()=>AI.configuration({planning:'yes'}),/planning/);
  const hidden=structuredClone(g);
  const enemy=hidden.players[0];
