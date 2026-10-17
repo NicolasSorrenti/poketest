@@ -293,12 +293,30 @@ function score(a,o,cfg,used){
    // Discarding a full hand to draw seven cards is not always an upgrade.
    return p.handCount<=2?225:p.handCount<=4?172:cfg.level>=3?50:110;
   }
-  if(name==='Gust of Wind')return (q.bench.some(u=>hpRemaining(u)<=estimatedDamage((card(p.active?.id)?.attacks||[])[0],p.active,u))?190:60)*style.control;
-  if(/Energy Removal|Lass|Rocket|Scoop/i.test(name))return (q.active?.energies?.length?175:65)*style.control;
-  if(/Potion|Center|Heal/i.test(name))return (p.active?.damage||0)>=20?160*style.survival:35;
-  if(name==='Switch')return p.active?.status?185*style.survival:45;
+  if(name==='Gust of Wind'){
+   const current=strongestAffordableAttack(p.active,q.active);
+   const opponentAlreadyLethal=current>=hpRemaining(q.active)&&hpRemaining(q.active)>0;
+   const vulnerable=q.bench.some(u=>{
+    const damage=strongestAffordableAttack(p.active,u);
+    return damage>=hpRemaining(u)&&hpRemaining(u)>0;
+   });
+   return (vulnerable&&!opponentAlreadyLethal?cfg.level>=3?275:205:40)*style.control;
+  }
+  if(name==='Super Energy Removal'){
+   const enemy=Math.max(q.active?.energies?.length||0,...q.bench.map(x=>x.energies?.length||0));
+   const ownCost=Math.min(p.active?.energies?.length||0,...p.bench.map(x=>x.energies?.length||0));
+   return enemy>=2&&ownCost<=1?210*style.control:cfg.level>=3?48:140;
+  }
+  if(name==='Energy Removal')return (q.active?.energies?.length?200:140)*style.control;
+  if(/Lass|Rocket|Scoop/i.test(name))return (q.active?.energies?.length?160:75)*style.control;
+  if(/Potion|Center|Heal/i.test(name))return (p.active?.damage||0)>=20?168*style.survival:40;
+  if(name==='Switch')return p.active?.status?210*style.survival:55;
   if(/Search|Computer|Ball|Trader|Elm/i.test(name))return 130*style.setup;
-  if(/PlusPower|Defender|Berry|Focus Band/i.test(name))return 115*style.damage;
+  if(name==='PlusPower'){
+   const damage=strongestAffordableAttack(p.active,q.active),needed=hpRemaining(q.active)-damage;
+   return (damage>0&&needed>0&&needed<=10?300:cfg.level>=3?45:118)*style.damage;
+  }
+  if(/Defender|Berry|Focus Band/i.test(name))return 115*style.survival;
   return 75;
  }
  if(type==='retreat'){
