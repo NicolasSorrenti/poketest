@@ -1,6 +1,6 @@
 'use strict';
 (()=>{
-const $=id=>document.getElementById(id),KEY='neoHarborRpgV1',STORY=window.NeoHarborStory,SCHEDULES=window.NeoRpgSchedules,BRIDGE=window.NeoRpgDuelBridge;
+const $=id=>document.getElementById(id),KEY='neoHarborRpgV1',STORY=window.NeoHarborStory,SCHEDULES=window.NeoRpgSchedules,WORLD=window.NeoRpgWorld,BRIDGE=window.NeoRpgDuelBridge;
 const periods=['Morning','Afternoon','Evening'];
 const places={
  home:['Your Apartment','Your base during the championship season.'],
@@ -68,7 +68,7 @@ function finishStory(){
 
 function timeFlash(beforeDay,beforeSlot){const overlay=document.createElement('div');overlay.className='notice-pop';const heading=document.createElement('b');heading.textContent=state.day>90?'Season complete':state.day!==beforeDay?'A NEW DAY BEGINS':'TIME PASSES';const body=document.createElement('span');body.textContent=state.day>90?'Day 90 has ended.':('Day '+state.day+' · '+periods[state.slot]);overlay.append(heading,body);document.body.append(overlay);overlay.addEventListener('animationend',()=>overlay.remove());}
 
-function defaults(){return {day:1,slot:0,location:'home',metReina:false,reinaTrust:0,reinaDuels:0,results:[],flags:{intro:false},journal:['The 90-day season begins.'],pendingDuel:null,bonds:{},talked:{},hungOut:{},eventsDone:{},points:0,credits:80,playerDeck:'blackout',selected:null,ended:false,storyDone:{},storyMissed:{},relationships:{},routeOutcomes:{},partner:null,activeStory:null,lastDuelReceipt:null,scene:null}}
+function defaults(){return {day:1,slot:0,location:'home',metReina:false,reinaTrust:0,reinaDuels:0,results:[],flags:{intro:false},journal:['The 90-day season begins.'],pendingDuel:null,bonds:{},talked:{},hungOut:{},eventsDone:{},points:0,credits:80,playerDeck:'blackout',selected:null,ended:false,storyDone:{},storyMissed:{},relationships:{},routeOutcomes:{},partner:null,activeStory:null,activeEncounter:null,activityDone:{},encountersDone:{},focus:75,insight:0,reputation:0,preparation:0,lastDuelReceipt:null,scene:null}}
 let state;try{state=JSON.parse(localStorage.getItem(KEY))||defaults();if(!Number.isInteger(state.day)||state.day<1||state.day>91)throw Error('Invalid save');}catch{state=defaults()}
 for(const [k,v] of Object.entries(defaults()))if(state[k]===undefined)state[k]=v;
 if(!places[state.location])state.location='home';
@@ -78,6 +78,7 @@ for(const k of ['flags','bonds','talked','hungOut','eventsDone','storyDone','sto
 if(!state.pendingDuel?.id||!cast[state.pendingDuel?.npc])state.pendingDuel=null;
 for(const id of Object.keys(cast)){if(!state.bonds[id])state.bonds[id]={affection:0,trust:0,duels:0};}
 STORY.normalize(state);
+WORLD.hydrate(state);
 for(const id of Object.keys(cast)){const old=state.bonds[id],current=state.relationships[id];
  if(!state.flags['newStoryMigrated_'+id]){for(const key of ['affection','trust','duels'])current[key]=Math.max(current[key]||0,old[key]||0);
  state.flags['newStoryMigrated_'+id]=true;}
@@ -90,6 +91,7 @@ let scene=state.scene&&typeof state.scene.speaker==='string'&&typeof state.scene
 const atKey=(id)=>state.day+':'+state.slot+':'+id;
 function advance(n=1){const beforeDay=state.day,beforeSlot=state.slot;for(let i=0;i<n;i++){state.slot++;if(state.slot>=3){state.slot=0;state.day++;}}if(state.day>90){state.day=91;state.ended=true;log('The Neo Harbor championship season has ended.');}
 state.selected=null;
+if(state.day>beforeDay)WORLD.newDay(state,state.day-beforeDay);
 const missed=STORY.recordExpiry(state);if(missed.length)log('Some opportunities in town passed while you were busy.');
 persist();timeFlash(beforeDay,beforeSlot);}
 function say(speaker,line,choices=[]){scene={speaker,line,choices};state.scene=scene;persist();render();}
@@ -105,21 +107,67 @@ function options(id){const key=atKey(id),spentToday=!!state.hungOut[state.day+':
  [state.talked['flirt:'+key]?'Playful remark again · free':'Playful remark · free · +1 affection','flirt:'+id],
  ['Goodbye · free','close']
  ];}
+
+function showEncounter(){
+ const a=state.activeEncounter,e=a&&WORLD.byEncounter(a.id);
+ if(!e)return null;
+ const name=e.npc?cast[e.npc].name:'Neo Harbor';
+ if(a.phase==='choice')return {speaker:name,line:e.intro,choices:e.choices.map((c,i)=>[c.label,'encounterChoice:'+i])};
+ const decision=e.choices[a.choice];
+ return {speaker:name,line:decision.reply,choices:[['Continue · ⏳ 1 period','encounterFinish']]};
+}
+function startEncounter(id){
+ if(state.activeStory||state.activeEncounter||state.pendingDuel||state.day>90)return;
+ const e=WORLD.availableEncounters(state,currentPeople()).find(x=>x.id===id);if(!e)return;
+ state.activeEncounter={id,phase:'choice',choice:null};state.selected=e.npc||null;persist();render();
+}
+function chooseEncounter(value){
+ const a=state.activeEncounter;if(!a||a.phase!=='choice')return;
+ const e=WORLD.byEncounter(a.id),index=Number(value);
+ if(!Number.isInteger(index)||!e?.choices[index])return;
+ const price=e.choices[index].delta.credits||0;
+ if(state.credits+price<0){$('notice').textContent='This choice costs more credits than you have.';return;}
+ a.phase='response';a.choice=index;persist();render();
+}
+function finishEncounter(){
+ const a=state.activeEncounter;if(!a||a.phase!=='response')return;
+ const e=WORLD.byEncounter(a.id);let report;
+ try{report=WORLD.completeEncounter(state,a.id,a.choice,currentPeople());}
+ catch(err){$('notice').textContent=err.message;return;}
+ state.activeEncounter=null;log('An everyday encounter at '+places[e.place][0]+' left an impression.');
+ advance();persist();
+ say(e.npc?cast[e.npc].name:'Narrator',report.summary);
+}
+function performActivity(id){
+ if(state.activeStory||state.activeEncounter||state.pendingDuel||state.day>90)return;
+ let result;try{result=WORLD.doActivity(state,id,currentPeople());}
+ catch(err){$('notice').textContent=err.message;return;}
+ const place=state.location;
+ log('Activity completed at '+places[place][0]+': '+result.summary);
+ advance();persist();say(result.person?cast[result.person].name:'Narrator',result.summary+(result.person?' You also made a good impression.':''));
+}
+
 function scheduleEvent(){return eventCards.find(e=>e.day===state.day&&e.slot===state.slot&&e.place===state.location&&!state.eventsDone[e.day+':'+e.title]);}
 function act(action){
  const [type,id]=action.split(':');
  if(type==='storyNext')return advanceStory();
  if(type==='storyChoice')return chooseStory(id);
  if(type==='storyFinish')return finishStory();
- if(state.activeStory||state.pendingDuel)return;
+ if(type==='encounterChoice')return chooseEncounter(id);
+ if(type==='encounterFinish')return finishEncounter();
+ if(state.activeStory||state.pendingDuel||state.activeEncounter)return;
+ if(type==='encounter')return startEncounter(id);
+ if(type==='townActivity')return performActivity(id);
  if(type==='calendar')return openCalendar();
  if(type==='home'){state.location='home';state.selected=null;persist();return say('Narrator','Back home. The championship posters on the wall remind you why you came.');}
- if(type==='where'){const c=cast[id],visit=SCHEDULES.nextVisit(id,state.day,state.slot,STORY.events);return say('Narrator',c.name+(visit?' is usually around '+places[visit.place][0]+' on day '+visit.day+', '+periods[visit.slot]+'.':' has no announced public visits in the coming week.'),options(id));}
+ if(type==='where'){const c=cast[id],visit=SCHEDULES.nextVisit(id,state.day,state.slot,[]);return say('Narrator',c.name+(visit?' is usually around '+places[visit.place][0]+' on day '+visit.day+', '+periods[visit.slot]+'.':' has no announced public visits in the coming week.'),options(id));}
  if(type==='sleep'){if(state.location!=='home')return;const n=3-state.slot;advance(n);return say('Narrator','You wake up to a new day in Neo Harbor.');}
  if(type==='close'){state.selected=null;persist();return say('Narrator','The town has a rhythm of its own. You are beginning to hear it.');}
  if(type==='duel')return startDuel(id||state.selected,false);
  if(type==='event'){const e=scheduleEvent();if(!e)return;const opponents={7:'yuna',14:'reina',21:'hana',30:'reina',42:'kaede',60:'akari',75:'camila',88:'reina',90:'shiori'};return startDuel(opponents[e.day]||'reina',e);}
- if(type==='rest'||type==='practice'||type==='work'){if(state.day>90)return;if(type==='work'){state.credits+=15;log('Earned 15 credits helping around town.');}advance();return say('Narrator',type==='work'?'A productive shift. The day continues.':type==='practice'?'You review matchups and refine your strategy.':'You take a break. Other lives in the town carry on.');}
+ if(type==='work')return performActivity('shop_shift');
+ if(type==='practice')return state.location==='library'?performActivity('library_research'):state.location==='center'?performActivity('center_scrimmage'):performActivity('home_reflect');
+ if(type==='rest'){if(state.day>90)return;advance();return say('Narrator','You take a break. Other lives in the town carry on.');}
  if(type==='new'){if(confirm('Start a new season? This overwrites this browser save.')){state=defaults();for(const id of Object.keys(cast))state.bonds[id]={affection:0,trust:0,duels:0};persist();location.reload();}return;}
  if(!cast[id]||!currentPeople().includes(id))return say('Narrator','They have already moved on. Try another time.');
  const c=cast[id],bond=state.bonds[id],key=atKey(id);
@@ -135,6 +183,7 @@ window.addEventListener('message',ev=>{
  const receipt=BRIDGE.settle(state,duel,ev.data.winner,cast[duel.npc].name);
  if(!receipt)return;
  for(const note of receipt.notes)log(note);
+ const preparationNote=WORLD.afterDuel(state,receipt);if(preparationNote)log(preparationNote);
  state.lastDuelReceipt=receipt;state.pendingDuel=null;
  sessionStorage.removeItem(BRIDGE.sessionKey(duel.id));
  advance();$('duel').hidden=true;$('battle').src='about:blank';
@@ -160,7 +209,7 @@ function render(){
  $('duelReceipt').hidden=!receipt;
  if(receipt){
   $('receiptTitle').textContent=receipt.outcome.toUpperCase()+' · '+receipt.name;
-  $('receiptDetails').textContent='+'+receipt.points+' circuit points · +'+receipt.credits+' credits · +'+receipt.trust+' trust'+(receipt.bonus?' (includes +'+receipt.bonus+' exhibition points)':'')+' · Time advanced one period.';
+  $('receiptDetails').textContent='+'+receipt.points+' circuit points · +'+receipt.credits+' credits · +'+receipt.trust+' trust'+(receipt.bonus?' (includes +'+receipt.bonus+' exhibition points)':'')+(receipt.trainingBonus?' · +'+receipt.trainingBonus+' training credits':'')+' · Time advanced one period.';
   $('duelReceipt').classList.toggle('is-victory',receipt.outcome==='Victory');
  }
  $('whereLabel').textContent=state.location==='home'?'⌂  YOU ARE HOME':'●  YOU ARE HERE';
