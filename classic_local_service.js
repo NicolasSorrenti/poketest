@@ -4,7 +4,7 @@
 const crypto=require('node:crypto');
 const {createGame,reduce,CATALOG}=require('./headless_duel');
 const {publicView,publicActivity}=require('./duel_protocol');
-const {driveBot}=require('./classic_bot');
+const {driveBot,configuration}=require('./classic_bot');
 const {list}=require('./authentic_decks');
 const {LAB}=require('./classic_live_decks');
 const RETAIL=require('./retail_theme_decks');
@@ -32,10 +32,11 @@ class ClassicLocalService {
   this.sessions=new Map();this.now=now;this.ttlMs=ttlMs;this.maxSessions=maxSessions;
  }
  prune(){for(const [token,r] of this.sessions)if(this.now()-r.updated>this.ttlMs)this.sessions.delete(token);}
- create({deck='blackout',opponent='brushfire',customDeck,seed}={}){
+ create({deck='blackout',opponent='brushfire',customDeck,seed,difficulty=3,personality='balanced',aiSeed=1}={}){
   this.prune();if(this.sessions.size>=this.maxSessions)throw Error('Too many active duels');
   if(!DECKS[deck]||!DECKS[opponent])throw Error('Unknown Classic deck');
   if(seed!==undefined&&(!Number.isSafeInteger(seed)||seed<0||seed>0xffffffff))throw Error('Invalid seed');
+  const cpuConfig=configuration({level:difficulty,personality,seed:aiSeed});
   if(deck==='custom'&&(!Array.isArray(customDeck)||customDeck.length!==60||!customDeck.every(id=>typeof id==='string'&&id.length<=40)))throw Error('Custom deck must contain exactly 60 card IDs');
   if(deck!=='custom'&&customDeck!==undefined)throw Error('Unexpected custom deck');
   if(opponent==='custom')throw Error('CPU deck must be a preset');
@@ -44,13 +45,13 @@ class ClassicLocalService {
   const expanded=deck==='custom'||EXPANDED[deck]||EXPANDED[opponent]||[...playerCards,...cpuCards].some(id=>id.startsWith('gym')&&!RETAIL.gymIds.includes(id));
   const format=[...playerCards,...cpuCards].some(id=>['neo1','neo2','neo3','neo4'].some(set=>id.startsWith(set+'-')))?(expanded?'online-preview':'neo-theme'):expanded?'gym-expanded':RETAIL.meta[deck]?.gym||RETAIL.meta[opponent]?.gym?'gym-theme':[...playerCards,...cpuCards].some(id=>id.startsWith('base4'))?'theme-expanded':'classic';
   let game=createGame({decks:[playerCards,cpuCards],names:['You','Classic CPU'],format,seed:seed??crypto.randomBytes(4).readUInt32BE(0)});
-  game=driveBot(game).game;
-  const token=crypto.randomBytes(24).toString('base64url'),session={game,revision:0,updated:this.now(),token,deck,opponent};
+  game=driveBot(game,200,cpuConfig).game;
+  const token=crypto.randomBytes(24).toString('base64url'),session={game,revision:0,updated:this.now(),token,deck,opponent,cpuConfig};
   this.sessions.set(token,session);return {token,...this.response(session)};
  }
  session(token){this.prune();const s=this.sessions.get(token);if(!s)throw Error('Unknown or expired session');s.updated=this.now();return s;}
  response(s){const g=s.game,view=publicView(g,0);
-  return {revision:s.revision,view,activity:publicActivity(g),format:g.format,winner:g.winner,turnSerial:g.turnSerial,
+  return {revision:s.revision,view,activity:publicActivity(g),format:g.format,winner:g.winner,turnSerial:g.turnSerial,cpu:{level:s.cpuConfig?.level??3,personality:s.cpuConfig?.personality??'balanced'},
    you:{energyUsed:!!g.players[0].energyUsed,retreated:!!g.players[0].retreated,stadiumUsed:g.players[0].stadiumUsedTurn===g.turnSerial},
    lastActions:g.events.slice(-8).map(e=>({side:e.side,type:e.type})),
    counts:g.players.map(p=>countCards(p))};
@@ -62,7 +63,7 @@ class ClassicLocalService {
   const result=reduce(s.game,0,raw);
   if(!result.ok)throw Error(result.error||'Illegal command');
   // Bot failures must never commit partial human or computer actions.
-  const {game}=driveBot(result.game);
+  const {game}=driveBot(result.game,200,s.cpuConfig);
   s.game=game;s.revision++;return this.response(s);
  }
  decklist(id){if(!DECKS[id]||id==='custom')throw Error('Unknown theme deck');return EXPANDED[id]?[...EXPANDED[id]]:LAB[id]?[...LAB[id]]:DECKS[id].startsWith('retail:')?RETAIL.list(id):DECKS[id].startsWith('neo:')?NEO.list(id):DECKS[id].startsWith('discovery:')?DISCOVERY.list(id):DECKS[id].startsWith('destiny:')?DESTINY.list(id):list(DECKS[id]);}
