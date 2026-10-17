@@ -59,6 +59,35 @@ function powerPlan(g,plan,h){
   if(choose('source',slotList(owner,x=>x.damage>=10&& (name!=='Strange Behavior'||x!==u)),'Choose source of damage'))return;
   if(name==='Strange Behavior'){}else if(choose('target',slotList(owner,x=>x!==pokemonAt('source',owner)&&(name==='Curse'||x.damage+10<Number(card(x.id).hp))),'Choose recipient of damage'))return;
  }
+
+ if(name==='Downpour'&&choose('energy',indices(p.hand,c=>c.name==='Water Energy','hand'),'Discard one Water Energy'))return;
+ if(name==='Berserk'&&!have(plan,'coin'))d.coin=h.flip(g);
+ if(name==='Fire Recharge'){
+  if(!have(plan,'coin'))d.coin=h.flip(g);
+  if(d.coin&&p.discard.some(id=>card(id).name==='Fire Energy')&&own(p).some(x=>card(x.id).types?.includes('Fire'))){
+   if(choose('energy',indices(p.discard,c=>c.name==='Fire Energy','discard'),'Fire Recharge: choose Energy'))return;
+   if(choose('target',slotList(p,x=>card(x.id).types?.includes('Fire')),'Fire Recharge: attach to Fire Pokemon'))return;
+  }
+ }
+ if(name==='Glaring Gaze'){
+  if(!have(plan,'coin'))d.coin=h.flip(g);
+  if(d.coin&&!have(plan,'trainer')){
+   const options=indices(f.hand,c=>c.supertype==='Trainer','hand');
+   if(options.length){if(choose('trainer',options,'Glaring Gaze: choose opposing Trainer'))return;}
+   else d.trainer=[];
+  }
+ }
+ if(name==='Fire Boost'){
+  if(!have(plan,'accept')&&choose('accept',[{id:'choice:1',label:'Flip for Fire Boost'}],'Fire Boost: use optional Power?',{min:0,max:1,optional:true}))return;
+  if(selected(plan,'accept').length){
+   if(!have(plan,'coin'))d.coin=h.flip(g);
+   if(d.coin&&!have(plan,'fire')){
+    const options=indices(p.deck,c=>c.name==='Fire Energy','deck');
+    if(options.length){if(choose('fire',options,'Attach up to 4 Fire Energy to Typhlosion',{min:0,max:Math.min(4,options.length),optional:true}))return;}
+    else d.fire=[];
+   }
+  }
+ }
  if(name==='[Engage]'){
   const yesNo=[{id:'choice:0',label:'Keep current hand'},{id:'choice:1',label:'Shuffle hand into deck and draw 4'}];
   if(!have(plan,'oppEngage')){choice(g,plan,'oppEngage',1-side,yesNo,{label:'Unown E: opponent may redraw'});return;}
@@ -146,6 +175,39 @@ function doPower(g,plan,h){
  const once=ONCE.has(name)&&plan.source!=='evolution';
  if(once){if(u.powerUsed?.[name]===g.turnSerial)throw Error('Power already used this turn');(u.powerUsed ||= {})[name]=g.turnSerial;}
  switch(name){
+
+  case 'Berserk':{
+   const target=d.coin?f:p;
+   for(let i=0;i<5&&target.deck.length;i++)target.discard.push(target.deck.pop());
+   break;
+  }
+  case 'Downpour':{
+   const i=s('energy');if(card(p.hand[i])?.name!=='Water Energy')throw Error('Downpour needs Water Energy');
+   p.discard.push(...take(p.hand,[i]));break;
+  }
+  case 'Fire Recharge':{
+   if(d.coin&&have(plan,'energy')&&have(plan,'target')){
+    const i=s('energy'),target=pokemon(p,s('target'));
+    if(card(p.discard[i])?.name!=='Fire Energy'||!target||!card(target.id).types?.includes('Fire'))throw Error('Invalid Fire Recharge target');
+    target.energies.push(...take(p.discard,[i]));
+   }break;
+  }
+  case 'Fire Boost':{
+   if(selected(plan,'accept').length&&d.coin){
+    const picks=selected(plan,'fire');
+    if(picks.length>4||new Set(picks).size!==picks.length||picks.some(i=>card(p.deck[i])?.name!=='Fire Energy'))throw Error('Invalid Fire Boost Energy search');
+    u.energies.push(...take(p.deck,picks));p.deck=h.shuffle(g,p.deck);
+   }break;
+  }
+  case 'Glaring Gaze':{
+   if(d.coin){
+    (p.privateLog ||= []).push('Glaring Gaze: opponent hand — '+f.hand.map(id=>card(id).name).join(', '));
+    if(selected(plan,'trainer').length){
+     const i=s('trainer');if(card(f.hand[i])?.supertype!=='Trainer')throw Error('Invalid Glaring Gaze selection');
+     f.deck=h.shuffle(g,[...f.deck,...take(f.hand,[i])]);
+    }
+   }break;
+  }
   case '[Engage]':{
    if(s('oppEngage')===1){f.deck=h.shuffle(g,[...f.deck,...f.hand]);f.hand=[];h.draw(g,1-side,4);}
    if(s('ownEngage')===1){p.deck=h.shuffle(g,[...p.deck,...p.hand]);p.hand=[];h.draw(g,side,4);}
@@ -230,9 +292,9 @@ function doPower(g,plan,h){
  }
  h.log(g,`${p.name} activated ${name}.`);
 }
-const ONCE=new Set(['Fragrance Trap','Soak Up','Natural Healing','Playful Punch','Emerge','Gather Fire','Heal','Step In','Curse','Shift','Evolutionary Light','Matter Exchange','Pollen Stench','Long Distance Hypnosis','Trickery','Peek','Revive Fossil','Revive Friends','[Search]','[Tell]']);
-const ACTIVATED=new Set(['Shapeshift','Fragrance Trap','Soak Up','Natural Healing','Playful Punch','Emerge','Energy Charge','Rain Dance','Energy Trans','Gather Fire','Energy Burn','Damage Swap','Curse','Strange Behavior','Heal','Step In','Cowardice','Evolutionary Light','Matter Exchange','Pollen Stench','Long Distance Hypnosis','Trickery','Shift','Peek','Buzzap','Revive Fossil','Revive Friends','[Search]','[Tell]']);
-const ONPLAY=new Set(['Call the Boss','Summon Minions','Sneak Attack','Reel In','[Increase]','[Engage]','Tag Team']);
+const ONCE=new Set(['Fragrance Trap','Soak Up','Natural Healing','Playful Punch','Emerge','Gather Fire','Heal','Step In','Curse','Shift','Evolutionary Light','Matter Exchange','Pollen Stench','Long Distance Hypnosis','Trickery','Peek','Revive Fossil','Revive Friends','Fire Recharge','Glaring Gaze','[Search]','[Tell]']);
+const ACTIVATED=new Set(['Shapeshift','Fragrance Trap','Soak Up','Natural Healing','Playful Punch','Emerge','Energy Charge','Rain Dance','Energy Trans','Gather Fire','Energy Burn','Damage Swap','Curse','Strange Behavior','Heal','Step In','Cowardice','Evolutionary Light','Matter Exchange','Pollen Stench','Long Distance Hypnosis','Trickery','Shift','Peek','Buzzap','Revive Fossil','Revive Friends','Downpour','Fire Recharge','Glaring Gaze','[Search]','[Tell]']);
+const ONPLAY=new Set(['Call the Boss','Summon Minions','Sneak Attack','Reel In','[Increase]','[Engage]','Tag Team','Berserk','Fire Boost']);
 const PASSIVE=new Set(['Rebirth','Energy Drain','Scram','Shock Blast','Gaseous Form','Healing Fire','Fortitude','Pollen Defense','Restless Sleep','Strange Barrier','Prehistoric Power','Toxic Gas','Hay Fever','Invisible Wall','Kabuto Armor','Transparency','Transform','Thick Skinned','Retreat Aid','Sticky Goo','Clairvoyance','Frenzy','Strikes Back','Sinkhole','Final Beam','Hydroelectric Power','Anger','Frog Song','Energy Evolution','[Normal]','Magma Pool','Hot Plate','Psylink','Flee','Bench Guard','Shell Armor','Photosynthesis','Relaxing Scent','Rebellion']);
 const UNSUPPORTED=new Set();
 function begin(g,side,payload,h){
