@@ -1,59 +1,53 @@
-# Neo Campus TCG — engineering status
+# Neo Campus TCG — gameplay engineering status
 
-Updated: 2026-10-17. Target: Base Set through Neo Destiny (Neo 4). Canonical branch: `main`.
+**Updated:** 2026-10-17  
+**Repository:** `NicolasSorrenti/poketest`, branch `main`  
+**Scope:** original Base Set through Neo Destiny (Neo 4).
 
-## Verification contract
+## Verification policy
 
-- "Signature recognized" means a card's attack/power text can be classified, NOT that its gameplay is complete.
-- "Implemented" means a reducer path, legally bounded decisions and at least a focused regression scenario exist.
-- "Verified" means the focused tests and complete `npm test` regression suite succeeded in GitHub Actions for the listed commit.
-- All local CPU and online games use `headless_duel.js` as the shared authoritative reducer. Full live two-browser and Render acceptance tests are not yet certified.
+A recognized attack signature or a handler name is **not** proof of complete historical behavior. "Verified below" means the implemented effect was exercised in a focused reducer regression and both `npm test` and the separate Node regression workflow passed for the listed commit. These are tests on the shared server-authoritative CPU/online engine, not a certification of every human multiplayer browser path.
 
-## Verified milestones in this execution session
+## Verified gameplay milestones
 
-| Milestone | Git commit | Gameplay changes | Evidence |
+| Version | Verified changes | Passing TCG workflow | Passing combined Node workflow |
 | --- | --- | --- | --- |
-| Neo v0.55 | `3954959bb8` plus tests `bc9b81a266` | Mary, PokéGear, Super Energy Retrieval, Time Capsule, Pokémon Personality Test, Impostor Professor Oak's Invention; six Trainer printings | GitHub Actions run [39013225555](https://github.com/NicolasSorrenti/poketest/actions/runs/39013225555), PASS |
-| Neo v0.56 | `cc3b29cfdd` plus regression fixes `c9839418a0` | Sprout Tower, Broken Ground Gym, Healing Field, Radio Tower, Lucky Stadium; five Stadium printings; CPU/online action support, live use button | GitHub Actions run [39013729444](https://github.com/NicolasSorrenti/poketest/actions/runs/39013729444), PASS |
+| v0.55 | Six interactive Trainer printings: Mary, PokéGear, Super Energy Retrieval, Time Capsule, Pokémon Personality Test, Impostor Professor Oak's Invention | [39013225555](https://github.com/NicolasSorrenti/poketest/actions/runs/39013225555) | Same workflow's full regression at that time |
+| v0.56 | Five Stadium printings; passive/activated effects, owner-only Radio Tower peek and once-per-turn action | [39013729444](https://github.com/NicolasSorrenti/poketest/actions/runs/39013729444) | Same workflow |
+| v0.57 | Rainbow and Miracle Energy: typed attack payments, recipient restriction, attachment damage, two-unit Miracle output, expiry | [39014085128](https://github.com/NicolasSorrenti/poketest/actions/runs/39014085128) | Same workflow |
+| v0.58 | Baby-to-Basic evolution, first-turn and Gym-name legality, per-Pokémon evolution tracking | [39014211528](https://github.com/NicolasSorrenti/poketest/actions/runs/39014211528) | Same workflow |
+| v0.59 | Recycle Energy return from attached play after retreat, KO and Trainer discards; hand discards excluded | [39014820392](https://github.com/NicolasSorrenti/poketest/actions/runs/39014820392) | [39014820386](https://github.com/NicolasSorrenti/poketest/actions/runs/39014820386) |
+| v0.60 | Multi-unit retreat costs: Double Colorless/Miracle, optional exact card payment and rollback on invalid choices | [39015045318](https://github.com/NicolasSorrenti/poketest/actions/runs/39015045318) | [39015045324](https://github.com/NicolasSorrenti/poketest/actions/runs/39015045324) |
+| **v0.61** | **Focus Band**, **EXP.ALL**: genuine attack-KO timing, defending-owner Basic Energy transfer choice, Tool exclusivity and rollback | [39041479868](https://github.com/NicolasSorrenti/poketest/actions/runs/39041479868) | [39041479894](https://github.com/NicolasSorrenti/poketest/actions/runs/39041479894) |
+| **v0.62** | **Gold Berry**, **Miracle Berry**; existing **Berry** corrected for optional between-turn and mandatory start-turn behavior on both owners' Pokémon | [39042096556](https://github.com/NicolasSorrenti/poketest/actions/runs/39042096556) | [39042096583](https://github.com/NicolasSorrenti/poketest/actions/runs/39042096583) |
+| **v0.63** | **Balloon Berry** corrected zero Retreat Cost, **Super Scoop Up** complete return to hand/promotion, **Magnifier** Resistance bypass and expiry | [39042461702](https://github.com/NicolasSorrenti/poketest/actions/runs/39042461702) | [39042461758](https://github.com/NicolasSorrenti/poketest/actions/runs/39042461758) |
+| **v0.64** | **New Pokédex** real shuffled top-five ordering, **Energy Amplifier** cost/coin/search, **Thought Wave Machine** coin-until-tails, returned Energy and immediate turn end | [39042937170](https://github.com/NicolasSorrenti/poketest/actions/runs/39042937170) | [39042937174](https://github.com/NicolasSorrenti/poketest/actions/runs/39042937174) |
 
-- Total newly registered, curated Neo Trainer/Stadium printings from v0.55-v0.56: **11**.
-- Historical Stadium text was checked against Neo Genesis and Neo Destiny card references; implementation respects the printed reduction/retreat semantics.
-- v0.56 tests cover 30-point post-Weakness/Resistance reduction, Basic retreat surcharge, heads/tails action outcomes, once-per-turn limits and private Radio Tower views.
+Four latest milestones were pushed through commits `04ec8653df`, `f67e9ffe8b`, `84ab669080` and `8203947574`, followed by focused test and fix commits, including `8a082eb684`, `d726b28848`, `ac5475a463`, `5993873239`, and `88a7007255`. Other agents' RPG work was preserved; updates used forward-only `main` changes with no force-push.
 
-| Neo v0.57 | `64f528ec9a` plus regression fixes `6f8fcb0dbd` | Rainbow Energy and Miracle Energy: wildcard typed costs, 10-damage attach effect, Miracle recipient restrictions, singleton deck rule and owner turn-end discard | GitHub Actions run [39014085128](https://github.com/NicolasSorrenti/poketest/actions/runs/39014085128), PASS |
-| Neo v0.58 | `9acce58e4c` plus regression fix `5e5ade8f52` | Baby-to-Basic legal evolutions, individual-Pokémon evolution turn checks, Gym-family restrictions and independent Active-slot evolution | GitHub Actions run [39014211528](https://github.com/NicolasSorrenti/poketest/actions/runs/39014211528), PASS |
+**Latest test chain:** `npm test` executes **147 sequential Node test commands**, including `test_neo_batch_v061.js`, `v062`, `v063` and `v064`. The `TCG Gameplay Regression` workflow runs it separately from the broader Node/RPG regression workflow.
 
-- v0.57 and v0.58 add **verified mechanical behavior** rather than merely adding text signatures. They do not unlock every Baby evolution combo or every Energy interaction.
+## Coverage accounting (do not overclaim)
 
-| Neo v0.59 | `3e841d470b`, effect-handler fixes `1b40d2d0ca` / `49e675671b`, tests `5783b08864` | Recycle Energy returns from attached play to hand when discarded during retreat, attack KO, Energy Removal or Pokémon Center, while hand discards do not return. | Dedicated TCG run [39014820392](https://github.com/NicolasSorrenti/poketest/actions/runs/39014820392) PASS; combined Node run [39014820386](https://github.com/NicolasSorrenti/poketest/actions/runs/39014820386) PASS |
+- **Neo-series Trainer archive:** 44 printings, **42 with registered effect handlers**, **2 without handlers** after v0.64. Handler availability is *not* a count of fully authenticated implementations.
+- **Unported Neo Trainers:** `neo1-84` **Ecogym** (opponent-caused attached Energy discard, excluding KO), and `neo1-92` **Card-Flip Game** (opponent Prize guess and permanently face-up Prize state).
+- **Pokémon Powers:** `power_coverage.json` lists 166 Power cards / 136 unique Power names and names with handlers, but not exhaustive dynamic trigger verification.
+- **Attacks:** `attack_coverage.json` lists 1,479 recognized signatures across 1,123 scanned historical cards; this is classification coverage, **not** verified attack execution coverage. Legacy interpreter audits still flag conditional/unported cases.
+- **Old coverage snapshots:** `trainer_coverage.json` is a static snapshot (178 cards, 170 handler, 8 partial) and must be refreshed with dynamic evidence before representing current runtime fidelity.
 
-- The v0.59 `npm test` consisted of **142 sequential Node test commands**, including `test_neo_batch_v056.js` through `test_neo_batch_v059.js`.
-- Independent TCG workflow `.github/workflows/tcg.yml` was introduced at `8e58adccab` to distinguish gameplay regressions from RPG integration failures. This does **not** replace the combined Node workflow.
-- All files were committed on the latest available `main` heads using forward-only updates. Other agents' RPG changes were preserved.
+## Known risks and unresolved interactions
 
-| Neo v0.60 | `41db8a59f1` and validation fix `44c51be394` | Retreat consumes Energy **units**: Double Colorless and Miracle pay two, Basic/Rainbow/Recycle pay one; player picks a minimal set when alternatives exist; underpayment is rejected transactionally. | Dedicated TCG run [39015045318](https://github.com/NicolasSorrenti/poketest/actions/runs/39015045318) PASS; combined Node run [39015045324](https://github.com/NicolasSorrenti/poketest/actions/runs/39015045324) PASS |
+1. Ecogym and Card-Flip Game require stateful cross-event tracking and privacy-safe face-up Prize representations; neither was declared complete.
+2. Focus Band, EXP.ALL and Berry effects need additional tests for simultaneous double KOs, multiple holders, KO while Poisoned, defensive Power interactions, and attacker-induced replacement.
+3. Copied attacks (Sketch / Super Metronome / Gym copying) still exclude certain nested choices, payment/redirection chains, and opponent-controlled decisions.
+4. Rainbow Energy named-type modifiers and Recycle Energy mixed discard/retrieval transactions still need a card-instance-level audit.
+5. Multi-Stadium replacement timing, some special Gym evolution exceptions, and older Trainer/Pokémon Power suppressed-status interactions still have edge cases.
+6. The CI suite exercises the shared authoritative reducer but does **not** certify a full two-browser live multiplayer session or independently verify a Render deployment.
+7. The corrected Balloon Berry zero-Retreat-Cost wording follows documented historical errata; complex interactions with opponent-imposed retreat surcharges should be separately tested.
 
-- v0.60 expands the exhaustive `npm test` script to **143 sequential Node test commands**, including `test_neo_batch_v060.js` and existing historical Gym/Neo regression tests.
+## Next priorities
 
-## Coverage limitations
-
-The existing `attack_coverage.json` currently counts 1,479/1,479 classified signatures across 1,123 cards, but classification is not proof that 1,479 attacks are fully implemented or individually verified. The `power_coverage.json` and `trainer_coverage.json` artifacts are also snapshots; the latter describes 178 cards, 170 marked handler and 8 partial, without exhaustive dynamic timing verification. These totals MUST NOT be shown as authentic gameplay coverage percentages.
-
-The curated deck pool is a strict subset of the 1,123-card archive; untested Neo printings should remain gated rather than represented as complete.
-
-## Open correctness gaps / risks
-
-1. **Special Energy fidelity**: Rainbow typed costs/attachment damage, Miracle attachments/expiry, and Recycle return-from-attached play on verified paths have regression tests. Recycle transactions with simultaneous discard retrieval, effects treating Rainbow as each named basic type, and cross-Power Energy modifiers remain unresolved. Miracle Energy pays two units in retreat and its dedicated payment selector now has regression coverage; broader named-type effects remain.
-2. **Baby and Gym evolution edge cases**: normal Baby-to-Basic and first-turn rules now have tests. Verify Baby evolution counted as an Evolved Pokémon for every effect and special Gym Trainer overrides.
-3. **Copied attack effects** with nested payment, targeting, redirection and reactive choices; Super Metronome and Sketch remain guarded for unsupported operations.
-4. **Pokémon Powers** whose timing depends on Bench transitions, on-play status, suppression, multi-KO and forced promotions.
-5. **Stadium timing** when a Stadium is replaced during a turn or a nested forced switch is underway; the current Stadium action is deliberately restricted to once per player's turn. Verify exact old-era Stadium once-per-turn replacement rules.
-6. **Trainer reactive tools** such as EXP.ALL, Focus Band, Miracle Berry and Gold Berry; confirm cross-turn tool timing and simultaneous KOs.
-7. **Multiplayer browser E2E** and Render deployment remain unverified; reducers are unit-tested using the same shared Node implementation.
-
-## Next prioritized tasks
-
-1. Audit the remaining Recycle Energy paths and validate Rainbow's all-type Energy interactions, effects that override special-Energy payments and trainer-triggered Energy transfers.
-2. Extend Baby/Gym evolution rules for special Trainer-granted exceptions and ensure evolved Baby-to-Basic is classified as Evolved for attack interactions.
-3. Implement remaining Neo Trainers / reactive tools and Stadium replacement timing using actual in-game tests.
-4. Re-run `npm test` and update this file **only after green CI**, retaining unresolved issues rather than declaring completion.
+1. Implement **Ecogym** with opponent-caused non-Colorless Energy discard provenance and KO exceptions; add comprehensive conservation and timing tests.
+2. Implement **Card-Flip Game** with publicly revealed opponent Prize identities and privacy-safe permanent face-up state through Prize selection and save/load.
+3. Expand attack-copy decision tests and reactive multi-KO scenarios, then audit broader Neo Powers and Gym modifiers.
+4. Repeat both CI suites and an actual two-client multiplayer smoke test. Update this document with reproducible pass/fail evidence, never handler-only completion claims.
