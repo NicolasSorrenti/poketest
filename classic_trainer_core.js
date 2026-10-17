@@ -547,7 +547,7 @@ function commit(g,plan,h){
    break;
   }
   case "Thought Wave Machine (Rocket's Secret Machine)":{
-   const amount=Math.min(d.twHeads,f.active?.energies.length||0),chosenIndices=picks('twEnergy');
+   const amount=Math.min(d.twHeads,f.active?.energies.length||0),chosenIndices=d.twEnergy?nums(d,'twEnergy'):[];
    if(chosenIndices.length!==amount||new Set(chosenIndices).size!==amount||chosenIndices.some(i=>!f.active.energies[i]))throw Error('Invalid Thought Wave Energy choice');
    f.hand.push(...take(f.active.energies,chosenIndices));
    g.tickleEndsTurn=true;
