@@ -54,8 +54,10 @@ function configuration(raw={}){
  if(typeof graduatedNoise!=='boolean')throw Error('Invalid graduated-noise setting');
  const energyHorizon=raw.energyHorizon??false;
  if(typeof energyHorizon!=='boolean')throw Error('Invalid energy-horizon setting');
+ const turnSearch=raw.turnSearch??false;
+ if(typeof turnSearch!=='boolean')throw Error('Invalid turn-search setting');
  return {level,personality,seed:raw.seed??1,side,planning,evolutionTempo,prizeRace,knockoutTempo,opponentResponse,
-  graduatedNoise,energyHorizon,skill:(graduatedNoise?CALIBRATED_SKILLS:SKILLS)[level],style:PERSONALITIES[personality]};
+  graduatedNoise,energyHorizon,turnSearch,skill:(graduatedNoise?CALIBRATED_SKILLS:SKILLS)[level],style:PERSONALITIES[personality]};
 }
 // Seeded independent of the engine's private deck order and future RNG state.
 function rng(seed){let x=(seed>>>0)||0x6d2b79f5;return ()=>{
@@ -796,13 +798,78 @@ function planningBonus(action,o,cfg){
  return Math.max(-45,Math.min(135,immediate+synergy))*cfg.style.damage;
 }
 
+// Search same-turn setup combinations on a masked, public-state projection.
+// This never calls reduce, reads the opponent hand/deck, or anticipates coin
+// flips. Only permitted actions are owned-hand evolve and one Energy attach.
+// Bounded to 3 preparation actions and 96 nodes per first move. Attacks are
+// evaluated at the leaf; no hypothetical damage is committed to the engine.
+function searchPrepActions(board,o){
+ const options=[];
+ for(let i=0;i<board.hand.length;i++){
+  const c=card(board.hand[i]);if(!c)continue;
+  if(!board.energyUsed&&isEnergy(c))
+   for(const slot of [-1,...board.bench.map((_,j)=>j)])
+    if(slot===-1?board.active:board.bench[slot])
+     options.push(command('attach_energy',{handIndex:i,slot}));
+  if(c.evolvesFrom)for(const slot of [-1,...board.bench.map((_,j)=>j)]){
+   const u=slot===-1?board.active:board.bench[slot];
+   if(u&&u.playedTurn<o.round&&canEvolve(c,card(u.id)))
+    options.push(command('evolve',{handIndex:i,slot}));
+  }
+ }
+ return options;
+}
+function searchBoardValue(board,o){
+ if(!board.active||!o.opponent.active)return 0;
+ const target=o.opponent.active;
+ const attackValue=projectedAttackValue(board.active,target,o.turnSerial);
+ const incoming=strongestAffordableAttack(target,board.active);
+ const isThreatened=!['Asleep','Paralyzed'].includes(target.status)&&
+  incoming>=hpRemaining(board.active)&&incoming>0;
+ const readyBackup=board.bench.some(u=>projectedAttackValue(u,target,o.turnSerial)>0);
+ const safeBackup=board.bench.some(u=>strongestAffordableAttack(target,u)<hpRemaining(u));
+ const survivorBonus=isThreatened?(safeBackup?22:readyBackup?7:-18):0;
+ return attackValue+survivorBonus;
+}
+function turnSequenceBonus(action,o,cfg){
+ if(!cfg.turnSearch||cfg.level<4||o.phase!=='game'||!o.self.active)return 0;
+ if(action.type!=='attach_energy'&&action.type!=='evolve')return 0;
+ const baseline=prepBoard(o),first=projectedPrep(baseline,action,o.round);
+ if(!first)return 0;
+ const initial=searchBoardValue(baseline,o);
+ const firstValue=searchBoardValue(first,o);
+ let best=firstValue,bestDepth=0,nodes=0;
+ // Small DFS over the CPU's own hand. Each continuation is a legal projection
+ // of its once-per-turn attachment and no turn-1 evolution rules.
+ const visit=(board,depth)=>{
+  if(depth>=2||nodes>=96)return;
+  for(const nextAction of searchPrepActions(board,o)){
+   if(nodes>=96)return;
+   nodes++;
+   const next=projectedPrep(board,nextAction,o.round);
+   if(!next)continue;
+   const v=searchBoardValue(next,o);
+   if(v>best){best=v;bestDepth=depth+1;}
+   visit(next,depth+1);
+  }
+ };
+ visit(first,0);
+ // Prefer a currently executable better attack, especially a knockout.
+ // An impressive evolution that stops all attacks is not a good same-turn line.
+ const improvement=best-initial;
+ const net=improvement*1.55-(bestDepth*7);
+ const stranded=firstValue<initial&&best<=initial+1;
+ const immediateLost=initial>=20&&firstValue<initial-15&&best<=initial+1;
+ const penalty=stranded?(immediateLost?145:65):0;
+ return Math.max(-200,Math.min(250,net-penalty))*cfg.style.damage;
+}
 function chooseAction(game,raw={},memo={}){
  const cfg=configuration(raw),o=observation(game,cfg.side);
  const used={trainers:memo.trainers||0,powers:memo.powers||0,powerKeys:memo.powerKeys||new Set(),stadium:!!memo.stadium};
  const actions=candidates(o,cfg,used);if(!actions.length)return null;
  const random=rng(cfg.seed+game.turnSerial*7919+(game.events?.length||0)*17011+cfg.side*31);
  const ranked=actions.map((action,i)=>({action,
-  score:score(action,o,cfg,used)+planningBonus(action,o,cfg)+prizeRaceBonus(action,o,cfg)+knockoutTempoBonus(action,o,cfg)+opponentResponseBonus(action,o,cfg)+energyHorizonBonus(action,o,cfg),tie:i}))
+  score:score(action,o,cfg,used)+planningBonus(action,o,cfg)+prizeRaceBonus(action,o,cfg)+knockoutTempoBonus(action,o,cfg)+opponentResponseBonus(action,o,cfg)+energyHorizonBonus(action,o,cfg)+turnSequenceBonus(action,o,cfg),tie:i}))
   .sort((a,b)=>b.score-a.score||a.tie-b.tie);
  // Rank all visible options before competence-sensitive choice noise. A larger
  // *evaluation budget* should NOT widen the random window: doing so previously
@@ -823,11 +890,11 @@ function chooseAction(game,raw={},memo={}){
  }
  return null;
 }
-function driveSide(initial,{side=1,level=3,personality='balanced',seed=1,planning,evolutionTempo,prizeRace,knockoutTempo,opponentResponse,graduatedNoise,energyHorizon,limit=200}={}){
+function driveSide(initial,{side=1,level=3,personality='balanced',seed=1,planning,evolutionTempo,prizeRace,knockoutTempo,opponentResponse,graduatedNoise,energyHorizon,turnSearch,limit=200}={}){
  let game=initial,steps=0;const commands=[],memo={trainers:0,powers:0,powerKeys:new Set(),stadium:false};
  while(!game.over&&steps<limit){
   const beforeTurn=game.turnSerial;
-  const next=chooseAction(game,{side,level,personality,seed,planning,evolutionTempo,prizeRace,knockoutTempo,opponentResponse,graduatedNoise,energyHorizon},memo);
+  const next=chooseAction(game,{side,level,personality,seed,planning,evolutionTempo,prizeRace,knockoutTempo,opponentResponse,graduatedNoise,energyHorizon,turnSearch},memo);
   if(!next){
    if(game.pendingDecision?.actor===side)throw Error('CPU unresolved choice: '+JSON.stringify({decision:game.pendingDecision,pendingAction:game.pendingAction}));
    break;
@@ -847,4 +914,4 @@ function driveSide(initial,{side=1,level=3,personality='balanced',seed=1,plannin
 }
 function driveBot(game,limit=200,config={}){return driveSide(game,{...config,side:1,limit});}
 function propose(game,config={}){return chooseAction(game,{...config,side:1});}
-module.exports={SKILLS,CALIBRATED_SKILLS,PERSONALITIES,configuration,observation,candidates,score,knockoutChance,planningBonus,evolutionTempoPenalty,prizeRaceBonus,knockoutTempoBonus,opponentResponseBonus,energyHorizonBonus,chooseAction,driveSide,driveBot,propose};
+module.exports={SKILLS,CALIBRATED_SKILLS,PERSONALITIES,configuration,observation,candidates,score,knockoutChance,planningBonus,evolutionTempoPenalty,prizeRaceBonus,knockoutTempoBonus,opponentResponseBonus,energyHorizonBonus,turnSequenceBonus,chooseAction,driveSide,driveBot,propose};
