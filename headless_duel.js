@@ -41,6 +41,14 @@ function next(g,n){
 function shuffle(g,a){const arr=[...a];for(let i=arr.length-1;i>0;i--){const j=randomRaw(g,i+1);[arr[i],arr[j]]=[arr[j],arr[i]];}return arr;}
 function log(g,message){g.message.unshift(String(message));g.message.length=Math.min(g.message.length,120);if(g.format==='online-preview'){(g.matchFeed ||= []).push({seq:(g.feedSeq=(g.feedSeq||0)+1),kind:'message',text:String(message)});if(g.matchFeed.length>150)g.matchFeed.shift();}}
 function card(g,id){const result=CATALOG.get(id);if(!result)fail(`Unknown card ${String(id)}`);return result;}
+// A named Energy requirement on an ATTACHED card checks the type it
+// supplies in play, not the cardboard's printed name. WotC Rainbow counts
+// as every Basic Energy type; Neo Destiny Miracle counts as every type.
+function attachedEnergyMatchesType(g,id,type){
+ if(!type)return true;
+ const name=card(g,id).name;
+ return name===type+' Energy'||name==='Rainbow Energy'||name==='Miracle Energy';
+}
 function unit(id,round=0){return {id,under:[],energies:[],attachedTrainers:[],damage:0,status:null,poison:false,playedTurn:round};}
 function allPokemon(p){return [p.active,...p.bench].filter(Boolean);}
 function hasActiveEffect(u,key,g){return Boolean(u&&u[key]&&u[key].expires>g.turnSerial);}
@@ -1062,7 +1070,7 @@ function performAction(g,side,cmd){
   if(program.kind==='energy-discard'||program.kind==='recover-discard'){
    const quantity=program.kind==='recover-discard'?1:program.quantity;
    if(program.subject!==c.name&&program.subject!=='this Pokémon')fail('Energy cost subject does not match attacker');
-   const eligible=u.energies.map((id,i)=>({id:card(g,id),i})).filter(o=>!program.onlyType||o.id.name===`${program.onlyType} Energy`).map(o=>o.i);
+   const eligible=u.energies.map((id,i)=>({id:card(g,id),i})).filter(o=>!program.onlyType||attachedEnergyMatchesType(g,u.energies[o.i],program.onlyType)).map(o=>o.i);
    if(eligible.length<quantity)fail('Insufficient Energy to discard for attack');
    if(eligible.length>quantity){
     g.nextDecisionId++;
@@ -1192,7 +1200,7 @@ function resolveAttack(g,side,index,chosenBench,energyPicks,extra={}){
  // announcing an attack and is never silently chosen by the engine.
  if(!extra.gymCharityApproved&&!extra.gymESPResuming&&(program.kind==='energy-discard'||program.kind==='recover-discard')){
   const picks=energyPicks,quantity=program.kind==='recover-discard'?1:program.quantity;
-  if(!Array.isArray(picks)||picks.length!==quantity||new Set(picks).size!==picks.length||picks.some(i=>!Number.isInteger(i)||i<0||i>=u.energies.length||program.onlyType&&card(g,u.energies[i]).name!==`${program.onlyType} Energy`))fail('Illegal attack Energy payment');
+  if(!Array.isArray(picks)||picks.length!==quantity||new Set(picks).size!==picks.length||picks.some(i=>!Number.isInteger(i)||i<0||i>=u.energies.length||program.onlyType&&!attachedEnergyMatchesType(g,u.energies[i],program.onlyType)))fail('Illegal attack Energy payment');
   for(const i of [...picks].sort((a,b)=>b-a))p.discard.push(u.energies.splice(i,1)[0]);
  }
  if(!extra.gymCharityApproved&&!extra.gymESPResuming&&FINAL_KINDS.has(program.kind)&&program.kind!=='flame-pillar'&&Array.isArray(energyPicks)){
@@ -1216,7 +1224,7 @@ function resolveAttack(g,side,index,chosenBench,energyPicks,extra={}){
   if(!effect||!copyAllowed.has(effect.kind))return false;
   // Super Metronome waives the printed Energy cost, not additional discards.
   // The picker must omit attacks whose required discard cannot be paid.
-  if(effect.kind==='energy-discard')return u.energies.filter(id=>!effect.onlyType||card(g,id).name===effect.onlyType+' Energy').length>=effect.quantity;
+  if(effect.kind==='energy-discard')return u.energies.filter(id=>!effect.onlyType||attachedEnergyMatchesType(g,id,effect.onlyType)).length>=effect.quantity;
   return true;
  };
  if(program.kind==='neo50:super-metronome'&&roll.neo50MetronomeHeads){
@@ -1258,7 +1266,7 @@ function resolveAttack(g,side,index,chosenBench,energyPicks,extra={}){
    g.pendingAction={kind:'neo50_select',stage,side,attackIndex:index,roll,extra,data};
   };
   if(script.kind==='energy-discard'&&program.kind==='neo50:super-metronome'){
-   const options=u.energies.flatMap((id,i)=>!script.onlyType||card(g,id).name===script.onlyType+' Energy'?[{id:'energy:'+i,label:card(g,id).name}]:[]);
+   const options=u.energies.flatMap((id,i)=>!script.onlyType||attachedEnergyMatchesType(g,id,script.onlyType)?[{id:'energy:'+i,label:card(g,id).name}]:[]);
    if(options.length<script.quantity)fail('Not enough attached Energy for copied attack payment');
    if(!Array.isArray(data.payment)){chooseCopy('payment',options,'Copied attack: discard attached Energy',script.quantity);return;}
    if(data.payment.length!==script.quantity||new Set(data.payment).size!==script.quantity||data.payment.some(k=>!options.some(x=>x.id===k)))fail('Illegal copied Energy payment');
