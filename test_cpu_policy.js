@@ -845,6 +845,28 @@ const settings={level:3,personality:'balanced',side:1,seed:47};
  assert.equal(hidden.pendingTrainerName,null,
   'AI must not observe another player’s Trainer plan through its healing heuristic');
 }
+{
+ const g=createGame({decks:[deck,deck],seed:17889,format:'classic'});
+ const o=AI.observation(g,1);o.phase='game';o.turn=1;o.round=5;
+ o.self.active={id:IDS.hit,damage:40,energies:[IDS.fight],playedTurn:2,status:null};
+ o.self.bench=[];o.self.hand=['neo1-101','neo1-96','neo1-91',IDS.fight];
+ o.self.handCount=4;o.self.deckCount=20;o.self.energyUsed=false;
+ o.opponent.active={id:IDS.hit,damage:0,energies:[IDS.fight],status:null};
+ const cfg=AI.configuration({side:1,level:5,trainerTactics:true});
+ const act=i=>({type:'play_trainer',payload:{handIndex:i}});
+ const value=i=>AI.score(act(i),o,cfg,{})+AI.trainerTacticsBonus(act(i),o,cfg);
+ const pass=AI.score({type:'end_turn',payload:{}},o,cfg,{});
+ assert.ok(value(0)>pass,'Moo-Moo Milk is useful when Active has four damage counters');
+ o.self.active.damage=0;
+ assert.ok(value(0)<pass,'Do not waste Moo-Moo Milk at full health');
+ assert.ok(value(1)<pass,'Save Professor Elm until after playable Energy and other Trainers');
+ o.self.hand=['neo1-96'];o.self.handCount=1;o.self.energyUsed=true;
+ assert.ok(value(0)>pass,'Elm must become valuable once useful hand cards have been played');
+ o.self.hand=['neo1-91'];o.self.handCount=1;o.self.deckCount=20;
+ assert.ok(value(0)>pass,'Teleporter has a fair expected draw value without peeking at a coin');
+ o.self.deckCount=2;
+ assert.ok(value(0)<pass,'Avoid gambling on cards when the deck is nearly exhausted');
+}
 let duels=0,decisions=0,attacks=0,energy=0,evolutions=0,trainer=0;
 for(let seed=1;seed<=4;seed++){
  let game=createGame({decks:[deck,deck],seed:seed*1789,format:'classic'});
