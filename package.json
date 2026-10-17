@@ -1,6 +1,6 @@
 {
   "name": "neo-campus-tcg",
-  "version": "0.63.0-neo-last-trainers",
+  "version": "0.64.0-neo-trainer-choices",
   "private": true,
   "description": "Neo Genesis and Neo Discovery: 19 authentic attack entries, 14 entire playable printings, interactive choices and defensive reactions",
   "scripts": {

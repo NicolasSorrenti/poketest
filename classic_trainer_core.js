@@ -170,6 +170,52 @@ function prompt(g,plan,helpers){
   if(d.ssuCoin[0]==='heads'&&!chosen(d,'ssuTarget'))
    return single('ssuTarget',side,own(),'Super Scoop Up: choose Pokémon to return to hand');
  }
+
+ // Neo v0.64: owner-only deck order and hand payment choices.
+ if(name==='New Pokédex'){
+  if(!d.newDexShuffled){p.deck=helpers.shuffle(g,p.deck);d.newDexShuffled=true;}
+  const count=Math.min(5,p.deck.length),base=p.deck.length-count;
+  for(let step=0;step<count;step++){
+   const key='newDex'+step;
+   if(!chosen(d,key)){
+    const used=Array.from({length:step},(_,i)=>nums(d,'newDex'+i)[0]);
+    const optionsFor=p.deck.flatMap((id,i)=>i>=base&&!used.includes(i)?[{id:'deck:'+i,label:get(id).name}]:[]);
+    return single(key,side,optionsFor,'New Pokédex: select card '+(step+1)+' from top',false);
+   }
+  }
+ }
+ if(name==='Energy Amplifier'){
+  if(!chosen(d,'ampCost'))return single('ampCost',side,hchoices(isEnergy),'Energy Amplifier: choose an Energy card to shuffle into deck');
+  if(!d.ampShuffled){
+   const ix=nums(d,'ampCost')[0],id=p.hand[ix];
+   if(!id||!isEnergy(get(id))||ix===plan.handIndex)throw Error('Energy Amplifier illegal Energy cost');
+   p.hand.splice(ix,1);if(ix<plan.handIndex)plan.handIndex--;
+   p.deck=helpers.shuffle(g,[...p.deck,id]);
+   helpers.log(g,'Energy Amplifier revealed '+get(id).name+'.');
+   d.ampShuffled=true;
+  }
+  if(!chosen(d,'ampCoin'))d.ampCoin=[helpers.flip(g)?'heads':'tails'];
+  if(d.ampCoin[0]==='heads'&&!chosen(d,'ampFind')){
+   const items=deck(basicEnergy);
+   if(items.length)return multi('ampFind',side,items,0,Math.min(3,items.length),'Energy Amplifier: select up to 3 Basic Energy',true);
+   d.ampFind=[];
+  }
+ }
+ if(name==="Thought Wave Machine (Rocket's Secret Machine)"){
+  if(!chosen(d,'twFlips')){
+   const results=[];let heads=0;
+   while(true){
+    if(results.length>1000)throw Error('Thought Wave flip limit exceeded');
+    const coin=helpers.flip(g);results.push(coin?'heads':'tails');if(!coin)break;heads++;
+   }
+   d.twFlips=results;d.twHeads=heads;
+  }
+  const energyCount=f.active?.energies.length||0,required=Math.min(d.twHeads,energyCount);
+  if(required>0&&!chosen(d,'twEnergy')){
+   if(required===energyCount)d.twEnergy=Array.from({length:energyCount},(_,i)=>'energy:'+i);
+   else return multi('twEnergy',side,options(zone(f.active.energies),'energy'),required,required,'Thought Wave: select opposing Energy to return');
+  }
+ }
  // Neo v0.55 — exact two-seat Trainer decisions. The Trainer itself remains
  // in its hand until commit; any other hand picks use pre-commit indices.
  if(name==='Mary'){
@@ -483,6 +529,30 @@ function commit(g,plan,h){
  switch(name){
 
 
+
+  case 'New Pokédex':{
+   const count=Math.min(5,p.deck.length),base=p.deck.length-count;
+   const chosenIndices=Array.from({length:count},(_,i)=>pick('newDex'+i));
+   if(new Set(chosenIndices).size!==count||chosenIndices.some(i=>i<base||i>=p.deck.length))throw Error('Invalid New Pokédex order');
+   const wanted=chosenIndices.map(i=>p.deck[i]);
+   for(let i=0;i<count;i++)p.deck[base+i]=wanted[count-1-i];
+   break;
+  }
+  case 'Energy Amplifier':{
+   if(d.ampCoin[0]==='heads'){
+    const picksFrom=picks('ampFind');
+    if(picksFrom.length>3||new Set(picksFrom).size!==picksFrom.length||picksFrom.some(i=>!basicEnergy(get(p.deck[i]))))throw Error('Invalid Amplifier search');
+    p.hand.push(...take(p.deck,picksFrom));p.deck=h.shuffle(g,p.deck);
+   }
+   break;
+  }
+  case "Thought Wave Machine (Rocket's Secret Machine)":{
+   const amount=Math.min(d.twHeads,f.active?.energies.length||0),chosenIndices=picks('twEnergy');
+   if(chosenIndices.length!==amount||new Set(chosenIndices).size!==amount||chosenIndices.some(i=>!f.active.energies[i]))throw Error('Invalid Thought Wave Energy choice');
+   f.hand.push(...take(f.active.energies,chosenIndices));
+   g.tickleEndsTurn=true;
+   break;
+  }
   case 'Super Scoop Up':{
    if(d.ssuCoin?.[0]==='heads'){
     const index=pick('ssuTarget'),u=slot(p,index);
@@ -848,7 +918,7 @@ function answer(g,plan,response,h){
  const data={...plan.data,[plan.await]:response.decline?[]:[...response.selected]};
  return prompt(g,{...plan,data,await:null},h);
 }
-const SUPPORTED=new Set(['Balloon Berry','Super Scoop Up','Magnifier','Gold Berry','Miracle Berry','Focus Band','EXP.ALL','Sprout Tower','Healing Field','Broken Ground Gym','Radio Tower','Lucky Stadium','Mary','PokéGear','Super Energy Retrieval','Time Capsule','Pokémon Personality Test',"Impostor Professor Oak's Invention",'Arcade Game','Energy Charge','Ruin Wall','Old Rod',"Team Rocket's Evil Deeds",'Energy Ark','Fossil Egg','Hyper Devolution Spray','Double Gust',"Bill's Teleporter",'Professor Elm','Moo-Moo Milk','Pokémon March','Super Rod','Bill','Professor Oak','Impostor Professor Oak',"Imposter Oak's Revenge",'Lass','Maintenance','Computer Search','Energy Search',"The Boss's Way",'Poké Ball','Pokémon Trader','Item Finder','Energy Retrieval','Nightly Garbage Run','Recycle','Pokédex','Gambler','Digger','Full Heal','Potion','Super Potion','Pokémon Center','Switch','Gust of Wind','Energy Removal','Super Energy Removal','Defender','PlusPower','Goop Gas Attack','Here Comes Team Rocket!',"Rocket's Sneak Attack",'Pokémon Flute','Revive','Mr. Fuji','Scoop Up','Devolution Spray','Pokémon Breeder','Challenge!','Sleep!',
+const SUPPORTED=new Set(['New Pokédex','Energy Amplifier',"Thought Wave Machine (Rocket's Secret Machine)",'Balloon Berry','Super Scoop Up','Magnifier','Gold Berry','Miracle Berry','Focus Band','EXP.ALL','Sprout Tower','Healing Field','Broken Ground Gym','Radio Tower','Lucky Stadium','Mary','PokéGear','Super Energy Retrieval','Time Capsule','Pokémon Personality Test',"Impostor Professor Oak's Invention",'Arcade Game','Energy Charge','Ruin Wall','Old Rod',"Team Rocket's Evil Deeds",'Energy Ark','Fossil Egg','Hyper Devolution Spray','Double Gust',"Bill's Teleporter",'Professor Elm','Moo-Moo Milk','Pokémon March','Super Rod','Bill','Professor Oak','Impostor Professor Oak',"Imposter Oak's Revenge",'Lass','Maintenance','Computer Search','Energy Search',"The Boss's Way",'Poké Ball','Pokémon Trader','Item Finder','Energy Retrieval','Nightly Garbage Run','Recycle','Pokédex','Gambler','Digger','Full Heal','Potion','Super Potion','Pokémon Center','Switch','Gust of Wind','Energy Removal','Super Energy Removal','Defender','PlusPower','Goop Gas Attack','Here Comes Team Rocket!',"Rocket's Sneak Attack",'Pokémon Flute','Revive','Mr. Fuji','Scoop Up','Devolution Spray','Pokémon Breeder','Challenge!','Sleep!',
  'Brock',"Brock's Training Method",'Misty','Lt. Surge','Secret Mission','Erika',"Erika's Perfume",'Koga','Sabrina',"Sabrina's Gaze",'Blaine',"Blaine's Gamble",'Fervor','Max Revive','Giovanni','Warp Point',
  "Blaine's Last Resort","Erika's Kindness",'Good Manners','Master Ball',"Giovanni's Last Resort","Misty's Tears","Erika's Maids","The Rocket's Trap","Rocket's Secret Experiment",
  'No Removal Gym',"The Rocket's Training Gym",'Resistance Gym',"Rocket's Minefield Gym",'Transparent Walls',
