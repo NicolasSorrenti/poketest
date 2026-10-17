@@ -89,6 +89,7 @@ function observation(game,side){
  return {phase:view.phase,turn:view.turn,round:view.round,turnSerial:game.turnSerial,over:view.over,
   self,opponent:view.players[1-side],stadium:view.stadium,
   pendingTrainerTarget:selectedIndex('target'),pendingTrainerSource:selectedIndex('source'),
+  pendingTrainerName:ownedPlan?.cardId?CATALOG.get(ownedPlan.cardId)?.name||null:null,
   decision:view.pendingDecision,setupReady:!!game.setupReady[side]};
 }
 const card=id=>CATALOG.get(id);
@@ -389,9 +390,12 @@ function choiceValue(option,decision,o,cfg){
    const unit=slotUnit(o.opponent,o.pendingTrainerTarget);
    return energyRemovalChoiceValue(unit,o.self.active,index,true);
   }
-  if(/^Discard one of your attached Energy$/i.test(ctx)&&o.pendingTrainerSource!==null){
-   const unit=slotUnit(o.self,o.pendingTrainerSource);
-   return energyRemovalChoiceValue(unit,o.opponent.active,index,false);
+  if(/^Discard one (?:of your )?attached Energy$/i.test(ctx)){
+   const chosenSlot=o.pendingTrainerSource??o.pendingTrainerTarget;
+   if(chosenSlot!==null&&chosenSlot!==undefined){
+    const unit=slotUnit(o.self,chosenSlot);
+    return energyRemovalChoiceValue(unit,o.opponent.active,index,false);
+   }
   }
  }
  if(/^count:/.test(id))return /draw/i.test(ctx)?Number(id.slice(6))*20:0;
@@ -400,6 +404,15 @@ function choiceValue(option,decision,o,cfg){
   const n=Number(id.split(':')[1]),own=/your|friendly|own|promot|receiv|retreat/i.test(ctx)&&!/opponent|opposing|enemy/i.test(ctx);
   const target=slotUnit(own?o.self:o.opponent,n);
   if(!target)return 0;
+  if(cfg?.level>=4&&own&&/^Choose one of your Pokémon$/i.test(ctx)&&
+    ['Potion','Super Potion'].includes(o.pendingTrainerName)){
+   const healed=Math.min(o.pendingTrainerName==='Potion'?20:40,target.damage||0);
+   const threat=o.opponent.active&&!['Asleep','Paralyzed'].includes(o.opponent.active.status)?
+    strongestAffordableAttack(o.opponent.active,target):0;
+   const survives=threat>=hpRemaining(target)&&
+    threat<hpRemaining({...target,damage:Math.max(0,target.damage-healed)});
+   return healed*2.5+(survives?160:0);
+  }
   if(cfg?.level>=3&&/^slot:/.test(id)&&/^Choose opposing Pokémon$/i.test(ctx))
    return energyDenialValue(target,o.self.active,n===-1);
   if(/promot|retreat|switch.*your/i.test(ctx)){
