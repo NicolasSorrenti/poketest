@@ -75,7 +75,7 @@ for(const id of require('./neo_v064_pool').ids){assert.ok(FORMAT.isAllowed(id,{n
   assert.equal(g.players[0].turn===undefined,true);
   assert.equal(g.turn,1,'Thought Wave Machine ends user turn immediately');
   const moved=before-g.players[1].active.energies.length;
-  assert.equal(g.players[1].hand.length,moved,'Discard not used; Energy returned to owner hand');
+  assert.equal(g.players[1].hand.length,moved+1,'Transferred Energy plus the mandatory beginning-of-turn draw; no discard');
   assert.equal(g.players[1].discard.length,0);
   assert.ok(g.players[0].discard.includes('neo4-96'));
  }
