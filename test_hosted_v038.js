@@ -1,0 +1,51 @@
+'use strict';
+const assert=require('node:assert/strict');
+const {ClassicOnlineService}=require('./classic_online_service');
+const {CATALOG}=require('./headless_duel');
+const {publicView}=require('./duel_protocol');
+const mkUnit=(id,damage=0,energies=[])=>({id,under:[],energies,attachedTrainers:[],damage,status:null,poison:false,playedTurn:0});
+let timestamp=100000;
+const svc=new ClassicOnlineService({now:()=>timestamp});
+let a=svc.create({code:'P0KEMN',deck:'brushfire',name:'Host'});assert.equal(a.code,'P0KEMN');
+assert.throws(()=>svc.create({code:'P0KEMN',deck:'brushfire'}),/already in use/);
+let b=svc.join({code:a.code,deck:'blackout',name:'Guest'});
+const w=svc.join({code:a.code,name:'Onlooker'});assert.equal(w.spectator,true);assert.equal(w.you,null);
+assert.throws(()=>svc.ready(a.code,w.token,{ready:true,revision:b.revision}),/spectator/);
+assert.throws(()=>svc.changeDeck(a.code,w.token,{deck:'brushfire',revision:b.revision}),/spectator/);
+const renamed=svc.changeName(a.code,b.token,{revision:b.revision,name:'GuestTrainer'});assert.equal(renamed.players[1].name,'GuestTrainer');
+let host=svc.ready(a.code,a.token,{ready:true,revision:renamed.revision});
+let guest=svc.ready(a.code,b.token,{ready:true,revision:host.revision});
+let started=svc.start(a.code,a.token,{revision:guest.revision});
+assert.equal(started.started,true);
+const room=svc.findRoom(a.code),g=room.game;
+const spectator=svc.state(a.code,w.token);
+for(const p of spectator.view.players){assert.equal(p.hand,undefined);assert.equal(p.prizes,undefined);}
+assert.equal(spectator.view.pendingDecision,null);
+assert.throws(()=>svc.action(a.code,w.token,{revision:started.revision,command:{type:'end_turn',payload:{}}}),/spectator/);
+const posted=svc.chatMessage(a.code,w.token,{text:'Nice game!'});assert.equal(posted.chatMessages.at(-1).name,'Onlooker');
+assert.equal(svc.state(a.code,b.token).chatMessages.at(-1).text,'Nice game!');
+// A deterministic online KO must offer a choice rather than take the last Prize.
+g.phase='game';g.turn=0;g.turnSerial=1;g.over=false;g.setupReady=[true,true];
+g.players[0].active=mkUnit('base1-58',0,['base1-100']);g.players[0].bench=[mkUnit('base1-61')];
+g.players[1].active=mkUnit('base1-61',20);g.players[1].bench=[mkUnit('base1-61')];
+g.players[0].prizes=['base1-97','base1-98','base1-99'];g.players[1].prizes=['base1-100','base1-101'];
+let state=svc.state(a.code,a.token);let result=svc.action(a.code,a.token,{revision:state.revision,command:{type:'attack',payload:{attackIndex:0}}});
+assert.equal(result.view.pendingDecision?.kind,'prize-card','KO must offer a Prize choice');
+assert.equal(result.view.pendingDecision.actor,0);assert.equal(result.view.players[0].prizeCount,3);
+const spectatorPrize=svc.state(a.code,w.token);assert.equal(spectatorPrize.view.pendingDecision?.options,undefined,'Spectator must not see the Prize options');
+const prize=svc.action(a.code,a.token,{revision:result.revision,command:{type:'choose',payload:{decisionId:result.view.pendingDecision.id,selected:['prize:1']}}});
+assert.equal(prize.view.players[0].prizeCount,2);assert.equal(prize.view.players[0].hand.includes('base1-98'),true,'Selected Prize must enter own hand');
+assert.deepEqual(svc.findRoom(a.code).game.players[0].prizes,['base1-97','base1-99']);
+assert.equal(publicView(svc.findRoom(a.code).game,1).players[0].hand,undefined);
+// Flip logs and public results must be identical to all viewers.
+const live=svc.findRoom(a.code).game;live.players[0].active=mkUnit('base1-58',0,['base1-100','base1-100']);live.players[1].active=mkUnit('base1-61');live.turn=0;live.phase='game';live.over=false;live.pendingDecision=null;live.pendingAction=null;
+state=svc.state(a.code,a.token);result=svc.action(a.code,a.token,{revision:state.revision,command:{type:'attack',payload:{attackIndex:1}}});
+assert.ok(result.view.coinFlips.length>0);assert.match(result.view.messages.join(' '),/Coin flip: (HEADS|TAILS)/);
+assert.deepEqual(svc.state(a.code,b.token).view.coinFlips,result.view.coinFlips);
+// Disconnect countdown: only one stale player loses after 60 seconds; returning earlier cancels it.
+const g2=svc.create({deck:'brushfire'}),g3=svc.join({code:g2.code,deck:'blackout'});
+let n=svc.ready(g2.code,g2.token,{ready:true,revision:g3.revision});n=svc.ready(g2.code,g3.token,{ready:true,revision:n.revision});n=svc.start(g2.code,g2.token,{revision:n.revision});
+svc.findRoom(g2.code).game.phase='game';
+timestamp+=9000;let v=svc.state(g2.code,g2.token);assert.equal(v.presence[1].connected,false);assert.ok(v.presence[1].secondsUntilForfeit>0);assert.equal(v.view.over,false);
+timestamp+=52000;v=svc.state(g2.code,g2.token);assert.equal(v.view.over,true);assert.equal(v.winner,0);
+console.log('PASS v0.38 hosted play: custom codes, spectator chat and privacy, authoritative Prize selection, coin results, 60s forfeit');

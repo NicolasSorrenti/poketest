@@ -16,6 +16,8 @@
  const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
  let modalDecisionId=null,lastFieldDecisionId=null;
  let token=null,roomCode=null,current=null,selectedHand=null,targetMode=null,busy=false,decisionSelection=new Set(),lastDecision=null,chatSeq=-1,chatBusy=false;
+ let chatOpen=false,logOpen=false,seenChatSeq=-1,lastCoinSeq=null,coinQueue=[],coinTimer=null,lastKoFeedSeq=null;
+ const watching=()=>!!current?.spectator;
  const side=()=>current?.you??0;
  const command=(type,payload={})=>({type,payload});
  async function api(path,opts={}){
@@ -24,7 +26,7 @@
   if(!r.ok)throw Error(body.error||'Could not contact Classic engine');return body;
  }
  const card=id=>cards.get(id)||{name:String(id),types:[],attacks:[],abilities:[]};
- const fieldDecision=()=>{const d=current?.view?.pendingDecision;if(!d||d.actor!==side())return null;
+ const fieldDecision=()=>{const d=current?.view?.pendingDecision;if(!d||d.actor!==side()||watching())return null;
   return window.NeoBattleDecisionUI.resolveTargets(d,current.view,side(),card);
  };
  function chooseFieldOption(id){const d=current?.view?.pendingDecision;if(!d||d.actor!==side()||!fieldDecision()?.some(x=>x.id===id)||busy)return;
@@ -40,6 +42,8 @@
   if(!data||data.chatSeq===undefined)return;
   const box=$('chatMessages');
   if(data.chatSeq===chatSeq)return;
+  if(seenChatSeq<0)seenChatSeq=data.chatSeq;
+  else if(!chatOpen&&data.chatSeq>seenChatSeq){const incoming=(data.chatMessages||[]).filter(m=>m.id>seenChatSeq&&(watching()||m.player!==side()));if(incoming.length){const badge=$('unreadBadge');badge.textContent=String(incoming.length+Number(badge.dataset.unread||0));badge.dataset.unread=badge.textContent;badge.classList.remove('hidden');}seenChatSeq=data.chatSeq;}
   const stick=box.scrollHeight-box.scrollTop-box.clientHeight<50;
   chatSeq=data.chatSeq;box.textContent='';
   for(const m of data.chatMessages||[]){
@@ -61,18 +65,19 @@
   finally{chatBusy=false;}
  }
 
- async function send(action){if(!current||busy)return;busy=true;clearError();try{
+ async function send(action){if(!current||busy||watching())return;busy=true;clearError();try{
   const result=await api('action',{method:'POST',body:JSON.stringify({code:roomCode,revision:current.revision,command:action})});
   preview.hide();current=result;selectedHand=null;targetMode=null;decisionSelection.clear();render();
  }catch(e){fail(e);}finally{busy=false;}}
  async function openRoom(kind){if(busy)return;busy=true;$('startupError').textContent='';try{
   const deck=$('deck').value;
-  const body={deck,name:$('nickname').value,...(deck==='custom'?{customDeck:JSON.parse(localStorage.getItem('neoCampusCustomGymDeck')||'null')}:{}),...(kind==='join'?{code:$('joinCode').value.trim().toUpperCase()}: {})};
+  const suppliedCode=$('joinCode').value.trim().toUpperCase();
+  const body={deck,name:$('nickname').value,...(deck==='custom'?{customDeck:JSON.parse(localStorage.getItem('neoCampusCustomGymDeck')||'null')}:{}),...(suppliedCode?{code:suppliedCode}:{})};
   const data=await api(kind,{method:'POST',body:JSON.stringify(body)});
-  feedback.reset();opponentActivity.clear();combat.reset();lobbyDeckDraft=null;token=data.token;roomCode=data.code;chatSeq=-1;sessionStorage.setItem('neoOnlineToken',token);sessionStorage.setItem('neoOnlineRoom',roomCode);
+  feedback.reset();opponentActivity.clear();combat.reset();lobbyDeckDraft=null;token=data.token;roomCode=data.code;chatSeq=-1;seenChatSeq=-1;lastCoinSeq=null;lastKoFeedSeq=null;sessionStorage.setItem('neoOnlineToken',token);sessionStorage.setItem('neoOnlineRoom',roomCode);
   current=data;render();
  }catch(e){$('startupError').textContent=e.message;}finally{busy=false;}}
- async function lobbyAction(path,payload={}){if(busy||!current)return;busy=true;$('lobbyError').textContent='';try{
+ async function lobbyAction(path,payload={}){if(busy||!current||watching())return;busy=true;$('lobbyError').textContent='';try{
   const updated=await api(path,{method:'POST',body:JSON.stringify({code:roomCode,revision:current.revision,...payload})});
   current=updated;if(path==='deck')lobbyDeckDraft=null;render();
  }catch(e){$('lobbyError').textContent=e.message;await refresh();}finally{busy=false;}}
@@ -81,7 +86,7 @@
   $('choiceModal').classList.add('hidden');$('choiceModal').setAttribute('aria-hidden','true');
   $('fieldChoiceBar').classList.add('hidden');modalDecisionId=null;lastFieldDecisionId=null;
  }
- function newDuel(){lobbyDeckDraft=null;clearChoiceUi();opponentActivity.clear();combat.reset();chatSeq=-1;$('chatMessages').textContent='';feedback.reset();preview.hide();token=null;roomCode=null;current=null;selectedHand=null;targetMode=null;
+ function newDuel(){lobbyDeckDraft=null;clearChoiceUi();opponentActivity.clear();combat.reset();chatSeq=-1;$('chatMessages').textContent='';feedback.reset();preview.hide();chatOpen=false;logOpen=false;token=null;roomCode=null;current=null;selectedHand=null;targetMode=null;
   sessionStorage.removeItem('neoOnlineToken');sessionStorage.removeItem('neoOnlineRoom');render();}
  async function refresh(){if(!token||!roomCode||busy)return;try{
   const state=await api('state?code='+encodeURIComponent(roomCode));
@@ -90,26 +95,108 @@
   if(!current||state.revision!==current.revision){const previous=current?.view?.pendingDecision?.id;
    preview.hide();current=state; if(previous!==state.view?.pendingDecision?.id)decisionSelection.clear();
    selectedHand=null;targetMode=null;render();}
+  else{current.presence=state.presence;current.spectatorCount=state.spectatorCount;renderPresence();}
  }catch(e){if($('networkStatus'))$('networkStatus').textContent='Disconnected';}
  }
+ function toggleDrawer(which,open){
+  if(which==='chat'){chatOpen=open;$('roomChat').classList.toggle('hidden',!open);$('roomChat').classList.toggle('drawer-open',open);$('chatToggle').setAttribute('aria-expanded',String(open));if(open){$('unreadBadge').classList.add('hidden');$('unreadBadge').dataset.unread='0';seenChatSeq=chatSeq;}}
+  else{logOpen=open;$('logDrawer').classList.toggle('hidden',!open);$('logToggle').setAttribute('aria-expanded',String(open));}
+ }
+ function renderPresence(){
+  if(!current?.started)return;
+  const other= current.presence?.[1-side()];
+  const name=current.players?.[1-side()]?.name||'Opponent';
+  const status=$('presenceNotice');
+  status.textContent=watching()?`👁 ${current.spectatorCount||0} watching`:other?.connected?'● '+name+' online':other?`⚠ ${name} disconnected · ${other.secondsUntilForfeit}s to forfeit`:'Waiting for opponent';
+  status.classList.toggle('connection-warn',!watching()&&other&&!other.connected);
+  $('spectatorCount').textContent=`👁 ${current.spectatorCount||0}`;
+  $('spectatorCount').classList.toggle('hidden',watching());
+ }
+ function renderPrizes(ownCount,opponentCount){
+  const d=current?.view?.pendingDecision;
+  if(watching()||d?.kind!=='prize-card'||d.actor!==side())return;
+  const section=$('prizeRail').querySelectorAll('.prize-group')[1];if(!section)return;
+  const grid=section.querySelector('.prize-grid');if(!grid)return;
+  grid.setAttribute('role','group');grid.setAttribute('aria-label','Choose a Prize card');
+  grid.replaceChildren();
+  for(let i=0;i<6;i++){
+   if(i>=ownCount){const slot=document.createElement('span');slot.className='prize-back prize-taken';grid.append(slot);continue;}
+   const button=btn('?',()=>send(command('choose',{decisionId:d.id,selected:['prize:'+i]})),'prize-back prize-select');
+   button.title='Take Prize '+(i+1);button.setAttribute('aria-label','Take Prize '+(i+1));button.disabled=busy;grid.append(button);
+  }
+ }
+ function openDiscard(owner){
+  const p=current?.view?.players?.[owner];if(!p)return;
+  $('pileTitle').textContent=`${current.players[owner]?.name||'Trainer'} — discard pile (${p.discard.length})`;
+  const list=$('pileCards');list.replaceChildren();
+  if(!p.discard.length){list.textContent='Discard pile is empty.';}
+  p.discard.forEach(id=>{const c=card(id),b=btn('',()=>preview.inspect(id),'pile-card');
+   const pic=picture(id);if(pic){const img=document.createElement('img');img.src=pic;img.alt='';b.append(img);}
+   const name=document.createElement('span');name.textContent=c.name;b.append(name);list.append(b);});
+  $('pileModal').classList.remove('hidden');
+ }
+ function renderCoin(view){
+  const incoming=(view.coinFlips||[]).filter(x=>x.seq>lastCoinSeq);
+  if(lastCoinSeq===null){lastCoinSeq=view.coinFlips?.at(-1)?.seq||0;return;}
+  if(incoming.length){lastCoinSeq=incoming.at(-1).seq;coinQueue.push(...incoming.slice(-12));pumpCoin();}
+ }
+ function pumpCoin(){
+  if(coinTimer||!coinQueue.length)return;
+  const flip=coinQueue.shift(),el=$('coinFx');
+  el.textContent='🪙 '+flip.result.toUpperCase();el.classList.remove('hidden');
+  el.classList.remove('coin-animate');void el.offsetWidth;el.classList.add('coin-animate');
+  coinTimer=setTimeout(()=>{el.classList.add('hidden');coinTimer=null;pumpCoin();},800);
+ }
+ function renderMatchFeed(){
+  if(!current?.feed?.length)return;
+  const list=$('actionTimeline');list.replaceChildren();
+  for(const entry of current.feed.slice(-45).reverse()){
+   const e=entry.kind==='action'?quick.actionDescription(entry,card,entry.side===side()&&!watching()?'You':current.players[entry.side]?.name||'Player'):null;
+   const row=document.createElement('li');row.className='timeline-entry '+(e?.kind||'rule');
+   const ico=document.createElement('span');ico.className='timeline-icon';ico.textContent=e?.icon||(/Coin flip/.test(entry.text)?'🪙':/Knocked Out/.test(entry.text)?'💥':'•');
+   const text=document.createElement('span');text.textContent=e?.text||entry.text;
+   row.append(ico,text);list.append(row);
+  }
+ }
+ function renderKnockOut(view){
+  const feed=current?.feed||[];
+  const latest=feed.at(-1)?.seq||0;
+  if(lastKoFeedSeq===null){lastKoFeedSeq=latest;return;}
+  const news=feed.filter(e=>e.seq>lastKoFeedSeq&&e.kind==='message'&&/Knocked Out|wins by forfeit/i.test(e.text));
+  lastKoFeedSeq=Math.max(lastKoFeedSeq,latest);
+  if(!news.length)return;
+  const el=$('koFx');el.textContent='💥 '+news.slice(-2).map(e=>e.text).join(' · ');el.classList.remove('hidden');
+  clearTimeout(el._dismiss);el._dismiss=setTimeout(()=>el.classList.add('hidden'),2500);
+ }
+
  function renderLobby(){const active=!!current&&!!current.started;
-  $('roomChat').classList.toggle('hidden',!current);
+  $('roomChat').classList.toggle('hidden',!current||(!!current.started&&!chatOpen));
+  $('roomChat').classList.toggle('drawer-open',!!current?.started&&chatOpen);
+  $('logDrawer').classList.toggle('hidden',!active||!logOpen);
+  $('chatToggle').setAttribute('aria-expanded',String(chatOpen));$('logToggle').setAttribute('aria-expanded',String(logOpen));
   const dock=$(active?'chatDuelDock':'chatLobbyDock');
   if(current&&dock&&$('roomChat').parentNode!==dock)dock.append($('roomChat'));
 
   $('lobby').classList.toggle('hidden',!!current);
+  document.body.classList.toggle('duel-active',active);
+  document.body.classList.toggle('invite-entry',!current&&!!new URLSearchParams(location.search).get('room'));
+  $('chatDuelDock').classList.toggle('hidden',!active);
   $('waitingRoom').classList.toggle('hidden',!current||active);
   $('duel').classList.toggle('hidden',!active);
   if(!current)return;
   if(!active){
    $('roomCode').textContent=roomCode;
+   $('readyBtn').classList.toggle('hidden',watching());$('startMatch').classList.toggle('hidden',watching());$('roomDeck').disabled=watching();$('saveRoomDeck').disabled=watching();
+   $('lobbyMessage').textContent=watching()?'You are watching this room. You may chat while waiting for the match.':'';
    $('roomLink').value=location.origin+'/online.html?room='+encodeURIComponent(roomCode);
    const mine=current.players[side()];
+   if(document.activeElement!==$('roomName'))$('roomName').value=mine?.name||'';
+   $('roomName').disabled=watching();$('saveRoomName').disabled=watching();
    const ownDeck=mine?.deck||'';
    const selectedDeck=lobbyDeckDraft??ownDeck;
    $('roomDeck').value=selectedDeck;
    const unsaved=selectedDeck!==ownDeck;
-   $('saveRoomDeck').disabled=!unsaved&&selectedDeck!=='custom';
+   $('saveRoomDeck').disabled=watching()||(!unsaved&&selectedDeck!=='custom');
    $('roomDeckHint').textContent=unsaved?'Save your selected deck before clicking Ready. Both players will need to Ready again.':'Deck saved. You can change it until the duel starts; changing a deck clears both Ready confirmations.';
    $('roomDeckHint').classList.toggle('unsaved',unsaved);
    $('myDeckStatus').textContent=unsaved?'Unsaved selection':mine?.ready?'Ready':'Not ready';
@@ -118,11 +205,11 @@
     item.innerHTML=`<strong>${i===0?'HOST':'GUEST'}${i===side()?' · YOU':''}</strong><span>${esc(p?.name||'Waiting for a friend…')}</span><div>${esc(p?deckNames.get(p.deck)||p.deck:'No deck')}</div><span class="tag">${p?.ready?'READY':'NOT READY'}</span>`;
     el.append(item);
    });
-   $('readyBtn').disabled=unsaved;
+   $('readyBtn').disabled=unsaved||watching();
    $('readyBtn').textContent=mine?.ready?'Cancel ready':'Ready';
    $('startMatch').disabled=unsaved||side()!==0||!current.players[1]||current.players.some(p=>!p?.ready);
-   $('startMatch').classList.toggle('hidden',side()!==0);
-   $('lobbyMessage').textContent=!current.joined?'Waiting for your friend to join…':!current.players.every(p=>p.ready)?'Both players must click Ready.':'Both players ready. Host can start the duel.';
+   $('startMatch').classList.toggle('hidden',side()!==0||watching());
+   if(!watching())$('lobbyMessage').textContent=!current.joined?'Waiting for your friend to join…':!current.players.every(p=>p.ready)?'Both players must click Ready.':'Both players ready. Host can start the duel.';
   }
  }
  function setTarget(type,payload,title,benchOnly=false){preview.hide();targetMode={type,payload,title,benchOnly};render();}
@@ -168,7 +255,7 @@
   preview.attach(b,id);
   b.addEventListener('click',()=>{
    if(setup){if(current.setupConfirmed)return;if(c.supertype==='Pokémon'&&c.subtypes?.includes('Basic'))send(command('setup_select',{handIndex:index}));else preview.inspect(id);return;}
-   const v=current.view, canAct=v.phase==='game'&&v.turn===side()&&!v.pendingDecision&&!v.over;
+   const v=current.view, canAct=!watching()&&v.phase==='game'&&v.turn===side()&&!v.pendingDecision&&!v.over;
    if(!canAct){preview.inspect(id);return;}
    if(c.supertype==='Energy'&&current.me.energyUsed){fail(new Error('You have already attached an Energy this turn.'));return;}
    if(c.supertype==='Trainer'){preview.hide();send(command('play_trainer',{handIndex:index}));return;}
@@ -196,7 +283,7 @@
   el.append(btn('Inspect selected card',()=>preview.inspect(us.hand[idx])));
  }
  function renderDecisions(){const v=current.view,el=$('decisionBox'),title=$('decisionTitle'),description=$('decisionText'),opts=$('decisionOptions'),acts=$('decisionActions');
-  const d=v.pendingDecision,field=fieldDecision(),showModal=!!(d&&d.actor===side()&&!field&&!targetMode);
+  const d=v.pendingDecision,field=fieldDecision(),prizeChoice=!!(d&&d.kind==='prize-card'&&d.actor===side()&&!watching()),showModal=!!(d&&d.actor===side()&&!field&&!targetMode&&!prizeChoice&&!watching());
   const destination=showModal?$('choiceModalContent'):$('choiceDock');
   if(el.parentElement!==destination)destination.append(el);
   $('choiceModal').classList.toggle('hidden',!showModal);
@@ -211,7 +298,8 @@
   if(targetMode){el.classList.add('active');title.textContent=targetMode.title;
    description.textContent='Click an eligible Pokémon in your Active or Bench area to complete this action.';
    acts.append(btn('Cancel selection (Esc)',cancelTarget,'cancel-target'));return;}
-  if(d&&d.actor===side()){el.classList.add('active');title.textContent=d.label||'Your decision';
+  if(prizeChoice){title.textContent='Choose a Prize card';description.textContent='Click one of your glowing face-down Prize cards in the left rail.';const bar=$('fieldChoiceBar');bar.classList.remove('hidden');bar.textContent='🎁 Knock Out! Select one of your highlighted Prize cards.';return;}
+  if(d&&d.actor===side()&&!watching()){el.classList.add('active');title.textContent=d.label||'Your decision';
    if(field){
     if(lastFieldDecisionId!==d.id){
      lastFieldDecisionId=d.id;
@@ -239,7 +327,8 @@
    acts.append(btn('Confirm selection',()=>send(command('choose',{decisionId:d.id,selected:[...decisionSelection]})),'primary',decisionSelection.size<d.min||decisionSelection.size>d.max));
    if(d.optional)acts.append(btn('Decline',()=>send(command('choose',{decisionId:d.id,decline:true}))));
   }else if(d){title.textContent='Opponent is choosing';description.textContent='Waiting for the other player to resolve their choice.';}
-  else if(v.over){title.textContent='DUEL COMPLETE';description.textContent=current.winner===side()?'You won!':current.winner===1-side()?'Your friend won.':'A draw!';acts.append(btn('Leave finished duel',newDuel,'primary'));}
+  else if(v.over){title.textContent='DUEL COMPLETE';description.textContent=watching()?(current.winner===null?'Draw!':`${current.players[current.winner]?.name||'A player'} won.`):current.winner===side()?'You won!':current.winner===1-side()?'Your friend won.':'A draw!';acts.append(btn('Leave finished duel',newDuel,'primary'));}
+  else if(watching()){title.textContent='SPECTATING';description.textContent='You can watch the public field and chat. Both players’ hands and face-down Prizes remain private.';}
   else if(v.phase==='setup'){
    title.textContent='OPENING SETUP';description.textContent='Select a Basic Pokémon from your opening hand to become Active. You may select up to five more for your Bench, then confirm. Your opponent’s team remains hidden until setup ends.';
    if(current.setupConfirmed){description.textContent='Opening setup confirmed. Waiting for your friend to confirm.';}
@@ -248,10 +337,10 @@
  }
  function performRender(){renderLobby();renderChat(current);if(!current?.started)return;
   feedback.update(current,side());opponentActivity.update(current,side(),current.players[1-side()]?.name||'Opponent');
-  const v=current.view,you=v.players[side()],cpu=v.players[1-side()],yourTurn=v.turn===side()&&!v.over;
+  const v=current.view,you=v.players[side()],cpu=v.players[1-side()],yourTurn=!watching()&&v.turn===side()&&!v.over;
   document.querySelector('.stage').classList.toggle('your-turn',yourTurn&&v.phase==='game'&&!v.pendingDecision);
-  $('yourLabel').textContent=current.players[side()].name.toUpperCase();$('opponentLabel').textContent=current.players[1-side()].name.toUpperCase();
-  $('phaseText').textContent=v.over?'DUEL COMPLETE':v.phase==='setup'?'Opening setup':yourTurn?'Your turn':`Waiting for ${current.players[1-side()].name}`;
+  $('yourLabel').textContent=(current.players[side()]?.name||'HOST').toUpperCase();$('opponentLabel').textContent=current.players[1-side()].name.toUpperCase();
+  $('phaseText').textContent=watching()?'Watching · '+(v.over?'Finished':v.phase==='setup'?'Opening setup':'Live match'):v.over?'DUEL COMPLETE':v.phase==='setup'?'Opening setup':yourTurn?'Your turn':`Waiting for ${current.players[1-side()].name}`;
   quick.drawPrizes($('prizeRail'),you.prizeCount,cpu.prizeCount,current.players[1-side()].name.toUpperCase());
   $('turnChip').textContent='TURN '+(current.turnSerial+1);$('scoreline').textContent=`Your Prizes ${you.prizeCount} · Opponent Prizes ${cpu.prizeCount}`;
   $('stadiumText').textContent=v.stadium?`Stadium: ${card(v.stadium.id).name}`:'';
@@ -260,14 +349,17 @@
   }
   $('oppStats').textContent=`Hand ${cpu.handCount} · Deck ${cpu.deckCount} · Discard ${cpu.discard.length}`;
   $('myStats').textContent=`Hand ${you.handCount} · Deck ${you.deckCount} · Discard ${you.discard.length}`;
-  $('energyStatus').textContent=current.me.energyUsed?'Energy attached this turn':'Energy attachment available';
+  $('energyStatus').textContent=watching()?'Spectating':current.me.energyUsed?'Energy attached this turn':'Energy attachment available';
+  $('myDeckCount').querySelector('b').textContent=you.deckCount;$('oppDeckCount').querySelector('b').textContent=cpu.deckCount;
+  $('myDiscardBtn').querySelector('b').textContent=you.discard.length;$('oppDiscardBtn').querySelector('b').textContent=cpu.discard.length;
+  renderPrizes(you.prizeCount,cpu.prizeCount);renderPresence();renderCoin(v);renderKnockOut(v);
   ux.renderGuide($('turnCoach'),{view:v,me:side(),energyUsed:current.me.energyUsed,targetMode,card,setupConfirmed:current.setupConfirmed});
   setZone('enemyActive',cpu,-1);setZone('enemyBench',cpu,0);setZone('myActive',you,-1);setZone('myBench',you,0);
-  $('handAmount').textContent=`(${you.hand.length})`;$('hand').textContent='';you.hand.forEach((id,i)=>$('hand').append(handCard(id,i,v.phase==='setup')));
+  $('handAmount').textContent=`(${you.handCount||0}${watching()?' hidden':''})`;$('hand').textContent='';(you.hand||[]).forEach((id,i)=>$('hand').append(handCard(id,i,v.phase==='setup')));
   renderHandActions();$('attacks').textContent='';$('powers').textContent='';
   if(you.active){
    const active=card(you.active.id);
-   const attackEnabled=v.phase==='game'&&!v.over&&yourTurn&&!v.pendingDecision;
+   const attackEnabled=!watching()&&v.phase==='game'&&!v.over&&yourTurn&&!v.pendingDecision;
    (you.active.effectiveAttacks||active.attacks||[]).forEach((a,i)=>{
     const b=btn('',()=>send(command('attack',{attackIndex:i})),'attack-action',!attackEnabled);
     const energy=(a.cost||[]).map(t=>`<span class="energy-pip energy-${esc(String(t).toLowerCase())}">${esc(String(t)[0])}</span>`).join('');
@@ -281,13 +373,13 @@
   if(v.phase==='game'&&!v.over&&yourTurn&&!v.pendingDecision&&you.active){
    [you.active,...you.bench].forEach((u,i)=>{const c=card(u.id);(c.abilities||[]).forEach(a=>{if(a.name)$('powers').append(btn(`✦ ${a.name} (${i===0?'Active':'Bench '+i})`,()=>send(command('use_power',{slot:i-1}))));});});
   }
-  const actionsDisabled=!yourTurn||v.phase!=='game'||!!v.pendingDecision||v.over;
+  const actionsDisabled=watching()||!yourTurn||v.phase!=='game'||!!v.pendingDecision||v.over;
   $('retreatBtn').disabled=actionsDisabled||!you.bench.length;
   $('retreatBtn').title=actionsDisabled?'Retreat on your turn after resolving any choices.':!you.bench.length?'You need a Benched Pokémon to retreat.':'Choose a Benched Pokémon to replace your Active Pokémon.';
   $('endBtn').disabled=actionsDisabled;
-  $('concedeBtn').disabled=v.over||v.phase!=='game'||!yourTurn;
+  $('concedeBtn').disabled=watching()||v.over||v.phase!=='game';
   $('history').textContent='';(v.messages||[]).forEach(x=>{const li=document.createElement('li');li.textContent=x;$('history').append(li);});
-  renderDecisions();combat.update(current);
+  renderDecisions();combat.update(current);renderMatchFeed();
  }
  function render(){try{performRender();}catch(error){
   console.error('Neo Campus online UI render failed',error);
@@ -299,7 +391,7 @@
    const data=await api('decks');$('deck').textContent='';$('roomDeck').textContent='';
    for(const x of data.decks){deckNames.set(x.id,x.name);for(const select of [$('deck'),$('roomDeck')]){const option=document.createElement('option');option.value=x.id;option.textContent=x.name;select.append(option);}}
    if(localStorage.getItem('neoCampusCustomGymDeck'))$('deck').value='custom';
-   const hinted=new URLSearchParams(location.search).get('room');if(hinted)$('joinCode').value=hinted.toUpperCase();
+   const hinted=new URLSearchParams(location.search).get('room');if(hinted){$('joinCode').value=hinted.toUpperCase();$('joinRoom').textContent='Enter match / Watch';document.querySelector('.lobby-form h3').textContent='Join room '+hinted.toUpperCase();$('joinCode').closest('label').classList.add('hidden');$('nickname').focus();}
    await Promise.all(['base1','base2','base3','base4','base5','gym1','gym2','neo1','neo2','neo3','neo4'].map(async set=>{
     const r=await fetch(`/cards/${set}.json`);if(!r.ok)throw Error(`Cannot load ${set}`);
     for(const c of await r.json())cards.set(c.id,c);
@@ -311,6 +403,11 @@
   }catch(e){$('startupError').textContent=e.message||String(e);}
  }
  $('chatForm').addEventListener('submit',submitChat);
+ $('chatToggle').addEventListener('click',()=>toggleDrawer('chat',!chatOpen));$('closeChat').addEventListener('click',()=>toggleDrawer('chat',false));
+ $('logToggle').addEventListener('click',()=>toggleDrawer('log',!logOpen));$('closeLog').addEventListener('click',()=>toggleDrawer('log',false));
+ $('closePile').addEventListener('click',()=>$('pileModal').classList.add('hidden'));
+ $('pileModal').addEventListener('click',e=>{if(e.target===$('pileModal'))$('pileModal').classList.add('hidden');});
+ $('myDiscardBtn').addEventListener('click',()=>openDiscard(side()));$('oppDiscardBtn').addEventListener('click',()=>openDiscard(1-side()));
  $('createRoom').addEventListener('click',()=>openRoom('create'));
  $('joinRoom').addEventListener('click',()=>openRoom('join'));
  $('roomDeck').addEventListener('change',()=>{lobbyDeckDraft=$('roomDeck').value;renderLobby();});
@@ -325,6 +422,7 @@
   }
   lobbyAction('deck',{deck,...(deck==='custom'?{customDeck}:{})});
  });
+ $('saveRoomName').addEventListener('click',()=>{const name=$('roomName').value.trim();if(!name||name===current?.players[side()]?.name)return;lobbyAction('name',{name});});
  $('readyBtn').addEventListener('click',()=>{if(lobbyDeckDraft&&lobbyDeckDraft!==current?.players?.[side()]?.deck)return;lobbyAction('ready',{ready:!current.players[side()].ready});});
  $('startMatch').addEventListener('click',()=>lobbyAction('start'));
  $('leaveLobby').addEventListener('click',async()=>{if(!current)return;try{await api('leave',{method:'POST',body:JSON.stringify({code:roomCode,revision:current.revision})});newDuel();}catch(e){$('lobbyError').textContent=e.message;}});

@@ -31,7 +31,8 @@ const apiBase=async(base,path,{method='GET',token,body,origin}={})=>{
   r=await request('join',{method:'POST',body:{code,deck:wallopId,name:'Bob'}});
   assert.equal(r.status,200,JSON.stringify(r.data));const guestToken=r.data.token;
   assert.equal(r.data.you,1);assert.notEqual(hostToken,guestToken);
-  r=await request('join',{method:'POST',body:{code,deck:'brushfire'}});assert.equal(r.status,400);
+  r=await request('join',{method:'POST',body:{code,deck:'brushfire',name:'Watcher'}});assert.equal(r.status,200);assert.equal(r.data.spectator,true);const spectatorToken=r.data.token;
+  assert.equal((await request('ready',{method:'POST',token:spectatorToken,body:{code,ready:true,revision:1}})).status,401);
   r=await request('ready',{method:'POST',token:guestToken,body:{code,ready:true,revision:1}});
   assert.equal(r.status,200,JSON.stringify(r.data));
   let denied=await request('start',{method:'POST',token:guestToken,body:{code,revision:2}});
@@ -47,6 +48,7 @@ const apiBase=async(base,path,{method='GET',token,body,origin}={})=>{
   assert.equal(peek.status,200);assert.equal(peek.data.view.players[0].hand,undefined,'Guest cannot see host hand');
   assert.deepEqual(r.data.counts,[60,60]);
   assert.equal(peek.data.view.players[1].hand.length,7);
+  const spectator=(await request('state?code='+code,{token:spectatorToken})).data;assert.equal(spectator.you,null);assert.equal(spectator.view.players[0].hand,undefined);assert.equal(spectator.view.players[1].hand,undefined);
   let revision=r.data.revision;
   denied=await request('action',{method:'POST',token:guestToken,body:{code,revision,command:{type:'setup_select',payload:{handIndex:999}}}});
   assert.equal(denied.status,400,'Invalid setup selection must not commit');

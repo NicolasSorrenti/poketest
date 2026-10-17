@@ -18,14 +18,24 @@ function historicalCards(){return SET_NAMES.flatMap(s=>require('./cards/'+s+'.js
 const CATALOG=new Map(historicalCards().map(c=>[c.id,c]));
 function fail(message){throw Error(message);}
 function requireInt(v,name){if(!Number.isSafeInteger(v))fail(`Invalid ${name}`);return v;}
-function next(g,n){
+function randomRaw(g,n){
  if(!Number.isSafeInteger(n)||n<=0)fail('Invalid random range');
  g.rngState=(Math.imul(g.rngState,1664525)+1013904223)>>>0;
- // Use HIGH bits. LCG low bits alternate 0/1 and produce non-random coin flips.
  return Math.floor((g.rngState/0x100000000)*n);
 }
-function shuffle(g,a){const arr=[...a];for(let i=arr.length-1;i>0;i--){const j=next(g,i+1);[arr[i],arr[j]]=[arr[j],arr[i]];}return arr;}
-function log(g,message){g.message.unshift(String(message));g.message.length=Math.min(g.message.length,120);}
+function next(g,n){
+ const result=randomRaw(g,n);
+ // Shuffle calls randomRaw directly, so shuffling two remaining cards is not a coin toss.
+ if(n===2&&g.phase==='game'){
+  g.coinSeq=(g.coinSeq||0)+1;
+  (g.coinFlips ||= []).push({seq:g.coinSeq,result:result?'heads':'tails'});
+  if(g.coinFlips.length>100)g.coinFlips.shift();
+  log(g,`🪙 Coin flip: ${result?'HEADS':'TAILS'}.`);
+ }
+ return result;
+}
+function shuffle(g,a){const arr=[...a];for(let i=arr.length-1;i>0;i--){const j=randomRaw(g,i+1);[arr[i],arr[j]]=[arr[j],arr[i]];}return arr;}
+function log(g,message){g.message.unshift(String(message));g.message.length=Math.min(g.message.length,120);if(g.format==='online-preview'){(g.matchFeed ||= []).push({seq:(g.feedSeq=(g.feedSeq||0)+1),kind:'message',text:String(message)});if(g.matchFeed.length>150)g.matchFeed.shift();}}
 function card(g,id){const result=CATALOG.get(id);if(!result)fail(`Unknown card ${String(id)}`);return result;}
 function unit(id,round=0){return {id,under:[],energies:[],attachedTrainers:[],damage:0,status:null,poison:false,playedTurn:round};}
 function allPokemon(p){return [p.active,...p.bench].filter(Boolean);}
@@ -127,7 +137,7 @@ function applyCondition(g,u,status){
   delete u.gymShapeshiftCard;
  }
 }
-function classicHelpers(){return {flip:g=>next(g,2)===1,random:next,shuffle,draw,log,unit,clearBenchEffects,knockOuts,finishPromotions,finishTurn,calculateDamage,applyCondition,onPlay:(g,side,slot)=>CLASSIC_POWERS.played(g,side,slot,classicHelpers())};}
+function classicHelpers(){return {flip:g=>next(g,2)===1,random:randomRaw,shuffle,draw,log,unit,clearBenchEffects,knockOuts,finishPromotions,finishTurn,calculateDamage,applyCondition,onPlay:(g,side,slot)=>CLASSIC_POWERS.played(g,side,slot,classicHelpers())};}
 function retreatCost(g,side,u){
  const owner=g.players[side],enemy=g.players[1-side];
  const base=(effectiveCard(g,u).retreatCost||[]).length;
@@ -335,6 +345,19 @@ function performAction(g,side,cmd){
   if(type!=='choose')fail('Resolve the pending decision first');
   const answer=validateAnswer(g.pendingDecision,side,v),pending=g.pendingAction;
   if(!pending)fail('Pending action is missing');
+  if(pending.kind==='take_prize'){
+   const owner=g.players[pending.side];
+   const idx=Number(answer.selected[0]?.slice(6));
+   if(!Number.isInteger(idx)||idx<0||idx>=owner.prizes.length)fail('Invalid Prize selection');
+   const chosen=owner.prizes.splice(idx,1)[0];owner.hand.push(chosen);
+   log(g,`${owner.name} took a Prize card (${owner.prizes.length} remaining).`);
+   g.pendingDecision=null;g.pendingAction=null;
+   if(promptPrize(g,pending.after))return;
+   const handled=completeKnockouts(g,pending.after);
+   if(!handled&&pending.after==='checkup')finishTurn(g);
+   else if(!handled&&pending.after==='advance')advanceTurn(g);
+   return;
+  }
   if(pending.kind==='classic_trainer'){g.pendingDecision=null;g.pendingAction=null;CLASSIC_TRAINERS.answer(g,pending.plan,answer,classicHelpers());return;}
   if(pending.kind==='classic_power'){g.pendingDecision=null;g.pendingAction=null;CLASSIC_POWERS.answer(g,pending.plan,answer,classicHelpers());return;}
   if(pending.kind==='gym_charity'){
@@ -1201,7 +1224,7 @@ function resolveAttack(g,side,index,chosenBench,energyPicks,extra={}){
  if(roll.gymAlert){draw(g,side);const old=p.active;p.active=p.bench.splice(extra.gymAlertBench,1,old)[0];STATUS.clearConditions(old);clearBenchEffects(old);}
  if(roll.gymSwapCounters){const previous=u.damage;u.damage=f.active.damage;f.active.damage=previous;}
  if(roll.gymFocus)u.gymFocus={attack:roll.gymFocus,expires:g.turnSerial+2};
- if(roll.gymSurprise&&f.hand.length){const index=next(g,f.hand.length),id=f.hand.splice(index,1)[0];f.deck=shuffle(g,[...f.deck,id]);(p.privateLog ||= []).push('Surprise revealed '+card(g,id).name);}
+ if(roll.gymSurprise&&f.hand.length){const index=randomRaw(g,f.hand.length),id=f.hand.splice(index,1)[0];f.deck=shuffle(g,[...f.deck,id]);(p.privateLog ||= []).push('Surprise revealed '+card(g,id).name);}
  if(roll.gymPlasma){const i=p.discard.findIndex(id=>card(g,id).name==='Lightning Energy');if(i>=0)u.energies.push(p.discard.splice(i,1)[0]);}
   if(roll.gymPainAmplifier){if(f.active.damage>0)f.active.damage+=10;for(const victim of f.bench)if(victim.damage>0)hitBench(f,victim,10);}
  if(roll.gymStorm)for(const owner of g.players)for(const victim of owner.bench)hitBench(owner,victim,20);
@@ -1540,7 +1563,7 @@ function knockOuts(g,after){
   for(let i=p.bench.length-1;i>=0;i--){
    const u=p.bench[i];if(u.damage<maxHP(g,u))continue;
    p.bench.splice(i,1);p.discard.push(u.id,...u.under,...u.energies,...u.attachedTrainers.map(x=>x.id),...(u.gymShapeshiftCard?[u.gymShapeshiftCard]:[]));if(u.gymRebirthReturn){const ix=p.discard.lastIndexOf(u.id);if(ix>=0)p.hand.push(p.discard.splice(ix,1)[0]);}
-   const enemy=g.players[1-side];if(enemy.prizes.length)enemy.hand.push(enemy.prizes.pop());
+   const enemy=g.players[1-side];if(enemy.prizes.length){if(g.format==='online-preview')(g.pendingPrizeClaims ||= []).push(1-side);else enemy.hand.push(enemy.prizes.pop());}
    eliminated.push(side);log(g,`${p.name}'s Benched ${card(g,u.id).name} was Knocked Out.`);
   }
  }
@@ -1548,10 +1571,24 @@ function knockOuts(g,after){
   const p=g.players[side],u=p.active;
   if(!u||u.damage<maxHP(g,u))continue;
   p.discard.push(u.id,...u.under,...u.energies,...u.attachedTrainers.map(x=>x.id),...(u.gymShapeshiftCard?[u.gymShapeshiftCard]:[]));if(u.gymRebirthReturn){const ix=p.discard.lastIndexOf(u.id);if(ix>=0)p.hand.push(p.discard.splice(ix,1)[0]);}p.active=null;
-  const enemy=g.players[1-side];if(enemy.prizes.length)enemy.hand.push(enemy.prizes.pop());
+  const enemy=g.players[1-side];if(enemy.prizes.length){if(g.format==='online-preview')(g.pendingPrizeClaims ||= []).push(1-side);else enemy.hand.push(enemy.prizes.pop());}
   eliminated.push(side);log(g,`${p.name}'s Active ${card(g,u.id).name} was Knocked Out.`);
  }
  if(!eliminated.length){const needs=[0,1].filter(side=>!g.players[side].active);if(needs.length){for(const side of needs)if(!g.players[side].bench.length){g.over=true;g.winner=1-side;return true;}g.pendingPromotions=needs;g.promotionAfter=after;finishPromotions(g);return true;}return false;}
+ if(promptPrize(g,after))return true;
+ return completeKnockouts(g,after);
+}
+function promptPrize(g,after){
+ const queue=g.pendingPrizeClaims||[];
+ while(queue.length&&!g.players[queue[0]].prizes.length)queue.shift();
+ if(!queue.length){delete g.pendingPrizeClaims;return false;}
+ const side=queue.shift(),player=g.players[side];
+ g.nextDecisionId++;
+ g.pendingDecision=makeDecision({id:`prize:${g.nextDecisionId}`,actor:side,kind:'prize-card',label:'Choose a face-down Prize card',
+  options:player.prizes.map((_,i)=>({id:`prize:${i}`,label:`Prize ${i+1}`})),min:1,max:1});
+ g.pendingAction={kind:'take_prize',side,after};return true;
+}
+function completeKnockouts(g,after){
  const winners=[0,1].filter(side=>!g.players[side].prizes.length||!g.players[1-side].active&&!g.players[1-side].bench.length);
  if(winners.length){g.over=true;g.winner=winners.length===1?winners[0]:null;
   log(g,g.winner===null?'Simultaneous win conditions — sudden-death rematch required.':`${g.players[g.winner].name} wins!`);return true;
@@ -1560,6 +1597,7 @@ function knockOuts(g,after){
  if(queue.length){g.pendingPromotions=queue;g.promotionAfter=after;finishPromotions(g);return true;}
  return false;
 }
+
 function finishPromotions(g){
  if(g.over)return;
  while(g.pendingPromotions&&g.pendingPromotions.length){
@@ -1637,6 +1675,7 @@ function reduce(game,actor,command){
   if(game.over)fail('Game is over');
   const next=structuredClone(game);
   const visible=describePublicAction(next,actor,cmd);
+  if(next.format==='online-preview'){(next.matchFeed ||= []).push({seq:(next.feedSeq=(next.feedSeq||0)+1),kind:'action',type:cmd.type,side:actor,...visible});if(next.matchFeed.length>150)next.matchFeed.shift();}
   performAction(next,actor,cmd);
   next.events.push({side:actor,type:cmd.type,payload:structuredClone(cmd.payload),visible});
   return {ok:true,game:next};

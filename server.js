@@ -41,13 +41,14 @@ async function onlineAPI(req,res,pathName,url){
   if(pathName==='/api/online/decks'&&req.method==='GET')return sendJSON(res,200,{decks:deckOptions()});
   if(pathName==='/api/online/create'&&req.method==='POST')return sendJSON(res,200,online.create(await parseJSON(req)));
   if(pathName==='/api/online/join'&&req.method==='POST')return sendJSON(res,200,online.join(await parseJSON(req)));
+  if(pathName==='/api/online/watch'&&req.method==='POST')return sendJSON(res,200,online.watch(await parseJSON(req)));
   const token=req.headers['x-duel-token'];
   if(typeof token!=='string'||!token)return sendJSON(res,401,{error:'Missing duel token'});
   if(pathName==='/api/online/state'&&req.method==='GET')return sendJSON(res,200,online.state(url.searchParams.get('code'),token));
   if(pathName==='/api/online/chat'&&req.method==='POST'){const body=await parseJSON(req);return sendJSON(res,200,online.chatMessage(body.code,token,body));}
-  if(['/api/online/ready','/api/online/deck','/api/online/start','/api/online/action','/api/online/leave'].includes(pathName)&&req.method==='POST'){
+  if(['/api/online/ready','/api/online/deck','/api/online/name','/api/online/start','/api/online/action','/api/online/leave'].includes(pathName)&&req.method==='POST'){
    const body=await parseJSON(req);
-   const result=pathName.endsWith('/ready')?online.ready(body.code,token,body):pathName.endsWith('/deck')?online.changeDeck(body.code,token,body):pathName.endsWith('/start')?online.start(body.code,token,body):pathName.endsWith('/leave')?online.leave(body.code,token,body):online.action(body.code,token,body);
+   const result=pathName.endsWith('/ready')?online.ready(body.code,token,body):pathName.endsWith('/deck')?online.changeDeck(body.code,token,body):pathName.endsWith('/name')?online.changeName(body.code,token,body):pathName.endsWith('/start')?online.start(body.code,token,body):pathName.endsWith('/leave')?online.leave(body.code,token,body):online.action(body.code,token,body);
    return sendJSON(res,200,result);
   }
   return sendJSON(res,404,{error:'Unknown Online API endpoint'});
@@ -75,5 +76,5 @@ const server=http.createServer((req,res)=>{
   fs.createReadStream(target).pipe(res);
  });
 });
-if(require.main===module){const host=process.env.HOST||'127.0.0.1';server.listen(port,host,()=>console.log(`Neo Campus ready: http://localhost:${port}/online.html (host ${host}, invite-code duels)`));}
+if(require.main===module){const host=process.env.HOST||'0.0.0.0';server.listen(port,host,()=>console.log(`Neo Campus ready: http://localhost:${port}/online.html (host ${host}, invite-code duels)`));}
 module.exports={server,classic,online};

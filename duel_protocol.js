@@ -42,7 +42,7 @@ function publicView(game,viewer){
    publicPlayers[viewer].privateMessages=[...(own.privateLog||[]).slice(-15)];
   }
  }
- return {phase:game.phase,turn:game.turn,round:game.round,over:!!game.over,stadium:game.stadium?{id:game.stadium.id,owner:game.stadium.owner}:null,players:publicPlayers,messages:[...(game.message||[]).slice(0,20)],pendingDecision:decisionForViewer(game.pendingDecision,viewer)};
+ return {phase:game.phase,turn:game.turn,round:game.round,over:!!game.over,stadium:game.stadium?{id:game.stadium.id,owner:game.stadium.owner}:null,players:publicPlayers,messages:[...(game.message||[]).slice(0,20)],pendingDecision:decisionForViewer(game.pendingDecision,viewer),coinFlips:[...(game.coinFlips||[]).slice(-40)]};
 }
 // Exact ordered public actions, with opaque sequence numbers for polling clients.
 // In particular, never serialize the authoritative event payload: a choice can

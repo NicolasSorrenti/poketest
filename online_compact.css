@@ -1,0 +1,139 @@
+/* v0.38: Online game-only layout. Local/CPU play keeps its original stylesheet. */
+.panel-toggle{position:relative;background:#163e51;border:1px solid #5e9ca8;font-weight:800}
+.unread-badge{position:absolute;right:-7px;top:-9px;background:#e84254;border:2px solid #08101b;color:white;min-width:21px;height:21px;line-height:17px;border-radius:22px;font-size:11px;text-align:center;box-shadow:0 0 15px #e8425499}
+.connection-warn{border-color:#f0bd62!important;color:#ffdeac!important;background:#663e25!important;animation:activity-breath 2s infinite}
+.pile-tools{display:flex;align-items:center;gap:7px;flex-wrap:wrap;justify-content:flex-end}
+.pile-button,.deck-counter{padding:4px 8px;background:#112c42;border:1px solid #40687a;color:#d9eef4;border-radius:8px;display:flex;align-items:center;gap:7px;font-size:11px;font-weight:800;min-height:25px}
+.deck-counter{flex-direction:column;line-height:1.1;min-width:38px;font-size:16px;gap:0}
+.deck-counter b{font-size:11px;color:#82e2d3}
+.pile-button b{color:#83e8d6}
+.prize-select{color:#fff9e6;font-size:20px;font-weight:900;box-shadow:0 0 0 2px #6af1c1,0 0 17px #6cf8b688;cursor:pointer;animation:prize-pulse 1.3s ease-in-out infinite;min-width:0;padding:0}
+.prize-select:hover{filter:brightness(1.4)}
+@keyframes prize-pulse{50%{box-shadow:0 0 0 3px #afffe3,0 0 23px #78efd6}}
+.pile-modal{position:fixed;inset:0;z-index:1100;background:#000b;display:grid;place-items:center;padding:16px}
+.pile-dialog{width:min(920px,100%);max-height:86dvh;overflow:hidden;background:#12283a;border:2px solid #579ca1;border-radius:16px;padding:16px;display:flex;flex-direction:column;gap:15px}
+.pile-dialog-heading{display:flex;justify-content:space-between;align-items:center;gap:12px}
+.pile-dialog-heading h3{margin:0}
+.pile-cards{display:flex;flex-wrap:wrap;align-content:flex-start;gap:12px;overflow:auto;min-height:130px}
+.pile-card{width:100px;display:flex;flex-direction:column;align-items:center;gap:5px;padding:5px;font-size:10px;line-height:1.25}
+.pile-card img{width:100%;height:118px;object-fit:contain}
+.pile-card span{overflow-wrap:anywhere}
+.coin-fx,.ko-fx{position:fixed;z-index:690;pointer-events:none;text-align:center;left:50%;top:17dvh;transform:translateX(-50%);font-size:20px;font-weight:950;background:linear-gradient(115deg,#493323ee,#74602d);border:2px solid #ffdd88;color:#fff7d8;border-radius:16px;padding:13px 24px;box-shadow:0 7px 40px #000c,0 0 25px #eed86766}
+.coin-fx.coin-animate{animation:coin-flip-in .8s ease-in-out both}
+@keyframes coin-flip-in{0%{opacity:0;transform:translateX(-50%) scale(.4) rotateY(0)}40%{opacity:1;transform:translateX(-50%) scale(1.2) rotateY(360deg)}75%{opacity:1;transform:translateX(-50%) scale(1)}100%{opacity:0;transform:translateX(-50%) scale(.9)}}
+.ko-fx{top:29dvh;background:linear-gradient(135deg,#742e36,#442334);border-color:#ffb4a9;max-width:80vw}
+.room-chat.drawer-open{position:fixed;z-index:850;right:12px;bottom:10px;width:min(385px,calc(100vw - 24px));max-height:min(570px,80dvh);margin:0;display:flex;flex-direction:column;box-shadow:0 14px 55px #000c;border:2px solid #62c4bf}
+.room-chat.drawer-open .chat-messages{max-height:min(380px,50dvh);min-height:120px}
+.room-chat .chat-heading{gap:10px}
+.room-chat .chat-heading button{margin-left:auto;padding:3px 9px;min-height:30px}
+.log-drawer{position:fixed;z-index:840;bottom:10px;right:12px;width:min(440px,calc(100vw - 24px));max-height:min(650px,85dvh);display:flex;flex-direction:column;border:2px solid #6eb9ae;box-shadow:0 16px 55px #000c}
+.log-drawer header{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.log-drawer h3{margin:0}
+.log-drawer header button{padding:3px 9px;min-height:30px}
+.log-scroll{overflow-y:auto;overscroll-behavior:contain;display:flex;flex-direction:column;gap:8px}
+.log-scroll h4{color:#9acdcf;font-size:10px;text-transform:uppercase;letter-spacing:.14em;margin:6px 0 0}
+.log-scroll .action-timeline{max-height:none;overflow:visible}
+.log-scroll .history{max-height:none;overflow:visible}
+body.invite-entry .lobby-copy{display:none}
+body.invite-entry #lobby{display:grid;grid-template-columns:minmax(290px,530px);justify-content:center;min-height:70dvh}
+body.invite-entry .lobby-form{border:2px solid #67cdb8}
+body.invite-entry #createRoom{display:none}
+body.invite-entry #joinRoom{background:#1d7d77;border-color:#56b6a4;font-weight:800;flex:1}
+body.invite-entry .masthead{padding:14px}
+body.duel-active{height:100dvh;overflow:hidden}
+body.duel-active .masthead,body.duel-active footer{display:none}
+body.duel-active main{height:100dvh;max-width:none;padding:4px 8px;overflow:hidden}
+body.duel-active #duel:not(.hidden){height:calc(100dvh - 8px);display:grid;grid-template-rows:auto auto minmax(0,1fr) minmax(0,175px);gap:4px}
+body.duel-active .toolbar{margin:0;gap:5px;justify-content:flex-start;min-height:33px}
+body.duel-active .toolbar button{padding:4px 8px;min-height:26px;font-size:11px}
+body.duel-active .toolbar .tag,body.duel-active #scoreline{font-size:10px;padding:4px 6px}
+body.duel-active .toolbar #reset{margin-left:auto}
+body.duel-active .stage{min-height:0;overflow:hidden;display:flex;flex-direction:column}
+body.duel-active .stage .turn-coach{padding:4px 10px;gap:5px;min-height:0;flex:none}
+body.duel-active .stage .coach-message{flex:1;gap:0}
+body.duel-active .stage .coach-message strong{font-size:11px}
+body.duel-active .stage .coach-message span{font-size:10px}
+body.duel-active .stage .coach-chip{padding:3px 6px;font-size:9px}
+body.duel-active .stage .opponent-activity-status{min-height:22px;padding:2px 8px;gap:7px;flex:none}
+body.duel-active .stage .activity-title,body.duel-active .stage .activity-subtitle{font-size:10px}
+body.duel-active .stage .arena-layout{min-height:0;flex:1;display:grid;grid-template-columns:105px minmax(0,1fr)}
+body.duel-active .stage .prize-sidebar{padding:1px 6px;grid-template-rows:minmax(0,1fr) 10px minmax(0,1fr)}
+body.duel-active .stage .prize-grid{gap:3px;max-width:85px}
+body.duel-active .stage .prize-group h3{font-size:9px;margin-bottom:3px}
+body.duel-active .stage .prize-count{font-size:9px;margin-bottom:2px}
+body.duel-active .stage .arena-field{min-height:0;display:grid;grid-template-rows:minmax(0,1fr) 19px minmax(0,1fr)}
+body.duel-active .stage .territory{min-height:0;overflow:hidden}
+body.duel-active .stage .trainerbar{min-height:26px;padding:1px 9px;gap:6px;flex:none}
+body.duel-active .stage .trainerlabel>span{font-size:14px}
+body.duel-active .stage .trainerlabel strong{font-size:10px}
+body.duel-active .stage .trainerlabel small{display:none}
+body.duel-active .stage .pile-button{padding:1px 6px;min-height:23px;font-size:10px}
+body.duel-active .stage .deck-counter{font-size:13px;min-width:30px}
+body.duel-active .stage .territory .field-row{padding:3px 8px;gap:4px;overflow:hidden;flex:1}
+body.duel-active .stage .zone h3{font-size:8px;margin:0 0 2px}
+body.duel-active .stage .bench-zone .pokemon-strip,body.duel-active .stage .active-zone .pokemon-strip{min-height:0}
+body.duel-active .stage .pokemon-strip{gap:4px;flex-wrap:nowrap;min-width:0}
+body.duel-active .stage .poke{width:clamp(65px,6.2vw,90px);min-height:0;max-height:140px;padding:3px;gap:2px;flex-shrink:1}
+body.duel-active .stage .poke .pokemon-face{height:clamp(42px,7dvh,75px);flex:none}
+body.duel-active .stage .poke:not(:has(.energy-peeks)) .pokemon-face{margin-top:15px}
+body.duel-active .stage .energy-peeks{height:15px}
+body.duel-active .stage .attached-energy{height:15px}
+body.duel-active .stage .poke strong{font-size:9px;max-width:100%}
+body.duel-active .stage .poke .stats{display:none}
+body.duel-active .stage .poke .hp-count{font-size:8px}
+body.duel-active .stage .poke .hp-track{height:4px}
+body.duel-active .stage .active-with-attacks{display:grid;grid-template-columns:minmax(0,1fr) minmax(65px,90px) minmax(0,1fr);gap:8px;align-items:start}
+body.duel-active .stage .active-with-attacks .active-slot{grid-column:2;grid-row:1;width:100%;min-width:0;max-width:90px}
+body.duel-active .stage .active-with-attacks .inline-attack-panel{grid-column:3;grid-row:1;max-width:320px;width:100%;min-width:0;padding:0}
+body.duel-active .stage .inline-attack-panel h4{font-size:8px;margin:0 0 3px}
+body.duel-active .stage button.attack-action{min-height:0;padding:3px 7px;font-size:9px;gap:3px}
+body.duel-active .stage button.attack-action .attack-effect{display:none}
+body.duel-active .stage .battleline{min-height:19px;font-size:10px;gap:10px}
+body.duel-active .below{display:block;min-height:0;margin:0}
+body.duel-active .below .main-column{display:grid;grid-template-columns:minmax(0,1fr) 235px;gap:5px;height:100%;min-height:0}
+body.duel-active .below .main-column>.panel{min-height:0;overflow:hidden;padding:5px 9px}
+body.duel-active .below .main-column>.panel h3{font-size:10px;margin-bottom:2px}
+body.duel-active .below .main-column>.panel .hint{font-size:9px}
+body.duel-active .below .hand{display:flex;flex-wrap:nowrap;overflow-x:auto;overflow-y:hidden;height:123px;min-height:0;gap:4px;justify-content:flex-start;padding-bottom:2px}
+body.duel-active .below .handcard{width:78px;min-width:78px;padding:2px;min-height:0}
+body.duel-active .below .handcard img{height:83px}
+body.duel-active .below .handcard strong{font-size:9px}
+body.duel-active .below .handcard-type{font-size:8px;margin-top:0}
+body.duel-active .below #cardActions{margin:0}
+body.duel-active .below #powers{max-height:70px;overflow:auto;margin:0}
+body.duel-active .below .actions{margin-top:4px;gap:4px}
+body.duel-active .below .actions button{padding:4px 6px;font-size:10px;min-height:25px}
+body.duel-active .below .side-column,body.duel-active .below #choiceDock{display:contents}
+body.duel-active #decisionBox:not(.hidden){position:fixed;right:12px;top:46px;max-width:300px;z-index:300;padding:10px;box-shadow:0 14px 40px #0009}
+body.duel-active #decisionBox h3{font-size:11px}
+body.duel-active #decisionBox p{font-size:10px}
+body.duel-active #fieldChoiceBar{z-index:500}
+body.duel-active .prize-select{font-size:16px}
+@media(max-height:690px){body.duel-active #duel:not(.hidden){grid-template-rows:auto auto minmax(0,1fr) 143px}body.duel-active .below .hand{height:101px}body.duel-active .below .handcard{min-width:65px;width:65px}body.duel-active .below .handcard img{height:65px}body.duel-active .stage .poke .pokemon-face{height:clamp(32px,6dvh,55px)}body.duel-active .stage .poke:not(:has(.energy-peeks)) .pokemon-face{margin-top:9px}body.duel-active .stage .energy-peeks{height:9px}body.duel-active .stage .coach-chips{display:none}}
+@media(max-width:780px){body.duel-active #duel:not(.hidden){grid-template-rows:auto auto minmax(0,1fr) 160px}body.duel-active .toolbar{flex-wrap:wrap}body.duel-active .toolbar #scoreline,body.duel-active .toolbar #stadiumText{display:none}body.duel-active .stage .arena-layout{grid-template-columns:53px minmax(0,1fr)}body.duel-active .stage .prize-sidebar{padding:0 3px}body.duel-active .stage .prize-grid{gap:1px}body.duel-active .stage .territory .field-row{padding:3px}body.duel-active .stage .poke{width:clamp(36px,9vw,72px);padding:2px;min-width:0}body.duel-active .stage .poke .pokemon-face{height:clamp(31px,6dvh,60px)}body.duel-active .stage .poke strong{font-size:8px}body.duel-active .stage .active-with-attacks{grid-template-columns:minmax(0,1fr) minmax(43px,70px) minmax(0,1fr);gap:3px}body.duel-active .stage .active-with-attacks .active-slot{min-width:0}body.duel-active .stage .active-with-attacks .inline-attack-panel{min-width:0}body.duel-active .stage button.attack-action{font-size:8px}body.duel-active .below .main-column{grid-template-columns:minmax(0,1fr) 130px}body.duel-active .below .main-column>.panel{padding:4px}body.duel-active .below .main-column>.panel .hint{display:none}body.duel-active .below .handcard{width:67px;min-width:67px}body.duel-active .below .handcard img{height:73px}body.duel-active .below .hand{height:113px}body.duel-active .stage .pile-button{font-size:8px}body.duel-active .stage #energyStatus{display:none}}
+@media(prefers-reduced-motion:reduce){.coin-fx.coin-animate,.prize-select{animation:none}}
+body.duel-active #duel>.toolbar{grid-row:1}
+body.duel-active #duel>.stage{grid-row:3}
+body.duel-active #duel>.below{grid-row:4}
+body.duel-active #duel>#error:not(.hidden){grid-row:2;max-height:45px;overflow:hidden}
+
+.room-name-controls{display:flex;align-items:center;gap:8px;margin-bottom:14px;flex-wrap:wrap}
+.room-name-controls label{flex-basis:100%;font-size:11px;font-weight:800;letter-spacing:.08em;color:#a8d9d8}
+.room-name-controls input{min-width:140px;flex:1;background:#081a2d;border:1px solid #3b7081;border-radius:8px;color:#fff;padding:10px;font:inherit}
+.room-name-controls button{min-height:40px}
+.deck-counter::before{content:"";width:16px;height:21px;background:#123b65 url('neo_card_back.svg') center/100% 100% no-repeat;border:1px solid #c9b37c;border-radius:2px;box-shadow:2px -2px 0 #507ba2}
+.deck-counter{font-size:0!important;gap:3px!important}
+.deck-counter b{font-size:11px!important}
+/* Use the additional desktop room for larger artwork without requiring a scroll. */
+@media(min-width:1000px) and (min-height:810px){
+ body.duel-active .stage .poke{width:100px;max-height:160px}
+ body.duel-active .stage .poke .pokemon-face{height:82px}
+ body.duel-active .stage .active-with-attacks{grid-template-columns:minmax(0,1fr) 100px minmax(0,1fr)}
+ body.duel-active .stage .active-with-attacks .active-slot{max-width:100px}
+ body.duel-active .below .handcard{width:93px;min-width:93px}
+ body.duel-active .below .handcard img{height:95px}
+}
+@media(max-width:780px){
+ body.duel-active .stage .active-with-attacks{grid-template-columns:minmax(0,1fr) 59px minmax(0,1fr)}
+ body.duel-active .stage .active-zone .poke{width:55px}
+}
