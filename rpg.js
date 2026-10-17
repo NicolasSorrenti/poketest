@@ -1,6 +1,6 @@
 'use strict';
 (()=>{
-const $=id=>document.getElementById(id),KEY='neoHarborRpgV1',STORY=window.NeoHarborStory,WORLD=window.NeoHarborWorld,CIRCUIT=window.NeoHarborCircuit;
+const $=id=>document.getElementById(id),KEY='neoHarborRpgV1',STORY=window.NeoHarborStory,WORLD=window.NeoHarborWorld,CIRCUIT=window.NeoHarborCircuit,MARKET=window.NeoHarborMarket;
 const periods=['Morning','Afternoon','Evening'];
 const places={
  home:['Your Apartment','Your base during the championship season.'],
@@ -73,7 +73,7 @@ let state;try{state=JSON.parse(localStorage.getItem(KEY))||defaults();if(!Number
 for(const [k,v] of Object.entries(defaults()))if(state[k]===undefined)state[k]=v;
 for(const id of Object.keys(cast)){if(!state.bonds[id])state.bonds[id]={affection:0,trust:0,duels:0};}
 STORY.normalize(state);
-WORLD.normalize(state);CIRCUIT.normalize(state);
+WORLD.normalize(state);CIRCUIT.normalize(state);MARKET.normalize(state);
 for(const id of Object.keys(cast)){const old=state.bonds[id],current=state.relationships[id];
  if(!state.flags['newStoryMigrated_'+id]){for(const key of ['affection','trust','duels'])current[key]=Math.max(current[key]||0,old[key]||0);
  state.flags['newStoryMigrated_'+id]=true;}
@@ -137,6 +137,8 @@ function startTournamentRound(){
 }
 function startDuel(id,exhibition=null,tournament=null){
  if(state.pendingDuel||state.day>90||!cast[id]||(!exhibition&&!tournament&&!currentPeople().includes(id)))return;
+ if(state.playerDeck==='custom'&&!state.collection.customDeck){$('notice').textContent='Save a collection-built 60-card deck first.';return;}
+ if(state.playerDeck==='custom')localStorage.setItem('neoCampusCustomGymDeck',JSON.stringify(state.collection.customDeck));
  const c=cast[id],eventKey=exhibition?exhibition.day+':'+exhibition.title:null;
  state.pendingDuel={id:'npc-'+id+'-'+state.day+'-'+state.slot+'-'+state.results.length,npc:id,day:state.day,slot:state.slot,
   opponent:c.deck,playerDeck:state.playerDeck,resolved:false,eventKey,eventReward:exhibition?exhibition.reward:0,
@@ -168,6 +170,88 @@ function makeAvatar(id,size=''){
  img.onerror=()=>{img.style.display='none';const span=document.createElement('span');span.className='avatar-fallback';span.textContent=cast[id].name.split(' ').map(x=>x[0]).join('');img.parentElement.append(span);};
  return img;
 }
+
+let cardCatalog=new Map(),marketReady=false;
+const currentPool=()=>{
+ const sets=state.day<31?['base1']:state.day<61?['base1','base2']:['base1','base2','neo1'];
+ return new Map([...cardCatalog].filter(([id])=>sets.some(set=>id.startsWith(set+'-'))));
+};
+async function initMarket(){
+ try{
+  const urls=['/cards/base1.json','/cards/base2.json','/cards/neo1.json','/api/classic/decklist?id=blackout'];
+  const responses=await Promise.all(urls.map(url=>fetch(url)));
+  if(responses.some(r=>!r.ok))throw Error('One or more card catalog files are unavailable');
+  const [base,jungle,neo,starter]=await Promise.all(responses.map(r=>r.json()));
+  cardCatalog=MARKET.catalog([...base,...jungle,...neo]);
+  MARKET.seedStarter(state,starter.cards);
+  marketReady=true;persist();render();renderMarket();
+ }catch(error){$('marketStatus').textContent='Card collection could not load: '+error.message;}
+}
+function marketMessage(text){$('marketStatus').textContent=text;}
+function renderMarket(){
+ const c=MARKET.normalize(state),pool=currentPool();
+ $('marketShop').hidden=state.location!=='shop';
+ $('marketBuyPack').disabled=!marketReady||state.location!=='shop'||state.credits<MARKET.PACK_PRICE;
+ $('marketSingles').replaceChildren();
+ if(marketReady&&state.location==='shop'){
+  for(const card of MARKET.singles(state,pool)){
+   const b=document.createElement('button');
+   b.textContent=card.name+' · '+card.price+' credits';
+   b.disabled=state.credits<card.price;
+   b.onclick=()=>{
+    try{MARKET.buySingle(state,card.id,pool);persist();marketMessage('Purchased '+card.name+' for your collection.');render();renderMarket();}
+    catch(error){marketMessage(error.message);}
+   };
+   $('marketSingles').append(b);
+  }
+ }
+ $('draftCount').textContent=MARKET.sum(c.draft)+' / 60';
+ $('marketSaveDeck').disabled=!marketReady||MARKET.validateDeck(state,cardCatalog).length>0;
+ $('marketCards').replaceChildren();
+ for(const [id,amount] of Object.entries(c.owned).sort((a,b)=>(cardCatalog.get(a[0])?.name||a[0]).localeCompare(cardCatalog.get(b[0])?.name||b[0]))){
+  const item=cardCatalog.get(id);if(!item)continue;
+  const row=document.createElement('div');row.className='market-card';
+  const info=document.createElement('div');info.className='market-card-name';
+  const name=document.createElement('strong');name.textContent=item.name;
+  const owned=document.createElement('small');owned.textContent='Owned '+amount+' · In deck '+(c.draft[id]||0);
+  info.append(name,owned);
+  const buttons=document.createElement('div');buttons.className='market-card-actions';
+  for(const [text,delta] of [['−',-1],['+',1]]){
+   const b=document.createElement('button');b.textContent=text;
+   b.disabled=delta===-1?!c.draft[id]:MARKET.sum(c.draft)>=60||(c.draft[id]||0)>=amount;
+   b.onclick=()=>{
+    try{MARKET.adjustDraft(state,id,delta,cardCatalog);persist();renderMarket();}catch(error){marketMessage(error.message);}
+   };
+   buttons.append(b);
+  }
+  row.append(info,buttons);$('marketCards').append(row);
+ }
+}
+function openMarket(){
+ if(!['home','shop'].includes(state.location)||state.activeStory||state.pendingDuel)return;
+ marketMessage(marketReady?'Choose cards you own and build a 60-card deck.':'Loading your starter deck and card catalog…');
+ renderMarket();$('marketDialog').showModal();
+}
+function buyMarketPack(){
+ if(!marketReady||state.location!=='shop')return;
+ try{
+  const opened=MARKET.buyPack(state,currentPool());
+  $('packReveal').replaceChildren();
+  for(const item of opened){const el=document.createElement('span');el.className='badge-card';el.textContent=item.name;$('packReveal').append(el);}
+  log('Opened a card bundle at The Lucky Draw.');persist();marketMessage('You received '+opened.length+' owned cards.');render();renderMarket();
+ }catch(error){marketMessage(error.message);}
+}
+function saveMarketDeck(){
+ if(!marketReady)return;
+ try{
+  const ids=MARKET.saveDeck(state,cardCatalog);
+  localStorage.setItem('neoCampusCustomGymDeck',JSON.stringify(ids));persist();
+  const select=$('deckPicker');let opt=[...select.options].find(o=>o.value==='custom');
+  if(!opt){opt=document.createElement('option');opt.value='custom';opt.textContent='My collection deck · 60 cards';select.append(opt);}
+  select.value='custom';marketMessage('Your 60-card collection deck is active for the next duel.');render();
+ }catch(error){marketMessage(error.message);}
+}
+
 function render(){
  const ended=state.day>90,locked=!!state.activeStory||!!state.pendingDuel;
  $('whereLabel').textContent=state.location==='home'?'⌂  YOU ARE HOME':'●  YOU ARE HERE';
@@ -217,6 +301,15 @@ function render(){
   const name=document.createElement('strong');name.textContent=c.name;const sub=document.createElement('small');sub.textContent=c.style;
   label.append(name,sub);b.append(avatar,label);b.onclick=()=>selectPerson(id);$('people').append(b);
  }
+ $('collectionPanel').replaceChildren();
+ const collection=MARKET.normalize(state),summary=document.createElement('p');summary.className='collection-summary';
+ summary.textContent=(collection.starterReady?MARKET.sum(collection.owned):'Loading')+' owned cards · '+state.credits+' credits';
+ $('collectionPanel').append(summary);
+ if(state.location==='home'||state.location==='shop'){
+  const action=document.createElement('button');action.className='activity';
+  action.textContent=state.location==='shop'?'◈ Shop cards & edit deck':'▤ Edit collection deck';
+  action.disabled=locked;action.onclick=openMarket;$('collectionPanel').append(action);
+ }
  $('circuitPanel').replaceChildren();
  const active=CIRCUIT.current(state),due=CIRCUIT.dueMatch(state),availableRegistration=CIRCUIT.registration(state);
  if(active){
@@ -262,7 +355,10 @@ function render(){
 }
 
 $('quickNext').onclick=()=>act('rest');$('quickHome').onclick=()=>act('home');$('calendarBtn').onclick=openCalendar;$('calendarClose').onclick=()=>$('calendarDialog').close();
+$('marketClose').onclick=()=>$('marketDialog').close();
+$('marketBuyPack').onclick=buyMarketPack;
+$('marketSaveDeck').onclick=saveMarketDeck;
 $('save').onclick=()=>{persist();$('notice').textContent='Campaign saved in this browser.'};
-async function initDecks(){try{const res=await fetch('/api/classic/decks');if(!res.ok)throw Error('Could not load decks');const data=await res.json(),select=$('deckPicker');for(const d of data.decks.filter(x=>x.id!=='custom')){const o=document.createElement('option');o.value=d.id;o.textContent=d.name;select.append(o)}if([...select.options].some(o=>o.value===state.playerDeck))select.value=state.playerDeck;else{select.value='blackout';state.playerDeck='blackout'}select.onchange=()=>{state.playerDeck=select.value;persist()};}catch(e){$('notice').textContent='Deck list unavailable: '+e.message;}}
-render();initDecks();if(state.pendingDuel){$('duel').hidden=false;$('battle').src=duelUrl(state.pendingDuel);}
+async function initDecks(){try{const res=await fetch('/api/classic/decks');if(!res.ok)throw Error('Could not load decks');const data=await res.json(),select=$('deckPicker');for(const d of data.decks.filter(x=>x.id!=='custom'||!!state.collection.customDeck)){const o=document.createElement('option');o.value=d.id;o.textContent=d.name;select.append(o)}if([...select.options].some(o=>o.value===state.playerDeck))select.value=state.playerDeck;else{select.value='blackout';state.playerDeck='blackout'}select.onchange=()=>{state.playerDeck=select.value;persist()};}catch(e){$('notice').textContent='Deck list unavailable: '+e.message;}}
+render();initDecks();initMarket();if(state.pendingDuel){$('duel').hidden=false;$('battle').src=duelUrl(state.pendingDuel);}
 })();
