@@ -50,8 +50,8 @@ function chooseStory(raw){
  const a=state.activeStory;if(!a||a.phase!=='choice')return;
  const index=Number(raw),e=STORY.byId(a.id),choice=e.choices[index];
  if(!choice||!Number.isInteger(index))return;
- if(choice.kind==='commit'&&state.partner&&state.partner!==e.npc){
-  $('notice').textContent='You have already committed to another relationship.';return;
+ if(choice.kind==='commit'&&((state.partner&&state.partner!==e.npc)||state.relationships[e.npc].trust<3||state.relationships[e.npc].affection<6)){
+  $('notice').textContent=state.partner&&state.partner!==e.npc?'You have already committed to another relationship.':'You need a stronger bond before taking this step.';return;
  }
  a.phase='response';a.choice=index;persist();render();
 }
@@ -84,6 +84,7 @@ const log=t=>{state.journal.unshift(t);state.journal=state.journal.slice(0,25)};
 let scene={speaker:'Narrator',line:'Ninety days. One championship. You came to Neo Harbor to win. Everyone else has their own plans.',choices:[]};
 const atKey=(id)=>state.day+':'+state.slot+':'+id;
 function advance(n=1){const beforeDay=state.day,beforeSlot=state.slot;for(let i=0;i<n;i++){state.slot++;if(state.slot>=3){state.slot=0;state.day++;}}if(state.day>90){state.day=91;state.ended=true;log('The Neo Harbor championship season has ended.');}
+state.selected=null;
 const missed=STORY.recordExpiry(state);if(missed.length)log('Some opportunities in town passed while you were busy.');
 persist();timeFlash(beforeDay,beforeSlot);}
 function say(speaker,line,choices=[]){scene={speaker,line,choices};render();}
@@ -168,7 +169,11 @@ function render(){
  $('speaker').textContent=shown?.speaker||'Narrator';$('line').textContent=shown?.line||'The town is waiting.';$('choices').replaceChildren();
  for(const [label,action] of shown.choices||[]){
   const b=document.createElement('button');b.className='choice'+(action==='storyFinish'?' finish':'');b.textContent=label;
-  b.disabled=action.startsWith('storyChoice:')&&STORY.byId(state.activeStory.id).choices[Number(action.split(':')[1])].kind==='commit'&&!!state.partner&&state.partner!==STORY.byId(state.activeStory.id).npc;
+  if(action.startsWith('storyChoice:')){
+   const event=STORY.byId(state.activeStory.id),chosen=event.choices[Number(action.split(':')[1])],bond=state.relationships[event.npc];
+   b.disabled=chosen.kind==='commit'&&((!!state.partner&&state.partner!==event.npc)||bond.trust<3||bond.affection<6);
+   if(b.disabled)b.title='You need a stronger bond or you already have a partner.';
+  }
   b.onclick=()=>act(action);$('choices').append(b);
  }
  $('people').replaceChildren();
