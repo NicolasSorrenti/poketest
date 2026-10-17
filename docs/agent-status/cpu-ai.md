@@ -135,6 +135,17 @@ GitHub Actions CPU AI regression additionally runs the existing Classic local CP
 - Code commit `c3c2ad2`: all three GitHub workflows **green**, including CPU 200-game A/B and other coverage, TCG gameplay and Node/RPG regressions.
 - The empirical 5% lower-tier upset threshold remains unmet. Higher-skill ability to prioritize sensible attacks, Trainers, Prize tempo and long-term survival needs a materially different model/decision policy to achieve meaningful separation in this stochastic game.
 
+## Post-merge CPU sequence and resource-discipline milestone — PR #12
+
+- Merged PR #11 into `main` as `0b34016caf46ec9c0ff7304c929ca6d6a8f81866`. New changes isolated in `agent/cpu-ai-sequence-20261017` / draft PR #12; current rules and RPG modules untouched.
+- Added opt-in `turnSearch`: bounded 3-action, maximum 96-node same-turn search using only the CPU's known hand, own evolving/attachment legality and public opposing Active. The authoritative reducer remains the only system executing actions. Evolutions clear Special Conditions and stale stage-specific attacks in the hypothetical projection. Unit regressions include Machop→Machoke + Fighting Energy and a Sleeping Machop.
+- A mirrored **200-game** matched Champion A/B across Blackout/Brushfire/Overgrowth was **99–100** (one draw) with `turnSearch` on versus off, so this search remains **OFF by default**. It is a technical foundation, not a proven win-rate boost.
+- Diagnosed a broader Champion flaw: `end_turn` carried zero value, making the CPU routinely burn a useful hand with low-value Trainer actions. Added opt-in `actionDiscipline` to allow keeping cards and ending a turn when doing so is better than an unnecessary Professor Oak, Potion or Switch; useful Bills and attacks still take precedence.
+- Six independent same-deck, seat-swapped cohorts across **440 matches** found resource-disciplined Champion **250–189** against the prior Champion (one draw). Decisive win rate **56.95%**, Wilson 95% interval approximately **52.3%–61.5%**. Gains differ by deck but suggest a real improvement over multiple themes and seeds.
+- **Promoted `actionDiscipline` to enabled-by-default only for Champion (level 5)** on the basis of this controlled, statistically positive comparison; Expert and levels 1–3 retain their original resource habits. The old Champion can be reproduced with explicit `actionDiscipline:false`.
+- Added truthful benchmark switches and `docs/cpu-ai-sequence-search.md` with reproducibility, no-hidden-information guarantees and complete A/B results.
+- Champion-versus-Expert direct measurement is part of a new three-deck benchmark run. **The user's 5% lower-tier upset target is still NOT met or verified.** Never change legal outcomes, hidden information or coin RNG to enforce it.
+
 ## Known limitations and next work
 
 1. Verify green CI on all affected and full regression suites. 
