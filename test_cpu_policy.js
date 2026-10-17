@@ -55,6 +55,16 @@ const settings={level:3,personality:'balanced',side:1,seed:47};
    .some(c=>c.type==='play_trainer'),
    'Super Energy Removal must not begin without a legal opposing Energy target');
 }
+{
+ const o={self:{active:{id:'base1-63',energies:['base1-102'],damage:0},bench:[]},
+  opponent:{active:{id:'base1-61',energies:['base1-97'],damage:0},bench:[]}};
+ const action={type:'attack',payload:{attackIndex:0}};
+ const risky=AI.score(action,o,AI.configuration({level:3,personality:'risk_taking'}),{});
+ const neutral=AI.score(action,o,AI.configuration({level:3,personality:'balanced'}),{});
+ const defensive=AI.score(action,o,AI.configuration({level:3,personality:'defensive'}),{});
+ assert.ok(risky>neutral&&neutral>defensive,
+  'Personality should visibly affect preferences on coin-flip attacks independently of skill');
+}
 let duels=0,decisions=0,attacks=0,energy=0,evolutions=0,trainer=0;
 for(let seed=1;seed<=4;seed++){
  let game=createGame({decks:[deck,deck],seed:seed*1789,format:'classic'});
