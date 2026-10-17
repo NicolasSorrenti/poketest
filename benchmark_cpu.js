@@ -9,7 +9,7 @@ const {driveSide,configuration}=require('./cpu_policy');
 const {ClassicLocalService}=require('./classic_local_service');
 
 function argumentsOf(argv){
- const opts={pairs:8,maxTurns:90,seed:7391,leftLevel:5,rightLevel:1,personality:'balanced',leftDeck:'blackout',rightDeck:'blackout',leftPlanning:null,rightPlanning:null,leftEvolutionTempo:null,rightEvolutionTempo:null,leftPrizeRace:null,rightPrizeRace:null,leftKnockoutTempo:null,rightKnockoutTempo:null,leftOpponentResponse:null,rightOpponentResponse:null,leftGraduatedNoise:null,rightGraduatedNoise:null,leftEnergyHorizon:null,rightEnergyHorizon:null,leftTurnSearch:null,rightTurnSearch:null,leftActionDiscipline:null,rightActionDiscipline:null,targetUpsetRate:0.05,logs:null};
+ const opts={pairs:8,maxTurns:90,seed:7391,leftLevel:5,rightLevel:1,personality:'balanced',leftDeck:'blackout',rightDeck:'blackout',leftPlanning:null,rightPlanning:null,leftEvolutionTempo:null,rightEvolutionTempo:null,leftPrizeRace:null,rightPrizeRace:null,leftKnockoutTempo:null,rightKnockoutTempo:null,leftOpponentResponse:null,rightOpponentResponse:null,leftGraduatedNoise:null,rightGraduatedNoise:null,leftEnergyHorizon:null,rightEnergyHorizon:null,leftTurnSearch:null,rightTurnSearch:null,leftActionDiscipline:null,rightActionDiscipline:null,leftTrainerTactics:null,rightTrainerTactics:null,targetUpsetRate:0.05,logs:null};
  const keys={'--pairs':'pairs','--max-turns':'maxTurns','--seed':'seed','--left-level':'leftLevel','--right-level':'rightLevel',
   '--personality':'personality','--left-deck':'leftDeck','--right-deck':'rightDeck',
   '--left-planning':'leftPlanning','--right-planning':'rightPlanning',
@@ -21,11 +21,12 @@ function argumentsOf(argv){
   '--left-energy-horizon':'leftEnergyHorizon','--right-energy-horizon':'rightEnergyHorizon',
   '--left-turn-search':'leftTurnSearch','--right-turn-search':'rightTurnSearch',
   '--left-action-discipline':'leftActionDiscipline','--right-action-discipline':'rightActionDiscipline',
+  '--left-trainer-tactics':'leftTrainerTactics','--right-trainer-tactics':'rightTrainerTactics',
   '--target-upset-rate':'targetUpsetRate','--logs':'logs'};
  for(let i=0;i<argv.length;i++){
   const k=keys[argv[i]];if(!k||i===argv.length-1)throw Error('Unknown or incomplete option '+argv[i]);
   const value=argv[++i];
-  if(['leftPlanning','rightPlanning','leftEvolutionTempo','rightEvolutionTempo','leftPrizeRace','rightPrizeRace','leftKnockoutTempo','rightKnockoutTempo','leftOpponentResponse','rightOpponentResponse','leftGraduatedNoise','rightGraduatedNoise','leftEnergyHorizon','rightEnergyHorizon','leftTurnSearch','rightTurnSearch','leftActionDiscipline','rightActionDiscipline'].includes(k)){
+  if(['leftPlanning','rightPlanning','leftEvolutionTempo','rightEvolutionTempo','leftPrizeRace','rightPrizeRace','leftKnockoutTempo','rightKnockoutTempo','leftOpponentResponse','rightOpponentResponse','leftGraduatedNoise','rightGraduatedNoise','leftEnergyHorizon','rightEnergyHorizon','leftTurnSearch','rightTurnSearch','leftActionDiscipline','rightActionDiscipline','leftTrainerTactics','rightTrainerTactics'].includes(k)){
    if(!['true','false'].includes(value))throw Error('Planning must be true or false');
    opts[k]=value==='true';
   }else opts[k]=['pairs','maxTurns','seed','leftLevel','rightLevel','targetUpsetRate'].includes(k)?Number(value):value;
@@ -33,8 +34,8 @@ function argumentsOf(argv){
  if(!Number.isInteger(opts.pairs)||opts.pairs<1||opts.pairs>1000)throw Error('pairs must be between 1 and 1000');
  if(!Number.isInteger(opts.maxTurns)||opts.maxTurns<1||opts.maxTurns>1000)throw Error('Invalid max-turns');
  if(!Number.isFinite(opts.targetUpsetRate)||opts.targetUpsetRate<0||opts.targetUpsetRate>=.5)throw Error('Invalid target upset rate');
- configuration({level:opts.leftLevel,personality:opts.personality,planning:opts.leftPlanning??undefined,evolutionTempo:opts.leftEvolutionTempo??undefined,prizeRace:opts.leftPrizeRace??undefined,knockoutTempo:opts.leftKnockoutTempo??undefined,opponentResponse:opts.leftOpponentResponse??undefined,graduatedNoise:opts.leftGraduatedNoise??undefined,energyHorizon:opts.leftEnergyHorizon??undefined,turnSearch:opts.leftTurnSearch??undefined,actionDiscipline:opts.leftActionDiscipline??undefined});
- configuration({level:opts.rightLevel,personality:opts.personality,planning:opts.rightPlanning??undefined,evolutionTempo:opts.rightEvolutionTempo??undefined,prizeRace:opts.rightPrizeRace??undefined,knockoutTempo:opts.rightKnockoutTempo??undefined,opponentResponse:opts.rightOpponentResponse??undefined,graduatedNoise:opts.rightGraduatedNoise??undefined,energyHorizon:opts.rightEnergyHorizon??undefined,turnSearch:opts.rightTurnSearch??undefined,actionDiscipline:opts.rightActionDiscipline??undefined});
+ configuration({level:opts.leftLevel,personality:opts.personality,planning:opts.leftPlanning??undefined,evolutionTempo:opts.leftEvolutionTempo??undefined,prizeRace:opts.leftPrizeRace??undefined,knockoutTempo:opts.leftKnockoutTempo??undefined,opponentResponse:opts.leftOpponentResponse??undefined,graduatedNoise:opts.leftGraduatedNoise??undefined,energyHorizon:opts.leftEnergyHorizon??undefined,turnSearch:opts.leftTurnSearch??undefined,actionDiscipline:opts.leftActionDiscipline??undefined,trainerTactics:opts.leftTrainerTactics??undefined});
+ configuration({level:opts.rightLevel,personality:opts.personality,planning:opts.rightPlanning??undefined,evolutionTempo:opts.rightEvolutionTempo??undefined,prizeRace:opts.rightPrizeRace??undefined,knockoutTempo:opts.rightKnockoutTempo??undefined,opponentResponse:opts.rightOpponentResponse??undefined,graduatedNoise:opts.rightGraduatedNoise??undefined,energyHorizon:opts.rightEnergyHorizon??undefined,turnSearch:opts.rightTurnSearch??undefined,actionDiscipline:opts.rightActionDiscipline??undefined,trainerTactics:opts.rightTrainerTactics??undefined});
  return opts;
 }
 function wilson(wins,n,z=1.96){
@@ -44,8 +45,8 @@ function wilson(wins,n,z=1.96){
  return {lower:Math.max(0,mid-half),upper:Math.min(1,mid+half)};
 }
 function duel(opts,number,swap,decks){
- const profile=[{level:opts.leftLevel,personality:opts.personality,planning:opts.leftPlanning??undefined,evolutionTempo:opts.leftEvolutionTempo??undefined,prizeRace:opts.leftPrizeRace??undefined,knockoutTempo:opts.leftKnockoutTempo??undefined,opponentResponse:opts.leftOpponentResponse??undefined,graduatedNoise:opts.leftGraduatedNoise??undefined,energyHorizon:opts.leftEnergyHorizon??undefined,turnSearch:opts.leftTurnSearch??undefined,actionDiscipline:opts.leftActionDiscipline??undefined,seed:opts.seed+number*4001+13},
-                {level:opts.rightLevel,personality:opts.personality,planning:opts.rightPlanning??undefined,evolutionTempo:opts.rightEvolutionTempo??undefined,prizeRace:opts.rightPrizeRace??undefined,knockoutTempo:opts.rightKnockoutTempo??undefined,opponentResponse:opts.rightOpponentResponse??undefined,graduatedNoise:opts.rightGraduatedNoise??undefined,energyHorizon:opts.rightEnergyHorizon??undefined,turnSearch:opts.rightTurnSearch??undefined,actionDiscipline:opts.rightActionDiscipline??undefined,seed:opts.seed+number*4001+31}];
+ const profile=[{level:opts.leftLevel,personality:opts.personality,planning:opts.leftPlanning??undefined,evolutionTempo:opts.leftEvolutionTempo??undefined,prizeRace:opts.leftPrizeRace??undefined,knockoutTempo:opts.leftKnockoutTempo??undefined,opponentResponse:opts.leftOpponentResponse??undefined,graduatedNoise:opts.leftGraduatedNoise??undefined,energyHorizon:opts.leftEnergyHorizon??undefined,turnSearch:opts.leftTurnSearch??undefined,actionDiscipline:opts.leftActionDiscipline??undefined,trainerTactics:opts.leftTrainerTactics??undefined,seed:opts.seed+number*4001+13},
+                {level:opts.rightLevel,personality:opts.personality,planning:opts.rightPlanning??undefined,evolutionTempo:opts.rightEvolutionTempo??undefined,prizeRace:opts.rightPrizeRace??undefined,knockoutTempo:opts.rightKnockoutTempo??undefined,opponentResponse:opts.rightOpponentResponse??undefined,graduatedNoise:opts.rightGraduatedNoise??undefined,energyHorizon:opts.rightEnergyHorizon??undefined,turnSearch:opts.rightTurnSearch??undefined,actionDiscipline:opts.rightActionDiscipline??undefined,trainerTactics:opts.rightTrainerTactics??undefined,seed:opts.seed+number*4001+31}];
  const roleForSide=swap?[1,0]:[0,1];
  const source=swap?[decks[1],decks[0]]:decks;
  let game=createGame({decks:source,format:'classic',seed:opts.seed+number*11+101});
@@ -108,7 +109,8 @@ function arena(opts){
     graduatedNoise:configuration({level:opts.leftLevel,graduatedNoise:opts.leftGraduatedNoise??undefined}).graduatedNoise,
     energyHorizon:configuration({level:opts.leftLevel,energyHorizon:opts.leftEnergyHorizon??undefined}).energyHorizon,
     turnSearch:configuration({level:opts.leftLevel,turnSearch:opts.leftTurnSearch??undefined}).turnSearch,
-    actionDiscipline:configuration({level:opts.leftLevel,actionDiscipline:opts.leftActionDiscipline??undefined}).actionDiscipline},
+    actionDiscipline:configuration({level:opts.leftLevel,actionDiscipline:opts.leftActionDiscipline??undefined}).actionDiscipline,
+    trainerTactics:configuration({level:opts.leftLevel,trainerTactics:opts.leftTrainerTactics??undefined}).trainerTactics},
   challenger:{level:opts.rightLevel,deck:opts.rightDeck,
     planning:configuration({level:opts.rightLevel,planning:opts.rightPlanning??undefined}).planning,
     evolutionTempo:configuration({level:opts.rightLevel,evolutionTempo:opts.rightEvolutionTempo??undefined}).evolutionTempo,
@@ -118,7 +120,8 @@ function arena(opts){
     graduatedNoise:configuration({level:opts.rightLevel,graduatedNoise:opts.rightGraduatedNoise??undefined}).graduatedNoise,
     energyHorizon:configuration({level:opts.rightLevel,energyHorizon:opts.rightEnergyHorizon??undefined}).energyHorizon,
     turnSearch:configuration({level:opts.rightLevel,turnSearch:opts.rightTurnSearch??undefined}).turnSearch,
-    actionDiscipline:configuration({level:opts.rightLevel,actionDiscipline:opts.rightActionDiscipline??undefined}).actionDiscipline},
+    actionDiscipline:configuration({level:opts.rightLevel,actionDiscipline:opts.rightActionDiscipline??undefined}).actionDiscipline,
+    trainerTactics:configuration({level:opts.rightLevel,trainerTactics:opts.rightTrainerTactics??undefined}).trainerTactics},
   personality:opts.personality,pairs:opts.pairs,totalMatches:matches.length,conclusiveMatches:conclusive.length,
   wins,losses,drawsOrTimeouts:matches.length-conclusive.length,
   deckOutLossesByRole:[0,1].map(role=>matches.filter(x=>x.endReason==='deckout'&&x.winner===1-role).length),
