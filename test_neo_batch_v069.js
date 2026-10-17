@@ -36,9 +36,9 @@ for(const id of ['base1-3','base1-44','base3-48','base4-80','base2-35']){
 }
 assert.equal(ATTACK.compile(CATALOG.get('base1-3').attacks[0]).kind,'coin-shield');
 assert.equal(ATTACK.compile(CATALOG.get('base1-44').attacks[0]).kind,'leech-seed');
-assert.equal(ATTACK.compile(CATALOG.get('base3-48').attacks[0]).kind,'damage-shield');
-assert.equal(ATTACK.compile(CATALOG.get('base4-80').attacks[0]).kind,'coin-draw');
-assert.equal(ATTACK.compile(CATALOG.get('base2-35').attacks[0]).kind,'energy-coins');
+assert.equal(ATTACK.compile(CATALOG.get('base3-48').attacks.find(a=>a.name==='Minimize')).kind,'damage-shield');
+assert.equal(ATTACK.compile(CATALOG.get('base4-80').attacks.find(a=>a.name==='Pay Day')).kind,'coin-draw');
+assert.equal(ATTACK.compile(CATALOG.get('base2-35').attacks.find(a=>a.name==='Big Eggsplosion')).kind,'energy-coins');
 {
  const g=metronome('base3-48','Minimize');
  assert.equal(g.players[0].active.shield.reduce,20,'Copied Minimize shields the copier');
@@ -72,7 +72,7 @@ assert.equal(ATTACK.compile(CATALOG.get('base2-35').attacks[0]).kind,'energy-coi
 }
 {
  const g=metronome('base2-35','Big Eggsplosion',{energies:['base1-99','base1-99','base1-99']});
- const flips=g.coinFlips.filter(x=>x.side===0||x.result); // All coin records, including Super Metronome.
+ const flips=g.coinFlips; // Includes one successful Super Metronome flip followed by copied attack flips.
  const copyFlips=flips.slice(-3).filter(x=>x.result==='heads').length;
  assert.equal(g.players[1].active.damage,copyFlips*20,'Copied Big Eggsplosion uses COPIER Energy count and coin results');
 }
