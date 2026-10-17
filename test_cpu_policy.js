@@ -769,7 +769,12 @@ const settings={level:3,personality:'balanced',side:1,seed:47};
  const beginner=AI.configuration({level:1,side:1,actionDiscipline:true});
  assert.equal(AI.score(end,o,beginner,{}),0,
   'Beginner has no expert conservation opportunity-cost heuristic');
- assert.equal(AI.configuration({level:5}).actionDiscipline,false);
+ assert.equal(AI.configuration({level:5}).actionDiscipline,true,
+  '440-game multi-deck evidence promotes Trainer conservation for Champion');
+ assert.equal(AI.configuration({level:4}).actionDiscipline,false,
+  'Expert remains independently calibrated and does not inherit Champion-only behavior');
+ assert.equal(AI.configuration({level:5,actionDiscipline:false}).actionDiscipline,false,
+  'Control policy can still be selected for a reproducible A/B baseline');
  assert.throws(()=>AI.configuration({actionDiscipline:'true'}),/action-discipline/);
  const {arena,argumentsOf}=require('./benchmark_cpu');
  const x=arena(argumentsOf(['--pairs','1','--max-turns','4','--left-level','5',
