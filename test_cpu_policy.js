@@ -294,6 +294,22 @@ const settings={level:3,personality:'balanced',side:1,seed:47};
  assert.equal(AI.planningBonus(evolve,structuredClone(o),champion),
   AI.planningBonus(evolve,o,champion),'Forecast must be pure and deterministic');
 }
+{
+ const g=createGame({decks:[deck,deck],seed:991,format:'classic'});
+ const o=AI.observation(g,1);o.phase='game';o.turn=1;
+ o.self.active={id:'base1-34',damage:70,playedTurn:1,
+  energies:[IDS.fight,IDS.fight,IDS.fight,IDS.fight],status:null};
+ o.self.bench=[{id:IDS.machop,damage:0,energies:[],status:null}];
+ o.opponent.active={id:IDS.hit,damage:0,energies:[IDS.fight],status:null};
+ const chop={type:'attack',payload:{attackIndex:0}};
+ const submission={type:'attack',payload:{attackIndex:1}};
+ assert.ok(AI.score(chop,o,AI.configuration({level:5}),{})>
+  AI.score(submission,o,AI.configuration({level:5}),{}),
+  'Champion should not use Submission for a self-KO without winning a Prize');
+ assert.ok(AI.score(submission,o,AI.configuration({level:1}),{})>
+  AI.score(chop,o,AI.configuration({level:1}),{}),
+  'Beginner may favor raw damage without appreciating the self-KO consequence');
+}
 let duels=0,decisions=0,attacks=0,energy=0,evolutions=0,trainer=0;
 for(let seed=1;seed<=4;seed++){
  let game=createGame({decks:[deck,deck],seed:seed*1789,format:'classic'});
