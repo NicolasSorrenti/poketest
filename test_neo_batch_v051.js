@@ -38,7 +38,9 @@ assert.equal(P.PASSIVE.has('Frog Song'),true);
  g.players[0].active.energies=Array(5).fill('base1-102');
  attack(g,'Doubleslap');
  const heads=g.coinFlips.slice(-2).filter(x=>x.result==='heads').length;
- assert.equal(g.players[1].active.damage,heads?heads*40+40:0,'Frog Song only boosts a hit');
+ const expected=heads?heads*40+40:0;
+ if(expected>=Number(CATALOG.get('base1-58').hp))assert.ok(g.players[1].discard.includes('base1-58'),'Frog Song damage knocks out low-HP Defender');
+ else assert.equal(g.players[1].active.damage,expected,'Frog Song only boosts a hit');
 }
 {
  const g=game('neo1-16');
