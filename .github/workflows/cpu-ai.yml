@@ -1,0 +1,25 @@
+name: CPU AI regression
+on:
+  push:
+    branches:
+      - 'agent/cpu-ai-*'
+  pull_request:
+    paths:
+      - 'cpu_policy.js'
+      - 'classic_bot.js'
+      - 'classic_local_service.js'
+      - 'test_cpu_policy.js'
+      - 'benchmark_cpu.js'
+      - '.github/workflows/cpu-ai.yml'
+jobs:
+  cpu:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: node --check cpu_policy.js
+      - run: node test_cpu_policy.js
+      - run: node test_classic_live_service.js
