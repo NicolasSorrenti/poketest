@@ -66,7 +66,7 @@ assert.equal(ATTACK.compile(CATALOG.get('base2-35').attacks.find(a=>a.name==='Bi
   const g=metronome('base4-80','Pay Day',{seed});
   if(g.players[0].hand.length) drew=true;
   else missed=true;
-  assert.equal(g.players[1].hand.length,0,'Coin-draw cannot draw for the source Pokémon');
+  assert.equal(g.players[1].hand.length,1,'Only the mandatory opponent turn-start draw applies to the source owner');
  }
  assert.ok(drew&&missed,'Copied Pay Day must use a real coin outcome');
 }
