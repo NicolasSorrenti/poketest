@@ -36,6 +36,12 @@
     </div>
   </div>
 
+  <section class="duel-receipt" id="duelReceipt" role="status" aria-live="polite" hidden>
+    <span class="receipt-icon" aria-hidden="true">★</span>
+    <div class="receipt-copy"><strong id="receiptTitle"></strong><p id="receiptDetails"></p></div>
+    <button id="dismissReceipt" type="button">Continue exploring →</button>
+  </section>
+
   <main class="layout">
     <aside class="locations-panel">
       <div class="panel-label">NEIGHBORHOODS</div>
@@ -73,6 +79,10 @@
     </section>
 
     <aside class="sidebar">
+      <section class="side-section">
+        <div class="sidebar-title"><span>AROUND TOWN NOW</span><small>FREE TRAVEL</small></div>
+        <div id="townRadar" class="town-radar" aria-label="Other available trainers and where to find them"></div>
+      </section>
       <section class="side-section">
         <div class="sidebar-title"><span>WHO'S HERE</span><small>AVAILABLE NOW</small></div>
         <div id="people" class="people-list"></div>
