@@ -34,13 +34,14 @@ function duel(opts,number,swap,decks){
  const roleForSide=swap?[1,0]:[0,1];
  const source=swap?[decks[1],decks[0]]:decks;
  let game=createGame({decks:source,format:'classic',seed:opts.seed+number*11+101});
- const logs=[],stats={actions:0,attacks:0,attachments:0,evolutions:0,trainers:0,choices:0,decisionsMs:0,illegalActions:0,rejectedProposals:0,probedCandidates:0,byRole:[{},{}]};
+ const logs=[],stats={actions:0,attacks:0,attachments:0,evolutions:0,trainers:0,choices:0,decisionsMs:0,illegalActions:0,rejectedProposals:0,probedCandidates:0,byRole:[{},{}],openingBenchByRole:[0,0]};
  const start=performance.now();
  for(let side=0;side<2;side++){
   const r=driveSide(game,{...profile[roleForSide[side]],side,limit:200});
   if(!r.steps)throw Error('CPU could not set up');
   game=r.game;logs.push(...r.commands);stats.actions+=r.steps;
  }
+ for(let side=0;side<2;side++)stats.openingBenchByRole[roleForSide[side]]=game.players[side].bench.length;
  for(let step=0;step<opts.maxTurns&&!game.over;step++){
   const side=game.pendingDecision?game.pendingDecision.actor:game.turn;
   const startDecision=performance.now();
@@ -79,6 +80,11 @@ function arena(opts){
   wins,losses,drawsOrTimeouts:matches.length-conclusive.length,
   deckOutLossesByRole:[0,1].map(role=>matches.filter(x=>x.endReason==='deckout'&&x.winner===1-role).length),
   actionCountsByRole:[0,1].map(role=>matches.reduce((acc,m)=>{for(const [k,v] of Object.entries(m.stats.byRole[role]))acc[k]=(acc[k]||0)+v;return acc;},{})),
+  openingBenchByRole:[0,1].map(role=>({
+   mean:matches.reduce((total,m)=>total+m.stats.openingBenchByRole[role],0)/matches.length,
+   zero:matches.filter(m=>m.stats.openingBenchByRole[role]===0).length,
+   atLeastTwo:matches.filter(m=>m.stats.openingBenchByRole[role]>=2).length
+  })),
   winRateConclusive:conclusive.length?wins/conclusive.length:null,confidence95Conclusive:wilson(wins,conclusive.length),
   meanDecisionMs:totals.actions?totals.decisionsMs/totals.actions:null,
   averageTurns:totals.turnSerial/matches.length,totalActions:totals.actions,
