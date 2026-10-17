@@ -38,8 +38,12 @@ function rng(seed){let x=(seed>>>0)||0x6d2b79f5;return ()=>{
 const command=(type,payload={})=>({type,payload});
 function observation(game,side){
  const view=publicView(game,side);
- return {phase:view.phase,turn:view.turn,round:view.round,over:view.over,
-  self:view.players[side],opponent:view.players[1-side],stadium:view.stadium,
+ // The network projection intentionally omits once-per-turn flags. Those are
+ // visible to the acting player and never reveal the opponent's private cards.
+ const self={...view.players[side],energyUsed:!!game.players[side].energyUsed,
+  retreated:!!game.players[side].retreated};
+ return {phase:view.phase,turn:view.turn,round:view.round,turnSerial:game.turnSerial,over:view.over,
+  self,opponent:view.players[1-side],stadium:view.stadium,
   decision:view.pendingDecision,setupReady:!!game.setupReady[side]};
 }
 const card=id=>CATALOG.get(id);
@@ -127,7 +131,9 @@ function hasExoticEnergy(unit){
 function eligibleAttack(o,active,attack,index){
  if(!attack||!active||!ATTACK.compile(attack))return false;
  if(['Asleep','Paralyzed'].includes(active.status))return false;
- if(active.amnesia?.index===index||active.gymAttackCooldown?.index===index)return false;
+ if(active.amnesia?.index===index&&active.amnesia.expires>o.turnSerial)return false;
+ if(active.gymAttackCooldown?.expires>o.turnSerial&&
+  (active.gymAttackCooldown.index===null||active.gymAttackCooldown.index===index))return false;
  if(active.gymAttackOnce?.includes(index))return false;
  if(!hasExoticEnergy(active)&&!canPayEnergy(attack.cost||[],energyPool(active)))return false;
  const script=ATTACK.compile(attack);
@@ -273,10 +279,21 @@ function choiceValue(option,decision,o){
 }
 function score(a,o,cfg,used){
  const p=o.self,q=o.opponent,style=cfg.style,{type,payload:v}=a;
- if(type==='setup_confirm')return p.bench.length>=1?110:25;
+ if(type==='setup_confirm')return 115+p.bench.length*10;
  if(type==='setup_select'){
   const u={id:p.hand[v.handIndex],energies:[]};
-  return (p.active?45:120)+setupValue(u)*style.setup;
+  const quality=setupValue(u)*style.setup;
+  if(!p.active)return 200+quality;
+  // Set a believable opening Bench before confirming. A novice often keeps
+  // only an Active; stronger duelists keep a backup, and champions may commit
+  // a third Basic when their opening hand allows it.
+  const n=p.bench.length;
+  const priority=cfg.level===1?55:cfg.level===2?
+   (n===0?160:48):cfg.level===3?
+   (n===0?175:65):cfg.level===4?
+   (n===0?183:n===1?165:55):
+   (n===0?190:n===1?175:n===2?153:55);
+  return priority+quality*.6;
  }
  if(type==='choose'){
   if(v.decline)return -30;
