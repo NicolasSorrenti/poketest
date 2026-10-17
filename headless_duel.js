@@ -2160,9 +2160,29 @@ function reduce(game,actor,command){
    const u=located(p,index),affected=(index===-1)!==hidden.active||u.energies.join('|')!==hidden.energy||u.attachedTrainers.map(t=>t.id).join('|')!==hidden.tools||u.damage!==hidden.damage||u.status!==hidden.status;
    if(affected){revealSecretPlan(next,hidden.owner,index);if(!p.active&&!next.pendingDecision)completeKnockouts(next,'trainer');}
   }
+  returnRecycledEnergy(game,next);
   next.events.push({side:actor,type:cmd.type,payload:structuredClone(cmd.payload),visible});
   return {ok:true,game:next};
  }catch(e){return {ok:false,error:e.message};}
+}
+// Neo Genesis Recycle Energy returns to its owner's hand when discarded from
+// an attached Pokémon. Compare the pre/post authoritative transaction: this
+// covers retreat, attacks, Trainer discards, and KOs without per-card branches.
+function returnRecycledEnergy(before,after){
+ for(let side=0;side<2;side++){
+  const old=before.players[side],now=after.players[side];
+  const attached=owner=>[owner.active,...owner.bench].filter(Boolean).reduce((sum,u)=>sum+(u.energies||[]).filter(id=>card(before,id).name==='Recycle Energy').length,0);
+  const inDiscard=owner=>owner.discard.filter(id=>card(before,id).name==='Recycle Energy').length;
+  const lost=Math.max(0,attached(old)-attached(now));
+  const newlyDiscarded=Math.max(0,inDiscard(now)-inDiscard(old));
+  const returned=Math.min(lost,newlyDiscarded);
+  for(let i=0;i<returned;i++){
+   const index=now.discard.findLastIndex(id=>card(before,id).name==='Recycle Energy');
+   if(index<0)break;
+   now.hand.push(now.discard.splice(index,1)[0]);
+  }
+  if(returned)log(after,`Recycle Energy returned ${returned} card(s) to ${now.name}'s hand.`);
+ }
 }
 function applyCommand(game,side,command){const result=reduce(game,side,command);if(!result.ok)return result;for(const k of Object.keys(game))delete game[k];Object.assign(game,result.game);return {ok:true};}
 function roomAdapter({format='classic'}={}){return {createGame:setup=>createGame({...setup,format,seed:crypto.randomBytes(4).readUInt32BE(0)}),applyCommand};}
