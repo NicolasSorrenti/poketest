@@ -134,9 +134,9 @@ const settings={level:3,personality:'balanced',side:1,seed:47};
  assert.throws(()=>profileForNpc('unknown'),/Unknown CPU NPC/);
  const service=new ClassicLocalService();
  const first=service.create({npc:'reina',seed:41,deck:'blackout',opponent:'brushfire'});
- assert.deepEqual(first.cpu,{level:4,personality:'aggressive',npc:'reina'});
+ assert.deepEqual(first.cpu,{level:4,personality:'aggressive',npc:'reina',advancedTactics:false});
  const second=service.create({npc:'reina',difficulty:1,personality:'defensive',seed:42});
- assert.deepEqual(second.cpu,{level:1,personality:'defensive',npc:'reina'},
+ assert.deepEqual(second.cpu,{level:1,personality:'defensive',npc:'reina',advancedTactics:false},
   'An RPG NPC identity must not constrain independent skill and temperament overrides');
 }
 {
