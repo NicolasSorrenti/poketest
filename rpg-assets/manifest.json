@@ -1,0 +1,161 @@
+{
+  "pack": "Neo Harbor visual novel first pass",
+  "gamePath": "/rpg-assets/",
+  "characters": {
+    "reina": {
+      "path": "reina.png",
+      "role": "canonical prototype",
+      "render": "VN foreground portrait"
+    },
+    "hana": {
+      "path": "hana.png",
+      "role": "concept-sheet crop prototype",
+      "render": "VN foreground portrait"
+    },
+    "shiori": {
+      "path": "shiori.png",
+      "role": "concept-sheet crop prototype",
+      "render": "VN foreground portrait"
+    },
+    "yuna": {
+      "path": "yuna.png",
+      "role": "concept-sheet crop prototype",
+      "render": "VN foreground portrait"
+    },
+    "akari": {
+      "path": "akari.png",
+      "role": "concept-sheet crop prototype",
+      "render": "VN foreground portrait"
+    },
+    "camila": {
+      "path": "camila.png",
+      "role": "concept-sheet crop prototype",
+      "render": "VN foreground portrait"
+    },
+    "marina": {
+      "path": "marina.png",
+      "role": "concept-sheet crop prototype",
+      "render": "VN foreground portrait"
+    },
+    "kaede": {
+      "path": "kaede.png",
+      "role": "concept-sheet crop prototype",
+      "render": "VN foreground portrait"
+    }
+  },
+  "locations": {
+    "shop": {
+      "day": "card-shop-day.png",
+      "evening": "card-shop-evening.png",
+      "quality": "full-resolution standalone concept art"
+    },
+    "home": {
+      "day": "home.jpg",
+      "quality": "concept-sheet environment crop (temporary)"
+    },
+    "cafe": {
+      "day": "cafe.jpg",
+      "quality": "concept-sheet environment crop (temporary)"
+    },
+    "park": {
+      "day": "park.jpg",
+      "quality": "concept-sheet environment crop (temporary)"
+    },
+    "center": {
+      "day": "center.jpg",
+      "quality": "concept-sheet environment crop (temporary)"
+    },
+    "arcade": {
+      "day": "arcade.jpg",
+      "quality": "concept-sheet environment crop (temporary)"
+    },
+    "library": {
+      "day": "library.jpg",
+      "quality": "concept-sheet environment crop (temporary)"
+    }
+  },
+  "sourceNotes": [
+    {
+      "character": "hana",
+      "source": "a_wide_clean_game_asset_style_collage_character.png",
+      "sourceCrop": [
+        195,
+        0,
+        381,
+        344
+      ],
+      "quality": "prototype cropped concept-sheet art, upscaled; replace later with full-resolution standalone character art"
+    },
+    {
+      "character": "shiori",
+      "source": "a_wide_clean_game_asset_style_collage_character.png",
+      "sourceCrop": [
+        387,
+        0,
+        573,
+        344
+      ],
+      "quality": "prototype cropped concept-sheet art, upscaled; replace later with full-resolution standalone character art"
+    },
+    {
+      "character": "yuna",
+      "source": "a_wide_clean_game_asset_style_collage_character.png",
+      "sourceCrop": [
+        579,
+        0,
+        765,
+        344
+      ],
+      "quality": "prototype cropped concept-sheet art, upscaled; replace later with full-resolution standalone character art"
+    },
+    {
+      "character": "akari",
+      "source": "a_wide_clean_game_asset_style_collage_character.png",
+      "sourceCrop": [
+        771,
+        0,
+        957,
+        344
+      ],
+      "quality": "prototype cropped concept-sheet art, upscaled; replace later with full-resolution standalone character art"
+    },
+    {
+      "character": "camila",
+      "source": "a_wide_clean_game_asset_style_collage_character.png",
+      "sourceCrop": [
+        963,
+        0,
+        1149,
+        344
+      ],
+      "quality": "prototype cropped concept-sheet art, upscaled; replace later with full-resolution standalone character art"
+    },
+    {
+      "character": "marina",
+      "source": "a_wide_clean_game_asset_style_collage_character.png",
+      "sourceCrop": [
+        1155,
+        0,
+        1341,
+        344
+      ],
+      "quality": "prototype cropped concept-sheet art, upscaled; replace later with full-resolution standalone character art"
+    },
+    {
+      "character": "kaede",
+      "source": "a_wide_clean_game_asset_style_collage_character.png",
+      "sourceCrop": [
+        1347,
+        0,
+        1533,
+        344
+      ],
+      "quality": "prototype cropped concept-sheet art, upscaled; replace later with full-resolution standalone character art"
+    }
+  ],
+  "warnings": [
+    "The seven non-Reina portraits were cropped from AI concept sheets; they are usable temporary sprites but not independently generated high-resolution masters.",
+    "Generated cast sheets contain appearance mismatches relative to the final character bible; treat these visuals as provisional.",
+    "The small backdrop crops are visual placeholders, not production-resolution environment masters."
+  ]
+}
