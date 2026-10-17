@@ -113,6 +113,9 @@ const settings={level:3,personality:'balanced',side:1,seed:47};
  const basicValue=AI.score(energy,o,beginner,{});
  assert.ok(experiencedValue>basicValue,
   'Experienced AI should value the next stronger attack unlocked by Energy');
+ const casual=AI.configuration({side:1,level:2});
+ assert.ok(AI.score(energy,o,casual,{})>basicValue,
+  'Casual should also recognize some immediate future attack damage, unlike Beginner');
  const plusPower={type:'play_trainer',payload:{handIndex:1}};
  assert.ok(AI.score(plusPower,o,experienced,{})>AI.score({type:'attack',payload:{attackIndex:0}},o,experienced,{}),
   'Strong AI should prepare a PlusPower KO when immediate damage is insufficient');
@@ -185,6 +188,23 @@ const settings={level:3,personality:'balanced',side:1,seed:47};
   inspected++;
  }
  assert.ok(inspected>=5,'Opening Bench test must exercise at least five multi-Basic hands');
+}
+{
+ // A defensive retreat must weigh whether the replacement can survive the
+ // known opposing attack, not simply reward the outgoing Pokémon being low HP.
+ const game=createGame({decks:[deck,deck],seed:5,format:'classic'});
+ const o=AI.observation(game,1);
+ o.phase='game';o.turn=1;
+ o.self.active={id:IDS.rat,damage:30,energies:[IDS.fight],status:null};
+ o.self.bench=[{id:IDS.hit,damage:0,energies:[IDS.fight],status:null}];
+ o.opponent.active={id:IDS.hit,damage:0,energies:[IDS.fight],status:null};
+ const expert=AI.configuration({level:5,side:1});
+ const action={type:'retreat',payload:{slot:0}};
+ const favorable=AI.score(action,o,expert,{});
+ o.self.bench[0]={id:IDS.rat,damage:30,energies:[IDS.fight],status:null};
+ const dangerous=AI.score(action,o,expert,{});
+ assert.ok(favorable>dangerous+90,
+  'Do not retreat into an equally exposed replacement when an attack can KO it');
 }
 let duels=0,decisions=0,attacks=0,energy=0,evolutions=0,trainer=0;
 for(let seed=1;seed<=4;seed++){
