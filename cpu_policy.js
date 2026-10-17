@@ -143,6 +143,20 @@ function powerOpportunity(o,slot,name){
  if(name==='Cowardice'||name==='Buzzap')return false; // unsafe irreversible options need a dedicated scorer
  return true;
 }
+function retreatFeasible(o,active){
+ if(!active||['Asleep','Paralyzed'].includes(active.status)||!o.self.bench.length)return false;
+ const printed=(card(active.id)?.retreatCost||[]).length;
+ const balloon=active.attachedTrainers?.some(t=>card(t.id)?.name==='Balloon Berry');
+ if(balloon||printed===0)return true;
+ const available=energyPool(active).length;
+ // Count public retreat discounts conservatively; final legality is ALWAYS
+ // delegated to the authoritative reducer (which also applies Stadium rules).
+ const discounted=o.self.bench.filter(u=>(card(u.id)?.abilities||[])
+  .some(a=>a.name==='Retreat Aid')).length;
+ const gym=o.stadium?.id?card(o.stadium.id)?.name:'';
+ const otherDiscount=gym==='Cerulean City Gym'?1:0;
+ return available+discounted+otherDiscount>=printed;
+}
 function trainerOpportunity(o,name){
  const p=o.self,q=o.opponent;
  const own=[p.active,...p.bench].filter(Boolean),enemy=[q.active,...q.bench].filter(Boolean);
@@ -212,7 +226,7 @@ function candidates(o,cfg,used){
   const effective=p.active.effectiveAttacks||card(p.active.id)?.attacks||[];
   for(let attackIndex=0;attackIndex<effective.length;attackIndex++)
    if(eligibleAttack(o,p.active,effective[attackIndex],attackIndex))options.push(command('attack',{attackIndex}));
-  if(!p.retreated&&!['Asleep','Paralyzed'].includes(p.active.status))
+  if(!p.retreated&&retreatFeasible(o,p.active))
    for(let slot=0;slot<p.bench.length;slot++)options.push(command('retreat',{slot}));
  }
  if(used.powers<Math.max(1,cfg.level)&&p.active)for(const slot of slots(p)){
