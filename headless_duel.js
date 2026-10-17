@@ -750,7 +750,7 @@ function performAction(g,side,cmd){
  if(type==='evolve'){
   const c=handCard(g,p,v.handIndex),u=safeSlot(p,v.slot);
   if(u.secretPlanFaceDown){if(!revealSecretPlan(g,side,v.slot)){if(!p.active)completeKnockouts(g,'trainer');return;}}
-  if(!canEvolve(c,card(g,u.id))||((u.playedTurn>=g.round||p.turnPlays.includes(v.slot))&&!(u.giovanniEvolveUntil>g.turnSerial&&c.name.startsWith("Giovanni's "))))fail('Illegal evolution');
+  if(!canEvolve(c,card(g,u.id))||((u.playedTurn>=g.round)&&!(u.giovanniEvolveUntil>g.turnSerial&&c.name.startsWith("Giovanni's "))))fail('Illegal evolution');
   if((c.abilities||[]).length&&!isClassicRules(g))fail('Evolution has an unported on-play Power');
   if(isClassicRules(g)&&CLASSIC_POWERS.powerInPlay(g,'Prehistoric Power'))fail('Prehistoric Power prevents evolution');
   u.under.unshift(u.id);u.id=p.hand.splice(v.handIndex,1)[0];u.playedTurn=g.round;STATUS.clearConditions(u);clearBenchEffects(u);delete u.leekSlapUsed;delete u.weaknessOverride;delete u.resistanceOverride;p.turnPlays.push(v.slot);

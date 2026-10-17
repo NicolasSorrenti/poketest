@@ -1,0 +1,3 @@
+# Neo v0.58: evolution correctness
+
+Baby-to-Basic species evolution now includes all seven WotC Baby species, preserving prior Baby under the evolved Basic. Legalities use Pokémon instance `playedTurn` rather than a reused Active/Bench slot: a second Pokémon may evolve later in the same slot, but a single Pokémon cannot evolve twice in one normal turn. Gym-owned evolution names still require matching trainers, and historical gender symbol normalization remains. Tests cover setup, Baby restrictions, first-turn, same-turn, Gym restrictions, and Active replacement. Other special Trainer-granted evolution exceptions are not assumed verified.

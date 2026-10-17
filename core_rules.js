@@ -8,16 +8,25 @@
 })(typeof globalThis!=='undefined'?globalThis:null,function(){
  const BASIC_ENERGY=new Set(['Grass Energy','Fire Energy','Water Energy','Lightning Energy','Psychic Energy','Fighting Energy']);
  const owners=["Blaine's ","Erika's ","Misty's ","Brock's ","Lt. Surge's ","Sabrina's ","Koga's ","Giovanni's ","Rocket's "];
+ // Neo-era Baby Pokémon may evolve into a corresponding Basic Pokémon.
+ // The Basic played onto the Baby is treated as evolved; no Gym-owned crossovers.
+ const BABY_EVOLUTIONS=Object.freeze({
+  Pichu:['Pikachu'],Cleffa:['Clefairy'],Elekid:['Electabuzz'],
+  Magby:['Magmar'],Igglybuff:['Jigglypuff'],Smoochum:['Jynx'],
+  Tyrogue:['Hitmonchan','Hitmonlee','Hitmontop']
+ });
  function isBasicEnergy(c){return Boolean(c&&BASIC_ENERGY.has(c.name)&&!c.hp&&!(c.attacks||[]).length&&!(c.abilities||[]).length);}
  function normalize(c){return isBasicEnergy(c)?{...c,supertype:'Energy',subtypes:(c.subtypes||[]).filter(x=>x!=='Basic')}:c;}
  function isEnergy(c){return Boolean(c&&(c.supertype==='Energy'||isBasicEnergy(c)));}
- function isBasicPokemon(c){return Boolean(c&&!isBasicEnergy(c)&&c.supertype==='Pokémon'&&((c.subtypes||[]).includes('Basic')||c.name==='Mysterious Fossil')&&!(c.subtypes||[]).includes('Baby'));}
+ function isBasicPokemon(c){return Boolean(c&&!isBasicEnergy(c)&&c.supertype==='Pokémon'&&((c.subtypes||[]).includes('Basic')||(c.subtypes||[]).includes('Baby')||c.name==='Mysterious Fossil'));}
  // Gender symbols and Gym printings differ in whitespace (Nidoran♂ vs Nidoran ♂).
  function speciesName(name){return String(name||'').normalize('NFKC').replace(/\s*([♂♀])\s*/g,'$1').replace(/\s+/g,' ').trim().toLocaleLowerCase('en');}
  function canEvolve(next,previous){
   if(!next||!previous)return false;
   if(previous.name==='Mysterious Fossil'&&['Kabuto','Omanyte','Aerodactyl'].includes(next.name)&&(next.subtypes||[]).includes('Stage 1'))return true;
-  if(!next.evolvesFrom||!previous.name)return false;
+  if(!previous.name)return false;
+  if((next.subtypes||[]).includes('Basic')&&next.supertype==='Pokémon'&&previous.supertype==='Pokémon'&&BABY_EVOLUTIONS[previous.name]?.includes(next.name))return true;
+  if(!next.evolvesFrom)return false;
   const owner=owners.find(prefix=>next.name?.startsWith(prefix));
   if(owner){const wanted=next.evolvesFrom.startsWith(owner)?next.evolvesFrom:owner+next.evolvesFrom;return speciesName(previous.name)===speciesName(wanted);}
   return speciesName(next.evolvesFrom)===speciesName(previous.name)||speciesName(next.evolvesFrom.replace(/^(Dark |Light )/,''))===speciesName(previous.name);
