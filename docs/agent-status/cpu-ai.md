@@ -38,6 +38,16 @@ GitHub Actions CPU AI regression additionally runs the existing Classic local CP
 
 - After the verified green run above, new Base→Neo rules commits landed on main. A later PR-merge TCG regression run for the AI branch failed at `test_neo_batch_v067.js:62`: expected a defender-owned Energy discard choice for Koga's Muk reactive Power. The CPU agent did not modify that rule or test; ownership belongs to the historical rules agent. CPU-only regression remains green. Re-run full suite when the rules fix lands; do not merge based solely on the earlier green result.
 
+## Follow-up milestone — fundamental tactics and RPG profiles
+
+- Implemented extra CPU-side candidate preflight for affordable attacks, evolution timing, and retreat Energy with public modifiers. Reducer still makes every authoritative decision.
+- Upgraded the strategy scorer with a backup-Pokémon safety incentive, conservative Professor Oak draw/discard evaluation, dangerous Energy Removal and defensive Trainer checks, lethal Gust/PlusPower setup, public one-step Energy damage projection, and exact printed-family expected damage for Flail/counters and coin effects.
+- Added targeted regression tests for opening backup setup, conserving Oak, Double Colorless multi-pay choices, Magikarp Flail, PlusPower/Gust setups and projected Energy readiness.
+- Added `cpu_profiles.js` with independent skills and tendencies for all eight existing Neo Harbor NPC identities. `ClassicLocalService.create({npc, difficulty, personality, aiSeed})` resolves NPC defaults but permits explicit overrides; decks stay independent. **The RPG client still must pass its NPC ID** through duel creation; that UI hook is intentionally left for the Integration Agent.
+- Expanded paired benchmark matrix to cover each neighboring difficulty. Early 50-match pairs did not establish a monotonic ordering: even when Champion clearly beat Beginner on Blackout mirrors, Expert/Champion were statistically close and Casual occasionally lost to Beginner. Avoid claiming balancing is done.
+- Across this milestone the CPU policy and local service regression passed repeatedly, with the full Node and TCG suites green at commit `1e142c01462201270b4f0c0cf83e725b8cf286ee`. Latest damage-evaluation tests are under CI verification as of this note.
+- Next: stronger prize-race evaluation, tempo/deck-archetype tuning, better mandatory Trainer selections and target combos, longer matched tournaments with fewer turn-limit outcomes, and explicit Integration Agent handoff.
+
 ## Known limitations and next work
 
 1. Verify green CI on all affected and full regression suites. 
