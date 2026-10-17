@@ -14,6 +14,7 @@ Integration owns the RPG/Classic CPU handshake, shared presentation, navigation 
 - Parent removes the match-scoped token on completion. Stale / cross-match callbacks have no effect.
 - Fixed a previously undeclared `rpgMode` use in the CPU reset path and the stale-token error cleanup path.
 - Prevented the standalone "New duel" button from resetting an embedded campaign encounter.
+- Fixed multiplayer lobby recovery for concurrent Ready/start actions: a stale revision now refreshes authoritative room state and retries the intent once, rather than losing the click. The previous catch path attempted to call `refresh()` while `busy` caused it to return without refreshing.
 
 ### 2. Save + player clarity
 - Persist a newly initialized or migrated campaign immediately and retain current dialogue/choice buttons through refresh.
@@ -22,6 +23,7 @@ Integration owns the RPG/Classic CPU handshake, shared presentation, navigation 
 - Display present-time NPC counts on town locations and a free-travel "Around Town Now" panel.
 - Added keyboard Space to advance authored multi-line scenes while not intercepting focused buttons or text inputs.
 - Corrected the exhibition action copy to say extra points are conditional on victory.
+- Dialogue buttons now state their time cost and expected relationship/reward effects, including when a once-per-day or once-per-period benefit has already been claimed.
 - Added mobile and reduced-motion styling.
 
 ### 3. Regression tests
@@ -30,20 +32,20 @@ Integration owns the RPG/Classic CPU handshake, shared presentation, navigation 
 - CI now gates RPG story + integration + flow tests before the original repository-wide `npm test` suite.
 - Node `--test` RPG suite: **11 tests passing, 0 failing** on GitHub Actions (includes HTTP/static and real service tests).
 - Full `npm test` + TCG Gameplay Regression: **green** on the verified integration commit `fe77ef34fc67af026ac103cf1b9bca9ee5d09b68`, after the concurrently owned v0.59 card-rule updates were fixed. Always inspect the latest head before release.
-- Browser workflow: `.github/workflows/rpg-browser.yml`, `tests/rpg_browser_smoke.js`; independently validates real Chromium play from town to NPC duel through actual Classic server concession, iframe notification, persisted result/refresh, mobile view, and shared CPU/online controls. Chromium job `39014950181` **passed**, generated **five screenshots**. [Browser workflow run](https://github.com/NicolasSorrenti/poketest/actions/runs/39014950181) · [Screenshot artifact](https://github.com/NicolasSorrenti/poketest/actions/runs/39014950181/artifacts/12094571629) (GitHub access required).
+- Browser workflow: `.github/workflows/rpg-browser.yml`, `tests/rpg_browser_smoke.js` + `tests/online_browser_smoke.js` independently validate real Chromium play: town exploration, actual Classic CPU concede via rules API, iframe return, both save/reload *during* a match and afterwards, two consecutive NPC challenges with distinct tokens and rewards, multi-day rollover; two separate real Chromium multiplayer clients join, become Ready, render the shared board, exchange a live chat message, and both receive the final server result. Chromium job `39015397220` **passed**, generated **seven screenshots**. [Browser workflow run](https://github.com/NicolasSorrenti/poketest/actions/runs/39015397220) · [Screenshot artifact](https://github.com/NicolasSorrenti/poketest/actions/runs/39015397220/artifacts/12095030239) (GitHub access required).
 - Static hosting compatibility fix in `server.js`: explicitly serve `rpg_duel_bridge.js`. Actual hosted test catches allowlist regressions which script-only checks missed.
 
 ## Verified / not verified
 
-**Verified:** bridge and campaign reward semantics; actual server HTTP assets; complete simulated multi-day RPG, two NPC matches and story save/load; actual HTTP Classic match completion; independent real Chromium full campaign → NPC encounter → finished Classic duel → iframe return → rewards → refresh with screenshot capture; browser presence of shared CPU/multiplayer interaction controls; latest observed full server Node suite green on the verified v0.59 integration commit.
+**Verified:** bridge and campaign reward semantics; actual server HTTP assets; complete simulated multi-day RPG, two NPC matches and story save/load; actual HTTP Classic match completion; independent real Chromium full campaign → NPC encounter → two finished Classic duels → iframe return → rewards → mid-match and post-match refresh with screenshots; real two-client multiplayer Chromium lobby, shared board, chat and outcome propagation; latest observed full Node + TCG Gameplay regression suites green on contemporary branch commits.
 
-**Pending:** production Render save/reconnect behaviour, full human-played complete TCG duel using only browser UI (Chromium test finishes legally via the real authoritative concede endpoint), WebKit and additional real mobile-device verification, visual screenshot *comparisons* / golden baselines (screenshots are captured for human review), human-vs-human multiplayer browser sessions, and sustained 90-day campaign endurance runs.
+**Pending:** production Render save/reconnect behaviour, full human-played complete TCG duel using only browser UI (Chromium tests finish legally via the real authoritative concede endpoint), WebKit and additional real mobile-device verification, visual screenshot *comparisons* / golden baselines (screenshots are captured for human review), prolonged multiplayer action/decision sequences beyond ready/chat/concede, and sustained 90-day campaign endurance runs.
 
 **Known limitations:** The local Node duel service keeps in-progress sessions in server memory. Restarting that service may require replaying an in-progress match. Campaign saves are still browser-local. NPC schedules currently permit one character to appear in multiple places in one period; schedule semantics belong to the RPG agent, not this integration change.
 
 ## Next priorities
 1. Run production Render smoke/reconnect check and verify server restart recovery; investigate long-term persistence without modifying the card-rules authority.
-2. Extend real-browser tests to follow legal opening setup, play a full attack/prize sequence and test both sides of an actual online room with human/browser action automation.
+2. Extend real-browser tests to follow legal opening setup and play full attack/prize sequences on CPU and both online clients (two-client lobby, chat, and completion already verified).
 3. Review uploaded screenshots for clipping, placement and differences; establish stable desktop/mobile screenshot baselines and accessibility checks.
 4. Coordinate with the RPG agent on day-time scheduling semantics and tournament progression; do not rewrite their subsystem inside integration work.
 5. Coordinate with art on final image backgrounds/portraits and missing-art fallbacks.
