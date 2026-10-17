@@ -5,10 +5,11 @@
 const {argumentsOf,arena,wilson}=require('./benchmark_cpu');
 const DEFAULT_DECKS=['blackout','brushfire'];
 function parse(argv){
- const o={pairs:25,maxTurns:120,seed:41093,decks:DEFAULT_DECKS,target:0.05,strict:false};
+ const o={pairs:25,maxTurns:120,seed:41093,decks:DEFAULT_DECKS,target:0.05,strict:false,graduatedNoise:false};
  for(let i=0;i<argv.length;i++){
   const key=argv[i];
   if(key==='--strict'){o.strict=true;continue;}
+  if(key==='--graduated-noise'){o.graduatedNoise=true;continue;}
   if(!['--pairs','--max-turns','--seed','--decks','--target'].includes(key)||i===argv.length-1)
    throw Error('Unknown or incomplete argument: '+key);
   const v=argv[++i];
@@ -31,7 +32,8 @@ function audit(o){
    const params=argumentsOf(['--pairs',String(o.pairs),'--max-turns',String(o.maxTurns),
     '--seed',String(o.seed+upper*100019+di*7907),
     '--left-level',String(upper),'--right-level',String(upper-1),
-    '--left-deck',deck,'--right-deck',deck,'--target-upset-rate',String(o.target)]);
+    '--left-deck',deck,'--right-deck',deck,'--target-upset-rate',String(o.target),
+    '--left-graduated-noise',String(o.graduatedNoise),'--right-graduated-noise',String(o.graduatedNoise)]);
    const result=arena(params);
    const row={deck,higherLevel:upper,lowerLevel:upper-1,total:result.totalMatches,
     higherWins:result.wins,lowerWins:result.losses,draws:result.drawsOrTimeouts,
@@ -49,7 +51,7 @@ function audit(o){
    confidence95:bounds,target:o.target,observedUnderTarget:rate!==null&&rate<=o.target,
    verifiedUnderTarget:decisive>0&&bounds.upper<=o.target});
  }
- return {target:o.target,perDeck:byDeck,aggregatedAdjacent:totals,
+ return {target:o.target,graduatedNoise:o.graduatedNoise,perDeck:byDeck,aggregatedAdjacent:totals,
   allPairsObservedUnderTarget:totals.every(x=>x.observedUnderTarget),
   allPairsVerifiedUnderTarget:totals.every(x=>x.verifiedUnderTarget),
   totalGames:totals.reduce((a,x)=>a+x.total,0),
