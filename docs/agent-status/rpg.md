@@ -34,14 +34,15 @@ The RPG/VN agent owns `rpg.js`, `rpg_story.js`, `rpg_schedules.js`, `rpg_world.j
 - Added `tests/rpg_rival_arc.test.js`, UI tests for route progression, a real bridged duel, and mid-dialogue save/reload, and an RPG-specific GitHub Actions workflow `.github/workflows/rpg-regression.yml`.
 
 ## Tests and QA
-- Added `tests/rpg_world.test.js` (11 tests) and `tests/rpg_world_ui.test.js` (5 browser-controller smoke tests).
-- Added `npm run test:rpg` for those tests plus the existing 11 story/schedules checks.
-- **40/40 scenarios passed** in isolated JavaScript execution of actual source/test contents through a test shim (rerun required after final edits); syntax, graph consistency, DOM ID bindings and all 16 encounter reachability windows also checked. This is **not** a claim of a completed native Node test run or a real-browser Render playthrough.
+- Added `tests/rpg_world.test.js` (11 tests), `tests/rpg_world_ui.test.js` (8 controller smoke tests) and `tests/rpg_rival_arc.test.js` (10 route tests).
+- `npm run test:rpg` runs 40 focused regression tests including the existing 11 story/schedule checks; `.github/workflows/rpg-regression.yml` now runs it on relevant PRs and main pushes.
+- **40/40 scenarios passed** in isolated JavaScript execution of actual source/test contents through a test shim; syntax, graph consistency, DOM ID bindings and all 16 encounter reachability windows also checked. This is **not** a claim of a completed native Node test run or a real-browser Render playthrough.
 - Need follow-up testing: `npm run test:rpg` in an actual checkout, mobile browser responsiveness, real TCG completed duel end-to-end, performance/save behavior across 90 days, and missing art files if the user has not committed the art ZIP.
 
 ## Integration contracts
-- The browser loads `rpg_story.js` → `rpg_schedules.js` → `rpg_world.js` → `rpg_duel_bridge.js` → `rpg.js`.
+- The browser loads `rpg_story.js` → `rpg_schedules.js` → `rpg_world.js` → `rpg_rival_arc.js` → `rpg_duel_bridge.js` → `rpg.js`.
 - `NeoRpgWorld`: `hydrate(state)`, `activitiesAt(state)`, `doActivity(state,id,people)`, `availableEncounters(state,people)`, `completeEncounter(state,id,index,people)`, `newDay(state,days)`, `afterDuel(state,receipt)`, `validate()`.
+- `NeoRpgRivalArc`: `hydrate(state)`, `available(state,people)`, `linesFor(state,id)`, `finish(state,id,index,people)`, `settleDuel(state,id,receipt)`, `validate()`. Trials store `arcEpisode` on the pending Classic duel; its authoritative result is applied once before the RPG clock advances.
 - World functions mutate only the RPG save object; the controller advances the clock afterward. For NPC bond changes, `relationships` and legacy `bonds` are updated consistently.
 - All dialogue and custom event IDs are fixed ASCII strings. No copyrighted Tag Force content or external sprites were added.
 
