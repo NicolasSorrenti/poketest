@@ -73,9 +73,10 @@ for(const id of require('./neo_v063_pool').ids){assert.equal(FORMAT.isAllowed(id
  assert.equal(g.players[0].active.attachedTrainers.length,0);
 }
 {
- const g=game();g.players[0].hand=['neo4-101'];send(g,0,'play_trainer',{handIndex:0});
- choice(g,['slot:0']);send(g,0,'end_turn');
+ const g=game();g.players[0].bench.push(U('base1-58'));g.players[0].hand=['neo4-101'];send(g,0,'play_trainer',{handIndex:0});
+ choice(g,['slot:1']);send(g,0,'end_turn');
  assert.ok(g.players[0].discard.includes('neo4-101'),'Benched Magnifier also expires without attacking');
- assert.equal(g.players[0].bench[0].attachedTrainers.length,1,'Other existing Berry remains');
+ assert.equal(g.players[0].bench[0].attachedTrainers.length,1,'Existing Berry on another Bench Pokémon remains');
+ assert.equal(g.players[0].bench[1].attachedTrainers.length,0,'Magnifier left its Bench host');
 }
 console.log('PASS v0.63: Balloon Berry zero retreat/energy conservation, Super Scoop Up full return and promotion, Magnifier ignore Resistance/expiry');
