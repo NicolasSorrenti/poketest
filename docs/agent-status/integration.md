@@ -51,3 +51,10 @@ Integration owns the RPG/Classic CPU handshake, shared presentation, navigation 
 ## Safe git practice
 
 All changes use incremental commits to `main` via SHA-checked file updates, never force-pushing, and preserving concurrent independent agent changes. Re-check workflow conclusions and current branch head before release.
+
+## Focused UI save / active-duel lock follow-up (2026-10-17)
+
+- Town-radar travel now saves location immediately; reload no longer reverts this navigation path.
+- The RPG locks the deck selector and navigation as soon as an NPC duel opens, including on reload. The onchange handler rejects a late programmatic deck replacement.
+- `tests/rpg_save_lock.test.js` covers town travel, refreshed state, NPC challenge, duel lock, late deck changes, final result, relationship progress, token cleanup and refreshed return state.
+- **Verified:** a focused simulated-DOM play session evaluated the actual feature-branch `rpg.js` and `rpg_story.js` through an entire NPC duel and passed. JavaScript syntax compiled. **Not verified:** full real-browser gameplay/screenshots or hosted/multiplayer end-to-end scenarios. Main's separate Neo rules CI is failing on `test_neo_batch_v059.js`; this integration change does not modify that subsystem.
