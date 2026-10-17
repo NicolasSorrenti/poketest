@@ -70,6 +70,37 @@ the problem, rather than resolving it:
 **Every matchup fails the 5% acceptance target.** The benchmark is a diagnostic,
 not a mechanism for fabricating passing outcomes.
 
+## Graduated decision-quality calibration (experimental)
+
+The base five levels were originally separated mainly by decision temperature,
+which frequently changes **action ordering** rather than whether a Pokémon can
+attack, evolve or attach an Energy. An optional `graduatedNoise` skill profile
+widens the selection of plausible legal actions and makes poor strategic choices
+more frequent on lower levels; it never adds illegal moves, changes decks, or
+alters opponent RNG. Champion remains deterministic.
+
+Audit side-by-side with the same seed cohort:
+
+```sh
+node benchmark_cpu_tiers.js --pairs 40 --max-turns 120 --seed 71839 --decks blackout,brushfire
+node benchmark_cpu_tiers.js --pairs 40 --max-turns 120 --seed 71839 --decks blackout,brushfire --graduated-noise
+```
+
+| Adjacent matchup | Original lower wins / decisive | Mild graduated experiment | Wider graduated experiment |
+| --- | ---: | ---: | ---: |
+| Beginner over Casual | 69/159 (43.4%) | 49/160 (30.6%) | 70/160 (43.8%) |
+| Casual over Experienced | 59/159 (37.1%) | 22/159 (13.8%) | 25/160 (15.6%) |
+| Experienced over Expert | 86/160 (53.8%) | 67/160 (41.9%) | 47/160 (29.4%) |
+| Expert over Champion | 86/160 (53.8%) | 86/159 (54.1%) | 80/159 (50.3%) |
+
+All have matched deck/seed/seat protocols, but the two noise experiments ran
+in different policy revisions (the wider parameters supersede the mild ones).
+Even the wider version **does not meet the user's 5% ceiling**. In particular
+Champion and Expert remain statistically indistinguishable and some beginner
+decisions get worse without benefiting the next level. Therefore **leave
+graduatedNoise disabled by default**, and stop relying on noise as the primary
+solution. Higher tiers need meaningful gameplay planning and error diagnosis.
+
 ## Tactical experiments (all opt-in)
 
 - `prizeRace`: final-Prize attacks and safe emergency retreats.
