@@ -24,3 +24,11 @@ These are source-backed extracts of original generated Neo Harbor art sheets, **
 3. Neutral/happy/embarrassed/angry/surprised/flirty *full VN portraits* with consistent silhouettes and costumes.
 4. Real frame-by-frame overworld sprites and independent high-res story CGs for Shiori and Kaede.
 5. After art review, integrate approved art selectively and run live browser/mobile screenshot checks.
+
+
+## 2026-10-17 — ZIP build integration prepared
+- `scripts/install-rpg-art.js` safely extracts `asset-packs/neo_harbor_art_expansion_2026-10-17.zip` during package postinstall, explicit build and prestart using Node built-ins.
+- 105 archive files in approved `rpg-assets/` paths were locally unpacked successfully and re-verified idempotently from the original 10.6 MB ZIP. All tracked canonical root portraits are preserved.
+- Five automated tests cover idempotence, overwrite refusal, zip-slip, checksum pinning, symlink safety, and missing-archive behavior. Registered in Node CI.
+- `docs/ART_PACK_INSTALL.md` explains the one manual GitHub ZIP upload.
+- **Publication boundary:** This branch commits the build configuration and test harness only. Until the ZIP itself is uploaded to `asset-packs/`, GitHub and deployed sites do not contain the new binaries. Builds continue to show existing artwork.

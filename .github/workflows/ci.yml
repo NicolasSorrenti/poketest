@@ -11,5 +11,5 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - run: node --test tests/rpg_story.test.js tests/rpg_integration.test.js tests/rpg_flow.test.js tests/rpg_save_lock.test.js
+      - run: node --test tests/rpg_story.test.js tests/rpg_integration.test.js tests/rpg_flow.test.js tests/rpg_save_lock.test.js tests/rpg_art_install.test.js
       - run: npm test
