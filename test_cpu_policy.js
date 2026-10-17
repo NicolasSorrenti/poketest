@@ -330,6 +330,26 @@ const settings={level:3,personality:'balanced',side:1,seed:47};
  assert.ok(trainerNames(champion).includes('Professor Oak'),
   'Champion can resume Oak when enough cards remain to draw another turn');
 }
+{
+ // Verify the opt-in planner on an actual post-setup game, not only during
+ // initial hand selection. Opponent concealed cards and future RNG cannot be
+ // inputs to a strategic preference.
+ let game=createGame({decks:[deck,deck],seed:12093,format:'classic'});
+ game=AI.driveSide(game,{side:0,level:5,seed:87}).game;
+ game=AI.driveSide(game,{side:1,level:5,seed:91}).game;
+ assert.equal(game.phase,'game');
+ const settings={side:game.turn,level:5,seed:99,planning:true};
+ const first=AI.chooseAction(game,settings);
+ assert.ok(first?.command,'Planning enabled must produce a legal action');
+ const hidden=structuredClone(game);
+ const unseen=hidden.players[1-game.turn];
+ if(unseen.deck.length&&unseen.hand.length)
+  [unseen.deck[0],unseen.hand[0]]=[unseen.hand[0],unseen.deck[0]];
+ hidden.rngState=(hidden.rngState^0x9e3779b9)>>>0;
+ const after=AI.chooseAction(hidden,settings);
+ assert.deepEqual(after?.command,first.command,
+  'Midgame forecast must ignore unrevealed opposing hand/deck and future flips');
+}
 let duels=0,decisions=0,attacks=0,energy=0,evolutions=0,trainer=0;
 for(let seed=1;seed<=4;seed++){
  let game=createGame({decks:[deck,deck],seed:seed*1789,format:'classic'});
