@@ -173,13 +173,15 @@ let cases=0;
 }
 {
  const g=ready();g.players[0].active.energies=[id.fight];
- const special='neo1-104'; // Darkness Energy: bonus damage requires a handler.
+ const special='neo1-104'; // Darkness Energy now has a real damage and recoil handler.
  g.players[1].active.energies=[special];
- reject(g,0,'attack',{attackIndex:0},/modifiers/);
+ change(g,0,'attack',{attackIndex:0});
+ assert.ok(g.players[1].active.damage>=20,'Darkness host still receives normal attack damage');
  const powered=[...CATALOG.values()].find(c=>c.supertype==='Pokémon'&&(c.abilities||[]).length&&(c.subtypes||[]).includes('Basic'));
  assert.ok(powered);
- g.players[1].bench.push(sampleUnit('rat'));g.players[1].bench.at(-1).id=powered.id;
- reject(g,0,'attack',{attackIndex:0},/Power requires/);
+ const unsupported=ready();unsupported.players[0].active.energies=[id.fight];
+ unsupported.players[1].bench.push(sampleUnit('rat'));unsupported.players[1].bench.at(-1).id=powered.id;
+ reject(unsupported,0,'attack',{attackIndex:0},/Power requires/);
  cases++;
 }
 console.log(`PASS headless duel: ${cases} comprehensive groups, 2,000 adversarial command attempts, private two-human room setup, full simple actions, Trainer choices, KO and opponent-turn promotion`);

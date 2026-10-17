@@ -12,6 +12,7 @@
  const DISCOVERY=(typeof require==='function'?require('./neo_discovery_attack_core'):null);
  const THEME=(typeof require==='function'?require('./theme_completion_attacks'):null);
  const NEO40=(typeof require==='function'?require('./neo_attack_batch_v040'):null);
+ const NEO46=(typeof require==='function'?require('./neo_attack_batch_v046'):null);
  const conditions=new Set(['Poisoned','Asleep','Paralyzed','Confused']);
  const patterns=[
   {kind:'coin-times',re:/^Flip (\d+) coins\. This attack does (\d+) damage times the number of heads\.$/i},
@@ -47,6 +48,7 @@
   if(!attack||typeof attack!=='object')return null;
   // Specific complete card families take priority over broad damage/coin patterns.
   // This prevents a partial broad-pattern match from hiding a valid exact script.
+  if(NEO46){const nextNeo=NEO46.compile(attack);if(nextNeo)return nextNeo;}
   if(NEO40){const nextNeo=NEO40.compile(attack);if(nextNeo)return nextNeo;}
   if(THEME){const theme=THEME.compile(attack);if(theme)return theme;}
   if(NEO){const neo=NEO.compile(attack);if(neo)return neo;}
@@ -185,7 +187,7 @@
    }
    case 'switch-defender':case 'switch-attacker':case 'switch-self':return {damage:program.damage,forceSwitch:program.kind,flips:[]};
    case 'draw-one':return {damage:0,draw:1,flips:[]};
-   default:if(NEO40&&program.kind.startsWith('neo40:'))return NEO40.resolve(program,flip,context);if(THEME&&program.kind.startsWith('theme:'))return THEME.resolve(program,flip,context);if(DISCOVERY&&program.kind.startsWith('discovery:'))return DISCOVERY.resolve(program,flip,context);if(NEO&&program.kind.startsWith('neo:'))return NEO.resolve(program,flip,context);if(GYM&&program.kind.startsWith('gym:'))return GYM.resolve(program,flip,context);if(FINAL&&FINAL.manifest.some(x=>x.kind===program.kind))return FINAL.resolve(program,flip,context);if(CLASSIC)return CLASSIC.resolve(program,flip,context);throw Error('Unsupported attack program');
+   default:if(NEO46&&program.kind.startsWith('neo46:'))return NEO46.resolve(program,flip,context);if(NEO40&&program.kind.startsWith('neo40:'))return NEO40.resolve(program,flip,context);if(THEME&&program.kind.startsWith('theme:'))return THEME.resolve(program,flip,context);if(DISCOVERY&&program.kind.startsWith('discovery:'))return DISCOVERY.resolve(program,flip,context);if(NEO&&program.kind.startsWith('neo:'))return NEO.resolve(program,flip,context);if(GYM&&program.kind.startsWith('gym:'))return GYM.resolve(program,flip,context);if(FINAL&&FINAL.manifest.some(x=>x.kind===program.kind))return FINAL.resolve(program,flip,context);if(CLASSIC)return CLASSIC.resolve(program,flip,context);throw Error('Unsupported attack program');
   }
  }
  return Object.freeze({compile,resolve});

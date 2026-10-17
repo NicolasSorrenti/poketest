@@ -164,6 +164,9 @@ function retreatCost(g,side,u){
 }
 function jawClampLocks(g,side){const u=g.players[side].active;return Boolean(u?.noSwitch?.expires>g.turnSerial&&g.players[1-side].active?.id===u.noSwitch.sourceId);}
 function allowTurn(g,side){if(g.phase!=='game'||g.over)fail('Duel is not active');if(side!==g.turn)fail('Not your turn');}
+function specialEnergyCount(g,u,name){return u.energies.filter(id=>card(g,id).name===name+' Energy').length;}
+function isDarkType(g,u){return effectiveCard(g,u).types?.includes('Darkness')||card(g,u.id).name.startsWith('Dark ');}
+function isMetalType(g,u){return effectiveCard(g,u).types?.includes('Metal');}
 function attackPool(g,u){const pool=[];
  for(const id of u.energies){
   // Erika's Oddish converts each attached Energy card into one Grass Energy,
@@ -692,7 +695,7 @@ function performAction(g,side,cmd){
   if(u.status==='Asleep'||u.status==='Paralyzed'||(p.confusedRetreatFailed&&u.status==='Confused')||hasActiveEffect(u,'noRetreat',g)&&jawClampLocks(g,side))fail('Cannot retreat');
   const cost=retreatCost(g,side,u);
   if(u.energies.length<cost)fail('Insufficient retreat Energy');
-  if(u.energies.some(id=>(card(g,id).subtypes||[]).includes('Special')&&!['Double Colorless Energy','Full Heal Energy','Potion Energy'].includes(card(g,id).name))||u.attachedTrainers.some(t=>!['Berry','Counterattack Claws',"Brock's Protection","Koga's Ninja Trick","Sabrina's ESP","Charity"].includes(card(g,t.id).name)))fail('Retreat modifiers require an effect handler');
+  if(u.energies.some(id=>(card(g,id).subtypes||[]).includes('Special')&&!['Double Colorless Energy','Full Heal Energy','Potion Energy','Metal Energy','Darkness Energy'].includes(card(g,id).name))||u.attachedTrainers.some(t=>!['Berry','Counterattack Claws',"Brock's Protection","Koga's Ninja Trick","Sabrina's ESP","Charity"].includes(card(g,t.id).name)))fail('Retreat modifiers require an effect handler');
   if(cost&&u.energies.length>cost){
    g.nextDecisionId++;
    g.pendingDecision=makeDecision({id:`retreat:${g.nextDecisionId}`,actor:side,kind:'energy-discard',label:`Select ${cost} Energy card(s) for retreat`,options:u.energies.map((id,i)=>({id:`energy:${i}`,label:card(g,id).name})),min:cost,max:cost,optional:true});
@@ -1004,7 +1007,7 @@ function resolveAttack(g,side,index,chosenBench,energyPicks,extra={}){
  }
 
  if(!canPayEnergy(a.cost||[],attackPool(g,u)) && !(isClassicRules(g)&&card(g,u.id).name==='Ditto'&&CLASSIC_POWERS.enabled(g,u,'Transform')&&u.energies.reduce((count,id)=>count+(card(g,id).name==='Double Colorless Energy'?2:1),0)>=(a.cost||[]).length))fail('Insufficient attack Energy');
- if(f.active.attachedTrainers.some(t=>!['Defender','PlusPower','Berry','Counterattack Claws',"Brock's Protection","Koga's Ninja Trick","Sabrina's ESP","Charity"].includes(card(g,t.id).name))||f.active.energies.some(id=>(card(g,id).subtypes||[]).includes('Special')&&!['Double Colorless Energy','Full Heal Energy','Potion Energy'].includes(card(g,id).name)))fail('Damage or Energy modifiers require effect handlers');
+ if((program.kind!=='neo46:plunder'&&f.active.attachedTrainers.some(t=>!['Defender','PlusPower','Berry','Counterattack Claws',"Brock's Protection","Koga's Ninja Trick","Sabrina's ESP","Charity"].includes(card(g,t.id).name)))||f.active.energies.some(id=>(card(g,id).subtypes||[]).includes('Special')&&!['Double Colorless Energy','Full Heal Energy','Potion Energy','Metal Energy','Darkness Energy'].includes(card(g,id).name)))fail('Damage or Energy modifiers require effect handlers');
  const usesChoice=['bench-target','switch-attacker','switch-self','target-any','target-any-coin','drag-off'].includes(program.kind);
  if(usesChoice){const owner=program.kind==='switch-self'?p:f;
   if(['target-any','target-any-coin'].includes(program.kind)){if(!Number.isInteger(chosenBench)||chosenBench< -1||chosenBench>=f.bench.length)fail('Invalid opponent target');}
@@ -1084,6 +1087,13 @@ function resolveAttack(g,side,index,chosenBench,energyPicks,extra={}){
 
  // Flytrap switches the Defending Pokémon BEFORE calculating 20 attack damage.
  if(roll.gymFlytrap){const i=Number(extra.gymLastData?.bench?.[0]?.slice(6));if(!Number.isInteger(i)||!f.bench[i])fail('Illegal Flytrap replacement');const old=f.active;f.active=f.bench.splice(i,1,old)[0];STATUS.clearConditions(old);clearBenchEffects(old);}
+ // Houndour Plunder discards ALL attached Trainer cards on the Defending
+ // Pokémon BEFORE damage/Defender/Charity calculations. Card ownership stays
+ // with the defending player. No Trainer can remain attached and discarded.
+ if(roll.discardDefenderTrainers){
+  f.discard.push(...f.active.attachedTrainers.map(t=>t.id));
+  f.active.attachedTrainers=[];
+ }
  const defCard=effectiveCard(g,f.active),shield=hasActiveEffect(f.active,'shield',g)?f.active.shield:null;
  let baseDamage=roll.damage;
  // Focus Energy doubles the indicated base attack on the following turn only.
@@ -1104,11 +1114,21 @@ function resolveAttack(g,side,index,chosenBench,energyPicks,extra={}){
  if(a.name==='Slash'&&u.swordsDance===g.turnSerial)baseDamage=60;
  if(u.id==='gym2-10'&&u.gymGiantGrowth&&a.name==='Pound')baseDamage=30;
  if(roll.gymGroupAttack)baseDamage=10*(allPokemon(p).filter(x=>card(g,x.id).name==="Koga's Zubat").length+(extra.gymLastData?.found?.length||0));
+ // Metal Energy: on a non-Metal attacker it reduces damage before
+ // Weakness/Resistance; on the defender it reduces damage AFTER those rules.
+ // Darkness Energy provides a +10 attack bonus after Weakness/Resistance.
+ const metalOnAttacker=specialEnergyCount(g,u,'Metal');
+ if(metalOnAttacker&&!isMetalType(g,u))baseDamage=Math.max(0,baseDamage-10*metalOnAttacker);
  let dmg=roll.ignoreWR?baseDamage:calculateDamage(c,defCard,baseDamage,f.active,{
   ignoreResistance:roll.ignoreResistance||(g.stadium&&card(g,g.stadium.id).name==='Pewter City Gym'&&c.name.startsWith("Brock's ")),
   ignoreWeakness:g.stadium&&card(g,g.stadium.id).name==='Cinnabar City Gym'&&c.types?.includes('Water')&&defCard.name.startsWith("Blaine's "),
   resistancePenalty:g.stadium&&card(g,g.stadium.id).name==='Resistance Gym'?10:30
  });
+ if(dmg>0){
+  dmg=Math.max(0,dmg-10*specialEnergyCount(g,f.active,'Metal'));
+  // The Darkness boost applies only when the attack actually damages.
+  if(dmg>0)dmg+=10*specialEnergyCount(g,u,'Darkness');
+ }
  if(isClassicRules(g)){
   if(!roll.ignoreDefendingEffects&&CLASSIC_POWERS.enabled(g,f.active,'Strange Barrier')&&c.subtypes?.includes('Basic')&&dmg>=20)dmg=10;
   if(!roll.ignoreDefendingEffects&&CLASSIC_POWERS.enabled(g,f.active,'Invisible Wall')&&dmg>=30)dmg=0;
@@ -1725,6 +1745,15 @@ function finishTurn(g){
   u.damage+=outcome.poisonDamage;
   if(outcome.poisonDamage)log(g,`${card(g,u.id).name} takes 10 Poison damage.`);
   if(outcome.woke)log(g,`${card(g,u.id).name} woke up.`);
+ }
+ // Darkness Energy damages non-Dark hosts at the end of EACH turn,
+ // including when the Energy is on a Benched Pokémon.
+ for(const owner of g.players)for(const target of allPokemon(owner)){
+  const count=specialEnergyCount(g,target,'Darkness');
+  if(count&&!isDarkType(g,target)){
+   target.damage+=10*count;
+   log(g,`${card(g,target.id).name} took ${count*10} Darkness Energy recoil.`);
+  }
  }
  if(!knockOuts(g,'advance'))advanceTurn(g);
 }
