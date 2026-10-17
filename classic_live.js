@@ -14,6 +14,7 @@
  const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
  let modalDecisionId=null,lastFieldDecisionId=null;
  let token=null,current=null,selectedHand=null,targetMode=null,busy=false,decisionSelection=new Set();
+ let handOpen=false,powersOpen=false,logOpen=false,lastCoinSeq=null,coinQueue=[],coinTimer=null,lastKoMessage="";
  const command=(type,payload={})=>({type,payload});
  async function api(path,opts={}){
   const headers={'Content-Type':'application/json',...(token?{'X-Duel-Token':token}:{})};
@@ -35,20 +36,61 @@
  function clearError(){$('error').textContent='';$('error').classList.add('hidden');}
  async function send(action){if(!current||busy)return;busy=true;clearError();try{
   const result=await api('action',{method:'POST',body:JSON.stringify({revision:current.revision,command:action})});
-  preview.hide();current=result;selectedHand=null;targetMode=null;decisionSelection.clear();render();
- }catch(e){fail(e);}finally{busy=false;}}
+  preview.hide();current=result;if(action.type!=='choose')setHandOpen(false);selectedHand=null;targetMode=null;decisionSelection.clear();render();
+ }catch(e){fail(e);}finally{busy=false;render();}}
  async function start(){if(busy)return;busy=true;$('startupError').textContent='';try{
   const response=await api('create',{method:'POST',body:JSON.stringify({deck:$('deck').value,opponent:$('opponent').value,...($('deck').value==='custom'?{customDeck:JSON.parse(localStorage.getItem('neoCampusCustomGymDeck')||'null')}: {})})});
   feedback.reset();opponentActivity.clear();combat.reset();token=response.token;sessionStorage.setItem('neoClassicLiveToken',token);current=response;
-  selectedHand=null;targetMode=null;decisionSelection.clear();render();
+  selectedHand=null;targetMode=null;decisionSelection.clear();handOpen=false;powersOpen=false;logOpen=false;lastCoinSeq=null;lastKoMessage="";render();
  }catch(e){$('startupError').textContent=e.message;}finally{busy=false;}}
+
+ function setHandOpen(open){handOpen=!!open;$('handTray').classList.toggle('hidden',!handOpen);$('handPanel').classList.toggle('tray-open',handOpen);$('handToggle').setAttribute('aria-expanded',String(handOpen));$('handToggle').setAttribute('aria-label',handOpen?'Close hand':'Open hand');if(handOpen)setPowersOpen(false);}
+ function setPowersOpen(open){powersOpen=!!open;$('powerDrawer').classList.toggle('hidden',!powersOpen);$('powersToggle').setAttribute('aria-expanded',String(powersOpen));if(powersOpen)setHandOpen(false);}
+ function setLogOpen(open){logOpen=!!open;$('logDrawer').classList.toggle('hidden',!logOpen);$('logToggle').setAttribute('aria-expanded',String(logOpen));}
+ function renderHandPeek(ids){const root=$('handPeek');root.replaceChildren();
+  if(!ids?.length){const t=document.createElement('span');t.className='hand-peek-empty';t.textContent='Empty';root.append(t);return;}
+  for(const [i,id] of ids.slice(0,3).entries()){const c=document.createElement('span');c.className='peek-card peek-card-'+i;const src=picture(id);if(src){const img=document.createElement('img');img.src=src;img.alt='';c.append(img);}else c.textContent='🎴';root.append(c);}
+ }
+ function pendingPrizeChoice(){const d=current?.view?.pendingDecision;return d?.kind==='prize-card'&&d.actor===0?d:null;}
+ function choosePrize(id){const d=pendingPrizeChoice();if(!d||busy||!d.options?.some(o=>o.id===id))return;send(command('choose',{decisionId:d.id,selected:[id]}));}
+ function renderPrizes(){const d=pendingPrizeChoice();if(!d)return;
+  const section=$('prizeRail').querySelectorAll('.prize-group')[1];const grid=section?.querySelector('.prize-grid');if(!grid)return;
+  section.classList.add('prize-awaiting');grid.replaceChildren();grid.setAttribute('aria-label','Choose your Prize');
+  const choices=new Map((d.options||[]).map(o=>[Number(/^prize:(\d+)$/.exec(o.id)?.[1]),o]));
+  for(let i=0;i<6;i++){const opt=choices.get(i);if(!opt){const empty=document.createElement('span');empty.className='prize-back prize-taken';grid.append(empty);continue;}
+   const b=btn(String(i+1),()=>choosePrize(opt.id),'prize-back prize-select',busy);b.title='Take Prize '+(i+1);grid.append(b);}
+ }
+ function renderPrizeFallback(){const d=pendingPrizeChoice(),box=$('prizeChoicePanel');box.replaceChildren();box.classList.toggle('hidden',!d);if(!d)return;
+  const title=document.createElement('strong');title.textContent='🎁 Choose a Prize';const info=document.createElement('span');info.textContent='Select a highlighted Prize or a number here';
+  const choices=document.createElement('div');choices.className='prize-choices';for(const o of d.options||[]){const n=Number(/^prize:(\d+)$/.exec(o.id)?.[1]);choices.append(btn('🎴 '+(n+1),()=>choosePrize(o.id),'prize-option',busy));}box.append(title,info,choices);
+ }
+ function openDiscard(owner){const u=current?.view?.players?.[owner];if(!u)return;$('pileTitle').textContent=(owner===0?'You':'Classic CPU')+' — discard pile ('+u.discard.length+')';
+  const root=$('pileCards');root.replaceChildren();if(!u.discard.length)root.textContent='Discard pile is empty.';
+  for(const id of u.discard){const c=card(id),b=btn('',()=>preview.inspect(id),'pile-card'),src=picture(id);if(src){const img=document.createElement('img');img.src=src;img.alt='';b.append(img);}const n=document.createElement('span');n.textContent=c.name;b.append(n);root.append(b);} $('pileModal').classList.remove('hidden');
+ }
+ function renderCoin(view){const flips=view.coinFlips||[];
+  if(lastCoinSeq===null){lastCoinSeq=flips.at(-1)?.seq||0;return;}
+  const news=flips.filter(x=>x.seq>lastCoinSeq);if(news.length){lastCoinSeq=news.at(-1).seq;coinQueue.push(...news.slice(-12));pumpCoin();}
+ }
+ function pumpCoin(){if(coinTimer||!coinQueue.length)return;const f=coinQueue.shift(),el=$('coinFx');el.textContent='🪙 '+String(f.result).toUpperCase();el.classList.remove('hidden','coin-animate');void el.offsetWidth;el.classList.add('coin-animate');coinTimer=setTimeout(()=>{el.classList.add('hidden');coinTimer=null;pumpCoin();},800);}
+ function renderCPULog(view){
+  const list=$('actionTimeline');list.replaceChildren();
+  const lines=(view.messages||[]).slice(0,45);
+  if(!lines.length){const empty=document.createElement('li');empty.className='timeline-empty';empty.textContent='Match events will appear here.';list.append(empty);return;}
+  for(const text of lines){const row=document.createElement('li');row.className='timeline-entry rule';const icon=document.createElement('span');icon.className='timeline-icon';icon.textContent=/Coin flip/i.test(text)?'🪙':/Knocked Out|wins!/i.test(text)?'💥':/damage|attack|used /i.test(text)?'⚔':'•';const msg=document.createElement('span');msg.textContent=text;row.append(icon,msg);list.append(row);}
+ }
+ function renderKnockOut(view){const messages=view.messages||[];const relevant=messages.filter(x=>/Knocked Out|wins by forfeit|wins!/i.test(x));const latest=relevant.at(-1)||'';
+  if(!lastKoMessage){lastKoMessage=latest;return;}
+  if(latest&&latest!==lastKoMessage){const el=$('koFx');el.textContent='💥 '+latest;el.classList.remove('hidden');clearTimeout(el._dismiss);el._dismiss=setTimeout(()=>el.classList.add('hidden'),2400);lastKoMessage=latest;}
+ }
+
  function clearChoiceUi(){
   const box=$('decisionBox'),dock=$('choiceDock');if(box.parentElement!==dock)dock.append(box);
   $('choiceModal').classList.add('hidden');$('choiceModal').setAttribute('aria-hidden','true');
   $('fieldChoiceBar').classList.add('hidden');modalDecisionId=null;lastFieldDecisionId=null;
  }
- function newDuel(){clearChoiceUi();opponentActivity.clear();combat.reset();feedback.reset();preview.hide();token=null;current=null;selectedHand=null;targetMode=null;sessionStorage.removeItem('neoClassicLiveToken');render();}
- function setTarget(type,payload,title,benchOnly=false){preview.hide();targetMode={type,payload,title,benchOnly};render();}
+ function newDuel(){clearChoiceUi();opponentActivity.clear();combat.reset();feedback.reset();preview.hide();token=null;current=null;selectedHand=null;targetMode=null;handOpen=false;powersOpen=false;logOpen=false;document.body.classList.remove('duel-active','cpu-match');sessionStorage.removeItem('neoClassicLiveToken');render();}
+ function setTarget(type,payload,title,benchOnly=false){preview.hide();setHandOpen(false);targetMode={type,payload,title,benchOnly};render();}
  function cancelTarget(){targetMode=null;selectedHand=null;preview.hide();render();}
  function pokemonNode(u,side,slot){
   const b=document.createElement('button');b.className='poke'+(u.damage>=Number(card(u.id).hp)?' broken':'');
@@ -118,7 +160,7 @@
   el.append(btn('Inspect selected card',()=>preview.inspect(us.hand[idx])));
  }
  function renderDecisions(){const v=current.view,el=$('decisionBox'),title=$('decisionTitle'),description=$('decisionText'),opts=$('decisionOptions'),acts=$('decisionActions');
-  const d=v.pendingDecision,field=fieldDecision(),showModal=!!(d&&d.actor===0&&!field&&!targetMode);
+  const d=v.pendingDecision,field=fieldDecision(),prizeChoice=!!pendingPrizeChoice(),showModal=!!(d&&d.actor===0&&!field&&!targetMode&&!prizeChoice);
   const destination=showModal?$('choiceModalContent'):$('choiceDock');
   if(el.parentElement!==destination)destination.append(el);
   $('choiceModal').classList.toggle('hidden',!showModal);
@@ -134,6 +176,7 @@
    description.textContent='Click an eligible Pokémon in your Active or Bench area to complete this action.';
    acts.append(btn('Cancel selection (Esc)',cancelTarget,'cancel-target'));return;}
   if(d&&d.actor===0){el.classList.add('active');title.textContent=d.label||'Your decision';
+   if(prizeChoice){title.textContent='Choose a Prize';description.textContent='Tap a highlighted Prize, or choose the number above the board.';const bar=$('fieldChoiceBar');bar.classList.remove('hidden');bar.textContent='🎁 Knock Out — choose your Prize';return;}
    if(field){
     if(lastFieldDecisionId!==d.id){
      lastFieldDecisionId=d.id;
@@ -167,12 +210,12 @@
    acts.append(btn('Confirm opening setup',()=>send(command('setup_confirm')),'primary',!v.players[0].active));
   }else{title.textContent='YOUR NEXT MOVE';description.textContent='Click a Trainer or Basic Pokémon to play it. Select Energy or Evolution, then click a highlighted Pokémon. Use the attack buttons beside your Active Pokémon.';}
  }
- function render(){const has=Boolean(current);$('lobby').classList.toggle('hidden',has);$('duel').classList.toggle('hidden',!has);if(!has)return;
+ function render(){const has=Boolean(current);document.body.classList.toggle('duel-active',has);document.body.classList.toggle('cpu-match',has);$('lobby').classList.toggle('hidden',has);$('duel').classList.toggle('hidden',!has);if(!has)return;
   feedback.update(current,0);opponentActivity.update(current,0,'Classic CPU');
   const v=current.view,you=v.players[0],cpu=v.players[1],yourTurn=v.turn===0&&!v.over;
   document.querySelector('.stage').classList.toggle('your-turn',yourTurn&&v.phase==='game'&&!v.pendingDecision);
   $('phaseText').textContent=v.over?'DUEL COMPLETE':v.phase==='setup'?'Opening setup':yourTurn?'Your turn':'CPU turn';
-  quick.drawPrizes($('prizeRail'),you.prizeCount,cpu.prizeCount,'CPU');
+  quick.drawPrizes($('prizeRail'),you.prizeCount,cpu.prizeCount,'CPU');renderPrizes();renderPrizeFallback();renderCoin(v);renderKnockOut(v);
   $('turnChip').textContent='TURN '+(current.turnSerial+1);$('scoreline').textContent=`Your Prizes ${you.prizeCount} · CPU Prizes ${cpu.prizeCount}`;
   $('stadiumText').textContent=v.stadium?`Stadium: ${card(v.stadium.id).name}`:'';
   if(v.stadium?.id==='neo4-99'&&v.phase==='game'&&yourTurn&&!v.pendingDecision){
@@ -181,9 +224,11 @@
   $('oppStats').textContent=`Hand ${cpu.handCount} · Deck ${cpu.deckCount} · Discard ${cpu.discard.length}`;
   $('myStats').textContent=`Hand ${you.handCount} · Deck ${you.deckCount} · Discard ${you.discard.length}`;
   $('energyStatus').textContent=current.you.energyUsed?'Energy attached this turn':'Energy attachment available';
+  $('myDeckCount').querySelector('b').textContent=you.deckCount;$('oppDeckCount').querySelector('b').textContent=cpu.deckCount;
+  $('myDiscardBtn').querySelector('b').textContent=you.discard.length;$('oppDiscardBtn').querySelector('b').textContent=cpu.discard.length;
   ux.renderGuide($('turnCoach'),{view:v,me:0,energyUsed:current.you.energyUsed,targetMode,card});
   setZone('enemyActive',cpu,-1);setZone('enemyBench',cpu,0);setZone('myActive',you,-1);setZone('myBench',you,0);
-  $('handAmount').textContent=`(${you.hand.length})`;$('hand').textContent='';you.hand.forEach((id,i)=>$('hand').append(handCard(id,i,v.phase==='setup')));
+  $('handAmount').textContent=`(${you.hand.length})`;renderHandPeek(you.hand);$('hand').textContent='';you.hand.forEach((id,i)=>$('hand').append(handCard(id,i,v.phase==='setup')));
   renderHandActions();$('attacks').textContent='';$('powers').textContent='';
   if(you.active){
    const active=card(you.active.id);
@@ -199,7 +244,7 @@
    });
   }else $('attacks').innerHTML='<span class="hint">Choose an Active Pokémon</span>';
   if(v.phase==='game'&&!v.over&&yourTurn&&!v.pendingDecision&&you.active){
-   [you.active,...you.bench].forEach((u,i)=>{const c=card(u.id);(c.abilities||[]).forEach(a=>{if(a.name)$('powers').append(btn(`✦ ${a.name} (${i===0?'Active':'Bench '+i})`,()=>send(command('use_power',{slot:i-1}))));});});
+   [you.active,...you.bench].forEach((u,i)=>{if(u?.secretPlanFaceDown){$('powers').append(btn(`🎴 Reveal Secret Plan (${i===0?'Active':'Bench '+i})`,()=>send(command('reveal_secret',{slot:i-1}))));return;}const c=card(u.id);(c.abilities||[]).forEach(a=>{if(a.name)$('powers').append(btn(`✦ ${a.name} (${i===0?'Active':'Bench '+i})`,()=>send(command('use_power',{slot:i-1}))));});});
   }
   const actionsDisabled=!yourTurn||v.phase!=='game'||!!v.pendingDecision||v.over;
   $('retreatBtn').disabled=actionsDisabled||!you.bench.length;
@@ -207,7 +252,7 @@
   $('endBtn').disabled=actionsDisabled;
   $('concedeBtn').disabled=v.over||v.phase!=='game'||!yourTurn;
   $('history').textContent='';(v.messages||[]).forEach(x=>{const li=document.createElement('li');li.textContent=x;$('history').append(li);});
-  renderDecisions();combat.update(current);
+  renderDecisions();combat.update(current);renderCPULog(v);
  }
  async function init(){
   try{
@@ -221,9 +266,14 @@
   }catch(e){$('startupError').textContent=e.message||String(e);}
  }
  $('newDuel').addEventListener('click',start);$('reset').addEventListener('click',newDuel);
+ $('handToggle').addEventListener('click',()=>setHandOpen(!handOpen));$('closeHand').addEventListener('click',()=>setHandOpen(false));
+ $('powersToggle').addEventListener('click',()=>setPowersOpen(!powersOpen));$('closePowers').addEventListener('click',()=>setPowersOpen(false));
+ $('logToggle').addEventListener('click',()=>setLogOpen(!logOpen));$('closeLog').addEventListener('click',()=>setLogOpen(false));
+ $('myDiscardBtn').addEventListener('click',()=>openDiscard(0));$('oppDiscardBtn').addEventListener('click',()=>openDiscard(1));
+ $('closePile').addEventListener('click',()=>$('pileModal').classList.add('hidden'));$('pileModal').addEventListener('click',e=>{if(e.target===$('pileModal'))$('pileModal').classList.add('hidden');});
  $('endBtn').addEventListener('click',()=>send(command('end_turn')));
  $('retreatBtn').addEventListener('click',()=>setTarget('retreat',{},'Choose Benched replacement',true));
  $('concedeBtn').addEventListener('click',()=>{if(confirm('Concede this duel?'))send(command('concede'));});
- document.addEventListener('keydown',e=>{if(e.key==='Escape'&&targetMode){e.preventDefault();cancelTarget();}});
+ document.addEventListener('keydown',e=>{if(e.key==='Escape'){if(targetMode){e.preventDefault();cancelTarget();}else if(handOpen)setHandOpen(false);else if(powersOpen)setPowersOpen(false);else if(logOpen)setLogOpen(false);else $('pileModal').classList.add('hidden');}});
  init();
 })();

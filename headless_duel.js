@@ -406,11 +406,14 @@ function performAction(g,side,cmd){
    const opponent=g.players[1-pending.side];
    if(!Number.isInteger(copyIndex)||!card(g,opponent.active.id).attacks?.[copyIndex])fail('Invalid ESP copied attack');
    const copied=ATTACK.compile(card(g,opponent.active.id).attacks[copyIndex]);
-   if(copied?.kind==='bench-target'){
-    if(!opponent.bench.length)fail('ESP copied Bench attack requires a target');
-    g.nextDecisionId++;
-    g.pendingDecision=makeDecision({id:`psyduckBench:${g.nextDecisionId}`,actor:pending.side,kind:'pokemon-target',label:"Misty's Psyduck ESP: choose opposing Benched Pokémon",options:opponent.bench.map((u,i)=>({id:`bench:${i}`,label:publicName(g,u)})),min:1,max:1});
-    g.pendingAction={kind:'psyduck_esp_bench',side:pending.side,attackIndex:pending.attackIndex,roll:pending.roll,extra:{...pending.extra,psyduckCopyIndex:copyIndex}};return;
+   if(['bench-target','switch-attacker','switch-self'].includes(copied?.kind)){
+    const targetOwner=copied.kind==='switch-self'?g.players[pending.side]:opponent;
+    if(targetOwner.bench.length){
+     g.nextDecisionId++;
+     const label=copied.kind==='bench-target'?"Misty's Psyduck ESP: choose opposing Benched Pokémon":copied.kind==='switch-self'?"Misty's Psyduck ESP: choose your replacement Active Pokémon":"Misty's Psyduck ESP: choose an opposing Pokémon to switch in";
+     g.pendingDecision=makeDecision({id:`psyduckTarget:${g.nextDecisionId}`,actor:pending.side,kind:'pokemon-target',label,options:targetOwner.bench.map((u,i)=>({id:`bench:${i}`,label:publicName(g,u)})),min:1,max:1});
+     g.pendingAction={kind:'psyduck_esp_bench',side:pending.side,attackIndex:pending.attackIndex,roll:pending.roll,extra:{...pending.extra,psyduckCopyIndex:copyIndex}};return;
+    }
    }
    resolveAttack(g,pending.side,pending.attackIndex,undefined,undefined,{...pending.extra,psyduckCopyIndex:copyIndex,preRoll:pending.roll,confusionChecked:true,attackPenaltyChecked:true});return;
   }
@@ -1032,7 +1035,7 @@ function resolveAttack(g,side,index,chosenBench,energyPicks,extra={}){
    const script=ATTACK.compile(attack);
    // Effects that involve new targets, payments, mode choices, or copied
    // attacks need a separate decision chain and must not execute as flat damage.
-   return script&&(script.kind!=='bench-target'||f.bench.length>0)&&['bench-target','flat','status','coin-status','coin-times','coin-bonus','coin-status-split','coin-failure','draw-one','defender-counters','own-counters','flail-counters','minus-counters','bench-count','coin-times-short','ignore-weakness','coin-recoil-bonus','recoil','coin-recoil','bench-own','bench-both-recoil','bench-splash-coin'].includes(script.kind)?[{id:`attack:${i}`,label:attack.name}]:[];
+   return script&&(script.kind!=='bench-target'||f.bench.length>0)&&['bench-target','flat','status','coin-status','coin-times','coin-bonus','coin-status-split','coin-failure','draw-one','defender-counters','own-counters','flail-counters','minus-counters','bench-count','coin-times-short','ignore-weakness','coin-recoil-bonus','recoil','coin-recoil','bench-own','bench-both-recoil','bench-splash-coin','switch-self','switch-attacker','switch-defender'].includes(script.kind)?[{id:`attack:${i}`,label:attack.name}]:[];
   });
   if(extra.psyduckCopyIndex===undefined){
    if(copyable.length){g.nextDecisionId++;g.pendingDecision=makeDecision({id:`psyduck:${g.nextDecisionId}`,actor:side,kind:'opponent-attack',label:`Misty's Psyduck ESP: 3 heads! Copy a Defending Pokémon attack`,options:copyable,min:1,max:1});g.pendingAction={kind:'psyduck_esp_copy',side,attackIndex:index,roll,extra};return;}
@@ -1040,7 +1043,10 @@ function resolveAttack(g,side,index,chosenBench,energyPicks,extra={}){
   }
   if(!copyable.some(o=>o.id===`attack:${extra.psyduckCopyIndex}`))fail('Copied attack requires an interactive effect handler');
   const copied=ATTACK.compile(card(g,f.active.id).attacks[extra.psyduckCopyIndex]);
-  if(copied.kind==='bench-target'&&(!Number.isInteger(chosenBench)||!f.bench[chosenBench]))fail('Copied Bench attack needs a legal Bench choice');
+  if(['bench-target','switch-attacker','switch-self'].includes(copied.kind)){
+   const replacement=copied.kind==='switch-self'?p:f;
+   if(replacement.bench.length&&(!Number.isInteger(chosenBench)||!replacement.bench[chosenBench]))fail('Copied attack needs a legal Bench choice');
+  }
   const effect=ATTACK.resolve(copied,()=>next(g,2)===1,coreContext);
   roll={...effect,flips:[...roll.flips,...(effect.flips||[])],gymPsyduckHeads:3};
  }

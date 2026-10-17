@@ -1,0 +1,14 @@
+/* v0.43 CPU uses the same compact battlefield + hand tray as online. */
+body.cpu-match.duel-active .prize-choice-panel {top:48px}
+body.cpu-match.duel-active #duel:not(.hidden) {grid-template-rows:auto auto minmax(0,1fr) 54px}
+body.cpu-match.duel-active .toolbar #logToggle {margin-left:auto}
+body.cpu-match.duel-active .toolbar #reset {margin-left:0}
+body.cpu-match.duel-active #logDrawer {position:fixed;right:12px;top:49px;bottom:62px;z-index:640;width:min(385px,calc(100vw - 22px));display:flex;flex-direction:column;box-shadow:0 15px 45px #000c;background:#101f32f7;border:1px solid #5d9d9e;border-radius:13px;padding:12px}
+body.cpu-match.duel-active #logDrawer.hidden {display:none}
+body.cpu-match.duel-active #logDrawer header{display:flex;align-items:center;justify-content:space-between;gap:10px}
+body.cpu-match.duel-active #logDrawer h3{margin:0;font-size:13px}
+body.cpu-match.duel-active #logDrawer .log-scroll{overflow-y:auto;min-height:0;flex:1}
+body.cpu-match.duel-active #logDrawer #history {display:none!important}
+body.cpu-match.duel-active .prize-choice-panel {z-index:800}
+body.cpu-match.duel-active .toolbar #scoreline {font-size:11px}
+@media(max-width:780px){body.cpu-match.duel-active #duel:not(.hidden){grid-template-rows:auto auto minmax(0,1fr) 52px}}
