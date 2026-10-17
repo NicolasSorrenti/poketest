@@ -48,6 +48,21 @@ GitHub Actions CPU AI regression additionally runs the existing Classic local CP
 - Across this milestone the CPU policy and local service regression passed repeatedly, with the full Node and TCG suites green at commit `1e142c01462201270b4f0c0cf83e725b8cf286ee`. Latest damage-evaluation tests are under CI verification as of this note.
 - Next: stronger prize-race evaluation, tempo/deck-archetype tuning, better mandatory Trainer selections and target combos, longer matched tournaments with fewer turn-limit outcomes, and explicit Integration Agent handoff.
 
+## 2026-10-17 continuation — validated action preflight and informed targeting
+
+- Corrected a significant own-turn-state bug: `publicView` masks fields `energyUsed` and `retreated`, yet the CPU generator mistakenly read these missing fields. The policy now adds *only its own* authoritative once-per-turn flags to its masked observation, never opponent secrets. It will not propose duplicate Energy attachments or second retreats within a turn.
+- Fixed opening setup: higher-skilled duelists establish a backup Basic before confirming; optional extra setup targets differ by skill, with Champions holding a sensible two-Basic Bench ceiling rather than exposing every card.
+- Fixed an inverse difficulty defect: larger `attention` previously also widened the randomized action pool for *stronger* CPUs. `sampleWindow` now decreases strictly from Beginner to Champion as intended, and temperatures also decrease monotonically. All candidates still fall back to the authoritative reducer for legality.
+- Added one-step public-state Energy foresight for Casual, refined threatened-retreat evaluation to distinguish safe replacements from equally lethal targets, and reduced speculative Champion fleeing that sacrificed attacking tempo.
+- Coin-flip evaluation now distinguishes expected damage from knockout probability. Known coin families use **exact binomial odds** instead of double-discounting the expected result, including Nidoking Thrash/Thunderpunch's recoil branch.
+- Improved forced promotion and Gust/target decisions to prioritize reachable knockouts after resistance/weakness and affordable Energy, as well as prospective survival, instead of only selecting a Pokémon with the lowest remaining HP.
+- Added focused regressions for the duplicate action issue, deterministic multi-Basic openings, strict decision-noise tiers, Casual one-step planning, avoidance of suicidal retreat, exact KO chances on printed cards, and choosing Gust/promotion targets.
+- Expanded the reproducible CI arena to **450 matches** across seven paired matchups, including 120-turn Champion/Expert and Casual/Beginner mirrors. The 120-turn horizon eliminates nearly all misleading 60-turn draws; it also reveals **Champion remains inadequately calibrated against Expert**.
+- On the 100-game Blackout mirror at commit `e75e980`, CPU legality probes rejected dropped from **13,076** at `17ccae8` to **599** while accepted CPU commands remained valid; Champion beat Beginner 41–21 with 38 time-limited games. This is a dramatic performance improvement, but not evidence of completed difficulty balancing.
+- The CPU, Node and full gameplay jobs were all green at prior commit `54a19e8`; latest targeting changes are being checked. External Neo rule changes on `main` caused intermittent historical-card test failures during this work; we did not modify those engine modules.
+
+**Honest limitations:** no genuine limited-depth adversarial search, still many Trainer effect-target and attack-text cases with heuristic valuation; end-turn score and resource strategy still need serious work. Champion's full-length Blackout mirror against Expert was 21–29 before the target-choice change, confirming that deterministic greedy choice is not yet consistently stronger than Expert's slight randomness. Do not advertise Champion as truly tournament-optimal.
+
 ## Known limitations and next work
 
 1. Verify green CI on all affected and full regression suites. 
