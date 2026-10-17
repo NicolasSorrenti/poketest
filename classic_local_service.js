@@ -39,6 +39,7 @@ class ClassicLocalService {
   if(seed!==undefined&&(!Number.isSafeInteger(seed)||seed<0||seed>0xffffffff))throw Error('Invalid seed');
   if(typeof advancedTactics!=='boolean')throw Error('advancedTactics must be a boolean');
   const defaults=npc===undefined?{level:3,personality:'balanced'}:profileForNpc(npc);
+  if(advancedTactics&&(difficulty??defaults.level)<4)throw Error('Advanced tactics require Expert or Champion level');
   const cpuConfig=configuration({level:difficulty??defaults.level,personality:personality??defaults.personality,seed:aiSeed,
    prizeRace:advancedTactics,knockoutTempo:advancedTactics,opponentResponse:advancedTactics});
   if(deck==='custom'&&(!Array.isArray(customDeck)||customDeck.length!==60||!customDeck.every(id=>typeof id==='string'&&id.length<=40)))throw Error('Custom deck must contain exactly 60 card IDs');
