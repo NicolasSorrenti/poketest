@@ -11,7 +11,7 @@ const CLASSIC=require('./classic_format');
 const CLASSIC_TRAINERS=require('./classic_trainer_core');
 const CLASSIC_POWERS=require('./classic_power_core');
 const isClassicRules=g=>['classic','theme-expanded','gym-theme','gym-expanded','neo-theme','online-preview'].includes(g.format);
-const ATTACH_ONLY_TRAINERS=new Set(['PlusPower','Defender','Berry','Counterattack Claws','Charity',"Brock's Protection","Koga's Ninja Trick","Sabrina's ESP",'Clefairy Doll','Mysterious Fossil']);
+const ATTACH_ONLY_TRAINERS=new Set(['PlusPower','Defender','Berry','Counterattack Claws','Focus Band','EXP.ALL','Charity',"Brock's Protection","Koga's Ninja Trick","Sabrina's ESP",'Clefairy Doll','Mysterious Fossil']);
 const protectedEnergy=u=>Boolean(u?.attachedTrainers?.some(t=>t.id==='gym2-101'));
 const isBaby=(g,u)=>['neo-theme','online-preview'].includes(g.format)&&u&&!u.secretPlanFaceDown&&['Elekid','Magby','Tyrogue','Igglybuff','Cleffa','Pichu','Smoochum'].includes(CATALOG.get(u.id)?.name);
 
@@ -398,6 +398,28 @@ function performAction(g,side,cmd){
    log(g,`Chaos Gym: ${g.players[side].name} will use ${card(g,pending.cardId).name}.`);
    CLASSIC_TRAINERS.startProxy(g,side,pending.cardId,classicHelpers());return;
   }
+  if(pending.kind==='neo_exp_all'){
+   const owner=g.players[pending.defenderSide],victim=owner.active;
+   if(!victim||victim.id!==pending.victimId||victim.damage<maxHP(g,victim))fail('EXP.ALL Active source changed');
+   if(!answer.decline&&answer.selected.length){
+    const m=/^move:(\d+):(\d+)$/.exec(answer.selected[0]||'');
+    if(!m)fail('Invalid EXP.ALL selection');
+    const bench=Number(m[1]),energyIndex=Number(m[2]),recipient=owner.bench[bench];
+    const energyId=victim.energies[energyIndex];
+    if(!recipient||!energyId||!isBasicEnergy(card(g,energyId)))fail('EXP.ALL Energy or recipient changed');
+    const tool=recipient.attachedTrainers.findIndex(t=>card(g,t.id).name==='EXP.ALL');
+    if(tool<0)fail('EXP.ALL is no longer attached');
+    recipient.energies.push(victim.energies.splice(energyIndex,1)[0]);
+    owner.discard.push(recipient.attachedTrainers.splice(tool,1)[0].id);
+    log(g,'EXP.ALL moved one Basic Energy before the Knock Out.');
+   }
+   g.pendingDecision=null;g.pendingAction=null;
+   if(!knockOuts(g,pending.after)){
+    if(pending.after==='checkup')finishTurn(g);
+    else if(pending.after==='advance')advanceTurn(g);
+   }
+   return;
+  }
   if(pending.kind==='classic_trainer'){g.pendingDecision=null;g.pendingAction=null;CLASSIC_TRAINERS.answer(g,pending.plan,answer,classicHelpers());return;}
   if(pending.kind==='classic_power'){g.pendingDecision=null;g.pendingAction=null;CLASSIC_POWERS.answer(g,pending.plan,answer,classicHelpers());return;}
   if(pending.kind==='gym_charity'){
@@ -777,7 +799,7 @@ function performAction(g,side,cmd){
   const cost=retreatCost(g,side,u);
   const total=u.energies.reduce((n,id)=>n+retreatUnits(g,u,id),0);
   if(total<cost)fail('Insufficient retreat Energy');
-  if(u.energies.some(id=>(card(g,id).subtypes||[]).includes('Special')&&!['Double Colorless Energy','Full Heal Energy','Potion Energy','Metal Energy','Darkness Energy','Recycle Energy','Rainbow Energy','Miracle Energy'].includes(card(g,id).name))||u.attachedTrainers.some(t=>!['Berry','Counterattack Claws',"Brock's Protection","Koga's Ninja Trick","Sabrina's ESP","Charity"].includes(card(g,t.id).name)))fail('Retreat modifiers require an effect handler');
+  if(u.energies.some(id=>(card(g,id).subtypes||[]).includes('Special')&&!['Double Colorless Energy','Full Heal Energy','Potion Energy','Metal Energy','Darkness Energy','Recycle Energy','Rainbow Energy','Miracle Energy'].includes(card(g,id).name))||u.attachedTrainers.some(t=>!['Berry','Counterattack Claws','Focus Band','EXP.ALL',"Brock's Protection","Koga's Ninja Trick","Sabrina's ESP","Charity"].includes(card(g,t.id).name)))fail('Retreat modifiers require an effect handler');
   if(cost&&total>cost&&u.energies.length>1){
    g.nextDecisionId++;
    g.pendingDecision=makeDecision({id:`retreat:${g.nextDecisionId}`,actor:side,kind:'energy-discard',label:`Choose Energy cards providing at least ${cost} retreat units`,options:u.energies.map((id,i)=>({id:`energy:${i}`,label:card(g,id).name})),min:1,max:Math.min(cost,u.energies.length)});
@@ -1116,7 +1138,7 @@ function resolveAttack(g,side,index,chosenBench,energyPicks,extra={}){
  }
 
  if(!canPayEnergy(a.cost||[],attackPool(g,u)) && !(isClassicRules(g)&&card(g,u.id).name==='Ditto'&&CLASSIC_POWERS.enabled(g,u,'Transform')&&u.energies.reduce((count,id)=>count+(card(g,id).name==='Double Colorless Energy'?2:1),0)>=(a.cost||[]).length))fail('Insufficient attack Energy');
- if((program.kind!=='neo46:plunder'&&f.active.attachedTrainers.some(t=>!['Defender','PlusPower','Berry','Counterattack Claws',"Brock's Protection","Koga's Ninja Trick","Sabrina's ESP","Charity"].includes(card(g,t.id).name)))||f.active.energies.some(id=>(card(g,id).subtypes||[]).includes('Special')&&!['Double Colorless Energy','Full Heal Energy','Potion Energy','Metal Energy','Darkness Energy','Recycle Energy','Rainbow Energy','Miracle Energy'].includes(card(g,id).name)))fail('Damage or Energy modifiers require effect handlers');
+ if((program.kind!=='neo46:plunder'&&f.active.attachedTrainers.some(t=>!['Defender','PlusPower','Berry','Counterattack Claws','Focus Band','EXP.ALL',"Brock's Protection","Koga's Ninja Trick","Sabrina's ESP","Charity"].includes(card(g,t.id).name)))||f.active.energies.some(id=>(card(g,id).subtypes||[]).includes('Special')&&!['Double Colorless Energy','Full Heal Energy','Potion Energy','Metal Energy','Darkness Energy','Recycle Energy','Rainbow Energy','Miracle Energy'].includes(card(g,id).name)))fail('Damage or Energy modifiers require effect handlers');
  const usesChoice=['bench-target','switch-attacker','switch-self','target-any','target-any-coin','drag-off'].includes(program.kind);
  if(usesChoice){const owner=program.kind==='switch-self'?p:f;
   if(['target-any','target-any-coin'].includes(program.kind)){if(!Number.isInteger(chosenBench)||chosenBench< -1||chosenBench>=f.bench.length)fail('Invalid opponent target');}
@@ -1951,6 +1973,33 @@ function knockOuts(g,after){
   const victim=g.players[side].active;
   if(victim&&victim.damage>=maxHP(g,victim)&&CLASSIC_POWERS.enabled(g,victim,'Fortitude')&&next(g,2)===1){
    victim.damage=maxHP(g,victim)-10;log(g,"Fortitude saved Giovanni's Machamp at 10 HP.");
+  }
+ }
+ // Neo Genesis Focus Band: the protected Pokémon (Active OR Bench) only
+ // gets a saving flip for a Knock Out caused by an opponent's attack.
+ if(attacking&&isClassicRules(g)){
+  const defenderSide=1-attacking.side,defender=g.players[defenderSide];
+  for(const victim of [defender.active,...defender.bench].filter(Boolean)){
+   if(victim.damage<maxHP(g,victim))continue;
+   const idx=victim.attachedTrainers.findIndex(t=>card(g,t.id).name==='Focus Band');
+   if(idx<0)continue;
+   defender.discard.push(victim.attachedTrainers.splice(idx,1)[0].id);
+   if(next(g,2)===1){
+    victim.damage=maxHP(g,victim)-10;
+    log(g,'Focus Band saved '+card(g,victim.id).name+' with 10 HP remaining.');
+   }else log(g,'Focus Band flipped tails: '+card(g,victim.id).name+' is still Knocked Out.');
+  }
+  // EXP.ALL may be declined. It protects one Basic Energy from the pending
+  // Active KO, before cards from that Active enter its owner's discard.
+  const victim=defender.active;
+  if(victim&&victim.damage>=maxHP(g,victim)&&victim.energies.some(id=>isBasicEnergy(card(g,id)))){
+   const destinations=defender.bench.flatMap((u,i)=>u.attachedTrainers.some(t=>card(g,t.id).name==='EXP.ALL')?[{i,u}]:[]);
+   const options=destinations.flatMap(({i})=>victim.energies.flatMap((id,j)=>isBasicEnergy(card(g,id))?[{id:'move:'+i+':'+j,label:card(g,id).name+' to '+card(g,defender.bench[i].id).name}]:[]));
+   if(options.length){
+    g.nextDecisionId++;
+    g.pendingDecision=makeDecision({id:'expall:'+g.nextDecisionId,actor:defenderSide,kind:'neo-exp-all',label:'EXP.ALL: move one Basic Energy to a Benched Pokémon?',options,min:0,max:1,optional:true});
+    g.pendingAction={kind:'neo_exp_all',defenderSide,victimId:victim.id,after};return true;
+   }
   }
  }
  // Remaining reactive Gym Pokémon Powers, processed before removing any KOs.

@@ -1,0 +1,3 @@
+# Neo v0.61 — Reactive tools
+
+Focus Band (Neo Genesis 86) and EXP.ALL (Neo Destiny 93) have server-authoritative attach and attack-KO effects. Focus Band flips only when its host would be Knocked Out by an opposing attack, sets 10 HP on heads and discards the tool. EXP.ALL offers its owner a private optional choice of one Basic Energy from the dying Active to a Benched EXP.ALL holder; accepted choices discard the tool before KO cleanup, declined choices preserve it. Both enforce one Pokémon Tool per recipient. Tests include opposing attack, non-attack KO, accepted/declined EXP.ALL, non-basic Energy exclusion and transactional malformed selections. Complex simultaneous reactive effect ordering remains subject to further scenarios.
