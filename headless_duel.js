@@ -11,7 +11,7 @@ const CLASSIC=require('./classic_format');
 const CLASSIC_TRAINERS=require('./classic_trainer_core');
 const CLASSIC_POWERS=require('./classic_power_core');
 const isClassicRules=g=>['classic','theme-expanded','gym-theme','gym-expanded','neo-theme','online-preview'].includes(g.format);
-const isBaby=(g,u)=>['neo-theme','online-preview'].includes(g.format)&&u&&['Elekid','Magby','Tyrogue','Igglybuff','Cleffa','Pichu','Smoochum'].includes(CATALOG.get(u.id)?.name);
+const isBaby=(g,u)=>['neo-theme','online-preview'].includes(g.format)&&u&&!u.secretPlanFaceDown&&['Elekid','Magby','Tyrogue','Igglybuff','Cleffa','Pichu','Smoochum'].includes(CATALOG.get(u.id)?.name);
 
 const SET_NAMES=['base1','base2','base3','base4','base5','gym1','gym2','neo1','neo2','neo3','neo4','basep'];
 function historicalCards(){return SET_NAMES.flatMap(s=>require('./cards/'+s+'.json'));}
@@ -86,7 +86,7 @@ function effectiveCard(g,u){
  }
  if(isClassicRules(g)&&printed.name==="Sabrina's Alakazam"&&CLASSIC_POWERS.enabled(g,u,'Psylink')){
   const owner=g.players.findIndex(p=>allPokemon(p).includes(u));
-  if(owner>=0){const others=allPokemon(g.players[owner]).filter(x=>x!==u&&card(g,x.id).types?.includes('Psychic'));
+  if(owner>=0){const others=allPokemon(g.players[owner]).filter(x=>x!==u&&!x.secretPlanFaceDown&&card(g,x.id).types?.includes('Psychic'));
    return {...printed,attacks:[...(printed.attacks||[]),...others.flatMap(x=>card(g,x.id).attacks||[])]};}
  }
 
@@ -102,7 +102,7 @@ function unownNormal(g,side){
  const copies=g.players.flatMap(allPokemon).filter(x=>card(g,x.id).id==='neo2-50');
  return copies.length===1&&allPokemon(g.players[side]).includes(copies[0])&&CLASSIC_POWERS.enabled(g,copies[0],'[Normal]');
 }
-function maxHP(g,u){const base=u.gymGiantGrowth&&u.id==='gym2-10'?80:Number(effectiveCard(g,u).hp)||0;return base+(isClassicRules(g)&&CLASSIC_POWERS.enabled(g,u,'Gaseous Form')?u.energies.filter(id=>card(g,id).name==='Psychic Energy').length*10:0)+(g.stadium&&card(g,g.stadium.id).name==="Rocket's Hideout"&&card(g,u.id).name.startsWith('Dark ')?20:0);}
+function maxHP(g,u){const base=u.gymGiantGrowth&&u.id==='gym2-10'?80:Number(effectiveCard(g,u).hp)||0;return base+(isClassicRules(g)&&CLASSIC_POWERS.enabled(g,u,'Gaseous Form')?u.energies.filter(id=>card(g,id).name==='Psychic Energy').length*10:0)+(!u.secretPlanFaceDown&&g.stadium&&card(g,g.stadium.id).name==="Rocket's Hideout"&&card(g,u.id).name.startsWith('Dark ')?20:0);}
 function draw(g,side,count=1,required=false){const p=g.players[side];for(let i=0;i<count;i++){if(!p.deck.length){if(required){g.over=true;g.winner=1-side;log(g,`${p.name} cannot draw at the start of turn.`);}return;}p.hand.push(p.deck.pop());}}
 function setupHand(g,p){let retries=0;while(retries++<200){p.deck=shuffle(g,[...p.deck,...p.hand]);p.hand=[];for(let i=0;i<7;i++)p.hand.push(p.deck.pop());if(p.hand.some(id=>isBasicPokemon(card(g,id))))break;}
  if(!p.hand.some(id=>isBasicPokemon(card(g,id))))fail(`${p.name} has no Basic Pokémon`);
@@ -403,8 +403,22 @@ function performAction(g,side,cmd){
   }
   if(pending.kind==='psyduck_esp_copy'){
    g.pendingDecision=null;g.pendingAction=null;const copyIndex=Number(answer.selected[0]?.slice(7));
-   if(!Number.isInteger(copyIndex)||!card(g,g.players[1-pending.side].active.id).attacks?.[copyIndex])fail('Invalid ESP copied attack');
+   const opponent=g.players[1-pending.side];
+   if(!Number.isInteger(copyIndex)||!card(g,opponent.active.id).attacks?.[copyIndex])fail('Invalid ESP copied attack');
+   const copied=ATTACK.compile(card(g,opponent.active.id).attacks[copyIndex]);
+   if(copied?.kind==='bench-target'){
+    if(!opponent.bench.length)fail('ESP copied Bench attack requires a target');
+    g.nextDecisionId++;
+    g.pendingDecision=makeDecision({id:`psyduckBench:${g.nextDecisionId}`,actor:pending.side,kind:'pokemon-target',label:"Misty's Psyduck ESP: choose opposing Benched Pokémon",options:opponent.bench.map((u,i)=>({id:`bench:${i}`,label:publicName(g,u)})),min:1,max:1});
+    g.pendingAction={kind:'psyduck_esp_bench',side:pending.side,attackIndex:pending.attackIndex,roll:pending.roll,extra:{...pending.extra,psyduckCopyIndex:copyIndex}};return;
+   }
    resolveAttack(g,pending.side,pending.attackIndex,undefined,undefined,{...pending.extra,psyduckCopyIndex:copyIndex,preRoll:pending.roll,confusionChecked:true,attackPenaltyChecked:true});return;
+  }
+  if(pending.kind==='psyduck_esp_bench'){
+   const index=Number(answer.selected[0]?.slice(6));
+   if(!Number.isInteger(index)||!g.players[1-pending.side].bench[index])fail('Illegal ESP Bench selection');
+   g.pendingDecision=null;g.pendingAction=null;
+   resolveAttack(g,pending.side,pending.attackIndex,index,undefined,{...pending.extra,preRoll:pending.roll,confusionChecked:true,attackPenaltyChecked:true});return;
   }
   if(pending.kind==='sabrina_esp'){
    g.pendingDecision=null;g.pendingAction=null;
@@ -1018,7 +1032,7 @@ function resolveAttack(g,side,index,chosenBench,energyPicks,extra={}){
    const script=ATTACK.compile(attack);
    // Effects that involve new targets, payments, mode choices, or copied
    // attacks need a separate decision chain and must not execute as flat damage.
-   return script&&['flat','status','coin-status','coin-times','coin-bonus','coin-status-split','coin-failure','draw-one','defender-counters','own-counters','flail-counters','minus-counters','bench-count','coin-times-short','ignore-weakness'].includes(script.kind)?[{id:`attack:${i}`,label:attack.name}]:[];
+   return script&&(script.kind!=='bench-target'||f.bench.length>0)&&['bench-target','flat','status','coin-status','coin-times','coin-bonus','coin-status-split','coin-failure','draw-one','defender-counters','own-counters','flail-counters','minus-counters','bench-count','coin-times-short','ignore-weakness','coin-recoil-bonus','recoil','coin-recoil','bench-own','bench-both-recoil','bench-splash-coin'].includes(script.kind)?[{id:`attack:${i}`,label:attack.name}]:[];
   });
   if(extra.psyduckCopyIndex===undefined){
    if(copyable.length){g.nextDecisionId++;g.pendingDecision=makeDecision({id:`psyduck:${g.nextDecisionId}`,actor:side,kind:'opponent-attack',label:`Misty's Psyduck ESP: 3 heads! Copy a Defending Pokémon attack`,options:copyable,min:1,max:1});g.pendingAction={kind:'psyduck_esp_copy',side,attackIndex:index,roll,extra};return;}
@@ -1026,6 +1040,7 @@ function resolveAttack(g,side,index,chosenBench,energyPicks,extra={}){
   }
   if(!copyable.some(o=>o.id===`attack:${extra.psyduckCopyIndex}`))fail('Copied attack requires an interactive effect handler');
   const copied=ATTACK.compile(card(g,f.active.id).attacks[extra.psyduckCopyIndex]);
+  if(copied.kind==='bench-target'&&(!Number.isInteger(chosenBench)||!f.bench[chosenBench]))fail('Copied Bench attack needs a legal Bench choice');
   const effect=ATTACK.resolve(copied,()=>next(g,2)===1,coreContext);
   roll={...effect,flips:[...roll.flips,...(effect.flips||[])],gymPsyduckHeads:3};
  }

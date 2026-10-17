@@ -30,7 +30,7 @@ function publicView(game,viewer){
   const p=game.players[viewer],a=p.active;
   if(a&&a.id==='gym2-16'&&CLASSIC_POWERS.enabled(game,a,'Psylink')){
    const C=require('./headless_duel').CATALOG;
-   publicPlayers[viewer].active.effectiveAttacks=[...(C.get(a.id).attacks||[]),...[p.active,...p.bench].filter(u=>u&&u!==a&&C.get(u.id)?.types?.includes('Psychic')).flatMap(u=>C.get(u.id).attacks||[])];
+   publicPlayers[viewer].active.effectiveAttacks=[...(C.get(a.id).attacks||[]),...[p.active,...p.bench].filter(u=>u&&u!==a&&!u.secretPlanFaceDown&&C.get(u.id)?.types?.includes('Psychic')).flatMap(u=>C.get(u.id).attacks||[])];
   }
  }
 
