@@ -43,6 +43,7 @@ assert.equal(RULES.legalAttachment({card:CATALOG.get('neo4-16'),unit:unit('neo4-
 }
 {
  const g=game('neo4-49');g.players[0].hand=['neo4-16'];
+ g.players[1].active=unit('base1-10'); // Mewtwo: no Fighting Weakness
  send(g,0,'attach_energy',{handIndex:0,slot:-1});
  assert.deepEqual(g.players[0].active.energies,['neo4-16']);
  send(g,0,'attack',{attackIndex:1}); // Gentle Kick needs two Fighting
