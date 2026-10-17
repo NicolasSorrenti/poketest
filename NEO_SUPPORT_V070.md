@@ -1,0 +1,3 @@
+# Neo v0.70 — real Sketch witness-history regression
+
+Test the original Neo Discovery Smeargle's Sketch through actual attack and turn actions in the authoritative reducer. A Benched Smeargle must have been in play when the currently Defending Pokémon attacked last turn. If valid, Sketch reproduces the attack without its printed Energy cost **or additional usage costs**; the tested case copies Charizard Fire Spin (100 damage) without discarding Smeargle's Energy. Negative tests cover a Smeargle Benched too late, switching away the previous attacker, and old attack history. Both Neo Discovery Smeargle printings use the same original text; classifying the signature alone never constituted proof.
