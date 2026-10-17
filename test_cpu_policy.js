@@ -572,6 +572,21 @@ const settings={level:3,personality:'balanced',side:1,seed:47};
  assert.equal(report.baseline.knockoutTempo,true);
  assert.equal(report.challenger.knockoutTempo,false);
 }
+{
+ const {parse,audit}=require('./benchmark_cpu_tiers');
+ const opts=parse(['--pairs','1','--max-turns','8','--seed','31819','--decks','blackout,brushfire']);
+ const result=audit(opts);
+ assert.equal(result.aggregatedAdjacent.length,4);
+ assert.equal(result.perDeck.length,8);
+ assert.equal(result.totalGames,16);
+ for(const row of result.aggregatedAdjacent){
+  assert.equal(row.total,row.higherWins+row.lowerWins+row.draws);
+  assert.equal(row.decisive,row.higherWins+row.lowerWins);
+  assert.ok(row.confidence95.upper>=row.lowerWinRateDecisive||row.decisive===0);
+ }
+ assert.throws(()=>parse(['--target','0.75']),/target/);
+ assert.throws(()=>parse(['--decks',',']),/deck list/);
+}
 let duels=0,decisions=0,attacks=0,energy=0,evolutions=0,trainer=0;
 for(let seed=1;seed<=4;seed++){
  let game=createGame({decks:[deck,deck],seed:seed*1789,format:'classic'});
