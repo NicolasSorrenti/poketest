@@ -619,6 +619,22 @@ const settings={level:3,personality:'balanced',side:1,seed:47};
  assert.equal(x.baseline.opponentResponse,true);
  assert.equal(x.challenger.opponentResponse,false);
 }
+{
+ const {ClassicLocalService}=require('./classic_local_service');
+ const local=new ClassicLocalService();
+ const experimental=local.create({deck:'blackout',opponent:'blackout',seed:781,
+  difficulty:5,advancedTactics:true});
+ assert.equal(experimental.cpu.advancedTactics,true,
+  'Real local Champion games must expose the opt-in setting to callers');
+ const stored=local.session(experimental.token);
+ assert.equal(stored.cpuConfig.prizeRace,true);
+ assert.equal(stored.cpuConfig.knockoutTempo,true);
+ assert.equal(stored.cpuConfig.opponentResponse,true);
+ const ordinary=local.create({deck:'blackout',opponent:'blackout',seed:782});
+ assert.equal(ordinary.cpu.advancedTactics,false,
+  'Existing casual matches must preserve prior CPU policy by default');
+ assert.throws(()=>local.create({advancedTactics:'yes'}),/boolean/);
+}
 let duels=0,decisions=0,attacks=0,energy=0,evolutions=0,trainer=0;
 for(let seed=1;seed<=4;seed++){
  let game=createGame({decks:[deck,deck],seed:seed*1789,format:'classic'});
