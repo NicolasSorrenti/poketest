@@ -56,7 +56,9 @@ function configuration(raw={}){
  if(typeof energyHorizon!=='boolean')throw Error('Invalid energy-horizon setting');
  const turnSearch=raw.turnSearch??false;
  if(typeof turnSearch!=='boolean')throw Error('Invalid turn-search setting');
- const actionDiscipline=raw.actionDiscipline??false;
+ // Validated in 440 paired games across four decks: Champion conserves low-value
+ // Trainer cards by default; opt-out remains available for baseline A/B tests.
+ const actionDiscipline=raw.actionDiscipline??(level===5);
  if(typeof actionDiscipline!=='boolean')throw Error('Invalid action-discipline setting');
  return {level,personality,seed:raw.seed??1,side,planning,evolutionTempo,prizeRace,knockoutTempo,opponentResponse,
   graduatedNoise,energyHorizon,turnSearch,actionDiscipline,
