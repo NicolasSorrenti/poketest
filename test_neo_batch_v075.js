@@ -49,12 +49,12 @@ function triple(g){
  assert.equal(g.players[0].active.energies.length,2,'KO does not refund additional attack cost');
 }
 {
- const g=game('base1-4',['base1-101','base1-98']);
+ const g=game('base1-4',['base1-101']);
  triple(g);
  assert.equal(g.pendingDecision,null,'No supported payable attack should not ask for an impossible selection');
  assert.equal(g.turn,1,'All three heads without a payable copy still consumes turn');
  assert.equal(g.players[1].active.damage,0);
- assert.equal(g.players[0].active.energies.length,2);
+ assert.equal(g.players[0].active.energies.length,1);
 }
 {
  const g=game('neo2-11',['base1-101']);
