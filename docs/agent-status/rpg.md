@@ -1,8 +1,8 @@
 # Neo Campus TCG — RPG/VN agent handoff
 
 **Owner:** RPG/Visual Novel gameplay and narrative workstream.
-**Branch:** \`feature/rpg-autonomous-world-systems\` (intended to merge to \`main\`).
-**Current implementation:** Neo Harbor world/economy/circuit narrative milestone, after the v0.4 living-town UI.
+**Branch:** \`feature/rpg-world-reconciled\` (rebased on latest \`main\` and preserves the connected duel-agent bridge).
+**Current implementation:** Neo Harbor world/economy/circuit narrative milestone, reconciled with newer duel-agent changes on main.
 **Preserve:** all eight established adult character definitions, the 90-day campaign, three periods per day, existing VN artwork paths and the Classic headless Pokémon TCG reducer. Do not copy Tag Force dialogue or assets.
 
 ## Executive status
@@ -33,11 +33,12 @@
 - \`rpg_circuit.js\`: tournament registration / scheduled rounds / duplicate match results / expiry and rewards.
 - \`rpg_market.js\`: item ownership, starter seeding, pack/singles buys and 60-card draft validation.
 - \`rpg_finale.js\`: end-of-season decisions and collection-retaining New Game+.
-- \`classic_live.js\`: **only** integration changes: \`rpg=1&rpgMatch=<uniqueId>&deck=<preset>&opponent=<preset>\`. Duel UI remains Classic-authoritative.
+- \`classic_live.js\`: **only** integration changes: \`rpg=1&duelId=<uniqueId>&deck=<preset>&opponent=<preset>\`. Duel UI remains Classic-authoritative.
 - \`localStorage['neoCampusRpgDeck']\`: the RPG's selected custom card list, **separate from** the standalone deck builder's \`neoCampusCustomGymDeck\`. The iframe uses the former only in RPG mode.
-- RPG event availability is purely RPG-owned. A battle returns via postMessage \`{type:'neo-rpg-duel-finished',matchId,winner}\`. The parent verifies same origin, same iframe source and exact pending match ID, then records the result once.
+- RPG event availability is purely RPG-owned. A battle returns via postMessage \`{type:'neo-rpg-duel-finished',duelId,winner}\` (winner 0, 1 or null for draw). The parent uses the existing \`NeoRpgDuelBridge.accepts\` and \`NeoRpgDuelBridge.settle\` contract to verify origin, iframe source and exact pending duel ID, then settles the result once and clears \`sessionStorage[NeoRpgDuelBridge.sessionKey(duelId)]\`.
 - \`ClassicLocalService\` and \`headless_duel.js\` MUST remain the card-rule authority. No separate Pokémon TCG reducer.
 - \`rpg-assets/{character}.png\`, \`rpg-assets/{location}.jpg/png\`: asset contract; the previous art ZIP must be committed manually. Missing character portraits fall back to initials.
+- Preserve \`rpg_duel_bridge.js\`, the agent-owned \`duelReceipt\` UI, autosaved scene text, guarded deck selector, town radar, and session-scoped bridge. Only RPG custom-deck storage selection was changed in \`classic_live.js\`.
 - Coordinate data contract changes with the duel-agent before touching duel service/rules.
 
 ## Quality gates and tests
