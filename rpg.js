@@ -308,12 +308,12 @@ function makeAvatar(id,size=''){
  return img;
 }
 function render(){
- const ended=state.day>90,locked=!!state.activeStory||!!state.activeEncounter||!!state.activeArc||!!state.pendingDuel;
+ const ended=state.day>90,locked=!!state.activeStory||!!state.activeEncounter||!!state.activeArc||!!state.activeTournament||!!state.pendingDuel;
  const receipt=state.lastDuelReceipt;
  $('duelReceipt').hidden=!receipt;
  if(receipt){
   $('receiptTitle').textContent=receipt.outcome.toUpperCase()+' · '+receipt.name;
-  $('receiptDetails').textContent='+'+receipt.points+' circuit points · +'+receipt.credits+' credits · +'+receipt.trust+' trust'+(receipt.bonus?' (includes +'+receipt.bonus+' exhibition points)':'')+(receipt.trainingBonus?' · +'+receipt.trainingBonus+' training credits':'')+' · Time advanced one period.';
+  $('receiptDetails').textContent='+'+receipt.points+' circuit points · +'+receipt.credits+' credits · +'+receipt.trust+' trust'+(receipt.bonus?' (includes +'+receipt.bonus+' exhibition points)':'')+(receipt.trainingBonus?' · +'+receipt.trainingBonus+' training credits':'')+(receipt.tournamentBonus?' · +'+receipt.tournamentBonus+' bracket points':'')+(state.activeTournament?' · Bracket session: town clock paused.':' · Time advanced one period.');
   $('duelReceipt').classList.toggle('is-victory',receipt.outcome==='Victory');
  }
  $('whereLabel').textContent=state.location==='home'?'⌂  YOU ARE HOME':'●  YOU ARE HERE';
@@ -323,7 +323,7 @@ function render(){
  $('chapterLabel').textContent='CHAPTER '+(state.day<=30?'I':state.day<=60?'II':'III')+' · '+(state.day<=30?'NEW FACES':state.day<=60?'RISING STAKES':'FINAL STRETCH');
  $('weekdayLabel').textContent=['MON','TUE','WED','THU','FRI','SAT','SUN'][(state.day-1)%7]+' · WEEK '+Math.ceil(Math.min(90,state.day)/7);
  $('campaignFill').style.width=Math.min(100,state.day/90*100)+'%';
- $('timeHint').textContent=state.slot===2?'Next time action starts a NEW DAY.':'Next: '+periods[state.slot+1]+' · ⏳';
+ $('timeHint').textContent=state.activeTournament?'TOURNAMENT IN PROGRESS · TOWN CLOCK PAUSED':state.slot===2?'Next time action starts a NEW DAY.':'Next: '+periods[state.slot+1]+' · ⏳';
  $('quickNext').textContent=state.slot===2?'☾ END DAY · ⏳':'▶ NEXT PERIOD · ⏳';
  $('quickNext').disabled=ended||locked;
  $('quickHome').disabled=locked||state.location==='home';
@@ -371,7 +371,7 @@ function render(){
   const label=document.createElement('strong');label.textContent=cast[id].name;
   const where=document.createElement('small');where.textContent='↗ '+places[place][0];
   button.append(label,where);button.title='Travel for free to '+places[place][0];
-  button.onclick=()=>{if(state.activeStory||state.activeEncounter||state.pendingDuel)return;state.location=place;state.selected=null;persist();say('Narrator','You head to '+places[place][0]+'. '+places[place][1]);};
+  button.onclick=()=>{if(state.activeStory||state.activeEncounter||state.activeArc||state.activeTournament||state.pendingDuel)return;state.location=place;state.selected=null;persist();say('Narrator','You head to '+places[place][0]+'. '+places[place][1]);};
   $('townRadar').append(button);
  }
  $('people').replaceChildren();
@@ -432,18 +432,50 @@ function render(){
   const note=document.createElement('p');note.className='empty-note';note.textContent='No special encounters here at this time.';$('townEncounters').append(note);
  }
 
+
+ $('bracketPanel').replaceChildren();
+ const bracket=TOURN.active(state);
+ const todayCup=TOURN.cupForDay(state.day);
+ if(bracket){
+  const cup=TOURN.cups.find(x=>x.id===bracket.id);
+  const head=document.createElement('strong');head.className='bracket-heading';head.textContent=cup.title+' · 8 entrants';
+  $('bracketPanel').append(head);
+  for(let i=0;i<3;i++){
+   const result=bracket.matches.filter(x=>x.round===i&&x.outcome!=='Draw').at(-1);
+   const row=document.createElement('div');row.className='bracket-round'+(i===bracket.round?' current':'');
+   const icon=result?(result.outcome==='Victory'?'✓':'✕'):i===bracket.round?'▶':'○';
+   row.textContent=icon+'  Round '+(i+1)+' — '+cast[bracket.opponents[i]].name;
+   $('bracketPanel').append(row);
+  }
+  const note=document.createElement('small');note.textContent='NPC matches are simulated offscreen. Your rounds use the actual Classic TCG engine. Time moves after the bracket ends.';$('bracketPanel').append(note);
+ }else if(todayCup&&state.day<=90&&!state.tournamentSessions[todayCup.id]){
+  const permit=TOURN.entry(state,todayCup.id);
+  const desc=document.createElement('div');desc.className='bracket-summary';desc.textContent=todayCup.title+' · Day '+todayCup.day+' · '+periods[todayCup.slot]+'. '+permit.reason;
+  $('bracketPanel').append(desc);
+ }else{
+  const completed=TOURN.cups.filter(c=>state.tournamentSessions[c.id]?.finished).at(-1);
+  const next=TOURN.cups.find(c=>c.day>state.day);
+  const text=document.createElement('p');text.className='empty-note';
+  text.textContent=completed?'Last cup: '+completed.title+' — '+(state.tournamentSessions[completed.id].outcome==='champion'?'Champion':'Eliminated')+'.':next?'Next major cup: '+next.title+' on Day '+next.day+'.':'No future major cups announced.';
+  $('bracketPanel').append(text);
+ }
+
  $('activities').replaceChildren();const e=scheduleEvent();
- const items=[...(e?[[e.title+' · ⏳ 1 period · +'+e.reward+' pts if you win','event']]:[]),
+ const bracketMatch=bracket?TOURN.nextMatch(state):null;
+ const scheduledCup=e?TOURN.cupForDay(e.day):null;
+ const entry=scheduledCup?TOURN.entry(state,scheduledCup.id):null;
+ const items=[...(bracketMatch?[['▶ Play bracket round '+(bracketMatch.round+1)+'/3 · '+cast[bracketMatch.opponent].name,'tournamentNext']]:
+ e?[[scheduledCup?'Enter '+scheduledCup.title+' · '+(entry?.cost?'Wildcard: '+entry.cost+' credits':'Qualified entry'):'Play '+e.title+' · ⏳ 1 period · +'+e.reward+' pts if you win','event']]:[]),
  [state.location==='home'?'Rest at home · ⏳ 1 period':'Wait one period · ⏳ 1 period','rest'],
  ...(state.location==='home'?[['Sleep until morning · ⏳ '+(3-state.slot)+' period(s)','sleep']]:[]),
  ['Calendar · free','calendar'],['New campaign','new']];
  for(const [label,action] of items){
-  const b=document.createElement('button');b.className='activity';b.textContent=label;b.disabled=(ended&&action!=='new'&&action!=='calendar')||(locked&&action!=='calendar');b.onclick=()=>act(action);$('activities').append(b);
+  const b=document.createElement('button');b.className='activity';b.textContent=label;b.disabled=(ended&&action!=='new'&&action!=='calendar')||(locked&&action!=='calendar'&&action!=='tournamentNext')||(action==='event'&&!!scheduledCup&&!entry.possible);if(action==='event'&&scheduledCup)b.title=entry.reason;b.onclick=()=>act(action);$('activities').append(b);
  }
  $('journal').replaceChildren();const stats=document.createElement('p');stats.className='stats';stats.textContent='🏆 '+state.points+' circuit points   ·   ◈ '+state.credits+' credits';$('journal').append(stats);
  for(const e of eventCards.filter(e=>e.day>=state.day).slice(0,2)){const p=document.createElement('p');p.textContent='DAY '+e.day+' · '+e.title+' ('+periods[e.slot]+')';$('journal').append(p)}
  for(const note of state.journal.slice(0,3)){const p=document.createElement('p');p.textContent='• '+note;$('journal').append(p)}
- $('notice').textContent=state.activeStory?'Story in progress: complete this scene to continue.':state.activeArc?'A private rivalry chapter is in progress.':state.activeEncounter?'Local encounter in progress — make your decision.':state.pendingDuel?'Your duel is in progress.':'Travel & talk are free · ⏳ actions advance time';
+ $('notice').textContent=state.activeStory?'Story in progress: complete this scene to continue.':state.activeArc?'A private rivalry chapter is in progress.':state.activeEncounter?'Local encounter in progress — make your decision.':state.pendingDuel?'Your duel is in progress.':state.activeTournament?'Bracket underway — complete your next match before leaving.':'Travel & talk are free · ⏳ actions advance time';
  $('deckPicker').disabled=locked||ended;
  if($('deckPicker')?.options.length)$('deckPicker').value=state.playerDeck;
 }
