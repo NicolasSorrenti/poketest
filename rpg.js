@@ -148,6 +148,55 @@ function performActivity(id){
  advance();persist();say(result.person?cast[result.person].name:'Narrator',result.summary+(result.person?' You also made a good impression.':''));
 }
 
+
+function startArc(id){
+ if(state.activeStory||state.activeEncounter||state.activeArc||state.pendingDuel||state.day>90)return;
+ const e=ARC.available(state,currentPeople()).find(x=>x.id===id);if(!e)return;
+ state.activeArc={id,phase:'lines',index:0,choice:null};state.selected='reina';persist();render();
+}
+function showArc(){
+ const a=state.activeArc,e=a&&ARC.byId(a.id);
+ if(!e){state.activeArc=null;persist();return null;}
+ if(a.phase==='lines'){
+  const lines=ARC.linesFor(state,a.id),line=lines[Math.min(a.index,lines.length-1)];
+  return {speaker:line[0]==='You'?'You':line[0],line:line[1],choices:[[a.index<lines.length-1?'Continue ›':'Respond ›','arcNext']]};
+ }
+ if(a.phase==='choice')return {speaker:cast.reina.name,line:e.duel?'Do you want to play the match now?':'How will you answer?',choices:e.choices.map((choice,i)=>[choice.label,'arcChoice:'+i])};
+ return {speaker:cast.reina.name,line:e.choices[a.choice].reply,choices:[['Finish conversation · ⏳ 1 period','arcFinish']]};
+}
+function advanceArc(){
+ const a=state.activeArc;if(!a||a.phase!=='lines')return;
+ const lines=ARC.linesFor(state,a.id);a.index++;
+ if(a.index>=lines.length)a.phase='choice';
+ persist();render();
+}
+function chooseArc(raw){
+ const a=state.activeArc;if(!a||a.phase!=='choice')return;
+ const e=ARC.byId(a.id),index=Number(raw),choice=e?.choices[index];
+ if(!Number.isInteger(index)||!choice)return;
+ if(choice.decline){
+  state.activeArc=null;state.selected=null;persist();
+  return say(cast.reina.name,'Then we will find another evening. I want you at your best.');
+ }
+ if(choice.duel){
+  if(e.id!=='reina_rival_trial')return;
+  startDuel('reina',null,e.id);
+  return;
+ }
+ a.phase='response';a.choice=index;persist();render();
+}
+function finishArc(){
+ const a=state.activeArc;if(!a||a.phase!=='response')return;
+ let report;try{report=ARC.finish(state,a.id,a.choice,currentPeople());}
+ catch(err){$('notice').textContent=err.message;return;}
+ const id=a.id;
+ state.activeArc=null;
+ log('A meaningful conversation with '+cast.reina.name+' brought the rivalry forward.');
+ if(report.ending)log('A personal chapter reached its conclusion.');
+ advance();persist();
+ say(cast.reina.name,report.text);
+}
+
 function scheduleEvent(){return eventCards.find(e=>e.day===state.day&&e.slot===state.slot&&e.place===state.location&&!state.eventsDone[e.day+':'+e.title]);}
 function act(action){
  const [type,id]=action.split(':');
@@ -156,7 +205,11 @@ function act(action){
  if(type==='storyFinish')return finishStory();
  if(type==='encounterChoice')return chooseEncounter(id);
  if(type==='encounterFinish')return finishEncounter();
- if(state.activeStory||state.pendingDuel||state.activeEncounter)return;
+ if(type==='arcNext')return advanceArc();
+ if(type==='arcChoice')return chooseArc(id);
+ if(type==='arcFinish')return finishArc();
+ if(state.activeStory||state.pendingDuel||state.activeEncounter||state.activeArc)return;
+ if(type==='arc')return startArc(id);
  if(type==='encounter')return startEncounter(id);
  if(type==='townActivity')return performActivity(id);
  if(type==='calendar')return openCalendar();
