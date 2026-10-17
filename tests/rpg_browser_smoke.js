@@ -38,6 +38,13 @@ const readState=page=>page.evaluate(()=>JSON.parse(localStorage.getItem('neoHarb
   await inner.locator('#phaseText').waitFor({timeout:45000});
   assert.equal(await inner.locator('#turnCoach').count(),1);
   await save(page,'02-campaign-duel.png');
+  // A reload DURING the match must resume the same server-authoritative session.
+  const tokenBefore=await page.evaluate(id=>sessionStorage.getItem('neoRpgDuelToken:'+encodeURIComponent(id)),pending.id);
+  await page.reload({waitUntil:'domcontentloaded'});
+  await page.waitForFunction(id=>!!sessionStorage.getItem('neoRpgDuelToken:'+encodeURIComponent(id)),pending.id,{timeout:45000});
+  assert.equal((await readState(page)).pendingDuel.id,pending.id);
+  assert.equal(await page.evaluate(id=>sessionStorage.getItem('neoRpgDuelToken:'+encodeURIComponent(id)),pending.id),tokenBefore,'Reload must restore the original match rather than create a new one');
+
 
   // The outcome is produced by the actual server-side TCG rules reducer.
   // Use the API to concede instead of injecting a fake postMessage or modifying game state.
@@ -71,6 +78,27 @@ const readState=page=>page.evaluate(()=>JSON.parse(localStorage.getItem('neoHarb
   assert.match(await page.locator('#receiptDetails').innerText(),/\+5 credits/);
   await page.reload({waitUntil:'domcontentloaded'});
   assert.equal((await readState(page)).results.length,1,'Refresh must never duplicate result');
+  // Rechallenge in the same evening, then complete another actual Classic session.
+  await page.locator('#people .person').filter({hasText:'Yuna Hoshino'}).click();
+  await page.locator('#choices button').filter({hasText:'Challenge to a duel'}).click();
+  const second=(await readState(page)).pendingDuel;
+  assert.ok(second?.id&&second.id!==pending.id,'Consecutive duels need different identities');
+  await page.waitForFunction(id=>!!sessionStorage.getItem('neoRpgDuelToken:'+encodeURIComponent(id)),second.id,{timeout:45000});
+  await page.evaluate(async id=>{
+   const token=sessionStorage.getItem('neoRpgDuelToken:'+encodeURIComponent(id));
+   const headers={'X-Duel-Token':token,'Content-Type':'application/json'};
+   const status=await (await fetch('/api/classic/state',{headers})).json();
+   const response=await fetch('/api/classic/action',{method:'POST',headers,body:JSON.stringify({revision:status.revision,command:{type:'concede',payload:{}}})});
+   if(!response.ok)throw Error('Second duel failed: '+await response.text());
+  },second.id);
+  await page.evaluate(()=>{const frame=document.getElementById('battle');frame.src=frame.src;});
+  await page.waitForFunction(()=>{const s=JSON.parse(localStorage.getItem('neoHarborRpgV1')||'{}');return s.results?.length===2&&!s.pendingDuel;},null,{timeout:45000});
+  state=await readState(page);
+  assert.equal(state.points,2);assert.equal(state.credits,90);
+  assert.equal(state.day,2);assert.equal(state.slot,0);
+  assert.equal(state.results.length,2);
+  await page.reload({waitUntil:'domcontentloaded'});
+  assert.equal((await readState(page)).results.length,2,'Reload cannot repeat the second match reward');
   await page.setViewportSize({width:390,height:844});
   await save(page,'03-reward-mobile.png');
 
