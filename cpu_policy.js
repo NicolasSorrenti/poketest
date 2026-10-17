@@ -444,6 +444,9 @@ function prizeRaceBonus(action,o,cfg){
  if(action.type==='retreat'&&enemy.prizeCount===1){
   const old=own.active,alternate=own.bench[action.payload.slot];
   if(!alternate)return 0;
+  // Sleeping/Paralyzed Pokémon cannot immediately attack. An omniscient
+  // "potential attack" should not provoke a desperate unnecessary retreat.
+  if(['Asleep','Paralyzed'].includes(enemy.active.status))return 0;
   const outgoing=strongestAffordableAttack(enemy.active,old);
   const incoming=strongestAffordableAttack(enemy.active,alternate);
   const deadly=outgoing>=hpRemaining(old)&&outgoing>0;
