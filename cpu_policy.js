@@ -649,6 +649,36 @@ function trainerTacticsBonus(action,o,cfg){
   if(before?.status&&after>old)return 80;
   return !before?.status&&after<=old?-100:0;
  }
+ if(name==='Moo-Moo Milk'){
+  const damaged=own.filter(u=>u.damage>0);
+  if(!damaged.length)return -220;
+  const best=Math.max(...damaged.map(u=>u.damage));
+  const active=p.active,qAttack=q.active&&!['Asleep','Paralyzed'].includes(q.active.status)?
+   strongestAffordableAttack(q.active,active):0;
+  // Two fair flips heal 20 on average. A serious damaged Pokémon gets more
+  // value than one with a single counter; no future flip is read.
+  const maySave=active?.damage>0&&qAttack>0&&qAttack>=hpRemaining(active)&&
+   qAttack<hpRemaining({...active,damage:Math.max(0,active.damage-20)});
+  return maySave?135:best>=40?75:best>=20?35:-120;
+ }
+ if(name==="Bill's Teleporter")
+  return p.deckCount>=5?55:-150; // 50% chance to draw four, never assume heads
+ if(name==='Professor Elm'){
+  if(p.deckCount<=7)return -170;
+  const hasPlayableEnergy=!p.energyUsed&&p.hand.some((id,i)=>
+   i!==action.payload.handIndex&&isEnergy(card(id)))&&own.length>0;
+  const canEvolveNow=p.hand.some((id,i)=>{
+   if(i===action.payload.handIndex)return false;
+   const c=card(id);
+   return c?.evolvesFrom&&own.some(u=>u.playedTurn<o.round&&canEvolve(c,card(u.id)));
+  });
+  // Elm locks out all other Trainers for the turn: play useful hand cards
+  // first, or refill immediately if the hand is genuinely nearly empty.
+  const otherTrainer=p.hand.some((id,i)=>i!==action.payload.handIndex&&
+   card(id)?.supertype==='Trainer');
+  return (p.handCount<=3?100:-65)-
+   (hasPlayableEnergy?125:0)-(canEvolveNow?130:0)-(otherTrainer?65:0);
+ }
  if(name==='Professor Oak'){
   // Discarding known, immediately playable Energy/evolutions wastes tempo.
   // Complete the development before Oak; after that, the normal Oak score
