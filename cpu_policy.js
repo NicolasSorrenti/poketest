@@ -19,10 +19,10 @@ const SKILLS=Object.freeze({
 // broader, noisier choice among *legal* actions, never extra cards, forced
 // concedes or favorable RNG for the other player.
 const CALIBRATED_SKILLS=Object.freeze({
- 1:Object.freeze({...SKILLS[1],temperature:220,sampleWindow:20}),
- 2:Object.freeze({...SKILLS[2],temperature:100,sampleWindow:14}),
- 3:Object.freeze({...SKILLS[3],temperature:40,sampleWindow:9}),
- 4:Object.freeze({...SKILLS[4],temperature:12,sampleWindow:5}),
+ 1:Object.freeze({...SKILLS[1],temperature:900,sampleWindow:36}),
+ 2:Object.freeze({...SKILLS[2],temperature:240,sampleWindow:24}),
+ 3:Object.freeze({...SKILLS[3],temperature:85,sampleWindow:13}),
+ 4:Object.freeze({...SKILLS[4],temperature:35,sampleWindow:7}),
  5:SKILLS[5]
 });
 const PERSONALITIES=Object.freeze({
