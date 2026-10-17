@@ -857,7 +857,7 @@ function turnSequenceBonus(action,o,cfg){
  // Prefer a currently executable better attack, especially a knockout.
  // An impressive evolution that stops all attacks is not a good same-turn line.
  const improvement=best-initial;
- const net=improvement*1.55-(bestDepth*7);
+ const net=improvement*2.2-(bestDepth*7);
  const stranded=firstValue<initial&&best<=initial+1;
  const immediateLost=initial>=20&&firstValue<initial-15&&best<=initial+1;
  const penalty=stranded?(immediateLost?145:65):0;
