@@ -149,6 +149,6 @@ for(const [key,kind] of Object.entries(defs)){
 }
 // Distinct Neo deck printer signatures are all accounted for.
 const missing={};for(const set of ['neo1','neo2']){missing[set]=[];for(const c of require('./cards/'+set+'.json'))for(const a of c.attacks||[])if(!A.compile(a))missing[set].push(c.id+'|'+a.name);}
-assert.deepEqual(missing.neo1,['neo1-16|Super Metronome','neo1-36|Sticky Nectar']);
-assert.deepEqual(missing.neo2,['neo2-11|Sketch','neo2-30|Sketch']);
-console.log('PASS v0.49: 19 Neo printed attacks + interactive sequences; 4 explicit copy/lock gaps remain');
+assert.deepEqual(missing.neo1,[]);
+assert.deepEqual(missing.neo2,[]);
+console.log('PASS v0.49: 19 Neo printed attacks + interactive sequences; four Neo v0.50 signatures compiled');

@@ -44,7 +44,7 @@ function unit(id,round=0){return {id,under:[],energies:[],attachedTrainers:[],da
 function allPokemon(p){return [p.active,...p.bench].filter(Boolean);}
 function hasActiveEffect(u,key,g){return Boolean(u&&u[key]&&u[key].expires>g.turnSerial);}
 function clearBenchEffects(u){
- for(const key of ['shield','attackPenalty','noRetreat','attackLock','reactiveShield','swordsDance','amnesia','mirrorShell','destinyBond','lastAttackImpact','screech','noSwitch','gymGiantGrowth','gymInkSpurt','gymShadowImages','gymFireWall','gymCrosscounter','neo48Growl','neo48Slime','neo48PollenShieldUntil','neo48Endure','neo48MeanLook','neo48EndureUsed','neo48SlimeUntil','neo48CrunchUntil','neo49LockOn','neo49LockTarget','neo49Pursuit','neo49CounterUntil','neo49PoisonUntil'])delete u[key];
+ for(const key of ['shield','attackPenalty','noRetreat','attackLock','reactiveShield','swordsDance','amnesia','mirrorShell','destinyBond','lastAttackImpact','screech','noSwitch','gymGiantGrowth','gymInkSpurt','gymShadowImages','gymFireWall','gymCrosscounter','neo48Growl','neo48Slime','neo48PollenShieldUntil','neo48Endure','neo48MeanLook','neo48EndureUsed','neo48SlimeUntil','neo48CrunchUntil','neo49LockOn','neo49LockTarget','neo49Pursuit','neo49CounterUntil','neo49PoisonUntil','neo50LastAttack','neo50Observed'])delete u[key];
 }
 function familyCandidates(g,side,restriction){
  const p=g.players[side];return p.deck.flatMap((id,i)=>{
@@ -522,7 +522,12 @@ function performAction(g,side,cmd){
    return;
   }
   if(pending.kind==='neo_hydro'){resolveAttack(g,pending.side,pending.attackIndex,undefined,undefined,{hydroBoost:selection==='boost:yes'});return;}
-  if(pending.kind==='neo49_select'){
+  if(pending.kind==='neo50_select'){
+    const data={...pending.data,[pending.stage]:[...answer.selected]};
+    g.pendingDecision=null;g.pendingAction=null;
+    resolveAttack(g,pending.side,pending.attackIndex,undefined,undefined,{...pending.extra,neo50Data:data,preRoll:pending.roll,confusionChecked:true,attackPenaltyChecked:true});return;
+   }
+   if(pending.kind==='neo49_select'){
    const data={...pending.data};data[pending.stage]=[...answer.selected];
    g.pendingDecision=null;g.pendingAction=null;
    resolveAttack(g,pending.side,pending.attackIndex,undefined,undefined,{...pending.extra,neo49Data:data,preRoll:pending.roll,confusionChecked:true,attackPenaltyChecked:true});return;
@@ -1108,6 +1113,43 @@ function resolveAttack(g,side,index,chosenBench,energyPicks,extra={}){
  }
  const coreContext={neo49Locked:Boolean(u.neo49LockOn?.expires>g.turnSerial&&f.active.neo49LockTarget?.side===side&&f.active.neo49LockTarget?.sourceId===u.id&&u.neo49LockOn.targetId===f.active.id),neo49Fossils:p.bench.filter(x=>['Omanyte','Omastar','Kabuto','Kabutops'].includes(card(g,x.id).name)).length,totalPokemon:g.players.reduce((n,owner)=>n+allPokemon(owner).length,0),selfWater:u.energies.filter(id=>card(g,id).name==='Water Energy').length,selfLightning:u.energies.filter(id=>card(g,id).name==='Lightning Energy').length,selfCounters:Math.floor(u.damage/10),defenderCounters:Math.floor(f.active.damage/10),benchCount:p.bench.length,enemyEnergy:f.active.energies.length,enemyRemainingHP:Math.max(0,maxHP(g,f.active)-f.active.damage),selfEnergy:u.energies.length,enemyBench:f.bench.length,topFireCount:p.deck.slice(-5).filter(id=>card(g,id).name==='Fire Energy').length,selfPoisoned:u.status==='Poisoned',nidokingOnBench:p.bench.some(x=>card(g,x.id).name==="Giovanni's Nidoking"),nightSpirits:allPokemon(p).filter(x=>["Sabrina's Gastly","Sabrina's Haunter","Sabrina's Gengar"].includes(card(g,x.id).name)).length,enemyMaxHP:maxHP(g,f.active),enemyFighting:effectiveCard(g,f.active).types?.includes('Fighting'),selfFireCards:u.energies.filter(id=>card(g,id).name==='Fire Energy').length,bellossomCount:allPokemon(p).filter(x=>card(g,x.id).name==='Bellossom').length,ownPokemonCount:allPokemon(p).length,discardEnergyCount:p.discard.filter(id=>isEnergy(card(g,id))).length,enemyBaby:['Elekid','Magby','Tyrogue','Igglybuff','Cleffa','Pichu','Smoochum'].includes(effectiveCard(g,f.active).name),enemyBasic:effectiveCard(g,f.active).subtypes?.includes('Basic'),damagedPreviousTurn:u.lastAttackImpact?.serial===g.turnSerial-1&&u.lastAttackImpact.damage>0,extraEnergies:(type)=>extraAttackEnergy(g,u,a,type),teamNameCount:(names,region)=> (region==='bench'?p.bench:allPokemon(p)).filter(x=>names.includes(card(g,x.id).name)).length,allNamedCount:(names)=>g.players.flatMap(allPokemon).filter(x=>names.includes(card(g,x.id).name)).length,enemyBenchCount:f.bench.length,darkDefender:card(g,f.active.id).name.startsWith('Dark '),topFiveEnergyCount:p.deck.slice(-5).filter(id=>isEnergy(card(g,id))).length,discardAmount:extra.theme?.sources?.length||0,flameHeads:extra.theme?.roll?.flips?.filter(Boolean).length||0};
  let roll=extra.preRoll||ATTACK.resolve(program,()=>next(g,2)===1,coreContext);
+
+ // Neo v0.50: preserve Super Metronome's coin while two public choices are made.
+ if(program.kind==='neo50:super-metronome'&&roll.neo50MetronomeHeads){
+  const data=extra.neo50Data||{};
+  const prompt=(stage,options,label)=>{
+   g.nextDecisionId++;
+   g.pendingDecision=makeDecision({id:'neo50:'+g.nextDecisionId,actor:side,kind:'neo-attack-choice',label,options,min:1,max:1});
+   g.pendingAction={kind:'neo50_select',stage,side,attackIndex:index,roll,extra,data};
+  };
+  if(!data.source){
+   prompt('source',[{id:'slot:-1',label:'Active: '+publicName(g,f.active)},...f.bench.map((x,i)=>({id:'slot:'+i,label:'Bench: '+publicName(g,x)}))],'Super Metronome: choose an opposing Pokémon');return;
+  }
+  if(!Array.isArray(data.source)||data.source.length!==1||!/^slot:(-1|[0-9]+)$/.test(data.source[0]))fail('Invalid Metronome target');
+  const slot=Number(data.source[0].slice(5)),source=slot===-1?f.active:f.bench[slot];
+  if(!source)fail('Metronome Pokémon no longer exists');
+  const choices=effectiveCard(g,source).attacks||[];
+  if(!data.attack){prompt('attack',choices.map((a,i)=>({id:'attack:'+i,label:a.name})),'Super Metronome: choose its attack');return;}
+  if(!Array.isArray(data.attack)||data.attack.length!==1||!/^attack:[0-9]+$/.test(data.attack[0]))fail('Invalid Metronome attack');
+  extra.neo50CopyAttack=choices[Number(data.attack[0].slice(7))];
+  if(!extra.neo50CopyAttack)fail('Metronome attack no longer exists');
+ }
+ if(program.kind==='neo50:sketch'){
+  const prior=f.active?.neo50LastAttack;
+  if(prior?.serial===g.turnSerial-1&&prior.cardId===f.active.id&&
+     u.neo50Observed?.serial===prior.serial&&u.neo50Observed?.attackerSide===1-side)
+   extra.neo50CopyAttack=prior.attack;
+ }
+ if(extra.neo50CopyAttack){
+  const copiedProgram=ATTACK.compile(extra.neo50CopyAttack);
+  // These effects are complete with no additional choices or manual payments.
+  // Other effects fail closed: they must not be represented as plain damage.
+  const supported=new Set(['flat','status','coin-status','coin-times','coin-bonus','coin-failure','coin-status-split','recoil','coin-recoil','coin-recoil-bonus','defender-counters','own-counters','flail-counters','minus-counters','bench-count','ignore-weakness','draw-one']);
+  if(!copiedProgram||!supported.has(copiedProgram.kind))fail('Copied attack requires an unported interactive effect');
+  const nextRoll=ATTACK.resolve(copiedProgram,()=>next(g,2)===1,coreContext);
+  nextRoll.flips=[...(roll.flips||[]),...(nextRoll.flips||[])];
+  roll=nextRoll;
+ }
  if(program.kind.startsWith('neo48:')){
   const kind=program.kind.slice(6),pickables=[];
   let min=0,max=0,label='',actor=side;
@@ -1602,7 +1644,7 @@ function resolveAttack(g,side,index,chosenBench,energyPicks,extra={}){
  if(roll.healFromDamage){const amount=roll.healFromDamage==='seed'?(dmg?10:0):roll.healFromDamage==='half'?Math.ceil(dmg/20)*10:dmg;u.damage=Math.max(0,u.damage-amount);}
  if(roll.poisonIfDamaged&&dmg>0)applyCondition(g,f.active,'Poisoned');
  if(roll.screech)f.active.screech={expires:g.turnSerial+3};
- if(roll.jawClamp){f.active.noRetreat={expires:g.turnSerial+2};f.active.noSwitch={expires:g.turnSerial+2,sourceId:u.id};}
+ if(roll.jawClamp||roll.neo50StickyLock){f.active.noRetreat={expires:g.turnSerial+2};f.active.noSwitch={expires:g.turnSerial+2,sourceId:u.id};}
  if(roll.charCounter&&(!shield?.allEffects||roll.ignoreDefendingEffects)&&!f.active.charCounter)f.active.charCounter=true;
  if(roll.discardSelfEnergyOnTails){const e=extra.neoDiscardIndex??0;if(!u.energies[e])fail('Fireworks Energy selection invalid');p.discard.push(u.energies.splice(e,1)[0]);}
  if(roll.energyCycle&&!protectedEnergy(f.active)&&f.active.energies.length&&f.bench.length){f.bench[extra.neoCycleBench].energies.push(f.active.energies.splice(extra.neoCycleEnergy,1)[0]);}
@@ -1686,6 +1728,12 @@ function resolveAttack(g,side,index,chosenBench,energyPicks,extra={}){
   if(!p.active&&!p.bench.length){g.over=true;g.winner=1-side;return;}
   if(!f.active&&!f.bench.length){g.over=true;g.winner=side;return;}
   g.pendingPromotions=[0,1].filter(i=>!g.players[i].active);g.promotionAfter='checkup';finishPromotions(g);return;
+ }
+ // Track the exact prior attacker and whether Smeargle was present when it attacked.
+ if(p.active===u){
+  u.neo50LastAttack={serial:g.turnSerial,cardId:u.id,attack:a};
+  for(const witness of allPokemon(f))if(card(g,witness.id).name==='Smeargle')
+   witness.neo50Observed={serial:g.turnSerial,attackerSide:side};
  }
  log(g,`${c.name} used ${a.name} for ${dmg} Active damage.${roll.benchSide?' Bench effect: '+roll.benchSide+'.':''}`);
  // With Bench splash damage, ALL KOs are collected before choosing replacements.
