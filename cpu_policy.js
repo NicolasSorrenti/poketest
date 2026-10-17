@@ -117,8 +117,10 @@ function candidates(o,cfg,used){
   if(o.decision.actor!==cfg.side)return [];
   const d=o.decision;
   const sorted=[...d.options].sort((a,b)=>choiceValue(b,d,o)-choiceValue(a,d,o)||a.id.localeCompare(b.id));
-  const sizes=new Set([d.min,Math.min(d.max,Math.max(1,d.min))]);
-  if(d.max>d.min&&cfg.level>=4)sizes.add(Math.min(d.max,Math.max(2,d.min)));
+  // Card costs and mandatory multi-pick effects must be solvable at every skill.
+  // Skill changes ranking, never the legal number of choices considered.
+  const sizes=new Set([d.min,d.max,Math.min(d.max,Math.max(1,d.min)),Math.min(d.max,Math.max(2,d.min))]);
+  if(d.max>d.min+3)sizes.add(Math.min(d.max,d.min+3));
   for(const n of sizes)options.push(command('choose',{decisionId:d.id,selected:sorted.slice(0,n).map(x=>x.id)}));
   if(d.optional)options.push(command('choose',{decisionId:d.id,decline:true}));
   return options;
