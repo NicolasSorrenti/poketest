@@ -110,6 +110,20 @@ function powerOpportunity(o,slot,name){
  if(name==='Cowardice'||name==='Buzzap')return false; // unsafe irreversible options need a dedicated scorer
  return true;
 }
+function trainerOpportunity(o,name){
+ const p=o.self,q=o.opponent;
+ const own=[p.active,...p.bench].filter(Boolean),enemy=[q.active,...q.bench].filter(Boolean);
+ const removable=enemy.some(u=>u.energies?.length>0&&!u.attachedTrainers?.some(t=>card(t.id)?.name==="Brock's Protection"));
+ if(name==='Super Energy Removal')return removable&&own.some(u=>u.energies?.length>0);
+ if(name==='Energy Removal')return removable;
+ if(name==='Super Potion')return own.some(u=>u.damage>=10&&u.energies?.length>0);
+ if(name==='Potion')return own.some(u=>u.damage>=10);
+ if(name==='Switch')return p.bench.length>0;
+ if(name==='Gust of Wind')return q.bench.length>0;
+ if(name==='Pokémon Center')return own.some(u=>u.damage>=10);
+ if(name==='Professor Oak'||name==='Bill')return p.deckCount>0;
+ return true;
+}
 function candidates(o,cfg,used){
  if(o.over||o.decision?.waitingFor!==undefined)return [];
  const p=o.self,turn=o.turn===cfg.side,options=[];
@@ -154,7 +168,7 @@ function candidates(o,cfg,used){
   if(c?.evolvesFrom||c?.subtypes?.includes('Basic')&&['Pikachu','Clefairy','Electabuzz','Magmar','Jigglypuff','Jynx','Hitmonchan','Hitmonlee','Hitmontop'].includes(c.name))
    for(const slot of slots(p))if(slotUnit(p,slot)&&canEvolve(c,card(slotUnit(p,slot).id)))options.push(command('evolve',{handIndex:i,slot}));
   if(!p.energyUsed&&isEnergy(c))for(const slot of slots(p))options.push(command('attach_energy',{handIndex:i,slot}));
-  if(c?.supertype==='Trainer'&&used.trainers<cfg.skill.trainers)options.push(command('play_trainer',{handIndex:i}));
+  if(c?.supertype==='Trainer'&&used.trainers<cfg.skill.trainers&&trainerOpportunity(o,c.name))options.push(command('play_trainer',{handIndex:i}));
  }
  if(p.active){
   const effective=p.active.effectiveAttacks||card(p.active.id)?.attacks||[];
