@@ -86,4 +86,18 @@ assert.equal(ATTACK.compile(CATALOG.get('base2-35').attacks.find(a=>a.name==='Bi
  }
  assert.ok(succeeded,'Unpayable additional Energy cost filtered on heads');
 }
+{
+ let seenHeads=false;
+ for(let seed=0;seed<12000&&!seenHeads;seed+=157){
+  const g=game('base1-4',{energies:['base1-99'],seed:seed*6553600});
+  g.players[1].bench=[]; // Only Fire Spin, which demands two additional discards.
+  send(g,0,'attack',{attackIndex:0});
+  if(g.coinFlips.at(-1)?.result!=='heads')continue;
+  assert.equal(g.pendingDecision,null,'No payable attack means no selection, not a rejected command');
+  assert.equal(g.turn,1,'No-effect heads consumes the attack and advances the turn');
+  assert.equal(g.players[1].active.damage,0);
+  seenHeads=true;
+ }
+ assert.ok(seenHeads,'No-eligible-target heads must be tested');
+}
 console.log('PASS v0.69: copied shield/heal/draw/energy-coins, coin outcomes, copier identity and impossible additional costs');
