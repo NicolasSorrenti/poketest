@@ -484,6 +484,17 @@ function performAction(g,side,cmd){
    const opponent=g.players[1-pending.side];
    if(!Number.isInteger(copyIndex)||!card(g,opponent.active.id).attacks?.[copyIndex])fail('Invalid ESP copied attack');
    const copied=ATTACK.compile(card(g,opponent.active.id).attacks[copyIndex]);
+   if(copied?.kind==='energy-discard'){
+    const attacker=g.players[pending.side].active;
+    const options=attacker.energies.flatMap((id,i)=>
+     !copied.onlyType||attachedEnergyMatchesType(g,id,copied.onlyType)
+      ?[{id:'energy:'+i,label:card(g,id).name}]:[]);
+    if(options.length<copied.quantity)fail('Insufficient attached Energy for ESP copied attack cost');
+    g.nextDecisionId++;
+    g.pendingDecision=makeDecision({id:'psyduckPayment:'+g.nextDecisionId,actor:pending.side,kind:'energy-discard',label:"ESP: choose additional Energy cards to discard",options,min:copied.quantity,max:copied.quantity});
+    g.pendingAction={kind:'psyduck_esp_payment',side:pending.side,attackIndex:pending.attackIndex,roll:pending.roll,extra:{...pending.extra,psyduckCopyIndex:copyIndex}};
+    return;
+   }
    if(['bench-target','switch-attacker','switch-self','target-any','target-any-coin'].includes(copied?.kind)){
     const targetOwner=copied.kind==='switch-self'?g.players[pending.side]:opponent;
     const selectable=targetOwner.bench.map((u,i)=>({id:`bench:${i}`,label:publicName(g,u)}));
@@ -496,6 +507,20 @@ function performAction(g,side,cmd){
     }
    }
    resolveAttack(g,pending.side,pending.attackIndex,undefined,undefined,{...pending.extra,psyduckCopyIndex:copyIndex,preRoll:pending.roll,confusionChecked:true,attackPenaltyChecked:true});return;
+  }
+  if(pending.kind==='psyduck_esp_payment'){
+   const p=g.players[pending.side],f=g.players[1-pending.side];
+   const chosen=f.active&&card(g,f.active.id).attacks?.[pending.extra.psyduckCopyIndex];
+   const script=chosen&&ATTACK.compile(chosen);
+   const picks=answer.selected.map(v=>Number(v.slice(7)));
+   if(!script||script.kind!=='energy-discard'||picks.length!==script.quantity||new Set(picks).size!==picks.length||
+    picks.some(i=>!Number.isInteger(i)||i<0||i>=p.active.energies.length||
+     script.onlyType&&!attachedEnergyMatchesType(g,p.active.energies[i],script.onlyType)))
+     fail('Invalid ESP copied Energy payment');
+   g.pendingDecision=null;g.pendingAction=null;
+   resolveAttack(g,pending.side,pending.attackIndex,undefined,undefined,
+    {...pending.extra,psyduckEnergyPayment:picks,preRoll:pending.roll,confusionChecked:true,attackPenaltyChecked:true});
+   return;
   }
   if(pending.kind==='psyduck_esp_bench'){
    const index=Number(answer.selected[0]?.slice(6));
@@ -1374,12 +1399,15 @@ function resolveAttack(g,side,index,chosenBench,energyPicks,extra={}){
    const script=ATTACK.compile(attack);
    // Effects that involve new targets, payments, mode choices, or copied
    // attacks need a separate decision chain and must not execute as flat damage.
-   return script&&(script.kind!=='bench-target'||f.bench.length>0)&&['bench-target','target-any','target-any-coin','flat','status','coin-status','coin-times','coin-bonus','coin-status-split','coin-failure','draw-one','defender-counters','own-counters','flail-counters','minus-counters','bench-count','coin-times-short','ignore-weakness','coin-recoil-bonus','recoil','coin-recoil','bench-own','bench-both-recoil','bench-splash-coin','switch-self','switch-attacker','switch-defender','coin-shield','damage-shield','coin-attack-lock','coin-heal-one','drain','leech-seed','coin-draw','energy-coins'].includes(script.kind)?[{id:`attack:${i}`,label:attack.name}]:[];
+   return script&&(script.kind!=='bench-target'||f.bench.length>0)&&
+    (script.kind!=='energy-discard'||u.energies.filter(id=>!script.onlyType||attachedEnergyMatchesType(g,id,script.onlyType)).length>=script.quantity)&&['energy-discard','bench-target','target-any','target-any-coin','flat','status','coin-status','coin-times','coin-bonus','coin-status-split','coin-failure','draw-one','defender-counters','own-counters','flail-counters','minus-counters','bench-count','coin-times-short','ignore-weakness','coin-recoil-bonus','recoil','coin-recoil','bench-own','bench-both-recoil','bench-splash-coin','switch-self','switch-attacker','switch-defender','coin-shield','damage-shield','coin-attack-lock','coin-heal-one','drain','leech-seed','coin-draw','energy-coins'].includes(script.kind)?[{id:`attack:${i}`,label:attack.name}]:[];
   });
   if(extra.psyduckCopyIndex===undefined){
    if(copyable.length){g.nextDecisionId++;g.pendingDecision=makeDecision({id:`psyduck:${g.nextDecisionId}`,actor:side,kind:'opponent-attack',label:`Misty's Psyduck ESP: 3 heads! Copy a Defending Pokémon attack`,options:copyable,min:1,max:1});g.pendingAction={kind:'psyduck_esp_copy',side,attackIndex:index,roll,extra};return;}
-   fail('ESP copied attacks need an additional interactive handler; no legal copy in this matchup');
-  }
+   // All three heads with no implementable target is still a used attack.
+   // Do not roll back and let a player retry until a more favorable outcome.
+   log(g,"Misty's Psyduck ESP found no supported attack it could copy.");
+  }else{
   if(!copyable.some(o=>o.id===`attack:${extra.psyduckCopyIndex}`))fail('Copied attack requires an interactive effect handler');
   const copied=ATTACK.compile(card(g,f.active.id).attacks[extra.psyduckCopyIndex]);
   if(['bench-target','switch-attacker','switch-self','target-any','target-any-coin'].includes(copied.kind)){
@@ -1387,8 +1415,10 @@ function resolveAttack(g,side,index,chosenBench,energyPicks,extra={}){
    if(replacement.bench.length&&(!Number.isInteger(chosenBench)||!replacement.bench[chosenBench])&&!(chosenBench===-1&&['target-any','target-any-coin'].includes(copied.kind)))fail('Copied attack needs a legal Bench choice');
    if(['target-any','target-any-coin'].includes(copied.kind)&&!replacement.bench.length&&chosenBench!==-1)fail('Copied attack needs its Active target');
   }
+  if(copied.kind==='energy-discard'&&(!Array.isArray(extra.psyduckEnergyPayment)||extra.psyduckEnergyPayment.length!==copied.quantity||new Set(extra.psyduckEnergyPayment).size!==copied.quantity||extra.psyduckEnergyPayment.some(i=>!Number.isInteger(i)||!u.energies[i]||copied.onlyType&&!attachedEnergyMatchesType(g,u.energies[i],copied.onlyType))))fail('ESP copied attack must pay additional Energy');
   const effect=ATTACK.resolve(copied,()=>next(g,2)===1,coreContext);
   roll={...effect,flips:[...roll.flips,...(effect.flips||[])],gymPsyduckHeads:3};
+  }
  }
 
  // Sabrina's ESP gives a single optional reroll of all flips of one attack.
@@ -1396,6 +1426,15 @@ function resolveAttack(g,side,index,chosenBench,energyPicks,extra={}){
   g.nextDecisionId++;
   g.pendingDecision=makeDecision({id:`gymESP:${g.nextDecisionId}`,actor:side,kind:'gym-esp',label:`Sabrina’s ESP: re-flip all ${roll.flips.length} attack coin(s)?`,options:[{id:'choice:reroll',label:'Re-flip ALL coins'}],min:0,max:1,optional:true});
   g.pendingAction={kind:'sabrina_esp',side,attackIndex:index,roll,extra};return;
+ }
+ // Keep the three initial ESP flips cached across choices. Pay extra attack
+ // costs exactly once, after the optional Sabrina's ESP reroll window.
+ if(program.kind==='gym:psyduck-esp'&&extra.psyduckEnergyPayment&&!extra.psyduckPaymentApplied){
+  const copied=ATTACK.compile(card(g,f.active.id).attacks[extra.psyduckCopyIndex]);
+  if(!copied||copied.kind!=='energy-discard'||extra.psyduckEnergyPayment.length!==copied.quantity)fail('Invalid copied ESP payment');
+  for(const i of [...extra.psyduckEnergyPayment].sort((a,b)=>b-a))
+   p.discard.push(u.energies.splice(i,1)[0]);
+  extra.psyduckPaymentApplied=true;
  }
  // A heads-only Energy discard is chosen by the attacking player, with the
  // coin cached across the decision. No hidden opponent cards are exposed.
