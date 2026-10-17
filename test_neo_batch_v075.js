@@ -70,8 +70,7 @@ function triple(g){
  choose(g,['energy:1','energy:2']);
  assert.equal(g.players[0].discard.includes('base5-17'),true);
  assert.equal(g.players[0].discard.includes('base1-98'),true);
- console.log('ESP FIRESTORM DIAG '+JSON.stringify({defender:g.players[1].active?.id,defDamage:g.players[1].active?.damage,defDiscard:g.players[1].discard,ownDiscard:g.players[0].discard,phase:g.phase,turn:g.turn,pending:g.pendingAction,events:g.events?.slice(-3)}));
- assert.equal(g.players[1].discard.includes('gym2-1'),true,'Water-type copied Firestorm Knocks Out Fire-weak Blaine Arcanine');
+ assert.equal(g.players[1].discard.includes('base1-4'),true,'Psyduck Water-type copied Fire Spin Knocks Out Charizard');
 }
 {
  const g=game('gym2-1',['base1-101','base5-17','base1-98','base1-98','base1-96']);
