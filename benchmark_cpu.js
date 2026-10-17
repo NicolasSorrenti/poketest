@@ -49,7 +49,14 @@ function duel(opts,number,swap,decks){
                 {level:opts.rightLevel,personality:opts.personality,planning:opts.rightPlanning??undefined,evolutionTempo:opts.rightEvolutionTempo??undefined,prizeRace:opts.rightPrizeRace??undefined,knockoutTempo:opts.rightKnockoutTempo??undefined,opponentResponse:opts.rightOpponentResponse??undefined,graduatedNoise:opts.rightGraduatedNoise??undefined,energyHorizon:opts.rightEnergyHorizon??undefined,turnSearch:opts.rightTurnSearch??undefined,actionDiscipline:opts.rightActionDiscipline??undefined,trainerTactics:opts.rightTrainerTactics??undefined,seed:opts.seed+number*4001+31}];
  const roleForSide=swap?[1,0]:[0,1];
  const source=swap?[decks[1],decks[0]]:decks;
- let game=createGame({decks:source,format:'classic',seed:opts.seed+number*11+101});
+ // Respect the same historical deck format used by ClassicLocalService.
+ // A Neo-theme deck is not legal under Base–Rocket; benchmarking must never
+ // silently downgrade rules or count an invalid-deck crash as a CPU defeat.
+ const allCards=source.flat();
+ const format=allCards.some(id=>/^neo[1-4]-/.test(id))?'neo-theme':
+  allCards.some(id=>/^gym[12]-/.test(id))?'gym-theme':
+  allCards.some(id=>/^base4-/.test(id))?'theme-expanded':'classic';
+ let game=createGame({decks:source,format,seed:opts.seed+number*11+101});
  const logs=[],stats={actions:0,attacks:0,attachments:0,evolutions:0,trainers:0,choices:0,decisionsMs:0,illegalActions:0,rejectedProposals:0,probedCandidates:0,byRole:[{},{}],openingBenchByRole:[0,0]};
  const start=performance.now();
  for(let side=0;side<2;side++){
