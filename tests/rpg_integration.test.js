@@ -60,6 +60,12 @@ test('host serves RPG and Classic integration assets with correct media types', 
     assert.match(response.headers.get('content-type')||'',new RegExp(type));
     const body=await response.text();assert.ok(body.length>30,'Empty hosted asset '+url);
    }
+  for(const asset of ['hana.png','reina.png','shiori.png','yuna.png','akari.png','camila.png','marina.png','kaede.png',
+   'home.jpg','arcade.jpg','park.jpg','cafe.jpg','center.jpg','library.jpg','card-shop-day.png','card-shop-evening.png']){
+   const response=await fetch(base+'/rpg-assets/'+asset);
+   assert.equal(response.status,200,'Missing campaign portrait or background: '+asset);
+   assert.match(response.headers.get('content-type')||'',/^image\//);
+  }
   // Exercise the actual API, not a fabricated duel callback: create, finish, and settle.
   const createdResponse=await fetch(base+'/api/classic/create',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({deck:'blackout',opponent:'zap',seed:7})});
   assert.equal(createdResponse.status,200);
