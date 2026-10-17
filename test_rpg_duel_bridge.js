@@ -1,0 +1,36 @@
+'use strict';
+const assert = require('node:assert/strict');
+const fs = require('node:fs');
+const vm = require('node:vm');
+const bridge = require('./rpg_duel_bridge');
+const first={id:'npc-reina-1-1-0',playerDeck:'blackout',opponent:'brushfire'};
+const next={...first,id:'npc-reina-1-2-1'};
+const a=bridge.context(bridge.duelUrl(first).split('?')[1]);
+const b=bridge.context(bridge.duelUrl(next).split('?')[1]);
+assert.deepEqual(a,{duelId:first.id});
+assert.deepEqual(b,{duelId:next.id});
+assert.equal(bridge.context('?rpg=1&deck=blackout'),null);
+assert.equal(bridge.context('?rpg=0&duelId='+first.id),null);
+assert.throws(()=>bridge.duelUrl({...first,id:'bad'}),/Invalid/);
+assert.notEqual(bridge.storageKey(a),bridge.storageKey(b),'RPG matches cannot share session tokens');
+assert.equal(bridge.storageKey(null),'neoClassicLiveToken','Normal CPU session remains independent');
+assert.equal(bridge.finishedMessage(a,{view:{over:false},winner:0}),null);
+assert.equal(bridge.finishedMessage(a,{view:{over:true},winner:2}),null);
+const victory=bridge.finishedMessage(a,{view:{over:true},winner:0});
+assert.deepEqual(victory,{type:'neo-rpg-duel-finished',duelId:first.id,winner:0});
+assert.ok(bridge.isExpectedOutcome(first,victory));
+assert.ok(!bridge.isExpectedOutcome(next,victory),'A delayed message must not finish a later match');
+assert.ok(!bridge.isExpectedOutcome({...first,resolved:true},victory),'Duplicate rewards must be blocked');
+assert.ok(!bridge.isExpectedOutcome(first,{...victory,winner:3}),'Invalid winners must be rejected');
+for(const [page,script] of [['rpg.html','rpg.js'],['classic_live.html','classic_live.js']]){
+ const html=fs.readFileSync(page,'utf8'),src=fs.readFileSync(script,'utf8');
+ assert.ok(html.includes('rpg_duel_bridge.js'),page+' must load the bridge');
+ assert.ok(html.indexOf('rpg_duel_bridge.js')<html.indexOf(script),page+' must load bridge before its client');
+ new vm.Script(src,{filename:script});
+}
+const rpg=fs.readFileSync('rpg.js','utf8'),classic=fs.readFileSync('classic_live.js','utf8');
+assert.match(rpg,/BRIDGE\.isExpectedOutcome\(duel,msg\)/,'Parent must verify duel ID');
+assert.match(classic,/sessionStorage\.removeItem\(tokenStorageKey\)/,'Expired RPG token must be cleared from the correct key');
+assert.match(classic,/reportRpgResult\(\)/,'Completion must be reported via the bridge');
+assert.match(classic,/current\?\.view\?\.over/,'Duel result must only be sent when engine marks match over');
+console.log('PASS RPG/CPU bridge: correlated results, duplicate protection, reload-safe token isolation, and script contracts');
