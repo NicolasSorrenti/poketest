@@ -1,6 +1,6 @@
 {
   "name": "neo-campus-tcg",
-  "version": "0.44.0-gym-trainer-fidelity",
+  "version": "0.45.0-gym-trainer-fidelity",
   "private": true,
   "description": "Gym Trainer fidelity: Chaos Gym WotC rulings, Koga switching, Charity knockout timing, Brock energy protection",
   "scripts": {

@@ -713,6 +713,7 @@ function performAction(g,side,cmd){
      // Chaos Gym tails. It would need to remain in play and in its owner's
      // discard simultaneously. Never create a phantom attachment.
      if(ATTACH_ONLY_TRAINERS.has(played.name)){log(g,`Chaos Gym: ${played.name} flipped tails; attached Trainer discarded without reuse.`);return;}
+     if(g.players[1-side].trainerLockedUntil>g.turnSerial){log(g,`Chaos Gym: opponent cannot reuse ${played.name} because Trainers are blocked this turn.`);return;}
      g.nextDecisionId++;
      g.pendingDecision=makeDecision({id:`chaos:${g.nextDecisionId}`,actor:1-side,kind:'chaos-redirect',label:`Chaos Gym: ${played.name} failed its coin flip. Play this Trainer with YOUR cards and Pokémon?`,options:[{id:'choice:use',label:`Use ${played.name}`}],min:0,max:1,optional:true});
      g.pendingAction={kind:'chaos_redirect',cardId:id,originalSide:side};

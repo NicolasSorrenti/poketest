@@ -638,6 +638,7 @@ function start(g,side,handIndex,h){const p=g.players[side],c=get(p.hand[handInde
  const plan={side,handIndex,cardId:c.id,data:{}};return prompt(g,plan,h);
 }
 function startProxy(g,side,cardId,h){
+ if(g.players[side].trainerLockedUntil>g.turnSerial)throw Error('Redirected Trainer use blocked this turn');
  const c=get(cardId);if(c.supertype!=='Trainer'||c.subtypes?.includes('Stadium')||ATTACH_ONLY.has(c.name)||!SUPPORTED.has(c.name))throw Error('Unsupported redirected Trainer');
  return prompt(g,{side,handIndex:g.players[side].hand.length,cardId,proxy:true,data:{}},h);
 }

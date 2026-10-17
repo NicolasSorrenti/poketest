@@ -42,6 +42,29 @@ function findCoin(predicate){for(let seed=0;seed<100000;seed++){const g=game();g
  assert.ok(result,'Need Chaos Gym tails');
  const g=result;pick(g,['choice:use']);assert.equal(g.turn,0,'Redirected turn-ending effect wrongly ended the active turn');
 }
+// A virtual Professor Elm locks its user out of further redirected Trainer
+// plays for the rest of the original player's turn (2001/2002 WotC rulings).
+{
+ let result=null;
+ for(let seed=0;seed<40000&&!result;seed++){
+  const g=game();g.rngState=seed;g.stadium={id:'gym2-102',owner:0};g.players[0].hand=['neo1-96','base1-91'];
+  const a=applyCommand(g,0,{type:'play_trainer',payload:{handIndex:0}});
+  if(a.ok&&g.pendingAction?.kind==='chaos_redirect')result=g;
+ }
+ assert.ok(result,'Need a Chaos Elm tails seed');const g=result;
+ pick(g,['choice:use']);assert.ok(g.players[1].trainerLockedUntil>g.turnSerial);
+ assert.equal(g.turn,0,'Redirected Professor Elm does not end original turn');
+ // Seed a second tails, retaining the lock across the new flip.
+ let second=null;
+ for(let seed=0;seed<40000&&!second;seed++){
+  const candidate=structuredClone(g);candidate.rngState=seed;
+  const out=applyCommand(candidate,0,{type:'play_trainer',payload:{handIndex:0}});
+  if(out.ok&&candidate.message.some(x=>x.includes('opponent cannot reuse')))second=candidate;
+ }
+ assert.ok(second,'Second Chaos tails should be possible');
+ assert.equal(second.pendingDecision,null,'Elm-locked opponent must not get a second use');
+ assert.ok(second.players[0].discard.includes('base1-91'));
+}
 // Brock's Protection is also applicable to attacks moving Energy to the
 // opposing Bench, not only to discard. Damage still resolves normally.
 {
@@ -71,4 +94,4 @@ function findCoin(predicate){for(let seed=0;seed<100000;seed++){const g=game();g
  send(g,0,'end_turn');assert.equal(g.players[0].hand.includes('gym1-99'),false,'Poison KO should discard Charity');
  assert.ok(g.players[0].discard.includes('gym1-99'));
 }
-console.log('PASS v0.44 Gym Trainer fidelity: Koga switching, Chaos attached cards and turn-ending, Brock Energy movement');
+console.log('PASS v0.45 Gym Trainer fidelity: Koga switching, Chaos attached cards and turn-ending, Brock Energy movement');
