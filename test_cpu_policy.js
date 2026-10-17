@@ -247,6 +247,22 @@ const settings={level:3,personality:'balanced',side:1,seed:47};
  assert.ok(AI.score(choose(1),o,cfg,{})>AI.score(choose(0),o,cfg,{}),
   'Forced promotion must prefer the ready winning attacker instead of an unready one');
 }
+{
+ const game=createGame({decks:[deck,deck],seed:161,format:'classic'});
+ const o=AI.observation(game,1);
+ o.phase='setup';o.self.active=null;o.self.bench=[];
+ o.self.hand=[IDS.hit,'base1-63','base1-102']; // Hitmonchan, Squirtle, Water Energy
+ const choose=i=>({type:'setup_select',payload:{handIndex:i}});
+ const expert=AI.configuration({level:5,side:1});
+ const beginner=AI.configuration({level:1,side:1});
+ assert.ok(AI.score(choose(1),o,expert,{})>AI.score(choose(0),o,expert,{}),
+  'Champion should lead Squirtle when only Water Energy is available in opening hand');
+ assert.ok(AI.score(choose(0),o,beginner,{})>AI.score(choose(1),o,beginner,{}),
+  'Novice might instead pick the impressive Hitmonchan without planning its Energy');
+ o.self.hand=[IDS.hit,'base1-63',IDS.fight];
+ assert.ok(AI.score(choose(0),o,expert,{})>AI.score(choose(1),o,expert,{}),
+  'Champion should reverse opening choice when its hand contains Fighting Energy');
+}
 let duels=0,decisions=0,attacks=0,energy=0,evolutions=0,trainer=0;
 for(let seed=1;seed<=4;seed++){
  let game=createGame({decks:[deck,deck],seed:seed*1789,format:'classic'});
