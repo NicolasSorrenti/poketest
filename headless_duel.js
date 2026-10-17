@@ -1106,7 +1106,7 @@ function resolveAttack(g,side,index,chosenBench,energyPicks,extra={}){
  }
 
  if(!canPayEnergy(a.cost||[],attackPool(g,u)) && !(isClassicRules(g)&&card(g,u.id).name==='Ditto'&&CLASSIC_POWERS.enabled(g,u,'Transform')&&u.energies.reduce((count,id)=>count+(card(g,id).name==='Double Colorless Energy'?2:1),0)>=(a.cost||[]).length))fail('Insufficient attack Energy');
- if((program.kind!=='neo46:plunder'&&f.active.attachedTrainers.some(t=>!['Defender','PlusPower','Berry','Counterattack Claws',"Brock's Protection","Koga's Ninja Trick","Sabrina's ESP","Charity"].includes(card(g,t.id).name)))||f.active.energies.some(id=>(card(g,id).subtypes||[]).includes('Special')&&!['Double Colorless Energy','Full Heal Energy','Potion Energy','Metal Energy','Darkness Energy'].includes(card(g,id).name)))fail('Damage or Energy modifiers require effect handlers');
+ if((program.kind!=='neo46:plunder'&&f.active.attachedTrainers.some(t=>!['Defender','PlusPower','Berry','Counterattack Claws',"Brock's Protection","Koga's Ninja Trick","Sabrina's ESP","Charity"].includes(card(g,t.id).name)))||f.active.energies.some(id=>(card(g,id).subtypes||[]).includes('Special')&&!['Double Colorless Energy','Full Heal Energy','Potion Energy','Metal Energy','Darkness Energy','Recycle Energy','Rainbow Energy','Miracle Energy'].includes(card(g,id).name)))fail('Damage or Energy modifiers require effect handlers');
  const usesChoice=['bench-target','switch-attacker','switch-self','target-any','target-any-coin','drag-off'].includes(program.kind);
  if(usesChoice){const owner=program.kind==='switch-self'?p:f;
   if(['target-any','target-any-coin'].includes(program.kind)){if(!Number.isInteger(chosenBench)||chosenBench< -1||chosenBench>=f.bench.length)fail('Invalid opponent target');}
