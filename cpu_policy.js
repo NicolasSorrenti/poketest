@@ -34,7 +34,9 @@ function configuration(raw={}){
  if(typeof planning!=='boolean')throw Error('Invalid CPU planning setting');
  const evolutionTempo=raw.evolutionTempo??false;
  if(typeof evolutionTempo!=='boolean')throw Error('Invalid CPU evolution-tempo setting');
- return {level,personality,seed:raw.seed??1,side,planning,evolutionTempo,skill:SKILLS[level],style:PERSONALITIES[personality]};
+ const prizeRace=raw.prizeRace??false;
+ if(typeof prizeRace!=='boolean')throw Error('Invalid CPU Prize-race setting');
+ return {level,personality,seed:raw.seed??1,side,planning,evolutionTempo,prizeRace,skill:SKILLS[level],style:PERSONALITIES[personality]};
 }
 // Seeded independent of the engine's private deck order and future RNG state.
 function rng(seed){let x=(seed>>>0)||0x6d2b79f5;return ()=>{
@@ -420,6 +422,39 @@ function evolutionTempoPenalty(o,slot,evolutionId,cfg){
  return getsSafer||isDisabled?0:
   Math.round((promoted===0?142:60)+(currentKO&&promoted<hpRemaining(o.opponent.active)?110:0));
 }
+// Conservative one-ply opponent response and visible Prize-race incentives.
+// No reducer rollouts, opponent concealed hand, unknown future Energy or RNG.
+function prizeRaceBonus(action,o,cfg){
+ if(!cfg.prizeRace||cfg.level<4||o.phase!=='game'||!o.self.active||!o.opponent.active)return 0;
+ const own=o.self,enemy=o.opponent;
+ const urgent=own.prizeCount===1||enemy.bench.length===0;
+ if(action.type==='attack'){
+  const moves=own.active.effectiveAttacks||card(own.active.id)?.attacks||[];
+  const attack=moves[action.payload.attackIndex];if(!attack)return 0;
+  const ko=knockoutChance(attack,own.active,enemy.active);
+  // An actual knockout that takes our final Prize or eliminates their last
+  // Pokémon must dominate speculative development, retreat or Trainer play.
+  const victory=urgent?550*ko:0;
+  const theirWin=enemy.prizeCount===1&&
+   strongestAffordableAttack(enemy.active,own.active)>=hpRemaining(own.active);
+  // Even without winning outright, trading Prizes before a likely loss helps.
+  const trade=(!urgent&&theirWin?100*ko:0)+(!urgent?45*ko:0);
+  return (victory+trade)*cfg.style.damage;
+ }
+ if(action.type==='retreat'&&enemy.prizeCount===1){
+  const old=own.active,alternate=own.bench[action.payload.slot];
+  if(!alternate)return 0;
+  const outgoing=strongestAffordableAttack(enemy.active,old);
+  const incoming=strongestAffordableAttack(enemy.active,alternate);
+  const deadly=outgoing>=hpRemaining(old)&&outgoing>0;
+  const escape=incoming<hpRemaining(alternate);
+  const myKO=strongestAffordableAttack(old,enemy.active)>=hpRemaining(enemy.active);
+  // If the next visible enemy attack takes their last Prize, a genuinely
+  // safe replacement may be more valuable than taking nonlethal damage.
+  return deadly&&escape&&!myKO?125*cfg.style.survival:0;
+ }
+ return 0;
+}
 function score(a,o,cfg,used){
  const p=o.self,q=o.opponent,style=cfg.style,{type,payload:v}=a;
  if(type==='setup_confirm')return 115+p.bench.length*10;
@@ -656,7 +691,7 @@ function chooseAction(game,raw={},memo={}){
  const actions=candidates(o,cfg,used);if(!actions.length)return null;
  const random=rng(cfg.seed+game.turnSerial*7919+(game.events?.length||0)*17011+cfg.side*31);
  const ranked=actions.map((action,i)=>({action,
-  score:score(action,o,cfg,used)+planningBonus(action,o,cfg),tie:i}))
+  score:score(action,o,cfg,used)+planningBonus(action,o,cfg)+prizeRaceBonus(action,o,cfg),tie:i}))
   .sort((a,b)=>b.score-a.score||a.tie-b.tie);
  // Rank all visible options before competence-sensitive choice noise. A larger
  // *evaluation budget* should NOT widen the random window: doing so previously
@@ -677,11 +712,11 @@ function chooseAction(game,raw={},memo={}){
  }
  return null;
 }
-function driveSide(initial,{side=1,level=3,personality='balanced',seed=1,planning,evolutionTempo,limit=200}={}){
+function driveSide(initial,{side=1,level=3,personality='balanced',seed=1,planning,evolutionTempo,prizeRace,limit=200}={}){
  let game=initial,steps=0;const commands=[],memo={trainers:0,powers:0,powerKeys:new Set(),stadium:false};
  while(!game.over&&steps<limit){
   const beforeTurn=game.turnSerial;
-  const next=chooseAction(game,{side,level,personality,seed,planning,evolutionTempo},memo);
+  const next=chooseAction(game,{side,level,personality,seed,planning,evolutionTempo,prizeRace},memo);
   if(!next){
    if(game.pendingDecision?.actor===side)throw Error('CPU unresolved choice: '+JSON.stringify({decision:game.pendingDecision,pendingAction:game.pendingAction}));
    break;
@@ -701,4 +736,4 @@ function driveSide(initial,{side=1,level=3,personality='balanced',seed=1,plannin
 }
 function driveBot(game,limit=200,config={}){return driveSide(game,{...config,side:1,limit});}
 function propose(game,config={}){return chooseAction(game,{...config,side:1});}
-module.exports={SKILLS,PERSONALITIES,configuration,observation,candidates,score,knockoutChance,planningBonus,evolutionTempoPenalty,chooseAction,driveSide,driveBot,propose};
+module.exports={SKILLS,PERSONALITIES,configuration,observation,candidates,score,knockoutChance,planningBonus,evolutionTempoPenalty,prizeRaceBonus,chooseAction,driveSide,driveBot,propose};
