@@ -610,7 +610,7 @@ function trainerTacticsBonus(action,o,cfg){
     strongestAffordableAttack(post,q.active));
    return Math.min(40,u.damage)*1.1-attackCost*1.5;
   }));
-  return benefit-100;
+  return benefit-135;
  }
  if(name==='Potion'){
   const damaged=own.filter(u=>u.damage>0);
