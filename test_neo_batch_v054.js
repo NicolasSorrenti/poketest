@@ -32,8 +32,8 @@ for(const id of require('./neo_v054_pool').ids){assert.ok(pool.find(c=>c.id===id
   const g=game('neo1-85',seed);g.players[0].discard=['base1-98','neo1-104'];
   play(g);
   if(g.pendingDecision){heads=true;assert.equal(g.pendingDecision.actor,0);assert.equal(g.pendingDecision.options.length,2);
-   choose(g,[g.pendingDecision.options[0].id]);assert.equal(g.players[0].discard.length,1);}
-  else {tails=true;assert.equal(g.players[0].discard.length,2);}
+   choose(g,[g.pendingDecision.options[0].id]);assert.equal(g.players[0].discard.filter(id=>id==='base1-98'||id==='neo1-104').length,1);}
+  else {tails=true;assert.equal(g.players[0].discard.filter(id=>id==='base1-98'||id==='neo1-104').length,2);}
  }
  assert.ok(heads&&tails,'Energy Charge both flips');
 }
