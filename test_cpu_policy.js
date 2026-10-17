@@ -65,6 +65,31 @@ const settings={level:3,personality:'balanced',side:1,seed:47};
  assert.ok(risky>neutral&&neutral>defensive,
   'Personality should visibly affect preferences on coin-flip attacks independently of skill');
 }
+{
+ // Champion builds its first backup before spending the turn on a cheap hit.
+ const g=createGame({decks:[deck,deck],seed:109,format:'classic'});
+ const o=AI.observation(g,1);o.phase='game';o.turn=1;
+ o.self.active={id:IDS.hit,energies:[IDS.fight],damage:0};
+ o.self.bench=[];o.self.hand=[IDS.machop];
+ o.opponent.active={id:IDS.rat,energies:[],damage:0};
+ const cfg=AI.configuration({level:5,side:1});
+ const benchAction={type:'bench',payload:{handIndex:0}};
+ const jab={type:'attack',payload:{attackIndex:0}};
+ assert.ok(AI.score(benchAction,o,cfg,{})>AI.score(jab,o,cfg,{}),
+  'Experienced player should establish a backup when entirely unbenched');
+ o.self.bench=[{id:IDS.machop,energies:[],damage:0}];
+ o.self.hand=['base1-88'];o.self.deckCount=32;o.self.handCount=8;
+ assert.ok(AI.score({type:'play_trainer',payload:{handIndex:0}},o,cfg,{})<
+  AI.score(jab,o,cfg,{}),'Champion should preserve an already-useful hand instead of dumping it with Oak');
+ const basic=AI.configuration({level:1,side:1});
+ o.self.hand=[IDS.fight];o.self.energyUsed=false;
+ o.self.active.energies=[];o.self.bench=[];
+ assert.equal(AI.candidates(o,basic,{trainers:0,powerKeys:new Set()})
+  .filter(c=>c.type==='attack').length,0,'An empty-Energy Active must not propose unaffordable attacks');
+ o.self.hand=['base1-34'];o.self.active={id:IDS.machop,energies:[],playedTurn:o.round,damage:0};
+ assert.ok(!AI.candidates(o,cfg,{trainers:0,powerKeys:new Set()})
+  .some(c=>c.type==='evolve'),'First-turn evolution must be excluded before reducer probes');
+}
 let duels=0,decisions=0,attacks=0,energy=0,evolutions=0,trainer=0;
 for(let seed=1;seed<=4;seed++){
  let game=createGame({decks:[deck,deck],seed:seed*1789,format:'classic'});
