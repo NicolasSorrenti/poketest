@@ -144,7 +144,7 @@ GitHub Actions CPU AI regression additionally runs the existing Classic local CP
 - Six independent same-deck, seat-swapped cohorts across **440 matches** found resource-disciplined Champion **250–189** against the prior Champion (one draw). Decisive win rate **56.95%**, Wilson 95% interval approximately **52.3%–61.5%**. Gains differ by deck but suggest a real improvement over multiple themes and seeds.
 - **Promoted `actionDiscipline` to enabled-by-default only for Champion (level 5)** on the basis of this controlled, statistically positive comparison; Expert and levels 1–3 retain their original resource habits. The old Champion can be reproduced with explicit `actionDiscipline:false`.
 - Added truthful benchmark switches and `docs/cpu-ai-sequence-search.md` with reproducibility, no-hidden-information guarantees and complete A/B results.
-- Champion-versus-Expert direct measurement is part of a new three-deck benchmark run. **The user's 5% lower-tier upset target is still NOT met or verified.** Never change legal outcomes, hidden information or coin RNG to enforce it.
+- Direct Champion-versus-Expert evaluation is complete: **116–84** over 200 decisive games (Blackout 45–35, Brushfire 38–22, Overgrowth 33–27). Champion's 58% win rate is a meaningful improvement over previous near-50/50 results, but **the user's 5% lower-tier upset target is still NOT met or verified**. Never change legal outcomes, hidden information or coin RNG to enforce it.
 
 ## Known limitations and next work
 
