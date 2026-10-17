@@ -401,6 +401,33 @@ const settings={level:3,personality:'balanced',side:1,seed:47};
   'An evolution that cures a blocking condition should remain viable');
  assert.throws(()=>AI.configuration({evolutionTempo:'yes'}),/evolution-tempo/);
 }
+{
+ // Energy Removal has a staged choice. Against a powered Active Hitmonchan
+ // and a weak Bench Rattata, removing Energy from the active attacker should
+ // take priority even though the Bench has fewer remaining HP.
+ const g=createGame({decks:[deck,deck],seed:777,format:'classic'});
+ const o=AI.observation(g,1);o.phase='game';o.turn=1;
+ o.self.active={id:IDS.machop,damage:0,energies:[IDS.fight],status:null};
+ o.opponent.active={id:IDS.hit,damage:0,energies:[IDS.fight],status:null};
+ o.opponent.bench=[{id:IDS.rat,damage:0,energies:[IDS.fight],status:null}];
+ o.decision={id:'classic-trainer:1',kind:'target',actor:1,
+  label:'Choose opposing Pokémon',min:1,max:1,optional:false,
+  options:[{id:'slot:-1',label:'Active: Hitmonchan'},
+   {id:'slot:0',label:'Bench: Rattata'}]};
+ const active={type:'choose',payload:{decisionId:'classic-trainer:1',selected:['slot:-1']}};
+ const bench={type:'choose',payload:{decisionId:'classic-trainer:1',selected:['slot:0']}};
+ const champion=AI.configuration({level:5,side:1});
+ const novice=AI.configuration({level:1,side:1});
+ assert.ok(AI.score(active,o,champion,{})>AI.score(bench,o,champion,{}),
+  'Skilled Energy Removal targets the currently attacking threat');
+ assert.ok(AI.score(bench,o,novice,{})>AI.score(active,o,novice,{}),
+  'Novice may instead target the weaker-looking Benched Pokémon');
+ o.opponent.active.energies=[];
+ assert.ok(AI.score(bench,o,champion,{})>AI.score(active,o,champion,{}),
+  'An opponent Bench attacker with Energy is the right target when Active has none');
+ assert.equal(AI.candidates(o,champion,{powerKeys:new Set()}).filter(x=>x.type==='choose').length,2,
+  'Target selection still uses the same authoritative choice-command interface');
+}
 let duels=0,decisions=0,attacks=0,energy=0,evolutions=0,trainer=0;
 for(let seed=1;seed<=4;seed++){
  let game=createGame({decks:[deck,deck],seed:seed*1789,format:'classic'});
