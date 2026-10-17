@@ -25,6 +25,12 @@ Updated: 2026-10-17. Target: Base Set through Neo Destiny (Neo 4). Canonical bra
 
 - v0.57 and v0.58 add **verified mechanical behavior** rather than merely adding text signatures. They do not unlock every Baby evolution combo or every Energy interaction.
 
+| Neo v0.59 | `3e841d470b`, effect-handler fixes `1b40d2d0ca` / `49e675671b`, tests `5783b08864` | Recycle Energy returns from attached play to hand when discarded during retreat, attack KO, Energy Removal or Pokémon Center, while hand discards do not return. | Dedicated TCG run [39014820392](https://github.com/NicolasSorrenti/poketest/actions/runs/39014820392) PASS; combined Node run [39014820386](https://github.com/NicolasSorrenti/poketest/actions/runs/39014820386) PASS |
+
+- The current `npm test` consists of **142 sequential Node test commands**, including `test_neo_batch_v056.js` through `test_neo_batch_v059.js`.
+- Independent TCG workflow `.github/workflows/tcg.yml` was introduced at `8e58adccab` to distinguish gameplay regressions from RPG integration failures. This does **not** replace the combined Node workflow.
+- All files were committed on the latest available `main` heads using forward-only updates. Other agents' RPG changes were preserved.
+
 ## Coverage limitations
 
 The existing `attack_coverage.json` currently counts 1,479/1,479 classified signatures across 1,123 cards, but classification is not proof that 1,479 attacks are fully implemented or individually verified. The `power_coverage.json` and `trainer_coverage.json` artifacts are also snapshots; the latter describes 178 cards, 170 marked handler and 8 partial, without exhaustive dynamic timing verification. These totals MUST NOT be shown as authentic gameplay coverage percentages.
@@ -33,17 +39,17 @@ The curated deck pool is a strict subset of the 1,123-card archive; untested Neo
 
 ## Open correctness gaps / risks
 
-1. **Special Energy fidelity**: Rainbow typed costs and attachment damage, and Miracle Energy attachments/expiry now have focused tests. Recycle Energy return-from-play, effects treating Rainbow as each named basic type, and cross-Power Energy modifiers remain unresolved.
+1. **Special Energy fidelity**: Rainbow typed costs/attachment damage, Miracle attachments/expiry, and Recycle return-from-attached play on verified paths have regression tests. Recycle transactions with simultaneous discard retrieval, effects treating Rainbow as each named basic type, and cross-Power Energy modifiers remain unresolved. Miracle Energy pays two units but retreat still needs a dedicated multi-unit payment selector.
 2. **Baby and Gym evolution edge cases**: normal Baby-to-Basic and first-turn rules now have tests. Verify Baby evolution counted as an Evolved Pokémon for every effect and special Gym Trainer overrides.
 3. **Copied attack effects** with nested payment, targeting, redirection and reactive choices; Super Metronome and Sketch remain guarded for unsupported operations.
 4. **Pokémon Powers** whose timing depends on Bench transitions, on-play status, suppression, multi-KO and forced promotions.
-5. **Stadium timing** when a Stadium is replaced during a turn or a nested forced switch is underway; the current Stadium action is deliberately restricted to once per player's turn.
+5. **Stadium timing** when a Stadium is replaced during a turn or a nested forced switch is underway; the current Stadium action is deliberately restricted to once per player's turn. Verify exact old-era Stadium once-per-turn replacement rules.
 6. **Trainer reactive tools** such as EXP.ALL, Focus Band, Miracle Berry and Gold Berry; confirm cross-turn tool timing and simultaneous KOs.
 7. **Multiplayer browser E2E** and Render deployment remain unverified; reducers are unit-tested using the same shared Node implementation.
 
 ## Next prioritized tasks
 
-1. Implement Recycle Energy return-from-play with conservation tests for retreat, attacks, Energy Removal and knockouts; confirm Rainbow named-type interactions.
+1. Audit the remaining Recycle Energy paths and implement a correct per-card, multi-unit retreat payment selector for Double Colorless/Miracle Energy; test Rainbow's named-type interactions.
 2. Extend Baby/Gym evolution rules for special Trainer-granted exceptions and ensure evolved Baby-to-Basic is classified as Evolved for attack interactions.
 3. Implement remaining Neo Trainers / reactive tools and Stadium replacement timing using actual in-game tests.
 4. Re-run `npm test` and update this file **only after green CI**, retaining unresolved issues rather than declaring completion.
