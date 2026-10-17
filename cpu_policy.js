@@ -411,7 +411,16 @@ function score(a,o,cfg,used){
   const direct=damage*style.damage;
   const statusValue=/Poison|Paraly|Sleep|Confus/i.test(attack?.text||'')?16:0;
   const fixedCost=/Discard.*Energy attached to/i.test(attack?.text||'')?30:0;
-  return 150+direct*.9+135*koChance+riskPreference+statusValue-fixedCost;
+  const program=ATTACK.compile(attack);
+  const selfDamage=['recoil','coin-recoil','coin-recoil-bonus'].includes(program?.kind)?
+   (program.selfDamage||0):0;
+  const selfKnockout=selfDamage>=hpRemaining(p.active)&&selfDamage>0?
+   (program.kind==='recoil'?1:.5):0;
+  // An expensive recoil KO is a reasonable last-Prize trade. Otherwise,
+  // abandoning the only Active to self-KO can outright lose the match.
+  const selfLoss=cfg.level>=4?selfKnockout*
+   (p.bench.length===0?240:100)*(1-koChance*.8)*style.survival:0;
+  return 150+direct*.9+135*koChance+riskPreference+statusValue-fixedCost-selfLoss;
  }
  if(type==='play_trainer'){
   const name=card(p.hand[v.handIndex])?.name||'';
