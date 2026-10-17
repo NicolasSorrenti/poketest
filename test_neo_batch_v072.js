@@ -37,7 +37,7 @@ for(const id of rainbow)assert.equal(isBasicEnergy(CATALOG.get(id)),false,'Rainb
  choose(g,['energy:0','energy:1','energy:2']);
  assert.equal(g.players[0].active.energies.length,1,'Exactly 3 cards discarded, despite 4 Fire energy units');
  assert.deepEqual(g.players[0].discard.slice().sort(),['base1-98','base5-17','base5-80'].sort());
- assert.equal(g.players[1].active?.id,'base1-3','Pending Prize decision does not erase defending KO');
+ assert.equal(g.players[1].discard.includes('base1-3'),true,'Firestorm Knocked Out and discarded the defending Chansey');
  assert.ok(g.players[1].discard.includes('base1-3')||g.players[1].active.damage===120,'Firestorm deals 120 damage');
 }
 {
