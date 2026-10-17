@@ -12,7 +12,7 @@
 | Living schedules | Implemented | Deterministic one-location-per-period routines, circuit gatherings, route-dependent visits, next public sightings, weekly NPC match results and a town bulletin |
 | Time / home UX | Implemented | Explicit Morning/Afternoon/Evening clock, free travel, visible character counts, sleep, action costs, period/day transitions, calendar |
 | Social & VN | Expanded and playable | 44 authored, missable scenes including the eight original core routes, four optional Hana scenes, eight paired-heroine encounters, choice effects on multiple characters, friendship/romance resolutions |
-| Side activities | Implemented | Arcade high-score challenge (risk vs safe), café shifts, shop jobs, library study progression, riverside scouting, home resting |
+| Side activities | Implemented | Arcade high-score challenge (risk vs safe), café shifts, shop jobs, library study progression, riverside scouting, home resting and public map counts |
 | Authentic TCG bridge | Integrated | All duels reuse ClassicLocalService; authoritative win/loss, CPU duel iframe with encounter-scoped session token and returned match ID; no card-rule duplication |
 | Multi-match tournament | Implemented | Neighborhood Cup, Regional Qualifier and Championship: registration, reputation thresholds, 2/2/3 CPU rounds, wins/losses, elimination/forfeit, non-player standings |
 | Card economy | Implemented limited catalog | Base/Jungle/Neo Genesis collection shop, actual card IDs, 60-card starter from existing decklist API, purchased singles, eight-card game bundles, owned-card editor, custom deck legality, credits |
@@ -42,10 +42,10 @@
 
 ## Quality gates and tests
 
-- Command: \`npm run test:rpg\` (Node built-in test runner, test files \`tests/rpg_story.test.js\` and \`tests/rpg_systems.test.js\`).
-- Current test cases: 17. Story registry contains 44 events, with validated links and windows. Module-source scenarios and isolated simulated DOM checks have passed.
+- Command: \`npm run test:rpg\` (Node built-in test runner, test files \`tests/rpg_story.test.js\`, \`tests/rpg_systems.test.js\` and \`tests/rpg_ui.test.js\`).
+- Current test cases: 23 (17 unit/logic, 6 simulated controller smoke). Story registry contains 44 events, with validated links and windows. Module-source scenarios and isolated simulated DOM checks have passed.
 - Syntax checked for RPG/duel-bridge JS, exact HTML IDs and server script whitelist.
-- **Execution caveat:** this agent's runtime cannot clone GitHub through the shell, so the Node command and live Render browser run have *not* been executed here. The assertions were exercised in a JavaScript evaluator against fetched connector sources. Verify with \`npm run test:rpg\` and a real browser before calling the milestone production stable.
+- **Execution caveat:** this agent's runtime cannot clone GitHub through the shell, so the Node command and live Render browser run have *not* been executed here. The 23 authored assertions were exercised in a JavaScript evaluator against fetched connector sources, including a mock DOM with asynchronous catalog loading. Verify with \`npm run test:rpg\` and a real browser before calling the milestone production stable.
 - Essential manual checks: first launch, home sleep/day rollover, entering late-game shop, opening a paid bundle, editing/playing an owned custom deck, a full two-match Cup, losing another Cup, returning after reload mid-story and mid-duel, finishing day 90 and starting NG+.
 - Avoid changing existing multiplayer or the standalone Classic deck-builder storage.
 
