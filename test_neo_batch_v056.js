@@ -37,13 +37,13 @@ for(const id of require('./neo_v056_pool').ids){const c=CATALOG.get(id);assert.e
 }
 {
  const g=make('neo3-61'),p=g.players[0];
- send(g,0,'use_stadium');assert.equal(p.stadiumUsedTurn,g.turnSerial);
- assert.ok([40,60].includes(p.active.damage),'Healing Field heals on heads but not tails');
+ send(g,0,'use_stadium');assert.equal(g.players[0].stadiumUsedTurn,g.turnSerial);
+ assert.ok([40,60].includes(g.players[0].active.damage),'Healing Field heals on heads but not tails');
  assert.equal(applyCommand(g,0,{type:'use_stadium',payload:{}}).ok,false,'Only once per turn');
 }
 {
  const g=make('neo4-100'),p=g.players[0],before=p.hand.length;
- send(g,0,'use_stadium');assert.ok([before,before+1].includes(p.hand.length));
+ send(g,0,'use_stadium');assert.ok([before,before+1].includes(g.players[0].hand.length));
  assert.equal(applyCommand(g,0,{type:'use_stadium',payload:{}}).ok,false);
 }
 {
