@@ -134,6 +134,35 @@ It can also be used at difficulty 4. Lower levels reject the flag; the default
 remains unchanged. This path uses the live authoritative duel service, not a
 fake simulator.
 
+## Hand-only Energy planning A/B
+
+Added `energyHorizon`, a public-information-only two-turn forecast for
+specific Energy attachments. It reasons about the current player's own hand,
+discounts a later legal attachment, and never assumes unknown draws or private
+opposing information. Tested with actual Machoke Karate Chop scenarios.
+
+A 200-match, seat-swapped Champion-on vs Champion-off experiment (120-turn
+limit, independent deck/seed cohorts) produced:
+
+| Deck | Horizon wins | Original wins | Draws |
+| --- | ---: | ---: | ---: |
+| Blackout | 43 | 36 | 1 |
+| Brushfire | 26 | 34 | 0 |
+| Overgrowth | 30 | 28 | 2 |
+| **Combined** | **99** | **98** | **3** |
+
+This provides **no evidence that the new horizon makes Champion stronger**.
+It remains **disabled by default**. For a controlled local comparison:
+
+```sh
+node benchmark_cpu.js --pairs 40 --max-turns 120 --seed 21409 --left-level 5 --right-level 5 --left-energy-horizon true --right-energy-horizon false
+```
+
+Future efforts should prioritize a stronger search/value model and diagnose why
+well-formed local improvements fail to increase aggregate win rates, especially
+on different decks. No unit test that validates a tactical scenario replaces
+actual tournament measurements.
+
 ## Next acceptance milestones
 
 1. Increase actual decision competence at higher levels through public-state
