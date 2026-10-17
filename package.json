@@ -67,7 +67,8 @@
     "build": "node scripts/install-rpg-art.js",
     "postinstall": "node scripts/install-rpg-art.js",
     "prestart": "node scripts/install-rpg-art.js",
-    "test:art": "node --test tests/rpg_art_install.test.js"
+    "test:art": "node --test tests/rpg_art_install.test.js",
+    "test:rpg": "node --test tests/rpg_story.test.js tests/rpg_schedules.test.js tests/rpg_world.test.js tests/rpg_world_ui.test.js"
   },
   "engines": {
     "node": ">=18"
