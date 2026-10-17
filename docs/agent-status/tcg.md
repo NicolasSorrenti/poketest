@@ -23,21 +23,24 @@ A recognized attack signature or a handler name is **not** proof of complete his
 | **v0.63** | **Balloon Berry** corrected zero Retreat Cost, **Super Scoop Up** complete return to hand/promotion, **Magnifier** Resistance bypass and expiry | [39042461702](https://github.com/NicolasSorrenti/poketest/actions/runs/39042461702) | [39042461758](https://github.com/NicolasSorrenti/poketest/actions/runs/39042461758) |
 | **v0.64** | **New Pokédex** real shuffled top-five ordering, **Energy Amplifier** cost/coin/search, **Thought Wave Machine** coin-until-tails, returned Energy and immediate turn end | [39042937170](https://github.com/NicolasSorrenti/poketest/actions/runs/39042937170) | [39042937174](https://github.com/NicolasSorrenti/poketest/actions/runs/39042937174) |
 
-Four latest milestones were pushed through commits `04ec8653df`, `f67e9ffe8b`, `84ab669080` and `8203947574`, followed by focused test and fix commits, including `8a082eb684`, `d726b28848`, `ac5475a463`, `5993873239`, and `88a7007255`. Other agents' RPG work was preserved; updates used forward-only `main` changes with no force-push.
+| **v0.65** | **Card-Flip Game** masked face-down Prize choice, hidden type guess, persistent public face-up reveal and correct-only draw; fixed online Prize indexing | [39044285607](https://github.com/NicolasSorrenti/poketest/actions/runs/39044285607) | [39044285605](https://github.com/NicolasSorrenti/poketest/actions/runs/39044285605) |
+| **v0.66** | **Ecogym** non-Colorless Energy returned on opponent-caused non-KO discards, including staged Trainer choices, Colorless exclusions and Stadium replacement | [39044285607](https://github.com/NicolasSorrenti/poketest/actions/runs/39044285607) | [39044285605](https://github.com/NicolasSorrenti/poketest/actions/runs/39044285605) |
 
-**Latest test chain:** `npm test` executes **147 sequential Node test commands**, including `test_neo_batch_v061.js`, `v062`, `v063` and `v064`. The `TCG Gameplay Regression` workflow runs it separately from the broader Node/RPG regression workflow.
+The initial four milestones were pushed through commits `04ec8653df`, `f67e9ffe8b`, `84ab669080` and `8203947574`, followed by focused test and fix commits, including `8a082eb684`, `d726b28848`, `ac5475a463`, `5993873239`, and `88a7007255`. Other agents' RPG work was preserved; updates used forward-only `main` changes with no force-push.
+
+**Latest test chain:** `npm test` executes **149 sequential Node test commands**, including `test_neo_batch_v061.js` through `test_neo_batch_v066.js`. The `TCG Gameplay Regression` workflow runs it separately from the broader Node/RPG regression workflow.
 
 ## Coverage accounting (do not overclaim)
 
-- **Neo-series Trainer archive:** 44 printings, **42 with registered effect handlers**, **2 without handlers** after v0.64. Handler availability is *not* a count of fully authenticated implementations.
-- **Unported Neo Trainers:** `neo1-84` **Ecogym** (opponent-caused attached Energy discard, excluding KO), and `neo1-92` **Card-Flip Game** (opponent Prize guess and permanently face-up Prize state).
+- **Neo-series Trainer archive:** 44 printings, **44 with registered effect handlers**, **0 missing handlers** after v0.66. Handler availability is *not* a count of fully authenticated implementations.
+- **Previously missing Neo Trainers:** `neo1-84` Ecogym and `neo1-92` Card-Flip Game now have transactional implementations and focused tests. This is handler coverage, not exhaustive proof against every timing, ownership or interaction edge case.
 - **Pokémon Powers:** `power_coverage.json` lists 166 Power cards / 136 unique Power names and names with handlers, but not exhaustive dynamic trigger verification.
 - **Attacks:** `attack_coverage.json` lists 1,479 recognized signatures across 1,123 scanned historical cards; this is classification coverage, **not** verified attack execution coverage. Legacy interpreter audits still flag conditional/unported cases.
 - **Old coverage snapshots:** `trainer_coverage.json` is a static snapshot (178 cards, 170 handler, 8 partial) and must be refreshed with dynamic evidence before representing current runtime fidelity.
 
 ## Known risks and unresolved interactions
 
-1. Ecogym and Card-Flip Game require stateful cross-event tracking and privacy-safe face-up Prize representations; neither was declared complete.
+1. **Ecogym corner cases:** opponent-caused multi-effect discards from evolving/devolving or cloned identical Pokémon, and Energy originally owned by a different player, require per-card instance tracking beyond the tested matching by surviving host. **Card-Flip Game:** face-up Prize data is projected for players/spectators; independently verify both browser UIs after reconnect and exact Prize-reveal visuals.
 2. Focus Band, EXP.ALL and Berry effects need additional tests for simultaneous double KOs, multiple holders, KO while Poisoned, defensive Power interactions, and attacker-induced replacement.
 3. Copied attacks (Sketch / Super Metronome / Gym copying) still exclude certain nested choices, payment/redirection chains, and opponent-controlled decisions.
 4. Rainbow Energy named-type modifiers and Recycle Energy mixed discard/retrieval transactions still need a card-instance-level audit.
@@ -47,7 +50,7 @@ Four latest milestones were pushed through commits `04ec8653df`, `f67e9ffe8b`, `
 
 ## Next priorities
 
-1. Implement **Ecogym** with opponent-caused non-Colorless Energy discard provenance and KO exceptions; add comprehensive conservation and timing tests.
-2. Implement **Card-Flip Game** with publicly revealed opponent Prize identities and privacy-safe permanent face-up state through Prize selection and save/load.
-3. Expand attack-copy decision tests and reactive multi-KO scenarios, then audit broader Neo Powers and Gym modifiers.
-4. Repeat both CI suites and an actual two-client multiplayer smoke test. Update this document with reproducible pass/fail evidence, never handler-only completion claims.
+1. Expand attack-copy decision tests and reactive simultaneous multi-KO scenarios, with Focus Band / EXP.ALL / Stadium interactions.
+2. Verify Ecogym opponent-effect provenance through Pokémon Power and copied attack discards, duplicate hosts and unusual Energy transfers; preserve all owner/card identities.
+3. Validate two-browser prize reveal and Prize selection across reconnect/save/load, including Card-Flip Game and Here Comes Team Rocket! interactions.
+4. Re-run dedicated TCG, combined Node and CPU/multiplayer suites after fixes, and update this document only with reproducible pass/fail evidence.
