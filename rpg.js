@@ -68,7 +68,7 @@ function finishStory(){
 
 function timeFlash(beforeDay,beforeSlot){const overlay=document.createElement('div');overlay.className='notice-pop';const heading=document.createElement('b');heading.textContent=state.day>90?'Season complete':state.day!==beforeDay?'A NEW DAY BEGINS':'TIME PASSES';const body=document.createElement('span');body.textContent=state.day>90?'Day 90 has ended.':('Day '+state.day+' · '+periods[state.slot]);overlay.append(heading,body);document.body.append(overlay);overlay.addEventListener('animationend',()=>overlay.remove());}
 
-function defaults(){return {day:1,slot:0,location:'home',metReina:false,reinaTrust:0,reinaDuels:0,results:[],flags:{intro:false},journal:['The 90-day season begins.'],pendingDuel:null,bonds:{},talked:{},hungOut:{},eventsDone:{},points:0,credits:80,playerDeck:'blackout',selected:null,ended:false,storyDone:{},storyMissed:{},relationships:{},routeOutcomes:{},partner:null,activeStory:null,finale:null,newGamePlus:0}}
+function defaults(){return {day:1,slot:0,location:'home',metReina:false,reinaTrust:0,reinaDuels:0,results:[],flags:{intro:false},journal:['The 90-day season begins.'],pendingDuel:null,bonds:{},talked:{},hungOut:{},eventsDone:{},points:0,credits:80,playerDeck:'blackout',selected:null,ended:false,storyDone:{},storyMissed:{},relationships:{},routeOutcomes:{},partner:null,activeStory:null,finale:null,newGamePlus:0,activityDone:{},practiceInsights:0}}
 let state;try{state=JSON.parse(localStorage.getItem(KEY))||defaults();if(!Number.isInteger(state.day)||state.day<1||state.day>91)throw Error('Invalid save');}catch{state=defaults()}
 for(const [k,v] of Object.entries(defaults()))if(state[k]===undefined)state[k]=v;
 for(const id of Object.keys(cast)){if(!state.bonds[id])state.bonds[id]={affection:0,trust:0,duels:0};}
@@ -113,6 +113,11 @@ function act(action){
  if(type==='calendar')return openCalendar();
  if(type==='tregister')return registerTournament(id);
  if(type==='tmatch')return startTournamentRound();
+ if(type==='arcadeStart')return arcadeStart();
+ if(type==='arcade')return arcadeFinish(id);
+ if(type==='cafeShift')return sideActivity('cafeShift');
+ if(type==='research')return sideActivity('research');
+ if(type==='scout')return sideActivity('scout');
  if(type==='home'){state.location='home';state.selected=null;persist();return say('Narrator','Back home. The championship posters on the wall remind you why you came.');}
  if(type==='sleep'){if(state.location!=='home')return;const n=3-state.slot;advance(n);return say('Narrator','You wake up to a new day in Neo Harbor.');}
  if(type==='close'){state.selected=null;persist();return say('Narrator','The town has a rhythm of its own. You are beginning to hear it.');}
@@ -156,13 +161,76 @@ if(duel.tournamentId){
  }catch(error){log('Tournament update error: '+error.message);}
 }
 if(duel.eventKey&&!state.eventsDone[duel.eventKey]){state.eventsDone[duel.eventKey]={won,day:duel.day};if(won)state.points+=duel.eventReward;log('Played '+duel.eventTitle+(won?' — victory.':' — defeat.'));}if(duel.npc==='reina'){state.reinaDuels=bond.duels;state.reinaTrust=bond.trust;}log('Day '+duel.day+': '+(won?'Defeated ':'Lost to ')+c.name+'.');state.pendingDuel=null;advance();state.selected=null;$('duel').hidden=true;$('battle').src='about:blank';say(duel.tournamentId?'Tournament Desk':c.name,duel.tournamentId?tournamentMessage:(won?c.duelWin:c.duelLose));});
+
+function sideActivity(type){
+ if(state.activeStory||state.pendingDuel||state.day>90)return;
+ const required={cafeShift:'cafe',research:'library',scout:'park'}[type];
+ if(state.location!==required)return;
+ const key=state.day+':'+type;
+ if(state.activityDone[key])return say('Narrator','You already completed that activity today.');
+ state.activityDone[key]=true;
+ if(type==='cafeShift'){
+  state.credits+=12;
+  const hana=currentPeople().includes('hana')?' Hana helps you balance the trays without dropping a single cup.':'';
+  log('Earned 12 credits helping at The Rest Stop.');advance();
+  return say('Café Counter','Another shift finished. You earn 12 credits.'+hana);
+ }
+ if(type==='research'){
+  state.practiceInsights++;let gain=0;
+  if(state.practiceInsights%3===0){gain=2;state.points+=gain;}
+  log('Studied match notes at the library'+(gain?' and earned 2 circuit points.':'.'));
+  advance();return say('Town Library',gain?'Your research starts to pay off: +2 circuit points.':'You discover new strategies. Three study sessions turn into useful tournament preparation.');
+ }
+ const present=currentPeople().filter(id=>state.relationships[id]?.affection>0);
+ const friend=present[0];
+ const result=friend?'You notice '+cast[friend].name+' also enjoys this quiet spot.':'You hear a few regulars discussing upcoming matches.';
+ state.practiceInsights++;log('Spent the period scouting opportunities along the river.');
+ advance();return say('Riverside Park',result+' You take a few useful notes for later.');
+}
+function arcadeStart(){
+ if(state.location!=='arcade'||state.activeStory||state.pendingDuel||state.day>90)return;
+ if(state.activityDone[state.day+':arcade'])return say('Arcade Host','You already entered today’s high-score challenge. Try again another day.');
+ return say('Arcade Host','The high-score cabinet has a new challenge. A steady run is safe; an aggressive run can earn a bigger prize.',[
+ ['Play it safe · ⏳ 1 period','arcade:safe'],
+ ['Go for the record · ⏳ 1 period','arcade:risk'],
+ ['Maybe later','close']
+ ]);
+}
+function arcadeFinish(option){
+ if(state.location!=='arcade'||state.activeStory||state.pendingDuel||state.day>90||!['safe','risk'].includes(option))return;
+ const key=state.day+':arcade';if(state.activityDone[key])return;
+ state.activityDone[key]=true;
+ const duels=state.results.length,success=option==='safe'||((state.day*13+duels*7+state.slot*5)%5)>=2;
+ const reward=option==='safe'?8:success?20:3;
+ state.credits+=reward;
+ if(success&&currentPeople().includes('yuna')){state.relationships.yuna.affection++;state.bonds.yuna.affection++;}
+ log('Played the Pixel Palace high-score challenge. Earned '+reward+' credits.');
+ advance();
+ return say('Arcade Host',success?'Your score lights up the screen. You earn '+reward+' credits!':'Not quite a record, but the arcade gives you '+reward+' participation credits.');
+}
+
 function openCalendar(){
  const root=$('calendarEntries');root.replaceChildren();
- for(const e of eventCards.filter(e=>e.day>=state.day).slice(0,8)){
+ const heading=document.createElement('h3');heading.textContent='Circuit Fixtures';root.append(heading);
+ for(const e of CIRCUIT.standing(state).filter(e=>e.day>=state.day)){
+  const p=document.createElement('div');p.className='calendar-entry';
+  p.textContent='DAY '+e.day+' · '+e.name+' · '+e.threshold+' circuit points · Community Center';root.append(p);
+ }
+ for(const e of eventCards.filter(e=>e.day>=state.day&&![30,60,88,90].includes(e.day)).slice(0,5)){
   const p=document.createElement('div');p.className='calendar-entry';
   p.textContent='DAY '+e.day+' · '+periods[e.slot]+' · '+e.title+' · '+places[e.place][0];root.append(p);
  }
- const info=document.createElement('p');info.className='empty-note';info.textContent='Character plans and private encounters are discovered through play.';root.append(info);
+ const label=document.createElement('h3');label.textContent='Your Contacts · Next Known Sighting';root.append(label);
+ let found=0;
+ for(const [id,c] of Object.entries(cast)){
+  if(!state['met_'+id]&&!state.flags['met_'+id])continue;
+  const next=WORLD.nextSighting(state,cast,id,7);
+  const row=document.createElement('p');row.className='calendar-entry';
+  row.textContent=c.name+' · '+(next?'Day '+next.day+', '+periods[next.slot]+' at '+places[next.place][0]:'No confirmed public schedule this week');
+  root.append(row);found++;
+ }
+ if(!found){const p=document.createElement('p');p.className='empty-note';p.textContent='Speak to a character to add their public routine to this notebook.';root.append(p);}
+ const info=document.createElement('p');info.className='empty-note';info.textContent='Personal plans and secret encounters are not announced on the public calendar.';root.append(info);
  $('calendarDialog').showModal();
 }
 function makeAvatar(id,size=''){
@@ -305,7 +373,8 @@ function render(){
   const b=document.createElement('button');b.className='place '+(id===state.location?'selected':'');
   const glyph={home:'⌂',shop:'♠',arcade:'✦',park:'❀',cafe:'☕',center:'♜',library:'▤'}[id];
   b.textContent=glyph+'  '+name;b.disabled=locked;b.onclick=()=>{state.location=id;state.selected=null;persist();say('Narrator',detail)};
-  const status=document.createElement('span');status.className='place-status';status.textContent=id===state.location?'HERE':'›';b.append(status);$('places').append(b);
+  const status=document.createElement('span');status.className='place-status';const present=WORLD.peopleAt(state,cast,id,STORY.available(state,id));
+  status.textContent=id===state.location?'HERE'+(present.length?' · '+present.length:''):present.length?present.length+' HERE':'›';b.append(status);$('places').append(b);
  }
  $('placeTitle').textContent=places[state.location][0];$('placeDetail').textContent=places[state.location][1];
  const bgFiles={home:'home.jpg',shop:state.slot===2?'card-shop-evening.png':'card-shop-day.png',arcade:'arcade.jpg',park:'park.jpg',cafe:'cafe.jpg',center:'center.jpg',library:'library.jpg'};
@@ -378,6 +447,10 @@ function render(){
  [state.location==='home'?'Rest at home · ⏳ 1 period':'Wait one period · ⏳ 1 period','rest'],
  ...(state.location==='home'?[['Sleep until morning · ⏳ '+(3-state.slot)+' period(s)','sleep']]:[]),
  ...(state.location==='shop'?[['Help at shop · ⏳ 1 period · +15 credits','work']]:[]),
+ ...(state.location==='arcade'?[['Arcade high-score challenge · ⏳ 1 period','arcadeStart']]:[]),
+ ...(state.location==='cafe'?[['Help at the café · ⏳ +12 credits','cafeShift']]:[]),
+ ...(state.location==='library'?[['Study match reports · ⏳ 1 period','research']]:[]),
+ ...(state.location==='park'?[['Scout the riverside · ⏳ 1 period','scout']]:[]),
  ['Study deck strategy · ⏳ 1 period','practice'],['Calendar · free','calendar'],['New campaign','new']];
  for(const [label,action] of items){
   const b=document.createElement('button');b.className='activity';b.textContent=label;b.disabled=(ended&&action!=='new'&&action!=='calendar')||(locked&&action!=='calendar');b.onclick=()=>act(action);$('activities').append(b);
