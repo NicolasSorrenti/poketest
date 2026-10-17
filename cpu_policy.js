@@ -78,7 +78,18 @@ function estimatedDamage(attack,attacker,defender){
  if(!attack||!defender)return 0;
  const raw=String(attack.damage||'0');
  let amount=parseInt(raw,10)||0;
- if(raw.endsWith('x'))amount*=1; // Conservative expectation: no unseen flips.
+ const program=ATTACK.compile(attack);
+ // The evaluator estimates EXPECTED damage of supported families, rather than
+ // assuming the highest coin outcome or treating counter attacks as flat 10.
+ // These estimates never alter combat resolution or RNG state.
+ if(program?.kind==='flail-counters')amount=program.factor*(attacker.damage||0)/10;
+ else if(program?.kind==='own-counters')amount=program.base+program.factor*(attacker.damage||0)/10;
+ else if(program?.kind==='defender-counters')amount=program.base+program.factor*(defender.damage||0)/10;
+ else if(program?.kind==='minus-counters')amount=Math.max(0,program.base-program.factor*(attacker.damage||0)/10);
+ else if(program?.kind==='coin-times')amount=program.flips*program.each*.5;
+ else if(program?.kind==='coin-failure')amount=program.damage*.5;
+ else if(program?.kind==='coin-bonus')amount=program.base+program.bonus*.5;
+ else if(raw.endsWith('x'))amount*=1;
  else if(raw.endsWith('+'))amount+=8;
  else if(raw.endsWith('-'))amount=Math.max(0,amount-10);
  const aType=(card(attacker?.id)?.types||[])[0],target=card(defender.id);
