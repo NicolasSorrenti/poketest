@@ -28,9 +28,9 @@ for(const row of NEO.entries){
  assert.equal(s.view.phase,'game');assert.deepEqual(s.counts,[60,60]);
  assert.deepEqual(local.decklist(row.id),cards);
 }
-assert.ok(!FORMAT.isAllowed('neo1-9',{neo:true}),'Lugia is not in either starter and must remain locked');
+assert.ok(FORMAT.isAllowed('neo1-9',{neo:true}),'Lugia is enabled with complete Elemental Blast');
 assert.ok(FORMAT.isAllowed('neo1-8',{neo:true}));
-assert.equal(new ClassicLocalService().cardPool().length,705+new Set([...NEO.neoIds,...require('./neo_discovery_decks').neoIds,...require('./neo_bonus_pool').ids,...require('./neo_destiny_decks').neoIds,...require('./neo_v040_pool').ids,...require('./neo_v046_pool').ids,...require('./neo_v047_pool').ids]).size);
+assert.equal(new ClassicLocalService().cardPool().length,705+new Set([...NEO.neoIds,...require('./neo_discovery_decks').neoIds,...require('./neo_bonus_pool').ids,...require('./neo_destiny_decks').neoIds,...require('./neo_v040_pool').ids,...require('./neo_v046_pool').ids,...require('./neo_v047_pool').ids,...require('./neo_v048_pool').ids]).size);
 assert.equal(T.SUPPORTED.has('Professor Elm'),true);
 for(const name of ["Bill's Teleporter",'Moo-Moo Milk','Pokémon March','Professor Elm','Super Rod'])assert.ok(T.SUPPORTED.has(name),`Missing Trainer: ${name}`);
 // Neo Trainer cards resolve in the same reducer as every existing Classic Trainer.

@@ -12,7 +12,7 @@ const decision=(g,ids)=>{const d=g.pendingDecision;assert.ok(d,'Expected pending
 const state=()=>{const g=createGame({decks:[D.list('brainwave'),D.list('wallop')],format:'neo-theme',seed:4526});g.phase='game';g.round=4;g.turnSerial=9;g.turn=0;g.players[0].active=unit('neo2-38');g.players[1].active=unit('neo2-66');return g;};
 assert.equal(D.entries.length,2);assert.equal(D.list('brainwave').length,60);assert.equal(D.list('wallop').length,60);
 assert.equal(D.neoIds.length,22);assert.equal(deckOptions().length,33);
-assert.equal(new ClassicLocalService().cardPool().length,705+new Set([...N.neoIds,...D.neoIds,...require('./neo_bonus_pool').ids,...require('./neo_destiny_decks').neoIds,...require('./neo_v040_pool').ids,...require('./neo_v046_pool').ids,...require('./neo_v047_pool').ids]).size);
+assert.equal(new ClassicLocalService().cardPool().length,705+new Set([...N.neoIds,...D.neoIds,...require('./neo_bonus_pool').ids,...require('./neo_destiny_decks').neoIds,...require('./neo_v040_pool').ids,...require('./neo_v046_pool').ids,...require('./neo_v047_pool').ids,...require('./neo_v048_pool').ids]).size);
 assert.equal(D.list('brainwave').filter(x=>x==='neo2-1').length,1,'Actual Espeon holo #1');
 assert.ok(!D.list('brainwave').includes('neo2-20'));
 for(const e of D.entries){
@@ -28,7 +28,7 @@ for(const e of D.entries){
  s=svc.action(token,{type:'setup_confirm',payload:{}},s.revision);
  assert.equal(s.view.phase,'game');assert.deepEqual(s.counts,[60,60]);assert.deepEqual(svc.decklist(e.id),cards);
 }
-assert.equal(F.isAllowed('neo2-12',{neo:true}),false,'Unsupported Neo Discovery printings stay locked');
+assert.equal(F.isAllowed('neo2-12',{neo:true}),true,'Tyranitar is now fully executable with Trample');
 assert.equal(F.isAllowed('neo2-1',{neo:true}),true);
 for(const name of ['Energy Ark','Fossil Egg','Hyper Devolution Spray','Double Gust'])assert.ok(T.SUPPORTED.has(name),name);
 // Energy Ark: flip twice; can search only 0..heads basic Energy, and shuffle.

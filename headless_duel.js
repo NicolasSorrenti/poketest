@@ -44,7 +44,7 @@ function unit(id,round=0){return {id,under:[],energies:[],attachedTrainers:[],da
 function allPokemon(p){return [p.active,...p.bench].filter(Boolean);}
 function hasActiveEffect(u,key,g){return Boolean(u&&u[key]&&u[key].expires>g.turnSerial);}
 function clearBenchEffects(u){
- for(const key of ['shield','attackPenalty','noRetreat','attackLock','reactiveShield','swordsDance','amnesia','mirrorShell','destinyBond','lastAttackImpact','screech','noSwitch','gymGiantGrowth','gymInkSpurt','gymShadowImages','gymFireWall','gymCrosscounter'])delete u[key];
+ for(const key of ['shield','attackPenalty','noRetreat','attackLock','reactiveShield','swordsDance','amnesia','mirrorShell','destinyBond','lastAttackImpact','screech','noSwitch','gymGiantGrowth','gymInkSpurt','gymShadowImages','gymFireWall','gymCrosscounter','neo48Growl','neo48Slime','neo48PollenShieldUntil','neo48Endure','neo48MeanLook','neo48EndureUsed','neo48SlimeUntil','neo48CrunchUntil'])delete u[key];
 }
 function familyCandidates(g,side,restriction){
  const p=g.players[side];return p.deck.flatMap((id,i)=>{
@@ -145,6 +145,7 @@ function requireMigratedEffects(g){
  for(const p of g.players)for(const u of allPokemon(p))if((card(g,u.id).abilities||[]).length)fail('An in-play Pokémon Power requires an effect handler');
 }
 function applyCondition(g,u,status){
+ if(u.neo48PollenShieldUntil>g.turnSerial&&['Asleep','Confused','Paralyzed','Poisoned'].includes(status))return;
  if(isClassicRules(g)&&CLASSIC_POWERS.protectsStatus(g,u))return;
  STATUS.applyCondition(u,status);
  if(u.gymShapeshiftCard&&['Asleep','Confused','Paralyzed'].includes(status)){
@@ -521,6 +522,10 @@ function performAction(g,side,cmd){
    return;
   }
   if(pending.kind==='neo_hydro'){resolveAttack(g,pending.side,pending.attackIndex,undefined,undefined,{hydroBoost:selection==='boost:yes'});return;}
+  if(pending.kind==='neo48_select'){
+   g.pendingDecision=null;g.pendingAction=null;
+   resolveAttack(g,pending.side,pending.attackIndex,undefined,undefined,{...pending.extra,neo48Choices:[...answer.selected],neo48Answered:true,preRoll:pending.roll,confusionChecked:true,attackPenaltyChecked:true});return;
+  }
   if(pending.kind==='neo47_attack'){
    const owner=g.players[pending.side],target=owner.active,stage=pending.stage;
    if(!target)fail('Neo attack Pokémon left Active before selection');
@@ -718,6 +723,7 @@ function performAction(g,side,cmd){
  }
  if(type==='retreat'){
   const u=safeSlot(p,-1);if(u.secretPlanFaceDown&&!revealSecretPlan(g,side,-1)){completeKnockouts(g,'trainer');return;}requireInt(v.slot,'Bench slot');if(!p.bench[v.slot])fail('Invalid retreat target');
+  if(u.neo48MeanLook&&g.players[1-side].active?.neo48MeanLook===u.neo48MeanLook)fail('Mean Look prevents retreat');
   if(u.status==='Asleep'||u.status==='Paralyzed'||(p.confusedRetreatFailed&&u.status==='Confused')||hasActiveEffect(u,'noRetreat',g)&&jawClampLocks(g,side))fail('Cannot retreat');
   const cost=retreatCost(g,side,u);
   if(u.energies.length<cost)fail('Insufficient retreat Energy');
@@ -1093,6 +1099,45 @@ function resolveAttack(g,side,index,chosenBench,energyPicks,extra={}){
  }
  const coreContext={selfWater:u.energies.filter(id=>card(g,id).name==='Water Energy').length,selfLightning:u.energies.filter(id=>card(g,id).name==='Lightning Energy').length,selfCounters:Math.floor(u.damage/10),defenderCounters:Math.floor(f.active.damage/10),benchCount:p.bench.length,enemyEnergy:f.active.energies.length,enemyRemainingHP:Math.max(0,maxHP(g,f.active)-f.active.damage),selfEnergy:u.energies.length,enemyBench:f.bench.length,topFireCount:p.deck.slice(-5).filter(id=>card(g,id).name==='Fire Energy').length,selfPoisoned:u.status==='Poisoned',nidokingOnBench:p.bench.some(x=>card(g,x.id).name==="Giovanni's Nidoking"),nightSpirits:allPokemon(p).filter(x=>["Sabrina's Gastly","Sabrina's Haunter","Sabrina's Gengar"].includes(card(g,x.id).name)).length,enemyMaxHP:maxHP(g,f.active),enemyFighting:effectiveCard(g,f.active).types?.includes('Fighting'),selfFireCards:u.energies.filter(id=>card(g,id).name==='Fire Energy').length,bellossomCount:allPokemon(p).filter(x=>card(g,x.id).name==='Bellossom').length,ownPokemonCount:allPokemon(p).length,discardEnergyCount:p.discard.filter(id=>isEnergy(card(g,id))).length,enemyBaby:['Elekid','Magby','Tyrogue','Igglybuff','Cleffa','Pichu','Smoochum'].includes(effectiveCard(g,f.active).name),enemyBasic:effectiveCard(g,f.active).subtypes?.includes('Basic'),damagedPreviousTurn:u.lastAttackImpact?.serial===g.turnSerial-1&&u.lastAttackImpact.damage>0,extraEnergies:(type)=>extraAttackEnergy(g,u,a,type),teamNameCount:(names,region)=> (region==='bench'?p.bench:allPokemon(p)).filter(x=>names.includes(card(g,x.id).name)).length,allNamedCount:(names)=>g.players.flatMap(allPokemon).filter(x=>names.includes(card(g,x.id).name)).length,enemyBenchCount:f.bench.length,darkDefender:card(g,f.active.id).name.startsWith('Dark '),topFiveEnergyCount:p.deck.slice(-5).filter(id=>isEnergy(card(g,id))).length,discardAmount:extra.theme?.sources?.length||0,flameHeads:extra.theme?.roll?.flips?.filter(Boolean).length||0};
  let roll=extra.preRoll||ATTACK.resolve(program,()=>next(g,2)===1,coreContext);
+ if(program.kind.startsWith('neo48:')){
+  const kind=program.kind.slice(6),pickables=[];
+  let min=0,max=0,label='',actor=side;
+  const choice=(ids,prefix,owner)=>ids.map((id,i)=>({id:`${prefix}:${i}`,label:owner(id,i)}));
+  if(kind==='feint-attack'){
+   pickables.push({id:'target:-1',label:`Active: ${publicName(g,f.active)}`},...f.bench.map((x,i)=>({id:`target:${i}`,label:`Bench: ${publicName(g,x)}`})));min=max=1;label='Feint Attack: choose an opposing Pokémon';
+  }else if(kind==='sweet-nectar'&&roll.healFullChoice){
+   pickables.push(...(p.active?.damage?[{id:'own:-1',label:`Active: ${publicName(g,p.active)}`}]:[]),...p.bench.flatMap((x,i)=>x.damage?[{id:`own:${i}`,label:`Bench: ${publicName(g,x)}`}]:[]));
+   if(pickables.length){min=max=1;label='Sweet Nectar: choose one of your damaged Pokémon';}
+  }else if(kind==='growth'&&roll.neo48Growth){
+   pickables.push(...p.hand.flatMap((id,i)=>isEnergy(card(g,id))?[{id:`hand:${i}`,label:card(g,id).name}]:[]));max=Math.min(2,pickables.length);label='Growth: attach up to 2 Energy from hand';
+  }else if(kind==='collect-fire'){
+   pickables.push(...p.discard.flatMap((id,i)=>card(g,id).name==='Fire Energy'?[{id:`discard:${i}`,label:card(g,id).name}]:[]));max=Math.min(1,pickables.length);label='Collect Fire: attach a Fire Energy from your discard';
+  }else if(kind==='flame-wheel'||kind==='flamethrower'||kind==='elemental-blast'){
+   pickables.push(...u.energies.map((id,i)=>({id:`energy:${i}`,label:card(g,id).name})));
+   min=max=kind==='flame-wheel'||kind==='elemental-blast'?3:Math.min(1,pickables.length);
+   if(kind==='elemental-blast'&&!['Fire','Water','Lightning'].every(name=>u.energies.some(id=>card(g,id).name===name+' Energy')))fail('Elemental Blast requires one attached Fire, Water and Lightning Energy card');
+   if(kind==='flame-wheel'&&u.energies.length<3)fail('Flame Wheel requires three attached Energy cards');
+   label=kind==='elemental-blast'?'Elemental Blast: choose one Fire, Water and Lightning Energy to discard':`Choose ${min} Energy card(s) to discard`;
+  }
+  if(!extra.neo48Answered&&pickables.length&&max>0){
+   g.nextDecisionId++;g.pendingDecision=makeDecision({id:`neo48:${g.nextDecisionId}`,actor,kind:'neo-attack-choice',label,options:pickables,min,max,optional:min===0});
+   g.pendingAction={kind:'neo48_select',side,attackIndex:index,roll,extra};return;
+  }
+  const choices=extra.neo48Choices||[];
+  if(choices.length!==new Set(choices).size)fail('Duplicate Neo choice');
+  const nums=(prefix)=>choices.filter(x=>x.startsWith(prefix+':')).map(x=>Number(x.slice(prefix.length+1)));
+  if(kind==='feint-attack'&&(nums('target').length!==1||nums('target')[0]<-1||nums('target')[0]>=f.bench.length))fail('Feint Attack requires a valid target');
+  if(kind==='sweet-nectar'&&roll.healFullChoice){const picks=nums('own');if(picks.length>1||picks.length&&!(picks[0]===-1?p.active:p.bench[picks[0]])?.damage)fail('Illegal Sweet Nectar target');}
+  if(kind==='growth'&&roll.neo48Growth){const picks=nums('hand');if(picks.length>2||picks.some(i=>!Number.isInteger(i)||i<0||i>=p.hand.length||!isEnergy(card(g,p.hand[i]))))fail('Illegal Growth energy');}
+  if(kind==='collect-fire'){const picks=nums('discard');if(picks.length>1||picks.some(i=>!Number.isInteger(i)||card(g,p.discard[i])?.name!=='Fire Energy'))fail('Illegal Collect Fire target');}
+  if(['flame-wheel','flamethrower','elemental-blast'].includes(kind)){
+   const picks=nums('energy'),expected=kind==='flamethrower'?Math.min(1,u.energies.length):3;
+   if(picks.length!==expected||picks.some(i=>!Number.isInteger(i)||i<0||i>=u.energies.length))fail('Invalid Neo attack Energy discard');
+   if(kind==='elemental-blast'&&(!['Fire Energy','Water Energy','Lightning Energy'].every(name=>picks.some(i=>card(g,u.energies[i]).name===name))||new Set(picks).size!==3))fail('Elemental Blast needs Fire, Water and Lightning Energy');
+  }
+  extra.neo48Choices=choices;
+ }
+
  if(program.kind==='gym:psyduck-esp'&&roll.gymPsyduckHeads===3){
   const copyable=(card(g,f.active.id).attacks||[]).flatMap((attack,i)=>{
    const script=ATTACK.compile(attack);
@@ -1172,6 +1217,7 @@ function resolveAttack(g,side,index,chosenBench,energyPicks,extra={}){
  // Darkness Energy provides a +10 attack bonus after Weakness/Resistance.
  const metalOnAttacker=specialEnergyCount(g,u,'Metal');
  if(metalOnAttacker&&!isMetalType(g,u))baseDamage=Math.max(0,baseDamage-10*metalOnAttacker);
+ if(f.active.neo48Growl?.expires>g.turnSerial&&f.active.neo48Growl.sourceId===u.id)baseDamage=Math.max(0,baseDamage-10);
  let dmg=roll.ignoreWR?baseDamage:calculateDamage(c,defCard,baseDamage,f.active,{
   ignoreResistance:roll.ignoreResistance||(g.stadium&&card(g,g.stadium.id).name==='Pewter City Gym'&&c.name.startsWith("Brock's ")),
   ignoreWeakness:g.stadium&&card(g,g.stadium.id).name==='Cinnabar City Gym'&&c.types?.includes('Water')&&defCard.name.startsWith("Blaine's "),
@@ -1194,6 +1240,8 @@ function resolveAttack(g,side,index,chosenBench,energyPicks,extra={}){
   if(dmg>0)dmg+=powers*10;
   if(CLASSIC_POWERS.enabled(g,u,'Frenzy')&&u.status==='Confused'&&dmg>0)dmg+=30;
  }
+ if(dmg>0&&f.active.neo48CrunchUntil>g.turnSerial)dmg+=20;
+ if(dmg>0&&f.active.neo48SlimeUntil>g.turnSerial&&next(g,2)===0){dmg=0;log(g,'Wooper Slime prevented damage on tails.');}
  // Relaxing Scent halves damage after Weakness/Resistance, rounded up to 10.
  const relaxing=isClassicRules(g)&&g.players.some(owner=>CLASSIC_POWERS.enabled(g,owner.active,'Relaxing Scent'));
  if(relaxing&&dmg>0)dmg=Math.ceil(dmg/20)*10;
@@ -1285,6 +1333,11 @@ function resolveAttack(g,side,index,chosenBench,energyPicks,extra={}){
    (g.benchGuardQueue ||= []).push({owner:victim,targetIndex:owner.bench.indexOf(target),amount:defended});
   }
  }};
+ // Neo multi-target attacks resolve through the existing Bench-damage helper
+ // so Bench Guard, Relaxing Scent and other general Bench effects are honored.
+ if(roll.neo48Trample)for(const owner of g.players)for(const victim of owner.bench)if(next(g,2)===1)hitBench(owner,victim,30);
+ if(roll.neo48Zzzap)for(const owner of g.players)for(const victim of allPokemon(owner))if(!victim.secretPlanFaceDown&&(card(g,victim.id).abilities||[]).length){if(owner.active===victim)victim.damage+=20;else hitBench(owner,victim,20);}
+ if(roll.neo48Shockwave){if(roll.neo48ShockwaveDamage){f.active.damage+=10;for(const victim of f.bench)hitBench(f,victim,10);}roll.forceSwitch='switch-defender';}
  if(program.kind.startsWith('theme:')){
   const d=extra.theme||{},effect=program.effect,heads=Boolean(roll.flips[0]);
   const choice=(key,prefix)=>d[key]?.map(id=>Number(id.slice(prefix.length)))||[];
@@ -1372,6 +1425,19 @@ function resolveAttack(g,side,index,chosenBench,energyPicks,extra={}){
  // Gym-specific effects with strict card conservation. Damage and shields
  // resolve first; KO handling stays in the existing common pipeline.
  if(u.id==='gym2-22'&&a.name==='Lie Low')u.gymLieLowSerial=g.turnSerial;
+ if(roll.neo48MeanLook){const key=`${side}:${g.turnSerial}:${u.id}`;u.neo48MeanLook=key;f.active.neo48MeanLook=key;}
+ if(roll.neo48PollenShield)u.neo48PollenShieldUntil=g.turnSerial+2;
+ if(roll.neo48Growl)u.neo48Growl={expires:g.turnSerial+2,sourceId:f.active.id};
+ if(roll.neo48Endure)u.neo48Endure={expires:g.turnSerial+2};
+ if(roll.neo48Freeze)f.active.attackLock={expires:g.turnSerial+2,targetId:u.id};
+ if(roll.neo48Slime)u.neo48SlimeUntil=g.turnSerial+2;
+ if(roll.neo48Crunch)f.active.neo48CrunchUntil=g.turnSerial+3;
+ if(roll.neo48EnergyDiscard){const chosen=extra.neo48Choices?.filter(x=>x.startsWith('energy:')).map(x=>Number(x.slice(7)))||[];for(const i of chosen.sort((a,b)=>b-a))p.discard.push(u.energies.splice(i,1)[0]);}
+ if(roll.neo48DiscardColors){const chosen=extra.neo48Choices.filter(x=>x.startsWith('energy:')).map(x=>Number(x.slice(7)));for(const i of chosen.sort((a,b)=>b-a))p.discard.push(u.energies.splice(i,1)[0]);}
+ if(roll.neo48Growth){for(const i of (extra.neo48Choices||[]).filter(x=>x.startsWith('hand:')).map(x=>Number(x.slice(5))).sort((a,b)=>b-a))u.energies.push(p.hand.splice(i,1)[0]);}
+ if(roll.neo48CollectFire){for(const i of (extra.neo48Choices||[]).filter(x=>x.startsWith('discard:')).map(x=>Number(x.slice(8))).sort((a,b)=>b-a))u.energies.push(p.discard.splice(i,1)[0]);}
+ if(roll.healFullChoice){const choice=extra.neo48Choices?.[0];if(choice){const i=Number(choice.slice(4)),victim=i===-1?p.active:p.bench[i];victim.damage=0;}}
+ if(roll.targetDamage!==undefined&&program.kind==='neo48:feint-attack'){const index=Number(extra.neo48Choices?.[0]?.slice(7));if(index!==-1&&f.bench[index])f.bench[index].damage+=roll.targetDamage;else if(index===-1)f.active.damage+=roll.targetDamage;roll.targetDamage=undefined;}
  if(roll.gymCrosscounter)u.gymCrosscounter={expires:g.turnSerial+2};
  if(roll.gymFireWall)u.gymFireWall={expires:g.turnSerial+2};
  if(roll.gymShadowImages)u.gymShadowImages=true;
@@ -1691,6 +1757,7 @@ function knockOuts(g,after){
    }
   }
  }
+ if(attacking){const victim=g.players[1-attacking.side].active;if(victim?.neo48Endure?.expires>g.turnSerial&&victim.damage>=maxHP(g,victim)){victim.damage=maxHP(g,victim)-10;delete victim.neo48Endure;log(g,'Phanpy Endure survived with 10 HP.');}}
  // A surviving Giovanni's Machamp at 10 HP is not Knocked Out and yields no Prize.
  if(attacking&&isClassicRules(g))for(let side=0;side<2;side++){
   if(side===attacking.side)continue;
