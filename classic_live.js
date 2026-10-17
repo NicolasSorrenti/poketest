@@ -3,6 +3,9 @@
 // Every button sends a typed command to the same server-side Classic reducer.
 (()=>{
  const $=id=>document.getElementById(id);
+ const rpgParams=new URLSearchParams(location.search),rpgMode=rpgParams.get('rpg')==='1',rpgDuelId=rpgParams.get('duelId');
+ const rpgKey=rpgMode&&rpgDuelId?window.NeoRpgDuelBridge.sessionKey(rpgDuelId):'neoClassicLiveToken';
+ function notifyRpg(){if(rpgMode&&rpgDuelId&&current?.view?.over&&(current.winner===null||current.winner===0||current.winner===1))window.parent.postMessage(window.NeoRpgDuelBridge.message(rpgDuelId,current.winner),location.origin);}
  const cards=new Map();
  const quick=window.NeoDuelUI;
  const ux=window.NeoExperienceUI;
@@ -37,14 +40,12 @@
  async function send(action){if(!current||busy)return;busy=true;clearError();try{
   const result=await api('action',{method:'POST',body:JSON.stringify({revision:current.revision,command:action})});
   preview.hide();current=result;
-  if(new URLSearchParams(location.search).get('rpg')==='1' && current?.view?.over && Number.isInteger(current.winner)){
-    window.parent.postMessage({type:'neo-rpg-duel-finished',winner:current.winner},location.origin);
-  }
+  notifyRpg();
   if(action.type!=='choose')setHandOpen(false);selectedHand=null;targetMode=null;decisionSelection.clear();render();
  }catch(e){fail(e);}finally{busy=false;render();}}
  async function start(){if(busy)return;busy=true;$('startupError').textContent='';try{
   const response=await api('create',{method:'POST',body:JSON.stringify({deck:$('deck').value,opponent:$('opponent').value,...($('deck').value==='custom'?{customDeck:JSON.parse(localStorage.getItem('neoCampusCustomGymDeck')||'null')}: {})})});
-  feedback.reset();opponentActivity.clear();combat.reset();token=response.token;sessionStorage.setItem(new URLSearchParams(location.search).get('rpg')==='1'?'neoRpgDuelToken':'neoClassicLiveToken',token);current=response;
+  feedback.reset();opponentActivity.clear();combat.reset();token=response.token;sessionStorage.setItem(rpgKey,token);current=response;
   selectedHand=null;targetMode=null;decisionSelection.clear();handOpen=false;powersOpen=false;logOpen=false;lastCoinSeq=null;lastKoMessage="";render();
  }catch(e){$('startupError').textContent=e.message;}finally{busy=false;}}
 
@@ -93,7 +94,7 @@
   $('choiceModal').classList.add('hidden');$('choiceModal').setAttribute('aria-hidden','true');
   $('fieldChoiceBar').classList.add('hidden');modalDecisionId=null;lastFieldDecisionId=null;
  }
- function newDuel(){clearChoiceUi();opponentActivity.clear();combat.reset();feedback.reset();preview.hide();token=null;current=null;selectedHand=null;targetMode=null;handOpen=false;powersOpen=false;logOpen=false;document.body.classList.remove('duel-active','cpu-match');sessionStorage.removeItem(rpgMode?'neoRpgDuelToken':'neoClassicLiveToken');render();}
+ function newDuel(){clearChoiceUi();opponentActivity.clear();combat.reset();feedback.reset();preview.hide();token=null;current=null;selectedHand=null;targetMode=null;handOpen=false;powersOpen=false;logOpen=false;document.body.classList.remove('duel-active','cpu-match');sessionStorage.removeItem(rpgKey);render();}
  function setTarget(type,payload,title,benchOnly=false){preview.hide();setHandOpen(false);targetMode={type,payload,title,benchOnly};render();}
  function cancelTarget(){targetMode=null;selectedHand=null;preview.hide();render();}
  function pokemonNode(u,side,slot){
@@ -208,7 +209,7 @@
    acts.append(btn('Confirm selection',()=>send(command('choose',{decisionId:d.id,selected:[...decisionSelection]})),'primary',decisionSelection.size<d.min||decisionSelection.size>d.max));
    if(d.optional)acts.append(btn('Decline',()=>send(command('choose',{decisionId:d.id,decline:true}))));
   }else if(d){title.textContent='CPU is choosing';description.textContent='Waiting for the CPU to resolve its choice.';}
-  else if(v.over){title.textContent='DUEL COMPLETE';description.textContent=current.winner===0?'You won!':current.winner===1?'The CPU won.':'A draw!';acts.append(btn('Play another duel',newDuel,'primary'));}
+  else if(v.over){title.textContent='DUEL COMPLETE';description.textContent=current.winner===0?'You won!':current.winner===1?'The CPU won.':'A draw!';acts.append(btn(rpgMode?'Returning to Neo Harbor…':'Play another duel',rpgMode?()=>{}:newDuel,'primary',rpgMode));}
   else if(v.phase==='setup'){
    title.textContent='OPENING SETUP';description.textContent='Select a Basic Pokémon from your opening hand to become Active. You may select up to five more for your Bench, then confirm. Your opponent’s team remains hidden until setup ends.';
    acts.append(btn('Confirm opening setup',()=>send(command('setup_confirm')),'primary',!v.players[0].active));
@@ -265,17 +266,16 @@
    $('opponent').value='brushfire';
    if(localStorage.getItem('neoCampusCustomGymDeck'))$('deck').value='custom';
    await Promise.all(['base1','base2','base3','base4','base5','gym1','gym2','neo1','neo2','neo3','neo4'].map(async set=>{const r=await fetch(`/cards/${set}.json`);if(!r.ok)throw Error(`Cannot load ${set}`);const arr=await r.json();for(const c of arr)cards.set(c.id,c);}));
-   const rpgMode=new URLSearchParams(location.search).get('rpg')==='1';
-   if(rpgMode){
+   document.body.classList.toggle('rpg-duel',rpgMode);
+  if(rpgMode&&!rpgDuelId)throw Error('Open RPG duels from Neo Harbor.');
+  if(rpgMode){
      const params=new URLSearchParams(location.search);
      $('deck').value=params.get('deck')||'blackout';
      $('opponent').value=params.get('opponent')||'brushfire';
    }
-   token=sessionStorage.getItem(rpgMode?'neoRpgDuelToken':'neoClassicLiveToken');if(token){try{current=await api('state');}catch{token=null;sessionStorage.removeItem('neoClassicLiveToken');}}
+   token=sessionStorage.getItem(rpgKey);if(token){try{current=await api('state');}catch{token=null;sessionStorage.removeItem(rpgKey);}}
    if(rpgMode && !current) await start();
-   if(rpgMode && current?.view?.over && Number.isInteger(current.winner)){
-     window.parent.postMessage({type:'neo-rpg-duel-finished',winner:current.winner},location.origin);
-   }
+   notifyRpg();
    render();
   }catch(e){$('startupError').textContent=e.message||String(e);}
  }
