@@ -723,6 +723,12 @@ const settings={level:3,personality:'balanced',side:1,seed:47};
  const noEnergy=structuredClone(o);noEnergy.self.hand=['base1-34'];
  assert.ok(AI.turnSequenceBonus(evolve,noEnergy,expert)<-90,
   'Evolving without the Energy to attack should lose tempo and be penalized');
+ const sleeping=structuredClone(o);
+ sleeping.self.active.status='Asleep';
+ sleeping.self.active.effectiveAttacks=CATALOG.get(IDS.machop).attacks;
+ assert.ok(AI.turnSequenceBonus(evolve,sleeping,expert)>30,
+  'Evolution cures Sleep and must replace any cached prior-stage attack list');
+
  const hidden=structuredClone(g);
  if(hidden.players[0].deck.length&&hidden.players[0].hand.length)
   [hidden.players[0].deck[0],hidden.players[0].hand[0]]=
