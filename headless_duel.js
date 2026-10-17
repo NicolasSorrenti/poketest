@@ -252,12 +252,11 @@ function planFinalAttack(g,side,attackIndex,program,plan={side,attackIndex,data:
   const wants=new Set(['bench-target','switch-self','switch-attacker','target-any','target-any-coin']);
   if(copied&&wants.has(copied.kind)){
    const owner=copied.kind==='switch-self'?p:f;
-   if(owner.bench.length){
+   if(owner.bench.length||copied.kind==='target-any'||copied.kind==='target-any-coin'){
     const options=benchOptions(owner);
     if(copied.kind==='target-any'||copied.kind==='target-any-coin')options.unshift({id:'bench:-1',label:'Active: '+publicName(g,f.active)});
     finalChoice(g,plan,'target-bench',side,options,{label:`${a.name}: choose target for copied ${card(g,f.active.id).attacks[data.copyIndex].name}`});return;
    }
-   if(copied.kind==='target-any'||copied.kind==='target-any-coin'){data.target=-1;}
   }
  }
  if(['stare'].includes(kind)&&!Object.hasOwn(data,'target')){
