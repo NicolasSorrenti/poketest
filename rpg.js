@@ -285,19 +285,52 @@ function render(){
   const small=document.createElement('small');small.textContent=cast[e.npc].name+' · limited-time encounter';b.append(small);b.onclick=()=>startStory(e.id);$('storyEvents').append(b);
  }
  if(!stories.length){const x=document.createElement('p');x.className='empty-note';x.textContent='No special story encounter right now.';$('storyEvents').append(x);}
+
+ $('lifeStats').replaceChildren();
+ const lifeGauges=[['FOCUS',state.focus,100,'Focus determines which activities you can perform'],['INSIGHT',state.insight,99,'Lessons learned from activities'],['REPUTATION',state.reputation,100,'How familiar the town is with your name'],['DUEL PREP',state.preparation,3,'A modest bonus after your next winning match']];
+ for(const [label,value,max,title] of lifeGauges){
+  const item=document.createElement('div');item.className='life-stat';item.title=title;
+  const row=document.createElement('div');row.className='life-stat-label';
+  const name=document.createElement('b');name.textContent=label;
+  const val=document.createElement('span');val.textContent=value+' / '+max;row.append(name,val);
+  const track=document.createElement('div');track.className='life-track';
+  const fill=document.createElement('div');fill.className='life-fill';fill.style.width=(value/max*100)+'%';track.append(fill);
+  item.append(row,track);$('lifeStats').append(item);
+ }
+ $('townActivities').replaceChildren();
+ for(const entry of WORLD.activitiesAt(state)){
+  const b=document.createElement('button');b.className='town-activity';b.disabled=locked||!!entry.disabledReason;
+  const title=document.createElement('strong');title.textContent=entry.title+' · ⏳ 1 period';
+  const description=document.createElement('small');
+  const gains=Object.entries(entry.change).filter(([,v])=>v>0).map(([key,value])=>'+'+value+' '+key);
+  description.textContent=(entry.disabledReason?entry.disabledReason+' · ':'')+'Focus cost '+entry.focus+(entry.cost?' · '+entry.cost+' credits':'')+' · '+gains.join(' · ');
+  b.append(title,description);b.title=entry.text;b.onclick=()=>act('townActivity:'+entry.id);
+  $('townActivities').append(b);
+ }
+ $('townEncounters').replaceChildren();
+ const encounters=WORLD.availableEncounters(state,currentPeople());
+ for(const entry of encounters){
+  const b=document.createElement('button');b.className='encounter-btn';b.disabled=locked;
+  const title=document.createElement('strong');title.textContent='✧ '+entry.title+' · ⏳ 1 period';
+  const hint=document.createElement('small');hint.textContent=(entry.npc?cast[entry.npc].name:'The neighborhood')+' · limited-time opportunity';
+  b.append(title,hint);b.onclick=()=>act('encounter:'+entry.id);$('townEncounters').append(b);
+ }
+ if(!encounters.length){
+  const note=document.createElement('p');note.className='empty-note';note.textContent='No special encounters here at this time.';$('townEncounters').append(note);
+ }
+
  $('activities').replaceChildren();const e=scheduleEvent();
  const items=[...(e?[[e.title+' · ⏳ 1 period · +'+e.reward+' pts if you win','event']]:[]),
  [state.location==='home'?'Rest at home · ⏳ 1 period':'Wait one period · ⏳ 1 period','rest'],
  ...(state.location==='home'?[['Sleep until morning · ⏳ '+(3-state.slot)+' period(s)','sleep']]:[]),
- ...(state.location==='shop'?[['Help at shop · ⏳ 1 period · +15 credits','work']]:[]),
- ['Study deck strategy · ⏳ 1 period','practice'],['Calendar · free','calendar'],['New campaign','new']];
+ ['Calendar · free','calendar'],['New campaign','new']];
  for(const [label,action] of items){
   const b=document.createElement('button');b.className='activity';b.textContent=label;b.disabled=(ended&&action!=='new'&&action!=='calendar')||(locked&&action!=='calendar');b.onclick=()=>act(action);$('activities').append(b);
  }
  $('journal').replaceChildren();const stats=document.createElement('p');stats.className='stats';stats.textContent='🏆 '+state.points+' circuit points   ·   ◈ '+state.credits+' credits';$('journal').append(stats);
  for(const e of eventCards.filter(e=>e.day>=state.day).slice(0,2)){const p=document.createElement('p');p.textContent='DAY '+e.day+' · '+e.title+' ('+periods[e.slot]+')';$('journal').append(p)}
  for(const note of state.journal.slice(0,3)){const p=document.createElement('p');p.textContent='• '+note;$('journal').append(p)}
- $('notice').textContent=state.activeStory?'Story in progress: complete this scene to continue.':locked?'Your duel is in progress.':'Travel & talk are free · ⏳ actions advance time';
+ $('notice').textContent=state.activeStory?'Story in progress: complete this scene to continue.':state.activeEncounter?'Local encounter in progress — make your decision.':state.pendingDuel?'Your duel is in progress.':'Travel & talk are free · ⏳ actions advance time';
  $('deckPicker').disabled=locked||ended;
  if($('deckPicker')?.options.length)$('deckPicker').value=state.playerDeck;
 }
