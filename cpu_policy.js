@@ -93,6 +93,13 @@ function strongestAffordableAttack(unit,defender){
  return attacks.reduce((best,attack)=>canPayEnergy(attack.cost||[],pool)?
   Math.max(best,estimatedDamage(attack,unit,defender)):best,0);
 }
+function damageAfterAttachment(unit,energyId,defender){
+ if(!unit||!defender)return 0;
+ const pool=[...energyPool(unit),...energyPool({energies:[energyId]})];
+ const attacks=unit.effectiveAttacks||card(unit.id)?.attacks||[];
+ return attacks.reduce((best,a)=>canPayEnergy(a.cost||[],pool)?
+  Math.max(best,estimatedDamage(a,unit,defender)):best,0);
+}
 function hpRemaining(u){return Math.max(0,(Number(card(u?.id)?.hp)||60)-(u?.damage||0));}
 function setupValue(unit){
  const c=card(unit?.id);
@@ -268,7 +275,16 @@ function score(a,o,cfg,used){
  }
  if(type==='attach_energy'){
   const unit=slotUnit(p,v.slot),value=energyValue(unit,p.hand[v.handIndex]);
-  return 110+value*style.setup+(v.slot===-1?20:0);
+  if(cfg.level<3)return 110+value*style.setup+(v.slot===-1?20:0);
+  // One-step public-state projection: evaluate the attacks unlocked by the
+  // Energy without calling reduce() to peek at future flips or hidden cards.
+  const before=strongestAffordableAttack(unit,q.active);
+  const after=damageAfterAttachment(unit,p.hand[v.handIndex],q.active);
+  const improvement=Math.max(0,after-before);
+  const ko=after>=hpRemaining(q.active)&&before<hpRemaining(q.active);
+  const future=(improvement*.85+(ko?65:0))*style.damage;
+  const saturation=before>0&&improvement===0?35:0;
+  return 110+value*style.setup+(v.slot===-1?18:0)+future-saturation;
  }
  if(type==='attack'){
   const attack=(p.active.effectiveAttacks||card(p.active.id)?.attacks||[])[v.attackIndex];
