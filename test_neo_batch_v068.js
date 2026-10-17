@@ -38,12 +38,14 @@ function settle(g){for(let i=0;i<10&&g.pendingDecision;i++){const d=g.pendingDec
   g.players[1].active.attachedTrainers=[{id:'neo1-86'}];
   send(g,0,'attack',{attackIndex:1});
   assert.equal(g.players[1].discard.includes('neo1-86'),true,'Focus Band consumed regardless of flip');
-  if(g.players[1].active?.id==='base1-58'){
-   saved=true;assert.equal(g.players[1].active.damage,30);
-   assert.notEqual(g.pendingDecision?.kind,'neo-exp-all','A saved Active cannot trigger EXP.ALL');
+  if(g.pendingDecision?.kind!=='neo-exp-all'){
+   saved=true;
+   assert.equal(g.players[1].active?.id,'base1-58');
+   assert.equal(g.players[1].active.damage,30,'Heads preserves ten HP');
    assert.equal(g.players[0].prizes.length,6);
   }else{
-   knocked=true;assert.equal(g.pendingDecision?.kind,'neo-exp-all','Failed Focus Band permits EXP.ALL');
+   knocked=true;
+   assert.equal(g.players[1].active.damage,80,'Failed Focus Band leaves pending KO until EXP.ALL choice');
    choose(g);settle(g);assert.equal(g.players[0].prizes.length,5);
   }
  }
