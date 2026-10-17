@@ -97,12 +97,12 @@ function currentPeople(){if(state.day>90)return [];const weekday=(state.day-1)%7
 for(const e of eligibleStories())if(!regular.includes(e.npc))regular.push(e.npc);
 return regular;}
 function selectPerson(id){if(state.activeStory||!cast[id]||!currentPeople().includes(id))return;const c=cast[id],first=!state['met_'+id]&&!((id==='reina')&&state.metReina);state['met_'+id]=true;if(id==='reina')state.metReina=true;state.selected=id;persist();say(c.name,first?c.intro:c.repeat,options(id));}
-function options(id){const c=cast[id],key=atKey(id);return [
- [state.talked[key]?'Talked this period':'Talk','talk:'+id],
- ['Spend time together · ⏳ 1 period','hang:'+id],
- ['Challenge to a duel · ⏳ 1 period','duel:'+id],
- ['Playful remark','flirt:'+id],
- ['Goodbye','close']
+function options(id){const key=atKey(id),spentToday=!!state.hungOut[state.day+':'+id];return [
+ [state.talked[key]?'Talk again · free (bond already earned)':'Talk · free · +1 affection','talk:'+id],
+ [spentToday?'Already spent time today · free':'Spend time together · ⏳ 1 period · +2 affection / +1 trust','hang:'+id],
+ ['Challenge to a duel · ⏳ 1 period · earn points, credits & trust','duel:'+id],
+ [state.talked['flirt:'+key]?'Playful remark again · free':'Playful remark · free · +1 affection','flirt:'+id],
+ ['Goodbye · free','close']
  ];}
 function scheduleEvent(){return eventCards.find(e=>e.day===state.day&&e.slot===state.slot&&e.place===state.location&&!state.eventsDone[e.day+':'+e.title]);}
 function act(action){
