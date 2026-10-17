@@ -92,6 +92,22 @@ GitHub Actions CPU AI regression additionally runs the existing Classic local CP
 - The CPU, Node and Gameplay regressions were green after the first tactical evolution fix at `8ef452c`. Latest Trainer-choice regression runs are under CI verification.
 - **Next milestones:** actual Prize-race optimization and expected opponent response within a bounded, masked-information model; more action-choice tests for Gym and Neo disruption; benchmark improvement across multiple independent seed ranges before enabling experimental tactics.
 
+## Public Prize-race and opponent-response prototype (PR #11, follow-up)
+
+- Added `prizeRace` as a **strict opt-in** CPU configuration flag (default `false`) for Expert/Champion. When the CPU can take its final Prize or knock out the only opponent Pokémon, its attack gains a dominant reward weighted by *published* attack knockout probability; it does not predict hidden Trainer cards, RNG or unknown drawn Energy.
+- The same public-state evaluator considers emergency retreat if the opponent has one Prize remaining and the *currently revealed* attacking Pokémon can knock out the CPU Active but not a prospective Bench replacement. An Asleep or Paralyzed attacker is excluded from this immediate threat forecast.
+- Focused tests cover guaranteed match-winning Low Kick, a genuinely safe escape from a visible final-Prize threat, a dangerous replacement, and a disabled (Asleep) enemy. Policy and benchmark are separately toggled via `--left-prize-race true/false` and `--right-prize-race true/false` for a **matched Champion vs Champion baseline**, without lowering the opponent's competence.
+- Paired headless benchmark added **260 matches** across four deck archetypes and seed cohorts, all with 120-turn cap:
+  - **Blackout:** experimental **43–37** baseline, no draws.
+  - **Brushfire:** **29–31**, no draws.
+  - **Overgrowth:** **30–30**, no draws, independent seed `17891`.
+  - **Zap:** **30–25**, **5 nondecisive**, independent seed `27891`.
+  - Combined: **132 wins, 123 losses, 5 draws/timeouts**, 132/255 = **51.76% decisive win rate**. Statistical uncertainty still includes no improvement; do **not** enable by default or claim calibrated Champion strength.
+- Improved `benchmark_cpu.js` to report wins by *Prizes, exhaustion of the opponent's Pokémon, deck-out, or other*, plus each side's mean remaining Prize cards. This prevents silently conflating draws/turn limits and legitimate victories. Added a small independent tournament regression checking all win causes sum correctly to conclusive results.
+- CPU benchmark workflow now executes **970 seat-swapped games**: the previous 710 plus the four new prize-response A/Bs (80+60+60+60). At commit `8badcf4`, **all three workflows passed**: CPU regression/arena, comprehensive Node/RPG and TCG gameplay regression.
+- Remaining tasks: distinguish truly guaranteed KOs from protective effects and redirected attacks, avoid speculative retreats, benchmark across different Gym and Neo deck themes, and measure independent seeds and strategic decisions over a larger statistically informative sample.
+- PR #11 remains draft; PR #9 is already merged into `main`. No historical rules, RPG story or duel UI code was changed during these experiments.
+
 ## Known limitations and next work
 
 1. Verify green CI on all affected and full regression suites. 
