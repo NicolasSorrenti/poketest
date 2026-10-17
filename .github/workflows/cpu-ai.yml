@@ -37,3 +37,5 @@ jobs:
       - run: node benchmark_cpu.js --pairs 30 --max-turns 120 --left-level 5 --right-level 5 --left-evolution-tempo true --right-evolution-tempo false --left-deck brushfire --right-deck brushfire
       - run: node benchmark_cpu.js --pairs 40 --max-turns 120 --left-level 5 --right-level 5 --left-prize-race true --right-prize-race false
       - run: node benchmark_cpu.js --pairs 30 --max-turns 120 --left-level 5 --right-level 5 --left-prize-race true --right-prize-race false --left-deck brushfire --right-deck brushfire
+      - run: node benchmark_cpu.js --pairs 30 --max-turns 120 --seed 17891 --left-level 5 --right-level 5 --left-prize-race true --right-prize-race false --left-deck overgrowth --right-deck overgrowth
+      - run: node benchmark_cpu.js --pairs 30 --max-turns 120 --seed 27891 --left-level 5 --right-level 5 --left-prize-race true --right-prize-race false --left-deck zap --right-deck zap
