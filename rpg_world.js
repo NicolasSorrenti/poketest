@@ -16,6 +16,24 @@
  ['yuna','akari'],['hana','marina'],['shiori','camila'],['kaede','reina']
  ];
  const POWER={reina:9,shiori:8,akari:8,camila:7,marina:7,yuna:6,hana:6,kaede:9};
+
+ // CPU service accepts these exact vetted existing deck preset IDs.
+ // These are progressive playable stand-ins until bespoke signature decks are validated.
+ const NPC_DECKS={
+  hana:['power_reserve','erika','light'],
+  reina:['blackout','brock','wallop'],
+  shiori:['overgrowth','sabrina','brainwave'],
+  yuna:['zap','cold_fusion','brainwave'],
+  akari:['gym_new_voltage','psych_out','brainwave'],
+  camila:['rocket_lab','trouble','dark'],
+  marina:['water_blast','misty','cold_fusion'],
+  kaede:['rocket_lab','trouble','dark']
+ };
+ const deckFor=(id,day)=>{
+  const stages=NPC_DECKS[id];if(!stages)return null;
+  return stages[day<=30?0:day<=60?1:2];
+ };
+
  function normalize(state){
   if(!state.world||typeof state.world!=='object')state.world={};
   const w=state.world;
@@ -123,5 +141,5 @@
   }
   return errors;
  }
- return Object.freeze({PERIODS,DAYS,CIRCUIT_DAYS,normalize,weekday,locationFor,peopleAt,nextSighting,afterAdvance,simulateWeek,todaySummary,validate});
+ return Object.freeze({PERIODS,DAYS,CIRCUIT_DAYS,NPC_DECKS,deckFor,normalize,weekday,locationFor,peopleAt,nextSighting,afterAdvance,simulateWeek,todaySummary,validate});
 });
