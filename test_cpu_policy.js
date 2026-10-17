@@ -13,6 +13,15 @@ assert.equal(Object.keys(AI.SKILLS).length,5);
 assert.equal(Object.keys(AI.PERSONALITIES).length,6);
 assert.throws(()=>AI.configuration({level:0}),/1/);
 assert.throws(()=>AI.configuration({personality:'cheater'}),/personality/);
+for(let level=2;level<=5;level++){
+ const lower=AI.SKILLS[level-1],higher=AI.SKILLS[level];
+ assert.ok(higher.sampleWindow<lower.sampleWindow,
+  'Competence must narrow the pool of possible strategic misjudgments');
+ assert.ok(higher.temperature<lower.temperature,
+  'Stronger opponents must inject strictly less decision noise');
+ assert.ok(higher.attention>lower.attention,
+  'Skill must still increase the intended analysis budget');
+}
 const settings={level:3,personality:'balanced',side:1,seed:47};
 
 {
