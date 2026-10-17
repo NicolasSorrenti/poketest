@@ -32,7 +32,9 @@ function configuration(raw={}){
  // Opt-in until blinded paired tournaments demonstrate a strength gain.
  const planning=raw.planning??false;
  if(typeof planning!=='boolean')throw Error('Invalid CPU planning setting');
- return {level,personality,seed:raw.seed??1,side,planning,skill:SKILLS[level],style:PERSONALITIES[personality]};
+ const evolutionTempo=raw.evolutionTempo??false;
+ if(typeof evolutionTempo!=='boolean')throw Error('Invalid CPU evolution-tempo setting');
+ return {level,personality,seed:raw.seed??1,side,planning,evolutionTempo,skill:SKILLS[level],style:PERSONALITIES[personality]};
 }
 // Seeded independent of the engine's private deck order and future RNG state.
 function rng(seed){let x=(seed>>>0)||0x6d2b79f5;return ()=>{
@@ -341,6 +343,33 @@ function choiceValue(option,decision,o){
  if(/draw|recover|search|attach|heal/i.test(ctx))return 15;
  return 0;
 }
+// Evolving can strand the Active without enough Energy to attack. Compute the
+// available attack value before/after evolution from only revealed combatants,
+// then check the player's own hand for a SAME-TURN usable Energy solution.
+function evolutionTempoPenalty(o,slot,evolutionId,cfg){
+ if(!cfg.evolutionTempo||cfg.level<3||slot!==-1)return 0;
+ const before=o.self.active,nextCard=card(evolutionId);
+ if(!before||!nextCard)return 0;
+ const after={...before,id:evolutionId};
+ const current=strongestAffordableAttack(before,o.opponent.active);
+ if(current<=0)return 0;
+ const promoted=strongestAffordableAttack(after,o.opponent.active);
+ if(promoted>=current)return 0;
+ // If one legal Energy attachment can restore a useful attack this turn,
+ // evolution is not necessarily a tempo sacrifice.
+ const canRefuel=!o.self.energyUsed&&o.self.hand.some(id=>
+  isEnergy(card(id))&&damageAfterAttachment(after,id,o.opponent.active)>=current);
+ if(canRefuel)return 0;
+ const currentKO=current>=hpRemaining(o.opponent.active)&&hpRemaining(o.opponent.active)>0;
+ const counterBefore=strongestAffordableAttack(o.opponent.active,before);
+ const counterAfter=strongestAffordableAttack(o.opponent.active,after);
+ const getsSafer=counterBefore>=hpRemaining(before)&&counterAfter<hpRemaining(after);
+ // Safety (larger HP pool and curing a disabling status) can outweigh tempo.
+ // Otherwise delaying evolution one turn preserves pressure on the Prize race.
+ const isDisabled=['Asleep','Paralyzed'].includes(before.status);
+ return getsSafer||isDisabled?0:
+  Math.round((promoted===0?142:60)+(currentKO&&promoted<hpRemaining(o.opponent.active)?110:0));
+}
 function score(a,o,cfg,used){
  const p=o.self,q=o.opponent,style=cfg.style,{type,payload:v}=a;
  if(type==='setup_confirm')return 115+p.bench.length*10;
@@ -385,7 +414,8 @@ function score(a,o,cfg,used){
  }
  if(type==='evolve'){
   const target=slotUnit(p,v.slot),after=card(p.hand[v.handIndex]);
-  return 165*style.setup+(Number(after?.hp)||0)*.35+((v.slot===-1)?15:0)-(target?.damage||0)*.1;
+  return 165*style.setup+(Number(after?.hp)||0)*.35+((v.slot===-1)?15:0)-
+   (target?.damage||0)*.1-evolutionTempoPenalty(o,v.slot,p.hand[v.handIndex],cfg);
  }
  if(type==='attach_energy'){
   const unit=slotUnit(p,v.slot),value=energyValue(unit,p.hand[v.handIndex]);
@@ -597,11 +627,11 @@ function chooseAction(game,raw={},memo={}){
  }
  return null;
 }
-function driveSide(initial,{side=1,level=3,personality='balanced',seed=1,planning,limit=200}={}){
+function driveSide(initial,{side=1,level=3,personality='balanced',seed=1,planning,evolutionTempo,limit=200}={}){
  let game=initial,steps=0;const commands=[],memo={trainers:0,powers:0,powerKeys:new Set(),stadium:false};
  while(!game.over&&steps<limit){
   const beforeTurn=game.turnSerial;
-  const next=chooseAction(game,{side,level,personality,seed,planning},memo);
+  const next=chooseAction(game,{side,level,personality,seed,planning,evolutionTempo},memo);
   if(!next){
    if(game.pendingDecision?.actor===side)throw Error('CPU unresolved choice: '+JSON.stringify({decision:game.pendingDecision,pendingAction:game.pendingAction}));
    break;
@@ -621,4 +651,4 @@ function driveSide(initial,{side=1,level=3,personality='balanced',seed=1,plannin
 }
 function driveBot(game,limit=200,config={}){return driveSide(game,{...config,side:1,limit});}
 function propose(game,config={}){return chooseAction(game,{...config,side:1});}
-module.exports={SKILLS,PERSONALITIES,configuration,observation,candidates,score,knockoutChance,planningBonus,chooseAction,driveSide,driveBot,propose};
+module.exports={SKILLS,PERSONALITIES,configuration,observation,candidates,score,knockoutChance,planningBonus,evolutionTempoPenalty,chooseAction,driveSide,driveBot,propose};
