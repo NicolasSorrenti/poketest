@@ -44,3 +44,25 @@ test('RPG and Classic clients use the adapter and parse without syntax errors',(
  assert.match(read('classic_live.js'),/sessionStorage\.removeItem\(rpgKey\)/);
  assert.match(read('classic_live.js'),/notifyRpg\(\)/);
 });
+
+// Load the actual HTTP host: a script may exist on disk yet be denied by the public allowlist.
+test('host serves RPG and Classic integration assets with correct media types', async()=>{
+ const {server}=require('../server');
+ await new Promise((resolve,reject)=>server.listen(0,'127.0.0.1',error=>error?reject(error):resolve()));
+ try{
+  const base='http://127.0.0.1:'+server.address().port;
+  for(const [url,type] of [
+   ['/rpg.html','text/html'],['/rpg.js','text/javascript'],['/rpg_story.js','text/javascript'],
+   ['/rpg_duel_bridge.js','text/javascript'],['/classic_live.html','text/html'],
+   ['/classic_live.js','text/javascript'],['/rpg.css','text/css'],['/rpg_duel.css','text/css']]){
+    const response=await fetch(base+url);
+    assert.equal(response.status,200,'Hosted game must serve '+url);
+    assert.match(response.headers.get('content-type')||'',new RegExp(type));
+    const body=await response.text();assert.ok(body.length>30,'Empty hosted asset '+url);
+   }
+  const forbidden=await fetch(base+'/headless_duel.js');
+  assert.equal(forbidden.status,404,'Server-owned game engine is not publicly exposed');
+ }finally{
+  await new Promise((resolve,reject)=>server.close(error=>error?reject(error):resolve()));
+ }
+});
