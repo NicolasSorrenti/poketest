@@ -85,6 +85,13 @@ function estimatedDamage(attack,attacker,defender){
  if(aType&&target?.resistances?.some(r=>r.type===aType))amount=Math.max(0,amount-30);
  return amount;
 }
+function strongestAffordableAttack(unit,defender){
+ if(!unit||!defender)return 0;
+ const attacks=(unit.effectiveAttacks||card(unit.id)?.attacks||[]);
+ const pool=energyPool(unit);
+ return attacks.reduce((best,attack)=>canPayEnergy(attack.cost||[],pool)?
+  Math.max(best,estimatedDamage(attack,unit,defender)):best,0);
+}
 function hpRemaining(u){return Math.max(0,(Number(card(u?.id)?.hp)||60)-(u?.damage||0));}
 function setupValue(unit){
  const c=card(unit?.id);
@@ -246,7 +253,17 @@ function score(a,o,cfg,used){
  if(type==='retreat'){
   const to=p.bench[v.slot],before=p.active;
   const gain=setupValue(to)-setupValue(before);
-  return (before.status?180:45)+(gain>0?gain:0)+((hpRemaining(before)<30)?40:0)*style.survival-(before.energies?.length||0)*20;
+  // Expert profiles recognize when an incoming attack is likely to KO their
+  // Active, but do not sacrifice an immediate winning attack to flee.
+  const oldDamage=strongestAffordableAttack(before,q.active);
+  const newDamage=strongestAffordableAttack(to,q.active);
+  const lethalOwn=oldDamage>=hpRemaining(q.active)&&hpRemaining(q.active)>0;
+  const counter=strongestAffordableAttack(q.active,before);
+  const threatened=counter>=hpRemaining(before)&&counter>0;
+  const foresight=cfg.level>=3?(threatened?130*style.survival:0)
+   -(lethalOwn?220:0)+(newDamage-oldDamage)*.9-(newDamage===0&&oldDamage>0?55:0):0;
+  return (before.status?180:45)+(gain>0?gain:0)+
+   ((hpRemaining(before)<30)?40:0)*style.survival-(before.energies?.length||0)*15+foresight;
  }
  if(type==='use_power')return 85*style.setup;
  if(type==='use_stadium')return 85;
