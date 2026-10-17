@@ -23,4 +23,5 @@ jobs:
       - run: node --check cpu_policy.js
       - run: node test_cpu_policy.js
       - run: node test_classic_live_service.js
-      - run: node benchmark_cpu.js --pairs 3 --max-turns 60 --left-level 5 --right-level 1
+      - run: node benchmark_cpu.js --pairs 50 --max-turns 60 --left-level 5 --right-level 1
+      - run: node benchmark_cpu.js --pairs 25 --max-turns 60 --left-level 5 --right-level 1 --left-deck brushfire --right-deck blackout
