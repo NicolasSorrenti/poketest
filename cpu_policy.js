@@ -247,7 +247,7 @@ function candidates(o,cfg,used){
  if(o.decision){
   if(o.decision.actor!==cfg.side)return [];
   const d=o.decision;
-  const sorted=[...d.options].sort((a,b)=>choiceValue(b,d,o)-choiceValue(a,d,o)||a.id.localeCompare(b.id));
+  const sorted=[...d.options].sort((a,b)=>choiceValue(b,d,o,cfg)-choiceValue(a,d,o,cfg)||a.id.localeCompare(b.id));
   // Card costs and mandatory multi-pick effects must be solvable at every skill.
   // Skill changes ranking, never the legal number of choices considered.
   const sizes=new Set([d.min,d.max,Math.min(d.max,Math.max(1,d.min)),Math.min(d.max,Math.max(2,d.min))]);
@@ -329,7 +329,7 @@ function energyDenialValue(unit,defender,isActive){
  const potential=Math.min(15,future*4);
  return (isActive?1.3:.7)*(denied+ready+potential)+(isActive?32:0);
 }
-function choiceValue(option,decision,o){
+function choiceValue(option,decision,o,cfg){
  const id=option.id,label=option.label||'',kind=decision.kind||'',ctx=decision.label||'';
  if(/^prize:/.test(id))return 1;
  if(/^count:/.test(id))return /draw/i.test(ctx)?Number(id.slice(6))*20:0;
@@ -338,7 +338,7 @@ function choiceValue(option,decision,o){
   const n=Number(id.split(':')[1]),own=/your|friendly|own|promot|receiv|retreat/i.test(ctx)&&!/opponent|opposing|enemy/i.test(ctx);
   const target=slotUnit(own?o.self:o.opponent,n);
   if(!target)return 0;
-  if(/^slot:/.test(id)&&/^Choose opposing Pokémon$/i.test(ctx))
+  if(cfg?.level>=3&&/^slot:/.test(id)&&/^Choose opposing Pokémon$/i.test(ctx))
    return energyDenialValue(target,o.self.active,n===-1);
   if(/promot|retreat|switch.*your/i.test(ctx)){
    const damage=strongestAffordableAttack(target,o.opponent.active);
@@ -420,7 +420,7 @@ function score(a,o,cfg,used){
   const ownDiscard=/discard|pay|cost|return .*deck/i.test(ctx)&&
    !/opponent|opposing|enemy/i.test(ctx);
   const beneficialPick=/recover|search|draw|attach|opposing|opponent|reveal|bench/i.test(ctx);
-  const value=v.selected.reduce((n,id)=>n+choiceValue(d.options.find(x=>x.id===id)||{id},d,o),0);
+  const value=v.selected.reduce((n,id)=>n+choiceValue(d.options.find(x=>x.id===id)||{id},d,o,cfg),0);
   return 120+value+(beneficialPick?v.selected.length*8:0)-(ownDiscard?v.selected.length*28:0);
  }
  if(type==='bench'){
