@@ -746,6 +746,37 @@ const settings={level:3,personality:'balanced',side:1,seed:47};
  assert.equal(a.baseline.turnSearch,true);
  assert.equal(a.challenger.turnSearch,false);
 }
+{
+ const g=createGame({decks:[deck,deck],seed:10997,format:'classic'});
+ const o=AI.observation(g,1);o.phase='game';o.turn=1;
+ o.self.active={id:IDS.hit,energies:[IDS.fight],damage:0,status:null};
+ o.opponent.active={id:IDS.hit,energies:[IDS.fight],damage:0,status:null};
+ o.self.hand=['base1-88',IDS.bill,'base1-95'];o.self.handCount=8;o.self.deckCount=30;
+ const cfg=AI.configuration({level:5,side:1,actionDiscipline:true});
+ const old=AI.configuration({level:5,side:1,actionDiscipline:false});
+ const end={type:'end_turn',payload:{}};
+ const oak={type:'play_trainer',payload:{handIndex:0}};
+ const bill={type:'play_trainer',payload:{handIndex:1}};
+ const attack={type:'attack',payload:{attackIndex:0}};
+ assert.ok(AI.score(end,o,cfg,{})>AI.score(oak,o,cfg,{}),
+  'Champion must be able to keep a good hand rather than use Oak blindly');
+ assert.ok(AI.score(bill,o,cfg,{})>AI.score(end,o,cfg,{}),
+  'Useful Bill draw remains preferable to a premature end turn');
+ assert.ok(AI.score(attack,o,cfg,{})>AI.score(end,o,cfg,{}),
+  'Resource conservation must not suppress an immediately affordable attack');
+ assert.ok(AI.score(end,o,old,{})<AI.score(oak,o,old,{}),
+  'Baseline retains prior greediness for reproducible A/B testing');
+ const beginner=AI.configuration({level:1,side:1,actionDiscipline:true});
+ assert.equal(AI.score(end,o,beginner,{}),0,
+  'Beginner has no expert conservation opportunity-cost heuristic');
+ assert.equal(AI.configuration({level:5}).actionDiscipline,false);
+ assert.throws(()=>AI.configuration({actionDiscipline:'true'}),/action-discipline/);
+ const {arena,argumentsOf}=require('./benchmark_cpu');
+ const x=arena(argumentsOf(['--pairs','1','--max-turns','4','--left-level','5',
+  '--right-level','5','--left-action-discipline','true','--right-action-discipline','false']));
+ assert.equal(x.baseline.actionDiscipline,true);
+ assert.equal(x.challenger.actionDiscipline,false);
+}
 let duels=0,decisions=0,attacks=0,energy=0,evolutions=0,trainer=0;
 for(let seed=1;seed<=4;seed++){
  let game=createGame({decks:[deck,deck],seed:seed*1789,format:'classic'});
