@@ -25,3 +25,7 @@ jobs:
       - run: node test_classic_live_service.js
       - run: node benchmark_cpu.js --pairs 50 --max-turns 60 --left-level 5 --right-level 1
       - run: node benchmark_cpu.js --pairs 25 --max-turns 60 --left-level 5 --right-level 1 --left-deck brushfire --right-deck blackout
+      - run: node benchmark_cpu.js --pairs 25 --max-turns 60 --left-level 5 --right-level 4
+      - run: node benchmark_cpu.js --pairs 25 --max-turns 60 --left-level 4 --right-level 3
+      - run: node benchmark_cpu.js --pairs 25 --max-turns 60 --left-level 3 --right-level 2
+      - run: node benchmark_cpu.js --pairs 25 --max-turns 60 --left-level 2 --right-level 1
