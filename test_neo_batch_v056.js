@@ -31,7 +31,7 @@ for(const id of require('./neo_v056_pool').ids){const c=CATALOG.get(id);assert.e
 {
  const g=make('neo1-97');
  g.players[0].active=unit('base1-3',{energies:Array(4).fill('base1-99')});
- g.players[1].active=unit('base1-58');
+ g.players[1].active=unit('base1-3'); // Chansey survives the reduced 50 damage
  send(g,0,'attack',{attackIndex:1});
  assert.equal(g.players[1].active.damage,50,'Double-edge 80 becomes 50 after W/R with Sprout Tower');
 }
