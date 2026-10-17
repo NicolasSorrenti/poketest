@@ -620,7 +620,7 @@ function trainerTacticsBonus(action,o,cfg){
   const lethal=qAttack>0&&qAttack>=hpRemaining(active);
   const save=lethal&&qAttack<hpRemaining({...active,damage:Math.max(0,active.damage-20)});
   const amount=Math.max(...damaged.map(u=>Math.min(u.damage,20)));
-  return save?150:amount>=20? -80:-115;
+  return save?150:amount>=20?-105:-135;
  }
  if(name==='Switch'&&p.bench.length){
   const before=p.active,after=p.bench.reduce((best,u)=>{
