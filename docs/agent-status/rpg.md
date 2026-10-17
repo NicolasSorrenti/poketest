@@ -25,10 +25,18 @@ The RPG/VN agent owns `rpg.js`, `rpg_story.js`, `rpg_schedules.js`, `rpg_world.j
 - Corrected "Around Town Now" radar and location people counts to use the actual schedule, preventing misleading navigation.
 - `rpg_world.js` public script is allowlisted in the Node server; no broad JS access opened.
 
+### 0.6: Optional Reina rivalry arc — THIS MILESTONE
+- `rpg_rival_arc.js`: a complete optional four-episode character-specific mini-arc complementing, not replacing, the established four Reina relationship events.
+- Unlock conditions use actual completed duels with Reina, growing bonds, earned reputation or insight; different playstyles can reach the private challenge. The storyline ends with an epilogue whose tone and friendship/romance status honor earlier choices.
+- The pivotal private match is launched through the **authoritative Classic TCG bridge**; its real win/loss/draw affects trust, respect, dialogue and the persisted arc record. A defeat does not make the epilogue unreachable.
+- Episodes persist as `arcFlags`, `arcOutcomes` and `activeArc` in the existing `neoHarborRpgV1` save. Legacy saves are repaired conservatively; an unfinished dialogue resumes after reload; duplicate battle notifications do not replay progress.
+- Rivalry scenes appear in the existing Story Opportunities panel, preserving established travel/time and dialogue UX. Declining the optional challenge is free and permits trying again while its window remains open.
+- Added `tests/rpg_rival_arc.test.js`, UI tests for route progression, a real bridged duel, and mid-dialogue save/reload, and an RPG-specific GitHub Actions workflow `.github/workflows/rpg-regression.yml`.
+
 ## Tests and QA
 - Added `tests/rpg_world.test.js` (11 tests) and `tests/rpg_world_ui.test.js` (5 browser-controller smoke tests).
 - Added `npm run test:rpg` for those tests plus the existing 11 story/schedules checks.
-- **27/27 scenarios passed** in isolated JavaScript execution of the actual source/test contents through a test shim; syntax, graph consistency, DOM ID bindings and all 16 encounter reachability windows also checked. This is **not** a claim of a completed native Node test run or a real-browser Render playthrough.
+- **40/40 scenarios passed** in isolated JavaScript execution of actual source/test contents through a test shim (rerun required after final edits); syntax, graph consistency, DOM ID bindings and all 16 encounter reachability windows also checked. This is **not** a claim of a completed native Node test run or a real-browser Render playthrough.
 - Need follow-up testing: `npm run test:rpg` in an actual checkout, mobile browser responsiveness, real TCG completed duel end-to-end, performance/save behavior across 90 days, and missing art files if the user has not committed the art ZIP.
 
 ## Integration contracts
@@ -38,7 +46,7 @@ The RPG/VN agent owns `rpg.js`, `rpg_story.js`, `rpg_schedules.js`, `rpg_world.j
 - All dialogue and custom event IDs are fixed ASCII strings. No copyrighted Tag Force content or external sprites were added.
 
 ## Prioritized continuation
-1. Complete one deeply branching heroine route with match-result/relationship requirements and a satisfying scene-ending outcome; extend mechanics to the other existing arcs afterward without rewriting character personalities.
+1. Extend the verified optional character-specific duel-and-choice episode format to the other seven heroines, preserving their established personalities and existing route events.
 2. Improve chapter milestones and actual in-game tournament brackets with bracket progress based on authoritative duel results, not automatic awards.
 3. Introduce a persistent card collection/shop inventory economy and deck legality integration with the existing TCG deck APIs.
 4. Complete personal and campaign endings, plus a replay/NG+ flow.
