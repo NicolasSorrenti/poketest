@@ -760,6 +760,12 @@ function projectedPrep(board,action,round){
   if(!u||!canEvolve(c,card(u.id))||u.playedTurn>=round)return null;
   u.id=id;
   u.playedTurn=round;
+  // Match evolution's treatment of Special Conditions. Cached/temporary
+  // attacks of the previous stage must not survive a hypothetical evolution.
+  u.status=null;
+  delete u.effectiveAttacks;
+  delete u.amnesia;
+  delete u.gymAttackCooldown;
  }else{
   if(!isBasicPokemon(c))return null;
   next.bench.push({id,damage:0,energies:[],status:null,playedTurn:round});
