@@ -146,6 +146,16 @@ GitHub Actions CPU AI regression additionally runs the existing Classic local CP
 - Added truthful benchmark switches and `docs/cpu-ai-sequence-search.md` with reproducibility, no-hidden-information guarantees and complete A/B results.
 - Direct Champion-versus-Expert evaluation is complete: **116–84** over 200 decisive games (Blackout 45–35, Brushfire 38–22, Overgrowth 33–27). Champion's 58% win rate is a meaningful improvement over previous near-50/50 results, but **the user's 5% lower-tier upset target is still NOT met or verified**. Never change legal outcomes, hidden information or coin RNG to enforce it.
 
+## Trainer timing and authentic Neo benchmark expansion (PR #12 continuation)
+
+- Added `trainerTactics` as an optional Expert/Champion policy for evaluating visible **Trainer opportunity costs**. It compares Pokémon Center's healing to all Energy discarded from damaged Pokémon; Super Potion's best Energy payment; Potion's immediate KO-prevention value; Switch readiness; and the cost of using Professor Oak before playing known hand Energy/evolutions. The choice scorer now preserves a necessary Fighting Energy when a spare Water Energy can pay Super Potion, and selects the better damaged friendly Pokémon.
+- Extended historical Neo Genesis Trainer intelligence to **Professor Elm** (locks other Trainers for the turn), **Moo-Moo Milk** (expected 20 healing, fair two-coin odds and own-Pokémon targets), and **Bill's Teleporter** (50% chance of drawing four, no predicted heads).
+- Repaired `benchmark_cpu.js` format selection. It was incorrectly attempting authentic Neo decks under Base–Rocket `classic` deck legality. It now chooses `neo-theme` for Neo decks and appropriate Gym/expanded formats; a real short Cold Fusion duel regression protects the fix. Duel rules remain untouched.
+- 600 matched tournament games across Blackout/Brushfire/Overgrowth/Zap plus authentic Neo Genesis **Cold Fusion/Hotfoot**: experimental Trainer policy **315–278**, seven draws/timeouts. **53.1%** of 593 decisive games, Wilson 95% CI approx **49.1%–57.1%**, insufficient to claim a reliable overall strength improvement. The Neo-only subset was **95–65** in 160 matches, encouraging but not universal.
+- A follow-up Moo-Moo Milk own-target bug fix was committed after that first 600-game sample. Regressions cover healing the correct own Pokémon, favorable Energy payment, opponent-plan secrecy, Elm and Teleporter behavior; CI re-runs the complete benchmarks.
+- Therefore **trainerTactics stays OFF by default**, whereas previously validated `actionDiscipline` remains ON at Champion. Complete reproducibility and results: `docs/cpu-ai-trainer-tactics.md`.
+- Difficulty target remains **≤5% lower-tier wins**, unachieved; focus future AI research on stronger strategic evaluation and Gym/Neo choice decisions, not manufactured results.
+
 ## Known limitations and next work
 
 1. Verify green CI on all affected and full regression suites. 
