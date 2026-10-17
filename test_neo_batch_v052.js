@@ -45,10 +45,17 @@ const fake={flip:()=>true,shuffle:(_,a)=>a,unit:U,draw(){},log(){}};
  assert.equal(g.players[1].deck.length,old-5,'Berserk mills the opponent on heads');
 }
 {
- const g=game('neo1-18');g.players[0].deck=['base1-98','base1-98','base1-99','base1-98','base1-98','base1-98'];
- P.played(g,0,-1,fake);assert.ok(g.pendingDecision);
- choose(g,['choice:1']);assert.ok(g.pendingDecision);
- const picks=g.pendingDecision.options.slice(0,3).map(o=>o.id);
- choose(g,picks);assert.equal(g.players[0].active.energies.length,3);
+ let heads=false,tails=false;
+ for(let seed=0;seed<10000&&!(heads&&tails);seed+=977){
+  const g=game('neo1-18');g.rngState=seed;
+  g.players[0].deck=['base1-98','base1-98','base1-99','base1-98','base1-98','base1-98'];
+  P.played(g,0,-1,fake);assert.ok(g.pendingDecision);
+  choose(g,['choice:1']);
+  if(!g.pendingDecision){tails=true;continue;}
+  heads=true;
+  const picks=g.pendingDecision.options.slice(0,3).map(o=>o.id);
+  choose(g,picks);assert.equal(g.players[0].active.energies.length,3);
+ }
+ assert.ok(heads&&tails,'Fire Boost should execute heads and tails');
 }
 console.log('PASS v0.52: 5 Neo Genesis Powers and curated pool');
