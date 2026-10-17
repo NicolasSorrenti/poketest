@@ -127,6 +127,16 @@ const settings={level:3,personality:'balanced',side:1,seed:47};
  assert.deepEqual(second.cpu,{level:1,personality:'defensive',npc:'reina'},
   'An RPG NPC identity must not constrain independent skill and temperament overrides');
 }
+{
+ const g=createGame({decks:[deck,deck],seed:125,format:'classic'});
+ const o=AI.observation(g,1);o.phase='game';o.turn=1;
+ o.self.active={id:'base1-35',energies:['base1-102'],damage:20};
+ o.opponent.active={id:'base1-46',energies:[],damage:0};
+ const champion=AI.configuration({side:1,level:5});
+ assert.ok(AI.score({type:'attack',payload:{attackIndex:1}},o,champion,{})>
+  AI.score({type:'attack',payload:{attackIndex:0}},o,champion,{}),
+  'A wounded Magikarp must recognize Flail damage counters instead of rating it as printed flat 10');
+}
 let duels=0,decisions=0,attacks=0,energy=0,evolutions=0,trainer=0;
 for(let seed=1;seed<=4;seed++){
  let game=createGame({decks:[deck,deck],seed:seed*1789,format:'classic'});
