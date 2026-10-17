@@ -464,7 +464,7 @@ function commit(g,plan,h){
  if(!plan.proxy)held(p,plan.cardId,plan.handIndex);
  const pick=k=>nums(d,k)[0],picks=k=>nums(d,k),extract=(owner,k)=>take(owner.discard,picks(k));
  const cardInHand=plan.proxy?plan.cardId:p.hand.splice(plan.handIndex,1)[0];
- const isStadium=['No Removal Gym',"The Rocket's Training Gym",'Resistance Gym',"Rocket's Minefield Gym",'Narrow Gym','Pewter City Gym','Cerulean City Gym','Vermilion City Gym','Celadon City Gym','Fuchsia City Gym','Saffron City Gym','Cinnabar City Gym','Viridian City Gym','Rocket\'s Hideout','Energy Stadium','Chaos Gym'].includes(name);
+ const isStadium=['No Removal Gym',"The Rocket's Training Gym",'Resistance Gym',"Rocket's Minefield Gym",'Narrow Gym','Pewter City Gym','Cerulean City Gym','Vermilion City Gym','Celadon City Gym','Fuchsia City Gym','Saffron City Gym','Cinnabar City Gym','Viridian City Gym','Rocket\'s Hideout','Energy Stadium','Chaos Gym','Sprout Tower','Healing Field','Broken Ground Gym','Radio Tower','Lucky Stadium'].includes(name);
  if(isStadium){
   if(g.stadium&&get(g.stadium.id).name===name)throw Error('This Stadium is already in play');
   if(g.stadium){const old=g.players[g.stadium.owner];old.discard.push(old.stadium);delete old.stadium;}
@@ -749,7 +749,7 @@ function commit(g,plan,h){
    if(indices.length)p.hand.push(...take(p.deck,indices));
    p.deck=h.shuffle(g,p.deck);break;
   }
-  case 'Energy Stadium':case "Rocket's Hideout":break;
+  case 'Energy Stadium':case "Rocket's Hideout":case 'Sprout Tower':case 'Healing Field':case 'Broken Ground Gym':case 'Radio Tower':case 'Lucky Stadium':break;
   case 'Bill':h.draw(g,plan.side,2);break;
   case 'Professor Oak':p.discard.push(...p.hand);p.hand=[];h.draw(g,plan.side,7);break;
   case 'Impostor Professor Oak':f.deck=h.shuffle(g,[...f.deck,...f.hand]);f.hand=[];h.draw(g,1-plan.side,7);break;
@@ -829,7 +829,7 @@ function answer(g,plan,response,h){
  const data={...plan.data,[plan.await]:response.decline?[]:[...response.selected]};
  return prompt(g,{...plan,data,await:null},h);
 }
-const SUPPORTED=new Set(['Mary','PokéGear','Super Energy Retrieval','Time Capsule','Pokémon Personality Test',"Impostor Professor Oak's Invention",'Arcade Game','Energy Charge','Ruin Wall','Old Rod',"Team Rocket's Evil Deeds",'Energy Ark','Fossil Egg','Hyper Devolution Spray','Double Gust',"Bill's Teleporter",'Professor Elm','Moo-Moo Milk','Pokémon March','Super Rod','Bill','Professor Oak','Impostor Professor Oak',"Imposter Oak's Revenge",'Lass','Maintenance','Computer Search','Energy Search',"The Boss's Way",'Poké Ball','Pokémon Trader','Item Finder','Energy Retrieval','Nightly Garbage Run','Recycle','Pokédex','Gambler','Digger','Full Heal','Potion','Super Potion','Pokémon Center','Switch','Gust of Wind','Energy Removal','Super Energy Removal','Defender','PlusPower','Goop Gas Attack','Here Comes Team Rocket!',"Rocket's Sneak Attack",'Pokémon Flute','Revive','Mr. Fuji','Scoop Up','Devolution Spray','Pokémon Breeder','Challenge!','Sleep!',
+const SUPPORTED=new Set(['Sprout Tower','Healing Field','Broken Ground Gym','Radio Tower','Lucky Stadium','Mary','PokéGear','Super Energy Retrieval','Time Capsule','Pokémon Personality Test',"Impostor Professor Oak's Invention",'Arcade Game','Energy Charge','Ruin Wall','Old Rod',"Team Rocket's Evil Deeds",'Energy Ark','Fossil Egg','Hyper Devolution Spray','Double Gust',"Bill's Teleporter",'Professor Elm','Moo-Moo Milk','Pokémon March','Super Rod','Bill','Professor Oak','Impostor Professor Oak',"Imposter Oak's Revenge",'Lass','Maintenance','Computer Search','Energy Search',"The Boss's Way",'Poké Ball','Pokémon Trader','Item Finder','Energy Retrieval','Nightly Garbage Run','Recycle','Pokédex','Gambler','Digger','Full Heal','Potion','Super Potion','Pokémon Center','Switch','Gust of Wind','Energy Removal','Super Energy Removal','Defender','PlusPower','Goop Gas Attack','Here Comes Team Rocket!',"Rocket's Sneak Attack",'Pokémon Flute','Revive','Mr. Fuji','Scoop Up','Devolution Spray','Pokémon Breeder','Challenge!','Sleep!',
  'Brock',"Brock's Training Method",'Misty','Lt. Surge','Secret Mission','Erika',"Erika's Perfume",'Koga','Sabrina',"Sabrina's Gaze",'Blaine',"Blaine's Gamble",'Fervor','Max Revive','Giovanni','Warp Point',
  "Blaine's Last Resort","Erika's Kindness",'Good Manners','Master Ball',"Giovanni's Last Resort","Misty's Tears","Erika's Maids","The Rocket's Trap","Rocket's Secret Experiment",
  'No Removal Gym',"The Rocket's Training Gym",'Resistance Gym',"Rocket's Minefield Gym",'Transparent Walls',

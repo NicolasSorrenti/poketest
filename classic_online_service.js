@@ -72,7 +72,7 @@ class ClassicOnlineService {
    players:room.players.map(p=>p?{name:p.name,deck:p.deck,ready:p.ready}:null),
    chatSeq:room.chatSeq,chatMessages:room.chat.map(m=>({...m})),
    ...(g?{view:publicView(g,side),activity:publicActivity(g),feed:[...(g.matchFeed||[]).slice(-90)],turnSerial:g.turnSerial,winner:g.winner,format:g.format,
-    me:side===null?{energyUsed:false,retreated:false}:{energyUsed:!!g.players[side].energyUsed,retreated:!!g.players[side].retreated},
+    me:side===null?{energyUsed:false,retreated:false,stadiumUsed:false}:{energyUsed:!!g.players[side].energyUsed,retreated:!!g.players[side].retreated,stadiumUsed:g.players[side].stadiumUsedTurn===g.turnSerial},
     setupConfirmed:side!==null&&!!g.setupReady[side],
     counts:g.players.map(countCards)}:{} )};
  }

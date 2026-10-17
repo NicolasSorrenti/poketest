@@ -222,8 +222,8 @@
   quick.drawPrizes($('prizeRail'),you.prizeCount,cpu.prizeCount,'CPU');renderPrizes();renderPrizeFallback();renderCoin(v);renderKnockOut(v);
   $('turnChip').textContent='TURN '+(current.turnSerial+1);$('scoreline').textContent=`Your Prizes ${you.prizeCount} · CPU Prizes ${cpu.prizeCount}`;
   $('stadiumText').textContent=v.stadium?`Stadium: ${card(v.stadium.id).name}`:'';
-  if(v.stadium?.id==='neo4-99'&&v.phase==='game'&&yourTurn&&!v.pendingDecision){
-   $('stadiumText').append(btn(' ↻ Use Stadium',()=>send(command('use_stadium')),'subtle'));
+  if(['neo4-99','neo3-61','neo4-95','neo4-100'].includes(v.stadium?.id)&&v.phase==='game'&&yourTurn&&!v.pendingDecision){
+   $('stadiumText').append(btn(current.you.stadiumUsed?' • Used this turn':' ↻ Use Stadium',()=>send(command('use_stadium')),'subtle',!!current.you.stadiumUsed));
   }
   $('oppStats').textContent=`Hand ${cpu.handCount} · Deck ${cpu.deckCount} · Discard ${cpu.discard.length}`;
   $('myStats').textContent=`Hand ${you.handCount} · Deck ${you.deckCount} · Discard ${you.discard.length}`;

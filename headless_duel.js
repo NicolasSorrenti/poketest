@@ -161,7 +161,9 @@ function retreatCost(g,side,u){
  const aids=owner.bench.filter(x=>CLASSIC_POWERS.enabled(g,x,'Retreat Aid')).length;
  const gymSave=g.stadium&&card(g,g.stadium.id).name==='Cerulean City Gym'&&card(g,u.id).name.startsWith("Misty's ")?1:0;
  const sticky=CLASSIC_POWERS.enabled(g,enemy.active,'Sticky Goo')?2:0;
- return Math.max(0,base-aids-gymSave)+sticky+(g.stadium&&card(g,g.stadium.id).name==="The Rocket's Training Gym"?1:0);
+ const broken=g.stadium&&card(g,g.stadium.id).name==='Broken Ground Gym'&&
+  (effectiveCard(g,u).subtypes||[]).some(t=>t==='Baby'||t==='Basic')?1:0;
+ return Math.max(0,base-aids-gymSave)+sticky+(g.stadium&&card(g,g.stadium.id).name==="The Rocket's Training Gym"?1:0)+broken;
 }
 function jawClampLocks(g,side){const u=g.players[side].active;return Boolean(u?.noSwitch?.expires>g.turnSerial&&g.players[1-side].active?.id===u.noSwitch.sourceId);}
 function allowTurn(g,side){if(g.phase!=='game'||g.over)fail('Duel is not active');if(side!==g.turn)fail('Not your turn');}
@@ -678,9 +680,28 @@ function performAction(g,side,cmd){
  if(type!=='concede')requireMigratedEffects(g);
  if(type==='concede'){g.over=true;g.winner=1-side;log(g,`${p.name} conceded.`);return;}
  if(type==='use_stadium'){
-  if(!g.stadium||card(g,g.stadium.id).name!=='Energy Stadium')fail('Energy Stadium not in play');
-  if(p.stadiumUsedTurn===g.turnSerial)fail('Energy Stadium already used this turn');
+  const name=g.stadium?card(g,g.stadium.id).name:null;
+  if(!['Energy Stadium','Healing Field','Radio Tower','Lucky Stadium'].includes(name))fail('No usable Stadium action in play');
+  if(p.stadiumUsedTurn===g.turnSerial)fail('Stadium action already used this turn');
   p.stadiumUsedTurn=g.turnSerial;
+  if(name==='Healing Field'){
+   if(next(g,2)===1&&p.active){
+    p.active.damage=Math.max(0,p.active.damage-20);
+    log(g,'Healing Field removed up to 2 damage counters from the Active Pokémon.');
+   }else log(g,'Healing Field flip was tails.');
+   return;
+  }
+  if(name==='Lucky Stadium'){
+   if(next(g,2)===1){draw(g,side);log(g,'Lucky Stadium drew one card.');}
+   else log(g,'Lucky Stadium flip was tails.');
+   return;
+  }
+  if(name==='Radio Tower'){
+   const top=p.deck.slice(-2).reverse().map(id=>card(g,id).name);
+   (p.privateLog ||= []).push('Radio Tower: top '+top.length+' card(s), in order — '+top.join(', '));
+   log(g,'Radio Tower inspected its owner’s top 2 cards.');
+   return;
+  }
   if(next(g,2)===0){log(g,'Energy Stadium flip was tails.');return;}
   const choices=p.discard.flatMap((id,i)=>/^(Grass|Fire|Water|Lightning|Psychic|Fighting) Energy$/.test(card(g,id).name)?[{id:`card:${i}`,label:card(g,id).name}]:[]);
   if(!choices.length)return;
@@ -1331,6 +1352,8 @@ function resolveAttack(g,side,index,chosenBench,energyPicks,extra={}){
   ignoreWeakness:g.stadium&&card(g,g.stadium.id).name==='Cinnabar City Gym'&&c.types?.includes('Water')&&defCard.name.startsWith("Blaine's "),
   resistancePenalty:g.stadium&&card(g,g.stadium.id).name==='Resistance Gym'?10:30
  });
+ // Sprout Tower reduces Colorless Pokémon attack damage after W/R, for both players.
+ if(dmg>0&&c.types?.includes('Colorless')&&g.stadium&&card(g,g.stadium.id).name==='Sprout Tower')dmg=Math.max(0,dmg-30);
  if(dmg>0){
   dmg=Math.max(0,dmg-10*specialEnergyCount(g,f.active,'Metal'));
   // The Darkness boost applies only when the attack actually damages.
