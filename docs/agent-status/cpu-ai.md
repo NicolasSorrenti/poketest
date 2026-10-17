@@ -19,9 +19,20 @@ The original classic_bot.js tried a fixed first-legal sequence, attached Energy 
 - ClassicLocalService.create accepts difficulty, personality and aiSeed independently of opponent deck, preserving existing defaults.
 - Headless deterministic secrecy tests and four short self-play scenarios; an optional paired arena with seat-swapped seeds, decision timing, command logs, game outcomes and Wilson 95% intervals.
 
+## Verified October 17, 2026 CI / benchmark
+
+- GitHub Actions on CPU branch: **CPU AI regression, TCG Gameplay Regression, and Node regression all green**, including RPG tests. Tested PR merged tip e81f696873267c51a3b331ea8950b9722a016fe6.
+- CPU unit suite: five difficulty settings, six personality styles, hidden-state projection, deterministic seed tests, legal action checks, 4 short self-play scenarios.
+- Existing Classic service regression: 80 CPU duel scenarios, 3,009 validated commands, 743 attacks, 207 interactive responses and deck conservation.
+- Paired seeded arena: Champion Blackout vs Beginner Blackout: 31 of 68 decisive games in 100 matches; 32 draws/turn-limits, 95% Wilson interval about 34.3%–57.3%. Champion Brushfire vs Beginner Blackout: 28 of 49 decisive in 50 matches, 1 draw/turn-limit, 95% interval about 43.3%–70.0%.
+- **No statistically demonstrated ordered difficulty advantage**: stronger CPU's greedy heuristic remains too weak; prioritize strategic tuning before describing Champion as a meaningful challenge.
+- No illegal actions committed by policies in the arena, but **16,181 rejected candidate legality probes from 25,707 probes** in the 100-match same-deck arena and 7,333 from 11,206 in mixed decks. This is correctness-safe but inefficient: reduce invalid candidate enumeration and avoid depending on hidden-state-sensitive reducer rejection.
+- Mean action decision time ~0.74 ms (same-deck) and ~0.77 ms (mixed-deck) on GitHub-hosted Node runner; not a promise for client hardware.
+- CI exposed and regression-tests two dead-end patterns: invalid activated Power choice, and Super Energy Removal without a valid opposing target; bounded subset generation handles non-prefix Double Colorless retreat cost payments.
+
 ## Testing
 
-GitHub Actions CPU AI regression additionally runs the existing Classic local CPU suite. First CI pass exposed a dead-end Strange Behavior activation with an impossible recipient. Added conservative preflight for Power use; this is an AI workaround, not a replacement for a rules-agent legality fix. PR also runs broader gameplay and RPG suites. Check latest CI before merging.
+GitHub Actions CPU AI regression additionally runs the existing Classic local CPU suite. First CI passes exposed and we corrected CPU-side dead-end choices for Strange Behavior, Double Colorless retreat payments, and unsupported Super Energy Removal target conditions. These CPU-side preflights are not substitutes for authoritative rules-agent legality fixes. All three CI workflows passed on the verified commit noted above.
 
 ## Known limitations and next work
 
