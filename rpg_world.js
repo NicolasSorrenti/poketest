@@ -51,7 +51,9 @@
   if(state.day>90)return [];
   const ids=Object.entries(cast).filter(([id,c])=>locationFor(id,c,state)===place).map(([id])=>id);
   // A scheduled personal encounter is always present where it takes place.
-  for(const story of stories)if(story.place===place&&cast[story.npc]&&!ids.includes(story.npc))ids.push(story.npc);
+  for(const story of stories)if(story.place===place){
+   for(const person of [story.npc,story.guest].filter(Boolean))if(cast[person]&&!ids.includes(person))ids.push(person);
+  }
   return ids;
  }
  function nextSighting(state,cast,id,withinDays=7){
