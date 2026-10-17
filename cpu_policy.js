@@ -60,8 +60,10 @@ function configuration(raw={}){
  // Trainer cards by default; opt-out remains available for baseline A/B tests.
  const actionDiscipline=raw.actionDiscipline??(level===5);
  if(typeof actionDiscipline!=='boolean')throw Error('Invalid action-discipline setting');
+ const trainerTactics=raw.trainerTactics??false;
+ if(typeof trainerTactics!=='boolean')throw Error('Invalid trainer-tactics setting');
  return {level,personality,seed:raw.seed??1,side,planning,evolutionTempo,prizeRace,knockoutTempo,opponentResponse,
-  graduatedNoise,energyHorizon,turnSearch,actionDiscipline,
+  graduatedNoise,energyHorizon,turnSearch,actionDiscipline,trainerTactics,
   skill:(graduatedNoise?CALIBRATED_SKILLS:SKILLS)[level],style:PERSONALITIES[personality]};
 }
 // Seeded independent of the engine's private deck order and future RNG state.
@@ -573,6 +575,77 @@ function energyHorizonBonus(action,o,cfg){
  const surplus=direct===0&&changed-before<=1?-35:0;
  return Math.max(-85,Math.min(160,expected+activeBias+weakDefense+surplus))*cfg.style.setup;
 }
+// Preserve expensive healing Trainers until their health gain outweighs the
+// *known* Energy lost, especially when that Energy currently pays for attacks.
+// The opponent's concealed hand is not consulted; current attack affordability
+// and present damage are the only inputs.
+function trainerTacticsBonus(action,o,cfg){
+ if(!cfg.trainerTactics||cfg.level<4||action.type!=='play_trainer'||o.phase!=='game')return 0;
+ const p=o.self,q=o.opponent,name=card(p.hand[action.payload.handIndex])?.name;
+ const own=[p.active,...p.bench].filter(Boolean);
+ if(name==='Pokémon Center'){
+  const damaged=own.filter(u=>u.damage>0);
+  if(!damaged.length)return -250;
+  const cured=damaged.reduce((v,u)=>v+u.damage,0);
+  const lostEnergy=damaged.reduce((v,u)=>v+(u.energies?.length||0),0);
+  const ready=strongestAffordableAttack(p.active,q.active);
+  const afterActive=p.active?.damage>0?{...p.active,energies:[]}:p.active;
+  const attackLost=Math.max(0,ready-strongestAffordableAttack(afterActive,q.active));
+  const threat=q.active&&!['Asleep','Paralyzed'].includes(q.active.status)?
+   strongestAffordableAttack(q.active,p.active):0;
+  const savesActive=p.active?.damage>0&&threat>=hpRemaining(p.active)&&
+   threat<hpRemaining({...p.active,damage:0});
+  // Early minor healing must not destroy several turns of Energy development.
+  return Math.min(165,cured*.7+(savesActive?120:0))-
+   lostEnergy*65-attackLost*1.55-50;
+ }
+ if(name==='Super Potion'){
+  const harmed=own.filter(u=>u.damage>0&&u.energies?.length);
+  if(!harmed.length)return -250;
+  // Scorer of the pending target and discarded Energy makes the final choice;
+  // do not play merely to discard an essential attached Energy.
+  const benefit=Math.max(...harmed.map(u=>{
+   const post={...u,energies:(u.energies||[]).slice(1)};
+   const attackCost=Math.max(0,strongestAffordableAttack(u,q.active)-
+    strongestAffordableAttack(post,q.active));
+   return Math.min(40,u.damage)*1.1-attackCost*1.5;
+  }));
+  return benefit-100;
+ }
+ if(name==='Potion'){
+  const damaged=own.filter(u=>u.damage>0);
+  if(!damaged.length)return -160;
+  const active=p.active,qAttack=q.active&&!['Asleep','Paralyzed'].includes(q.active.status)?
+   strongestAffordableAttack(q.active,active):0;
+  const lethal=qAttack>0&&qAttack>=hpRemaining(active);
+  const save=lethal&&qAttack<hpRemaining({...active,damage:Math.max(0,active.damage-20)});
+  const amount=Math.max(...damaged.map(u=>Math.min(u.damage,20)));
+  return save?150:amount>=20? -80:-115;
+ }
+ if(name==='Switch'&&p.bench.length){
+  const before=p.active,after=p.bench.reduce((best,u)=>{
+   const power=strongestAffordableAttack(u,q.active);
+   return power>best?power:best;
+  },0);
+  const old=strongestAffordableAttack(before,q.active);
+  if(before?.status&&after>old)return 80;
+  return !before?.status&&after<=old?-100:0;
+ }
+ if(name==='Professor Oak'){
+  // Discarding known, immediately playable Energy/evolutions wastes tempo.
+  // Complete the development before Oak; after that, the normal Oak score
+  // decides whether the depleted hand is worth refreshing.
+  const playableEnergy=!p.energyUsed&&p.hand.some((id,i)=>i!==action.payload.handIndex&&
+   isEnergy(card(id)))&&own.length>0;
+  const playableEvolution=p.hand.some((id,i)=>{
+   if(i===action.payload.handIndex)return false;
+   const c=card(id);
+   return c?.evolvesFrom&&own.some(u=>u.playedTurn<o.round&&canEvolve(c,card(u.id)));
+  });
+  return (playableEnergy?-125:0)+(playableEvolution?-130:0);
+ }
+ return 0;
+}
 function score(a,o,cfg,used){
  const p=o.self,q=o.opponent,style=cfg.style,{type,payload:v}=a;
  if(type==='setup_confirm')return 115+p.bench.length*10;
@@ -884,7 +957,7 @@ function chooseAction(game,raw={},memo={}){
  const actions=candidates(o,cfg,used);if(!actions.length)return null;
  const random=rng(cfg.seed+game.turnSerial*7919+(game.events?.length||0)*17011+cfg.side*31);
  const ranked=actions.map((action,i)=>({action,
-  score:score(action,o,cfg,used)+planningBonus(action,o,cfg)+prizeRaceBonus(action,o,cfg)+knockoutTempoBonus(action,o,cfg)+opponentResponseBonus(action,o,cfg)+energyHorizonBonus(action,o,cfg)+turnSequenceBonus(action,o,cfg),tie:i}))
+  score:score(action,o,cfg,used)+planningBonus(action,o,cfg)+prizeRaceBonus(action,o,cfg)+knockoutTempoBonus(action,o,cfg)+opponentResponseBonus(action,o,cfg)+energyHorizonBonus(action,o,cfg)+turnSequenceBonus(action,o,cfg)+trainerTacticsBonus(action,o,cfg),tie:i}))
   .sort((a,b)=>b.score-a.score||a.tie-b.tie);
  // Rank all visible options before competence-sensitive choice noise. A larger
  // *evaluation budget* should NOT widen the random window: doing so previously
@@ -905,11 +978,11 @@ function chooseAction(game,raw={},memo={}){
  }
  return null;
 }
-function driveSide(initial,{side=1,level=3,personality='balanced',seed=1,planning,evolutionTempo,prizeRace,knockoutTempo,opponentResponse,graduatedNoise,energyHorizon,turnSearch,actionDiscipline,limit=200}={}){
+function driveSide(initial,{side=1,level=3,personality='balanced',seed=1,planning,evolutionTempo,prizeRace,knockoutTempo,opponentResponse,graduatedNoise,energyHorizon,turnSearch,actionDiscipline,trainerTactics,limit=200}={}){
  let game=initial,steps=0;const commands=[],memo={trainers:0,powers:0,powerKeys:new Set(),stadium:false};
  while(!game.over&&steps<limit){
   const beforeTurn=game.turnSerial;
-  const next=chooseAction(game,{side,level,personality,seed,planning,evolutionTempo,prizeRace,knockoutTempo,opponentResponse,graduatedNoise,energyHorizon,turnSearch,actionDiscipline},memo);
+  const next=chooseAction(game,{side,level,personality,seed,planning,evolutionTempo,prizeRace,knockoutTempo,opponentResponse,graduatedNoise,energyHorizon,turnSearch,actionDiscipline,trainerTactics},memo);
   if(!next){
    if(game.pendingDecision?.actor===side)throw Error('CPU unresolved choice: '+JSON.stringify({decision:game.pendingDecision,pendingAction:game.pendingAction}));
    break;
@@ -929,4 +1002,4 @@ function driveSide(initial,{side=1,level=3,personality='balanced',seed=1,plannin
 }
 function driveBot(game,limit=200,config={}){return driveSide(game,{...config,side:1,limit});}
 function propose(game,config={}){return chooseAction(game,{...config,side:1});}
-module.exports={SKILLS,CALIBRATED_SKILLS,PERSONALITIES,configuration,observation,candidates,score,knockoutChance,planningBonus,evolutionTempoPenalty,prizeRaceBonus,knockoutTempoBonus,opponentResponseBonus,energyHorizonBonus,turnSequenceBonus,chooseAction,driveSide,driveBot,propose};
+module.exports={SKILLS,CALIBRATED_SKILLS,PERSONALITIES,configuration,observation,candidates,score,knockoutChance,planningBonus,evolutionTempoPenalty,prizeRaceBonus,knockoutTempoBonus,opponentResponseBonus,energyHorizonBonus,turnSequenceBonus,trainerTacticsBonus,chooseAction,driveSide,driveBot,propose};
