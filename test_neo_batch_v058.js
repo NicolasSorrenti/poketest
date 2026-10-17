@@ -38,6 +38,7 @@ assert.equal(RULES.setupCandidates(['neo1-12','base1-99'],CATALOG).length,1);
  rejected(g,'evolve',{handIndex:1,slot:-1}); // same Pokémon cannot evolve twice this round
  assert.equal(g.players[0].active.id,'base1-24');
  send(g,0,'retreat',{slot:0});
+ if(g.pendingDecision){const d=g.pendingDecision;send(g,d.actor,'choose',{decisionId:d.id,selected:d.options.slice(0,d.min).map(x=>x.id)});}
  assert.equal(g.players[0].active.id,'base1-63');
  send(g,0,'evolve',{handIndex:0,slot:-1});
  assert.equal(g.players[0].active.id,'base1-42','Different Pokémon can evolve in same Active slot on the same turn');
