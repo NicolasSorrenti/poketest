@@ -1,6 +1,6 @@
 'use strict';
 (()=>{
-const $=id=>document.getElementById(id),KEY='neoHarborRpgV1',STORY=window.NeoHarborStory,WORLD=window.NeoHarborWorld,CIRCUIT=window.NeoHarborCircuit,MARKET=window.NeoHarborMarket;
+const $=id=>document.getElementById(id),KEY='neoHarborRpgV1',STORY=window.NeoHarborStory,WORLD=window.NeoHarborWorld,CIRCUIT=window.NeoHarborCircuit,MARKET=window.NeoHarborMarket,FINALE=window.NeoHarborFinale;
 const periods=['Morning','Afternoon','Evening'];
 const places={
  home:['Your Apartment','Your base during the championship season.'],
@@ -68,7 +68,7 @@ function finishStory(){
 
 function timeFlash(beforeDay,beforeSlot){const overlay=document.createElement('div');overlay.className='notice-pop';const heading=document.createElement('b');heading.textContent=state.day>90?'Season complete':state.day!==beforeDay?'A NEW DAY BEGINS':'TIME PASSES';const body=document.createElement('span');body.textContent=state.day>90?'Day 90 has ended.':('Day '+state.day+' · '+periods[state.slot]);overlay.append(heading,body);document.body.append(overlay);overlay.addEventListener('animationend',()=>overlay.remove());}
 
-function defaults(){return {day:1,slot:0,location:'home',metReina:false,reinaTrust:0,reinaDuels:0,results:[],flags:{intro:false},journal:['The 90-day season begins.'],pendingDuel:null,bonds:{},talked:{},hungOut:{},eventsDone:{},points:0,credits:80,playerDeck:'blackout',selected:null,ended:false,storyDone:{},storyMissed:{},relationships:{},routeOutcomes:{},partner:null,activeStory:null}}
+function defaults(){return {day:1,slot:0,location:'home',metReina:false,reinaTrust:0,reinaDuels:0,results:[],flags:{intro:false},journal:['The 90-day season begins.'],pendingDuel:null,bonds:{},talked:{},hungOut:{},eventsDone:{},points:0,credits:80,playerDeck:'blackout',selected:null,ended:false,storyDone:{},storyMissed:{},relationships:{},routeOutcomes:{},partner:null,activeStory:null,finale:null,newGamePlus:0}}
 let state;try{state=JSON.parse(localStorage.getItem(KEY))||defaults();if(!Number.isInteger(state.day)||state.day<1||state.day>91)throw Error('Invalid save');}catch{state=defaults()}
 for(const [k,v] of Object.entries(defaults()))if(state[k]===undefined)state[k]=v;
 for(const id of Object.keys(cast)){if(!state.bonds[id])state.bonds[id]={affection:0,trust:0,duels:0};}
@@ -252,6 +252,41 @@ function saveMarketDeck(){
  }catch(error){marketMessage(error.message);}
 }
 
+
+function renderFinale(){
+ const root=$('finaleChoices');root.replaceChildren();
+ const info=FINALE.summary(state);
+ $('finaleTitle').textContent=info.title;
+ $('finaleCompetitive').textContent=info.competition;
+ $('finaleRelationship').textContent=info.intimate;
+ if(state.finale?.choice){
+  $('finaleQuestion').textContent='Your next chapter';
+  $('finaleClosing').textContent=FINALE.choose(state,state.finale.choice).closing;
+  $('finaleNewGame').hidden=false;
+ }else{
+  $('finaleQuestion').textContent='Choose your next chapter';
+  $('finaleClosing').textContent='';
+  $('finaleNewGame').hidden=true;
+  for(const option of FINALE.ENDING_CHOICES){
+   const btn=document.createElement('button');btn.className='event-btn';
+   btn.textContent=option.title;
+   const label=document.createElement('small');label.textContent=option.description;btn.append(label);
+   btn.onclick=()=>{try{FINALE.choose(state,option.id);persist();renderFinale();}catch(error){$('notice').textContent=error.message;}};
+   root.append(btn);
+  }
+ }
+}
+function openFinale(){
+ if(state.day<=90||state.activeStory||state.pendingDuel)return;
+ renderFinale();$('finaleDialog').showModal();
+}
+function startNewGamePlus(){
+ if(!state.finale?.choice)return;
+ if(!confirm('Start New Game+? Story and relationships will reset. Your collected cards will carry over.'))return;
+ try{state=FINALE.newGamePlus(state,defaults);STORY.normalize(state);WORLD.normalize(state);CIRCUIT.normalize(state);MARKET.normalize(state);persist();location.reload();}
+ catch(error){$('notice').textContent=error.message;}
+}
+
 function render(){
  const ended=state.day>90,locked=!!state.activeStory||!!state.pendingDuel;
  $('whereLabel').textContent=state.location==='home'?'⌂  YOU ARE HOME':'●  YOU ARE HERE';
@@ -352,13 +387,25 @@ function render(){
  for(const note of state.journal.slice(0,3)){const p=document.createElement('p');p.textContent='• '+note;$('journal').append(p)}
  $('notice').textContent=state.activeStory?'Story in progress: complete this scene to continue.':locked?'Your duel is in progress.':'Travel & talk are free · ⏳ actions advance time';
  if($('deckPicker')?.options.length)$('deckPicker').value=state.playerDeck;
+ $('endSeason').hidden=!ended;$('endSeason').replaceChildren();
+ if(ended){
+  const p=document.createElement('p');p.textContent='The ninety-day season has ended. Your story has an ending to discover.';
+  const b=document.createElement('button');b.className='event-btn';b.textContent='View your season ending';b.onclick=openFinale;
+  $('endSeason').append(p,b);
+ }
 }
 
 $('quickNext').onclick=()=>act('rest');$('quickHome').onclick=()=>act('home');$('calendarBtn').onclick=openCalendar;$('calendarClose').onclick=()=>$('calendarDialog').close();
+$('finaleClose').onclick=()=>$('finaleDialog').close();
+$('finaleNewGame').onclick=startNewGamePlus;
 $('marketClose').onclick=()=>$('marketDialog').close();
 $('marketBuyPack').onclick=buyMarketPack;
 $('marketSaveDeck').onclick=saveMarketDeck;
 $('save').onclick=()=>{persist();$('notice').textContent='Campaign saved in this browser.'};
 async function initDecks(){try{const res=await fetch('/api/classic/decks');if(!res.ok)throw Error('Could not load decks');const data=await res.json(),select=$('deckPicker');for(const d of data.decks.filter(x=>x.id!=='custom'||!!state.collection.customDeck)){const o=document.createElement('option');o.value=d.id;o.textContent=d.name;select.append(o)}if([...select.options].some(o=>o.value===state.playerDeck))select.value=state.playerDeck;else{select.value='blackout';state.playerDeck='blackout'}select.onchange=()=>{state.playerDeck=select.value;persist()};}catch(e){$('notice').textContent='Deck list unavailable: '+e.message;}}
-render();initDecks();initMarket();if(state.pendingDuel){$('duel').hidden=false;$('battle').src=duelUrl(state.pendingDuel);}
+render();initDecks();initMarket();
+if(state.day>90&&!state.flags.finaleOffered&&!state.pendingDuel){
+ state.flags.finaleOffered=true;persist();openFinale();
+}
+if(state.pendingDuel){$('duel').hidden=false;$('battle').src=duelUrl(state.pendingDuel);}
 })();
