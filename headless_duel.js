@@ -1205,14 +1205,20 @@ function resolveAttack(g,side,index,chosenBench,energyPicks,extra={}){
    g.nextDecisionId++;g.pendingDecision=makeDecision({id:'neo50:'+g.nextDecisionId,actor:side,kind:'neo-attack-choice',label,options,min:1,max:1});
    g.pendingAction={kind:'neo50_select',stage,side,attackIndex:index,roll,extra,data};
   };
-  if(!data.source){prompt('source',sources.map(x=>({id:x.id,label:(x.id==='slot:-1'?'Active: ':'Bench: ')+publicName(g,x.unit)})),'Super Metronome: choose an opposing Pokémon');return;}
-  if(!Array.isArray(data.source)||data.source.length!==1||!sources.some(x=>x.id===data.source[0]))fail('Invalid Metronome source');
-  const slot=Number(data.source[0].slice(5)),source=slot===-1?f.active:f.bench[slot];
-  if(!source)fail('Metronome Pokémon left play');
-  const choices=attacksFor(source);
-  if(!data.attack){prompt('attack',choices,'Super Metronome: choose an attack');return;}
-  if(!Array.isArray(data.attack)||data.attack.length!==1||!choices.some(x=>x.id===data.attack[0]))fail('Invalid Metronome attack');
-  extra.neo50CopyAttack=effectiveCard(g,source).attacks[Number(data.attack[0].slice(7))];
+  if(!data.source&&!sources.length){
+   // Heads with no payable/copied attacks is a valid attack that does
+   // nothing. Do not rollback the entire action or allow a free reroll.
+   log(g,'Super Metronome has no eligible opposing attack to copy.');
+  }else{
+   if(!data.source){prompt('source',sources.map(x=>({id:x.id,label:(x.id==='slot:-1'?'Active: ':'Bench: ')+publicName(g,x.unit)})),'Super Metronome: choose an opposing Pokémon');return;}
+   if(!Array.isArray(data.source)||data.source.length!==1||!sources.some(x=>x.id===data.source[0]))fail('Invalid Metronome source');
+   const slot=Number(data.source[0].slice(5)),source=slot===-1?f.active:f.bench[slot];
+   if(!source)fail('Metronome Pokémon left play');
+   const choices=attacksFor(source);
+   if(!data.attack){prompt('attack',choices,'Super Metronome: choose an attack');return;}
+   if(!Array.isArray(data.attack)||data.attack.length!==1||!choices.some(x=>x.id===data.attack[0]))fail('Invalid Metronome attack');
+   extra.neo50CopyAttack=effectiveCard(g,source).attacks[Number(data.attack[0].slice(7))];
+  }
  }
  if(program.kind==='neo50:sketch'){
   const prior=f.active?.neo50LastAttack;
