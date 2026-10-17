@@ -222,6 +222,31 @@ const settings={level:3,personality:'balanced',side:1,seed:47};
  assert.equal(AI.knockoutChance({damage:'30',text:''},attacker,defender),1,
   'A deterministic affordable 30-damage attack is a certain KO');
 }
+{
+ const game=createGame({decks:[deck,deck],seed:60,format:'classic'});
+ const o=AI.observation(game,1);o.phase='game';o.turn=1;
+ o.self.active={id:IDS.hit,damage:0,energies:[IDS.fight],status:null};
+ o.opponent.active={id:IDS.machop,damage:0,energies:[IDS.fight],status:null};
+ o.opponent.bench=[
+  {id:'base1-50',damage:20,energies:[],status:null}, // Ghost: 10 HP, resists Fighting
+  {id:'base1-46',damage:30,energies:[],status:null}  // Charmander: 20 HP, vulnerable to Jab
+ ];
+ o.decision={id:'gust:1',actor:1,label:'Choose opposing Benched Pokémon to switch',
+  kind:'bench',min:1,max:1,options:[{id:'bench:0',label:'Gastly'},{id:'bench:1',label:'Charmander'}]};
+ const cfg=AI.configuration({level:5,side:1});
+ const choose=i=>({type:'choose',payload:{decisionId:o.decision.id,selected:['bench:'+i]}});
+ assert.ok(AI.score(choose(1),o,cfg,{})>AI.score(choose(0),o,cfg,{}),
+  'Gust must prefer a guaranteed KO over a lower-HP Pokémon that resists the Active');
+ o.self.bench=[
+  {id:'base1-50',damage:0,energies:['base1-101'],status:null},
+  {id:IDS.hit,damage:0,energies:[IDS.fight],status:null}
+ ];
+ o.opponent.active={id:'base1-46',damage:30,energies:[],status:null};
+ o.decision={id:'promote:1',actor:1,label:'Choose your Benched Pokémon to promote',
+  kind:'bench',min:1,max:1,options:[{id:'bench:0',label:'Gastly'},{id:'bench:1',label:'Hitmonchan'}]};
+ assert.ok(AI.score(choose(1),o,cfg,{})>AI.score(choose(0),o,cfg,{}),
+  'Forced promotion must prefer the ready winning attacker instead of an unready one');
+}
 let duels=0,decisions=0,attacks=0,energy=0,evolutions=0,trainer=0;
 for(let seed=1;seed<=4;seed++){
  let game=createGame({decks:[deck,deck],seed:seed*1789,format:'classic'});
