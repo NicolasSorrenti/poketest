@@ -1,6 +1,6 @@
 {
   "name": "neo-campus-tcg",
-  "version": "0.68.0-reactive-multi-ko",
+  "version": "0.69.0-copy-execution",
   "private": true,
   "description": "Neo Genesis and Neo Discovery: 19 authentic attack entries, 14 entire playable printings, interactive choices and defensive reactions",
   "scripts": {

@@ -1184,8 +1184,18 @@ function resolveAttack(g,side,index,chosenBench,energyPicks,extra={}){
 
  // Neo v0.51: shared copy programs with explicit Bench targeting and
  // attached-Energy payments. Preserve Super Metronome's coin through choices.
- const copyAllowed=new Set(['flat','status','coin-status','coin-times','coin-bonus','coin-failure','coin-status-split','recoil','coin-recoil','coin-recoil-bonus','defender-counters','own-counters','flail-counters','minus-counters','bench-count','ignore-weakness','draw-one','bench-target','bench-own','bench-both-recoil','bench-splash-coin','switch-self','switch-attacker','switch-defender','energy-discard']);
- const isCopyable=attack=>{const effect=ATTACK.compile(attack);return Boolean(effect&&copyAllowed.has(effect.kind)&&(effect.kind!=='energy-discard'||u.energies.length>=effect.quantity));};
+ const copyAllowed=new Set(['flat','status','coin-status','coin-times','coin-bonus','coin-failure','coin-status-split','recoil','coin-recoil','coin-recoil-bonus','defender-counters','own-counters','flail-counters','minus-counters','bench-count','ignore-weakness','draw-one','bench-target','bench-own','bench-both-recoil','bench-splash-coin','switch-self','switch-attacker','switch-defender','energy-discard',
+  // These classic effect families execute on the copying Pokémon with no
+  // additional target/payment decision; they are safe for Neo v0.69.
+  'coin-shield','damage-shield','coin-attack-lock','coin-heal-one','drain','leech-seed','coin-draw','energy-coins','coin-no-retreat','sand-attack','coin-clamp']);
+ const isCopyable=attack=>{
+  const effect=ATTACK.compile(attack);
+  if(!effect||!copyAllowed.has(effect.kind))return false;
+  // Super Metronome waives the printed Energy cost, not additional discards.
+  // The picker must omit attacks whose required discard cannot be paid.
+  if(effect.kind==='energy-discard')return u.energies.filter(id=>!effect.onlyType||card(g,id).name===effect.onlyType+' Energy').length>=effect.quantity;
+  return true;
+ };
  if(program.kind==='neo50:super-metronome'&&roll.neo50MetronomeHeads){
   const data=extra.neo50Data||{};
   const attacksFor=source=>(effectiveCard(g,source).attacks||[]).flatMap((a,i)=>isCopyable(a)?[{id:'attack:'+i,label:a.name}]:[]);
