@@ -56,7 +56,19 @@ seed base 71839; **240 matches** overall.
 
 **None approaches the 5% target.** The first two levels show moderate
 separation; Expert and Champion currently fail to outperform the level below.
-Use the larger 640-game audit to update the sample and track generalization.
+
+The expanded **640-match audit** (40 pairs per deck, same seed base) confirmed
+the problem, rather than resolving it:
+
+| Matchup | Higher wins | Lower wins | Draws | Lower wins / decisive |
+| --- | ---: | ---: | ---: | ---: |
+| Casual vs Beginner | 90 | 69 | 1 | 43.4% |
+| Experienced vs Casual | 100 | 59 | 1 | 37.1% |
+| Expert vs Experienced | 74 | 86 | 0 | 53.8% |
+| Champion vs Expert | 74 | 86 | 0 | 53.8% |
+
+**Every matchup fails the 5% acceptance target.** The benchmark is a diagnostic,
+not a mechanism for fabricating passing outcomes.
 
 ## Tactical experiments (all opt-in)
 
@@ -76,6 +88,10 @@ Initial 120-turn 2-deck A/B on independent seeds:
 - Opponent response alone: **74–66**, no draws.
 - Combined Prize race + Knockout tempo + Opponent response:
   **64–56** vs unchanged Champion; **63–57** vs Expert.
+
+These combined tactical choices are available for opt-in live playtesting, but
+remain OFF in regular difficulty settings until larger independent studies can
+demonstrate a credible strength gain.
 
 These are modest outcomes **not statistical evidence of 95% strength**.
 The first combined benchmark is only 120 games, so additional seeds/decks are
