@@ -311,6 +311,25 @@ const settings={level:3,personality:'balanced',side:1,seed:47};
   AI.score(chop,o,AI.configuration({level:1}),{}),
   'Beginner may favor raw damage without appreciating the self-KO consequence');
 }
+{
+ const g=createGame({decks:[deck,deck],seed:931,format:'classic'});
+ const o=AI.observation(g,1);o.phase='game';o.turn=1;
+ o.self.active={id:IDS.hit,damage:0,energies:[IDS.fight],status:null};
+ o.self.hand=[IDS.bill,'base1-88'];
+ o.self.deckCount=2;
+ o.opponent.active={id:IDS.rat,damage:0,energies:[IDS.fight],status:null};
+ const champion=AI.configuration({level:5,side:1});
+ const beginner=AI.configuration({level:1,side:1});
+ const used={trainers:0,powerKeys:new Set(),powers:0,stadium:false};
+ const trainerNames=(cfg)=>AI.candidates(o,cfg,used).filter(x=>x.type==='play_trainer').map(x=>CATALOG.get(o.self.hand[x.payload.handIndex]).name);
+ assert.deepEqual(trainerNames(champion),[],
+  'Champion must not consume its last two cards with Bill or Oak when deckout looms');
+ assert.ok(trainerNames(beginner).includes('Bill'),
+  'Beginner may still misplay risky final draws');
+ o.self.deckCount=8;
+ assert.ok(trainerNames(champion).includes('Professor Oak'),
+  'Champion can resume Oak when enough cards remain to draw another turn');
+}
 let duels=0,decisions=0,attacks=0,energy=0,evolutions=0,trainer=0;
 for(let seed=1;seed<=4;seed++){
  let game=createGame({decks:[deck,deck],seed:seed*1789,format:'classic'});
