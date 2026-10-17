@@ -61,6 +61,14 @@ The improvement is **not proven** across all archetypes. In the 160 Neo
 Genesis games alone it won **95–65 (59.4%)**, suggestive but still
 archetype-dependent. More seed/deck diversity and additional tests are needed.
 
+The subsequent staged Moo-Moo Milk own-target fix **re-ran the full 600-match
+matrix with the same 315–278 and seven nondecisive results** on GitHub Actions
+run `39075080803`; the historical TCG gameplay and focused CPU experiment
+suite passed. The unrelated RPG/Node workflow is currently failing the same
+`rpg.js:96` `peopleAt` null-state scenario on `main` (Node run
+`39073777472`) as well as on the CPU PR. This branch did not edit any RPG
+logic or tests.
+
 This benchmark work also repaired a coverage hole:
 `benchmark_cpu.js` had always passed format `classic` to `createGame`,
 incorrectly rejecting authentic Neo decks. It now selects appropriate
@@ -73,7 +81,7 @@ this remains supported. None of these changes alters duel rules.
 `trainerTactics` remains **OFF by default**, because the overall 600-game
 difference is not statistically persuasive. The staged Moo-Moo Milk target
 fix was added *after* the initial 600-game run and has focused unit coverage;
-the latest CI benchmark is re-running it.
+the complete 600-game CI benchmark was rerun successfully with unchanged results.
 
 Reproduction example:
 
