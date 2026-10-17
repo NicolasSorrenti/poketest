@@ -27,7 +27,7 @@ Integration owns the RPG/Classic CPU handshake, shared presentation, navigation 
 - Added mobile and reduced-motion styling.
 
 ### 3. Regression tests
-- `tests/rpg_integration.test.js`: session isolation, origin/source/ID rejection, victory/defeat/draw outcomes, duplicate reward protection, client syntax/wiring, actual hosted JS/CSS HTTP responses and a genuine server-authoritative Classic create/concede/result cycle.
+- `tests/rpg_integration.test.js`: session isolation, origin/source/ID rejection, victory/defeat/draw outcomes, duplicate reward protection, client syntax/wiring, actual hosted JS/CSS HTTP responses and a genuine server-authoritative Classic create/concede/result cycle. Hosted test also validates all eight character portraits and eight town backgrounds are publicly accessible.
 - `tests/rpg_flow.test.js`: simulated DOM playthrough of new campaign, free travel, NPC encounter, two duels, stale-result rejection, reward persistence, reload, sleep/day rollover, authored scene dialogue and refresh.
 - CI now gates RPG story + integration + flow tests before the original repository-wide `npm test` suite.
 - Node `--test` RPG suite: **11 tests passing, 0 failing** on GitHub Actions (includes HTTP/static and real service tests).
