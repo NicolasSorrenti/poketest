@@ -171,6 +171,18 @@ function prompt(g,plan,helpers){
    return single('ssuTarget',side,own(),'Super Scoop Up: choose Pokémon to return to hand');
  }
 
+ // Neo Genesis Card-Flip Game: pick a genuinely face-down Prize, then guess
+ // its public category WITHOUT ever exposing its ID in private options.
+ if(name==='Card-Flip Game'){
+  if(!chosen(d,'flipPrize')){
+   const available=f.prizes.flatMap((id,i)=>!g.prizesFaceUp&&!f.prizeFaceUp?.[i]?[{id:'prize:'+i,label:'Opponent Prize '+(i+1)}]:[]);
+   if(!available.length)throw Error('Card-Flip Game requires an opponent face-down Prize');
+   return single('flipPrize',side,available,'Choose an opponent face-down Prize');
+  }
+  if(!chosen(d,'flipGuess'))return single('flipGuess',side,[
+   {id:'kind:0',label:'Energy'}, {id:'kind:1',label:'Trainer'}, {id:'kind:2',label:'Pokémon'}
+  ],'Guess the hidden Prize card type');
+ }
  // Neo v0.64: owner-only deck order and hand payment choices.
  if(name==='New Pokédex'){
   if(!d.newDexShuffled){p.deck=helpers.shuffle(g,p.deck);d.newDexShuffled=true;}
@@ -530,6 +542,17 @@ function commit(g,plan,h){
 
 
 
+  case 'Card-Flip Game':{
+   const i=pick('flipPrize'),guess=pick('flipGuess');
+   if(i<0||i>=f.prizes.length||g.prizesFaceUp||f.prizeFaceUp?.[i])throw Error('Card-Flip Game selected a face-up or missing Prize');
+   if(guess<0||guess>2)throw Error('Card-Flip Game requires a valid type guess');
+   const revealed=get(f.prizes[i]);
+   (f.prizeFaceUp ||= [])[i]=true;
+   const actual=revealed.supertype==='Energy'||basicEnergy(revealed)?0:revealed.supertype==='Trainer'?1:2;
+   h.log(g,'Card-Flip Game revealed opponent Prize '+(i+1)+': '+revealed.name+'.');
+   if(guess===actual)h.draw(g,plan.side,2);
+   break;
+  }
   case 'New Pokédex':{
    const count=Math.min(5,p.deck.length),base=p.deck.length-count;
    const chosenIndices=Array.from({length:count},(_,i)=>pick('newDex'+i));
@@ -918,7 +941,7 @@ function answer(g,plan,response,h){
  const data={...plan.data,[plan.await]:response.decline?[]:[...response.selected]};
  return prompt(g,{...plan,data,await:null},h);
 }
-const SUPPORTED=new Set(['New Pokédex','Energy Amplifier',"Thought Wave Machine (Rocket's Secret Machine)",'Balloon Berry','Super Scoop Up','Magnifier','Gold Berry','Miracle Berry','Focus Band','EXP.ALL','Sprout Tower','Healing Field','Broken Ground Gym','Radio Tower','Lucky Stadium','Mary','PokéGear','Super Energy Retrieval','Time Capsule','Pokémon Personality Test',"Impostor Professor Oak's Invention",'Arcade Game','Energy Charge','Ruin Wall','Old Rod',"Team Rocket's Evil Deeds",'Energy Ark','Fossil Egg','Hyper Devolution Spray','Double Gust',"Bill's Teleporter",'Professor Elm','Moo-Moo Milk','Pokémon March','Super Rod','Bill','Professor Oak','Impostor Professor Oak',"Imposter Oak's Revenge",'Lass','Maintenance','Computer Search','Energy Search',"The Boss's Way",'Poké Ball','Pokémon Trader','Item Finder','Energy Retrieval','Nightly Garbage Run','Recycle','Pokédex','Gambler','Digger','Full Heal','Potion','Super Potion','Pokémon Center','Switch','Gust of Wind','Energy Removal','Super Energy Removal','Defender','PlusPower','Goop Gas Attack','Here Comes Team Rocket!',"Rocket's Sneak Attack",'Pokémon Flute','Revive','Mr. Fuji','Scoop Up','Devolution Spray','Pokémon Breeder','Challenge!','Sleep!',
+const SUPPORTED=new Set(['Card-Flip Game','New Pokédex','Energy Amplifier',"Thought Wave Machine (Rocket's Secret Machine)",'Balloon Berry','Super Scoop Up','Magnifier','Gold Berry','Miracle Berry','Focus Band','EXP.ALL','Sprout Tower','Healing Field','Broken Ground Gym','Radio Tower','Lucky Stadium','Mary','PokéGear','Super Energy Retrieval','Time Capsule','Pokémon Personality Test',"Impostor Professor Oak's Invention",'Arcade Game','Energy Charge','Ruin Wall','Old Rod',"Team Rocket's Evil Deeds",'Energy Ark','Fossil Egg','Hyper Devolution Spray','Double Gust',"Bill's Teleporter",'Professor Elm','Moo-Moo Milk','Pokémon March','Super Rod','Bill','Professor Oak','Impostor Professor Oak',"Imposter Oak's Revenge",'Lass','Maintenance','Computer Search','Energy Search',"The Boss's Way",'Poké Ball','Pokémon Trader','Item Finder','Energy Retrieval','Nightly Garbage Run','Recycle','Pokédex','Gambler','Digger','Full Heal','Potion','Super Potion','Pokémon Center','Switch','Gust of Wind','Energy Removal','Super Energy Removal','Defender','PlusPower','Goop Gas Attack','Here Comes Team Rocket!',"Rocket's Sneak Attack",'Pokémon Flute','Revive','Mr. Fuji','Scoop Up','Devolution Spray','Pokémon Breeder','Challenge!','Sleep!',
  'Brock',"Brock's Training Method",'Misty','Lt. Surge','Secret Mission','Erika',"Erika's Perfume",'Koga','Sabrina',"Sabrina's Gaze",'Blaine',"Blaine's Gamble",'Fervor','Max Revive','Giovanni','Warp Point',
  "Blaine's Last Resort","Erika's Kindness",'Good Manners','Master Ball',"Giovanni's Last Resort","Misty's Tears","Erika's Maids","The Rocket's Trap","Rocket's Secret Experiment",
  'No Removal Gym',"The Rocket's Training Gym",'Resistance Gym',"Rocket's Minefield Gym",'Transparent Walls',

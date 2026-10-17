@@ -36,6 +36,8 @@ function publicView(game,viewer){
 
  if(['classic','theme-expanded','gym-theme','gym-expanded','neo-theme','online-preview'].includes(game.format)&&game.phase==='game'){
   if(game.prizesFaceUp)for(let i=0;i<2;i++)publicPlayers[i].prizes=[...game.players[i].prizes];
+  for(let i=0;i<2;i++)publicPlayers[i].revealedPrizes=game.players[i].prizes.flatMap((id,idx)=>
+   game.prizesFaceUp||game.players[i].prizeFaceUp?.[idx]?[{index:idx,id}]:[]);
   if(viewer!==null){
    const own=game.players[viewer],opp=game.players[1-viewer];
    if([own.active,...own.bench].filter(Boolean).some(u=>CLASSIC_POWERS.enabled(game,u,'Clairvoyance')))

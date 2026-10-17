@@ -384,7 +384,7 @@ function performAction(g,side,cmd){
    const owner=g.players[pending.side];
    const idx=Number(answer.selected[0]?.slice(6));
    if(!Number.isInteger(idx)||idx<0||idx>=owner.prizes.length)fail('Invalid Prize selection');
-   const chosen=owner.prizes.splice(idx,1)[0];owner.hand.push(chosen);
+   const chosen=owner.prizes.splice(idx,1)[0];owner.prizeFaceUp?.splice(idx,1);owner.hand.push(chosen);
    log(g,`${owner.name} took a Prize card (${owner.prizes.length} remaining).`);
    g.pendingDecision=null;g.pendingAction=null;
    if(promptPrize(g,pending.after))return;
@@ -2060,7 +2060,7 @@ function knockOuts(g,after){
   for(let i=p.bench.length-1;i>=0;i--){
    const u=p.bench[i];if(u.damage<maxHP(g,u))continue;
    p.bench.splice(i,1);p.discard.push(u.id,...u.under,...u.energies,...u.attachedTrainers.map(x=>x.id),...(u.gymShapeshiftCard?[u.gymShapeshiftCard]:[]));if(u.gymRebirthReturn){const ix=p.discard.lastIndexOf(u.id);if(ix>=0)p.hand.push(p.discard.splice(ix,1)[0]);}
-   const enemy=g.players[1-side];if(enemy.prizes.length){if(g.format==='online-preview')(g.pendingPrizeClaims ||= []).push(1-side);else enemy.hand.push(enemy.prizes.pop());}
+   const enemy=g.players[1-side];if(enemy.prizes.length){if(g.format==='online-preview')(g.pendingPrizeClaims ||= []).push(1-side);else enemy.hand.push(enemy.prizes.pop());enemy.prizeFaceUp?.pop();}
    eliminated.push(side);log(g,`${p.name}'s Benched ${card(g,u.id).name} was Knocked Out.`);
   }
  }
@@ -2068,7 +2068,7 @@ function knockOuts(g,after){
   const p=g.players[side],u=p.active;
   if(!u||u.damage<maxHP(g,u))continue;
   p.discard.push(u.id,...u.under,...u.energies,...u.attachedTrainers.map(x=>x.id),...(u.gymShapeshiftCard?[u.gymShapeshiftCard]:[]));if(u.gymRebirthReturn){const ix=p.discard.lastIndexOf(u.id);if(ix>=0)p.hand.push(p.discard.splice(ix,1)[0]);}p.active=null;
-  const enemy=g.players[1-side];if(enemy.prizes.length){if(g.format==='online-preview')(g.pendingPrizeClaims ||= []).push(1-side);else enemy.hand.push(enemy.prizes.pop());}
+  const enemy=g.players[1-side];if(enemy.prizes.length){if(g.format==='online-preview')(g.pendingPrizeClaims ||= []).push(1-side);else enemy.hand.push(enemy.prizes.pop());enemy.prizeFaceUp?.pop();}
   eliminated.push(side);log(g,`${p.name}'s Active ${card(g,u.id).name} was Knocked Out.`);
  }
  if(!eliminated.length){const needs=[0,1].filter(side=>!g.players[side].active);if(needs.length){for(const side of needs)if(!g.players[side].bench.length){g.over=true;g.winner=1-side;return true;}g.pendingPromotions=needs;g.promotionAfter=after;finishPromotions(g);return true;}return false;}
