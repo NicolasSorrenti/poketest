@@ -587,6 +587,38 @@ const settings={level:3,personality:'balanced',side:1,seed:47};
  assert.throws(()=>parse(['--target','0.75']),/target/);
  assert.throws(()=>parse(['--decks',',']),/deck list/);
 }
+{
+ const g=createGame({decks:[deck,deck],seed:8719,format:'classic'});
+ const o=AI.observation(g,1);o.phase='game';o.turn=1;o.round=5;
+ o.self.active={id:IDS.rat,energies:[IDS.fight],damage:20,status:null};
+ o.self.bench=[{id:IDS.hit,energies:[IDS.fight],damage:0,status:null}];
+ o.opponent.active={id:IDS.hit,energies:[IDS.fight],damage:0,status:null};
+ const retreat={type:'retreat',payload:{slot:0}};
+ const champ=AI.configuration({level:5,side:1,opponentResponse:true});
+ assert.ok(AI.opponentResponseBonus(retreat,o,champ)>=220,
+  'Replace a soon-KOed Active with a survivable ready attacker using visible opponent attacks');
+ o.opponent.active.status='Asleep';
+ assert.equal(AI.opponentResponseBonus(retreat,o,champ),0,
+  'Asleep opponent cannot attack in next immediate response');
+ o.opponent.active.status=null;
+ o.self.bench[0]={id:IDS.hit,energies:[],damage:0,status:null};
+ assert.equal(AI.opponentResponseBonus(retreat,o,champ),0,
+  'Cannot award defensive retreat credit to a passive unpowered Bench');
+ o.self.bench[0]={id:IDS.hit,energies:[IDS.fight],damage:0,status:null};
+ o.opponent.active.damage=60;
+ assert.equal(AI.opponentResponseBonus(retreat,o,champ),0,
+  'Do not retreat instead of taking an immediate knockout');
+ const old=AI.configuration({level:5,side:1});
+ assert.equal(AI.opponentResponseBonus(retreat,o,old),0);
+ assert.equal(AI.configuration({level:5}).opponentResponse,false,
+  'Unverified opponent-response feature must stay opt-in');
+ assert.throws(()=>AI.configuration({opponentResponse:'yes'}),/opponent-response/);
+ const {arena,argumentsOf}=require('./benchmark_cpu');
+ const x=arena(argumentsOf(['--pairs','1','--max-turns','4','--left-level','5',
+  '--right-level','5','--left-opponent-response','true','--right-opponent-response','false']));
+ assert.equal(x.baseline.opponentResponse,true);
+ assert.equal(x.challenger.opponentResponse,false);
+}
 let duels=0,decisions=0,attacks=0,energy=0,evolutions=0,trainer=0;
 for(let seed=1;seed<=4;seed++){
  let game=createGame({decks:[deck,deck],seed:seed*1789,format:'classic'});
