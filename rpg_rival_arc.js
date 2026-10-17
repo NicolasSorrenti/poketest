@@ -51,7 +51,11 @@
  function hydrate(state){
   if(!state.arcFlags||typeof state.arcFlags!=='object'||Array.isArray(state.arcFlags))state.arcFlags={};
   if(!state.arcOutcomes||typeof state.arcOutcomes!=='object'||Array.isArray(state.arcOutcomes))state.arcOutcomes={};
-  if(!state.activeArc||typeof state.activeArc!=='object'||!byId.has(state.activeArc.id))state.activeArc=null;
+  const a=state.activeArc,episode=a&&byId.get(a.id);
+  if(!episode||!['lines','choice','response'].includes(a.phase)
+    ||(a.phase==='lines'&&(!Number.isInteger(a.index)||a.index<0||a.index>=linesFor(state,a.id).length))
+    ||(a.phase==='response'&&(!Number.isInteger(a.choice)||!episode.choices[a.choice]||episode.duel)))
+    state.activeArc=null;
   if(!Array.isArray(state.results))state.results=[];
   if(!state.relationships||typeof state.relationships!=='object')state.relationships={};
   if(!state.relationships.reina)state.relationships.reina={affection:0,trust:0,respect:0,attraction:0,duels:0};
