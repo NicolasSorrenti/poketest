@@ -27,9 +27,13 @@ Updated: 2026-10-17. Target: Base Set through Neo Destiny (Neo 4). Canonical bra
 
 | Neo v0.59 | `3e841d470b`, effect-handler fixes `1b40d2d0ca` / `49e675671b`, tests `5783b08864` | Recycle Energy returns from attached play to hand when discarded during retreat, attack KO, Energy Removal or Pokémon Center, while hand discards do not return. | Dedicated TCG run [39014820392](https://github.com/NicolasSorrenti/poketest/actions/runs/39014820392) PASS; combined Node run [39014820386](https://github.com/NicolasSorrenti/poketest/actions/runs/39014820386) PASS |
 
-- The current `npm test` consists of **142 sequential Node test commands**, including `test_neo_batch_v056.js` through `test_neo_batch_v059.js`.
+- The v0.59 `npm test` consisted of **142 sequential Node test commands**, including `test_neo_batch_v056.js` through `test_neo_batch_v059.js`.
 - Independent TCG workflow `.github/workflows/tcg.yml` was introduced at `8e58adccab` to distinguish gameplay regressions from RPG integration failures. This does **not** replace the combined Node workflow.
 - All files were committed on the latest available `main` heads using forward-only updates. Other agents' RPG changes were preserved.
+
+| Neo v0.60 | `41db8a59f1` and validation fix `44c51be394` | Retreat consumes Energy **units**: Double Colorless and Miracle pay two, Basic/Rainbow/Recycle pay one; player picks a minimal set when alternatives exist; underpayment is rejected transactionally. | Dedicated TCG run [39015045318](https://github.com/NicolasSorrenti/poketest/actions/runs/39015045318) PASS; combined Node run [39015045324](https://github.com/NicolasSorrenti/poketest/actions/runs/39015045324) PASS |
+
+- v0.60 expands the exhaustive `npm test` script to **143 sequential Node test commands**, including `test_neo_batch_v060.js` and existing historical Gym/Neo regression tests.
 
 ## Coverage limitations
 
@@ -39,7 +43,7 @@ The curated deck pool is a strict subset of the 1,123-card archive; untested Neo
 
 ## Open correctness gaps / risks
 
-1. **Special Energy fidelity**: Rainbow typed costs/attachment damage, Miracle attachments/expiry, and Recycle return-from-attached play on verified paths have regression tests. Recycle transactions with simultaneous discard retrieval, effects treating Rainbow as each named basic type, and cross-Power Energy modifiers remain unresolved. Miracle Energy pays two units but retreat still needs a dedicated multi-unit payment selector.
+1. **Special Energy fidelity**: Rainbow typed costs/attachment damage, Miracle attachments/expiry, and Recycle return-from-attached play on verified paths have regression tests. Recycle transactions with simultaneous discard retrieval, effects treating Rainbow as each named basic type, and cross-Power Energy modifiers remain unresolved. Miracle Energy pays two units in retreat and its dedicated payment selector now has regression coverage; broader named-type effects remain.
 2. **Baby and Gym evolution edge cases**: normal Baby-to-Basic and first-turn rules now have tests. Verify Baby evolution counted as an Evolved Pokémon for every effect and special Gym Trainer overrides.
 3. **Copied attack effects** with nested payment, targeting, redirection and reactive choices; Super Metronome and Sketch remain guarded for unsupported operations.
 4. **Pokémon Powers** whose timing depends on Bench transitions, on-play status, suppression, multi-KO and forced promotions.
@@ -49,7 +53,7 @@ The curated deck pool is a strict subset of the 1,123-card archive; untested Neo
 
 ## Next prioritized tasks
 
-1. Audit the remaining Recycle Energy paths and implement a correct per-card, multi-unit retreat payment selector for Double Colorless/Miracle Energy; test Rainbow's named-type interactions.
+1. Audit the remaining Recycle Energy paths and validate Rainbow's all-type Energy interactions, effects that override special-Energy payments and trainer-triggered Energy transfers.
 2. Extend Baby/Gym evolution rules for special Trainer-granted exceptions and ensure evolved Baby-to-Basic is classified as Evolved for attack interactions.
 3. Implement remaining Neo Trainers / reactive tools and Stadium replacement timing using actual in-game tests.
 4. Re-run `npm test` and update this file **only after green CI**, retaining unresolved issues rather than declaring completion.
