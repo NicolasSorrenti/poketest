@@ -322,7 +322,7 @@ function score(a,o,cfg,used){
    (n===0?160:48):cfg.level===3?
    (n===0?175:65):cfg.level===4?
    (n===0?183:n===1?165:55):
-   (n===0?190:n===1?175:n===2?153:55);
+   (n===0?190:n===1?175:55);
   return priority+quality*.6;
  }
  if(type==='choose'){
@@ -422,7 +422,10 @@ function score(a,o,cfg,used){
   // A defensive swap is useful only when it *actually* shelters the Active
   // from a visible affordable knockout. Avoid abandoning a ready attacker for
   // a Bench Pokémon that is equally easy to knock out.
-  const rescue=threatened&&alternativeSurvives?105*style.survival:
+  // Avoid perpetual KO-avoidance: fleeing costs Energy and concedes tempo.
+  // A slightly threatened attacker should still trade damage if it can score
+  // Prizes. Champion values the *quality* of a safe replacement over panic.
+  const rescue=threatened&&alternativeSurvives?(cfg.level>=4?65:100)*style.survival:
    threatened&&!alternativeSurvives?-45:0;
   const foresight=cfg.level>=3?rescue-
    (lethalOwn?300:0)+(newDamage-oldDamage)*1.05-
