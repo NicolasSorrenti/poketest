@@ -151,6 +151,23 @@ function setupValue(unit){
  const attacks=c?.attacks||[];
  return (Number(c?.hp)||40)*.3+Math.max(0,30-Math.min(...attacks.map(a=>(a.cost||[]).length),5)*10)+attacks.length*4;
 }
+function openingReadiness(cardId,hand){
+ const pokemon=card(cardId),moves=pokemon?.attacks||[];
+ const energies=hand.filter(id=>isEnergy(card(id)));
+ if(!moves.length||!energies.length)return 0;
+ let readiness=0;
+ for(const e of energies){
+  const provided=energyPool({energies:[e]});
+  for(const move of moves){
+   const cost=move.cost||[];
+   if(!cost.length)readiness=Math.max(readiness,12);
+   else if(canPayEnergy(cost,provided))readiness=Math.max(readiness,85);
+   else if(cost.some(t=>t!=='Colorless'&&(provided.includes(t)||provided.includes('Any'))))
+    readiness=Math.max(readiness,30);
+  }
+ }
+ return readiness;
+}
 function hasExoticEnergy(unit){
  // Special abilities can change printed Energy costs. Let the authoritative
  // reducer decide these instead of excluding them with a simple card-name pool.
@@ -326,7 +343,15 @@ function score(a,o,cfg,used){
  if(type==='setup_select'){
   const u={id:p.hand[v.handIndex],energies:[]};
   const quality=setupValue(u)*style.setup;
-  if(!p.active)return 200+quality;
+  if(!p.active){
+   // Champion evaluates a realistic first attack with Energy actually in hand
+   // rather than always choosing the printed strongest Basic and getting stuck
+   // on the wrong half of a mixed Water/Fighting deck.
+   const ready=openingReadiness(u.id,p.hand);
+   const foresight=cfg.level===1?0:cfg.level===2?.18:
+    cfg.level===3?.45:cfg.level===4?.65:1;
+   return 200+quality+ready*foresight*style.setup;
+  }
   // Set a believable opening Bench before confirming. A novice often keeps
   // only an Active; stronger duelists keep a backup, and champions may commit
   // a third Basic when their opening hand allows it.
