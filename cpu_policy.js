@@ -236,7 +236,13 @@ function score(a,o,cfg,used){
   const attack=(p.active.effectiveAttacks||card(p.active.id)?.attacks||[])[v.attackIndex];
   const damage=estimatedDamage(attack,p.active,q.active),hp=hpRemaining(q.active);
   const lethal=damage>=hp&&hp>0;
-  return 120+damage*style.damage*.9+(lethal?110:0)+(/Poison|Paraly|Sleep|Confus/i.test(attack?.text||'')?12:0)-(/Discard.*Energy attached to/i.test(attack?.text||'')?20:0);
+  const uncertain=/flip (?:a |one |\\d+ )?coins?|heads|tails/i.test(attack?.text||'');
+  // Personality is independent from competence: risk-takers value high-upside
+  // uncertainty, while defensive profiles shade the same legal attack down.
+  const riskPreference=uncertain?style.risk*40:0;
+  return 120+damage*style.damage*.9+(lethal?110:0)+riskPreference+
+   (/Poison|Paraly|Sleep|Confus/i.test(attack?.text||'')?12:0)-
+   (/Discard.*Energy attached to/i.test(attack?.text||'')?20:0);
  }
  if(type==='play_trainer'){
   const name=card(p.hand[v.handIndex])?.name||'';
