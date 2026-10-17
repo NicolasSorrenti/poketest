@@ -1,6 +1,6 @@
 'use strict';
 (()=>{
-const $=id=>document.getElementById(id),KEY='neoHarborRpgV1';
+const $=id=>document.getElementById(id),KEY='neoHarborRpgV1',STORY=window.NeoHarborStory;
 const periods=['Morning','Afternoon','Evening'];
 const places={
  home:['Your Apartment','Your base during the championship season.'],
@@ -23,33 +23,74 @@ const cast={
 };
 const eventCards=[{day:7,slot:1,place:'arcade',title:'Arcade Friendly Cup',reward:7},{day:14,slot:1,place:'center',title:'Club Exhibition',reward:9},{day:21,slot:2,place:'shop',title:'Card Shop Night',reward:8},{day:30,slot:1,place:'center',title:'Neighborhood Cup',reward:15},{day:42,slot:1,place:'arcade',title:'Open Challenge',reward:10},{day:60,slot:1,place:'center',title:'Regional Qualifier',reward:22},{day:75,slot:2,place:'shop',title:'Final Practice Meet',reward:12},{day:88,slot:1,place:'center',title:'Championship Opening',reward:20},{day:90,slot:1,place:'center',title:'Championship Finals',reward:25}];
 
-const storyBeats=[
-{id:'hana_early',npc:'hana',start:5,end:10,slot:0,place:'shop',minBond:1,title:'A Helping Hand',intro:'I promised to prepare the tables before everyone arrives. I might have promised a little too much.',choices:[['Offer to help','help'],['Encourage her to delegate','advice'],['Wish her luck','neutral']],responses:{help:'You stayed? Thank you. I was trying to do everything myself again.',advice:'You know... asking for help should not be so difficult. Thank you.',neutral:'Thanks! I will figure it out. I always do.'}},
-{id:'reina_early',npc:'reina',start:9,end:14,slot:2,place:'center',minBond:1,title:'After Hours',intro:'Most players leave after the official session. You did not. What are you hoping to find?',choices:[['Ask for a serious practice match','help'],['Admit you wanted to see her','flirt'],['Give her space','neutral']],responses:{help:'Then sit down. I have a few openings to test.',flirt:'You really pick your moments. ...Stay a while.',neutral:'Fair enough. See you in the next bracket.'}},
-{id:'marina_early',npc:'marina',start:10,end:16,slot:2,place:'park',minBond:1,title:'A Quiet Evening',intro:'It is beautiful out here. Do you ever feel like the whole town is rushing somewhere?',choices:[['Stay and listen','help'],['Talk about the championship','advice'],['Head back to town','neutral']],responses:{help:'You are a surprisingly good listener.',advice:'You never really stop thinking about cards, do you?',neutral:'Maybe another evening, then.'}},
-{id:'yuna_early',npc:'yuna',start:13,end:18,slot:1,place:'arcade',minBond:1,title:'The Impossible Combo',intro:'I have an absolutely incredible idea. There is only one tiny problem: it never works.',choices:[['Help test it','help'],['Challenge her to explain it','advice'],['Politely escape','neutral']],responses:{help:'A willing accomplice! This is going to be historic.',advice:'All right, smart guy. Watch closely.',neutral:'Your loss. Probably. Maybe.'}},
-{id:'akari_mid',npc:'akari',start:34,end:40,slot:0,place:'library',minBond:2,title:'Unexpected Variable',intro:'I designed this strategy around a specific assumption. You seem to invalidate it just by sitting here.',choices:[['Work through the problem together','help'],['Tease her about it','flirt'],['Leave her to her notes','neutral']],responses:{help:'There is value in a second perspective. I can admit that.',flirt:'That was entirely unhelpful. ...And amusing.',neutral:'Thank you. I need to think.'}},
-{id:'camila_mid',npc:'camila',start:37,end:44,slot:2,place:'cafe',minBond:2,title:'A Fair Exchange',intro:'Tell me. Do you believe every favor deserves one in return?',choices:[['Some things are gifts','help'],['Depends who is asking','flirt'],['Every trade needs terms','neutral']],responses:{help:'That is a dangerously generous way to live.',flirt:'Oh? You are learning quickly.',neutral:'You might make an excellent trader yet.'}},
-{id:'shiori_mid',npc:'shiori',start:45,end:53,slot:2,place:'park',minBond:2,title:'A Different Kind of Victory',intro:'Do you ever wonder whether the strongest player is necessarily the happiest?',choices:[['Ask what happiness means to her','help'],['Talk about a difficult loss','advice'],['Change the subject','neutral']],responses:{help:'I did not expect that question. Perhaps I needed it.',advice:'Loss can be the beginning of something. I hope you remember that.',neutral:'Of course. It was just a passing thought.'}},
-{id:'kaede_late',npc:'kaede',start:51,end:58,slot:2,place:'arcade',minBond:1,title:'No Easy Answers',intro:'Everyone here thinks they have me figured out. You too?',choices:[['Tell her you would rather find out','help'],['Challenge her assumptions','flirt'],['Say nothing','neutral']],responses:{help:'Huh. That might actually be an interesting answer.',flirt:'Big talk. I like that.',neutral:'At least you know when to stop talking.'}}
-];
-function eligibleStories(){return storyBeats.filter(e=>state.day>=e.start&&state.day<=e.end&&state.slot===e.slot&&state.location===e.place&&!state.storyDone[e.id]&&state.bonds[e.npc].affection>=e.minBond);}
-function startStory(id){const e=eligibleStories().find(x=>x.id===id);if(!e)return;state.selected=e.npc;state.activeStory=id;persist();say(cast[e.npc].name,e.intro,e.choices.map(([label,choice])=>[label,'story:'+choice]));}
-function resolveStory(option){const e=storyBeats.find(x=>x.id===state.activeStory);if(!e||!eligibleStories().some(x=>x.id===e.id))return;const bond=state.bonds[e.npc];state.storyDone[e.id]=option;bond.affection+=option==='help'?3:option==='flirt'?2:1;bond.trust+=option==='help'?2:option==='advice'?1:0;log('A memorable encounter with '+cast[e.npc].name+'.');state.activeStory=null;advance();state.selected=e.npc;say(cast[e.npc].name,e.responses[option]||e.responses.neutral);}
+
+function eligibleStories(){return STORY.available(state);}
+function startStory(id){
+ if(state.activeStory||state.pendingDuel)return;
+ const e=eligibleStories().find(e=>e.id===id);if(!e)return;
+ state.selected=e.npc;state.activeStory={id:e.id,phase:'lines',index:0,choice:null};persist();render();
+}
+function renderStory(){
+ const a=state.activeStory,e=STORY.byId(a.id);
+ if(!e){state.activeStory=null;persist();return null;}
+ if(a.phase==='lines'){
+  const line=e.lines[Math.min(a.index,e.lines.length-1)];
+  return {speaker:line.speaker==='Protagonist'?'You':cast[e.npc].name,line:line.text,choices:[[a.index<e.lines.length-1?'Continue ›':'Respond ›','storyNext']]};
+ }
+ if(a.phase==='choice')return {speaker:cast[e.npc].name,line:'How will you respond?',choices:e.choices.map((c,i)=>[c.label,'storyChoice:'+i])};
+ const chosen=e.choices[a.choice];
+ return {speaker:cast[e.npc].name,line:chosen.reply,choices:[['Finish scene · ⏳ 1 period','storyFinish']]};
+}
+function advanceStory(){
+ const a=state.activeStory;if(!a||a.phase!=='lines')return;
+ const e=STORY.byId(a.id);a.index++;if(a.index>=e.lines.length)a.phase='choice';
+ persist();render();
+}
+function chooseStory(raw){
+ const a=state.activeStory;if(!a||a.phase!=='choice')return;
+ const index=Number(raw),e=STORY.byId(a.id),choice=e.choices[index];
+ if(!choice||!Number.isInteger(index))return;
+ if(choice.kind==='commit'&&state.partner&&state.partner!==e.npc){
+  $('notice').textContent='You have already committed to another relationship.';return;
+ }
+ a.phase='response';a.choice=index;persist();render();
+}
+function finishStory(){
+ const a=state.activeStory;if(!a||a.phase!=='response')return;
+ const e=STORY.byId(a.id);
+ let result;try{result=STORY.resolve(state,a.id,a.choice)}catch(err){$('notice').textContent=err.message;return;}
+ const id=e.npc,bond=state.bonds[id],updated=state.relationships[id];
+ for(const metric of ['affection','trust','duels'])bond[metric]=Math.max(bond[metric]||0,updated[metric]||0);
+ log('A memorable afternoon with '+cast[id].name+'.');
+ state.activeStory=null;advance();state.selected=id;
+ persist();say(cast[id].name,result.choice.reply);
+}
+
 function timeFlash(beforeDay,beforeSlot){const overlay=document.createElement('div');overlay.className='notice-pop';const heading=document.createElement('b');heading.textContent=state.day>90?'Season complete':state.day!==beforeDay?'A NEW DAY BEGINS':'TIME PASSES';const body=document.createElement('span');body.textContent=state.day>90?'Day 90 has ended.':('Day '+state.day+' · '+periods[state.slot]);overlay.append(heading,body);document.body.append(overlay);overlay.addEventListener('animationend',()=>overlay.remove());}
 
-function defaults(){return {day:1,slot:0,location:'home',metReina:false,reinaTrust:0,reinaDuels:0,results:[],flags:{intro:false},journal:['The 90-day season begins.'],pendingDuel:null,bonds:{},talked:{},hungOut:{},eventsDone:{},points:0,credits:80,playerDeck:'blackout',selected:null,ended:false,storyDone:{},activeStory:null}}
+function defaults(){return {day:1,slot:0,location:'home',metReina:false,reinaTrust:0,reinaDuels:0,results:[],flags:{intro:false},journal:['The 90-day season begins.'],pendingDuel:null,bonds:{},talked:{},hungOut:{},eventsDone:{},points:0,credits:80,playerDeck:'blackout',selected:null,ended:false,storyDone:{},storyMissed:{},relationships:{},routeOutcomes:{},partner:null,activeStory:null}}
 let state;try{state=JSON.parse(localStorage.getItem(KEY))||defaults();if(!Number.isInteger(state.day)||state.day<1||state.day>91)throw Error('Invalid save');}catch{state=defaults()}
 for(const [k,v] of Object.entries(defaults()))if(state[k]===undefined)state[k]=v;
 for(const id of Object.keys(cast)){if(!state.bonds[id])state.bonds[id]={affection:0,trust:0,duels:0};}
+STORY.normalize(state);
+for(const id of Object.keys(cast)){const old=state.bonds[id],current=state.relationships[id];
+ if(!state.flags['newStoryMigrated_'+id]){for(const key of ['affection','trust','duels'])current[key]=Math.max(current[key]||0,old[key]||0);
+ state.flags['newStoryMigrated_'+id]=true;}
+}
+if(typeof state.activeStory==='string')state.activeStory=null;
+STORY.recordExpiry(state);
 const persist=()=>localStorage.setItem(KEY,JSON.stringify(state));
 const log=t=>{state.journal.unshift(t);state.journal=state.journal.slice(0,25)};
 let scene={speaker:'Narrator',line:'Ninety days. One championship. You came to Neo Harbor to win. Everyone else has their own plans.',choices:[]};
 const atKey=(id)=>state.day+':'+state.slot+':'+id;
-function advance(n=1){const beforeDay=state.day,beforeSlot=state.slot;for(let i=0;i<n;i++){state.slot++;if(state.slot>=3){state.slot=0;state.day++;}}if(state.day>90){state.day=91;state.ended=true;log('The Neo Harbor championship season has ended.');}persist();timeFlash(beforeDay,beforeSlot);}
+function advance(n=1){const beforeDay=state.day,beforeSlot=state.slot;for(let i=0;i<n;i++){state.slot++;if(state.slot>=3){state.slot=0;state.day++;}}if(state.day>90){state.day=91;state.ended=true;log('The Neo Harbor championship season has ended.');}
+const missed=STORY.recordExpiry(state);if(missed.length)log('Some opportunities in town passed while you were busy.');
+persist();timeFlash(beforeDay,beforeSlot);}
 function say(speaker,line,choices=[]){scene={speaker,line,choices};render();}
-function currentPeople(){if(state.day>90)return [];const weekday=(state.day-1)%7;return Object.entries(cast).filter(([id,c])=>state.day>=(c.start||1)&&c.locs.includes(state.location)&&c.slots.includes(state.slot)&&c.days.includes(weekday)).map(([id])=>id);}
-function selectPerson(id){if(!cast[id]||!currentPeople().includes(id))return;const c=cast[id],first=!state['met_'+id]&&!((id==='reina')&&state.metReina);state['met_'+id]=true;if(id==='reina')state.metReina=true;state.selected=id;persist();say(c.name,first?c.intro:c.repeat,options(id));}
+function currentPeople(){if(state.day>90)return [];const weekday=(state.day-1)%7;const regular=Object.entries(cast).filter(([id,c])=>state.day>=(c.start||1)&&c.locs.includes(state.location)&&c.slots.includes(state.slot)&&c.days.includes(weekday)).map(([id])=>id);
+for(const e of eligibleStories())if(!regular.includes(e.npc))regular.push(e.npc);
+return regular;}
+function selectPerson(id){if(state.activeStory||!cast[id]||!currentPeople().includes(id))return;const c=cast[id],first=!state['met_'+id]&&!((id==='reina')&&state.metReina);state['met_'+id]=true;if(id==='reina')state.metReina=true;state.selected=id;persist();say(c.name,first?c.intro:c.repeat,options(id));}
 function options(id){const c=cast[id],key=atKey(id);return [
  [state.talked[key]?'Talked this period':'Talk','talk:'+id],
  ['Spend time together · ⏳ 1 period','hang:'+id],
@@ -60,7 +101,13 @@ function options(id){const c=cast[id],key=atKey(id);return [
 function scheduleEvent(){return eventCards.find(e=>e.day===state.day&&e.slot===state.slot&&e.place===state.location&&!state.eventsDone[e.day+':'+e.title]);}
 function act(action){
  const [type,id]=action.split(':');
- if(type==='story')return resolveStory(id);
+ if(type==='storyNext')return advanceStory();
+ if(type==='storyChoice')return chooseStory(id);
+ if(type==='storyFinish')return finishStory();
+ if(state.activeStory||state.pendingDuel)return;
+ if(type==='calendar')return openCalendar();
+ if(type==='home'){state.location='home';state.selected=null;persist();return say('Narrator','Back home. The championship posters on the wall remind you why you came.');}
+ if(type==='sleep'){if(state.location!=='home')return;const n=3-state.slot;advance(n);return say('Narrator','You wake up to a new day in Neo Harbor.');}
  if(type==='close'){state.selected=null;persist();return say('Narrator','The town has a rhythm of its own. You are beginning to hear it.');}
  if(type==='duel')return startDuel(id||state.selected,false);
  if(type==='event'){const e=scheduleEvent();if(!e)return;state.eventsDone[e.day+':'+e.title]=true;state.points+=e.reward;log('Attended '+e.title+' (+'+e.reward+' circuit points).');advance(e.day===90?2:1);return say('Tournament Board','You competed in '+e.title+'. The exhibition result has been recorded. Full tournament brackets are planned for a later release.');}
@@ -68,39 +115,95 @@ function act(action){
  if(type==='new'){if(confirm('Start a new season? This overwrites this browser save.')){state=defaults();for(const id of Object.keys(cast))state.bonds[id]={affection:0,trust:0,duels:0};persist();location.reload();}return;}
  if(!cast[id]||!currentPeople().includes(id))return say('Narrator','They have already moved on. Try another time.');
  const c=cast[id],bond=state.bonds[id],key=atKey(id);
- if(type==='talk'){if(!state.talked[key]){state.talked[key]=true;bond.affection++;}persist();return say(c.name,c.talk[(state.day+bond.duels+bond.affection)%c.talk.length],options(id));}
- if(type==='flirt'){if(!state.talked['flirt:'+key]){state.talked['flirt:'+key]=true;bond.affection++;}persist();return say(c.name,c.flirt,options(id));}
- if(type==='hang'){if(state.hungOut[state.day+':'+id])return say(c.name,'I enjoyed our time today. Let us make plans another day.',options(id));state.hungOut[state.day+':'+id]=true;bond.affection+=2;bond.trust++;log('Spent time with '+c.name+'.');advance();state.selected=null;return say(c.name,'That was a lovely way to spend part of the day. See you around.');}
+ if(type==='talk'){if(!state.talked[key]){state.talked[key]=true;bond.affection++;state.relationships[id].affection++;}persist();return say(c.name,c.talk[(state.day+bond.duels+bond.affection)%c.talk.length],options(id));}
+ if(type==='flirt'){if(!state.talked['flirt:'+key]){state.talked['flirt:'+key]=true;bond.affection++;state.relationships[id].affection++;state.relationships[id].attraction++;}persist();return say(c.name,c.flirt,options(id));}
+ if(type==='hang'){if(state.hungOut[state.day+':'+id])return say(c.name,'I enjoyed our time today. Let us make plans another day.',options(id));state.hungOut[state.day+':'+id]=true;bond.affection+=2;bond.trust++;state.relationships[id].affection+=2;state.relationships[id].trust++;log('Spent time with '+c.name+'.');advance();state.selected=null;return say(c.name,'That was a lovely way to spend part of the day. See you around.');}
 }
 function duelUrl(duel){return '/classic_live.html?rpg=1&deck='+encodeURIComponent(duel.playerDeck)+'&opponent='+encodeURIComponent(duel.opponent);}
 function startDuel(id){if(state.pendingDuel||state.day>90||!cast[id]||!currentPeople().includes(id))return;const c=cast[id];state.pendingDuel={id:'npc-'+id+'-'+state.day+'-'+state.slot+'-'+state.results.length,npc:id,day:state.day,slot:state.slot,opponent:c.deck,playerDeck:state.playerDeck,resolved:false};persist();$('duel').hidden=false;$('battle').src=duelUrl(state.pendingDuel);}
-window.addEventListener('message',ev=>{if(ev.origin!==location.origin||ev.source!==$('battle').contentWindow)return;const msg=ev.data,duel=state.pendingDuel;if(!msg||msg.type!=='neo-rpg-duel-finished'||!duel||duel.resolved||!Number.isInteger(msg.winner))return;duel.resolved=true;const won=msg.winner===0,c=cast[duel.npc],bond=state.bonds[duel.npc];state.results.push({id:duel.id,npc:duel.npc,won,day:duel.day});bond.duels++;bond.trust+=won?2:1;state.points+=won?3:1;state.credits+=won?15:5;if(duel.npc==='reina'){state.reinaDuels=bond.duels;state.reinaTrust=bond.trust;}log('Day '+duel.day+': '+(won?'Defeated ':'Lost to ')+c.name+'.');state.pendingDuel=null;advance();state.selected=null;$('duel').hidden=true;$('battle').src='about:blank';say(c.name,won?c.duelWin:c.duelLose);});
+window.addEventListener('message',ev=>{if(ev.origin!==location.origin||ev.source!==$('battle').contentWindow)return;const msg=ev.data,duel=state.pendingDuel;if(!msg||msg.type!=='neo-rpg-duel-finished'||!duel||duel.resolved||!Number.isInteger(msg.winner))return;duel.resolved=true;const won=msg.winner===0,c=cast[duel.npc],bond=state.bonds[duel.npc];state.results.push({id:duel.id,npc:duel.npc,won,day:duel.day});bond.duels++;bond.trust+=won?2:1;state.relationships[duel.npc].duels++;state.relationships[duel.npc].trust+=won?2:1;state.relationships[duel.npc].respect+=won?2:1;state.points+=won?3:1;state.credits+=won?15:5;if(duel.npc==='reina'){state.reinaDuels=bond.duels;state.reinaTrust=bond.trust;}log('Day '+duel.day+': '+(won?'Defeated ':'Lost to ')+c.name+'.');state.pendingDuel=null;advance();state.selected=null;$('duel').hidden=true;$('battle').src='about:blank';say(c.name,won?c.duelWin:c.duelLose);});
+function openCalendar(){
+ const root=$('calendarEntries');root.replaceChildren();
+ for(const e of eventCards.filter(e=>e.day>=state.day).slice(0,8)){
+  const p=document.createElement('div');p.className='calendar-entry';
+  p.textContent='DAY '+e.day+' · '+periods[e.slot]+' · '+e.title+' · '+places[e.place][0];root.append(p);
+ }
+ const info=document.createElement('p');info.className='empty-note';info.textContent='Character plans and private encounters are discovered through play.';root.append(info);
+ $('calendarDialog').showModal();
+}
+function makeAvatar(id,size=''){
+ const img=document.createElement('img');img.src='/rpg-assets/'+id+'.png';img.alt=cast[id].name;img.loading='lazy';
+ img.onerror=()=>{img.style.display='none';const span=document.createElement('span');span.className='avatar-fallback';span.textContent=cast[id].name.split(' ').map(x=>x[0]).join('');img.parentElement.append(span);};
+ return img;
+}
 function render(){
- const ended=state.day>90;
- $('whereLabel').textContent=state.location==='home'?'⌂ YOU ARE HOME':'● YOU ARE HERE';
- $('timeTrack').replaceChildren();periods.forEach((p,i)=>{const x=document.createElement('span');x.className='time-pill'+(i===state.slot?' active':i<state.slot?' past':'');x.textContent=(i===state.slot?'● ':'')+p;$('timeTrack').append(x)});
+ const ended=state.day>90,locked=!!state.activeStory||!!state.pendingDuel;
+ $('whereLabel').textContent=state.location==='home'?'⌂  YOU ARE HOME':'●  YOU ARE HERE';
+ $('timeTrack').replaceChildren();periods.forEach((p,i)=>{const x=document.createElement('span');x.className='time-pill'+(i===state.slot?' active':i<state.slot?' past':'');x.textContent=(i===0?'☀ ':i===1?'◐ ':'☾ ')+p;$('timeTrack').append(x)});
  $('day').textContent='DAY '+String(Math.min(state.day,90)).padStart(2,'0')+' / 90';
  $('period').textContent=ended?'SEASON COMPLETE':periods[state.slot].toUpperCase();
+ $('chapterLabel').textContent='CHAPTER '+(state.day<=30?'I':state.day<=60?'II':'III')+' · '+(state.day<=30?'NEW FACES':state.day<=60?'RISING STAKES':'FINAL STRETCH');
+ $('weekdayLabel').textContent=['MON','TUE','WED','THU','FRI','SAT','SUN'][(state.day-1)%7]+' · WEEK '+Math.ceil(Math.min(90,state.day)/7);
+ $('campaignFill').style.width=Math.min(100,state.day/90*100)+'%';
+ $('timeHint').textContent=state.slot===2?'Next time action starts a NEW DAY.':'Next: '+periods[state.slot+1]+' · ⏳';
+ $('quickNext').textContent=state.slot===2?'☾ END DAY · ⏳':'▶ NEXT PERIOD · ⏳';
+ $('quickNext').disabled=ended||locked;
+ $('quickHome').disabled=locked||state.location==='home';
  $('places').replaceChildren();
- for(const [id,[name,detail]] of Object.entries(places)){const b=document.createElement('button');b.textContent=name;b.className=id===state.location?'selected':'';b.onclick=()=>{state.location=id;state.selected=null;persist();say('Narrator',detail)};$('places').append(b)}
+ for(const [id,[name,detail]] of Object.entries(places)){
+  const b=document.createElement('button');b.className='place '+(id===state.location?'selected':'');
+  const glyph={home:'⌂',shop:'♠',arcade:'✦',park:'❀',cafe:'☕',center:'♜',library:'▤'}[id];
+  b.textContent=glyph+'  '+name;b.disabled=locked;b.onclick=()=>{state.location=id;state.selected=null;persist();say('Narrator',detail)};
+  const status=document.createElement('span');status.className='place-status';status.textContent=id===state.location?'HERE':'›';b.append(status);$('places').append(b);
+ }
  $('placeTitle').textContent=places[state.location][0];$('placeDetail').textContent=places[state.location][1];
- const backgrounds={home:'home.jpg',shop:state.slot===2?'card-shop-evening.png':'card-shop-day.png',arcade:'arcade.jpg',park:'park.jpg',cafe:'cafe.jpg',center:'center.jpg',library:'library.jpg'};
- const bg=backgrounds[state.location];
- $('scene').style.backgroundImage=bg?"linear-gradient(0deg,#090b18bb,#090b1830),url('/rpg-assets/"+bg+"')":'';
- const portrait=state.selected&&cast[state.selected]?'/rpg-assets/'+state.selected+'.png':null;
- $('portrait').style.backgroundImage=portrait?"url('"+portrait+"')":'none';
- $('speaker').textContent=scene.speaker;$('line').textContent=scene.line;
- $('choices').replaceChildren();for(const [label,action] of scene.choices){const b=document.createElement('button');b.textContent=label;b.disabled=action.startsWith('talk:')&&!!state.talked[atKey(action.slice(5))];b.onclick=()=>act(action);$('choices').append(b)}
- $('people').replaceChildren();const people=currentPeople();for(const id of people){const c=cast[id],b=document.createElement('button');b.className='sidebtn';b.textContent=c.name+' · '+c.style;b.onclick=()=>selectPerson(id);$('people').append(b)}if(!people.length)$('people').textContent='No major characters at this location right now.';
- $('storyEvents').replaceChildren();const stories=eligibleStories();for(const e of stories){const b=document.createElement('button');b.className='sidebtn event-btn';b.textContent='✦ '+e.title+' · ⏳ 1 period';b.onclick=()=>startStory(e.id);$('storyEvents').append(b)}if(!stories.length)$('storyEvents').textContent='No special encounters available here right now.';
- $('activities').replaceChildren();const event=scheduleEvent();const items=[...(event?[[event.title+' · ⏳ 1 period · +' +event.reward+' pts','event']]:[]),[state.location==='home'?'Rest at home · ⏳ 1 period':'Wait until next period · ⏳ 1 period','rest'],...(state.location==='shop'?[['Help at the shop · ⏳ 1 period · +15 credits','work']]:[]),['Study deck strategy · ⏳ 1 period','practice'],['New campaign','new']];
- for(const [label,action] of items){const b=document.createElement('button');b.className='sidebtn';b.textContent=label;b.disabled=ended&&action!=='new';b.onclick=()=>act(action);$('activities').append(b)}
- $('journal').replaceChildren();const stats=document.createElement('p');stats.textContent='Circuit: '+state.points+' pts · Credits: '+state.credits;stats.className='stats';$('journal').append(stats);
- const upcoming=eventCards.filter(e=>e.day>=state.day).slice(0,3);for(const e of upcoming){const p=document.createElement('p');p.textContent='Day '+e.day+' · '+e.title+' ('+periods[e.slot]+')';$('journal').append(p)}
- for(const note of state.journal.slice(0,5)){const p=document.createElement('p');p.textContent='• '+note;$('journal').append(p)}
- $('notice').textContent='Your duels use the existing Neo Campus TCG engine. Character decks are temporary presets pending unique, tested deck lists.';
- if($('deckPicker'))$('deckPicker').value=state.playerDeck;
+ const bgFiles={home:'home.jpg',shop:state.slot===2?'card-shop-evening.png':'card-shop-day.png',arcade:'arcade.jpg',park:'park.jpg',cafe:'cafe.jpg',center:'center.jpg',library:'library.jpg'};
+ $('scene').style.backgroundImage="linear-gradient(0deg,#090b18ec 0%,#090b1860 80%),url('/rpg-assets/"+bgFiles[state.location]+"')";
+ const showingStory=state.activeStory?STORY.byId(state.activeStory.id):null;
+ const portraitId=showingStory?.npc||state.selected,portraitRoot=$('portrait');portraitRoot.replaceChildren();
+ if(portraitId&&cast[portraitId])portraitRoot.append(makeAvatar(portraitId));
+ $('homeBanner').hidden=state.location!=='home'||!!portraitId;
+ $('homeBanner').textContent='YOUR APARTMENT  ·  DAY '+state.day+'  ·  '+periods[state.slot]+' — Prepare your deck, review your plans or rest.';
+ let shown=showingStory?renderStory():scene;
+ $('speaker').textContent=shown?.speaker||'Narrator';$('line').textContent=shown?.line||'The town is waiting.';$('choices').replaceChildren();
+ for(const [label,action] of shown.choices||[]){
+  const b=document.createElement('button');b.className='choice'+(action==='storyFinish'?' finish':'');b.textContent=label;
+  b.disabled=action.startsWith('storyChoice:')&&STORY.byId(state.activeStory.id).choices[Number(action.split(':')[1])].kind==='commit'&&!!state.partner&&state.partner!==STORY.byId(state.activeStory.id).npc;
+  b.onclick=()=>act(action);$('choices').append(b);
+ }
+ $('people').replaceChildren();
+ const people=currentPeople();
+ if(!people.length){const p=document.createElement('p');p.className='empty-note';p.textContent='No regulars here at this time. Try another location or time period.';$('people').append(p);}
+ for(const id of people){
+  const c=cast[id],b=document.createElement('button');b.className='person'+(state.selected===id?' selected':'');b.disabled=locked;
+  const avatar=document.createElement('span');avatar.className='person-avatar';avatar.append(makeAvatar(id));
+  const label=document.createElement('span');label.className='person-info';
+  const name=document.createElement('strong');name.textContent=c.name;const sub=document.createElement('small');sub.textContent=c.style;
+  label.append(name,sub);b.append(avatar,label);b.onclick=()=>selectPerson(id);$('people').append(b);
+ }
+ $('storyEvents').replaceChildren();const stories=eligibleStories();
+ for(const e of stories){
+  const b=document.createElement('button');b.className='event-btn';b.disabled=locked;b.textContent='✦  '+e.title+' · ⏳ 1 period';
+  const small=document.createElement('small');small.textContent=cast[e.npc].name+' · limited-time encounter';b.append(small);b.onclick=()=>startStory(e.id);$('storyEvents').append(b);
+ }
+ if(!stories.length){const x=document.createElement('p');x.className='empty-note';x.textContent='No special story encounter right now.';$('storyEvents').append(x);}
+ $('activities').replaceChildren();const e=scheduleEvent();
+ const items=[...(e?[[e.title+' · ⏳ 1 period · +'+e.reward+' pts','event']]:[]),
+ [state.location==='home'?'Rest at home · ⏳ 1 period':'Wait one period · ⏳ 1 period','rest'],
+ ...(state.location==='home'?[['Sleep until morning · ⏳ '+(3-state.slot)+' period(s)','sleep']]:[]),
+ ...(state.location==='shop'?[['Help at shop · ⏳ 1 period · +15 credits','work']]:[]),
+ ['Study deck strategy · ⏳ 1 period','practice'],['Calendar · free','calendar'],['New campaign','new']];
+ for(const [label,action] of items){
+  const b=document.createElement('button');b.className='activity';b.textContent=label;b.disabled=(ended&&action!=='new'&&action!=='calendar')||(locked&&action!=='calendar');b.onclick=()=>act(action);$('activities').append(b);
+ }
+ $('journal').replaceChildren();const stats=document.createElement('p');stats.className='stats';stats.textContent='🏆 '+state.points+' circuit points   ·   ◈ '+state.credits+' credits';$('journal').append(stats);
+ for(const e of eventCards.filter(e=>e.day>=state.day).slice(0,2)){const p=document.createElement('p');p.textContent='DAY '+e.day+' · '+e.title+' ('+periods[e.slot]+')';$('journal').append(p)}
+ for(const note of state.journal.slice(0,3)){const p=document.createElement('p');p.textContent='• '+note;$('journal').append(p)}
+ $('notice').textContent=state.activeStory?'Story in progress: complete this scene to continue.':locked?'Your duel is in progress.':'Travel & talk are free · ⏳ actions advance time';
+ if($('deckPicker')?.options.length)$('deckPicker').value=state.playerDeck;
 }
+
+$('quickNext').onclick=()=>act('rest');$('quickHome').onclick=()=>act('home');$('calendarBtn').onclick=openCalendar;$('calendarClose').onclick=()=>$('calendarDialog').close();
 $('save').onclick=()=>{persist();$('notice').textContent='Campaign saved in this browser.'};
 async function initDecks(){try{const res=await fetch('/api/classic/decks');if(!res.ok)throw Error('Could not load decks');const data=await res.json(),select=$('deckPicker');for(const d of data.decks.filter(x=>x.id!=='custom')){const o=document.createElement('option');o.value=d.id;o.textContent=d.name;select.append(o)}if([...select.options].some(o=>o.value===state.playerDeck))select.value=state.playerDeck;else{select.value='blackout';state.playerDeck='blackout'}select.onchange=()=>{state.playerDeck=select.value;persist()};}catch(e){$('notice').textContent='Deck list unavailable: '+e.message;}}
 render();initDecks();if(state.pendingDuel){$('duel').hidden=false;$('battle').src=duelUrl(state.pendingDuel);}
