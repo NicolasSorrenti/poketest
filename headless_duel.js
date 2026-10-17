@@ -1220,7 +1220,7 @@ function resolveAttack(g,side,index,chosenBench,energyPicks,extra={}){
  const copyAllowed=new Set(['flat','status','coin-status','coin-times','coin-bonus','coin-failure','coin-status-split','recoil','coin-recoil','coin-recoil-bonus','defender-counters','own-counters','flail-counters','minus-counters','bench-count','ignore-weakness','draw-one','bench-target','bench-own','bench-both-recoil','bench-splash-coin','switch-self','switch-attacker','switch-defender','energy-discard',
   // These classic effect families execute on the copying Pokémon with no
   // additional target/payment decision; they are safe for Neo v0.69.
-  'coin-shield','damage-shield','coin-attack-lock','coin-heal-one','drain','leech-seed','coin-draw','energy-coins','coin-no-retreat','sand-attack','coin-clamp']);
+  'coin-shield','damage-shield','coin-attack-lock','coin-heal-one','drain','leech-seed','coin-draw','energy-coins','coin-no-retreat','sand-attack','coin-clamp','target-any','target-any-coin']);
  const isCopyable=attack=>{
   const effect=ATTACK.compile(attack);
   if(!effect||!copyAllowed.has(effect.kind))return false;
@@ -1274,10 +1274,16 @@ function resolveAttack(g,side,index,chosenBench,energyPicks,extra={}){
    if(data.payment.length!==script.quantity||new Set(data.payment).size!==script.quantity||data.payment.some(k=>!options.some(x=>x.id===k)))fail('Illegal copied Energy payment');
   }
   const targetKind=script.kind,owner=targetKind==='switch-self'?p:f;
-  if(['bench-target','switch-self','switch-attacker'].includes(targetKind)&&owner.bench.length){
-   const options=owner.bench.map((unit,i)=>({id:'bench:'+i,label:publicName(g,unit)}));
-   if(!Array.isArray(data.copyTarget)){chooseCopy('copyTarget',options,'Copied attack: choose Bench target');return;}
-   if(data.copyTarget.length!==1||!options.some(x=>x.id===data.copyTarget[0]))fail('Invalid copied Bench target');
+  const copiedAnyTarget=targetKind==='target-any'||targetKind==='target-any-coin';
+  if(copiedAnyTarget||['bench-target','switch-self','switch-attacker'].includes(targetKind)&&owner.bench.length){
+   // Flitter and Coin Hurl may target the Defending Active OR any of
+   // its Bench. The original source Pokémon's side never chooses this.
+   const options=[
+    ...(copiedAnyTarget?[{id:'bench:-1',label:'Active: '+publicName(g,f.active)}]:[]),
+    ...owner.bench.map((unit,i)=>({id:'bench:'+i,label:'Bench: '+publicName(g,unit)}))
+   ];
+   if(!Array.isArray(data.copyTarget)){chooseCopy('copyTarget',options,'Copied attack: choose opposing Pokémon');return;}
+   if(data.copyTarget.length!==1||!options.some(x=>x.id===data.copyTarget[0]))fail('Invalid copied Pokémon target');
    chosenBench=Number(data.copyTarget[0].slice(6));
   }
   if(script.kind==='energy-discard'&&program.kind==='neo50:super-metronome')
