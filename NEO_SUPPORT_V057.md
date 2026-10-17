@@ -1,0 +1,3 @@
+# Neo v0.57 — Special Energy correctness
+
+Rainbow Energy (Team Rocket holo/uncommon): 1 wildcard Energy while attached and 10 counters on attachment. Miracle Energy (Neo Destiny): only Shining/Light recipients; two wildcard Energy while in play; automatically discarded from all owner's Pokémon (including Bench) at the end of its turn; singleton deck rule. Two printings of Rainbow and one Miracle use one shared typed-cost function in CPU/online reducers. Regression tests test both payment cardinalities, first attach, restriction, damage, end-turn lifecycle, and singleton deck checks. Further historical Energy-specific bonuses and Recycle Energy return-from-play require dedicated verification.

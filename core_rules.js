@@ -27,14 +27,14 @@
  function canPayEnergy(cost,pool){
   if(!Array.isArray(cost)||!Array.isArray(pool))return false;
   let remain=[...pool];
-  for(const symbol of cost){if(symbol==='Colorless')continue;const i=remain.indexOf(symbol);if(i<0)return false;remain.splice(i,1);}
+  for(const symbol of cost){if(symbol==='Colorless')continue;let i=remain.indexOf(symbol);if(i<0)i=remain.indexOf('Any');if(i<0)return false;remain.splice(i,1);}
   return remain.length>=cost.filter(symbol=>symbol==='Colorless').length;
  }
  function legalAttachment({card,unit,energyUsed=false,round=0,pureBody=false,cardName=''}){
   if(!unit||!isEnergy(card)||energyUsed)return false;
   if(unit.energyAttachBlockUntil>=round&&unit.energyAttachBlockUntil>0)return false;
   if(pureBody&&card.name==='Water Energy'&&!(unit.energies||[]).length)return false;
-  if((card.subtypes||[]).includes('Special')&&card.name==='Miracle Energy'&&!/Shining /i.test(cardName))return false;
+  if(card.name==='Miracle Energy'&&!/^(Shining|Light) /i.test(cardName))return false;
   return true;
  }
  function setupCandidates(hand,lookup){return hand.map((id,index)=>({id,index})).filter(({id})=>isBasicPokemon(lookup.get(id)));}
@@ -48,7 +48,7 @@
    if(isBasicEnergy(card))continue;
    const key=card.name;counts.set(key,(counts.get(key)||0)+1);
   }
-  for(const [name,n] of counts)if(n>maxCopies)errors.push(`Too many copies of ${name}: ${n}`);
+  for(const [name,n] of counts)if(n>(name==='Miracle Energy'?1:maxCopies))errors.push(`Too many copies of ${name}: ${n}`);
   if(!basics)errors.push('Deck needs at least one Basic Pokémon');
   return {valid:!errors.length,errors,basicCount:basics};
  }

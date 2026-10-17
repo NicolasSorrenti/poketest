@@ -178,6 +178,8 @@ function attackPool(g,u){const pool=[];
   if(u.buzzapTypes?.[id]){pool.push(u.buzzapTypes[id],u.buzzapTypes[id]);continue;}
   if(isClassicRules(g)&&u.energyBurnUntil>g.turnSerial){pool.push('Fire');if(card(g,id).name==='Double Colorless Energy')pool.push('Fire');continue;}const c=card(g,id);if(['Grass Energy','Fire Energy','Water Energy','Lightning Energy','Psychic Energy','Fighting Energy'].includes(c.name))pool.push(c.name.slice(0,-7));
  else if(c.name==='Double Colorless Energy')pool.push('Colorless','Colorless');
+ else if(c.name==='Rainbow Energy')pool.push('Any');
+ else if(c.name==='Miracle Energy')pool.push('Any','Any');
  else if(['Recycle Energy','Full Heal Energy','Potion Energy'].includes(c.name))pool.push('Colorless');
  else if(c.name==='Darkness Energy')pool.push('Darkness');
  else if(c.name==='Metal Energy')pool.push('Metal');
@@ -739,8 +741,11 @@ function performAction(g,side,cmd){
   u.energies.push(p.hand.splice(v.handIndex,1)[0]);
   if(c.name==='Full Heal Energy')STATUS.clearConditions(u);
   if(c.name==='Potion Energy')u.damage=Math.max(0,u.damage-10);
+  if(c.name==='Rainbow Energy'){u.damage+=10;log(g,'Rainbow Energy placed one damage counter on its host.');}
   if(c.name==='Fire Energy'&&CLASSIC_POWERS.enabled(g,u,'Healing Fire'))u.damage=Math.max(0,u.damage-10);
-  log(g,`${p.name} attached ${c.name}.`);if(isClassicRules(g))CLASSIC_POWERS.attached(g,side,v.slot,c.id,classicHelpers());return;
+  log(g,`${p.name} attached ${c.name}.`);
+  if(c.name==='Rainbow Energy'&&u.damage>=maxHP(g,u)){knockOuts(g,'direct');return;}
+  if(isClassicRules(g))CLASSIC_POWERS.attached(g,side,v.slot,c.id,classicHelpers());return;
  }
  if(type==='evolve'){
   const c=handCard(g,p,v.handIndex),u=safeSlot(p,v.slot);
@@ -2047,6 +2052,11 @@ function finishTurn(g){
   u.damage+=outcome.poisonDamage;
   if(outcome.poisonDamage)log(g,`${card(g,u.id).name} takes 10 Poison damage.`);
   if(outcome.woke)log(g,`${card(g,u.id).name} woke up.`);
+ }
+ // Miracle Energy is discarded at the end of its owner's turn, even if Benched.
+ for(const host of allPokemon(cur)){
+  const left=[];for(const id of host.energies){if(card(g,id).name==='Miracle Energy')cur.discard.push(id);else left.push(id);}
+  host.energies=left;
  }
  // Darkness Energy damages non-Dark hosts at the end of EACH turn,
  // including when the Energy is on a Benched Pokémon.
