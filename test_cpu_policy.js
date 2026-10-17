@@ -799,6 +799,12 @@ const settings={level:3,personality:'balanced',side:1,seed:47};
  assert.ok(value(0,cfg)<pass,'Champion must not discard its powered Active Energy for only 20 Center healing');
  assert.ok(value(0,old)>pass,'Baseline must reproduce premature Pokémon Center');
  assert.ok(value(1,cfg)<pass,'Super Potion must consider losing an important attached Energy');
+ o.self.active.energies=[IDS.fight,'base1-102'];
+ const optimalPayment=AI.trainerTacticsBonus(action(1),o,cfg);
+ o.self.active.energies=['base1-102',IDS.fight];
+ assert.equal(AI.trainerTacticsBonus(action(1),o,cfg),optimalPayment,
+  'Super Potion opportunity score must choose the best payment regardless of attachment order');
+ o.self.active.energies=[IDS.fight,IDS.fight];
  assert.ok(value(2,cfg)<pass,'Small nonlethal Potion healing should not be mandatory before ending turn');
  o.self.active.energies=[];
  o.self.active.damage=40;
