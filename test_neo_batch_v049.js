@@ -89,7 +89,8 @@ for(const [key,kind] of Object.entries(defs)){
 {
  const pool=new ClassicLocalService().cardPool();assert.equal(unlocked.length,14);
  for(const id of unlocked){const entry=pool.find(x=>x.id===id);assert.ok(entry?.supported,'Incomplete card '+id);assert.ok(FORMAT.isAllowed(id,{neo:true}));assert.equal(FORMAT.isAllowed(id),false);}
- for(const id of ['neo2-2','neo2-21','neo2-56'])assert.equal(FORMAT.isAllowed(id,{neo:true}),false,'Incomplete Powers must stay locked');
+ for(const id of ['neo2-2','neo2-21'])assert.equal(FORMAT.isAllowed(id,{neo:true}),false,'Unported Spikes must stay locked');
+ assert.equal(FORMAT.isAllowed('neo2-56',{neo:true}),true,'Revive Friends now completes Kabuto in v0.51');
 }
 // Forretress Rapid Spin is implemented but Forretress Spikes still prevents
 // full-card legality: this distinction matters for collection UI.
