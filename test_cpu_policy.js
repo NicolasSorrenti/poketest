@@ -698,6 +698,48 @@ const settings={level:3,personality:'balanced',side:1,seed:47};
  assert.equal(result.baseline.energyHorizon,true);
  assert.equal(result.challenger.energyHorizon,false);
 }
+{
+ // Same-turn *sequence* regression: on a two-Fighting Energy Machop,
+ // evolving first disables Low Kick but leaves enough hand Energy for
+ // Machoke's three-Energy Karate Chop after one attach.
+ const g=createGame({decks:[deck,deck],seed:1911,format:'classic'});
+ const o=AI.observation(g,1);o.phase='game';o.turn=1;o.round=5;o.turnSerial=10;
+ o.self.active={id:IDS.machop,damage:0,playedTurn:2,
+  energies:[IDS.fight,IDS.fight],status:null};
+ o.self.bench=[{id:IDS.hit,damage:0,energies:[],playedTurn:2,status:null}];
+ o.self.hand=['base1-34',IDS.fight];o.self.energyUsed=false;
+ o.opponent.active={id:IDS.hit,damage:0,energies:[IDS.fight],status:null};
+ const expert=AI.configuration({side:1,level:5,turnSearch:true});
+ const noSearch=AI.configuration({side:1,level:5,turnSearch:false});
+ const evolve={type:'evolve',payload:{handIndex:0,slot:-1}};
+ const attach={type:'attach_energy',payload:{handIndex:1,slot:-1}};
+ const multi=AI.turnSequenceBonus(evolve,o,expert);
+ assert.ok(multi>35,
+  'Champion must value completing evolve + attach into a stronger immediate attack');
+ assert.ok(AI.turnSequenceBonus(attach,o,expert)>35,
+  'Champion must recognize attach + evolve yields the same affordable attack');
+ assert.equal(AI.turnSequenceBonus(evolve,o,noSearch),0,
+  'Existing production CPU remains available as paired-match control');
+ const noEnergy=structuredClone(o);noEnergy.self.hand=['base1-34'];
+ assert.ok(AI.turnSequenceBonus(evolve,noEnergy,expert)<-90,
+  'Evolving without the Energy to attack should lose tempo and be penalized');
+ const hidden=structuredClone(g);
+ if(hidden.players[0].deck.length&&hidden.players[0].hand.length)
+  [hidden.players[0].deck[0],hidden.players[0].hand[0]]=
+   [hidden.players[0].hand[0],hidden.players[0].deck[0]];
+ hidden.rngState=(hidden.rngState^0x7ab3d98f)>>>0;
+ assert.deepEqual(AI.observation(hidden,1),AI.observation(g,1),
+  'Future coin states and concealed opponent draws must stay outside the search');
+ assert.equal(AI.turnSequenceBonus(evolve,structuredClone(o),expert),multi,
+  'Projected sequence search must be deterministic, without mutating board');
+ assert.equal(AI.configuration({level:5}).turnSearch,false);
+ assert.throws(()=>AI.configuration({turnSearch:'yes'}),/turn-search/);
+ const {argumentsOf,arena}=require('./benchmark_cpu');
+ const a=arena(argumentsOf(['--pairs','1','--max-turns','4','--left-level','5',
+  '--right-level','5','--left-turn-search','true','--right-turn-search','false']));
+ assert.equal(a.baseline.turnSearch,true);
+ assert.equal(a.challenger.turnSearch,false);
+}
 let duels=0,decisions=0,attacks=0,energy=0,evolutions=0,trainer=0;
 for(let seed=1;seed<=4;seed++){
  let game=createGame({decks:[deck,deck],seed:seed*1789,format:'classic'});
