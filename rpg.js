@@ -182,6 +182,54 @@ window.addEventListener('message',ev=>{
  const c=cast[duel.npc];
  say(duel.tournamentId?'Tournament Desk':c.name,duel.tournamentId?tournamentMessage:receipt.outcome==='Victory'?c.duelWin:receipt.outcome==='Draw'?'A hard-fought draw. Let us play again.':c.duelLose);
 });
+function sideActivity(type){
+ if(state.activeStory||state.pendingDuel||state.day>90)return;
+ const required={cafeShift:'cafe',research:'library',scout:'park'}[type];
+ if(state.location!==required)return;
+ const key=state.day+':'+type;
+ if(state.activityDone[key])return say('Narrator','You already completed that activity today.');
+ state.activityDone[key]=true;
+ if(type==='cafeShift'){
+  state.credits+=12;
+  const hana=currentPeople().includes('hana')?' Hana helps you balance the trays without dropping a single cup.':'';
+  log('Earned 12 credits helping at The Rest Stop.');advance();
+  return say('Café Counter','Another shift finished. You earn 12 credits.'+hana);
+ }
+ if(type==='research'){
+  state.practiceInsights++;let gain=0;
+  if(state.practiceInsights%3===0){gain=2;state.points+=gain;}
+  log('Studied match notes at the library'+(gain?' and earned 2 circuit points.':'.'));
+  advance();return say('Town Library',gain?'Your research starts to pay off: +2 circuit points.':'You discover new strategies. Three study sessions turn into useful tournament preparation.');
+ }
+ const present=currentPeople().filter(id=>state.relationships[id]?.affection>0);
+ const friend=present[0];
+ const result=friend?'You notice '+cast[friend].name+' also enjoys this quiet spot.':'You hear a few regulars discussing upcoming matches.';
+ state.practiceInsights++;log('Spent the period scouting opportunities along the river.');
+ advance();return say('Riverside Park',result+' You take a few useful notes for later.');
+}
+function arcadeStart(){
+ if(state.location!=='arcade'||state.activeStory||state.pendingDuel||state.day>90)return;
+ if(state.activityDone[state.day+':arcade'])return say('Arcade Host','You already entered today’s high-score challenge. Try again another day.');
+ return say('Arcade Host','The high-score cabinet has a new challenge. A steady run is safe; an aggressive run can earn a bigger prize.',[
+ ['Play it safe · ⏳ 1 period','arcade:safe'],
+ ['Go for the record · ⏳ 1 period','arcade:risk'],
+ ['Maybe later','close']
+ ]);
+}
+function arcadeFinish(option){
+ if(state.location!=='arcade'||state.activeStory||state.pendingDuel||state.day>90||!['safe','risk'].includes(option))return;
+ const key=state.day+':arcade';if(state.activityDone[key])return;
+ state.activityDone[key]=true;
+ const duels=state.results.length,success=option==='safe'||((state.day*13+duels*7+state.slot*5)%5)>=2;
+ const reward=option==='safe'?8:success?20:3;
+ state.credits+=reward;
+ if(success&&currentPeople().includes('yuna')){state.relationships.yuna.affection++;state.bonds.yuna.affection++;}
+ log('Played the Pixel Palace high-score challenge. Earned '+reward+' credits.');
+ advance();
+ return say('Arcade Host',success?'Your score lights up the screen. You earn '+reward+' credits!':'Not quite a record, but the arcade gives you '+reward+' participation credits.');
+}
+
+
 function openCalendar(){
  const root=$('calendarEntries');root.replaceChildren();
  const heading=document.createElement('h3');heading.textContent='Circuit Fixtures';root.append(heading);
