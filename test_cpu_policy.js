@@ -71,7 +71,7 @@ const settings={level:3,personality:'balanced',side:1,seed:47};
  const o=AI.observation(g,1);o.phase='game';o.turn=1;
  o.self.active={id:IDS.hit,energies:[IDS.fight],damage:0};
  o.self.bench=[];o.self.hand=[IDS.machop];
- o.opponent.active={id:IDS.rat,energies:[],damage:0};
+ o.opponent.active={id:IDS.hit,energies:[],damage:0}; // do not override an immediate KO
  const cfg=AI.configuration({level:5,side:1});
  const benchAction={type:'bench',payload:{handIndex:0}};
  const jab={type:'attack',payload:{attackIndex:0}};
