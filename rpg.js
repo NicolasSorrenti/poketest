@@ -35,7 +35,7 @@ function renderStory(){
  if(!e){state.activeStory=null;persist();return null;}
  if(a.phase==='lines'){
   const line=e.lines[Math.min(a.index,e.lines.length-1)];
-  return {speaker:line.speaker==='Protagonist'?'You':cast[e.npc].name,line:line.text,choices:[[a.index<e.lines.length-1?'Continue ›':'Respond ›','storyNext']]};
+  return {speaker:line.speaker==='Protagonist'?'You':line.speaker===e.guest?cast[e.guest].name:cast[e.npc].name,line:line.text,choices:[[a.index<e.lines.length-1?'Continue ›':'Respond ›','storyNext']]};
  }
  if(a.phase==='choice')return {speaker:cast[e.npc].name,line:'How will you respond?',choices:e.choices.map((c,i)=>[c.label,'storyChoice:'+i])};
  const chosen=e.choices[a.choice];
