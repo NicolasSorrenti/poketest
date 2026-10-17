@@ -2,7 +2,7 @@
 const test=require('node:test'),assert=require('node:assert/strict');
 const fs=require('node:fs'),path=require('node:path'),vm=require('node:vm');
 const STORY=require('../rpg_story'),WORLD=require('../rpg_world'),CIRCUIT=require('../rpg_circuit');
-const MARKET=require('../rpg_market'),FINALE=require('../rpg_finale');
+const MARKET=require('../rpg_market'),FINALE=require('../rpg_finale'),BRIDGE=require('../rpg_duel_bridge');
 const root=path.join(__dirname,'..');
 const script=fs.readFileSync(path.join(root,'rpg.js'),'utf8');
 const html=fs.readFileSync(path.join(root,'rpg.html'),'utf8');
@@ -11,11 +11,12 @@ class MockElement {
  constructor(tag='div'){
   this.tagName=tag.toUpperCase();this.children=[];this.options=[];this.value='';
   this.style={};this.hidden=false;this.disabled=false;this.textContent='';this.className='';
-  this.classList={add(){},remove(){}};this.contentWindow=null;this.open=false;
+  this.classList={add(){},remove(){},toggle(){}};this.contentWindow=null;this.open=false;
  }
  append(...items){for(const item of items){item.parentElement=this;this.children.push(item);}if(this.tagName==='SELECT')this.options=this.children;}
  replaceChildren(...items){this.children=[];this.options=[];this.append(...items);}
  addEventListener(name,handler){this['on'+name]=handler;}
+ setAttribute(name,value){this[name]=value;}
  showModal(){this.open=true;}close(){this.open=false;}
 }
 const starter=[...Array(56).fill('base1-97'),...Array(4).fill('base1-53')];
@@ -30,9 +31,10 @@ function launch(initial){
   createElement:tag=>new MockElement(tag),body:new MockElement('body'),
   addEventListener:(name,fn)=>handlers['doc:'+name]=fn,activeElement:{tagName:'DIV'}
  };
- const window={NeoHarborStory:STORY,NeoHarborWorld:WORLD,NeoHarborCircuit:CIRCUIT,NeoHarborMarket:MARKET,NeoHarborFinale:FINALE,
+ const window={NeoHarborStory:STORY,NeoHarborWorld:WORLD,NeoHarborCircuit:CIRCUIT,NeoHarborMarket:MARKET,NeoHarborFinale:FINALE,NeoRpgDuelBridge:BRIDGE,
   addEventListener:(name,fn)=>handlers[name]=fn};
  const localStorage={getItem:k=>store[k]||null,setItem:(k,v)=>{store[k]=String(v)}};
+ const sessionStorage={getItem:k=>store['session:'+k]||null,setItem:(k,v)=>{store['session:'+k]=String(v)},removeItem:k=>{delete store['session:'+k]}};
  const responses={
   '/api/classic/decks':{decks:[{id:'blackout',name:'Blackout'},{id:'brushfire',name:'Brushfire'},{id:'custom',name:'Custom'}]},
   '/api/classic/decklist?id=blackout':{cards:starter},
@@ -40,11 +42,11 @@ function launch(initial){
  };
  const fetch=async url=>({ok:Object.hasOwn(responses,url),json:async()=>responses[url]});
  const location={origin:'https://neo.test',href:'https://neo.test/rpg.html',reload(){this.reloaded=true}};
- vm.runInNewContext(script,{document,window,localStorage,location,fetch,confirm:()=>true,Math,Date,JSON},{filename:'rpg.js'});
+ vm.runInNewContext(script,{document,window,localStorage,sessionStorage,location,fetch,confirm:()=>true,Math,Date,JSON},{filename:'rpg.js'});
  const game={elements,handlers,location,store,state:()=>JSON.parse(store.neoHarborRpgV1)};
  game.finishDuel=(winner=0,matchId=null)=>{
   const duel=game.state().pendingDuel;if(!duel)return false;
-  handlers.message({origin:location.origin,source:elements.battle.contentWindow,data:{type:'neo-rpg-duel-finished',matchId:matchId||duel.id,winner}});
+  handlers.message({origin:location.origin,source:elements.battle.contentWindow,data:{type:'neo-rpg-duel-finished',duelId:matchId||duel.id,winner}});
   return true;
  };
  return game;
