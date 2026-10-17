@@ -6,7 +6,7 @@ const {ClassicLocalService,deckOptions}=require('./classic_local_service');
 const {ClassicOnlineService}=require('./classic_online_service');
 const root=__dirname;
 const port=Number(process.env.PORT||8000);
-const types={'.html':'text/html; charset=utf-8','.js':'text/javascript; charset=utf-8','.json':'application/json; charset=utf-8','.css':'text/css; charset=utf-8','.png':'image/png','.jpg':'image/jpeg','.svg':'image/svg+xml'};
+const types={'.html':'text/html; charset=utf-8','.js':'text/javascript; charset=utf-8','.json':'application/json; charset=utf-8','.css':'text/css; charset=utf-8','.png':'image/png','.jpg':'image/jpeg','.svg':'image/svg+xml','.webp':'image/webp'};
 const classic=new ClassicLocalService();
 const online=new ClassicOnlineService();
 const sendJSON=(res,status,value)=>{res.writeHead(status,{'Content-Type':'application/json; charset=utf-8','Cache-Control':'no-store','X-Content-Type-Options':'nosniff'});res.end(JSON.stringify(value));};
@@ -66,6 +66,7 @@ const server=http.createServer((req,res)=>{
  // Public hosting: never expose source maps, logs, archives, env files or server code over static HTTP.
  if(!(pathname==='/'||/\.(html|js|css|png|jpg|jpeg|svg|webp)$/i.test(pathname)||(/^\/cards\/[a-z0-9_-]+\.json$/i.test(pathname)))){res.writeHead(404).end('Not found');return;}
  const publicScripts=new Set(['authentic_decks.js','card_corrections.js','classic_format.js','classic_live.js','core_rules.js','decision_core.js','decision_session.js','duel_quick_ui.js','battle_decision_ui.js','duel_experience_ui.js','battle_presentation_ui.js','deck_builder.js','deck_builder_core.js','engine.js','legacy_choice_bridge.js','online.js','target_choice_bridge.js','trainer_rules_v058.js','trainer_rules_v059.js','trainer_rules_v060.js','trainer_rules_v061.js','trainer_rules_v062.js','trainer_rules_v063.js','trainer_rules_v064.js']);
+ if(pathname==='/rpg.js')publicScripts.add('rpg.js');
  if(pathname.endsWith('.js')&&!publicScripts.has(pathname.slice(1))){res.writeHead(404).end('Not found');return;}
  const target=path.resolve(root,'.'+pathname,pathname.endsWith('/')?'index.html':'');
  if(!target.startsWith(root+path.sep)&&target!==root){res.writeHead(403).end('Forbidden');return;}
