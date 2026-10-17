@@ -45,9 +45,8 @@ function triple(g){
  assert.equal(g.players[0].discard.filter(id=>id==='base1-98').length,2,'Both additional Fire Energy paid exactly once');
  assert.equal(g.players[0].active.energies.length,2);
  assert.equal(g.players[0].active.energies.includes('base1-101'),true,'ESP itself requires Psychic, not discarded');
- assert.equal(g.players[1].active.damage,100,'Copied Fire Spin actually damages opponent');
- assert.equal(g.turn,1,'Copied attack finishes the turn');
- assert.equal(g.pendingDecision,null);
+ assert.equal(g.players[1].discard.includes('base1-4'),true,'Psyduck remains Water type: copied Fire Spin doubles to 200 versus Charizard Water Weakness, causing KO');
+ assert.equal(g.players[0].active.energies.length,2,'KO does not refund additional attack cost');
 }
 {
  const g=game('base1-4',['base1-101','base1-98']);
@@ -71,7 +70,7 @@ function triple(g){
  choose(g,['energy:1','energy:2']);
  assert.equal(g.players[0].discard.includes('base5-17'),true);
  assert.equal(g.players[0].discard.includes('base1-98'),true);
- assert.equal(g.players[1].active.damage,100);
+ assert.equal(g.players[1].discard.includes('gym2-1'),true,'Water-type copied Firestorm Knocks Out Fire-weak Blaine Arcanine');
 }
 {
  const g=game('gym2-1',['base1-101','base5-17','base1-98','base1-98','base1-96']);
