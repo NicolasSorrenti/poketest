@@ -231,6 +231,7 @@
   if(!qualifies(e,state))throw Error('Story event is no longer available');
   const choice=e.choices[choiceIndex];if(!choice)throw Error('Invalid story choice');
   if(choice.kind==='commit'&&state.partner&&state.partner!==e.npc)throw Error('Already committed to another relationship');
+  if(choice.kind==='commit'&&(state.relationships[e.npc].affection<6||state.relationships[e.npc].trust<3))throw Error('A deeper bond is required');
   const b=state.relationships[e.npc];for(const [k,v] of Object.entries(choice.delta))b[k]=(b[k]||0)+v;
   if(choice.kind==='commit'){if(b.affection>=6&&b.trust>=3){state.partner=e.npc;state.routeOutcomes=state.routeOutcomes||{};state.routeOutcomes[e.npc]='romance';}else{state.routeOutcomes=state.routeOutcomes||{};state.routeOutcomes[e.npc]='friendship';}}
   if(choice.flag==='friendship'){state.routeOutcomes=state.routeOutcomes||{};state.routeOutcomes[e.npc]='friendship';}
