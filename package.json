@@ -61,7 +61,13 @@
     "test:neo:v046": "node test_neo_batch_v040.js && node test_neo_batch_v046.js && node test_neo_genesis_decks.js && node test_neo_discovery_decks.js",
     "test:neo:v047": "node test_neo_batch_v040.js && node test_neo_batch_v046.js && node test_neo_batch_v047.js && node test_neo_genesis_decks.js && node test_neo_discovery_decks.js",
     "test:neo:v048": "node test_neo_batch_v040.js && node test_neo_batch_v046.js && node test_neo_batch_v047.js && node test_neo_batch_v048.js && node test_neo_interactions_v048.js && node test_neo_genesis_decks.js && node test_neo_discovery_decks.js",
-    "test:neo:v049": "node test_neo_batch_v048.js && node test_neo_interactions_v048.js && node test_neo_batch_v049.js && node test_neo_genesis_decks.js && node test_neo_discovery_decks.js"
+    "test:neo:v049": "node test_neo_batch_v048.js && node test_neo_interactions_v048.js && node test_neo_batch_v049.js && node test_neo_genesis_decks.js && node test_neo_discovery_decks.js",
+    "assets:unpack": "node scripts/install-rpg-art.js",
+    "assets:unpack:required": "node scripts/install-rpg-art.js --required",
+    "build": "node scripts/install-rpg-art.js",
+    "postinstall": "node scripts/install-rpg-art.js",
+    "prestart": "node scripts/install-rpg-art.js",
+    "test:art": "node --test tests/rpg_art_install.test.js"
   },
   "engines": {
     "node": ">=18"
