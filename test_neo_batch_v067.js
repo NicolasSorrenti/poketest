@@ -46,19 +46,34 @@ const act=(g,side,type,payload={})=>{const r=applyCommand(g,side,{type,payload})
  assert.equal(g.players[1].active.energies.includes('base1-96'),true,'Colorless Energy remains attached');
 }
 {
- let observed=false;
- for(let seed=1;seed<4000&&!observed;seed+=17){
-  const g=game();g.rngState=seed;
-  g.players[0].active=U('base1-46',{energies:['base1-98']});
-  g.players[1].active=U('gym2-26');
-  act(g,0,'attack',{attackIndex:0}); // Scratch damages Koga's Muk, triggers Energy Drain
-  if(g.pendingDecision?.actor!==1||g.pendingAction?.kind!=='gym_energy_drain')continue;
-  const d=g.pendingDecision;
-  act(g,1,'choose',{decisionId:d.id,selected:[d.options[0].id]});
-  assert.equal(g.players[0].hand.includes('base1-98'),true,'Ecogym protects opponent Energy discarded by reactive Power');
-  assert.equal(g.players[0].discard.includes('base1-98'),false);
-  observed=true;
+ let autoHeads=false,chosenHeads=false;
+ for(let seed=1;seed<4000&&!(autoHeads&&chosenHeads);seed+=17){
+  // With one attached Energy, Koga's Muk automatically discards it on heads.
+  // Ecogym must attribute the discard to the defending player's Power.
+  if(!autoHeads){
+   const g=game();g.rngState=seed;
+   g.players[0].active=U('base1-46',{energies:['base1-98']});
+   g.players[1].active=U('gym2-26');
+   act(g,0,'attack',{attackIndex:0});
+   if(g.players[0].hand.includes('base1-98')){
+    assert.equal(g.players[0].discard.includes('base1-98'),false,'Auto Power-discarded Energy returned by Ecogym');
+    autoHeads=true;
+   }
+  }
+  if(!chosenHeads){
+   const g=game();g.rngState=seed;
+   g.players[0].active=U('base1-46',{energies:['base1-98','base1-102']});
+   g.players[1].active=U('gym2-26');
+   act(g,0,'attack',{attackIndex:0});
+   if(g.pendingAction?.kind!=='gym_energy_drain')continue;
+   const d=g.pendingDecision;
+   assert.equal(d.actor,1,'Defender owns Energy Drain decision');
+   act(g,1,'choose',{decisionId:d.id,selected:['energy:0']});
+   assert.equal(g.players[0].hand.includes('base1-98'),true,'Chosen Power-discarded Energy returned by Ecogym');
+   assert.equal(g.players[0].active.energies.includes('base1-102'),true,'Unselected Energy stays attached');
+   chosenHeads=true;
+  }
  }
- assert.ok(observed,'Reactive Koga Muk Power must produce a defender-owned Energy discard choice on heads');
+ assert.ok(autoHeads&&chosenHeads,'Ecogym covers automatic and defender-selected Koga Muk Energy Drain');
 }
 console.log('PASS v0.67: seat-correct permanent Prize UI and Ecogym attack/Pokémon Power provenance across owner decisions');
