@@ -56,8 +56,11 @@ function configuration(raw={}){
  if(typeof energyHorizon!=='boolean')throw Error('Invalid energy-horizon setting');
  const turnSearch=raw.turnSearch??false;
  if(typeof turnSearch!=='boolean')throw Error('Invalid turn-search setting');
+ const actionDiscipline=raw.actionDiscipline??false;
+ if(typeof actionDiscipline!=='boolean')throw Error('Invalid action-discipline setting');
  return {level,personality,seed:raw.seed??1,side,planning,evolutionTempo,prizeRace,knockoutTempo,opponentResponse,
-  graduatedNoise,energyHorizon,turnSearch,skill:(graduatedNoise?CALIBRATED_SKILLS:SKILLS)[level],style:PERSONALITIES[personality]};
+  graduatedNoise,energyHorizon,turnSearch,actionDiscipline,
+  skill:(graduatedNoise?CALIBRATED_SKILLS:SKILLS)[level],style:PERSONALITIES[personality]};
 }
 // Seeded independent of the engine's private deck order and future RNG state.
 function rng(seed){let x=(seed>>>0)||0x6d2b79f5;return ()=>{
@@ -715,6 +718,10 @@ function score(a,o,cfg,used){
  }
  if(type==='use_power')return 85*style.setup;
  if(type==='use_stadium')return 85;
+ // Without a meaningful end-turn alternative, a perfect-greedy CPU burns
+ // every Trainer it holds, even Oak with a strong hand or a pointless Switch.
+ // Conserving resources is an explicit choice, not a forced rule change.
+ if(type==='end_turn')return cfg.actionDiscipline&&cfg.level>=4?82:0;
  return 0;
 }
 
@@ -896,11 +903,11 @@ function chooseAction(game,raw={},memo={}){
  }
  return null;
 }
-function driveSide(initial,{side=1,level=3,personality='balanced',seed=1,planning,evolutionTempo,prizeRace,knockoutTempo,opponentResponse,graduatedNoise,energyHorizon,turnSearch,limit=200}={}){
+function driveSide(initial,{side=1,level=3,personality='balanced',seed=1,planning,evolutionTempo,prizeRace,knockoutTempo,opponentResponse,graduatedNoise,energyHorizon,turnSearch,actionDiscipline,limit=200}={}){
  let game=initial,steps=0;const commands=[],memo={trainers:0,powers:0,powerKeys:new Set(),stadium:false};
  while(!game.over&&steps<limit){
   const beforeTurn=game.turnSerial;
-  const next=chooseAction(game,{side,level,personality,seed,planning,evolutionTempo,prizeRace,knockoutTempo,opponentResponse,graduatedNoise,energyHorizon,turnSearch},memo);
+  const next=chooseAction(game,{side,level,personality,seed,planning,evolutionTempo,prizeRace,knockoutTempo,opponentResponse,graduatedNoise,energyHorizon,turnSearch,actionDiscipline},memo);
   if(!next){
    if(game.pendingDecision?.actor===side)throw Error('CPU unresolved choice: '+JSON.stringify({decision:game.pendingDecision,pendingAction:game.pendingAction}));
    break;
