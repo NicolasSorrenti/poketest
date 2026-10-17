@@ -92,13 +92,25 @@
         <div id="storyEvents" class="event-list"></div>
       </section>
       <section class="side-section">
+        <div class="sidebar-title"><span>🏆 TOURNAMENT CIRCUIT</span><small>LIVE BRACKETS</small></div>
+        <div id="circuitPanel"></div>
+      </section>
+      <section class="side-section">
         <div class="sidebar-title"><span>YOUR DAY</span><small>⏳ = USES TIME</small></div>
         <div id="activities" class="activity-list"></div>
+      </section>
+      <section class="side-section">
+        <div class="sidebar-title"><span>◈ COLLECTION & SHOP</span><small>OWNED CARDS</small></div>
+        <div id="collectionPanel"></div>
       </section>
       <section class="side-section">
         <div class="sidebar-title"><span>YOUR DECK</span><small>CHOOSE FOR NEXT DUEL</small></div>
         <label class="decklabel" for="deckPicker">ACTIVE 60-CARD DECK</label>
         <select id="deckPicker"></select>
+      </section>
+      <section class="side-section">
+        <div class="sidebar-title"><span>TOWN BULLETIN</span><small>THE WORLD MOVES ON</small></div>
+        <div id="townBulletin"></div>
       </section>
       <section class="side-section">
         <div class="sidebar-title"><span>SEASON JOURNAL</span><small>NO SPOILERS</small></div>
@@ -117,6 +129,28 @@
  <div id="calendarEntries"></div>
 </dialog>
 
+<dialog id="marketDialog" class="modal market-dialog">
+ <div class="modal-heading"><h2>◈ Card Shop & Deck Workshop</h2><button id="marketClose" type="button">✕ Close</button></div>
+ <p>Your RPG collection uses actual card IDs. Shopping costs credits; browsing costs no time.</p>
+ <div id="marketStatus" role="status" aria-live="polite"></div>
+ <div class="market-section" id="marketShop">
+  <h3>Today's cards</h3>
+  <button id="marketBuyPack" type="button" class="time-advance">Open an 8-card bundle · 18 credits</button>
+  <div id="packReveal"></div><div id="marketSingles"></div>
+ </div>
+ <div class="market-section">
+  <h3>Your 60-card deck <span id="draftCount"></span></h3>
+  <p>Add only cards you own; Basic Energy is exempt from the four-copy limit.</p>
+  <button id="marketSaveDeck" type="button" class="time-advance">Save collection deck</button><div id="marketCards"></div>
+ </div>
+</dialog>
+<dialog id="finaleDialog" class="modal finale-dialog">
+ <div class="modal-heading"><h2 id="finaleTitle">The Season Ends</h2><button id="finaleClose" type="button">✕ Close</button></div>
+ <p id="finaleCompetitive"></p><p id="finaleRelationship"></p>
+ <h3 id="finaleQuestion">What comes next?</h3><div id="finaleChoices"></div>
+ <p id="finaleClosing"></p>
+ <button id="finaleNewGame" class="time-advance" type="button" hidden>New Game+ · Retain your cards</button>
+</dialog>
 <div id="duel" hidden>
  <div class="duelhead"><strong>NEO CAMPUS · OFFICIAL TCG DUEL ENGINE</strong><span>The RPG clock advances after the match finishes.</span></div>
  <iframe id="battle" title="Neo Campus TCG Duel"></iframe>
@@ -124,6 +158,10 @@
 
 <script src="/rpg_story.js"></script>
 <script src="/rpg_duel_bridge.js"></script>
+<script src="/rpg_world.js"></script>
+<script src="/rpg_circuit.js"></script>
+<script src="/rpg_market.js"></script>
+<script src="/rpg_finale.js"></script>
 <script src="/rpg.js"></script>
 </body>
 </html>
