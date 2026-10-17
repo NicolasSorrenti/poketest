@@ -33,23 +33,33 @@ The RPG/VN agent owns `rpg.js`, `rpg_story.js`, `rpg_schedules.js`, `rpg_world.j
 - Rivalry scenes appear in the existing Story Opportunities panel, preserving established travel/time and dialogue UX. Declining the optional challenge is free and permits trying again while its window remains open.
 - Added `tests/rpg_rival_arc.test.js`, UI tests for route progression, a real bridged duel, and mid-dialogue save/reload, and an RPG-specific GitHub Actions workflow `.github/workflows/rpg-regression.yml`.
 
+### 0.7: Real player tournament brackets — THIS MILESTONE
+- `rpg_tournaments.js`: fixed Day 30, Day 60 and Day 90 **eight-entrant single-elimination** cup structures. Three rounds of **real, authoritative Classic CPU duels** decide the player path. Other entrants' matches are deterministically simulated offscreen and recorded (this is not full TCG CPU-vs-CPU simulation).
+- Neighborhood Cup, Regional Qualifier and Championship Finale now require winning actual bracket matches for championship trophies; earlier single-match exhibition rewards remain unchanged.
+- **Optional qualification**: circuit points, local reputation, previous cup success or a paid wildcard offer routes into later tournaments. No mandatory story route gates progress.
+- State fields `tournamentSessions` and `activeTournament` extend the same browser save key. Round, opponent, player results, NPC fixtures, trophy and entry fee survive reload.
+- The bracket occupies **one total time period**; between rounds the town clock intentionally pauses, navigation/deck switching is locked and a dedicated "Next round" control remains enabled. Defeat ends the run, a draw replays the round, and the final result advances the time by one period. Double notifications cannot reapply rewards.
+- New live `#bracketPanel` displays each opponent and round state, plus qualification/entry requirements. Added all client/server script links.
+- 10 dedicated tournament-domain tests and 3 new browser-controller roundtrip tests; `npm run test:rpg` now includes them. Extended the HTTP regression suite to ensure all RPG public modules can be served.
+
 ## Tests and QA
 - Added `tests/rpg_world.test.js` (11 tests), `tests/rpg_world_ui.test.js` (8 controller smoke tests) and `tests/rpg_rival_arc.test.js` (10 route tests).
-- `npm run test:rpg` runs 40 focused regression tests including the existing 11 story/schedule checks; `.github/workflows/rpg-regression.yml` now runs it on relevant PRs and main pushes.
-- **40/40 focused scenarios passed**, first in isolated JavaScript execution and then in the **native Node GitHub Actions RPG Regression Suite** on PR #15. All four rival episode windows and all 16 optional encounter windows are reachable; DOM IDs, script serving and save flows were checked.
-- The broader **Node regression**, **RPG Chromium smoke** and **TCG Gameplay Regression** checks on PR #15 also passed after modernizing the legacy RPG flow/save test fixtures to load the real set of client modules.
+- `npm run test:rpg` runs 53 focused regression tests including the existing 11 story/schedule checks; `.github/workflows/rpg-regression.yml` now runs it on relevant PRs and main pushes.
+- **53/53 focused tests passed in the native GitHub Actions RPG Regression Suite**, in addition to isolated JavaScript checks, first in isolated JavaScript execution and then in the **native Node GitHub Actions RPG Regression Suite** on PR #15. All four rival episode windows and all 16 optional encounter windows are reachable; DOM IDs, script serving and save flows were checked.
+- The **Node regression**, **RPG Chromium smoke**, **TCG Gameplay Regression** and **RPG Regression Suite** workflows all passed for PR #16 on the tournament code.
 - Follow-up testing: a longer manual/Render playthrough across 90 days, mobile touch and narrow-screen usability, several live completed duels in varied locations, and confirming production art is installed where the browser expects it.
 
 ## Integration contracts
-- The browser loads `rpg_story.js` → `rpg_schedules.js` → `rpg_world.js` → `rpg_rival_arc.js` → `rpg_duel_bridge.js` → `rpg.js`.
+- The browser loads `rpg_story.js` → `rpg_schedules.js` → `rpg_world.js` → `rpg_rival_arc.js` → `rpg_tournaments.js` → `rpg_duel_bridge.js` → `rpg.js`.
 - `NeoRpgWorld`: `hydrate(state)`, `activitiesAt(state)`, `doActivity(state,id,people)`, `availableEncounters(state,people)`, `completeEncounter(state,id,index,people)`, `newDay(state,days)`, `afterDuel(state,receipt)`, `validate()`.
 - `NeoRpgRivalArc`: `hydrate(state)`, `available(state,people)`, `linesFor(state,id)`, `finish(state,id,index,people)`, `settleDuel(state,id,receipt)`, `validate()`. Trials store `arcEpisode` on the pending Classic duel; its authoritative result is applied once before the RPG clock advances.
+- `NeoRpgTournaments`: `cupForDay(day)`, `entry(state,id)`, `begin(state,id)`, `active(state)`, `nextMatch(state)`, `settle(state,receipt,duel)`, `hydrate(state)`, `validate()`. A pending tournament duel carries `tournamentId` and `tournamentRound`; the bridge receipt is applied to the session before the town clock advances. Competition NPC matches outside the player path are saved rating-based simulations, not calls to the TCG engine.
 - World functions mutate only the RPG save object; the controller advances the clock afterward. For NPC bond changes, `relationships` and legacy `bonds` are updated consistently.
 - All dialogue and custom event IDs are fixed ASCII strings. No copyrighted Tag Force content or external sprites were added.
 
 ## Prioritized continuation
 1. Extend the verified optional character-specific duel-and-choice episode format to the other seven heroines, preserving their established personalities and existing route events.
-2. Improve chapter milestones and actual in-game tournament brackets with bracket progress based on authoritative duel results, not automatic awards.
+2. Expand tournament presentation (full NPC bracket map, standings, seasonal circuit leaderboard) and eventually replace offscreen NPC result simulation with actual CPU-vs-CPU game execution where feasible.
 3. Introduce a persistent card collection/shop inventory economy and deck legality integration with the existing TCG deck APIs.
 4. Complete personal and campaign endings, plus a replay/NG+ flow.
 5. Keep expanding tests (especially browser/Render end-to-end); coordinate shared `server.js` and `package.json` edits with other agents.

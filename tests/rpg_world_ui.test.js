@@ -2,7 +2,7 @@
 const test=require('node:test');
 const assert=require('node:assert/strict');
 const fs=require('node:fs'),path=require('node:path');
-const Story=require('../rpg_story'),Schedules=require('../rpg_schedules'),World=require('../rpg_world'),Arc=require('../rpg_rival_arc'),Bridge=require('../rpg_duel_bridge');
+const Story=require('../rpg_story'),Schedules=require('../rpg_schedules'),World=require('../rpg_world'),Arc=require('../rpg_rival_arc'),Tournaments=require('../rpg_tournaments'),Bridge=require('../rpg_duel_bridge');
 const js=fs.readFileSync(path.join(__dirname,'..','rpg.js'),'utf8');
 const html=fs.readFileSync(path.join(__dirname,'..','rpg.html'),'utf8');
 const ids=[...html.matchAll(/id="([^"]+)"/g)].map(x=>x[1]);
@@ -27,7 +27,7 @@ function launch(initial){
  const doc={getElementById(id){if(!elements[id])throw Error('Missing '+id);return elements[id];},
   createElement(tag){return new FakeNode(tag);},body:new FakeNode('body'),
   addEventListener(name,cb){listeners['document:'+name]=cb;}};
- const win={NeoHarborStory:Story,NeoRpgSchedules:Schedules,NeoRpgWorld:World,NeoRpgRivalArc:Arc,NeoRpgDuelBridge:Bridge,
+ const win={NeoHarborStory:Story,NeoRpgSchedules:Schedules,NeoRpgWorld:World,NeoRpgRivalArc:Arc,NeoRpgTournaments:Tournaments,NeoRpgDuelBridge:Bridge,
   addEventListener(name,cb){listeners[name]=cb;}};
  const local={getItem(k){return saved[k]||null;},setItem(k,v){saved[k]=String(v);}};
  const session={removeItem(){}};
@@ -149,4 +149,64 @@ test('in-progress rivalry dialogue resumes at the same line after save and reloa
  assert.ok(restored.elements.line.textContent.includes('match'));
  restored.elements.choices.children[0].onclick();
  assert.equal(restored.state().activeArc.index,2);
+});
+
+
+test('Neighborhood Cup plays a real three-round bracket while freezing the clock until completion',()=>{
+ const r=launch({day:30,slot:1,location:'center',points:10});
+ const entry=r.elements.activities.children.find(x=>x.textContent.includes('Enter Neighborhood Cup'));
+ assert.ok(entry);assert.notEqual(entry.disabled,true);entry.onclick();
+ assert.equal(r.state().activeTournament,'neighborhood');
+ assert.equal(r.state().tournamentSessions.neighborhood.round,0);
+ assert.equal(r.elements.quickHome.disabled,true);
+ for(let round=0;round<3;round++){
+  const button=r.elements.activities.children.find(x=>x.textContent.includes('Play bracket round'));
+  assert.ok(button,'Next-round action must remain available between matches');
+  assert.equal(button.disabled,false);
+  button.onclick();
+  const duel=r.state().pendingDuel;assert.ok(duel);
+  assert.equal(duel.tournamentRound,round);
+  assert.equal(duel.tournamentId,'neighborhood');
+  const event={data:Bridge.message(duel.id,0),origin:r.loc.origin,source:r.elements.battle.contentWindow};
+  r.listeners.message(event);
+  assert.equal(r.state().tournamentSessions.neighborhood.matches.length,round+1);
+  if(round<2){assert.equal(r.state().day,30);assert.equal(r.state().slot,1);}
+ }
+ const s=r.state();
+ assert.equal(s.tournamentSessions.neighborhood.outcome,'champion');
+ assert.equal(s.activeTournament,null);
+ assert.equal(s.day,30);assert.equal(s.slot,2);
+ assert.equal(s.eventsDone['30:Neighborhood Cup'].won,true);
+ assert.ok(s.points>=25);
+});
+
+test('a single real loss eliminates the player and commits a time period only once',()=>{
+ const r=launch({day:30,slot:1,location:'center'});
+ const entry=r.elements.activities.children.find(x=>x.textContent.includes('Enter Neighborhood Cup'));
+ assert.ok(entry);entry.onclick();
+ r.elements.activities.children.find(x=>x.textContent.includes('Play bracket round')).onclick();
+ const duel=r.state().pendingDuel;
+ const result={data:Bridge.message(duel.id,1),origin:r.loc.origin,source:r.elements.battle.contentWindow};
+ r.listeners.message(result);
+ assert.equal(r.state().tournamentSessions.neighborhood.outcome,'eliminated');
+ assert.equal(r.state().activeTournament,null);
+ assert.equal(r.state().slot,2);
+ r.listeners.message(result);
+ assert.equal(r.state().results.length,1);
+});
+
+test('saved tournament round resumes with the same next challenger',()=>{
+ const r=launch({day:30,slot:1,location:'center'});
+ r.elements.activities.children.find(x=>x.textContent.includes('Enter Neighborhood Cup')).onclick();
+ r.elements.activities.children.find(x=>x.textContent.includes('Play bracket round')).onclick();
+ const duel=r.state().pendingDuel;
+ r.listeners.message({data:Bridge.message(duel.id,0),origin:r.loc.origin,source:r.elements.battle.contentWindow});
+ const state=r.state();assert.equal(state.tournamentSessions.neighborhood.round,1);
+ const restored=launch(state);
+ assert.equal(restored.state().activeTournament,'neighborhood');
+ assert.equal(restored.elements.quickNext.disabled,true);
+ const action=restored.elements.activities.children.find(x=>x.textContent.includes('Play bracket round'));
+ assert.ok(action);action.onclick();
+ assert.equal(restored.state().pendingDuel.tournamentRound,1);
+ assert.equal(restored.state().pendingDuel.npc,state.tournamentSessions.neighborhood.opponents[1]);
 });

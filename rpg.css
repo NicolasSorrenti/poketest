@@ -49,3 +49,15 @@
 .arc-episode{background:linear-gradient(110deg,#5e3038,#242844);border-color:#f0a887;box-shadow:inset 3px 0 0 #f3bd91}
 .arc-episode strong{font:800 15px 'Barlow Condensed',sans-serif;color:#ffdfbb}
 .arc-episode small{font:500 11px 'Inter',sans-serif;color:#e4bcaa;margin-top:5px}
+
+/* Player-facing tournament bracket, adjacent to existing circuit actions */
+.bracket-section{border-left:2px solid #dfb476;padding-left:10px}
+.bracket-panel{display:grid;gap:8px;background:linear-gradient(135deg,#1d263b,#161d2e);padding:12px;border:1px solid #625373;border-radius:9px}
+.bracket-heading{font:800 17px 'Barlow Condensed',sans-serif;letter-spacing:.5px;color:#ffd9a6}
+.bracket-round{border:1px solid #4b4c69;border-radius:7px;padding:9px;background:#22283d;font:700 12px 'Barlow Condensed',sans-serif;color:#c6d0de}
+.bracket-round.current{border-color:#e7b57d;background:#5e4351;color:#fff;box-shadow:0 0 12px #d7997030}
+.bracket-panel small{font:500 10px/1.5 'Inter',sans-serif;color:#b8b9c9}
+.bracket-summary{font:700 12px/1.6 'Barlow Condensed',sans-serif;color:#e7dbd0}
+.activity.tournament-next{border:1px solid #eabc79;background:linear-gradient(100deg,#78504f,#41324e);color:#fff;font-weight:800;box-shadow:0 0 12px #db926a38}
+.activity.tournament-next:hover{background:#8d5c62;border-color:#ffd098}
+@media(max-width:700px){.bracket-section{border-left:0;padding-left:2px}}

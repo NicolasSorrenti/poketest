@@ -1,6 +1,6 @@
 'use strict';
 (()=>{
-const $=id=>document.getElementById(id),KEY='neoHarborRpgV1',STORY=window.NeoHarborStory,SCHEDULES=window.NeoRpgSchedules,WORLD=window.NeoRpgWorld,ARC=window.NeoRpgRivalArc,BRIDGE=window.NeoRpgDuelBridge;
+const $=id=>document.getElementById(id),KEY='neoHarborRpgV1',STORY=window.NeoHarborStory,SCHEDULES=window.NeoRpgSchedules,WORLD=window.NeoRpgWorld,ARC=window.NeoRpgRivalArc,TOURN=window.NeoRpgTournaments,BRIDGE=window.NeoRpgDuelBridge;
 const periods=['Morning','Afternoon','Evening'];
 const places={
  home:['Your Apartment','Your base during the championship season.'],
@@ -21,12 +21,12 @@ const cast={
  marina:{name:'Marina Aoki',age:21,deck:'water_blast',style:'Rain Dance · Setup',locs:['park','cafe'],slots:[0,2],days:[0,2,3,5,6],intro:'Oh, hello. There is usually room for one more along the water.',repeat:'It is nice to see you again. The river is particularly beautiful today.',talk:['Some decks need time before you see what they can really do.','I like coming here when the competition becomes too loud.','I keep telling myself that tomorrow is a good day to try something new.'],flirt:'That is a wonderful thing to say. Thank you.',duelWin:'You played beautifully. I enjoyed watching your plan come together.',duelLose:'Maybe patience really is worth something after all.'},
  kaede:{name:'Kaede Arashi',age:22,deck:'rocket_lab',style:'Dark Pokémon · Disruption',locs:['arcade','center','park'],slots:[1,2],days:[0,1,3,4,6],start:40,intro:'So you are the local hotshot? Cute town you have here.',repeat:'Still trying to figure me out? Keep trying.',talk:['Reputations are just stories that got repeated too many times.','I came here for strong opponents, not polite applause.','Sometimes the best move is the one nobody expects you to make.'],flirt:'Heh. You are going to be trouble, aren’t you?',duelWin:'Not bad. You might actually be fun.',duelLose:'That expression on your face? Worth the trip.'}
 };
-const eventCards=[{day:7,slot:1,place:'arcade',title:'Arcade Friendly Cup',reward:7},{day:14,slot:1,place:'center',title:'Club Exhibition',reward:9},{day:21,slot:2,place:'shop',title:'Card Shop Night',reward:8},{day:30,slot:1,place:'center',title:'Neighborhood Cup',reward:15},{day:42,slot:1,place:'arcade',title:'Open Challenge',reward:10},{day:60,slot:1,place:'center',title:'Regional Qualifier',reward:22},{day:75,slot:2,place:'shop',title:'Final Practice Meet',reward:12},{day:88,slot:1,place:'center',title:'Championship Opening',reward:20},{day:90,slot:1,place:'center',title:'Championship Finale Exhibition',reward:25}];
+const eventCards=[{day:7,slot:1,place:'arcade',title:'Arcade Friendly Cup',reward:7},{day:14,slot:1,place:'center',title:'Club Exhibition',reward:9},{day:21,slot:2,place:'shop',title:'Card Shop Night',reward:8},{day:30,slot:1,place:'center',title:'Neighborhood Cup',reward:15},{day:42,slot:1,place:'arcade',title:'Open Challenge',reward:10},{day:60,slot:1,place:'center',title:'Regional Qualifier',reward:22},{day:75,slot:2,place:'shop',title:'Final Practice Meet',reward:12},{day:88,slot:1,place:'center',title:'Championship Opening',reward:20},{day:90,slot:1,place:'center',title:'Championship Finale',reward:30}];
 
 
 function eligibleStories(){return STORY.available(state);}
 function startStory(id){
- if(state.activeStory||state.activeEncounter||state.activeArc||state.pendingDuel)return;
+ if(state.activeStory||state.activeEncounter||state.activeArc||state.activeTournament||state.pendingDuel)return;
  const e=eligibleStories().find(e=>e.id===id);if(!e)return;
  state.selected=e.npc;state.activeStory={id:e.id,phase:'lines',index:0,choice:null};persist();render();
 }
@@ -68,7 +68,7 @@ function finishStory(){
 
 function timeFlash(beforeDay,beforeSlot){const overlay=document.createElement('div');overlay.className='notice-pop';const heading=document.createElement('b');heading.textContent=state.day>90?'Season complete':state.day!==beforeDay?'A NEW DAY BEGINS':'TIME PASSES';const body=document.createElement('span');body.textContent=state.day>90?'Day 90 has ended.':('Day '+state.day+' · '+periods[state.slot]);overlay.append(heading,body);document.body.append(overlay);overlay.addEventListener('animationend',()=>overlay.remove());}
 
-function defaults(){return {day:1,slot:0,location:'home',metReina:false,reinaTrust:0,reinaDuels:0,results:[],flags:{intro:false},journal:['The 90-day season begins.'],pendingDuel:null,bonds:{},talked:{},hungOut:{},eventsDone:{},points:0,credits:80,playerDeck:'blackout',selected:null,ended:false,storyDone:{},storyMissed:{},relationships:{},routeOutcomes:{},partner:null,activeStory:null,activeEncounter:null,activeArc:null,arcFlags:{},arcOutcomes:{},activityDone:{},encountersDone:{},focus:75,insight:0,reputation:0,preparation:0,lastDuelReceipt:null,scene:null}}
+function defaults(){return {day:1,slot:0,location:'home',metReina:false,reinaTrust:0,reinaDuels:0,results:[],flags:{intro:false},journal:['The 90-day season begins.'],pendingDuel:null,bonds:{},talked:{},hungOut:{},eventsDone:{},points:0,credits:80,playerDeck:'blackout',selected:null,ended:false,storyDone:{},storyMissed:{},relationships:{},routeOutcomes:{},partner:null,activeStory:null,activeEncounter:null,activeArc:null,arcFlags:{},arcOutcomes:{},tournamentSessions:{},activeTournament:null,activityDone:{},encountersDone:{},focus:75,insight:0,reputation:0,preparation:0,lastDuelReceipt:null,scene:null}}
 let state;try{state=JSON.parse(localStorage.getItem(KEY))||defaults();if(!Number.isInteger(state.day)||state.day<1||state.day>91)throw Error('Invalid save');}catch{state=defaults()}
 for(const [k,v] of Object.entries(defaults()))if(state[k]===undefined)state[k]=v;
 if(!places[state.location])state.location='home';
@@ -80,6 +80,7 @@ for(const id of Object.keys(cast)){if(!state.bonds[id])state.bonds[id]={affectio
 STORY.normalize(state);
 WORLD.hydrate(state);
 ARC.hydrate(state);
+TOURN.hydrate(state);
 for(const id of Object.keys(cast)){const old=state.bonds[id],current=state.relationships[id];
  if(!state.flags['newStoryMigrated_'+id]){for(const key of ['affection','trust','duels'])current[key]=Math.max(current[key]||0,old[key]||0);
  state.flags['newStoryMigrated_'+id]=true;}
@@ -99,7 +100,7 @@ function say(speaker,line,choices=[]){scene={speaker,line,choices};state.scene=s
 function currentPeople(){if(state.day>90)return [];const regular=SCHEDULES.peopleAt(state.day,state.slot,state.location,eligibleStories());
 for(const e of eligibleStories())if(!regular.includes(e.npc))regular.push(e.npc);
 return regular;}
-function selectPerson(id){if(state.activeStory||state.activeEncounter||state.activeArc||!cast[id]||!currentPeople().includes(id))return;const c=cast[id],first=!state['met_'+id]&&!((id==='reina')&&state.metReina);state['met_'+id]=true;if(id==='reina')state.metReina=true;state.selected=id;persist();say(c.name,first?c.intro:c.repeat,options(id));}
+function selectPerson(id){if(state.activeStory||state.activeEncounter||state.activeArc||state.activeTournament||!cast[id]||!currentPeople().includes(id))return;const c=cast[id],first=!state['met_'+id]&&!((id==='reina')&&state.metReina);state['met_'+id]=true;if(id==='reina')state.metReina=true;state.selected=id;persist();say(c.name,first?c.intro:c.repeat,options(id));}
 function options(id){const key=atKey(id),spentToday=!!state.hungOut[state.day+':'+id];return [
  ['Ask about their routine · free','where:'+id],
  [state.talked[key]?'Talk again · free (bond already earned)':'Talk · free · +1 affection','talk:'+id],
@@ -118,7 +119,7 @@ function showEncounter(){
  return {speaker:name,line:decision.reply,choices:[['Continue · ⏳ 1 period','encounterFinish']]};
 }
 function startEncounter(id){
- if(state.activeStory||state.activeEncounter||state.activeArc||state.pendingDuel||state.day>90)return;
+ if(state.activeStory||state.activeEncounter||state.activeArc||state.activeTournament||state.pendingDuel||state.day>90)return;
  const e=WORLD.availableEncounters(state,currentPeople()).find(x=>x.id===id);if(!e)return;
  state.activeEncounter={id,phase:'choice',choice:null};state.selected=e.npc||null;persist();render();
 }
@@ -140,7 +141,7 @@ function finishEncounter(){
  say(e.npc?cast[e.npc].name:'Narrator',report.summary);
 }
 function performActivity(id){
- if(state.activeStory||state.activeEncounter||state.activeArc||state.pendingDuel||state.day>90)return;
+ if(state.activeStory||state.activeEncounter||state.activeArc||state.activeTournament||state.pendingDuel||state.day>90)return;
  let result;try{result=WORLD.doActivity(state,id,currentPeople());}
  catch(err){$('notice').textContent=err.message;return;}
  const place=state.location;
@@ -150,7 +151,7 @@ function performActivity(id){
 
 
 function startArc(id){
- if(state.activeStory||state.activeEncounter||state.activeArc||state.pendingDuel||state.day>90)return;
+ if(state.activeStory||state.activeEncounter||state.activeArc||state.activeTournament||state.pendingDuel||state.day>90)return;
  const e=ARC.available(state,currentPeople()).find(x=>x.id===id);if(!e)return;
  state.activeArc={id,phase:'lines',index:0,choice:null};state.selected='reina';persist();render();
 }
@@ -197,6 +198,21 @@ function finishArc(){
  say(cast.reina.name,report.text);
 }
 
+
+function enterTournament(id){
+ if(state.activeStory||state.activeEncounter||state.activeArc||state.activeTournament||state.pendingDuel||state.day>90)return;
+ let session;try{session=TOURN.begin(state,id);}
+ catch(err){$('notice').textContent=err.message;return;}
+ const cup=TOURN.cups.find(x=>x.id===id);
+ log('Entered the '+cup.title+' bracket.');
+ persist();say('Tournament Board',cup.title+': your eight-player bracket has been drawn. Your opening opponent is '+cast[session.opponents[0]].name+'. Win to advance; a loss ends your run. The session uses one time period in total.');
+}
+function nextTournamentRound(){
+ const next=TOURN.nextMatch(state);
+ if(!next||state.pendingDuel||state.activeStory||state.activeEncounter||state.activeArc)return;
+ startDuel(next.opponent,null,null,next.tournamentId);
+}
+
 function scheduleEvent(){return eventCards.find(e=>e.day===state.day&&e.slot===state.slot&&e.place===state.location&&!state.eventsDone[e.day+':'+e.title]);}
 function act(action){
  const [type,id]=action.split(':');
@@ -208,7 +224,8 @@ function act(action){
  if(type==='arcNext')return advanceArc();
  if(type==='arcChoice')return chooseArc(id);
  if(type==='arcFinish')return finishArc();
- if(state.activeStory||state.pendingDuel||state.activeEncounter||state.activeArc)return;
+ if(type==='tournamentNext')return nextTournamentRound();
+ if(state.activeStory||state.pendingDuel||state.activeEncounter||state.activeArc||state.activeTournament)return;
  if(type==='arc')return startArc(id);
  if(type==='encounter')return startEncounter(id);
  if(type==='townActivity')return performActivity(id);
@@ -218,7 +235,7 @@ function act(action){
  if(type==='sleep'){if(state.location!=='home')return;const n=3-state.slot;advance(n);return say('Narrator','You wake up to a new day in Neo Harbor.');}
  if(type==='close'){state.selected=null;persist();return say('Narrator','The town has a rhythm of its own. You are beginning to hear it.');}
  if(type==='duel')return startDuel(id||state.selected,false);
- if(type==='event'){const e=scheduleEvent();if(!e)return;const opponents={7:'yuna',14:'reina',21:'hana',30:'reina',42:'kaede',60:'akari',75:'camila',88:'reina',90:'shiori'};return startDuel(opponents[e.day]||'reina',e);}
+ if(type==='event'){const e=scheduleEvent();if(!e)return;const cup=TOURN.cupForDay(e.day);if(cup)return enterTournament(cup.id);const opponents={7:'yuna',14:'reina',21:'hana',42:'kaede',75:'camila',88:'reina'};return startDuel(opponents[e.day]||'reina',e);}
  if(type==='work')return performActivity('shop_shift');
  if(type==='practice')return state.location==='library'?performActivity('library_research'):state.location==='center'?performActivity('center_scrimmage'):performActivity('home_reflect');
  if(type==='rest'){if(state.day>90)return;advance();return say('Narrator','You take a break. Other lives in the town carry on.');}
@@ -230,27 +247,51 @@ function act(action){
  if(type==='hang'){if(state.hungOut[state.day+':'+id])return say(c.name,'I enjoyed our time today. Let us make plans another day.',options(id));state.hungOut[state.day+':'+id]=true;bond.affection+=2;bond.trust++;state.relationships[id].affection+=2;state.relationships[id].trust++;log('Spent time with '+c.name+'.');advance();state.selected=null;return say(c.name,'That was a lovely way to spend part of the day. See you around.');}
 }
 function duelUrl(duel){return '/classic_live.html?rpg=1&duelId='+encodeURIComponent(duel.id)+'&deck='+encodeURIComponent(duel.playerDeck)+'&opponent='+encodeURIComponent(duel.opponent);}
-function startDuel(id,exhibition=null,arcEpisode=null){
- if(state.activeStory||state.activeEncounter||(state.activeArc&&state.activeArc.id!==arcEpisode)||state.pendingDuel||state.day>90||!cast[id]||(!exhibition&&!currentPeople().includes(id)))return;
+function startDuel(id,exhibition=null,arcEpisode=null,tournamentId=null){
+ const activeBracket=TOURN.active(state);
+ if(state.activeStory||state.activeEncounter||(state.activeArc&&state.activeArc.id!==arcEpisode)||state.pendingDuel||state.day>90||!cast[id]
+   ||(activeBracket&&activeBracket.id!==tournamentId)||(!exhibition&&!tournamentId&&!currentPeople().includes(id)))return;
  if(arcEpisode&&(!state.activeArc||state.activeArc.phase!=='choice'||!ARC.available(state,currentPeople()).some(e=>e.id===arcEpisode)))return;
+ const next=tournamentId?TOURN.nextMatch(state):null;
+ if(tournamentId&&(!next||next.tournamentId!==tournamentId||next.opponent!==id))return;
  const c=cast[id];
- state.pendingDuel={id:'npc-'+id+'-'+state.day+'-'+state.slot+'-'+state.results.length,npc:id,day:state.day,slot:state.slot,opponent:c.deck,playerDeck:state.playerDeck,resolved:false,eventKey:exhibition?exhibition.day+':'+exhibition.title:null,eventReward:exhibition?exhibition.reward:0,eventTitle:exhibition?exhibition.title:null,arcEpisode:arcEpisode||null};
+ state.pendingDuel={id:'npc-'+id+'-'+state.day+'-'+state.slot+'-'+state.results.length,
+  npc:id,day:state.day,slot:state.slot,opponent:c.deck,playerDeck:state.playerDeck,resolved:false,
+  eventKey:exhibition?exhibition.day+':'+exhibition.title:null,
+  eventReward:exhibition?exhibition.reward:0,eventTitle:exhibition?exhibition.title:null,
+  arcEpisode:arcEpisode||null,tournamentId:tournamentId||null,tournamentRound:next?next.round:null};
  if(arcEpisode)state.activeArc=null;
  persist();render();$('duel').hidden=false;$('battle').src=duelUrl(state.pendingDuel);
 }
 window.addEventListener('message',ev=>{
  const duel=state.pendingDuel;
  if(!BRIDGE.accepts(ev,location.origin,$('battle').contentWindow,duel))return;
+ if(duel.tournamentId){
+  const expected=TOURN.nextMatch(state);
+  if(!expected||expected.tournamentId!==duel.tournamentId||expected.round!==duel.tournamentRound||expected.opponent!==duel.npc)return;
+ }
  const receipt=BRIDGE.settle(state,duel,ev.data.winner,cast[duel.npc].name);
  if(!receipt)return;
  for(const note of receipt.notes)log(note);
  const preparationNote=WORLD.afterDuel(state,receipt);if(preparationNote)log(preparationNote);
  const personalOutcome=duel.arcEpisode?ARC.settleDuel(state,duel.arcEpisode,receipt):null;
  if(personalOutcome)log('A special rivalry challenge reached its result.');
+ const bracketProgress=duel.tournamentId?TOURN.settle(state,receipt,duel):null;
+ if(bracketProgress){
+  log(bracketProgress.message);
+  if(bracketProgress.bonusPoints||bracketProgress.bonusCredits){
+   receipt.points+=bracketProgress.bonusPoints||0;
+   receipt.credits+=bracketProgress.bonusCredits||0;
+   receipt.tournamentBonus=bracketProgress.bonusPoints||0;
+  }
+ }
  state.lastDuelReceipt=receipt;state.pendingDuel=null;
  sessionStorage.removeItem(BRIDGE.sessionKey(duel.id));
- advance();$('duel').hidden=true;$('battle').src='about:blank';
- const c=cast[duel.npc];say(c.name,personalOutcome|| (receipt.outcome==='Victory'?c.duelWin:receipt.outcome==='Draw'?'A hard-fought draw. Let us play again.':c.duelLose));
+ const inProgress=bracketProgress&&(bracketProgress.status==='next'||bracketProgress.status==='draw');
+ if(!inProgress)advance();else {state.selected=null;persist();}
+ $('duel').hidden=true;$('battle').src='about:blank';
+ const c=cast[duel.npc];
+ say(bracketProgress?'Tournament Board':c.name,bracketProgress?bracketProgress.message:(personalOutcome|| (receipt.outcome==='Victory'?c.duelWin:receipt.outcome==='Draw'?'A hard-fought draw. Let us play again.':c.duelLose)));
 });
 function openCalendar(){
  const root=$('calendarEntries');root.replaceChildren();
@@ -267,12 +308,12 @@ function makeAvatar(id,size=''){
  return img;
 }
 function render(){
- const ended=state.day>90,locked=!!state.activeStory||!!state.activeEncounter||!!state.activeArc||!!state.pendingDuel;
+ const ended=state.day>90,locked=!!state.activeStory||!!state.activeEncounter||!!state.activeArc||!!state.activeTournament||!!state.pendingDuel;
  const receipt=state.lastDuelReceipt;
  $('duelReceipt').hidden=!receipt;
  if(receipt){
   $('receiptTitle').textContent=receipt.outcome.toUpperCase()+' · '+receipt.name;
-  $('receiptDetails').textContent='+'+receipt.points+' circuit points · +'+receipt.credits+' credits · +'+receipt.trust+' trust'+(receipt.bonus?' (includes +'+receipt.bonus+' exhibition points)':'')+(receipt.trainingBonus?' · +'+receipt.trainingBonus+' training credits':'')+' · Time advanced one period.';
+  $('receiptDetails').textContent='+'+receipt.points+' circuit points · +'+receipt.credits+' credits · +'+receipt.trust+' trust'+(receipt.bonus?' (includes +'+receipt.bonus+' exhibition points)':'')+(receipt.trainingBonus?' · +'+receipt.trainingBonus+' training credits':'')+(receipt.tournamentBonus?' · +'+receipt.tournamentBonus+' bracket points':'')+(state.activeTournament?' · Bracket session: town clock paused.':' · Time advanced one period.');
   $('duelReceipt').classList.toggle('is-victory',receipt.outcome==='Victory');
  }
  $('whereLabel').textContent=state.location==='home'?'⌂  YOU ARE HOME':'●  YOU ARE HERE';
@@ -282,7 +323,7 @@ function render(){
  $('chapterLabel').textContent='CHAPTER '+(state.day<=30?'I':state.day<=60?'II':'III')+' · '+(state.day<=30?'NEW FACES':state.day<=60?'RISING STAKES':'FINAL STRETCH');
  $('weekdayLabel').textContent=['MON','TUE','WED','THU','FRI','SAT','SUN'][(state.day-1)%7]+' · WEEK '+Math.ceil(Math.min(90,state.day)/7);
  $('campaignFill').style.width=Math.min(100,state.day/90*100)+'%';
- $('timeHint').textContent=state.slot===2?'Next time action starts a NEW DAY.':'Next: '+periods[state.slot+1]+' · ⏳';
+ $('timeHint').textContent=state.activeTournament?'TOURNAMENT IN PROGRESS · TOWN CLOCK PAUSED':state.slot===2?'Next time action starts a NEW DAY.':'Next: '+periods[state.slot+1]+' · ⏳';
  $('quickNext').textContent=state.slot===2?'☾ END DAY · ⏳':'▶ NEXT PERIOD · ⏳';
  $('quickNext').disabled=ended||locked;
  $('quickHome').disabled=locked||state.location==='home';
@@ -330,7 +371,7 @@ function render(){
   const label=document.createElement('strong');label.textContent=cast[id].name;
   const where=document.createElement('small');where.textContent='↗ '+places[place][0];
   button.append(label,where);button.title='Travel for free to '+places[place][0];
-  button.onclick=()=>{if(state.activeStory||state.activeEncounter||state.pendingDuel)return;state.location=place;state.selected=null;persist();say('Narrator','You head to '+places[place][0]+'. '+places[place][1]);};
+  button.onclick=()=>{if(state.activeStory||state.activeEncounter||state.activeArc||state.activeTournament||state.pendingDuel)return;state.location=place;state.selected=null;persist();say('Narrator','You head to '+places[place][0]+'. '+places[place][1]);};
   $('townRadar').append(button);
  }
  $('people').replaceChildren();
@@ -391,18 +432,50 @@ function render(){
   const note=document.createElement('p');note.className='empty-note';note.textContent='No special encounters here at this time.';$('townEncounters').append(note);
  }
 
+
+ $('bracketPanel').replaceChildren();
+ const bracket=TOURN.active(state);
+ const todayCup=TOURN.cupForDay(state.day);
+ if(bracket){
+  const cup=TOURN.cups.find(x=>x.id===bracket.id);
+  const head=document.createElement('strong');head.className='bracket-heading';head.textContent=cup.title+' · 8 entrants';
+  $('bracketPanel').append(head);
+  for(let i=0;i<3;i++){
+   const result=bracket.matches.filter(x=>x.round===i&&x.outcome!=='Draw').at(-1);
+   const row=document.createElement('div');row.className='bracket-round'+(i===bracket.round?' current':'');
+   const icon=result?(result.outcome==='Victory'?'✓':'✕'):i===bracket.round?'▶':'○';
+   row.textContent=icon+'  Round '+(i+1)+' — '+cast[bracket.opponents[i]].name;
+   $('bracketPanel').append(row);
+  }
+  const note=document.createElement('small');note.textContent='NPC matches are simulated offscreen. Your rounds use the actual Classic TCG engine. Time moves after the bracket ends.';$('bracketPanel').append(note);
+ }else if(todayCup&&state.day<=90&&!state.tournamentSessions[todayCup.id]){
+  const permit=TOURN.entry(state,todayCup.id);
+  const desc=document.createElement('div');desc.className='bracket-summary';desc.textContent=todayCup.title+' · Day '+todayCup.day+' · '+periods[todayCup.slot]+'. '+permit.reason;
+  $('bracketPanel').append(desc);
+ }else{
+  const completed=TOURN.cups.filter(c=>state.tournamentSessions[c.id]?.finished).at(-1);
+  const next=TOURN.cups.find(c=>c.day>state.day);
+  const text=document.createElement('p');text.className='empty-note';
+  text.textContent=completed?'Last cup: '+completed.title+' — '+(state.tournamentSessions[completed.id].outcome==='champion'?'Champion':'Eliminated')+'.':next?'Next major cup: '+next.title+' on Day '+next.day+'.':'No future major cups announced.';
+  $('bracketPanel').append(text);
+ }
+
  $('activities').replaceChildren();const e=scheduleEvent();
- const items=[...(e?[[e.title+' · ⏳ 1 period · +'+e.reward+' pts if you win','event']]:[]),
+ const bracketMatch=bracket?TOURN.nextMatch(state):null;
+ const scheduledCup=e?TOURN.cupForDay(e.day):null;
+ const entry=scheduledCup?TOURN.entry(state,scheduledCup.id):null;
+ const items=[...(bracketMatch?[['▶ Play bracket round '+(bracketMatch.round+1)+'/3 · '+cast[bracketMatch.opponent].name,'tournamentNext']]:
+ e?[[scheduledCup?'Enter '+scheduledCup.title+' · '+(entry?.cost?'Wildcard: '+entry.cost+' credits':'Qualified entry'):'Play '+e.title+' · ⏳ 1 period · +'+e.reward+' pts if you win','event']]:[]),
  [state.location==='home'?'Rest at home · ⏳ 1 period':'Wait one period · ⏳ 1 period','rest'],
  ...(state.location==='home'?[['Sleep until morning · ⏳ '+(3-state.slot)+' period(s)','sleep']]:[]),
  ['Calendar · free','calendar'],['New campaign','new']];
  for(const [label,action] of items){
-  const b=document.createElement('button');b.className='activity';b.textContent=label;b.disabled=(ended&&action!=='new'&&action!=='calendar')||(locked&&action!=='calendar');b.onclick=()=>act(action);$('activities').append(b);
+  const b=document.createElement('button');b.className='activity'+(action==='tournamentNext'?' tournament-next':'');b.textContent=label;b.disabled=(ended&&action!=='new'&&action!=='calendar')||(locked&&action!=='calendar'&&action!=='tournamentNext')||(action==='event'&&!!scheduledCup&&!entry.possible);if(action==='event'&&scheduledCup)b.title=entry.reason;b.onclick=()=>act(action);$('activities').append(b);
  }
  $('journal').replaceChildren();const stats=document.createElement('p');stats.className='stats';stats.textContent='🏆 '+state.points+' circuit points   ·   ◈ '+state.credits+' credits';$('journal').append(stats);
  for(const e of eventCards.filter(e=>e.day>=state.day).slice(0,2)){const p=document.createElement('p');p.textContent='DAY '+e.day+' · '+e.title+' ('+periods[e.slot]+')';$('journal').append(p)}
  for(const note of state.journal.slice(0,3)){const p=document.createElement('p');p.textContent='• '+note;$('journal').append(p)}
- $('notice').textContent=state.activeStory?'Story in progress: complete this scene to continue.':state.activeArc?'A private rivalry chapter is in progress.':state.activeEncounter?'Local encounter in progress — make your decision.':state.pendingDuel?'Your duel is in progress.':'Travel & talk are free · ⏳ actions advance time';
+ $('notice').textContent=state.activeStory?'Story in progress: complete this scene to continue.':state.activeArc?'A private rivalry chapter is in progress.':state.activeEncounter?'Local encounter in progress — make your decision.':state.pendingDuel?'Your duel is in progress.':state.activeTournament?'Bracket underway — complete your next match before leaving.':'Travel & talk are free · ⏳ actions advance time';
  $('deckPicker').disabled=locked||ended;
  if($('deckPicker')?.options.length)$('deckPicker').value=state.playerDeck;
 }
