@@ -478,6 +478,10 @@ const settings={level:3,personality:'balanced',side:1,seed:47};
  let retreat={type:'retreat',payload:{slot:0}};
  assert.ok(AI.prizeRaceBonus(retreat,o,race)>=100,
   'When the opponent needs one Prize, a safe retreat prevents a known loss');
+ o.opponent.active.status='Asleep';
+ assert.equal(AI.prizeRaceBonus(retreat,o,race),0,
+  'An Asleep enemy with a powered attack is not an immediate attack threat');
+ o.opponent.active.status=null;
  o.self.bench[0]={id:IDS.rat,damage:20,energies:[],status:null};
  assert.equal(AI.prizeRaceBonus(retreat,o,race),0,
   'Do not flee into another Pokémon that loses to the same public counterattack');
