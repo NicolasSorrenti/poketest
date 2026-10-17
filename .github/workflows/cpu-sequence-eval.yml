@@ -26,6 +26,8 @@ jobs:
       - run: node benchmark_cpu.js --pairs 40 --max-turns 120 --seed 441991 --left-level 5 --right-level 5 --left-trainer-tactics true --right-trainer-tactics false --left-deck zap --right-deck zap
       - run: node benchmark_cpu.js --pairs 40 --max-turns 120 --seed 541991 --left-level 5 --right-level 5 --left-trainer-tactics true --right-trainer-tactics false
       - run: node benchmark_cpu.js --pairs 40 --max-turns 120 --seed 641991 --left-level 5 --right-level 5 --left-trainer-tactics true --right-trainer-tactics false --left-deck brushfire --right-deck brushfire
+      - run: node benchmark_cpu.js --pairs 40 --max-turns 120 --seed 741991 --left-level 5 --right-level 5 --left-trainer-tactics true --right-trainer-tactics false --left-deck cold_fusion --right-deck cold_fusion
+      - run: node benchmark_cpu.js --pairs 40 --max-turns 120 --seed 841991 --left-level 5 --right-level 5 --left-trainer-tactics true --right-trainer-tactics false --left-deck hotfoot --right-deck hotfoot
       - run: node benchmark_cpu.js --pairs 40 --max-turns 120 --seed 62531 --left-level 5 --right-level 5 --left-turn-search true --right-turn-search false
       - run: node benchmark_cpu.js --pairs 30 --max-turns 120 --seed 72531 --left-level 5 --right-level 5 --left-turn-search true --right-turn-search false --left-deck brushfire --right-deck brushfire
       - run: node benchmark_cpu.js --pairs 30 --max-turns 120 --seed 82531 --left-level 5 --right-level 5 --left-turn-search true --right-turn-search false --left-deck overgrowth --right-deck overgrowth
