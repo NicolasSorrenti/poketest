@@ -2087,6 +2087,8 @@ function reduce(game,actor,command){
   const visible=describePublicAction(next,actor,cmd);
   if(next.format==='online-preview'){(next.matchFeed ||= []).push({seq:(next.feedSeq=(next.feedSeq||0)+1),kind:'action',type:cmd.type,side:actor,...visible});if(next.matchFeed.length>150)next.matchFeed.shift();}
   const activeBefore=next.players.map(p=>p.active);
+  const benchBefore=next.players.map(p=>new Set(p.bench));
+  const turnBefore=next.turn;
   const hiddenBefore=next.players.flatMap((p,owner)=>[-1,...p.bench.map((_,i)=>i)].flatMap(slot=>{
    const u=located(p,slot);return u?.secretPlanFaceDown?[{owner,serial:u.secretPlanSerial,originalId:u.id,active:slot===-1,energy:u.energies.join('|'),tools:u.attachedTrainers.map(t=>t.id).join('|'),damage:u.damage,status:u.status}]:[];
   }));
@@ -2099,6 +2101,23 @@ function reduce(game,actor,command){
    if(!old||!owner.bench.includes(old))continue;
    const tricks=old.attachedTrainers.filter(t=>card(next,t.id).name==="Koga's Ninja Trick");
    if(tricks.length){old.attachedTrainers=old.attachedTrainers.filter(t=>!tricks.includes(t));owner.discard.push(...tricks.map(t=>t.id));log(next,`Koga's Ninja Trick was discarded when ${publicName(next,old)} moved to the Bench.`);}
+  }
+  // Neo Discovery Spikes: each healthy opposing Forretress reacts to a
+  // Pokémon that was Benched becoming Active during its owner's turn.
+  // The comparison uses the ORIGINAL turn owner, since attacking itself can
+  // advance the turn before this transaction finishes.
+  if(isClassicRules(next)&&!next.over){
+   const owner=next.players[turnBefore],oldActive=activeBefore[turnBefore],incoming=owner.active;
+   if(incoming&&incoming!==oldActive&&benchBefore[turnBefore].has(incoming)){
+    const opposing=next.players[1-turnBefore];
+    const sources=allPokemon(opposing).filter(x=>CLASSIC_POWERS.enabled(next,x,'Spikes'));
+    if(sources.length){
+     incoming.damage+=10*sources.length;
+     log(next,'Forretress Spikes placed '+sources.length+' damage counter(s) on the new Active Pokémon.');
+     // Let mandatory choices already in flight finish before KO cleanup.
+     if(incoming.damage>=maxHP(next,incoming)&&!next.pendingDecision)knockOuts(next,'trainer');
+    }
+   }
   }
   if(['attack','play_trainer','use_power','choose'].includes(cmd.type))for(const hidden of hiddenBefore){
    const p=next.players[hidden.owner];const index=[-1,...p.bench.map((_,i)=>i)].find(i=>{
