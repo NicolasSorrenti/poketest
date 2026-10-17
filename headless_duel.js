@@ -1731,9 +1731,11 @@ function resolveAttack(g,side,index,chosenBench,energyPicks,extra={}){
  }
  // Track the exact prior attacker and whether Smeargle was present when it attacked.
  if(p.active===u){
-  u.neo50LastAttack={serial:g.turnSerial,cardId:u.id,attack:a};
-  for(const witness of allPokemon(f))if(card(g,witness.id).name==='Smeargle')
-   witness.neo50Observed={serial:g.turnSerial,attackerSide:side};
+  const smeargleWitnesses=allPokemon(f).filter(x=>card(g,x.id).name==='Smeargle');
+  if(smeargleWitnesses.length){
+   u.neo50LastAttack={serial:g.turnSerial,cardId:u.id,attack:a};
+   for(const witness of smeargleWitnesses)witness.neo50Observed={serial:g.turnSerial,attackerSide:side};
+  }
  }
  log(g,`${c.name} used ${a.name} for ${dmg} Active damage.${roll.benchSide?' Bench effect: '+roll.benchSide+'.':''}`);
  // With Bench splash damage, ALL KOs are collected before choosing replacements.
