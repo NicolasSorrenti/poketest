@@ -1,0 +1,3328 @@
+{
+  "compiled": 427,
+  "tally": {
+    "blocked_power": 50,
+    "executed": 375,
+    "rejected": 2
+  },
+  "results": [
+    {
+      "id": "base1-1",
+      "name": "Alakazam",
+      "attack": "Confuse Ray",
+      "result": "blocked_power"
+    },
+    {
+      "id": "base1-2",
+      "name": "Blastoise",
+      "attack": "Hydro Pump",
+      "result": "blocked_power"
+    },
+    {
+      "id": "base1-3",
+      "name": "Chansey",
+      "attack": "Scrunch",
+      "kind": "coin-shield",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base1-3",
+      "name": "Chansey",
+      "attack": "Double-edge",
+      "kind": "recoil",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base1-4",
+      "name": "Charizard",
+      "attack": "Fire Spin",
+      "result": "blocked_power"
+    },
+    {
+      "id": "base1-5",
+      "name": "Clefairy",
+      "attack": "Sing",
+      "kind": "coin-status-alias",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base1-5",
+      "name": "Clefairy",
+      "attack": "Metronome",
+      "kind": "copy-attack",
+      "result": "executed",
+      "choices": 1
+    },
+    {
+      "id": "base1-6",
+      "name": "Gyarados",
+      "attack": "Dragon Rage",
+      "kind": "flat",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base1-6",
+      "name": "Gyarados",
+      "attack": "Bubblebeam",
+      "kind": "coin-status-alias",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base1-7",
+      "name": "Hitmonchan",
+      "attack": "Jab",
+      "kind": "flat",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base1-7",
+      "name": "Hitmonchan",
+      "attack": "Special Punch",
+      "kind": "flat",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base1-8",
+      "name": "Machamp",
+      "attack": "Seismic Toss",
+      "result": "blocked_power"
+    },
+    {
+      "id": "base1-9",
+      "name": "Magneton",
+      "attack": "Thunder Wave",
+      "kind": "coin-status-alias",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base1-9",
+      "name": "Magneton",
+      "attack": "Selfdestruct",
+      "kind": "bench-both-recoil",
+      "result": "executed",
+      "choices": 1
+    },
+    {
+      "id": "base1-10",
+      "name": "Mewtwo",
+      "attack": "Psychic",
+      "kind": "enemy-energy",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base1-10",
+      "name": "Mewtwo",
+      "attack": "Barrier",
+      "kind": "barrier",
+      "result": "executed",
+      "choices": 1
+    },
+    {
+      "id": "base1-11",
+      "name": "Nidoking",
+      "attack": "Thrash",
+      "kind": "coin-recoil-bonus",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base1-11",
+      "name": "Nidoking",
+      "attack": "Toxic",
+      "kind": "toxic",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base1-12",
+      "name": "Ninetales",
+      "attack": "Lure",
+      "kind": "switch-attacker",
+      "result": "executed",
+      "choices": 1
+    },
+    {
+      "id": "base1-12",
+      "name": "Ninetales",
+      "attack": "Fire Blast",
+      "kind": "energy-discard",
+      "result": "executed",
+      "choices": 1
+    },
+    {
+      "id": "base1-13",
+      "name": "Poliwrath",
+      "attack": "Water Gun",
+      "kind": "water-extra",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base1-13",
+      "name": "Poliwrath",
+      "attack": "Whirlpool",
+      "kind": "enemy-energy-removal",
+      "result": "executed",
+      "choices": 1
+    },
+    {
+      "id": "base1-14",
+      "name": "Raichu",
+      "attack": "Agility",
+      "kind": "coin-shield",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base1-14",
+      "name": "Raichu",
+      "attack": "Thunder",
+      "kind": "coin-recoil",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base1-15",
+      "name": "Venusaur",
+      "attack": "Solarbeam",
+      "result": "blocked_power"
+    },
+    {
+      "id": "base1-16",
+      "name": "Zapdos",
+      "attack": "Thunder",
+      "kind": "coin-recoil",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base1-16",
+      "name": "Zapdos",
+      "attack": "Thunderbolt",
+      "kind": "discard-all-self-energy",
+      "result": "executed",
+      "choices": 1
+    },
+    {
+      "id": "base1-17",
+      "name": "Beedrill",
+      "attack": "Twineedle",
+      "kind": "coin-times",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base1-17",
+      "name": "Beedrill",
+      "attack": "Poison Sting",
+      "kind": "coin-status-alias",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base1-18",
+      "name": "Dragonair",
+      "attack": "Slam",
+      "kind": "coin-times",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base1-18",
+      "name": "Dragonair",
+      "attack": "Hyper Beam",
+      "kind": "enemy-energy-removal",
+      "result": "executed",
+      "choices": 1
+    },
+    {
+      "id": "base1-19",
+      "name": "Dugtrio",
+      "attack": "Slash",
+      "kind": "flat",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base1-19",
+      "name": "Dugtrio",
+      "attack": "Earthquake",
+      "kind": "bench-own",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base1-20",
+      "name": "Electabuzz",
+      "attack": "Thundershock",
+      "kind": "coin-status-alias",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base1-20",
+      "name": "Electabuzz",
+      "attack": "Thunderpunch",
+      "kind": "coin-recoil-bonus",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base1-21",
+      "name": "Electrode",
+      "attack": "Electric Shock",
+      "result": "blocked_power"
+    },
+    {
+      "id": "base1-22",
+      "name": "Pidgeotto",
+      "attack": "Whirlwind",
+      "kind": "switch-defender",
+      "result": "executed",
+      "choices": 1
+    },
+    {
+      "id": "base1-22",
+      "name": "Pidgeotto",
+      "attack": "Mirror Move",
+      "kind": "mirror-move",
+      "result": "rejected",
+      "reason": "Mirror Move requires a hit on the previous turn",
+      "choices": 0
+    },
+    {
+      "id": "base1-23",
+      "name": "Arcanine",
+      "attack": "Flamethrower",
+      "kind": "energy-discard",
+      "result": "executed",
+      "choices": 1
+    },
+    {
+      "id": "base1-23",
+      "name": "Arcanine",
+      "attack": "Take Down",
+      "kind": "recoil",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base1-24",
+      "name": "Charmeleon",
+      "attack": "Slash",
+      "kind": "flat",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base1-24",
+      "name": "Charmeleon",
+      "attack": "Flamethrower",
+      "kind": "energy-discard",
+      "result": "executed",
+      "choices": 1
+    },
+    {
+      "id": "base1-25",
+      "name": "Dewgong",
+      "attack": "Aurora Beam",
+      "kind": "flat",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base1-25",
+      "name": "Dewgong",
+      "attack": "Ice Beam",
+      "kind": "coin-status-alias",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base1-26",
+      "name": "Dratini",
+      "attack": "Pound",
+      "kind": "flat",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base1-27",
+      "name": "Farfetch'd",
+      "attack": "Leek Slap",
+      "kind": "once-per-unit",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base1-27",
+      "name": "Farfetch'd",
+      "attack": "Pot Smash",
+      "kind": "flat",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base1-28",
+      "name": "Growlithe",
+      "attack": "Flare",
+      "kind": "flat",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base1-29",
+      "name": "Haunter",
+      "attack": "Hypnosis",
+      "kind": "status",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base1-29",
+      "name": "Haunter",
+      "attack": "Dream Eater",
+      "kind": "dream-eater",
+      "result": "executed",
+      "choices": 1
+    },
+    {
+      "id": "base1-30",
+      "name": "Ivysaur",
+      "attack": "Vine Whip",
+      "kind": "flat",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base1-30",
+      "name": "Ivysaur",
+      "attack": "Poisonpowder",
+      "kind": "status",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base1-31",
+      "name": "Jynx",
+      "attack": "Doubleslap",
+      "kind": "coin-times",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base1-31",
+      "name": "Jynx",
+      "attack": "Meditate",
+      "kind": "defender-counters",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base1-32",
+      "name": "Kadabra",
+      "attack": "Recover",
+      "kind": "recover-discard",
+      "result": "executed",
+      "choices": 1
+    },
+    {
+      "id": "base1-32",
+      "name": "Kadabra",
+      "attack": "Super Psy",
+      "kind": "flat",
+      "result": "executed",
+      "choices": 1
+    },
+    {
+      "id": "base1-33",
+      "name": "Kakuna",
+      "attack": "Stiffen",
+      "kind": "coin-shield",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base1-33",
+      "name": "Kakuna",
+      "attack": "Poisonpowder",
+      "kind": "coin-status-alias",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base1-34",
+      "name": "Machoke",
+      "attack": "Karate Chop",
+      "kind": "minus-counters",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base1-34",
+      "name": "Machoke",
+      "attack": "Submission",
+      "kind": "recoil",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base1-35",
+      "name": "Magikarp",
+      "attack": "Tackle",
+      "kind": "flat",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base1-35",
+      "name": "Magikarp",
+      "attack": "Flail",
+      "kind": "flail-counters",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base1-36",
+      "name": "Magmar",
+      "attack": "Fire Punch",
+      "kind": "flat",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base1-36",
+      "name": "Magmar",
+      "attack": "Flamethrower",
+      "kind": "energy-discard",
+      "result": "executed",
+      "choices": 1
+    },
+    {
+      "id": "base1-37",
+      "name": "Nidorino",
+      "attack": "Double Kick",
+      "kind": "coin-times",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base1-37",
+      "name": "Nidorino",
+      "attack": "Horn Drill",
+      "kind": "flat",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base1-38",
+      "name": "Poliwhirl",
+      "attack": "Amnesia",
+      "kind": "amnesia",
+      "result": "executed",
+      "choices": 1
+    },
+    {
+      "id": "base1-38",
+      "name": "Poliwhirl",
+      "attack": "Doubleslap",
+      "kind": "coin-times",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base1-39",
+      "name": "Porygon",
+      "attack": "Conversion 1",
+      "kind": "conversion1",
+      "result": "executed",
+      "choices": 1
+    },
+    {
+      "id": "base1-39",
+      "name": "Porygon",
+      "attack": "Conversion 2",
+      "kind": "conversion2",
+      "result": "executed",
+      "choices": 1
+    },
+    {
+      "id": "base1-40",
+      "name": "Raticate",
+      "attack": "Bite",
+      "kind": "flat",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base1-40",
+      "name": "Raticate",
+      "attack": "Super Fang",
+      "kind": "half-hp",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base1-41",
+      "name": "Seel",
+      "attack": "Headbutt",
+      "kind": "flat",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base1-42",
+      "name": "Wartortle",
+      "attack": "Withdraw",
+      "kind": "coin-shield",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base1-42",
+      "name": "Wartortle",
+      "attack": "Bite",
+      "kind": "flat",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base1-43",
+      "name": "Abra",
+      "attack": "Psyshock",
+      "kind": "coin-status-alias",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base1-44",
+      "name": "Bulbasaur",
+      "attack": "Leech Seed",
+      "kind": "leech-seed",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base1-45",
+      "name": "Caterpie",
+      "attack": "String Shot",
+      "kind": "coin-status-alias",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base1-46",
+      "name": "Charmander",
+      "attack": "Scratch",
+      "kind": "flat",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base1-46",
+      "name": "Charmander",
+      "attack": "Ember",
+      "kind": "energy-discard",
+      "result": "executed",
+      "choices": 1
+    },
+    {
+      "id": "base1-47",
+      "name": "Diglett",
+      "attack": "Dig",
+      "kind": "flat",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base1-47",
+      "name": "Diglett",
+      "attack": "Mud Slap",
+      "kind": "flat",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base1-48",
+      "name": "Doduo",
+      "attack": "Fury Attack",
+      "kind": "coin-times",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base1-49",
+      "name": "Drowzee",
+      "attack": "Pound",
+      "kind": "flat",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base1-49",
+      "name": "Drowzee",
+      "attack": "Confuse Ray",
+      "kind": "coin-status-alias",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base1-50",
+      "name": "Gastly",
+      "attack": "Sleeping Gas",
+      "kind": "coin-status-alias",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base1-50",
+      "name": "Gastly",
+      "attack": "Destiny Bond",
+      "kind": "destiny-bond",
+      "result": "executed",
+      "choices": 1
+    },
+    {
+      "id": "base1-51",
+      "name": "Koffing",
+      "attack": "Foul Gas",
+      "kind": "coin-status-split",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base1-52",
+      "name": "Machop",
+      "attack": "Low Kick",
+      "kind": "flat",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base1-53",
+      "name": "Magnemite",
+      "attack": "Thunder Wave",
+      "kind": "coin-status-alias",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base1-53",
+      "name": "Magnemite",
+      "attack": "Selfdestruct",
+      "kind": "bench-both-recoil",
+      "result": "executed",
+      "choices": 1
+    },
+    {
+      "id": "base1-54",
+      "name": "Metapod",
+      "attack": "Stiffen",
+      "kind": "coin-shield",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base1-54",
+      "name": "Metapod",
+      "attack": "Stun Spore",
+      "kind": "coin-status-alias",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base1-55",
+      "name": "Nidoran♂",
+      "attack": "Horn Hazard",
+      "kind": "coin-failure",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base1-56",
+      "name": "Onix",
+      "attack": "Rock Throw",
+      "kind": "flat",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base1-56",
+      "name": "Onix",
+      "attack": "Harden",
+      "kind": "damage-shield",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base1-57",
+      "name": "Pidgey",
+      "attack": "Whirlwind",
+      "kind": "switch-defender",
+      "result": "executed",
+      "choices": 1
+    },
+    {
+      "id": "base1-58",
+      "name": "Pikachu",
+      "attack": "Gnaw",
+      "kind": "flat",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base1-58",
+      "name": "Pikachu",
+      "attack": "Thunder Jolt",
+      "kind": "coin-recoil",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base1-59",
+      "name": "Poliwag",
+      "attack": "Water Gun",
+      "kind": "extra-energy",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base1-60",
+      "name": "Ponyta",
+      "attack": "Smash Kick",
+      "kind": "flat",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base1-60",
+      "name": "Ponyta",
+      "attack": "Flame Tail",
+      "kind": "flat",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base1-61",
+      "name": "Rattata",
+      "attack": "Bite",
+      "kind": "flat",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base1-62",
+      "name": "Sandshrew",
+      "attack": "Sand-attack",
+      "kind": "sand-attack",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base1-63",
+      "name": "Squirtle",
+      "attack": "Bubble",
+      "kind": "coin-status-alias",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base1-63",
+      "name": "Squirtle",
+      "attack": "Withdraw",
+      "kind": "coin-shield",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base1-64",
+      "name": "Starmie",
+      "attack": "Recover",
+      "kind": "recover-discard",
+      "result": "executed",
+      "choices": 1
+    },
+    {
+      "id": "base1-64",
+      "name": "Starmie",
+      "attack": "Star Freeze",
+      "kind": "coin-status-alias",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base1-65",
+      "name": "Staryu",
+      "attack": "Slap",
+      "kind": "flat",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base1-66",
+      "name": "Tangela",
+      "attack": "Bind",
+      "kind": "coin-status-alias",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base1-66",
+      "name": "Tangela",
+      "attack": "Poisonpowder",
+      "kind": "status",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base1-67",
+      "name": "Voltorb",
+      "attack": "Tackle",
+      "kind": "flat",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base1-68",
+      "name": "Vulpix",
+      "attack": "Confuse Ray",
+      "kind": "coin-status-alias",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base1-69",
+      "name": "Weedle",
+      "attack": "Poison Sting",
+      "kind": "coin-status-alias",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base2-1",
+      "name": "Clefable",
+      "attack": "Metronome",
+      "kind": "copy-attack",
+      "result": "executed",
+      "choices": 1
+    },
+    {
+      "id": "base2-1",
+      "name": "Clefable",
+      "attack": "Minimize",
+      "kind": "damage-shield",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base2-2",
+      "name": "Electrode",
+      "attack": "Tackle",
+      "kind": "flat",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base2-2",
+      "name": "Electrode",
+      "attack": "Chain Lightning",
+      "kind": "chain-lightning",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base2-3",
+      "name": "Flareon",
+      "attack": "Quick Attack",
+      "kind": "coin-more",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base2-3",
+      "name": "Flareon",
+      "attack": "Flamethrower",
+      "kind": "energy-discard",
+      "result": "executed",
+      "choices": 1
+    },
+    {
+      "id": "base2-4",
+      "name": "Jolteon",
+      "attack": "Quick Attack",
+      "kind": "coin-more",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base2-4",
+      "name": "Jolteon",
+      "attack": "Pin Missile",
+      "kind": "coin-times",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base2-5",
+      "name": "Kangaskhan",
+      "attack": "Fetch",
+      "kind": "draw-one",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base2-5",
+      "name": "Kangaskhan",
+      "attack": "Comet Punch",
+      "kind": "coin-times",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base2-6",
+      "name": "Mr. Mime",
+      "attack": "Meditate",
+      "result": "blocked_power"
+    },
+    {
+      "id": "base2-7",
+      "name": "Nidoqueen",
+      "attack": "Boyfriends",
+      "kind": "team-name",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base2-7",
+      "name": "Nidoqueen",
+      "attack": "Mega Punch",
+      "kind": "flat",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base2-8",
+      "name": "Pidgeot",
+      "attack": "Wing Attack",
+      "kind": "flat",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base2-8",
+      "name": "Pidgeot",
+      "attack": "Hurricane",
+      "kind": "hurricane",
+      "result": "executed",
+      "choices": 1
+    },
+    {
+      "id": "base2-9",
+      "name": "Pinsir",
+      "attack": "Irongrip",
+      "kind": "coin-status-alias",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base2-9",
+      "name": "Pinsir",
+      "attack": "Guillotine",
+      "kind": "flat",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base2-10",
+      "name": "Scyther",
+      "attack": "Swords Dance",
+      "kind": "swords-dance",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base2-10",
+      "name": "Scyther",
+      "attack": "Slash",
+      "kind": "flat",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base2-11",
+      "name": "Snorlax",
+      "attack": "Body Slam",
+      "result": "blocked_power"
+    },
+    {
+      "id": "base2-12",
+      "name": "Vaporeon",
+      "attack": "Quick Attack",
+      "kind": "coin-more",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base2-12",
+      "name": "Vaporeon",
+      "attack": "Water Gun",
+      "kind": "extra-energy",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base2-13",
+      "name": "Venomoth",
+      "attack": "Venom Powder",
+      "result": "blocked_power"
+    },
+    {
+      "id": "base2-14",
+      "name": "Victreebel",
+      "attack": "Lure",
+      "kind": "switch-attacker",
+      "result": "executed",
+      "choices": 1
+    },
+    {
+      "id": "base2-14",
+      "name": "Victreebel",
+      "attack": "Acid",
+      "kind": "coin-no-retreat",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base2-15",
+      "name": "Vileplume",
+      "attack": "Petal Dance",
+      "result": "blocked_power"
+    },
+    {
+      "id": "base2-16",
+      "name": "Wigglytuff",
+      "attack": "Lullaby",
+      "kind": "status",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base2-16",
+      "name": "Wigglytuff",
+      "attack": "Do the Wave",
+      "kind": "bench-count",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base2-17",
+      "name": "Clefable",
+      "attack": "Metronome",
+      "kind": "copy-attack",
+      "result": "executed",
+      "choices": 1
+    },
+    {
+      "id": "base2-17",
+      "name": "Clefable",
+      "attack": "Minimize",
+      "kind": "damage-shield",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base2-18",
+      "name": "Electrode",
+      "attack": "Tackle",
+      "kind": "flat",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base2-18",
+      "name": "Electrode",
+      "attack": "Chain Lightning",
+      "kind": "chain-lightning",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base2-19",
+      "name": "Flareon",
+      "attack": "Quick Attack",
+      "kind": "coin-more",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base2-19",
+      "name": "Flareon",
+      "attack": "Flamethrower",
+      "kind": "energy-discard",
+      "result": "executed",
+      "choices": 1
+    },
+    {
+      "id": "base2-20",
+      "name": "Jolteon",
+      "attack": "Quick Attack",
+      "kind": "coin-more",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base2-20",
+      "name": "Jolteon",
+      "attack": "Pin Missile",
+      "kind": "coin-times",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base2-21",
+      "name": "Kangaskhan",
+      "attack": "Fetch",
+      "kind": "draw-one",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base2-21",
+      "name": "Kangaskhan",
+      "attack": "Comet Punch",
+      "kind": "coin-times",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base2-22",
+      "name": "Mr. Mime",
+      "attack": "Meditate",
+      "result": "blocked_power"
+    },
+    {
+      "id": "base2-23",
+      "name": "Nidoqueen",
+      "attack": "Boyfriends",
+      "kind": "team-name",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base2-23",
+      "name": "Nidoqueen",
+      "attack": "Mega Punch",
+      "kind": "flat",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base2-24",
+      "name": "Pidgeot",
+      "attack": "Wing Attack",
+      "kind": "flat",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base2-24",
+      "name": "Pidgeot",
+      "attack": "Hurricane",
+      "kind": "hurricane",
+      "result": "executed",
+      "choices": 1
+    },
+    {
+      "id": "base2-25",
+      "name": "Pinsir",
+      "attack": "Irongrip",
+      "kind": "coin-status-alias",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base2-25",
+      "name": "Pinsir",
+      "attack": "Guillotine",
+      "kind": "flat",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base2-26",
+      "name": "Scyther",
+      "attack": "Swords Dance",
+      "kind": "swords-dance",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base2-26",
+      "name": "Scyther",
+      "attack": "Slash",
+      "kind": "flat",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base2-27",
+      "name": "Snorlax",
+      "attack": "Body Slam",
+      "result": "blocked_power"
+    },
+    {
+      "id": "base2-28",
+      "name": "Vaporeon",
+      "attack": "Quick Attack",
+      "kind": "coin-more",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base2-28",
+      "name": "Vaporeon",
+      "attack": "Water Gun",
+      "kind": "extra-energy",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base2-29",
+      "name": "Venomoth",
+      "attack": "Venom Powder",
+      "result": "blocked_power"
+    },
+    {
+      "id": "base2-30",
+      "name": "Victreebel",
+      "attack": "Lure",
+      "kind": "switch-attacker",
+      "result": "executed",
+      "choices": 1
+    },
+    {
+      "id": "base2-30",
+      "name": "Victreebel",
+      "attack": "Acid",
+      "kind": "coin-no-retreat",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base2-31",
+      "name": "Vileplume",
+      "attack": "Petal Dance",
+      "result": "blocked_power"
+    },
+    {
+      "id": "base2-32",
+      "name": "Wigglytuff",
+      "attack": "Lullaby",
+      "kind": "status",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base2-32",
+      "name": "Wigglytuff",
+      "attack": "Do the Wave",
+      "kind": "bench-count",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base2-33",
+      "name": "Butterfree",
+      "attack": "Whirlwind",
+      "kind": "switch-defender",
+      "result": "executed",
+      "choices": 1
+    },
+    {
+      "id": "base2-33",
+      "name": "Butterfree",
+      "attack": "Mega Drain",
+      "kind": "drain",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base2-34",
+      "name": "Dodrio",
+      "attack": "Rage",
+      "result": "blocked_power"
+    },
+    {
+      "id": "base2-35",
+      "name": "Exeggutor",
+      "attack": "Teleport",
+      "kind": "switch-self",
+      "result": "executed",
+      "choices": 1
+    },
+    {
+      "id": "base2-35",
+      "name": "Exeggutor",
+      "attack": "Big Eggsplosion",
+      "kind": "energy-coins",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base2-36",
+      "name": "Fearow",
+      "attack": "Agility",
+      "kind": "coin-shield",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base2-36",
+      "name": "Fearow",
+      "attack": "Drill Peck",
+      "kind": "flat",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base2-37",
+      "name": "Gloom",
+      "attack": "Poisonpowder",
+      "kind": "status",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base2-37",
+      "name": "Gloom",
+      "attack": "Foul Odor",
+      "kind": "self-confuse",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base2-38",
+      "name": "Lickitung",
+      "attack": "Tongue Wrap",
+      "kind": "coin-status-alias",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base2-38",
+      "name": "Lickitung",
+      "attack": "Supersonic",
+      "kind": "coin-status-alias",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base2-39",
+      "name": "Marowak",
+      "attack": "Bonemerang",
+      "kind": "coin-times",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base2-39",
+      "name": "Marowak",
+      "attack": "Call for Friend",
+      "kind": "call-family",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base2-40",
+      "name": "Nidorina",
+      "attack": "Supersonic",
+      "kind": "coin-status-alias",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base2-40",
+      "name": "Nidorina",
+      "attack": "Double Kick",
+      "kind": "coin-times",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base2-41",
+      "name": "Parasect",
+      "attack": "Spore",
+      "kind": "status",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base2-41",
+      "name": "Parasect",
+      "attack": "Slash",
+      "kind": "flat",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base2-42",
+      "name": "Persian",
+      "attack": "Scratch",
+      "kind": "flat",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base2-42",
+      "name": "Persian",
+      "attack": "Pounce",
+      "kind": "reactive-shield",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base2-43",
+      "name": "Primeape",
+      "attack": "Fury Swipes",
+      "kind": "coin-times",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base2-43",
+      "name": "Primeape",
+      "attack": "Tantrum",
+      "kind": "self-confuse",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base2-44",
+      "name": "Rapidash",
+      "attack": "Stomp",
+      "kind": "coin-more",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base2-44",
+      "name": "Rapidash",
+      "attack": "Agility",
+      "kind": "coin-shield",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base2-45",
+      "name": "Rhydon",
+      "attack": "Horn Attack",
+      "kind": "flat",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base2-45",
+      "name": "Rhydon",
+      "attack": "Ram",
+      "kind": "ram",
+      "result": "executed",
+      "choices": 1
+    },
+    {
+      "id": "base2-46",
+      "name": "Seaking",
+      "attack": "Horn Attack",
+      "kind": "flat",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base2-46",
+      "name": "Seaking",
+      "attack": "Waterfall",
+      "kind": "flat",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base2-47",
+      "name": "Tauros",
+      "attack": "Stomp",
+      "kind": "coin-stomp",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base2-47",
+      "name": "Tauros",
+      "attack": "Rampage",
+      "kind": "rampage",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base2-48",
+      "name": "Weepinbell",
+      "attack": "Poisonpowder",
+      "kind": "coin-status-alias",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base2-48",
+      "name": "Weepinbell",
+      "attack": "Razor Leaf",
+      "kind": "flat",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base2-49",
+      "name": "Bellsprout",
+      "attack": "Vine Whip",
+      "kind": "flat",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base2-49",
+      "name": "Bellsprout",
+      "attack": "Call for Family",
+      "kind": "call-family",
+      "result": "executed",
+      "choices": 1
+    },
+    {
+      "id": "base2-50",
+      "name": "Cubone",
+      "attack": "Snivel",
+      "kind": "reactive-shield",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base2-50",
+      "name": "Cubone",
+      "attack": "Rage",
+      "kind": "own-counters",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base2-51",
+      "name": "Eevee",
+      "attack": "Tail Wag",
+      "kind": "coin-attack-lock",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base2-51",
+      "name": "Eevee",
+      "attack": "Quick Attack",
+      "kind": "coin-more",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base2-52",
+      "name": "Exeggcute",
+      "attack": "Hypnosis",
+      "kind": "status",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base2-52",
+      "name": "Exeggcute",
+      "attack": "Leech Seed",
+      "kind": "leech-seed",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base2-53",
+      "name": "Goldeen",
+      "attack": "Horn Attack",
+      "kind": "flat",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base2-54",
+      "name": "Jigglypuff",
+      "attack": "Lullaby",
+      "kind": "status",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base2-54",
+      "name": "Jigglypuff",
+      "attack": "Pound",
+      "kind": "flat",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base2-55",
+      "name": "Mankey",
+      "attack": "Scratch",
+      "result": "blocked_power"
+    },
+    {
+      "id": "base2-56",
+      "name": "Meowth",
+      "attack": "Pay Day",
+      "kind": "coin-draw",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base2-57",
+      "name": "Nidoran♀",
+      "attack": "Fury Swipes",
+      "kind": "coin-times",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base2-57",
+      "name": "Nidoran♀",
+      "attack": "Call for Family",
+      "kind": "call-family",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base2-58",
+      "name": "Oddish",
+      "attack": "Stun Spore",
+      "kind": "coin-status-alias",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base2-58",
+      "name": "Oddish",
+      "attack": "Sprout",
+      "kind": "call-family",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base2-59",
+      "name": "Paras",
+      "attack": "Scratch",
+      "kind": "flat",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base2-59",
+      "name": "Paras",
+      "attack": "Spore",
+      "kind": "status",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base2-60",
+      "name": "Pikachu",
+      "attack": "Spark",
+      "kind": "bench-target",
+      "result": "executed",
+      "choices": 1
+    },
+    {
+      "id": "base2-61",
+      "name": "Rhyhorn",
+      "attack": "Leer",
+      "kind": "coin-attack-lock",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base2-61",
+      "name": "Rhyhorn",
+      "attack": "Horn Attack",
+      "kind": "flat",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base2-62",
+      "name": "Spearow",
+      "attack": "Peck",
+      "kind": "flat",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base2-62",
+      "name": "Spearow",
+      "attack": "Mirror Move",
+      "kind": "mirror-move",
+      "result": "rejected",
+      "reason": "Mirror Move requires a hit on the previous turn",
+      "choices": 0
+    },
+    {
+      "id": "base2-63",
+      "name": "Venonat",
+      "attack": "Stun Spore",
+      "kind": "coin-status-alias",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base2-63",
+      "name": "Venonat",
+      "attack": "Leech Life",
+      "kind": "drain",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base3-1",
+      "name": "Aerodactyl",
+      "attack": "Wing Attack",
+      "result": "blocked_power"
+    },
+    {
+      "id": "base3-2",
+      "name": "Articuno",
+      "attack": "Freeze Dry",
+      "kind": "coin-status-alias",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base3-2",
+      "name": "Articuno",
+      "attack": "Blizzard",
+      "kind": "bench-splash-coin",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base3-4",
+      "name": "Dragonite",
+      "attack": "Slam",
+      "result": "blocked_power"
+    },
+    {
+      "id": "base3-5",
+      "name": "Gengar",
+      "attack": "Dark Mind",
+      "result": "blocked_power"
+    },
+    {
+      "id": "base3-6",
+      "name": "Haunter",
+      "attack": "Nightmare",
+      "result": "blocked_power"
+    },
+    {
+      "id": "base3-7",
+      "name": "Hitmonlee",
+      "attack": "Stretch Kick",
+      "kind": "bench-target",
+      "result": "executed",
+      "choices": 1
+    },
+    {
+      "id": "base3-7",
+      "name": "Hitmonlee",
+      "attack": "High Jump Kick",
+      "kind": "flat",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base3-8",
+      "name": "Hypno",
+      "attack": "Prophecy",
+      "kind": "prophecy",
+      "result": "executed",
+      "choices": 2
+    },
+    {
+      "id": "base3-8",
+      "name": "Hypno",
+      "attack": "Dark Mind",
+      "kind": "bench-target",
+      "result": "executed",
+      "choices": 1
+    },
+    {
+      "id": "base3-9",
+      "name": "Kabutops",
+      "attack": "Sharp Sickle",
+      "kind": "flat",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base3-9",
+      "name": "Kabutops",
+      "attack": "Absorb",
+      "kind": "drain",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base3-10",
+      "name": "Lapras",
+      "attack": "Water Gun",
+      "kind": "extra-energy",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base3-10",
+      "name": "Lapras",
+      "attack": "Confuse Ray",
+      "kind": "coin-status-alias",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base3-11",
+      "name": "Magneton",
+      "attack": "Sonicboom",
+      "kind": "ignore-weakness",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base3-11",
+      "name": "Magneton",
+      "attack": "Selfdestruct",
+      "kind": "bench-both-recoil",
+      "result": "executed",
+      "choices": 2
+    },
+    {
+      "id": "base3-12",
+      "name": "Moltres",
+      "attack": "Wildfire",
+      "kind": "wildfire",
+      "result": "executed",
+      "choices": 1
+    },
+    {
+      "id": "base3-12",
+      "name": "Moltres",
+      "attack": "Dive Bomb",
+      "kind": "coin-failure",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base3-13",
+      "name": "Muk",
+      "attack": "Sludge",
+      "result": "blocked_power"
+    },
+    {
+      "id": "base3-14",
+      "name": "Raichu",
+      "attack": "Gigashock",
+      "kind": "bench-up-to-three",
+      "result": "executed",
+      "choices": 1
+    },
+    {
+      "id": "base3-15",
+      "name": "Zapdos",
+      "attack": "Thunderstorm",
+      "kind": "thunderstorm",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base3-16",
+      "name": "Aerodactyl",
+      "attack": "Wing Attack",
+      "result": "blocked_power"
+    },
+    {
+      "id": "base3-17",
+      "name": "Articuno",
+      "attack": "Freeze Dry",
+      "kind": "coin-status-alias",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base3-17",
+      "name": "Articuno",
+      "attack": "Blizzard",
+      "kind": "bench-splash-coin",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base3-19",
+      "name": "Dragonite",
+      "attack": "Slam",
+      "result": "blocked_power"
+    },
+    {
+      "id": "base3-20",
+      "name": "Gengar",
+      "attack": "Dark Mind",
+      "result": "blocked_power"
+    },
+    {
+      "id": "base3-21",
+      "name": "Haunter",
+      "attack": "Nightmare",
+      "result": "blocked_power"
+    },
+    {
+      "id": "base3-22",
+      "name": "Hitmonlee",
+      "attack": "Stretch Kick",
+      "kind": "bench-target",
+      "result": "executed",
+      "choices": 1
+    },
+    {
+      "id": "base3-22",
+      "name": "Hitmonlee",
+      "attack": "High Jump Kick",
+      "kind": "flat",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base3-23",
+      "name": "Hypno",
+      "attack": "Prophecy",
+      "kind": "prophecy",
+      "result": "executed",
+      "choices": 2
+    },
+    {
+      "id": "base3-23",
+      "name": "Hypno",
+      "attack": "Dark Mind",
+      "kind": "bench-target",
+      "result": "executed",
+      "choices": 1
+    },
+    {
+      "id": "base3-24",
+      "name": "Kabutops",
+      "attack": "Sharp Sickle",
+      "kind": "flat",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base3-24",
+      "name": "Kabutops",
+      "attack": "Absorb",
+      "kind": "drain",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base3-25",
+      "name": "Lapras",
+      "attack": "Water Gun",
+      "kind": "extra-energy",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base3-25",
+      "name": "Lapras",
+      "attack": "Confuse Ray",
+      "kind": "coin-status-alias",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base3-26",
+      "name": "Magneton",
+      "attack": "Sonicboom",
+      "kind": "ignore-weakness",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base3-26",
+      "name": "Magneton",
+      "attack": "Selfdestruct",
+      "kind": "bench-both-recoil",
+      "result": "executed",
+      "choices": 2
+    },
+    {
+      "id": "base3-27",
+      "name": "Moltres",
+      "attack": "Wildfire",
+      "kind": "wildfire",
+      "result": "executed",
+      "choices": 1
+    },
+    {
+      "id": "base3-27",
+      "name": "Moltres",
+      "attack": "Dive Bomb",
+      "kind": "coin-failure",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base3-28",
+      "name": "Muk",
+      "attack": "Sludge",
+      "result": "blocked_power"
+    },
+    {
+      "id": "base3-29",
+      "name": "Raichu",
+      "attack": "Gigashock",
+      "kind": "bench-up-to-three",
+      "result": "executed",
+      "choices": 1
+    },
+    {
+      "id": "base3-30",
+      "name": "Zapdos",
+      "attack": "Thunderstorm",
+      "kind": "thunderstorm",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base3-31",
+      "name": "Arbok",
+      "attack": "Terror Strike",
+      "kind": "coin-defender-switch",
+      "result": "executed",
+      "choices": 1
+    },
+    {
+      "id": "base3-31",
+      "name": "Arbok",
+      "attack": "Poison Fang",
+      "kind": "status",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base3-32",
+      "name": "Cloyster",
+      "attack": "Clamp",
+      "kind": "coin-clamp",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base3-32",
+      "name": "Cloyster",
+      "attack": "Spike Cannon",
+      "kind": "coin-times",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base3-33",
+      "name": "Gastly",
+      "attack": "Lick",
+      "kind": "coin-status-alias",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base3-33",
+      "name": "Gastly",
+      "attack": "Energy Conversion",
+      "kind": "energy-conversion",
+      "result": "executed",
+      "choices": 1
+    },
+    {
+      "id": "base3-34",
+      "name": "Golbat",
+      "attack": "Wing Attack",
+      "kind": "flat",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base3-34",
+      "name": "Golbat",
+      "attack": "Leech Life",
+      "kind": "drain",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base3-35",
+      "name": "Golduck",
+      "attack": "Psyshock",
+      "kind": "coin-status-alias",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base3-35",
+      "name": "Golduck",
+      "attack": "Hyper Beam",
+      "kind": "enemy-energy-removal",
+      "result": "executed",
+      "choices": 1
+    },
+    {
+      "id": "base3-36",
+      "name": "Golem",
+      "attack": "Avalanche",
+      "kind": "flat",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base3-36",
+      "name": "Golem",
+      "attack": "Selfdestruct",
+      "kind": "bench-both-recoil",
+      "result": "executed",
+      "choices": 2
+    },
+    {
+      "id": "base3-37",
+      "name": "Graveler",
+      "attack": "Harden",
+      "kind": "damage-shield",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base3-37",
+      "name": "Graveler",
+      "attack": "Rock Throw",
+      "kind": "flat",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base3-38",
+      "name": "Kingler",
+      "attack": "Flail",
+      "kind": "flail-counters",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base3-38",
+      "name": "Kingler",
+      "attack": "Crabhammer",
+      "kind": "flat",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base3-39",
+      "name": "Magmar",
+      "attack": "Smokescreen",
+      "kind": "sand-attack",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base3-39",
+      "name": "Magmar",
+      "attack": "Smog",
+      "kind": "coin-status-alias",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base3-40",
+      "name": "Omastar",
+      "attack": "Water Gun",
+      "kind": "extra-energy",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base3-40",
+      "name": "Omastar",
+      "attack": "Spike Cannon",
+      "kind": "coin-times",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base3-41",
+      "name": "Sandslash",
+      "attack": "Slash",
+      "kind": "flat",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base3-41",
+      "name": "Sandslash",
+      "attack": "Fury Swipes",
+      "kind": "coin-times",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base3-42",
+      "name": "Seadra",
+      "attack": "Water Gun",
+      "kind": "extra-energy",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base3-42",
+      "name": "Seadra",
+      "attack": "Agility",
+      "kind": "coin-shield",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base3-43",
+      "name": "Slowbro",
+      "attack": "Psyshock",
+      "result": "blocked_power"
+    },
+    {
+      "id": "base3-44",
+      "name": "Tentacruel",
+      "attack": "Supersonic",
+      "kind": "coin-status-alias",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base3-44",
+      "name": "Tentacruel",
+      "attack": "Jellyfish Sting",
+      "kind": "status",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base3-45",
+      "name": "Weezing",
+      "attack": "Smog",
+      "kind": "coin-status-alias",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base3-45",
+      "name": "Weezing",
+      "attack": "Selfdestruct",
+      "kind": "bench-both-recoil",
+      "result": "executed",
+      "choices": 1
+    },
+    {
+      "id": "base3-46",
+      "name": "Ekans",
+      "attack": "Spit Poison",
+      "kind": "coin-status-alias",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base3-46",
+      "name": "Ekans",
+      "attack": "Wrap",
+      "kind": "coin-status-alias",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base3-47",
+      "name": "Geodude",
+      "attack": "Stone Barrage",
+      "kind": "coins-until-tails",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base3-48",
+      "name": "Grimer",
+      "attack": "Nasty Goo",
+      "kind": "coin-status-alias",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base3-48",
+      "name": "Grimer",
+      "attack": "Minimize",
+      "kind": "damage-shield",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base3-49",
+      "name": "Horsea",
+      "attack": "Smokescreen",
+      "kind": "sand-attack",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base3-50",
+      "name": "Kabuto",
+      "attack": "Scratch",
+      "result": "blocked_power"
+    },
+    {
+      "id": "base3-51",
+      "name": "Krabby",
+      "attack": "Call for Family",
+      "kind": "call-family",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base3-51",
+      "name": "Krabby",
+      "attack": "Irongrip",
+      "kind": "flat",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base3-52",
+      "name": "Omanyte",
+      "attack": "Water Gun",
+      "result": "blocked_power"
+    },
+    {
+      "id": "base3-53",
+      "name": "Psyduck",
+      "attack": "Headache",
+      "kind": "trainer-lock",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base3-53",
+      "name": "Psyduck",
+      "attack": "Fury Swipes",
+      "kind": "coin-times",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base3-54",
+      "name": "Shellder",
+      "attack": "Supersonic",
+      "kind": "coin-status-alias",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base3-54",
+      "name": "Shellder",
+      "attack": "Hide in Shell",
+      "kind": "coin-shield",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base3-55",
+      "name": "Slowpoke",
+      "attack": "Spacing Out",
+      "kind": "coin-heal-one",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base3-55",
+      "name": "Slowpoke",
+      "attack": "Scavenge",
+      "kind": "scavenge",
+      "result": "executed",
+      "choices": 2
+    },
+    {
+      "id": "base3-56",
+      "name": "Tentacool",
+      "attack": "Acid",
+      "result": "blocked_power"
+    },
+    {
+      "id": "base3-57",
+      "name": "Zubat",
+      "attack": "Supersonic",
+      "kind": "coin-status-alias",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base3-57",
+      "name": "Zubat",
+      "attack": "Leech Life",
+      "kind": "drain",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base5-1",
+      "name": "Dark Alakazam",
+      "attack": "Teleport Blast",
+      "kind": "optional-switch-self",
+      "result": "executed",
+      "choices": 1
+    },
+    {
+      "id": "base5-1",
+      "name": "Dark Alakazam",
+      "attack": "Mind Shock",
+      "kind": "ignore-weakness",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base5-2",
+      "name": "Dark Arbok",
+      "attack": "Stare",
+      "kind": "stare",
+      "result": "executed",
+      "choices": 1
+    },
+    {
+      "id": "base5-2",
+      "name": "Dark Arbok",
+      "attack": "Poison Vapor",
+      "kind": "poison-bench",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base5-3",
+      "name": "Dark Blastoise",
+      "attack": "Hydrocannon",
+      "kind": "water-extra",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base5-3",
+      "name": "Dark Blastoise",
+      "attack": "Rocket Tackle",
+      "kind": "recoil-coin-shield",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base5-4",
+      "name": "Dark Charizard",
+      "attack": "Nail Flick",
+      "kind": "flat",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base5-4",
+      "name": "Dark Charizard",
+      "attack": "Continuous Fireball",
+      "kind": "continuous-fireball",
+      "result": "executed",
+      "choices": 2
+    },
+    {
+      "id": "base5-5",
+      "name": "Dark Dragonite",
+      "attack": "Giant Tail",
+      "result": "blocked_power"
+    },
+    {
+      "id": "base5-6",
+      "name": "Dark Dugtrio",
+      "attack": "Knock Down",
+      "result": "blocked_power"
+    },
+    {
+      "id": "base5-7",
+      "name": "Dark Golbat",
+      "attack": "Flitter",
+      "result": "blocked_power"
+    },
+    {
+      "id": "base5-8",
+      "name": "Dark Gyarados",
+      "attack": "Ice Beam",
+      "result": "blocked_power"
+    },
+    {
+      "id": "base5-9",
+      "name": "Dark Hypno",
+      "attack": "Psypunch",
+      "kind": "flat",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base5-9",
+      "name": "Dark Hypno",
+      "attack": "Bench Manipulation",
+      "kind": "bench-tails",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base5-10",
+      "name": "Dark Machamp",
+      "attack": "Mega Punch",
+      "kind": "flat",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base5-10",
+      "name": "Dark Machamp",
+      "attack": "Fling",
+      "kind": "fling",
+      "result": "executed",
+      "choices": 1
+    },
+    {
+      "id": "base5-11",
+      "name": "Dark Magneton",
+      "attack": "Sonicboom",
+      "kind": "ignore-weakness",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base5-11",
+      "name": "Dark Magneton",
+      "attack": "Magnetic Lines",
+      "kind": "magnetic-lines",
+      "result": "executed",
+      "choices": 2
+    },
+    {
+      "id": "base5-12",
+      "name": "Dark Slowbro",
+      "attack": "Fickle Attack",
+      "result": "blocked_power"
+    },
+    {
+      "id": "base5-13",
+      "name": "Dark Vileplume",
+      "attack": "Petal Whirlwind",
+      "result": "blocked_power"
+    },
+    {
+      "id": "base5-14",
+      "name": "Dark Weezing",
+      "attack": "Mass Explosion",
+      "kind": "mass-explosion",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base5-14",
+      "name": "Dark Weezing",
+      "attack": "Stun Gas",
+      "kind": "coin-status-split",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base5-18",
+      "name": "Dark Alakazam",
+      "attack": "Teleport Blast",
+      "kind": "optional-switch-self",
+      "result": "executed",
+      "choices": 1
+    },
+    {
+      "id": "base5-18",
+      "name": "Dark Alakazam",
+      "attack": "Mind Shock",
+      "kind": "ignore-weakness",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base5-19",
+      "name": "Dark Arbok",
+      "attack": "Stare",
+      "kind": "stare",
+      "result": "executed",
+      "choices": 1
+    },
+    {
+      "id": "base5-19",
+      "name": "Dark Arbok",
+      "attack": "Poison Vapor",
+      "kind": "poison-bench",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base5-20",
+      "name": "Dark Blastoise",
+      "attack": "Hydrocannon",
+      "kind": "water-extra",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base5-20",
+      "name": "Dark Blastoise",
+      "attack": "Rocket Tackle",
+      "kind": "recoil-coin-shield",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base5-21",
+      "name": "Dark Charizard",
+      "attack": "Nail Flick",
+      "kind": "flat",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base5-21",
+      "name": "Dark Charizard",
+      "attack": "Continuous Fireball",
+      "kind": "continuous-fireball",
+      "result": "executed",
+      "choices": 2
+    },
+    {
+      "id": "base5-22",
+      "name": "Dark Dragonite",
+      "attack": "Giant Tail",
+      "result": "blocked_power"
+    },
+    {
+      "id": "base5-23",
+      "name": "Dark Dugtrio",
+      "attack": "Knock Down",
+      "result": "blocked_power"
+    },
+    {
+      "id": "base5-24",
+      "name": "Dark Golbat",
+      "attack": "Flitter",
+      "result": "blocked_power"
+    },
+    {
+      "id": "base5-25",
+      "name": "Dark Gyarados",
+      "attack": "Ice Beam",
+      "result": "blocked_power"
+    },
+    {
+      "id": "base5-26",
+      "name": "Dark Hypno",
+      "attack": "Psypunch",
+      "kind": "flat",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base5-26",
+      "name": "Dark Hypno",
+      "attack": "Bench Manipulation",
+      "kind": "bench-tails",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base5-27",
+      "name": "Dark Machamp",
+      "attack": "Mega Punch",
+      "kind": "flat",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base5-27",
+      "name": "Dark Machamp",
+      "attack": "Fling",
+      "kind": "fling",
+      "result": "executed",
+      "choices": 1
+    },
+    {
+      "id": "base5-28",
+      "name": "Dark Magneton",
+      "attack": "Sonicboom",
+      "kind": "ignore-weakness",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base5-28",
+      "name": "Dark Magneton",
+      "attack": "Magnetic Lines",
+      "kind": "magnetic-lines",
+      "result": "executed",
+      "choices": 2
+    },
+    {
+      "id": "base5-29",
+      "name": "Dark Slowbro",
+      "attack": "Fickle Attack",
+      "result": "blocked_power"
+    },
+    {
+      "id": "base5-30",
+      "name": "Dark Vileplume",
+      "attack": "Petal Whirlwind",
+      "result": "blocked_power"
+    },
+    {
+      "id": "base5-31",
+      "name": "Dark Weezing",
+      "attack": "Mass Explosion",
+      "kind": "mass-explosion",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base5-31",
+      "name": "Dark Weezing",
+      "attack": "Stun Gas",
+      "kind": "coin-status-split",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base5-32",
+      "name": "Dark Charmeleon",
+      "attack": "Tail Slap",
+      "kind": "flat",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base5-32",
+      "name": "Dark Charmeleon",
+      "attack": "Fireball",
+      "kind": "fireball",
+      "result": "executed",
+      "choices": 1
+    },
+    {
+      "id": "base5-33",
+      "name": "Dark Dragonair",
+      "attack": "Tail Strike",
+      "result": "blocked_power"
+    },
+    {
+      "id": "base5-34",
+      "name": "Dark Electrode",
+      "attack": "Rolling Tackle",
+      "kind": "flat",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base5-34",
+      "name": "Dark Electrode",
+      "attack": "Energy Bomb",
+      "kind": "energy-bomb",
+      "result": "executed",
+      "choices": 5
+    },
+    {
+      "id": "base5-35",
+      "name": "Dark Flareon",
+      "attack": "Rage",
+      "kind": "own-counters",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base5-35",
+      "name": "Dark Flareon",
+      "attack": "Playing with Fire",
+      "kind": "playing-with-fire",
+      "result": "executed",
+      "choices": 1
+    },
+    {
+      "id": "base5-36",
+      "name": "Dark Gloom",
+      "attack": "Poisonpowder",
+      "result": "blocked_power"
+    },
+    {
+      "id": "base5-37",
+      "name": "Dark Golduck",
+      "attack": "Third Eye",
+      "kind": "third-eye",
+      "result": "executed",
+      "choices": 2
+    },
+    {
+      "id": "base5-37",
+      "name": "Dark Golduck",
+      "attack": "Super Psy",
+      "kind": "flat",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base5-38",
+      "name": "Dark Jolteon",
+      "attack": "Lightning Flash",
+      "kind": "sand-attack",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base5-38",
+      "name": "Dark Jolteon",
+      "attack": "Thunder Attack",
+      "kind": "coin-status-recoil",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base5-39",
+      "name": "Dark Kadabra",
+      "attack": "Mind Shock",
+      "result": "blocked_power"
+    },
+    {
+      "id": "base5-40",
+      "name": "Dark Machoke",
+      "attack": "Drag Off",
+      "kind": "drag-off",
+      "result": "executed",
+      "choices": 1
+    },
+    {
+      "id": "base5-40",
+      "name": "Dark Machoke",
+      "attack": "Knock Back",
+      "kind": "switch-defender",
+      "result": "executed",
+      "choices": 1
+    },
+    {
+      "id": "base5-41",
+      "name": "Dark Muk",
+      "attack": "Sludge Punch",
+      "result": "blocked_power"
+    },
+    {
+      "id": "base5-42",
+      "name": "Dark Persian",
+      "attack": "Fascinate",
+      "kind": "fascinate",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base5-42",
+      "name": "Dark Persian",
+      "attack": "Poison Claws",
+      "kind": "coin-status-alias",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base5-43",
+      "name": "Dark Primeape",
+      "attack": "Frenzied Attack",
+      "result": "blocked_power"
+    },
+    {
+      "id": "base5-44",
+      "name": "Dark Rapidash",
+      "attack": "Rear Kick",
+      "kind": "flat",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base5-44",
+      "name": "Dark Rapidash",
+      "attack": "Flame Pillar",
+      "kind": "flame-pillar",
+      "result": "executed",
+      "choices": 2
+    },
+    {
+      "id": "base5-45",
+      "name": "Dark Vaporeon",
+      "attack": "Bite",
+      "kind": "flat",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base5-45",
+      "name": "Dark Vaporeon",
+      "attack": "Whirlpool",
+      "kind": "enemy-energy-removal",
+      "result": "executed",
+      "choices": 1
+    },
+    {
+      "id": "base5-46",
+      "name": "Dark Wartortle",
+      "attack": "Doubleslap",
+      "kind": "coin-times",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base5-46",
+      "name": "Dark Wartortle",
+      "attack": "Mirror Shell",
+      "kind": "mirror-shell",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base5-47",
+      "name": "Magikarp",
+      "attack": "Flop",
+      "kind": "flat",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base5-47",
+      "name": "Magikarp",
+      "attack": "Rapid Evolution",
+      "kind": "rapid-evolution",
+      "result": "executed",
+      "choices": 1
+    },
+    {
+      "id": "base5-48",
+      "name": "Porygon",
+      "attack": "Conversion 1",
+      "kind": "conversion1",
+      "result": "executed",
+      "choices": 1
+    },
+    {
+      "id": "base5-48",
+      "name": "Porygon",
+      "attack": "Psybeam",
+      "kind": "coin-status-alias",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base5-49",
+      "name": "Abra",
+      "attack": "Vanish",
+      "kind": "vanish",
+      "result": "executed",
+      "choices": 1
+    },
+    {
+      "id": "base5-49",
+      "name": "Abra",
+      "attack": "Psyshock",
+      "kind": "coin-status-alias",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base5-50",
+      "name": "Charmander",
+      "attack": "Fire Tail",
+      "result": "blocked_power"
+    },
+    {
+      "id": "base5-51",
+      "name": "Dark Raticate",
+      "attack": "Gnaw",
+      "kind": "flat",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base5-51",
+      "name": "Dark Raticate",
+      "attack": "Hyper Fang",
+      "kind": "coin-failure",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base5-52",
+      "name": "Diglett",
+      "attack": "Dig Under",
+      "kind": "target-any",
+      "result": "executed",
+      "choices": 1
+    },
+    {
+      "id": "base5-52",
+      "name": "Diglett",
+      "attack": "Scratch",
+      "kind": "flat",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base5-53",
+      "name": "Dratini",
+      "attack": "Wrap",
+      "kind": "coin-status-alias",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base5-54",
+      "name": "Drowzee",
+      "attack": "Nightmare",
+      "result": "blocked_power"
+    },
+    {
+      "id": "base5-55",
+      "name": "Eevee",
+      "attack": "Tackle",
+      "kind": "flat",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base5-55",
+      "name": "Eevee",
+      "attack": "Sand-attack",
+      "kind": "sand-attack",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base5-56",
+      "name": "Ekans",
+      "attack": "Bite",
+      "kind": "flat",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base5-56",
+      "name": "Ekans",
+      "attack": "Poison Sting",
+      "kind": "coin-status-alias",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base5-57",
+      "name": "Grimer",
+      "attack": "Poison Gas",
+      "kind": "status",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base5-57",
+      "name": "Grimer",
+      "attack": "Sticky Hands",
+      "kind": "coin-bonus-status",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base5-58",
+      "name": "Koffing",
+      "attack": "Tackle",
+      "kind": "flat",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base5-58",
+      "name": "Koffing",
+      "attack": "Poison Gas",
+      "kind": "coin-status-alias",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base5-59",
+      "name": "Machop",
+      "attack": "Punch",
+      "kind": "flat",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base5-59",
+      "name": "Machop",
+      "attack": "Kick",
+      "kind": "flat",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base5-60",
+      "name": "Magnemite",
+      "attack": "Tackle",
+      "kind": "flat",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base5-60",
+      "name": "Magnemite",
+      "attack": "Magnetism",
+      "kind": "team-name",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base5-61",
+      "name": "Mankey",
+      "attack": "Mischief",
+      "kind": "shuffle-enemy",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base5-61",
+      "name": "Mankey",
+      "attack": "Anger",
+      "kind": "coin-more",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base5-62",
+      "name": "Meowth",
+      "attack": "Coin Hurl",
+      "kind": "target-any-coin",
+      "result": "executed",
+      "choices": 1
+    },
+    {
+      "id": "base5-63",
+      "name": "Oddish",
+      "attack": "Sleep Powder",
+      "kind": "status",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base5-63",
+      "name": "Oddish",
+      "attack": "Poisonpowder",
+      "kind": "status",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base5-64",
+      "name": "Ponyta",
+      "attack": "Ember",
+      "kind": "energy-discard",
+      "result": "executed",
+      "choices": 1
+    },
+    {
+      "id": "base5-65",
+      "name": "Psyduck",
+      "attack": "Dizziness",
+      "kind": "draw-one",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base5-65",
+      "name": "Psyduck",
+      "attack": "Water Gun",
+      "kind": "extra-energy",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base5-66",
+      "name": "Rattata",
+      "attack": "Quick Attack",
+      "result": "blocked_power"
+    },
+    {
+      "id": "base5-67",
+      "name": "Slowpoke",
+      "attack": "Afternoon Nap",
+      "kind": "afternoon-nap",
+      "result": "executed",
+      "choices": 1
+    },
+    {
+      "id": "base5-67",
+      "name": "Slowpoke",
+      "attack": "Headbutt",
+      "kind": "flat",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base5-68",
+      "name": "Squirtle",
+      "attack": "Shell Attack",
+      "kind": "flat",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base5-69",
+      "name": "Voltorb",
+      "attack": "Speed Ball",
+      "kind": "flat",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base5-70",
+      "name": "Zubat",
+      "attack": "Ram",
+      "kind": "flat",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base5-70",
+      "name": "Zubat",
+      "attack": "Bite",
+      "kind": "flat",
+      "result": "executed",
+      "choices": 0
+    },
+    {
+      "id": "base5-83",
+      "name": "Dark Raichu",
+      "attack": "Surprise Thunder",
+      "kind": "surprise-thunder",
+      "result": "executed",
+      "choices": 0
+    }
+  ]
+}

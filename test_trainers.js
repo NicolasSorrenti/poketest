@@ -1,0 +1,17 @@
+'use strict';
+const fs=require('node:fs'),vm=require('node:vm'),assert=require('node:assert/strict');
+const src=fs.readFileSync(__dirname+'/engine.js','utf8');
+const pre=src.split('async function load()')[0];
+const context={Math,console,document:{getElementById:()=>({classList:{add(){},remove(){}},textContent:'',style:{}}),querySelector:()=>null},setTimeout:()=>0,clearTimeout(){}};
+vm.createContext(context);vm.runInContext(pre.replace('const engine=new Engine();window.NeoCampus={engine,get cards(){return cards},lookup};','const engine=new Engine();'),context);
+vm.runInContext(`lookup=new Map([['s',{id:'s',name:'Switch',supertype:'Trainer'}],['g',{id:'g',name:'Gust of Wind',supertype:'Trainer'}],...['A','B','C','D','E','F'].map(n=>[n,{id:n,name:n,hp:'100',supertype:'Pokémon'}])]);engine.players=[statePlayer('You',[]),statePlayer('Rival',[])];engine.turn=0;engine.phase='game';engine.started=true;engine.players[0].active=unit('A');engine.players[0].bench=[unit('B'),unit('C')];engine.players[1].active=unit('D');engine.players[1].bench=[unit('E'),unit('F')];engine.players[0].hand=['s','g'];render=()=>{};`,context);
+assert.equal(vm.runInContext('engine.trainer(0)',context),false,'Switch requires target');
+assert.equal(vm.runInContext('engine.players[0].hand.length',context),2,'invalid play preserves card');
+assert.equal(vm.runInContext('engine.trainer(0,1)',context),true);
+assert.equal(vm.runInContext('engine.players[0].active.id',context),'C');
+assert.equal(vm.runInContext('engine.players[0].bench[1].id',context),'A');
+assert.equal(vm.runInContext('engine.trainer(0,1)',context),true);
+assert.equal(vm.runInContext('engine.players[1].active.id',context),'F');
+assert.equal(vm.runInContext('engine.players[1].bench[1].id',context),'D');
+assert.equal(vm.runInContext('engine.players[0].hand.length',context),0);
+console.log('PASS: Switch and Gust require explicit valid targets; choose second Bench Pokémon correctly');

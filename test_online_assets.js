@@ -1,0 +1,17 @@
+'use strict';
+const assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm');
+const html=fs.readFileSync(__dirname+'/online.html','utf8'),script=fs.readFileSync(__dirname+'/online.js','utf8');
+new vm.Script(script,{filename:'online.js'});
+const refs=[...new Set([...script.matchAll(/\$\('([^']+)'\)/g)].map(m=>m[1]))];
+const ids=[...html.matchAll(/id="([^"]+)"/g)].map(m=>m[1]);
+assert.equal(ids.length,new Set(ids).size,'Duplicate ID');
+for(const id of refs)assert.ok(ids.includes(id),'Missing UI element: '+id);
+assert.ok(refs.length>=28);
+assert.doesNotMatch(html,/src="engine\.js"/);
+assert.doesNotMatch(script,/new Engine\(/);
+assert.match(script,/\/api\/online\//);
+assert.match(script,/sessionStorage\.setItem\('neoOnlineToken'/);
+assert.match(script,/v\.players\[side\(\)\]/);
+assert.match(html,/battle_decision_ui\.js/,'Both duel clients load the common selection helper');
+assert.match(script,/fieldDecision\(/,'Battlefield decision targets must be wired in');
+console.log(`PASS Online browser assets: ${refs.length} referenced DOM IDs, syntax check, player-relative view, server authority and token storage`);

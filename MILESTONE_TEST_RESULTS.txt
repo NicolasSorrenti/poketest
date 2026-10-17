@@ -1,0 +1,12 @@
+Neo Campus — Authoritative Engine Slice (v0.10)
+Actual completed local verification on 2026-10-16:
+- npm test: PASS (entire legacy + new suite)
+- npm run test:headless: PASS
+- 100 seeded complete headless duels: PASS, 994 attacks, 2,275 accepted actions, 11 rejected attacks, all games finished, 60 cards conserved per player
+- 2,000 adversarial command attempts: PASS (no mutation after rejected commands)
+- 1,479 attack records enumerated: 412 matched strictly in the new headless interpreter; 1,067 unsupported there
+- 12 of 178 historical Trainer records across six Trainer names in the new headless path
+- npm run release:strict: EXPECTED FAILURE, eight Trainers remain partial
+- Existing browser duel and HTTP server tests: PASS
+
+IMPORTANT: The new authoritative headless duel does not yet replace the older browser engine. In particular, 1,067 attacks, all Pokémon Powers, complex Trainer effects, reactive effects and many Special Energy modifiers still await correct migration to the headless resolver.

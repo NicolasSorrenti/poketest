@@ -1,0 +1,10 @@
+Historical rules fidelity NOT certified. Open Trainer records:
+- gym1-99: Charity (partial)
+- gym1-117: Sabrina's ESP (partial)
+- gym2-101: Brock's Protection (partial)
+- gym2-102: Chaos Gym (partial)
+- gym2-107: Lt. Surge's Secret Plan (partial)
+- gym2-115: Koga's Ninja Trick (partial)
+- gym2-121: Sabrina's Psychic Control (partial)
+- neo4-93: EXP.ALL (partial)
+Additionally requires manual browser playthroughs and card-interaction verification.

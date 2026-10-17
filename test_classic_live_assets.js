@@ -1,0 +1,18 @@
+'use strict';
+const assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm');
+const html=fs.readFileSync(__dirname+'/classic_live.html','utf8');
+const script=fs.readFileSync(__dirname+'/classic_live.js','utf8');
+const style=fs.readFileSync(__dirname+'/classic_live.css','utf8');
+new vm.Script(script,{filename:'classic_live.js'});
+const references=[...new Set([...script.matchAll(/\$\('([^']+)'\)/g)].map(match=>match[1]))];
+const ids=[...html.matchAll(/id="([^"]+)"/g)].map(m=>m[1]);
+assert.equal(new Set(ids).size,ids.length,'Duplicate HTML element ids');
+for(const id of references)assert.ok(ids.includes(id),'Missing UI element '+id);
+assert.match(html,/classic_live\.js/);assert.match(html,/classic_live\.css/);
+assert.doesNotMatch(html,/src="engine\.js"/,'New client must not load old rule engine');
+assert.doesNotMatch(script,/new Engine\(/,'New client must not build a second rules authority');
+assert.match(script,/\/api\/classic\//,'Client must call server rules');
+assert.ok(style.length>1000);
+assert.match(html,/battle_decision_ui\.js/,'Both duel clients load the common selection helper');
+assert.match(script,/fieldDecision\(/,'Battlefield decision targets must be wired in');
+console.log(`PASS authoritative browser assets: ${references.length} referenced DOM elements found, unique ids, script parses, no legacy rule-engine loading`);

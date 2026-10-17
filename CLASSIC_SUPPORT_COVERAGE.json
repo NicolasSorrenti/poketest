@@ -1,0 +1,94 @@
+{
+  "format": "classic",
+  "status": "Execution handler coverage, NOT historical-rule fidelity certification",
+  "sets": [
+    {
+      "set": "base1",
+      "cards": 102,
+      "attacks": {
+        "total": 114,
+        "handlers": 114
+      },
+      "trainers": {
+        "total": 25,
+        "handlers": 25
+      },
+      "powers": {
+        "total": 6,
+        "handlers": 6
+      }
+    },
+    {
+      "set": "base2",
+      "cards": 64,
+      "attacks": {
+        "total": 113,
+        "handlers": 113
+      },
+      "trainers": {
+        "total": 1,
+        "handlers": 1
+      },
+      "powers": {
+        "total": 10,
+        "handlers": 10
+      }
+    },
+    {
+      "set": "base3",
+      "cards": 62,
+      "attacks": {
+        "total": 90,
+        "handlers": 90
+      },
+      "trainers": {
+        "total": 4,
+        "handlers": 4
+      },
+      "powers": {
+        "total": 16,
+        "handlers": 16
+      }
+    },
+    {
+      "set": "base5",
+      "cards": 83,
+      "attacks": {
+        "total": 110,
+        "handlers": 110
+      },
+      "trainers": {
+        "total": 11,
+        "handlers": 11
+      },
+      "powers": {
+        "total": 20,
+        "handlers": 20
+      }
+    }
+  ],
+  "totals": [
+    {
+      "type": "attacks",
+      "records": 427,
+      "handlers": 427
+    },
+    {
+      "type": "trainers",
+      "records": 41,
+      "handlers": 41
+    },
+    {
+      "type": "powers",
+      "records": 52,
+      "handlers": 52
+    }
+  ],
+  "unhandled": [],
+  "notes": [
+    "Four-set card pool only. Later expansions stay archived.",
+    "The headless reducer is authoritative for these tests; the existing browser UI still uses its legacy rules engine.",
+    "Handler existence and smoke resolution do not certify every timing or card combination.",
+    "Legacy strict fidelity gate still audits Gym and Neo mechanics outside Classic scope."
+  ]
+}

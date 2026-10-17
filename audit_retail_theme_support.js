@@ -1,0 +1,17 @@
+'use strict';
+const fs=require('node:fs');
+const RETAIL=require('./retail_theme_decks');
+const ATTACK=require('./attack_effects_core');
+const POWERS=require('./classic_power_core');
+const TRAINERS=require('./classic_trainer_core');
+const {CATALOG}=require('./headless_duel');
+const gym=RETAIL.gymIds.map(id=>CATALOG.get(id));
+const attacks=gym.filter(c=>c.supertype==='Pokémon').flatMap(c=>(c.attacks||[]).map(a=>({id:c.id,pokemon:c.name,attack:a.name,compiled:!!ATTACK.compile(a),handler:ATTACK.compile(a)?.kind||null})));
+const trainerCards=gym.filter(c=>c.supertype==='Trainer').map(c=>({id:c.id,name:c.name,supported:TRAINERS.SUPPORTED.has(c.name)}));
+const powers=gym.filter(c=>c.supertype==='Pokémon').flatMap(c=>(c.abilities||[]).filter(a=>a.name).map(a=>({id:c.id,pokemon:c.name,power:a.name,migrated:[...POWERS.ACTIVATED,...POWERS.ONPLAY,...POWERS.PASSIVE].includes(a.name)})));
+const totals={deckCount:RETAIL.entries.length,curatedGymCards:gym.length,gymPokemon:gym.filter(c=>c.supertype==='Pokémon').length,gymTrainers:trainerCards.length,gymEnergy:gym.filter(c=>c.supertype==='Energy').length,printedGymAttacks:attacks.length,compiledGymAttacks:attacks.filter(x=>x.compiled).length,unportedGymAttacks:attacks.filter(x=>!x.compiled).length,implementedGymTrainers:trainerCards.filter(x=>x.supported).length,unsupportedGymTrainers:trainerCards.filter(x=>!x.supported).length,gymPowers:powers.length,migratedGymPowers:powers.filter(x=>x.migrated).length};
+const perDeck=RETAIL.entries.map(e=>{const cards=[...new Set(RETAIL.list(e.id))].map(id=>CATALOG.get(id));return {name:e.name,format:e.gym?'Gym preview':'Retail reprint / Classic',printedCards:RETAIL.list(e.id).length,distinctCards:cards.length,unsupportedAttacks:cards.flatMap(c=>(c.attacks||[]).filter(a=>!ATTACK.compile(a)).map(a=>`${c.name} — ${a.name}`)),unsupportedTrainers:cards.filter(c=>c.supertype==='Trainer'&&!TRAINERS.SUPPORTED.has(c.name)).map(c=>c.name),unsupportedPowers:cards.flatMap(c=>(c.abilities||[]).filter(a=>a.name&&!([ ...POWERS.ACTIVATED,...POWERS.ONPLAY,...POWERS.PASSIVE].includes(a.name))).map(a=>`${c.name} — ${a.name}`))};});
+const result={generatedBy:'node audit_retail_theme_support.js',scope:'Only cards included in the 16 new retail theme decks',totals,perDeck,gymUnsupportedAttacks:attacks.filter(a=>!a.compiled),gymUnsupportedTrainers:trainerCards.filter(c=>!c.supported),gymUnsupportedPowers:powers.filter(a=>!a.migrated)};
+fs.writeFileSync('CURATED_RETAIL_SUPPORT.json',JSON.stringify(result,null,2)+'\n');
+console.log('RETAIL THEME SUPPORT',totals);
+module.exports=result;

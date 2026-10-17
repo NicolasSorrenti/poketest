@@ -1,0 +1,58 @@
+{
+  "version": "v0.33",
+  "scope": "Gym Heroes / Gym Challenge",
+  "classification": "Static handler audit only; passing handler audit does NOT certify faithful complete historical interactions",
+  "summary": {
+    "cards": 264,
+    "attacks": {
+      "total": 316,
+      "handler": 315,
+      "missing": 1
+    },
+    "pokemonPowers": {
+      "total": 24,
+      "handler": 24,
+      "missing": 0
+    },
+    "trainers": {
+      "total": 66,
+      "handler": 63,
+      "missing": 3
+    }
+  },
+  "missing": {
+    "attacks": [
+      {
+        "id": "gym2-90",
+        "card": "Misty's Psyduck",
+        "effect": "ESP"
+      }
+    ],
+    "pokemonPowers": [],
+    "trainers": [
+      {
+        "id": "gym1-97",
+        "card": "Blaine's Quiz #1",
+        "effect": "Blaine's Quiz #1"
+      },
+      {
+        "id": "gym2-102",
+        "card": "Chaos Gym",
+        "effect": "Chaos Gym"
+      },
+      {
+        "id": "gym2-107",
+        "card": "Lt. Surge's Secret Plan",
+        "effect": "Lt. Surge's Secret Plan"
+      }
+    ]
+  },
+  "notes": [
+    "Four card printings have no effect handler.",
+    "Blaine Quiz #1 requires accurate Pokédex height data and answer choices.",
+    "Misty Psyduck ESP copy branch requires three-flip, arbitrary attack-copy choices.",
+    "Chaos Gym requires fully atomic Trainer replay under opponent control.",
+    "Lt Surge Secret Plan requires concealed face-down Bench card rules and privacy-safe reveal.",
+    "Reactive Powers, preexisting attacks, Gym/Neo cross-sets require further multiplayer fidelity verification."
+  ]
+}

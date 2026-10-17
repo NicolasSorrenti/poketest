@@ -1,0 +1,28 @@
+
+> neo-campus-tcg@0.12.0-headless-targeting audit:headless
+> node audit_headless.js
+
+Headless attack execution: 704/1479 (47.6%)
+┌───────────────────┬────────┐
+│ (index)           │ Values │
+├───────────────────┼────────┤
+│ flat              │ 297    │
+│ coin-times        │ 55     │
+│ coin-failure      │ 25     │
+│ coin-bonus        │ 38     │
+│ status            │ 48     │
+│ coin-status       │ 141    │
+│ recoil            │ 20     │
+│ coin-recoil       │ 12     │
+│ draw-one          │ 4      │
+│ bench-own         │ 5      │
+│ bench-target      │ 10     │
+│ bench-both-recoil │ 8      │
+│ bench-splash-coin │ 4      │
+│ switch-defender   │ 11     │
+│ switch-attacker   │ 6      │
+│ switch-self       │ 2      │
+│ energy-discard    │ 18     │
+│ unported          │ 775    │
+└───────────────────┴────────┘
+Unported effects are rejected, never silently treated as plain damage.

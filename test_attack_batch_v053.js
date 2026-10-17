@@ -1,0 +1,32 @@
+'use strict';
+const assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm'),path=require('node:path');
+const src=fs.readFileSync(path.join(__dirname,'engine.js'),'utf8').split('async function load()')[0].replace('const engine=new Engine();window.NeoCampus={engine,get cards(){return cards},lookup};','const engine=new Engine();');
+const el=()=>({classList:{add(){},remove(){}},style:{},querySelectorAll:()=>[]});
+const ctx={console,Math:Object.create(Math),document:{getElementById:el,querySelector:()=>null},setTimeout(){},clearTimeout(){}};vm.createContext(ctx);vm.runInContext(src,ctx);const run=s=>vm.runInContext(s,ctx);
+const base=['base1','base2','base3','base4','base5','basep','gym1','gym2','neo1','neo2','neo3','neo4'].flatMap(x=>require('./cards/'+x+'.json'));
+const testCards=['Grass','Fire','Water','Psychic','Fighting','Lightning'].map(t=>({id:'v53-'+t,name:t+' Energy',supertype:'Energy'}));
+testCards.push({id:'v53-dummy',name:'Training Dummy',supertype:'Pokémon',subtypes:['Basic'],types:['Colorless'],hp:'400',attacks:[{name:'Tackle',cost:['Colorless'],damage:'10',text:''}],abilities:[],retreatCost:[],weaknesses:[],resistances:[]});
+ctx.localCards=[...base,...testCards];run('cards=localCards;lookup=new Map(cards.map(c=>[c.id,c]));render=()=>{};engine.end=()=>{};battlefieldAttack=()=>{};queuePrizeFX=()=>{};');
+let tests=0;
+function setup(id,name,extras='',head=true){
+ const c=base.find(x=>x.id===id),index=c.attacks.findIndex(a=>a.name===name);assert(index>=0);
+ const energies=c.attacks[index].cost.map(x=>'v53-'+(x==='Colorless'?'Fire':x));
+ run(`engine.players=[statePlayer('Human',[]),statePlayer('CPU',[])];engine.phase='game';engine.round=8;engine.turnSerial=12;engine.turn=0;engine.over=false;engine.pending53=null;engine.players[0].active=unit('${id}');engine.players[0].active.energies=${JSON.stringify(energies)};engine.players[0].bench=[unit('v53-dummy')];engine.players[1].active=unit('v53-dummy');engine.players[1].bench=[unit('v53-dummy')];engine.players[0].prizes=['v53-dummy','v53-dummy'];engine.players[1].prizes=['v53-dummy','v53-dummy'];deckSearchRequest=null;${extras}`);
+ ctx.Math.random=()=>head?.01:.99;
+ assert.equal(run(`engine.attackPattern(engine.card(engine.me.active).attacks[${index}])`),'batch53');tests++;
+ return choice=>run(`engine.attack(${index},null,true,${choice===undefined?'null':JSON.stringify(choice)})`);
+}
+const choices=()=>run('deckSearchRequest.options.map(x=>({index:x.index,name:x.name}))');
+let a=setup('gym2-31','Bonfire',"engine.me.active.energies=['v53-Fire','v53-Fire','v53-Fire','v53-Fire'];");
+assert.equal(a(),false);assert.equal(choices().length,4);assert.equal(a([0,0,1]),false);assert.equal(run('engine.me.active.energies.length'),4);assert(a([0,1,3]));assert.equal(run('engine.me.active.energies.length'),1);assert.equal(run('engine.me.discard.length'),3);assert.equal(run('engine.foe.active.damage'),30);assert.equal(run('engine.foe.bench[0].damage'),30);
+a=setup('gym2-31','Bonfire',"engine.me.active.energies=['v53-Fire','v53-Fire','v53-Fire'];",false);assert(a());assert.equal(run('engine.foe.active.damage'),0);assert.equal(run('engine.me.discard.length'),0);
+a=setup('gym1-14','Call of the Night',"engine.foe.active.energies=['v53-Fire'];engine.foe.active.under=['base1-26'];",true);assert(a());assert.equal(run('engine.foe.deck.length'),3);assert.equal(run('engine.foe.active.id'),'v53-dummy');assert.equal(run('engine.foe.bench.length'),0);
+a=setup('gym1-14','Call of the Night',"engine.foe.active.damage=360;engine.foe.active.energies=['v53-Fire'];",true);assert(a());assert.equal(run('engine.foe.deck.length'),0);assert.equal(run('engine.me.prizes.length'),1);
+a=setup('gym2-56','Invigorate',"engine.me.discard=['base1-50','base1-63'];engine.foe.discard=['base1-44'];");assert.equal(a(),false);assert.equal(choices().length,3);assert.equal(a(12345),false);assert.equal(run('engine.me.discard.length'),2);assert(a(10000));assert.equal(run('engine.foe.bench.length'),2);assert.equal(run('engine.foe.bench[1].id'),'base1-44');assert.equal(run('engine.foe.bench[1].damage'),Math.floor(Number(base.find(x=>x.id==='base1-44').hp)/20)*10);
+a=setup('neo4-7','Eerie Howl',"engine.foe.hand=['base1-44','v53-Fire','base1-63'];");assert.equal(a(),false);assert.equal(choices().length,2);assert.equal(a(1),false);assert.equal(run('engine.foe.bench.length'),1);assert(a(2));assert.equal(run('engine.foe.bench.length'),2);assert.equal(run('engine.foe.bench[1].id'),'base1-63');assert.equal(run('engine.foe.hand.length'),2);
+a=setup('neo4-21','Provoke',"engine.foe.hand=['base1-44','base1-63','v53-Fire'];");assert.equal(a(),false);assert.equal(a([0,0]),false);assert(a([0,1]));assert.equal(run('engine.foe.bench.length'),3);assert.equal(run('engine.foe.hand.length'),1);
+a=setup('neo4-19','Prehistoric Water',"engine.foe.bench[0].id='base1-2';engine.foe.bench[0].under=['base1-42','base1-47'];",true);assert.equal(a(),false);assert.equal(a(18),false);assert(a(0));assert.equal(run('engine.foe.bench[0].id'),'base1-42');assert.equal(run('engine.foe.deck.length'),1);
+a=setup('neo4-19','Prehistoric Water',"engine.foe.bench[0].id='base1-2';engine.foe.bench[0].under=['base1-42'];",false);assert.equal(a(),false);assert(a(0));assert.equal(run('engine.foe.bench[0].id'),'base1-2');
+a=setup('gym2-57','Helping Hand',"engine.foe.active.damage=40;engine.me.deck=['v53-Water','v53-Fire','v53-Psychic'];");assert.equal(a(),false);assert.equal(a(-1),false);assert.equal(a({slot:-1,count:5}),false);assert.equal(run('engine.foe.active.damage'),40);assert(a({slot:-1,count:2}));assert.equal(run('engine.foe.active.damage'),20);assert.equal(run('engine.me.hand.length'),2);
+const audit=run('engine.attackAudit()');assert.equal(audit.filter(x=>x.pattern==='batch53').length,7);assert.ok(audit.filter(x=>!x.implemented).length<=25);
+console.log('PASS v0.5.3: '+tests+' prepared duel setups, seven new historical card-attack records, coin flips, invalid choices, Energy discards, Bench damage, deck shuffling, devolution, opponent hand selection, healing and card draw.');

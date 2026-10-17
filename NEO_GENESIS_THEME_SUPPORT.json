@@ -1,0 +1,521 @@
+{
+  "scope": "Original 2 Neo Genesis retail decks only, not complete Neo Genesis set",
+  "deckCount": 2,
+  "printings": 33,
+  "attackPrograms": {
+    "compiled": 42,
+    "total": 42
+  },
+  "powers": {
+    "registered": 2,
+    "total": 2
+  },
+  "trainers": {
+    "registered": 5,
+    "total": 5
+  },
+  "missingEffects": [],
+  "decks": [
+    {
+      "id": "cold_fusion",
+      "name": "Cold Fusion · Neo Genesis (preview)",
+      "cards": [
+        {
+          "id": "neo1-80",
+          "name": "Totodile",
+          "supertype": "Pokémon",
+          "attacks": [
+            {
+              "name": "Bite",
+              "compiled": true
+            },
+            {
+              "name": "Rage",
+              "compiled": true
+            }
+          ],
+          "powers": [],
+          "trainer": null
+        },
+        {
+          "id": "neo1-81",
+          "name": "Totodile",
+          "supertype": "Pokémon",
+          "attacks": [
+            {
+              "name": "Leer",
+              "compiled": true
+            },
+            {
+              "name": "Fury Swipes",
+              "compiled": true
+            }
+          ],
+          "powers": [],
+          "trainer": null
+        },
+        {
+          "id": "neo1-31",
+          "name": "Croconaw",
+          "supertype": "Pokémon",
+          "attacks": [
+            {
+              "name": "Screech",
+              "compiled": true
+            },
+            {
+              "name": "Jaw Clamp",
+              "compiled": true
+            }
+          ],
+          "powers": [],
+          "trainer": null
+        },
+        {
+          "id": "neo1-32",
+          "name": "Croconaw",
+          "supertype": "Pokémon",
+          "attacks": [
+            {
+              "name": "Tackle",
+              "compiled": true
+            },
+            {
+              "name": "Sweep Away",
+              "compiled": true
+            }
+          ],
+          "powers": [],
+          "trainer": null
+        },
+        {
+          "id": "neo1-64",
+          "name": "Mantine",
+          "supertype": "Pokémon",
+          "attacks": [
+            {
+              "name": "Undulate",
+              "compiled": true
+            }
+          ],
+          "powers": [],
+          "trainer": null
+        },
+        {
+          "id": "neo1-62",
+          "name": "Horsea",
+          "supertype": "Pokémon",
+          "attacks": [
+            {
+              "name": "Fin Slap",
+              "compiled": true
+            }
+          ],
+          "powers": [],
+          "trainer": null
+        },
+        {
+          "id": "neo1-48",
+          "name": "Seadra",
+          "supertype": "Pokémon",
+          "attacks": [
+            {
+              "name": "Bubble",
+              "compiled": true
+            },
+            {
+              "name": "Mud Splash",
+              "compiled": true
+            }
+          ],
+          "powers": [],
+          "trainer": null
+        },
+        {
+          "id": "neo1-8",
+          "name": "Kingdra",
+          "supertype": "Pokémon",
+          "attacks": [
+            {
+              "name": "Agility",
+              "compiled": true
+            },
+            {
+              "name": "Dragon Tornado",
+              "compiled": true
+            }
+          ],
+          "powers": [],
+          "trainer": null
+        },
+        {
+          "id": "neo1-55",
+          "name": "Chinchou",
+          "supertype": "Pokémon",
+          "attacks": [
+            {
+              "name": "Supersonic",
+              "compiled": true
+            },
+            {
+              "name": "Flail",
+              "compiled": true
+            }
+          ],
+          "powers": [],
+          "trainer": null
+        },
+        {
+          "id": "neo1-38",
+          "name": "Lanturn",
+          "supertype": "Pokémon",
+          "attacks": [
+            {
+              "name": "Floodlight",
+              "compiled": true
+            }
+          ],
+          "powers": [
+            {
+              "name": "Hydroelectric Power",
+              "registered": true
+            }
+          ],
+          "trainer": null
+        },
+        {
+          "id": "neo1-22",
+          "name": "Elekid",
+          "supertype": "Pokémon",
+          "attacks": [],
+          "powers": [
+            {
+              "name": "Playful Punch",
+              "registered": true
+            }
+          ],
+          "trainer": null
+        },
+        {
+          "id": "neo1-33",
+          "name": "Electabuzz",
+          "supertype": "Pokémon",
+          "attacks": [
+            {
+              "name": "Punch",
+              "compiled": true
+            },
+            {
+              "name": "Swift",
+              "compiled": true
+            }
+          ],
+          "powers": [],
+          "trainer": null
+        },
+        {
+          "id": "neo1-70",
+          "name": "Pikachu",
+          "supertype": "Pokémon",
+          "attacks": [
+            {
+              "name": "Quick Attack",
+              "compiled": true
+            },
+            {
+              "name": "Agility",
+              "compiled": true
+            }
+          ],
+          "powers": [],
+          "trainer": null
+        },
+        {
+          "id": "neo1-101",
+          "name": "Moo-Moo Milk",
+          "supertype": "Trainer",
+          "attacks": [],
+          "powers": [],
+          "trainer": true
+        },
+        {
+          "id": "neo1-96",
+          "name": "Professor Elm",
+          "supertype": "Trainer",
+          "attacks": [],
+          "powers": [],
+          "trainer": true
+        },
+        {
+          "id": "neo1-103",
+          "name": "Super Rod",
+          "supertype": "Trainer",
+          "attacks": [],
+          "powers": [],
+          "trainer": true
+        },
+        {
+          "id": "neo1-111",
+          "name": "Water Energy",
+          "supertype": "Energy",
+          "attacks": [],
+          "powers": [],
+          "trainer": null
+        },
+        {
+          "id": "neo1-109",
+          "name": "Lightning Energy",
+          "supertype": "Energy",
+          "attacks": [],
+          "powers": [],
+          "trainer": null
+        }
+      ]
+    },
+    {
+      "id": "hotfoot",
+      "name": "Hotfoot · Neo Genesis (preview)",
+      "cards": [
+        {
+          "id": "neo1-61",
+          "name": "Hoppip",
+          "supertype": "Pokémon",
+          "attacks": [
+            {
+              "name": "Hop",
+              "compiled": true
+            },
+            {
+              "name": "Sprout",
+              "compiled": true
+            }
+          ],
+          "powers": [],
+          "trainer": null
+        },
+        {
+          "id": "neo1-49",
+          "name": "Skiploom",
+          "supertype": "Pokémon",
+          "attacks": [
+            {
+              "name": "Poisonpowder",
+              "compiled": true
+            },
+            {
+              "name": "Stun Spore",
+              "compiled": true
+            }
+          ],
+          "powers": [],
+          "trainer": null
+        },
+        {
+          "id": "neo1-7",
+          "name": "Jumpluff",
+          "supertype": "Pokémon",
+          "attacks": [
+            {
+              "name": "Sleep Powder",
+              "compiled": true
+            },
+            {
+              "name": "Leech Seed",
+              "compiled": true
+            }
+          ],
+          "powers": [],
+          "trainer": null
+        },
+        {
+          "id": "neo1-68",
+          "name": "Oddish",
+          "supertype": "Pokémon",
+          "attacks": [
+            {
+              "name": "Hide",
+              "compiled": true
+            },
+            {
+              "name": "Absorb",
+              "compiled": true
+            }
+          ],
+          "powers": [],
+          "trainer": null
+        },
+        {
+          "id": "neo1-75",
+          "name": "Spinarak",
+          "supertype": "Pokémon",
+          "attacks": [
+            {
+              "name": "Scary Face",
+              "compiled": true
+            },
+            {
+              "name": "String Shot",
+              "compiled": true
+            }
+          ],
+          "powers": [],
+          "trainer": null
+        },
+        {
+          "id": "neo1-27",
+          "name": "Ariados",
+          "supertype": "Pokémon",
+          "attacks": [
+            {
+              "name": "Spider Web",
+              "compiled": true
+            },
+            {
+              "name": "Poison Bite",
+              "compiled": true
+            }
+          ],
+          "powers": [],
+          "trainer": null
+        },
+        {
+          "id": "neo1-56",
+          "name": "Cyndaquil",
+          "supertype": "Pokémon",
+          "attacks": [
+            {
+              "name": "Leer",
+              "compiled": true
+            },
+            {
+              "name": "Swift",
+              "compiled": true
+            }
+          ],
+          "powers": [],
+          "trainer": null
+        },
+        {
+          "id": "neo1-57",
+          "name": "Cyndaquil",
+          "supertype": "Pokémon",
+          "attacks": [
+            {
+              "name": "Fireworks",
+              "compiled": true
+            },
+            {
+              "name": "Quick Attack",
+              "compiled": true
+            }
+          ],
+          "powers": [],
+          "trainer": null
+        },
+        {
+          "id": "neo1-47",
+          "name": "Quilava",
+          "supertype": "Pokémon",
+          "attacks": [
+            {
+              "name": "Smokescreen",
+              "compiled": true
+            },
+            {
+              "name": "Char",
+              "compiled": true
+            }
+          ],
+          "powers": [],
+          "trainer": null
+        },
+        {
+          "id": "neo1-23",
+          "name": "Magby",
+          "supertype": "Pokémon",
+          "attacks": [
+            {
+              "name": "Sputter",
+              "compiled": true
+            }
+          ],
+          "powers": [],
+          "trainer": null
+        },
+        {
+          "id": "neo1-40",
+          "name": "Magmar",
+          "supertype": "Pokémon",
+          "attacks": [
+            {
+              "name": "Tail Slap",
+              "compiled": true
+            },
+            {
+              "name": "Magma Punch",
+              "compiled": true
+            }
+          ],
+          "powers": [],
+          "trainer": null
+        },
+        {
+          "id": "neo1-91",
+          "name": "Bill's Teleporter",
+          "supertype": "Trainer",
+          "attacks": [],
+          "powers": [],
+          "trainer": true
+        },
+        {
+          "id": "neo1-101",
+          "name": "Moo-Moo Milk",
+          "supertype": "Trainer",
+          "attacks": [],
+          "powers": [],
+          "trainer": true
+        },
+        {
+          "id": "neo1-102",
+          "name": "Pokémon March",
+          "supertype": "Trainer",
+          "attacks": [],
+          "powers": [],
+          "trainer": true
+        },
+        {
+          "id": "neo1-96",
+          "name": "Professor Elm",
+          "supertype": "Trainer",
+          "attacks": [],
+          "powers": [],
+          "trainer": true
+        },
+        {
+          "id": "neo1-103",
+          "name": "Super Rod",
+          "supertype": "Trainer",
+          "attacks": [],
+          "powers": [],
+          "trainer": true
+        },
+        {
+          "id": "neo1-108",
+          "name": "Grass Energy",
+          "supertype": "Energy",
+          "attacks": [],
+          "powers": [],
+          "trainer": null
+        },
+        {
+          "id": "neo1-107",
+          "name": "Fire Energy",
+          "supertype": "Energy",
+          "attacks": [],
+          "powers": [],
+          "trainer": null
+        }
+      ]
+    }
+  ]
+}

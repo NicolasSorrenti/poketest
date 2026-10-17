@@ -1,0 +1,3163 @@
+{
+  "scannedCards": 1123,
+  "totalAttacks": 1479,
+  "handled": 1147,
+  "unsupported": [
+    {
+      "card": "base1-5",
+      "cardName": "Clefairy",
+      "index": 1,
+      "attack": "Metronome",
+      "pattern": null,
+      "implemented": false,
+      "text": "Choose 1 of Defending Pokémon's attacks. Metronome copies that attack except for its Energy costs and anything else required in order to use that attack, such as discarding energy cards. (No matter what type the defender is, Clefairy's type is still Colorless.)"
+    },
+    {
+      "card": "base1-22",
+      "cardName": "Pidgeotto",
+      "index": 1,
+      "attack": "Mirror Move",
+      "pattern": null,
+      "implemented": false,
+      "text": "If Pidgeotto was attacked last turn, do the final result of that attack on Pidgeotto to the Defending Pokémon."
+    },
+    {
+      "card": "base1-39",
+      "cardName": "Porygon",
+      "index": 0,
+      "attack": "Conversion 1",
+      "pattern": null,
+      "implemented": false,
+      "text": "If the Defending Pokémon has a Weakness, you may change it to a type of your choice other than Colorless."
+    },
+    {
+      "card": "base1-39",
+      "cardName": "Porygon",
+      "index": 1,
+      "attack": "Conversion 2",
+      "pattern": null,
+      "implemented": false,
+      "text": "Change Porygon's Resistance to a type of your choice other than Colorless."
+    },
+    {
+      "card": "base1-59",
+      "cardName": "Poliwag",
+      "index": 0,
+      "attack": "Water Gun",
+      "pattern": null,
+      "implemented": false,
+      "text": "Does 10 damage plus 10 damage for each Energy attached to Poliwag but not used to pay for this attack's Energy cost. Extra Energy after the end don't count."
+    },
+    {
+      "card": "base2-1",
+      "cardName": "Clefable",
+      "index": 0,
+      "attack": "Metronome",
+      "pattern": null,
+      "implemented": false,
+      "text": "Choose 1 of the Defending Pokémon's attacks. Metronome copies that attack except for its Energy costs and anything else required in order to use that attack, such as discarding Energy cards. (No matter what type the Defending Pokémon is, Clefable's type is still Colorless.)"
+    },
+    {
+      "card": "base2-17",
+      "cardName": "Clefable",
+      "index": 0,
+      "attack": "Metronome",
+      "pattern": null,
+      "implemented": false,
+      "text": "Choose 1 of the Defending Pokémon's attacks. Metronome copies that attack except for its Energy costs and anything else required in order to use that attack, such as discarding Energy cards. (No matter what type the Defending Pokémon is, Clefable's type is still Colorless.)"
+    },
+    {
+      "card": "base2-62",
+      "cardName": "Spearow",
+      "index": 1,
+      "attack": "Mirror Move",
+      "pattern": null,
+      "implemented": false,
+      "text": "If Spearow was attacked last turn, do the final result of that attack on Spearow to the Defending Pokémon."
+    },
+    {
+      "card": "base3-8",
+      "cardName": "Hypno",
+      "index": 0,
+      "attack": "Prophecy",
+      "pattern": null,
+      "implemented": false,
+      "text": "Look at up to 3 cards from the top of either player's deck and rearrange them as you like."
+    },
+    {
+      "card": "base3-12",
+      "cardName": "Moltres",
+      "index": 0,
+      "attack": "Wildfire",
+      "pattern": null,
+      "implemented": false,
+      "text": "You may discard any number of R Energy cards attached to Moltres when you use this attack. If you do, discard that many cards from the top of your opponent's deck."
+    },
+    {
+      "card": "base3-14",
+      "cardName": "Raichu",
+      "index": 0,
+      "attack": "Gigashock",
+      "pattern": null,
+      "implemented": false,
+      "text": "Choose 3 of your opponent's Benched Pokémon and this attack does 10 damage to each of them. (Don't apply Weakness and Resistance for Benched Pokémon.) If your opponent has fewer than 3 Benched Pokémon, do the damage to each of them."
+    },
+    {
+      "card": "base3-15",
+      "cardName": "Zapdos",
+      "index": 0,
+      "attack": "Thunderstorm",
+      "pattern": null,
+      "implemented": false,
+      "text": "For each of your opponent's Benched Pokémon, flip a coin. If heads, this attack does 20 damage to that Pokémon. (Don't apply Weakness and Resistance for Benched Pokémon.) Then, Zapdos does 10 damage times the number of tails to itself."
+    },
+    {
+      "card": "base3-23",
+      "cardName": "Hypno",
+      "index": 0,
+      "attack": "Prophecy",
+      "pattern": null,
+      "implemented": false,
+      "text": "Look at up to 3 cards from the top of either player's deck and rearrange them as you like."
+    },
+    {
+      "card": "base3-27",
+      "cardName": "Moltres",
+      "index": 0,
+      "attack": "Wildfire",
+      "pattern": null,
+      "implemented": false,
+      "text": "You may discard any number of R Energy cards attached to Moltres when you use this attack. If you do, discard that many cards from the top of your opponent's deck."
+    },
+    {
+      "card": "base3-29",
+      "cardName": "Raichu",
+      "index": 0,
+      "attack": "Gigashock",
+      "pattern": null,
+      "implemented": false,
+      "text": "Choose 3 of your opponent's Benched Pokémon and this attack does 10 damage to each of them. (Don't apply Weakness and Resistance for Benched Pokémon.) If your opponent has fewer than 3 Benched Pokémon, do the damage to each of them."
+    },
+    {
+      "card": "base3-30",
+      "cardName": "Zapdos",
+      "index": 0,
+      "attack": "Thunderstorm",
+      "pattern": null,
+      "implemented": false,
+      "text": "For each of your opponent's Benched Pokémon, flip a coin. If heads, this attack does 20 damage to that Pokémon. (Don't apply Weakness and Resistance for Benched Pokémon.) Then, Zapdos does 10 damage times the number of tails to itself."
+    },
+    {
+      "card": "base4-5",
+      "cardName": "Clefable",
+      "index": 0,
+      "attack": "Metronome",
+      "pattern": null,
+      "implemented": false,
+      "text": "Choose 1 of the Defending Pokémon's attacks. Metronome copies that attack except for its Energy costs and anything else required in order to use that attack, such as discarding Energy cards. (No matter what type the Defending Pokémon is, Clefable's type is still Colorless.)"
+    },
+    {
+      "card": "base4-6",
+      "cardName": "Clefairy",
+      "index": 1,
+      "attack": "Metronome",
+      "pattern": null,
+      "implemented": false,
+      "text": "Choose 1 of Defending Pokémon's attacks. Metronome copies that attack except for its Energy costs and anything else required in order to use that attack, such as discarding energy cards. (No matter what type the defender is, Clefairy's type is still Colorless.)"
+    },
+    {
+      "card": "base4-28",
+      "cardName": "Pidgeotto",
+      "index": 1,
+      "attack": "Mirror Move",
+      "pattern": null,
+      "implemented": false,
+      "text": "If Pidgeotto was attacked last turn, do the final result of that attack on Pidgeotto to the Defending Pokémon."
+    },
+    {
+      "card": "base4-88",
+      "cardName": "Poliwag",
+      "index": 0,
+      "attack": "Water Gun",
+      "pattern": null,
+      "implemented": false,
+      "text": "Does 10 damage plus 10 damage for each Energy attached to Poliwag but not used to pay for this attack's Energy cost. Extra Energy after the end don't count."
+    },
+    {
+      "card": "base4-92",
+      "cardName": "Spearow",
+      "index": 1,
+      "attack": "Mirror Move",
+      "pattern": null,
+      "implemented": false,
+      "text": "If Spearow was attacked last turn, do the final result of that attack on Spearow to the Defending Pokémon."
+    },
+    {
+      "card": "base5-2",
+      "cardName": "Dark Arbok",
+      "index": 0,
+      "attack": "Stare",
+      "pattern": null,
+      "implemented": false,
+      "text": "Choose 1 of your opponent's Pokémon. This attack does 10 damage to that Pokémon. Don't apply Weakness and Resistance for this attack. (Any other effects that would happen after applying Weakness and Resistance still happen.) If that Pokémon has a Pokémon Power, that power stops working until the end of your opponent's next turn."
+    },
+    {
+      "card": "base5-19",
+      "cardName": "Dark Arbok",
+      "index": 0,
+      "attack": "Stare",
+      "pattern": null,
+      "implemented": false,
+      "text": "Choose 1 of your opponent's Pokémon. This attack does 10 damage to that Pokémon. Don't apply Weakness and Resistance for this attack. (Any other effects that would happen after applying Weakness and Resistance still happen.) If that Pokémon has a Pokémon Power, that power stops working until the end of your opponent's next turn."
+    },
+    {
+      "card": "base5-34",
+      "cardName": "Dark Electrode",
+      "index": 1,
+      "attack": "Energy Bomb",
+      "pattern": null,
+      "implemented": false,
+      "text": "Take all Energy cards attached to Dark Electrode and attach them to your Benched Pokémon (in any way you choose). If you have no Benched Pokémon, discard all Energy cards attached to Dark Electrode."
+    },
+    {
+      "card": "base5-44",
+      "cardName": "Dark Rapidash",
+      "index": 1,
+      "attack": "Flame Pillar",
+      "pattern": null,
+      "implemented": false,
+      "text": "You may discard 1 Energy card attached to Dark Rapidash when you use this attack. If you do and if your opponent has any Benched Pokémon, choose 1 of them and this attack does 10 damage to it. (Don't apply Weakness and Resistance for Benched Pokémon.)"
+    },
+    {
+      "card": "base5-46",
+      "cardName": "Dark Wartortle",
+      "index": 1,
+      "attack": "Mirror Shell",
+      "pattern": null,
+      "implemented": false,
+      "text": "If an attack does damage to Dark Wartortle during your opponent's next turn (even if Dark Wartortle is Knocked Out), Dark Wartortle attacks the Defending Pokémon for an equal amount of damage."
+    },
+    {
+      "card": "base5-48",
+      "cardName": "Porygon",
+      "index": 0,
+      "attack": "Conversion 1",
+      "pattern": null,
+      "implemented": false,
+      "text": "If Defending Pokémon has a Weakness, you may change it to a type of your choice other than Colorless."
+    },
+    {
+      "card": "basep-8",
+      "cardName": "Mew",
+      "index": 1,
+      "attack": "Devolution Beam",
+      "pattern": null,
+      "implemented": false,
+      "text": "Choose an Evolved Pokémon (your own or your opponent's). Return the highest Stage Evolution card on that Pokémon to its player's hand. That Pokémon is no longer Asleep, Confused, Paralyzed, Poisoned, or anything else that might be the result of an attack (just as if you had evolved it)."
+    },
+    {
+      "card": "basep-9",
+      "cardName": "Mew",
+      "index": 1,
+      "attack": "Devolution Beam",
+      "pattern": null,
+      "implemented": false,
+      "text": "Choose an Evolved Pokémon (your own or your opponent's). Return the highest Stage Evolution card on that Pokémon to its player's hand. That Pokémon is no longer Asleep, Confused, Paralyzed, Poisoned, or anything else that might be the result of an attack (just as if you had evolved it)."
+    },
+    {
+      "card": "basep-10",
+      "cardName": "Meowth",
+      "index": 0,
+      "attack": "Cat Punch",
+      "pattern": null,
+      "implemented": false,
+      "text": "Flip a coin. If heads, this attack does 20 damage. If tails and if your opponent has any Benched Pokémon, he or she chooses 1 of them and this attack does 20 damage to it. (Don't apply Weakness and Resistance for Benched Pokémon.)"
+    },
+    {
+      "card": "basep-12",
+      "cardName": "Mewtwo",
+      "index": 0,
+      "attack": "Energy Control",
+      "pattern": null,
+      "implemented": false,
+      "text": "Flip a coin. If heads, choose a basic Energy card attached to 1 of your opponent's Pokémon and attach it to another of your opponent's Pokémon of your choice."
+    },
+    {
+      "card": "basep-15",
+      "cardName": "Cool Porygon",
+      "index": 0,
+      "attack": "Texture Magic",
+      "pattern": null,
+      "implemented": false,
+      "text": "You may change Cool Porygon's Resistance to a type of your choice other than Colorless. If the Defending Pokémon has a Weakness, you may change it to a type of your choice other than Colorless. (Benching either Pokémon ends the effect on that Pokémon.)"
+    },
+    {
+      "card": "basep-17",
+      "cardName": "Dark Persian",
+      "index": 0,
+      "attack": "Tempt",
+      "pattern": null,
+      "implemented": false,
+      "text": "If your opponent has any Benched Pokémon, flip a coin. If heads, choose 1 of your opponent's Benched Pokémon and switch it with the Defending Pokémon."
+    },
+    {
+      "card": "basep-23",
+      "cardName": "Zapdos",
+      "index": 0,
+      "attack": "Lightning Burn",
+      "pattern": null,
+      "implemented": false,
+      "text": "Flip a coin. If heads, and if your opponent has any Benched Pokémon, choose 1 of them. This attack does 30 damage to that Pokémon. (Don't apply Weakness and Resistance for Benched Pokémon.) If tails, Zapdos does 30 damage to itself."
+    },
+    {
+      "card": "basep-24",
+      "cardName": "___________'s Pikachu",
+      "index": 0,
+      "attack": "Birthday Surprise",
+      "pattern": null,
+      "implemented": false,
+      "text": "If it's not your birthday, this attack does 30 damage. If it is your birthday, flip a coin. If heads, this attack does 30 damage plus 50 more damage; if tails, this attack does 30 damage."
+    },
+    {
+      "card": "basep-30",
+      "cardName": "Togepi",
+      "index": 1,
+      "attack": "Mini-Metronome",
+      "pattern": null,
+      "implemented": false,
+      "text": "Flip a coin. If heads, choose 1 of the Defending Pokémon's attacks. Mini-Metronome copies that attack except for its Energy cost. (You must still do anything else in order to use that attack.) (No matter what type the Defending Pokémon is, Togepi's type is still .) Togepi performs that attack."
+    },
+    {
+      "card": "basep-32",
+      "cardName": "Smeargle",
+      "index": 0,
+      "attack": "Paint",
+      "pattern": null,
+      "implemented": false,
+      "text": "Flip a coin. If heads, choose a type (other than colorless) and put a Coloring counter on the Defending Pokémon. That Pokémon is now the type you choose. If it already had a Coloring counter, remove the old one. If tails, this attack does nothing."
+    },
+    {
+      "card": "basep-35",
+      "cardName": "Pichu",
+      "index": 0,
+      "attack": "Let's Play!",
+      "pattern": null,
+      "implemented": false,
+      "text": "Search your deck for a Baby Pokémon card and put it onto your Bench. Shuffle your deck afterward. (You can't use this attack if your Bench is full.)"
+    },
+    {
+      "card": "basep-44",
+      "cardName": "Magmar",
+      "index": 0,
+      "attack": "Burning Fire",
+      "pattern": null,
+      "implemented": false,
+      "text": "When you use this attack, you may discard any number of Energy cards attached to your Pokémon in play. This attack does 10 damage plus 10 more damage for each Energy card you discarded in this way."
+    },
+    {
+      "card": "basep-46",
+      "cardName": "Electabuzz",
+      "index": 0,
+      "attack": "Lightning Rod",
+      "pattern": null,
+      "implemented": false,
+      "text": "Choose 1 of your opponent's Pokémon and put a Lightning Rod marker on it. (A Pokémon can have only 1 Lightning Rod marker on it at a time.)"
+    },
+    {
+      "card": "basep-46",
+      "cardName": "Electabuzz",
+      "index": 1,
+      "attack": "Lightning Bolt",
+      "pattern": null,
+      "implemented": false,
+      "text": "This attack does 20 damage to any Pokémon with a Lightning Rod counter on it. Apply Weakness and Resistance."
+    },
+    {
+      "card": "basep-51",
+      "cardName": "Rapidash",
+      "index": 0,
+      "attack": "Jump Over",
+      "pattern": null,
+      "implemented": false,
+      "text": "If you opponent has any Benched Pokémon, choose 1 of them. Flip a coin. If heads, this attack does 20 damage to that Pokémon. (Don't apply Weakness and Resistance for Benched Pokémon.)"
+    },
+    {
+      "card": "gym1-3",
+      "cardName": "Erika's Clefable",
+      "index": 0,
+      "attack": "Fairy Power",
+      "pattern": null,
+      "implemented": false,
+      "text": "Flip a coin. If heads, you may return any number of your Pokémon in play and all cards attached to them to your hand."
+    },
+    {
+      "card": "gym1-4",
+      "cardName": "Erika's Dragonair",
+      "index": 1,
+      "attack": "Take Away",
+      "pattern": null,
+      "implemented": false,
+      "text": "Shuffle Erika's Dragonair and all cards attached to it into your deck. Then, your opponent shuffles his or her Active Pokémon and all cards attached to it into his or her deck."
+    },
+    {
+      "card": "gym1-6",
+      "cardName": "Lt. Surge's Electabuzz",
+      "index": 1,
+      "attack": "Discharge",
+      "pattern": null,
+      "implemented": false,
+      "text": "Discard all Lightning Energy cards attached to Lt. Surge's Electabuzz in order to use this attack. Flip a number of coins equal to the number of Lightning Energy cards you discarded. This attack does 30 damage times the number of heads."
+    },
+    {
+      "card": "gym1-11",
+      "cardName": "Rocket's Hitmonchan",
+      "index": 0,
+      "attack": "Crosscounter",
+      "pattern": null,
+      "implemented": false,
+      "text": "If an attack does damage to Rocket's Hitmonchan during your opponent's next turn (even if Rocket's Hitmonchan is Knocked Out), flip a coin. If heads, Rocket's Hitmonchan attacks your opponent's Active Pokémon for double that amount of damage. (If Rocket's Hitmonchan takes 20 damage, it does 40 damage to that Pokémon.)"
+    },
+    {
+      "card": "gym1-12",
+      "cardName": "Rocket's Moltres",
+      "index": 0,
+      "attack": "Fire Wall",
+      "pattern": null,
+      "implemented": false,
+      "text": "If an attack does damage to Rocket's Moltres during your opponent's next turn (even if Rocket's Moltres is Knocked Out), Rocket's Moltres attacks your opponent's Active Pokémon for 10 damage. (Apply Weakness and Resistance.)"
+    },
+    {
+      "card": "gym1-13",
+      "cardName": "Rocket's Scyther",
+      "index": 0,
+      "attack": "Shadow Images",
+      "pattern": null,
+      "implemented": false,
+      "text": "Whenever Rocket's Scyther is attacked, your opponent flips a coin. If tails, that attack does no damage to Rocket's Scyther. (Any other effects of the attack still happen.) This effect lasts until Rocket's Scyther takes damage (or is Benched or is evolved)."
+    },
+    {
+      "card": "gym1-14",
+      "cardName": "Sabrina's Gengar",
+      "index": 1,
+      "attack": "Call of the Night",
+      "pattern": null,
+      "implemented": false,
+      "text": "Unless this attack Knocks Out the Defending Pokémon, flip 2 coins. If both of them are heads, your opponent shuffles his or her Active Pokémon and all cards attached to it into his or her deck."
+    },
+    {
+      "card": "gym1-20",
+      "cardName": "Brock's Golem",
+      "index": 0,
+      "attack": "Rock Slide",
+      "pattern": null,
+      "implemented": false,
+      "text": "If your opponent has any Benched Pokémon, choose up to 3 of them. This attack does 10 damgae to each of them. (Don't apply Weakness and Resistance for Benched Pokémon.)"
+    },
+    {
+      "card": "gym1-21",
+      "cardName": "Brock's Onix",
+      "index": 1,
+      "attack": "Tunneling",
+      "pattern": null,
+      "implemented": false,
+      "text": "If your opponent has any Benched Pokémon, choose up to 2 of them. This attack does 20 damage to each of them. (Don't apply Weakness and Resistance for Benched Pokémon.) Brock's Onix can't attack during your next turn."
+    },
+    {
+      "card": "gym1-27",
+      "cardName": "Lt. Surge's Electabuzz",
+      "index": 1,
+      "attack": "Electric Current",
+      "pattern": null,
+      "implemented": false,
+      "text": "Take 1 Lightning Energy card attached to Lt. Surge's Electabuzz and attach it to 1 of your Benched Pokémon. If you have no Benched Pokémon, discard that Energy card."
+    },
+    {
+      "card": "gym1-28",
+      "cardName": "Lt. Surge's Raichu",
+      "index": 1,
+      "attack": "Thunderbolt",
+      "pattern": null,
+      "implemented": false,
+      "text": "Discard all Energy cards attached to Lt. Surge's Raichu in order to use this attack."
+    },
+    {
+      "card": "gym1-32",
+      "cardName": "Misty's Tentacool",
+      "index": 1,
+      "attack": "Jellyfish Pod",
+      "pattern": null,
+      "implemented": false,
+      "text": "Search your deck for any number of Pokémon named Tentacool, Tentacruel, Misty's Tentacool, and/or Misty's Tentacruel. Show those cards to your opponent, then put them into your hand. Shuffle your deck afterward."
+    },
+    {
+      "card": "gym1-38",
+      "cardName": "Brock's Geodude",
+      "index": 1,
+      "attack": "Lucky Shot",
+      "pattern": null,
+      "implemented": false,
+      "text": "Choose 1 of your opponent's Benched Pokémon and flip a coin. If heads, this attack does 30 damage to that Pokémon. (Don't apply Weakness and Resistance for Benched Pokémon.) This attack can't be used if your opponent has no Benched Pokémon."
+    },
+    {
+      "card": "gym1-43",
+      "cardName": "Erika's Exeggcute",
+      "index": 0,
+      "attack": "Deflector",
+      "pattern": null,
+      "implemented": false,
+      "text": "During your opponent's next turn, whenever Erika's Exeggcute takes damage, divide that damage in half (rounded down to the nearest 10). (Any other effects still happen.)"
+    },
+    {
+      "card": "gym1-43",
+      "cardName": "Erika's Exeggcute",
+      "index": 1,
+      "attack": "Egg Bomb",
+      "pattern": null,
+      "implemented": false,
+      "text": "Flip a coin. If tails, this attack does nothing to the Defending Pokémon and Erika's Exeggcute does 20 damage to itself."
+    },
+    {
+      "card": "gym1-48",
+      "cardName": "Erika's Weepinbell",
+      "index": 1,
+      "attack": "Flytrap",
+      "pattern": null,
+      "implemented": false,
+      "text": "Before doing damage, choose 1 of your opponent's Benched Pokémon and switch it with his or her Active Pokémon. This attack can't be used if your opponent has no Benched Pokémon."
+    },
+    {
+      "card": "gym1-53",
+      "cardName": "Misty's Poliwhirl",
+      "index": 1,
+      "attack": "Water Punch",
+      "pattern": null,
+      "implemented": false,
+      "text": "Flip a number of coins equal to the number of Water Energy attached to Misty's Poliwhirl. This attack does 30 damage plus 10 damage for each heads."
+    },
+    {
+      "card": "gym1-57",
+      "cardName": "Misty's Tentacool",
+      "index": 0,
+      "attack": "Crystal Beam",
+      "pattern": null,
+      "implemented": false,
+      "text": "Flip a coin. If heads, your opponent can't attach Energy cards to the Defending Pokémon during his or her next turn."
+    },
+    {
+      "card": "gym1-58",
+      "cardName": "Sabrina's Haunter",
+      "index": 0,
+      "attack": "Night Spirits",
+      "pattern": null,
+      "implemented": false,
+      "text": "Flip a number of coins equal to the total number of Sabrina's Gastlys, Sabrina's Haunters, and Sabrina's Gengars you have in play. This attack does 30 damage times the number of heads."
+    },
+    {
+      "card": "gym1-68",
+      "cardName": "Brock's Mankey",
+      "index": 1,
+      "attack": "Karate Chop",
+      "pattern": null,
+      "implemented": false,
+      "text": "Does 40 damage minus 10 damage for each damage counter on Brock's Mankey."
+    },
+    {
+      "card": "gym1-82",
+      "cardName": "Lt. Surge's Rattata",
+      "index": 0,
+      "attack": "Focus Energy",
+      "pattern": null,
+      "implemented": false,
+      "text": "During your next turn, Lt. Surge's Rattata's Gnaw attack's base damage is doubled."
+    },
+    {
+      "card": "gym1-94",
+      "cardName": "Sabrina's Mr. Mime",
+      "index": 0,
+      "attack": "Sleight of Hand",
+      "pattern": null,
+      "implemented": false,
+      "text": "Choose up to 3 cards from your hand and put them on top of your deck. Then search your deck for that many basic Energy cards. Show those cards to your opponent, then put them into your hand. Shuffle your deck afterward."
+    },
+    {
+      "card": "gym2-1",
+      "cardName": "Blaine's Arcanine",
+      "index": 1,
+      "attack": "Firestorm",
+      "pattern": null,
+      "implemented": false,
+      "text": "Discard 3 Fire Energy cards attached to Blaine's Arcanine in order to use this attack."
+    },
+    {
+      "card": "gym2-2",
+      "cardName": "Blaine's Charizard",
+      "index": 0,
+      "attack": "Roaring Flames",
+      "pattern": null,
+      "implemented": false,
+      "text": "Discard all Fire Energy cards attached to Blaine's Charizard. If all Energy cards attached to Blaine's Charizard provide 2 Fire Energy, discard all of them. This attack does 20 damage plus 20 more damage for each Fire Energy discarded in this way."
+    },
+    {
+      "card": "gym2-2",
+      "cardName": "Blaine's Charizard",
+      "index": 1,
+      "attack": "Flame Jet",
+      "pattern": null,
+      "implemented": false,
+      "text": "Flip a coin. If heads, choose 1 of your opponent's Pokémon. This attack does 40 damage to that Pokémon. Don't apply Weakness and Resistance for this attack. (Any other effects that would happen after applying Weakness and Resistance still happen.)"
+    },
+    {
+      "card": "gym2-4",
+      "cardName": "Erika's Venusaur",
+      "index": 1,
+      "attack": "Wide Solarbeam",
+      "pattern": null,
+      "implemented": false,
+      "text": "If your opponent has any Benched Pokémon, choose 2 of them (or 1 if he or she only has 1). This attack does 20 damage to each of them. (Don't apply Weakness and Resistance for Benched Pokémon.)"
+    },
+    {
+      "card": "gym2-5",
+      "cardName": "Giovanni's Gyarados",
+      "index": 0,
+      "attack": "Summon Storm",
+      "pattern": null,
+      "implemented": false,
+      "text": "Flip 2 coins. If both of them are heads, this attack does 20 damage to each other Pokémon (even your own). Don't apply Weakness and Resistance for this attack."
+    },
+    {
+      "card": "gym2-5",
+      "cardName": "Giovanni's Gyarados",
+      "index": 1,
+      "attack": "Dragon Tornado",
+      "pattern": null,
+      "implemented": false,
+      "text": "Unless this attack Knocks Out the Defending Pokémon, choose 1 of your opponent's Benched Pokémon and switch it with the Defending Pokémon."
+    },
+    {
+      "card": "gym2-7",
+      "cardName": "Giovanni's Nidoking",
+      "index": 0,
+      "attack": "Intimidate",
+      "pattern": null,
+      "implemented": false,
+      "text": "If the Defending Pokémon's maximum HP is 50 or less, it can't attack Giovanni's Nidoking during your opponent's next turn. (Benching or evolving either Pokémon ends this effect.)"
+    },
+    {
+      "card": "gym2-10",
+      "cardName": "Koga's Ditto",
+      "index": 0,
+      "attack": "Giant Growth",
+      "pattern": null,
+      "implemented": false,
+      "text": "Flip a coin. If heads, Koga's Ditto's maximum HP is now 80 and Koga's Ditto's Pound attack's base damage is 30 instead of 10. (Benching Koga's Ditto ends this effect.)"
+    },
+    {
+      "card": "gym2-11",
+      "cardName": "Lt. Surge's Raichu",
+      "index": 0,
+      "attack": "Kerzap",
+      "pattern": null,
+      "implemented": false,
+      "text": "Flip a coin. If heads, this attack does 20 damage plus 30 more damage to the Defending Pokémon and discard all Lightning Energy cards attached to Lt. Surge's Raichu. If tails, this attack does 20 damage."
+    },
+    {
+      "card": "gym2-11",
+      "cardName": "Lt. Surge's Raichu",
+      "index": 1,
+      "attack": "Thundertackle",
+      "pattern": null,
+      "implemented": false,
+      "text": "Flip a coin. If heads, the Defending Pokémon is now Paralyzed. If tails, Lt. Surge's Raichu does 20 damage to itself."
+    },
+    {
+      "card": "gym2-12",
+      "cardName": "Misty's Golduck",
+      "index": 0,
+      "attack": "Electro Beam",
+      "pattern": null,
+      "implemented": false,
+      "text": "Flip a coin. If tails, discard all Energy cards attached to Misty's Golduck."
+    },
+    {
+      "card": "gym2-12",
+      "cardName": "Misty's Golduck",
+      "index": 1,
+      "attack": "Super Removal",
+      "pattern": null,
+      "implemented": false,
+      "text": "Flip a coin. If heads, choose 1 Energy card attached to each of your opponent's Pokémon that has any Energy cards and discard those Energy cards."
+    },
+    {
+      "card": "gym2-14",
+      "cardName": "Rocket's Mewtwo",
+      "index": 0,
+      "attack": "Juxtapose",
+      "pattern": null,
+      "implemented": false,
+      "text": "Flip a coin. If heads, switch the number of damage counters on Rocket's Mewtwo with the number of damage counters on the Defending Pokémon (even if it would Knock Out either Pokémon). (It's okay if 1 of the Pokémon has no damage counters on it.)"
+    },
+    {
+      "card": "gym2-21",
+      "cardName": "Blaine's Ninetales",
+      "index": 0,
+      "attack": "Burn Up",
+      "pattern": null,
+      "implemented": false,
+      "text": "Flip a coin. If tails, discard all Fire Energy cards attached to Blaine's Ninetales."
+    },
+    {
+      "card": "gym2-22",
+      "cardName": "Brock's Dugtrio",
+      "index": 0,
+      "attack": "Lie Low",
+      "pattern": null,
+      "implemented": false,
+      "text": "All damage done to Brock's Dugtrio during your opponent's next turn is reduced by 20 (after applying Weakness and Resistance)."
+    },
+    {
+      "card": "gym2-22",
+      "cardName": "Brock's Dugtrio",
+      "index": 1,
+      "attack": "Earthdrill",
+      "pattern": null,
+      "implemented": false,
+      "text": "This attack can't be used unless Brock's Dugtrio used its Lie Low attack last turn."
+    },
+    {
+      "card": "gym2-23",
+      "cardName": "Giovanni's Nidoqueen",
+      "index": 1,
+      "attack": "Love Lariat",
+      "pattern": null,
+      "implemented": false,
+      "text": "Flip a coin. If heads, this attack does 50 damage plus 50 more damage if you have at least 1 Giovanni's Nidoking on your Bench. If tails, this attack does nothing."
+    },
+    {
+      "card": "gym2-24",
+      "cardName": "Giovanni's Pinsir",
+      "index": 1,
+      "attack": "Overhead Toss",
+      "pattern": null,
+      "implemented": false,
+      "text": "If you have any Benched Pokémon, flip a coin. If tails, choose 1 of your Benched Pokémon. This attack does 20 damage to that Pokémon. (Don't apply Weakness and Resistance for Benched Pokémon.)"
+    },
+    {
+      "card": "gym2-27",
+      "cardName": "Koga's Pidgeotto",
+      "index": 1,
+      "attack": "Aerial Maneuvers",
+      "pattern": null,
+      "implemented": false,
+      "text": "Flip a coin. If heads, this attack does 10 damage plus 30 more damage, and, during your opponent's next turn, prevent all effects of attacks, including damage, done to Koga's Pidgeotto. If tails, this attack does 10 damage."
+    },
+    {
+      "card": "gym2-28",
+      "cardName": "Lt. Surge's Jolteon",
+      "index": 1,
+      "attack": "Thunder Flare",
+      "pattern": null,
+      "implemented": false,
+      "text": "Does 30 damage plus 10 damage times the number of damage counters on Lt. Surge's Jolteon, then flip a coin. If tails, Lt. Surge's Jolteon does 30 damage to itself."
+    },
+    {
+      "card": "gym2-29",
+      "cardName": "Sabrina's Gengar",
+      "index": 0,
+      "attack": "Dark Wave",
+      "pattern": null,
+      "implemented": false,
+      "text": "All Pokémon Powers stop working until the end of your opponent's next turn."
+    },
+    {
+      "card": "gym2-30",
+      "cardName": "Sabrina's Golduck",
+      "index": 0,
+      "attack": "Damage Shift",
+      "pattern": null,
+      "implemented": false,
+      "text": "Move 1 damage counter from each of your Pokémon that has any on it to the Defending Pokémon. (Don't apply Weakness and Resistance.)"
+    },
+    {
+      "card": "gym2-31",
+      "cardName": "Blaine's Charmeleon",
+      "index": 1,
+      "attack": "Bonfire",
+      "pattern": null,
+      "implemented": false,
+      "text": "Flip 3 coins. For each heads, discard 1 Fire Energy card attached to Blaine's Charmeleon. If you can't discard Energy cards, this attack does nothing. This attack does 10 damage times the number of heads to each of your opponent's Pokémon. Don't apply Weakness and Resistance for this attack. (Any other effects that would happen after applying Weakness and Resistance still happen.)"
+    },
+    {
+      "card": "gym2-33",
+      "cardName": "Blaine's Rapidash",
+      "index": 1,
+      "attack": "Stamp",
+      "pattern": null,
+      "implemented": false,
+      "text": "Flip a coin. If heads, this attack does 30 damage plus 10 more damage (to the Defending Pokémon) and 10 damage to each of your opponent's Benched Pokémon. (Don't apply Weakness and Resistance for Benched Pokémon.) If tails, this attack does 30 damage (to the Defending Pokémon)."
+    },
+    {
+      "card": "gym2-34",
+      "cardName": "Brock's Graveler",
+      "index": 1,
+      "attack": "Detonate",
+      "pattern": null,
+      "implemented": false,
+      "text": "Does 10 damage to each Pokémon on each player's bench. (Don't apply Weakness and Resistance for Benched Pokémon.) Brock's Graveler does 50 damage to itself. If there is a Stadium card in play, discard it."
+    },
+    {
+      "card": "gym2-35",
+      "cardName": "Brock's Primeape",
+      "index": 0,
+      "attack": "Mega Thrash",
+      "pattern": null,
+      "implemented": false,
+      "text": "Brock's Primeape does 20 damage to itself. If there is a Stadium card in play, discard it."
+    },
+    {
+      "card": "gym2-38",
+      "cardName": "Erika's Bellsprout",
+      "index": 0,
+      "attack": "Stretch Vine",
+      "pattern": null,
+      "implemented": false,
+      "text": "Choose 1 of your opponent's Benched Pokémon, and this attack does 10 damage to it. (Don't apply Weakness and Resistance for Benched Pokémon.)"
+    },
+    {
+      "card": "gym2-39",
+      "cardName": "Erika's Bulbasaur",
+      "index": 1,
+      "attack": "Errand-Running",
+      "pattern": null,
+      "implemented": false,
+      "text": "Flip a coin. If heads, you may search your deck for a Trainer card. Show it to your opponent and put it into your hand. Shuffle your deck afterward."
+    },
+    {
+      "card": "gym2-40",
+      "cardName": "Erika's Clefairy",
+      "index": 0,
+      "attack": "Lunar Power",
+      "pattern": null,
+      "implemented": false,
+      "text": "Flip a coin. If heads, search your deck for a card that evolves from 1 of your Benched Pokémon and put that card on that Pokémon. (This counts as evolving that Pokémon.) Shuffle your deck afterward."
+    },
+    {
+      "card": "gym2-42",
+      "cardName": "Giovanni's Machoke",
+      "index": 0,
+      "attack": "Risky Attack",
+      "pattern": null,
+      "implemented": false,
+      "text": "Flip a coin. If tails, this attack does no damage to the Defending Pokémon and Giovanni's Machoke does 100 damage to itself."
+    },
+    {
+      "card": "gym2-42",
+      "cardName": "Giovanni's Machoke",
+      "index": 1,
+      "attack": "Headlock",
+      "pattern": null,
+      "implemented": false,
+      "text": "Flip a coin. If heads, this attack does 20 damage plus 20 more damage and the Defending Pokémon is now Paralyzed. If tails, this attack does 20 damage."
+    },
+    {
+      "card": "gym2-43",
+      "cardName": "Giovanni's Meowth",
+      "index": 0,
+      "attack": "False Charity",
+      "pattern": null,
+      "implemented": false,
+      "text": "Flip a coin. If heads, look at the top card of your opponent's deck. If it's a Trainer card, put it in your opponent's discard pile; otherwise, put it into his or her hand."
+    },
+    {
+      "card": "gym2-44",
+      "cardName": "Giovanni's Nidorina",
+      "index": 0,
+      "attack": "Poison Sting Tackle",
+      "pattern": null,
+      "implemented": false,
+      "text": "Giovanni's Nidorina does 20 damage to itself. Flip a coin. If heads, the Defending Pokémon is now Poisoned."
+    },
+    {
+      "card": "gym2-45",
+      "cardName": "Giovanni's Nidorino",
+      "index": 0,
+      "attack": "Rend",
+      "pattern": null,
+      "implemented": false,
+      "text": "If the Defending Pokémon already has any damage counters on it, this attack does 20 damage plus 20 more damage. If not, this attack does 20 damage."
+    },
+    {
+      "card": "gym2-47",
+      "cardName": "Koga's Kakuna",
+      "index": 0,
+      "attack": "Toxic Secretion",
+      "pattern": null,
+      "implemented": false,
+      "text": "Flip a coin. If heads, the Defending Pokémon is now Poisoned. It now takes 20 Poison damage instead of 10 after each player's turn (even if it was already Poisoned)."
+    },
+    {
+      "card": "gym2-48",
+      "cardName": "Koga's Koffing",
+      "index": 1,
+      "attack": "Obscuring Gas",
+      "pattern": null,
+      "implemented": false,
+      "text": "Flip a coin. If heads, shuffle Koga's Koffing and all cards attached to it into your deck (after doing damage)."
+    },
+    {
+      "card": "gym2-49",
+      "cardName": "Koga's Pidgey",
+      "index": 0,
+      "attack": "Messenger",
+      "pattern": null,
+      "implemented": false,
+      "text": "Put Koga's Pidgey and all cards attached to it on top of your deck. Then search your deck for any Basic Pokémon or Evolution card not named Koga's Pidgey. Show that card to your opponent, then put it into your hand. Shuffle your deck afterward."
+    },
+    {
+      "card": "gym2-50",
+      "cardName": "Koga's Weezing",
+      "index": 0,
+      "attack": "Spontaneous Explosion",
+      "pattern": null,
+      "implemented": false,
+      "text": "Flip a coin. If heads, this attack does 10 damage plus 30 more damage and Koga's Weezing does 30 damage to itself; if tails, this attack does 10 damage."
+    },
+    {
+      "card": "gym2-50",
+      "cardName": "Koga's Weezing",
+      "index": 1,
+      "attack": "Toxic Cloud",
+      "pattern": null,
+      "implemented": false,
+      "text": "Flip a coin. If heads, this Defending Pokémon is now Poisoned. It now takes 20 Poison damage instead of 10 after each player's turn (even if it was already Poisoned)."
+    },
+    {
+      "card": "gym2-51",
+      "cardName": "Lt. Surge's Eevee",
+      "index": 0,
+      "attack": "Surprise",
+      "pattern": null,
+      "implemented": false,
+      "text": "Look at a random card from your opponent's hand. Your opponent shuffles that card into his or her deck."
+    },
+    {
+      "card": "gym2-52",
+      "cardName": "Lt. Surge's Electrode",
+      "index": 0,
+      "attack": "Power Ball",
+      "pattern": null,
+      "implemented": false,
+      "text": "Flip 3 coins. This attack does 30 damage plus 10 more damage for each heads."
+    },
+    {
+      "card": "gym2-53",
+      "cardName": "Lt. Surge's Raticate",
+      "index": 0,
+      "attack": "Focus Energy",
+      "pattern": null,
+      "implemented": false,
+      "text": "During your next turn, Lt. Surge's Raticate's Double-edge attack's damage (base damage and damage to itself) is doubled."
+    },
+    {
+      "card": "gym2-53",
+      "cardName": "Lt. Surge's Raticate",
+      "index": 1,
+      "attack": "Double-edge",
+      "pattern": null,
+      "implemented": false,
+      "text": "Lt. Surge's Raticate does 20 damage to itself."
+    },
+    {
+      "card": "gym2-54",
+      "cardName": "Misty's Dewgong",
+      "index": 0,
+      "attack": "Ice Throw",
+      "pattern": null,
+      "implemented": false,
+      "text": "If the Defending Pokémon is Fighting, this attack's base damage is doubled."
+    },
+    {
+      "card": "gym2-55",
+      "cardName": "Sabrina's Haunter",
+      "index": 1,
+      "attack": "Shadow Attack",
+      "pattern": null,
+      "implemented": false,
+      "text": "Flip a coin. If heads, and if your opponent has any Benched Pokémon, choose 1 of them and this attack does 30 damage to it. (Don't apply Weakness and Resistance for Benched Pokémon.)"
+    },
+    {
+      "card": "gym2-56",
+      "cardName": "Sabrina's Hypno",
+      "index": 0,
+      "attack": "Invigorate",
+      "pattern": null,
+      "implemented": false,
+      "text": "Choose 1 Basic Pokémon in any player's discard pile. Put it onto that player's Bench. Put a number of damage counters on that Pokémon equal to half its HP (rounded down to the nearest 10). (You can't put a Pokémon on a Bench that's full.)"
+    },
+    {
+      "card": "gym2-56",
+      "cardName": "Sabrina's Hypno",
+      "index": 1,
+      "attack": "Pendulum Curse",
+      "pattern": null,
+      "implemented": false,
+      "text": "Flip a number of coins equal to the number of damage counters on the Defending Pokémon. This attack does 20 damage times the number of heads."
+    },
+    {
+      "card": "gym2-57",
+      "cardName": "Sabrina's Jynx",
+      "index": 0,
+      "attack": "Helping Hand",
+      "pattern": null,
+      "implemented": false,
+      "text": "Choose 1 of your opponent's Pokémon. Remove any number of damage counters from that Pokémon, then draw that many cards."
+    },
+    {
+      "card": "gym2-58",
+      "cardName": "Sabrina's Kadabra",
+      "index": 0,
+      "attack": "Life Drain",
+      "pattern": null,
+      "implemented": false,
+      "text": "Flip a coin. If heads, put a number of damage counters on the Defending Pokémon so that its remaining HP are 10."
+    },
+    {
+      "card": "gym2-59",
+      "cardName": "Sabrina's Mr. Mime",
+      "index": 0,
+      "attack": "Magic Darts",
+      "pattern": null,
+      "implemented": false,
+      "text": "Choose 1 of your opponent's Pokémon and flip 3 coins. This attack does 10 damage times the number of heads to that Pokémon. Don't apply Weakness and Resistance for this attack."
+    },
+    {
+      "card": "gym2-60",
+      "cardName": "Blaine's Charmander",
+      "index": 0,
+      "attack": "Fire Tail Slap",
+      "pattern": null,
+      "implemented": false,
+      "text": "Use this attack only if there are any Fire Energy cards attached to Blaine's Charmander. Flip a coin. If tails, discard 1 of those cards."
+    },
+    {
+      "card": "gym2-62",
+      "cardName": "Blaine's Growlithe",
+      "index": 0,
+      "attack": "Stoke",
+      "pattern": null,
+      "implemented": false,
+      "text": "Search your deck for a Fire Energy card and attach it to Blaine's Growlithe. Shuffle your deck afterward."
+    },
+    {
+      "card": "gym2-63",
+      "cardName": "Blaine's Mankey",
+      "index": 0,
+      "attack": "Pranks",
+      "pattern": null,
+      "implemented": false,
+      "text": "Flip a coin. If heads, choose a card from your opponent's discard pile and put it on top of his or her deck."
+    },
+    {
+      "card": "gym2-64",
+      "cardName": "Blaine's Ponyta",
+      "index": 0,
+      "attack": "Hind Kick",
+      "pattern": null,
+      "implemented": false,
+      "text": "If you have any Benched Pokémon, flip a coin. If heads, switch Blaine's Ponyta with 1 of your Benched Pokémon."
+    },
+    {
+      "card": "gym2-65",
+      "cardName": "Blaine's Rhyhorn",
+      "index": 1,
+      "attack": "Overrun",
+      "pattern": null,
+      "implemented": false,
+      "text": "Flip a coin. If heads and if your opponent has any Benched Pokémon, choose 1 of them and this attack does 20 damage to it. (Don't apply Weakness and Resistance for Benched Pokémon.)"
+    },
+    {
+      "card": "gym2-66",
+      "cardName": "Blaine's Vulpix",
+      "index": 1,
+      "attack": "Call Will-o'-the-wisp",
+      "pattern": null,
+      "implemented": false,
+      "text": "Flip 3 coins. For each heads, if you have a Fire Energy card in your discard pile, put it into your hand."
+    },
+    {
+      "card": "gym2-69",
+      "cardName": "Erika's Jigglypuff",
+      "index": 0,
+      "attack": "Group Therapy",
+      "pattern": null,
+      "implemented": false,
+      "text": "You and your opponent remove 1 damage counter from each of your Pokémon with damage counters on them."
+    },
+    {
+      "card": "gym2-69",
+      "cardName": "Erika's Jigglypuff",
+      "index": 1,
+      "attack": "Pulled Punch",
+      "pattern": null,
+      "implemented": false,
+      "text": "If the Defending Pokémon has no damage counters on it, this attack does 40 damage. If it has any damage counters on it, this attack does 10 damage."
+    },
+    {
+      "card": "gym2-71",
+      "cardName": "Erika's Paras",
+      "index": 1,
+      "attack": "Poison Spore",
+      "pattern": null,
+      "implemented": false,
+      "text": "Flip a coin. If heads, the Defending Pokémon is now Poisoned and this attack does 10 damage to each of your opponent's Benched Pokémon. (Don't apply Weakness and Resistance for Benched Pokémon.)"
+    },
+    {
+      "card": "gym2-72",
+      "cardName": "Giovanni's Machop",
+      "index": 1,
+      "attack": "Fury Punch",
+      "pattern": null,
+      "implemented": false,
+      "text": "Flip a coin. If heads, this attack does 20 damage times the number of damage counters on Giovanni's Machop."
+    },
+    {
+      "card": "gym2-75",
+      "cardName": "Giovanni's Nidoran ♀",
+      "index": 1,
+      "attack": "Double-edge",
+      "pattern": null,
+      "implemented": false,
+      "text": "Giovanni's Nidoran ♀ does 20 damage to itself."
+    },
+    {
+      "card": "gym2-76",
+      "cardName": "Giovanni's Nidoran ♂",
+      "index": 1,
+      "attack": "Retaliation",
+      "pattern": null,
+      "implemented": false,
+      "text": "You can't use this attack unless Giovanni's Nidoran ♂ has 2 or more damage counters on it."
+    },
+    {
+      "card": "gym2-77",
+      "cardName": "Koga's Ekans",
+      "index": 0,
+      "attack": "Fast-Acting Poison",
+      "pattern": null,
+      "implemented": false,
+      "text": "Flip 2 coins. If both are heads, the Defending Pokémon is now Confused and Poisoned."
+    },
+    {
+      "card": "gym2-78",
+      "cardName": "Koga's Grimer",
+      "index": 0,
+      "attack": "Sludge Grip",
+      "pattern": null,
+      "implemented": false,
+      "text": "If your opponent has any Benched Pokémon, flip a coin. If heads, choose 1 of your opponent's Benched Pokémon and switch it with the Defending Pokémon. The new Defending Pokémon is now Poisoned."
+    },
+    {
+      "card": "gym2-79",
+      "cardName": "Koga's Koffing",
+      "index": 0,
+      "attack": "Smelly Gas",
+      "pattern": null,
+      "implemented": false,
+      "text": "Flip a coin. If heads, this attack does 10 damage to each Benched Pokémon (including your own). (Don't apply Weakness and Resistance for Benched Pokémon.)"
+    },
+    {
+      "card": "gym2-83",
+      "cardName": "Koga's Zubat",
+      "index": 0,
+      "attack": "Group Attack",
+      "pattern": null,
+      "implemented": false,
+      "text": "Does 10 damage times the number of Koga's Zubats you have in play. Before doing damage, you may search your deck for any number of Basic Pokémon named Koga's Zubat and put them onto your Bench. (You can't get more cards with this attack than you have room on your Bench.) If you do, shuffle your deck afterward."
+    },
+    {
+      "card": "gym2-85",
+      "cardName": "Lt. Surge's Rattata",
+      "index": 0,
+      "attack": "Focus Energy",
+      "pattern": null,
+      "implemented": false,
+      "text": "During your next turn, Lt. Surge's Rattata's Quick Attack's base damage is doubled."
+    },
+    {
+      "card": "gym2-86",
+      "cardName": "Lt. Surge's Voltorb",
+      "index": 0,
+      "attack": "Bouncing Ball",
+      "pattern": null,
+      "implemented": false,
+      "text": "Flip a coin. If tails, Lt. Surge's Voltorb does 10 damage to itself."
+    },
+    {
+      "card": "gym2-87",
+      "cardName": "Misty's Horsea",
+      "index": 0,
+      "attack": "Ink Spurt",
+      "pattern": null,
+      "implemented": false,
+      "text": "Flip a coin. If heads, whenever the Defending Pokémon tries to attack, your opponent flips a coin. If tails, that attack does nothing. (This effect lasts until the Defending Pokémon evolves or is Benched.)"
+    },
+    {
+      "card": "gym2-89",
+      "cardName": "Misty's Poliwag",
+      "index": 0,
+      "attack": "Bubbles",
+      "pattern": null,
+      "implemented": false,
+      "text": "Flip a coin. If tails, you can't use this attack during your next turn."
+    },
+    {
+      "card": "gym2-90",
+      "cardName": "Misty's Psyduck",
+      "index": 0,
+      "attack": "ESP",
+      "pattern": null,
+      "implemented": false,
+      "text": "Flip 3 coins. If exactly 1 is heads, draw a card. If exactly 2 are heads, this attack does 20 damage. If all 3 are heads, choose 1 of the Defending Pokémon's attacks. Misty's Psyduck copies that attack except for its Energy costs. (No matter what type the Defending Pokémon is, Misty's Psyduck's type is still Water.)"
+    },
+    {
+      "card": "gym2-92",
+      "cardName": "Misty's Staryu",
+      "index": 0,
+      "attack": "Star Boomerang",
+      "pattern": null,
+      "implemented": false,
+      "text": "Flip a coin. If heads, return Misty's Staryu and all cards attached to it to your hand. (Either way, this attack does its damage.)"
+    },
+    {
+      "card": "gym2-95",
+      "cardName": "Sabrina's Drowzee",
+      "index": 0,
+      "attack": "Energy Support",
+      "pattern": null,
+      "implemented": false,
+      "text": "Search your deck for a Psychic Energy card. Show that card to your opponent, then put it into your hand. Shuffle your deck afterward."
+    },
+    {
+      "card": "gym2-96",
+      "cardName": "Sabrina's Gastly",
+      "index": 1,
+      "attack": "Fade Out",
+      "pattern": null,
+      "implemented": false,
+      "text": "Return Sabrina's Gastly and all Energy cards attached to it to your hand. (Discard all other cards attached to Sabrina's Gastly.)"
+    },
+    {
+      "card": "gym2-99",
+      "cardName": "Sabrina's Psyduck",
+      "index": 1,
+      "attack": "Random ESP",
+      "pattern": null,
+      "implemented": false,
+      "text": "Flip a coin. If heads, the Defending Pokémon is now Confused. If tails, this attack does no damage and Sabrina's Psyduck is now Confused."
+    },
+    {
+      "card": "neo1-3",
+      "cardName": "Bellossom",
+      "index": 0,
+      "attack": "Sweet Nectar",
+      "pattern": null,
+      "implemented": false,
+      "text": "Flip a coin. If heads, remove all damage counters from 1 of your Pokémon."
+    },
+    {
+      "card": "neo1-3",
+      "cardName": "Bellossom",
+      "index": 1,
+      "attack": "Flower Dance",
+      "pattern": null,
+      "implemented": false,
+      "text": "Does 30 damage times the number of cards with Bellossom in their names that you have in play (including this one)."
+    },
+    {
+      "card": "neo1-5",
+      "cardName": "Feraligatr",
+      "index": 0,
+      "attack": "Riptide",
+      "pattern": null,
+      "implemented": false,
+      "text": "Does 10 damage plus 10 damage times the number of Energy cards in your discard pile. Then, shuffle all Energy cards from your discard pile into your deck."
+    },
+    {
+      "card": "neo1-7",
+      "cardName": "Jumpluff",
+      "index": 1,
+      "attack": "Leech Seed",
+      "pattern": null,
+      "implemented": false,
+      "text": "If this attack damages the Defending Pokémon (after applying Weakness and Resistance), remove 1 damage counter from Jumpluff, if it has any."
+    },
+    {
+      "card": "neo1-8",
+      "cardName": "Kingdra",
+      "index": 1,
+      "attack": "Dragon Tornado",
+      "pattern": null,
+      "implemented": false,
+      "text": "If this attack doesn't Knock Out the Defending Pokémon, and if there are any Pokémon on your opponent's Bench, choose 1 of them and switch it with the Defending Pokémon."
+    },
+    {
+      "card": "neo1-9",
+      "cardName": "Lugia",
+      "index": 0,
+      "attack": "Elemental Blast",
+      "pattern": null,
+      "implemented": false,
+      "text": "Discard a Energy card, a Energy card, and a Energy card attached to Lugia in order to use this attack."
+    },
+    {
+      "card": "neo1-12",
+      "cardName": "Pichu",
+      "index": 0,
+      "attack": "Zzzap",
+      "pattern": null,
+      "implemented": false,
+      "text": "Does 20 damage to each Pokémon in play that has a Pokémon Power. Don't apply Weakness and Resistance."
+    },
+    {
+      "card": "neo1-13",
+      "cardName": "Skarmory",
+      "index": 1,
+      "attack": "Steel Wing",
+      "pattern": null,
+      "implemented": false,
+      "text": "Flip a coin. If heads, all damage done by attacks to Skarmory during your opponent's next turn is reduced by 20 (after applying Weakness and Resistance)."
+    },
+    {
+      "card": "neo1-14",
+      "cardName": "Slowking",
+      "index": 0,
+      "attack": "Mind Blast",
+      "pattern": null,
+      "implemented": false,
+      "text": "Flip a coin. If heads, this attack does 20 damage plus 10 more damage and the Defending Pokémon is now Confused. If tails, this attack does 20 damage."
+    },
+    {
+      "card": "neo1-16",
+      "cardName": "Togetic",
+      "index": 0,
+      "attack": "Super Metronome",
+      "pattern": null,
+      "implemented": false,
+      "text": "Flip a coin. If heads, choose an attack of 1 of your opponent's Pokémon. Super Metronome copies that attack except for its Energy cost. (You must still do anything else in order to use that attack.) (No matter what type the Defending Pokémon is, Togetic's type is still .) Togetic performs that attack. (Togetic can make that attack even if it does not have the appropriate number or type of Energy attached to it necessary to make the attack.)"
+    },
+    {
+      "card": "neo1-17",
+      "cardName": "Typhlosion",
+      "index": 0,
+      "attack": "Flame Burst",
+      "pattern": null,
+      "implemented": false,
+      "text": "Flip a coin. If heads, this attack does 60 damage plus 20 more damage and does 20 damage to Typhlosion. If tails, this attack does 60 damage."
+    },
+    {
+      "card": "neo1-18",
+      "cardName": "Typhlosion",
+      "index": 0,
+      "attack": "Flame Wheel",
+      "pattern": null,
+      "implemented": false,
+      "text": "Discard 3 Energy cards attached to Typhlosion in order to use this attack. Do 20 damage to each Benched Pokémon (yours and your opponent's). (Don't apply Weakness and Resistance for Benched Pokémon.)"
+    },
+    {
+      "card": "neo1-23",
+      "cardName": "Magby",
+      "index": 0,
+      "attack": "Sputter",
+      "pattern": null,
+      "implemented": false,
+      "text": "All Pokémon Powers stop working until the end of your next turn."
+    },
+    {
+      "card": "neo1-24",
+      "cardName": "Murkrow",
+      "index": 0,
+      "attack": "Mean Look",
+      "pattern": null,
+      "implemented": false,
+      "text": "The Defending Pokémon can't retreat as long as Murkrow remains your Active Pokémon. (Benching or evolving either Pokémon ends this effect.)"
+    },
+    {
+      "card": "neo1-24",
+      "cardName": "Murkrow",
+      "index": 1,
+      "attack": "Feint Attack",
+      "pattern": null,
+      "implemented": false,
+      "text": "Choose 1 of your opponent's Pokémon. This attack does 20 damage to that Pokémon. This attack's damage isn't affected by Weakness, Resistance, Pokémon Powers, or any other effects on the Defending Pokémon."
+    },
+    {
+      "card": "neo1-25",
+      "cardName": "Sneasel",
+      "index": 1,
+      "attack": "Beat Up",
+      "pattern": null,
+      "implemented": false,
+      "text": "Flip a coin for each of your Pokémon in play (including this one). This attack does 20 damage times the number of heads."
+    },
+    {
+      "card": "neo1-26",
+      "cardName": "Aipom",
+      "index": 0,
+      "attack": "Pilfer",
+      "pattern": null,
+      "implemented": false,
+      "text": "Shuffle Aipom and all cards attached to it into your deck. Flip a coin. If heads, shuffle a card from your discard pile into your deck."
+    },
+    {
+      "card": "neo1-27",
+      "cardName": "Ariados",
+      "index": 0,
+      "attack": "Spider Web",
+      "pattern": null,
+      "implemented": false,
+      "text": "Flip a coin. If heads, the Defending Pokémon can't retreat. (Benching or evolving that Pokémon ends this effect.)"
+    },
+    {
+      "card": "neo1-27",
+      "cardName": "Ariados",
+      "index": 1,
+      "attack": "Poison Bite",
+      "pattern": null,
+      "implemented": false,
+      "text": "If this attack damages the Defending Pokémon, the Defending Pokémon is now Poisoned and you remove a number of damage counters from Ariados equal to half that damage (rounded up to the nearest 10). If Ariados has fewer damage counters than that, remove all of them."
+    },
+    {
+      "card": "neo1-28",
+      "cardName": "Bayleef",
+      "index": 1,
+      "attack": "Pollen Shield",
+      "pattern": null,
+      "implemented": false,
+      "text": "During your opponent's next turn, Bayleef can't become Asleep, Confused, Paralyzed, or Poisoned. (All other effects of attacks, Pokémon Powers, and Trainer cards still happen.)"
+    },
+    {
+      "card": "neo1-29",
+      "cardName": "Bayleef",
+      "index": 0,
+      "attack": "Sweet Scent",
+      "pattern": null,
+      "implemented": false,
+      "text": "Flip a coin. If heads and if any of your Pokémon have any damage counters on them, then remove 2 damage counters from 1 of them (or 1 if it only has 1). If tails and if any of your opponent's Pokémon have any damage counters on them, choose 1 of them and remove 2 damage counters from it (or 1 if it only has 1)."
+    },
+    {
+      "card": "neo1-30",
+      "cardName": "Clefairy",
+      "index": 1,
+      "attack": "Squaredance",
+      "pattern": null,
+      "implemented": false,
+      "text": "Flip a number of coins equal to the total number of Pokémon in play. For each heads, you may search your deck for a basic Energy card, show it to your opponent, and put it into your hand. Shuffle your deck afterward."
+    },
+    {
+      "card": "neo1-31",
+      "cardName": "Croconaw",
+      "index": 1,
+      "attack": "Jaw Clamp",
+      "pattern": null,
+      "implemented": false,
+      "text": "Until the end of your opponent's next turn, as long as Croconaw is your Active Pokémon, the Defending Pokémon can't retreat, and if the effect of an attack, Pokémon Power, or Trainer card would change that player's Active Pokémon, that part of the effect does nothing."
+    },
+    {
+      "card": "neo1-32",
+      "cardName": "Croconaw",
+      "index": 1,
+      "attack": "Sweep Away",
+      "pattern": null,
+      "implemented": false,
+      "text": "Discard the top 3 cards from your deck."
+    },
+    {
+      "card": "neo1-34",
+      "cardName": "Flaaffy",
+      "index": 0,
+      "attack": "Discharge",
+      "pattern": null,
+      "implemented": false,
+      "text": "Discard all Energy cards attached to Flaaffy in order to use this attack. Flip a number of coins equal to the number of Energy cards you discarded. This attack does 30 damage times the number of heads."
+    },
+    {
+      "card": "neo1-34",
+      "cardName": "Flaaffy",
+      "index": 1,
+      "attack": "Electric Current",
+      "pattern": null,
+      "implemented": false,
+      "text": "Take 1 Energy card attached to Flaaffy and attach it to 1 of your Benched Pokémon. If you have no Benched Pokémon, discard that Energy card."
+    },
+    {
+      "card": "neo1-36",
+      "cardName": "Gloom",
+      "index": 1,
+      "attack": "Sticky Nectar",
+      "pattern": null,
+      "implemented": false,
+      "text": "Flip a coin. If heads, this attack does 20 damage plus 10 more damage and, until the end of your opponent's next turn, as long as Gloom is your Active Pokémon, the Defending Pokémon can't retreat, and if the effect of an attack, Pokémon Power, or Trainer card would change that player's Active Pokémon, that part of the effect does nothing. If tails, this attack does 20 damage."
+    },
+    {
+      "card": "neo1-37",
+      "cardName": "Granbull",
+      "index": 1,
+      "attack": "Raging Charge",
+      "pattern": null,
+      "implemented": false,
+      "text": "This attack does 10 damage plus 10 damage for each damage counter on Granbull. Then, Granbull does 20 damage to itself."
+    },
+    {
+      "card": "neo1-39",
+      "cardName": "Ledian",
+      "index": 0,
+      "attack": "Baton Pass",
+      "pattern": null,
+      "implemented": false,
+      "text": "If you have any Pokémon on your Bench, remove all Energy cards from Ledian and attach them to 1 of those Pokémon, then switch Ledian with that Pokémon."
+    },
+    {
+      "card": "neo1-41",
+      "cardName": "Miltank",
+      "index": 0,
+      "attack": "Milk Drink",
+      "pattern": null,
+      "implemented": false,
+      "text": "Flip 2 coins. Remove 2 damage counters times the number of heads from Miltank. If it has fewer damage counters than that, remove all of them."
+    },
+    {
+      "card": "neo1-43",
+      "cardName": "Phanpy",
+      "index": 1,
+      "attack": "Endure",
+      "pattern": null,
+      "implemented": false,
+      "text": "Flip a coin. If heads, then if, during your opponent's next turn, Phanpy would be Knocked Out by an attack, Phanpy isn't Knocked Out and its remaining HP become 10 instead."
+    },
+    {
+      "card": "neo1-44",
+      "cardName": "Piloswine",
+      "index": 0,
+      "attack": "Freeze",
+      "pattern": null,
+      "implemented": false,
+      "text": "Flip a coin. If heads, the Defending Pokémon can't attack. (Benching or evolving the Defending Pokémon ends this effect.)"
+    },
+    {
+      "card": "neo1-46",
+      "cardName": "Quilava",
+      "index": 1,
+      "attack": "Fire Wind",
+      "pattern": null,
+      "implemented": false,
+      "text": "If your opponent has any Benched Pokémon, choose 1 of them. Flip 2 coins. For each heads, this attack does 10 damage to that Pokémon. (Don't apply Weakness and Resistance.)"
+    },
+    {
+      "card": "neo1-47",
+      "cardName": "Quilava",
+      "index": 1,
+      "attack": "Char",
+      "pattern": null,
+      "implemented": false,
+      "text": "If the Defending Pokémon doesn't have a Char counter on it, flip a coin. If heads, put a Char counter on it. A Char counter requires your opponent to flip a coin after every turn. If tails, put 2 damage counters on the Pokémon with that Char counter. (Char counters stay on the Pokémon as long as it's in play.)"
+    },
+    {
+      "card": "neo1-52",
+      "cardName": "Xatu",
+      "index": 0,
+      "attack": "Prophecy",
+      "pattern": null,
+      "implemented": false,
+      "text": "Look at the top 3 cards of either player's deck and rearrange them as you like."
+    },
+    {
+      "card": "neo1-53",
+      "cardName": "Chikorita",
+      "index": 1,
+      "attack": "Deflector",
+      "pattern": null,
+      "implemented": false,
+      "text": "During your opponent's next turn, whenever Chikorita takes damage, divide that damage in half (rounded down to the nearest 10). (Any other effects still happen.)"
+    },
+    {
+      "card": "neo1-57",
+      "cardName": "Cyndaquil",
+      "index": 0,
+      "attack": "Fireworks",
+      "pattern": null,
+      "implemented": false,
+      "text": "Flip a coin. If tails, discard 1 Energy card attached to Cyndaquil."
+    },
+    {
+      "card": "neo1-62",
+      "cardName": "Horsea",
+      "index": 0,
+      "attack": "Fin Slap",
+      "pattern": null,
+      "implemented": false,
+      "text": "If an attack damaged Horsea during your opponent's last turn, this attack does 20 damage plus 10 more damage. If not, this attack does 20 damage."
+    },
+    {
+      "card": "neo1-65",
+      "cardName": "Mareep",
+      "index": 0,
+      "attack": "Static Electricity",
+      "pattern": null,
+      "implemented": false,
+      "text": "For each Mareep in play, you may search your deck for a Energy card and attach it to Mareep. Shuffle your deck afterward."
+    },
+    {
+      "card": "neo1-75",
+      "cardName": "Spinarak",
+      "index": 0,
+      "attack": "Scary Face",
+      "pattern": null,
+      "implemented": false,
+      "text": "Flip a coin. If heads, until the end of your opponent's next turn the Defending Pokémon can't attack or retreat."
+    },
+    {
+      "card": "neo1-78",
+      "cardName": "Sunkern",
+      "index": 0,
+      "attack": "Growth",
+      "pattern": null,
+      "implemented": false,
+      "text": "Flip a coin. If heads, you may attach up to 2 Energy cards from your hand to Sunkern."
+    },
+    {
+      "card": "neo2-1",
+      "cardName": "Espeon",
+      "index": 1,
+      "attack": "Psychic",
+      "pattern": null,
+      "implemented": false,
+      "text": "Does 30 damage plus 10 more for each Energy Card attached to the Defending Pokémon."
+    },
+    {
+      "card": "neo2-7",
+      "cardName": "Magnemite",
+      "index": 0,
+      "attack": "Lock-on",
+      "pattern": null,
+      "implemented": false,
+      "text": "During your next turn, treat any tails flipped when using Magnemite's Electric Bolt attack on the Defending Pokémon as if they were heads. (Benching or evolving either Pokémon ends this effect.)"
+    },
+    {
+      "card": "neo2-11",
+      "cardName": "Smeargle",
+      "index": 0,
+      "attack": "Sketch",
+      "pattern": null,
+      "implemented": false,
+      "text": "If the Defending Pokémon attacked last turn, and Smeargle was in play during that attack, Smeargle copies that attack except for its Energy costs and anything else required in order to use that attack."
+    },
+    {
+      "card": "neo2-13",
+      "cardName": "Umbreon",
+      "index": 1,
+      "attack": "Feint Attack",
+      "pattern": null,
+      "implemented": false,
+      "text": "Choose 1 of your opponent's Pokémon. This attack does 30 damage to that Pokémon. This attack's damage isn't affected by Weakness, Resistance, Pokémon Powers or any other effects on the Defending Pokémon."
+    },
+    {
+      "card": "neo2-16",
+      "cardName": "Wobbuffet",
+      "index": 0,
+      "attack": "Counter",
+      "pattern": null,
+      "implemented": false,
+      "text": "If an attack damages Wobbuffet during your opponent's next turn (even if Wobbuffet is knocked out), flip a coin. If heads, Wobbuffet attacks the Defending Pokémon for an equal amount of damage."
+    },
+    {
+      "card": "neo2-18",
+      "cardName": "Beedrill",
+      "index": 0,
+      "attack": "Triple Poison",
+      "pattern": null,
+      "implemented": false,
+      "text": "Flip a coin. If heads, the Defending Pokémon is now Poisoned. Your opponent now puts 3 damage counters instead of 1 after each player's turn (even if it was already Poisoned)."
+    },
+    {
+      "card": "neo2-19",
+      "cardName": "Butterfree",
+      "index": 0,
+      "attack": "Magic Dust",
+      "pattern": null,
+      "implemented": false,
+      "text": "Flip a coin. If heads, the Defending Pokémon is now either Asleep, Confused, Paralyzed, or Poisoned (your choice)."
+    },
+    {
+      "card": "neo2-19",
+      "cardName": "Butterfree",
+      "index": 1,
+      "attack": "Hyper Reverse",
+      "pattern": null,
+      "implemented": false,
+      "text": "Does 10 damage times the number of Energy cards attached to the Defending Pokémon. After doing damage, remove a number of damage counters from Butterfree equal to the amount of damage done to the Defending Pokémon (after applying Weakness and Resistance)."
+    },
+    {
+      "card": "neo2-26",
+      "cardName": "Magnemite",
+      "index": 0,
+      "attack": "Lock-on",
+      "pattern": null,
+      "implemented": false,
+      "text": "During your next turn, treat any tails flipped when using Magnemite's Electric Bolt attack on the Defending Pokémon as if they were heads. (Benching or evolving either Pokémon ends this effect.)"
+    },
+    {
+      "card": "neo2-30",
+      "cardName": "Smeargle",
+      "index": 0,
+      "attack": "Sketch",
+      "pattern": null,
+      "implemented": false,
+      "text": "If the Defending Pokémon attacked last turn, and Smeargle was in play during that attack, Smeargle copies that attack except for its Energy costs and anything else required in order to use that attack."
+    },
+    {
+      "card": "neo2-32",
+      "cardName": "Umbreon",
+      "index": 1,
+      "attack": "Pursuit",
+      "pattern": null,
+      "implemented": false,
+      "text": "During your opponent's next turn, if the Defending Pokémon tries to retreat, do 10 damage to it. (Don't apply Weakness and Resistance.)"
+    },
+    {
+      "card": "neo2-35",
+      "cardName": "Wobbuffet",
+      "index": 0,
+      "attack": "Counter",
+      "pattern": null,
+      "implemented": false,
+      "text": "If an attack damages Wobbuffet during your opponent's next turn (even if Wobbuffet is knocked out), flip a coin. If heads, Wobbuffet attacks the Defending Pokémon for an equal amount of damage."
+    },
+    {
+      "card": "neo2-37",
+      "cardName": "Corsola",
+      "index": 0,
+      "attack": "Recover",
+      "pattern": null,
+      "implemented": false,
+      "text": "Discard 1 Energy attached to Corsola or this attack does nothing. Remove all damage counters from Corsola."
+    },
+    {
+      "card": "neo2-39",
+      "cardName": "Houndour",
+      "index": 1,
+      "attack": "Plunder",
+      "pattern": null,
+      "implemented": false,
+      "text": "Before doing damage, discard all Trainer cards attached to the Defending Pokémon."
+    },
+    {
+      "card": "neo2-41",
+      "cardName": "Kakuna",
+      "index": 0,
+      "attack": "Secrete Poison",
+      "pattern": null,
+      "implemented": false,
+      "text": "During your opponent's next turn, whenever your opponent's attack damages Kakuna (even if Kakuna is knocked out), your opponent's Active Pokémon is now Poisoned and Kakuna does 10 damage to each of your opponent's Benched Pokémon. (Don't apply Weakness and Resistance for Benched Pokémon.)"
+    },
+    {
+      "card": "neo2-42",
+      "cardName": "Metapod",
+      "index": 1,
+      "attack": "Hatch",
+      "pattern": null,
+      "implemented": false,
+      "text": "Flip a coin. If heads, remove all damage counters from Metapod. Then, search your deck for a card that evolves from Metapod and attach that card to Metapod. This counts as evolving Metapod. Shuffle your deck afterward."
+    },
+    {
+      "card": "neo2-43",
+      "cardName": "Omastar",
+      "index": 0,
+      "attack": "Squeeze",
+      "pattern": null,
+      "implemented": false,
+      "text": "Flip a coin. If heads, this attack does 10 damage plus 20 more damage and the Defending Pokémon is now Paralyzed. If tails, this attack does 10 damage."
+    },
+    {
+      "card": "neo2-43",
+      "cardName": "Omastar",
+      "index": 1,
+      "attack": "Spike Barrage",
+      "pattern": null,
+      "implemented": false,
+      "text": "Flip a number of coins equal to the number of Energy attached to Omastar. This attack does 20 damage plus 20 more for each heads."
+    },
+    {
+      "card": "neo2-44",
+      "cardName": "Poliwhirl",
+      "index": 0,
+      "attack": "Belly Drum",
+      "pattern": null,
+      "implemented": false,
+      "text": "Put 3 damage counters on Poliwhirl. If this doesn't knock out Poliwhirl, search your deck for up to 2 Basic Energy cards and attach them to Poliwhirl. Shuffle your deck afterward."
+    },
+    {
+      "card": "neo2-45",
+      "cardName": "Pupitar",
+      "index": 1,
+      "attack": "Dust Devil",
+      "pattern": null,
+      "implemented": false,
+      "text": "Does 10 damage to each non- Pokémon in play. Don't apply Weakness and Resistance."
+    },
+    {
+      "card": "neo2-46",
+      "cardName": "Scyther",
+      "index": 0,
+      "attack": "Fury Cutter",
+      "pattern": null,
+      "implemented": false,
+      "text": "Flip 4 coins. This attack does 10 damage plus 10 more damage if exactly 1 is heads, or 20 more damage if exactly 2 are heads, or 40 more damage if exactly 3 are heads, or 80 more damage if all 4 are heads."
+    },
+    {
+      "card": "neo2-52",
+      "cardName": "Xatu",
+      "index": 0,
+      "attack": "Energy Cycle",
+      "pattern": null,
+      "implemented": false,
+      "text": "Flip a coin. If heads, choose 1 Energy card attached to the Defending Pokémon and 1 of your opponent's Benched Pokémon. Attach that Energy card to that Pokémon."
+    },
+    {
+      "card": "neo2-56",
+      "cardName": "Kabuto",
+      "index": 0,
+      "attack": "Work Together",
+      "pattern": null,
+      "implemented": false,
+      "text": "Flip a coin. If heads, this attack does 10 damage plus 10 more damage for each Omanyte, Omastar, Kabuto, and Kabutops on your Bench."
+    },
+    {
+      "card": "neo2-61",
+      "cardName": "Pineco",
+      "index": 0,
+      "attack": "Burst",
+      "pattern": null,
+      "implemented": false,
+      "text": "Flip a coin. If heads, Pineco does 40 damage to itself and 10 damage to each Pokémon on each player's Bench. (Don't apply Weakness and Resistance for Benched Pokémon.) Flip a coin. If tails, this attack does nothing (not even damage)."
+    },
+    {
+      "card": "neo2-70",
+      "cardName": "Weedle",
+      "index": 0,
+      "attack": "Spike Stab",
+      "pattern": null,
+      "implemented": false,
+      "text": "Flip a coin. If heads, the Defending Pokémon is now Poisoned. If tails, this attack does nothing (not even damage)."
+    },
+    {
+      "card": "neo2-71",
+      "cardName": "Wooper",
+      "index": 0,
+      "attack": "Slime",
+      "pattern": null,
+      "implemented": false,
+      "text": "If an attack would do damage to Wooper during your opponent's next turn, your opponent flips a coin. If tails, prevent all damage done to Wooper from that attack. (Any other effects of that attack happen.)"
+    },
+    {
+      "card": "neo3-1",
+      "cardName": "Ampharos",
+      "index": 0,
+      "attack": "Attract Current",
+      "pattern": null,
+      "implemented": false,
+      "text": "Flip 3 coins. For each heads, you may search your deck for a L Energy card and attach it to 1 of your L Pokémon. Shuffle your deck afterward."
+    },
+    {
+      "card": "neo3-1",
+      "cardName": "Ampharos",
+      "index": 1,
+      "attack": "Gigavolt",
+      "pattern": null,
+      "implemented": false,
+      "text": "Flip a coin. If heads, this attack does 40 damage plus 20 more damage. If tails, this attack does 40 damage and the Defending Pokémon is now Paralyzed."
+    },
+    {
+      "card": "neo3-3",
+      "cardName": "Celebi",
+      "index": 0,
+      "attack": "Psychic Damage",
+      "pattern": null,
+      "implemented": false,
+      "text": "Flip 3 coins. For each heads, put 1 damage counter on the Defending Pokémon."
+    },
+    {
+      "card": "neo3-4",
+      "cardName": "Crobat",
+      "index": 0,
+      "attack": "Triggered Poison",
+      "pattern": null,
+      "implemented": false,
+      "text": "If your opponent attaches an Energy card to the Defending Pokémon during his or her next turn, that Pokémon becomes Poisoned."
+    },
+    {
+      "card": "neo3-5",
+      "cardName": "Delibird",
+      "index": 0,
+      "attack": "Present",
+      "pattern": null,
+      "implemented": false,
+      "text": "Flip 3 coins. If exactly 1 is heads, this attack does 40 damage. If exactly 2 are heads, remove 3 damage counters from the Defending Pokémon. If the Defending Pokémon has fewer damage counters than that, remove all of them. If all 3 are heads, this attack does 60 damage. If all 3 are tails, remove all damage counters from the Defending Pokémon."
+    },
+    {
+      "card": "neo3-6",
+      "cardName": "Entei",
+      "index": 0,
+      "attack": "Searing Flames",
+      "pattern": null,
+      "implemented": false,
+      "text": "Discard 2 Energy cards attached to Entei or this attack does nothing."
+    },
+    {
+      "card": "neo3-7",
+      "cardName": "Ho-oh",
+      "index": 0,
+      "attack": "Stoke",
+      "pattern": null,
+      "implemented": false,
+      "text": "You may search your deck for a Energy card and attach it to Ho-oh"
+    },
+    {
+      "card": "neo3-7",
+      "cardName": "Ho-oh",
+      "index": 1,
+      "attack": "Sacred Fire",
+      "pattern": null,
+      "implemented": false,
+      "text": "Flip a coin. If heads, choose 1 of your opponent's Pokémon. This attack does 40 damage to that Pokémon. Don't apply Weakness and Resistance."
+    },
+    {
+      "card": "neo3-8",
+      "cardName": "Houndoom",
+      "index": 0,
+      "attack": "Dark Flame",
+      "pattern": null,
+      "implemented": false,
+      "text": "Discard 1 Energy card attached to Houndoom or this attack does nothing. If there are any Energy cards in your discard pile, attach 1 of them to Houndoom."
+    },
+    {
+      "card": "neo3-8",
+      "cardName": "Houndoom",
+      "index": 1,
+      "attack": "Black Fang",
+      "pattern": null,
+      "implemented": false,
+      "text": "Flip a number of coins equal to the number of Energy attached to Houndoom. This attack does 30 damage plus 10 more damage for each heads."
+    },
+    {
+      "card": "neo3-9",
+      "cardName": "Jumpluff",
+      "index": 0,
+      "attack": "Evolutionary Spore",
+      "pattern": null,
+      "implemented": false,
+      "text": "Choose any number of your Hoppips and Skiplooms. Then, for each Pokémon you chose in this way, you may search your deck for a card that evolves from that Pokémon and attach it to that Pokémon. (This counts as evolving those Pokémon.) Shuffle your deck afterward."
+    },
+    {
+      "card": "neo3-10",
+      "cardName": "Magneton",
+      "index": 0,
+      "attack": "Plasma",
+      "pattern": null,
+      "implemented": false,
+      "text": "If there are any Energy cards in your discard pile, attach 1 of them to Magneton."
+    },
+    {
+      "card": "neo3-11",
+      "cardName": "Misdreavus",
+      "index": 1,
+      "attack": "Perish Song",
+      "pattern": null,
+      "implemented": false,
+      "text": "If the Defending Pokémon is Asleep, and was attacked with Night Eyes during your last turn, it is Knocked Out."
+    },
+    {
+      "card": "neo3-12",
+      "cardName": "Porygon2",
+      "index": 0,
+      "attack": "Delta Beam",
+      "pattern": null,
+      "implemented": false,
+      "text": "Flip a coin. If heads, choose whether the Defending Pokémon becomes Asleep, Confused, or Paralyzed."
+    },
+    {
+      "card": "neo3-14",
+      "cardName": "Suicune",
+      "index": 0,
+      "attack": "Aurora Wave",
+      "pattern": null,
+      "implemented": false,
+      "text": "Flip 2 coins. If both are heads, the Defending Pokémon is now Paralyzed. If only 1 is heads, the Defending Pokémon is now Asleep."
+    },
+    {
+      "card": "neo3-15",
+      "cardName": "Aerodactyl",
+      "index": 0,
+      "attack": "Fly",
+      "pattern": null,
+      "implemented": false,
+      "text": "Flip a coin. If heads, during your opponent's next turn, prevent all effects of attacks, including damage, done to Aerodactyl. If tails, this attack does nothing (not even damage)."
+    },
+    {
+      "card": "neo3-16",
+      "cardName": "Celebi",
+      "index": 0,
+      "attack": "Psychic Leaf",
+      "pattern": null,
+      "implemented": false,
+      "text": "Flip a coin for each Energy attached to the Defending Pokémon. This attack does 10 damage plus 10 more damage for each heads. Remove a number of damage counters from Celebi equal to the damage done to the Defending Pokémon (after applying Weakness and Resistance). If Celebi has fewer damage counters than that, remove all of them."
+    },
+    {
+      "card": "neo3-17",
+      "cardName": "Entei",
+      "index": 0,
+      "attack": "Mega Flame",
+      "pattern": null,
+      "implemented": false,
+      "text": "Flip 2 coins. For each tails, discard 1 Energy card from Entei, if it has any."
+    },
+    {
+      "card": "neo3-18",
+      "cardName": "Ho-oh",
+      "index": 0,
+      "attack": "Rainbow Burn",
+      "pattern": null,
+      "implemented": false,
+      "text": "This attack does 30 damage plus 10 more for each type of Basic Energy card if any, attached to Ho-oh"
+    },
+    {
+      "card": "neo3-19",
+      "cardName": "Kingdra",
+      "index": 0,
+      "attack": "Genetic Memory",
+      "pattern": null,
+      "implemented": false,
+      "text": "Use any attack from Kingdra's Basic Pokémon card or Evolution card. (Kingdra doesn't have to pay for that attack's Energy cost.)"
+    },
+    {
+      "card": "neo3-19",
+      "cardName": "Kingdra",
+      "index": 1,
+      "attack": "Twister",
+      "pattern": null,
+      "implemented": false,
+      "text": "Flip 2 coins. For each heads, choose an Energy card attached to the Defending Pokémon, if any, and discard it. If both are tails, this attack does nothing (not even damage)."
+    },
+    {
+      "card": "neo3-20",
+      "cardName": "Lugia",
+      "index": 0,
+      "attack": "Aerowing",
+      "pattern": null,
+      "implemented": false,
+      "text": "You may flip a coin. If heads, this attack does 80 damage. If tails, this attack does nothing."
+    },
+    {
+      "card": "neo3-21",
+      "cardName": "Raichu",
+      "index": 1,
+      "attack": "Lightning Strike",
+      "pattern": null,
+      "implemented": false,
+      "text": "You may discard all Energy cards attached to Raichu. If you do, this attack does 80 damage."
+    },
+    {
+      "card": "neo3-22",
+      "cardName": "Raikou",
+      "index": 0,
+      "attack": "Lightning Spark",
+      "pattern": null,
+      "implemented": false,
+      "text": "If your opponent has any Benched Pokémon, flip a coin. If heads, choose 1 of them and this attack does 20 damage to it. (Don't apply Weakness and Resistance for Benched Pokémon.)"
+    },
+    {
+      "card": "neo3-24",
+      "cardName": "Sneasel",
+      "index": 0,
+      "attack": "Swipe",
+      "pattern": null,
+      "implemented": false,
+      "text": "Flip a coin. If heads, discard all Trainer cards attached to your opponent's Pokémon."
+    },
+    {
+      "card": "neo3-24",
+      "cardName": "Sneasel",
+      "index": 1,
+      "attack": "Quick Attack",
+      "pattern": null,
+      "implemented": false,
+      "text": "Flip a coin. If heads, this attack does 10 damage plus 20 more damage."
+    },
+    {
+      "card": "neo3-25",
+      "cardName": "Starmie",
+      "index": 1,
+      "attack": "Core Stream",
+      "pattern": null,
+      "implemented": false,
+      "text": "Choose an Energy type other than . This attack does 20 damage to each of your opponent's Pokémon with any Energy cards of that type attached to it. Don't apply Weakness and Resistance."
+    },
+    {
+      "card": "neo3-27",
+      "cardName": "Suicune",
+      "index": 0,
+      "attack": "Crystal Wave",
+      "pattern": null,
+      "implemented": false,
+      "text": "Flip a coin. If heads, this attack does 30 damage plus 10 more damage. If tails, this attack does 30 damage and, if your opponent has any Benched Pokémon, he or she chooses 1 of them and switches it with the Defending Pokémon. (Do the damage before switching the Pokémon.)"
+    },
+    {
+      "card": "neo3-28",
+      "cardName": "Flaaffy",
+      "index": 1,
+      "attack": "Tail Shock",
+      "pattern": null,
+      "implemented": false,
+      "text": "Flip a coin. If heads, this attack does 10 damage to each of your opponent's Benched Pokémon. (Don't apply Weakness and Resistance for Benched Pokémon.)"
+    },
+    {
+      "card": "neo3-29",
+      "cardName": "Golbat",
+      "index": 1,
+      "attack": "Poison Bite",
+      "pattern": null,
+      "implemented": false,
+      "text": "If this attack damages the Defending Pokémon, the Defending Pokémon is now Poisoned and you remove a number of damage counters from Golbat equal to half that damage (rounded up to the nearest 10). If Golbat has fewer damage counters than that, remove all of them. Either way, the Defending Pokémon is now Poisoned."
+    },
+    {
+      "card": "neo3-30",
+      "cardName": "Graveler",
+      "index": 1,
+      "attack": "Rock Tumble",
+      "pattern": null,
+      "implemented": false,
+      "text": "Don't apply Resistance."
+    },
+    {
+      "card": "neo3-31",
+      "cardName": "Jynx",
+      "index": 1,
+      "attack": "Strange Dance",
+      "pattern": null,
+      "implemented": false,
+      "text": "Flip a coin. If heads, this attack does 20 damage plus 20 more damage and the Defending Pokémon is now Confused. If tails, this attack does 20 damage."
+    },
+    {
+      "card": "neo3-33",
+      "cardName": "Magcargo",
+      "index": 0,
+      "attack": "Lava Flow",
+      "pattern": null,
+      "implemented": false,
+      "text": "You may discard any number of Energy cards attached to Magcargo when you use this attack. If you do, this attack does 40 damage plus 20 more damage for each Energy card you discarded in this way."
+    },
+    {
+      "card": "neo3-34",
+      "cardName": "Octillery",
+      "index": 1,
+      "attack": "Octazooka",
+      "pattern": null,
+      "implemented": false,
+      "text": "Flip a coin. If heads, whenever the Defending Pokémon attacks, your opponent flips a coin. If tails that attack does nothing. (Benching or evolving that Pokémon ends this effect.)"
+    },
+    {
+      "card": "neo3-36",
+      "cardName": "Piloswine",
+      "index": 0,
+      "attack": "Nap",
+      "pattern": null,
+      "implemented": false,
+      "text": "Remove 3 damage counters from Piloswine. If it has fewer damage counters than that, remove all of them."
+    },
+    {
+      "card": "neo3-36",
+      "cardName": "Piloswine",
+      "index": 1,
+      "attack": "High-Speed Charge",
+      "pattern": null,
+      "implemented": false,
+      "text": "Piloswine does 30 damage to itself. Piloswine can't use this attack during your next turn."
+    },
+    {
+      "card": "neo3-37",
+      "cardName": "Seaking",
+      "index": 0,
+      "attack": "Rising Lunge",
+      "pattern": null,
+      "implemented": false,
+      "text": "Flip a coin. If heads, this attack does 10 damage plus 10 more damage. If tails, this attack does 10 damage."
+    },
+    {
+      "card": "neo3-38",
+      "cardName": "Stantler",
+      "index": 0,
+      "attack": "Terrorize",
+      "pattern": null,
+      "implemented": false,
+      "text": "If the Defending Pokémon is a Basic, choose 1 of its attacks. That Pokémon can't use that attack during your opponent's next turn."
+    },
+    {
+      "card": "neo3-38",
+      "cardName": "Stantler",
+      "index": 1,
+      "attack": "Overhead Toss",
+      "pattern": null,
+      "implemented": false,
+      "text": "If you have any Benched Pokémon, flip a coin. If tails, this attack does 10 damage to 1 of them. (Don't apply Weakness and Resistance for Benched Pokémon.)"
+    },
+    {
+      "card": "neo3-41",
+      "cardName": "Aipom",
+      "index": 0,
+      "attack": "Grab",
+      "pattern": null,
+      "implemented": false,
+      "text": "Choose a Trainer card attached to 1 of your opponent's Pokémon. Your opponent shuffles that card into his or her deck."
+    },
+    {
+      "card": "neo3-42",
+      "cardName": "Chinchou",
+      "index": 0,
+      "attack": "Positive Ion",
+      "pattern": null,
+      "implemented": false,
+      "text": "Flip a coin. If heads, this attack does 10 damage plus 10 more damage. If tails, this attack does 10 damage."
+    },
+    {
+      "card": "neo3-46",
+      "cardName": "Murkrow",
+      "index": 0,
+      "attack": "Call for Family",
+      "pattern": null,
+      "implemented": false,
+      "text": "Search your deck for a card named Murkrow and put it onto your Bench. Shuffle your deck afterward. (You can't use this attack if your Bench is full.)"
+    },
+    {
+      "card": "neo3-46",
+      "cardName": "Murkrow",
+      "index": 1,
+      "attack": "Flock Attack",
+      "pattern": null,
+      "implemented": false,
+      "text": "Flip a number of coins equal to the number of Murkrows on your Bench. This attack does 10 damage plus 10 more damage for each heads."
+    },
+    {
+      "card": "neo3-49",
+      "cardName": "Qwilfish",
+      "index": 1,
+      "attack": "Needle Storm",
+      "pattern": null,
+      "implemented": false,
+      "text": "Flip a coin until you get tails. This attack does 20 damage times the number of heads you get."
+    },
+    {
+      "card": "neo3-50",
+      "cardName": "Remoraid",
+      "index": 0,
+      "attack": "Sharpshooting",
+      "pattern": null,
+      "implemented": false,
+      "text": "Flip a coin. If heads, choose 1 of your opponent's Pokémon. This attack does 20 damage to that Pokémon. Don't apply Weakness and Resistance."
+    },
+    {
+      "card": "neo3-51",
+      "cardName": "Shuckle",
+      "index": 0,
+      "attack": "Toxic Saliva",
+      "pattern": null,
+      "implemented": false,
+      "text": "Flip a coin. If heads, the Defending Pokémon is now Poisoned. It now takes 20 Poison damage after each player's turn (even if it was already Poisoned)."
+    },
+    {
+      "card": "neo3-54",
+      "cardName": "Smoochum",
+      "index": 0,
+      "attack": "Psykiss",
+      "pattern": null,
+      "implemented": false,
+      "text": "Flip a coin. If heads, choose a Special Energy card attached to 1 of your opponent's Pokémon. Your opponent shuffles that card into his or her deck."
+    },
+    {
+      "card": "neo3-55",
+      "cardName": "Snubbull",
+      "index": 1,
+      "attack": "Raging Headbutt",
+      "pattern": null,
+      "implemented": false,
+      "text": "Flip a coin. If heads, this attack does 10 damage plus 10 damage times the number of damage counters on Snubbull. If tails, this attack does 10 damage."
+    },
+    {
+      "card": "neo3-65",
+      "cardName": "Shining Gyarados",
+      "index": 0,
+      "attack": "Outrage",
+      "pattern": null,
+      "implemented": false,
+      "text": "Flip a coin. If heads, this attack does 30 damage plus 10 more damage for each damage counter on Shining Gyarados. If tails, this attack does nothing."
+    },
+    {
+      "card": "neo3-65",
+      "cardName": "Shining Gyarados",
+      "index": 1,
+      "attack": "Devastate",
+      "pattern": null,
+      "implemented": false,
+      "text": "Discard 2 Energy cards attached to Shining Gyarados or this attack does nothing. This attack does 10 damage to each of your opponent's Benched Pokémon. (Don't apply Weakness and Resistance for Benched Pokémon.) Then, flip a coin. If heads, choose 1 Energy card attached to each of your opponent's Pokémon that has any Energy cards attached to it and discard those Energy cards."
+    },
+    {
+      "card": "neo3-66",
+      "cardName": "Shining Magikarp",
+      "index": 0,
+      "attack": "Gold Scale",
+      "pattern": null,
+      "implemented": false,
+      "text": "Your opponent may draw 2 cards. Either way, you may draw 2 cards."
+    },
+    {
+      "card": "neo3-66",
+      "cardName": "Shining Magikarp",
+      "index": 1,
+      "attack": "Dragon Bond",
+      "pattern": null,
+      "implemented": false,
+      "text": "Search your deck for a card named Gyarados, Dark Gyarados, or Shining Gyarados. Show it to your opponent and put it into your hand. Shuffle your deck afterward."
+    },
+    {
+      "card": "neo4-2",
+      "cardName": "Dark Crobat",
+      "index": 0,
+      "attack": "Dark Drain",
+      "pattern": null,
+      "implemented": false,
+      "text": "Flip a coin for each of your opponent's Pokémon. For each heads, this attack does 10 damage to that Pokémon. Don't apply Weakness and Resistance. Remove a number of damage counters from Dark Crobat equal to the damage dealt. If Dark Crobat has fewer damage counters than that, remove all of them."
+    },
+    {
+      "card": "neo4-3",
+      "cardName": "Dark Donphan",
+      "index": 0,
+      "attack": "Tusk Toss",
+      "pattern": null,
+      "implemented": false,
+      "text": "If your opponent has any Benched Pokémon, flip a coin. If heads, return the Defending Pokémon and all cards attached to it to your opponent's hand. If tails, your opponent chooses 1 of his or her Benched Pokémon and switches it with the Defending Pokémon."
+    },
+    {
+      "card": "neo4-4",
+      "cardName": "Dark Espeon",
+      "index": 1,
+      "attack": "Psysplash",
+      "pattern": null,
+      "implemented": false,
+      "text": "Does 10 damage to each of your opponent's Pokémon for each Energy card attached to that Pokémon. Don't apply Weakness and Resistance."
+    },
+    {
+      "card": "neo4-5",
+      "cardName": "Dark Feraligatr",
+      "index": 0,
+      "attack": "Crushing Blow",
+      "pattern": null,
+      "implemented": false,
+      "text": "If the Defending Pokémon has any Energy cards attached to it, flip a coin. If heads, choose 1 of those cards and discard it."
+    },
+    {
+      "card": "neo4-6",
+      "cardName": "Dark Gengar",
+      "index": 0,
+      "attack": "Pull In",
+      "pattern": null,
+      "implemented": false,
+      "text": "If your opponent has any Benched Pokémon, you may choose 1 of them and switch it with the Defending Pokémon (before doing damage or other effects of this attack). Either way, the Defending Pokémon is now Asleep."
+    },
+    {
+      "card": "neo4-7",
+      "cardName": "Dark Houndoom",
+      "index": 0,
+      "attack": "Eerie Howl",
+      "pattern": null,
+      "implemented": false,
+      "text": "If your opponent's Bench isn't full, look at his or her hand. If your opponent has any Baby Pokémon or Basic Pokémon there, choose 1 of them and put it on his or her Bench. Then, switch it with the Defending Pokémon."
+    },
+    {
+      "card": "neo4-7",
+      "cardName": "Dark Houndoom",
+      "index": 1,
+      "attack": "Dark Fire",
+      "pattern": null,
+      "implemented": false,
+      "text": "If there are any Energy cards attached to Dark Houndoom, discard 1 of them and this attack does 30 damage plus 20 more damage (plus 10 more damage for the Energy you discarded). If there aren't any, this attack does 30 damage."
+    },
+    {
+      "card": "neo4-8",
+      "cardName": "Dark Porygon2",
+      "index": 0,
+      "attack": "Curve Attack",
+      "pattern": null,
+      "implemented": false,
+      "text": "Flip a coin. If heads, prevent all damage done by attacks to Dark Porygon2 during your opponent's next turn. (Any other effects of attacks still happen.)"
+    },
+    {
+      "card": "neo4-9",
+      "cardName": "Dark Scizor",
+      "index": 0,
+      "attack": "Threaten",
+      "pattern": null,
+      "implemented": false,
+      "text": "Flip a coin. If heads, look at your opponent's hand. If he or she has any Trainer cards there, choose 1 of them. Your opponent shuffles that card into his or her deck."
+    },
+    {
+      "card": "neo4-10",
+      "cardName": "Dark Typhlosion",
+      "index": 1,
+      "attack": "Rushing Flames",
+      "pattern": null,
+      "implemented": false,
+      "text": "You may discard any number of Energy cards attached to your Pokémon. Flip a coin for each Energy card discarded in this way. This attack does 40 damage times the number of heads."
+    },
+    {
+      "card": "neo4-11",
+      "cardName": "Dark Tyranitar",
+      "index": 0,
+      "attack": "Mountain Smasher",
+      "pattern": null,
+      "implemented": false,
+      "text": "Flip a number of coins equal to the number of Energy cards attached to Dark Tyranitar. This attack does 20 damage times the number of heads. Then, for each heads, discard the top card from your opponent's deck."
+    },
+    {
+      "card": "neo4-11",
+      "cardName": "Dark Tyranitar",
+      "index": 1,
+      "attack": "Fling Away",
+      "pattern": null,
+      "implemented": false,
+      "text": "If your opponent has any Benched Pokémon, this attack does 30 damage instead of 50 and choose 1 of those Benched Pokémon. This attack does 30 damage to that Pokémon. (Don't apply Weakness and Resistance for Benched Pokémon.)"
+    },
+    {
+      "card": "neo4-12",
+      "cardName": "Light Arcanine",
+      "index": 0,
+      "attack": "Gentle Flames",
+      "pattern": null,
+      "implemented": false,
+      "text": "If the Defending Pokémon is a Baby Pokémon, this attack does 10 damage instead of 50. If the Defending Pokémon is a Basic Pokémon, this attack does 30 damage instead of 50."
+    },
+    {
+      "card": "neo4-13",
+      "cardName": "Light Azumarill",
+      "index": 1,
+      "attack": "Bubble Jump",
+      "pattern": null,
+      "implemented": false,
+      "text": "If you have any Benched Pokémon, flip a coin. If heads, take 2 Energy cards attached to Light Azumarill and attach them to 1 of your Benched Pokémon. Then return Light Azumarill and all cards attached to it to your hand."
+    },
+    {
+      "card": "neo4-14",
+      "cardName": "Light Dragonite",
+      "index": 0,
+      "attack": "Light Wave",
+      "pattern": null,
+      "implemented": false,
+      "text": "During your opponent's next turn, prevent all effects of attacks that are not damage done to this Pokémon."
+    },
+    {
+      "card": "neo4-15",
+      "cardName": "Light Togetic",
+      "index": 0,
+      "attack": "Sweet Kiss",
+      "pattern": null,
+      "implemented": false,
+      "text": "Your opponent may draw a card."
+    },
+    {
+      "card": "neo4-17",
+      "cardName": "Dark Ariados",
+      "index": 0,
+      "attack": "Entangle",
+      "pattern": null,
+      "implemented": false,
+      "text": "If your opponent has any Benched Pokémon, choose 1 of them and switch it with the Defending Pokémon, then flip a coin. If heads, the new Defending Pokémon is now Paralyzed."
+    },
+    {
+      "card": "neo4-17",
+      "cardName": "Dark Ariados",
+      "index": 1,
+      "attack": "Poison Bind",
+      "pattern": null,
+      "implemented": false,
+      "text": "The Defending Pokémon is now Poisoned. Flip a coin. If heads, the Defending Pokémon can't retreat until the end of your opponent's next turn and if the effect of an attack, Pokémon Power, or Trainer card would change that player's Active Pokémon, that part of the effect does nothing."
+    },
+    {
+      "card": "neo4-18",
+      "cardName": "Dark Magcargo",
+      "index": 0,
+      "attack": "Ball of Flame",
+      "pattern": null,
+      "implemented": false,
+      "text": "You may discard a Energy card attached to Dark Magcargo when you use this attack. If you do and if your opponent has any Benched Pokémon, choose 1 of them and this attack does 20 damage to it. (Don't apply Weakness and Resistance for Benched Pokémon.)"
+    },
+    {
+      "card": "neo4-19",
+      "cardName": "Dark Omastar",
+      "index": 0,
+      "attack": "Prehistoric Water",
+      "pattern": null,
+      "implemented": false,
+      "text": "If your opponent has any evolved Pokémon in play, choose 1 of them and flip a coin. If heads, your opponent takes the highest Stage Evolution card on that Pokémon and shuffles it into his or her deck."
+    },
+    {
+      "card": "neo4-19",
+      "cardName": "Dark Omastar",
+      "index": 1,
+      "attack": "Dark Tentacle",
+      "pattern": null,
+      "implemented": false,
+      "text": "During your opponent's next turn, the Defending Pokémon can't evolve except from effects of attacks or Pokémon Powers. (Benching that Pokémon ends this effect.)"
+    },
+    {
+      "card": "neo4-20",
+      "cardName": "Dark Slowking",
+      "index": 0,
+      "attack": "Mind Shock",
+      "pattern": null,
+      "implemented": false,
+      "text": "Don't apply Weakness or Resistance for this attack."
+    },
+    {
+      "card": "neo4-21",
+      "cardName": "Dark Ursaring",
+      "index": 0,
+      "attack": "Provoke",
+      "pattern": null,
+      "implemented": false,
+      "text": "Look at your opponent's hand. If he or she has any Baby Pokémon and/or Basic Pokémon there, you may put any number of them onto your opponent's Bench (as long as there's room). Then, your opponent looks at your hand. If you have any Baby Pokémon and/or Basic Pokémon there, your opponent may put any number of them onto your Bench (as long as there's room)."
+    },
+    {
+      "card": "neo4-21",
+      "cardName": "Dark Ursaring",
+      "index": 1,
+      "attack": "Battle Frenzy",
+      "pattern": null,
+      "implemented": false,
+      "text": "For each Pokémon in play (yours and your opponent's), flip a coin. For each heads, this attack does 20 damage to that Pokémon. Don't apply Weakness and Resistance for this attack."
+    },
+    {
+      "card": "neo4-24",
+      "cardName": "Light Ledian",
+      "index": 0,
+      "attack": "Flash Touch",
+      "pattern": null,
+      "implemented": false,
+      "text": "If you have any Benched Pokémon, switch 1 of them with Light Ledian. As long as that Pokémon is your Active Pokémon, it can't become Asleep, Confused, Paralyzed, or Poisoned. (All other effects of attacks, Pokémon Powers, and Trainer cards still happen.)"
+    },
+    {
+      "card": "neo4-25",
+      "cardName": "Light Machamp",
+      "index": 0,
+      "attack": "Beatdown",
+      "pattern": null,
+      "implemented": false,
+      "text": "If the Defending Pokémon has Dark in its name or is a Pokémon, flip a coin. If heads, this attack does 100 damage instead of 50."
+    },
+    {
+      "card": "neo4-26",
+      "cardName": "Light Piloswine",
+      "index": 0,
+      "attack": "Knock Over",
+      "pattern": null,
+      "implemented": false,
+      "text": "If there is a Stadium card in play, you may discard it."
+    },
+    {
+      "card": "neo4-31",
+      "cardName": "Chansey",
+      "index": 1,
+      "attack": "Egg Toss",
+      "pattern": null,
+      "implemented": false,
+      "text": "Flip 2 coins. If either of them is tails, this attack does nothing."
+    },
+    {
+      "card": "neo4-32",
+      "cardName": "Dark Croconaw",
+      "index": 0,
+      "attack": "Clamping Jaw",
+      "pattern": null,
+      "implemented": false,
+      "text": "The Defending Pokémon can't retreat during your opponent's next turn. If the Defending Pokémon tries to attack during your opponent's next turn, your opponent flips a coin. If tails, that attack does nothing. (Benching either Pokémon ends this effect.)"
+    },
+    {
+      "card": "neo4-34",
+      "cardName": "Dark Flaaffy",
+      "index": 1,
+      "attack": "Stun Wave",
+      "pattern": null,
+      "implemented": false,
+      "text": "If the Defending Pokémon has a Pokémon Power, that power stops working until the end of your next turn."
+    },
+    {
+      "card": "neo4-35",
+      "cardName": "Dark Forretress",
+      "index": 0,
+      "attack": "Armor Up",
+      "pattern": null,
+      "implemented": false,
+      "text": "Until the end of your next turn, if Dark Forretress would be Knocked Out by damage from an attack, flip a coin. If heads, Dark Forretress is not Knocked Out and its remaining HP become 10 instead."
+    },
+    {
+      "card": "neo4-36",
+      "cardName": "Dark Haunter",
+      "index": 0,
+      "attack": "Call Back",
+      "pattern": null,
+      "implemented": false,
+      "text": "Put a Baby Pokémon or Basic Pokémon card from your opponent's discard pile onto his or her Bench. Put 1 damage counter on that Pokémon. (You can't use this attack if your Bench is full.)"
+    },
+    {
+      "card": "neo4-36",
+      "cardName": "Dark Haunter",
+      "index": 1,
+      "attack": "Surround",
+      "pattern": null,
+      "implemented": false,
+      "text": "Flip a coin. If heads, the Defending Pokémon is now Asleep. If tails, the Defending Pokémon can't retreat during your opponent's next turn."
+    },
+    {
+      "card": "neo4-37",
+      "cardName": "Dark Omanyte",
+      "index": 0,
+      "attack": "Water Cannon",
+      "pattern": null,
+      "implemented": false,
+      "text": "Choose 1 of your opponent's Pokémon. This attack does 10 damage for each Energy card attached to Dark Omanyte. Don't apply Weakness and Resistance. You can't do more than 30 damage in this way."
+    },
+    {
+      "card": "neo4-38",
+      "cardName": "Dark Pupitar",
+      "index": 0,
+      "attack": "Rock Tackle",
+      "pattern": null,
+      "implemented": false,
+      "text": "Dark Pupitar does 10 damage to itself. Dark Pupitar can't use this attack during your next turn."
+    },
+    {
+      "card": "neo4-38",
+      "cardName": "Dark Pupitar",
+      "index": 1,
+      "attack": "Explosive Evolution",
+      "pattern": null,
+      "implemented": false,
+      "text": "Flip a coin. If heads, this attack does 10 damage to each of your opponent's Pokémon. Don't apply Weakness and Resistance. Then, search your deck for an Evolution card named Dark Tyranitar and put it on Dark Pupitar. (This counts as evolving Dark Pupitar.) Shuffle your deck afterward."
+    },
+    {
+      "card": "neo4-39",
+      "cardName": "Dark Quilava",
+      "index": 0,
+      "attack": "Incinerate",
+      "pattern": null,
+      "implemented": false,
+      "text": "Show the top card of your opponent's deck to all players. If it's a Trainer card, discard it."
+    },
+    {
+      "card": "neo4-39",
+      "cardName": "Dark Quilava",
+      "index": 1,
+      "attack": "Rushing Magma",
+      "pattern": null,
+      "implemented": false,
+      "text": "Discard the top 5 cards of your deck. (If there are fewer than 5 cards in your deck, discard all of them.) This attack does 20 damage for each Energy card you discarded in this way."
+    },
+    {
+      "card": "neo4-40",
+      "cardName": "Dark Wigglytuff",
+      "index": 0,
+      "attack": "Dark Song",
+      "pattern": null,
+      "implemented": false,
+      "text": "Flip a coin. If heads, the Defending Pokémon is now Asleep. If tails, the Defending Pokémon is now Confused."
+    },
+    {
+      "card": "neo4-40",
+      "cardName": "Dark Wigglytuff",
+      "index": 1,
+      "attack": "Slap Awake",
+      "pattern": null,
+      "implemented": false,
+      "text": "If the Defending Pokémon is Asleep or Confused, this attack does 20 damage plus 20 more damage. Then, the Defending Pokémon is no longer Asleep or Confused."
+    },
+    {
+      "card": "neo4-41",
+      "cardName": "Heracross",
+      "index": 1,
+      "attack": "Charging Horn",
+      "pattern": null,
+      "implemented": false,
+      "text": "Flip a coin. If heads, this attack does 30 damage plus 30 more damage. If tails, this attack does 30 damage."
+    },
+    {
+      "card": "neo4-44",
+      "cardName": "Jigglypuff",
+      "index": 0,
+      "attack": "Expand",
+      "pattern": null,
+      "implemented": false,
+      "text": "All damage done to Jigglypuff during your opponent's next turn is reduced by 10 (after applying Weakness and Resistance)."
+    },
+    {
+      "card": "neo4-45",
+      "cardName": "Light Dewgong",
+      "index": 1,
+      "attack": "Ice Pillar",
+      "pattern": null,
+      "implemented": false,
+      "text": "Until the end of your opponent's next turn, as long as Light Dewgong is your Active Pokémon, prevent all damage done by attacks to your Benched Pokémon. (Any other effects of attacks still happen.)"
+    },
+    {
+      "card": "neo4-46",
+      "cardName": "Light Flareon",
+      "index": 0,
+      "attack": "Warm Up",
+      "pattern": null,
+      "implemented": false,
+      "text": "If you have any benched Pokémon, search your deck for a Energy card and attach it to 1 of them. Then shuffle your deck."
+    },
+    {
+      "card": "neo4-46",
+      "cardName": "Light Flareon",
+      "index": 1,
+      "attack": "Burning Flame",
+      "pattern": null,
+      "implemented": false,
+      "text": "Flip 2 coins. For each heads, discard a Energy card attached to Light Flareon or this attack does nothing. This attack does 30 damage plus 20 damage for each heads."
+    },
+    {
+      "card": "neo4-47",
+      "cardName": "Light Golduck",
+      "index": 0,
+      "attack": "Flipper Stroke",
+      "pattern": null,
+      "implemented": false,
+      "text": "Your opponent looks at the top 3 cards of his or her deck. If any of them are basic Energy cards, he or she may show any number of them to you and put them into his or her hand. You do the same. Either way, each player shuffles his or her deck."
+    },
+    {
+      "card": "neo4-48",
+      "cardName": "Light Jolteon",
+      "index": 0,
+      "attack": "Pulse Guard",
+      "pattern": null,
+      "implemented": false,
+      "text": "During your opponent's next turn, whenever 30 or more damage is done to Light Jolteon (after applying Weakness and Resistance), prevent that damage. (Any other effects of attacks still happen.)"
+    },
+    {
+      "card": "neo4-48",
+      "cardName": "Light Jolteon",
+      "index": 1,
+      "attack": "Thunder Needle",
+      "pattern": null,
+      "implemented": false,
+      "text": "Flip 3 coins. This attack does 20 damage times the number of heads. If you get 2 or more heads, the Defending Pokémon is now Paralyzed."
+    },
+    {
+      "card": "neo4-49",
+      "cardName": "Light Machoke",
+      "index": 0,
+      "attack": "Return Home",
+      "pattern": null,
+      "implemented": false,
+      "text": "If you have any Benched Pokémon, shuffle 1 of them and all cards attached to it into your deck."
+    },
+    {
+      "card": "neo4-50",
+      "cardName": "Light Ninetales",
+      "index": 0,
+      "attack": "Guiding Flame",
+      "pattern": null,
+      "implemented": false,
+      "text": "Put a Baby Pokémon or a Basic Pokémon card from your discard pile onto your Bench. (You can't use this attack if your Bench is full.)"
+    },
+    {
+      "card": "neo4-50",
+      "cardName": "Light Ninetales",
+      "index": 1,
+      "attack": "Fire Blast",
+      "pattern": null,
+      "implemented": false,
+      "text": "Discard a Energy card attached to Light Ninetales in order to use this attack."
+    },
+    {
+      "card": "neo4-51",
+      "cardName": "Light Slowbro",
+      "index": 0,
+      "attack": "Fish Out",
+      "pattern": null,
+      "implemented": false,
+      "text": "Your opponent may choose up to 3 Baby Pokémon, Basic Pokémon, and/or Evolution cards from his or her discard pile and shuffle them into his or her deck. Either way, you may do the same."
+    },
+    {
+      "card": "neo4-52",
+      "cardName": "Light Vaporeon",
+      "index": 0,
+      "attack": "Wash Away",
+      "pattern": null,
+      "implemented": false,
+      "text": "If you have any Benched Pokémon, flip a coin. If heads, remove all damage counters from 1 of your Benched Pokémon and discard all Energy cards attached to it."
+    },
+    {
+      "card": "neo4-52",
+      "cardName": "Light Vaporeon",
+      "index": 1,
+      "attack": "Hypno Shower",
+      "pattern": null,
+      "implemented": false,
+      "text": "The Defending Pokémon is now Asleep. Remove 1 damage counter from each Benched Pokémon (yours and your opponent's) with any damage counters on it."
+    },
+    {
+      "card": "neo4-53",
+      "cardName": "Light Venomoth",
+      "index": 0,
+      "attack": "Mysterious Wing",
+      "pattern": null,
+      "implemented": false,
+      "text": "Your opponent may choose a Baby Pokémon, Basic Pokémon, or Evolution card from his or her discard pile and put it into his or her hand. Either way, you may do the same."
+    },
+    {
+      "card": "neo4-54",
+      "cardName": "Light Wigglytuff",
+      "index": 0,
+      "attack": "Evolution Song",
+      "pattern": null,
+      "implemented": false,
+      "text": "Your opponent may choose 1 of his or her Pokémon and search his or her deck for a card that evolves from that Pokémon. Your opponent attaches that card to that Pokémon. This counts as evolving that Pokémon. Either way, you may do the same, and then each player who searched shuffles his or her deck."
+    },
+    {
+      "card": "neo4-56",
+      "cardName": "Togepi",
+      "index": 0,
+      "attack": "Charm",
+      "pattern": null,
+      "implemented": false,
+      "text": "If the Defending Pokémon attacks during your opponent's next turn, any damage it does is reduced by 10 (before applying Weakness and Resistance)."
+    },
+    {
+      "card": "neo4-62",
+      "cardName": "Dark Octillery",
+      "index": 0,
+      "attack": "Ink Blast",
+      "pattern": null,
+      "implemented": false,
+      "text": "This attack does 20 damage plus 10 more damage for each Energy attached to Dark Octillery but not used to pay for this attack's Energy cost. You can't add more than 20 damage in this way."
+    },
+    {
+      "card": "neo4-62",
+      "cardName": "Dark Octillery",
+      "index": 1,
+      "attack": "Tentacle Wrap",
+      "pattern": null,
+      "implemented": false,
+      "text": "Flip a coin. If heads, the Defending Pokémon is now Paralyzed. If tails, during your opponent's next turn, your opponent pays more to retreat the Defending Pokémon."
+    },
+    {
+      "card": "neo4-69",
+      "cardName": "Hitmonchan",
+      "index": 0,
+      "attack": "Dodge",
+      "pattern": null,
+      "implemented": false,
+      "text": "If Hitmonchan would be damaged by an attack during your opponent's next turn, flip a coin. If heads, prevent that attack's damage done to Hitmonchan. (Any other effects of attacks still happen.)"
+    },
+    {
+      "card": "neo4-70",
+      "cardName": "Larvitar",
+      "index": 0,
+      "attack": "Leer",
+      "pattern": null,
+      "implemented": false,
+      "text": "Flip a coin. If heads, the Defending Pokémon can't attack during your opponent's next turn. (Benching or evolving either Pokémon ends this effect.)"
+    },
+    {
+      "card": "neo4-72",
+      "cardName": "Light Sunflora",
+      "index": 0,
+      "attack": "Reflected Sunlight",
+      "pattern": null,
+      "implemented": false,
+      "text": "Attach up to 2 Energy cards from your hand to 1 of your Pokémon."
+    },
+    {
+      "card": "neo4-79",
+      "cardName": "Psyduck",
+      "index": 1,
+      "attack": "Migraine",
+      "pattern": null,
+      "implemented": false,
+      "text": "Flip a coin. If heads, the Defending Pokémon is now Confused. If tails, Psyduck is now Confused."
+    },
+    {
+      "card": "neo4-83",
+      "cardName": "Sunkern",
+      "index": 1,
+      "attack": "Sunbathe",
+      "pattern": null,
+      "implemented": false,
+      "text": "Flip a coin. If heads, remove all damage counters from Sunkern. Search your deck for a card that evolves from Sunkern and attach that card to Sunkern. This counts as evolving Sunkern. Shuffle your deck afterward."
+    },
+    {
+      "card": "neo4-106",
+      "cardName": "Shining Celebi",
+      "index": 0,
+      "attack": "Healing Water",
+      "pattern": null,
+      "implemented": false,
+      "text": "Remove a number of damage counters from 1 of your Benched Pokémon equal to the number of Energy cards attached to Shining Celebi. If the Pokémon has fewer damage counters than that, remove all of them."
+    },
+    {
+      "card": "neo4-106",
+      "cardName": "Shining Celebi",
+      "index": 1,
+      "attack": "Miracle Leaf",
+      "pattern": null,
+      "implemented": false,
+      "text": "Flip a number of coins equal to the number of Energy attached to the Defending Pokémon. If you get 1 or more heads, the Defending Pokémon is now Asleep, Confused, or Poisoned (your choice)."
+    },
+    {
+      "card": "neo4-107",
+      "cardName": "Shining Charizard",
+      "index": 0,
+      "attack": "White-Hot Flame",
+      "pattern": null,
+      "implemented": false,
+      "text": "Discard 1 Energy card and 1 Energy card attached to Shining Charizard or this attack does nothing. Flip a coin. If tails, Shining Charizard does 30 damage to itself."
+    },
+    {
+      "card": "neo4-108",
+      "cardName": "Shining Kabutops",
+      "index": 0,
+      "attack": "Lightning Cut",
+      "pattern": null,
+      "implemented": false,
+      "text": "Flip a coin. If heads, this attack does 30 damage plus 10 more damage and does 10 damage to each of your opponent's Benched Pokémon. (Don't apply Weakness and Resistance for Benched Pokémon.) If tails, this attack does 30 damage and Shining Kabutops does 10 damage to itself."
+    },
+    {
+      "card": "neo4-108",
+      "cardName": "Shining Kabutops",
+      "index": 1,
+      "attack": "Water Slash",
+      "pattern": null,
+      "implemented": false,
+      "text": "Does 50 damage plus 10 more damage for each Energy attached to Shining Kabutops but not used to pay for this attack's Energy cost. Don't apply Resistance."
+    },
+    {
+      "card": "neo4-109",
+      "cardName": "Shining Mewtwo",
+      "index": 0,
+      "attack": "Reflect Shield",
+      "pattern": null,
+      "implemented": false,
+      "text": "If an attack does damage to Shining Mewtwo during your opponent's next turn (even if Shining Mewtwo is Knocked Out), flip a coin. If heads, prevent all damage done to Shining Mewtwo from that attack (any other effects of attacks still happen) and do 20 damage to the attacking Pokémon."
+    },
+    {
+      "card": "neo4-109",
+      "cardName": "Shining Mewtwo",
+      "index": 1,
+      "attack": "Psyburst",
+      "pattern": null,
+      "implemented": false,
+      "text": "Discard a Energy card attached to Shining Mewtwo or this attack does nothing. This attack does 40 damage plus 10 damage for each Energy attached to the Defending Pokémon."
+    },
+    {
+      "card": "neo4-110",
+      "cardName": "Shining Noctowl",
+      "index": 0,
+      "attack": "Flashing Eyes",
+      "pattern": null,
+      "implemented": false,
+      "text": "Flip 3 coins. If exactly 1 is heads, the Defending Pokémon is now Asleep. If exactly 2 are heads, the Defending Pokémon is now Confused. If all 3 are heads, the Defending Pokémon is now Paralyzed."
+    },
+    {
+      "card": "neo4-111",
+      "cardName": "Shining Raichu",
+      "index": 0,
+      "attack": "Thundersquall",
+      "pattern": null,
+      "implemented": false,
+      "text": "If your opponent has any Benched Pokémon, choose 1 of them and this attack does 10 damage to that Pokémon for each Energy attached to Shining Raichu. (Don't apply Weakness and Resistance for Benched Pokémon.)"
+    },
+    {
+      "card": "neo4-112",
+      "cardName": "Shining Steelix",
+      "index": 0,
+      "attack": "Crushing Earth",
+      "pattern": null,
+      "implemented": false,
+      "text": "Flip a coin. If heads, this attack does 10 damage to each Benched Pokémon (yours and your opponent's). (Don't apply Weakness and Resistance for Benched Pokémon.) If tails, this attack does nothing. Either way, Shining Steelix can't attack during your next turn."
+    }
+  ],
+  "byPattern": {
+    "coinStatus": 144,
+    "extraEnergyDamage": 17,
+    "coinPreventDamage": 14,
+    "recoil": 19,
+    "discardSome": 17,
+    "unsupported": 332,
+    "plain": 297,
+    "allBenchSelfDamage": 8,
+    "defenderEnergyBonus": 4,
+    "barrierShield": 2,
+    "coinDamageRecoil": 4,
+    "severePoison": 2,
+    "forceSwitch": 6,
+    "discardDefenderEnergy": 7,
+    "agilityShield": 21,
+    "coinRecoil": 10,
+    "discardAll": 5,
+    "multi": 82,
+    "ownBenchSpread": 5,
+    "forceSwitchAfterDamage": 11,
+    "oncePerPlayCoin": 4,
+    "status": 33,
+    "sleepRequired": 2,
+    "selfPoison": 17,
+    "defenderDamageBonus": 5,
+    "recoverFull": 4,
+    "selfDamageMinus": 2,
+    "selfDamageTimes": 7,
+    "opponentAttackLock": 4,
+    "halfRemainingHP": 3,
+    "leechSeed": 4,
+    "destinyBond": 2,
+    "poisonOrConfuse": 2,
+    "fail": 25,
+    "hardenThreshold": 4,
+    "smokescreen": 13,
+    "defendReduce": 13,
+    "chainLightning": 2,
+    "coinDamageChoice": 39,
+    "draw": 5,
+    "namedInPlayBonus": 3,
+    "bounceDefender": 3,
+    "boostNextAttack": 3,
+    "coinDoubleStatus": 6,
+    "coinCantRetreat": 4,
+    "multiSelfConfuse": 3,
+    "benchCountBonus": 3,
+    "drainDamage": 11,
+    "selfDamageBonus": 7,
+    "selfSwitch": 4,
+    "energyCoinDamage": 4,
+    "bothConfused": 2,
+    "searchBasicToBench": 9,
+    "coinSelfConfuse": 1,
+    "recoilForceSwitch": 2,
+    "selfDamageBonusConfuse": 2,
+    "coinPreventAttack": 7,
+    "coinDraw": 3,
+    "benchSnipe": 8,
+    "coinBenchSpread": 4,
+    "stretch": 2,
+    "ignoreWR": 8,
+    "coinForceSwitchAfterDamage": 2,
+    "paralyzeOrFail": 4,
+    "recoverEnergyHandRecoil": 1,
+    "untilTails": 2,
+    "trainerLock": 2,
+    "coinHeal": 2,
+    "recoverTrainer": 1,
+    "hydropump": 1,
+    "poisonBenchSpread": 2,
+    "recoilCoinPreventDamage": 2,
+    "energyCoinDamageDiscard": 2,
+    "anySnipe": 5,
+    "benchTailsDamage": 2,
+    "shuffleDefender": 2,
+    "moveDefenderEnergy": 2,
+    "multiConditionalSelfConfuse": 3,
+    "massExplosion": 2,
+    "poisonOrParalyze": 3,
+    "energyRequiredCoinDiscardOrFail": 1,
+    "energyRequiredCoinBonusDiscard": 1,
+    "discardEnergyDraw": 1,
+    "paralyzeOrRecoil": 2,
+    "forceSwitchBefore": 1,
+    "coinForceSwitch": 1,
+    "selfConfuse": 1,
+    "searchEvolutionSelf": 1,
+    "shuffleSelfDiscardAttachments": 1,
+    "coinBonusParalyze": 1,
+    "namedBenchBonus": 1,
+    "shuffleOpponentDeck": 1,
+    "coinAnySnipe": 1,
+    "searchEnergyAttach": 2,
+    "doubleCoinBenchSpread": 1,
+    "halfShield": 1,
+    "recoverEnergyAttach": 4,
+    "discardSomeSelfDamageBonus": 1,
+    "heal": 3,
+    "defenderEnergyTimes": 2,
+    "allPokemonCoinsRecoil": 1,
+    "equalEnergyRequired": 3,
+    "coinDiscardOneOrAll": 1,
+    "coinParalyzeBenchSpread": 3,
+    "untilTailsBase": 1,
+    "benchShield": 1,
+    "rapidSpin": 4,
+    "counterMirrorDamage": 1,
+    "damageCounterCoins": 2,
+    "selfAttackLock": 5,
+    "selfSleepCoinSleep": 1,
+    "coinBurn": 1,
+    "coinLowDamage": 1,
+    "damageOrSleep": 1,
+    "coinShuffleSelf": 1,
+    "megaDrain": 1,
+    "recoverLightningAttach": 4,
+    "cantRetreat": 7,
+    "magnetonRecoil": 1,
+    "twoHeadsBonus": 2,
+    "damageDamagedOpponents": 1,
+    "drawSelfSwitch": 1,
+    "searchBasicEnergyHand": 1,
+    "typedBenchSpread": 1,
+    "selfSleep": 2,
+    "multiHealAll": 1,
+    "twoCoinsStatus": 1,
+    "millSelfEnergyDamage": 1,
+    "allOpponentSpread": 1,
+    "shuffleHandDraw": 2,
+    "coinHealMany": 2,
+    "coinChoiceStatus": 1,
+    "bothAsleep": 1,
+    "sleepPoison": 1,
+    "coinDiscardDefenderEnergy": 3,
+    "coinSearchBasicToBench": 2,
+    "coinBenchSnipe": 2,
+    "watergun": 1,
+    "wakeDefender": 1,
+    "discardOwnAndDefenderEnergy": 1,
+    "typedOpponentBenchSpread": 1,
+    "multiHeadsDamageTailsRecoil": 1,
+    "ignoreResistance": 1,
+    "shuffleOwnDeck": 1,
+    "twoHeadsRequired": 1,
+    "paralyzeOrSleep": 2,
+    "swift": 7,
+    "returnEnergyRequired": 1,
+    "coinGrassGrowth": 1,
+    "lightningSelfRecoil": 1,
+    "coinTrainerLock": 2,
+    "confuseOrSleep": 2,
+    "revealHand": 2,
+    "damageAmplifier": 5,
+    "discardOneRequired": 2,
+    "cappedEnergyCoins": 2,
+    "twoHeadsParalyze": 2,
+    "halfRemainingHPDown": 2,
+    "allBenchCoinDamage": 2,
+    "coinAllOpponentSwitch": 2,
+    "restHeal": 1,
+    "healAllFriendly": 1,
+    "coinRecoverBoth": 1,
+    "specialEnergyBonus": 1,
+    "damageIfHealthy": 1,
+    "energyComparisonDamage": 1
+  }
+}

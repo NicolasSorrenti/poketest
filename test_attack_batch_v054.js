@@ -1,0 +1,40 @@
+'use strict';
+const assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path'),vm=require('node:vm');
+const src=fs.readFileSync(path.join(__dirname,'engine.js'),'utf8').split('async function load()')[0].replace('const engine=new Engine();window.NeoCampus={engine,get cards(){return cards},lookup};','const engine=new Engine();');
+const el=()=>({classList:{add(){},remove(){}},style:{},querySelectorAll:()=>[]});
+const ctx={console,Math:Object.create(Math),document:{getElementById:el,querySelector:()=>null},setTimeout(){},clearTimeout(){}};
+vm.createContext(ctx);vm.runInContext(src,ctx);const run=s=>vm.runInContext(s,ctx);
+const base=['base1','base2','base3','base4','base5','basep','gym1','gym2','neo1','neo2','neo3','neo4'].flatMap(x=>require('./cards/'+x+'.json'));
+const basicEnergy=['Water','Fire','Lightning','Psychic','Fighting','Grass'].map(t=>({id:'test54-'+t,name:t+' Energy',supertype:'Energy',subtypes:[],attacks:[],abilities:[]}));
+const dummy={id:'test54-dummy',name:'Training Dummy',supertype:'Pokémon',subtypes:['Basic'],types:['Colorless'],hp:'900',attacks:[{name:'Tackle',cost:['Colorless'],damage:'10',text:''}],abilities:[],retreatCost:[],weaknesses:[],resistances:[]};
+ctx.cardsData=[...base,...basicEnergy,dummy];run('cards=cardsData;lookup=new Map(cards.map(c=>[c.id,c]));render=()=>{};engine.end=()=>{};battlefieldAttack=()=>{};queuePrizeFX=()=>{};');
+let checks=0;
+function setup(cardId,attackName,extra='',heads=true){
+ const card=base.find(c=>c.id===cardId),i=card.attacks.findIndex(a=>a.name===attackName);assert(i>=0);
+ const costs=card.attacks[i].cost.map(x=>'test54-'+(x==='Colorless'?'Water':x));
+ run(`engine.players=[statePlayer('Human',[]),statePlayer('CPU',[])];engine.phase='game';engine.round=6;engine.turnSerial=12;engine.turn=0;engine.over=false;engine.pending54=null;engine.players[0].active=unit('${cardId}');engine.players[0].active.energies=${JSON.stringify(costs)};engine.players[0].bench=[unit('test54-dummy')];engine.players[1].active=unit('test54-dummy');engine.players[1].bench=[unit('test54-dummy')];engine.players[0].prizes=['test54-dummy','test54-dummy'];engine.players[1].prizes=['test54-dummy','test54-dummy'];deckSearchRequest=null;${extra}`);
+ ctx.Math.random=()=>heads?0.01:0.99;
+ assert.equal(run(`engine.attackPattern(engine.card(engine.me.active).attacks[${i}])`),'batch54');checks++;
+ return selection=>run(`engine.attack(${i},null,true,${selection===undefined?'null':JSON.stringify(selection)})`);
+}
+let x=setup('base5-34','Energy Bomb',"engine.me.active.energies=['test54-Lightning','test54-Lightning'];engine.me.bench=[unit('test54-dummy'),unit('test54-dummy')];");
+assert.equal(x(),false);assert.equal(run('deckSearchRequest.options.length'),4);assert.equal(x([0,0]),false);assert.equal(x([0,1]),false);assert.equal(run('engine.me.active.energies.length'),2);assert.equal(x([0,11]),true);assert.equal(run('engine.me.active.energies.length'),0);assert.equal(run('engine.me.bench[0].energies[0]'),'test54-Lightning');assert.equal(run('engine.me.bench[1].energies[0]'),'test54-Lightning');assert.equal(run('engine.foe.active.damage'),30);
+x=setup('base5-34','Energy Bomb',"engine.me.active.energies=['test54-Lightning','test54-Lightning'];engine.me.bench=[];");assert(x());assert.equal(run('engine.me.discard.length'),2);
+x=setup('basep-12','Energy Control',"engine.foe.active.energies=['test54-Lightning'];engine.foe.bench[0].energies=[];");
+assert.equal(x(),false);assert.equal(run('deckSearchRequest.options.length'),2);assert.equal(x(999),false);assert.equal(run('engine.foe.active.energies.length'),1);assert(x(0));assert.equal(run('engine.foe.bench[0].energies[0]'),'test54-Lightning');
+x=setup('basep-12','Energy Control',"engine.foe.active.energies=['test54-Lightning'];",false);assert(x());assert.equal(run('engine.foe.active.energies.length'),1);
+x=setup('neo2-52','Energy Cycle',"engine.foe.active.energies=['test54-Psychic'];engine.foe.bench[0].energies=[];");assert.equal(x(),false);assert(x(0));assert.equal(run('engine.foe.bench[0].energies[0]'),'test54-Psychic');assert.equal(run('engine.foe.active.damage'),10);
+x=setup('neo3-7','Stoke',"engine.me.deck=['test54-Water','test54-Fire','test54-Fire'];");assert.equal(x(),false);assert.equal(run('deckSearchRequest.options.length'),3);assert.equal(x(0),false);assert.equal(run('engine.me.deck.length'),3);assert(x(2));assert.equal(run('engine.me.active.energies.at(-1)'),'test54-Fire');assert.equal(run('engine.me.deck.length'),2);
+x=setup('neo3-7','Stoke',"engine.me.deck=['test54-Water'];");assert(x());assert.equal(run('engine.me.active.energies.length'),1);assert.equal(run('engine.me.deck.length'),1);
+x=setup('neo1-65','Static Electricity',"engine.me.deck=['test54-Lightning','test54-Lightning','test54-Fire'];engine.me.bench.push(unit('neo1-65'));engine.foe.bench.push(unit('neo1-65'));");
+assert.equal(x(),false);let options=run('deckSearchRequest.options.map(o=>o.index)');assert(options.length>=6);assert.equal(x([options[0],options[1]]),false);assert.equal(run('engine.me.deck.length'),3);
+// Pick unique Lightning Energy cards going to different Mareep targets.
+const chosen=run('(()=>{const a=batch54Choices(engine,"staticElectricity");const first=a[0];const second=a.find(x=>x.data.e!==first.data.e && x.data.target!==first.data.target);return [first.index,second.index]})()');
+assert(x(chosen));assert.equal(run('engine.me.deck.length'),1);assert.equal(run('engine.me.active.energies.length'),2);assert.equal(run('engine.me.bench[1].energies.length+engine.foe.bench[1].energies.length'),1);
+x=setup('neo3-1','Attract Current',"engine.me.deck=['test54-Lightning','test54-Lightning','test54-Water'];engine.me.bench=[unit('neo1-65')];",true);
+assert.equal(x(),false);assert.equal(run('engine.pending54.heads'),3);assert.equal(x([0,0]),false);assert.equal(run('engine.me.deck.length'),3);const assign=run('(()=>{const a=batch54Choices(engine,"attractCurrent");return [a[0].index,a.find(o=>o.data.e!==a[0].data.e).index]})()');assert(x(assign));assert.equal(run('engine.me.deck.length'),1);assert.equal(run('engine.foe.active.damage'),20);
+x=setup('neo3-1','Attract Current',"engine.me.deck=['test54-Lightning'];engine.me.bench=[unit('neo1-65')];",false);assert(x());assert.equal(run('engine.me.deck.length'),1);assert.equal(run('engine.foe.active.damage'),20);
+x=setup('neo3-9','Evolutionary Spore',"engine.me.bench=[unit('neo1-61'),unit('neo1-49')];engine.me.deck=['neo1-49','neo1-7','test54-Water'];");
+assert.equal(x(),false);assert.equal(run('deckSearchRequest.options.length'),2);assert.equal(x([0,0]),false);assert.equal(run('engine.me.deck.length'),3);assert(x([0,1]));assert.equal(run('engine.me.bench[0].id'),'neo1-49');assert.equal(run('engine.me.bench[1].id'),'neo1-7');assert.equal(run('engine.me.deck.length'),1);
+const audit=run('engine.attackAudit()');assert.equal(audit.filter(x=>x.pattern==='batch54').length,7);assert.ok(audit.filter(x=>!x.implemented).length<=25);
+console.log('PASS v0.5.4: '+checks+' prepared attacks; Energy Bomb, Energy Control, Energy Cycle, Stoke, Static Electricity, Attract Current, Evolutionary Spore, damage, heads/tails and invalid choice checks.');

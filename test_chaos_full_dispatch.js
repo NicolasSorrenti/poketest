@@ -1,0 +1,22 @@
+'use strict';
+const fs=require('node:fs'),vm=require('node:vm'),assert=require('node:assert/strict');
+const ctx={console,Math,window:{NeoCardCorrections:{}},document:{getElementById:()=>({classList:{add(){},remove(){}},style:{},appendChild(){},querySelectorAll(){return []}}),querySelector:()=>null},setTimeout(){},clearTimeout(){},innerWidth:1600};
+vm.createContext(ctx);
+vm.runInContext(fs.readFileSync(__dirname+'/engine.js','utf8').split('async function load()')[0].replace('const engine=new Engine();window.NeoCampus={engine,get cards(){return cards},lookup};','const engine=new Engine();'),ctx);
+for(const f of ['trainer_rules_v058.js','trainer_rules_v059.js','trainer_rules_v060.js'])vm.runInContext(fs.readFileSync(__dirname+'/'+f,'utf8'),ctx);
+const cards=fs.readdirSync(__dirname+'/cards').filter(x=>x.endsWith('.json')).flatMap(x=>JSON.parse(fs.readFileSync(__dirname+'/cards/'+x)));
+const lookup=vm.runInContext('lookup',ctx),game=vm.runInContext('engine',ctx),player=vm.runInContext('statePlayer',ctx),unit=vm.runInContext('unit',ctx);
+for(const c of cards)lookup.set(c.id,c);
+const id=n=>cards.find(c=>c.name===n&&c.supertype==='Trainer').id;
+game.players=[player('Human',[]),player('Rival',[])];game.phase='game';game.over=false;game.turn=0;game.round=3;game.turnSerial=12;
+for(const p of game.players){p.active=unit('base1-58');p.deck=['base1-98','base1-99','base1-95'];}
+game.stadium={id:id('Chaos Gym')};
+const ownDeck=game.players[0].deck.slice(),enemyDeck=game.players[1].deck.slice();
+assert.equal(game._trainer60RivalReplay(id('Bill')),true);
+assert.deepEqual(game.players[0].deck,ownDeck);
+assert.equal(game.players[1].deck.length,1);
+assert.equal(game.stadium.id,id('Chaos Gym'));
+assert.equal(game.turn,0);
+assert.equal(game.players[1].hand.includes(id('Bill')),false);
+assert.equal(game.players[1].discard.includes(id('Bill')),false);
+console.log('PASS Chaos Gym full dispatcher virtual Bill replay preserves card ownership and Stadium');

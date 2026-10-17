@@ -1,0 +1,41 @@
+{
+  "version": "0.27.0",
+  "scope": "Neo Genesis & Neo Discovery themes + 23 experimental Pok\u00e9mon printings",
+  "additionalPrintings": 23,
+  "themeDecks": 4,
+  "attackPrograms": {
+    "Neo Genesis": {
+      "compiled": 42,
+      "total": 42
+    },
+    "Neo Discovery": {
+      "compiled": 33,
+      "total": 33
+    }
+  },
+  "powers": {
+    "Neo Genesis": {
+      "registered": 2,
+      "total": 2
+    },
+    "Neo Discovery": {
+      "registered": 5,
+      "total": 5
+    }
+  },
+  "trainers": {
+    "Neo Genesis": {
+      "registered": 5,
+      "total": 5
+    },
+    "Neo Discovery": {
+      "registered": 7,
+      "total": 7
+    }
+  },
+  "knownLimitations": [
+    "Coverage means registered and tested handlers, not exhaustive historical accuracy",
+    "Neo Revelation and Neo Destiny not unlocked",
+    "Special Energy, rare suppression and multi-effect combinations need further historical testing"
+  ]
+}

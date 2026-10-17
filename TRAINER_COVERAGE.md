@@ -1,0 +1,159 @@
+# Neo Campus TCG — Historical Trainer Audit
+
+Generated: 2026-10-16T00:40:07.851Z
+
+**178 records / 143 distinct names**
+
+- **handler:** 170 card records
+- **partial:** 8 card records
+
+**This is implementation dispatch coverage, not evidence of complete card-by-card rules accuracy.**
+
+## handler
+
+- Arcade Game
+- Balloon Berry
+- Berry
+- Bill
+- Bill's Teleporter
+- Blaine
+- Blaine's Gamble
+- Blaine's Last Resort
+- Blaine's Quiz #1
+- Blaine's Quiz #2
+- Blaine's Quiz #3
+- Brock
+- Brock's Training Method
+- Broken Ground Gym
+- Card-Flip Game
+- Celadon City Gym
+- Cerulean City Gym
+- Challenge!
+- Cinnabar City Gym
+- Computer Error
+- Computer Search
+- Counterattack Claws
+- Defender
+- Devolution Spray
+- Digger
+- Double Gust
+- Ecogym
+- Energy Amplifier
+- Energy Ark
+- Energy Charge
+- Energy Flow
+- Energy Removal
+- Energy Retrieval
+- Energy Search
+- Energy Stadium
+- Erika
+- Erika's Kindness
+- Erika's Maids
+- Erika's Perfume
+- Fervor
+- Focus Band
+- Fossil Egg
+- Fuchsia City Gym
+- Full Heal
+- Gambler
+- Giovanni
+- Giovanni's Last Resort
+- Gold Berry
+- Good Manners
+- Goop Gas Attack
+- Gust of Wind
+- Heal Powder
+- Healing Field
+- Here Comes Team Rocket!
+- Hyper Devolution Spray
+- Imposter Oak's Revenge
+- Impostor Professor Oak
+- Impostor Professor Oak's Invention
+- Item Finder
+- Koga
+- Lass
+- Lt. Surge
+- Lt. Surge's Treaty
+- Lucky Stadium
+- Magnifier
+- Mail from Bill
+- Maintenance
+- Mary
+- Master Ball
+- Max Revive
+- Minion of Team Rocket
+- Miracle Berry
+- Misty
+- Misty's Duel
+- Misty's Tears
+- Misty's Wish
+- Misty's Wrath
+- Moo-Moo Milk
+- Mr. Fuji
+- Narrow Gym
+- New Pokédex
+- Nightly Garbage Run
+- No Removal Gym
+- Old Rod
+- Pewter City Gym
+- PlusPower
+- Poké Ball
+- PokéGear
+- Pokédex
+- Pokémon Breeder
+- Pokémon Breeder Fields
+- Pokémon Center
+- Pokémon Flute
+- Pokémon March
+- Pokémon Personality Test
+- Pokémon Tower
+- Pokémon Trader
+- Potion
+- Professor Elm
+- Professor Oak
+- Radio Tower
+- Recall
+- Recycle
+- Resistance Gym
+- Revive
+- Rocket's Hideout
+- Rocket's Minefield Gym
+- Rocket's Secret Experiment
+- Rocket's Sneak Attack
+- Ruin Wall
+- Sabrina
+- Sabrina's Gaze
+- Saffron City Gym
+- Scoop Up
+- Secret Mission
+- Sleep!
+- Sprout Tower
+- Super Energy Removal
+- Super Energy Retrieval
+- Super Potion
+- Super Rod
+- Super Scoop Up
+- Switch
+- Team Rocket's Evil Deeds
+- The Boss's Way
+- The Rocket's Training Gym
+- The Rocket's Trap
+- Thought Wave Machine (Rocket's Secret Machine)
+- Tickling Machine
+- Time Capsule
+- Transparent Walls
+- Trash Exchange
+- Vermilion City Gym
+- Viridian City Gym
+- Warp Point
+
+## partial
+
+- Brock's Protection
+- Chaos Gym
+- Charity
+- EXP.ALL
+- Koga's Ninja Trick
+- Lt. Surge's Secret Plan
+- Sabrina's ESP
+- Sabrina's Psychic Control

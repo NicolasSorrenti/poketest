@@ -1,0 +1,361 @@
+{
+  "generatedBy": "node audit_retail_theme_support.js",
+  "scope": "Only cards included in the 16 new retail theme decks",
+  "totals": {
+    "deckCount": 16,
+    "curatedGymCards": 107,
+    "gymPokemon": 73,
+    "gymTrainers": 25,
+    "gymEnergy": 9,
+    "printedGymAttacks": 123,
+    "compiledGymAttacks": 104,
+    "unportedGymAttacks": 19,
+    "implementedGymTrainers": 24,
+    "unsupportedGymTrainers": 1,
+    "gymPowers": 8,
+    "migratedGymPowers": 5
+  },
+  "perDeck": [
+    {
+      "name": "BodyGuard · Fossil",
+      "format": "Retail reprint / Classic",
+      "printedCards": 60,
+      "distinctCards": 15,
+      "unsupportedAttacks": [],
+      "unsupportedTrainers": [],
+      "unsupportedPowers": []
+    },
+    {
+      "name": "LockDown · Fossil",
+      "format": "Retail reprint / Classic",
+      "printedCards": 60,
+      "distinctCards": 17,
+      "unsupportedAttacks": [],
+      "unsupportedTrainers": [],
+      "unsupportedPowers": []
+    },
+    {
+      "name": "Grass Chopper · Base Set 2",
+      "format": "Retail reprint / Classic",
+      "printedCards": 60,
+      "distinctCards": 17,
+      "unsupportedAttacks": [],
+      "unsupportedTrainers": [],
+      "unsupportedPowers": []
+    },
+    {
+      "name": "Hot Water · Base Set 2",
+      "format": "Retail reprint / Classic",
+      "printedCards": 60,
+      "distinctCards": 17,
+      "unsupportedAttacks": [],
+      "unsupportedTrainers": [],
+      "unsupportedPowers": []
+    },
+    {
+      "name": "Lightning Bug · Base Set 2",
+      "format": "Retail reprint / Classic",
+      "printedCards": 60,
+      "distinctCards": 17,
+      "unsupportedAttacks": [],
+      "unsupportedTrainers": [],
+      "unsupportedPowers": []
+    },
+    {
+      "name": "Psych Out · Base Set 2",
+      "format": "Retail reprint / Classic",
+      "printedCards": 60,
+      "distinctCards": 19,
+      "unsupportedAttacks": [],
+      "unsupportedTrainers": [],
+      "unsupportedPowers": []
+    },
+    {
+      "name": "Devastation · Team Rocket",
+      "format": "Retail reprint / Classic",
+      "printedCards": 60,
+      "distinctCards": 19,
+      "unsupportedAttacks": [],
+      "unsupportedTrainers": [],
+      "unsupportedPowers": []
+    },
+    {
+      "name": "Trouble · Team Rocket",
+      "format": "Retail reprint / Classic",
+      "printedCards": 60,
+      "distinctCards": 21,
+      "unsupportedAttacks": [],
+      "unsupportedTrainers": [],
+      "unsupportedPowers": []
+    },
+    {
+      "name": "Brock · Gym Heroes",
+      "format": "Gym preview",
+      "printedCards": 60,
+      "distinctCards": 18,
+      "unsupportedAttacks": [
+        "Brock's Geodude — Call for Friend"
+      ],
+      "unsupportedTrainers": [],
+      "unsupportedPowers": [
+        "Brock's Rhydon — Bench Guard"
+      ]
+    },
+    {
+      "name": "Misty · Gym Heroes",
+      "format": "Gym preview",
+      "printedCards": 60,
+      "distinctCards": 16,
+      "unsupportedAttacks": [
+        "Misty's Poliwhirl — Rapids",
+        "Misty's Psyduck — Call for Friend",
+        "Misty's Tentacool — Crystal Beam"
+      ],
+      "unsupportedTrainers": [],
+      "unsupportedPowers": [
+        "Misty's Tentacruel — Flee"
+      ]
+    },
+    {
+      "name": "Lt. Surge · Gym Heroes",
+      "format": "Gym preview",
+      "printedCards": 60,
+      "distinctCards": 16,
+      "unsupportedAttacks": [
+        "Lt. Surge's Rattata — Focus Energy"
+      ],
+      "unsupportedTrainers": [],
+      "unsupportedPowers": []
+    },
+    {
+      "name": "Erika · Gym Heroes",
+      "format": "Gym preview",
+      "printedCards": 60,
+      "distinctCards": 18,
+      "unsupportedAttacks": [
+        "Erika's Gloom — Magic Pollen"
+      ],
+      "unsupportedTrainers": [],
+      "unsupportedPowers": []
+    },
+    {
+      "name": "Koga · Gym Challenge",
+      "format": "Gym preview",
+      "printedCards": 60,
+      "distinctCards": 17,
+      "unsupportedAttacks": [
+        "Koga's Beedrill — Hyper Needle",
+        "Koga's Grimer — Sludge Grip",
+        "Koga's Koffing — Obscuring Gas"
+      ],
+      "unsupportedTrainers": [],
+      "unsupportedPowers": []
+    },
+    {
+      "name": "Sabrina · Gym Challenge",
+      "format": "Gym preview",
+      "printedCards": 60,
+      "distinctCards": 17,
+      "unsupportedAttacks": [
+        "Sabrina's Kadabra — Life Drain",
+        "Sabrina's Gastly — Fade Out",
+        "Sabrina's Haunter — Shadow Attack",
+        "Sabrina's Jynx — Helping Hand"
+      ],
+      "unsupportedTrainers": [
+        "Sabrina's Psychic Control"
+      ],
+      "unsupportedPowers": [
+        "Sabrina's Alakazam — Psylink"
+      ]
+    },
+    {
+      "name": "Blaine · Gym Challenge",
+      "format": "Gym preview",
+      "printedCards": 60,
+      "distinctCards": 19,
+      "unsupportedAttacks": [
+        "Blaine's Charmander — Fire Tail Slap",
+        "Blaine's Charmeleon — Bonfire",
+        "Blaine's Ponyta — Hind Kick",
+        "Blaine's Rapidash — Stamp",
+        "Blaine's Vulpix — Call Will-o'-the-wisp"
+      ],
+      "unsupportedTrainers": [],
+      "unsupportedPowers": []
+    },
+    {
+      "name": "Giovanni · Gym Challenge",
+      "format": "Gym preview",
+      "printedCards": 60,
+      "distinctCards": 18,
+      "unsupportedAttacks": [
+        "Giovanni's Meowth — False Charity"
+      ],
+      "unsupportedTrainers": [],
+      "unsupportedPowers": []
+    }
+  ],
+  "gymUnsupportedAttacks": [
+    {
+      "id": "gym1-66",
+      "pokemon": "Brock's Geodude",
+      "attack": "Call for Friend",
+      "compiled": false,
+      "handler": null
+    },
+    {
+      "id": "gym1-53",
+      "pokemon": "Misty's Poliwhirl",
+      "attack": "Rapids",
+      "compiled": false,
+      "handler": null
+    },
+    {
+      "id": "gym1-54",
+      "pokemon": "Misty's Psyduck",
+      "attack": "Call for Friend",
+      "compiled": false,
+      "handler": null
+    },
+    {
+      "id": "gym1-57",
+      "pokemon": "Misty's Tentacool",
+      "attack": "Crystal Beam",
+      "compiled": false,
+      "handler": null
+    },
+    {
+      "id": "gym1-82",
+      "pokemon": "Lt. Surge's Rattata",
+      "attack": "Focus Energy",
+      "compiled": false,
+      "handler": null
+    },
+    {
+      "id": "gym1-45",
+      "pokemon": "Erika's Gloom",
+      "attack": "Magic Pollen",
+      "compiled": false,
+      "handler": null
+    },
+    {
+      "id": "gym2-9",
+      "pokemon": "Koga's Beedrill",
+      "attack": "Hyper Needle",
+      "compiled": false,
+      "handler": null
+    },
+    {
+      "id": "gym2-78",
+      "pokemon": "Koga's Grimer",
+      "attack": "Sludge Grip",
+      "compiled": false,
+      "handler": null
+    },
+    {
+      "id": "gym2-48",
+      "pokemon": "Koga's Koffing",
+      "attack": "Obscuring Gas",
+      "compiled": false,
+      "handler": null
+    },
+    {
+      "id": "gym2-58",
+      "pokemon": "Sabrina's Kadabra",
+      "attack": "Life Drain",
+      "compiled": false,
+      "handler": null
+    },
+    {
+      "id": "gym2-96",
+      "pokemon": "Sabrina's Gastly",
+      "attack": "Fade Out",
+      "compiled": false,
+      "handler": null
+    },
+    {
+      "id": "gym2-55",
+      "pokemon": "Sabrina's Haunter",
+      "attack": "Shadow Attack",
+      "compiled": false,
+      "handler": null
+    },
+    {
+      "id": "gym2-57",
+      "pokemon": "Sabrina's Jynx",
+      "attack": "Helping Hand",
+      "compiled": false,
+      "handler": null
+    },
+    {
+      "id": "gym2-60",
+      "pokemon": "Blaine's Charmander",
+      "attack": "Fire Tail Slap",
+      "compiled": false,
+      "handler": null
+    },
+    {
+      "id": "gym2-31",
+      "pokemon": "Blaine's Charmeleon",
+      "attack": "Bonfire",
+      "compiled": false,
+      "handler": null
+    },
+    {
+      "id": "gym2-64",
+      "pokemon": "Blaine's Ponyta",
+      "attack": "Hind Kick",
+      "compiled": false,
+      "handler": null
+    },
+    {
+      "id": "gym2-33",
+      "pokemon": "Blaine's Rapidash",
+      "attack": "Stamp",
+      "compiled": false,
+      "handler": null
+    },
+    {
+      "id": "gym2-66",
+      "pokemon": "Blaine's Vulpix",
+      "attack": "Call Will-o'-the-wisp",
+      "compiled": false,
+      "handler": null
+    },
+    {
+      "id": "gym2-43",
+      "pokemon": "Giovanni's Meowth",
+      "attack": "False Charity",
+      "compiled": false,
+      "handler": null
+    }
+  ],
+  "gymUnsupportedTrainers": [
+    {
+      "id": "gym2-121",
+      "name": "Sabrina's Psychic Control",
+      "supported": false
+    }
+  ],
+  "gymUnsupportedPowers": [
+    {
+      "id": "gym1-2",
+      "pokemon": "Brock's Rhydon",
+      "power": "Bench Guard",
+      "migrated": false
+    },
+    {
+      "id": "gym1-10",
+      "pokemon": "Misty's Tentacruel",
+      "power": "Flee",
+      "migrated": false
+    },
+    {
+      "id": "gym2-16",
+      "pokemon": "Sabrina's Alakazam",
+      "power": "Psylink",
+      "migrated": false
+    }
+  ]
+}

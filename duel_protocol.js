@@ -1,0 +1,59 @@
+'use strict';
+const {decisionForViewer}=require('./decision_core');
+const CLASSIC_POWERS=require('./classic_power_core');
+// Transport-agnostic definitions: the same command is used for local, CPU, and online play.
+const ACTIONS=Object.freeze(['setup_select','setup_undo','setup_confirm','bench','evolve','attach_energy','play_trainer','use_stadium','attack','retreat','use_power','choose','end_turn','concede']);
+const KNOWN=new Set(ACTIONS);
+function validateCommand(input){
+ if(!input||typeof input!=='object'||Array.isArray(input))throw Error('Command must be an object');
+ const {type,payload={},requestId}=input;
+ if(!KNOWN.has(type))throw Error('Unknown command type');
+ if(payload===null||typeof payload!=='object'||Array.isArray(payload))throw Error('Invalid command payload');
+ if(requestId!==undefined&&(typeof requestId!=='string'||requestId.length>100||requestId.length===0))throw Error('Invalid requestId');
+ return Object.freeze({type,payload:Object.freeze({...payload}),...(requestId===undefined?{}:{requestId})});
+}
+// Never serialize the authoritative game object directly to a client.
+function projectPlayer(player,own,hideField=false){
+ if(!player)return null;
+ const base={name:player.name,active:hideField?null:player.active?structuredClone(player.active):null,bench:hideField?[]:structuredClone(player.bench||[]),handCount:(player.hand||[]).length,deckCount:(player.deck||[]).length,prizeCount:(player.prizes||[]).length,discard:[...(player.discard||[])]};
+ if(own){base.hand=[...(player.hand||[])];base.prizesCount=(player.prizes||[]).length;}
+ return base;
+}
+function publicView(game,viewer){
+ if(!game||!Array.isArray(game.players)||game.players.length!==2)throw Error('Invalid game');
+ if(viewer!==0&&viewer!==1&&viewer!==null)throw Error('Invalid viewer');
+ const publicPlayers=game.players.map((p,i)=>projectPlayer(p,viewer===i,game.phase==='setup'&&viewer!==i));
+ // Psylink copies attacks of the owner's Psychic Pokémon in play. The copied
+ // attacks are all public and are exposed only to the owning Active action UI.
+ if(viewer!==null&&game.phase==='game'){
+  const p=game.players[viewer],a=p.active;
+  if(a&&a.id==='gym2-16'&&CLASSIC_POWERS.enabled(game,a,'Psylink')){
+   const C=require('./headless_duel').CATALOG;
+   publicPlayers[viewer].active.effectiveAttacks=[...(C.get(a.id).attacks||[]),...[p.active,...p.bench].filter(u=>u&&u!==a&&C.get(u.id)?.types?.includes('Psychic')).flatMap(u=>C.get(u.id).attacks||[])];
+  }
+ }
+
+ if(['classic','theme-expanded','gym-theme','gym-expanded','neo-theme','online-preview'].includes(game.format)&&game.phase==='game'){
+  if(game.prizesFaceUp)for(let i=0;i<2;i++)publicPlayers[i].prizes=[...game.players[i].prizes];
+  if(viewer!==null){
+   const own=game.players[viewer],opp=game.players[1-viewer];
+   if([own.active,...own.bench].filter(Boolean).some(u=>CLASSIC_POWERS.enabled(game,u,'Clairvoyance')))
+    publicPlayers[1-viewer].hand=[...opp.hand];
+   publicPlayers[viewer].privateMessages=[...(own.privateLog||[]).slice(-15)];
+  }
+ }
+ return {phase:game.phase,turn:game.turn,round:game.round,over:!!game.over,stadium:game.stadium?{id:game.stadium.id,owner:game.stadium.owner}:null,players:publicPlayers,messages:[...(game.message||[]).slice(0,20)],pendingDecision:decisionForViewer(game.pendingDecision,viewer)};
+}
+// Exact ordered public actions, with opaque sequence numbers for polling clients.
+// In particular, never serialize the authoritative event payload: a choice can
+// contain private deck/hand indices and an opponent must not learn those.
+function publicActivity(game,limit=24){
+ const events=game?.events||[];
+ return events.slice(-limit).map((e,i)=>({
+  seq:events.length-Math.min(limit,events.length)+i+1,
+  side:e.side,type:e.type,
+  ...(typeof e.visible?.cardId==='string'?{cardId:e.visible.cardId}:{}),
+  ...(typeof e.visible?.label==='string'?{label:e.visible.label}:{})
+ }));
+}
+module.exports={ACTIONS,validateCommand,publicView,publicActivity};

@@ -1,0 +1,10 @@
+'use strict';
+const assert=require('node:assert/strict');const {normalizeCard}=require('./tcgdex_adapter');
+const c=normalizeCard({id:'base1-4',name:'Charizard',category:'Pokemon',stage:'Stage2',hp:120,evolveFrom:'Charmeleon',types:['Fire'],retreat:3,image:'https://assets.tcgdex.net/en/base/base1/4',abilities:[{name:'Energy Burn',effect:'As often as you like during your turn, you may turn all Energy attached to Charizard into Fire Energy for the rest of the turn.'}],attacks:[{name:'Fire Spin',cost:['Fire','Fire','Fire','Fire'],damage:100,effect:'Discard 2 Energy cards attached to Charizard in order to use this attack.'}]});
+assert.equal(c.supertype,'Pokémon');assert.equal(c.subtypes[0],'Stage 2');assert.equal(c.evolvesFrom,'Charmeleon');assert.equal(c.abilities[0].name,'Energy Burn');assert.equal(c.attacks[0].text.startsWith('Discard'),true);assert.equal(c.retreatCost.length,3);assert.ok(c.images.small.endsWith('/low.webp'));
+const g=normalizeCard({id:'base3-48',name:'Grimer',category:'Pokemon',stage:'Basic',hp:50,types:['Grass'],attacks:[{name:'Minimize',cost:['Grass'],effect:"All damage done by attacks to Grimer during your opponent's next turn is reduced by 20 (after applying Weakness and Resistance)."}]});
+assert.equal(g.attacks[0].damage,'');assert.equal(g.attacks[0].cost[0],'Grass');
+assert.equal(normalizeCard({id:'base1-99',name:'Grass Energy',category:'Energy'}).supertype,'Energy');
+const historicEnergy=normalizeCard({id:'base1-102',name:'Water Energy',category:'Energy',stage:'Basic'});
+assert.equal(historicEnergy.supertype,'Energy');assert.deepEqual(historicEnergy.subtypes,[]);
+console.log('TCGdex normalization tests passed');

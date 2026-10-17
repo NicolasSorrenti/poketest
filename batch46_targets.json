@@ -1,0 +1,134 @@
+[
+  {
+    "card": "gym1-38",
+    "name": "Lucky Shot",
+    "kind": "luckyShot",
+    "mode": "foeBench"
+  },
+  {
+    "card": "gym1-48",
+    "name": "Flytrap",
+    "kind": "flytrap",
+    "mode": "foeBench"
+  },
+  {
+    "card": "basep-17",
+    "name": "Tempt",
+    "kind": "tempt",
+    "mode": "foeBenchOptional"
+  },
+  {
+    "card": "gym2-78",
+    "name": "Sludge Grip",
+    "kind": "sludgeGrip",
+    "mode": "foeBenchOptional"
+  },
+  {
+    "card": "neo4-6",
+    "name": "Pull In",
+    "kind": "pullIn",
+    "mode": "foeAnyOptional"
+  },
+  {
+    "card": "neo4-17",
+    "name": "Entangle",
+    "kind": "entangle",
+    "mode": "foeBench"
+  },
+  {
+    "card": "neo4-11",
+    "name": "Fling Away",
+    "kind": "flingAway",
+    "mode": "foeBenchOptional"
+  },
+  {
+    "card": "gym2-5",
+    "name": "Dragon Tornado",
+    "kind": "dragonTornado",
+    "mode": "foeBenchOptional"
+  },
+  {
+    "card": "neo1-8",
+    "name": "Dragon Tornado",
+    "kind": "dragonTornado",
+    "mode": "foeBenchOptional"
+  },
+  {
+    "card": "gym2-24",
+    "name": "Overhead Toss",
+    "kind": "overheadToss",
+    "mode": "ownBenchOptional"
+  },
+  {
+    "card": "neo3-38",
+    "name": "Overhead Toss",
+    "kind": "overheadToss",
+    "mode": "ownBenchOptional"
+  },
+  {
+    "card": "neo4-52",
+    "name": "Wash Away",
+    "kind": "washAway",
+    "mode": "ownBenchOptional"
+  },
+  {
+    "card": "gym1-27",
+    "name": "Electric Current",
+    "kind": "electricCurrent",
+    "mode": "ownBenchOptional"
+  },
+  {
+    "card": "neo1-34",
+    "name": "Electric Current",
+    "kind": "electricCurrent",
+    "mode": "ownBenchOptional"
+  },
+  {
+    "card": "neo1-39",
+    "name": "Baton Pass",
+    "kind": "batonPass",
+    "mode": "ownBenchOptional"
+  },
+  {
+    "card": "neo3-10",
+    "name": "Plasma",
+    "kind": "plasma",
+    "mode": "none"
+  },
+  {
+    "card": "neo3-38",
+    "name": "Terrorize",
+    "kind": "terrorize",
+    "mode": "none"
+  },
+  {
+    "card": "neo3-21",
+    "name": "Lightning Strike",
+    "kind": "lightningStrike",
+    "mode": "none"
+  },
+  {
+    "card": "neo4-46",
+    "name": "Warm Up",
+    "kind": "warmUp",
+    "mode": "ownBenchOptional"
+  },
+  {
+    "card": "neo4-62",
+    "name": "Tentacle Wrap",
+    "kind": "tentacleWrap",
+    "mode": "none"
+  },
+  {
+    "card": "base5-2",
+    "name": "Stare",
+    "kind": "stare",
+    "mode": "foeAny"
+  },
+  {
+    "card": "base5-19",
+    "name": "Stare",
+    "kind": "stare",
+    "mode": "foeAny"
+  }
+]

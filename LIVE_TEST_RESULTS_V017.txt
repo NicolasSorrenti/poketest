@@ -1,0 +1,8 @@
+
+> neo-campus-tcg@0.17.0-classic-authoritative-client test:classic:live
+> node test_classic_live_assets.js && node test_classic_live_attack_preflight.js && node test_classic_live_service.js && node test_classic_live_http.js
+
+PASS authoritative browser assets: 28 referenced DOM elements found, unique ids, script parses, no legacy rule-engine loading
+PASS Classic attack preflight: invalid Scavenge and attack-locked Call for Family cannot trap a player in a mandatory decision
+PASS authoritative local service: 96 CPU duels, 3924 validated commands, 1247 attacks, 236 interactive responses, 72 Bill Trainers, 500 explicit turn ends; hidden-information, stale revision, deck conservation
+PASS HTTP authoritative Classic: real page, 8 decks, secret token, setup, CPU turn, stale and invalid command rejection, origin protection, card conservation

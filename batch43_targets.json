@@ -1,0 +1,602 @@
+[
+  {
+    "id": "base1-59",
+    "attack": "Water Gun",
+    "text": "Does 10 damage plus 10 damage for each Energy attached to Poliwag but not used to pay for this attack's Energy cost. Extra Energy after the end don't count.",
+    "index": 4
+  },
+  {
+    "id": "base3-15",
+    "attack": "Thunderstorm",
+    "text": "For each of your opponent's Benched Pokémon, flip a coin. If heads, this attack does 20 damage to that Pokémon. (Don't apply Weakness and Resistance for Benched Pokémon.) Then, Zapdos does 10 damage times the number of tails to itself.",
+    "index": 11
+  },
+  {
+    "id": "base3-30",
+    "attack": "Thunderstorm",
+    "text": "For each of your opponent's Benched Pokémon, flip a coin. If heads, this attack does 20 damage to that Pokémon. (Don't apply Weakness and Resistance for Benched Pokémon.) Then, Zapdos does 10 damage times the number of tails to itself.",
+    "index": 15
+  },
+  {
+    "id": "base4-88",
+    "attack": "Water Gun",
+    "text": "Does 10 damage plus 10 damage for each Energy attached to Poliwag but not used to pay for this attack's Energy cost. Extra Energy after the end don't count.",
+    "index": 19
+  },
+  {
+    "id": "gym1-6",
+    "attack": "Discharge",
+    "text": "Discard all Lightning Energy cards attached to Lt. Surge's Electabuzz in order to use this attack. Flip a number of coins equal to the number of Lightning Energy cards you discarded. This attack does 30 damage times the number of heads.",
+    "index": 44
+  },
+  {
+    "id": "gym1-28",
+    "attack": "Thunderbolt",
+    "text": "Discard all Energy cards attached to Lt. Surge's Raichu in order to use this attack.",
+    "index": 52
+  },
+  {
+    "id": "gym1-43",
+    "attack": "Deflector",
+    "text": "During your opponent's next turn, whenever Erika's Exeggcute takes damage, divide that damage in half (rounded down to the nearest 10). (Any other effects still happen.)",
+    "index": 55
+  },
+  {
+    "id": "gym1-43",
+    "attack": "Egg Bomb",
+    "text": "Flip a coin. If tails, this attack does nothing to the Defending Pokémon and Erika's Exeggcute does 20 damage to itself.",
+    "index": 56
+  },
+  {
+    "id": "gym1-53",
+    "attack": "Water Punch",
+    "text": "Flip a number of coins equal to the number of Water Energy attached to Misty's Poliwhirl. This attack does 30 damage plus 10 damage for each heads.",
+    "index": 58
+  },
+  {
+    "id": "gym1-58",
+    "attack": "Night Spirits",
+    "text": "Flip a number of coins equal to the total number of Sabrina's Gastlys, Sabrina's Haunters, and Sabrina's Gengars you have in play. This attack does 30 damage times the number of heads.",
+    "index": 60
+  },
+  {
+    "id": "gym1-68",
+    "attack": "Karate Chop",
+    "text": "Does 40 damage minus 10 damage for each damage counter on Brock's Mankey.",
+    "index": 61
+  },
+  {
+    "id": "gym2-1",
+    "attack": "Firestorm",
+    "text": "Discard 3 Fire Energy cards attached to Blaine's Arcanine in order to use this attack.",
+    "index": 64
+  },
+  {
+    "id": "gym2-5",
+    "attack": "Summon Storm",
+    "text": "Flip 2 coins. If both of them are heads, this attack does 20 damage to each other Pokémon (even your own). Don't apply Weakness and Resistance for this attack.",
+    "index": 68
+  },
+  {
+    "id": "gym2-11",
+    "attack": "Kerzap",
+    "text": "Flip a coin. If heads, this attack does 20 damage plus 30 more damage to the Defending Pokémon and discard all Lightning Energy cards attached to Lt. Surge's Raichu. If tails, this attack does 20 damage.",
+    "index": 72
+  },
+  {
+    "id": "gym2-11",
+    "attack": "Thundertackle",
+    "text": "Flip a coin. If heads, the Defending Pokémon is now Paralyzed. If tails, Lt. Surge's Raichu does 20 damage to itself.",
+    "index": 73
+  },
+  {
+    "id": "gym2-12",
+    "attack": "Electro Beam",
+    "text": "Flip a coin. If tails, discard all Energy cards attached to Misty's Golduck.",
+    "index": 74
+  },
+  {
+    "id": "gym2-14",
+    "attack": "Juxtapose",
+    "text": "Flip a coin. If heads, switch the number of damage counters on Rocket's Mewtwo with the number of damage counters on the Defending Pokémon (even if it would Knock Out either Pokémon). (It's okay if 1 of the Pokémon has no damage counters on it.)",
+    "index": 76
+  },
+  {
+    "id": "gym2-21",
+    "attack": "Burn Up",
+    "text": "Flip a coin. If tails, discard all Fire Energy cards attached to Blaine's Ninetales.",
+    "index": 77
+  },
+  {
+    "id": "gym2-22",
+    "attack": "Lie Low",
+    "text": "All damage done to Brock's Dugtrio during your opponent's next turn is reduced by 20 (after applying Weakness and Resistance).",
+    "index": 78
+  },
+  {
+    "id": "gym2-22",
+    "attack": "Earthdrill",
+    "text": "This attack can't be used unless Brock's Dugtrio used its Lie Low attack last turn.",
+    "index": 79
+  },
+  {
+    "id": "gym2-23",
+    "attack": "Love Lariat",
+    "text": "Flip a coin. If heads, this attack does 50 damage plus 50 more damage if you have at least 1 Giovanni's Nidoking on your Bench. If tails, this attack does nothing.",
+    "index": 80
+  },
+  {
+    "id": "gym2-27",
+    "attack": "Aerial Maneuvers",
+    "text": "Flip a coin. If heads, this attack does 10 damage plus 30 more damage, and, during your opponent's next turn, prevent all effects of attacks, including damage, done to Koga's Pidgeotto. If tails, this attack does 10 damage.",
+    "index": 82
+  },
+  {
+    "id": "gym2-28",
+    "attack": "Thunder Flare",
+    "text": "Does 30 damage plus 10 damage times the number of damage counters on Lt. Surge's Jolteon, then flip a coin. If tails, Lt. Surge's Jolteon does 30 damage to itself.",
+    "index": 83
+  },
+  {
+    "id": "gym2-33",
+    "attack": "Stamp",
+    "text": "Flip a coin. If heads, this attack does 30 damage plus 10 more damage (to the Defending Pokémon) and 10 damage to each of your opponent's Benched Pokémon. (Don't apply Weakness and Resistance for Benched Pokémon.) If tails, this attack does 30 damage (to the Defending Pokémon).",
+    "index": 87
+  },
+  {
+    "id": "gym2-42",
+    "attack": "Risky Attack",
+    "text": "Flip a coin. If tails, this attack does no damage to the Defending Pokémon and Giovanni's Machoke does 100 damage to itself.",
+    "index": 93
+  },
+  {
+    "id": "gym2-42",
+    "attack": "Headlock",
+    "text": "Flip a coin. If heads, this attack does 20 damage plus 20 more damage and the Defending Pokémon is now Paralyzed. If tails, this attack does 20 damage.",
+    "index": 94
+  },
+  {
+    "id": "gym2-44",
+    "attack": "Poison Sting Tackle",
+    "text": "Giovanni's Nidorina does 20 damage to itself. Flip a coin. If heads, the Defending Pokémon is now Poisoned.",
+    "index": 96
+  },
+  {
+    "id": "gym2-45",
+    "attack": "Rend",
+    "text": "If the Defending Pokémon already has any damage counters on it, this attack does 20 damage plus 20 more damage. If not, this attack does 20 damage.",
+    "index": 97
+  },
+  {
+    "id": "gym2-47",
+    "attack": "Toxic Secretion",
+    "text": "Flip a coin. If heads, the Defending Pokémon is now Poisoned. It now takes 20 Poison damage instead of 10 after each player's turn (even if it was already Poisoned).",
+    "index": 98
+  },
+  {
+    "id": "gym2-50",
+    "attack": "Spontaneous Explosion",
+    "text": "Flip a coin. If heads, this attack does 10 damage plus 30 more damage and Koga's Weezing does 30 damage to itself; if tails, this attack does 10 damage.",
+    "index": 101
+  },
+  {
+    "id": "gym2-50",
+    "attack": "Toxic Cloud",
+    "text": "Flip a coin. If heads, this Defending Pokémon is now Poisoned. It now takes 20 Poison damage instead of 10 after each player's turn (even if it was already Poisoned).",
+    "index": 102
+  },
+  {
+    "id": "gym2-53",
+    "attack": "Double-edge",
+    "text": "Lt. Surge's Raticate does 20 damage to itself.",
+    "index": 106
+  },
+  {
+    "id": "gym2-54",
+    "attack": "Ice Throw",
+    "text": "If the Defending Pokémon is Fighting, this attack's base damage is doubled.",
+    "index": 107
+  },
+  {
+    "id": "gym2-56",
+    "attack": "Pendulum Curse",
+    "text": "Flip a number of coins equal to the number of damage counters on the Defending Pokémon. This attack does 20 damage times the number of heads.",
+    "index": 110
+  },
+  {
+    "id": "gym2-60",
+    "attack": "Fire Tail Slap",
+    "text": "Use this attack only if there are any Fire Energy cards attached to Blaine's Charmander. Flip a coin. If tails, discard 1 of those cards.",
+    "index": 114
+  },
+  {
+    "id": "gym2-69",
+    "attack": "Group Therapy",
+    "text": "You and your opponent remove 1 damage counter from each of your Pokémon with damage counters on them.",
+    "index": 120
+  },
+  {
+    "id": "gym2-69",
+    "attack": "Pulled Punch",
+    "text": "If the Defending Pokémon has no damage counters on it, this attack does 40 damage. If it has any damage counters on it, this attack does 10 damage.",
+    "index": 121
+  },
+  {
+    "id": "gym2-72",
+    "attack": "Fury Punch",
+    "text": "Flip a coin. If heads, this attack does 20 damage times the number of damage counters on Giovanni's Machop.",
+    "index": 123
+  },
+  {
+    "id": "gym2-75",
+    "attack": "Double-edge",
+    "text": "Giovanni's Nidoran ♀ does 20 damage to itself.",
+    "index": 124
+  },
+  {
+    "id": "gym2-76",
+    "attack": "Retaliation",
+    "text": "You can't use this attack unless Giovanni's Nidoran ♂ has 2 or more damage counters on it.",
+    "index": 125
+  },
+  {
+    "id": "gym2-77",
+    "attack": "Fast-Acting Poison",
+    "text": "Flip 2 coins. If both are heads, the Defending Pokémon is now Confused and Poisoned.",
+    "index": 126
+  },
+  {
+    "id": "gym2-79",
+    "attack": "Smelly Gas",
+    "text": "Flip a coin. If heads, this attack does 10 damage to each Benched Pokémon (including your own). (Don't apply Weakness and Resistance for Benched Pokémon.)",
+    "index": 128
+  },
+  {
+    "id": "gym2-86",
+    "attack": "Bouncing Ball",
+    "text": "Flip a coin. If tails, Lt. Surge's Voltorb does 10 damage to itself.",
+    "index": 131
+  },
+  {
+    "id": "gym2-89",
+    "attack": "Bubbles",
+    "text": "Flip a coin. If tails, you can't use this attack during your next turn.",
+    "index": 133
+  },
+  {
+    "id": "gym2-99",
+    "attack": "Random ESP",
+    "text": "Flip a coin. If heads, the Defending Pokémon is now Confused. If tails, this attack does no damage and Sabrina's Psyduck is now Confused.",
+    "index": 138
+  },
+  {
+    "id": "neo1-3",
+    "attack": "Flower Dance",
+    "text": "Does 30 damage times the number of cards with Bellossom in their names that you have in play (including this one).",
+    "index": 140
+  },
+  {
+    "id": "neo1-5",
+    "attack": "Riptide",
+    "text": "Does 10 damage plus 10 damage times the number of Energy cards in your discard pile. Then, shuffle all Energy cards from your discard pile into your deck.",
+    "index": 141
+  },
+  {
+    "id": "neo1-7",
+    "attack": "Leech Seed",
+    "text": "If this attack damages the Defending Pokémon (after applying Weakness and Resistance), remove 1 damage counter from Jumpluff, if it has any.",
+    "index": 142
+  },
+  {
+    "id": "neo1-13",
+    "attack": "Steel Wing",
+    "text": "Flip a coin. If heads, all damage done by attacks to Skarmory during your opponent's next turn is reduced by 20 (after applying Weakness and Resistance).",
+    "index": 146
+  },
+  {
+    "id": "neo1-14",
+    "attack": "Mind Blast",
+    "text": "Flip a coin. If heads, this attack does 20 damage plus 10 more damage and the Defending Pokémon is now Confused. If tails, this attack does 20 damage.",
+    "index": 147
+  },
+  {
+    "id": "neo1-17",
+    "attack": "Flame Burst",
+    "text": "Flip a coin. If heads, this attack does 60 damage plus 20 more damage and does 20 damage to Typhlosion. If tails, this attack does 60 damage.",
+    "index": 149
+  },
+  {
+    "id": "neo1-25",
+    "attack": "Beat Up",
+    "text": "Flip a coin for each of your Pokémon in play (including this one). This attack does 20 damage times the number of heads.",
+    "index": 154
+  },
+  {
+    "id": "neo1-27",
+    "attack": "Poison Bite",
+    "text": "If this attack damages the Defending Pokémon, the Defending Pokémon is now Poisoned and you remove a number of damage counters from Ariados equal to half that damage (rounded up to the nearest 10). If Ariados has fewer damage counters than that, remove all of them.",
+    "index": 157
+  },
+  {
+    "id": "neo1-32",
+    "attack": "Sweep Away",
+    "text": "Discard the top 3 cards from your deck.",
+    "index": 162
+  },
+  {
+    "id": "neo1-34",
+    "attack": "Discharge",
+    "text": "Discard all Energy cards attached to Flaaffy in order to use this attack. Flip a number of coins equal to the number of Energy cards you discarded. This attack does 30 damage times the number of heads.",
+    "index": 163
+  },
+  {
+    "id": "neo1-37",
+    "attack": "Raging Charge",
+    "text": "This attack does 10 damage plus 10 damage for each damage counter on Granbull. Then, Granbull does 20 damage to itself.",
+    "index": 166
+  },
+  {
+    "id": "neo1-41",
+    "attack": "Milk Drink",
+    "text": "Flip 2 coins. Remove 2 damage counters times the number of heads from Miltank. If it has fewer damage counters than that, remove all of them.",
+    "index": 168
+  },
+  {
+    "id": "neo1-53",
+    "attack": "Deflector",
+    "text": "During your opponent's next turn, whenever Chikorita takes damage, divide that damage in half (rounded down to the nearest 10). (Any other effects still happen.)",
+    "index": 174
+  },
+  {
+    "id": "neo2-1",
+    "attack": "Psychic",
+    "text": "Does 30 damage plus 10 more for each Energy Card attached to the Defending Pokémon.",
+    "index": 180
+  },
+  {
+    "id": "neo2-18",
+    "attack": "Triple Poison",
+    "text": "Flip a coin. If heads, the Defending Pokémon is now Poisoned. Your opponent now puts 3 damage counters instead of 1 after each player's turn (even if it was already Poisoned).",
+    "index": 185
+  },
+  {
+    "id": "neo2-19",
+    "attack": "Hyper Reverse",
+    "text": "Does 10 damage times the number of Energy cards attached to the Defending Pokémon. After doing damage, remove a number of damage counters from Butterfree equal to the amount of damage done to the Defending Pokémon (after applying Weakness and Resistance).",
+    "index": 187
+  },
+  {
+    "id": "neo2-43",
+    "attack": "Squeeze",
+    "text": "Flip a coin. If heads, this attack does 10 damage plus 20 more damage and the Defending Pokémon is now Paralyzed. If tails, this attack does 10 damage.",
+    "index": 196
+  },
+  {
+    "id": "neo2-43",
+    "attack": "Spike Barrage",
+    "text": "Flip a number of coins equal to the number of Energy attached to Omastar. This attack does 20 damage plus 20 more for each heads.",
+    "index": 197
+  },
+  {
+    "id": "neo2-46",
+    "attack": "Fury Cutter",
+    "text": "Flip 4 coins. This attack does 10 damage plus 10 more damage if exactly 1 is heads, or 20 more damage if exactly 2 are heads, or 40 more damage if exactly 3 are heads, or 80 more damage if all 4 are heads.",
+    "index": 200
+  },
+  {
+    "id": "neo2-70",
+    "attack": "Spike Stab",
+    "text": "Flip a coin. If heads, the Defending Pokémon is now Poisoned. If tails, this attack does nothing (not even damage).",
+    "index": 204
+  },
+  {
+    "id": "neo3-1",
+    "attack": "Gigavolt",
+    "text": "Flip a coin. If heads, this attack does 40 damage plus 20 more damage. If tails, this attack does 40 damage and the Defending Pokémon is now Paralyzed.",
+    "index": 207
+  },
+  {
+    "id": "neo3-3",
+    "attack": "Psychic Damage",
+    "text": "Flip 3 coins. For each heads, put 1 damage counter on the Defending Pokémon.",
+    "index": 208
+  },
+  {
+    "id": "neo3-8",
+    "attack": "Black Fang",
+    "text": "Flip a number of coins equal to the number of Energy attached to Houndoom. This attack does 30 damage plus 10 more damage for each heads.",
+    "index": 215
+  },
+  {
+    "id": "neo3-14",
+    "attack": "Aurora Wave",
+    "text": "Flip 2 coins. If both are heads, the Defending Pokémon is now Paralyzed. If only 1 is heads, the Defending Pokémon is now Asleep.",
+    "index": 220
+  },
+  {
+    "id": "neo3-18",
+    "attack": "Rainbow Burn",
+    "text": "This attack does 30 damage plus 10 more for each type of Basic Energy card if any, attached to Ho-oh",
+    "index": 224
+  },
+  {
+    "id": "neo3-20",
+    "attack": "Aerowing",
+    "text": "You may flip a coin. If heads, this attack does 80 damage. If tails, this attack does nothing.",
+    "index": 227
+  },
+  {
+    "id": "neo3-24",
+    "attack": "Quick Attack",
+    "text": "Flip a coin. If heads, this attack does 10 damage plus 20 more damage.",
+    "index": 231
+  },
+  {
+    "id": "neo3-31",
+    "attack": "Strange Dance",
+    "text": "Flip a coin. If heads, this attack does 20 damage plus 20 more damage and the Defending Pokémon is now Confused. If tails, this attack does 20 damage.",
+    "index": 237
+  },
+  {
+    "id": "neo3-36",
+    "attack": "Nap",
+    "text": "Remove 3 damage counters from Piloswine. If it has fewer damage counters than that, remove all of them.",
+    "index": 240
+  },
+  {
+    "id": "neo3-36",
+    "attack": "High-Speed Charge",
+    "text": "Piloswine does 30 damage to itself. Piloswine can't use this attack during your next turn.",
+    "index": 241
+  },
+  {
+    "id": "neo3-37",
+    "attack": "Rising Lunge",
+    "text": "Flip a coin. If heads, this attack does 10 damage plus 10 more damage. If tails, this attack does 10 damage.",
+    "index": 242
+  },
+  {
+    "id": "neo3-42",
+    "attack": "Positive Ion",
+    "text": "Flip a coin. If heads, this attack does 10 damage plus 10 more damage. If tails, this attack does 10 damage.",
+    "index": 246
+  },
+  {
+    "id": "neo3-46",
+    "attack": "Flock Attack",
+    "text": "Flip a number of coins equal to the number of Murkrows on your Bench. This attack does 10 damage plus 10 more damage for each heads.",
+    "index": 248
+  },
+  {
+    "id": "neo3-49",
+    "attack": "Needle Storm",
+    "text": "Flip a coin until you get tails. This attack does 20 damage times the number of heads you get.",
+    "index": 249
+  },
+  {
+    "id": "neo3-51",
+    "attack": "Toxic Saliva",
+    "text": "Flip a coin. If heads, the Defending Pokémon is now Poisoned. It now takes 20 Poison damage after each player's turn (even if it was already Poisoned).",
+    "index": 251
+  },
+  {
+    "id": "neo3-55",
+    "attack": "Raging Headbutt",
+    "text": "Flip a coin. If heads, this attack does 10 damage plus 10 damage times the number of damage counters on Snubbull. If tails, this attack does 10 damage.",
+    "index": 253
+  },
+  {
+    "id": "neo3-65",
+    "attack": "Outrage",
+    "text": "Flip a coin. If heads, this attack does 30 damage plus 10 more damage for each damage counter on Shining Gyarados. If tails, this attack does nothing.",
+    "index": 254
+  },
+  {
+    "id": "neo4-4",
+    "attack": "Psysplash",
+    "text": "Does 10 damage to each of your opponent's Pokémon for each Energy card attached to that Pokémon. Don't apply Weakness and Resistance.",
+    "index": 260
+  },
+  {
+    "id": "neo4-8",
+    "attack": "Curve Attack",
+    "text": "Flip a coin. If heads, prevent all damage done by attacks to Dark Porygon2 during your opponent's next turn. (Any other effects of attacks still happen.)",
+    "index": 265
+  },
+  {
+    "id": "neo4-20",
+    "attack": "Mind Shock",
+    "text": "Don't apply Weakness or Resistance for this attack.",
+    "index": 279
+  },
+  {
+    "id": "neo4-31",
+    "attack": "Egg Toss",
+    "text": "Flip 2 coins. If either of them is tails, this attack does nothing.",
+    "index": 285
+  },
+  {
+    "id": "neo4-36",
+    "attack": "Surround",
+    "text": "Flip a coin. If heads, the Defending Pokémon is now Asleep. If tails, the Defending Pokémon can't retreat during your opponent's next turn.",
+    "index": 290
+  },
+  {
+    "id": "neo4-38",
+    "attack": "Rock Tackle",
+    "text": "Dark Pupitar does 10 damage to itself. Dark Pupitar can't use this attack during your next turn.",
+    "index": 292
+  },
+  {
+    "id": "neo4-39",
+    "attack": "Incinerate",
+    "text": "Show the top card of your opponent's deck to all players. If it's a Trainer card, discard it.",
+    "index": 294
+  },
+  {
+    "id": "neo4-39",
+    "attack": "Rushing Magma",
+    "text": "Discard the top 5 cards of your deck. (If there are fewer than 5 cards in your deck, discard all of them.) This attack does 20 damage for each Energy card you discarded in this way.",
+    "index": 295
+  },
+  {
+    "id": "neo4-40",
+    "attack": "Dark Song",
+    "text": "Flip a coin. If heads, the Defending Pokémon is now Asleep. If tails, the Defending Pokémon is now Confused.",
+    "index": 296
+  },
+  {
+    "id": "neo4-40",
+    "attack": "Slap Awake",
+    "text": "If the Defending Pokémon is Asleep or Confused, this attack does 20 damage plus 20 more damage. Then, the Defending Pokémon is no longer Asleep or Confused.",
+    "index": 297
+  },
+  {
+    "id": "neo4-41",
+    "attack": "Charging Horn",
+    "text": "Flip a coin. If heads, this attack does 30 damage plus 30 more damage. If tails, this attack does 30 damage.",
+    "index": 298
+  },
+  {
+    "id": "neo4-44",
+    "attack": "Expand",
+    "text": "All damage done to Jigglypuff during your opponent's next turn is reduced by 10 (after applying Weakness and Resistance).",
+    "index": 299
+  },
+  {
+    "id": "neo4-48",
+    "attack": "Thunder Needle",
+    "text": "Flip 3 coins. This attack does 20 damage times the number of heads. If you get 2 or more heads, the Defending Pokémon is now Paralyzed.",
+    "index": 305
+  },
+  {
+    "id": "neo4-52",
+    "attack": "Hypno Shower",
+    "text": "The Defending Pokémon is now Asleep. Remove 1 damage counter from each Benched Pokémon (yours and your opponent's) with any damage counters on it.",
+    "index": 311
+  },
+  {
+    "id": "neo4-62",
+    "attack": "Ink Blast",
+    "text": "This attack does 20 damage plus 10 more damage for each Energy attached to Dark Octillery but not used to pay for this attack's Energy cost. You can't add more than 20 damage in this way.",
+    "index": 315
+  },
+  {
+    "id": "neo4-79",
+    "attack": "Migraine",
+    "text": "Flip a coin. If heads, the Defending Pokémon is now Confused. If tails, Psyduck is now Confused.",
+    "index": 320
+  },
+  {
+    "id": "neo4-108",
+    "attack": "Water Slash",
+    "text": "Does 50 damage plus 10 more damage for each Energy attached to Shining Kabutops but not used to pay for this attack's Energy cost. Don't apply Resistance.",
+    "index": 326
+  },
+  {
+    "id": "neo4-112",
+    "attack": "Crushing Earth",
+    "text": "Flip a coin. If heads, this attack does 10 damage to each Benched Pokémon (yours and your opponent's). (Don't apply Weakness and Resistance for Benched Pokémon.) If tails, this attack does nothing. Either way, Shining Steelix can't attack during your next turn.",
+    "index": 331
+  }
+]

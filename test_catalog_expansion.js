@@ -1,0 +1,12 @@
+'use strict';
+const assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm');
+const {applyCardCorrections}=require('./card_corrections');
+const src=fs.readFileSync(__dirname+'/engine.js','utf8').split('async function load()')[0];
+const el=()=>({classList:{add(){},remove(){}},textContent:'',style:{}}),ctx={console,Math,document:{getElementById:el,querySelector:()=>null},setTimeout:()=>0,clearTimeout(){}};
+vm.createContext(ctx);vm.runInContext(src.replace('const engine=new Engine();window.NeoCampus={engine,get cards(){return cards},lookup};','const engine=new Engine();'),ctx);
+const run=s=>vm.runInContext(s,ctx),all=applyCardCorrections(['base1','base2','base3','base4','base5','gym1','gym2','neo1','neo2','neo3','neo4','basep'].flatMap(s=>JSON.parse(fs.readFileSync(`${__dirname}/cards/${s}.json`))));
+const attack=(card,name)=>all.find(c=>c.name===card)?.attacks?.find(a=>a.name===name);
+for(const [card,name,pattern] of [['Pidgeot','Hurricane','bounceDefender'],['Nidoqueen','Boyfriends','namedInPlayBonus'],['Scyther','Swords Dance','boostNextAttack'],['Mew','Psywave','defenderEnergyTimes'],['Scizor','False Swipe','halfRemainingHPDown'],['Psyduck','Headache','trainerLock']])assert.equal(run(`engine.attackPattern(${JSON.stringify(attack(card,name))})`),pattern,`${card} ${name}`);
+for(const [id,name] of [['neo2-49','[Metal]'],['neo2-50','[Normal]'],['neo2-68','[Increase]'],['neo3-35','Allergic Pollen'],['neo4-26','Fluffy Wool']])assert.equal(all.find(c=>c.id===id).abilities[0].name,name);
+assert.equal(run(`IMPLEMENTED_POWERS.has('[Metal]')&&IMPLEMENTED_POWERS.has('Fluffy Wool')`),true);
+console.log('PASS: expanded catalog families, persistent effects, and corrected missing historical Power text');

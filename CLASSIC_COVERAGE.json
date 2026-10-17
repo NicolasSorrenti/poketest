@@ -1,0 +1,52 @@
+{
+  "format": "classic-base-rocket",
+  "cards": 311,
+  "total": 427,
+  "ported": 427,
+  "remaining": 0,
+  "powerRecords": 52,
+  "trainerCards": 41,
+  "sets": [
+    {
+      "id": "base1",
+      "name": "Base Set",
+      "cards": 102,
+      "attacks": 114,
+      "ported": 114,
+      "remaining": 0,
+      "powers": 6,
+      "trainers": 25
+    },
+    {
+      "id": "base2",
+      "name": "Jungle",
+      "cards": 64,
+      "attacks": 113,
+      "ported": 113,
+      "remaining": 0,
+      "powers": 10,
+      "trainers": 1
+    },
+    {
+      "id": "base3",
+      "name": "Fossil",
+      "cards": 62,
+      "attacks": 90,
+      "ported": 90,
+      "remaining": 0,
+      "powers": 16,
+      "trainers": 4
+    },
+    {
+      "id": "base5",
+      "name": "Team Rocket",
+      "cards": 83,
+      "attacks": 110,
+      "ported": 110,
+      "remaining": 0,
+      "powers": 20,
+      "trainers": 11
+    }
+  ],
+  "unported": []
+}

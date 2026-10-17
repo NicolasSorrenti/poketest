@@ -1,0 +1,41 @@
+'use strict';
+const assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm'),path=require('node:path');
+const src=fs.readFileSync(path.join(__dirname,'engine.js'),'utf8').split('async function load()')[0].replace('const engine=new Engine();window.NeoCampus={engine,get cards(){return cards},lookup};','const engine=new Engine();');
+const el=()=>({classList:{add(){},remove(){}},style:{},querySelectorAll:()=>[]});
+const ctx={console,Math:Object.create(Math),document:{getElementById:el,querySelector:()=>null},setTimeout(){},clearTimeout(){}};
+vm.createContext(ctx);vm.runInContext(src,ctx);const run=s=>vm.runInContext(s,ctx);
+const originals=['base1','base2','base3','base4','base5','basep','gym1','gym2','neo1','neo2','neo3','neo4'].flatMap(x=>require('./cards/'+x+'.json'));
+const extras=['Fire','Water','Grass','Lightning','Fighting','Psychic'].map(t=>({id:'test51-'+t,name:t+' Energy',supertype:'Energy',subtypes:['Basic']}));
+extras.push({id:'test51-dummy',name:'Training Dummy',supertype:'Pokémon',subtypes:['Basic'],hp:'500',types:['Colorless'],attacks:[{name:'Tackle',cost:['Colorless'],damage:'10',text:''}],abilities:[],weaknesses:[],resistances:[],retreatCost:[]});
+ctx.localCards=[...originals,...extras];
+run('cards=localCards;lookup=new Map(cards.map(c=>[c.id,c]));render=()=>{};engine.end=()=>{};battlefieldAttack=()=>{};queuePrizeFX=()=>{};');
+let checks=0;
+function setup(cardId,attackName,{heads=true,setupExtra=''}={}){
+ const c=originals.find(c=>c.id===cardId),i=c?.attacks?.findIndex(a=>a.name===attackName);assert(i>=0,`${cardId}:${attackName}`);
+ const cost=c.attacks[i].cost.map(x=>'test51-'+(x==='Colorless'?'Fire':x));
+ run(`engine.players=[statePlayer('Human',[]),statePlayer('AI',[])];engine.phase='game';engine.round=8;engine.turnSerial=12;engine.turn=0;engine.over=false;engine.players[0].active=unit(${JSON.stringify(cardId)});engine.players[0].active.energies=${JSON.stringify([...cost,'test51-Fire'])};engine.players[0].bench=[unit('test51-dummy')];engine.players[1].active=unit('test51-dummy');engine.players[1].bench=[unit('test51-dummy')];engine.players[0].prizes=['test51-dummy','test51-dummy'];engine.players[1].prizes=['test51-dummy','test51-dummy'];deckSearchRequest=null;engine.pendingAttack51=null;${setupExtra}`);
+ ctx.Math.random=()=>heads?0.01:0.99;
+ assert.equal(run(`engine.attackPattern(engine.card(engine.me.active).attacks[${i}])`),'batch51');checks++;
+ return choice=>run(`engine.attack(${i},null,true,${choice===undefined?'null':JSON.stringify(choice)})`);
+}
+function options(){return run('deckSearchRequest.options.map(o=>({index:o.index,name:o.name}))')}
+let a=setup('neo2-42','Hatch',{setupExtra:"engine.me.active.damage=40;engine.me.deck=['base2-33','test51-Fire'];"});
+assert.equal(a(),false);assert(options().some(o=>o.name.includes('Butterfree')));assert.equal(a(500000),false);assert.equal(run('engine.me.active.damage'),40);assert(a(options().find(o=>o.name.includes('Butterfree')).index));assert.equal(run('engine.me.active.id'),'base2-33');assert.equal(run('engine.me.active.damage'),0);assert.equal(run('engine.me.active.under[0]'),'neo2-42');
+a=setup('neo2-42','Hatch',{heads:false,setupExtra:"engine.me.active.damage=40;engine.me.deck=['base2-33'];"});assert(a());assert.equal(run('engine.me.active.id'),'neo2-42');assert.equal(run('engine.me.active.damage'),40);
+a=setup('neo4-83','Sunbathe',{setupExtra:"engine.me.deck=['neo1-50'];engine.me.active.damage=20;"});assert.equal(a(),false);assert(options().length);assert(a(options()[0].index));assert.equal(run('engine.me.active.damage'),0);assert.equal(run('engine.me.active.under[0]'),'neo4-83');
+a=setup('gym2-40','Lunar Power',{setupExtra:"engine.me.bench=[unit('base1-44'),unit('base1-63')];engine.me.deck=['base1-30','base1-15'];"});assert.equal(a(),false);assert(options().length);const op=options()[0];assert(a(op.index));assert.equal(run('engine.me.deck.length'),1);assert.equal(run('engine.me.active.id'),'gym2-40');
+a=setup('neo4-38','Explosive Evolution',{setupExtra:"engine.me.deck=['neo4-11'];"});assert.equal(a(),false);assert(options().length);assert(a(options()[0].index));assert.equal(run('engine.me.active.id'),'neo4-11');assert.equal(run('engine.foe.active.damage'),10);assert.equal(run('engine.foe.bench[0].damage'),10);
+a=setup('neo1-30','Squaredance',{setupExtra:"engine.me.deck=['test51-Fire','test51-Water','test51-Grass'];"});assert.equal(a(),false);assert.equal(options().length,3);assert.equal(a([0,0]),false);assert(a([0,2]));assert.equal(run('engine.me.hand.length'),2);assert.equal(run('engine.me.deck.length'),1);
+a=setup('gym1-32','Jellyfish Pod',{setupExtra:"engine.me.deck=['gym1-32','gym1-57','gym1-58','test51-Fire'];"});assert.equal(a(),false);assert(options().length>=1);const j=options().map(o=>o.index);assert(a(j));assert.equal(run('engine.me.hand.length'),j.length);assert.equal(run('engine.me.deck.length'),4-j.length);
+a=setup('gym2-12','Super Removal',{setupExtra:"engine.foe.active.energies=['test51-Fire','test51-Water'];engine.foe.bench[0].energies=['test51-Grass'];"});assert.equal(a(),false);assert.equal(a([0,1]),false);assert.equal(run('engine.foe.active.energies.length'),2);assert(a([0,10000]));assert.equal(run('engine.foe.active.energies.length'),1);assert.equal(run('engine.foe.bench[0].energies.length'),0);assert.equal(run('engine.foe.discard.length'),2);
+a=setup('gym2-12','Super Removal',{heads:false,setupExtra:"engine.foe.active.energies=['test51-Fire'];"});assert(a());assert.equal(run('engine.foe.active.energies.length'),1);
+a=setup('neo1-26','Pilfer',{setupExtra:"engine.me.discard=['test51-Water','test51-Grass'];engine.me.deck=['test51-Fire'];"});assert.equal(a(),false);assert(a(1));assert.equal(run('engine.me.active.id'),'test51-dummy');assert.equal(run('engine.me.discard.length'),1);assert.equal(run('engine.me.deck.length'),1+1+1+2);
+a=setup('neo3-19','Twister',{setupExtra:"engine.foe.active.energies=['test51-Fire','test51-Water','test51-Grass'];"});assert.equal(a(),false);assert.equal(a([0,0]),false);assert.equal(run('engine.foe.active.damage'),0);assert(a([0,2]));assert.equal(run('engine.foe.active.damage'),50);assert.equal(run('engine.foe.active.energies.length'),1);assert.equal(run('engine.foe.discard.length'),2);
+a=setup('neo3-19','Twister',{heads:false});assert(a());assert.equal(run('engine.foe.active.damage'),0);
+a=setup('gym2-83','Group Attack',{setupExtra:"engine.me.deck=['gym2-83','gym2-83','gym2-83','gym2-83','gym2-83','test51-Water'];"});assert.equal(a(),false);assert.equal(options().length,5);assert(a(options().slice(0,4).map(x=>x.index)));assert.equal(run('engine.me.bench.length'),5);assert.equal(run('engine.foe.active.damage'),50);
+a=setup('neo1-47','Char',{setupExtra:'engine.foe.active.damage=10;'});assert(a());assert.equal(run('engine.foe.active.charCounter'),true);assert.equal(run('engine.foe.active.damage'),40);ctx.Math.random=()=>0.99;run('engine.between()');assert.equal(run('engine.foe.active.damage'),60);run('engine.foe.bench[0].charCounter=true;engine.between()');assert.equal(run('engine.foe.bench[0].damage'),20);
+a=setup('neo1-47','Char',{heads:false});assert(a());assert.equal(run('Boolean(engine.foe.active.charCounter)'),false);
+a=setup('neo3-11','Perish Song',{setupExtra:"engine.foe.active.status='Asleep';engine.foe.active.lastNightEyesRound=7;engine.foe.active.lastNightEyesBy=0;"});assert(a());assert.equal(run('engine.foe.active.id'),'test51-dummy');assert.equal(run('engine.foe.discard.length'),1);assert.equal(run('engine.me.prizes.length'),1);
+a=setup('neo3-11','Perish Song',{setupExtra:"engine.foe.active.status='Asleep';engine.foe.active.lastNightEyesRound=6;engine.foe.active.lastNightEyesBy=0;"});assert(a());assert.equal(run('engine.foe.active.damage'),0);
+let audit=run('engine.attackAudit()');assert.equal(audit.filter(x=>x.pattern==='batch51').length,12);assert.ok(audit.filter(x=>!x.implemented).length<=53);
+console.log(`PASS v0.5.1: ${checks} prepared duels; 12 exact attack records, Heads/Tails, multi-card selection, invalid choices, evolution, recoil/spread, deck retrieval, shuffled attachments and KO handling.`);

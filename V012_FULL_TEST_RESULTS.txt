@@ -1,0 +1,71 @@
+
+> neo-campus-tcg@0.12.0-headless-targeting test
+> node test_core_rules.js && node test_headless_core_integration.js && node test_decision_session.js && node test_target_choice_bridge.js && node test_legacy_choice_bridge.js && node test_decision_core.js && node test_duel_rooms.js && node test_engine.js && node test_watergun.js && node test_trainers.js && node test_targeting.js && node test_decks.js && node test_authentic_gameplay.js && node test_powers.js && node test_power_framework.js && node test_attack_framework.js && node test_attack_choices.js && node test_defensive_attacks.js && node test_tcgdex.js && node test_imported_effects.js && node test_protection_and_recovery.js && node test_effect_expansion.js && node test_catalog_expansion.js && node test_catalog_phase2.js && node test_power_triggers_phase3.js && node test_energy_attachment_ui.js && node test_attack_expansion_v041.js && node test_attack_expansion_v042.js && node test_attack_batch_v043.js && node test_attack_batch_v043_outcomes.js && node test_attack_batch_v044.js && node test_attack_batch_v044_outcomes.js && node test_attack_batch_v045.js && node test_attack_batch_v046.js && node test_attack_batch_v047.js && node test_attack_batch_v048.js && node test_attack_batch_v049.js && node test_attack_batch_v050.js && node test_attack_batch_v051.js && node test_attack_copy_v052.js && node test_attack_batch_v053.js && node test_attack_batch_v054.js && node test_attack_batch_v055.js && node test_power_batch_v056.js && node test_power_final_v057.js && node test_trainer_v058.js && node test_trainer_v059.js && node test_trainer_v060.js && node test_trainer_v061.js && node test_trainer_v062.js && node test_trainer_v063.js && node test_trainer_v064.js && node test_release_integrity.js && node test_server_integration.js && node test_energy_source_integrity.js && node test_chaos_replay_atomic.js && node test_chaos_human_response.js && node test_secret_plan_v075.js && node test_chaos_choice_bounds_v080.js && node test_attack_effects_core.js && node test_headless_duel.js && node test_headless_full_duels.js && node test_headless_status_milestone.js && node test_headless_status_duels.js && node test_headless_targeting_milestone.js && node test_headless_targeted_duels.js
+
+PASS pure core: 1123 cards, 1479 attacks, 407 evolutions, 40 Energy records, 20000 randomized payment checks, deck and attachment legality
+PASS actual browser Engine: attach Energy, enforce once per turn, evolve preserving Energy, pay typed attack costs through extracted core
+PASS: shared decision sessions support actor authorization, legal-option refresh, retry, cancel, and single-commit lifecycle
+PASS: attack/Power/Trainer target choices validate ownership and current legality
+PASS: legacy picker choices use shared decision validation before executing effects
+Decision core: choices, privacy, ownership, bounds, and room validation pass.
+PASS: code-based rooms, authentication, isolation, private views, revisions, turn validation
+PASS: Stretch Kick legal, AI evaluates Bench KO, KO awards Prize, Active untouched
+PASS: Fossil Lapras Water Gun enabled with 1 Water Energy; 10/20/30/30 damage
+PASS: Switch and Gust require explicit valid targets; choose second Bench Pokémon correctly
+PASS: 28 themes, no Neo Revelation themes, targeting chooses specific Bench for Potion and Energy Removal
+PASS: eight verified original decks, exact 60-card recipes; remaining decks not mislabeled
+PASS: evolution stacks, full KO discard, original Weakness/Resistance, paralysis duration
+PASS: Rain Dance, Energy Trans, Energy Burn, Hydro Pump
+PASS: damage swap, Toxic Gas suppression, Prehistoric Power, Hay Fever, Invisible Wall, Strikes Back, Curse, Strange Behavior
+PASS: attack interpreter draw, healing, recoil, Energy discard, strict unsupported detection, audit
+PASS: choose Bench target, Bench spread, deck-search player choice, reject invalid selections
+PASS: Grimer Minimize costs one Grass, applies shield after Weakness, expires correctly, AI values protection
+TCGdex normalization tests passed
+PASS: imported Base Set Psychic Energy scaling, Scrunch protection, unsupported effects stay blocked
+PASS: imported Agility/Detect/Barrier/Recover/Nap Time/Light Screen patterns, shield duration, status blocking, discard and healing
+PASS: expanded executable attack families and damage-counter scaling
+PASS: expanded catalog families, persistent effects, and corrected missing historical Power text
+PASS: phase-2 catalog mechanics are executable patterns; attack copying remains strictly unsupported
+PASS: phase-3 passive and triggered Powers, including status-exception behavior
+PASS: malformed Basic Energy is not a Pokémon, attaches to Active or Bench, and has explicit UI controls
+PASS: Mega Drain, Mega Shock and Mass Explosion resolve using historical card records
+PASS: Charge, Plasma, Electroburn, Growth, Poison Buildup
+PASS: 100 newly enabled historical attack records each executed and changed duel state
+PASS: 35+ independent head/tail, energy, damage, status, deck and turn-lock assertions for historical attacks
+PASS: 65 newly scripted attacks executed in legal duel states
+PASS: 20+ historical outcomes, including Heads/Tails, Energy costs, damage caps, spread and duration checks
+PASS: incoming attacks respect Dodge Heads/Tails and Armor Up KO thresholds
+PASS: 26 exact attack texts, targeting, Heads/Tails, recoil, defense, duration and Energy outcomes
+PASS v0.4.6: 22 exact card-attack records; interactive choices, typed Energy, Bench targeting, switches, status, and timing
+PASS v0.4.7: 18 previously unsupported attack records; multi-target selection, Bench protection, defensive bypass, Energy discard, deck milling, devolution and deck searches.
+PASS v0.4.8: eleven exact attack records; deck ordering, status, Trainer search, Energy discards, targeted Energy moves, variable damage, Bench damage and recoil.
+PASS v0.4.9: 18 prepared matches; 14 new historical attack records, player choice validation, statuses, protection windows, damage, Energy manipulation, and conditional effects.
+PASS v0.5.0: 17 prepared matches; 11 exact historical attack records, reaction effects, duration, KO response, damage prevention, multiple choice validation and HP modification.
+PASS v0.5.1: 17 prepared duels; 12 exact attack records, Heads/Tails, multi-card selection, invalid choices, evolution, recoil/spread, deck retrieval, shuffled attachments and KO handling.
+PASS v0.5.2 attack copying: 17 scenarios (selection, validation, type, status, coin, genetic ancestry, previous attack history, Mirror Move).
+PASS v0.5.3: 10 prepared duel setups, seven new historical card-attack records, coin flips, invalid choices, Energy discards, Bench damage, deck shuffling, devolution, opponent hand selection, healing and card draw.
+PASS v0.5.4: 11 prepared attacks; Energy Bomb, Energy Control, Energy Cycle, Stoke, Static Electricity, Attract Current, Evolutionary Spore, damage, heads/tails and invalid choice checks.
+PASS v0.5.5: 34 card preparations, real attack outcomes, explicit choices, status types, attached Trainer handling, discard searches, and 1479/1479 effect recognition.
+PASS: 21 Power scenarios (activation, costs, choices, on-play, KO, selection)
+PASS v0.5.7: 68 outcome checks for remaining Powers (Buzzap, Shapeshift, Miraculous Wind, Bench Guard, Flee, Keep, Quicken, Allergic Pollen).
+PASS v0.5.8: 25 Trainer and choice tests
+PASS v0.5.9 20 Trainer regression tests
+PASS v0.6.0: 61 human Trainer timing, choices, and damage outcome scenarios
+PASS v0.6.1: 14 Trainer attack-interaction scenarios
+PASS v0.6.2: 13 Pokémon Tower cross-card scenarios
+PASS v0.6.3: 9 Trainer reaction, optional transfer, tool lifecycle and Chaos Gym legality scenarios
+PASS v0.6.4: 31 Trainer ESP, Psychic Control and reactive Tool scenarios
+PASS release integrity: 1123 cards, 1479 attacks, 166 Powers, 178 Trainers, 12 sets, all 6 basic Energy identities, 7 Trainer bundles
+PASS HTTP integration: game UI, all Trainer scripts, historical sets, 404 and traversal rejection
+PASS: 30 bundled Energy cards correctly classified, upstream import corrected, and Special Energy not blanket-blocked
+PASS Chaos Gym rejected replay is atomic
+PASS Chaos Gym CPU-turn redirected Bill offers the human accept/decline choices
+Secret Plan reveal ownership tests passed
+PASS Chaos Gym redirected pickers enforce minimum and maximum selections
+PASS pure attack interpreter: 704 attack records ported, 775 explicitly unported, all 1,479 audited, heads/tails branches validated
+PASS headless duel: 13 comprehensive groups, 2,000 adversarial command attempts, private two-human room setup, full simple actions, Trainer choices, KO and opponent-turn promotion
+PASS 100 complete seeded headless duels: 994 attacks, 10 other turns, 2275 accepted actions, 11 safely rejected attacks; all games finished and conserved 60 cards per player
+PASS historical headless conditions: 11 full state-transition scenarios; status, coin outcomes, recoil, double KOs, Poison between turns, no-loss attack draw, WotC Confusion retreat
+PASS 60 completed status-heavy seeded duels: 1086 attacks (663 status attacks), 303 attack KOs, 319 no-attack turns; card conservation verified for every match
+PASS targeted/Bench/switch milestone: 17 full command paths, 64 newly recognized historical attacks, private defender choices, KO Prize attribution, atomic invalid actions
+PASS 60 complete historical targeted duels: 1821 attacks (308 targeted Bench, 408 Whirlwind), 721 opponent-turn choices, 786 other turns, conservation of both 60-card decks

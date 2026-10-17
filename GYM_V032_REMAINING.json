@@ -1,0 +1,232 @@
+{
+  "version": "v0.32",
+  "scope": "Gym Heroes and Gym Challenge (excluding reprint effect duplicates)",
+  "definition": "missing executable effect handler, not a certification of full historical accuracy",
+  "missing": {
+    "gym1": {
+      "missingAttacks": [
+        {
+          "id": "gym1-3",
+          "card": "Erika's Clefable",
+          "attack": "Fairy Power"
+        },
+        {
+          "id": "gym1-4",
+          "card": "Erika's Dragonair",
+          "attack": "Take Away"
+        },
+        {
+          "id": "gym1-14",
+          "card": "Sabrina's Gengar",
+          "attack": "Call of the Night"
+        },
+        {
+          "id": "gym1-27",
+          "card": "Lt. Surge's Electabuzz",
+          "attack": "Electric Current"
+        },
+        {
+          "id": "gym1-48",
+          "card": "Erika's Weepinbell",
+          "attack": "Flytrap"
+        },
+        {
+          "id": "gym1-61",
+          "card": "Blaine's Charmander",
+          "attack": "Kindle"
+        },
+        {
+          "id": "gym1-94",
+          "card": "Sabrina's Mr. Mime",
+          "attack": "Sleight of Hand"
+        }
+      ],
+      "missingPowers": [
+        {
+          "id": "gym1-12",
+          "card": "Rocket's Moltres",
+          "power": "Rebirth"
+        },
+        {
+          "id": "gym1-26",
+          "card": "Erika's Victreebel",
+          "power": "Fragrance Trap"
+        }
+      ],
+      "missingTrainers": [
+        {
+          "id": "gym1-97",
+          "card": "Blaine's Quiz #1"
+        },
+        {
+          "id": "gym1-99",
+          "card": "Charity"
+        },
+        {
+          "id": "gym1-116",
+          "card": "Recall"
+        },
+        {
+          "id": "gym1-117",
+          "card": "Sabrina's ESP"
+        },
+        {
+          "id": "gym1-119",
+          "card": "Tickling Machine"
+        },
+        {
+          "id": "gym1-124",
+          "card": "Narrow Gym"
+        }
+      ]
+    },
+    "gym2": {
+      "missingAttacks": [
+        {
+          "id": "gym2-2",
+          "card": "Blaine's Charizard",
+          "attack": "Flame Jet"
+        },
+        {
+          "id": "gym2-4",
+          "card": "Erika's Venusaur",
+          "attack": "Growth"
+        },
+        {
+          "id": "gym2-12",
+          "card": "Misty's Golduck",
+          "attack": "Super Removal"
+        },
+        {
+          "id": "gym2-22",
+          "card": "Brock's Dugtrio",
+          "attack": "Earthdrill"
+        },
+        {
+          "id": "gym2-24",
+          "card": "Giovanni's Pinsir",
+          "attack": "Overhead Toss"
+        },
+        {
+          "id": "gym2-39",
+          "card": "Erika's Bulbasaur",
+          "attack": "Errand-Running"
+        },
+        {
+          "id": "gym2-40",
+          "card": "Erika's Clefairy",
+          "attack": "Lunar Power"
+        },
+        {
+          "id": "gym2-49",
+          "card": "Koga's Pidgey",
+          "attack": "Messenger"
+        },
+        {
+          "id": "gym2-56",
+          "card": "Sabrina's Hypno",
+          "attack": "Invigorate"
+        },
+        {
+          "id": "gym2-59",
+          "card": "Sabrina's Mr. Mime",
+          "attack": "Magic Darts"
+        },
+        {
+          "id": "gym2-63",
+          "card": "Blaine's Mankey",
+          "attack": "Pranks"
+        },
+        {
+          "id": "gym2-65",
+          "card": "Blaine's Rhyhorn",
+          "attack": "Overrun"
+        },
+        {
+          "id": "gym2-83",
+          "card": "Koga's Zubat",
+          "attack": "Group Attack"
+        },
+        {
+          "id": "gym2-89",
+          "card": "Misty's Poliwag",
+          "attack": "Amnesia"
+        },
+        {
+          "id": "gym2-90",
+          "card": "Misty's Psyduck",
+          "attack": "ESP"
+        }
+      ],
+      "missingPowers": [
+        {
+          "id": "gym2-3",
+          "card": "Brock's Ninetales",
+          "power": "Shapeshift"
+        },
+        {
+          "id": "gym2-26",
+          "card": "Koga's Muk",
+          "power": "Energy Drain"
+        },
+        {
+          "id": "gym2-35",
+          "card": "Brock's Primeape",
+          "power": "Scram"
+        },
+        {
+          "id": "gym2-38",
+          "card": "Erika's Bellsprout",
+          "power": "Soak Up"
+        },
+        {
+          "id": "gym2-52",
+          "card": "Lt. Surge's Electrode",
+          "power": "Shock Blast"
+        }
+      ],
+      "missingTrainers": [
+        {
+          "id": "gym2-101",
+          "card": "Brock's Protection"
+        },
+        {
+          "id": "gym2-102",
+          "card": "Chaos Gym"
+        },
+        {
+          "id": "gym2-107",
+          "card": "Lt. Surge's Secret Plan"
+        },
+        {
+          "id": "gym2-108",
+          "card": "Misty's Wish"
+        },
+        {
+          "id": "gym2-111",
+          "card": "Blaine's Quiz #2"
+        },
+        {
+          "id": "gym2-112",
+          "card": "Blaine's Quiz #3"
+        },
+        {
+          "id": "gym2-115",
+          "card": "Koga's Ninja Trick"
+        }
+      ]
+    }
+  },
+  "counts": {
+    "gym1": {
+      "attacks": 7,
+      "powers": 2,
+      "trainers": 6
+    },
+    "gym2": {
+      "attacks": 15,
+      "powers": 5,
+      "trainers": 7
+    }
+  }
+}

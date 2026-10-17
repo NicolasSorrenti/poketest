@@ -1,0 +1,79 @@
+{
+  "gym1": {
+    "attacks": 13,
+    "powers": 2,
+    "trainers": 6,
+    "attackNames": [
+      "gym1-3 Fairy Power",
+      "gym1-4 Take Away",
+      "gym1-11 Crosscounter",
+      "gym1-12 Fire Wall",
+      "gym1-13 Shadow Images",
+      "gym1-14 Call of the Night",
+      "gym1-24 Alert",
+      "gym1-27 Electric Current",
+      "gym1-43 Egg Bomb",
+      "gym1-48 Flytrap",
+      "gym1-61 Kindle",
+      "gym1-91 Energy Loop",
+      "gym1-94 Sleight of Hand"
+    ],
+    "powerNames": [
+      "gym1-12 Rebirth",
+      "gym1-26 Fragrance Trap"
+    ],
+    "trainerNames": [
+      "gym1-97 Blaine's Quiz #1",
+      "gym1-99 Charity",
+      "gym1-116 Recall",
+      "gym1-117 Sabrina's ESP",
+      "gym1-119 Tickling Machine",
+      "gym1-124 Narrow Gym"
+    ]
+  },
+  "gym2": {
+    "attacks": 20,
+    "powers": 7,
+    "trainers": 7,
+    "attackNames": [
+      "gym2-2 Roaring Flames",
+      "gym2-2 Flame Jet",
+      "gym2-4 Growth",
+      "gym2-10 Giant Growth",
+      "gym2-12 Super Removal",
+      "gym2-22 Earthdrill",
+      "gym2-24 Overhead Toss",
+      "gym2-30 Damage Shift",
+      "gym2-39 Errand-Running",
+      "gym2-40 Lunar Power",
+      "gym2-49 Messenger",
+      "gym2-54 Ice Throw",
+      "gym2-56 Invigorate",
+      "gym2-59 Magic Darts",
+      "gym2-63 Pranks",
+      "gym2-65 Overrun",
+      "gym2-83 Group Attack",
+      "gym2-87 Ink Spurt",
+      "gym2-89 Amnesia",
+      "gym2-90 ESP"
+    ],
+    "powerNames": [
+      "gym2-3 Shapeshift",
+      "gym2-13 Rebellion",
+      "gym2-26 Energy Drain",
+      "gym2-35 Scram",
+      "gym2-38 Soak Up",
+      "gym2-41 Relaxing Scent",
+      "gym2-52 Shock Blast"
+    ],
+    "trainerNames": [
+      "gym2-101 Brock's Protection",
+      "gym2-102 Chaos Gym",
+      "gym2-107 Lt. Surge's Secret Plan",
+      "gym2-108 Misty's Wish",
+      "gym2-111 Blaine's Quiz #2",
+      "gym2-112 Blaine's Quiz #3",
+      "gym2-115 Koga's Ninja Trick"
+    ]
+  }
+}

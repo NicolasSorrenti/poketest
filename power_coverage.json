@@ -1,0 +1,1140 @@
+{
+  "cachedSets": [
+    "base1",
+    "base2",
+    "base3",
+    "base4",
+    "base5",
+    "gym1",
+    "gym2",
+    "neo1",
+    "neo2",
+    "neo3",
+    "neo4",
+    "basep"
+  ],
+  "powerCardCount": 166,
+  "uniquePowers": 136,
+  "implementedNames": [
+    "Allergic Pollen",
+    "Anger",
+    "Aurora Veil",
+    "Bench Guard",
+    "Berserk",
+    "Bolt",
+    "Buzzap",
+    "Call the Boss",
+    "Chain Reaction",
+    "Clairvoyance",
+    "Conductivity",
+    "Cowardice",
+    "Crystal Body",
+    "Cunning",
+    "Curse",
+    "Damage Swap",
+    "Darkness",
+    "Deep Sleep",
+    "Downpour",
+    "Drive Off",
+    "Electromagnetic Power",
+    "Emerge",
+    "Energy Burn",
+    "Energy Charge",
+    "Energy Converter",
+    "Energy Drain",
+    "Energy Evolution",
+    "Energy Trans",
+    "Evolutionary Light",
+    "Final Beam",
+    "Final Blow",
+    "Fire Boost",
+    "Fire Recharge",
+    "Flee",
+    "Fluffy Wool",
+    "Fortitude",
+    "Fossil",
+    "Fragrance Trap",
+    "Frenzy",
+    "Frog Song",
+    "Gaseous Form",
+    "Gather Fire",
+    "Gaze",
+    "Gift",
+    "Glaring Gaze",
+    "Guard",
+    "Hard Shell",
+    "Hay Fever",
+    "Heal",
+    "Healing Fire",
+    "Herbal Scent",
+    "Hot Plate",
+    "Howl",
+    "Hydroelectric Power",
+    "Invisible Wall",
+    "Kabuto Armor",
+    "Legendary Body",
+    "Lightning Burst",
+    "Long Distance Hypnosis",
+    "Magma Pool",
+    "Matter Exchange",
+    "Mimic",
+    "Mind Games",
+    "Miraculous Wind",
+    "Natural Healing",
+    "Neutral Shield",
+    "Observe",
+    "Peek",
+    "Photosynthesis",
+    "Playful Punch",
+    "Pollen Defense",
+    "Pollen Stench",
+    "Prehistoric Memory",
+    "Prehistoric Power",
+    "Psylink",
+    "Pure Body",
+    "Rain Dance",
+    "Rebellion",
+    "Rebirth",
+    "Reel In",
+    "Relaxing Scent",
+    "Restless Sleep",
+    "Retreat Aid",
+    "Revive Friends",
+    "Scare",
+    "Scram",
+    "Shapeshift",
+    "Shell Armor",
+    "Shift",
+    "Shock Blast",
+    "Sinkhole",
+    "Sneak Attack",
+    "Soak Up",
+    "Softboiled",
+    "Solar Power",
+    "Spatial Distortion",
+    "Special Delivery",
+    "Spikes",
+    "Step In",
+    "Sticky Goo",
+    "Strange Barrier",
+    "Strange Behavior",
+    "Strikes Back",
+    "Submerge",
+    "Summon Minions",
+    "Surprise Bite",
+    "Tag Team",
+    "Thick Skinned",
+    "Time Travel",
+    "Toxic Gas",
+    "Transform",
+    "Transparency",
+    "Trickery",
+    "Undo",
+    "Wild Growth",
+    "[Bear]",
+    "[Chase]",
+    "[Engage]",
+    "[Find]",
+    "[Give]",
+    "[Help]",
+    "[Increase]",
+    "[Join]",
+    "[Keep]",
+    "[Laugh]",
+    "[Metal]",
+    "[Normal]",
+    "[Perform]",
+    "[Quicken]",
+    "[Search]",
+    "[Tell]",
+    "[Vanish]",
+    "[Want]",
+    "[XXXXX]",
+    "[Yield]",
+    "[Zoom]"
+  ],
+  "powers": [
+    {
+      "name": "[Bear]",
+      "cards": [
+        "neo3-39"
+      ],
+      "implemented": true
+    },
+    {
+      "name": "[Chase]",
+      "cards": [
+        "neo4-57"
+      ],
+      "implemented": true
+    },
+    {
+      "name": "[Engage]",
+      "cards": [
+        "neo2-67"
+      ],
+      "implemented": true
+    },
+    {
+      "name": "[Find]",
+      "cards": [
+        "neo2-48"
+      ],
+      "implemented": true
+    },
+    {
+      "name": "[Give]",
+      "cards": [
+        "neo4-27"
+      ],
+      "implemented": true
+    },
+    {
+      "name": "[Help]",
+      "cards": [
+        "neo4-28"
+      ],
+      "implemented": true
+    },
+    {
+      "name": "[Increase]",
+      "cards": [
+        "neo2-68"
+      ],
+      "implemented": true
+    },
+    {
+      "name": "[Join]",
+      "cards": [
+        "basep-38"
+      ],
+      "implemented": true
+    },
+    {
+      "name": "[Keep]",
+      "cards": [
+        "neo3-58"
+      ],
+      "implemented": true
+    },
+    {
+      "name": "[Laugh]",
+      "cards": [
+        "neo4-86"
+      ],
+      "implemented": true
+    },
+    {
+      "name": "[Metal]",
+      "cards": [
+        "neo2-49"
+      ],
+      "implemented": true
+    },
+    {
+      "name": "[Normal]",
+      "cards": [
+        "neo2-50"
+      ],
+      "implemented": true
+    },
+    {
+      "name": "[Perform]",
+      "cards": [
+        "neo4-58"
+      ],
+      "implemented": true
+    },
+    {
+      "name": "[Quicken]",
+      "cards": [
+        "neo4-59"
+      ],
+      "implemented": true
+    },
+    {
+      "name": "[Search]",
+      "cards": [
+        "neo4-87"
+      ],
+      "implemented": true
+    },
+    {
+      "name": "[Tell]",
+      "cards": [
+        "neo4-88"
+      ],
+      "implemented": true
+    },
+    {
+      "name": "[Vanish]",
+      "cards": [
+        "neo4-89"
+      ],
+      "implemented": true
+    },
+    {
+      "name": "[Want]",
+      "cards": [
+        "neo4-29"
+      ],
+      "implemented": true
+    },
+    {
+      "name": "[XXXXX]",
+      "cards": [
+        "neo4-30"
+      ],
+      "implemented": true
+    },
+    {
+      "name": "[Yield]",
+      "cards": [
+        "neo3-40"
+      ],
+      "implemented": true
+    },
+    {
+      "name": "[Zoom]",
+      "cards": [
+        "neo4-60"
+      ],
+      "implemented": true
+    },
+    {
+      "name": "Allergic Pollen",
+      "cards": [
+        "neo3-35"
+      ],
+      "implemented": true
+    },
+    {
+      "name": "Anger",
+      "cards": [
+        "neo2-14",
+        "neo2-33"
+      ],
+      "implemented": true
+    },
+    {
+      "name": "Aurora Veil",
+      "cards": [
+        "basep-48"
+      ],
+      "implemented": true
+    },
+    {
+      "name": "Bench Guard",
+      "cards": [
+        "gym1-2"
+      ],
+      "implemented": true
+    },
+    {
+      "name": "Berserk",
+      "cards": [
+        "neo1-4"
+      ],
+      "implemented": true
+    },
+    {
+      "name": "Bolt",
+      "cards": [
+        "basep-34"
+      ],
+      "implemented": true
+    },
+    {
+      "name": "Buzzap",
+      "cards": [
+        "base1-21",
+        "base4-25"
+      ],
+      "implemented": true
+    },
+    {
+      "name": "Call the Boss",
+      "cards": [
+        "gym2-8"
+      ],
+      "implemented": true
+    },
+    {
+      "name": "Chain Reaction",
+      "cards": [
+        "basep-11"
+      ],
+      "implemented": true
+    },
+    {
+      "name": "Clairvoyance",
+      "cards": [
+        "base3-52"
+      ],
+      "implemented": true
+    },
+    {
+      "name": "Conductivity",
+      "cards": [
+        "neo4-1"
+      ],
+      "implemented": true
+    },
+    {
+      "name": "Cowardice",
+      "cards": [
+        "base3-56"
+      ],
+      "implemented": true
+    },
+    {
+      "name": "Crystal Body",
+      "cards": [
+        "neo3-14"
+      ],
+      "implemented": true
+    },
+    {
+      "name": "Cunning",
+      "cards": [
+        "neo4-20"
+      ],
+      "implemented": true
+    },
+    {
+      "name": "Curse",
+      "cards": [
+        "base3-5",
+        "base3-20"
+      ],
+      "implemented": true
+    },
+    {
+      "name": "Damage Swap",
+      "cards": [
+        "base1-1",
+        "base4-1"
+      ],
+      "implemented": true
+    },
+    {
+      "name": "Darkness",
+      "cards": [
+        "neo2-47"
+      ],
+      "implemented": true
+    },
+    {
+      "name": "Deep Sleep",
+      "cards": [
+        "neo4-6"
+      ],
+      "implemented": true
+    },
+    {
+      "name": "Downpour",
+      "cards": [
+        "neo1-5"
+      ],
+      "implemented": true
+    },
+    {
+      "name": "Drive Off",
+      "cards": [
+        "neo4-12"
+      ],
+      "implemented": true
+    },
+    {
+      "name": "Electromagnetic Power",
+      "cards": [
+        "neo3-10"
+      ],
+      "implemented": true
+    },
+    {
+      "name": "Emerge",
+      "cards": [
+        "gym2-47"
+      ],
+      "implemented": true
+    },
+    {
+      "name": "Energy Burn",
+      "cards": [
+        "base1-4",
+        "base4-4"
+      ],
+      "implemented": true
+    },
+    {
+      "name": "Energy Charge",
+      "cards": [
+        "gym1-8"
+      ],
+      "implemented": true
+    },
+    {
+      "name": "Energy Converter",
+      "cards": [
+        "neo3-12"
+      ],
+      "implemented": true
+    },
+    {
+      "name": "Energy Drain",
+      "cards": [
+        "gym2-26"
+      ],
+      "implemented": true
+    },
+    {
+      "name": "Energy Evolution",
+      "cards": [
+        "neo2-38"
+      ],
+      "implemented": true
+    },
+    {
+      "name": "Energy Trans",
+      "cards": [
+        "base1-15",
+        "base4-18"
+      ],
+      "implemented": true
+    },
+    {
+      "name": "Evolutionary Light",
+      "cards": [
+        "base5-33"
+      ],
+      "implemented": true
+    },
+    {
+      "name": "Final Beam",
+      "cards": [
+        "base5-8",
+        "base5-25"
+      ],
+      "implemented": true
+    },
+    {
+      "name": "Final Blow",
+      "cards": [
+        "neo1-6"
+      ],
+      "implemented": true
+    },
+    {
+      "name": "Fire Boost",
+      "cards": [
+        "neo1-18"
+      ],
+      "implemented": true
+    },
+    {
+      "name": "Fire Recharge",
+      "cards": [
+        "neo1-17"
+      ],
+      "implemented": true
+    },
+    {
+      "name": "Flee",
+      "cards": [
+        "gym1-10"
+      ],
+      "implemented": true
+    },
+    {
+      "name": "Fluffy Wool",
+      "cards": [
+        "neo4-26"
+      ],
+      "implemented": true
+    },
+    {
+      "name": "Fortitude",
+      "cards": [
+        "gym2-6"
+      ],
+      "implemented": true
+    },
+    {
+      "name": "Fossil",
+      "cards": [
+        "neo2-60"
+      ],
+      "implemented": true
+    },
+    {
+      "name": "Fragrance Trap",
+      "cards": [
+        "gym1-26"
+      ],
+      "implemented": true
+    },
+    {
+      "name": "Frenzy",
+      "cards": [
+        "base5-43"
+      ],
+      "implemented": true
+    },
+    {
+      "name": "Frog Song",
+      "cards": [
+        "neo2-8",
+        "neo2-27"
+      ],
+      "implemented": true
+    },
+    {
+      "name": "Gaseous Form",
+      "cards": [
+        "gym2-97"
+      ],
+      "implemented": true
+    },
+    {
+      "name": "Gather Fire",
+      "cards": [
+        "base5-50"
+      ],
+      "implemented": true
+    },
+    {
+      "name": "Gaze",
+      "cards": [
+        "neo2-40"
+      ],
+      "implemented": true
+    },
+    {
+      "name": "Gift",
+      "cards": [
+        "neo4-15"
+      ],
+      "implemented": true
+    },
+    {
+      "name": "Glaring Gaze",
+      "cards": [
+        "neo1-42"
+      ],
+      "implemented": true
+    },
+    {
+      "name": "Guard",
+      "cards": [
+        "basep-49"
+      ],
+      "implemented": true
+    },
+    {
+      "name": "Hard Shell",
+      "cards": [
+        "neo3-51"
+      ],
+      "implemented": true
+    },
+    {
+      "name": "Hay Fever",
+      "cards": [
+        "base5-13",
+        "base5-30"
+      ],
+      "implemented": true
+    },
+    {
+      "name": "Heal",
+      "cards": [
+        "base2-15",
+        "base2-31"
+      ],
+      "implemented": true
+    },
+    {
+      "name": "Healing Fire",
+      "cards": [
+        "gym2-21"
+      ],
+      "implemented": true
+    },
+    {
+      "name": "Herbal Scent",
+      "cards": [
+        "neo1-10"
+      ],
+      "implemented": true
+    },
+    {
+      "name": "Hot Plate",
+      "cards": [
+        "neo4-18"
+      ],
+      "implemented": true
+    },
+    {
+      "name": "Howl",
+      "cards": [
+        "neo3-6"
+      ],
+      "implemented": true
+    },
+    {
+      "name": "Hydroelectric Power",
+      "cards": [
+        "neo1-38"
+      ],
+      "implemented": true
+    },
+    {
+      "name": "Invisible Wall",
+      "cards": [
+        "base2-6",
+        "base2-22",
+        "base4-27"
+      ],
+      "implemented": true
+    },
+    {
+      "name": "Kabuto Armor",
+      "cards": [
+        "base3-50"
+      ],
+      "implemented": true
+    },
+    {
+      "name": "Legendary Body",
+      "cards": [
+        "neo3-17",
+        "neo3-22",
+        "neo3-27"
+      ],
+      "implemented": true
+    },
+    {
+      "name": "Lightning Burst",
+      "cards": [
+        "neo3-13"
+      ],
+      "implemented": true
+    },
+    {
+      "name": "Long Distance Hypnosis",
+      "cards": [
+        "base5-54"
+      ],
+      "implemented": true
+    },
+    {
+      "name": "Magma Pool",
+      "cards": [
+        "neo3-33"
+      ],
+      "implemented": true
+    },
+    {
+      "name": "Matter Exchange",
+      "cards": [
+        "base5-39"
+      ],
+      "implemented": true
+    },
+    {
+      "name": "Mimic",
+      "cards": [
+        "neo3-26"
+      ],
+      "implemented": true
+    },
+    {
+      "name": "Mind Games",
+      "cards": [
+        "neo1-14"
+      ],
+      "implemented": true
+    },
+    {
+      "name": "Miraculous Wind",
+      "cards": [
+        "neo4-14"
+      ],
+      "implemented": true
+    },
+    {
+      "name": "Natural Healing",
+      "cards": [
+        "gym1-65"
+      ],
+      "implemented": true
+    },
+    {
+      "name": "Neutral Shield",
+      "cards": [
+        "basep-47"
+      ],
+      "implemented": true
+    },
+    {
+      "name": "Observe",
+      "cards": [
+        "neo2-69"
+      ],
+      "implemented": true
+    },
+    {
+      "name": "Peek",
+      "cards": [
+        "base2-55"
+      ],
+      "implemented": true
+    },
+    {
+      "name": "Photosynthesis",
+      "cards": [
+        "gym1-47"
+      ],
+      "implemented": true
+    },
+    {
+      "name": "Playful Punch",
+      "cards": [
+        "neo1-22"
+      ],
+      "implemented": true
+    },
+    {
+      "name": "Pollen Defense",
+      "cards": [
+        "gym1-5"
+      ],
+      "implemented": true
+    },
+    {
+      "name": "Pollen Stench",
+      "cards": [
+        "base5-36"
+      ],
+      "implemented": true
+    },
+    {
+      "name": "Prehistoric Memory",
+      "cards": [
+        "neo3-15"
+      ],
+      "implemented": true
+    },
+    {
+      "name": "Prehistoric Power",
+      "cards": [
+        "base3-1",
+        "base3-16"
+      ],
+      "implemented": true
+    },
+    {
+      "name": "Psylink",
+      "cards": [
+        "gym2-16"
+      ],
+      "implemented": true
+    },
+    {
+      "name": "Pure Body",
+      "cards": [
+        "basep-53"
+      ],
+      "implemented": true
+    },
+    {
+      "name": "Rain Dance",
+      "cards": [
+        "base1-2",
+        "base4-2"
+      ],
+      "implemented": true
+    },
+    {
+      "name": "Rebellion",
+      "cards": [
+        "gym2-13"
+      ],
+      "implemented": true
+    },
+    {
+      "name": "Rebirth",
+      "cards": [
+        "gym1-12"
+      ],
+      "implemented": true
+    },
+    {
+      "name": "Reel In",
+      "cards": [
+        "base5-12",
+        "base5-29"
+      ],
+      "implemented": true
+    },
+    {
+      "name": "Relaxing Scent",
+      "cards": [
+        "gym2-41"
+      ],
+      "implemented": true
+    },
+    {
+      "name": "Restless Sleep",
+      "cards": [
+        "gym1-33"
+      ],
+      "implemented": true
+    },
+    {
+      "name": "Retreat Aid",
+      "cards": [
+        "base2-34",
+        "base4-37"
+      ],
+      "implemented": true
+    },
+    {
+      "name": "Revive Friends",
+      "cards": [
+        "neo2-56"
+      ],
+      "implemented": true
+    },
+    {
+      "name": "Scare",
+      "cards": [
+        "neo4-5"
+      ],
+      "implemented": true
+    },
+    {
+      "name": "Scram",
+      "cards": [
+        "gym2-35"
+      ],
+      "implemented": true
+    },
+    {
+      "name": "Shapeshift",
+      "cards": [
+        "gym2-3"
+      ],
+      "implemented": true
+    },
+    {
+      "name": "Shell Armor",
+      "cards": [
+        "gym1-29"
+      ],
+      "implemented": true
+    },
+    {
+      "name": "Shift",
+      "cards": [
+        "base2-13",
+        "base2-29",
+        "base4-31"
+      ],
+      "implemented": true
+    },
+    {
+      "name": "Shock Blast",
+      "cards": [
+        "gym2-52"
+      ],
+      "implemented": true
+    },
+    {
+      "name": "Sinkhole",
+      "cards": [
+        "base5-6",
+        "base5-23"
+      ],
+      "implemented": true
+    },
+    {
+      "name": "Sneak Attack",
+      "cards": [
+        "base5-7",
+        "base5-24"
+      ],
+      "implemented": true
+    },
+    {
+      "name": "Soak Up",
+      "cards": [
+        "gym2-38"
+      ],
+      "implemented": true
+    },
+    {
+      "name": "Softboiled",
+      "cards": [
+        "neo3-2"
+      ],
+      "implemented": true
+    },
+    {
+      "name": "Solar Power",
+      "cards": [
+        "basep-13"
+      ],
+      "implemented": true
+    },
+    {
+      "name": "Spatial Distortion",
+      "cards": [
+        "neo4-8"
+      ],
+      "implemented": true
+    },
+    {
+      "name": "Special Delivery",
+      "cards": [
+        "basep-5"
+      ],
+      "implemented": true
+    },
+    {
+      "name": "Spikes",
+      "cards": [
+        "neo2-2",
+        "neo2-21"
+      ],
+      "implemented": true
+    },
+    {
+      "name": "Step In",
+      "cards": [
+        "base3-4",
+        "base3-19"
+      ],
+      "implemented": true
+    },
+    {
+      "name": "Sticky Goo",
+      "cards": [
+        "base5-41"
+      ],
+      "implemented": true
+    },
+    {
+      "name": "Strange Barrier",
+      "cards": [
+        "gym1-42"
+      ],
+      "implemented": true
+    },
+    {
+      "name": "Strange Behavior",
+      "cards": [
+        "base3-43"
+      ],
+      "implemented": true
+    },
+    {
+      "name": "Strikes Back",
+      "cards": [
+        "base1-8"
+      ],
+      "implemented": true
+    },
+    {
+      "name": "Submerge",
+      "cards": [
+        "neo3-32"
+      ],
+      "implemented": true
+    },
+    {
+      "name": "Summon Minions",
+      "cards": [
+        "base5-5",
+        "base5-22"
+      ],
+      "implemented": true
+    },
+    {
+      "name": "Surprise Bite",
+      "cards": [
+        "neo4-2"
+      ],
+      "implemented": true
+    },
+    {
+      "name": "Tag Team",
+      "cards": [
+        "neo4-25"
+      ],
+      "implemented": true
+    },
+    {
+      "name": "Thick Skinned",
+      "cards": [
+        "base2-11",
+        "base2-27",
+        "base4-30"
+      ],
+      "implemented": true
+    },
+    {
+      "name": "Time Travel",
+      "cards": [
+        "neo3-3"
+      ],
+      "implemented": true
+    },
+    {
+      "name": "Toxic Gas",
+      "cards": [
+        "base3-13",
+        "base3-28"
+      ],
+      "implemented": true
+    },
+    {
+      "name": "Transform",
+      "cards": [
+        "base3-3",
+        "base3-18"
+      ],
+      "implemented": true
+    },
+    {
+      "name": "Transparency",
+      "cards": [
+        "base3-6",
+        "base3-21"
+      ],
+      "implemented": true
+    },
+    {
+      "name": "Trickery",
+      "cards": [
+        "base5-66"
+      ],
+      "implemented": true
+    },
+    {
+      "name": "Undo",
+      "cards": [
+        "neo2-51"
+      ],
+      "implemented": true
+    },
+    {
+      "name": "Wild Growth",
+      "cards": [
+        "neo1-11"
+      ],
+      "implemented": true
+    }
+  ]
+}

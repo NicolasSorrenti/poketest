@@ -1,0 +1,18 @@
+'use strict';
+const fs=require('node:fs'),vm=require('node:vm'),assert=require('node:assert/strict');
+const code=fs.readFileSync(__dirname+'/engine.js','utf8').split('async function load()')[0].replace('const engine=new Engine();window.NeoCampus={engine,get cards(){return cards},lookup};','const engine=new Engine();');
+const dummy=()=>({classList:{add(){},remove(){}},textContent:'',style:{}});
+const ctx={console,Math,document:{getElementById:dummy,querySelector:()=>null,querySelectorAll:()=>[]},window:{},setTimeout(){},clearTimeout(){}};
+vm.createContext(ctx);vm.runInContext(code,ctx);
+assert.equal(vm.runInContext('HISTORIC_THEMES.length',ctx),10);
+assert.equal(vm.runInContext('HISTORIC_THEMES.some(x=>!(["base1","base2","base3","base5"].includes(x.set)))',ctx),false);
+vm.runInContext(`lookup=new Map([['p',{id:'p',name:'Potion',supertype:'Trainer'}],['r',{id:'r',name:'Energy Removal',supertype:'Trainer'}],['e',{id:'e',name:'Water Energy',supertype:'Energy'}],...['A','B','C','D'].map(n=>[n,{id:n,name:n,hp:'100',supertype:'Pokémon'}])]);engine.players=[statePlayer('You',[]),statePlayer('Rival',[])];engine.turn=0;engine.phase='game';engine.started=true;engine.players[0].active=unit('A');engine.players[0].bench=[unit('B')];engine.players[1].active=unit('C');engine.players[1].bench=[unit('D')];engine.players[0].bench[0].damage=40;engine.players[1].bench[0].energies=['e'];engine.players[0].hand=['p','r'];render=()=>{};`,ctx);
+assert.equal(vm.runInContext('optionsFor(TARGET_RULES.Potion).length',ctx),1);
+assert.equal(vm.runInContext('optionsFor(TARGET_RULES["Energy Removal"])[0].slot',ctx),0);
+assert.equal(vm.runInContext('engine.trainer(0,-1)',ctx),false);
+assert.equal(vm.runInContext('engine.players[0].hand.length',ctx),2);
+assert.equal(vm.runInContext('engine.trainer(0,0)',ctx),true);
+assert.equal(vm.runInContext('engine.players[0].bench[0].damage',ctx),20);
+assert.equal(vm.runInContext('engine.trainer(0,0)',ctx),true);
+assert.equal(vm.runInContext('engine.players[1].bench[0].energies.length',ctx),0);
+console.log('PASS: 10 Classic themes, no post-Rocket themes, targeting chooses specific Bench for Potion and Energy Removal');

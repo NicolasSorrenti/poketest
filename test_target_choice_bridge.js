@@ -1,0 +1,17 @@
+'use strict';
+const assert=require('node:assert/strict');
+const bridge=require('./target_choice_bridge');
+const req={name:'Stretch Kick'};
+const options=[{side:1,slot:0},{side:1,slot:1}];
+const decision=bridge.prepare(req,options,0);
+assert.equal(decision.options.length,2);
+assert.equal(bridge.prepare(req,options,0).id,decision.id);
+let calls=0;
+assert.throws(()=>bridge.commit(req,1,1,0,options,()=>calls++),/another player/);
+assert.throws(()=>bridge.commit(req,0,0,0,options,()=>calls++),/Invalid option/);
+assert.throws(()=>bridge.commit(req,0,1,0,[options[1]],()=>calls++),/no longer legal/);
+assert.equal(calls,0);
+assert.equal(bridge.commit(req,0,1,1,options,slot=>{calls++;return slot;}),1);
+assert.equal(calls,1);
+assert.throws(()=>bridge.commit({},0,1,1,options,()=>calls++),/no longer available/);
+console.log('PASS: attack/Power/Trainer target choices validate ownership and current legality');

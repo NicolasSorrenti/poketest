@@ -1,0 +1,15 @@
+'use strict';
+const assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm');
+const src=fs.readFileSync('engine.js','utf8').split('async function load()')[0];
+const c={console,Math,window:{NeoCardCorrections:{}},document:{getElementById:()=>({classList:{add(){},remove(){}},textContent:'',style:{},appendChild(){},querySelectorAll(){return []}}),querySelector:()=>null},setTimeout:()=>0,clearTimeout(){},innerWidth:1600};vm.createContext(c);
+vm.runInContext(src.replace('const engine=new Engine();window.NeoCampus={engine,get cards(){return cards},lookup};','const engine=new Engine();'),c);
+for(const filename of ['trainer_rules_v058.js','trainer_rules_v059.js','trainer_rules_v060.js','trainer_rules_v061.js','trainer_rules_v062.js'])vm.runInContext(fs.readFileSync(filename,'utf8'),c);
+const cards=fs.readdirSync('cards').filter(x=>x.endsWith('.json')).flatMap(x=>JSON.parse(fs.readFileSync('cards/'+x)));
+vm.runInContext("lookup=new Map();engine.players=[statePlayer('Human',[]),statePlayer('CPU',[])];engine.turn=0;engine.round=3;engine.phase='game';engine.over=false;render=()=>{};deckSearchRequest=null;selected=null",c);
+const g=vm.runInContext('engine',c),mk=vm.runInContext('unit',c),lookup=vm.runInContext('lookup',c);
+for(const card of cards)lookup.set(card.id,card);
+const p=g.players[0],f=g.players[1];p.active=mk('base1-50');f.active=mk('base1-58');p.hand=['gym2-107','base1-98'];
+assert.equal(g.trainer59(0,[1]),true);assert.equal(p.bench[0].secretPlanOwner,0);
+const hidden=p.bench[0];g.turn=1;assert.equal(g.revealSecretPlan(hidden),false,'opponent cannot voluntarily reveal our card');assert.equal(hidden.secretPlanFaceDown,true);
+assert.equal(g.revealSecretPlan(hidden,true),true,'game effects may force a reveal on either turn');assert.equal(p.bench.length,0,'non-Basic revealed card leaves play');assert.ok(p.discard.includes('base1-98'));
+console.log('Secret Plan reveal ownership tests passed');

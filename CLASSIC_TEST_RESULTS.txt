@@ -1,0 +1,24 @@
+Neo Campus Classic Preview v0.13
+================================
+Format: Base Set / Jungle / Fossil / Team Rocket
+Cards legal in Classic: 311
+Historical attack records: 427
+Headless compiled/executable attack records: 273 (previous 250)
+Remaining unported attacks: 154
+Historical Pokémon Power records: 52 (NOT headless complete)
+Historical Trainer cards: 41 (NOT headless complete)
+
+Verified:
+- node test_classic_format.js: PASS, 311 whitelist and 60-card format enforcement
+- node test_classic_ui.js: PASS, 13 UI deck choices (3 prototypes, 10 themes)
+- node test_classic_effects.js: PASS, 10 targeted effects scenarios
+- npm run test:classic: PASS
+- npm test: PASS, existing legacy and new headless regression suites
+- 100 complete seeded baseline, 60 status-heavy and 60 targeted headless duels: PASS
+- HTTP server integration test: PASS
+- Chrome full-page smoke: NOT VERIFIED (execution stalled in CI/container)
+
+Limitations:
+The local browser duel still runs the legacy engine; the new headless reducer is
+not yet the browser rules authority. Passing tests do not prove full historical
+accuracy for every playable Classic card. The card archive preserves later sets.

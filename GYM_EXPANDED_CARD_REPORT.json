@@ -1,0 +1,1576 @@
+{
+  "title": "Neo Campus v0.19 Expanded Gym card audit",
+  "scope": "All set printings from Base Set to Gym Challenge (not Neo). Card ready flags indicate compiled effects only, not comprehensive historical accuracy.",
+  "summaries": {
+    "cardsInAvailablePool": 760,
+    "originalClassicCards": 311,
+    "gymCardsBefore": 107,
+    "gymCardsNow": 264,
+    "additionalGymPrintings": 157,
+    "additionalPokemon": 113,
+    "additionalTrainers": 41,
+    "additionalEnergies": 3,
+    "newGymCardsWithAllEffectsCompiled": 29,
+    "totalDeckPresets": 31
+  },
+  "bySet": {
+    "base1": {
+      "cards": 102,
+      "fullyExecutableRecords": 102,
+      "unsupportedRecords": 0
+    },
+    "base2": {
+      "cards": 64,
+      "fullyExecutableRecords": 64,
+      "unsupportedRecords": 0
+    },
+    "base3": {
+      "cards": 62,
+      "fullyExecutableRecords": 62,
+      "unsupportedRecords": 0
+    },
+    "base4": {
+      "cards": 130,
+      "fullyExecutableRecords": 130,
+      "unsupportedRecords": 0
+    },
+    "base5": {
+      "cards": 83,
+      "fullyExecutableRecords": 83,
+      "unsupportedRecords": 0
+    },
+    "gym1": {
+      "cards": 132,
+      "fullyExecutableRecords": 58,
+      "unsupportedRecords": 74
+    },
+    "gym2": {
+      "cards": 132,
+      "fullyExecutableRecords": 46,
+      "unsupportedRecords": 86
+    }
+  },
+  "addedGymCards": [
+    {
+      "id": "gym1-1",
+      "name": "Blaine's Moltres",
+      "supertype": "Pokémon",
+      "ready": false,
+      "missingAttacks": [
+        "Phoenix Flame"
+      ],
+      "missingPowers": []
+    },
+    {
+      "id": "gym1-3",
+      "name": "Erika's Clefable",
+      "supertype": "Pokémon",
+      "ready": false,
+      "missingAttacks": [
+        "Fairy Power"
+      ],
+      "missingPowers": []
+    },
+    {
+      "id": "gym1-4",
+      "name": "Erika's Dragonair",
+      "supertype": "Pokémon",
+      "ready": false,
+      "missingAttacks": [
+        "Take Away"
+      ],
+      "missingPowers": []
+    },
+    {
+      "id": "gym1-6",
+      "name": "Lt. Surge's Electabuzz",
+      "supertype": "Pokémon",
+      "ready": false,
+      "missingAttacks": [
+        "Charge",
+        "Discharge"
+      ],
+      "missingPowers": []
+    },
+    {
+      "id": "gym1-7",
+      "name": "Lt. Surge's Fearow",
+      "supertype": "Pokémon",
+      "ready": false,
+      "missingAttacks": [
+        "Clutch"
+      ],
+      "missingPowers": []
+    },
+    {
+      "id": "gym1-9",
+      "name": "Misty's Seadra",
+      "supertype": "Pokémon",
+      "ready": false,
+      "missingAttacks": [
+        "Knockout Needle"
+      ],
+      "missingPowers": []
+    },
+    {
+      "id": "gym1-11",
+      "name": "Rocket's Hitmonchan",
+      "supertype": "Pokémon",
+      "ready": false,
+      "missingAttacks": [
+        "Crosscounter"
+      ],
+      "missingPowers": []
+    },
+    {
+      "id": "gym1-12",
+      "name": "Rocket's Moltres",
+      "supertype": "Pokémon",
+      "ready": false,
+      "missingAttacks": [
+        "Fire Wall"
+      ],
+      "missingPowers": [
+        "Rebirth"
+      ]
+    },
+    {
+      "id": "gym1-13",
+      "name": "Rocket's Scyther",
+      "supertype": "Pokémon",
+      "ready": false,
+      "missingAttacks": [
+        "Shadow Images"
+      ],
+      "missingPowers": []
+    },
+    {
+      "id": "gym1-14",
+      "name": "Sabrina's Gengar",
+      "supertype": "Pokémon",
+      "ready": false,
+      "missingAttacks": [
+        "Pain Amplifier",
+        "Call of the Night"
+      ],
+      "missingPowers": []
+    },
+    {
+      "id": "gym1-15",
+      "name": "Brock",
+      "supertype": "Trainer",
+      "ready": true,
+      "missingAttacks": [],
+      "missingPowers": []
+    },
+    {
+      "id": "gym1-16",
+      "name": "Erika",
+      "supertype": "Trainer",
+      "ready": true,
+      "missingAttacks": [],
+      "missingPowers": []
+    },
+    {
+      "id": "gym1-17",
+      "name": "Lt. Surge",
+      "supertype": "Trainer",
+      "ready": true,
+      "missingAttacks": [],
+      "missingPowers": []
+    },
+    {
+      "id": "gym1-18",
+      "name": "Misty",
+      "supertype": "Trainer",
+      "ready": true,
+      "missingAttacks": [],
+      "missingPowers": []
+    },
+    {
+      "id": "gym1-19",
+      "name": "The Rocket's Trap",
+      "supertype": "Trainer",
+      "ready": false,
+      "missingAttacks": [],
+      "missingPowers": []
+    },
+    {
+      "id": "gym1-20",
+      "name": "Brock's Golem",
+      "supertype": "Pokémon",
+      "ready": false,
+      "missingAttacks": [
+        "Rock Slide"
+      ],
+      "missingPowers": []
+    },
+    {
+      "id": "gym1-21",
+      "name": "Brock's Onix",
+      "supertype": "Pokémon",
+      "ready": false,
+      "missingAttacks": [
+        "Tunneling"
+      ],
+      "missingPowers": []
+    },
+    {
+      "id": "gym1-22",
+      "name": "Brock's Rhyhorn",
+      "supertype": "Pokémon",
+      "ready": true,
+      "missingAttacks": [],
+      "missingPowers": []
+    },
+    {
+      "id": "gym1-23",
+      "name": "Brock's Sandslash",
+      "supertype": "Pokémon",
+      "ready": true,
+      "missingAttacks": [],
+      "missingPowers": []
+    },
+    {
+      "id": "gym1-24",
+      "name": "Brock's Zubat",
+      "supertype": "Pokémon",
+      "ready": false,
+      "missingAttacks": [
+        "Alert"
+      ],
+      "missingPowers": []
+    },
+    {
+      "id": "gym1-25",
+      "name": "Erika's Clefairy",
+      "supertype": "Pokémon",
+      "ready": false,
+      "missingAttacks": [
+        "Moonwatching"
+      ],
+      "missingPowers": []
+    },
+    {
+      "id": "gym1-26",
+      "name": "Erika's Victreebel",
+      "supertype": "Pokémon",
+      "ready": false,
+      "missingAttacks": [],
+      "missingPowers": [
+        "Fragrance Trap"
+      ]
+    },
+    {
+      "id": "gym1-27",
+      "name": "Lt. Surge's Electabuzz",
+      "supertype": "Pokémon",
+      "ready": false,
+      "missingAttacks": [
+        "Charge",
+        "Electric Current"
+      ],
+      "missingPowers": []
+    },
+    {
+      "id": "gym1-28",
+      "name": "Lt. Surge's Raichu",
+      "supertype": "Pokémon",
+      "ready": false,
+      "missingAttacks": [
+        "Thunderbolt"
+      ],
+      "missingPowers": []
+    },
+    {
+      "id": "gym1-29",
+      "name": "Misty's Cloyster",
+      "supertype": "Pokémon",
+      "ready": false,
+      "missingAttacks": [],
+      "missingPowers": [
+        "Shell Armor"
+      ]
+    },
+    {
+      "id": "gym1-30",
+      "name": "Misty's Goldeen",
+      "supertype": "Pokémon",
+      "ready": true,
+      "missingAttacks": [],
+      "missingPowers": []
+    },
+    {
+      "id": "gym1-31",
+      "name": "Misty's Poliwrath",
+      "supertype": "Pokémon",
+      "ready": false,
+      "missingAttacks": [
+        "Water Ring"
+      ],
+      "missingPowers": []
+    },
+    {
+      "id": "gym1-32",
+      "name": "Misty's Tentacool",
+      "supertype": "Pokémon",
+      "ready": false,
+      "missingAttacks": [
+        "Jellyfish Pod"
+      ],
+      "missingPowers": []
+    },
+    {
+      "id": "gym1-33",
+      "name": "Rocket's Snorlax",
+      "supertype": "Pokémon",
+      "ready": false,
+      "missingAttacks": [
+        "Collapse"
+      ],
+      "missingPowers": [
+        "Restless Sleep"
+      ]
+    },
+    {
+      "id": "gym1-34",
+      "name": "Sabrina's Venomoth",
+      "supertype": "Pokémon",
+      "ready": false,
+      "missingAttacks": [
+        "Healing Pollen",
+        "Sonic Distortion"
+      ],
+      "missingPowers": []
+    },
+    {
+      "id": "gym1-35",
+      "name": "Blaine's Growlithe",
+      "supertype": "Pokémon",
+      "ready": true,
+      "missingAttacks": [],
+      "missingPowers": []
+    },
+    {
+      "id": "gym1-36",
+      "name": "Blaine's Kangaskhan",
+      "supertype": "Pokémon",
+      "ready": true,
+      "missingAttacks": [],
+      "missingPowers": []
+    },
+    {
+      "id": "gym1-37",
+      "name": "Blaine's Magmar",
+      "supertype": "Pokémon",
+      "ready": false,
+      "missingAttacks": [
+        "Lava Burst"
+      ],
+      "missingPowers": []
+    },
+    {
+      "id": "gym1-38",
+      "name": "Brock's Geodude",
+      "supertype": "Pokémon",
+      "ready": false,
+      "missingAttacks": [
+        "Lucky Shot"
+      ],
+      "missingPowers": []
+    },
+    {
+      "id": "gym1-39",
+      "name": "Brock's Golbat",
+      "supertype": "Pokémon",
+      "ready": false,
+      "missingAttacks": [
+        "Spiral Dive"
+      ],
+      "missingPowers": []
+    },
+    {
+      "id": "gym1-43",
+      "name": "Erika's Exeggcute",
+      "supertype": "Pokémon",
+      "ready": false,
+      "missingAttacks": [
+        "Deflector",
+        "Egg Bomb"
+      ],
+      "missingPowers": []
+    },
+    {
+      "id": "gym1-47",
+      "name": "Erika's Oddish",
+      "supertype": "Pokémon",
+      "ready": false,
+      "missingAttacks": [],
+      "missingPowers": [
+        "Photosynthesis"
+      ]
+    },
+    {
+      "id": "gym1-48",
+      "name": "Erika's Weepinbell",
+      "supertype": "Pokémon",
+      "ready": false,
+      "missingAttacks": [
+        "Flytrap"
+      ],
+      "missingPowers": []
+    },
+    {
+      "id": "gym1-50",
+      "name": "Lt. Surge's Magnemite",
+      "supertype": "Pokémon",
+      "ready": false,
+      "missingAttacks": [
+        "Removal Pulse"
+      ],
+      "missingPowers": []
+    },
+    {
+      "id": "gym1-55",
+      "name": "Misty's Seaking",
+      "supertype": "Pokémon",
+      "ready": false,
+      "missingAttacks": [
+        "Mud Splash"
+      ],
+      "missingPowers": []
+    },
+    {
+      "id": "gym1-58",
+      "name": "Sabrina's Haunter",
+      "supertype": "Pokémon",
+      "ready": false,
+      "missingAttacks": [
+        "Night Spirits"
+      ],
+      "missingPowers": []
+    },
+    {
+      "id": "gym1-59",
+      "name": "Sabrina's Jynx",
+      "supertype": "Pokémon",
+      "ready": false,
+      "missingAttacks": [
+        "Good Morning"
+      ],
+      "missingPowers": []
+    },
+    {
+      "id": "gym1-60",
+      "name": "Sabrina's Slowbro",
+      "supertype": "Pokémon",
+      "ready": false,
+      "missingAttacks": [
+        "Naptime",
+        "Screaming Headbutt"
+      ],
+      "missingPowers": []
+    },
+    {
+      "id": "gym1-61",
+      "name": "Blaine's Charmander",
+      "supertype": "Pokémon",
+      "ready": false,
+      "missingAttacks": [
+        "Kindle"
+      ],
+      "missingPowers": []
+    },
+    {
+      "id": "gym1-63",
+      "name": "Blaine's Ponyta",
+      "supertype": "Pokémon",
+      "ready": true,
+      "missingAttacks": [],
+      "missingPowers": []
+    },
+    {
+      "id": "gym1-64",
+      "name": "Blaine's Tauros",
+      "supertype": "Pokémon",
+      "ready": false,
+      "missingAttacks": [
+        "Full Speed Charge"
+      ],
+      "missingPowers": []
+    },
+    {
+      "id": "gym1-65",
+      "name": "Blaine's Vulpix",
+      "supertype": "Pokémon",
+      "ready": false,
+      "missingAttacks": [],
+      "missingPowers": [
+        "Natural Healing"
+      ]
+    },
+    {
+      "id": "gym1-68",
+      "name": "Brock's Mankey",
+      "supertype": "Pokémon",
+      "ready": false,
+      "missingAttacks": [
+        "Fidget",
+        "Karate Chop"
+      ],
+      "missingPowers": []
+    },
+    {
+      "id": "gym1-73",
+      "name": "Brock's Vulpix",
+      "supertype": "Pokémon",
+      "ready": true,
+      "missingAttacks": [],
+      "missingPowers": []
+    },
+    {
+      "id": "gym1-74",
+      "name": "Brock's Zubat",
+      "supertype": "Pokémon",
+      "ready": true,
+      "missingAttacks": [],
+      "missingPowers": []
+    },
+    {
+      "id": "gym1-75",
+      "name": "Erika's Bellsprout",
+      "supertype": "Pokémon",
+      "ready": true,
+      "missingAttacks": [],
+      "missingPowers": []
+    },
+    {
+      "id": "gym1-88",
+      "name": "Misty's Seel",
+      "supertype": "Pokémon",
+      "ready": true,
+      "missingAttacks": [],
+      "missingPowers": []
+    },
+    {
+      "id": "gym1-89",
+      "name": "Misty's Shellder",
+      "supertype": "Pokémon",
+      "ready": false,
+      "missingAttacks": [
+        "Clamp"
+      ],
+      "missingPowers": []
+    },
+    {
+      "id": "gym1-91",
+      "name": "Sabrina's Abra",
+      "supertype": "Pokémon",
+      "ready": false,
+      "missingAttacks": [
+        "Energy Loop"
+      ],
+      "missingPowers": []
+    },
+    {
+      "id": "gym1-92",
+      "name": "Sabrina's Drowzee",
+      "supertype": "Pokémon",
+      "ready": false,
+      "missingAttacks": [
+        "Suggestion"
+      ],
+      "missingPowers": []
+    },
+    {
+      "id": "gym1-93",
+      "name": "Sabrina's Gastly",
+      "supertype": "Pokémon",
+      "ready": false,
+      "missingAttacks": [
+        "Spook"
+      ],
+      "missingPowers": []
+    },
+    {
+      "id": "gym1-94",
+      "name": "Sabrina's Mr. Mime",
+      "supertype": "Pokémon",
+      "ready": false,
+      "missingAttacks": [
+        "Sleight of Hand"
+      ],
+      "missingPowers": []
+    },
+    {
+      "id": "gym1-95",
+      "name": "Sabrina's Slowpoke",
+      "supertype": "Pokémon",
+      "ready": false,
+      "missingAttacks": [
+        "Lazy Attack"
+      ],
+      "missingPowers": []
+    },
+    {
+      "id": "gym1-96",
+      "name": "Sabrina's Venonat",
+      "supertype": "Pokémon",
+      "ready": false,
+      "missingAttacks": [
+        "Removal Beam"
+      ],
+      "missingPowers": []
+    },
+    {
+      "id": "gym1-97",
+      "name": "Blaine's Quiz #1",
+      "supertype": "Trainer",
+      "ready": false,
+      "missingAttacks": [],
+      "missingPowers": []
+    },
+    {
+      "id": "gym1-99",
+      "name": "Charity",
+      "supertype": "Trainer",
+      "ready": false,
+      "missingAttacks": [],
+      "missingPowers": []
+    },
+    {
+      "id": "gym1-103",
+      "name": "No Removal Gym",
+      "supertype": "Trainer",
+      "ready": false,
+      "missingAttacks": [],
+      "missingPowers": []
+    },
+    {
+      "id": "gym1-104",
+      "name": "The Rocket's Training Gym",
+      "supertype": "Trainer",
+      "ready": false,
+      "missingAttacks": [],
+      "missingPowers": []
+    },
+    {
+      "id": "gym1-105",
+      "name": "Blaine's Last Resort",
+      "supertype": "Trainer",
+      "ready": false,
+      "missingAttacks": [],
+      "missingPowers": []
+    },
+    {
+      "id": "gym1-109",
+      "name": "Erika's Maids",
+      "supertype": "Trainer",
+      "ready": false,
+      "missingAttacks": [],
+      "missingPowers": []
+    },
+    {
+      "id": "gym1-111",
+      "name": "Good Manners",
+      "supertype": "Trainer",
+      "ready": false,
+      "missingAttacks": [],
+      "missingPowers": []
+    },
+    {
+      "id": "gym1-112",
+      "name": "Lt. Surge's Treaty",
+      "supertype": "Trainer",
+      "ready": false,
+      "missingAttacks": [],
+      "missingPowers": []
+    },
+    {
+      "id": "gym1-113",
+      "name": "Minion of Team Rocket",
+      "supertype": "Trainer",
+      "ready": false,
+      "missingAttacks": [],
+      "missingPowers": []
+    },
+    {
+      "id": "gym1-114",
+      "name": "Misty's Wrath",
+      "supertype": "Trainer",
+      "ready": false,
+      "missingAttacks": [],
+      "missingPowers": []
+    },
+    {
+      "id": "gym1-116",
+      "name": "Recall",
+      "supertype": "Trainer",
+      "ready": false,
+      "missingAttacks": [],
+      "missingPowers": []
+    },
+    {
+      "id": "gym1-117",
+      "name": "Sabrina's ESP",
+      "supertype": "Trainer",
+      "ready": false,
+      "missingAttacks": [],
+      "missingPowers": []
+    },
+    {
+      "id": "gym1-119",
+      "name": "Tickling Machine",
+      "supertype": "Trainer",
+      "ready": false,
+      "missingAttacks": [],
+      "missingPowers": []
+    },
+    {
+      "id": "gym1-122",
+      "name": "Energy Flow",
+      "supertype": "Trainer",
+      "ready": false,
+      "missingAttacks": [],
+      "missingPowers": []
+    },
+    {
+      "id": "gym1-123",
+      "name": "Misty's Duel",
+      "supertype": "Trainer",
+      "ready": false,
+      "missingAttacks": [],
+      "missingPowers": []
+    },
+    {
+      "id": "gym1-124",
+      "name": "Narrow Gym",
+      "supertype": "Trainer",
+      "ready": false,
+      "missingAttacks": [],
+      "missingPowers": []
+    },
+    {
+      "id": "gym1-126",
+      "name": "Trash Exchange",
+      "supertype": "Trainer",
+      "ready": false,
+      "missingAttacks": [],
+      "missingPowers": []
+    },
+    {
+      "id": "gym1-128",
+      "name": "Fire Energy",
+      "supertype": "Energy",
+      "ready": true,
+      "missingAttacks": [],
+      "missingPowers": []
+    },
+    {
+      "id": "gym2-2",
+      "name": "Blaine's Charizard",
+      "supertype": "Pokémon",
+      "ready": false,
+      "missingAttacks": [
+        "Roaring Flames",
+        "Flame Jet"
+      ],
+      "missingPowers": []
+    },
+    {
+      "id": "gym2-3",
+      "name": "Brock's Ninetales",
+      "supertype": "Pokémon",
+      "ready": false,
+      "missingAttacks": [],
+      "missingPowers": [
+        "Shapeshift"
+      ]
+    },
+    {
+      "id": "gym2-4",
+      "name": "Erika's Venusaur",
+      "supertype": "Pokémon",
+      "ready": false,
+      "missingAttacks": [
+        "Growth",
+        "Wide Solarbeam"
+      ],
+      "missingPowers": []
+    },
+    {
+      "id": "gym2-5",
+      "name": "Giovanni's Gyarados",
+      "supertype": "Pokémon",
+      "ready": false,
+      "missingAttacks": [
+        "Summon Storm",
+        "Dragon Tornado"
+      ],
+      "missingPowers": []
+    },
+    {
+      "id": "gym2-6",
+      "name": "Giovanni's Machamp",
+      "supertype": "Pokémon",
+      "ready": false,
+      "missingAttacks": [],
+      "missingPowers": [
+        "Fortitude"
+      ]
+    },
+    {
+      "id": "gym2-7",
+      "name": "Giovanni's Nidoking",
+      "supertype": "Pokémon",
+      "ready": false,
+      "missingAttacks": [
+        "Intimidate"
+      ],
+      "missingPowers": []
+    },
+    {
+      "id": "gym2-10",
+      "name": "Koga's Ditto",
+      "supertype": "Pokémon",
+      "ready": false,
+      "missingAttacks": [
+        "Giant Growth"
+      ],
+      "missingPowers": []
+    },
+    {
+      "id": "gym2-11",
+      "name": "Lt. Surge's Raichu",
+      "supertype": "Pokémon",
+      "ready": false,
+      "missingAttacks": [
+        "Kerzap"
+      ],
+      "missingPowers": []
+    },
+    {
+      "id": "gym2-12",
+      "name": "Misty's Golduck",
+      "supertype": "Pokémon",
+      "ready": false,
+      "missingAttacks": [
+        "Electro Beam",
+        "Super Removal"
+      ],
+      "missingPowers": []
+    },
+    {
+      "id": "gym2-13",
+      "name": "Misty's Gyarados",
+      "supertype": "Pokémon",
+      "ready": false,
+      "missingAttacks": [],
+      "missingPowers": [
+        "Rebellion"
+      ]
+    },
+    {
+      "id": "gym2-14",
+      "name": "Rocket's Mewtwo",
+      "supertype": "Pokémon",
+      "ready": false,
+      "missingAttacks": [
+        "Juxtapose"
+      ],
+      "missingPowers": []
+    },
+    {
+      "id": "gym2-15",
+      "name": "Rocket's Zapdos",
+      "supertype": "Pokémon",
+      "ready": false,
+      "missingAttacks": [
+        "Plasma",
+        "Electroburn"
+      ],
+      "missingPowers": []
+    },
+    {
+      "id": "gym2-17",
+      "name": "Blaine",
+      "supertype": "Trainer",
+      "ready": true,
+      "missingAttacks": [],
+      "missingPowers": []
+    },
+    {
+      "id": "gym2-18",
+      "name": "Giovanni",
+      "supertype": "Trainer",
+      "ready": true,
+      "missingAttacks": [],
+      "missingPowers": []
+    },
+    {
+      "id": "gym2-19",
+      "name": "Koga",
+      "supertype": "Trainer",
+      "ready": true,
+      "missingAttacks": [],
+      "missingPowers": []
+    },
+    {
+      "id": "gym2-20",
+      "name": "Sabrina",
+      "supertype": "Trainer",
+      "ready": true,
+      "missingAttacks": [],
+      "missingPowers": []
+    },
+    {
+      "id": "gym2-21",
+      "name": "Blaine's Ninetales",
+      "supertype": "Pokémon",
+      "ready": false,
+      "missingAttacks": [
+        "Burn Up"
+      ],
+      "missingPowers": [
+        "Healing Fire"
+      ]
+    },
+    {
+      "id": "gym2-22",
+      "name": "Brock's Dugtrio",
+      "supertype": "Pokémon",
+      "ready": false,
+      "missingAttacks": [
+        "Lie Low",
+        "Earthdrill"
+      ],
+      "missingPowers": []
+    },
+    {
+      "id": "gym2-23",
+      "name": "Giovanni's Nidoqueen",
+      "supertype": "Pokémon",
+      "ready": false,
+      "missingAttacks": [
+        "Love Lariat"
+      ],
+      "missingPowers": []
+    },
+    {
+      "id": "gym2-24",
+      "name": "Giovanni's Pinsir",
+      "supertype": "Pokémon",
+      "ready": false,
+      "missingAttacks": [
+        "Overhead Toss"
+      ],
+      "missingPowers": []
+    },
+    {
+      "id": "gym2-25",
+      "name": "Koga's Arbok",
+      "supertype": "Pokémon",
+      "ready": false,
+      "missingAttacks": [
+        "Poison Buildup",
+        "Poison Power"
+      ],
+      "missingPowers": []
+    },
+    {
+      "id": "gym2-26",
+      "name": "Koga's Muk",
+      "supertype": "Pokémon",
+      "ready": false,
+      "missingAttacks": [],
+      "missingPowers": [
+        "Energy Drain"
+      ]
+    },
+    {
+      "id": "gym2-27",
+      "name": "Koga's Pidgeotto",
+      "supertype": "Pokémon",
+      "ready": false,
+      "missingAttacks": [
+        "Aerial Maneuvers"
+      ],
+      "missingPowers": []
+    },
+    {
+      "id": "gym2-28",
+      "name": "Lt. Surge's Jolteon",
+      "supertype": "Pokémon",
+      "ready": false,
+      "missingAttacks": [
+        "High Voltage",
+        "Thunder Flare"
+      ],
+      "missingPowers": []
+    },
+    {
+      "id": "gym2-29",
+      "name": "Sabrina's Gengar",
+      "supertype": "Pokémon",
+      "ready": false,
+      "missingAttacks": [
+        "Dark Wave",
+        "Shadow Bind"
+      ],
+      "missingPowers": []
+    },
+    {
+      "id": "gym2-30",
+      "name": "Sabrina's Golduck",
+      "supertype": "Pokémon",
+      "ready": false,
+      "missingAttacks": [
+        "Damage Shift"
+      ],
+      "missingPowers": []
+    },
+    {
+      "id": "gym2-34",
+      "name": "Brock's Graveler",
+      "supertype": "Pokémon",
+      "ready": false,
+      "missingAttacks": [
+        "Detonate"
+      ],
+      "missingPowers": []
+    },
+    {
+      "id": "gym2-35",
+      "name": "Brock's Primeape",
+      "supertype": "Pokémon",
+      "ready": false,
+      "missingAttacks": [
+        "Mega Thrash"
+      ],
+      "missingPowers": [
+        "Scram"
+      ]
+    },
+    {
+      "id": "gym2-36",
+      "name": "Brock's Sandslash",
+      "supertype": "Pokémon",
+      "ready": true,
+      "missingAttacks": [],
+      "missingPowers": []
+    },
+    {
+      "id": "gym2-37",
+      "name": "Brock's Vulpix",
+      "supertype": "Pokémon",
+      "ready": true,
+      "missingAttacks": [],
+      "missingPowers": []
+    },
+    {
+      "id": "gym2-38",
+      "name": "Erika's Bellsprout",
+      "supertype": "Pokémon",
+      "ready": false,
+      "missingAttacks": [
+        "Stretch Vine"
+      ],
+      "missingPowers": [
+        "Soak Up"
+      ]
+    },
+    {
+      "id": "gym2-39",
+      "name": "Erika's Bulbasaur",
+      "supertype": "Pokémon",
+      "ready": false,
+      "missingAttacks": [
+        "Errand-Running"
+      ],
+      "missingPowers": []
+    },
+    {
+      "id": "gym2-40",
+      "name": "Erika's Clefairy",
+      "supertype": "Pokémon",
+      "ready": false,
+      "missingAttacks": [
+        "Lunar Power"
+      ],
+      "missingPowers": []
+    },
+    {
+      "id": "gym2-41",
+      "name": "Erika's Ivysaur",
+      "supertype": "Pokémon",
+      "ready": false,
+      "missingAttacks": [],
+      "missingPowers": [
+        "Relaxing Scent"
+      ]
+    },
+    {
+      "id": "gym2-46",
+      "name": "Koga's Golbat",
+      "supertype": "Pokémon",
+      "ready": true,
+      "missingAttacks": [],
+      "missingPowers": []
+    },
+    {
+      "id": "gym2-49",
+      "name": "Koga's Pidgey",
+      "supertype": "Pokémon",
+      "ready": false,
+      "missingAttacks": [
+        "Messenger"
+      ],
+      "missingPowers": []
+    },
+    {
+      "id": "gym2-51",
+      "name": "Lt. Surge's Eevee",
+      "supertype": "Pokémon",
+      "ready": false,
+      "missingAttacks": [
+        "Surprise"
+      ],
+      "missingPowers": []
+    },
+    {
+      "id": "gym2-52",
+      "name": "Lt. Surge's Electrode",
+      "supertype": "Pokémon",
+      "ready": false,
+      "missingAttacks": [
+        "Power Ball"
+      ],
+      "missingPowers": [
+        "Shock Blast"
+      ]
+    },
+    {
+      "id": "gym2-53",
+      "name": "Lt. Surge's Raticate",
+      "supertype": "Pokémon",
+      "ready": false,
+      "missingAttacks": [
+        "Focus Energy"
+      ],
+      "missingPowers": []
+    },
+    {
+      "id": "gym2-54",
+      "name": "Misty's Dewgong",
+      "supertype": "Pokémon",
+      "ready": false,
+      "missingAttacks": [
+        "Ice Throw"
+      ],
+      "missingPowers": []
+    },
+    {
+      "id": "gym2-56",
+      "name": "Sabrina's Hypno",
+      "supertype": "Pokémon",
+      "ready": false,
+      "missingAttacks": [
+        "Invigorate",
+        "Pendulum Curse"
+      ],
+      "missingPowers": []
+    },
+    {
+      "id": "gym2-59",
+      "name": "Sabrina's Mr. Mime",
+      "supertype": "Pokémon",
+      "ready": false,
+      "missingAttacks": [
+        "Magic Darts"
+      ],
+      "missingPowers": []
+    },
+    {
+      "id": "gym2-63",
+      "name": "Blaine's Mankey",
+      "supertype": "Pokémon",
+      "ready": false,
+      "missingAttacks": [
+        "Pranks"
+      ],
+      "missingPowers": []
+    },
+    {
+      "id": "gym2-65",
+      "name": "Blaine's Rhyhorn",
+      "supertype": "Pokémon",
+      "ready": false,
+      "missingAttacks": [
+        "Overrun"
+      ],
+      "missingPowers": []
+    },
+    {
+      "id": "gym2-67",
+      "name": "Brock's Diglett",
+      "supertype": "Pokémon",
+      "ready": true,
+      "missingAttacks": [],
+      "missingPowers": []
+    },
+    {
+      "id": "gym2-68",
+      "name": "Brock's Geodude",
+      "supertype": "Pokémon",
+      "ready": true,
+      "missingAttacks": [],
+      "missingPowers": []
+    },
+    {
+      "id": "gym2-69",
+      "name": "Erika's Jigglypuff",
+      "supertype": "Pokémon",
+      "ready": false,
+      "missingAttacks": [
+        "Group Therapy",
+        "Pulled Punch"
+      ],
+      "missingPowers": []
+    },
+    {
+      "id": "gym2-70",
+      "name": "Erika's Oddish",
+      "supertype": "Pokémon",
+      "ready": true,
+      "missingAttacks": [],
+      "missingPowers": []
+    },
+    {
+      "id": "gym2-71",
+      "name": "Erika's Paras",
+      "supertype": "Pokémon",
+      "ready": false,
+      "missingAttacks": [
+        "Poison Spore"
+      ],
+      "missingPowers": []
+    },
+    {
+      "id": "gym2-73",
+      "name": "Giovanni's Magikarp",
+      "supertype": "Pokémon",
+      "ready": false,
+      "missingAttacks": [
+        "Ancestral Memory"
+      ],
+      "missingPowers": []
+    },
+    {
+      "id": "gym2-81",
+      "name": "Koga's Tangela",
+      "supertype": "Pokémon",
+      "ready": false,
+      "missingAttacks": [
+        "Grasping Vine"
+      ],
+      "missingPowers": []
+    },
+    {
+      "id": "gym2-83",
+      "name": "Koga's Zubat",
+      "supertype": "Pokémon",
+      "ready": false,
+      "missingAttacks": [
+        "Group Attack"
+      ],
+      "missingPowers": []
+    },
+    {
+      "id": "gym2-84",
+      "name": "Lt. Surge's Pikachu",
+      "supertype": "Pokémon",
+      "ready": true,
+      "missingAttacks": [],
+      "missingPowers": []
+    },
+    {
+      "id": "gym2-85",
+      "name": "Lt. Surge's Rattata",
+      "supertype": "Pokémon",
+      "ready": false,
+      "missingAttacks": [
+        "Focus Energy"
+      ],
+      "missingPowers": []
+    },
+    {
+      "id": "gym2-86",
+      "name": "Lt. Surge's Voltorb",
+      "supertype": "Pokémon",
+      "ready": true,
+      "missingAttacks": [],
+      "missingPowers": []
+    },
+    {
+      "id": "gym2-87",
+      "name": "Misty's Horsea",
+      "supertype": "Pokémon",
+      "ready": false,
+      "missingAttacks": [
+        "Ink Spurt"
+      ],
+      "missingPowers": []
+    },
+    {
+      "id": "gym2-88",
+      "name": "Misty's Magikarp",
+      "supertype": "Pokémon",
+      "ready": false,
+      "missingAttacks": [
+        "Play Dead"
+      ],
+      "missingPowers": []
+    },
+    {
+      "id": "gym2-89",
+      "name": "Misty's Poliwag",
+      "supertype": "Pokémon",
+      "ready": false,
+      "missingAttacks": [
+        "Bubbles",
+        "Amnesia"
+      ],
+      "missingPowers": []
+    },
+    {
+      "id": "gym2-90",
+      "name": "Misty's Psyduck",
+      "supertype": "Pokémon",
+      "ready": false,
+      "missingAttacks": [
+        "ESP"
+      ],
+      "missingPowers": []
+    },
+    {
+      "id": "gym2-91",
+      "name": "Misty's Seel",
+      "supertype": "Pokémon",
+      "ready": false,
+      "missingAttacks": [
+        "Frostbite"
+      ],
+      "missingPowers": []
+    },
+    {
+      "id": "gym2-92",
+      "name": "Misty's Staryu",
+      "supertype": "Pokémon",
+      "ready": false,
+      "missingAttacks": [
+        "Star Boomerang"
+      ],
+      "missingPowers": []
+    },
+    {
+      "id": "gym2-97",
+      "name": "Sabrina's Gastly",
+      "supertype": "Pokémon",
+      "ready": false,
+      "missingAttacks": [],
+      "missingPowers": [
+        "Gaseous Form"
+      ]
+    },
+    {
+      "id": "gym2-99",
+      "name": "Sabrina's Psyduck",
+      "supertype": "Pokémon",
+      "ready": false,
+      "missingAttacks": [
+        "Random ESP"
+      ],
+      "missingPowers": []
+    },
+    {
+      "id": "gym2-101",
+      "name": "Brock's Protection",
+      "supertype": "Trainer",
+      "ready": false,
+      "missingAttacks": [],
+      "missingPowers": []
+    },
+    {
+      "id": "gym2-102",
+      "name": "Chaos Gym",
+      "supertype": "Trainer",
+      "ready": false,
+      "missingAttacks": [],
+      "missingPowers": []
+    },
+    {
+      "id": "gym2-103",
+      "name": "Erika's Kindness",
+      "supertype": "Trainer",
+      "ready": false,
+      "missingAttacks": [],
+      "missingPowers": []
+    },
+    {
+      "id": "gym2-105",
+      "name": "Giovanni's Last Resort",
+      "supertype": "Trainer",
+      "ready": false,
+      "missingAttacks": [],
+      "missingPowers": []
+    },
+    {
+      "id": "gym2-107",
+      "name": "Lt. Surge's Secret Plan",
+      "supertype": "Trainer",
+      "ready": false,
+      "missingAttacks": [],
+      "missingPowers": []
+    },
+    {
+      "id": "gym2-108",
+      "name": "Misty's Wish",
+      "supertype": "Trainer",
+      "ready": false,
+      "missingAttacks": [],
+      "missingPowers": []
+    },
+    {
+      "id": "gym2-109",
+      "name": "Resistance Gym",
+      "supertype": "Trainer",
+      "ready": false,
+      "missingAttacks": [],
+      "missingPowers": []
+    },
+    {
+      "id": "gym2-111",
+      "name": "Blaine's Quiz #2",
+      "supertype": "Trainer",
+      "ready": false,
+      "missingAttacks": [],
+      "missingPowers": []
+    },
+    {
+      "id": "gym2-112",
+      "name": "Blaine's Quiz #3",
+      "supertype": "Trainer",
+      "ready": false,
+      "missingAttacks": [],
+      "missingPowers": []
+    },
+    {
+      "id": "gym2-115",
+      "name": "Koga's Ninja Trick",
+      "supertype": "Trainer",
+      "ready": false,
+      "missingAttacks": [],
+      "missingPowers": []
+    },
+    {
+      "id": "gym2-116",
+      "name": "Master Ball",
+      "supertype": "Trainer",
+      "ready": false,
+      "missingAttacks": [],
+      "missingPowers": []
+    },
+    {
+      "id": "gym2-118",
+      "name": "Misty's Tears",
+      "supertype": "Trainer",
+      "ready": false,
+      "missingAttacks": [],
+      "missingPowers": []
+    },
+    {
+      "id": "gym2-119",
+      "name": "Rocket's Minefield Gym",
+      "supertype": "Trainer",
+      "ready": false,
+      "missingAttacks": [],
+      "missingPowers": []
+    },
+    {
+      "id": "gym2-120",
+      "name": "Rocket's Secret Experiment",
+      "supertype": "Trainer",
+      "ready": false,
+      "missingAttacks": [],
+      "missingPowers": []
+    },
+    {
+      "id": "gym2-125",
+      "name": "Transparent Walls",
+      "supertype": "Trainer",
+      "ready": false,
+      "missingAttacks": [],
+      "missingPowers": []
+    },
+    {
+      "id": "gym2-130",
+      "name": "Lightning Energy",
+      "supertype": "Energy",
+      "ready": true,
+      "missingAttacks": [],
+      "missingPowers": []
+    },
+    {
+      "id": "gym2-132",
+      "name": "Water Energy",
+      "supertype": "Energy",
+      "ready": true,
+      "missingAttacks": [],
+      "missingPowers": []
+    }
+  ],
+  "sampleDecks": {
+    "gym_new_garden": {
+      "size": 60,
+      "unique": 15,
+      "validation": {
+        "valid": true,
+        "errors": [],
+        "total": 60,
+        "basic": 24,
+        "unsupported": 0,
+        "distinct": 15
+      },
+      "newGymPrintings": [
+        "gym1-22",
+        "gym2-67",
+        "gym2-68",
+        "gym1-74",
+        "gym1-75",
+        "gym2-70",
+        "gym1-36"
+      ]
+    },
+    "gym_new_voltage": {
+      "size": 60,
+      "unique": 15,
+      "validation": {
+        "valid": true,
+        "errors": [],
+        "total": 60,
+        "basic": 24,
+        "unsupported": 0,
+        "distinct": 15
+      },
+      "newGymPrintings": [
+        "gym1-35",
+        "gym1-63",
+        "gym1-73",
+        "gym2-37",
+        "gym2-84",
+        "gym2-86",
+        "gym1-36"
+      ]
+    }
+  }
+}

@@ -1,0 +1,21 @@
+Neo Campus Gym Compatibility v0.24 release checks
+Date: 2026-10-16
+
+PASS curated Gym attack effects: 36 newly implemented printed attacks with full reducer and outcome tests
+PASS Gym Pokémon Powers: Energy Charge, Strange Barrier, Call the Boss (activated/passive/on-evolution)
+PASS Base Set 2 normalized reprints: all four retail themes have executable attack programs, corrected damage signs retained
+PASS expanded Gym pool: 705 indexed cards, 157 additional Gym printings, 2 new legal decks, 8 authoritative duel openings, custom deck legality, old formats preserved, HTTP endpoints, private hands.
+PASS Neo Genesis retail decks: 2 exact 60-card lists, 33 curated Neo printings, 36/42 attack programs, 5 Trainer effects, Baby rule, Power, strict pool, local duel startup and hidden hands.
+PASS Neo Genesis: all newly migrated attack families executed through reducer
+PASS Neo Discovery: 2 60-card themes, 22 new printings, 29/33 compiled attacks, four Trainer interactions, setup, hidden hands, Baby Pokémon and spread damage
+PASS Neo Discovery: all 9 newly compiled attack families executed by authoritative reducer
+PASS Online browser assets: 46 referenced DOM IDs, syntax check, player-relative view, server authority and token storage
+PASS Online: hosted pages, invite code, room security, two-human setup, hidden hands, ready/start, stale actions, no CPU, 60-card conservation
+PASS Online reactive decisions: guest chooses during host turn; protected options, wrong-actor rejection, game resumes, 60 cards preserved
+PASS Online mixed-deck matrix: 30 human-vs-human starts, every theme deck, mixed expansions, private hands, 60-card conservation
+PASS Gym v0.24: 44 new attacks executed, 9 trainer decision flows, Power actions and state checks
+PASS Gym choice migration: 11 real multi-stage attack decisions and invalid-choice rollback
+PASS Gym reactive Powers: Healing Fire and Fortitude both coin outcomes
+PASS Gym Stadiums: Training, No Removal, Minefield errata, Resistance, Transparent Walls
+PASS legacy Trainer preflights reject impossible Energy Retrieval and Sabrina resolutions atomically
+PASS Gym mixed CPU integrations: 32 bounded sessions; 1442 authoritative actions; 353 attacks; 220 choices; 126 end turns; conservation and private-state guards

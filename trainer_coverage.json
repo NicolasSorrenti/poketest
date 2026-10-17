@@ -1,0 +1,908 @@
+{
+  "summary": {
+    "totalCards": 178,
+    "uniqueNames": 143,
+    "counts": {
+      "handler": 170,
+      "partial": 8
+    },
+    "legend": {
+      "handler": "An effect handler exists, but not exhaustively verified",
+      "partial": "Handler or major functionality exists but known timing/choices are incomplete",
+      "stadium-placement-only": "Stadium enters play, but its effect is not implemented",
+      "unimplemented": "No working effect handler"
+    }
+  },
+  "records": [
+    {
+      "id": "base1-71",
+      "name": "Computer Search",
+      "status": "handler"
+    },
+    {
+      "id": "base1-72",
+      "name": "Devolution Spray",
+      "status": "handler"
+    },
+    {
+      "id": "base1-73",
+      "name": "Impostor Professor Oak",
+      "status": "handler"
+    },
+    {
+      "id": "base1-74",
+      "name": "Item Finder",
+      "status": "handler"
+    },
+    {
+      "id": "base1-75",
+      "name": "Lass",
+      "status": "handler"
+    },
+    {
+      "id": "base1-76",
+      "name": "Pokémon Breeder",
+      "status": "handler"
+    },
+    {
+      "id": "base1-77",
+      "name": "Pokémon Trader",
+      "status": "handler"
+    },
+    {
+      "id": "base1-78",
+      "name": "Scoop Up",
+      "status": "handler"
+    },
+    {
+      "id": "base1-79",
+      "name": "Super Energy Removal",
+      "status": "handler"
+    },
+    {
+      "id": "base1-80",
+      "name": "Defender",
+      "status": "handler"
+    },
+    {
+      "id": "base1-81",
+      "name": "Energy Retrieval",
+      "status": "handler"
+    },
+    {
+      "id": "base1-82",
+      "name": "Full Heal",
+      "status": "handler"
+    },
+    {
+      "id": "base1-83",
+      "name": "Maintenance",
+      "status": "handler"
+    },
+    {
+      "id": "base1-84",
+      "name": "PlusPower",
+      "status": "handler"
+    },
+    {
+      "id": "base1-85",
+      "name": "Pokémon Center",
+      "status": "handler"
+    },
+    {
+      "id": "base1-86",
+      "name": "Pokémon Flute",
+      "status": "handler"
+    },
+    {
+      "id": "base1-87",
+      "name": "Pokédex",
+      "status": "handler"
+    },
+    {
+      "id": "base1-88",
+      "name": "Professor Oak",
+      "status": "handler"
+    },
+    {
+      "id": "base1-89",
+      "name": "Revive",
+      "status": "handler"
+    },
+    {
+      "id": "base1-90",
+      "name": "Super Potion",
+      "status": "handler"
+    },
+    {
+      "id": "base1-91",
+      "name": "Bill",
+      "status": "handler"
+    },
+    {
+      "id": "base1-92",
+      "name": "Energy Removal",
+      "status": "handler"
+    },
+    {
+      "id": "base1-93",
+      "name": "Gust of Wind",
+      "status": "handler"
+    },
+    {
+      "id": "base1-94",
+      "name": "Potion",
+      "status": "handler"
+    },
+    {
+      "id": "base1-95",
+      "name": "Switch",
+      "status": "handler"
+    },
+    {
+      "id": "base2-64",
+      "name": "Poké Ball",
+      "status": "handler"
+    },
+    {
+      "id": "base3-58",
+      "name": "Mr. Fuji",
+      "status": "handler"
+    },
+    {
+      "id": "base3-59",
+      "name": "Energy Search",
+      "status": "handler"
+    },
+    {
+      "id": "base3-60",
+      "name": "Gambler",
+      "status": "handler"
+    },
+    {
+      "id": "base3-61",
+      "name": "Recycle",
+      "status": "handler"
+    },
+    {
+      "id": "base4-101",
+      "name": "Computer Search",
+      "status": "handler"
+    },
+    {
+      "id": "base4-102",
+      "name": "Impostor Professor Oak",
+      "status": "handler"
+    },
+    {
+      "id": "base4-103",
+      "name": "Item Finder",
+      "status": "handler"
+    },
+    {
+      "id": "base4-104",
+      "name": "Lass",
+      "status": "handler"
+    },
+    {
+      "id": "base4-105",
+      "name": "Pokémon Breeder",
+      "status": "handler"
+    },
+    {
+      "id": "base4-106",
+      "name": "Pokémon Trader",
+      "status": "handler"
+    },
+    {
+      "id": "base4-107",
+      "name": "Scoop Up",
+      "status": "handler"
+    },
+    {
+      "id": "base4-108",
+      "name": "Super Energy Removal",
+      "status": "handler"
+    },
+    {
+      "id": "base4-109",
+      "name": "Defender",
+      "status": "handler"
+    },
+    {
+      "id": "base4-110",
+      "name": "Energy Retrieval",
+      "status": "handler"
+    },
+    {
+      "id": "base4-111",
+      "name": "Full Heal",
+      "status": "handler"
+    },
+    {
+      "id": "base4-112",
+      "name": "Maintenance",
+      "status": "handler"
+    },
+    {
+      "id": "base4-113",
+      "name": "PlusPower",
+      "status": "handler"
+    },
+    {
+      "id": "base4-114",
+      "name": "Pokémon Center",
+      "status": "handler"
+    },
+    {
+      "id": "base4-115",
+      "name": "Pokédex",
+      "status": "handler"
+    },
+    {
+      "id": "base4-116",
+      "name": "Professor Oak",
+      "status": "handler"
+    },
+    {
+      "id": "base4-117",
+      "name": "Super Potion",
+      "status": "handler"
+    },
+    {
+      "id": "base4-118",
+      "name": "Bill",
+      "status": "handler"
+    },
+    {
+      "id": "base4-119",
+      "name": "Energy Removal",
+      "status": "handler"
+    },
+    {
+      "id": "base4-120",
+      "name": "Gust of Wind",
+      "status": "handler"
+    },
+    {
+      "id": "base4-121",
+      "name": "Poké Ball",
+      "status": "handler"
+    },
+    {
+      "id": "base4-122",
+      "name": "Potion",
+      "status": "handler"
+    },
+    {
+      "id": "base4-123",
+      "name": "Switch",
+      "status": "handler"
+    },
+    {
+      "id": "base5-15",
+      "name": "Here Comes Team Rocket!",
+      "status": "handler"
+    },
+    {
+      "id": "base5-16",
+      "name": "Rocket's Sneak Attack",
+      "status": "handler"
+    },
+    {
+      "id": "base5-71",
+      "name": "Here Comes Team Rocket!",
+      "status": "handler"
+    },
+    {
+      "id": "base5-72",
+      "name": "Rocket's Sneak Attack",
+      "status": "handler"
+    },
+    {
+      "id": "base5-73",
+      "name": "The Boss's Way",
+      "status": "handler"
+    },
+    {
+      "id": "base5-74",
+      "name": "Challenge!",
+      "status": "handler"
+    },
+    {
+      "id": "base5-75",
+      "name": "Digger",
+      "status": "handler"
+    },
+    {
+      "id": "base5-76",
+      "name": "Imposter Oak's Revenge",
+      "status": "handler"
+    },
+    {
+      "id": "base5-77",
+      "name": "Nightly Garbage Run",
+      "status": "handler"
+    },
+    {
+      "id": "base5-78",
+      "name": "Goop Gas Attack",
+      "status": "handler"
+    },
+    {
+      "id": "base5-79",
+      "name": "Sleep!",
+      "status": "handler"
+    },
+    {
+      "id": "basep-16",
+      "name": "Computer Error",
+      "status": "handler"
+    },
+    {
+      "id": "basep-40",
+      "name": "Pokémon Center",
+      "status": "handler"
+    },
+    {
+      "id": "basep-41",
+      "name": "Lucky Stadium",
+      "status": "handler"
+    },
+    {
+      "id": "basep-42",
+      "name": "Pokémon Tower",
+      "status": "handler"
+    },
+    {
+      "id": "gym1-15",
+      "name": "Brock",
+      "status": "handler"
+    },
+    {
+      "id": "gym1-16",
+      "name": "Erika",
+      "status": "handler"
+    },
+    {
+      "id": "gym1-17",
+      "name": "Lt. Surge",
+      "status": "handler"
+    },
+    {
+      "id": "gym1-18",
+      "name": "Misty",
+      "status": "handler"
+    },
+    {
+      "id": "gym1-19",
+      "name": "The Rocket's Trap",
+      "status": "handler"
+    },
+    {
+      "id": "gym1-97",
+      "name": "Blaine's Quiz #1",
+      "status": "handler"
+    },
+    {
+      "id": "gym1-98",
+      "name": "Brock",
+      "status": "handler"
+    },
+    {
+      "id": "gym1-99",
+      "name": "Charity",
+      "status": "partial"
+    },
+    {
+      "id": "gym1-100",
+      "name": "Erika",
+      "status": "handler"
+    },
+    {
+      "id": "gym1-101",
+      "name": "Lt. Surge",
+      "status": "handler"
+    },
+    {
+      "id": "gym1-102",
+      "name": "Misty",
+      "status": "handler"
+    },
+    {
+      "id": "gym1-103",
+      "name": "No Removal Gym",
+      "status": "handler"
+    },
+    {
+      "id": "gym1-104",
+      "name": "The Rocket's Training Gym",
+      "status": "handler"
+    },
+    {
+      "id": "gym1-105",
+      "name": "Blaine's Last Resort",
+      "status": "handler"
+    },
+    {
+      "id": "gym1-106",
+      "name": "Brock's Training Method",
+      "status": "handler"
+    },
+    {
+      "id": "gym1-107",
+      "name": "Celadon City Gym",
+      "status": "handler"
+    },
+    {
+      "id": "gym1-108",
+      "name": "Cerulean City Gym",
+      "status": "handler"
+    },
+    {
+      "id": "gym1-109",
+      "name": "Erika's Maids",
+      "status": "handler"
+    },
+    {
+      "id": "gym1-110",
+      "name": "Erika's Perfume",
+      "status": "handler"
+    },
+    {
+      "id": "gym1-111",
+      "name": "Good Manners",
+      "status": "handler"
+    },
+    {
+      "id": "gym1-112",
+      "name": "Lt. Surge's Treaty",
+      "status": "handler"
+    },
+    {
+      "id": "gym1-113",
+      "name": "Minion of Team Rocket",
+      "status": "handler"
+    },
+    {
+      "id": "gym1-114",
+      "name": "Misty's Wrath",
+      "status": "handler"
+    },
+    {
+      "id": "gym1-115",
+      "name": "Pewter City Gym",
+      "status": "handler"
+    },
+    {
+      "id": "gym1-116",
+      "name": "Recall",
+      "status": "handler"
+    },
+    {
+      "id": "gym1-117",
+      "name": "Sabrina's ESP",
+      "status": "partial"
+    },
+    {
+      "id": "gym1-118",
+      "name": "Secret Mission",
+      "status": "handler"
+    },
+    {
+      "id": "gym1-119",
+      "name": "Tickling Machine",
+      "status": "handler"
+    },
+    {
+      "id": "gym1-120",
+      "name": "Vermilion City Gym",
+      "status": "handler"
+    },
+    {
+      "id": "gym1-121",
+      "name": "Blaine's Gamble",
+      "status": "handler"
+    },
+    {
+      "id": "gym1-122",
+      "name": "Energy Flow",
+      "status": "handler"
+    },
+    {
+      "id": "gym1-123",
+      "name": "Misty's Duel",
+      "status": "handler"
+    },
+    {
+      "id": "gym1-124",
+      "name": "Narrow Gym",
+      "status": "handler"
+    },
+    {
+      "id": "gym1-125",
+      "name": "Sabrina's Gaze",
+      "status": "handler"
+    },
+    {
+      "id": "gym1-126",
+      "name": "Trash Exchange",
+      "status": "handler"
+    },
+    {
+      "id": "gym2-17",
+      "name": "Blaine",
+      "status": "handler"
+    },
+    {
+      "id": "gym2-18",
+      "name": "Giovanni",
+      "status": "handler"
+    },
+    {
+      "id": "gym2-19",
+      "name": "Koga",
+      "status": "handler"
+    },
+    {
+      "id": "gym2-20",
+      "name": "Sabrina",
+      "status": "handler"
+    },
+    {
+      "id": "gym2-100",
+      "name": "Blaine",
+      "status": "handler"
+    },
+    {
+      "id": "gym2-101",
+      "name": "Brock's Protection",
+      "status": "partial"
+    },
+    {
+      "id": "gym2-102",
+      "name": "Chaos Gym",
+      "status": "partial"
+    },
+    {
+      "id": "gym2-103",
+      "name": "Erika's Kindness",
+      "status": "handler"
+    },
+    {
+      "id": "gym2-104",
+      "name": "Giovanni",
+      "status": "handler"
+    },
+    {
+      "id": "gym2-105",
+      "name": "Giovanni's Last Resort",
+      "status": "handler"
+    },
+    {
+      "id": "gym2-106",
+      "name": "Koga",
+      "status": "handler"
+    },
+    {
+      "id": "gym2-107",
+      "name": "Lt. Surge's Secret Plan",
+      "status": "partial"
+    },
+    {
+      "id": "gym2-108",
+      "name": "Misty's Wish",
+      "status": "handler"
+    },
+    {
+      "id": "gym2-109",
+      "name": "Resistance Gym",
+      "status": "handler"
+    },
+    {
+      "id": "gym2-110",
+      "name": "Sabrina",
+      "status": "handler"
+    },
+    {
+      "id": "gym2-111",
+      "name": "Blaine's Quiz #2",
+      "status": "handler"
+    },
+    {
+      "id": "gym2-112",
+      "name": "Blaine's Quiz #3",
+      "status": "handler"
+    },
+    {
+      "id": "gym2-113",
+      "name": "Cinnabar City Gym",
+      "status": "handler"
+    },
+    {
+      "id": "gym2-114",
+      "name": "Fuchsia City Gym",
+      "status": "handler"
+    },
+    {
+      "id": "gym2-115",
+      "name": "Koga's Ninja Trick",
+      "status": "partial"
+    },
+    {
+      "id": "gym2-116",
+      "name": "Master Ball",
+      "status": "handler"
+    },
+    {
+      "id": "gym2-117",
+      "name": "Max Revive",
+      "status": "handler"
+    },
+    {
+      "id": "gym2-118",
+      "name": "Misty's Tears",
+      "status": "handler"
+    },
+    {
+      "id": "gym2-119",
+      "name": "Rocket's Minefield Gym",
+      "status": "handler"
+    },
+    {
+      "id": "gym2-120",
+      "name": "Rocket's Secret Experiment",
+      "status": "handler"
+    },
+    {
+      "id": "gym2-121",
+      "name": "Sabrina's Psychic Control",
+      "status": "partial"
+    },
+    {
+      "id": "gym2-122",
+      "name": "Saffron City Gym",
+      "status": "handler"
+    },
+    {
+      "id": "gym2-123",
+      "name": "Viridian City Gym",
+      "status": "handler"
+    },
+    {
+      "id": "gym2-124",
+      "name": "Fervor",
+      "status": "handler"
+    },
+    {
+      "id": "gym2-125",
+      "name": "Transparent Walls",
+      "status": "handler"
+    },
+    {
+      "id": "gym2-126",
+      "name": "Warp Point",
+      "status": "handler"
+    },
+    {
+      "id": "neo1-83",
+      "name": "Arcade Game",
+      "status": "handler"
+    },
+    {
+      "id": "neo1-84",
+      "name": "Ecogym",
+      "status": "handler"
+    },
+    {
+      "id": "neo1-85",
+      "name": "Energy Charge",
+      "status": "handler"
+    },
+    {
+      "id": "neo1-86",
+      "name": "Focus Band",
+      "status": "handler"
+    },
+    {
+      "id": "neo1-87",
+      "name": "Mary",
+      "status": "handler"
+    },
+    {
+      "id": "neo1-88",
+      "name": "PokéGear",
+      "status": "handler"
+    },
+    {
+      "id": "neo1-89",
+      "name": "Super Energy Retrieval",
+      "status": "handler"
+    },
+    {
+      "id": "neo1-90",
+      "name": "Time Capsule",
+      "status": "handler"
+    },
+    {
+      "id": "neo1-91",
+      "name": "Bill's Teleporter",
+      "status": "handler"
+    },
+    {
+      "id": "neo1-92",
+      "name": "Card-Flip Game",
+      "status": "handler"
+    },
+    {
+      "id": "neo1-93",
+      "name": "Gold Berry",
+      "status": "handler"
+    },
+    {
+      "id": "neo1-94",
+      "name": "Miracle Berry",
+      "status": "handler"
+    },
+    {
+      "id": "neo1-95",
+      "name": "New Pokédex",
+      "status": "handler"
+    },
+    {
+      "id": "neo1-96",
+      "name": "Professor Elm",
+      "status": "handler"
+    },
+    {
+      "id": "neo1-97",
+      "name": "Sprout Tower",
+      "status": "handler"
+    },
+    {
+      "id": "neo1-98",
+      "name": "Super Scoop Up",
+      "status": "handler"
+    },
+    {
+      "id": "neo1-99",
+      "name": "Berry",
+      "status": "handler"
+    },
+    {
+      "id": "neo1-100",
+      "name": "Double Gust",
+      "status": "handler"
+    },
+    {
+      "id": "neo1-101",
+      "name": "Moo-Moo Milk",
+      "status": "handler"
+    },
+    {
+      "id": "neo1-102",
+      "name": "Pokémon March",
+      "status": "handler"
+    },
+    {
+      "id": "neo1-103",
+      "name": "Super Rod",
+      "status": "handler"
+    },
+    {
+      "id": "neo2-72",
+      "name": "Fossil Egg",
+      "status": "handler"
+    },
+    {
+      "id": "neo2-73",
+      "name": "Hyper Devolution Spray",
+      "status": "handler"
+    },
+    {
+      "id": "neo2-74",
+      "name": "Ruin Wall",
+      "status": "handler"
+    },
+    {
+      "id": "neo2-75",
+      "name": "Energy Ark",
+      "status": "handler"
+    },
+    {
+      "id": "neo3-60",
+      "name": "Balloon Berry",
+      "status": "handler"
+    },
+    {
+      "id": "neo3-61",
+      "name": "Healing Field",
+      "status": "handler"
+    },
+    {
+      "id": "neo3-62",
+      "name": "Pokémon Breeder Fields",
+      "status": "handler"
+    },
+    {
+      "id": "neo3-63",
+      "name": "Rocket's Hideout",
+      "status": "handler"
+    },
+    {
+      "id": "neo3-64",
+      "name": "Old Rod",
+      "status": "handler"
+    },
+    {
+      "id": "neo4-92",
+      "name": "Broken Ground Gym",
+      "status": "handler"
+    },
+    {
+      "id": "neo4-93",
+      "name": "EXP.ALL",
+      "status": "partial"
+    },
+    {
+      "id": "neo4-94",
+      "name": "Impostor Professor Oak's Invention",
+      "status": "handler"
+    },
+    {
+      "id": "neo4-95",
+      "name": "Radio Tower",
+      "status": "handler"
+    },
+    {
+      "id": "neo4-96",
+      "name": "Thought Wave Machine (Rocket's Secret Machine)",
+      "status": "handler"
+    },
+    {
+      "id": "neo4-97",
+      "name": "Counterattack Claws",
+      "status": "handler"
+    },
+    {
+      "id": "neo4-98",
+      "name": "Energy Amplifier",
+      "status": "handler"
+    },
+    {
+      "id": "neo4-99",
+      "name": "Energy Stadium",
+      "status": "handler"
+    },
+    {
+      "id": "neo4-100",
+      "name": "Lucky Stadium",
+      "status": "handler"
+    },
+    {
+      "id": "neo4-101",
+      "name": "Magnifier",
+      "status": "handler"
+    },
+    {
+      "id": "neo4-102",
+      "name": "Pokémon Personality Test",
+      "status": "handler"
+    },
+    {
+      "id": "neo4-103",
+      "name": "Team Rocket's Evil Deeds",
+      "status": "handler"
+    },
+    {
+      "id": "neo4-104",
+      "name": "Heal Powder",
+      "status": "handler"
+    },
+    {
+      "id": "neo4-105",
+      "name": "Mail from Bill",
+      "status": "handler"
+    }
+  ]
+}
