@@ -9,22 +9,24 @@ const {driveSide,configuration}=require('./cpu_policy');
 const {ClassicLocalService}=require('./classic_local_service');
 
 function argumentsOf(argv){
- const opts={pairs:8,maxTurns:90,seed:7391,leftLevel:5,rightLevel:1,personality:'balanced',leftDeck:'blackout',rightDeck:'blackout',leftPlanning:null,rightPlanning:null,leftEvolutionTempo:null,rightEvolutionTempo:null,leftPrizeRace:null,rightPrizeRace:null,logs:null};
+ const opts={pairs:8,maxTurns:90,seed:7391,leftLevel:5,rightLevel:1,personality:'balanced',leftDeck:'blackout',rightDeck:'blackout',leftPlanning:null,rightPlanning:null,leftEvolutionTempo:null,rightEvolutionTempo:null,leftPrizeRace:null,rightPrizeRace:null,targetUpsetRate:0.05,logs:null};
  const keys={'--pairs':'pairs','--max-turns':'maxTurns','--seed':'seed','--left-level':'leftLevel','--right-level':'rightLevel',
   '--personality':'personality','--left-deck':'leftDeck','--right-deck':'rightDeck',
   '--left-planning':'leftPlanning','--right-planning':'rightPlanning',
   '--left-evolution-tempo':'leftEvolutionTempo','--right-evolution-tempo':'rightEvolutionTempo',
-  '--left-prize-race':'leftPrizeRace','--right-prize-race':'rightPrizeRace','--logs':'logs'};
+  '--left-prize-race':'leftPrizeRace','--right-prize-race':'rightPrizeRace',
+  '--target-upset-rate':'targetUpsetRate','--logs':'logs'};
  for(let i=0;i<argv.length;i++){
   const k=keys[argv[i]];if(!k||i===argv.length-1)throw Error('Unknown or incomplete option '+argv[i]);
   const value=argv[++i];
   if(['leftPlanning','rightPlanning','leftEvolutionTempo','rightEvolutionTempo','leftPrizeRace','rightPrizeRace'].includes(k)){
    if(!['true','false'].includes(value))throw Error('Planning must be true or false');
    opts[k]=value==='true';
-  }else opts[k]=['pairs','maxTurns','seed','leftLevel','rightLevel'].includes(k)?Number(value):value;
+  }else opts[k]=['pairs','maxTurns','seed','leftLevel','rightLevel','targetUpsetRate'].includes(k)?Number(value):value;
  }
  if(!Number.isInteger(opts.pairs)||opts.pairs<1||opts.pairs>1000)throw Error('pairs must be between 1 and 1000');
  if(!Number.isInteger(opts.maxTurns)||opts.maxTurns<1||opts.maxTurns>1000)throw Error('Invalid max-turns');
+ if(!Number.isFinite(opts.targetUpsetRate)||opts.targetUpsetRate<0||opts.targetUpsetRate>=.5)throw Error('Invalid target upset rate');
  configuration({level:opts.leftLevel,personality:opts.personality,planning:opts.leftPlanning??undefined,evolutionTempo:opts.leftEvolutionTempo??undefined,prizeRace:opts.leftPrizeRace??undefined});
  configuration({level:opts.rightLevel,personality:opts.personality,planning:opts.rightPlanning??undefined,evolutionTempo:opts.rightEvolutionTempo??undefined,prizeRace:opts.rightPrizeRace??undefined});
  return opts;
@@ -112,12 +114,20 @@ function arena(opts){
    atLeastTwo:matches.filter(m=>m.stats.openingBenchByRole[role]>=2).length
   })),
   winRateConclusive:conclusive.length?wins/conclusive.length:null,confidence95Conclusive:wilson(wins,conclusive.length),
+  upsetTarget:{higherLevel:opts.leftLevel,lowerLevel:opts.rightLevel,targetMaximum:opts.targetUpsetRate,
+   applicable:opts.leftLevel>opts.rightLevel,
+   totalMatchUpsetRate:losses/matches.length,
+   decisiveUpsetRate:conclusive.length?losses/conclusive.length:null,
+   confidence95Decisive:wilson(losses,conclusive.length),
+   observedPass:opts.leftLevel>opts.rightLevel&&conclusive.length>0&&losses/conclusive.length<=opts.targetUpsetRate,
+   statisticallyVerified:opts.leftLevel>opts.rightLevel&&conclusive.length>0&&wilson(losses,conclusive.length).upper<=opts.targetUpsetRate,
+   note:'Zero lower-level wins does not establish a five-percent ceiling without enough matches; draws are separate.'},
   meanDecisionMs:totals.actions?totals.decisionsMs/totals.actions:null,
   averageTurns:totals.turnSerial/matches.length,totalActions:totals.actions,
   illegalActions:totals.illegalActions,rejectedProposals:totals.rejectedProposals,probedCandidates:totals.probedCandidates,
   attacks:totals.attacks,attachments:totals.attachments,
   evolutions:totals.evolutions,trainers:totals.trainers,
-  caveats:['Confidence interval excludes timeouts/draws','Same-deck paired games are not evidence of universal strength','Unported rule effects can distort outcomes','Illegal actions means executed invalid actions, not rejected legality probes']};
+  caveats:['Confidence interval excludes timeouts/draws','Same-deck paired games are not evidence of universal strength','Unported rule effects can distort outcomes','Illegal actions means executed invalid actions, not rejected legality probes','95% target applies to decisive games; Wilson upper confidence bound must be <=5% to claim statistically verified']};
  if(opts.logs)fs.writeFileSync(opts.logs,JSON.stringify({report,matches},null,2));
  return report;
 }
