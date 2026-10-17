@@ -30,7 +30,7 @@
  function registration(state){
   normalize(state);
   if(state.location!=='center'||state.day>90)return null;
-  return EVENTS.find(e=>e.day===state.day&&state.slot===0&&!state.tournament.completed[e.id]&&(!state.tournament.active||state.tournament.active.id===e.id))||null;
+  return EVENTS.find(e=>e.day===state.day&&state.slot<=1&&!state.tournament.completed[e.id]&&(!state.tournament.active||state.tournament.active.id===e.id))||null;
  }
  function canEnter(state,id){
   const event=BY_ID.get(id),t=normalize(state);
