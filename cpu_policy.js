@@ -52,8 +52,10 @@ function configuration(raw={}){
  if(typeof opponentResponse!=='boolean')throw Error('Invalid CPU opponent-response setting');
  const graduatedNoise=raw.graduatedNoise??false;
  if(typeof graduatedNoise!=='boolean')throw Error('Invalid graduated-noise setting');
+ const energyHorizon=raw.energyHorizon??false;
+ if(typeof energyHorizon!=='boolean')throw Error('Invalid energy-horizon setting');
  return {level,personality,seed:raw.seed??1,side,planning,evolutionTempo,prizeRace,knockoutTempo,opponentResponse,
-  graduatedNoise,skill:(graduatedNoise?CALIBRATED_SKILLS:SKILLS)[level],style:PERSONALITIES[personality]};
+  graduatedNoise,energyHorizon,skill:(graduatedNoise?CALIBRATED_SKILLS:SKILLS)[level],style:PERSONALITIES[personality]};
 }
 // Seeded independent of the engine's private deck order and future RNG state.
 function rng(seed){let x=(seed>>>0)||0x6d2b79f5;return ()=>{
@@ -520,6 +522,50 @@ function knockoutTempoBonus(a,o,cfg){
   strongestAffordableAttack(q.active,p.active)>=hpRemaining(p.active);
  return chance*(vulnerability?230:125);
 }
+// Estimate what additional cards ALREADY in the player's own hand could unlock
+// after the current Energy attachment. No future draw is assumed, no opponent
+// hidden cards are accessed, and no engine reducer/coin oracle is consulted.
+function horizonAttackValue(unit,defender,hand,remaining=1){
+ if(!unit||!defender)return 0;
+ const immediate=projectedAttackValue(unit,defender);
+ if(remaining===0)return immediate;
+ const seen=new Set();
+ let best=immediate;
+ for(const id of hand){
+  if(seen.has(id)||!isEnergy(card(id)))continue;
+  seen.add(id);
+  const after={...unit,energies:[...(unit.energies||[]),id]};
+  // A card requires another turn's Energy attachment. Discount those future
+  // outcomes to avoid preferring a speculative combination to today's KO.
+  const next=projectedAttackValue(after,defender);
+  best=Math.max(best,immediate+(next-immediate)*.48);
+ }
+ return best;
+}
+function energyHorizonBonus(action,o,cfg){
+ if(!cfg.energyHorizon||cfg.level<4||o.phase!=='game'||action.type!=='attach_energy')
+  return 0;
+ const p=o.self,q=o.opponent,v=action.payload,u=slotUnit(p,v.slot);
+ if(!u||!q.active)return 0;
+ const attachedId=p.hand[v.handIndex];
+ if(!isEnergy(card(attachedId)))return 0;
+ const after={...u,energies:[...(u.energies||[]),attachedId]};
+ const futureHand=p.hand.filter((_,i)=>i!==v.handIndex);
+ const before=horizonAttackValue(u,q.active,futureHand);
+ const changed=horizonAttackValue(after,q.active,futureHand);
+ const direct=projectedAttackValue(after,q.active)-projectedAttackValue(u,q.active);
+ // Reward immediate Energy unlocks, but value two-card lines only insofar as
+ // they are possible with cards that are ALREADY visible in our own hand.
+ const expected=Math.max(0,changed-before)*1.15+Math.max(0,direct)*.35;
+ const enemyReady=!['Asleep','Paralyzed'].includes(q.active.status)&&
+  strongestAffordableAttack(q.active,u)>=hpRemaining(u);
+ // A Bench attacker is useful as a replacement when the Active is visibly
+ // exposed. Otherwise minimize speculative Energy sunk on remote Bench.
+ const activeBias=v.slot===-1?35:enemyReady?22:-34;
+ const weakDefense=enemyReady&&v.slot===-1&&p.bench.length>0?-30:0;
+ const surplus=direct===0&&changed-before<=1?-35:0;
+ return Math.max(-85,Math.min(160,expected+activeBias+weakDefense+surplus))*cfg.style.setup;
+}
 function score(a,o,cfg,used){
  const p=o.self,q=o.opponent,style=cfg.style,{type,payload:v}=a;
  if(type==='setup_confirm')return 115+p.bench.length*10;
@@ -756,7 +802,7 @@ function chooseAction(game,raw={},memo={}){
  const actions=candidates(o,cfg,used);if(!actions.length)return null;
  const random=rng(cfg.seed+game.turnSerial*7919+(game.events?.length||0)*17011+cfg.side*31);
  const ranked=actions.map((action,i)=>({action,
-  score:score(action,o,cfg,used)+planningBonus(action,o,cfg)+prizeRaceBonus(action,o,cfg)+knockoutTempoBonus(action,o,cfg)+opponentResponseBonus(action,o,cfg),tie:i}))
+  score:score(action,o,cfg,used)+planningBonus(action,o,cfg)+prizeRaceBonus(action,o,cfg)+knockoutTempoBonus(action,o,cfg)+opponentResponseBonus(action,o,cfg)+energyHorizonBonus(action,o,cfg),tie:i}))
   .sort((a,b)=>b.score-a.score||a.tie-b.tie);
  // Rank all visible options before competence-sensitive choice noise. A larger
  // *evaluation budget* should NOT widen the random window: doing so previously
@@ -777,11 +823,11 @@ function chooseAction(game,raw={},memo={}){
  }
  return null;
 }
-function driveSide(initial,{side=1,level=3,personality='balanced',seed=1,planning,evolutionTempo,prizeRace,knockoutTempo,opponentResponse,graduatedNoise,limit=200}={}){
+function driveSide(initial,{side=1,level=3,personality='balanced',seed=1,planning,evolutionTempo,prizeRace,knockoutTempo,opponentResponse,graduatedNoise,energyHorizon,limit=200}={}){
  let game=initial,steps=0;const commands=[],memo={trainers:0,powers:0,powerKeys:new Set(),stadium:false};
  while(!game.over&&steps<limit){
   const beforeTurn=game.turnSerial;
-  const next=chooseAction(game,{side,level,personality,seed,planning,evolutionTempo,prizeRace,knockoutTempo,opponentResponse,graduatedNoise},memo);
+  const next=chooseAction(game,{side,level,personality,seed,planning,evolutionTempo,prizeRace,knockoutTempo,opponentResponse,graduatedNoise,energyHorizon},memo);
   if(!next){
    if(game.pendingDecision?.actor===side)throw Error('CPU unresolved choice: '+JSON.stringify({decision:game.pendingDecision,pendingAction:game.pendingAction}));
    break;
@@ -801,4 +847,4 @@ function driveSide(initial,{side=1,level=3,personality='balanced',seed=1,plannin
 }
 function driveBot(game,limit=200,config={}){return driveSide(game,{...config,side:1,limit});}
 function propose(game,config={}){return chooseAction(game,{...config,side:1});}
-module.exports={SKILLS,CALIBRATED_SKILLS,PERSONALITIES,configuration,observation,candidates,score,knockoutChance,planningBonus,evolutionTempoPenalty,prizeRaceBonus,knockoutTempoBonus,opponentResponseBonus,chooseAction,driveSide,driveBot,propose};
+module.exports={SKILLS,CALIBRATED_SKILLS,PERSONALITIES,configuration,observation,candidates,score,knockoutChance,planningBonus,evolutionTempoPenalty,prizeRaceBonus,knockoutTempoBonus,opponentResponseBonus,energyHorizonBonus,chooseAction,driveSide,driveBot,propose};
