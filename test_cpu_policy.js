@@ -35,6 +35,26 @@ const settings={level:3,personality:'balanced',side:1,seed:47};
   'Opponent hidden cards must not alter a CPU decision');
 }
 
+{
+ // Regressions for mandatory payment choices: selecting only the first Energy
+ // cannot cover a two-unit retreat where Double Colorless must pay alone.
+ const game=createGame({decks:[deck,deck],seed:33,format:'classic'});
+ const o=AI.observation(game,1);o.phase='game';o.turn=1;
+ o.decision={id:'retreat:1',actor:1,kind:'energy-discard',
+  label:'Choose Energy cards providing at least 2 retreat units',min:1,max:2,optional:false,
+  options:[{id:'energy:0',label:'Water Energy'},{id:'energy:1',label:'Double Colorless Energy'}]};
+ const options=AI.candidates(o,AI.configuration({side:1,level:1}),{powerKeys:new Set()});
+ assert.ok(options.some(c=>c.type==='choose'&&c.payload.selected.length===1&&c.payload.selected[0]==='energy:1'),
+  'Beginner must still consider a valid Double Colorless payment');
+ o.decision=null;
+ o.self.active={id:IDS.hit,energies:[IDS.fight],damage:0};
+ o.self.bench=[{id:IDS.machop,energies:[],damage:0}];
+ o.self.hand=['base1-79'];o.self.energyUsed=true;
+ o.opponent.active={id:IDS.rat,energies:[],damage:0};
+ assert.ok(!AI.candidates(o,AI.configuration({side:1,level:5}),{trainers:0,powerKeys:new Set()})
+   .some(c=>c.type==='play_trainer'),
+   'Super Energy Removal must not begin without a legal opposing Energy target');
+}
 let duels=0,decisions=0,attacks=0,energy=0,evolutions=0,trainer=0;
 for(let seed=1;seed<=4;seed++){
  let game=createGame({decks:[deck,deck],seed:seed*1789,format:'classic'});
@@ -58,6 +78,8 @@ for(let seed=1;seed<=4;seed++){
   assert.ok(result.commands.every(x=>x.side===side));
   for(const x of result.commands){
    assert.ok(x.alternatives>=1);
+   assert.ok(x.probedCandidates>=1&&x.rejectedCandidates>=0);
+   assert.ok(x.rejectedCandidates<x.probedCandidates,'Selected CPU actions passed reducer checks');
    if(x.command.type==='attack')attacks++;
    if(x.command.type==='attach_energy')energy++;
    if(x.command.type==='evolve')evolutions++;
