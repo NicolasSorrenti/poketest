@@ -101,6 +101,35 @@ function estimatedDamage(attack,attacker,defender){
  if(aType&&target?.resistances?.some(r=>r.type===aType))amount=Math.max(0,amount-30);
  return amount;
 }
+function damageAfterType(amount,attacker,defender){
+ const type=(card(attacker?.id)?.types||[])[0],target=card(defender?.id);
+ let value=amount;
+ if(type&&target?.weaknesses?.some(w=>w.type===type))value*=2;
+ if(type&&target?.resistances?.some(w=>w.type===type))value=Math.max(0,value-30);
+ return value;
+}
+function knockoutChance(attack,attacker,defender){
+ if(!attack||!attacker||!defender)return 0;
+ const hp=hpRemaining(defender);
+ if(hp<=0)return 0;
+ const program=ATTACK.compile(attack),kill=raw=>damageAfterType(raw,attacker,defender)>=hp;
+ if(program?.kind==='coin-failure')return kill(program.damage)?0.5:0;
+ if(program?.kind==='coin-bonus')return (Number(kill(program.base))+Number(kill(program.base+program.bonus)))/2;
+ if(program?.kind==='coin-times'){
+  // Exact public probability for the printed number of fair coin flips. No
+  // random calls and no access to the engine's future RNG or shuffled deck.
+  let prob=[1];
+  for(let flip=0;flip<program.flips;flip++){
+   const next=Array(prob.length+1).fill(0);
+   for(let k=0;k<prob.length;k++){next[k]+=prob[k]*.5;next[k+1]+=prob[k]*.5;}
+   prob=next;
+  }
+  return prob.reduce((v,p,k)=>v+(kill(k*program.each)?p:0),0);
+ }
+ const expected=estimatedDamage(attack,attacker,defender);
+ const coin=/flip (?:a |one |\\d+ )?coins?|heads|tails/i.test(attack.text||'');
+ return expected>=hp?(coin&&program?.kind!=='coin-status'?.5:1):0;
+}
 function strongestAffordableAttack(unit,defender){
  if(!unit||!defender)return 0;
  const attacks=(unit.effectiveAttacks||card(unit.id)?.attacks||[]);
@@ -332,16 +361,16 @@ function score(a,o,cfg,used){
   const attack=(p.active.effectiveAttacks||card(p.active.id)?.attacks||[])[v.attackIndex];
   const damage=estimatedDamage(attack,p.active,q.active),hp=hpRemaining(q.active);
   const uncertain=/flip (?:a |one |\\d+ )?coins?|heads|tails/i.test(attack?.text||'');
-  // An apparent coin-dependent KO is not guaranteed. Skilled AI discounts
-  // the expected effect instead of treating a high-roll as certain lethal.
-  const accuracy=cfg.level>=3&&uncertain?.55:1;
+  // Expected damage has already accounted for coin outcomes. Applying another
+  // 55% multiplier here previously double-discounted random attacks. Higher
+  // levels instead compute the actual KO probability for known coin families.
   const lethal=damage>=hp&&hp>0;
+  const koChance=cfg.level>=3?knockoutChance(attack,p.active,q.active):(lethal?1:0);
   const riskPreference=uncertain?style.risk*40:0;
-  const direct=damage*accuracy*style.damage;
+  const direct=damage*style.damage;
   const statusValue=/Poison|Paraly|Sleep|Confus/i.test(attack?.text||'')?16:0;
   const fixedCost=/Discard.*Energy attached to/i.test(attack?.text||'')?30:0;
-  return 150+direct*.9+(lethal?Math.round(135*accuracy):0)+riskPreference+
-   statusValue-fixedCost;
+  return 150+direct*.9+135*koChance+riskPreference+statusValue-fixedCost;
  }
  if(type==='play_trainer'){
   const name=card(p.hand[v.handIndex])?.name||'';
@@ -455,4 +484,4 @@ function driveSide(initial,{side=1,level=3,personality='balanced',seed=1,limit=2
 }
 function driveBot(game,limit=200,config={}){return driveSide(game,{...config,side:1,limit});}
 function propose(game,config={}){return chooseAction(game,{...config,side:1});}
-module.exports={SKILLS,PERSONALITIES,configuration,observation,candidates,score,chooseAction,driveSide,driveBot,propose};
+module.exports={SKILLS,PERSONALITIES,configuration,observation,candidates,score,knockoutChance,chooseAction,driveSide,driveBot,propose};
