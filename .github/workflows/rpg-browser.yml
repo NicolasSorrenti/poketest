@@ -8,6 +8,9 @@ on:
       - 'rpg-assets/**'
       - 'server.js'
       - 'tests/rpg_browser_smoke.js'
+      - 'tests/online_browser_smoke.js'
+      - 'online.html'
+      - 'online.js'
       - '.github/workflows/rpg-browser.yml'
   pull_request:
     paths:
@@ -15,6 +18,9 @@ on:
       - 'classic_live*'
       - 'server.js'
       - 'tests/rpg_browser_smoke.js'
+      - 'tests/online_browser_smoke.js'
+      - 'online.html'
+      - 'online.js'
       - '.github/workflows/rpg-browser.yml'
 jobs:
   browser-smoke:
@@ -31,6 +37,8 @@ jobs:
         run: npx playwright install --with-deps chromium
       - name: Run full RPG browser loop
         run: node tests/rpg_browser_smoke.js
+      - name: Test two real multiplayer browser clients
+        run: node tests/online_browser_smoke.js
       - name: Preserve screenshots
         if: always()
         uses: actions/upload-artifact@v4
