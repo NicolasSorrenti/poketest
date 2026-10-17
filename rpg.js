@@ -154,6 +154,13 @@ function makeAvatar(id,size=''){
 }
 function render(){
  const ended=state.day>90,locked=!!state.activeStory||!!state.pendingDuel;
+ const receipt=state.lastDuelReceipt;
+ $('duelReceipt').hidden=!receipt;
+ if(receipt){
+  $('receiptTitle').textContent=receipt.outcome.toUpperCase()+' · '+receipt.name;
+  $('receiptDetails').textContent='+'+receipt.points+' circuit points · +'+receipt.credits+' credits · +'+receipt.trust+' trust'+(receipt.bonus?' (includes +'+receipt.bonus+' exhibition points)':'')+' · Time advanced one period.';
+  $('duelReceipt').classList.toggle('is-victory',receipt.outcome==='Victory');
+ }
  $('whereLabel').textContent=state.location==='home'?'⌂  YOU ARE HOME':'●  YOU ARE HERE';
  $('timeTrack').replaceChildren();periods.forEach((p,i)=>{const x=document.createElement('span');x.className='time-pill'+(i===state.slot?' active':i<state.slot?' past':'');x.textContent=(i===0?'☀ ':i===1?'◐ ':'☾ ')+p;$('timeTrack').append(x)});
  $('day').textContent='DAY '+String(Math.min(state.day,90)).padStart(2,'0')+' / 90';
@@ -169,8 +176,9 @@ function render(){
  for(const [id,[name,detail]] of Object.entries(places)){
   const b=document.createElement('button');b.className='place '+(id===state.location?'selected':'');
   const glyph={home:'⌂',shop:'♠',arcade:'✦',park:'❀',cafe:'☕',center:'♜',library:'▤'}[id];
-  b.textContent=glyph+'  '+name;b.disabled=locked;b.onclick=()=>{state.location=id;state.selected=null;persist();say('Narrator',detail)};
-  const status=document.createElement('span');status.className='place-status';status.textContent=id===state.location?'HERE':'›';b.append(status);$('places').append(b);
+  b.textContent=glyph+'  '+name;b.disabled=locked;b.setAttribute('aria-current',id===state.location?'location':'false');b.onclick=()=>{state.location=id;state.selected=null;persist();say('Narrator',detail)};
+  const status=document.createElement('span');status.className='place-status';const count=Object.entries(cast).filter(([who,c])=>state.day>=(c.start||1)&&c.locs.includes(id)&&c.slots.includes(state.slot)&&c.days.includes((state.day-1)%7)).length;
+   status.textContent=id===state.location?'HERE':count?count+' HERE':'›';b.append(status);$('places').append(b);
  }
  $('placeTitle').textContent=places[state.location][0];$('placeDetail').textContent=places[state.location][1];
  const bgFiles={home:'home.jpg',shop:state.slot===2?'card-shop-evening.png':'card-shop-day.png',arcade:'arcade.jpg',park:'park.jpg',cafe:'cafe.jpg',center:'center.jpg',library:'library.jpg'};
@@ -191,6 +199,19 @@ function render(){
   }
   b.onclick=()=>act(action);$('choices').append(b);
  }
+ $('townRadar').replaceChildren();
+ const weekday=(state.day-1)%7;
+ const elsewhere=Object.entries(cast).filter(([id,c])=>state.day<91&&state.day>=(c.start||1)&&!c.locs.includes(state.location)&&c.slots.includes(state.slot)&&c.days.includes(weekday));
+ if(!elsewhere.length){const p=document.createElement('p');p.className='empty-note';p.textContent='Everyone available is already here, or the town is quiet right now.';$('townRadar').append(p);}
+ for(const [id,c] of elsewhere){
+  const button=document.createElement('button');button.className='radar-person';button.disabled=locked;
+  const label=document.createElement('strong');label.textContent=c.name;
+  const where=document.createElement('small');where.textContent='↗ '+c.locs.map(place=>places[place][0]).join(' · ');
+  button.append(label,where);
+  button.title='Travel for free to '+places[c.locs[0]][0];
+  button.onclick=()=>{state.location=c.locs[0];state.selected=null;say('Narrator','You head to '+places[state.location][0]+'. '+places[state.location][1]);};
+  $('townRadar').append(button);
+ }
  $('people').replaceChildren();
  const people=currentPeople();
  if(!people.length){const p=document.createElement('p');p.className='empty-note';p.textContent='No regulars here at this time. Try another location or time period.';$('people').append(p);}
@@ -208,7 +229,7 @@ function render(){
  }
  if(!stories.length){const x=document.createElement('p');x.className='empty-note';x.textContent='No special story encounter right now.';$('storyEvents').append(x);}
  $('activities').replaceChildren();const e=scheduleEvent();
- const items=[...(e?[[e.title+' · ⏳ 1 period · +'+e.reward+' pts','event']]:[]),
+ const items=[...(e?[[e.title+' · ⏳ 1 period · +'+e.reward+' pts if you win','event']]:[]),
  [state.location==='home'?'Rest at home · ⏳ 1 period':'Wait one period · ⏳ 1 period','rest'],
  ...(state.location==='home'?[['Sleep until morning · ⏳ '+(3-state.slot)+' period(s)','sleep']]:[]),
  ...(state.location==='shop'?[['Help at shop · ⏳ 1 period · +15 credits','work']]:[]),
@@ -225,6 +246,8 @@ function render(){
 
 $('quickNext').onclick=()=>act('rest');$('quickHome').onclick=()=>act('home');$('calendarBtn').onclick=openCalendar;$('calendarClose').onclick=()=>$('calendarDialog').close();
 $('save').onclick=()=>{persist();$('notice').textContent='Campaign saved in this browser.'};
+$('dismissReceipt').onclick=()=>{state.lastDuelReceipt=null;persist();render();};
+document.addEventListener('keydown',e=>{if((e.key===' '||e.code==='Space')&&state.activeStory?.phase==='lines'&&!['INPUT','TEXTAREA','SELECT','BUTTON'].includes(e.target?.tagName)){e.preventDefault();act('storyNext');}});
 async function initDecks(){try{const res=await fetch('/api/classic/decks');if(!res.ok)throw Error('Could not load decks');const data=await res.json(),select=$('deckPicker');for(const d of data.decks.filter(x=>x.id!=='custom')){const o=document.createElement('option');o.value=d.id;o.textContent=d.name;select.append(o)}if([...select.options].some(o=>o.value===state.playerDeck))select.value=state.playerDeck;else{select.value='blackout';state.playerDeck='blackout'}select.onchange=()=>{state.playerDeck=select.value;persist()};}catch(e){$('notice').textContent='Deck list unavailable: '+e.message;}}
 render();initDecks();if(state.pendingDuel){$('duel').hidden=false;$('battle').src=duelUrl(state.pendingDuel);}
 })();
