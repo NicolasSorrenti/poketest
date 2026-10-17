@@ -29,7 +29,8 @@ function configuration(raw={}){
  if(!Object.hasOwn(PERSONALITIES,personality))throw Error('Unknown CPU personality');
  if(!Number.isSafeInteger(raw.seed??1))throw Error('Invalid CPU policy seed');
  const side=raw.side??1;if(side!==0&&side!==1)throw Error('Invalid CPU side');
- const planning=raw.planning??level>=4;
+ // Opt-in until blinded paired tournaments demonstrate a strength gain.
+ const planning=raw.planning??false;
  if(typeof planning!=='boolean')throw Error('Invalid CPU planning setting');
  return {level,personality,seed:raw.seed??1,side,planning,skill:SKILLS[level],style:PERSONALITIES[personality]};
 }
