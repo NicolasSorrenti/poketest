@@ -107,3 +107,29 @@ test('Finale branches on championship and romance; New Game+ retains collection 
  assert.equal(next.storyDone?.hana_route_1,undefined);
  assert.throws(()=>FINALE.choose(old,'circuit'),/already/);
 });
+
+test('all eight core routes remain reachable and can finish at their authored windows',()=>{
+ const characters=['hana','reina','shiori','yuna','akari','camila','marina','kaede'];
+ for(const id of characters){
+  const s=simulation();
+  for(let n=1;n<=4;n++){
+   const event=STORY.byId(id+'_route_'+n);
+   assert.ok(event,'Missing story for '+id+' '+n);
+   s.day=event.start;s.slot=event.slot;s.location=event.place;
+   assert.ok(STORY.available(s).some(e=>e.id===event.id),id+' route '+n+' is unreachable');
+   STORY.resolve(s,event.id,0);
+  }
+  assert.equal(s.partner,id,id+' romance resolution');
+  assert.equal(s.routeOutcomes[id],'romance');
+ }
+});
+test('the complete 90-day calendar progresses NPC life independently',()=>{
+ const state=simulation();WORLD.normalize(state);CIRCUIT.normalize(state);
+ for(let day=2;day<=91;day++){
+  const before=state.day;state.day=day;state.slot=0;
+  WORLD.afterAdvance(state,before);STORY.recordExpiry(state);CIRCUIT.expire(state);
+ }
+ assert.ok(Object.keys(state.world.weeklyResults).length>=12);
+ assert.ok(state.world.notices.some(x=>x.kind==='arrival'));
+ assert.ok(Object.keys(state.storyMissed).length>0);
+});
