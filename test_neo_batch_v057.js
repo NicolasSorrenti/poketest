@@ -33,6 +33,7 @@ assert.equal(RULES.legalAttachment({card:CATALOG.get('neo4-16'),unit:unit('neo4-
  send(g,0,'attach_energy',{handIndex:0,slot:-1});
  assert.equal(g.players[0].active.damage,10,'Rainbow attachment deals 10 to attached host');
  assert.equal(g.players[0].active.energies[0],'base5-17');
+ g.players[0].hand=['base5-80'];
  assert.equal(applyCommand(g,0,{type:'bench',payload:{handIndex:0}}).ok,false,'Rainbow cannot be played as Pokémon');
 }
 {
@@ -50,7 +51,7 @@ assert.equal(RULES.legalAttachment({card:CATALOG.get('neo4-16'),unit:unit('neo4-
  assert.equal(g.players[0].discard.includes('neo4-16'),true);
 }
 {
- const g=game('neo4-49');g.players[0].hand=['neo4-16'];
+ const g=game('neo4-49');g.players[0].hand=['neo4-16'];g.players[0].bench[0]=unit('neo4-49');
  send(g,0,'attach_energy',{handIndex:0,slot:0});
  send(g,0,'end_turn');
  assert.equal(g.players[0].bench[0].energies.length,0,'Miracle leaves Benched host at end of owner turn');
