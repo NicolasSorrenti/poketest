@@ -782,6 +782,44 @@ const settings={level:3,personality:'balanced',side:1,seed:47};
  assert.equal(x.baseline.actionDiscipline,true);
  assert.equal(x.challenger.actionDiscipline,false);
 }
+{
+ const g=createGame({decks:[deck,deck],seed:1337,format:'classic'});
+ const o=AI.observation(g,1);o.phase='game';o.turn=1;o.round=5;
+ o.self.active={id:IDS.hit,damage:20,playedTurn:2,
+  energies:[IDS.fight,IDS.fight],status:null};
+ o.self.bench=[{id:IDS.machop,damage:0,energies:[],playedTurn:2,status:null}];
+ o.self.hand=['base1-85','base1-90',IDS.potion];
+ o.self.handCount=3;o.self.deckCount=32;o.self.energyUsed=false;
+ o.opponent.active={id:IDS.hit,damage:0,energies:[IDS.fight],status:null};
+ const cfg=AI.configuration({level:5,side:1,trainerTactics:true});
+ const old=AI.configuration({level:5,side:1,trainerTactics:false});
+ const action=i=>({type:'play_trainer',payload:{handIndex:i}});
+ const value=(i,c)=>AI.score(action(i),o,c,{})+AI.trainerTacticsBonus(action(i),o,c);
+ const pass=AI.score({type:'end_turn',payload:{}},o,cfg,{});
+ assert.ok(value(0,cfg)<pass,'Champion must not discard its powered Active Energy for only 20 Center healing');
+ assert.ok(value(0,old)>pass,'Baseline must reproduce premature Pokémon Center');
+ assert.ok(value(1,cfg)<pass,'Super Potion must consider losing an important attached Energy');
+ assert.ok(value(2,cfg)<pass,'Small nonlethal Potion healing should not be mandatory before ending turn');
+ o.self.active.energies=[];
+ o.self.active.damage=40;
+ assert.ok(value(0,cfg)>pass,'Center should still heal a badly damaged unpowered Active');
+ o.self.active={id:IDS.machop,damage:0,energies:[IDS.fight],playedTurn:2,status:null};
+ o.self.hand=['base1-88',IDS.fight,'base1-34'];o.self.handCount=2;
+ const oak={type:'play_trainer',payload:{handIndex:0}};
+ assert.ok(AI.trainerTacticsBonus(oak,o,cfg)<=-250,
+  'Oak should not discard immediately playable own Energy and evolution from hand');
+ assert.equal(AI.trainerTacticsBonus(oak,o,old),0);
+ o.self.hand=['base1-88'];o.self.energyUsed=true;
+ assert.equal(AI.trainerTacticsBonus(oak,o,cfg),0,
+  'Once development cards have been played, Oak is judged by hand refresh value');
+ assert.throws(()=>AI.configuration({trainerTactics:'enabled'}),/trainer-tactics/);
+ assert.equal(AI.configuration({level:5}).trainerTactics,false);
+ const {arena,argumentsOf}=require('./benchmark_cpu');
+ const output=arena(argumentsOf(['--pairs','1','--max-turns','3','--left-level','5',
+  '--right-level','5','--left-trainer-tactics','true','--right-trainer-tactics','false']));
+ assert.equal(output.baseline.trainerTactics,true);
+ assert.equal(output.challenger.trainerTactics,false);
+}
 let duels=0,decisions=0,attacks=0,energy=0,evolutions=0,trainer=0;
 for(let seed=1;seed<=4;seed++){
  let game=createGame({decks:[deck,deck],seed:seed*1789,format:'classic'});
