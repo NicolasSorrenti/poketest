@@ -202,6 +202,51 @@
    ['Offer a friendship that survives distance','Then do not lose my number.','friend','friendship'],
    ['Tell her the decision is still hers','It is. And I finally think I can make it.','honest','friendship']]]
  ]);
+
+ // Optional personal scenes and overlapping friendships, authored independently from the core route chain.
+ function extra({id,npc,guest=null,title,start,end,place,slot,minBond=0,prerequisite=null,requiresAll=[],lines,choices}){
+  E.push({id,npc,guest,title,start,end,place,slot,minBond,prerequisite,requiresAll,
+   lines:lines.map(([speaker,text])=>({speaker,text})),
+   choices:choices.map(([label,reply,kind])=>({label,reply,kind,delta:kinds[kind]}))});
+ }
+ extra({id:'hana_extra_1',npc:'hana',title:'The Last Table',start:15,end:23,place:'shop',slot:2,minBond:2,prerequisite:'hana_route_1',
+  lines:[['hana','Nobody else remembered to put away the last table.'],['Protagonist','You were about to do it by yourself, weren’t you?'],['hana','Old habits. Want to make a better one with me?']],
+  choices:[['Help her close the shop','That was faster with two people. And a lot more fun.','support'],['Suggest asking the owner next time','I guess I really am learning to say no.','honest'],['Offer to walk her home','You make little things feel like dates.','flirt']]});
+ extra({id:'hana_extra_2',npc:'hana',title:'The Invitation',start:42,end:49,place:'cafe',slot:2,minBond:3,prerequisite:'hana_route_2',
+  lines:[['hana','I almost cancelled tonight. I got nervous that you might have something more important to do.'],['Protagonist','We made plans. I wanted to keep them.'],['hana','Then maybe I should stop apologizing for wanting time with people.']],
+  choices:[['Spend the evening listening','That means more than you think.','support'],['Share a story from your hometown','I like the person you are when you stop worrying about winning.','honest'],['Call it a real date','You said it first! Now I’m definitely nervous.','flirt']]});
+ extra({id:'hana_extra_3',npc:'hana',title:'A Difficult Yes',start:66,end:74,place:'center',slot:0,minBond:4,prerequisite:'hana_route_3',
+  lines:[['hana','I got an offer to help with the final event.'],['Protagonist','That sounds like something you’d love.'],['hana','I would. But there is also something I’ve been wanting to compete in myself.']],
+  choices:[['Tell her to choose her own match','Then I’m going to register. For me.','support'],['Help her make a schedule','You really do believe I can make room for both.','honest'],['Promise you will be cheering for her','That might be all the encouragement I need.','flirt']]});
+ extra({id:'hana_extra_4',npc:'hana',title:'The Yearbook Page',start:87,end:90,place:'park',slot:0,minBond:5,prerequisite:'hana_route_4',
+  lines:[['hana','I bought a little notebook when the season began. It has names, scores, and far too many doodles.'],['Protagonist','You kept all of that?'],['hana','Every time somebody mattered to me, I wanted to remember why.']],
+  choices:[['Write a page together','No matter where the next season takes us, I’ll keep this page.','support'],['Sign it with a promise of friendship','I’ll hold you to that. Even after the last match.','friend'],['Write something that makes her blush','I can’t believe you actually wrote that! I’m keeping it.','flirt']]});
+ // Intersecting cast arcs: completing them alters both people in the scene.
+ extra({id:'hana_marina_1',npc:'hana',guest:'marina',title:'Two Old Friends',start:18,end:29,place:'park',slot:2,minBond:2,prerequisite:'hana_route_1',
+  lines:[['hana','Marina brought some new cards to show me. We used to play beside the river all the time.'],['marina','Hana always insisted we could build a deck from anything.'],['Protagonist','What happens when you disagree over the best play?']],
+  choices:[['Help them test both ideas','It’s even better with three players offering ideas.','support'],['Ask them to settle it with a match','We were going to do that anyway!','honest'],['Say neither should have to play alone','That was unexpectedly thoughtful of you.','flirt']]});
+ extra({id:'hana_marina_2',npc:'marina',guest:'hana',title:'A Shared Decision',start:53,end:66,place:'cafe',slot:1,minBond:2,prerequisite:'marina_route_1',
+  lines:[['marina','Hana came to ask about the qualifier. She seems so certain I should go.'],['hana','I’m not certain. I just know I’d regret not cheering for her.'],['Protagonist','Then maybe both of you already know the important part.']],
+  choices:[['Help them practice as a team','We haven’t laughed this much over a deck in years.','support'],['Give them space to decide','I think we can handle this together.','honest'],['Tell them they make a great pair','Now you’re making both of us blush!','flirt']]});
+ extra({id:'reina_shiori_1',npc:'reina',guest:'shiori',title:'Two Perspectives',start:38,end:51,place:'library',slot:2,minBond:2,prerequisite:'reina_route_1',
+  lines:[['reina','We’re arguing about one move. One move!'],['shiori','A single move can reveal the whole plan behind a deck.'],['Protagonist','Maybe the best answer is to replay it.']],
+  choices:[['Offer to watch both lines','You may be the only person here with the patience for this.','support'],['Point out the strengths of each plan','That is annoyingly fair.','honest'],['Tell Reina she is impossible to ignore','Not helping. ...But you can stay.','flirt']]});
+ extra({id:'reina_shiori_2',npc:'shiori',guest:'reina',title:'The Open Table',start:69,end:81,place:'center',slot:2,minBond:3,prerequisite:'shiori_route_2',
+  lines:[['shiori','A long time ago, I thought returning to these tables would be impossible.'],['reina','You could have fooled me.'],['Protagonist','Then perhaps the next game should just be a game.']],
+  choices:[['Invite them both to play again','Perhaps it’s time I stopped treating every game as a verdict.','support'],['Ask them to talk before competing','Fine. Five minutes. No strategy talk.','honest'],['Promise an unforgettable rematch','You are both far too confident.','flirt']]});
+ extra({id:'yuna_akari_1',npc:'yuna',guest:'akari',title:'Method to Madness',start:24,end:36,place:'arcade',slot:1,minBond:1,prerequisite:'yuna_route_1',
+  lines:[['yuna','I invited Akari to test my wildest combo!'],['akari','She described it as an essential scientific experiment.'],['Protagonist','Could it actually work?']],
+  choices:[['Test it patiently','Finally! Two people who respect the scientific method! Sort of.','support'],['Ask Akari for the actual odds','The answer is not encouraging, but useful.','honest'],['Tell Yuna her enthusiasm is contagious','I knew you were a fan!','flirt']]});
+ extra({id:'yuna_akari_2',npc:'akari',guest:'yuna',title:'Unscheduled Experiment',start:59,end:71,place:'cafe',slot:1,minBond:2,prerequisite:'akari_route_1',
+  lines:[['akari','Yuna says I am becoming less predictable.'],['yuna','She ordered something new without calculating the odds!'],['Protagonist','That sounds like progress to me.']],
+  choices:[['Encourage their new partnership','I may have underestimated how much I enjoy these experiments.','support'],['Ask what they learned from each other','A surprisingly productive exchange of ideas.','honest'],['Call it a double date with probability','Both of us? You really are fearless.','flirt']]});
+ extra({id:'camila_kaede_1',npc:'camila',guest:'kaede',title:'Old Acquaintances',start:53,end:65,place:'shop',slot:2,minBond:2,prerequisite:'camila_route_1',
+  lines:[['camila','A familiar face came into town. Small world, isn’t it?'],['kaede','You have a talent for making everything sound like business.'],['Protagonist','If you two are going to argue, I’d rather hear the facts.']],
+  choices:[['Hear both sides before judging','Now that is rarer than any card I sell.','support'],['Suggest they settle terms fairly','For once, an agreement might actually work.','honest'],['Tell them they are both intimidating','Compliments won’t save you here.','flirt']]});
+ extra({id:'camila_kaede_2',npc:'kaede',guest:'camila',title:'A Fair Departure',start:73,end:84,place:'cafe',slot:2,minBond:2,prerequisite:'kaede_route_2',
+  lines:[['kaede','You ever notice how people only say goodbye when they think it means something?'],['camila','Some things are worth saying even without a guarantee.'],['Protagonist','Sounds like you two might agree on something for once.']],
+  choices:[['Help them finish the conversation','Thanks. I might have left before saying any of that.','support'],['Give them time alone','We’ll take it from here.','honest'],['Suggest a less dramatic reunion','Don’t spoil our reputation.','flirt']]});
+
  const ID=new Map(E.map(e=>[e.id,e]));
  function normalize(state){
   if(!state.storyDone||typeof state.storyDone!=='object')state.storyDone={};
@@ -213,7 +258,7 @@
  }
  function qualifies(e,state,place=state.location){
   const s=normalize(state),b=s.relationships[e.npc],previous=e.prerequisite;
-  return s.day>=e.start&&s.day<=e.end&&s.slot===e.slot&&place===e.place&&!s.storyDone[e.id]&&!s.storyMissed[e.id]&&(!previous||!!s.storyDone[previous])&&b.affection>=e.minBond;
+  return s.day>=e.start&&s.day<=e.end&&s.slot===e.slot&&place===e.place&&!s.storyDone[e.id]&&!s.storyMissed[e.id]&&(!previous||!!s.storyDone[previous])&&(!e.requiresAll||e.requiresAll.every(id=>!!s.storyDone[id]))&&b.affection>=e.minBond;
  }
  function available(state,place=state.location){return E.filter(e=>qualifies(e,state,place));}
  function recordExpiry(state){
@@ -233,6 +278,11 @@
   if(choice.kind==='commit'&&state.partner&&state.partner!==e.npc)throw Error('Already committed to another relationship');
   if(choice.kind==='commit'&&(state.relationships[e.npc].affection<6||state.relationships[e.npc].trust<3))throw Error('A deeper bond is required');
   const b=state.relationships[e.npc];for(const [k,v] of Object.entries(choice.delta))b[k]=(b[k]||0)+v;
+  if(e.guest&&state.relationships[e.guest]){
+    const other=state.relationships[e.guest];
+    other.affection+=(choice.kind==='support'||choice.kind==='friend')?2:1;
+    if(choice.kind==='support')other.trust++;
+  }
   if(choice.kind==='commit'){if(b.affection>=6&&b.trust>=3){state.partner=e.npc;state.routeOutcomes=state.routeOutcomes||{};state.routeOutcomes[e.npc]='romance';}else{state.routeOutcomes=state.routeOutcomes||{};state.routeOutcomes[e.npc]='friendship';}}
   if(choice.flag==='friendship'){state.routeOutcomes=state.routeOutcomes||{};state.routeOutcomes[e.npc]='friendship';}
   state.storyDone[e.id]={choice:choiceIndex,day:state.day};
@@ -245,6 +295,7 @@
    if(e.start>e.end||e.start<1||e.end>90||e.slot<0||e.slot>2)faults.push('Invalid window '+e.id);
    if(e.prerequisite){const prev=ID.get(e.prerequisite);if(!prev||prev.end>=e.end)faults.push('Bad link '+e.id);}
    if(e.choices.length<2||!e.lines.length)faults.push('Incomplete '+e.id);
+   if(e.guest&&!E.some(x=>x.npc===e.guest))faults.push('Missing guest '+e.id);
   }
   return faults;
  }
