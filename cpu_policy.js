@@ -477,7 +477,8 @@ function knockoutTempoBonus(a,o,cfg){
  // backup first, except when this KO wins outright.
  if(!p.bench.length&&p.hand.some(id=>isBasicPokemon(card(id))))return 0;
  // Don't spend a turn in endless preparation when a certain Prize is available.
- const vulnerability=strongestAffordableAttack(q.active,p.active)>=hpRemaining(p.active);
+ const vulnerability=!['Asleep','Paralyzed'].includes(q.active.status)&&
+  strongestAffordableAttack(q.active,p.active)>=hpRemaining(p.active);
  return chance*(vulnerability?230:125);
 }
 function score(a,o,cfg,used){
