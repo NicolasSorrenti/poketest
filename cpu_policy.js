@@ -605,10 +605,15 @@ function trainerTacticsBonus(action,o,cfg){
   // Scorer of the pending target and discarded Energy makes the final choice;
   // do not play merely to discard an essential attached Energy.
   const benefit=Math.max(...harmed.map(u=>{
-   const post={...u,energies:(u.energies||[]).slice(1)};
-   const attackCost=Math.max(0,strongestAffordableAttack(u,q.active)-
-    strongestAffordableAttack(post,q.active));
-   return Math.min(40,u.damage)*1.1-attackCost*1.5;
+   const old=strongestAffordableAttack(u,q.active);
+   // The payment prompt permits choosing which Energy to discard. Value the
+   // *best* publicly available payment, not an arbitrary first attached card.
+   const leastLoss=Math.min(...u.energies.map((id,i)=>{
+    const post={...u,energies:u.energies.filter((_,j)=>j!==i)};
+    const attackLost=Math.max(0,old-strongestAffordableAttack(post,q.active));
+    return attackLost*1.5+energyPool({energies:[id]}).length*12;
+   }));
+   return Math.min(40,u.damage)*1.1-leastLoss;
   }));
   return benefit-135;
  }
