@@ -143,7 +143,7 @@ function startTournamentRound(){
 function startDuel(id,exhibition=null,tournament=null){
  if(state.pendingDuel||state.day>90||!cast[id]||(!exhibition&&!tournament&&!currentPeople().includes(id)))return;
  if(state.playerDeck==='custom'&&!state.collection.customDeck){$('notice').textContent='Save a collection-built 60-card deck first.';return;}
- if(state.playerDeck==='custom')localStorage.setItem('neoCampusCustomGymDeck',JSON.stringify(state.collection.customDeck));
+ if(state.playerDeck==='custom')localStorage.setItem('neoCampusRpgDeck',JSON.stringify(state.collection.customDeck));
  const c=cast[id],eventKey=exhibition?exhibition.day+':'+exhibition.title:null;
  state.pendingDuel={id:'npc-'+id+'-'+state.day+'-'+state.slot+'-'+state.results.length+'-'+Math.random().toString(36).slice(2,10),npc:id,day:state.day,slot:state.slot,
   opponent:WORLD.deckFor(id,state.day)||c.deck,playerDeck:state.playerDeck,resolved:false,eventKey,eventReward:exhibition?exhibition.reward:0,
@@ -313,7 +313,7 @@ function saveMarketDeck(){
  if(!marketReady)return;
  try{
   const ids=MARKET.saveDeck(state,cardCatalog);
-  localStorage.setItem('neoCampusCustomGymDeck',JSON.stringify(ids));persist();
+  localStorage.setItem('neoCampusRpgDeck',JSON.stringify(ids));persist();
   const select=$('deckPicker');let opt=[...select.options].find(o=>o.value==='custom');
   if(!opt){opt=document.createElement('option');opt.value='custom';opt.textContent='My collection deck · 60 cards';select.append(opt);}
   select.value='custom';marketMessage('Your 60-card collection deck is active for the next duel.');render();
