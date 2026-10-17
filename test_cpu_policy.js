@@ -515,6 +515,27 @@ const settings={level:3,personality:'balanced',side:1,seed:47};
   assert.ok(result.meanFinalPrizesByRole[role]>=0&&result.meanFinalPrizesByRole[role]<=6);
  }
 }
+{
+ const {arena,argumentsOf,wilson}=require('./benchmark_cpu');
+ const report=arena(argumentsOf(['--pairs','3','--seed','21987',
+  '--max-turns','12','--left-level','5','--right-level','4','--target-upset-rate','0.05']));
+ assert.equal(report.upsetTarget.higherLevel,5);
+ assert.equal(report.upsetTarget.lowerLevel,4);
+ assert.equal(report.upsetTarget.targetMaximum,0.05);
+ assert.equal(report.upsetTarget.applicable,true);
+ assert.equal(report.upsetTarget.totalMatchUpsetRate,report.losses/report.totalMatches);
+ assert.equal(report.upsetTarget.decisiveUpsetRate,
+  report.conclusiveMatches?report.losses/report.conclusiveMatches:null);
+ assert.equal(report.upsetTarget.statisticallyVerified,
+  report.conclusiveMatches>0&&wilson(report.losses,report.conclusiveMatches).upper<=.05);
+ const same=arena(argumentsOf(['--pairs','1','--max-turns','3','--left-level','5','--right-level','5']));
+ assert.equal(same.upsetTarget.applicable,false,
+  'Unranked same-skill comparisons must not be counted as lower-level upsets');
+ assert.equal(same.upsetTarget.statisticallyVerified,false);
+ assert.throws(()=>argumentsOf(['--target-upset-rate','-0.1']),/upset rate/);
+ assert.throws(()=>argumentsOf(['--target-upset-rate','0.8']),/upset rate/);
+ assert.ok(wilson(0,10).upper>.05,'Ten undefeated games cannot prove a <=5% upset rate');
+}
 let duels=0,decisions=0,attacks=0,energy=0,evolutions=0,trainer=0;
 for(let seed=1;seed<=4;seed++){
  let game=createGame({decks:[deck,deck],seed:seed*1789,format:'classic'});
