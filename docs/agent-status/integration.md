@@ -25,25 +25,28 @@ Integration owns the RPG/Classic CPU handshake, shared presentation, navigation 
 - Added mobile and reduced-motion styling.
 
 ### 3. Regression tests
-- `tests/rpg_integration.test.js`: session isolation, origin/source/ID rejection, victory/defeat/draw outcomes, duplicate reward protection, client syntax/wiring.
+- `tests/rpg_integration.test.js`: session isolation, origin/source/ID rejection, victory/defeat/draw outcomes, duplicate reward protection, client syntax/wiring, actual hosted JS/CSS HTTP responses and a genuine server-authoritative Classic create/concede/result cycle.
 - `tests/rpg_flow.test.js`: simulated DOM playthrough of new campaign, free travel, NPC encounter, two duels, stale-result rejection, reward persistence, reload, sleep/day rollover, authored scene dialogue and refresh.
 - CI now gates RPG story + integration + flow tests before the original repository-wide `npm test` suite.
-- GitHub Actions green before the new multi-step flow suite. Latest CI run should be consulted before declaring this new suite green.
+- Node `--test` RPG suite: **11 tests passing, 0 failing** on GitHub Actions (includes HTTP/static and real service tests).
+- Full `npm test` + TCG Gameplay Regression: **green** on the verified integration commit `fe77ef34fc67af026ac103cf1b9bca9ee5d09b68`, after the concurrently owned v0.59 card-rule updates were fixed. Always inspect the latest head before release.
+- Browser workflow: `.github/workflows/rpg-browser.yml`, `tests/rpg_browser_smoke.js`; independently validates real Chromium play from town to NPC duel through actual Classic server concession, iframe notification, persisted result/refresh, mobile view, and shared CPU/online controls. Chromium job `39014950181` **passed**, generated **five screenshots**. [Browser workflow run](https://github.com/NicolasSorrenti/poketest/actions/runs/39014950181) · [Screenshot artifact](https://github.com/NicolasSorrenti/poketest/actions/runs/39014950181/artifacts/12094571629) (GitHub access required).
+- Static hosting compatibility fix in `server.js`: explicitly serve `rpg_duel_bridge.js`. Actual hosted test catches allowlist regressions which script-only checks missed.
 
 ## Verified / not verified
 
-**Verified:** integration helper executable preflight for scoped result messaging, reward updates and idempotence; browser script syntax; earlier repository-wide GitHub Actions regressions; existing story unit tests.
+**Verified:** bridge and campaign reward semantics; actual server HTTP assets; complete simulated multi-day RPG, two NPC matches and story save/load; actual HTTP Classic match completion; independent real Chromium full campaign → NPC encounter → finished Classic duel → iframe return → rewards → refresh with screenshot capture; browser presence of shared CPU/multiplayer interaction controls; latest observed full server Node suite green on the verified v0.59 integration commit.
 
-**Pending:** latest multi-step simulated DOM workflow result; actual Chromium/WebKit screenshots; end-to-end completed Node-backed CPU match in a real browser; production Render save/reconnect behaviour; multiplayer human-vs-human browser interaction.
+**Pending:** production Render save/reconnect behaviour, full human-played complete TCG duel using only browser UI (Chromium test finishes legally via the real authoritative concede endpoint), WebKit and additional real mobile-device verification, visual screenshot *comparisons* / golden baselines (screenshots are captured for human review), human-vs-human multiplayer browser sessions, and sustained 90-day campaign endurance runs.
 
 **Known limitations:** The local Node duel service keeps in-progress sessions in server memory. Restarting that service may require replaying an in-progress match. Campaign saves are still browser-local. NPC schedules currently permit one character to appear in multiple places in one period; schedule semantics belong to the RPG agent, not this integration change.
 
 ## Next priorities
-1. Resolve any remaining CI failures from the new DOM playthrough and keep full repository CI green.
-2. Add real-browser E2E tests against a running Node server for new game → actual completed NPC match → rewards → reload and mobile screenshots.
-3. Add realistic CPU/online visual parity screenshot assertions and responsiveness/accessibility checks.
-4. Coordinate with the RPG agent on day-time scheduling semantics and tournament progression; do not rewrite these subsystems inside integration work.
-5. Coordinate with art on missing image handling and final asset resolution.
+1. Run production Render smoke/reconnect check and verify server restart recovery; investigate long-term persistence without modifying the card-rules authority.
+2. Extend real-browser tests to follow legal opening setup, play a full attack/prize sequence and test both sides of an actual online room with human/browser action automation.
+3. Review uploaded screenshots for clipping, placement and differences; establish stable desktop/mobile screenshot baselines and accessibility checks.
+4. Coordinate with the RPG agent on day-time scheduling semantics and tournament progression; do not rewrite their subsystem inside integration work.
+5. Coordinate with art on final image backgrounds/portraits and missing-art fallbacks.
 
 ## Safe git practice
 
