@@ -58,7 +58,7 @@ const readState=page=>page.evaluate(()=>JSON.parse(localStorage.getItem('neoHarb
   // On reload, the iframe restores its existing session and notifies the parent once.
   const child=page.frame({url:/classic_live\.html/});
   assert.ok(child,'Embedded Classic duel frame exists');
-  await child.goto(child.url(),{waitUntil:'domcontentloaded',timeout:45000});
+  await page.evaluate(()=>{const frame=document.getElementById('battle');frame.src=frame.src;});
   await page.locator('#duelReceipt').waitFor({state:'visible',timeout:45000});
   state=await readState(page);
   assert.equal(state.pendingDuel,null);
