@@ -1,0 +1,25 @@
+name: CPU Sequence Experiment
+on:
+  push:
+    branches:
+      - 'agent/cpu-ai-sequence-*'
+  pull_request:
+    paths:
+      - 'cpu_policy.js'
+      - 'test_cpu_policy.js'
+      - 'benchmark_cpu.js'
+      - '.github/workflows/cpu-sequence-eval.yml'
+jobs:
+  sequence:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: node --check cpu_policy.js
+      - run: node test_cpu_policy.js
+      - run: node benchmark_cpu.js --pairs 40 --max-turns 120 --seed 62531 --left-level 5 --right-level 5 --left-turn-search true --right-turn-search false
+      - run: node benchmark_cpu.js --pairs 30 --max-turns 120 --seed 72531 --left-level 5 --right-level 5 --left-turn-search true --right-turn-search false --left-deck brushfire --right-deck brushfire
+      - run: node benchmark_cpu.js --pairs 30 --max-turns 120 --seed 82531 --left-level 5 --right-level 5 --left-turn-search true --right-turn-search false --left-deck overgrowth --right-deck overgrowth
