@@ -90,6 +90,29 @@ const settings={level:3,personality:'balanced',side:1,seed:47};
  assert.ok(!AI.candidates(o,cfg,{trainers:0,powerKeys:new Set()})
   .some(c=>c.type==='evolve'),'First-turn evolution must be excluded before reducer probes');
 }
+{
+ const g=createGame({decks:[deck,deck],seed:91,format:'classic'});
+ const o=AI.observation(g,1);o.phase='game';o.turn=1;
+ o.self.active={id:IDS.hit,energies:[IDS.fight,IDS.fight],damage:0};
+ o.self.bench=[];o.self.hand=[IDS.fight,'base1-84','base1-93'];
+ o.opponent.active={id:'base1-46',energies:[],damage:20};
+ o.opponent.bench=[{id:IDS.hit,energies:[],damage:0}];
+ const experienced=AI.configuration({side:1,level:5});
+ const beginner=AI.configuration({side:1,level:1});
+ const energy={type:'attach_energy',payload:{handIndex:0,slot:-1}};
+ const experiencedValue=AI.score(energy,o,experienced,{});
+ const basicValue=AI.score(energy,o,beginner,{});
+ assert.ok(experiencedValue>basicValue,
+  'Experienced AI should value the next stronger attack unlocked by Energy');
+ const plusPower={type:'play_trainer',payload:{handIndex:1}};
+ assert.ok(AI.score(plusPower,o,experienced,{})>AI.score({type:'attack',payload:{attackIndex:0}},o,experienced,{}),
+  'Strong AI should prepare a PlusPower KO when immediate damage is insufficient');
+ const gust={type:'play_trainer',payload:{handIndex:2}};
+ const valueWithGust=AI.score(gust,o,experienced,{});
+ o.opponent.bench=[];
+ assert.ok(AI.score(gust,o,experienced,{})<valueWithGust,
+  'Gust utility must depend on a genuinely vulnerable opponent Bench');
+}
 let duels=0,decisions=0,attacks=0,energy=0,evolutions=0,trainer=0;
 for(let seed=1;seed<=4;seed++){
  let game=createGame({decks:[deck,deck],seed:seed*1789,format:'classic'});
