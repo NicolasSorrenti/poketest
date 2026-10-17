@@ -121,7 +121,21 @@ function candidates(o,cfg,used){
   // Skill changes ranking, never the legal number of choices considered.
   const sizes=new Set([d.min,d.max,Math.min(d.max,Math.max(1,d.min)),Math.min(d.max,Math.max(2,d.min))]);
   if(d.max>d.min+3)sizes.add(Math.min(d.max,d.min+3));
-  for(const n of sizes)options.push(command('choose',{decisionId:d.id,selected:sorted.slice(0,n).map(x=>x.id)}));
+  // Payment effects may demand one special Energy instead of two Basic ones;
+  // prefix-only selection can create a mandatory, impossible-to-finish prompt.
+  // Enumerate small legal subsets, bounded to avoid combinatorial explosion.
+  let combinations=0;
+  for(const n of [...sizes].sort((a,b)=>a-b)){
+   const pick=selected=>{options.push(command('choose',{decisionId:d.id,selected:selected.map(x=>x.id)}));combinations++;};
+   const pool=sorted.slice(0,Math.max(8,Math.min(24,n)));
+   if(n>4||n>pool.length){pick(sorted.slice(0,n));continue;}
+   const walk=(from,selected)=>{
+    if(combinations>=72)return;
+    if(selected.length===n){pick(selected);return;}
+    for(let i=from;i<=pool.length-(n-selected.length)&&combinations<72;i++)walk(i+1,[...selected,pool[i]]);
+   };
+   walk(0,[]);
+  }
   if(d.optional)options.push(command('choose',{decisionId:d.id,decline:true}));
   return options;
  }
