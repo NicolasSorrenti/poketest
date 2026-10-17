@@ -26,7 +26,7 @@ const eventCards=[{day:7,slot:1,place:'arcade',title:'Arcade Friendly Cup',rewar
 
 function eligibleStories(){return STORY.available(state);}
 function startStory(id){
- if(state.activeStory||state.pendingDuel)return;
+ if(state.activeStory||state.activeEncounter||state.pendingDuel)return;
  const e=eligibleStories().find(e=>e.id===id);if(!e)return;
  state.selected=e.npc;state.activeStory={id:e.id,phase:'lines',index:0,choice:null};persist();render();
 }
@@ -98,7 +98,7 @@ function say(speaker,line,choices=[]){scene={speaker,line,choices};state.scene=s
 function currentPeople(){if(state.day>90)return [];const regular=SCHEDULES.peopleAt(state.day,state.slot,state.location,eligibleStories());
 for(const e of eligibleStories())if(!regular.includes(e.npc))regular.push(e.npc);
 return regular;}
-function selectPerson(id){if(state.activeStory||!cast[id]||!currentPeople().includes(id))return;const c=cast[id],first=!state['met_'+id]&&!((id==='reina')&&state.metReina);state['met_'+id]=true;if(id==='reina')state.metReina=true;state.selected=id;persist();say(c.name,first?c.intro:c.repeat,options(id));}
+function selectPerson(id){if(state.activeStory||state.activeEncounter||!cast[id]||!currentPeople().includes(id))return;const c=cast[id],first=!state['met_'+id]&&!((id==='reina')&&state.metReina);state['met_'+id]=true;if(id==='reina')state.metReina=true;state.selected=id;persist();say(c.name,first?c.intro:c.repeat,options(id));}
 function options(id){const key=atKey(id),spentToday=!!state.hungOut[state.day+':'+id];return [
  ['Ask about their routine · free','where:'+id],
  [state.talked[key]?'Talk again · free (bond already earned)':'Talk · free · +1 affection','talk:'+id],
@@ -176,7 +176,7 @@ function act(action){
  if(type==='hang'){if(state.hungOut[state.day+':'+id])return say(c.name,'I enjoyed our time today. Let us make plans another day.',options(id));state.hungOut[state.day+':'+id]=true;bond.affection+=2;bond.trust++;state.relationships[id].affection+=2;state.relationships[id].trust++;log('Spent time with '+c.name+'.');advance();state.selected=null;return say(c.name,'That was a lovely way to spend part of the day. See you around.');}
 }
 function duelUrl(duel){return '/classic_live.html?rpg=1&duelId='+encodeURIComponent(duel.id)+'&deck='+encodeURIComponent(duel.playerDeck)+'&opponent='+encodeURIComponent(duel.opponent);}
-function startDuel(id,exhibition=null){if(state.pendingDuel||state.day>90||!cast[id]||(!exhibition&&!currentPeople().includes(id)))return;const c=cast[id];state.pendingDuel={id:'npc-'+id+'-'+state.day+'-'+state.slot+'-'+state.results.length,npc:id,day:state.day,slot:state.slot,opponent:c.deck,playerDeck:state.playerDeck,resolved:false,eventKey:exhibition?exhibition.day+':'+exhibition.title:null,eventReward:exhibition?exhibition.reward:0,eventTitle:exhibition?exhibition.title:null};persist();render();$('duel').hidden=false;$('battle').src=duelUrl(state.pendingDuel);}
+function startDuel(id,exhibition=null){if(state.activeStory||state.activeEncounter||state.pendingDuel||state.day>90||!cast[id]||(!exhibition&&!currentPeople().includes(id)))return;const c=cast[id];state.pendingDuel={id:'npc-'+id+'-'+state.day+'-'+state.slot+'-'+state.results.length,npc:id,day:state.day,slot:state.slot,opponent:c.deck,playerDeck:state.playerDeck,resolved:false,eventKey:exhibition?exhibition.day+':'+exhibition.title:null,eventReward:exhibition?exhibition.reward:0,eventTitle:exhibition?exhibition.title:null};persist();render();$('duel').hidden=false;$('battle').src=duelUrl(state.pendingDuel);}
 window.addEventListener('message',ev=>{
  const duel=state.pendingDuel;
  if(!BRIDGE.accepts(ev,location.origin,$('battle').contentWindow,duel))return;
@@ -204,7 +204,7 @@ function makeAvatar(id,size=''){
  return img;
 }
 function render(){
- const ended=state.day>90,locked=!!state.activeStory||!!state.pendingDuel;
+ const ended=state.day>90,locked=!!state.activeStory||!!state.activeEncounter||!!state.pendingDuel;
  const receipt=state.lastDuelReceipt;
  $('duelReceipt').hidden=!receipt;
  if(receipt){
@@ -228,18 +228,19 @@ function render(){
   const b=document.createElement('button');b.className='place '+(id===state.location?'selected':'');
   const glyph={home:'⌂',shop:'♠',arcade:'✦',park:'❀',cafe:'☕',center:'♜',library:'▤'}[id];
   b.textContent=glyph+'  '+name;b.disabled=locked;b.setAttribute('aria-current',id===state.location?'location':'false');b.onclick=()=>{state.location=id;state.selected=null;persist();say('Narrator',detail)};
-  const status=document.createElement('span');status.className='place-status';const count=Object.entries(cast).filter(([who,c])=>state.day>=(c.start||1)&&c.locs.includes(id)&&c.slots.includes(state.slot)&&c.days.includes((state.day-1)%7)).length;
+  const status=document.createElement('span');status.className='place-status';const count=state.day<=90?SCHEDULES.peopleAt(state.day,state.slot,id,STORY.available(state,id)).length:0;
    status.textContent=id===state.location?'HERE':count?count+' HERE':'›';b.append(status);$('places').append(b);
  }
  $('placeTitle').textContent=places[state.location][0];$('placeDetail').textContent=places[state.location][1];
  const bgFiles={home:'home.jpg',shop:state.slot===2?'card-shop-evening.png':'card-shop-day.png',arcade:'arcade.jpg',park:'park.jpg',cafe:'cafe.jpg',center:'center.jpg',library:'library.jpg'};
  $('scene').style.backgroundImage="linear-gradient(0deg,#090b18ec 0%,#090b1860 80%),url('/rpg-assets/"+bgFiles[state.location]+"')";
  const showingStory=state.activeStory?STORY.byId(state.activeStory.id):null;
- const portraitId=showingStory?.npc||state.selected,portraitRoot=$('portrait');portraitRoot.replaceChildren();
+ const showingEncounter=state.activeEncounter?WORLD.byEncounter(state.activeEncounter.id):null;
+ const portraitId=showingStory?.npc||showingEncounter?.npc||state.selected,portraitRoot=$('portrait');portraitRoot.replaceChildren();
  if(portraitId&&cast[portraitId])portraitRoot.append(makeAvatar(portraitId));
  $('homeBanner').hidden=state.location!=='home'||!!portraitId;
  $('homeBanner').textContent='YOUR APARTMENT  ·  DAY '+state.day+'  ·  '+periods[state.slot]+' — Prepare your deck, review your plans or rest.';
- let shown=showingStory?renderStory():scene;
+ let shown=showingStory?renderStory():showingEncounter?showEncounter():scene;
  $('speaker').textContent=shown?.speaker||'Narrator';$('line').textContent=shown?.line||'The town is waiting.';$('choices').replaceChildren();
  for(const [label,action] of shown.choices||[]){
   const b=document.createElement('button');b.className='choice'+(action==='storyFinish'?' finish':'');b.textContent=label;
@@ -251,16 +252,21 @@ function render(){
   b.onclick=()=>act(action);$('choices').append(b);
  }
  $('townRadar').replaceChildren();
- const weekday=(state.day-1)%7;
- const elsewhere=Object.entries(cast).filter(([id,c])=>state.day<91&&state.day>=(c.start||1)&&!c.locs.includes(state.location)&&c.slots.includes(state.slot)&&c.days.includes(weekday));
- if(!elsewhere.length){const p=document.createElement('p');p.className='empty-note';p.textContent='Everyone available is already here, or the town is quiet right now.';$('townRadar').append(p);}
- for(const [id,c] of elsewhere){
+ const elsewhere=[];
+ for(const place of Object.keys(places)){
+  if(place==='home'||place===state.location)continue;
+  const visible=state.day<=90?SCHEDULES.peopleAt(state.day,state.slot,place,STORY.available(state,place)):[];
+  for(const id of visible)if(!elsewhere.some(e=>e.id===id))elsewhere.push({id,place});
+ }
+ if(!elsewhere.length){
+  const p=document.createElement('p');p.className='empty-note';p.textContent='No other trainers are around town this period.';$('townRadar').append(p);
+ }
+ for(const {id,place} of elsewhere){
   const button=document.createElement('button');button.className='radar-person';button.disabled=locked;
-  const label=document.createElement('strong');label.textContent=c.name;
-  const where=document.createElement('small');where.textContent='↗ '+c.locs.map(place=>places[place][0]).join(' · ');
-  button.append(label,where);
-  button.title='Travel for free to '+places[c.locs[0]][0];
-  button.onclick=()=>{state.location=c.locs[0];state.selected=null;persist();say('Narrator','You head to '+places[state.location][0]+'. '+places[state.location][1]);};
+  const label=document.createElement('strong');label.textContent=cast[id].name;
+  const where=document.createElement('small');where.textContent='↗ '+places[place][0];
+  button.append(label,where);button.title='Travel for free to '+places[place][0];
+  button.onclick=()=>{if(state.activeStory||state.activeEncounter||state.pendingDuel)return;state.location=place;state.selected=null;persist();say('Narrator','You head to '+places[place][0]+'. '+places[place][1]);};
   $('townRadar').append(button);
  }
  $('people').replaceChildren();
