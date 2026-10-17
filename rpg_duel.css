@@ -1,0 +1,4 @@
+/* Embedded campaign matches cannot start a disconnected replacement duel. */
+body.rpg-duel #reset,body.rpg-duel .masthead nav a{display:none!important}
+body.rpg-duel .engine-badge{border-color:#d8749e;color:#ffd4e0}
+@media(prefers-reduced-motion:reduce){body.rpg-duel *{animation-duration:.01ms!important;transition-duration:.01ms!important}}
