@@ -82,6 +82,16 @@ GitHub Actions CPU AI regression additionally runs the existing Classic local CP
 - All three suites (CPU, full TCG and Node/RPG) were green at `6b5cc4e`. A subsequent benchmark reporting regression correction is being checked. One transient full-suite red earlier in this milestone came from concurrently added `test_neo_batch_v072.js` Prize/KO rules; this branch did not modify its engine implementation and later full suites recovered.
 - Next genuinely promising research: diagnose **which actions differ on expert losses**, design stronger opponent-reply/Prize-race evaluation and mandatory multi-stage Trainer target planning, run multiple new *seed sets* with fewer censored games. Prefer demonstrable win-rate gains over increasing simulation complexity.
 
+## Post-merge tactical continuation — PR #11
+
+- PR #9 was **merged** into `main` at commit `66ec583ce68dddf77e02c1862f2e37f103dc3bfa`. This continuation now lives on dedicated branch `agent/cpu-ai-tactics-20261017`, draft PR #11. The current `main` contains the previous complete CPU milestone.
+- Added experimental `evolutionTempo` option and regression scenarios. In a ready Machop → Machoke evolution, an Active with one Fighting Energy loses its immediately affordable Low Kick. The stronger evaluator delays that evolution unless it protects the Pokémon from an imminent knockout, cures a disabling condition, or an Energy in hand can restore effective attacking immediately. This uses only visible battle state/own hand.
+- Added paired benchmark `--left-evolution-tempo` / `--right-evolution-tempo` to measure the feature against the unchanged Champion on exact same deck/seed with swapped sides. On 120-turn matches: **39–41** on Blackout (80 matches) and **28–32** on Brushfire (60 matches), with zero timeouts. It did **not** measurably improve head-to-head strength, so remains **off by default**.
+- Improved Energy Removal/Super Energy Removal multi-stage choices using actual public attack affordability. Experienced+ CPUs now preferentially remove Energy from the opponent Pokémon creating the greatest immediate threat, and choose the specific attached Energy card that disables affordable attacks. On the Super Energy Removal payment stage, they prioritize discarding their least valuable own Energy while retaining the type needed for their Active attack. Beginners continue to make plausible simpler targeting mistakes.
+- Only expose an **own previously selected** Trainer target/source from the pending plan to the scorer, never the opponent's hidden cards/hand/deck or the complete internal pending plan. Focused regressions cover opponent active-vs-bench target, Fighting-vs-Water Energy choice and no hidden decision metadata from another player's Trainer plan.
+- The CPU, Node and Gameplay regressions were green after the first tactical evolution fix at `8ef452c`. Latest Trainer-choice regression runs are under CI verification.
+- **Next milestones:** actual Prize-race optimization and expected opponent response within a bounded, masked-information model; more action-choice tests for Gym and Neo disruption; benchmark improvement across multiple independent seed ranges before enabling experimental tactics.
+
 ## Known limitations and next work
 
 1. Verify green CI on all affected and full regression suites. 
