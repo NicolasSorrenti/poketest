@@ -53,7 +53,7 @@ function observation(game,side){
   game.pendingAction.plan?.side===side?game.pendingAction.plan:null;
  const selectedIndex=key=>{
   const x=ownedPlan?.data?.[key]?.[0];
-  if(typeof x!=='string'||!/^slot:-?\\d+$/.test(x))return null;
+  if(typeof x!=='string'||!/^slot:-?\d+$/.test(x))return null;
   return Number(x.slice(5));
  };
  return {phase:view.phase,turn:view.turn,round:view.round,turnSerial:game.turnSerial,over:view.over,
@@ -353,7 +353,7 @@ function energyRemovalChoiceValue(unit,defender,energyIndex,enemy){
 function choiceValue(option,decision,o,cfg){
  const id=option.id,label=option.label||'',kind=decision.kind||'',ctx=decision.label||'';
  if(/^prize:/.test(id))return 1;
- if(/^n:\\d+$/.test(id)&&cfg?.level>=3){
+ if(/^n:\d+$/.test(id)&&cfg?.level>=3){
   const index=Number(id.slice(2));
   if(/^Choose opposing Energy to discard$/i.test(ctx)&&o.pendingTrainerTarget!==null){
    const unit=slotUnit(o.opponent,o.pendingTrainerTarget);
