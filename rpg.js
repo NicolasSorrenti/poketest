@@ -470,7 +470,7 @@ function render(){
  ...(state.location==='home'?[['Sleep until morning · ⏳ '+(3-state.slot)+' period(s)','sleep']]:[]),
  ['Calendar · free','calendar'],['New campaign','new']];
  for(const [label,action] of items){
-  const b=document.createElement('button');b.className='activity';b.textContent=label;b.disabled=(ended&&action!=='new'&&action!=='calendar')||(locked&&action!=='calendar'&&action!=='tournamentNext')||(action==='event'&&!!scheduledCup&&!entry.possible);if(action==='event'&&scheduledCup)b.title=entry.reason;b.onclick=()=>act(action);$('activities').append(b);
+  const b=document.createElement('button');b.className='activity'+(action==='tournamentNext'?' tournament-next':'');b.textContent=label;b.disabled=(ended&&action!=='new'&&action!=='calendar')||(locked&&action!=='calendar'&&action!=='tournamentNext')||(action==='event'&&!!scheduledCup&&!entry.possible);if(action==='event'&&scheduledCup)b.title=entry.reason;b.onclick=()=>act(action);$('activities').append(b);
  }
  $('journal').replaceChildren();const stats=document.createElement('p');stats.className='stats';stats.textContent='🏆 '+state.points+' circuit points   ·   ◈ '+state.credits+' credits';$('journal').append(stats);
  for(const e of eventCards.filter(e=>e.day>=state.day).slice(0,2)){const p=document.createElement('p');p.textContent='DAY '+e.day+' · '+e.title+' ('+periods[e.slot]+')';$('journal').append(p)}
