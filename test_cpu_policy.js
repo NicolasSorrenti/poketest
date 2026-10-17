@@ -498,6 +498,23 @@ const settings={level:3,personality:'balanced',side:1,seed:47};
  assert.equal(result.challenger.prizeRace,false);
  assert.throws(()=>argumentsOf(['--left-prize-race','maybe']),/Planning/);
 }
+{
+ const {arena,argumentsOf}=require('./benchmark_cpu');
+ const result=arena(argumentsOf(['--pairs','2','--max-turns','8','--seed','87002',
+  '--left-level','5','--right-level','5','--left-prize-race','true','--right-prize-race','false']));
+ assert.equal(result.totalMatches,4);
+ assert.equal(result.prizeRace,undefined);
+ assert.equal(result.baseline.prizeRace,true);
+ assert.equal(result.challenger.prizeRace,false);
+ assert.equal(result.winCausesByRole.length,2);
+ assert.equal(result.meanFinalPrizesByRole.length,2);
+ for(let role=0;role<2;role++){
+  assert.equal(Object.values(result.winCausesByRole[role]).reduce((n,x)=>n+x,0),
+   role===0?result.wins:result.losses,
+   'Win reasons must account for all conclusive results without inventing new wins');
+  assert.ok(result.meanFinalPrizesByRole[role]>=0&&result.meanFinalPrizesByRole[role]<=6);
+ }
+}
 let duels=0,decisions=0,attacks=0,energy=0,evolutions=0,trainer=0;
 for(let seed=1;seed<=4;seed++){
  let game=createGame({decks:[deck,deck],seed:seed*1789,format:'classic'});
