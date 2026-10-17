@@ -108,8 +108,8 @@ function prompt(g,plan,helpers){
   }
  }
  // Neo Destiny theme Trainer decisions are authoritative and replay-safe.
- if(['Berry','Counterattack Claws','Focus Band','EXP.ALL','Gold Berry','Miracle Berry'].includes(name)&&!chosen(d,'target')){
-  return single('target',side,own(u=>!u.attachedTrainers.some(t=>['Berry','Counterattack Claws','Focus Band','EXP.ALL','Gold Berry','Miracle Berry'].includes(get(t.id).name))),'Attach the Pokémon Tool to which Pokémon?');
+ if(['Berry','Counterattack Claws','Focus Band','EXP.ALL','Gold Berry','Miracle Berry','Balloon Berry','Magnifier'].includes(name)&&!chosen(d,'target')){
+  return single('target',side,own(u=>!u.attachedTrainers.some(t=>['Berry','Counterattack Claws','Focus Band','EXP.ALL','Gold Berry','Miracle Berry','Balloon Berry','Magnifier'].includes(get(t.id).name))),'Attach the Pokémon Tool to which Pokémon?');
  }
  if(name==='Pokémon Breeder Fields'){
   // One or two of your in-play Pokémon can be nominated for independent flips.
@@ -164,6 +164,12 @@ function prompt(g,plan,helpers){
 
 
 
+ // Neo v0.63: Super Scoop Up flips once before offering a target.
+ if(name==='Super Scoop Up'){
+  if(!chosen(d,'ssuCoin'))d.ssuCoin=[helpers.flip(g)?'heads':'tails'];
+  if(d.ssuCoin[0]==='heads'&&!chosen(d,'ssuTarget'))
+   return single('ssuTarget',side,own(),'Super Scoop Up: choose Pokémon to return to hand');
+ }
  // Neo v0.55 — exact two-seat Trainer decisions. The Trainer itself remains
  // in its hand until commit; any other hand picks use pre-commit indices.
  if(name==='Mary'){
@@ -477,6 +483,19 @@ function commit(g,plan,h){
  switch(name){
 
 
+  case 'Super Scoop Up':{
+   if(d.ssuCoin?.[0]==='heads'){
+    const index=pick('ssuTarget'),u=slot(p,index);
+    if(!u)throw Error('Super Scoop Up target is missing');
+    if(index===-1)p.active=null;else p.bench.splice(index,1);
+    p.hand.push(u.id,...u.under,...u.energies,...u.attachedTrainers.map(t=>t.id),...(u.gymShapeshiftCard?[u.gymShapeshiftCard]:[]));
+    if(index===-1){
+     if(!p.bench.length){g.over=true;g.winner=1-plan.side;}
+     else{g.pendingPromotions=[plan.side];g.promotionAfter='trainer';h.finishPromotions(g);}
+    }
+   }
+   break;
+  }
   case 'Mary':{
    const chosenHand=picks('maryReturn').map(i=>i>plan.handIndex?i-1:i);
    if(chosenHand.length!==2||new Set(chosenHand).size!==2||chosenHand.some(i=>!p.hand[i]))throw Error('Invalid Mary hand selection');
@@ -728,8 +747,8 @@ function commit(g,plan,h){
    }break;
   }
   case 'Super Rod':if(d.rodCard?.length)p.hand.push(...extract(p,'rodCard'));break;
-  case 'Berry':case 'Counterattack Claws':case 'Focus Band':case 'EXP.ALL':case 'Gold Berry':case 'Miracle Berry':{
-   const u=slot(p,pick('target'));if(u.attachedTrainers.some(t=>['Berry','Counterattack Claws','Focus Band','EXP.ALL','Gold Berry','Miracle Berry'].includes(get(t.id).name)))throw Error('Pokémon already has a Tool');
+  case 'Berry':case 'Counterattack Claws':case 'Focus Band':case 'EXP.ALL':case 'Gold Berry':case 'Miracle Berry':case 'Balloon Berry':case 'Magnifier':{
+   const u=slot(p,pick('target'));if(u.attachedTrainers.some(t=>['Berry','Counterattack Claws','Focus Band','EXP.ALL','Gold Berry','Miracle Berry','Balloon Berry','Magnifier'].includes(get(t.id).name)))throw Error('Pokémon already has a Tool');
    u.attachedTrainers.push({id:plan.cardId});p.discard.pop();break;
   }
   case 'Mail from Bill':if(p.hand.length<4)h.draw(g,plan.side,4-p.hand.length);break;
@@ -829,7 +848,7 @@ function answer(g,plan,response,h){
  const data={...plan.data,[plan.await]:response.decline?[]:[...response.selected]};
  return prompt(g,{...plan,data,await:null},h);
 }
-const SUPPORTED=new Set(['Gold Berry','Miracle Berry','Focus Band','EXP.ALL','Sprout Tower','Healing Field','Broken Ground Gym','Radio Tower','Lucky Stadium','Mary','PokéGear','Super Energy Retrieval','Time Capsule','Pokémon Personality Test',"Impostor Professor Oak's Invention",'Arcade Game','Energy Charge','Ruin Wall','Old Rod',"Team Rocket's Evil Deeds",'Energy Ark','Fossil Egg','Hyper Devolution Spray','Double Gust',"Bill's Teleporter",'Professor Elm','Moo-Moo Milk','Pokémon March','Super Rod','Bill','Professor Oak','Impostor Professor Oak',"Imposter Oak's Revenge",'Lass','Maintenance','Computer Search','Energy Search',"The Boss's Way",'Poké Ball','Pokémon Trader','Item Finder','Energy Retrieval','Nightly Garbage Run','Recycle','Pokédex','Gambler','Digger','Full Heal','Potion','Super Potion','Pokémon Center','Switch','Gust of Wind','Energy Removal','Super Energy Removal','Defender','PlusPower','Goop Gas Attack','Here Comes Team Rocket!',"Rocket's Sneak Attack",'Pokémon Flute','Revive','Mr. Fuji','Scoop Up','Devolution Spray','Pokémon Breeder','Challenge!','Sleep!',
+const SUPPORTED=new Set(['Balloon Berry','Super Scoop Up','Magnifier','Gold Berry','Miracle Berry','Focus Band','EXP.ALL','Sprout Tower','Healing Field','Broken Ground Gym','Radio Tower','Lucky Stadium','Mary','PokéGear','Super Energy Retrieval','Time Capsule','Pokémon Personality Test',"Impostor Professor Oak's Invention",'Arcade Game','Energy Charge','Ruin Wall','Old Rod',"Team Rocket's Evil Deeds",'Energy Ark','Fossil Egg','Hyper Devolution Spray','Double Gust',"Bill's Teleporter",'Professor Elm','Moo-Moo Milk','Pokémon March','Super Rod','Bill','Professor Oak','Impostor Professor Oak',"Imposter Oak's Revenge",'Lass','Maintenance','Computer Search','Energy Search',"The Boss's Way",'Poké Ball','Pokémon Trader','Item Finder','Energy Retrieval','Nightly Garbage Run','Recycle','Pokédex','Gambler','Digger','Full Heal','Potion','Super Potion','Pokémon Center','Switch','Gust of Wind','Energy Removal','Super Energy Removal','Defender','PlusPower','Goop Gas Attack','Here Comes Team Rocket!',"Rocket's Sneak Attack",'Pokémon Flute','Revive','Mr. Fuji','Scoop Up','Devolution Spray','Pokémon Breeder','Challenge!','Sleep!',
  'Brock',"Brock's Training Method",'Misty','Lt. Surge','Secret Mission','Erika',"Erika's Perfume",'Koga','Sabrina',"Sabrina's Gaze",'Blaine',"Blaine's Gamble",'Fervor','Max Revive','Giovanni','Warp Point',
  "Blaine's Last Resort","Erika's Kindness",'Good Manners','Master Ball',"Giovanni's Last Resort","Misty's Tears","Erika's Maids","The Rocket's Trap","Rocket's Secret Experiment",
  'No Removal Gym',"The Rocket's Training Gym",'Resistance Gym',"Rocket's Minefield Gym",'Transparent Walls',

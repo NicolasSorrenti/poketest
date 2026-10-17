@@ -12,7 +12,7 @@ const CLASSIC=require('./classic_format');
 const CLASSIC_TRAINERS=require('./classic_trainer_core');
 const CLASSIC_POWERS=require('./classic_power_core');
 const isClassicRules=g=>['classic','theme-expanded','gym-theme','gym-expanded','neo-theme','online-preview'].includes(g.format);
-const ATTACH_ONLY_TRAINERS=new Set(['PlusPower','Defender','Berry','Counterattack Claws','Focus Band','EXP.ALL','Gold Berry','Miracle Berry','Charity',"Brock's Protection","Koga's Ninja Trick","Sabrina's ESP",'Clefairy Doll','Mysterious Fossil']);
+const ATTACH_ONLY_TRAINERS=new Set(['PlusPower','Defender','Berry','Counterattack Claws','Focus Band','EXP.ALL','Gold Berry','Miracle Berry','Balloon Berry','Magnifier','Charity',"Brock's Protection","Koga's Ninja Trick","Sabrina's ESP",'Clefairy Doll','Mysterious Fossil']);
 const protectedEnergy=u=>Boolean(u?.attachedTrainers?.some(t=>t.id==='gym2-101'));
 const isBaby=(g,u)=>['neo-theme','online-preview'].includes(g.format)&&u&&!u.secretPlanFaceDown&&['Elekid','Magby','Tyrogue','Igglybuff','Cleffa','Pichu','Smoochum'].includes(CATALOG.get(u.id)?.name);
 
@@ -159,6 +159,8 @@ function retreatCost(g,side,u){
  const owner=g.players[side],enemy=g.players[1-side];
  const base=(effectiveCard(g,u).retreatCost||[]).length;
  if(!isClassicRules(g))return base;
+ // Balloon Berry errata: this Pokémon's Retreat Cost is 0.
+ if(u.attachedTrainers.some(t=>card(g,t.id).name==='Balloon Berry'))return 0;
  const aids=owner.bench.filter(x=>CLASSIC_POWERS.enabled(g,x,'Retreat Aid')).length;
  const gymSave=g.stadium&&card(g,g.stadium.id).name==='Cerulean City Gym'&&card(g,u.id).name.startsWith("Misty's ")?1:0;
  const sticky=CLASSIC_POWERS.enabled(g,enemy.active,'Sticky Goo')?2:0;
@@ -807,7 +809,7 @@ function performAction(g,side,cmd){
   const cost=retreatCost(g,side,u);
   const total=u.energies.reduce((n,id)=>n+retreatUnits(g,u,id),0);
   if(total<cost)fail('Insufficient retreat Energy');
-  if(u.energies.some(id=>(card(g,id).subtypes||[]).includes('Special')&&!['Double Colorless Energy','Full Heal Energy','Potion Energy','Metal Energy','Darkness Energy','Recycle Energy','Rainbow Energy','Miracle Energy'].includes(card(g,id).name))||u.attachedTrainers.some(t=>!['Berry','Counterattack Claws','Focus Band','EXP.ALL','Gold Berry','Miracle Berry',"Brock's Protection","Koga's Ninja Trick","Sabrina's ESP","Charity"].includes(card(g,t.id).name)))fail('Retreat modifiers require an effect handler');
+  if(u.energies.some(id=>(card(g,id).subtypes||[]).includes('Special')&&!['Double Colorless Energy','Full Heal Energy','Potion Energy','Metal Energy','Darkness Energy','Recycle Energy','Rainbow Energy','Miracle Energy'].includes(card(g,id).name))||u.attachedTrainers.some(t=>!['Berry','Counterattack Claws','Focus Band','EXP.ALL','Gold Berry','Miracle Berry','Balloon Berry','Magnifier',"Brock's Protection","Koga's Ninja Trick","Sabrina's ESP","Charity"].includes(card(g,t.id).name)))fail('Retreat modifiers require an effect handler');
   if(cost&&total>cost&&u.energies.length>1){
    g.nextDecisionId++;
    g.pendingDecision=makeDecision({id:`retreat:${g.nextDecisionId}`,actor:side,kind:'energy-discard',label:`Choose Energy cards providing at least ${cost} retreat units`,options:u.energies.map((id,i)=>({id:`energy:${i}`,label:card(g,id).name})),min:1,max:Math.min(cost,u.energies.length)});
@@ -1146,7 +1148,7 @@ function resolveAttack(g,side,index,chosenBench,energyPicks,extra={}){
  }
 
  if(!canPayEnergy(a.cost||[],attackPool(g,u)) && !(isClassicRules(g)&&card(g,u.id).name==='Ditto'&&CLASSIC_POWERS.enabled(g,u,'Transform')&&u.energies.reduce((count,id)=>count+(card(g,id).name==='Double Colorless Energy'?2:1),0)>=(a.cost||[]).length))fail('Insufficient attack Energy');
- if((program.kind!=='neo46:plunder'&&f.active.attachedTrainers.some(t=>!['Defender','PlusPower','Berry','Counterattack Claws','Focus Band','EXP.ALL','Gold Berry','Miracle Berry',"Brock's Protection","Koga's Ninja Trick","Sabrina's ESP","Charity"].includes(card(g,t.id).name)))||f.active.energies.some(id=>(card(g,id).subtypes||[]).includes('Special')&&!['Double Colorless Energy','Full Heal Energy','Potion Energy','Metal Energy','Darkness Energy','Recycle Energy','Rainbow Energy','Miracle Energy'].includes(card(g,id).name)))fail('Damage or Energy modifiers require effect handlers');
+ if((program.kind!=='neo46:plunder'&&f.active.attachedTrainers.some(t=>!['Defender','PlusPower','Berry','Counterattack Claws','Focus Band','EXP.ALL','Gold Berry','Miracle Berry','Balloon Berry','Magnifier',"Brock's Protection","Koga's Ninja Trick","Sabrina's ESP","Charity"].includes(card(g,t.id).name)))||f.active.energies.some(id=>(card(g,id).subtypes||[]).includes('Special')&&!['Double Colorless Energy','Full Heal Energy','Potion Energy','Metal Energy','Darkness Energy','Recycle Energy','Rainbow Energy','Miracle Energy'].includes(card(g,id).name)))fail('Damage or Energy modifiers require effect handlers');
  const usesChoice=['bench-target','switch-attacker','switch-self','target-any','target-any-coin','drag-off'].includes(program.kind);
  if(usesChoice){const owner=program.kind==='switch-self'?p:f;
   if(['target-any','target-any-coin'].includes(program.kind)){if(!Number.isInteger(chosenBench)||chosenBench< -1||chosenBench>=f.bench.length)fail('Invalid opponent target');}
@@ -1393,7 +1395,7 @@ function resolveAttack(g,side,index,chosenBench,energyPicks,extra={}){
  if(metalOnAttacker&&!isMetalType(g,u))baseDamage=Math.max(0,baseDamage-10*metalOnAttacker);
  if(f.active.neo48Growl?.expires>g.turnSerial&&f.active.neo48Growl.sourceId===u.id)baseDamage=Math.max(0,baseDamage-10);
  let dmg=roll.ignoreWR?baseDamage:calculateDamage(c,defCard,baseDamage,f.active,{
-  ignoreResistance:roll.ignoreResistance||(g.stadium&&card(g,g.stadium.id).name==='Pewter City Gym'&&c.name.startsWith("Brock's ")),
+  ignoreResistance:roll.ignoreResistance||u.attachedTrainers.some(t=>card(g,t.id).name==='Magnifier')||(g.stadium&&card(g,g.stadium.id).name==='Pewter City Gym'&&c.name.startsWith("Brock's ")),
   ignoreWeakness:g.stadium&&card(g,g.stadium.id).name==='Cinnabar City Gym'&&c.types?.includes('Water')&&defCard.name.startsWith("Blaine's "),
   resistancePenalty:g.stadium&&card(g,g.stadium.id).name==='Resistance Gym'?10:30
  });
@@ -1937,6 +1939,8 @@ function finishRetreat(g,side,slot,picks){
  if(cost===0&&picks.length||cost>0&&(!picks.length||total<cost||contribution.some(v=>total-v>=cost)))fail('Wrong number or excessive retreat Energy payment');
  for(const i of [...picks].sort((a,b)=>b-a))p.discard.push(u.energies.splice(i,1)[0]);
  if(u.status==='Confused'&&next(g,2)===0){p.confusedRetreatFailed=true;log(g,`${p.name} failed to retreat due to Confusion.`);return;}
+ const balloon=u.attachedTrainers.findIndex(t=>card(g,t.id).name==='Balloon Berry');
+ if(balloon>=0)p.discard.push(u.attachedTrainers.splice(balloon,1)[0].id);
  p.active=p.bench.splice(slot,1,u)[0];STATUS.clearConditions(u);clearBenchEffects(u);if(isClassicRules(g))CLASSIC_POWERS.movedToBench(g,side,u,p.active,classicHelpers());p.retreated=true;log(g,`${p.name} retreated.`);
  if(isClassicRules(g)&&g.players[1-side].bench.some(x=>CLASSIC_POWERS.enabled(g,x,'Sinkhole'))&&next(g,2)===0){u.damage+=20;knockOuts(g,'direct');}
 }
@@ -2110,6 +2114,14 @@ const berryHelpers=()=>({card,maxHP,STATUS,log,makeDecision});
 function finishTurn(g){
  if(g.over)return;
  const cur=g.players[g.turn];
+ // Magnifier expires at the end of the owning player's turn, even if Benched.
+ for(const host of allPokemon(cur)){
+  const kept=[];for(const t of host.attachedTrainers){
+   if(card(g,t.id).name==='Magnifier')cur.discard.push(t.id);
+   else kept.push(t);
+  }
+  host.attachedTrainers=kept;
+ }
  // Do NOT return Charity here. Poison/Char Checkup can still Knock Out the
  // attached Pokémon at end of turn; in that case Charity must be discarded.
  if(cur.tickleHand&&cur.tickleRestoreTurn<=g.turnSerial){cur.hand.push(...cur.tickleHand);delete cur.tickleHand;delete cur.tickleRestoreTurn;}
