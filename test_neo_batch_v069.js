@@ -20,7 +20,7 @@ function metronome(source,attackName,opts={}){
  const idx=CATALOG.get(source).attacks.findIndex(a=>a.name===attackName);
  assert.ok(idx>=0,source+' has '+attackName);
  for(let seed=0;seed<15000;seed+=151){
-  const g=game(source,{...opts,seed:seed*6553600});send(g,0,'attack',{attackIndex:0});
+  const g=game(source,{...opts,seed:seed*6553600+(opts.seed||0)});send(g,0,'attack',{attackIndex:0});
   if(!g.pendingDecision)continue;
   assert.equal(g.pendingDecision.actor,0,'Chooser always controls Super Metronome');
   const sources=g.pendingDecision.options.map(x=>x.id);assert.ok(sources.includes('slot:-1'));
