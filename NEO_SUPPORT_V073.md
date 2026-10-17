@@ -1,0 +1,3 @@
+# Neo v0.73 — Misty's Psyduck ESP target decisions
+
+Misty's Psyduck ESP adds copies of previously supported any-opponent Pokémon attacks such as Dark Golbat Flitter and Meowth Coin Hurl, with defender's Active vs Bench targeting and attacker-only selections after a three-head coin result. The copied attack rolls its own independent coin after the original ESP flips; the engine also permits non-targeted supported effects such as Grimer Minimize, shielding Psyduck and not its target. Unsupported nested Gym Trainer/Power interactions remain explicitly gated. The shared Node reducer controls CPU and online matches; tests include no-Bench alternatives, wrong-player rejection and both additional-coin outcomes.
