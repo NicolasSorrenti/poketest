@@ -428,6 +428,34 @@ const settings={level:3,personality:'balanced',side:1,seed:47};
  assert.equal(AI.candidates(o,champion,{powerKeys:new Set()}).filter(x=>x.type==='choose').length,2,
   'Target selection still uses the same authoritative choice-command interface');
 }
+{
+ // The second Energy Removal decision must choose the Energy that actually
+ // disables the target's affordable attack, not the first Energy in its list.
+ const game=createGame({decks:[deck,deck],seed:887,format:'classic'});
+ game.pendingAction={kind:'classic_trainer',plan:{side:1,
+  data:{target:['slot:-1'],source:['slot:-1']}}};
+ const o=AI.observation(game,1);
+ assert.equal(o.pendingTrainerTarget,-1);
+ assert.equal(o.pendingTrainerSource,-1);
+ o.phase='game';o.turn=1;
+ o.self.active={id:IDS.hit,energies:[IDS.fight,'base1-102'],damage:0,status:null};
+ o.opponent.active={id:IDS.hit,energies:[IDS.fight,'base1-102'],damage:0,status:null};
+ o.decision={id:'classic-trainer:4',kind:'enemyEnergy',actor:1,
+  label:'Choose opposing Energy to discard',min:1,max:1,optional:false,
+  options:[{id:'n:0',label:'Fighting Energy'},{id:'n:1',label:'Water Energy'}]};
+ const champion=AI.configuration({side:1,level:5});
+ const choose=i=>({type:'choose',payload:{decisionId:o.decision.id,selected:['n:'+i]}});
+ assert.ok(AI.score(choose(0),o,champion,{})>AI.score(choose(1),o,champion,{}),
+  'Removing Fighting must be better than irrelevant Water on enemy Hitmonchan');
+ o.decision={...o.decision,kind:'ownEnergy',label:'Discard one of your attached Energy'};
+ assert.ok(AI.score(choose(1),o,champion,{})>AI.score(choose(0),o,champion,{}),
+  'Super Energy Removal should pay spare Water instead of essential Fighting');
+ const opposite=structuredClone(game);opposite.pendingAction.plan.side=0;
+ const hidden=AI.observation(opposite,1);
+ assert.equal(hidden.pendingTrainerTarget,null);
+ assert.equal(hidden.pendingTrainerSource,null);
+ assert.equal(hidden.opponent.hand,undefined);
+}
 let duels=0,decisions=0,attacks=0,energy=0,evolutions=0,trainer=0;
 for(let seed=1;seed<=4;seed++){
  let game=createGame({decks:[deck,deck],seed:seed*1789,format:'classic'});
