@@ -93,6 +93,7 @@ function estimatedDamage(attack,attacker,defender){
  else if(program?.kind==='coin-times')amount=program.flips*program.each*.5;
  else if(program?.kind==='coin-failure')amount=program.damage*.5;
  else if(program?.kind==='coin-bonus')amount=program.base+program.bonus*.5;
+ else if(program?.kind==='coin-recoil-bonus')amount=program.base+program.bonus*.5;
  else if(raw.endsWith('x'))amount*=1;
  else if(raw.endsWith('+'))amount+=8;
  else if(raw.endsWith('-'))amount=Math.max(0,amount-10);
@@ -114,7 +115,7 @@ function knockoutChance(attack,attacker,defender){
  if(hp<=0)return 0;
  const program=ATTACK.compile(attack),kill=raw=>damageAfterType(raw,attacker,defender)>=hp;
  if(program?.kind==='coin-failure')return kill(program.damage)?0.5:0;
- if(program?.kind==='coin-bonus')return (Number(kill(program.base))+Number(kill(program.base+program.bonus)))/2;
+ if(['coin-bonus','coin-recoil-bonus'].includes(program?.kind))return (Number(kill(program.base))+Number(kill(program.base+program.bonus)))/2;
  if(program?.kind==='coin-times'){
   // Exact public probability for the printed number of fair coin flips. No
   // random calls and no access to the engine's future RNG or shuffled deck.
