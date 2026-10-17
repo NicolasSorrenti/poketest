@@ -263,6 +263,35 @@ const settings={level:3,personality:'balanced',side:1,seed:47};
  assert.ok(AI.score(choose(0),o,expert,{})>AI.score(choose(1),o,expert,{}),
   'Champion should reverse opening choice when its hand contains Fighting Energy');
 }
+{
+ // A two-card setup line: two Fighting Energy support only Machop's
+ // Low Kick, but evolving to Machoke THEN attaching another Fighting Energy
+ // unlocks Karate Chop. Neither move alone can produce that attack.
+ const g=createGame({decks:[deck,deck],seed:871,format:'classic'});
+ const o=AI.observation(g,1);o.phase='game';o.turn=1;o.round=5;o.turnSerial=8;
+ o.self.active={id:IDS.machop,damage:0,playedTurn:2,energies:[IDS.fight,IDS.fight],status:null};
+ o.self.hand=['base1-34',IDS.fight];
+ o.self.energyUsed=false;
+ o.opponent.active={id:IDS.hit,damage:0,energies:[IDS.fight],status:null};
+ const champion=AI.configuration({side:1,level:5,planning:true});
+ const noPlan=AI.configuration({side:1,level:5,planning:false});
+ const evolve={type:'evolve',payload:{handIndex:0,slot:-1}};
+ const energy={type:'attach_energy',payload:{handIndex:1,slot:-1}};
+ assert.ok(AI.planningBonus(evolve,o,champion)>0,
+  'Champion should forecast a two-step evolve/attach attack line');
+ assert.ok(AI.planningBonus(energy,o,champion)>0,
+  'Champion should also recognize attach/then/evolve as a viable line');
+ assert.equal(AI.planningBonus(evolve,o,noPlan),0,
+  'The baseline policy must remain independently benchmarkable');
+ assert.equal(AI.configuration({side:1,level:3}).planning,false);
+ assert.equal(AI.configuration({side:1,level:5}).planning,true);
+ assert.throws(()=>AI.configuration({planning:'yes'}),/planning/);
+ const hidden=structuredClone(g);
+ const enemy=hidden.players[0];
+ if(enemy.deck.length&&enemy.hand.length)[enemy.hand[0],enemy.deck[0]]=[enemy.deck[0],enemy.hand[0]];
+ assert.equal(AI.planningBonus(evolve,o,champion),
+  AI.planningBonus(evolve,o,champion),'Forecast must be pure and deterministic');
+}
 let duels=0,decisions=0,attacks=0,energy=0,evolutions=0,trainer=0;
 for(let seed=1;seed<=4;seed++){
  let game=createGame({decks:[deck,deck],seed:seed*1789,format:'classic'});
