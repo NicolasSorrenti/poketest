@@ -29,7 +29,9 @@ function configuration(raw={}){
  if(!Object.hasOwn(PERSONALITIES,personality))throw Error('Unknown CPU personality');
  if(!Number.isSafeInteger(raw.seed??1))throw Error('Invalid CPU policy seed');
  const side=raw.side??1;if(side!==0&&side!==1)throw Error('Invalid CPU side');
- return {level,personality,seed:raw.seed??1,side,skill:SKILLS[level],style:PERSONALITIES[personality]};
+ const planning=raw.planning??level>=4;
+ if(typeof planning!=='boolean')throw Error('Invalid CPU planning setting');
+ return {level,personality,seed:raw.seed??1,side,planning,skill:SKILLS[level],style:PERSONALITIES[personality]};
 }
 // Seeded independent of the engine's private deck order and future RNG state.
 function rng(seed){let x=(seed>>>0)||0x6d2b79f5;return ()=>{
@@ -476,12 +478,94 @@ function score(a,o,cfg,used){
  if(type==='use_stadium')return 85;
  return 0;
 }
+
+// Deterministic two-step tactical forecast. This is NOT a rules simulation:
+// it uses only the current player's visible hand, board, printed attack costs
+// and probabilities, and never calls the reducer or reads an unrevealed card.
+function projectedAttackValue(active,defender,turnSerial=0){
+ if(!active||!defender||['Asleep','Paralyzed'].includes(active.status))return 0;
+ const attacks=active.effectiveAttacks||card(active.id)?.attacks||[],pool=energyPool(active);
+ const hp=hpRemaining(defender);
+ let best=0;
+ for(let i=0;i<attacks.length;i++){
+  const attack=attacks[i];
+  if(!ATTACK.compile(attack)||!canPayEnergy(attack.cost||[],pool))continue;
+  if(active.amnesia?.index===i&&active.amnesia.expires>turnSerial)continue;
+  if(active.gymAttackCooldown?.expires>turnSerial&&
+    (active.gymAttackCooldown.index===null||active.gymAttackCooldown.index===i))continue;
+  const dmg=estimatedDamage(attack,active,defender),ko=knockoutChance(attack,active,defender);
+  const impact=Math.min(dmg,hp)*1.05+ko*115+
+   (/Poison|Paraly|Sleep|Confus/i.test(attack.text||'')?10:0);
+  best=Math.max(best,impact);
+ }
+ return best;
+}
+function prepBoard(o){
+ return {active:o.self.active?{...o.self.active}:null,
+  bench:o.self.bench.map(x=>({...x})),hand:[...(o.self.hand||[])],
+  energyUsed:!!o.self.energyUsed};
+}
+function projectedPrep(board,action,round){
+ const {type,payload}=action;
+ if(!['attach_energy','evolve','bench'].includes(type))return null;
+ const next={...board,active:board.active?{...board.active}:null,
+  bench:board.bench.map(x=>({...x})),hand:[...board.hand]};
+ const id=next.hand[payload.handIndex],c=card(id);
+ if(!c)return null;
+ const u=payload.slot===-1?next.active:next.bench[payload.slot];
+ if(type==='attach_energy'){
+  if(next.energyUsed||!u||!isEnergy(c))return null;
+  u.energies=[...(u.energies||[]),id];
+  next.energyUsed=true;
+ }else if(type==='evolve'){
+  if(!u||!canEvolve(c,card(u.id))||u.playedTurn>=round)return null;
+  u.id=id;
+  u.playedTurn=round;
+ }else{
+  if(!isBasicPokemon(c))return null;
+  next.bench.push({id,damage:0,energies:[],status:null,playedTurn:round});
+ }
+ next.hand.splice(payload.handIndex,1);
+ return next;
+}
+function bestOnePrep(board,o){
+ let best=projectedAttackValue(board.active,o.opponent.active,o.turnSerial);
+ for(let i=0;i<board.hand.length;i++){
+  const c=card(board.hand[i]);if(!c)continue;
+  if(isEnergy(c)&&!board.energyUsed&&board.active){
+   const next=projectedPrep(board,command('attach_energy',{handIndex:i,slot:-1}),o.round);
+   if(next)best=Math.max(best,projectedAttackValue(next.active,o.opponent.active,o.turnSerial));
+  }
+  if(c.evolvesFrom&&board.active&&canEvolve(c,card(board.active.id))&&
+   board.active.playedTurn<o.round){
+   const next=projectedPrep(board,command('evolve',{handIndex:i,slot:-1}),o.round);
+   if(next)best=Math.max(best,projectedAttackValue(next.active,o.opponent.active,o.turnSerial));
+  }
+ }
+ return best;
+}
+function planningBonus(action,o,cfg){
+ if(!cfg.planning||o.phase!=='game'||!o.self.active)return 0;
+ const before=prepBoard(o),after=projectedPrep(before,action,o.round);
+ if(!after)return 0;
+ const now=projectedAttackValue(before.active,o.opponent.active,o.turnSerial);
+ const next=projectedAttackValue(after.active,o.opponent.active,o.turnSerial);
+ const alone=bestOnePrep(before,o);
+ const combo=bestOnePrep(after,o);
+ // A full two-card sequence can open an attack that neither card alone could
+ // enable. Reward that tempo without treating possible future card draws as known.
+ const immediate=(next-now)*.50;
+ const synergy=Math.max(0,combo-Math.max(next,alone))*.85;
+ return Math.max(-45,Math.min(135,immediate+synergy))*cfg.style.damage;
+}
+
 function chooseAction(game,raw={},memo={}){
  const cfg=configuration(raw),o=observation(game,cfg.side);
  const used={trainers:memo.trainers||0,powers:memo.powers||0,powerKeys:memo.powerKeys||new Set(),stadium:!!memo.stadium};
  const actions=candidates(o,cfg,used);if(!actions.length)return null;
  const random=rng(cfg.seed+game.turnSerial*7919+(game.events?.length||0)*17011+cfg.side*31);
- const ranked=actions.map((action,i)=>({action,score:score(action,o,cfg,used),tie:i}))
+ const ranked=actions.map((action,i)=>({action,
+  score:score(action,o,cfg,used)+planningBonus(action,o,cfg),tie:i}))
   .sort((a,b)=>b.score-a.score||a.tie-b.tie);
  // Rank all visible options before competence-sensitive choice noise. A larger
  // *evaluation budget* should NOT widen the random window: doing so previously
@@ -502,11 +586,11 @@ function chooseAction(game,raw={},memo={}){
  }
  return null;
 }
-function driveSide(initial,{side=1,level=3,personality='balanced',seed=1,limit=200}={}){
+function driveSide(initial,{side=1,level=3,personality='balanced',seed=1,planning,limit=200}={}){
  let game=initial,steps=0;const commands=[],memo={trainers:0,powers:0,powerKeys:new Set(),stadium:false};
  while(!game.over&&steps<limit){
   const beforeTurn=game.turnSerial;
-  const next=chooseAction(game,{side,level,personality,seed},memo);
+  const next=chooseAction(game,{side,level,personality,seed,planning},memo);
   if(!next){
    if(game.pendingDecision?.actor===side)throw Error('CPU unresolved choice: '+JSON.stringify({decision:game.pendingDecision,pendingAction:game.pendingAction}));
    break;
@@ -526,4 +610,4 @@ function driveSide(initial,{side=1,level=3,personality='balanced',seed=1,limit=2
 }
 function driveBot(game,limit=200,config={}){return driveSide(game,{...config,side:1,limit});}
 function propose(game,config={}){return chooseAction(game,{...config,side:1});}
-module.exports={SKILLS,PERSONALITIES,configuration,observation,candidates,score,knockoutChance,chooseAction,driveSide,driveBot,propose};
+module.exports={SKILLS,PERSONALITIES,configuration,observation,candidates,score,knockoutChance,planningBonus,chooseAction,driveSide,driveBot,propose};
