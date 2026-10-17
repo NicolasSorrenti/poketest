@@ -4,10 +4,10 @@ const assert=require('node:assert/strict');
 const STORY=require('../rpg_story');
 const heroes=['hana','reina','shiori','yuna','akari','camila','marina','kaede'];
 const sample=()=>STORY.normalize({day:1,slot:0,location:'home',storyDone:{},storyMissed:{},relationships:{},partner:null});
-test('authored event graph is valid and every adult route has four scenes',()=>{
+test('authored event graph is valid and every adult route has at least four core scenes',()=>{
  assert.deepEqual(STORY.validate(),[]);
- assert.equal(STORY.events.length,32);
- for(const id of heroes)assert.equal(STORY.events.filter(e=>e.npc===id).length,4);
+ assert.equal(STORY.events.length,44);
+ for(const id of heroes)assert.equal(STORY.events.filter(e=>e.id.startsWith(id+'_route_')).length,4);
 });
 test('first encounters can begin and choices award relationships exactly once',()=>{
  const st=sample(),first=STORY.events.find(e=>e.npc==='reina');
@@ -44,4 +44,30 @@ test('romance commitments exclude alternative commitments without blocking frien
  assert.throws(()=>STORY.resolve(st,two.id,0),/committed/);
  assert.equal(STORY.resolve(st,two.id,1).choice.kind,'friend');
  assert.equal(st.partner,one.npc);
+});
+
+test('joint encounters affect both established cast members',()=>{
+ const event=STORY.events.find(e=>e.id==='hana_marina_1'),st=sample();
+ st.day=event.start;st.slot=event.slot;st.location=event.place;
+ st.storyDone[event.prerequisite]={choice:0,day:event.start-1};
+ st.relationships.hana.affection=5;
+ const before=st.relationships.marina.trust;
+ assert.ok(STORY.available(st).some(e=>e.id===event.id));
+ STORY.resolve(st,event.id,0);
+ assert.equal(st.relationships.marina.trust,before+1);
+ assert.equal(st.relationships.marina.affection,2);
+});
+test('Hana has a complete route with optional scenes and a real finale',()=>{
+ const st=sample(),route=STORY.events.filter(e=>e.id.startsWith('hana_route_'));
+ for(const e of route){
+  st.day=e.start;st.slot=e.slot;st.location=e.place;
+  st.relationships.hana.affection=Math.max(9,st.relationships.hana.affection);
+  st.relationships.hana.trust=Math.max(7,st.relationships.hana.trust);
+  assert.ok(STORY.available(st).some(x=>x.id===e.id));
+  STORY.resolve(st,e.id,e.id.endsWith('_4')?0:0);
+ }
+ assert.equal(st.partner,'hana');
+ assert.equal(st.routeOutcomes.hana,'romance');
+ assert.equal(route.length,4);
+ assert.equal(STORY.events.filter(e=>e.id.startsWith('hana_extra_')).length,4);
 });
