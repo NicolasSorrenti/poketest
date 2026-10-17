@@ -53,6 +53,10 @@
   if(!state.arcOutcomes||typeof state.arcOutcomes!=='object'||Array.isArray(state.arcOutcomes))state.arcOutcomes={};
   if(!state.activeArc||typeof state.activeArc!=='object'||!byId.has(state.activeArc.id))state.activeArc=null;
   if(!Array.isArray(state.results))state.results=[];
+  if(!state.relationships||typeof state.relationships!=='object')state.relationships={};
+  if(!state.relationships.reina)state.relationships.reina={affection:0,trust:0,respect:0,attraction:0,duels:0};
+  if(!state.bonds||typeof state.bonds!=='object')state.bonds={};
+  if(!state.bonds.reina)state.bonds.reina={affection:state.relationships.reina.affection||0,trust:state.relationships.reina.trust||0,duels:state.relationships.reina.duels||0};
   return state;
  }
  function wonAgainst(state,npc){return state.results.filter(x=>x.npc===npc&&x.won&&!x.draw).length;}
