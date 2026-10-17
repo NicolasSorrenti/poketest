@@ -59,9 +59,17 @@ GitHub Actions CPU AI regression additionally runs the existing Classic local CP
 - Added focused regressions for the duplicate action issue, deterministic multi-Basic openings, strict decision-noise tiers, Casual one-step planning, avoidance of suicidal retreat, exact KO chances on printed cards, and choosing Gust/promotion targets.
 - Expanded the reproducible CI arena to **450 matches** across seven paired matchups, including 120-turn Champion/Expert and Casual/Beginner mirrors. The 120-turn horizon eliminates nearly all misleading 60-turn draws; it also reveals **Champion remains inadequately calibrated against Expert**.
 - On the 100-game Blackout mirror at commit `e75e980`, CPU legality probes rejected dropped from **13,076** at `17ccae8` to **599** while accepted CPU commands remained valid; Champion beat Beginner 41–21 with 38 time-limited games. This is a dramatic performance improvement, but not evidence of completed difficulty balancing.
-- The CPU, Node and full gameplay jobs were all green at prior commit `54a19e8`; latest targeting changes are being checked. External Neo rule changes on `main` caused intermittent historical-card test failures during this work; we did not modify those engine modules.
+- The CPU, Node and full gameplay jobs were all green at commit `54a19e8`; subsequent regression runs continue on the CPU branch. External Neo rule changes on `main` caused intermittent historical-card test failures during this work; we did not modify those engine modules.
 
 **Honest limitations:** no genuine limited-depth adversarial search, still many Trainer effect-target and attack-text cases with heuristic valuation; end-turn score and resource strategy still need serious work. Champion's full-length Blackout mirror against Expert was 21–29 before the target-choice change, confirming that deterministic greedy choice is not yet consistently stronger than Expert's slight randomness. Do not advertise Champion as truly tournament-optimal.
+
+## Additional improvement — hand-aware openings and accessible Trainer choices
+
+- Opening Active evaluation now cross-checks the CPU's **actual visible hand Energy** with affordable first attacks. A skilled CPU with Hitmonchan, Squirtle and Water Energy chooses the Water attacker; with Fighting Energy it chooses Hitmonchan. A novice may still be swayed by high printed HP. Covered by deterministic scoring regressions.
+- Pending Gust of Wind decisions now prefer a target the current Active can actually KO after Weakness/Resistance, even if another target has less HP but resists the attack. Forced promotions similarly weigh ready attacks, current HP, and the publicly visible opposing threat. Covered by targeted regression tests.
+- Final 120-turn *same-deck* seeded benchmark after these changes (`051dcc2`): **Champion 22–28 Expert**; **Casual 24–26 Beginner**. These are improvements from 17–33 and 25–25 respectively in the earlier 120-turn policy version, but not proof of stronger elite play. The current Champion simply remains **not consistently stronger** in this pool and must not be advertised as tournament optimized.
+- The 100-game 60-turn Blackout baseline: Champion 35–20 Beginner, 45 time-limited results. **The mixed-deck Brushfire/Blackout series was 17–26 with seven nondecisive**; deck matchups matter greatly.
+- CPU regression passed at commit `051dcc2` alongside 450 seeded arena matches; complete full-suite status must be checked on the same PR head after doc updates.
 
 ## Known limitations and next work
 
