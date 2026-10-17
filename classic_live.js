@@ -16,6 +16,14 @@
  let token=null,current=null,selectedHand=null,targetMode=null,busy=false,decisionSelection=new Set();
  let handOpen=false,powersOpen=false,logOpen=false,lastCoinSeq=null,coinQueue=[],coinTimer=null,lastKoMessage="";
  const command=(type,payload={})=>({type,payload});
+ const rpgParams=new URLSearchParams(location.search);
+ const rpgMode=rpgParams.get('rpg')==='1';
+ const rpgMatchId=rpgParams.get('rpgMatch')||'legacy';
+ const storageKey=()=>rpgMode?'neoRpgDuelToken:'+rpgMatchId:'neoClassicLiveToken';
+ const announceRpgResult=()=>{
+  if(rpgMode&&current?.view?.over&&Number.isInteger(current.winner))
+   window.parent.postMessage({type:'neo-rpg-duel-finished',matchId:rpgMatchId,winner:current.winner},location.origin);
+ };
  async function api(path,opts={}){
   const headers={'Content-Type':'application/json',...(token?{'X-Duel-Token':token}:{})};
   const r=await fetch('/api/classic/'+path,{...opts,headers});const body=await r.json();
@@ -38,13 +46,13 @@
   const result=await api('action',{method:'POST',body:JSON.stringify({revision:current.revision,command:action})});
   preview.hide();current=result;
   if(new URLSearchParams(location.search).get('rpg')==='1' && current?.view?.over && Number.isInteger(current.winner)){
-    window.parent.postMessage({type:'neo-rpg-duel-finished',winner:current.winner},location.origin);
+    announceRpgResult();
   }
   if(action.type!=='choose')setHandOpen(false);selectedHand=null;targetMode=null;decisionSelection.clear();render();
  }catch(e){fail(e);}finally{busy=false;render();}}
  async function start(){if(busy)return;busy=true;$('startupError').textContent='';try{
   const response=await api('create',{method:'POST',body:JSON.stringify({deck:$('deck').value,opponent:$('opponent').value,...($('deck').value==='custom'?{customDeck:JSON.parse(localStorage.getItem('neoCampusCustomGymDeck')||'null')}: {})})});
-  feedback.reset();opponentActivity.clear();combat.reset();token=response.token;sessionStorage.setItem(new URLSearchParams(location.search).get('rpg')==='1'?'neoRpgDuelToken':'neoClassicLiveToken',token);current=response;
+  feedback.reset();opponentActivity.clear();combat.reset();token=response.token;sessionStorage.setItem(storageKey(),token);current=response;
   selectedHand=null;targetMode=null;decisionSelection.clear();handOpen=false;powersOpen=false;logOpen=false;lastCoinSeq=null;lastKoMessage="";render();
  }catch(e){$('startupError').textContent=e.message;}finally{busy=false;}}
 
@@ -265,16 +273,14 @@
    $('opponent').value='brushfire';
    if(localStorage.getItem('neoCampusCustomGymDeck'))$('deck').value='custom';
    await Promise.all(['base1','base2','base3','base4','base5','gym1','gym2','neo1','neo2','neo3','neo4'].map(async set=>{const r=await fetch(`/cards/${set}.json`);if(!r.ok)throw Error(`Cannot load ${set}`);const arr=await r.json();for(const c of arr)cards.set(c.id,c);}));
-   const rpgMode=new URLSearchParams(location.search).get('rpg')==='1';
    if(rpgMode){
-     const params=new URLSearchParams(location.search);
-     $('deck').value=params.get('deck')||'blackout';
-     $('opponent').value=params.get('opponent')||'brushfire';
+     $('deck').value=rpgParams.get('deck')||'blackout';
+     $('opponent').value=rpgParams.get('opponent')||'brushfire';
    }
-   token=sessionStorage.getItem(rpgMode?'neoRpgDuelToken':'neoClassicLiveToken');if(token){try{current=await api('state');}catch{token=null;sessionStorage.removeItem('neoClassicLiveToken');}}
+   token=sessionStorage.getItem(storageKey());if(token){try{current=await api('state');}catch{token=null;sessionStorage.removeItem(storageKey());}}
    if(rpgMode && !current) await start();
    if(rpgMode && current?.view?.over && Number.isInteger(current.winner)){
-     window.parent.postMessage({type:'neo-rpg-duel-finished',winner:current.winner},location.origin);
+     announceRpgResult();
    }
    render();
   }catch(e){$('startupError').textContent=e.message||String(e);}
