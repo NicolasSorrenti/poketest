@@ -313,6 +313,22 @@ function candidates(o,cfg,used){
  options.push(command('end_turn'));
  return options;
 }
+function energyDenialValue(unit,defender,isActive){
+ if(!unit||!unit.energies?.length)return -100;
+ const before=strongestAffordableAttack(unit,defender);
+ const future=(unit.effectiveAttacks||card(unit.id)?.attacks||[]).reduce((max,a)=>
+  Math.max(max,(a.cost||[]).length),0);
+ let denied=0;
+ for(let i=0;i<unit.energies.length;i++){
+  const after={...unit,energies:unit.energies.filter((_,j)=>j!==i)};
+  const remaining=strongestAffordableAttack(after,defender);
+  denied=Math.max(denied,Math.max(0,before-remaining)+
+   ((before>=hpRemaining(defender)&&remaining<hpRemaining(defender))?100:0));
+ }
+ const ready=before>0?28:0;
+ const potential=Math.min(15,future*4);
+ return (isActive?1.3:.7)*(denied+ready+potential)+(isActive?32:0);
+}
 function choiceValue(option,decision,o){
  const id=option.id,label=option.label||'',kind=decision.kind||'',ctx=decision.label||'';
  if(/^prize:/.test(id))return 1;
@@ -322,6 +338,8 @@ function choiceValue(option,decision,o){
   const n=Number(id.split(':')[1]),own=/your|friendly|own|promot|receiv|retreat/i.test(ctx)&&!/opponent|opposing|enemy/i.test(ctx);
   const target=slotUnit(own?o.self:o.opponent,n);
   if(!target)return 0;
+  if(/^slot:/.test(id)&&/^Choose opposing Pokémon$/i.test(ctx))
+   return energyDenialValue(target,o.self.active,n===-1);
   if(/promot|retreat|switch.*your/i.test(ctx)){
    const damage=strongestAffordableAttack(target,o.opponent.active);
    const incoming=strongestAffordableAttack(o.opponent.active,target);
