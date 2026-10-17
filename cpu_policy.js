@@ -283,9 +283,13 @@ function chooseAction(game,raw={},memo={}){
   .sort((a,b)=>b.priority-a.priority||a.tie-b.tie);
  // The result of each probe is intentionally opaque to the scorer. In
  // particular a previewed random coin result is never used to rank actions.
+ let probedCandidates=0,rejectedCandidates=0;
  for(const item of [...ordered,...ranked.slice(cfg.skill.attention)]){
+  probedCandidates++;
   const result=reduce(game,cfg.side,item.action);
-  if(result.ok)return {command:item.action,game:result.game,score:item.score,alternatives:ranked.length};
+  if(result.ok)return {command:item.action,game:result.game,score:item.score,alternatives:ranked.length,
+   probedCandidates,rejectedCandidates};
+  rejectedCandidates++;
  }
  return null;
 }
@@ -302,7 +306,8 @@ function driveSide(initial,{side=1,level=3,personality='balanced',seed=1,limit=2
   if(a.type==='play_trainer')memo.trainers++;
   if(a.type==='use_power'){memo.powers++;memo.powerKeys.add(a.payload.slot+':'+a.payload.powerIndex);}
   if(a.type==='use_stadium')memo.stadium=true;
-  commands.push({side,command:a,score:next.score,alternatives:next.alternatives});
+  commands.push({side,command:a,score:next.score,alternatives:next.alternatives,
+   probedCandidates:next.probedCandidates,rejectedCandidates:next.rejectedCandidates});
   game=next.game;steps++;
   if(beforeTurn!==game.turnSerial){memo.trainers=0;memo.powers=0;memo.powerKeys.clear();memo.stadium=false;}
   if(a.type==='end_turn'&&game.turn===side&&!game.pendingDecision&&!game.over)throw Error('CPU did not advance turn');
