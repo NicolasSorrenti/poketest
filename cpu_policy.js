@@ -401,9 +401,15 @@ function choiceValue(option,decision,o,cfg){
  if(/^count:/.test(id))return /draw/i.test(ctx)?Number(id.slice(6))*20:0;
  if(/^energy:/.test(id)&&/discard|retreat|pay/i.test(ctx))return /Double Colorless|Rainbow/i.test(label)?-15:10;
  if(/^bench:/.test(id)||/^slot:/.test(id)){
-  const n=Number(id.split(':')[1]),own=/your|friendly|own|promot|receiv|retreat/i.test(ctx)&&!/opponent|opposing|enemy/i.test(ctx);
+  const n=Number(id.split(':')[1]),own=
+   (/your|friendly|own|promot|receiv|retreat/i.test(ctx)||
+    o.pendingTrainerName==='Moo-Moo Milk'&&/heal/i.test(ctx))&&
+   !/opponent|opposing|enemy/i.test(ctx);
   const target=slotUnit(own?o.self:o.opponent,n);
   if(!target)return 0;
+  if(cfg?.level>=4&&own&&o.pendingTrainerName==='Moo-Moo Milk'&&/heal/i.test(ctx))
+   return Math.min(20,target.damage||0)*2.5+
+    ((target.damage||0)>=40?60:0);
   if(cfg?.level>=4&&own&&/^Choose one of your Pokémon$/i.test(ctx)&&
     ['Potion','Super Potion'].includes(o.pendingTrainerName)){
    const healed=Math.min(o.pendingTrainerName==='Potion'?20:40,target.damage||0);
