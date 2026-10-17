@@ -456,6 +456,44 @@ const settings={level:3,personality:'balanced',side:1,seed:47};
  assert.equal(hidden.pendingTrainerSource,null);
  assert.equal(hidden.opponent.hand,undefined);
 }
+{
+ const g=createGame({decks:[deck,deck],seed:241,format:'classic'});
+ const o=AI.observation(g,1);o.phase='game';o.turn=1;
+ o.self.prizeCount=1;o.opponent.prizeCount=4;
+ o.self.active={id:IDS.machop,damage:0,energies:[IDS.fight],status:null};
+ o.self.bench=[];o.self.hand=[IDS.fight];
+ o.opponent.active={id:IDS.rat,damage:10,energies:[],status:null};
+ o.opponent.bench=[{id:IDS.hit,damage:0,energies:[],status:null}];
+ const race=AI.configuration({side:1,level:5,prizeRace:true});
+ const old=AI.configuration({side:1,level:5,prizeRace:false});
+ const attack={type:'attack',payload:{attackIndex:0}};
+ assert.ok(AI.prizeRaceBonus(attack,o,race)>=500,
+  'Guaranteed last Prize from Low Kick must dominate optional setup');
+ assert.equal(AI.prizeRaceBonus(attack,o,old),0,
+  'Baseline remains available for blinded controlled comparison');
+ o.self.prizeCount=4;o.opponent.prizeCount=1;
+ o.opponent.active={id:IDS.hit,damage:0,energies:[IDS.fight],status:null};
+ o.self.active={id:IDS.rat,damage:20,energies:[IDS.fight],status:null};
+ o.self.bench=[{id:IDS.hit,damage:0,energies:[IDS.fight],status:null}];
+ let retreat={type:'retreat',payload:{slot:0}};
+ assert.ok(AI.prizeRaceBonus(retreat,o,race)>=100,
+  'When the opponent needs one Prize, a safe retreat prevents a known loss');
+ o.self.bench[0]={id:IDS.rat,damage:20,energies:[],status:null};
+ assert.equal(AI.prizeRaceBonus(retreat,o,race),0,
+  'Do not flee into another Pokémon that loses to the same public counterattack');
+ assert.throws(()=>AI.configuration({prizeRace:'yes'}),/Prize-race/);
+ assert.equal(AI.configuration({level:5}).prizeRace,false,
+  'Experimental game-tree evaluation remains disabled by default');
+}
+{
+ const {argumentsOf,arena}=require('./benchmark_cpu');
+ const opts=argumentsOf(['--pairs','1','--max-turns','4','--left-level','5','--right-level','5',
+   '--left-prize-race','true','--right-prize-race','false']);
+ const result=arena(opts);
+ assert.equal(result.baseline.prizeRace,true);
+ assert.equal(result.challenger.prizeRace,false);
+ assert.throws(()=>argumentsOf(['--left-prize-race','maybe']),/Planning/);
+}
 let duels=0,decisions=0,attacks=0,energy=0,evolutions=0,trainer=0;
 for(let seed=1;seed<=4;seed++){
  let game=createGame({decks:[deck,deck],seed:seed*1789,format:'classic'});
