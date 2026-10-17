@@ -80,8 +80,10 @@ function arena(opts){
  const conclusive=matches.filter(x=>x.winner!==null);
  const wins=conclusive.filter(x=>x.winner===0).length,losses=conclusive.length-wins;
  const totals=matches.reduce((s,x)=>{for(const [k,v] of Object.entries(x.stats))if(typeof v==='number')s[k]=(s[k]||0)+v;return s;},{});
- const report={baseline:{level:opts.leftLevel,deck:opts.leftDeck,planning:opts.leftPlanning??opts.leftLevel>=4},
-  challenger:{level:opts.rightLevel,deck:opts.rightDeck,planning:opts.rightPlanning??opts.rightLevel>=4},
+ const report={baseline:{level:opts.leftLevel,deck:opts.leftDeck,
+    planning:configuration({level:opts.leftLevel,planning:opts.leftPlanning??undefined}).planning},
+  challenger:{level:opts.rightLevel,deck:opts.rightDeck,
+    planning:configuration({level:opts.rightLevel,planning:opts.rightPlanning??undefined}).planning},
   personality:opts.personality,pairs:opts.pairs,totalMatches:matches.length,conclusiveMatches:conclusive.length,
   wins,losses,drawsOrTimeouts:matches.length-conclusive.length,
   deckOutLossesByRole:[0,1].map(role=>matches.filter(x=>x.endReason==='deckout'&&x.winner===1-role).length),
