@@ -45,8 +45,8 @@ The RPG/VN agent owns `rpg.js`, `rpg_story.js`, `rpg_schedules.js`, `rpg_world.j
 ## Tests and QA
 - Added `tests/rpg_world.test.js` (11 tests), `tests/rpg_world_ui.test.js` (8 controller smoke tests) and `tests/rpg_rival_arc.test.js` (10 route tests).
 - `npm run test:rpg` runs 53 focused regression tests including the existing 11 story/schedule checks; `.github/workflows/rpg-regression.yml` now runs it on relevant PRs and main pushes.
-- **53/53 focused scenarios passed in an isolated JavaScript test run**, first in isolated JavaScript execution and then in the **native Node GitHub Actions RPG Regression Suite** on PR #15. All four rival episode windows and all 16 optional encounter windows are reachable; DOM IDs, script serving and save flows were checked.
-- The broader **Node regression**, **RPG Chromium smoke** and **TCG Gameplay Regression** checks passed on the previous PR #15. Native CI for this new tournament milestone must be checked on its own PR before merging.
+- **53/53 focused tests passed in the native GitHub Actions RPG Regression Suite**, in addition to isolated JavaScript checks, first in isolated JavaScript execution and then in the **native Node GitHub Actions RPG Regression Suite** on PR #15. All four rival episode windows and all 16 optional encounter windows are reachable; DOM IDs, script serving and save flows were checked.
+- The **Node regression**, **RPG Chromium smoke**, **TCG Gameplay Regression** and **RPG Regression Suite** workflows all passed for PR #16 on the tournament code.
 - Follow-up testing: a longer manual/Render playthrough across 90 days, mobile touch and narrow-screen usability, several live completed duels in varied locations, and confirming production art is installed where the browser expects it.
 
 ## Integration contracts
