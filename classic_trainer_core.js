@@ -163,6 +163,63 @@ function prompt(g,plan,helpers){
  }
 
 
+
+ // Neo v0.55 — exact two-seat Trainer decisions. The Trainer itself remains
+ // in its hand until commit; any other hand picks use pre-commit indices.
+ if(name==='Mary'){
+  if(!chosen(d,'maryDrawn')){
+   helpers.draw(g,side,2);d.maryDrawn=true;
+  }
+  if(!chosen(d,'maryReturn')){
+   const candidates=hchoices();
+   if(candidates.length<2)throw Error('Mary requires two cards to shuffle back');
+   return multi('maryReturn',side,candidates,2,2,'Mary: choose two hand cards to shuffle into your deck');
+  }
+ }
+ if(name==='PokéGear'&&!chosen(d,'gearTrainer')){
+  const at=Math.max(0,p.deck.length-7),items=p.deck.flatMap((id,i)=>i>=at&&get(id).supertype==='Trainer'?[{id:'deck:'+i,label:get(id).name}]:[]);
+  if(items.length)return multi('gearTrainer',side,items,0,1,'PokéGear: reveal one Trainer from top seven',true);
+  d.gearTrainer=[];
+ }
+ if(name==='Super Energy Retrieval'){
+  if(!chosen(d,'serCost')){
+   const possible=hchoices();
+   if(possible.length<2||!p.discard.some(id=>basicEnergy(get(id))))throw Error('Super Energy Retrieval requires 2 other hand cards and Basic Energy in discard');
+   return multi('serCost',side,possible,2,2,'Super Energy Retrieval: trade two hand cards');
+  }
+  if(!chosen(d,'serEnergy')){
+   const possible=disc(p,basicEnergy),count=Math.min(4,possible.length);
+   if(count)return multi('serEnergy',side,possible,count,count,'Super Energy Retrieval: choose '+count+' Basic Energy cards');
+   d.serEnergy=[];
+  }
+ }
+ if(name==='Time Capsule'){
+  for(const ownerSide of [1-side,side]){
+   const owner=g.players[ownerSide],yesKey='capsuleYes'+ownerSide,pickKey='capsuleCards'+ownerSide;
+   const eligible=options(zone(owner.discard,c=>basicEnergy(c)||(c.supertype==='Pokémon'&&(c.subtypes?.includes('Basic')||c.subtypes?.includes('Stage 1')||c.subtypes?.includes('Stage 2')))),'disc');
+   if(!chosen(d,yesKey)){
+    if(eligible.length)return single(yesKey,ownerSide,[{id:'choice:0',label:'Return no cards'},{id:'choice:1',label:'Return '+Math.min(5,eligible.length)+' eligible cards'}],'Time Capsule: choose whether to recycle cards');
+    d[yesKey]=['choice:0'];
+   }
+   if(nums(d,yesKey)[0]===1&&!chosen(d,pickKey))
+    return multi(pickKey,ownerSide,eligible,Math.min(5,eligible.length),Math.min(5,eligible.length),'Time Capsule: choose cards to shuffle into your deck');
+  }
+ }
+ if(name==='Pokémon Personality Test'){
+  if(!chosen(d,'personalityCard')){
+   const valid=hchoices(c=>c.supertype==='Pokémon'&&c.subtypes?.some(x=>x==='Stage 1'||x==='Stage 2'));
+   if(!valid.length)throw Error('Pokémon Personality Test requires an Evolution in hand');
+   return single('personalityCard',side,valid,'Select an Evolution card to show after opponent guesses');
+  }
+  if(!chosen(d,'personalityGuess'))
+   return single('personalityGuess',1-side,[{id:'kind:0',label:'Light Pokémon'},{id:'kind:1',label:'Dark Pokémon'},{id:'kind:2',label:'Neither'}],'Guess the hidden Evolution card category');
+ }
+ if(name==="Impostor Professor Oak's Invention"){
+  if(!chosen(d,'oakReplace')){
+   (p.privateLog ||= []).push('Impostor Invention: opponent Prize cards — '+f.prizes.map(id=>get(id).name).join(', '));
+   return single('oakReplace',side,[{id:'choice:0',label:'Keep opponent Prizes'},{id:'choice:1',label:'Shuffle opponent Prizes into deck and replace'}],'Impostor Invention: replace opponent Prizes?');
+  }
+ }
  // Neo v0.54: Trainer decisions are owner-specific and transactional.
  if(name==='Energy Charge'){
   if(!chosen(d,'chargeHeads'))d.chargeHeads=[helpers.flip(g)];
@@ -419,6 +476,55 @@ function commit(g,plan,h){
  if(name==='Maintenance')p.deck.push(...take(p.hand,picks('cost').map(i=>i>plan.handIndex?i-1:i)));
  switch(name){
 
+
+  case 'Mary':{
+   const chosenHand=picks('maryReturn').map(i=>i>plan.handIndex?i-1:i);
+   if(chosenHand.length!==2||new Set(chosenHand).size!==2||chosenHand.some(i=>!p.hand[i]))throw Error('Invalid Mary hand selection');
+   p.deck=h.shuffle(g,[...p.deck,...take(p.hand,chosenHand)]);
+   break;
+  }
+  case 'PokéGear':{
+   if(d.gearTrainer?.length){
+    const idx=pick('gearTrainer'),at=Math.max(0,p.deck.length-7);
+    if(idx<at||get(p.deck[idx])?.supertype!=='Trainer')throw Error('Invalid PokéGear Trainer choice');
+    p.hand.push(...take(p.deck,[idx]));
+   }
+   p.deck=h.shuffle(g,p.deck);p.trainerLockedUntil=g.turnSerial+1;break;
+  }
+  case 'Super Energy Retrieval':{
+   const cost=picks('serCost').map(i=>i>plan.handIndex?i-1:i),energy=picks('serEnergy');
+   const required=Math.min(4,p.discard.filter(id=>basicEnergy(get(id))).length);
+   if(cost.length!==2||new Set(cost).size!==2||cost.some(i=>!p.hand[i])||energy.length!==required||new Set(energy).size!==required||energy.some(i=>!basicEnergy(get(p.discard[i]))))throw Error('Invalid Super Energy Retrieval selection');
+   p.discard.push(...take(p.hand,cost));
+   p.hand.push(...take(p.discard,energy));break;
+  }
+  case 'Time Capsule':{
+   for(const ownerSide of [1-plan.side,plan.side]){
+    const owner=g.players[ownerSide],yes='capsuleYes'+ownerSide,key='capsuleCards'+ownerSide;
+    if(nums(d,yes)[0]!==1)continue;
+    const valid=owner.discard.filter(id=>{const c=get(id);return basicEnergy(c)||(c.supertype==='Pokémon'&&(c.subtypes?.includes('Basic')||c.subtypes?.includes('Stage 1')||c.subtypes?.includes('Stage 2')));});
+    const count=Math.min(5,valid.length),chosenCards=picks(key);
+    if(chosenCards.length!==count||new Set(chosenCards).size!==count||chosenCards.some(i=>!owner.discard[i]||!valid.includes(owner.discard[i])))throw Error('Invalid Time Capsule recovery');
+    owner.deck=h.shuffle(g,[...owner.deck,...take(owner.discard,chosenCards)]);
+   }
+   p.trainerLockedUntil=g.turnSerial+1;break;
+  }
+  case 'Pokémon Personality Test':{
+   const original=picks('personalityCard')[0],i=original>plan.handIndex?original-1:original;
+   const candidate=get(p.hand[i]);
+   if(candidate.supertype!=='Pokémon'||!candidate.subtypes?.some(s=>s==='Stage 1'||s==='Stage 2'))throw Error('Invalid Pokémon Personality Test target');
+   const trueType=candidate.name.startsWith('Light ')?0:candidate.name.startsWith('Dark ')?1:2;
+   h.draw(g,nums(d,'personalityGuess')[0]===trueType?1-plan.side:plan.side,3);
+   h.log(g,'Pokémon Personality Test revealed '+candidate.name+'.');
+   break;
+  }
+  case "Impostor Professor Oak's Invention":{
+   if(nums(d,'oakReplace')[0]===1){
+    const count=f.prizes.length;
+    f.deck=h.shuffle(g,[...f.deck,...f.prizes]);f.prizes=[];
+    for(let i=0;i<count;i++)f.prizes.push(f.deck.pop());
+   }break;
+  }
   case 'Arcade Game':{
    p.deck=h.shuffle(g,p.deck);
    const revealed=[];for(let i=0;i<3&&p.deck.length;i++)revealed.push(p.deck.pop());
@@ -723,7 +829,7 @@ function answer(g,plan,response,h){
  const data={...plan.data,[plan.await]:response.decline?[]:[...response.selected]};
  return prompt(g,{...plan,data,await:null},h);
 }
-const SUPPORTED=new Set(['Arcade Game','Energy Charge','Ruin Wall','Old Rod',"Team Rocket's Evil Deeds",'Energy Ark','Fossil Egg','Hyper Devolution Spray','Double Gust',"Bill's Teleporter",'Professor Elm','Moo-Moo Milk','Pokémon March','Super Rod','Bill','Professor Oak','Impostor Professor Oak',"Imposter Oak's Revenge",'Lass','Maintenance','Computer Search','Energy Search',"The Boss's Way",'Poké Ball','Pokémon Trader','Item Finder','Energy Retrieval','Nightly Garbage Run','Recycle','Pokédex','Gambler','Digger','Full Heal','Potion','Super Potion','Pokémon Center','Switch','Gust of Wind','Energy Removal','Super Energy Removal','Defender','PlusPower','Goop Gas Attack','Here Comes Team Rocket!',"Rocket's Sneak Attack",'Pokémon Flute','Revive','Mr. Fuji','Scoop Up','Devolution Spray','Pokémon Breeder','Challenge!','Sleep!',
+const SUPPORTED=new Set(['Mary','PokéGear','Super Energy Retrieval','Time Capsule','Pokémon Personality Test',"Impostor Professor Oak's Invention",'Arcade Game','Energy Charge','Ruin Wall','Old Rod',"Team Rocket's Evil Deeds",'Energy Ark','Fossil Egg','Hyper Devolution Spray','Double Gust',"Bill's Teleporter",'Professor Elm','Moo-Moo Milk','Pokémon March','Super Rod','Bill','Professor Oak','Impostor Professor Oak',"Imposter Oak's Revenge",'Lass','Maintenance','Computer Search','Energy Search',"The Boss's Way",'Poké Ball','Pokémon Trader','Item Finder','Energy Retrieval','Nightly Garbage Run','Recycle','Pokédex','Gambler','Digger','Full Heal','Potion','Super Potion','Pokémon Center','Switch','Gust of Wind','Energy Removal','Super Energy Removal','Defender','PlusPower','Goop Gas Attack','Here Comes Team Rocket!',"Rocket's Sneak Attack",'Pokémon Flute','Revive','Mr. Fuji','Scoop Up','Devolution Spray','Pokémon Breeder','Challenge!','Sleep!',
  'Brock',"Brock's Training Method",'Misty','Lt. Surge','Secret Mission','Erika',"Erika's Perfume",'Koga','Sabrina',"Sabrina's Gaze",'Blaine',"Blaine's Gamble",'Fervor','Max Revive','Giovanni','Warp Point',
  "Blaine's Last Resort","Erika's Kindness",'Good Manners','Master Ball',"Giovanni's Last Resort","Misty's Tears","Erika's Maids","The Rocket's Trap","Rocket's Secret Experiment",
  'No Removal Gym',"The Rocket's Training Gym",'Resistance Gym',"Rocket's Minefield Gym",'Transparent Walls',

@@ -21,12 +21,13 @@
  const neo52Prints=new Set(typeof require==='function'?require('./neo_v052_pool').ids:[]);
  const neo53Prints=new Set(typeof require==='function'?require('./neo_v053_pool').ids:[]);
  const neo54Prints=new Set(typeof require==='function'?require('./neo_v054_pool').ids:[]);
+ const neo55Prints=new Set(typeof require==='function'?require('./neo_v055_pool').ids:[]);
  const neoDestinyPrints=new Set(typeof require==='function'?require('./neo_destiny_decks').neoIds:[]);
  const neoDiscoveryPrints=new Set(typeof require==='function'?[...require('./neo_discovery_decks').neoIds,...require('./neo_bonus_pool').ids]:[]);
  const reprints=new Set(typeof require==='function'?require('./retail_theme_decks').entries.filter(e=>!e.gym).flatMap(e=>require('./retail_theme_decks').list(e.id)).filter(id=>id.startsWith('base4')):[]);
  const curatedGym=new Set(typeof require==='function'?require('./retail_theme_decks').gymIds:[]);
  function setOf(id){return typeof id==='string'?id.split('-')[0]:null;}
- function isAllowed(idOrCard,{gym=false,reprint=false,gymFull=false,neo=false}={}){const id=typeof idOrCard==='string'?idOrCard:idOrCard?.id;return Boolean(allowed.has(setOf(id))||((gym||reprint||gymFull)&&reprints.has(id))||(gym&&curatedGym.has(id))||(gymFull&&(fullGym.has(id)||setOf(id)==='base4'))||(neo&&(neoPrints.has(id)||neoDiscoveryPrints.has(id)||neoDestinyPrints.has(id)||neo40Prints.has(id)||neo46Prints.has(id)||neo47Prints.has(id)||neo48Prints.has(id)||neo49Prints.has(id)||neo50Prints.has(id)||neo51Prints.has(id)||neo52Prints.has(id)||neo53Prints.has(id)||neo54Prints.has(id)||curatedGym.has(id)||reprints.has(id))));}
+ function isAllowed(idOrCard,{gym=false,reprint=false,gymFull=false,neo=false}={}){const id=typeof idOrCard==='string'?idOrCard:idOrCard?.id;return Boolean(allowed.has(setOf(id))||((gym||reprint||gymFull)&&reprints.has(id))||(gym&&curatedGym.has(id))||(gymFull&&(fullGym.has(id)||setOf(id)==='base4'))||(neo&&(neoPrints.has(id)||neoDiscoveryPrints.has(id)||neoDestinyPrints.has(id)||neo40Prints.has(id)||neo46Prints.has(id)||neo47Prints.has(id)||neo48Prints.has(id)||neo49Prints.has(id)||neo50Prints.has(id)||neo51Prints.has(id)||neo52Prints.has(id)||neo53Prints.has(id)||neo54Prints.has(id)||neo55Prints.has(id)||curatedGym.has(id)||reprints.has(id))));}
  function illegalCards(ids,{gym=false,reprint=false,gymFull=false,neo=false}={}){return [...new Set((ids||[]).filter(id=>!isAllowed(id,{gym,reprint,gymFull,neo})))];}
  function validateDeck(deck,lookup,{gym=false,reprint=false,gymFull=false,neo=false}={}){
   // Core deck legality validates size, card existence, Basic requirement and
@@ -39,5 +40,5 @@
   const errors=[...result.errors,...(unownCount>4?[`Neo Unown rule: maximum 4 Unown Basic Pokémon (found ${unownCount})`]:[]),...disallowed.map(id=>`Not legal in ${neo?"Neo curated theme preview":gymFull?"Gym Expanded preview":gym?"curated Gym theme":reprint?"curated retail themes":"Base–Rocket Classic"}: ${id}`)];
   return {...result,valid:errors.length===0,errors,disallowed};
  }
- return Object.freeze({id:'classic-base-rocket',name:'Base–Rocket Classic',SETS,SET_NAMES,FULL_GYM_IDS:Object.freeze([...fullGym]),GYM_IDS:Object.freeze([...curatedGym]),REPRINT_IDS:Object.freeze([...reprints]),NEO_IDS:Object.freeze([...neoPrints,...neoDiscoveryPrints,...neoDestinyPrints,...neo40Prints,...neo46Prints,...neo47Prints,...neo48Prints,...neo49Prints,...neo50Prints,...neo51Prints,...neo52Prints,...neo53Prints,...neo54Prints]),setOf,isAllowed,illegalCards,validateDeck});
+ return Object.freeze({id:'classic-base-rocket',name:'Base–Rocket Classic',SETS,SET_NAMES,FULL_GYM_IDS:Object.freeze([...fullGym]),GYM_IDS:Object.freeze([...curatedGym]),REPRINT_IDS:Object.freeze([...reprints]),NEO_IDS:Object.freeze([...neoPrints,...neoDiscoveryPrints,...neoDestinyPrints,...neo40Prints,...neo46Prints,...neo47Prints,...neo48Prints,...neo49Prints,...neo50Prints,...neo51Prints,...neo52Prints,...neo53Prints,...neo54Prints,...neo55Prints]),setOf,isAllowed,illegalCards,validateDeck});
 });
