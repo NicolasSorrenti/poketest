@@ -9,11 +9,11 @@ const ATTACK=require('./attack_effects_core');
 const POWERS=require('./classic_power_core');
 
 const SKILLS=Object.freeze({
-  1:Object.freeze({name:'Beginner',temperature:40,attention:5,trainers:1,bench:2}),
-  2:Object.freeze({name:'Casual',temperature:20,attention:9,trainers:2,bench:3}),
-  3:Object.freeze({name:'Experienced',temperature:9,attention:16,trainers:3,bench:3}),
-  4:Object.freeze({name:'Expert',temperature:3,attention:30,trainers:4,bench:4}),
-  5:Object.freeze({name:'Champion',temperature:0,attention:100,trainers:6,bench:4})
+  1:Object.freeze({name:'Beginner',temperature:40,attention:5,sampleWindow:14,trainers:1,bench:2}),
+  2:Object.freeze({name:'Casual',temperature:18,attention:9,sampleWindow:9,trainers:2,bench:3}),
+  3:Object.freeze({name:'Experienced',temperature:8,attention:16,sampleWindow:6,trainers:3,bench:3}),
+  4:Object.freeze({name:'Expert',temperature:2,attention:30,sampleWindow:3,trainers:4,bench:4}),
+  5:Object.freeze({name:'Champion',temperature:0,attention:100,sampleWindow:1,trainers:6,bench:4})
 });
 const PERSONALITIES=Object.freeze({
  balanced:Object.freeze({damage:1,survival:1,setup:1,control:1,risk:0}),
@@ -403,15 +403,17 @@ function chooseAction(game,raw={},memo={}){
  const random=rng(cfg.seed+game.turnSerial*7919+(game.events?.length||0)*17011+cfg.side*31);
  const ranked=actions.map((action,i)=>({action,score:score(action,o,cfg,used),tie:i}))
   .sort((a,b)=>b.score-a.score||a.tie-b.tie);
- // Limited attention is a difficulty mechanic. Lower levels sample plausible
- // alternatives; Champion evaluates every action without stochastic errors.
- const shortlist=ranked.slice(0,cfg.skill.attention);
+ // Rank all visible options before competence-sensitive choice noise. A larger
+ // *evaluation budget* should NOT widen the random window: doing so previously
+ // made mid-level players less competent than beginners. Beginner is allowed
+ // to overlook the best move; Champion deterministically chooses its best.
+ const shortlist=ranked.slice(0,cfg.skill.sampleWindow);
  const temp=cfg.skill.temperature,ordered=temp===0?shortlist:[...shortlist].map(x=>({...x,priority:x.score+Math.log(-Math.log(Math.max(1e-12,random())))*-temp}))
   .sort((a,b)=>b.priority-a.priority||a.tie-b.tie);
  // The result of each probe is intentionally opaque to the scorer. In
  // particular a previewed random coin result is never used to rank actions.
  let probedCandidates=0,rejectedCandidates=0;
- for(const item of [...ordered,...ranked.slice(cfg.skill.attention)]){
+ for(const item of [...ordered,...ranked.slice(cfg.skill.sampleWindow)]){
   probedCandidates++;
   const result=reduce(game,cfg.side,item.action);
   if(result.ok)return {command:item.action,game:result.game,score:item.score,alternatives:ranked.length,
