@@ -64,8 +64,10 @@ function configuration(raw={}){
  if(typeof trainerTactics!=='boolean')throw Error('Invalid trainer-tactics setting');
  const trainerSelections=raw.trainerSelections??false;
  if(typeof trainerSelections!=='boolean')throw Error('Invalid trainer-selections setting');
+ const comboSearch=raw.comboSearch??false;
+ if(typeof comboSearch!=='boolean')throw Error('Invalid CPU combo-search setting');
  return {level,personality,seed:raw.seed??1,side,planning,evolutionTempo,prizeRace,knockoutTempo,opponentResponse,
-  graduatedNoise,energyHorizon,turnSearch,actionDiscipline,trainerTactics,trainerSelections,
+  graduatedNoise,energyHorizon,turnSearch,actionDiscipline,trainerTactics,trainerSelections,comboSearch,
   skill:(graduatedNoise?CALIBRATED_SKILLS:SKILLS)[level],style:PERSONALITIES[personality]};
 }
 // Seeded independent of the engine's private deck order and future RNG state.
@@ -1132,13 +1134,123 @@ function turnSequenceBonus(action,o,cfg){
  const penalty=stranded?(immediateLost?145:65):0;
  return Math.max(-200,Math.min(250,net-penalty))*cfg.style.damage;
 }
+// Bounded same-turn combination search. Trainer effects are represented only
+// when deterministic from OUR OWN PUBLIC DISCARD and already-held cards. This
+// models legal Energy Retrieval -> evolution -> attachment -> attack and an
+// attacking PlusPower bonus; it NEVER accesses deck order, opponent hand,
+// future coin rolls, or reducer previews. The real reducer performs all plays.
+const basicRetrievalEnergy=id=>/^(Grass|Fire|Water|Lightning|Psychic|Fighting) Energy$/.test(card(id)?.name||'');
+function comboAttackValue(board,o){
+ const active=board.active,enemy=o.opponent.active;
+ if(!active||!enemy||['Asleep','Paralyzed'].includes(active.status))return 0;
+ const attacks=active.effectiveAttacks||card(active.id)?.attacks||[];
+ const pool=energyPool(active),hp=hpRemaining(enemy);
+ let best=0;
+ for(let i=0;i<attacks.length;i++){
+  const atk=attacks[i],script=ATTACK.compile(atk);
+  if(!script||!canPayEnergy(atk.cost||[],pool))continue;
+  if(active.amnesia?.index===i&&active.amnesia.expires>o.turnSerial)continue;
+  if(active.gymAttackCooldown?.expires>o.turnSerial&&
+   (active.gymAttackCooldown.index===null||active.gymAttackCooldown.index===i))continue;
+  const damage=estimatedDamage(atk,active,enemy);
+  // PlusPower adds 10 damage only if the attack already deals damage. Exact
+  // guarantee for deterministic attacks; coin-based attacks use expectation.
+  const boost=damage>0?10*(board.plusPower||0):0;
+  const actual=Math.min(hp,damage+boost);
+  const coin=/flip (?:a |one |\d+ )?coins?|heads|tails/i.test(atk.text||'');
+  const certainty=coin?.5:1;
+  const ko=damage+boost>=hp?certainty:0;
+  best=Math.max(best,actual*1.05+ko*115);
+ }
+ return best;
+}
+function comboValue(board,o){
+ const base=comboAttackValue(board,o);
+ const ready=board.bench.some(u=>projectedAttackValue(u,o.opponent.active,o.turnSerial)>0);
+ const backup=o.opponent.active&&board.bench.length&&(ready?11:4)||0;
+ return base+backup;
+}
+function comboActions(board,o){
+ const actions=searchPrepActions(board,o);
+ for(let i=0;i<board.hand.length;i++){
+  const name=card(board.hand[i])?.name;
+  if(name==='PlusPower'&&board.active)
+   actions.push(command('play_trainer',{handIndex:i}));
+  if(name==='Energy Retrieval'&&board.discard.some(basicRetrievalEnergy)&&board.hand.length>=2)
+   actions.push(command('play_trainer',{handIndex:i}));
+ }
+ return actions;
+}
+function comboProjected(board,action,o){
+ if(action.type!=='play_trainer'){
+  const next=projectedPrep(board,action,o.round);
+  return next?[{...next,discard:[...board.discard],plusPower:board.plusPower||0}]:[];
+ }
+ const i=action.payload.handIndex,name=card(board.hand[i])?.name;
+ if(name==='PlusPower'&&board.active){
+  return [{...board,hand:board.hand.filter((_,n)=>n!==i),
+   discard:[...board.discard],plusPower:(board.plusPower||0)+1}];
+ }
+ if(name!=='Energy Retrieval'||board.hand.length<2)return [];
+ const energies=board.discard.map((id,n)=>({id,n})).filter(x=>basicRetrievalEnergy(x.id)).slice(0,8);
+ if(!energies.length)return [];
+ const recovered=energies.map(x=>[x]);
+ for(let j=0;j<energies.length;j++)for(let k=j+1;k<energies.length&&recovered.length<28;k++)
+  recovered.push([energies[j],energies[k]]);
+ const results=[];
+ // One other card MUST be paid from the hand. Different payments are tested
+ // separately so a valuable evolution cannot also be kept in a fake rollout.
+ for(let cost=0;cost<board.hand.length;cost++){
+  if(cost===i)continue;
+  for(const take of recovered){
+   if(results.length>=64)return results;
+   const removed=new Set([i,cost]);
+   const pulled=new Set(take.map(x=>x.n));
+   results.push({...board,hand:[...board.hand.filter((_,n)=>!removed.has(n)),...take.map(x=>x.id)],
+    discard:board.discard.filter((_,n)=>!pulled.has(n)),
+    plusPower:board.plusPower||0});
+  }
+ }
+ return results;
+}
+function comboSequenceBonus(action,o,cfg){
+ if(!cfg.comboSearch||cfg.level<4||o.phase!=='game'||!o.self.active||!o.opponent.active)return 0;
+ if(!['evolve','attach_energy','play_trainer'].includes(action.type))return 0;
+ if(action.type==='play_trainer'&&!['PlusPower','Energy Retrieval'].includes(
+  card(o.self.hand[action.payload.handIndex])?.name))return 0;
+ const root={...prepBoard(o),discard:[...(o.self.discard||[])],plusPower:0};
+ const initial=comboValue(root,o);
+ let best=-Infinity,bestDepth=0,nodes=0;
+ const first=comboProjected(root,action,o);
+ if(!first.length)return 0;
+ const visit=(board,depth)=>{
+  const v=comboValue(board,o);
+  if(v>best){best=v;bestDepth=depth;}
+  if(depth>=3||nodes>=96)return;
+  for(const nextAction of comboActions(board,o)){
+   if(nodes>=96)break;
+   const branches=comboProjected(board,nextAction,o);
+   for(const next of branches){
+    if(nodes>=96)break;
+    nodes++;
+    visit(next,depth+1);
+   }
+  }
+ };
+ for(const state of first){if(nodes>=96)break;nodes++;visit(state,0);}
+ const gain=best-initial;
+ // A combo can deserve a preparation action even if it does no damage on
+ // its first step, but cannot justify spending resources with no attack gain.
+ const reward=gain*2.15-bestDepth*9;
+ return Math.max(-185,Math.min(270,reward<=0?-50:reward))*cfg.style.damage;
+}
 function chooseAction(game,raw={},memo={}){
  const cfg=configuration(raw),o=observation(game,cfg.side);
  const used={trainers:memo.trainers||0,powers:memo.powers||0,powerKeys:memo.powerKeys||new Set(),stadium:!!memo.stadium};
  const actions=candidates(o,cfg,used);if(!actions.length)return null;
  const random=rng(cfg.seed+game.turnSerial*7919+(game.events?.length||0)*17011+cfg.side*31);
  const ranked=actions.map((action,i)=>({action,
-  score:score(action,o,cfg,used)+planningBonus(action,o,cfg)+prizeRaceBonus(action,o,cfg)+knockoutTempoBonus(action,o,cfg)+opponentResponseBonus(action,o,cfg)+energyHorizonBonus(action,o,cfg)+turnSequenceBonus(action,o,cfg)+trainerTacticsBonus(action,o,cfg)+trainerSearchPlayBonus(action,o,cfg),tie:i}))
+  score:score(action,o,cfg,used)+planningBonus(action,o,cfg)+prizeRaceBonus(action,o,cfg)+knockoutTempoBonus(action,o,cfg)+opponentResponseBonus(action,o,cfg)+energyHorizonBonus(action,o,cfg)+turnSequenceBonus(action,o,cfg)+trainerTacticsBonus(action,o,cfg)+trainerSearchPlayBonus(action,o,cfg)+comboSequenceBonus(action,o,cfg),tie:i}))
   .sort((a,b)=>b.score-a.score||a.tie-b.tie);
  // Rank all visible options before competence-sensitive choice noise. A larger
  // *evaluation budget* should NOT widen the random window: doing so previously
@@ -1159,11 +1271,11 @@ function chooseAction(game,raw={},memo={}){
  }
  return null;
 }
-function driveSide(initial,{side=1,level=3,personality='balanced',seed=1,planning,evolutionTempo,prizeRace,knockoutTempo,opponentResponse,graduatedNoise,energyHorizon,turnSearch,actionDiscipline,trainerTactics,trainerSelections,limit=200}={}){
+function driveSide(initial,{side=1,level=3,personality='balanced',seed=1,planning,evolutionTempo,prizeRace,knockoutTempo,opponentResponse,graduatedNoise,energyHorizon,turnSearch,actionDiscipline,trainerTactics,trainerSelections,comboSearch,limit=200}={}){
  let game=initial,steps=0;const commands=[],memo={trainers:0,powers:0,powerKeys:new Set(),stadium:false};
  while(!game.over&&steps<limit){
   const beforeTurn=game.turnSerial;
-  const next=chooseAction(game,{side,level,personality,seed,planning,evolutionTempo,prizeRace,knockoutTempo,opponentResponse,graduatedNoise,energyHorizon,turnSearch,actionDiscipline,trainerTactics,trainerSelections},memo);
+  const next=chooseAction(game,{side,level,personality,seed,planning,evolutionTempo,prizeRace,knockoutTempo,opponentResponse,graduatedNoise,energyHorizon,turnSearch,actionDiscipline,trainerTactics,trainerSelections,comboSearch},memo);
   if(!next){
    if(game.pendingDecision?.actor===side)throw Error('CPU unresolved choice: '+JSON.stringify({decision:game.pendingDecision,pendingAction:game.pendingAction}));
    break;
@@ -1183,4 +1295,4 @@ function driveSide(initial,{side=1,level=3,personality='balanced',seed=1,plannin
 }
 function driveBot(game,limit=200,config={}){return driveSide(game,{...config,side:1,limit});}
 function propose(game,config={}){return chooseAction(game,{...config,side:1});}
-module.exports={SKILLS,CALIBRATED_SKILLS,PERSONALITIES,configuration,observation,candidates,score,knockoutChance,planningBonus,evolutionTempoPenalty,prizeRaceBonus,knockoutTempoBonus,opponentResponseBonus,energyHorizonBonus,turnSequenceBonus,trainerTacticsBonus,trainerSelectionValue,trainerSearchPlayBonus,chooseAction,driveSide,driveBot,propose};
+module.exports={SKILLS,CALIBRATED_SKILLS,PERSONALITIES,configuration,observation,candidates,score,knockoutChance,planningBonus,evolutionTempoPenalty,prizeRaceBonus,knockoutTempoBonus,opponentResponseBonus,energyHorizonBonus,turnSequenceBonus,trainerTacticsBonus,trainerSelectionValue,trainerSearchPlayBonus,comboSequenceBonus,chooseAction,driveSide,driveBot,propose};
