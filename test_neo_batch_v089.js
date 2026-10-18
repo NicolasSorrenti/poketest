@@ -31,7 +31,7 @@ function make(id,name){
  const deck=list('base1:Brushfire'),g=createGame({decks:[deck,deck],format:'online-preview',seed:124});
  g.phase='game';g.round=6;g.turn=0;g.turnSerial=12;g.rngState=38291;
  g.players[0].active=unit(id,{energies:attack(id,name).cost.map(t=>costEnergy[t])});
- g.players[1].active=unit('base1-2');
+ g.players[1].active=unit('base1-3'); // Chansey: no Lightning Weakness; survives an 80-damage hit.
  for(const p of g.players){p.bench=[unit('base1-2')];p.hand=[];p.prizes=Array(6).fill('base1-99');}
  return g;
 }
