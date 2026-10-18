@@ -128,6 +128,21 @@ body.cube-deck-mode > #room{display:block!important;width:100%;max-width:none}
   letter-spacing:.04em;
 }
 .cube-build-context strong{color:#ffdc84;letter-spacing:.1em}
+.cube-build-reset{
+  border:1px solid #5d7dab;
+  border-radius:9px;
+  background:#1a345b;
+  color:#d6e7ff;
+  font-size:12px;
+  font-weight:700;
+  padding:9px 12px;
+  cursor:pointer;
+  white-space:nowrap;
+}
+.cube-build-reset:hover,.cube-build-reset:focus-visible{
+  border-color:#ffd56f;
+  color:#fff;
+}
 .cube-build-context span:nth-child(2){color:#e8f2ff;font-weight:750}
 body.cube-deck-mode #soloBuilderAction,
 body.cube-deck-mode #roomBuilderAction{margin-top:0}
