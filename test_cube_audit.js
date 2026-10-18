@@ -62,7 +62,7 @@ function auditPreset(config){
   const decks=[];
   for(let seat=0;seat<4;seat++){
    try{
-    const deck=buildCpuDeck(state.picks[seat]);
+    const deck=buildCpuDeck(state.picks[seat],{preset:config.id});
     const profile=deckProfile(state.picks[seat],deck);
     profiles.push({...profile,seat,seed});
     if(!profile.legal||profile.basicCount===0||profile.attackableBasics===0)
