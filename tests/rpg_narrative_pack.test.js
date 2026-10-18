@@ -72,6 +72,23 @@ test('every new scene has a legal window, reachable start and a stored consequen
  }
 });
 
+test('later guest chapters acknowledge specific earlier decisions',()=>{
+ for(const id of ['jun','teo','iris']){
+  const previous=STORY.byId(id+'_guest_1');
+  const next=STORY.byId(id+'_guest_2');
+  for(let i=0;i<2;i++){
+   const state=sample(next);state.relationships[id].affection=12;
+   state.storyFlags[previous.id]=previous.choices[i].flag;
+   state.storyDone[previous.id]={day:previous.start,choice:i};
+   assert.notEqual(STORY.linesFor(state,next.id)[0].text,next.lines[0].text);
+  }
+  const first=sample(next),second=sample(next);
+  first.storyFlags[previous.id]=previous.choices[0].flag;
+  second.storyFlags[previous.id]=previous.choices[1].flag;
+  assert.notEqual(STORY.linesFor(first,next.id)[0].text,STORY.linesFor(second,next.id)[0].text);
+ }
+});
+
 test('choice variations remain meaningful and missed opportunities stay missed',()=>{
  for(const e of PACK.events){
   assert.notEqual(e.choices[0].reply,e.choices[1].reply);
