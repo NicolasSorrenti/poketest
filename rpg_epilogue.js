@@ -3,7 +3,7 @@
 (function(root,factory){const api=factory();if(typeof module==='object'&&module.exports)module.exports=api;if(root)root.NeoRpgEpilogue=api;})(typeof window!=='undefined'?window:null,function(){
  const names={hana:'Hana Mizuno',reina:'Reina Kurogane',shiori:'Shiori Tsukishima',yuna:'Yuna Hoshino',
  akari:'Akari Fujimoto',camila:'Camila Vega',marina:'Marina Aoki',kaede:'Kaede Arashi',
- jun:'Jun Arai'};
+ jun:'Jun Arai',sol:'Sol Varela'};
  const cups=[['neighborhood','Neighborhood Cup'],['regional','Regional Qualifier'],['championship','Championship Bracket']];
  function displayName(id){return names[id]||String(id||'Someone').replace(/[_-]+/g,' ').replace(/\b\w/g,x=>x.toUpperCase());}
  function report(state){
