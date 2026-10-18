@@ -53,10 +53,17 @@ The solo selector and multiplayer room host both use exactly the same server-app
 | Preset ID | Name | Pokémon | Trainers | Draft identity |
 | --- | --- | ---: | ---: | --- |
 | `balanced` | Classic Balanced | 156 | 84 | Original broad all-era Cube |
+| `foundations` | Kanto Origins · Base / Jungle / Fossil | 160 | 80 | Only original Base Set, Jungle, and Fossil cards; classic Kanto types and evolutionary lines |
 | `elemental` | Elemental Rivals | 180 | 60 | Six type lanes: Grass status, Fire offense, Water control, Lightning speed, Psychic disruption, Fighting pressure |
 | `neo` | Neo Evolution Lab | 176 | 64 | Neo-biased evolution families and setup play |
 | `rocket` | Rocket's Schemes | 160 | 80 | Dark/Rocket/Gym personalities and disruptive Trainers |
 | `mayhem` | Trainer Mayhem | 128 | 112 | Basic-heavy decks and frequent Trainer plays |
+
+Every preset draws only from the supported historical theme-deck printings.
+
+### Reprint consistency
+
+A generated Cube selects **one expansion per named card** for the entire pool, while allowing multiple copies of the chosen printing. For example, PlusPower cannot appear partly as Base Set and partly as Base Set 2. The default favors the earliest eligible set, Neo Evolution Lab favors Neo printings, and Rocket's Schemes favors Team Rocket/Gym printings. Kanto Origins is strictly restricted to `base1` (Base Set), `base2` (Jungle), and `base3` (Fossil); `base4` is Base Set 2 and never appears in that Cube. This intentionally also chooses one set for same-name Pokémon with different artwork or attacks, prioritizing a consistent card library. Player decks retain the usual four-of-by-name limit.
 
 Every preset draws only from the supported historical theme-deck printings. Evolutions are admitted only when a compatible predecessor is somewhere in the final cube, and CPU decks must still obey 40-card construction rules. Drafting the whole evolution family is not automatic; it requires actual picks. Mono-type support is intentional in Elemental Rivals; specialized text-effect weighting nudges each type toward its archetype but does not create new custom Pokémon rules. All presets support reproducible seeds for testing.
 

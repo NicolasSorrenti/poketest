@@ -13,6 +13,7 @@ const A=require('./attack_effects_core');
 const P=require('./classic_power_core');
 const T=require('./classic_trainer_core');
 const BASIC_TYPES=['Grass','Fire','Water','Lightning','Psychic','Fighting'];
+const {preferredPrintings,mixedPrintingNames}=require('./cube_printings');
 const themes=['base1:Blackout','base1:Brushfire','base1:Overgrowth','base1:Zap!','base2:Power Reserve','base2:Water Blast'];
 const sourceDecks=()=>[
  ...themes.map(x=>authentic(x)),
@@ -44,7 +45,7 @@ function random(seed){
 function shuffle(input,rng){const a=[...input];for(let i=a.length-1;i>0;i--){const j=Math.floor(rng()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
 function makePool({size=240,seed=1}={}){
  if(!Number.isInteger(size)||size<60||size>720||!Number.isSafeInteger(seed)||seed<0)throw Error('Invalid cube configuration');
- const ids=eligibleIds(),pokemon=ids.filter(id=>CATALOG.get(id).supertype==='Pokémon'),trainers=ids.filter(id=>CATALOG.get(id).supertype==='Trainer');
+ const ids=preferredPrintings(eligibleIds()),pokemon=ids.filter(id=>CATALOG.get(id).supertype==='Pokémon'),trainers=ids.filter(id=>CATALOG.get(id).supertype==='Trainer');
  const basics=pokemon.filter(id=>isBasicPokemon(CATALOG.get(id)));
  const stages=pokemon.filter(id=>!isBasicPokemon(CATALOG.get(id)));
  if(!basics.length||!trainers.length)throw Error('Insufficient verified cards');
@@ -97,6 +98,7 @@ function makeDraft({players=4,packs=4,cardsPerPack=15,seed=1,pool,preset='balanc
  const cards=pool?[...pool]:preset==='balanced'?makePool({size:Math.max(240,count),seed}):
   makePresetPool({preset,size:Math.max(240,count),seed});
  if(cards.length<count||cards.some(id=>!supported(id)))throw Error('Cube contains unsupported cards or is too small');
+ if(mixedPrintingNames(cards).length)throw Error('Cube mixes reprints from multiple sets: '+mixedPrintingNames(cards).join(', '));
  const order=shuffle(cards,random(seed^0xabcdef));
  const rounds=Array.from({length:packs},(_,i)=>Array.from({length:players},(_,seat)=>order.slice((i*players+seat)*cardsPerPack,(i*players+seat+1)*cardsPerPack)));
  return {players,packs,cardsPerPack,preset,rounds,round:0,pick:0,available:rounds[0].map(a=>[...a]),picks:Array.from({length:players},()=>[]),done:false};

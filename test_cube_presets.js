@@ -8,8 +8,8 @@ const {cpuPick,buildCpuDeck}=require('./cube_strategy');
 const {CubeService}=require('./cube_service');
 const {CubeRoomService}=require('./cube_room_service');
 
-assert.equal(PRESETS.length,5);
-assert.equal(new Set(PRESETS.map(p=>p.id)).size,5);
+assert.equal(PRESETS.length,6);
+assert.equal(new Set(PRESETS.map(p=>p.id)).size,6);
 assert.equal(getPreset().id,'balanced');
 assert.throws(()=>getPreset('__proto__'),/Unknown Cube preset/);
 assert.throws(()=>makePresetPool({preset:'hacked'}),/Unknown Cube preset/);
@@ -21,6 +21,13 @@ for(const preset of PRESETS){
   assert.deepEqual(pool,makePresetPool({preset:preset.id,seed}),preset.name+' seed repeatable');
   assert(pool.every(id=>C.supported(id)),preset.name+' unsupported printings');
   assert(pool.every(id=>!isEnergy(CATALOG.get(id))),preset.name+' drafted Energy');
+  const {mixedPrintingNames}=require('./cube_printings');
+  assert.deepEqual(mixedPrintingNames(pool),[],preset.name+' mixed card names from different expansions');
+  if(preset.id==='foundations'){
+   assert(pool.every(id=>/^base[123]-/.test(id)),'Kanto Origins contains cards outside Base/Jungle/Fossil');
+   for(const set of ['base1','base2','base3'])
+    assert(pool.some(id=>id.startsWith(set+'-')),'Missing historical set '+set);
+  }
   const pokemon=pool.filter(id=>CATALOG.get(id).supertype==='Pokémon');
   assert.equal(pokemon.length,preset.pokemon,preset.name+' Pokémon quota');
   assert.equal(pool.length-pokemon.length,preset.trainers,preset.name+' Trainer quota');
@@ -75,4 +82,4 @@ const started=rooms.start(host.code,host.token);
 assert.equal(started.preset,'elemental');
 assert.equal(rooms.room(host.code).draft.preset,'elemental');
 assert.throws(()=>rooms.create({name:'Host',preset:'invalid'}),/Unknown Cube preset/);
-console.log('PASS themed cubes: 5 presets, 240-card pools, seeded archetypes, legal CPU builds and multiplayer format locking');
+console.log('PASS themed cubes: 6 presets, 240-card pools, seeded archetypes, legal CPU builds and multiplayer format locking');

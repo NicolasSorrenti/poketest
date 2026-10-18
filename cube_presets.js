@@ -4,10 +4,12 @@
 const {CATALOG}=require('./headless_duel');
 const {isBasicPokemon,canEvolve}=require('./core_rules');
 const {eligibleIds}=require('./cube_draft');
+const {preferredPrintings}=require('./cube_printings');
 
 const TYPES=Object.freeze(['Grass','Fire','Water','Lightning','Psychic','Fighting']);
 const PRESETS=Object.freeze([
  {id:'balanced',name:'Classic Balanced',description:'The original all-era Cube: flexible decks, six Energy types and approachable evolution lines.',archetypes:['Mixed types','Evolutions','All-round Trainers'],pokemon:156,trainers:84},
+ {id:'foundations',name:'Kanto Origins · Base / Jungle / Fossil',description:'The first three Pokémon TCG expansions only: classic Kanto evolutions, early Trainer tactics and Fossil surprises.',archetypes:['Kanto starters','Jungle evolution families','Fossil attackers','Classic Trainers'],pokemon:160,trainers:80},
  {id:'elemental',name:'Elemental Rivals',description:'Six color lanes fight for control: Grass status, Fire aggression, Water control, Lightning tempo, Psychic tricks and Fighting pressure.',archetypes:['Grass · status','Fire · offense','Water · control','Lightning · speed','Psychic · disruption','Fighting · brawlers'],pokemon:180,trainers:60},
  {id:'neo',name:'Neo Evolution Lab',description:'Evolution-chain drafting with extra Stage 1/2 targets and a bias toward the Neo-era card printings.',archetypes:['Evolution chains','Neo-era Pokémon','Setup Trainers'],pokemon:176,trainers:64},
  {id:'rocket',name:"Rocket's Schemes",description:'A mischievous Cube favoring Rocket, Dark and Gym personalities, tricky attacks and disruptive Trainers.',archetypes:['Dark evolutions','Gym personalities','Disruption'],pokemon:160,trainers:80},
@@ -57,6 +59,7 @@ function elementalSynergy(id){
 }
 function pokemonWeight(id,preset){
  const c=card(id);
+ if(preset==='foundations')return /^(base2|base3)-/.test(id)?2.2:1;
  if(preset==='elemental')return elementalSynergy(id);
  if(preset==='neo')return era(id)?6:1;
  if(preset==='rocket')return rocket(c,id)?6:1;
@@ -89,7 +92,7 @@ function makePresetPool({preset='balanced',size=240,seed=1}={}){
  if(!Number.isInteger(size)||size!==240)throw Error('Themed Cube presets require 240 cards');
  if(!Number.isSafeInteger(seed)||seed<0||seed>0xffffffff)throw Error('Invalid Cube seed');
  const random=rng(seed);
- const all=eligibleIds();
+ const all=preferredPrintings(eligibleIds().filter(id=>preset!=='foundations'||/^base[123]-/.test(id)),{preset});
  const pokemon=all.filter(id=>card(id).supertype==='Pokémon');
  const trainers=all.filter(id=>card(id).supertype==='Trainer');
  const basics=pokemon.filter(id=>isBasicPokemon(card(id)));
@@ -107,7 +110,7 @@ function makePresetPool({preset='balanced',size=240,seed=1}={}){
   const picked=weightedPick(source,id=>weight(id)/(1+count(id)*1.8),random);
   add(picked);return picked;
  }
- const basicCount= preset==='neo'?102:preset==='elemental'?114:preset==='rocket'?112:103;
+ const basicCount= preset==='neo'?102:preset==='elemental'?114:preset==='rocket'?112:preset==='foundations'?110:103;
  if(preset==='elemental'){
   for(let i=0;i<basicCount;i++){
    const type=TYPES[i%TYPES.length];
