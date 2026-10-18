@@ -48,8 +48,8 @@
   controls.append(minus,qty,plus);row.append(controls);return row;
  }
  function renderBuilder(){
-  $('builder').classList.toggle('hidden',!state.done);
-  if(!state.done)return;
+  $('builder').classList.toggle('hidden',!state.done||state.started);
+  if(!state.done||state.started)return;
   if(!deckInitialized){deck=[...(state.suggestedDeck||[])];deckInitialized=true;}
   const unique=new Map();
   state.drafted.forEach(c=>{const v=unique.get(c.id);if(v)v.copies++;else unique.set(c.id,{card:c,copies:1});});
@@ -76,6 +76,41 @@
   $('playCube').disabled=!valid||busy||state.started;
   $('playCube').textContent=state.started?'Match already started':'Start 4-Prize CPU Duel →';
  }
+ function renderTournament(){
+  const t=state.tournament,visible=!!t;
+  $('tournament').classList.toggle('hidden',!visible);
+  if(!visible)return;
+  const rounds=$('roundList');rounds.replaceChildren();
+  t.opponents.forEach((name,i)=>{
+   const result=t.results[i];
+   const row=document.createElement('div');
+   row.className='round '+(result?result.outcome:i===t.results.length&&!t.finished?'current':'');
+   const title=document.createElement('strong');title.textContent='Round '+(i+1)+' · '+name;
+   const status=document.createElement('small');
+   status.textContent=result?result.outcome.toUpperCase():i===t.results.length&&!t.finished?'CURRENT OPPONENT':'UPCOMING';
+   row.append(title,status);rounds.append(row);
+  });
+  const record=t.wins+' wins · '+t.losses+' losses · '+t.draws+' draws';
+  $('tournamentStatus').textContent=t.finished?
+   'Tournament complete! '+record+'. '+(t.wins>=2?'Champion performance!':'Try drafting a different strategy next time.'):
+   'Current standing: '+record+'. '+(t.readyForNext?'Next opponent unlocked.':'Finish your current match to continue.');
+  $('tournamentStatus').classList.toggle('final-record',t.finished);
+  $('nextMatch').classList.toggle('hidden',!t.readyForNext);
+  $('resumeMatch').classList.toggle('hidden',!t.activeDuelToken||t.finished||t.readyForNext);
+ }
+ async function nextMatch(){
+  if(busy||!state?.tournament?.readyForNext)return;
+  busy=true;$('error').textContent='';
+  try{
+   const result=await request('next',{method:'POST',body:JSON.stringify({revision:state.revision})});
+   sessionStorage.setItem('neoClassicLiveToken',result.duelToken);
+   location.assign('/classic_live.html');
+  }catch(e){
+   $('error').textContent=e.message;
+   try{state=await request('state');render();}catch{}
+   busy=false;
+  }
+ }
  function render(){
   $('start').textContent='Restart Draft';
   $('progress').textContent=state.done?'Draft completed! Build your deck below.':
@@ -92,6 +127,7 @@
   });
   $('drafted').innerHTML=state.drafted.map((c,i)=>'<div class="row">'+(i+1)+'. '+esc(c.name)+'</div>').join('');
   renderBuilder();
+  renderTournament();
  }
  async function play(){
   if(busy||!state?.done||deck.length!==40)return;
@@ -110,5 +146,9 @@
  }
  $('start').addEventListener('click',start);
  $('playCube').addEventListener('click',play);
+ $('nextMatch').addEventListener('click',nextMatch);
+ $('resumeMatch').addEventListener('click',()=>{
+  if(state?.tournament?.activeDuelToken)sessionStorage.setItem('neoClassicLiveToken',state.tournament.activeDuelToken);
+ });
  init();
 })();
