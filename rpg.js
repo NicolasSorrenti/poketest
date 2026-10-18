@@ -532,6 +532,20 @@ function render(){
   b.append(title,description);b.title=entry.text;b.onclick=()=>act('townActivity:'+entry.id);
   $('townActivities').append(b);
  }
+ $('sideQuestEvents').replaceChildren();
+ for(const x of SIDE.available(state,currentPeople())){
+  const b=document.createElement('button');b.className='event-btn';b.disabled=locked;
+  const h=document.createElement('strong');h.textContent='◆ '+x.stage.title+' · ⏳ 1 period';
+  const hint=document.createElement('small');hint.textContent=cast[x.stage.npc].name+' · '+x.quest.title;
+  b.append(h,hint);b.onclick=()=>act('sideQuest:'+x.quest.id);$('sideQuestEvents').append(b);
+ }
+ if(!$('sideQuestEvents').children.length){const p=document.createElement('p');p.className='empty-note';p.textContent='No side quest encounter here right now.';$('sideQuestEvents').append(p);}
+ $('sideQuestJournal').replaceChildren();
+ for(const info of SIDE.journal(state)){
+  const row=document.createElement('div');row.className='calendar-entry';
+  row.textContent=(info.status==='complete'?'✓ ':info.status==='missed'?'– ':'◆ ')+info.title+' · '+(info.status==='active'?info.summary.replace(/shop|cafe|park|center|arcade|library/g,m=>places[m][0]):info.summary);
+  $('sideQuestJournal').append(row);
+ }
  $('townEncounters').replaceChildren();
  const encounters=WORLD.availableEncounters(state,currentPeople());
  for(const entry of encounters){
