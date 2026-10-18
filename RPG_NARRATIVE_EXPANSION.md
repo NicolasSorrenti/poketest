@@ -10,7 +10,7 @@ The primary cast remains the existing eight **adult** heroines. New guest charac
 
 **Write conversations as actions:** somebody wants something; another person has a different, defensible need; the player can support, challenge or mediate. Avoid exposition monologues and generic "I am glad you came" endings. Jokes should expose personality or ease tension, not undermine sincere moments. Use silence when a character would realistically be uncomfortable.
 
-**Consequences:** every authored episode consumes one of three daily periods, expires after its date window, records the choice, and changes relationship statistics. The expansion also records an explicit `storyFlags[eventId]` outcome so future scenes can branch without inferring intentions from a relationship number. Story flags are saved, but *conditional follow-ups keyed to those flags are not implemented yet*.
+**Consequences:** every authored episode consumes one of three daily periods, expires after its date window, records the choice, and changes relationship statistics. The expansion also records an explicit `storyFlags[eventId]` outcome so future scenes can branch without inferring intentions from a relationship number. Story flags are saved, and the **second and third guest chapters now change their opening dialogue** according to the preceding chapter's specific choice. Wider multi-branch quest endings remain a later milestone.
 
 ## Three new recurring trainers
 
@@ -70,4 +70,4 @@ The deck IDs above are *current gameplay presets*, and not a claim that any card
 
 The expansion builds on `rpg_story.js`, `rpg_schedules.js`, `rpg.js`, the existing Classic duel engine, and browser save data. It does not replace any of them, nor does it change combat rules. Story IDs from the original thirty-two scenes remain stable for existing saves.
 
-Guest decks are selected using existing `deckOptions()` IDs. Future bespoke competitive archetypes should be introduced *only after* confirming card support and automated full-duel tests. The module is browser-static; server-side spoiler security, branch-dependent dialogue, custom deck lists and new final endings are separate future milestones.
+Guest decks are selected using existing `deckOptions()` IDs. Future bespoke competitive archetypes should be introduced *only after* confirming card support and automated full-duel tests. The module is browser-static; server-side spoiler security, fully divergent multi-scene branches, custom deck lists and new final endings are separate future milestones.
