@@ -372,9 +372,9 @@
       }
     ],
     "openingByFlag": {
-      "sol_small": "That tiny arcade night was lovely. Alma says I've been making festival plans for three hours.",
-      "sol_clear": "I sent honest invitations this time. Alma says I've been planning follow-ups at her café for three hours.",
-      "sol_date": "About that date. I haven't forgotten. Alma says I've been rehearsing what to say for three hours."
+      "sol_small": "The tiny arcade night cheered her up. And now Sol's been here three hours planning the next festival.",
+      "sol_clear": "Sol sent perfectly clear invitations this time. She's still been here for three hours planning the follow-up.",
+      "sol_date": "Sol's been here three hours rehearsing something about a date. Personally, I'd like my table back."
     }
   },
   {
@@ -472,9 +472,9 @@
       }
     ],
     "openingByFlag": {
-      "sol_listen": "I took a day to think after our talk. Jun's here with bad news about the waterfront festival.",
-      "sol_team": "I recruited a team. Jun is on it, and he's telling me the weather makes the waterfront festival unsafe.",
-      "sol_ordinary": "Turns out a quiet day includes tough phone calls. Jun says the waterfront isn't safe this weekend."
+      "sol_listen": "Sol spent a day thinking about the festival. Unfortunately, the waterfront safety report is not encouraging.",
+      "sol_team": "Sol finally recruited a festival team. As a member of that team, I need to tell her the waterfront is unsafe.",
+      "sol_ordinary": "I wish this were an ordinary scheduling call. The waterfront won't be safe for her festival this weekend."
     }
   },
   {
@@ -734,9 +734,9 @@
       }
     ],
     "openingByFlag": {
-      "sol_small": "After our tiny arcade party I promised a simpler event. Marina says the river may complicate that.",
-      "sol_clear": "I sent a real itinerary this time. Marina says the river doesn't read invitations.",
-      "sol_date": "That date is still on my mind, but first I owe a group of people an update about the river."
+      "sol_small": "I'm glad the small arcade party worked out, Sol. The river is going to complicate your next event, though.",
+      "sol_clear": "Thank you for sending me a proper itinerary, Sol. Unfortunately, the river didn't read it.",
+      "sol_date": "I don't need the details of your date, Sol. I do need to tell you the river's too rough for the ferry party."
     }
   }
 ];
