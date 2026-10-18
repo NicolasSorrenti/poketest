@@ -18,12 +18,18 @@ assert.equal(s.available.length,4);
 assert.equal(s.available[0].length,15);
 assert.throws(()=>C.draftPick(s,0,'unknown'),/Card not in current pack/);
 let first=s.available[0][0];
+const originalCopies=s.available.flat().filter(id=>id===first).length;
 C.draftPick(s,0,first);
 assert.throws(()=>C.draftPick(s,0,s.available[0][0]),/already picked/);
 for(let seat=1;seat<4;seat++)C.draftPick(s,seat,s.available[seat][0]);
 assert.equal(s.pick,1);
 assert.equal(s.available[0].length,14);
-assert(!s.available[0].includes(first));
+// A different physical copy of the same printing may be passed to this
+// seat; an ID appearing again is valid. Count copies instead of uniqueness.
+const remainingCopies=s.available.flat().filter(id=>id===first).length;
+const pickedCopies=s.picks.flat().filter(id=>id===first).length;
+assert.equal(remainingCopies+pickedCopies,originalCopies,
+ 'Drafting must neither clone nor lose physical copies of a printing');
 while(!s.done){
  for(let seat=0;seat<4;seat++){
   const candidates=C.availableForSeat(s,seat);
