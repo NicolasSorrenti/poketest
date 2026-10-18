@@ -3,6 +3,7 @@
 // the same four-seat draft can feed human or CPU tournaments in future.
 const crypto=require('node:crypto');
 const Cube=require('./cube_draft');
+const {getPreset}=require('./cube_presets');
 const {cpuPick,buildCpuDeck,ENERGY_IDS}=require('./cube_strategy');
 const {CATALOG}=require('./headless_duel');
 const LETTERS='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
@@ -36,13 +37,14 @@ class CubeRoomService{
   room.updated=this.now();
   return {room,seat};
  }
- create({name='Host',seed}={}){
+ create({name='Host',seed,preset='balanced'}={}){
+  getPreset(preset);
   this.prune();
   if(this.rooms.size>=this.maxRooms)throw Error('Cube room limit reached');
   if(seed!==undefined&&(!Number.isSafeInteger(seed)||seed<0||seed>0xffffffff))throw Error('Invalid Cube seed');
   let code;do{code=randomCode();}while(this.rooms.has(code));
   const token=makeToken();
-  const room={code,seed:seed??crypto.randomBytes(4).readUInt32BE(0),
+  const room={code,preset,seed:seed??crypto.randomBytes(4).readUInt32BE(0),
    seats:[{name:normalizeName(name,'Host'),token,cpu:false,ready:false,deck:null}],
    draft:null,revision:0,updated:this.now()};
   this.rooms.set(code,room);
@@ -75,7 +77,7 @@ class CubeRoomService{
   while(room.seats.length<4)room.seats.push({
    name:cpuNames[room.seats.length-humans],cpu:true,ready:true,token:null,deck:null
   });
-  room.draft=Cube.makeDraft({seed:room.seed,players:4,packs:4,cardsPerPack:15});
+  room.draft=Cube.makeDraft({seed:room.seed,players:4,packs:4,cardsPerPack:15,preset:room.preset});
   room.revision++;
   return this.view(room,seat);
  }
@@ -113,7 +115,7 @@ class CubeRoomService{
  }
  view(room,seat){
   const d=room.draft,me=room.seats[seat],base={
-   code:room.code,seat,revision:room.revision,host:seat===0,
+   code:room.code,preset:room.preset,seat,revision:room.revision,host:seat===0,
    status:!d?'lobby':d.done?'build':'draft',finished:!!d?.done,
    seats:room.seats.map((s,i)=>({seat:i,name:s.name,cpu:s.cpu,ready:s.ready,
     pickCount:d?d.picks[i].length:0,deckReady:!!s.deck})),

@@ -2,8 +2,27 @@
 (()=>{
  const $=id=>document.getElementById(id);
  const TYPES=['Grass','Fire','Water','Lightning','Psychic','Fighting'];
- let code=null,token=null,state=null,busy=false,deck=[],deckInitialized=false,loading=false;
+ let code=null,token=null,state=null,busy=false,deck=[],deckInitialized=false,loading=false,presets=[];
  const storageKey='neoCampusCubeRoomV1';
+ async function loadPresets(){
+  try{
+   const r=await fetch('/api/cube/presets');
+   if(!r.ok)throw Error('Presets unavailable');
+   presets=(await r.json()).presets||[];
+   const selector=$('cubePreset'),previous=selector.value;
+   selector.replaceChildren();
+   for(const p of presets){
+    const option=document.createElement('option');option.value=p.id;option.textContent=p.name;
+    selector.append(option);
+   }
+   selector.value=presets.some(p=>p.id===previous)?previous:'balanced';
+   showPreset();
+  }catch{$('cubePresetInfo').textContent='Classic Balanced is available.';}
+ }
+ function showPreset(){
+  const active=presets.find(p=>p.id===$('cubePreset').value);
+  if(active)$('cubePresetInfo').textContent=active.description+' · '+active.archetypes.join(' / ');
+ }
  const store=()=>sessionStorage.setItem(storageKey,JSON.stringify({code,token}));
  const say=msg=>{$('message').textContent=msg||'';};
  async function api(path,data){
@@ -27,7 +46,7 @@
  async function createOrJoin(isJoin){
   await act(async()=>{
    const name=$('playerName').value.trim()||'Player';
-   const result=await api(isJoin?'join':'create',isJoin?{code:$('roomCode').value.toUpperCase().trim(),name}:{name});
+   const result=await api(isJoin?'join':'create',isJoin?{code:$('roomCode').value.toUpperCase().trim(),name}:{name,preset:$('cubePreset').value});
    code=result.code;token=result.token;state=result;deck=[];deckInitialized=false;
    store();render();
   });
@@ -102,7 +121,7 @@
  function render(){
   if(!state)return;
   $('entrance').classList.add('hidden');$('room').classList.remove('hidden');
-  $('roomTitle').textContent='Cube room '+state.code;
+  $('roomTitle').textContent='Cube room '+state.code+' · '+(presets.find(p=>p.id===state.preset)?.name||state.preset||'Classic Balanced');
   const invite=new URL(location.href);invite.pathname='/cube_room.html';invite.search='?room='+encodeURIComponent(code);
   invite.hash='';$('inviteLink').value=invite.toString();
   const seat=state.seats[state.seat];
@@ -166,6 +185,8 @@
   }catch(e){say(e.message||String(e));}
   finally{loading=false;}
  }
+ $('cubePreset').addEventListener('change',showPreset);
+ loadPresets();
  $('createRoom').onclick=()=>createOrJoin(false);
  $('joinRoom').onclick=()=>createOrJoin(true);
  $('readyRoom').onclick=()=>act(async()=>{state=await api('ready',{ready:!state.seats[state.seat].ready});render();});
