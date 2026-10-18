@@ -905,6 +905,43 @@ const settings={level:3,personality:'balanced',side:1,seed:47};
  assert.equal(AI.observation(g,1).pendingTrainerName,null,
   'Opponent Trainer card identity must not leak via own-plan metadata');
 }
+{
+ const g=createGame({decks:[deck,deck],seed:55121,format:'classic'});
+ const o=AI.observation(g,1);o.phase='game';o.turn=1;o.round=5;
+ o.self.active={id:IDS.machop,energies:[IDS.fight],damage:0,playedTurn:2,status:null};
+ o.self.bench=[{id:IDS.rat,energies:[],damage:0,playedTurn:2,status:null}];
+ o.opponent.active={id:IDS.hit,energies:[IDS.fight],damage:0,status:null};
+ o.self.hand=[IDS.fight,'base1-34','base1-61'];
+ o.self.handCount=3;o.self.deckCount=23;
+ const cfg=AI.configuration({level:5,side:1,trainerSelections:true});
+ const old=AI.configuration({level:5,side:1});
+ const find={kind:'find',label:'Choose one Pokémon from your deck'};
+ const options=[{id:'deck:4',label:'Machoke'},{id:'deck:8',label:'Rattata'}];
+ assert.ok(AI.trainerSelectionValue(options[0],find,o,cfg)>
+  AI.trainerSelectionValue(options[1],find,o,cfg),
+  'Pokémon Trader must select the matching on-board Machop evolution');
+ assert.equal(AI.trainerSelectionValue(options[0],find,o,old),null);
+ const energyDecision={kind:'find',label:'Choose Basic Energy'};
+ const good={id:'deck:3',label:'Fighting Energy'};
+ const bad={id:'deck:5',label:'Water Energy'};
+ assert.ok(AI.trainerSelectionValue(good,energyDecision,o,cfg)>
+  AI.trainerSelectionValue(bad,energyDecision,o,cfg),
+  'Energy Search must choose Fighting that supports a ready Machop, not unrelated Water');
+ const cost={kind:'cost',label:'Choose one other card to discard'};
+ assert.ok(AI.trainerSelectionValue({id:'hand:2',label:'Rattata'},cost,o,cfg)>
+  AI.trainerSelectionValue({id:'hand:1',label:'Machoke'},cost,o,cfg),
+  'Computer Search must preserve an available evolution and pay a surplus Basic');
+ assert.equal(AI.trainerSelectionValue({id:'deck:2',label:'Professor Oak'},
+  {kind:'target',label:'Choose opposing Pokémon'},o,cfg),null,
+  'The card evaluator must never apply search logic to an unrelated choice');
+ assert.throws(()=>AI.configuration({trainerSelections:'yes'}),/trainer-selections/);
+ const {arena,argumentsOf}=require('./benchmark_cpu');
+ const outcome=arena(argumentsOf(['--pairs','1','--max-turns','4',
+  '--left-level','5','--right-level','5',
+  '--left-trainer-selections','true','--right-trainer-selections','false']));
+ assert.equal(outcome.baseline.trainerSelections,true);
+ assert.equal(outcome.challenger.trainerSelections,false);
+}
 let duels=0,decisions=0,attacks=0,energy=0,evolutions=0,trainer=0;
 for(let seed=1;seed<=4;seed++){
  let game=createGame({decks:[deck,deck],seed:seed*1789,format:'classic'});
