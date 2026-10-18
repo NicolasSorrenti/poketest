@@ -83,6 +83,6 @@ function attack(g,name){const a=CATALOG.get(g.players[0].active.id).attacks.find
 }
 {
  const g=game('neo4-47','Core Blast');g.players[1].active.energies=['base1-96','neo1-104'];
- attack(g,'Core Blast');assert.equal(g.players[1].active.damage,70);
+ attack(g,'Core Blast');assert.equal(g.players[1].active.damage,80,'70 Core Blast plus 10 end-turn Darkness Energy recoil on non-Dark host');
 }
 console.log('PASS Neo v085: 11 exact effects, coin and context branches, six full reducer interactions');
