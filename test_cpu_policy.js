@@ -921,6 +921,9 @@ const settings={level:3,personality:'balanced',side:1,seed:47};
   AI.trainerSelectionValue(options[1],find,o,cfg),
   'Pokémon Trader must select the matching on-board Machop evolution');
  assert.equal(AI.trainerSelectionValue(options[0],find,o,old),null);
+ // Machop's printed Low Kick needs one Fighting Energy. A Water Energy only
+ // helps its Colorless Bench partner; the active need should dominate.
+ o.self.active.energies=[];
  const energyDecision={kind:'find',label:'Choose Basic Energy'};
  const good={id:'deck:3',label:'Fighting Energy'};
  const bad={id:'deck:5',label:'Water Energy'};
