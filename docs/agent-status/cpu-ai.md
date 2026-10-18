@@ -157,6 +157,15 @@ GitHub Actions CPU AI regression additionally runs the existing Classic local CP
 - Therefore **trainerTactics stays OFF by default**, whereas previously validated `actionDiscipline` remains ON at Champion. Complete reproducibility and results: `docs/cpu-ai-trainer-tactics.md`.
 - Difficulty target remains **≤5% lower-tier wins**, unachieved; focus future AI research on stronger strategic evaluation and Gym/Neo choice decisions, not manufactured results.
 
+## Trainer search, discard payments and legal Gym/Rocket decisions (PR #12)
+
+- Introduced optional Expert/Champion `trainerSelections` with two linked phases. Search-play scoring rewards a worthwhile **Brock's Training Method** when a Brock evolution line is on board and **The Boss's Way** when Dark evolution of a visible Pokémon may be useful; basic Energy Search, Pokémon Trader, Poké Ball and Computer Search receive situational play incentives. This fixes the existing gap where the generic Trainer score was below `end_turn`, so skilled CPUs never initiated the search.
+- Once a legal Trainer choice appears, evaluate **only the printed names visible in the acting player's authorized search or discard decision**. Search for a matching evolution or Energy satisfying real colored attack requirements; pay a discard cost with a less valuable card instead of giving up a live evolution. Does not read the opponent's concealed hand/deck, predict coin flips or call reducer rollouts.
+- Focused tests cover Machop→Machoke, printed Low Kick Fighting cost versus unrelated Water, preserving a playable evolution over Rattata as Trainer payment, preserving old disabled defaults, Brock search when a Brock's Geodude is on board, and Grimer→Dark Muk via The Boss's Way. All passing.
+- Controlled identical-Champion 520-game seat-swapped A/B across Blackout, Brushfire, Cold Fusion, Brock Gym Heroes and Trouble Team Rocket, plus independent repeat Brock/Trouble seeds: experimental AI **272–248**, no draws, **52.31%** decisive (Wilson 95% CI **48.0%–56.6%**). The 160 added Gym/Rocket repeat matches independently produced 43–37 in each group, but aggregate uncertainty still includes parity; **OFF by default**.
+- GitHub Actions `CPU Sequence Experiment` run `39088652333` completed with every unit test and all 520 matched matches passing. Latest separate full TCG regression on concurrent rules work encountered `test_gym_misty_wish_v078.js` expecting `hand:1` (CPU branch did not edit Trainer resolver or that test). Track the rules-owner fix separately.
+- Full study/reproduction in `docs/cpu-ai-trainer-search.md`. 95% higher-level win objective / ≤5% lower-tier upset target remains unmet, with historical rules, public information and fair randomness preserved.
+
 ## Known limitations and next work
 
 1. Verify green CI on all affected and full regression suites. 
