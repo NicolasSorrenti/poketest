@@ -22,4 +22,16 @@ After that fix, 260 seat-swapped Champion A/B games yielded:
 
 There is no established win-rate improvement. Keep the policy experimental. The 5% maximum lower-tier upset target remains unmet; historical RNG and match outcomes remain fair.
 
+## Playtesting the feature in the actual game
+
+`ClassicLocalService.create({deck:'blackout',opponent:'brock',difficulty:5,
+experimentalCombos:true})` enables the projected combos for the CPU in a
+normal local headless duel session. Levels 4 (Expert) and 5 (Champion) allow
+this explicit option. Lower levels reject it rather than silently claiming an
+unavailable strategy, and all ordinary local matches remain on the unchanged
+default. The returned `cpu.experimentalCombos` metadata confirms whether
+the experiment is enabled. Regression tests cover these session guarantees.
+The experimental flag is independent of `advancedTactics` and can be tested
+without enabling other unvalidated heuristics.
+
 Run `node test_cpu_policy.js`, `node test_classic_live_service.js`, or `node benchmark_cpu.js --pairs 40 --max-turns 120 --seed 101183 --left-level 5 --right-level 5 --left-combo-search true --right-combo-search false --left-deck cpu_combo_lab --right-deck cpu_combo_lab`.
