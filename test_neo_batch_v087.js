@@ -12,6 +12,8 @@ for(const [key,kind] of Object.entries(defs)){
  assert.equal(p?.kind,kind==='stoke'?'afternoon-nap':kind==='call-for-murkrow'?'call-family':'neo87:'+kind);
  assert.equal(A.compile({...a,text:a.text+' modified'}),null);
 }
+assert.notEqual(A.compile(printed('neo3-1','Gigavolt')).kind,'neo87:gigavolt','preserve historical v040 Gigavolt');
+assert.notEqual(A.compile(printed('neo4-11','Mountain Smasher')).kind,'neo87:mountain-smasher','preserve historical v040 Mountain Smasher');
 const resolve=(id,name,seq,ctx={})=>{const picks=[...seq];return A.resolve(A.compile(printed(id,name)),()=>{assert.ok(picks.length);return picks.shift();},ctx);};
 assert.equal(resolve('neo3-1','Gigavolt',[true]).damage,60);
 assert.equal(resolve('neo3-1','Gigavolt',[false]).status,'Paralyzed');
@@ -74,4 +76,4 @@ function use(g,name){send(g,0,'attack',{attackIndex:CATALOG.get(g.players[0].act
  assert.equal(g.players[1].deck.length,before-heads);
  assert.equal(g.players[1].active.damage,20*heads);
 }
-console.log('PASS Neo v087: 5 signed attacks, two player-owned search flows, tools and deck milling');
+console.log('PASS Neo v087: 3 newly signed attacks, two retained v040 scripts, owned searches, tools and deck milling');
