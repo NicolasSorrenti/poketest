@@ -973,6 +973,67 @@ const settings={level:3,personality:'balanced',side:1,seed:47};
  assert.equal(AI.trainerSearchPlayBonus(play,o,cfg),0,
   'The decision feature must not alter unrelated Professor Oak behavior');
 }
+{
+ // Complete legal four-step line: Energy Retrieval -> pay spare Potion ->
+ // recover discarded Fighting -> evolve Machop into Machoke -> attach Energy
+ // -> Karate Chop. All materials are already in own hand/public discard.
+ const g=createGame({decks:[deck,deck],seed:82283,format:'classic'});
+ const o=AI.observation(g,1);o.phase='game';o.turn=1;o.round=6;o.turnSerial=21;
+ o.self.active={id:IDS.machop,damage:0,playedTurn:3,
+  energies:[IDS.fight,IDS.fight],status:null};
+ o.self.bench=[];o.self.hand=['base1-81','base1-34',IDS.potion];
+ o.self.discard=[IDS.fight];
+ o.self.energyUsed=false;o.self.handCount=3;
+ o.opponent.active={id:IDS.hit,damage:0,energies:[IDS.fight],status:null};
+ const cfg=AI.configuration({level:5,side:1,comboSearch:true});
+ const old=AI.configuration({level:5,side:1});
+ const retrieval={type:'play_trainer',payload:{handIndex:0}};
+ const evolve={type:'evolve',payload:{handIndex:1,slot:-1}};
+ assert.ok(AI.comboSequenceBonus(retrieval,o,cfg)>20,
+  'Retrieval must be worth playing when it enables Machoke Karate Chop this turn');
+ assert.ok(AI.comboSequenceBonus(evolve,o,cfg)>20,
+  'Evolution-first sequence must also find Recovery then Energy attachment');
+ assert.equal(AI.comboSequenceBonus(retrieval,o,old),0);
+ const noDiscard=structuredClone(o);noDiscard.self.discard=[];
+ assert.equal(AI.comboSequenceBonus(retrieval,noDiscard,cfg),0,
+  'Cannot recover imaginary Energy missing from the public discard');
+ const noPayment=structuredClone(o);noPayment.self.hand=['base1-81','base1-34'];
+ assert.ok(AI.comboSequenceBonus(retrieval,noPayment,cfg)<=0,
+  'Cannot recover Energy while pretending to retain its discarded Evolution cost');
+ const afterEnergy=structuredClone(o);afterEnergy.self.energyUsed=true;
+ assert.ok(AI.comboSequenceBonus(retrieval,afterEnergy,cfg)<=0,
+  'Once an Energy is attached this turn the combo cannot attach another');
+ g.pendingAction={kind:'classic_trainer',plan:{side:1,cardId:'base1-81',data:{}}};
+ const owned=AI.observation(g,1);
+ owned.phase='game';owned.self.active=o.self.active;owned.self.hand=o.self.hand;
+ owned.self.discard=o.self.discard;owned.opponent.active=o.opponent.active;
+ const pay={kind:'cost',label:'Choose one other card to discard'};
+ assert.ok(AI.comboChoiceValue({id:'n:2',label:'Potion'},pay,owned,cfg)>
+  AI.comboChoiceValue({id:'n:1',label:'Machoke'},pay,owned,cfg),
+  'Payment must not sacrifice the exact evolution the line needs');
+ const recover={kind:'recover',label:'Recover 1 or 2 Basic Energy'};
+ assert.ok(AI.comboChoiceValue({id:'n:0',label:'Fighting Energy'},recover,owned,cfg)>0);
+ const hidden=structuredClone(g);hidden.pendingAction.plan.side=0;
+ assert.equal(AI.observation(hidden,1).pendingTrainerName,null,
+  'Opponent Trainer private choices must never be accessible to the CPU');
+ const lethal=structuredClone(o);
+ lethal.self.active={id:IDS.hit,damage:0,playedTurn:3,energies:[IDS.fight],status:null};
+ lethal.self.hand=['base1-84'];lethal.self.discard=[];
+ lethal.opponent.active={id:IDS.rat,damage:0,energies:[],status:null};
+ assert.ok(AI.comboSequenceBonus({type:'play_trainer',payload:{handIndex:0}},lethal,cfg)>150,
+  'PlusPower must secure a 10-damage-gap knockout before the attack');
+ const untimely=structuredClone(lethal);untimely.opponent.active={...o.opponent.active};
+ assert.ok(AI.comboSequenceBonus({type:'play_trainer',payload:{handIndex:0}},untimely,cfg)<
+  AI.comboSequenceBonus({type:'play_trainer',payload:{handIndex:0}},lethal,cfg),
+  'Do not value unneeded PlusPower as much as a guaranteed Prize knockout');
+ assert.equal(AI.configuration({level:5}).comboSearch,false);
+ assert.throws(()=>AI.configuration({comboSearch:'yes'}),/combo-search/);
+ const {arena,argumentsOf}=require('./benchmark_cpu');
+ const result=arena(argumentsOf(['--pairs','1','--max-turns','4','--left-level','5',
+  '--right-level','5','--left-combo-search','true','--right-combo-search','false']));
+ assert.equal(result.baseline.comboSearch,true);
+ assert.equal(result.challenger.comboSearch,false);
+}
 let duels=0,decisions=0,attacks=0,energy=0,evolutions=0,trainer=0;
 for(let seed=1;seed<=4;seed++){
  let game=createGame({decks:[deck,deck],seed:seed*1789,format:'classic'});
