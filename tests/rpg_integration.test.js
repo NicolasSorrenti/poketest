@@ -53,6 +53,7 @@ test('host serves RPG and Classic integration assets with correct media types', 
   const base='http://127.0.0.1:'+server.address().port;
   for(const [url,type] of [
    ['/rpg.html','text/html'],['/rpg.js','text/javascript'],['/rpg_story.js','text/javascript'],
+   ['/rpg_appointments.js','text/javascript'],
    ['/rpg_duel_bridge.js','text/javascript'],['/classic_live.html','text/html'],
    ['/classic_live.js','text/javascript'],['/rpg.css','text/css'],['/rpg_duel.css','text/css']]){
     const response=await fetch(base+url);
