@@ -1101,6 +1101,55 @@ const settings={level:3,personality:'balanced',side:1,seed:47};
   'Both sides must complete real authenticated Base Set Trainer-combo matches');
  assert.equal(stress.baseline.deck,'cpu_combo_lab');
 }
+{
+ // Integration: only the authentic reducer may create and resolve the staged
+ // Trainer prompts. Test the exact n: hand-cost and disc: recovery namespaces
+ // seen by a human playing these same legal options.
+ const laboratory=[
+  ...Array(4).fill(IDS.machop),...Array(4).fill('base1-34'),
+  ...Array(2).fill(IDS.hit),...Array(2).fill(IDS.rat),
+  ...Array(4).fill('base1-81'),...Array(4).fill('base1-84'),
+  ...Array(4).fill(IDS.bill),...Array(4).fill('base1-88'),
+  ...Array(4).fill(IDS.potion),...Array(4).fill(IDS.switch),
+  ...Array(24).fill(IDS.fight)];
+ let live=createGame({decks:[laboratory,laboratory],format:'classic',seed:390144});
+ live=AI.driveSide(live,{side:0,level:5,seed:1}).game;
+ live=AI.driveSide(live,{side:1,level:5,seed:2}).game;
+ assert.equal(live.phase,'game');
+ live.turn=1;live.round=5;live.turnSerial=11;
+ const own=live.players[1];
+ const drawKnown=id=>{
+  if(own.hand.includes(id))return own.hand.indexOf(id);
+  const n=own.deck.indexOf(id);
+  assert.ok(n>=0,'Test seed must make '+id+' available from own deck');
+  own.hand.push(own.deck.splice(n,1)[0]);
+  return own.hand.length-1;
+ };
+ const trainerIndex=drawKnown('base1-81');
+ const machokeIndex=drawKnown('base1-34');
+ drawKnown(IDS.potion);
+ const energyIndex=own.deck.indexOf(IDS.fight);
+ assert.ok(energyIndex>=0);
+ own.discard.push(own.deck.splice(energyIndex,1)[0]);
+ const initiated=reduce(live,1,{type:'play_trainer',payload:{handIndex:trainerIndex}});
+ assert.equal(initiated.ok,true,'Actual Energy Retrieval Trainer must begin a legal staged resolution');
+ assert.equal(initiated.game.pendingDecision.kind,'cost');
+ const settings={side:1,level:5,seed:7,comboSearch:true};
+ const payment=AI.chooseAction(initiated.game,settings);
+ assert.equal(payment?.command.type,'choose');
+ assert.ok(!payment.command.payload.selected.includes('n:'+machokeIndex),
+  'Real reducer prompt must preserve playable Machoke when paying Retrieval cost');
+ assert.equal(payment.game.pendingDecision.kind,'recover');
+ assert.ok(payment.game.pendingDecision.options.some(o=>o.id.startsWith('disc:')),
+  'Energy recovery is actually indexed by disc:, not n:');
+ const recovered=AI.chooseAction(payment.game,settings);
+ assert.equal(recovered?.command.type,'choose');
+ assert.ok(recovered.command.payload.selected.some(id=>id.startsWith('disc:')));
+ assert.equal(recovered.game.pendingDecision,null,
+  'Completing Retrieval via CPU choices must not leave a mandatory decision stuck');
+ assert.ok(recovered.game.players[1].hand.includes(IDS.fight),
+  'The actual game state must now contain legally recovered Fighting Energy');
+}
 let duels=0,decisions=0,attacks=0,energy=0,evolutions=0,trainer=0;
 for(let seed=1;seed<=4;seed++){
  let game=createGame({decks:[deck,deck],seed:seed*1789,format:'classic'});
