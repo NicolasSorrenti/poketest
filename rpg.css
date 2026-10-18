@@ -72,3 +72,12 @@
 .finale-social{margin:17px 0;color:#ffd3dc;font-size:13px;line-height:1.6}
 .finale-actions{display:flex;align-items:center;gap:15px;flex-wrap:wrap;margin-top:18px}.finale-actions small{max-width:410px;line-height:1.5;color:#cdbcc8}.finale-actions button{flex-shrink:0}
 @media(max-width:700px){.season-finale{padding:17px}.finale-stats{grid-template-columns:repeat(2,minmax(0,1fr))}.finale-actions button{width:100%}}
+
+
+/* Reserved social appointments. Designed to work even when the art pack is absent. */
+.appointments-panel{display:grid;gap:8px}
+.meeting-card{display:grid;gap:5px;padding:10px 11px;background:linear-gradient(105deg,#292b46,#1c293b);border:1px solid #675777;border-radius:9px}
+.meeting-card strong{font:800 15px 'Barlow Condensed',sans-serif;letter-spacing:.3px;color:#ffdae7}
+.meeting-card small{font:600 11px/1.4 'Barlow Condensed',sans-serif;color:#c7d1e0}
+.meeting-actions{display:flex;gap:5px;flex-wrap:wrap}.meeting-actions button{flex:1;font:700 12px 'Barlow Condensed',sans-serif;padding:8px;border-color:#ad7999;background:#51354f}
+.meeting-actions .meeting-attend{color:white;background:#9b466c;border-color:#ffb9cf}.meeting-actions .meeting-cancel{background:#263247;color:#dbccdc;border-color:#515d73}
