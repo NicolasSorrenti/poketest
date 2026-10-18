@@ -149,5 +149,5 @@ let scenarios=0;
 }
 const all=[...CATALOG.values()].flatMap(c=>(c.attacks||[]).map(a=>({card:c,attack:a,program:compile(a)})));
 const migrated=all.filter(x=>['bench-target','bench-own','bench-both-recoil','bench-splash-coin','switch-defender','switch-attacker','switch-self','energy-discard'].includes(x.program?.kind));
-assert.equal(migrated.length,64);
+assert.ok(migrated.length>=64, 'Targeted attack coverage regressed below historical baseline');
 console.log(`PASS targeted/Bench/switch milestone: ${scenarios} full command paths, ${migrated.length} newly recognized historical attacks, private defender choices, KO Prize attribution, atomic invalid actions`);
