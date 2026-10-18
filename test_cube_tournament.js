@@ -3,7 +3,7 @@ const assert=require('node:assert/strict');
 const {CubeService}=require('./cube_service');
 const {ClassicLocalService}=require('./classic_local_service');
 
-function runSemifinal(winner){
+function runSemifinal(winner,placementWinner){
  const simulations=[];
  const cube=new CubeService({simulateCpu:(a,b,opts)=>{
   simulations.push({a,b,opts});
@@ -48,19 +48,21 @@ function runSemifinal(winner){
  assert.equal(active.game.players[1].name,winner===0?'Cube Champion':'Campus Challenger');
  assert.equal(cube.session(token).tournament.decks[0].length,40);
  assert.deepEqual(cube.session(token).tournament.decks[0],frozen);
- active.game.over=true;active.game.winner=0;
+ active.game.over=true;active.game.winner=placementWinner;
  state=cube.sync(token,classic);
  assert.equal(state.tournament.finished,true);
  assert.equal(state.tournament.results.length,2);
  assert.equal(state.tournament.standings.length,4);
  assert.equal(new Set(state.tournament.standings.map(x=>x.name)).size,4);
- assert.equal(state.tournament.standings.find(x=>x.name==='You').place,winner===0?1:3);
+ assert.equal(state.tournament.standings.find(x=>x.name==='You').place,winner===0?(placementWinner===0?1:2):(placementWinner===0?3:4));
  assert.equal(state.tournament.bracket.every(x=>x.status==='complete'),true);
  assert.equal(simulations.length,2,'Each CPU fixture only once');
  assert.equal(cube.sync(token,classic).revision,state.revision,'No double-scoring terminal bracket');
  assert.throws(()=>cube.next(token,state.revision,classic),/complete/);
  return state;
 }
-runSemifinal(0);
-runSemifinal(1);
-console.log('PASS Cube bracket: two semifinal paths, drawn rematch, CPU fixtures, immutable decks and four-place standings');
+runSemifinal(0,0);
+runSemifinal(0,1);
+runSemifinal(1,0);
+runSemifinal(1,1);
+console.log('PASS Cube bracket: all four placements, drawn rematch, CPU fixtures, immutable decks and four-place standings');
