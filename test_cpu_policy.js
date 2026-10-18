@@ -1019,7 +1019,9 @@ const settings={level:3,personality:'balanced',side:1,seed:47};
  const lethal=structuredClone(o);
  lethal.self.active={id:IDS.hit,damage:0,playedTurn:3,energies:[IDS.fight],status:null};
  lethal.self.hand=['base1-84'];lethal.self.discard=[];
- lethal.opponent.active={id:IDS.rat,damage:0,energies:[],status:null};
+ // Charmander has no Fighting weakness. With 20 existing damage it has
+ // exactly 30 HP remaining: Jab 20 + PlusPower 10 is a genuine new KO.
+ lethal.opponent.active={id:'base1-46',damage:20,energies:[],status:null};
  const koBonus=AI.comboSequenceBonus({type:'play_trainer',payload:{handIndex:0}},lethal,cfg);
  assert.ok(koBonus>150,
   'PlusPower must secure a 10-damage-gap knockout before the attack; score '+koBonus);
