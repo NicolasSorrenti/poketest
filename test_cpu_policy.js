@@ -997,6 +997,12 @@ const settings={level:3,personality:'balanced',side:1,seed:47};
  const noDiscard=structuredClone(o);noDiscard.self.discard=[];
  assert.equal(AI.comboSequenceBonus(retrieval,noDiscard,cfg),0,
   'Cannot recover imaginary Energy missing from the public discard');
+ assert.equal(AI.comboSequenceBonus(evolve,noDiscard,cfg),0,
+  'A normal evolution without a combo must not be penalized by the optional planner');
+ const normalEnergy=structuredClone(o);normalEnergy.self.hand=[IDS.fight];
+ normalEnergy.self.discard=[];
+ assert.equal(AI.comboSequenceBonus({type:'attach_energy',payload:{handIndex:0,slot:-1}},normalEnergy,cfg),0,
+  'Do not downgrade vital ordinary Energy attachments if they do not unlock a new attack yet');
  const noPayment=structuredClone(o);noPayment.self.hand=['base1-81','base1-34'];
  assert.ok(AI.comboSequenceBonus(retrieval,noPayment,cfg)<=0,
   'Cannot recover Energy while pretending to retain its discarded Evolution cost');
