@@ -20,6 +20,7 @@
  const NEO82=(typeof require==='function'?require('./neo_attack_batch_v082'):null);
  const NEO83=(typeof require==='function'?require('./neo_attack_batch_v083'):null);
  const NEO84=(typeof require==='function'?require('./neo_attack_batch_v084'):null);
+ const NEO85=(typeof require==='function'?require('./neo_attack_batch_v085'):null);
  const conditions=new Set(['Poisoned','Asleep','Paralyzed','Confused']);
  const patterns=[
   {kind:'coin-times',re:/^Flip (\d+) coins\. This attack does (\d+) damage times the number of heads\.$/i},
@@ -55,6 +56,7 @@
   if(!attack||typeof attack!=='object')return null;
   // Specific complete card families take priority over broad damage/coin patterns.
   // This prevents a partial broad-pattern match from hiding a valid exact script.
+  if(NEO85){const nextNeo=NEO85.compile(attack);if(nextNeo)return nextNeo;}
   if(NEO84){const nextNeo=NEO84.compile(attack);if(nextNeo)return nextNeo;}
   if(NEO83){const nextNeo=NEO83.compile(attack);if(nextNeo)return nextNeo;}
   if(NEO82){const nextNeo=NEO82.compile(attack);if(nextNeo)return nextNeo;}
@@ -201,7 +203,7 @@
    }
    case 'switch-defender':case 'switch-attacker':case 'switch-self':return {damage:program.damage,forceSwitch:program.kind,flips:[]};
    case 'draw-one':return {damage:0,draw:1,flips:[]};
-   default:if(NEO84&&program.kind.startsWith('neo84:'))return NEO84.resolve(program,flip,context);if(NEO83&&program.kind.startsWith('neo83:'))return NEO83.resolve(program,flip,context);if(NEO82&&program.kind.startsWith('neo82:'))return NEO82.resolve(program,flip,context);if(NEO50&&program.kind.startsWith('neo50:'))return NEO50.resolve(program,flip,context);if(NEO49&&program.kind.startsWith('neo49:'))return NEO49.resolve(program,flip,context);if(NEO48&&program.kind.startsWith('neo48:'))return NEO48.resolve(program,flip,context);if(NEO47&&program.kind.startsWith('neo47:'))return NEO47.resolve(program,flip,context);if(NEO46&&program.kind.startsWith('neo46:'))return NEO46.resolve(program,flip,context);if(NEO40&&program.kind.startsWith('neo40:'))return NEO40.resolve(program,flip,context);if(THEME&&program.kind.startsWith('theme:'))return THEME.resolve(program,flip,context);if(DISCOVERY&&program.kind.startsWith('discovery:'))return DISCOVERY.resolve(program,flip,context);if(NEO&&program.kind.startsWith('neo:'))return NEO.resolve(program,flip,context);if(GYM&&program.kind.startsWith('gym:'))return GYM.resolve(program,flip,context);if(FINAL&&FINAL.manifest.some(x=>x.kind===program.kind))return FINAL.resolve(program,flip,context);if(CLASSIC)return CLASSIC.resolve(program,flip,context);throw Error('Unsupported attack program');
+   default:if(NEO85&&program.kind.startsWith('neo85:'))return NEO85.resolve(program,flip,context);if(NEO84&&program.kind.startsWith('neo84:'))return NEO84.resolve(program,flip,context);if(NEO83&&program.kind.startsWith('neo83:'))return NEO83.resolve(program,flip,context);if(NEO82&&program.kind.startsWith('neo82:'))return NEO82.resolve(program,flip,context);if(NEO50&&program.kind.startsWith('neo50:'))return NEO50.resolve(program,flip,context);if(NEO49&&program.kind.startsWith('neo49:'))return NEO49.resolve(program,flip,context);if(NEO48&&program.kind.startsWith('neo48:'))return NEO48.resolve(program,flip,context);if(NEO47&&program.kind.startsWith('neo47:'))return NEO47.resolve(program,flip,context);if(NEO46&&program.kind.startsWith('neo46:'))return NEO46.resolve(program,flip,context);if(NEO40&&program.kind.startsWith('neo40:'))return NEO40.resolve(program,flip,context);if(THEME&&program.kind.startsWith('theme:'))return THEME.resolve(program,flip,context);if(DISCOVERY&&program.kind.startsWith('discovery:'))return DISCOVERY.resolve(program,flip,context);if(NEO&&program.kind.startsWith('neo:'))return NEO.resolve(program,flip,context);if(GYM&&program.kind.startsWith('gym:'))return GYM.resolve(program,flip,context);if(FINAL&&FINAL.manifest.some(x=>x.kind===program.kind))return FINAL.resolve(program,flip,context);if(CLASSIC)return CLASSIC.resolve(program,flip,context);throw Error('Unsupported attack program');
   }
  }
  return Object.freeze({compile,resolve});
