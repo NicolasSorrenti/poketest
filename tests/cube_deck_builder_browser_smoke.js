@@ -27,6 +27,17 @@ const best=cards=>cards.find(c=>(c.subtypes||[]).includes('Basic'))||cards[0];
   await solo.goto(origin+'/cube.html');
   await solo.locator('#soloDeckBuilder .cb-tile').first().waitFor({timeout:25000});
   assert.equal(await solo.locator('#cbTotal').innerText(),'40 / 40 cards');
+  assert.equal(await solo.locator('body.cube-deck-mode').count(),1,'Solo deck building must enter focused mode');
+  assert.equal(await solo.locator('header').isVisible(),false,'Draft header must be hidden');
+  assert.equal(await solo.locator('.layout').isVisible(),false,'The draft pack and pick list must be hidden');
+  assert.equal(await solo.locator('#presetSelect').isVisible(),false,'Preset selection must not distract');
+  assert.equal(await solo.locator('#builder').isVisible(),true);
+  assert.equal(await solo.locator('#restartBuilder').isVisible(),true);
+  const soloLayout=await solo.evaluate(()=>({
+   width:document.querySelector('#builder').getBoundingClientRect().width,
+   viewport:window.innerWidth
+  }));
+  assert(soloLayout.width>=soloLayout.viewport*.9,'Builder should use nearly the entire desktop width');
   assert(await solo.locator('#soloDeckBuilder .cb-tile').count()>=20,'Drafted pool must show card tiles');
   assert(await solo.locator('#soloDeckBuilder .cb-tile img').count()>=20,'Pool tiles need real art');
   assert(await solo.locator('#soloDeckBuilder .cb-preview img').count()===1,'Large preview must show art');
@@ -74,6 +85,17 @@ const best=cards=>cards.find(c=>(c.subtypes||[]).includes('Basic'))||cards[0];
   await mobile.goto(origin+'/cube_room.html');
   await mobile.locator('#roomDeckBuilder .cb-tile').first().waitFor({timeout:25000});
   assert.equal(await mobile.locator('#cbTotal').innerText(),'40 / 40 cards');
+  assert.equal(await mobile.locator('body.cube-deck-mode').count(),1,'Multiplayer builder must enter focused mode');
+  assert.equal(await mobile.locator('header').isVisible(),false,'Multiplayer site header should be hidden');
+  assert.equal(await mobile.locator('#room > .panel:first-child').isVisible(),false,'Lobby controls must be hidden while building');
+  assert.equal(await mobile.locator('#draftArea').isVisible(),false);
+  assert.equal(await mobile.locator('#deckArea').isVisible(),true);
+  assert((await mobile.locator('#cubeRoomBuildContext').innerText()).includes(host.code));
+  const mobileLayout=await mobile.evaluate(()=>({
+   width:document.querySelector('#deckArea').getBoundingClientRect().width,
+   viewport:window.innerWidth
+  }));
+  assert(mobileLayout.width>=mobileLayout.viewport*.9,'Builder should use entire mobile width');
   assert(await mobile.locator('#roomDeckBuilder .cb-deck-row img').count()>3,'Selected deck must show thumbnails');
   assert(await mobile.locator('#roomDeckBuilder .cb-preview img').count()===1);
   assert.equal(await mobile.locator('#lockDeck').isEnabled(),true);
@@ -83,8 +105,16 @@ const best=cards=>cards.find(c=>(c.subtypes||[]).includes('Basic'))||cards[0];
   assert((await mobile.locator('#buildStatus').innerText()).includes('locked'));
   assert.equal(await mobile.locator('#roomDeckBuilder .cb-qty-btn:enabled').count(),0,
    'Locked multiplayer deck must be immutable');
+  assert.equal(await mobile.locator('body.cube-deck-mode').count(),1,'Stay in full-screen builder while waiting for others');
+  const guestDeck=cubeRooms.state(host.code,guest.token).suggestedDeck;
+  cubeRooms.submit(host.code,guest.token,guestDeck);
+  await mobile.locator('#roundRobinArea:not(.hidden)').waitFor({timeout:25000});
+  assert.equal(await mobile.locator('body.cube-deck-mode').count(),0,'Restore normal UI when the tournament starts');
+  assert.equal(await mobile.locator('header').isVisible(),true);
+  assert.equal(await mobile.locator('#room > .panel:first-child').isVisible(),true);
+  assert.equal(await mobile.locator('#deckArea').isVisible(),false);
   assert.deepEqual(errors,[]);
-  console.log('PASS Cube deck builder browser: desktop cards, filters, preview, counts, duel validation, mobile lock');
+  console.log('PASS Cube deck builder browser: full-screen solo/mobile builds, hidden clutter, locked waiting, return to tournament');
  }finally{
   images.get=previous;
   if(browser)await browser.close();

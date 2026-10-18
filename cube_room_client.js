@@ -90,7 +90,7 @@
    ready?'Deck ready: lock it when you are happy with your choices.':
    'Choose '+(40-deck.length)+' more cards. At least one Basic Pokémon is required.';
   $('roomNext').textContent=state.allDecksReady?
-   'All human decks are locked. Multiplayer duel matchmaking is not connected yet.':
+   'All decks are locked. The round-robin tournament is starting…':
    'Your deck is private to your seat. All players must lock their decks before the next stage.';
  }
  function renderTournament(){
@@ -169,6 +169,11 @@
  }
  function render(){
   if(!state)return;
+  const focused=!!state.finished&&!state.tournament;
+  const entering=focused&&!document.body.classList.contains('cube-deck-mode');
+  document.body.classList.toggle('cube-deck-mode',focused);
+  $('cubeRoomBuildContext').textContent='Room '+state.code+' · '+
+   (state.seats[state.seat].deckReady?'Deck locked · Waiting for other players':'60 cards drafted · Create your 40-card deck');
   $('entrance').classList.add('hidden');$('room').classList.remove('hidden');
   $('roomTitle').textContent='Cube room '+state.code+' · '+(presets.find(p=>p.id===state.preset)?.name||state.preset||'Classic Balanced');
   const invite=new URL(location.href);invite.pathname='/cube_room.html';invite.search='?room='+encodeURIComponent(code);
@@ -220,6 +225,11 @@
    });
   }
   if(state.finished)renderBuild();
+  if(entering){
+   window.scrollTo({top:0,behavior:'instant'});
+   const heading=$('deckArea').querySelector('.cb-header h2');
+   if(heading){heading.tabIndex=-1;heading.focus({preventScroll:true});}
+  }
  }
  async function refresh(){
   if(!token||!code||busy||loading)return;
