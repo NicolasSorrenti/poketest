@@ -511,36 +511,66 @@ function trainerSearchPlayBonus(action,o,cfg){
 // Energy Retrieval is a staged public Trainer action. Preserve the useful
 // evolution during its hand payment, then recover the Basic Energy that can
 // immediately enable a stronger attack. Both zones are own/public.
+// A choice belongs to the acting player only if exposed as an actual
+// pendingDecision option. deck:<index> exposes JUST THE NAME and never the
+// concealed deck ID. disc:<index> is a public discard index; n:<index> is
+// the player's OWN hand, used by Trainer costs. These namespaces matter.
 function comboChoiceValue(option,decision,o,cfg){
- if(!cfg?.comboSearch||cfg.level<4||o.pendingTrainerName!=='Energy Retrieval')return null;
- const id=option.id,kind=decision.kind,p=o.self;
- if(kind==='cost'&&/^n:\d+$/.test(id)){
-  const n=Number(id.slice(2)),c=card(p.hand[n]);
+ if(!cfg?.comboSearch||cfg.level<4||!o.pendingTrainerName)return null;
+ const name=o.pendingTrainerName,id=option.id||'',kind=decision.kind||'',p=o.self;
+ const handCost=(kind==='cost'&&['Energy Retrieval','Computer Search','Item Finder'].includes(name))||
+  (kind==='serCost'&&name==='Super Energy Retrieval')||
+  (kind==='trade'&&name==='Pokémon Trader');
+ if(handCost&&/^n:\d+$/.test(id)){
+  const n=Number(id.slice(2)),c=card(p.hand?.[n]);
   if(!c)return null;
   const units=[p.active,...p.bench].filter(Boolean);
-  if(c.evolvesFrom&&units.some(u=>canEvolve(c,card(u.id))))return -240;
-  if(isEnergy(c)&&!p.energyUsed)return -125;
-  if(isBasicPokemon(c)&&p.bench.length===0)return -110;
-  return c.supertype==='Trainer'?140:isBasicPokemon(c)?115:30;
+  const matchingEvolution=c.evolvesFrom&&units.some(u=>canEvolve(c,card(u.id)));
+  if(matchingEvolution)return -280;
+  const isCriticalEnergy=isEnergy(c)&&!p.energyUsed&&units.some(u=>
+   damageAfterAttachment(u,c.id,o.opponent.active)>strongestAffordableAttack(u,o.opponent.active));
+  if(isCriticalEnergy)return -210;
+  if(isEnergy(c)&&!p.energyUsed)return -115;
+  if(isBasicPokemon(c)&&p.bench.length===0)return -135;
+  const sameInHand=p.hand.filter(id=>id===c.id).length;
+  if(sameInHand>1)return 175;
+  // Don't burn unique search, hand-refresh or defense cards just to take a
+  // speculative future action, especially when a real combo is in hand.
+  if(['Professor Oak','Bill','Computer Search','Item Finder'].includes(c.name))return -70;
+  return c.supertype==='Trainer'?110:isBasicPokemon(c)?90:25;
  }
- if(kind==='recover'&&/^n:\d+$/.test(id)){
-  const energy=p.discard[Number(id.slice(2))];
-  if(!basicRetrievalEnergy(energy))return null;
-  const base=prepBoard(o);
+ // Recoveries use 'disc', not 'n'; evaluating the old n: alias silently
+ // disabled every Energy Retrieval choice in real authenticated matches.
+ const fromDiscard=/^disc:\d+$/.test(id);
+ const ownRecovery=(name==='Energy Retrieval'&&kind==='recover')||
+  (name==='Super Energy Retrieval'&&kind==='serEnergy');
+ if(ownRecovery&&fromDiscard){
+  const n=Number(id.slice(5)),energy=p.discard?.[n];
+  if(!basicRetrievalEnergy(energy)||card(energy)?.name!==option.label)return null;
   let best=0;
-  for(const unit of [base.active,...base.bench].filter(Boolean)){
-   const old=strongestAffordableAttack(unit,o.opponent.active);
-   const direct=damageAfterAttachment(unit,energy,o.opponent.active);
-   let evolved=direct;
-   // Hypothetical evolution is limited to a printed card already in our hand.
-   for(const id of p.hand){
-    const e=card(id);
-    if(e?.evolvesFrom&&canEvolve(e,card(unit.id))&&unit.playedTurn<o.round)
-     evolved=Math.max(evolved,damageAfterAttachment({...unit,id},energy,o.opponent.active));
+  for(const u of [p.active,...p.bench].filter(Boolean)){
+   const old=strongestAffordableAttack(u,o.opponent.active);
+   const direct=damageAfterAttachment(u,energy,o.opponent.active);
+   let withEvolution=direct;
+   for(const id of p.hand||[]){
+    const next=card(id);
+    if(next?.evolvesFrom&&canEvolve(next,card(u.id))&&u.playedTurn<o.round)
+     withEvolution=Math.max(withEvolution,damageAfterAttachment({...u,id},energy,o.opponent.active));
    }
-   best=Math.max(best,(evolved-old)*2+(direct>old?60:0));
+   best=Math.max(best,(withEvolution-old)*2+(direct>old?60:0)+
+    Math.max(0,energyValue(u,energy))*0.45);
   }
   return 45+best;
+ }
+ // The reducer's authorized search prompt reveals candidate NAMES to this
+ // player only. Never read or infer the private shuffled deck behind deck:n.
+ const canSearch=name==='Computer Search'||name==='Pokémon Trader'||
+  name==='Energy Search'||name==="The Boss's Way"||
+  name==="Brock's Training Method"||name==='Item Finder';
+ if(canSearch&&((kind==='find'&&/^deck:\d+$/.test(id))||
+  (kind==='recover'&&fromDiscard))){
+  if(!option.label)return null;
+  return searchedCardValue(option.label,o);
  }
  return null;
 }
