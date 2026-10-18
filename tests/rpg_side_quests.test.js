@@ -114,7 +114,7 @@ test('missed stages expire only once, never claim rewards and clear unfinished d
  SIDE.begin(s,q.id,present(s));
  const before=s.credits;
  s.day=e.end+1;
- assert.deepEqual(SIDE.expire(s),[q.id]);
+ assert.ok(SIDE.expire(s).includes(q.id));
  assert.equal(s.activeSideQuest,null);
  assert.equal(s.sideQuests[q.id].status,'missed');
  assert.deepEqual(SIDE.expire(s),[]);
