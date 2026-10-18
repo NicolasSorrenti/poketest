@@ -1036,6 +1036,13 @@ const settings={level:3,personality:'balanced',side:1,seed:47};
   '--right-level','5','--left-combo-search','true','--right-combo-search','false']));
  assert.equal(result.baseline.comboSearch,true);
  assert.equal(result.challenger.comboSearch,false);
+ const stress=arena(argumentsOf(['--pairs','1','--max-turns','8',
+  '--left-level','5','--right-level','5','--left-combo-search','true',
+  '--right-combo-search','false','--left-deck','cpu_combo_lab','--right-deck','cpu_combo_lab']));
+ assert.equal(stress.totalMatches,2);
+ assert.equal(stress.illegalActions,0,
+  'Both sides must complete real authenticated Base Set Trainer-combo matches');
+ assert.equal(stress.baseline.deck,'cpu_combo_lab');
 }
 let duels=0,decisions=0,attacks=0,energy=0,evolutions=0,trainer=0;
 for(let seed=1;seed<=4;seed++){
