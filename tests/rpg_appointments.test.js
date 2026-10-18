@@ -11,7 +11,9 @@ test('proposals use real character itineraries, never private home locations',()
 });
 test('new characters supplied by the schedule module can be invited without hardcoded cast IDs',()=>{
  const id=Object.keys(S.start).find(k=>!['hana','reina','shiori','yuna','akari','camila','marina','kaede'].includes(k));
- assert.ok(id,'Expected narrative agent guest schedule');assert.ok(AP.proposed(blank(),id,S).length>0);
+ assert.ok(id,'Expected narrative agent guest schedule');
+ const day=Math.max(2,S.start[id]);
+ assert.ok(AP.proposed(blank({day,slot:0}),id,S).length>0);
 });
 test('booking reserves a unique free future period and survives JSON saving',()=>{
  const s=blank(),slot=AP.proposed(s,'hana',S)[0],e=AP.book(s,'hana',slot.day,slot.slot,slot.place,S);
