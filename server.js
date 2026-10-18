@@ -65,6 +65,7 @@ async function cubeAPI(req,res,pathName){
  if(origin){let u;try{u=new URL(origin);}catch{sendJSON(res,403,{error:'Invalid origin'});return;}
  if(u.host!==req.headers.host||!['http:','https:'].includes(u.protocol)){sendJSON(res,403,{error:'Origin not allowed'});return;}}
  try{
+  if(pathName==='/api/cube/presets'&&req.method==='GET')return sendJSON(res,200,{presets:require('./cube_presets').PRESETS});
   if(pathName==='/api/cube/create'&&req.method==='POST')return sendJSON(res,200,cube.create(await parseJSON(req)));
   const token=req.headers['x-cube-token'];
   if(typeof token!=='string'||!token)return sendJSON(res,401,{error:'Missing cube token'});
@@ -124,7 +125,7 @@ const server=http.createServer((req,res)=>{
  // Public hosting: never expose source maps, logs, archives, env files or server code over static HTTP.
  if(!(pathname==='/'||/\.(html|js|css|png|jpg|jpeg|svg|webp)$/i.test(pathname)||(/^\/cards\/[a-z0-9_-]+\.json$/i.test(pathname)))){res.writeHead(404).end('Not found');return;}
  const publicScripts=new Set(['cube_room_client.js','cube_client.js','authentic_decks.js','card_corrections.js','classic_format.js','classic_live.js','core_rules.js','decision_core.js','decision_session.js','duel_quick_ui.js','battle_decision_ui.js','duel_experience_ui.js','battle_presentation_ui.js','deck_builder.js','deck_builder_core.js','engine.js','legacy_choice_bridge.js','online.js','target_choice_bridge.js','trainer_rules_v058.js','trainer_rules_v059.js','trainer_rules_v060.js','trainer_rules_v061.js','trainer_rules_v062.js','trainer_rules_v063.js','trainer_rules_v064.js']);
- if(pathname==='/rpg.js'||pathname==='/rpg_narrative_pack.js'||pathname==='/rpg_side_quests.js'||pathname==='/rpg_story.js'||pathname==='/rpg_schedules.js'||pathname==='/rpg_duel_bridge.js'||pathname==='/rpg_world.js'||pathname==='/rpg_rival_arc.js'||pathname==='/rpg_tournaments.js'||pathname==='/rpg_epilogue.js'||pathname==='/rpg_appointments.js')publicScripts.add(pathname.slice(1));
+ if(pathname==='/rpg.js'||pathname==='/rpg_narrative_pack.js'||pathname==='/rpg_side_quests.js'||pathname==='/rpg_story.js'||pathname==='/rpg_schedules.js'||pathname==='/rpg_duel_bridge.js'||pathname==='/rpg_world.js'||pathname==='/rpg_rival_arc.js'||pathname==='/rpg_tournaments.js'||pathname==='/rpg_epilogue.js')publicScripts.add(pathname.slice(1));
  if(pathname.endsWith('.js')&&!publicScripts.has(pathname.slice(1))){res.writeHead(404).end('Not found');return;}
  const target=path.resolve(root,'.'+pathname,pathname.endsWith('/')?'index.html':'');
  if(!target.startsWith(root+path.sep)&&target!==root){res.writeHead(403).end('Forbidden');return;}

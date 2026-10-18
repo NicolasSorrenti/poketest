@@ -2,6 +2,7 @@
 const crypto=require('node:crypto');
 const {CATALOG}=require('./headless_duel');
 const C=require('./cube_draft');
+const {getPreset}=require('./cube_presets');
 const {cpuPick,score,buildCpuDeck,ENERGY_IDS}=require('./cube_strategy');
 const {simulateCpuMatch}=require('./cube_bracket');
 const RIVALS=Object.freeze([
@@ -15,11 +16,12 @@ const match=(id,seats)=>({id,seats:[...seats],winner:null,method:null,status:sea
 
 class CubeService{
  constructor({simulateCpu=simulateCpuMatch}={}){this.sessions=new Map();this.simulateCpu=simulateCpu;}
- create({seed}={}){
+ create({seed,preset='balanced'}={}){
+  getPreset(preset);
   if(seed!==undefined&&(!Number.isSafeInteger(seed)||seed<0||seed>0xffffffff))throw Error('Invalid cube seed');
   for(const [key,session] of this.sessions)if(Date.now()-session.updated>90*60*1000)this.sessions.delete(key);
   if(this.sessions.size>=32)throw Error('Too many active cube drafts');
-  const realSeed=seed??crypto.randomBytes(4).readUInt32BE(0),draft=C.makeDraft({seed:realSeed});
+  const realSeed=seed??crypto.randomBytes(4).readUInt32BE(0),draft=C.makeDraft({seed:realSeed,preset});
   const token=crypto.randomBytes(24).toString('base64url');
   this.sessions.set(token,{draft,seed:realSeed,revision:0,updated:Date.now()});
   return {token,...this.view(token)};
@@ -41,7 +43,7 @@ class CubeService{
     const m=t.matches[id];
     return id==='final'?[m.winner,other(m.seats,m.winner)]:[m.winner,other(m.seats,m.winner)];
    }).map((seat,i)=>({place:i+1,name:NAMES[seat]})):null;
-  return {revision:s.revision,round:d.round,pick:d.pick,packs:d.packs,cardsPerPack:d.cardsPerPack,done:d.done,
+  return {preset:d.preset||'balanced',revision:s.revision,round:d.round,pick:d.pick,packs:d.packs,cardsPerPack:d.cardsPerPack,done:d.done,
    pack:C.availableForSeat(d,0).map(id=>this.card(id)),drafted:d.picks[0].map(id=>this.card(id)),
    opponentCounts:d.picks.slice(1).map(a=>a.length),started:!!t,
    tournament:t?{

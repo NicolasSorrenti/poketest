@@ -1,8 +1,27 @@
 'use strict';
 (()=>{
  const $=id=>document.getElementById(id);
- let token=null,state=null,busy=false,deck=[],deckInitialized=false;
+ let token=null,state=null,busy=false,deck=[],deckInitialized=false,presets=[];
  const types=['Grass','Fire','Water','Lightning','Psychic','Fighting'];
+ async function loadPresets(){
+  try{
+   const response=await fetch('/api/cube/presets');
+   if(!response.ok)throw Error('Cube formats unavailable');
+   const data=await response.json();presets=data.presets||[];
+   const selector=$('presetSelect'),previous=selector.value;
+   selector.replaceChildren();
+   for(const p of presets){
+    const option=document.createElement('option');option.value=p.id;option.textContent=p.name;
+    selector.append(option);
+   }
+   selector.value=presets.some(p=>p.id===previous)?previous:'balanced';
+   showPreset();
+  }catch{$('presetInfo').textContent='Balanced Cube is available.';}
+ }
+ function showPreset(){
+  const p=presets.find(p=>p.id===$('presetSelect').value);
+  if(p)$('presetInfo').textContent=p.description+' · '+p.archetypes.join(' / ');
+ }
  function esc(v){return String(v??'').replace(/[&<>"']/g,x=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;','\'':'&#39;'}[x]));}
  async function request(path,opts={}){
   const r=await fetch('/api/cube/'+path,{...opts,headers:{'Content-Type':'application/json',...(token?{'X-Cube-Token':token}:{})}});
@@ -11,7 +30,7 @@
  async function start(){
   if(busy)return;busy=true;$('error').textContent='';
   try{
-   const result=await request('create',{method:'POST',body:'{}'});
+   const result=await request('create',{method:'POST',body:JSON.stringify({preset:$('presetSelect').value})});
    token=result.token;sessionStorage.setItem('neoCubeDraftToken',token);
    state=result;deck=[];deckInitialized=false;render();
   }catch(e){$('error').textContent=e.message;}finally{busy=false;}
@@ -133,7 +152,7 @@
   $('start').textContent='Restart Draft';
   $('progress').textContent=state.done?'Draft completed! Build your deck below.':
    'Pack '+(state.round+1)+' of '+state.packs+' · Pick '+(state.pick+1)+' of '+state.cardsPerPack;
-  $('packTitle').textContent=state.done?'All packs completed':'Pick one card';
+  $('packTitle').textContent=state.done?'All packs completed':'Pick one card · '+(presets.find(p=>p.id===state.preset)?.name||'Cube');
   $('total').textContent=state.drafted.length;
   $('pack').replaceChildren();
   state.pack.forEach(c=>{
@@ -162,6 +181,8 @@
   try{state=await request('state');render();}
   catch{sessionStorage.removeItem('neoCubeDraftToken');token=null;}
  }
+ $('presetSelect').addEventListener('change',showPreset);
+ loadPresets();
  $('start').addEventListener('click',start);
  $('playCube').addEventListener('click',play);
  $('nextMatch').addEventListener('click',nextMatch);

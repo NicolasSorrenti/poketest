@@ -89,14 +89,17 @@ function makePool({size=240,seed=1}={}){
  if(pokemonPool.length<wantedPokemon)pokemonPool.push(...expand(basics,wantedPokemon-pokemonPool.length));
  return shuffle([...pokemonPool,...expand(trainers,size-wantedPokemon)],rng);
 }
-function makeDraft({players=4,packs=4,cardsPerPack=15,seed=1,pool}={}){
+function makeDraft({players=4,packs=4,cardsPerPack=15,seed=1,pool,preset='balanced'}={}){
  if(!Number.isInteger(players)||players<2||players>8||!Number.isInteger(packs)||packs<1||packs>8||!Number.isInteger(cardsPerPack)||cardsPerPack<5||cardsPerPack>20)throw Error('Invalid draft settings');
  const count=players*packs*cardsPerPack;
- const cards=pool? [...pool]:makePool({size:Math.max(240,count),seed});
+ const {getPreset,makePresetPool}=require('./cube_presets');
+ getPreset(preset);
+ const cards=pool?[...pool]:preset==='balanced'?makePool({size:Math.max(240,count),seed}):
+  makePresetPool({preset,size:Math.max(240,count),seed});
  if(cards.length<count||cards.some(id=>!supported(id)))throw Error('Cube contains unsupported cards or is too small');
  const order=shuffle(cards,random(seed^0xabcdef));
  const rounds=Array.from({length:packs},(_,i)=>Array.from({length:players},(_,seat)=>order.slice((i*players+seat)*cardsPerPack,(i*players+seat+1)*cardsPerPack)));
- return {players,packs,cardsPerPack,rounds,round:0,pick:0,available:rounds[0].map(a=>[...a]),picks:Array.from({length:players},()=>[]),done:false};
+ return {players,packs,cardsPerPack,preset,rounds,round:0,pick:0,available:rounds[0].map(a=>[...a]),picks:Array.from({length:players},()=>[]),done:false};
 }
 function draftPick(state,seat,id){
  if(state.done)throw Error('Draft finished');
