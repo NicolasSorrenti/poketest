@@ -62,7 +62,7 @@ function attack(g,name){const a=CATALOG.get(g.players[0].active.id).attacks.find
 }
 {
  const g=game('neo4-40','Slap Awake');g.players[1].active.status='Asleep';g.players[1].active.poison=true;
- attack(g,'Slap Awake');assert.equal(g.players[1].active.damage,40);
+ attack(g,'Slap Awake');assert.equal(g.players[1].active.damage,50,'40 attack damage plus 10 Poison between-turn damage');
  assert.equal(g.players[1].active.status,null);
  assert.equal(g.players[1].active.poison,true,'Slap Awake does not cure independent Poison');
 }
