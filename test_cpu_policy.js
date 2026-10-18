@@ -1218,6 +1218,27 @@ const settings={level:3,personality:'balanced',side:1,seed:47};
   ' final='+JSON.stringify({active:played.game.players[1].active,turn:played.game.turn,over:played.game.over}));
  assert.equal(played.game.pendingDecision,null);
 }
+{
+ // Only the card NAMES explicitly exposed in a real search decision may be
+ // evaluated. An immediately playable Machoke should beat a generic card.
+ const game=createGame({decks:[deck,deck],seed:17017,format:'classic'});
+ const o=AI.observation(game,1);
+ o.phase='game';o.round=6;
+ o.self.active={id:IDS.machop,damage:0,playedTurn:3,energies:[IDS.fight,IDS.fight,IDS.fight],status:null};
+ o.self.bench=[];o.self.energyUsed=false;
+ o.opponent.active={id:'base1-46',damage:0,energies:[],status:null};
+ o.pendingTrainerName='Computer Search';
+ const cfg=AI.configuration({level:5,side:1,comboSearch:true});
+ const decision={kind:'find',label:'Choose a Pokémon or Trainer'};
+ const machoke=AI.comboChoiceValue({id:'deck:7',label:'Machoke'},decision,o,cfg);
+ const potion=AI.comboChoiceValue({id:'deck:9',label:'Potion'},decision,o,cfg);
+ assert.ok(machoke>potion+80,'A genuinely ready evolution must win a revealed Trainer search');
+ const unready=structuredClone(o);unready.self.active.playedTurn=6;
+ assert.ok(AI.comboChoiceValue({id:'deck:7',label:'Machoke'},decision,unready,cfg)<machoke,
+  'Do not pretend to evolve a Pokémon played this turn');
+ assert.equal(AI.comboChoiceValue({id:'deck:7',label:'Machoke'},decision,o,
+  AI.configuration({level:5})),null,'Old Champion search priorities remain unchanged');
+}
 let duels=0,decisions=0,attacks=0,energy=0,evolutions=0,trainer=0;
 for(let seed=1;seed<=4;seed++){
  let game=createGame({decks:[deck,deck],seed:seed*1789,format:'classic'});
