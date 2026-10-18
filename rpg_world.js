@@ -72,6 +72,51 @@
  {id:'home_reflection',place:'home',npc:null,start:60,end:83,slots:[0,2],minBond:0,title:'The Unmarked Date',intro:'There is one more blank page in your journal than you expected.',choices:[
   choice('List what has changed','The progress that matters extends beyond the rankings.',{insight:3,focus:10}),
   choice('Make time for the people who matter','You leave the page open as a reminder.',{focus:20,reputation:1})]}
+,
+ // Optional tournament aftermath: the result matters, but no cup is required for the campaign.
+ {id:'cup_neighborhood_rival',place:'center',npc:'reina',start:31,end:49,slots:[1,2],minBond:0,
+  requiresCup:{id:'neighborhood',states:['champion','eliminated']},
+  title:'A Match Worth Remembering',
+  intro:'Reina is putting away the community center tables. She taps the corner of your old tournament score sheet and raises an eyebrow.',
+  choices:[
+   choice('Ask her to analyze the toughest turn','She draws three quick arrows on the score sheet. The next game already feels closer.',{insight:2,preparation:1,respect:2}),
+   choice('Admit what the cup meant to you','Her answer comes without the usual teasing. The result is not the whole story.',{trust:2,affection:1,reputation:1})]},
+ {id:'cup_neighborhood_return',place:'shop',npc:'hana',start:36,end:54,slots:[0,1],minBond:0,
+  requiresCup:{id:'neighborhood',states:['missed','expired']},
+  title:'A Seat at the Next Table',
+  intro:'The neighborhood cup is over. Hana finds you studying the old sign-up sheet with a look she recognizes immediately.',
+  choices:[
+   choice('Ask for help preparing for the next chance','She clears a table and quietly promises to save an evening for practice.',{trust:2,affection:1,preparation:1}),
+   choice('Volunteer to help the next event run smoothly','The list of volunteers gets one name longer. The room feels more welcoming.',{reputation:3,affection:1,credits:6})]},
+ {id:'cup_regional_numbers',place:'library',npc:'akari',start:61,end:80,slots:[0,1],minBond:0,
+  requiresCup:{id:'regional',states:['champion','eliminated']},
+  title:'What the Numbers Leave Out',
+  intro:'Akari has a stack of match notes from the regional qualifier. One page has your name circled in precise handwriting.',
+  choices:[
+   choice('Study your strongest decision together','She nods at your reasoning, then offers a more difficult puzzle to solve.',{insight:3,respect:2}),
+   choice('Ask about the things statistics cannot measure','For a moment, she forgets to take notes and simply enjoys the conversation.',{affection:2,trust:1,focus:8})]},
+ {id:'cup_regional_new_tide',place:'park',npc:'marina',start:68,end:87,slots:[0,2],minBond:0,
+  requiresCup:{id:'regional',states:['missed','expired']},
+  title:'Another Way Forward',
+  intro:'Marina sits by the river with a folded qualifier schedule. She makes room on the bench before you say a word.',
+  choices:[
+   choice('Plan your own challenge away from the circuit','The river keeps moving. So will the two of you.',{affection:2,trust:1,focus:15}),
+   choice('Talk about returning to competition on your terms','A calmer plan takes shape, with room for both training and ordinary life.',{insight:2,preparation:1,respect:1})]},
+ {id:'cup_final_between_rounds',place:'arcade',npc:'kaede',start:88,end:90,slots:[1,2],minBond:0,
+  requiresCup:{id:'championship',states:['open'],minRound:1},
+  title:'Between the Rounds',
+  intro:'Kaede spots your unfinished bracket on a tournament flyer and blocks your path with a mischievous grin.',
+  choices:[
+   choice('Share the opening you are still working on','She laughs at the obvious mistake and helps you fix it anyway.',{preparation:1,insight:2,respect:1}),
+   choice('Take one evening away from the pressure','The arcade lights feel warm rather than loud. Tomorrow can wait a little.',{focus:20,trust:1,affection:1})]},
+ {id:'cup_final_afterglow',place:'center',npc:'reina',start:88,end:90,slots:[1,2],minBond:0,
+  requiresCup:{id:'championship',states:['champion','eliminated']},
+  title:'When the Crowd Goes Home',
+  intro:'There are no spectators left at the final tournament table. Reina sets down two cups of water and finally stops checking the clock.',
+  choices:[
+   choice('Thank her for pushing you all season','She gives you a rare unguarded smile. Rivalry always had room for respect.',{trust:2,affection:1,reputation:2}),
+   choice('Ask for one more friendly practice together','A new hand of cards appears on the table before you have finished asking.',{preparation:1,respect:2,focus:-5})]}
+
  ];
  const IDs=new Map(activities.map(a=>[a.id,a])),EVENTS=new Map(encounters.map(e=>[e.id,e]));
  const caps={focus:100,preparation:3,insight:99,reputation:100,credits:999999};
@@ -122,7 +167,11 @@
  function availableEncounters(state,people=[]){
   hydrate(state);
   if(state.day>90)return [];
-  return encounters.filter(e=>e.place===state.location&&e.start<=state.day&&state.day<=e.end&&e.slots.includes(state.slot)&&!state.encountersDone[e.id]&&(!e.npc||people.includes(e.npc))&&(!e.npc||(state.relationships?.[e.npc]?.affection||0)>=e.minBond));
+  return encounters.filter(e=>e.place===state.location&&e.start<=state.day&&state.day<=e.end&&e.slots.includes(state.slot)&&!state.encountersDone[e.id]&&(!e.npc||people.includes(e.npc))&&(!e.npc||(state.relationships?.[e.npc]?.affection||0)>=e.minBond)
+   &&(!e.requiresCup||(
+    e.requiresCup.states.includes(state.tournaments?.[e.requiresCup.id]?.state)
+    &&(state.tournaments?.[e.requiresCup.id]?.round||0)>=(e.requiresCup.minRound||0)
+   )));
  }
  function completeEncounter(state,id,index,people=[]){
   hydrate(state);const e=EVENTS.get(id);
@@ -156,6 +205,11 @@
   for(const e of encounters){
    if(seen.has(e.id))faults.push('Duplicate encounter '+e.id);seen.add(e.id);
    if(e.start<1||e.end>90||e.end<e.start||!e.choices.length||!e.choices.every(c=>c.label&&c.reply))faults.push('Bad encounter '+e.id);
+   if(e.requiresCup&&(!['neighborhood','regional','championship'].includes(e.requiresCup.id)
+    ||!Array.isArray(e.requiresCup.states)||!e.requiresCup.states.length
+    ||e.requiresCup.states.some(status=>!['open','champion','eliminated','expired','missed'].includes(status))
+    ||(e.requiresCup.minRound!==undefined&&(!Number.isInteger(e.requiresCup.minRound)||e.requiresCup.minRound<0||e.requiresCup.minRound>3))
+   ))faults.push('Bad tournament prerequisite '+e.id);
   }
   return faults;
  }
