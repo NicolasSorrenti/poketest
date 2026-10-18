@@ -1,7 +1,7 @@
 'use strict';
 (()=>{
 const $=id=>document.getElementById(id),KEY='neoHarborRpgV1',STORY=window.NeoHarborStory,SCHEDULES=window.NeoRpgSchedules,WORLD=window.NeoRpgWorld,ARC=window.NeoRpgRivalArc,TOURNAMENTS=window.NeoRpgTournaments,BRIDGE=window.NeoRpgDuelBridge;
-const PACK=window.NeoRpgNarrativePack,SIDE=window.NeoRpgSideQuests,EPILOGUE=window.NeoRpgEpilogue,APPOINTMENTS=window.NeoRpgAppointments;
+const PACK=window.NeoRpgNarrativePack,SIDE=window.NeoRpgSideQuests,EPILOGUE=window.NeoRpgEpilogue,APPOINTMENTS=window.NeoRpgAppointments,INTENTIONS=window.NeoRpgIntentions;
 const periods=['Morning','Afternoon','Evening'];
 const places={
  home:['Your Apartment','Your base during the championship season.'],
@@ -64,7 +64,7 @@ function finishStory(){
  let result;try{result=STORY.resolve(state,a.id,a.choice)}catch(err){$('notice').textContent=err.message;return;}
  const id=e.npc,bond=state.bonds[id],updated=state.relationships[id];
  for(const metric of ['affection','trust','duels'])bond[metric]=Math.max(bond[metric]||0,updated[metric]||0);
- log('A memorable afternoon with '+cast[id].name+'.');
+ log('A memorable afternoon with '+cast[id].name+'.');recordIntention('story');
  state.activeStory=null;advance();state.selected=id;
  persist();say(cast[id].name,result.choice.reply);
 }
@@ -107,7 +107,7 @@ function finishSideQuest(){
  const x=SIDE.byId(a.id),i=a.choice,owner=x.stages[state.sideQuests[a.id].step].npc;
  let result;try{result=SIDE.finishChoice(state,a.id,i,currentPeople());}
  catch(err){$('notice').textContent=err.message;return;}
- log((result.done?'Completed':'Progressed')+' side quest: '+result.title+'.');
+ log((result.done?'Completed':'Progressed')+' side quest: '+result.title+'.');recordIntention('sideQuest');
  advance();persist();say(cast[owner].name,result.reply);
 }
 function pauseSideQuest(){
@@ -135,7 +135,7 @@ SIDE.expire(state);
 ARC.hydrate(state);
 // Restored saves may already be beyond an optional cup's registration window.
 TOURNAMENTS.expire(state);
-APPOINTMENTS.hydrate(state);APPOINTMENTS.expire(state);
+APPOINTMENTS.hydrate(state);APPOINTMENTS.expire(state);INTENTIONS.hydrate(state);
 for(const id of Object.keys(cast)){const old=state.bonds[id],current=state.relationships[id];
  if(!state.flags['newStoryMigrated_'+id]){for(const key of ['affection','trust','duels'])current[key]=Math.max(current[key]||0,old[key]||0);
  state.flags['newStoryMigrated_'+id]=true;}
@@ -144,6 +144,7 @@ if(typeof state.activeStory==='string')state.activeStory=null;
 STORY.recordExpiry(state);
 const persist=()=>localStorage.setItem(KEY,JSON.stringify(state));
 const log=t=>{state.journal.unshift(t);state.journal=state.journal.slice(0,25)};
+function recordIntention(kind){const result=INTENTIONS.record(state,kind);if(result)log('Daily priority fulfilled: '+result.title+' ('+result.rewardLabel+').');}
 let scene=state.scene&&typeof state.scene.speaker==='string'&&typeof state.scene.line==='string'&&Array.isArray(state.scene.choices)?state.scene:{speaker:'Narrator',line:'Ninety days. One championship. You came to Neo Harbor to win. Everyone else has their own plans.',choices:[]};
 const atKey=(id)=>state.day+':'+state.slot+':'+id;
 function advance(n=1){const beforeDay=state.day,beforeSlot=state.slot;for(let i=0;i<n;i++){state.slot++;if(state.slot>=3){state.slot=0;state.day++;}}if(state.day>90){state.day=91;state.ended=true;log('The Neo Harbor championship season has ended.');}
@@ -153,6 +154,7 @@ const expiredCups=TOURNAMENTS.expire(state);if(expiredCups.length)log('A tournam
 const missed=STORY.recordExpiry(state);if(missed.length)log('Some opportunities in town passed while you were busy.');
 const missedQuests=SIDE.expire(state);if(missedQuests.length)log('A local side-quest opportunity passed while you were away.');
 const missedAppointments=APPOINTMENTS.expire(state);
+INTENTIONS.hydrate(state); // Expire yesterday's optional choice before saving the new day.
 for(const plan of missedAppointments)log('You missed your planned meet-up with '+(cast[plan.npc]?.name||'a trainer')+'.');
 persist();timeFlash(beforeDay,beforeSlot);}
 function say(speaker,line,choices=[]){scene={speaker,line,choices};state.scene=scene;persist();render();}
@@ -199,7 +201,7 @@ function finishEncounter(){
  const e=WORLD.byEncounter(a.id);let report;
  try{report=WORLD.completeEncounter(state,a.id,a.choice,currentPeople());}
  catch(err){$('notice').textContent=err.message;return;}
- state.activeEncounter=null;log('An everyday encounter at '+places[e.place][0]+' left an impression.');
+ state.activeEncounter=null;recordIntention('encounter');log('An everyday encounter at '+places[e.place][0]+' left an impression.');
  advance();persist();
  say(e.npc?cast[e.npc].name:'Narrator',report.summary);
 }
@@ -208,7 +210,7 @@ function performActivity(id){
  let result;try{result=WORLD.doActivity(state,id,currentPeople());}
  catch(err){$('notice').textContent=err.message;return;}
  const place=state.location;
- log('Activity completed at '+places[place][0]+': '+result.summary);
+ log('Activity completed at '+places[place][0]+': '+result.summary);recordIntention('activity');
  advance();persist();say(result.person?cast[result.person].name:'Narrator',result.summary+(result.person?' You also made a good impression.':''));
 }
 
@@ -255,7 +257,7 @@ function finishArc(){
  catch(err){$('notice').textContent=err.message;return;}
  const id=a.id;
  state.activeArc=null;
- log('A meaningful conversation with '+cast.reina.name+' brought the rivalry forward.');
+ log('A meaningful conversation with '+cast.reina.name+' brought the rivalry forward.');recordIntention('arc');
  if(report.ending)log('A personal chapter reached its conclusion.');
  advance();persist();
  say(cast.reina.name,report.text);
@@ -282,6 +284,11 @@ function act(action){
  if(type==='arcChoice')return chooseArc(id);
  if(type==='arcFinish')return finishArc();
  if(state.activeStory||state.pendingDuel||state.activeEncounter||state.activeArc||state.activeSideQuest)return;
+ if(type==='intention'){
+  try{const goal=INTENTIONS.choose(state,id);log('Today’s priority: '+goal.title+'.');persist();render();}
+  catch(err){$('notice').textContent=err.message;}
+  return;
+ }
  if(type==='sideQuest')return beginSideQuest(id);
  if(type==='arc')return startArc(id);
  if(type==='encounter')return startEncounter(id);
@@ -311,7 +318,7 @@ function act(action){
   if(!plan)return;
   const person=cast[plan.npc];
   try{
-   APPOINTMENTS.attend(state,number,currentPeople());
+   APPOINTMENTS.attend(state,number,currentPeople());recordIntention('appointment');
    log('Kept a planned meet-up with '+(person?.name||'a trainer')+'.');
    advance();
    return say(person?.name||'Trainer','I am glad we made time for this. It is good to do something together away from the tournament noise.');
@@ -344,7 +351,7 @@ function act(action){
  const c=cast[id],bond=state.bonds[id],key=atKey(id);
  if(type==='talk'){if(!state.talked[key]){state.talked[key]=true;bond.affection++;state.relationships[id].affection++;}persist();return say(c.name,c.talk[(state.day+bond.duels+bond.affection)%c.talk.length],options(id));}
  if(type==='flirt'){if(!state.talked['flirt:'+key]){state.talked['flirt:'+key]=true;bond.affection++;state.relationships[id].affection++;state.relationships[id].attraction++;}persist();return say(c.name,c.flirt,options(id));}
- if(type==='hang'){if(state.hungOut[state.day+':'+id])return say(c.name,'I enjoyed our time today. Let us make plans another day.',options(id));state.hungOut[state.day+':'+id]=true;bond.affection+=2;bond.trust++;state.relationships[id].affection+=2;state.relationships[id].trust++;log('Spent time with '+c.name+'.');advance();state.selected=null;return say(c.name,Array.isArray(c.hangouts)&&c.hangouts.length?c.hangouts[(state.day+bond.duels)%c.hangouts.length]:'That was a lovely way to spend part of the day. See you around.');}
+ if(type==='hang'){if(state.hungOut[state.day+':'+id])return say(c.name,'I enjoyed our time today. Let us make plans another day.',options(id));state.hungOut[state.day+':'+id]=true;bond.affection+=2;bond.trust++;state.relationships[id].affection+=2;state.relationships[id].trust++;log('Spent time with '+c.name+'.');recordIntention('hangout');advance();state.selected=null;return say(c.name,Array.isArray(c.hangouts)&&c.hangouts.length?c.hangouts[(state.day+bond.duels)%c.hangouts.length]:'That was a lovely way to spend part of the day. See you around.');}
 }
 function duelUrl(duel){return '/classic_live.html?rpg=1&duelId='+encodeURIComponent(duel.id)+'&deck='+encodeURIComponent(duel.playerDeck)+'&opponent='+encodeURIComponent(duel.opponent);}
 function startDuel(id,exhibition=null,arcEpisode=null,tournament=null,sideQuest=null){
@@ -363,6 +370,7 @@ window.addEventListener('message',ev=>{
  if(!receipt)return;
  for(const note of receipt.notes)log(note);
  const preparationNote=WORLD.afterDuel(state,receipt);if(preparationNote)log(preparationNote);
+ recordIntention('duel');
  const cupOutcome=duel.tournamentId?TOURNAMENTS.settle(state,duel,receipt):null;
  if(cupOutcome){
   receipt.points+=cupOutcome.points;
@@ -404,6 +412,35 @@ function renderAppointments(locked){
  }
 }
 
+function renderDailyIntention(locked){
+ const root=$('dailyIntention');root.replaceChildren();
+ const progress=INTENTIONS.status(state);
+ const summary=document.createElement('p');summary.className='intention-summary';
+ if(state.day>90){
+  summary.textContent='The season is complete. '+progress.completedCount+' daily priorities fulfilled.';
+  root.append(summary);return;
+ }
+ if(!progress.chosen){
+  summary.textContent='Choose one focus for today. It is optional, and any result counts for duels.';
+  root.append(summary);
+  for(const goal of INTENTIONS.goals){
+   const button=document.createElement('button');button.className='intention-choice';button.disabled=locked;
+   const title=document.createElement('strong');title.textContent=goal.title;
+   const detail=document.createElement('small');detail.textContent=goal.detail;
+   const reward=document.createElement('span');reward.className='intention-reward';reward.textContent=goal.rewardLabel;
+   button.append(title,detail,reward);button.onclick=()=>act('intention:'+goal.id);root.append(button);
+  }
+ }else{
+  const goal=progress.selected;
+  const card=document.createElement('div');card.className='intention-active'+(progress.completed?' complete':'');
+  const title=document.createElement('strong');title.textContent=(progress.completed?'✓ COMPLETED · ':'◷ TODAY · ')+goal.title;
+  const detail=document.createElement('p');detail.textContent=progress.completed?'You made progress on your own terms. Tomorrow brings a new choice.':goal.detail;
+  const reward=document.createElement('small');reward.textContent='REWARD · '+goal.rewardLabel;
+  card.append(title,detail,reward);root.append(card);
+ }
+ const count=document.createElement('small');count.className='intention-count';count.textContent=progress.completedCount+' priorities completed this season · resets tomorrow';
+ root.append(count);
+}
 function renderBracketProgress(){
  const root=$('bracketProgress');root.replaceChildren();
  for(const cup of TOURNAMENTS.cups){
@@ -487,6 +524,7 @@ function renderSeasonReport(){
 
 function render(){
  const ended=state.day>90,locked=!!state.activeStory||!!state.activeEncounter||!!state.activeArc||!!state.activeSideQuest||!!state.pendingDuel;
+ renderDailyIntention(locked);
  const receipt=state.lastDuelReceipt;
  $('duelReceipt').hidden=!receipt;
  if(receipt){
