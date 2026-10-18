@@ -1,0 +1,11 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Neo Campus • Cube Draft</title>
+<style>
+:root{font-family:system-ui,sans-serif;color:#e9eeff;background:#0c1226}body{max-width:1200px;margin:auto;padding:20px}a{color:#86caff}header{display:flex;justify-content:space-between;gap:12px;align-items:center}h1{font-size:clamp(26px,5vw,44px)}.tag{color:#93a7cb}.layout{display:grid;grid-template-columns:minmax(0,3fr) minmax(220px,1fr);gap:20px}.pack{display:grid;grid-template-columns:repeat(auto-fill,minmax(145px,1fr));gap:12px}.card{cursor:pointer;position:relative;text-align:left;padding:9px;border:1px solid #3a4b76;background:#192544;border-radius:14px;color:inherit}.card:hover,.card:focus-visible{border-color:#facd65;box-shadow:0 0 0 2px #facd6580}.card img{width:100%;aspect-ratio:2.5/3.5;object-fit:contain}.card strong{display:block}.card small{color:#b5c5e7}.panel{background:#141f3b;padding:16px;border-radius:16px}.drafted{max-height:65vh;overflow:auto}.row{border-bottom:1px solid #36405b;padding:5px 0;font-size:13px}button.primary{background:#ffd56f;color:#1c2436;font-size:17px;font-weight:700;padding:12px 22px;border:0;border-radius:12px;cursor:pointer}.error{color:#ffa1a1}#progress{margin:18px 0}.muted{color:#bdc9e5}@media(max-width:700px){.layout{grid-template-columns:1fr}.pack{grid-template-columns:repeat(2,minmax(0,1fr))}}
+</style></head><body>
+<header><div><div class="tag">NEO CAMPUS TCG · LIMITED</div><h1>Cube Draft</h1></div><a href="/classic_live.html">← Classic Duels</a></header>
+<p>Draft four 15-card packs against three CPU players. Picks pass left, then right each round. Only curated theme-deck cards with registered engine handlers can appear.</p>
+<button id="start" class="primary">Start New Draft</button><p id="progress" aria-live="polite"></p><p id="error" class="error" role="alert"></p>
+<div class="layout"><section><h2 id="packTitle">Your pack</h2><div id="pack" class="pack"></div></section>
+<aside class="panel"><h2>Your picks <span id="total">0</span>/60</h2><div class="drafted" id="drafted"></div></aside></div>
+<script src="/cube_client.js"></script></body></html>
