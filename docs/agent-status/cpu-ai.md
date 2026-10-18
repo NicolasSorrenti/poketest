@@ -175,6 +175,14 @@ GitHub Actions CPU AI regression additionally runs the existing Classic local CP
 - Real local game sessions can now explicitly enable the experiment using `ClassicLocalService.create({difficulty:5,experimentalCombos:true})`. Only Expert/Champion may opt in; ordinary local matches remain unchanged, and the API reports the actual `cpu.experimentalCombos` setting. Live-service and policy tests cover the new option and validation.
 - New implementation and benchmark documentation: `docs/cpu-ai-combo-sequences.md`. User's desired ≤5% lower-tier upset objective still **NOT achieved**; fair stochastic outcomes are untouched.
 
+## Staged Trainer cards: confirmed reducer-driven search-and-attack continuation
+
+- Discovered a genuine `comboChoiceValue` option-ID mismatch: `Energy Retrieval` recovery options are `disc:N` rather than `n:N` (the latter is only a hand-card payment). Fixed discard/hand/deck namespaces with source-label checks and situation-aware ranking for Super Energy Retrieval, Computer Search, Item Finder and Pokémon Trader. Deck-search evaluation sees only the authorized printed option labels, not shuffled deck order or hidden opposing cards.
+- **Actual headless-duel integration**, not just mocked scores, now tests Energy Retrieval's legal payment and recovery; Computer Search's two-Potion payment, deck-search choice of Machoke, **then real same-turn evolution → Active Fighting attachment → attack**. The real sequence originally FAILED because the AI forgot the plan after searching and mistakenly attached Energy to a Benched Pokémon. Corrected `comboSequenceBonus` to retain an immediate own-hand Evolution + Energy line without the now-consumed Trainer card. Regression preserves this valid end-to-end behavior.
+- Added benchmark-only legal 60-card `cpu_search_lab` to exercise Trainer searches and two-card costs. Full **340** matched Champion on/off games over Blackout, Brock Gym Heroes, Cold Fusion Neo Genesis, combo lab and search lab: **175–165**, no draws, zero invalid committed actions. A/B run `39103825177` passed focused policy/live-duel suites and every arena game. This **51.47%** edge is not conclusive enough to enable the experiment by default.
+- Historical TCG Gameplay and Node/RPG regressions passed on the last code update (run SHA `171f6423`); comprehensive CPU AI regression and some duplicate follow-up workflows were still in progress at that check. Detailed reproducible findings: `docs/cpu-ai-combo-sequences.md`.
+- The user's required ≤5% lower-tier upset rate remains **NOT MET**. Default Champion behavior remains limited to the validated `actionDiscipline` policy. Keep this branch/PR separate from active rules/RPG agent work.
+
 ## Known limitations and next work
 
 1. Verify green CI on all affected and full regression suites. 
