@@ -1,0 +1,23 @@
+name: Cube Printings and Kanto Origins
+on:
+  pull_request:
+    paths:
+      - 'cube_draft.js'
+      - 'cube_presets.js'
+      - 'cube_printings.js'
+      - 'test_cube_printings.js'
+      - 'test_cube_presets.js'
+      - 'test_cube_http.js'
+  push:
+    branches: [main, feature/cube-base-jungle-fossil-printings]
+jobs:
+  printings:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify historical set selection and reprint consistency
+        run: node --check cube_printings.js && node test_cube_printings.js && node test_cube_presets.js && node test_cube_http.js
