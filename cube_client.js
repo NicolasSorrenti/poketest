@@ -23,8 +23,8 @@
  }
  function count(id){return deck.filter(x=>x===id).length;}
  function quantityByName(name){
-  const rows=state.drafted.filter(x=>x.name===name);
-  return rows.reduce((n,c)=>n+count(c.id),0);
+  const ids=new Set(state.drafted.filter(x=>x.name===name).map(c=>c.id));
+  return [...ids].reduce((n,id)=>n+count(id),0);
  }
  function change(id,delta,limit,name,energy=false){
   if(delta>0){
