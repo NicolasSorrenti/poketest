@@ -349,6 +349,11 @@ const settings={level:3,personality:'balanced',side:1,seed:47};
  const after=AI.chooseAction(hidden,settings);
  assert.deepEqual(after?.command,first.command,
   'Midgame forecast must ignore unrevealed opposing hand/deck and future flips');
+ const combos={...settings,comboSearch:true};
+ const normalCombo=AI.chooseAction(game,combos);
+ const hiddenCombo=AI.chooseAction(hidden,combos);
+ assert.deepEqual(hiddenCombo?.command,normalCombo?.command,
+  'Combination planner must select the same legal move when only opponent private cards and RNG differ');
 }
 {
  const {argumentsOf,arena}=require('./benchmark_cpu');
