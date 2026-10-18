@@ -2379,6 +2379,7 @@ function returnEcogymEnergy(before,after,actor,cmd){
   const prev=before.players[ownerSide],now=after.players[ownerSide];
   const beforeUnits=allPokemon(prev),afterUnits=allPokemon(now),matched=new Set();
   const lost=[];
+  const recoveredById=new Map();
   for(const previous of beforeUnits){
    const signature=u=>u.id+'|'+u.under.join('|');
    const candidates=afterUnits.flatMap((u,i)=>!matched.has(i)&&signature(u)===signature(previous)?[{u,i}]:[]);
@@ -2400,10 +2401,12 @@ function returnEcogymEnergy(before,after,actor,cmd){
   const newCount=id=>now.discard.filter(x=>x===id).length;
   for(const id of lost){
    if(source===ownerSide&&!causes.some(z=>z.owner===ownerSide&&z.source!==ownerSide&&z.id===id))continue;
-   if(newCount(id)<=oldCount(id))continue;
+   const already=recoveredById.get(id)||0;
+   if(newCount(id)-oldCount(id)<=already)continue;
    const index=now.discard.lastIndexOf(id);
    if(index<0)continue;
    now.hand.push(now.discard.splice(index,1)[0]);
+   recoveredById.set(id,already+1);
    log(after,'Ecogym returned '+card(before,id).name+' to '+now.name+'\'s hand.');
   }
  }
