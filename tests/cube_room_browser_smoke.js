@@ -22,7 +22,7 @@ fs.mkdirSync(artifacts,{recursive:true});
   await host.locator('#createRoom').click();
   await host.locator('#room:not(.hidden)').waitFor({timeout:20000});
   const title=await host.locator('#roomTitle').innerText();
-  const code=title.replace('Cube room ','').trim();
+  const code=/^Cube room ([A-Z2-9]{6})(?:\s|$)/.exec(title)?.[1];
   assert.match(code,/^[A-Z2-9]{6}$/);
   await guest.locator('#playerName').fill('Friend');
   await guest.locator('#roomCode').fill(code);
