@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Neo Campus • Multiplayer Cube</title>
+<style>
+:root{font-family:system-ui,Arial,sans-serif;color:#eff4ff;background:#0d1429}
+*{box-sizing:border-box}body{max-width:1180px;padding:20px;margin:auto}a{color:#91c6ff}
+header{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+h1{margin:12px 0 4px;font-size:clamp(28px,4vw,44px)}h2{margin-top:0}p,.muted{color:#b5c5e3;line-height:1.5}
+.panel{background:#18243e;border:1px solid #3b507b;border-radius:16px;padding:20px;margin:18px 0}
+.hidden{display:none!important}button{background:#273e68;color:#fff;border:1px solid #6282af;border-radius:10px;padding:10px 13px;cursor:pointer}
+button:hover:not(:disabled){background:#35517f}button:disabled{opacity:.42;cursor:not-allowed}
+button.primary{background:#ffd56f;border:0;color:#1d2540;font-weight:800}
+input{background:#0b162e;border:1px solid #5c77a5;border-radius:9px;color:#fff;padding:12px;width:100%;min-width:0}
+.field{display:grid;gap:6px;min-width:190px;flex:1}.inputs{display:flex;gap:12px;flex-wrap:wrap;align-items:end}
+.actions{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:14px}
+.columns{display:grid;grid-template-columns:minmax(0,3fr) minmax(225px,1fr);gap:18px}
+.pack{display:grid;grid-template-columns:repeat(auto-fill,minmax(145px,1fr));gap:12px}
+.card{padding:10px;background:#223251;border:1px solid #47638d;border-radius:12px;text-align:left;min-height:105px}
+.card img{width:100%;aspect-ratio:2.5/3.5;object-fit:contain}.card strong{display:block}.card small{color:#b5c5e3}
+.roster{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
+.seat{background:#243454;padding:12px;border-radius:11px}.seat strong,.seat small{display:block}.seat small{color:#b4c5e3;margin-top:6px}
+.picks{max-height:420px;overflow:auto;display:grid;gap:4px}.picks div{border-bottom:1px solid #374765;padding:5px;font-size:13px}
+#message{color:#ffb4b4;min-height:20px}.buildrow{display:flex;justify-content:space-between;align-items:center;gap:6px;padding:9px;background:#233453;border-radius:9px}
+.buildrow>span{font-size:13px;min-width:70px}.buildrow div{display:flex;align-items:center;gap:6px}
+.buildrow div button{padding:5px 9px}.buildgrid{display:grid;grid-template-columns:2fr 1fr;gap:16px}
+.buildchoices{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:9px}.section{margin-bottom:22px}
+#buildStatus{font-weight:700;color:#fed988}
+@media(max-width:700px){.columns,.buildgrid{grid-template-columns:1fr}.pack{grid-template-columns:repeat(2,minmax(0,1fr))}}
+</style></head>
+<body>
+<header><div><small>NEO CAMPUS · LIMITED FORMAT</small><h1>Multiplayer Cube Draft</h1></div><nav><a href="/cube.html">← Solo Cube</a></nav></header>
+<p>Invite your friends to draft from the same 240-card cube. Two to four humans can join; empty seats become CPU drafters. Packs and picks stay private.</p>
+<p id="message" role="alert" aria-live="polite"></p>
+<section id="entrance" class="panel">
+<h2>Create or join a draft</h2>
+<div class="inputs"><label class="field">Display name<input id="playerName" placeholder="Your nickname" maxlength="28" value="Player"></label>
+<label class="field">Invite code<input id="roomCode" placeholder="ABC234" maxlength="6" autocapitalize="characters"></label></div>
+<div class="actions"><button id="createRoom" class="primary">Create Cube room</button><button id="joinRoom">Join with code</button></div>
+</section>
+<section id="room" class="hidden">
+<div class="panel">
+<h2 id="roomTitle">Cube room</h2>
+<div class="inputs"><label class="field">Share this invite link<input id="inviteLink" readonly></label>
+<button id="copyInvite">Copy invite link</button></div>
+<p id="roomProgress" aria-live="polite"></p>
+<div id="roster" class="roster"></div>
+<div class="actions" id="lobbyActions"><button id="readyRoom">Ready</button><button id="beginDraft" class="primary">Start draft</button></div>
+</div>
+<section id="draftArea" class="panel hidden">
+<h2 id="draftHeading">Your pack</h2><p id="draftStatus" aria-live="polite"></p>
+<div class="columns"><div id="pack" class="pack"></div><aside><h3>Your drafted cards <span id="pickCount">0</span>/60</h3><div id="picks" class="picks"></div></aside></div>
+</section>
+<section id="deckArea" class="panel hidden">
+<h2>Build your 40-card deck</h2><p>Choose from cards you drafted and unlimited Basic Energy. You can edit until you lock the deck.</p>
+<p id="buildStatus" aria-live="polite"></p>
+<div class="buildgrid"><div>
+<div class="section"><h3>Drafted cards</h3><div class="buildchoices" id="buildChoices"></div></div>
+<div class="section"><h3>Basic Energy</h3><div class="buildchoices" id="energyChoices"></div></div>
+</div><div><h3>Deck contents</h3><div id="builtCards" class="picks"></div><div class="actions"><button class="primary" id="lockDeck">Lock 40-card deck</button></div></div></div>
+<p id="roomNext" class="muted"></p>
+</section>
+</section>
+<script src="/cube_room_client.js" defer></script>
+</body></html>

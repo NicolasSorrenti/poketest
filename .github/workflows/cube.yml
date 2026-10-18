@@ -2,7 +2,7 @@ name: Cube Draft Regression
 on:
   pull_request:
   push:
-    branches: [feature/cube-balance-tournament]
+    branches: [main]
 jobs:
   cube:
     runs-on: ubuntu-latest
