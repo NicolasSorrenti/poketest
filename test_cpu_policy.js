@@ -945,6 +945,34 @@ const settings={level:3,personality:'balanced',side:1,seed:47};
  assert.equal(outcome.baseline.trainerSelections,true);
  assert.equal(outcome.challenger.trainerSelections,false);
 }
+{
+ const g=createGame({decks:[deck,deck],seed:55671,format:'classic'});
+ const o=AI.observation(g,1);o.phase='game';o.turn=1;o.round=5;
+ o.self.active={id:'gym1-66',playedTurn:2,energies:[IDS.fight],damage:0,status:null};
+ o.self.bench=[];o.self.hand=['gym1-106'];
+ o.self.handCount=1;o.self.deckCount=24;o.self.energyUsed=true;
+ o.opponent.active={id:IDS.hit,energies:[IDS.fight],damage:0,status:null};
+ const cfg=AI.configuration({side:1,level:5,trainerSelections:true});
+ const old=AI.configuration({side:1,level:5});
+ const play={type:'play_trainer',payload:{handIndex:0}};
+ const end={type:'end_turn',payload:{}};
+ const search=AI.trainerSearchPlayBonus(play,o,cfg);
+ assert.ok(search>AI.score(end,o,cfg,{})-AI.score(play,o,cfg,{}),
+  'Champion must actually play Brock Training Method when it can search an evolution');
+ assert.equal(AI.trainerSearchPlayBonus(play,o,old),0);
+ o.self.active={id:IDS.hit,playedTurn:2,energies:[IDS.fight],damage:0,status:null};
+ assert.equal(AI.trainerSearchPlayBonus(play,o,cfg),0,
+  'Do not waste a Brock search without a Brock Pokémon in play');
+ const boss=[...CATALOG.values()].find(c=>c.name==="The Boss's Way");
+ assert.ok(boss);
+ o.self.hand=[boss.id];
+ o.self.active={id:'base5-57',playedTurn:2,energies:[],damage:0,status:null};
+ assert.ok(AI.trainerSearchPlayBonus(play,o,cfg)>100,
+  'A visible Grimer should make The Boss’s Way worth playing to find Dark Muk');
+ o.self.hand=['base1-88'];
+ assert.equal(AI.trainerSearchPlayBonus(play,o,cfg),0,
+  'The decision feature must not alter unrelated Professor Oak behavior');
+}
 let duels=0,decisions=0,attacks=0,energy=0,evolutions=0,trainer=0;
 for(let seed=1;seed<=4;seed++){
  let game=createGame({decks:[deck,deck],seed:seed*1789,format:'classic'});
