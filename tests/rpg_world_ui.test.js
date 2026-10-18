@@ -221,3 +221,37 @@ test('old saves past a missed cup can unlock an alternative NPC scene on load',(
  assert.equal(s.relationships.hana.trust,2);
  assert.equal(s.day,36);assert.equal(s.slot,1);
 });
+
+test('season epilogue remains hidden until the final period has passed',()=>{
+ const r=launch({day:90,slot:2,location:'home'});
+ assert.equal(r.elements.endSeason.hidden,true);
+ r.elements.quickNext.onclick();
+ const s=r.state();
+ assert.equal(s.day,91);
+ assert.equal(s.ended,true);
+ assert.equal(r.elements.endSeason.hidden,false);
+ assert.ok(r.elements.endSeason.children.some(x=>x.className==='finale-stats'));
+ const actions=r.elements.endSeason.children.find(x=>x.className==='finale-actions');
+ assert.ok(actions);assert.ok(actions.children[0].textContent.includes('New Game+'));
+});
+test('finale reflects the player actual match, cup and romantic relationship outcomes',()=>{
+ const r=launch({day:91,ended:true,slot:0,location:'home',points:36,
+  results:[{won:true,draw:false},{won:false,draw:false},{won:false,draw:true}],
+  tournaments:{championship:{state:'champion',round:3,results:[]}},
+  partner:'hana',relationships:{hana:{affection:10,trust:8,duels:1}}});
+ assert.equal(r.elements.endSeason.hidden,false);
+ const title=r.elements.endSeason.children.find(x=>x.tagName==='H2');
+ assert.equal(title.textContent,'The Harbor Champion');
+ const social=r.elements.endSeason.children.find(x=>x.className==='finale-social');
+ assert.ok(social.textContent.includes('Hana Mizuno'));
+});
+test('New Game+ records a report and starts fresh without stale romance or standings',()=>{
+ const r=launch({day:91,ended:true,slot:0,location:'home',credits:999,points:66,
+  results:[{won:true}],partner:'reina',relationships:{reina:{affection:9,trust:5}},
+  ngPlus:0},true);
+ const button=r.elements.endSeason.children.find(x=>x.className==='finale-actions').children[0];
+ button.onclick();const s=r.state();
+ assert.equal(s.day,1);assert.equal(s.ngPlus,1);assert.equal(s.credits,80);
+ assert.equal(s.points,0);assert.equal(s.partner,null);assert.equal(s.results.length,0);
+ assert.equal(s.campaignHistory.length,1);assert.equal(s.campaignHistory[0].partner,'Reina Kurogane');
+});
