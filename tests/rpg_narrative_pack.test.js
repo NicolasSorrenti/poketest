@@ -63,12 +63,13 @@ test('every new scene has a legal window, reachable start and a stored consequen
   for(const person of e.participants||[])assert.equal(SCHEDULES.locationFor(person,e.start,e.slot,[e]),e.place,'guest missing from crossroads');
   const answer=STORY.resolve(state,e.id,0);
   assert.equal(answer.choice.flag,e.choices[0].flag);
-  assert.equal(state.storyFlags[e.id],e.choices[0].flag);
-  assert.equal(state.partner,null,'guest/crossover scenes must not force romance');
+  if(e.choices[0].kind==='commit')assert.equal(state.partner,e.npc,'explicit romance commit should be allowed');
+  else {assert.equal(state.storyFlags[e.id],e.choices[0].flag);assert.equal(state.partner,null,'guest/crossover scenes cannot force romance');}
   assert.ok(!STORY.available(state).some(x=>x.id===e.id),'completed scene can replay');
   assert.throws(()=>STORY.resolve(state,e.id,0));
   const loaded=STORY.normalize(JSON.parse(JSON.stringify(state)));
-  assert.equal(loaded.storyFlags[e.id],e.choices[0].flag,'decision lost on load');
+  if(e.choices[0].kind==='commit')assert.equal(loaded.partner,e.npc,'romance lost on load');
+  else assert.equal(loaded.storyFlags[e.id],e.choices[0].flag,'decision lost on load');
  }
 });
 
