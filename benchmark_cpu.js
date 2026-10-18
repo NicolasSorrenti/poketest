@@ -119,9 +119,24 @@ const COMBO_LAB=[
  ...Array(4).fill('base1-95'), // Switch
  ...Array(24).fill('base1-97') // Fighting Energy
 ];
+// A second fixed 60-card stress deck tests authenticated Computer Search,
+// Item Finder, Pokémon Trader and Retrieval choices. It is benchmark-only;
+// player-facing retail decks and historical legality are never changed.
+const SEARCH_LAB=[
+ ...Array(4).fill('base1-52'),...Array(4).fill('base1-34'),
+ ...Array(2).fill('base1-7'),...Array(2).fill('base1-61'),
+ ...Array(4).fill('base1-71'), // Computer Search
+ ...Array(4).fill('base1-74'), // Item Finder
+ ...Array(4).fill('base1-77'), // Pokémon Trader
+ ...Array(4).fill('base1-81'), // Energy Retrieval
+ ...Array(4).fill('base1-91'), // Bill
+ ...Array(4).fill('base1-94'), // Potion
+ ...Array(24).fill('base1-97') // Fighting
+];
 function arena(opts){
  const service=new ClassicLocalService();
- const getDeck=name=>name==='cpu_combo_lab'?[...COMBO_LAB]:service.decklist(name);
+ const getDeck=name=>name==='cpu_combo_lab'?[...COMBO_LAB]:
+  name==='cpu_search_lab'?[...SEARCH_LAB]:service.decklist(name);
  const decks=[getDeck(opts.leftDeck),getDeck(opts.rightDeck)];
  const matches=[];
  for(let i=0;i<opts.pairs;i++)for(const swap of [false,true])matches.push(duel(opts,i,swap,decks));
