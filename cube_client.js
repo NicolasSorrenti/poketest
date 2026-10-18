@@ -172,6 +172,9 @@
  $('presetSelect').addEventListener('change',showPreset);
  loadPresets();
  $('start').addEventListener('click',start);
+ $('restartBuilder').addEventListener('click',()=>{
+  if(window.confirm('Start a new Cube draft? Your current picks and deck will be replaced.'))start();
+ });
  $('playCube').addEventListener('click',play);
  $('nextMatch').addEventListener('click',nextMatch);
  $('resumeMatch').addEventListener('click',()=>{
