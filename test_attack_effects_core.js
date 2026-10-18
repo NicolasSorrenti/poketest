@@ -6,7 +6,8 @@ let coverage={flat:0,'coin-times':0,'coin-failure':0,'coin-bonus':0,status:0,'co
 for(const c of CATALOG.values())for(const a of c.attacks||[]){
  const program=compile(a);if(!program){coverage.unported++;continue;}
  coverage[program.kind]=(coverage[program.kind]||0)+1;
- let flipCount=0;const flip=()=>program.kind==='coins-until-tails'?++flipCount<=3:true;
+ let flipCount=0;// Until-tails attacks need a terminating deterministic flip sequence.
+ const flip=()=>['coins-until-tails','neo82:needle-storm'].includes(program.kind)?++flipCount<=3:true;
  const context={extraEnergies:()=>0,teamNameCount:()=>0,allNamedCount:()=>0,enemyRemainingHP:0,selfEnergy:0,enemyBench:0,enemyEnergy:0,selfCounters:0,defenderCounters:0,benchCount:0};
  const yes=resolve(program,flip,context),no=resolve(program,()=>false,context);
  for(const result of [yes,no]){
