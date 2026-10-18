@@ -111,6 +111,33 @@
      focusId:'people'});
    }
   }
+  // Later-today narrative windows are only surfaced when all prerequisites
+  // and NPC availability will truly be satisfied. Mask chapter titles until
+  // the player reaches them; never offer an early execution shortcut.
+  for(let slot=s.slot+1;slot<=2;slot++)for(const place of validPlaces){
+   const {draft,present}=snapshot(place,slot);
+   for(const e of story.available(draft,place)){
+    if(e.end!==s.day)continue;
+    add({kind:'story_soon',key:e.id,place,slot,timing:'upcoming',priority:75,
+     title:'Personal opportunity later today',
+     detail:safeName(cast,e.npc)+' has a time-sensitive conversation in the '+periodNames[slot]+' at '+placeName(places,place)+'. Do not skip that period.',
+     focusId:'storyEvents'});
+   }
+   for(const q of side.available(draft,present)){
+    if(q.stage.end!==s.day)continue;
+    add({kind:'sidequest_soon',key:q.quest.id,place,slot,timing:'upcoming',priority:73,
+     title:'Side quest opportunity later today',
+     detail:'A chapter with '+safeName(cast,q.stage.npc)+' will be available in the '+periodNames[slot]+' at '+placeName(places,place)+'. It closes today.',
+     focusId:'sideQuestEvents'});
+   }
+   if(arc)for(const e of arc.available(draft,present)){
+    if(e.end!==s.day)continue;
+    add({kind:'arc_soon',key:e.id,place,slot,timing:'upcoming',priority:72,
+     title:'Rivalry moment later today',
+     detail:'A personal conversation can happen in the '+periodNames[slot]+' at '+placeName(places,place)+'. It closes today.',
+     focusId:'storyEvents'});
+   }
+  }
   // A future appointment gets a warning; a not-yet-started cup can appear as a
   // date-only heads-up, but never a misleading "Play now" button.
   for(const cup of tournaments.cups){
@@ -124,7 +151,7 @@
   // urgency. Never suppress a time-critical appointment or deadline.
   candidates.sort((a,b)=>b.priority-a.priority||a.day-b.day||a.slot-b.slot||a.id.localeCompare(b.id));
   const selected=[],families=new Set();
-  const family=c=>c.kind==='story'||c.kind==='sidequest'||c.kind==='arc'||c.kind==='social'?'social':c.kind==='tournament'||c.kind==='event'||c.kind==='tournament_soon'?'duel':c.kind;
+  const family=c=>c.kind==='story'||c.kind==='story_soon'||c.kind==='sidequest'||c.kind==='sidequest_soon'||c.kind==='arc'||c.kind==='arc_soon'||c.kind==='social'?'social':c.kind==='tournament'||c.kind==='event'||c.kind==='tournament_soon'?'duel':c.kind;
   for(const c of candidates){
    const fam=family(c);
    if(families.has(fam)&&c.priority<100)continue;
