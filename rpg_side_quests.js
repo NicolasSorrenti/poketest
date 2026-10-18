@@ -35,7 +35,7 @@
     'I like card games. Nobody can say the current changed halfway through a turn.'],
    flirt:'That is kind of you. It might even make me less grumpy for the next ten minutes.',
    duelWin:'You had a plan for the bad draws. That is worth more than a perfect hand.',
-   duelLose:'See? Sometimes the river lets you cross. Sometimes you rebuild the boat.']
+   duelLose:'See? Sometimes the river lets you cross. Sometimes you rebuild the boat.'}
   }
  };
  const looks={
