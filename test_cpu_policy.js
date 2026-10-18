@@ -1035,6 +1035,9 @@ const settings={level:3,personality:'balanced',side:1,seed:47};
  assert.ok(AI.comboSequenceBonus({type:'play_trainer',payload:{handIndex:0}},untimely,cfg)<
   AI.comboSequenceBonus({type:'play_trainer',payload:{handIndex:0}},lethal,cfg),
   'Do not value unneeded PlusPower as much as a guaranteed Prize knockout');
+ const chaos=structuredClone(lethal);chaos.stadium={id:'gym2-102',owner:0};
+ assert.equal(AI.comboSequenceBonus({type:'play_trainer',payload:{handIndex:0}},chaos,cfg),0,
+  'Never assume Chaos Gym heads or guarantee a Trainer can be used');
  assert.equal(AI.configuration({level:5}).comboSearch,false);
  assert.throws(()=>AI.configuration({comboSearch:'yes'}),/combo-search/);
  const {arena,argumentsOf}=require('./benchmark_cpu');
