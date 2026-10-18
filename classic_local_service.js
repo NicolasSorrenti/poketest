@@ -54,11 +54,11 @@ class ClassicLocalService {
   const token=crypto.randomBytes(24).toString('base64url'),session={game,revision:0,updated:this.now(),token,deck,opponent,cpuConfig,npc:npc??null};
   this.sessions.set(token,session);return {token,...this.response(session)};
  }
- createCube({humanDeck,cpuDeck,seed}={}){
+ createCube({humanDeck,cpuDeck,seed,difficulty=3,personality='balanced',name='Cube CPU'}={}){
   this.prune();if(this.sessions.size>=this.maxSessions)throw Error('Too many active duels');
   if(!Array.isArray(humanDeck)||!Array.isArray(cpuDeck))throw Error('Missing Cube decks');
-  const cpuConfig=configuration({level:3,personality:'balanced',seed:1});
-  let game=createGame({decks:[[...humanDeck],[...cpuDeck]],names:['You','Cube CPU'],format:'online-preview',
+  const cpuConfig=configuration({level:difficulty,personality,seed:1});
+  let game=createGame({decks:[[...humanDeck],[...cpuDeck]],names:['You',String(name).slice(0,36)],format:'online-preview',
    deckSize:40,prizeCount:4,seed:seed??crypto.randomBytes(4).readUInt32BE(0)});
   game=driveBot(game,200,cpuConfig).game;
   const token=crypto.randomBytes(24).toString('base64url');

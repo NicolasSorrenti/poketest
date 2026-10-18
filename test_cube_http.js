@@ -38,6 +38,34 @@ const {server}=require('./server');
   assert.equal(duel.status,200);
   assert.deepEqual(duel.body.counts,[40,40]);
   assert.equal((await api('start','POST',{revision:state.revision,deck:state.suggestedDeck})).status,409);
+  // A client cannot skip a round or report its own win.
+  let progress=await api('state');
+  assert.equal(progress.body.tournament.results.length,0);
+  assert.equal((await api('next','POST',{revision:progress.body.revision})).status,400);
+  let active=started.body.duelToken;
+  const {classic}=require('./server');
+  for(let round=0;round<3;round++){
+   const game=classic.session(active).game;
+   game.over=true;
+   game.winner=round===1?1:0;
+   progress=await api('state');
+   assert.equal(progress.status,200);
+   assert.equal(progress.body.tournament.results.length,round+1);
+   assert.equal((await api('state')).body.tournament.results.length,round+1,'No double-score on poll');
+   if(round<2){
+    assert.equal(progress.body.tournament.readyForNext,true);
+    const n=await api('next','POST',{revision:progress.body.revision});
+    assert.equal(n.status,200,'Next round should start: '+n.body.error);
+    assert.notEqual(n.body.duelToken,active);
+    active=n.body.duelToken;
+    const follow=await api('state');
+    assert.equal(follow.body.tournament.readyForNext,false);
+   }else{
+    assert.equal(progress.body.tournament.finished,true);
+    assert.equal(progress.body.tournament.wins,2);
+    assert.equal((await api('next','POST',{revision:progress.body.revision})).status,400);
+   }
+  }
   assert.equal((await fetch(base+'/cube_draft.js')).status,404,'Private cube rules exposed as static JS');
   console.log('PASS Cube HTTP: page, client, draft, 40-card match, tokens and private scripts');
  }finally{

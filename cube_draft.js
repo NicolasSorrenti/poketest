@@ -12,6 +12,7 @@ const DESTINY=require('./neo_destiny_decks');
 const A=require('./attack_effects_core');
 const P=require('./classic_power_core');
 const T=require('./classic_trainer_core');
+const BASIC_TYPES=['Grass','Fire','Water','Lightning','Psychic','Fighting'];
 const themes=['base1:Blackout','base1:Brushfire','base1:Overgrowth','base1:Zap!','base2:Power Reserve','base2:Water Blast'];
 const sourceDecks=()=>[
  ...themes.map(x=>authentic(x)),
@@ -22,8 +23,14 @@ function supported(id){
  if(!c||isEnergy(c))return false;
  if(c.supertype==='Trainer')return T.SUPPORTED.has(c.name);
  if(c.supertype!=='Pokémon')return false;
- return (c.attacks||[]).every(a=>!!A.compile(a))&&
+ const registered=(c.attacks||[]).every(a=>!!A.compile(a))&&
  (c.abilities||[]).every(a=>[P.ACTIVATED,P.PASSIVE,P.ONPLAY].some(x=>x.has(a.name)));
+ if(!registered)return false;
+ // Basic Energy is the only Energy supplied in this Cube. Exclude attackers
+ // whose every attack requires Dark/Metal/Special Energy unavailable here,
+ // unless they have a functional Power.
+ const playable=(c.attacks||[]).some(a=>(a.cost||[]).every(t=>t==='Colorless'||BASIC_TYPES.includes(t)));
+ return playable||!!c.abilities?.length;
 }
 function eligibleIds(){
  const ids=new Set(sourceDecks().flat().filter(supported));
@@ -53,7 +60,25 @@ function makePool({size=240,seed=1}={}){
  // a compatible parent in the cube. This does not guarantee players draft
  // both halves of a line; that remains an interesting draft decision.
  const basicCount=Math.min(wantedPokemon,Math.round(wantedPokemon*.68));
- const pokemonPool=expand(basics,basicCount);
+ // Spread opening Basics among the six supported Energy types, preventing a
+ // purely random cube from being dominated by one color for a given seed.
+ const buckets=Object.fromEntries(BASIC_TYPES.map(t=>[t,[]]));
+ const neutral=[];
+ for(const id of basics){
+  const c=CATALOG.get(id);
+  const attack=(c.attacks||[]).find(a=>(a.cost||[]).every(t=>t==='Colorless'||BASIC_TYPES.includes(t)));
+  const needed=(attack?.cost||[]).filter(t=>BASIC_TYPES.includes(t));
+  const type=needed[0]||c.types?.find(t=>BASIC_TYPES.includes(t));
+  if(type&&buckets[type])buckets[type].push(id);else neutral.push(id);
+ }
+ const pokemonPool=[];
+ for(let i=0;i<basicCount;i++){
+  const type=BASIC_TYPES[i%BASIC_TYPES.length];
+  const choices=buckets[type]?.length?buckets[type]:neutral.length?neutral:basics;
+  // Sample with replacement so a useful evolutionary Basic can appear
+  // multiple times and support multiple drafters.
+  pokemonPool.push(choices[Math.floor(rng()*choices.length)]);
+ }
  let attempts=0;
  while(pokemonPool.length<wantedPokemon&&attempts++<wantedPokemon*10){
   const eligible=stages.filter(id=>pokemonPool.some(parent=>canEvolve(CATALOG.get(id),CATALOG.get(parent))));
