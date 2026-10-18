@@ -462,6 +462,50 @@ function trainerSelectionValue(option,decision,o,cfg){
  }
  return null;
 }
+// A search decision is worthless if Champion chooses to end the turn rather
+// than USE the searchable Trainer. Tie the *play* opportunity to public setup
+// needs and own known hand. Do not assume an exact card is in the unknown deck.
+function trainerSearchPlayBonus(action,o,cfg){
+ if(!cfg?.trainerSelections||cfg.level<4||o.phase!=='game'||action.type!=='play_trainer')return 0;
+ const p=o.self,name=card(p.hand[action.payload.handIndex])?.name;
+ if(!name||p.deckCount===0)return 0;
+ const units=[p.active,...p.bench].filter(Boolean),onBench=p.bench.length;
+ const hasBasic=p.hand.some((id,i)=>i!==action.payload.handIndex&&isBasicPokemon(card(id)));
+ const readyEvolution=p.hand.some((id,i)=>{
+  if(i===action.payload.handIndex)return false;
+  const c=card(id);
+  return c?.evolvesFrom&&units.some(u=>canEvolve(c,card(u.id)));
+ });
+ if(name==="Brock's Training Method"){
+  const brock=units.some(u=>card(u.id)?.name?.startsWith("Brock's "));
+  return brock&&!readyEvolution?190:0;
+ }
+ if(name==="The Boss's Way"){
+  // The classic Rocket Trainer finds Dark Evolutions for a visible evolving
+  // Basic (Dark Muk can evolve from Grimer, for example).
+  const darkLine=units.some(u=>[...CATALOG.values()].some(c=>
+   c.name.startsWith('Dark ')&&c.evolvesFrom&&canEvolve(c,card(u.id))));
+  return darkLine&&!readyEvolution?180:0;
+ }
+ if(name==='Energy Search'){
+  const canAttach=!p.energyUsed&&units.length>0;
+  const energyInHand=p.hand.some((id,i)=>i!==action.payload.handIndex&&isEnergy(card(id)));
+  return canAttach&&!energyInHand?170:0;
+ }
+ if(name==='Poké Ball'){
+  // One fair heads roll may find an otherwise unavailable evolution or Basic.
+  return !hasBasic&&onBench<2?95:!readyEvolution?45:0;
+ }
+ if(name==='Pokémon Trader'){
+  const tradeable=p.hand.some((id,i)=>i!==action.payload.handIndex&&card(id)?.supertype==='Pokémon');
+  return tradeable&&!readyEvolution?115:0;
+ }
+ if(name==='Computer Search'){
+  const expendable=p.hand.length>3;
+  return expendable&&!readyEvolution?85:0;
+ }
+ return 0;
+}
 function choiceValue(option,decision,o,cfg){
  const id=option.id,label=option.label||'',kind=decision.kind||'',ctx=decision.label||'';
  const trained=trainerSelectionValue(option,decision,o,cfg);
@@ -1094,7 +1138,7 @@ function chooseAction(game,raw={},memo={}){
  const actions=candidates(o,cfg,used);if(!actions.length)return null;
  const random=rng(cfg.seed+game.turnSerial*7919+(game.events?.length||0)*17011+cfg.side*31);
  const ranked=actions.map((action,i)=>({action,
-  score:score(action,o,cfg,used)+planningBonus(action,o,cfg)+prizeRaceBonus(action,o,cfg)+knockoutTempoBonus(action,o,cfg)+opponentResponseBonus(action,o,cfg)+energyHorizonBonus(action,o,cfg)+turnSequenceBonus(action,o,cfg)+trainerTacticsBonus(action,o,cfg),tie:i}))
+  score:score(action,o,cfg,used)+planningBonus(action,o,cfg)+prizeRaceBonus(action,o,cfg)+knockoutTempoBonus(action,o,cfg)+opponentResponseBonus(action,o,cfg)+energyHorizonBonus(action,o,cfg)+turnSequenceBonus(action,o,cfg)+trainerTacticsBonus(action,o,cfg)+trainerSearchPlayBonus(action,o,cfg),tie:i}))
   .sort((a,b)=>b.score-a.score||a.tie-b.tie);
  // Rank all visible options before competence-sensitive choice noise. A larger
  // *evaluation budget* should NOT widen the random window: doing so previously
@@ -1139,4 +1183,4 @@ function driveSide(initial,{side=1,level=3,personality='balanced',seed=1,plannin
 }
 function driveBot(game,limit=200,config={}){return driveSide(game,{...config,side:1,limit});}
 function propose(game,config={}){return chooseAction(game,{...config,side:1});}
-module.exports={SKILLS,CALIBRATED_SKILLS,PERSONALITIES,configuration,observation,candidates,score,knockoutChance,planningBonus,evolutionTempoPenalty,prizeRaceBonus,knockoutTempoBonus,opponentResponseBonus,energyHorizonBonus,turnSequenceBonus,trainerTacticsBonus,trainerSelectionValue,chooseAction,driveSide,driveBot,propose};
+module.exports={SKILLS,CALIBRATED_SKILLS,PERSONALITIES,configuration,observation,candidates,score,knockoutChance,planningBonus,evolutionTempoPenalty,prizeRaceBonus,knockoutTempoBonus,opponentResponseBonus,energyHorizonBonus,turnSequenceBonus,trainerTacticsBonus,trainerSelectionValue,trainerSearchPlayBonus,chooseAction,driveSide,driveBot,propose};
