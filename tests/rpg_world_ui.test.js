@@ -2,7 +2,7 @@
 const test=require('node:test');
 const assert=require('node:assert/strict');
 const fs=require('node:fs'),path=require('node:path');
-const Pack=require('../rpg_narrative_pack'),Side=require('../rpg_side_quests'),Story=require('../rpg_story'),Schedules=require('../rpg_schedules'),World=require('../rpg_world'),Arc=require('../rpg_rival_arc'),Tournaments=require('../rpg_tournaments'),Epilogue=require('../rpg_epilogue'),Bridge=require('../rpg_duel_bridge');
+const Pack=require('../rpg_narrative_pack'),Side=require('../rpg_side_quests'),Story=require('../rpg_story'),Schedules=require('../rpg_schedules'),World=require('../rpg_world'),Arc=require('../rpg_rival_arc'),Tournaments=require('../rpg_tournaments'),Epilogue=require('../rpg_epilogue'),Appointments=require('../rpg_appointments'),Bridge=require('../rpg_duel_bridge');
 const js=fs.readFileSync(path.join(__dirname,'..','rpg.js'),'utf8');
 const html=fs.readFileSync(path.join(__dirname,'..','rpg.html'),'utf8');
 const ids=[...html.matchAll(/id="([^"]+)"/g)].map(x=>x[1]);
@@ -27,7 +27,7 @@ function launch(initial,approve=false){
  const doc={getElementById(id){if(!elements[id])throw Error('Missing '+id);return elements[id];},
   createElement(tag){return new FakeNode(tag);},body:new FakeNode('body'),
   addEventListener(name,cb){listeners['document:'+name]=cb;}};
- const win={NeoRpgNarrativePack:Pack,NeoRpgSideQuests:Side,NeoHarborStory:Story,NeoRpgSchedules:Schedules,NeoRpgWorld:World,NeoRpgRivalArc:Arc,NeoRpgTournaments:Tournaments,NeoRpgEpilogue:Epilogue,NeoRpgDuelBridge:Bridge,
+ const win={NeoRpgNarrativePack:Pack,NeoRpgSideQuests:Side,NeoHarborStory:Story,NeoRpgSchedules:Schedules,NeoRpgWorld:World,NeoRpgRivalArc:Arc,NeoRpgTournaments:Tournaments,NeoRpgEpilogue:Epilogue,NeoRpgAppointments:Appointments,NeoRpgDuelBridge:Bridge,
   addEventListener(name,cb){listeners[name]=cb;}};
  const local={getItem(k){return saved[k]||null;},setItem(k,v){saved[k]=String(v);}};
  const session={removeItem(){}};
@@ -306,4 +306,46 @@ test('Elio quest launches a real deck duel and rewards a saved result only once'
  assert.equal(resumed.state().credits,credits);
  assert.equal(resumed.state().results.length,1);
  assert.ok(resumed.elements.sideQuestJournal.children.some(x=>x.textContent.includes('Completed')));
+});
+
+test('an invitation schedules a real NPC meeting without advancing time',()=>{
+ const r=launch({day:5,slot:0,location:'shop'});
+ const hana=r.elements.people.children.find(x=>x.children?.[1]?.children?.[0]?.textContent==='Hana Mizuno');
+ assert.ok(hana,'Hana should be at the shop on the morning of Day 5');hana.onclick();
+ const invite=r.elements.choices.children.find(x=>x.textContent.includes('Invite to a future meet-up'));
+ assert.ok(invite);invite.onclick();
+ const offer=r.elements.choices.children.find(x=>x.textContent.startsWith('Day '));
+ assert.ok(offer);offer.onclick();
+ const save=r.state();
+ assert.equal(save.day,5);assert.equal(save.slot,0);
+ assert.equal(save.appointments.length,1);
+ assert.equal(save.appointments[0].status,'booked');
+ assert.ok(r.elements.appointments.children[0].children[1].textContent.includes('DAY '));
+});
+test('attending a scheduled meet-up uses exactly one period and awards affection/trust once',()=>{
+ const fresh=launch({day:5,slot:0,location:'shop'});
+ const hana=fresh.elements.people.children.find(x=>x.children?.[1]?.children?.[0]?.textContent==='Hana Mizuno');hana.onclick();
+ fresh.elements.choices.children.find(x=>x.textContent.includes('Invite to a future meet-up')).onclick();
+ fresh.elements.choices.children.find(x=>x.textContent.startsWith('Day ')).onclick();
+ const scheduled=fresh.state().appointments[0];
+ const restored=launch({...fresh.state(),day:scheduled.day,slot:scheduled.slot,location:scheduled.place});
+ const button=restored.elements.appointments.children[0].children[2].children[0];
+ assert.ok(button.textContent.includes('Meet now'));button.onclick();
+ const s=restored.state();
+ assert.equal(s.appointments[0].status,'attended');
+ assert.equal(s.relationships.hana.affection,2);assert.equal(s.relationships.hana.trust,1);
+ assert.equal(s.bonds.hana.affection,2);assert.equal(s.bonds.hana.trust,1);
+ assert.equal(s.day*3+s.slot,scheduled.day*3+scheduled.slot+1);
+ assert.ok(restored.elements.appointments.children[0].textContent.includes('No plans yet'));
+});
+test('skipping a booked meet-up only reduces trust once after its time has passed',()=>{
+ const first=launch({day:5,slot:0,location:'shop',relationships:{hana:{affection:4,trust:3}},bonds:{hana:{affection:4,trust:3,duels:0}}});
+ first.elements.people.children.find(x=>x.children?.[1]?.children?.[0]?.textContent==='Hana Mizuno').onclick();
+ first.elements.choices.children.find(x=>x.textContent.includes('Invite to a future meet-up')).onclick();
+ first.elements.choices.children.find(x=>x.textContent.startsWith('Day ')).onclick();
+ const plan=first.state().appointments[0];
+ const later=launch({...first.state(),day:plan.day+1,slot:0,location:'home'});
+ assert.equal(later.state().appointments[0].status,'missed');
+ assert.equal(later.state().relationships.hana.trust,2);
+ assert.equal(launch(later.state()).state().relationships.hana.trust,2);
 });
