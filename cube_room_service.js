@@ -146,7 +146,8 @@ class CubeRoomService{
  card(id){
   const c=CATALOG.get(id);
   return {id,name:c.name,supertype:c.supertype,types:c.types||[],
-   subtypes:c.subtypes||[],images:c.images||{},evolvesFrom:c.evolvesFrom||null};
+   subtypes:c.subtypes||[],images:c.images||{},evolvesFrom:c.evolvesFrom||null,
+   hp:c.hp||null,attacks:(c.attacks||[]).map(a=>({name:a.name,cost:a.cost||[],damage:a.damage||''}))};
  }
 }
 module.exports={CubeRoomService};

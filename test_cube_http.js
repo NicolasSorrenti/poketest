@@ -20,6 +20,11 @@ const {server}=require('./server');
   res=await fetch(base+'/cube_client.js');
   assert.equal(res.status,200);
   assert((await res.text()).includes('/classic_live.html'),'Cube client duel navigation missing');
+  for(const asset of ['/cube_builder_ui.js','/cube_builder.css']){
+   const resource=await fetch(base+asset);
+   assert.equal(resource.status,200,'Visual builder asset missing: '+asset);
+  }
+  for(const id of ['soloDeckBuilder','soloBuilderAction'])assert(cubeHtml.includes('id="'+id+'"'));
   const formats=await api('presets');
   assert.equal(formats.status,200);
   assert.deepEqual(formats.body.presets.map(p=>p.id),['balanced','elemental','neo','rocket','mayhem']);

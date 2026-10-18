@@ -1,0 +1,38 @@
+name: Cube Visual Deck Builder
+on:
+  push:
+    branches: [main, feature/cube-visual-deck-builder]
+  pull_request:
+    paths:
+      - 'cube_builder*'
+      - 'cube_client.js'
+      - 'cube_room_client.js'
+      - 'cube.html'
+      - 'cube_room.html'
+      - 'tests/cube_deck_builder_browser_smoke.js'
+      - '.github/workflows/cube-visual.yml'
+jobs:
+  deck-builder:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Check client and server routes
+        run: node --check cube_builder_ui.js && node --check cube_client.js && node --check cube_room_client.js && node test_cube_http.js && node test_cube_room_http.js
+      - name: Install Playwright
+        run: npm install --no-save --ignore-scripts playwright@1.56.1
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+      - name: Verify visual deck building in desktop and mobile
+        run: node tests/cube_deck_builder_browser_smoke.js
+      - name: Preserve screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: cube-visual-builder
+          path: artifacts/rpg-browser/cube-deck-builder-*.png
+          if-no-files-found: ignore
+          retention-days: 7

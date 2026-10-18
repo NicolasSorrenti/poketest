@@ -12,11 +12,10 @@
 <button id="start" class="primary">Start New Draft</button><p id="progress" aria-live="polite"></p><p id="error" class="error" role="alert"></p>
 <div class="layout"><section><h2 id="packTitle">Your pack</h2><div id="pack" class="pack"></div></section>
 <aside class="panel"><h2>Your picks <span id="total">0</span>/60</h2><div class="drafted" id="drafted"></div></aside></div>
-<section id="builder" class="panel hidden" aria-label="Cube deck builder">
-<h2>Build your 40-card deck</h2><p class="muted">Choose cards you drafted and add unlimited Basic Energy. The CPU has built its own deck. You start with a suggested legal deck that you can customize.</p>
-<p id="deckStatus" class="total" aria-live="polite"></p>
-<div class="build-grid"><div class="stack"><div><h3>Drafted cards</h3><div id="cardChoices" class="choose-list"></div></div><div><h3>Basic Energy</h3><div id="energyChoices" class="choose-list"></div></div></div>
-<div><h3>Selected deck</h3><div id="deckContents"></div><button class="primary" id="playCube">Start 4-Prize CPU Duel →</button></div></div>
+<section id="builder" class="hidden" aria-label="Cube deck builder">
+<div id="soloDeckBuilder"></div>
+<div id="soloBuilderAction"><button class="primary" id="playCube" type="button">Start 4-Prize CPU Duel →</button></div>
+<p id="deckStatus" class="muted" aria-live="polite"></p>
 </section>
 <section id="tournament" class="panel hidden" aria-label="Cube Championship">
 <h2>Cube Championship · Four-player championship bracket</h2>
@@ -25,4 +24,6 @@
 <p id="tournamentStatus" aria-live="polite"></p><div id="standings"></div>
 <div class="tourney-actions"><button id="nextMatch" class="primary hidden" type="button">Challenge next opponent →</button><a id="resumeMatch" class="hidden" href="/classic_live.html">Return to current duel →</a></div>
 </section>
+<link rel="stylesheet" href="/cube_builder.css">
+<script src="/cube_builder_ui.js"></script>
 <script src="/cube_client.js"></script></body></html>
