@@ -54,8 +54,21 @@ function configuration(raw={}){
  if(typeof graduatedNoise!=='boolean')throw Error('Invalid graduated-noise setting');
  const energyHorizon=raw.energyHorizon??false;
  if(typeof energyHorizon!=='boolean')throw Error('Invalid energy-horizon setting');
+ const turnSearch=raw.turnSearch??false;
+ if(typeof turnSearch!=='boolean')throw Error('Invalid turn-search setting');
+ // Validated in 440 paired games across four decks: Champion conserves low-value
+ // Trainer cards by default; opt-out remains available for baseline A/B tests.
+ const actionDiscipline=raw.actionDiscipline??(level===5);
+ if(typeof actionDiscipline!=='boolean')throw Error('Invalid action-discipline setting');
+ const trainerTactics=raw.trainerTactics??false;
+ if(typeof trainerTactics!=='boolean')throw Error('Invalid trainer-tactics setting');
+ const trainerSelections=raw.trainerSelections??false;
+ if(typeof trainerSelections!=='boolean')throw Error('Invalid trainer-selections setting');
+ const comboSearch=raw.comboSearch??false;
+ if(typeof comboSearch!=='boolean')throw Error('Invalid CPU combo-search setting');
  return {level,personality,seed:raw.seed??1,side,planning,evolutionTempo,prizeRace,knockoutTempo,opponentResponse,
-  graduatedNoise,energyHorizon,skill:(graduatedNoise?CALIBRATED_SKILLS:SKILLS)[level],style:PERSONALITIES[personality]};
+  graduatedNoise,energyHorizon,turnSearch,actionDiscipline,trainerTactics,trainerSelections,comboSearch,
+  skill:(graduatedNoise?CALIBRATED_SKILLS:SKILLS)[level],style:PERSONALITIES[personality]};
 }
 // Seeded independent of the engine's private deck order and future RNG state.
 function rng(seed){let x=(seed>>>0)||0x6d2b79f5;return ()=>{
@@ -80,6 +93,7 @@ function observation(game,side){
  return {phase:view.phase,turn:view.turn,round:view.round,turnSerial:game.turnSerial,over:view.over,
   self,opponent:view.players[1-side],stadium:view.stadium,
   pendingTrainerTarget:selectedIndex('target'),pendingTrainerSource:selectedIndex('source'),
+  pendingTrainerName:ownedPlan?.cardId?CATALOG.get(ownedPlan.cardId)?.name||null:null,
   decision:view.pendingDecision,setupReady:!!game.setupReady[side]};
 }
 const card=id=>CATALOG.get(id);
@@ -371,8 +385,223 @@ function energyRemovalChoiceValue(unit,defender,energyIndex,enemy){
  const control=denied*2+(preventedKO?130:0)+removed*7;
  return enemy?control:-control;
 }
+// The chooser gets only printed names exposed by the authorized Trainer
+// decision. Search options reveal the CPU's own deck/discard (as they do to a
+// human searching their deck), never the opponent's concealed library.
+// Board-aware choices do not execute or inspect the reducer / future RNG.
+function searchedCardValue(name,o){
+ const matches=[...CATALOG.values()].filter(c=>c.name===name);
+ if(!matches.length)return 0;
+ const p=o.self,q=o.opponent;
+ const battlefield=[p.active,...p.bench].filter(Boolean);
+ if(matches.some(c=>isEnergy(c))){
+  return 25+Math.max(0,...matches.filter(isEnergy).flatMap(c=>
+   battlefield.map((u,index)=>{
+    const before=strongestAffordableAttack(u,q.active);
+    const after=damageAfterAttachment(u,c.id,q.active);
+    const useful=after>before?(after-before)*2+75:0;
+    const filling=energyValue(u,c.id);
+    const pool=energyPool(u),added=energyPool({energies:[c.id]});
+    // Colored requirements cannot be paid with unrelated Energy even if the
+    // attack also has Colorless costs. Fixes a searching CPU choosing Water
+    // for a Rattata over the second Fighting needed for Machop's Submission.
+    const colorMissing=(cost,available)=>{
+     const remain=[...available];let missing=0;
+     for(const type of cost.filter(t=>t!=='Colorless')){
+      let i=remain.indexOf(type);
+      if(i<0)i=remain.indexOf('Any');
+      if(i<0)missing++;else remain.splice(i,1);
+     }
+     return missing;
+    };
+    const coloredProgress=Math.max(0,...(card(u.id)?.attacks||[]).map(a=>{
+     const old=colorMissing(a.cost||[],pool);
+     const current=colorMissing(a.cost||[],[...pool,...added]);
+     return old>current?(index===0?125:36):0;
+    }));
+    return (useful+Math.max(0,filling)+coloredProgress)*(index===0?1.22:.58);
+   })));
+ }
+ const pokemon=matches.filter(c=>c.supertype==='Pokémon');
+ if(pokemon.length){
+  const evolving=pokemon.some(c=>c.evolvesFrom&&battlefield.some(u=>canEvolve(c,card(u.id))));
+  const setup=pokemon.some(c=>isBasicPokemon(c)&&p.bench.length<5);
+  const duplicate=p.hand.filter(id=>card(id)?.name===name).length;
+  return (evolving?240:setup?130:45)+
+   Math.max(0,...pokemon.map(c=>(Number(c.hp)||0)*.2))-
+   duplicate*75;
+ }
+ const trainer=matches.some(c=>c.supertype==='Trainer');
+ if(trainer){
+  if(name==='Professor Oak'||name==='Professor Elm')return p.handCount<=2?190:65;
+  if(name==='Bill')return p.deckCount>3?185:20;
+  if(name==='Energy Removal')return q.active?.energies?.length?175:50;
+  if(name==='Switch')return p.active?.status?220:55;
+  if(name==='Gust of Wind')return q.bench.length?150:30;
+  return 80;
+ }
+ return 0;
+}
+function trainerSelectionValue(option,decision,o,cfg){
+ if(!cfg?.trainerSelections||cfg.level<4)return null;
+ const id=option.id,label=option.label||'',kind=decision.kind||'';
+ const ownedChoice=/^deck:|^hand:|^n:/.test(id);
+ if(!ownedChoice)return null;
+ const select=/^(find|recover|gearTrainer|rodCard|basic|evolution)$/.test(kind);
+ const discard=/^(cost|trade|discard)$/.test(kind);
+ if(!select&&!discard)return null;
+ const searched=searchedCardValue(label,o);
+ if(select)return searched;
+ // Payment from hand: the printed card label is revealed to this player.
+ // Keep matching evolution lines, color-critical Energy and useful Trainers.
+ // A basic with no Bench room is typically cheaper to give up.
+ if(discard){
+  const isEnergyName=/ Energy$/.test(label);
+  const isPokemonName=[...CATALOG.values()].some(c=>c.name===label&&c.supertype==='Pokémon');
+  const value=searched;
+  const penalty=isEnergyName?25:isPokemonName?15:5;
+  return 230-value-penalty;
+ }
+ return null;
+}
+// A search decision is worthless if Champion chooses to end the turn rather
+// than USE the searchable Trainer. Tie the *play* opportunity to public setup
+// needs and own known hand. Do not assume an exact card is in the unknown deck.
+function trainerSearchPlayBonus(action,o,cfg){
+ if(!cfg?.trainerSelections||cfg.level<4||o.phase!=='game'||action.type!=='play_trainer')return 0;
+ const p=o.self,name=card(p.hand[action.payload.handIndex])?.name;
+ if(!name||p.deckCount===0)return 0;
+ const units=[p.active,...p.bench].filter(Boolean),onBench=p.bench.length;
+ const hasBasic=p.hand.some((id,i)=>i!==action.payload.handIndex&&isBasicPokemon(card(id)));
+ const readyEvolution=p.hand.some((id,i)=>{
+  if(i===action.payload.handIndex)return false;
+  const c=card(id);
+  return c?.evolvesFrom&&units.some(u=>canEvolve(c,card(u.id)));
+ });
+ if(name==="Brock's Training Method"){
+  const brock=units.some(u=>card(u.id)?.name?.startsWith("Brock's "));
+  return brock&&!readyEvolution?190:0;
+ }
+ if(name==="The Boss's Way"){
+  // The classic Rocket Trainer finds Dark Evolutions for a visible evolving
+  // Basic (Dark Muk can evolve from Grimer, for example).
+  const darkLine=units.some(u=>[...CATALOG.values()].some(c=>
+   c.name.startsWith('Dark ')&&c.evolvesFrom&&canEvolve(c,card(u.id))));
+  return darkLine&&!readyEvolution?180:0;
+ }
+ if(name==='Energy Search'){
+  const canAttach=!p.energyUsed&&units.length>0;
+  const energyInHand=p.hand.some((id,i)=>i!==action.payload.handIndex&&isEnergy(card(id)));
+  return canAttach&&!energyInHand?170:0;
+ }
+ if(name==='Poké Ball'){
+  // One fair heads roll may find an otherwise unavailable evolution or Basic.
+  return !hasBasic&&onBench<2?95:!readyEvolution?45:0;
+ }
+ if(name==='Pokémon Trader'){
+  const tradeable=p.hand.some((id,i)=>i!==action.payload.handIndex&&card(id)?.supertype==='Pokémon');
+  return tradeable&&!readyEvolution?115:0;
+ }
+ if(name==='Computer Search'){
+  const expendable=p.hand.length>3;
+  return expendable&&!readyEvolution?85:0;
+ }
+ return 0;
+}
+// Energy Retrieval is a staged public Trainer action. Preserve the useful
+// evolution during its hand payment, then recover the Basic Energy that can
+// immediately enable a stronger attack. Both zones are own/public.
+// A choice belongs to the acting player only if exposed as an actual
+// pendingDecision option. deck:<index> exposes JUST THE NAME and never the
+// concealed deck ID. disc:<index> is a public discard index; n:<index> is
+// the player's OWN hand, used by Trainer costs. These namespaces matter.
+function comboChoiceValue(option,decision,o,cfg){
+ if(!cfg?.comboSearch||cfg.level<4||!o.pendingTrainerName)return null;
+ const name=o.pendingTrainerName,id=option.id||'',kind=decision.kind||'',p=o.self;
+ const handCost=(kind==='cost'&&['Energy Retrieval','Computer Search','Item Finder'].includes(name))||
+  (kind==='serCost'&&name==='Super Energy Retrieval')||
+  (kind==='trade'&&name==='Pokémon Trader');
+ if(handCost&&/^n:\d+$/.test(id)){
+  const n=Number(id.slice(2)),c=card(p.hand?.[n]);
+  if(!c)return null;
+  const units=[p.active,...p.bench].filter(Boolean);
+  const matchingEvolution=c.evolvesFrom&&units.some(u=>canEvolve(c,card(u.id)));
+  if(matchingEvolution)return -280;
+  const isCriticalEnergy=isEnergy(c)&&!p.energyUsed&&units.some(u=>
+   damageAfterAttachment(u,c.id,o.opponent.active)>strongestAffordableAttack(u,o.opponent.active));
+  if(isCriticalEnergy)return -210;
+  if(isEnergy(c)&&!p.energyUsed)return -115;
+  if(isBasicPokemon(c)&&p.bench.length===0)return -135;
+  const sameInHand=p.hand.filter(id=>id===c.id).length;
+  if(sameInHand>1)return 175;
+  // Don't burn unique search, hand-refresh or defense cards just to take a
+  // speculative future action, especially when a real combo is in hand.
+  if(['Professor Oak','Bill','Computer Search','Item Finder'].includes(c.name))return -70;
+  return c.supertype==='Trainer'?110:isBasicPokemon(c)?90:25;
+ }
+ // Recoveries use 'disc', not 'n'; evaluating the old n: alias silently
+ // disabled every Energy Retrieval choice in real authenticated matches.
+ const fromDiscard=/^disc:\d+$/.test(id);
+ const ownRecovery=(name==='Energy Retrieval'&&kind==='recover')||
+  (name==='Super Energy Retrieval'&&kind==='serEnergy');
+ if(ownRecovery&&fromDiscard){
+  const n=Number(id.slice(5)),energy=p.discard?.[n];
+  if(!basicRetrievalEnergy(energy)||card(energy)?.name!==option.label)return null;
+  let best=0;
+  for(const u of [p.active,...p.bench].filter(Boolean)){
+   const old=strongestAffordableAttack(u,o.opponent.active);
+   const direct=damageAfterAttachment(u,energy,o.opponent.active);
+   let withEvolution=direct;
+   for(const id of p.hand||[]){
+    const next=card(id);
+    if(next?.evolvesFrom&&canEvolve(next,card(u.id))&&u.playedTurn<o.round)
+     withEvolution=Math.max(withEvolution,damageAfterAttachment({...u,id},energy,o.opponent.active));
+   }
+   best=Math.max(best,(withEvolution-old)*2+(direct>old?60:0)+
+    Math.max(0,energyValue(u,energy))*0.45);
+  }
+  return 45+best;
+ }
+ // The reducer's authorized search prompt reveals candidate NAMES to this
+ // player only. Never read or infer the private shuffled deck behind deck:n.
+ const canSearch=name==='Computer Search'||name==='Pokémon Trader'||
+  name==='Energy Search'||name==="The Boss's Way"||
+  name==="Brock's Training Method"||name==='Item Finder';
+ if(canSearch&&((kind==='find'&&/^deck:\d+$/.test(id))||
+  (kind==='recover'&&fromDiscard))){
+  if(!option.label)return null;
+  const chosen=[...CATALOG.values()].find(c=>c.name===option.label);
+  // Once the authoritative reducer exposes a card's name in this player's
+  // legitimate search choices, value the *specific* card's same-turn use.
+  // This does not inspect any concealed deck ID or predict an unseen draw.
+  if(chosen&&kind==='find'){
+   const p=o.self,units=[p.active,...p.bench].filter(Boolean);
+   if(chosen.evolvesFrom){
+    const ready=units.some(u=>u.playedTurn<o.round&&canEvolve(chosen,card(u.id)));
+    if(ready){
+     const base=searchedCardValue(option.label,o);
+     const attackGain=Math.max(0,...units.filter(u=>u.playedTurn<o.round&&canEvolve(chosen,card(u.id)))
+      .map(u=>strongestAffordableAttack({...u,id:chosen.id},o.opponent.active)-
+       strongestAffordableAttack(u,o.opponent.active)));
+     return base+95+Math.min(150,attackGain*2);
+    }
+   }
+   if(isEnergy(chosen)&&!p.energyUsed&&p.active){
+    const gain=damageAfterAttachment(p.active,chosen.id,o.opponent.active)-
+     strongestAffordableAttack(p.active,o.opponent.active);
+    if(gain>0)return searchedCardValue(option.label,o)+90+Math.min(110,gain*2);
+   }
+  }
+  return searchedCardValue(option.label,o);
+ }
+ return null;
+}
 function choiceValue(option,decision,o,cfg){
  const id=option.id,label=option.label||'',kind=decision.kind||'',ctx=decision.label||'';
+ const comboChoice=comboChoiceValue(option,decision,o,cfg);
+ if(comboChoice!==null)return comboChoice;
+ const trained=trainerSelectionValue(option,decision,o,cfg);
+ if(trained!==null)return trained;
  if(/^prize:/.test(id))return 1;
  if(/^n:\d+$/.test(id)&&cfg?.level>=3){
   const index=Number(id.slice(2));
@@ -380,17 +609,35 @@ function choiceValue(option,decision,o,cfg){
    const unit=slotUnit(o.opponent,o.pendingTrainerTarget);
    return energyRemovalChoiceValue(unit,o.self.active,index,true);
   }
-  if(/^Discard one of your attached Energy$/i.test(ctx)&&o.pendingTrainerSource!==null){
-   const unit=slotUnit(o.self,o.pendingTrainerSource);
-   return energyRemovalChoiceValue(unit,o.opponent.active,index,false);
+  if(/^Discard one (?:of your )?attached Energy$/i.test(ctx)){
+   const chosenSlot=o.pendingTrainerSource??o.pendingTrainerTarget;
+   if(chosenSlot!==null&&chosenSlot!==undefined){
+    const unit=slotUnit(o.self,chosenSlot);
+    return energyRemovalChoiceValue(unit,o.opponent.active,index,false);
+   }
   }
  }
  if(/^count:/.test(id))return /draw/i.test(ctx)?Number(id.slice(6))*20:0;
  if(/^energy:/.test(id)&&/discard|retreat|pay/i.test(ctx))return /Double Colorless|Rainbow/i.test(label)?-15:10;
  if(/^bench:/.test(id)||/^slot:/.test(id)){
-  const n=Number(id.split(':')[1]),own=/your|friendly|own|promot|receiv|retreat/i.test(ctx)&&!/opponent|opposing|enemy/i.test(ctx);
+  const n=Number(id.split(':')[1]),own=
+   (/your|friendly|own|promot|receiv|retreat/i.test(ctx)||
+    o.pendingTrainerName==='Moo-Moo Milk'&&/heal/i.test(ctx))&&
+   !/opponent|opposing|enemy/i.test(ctx);
   const target=slotUnit(own?o.self:o.opponent,n);
   if(!target)return 0;
+  if(cfg?.level>=4&&own&&o.pendingTrainerName==='Moo-Moo Milk'&&/heal/i.test(ctx))
+   return Math.min(20,target.damage||0)*2.5+
+    ((target.damage||0)>=40?60:0);
+  if(cfg?.level>=4&&own&&/^Choose one of your Pokémon$/i.test(ctx)&&
+    ['Potion','Super Potion'].includes(o.pendingTrainerName)){
+   const healed=Math.min(o.pendingTrainerName==='Potion'?20:40,target.damage||0);
+   const threat=o.opponent.active&&!['Asleep','Paralyzed'].includes(o.opponent.active.status)?
+    strongestAffordableAttack(o.opponent.active,target):0;
+   const survives=threat>=hpRemaining(target)&&
+    threat<hpRemaining({...target,damage:Math.max(0,target.damage-healed)});
+   return healed*2.5+(survives?160:0);
+  }
   if(cfg?.level>=3&&/^slot:/.test(id)&&/^Choose opposing Pokémon$/i.test(ctx))
    return energyDenialValue(target,o.self.active,n===-1);
   if(/promot|retreat|switch.*your/i.test(ctx)){
@@ -566,6 +813,112 @@ function energyHorizonBonus(action,o,cfg){
  const surplus=direct===0&&changed-before<=1?-35:0;
  return Math.max(-85,Math.min(160,expected+activeBias+weakDefense+surplus))*cfg.style.setup;
 }
+// Preserve expensive healing Trainers until their health gain outweighs the
+// *known* Energy lost, especially when that Energy currently pays for attacks.
+// The opponent's concealed hand is not consulted; current attack affordability
+// and present damage are the only inputs.
+function trainerTacticsBonus(action,o,cfg){
+ if(!cfg.trainerTactics||cfg.level<4||action.type!=='play_trainer'||o.phase!=='game')return 0;
+ const p=o.self,q=o.opponent,name=card(p.hand[action.payload.handIndex])?.name;
+ const own=[p.active,...p.bench].filter(Boolean);
+ if(name==='Pokémon Center'){
+  const damaged=own.filter(u=>u.damage>0);
+  if(!damaged.length)return -250;
+  const cured=damaged.reduce((v,u)=>v+u.damage,0);
+  const lostEnergy=damaged.reduce((v,u)=>v+(u.energies?.length||0),0);
+  const ready=strongestAffordableAttack(p.active,q.active);
+  const afterActive=p.active?.damage>0?{...p.active,energies:[]}:p.active;
+  const attackLost=Math.max(0,ready-strongestAffordableAttack(afterActive,q.active));
+  const threat=q.active&&!['Asleep','Paralyzed'].includes(q.active.status)?
+   strongestAffordableAttack(q.active,p.active):0;
+  const savesActive=p.active?.damage>0&&threat>=hpRemaining(p.active)&&
+   threat<hpRemaining({...p.active,damage:0});
+  // Early minor healing must not destroy several turns of Energy development.
+  return Math.min(165,cured*.7+(savesActive?120:0))-
+   lostEnergy*65-attackLost*1.55-50;
+ }
+ if(name==='Super Potion'){
+  const harmed=own.filter(u=>u.damage>0&&u.energies?.length);
+  if(!harmed.length)return -250;
+  // Scorer of the pending target and discarded Energy makes the final choice;
+  // do not play merely to discard an essential attached Energy.
+  const benefit=Math.max(...harmed.map(u=>{
+   const old=strongestAffordableAttack(u,q.active);
+   // The payment prompt permits choosing which Energy to discard. Value the
+   // *best* publicly available payment, not an arbitrary first attached card.
+   const leastLoss=Math.min(...u.energies.map((id,i)=>{
+    const post={...u,energies:u.energies.filter((_,j)=>j!==i)};
+    const attackLost=Math.max(0,old-strongestAffordableAttack(post,q.active));
+    return attackLost*1.5+energyPool({energies:[id]}).length*12;
+   }));
+   return Math.min(40,u.damage)*1.1-leastLoss;
+  }));
+  return benefit-135;
+ }
+ if(name==='Potion'){
+  const damaged=own.filter(u=>u.damage>0);
+  if(!damaged.length)return -160;
+  const active=p.active,qAttack=q.active&&!['Asleep','Paralyzed'].includes(q.active.status)?
+   strongestAffordableAttack(q.active,active):0;
+  const lethal=qAttack>0&&qAttack>=hpRemaining(active);
+  const save=lethal&&qAttack<hpRemaining({...active,damage:Math.max(0,active.damage-20)});
+  const amount=Math.max(...damaged.map(u=>Math.min(u.damage,20)));
+  return save?150:amount>=20?-105:-135;
+ }
+ if(name==='Switch'&&p.bench.length){
+  const before=p.active,after=p.bench.reduce((best,u)=>{
+   const power=strongestAffordableAttack(u,q.active);
+   return power>best?power:best;
+  },0);
+  const old=strongestAffordableAttack(before,q.active);
+  if(before?.status&&after>old)return 80;
+  return !before?.status&&after<=old?-100:0;
+ }
+ if(name==='Moo-Moo Milk'){
+  const damaged=own.filter(u=>u.damage>0);
+  if(!damaged.length)return -220;
+  const best=Math.max(...damaged.map(u=>u.damage));
+  const active=p.active,qAttack=q.active&&!['Asleep','Paralyzed'].includes(q.active.status)?
+   strongestAffordableAttack(q.active,active):0;
+  // Two fair flips heal 20 on average. A serious damaged Pokémon gets more
+  // value than one with a single counter; no future flip is read.
+  const maySave=active?.damage>0&&qAttack>0&&qAttack>=hpRemaining(active)&&
+   qAttack<hpRemaining({...active,damage:Math.max(0,active.damage-20)});
+  return maySave?135:best>=40?75:best>=20?35:-120;
+ }
+ if(name==="Bill's Teleporter")
+  return p.deckCount>=5?55:-150; // 50% chance to draw four, never assume heads
+ if(name==='Professor Elm'){
+  if(p.deckCount<=7)return -170;
+  const hasPlayableEnergy=!p.energyUsed&&p.hand.some((id,i)=>
+   i!==action.payload.handIndex&&isEnergy(card(id)))&&own.length>0;
+  const canEvolveNow=p.hand.some((id,i)=>{
+   if(i===action.payload.handIndex)return false;
+   const c=card(id);
+   return c?.evolvesFrom&&own.some(u=>u.playedTurn<o.round&&canEvolve(c,card(u.id)));
+  });
+  // Elm locks out all other Trainers for the turn: play useful hand cards
+  // first, or refill immediately if the hand is genuinely nearly empty.
+  const otherTrainer=p.hand.some((id,i)=>i!==action.payload.handIndex&&
+   card(id)?.supertype==='Trainer');
+  return (p.handCount<=3?100:-65)-
+   (hasPlayableEnergy?125:0)-(canEvolveNow?130:0)-(otherTrainer?65:0);
+ }
+ if(name==='Professor Oak'){
+  // Discarding known, immediately playable Energy/evolutions wastes tempo.
+  // Complete the development before Oak; after that, the normal Oak score
+  // decides whether the depleted hand is worth refreshing.
+  const playableEnergy=!p.energyUsed&&p.hand.some((id,i)=>i!==action.payload.handIndex&&
+   isEnergy(card(id)))&&own.length>0;
+  const playableEvolution=p.hand.some((id,i)=>{
+   if(i===action.payload.handIndex)return false;
+   const c=card(id);
+   return c?.evolvesFrom&&own.some(u=>u.playedTurn<o.round&&canEvolve(c,card(u.id)));
+  });
+  return (playableEnergy?-125:0)+(playableEvolution?-130:0);
+ }
+ return 0;
+}
 function score(a,o,cfg,used){
  const p=o.self,q=o.opponent,style=cfg.style,{type,payload:v}=a;
  if(type==='setup_confirm')return 115+p.bench.length*10;
@@ -713,6 +1066,10 @@ function score(a,o,cfg,used){
  }
  if(type==='use_power')return 85*style.setup;
  if(type==='use_stadium')return 85;
+ // Without a meaningful end-turn alternative, a perfect-greedy CPU burns
+ // every Trainer it holds, even Oak with a strong hand or a pointless Switch.
+ // Conserving resources is an explicit choice, not a forced rule change.
+ if(type==='end_turn')return cfg.actionDiscipline&&cfg.level>=4?82:0;
  return 0;
 }
 
@@ -758,6 +1115,12 @@ function projectedPrep(board,action,round){
   if(!u||!canEvolve(c,card(u.id))||u.playedTurn>=round)return null;
   u.id=id;
   u.playedTurn=round;
+  // Match evolution's treatment of Special Conditions. Cached/temporary
+  // attacks of the previous stage must not survive a hypothetical evolution.
+  u.status=null;
+  delete u.effectiveAttacks;
+  delete u.amnesia;
+  delete u.gymAttackCooldown;
  }else{
   if(!isBasicPokemon(c))return null;
   next.bench.push({id,damage:0,energies:[],status:null,playedTurn:round});
@@ -796,13 +1159,210 @@ function planningBonus(action,o,cfg){
  return Math.max(-45,Math.min(135,immediate+synergy))*cfg.style.damage;
 }
 
+// Search same-turn setup combinations on a masked, public-state projection.
+// This never calls reduce, reads the opponent hand/deck, or anticipates coin
+// flips. Only permitted actions are owned-hand evolve and one Energy attach.
+// Bounded to 3 preparation actions and 96 nodes per first move. Attacks are
+// evaluated at the leaf; no hypothetical damage is committed to the engine.
+function searchPrepActions(board,o){
+ const options=[];
+ for(let i=0;i<board.hand.length;i++){
+  const c=card(board.hand[i]);if(!c)continue;
+  if(!board.energyUsed&&isEnergy(c))
+   for(const slot of [-1,...board.bench.map((_,j)=>j)])
+    if(slot===-1?board.active:board.bench[slot])
+     options.push(command('attach_energy',{handIndex:i,slot}));
+  if(c.evolvesFrom)for(const slot of [-1,...board.bench.map((_,j)=>j)]){
+   const u=slot===-1?board.active:board.bench[slot];
+   if(u&&u.playedTurn<o.round&&canEvolve(c,card(u.id)))
+    options.push(command('evolve',{handIndex:i,slot}));
+  }
+ }
+ return options;
+}
+function searchBoardValue(board,o){
+ if(!board.active||!o.opponent.active)return 0;
+ const target=o.opponent.active;
+ const attackValue=projectedAttackValue(board.active,target,o.turnSerial);
+ const incoming=strongestAffordableAttack(target,board.active);
+ const isThreatened=!['Asleep','Paralyzed'].includes(target.status)&&
+  incoming>=hpRemaining(board.active)&&incoming>0;
+ const readyBackup=board.bench.some(u=>projectedAttackValue(u,target,o.turnSerial)>0);
+ const safeBackup=board.bench.some(u=>strongestAffordableAttack(target,u)<hpRemaining(u));
+ const survivorBonus=isThreatened?(safeBackup?22:readyBackup?7:-18):0;
+ return attackValue+survivorBonus;
+}
+function turnSequenceBonus(action,o,cfg){
+ if(!cfg.turnSearch||cfg.level<4||o.phase!=='game'||!o.self.active)return 0;
+ if(action.type!=='attach_energy'&&action.type!=='evolve')return 0;
+ const baseline=prepBoard(o),first=projectedPrep(baseline,action,o.round);
+ if(!first)return 0;
+ const initial=searchBoardValue(baseline,o);
+ const firstValue=searchBoardValue(first,o);
+ let best=firstValue,bestDepth=0,nodes=0;
+ // Small DFS over the CPU's own hand. Each continuation is a legal projection
+ // of its once-per-turn attachment and no turn-1 evolution rules.
+ const visit=(board,depth)=>{
+  if(depth>=2||nodes>=96)return;
+  for(const nextAction of searchPrepActions(board,o)){
+   if(nodes>=96)return;
+   nodes++;
+   const next=projectedPrep(board,nextAction,o.round);
+   if(!next)continue;
+   const v=searchBoardValue(next,o);
+   if(v>best){best=v;bestDepth=depth+1;}
+   visit(next,depth+1);
+  }
+ };
+ visit(first,0);
+ // Prefer a currently executable better attack, especially a knockout.
+ // An impressive evolution that stops all attacks is not a good same-turn line.
+ const improvement=best-initial;
+ const net=improvement*2.2-(bestDepth*7);
+ const stranded=firstValue<initial&&best<=initial+1;
+ const immediateLost=initial>=20&&firstValue<initial-15&&best<=initial+1;
+ const penalty=stranded?(immediateLost?145:65):0;
+ return Math.max(-200,Math.min(250,net-penalty))*cfg.style.damage;
+}
+// Bounded same-turn combination search. Trainer effects are represented only
+// when deterministic from OUR OWN PUBLIC DISCARD and already-held cards. This
+// models legal Energy Retrieval -> evolution -> attachment -> attack and an
+// attacking PlusPower bonus; it NEVER accesses deck order, opponent hand,
+// future coin rolls, or reducer previews. The real reducer performs all plays.
+const basicRetrievalEnergy=id=>/^(Grass|Fire|Water|Lightning|Psychic|Fighting) Energy$/.test(card(id)?.name||'');
+function comboAttackValue(board,o){
+ const active=board.active,enemy=o.opponent.active;
+ if(!active||!enemy||['Asleep','Paralyzed'].includes(active.status))return 0;
+ const attacks=active.effectiveAttacks||card(active.id)?.attacks||[];
+ const pool=energyPool(active),hp=hpRemaining(enemy);
+ let best=0;
+ for(let i=0;i<attacks.length;i++){
+  const atk=attacks[i],script=ATTACK.compile(atk);
+  if(!script||!canPayEnergy(atk.cost||[],pool))continue;
+  if(active.amnesia?.index===i&&active.amnesia.expires>o.turnSerial)continue;
+  if(active.gymAttackCooldown?.expires>o.turnSerial&&
+   (active.gymAttackCooldown.index===null||active.gymAttackCooldown.index===i))continue;
+  const damage=estimatedDamage(atk,active,enemy);
+  // PlusPower adds 10 damage only if the attack already deals damage. Exact
+  // guarantee for deterministic attacks; coin-based attacks use expectation.
+  const boost=damage>0?10*(board.plusPower||0):0;
+  const actual=Math.min(hp,damage+boost);
+  const coin=/flip (?:a |one |\d+ )?coins?|heads|tails/i.test(atk.text||'');
+  const certainty=coin?.5:1;
+  const ko=damage+boost>=hp?certainty:0;
+  best=Math.max(best,actual*1.05+ko*115);
+ }
+ return best;
+}
+function comboValue(board,o){
+ const base=comboAttackValue(board,o);
+ const ready=board.bench.some(u=>projectedAttackValue(u,o.opponent.active,o.turnSerial)>0);
+ const backup=o.opponent.active&&board.bench.length&&(ready?11:4)||0;
+ return base+backup;
+}
+function comboActions(board,o){
+ const actions=searchPrepActions(board,o);
+ for(let i=0;i<board.hand.length;i++){
+  const name=card(board.hand[i])?.name;
+  if(name==='PlusPower'&&board.active)
+   actions.push(command('play_trainer',{handIndex:i}));
+  if(name==='Energy Retrieval'&&board.discard.some(basicRetrievalEnergy)&&board.hand.length>=2)
+   actions.push(command('play_trainer',{handIndex:i}));
+ }
+ return actions;
+}
+function comboProjected(board,action,o){
+ if(action.type!=='play_trainer'){
+  const next=projectedPrep(board,action,o.round);
+  return next?[{...next,discard:[...board.discard],plusPower:board.plusPower||0}]:[];
+ }
+ const i=action.payload.handIndex,name=card(board.hand[i])?.name;
+ if(name==='PlusPower'&&board.active){
+  return [{...board,hand:board.hand.filter((_,n)=>n!==i),
+   discard:[...board.discard],plusPower:(board.plusPower||0)+1}];
+ }
+ if(name!=='Energy Retrieval'||board.hand.length<2)return [];
+ const energies=board.discard.map((id,n)=>({id,n})).filter(x=>basicRetrievalEnergy(x.id)).slice(0,8);
+ if(!energies.length)return [];
+ const recovered=energies.map(x=>[x]);
+ for(let j=0;j<energies.length;j++)for(let k=j+1;k<energies.length&&recovered.length<28;k++)
+  recovered.push([energies[j],energies[k]]);
+ const results=[];
+ // One other card MUST be paid from the hand. Different payments are tested
+ // separately so a valuable evolution cannot also be kept in a fake rollout.
+ for(let cost=0;cost<board.hand.length;cost++){
+  if(cost===i)continue;
+  for(const take of recovered){
+   if(results.length>=64)return results;
+   const removed=new Set([i,cost]);
+   const pulled=new Set(take.map(x=>x.n));
+   results.push({...board,hand:[...board.hand.filter((_,n)=>!removed.has(n)),...take.map(x=>x.id)],
+    discard:board.discard.filter((_,n)=>!pulled.has(n)),
+    plusPower:board.plusPower||0});
+  }
+ }
+ return results;
+}
+function comboSequenceBonus(action,o,cfg){
+ if(!cfg.comboSearch||cfg.level<4||o.phase!=='game'||!o.self.active||!o.opponent.active)return 0;
+ if(!['evolve','attach_energy','play_trainer'].includes(action.type))return 0;
+ if(action.type==='play_trainer'&&!['PlusPower','Energy Retrieval'].includes(
+  card(o.self.hand[action.payload.handIndex])?.name))return 0;
+ // Chaos Gym first requires a coin flip and can redirect the Trainer.
+ // Never treat a random, opponent-controlled result as a guaranteed line.
+ if(card(o.stadium?.id)?.name==='Chaos Gym')return 0;
+ // Once a search Trainer resolves, the resulting evolution and Energy are
+ // in our hand, but the Trainer itself is gone. Continue that concrete,
+ // visible two-card plan rather than abandoning it in favor of a random Bench
+ // attachment. No imaginary draws or extra attachments are allowed.
+ const hasTrainer=o.self.hand.some(id=>
+  ['PlusPower','Energy Retrieval'].includes(card(id)?.name));
+ const canFinishEvolution=!o.self.energyUsed&&o.self.active.playedTurn<o.round&&
+  o.self.hand.some(id=>isEnergy(card(id)))&&
+  o.self.hand.some(id=>{
+   const c=card(id);return c?.evolvesFrom&&canEvolve(c,card(o.self.active.id));
+  });
+ // Keep ordinary setup cheap unless an actual own-hand Trainer or a legal,
+ // immediate evolution+Energy chain is present.
+ if(action.type!=='play_trainer'&&!hasTrainer&&!canFinishEvolution)return 0;
+ const root={...prepBoard(o),discard:[...(o.self.discard||[])],plusPower:0};
+ const initial=comboValue(root,o);
+ let best=-Infinity,bestDepth=0,nodes=0;
+ const first=comboProjected(root,action,o);
+ if(!first.length)return 0;
+ const visit=(board,depth)=>{
+  const v=comboValue(board,o);
+  if(v>best){best=v;bestDepth=depth;}
+  if(depth>=3||nodes>=96)return;
+  for(const nextAction of comboActions(board,o)){
+   if(nodes>=96)break;
+   const branches=comboProjected(board,nextAction,o);
+   for(const next of branches){
+    if(nodes>=96)break;
+    nodes++;
+    visit(next,depth+1);
+   }
+  }
+ };
+ for(const state of first){if(nodes>=96)break;nodes++;visit(state,0);}
+ const gain=best-initial;
+ // A combo can deserve a preparation action even if it does no damage on
+ // its first step, but cannot justify spending resources with no attack gain.
+ const reward=gain*2.15-bestDepth*9;
+ // Preparing an Energy or evolution can be essential even if it improves
+ // NEXT TURN rather than the projected attack right now. Never suppress the
+ // existing heuristic on a non-improving preparation; the initial experiment
+ // won just 10/60 Brock matches by over-penalizing such investments.
+ if(reward<=0)return action.type==='play_trainer'?-50*cfg.style.damage:0;
+ return Math.min(action.type==='play_trainer'?270:155,reward)*cfg.style.damage;
+}
 function chooseAction(game,raw={},memo={}){
  const cfg=configuration(raw),o=observation(game,cfg.side);
  const used={trainers:memo.trainers||0,powers:memo.powers||0,powerKeys:memo.powerKeys||new Set(),stadium:!!memo.stadium};
  const actions=candidates(o,cfg,used);if(!actions.length)return null;
  const random=rng(cfg.seed+game.turnSerial*7919+(game.events?.length||0)*17011+cfg.side*31);
  const ranked=actions.map((action,i)=>({action,
-  score:score(action,o,cfg,used)+planningBonus(action,o,cfg)+prizeRaceBonus(action,o,cfg)+knockoutTempoBonus(action,o,cfg)+opponentResponseBonus(action,o,cfg)+energyHorizonBonus(action,o,cfg),tie:i}))
+  score:score(action,o,cfg,used)+planningBonus(action,o,cfg)+prizeRaceBonus(action,o,cfg)+knockoutTempoBonus(action,o,cfg)+opponentResponseBonus(action,o,cfg)+energyHorizonBonus(action,o,cfg)+turnSequenceBonus(action,o,cfg)+trainerTacticsBonus(action,o,cfg)+trainerSearchPlayBonus(action,o,cfg)+comboSequenceBonus(action,o,cfg),tie:i}))
   .sort((a,b)=>b.score-a.score||a.tie-b.tie);
  // Rank all visible options before competence-sensitive choice noise. A larger
  // *evaluation budget* should NOT widen the random window: doing so previously
@@ -823,11 +1383,11 @@ function chooseAction(game,raw={},memo={}){
  }
  return null;
 }
-function driveSide(initial,{side=1,level=3,personality='balanced',seed=1,planning,evolutionTempo,prizeRace,knockoutTempo,opponentResponse,graduatedNoise,energyHorizon,limit=200}={}){
+function driveSide(initial,{side=1,level=3,personality='balanced',seed=1,planning,evolutionTempo,prizeRace,knockoutTempo,opponentResponse,graduatedNoise,energyHorizon,turnSearch,actionDiscipline,trainerTactics,trainerSelections,comboSearch,limit=200}={}){
  let game=initial,steps=0;const commands=[],memo={trainers:0,powers:0,powerKeys:new Set(),stadium:false};
  while(!game.over&&steps<limit){
   const beforeTurn=game.turnSerial;
-  const next=chooseAction(game,{side,level,personality,seed,planning,evolutionTempo,prizeRace,knockoutTempo,opponentResponse,graduatedNoise,energyHorizon},memo);
+  const next=chooseAction(game,{side,level,personality,seed,planning,evolutionTempo,prizeRace,knockoutTempo,opponentResponse,graduatedNoise,energyHorizon,turnSearch,actionDiscipline,trainerTactics,trainerSelections,comboSearch},memo);
   if(!next){
    if(game.pendingDecision?.actor===side)throw Error('CPU unresolved choice: '+JSON.stringify({decision:game.pendingDecision,pendingAction:game.pendingAction}));
    break;
@@ -847,4 +1407,4 @@ function driveSide(initial,{side=1,level=3,personality='balanced',seed=1,plannin
 }
 function driveBot(game,limit=200,config={}){return driveSide(game,{...config,side:1,limit});}
 function propose(game,config={}){return chooseAction(game,{...config,side:1});}
-module.exports={SKILLS,CALIBRATED_SKILLS,PERSONALITIES,configuration,observation,candidates,score,knockoutChance,planningBonus,evolutionTempoPenalty,prizeRaceBonus,knockoutTempoBonus,opponentResponseBonus,energyHorizonBonus,chooseAction,driveSide,driveBot,propose};
+module.exports={SKILLS,CALIBRATED_SKILLS,PERSONALITIES,configuration,observation,candidates,score,knockoutChance,planningBonus,evolutionTempoPenalty,prizeRaceBonus,knockoutTempoBonus,opponentResponseBonus,energyHorizonBonus,turnSequenceBonus,trainerTacticsBonus,trainerSelectionValue,trainerSearchPlayBonus,comboSequenceBonus,comboChoiceValue,chooseAction,driveSide,driveBot,propose};

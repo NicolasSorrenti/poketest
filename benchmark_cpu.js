@@ -9,7 +9,7 @@ const {driveSide,configuration}=require('./cpu_policy');
 const {ClassicLocalService}=require('./classic_local_service');
 
 function argumentsOf(argv){
- const opts={pairs:8,maxTurns:90,seed:7391,leftLevel:5,rightLevel:1,personality:'balanced',leftDeck:'blackout',rightDeck:'blackout',leftPlanning:null,rightPlanning:null,leftEvolutionTempo:null,rightEvolutionTempo:null,leftPrizeRace:null,rightPrizeRace:null,leftKnockoutTempo:null,rightKnockoutTempo:null,leftOpponentResponse:null,rightOpponentResponse:null,leftGraduatedNoise:null,rightGraduatedNoise:null,leftEnergyHorizon:null,rightEnergyHorizon:null,targetUpsetRate:0.05,logs:null};
+ const opts={pairs:8,maxTurns:90,seed:7391,leftLevel:5,rightLevel:1,personality:'balanced',leftDeck:'blackout',rightDeck:'blackout',leftPlanning:null,rightPlanning:null,leftEvolutionTempo:null,rightEvolutionTempo:null,leftPrizeRace:null,rightPrizeRace:null,leftKnockoutTempo:null,rightKnockoutTempo:null,leftOpponentResponse:null,rightOpponentResponse:null,leftGraduatedNoise:null,rightGraduatedNoise:null,leftEnergyHorizon:null,rightEnergyHorizon:null,leftTurnSearch:null,rightTurnSearch:null,leftActionDiscipline:null,rightActionDiscipline:null,leftTrainerTactics:null,rightTrainerTactics:null,leftTrainerSelections:null,rightTrainerSelections:null,leftComboSearch:null,rightComboSearch:null,targetUpsetRate:0.05,logs:null};
  const keys={'--pairs':'pairs','--max-turns':'maxTurns','--seed':'seed','--left-level':'leftLevel','--right-level':'rightLevel',
   '--personality':'personality','--left-deck':'leftDeck','--right-deck':'rightDeck',
   '--left-planning':'leftPlanning','--right-planning':'rightPlanning',
@@ -19,11 +19,16 @@ function argumentsOf(argv){
   '--left-opponent-response':'leftOpponentResponse','--right-opponent-response':'rightOpponentResponse',
   '--left-graduated-noise':'leftGraduatedNoise','--right-graduated-noise':'rightGraduatedNoise',
   '--left-energy-horizon':'leftEnergyHorizon','--right-energy-horizon':'rightEnergyHorizon',
+  '--left-turn-search':'leftTurnSearch','--right-turn-search':'rightTurnSearch',
+  '--left-action-discipline':'leftActionDiscipline','--right-action-discipline':'rightActionDiscipline',
+  '--left-trainer-tactics':'leftTrainerTactics','--right-trainer-tactics':'rightTrainerTactics',
+  '--left-trainer-selections':'leftTrainerSelections','--right-trainer-selections':'rightTrainerSelections',
+  '--left-combo-search':'leftComboSearch','--right-combo-search':'rightComboSearch',
   '--target-upset-rate':'targetUpsetRate','--logs':'logs'};
  for(let i=0;i<argv.length;i++){
   const k=keys[argv[i]];if(!k||i===argv.length-1)throw Error('Unknown or incomplete option '+argv[i]);
   const value=argv[++i];
-  if(['leftPlanning','rightPlanning','leftEvolutionTempo','rightEvolutionTempo','leftPrizeRace','rightPrizeRace','leftKnockoutTempo','rightKnockoutTempo','leftOpponentResponse','rightOpponentResponse','leftGraduatedNoise','rightGraduatedNoise','leftEnergyHorizon','rightEnergyHorizon'].includes(k)){
+  if(['leftPlanning','rightPlanning','leftEvolutionTempo','rightEvolutionTempo','leftPrizeRace','rightPrizeRace','leftKnockoutTempo','rightKnockoutTempo','leftOpponentResponse','rightOpponentResponse','leftGraduatedNoise','rightGraduatedNoise','leftEnergyHorizon','rightEnergyHorizon','leftTurnSearch','rightTurnSearch','leftActionDiscipline','rightActionDiscipline','leftTrainerTactics','rightTrainerTactics','leftTrainerSelections','rightTrainerSelections','leftComboSearch','rightComboSearch'].includes(k)){
    if(!['true','false'].includes(value))throw Error('Planning must be true or false');
    opts[k]=value==='true';
   }else opts[k]=['pairs','maxTurns','seed','leftLevel','rightLevel','targetUpsetRate'].includes(k)?Number(value):value;
@@ -31,8 +36,8 @@ function argumentsOf(argv){
  if(!Number.isInteger(opts.pairs)||opts.pairs<1||opts.pairs>1000)throw Error('pairs must be between 1 and 1000');
  if(!Number.isInteger(opts.maxTurns)||opts.maxTurns<1||opts.maxTurns>1000)throw Error('Invalid max-turns');
  if(!Number.isFinite(opts.targetUpsetRate)||opts.targetUpsetRate<0||opts.targetUpsetRate>=.5)throw Error('Invalid target upset rate');
- configuration({level:opts.leftLevel,personality:opts.personality,planning:opts.leftPlanning??undefined,evolutionTempo:opts.leftEvolutionTempo??undefined,prizeRace:opts.leftPrizeRace??undefined,knockoutTempo:opts.leftKnockoutTempo??undefined,opponentResponse:opts.leftOpponentResponse??undefined,graduatedNoise:opts.leftGraduatedNoise??undefined,energyHorizon:opts.leftEnergyHorizon??undefined});
- configuration({level:opts.rightLevel,personality:opts.personality,planning:opts.rightPlanning??undefined,evolutionTempo:opts.rightEvolutionTempo??undefined,prizeRace:opts.rightPrizeRace??undefined,knockoutTempo:opts.rightKnockoutTempo??undefined,opponentResponse:opts.rightOpponentResponse??undefined,graduatedNoise:opts.rightGraduatedNoise??undefined,energyHorizon:opts.rightEnergyHorizon??undefined});
+ configuration({level:opts.leftLevel,personality:opts.personality,planning:opts.leftPlanning??undefined,evolutionTempo:opts.leftEvolutionTempo??undefined,prizeRace:opts.leftPrizeRace??undefined,knockoutTempo:opts.leftKnockoutTempo??undefined,opponentResponse:opts.leftOpponentResponse??undefined,graduatedNoise:opts.leftGraduatedNoise??undefined,energyHorizon:opts.leftEnergyHorizon??undefined,turnSearch:opts.leftTurnSearch??undefined,actionDiscipline:opts.leftActionDiscipline??undefined,trainerTactics:opts.leftTrainerTactics??undefined});
+ configuration({level:opts.rightLevel,personality:opts.personality,planning:opts.rightPlanning??undefined,evolutionTempo:opts.rightEvolutionTempo??undefined,prizeRace:opts.rightPrizeRace??undefined,knockoutTempo:opts.rightKnockoutTempo??undefined,opponentResponse:opts.rightOpponentResponse??undefined,graduatedNoise:opts.rightGraduatedNoise??undefined,energyHorizon:opts.rightEnergyHorizon??undefined,turnSearch:opts.rightTurnSearch??undefined,actionDiscipline:opts.rightActionDiscipline??undefined,trainerTactics:opts.rightTrainerTactics??undefined});
  return opts;
 }
 function wilson(wins,n,z=1.96){
@@ -42,11 +47,18 @@ function wilson(wins,n,z=1.96){
  return {lower:Math.max(0,mid-half),upper:Math.min(1,mid+half)};
 }
 function duel(opts,number,swap,decks){
- const profile=[{level:opts.leftLevel,personality:opts.personality,planning:opts.leftPlanning??undefined,evolutionTempo:opts.leftEvolutionTempo??undefined,prizeRace:opts.leftPrizeRace??undefined,knockoutTempo:opts.leftKnockoutTempo??undefined,opponentResponse:opts.leftOpponentResponse??undefined,graduatedNoise:opts.leftGraduatedNoise??undefined,energyHorizon:opts.leftEnergyHorizon??undefined,seed:opts.seed+number*4001+13},
-                {level:opts.rightLevel,personality:opts.personality,planning:opts.rightPlanning??undefined,evolutionTempo:opts.rightEvolutionTempo??undefined,prizeRace:opts.rightPrizeRace??undefined,knockoutTempo:opts.rightKnockoutTempo??undefined,opponentResponse:opts.rightOpponentResponse??undefined,graduatedNoise:opts.rightGraduatedNoise??undefined,energyHorizon:opts.rightEnergyHorizon??undefined,seed:opts.seed+number*4001+31}];
+ const profile=[{level:opts.leftLevel,personality:opts.personality,planning:opts.leftPlanning??undefined,evolutionTempo:opts.leftEvolutionTempo??undefined,prizeRace:opts.leftPrizeRace??undefined,knockoutTempo:opts.leftKnockoutTempo??undefined,opponentResponse:opts.leftOpponentResponse??undefined,graduatedNoise:opts.leftGraduatedNoise??undefined,energyHorizon:opts.leftEnergyHorizon??undefined,turnSearch:opts.leftTurnSearch??undefined,actionDiscipline:opts.leftActionDiscipline??undefined,trainerTactics:opts.leftTrainerTactics??undefined,trainerSelections:opts.leftTrainerSelections??undefined,comboSearch:opts.leftComboSearch??undefined,seed:opts.seed+number*4001+13},
+                {level:opts.rightLevel,personality:opts.personality,planning:opts.rightPlanning??undefined,evolutionTempo:opts.rightEvolutionTempo??undefined,prizeRace:opts.rightPrizeRace??undefined,knockoutTempo:opts.rightKnockoutTempo??undefined,opponentResponse:opts.rightOpponentResponse??undefined,graduatedNoise:opts.rightGraduatedNoise??undefined,energyHorizon:opts.rightEnergyHorizon??undefined,turnSearch:opts.rightTurnSearch??undefined,actionDiscipline:opts.rightActionDiscipline??undefined,trainerTactics:opts.rightTrainerTactics??undefined,trainerSelections:opts.rightTrainerSelections??undefined,comboSearch:opts.rightComboSearch??undefined,seed:opts.seed+number*4001+31}];
  const roleForSide=swap?[1,0]:[0,1];
  const source=swap?[decks[1],decks[0]]:decks;
- let game=createGame({decks:source,format:'classic',seed:opts.seed+number*11+101});
+ // Respect the same historical deck format used by ClassicLocalService.
+ // A Neo-theme deck is not legal under Base–Rocket; benchmarking must never
+ // silently downgrade rules or count an invalid-deck crash as a CPU defeat.
+ const allCards=source.flat();
+ const format=allCards.some(id=>/^neo[1-4]-/.test(id))?'neo-theme':
+  allCards.some(id=>/^gym[12]-/.test(id))?'gym-theme':
+  allCards.some(id=>/^base4-/.test(id))?'theme-expanded':'classic';
+ let game=createGame({decks:source,format,seed:opts.seed+number*11+101});
  const logs=[],stats={actions:0,attacks:0,attachments:0,evolutions:0,trainers:0,choices:0,decisionsMs:0,illegalActions:0,rejectedProposals:0,probedCandidates:0,byRole:[{},{}],openingBenchByRole:[0,0]};
  const start=performance.now();
  for(let side=0;side<2;side++){
@@ -90,8 +102,42 @@ function duel(opts,number,swap,decks){
  return {seed:opts.seed+number*11+101,swap,winner,finished:game.over,
   endReason,stats,logs};
 }
+// A symmetrical 60-card Base Set stress deck made only of authentic legal
+// cards. It deliberately exercises Retrieval -> Machoke + Energy and PlusPower
+// Prize KOs, which retail themes rarely draw together. Never changes cards
+// or outcomes once a match begins.
+const COMBO_LAB=[
+ ...Array(4).fill('base1-52'), // Machop
+ ...Array(4).fill('base1-34'), // Machoke
+ ...Array(2).fill('base1-7'),  // Hitmonchan
+ ...Array(2).fill('base1-61'), // Rattata
+ ...Array(4).fill('base1-81'), // Energy Retrieval
+ ...Array(4).fill('base1-84'), // PlusPower
+ ...Array(4).fill('base1-91'), // Bill
+ ...Array(4).fill('base1-88'), // Professor Oak
+ ...Array(4).fill('base1-94'), // Potion
+ ...Array(4).fill('base1-95'), // Switch
+ ...Array(24).fill('base1-97') // Fighting Energy
+];
+// A second fixed 60-card stress deck tests authenticated Computer Search,
+// Item Finder, Pokémon Trader and Retrieval choices. It is benchmark-only;
+// player-facing retail decks and historical legality are never changed.
+const SEARCH_LAB=[
+ ...Array(4).fill('base1-52'),...Array(4).fill('base1-34'),
+ ...Array(2).fill('base1-7'),...Array(2).fill('base1-61'),
+ ...Array(4).fill('base1-71'), // Computer Search
+ ...Array(4).fill('base1-74'), // Item Finder
+ ...Array(4).fill('base1-77'), // Pokémon Trader
+ ...Array(4).fill('base1-81'), // Energy Retrieval
+ ...Array(4).fill('base1-91'), // Bill
+ ...Array(4).fill('base1-94'), // Potion
+ ...Array(24).fill('base1-97') // Fighting
+];
 function arena(opts){
- const service=new ClassicLocalService(),decks=[service.decklist(opts.leftDeck),service.decklist(opts.rightDeck)];
+ const service=new ClassicLocalService();
+ const getDeck=name=>name==='cpu_combo_lab'?[...COMBO_LAB]:
+  name==='cpu_search_lab'?[...SEARCH_LAB]:service.decklist(name);
+ const decks=[getDeck(opts.leftDeck),getDeck(opts.rightDeck)];
  const matches=[];
  for(let i=0;i<opts.pairs;i++)for(const swap of [false,true])matches.push(duel(opts,i,swap,decks));
  const conclusive=matches.filter(x=>x.winner!==null);
@@ -104,7 +150,12 @@ function arena(opts){
     knockoutTempo:configuration({level:opts.leftLevel,knockoutTempo:opts.leftKnockoutTempo??undefined}).knockoutTempo,
     opponentResponse:configuration({level:opts.leftLevel,opponentResponse:opts.leftOpponentResponse??undefined}).opponentResponse,
     graduatedNoise:configuration({level:opts.leftLevel,graduatedNoise:opts.leftGraduatedNoise??undefined}).graduatedNoise,
-    energyHorizon:configuration({level:opts.leftLevel,energyHorizon:opts.leftEnergyHorizon??undefined}).energyHorizon},
+    energyHorizon:configuration({level:opts.leftLevel,energyHorizon:opts.leftEnergyHorizon??undefined}).energyHorizon,
+    turnSearch:configuration({level:opts.leftLevel,turnSearch:opts.leftTurnSearch??undefined}).turnSearch,
+    actionDiscipline:configuration({level:opts.leftLevel,actionDiscipline:opts.leftActionDiscipline??undefined}).actionDiscipline,
+    trainerTactics:configuration({level:opts.leftLevel,trainerTactics:opts.leftTrainerTactics??undefined}).trainerTactics,
+    trainerSelections:configuration({level:opts.leftLevel,trainerSelections:opts.leftTrainerSelections??undefined}).trainerSelections,
+    comboSearch:configuration({level:opts.leftLevel,comboSearch:opts.leftComboSearch??undefined}).comboSearch},
   challenger:{level:opts.rightLevel,deck:opts.rightDeck,
     planning:configuration({level:opts.rightLevel,planning:opts.rightPlanning??undefined}).planning,
     evolutionTempo:configuration({level:opts.rightLevel,evolutionTempo:opts.rightEvolutionTempo??undefined}).evolutionTempo,
@@ -112,7 +163,12 @@ function arena(opts){
     knockoutTempo:configuration({level:opts.rightLevel,knockoutTempo:opts.rightKnockoutTempo??undefined}).knockoutTempo,
     opponentResponse:configuration({level:opts.rightLevel,opponentResponse:opts.rightOpponentResponse??undefined}).opponentResponse,
     graduatedNoise:configuration({level:opts.rightLevel,graduatedNoise:opts.rightGraduatedNoise??undefined}).graduatedNoise,
-    energyHorizon:configuration({level:opts.rightLevel,energyHorizon:opts.rightEnergyHorizon??undefined}).energyHorizon},
+    energyHorizon:configuration({level:opts.rightLevel,energyHorizon:opts.rightEnergyHorizon??undefined}).energyHorizon,
+    turnSearch:configuration({level:opts.rightLevel,turnSearch:opts.rightTurnSearch??undefined}).turnSearch,
+    actionDiscipline:configuration({level:opts.rightLevel,actionDiscipline:opts.rightActionDiscipline??undefined}).actionDiscipline,
+    trainerTactics:configuration({level:opts.rightLevel,trainerTactics:opts.rightTrainerTactics??undefined}).trainerTactics,
+    trainerSelections:configuration({level:opts.rightLevel,trainerSelections:opts.rightTrainerSelections??undefined}).trainerSelections,
+    comboSearch:configuration({level:opts.rightLevel,comboSearch:opts.rightComboSearch??undefined}).comboSearch},
   personality:opts.personality,pairs:opts.pairs,totalMatches:matches.length,conclusiveMatches:conclusive.length,
   wins,losses,drawsOrTimeouts:matches.length-conclusive.length,
   deckOutLossesByRole:[0,1].map(role=>matches.filter(x=>x.endReason==='deckout'&&x.winner===1-role).length),

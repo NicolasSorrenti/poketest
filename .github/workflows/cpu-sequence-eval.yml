@@ -1,0 +1,49 @@
+name: CPU Sequence Experiment
+on:
+  push:
+    branches:
+      - 'agent/cpu-ai-sequence-*'
+  pull_request:
+    paths:
+      - 'cpu_policy.js'
+      - 'test_cpu_policy.js'
+      - 'benchmark_cpu.js'
+      - '.github/workflows/cpu-sequence-eval.yml'
+jobs:
+  sequence:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: node --check cpu_policy.js
+      - run: node test_cpu_policy.js
+      - run: node benchmark_cpu.js --pairs 40 --max-turns 120 --seed 951931 --left-level 5 --right-level 5 --left-trainer-selections true --right-trainer-selections false
+      - run: node benchmark_cpu.js --pairs 30 --max-turns 120 --seed 1051931 --left-level 5 --right-level 5 --left-trainer-selections true --right-trainer-selections false --left-deck brushfire --right-deck brushfire
+      - run: node benchmark_cpu.js --pairs 30 --max-turns 120 --seed 1151931 --left-level 5 --right-level 5 --left-trainer-selections true --right-trainer-selections false --left-deck cold_fusion --right-deck cold_fusion
+      - run: node benchmark_cpu.js --pairs 40 --max-turns 120 --seed 1251931 --left-level 5 --right-level 5 --left-trainer-selections true --right-trainer-selections false --left-deck brock --right-deck brock
+      - run: node benchmark_cpu.js --pairs 40 --max-turns 120 --seed 1351931 --left-level 5 --right-level 5 --left-trainer-selections true --right-trainer-selections false --left-deck trouble --right-deck trouble
+      - run: node benchmark_cpu.js --pairs 40 --max-turns 120 --seed 1451931 --left-level 5 --right-level 5 --left-trainer-selections true --right-trainer-selections false --left-deck brock --right-deck brock
+      - run: node benchmark_cpu.js --pairs 40 --max-turns 120 --seed 1551931 --left-level 5 --right-level 5 --left-trainer-selections true --right-trainer-selections false --left-deck trouble --right-deck trouble
+      - run: node benchmark_cpu.js --pairs 40 --max-turns 120 --seed 141991 --left-level 5 --right-level 5 --left-trainer-tactics true --right-trainer-tactics false
+      - run: node benchmark_cpu.js --pairs 30 --max-turns 120 --seed 241991 --left-level 5 --right-level 5 --left-trainer-tactics true --right-trainer-tactics false --left-deck brushfire --right-deck brushfire
+      - run: node benchmark_cpu.js --pairs 30 --max-turns 120 --seed 341991 --left-level 5 --right-level 5 --left-trainer-tactics true --right-trainer-tactics false --left-deck overgrowth --right-deck overgrowth
+      - run: node benchmark_cpu.js --pairs 40 --max-turns 120 --seed 441991 --left-level 5 --right-level 5 --left-trainer-tactics true --right-trainer-tactics false --left-deck zap --right-deck zap
+      - run: node benchmark_cpu.js --pairs 40 --max-turns 120 --seed 541991 --left-level 5 --right-level 5 --left-trainer-tactics true --right-trainer-tactics false
+      - run: node benchmark_cpu.js --pairs 40 --max-turns 120 --seed 641991 --left-level 5 --right-level 5 --left-trainer-tactics true --right-trainer-tactics false --left-deck brushfire --right-deck brushfire
+      - run: node benchmark_cpu.js --pairs 40 --max-turns 120 --seed 741991 --left-level 5 --right-level 5 --left-trainer-tactics true --right-trainer-tactics false --left-deck cold_fusion --right-deck cold_fusion
+      - run: node benchmark_cpu.js --pairs 40 --max-turns 120 --seed 841991 --left-level 5 --right-level 5 --left-trainer-tactics true --right-trainer-tactics false --left-deck hotfoot --right-deck hotfoot
+      - run: node benchmark_cpu.js --pairs 40 --max-turns 120 --seed 62531 --left-level 5 --right-level 5 --left-turn-search true --right-turn-search false
+      - run: node benchmark_cpu.js --pairs 30 --max-turns 120 --seed 72531 --left-level 5 --right-level 5 --left-turn-search true --right-turn-search false --left-deck brushfire --right-deck brushfire
+      - run: node benchmark_cpu.js --pairs 30 --max-turns 120 --seed 82531 --left-level 5 --right-level 5 --left-turn-search true --right-turn-search false --left-deck overgrowth --right-deck overgrowth
+      - run: node benchmark_cpu.js --pairs 40 --max-turns 120 --seed 33197 --left-level 5 --right-level 5 --left-action-discipline true --right-action-discipline false
+      - run: node benchmark_cpu.js --pairs 30 --max-turns 120 --seed 43197 --left-level 5 --right-level 5 --left-action-discipline true --right-action-discipline false --left-deck brushfire --right-deck brushfire
+      - run: node benchmark_cpu.js --pairs 40 --max-turns 120 --seed 53197 --left-level 5 --right-level 5 --left-action-discipline true --right-action-discipline false --left-deck overgrowth --right-deck overgrowth
+      - run: node benchmark_cpu.js --pairs 40 --max-turns 120 --seed 63197 --left-level 5 --right-level 5 --left-action-discipline true --right-action-discipline false --left-deck zap --right-deck zap
+      - run: node benchmark_cpu.js --pairs 40 --max-turns 120 --seed 73197 --left-level 5 --right-level 5 --left-action-discipline true --right-action-discipline false
+      - run: node benchmark_cpu.js --pairs 30 --max-turns 120 --seed 83197 --left-level 5 --right-level 5 --left-action-discipline true --right-action-discipline false --left-deck brushfire --right-deck brushfire
+      - run: node benchmark_cpu.js --pairs 40 --max-turns 120 --seed 93197 --left-level 5 --right-level 4 --left-action-discipline true
+      - run: node benchmark_cpu.js --pairs 30 --max-turns 120 --seed 103197 --left-level 5 --right-level 4 --left-action-discipline true --left-deck brushfire --right-deck brushfire
+      - run: node benchmark_cpu.js --pairs 30 --max-turns 120 --seed 113197 --left-level 5 --right-level 4 --left-action-discipline true --left-deck overgrowth --right-deck overgrowth

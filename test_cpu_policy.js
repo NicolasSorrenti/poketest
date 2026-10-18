@@ -134,9 +134,9 @@ const settings={level:3,personality:'balanced',side:1,seed:47};
  assert.throws(()=>profileForNpc('unknown'),/Unknown CPU NPC/);
  const service=new ClassicLocalService();
  const first=service.create({npc:'reina',seed:41,deck:'blackout',opponent:'brushfire'});
- assert.deepEqual(first.cpu,{level:4,personality:'aggressive',npc:'reina',advancedTactics:false});
+ assert.deepEqual(first.cpu,{level:4,personality:'aggressive',npc:'reina',advancedTactics:false,experimentalCombos:false});
  const second=service.create({npc:'reina',difficulty:1,personality:'defensive',seed:42});
- assert.deepEqual(second.cpu,{level:1,personality:'defensive',npc:'reina',advancedTactics:false},
+ assert.deepEqual(second.cpu,{level:1,personality:'defensive',npc:'reina',advancedTactics:false,experimentalCombos:false},
   'An RPG NPC identity must not constrain independent skill and temperament overrides');
 }
 {
@@ -349,6 +349,11 @@ const settings={level:3,personality:'balanced',side:1,seed:47};
  const after=AI.chooseAction(hidden,settings);
  assert.deepEqual(after?.command,first.command,
   'Midgame forecast must ignore unrevealed opposing hand/deck and future flips');
+ const combos={...settings,comboSearch:true};
+ const normalCombo=AI.chooseAction(game,combos);
+ const hiddenCombo=AI.chooseAction(hidden,combos);
+ assert.deepEqual(hiddenCombo?.command,normalCombo?.command,
+  'Combination planner must select the same legal move when only opponent private cards and RNG differ');
 }
 {
  const {argumentsOf,arena}=require('./benchmark_cpu');
@@ -635,6 +640,14 @@ const settings={level:3,personality:'balanced',side:1,seed:47};
   'Existing casual matches must preserve prior CPU policy by default');
  assert.throws(()=>local.create({advancedTactics:'yes'}),/boolean/);
  assert.throws(()=>local.create({advancedTactics:true,difficulty:2}),/require Expert or Champion/);
+ const combo=local.create({deck:'blackout',opponent:'blackout',seed:784,difficulty:5,experimentalCombos:true});
+ assert.equal(combo.cpu.experimentalCombos,true);
+ assert.equal(local.session(combo.token).cpuConfig.comboSearch,true,
+  'The real local duel engine must receive the experimental combo planning switch');
+ assert.equal(ordinary.cpu.experimentalCombos,false,
+  'Normal local CPU matches must not silently activate unproven combo planning');
+ assert.throws(()=>local.create({experimentalCombos:'yes'}),/boolean/);
+ assert.throws(()=>local.create({experimentalCombos:true,difficulty:3}),/require Expert or Champion/);
 }
 {
  for(let level=1;level<=5;level++){
@@ -697,6 +710,534 @@ const settings={level:3,personality:'balanced',side:1,seed:47};
   '--right-level','5','--left-energy-horizon','true','--right-energy-horizon','false']));
  assert.equal(result.baseline.energyHorizon,true);
  assert.equal(result.challenger.energyHorizon,false);
+}
+{
+ // Same-turn *sequence* regression: on a two-Fighting Energy Machop,
+ // evolving first disables Low Kick but leaves enough hand Energy for
+ // Machoke's three-Energy Karate Chop after one attach.
+ const g=createGame({decks:[deck,deck],seed:1911,format:'classic'});
+ const o=AI.observation(g,1);o.phase='game';o.turn=1;o.round=5;o.turnSerial=10;
+ o.self.active={id:IDS.machop,damage:0,playedTurn:2,
+  energies:[IDS.fight,IDS.fight],status:null};
+ o.self.bench=[{id:IDS.hit,damage:0,energies:[],playedTurn:2,status:null}];
+ o.self.hand=['base1-34',IDS.fight];o.self.energyUsed=false;
+ o.opponent.active={id:IDS.hit,damage:0,energies:[IDS.fight],status:null};
+ const expert=AI.configuration({side:1,level:5,turnSearch:true});
+ const noSearch=AI.configuration({side:1,level:5,turnSearch:false});
+ const evolve={type:'evolve',payload:{handIndex:0,slot:-1}};
+ const attach={type:'attach_energy',payload:{handIndex:1,slot:-1}};
+ const multi=AI.turnSequenceBonus(evolve,o,expert);
+ assert.ok(multi>35,
+  'Champion must value completing evolve + attach into a stronger immediate attack');
+ assert.ok(AI.turnSequenceBonus(attach,o,expert)>35,
+  'Champion must recognize attach + evolve yields the same affordable attack');
+ assert.equal(AI.turnSequenceBonus(evolve,o,noSearch),0,
+  'Existing production CPU remains available as paired-match control');
+ const noEnergy=structuredClone(o);noEnergy.self.hand=['base1-34'];
+ assert.ok(AI.turnSequenceBonus(evolve,noEnergy,expert)<-90,
+  'Evolving without the Energy to attack should lose tempo and be penalized');
+ const sleeping=structuredClone(o);
+ sleeping.self.active.status='Asleep';
+ sleeping.self.active.effectiveAttacks=CATALOG.get(IDS.machop).attacks;
+ assert.ok(AI.turnSequenceBonus(evolve,sleeping,expert)>30,
+  'Evolution cures Sleep and must replace any cached prior-stage attack list');
+
+ const hidden=structuredClone(g);
+ if(hidden.players[0].deck.length&&hidden.players[0].hand.length)
+  [hidden.players[0].deck[0],hidden.players[0].hand[0]]=
+   [hidden.players[0].hand[0],hidden.players[0].deck[0]];
+ hidden.rngState=(hidden.rngState^0x7ab3d98f)>>>0;
+ assert.deepEqual(AI.observation(hidden,1),AI.observation(g,1),
+  'Future coin states and concealed opponent draws must stay outside the search');
+ assert.equal(AI.turnSequenceBonus(evolve,structuredClone(o),expert),multi,
+  'Projected sequence search must be deterministic, without mutating board');
+ assert.equal(AI.configuration({level:5}).turnSearch,false);
+ assert.throws(()=>AI.configuration({turnSearch:'yes'}),/turn-search/);
+ const {argumentsOf,arena}=require('./benchmark_cpu');
+ const a=arena(argumentsOf(['--pairs','1','--max-turns','4','--left-level','5',
+  '--right-level','5','--left-turn-search','true','--right-turn-search','false']));
+ assert.equal(a.baseline.turnSearch,true);
+ assert.equal(a.challenger.turnSearch,false);
+}
+{
+ const g=createGame({decks:[deck,deck],seed:10997,format:'classic'});
+ const o=AI.observation(g,1);o.phase='game';o.turn=1;
+ o.self.active={id:IDS.hit,energies:[IDS.fight],damage:0,status:null};
+ o.opponent.active={id:IDS.hit,energies:[IDS.fight],damage:0,status:null};
+ o.self.hand=['base1-88',IDS.bill,'base1-95'];o.self.handCount=8;o.self.deckCount=30;
+ const cfg=AI.configuration({level:5,side:1,actionDiscipline:true});
+ const old=AI.configuration({level:5,side:1,actionDiscipline:false});
+ const end={type:'end_turn',payload:{}};
+ const oak={type:'play_trainer',payload:{handIndex:0}};
+ const bill={type:'play_trainer',payload:{handIndex:1}};
+ const attack={type:'attack',payload:{attackIndex:0}};
+ assert.ok(AI.score(end,o,cfg,{})>AI.score(oak,o,cfg,{}),
+  'Champion must be able to keep a good hand rather than use Oak blindly');
+ assert.ok(AI.score(bill,o,cfg,{})>AI.score(end,o,cfg,{}),
+  'Useful Bill draw remains preferable to a premature end turn');
+ assert.ok(AI.score(attack,o,cfg,{})>AI.score(end,o,cfg,{}),
+  'Resource conservation must not suppress an immediately affordable attack');
+ assert.ok(AI.score(end,o,old,{})<AI.score(oak,o,old,{}),
+  'Baseline retains prior greediness for reproducible A/B testing');
+ const beginner=AI.configuration({level:1,side:1,actionDiscipline:true});
+ assert.equal(AI.score(end,o,beginner,{}),0,
+  'Beginner has no expert conservation opportunity-cost heuristic');
+ assert.equal(AI.configuration({level:5}).actionDiscipline,true,
+  '440-game multi-deck evidence promotes Trainer conservation for Champion');
+ assert.equal(AI.configuration({level:4}).actionDiscipline,false,
+  'Expert remains independently calibrated and does not inherit Champion-only behavior');
+ assert.equal(AI.configuration({level:5,actionDiscipline:false}).actionDiscipline,false,
+  'Control policy can still be selected for a reproducible A/B baseline');
+ assert.throws(()=>AI.configuration({actionDiscipline:'true'}),/action-discipline/);
+ const {arena,argumentsOf}=require('./benchmark_cpu');
+ const x=arena(argumentsOf(['--pairs','1','--max-turns','4','--left-level','5',
+  '--right-level','5','--left-action-discipline','true','--right-action-discipline','false']));
+ assert.equal(x.baseline.actionDiscipline,true);
+ assert.equal(x.challenger.actionDiscipline,false);
+}
+{
+ const g=createGame({decks:[deck,deck],seed:1337,format:'classic'});
+ const o=AI.observation(g,1);o.phase='game';o.turn=1;o.round=5;
+ o.self.active={id:IDS.hit,damage:20,playedTurn:2,
+  energies:[IDS.fight,IDS.fight],status:null};
+ o.self.bench=[{id:IDS.machop,damage:0,energies:[],playedTurn:2,status:null}];
+ o.self.hand=['base1-85','base1-90',IDS.potion];
+ o.self.handCount=3;o.self.deckCount=32;o.self.energyUsed=false;
+ o.opponent.active={id:IDS.hit,damage:0,energies:[IDS.fight],status:null};
+ const cfg=AI.configuration({level:5,side:1,trainerTactics:true});
+ const old=AI.configuration({level:5,side:1,trainerTactics:false});
+ const action=i=>({type:'play_trainer',payload:{handIndex:i}});
+ const value=(i,c)=>AI.score(action(i),o,c,{})+AI.trainerTacticsBonus(action(i),o,c);
+ const pass=AI.score({type:'end_turn',payload:{}},o,cfg,{});
+ assert.ok(value(0,cfg)<pass,'Champion must not discard its powered Active Energy for only 20 Center healing');
+ assert.ok(value(0,old)>pass,'Baseline must reproduce premature Pokémon Center');
+ assert.ok(value(1,cfg)<pass,'Super Potion must consider losing an important attached Energy');
+ o.self.active.energies=[IDS.fight,'base1-102'];
+ const optimalPayment=AI.trainerTacticsBonus(action(1),o,cfg);
+ o.self.active.energies=['base1-102',IDS.fight];
+ assert.equal(AI.trainerTacticsBonus(action(1),o,cfg),optimalPayment,
+  'Super Potion opportunity score must choose the best payment regardless of attachment order');
+ o.self.active.energies=[IDS.fight,IDS.fight];
+ assert.ok(value(2,cfg)<pass,'Small nonlethal Potion healing should not be mandatory before ending turn');
+ o.self.active.energies=[];
+ o.self.active.damage=40;
+ assert.ok(value(0,cfg)>pass,'Center should still heal a badly damaged unpowered Active');
+ o.self.active={id:IDS.machop,damage:0,energies:[IDS.fight],playedTurn:2,status:null};
+ o.self.hand=['base1-88',IDS.fight,'base1-34'];o.self.handCount=2;
+ const oak={type:'play_trainer',payload:{handIndex:0}};
+ assert.ok(AI.trainerTacticsBonus(oak,o,cfg)<=-250,
+  'Oak should not discard immediately playable own Energy and evolution from hand');
+ assert.equal(AI.trainerTacticsBonus(oak,o,old),0);
+ o.self.hand=['base1-88'];o.self.energyUsed=true;
+ assert.equal(AI.trainerTacticsBonus(oak,o,cfg),0,
+  'Once development cards have been played, Oak is judged by hand refresh value');
+ assert.throws(()=>AI.configuration({trainerTactics:'enabled'}),/trainer-tactics/);
+ assert.equal(AI.configuration({level:5}).trainerTactics,false);
+ const {arena,argumentsOf}=require('./benchmark_cpu');
+ const output=arena(argumentsOf(['--pairs','1','--max-turns','3','--left-level','5',
+  '--right-level','5','--left-trainer-tactics','true','--right-trainer-tactics','false']));
+ assert.equal(output.baseline.trainerTactics,true);
+ assert.equal(output.challenger.trainerTactics,false);
+}
+{
+ const g=createGame({decks:[deck,deck],seed:18819,format:'classic'});
+ g.pendingAction={kind:'classic_trainer',plan:{side:1,cardId:'base1-90',
+  data:{target:['slot:-1']}}};
+ const o=AI.observation(g,1);o.phase='game';o.turn=1;
+ o.self.active={id:IDS.hit,energies:[IDS.fight,'base1-102'],damage:30,status:null};
+ o.self.bench=[{id:IDS.machop,energies:[IDS.fight],damage:10,status:null}];
+ o.opponent.active={id:IDS.hit,energies:[IDS.fight],damage:0,status:null};
+ assert.equal(o.pendingTrainerName,'Super Potion');
+ o.decision={id:'classic-trainer:200',actor:1,label:'Discard one attached Energy',
+   kind:'ownEnergy',min:1,max:1,options:[
+    {id:'n:0',label:'Fighting Energy'},{id:'n:1',label:'Water Energy'}]};
+ const champ=AI.configuration({level:5,side:1,trainerTactics:true});
+ const choose=id=>({type:'choose',payload:{decisionId:o.decision.id,selected:[id]}});
+ assert.ok(AI.score(choose('n:1'),o,champ,{})>AI.score(choose('n:0'),o,champ,{}),
+  'Super Potion must discard spare Water before necessary Fighting on Hitmonchan');
+ o.decision={...o.decision,kind:'target',label:'Choose one of your Pokémon',
+  options:[{id:'slot:-1',label:'Hitmonchan'},{id:'slot:0',label:'Machop'}]};
+ assert.ok(AI.score(choose('slot:-1'),o,champ,{})>AI.score(choose('slot:0'),o,champ,{}),
+  'Super Potion should heal the more critically damaged Active');
+ const unseen=structuredClone(g);unseen.pendingAction.plan.side=0;
+ const hidden=AI.observation(unseen,1);
+ assert.equal(hidden.pendingTrainerName,null,
+  'AI must not observe another player’s Trainer plan through its healing heuristic');
+}
+{
+ const g=createGame({decks:[deck,deck],seed:17889,format:'classic'});
+ const o=AI.observation(g,1);o.phase='game';o.turn=1;o.round=5;
+ o.self.active={id:IDS.hit,damage:40,energies:[IDS.fight],playedTurn:2,status:null};
+ o.self.bench=[];o.self.hand=['neo1-101','neo1-96','neo1-91',IDS.fight];
+ o.self.handCount=4;o.self.deckCount=20;o.self.energyUsed=false;
+ o.opponent.active={id:IDS.hit,damage:0,energies:[IDS.fight],status:null};
+ const cfg=AI.configuration({side:1,level:5,trainerTactics:true});
+ const act=i=>({type:'play_trainer',payload:{handIndex:i}});
+ const value=i=>AI.score(act(i),o,cfg,{})+AI.trainerTacticsBonus(act(i),o,cfg);
+ const pass=AI.score({type:'end_turn',payload:{}},o,cfg,{});
+ assert.ok(value(0)>pass,'Moo-Moo Milk is useful when Active has four damage counters');
+ o.self.active.damage=0;
+ assert.ok(value(0)<pass,'Do not waste Moo-Moo Milk at full health');
+ assert.ok(value(1)<pass,'Save Professor Elm until after playable Energy and other Trainers');
+ o.self.hand=['neo1-96'];o.self.handCount=1;o.self.energyUsed=true;
+ assert.ok(value(0)>pass,'Elm must become valuable once useful hand cards have been played');
+ o.self.hand=['neo1-91'];o.self.handCount=1;o.self.deckCount=20;
+ assert.ok(value(0)>pass,'Teleporter has a fair expected draw value without peeking at a coin');
+ o.self.deckCount=2;
+ assert.ok(value(0)<pass,'Avoid gambling on cards when the deck is nearly exhausted');
+}
+{
+ const {arena,argumentsOf}=require('./benchmark_cpu');
+ const report=arena(argumentsOf(['--pairs','1','--max-turns','5','--seed','141019',
+  '--left-level','5','--right-level','5','--left-deck','cold_fusion',
+  '--right-deck','cold_fusion','--left-trainer-tactics','true']));
+ assert.equal(report.totalMatches,2);
+ assert.equal(report.baseline.deck,'cold_fusion');
+ assert.equal(report.challenger.deck,'cold_fusion');
+ assert.equal(report.baseline.trainerTactics,true);
+ assert.equal(report.illegalActions,0,
+  'The historical Neo Genesis format must allow legal Cold Fusion tournament games');
+}
+{
+ const g=createGame({decks:[deck,deck],seed:118809,format:'classic'});
+ g.pendingAction={kind:'classic_trainer',plan:{side:1,cardId:'neo1-101',data:{}}};
+ const o=AI.observation(g,1);o.phase='game';o.turn=1;
+ o.self.active={id:IDS.hit,damage:40,energies:[IDS.fight],status:null};
+ o.self.bench=[{id:IDS.machop,damage:10,energies:[],status:null}];
+ o.opponent.active={id:IDS.hit,damage:50,energies:[IDS.fight],status:null};
+ o.decision={actor:1,id:'classic-trainer:11',label:'Choose Pokémon to heal',
+   kind:'healTarget',min:1,max:1,options:[
+    {id:'slot:-1',label:'Hitmonchan'},{id:'slot:0',label:'Machop'}]};
+ const champ=AI.configuration({level:5,side:1,trainerTactics:true});
+ const choose=x=>({type:'choose',payload:{decisionId:o.decision.id,selected:[x]}});
+ assert.equal(o.pendingTrainerName,'Moo-Moo Milk');
+ assert.ok(AI.score(choose('slot:-1'),o,champ,{})>
+  AI.score(choose('slot:0'),o,champ,{}),
+  'Moo-Moo Milk must heal the most damaged OWN Pokémon, not compare opposing cards');
+ g.pendingAction.plan.side=0;
+ assert.equal(AI.observation(g,1).pendingTrainerName,null,
+  'Opponent Trainer card identity must not leak via own-plan metadata');
+}
+{
+ const g=createGame({decks:[deck,deck],seed:55121,format:'classic'});
+ const o=AI.observation(g,1);o.phase='game';o.turn=1;o.round=5;
+ o.self.active={id:IDS.machop,energies:[IDS.fight],damage:0,playedTurn:2,status:null};
+ o.self.bench=[{id:IDS.rat,energies:[],damage:0,playedTurn:2,status:null}];
+ o.opponent.active={id:IDS.hit,energies:[IDS.fight],damage:0,status:null};
+ o.self.hand=[IDS.fight,'base1-34','base1-61'];
+ o.self.handCount=3;o.self.deckCount=23;
+ const cfg=AI.configuration({level:5,side:1,trainerSelections:true});
+ const old=AI.configuration({level:5,side:1});
+ const find={kind:'find',label:'Choose one Pokémon from your deck'};
+ const options=[{id:'deck:4',label:'Machoke'},{id:'deck:8',label:'Rattata'}];
+ assert.ok(AI.trainerSelectionValue(options[0],find,o,cfg)>
+  AI.trainerSelectionValue(options[1],find,o,cfg),
+  'Pokémon Trader must select the matching on-board Machop evolution');
+ assert.equal(AI.trainerSelectionValue(options[0],find,o,old),null);
+ // Machop's printed Low Kick needs one Fighting Energy. A Water Energy only
+ // helps its Colorless Bench partner; the active need should dominate.
+ o.self.active.energies=[];
+ const energyDecision={kind:'find',label:'Choose Basic Energy'};
+ const good={id:'deck:3',label:'Fighting Energy'};
+ const bad={id:'deck:5',label:'Water Energy'};
+ assert.ok(AI.trainerSelectionValue(good,energyDecision,o,cfg)>
+  AI.trainerSelectionValue(bad,energyDecision,o,cfg),
+  'Energy Search must choose Fighting that supports a ready Machop, not unrelated Water');
+ const cost={kind:'cost',label:'Choose one other card to discard'};
+ assert.ok(AI.trainerSelectionValue({id:'hand:2',label:'Rattata'},cost,o,cfg)>
+  AI.trainerSelectionValue({id:'hand:1',label:'Machoke'},cost,o,cfg),
+  'Computer Search must preserve an available evolution and pay a surplus Basic');
+ assert.equal(AI.trainerSelectionValue({id:'deck:2',label:'Professor Oak'},
+  {kind:'target',label:'Choose opposing Pokémon'},o,cfg),null,
+  'The card evaluator must never apply search logic to an unrelated choice');
+ assert.throws(()=>AI.configuration({trainerSelections:'yes'}),/trainer-selections/);
+ const {arena,argumentsOf}=require('./benchmark_cpu');
+ const outcome=arena(argumentsOf(['--pairs','1','--max-turns','4',
+  '--left-level','5','--right-level','5',
+  '--left-trainer-selections','true','--right-trainer-selections','false']));
+ assert.equal(outcome.baseline.trainerSelections,true);
+ assert.equal(outcome.challenger.trainerSelections,false);
+}
+{
+ const g=createGame({decks:[deck,deck],seed:55671,format:'classic'});
+ const o=AI.observation(g,1);o.phase='game';o.turn=1;o.round=5;
+ o.self.active={id:'gym1-66',playedTurn:2,energies:[IDS.fight],damage:0,status:null};
+ o.self.bench=[];o.self.hand=['gym1-106'];
+ o.self.handCount=1;o.self.deckCount=24;o.self.energyUsed=true;
+ o.opponent.active={id:IDS.hit,energies:[IDS.fight],damage:0,status:null};
+ const cfg=AI.configuration({side:1,level:5,trainerSelections:true});
+ const old=AI.configuration({side:1,level:5});
+ const play={type:'play_trainer',payload:{handIndex:0}};
+ const end={type:'end_turn',payload:{}};
+ const search=AI.trainerSearchPlayBonus(play,o,cfg);
+ assert.ok(search>AI.score(end,o,cfg,{})-AI.score(play,o,cfg,{}),
+  'Champion must actually play Brock Training Method when it can search an evolution');
+ assert.equal(AI.trainerSearchPlayBonus(play,o,old),0);
+ o.self.active={id:IDS.hit,playedTurn:2,energies:[IDS.fight],damage:0,status:null};
+ assert.equal(AI.trainerSearchPlayBonus(play,o,cfg),0,
+  'Do not waste a Brock search without a Brock Pokémon in play');
+ const boss=[...CATALOG.values()].find(c=>c.name==="The Boss's Way");
+ assert.ok(boss);
+ o.self.hand=[boss.id];
+ o.self.active={id:'base5-57',playedTurn:2,energies:[],damage:0,status:null};
+ assert.ok(AI.trainerSearchPlayBonus(play,o,cfg)>100,
+  'A visible Grimer should make The Boss’s Way worth playing to find Dark Muk');
+ o.self.hand=['base1-88'];
+ assert.equal(AI.trainerSearchPlayBonus(play,o,cfg),0,
+  'The decision feature must not alter unrelated Professor Oak behavior');
+}
+{
+ // Complete legal four-step line: Energy Retrieval -> pay spare Potion ->
+ // recover discarded Fighting -> evolve Machop into Machoke -> attach Energy
+ // -> Karate Chop. All materials are already in own hand/public discard.
+ const g=createGame({decks:[deck,deck],seed:82283,format:'classic'});
+ const o=AI.observation(g,1);o.phase='game';o.turn=1;o.round=6;o.turnSerial=21;
+ o.self.active={id:IDS.machop,damage:0,playedTurn:3,
+  energies:[IDS.fight,IDS.fight],status:null};
+ o.self.bench=[];o.self.hand=['base1-81','base1-34',IDS.potion];
+ o.self.discard=[IDS.fight];
+ o.self.energyUsed=false;o.self.handCount=3;
+ o.opponent.active={id:IDS.hit,damage:0,energies:[IDS.fight],status:null};
+ const cfg=AI.configuration({level:5,side:1,comboSearch:true});
+ const old=AI.configuration({level:5,side:1});
+ const retrieval={type:'play_trainer',payload:{handIndex:0}};
+ const evolve={type:'evolve',payload:{handIndex:1,slot:-1}};
+ assert.ok(AI.comboSequenceBonus(retrieval,o,cfg)>20,
+  'Retrieval must be worth playing when it enables Machoke Karate Chop this turn');
+ assert.ok(AI.comboSequenceBonus(evolve,o,cfg)>20,
+  'Evolution-first sequence must also find Recovery then Energy attachment');
+ assert.equal(AI.comboSequenceBonus(retrieval,o,old),0);
+ const noDiscard=structuredClone(o);noDiscard.self.discard=[];
+ assert.equal(AI.comboSequenceBonus(retrieval,noDiscard,cfg),0,
+  'Cannot recover imaginary Energy missing from the public discard');
+ assert.equal(AI.comboSequenceBonus(evolve,noDiscard,cfg),0,
+  'A normal evolution without a combo must not be penalized by the optional planner');
+ const normalEnergy=structuredClone(o);normalEnergy.self.hand=[IDS.fight];
+ normalEnergy.self.discard=[];
+ assert.equal(AI.comboSequenceBonus({type:'attach_energy',payload:{handIndex:0,slot:-1}},normalEnergy,cfg),0,
+  'Do not downgrade vital ordinary Energy attachments if they do not unlock a new attack yet');
+ const noPayment=structuredClone(o);noPayment.self.hand=['base1-81','base1-34'];
+ assert.ok(AI.comboSequenceBonus(retrieval,noPayment,cfg)<=0,
+  'Cannot recover Energy while pretending to retain its discarded Evolution cost');
+ const afterEnergy=structuredClone(o);afterEnergy.self.energyUsed=true;
+ assert.ok(AI.comboSequenceBonus(retrieval,afterEnergy,cfg)<=0,
+  'Once an Energy is attached this turn the combo cannot attach another');
+ g.pendingAction={kind:'classic_trainer',plan:{side:1,cardId:'base1-81',data:{}}};
+ const owned=AI.observation(g,1);
+ owned.phase='game';owned.self.active=o.self.active;owned.self.hand=o.self.hand;
+ owned.self.discard=o.self.discard;owned.opponent.active=o.opponent.active;
+ const pay={kind:'cost',label:'Choose one other card to discard'};
+ assert.ok(AI.comboChoiceValue({id:'n:2',label:'Potion'},pay,owned,cfg)>
+  AI.comboChoiceValue({id:'n:1',label:'Machoke'},pay,owned,cfg),
+  'Payment must not sacrifice the exact evolution the line needs');
+ const recover={kind:'recover',label:'Recover 1 or 2 Basic Energy'};
+ assert.ok(AI.comboChoiceValue({id:'disc:0',label:'Fighting Energy'},recover,owned,cfg)>0,
+  'Real Energy Retrieval options are public disc: indices, not n: aliases');
+ assert.equal(AI.comboChoiceValue({id:'n:0',label:'Fighting Energy'},recover,owned,cfg),null,
+  'Cannot treat a hand index as the public discard pile');
+ assert.equal(AI.comboChoiceValue({id:'disc:0',label:'Water Energy'},recover,owned,cfg),null,
+  'A card name must match the public discard card at that exact index');
+ const paid=structuredClone(owned);
+ paid.decision={actor:1,id:'classic-trainer:5',kind:'cost',
+  label:'Choose one other card to discard',min:1,max:1,options:[
+   {id:'n:1',label:'Machoke'},{id:'n:2',label:'Potion'}]};
+ const choices=AI.candidates(paid,cfg,{powerKeys:new Set()});
+ assert.deepEqual(choices[0]?.payload.selected,['n:2'],
+  'Real pending decision generation must prioritize surplus Potion over playable Machoke');
+ // Computer Search has a 2-card payment from hand, then its own-deck options
+ // are presented with deck: indices. Never inspect the still-shuffled deck.
+ const computer=structuredClone(owned);
+ computer.pendingTrainerName='Computer Search';
+ computer.self.hand=['base1-71','base1-34',IDS.potion,IDS.rat];
+ const computerCost={kind:'cost',label:'Choose two other cards to discard'};
+ assert.ok(AI.comboChoiceValue({id:'n:2',label:'Potion'},computerCost,computer,cfg)>
+  AI.comboChoiceValue({id:'n:1',label:'Machoke'},computerCost,computer,cfg));
+ const computerSearch={kind:'find',label:'Search your deck for any card'};
+ assert.ok(AI.comboChoiceValue({id:'deck:9',label:'Machoke'},computerSearch,computer,cfg)>
+  AI.comboChoiceValue({id:'deck:8',label:'Rattata'},computerSearch,computer,cfg),
+  'Computer Search must prioritize a compatible Evolution in revealed legal options');
+ assert.equal(AI.comboChoiceValue({id:'disc:9',label:'Machoke'},computerSearch,computer,cfg),null,
+  'Never treat a public discard card as a searched, unknown deck card');
+ const superRetrieval=structuredClone(owned);
+ superRetrieval.pendingTrainerName='Super Energy Retrieval';
+ assert.ok(AI.comboChoiceValue({id:'disc:0',label:'Fighting Energy'},
+  {kind:'serEnergy',label:'Super Energy Retrieval: choose Basic Energy'},superRetrieval,cfg)>0,
+  'Super Energy Retrieval also uses disc: options for recovered energy');
+ assert.ok(AI.comboChoiceValue({id:'n:2',label:'Potion'},
+  {kind:'serCost',label:'Super Energy Retrieval: trade two hand cards'},superRetrieval,cfg)>
+  AI.comboChoiceValue({id:'n:1',label:'Machoke'},
+   {kind:'serCost',label:'Super Energy Retrieval: trade two hand cards'},superRetrieval,cfg));
+ const hidden=structuredClone(g);hidden.pendingAction.plan.side=0;
+ assert.equal(AI.observation(hidden,1).pendingTrainerName,null,
+  'Opponent Trainer private choices must never be accessible to the CPU');
+ const lethal=structuredClone(o);
+ lethal.self.active={id:IDS.hit,damage:0,playedTurn:3,energies:[IDS.fight],status:null};
+ lethal.self.hand=['base1-84'];lethal.self.discard=[];
+ // Charmander has no Fighting weakness. With 20 existing damage it has
+ // exactly 30 HP remaining: Jab 20 + PlusPower 10 is a genuine new KO.
+ lethal.opponent.active={id:'base1-46',damage:20,energies:[],status:null};
+ const koBonus=AI.comboSequenceBonus({type:'play_trainer',payload:{handIndex:0}},lethal,cfg);
+ assert.ok(koBonus>150,
+  'PlusPower must secure a 10-damage-gap knockout before the attack; score '+koBonus);
+ const untimely=structuredClone(lethal);untimely.opponent.active={...o.opponent.active};
+ assert.ok(AI.comboSequenceBonus({type:'play_trainer',payload:{handIndex:0}},untimely,cfg)<
+  AI.comboSequenceBonus({type:'play_trainer',payload:{handIndex:0}},lethal,cfg),
+  'Do not value unneeded PlusPower as much as a guaranteed Prize knockout');
+ const chaos=structuredClone(lethal);chaos.stadium={id:'gym2-102',owner:0};
+ assert.equal(AI.comboSequenceBonus({type:'play_trainer',payload:{handIndex:0}},chaos,cfg),0,
+  'Never assume Chaos Gym heads or guarantee a Trainer can be used');
+ assert.equal(AI.configuration({level:5}).comboSearch,false);
+ assert.throws(()=>AI.configuration({comboSearch:'yes'}),/combo-search/);
+ const {arena,argumentsOf}=require('./benchmark_cpu');
+ const result=arena(argumentsOf(['--pairs','1','--max-turns','4','--left-level','5',
+  '--right-level','5','--left-combo-search','true','--right-combo-search','false']));
+ assert.equal(result.baseline.comboSearch,true);
+ assert.equal(result.challenger.comboSearch,false);
+ const stress=arena(argumentsOf(['--pairs','1','--max-turns','8',
+  '--left-level','5','--right-level','5','--left-combo-search','true',
+  '--right-combo-search','false','--left-deck','cpu_combo_lab','--right-deck','cpu_combo_lab']));
+ assert.equal(stress.totalMatches,2);
+ assert.equal(stress.illegalActions,0,
+  'Both sides must complete real authenticated Base Set Trainer-combo matches');
+ assert.equal(stress.baseline.deck,'cpu_combo_lab');
+ const search=arena(argumentsOf(['--pairs','1','--max-turns','12',
+  '--left-level','5','--right-level','5','--left-combo-search','true',
+  '--right-combo-search','false','--left-deck','cpu_search_lab','--right-deck','cpu_search_lab']));
+ assert.equal(search.totalMatches,2);
+ assert.equal(search.illegalActions,0,
+  'Full Trainer-search mirrors must use real legal cards and authenticated prompts');
+ assert.equal(search.baseline.deck,'cpu_search_lab');
+}
+{
+ // Integration: only the authentic reducer may create and resolve the staged
+ // Trainer prompts. Test the exact n: hand-cost and disc: recovery namespaces
+ // seen by a human playing these same legal options.
+ const laboratory=[
+  ...Array(4).fill(IDS.machop),...Array(4).fill('base1-34'),
+  ...Array(2).fill(IDS.hit),...Array(2).fill(IDS.rat),
+  ...Array(4).fill('base1-81'),...Array(4).fill('base1-84'),
+  ...Array(4).fill(IDS.bill),...Array(4).fill('base1-88'),
+  ...Array(4).fill(IDS.potion),...Array(4).fill(IDS.switch),
+  ...Array(24).fill(IDS.fight)];
+ let live=createGame({decks:[laboratory,laboratory],format:'classic',seed:390144});
+ live=AI.driveSide(live,{side:0,level:5,seed:1}).game;
+ live=AI.driveSide(live,{side:1,level:5,seed:2}).game;
+ assert.equal(live.phase,'game');
+ live.turn=1;live.round=5;live.turnSerial=11;
+ const own=live.players[1];
+ const drawKnown=id=>{
+  if(own.hand.includes(id))return own.hand.indexOf(id);
+  const n=own.deck.indexOf(id);
+  assert.ok(n>=0,'Test seed must make '+id+' available from own deck');
+  own.hand.push(own.deck.splice(n,1)[0]);
+  return own.hand.length-1;
+ };
+ const trainerIndex=drawKnown('base1-81');
+ const machokeIndex=drawKnown('base1-34');
+ drawKnown(IDS.potion);
+ const energyIndex=own.deck.indexOf(IDS.fight);
+ assert.ok(energyIndex>=0);
+ own.discard.push(own.deck.splice(energyIndex,1)[0]);
+ const initiated=reduce(live,1,{type:'play_trainer',payload:{handIndex:trainerIndex}});
+ assert.equal(initiated.ok,true,'Actual Energy Retrieval Trainer must begin a legal staged resolution');
+ assert.equal(initiated.game.pendingDecision.kind,'cost');
+ const settings={side:1,level:5,seed:7,comboSearch:true};
+ const payment=AI.chooseAction(initiated.game,settings);
+ assert.equal(payment?.command.type,'choose');
+ assert.ok(!payment.command.payload.selected.includes('n:'+machokeIndex),
+  'Real reducer prompt must preserve playable Machoke when paying Retrieval cost');
+ assert.equal(payment.game.pendingDecision.kind,'recover');
+ assert.ok(payment.game.pendingDecision.options.some(o=>o.id.startsWith('disc:')),
+  'Energy recovery is actually indexed by disc:, not n:');
+ const recovered=AI.chooseAction(payment.game,settings);
+ assert.equal(recovered?.command.type,'choose');
+ assert.ok(recovered.command.payload.selected.some(id=>id.startsWith('disc:')));
+ assert.equal(recovered.game.pendingDecision,null,
+  'Completing Retrieval via CPU choices must not leave a mandatory decision stuck');
+ assert.ok(recovered.game.players[1].hand.includes(IDS.fight),
+  'The actual game state must now contain legally recovered Fighting Energy');
+}
+{
+ // Computer Search must use the legal reducer two-card cost and private
+ // deck-choice prompt. The policy reads only revealed option labels, never
+ // the underlying face-down deck before that prompt exists.
+ const searchLab=[
+  ...Array(4).fill(IDS.machop),...Array(4).fill('base1-34'),
+  ...Array(2).fill(IDS.hit),...Array(2).fill(IDS.rat),
+  ...Array(4).fill('base1-71'),...Array(4).fill('base1-84'),
+  ...Array(4).fill(IDS.bill),...Array(4).fill('base1-81'),
+  ...Array(4).fill(IDS.potion),...Array(4).fill(IDS.switch),
+  ...Array(24).fill(IDS.fight)];
+ let game=createGame({decks:[searchLab,searchLab],format:'classic',seed:390145});
+ game=AI.driveSide(game,{side:0,level:5,seed:1}).game;
+ game=AI.driveSide(game,{side:1,level:5,seed:2}).game;
+ game.turn=1;game.round=5;game.turnSerial=11;
+ const p=game.players[1];
+ p.deck.push(...p.hand);p.hand=[];
+ if(p.active.id!==IDS.machop){
+  const ix=p.deck.indexOf(IDS.machop);
+  assert.ok(ix>=0);
+  const prior=p.active.id;p.active.id=p.deck[ix];p.deck[ix]=prior;
+ }
+ p.active.playedTurn=1;p.active.status=null;
+ const move=id=>{
+  const ix=p.deck.indexOf(id);
+  assert.ok(ix>=0,'A legal test deck must contain '+id);
+  return p.deck.splice(ix,1)[0];
+ };
+ p.active.energies.push(move(IDS.fight),move(IDS.fight));
+ p.energyUsed=false;
+ p.hand.push(move('base1-71'),move(IDS.potion),move(IDS.potion),move(IDS.fight));
+ const started=reduce(game,1,{type:'play_trainer',payload:{handIndex:0}});
+ assert.equal(started.ok,true,'Computer Search must initiate legal game-reducer prompts');
+ assert.equal(started.game.pendingDecision.kind,'cost');
+ assert.equal(started.game.pendingDecision.min,2);
+ const cfg={side:1,level:5,seed:4,comboSearch:true};
+ const cost=AI.chooseAction(started.game,cfg);
+ assert.equal(cost?.command.type,'choose');
+ assert.deepEqual([...cost.command.payload.selected].sort(),['n:1','n:2'],
+  'Search cost should use two surplus Potions, keeping the required Fighting Energy');
+ assert.equal(cost.game.pendingDecision.kind,'find');
+ assert.ok(cost.game.pendingDecision.options.some(x=>x.id.startsWith('deck:')&&x.label==='Machoke'));
+ const selected=AI.chooseAction(cost.game,cfg);
+ assert.equal(selected?.command.type,'choose');
+ const chosen=cost.game.pendingDecision.options.find(x=>
+  x.id===selected.command.payload.selected[0]);
+ assert.equal(chosen?.label,'Machoke',
+  'After lawful Computer Search selection, fetch the Active Machop Evolution');
+ assert.ok(selected.game.players[1].hand.includes('base1-34'));
+ assert.equal(selected.game.pendingDecision,null);
+ const played=AI.driveSide(selected.game,{side:1,level:5,seed:4,comboSearch:true,limit:100});
+ const actions=played.commands.map(x=>x.command.type);
+ assert.ok(actions.includes('evolve'),
+  'The searched Evolution must be available for actual same-turn play');
+ assert.ok(actions.includes('attach_energy'),
+  'After legal search and evolution, the CPU must attach its held Fighting Energy');
+ assert.ok(actions.includes('attack'),
+  'The completed Search to evolution to Energy sequence must finish with a real attack; actions='+JSON.stringify(played.commands.map(x=>x.command))+
+  ' final='+JSON.stringify({active:played.game.players[1].active,turn:played.game.turn,over:played.game.over}));
+ assert.equal(played.game.pendingDecision,null);
+}
+{
+ // Only the card NAMES explicitly exposed in a real search decision may be
+ // evaluated. An immediately playable Machoke should beat a generic card.
+ const game=createGame({decks:[deck,deck],seed:17017,format:'classic'});
+ const o=AI.observation(game,1);
+ o.phase='game';o.round=6;
+ o.self.active={id:IDS.machop,damage:0,playedTurn:3,energies:[IDS.fight,IDS.fight,IDS.fight],status:null};
+ o.self.bench=[];o.self.energyUsed=false;
+ o.opponent.active={id:'base1-46',damage:0,energies:[],status:null};
+ o.pendingTrainerName='Computer Search';
+ const cfg=AI.configuration({level:5,side:1,comboSearch:true});
+ const decision={kind:'find',label:'Choose a Pokémon or Trainer'};
+ const machoke=AI.comboChoiceValue({id:'deck:7',label:'Machoke'},decision,o,cfg);
+ const potion=AI.comboChoiceValue({id:'deck:9',label:'Potion'},decision,o,cfg);
+ assert.ok(machoke>potion+80,'A genuinely ready evolution must win a revealed Trainer search');
+ const unready=structuredClone(o);unready.self.active.playedTurn=6;
+ assert.ok(AI.comboChoiceValue({id:'deck:7',label:'Machoke'},decision,unready,cfg)<machoke,
+  'Do not pretend to evolve a Pokémon played this turn');
+ assert.equal(AI.comboChoiceValue({id:'deck:7',label:'Machoke'},decision,o,
+  AI.configuration({level:5})),null,'Old Champion search priorities remain unchanged');
 }
 let duels=0,decisions=0,attacks=0,energy=0,evolutions=0,trainer=0;
 for(let seed=1;seed<=4;seed++){
