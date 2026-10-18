@@ -3,11 +3,9 @@
 // search/discard decisions; never mark a complex effect handled with a no-op.
 const cards=[...require('./cards/neo3.json'),...require('./cards/neo4.json')];
 const defs=Object.freeze({
- 'neo3-1|Gigavolt':'gigavolt',
  'neo3-7|Stoke':'stoke',
  'neo3-24|Swipe':'swipe',
- 'neo3-46|Call for Family':'call-for-murkrow',
- 'neo4-11|Mountain Smasher':'mountain-smasher'
+ 'neo3-46|Call for Family':'call-for-murkrow'
 });
 const signatures=new Map();
 for(const [key,effect] of Object.entries(defs)){
@@ -27,14 +25,7 @@ function resolve(program,flip,ctx={}){
  const r={damage:program.damage,flips:[]};
  const coin=()=>{const heads=Boolean(flip());r.flips.push(heads);return heads;};
  switch(program.kind){
-  case 'neo87:gigavolt':if(coin())r.damage+=20;else r.status='Paralyzed';break;
   case 'neo87:swipe':if(coin())r.discardOpponentTools=true;break;
-  case 'neo87:mountain-smasher':{
-   const n=ctx.selfEnergy||0;
-   if(!Number.isInteger(n)||n<0||n>60)throw Error('Invalid Tyranitar Energy count');
-   let heads=0;for(let i=0;i<n;i++)if(coin())heads++;
-   r.damage=20*heads;r.millOpponent=heads;break;
-  }
   default:throw Error('Unported Neo v087 type '+program.kind);
  }
  return r;
