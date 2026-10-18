@@ -93,7 +93,7 @@ function choose(g,d,...selected){ok(g,d.actor,'choose',{decisionId:d.id,selected
  const g=game('neo3-22','Lightning Spark',{bench:false});
  assert.equal(start(g,'Lightning Spark'),null);
  assert.equal(g.players[1].active.damage,30);
- assert.equal(g.coinFlips.length,0,'no coin without opponent Bench');
+ assert.equal((g.coinFlips||[]).length,0,'no coin without opponent Bench');
 }
 {
  const outcomes=new Set();
