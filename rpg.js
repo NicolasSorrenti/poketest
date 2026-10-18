@@ -1,7 +1,7 @@
 'use strict';
 (()=>{
 const $=id=>document.getElementById(id),KEY='neoHarborRpgV1',STORY=window.NeoHarborStory,SCHEDULES=window.NeoRpgSchedules,WORLD=window.NeoRpgWorld,ARC=window.NeoRpgRivalArc,TOURNAMENTS=window.NeoRpgTournaments,BRIDGE=window.NeoRpgDuelBridge;
-const PACK=window.NeoRpgNarrativePack,SIDE=window.NeoRpgSideQuests,EPILOGUE=window.NeoRpgEpilogue;
+const PACK=window.NeoRpgNarrativePack,SIDE=window.NeoRpgSideQuests,EPILOGUE=window.NeoRpgEpilogue,APPOINTMENTS=window.NeoRpgAppointments;
 const periods=['Morning','Afternoon','Evening'];
 const places={
  home:['Your Apartment','Your base during the championship season.'],
@@ -116,7 +116,7 @@ function pauseSideQuest(){
 
 function timeFlash(beforeDay,beforeSlot){const overlay=document.createElement('div');overlay.className='notice-pop';const heading=document.createElement('b');heading.textContent=state.day>90?'Season complete':state.day!==beforeDay?'A NEW DAY BEGINS':'TIME PASSES';const body=document.createElement('span');body.textContent=state.day>90?'Day 90 has ended.':('Day '+state.day+' · '+periods[state.slot]);overlay.append(heading,body);document.body.append(overlay);overlay.addEventListener('animationend',()=>overlay.remove());}
 
-function defaults(){return {sideQuests:{},activeSideQuest:null,day:1,slot:0,location:'home',metReina:false,reinaTrust:0,reinaDuels:0,results:[],flags:{intro:false},journal:['The 90-day season begins.'],pendingDuel:null,bonds:{},talked:{},hungOut:{},eventsDone:{},points:0,credits:80,playerDeck:'blackout',selected:null,ended:false,storyDone:{},storyMissed:{},relationships:{},routeOutcomes:{},partner:null,activeStory:null,activeEncounter:null,activeArc:null,arcFlags:{},arcOutcomes:{},activityDone:{},encountersDone:{},focus:75,insight:0,reputation:0,preparation:0,lastDuelReceipt:null,tournaments:{},campaignHistory:[],ngPlus:0,scene:null}}
+function defaults(){return {sideQuests:{},activeSideQuest:null,day:1,slot:0,location:'home',metReina:false,reinaTrust:0,reinaDuels:0,results:[],flags:{intro:false},journal:['The 90-day season begins.'],pendingDuel:null,bonds:{},talked:{},hungOut:{},eventsDone:{},points:0,credits:80,playerDeck:'blackout',selected:null,ended:false,storyDone:{},storyMissed:{},relationships:{},routeOutcomes:{},partner:null,activeStory:null,activeEncounter:null,activeArc:null,arcFlags:{},arcOutcomes:{},activityDone:{},encountersDone:{},focus:75,insight:0,reputation:0,preparation:0,lastDuelReceipt:null,tournaments:{},campaignHistory:[],ngPlus:0,appointments:[],appointmentSeq:0,scene:null}}
 let state;try{state=JSON.parse(localStorage.getItem(KEY))||defaults();if(!Number.isInteger(state.day)||state.day<1||state.day>91)throw Error('Invalid save');}catch{state=defaults()}
 for(const [k,v] of Object.entries(defaults()))if(state[k]===undefined)state[k]=v;
 if(!Array.isArray(state.campaignHistory))state.campaignHistory=[];
@@ -134,6 +134,7 @@ SIDE.expire(state);
 ARC.hydrate(state);
 // Restored saves may already be beyond an optional cup's registration window.
 TOURNAMENTS.expire(state);
+APPOINTMENTS.hydrate(state);APPOINTMENTS.expire(state);
 for(const id of Object.keys(cast)){const old=state.bonds[id],current=state.relationships[id];
  if(!state.flags['newStoryMigrated_'+id]){for(const key of ['affection','trust','duels'])current[key]=Math.max(current[key]||0,old[key]||0);
  state.flags['newStoryMigrated_'+id]=true;}
@@ -150,14 +151,19 @@ if(state.day>beforeDay)WORLD.newDay(state,state.day-beforeDay);
 const expiredCups=TOURNAMENTS.expire(state);if(expiredCups.length)log('A tournament registration window has closed.');
 const missed=STORY.recordExpiry(state);if(missed.length)log('Some opportunities in town passed while you were busy.');
 const missedQuests=SIDE.expire(state);if(missedQuests.length)log('A local side-quest opportunity passed while you were away.');
+const missedAppointments=APPOINTMENTS.expire(state);
+for(const plan of missedAppointments)log('You missed your planned meet-up with '+(cast[plan.npc]?.name||'a trainer')+'.');
 persist();timeFlash(beforeDay,beforeSlot);}
 function say(speaker,line,choices=[]){scene={speaker,line,choices};state.scene=scene;persist();render();}
-function publicAppointments(place){return [...STORY.available(state,place),...SIDE.appointments(state)];}
+function publicAppointments(place){return [...APPOINTMENTS.overrides(state),...STORY.available(state,place),...SIDE.appointments(state)];}
 function currentPeople(){if(state.day>90)return [];const regular=SCHEDULES.peopleAt(state.day,state.slot,state.location,publicAppointments(state.location));
 for(const e of eligibleStories())if(!regular.includes(e.npc))regular.push(e.npc);
 return regular;}
 function selectPerson(id){if(state.activeStory||state.activeEncounter||state.activeArc||!cast[id]||!currentPeople().includes(id))return;const c=cast[id],first=!state['met_'+id]&&!((id==='reina')&&state.metReina);state['met_'+id]=true;if(id==='reina')state.metReina=true;state.selected=id;persist();say(c.name,first?c.intro:c.repeat,options(id));}
-function options(id){const key=atKey(id),spentToday=!!state.hungOut[state.day+':'+id];return [
+function options(id){const key=atKey(id),spentToday=!!state.hungOut[state.day+':'+id];
+ const booked=APPOINTMENTS.active(state).find(e=>e.npc===id);
+ return [
+ [booked?'Meet-up scheduled · check upcoming plans':'Invite to a future meet-up · free',booked?'plans':'invite:'+id],
  ['Ask about their routine · free','where:'+id],
  [state.talked[key]?'Talk again · free (bond already earned)':'Talk · free · +1 affection','talk:'+id],
  [spentToday?'Already spent time today · free':'Spend time together · ⏳ 1 period · +2 affection / +1 trust','hang:'+id],
@@ -256,7 +262,7 @@ function finishArc(){
 
 function scheduleEvent(){return eventCards.find(e=>e.day===state.day&&e.slot===state.slot&&e.place===state.location&&!state.eventsDone[e.day+':'+e.title]);}
 function act(action){
- const [type,id]=action.split(':');
+ const [type,id,part]=action.split(':');
  if(type==='sideNext')return nextSideQuest();
  if(type==='sideChoice')return chooseSideQuest(id);
  if(type==='sideFinish')return finishSideQuest();
@@ -280,6 +286,41 @@ function act(action){
  if(type==='encounter')return startEncounter(id);
  if(type==='townActivity')return performActivity(id);
  if(type==='calendar')return openCalendar();
+ if(type==='plans')return say('Planner','Your booked meet-ups appear under UPCOMING PLANS. Travel there at the agreed time; the appointment itself uses one period.');
+ if(type==='back'&&cast[id])return say(cast[id].name,'Where were we?',options(id));
+ if(type==='invite'){
+  if(!cast[id]||!currentPeople().includes(id))return;
+  const dates=APPOINTMENTS.proposed(state,id,SCHEDULES);
+  if(!dates.length)return say(cast[id].name,'My schedule is rather full right now. Maybe ask again after our current plans.');
+  const choices=dates.map((time,i)=>['Day '+time.day+' · '+periods[time.slot]+' · '+places[time.place][0]+' · free to book','book:'+id+':'+i]);
+  choices.push(['Maybe another time','back:'+id]);
+  return say(cast[id].name,'There are a few openings in my schedule. When should we meet?',choices);
+ }
+ if(type==='book'){
+  if(!cast[id]||!currentPeople().includes(id))return;
+  const chosen=APPOINTMENTS.proposed(state,id,SCHEDULES)[Number(part)];
+  if(!chosen)return say(cast[id].name,'That opening is no longer available.',options(id));
+  try{
+   APPOINTMENTS.book(state,id,chosen.day,chosen.slot,chosen.place,SCHEDULES);
+   persist();return say(cast[id].name,'Great! Day '+chosen.day+', '+periods[chosen.slot].toLowerCase()+' at '+places[chosen.place][0]+'. I will be there.',options(id));
+  }catch(err){return say(cast[id].name,err.message,options(id));}
+ }
+ if(type==='attend'){
+  const number=Number(id),plan=APPOINTMENTS.active(state).find(e=>e.id===number);
+  if(!plan)return;
+  const person=cast[plan.npc];
+  try{
+   APPOINTMENTS.attend(state,number,currentPeople());
+   log('Kept a planned meet-up with '+(person?.name||'a trainer')+'.');
+   advance();
+   return say(person?.name||'Trainer','I am glad we made time for this. It is good to do something together away from the tournament noise.');
+  }catch(err){$('notice').textContent=err.message;return;}
+ }
+ if(type==='cancelPlan'){
+  const plan=APPOINTMENTS.active(state).find(e=>e.id===Number(id));if(!plan)return;
+  try{APPOINTMENTS.cancel(state,plan.id);persist();return say('Planner','You cancelled the meet-up in advance. No one was kept waiting.');}
+  catch(err){$('notice').textContent=err.message;return;}
+ }
  if(type==='home'){state.location='home';state.selected=null;persist();return say('Narrator','Back home. The championship posters on the wall remind you why you came.');}
  if(type==='where'){const c=cast[id],visit=SCHEDULES.nextVisit(id,state.day,state.slot,[]);return say('Narrator',c.name+(visit?' is usually around '+places[visit.place][0]+' on day '+visit.day+', '+periods[visit.slot]+'.':' has no announced public visits in the coming week.'),options(id));}
  if(type==='sleep'){if(state.location!=='home')return;const n=3-state.slot;advance(n);return say('Narrator','You wake up to a new day in Neo Harbor.');}
@@ -337,6 +378,31 @@ window.addEventListener('message',ev=>{
  advance();$('duel').hidden=true;$('battle').src='about:blank';
  const c=cast[duel.npc];say(c.name,sideOutcome?.text||personalOutcome|| (receipt.outcome==='Victory'?c.duelWin:receipt.outcome==='Draw'?'A hard-fought draw. Let us play again.':c.duelLose));
 });
+function renderAppointments(locked){
+ const root=$('appointments');root.replaceChildren();
+ const plans=APPOINTMENTS.active(state);
+ if(!plans.length){const note=document.createElement('p');note.className='empty-note';note.textContent='No plans yet. Talk to someone in town to arrange a future meet-up.';root.append(note);return;}
+ for(const meeting of plans){
+  const entry=document.createElement('div');entry.className='meeting-card';
+  const name=document.createElement('strong');name.textContent=cast[meeting.npc]?.name||meeting.npc;
+  const detail=document.createElement('small');detail.textContent='DAY '+meeting.day+' · '+periods[meeting.slot]+' · '+places[meeting.place]?.[0];
+  entry.append(name,detail);
+  const ready=meeting.day===state.day&&meeting.slot===state.slot;
+  const controls=document.createElement('div');controls.className='meeting-actions';
+  if(ready){
+   if(meeting.place===state.location){
+    const attend=document.createElement('button');attend.className='meeting-attend';attend.textContent='Meet now · ⏳';attend.disabled=locked;attend.onclick=()=>act('attend:'+meeting.id);controls.append(attend);
+   }else{
+    const travel=document.createElement('button');travel.className='meeting-attend';travel.textContent='Go there · free';travel.disabled=locked;travel.onclick=()=>{
+     state.location=meeting.place;state.selected=null;persist();say('Planner','You arrive for your planned meet-up.');};controls.append(travel);
+   }
+  }else{
+   const cancel=document.createElement('button');cancel.className='meeting-cancel';cancel.textContent='Cancel · free';cancel.disabled=locked;cancel.onclick=()=>act('cancelPlan:'+meeting.id);controls.append(cancel);
+  }
+  entry.append(controls);root.append(entry);
+ }
+}
+
 function renderBracketProgress(){
  const root=$('bracketProgress');root.replaceChildren();
  for(const cup of TOURNAMENTS.cups){
@@ -568,6 +634,7 @@ function render(){
   const b=document.createElement('button');b.className='activity';b.textContent=label;b.disabled=(ended&&action!=='new'&&action!=='calendar')||(locked&&action!=='calendar');b.onclick=()=>act(action);$('activities').append(b);
  }
  renderBracketProgress();
+ renderAppointments(locked);
  renderSeasonReport();
  $('journal').replaceChildren();const stats=document.createElement('p');stats.className='stats';stats.textContent='🏆 '+state.points+' circuit points   ·   ◈ '+state.credits+' credits';$('journal').append(stats);
  for(const e of eventCards.filter(e=>e.day>=state.day).slice(0,2)){const p=document.createElement('p');p.textContent='DAY '+e.day+' · '+e.title+' ('+periods[e.slot]+')';$('journal').append(p)}
