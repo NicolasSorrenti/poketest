@@ -1,10 +1,10 @@
 # Neo Harbor art ZIP — build-time installation
 
-The art expansion is distributed as **one verified ZIP**, not 102 independent binary commits.
+The current production archive is the **2026-10-18 complete art pack**: 158 image files (102 previous assets + 48 new dialogue expression panels + 8 reference sheets). The images are real generated illustrations, not placeholder filenames.
 
 ## One-time upload (required)
 
-1. Download the ZIP from the ChatGPT conversation: `neo_harbor_art_expansion_2026-10-17.zip` (10.6 MB).
+1. Download the ZIP from the ChatGPT conversation: `neo_harbor_complete_art_pack_2026-10-18.zip` (20.2 MB).
 2. Open `asset-packs/` in this repository on GitHub and choose **Add file → Upload files**.
 3. Upload the **ZIP itself** (do not unzip locally or change its name). Commit it to `main`.
 4. Redeploy Render. No other asset uploads are needed.
@@ -12,13 +12,13 @@ The art expansion is distributed as **one verified ZIP**, not 102 independent bi
 Required repository destination:
 
 ```
-asset-packs/neo_harbor_art_expansion_2026-10-17.zip
+asset-packs/neo_harbor_complete_art_pack_2026-10-18.zip
 ```
 
 Expected archive SHA-256:
 
 ```
-2a7173080138c1264eb8d012d462a540c74c775507b1b756c46e1bd9545840ed
+6683a2ba03e30c88b6d8c493e238cc3822972f8efa499c93ea62686d1f1269d5
 ```
 
 ## Automatic installation
@@ -61,3 +61,9 @@ Then visit an extracted static URL, for example:
 The previous root RPG portraits remain in the existing UI until a separate approved art-selection integration is made. New art is now web-served and ready for visual review.
 
 **Important:** Until the ZIP itself is uploaded through GitHub, the build skips extraction without error and the game continues using its existing artwork. The code/configuration PR by itself does not contain the binary archive.
+
+## Six-expression artwork
+
+Each of the eight original heroines has an independent illustrated panel for **neutral, happy, embarrassed, angry, surprised, and flirty**, at `rpg-assets/characters/{id}/vn-expressions/{emotion}.webp`. The full eight source sheets (one per heroine) are retained at `rpg-assets/characters/{id}/reference/expression-master.webp`. `rpg-assets/characters/vn-expressions-manifest.json` maps the 48 expressions to exact filenames and includes identity/age metadata. `rpg-assets/characters/vn-expression-checksums.json` records image SHA-256 and dimensions.
+
+**Do not confuse these with transparent cut-out sprites.** These are background-backed, native-resolution dialogue portrait panels. They are additive; prior root portraits and the previous art expansion's manifest/checksums remain unchanged. The RPG UI does not automatically select the new expression per dialogue yet.
