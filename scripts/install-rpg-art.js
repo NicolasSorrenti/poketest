@@ -6,8 +6,8 @@ const path = require('node:path');
 const crypto = require('node:crypto');
 const zlib = require('node:zlib');
 
-const ARCHIVE = 'asset-packs/neo_harbor_complete_art_pack_2026-10-18.zip';
-const EXPECTED_SHA256 = '6683a2ba03e30c88b6d8c493e238cc3822972f8efa499c93ea62686d1f1269d5';
+const ARCHIVE = 'asset-packs/neo_harbor_complete_art_with_guests_2026-10-18.zip';
+const EXPECTED_SHA256 = 'bd784ecd1b22d06fa31624768357e0fa78952ba854557ef816bf1eb056b23972';
 const LIMIT_BYTES = 64 * 1024 * 1024;
 const LIMIT_ENTRIES = 300;
 const ALLOWED_PREFIXES = [
@@ -20,6 +20,16 @@ const ALLOWED_FILES = new Set([
   'rpg-assets/manifest.art-expansion.json',
   'rpg-assets/checksums.json',
   'rpg-assets/ART_EXPANSION_README.md',
+  'rpg-assets/COMPLETE_ART_PACK_README.md',
+  'rpg-assets/complete-art-manifest.json',
+  'rpg-assets/complete-art-checksums.json',
+  'rpg-assets/guest-portraits-manifest.json',
+  'rpg-assets/jun.png',
+  'rpg-assets/teo.png',
+  'rpg-assets/iris.png',
+  'rpg-assets/elio.png',
+  'rpg-assets/alma.png',
+  'rpg-assets/nereo.png',
 ]);
 function ensure(condition, message) { if (!condition) throw new Error('RPG art archive: ' + message); }
 function hash(data) { return crypto.createHash('sha256').update(data).digest('hex'); }
