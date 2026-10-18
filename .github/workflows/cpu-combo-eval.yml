@@ -1,0 +1,32 @@
+name: CPU Combo Experiment
+on:
+  push:
+    branches:
+      - 'agent/cpu-ai-sequence-*'
+    paths:
+      - 'cpu_policy.js'
+      - 'benchmark_cpu.js'
+      - 'test_cpu_policy.js'
+      - '.github/workflows/cpu-combo-eval.yml'
+  pull_request:
+    paths:
+      - 'cpu_policy.js'
+      - 'benchmark_cpu.js'
+      - 'test_cpu_policy.js'
+      - '.github/workflows/cpu-combo-eval.yml'
+jobs:
+  combo:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: node --check cpu_policy.js
+      - run: node --check benchmark_cpu.js
+      - run: node test_cpu_policy.js
+      - run: node test_classic_live_service.js
+      - run: node benchmark_cpu.js --pairs 30 --max-turns 120 --seed 71183 --left-level 5 --right-level 5 --left-combo-search true --right-combo-search false
+      - run: node benchmark_cpu.js --pairs 30 --max-turns 120 --seed 81183 --left-level 5 --right-level 5 --left-combo-search true --right-combo-search false --left-deck brock --right-deck brock
+      - run: node benchmark_cpu.js --pairs 30 --max-turns 120 --seed 91183 --left-level 5 --right-level 5 --left-combo-search true --right-combo-search false --left-deck cold_fusion --right-deck cold_fusion
