@@ -1,3 +1,16 @@
+test('supporting NPC portraits and guest manifest are permitted, but arbitrary root artwork is rejected',()=>withRepo(root=>{
+ const zip=zipEntries([
+  ['rpg-assets/jun.png','image test data'],
+  ['rpg-assets/teo.png','second portrait'],
+  ['rpg-assets/guest-portraits-manifest.json','{}'],
+  ['rpg-assets/complete-art-manifest.json','{}'],
+  ['rpg-assets/complete-art-checksums.json','{}'],
+ ]);
+ const archivePath=write(root,zip),result=install({root,archivePath,expectedSha:sha(zip),required:true});
+ assert.equal(result.installed,5);
+ assert.equal(fs.readFileSync(path.join(root,'rpg-assets/jun.png'),'utf8'),'image test data');
+ assert.throws(()=>parseZip(zipEntries([['rpg-assets/unrelated.png','unsafe']])),/unexpected file/);
+}));
 'use strict';
 const test = require('node:test');
 const assert = require('node:assert/strict');
