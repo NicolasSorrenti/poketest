@@ -1100,6 +1100,13 @@ const settings={level:3,personality:'balanced',side:1,seed:47};
  assert.equal(stress.illegalActions,0,
   'Both sides must complete real authenticated Base Set Trainer-combo matches');
  assert.equal(stress.baseline.deck,'cpu_combo_lab');
+ const search=arena(argumentsOf(['--pairs','1','--max-turns','12',
+  '--left-level','5','--right-level','5','--left-combo-search','true',
+  '--right-combo-search','false','--left-deck','cpu_search_lab','--right-deck','cpu_search_lab']));
+ assert.equal(search.totalMatches,2);
+ assert.equal(search.illegalActions,0,
+  'Full Trainer-search mirrors must use real legal cards and authenticated prompts');
+ assert.equal(search.baseline.deck,'cpu_search_lab');
 }
 {
  // Integration: only the authentic reducer may create and resolve the staged
