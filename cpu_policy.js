@@ -570,6 +570,28 @@ function comboChoiceValue(option,decision,o,cfg){
  if(canSearch&&((kind==='find'&&/^deck:\d+$/.test(id))||
   (kind==='recover'&&fromDiscard))){
   if(!option.label)return null;
+  const chosen=[...CATALOG.values()].find(c=>c.name===option.label);
+  // Once the authoritative reducer exposes a card's name in this player's
+  // legitimate search choices, value the *specific* card's same-turn use.
+  // This does not inspect any concealed deck ID or predict an unseen draw.
+  if(chosen&&kind==='find'){
+   const p=o.self,units=[p.active,...p.bench].filter(Boolean);
+   if(chosen.evolvesFrom){
+    const ready=units.some(u=>u.playedTurn<o.round&&canEvolve(chosen,card(u.id)));
+    if(ready){
+     const base=searchedCardValue(option.label,o);
+     const attackGain=Math.max(0,...units.filter(u=>u.playedTurn<o.round&&canEvolve(chosen,card(u.id)))
+      .map(u=>strongestAffordableAttack({...u,id:chosen.id},o.opponent.active)-
+       strongestAffordableAttack(u,o.opponent.active)));
+     return base+95+Math.min(150,attackGain*2);
+    }
+   }
+   if(isEnergy(chosen)&&!p.energyUsed&&p.active){
+    const gain=damageAfterAttachment(p.active,chosen.id,o.opponent.active)-
+     strongestAffordableAttack(p.active,o.opponent.active);
+    if(gain>0)return searchedCardValue(option.label,o)+90+Math.min(110,gain*2);
+   }
+  }
   return searchedCardValue(option.label,o);
  }
  return null;
