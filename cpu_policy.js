@@ -508,8 +508,46 @@ function trainerSearchPlayBonus(action,o,cfg){
  }
  return 0;
 }
+// Energy Retrieval is a staged public Trainer action. Preserve the useful
+// evolution during its hand payment, then recover the Basic Energy that can
+// immediately enable a stronger attack. Both zones are own/public.
+function comboChoiceValue(option,decision,o,cfg){
+ if(!cfg?.comboSearch||cfg.level<4||o.pendingTrainerName!=='Energy Retrieval')return null;
+ const id=option.id,kind=decision.kind,p=o.self;
+ if(kind==='cost'&&/^n:\d+$/.test(id)){
+  const n=Number(id.slice(2)),c=card(p.hand[n]);
+  if(!c)return null;
+  const units=[p.active,...p.bench].filter(Boolean);
+  if(c.evolvesFrom&&units.some(u=>canEvolve(c,card(u.id))))return -240;
+  if(isEnergy(c)&&!p.energyUsed)return -125;
+  if(isBasicPokemon(c)&&p.bench.length===0)return -110;
+  return c.supertype==='Trainer'?140:isBasicPokemon(c)?115:30;
+ }
+ if(kind==='recover'&&/^n:\d+$/.test(id)){
+  const energy=p.discard[Number(id.slice(2))];
+  if(!basicRetrievalEnergy(energy))return null;
+  const base=prepBoard(o);
+  let best=0;
+  for(const unit of [base.active,...base.bench].filter(Boolean)){
+   const old=strongestAffordableAttack(unit,o.opponent.active);
+   const direct=damageAfterAttachment(unit,energy,o.opponent.active);
+   let evolved=direct;
+   // Hypothetical evolution is limited to a printed card already in our hand.
+   for(const id of p.hand){
+    const e=card(id);
+    if(e?.evolvesFrom&&canEvolve(e,card(unit.id))&&unit.playedTurn<o.round)
+     evolved=Math.max(evolved,damageAfterAttachment({...unit,id},energy,o.opponent.active));
+   }
+   best=Math.max(best,(evolved-old)*2+(direct>old?60:0));
+  }
+  return 45+best;
+ }
+ return null;
+}
 function choiceValue(option,decision,o,cfg){
  const id=option.id,label=option.label||'',kind=decision.kind||'',ctx=decision.label||'';
+ const comboChoice=comboChoiceValue(option,decision,o,cfg);
+ if(comboChoice!==null)return comboChoice;
  const trained=trainerSelectionValue(option,decision,o,cfg);
  if(trained!==null)return trained;
  if(/^prize:/.test(id))return 1;
@@ -1295,4 +1333,4 @@ function driveSide(initial,{side=1,level=3,personality='balanced',seed=1,plannin
 }
 function driveBot(game,limit=200,config={}){return driveSide(game,{...config,side:1,limit});}
 function propose(game,config={}){return chooseAction(game,{...config,side:1});}
-module.exports={SKILLS,CALIBRATED_SKILLS,PERSONALITIES,configuration,observation,candidates,score,knockoutChance,planningBonus,evolutionTempoPenalty,prizeRaceBonus,knockoutTempoBonus,opponentResponseBonus,energyHorizonBonus,turnSequenceBonus,trainerTacticsBonus,trainerSelectionValue,trainerSearchPlayBonus,comboSequenceBonus,chooseAction,driveSide,driveBot,propose};
+module.exports={SKILLS,CALIBRATED_SKILLS,PERSONALITIES,configuration,observation,candidates,score,knockoutChance,planningBonus,evolutionTempoPenalty,prizeRaceBonus,knockoutTempoBonus,opponentResponseBonus,energyHorizonBonus,turnSequenceBonus,trainerTacticsBonus,trainerSelectionValue,trainerSearchPlayBonus,comboSequenceBonus,comboChoiceValue,chooseAction,driveSide,driveBot,propose};
