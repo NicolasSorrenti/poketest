@@ -55,7 +55,7 @@ class CubeService{
     wins:t.results.filter(r=>r.outcome==='win').length,
     losses:t.results.filter(r=>r.outcome==='loss').length,draws:t.draws
    }:null,
-   energyIds:ENERGY_IDS,suggestedDeck:d.done?buildCpuDeck(d.picks[0]):null};
+   energyIds:ENERGY_IDS,suggestedDeck:d.done?buildCpuDeck(d.picks[0],{preset:d.preset}):null};
  }
  launch(s,classic,opponentSeat){
   const rival=RIVALS[opponentSeat-1];
@@ -70,7 +70,7 @@ class CubeService{
   if(s.tournament)throw Error('Cube tournament already started');
   const v=C.validateBuild(s.draft.picks[0],deck);
   if(!v.valid)throw Error(v.reason);
-  const decks=[[...deck],...s.draft.picks.slice(1).map(buildCpuDeck)];
+  const decks=[[...deck],...s.draft.picks.slice(1).map(picks=>buildCpuDeck(picks,{preset:s.draft.preset}))];
   const t={decks,results:[],draws:0,rematch:false,pendingNext:false,finished:false,
    activeMatch:'semiHuman',
    matches:{semiHuman:match('semiHuman',[0,1]),semiCpu:match('semiCpu',[2,3]),

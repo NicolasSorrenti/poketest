@@ -131,7 +131,7 @@ class CubeRoomService{
    room.suggestedDecks ||= new Map();
    if(!room.suggestedDecks.has(seat)){
     let candidate=null;
-    try{candidate=buildCpuDeck(d.picks[seat]);}catch{}
+    try{candidate=buildCpuDeck(d.picks[seat],{preset:room.preset});}catch{}
     room.suggestedDecks.set(seat,candidate);
    }
    suggestion=room.suggestedDecks.get(seat);
