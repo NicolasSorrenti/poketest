@@ -34,7 +34,7 @@
    const prior=previous;previous=now;
    const fresh=all.filter(e=>Number.isSafeInteger(e?.seq)&&e.seq>lastSeq&&e.seq<=nextSeq).sort((a,b)=>a.seq-b.seq);
    lastSeq=nextSeq;
-   if(view.phase!=='game'||count>=MAX_REACTIONS)return null;
+   if((view.phase!=='game'&&!view.over)||count>=MAX_REACTIONS)return null;
    const koTaken=prior.prizes[0]!==null&&now.prizes[0]!==null&&now.prizes[0]<prior.prizes[0];
    const koScored=prior.prizes[1]!==null&&now.prizes[1]!==null&&now.prizes[1]<prior.prizes[1];
    let kind=null,event=null;
@@ -49,7 +49,7 @@
      if(now.cpuUnits.some(u=>prior.cpuUnits.some(p=>p.id===u.id&&u.damage>p.damage)))kind='hurt';
     }
    }
-   if(!kind)return null;
+   if(!kind||(view.phase!=='game'&&kind!=='ko_taken'&&kind!=='ko_scored'))return null;
    const keyMoment=kind==='ko_taken'||kind==='ko_scored';
    if(!keyMoment&&(count>=MAX_REACTIONS-1||nextSeq-lastReactionSeq<3))return null;
    if((typeof random==='function'?random():Math.random())>=CHANCES[kind])return null;

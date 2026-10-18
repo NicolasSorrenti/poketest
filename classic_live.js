@@ -41,9 +41,12 @@
  function clearError(){$('error').textContent='';$('error').classList.add('hidden');}
  async function send(action){if(!current||busy)return;busy=true;clearError();try{
   const result=await api('action',{method:'POST',body:JSON.stringify({revision:current.revision,command:action})});
-  preview.hide();current=result;
-  notifyRpg();
+  const beforePrizes=current?.view?.players?.map(p=>p.prizeCount);preview.hide();current=result;
   if(action.type!=='choose')setHandOpen(false);selectedHand=null;targetMode=null;decisionSelection.clear();render();
+  // Let a final knockout reaction appear before returning to the RPG map.
+  const prizes=current.view.players;
+  const finalKo=rpgMode&&current.view.over&&beforePrizes&&prizes.some((p,i)=>typeof beforePrizes[i]==='number'&&p.prizeCount<beforePrizes[i]);
+  if(finalKo)setTimeout(notifyRpg,1900);else notifyRpg();
  }catch(e){fail(e);}finally{busy=false;render();}}
  async function start(){if(busy)return;busy=true;$('startupError').textContent='';try{
   const response=await api('create',{method:'POST',body:JSON.stringify({deck:$('deck').value,opponent:$('opponent').value,...($('deck').value==='custom'?{customDeck:JSON.parse(localStorage.getItem('neoCampusCustomGymDeck')||'null')}: {})})});

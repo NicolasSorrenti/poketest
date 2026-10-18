@@ -1,0 +1,29 @@
+{
+  "description": "RPG battle cut-in art. Existing portraits are live today; additional expression images can be supplied later.",
+  "characters": {
+    "reina": {
+      "default": "/rpg-assets/reina.png"
+    },
+    "hana": {
+      "default": "/rpg-assets/hana.png"
+    },
+    "shiori": {
+      "default": "/rpg-assets/shiori.png"
+    },
+    "yuna": {
+      "default": "/rpg-assets/yuna.png"
+    },
+    "akari": {
+      "default": "/rpg-assets/akari.png"
+    },
+    "camila": {
+      "default": "/rpg-assets/camila.png"
+    },
+    "marina": {
+      "default": "/rpg-assets/marina.png"
+    },
+    "kaede": {
+      "default": "/rpg-assets/kaede.png"
+    }
+  }
+}
