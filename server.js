@@ -67,6 +67,9 @@ async function cubeAPI(req,res,pathName){
   const token=req.headers['x-cube-token'];
   if(typeof token!=='string'||!token)return sendJSON(res,401,{error:'Missing cube token'});
   if(pathName==='/api/cube/state'&&req.method==='GET')return sendJSON(res,200,cube.view(token));
+  if(pathName==='/api/cube/start'&&req.method==='POST'){
+   const body=await parseJSON(req);return sendJSON(res,200,cube.start(token,body.deck,body.revision,classic));
+  }
   if(pathName==='/api/cube/pick'&&req.method==='POST'){
    const body=await parseJSON(req);return sendJSON(res,200,cube.pick(token,body.id,body.revision));
   }
