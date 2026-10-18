@@ -255,3 +255,55 @@ test('New Game+ records a report and starts fresh without stale romance or stand
  assert.equal(s.points,0);assert.equal(s.partner,null);assert.equal(s.results.length,0);
  assert.equal(s.campaignHistory.length,1);assert.equal(s.campaignHistory[0].partner,'Reina Kurogane');
 });
+
+
+test('side quest is discoverable, choice persists through reload, and chapter pays only once',()=>{
+ const first=launch({day:4,slot:1,location:'shop'});
+ const invitation=first.elements.sideQuestEvents.children.find(x=>x.children?.[0]?.textContent.includes('Bent Binder'));
+ assert.ok(invitation,'Elio chapter is not discoverable in the card shop');
+ invitation.onclick();
+ assert.equal(first.state().activeSideQuest.id,'borrowed_deck');
+ first.elements.choices.children[0].onclick();
+ assert.equal(first.state().activeSideQuest.index,1);
+ const second=launch(first.state());
+ assert.equal(second.state().activeSideQuest.index,1);
+ for(let i=1;i<Side.byId('borrowed_deck').stages[0].lines.length;i++)second.elements.choices.children[0].onclick();
+ assert.equal(second.state().activeSideQuest.phase,'choice');
+ second.elements.choices.children[0].onclick();
+ assert.equal(second.state().activeSideQuest.phase,'response');
+ const third=launch(second.state());
+ const credits=third.state().credits;
+ third.elements.choices.children[0].onclick();
+ assert.equal(third.state().sideQuests.borrowed_deck.step,1);
+ assert.equal(third.state().sideQuests.borrowed_deck.history[0].flag,'elio_own_list');
+ assert.equal(third.state().credits,credits+4);
+ assert.equal(third.state().activeSideQuest,null);
+ assert.ok(third.elements.sideQuestJournal.children.some(x=>x.textContent.includes('Missing Pieces')));
+});
+
+test('Elio quest launches a real deck duel and rewards a saved result only once',()=>{
+ const first=launch({day:35,slot:1,location:'center',
+  sideQuests:{borrowed_deck:{status:'active',step:2,history:[{step:0,flag:'elio_own_list'},{step:1,flag:'elio_budget'}]}}});
+ const invitation=first.elements.sideQuestEvents.children.find(x=>x.children?.[0]?.textContent.includes('No Inherited Victory'));
+ assert.ok(invitation,'final encounter is not reachable');
+ invitation.onclick();
+ const total=Side.byId('borrowed_deck').stages[2].lines.length+1; // includes remembered callback
+ for(let i=0;i<total;i++)first.elements.choices.children[0].onclick();
+ assert.equal(first.state().activeSideQuest.phase,'duel');
+ const resumed=launch(first.state());
+ resumed.elements.choices.children[0].onclick();
+ const pending=resumed.state().pendingDuel;
+ assert.equal(pending.sideQuestId,'borrowed_deck');
+ assert.equal(pending.opponent,'bodyguard');
+ const ev={origin:resumed.loc.origin,source:resumed.elements.battle.contentWindow,data:Bridge.message(pending.id,1)};
+ resumed.listeners.message(ev);
+ const s=resumed.state(),credits=s.credits;
+ assert.equal(s.sideQuests.borrowed_deck.status,'complete');
+ assert.equal(s.sideQuests.borrowed_deck.history[2].result,'loss');
+ assert.equal(s.results.length,1);
+ assert.equal(s.activeSideQuest,null);
+ resumed.listeners.message(ev);
+ assert.equal(resumed.state().credits,credits);
+ assert.equal(resumed.state().results.length,1);
+ assert.ok(resumed.elements.sideQuestJournal.children.some(x=>x.textContent.includes('Completed')));
+});
