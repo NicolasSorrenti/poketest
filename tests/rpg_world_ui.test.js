@@ -2,7 +2,7 @@
 const test=require('node:test');
 const assert=require('node:assert/strict');
 const fs=require('node:fs'),path=require('node:path');
-const Pack=require('../rpg_narrative_pack'),Side=require('../rpg_side_quests'),Story=require('../rpg_story'),Schedules=require('../rpg_schedules'),World=require('../rpg_world'),Arc=require('../rpg_rival_arc'),Tournaments=require('../rpg_tournaments'),Epilogue=require('../rpg_epilogue'),Appointments=require('../rpg_appointments'),Intentions=require('../rpg_intentions'),Bridge=require('../rpg_duel_bridge');
+const Pack=require('../rpg_narrative_pack'),Side=require('../rpg_side_quests'),Story=require('../rpg_story'),Schedules=require('../rpg_schedules'),World=require('../rpg_world'),Arc=require('../rpg_rival_arc'),Tournaments=require('../rpg_tournaments'),Epilogue=require('../rpg_epilogue'),Appointments=require('../rpg_appointments'),Intentions=require('../rpg_intentions'),CG=require('../rpg_cg_gallery'),Bridge=require('../rpg_duel_bridge');
 const js=fs.readFileSync(path.join(__dirname,'..','rpg.js'),'utf8');
 const html=fs.readFileSync(path.join(__dirname,'..','rpg.html'),'utf8');
 const ids=[...html.matchAll(/id="([^"]+)"/g)].map(x=>x[1]);
@@ -27,7 +27,7 @@ function launch(initial,approve=false){
  const doc={getElementById(id){if(!elements[id])throw Error('Missing '+id);return elements[id];},
   createElement(tag){return new FakeNode(tag);},body:new FakeNode('body'),
   addEventListener(name,cb){listeners['document:'+name]=cb;}};
- const win={NeoRpgNarrativePack:Pack,NeoRpgSideQuests:Side,NeoHarborStory:Story,NeoRpgSchedules:Schedules,NeoRpgWorld:World,NeoRpgRivalArc:Arc,NeoRpgTournaments:Tournaments,NeoRpgEpilogue:Epilogue,NeoRpgAppointments:Appointments,NeoRpgIntentions:Intentions,NeoRpgDuelBridge:Bridge,
+ const win={NeoRpgNarrativePack:Pack,NeoRpgSideQuests:Side,NeoHarborStory:Story,NeoRpgSchedules:Schedules,NeoRpgWorld:World,NeoRpgRivalArc:Arc,NeoRpgTournaments:Tournaments,NeoRpgEpilogue:Epilogue,NeoRpgAppointments:Appointments,NeoRpgIntentions:Intentions,NeoRpgCGGallery:CG,NeoRpgDuelBridge:Bridge,
   addEventListener(name,cb){listeners[name]=cb;}};
  const local={getItem(k){return saved[k]||null;},setItem(k,v){saved[k]=String(v);}};
  const session={removeItem(){}};
@@ -396,4 +396,42 @@ test('duel intention counts authentic defeat, then resets cleanly the next day',
  r.listeners.message(event);
  assert.equal(r.state().intentionsCompleted,1);
  assert.equal(r.elements.dailyIntention.children.filter(x=>x.className==='intention-choice').length,3);
+});
+
+test('gallery opens with 32 locked CGs; a real first encounter reveals only its earned profile',()=>{
+ const r=launch({day:5,slot:0,location:'shop'});
+ r.elements.galleryBtn.onclick();
+ assert.equal(r.elements.galleryDialog.open,true);
+ assert.equal(r.elements.galleryGrid.children.length,32);
+ assert.equal(r.elements.galleryGrid.children.filter(x=>!x.disabled).length,0);
+ r.elements.galleryClose.onclick();
+ const person=r.elements.people.children.find(x=>x.children[1]?.children[0]?.textContent==='Hana Mizuno');
+ assert.ok(person);person.onclick();
+ assert.equal(r.state().cgUnlocked.hana_first_meeting.day,5);
+ r.elements.galleryBtn.onclick();
+ assert.equal(r.elements.galleryGrid.children.filter(x=>!x.disabled).length,1);
+ const tile=r.elements.galleryGrid.children.find(x=>!x.disabled);
+ tile.onclick();
+ assert.match(r.elements.galleryPreview.children[0].textContent,/Warm Welcome/);
+ assert.equal(r.state().cgViewed.hana_first_meeting,true);
+});
+test('a genuine duel may unlock pre-duel art but still opens the authoritative iframe with no image files',()=>{
+ const r=launch({day:8,slot:1,location:'shop',relationships:{hana:{affection:2,trust:2}},bonds:{hana:{affection:2,trust:2,duels:0}}});
+ const person=r.elements.people.children.find(x=>x.children[1]?.children[0]?.textContent==='Hana Mizuno');
+ assert.ok(person);person.onclick();
+ r.elements.choices.children.find(x=>x.textContent.includes('Challenge to a duel')).onclick();
+ assert.ok(r.state().pendingDuel);
+ assert.ok(r.state().cgUnlocked.hana_shop_challenge);
+ assert.equal(r.elements.duel.hidden,false);
+ assert.match(r.elements.battle.src,/classic_live\.html/);
+});
+test('eligible riverside hangout unlocks special summer CG, then saves it after day rollover',()=>{
+ const r=launch({day:20,slot:1,location:'park',relationships:{marina:{affection:7,trust:3}},bonds:{marina:{affection:7,trust:3,duels:0}}});
+ const person=r.elements.people.children.find(x=>x.children[1]?.children[0]?.textContent==='Marina Aoki');
+ assert.ok(person);person.onclick();
+ r.elements.choices.children.find(x=>x.textContent.includes('Spend time together')).onclick();
+ assert.ok(r.state().cgUnlocked.marina_beach_towel);
+ const saved=launch(r.state()).state();
+ assert.ok(saved.cgUnlocked.marina_beach_towel);
+ assert.ok(!saved.pendingDuel);
 });
