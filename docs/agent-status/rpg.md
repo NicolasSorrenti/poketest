@@ -117,3 +117,20 @@ Start from current `main` and review recent changes from other agents before edi
 
 ### Next priority
 Fully scripted epilogue conversations per heroine that honor route decisions, then more connected duel-and-choice arcs and deeper NPC tournament bracket presentation. Keep these optional and do not impose a compulsory main quest.
+
+## Milestone — Schedule-based NPC meet-ups (2026-10-18)
+
+**Coordination:** Another agent owns authored character/story content (rpg_narrative_pack.js, rpg_story.js). This milestone only edits RPG infrastructure and tests; no new character definitions, personal dialogue arcs, or Classic combat rules are changed.
+
+- Pure module rpg_appointments.js exports NeoRpgAppointments in the browser and CommonJS. Public API: hydrate, all, active, proposed, book, statusAt, overrides, attend, cancel, expire, stamp.
+- Player invitation during an in-person conversation presents three future slots grounded in NeoRpgSchedules, including additional guest NPCs from the narrative team. Bookings are free, require public locations and distinct periods, and max out at three active plans. They are optional: no main-quest gate.
+- Upcoming Plans sidebar displays agreed time/location, travel shortcut, attendance and advance cancellation. Attending consumes one period and grants +2 affection/+1 trust. Missing an appointment reduces trust once, and proper early cancellation is free.
+- The NPC's booked location overrides a normal routine for the agreed period so meeting them is reliable. Other story definitions, original schedules and duel mechanics remain unchanged.
+- Uses existing browser save key neoHarborRpgV1; new fields appointments/appointmentSeq are hydrated conservatively, and appointment states are saved and de-duplicated.
+- Includes tests/rpg_appointments.test.js, extended controller UI tests and HTTP-host smoke asset check; npm run test:rpg loads the new unit tests. Save-lock and flow fixtures import the new browser API. Full production E2E is not claimed.
+
+### Next system priorities
+1. Non-spoiler character opportunity dashboard and calendaring, avoiding duplicate authoring with the story agent.
+2. Advanced tournament simulation and recovery paths without altering combat rules.
+3. Persistent collection/shop mechanics only after verifying TCG legality and other agents' ownership.
+4. Native browser campaign E2E and responsive interaction hardening.
