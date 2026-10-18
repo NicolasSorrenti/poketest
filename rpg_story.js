@@ -13,6 +13,7 @@
   friend:{affection:2,trust:1,respect:0,attraction:0},
   commit:{affection:2,trust:1,respect:0,attraction:2}
  };
+ const PACK=typeof module==='object'&&module.exports?require('./rpg_narrative_pack'):window.NeoRpgNarrativePack;
  const E=[];
  function arc(npc,rows){
   rows.forEach((r,index)=>{
@@ -202,6 +203,9 @@
    ['Offer a friendship that survives distance','Then do not lose my number.','friend','friendship'],
    ['Tell her the decision is still hers','It is. And I finally think I can make it.','honest','friendship']]]
  ]);
+ // Keep the original four-scene heroine routes stable for existing saves.
+ // Add optional guest and crossover episodes without renumbering those routes.
+ E.push(...PACK.events);
  const ID=new Map(E.map(e=>[e.id,e]));
  function normalize(state){
   if(!state.storyDone||typeof state.storyDone!=='object')state.storyDone={};
@@ -244,7 +248,8 @@
    if(seen.has(e.id))faults.push('Duplicate '+e.id);seen.add(e.id);
    if(e.start>e.end||e.start<1||e.end>90||e.slot<0||e.slot>2)faults.push('Invalid window '+e.id);
    if(e.prerequisite){const prev=ID.get(e.prerequisite);if(!prev||prev.end>=e.end)faults.push('Bad link '+e.id);}
-   if(e.choices.length<2||!e.lines.length)faults.push('Incomplete '+e.id);
+   if(e.choices.length<2||!e.lines.length||!e.choices.every(c=>c.label&&c.reply&&c.delta))faults.push('Incomplete '+e.id);
+   if(e.lines.some(line=>!line.speaker||!line.text))faults.push('Invalid dialogue '+e.id);
   }
   return faults;
  }
