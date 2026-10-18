@@ -36,7 +36,6 @@
    flirt:'That is kind of you. It might even make me less grumpy for the next ten minutes.',
    duelWin:'You had a plan for the bad draws. That is worth more than a perfect hand.',
    duelLose:'See? Sometimes the river lets you cross. Sometimes you rebuild the boat.'}
-  }
  };
  const looks={
   elio:{silhouette:'Compact oversized varsity hoodie with layered tee and worn straight-leg denim',palette:'Sky blue, amber, charcoal',hair:'Soft chestnut curls, loosely pinned away from the eyes',details:'Hand-decorated card binder, repaired canvas sneakers, mismatched sleeves',expressions:'Overthought smile, relief after admitting uncertainty'},
