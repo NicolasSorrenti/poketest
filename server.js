@@ -6,7 +6,7 @@ const {ClassicLocalService,deckOptions}=require('./classic_local_service');
 const {ClassicOnlineService}=require('./classic_online_service');
 const root=__dirname;
 const port=Number(process.env.PORT||8000);
-const types={'.html':'text/html; charset=utf-8','.js':'text/javascript; charset=utf-8','.json':'application/json; charset=utf-8','.css':'text/css; charset=utf-8','.png':'image/png','.jpg':'image/jpeg','.svg':'image/svg+xml','.webp':'image/webp','.json':'application/json; charset=utf-8'};
+const types={'.html':'text/html; charset=utf-8','.js':'text/javascript; charset=utf-8','.json':'application/json; charset=utf-8','.css':'text/css; charset=utf-8','.png':'image/png','.jpg':'image/jpeg','.svg':'image/svg+xml','.webp':'image/webp'};
 const classic=new ClassicLocalService();
 const online=new ClassicOnlineService();
 const {CubeService}=require('./cube_service');
