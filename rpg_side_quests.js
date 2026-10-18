@@ -150,6 +150,12 @@
  const MAP=new Map(quests.map(q=>[q.id,q]));
  const caps={credits:999999,focus:100,insight:99,reputation:100,preparation:3};
  function hydrate(s){
+  if(!s.relationships||typeof s.relationships!=='object'||Array.isArray(s.relationships))s.relationships={};
+  if(!s.bonds||typeof s.bonds!=='object'||Array.isArray(s.bonds))s.bonds={};
+  for(const id of Object.keys(cast)){
+   if(!s.relationships[id]||typeof s.relationships[id]!=='object')s.relationships[id]={affection:0,trust:0,respect:0,attraction:0,duels:0};
+   if(!s.bonds[id]||typeof s.bonds[id]!=='object')s.bonds[id]={affection:0,trust:0,duels:0};
+  }
   if(!s.sideQuests||typeof s.sideQuests!=='object'||Array.isArray(s.sideQuests))s.sideQuests={};
   if(!s.activeSideQuest||typeof s.activeSideQuest!=='object'||!MAP.has(s.activeSideQuest.id))s.activeSideQuest=null;
   if(s.activeSideQuest){
