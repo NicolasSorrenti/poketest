@@ -3,7 +3,7 @@
 // cards in the 28 historically tested theme decks, NOT the entire imported DB.
 // Handler checks are conservative but do not certify rare cross-card interactions.
 const {CATALOG}=require('./headless_duel');
-const {isEnergy,isBasicPokemon}=require('./core_rules');
+const {isEnergy,isBasicPokemon,canEvolve,validateDeck}=require('./core_rules');
 const {list:authentic}=require('./authentic_decks');
 const RETAIL=require('./retail_theme_decks');
 const GENESIS=require('./neo_genesis_decks');
@@ -38,7 +38,9 @@ function shuffle(input,rng){const a=[...input];for(let i=a.length-1;i>0;i--){con
 function makePool({size=240,seed=1}={}){
  if(!Number.isInteger(size)||size<60||size>720||!Number.isSafeInteger(seed)||seed<0)throw Error('Invalid cube configuration');
  const ids=eligibleIds(),pokemon=ids.filter(id=>CATALOG.get(id).supertype==='Pokémon'),trainers=ids.filter(id=>CATALOG.get(id).supertype==='Trainer');
- if(!pokemon.length||!trainers.length)throw Error('Insufficient verified cards');
+ const basics=pokemon.filter(id=>isBasicPokemon(CATALOG.get(id)));
+ const stages=pokemon.filter(id=>!isBasicPokemon(CATALOG.get(id)));
+ if(!basics.length||!trainers.length)throw Error('Insufficient verified cards');
  const rng=random(seed),wantedPokemon=Math.round(size*.65);
  // Card duplicates are intentional: unlike singleton Magic cubes, evolution
  // lines require multiple Basics and Stage 1 cards to draft playable decks.
@@ -47,7 +49,20 @@ function makePool({size=240,seed=1}={}){
   while(result.length<wanted){if(!bag.length)bag=shuffle(items,rng);result.push(bag.pop());}
   return result;
  }
- return shuffle([...expand(pokemon,wantedPokemon),...expand(trainers,size-wantedPokemon)],rng);
+ // Seed a healthy number of Basics, then only include Evolutions with
+ // a compatible parent in the cube. This does not guarantee players draft
+ // both halves of a line; that remains an interesting draft decision.
+ const basicCount=Math.min(wantedPokemon,Math.round(wantedPokemon*.68));
+ const pokemonPool=expand(basics,basicCount);
+ let attempts=0;
+ while(pokemonPool.length<wantedPokemon&&attempts++<wantedPokemon*10){
+  const eligible=stages.filter(id=>pokemonPool.some(parent=>canEvolve(CATALOG.get(id),CATALOG.get(parent))));
+  if(!eligible.length)break;
+  const id=eligible[Math.floor(rng()*eligible.length)];
+  pokemonPool.push(id);
+ }
+ if(pokemonPool.length<wantedPokemon)pokemonPool.push(...expand(basics,wantedPokemon-pokemonPool.length));
+ return shuffle([...pokemonPool,...expand(trainers,size-wantedPokemon)],rng);
 }
 function makeDraft({players=4,packs=4,cardsPerPack=15,seed=1,pool}={}){
  if(!Number.isInteger(players)||players<2||players>8||!Number.isInteger(packs)||packs<1||packs>8||!Number.isInteger(cardsPerPack)||cardsPerPack<5||cardsPerPack>20)throw Error('Invalid draft settings');
@@ -95,6 +110,8 @@ function validateBuild(drafted,deck,{deckSize=40}={}){
   if(!n)return {valid:false,reason:'Card was not drafted: '+id};
   counts.set(id,n-1);
  }
+ const legality=validateDeck(deck,CATALOG,{size:deckSize,maxCopies:4});
+ if(!legality.valid)return {valid:false,reason:legality.errors.join('; ')};
  return basics?{valid:true}:{valid:false,reason:'At least one Basic Pokémon is required'};
 }
 module.exports={supported,eligibleIds,makePool,makeDraft,draftPick,availableForSeat,validateBuild};
