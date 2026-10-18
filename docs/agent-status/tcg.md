@@ -41,7 +41,20 @@ A recognized attack signature or a handler name is **not** proof of complete his
 
 The initial four milestones were pushed through commits `04ec8653df`, `f67e9ffe8b`, `84ab669080` and `8203947574`, followed by focused test and fix commits, including `8a082eb684`, `d726b28848`, `ac5475a463`, `5993873239`, and `88a7007255`. Other agents' RPG work was preserved; updates used forward-only `main` changes with no force-push.
 
-**Latest test chain:** `npm test` executes **158 sequential Node test commands**, including `test_neo_batch_v061.js` through `test_neo_batch_v075.js`. The `TCG Gameplay Regression` workflow runs it separately from the broader Node/RPG regression workflow.
+**Latest test chain:** `npm test` executes **162 sequential Node test commands**, including `test_neo_batch_v061.js` through `test_neo_batch_v075.js` plus four incremental Prize/Trainer regression scripts. The `TCG Gameplay Regression` workflow runs it separately from the broader Node/RPG regression workflow.
+
+## Incremental Prize/Trainer rule fixes — v0.76 through v0.79
+
+Small, sequential, independently tested commits:
+
+| Version | Commit | Verified rules change | TCG / Node evidence |
+| --- | --- | --- | --- |
+| v0.76 | [c828df9](https://github.com/NicolasSorrenti/poketest/commit/c828df9cdbb935f015b72688a5154d7380bd11f7), test correction [e7fb7c7](https://github.com/NicolasSorrenti/poketest/commit/e7fb7c778be6aa8c8a92f53281031530ace95b7f) | Impostor Professor Oak's Invention clears stale Card-Flip reveal flags only if old Prizes are replaced; decline preserves flags; global reveal still applies | [TCG 39088022391](https://github.com/NicolasSorrenti/poketest/actions/runs/39088022391), [Node 39088022430](https://github.com/NicolasSorrenti/poketest/actions/runs/39088022430) |
+| v0.77 | [ef9cf30](https://github.com/NicolasSorrenti/poketest/commit/ef9cf300af8302f756841437c9f8cc46b327c7d7) | Lt. Surge's Treaty takes the specifically selected Prize for each owner and shifts that owner's visibility markers; draw-only branch preserves Prizes | [TCG 39088239935](https://github.com/NicolasSorrenti/poketest/actions/runs/39088239935), [Node 39088239910](https://github.com/NicolasSorrenti/poketest/actions/runs/39088239910) |
+| v0.78 | [9b326c1](https://github.com/NicolasSorrenti/poketest/commit/9b326c1ca8d945bfa95ad3d14d9b91cc8dd03d93), test correction [7822b12](https://github.com/NicolasSorrenti/poketest/commit/7822b12577288a9e64542b10caa0789af694c164) | Misty's Wish: opponent denial draws one and returns inspected Prize face-down; approved exchange adds new face-down Prize; approval without spare hand card never draws | [TCG 39088503035](https://github.com/NicolasSorrenti/poketest/actions/runs/39088503035), [Node 39088502979](https://github.com/NicolasSorrenti/poketest/actions/runs/39088502979) |
+| v0.79 | [ae799c4](https://github.com/NicolasSorrenti/poketest/commit/ae799c483140ba595b59a9902602fb8f29c8f0e5) | Treaty taking final Prize sets victory, including opposing player's victory; simultaneous last Prizes record unresolved historic sudden death | [TCG 39088650777](https://github.com/NicolasSorrenti/poketest/actions/runs/39088650777), [Node 39088650737](https://github.com/NicolasSorrenti/poketest/actions/runs/39088650737) |
+
+**Current `npm test` chain:** 162 sequential Node test commands. These four milestones add `test_neo_batch_v076.js`, `test_gym_treaty_prizes_v077.js`, `test_gym_misty_wish_v078.js`, and `test_gym_treaty_victory_v079.js`. All changes were pushed as fast-forward commits, preserving concurrent RPG and CPU changes.
 
 ## Coverage accounting (do not overclaim)
 
@@ -65,5 +78,5 @@ The initial four milestones were pushed through commits `04ec8653df`, `f67e9ffe8
 
 1. Expand audited copied-attack handling for multi-stage opponent-owned decisions, status/KO redirection and unsupported scripts; test both Neo Discovery Smeargle printings and combined reactive effects. Preserve no-free-reroll behavior for unavailable copies.
 2. Extend Ecogym to rare duplicate-host and ownership-transfer paths with identity-based energy tracing; verify no false returns from Knock Outs and same-player costs.
-3. Run genuine two-browser acceptance for online face-up Prizes and Prize selection across reconnect/save/load, including Card-Flip Game and Here Comes Team Rocket! interactions.
+3. Run genuine two-browser acceptance for online face-up Prizes and Prize selection across reconnect/save/load, including Card-Flip Game, Here Comes Team Rocket!, Misty's Wish, Lt. Surge's Treaty and Impostor Invention.
 4. Re-run dedicated TCG, combined Node and CPU/multiplayer suites after fixes, and update this document only with reproducible pass/fail evidence.
