@@ -2,48 +2,65 @@
 const assert=require('node:assert/strict');
 const {CubeService}=require('./cube_service');
 const {ClassicLocalService}=require('./classic_local_service');
-const cube=new CubeService(),classic=new ClassicLocalService({maxSessions:8});
-let state=cube.create({seed:475}),token=state.token;
-for(let i=0;i<60;i++)state=cube.pick(token,state.pack[0].id,state.revision);
-const deck=state.suggestedDeck;
-const start=cube.start(token,deck,state.revision,classic);
-assert.equal(typeof start.duelToken,'string');
-state=cube.view(token);
-assert.equal(state.tournament.activeRound,1);
-assert.equal(state.tournament.wins,0);
-assert.equal(state.tournament.readyForNext,false);
-assert.deepEqual(classic.session(start.duelToken).game.players[0].deck.length+classic.session(start.duelToken).game.players[0].hand.length,40);
-assert.throws(()=>cube.next(token,state.revision,classic),/Finish the current/);
-let duelToken=start.duelToken;
-for(let i=0;i<3;i++){
- const session=classic.session(duelToken);
- assert.equal(session.cpuConfig.level,i+2,'Round should increase AI difficulty');
- assert.equal(session.game.prizeCount,4);
- assert.equal(session.game.deckSize,40);
- const original=cube.session(token).tournament.humanDeck;
- assert.deepEqual(original,deck,'Do not change the human deck between rounds');
- // Simulate a completed *authoritative game*, never a client-reported score.
- session.game.over=true;
- session.game.winner=i===0?0:i===1?1:null;
+
+function runSemifinal(winner){
+ const simulations=[];
+ const cube=new CubeService({simulateCpu:(a,b,opts)=>{
+  simulations.push({a,b,opts});
+  return {winner:1,method:'played',actions:50};
+ }});
+ const classic=new ClassicLocalService({maxSessions:10});
+ let state=cube.create({seed:475}),token=state.token;
+ for(let i=0;i<60;i++)state=cube.pick(token,state.pack[0].id,state.revision);
+ const frozen=state.suggestedDeck;
+ let launched=cube.start(token,frozen,state.revision,classic);
+ state=cube.view(token);
+ assert.equal(state.tournament.bracket.length,4);
+ assert.equal(state.tournament.results.length,0);
+ assert.throws(()=>cube.next(token,state.revision,classic),/Finish the current/);
+ // Verify a true draw does not falsely award the semifinal.
+ let session=classic.session(launched.duelToken);
+ session.game.over=true;session.game.winner=null;
  state=cube.sync(token,classic);
- assert.equal(state.tournament.results.length,i+1);
- assert.equal(state.tournament.results[i].outcome,['win','loss','draw'][i]);
- const before=state.revision;
- assert.equal(cube.sync(token,classic).revision,before,'Finish must be idempotent');
- if(i<2){
-  assert.equal(state.tournament.readyForNext,true);
-  assert.throws(()=>cube.next(token,before-1,classic),/Stale draft/);
-  const next=cube.next(token,before,classic);
-  assert.notEqual(next.duelToken,duelToken);
-  duelToken=next.duelToken;
-  state=cube.view(token);
-  assert.equal(state.tournament.readyForNext,false);
- }else{
-  assert.equal(state.tournament.finished,true);
-  assert.equal(state.tournament.wins,1);
-  assert.equal(state.tournament.losses,1);
-  assert.equal(state.tournament.draws,1);
-  assert.throws(()=>cube.next(token,state.revision,classic),/Finish the current|Tournament complete/);
- }
+ assert.equal(state.tournament.draws,1);
+ assert.equal(state.tournament.readyForNext,true);
+ assert.equal(state.tournament.bracket[0].status,'waiting');
+ assert.equal(simulations.length,0,'CPU semifinal must not run before a decisive human semifinal');
+ assert.equal(cube.sync(token,classic).revision,state.revision,'Repeated polling must not double count');
+ launched=cube.next(token,state.revision,classic);
+ session=classic.session(launched.duelToken);
+ assert.equal(session.game.deckSize,40);
+ assert.equal(session.game.prizeCount,4);
+ session.game.over=true;session.game.winner=winner;
+ state=cube.sync(token,classic);
+ assert.equal(state.tournament.results.length,1);
+ assert.equal(simulations.length,1,'Run CPU semifinal once');
+ assert.equal(state.tournament.bracket[1].status,'complete');
+ assert.equal(state.tournament.bracket[1].winner,'Cube Champion');
+ assert.equal(state.tournament.bracket[0].winner,winner===0?'You':'Rookie Rival');
+ assert.equal(state.tournament.activeMatchId,winner===0?'final':'third');
+ assert.equal(state.tournament.readyForNext,true);
+ assert.throws(()=>cube.next(token,state.revision-1,classic),/Stale/);
+ const next=cube.next(token,state.revision,classic);
+ assert.notEqual(next.duelToken,launched.duelToken);
+ const active=classic.session(next.duelToken);
+ assert.equal(active.cpuConfig.level,winner===0?4:3);
+ assert.equal(active.game.players[1].name,winner===0?'Cube Champion':'Campus Challenger');
+ assert.equal(cube.session(token).tournament.decks[0].length,40);
+ assert.deepEqual(cube.session(token).tournament.decks[0],frozen);
+ active.game.over=true;active.game.winner=0;
+ state=cube.sync(token,classic);
+ assert.equal(state.tournament.finished,true);
+ assert.equal(state.tournament.results.length,2);
+ assert.equal(state.tournament.standings.length,4);
+ assert.equal(new Set(state.tournament.standings.map(x=>x.name)).size,4);
+ assert.equal(state.tournament.standings.find(x=>x.name==='You').place,winner===0?1:3);
+ assert.equal(state.tournament.bracket.every(x=>x.status==='complete'),true);
+ assert.equal(simulations.length,2,'Each CPU fixture only once');
+ assert.equal(cube.sync(token,classic).revision,state.revision,'No double-scoring terminal bracket');
+ assert.throws(()=>cube.next(token,state.revision,classic),/complete/);
+ return state;
 }
-console.log('PASS Cube tournament: three rounds, immutable deck, server-side results, no duplicate scores');
+runSemifinal(0);
+runSemifinal(1);
+console.log('PASS Cube bracket: two semifinal paths, drawn rematch, CPU fixtures, immutable decks and four-place standings');
