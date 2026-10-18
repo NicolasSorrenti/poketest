@@ -23,6 +23,23 @@
   if(p)$('presetInfo').textContent=p.description+' · '+p.archetypes.join(' / ');
  }
  function esc(v){return String(v??'').replace(/[&<>"']/g,x=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;','\'':'&#39;'}[x]));}
+ function cardArt(card){
+  const image=document.createElement('img');
+  image.alt=card.name+' Pokémon TCG card';image.loading='lazy';image.decoding='async';
+  const urls=['/api/cube-card-image/'+encodeURIComponent(card.id)];
+  const upstream=card.images?.small;
+  if(typeof upstream==='string'&&/^https:\/\/assets\.tcgdex\.net\/en\//.test(upstream))urls.push(upstream);
+  const match=/^((?:base[1-5]|basep|gym[12]|neo[1-4]))-(\d+)$/.exec(card.id);
+  if(match)urls.push('https://images.pokemontcg.io/'+match[1]+'/'+Number(match[2])+'.png');
+  let index=0;
+  image.addEventListener('error',()=>{
+   if(++index<urls.length){image.src=urls[index];return;}
+   const fallback=document.createElement('div');fallback.className='card-art-fallback';
+   fallback.textContent='Art unavailable';image.replaceWith(fallback);
+  });
+  image.src=urls[0];
+  return image;
+ }
  async function request(path,opts={}){
   const r=await fetch('/api/cube/'+path,{...opts,headers:{'Content-Type':'application/json',...(token?{'X-Cube-Token':token}:{})}});
   const data=await r.json();if(!r.ok)throw Error(data.error||'Cube request failed');return data;
@@ -157,9 +174,9 @@
   $('pack').replaceChildren();
   state.pack.forEach(c=>{
    const b=document.createElement('button');b.className='card';b.type='button';
-   const img=c.images?.small;
-   b.innerHTML=(typeof img==='string'&&/^https:\/\//.test(img)?'<img alt="" loading="lazy" src="'+esc(img)+'">':'')+
-    '<strong>'+esc(c.name)+'</strong><small>'+esc(c.supertype)+' · '+esc(c.types.join(', '))+'</small>';
+   const title=document.createElement('strong');title.textContent=c.name;
+   const detail=document.createElement('small');detail.textContent=c.supertype+' · '+c.types.join(', ');
+   b.append(cardArt(c),title,detail);
    b.addEventListener('click',()=>pick(c.id));$('pack').append(b);
   });
   $('drafted').innerHTML=state.drafted.map((c,i)=>'<div class="row">'+(i+1)+'. '+esc(c.name)+'</div>').join('');

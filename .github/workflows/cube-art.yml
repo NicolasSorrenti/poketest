@@ -1,0 +1,23 @@
+name: Cube Artwork Regression
+on:
+  pull_request:
+    paths:
+      - 'cube_card_images.js'
+      - 'cube_client.js'
+      - 'cube_room_client.js'
+      - 'test_cube_card_images.js'
+      - 'server.js'
+      - '.github/workflows/cube-art.yml'
+  push:
+    branches: [main]
+jobs:
+  images:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Validate card-art endpoint and client scripts
+        run: node test_cube_card_images.js && node --check cube_client.js && node --check cube_room_client.js

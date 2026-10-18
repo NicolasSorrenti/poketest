@@ -13,6 +13,7 @@ const {CubeService}=require('./cube_service');
 const cube=new CubeService();
 const {CubeRoomService}=require('./cube_room_service');
 const cubeRooms=new CubeRoomService();
+const {sendCardImage}=require('./cube_card_images');
 const sendJSON=(res,status,value)=>{res.writeHead(status,{'Content-Type':'application/json; charset=utf-8','Cache-Control':'no-store','X-Content-Type-Options':'nosniff'});res.end(JSON.stringify(value));};
 async function parseJSON(req){return new Promise((resolve,reject)=>{
  let text='';req.on('data',chunk=>{text+=chunk;if(text.length>65536){reject(Error('Request too large'));req.destroy();}});
@@ -117,6 +118,7 @@ const server=http.createServer((req,res)=>{
  let url;try{url=new URL(req.url,'http://localhost');}catch{res.writeHead(400).end('Bad request');return;}
  let pathname;try{pathname=decodeURIComponent(url.pathname);}catch{res.writeHead(400).end('Bad request');return;}
  if(pathname.split('/').includes('..')){res.writeHead(403).end('Forbidden');return;}
+ if(pathname.startsWith('/api/cube-card-image/')){sendCardImage(req,res,pathname);return;}
  if(pathname.startsWith('/api/cube-room/')){cubeRoomAPI(req,res,pathname);return;}
  if(pathname.startsWith('/api/cube/')){cubeAPI(req,res,pathname);return;}
  if(pathname.startsWith('/api/classic/')){api(req,res,pathname,url);return;}

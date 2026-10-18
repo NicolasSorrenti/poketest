@@ -25,6 +25,23 @@
  }
  const store=()=>sessionStorage.setItem(storageKey,JSON.stringify({code,token}));
  const say=msg=>{$('message').textContent=msg||'';};
+ function cardArt(card){
+  const image=document.createElement('img');
+  image.alt=card.name+' Pokémon TCG card';image.loading='lazy';image.decoding='async';
+  const urls=['/api/cube-card-image/'+encodeURIComponent(card.id)];
+  const upstream=card.images?.small;
+  if(typeof upstream==='string'&&/^https:\/\/assets\.tcgdex\.net\/en\//.test(upstream))urls.push(upstream);
+  const match=/^((?:base[1-5]|basep|gym[12]|neo[1-4]))-(\d+)$/.exec(card.id);
+  if(match)urls.push('https://images.pokemontcg.io/'+match[1]+'/'+Number(match[2])+'.png');
+  let index=0;
+  image.addEventListener('error',()=>{
+   if(++index<urls.length){image.src=urls[index];return;}
+   const fallback=document.createElement('div');fallback.className='card-art-fallback';
+   fallback.textContent='Art unavailable';image.replaceWith(fallback);
+  });
+  image.src=urls[0];
+  return image;
+ }
  async function api(path,data){
   const response=await fetch('/api/cube-room/'+path,{
    method:data===undefined?'GET':'POST',
@@ -154,10 +171,7 @@
    $('pack').replaceChildren();
    for(const card of state.pack){
     const btn=document.createElement('button');btn.className='card';btn.type='button';
-    const src=card.images?.small;
-    if(typeof src==='string'&&/^https:\/\//.test(src)){
-     const img=document.createElement('img');img.src=src;img.alt='';img.loading='lazy';btn.append(img);
-    }
+    btn.append(cardArt(card));
     const name=document.createElement('strong');name.textContent=card.name;
     const meta=document.createElement('small');meta.textContent=card.types.join(', ')+' · '+card.supertype;
     btn.append(name,meta);
