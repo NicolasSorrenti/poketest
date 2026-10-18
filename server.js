@@ -9,6 +9,8 @@ const port=Number(process.env.PORT||8000);
 const types={'.html':'text/html; charset=utf-8','.js':'text/javascript; charset=utf-8','.json':'application/json; charset=utf-8','.css':'text/css; charset=utf-8','.png':'image/png','.jpg':'image/jpeg','.svg':'image/svg+xml','.webp':'image/webp'};
 const classic=new ClassicLocalService();
 const online=new ClassicOnlineService();
+const {CubeService}=require('./cube_service');
+const cube=new CubeService();
 const sendJSON=(res,status,value)=>{res.writeHead(status,{'Content-Type':'application/json; charset=utf-8','Cache-Control':'no-store','X-Content-Type-Options':'nosniff'});res.end(JSON.stringify(value));};
 async function parseJSON(req){return new Promise((resolve,reject)=>{
  let text='';req.on('data',chunk=>{text+=chunk;if(text.length>65536){reject(Error('Request too large'));req.destroy();}});
@@ -56,16 +58,32 @@ async function onlineAPI(req,res,pathName,url){
   const status=/Unauthorized|token/i.test(msg)?401:/Stale match revision/.test(msg)?409:/Room not found|expired/.test(msg)?404:400;
   return sendJSON(res,status,{error:msg});}
 }
+async function cubeAPI(req,res,pathName){
+ const origin=req.headers.origin;
+ if(origin){let u;try{u=new URL(origin);}catch{sendJSON(res,403,{error:'Invalid origin'});return;}
+ if(u.host!==req.headers.host||!['http:','https:'].includes(u.protocol)){sendJSON(res,403,{error:'Origin not allowed'});return;}}
+ try{
+  if(pathName==='/api/cube/create'&&req.method==='POST')return sendJSON(res,200,cube.create(await parseJSON(req)));
+  const token=req.headers['x-cube-token'];
+  if(typeof token!=='string'||!token)return sendJSON(res,401,{error:'Missing cube token'});
+  if(pathName==='/api/cube/state'&&req.method==='GET')return sendJSON(res,200,cube.view(token));
+  if(pathName==='/api/cube/pick'&&req.method==='POST'){
+   const body=await parseJSON(req);return sendJSON(res,200,cube.pick(token,body.id,body.revision));
+  }
+  return sendJSON(res,404,{error:'Unknown Cube API endpoint'});
+ }catch(e){sendJSON(res,/token|expired/i.test(String(e.message))?401:/Stale draft/.test(String(e.message))?409:400,{error:String(e.message||e)});}
+}
 const server=http.createServer((req,res)=>{
  let url;try{url=new URL(req.url,'http://localhost');}catch{res.writeHead(400).end('Bad request');return;}
  let pathname;try{pathname=decodeURIComponent(url.pathname);}catch{res.writeHead(400).end('Bad request');return;}
  if(pathname.split('/').includes('..')){res.writeHead(403).end('Forbidden');return;}
+ if(pathname.startsWith('/api/cube/')){cubeAPI(req,res,pathname);return;}
  if(pathname.startsWith('/api/classic/')){api(req,res,pathname,url);return;}
  if(pathname.startsWith('/api/online/')){onlineAPI(req,res,pathname,url);return;}
  if(req.method!=='GET'&&req.method!=='HEAD'){res.writeHead(405).end('Method not allowed');return;}
  // Public hosting: never expose source maps, logs, archives, env files or server code over static HTTP.
  if(!(pathname==='/'||/\.(html|js|css|png|jpg|jpeg|svg|webp)$/i.test(pathname)||(/^\/cards\/[a-z0-9_-]+\.json$/i.test(pathname)))){res.writeHead(404).end('Not found');return;}
- const publicScripts=new Set(['authentic_decks.js','card_corrections.js','classic_format.js','classic_live.js','core_rules.js','decision_core.js','decision_session.js','duel_quick_ui.js','battle_decision_ui.js','duel_experience_ui.js','battle_presentation_ui.js','deck_builder.js','deck_builder_core.js','engine.js','legacy_choice_bridge.js','online.js','target_choice_bridge.js','trainer_rules_v058.js','trainer_rules_v059.js','trainer_rules_v060.js','trainer_rules_v061.js','trainer_rules_v062.js','trainer_rules_v063.js','trainer_rules_v064.js']);
+ const publicScripts=new Set(['cube_client.js','authentic_decks.js','card_corrections.js','classic_format.js','classic_live.js','core_rules.js','decision_core.js','decision_session.js','duel_quick_ui.js','battle_decision_ui.js','duel_experience_ui.js','battle_presentation_ui.js','deck_builder.js','deck_builder_core.js','engine.js','legacy_choice_bridge.js','online.js','target_choice_bridge.js','trainer_rules_v058.js','trainer_rules_v059.js','trainer_rules_v060.js','trainer_rules_v061.js','trainer_rules_v062.js','trainer_rules_v063.js','trainer_rules_v064.js']);
  if(pathname==='/rpg.js'||pathname==='/rpg_story.js'||pathname==='/rpg_schedules.js'||pathname==='/rpg_duel_bridge.js'||pathname==='/rpg_world.js'||pathname==='/rpg_rival_arc.js')publicScripts.add(pathname.slice(1));
  if(pathname.endsWith('.js')&&!publicScripts.has(pathname.slice(1))){res.writeHead(404).end('Not found');return;}
  const target=path.resolve(root,'.'+pathname,pathname.endsWith('/')?'index.html':'');
@@ -78,4 +96,4 @@ const server=http.createServer((req,res)=>{
  });
 });
 if(require.main===module){const host=process.env.HOST||'0.0.0.0';server.listen(port,host,()=>console.log(`Neo Campus ready: http://localhost:${port}/online.html (host ${host}, invite-code duels)`));}
-module.exports={server,classic,online};
+module.exports={server,classic,online,cube};
