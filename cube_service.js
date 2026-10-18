@@ -2,22 +2,26 @@
 const crypto=require('node:crypto');
 const {CATALOG}=require('./headless_duel');
 const C=require('./cube_draft');
-const {isBasicPokemon,isBasicEnergy,canEvolve}=require('./core_rules');
 const {cpuPick,score,buildCpuDeck,ENERGY_IDS}=require('./cube_strategy');
+const {simulateCpuMatch}=require('./cube_bracket');
 const RIVALS=Object.freeze([
  {name:'Rookie Rival',level:2,personality:'balanced'},
  {name:'Campus Challenger',level:3,personality:'balanced'},
  {name:'Cube Champion',level:4,personality:'balanced'}
 ]);
+const NAMES=['You',...RIVALS.map(x=>x.name)];
+const other=(seats,winner)=>seats.find(x=>x!==winner);
+const match=(id,seats)=>({id,seats:[...seats],winner:null,method:null,status:seats.length?'waiting':'pending'});
+
 class CubeService{
- constructor(){this.sessions=new Map();}
+ constructor({simulateCpu=simulateCpuMatch}={}){this.sessions=new Map();this.simulateCpu=simulateCpu;}
  create({seed}={}){
   if(seed!==undefined&&(!Number.isSafeInteger(seed)||seed<0||seed>0xffffffff))throw Error('Invalid cube seed');
   for(const [key,session] of this.sessions)if(Date.now()-session.updated>90*60*1000)this.sessions.delete(key);
   if(this.sessions.size>=32)throw Error('Too many active cube drafts');
-  const draft=C.makeDraft({seed:seed??crypto.randomBytes(4).readUInt32BE(0)});
+  const realSeed=seed??crypto.randomBytes(4).readUInt32BE(0),draft=C.makeDraft({seed:realSeed});
   const token=crypto.randomBytes(24).toString('base64url');
-  this.sessions.set(token,{draft,revision:0,updated:Date.now()});
+  this.sessions.set(token,{draft,seed:realSeed,revision:0,updated:Date.now()});
   return {token,...this.view(token)};
  }
  session(token){
@@ -26,69 +30,107 @@ class CubeService{
   s.updated=Date.now();return s;
  }
  view(token){
-  const session=this.session(token);
-  const {draft:d,revision}=session;
-  return {revision,round:d.round,pick:d.pick,packs:d.packs,cardsPerPack:d.cardsPerPack,done:d.done,
-   pack:C.availableForSeat(d,0).map(id=>this.card(id)),
-   drafted:d.picks[0].map(id=>this.card(id)),
-   opponentCounts:d.picks.slice(1).map(a=>a.length),started:!!session.tournament,
-   tournament:session.tournament?{
-    activeRound:session.tournament.results.length+1,
-    rounds:3,results:session.tournament.results.map(r=>({...r})),
-    opponents:RIVALS.map(r=>r.name),
-    readyForNext:session.tournament.pendingNext,
-    finished:session.tournament.results.length===3,
-    activeDuelToken:session.tournament.pendingNext?null:session.duelToken,
-    wins:session.tournament.results.filter(r=>r.outcome==='win').length,
-    losses:session.tournament.results.filter(r=>r.outcome==='loss').length,
-    draws:session.tournament.results.filter(r=>r.outcome==='draw').length
+  const s=this.session(token),d=s.draft,t=s.tournament;
+  const bracket=t?['semiHuman','semiCpu','final','third'].map(id=>{
+   const m=t.matches[id];
+   return {id,seats:m.seats.map(x=>NAMES[x]),winner:m.winner===null?null:NAMES[m.winner],
+    status:m.status,method:m.method};
+  }):null;
+  const placement=t?.finished?
+   ['final','third'].flatMap((id)=>{
+    const m=t.matches[id];
+    return id==='final'?[m.winner,other(m.seats,m.winner)]:[m.winner,other(m.seats,m.winner)];
+   }).map((seat,i)=>({place:i+1,name:NAMES[seat]})):null;
+  return {revision:s.revision,round:d.round,pick:d.pick,packs:d.packs,cardsPerPack:d.cardsPerPack,done:d.done,
+   pack:C.availableForSeat(d,0).map(id=>this.card(id)),drafted:d.picks[0].map(id=>this.card(id)),
+   opponentCounts:d.picks.slice(1).map(a=>a.length),started:!!t,
+   tournament:t?{
+    rounds:2,activeRound:Math.min(2,t.results.length+1),
+    results:t.results.map(r=>({...r})),opponents:RIVALS.map(r=>r.name),
+    bracket,standings:placement,readyForNext:t.pendingNext,finished:t.finished,
+    rematch:t.rematch,activeMatchId:t.activeMatch,
+    activeDuelToken:t.pendingNext||t.finished?null:s.duelToken,
+    wins:t.results.filter(r=>r.outcome==='win').length,
+    losses:t.results.filter(r=>r.outcome==='loss').length,draws:t.draws
    }:null,
    energyIds:ENERGY_IDS,suggestedDeck:d.done?buildCpuDeck(d.picks[0]):null};
+ }
+ launch(s,classic,opponentSeat){
+  const rival=RIVALS[opponentSeat-1];
+  if(!rival)throw Error('Invalid Cube opponent');
+  return classic.createCube({humanDeck:s.tournament.decks[0],cpuDeck:s.tournament.decks[opponentSeat],
+   difficulty:rival.level,personality:rival.personality,name:rival.name});
  }
  start(token,deck,revision,classic){
   const s=this.session(token);
   if(s.revision!==revision)throw Error('Stale draft revision');
   if(!s.draft.done)throw Error('Draft must be completed first');
-  if(s.duelToken)throw Error('Cube match already started');
-  const result=C.validateBuild(s.draft.picks[0],deck);
-  if(!result.valid)throw Error(result.reason);
-  // Freeze a single deck for all three rounds: the player cannot silently
-  // upgrade their draft between games. All CPU decks come from their own picks.
-  const opponentDecks=s.draft.picks.slice(1).map(buildCpuDeck);
-  const duel=classic.createCube({humanDeck:deck,cpuDeck:opponentDecks[0],
-   difficulty:RIVALS[0].level,personality:RIVALS[0].personality,name:RIVALS[0].name});
-  s.tournament={humanDeck:[...deck],opponentDecks,results:[],pendingNext:false};
-  s.duelToken=duel.token;s.revision++;
-  return {duelToken:duel.token};
+  if(s.tournament)throw Error('Cube tournament already started');
+  const v=C.validateBuild(s.draft.picks[0],deck);
+  if(!v.valid)throw Error(v.reason);
+  const decks=[[...deck],...s.draft.picks.slice(1).map(buildCpuDeck)];
+  const t={decks,results:[],draws:0,rematch:false,pendingNext:false,finished:false,
+   activeMatch:'semiHuman',
+   matches:{semiHuman:match('semiHuman',[0,1]),semiCpu:match('semiCpu',[2,3]),
+    final:match('final',[]),third:match('third',[])}};
+  s.tournament=t;
+  try{const duel=this.launch(s,classic,1);s.duelToken=duel.token;s.revision++;return {duelToken:duel.token};}
+  catch(e){delete s.tournament;throw e;}
+ }
+ resolveCpuFixture(s,id){
+  const t=s.tournament,m=t.matches[id];
+  if(m.status==='complete')return;
+  if(m.seats.length!==2||m.seats.includes(0))throw Error('Not a CPU bracket fixture');
+  const [a,b]=m.seats,result=this.simulateCpu(t.decks[a],t.decks[b],{
+   seed:(s.seed+id.length*12347)>>>0,
+   levelA:RIVALS[a-1].level,levelB:RIVALS[b-1].level
+  });
+  if(!result||(result.winner!==0&&result.winner!==1))throw Error('CPU fixture requires a winner');
+  m.winner=m.seats[result.winner];m.method=result.method||'played';m.status='complete';
  }
  sync(token,classic){
   const s=this.session(token),t=s.tournament;
-  if(!t||t.pendingNext||t.results.length===3)return this.view(token);
+  if(!t||t.pendingNext||t.finished)return this.view(token);
   if(!classic)throw Error('Classic duel service required');
   const duel=classic.state(s.duelToken);
-  if(duel.view.over){
-   const index=t.results.length;
-   const outcome=duel.winner===0?'win':duel.winner===1?'loss':'draw';
-   t.results.push({round:index+1,opponent:RIVALS[index].name,outcome});
-   t.pendingNext=t.results.length<3;
-   s.revision++;
+  if(!duel.view.over)return this.view(token);
+  if(duel.winner!==0&&duel.winner!==1){
+   t.draws++;t.pendingNext=true;t.rematch=true;s.revision++;return this.view(token);
   }
-  return this.view(token);
+  const m=t.matches[t.activeMatch];
+  if(m.status==='complete')return this.view(token);
+  const winner=duel.winner===0?0:m.seats[1];
+  m.winner=winner;m.status='complete';m.method='played';
+  t.results.push({round:t.results.length+1,opponent:NAMES[m.seats[1]],
+   outcome:winner===0?'win':'loss'});
+  t.rematch=false;
+  if(t.activeMatch==='semiHuman'){
+   this.resolveCpuFixture(s,'semiCpu');
+   const h=t.matches.semiHuman,c=t.matches.semiCpu;
+   t.matches.final=match('final',[h.winner,c.winner]);
+   t.matches.third=match('third',[other(h.seats,h.winner),other(c.seats,c.winner)]);
+   t.activeMatch=h.winner===0?'final':'third';
+   t.pendingNext=true;
+  }else{
+   const otherId=t.activeMatch==='final'?'third':'final';
+   this.resolveCpuFixture(s,otherId);
+   t.activeMatch=null;t.finished=true;t.pendingNext=false;
+  }
+  s.revision++;return this.view(token);
  }
  next(token,revision,classic){
   const s=this.session(token);
   if(s.revision!==revision)throw Error('Stale draft revision');
   if(!s.tournament)throw Error('Start a Cube tournament first');
-  // Always consult the authoritative duel state, never a client-reported win.
   this.sync(token,classic);
   const t=s.tournament;
-  if(!t.pendingNext)throw Error('Finish the current Cube match first');
-  // If syncing just advanced the state, the client must refresh its revision.
   if(s.revision!==revision)throw Error('Stale draft revision');
-  const index=t.results.length;
-  const duel=classic.createCube({humanDeck:t.humanDeck,cpuDeck:t.opponentDecks[index],
-   difficulty:RIVALS[index].level,personality:RIVALS[index].personality,name:RIVALS[index].name});
-  s.duelToken=duel.token;t.pendingNext=false;s.revision++;
+  if(t.finished)throw Error('Cube tournament complete');
+  if(!t.pendingNext)throw Error('Finish the current Cube match first');
+  const current=t.matches[t.activeMatch],opponent=current.seats[1];
+  if(current.seats[0]!==0)throw Error('Human must be first in the match');
+  const duel=this.launch(s,classic,opponent);
+  s.duelToken=duel.token;t.pendingNext=false;t.rematch=false;s.revision++;
   return {duelToken:duel.token};
  }
  card(id){

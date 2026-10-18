@@ -14,7 +14,9 @@ const {server}=require('./server');
  try{
   let res=await fetch(base+'/cube.html');
   assert.equal(res.status,200);
-  assert((await res.text()).includes('deckStatus'),'Cube builder markup unavailable');
+  const cubeHtml=await res.text();
+  for(const id of ['deckStatus','tournament','roundList','standings','nextMatch','resumeMatch'])
+   assert(cubeHtml.includes('id="'+id+'"'),'Cube bracket markup missing '+id);
   res=await fetch(base+'/cube_client.js');
   assert.equal(res.status,200);
   assert((await res.text()).includes('/classic_live.html'),'Cube client duel navigation missing');
@@ -38,36 +40,36 @@ const {server}=require('./server');
   assert.equal(duel.status,200);
   assert.deepEqual(duel.body.counts,[40,40]);
   assert.equal((await api('start','POST',{revision:state.revision,deck:state.suggestedDeck})).status,409);
-  // A client cannot skip a round or report its own win.
+  // Exercise the real HTTP bracket with a deterministic CPU fixture stub.
+  // The actual CPU-vs-CPU engine is covered by test_cube_simulation.js.
+  const {classic,cube}=require('./server');
+  cube.simulateCpu=()=>({winner:1,method:'played',actions:10});
   let progress=await api('state');
-  assert.equal(progress.body.tournament.results.length,0);
+  assert.equal(progress.body.tournament.bracket.length,4);
   assert.equal((await api('next','POST',{revision:progress.body.revision})).status,400);
   let active=started.body.duelToken;
-  const {classic}=require('./server');
-  for(let round=0;round<3;round++){
-   const game=classic.session(active).game;
-   game.over=true;
-   game.winner=round===1?1:0;
-   progress=await api('state');
-   assert.equal(progress.status,200);
-   assert.equal(progress.body.tournament.results.length,round+1);
-   assert.equal((await api('state')).body.tournament.results.length,round+1,'No double-score on poll');
-   if(round<2){
-    assert.equal(progress.body.tournament.readyForNext,true);
-    const n=await api('next','POST',{revision:progress.body.revision});
-    assert.equal(n.status,200,'Next round should start: '+n.body.error);
-    assert.notEqual(n.body.duelToken,active);
-    active=n.body.duelToken;
-    const follow=await api('state');
-    assert.equal(follow.body.tournament.readyForNext,false);
-   }else{
-    assert.equal(progress.body.tournament.finished,true);
-    assert.equal(progress.body.tournament.wins,2);
-    assert.equal((await api('next','POST',{revision:progress.body.revision})).status,400);
-   }
-  }
+  const semi=classic.session(active).game;
+  semi.over=true;semi.winner=0;
+  progress=await api('state');
+  assert.equal(progress.body.tournament.bracket[0].status,'complete');
+  assert.equal(progress.body.tournament.bracket[1].status,'complete');
+  assert.equal(progress.body.tournament.activeMatchId,'final');
+  assert.equal((await api('state')).body.revision,progress.body.revision);
+  assert.equal((await api('next','POST',{revision:progress.body.revision-1})).status,409);
+  const next=await api('next','POST',{revision:progress.body.revision});
+  assert.equal(next.status,200,'Next match should start: '+next.body.error);
+  assert.notEqual(next.body.duelToken,active);
+  active=next.body.duelToken;
+  const final=classic.session(active).game;
+  final.over=true;final.winner=0;
+  progress=await api('state');
+  assert.equal(progress.body.tournament.finished,true);
+  assert.equal(progress.body.tournament.standings.length,4);
+  assert.equal(progress.body.tournament.standings[0].name,'You');
+  assert.equal(progress.body.tournament.bracket.every(m=>m.status==='complete'),true);
+  assert.equal((await api('next','POST',{revision:progress.body.revision})).status,400);
   assert.equal((await fetch(base+'/cube_draft.js')).status,404,'Private cube rules exposed as static JS');
-  console.log('PASS Cube HTTP: page, client, draft, 40-card match, tokens and private scripts');
+  console.log('PASS Cube HTTP: authenticated 4-player bracket, final standings and protected match transitions');
  }finally{
   await new Promise((resolve,reject)=>server.close(e=>e?reject(e):resolve()));
  }

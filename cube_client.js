@@ -77,25 +77,43 @@
   $('playCube').textContent=state.started?'Match already started':'Start 4-Prize CPU Duel →';
  }
  function renderTournament(){
-  const t=state.tournament,visible=!!t;
-  $('tournament').classList.toggle('hidden',!visible);
-  if(!visible)return;
+  const t=state.tournament;
+  $('tournament').classList.toggle('hidden',!t);
+  if(!t)return;
   const rounds=$('roundList');rounds.replaceChildren();
-  t.opponents.forEach((name,i)=>{
-   const result=t.results[i];
+  const titles={semiHuman:'Your semifinal',semiCpu:'CPU semifinal',final:'Championship final',third:'Third-place match'};
+  for(const m of t.bracket){
    const row=document.createElement('div');
-   row.className='round '+(result?result.outcome:i===t.results.length&&!t.finished?'current':'');
-   const title=document.createElement('strong');title.textContent='Round '+(i+1)+' · '+name;
-   const status=document.createElement('small');
-   status.textContent=result?result.outcome.toUpperCase():i===t.results.length&&!t.finished?'CURRENT OPPONENT':'UPCOMING';
-   row.append(title,status);rounds.append(row);
-  });
-  const record=t.wins+' wins · '+t.losses+' losses · '+t.draws+' draws';
-  $('tournamentStatus').textContent=t.finished?
-   'Tournament complete! '+record+'. '+(t.wins>=2?'Champion performance!':'Try drafting a different strategy next time.'):
-   'Current standing: '+record+'. '+(t.readyForNext?'Next opponent unlocked.':'Finish your current match to continue.');
+   row.className='round '+(m.status==='complete'?'complete':m.id===t.activeMatchId&&!t.readyForNext?'current':'');
+   const title=document.createElement('strong');title.textContent=titles[m.id];
+   const matchup=document.createElement('span');
+   matchup.textContent=m.seats.length===2?m.seats.join(' vs '):'Awaiting semifinals';
+   const status=document.createElement('small');status.style.display='block';
+   status.textContent=m.status==='complete'?'Winner: '+m.winner+(m.method==='played'?'':' · '+m.method+' tiebreak'):
+    m.id===t.activeMatchId&&!t.readyForNext?'MATCH IN PROGRESS':
+    m.id===t.activeMatchId&&t.readyForNext?'READY TO PLAY':'PENDING';
+   row.append(title,matchup,status);rounds.append(row);
+  }
+  const record=t.wins+' wins · '+t.losses+' losses'+(t.draws?' · '+t.draws+' rematch draws':'');
+  let message='Your bracket record: '+record+'. ';
+  if(t.finished){
+   const place=t.standings.find(x=>x.name==='You')?.place;
+   message+='Tournament finished — '+(place===1?'Champion!':place===2?'Runner-up!':place===3?'Third place.':'Fourth place.');
+   const table=document.createElement('ol');table.className='standings';
+   for(const result of t.standings){
+    const row=document.createElement('li');row.textContent=result.name;
+    table.append(row);
+   }
+   $('standings').replaceChildren(table);
+  }else{
+   $('standings').replaceChildren();
+   message+=t.rematch?'The duel was a draw. Replay this match to decide the bracket.':
+    t.readyForNext?'Your next bracket match is ready.':'Finish your current match to advance.';
+  }
+  $('tournamentStatus').textContent=message;
   $('tournamentStatus').classList.toggle('final-record',t.finished);
   $('nextMatch').classList.toggle('hidden',!t.readyForNext);
+  $('nextMatch').textContent=t.rematch?'Replay drawn match →':'Play next bracket match →';
   $('resumeMatch').classList.toggle('hidden',!t.activeDuelToken||t.finished||t.readyForNext);
  }
  async function nextMatch(){
