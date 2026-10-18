@@ -29,7 +29,7 @@ const eventCards=[{day:7,slot:1,place:'arcade',title:'Arcade Friendly Cup',rewar
 
 function eligibleStories(){return STORY.available(state);}
 function startStory(id){
- if(state.activeStory||state.activeEncounter||state.activeArc||state.pendingDuel)return;
+ if(state.activeSideQuest||state.activeStory||state.activeEncounter||state.activeArc||state.pendingDuel)return;
  const e=eligibleStories().find(e=>e.id===id);if(!e)return;
  state.selected=e.npc;state.activeStory={id:e.id,phase:'lines',index:0,choice:null};persist();render();
 }
@@ -67,6 +67,51 @@ function finishStory(){
  log('A memorable afternoon with '+cast[id].name+'.');
  state.activeStory=null;advance();state.selected=id;
  persist();say(cast[id].name,result.choice.reply);
+}
+
+
+function beginSideQuest(id){
+ if(state.activeSideQuest||state.activeStory||state.activeEncounter||state.activeArc||state.pendingDuel||state.day>90)return;
+ try{const x=SIDE.begin(state,id,currentPeople());state.selected=x.stage.npc;persist();render();}
+ catch(err){$('notice').textContent=err.message;}
+}
+function showSideQuest(){
+ const a=state.activeSideQuest,x=SIDE.byId(a?.id),p=state.sideQuests[a?.id],e=x?.stages[p?.step];
+ if(!e){state.activeSideQuest=null;persist();return null;}
+ if(a.phase==='lines'){
+  const lines=SIDE.linesFor(state,a.id),line=lines[Math.min(a.index,lines.length-1)];
+  return {speaker:line.speaker==='Protagonist'?'You':cast[line.speaker]?.name||line.speaker,line:line.text,choices:[[a.index<lines.length-1?'Continue ›':'Respond ›','sideNext']]};
+ }
+ if(a.phase==='duel')return {speaker:cast[e.npc].name,line:'Ready for a real match? No special rules, no going easy.',choices:[['Play the match · ⏳ 1 period','sideDuel'],['Not right now · free','sidePause']]};
+ if(a.phase==='choice')return {speaker:cast[e.npc].name,line:'What would you suggest?',choices:e.choices.map((c,i)=>[c.label,'sideChoice:'+i])};
+ return {speaker:cast[e.npc].name,line:e.choices[a.choice].reply,choices:[['Finish chapter · ⏳ 1 period','sideFinish']]};
+}
+function nextSideQuest(){
+ const a=state.activeSideQuest;if(!a||a.phase!=='lines')return;
+ const x=SIDE.byId(a.id);a.index++;
+ if(a.index>=SIDE.linesFor(state,a.id).length)a.phase=x.stages[state.sideQuests[a.id].step].kind==='duel'?'duel':'choice';
+ persist();render();
+}
+function chooseSideQuest(raw){
+ const a=state.activeSideQuest;if(!a||a.phase!=='choice')return;
+ const x=SIDE.byId(a.id),stage=x.stages[state.sideQuests[a.id].step],i=Number(raw),choice=stage.choices?.[i];
+ if(!Number.isInteger(i)||!choice)return;
+ if(state.credits+(choice.delta.credits||0)<0||state.focus+(choice.delta.focus||0)<0){
+  $('notice').textContent='Not enough credits or focus for that choice.';return;
+ }
+ a.phase='response';a.choice=i;persist();render();
+}
+function finishSideQuest(){
+ const a=state.activeSideQuest;if(!a||a.phase!=='response')return;
+ const x=SIDE.byId(a.id),i=a.choice,owner=x.stages[state.sideQuests[a.id].step].npc;
+ let result;try{result=SIDE.finishChoice(state,a.id,i,currentPeople());}
+ catch(err){$('notice').textContent=err.message;return;}
+ log((result.done?'Completed':'Progressed')+' side quest: '+result.title+'.');
+ advance();persist();say(cast[owner].name,result.reply);
+}
+function pauseSideQuest(){
+ if(state.activeSideQuest?.phase!=='duel')return;
+ state.activeSideQuest=null;persist();say('Narrator','You agree to return when you are ready to play. No time has passed.');
 }
 
 function timeFlash(beforeDay,beforeSlot){const overlay=document.createElement('div');overlay.className='notice-pop';const heading=document.createElement('b');heading.textContent=state.day>90?'Season complete':state.day!==beforeDay?'A NEW DAY BEGINS':'TIME PASSES';const body=document.createElement('span');body.textContent=state.day>90?'Day 90 has ended.':('Day '+state.day+' · '+periods[state.slot]);overlay.append(heading,body);document.body.append(overlay);overlay.addEventListener('animationend',()=>overlay.remove());}
@@ -212,6 +257,15 @@ function finishArc(){
 function scheduleEvent(){return eventCards.find(e=>e.day===state.day&&e.slot===state.slot&&e.place===state.location&&!state.eventsDone[e.day+':'+e.title]);}
 function act(action){
  const [type,id]=action.split(':');
+ if(type==='sideNext')return nextSideQuest();
+ if(type==='sideChoice')return chooseSideQuest(id);
+ if(type==='sideFinish')return finishSideQuest();
+ if(type==='sideDuel'){
+  const a=state.activeSideQuest,q=a&&SIDE.byId(a.id),stage=q?.stages[state.sideQuests[a.id]?.step];
+  if(stage&&SIDE.canDuel(state,a.id,currentPeople()))return startDuel(stage.npc,null,null,null,{id:a.id,step:state.sideQuests[a.id].step});
+  return;
+ }
+ if(type==='sidePause')return pauseSideQuest();
  if(type==='storyNext')return advanceStory();
  if(type==='storyChoice')return chooseStory(id);
  if(type==='storyFinish')return finishStory();
@@ -220,7 +274,8 @@ function act(action){
  if(type==='arcNext')return advanceArc();
  if(type==='arcChoice')return chooseArc(id);
  if(type==='arcFinish')return finishArc();
- if(state.activeStory||state.pendingDuel||state.activeEncounter||state.activeArc)return;
+ if(state.activeStory||state.pendingDuel||state.activeEncounter||state.activeArc||state.activeSideQuest)return;
+ if(type==='sideQuest')return beginSideQuest(id);
  if(type==='arc')return startArc(id);
  if(type==='encounter')return startEncounter(id);
  if(type==='townActivity')return performActivity(id);
