@@ -1256,6 +1256,13 @@ function comboSequenceBonus(action,o,cfg){
  if(!['evolve','attach_energy','play_trainer'].includes(action.type))return 0;
  if(action.type==='play_trainer'&&!['PlusPower','Energy Retrieval'].includes(
   card(o.self.hand[action.payload.handIndex])?.name))return 0;
+ // Chaos Gym first requires a coin flip and can redirect the Trainer.
+ // Never treat a random, opponent-controlled result as a guaranteed line.
+ if(card(o.stadium?.id)?.name==='Chaos Gym')return 0;
+ // No Trainer in hand means there is no novel Trainer combo to search.
+ // Keep the established evolution/Energy policy without burning DFS nodes.
+ if(action.type!=='play_trainer'&&!o.self.hand.some(id=>
+  ['PlusPower','Energy Retrieval'].includes(card(id)?.name)))return 0;
  const root={...prepBoard(o),discard:[...(o.self.discard||[])],plusPower:0};
  const initial=comboValue(root,o);
  let best=-Infinity,bestDepth=0,nodes=0;
