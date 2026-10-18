@@ -38,7 +38,7 @@ for(const replace of [false,true]){
   assert.equal(g.players[1].prizes.length,3);
   // After a replacement, Card-Flip Game can select any new Prize again.
   send(g,0,'play_trainer',{handIndex:0});
-  assert.equal(g.pendingDecision.kind,'classic-trainer');
+  assert.equal(g.pendingDecision.kind,'flipPrize');
   assert.equal(g.pendingDecision.options.length,3,'All three replacement Prizes are hidden');
  }else{
   for(const viewer of [0,1,null])
