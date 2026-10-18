@@ -60,7 +60,7 @@ function attack(g,side,name){
 {
  const g=game('neo3-42','Negative Ion',{enemy:'base1-56'});
  attack(g,0,'Negative Ion');
- assert.equal(g.players[1].active.damage,20,'10 damage doubled by Grass weakness on Onix');
+ assert.equal(g.players[1].active.damage,10,'Chinchou is Lightning-type, neutral to Onix');
  assert.equal(g.players[0].active.neo91IonGuard?.key,g.players[1].active.neo91IonAttack?.key);
  assert.equal(g.turn,1);
  attack(g,1,'Rock Throw');
