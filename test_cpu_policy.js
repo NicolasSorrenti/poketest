@@ -1207,7 +1207,8 @@ const settings={level:3,personality:'balanced',side:1,seed:47};
  assert.ok(actions.includes('attach_energy'),
   'After legal search and evolution, the CPU must attach its held Fighting Energy');
  assert.ok(actions.includes('attack'),
-  'The completed Search to evolution to Energy sequence must finish with a real attack');
+  'The completed Search to evolution to Energy sequence must finish with a real attack; actions='+JSON.stringify(played.commands.map(x=>x.command))+
+  ' final='+JSON.stringify({active:played.game.players[1].active,turn:played.game.turn,over:played.game.over}));
  assert.equal(played.game.pendingDecision,null);
 }
 let duels=0,decisions=0,attacks=0,energy=0,evolutions=0,trainer=0;
