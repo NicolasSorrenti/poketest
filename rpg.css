@@ -49,3 +49,10 @@
 .arc-episode{background:linear-gradient(110deg,#5e3038,#242844);border-color:#f0a887;box-shadow:inset 3px 0 0 #f3bd91}
 .arc-episode strong{font:800 15px 'Barlow Condensed',sans-serif;color:#ffdfbb}
 .arc-episode small{font:500 11px 'Inter',sans-serif;color:#e4bcaa;margin-top:5px}
+
+/* Tournaments: persistent bracket progress */
+.bracket-progress{display:grid;gap:8px}.bracket-card{padding:10px;border:1px solid #49526a;border-radius:9px;background:linear-gradient(110deg,#1c273e,#1c2233);display:flex;flex-direction:column;gap:6px}
+.bracket-card strong{font:800 15px 'Barlow Condensed',sans-serif;letter-spacing:.5px;color:#ffe1c9}
+.bracket-card small{font:600 11px 'Barlow Condensed',sans-serif;letter-spacing:.4px;color:#bdc6d6}
+.bracket-track{display:flex;gap:8px}.bracket-step{height:24px;flex:1;display:grid;place-items:center;border-radius:5px;border:1px solid #3f4a61;background:#172035;color:#8394ac;font:800 12px 'Barlow Condensed',sans-serif}
+.bracket-step.cleared{background:#315f57;border-color:#8cc4aa;color:#e7ffed}.bracket-step.current{background:#874766;border-color:#f9b9ca;color:white;box-shadow:0 0 8px #cc618444}.bracket-champion{border-color:#e3bc7e;background:linear-gradient(110deg,#51442f,#2a2c42)}.bracket-eliminated{opacity:.72}
