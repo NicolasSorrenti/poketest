@@ -11,15 +11,20 @@
  function available(s){hydrate(s);return cups.filter(c=>s.day>=c.day&&s.day<=c.end&&s.location===c.place&&status(s,c.id).state==='open');}
  function begin(s,id){const x=status(s,id);if(!x||!available(s).some(c=>c.id===id)||s.pendingDuel)throw Error('Tournament not available');
   const p=s.tournaments[id]||(s.tournaments[id]={round:0,results:[],state:'open'});
+  p.attempts=(Number.isInteger(p.attempts)&&p.attempts>=0?p.attempts:0)+1;
   if(p.round>=x.cup.rounds.length)throw Error('Tournament completed');
-  return {tournamentId:id,tournamentRound:p.round,npc:x.cup.rounds[p.round],title:x.cup.title+' · Round '+(p.round+1)};
+  return {tournamentId:id,tournamentRound:p.round,tournamentAttempt:p.attempts,npc:x.cup.rounds[p.round],title:x.cup.title+' · Round '+(p.round+1)};
  }
  function settle(s,duel,receipt){
   if(!duel.tournamentId)return null;
   const x=status(s,duel.tournamentId);if(!x||x.state!=='open'||x.round!==duel.tournamentRound||x.opponent!==duel.npc)return null;
   if(!receipt||!['Victory','Defeat','Draw'].includes(receipt.outcome))throw Error('Invalid match result');
+  const saved=s.tournaments[duel.tournamentId];
+  const attempt=duel.tournamentAttempt??null;
+  const identity=duel.id||receipt.duelId||null;
+  if(saved.results.some(r=>(identity&&r.duelId===identity)||(attempt!==null&&r.attempt===attempt)))return null;
   const p=s.tournaments[duel.tournamentId],won=receipt.outcome==='Victory';
-  p.results.push({round:p.round,npc:duel.npc,outcome:receipt.outcome,day:s.day});
+  p.results.push({round:p.round,npc:duel.npc,outcome:receipt.outcome,day:s.day,duelId:identity,attempt});
   let points=0,credits=0;
   if(won){points=x.cup.points[p.round];credits=x.cup.credits[p.round];s.points=(s.points||0)+points;s.credits=(s.credits||0)+credits;p.round++;if(p.round===x.cup.rounds.length)p.state='champion';}
   else if(receipt.outcome==='Defeat')p.state='eliminated';

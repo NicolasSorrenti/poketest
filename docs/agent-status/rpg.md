@@ -73,3 +73,14 @@ Start from current `main` and review recent changes from other agents before edi
 3. Expand seven additional optional duel-and-choice character arcs.
 4. Integrate the shop and persistent card collection with existing deck APIs.
 5. Final campaign results, endings and replay support.
+
+
+### Tournament bracket milestone — controller/UI hardening (2026-10-18)
+- Player-visible tournament progress now appears in the right sidebar and the public circuit calendar. Three markers reflect cleared rounds, the upcoming opponent, champion/defeat state, and registration deadlines.
+- Existing character-themed single-match exhibitions remain separate; the three new cups use persistent three-round player paths with actual Classic CPU matches. This is **not yet a full 8-player simulated elimination tree**, and NPC-versus-NPC matches are not simulated.
+- A per-cup attempt sequence identifies individual duels, including draws. Repeated settlement of a draw returns no result; duplicate Classic callbacks remain guarded by the existing duel bridge.
+- Match receipts include tournament points/credits in reported totals. Legacy saves are handled through optional tournament fields and hydration.
+- The main RPG regression script now includes tests/rpg_tournaments.test.js. Both previously used browser-controller test fixtures load the tournament module.
+- Added three controller integration cases (three wins and rewards, elimination with continued free exploration, drawn-round retry) and two module cases (draw idempotency and invalid receipt), in addition to the original seven tournament tests.
+- **Local verification:** 20 focused tournament/UI tests passed using the source test fixtures in an isolated JavaScript execution harness; JavaScript parses. GitHub Actions full Node CI and live browser/Render end-to-end checks are not yet confirmed.
+- Next priorities: make NPC fixtures and bracket seeding visible if building full elimination trees; add participation after elimination, more personal routes, and eventually campaign endings.

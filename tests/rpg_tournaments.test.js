@@ -8,3 +8,19 @@ test('draw permits a rematch and records result',()=>{const s=state(),d=T.begin(
 test('different brackets preserve independent save state',()=>{const s=state(),d=T.begin(s,'neighborhood');T.settle(s,d,{outcome:'Victory'});s.day=60;const q=T.begin(s,'regional');T.settle(s,q,{outcome:'Victory'});const loaded=JSON.parse(JSON.stringify(s));assert.equal(T.status(loaded,'neighborhood').round,1);assert.equal(T.status(loaded,'regional').round,1);});
 test('late registration expires and prevents replay',()=>{const s=state(36);assert.ok(T.expire(s).includes('neighborhood'));s.day=30;assert.equal(T.available(s).length,0);});
 test('championship rounds fit within final days',()=>{const s=state(88);assert.equal(T.begin(s,'championship').npc,'kaede');s.day=91;assert.ok(T.expire(s).includes('championship'));});
+
+test('repeated draw receipt cannot settle same bracket attempt twice',()=>{
+ const s=state(),d=T.begin(s,'neighborhood');
+ assert.equal(T.settle(s,d,{outcome:'Draw'}).draw,true);
+ assert.equal(T.settle(s,d,{outcome:'Draw'}),null);
+ assert.equal(T.status(s,'neighborhood').results.length,1);
+ const next=T.begin(s,'neighborhood');
+ assert.notEqual(d.tournamentAttempt,next.tournamentAttempt);
+ T.settle(s,next,{outcome:'Victory'});
+ assert.equal(T.status(s,'neighborhood').round,1);
+});
+test('malformed receipt cannot mutate bracket progression',()=>{
+ const s=state(),d=T.begin(s,'neighborhood'),before=JSON.stringify(s);
+ assert.throws(()=>T.settle(s,d,{outcome:'Unknown'}),/Invalid/);
+ assert.equal(JSON.stringify(s),before);
+});

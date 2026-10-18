@@ -2,7 +2,7 @@
 const test=require('node:test');
 const assert=require('node:assert/strict');
 const fs=require('node:fs'),path=require('node:path');
-const Story=require('../rpg_story'),Schedules=require('../rpg_schedules'),World=require('../rpg_world'),Arc=require('../rpg_rival_arc'),Bridge=require('../rpg_duel_bridge');
+const Story=require('../rpg_story'),Schedules=require('../rpg_schedules'),World=require('../rpg_world'),Arc=require('../rpg_rival_arc'),Tournaments=require('../rpg_tournaments'),Bridge=require('../rpg_duel_bridge');
 const js=fs.readFileSync(path.join(__dirname,'..','rpg.js'),'utf8');
 const html=fs.readFileSync(path.join(__dirname,'..','rpg.html'),'utf8');
 const ids=[...html.matchAll(/id="([^"]+)"/g)].map(x=>x[1]);
@@ -27,7 +27,7 @@ function launch(initial){
  const doc={getElementById(id){if(!elements[id])throw Error('Missing '+id);return elements[id];},
   createElement(tag){return new FakeNode(tag);},body:new FakeNode('body'),
   addEventListener(name,cb){listeners['document:'+name]=cb;}};
- const win={NeoHarborStory:Story,NeoRpgSchedules:Schedules,NeoRpgWorld:World,NeoRpgRivalArc:Arc,NeoRpgDuelBridge:Bridge,
+ const win={NeoHarborStory:Story,NeoRpgSchedules:Schedules,NeoRpgWorld:World,NeoRpgRivalArc:Arc,NeoRpgTournaments:Tournaments,NeoRpgDuelBridge:Bridge,
   addEventListener(name,cb){listeners[name]=cb;}};
  const local={getItem(k){return saved[k]||null;},setItem(k,v){saved[k]=String(v);}};
  const session={removeItem(){}};
@@ -149,4 +149,49 @@ test('in-progress rivalry dialogue resumes at the same line after save and reloa
  assert.ok(restored.elements.line.textContent.includes('match'));
  restored.elements.choices.children[0].onclick();
  assert.equal(restored.state().activeArc.index,2);
+});
+
+test('three tournament victories advance a saved championship bracket exactly once per duel',()=>{
+ const r=launch({day:30,slot:0,location:'center'});
+ assert.ok(r.elements.bracketProgress.children.some(x=>x.children[0].textContent==='Neighborhood Cup'));
+ for(let round=0;round<3;round++){
+  const button=r.elements.activities.children.find(x=>x.textContent.includes('Neighborhood Cup')&&x.textContent.includes('Round '+(round+1)));
+  assert.ok(button,'Missing round '+(round+1));
+  button.onclick();
+  const pending=r.state().pendingDuel;
+  assert.equal(pending.tournamentRound,round);
+  assert.equal(pending.tournamentId,'neighborhood');
+  const ev={origin:r.loc.origin,source:r.elements.battle.contentWindow,data:Bridge.message(pending.id,0)};
+  r.listeners.message(ev);r.listeners.message(ev);
+  assert.equal(r.state().tournaments.neighborhood.round,round+1);
+  assert.equal(r.state().results.length,round+1);
+ }
+ const complete=r.state();
+ assert.equal(complete.tournaments.neighborhood.state,'champion');
+ assert.equal(complete.points,36);
+ assert.equal(complete.credits,178);
+ assert.ok(r.elements.bracketProgress.children.some(x=>x.children[1].textContent.includes('CHAMPION')));
+});
+test('tournament defeat eliminates but never blocks home travel',()=>{
+ const r=launch({day:60,slot:0,location:'center'});
+ const cup=r.elements.activities.children.find(x=>x.textContent.includes('Regional Qualifier'));
+ assert.ok(cup);cup.onclick();
+ const pending=r.state().pendingDuel;
+ r.listeners.message({origin:r.loc.origin,source:r.elements.battle.contentWindow,data:Bridge.message(pending.id,1)});
+ assert.equal(r.state().tournaments.regional.state,'eliminated');
+ assert.equal(r.state().tournaments.regional.round,0);
+ assert.ok(r.elements.activities.children.every(x=>!x.textContent.includes('Regional Qualifier')));
+ assert.ok(!r.elements.quickHome.disabled);
+ r.elements.quickHome.onclick();assert.equal(r.state().location,'home');
+});
+test('drawn bracket round remains available for a rematch',()=>{
+ const r=launch({day:30,slot:0,location:'center'});
+ const round=r.elements.activities.children.find(x=>x.textContent.includes('Neighborhood Cup'));
+ assert.ok(round);round.onclick();
+ const d=r.state().pendingDuel;
+ r.listeners.message({origin:r.loc.origin,source:r.elements.battle.contentWindow,data:Bridge.message(d.id,null)});
+ const s=r.state();
+ assert.equal(s.tournaments.neighborhood.round,0);
+ assert.equal(s.tournaments.neighborhood.results.length,1);
+ assert.ok(r.elements.activities.children.some(x=>x.textContent.includes('Neighborhood Cup')));
 });
