@@ -586,6 +586,19 @@ function performAction(g,side,cmd){
    g.pendingDecision=null;g.pendingAction=null;
    answerFinalAttack(g,pending.plan,answer);return;
   }
+  if(pending.kind==='neo89_option'){
+   const yes=!answer.decline&&answer.selected.includes('choice:yes');
+   g.pendingDecision=null;g.pendingAction=null;
+   resolveAttack(g,pending.side,pending.attackIndex,undefined,undefined,{neo89Answered:true,neo89Boost:yes});
+   return;
+  }
+  if(pending.kind==='neo89_plasma'){
+   if(answer.decline||answer.selected.length!==1)fail('Plasma must select one discarded Energy if available');
+   const ix=Number(answer.selected[0].slice(8));
+   g.pendingDecision=null;g.pendingAction=null;
+   resolveAttack(g,pending.side,pending.attackIndex,undefined,undefined,{neo89Answered:true,neo89EnergyIndex:ix});
+   return;
+  }
   if(answer.decline&&pending.kind==='neo_hydro'){g.pendingDecision=null;g.pendingAction=null;resolveAttack(g,pending.side,pending.attackIndex,undefined,undefined,{hydroBoost:false});return;}
   if(answer.decline&&pending.kind==='neo_attack_choice'&&pending.stage==='hatch'){
    g.pendingDecision=null;g.pendingAction=null;
@@ -984,6 +997,23 @@ function performAction(g,side,cmd){
    g.nextDecisionId++;g.pendingDecision=makeDecision({id:`conversion:${g.nextDecisionId}`,actor:side,kind:'energy-type',label:'Choose a Pokémon type',options:colors.map(x=>({id:`type:${x}`,label:x})),min:1,max:1,optional:program.kind==='conversion1'});
    g.pendingAction={kind:'attack_color',side,attackIndex:index};return;
   }
+  if(program.kind.startsWith('neo89:')){
+   if(program.kind==='neo89:plasma'){
+    const eligible=p.discard.flatMap((id,i)=>isEnergy(card(g,id))?[{id:'discard:'+i,label:card(g,id).name}]:[]);
+    if(eligible.length){
+     g.nextDecisionId++;g.pendingDecision=makeDecision({id:'neo89plasma:'+g.nextDecisionId,actor:side,kind:'discard-recovery',label:'Plasma: choose an Energy card to attach from discard',options:eligible,min:1,max:1});
+     g.pendingAction={kind:'neo89_plasma',side,attackIndex:index};return;
+    }
+    resolveAttack(g,side,index,undefined,undefined,{neo89Answered:true});return;
+   }
+   if(program.kind==='neo89:knock-over'&&!g.stadium){
+    resolveAttack(g,side,index,undefined,undefined,{neo89Answered:true,neo89Boost:false});return;
+   }
+   g.nextDecisionId++;g.pendingDecision=makeDecision({id:'neo89optional:'+g.nextDecisionId,actor:side,kind:'attack-option',
+    label:program.kind==='neo89:aerowing'?'Aerowing: risk 40 damage for a coin flip (80 or 0)?':program.kind==='neo89:lightning-strike'?'Lightning Strike: discard all attached Energy to do 80 damage?':'Knock Over: discard the Stadium?',
+    options:[{id:'choice:yes',label:program.kind==='neo89:aerowing'?'Flip coin for 80 or 0 damage':program.kind==='neo89:lightning-strike'?'Discard all Energy for 80 damage':'Discard Stadium'}],min:0,max:1,optional:true});
+   g.pendingAction={kind:'neo89_option',side,attackIndex:index};return;
+  }
   if(program.kind==='gym:alert'){
    if(!p.bench.length)fail('Alert requires a Benched Pokémon to switch with');
    g.nextDecisionId++;g.pendingDecision=makeDecision({id:`gymAlert:${g.nextDecisionId}`,actor:side,kind:'pokemon-target',label:'Alert: choose your new Active Pokémon',options:p.bench.map((x,i)=>({id:`bench:${i}`,label:publicName(g,x)})),min:1,max:1});
@@ -1151,6 +1181,16 @@ function resolveAttack(g,side,index,chosenBench,energyPicks,extra={}){
   if(p.bench.length&&(!Number.isInteger(extra.neo47BenchIndex)||!p.bench[extra.neo47BenchIndex]))fail('Electric Current requires a valid Bench target');
  }
  if(program.kind==='neo47:discharge'&&!u.energies.some(id=>card(g,id).name==='Lightning Energy'))fail('Discharge needs a Lightning Energy card to discard');
+ if(program.kind.startsWith('neo89:')){
+  if(extra.neo89Answered!==true)fail('Neo v089 requires completion of its player choice');
+  if(program.kind==='neo89:plasma'){
+   const eligible=p.discard.flatMap((id,i)=>isEnergy(card(g,id))?[i]:[]);
+   if(eligible.length&&!eligible.includes(extra.neo89EnergyIndex))fail('Plasma needs a valid discarded Energy card');
+   if(!eligible.length&&extra.neo89EnergyIndex!==undefined)fail('Plasma Energy was not available');
+  }else if(typeof extra.neo89Boost!=='boolean')fail('Invalid optional attack choice');
+  if(program.kind==='neo89:knock-over'&&extra.neo89Boost&&!g.stadium)fail('Knock Over has no Stadium to discard');
+ }
+
  // Exact-matched final Classic attack programs must have completed every
  // required choice. The caller cannot inject an unvalidated final effect.
  if(GYM_LAST.planned(program.kind)&&!extra.gymLastApproved)fail('Complete Gym attack choices first');
@@ -1239,7 +1279,7 @@ function resolveAttack(g,side,index,chosenBench,energyPicks,extra={}){
   STATUS.clearConditions(prior);clearBenchEffects(prior);
  }
  const coreContext={neo49Locked:Boolean(u.neo49LockOn?.expires>g.turnSerial&&f.active.neo49LockTarget?.side===side&&f.active.neo49LockTarget?.sourceId===u.id&&u.neo49LockOn.targetId===f.active.id),neo49Fossils:p.bench.filter(x=>['Omanyte','Omastar','Kabuto','Kabutops'].includes(card(g,x.id).name)).length,totalPokemon:g.players.reduce((n,owner)=>n+allPokemon(owner).length,0),selfWater:u.energies.filter(id=>card(g,id).name==='Water Energy').length,selfLightning:u.energies.filter(id=>card(g,id).name==='Lightning Energy').length,selfCounters:Math.floor(u.damage/10),defenderCounters:Math.floor(f.active.damage/10),benchCount:p.bench.length,enemyEnergy:f.active.energies.length,enemyRemainingHP:Math.max(0,maxHP(g,f.active)-f.active.damage),selfEnergy:u.energies.length,selfBasicTypes:new Set(u.energies.map(id=>card(g,id).name).filter(n=>['Grass Energy','Fire Energy','Water Energy','Lightning Energy','Psychic Energy','Fighting Energy'].includes(n))).size,murkrowBench:p.bench.filter(x=>effectiveCard(g,x).name==='Murkrow').length,opponentAllEnergy:[f.active,...f.bench].reduce((n,x)=>n+x.energies.length,0),enemySpecialEnergy:f.active.energies.filter(id=>(card(g,id).subtypes||[]).includes('Special')).length,defenderStatus:f.active.status,enemyBench:f.bench.length,topFireCount:p.deck.slice(-5).filter(id=>card(g,id).name==='Fire Energy').length,selfPoisoned:u.status==='Poisoned',nidokingOnBench:p.bench.some(x=>card(g,x.id).name==="Giovanni's Nidoking"),nightSpirits:allPokemon(p).filter(x=>["Sabrina's Gastly","Sabrina's Haunter","Sabrina's Gengar"].includes(card(g,x.id).name)).length,enemyMaxHP:maxHP(g,f.active),enemyFighting:effectiveCard(g,f.active).types?.includes('Fighting'),selfFireCards:u.energies.filter(id=>card(g,id).name==='Fire Energy').length,bellossomCount:allPokemon(p).filter(x=>card(g,x.id).name==='Bellossom').length,ownPokemonCount:allPokemon(p).length,discardEnergyCount:p.discard.filter(id=>isEnergy(card(g,id))).length,enemyBaby:['Elekid','Magby','Tyrogue','Igglybuff','Cleffa','Pichu','Smoochum'].includes(effectiveCard(g,f.active).name),enemyBasic:effectiveCard(g,f.active).subtypes?.includes('Basic'),damagedPreviousTurn:u.lastAttackImpact?.serial===g.turnSerial-1&&u.lastAttackImpact.damage>0,extraEnergies:(type)=>extraAttackEnergy(g,u,a,type),teamNameCount:(names,region)=> (region==='bench'?p.bench:allPokemon(p)).filter(x=>names.includes(card(g,x.id).name)).length,allNamedCount:(names)=>g.players.flatMap(allPokemon).filter(x=>names.includes(card(g,x.id).name)).length,enemyBenchCount:f.bench.length,darkDefender:card(g,f.active.id).name.startsWith('Dark '),topFiveEnergyCount:p.deck.slice(-5).filter(id=>isEnergy(card(g,id))).length,discardAmount:extra.theme?.sources?.length||0,flameHeads:extra.theme?.roll?.flips?.filter(Boolean).length||0};
- let roll=extra.preRoll||ATTACK.resolve(program,()=>next(g,2)===1,coreContext);
+ let roll=extra.preRoll||ATTACK.resolve(program,()=>next(g,2)===1,{...coreContext,optionalBoost:extra.neo89Boost,discardEnergyIndex:extra.neo89EnergyIndex});
 
  // Neo v0.51: shared copy programs with explicit Bench targeting and
  // attached-Energy payments. Preserve Super Metronome's coin through choices.
@@ -1795,6 +1835,11 @@ function resolveAttack(g,side,index,chosenBench,energyPicks,extra={}){
   const picks=extra.fireIndices||[];
   for(const i of [...picks].sort((a,b)=>b-a))p.discard.push(u.energies.splice(i,1)[0]);
   for(let i=0;i<picks.length&&f.deck.length;i++)f.discard.push(f.deck.pop());
+ }
+ if(roll.recoverAttachedEnergyIndex!==undefined){
+  const ix=roll.recoverAttachedEnergyIndex;
+  if(!Number.isInteger(ix)||!p.discard[ix]||!isEnergy(card(g,p.discard[ix])))fail('Plasma discarded Energy changed');
+  u.energies.push(p.discard.splice(ix,1)[0]);
  }
  if(roll.retrieveEnergy){
   for(const i of [...(extra.discardIndices||[])].sort((a,b)=>b-a))p.hand.push(p.discard.splice(i,1)[0]);
