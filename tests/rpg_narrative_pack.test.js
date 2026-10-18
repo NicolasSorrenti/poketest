@@ -107,6 +107,6 @@ test('browser asset and multiple speaker wiring are explicit',()=>{
  const app=fs.readFileSync('rpg.js','utf8');
  assert.ok(html.indexOf('/rpg_narrative_pack.js')<html.indexOf('/rpg_story.js'));
  assert.match(server,/pathname==='\/rpg_narrative_pack\.js'/);
- assert.match(app,/Object\.assign\(cast,PACK\.cast\)/);
+ assert.match(app,/Object\.assign\(cast,PACK\.cast,SIDE\.cast\)/);
  assert.match(app,/cast\[line\.speaker\]\?\.name/);
 });
