@@ -94,7 +94,8 @@ class CubeService{
   return {revision,round:d.round,pick:d.pick,packs:d.packs,cardsPerPack:d.cardsPerPack,done:d.done,
    pack:C.availableForSeat(d,0).map(id=>this.card(id)),
    drafted:d.picks[0].map(id=>this.card(id)),
-   opponentCounts:d.picks.slice(1).map(a=>a.length),started:!!this.session(token).duelToken};
+   opponentCounts:d.picks.slice(1).map(a=>a.length),started:!!this.session(token).duelToken,
+   energyIds:ENERGY_IDS,suggestedDeck:d.done?buildCpuDeck(d.picks[0]):null};
  }
  start(token,deck,revision,classic){
   const s=this.session(token);
