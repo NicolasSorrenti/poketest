@@ -65,10 +65,13 @@ test('starting a quest, reloading, choosing, and completing a chapter pays rewar
 test('earlier choices produce distinct opening dialogue in later chapters',()=>{
  for(const q of SIDE.quests){
   const x=q.stages[1],s=sample(x,{sideQuests:{[q.id]:{status:'active',step:1,history:[{step:0,flag:q.stages[0].choices[0].flag}]}}});
-  const a=SIDE.linesFor(s,q.id)[0].text;
+  const a=SIDE.linesFor(s,q.id)[1].text;
   s.sideQuests[q.id].history[0].flag=q.stages[0].choices[1].flag;
-  const b=SIDE.linesFor(s,q.id)[0].text;
+  const b=SIDE.linesFor(s,q.id)[1].text;
   assert.notEqual(a,b,q.id+' has no callback for earlier choice');
+  assert.equal(SIDE.linesFor(s,q.id)[0].text,x.lines[0].text,'Essential opening context must remain intact');
+  const resumed=JSON.parse(JSON.stringify(s));resumed.activeSideQuest={id:q.id,phase:'lines',index:x.lines.length,choice:null};
+  SIDE.hydrate(resumed);assert.ok(resumed.activeSideQuest,'Inserted callback must not break a saved scene near its final line');
  }
 });
 test('a complete conversation-only quest survives save/load, without accidental repeat rewards',()=>{
