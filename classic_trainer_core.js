@@ -7,7 +7,7 @@ const {isBasicPokemon,isEnergy,canEvolve}=require('./core_rules');
 const STATUS=require('./special_conditions_core');
 // Chaos Gym cannot pass attached Trainers to the other player (WotC ruling).
 const ATTACH_ONLY=new Set(['PlusPower','Defender','Berry','Counterattack Claws','Charity',"Brock's Protection","Koga's Ninja Trick","Sabrina's ESP",'Mysterious Fossil','Clefairy Doll']);
-const SETS=['base1','base2','base3','base4','base5','gym1','gym2','neo1','neo2','neo3','neo4'];
+const SETS=['base1','base2','base3','base4','base5','gym1','gym2','neo1','neo2','neo3','neo4','basep'];
 const CATALOG=new Map(SETS.flatMap(s=>require('./cards/'+s+'.json')).map(c=>[c.id,c]));
 const get=id=>{const c=CATALOG.get(id);if(!c)throw Error('Unknown Classic card: '+id);return c;};
 const fossilEvolution=c=>c.evolvesFrom==='Mysterious Fossil'||(['Omanyte','Kabuto','Aerodactyl'].includes(c.name)&&c.subtypes?.includes('Stage 1'));
