@@ -1263,6 +1263,29 @@ function resolveAttack(g,side,index,chosenBench,energyPicks,extra={}){
   if(p.bench.length&&(!Number.isInteger(extra.neo47BenchIndex)||!p.bench[extra.neo47BenchIndex]))fail('Electric Current requires a valid Bench target');
  }
  if(program.kind==='neo47:discharge'&&!u.energies.some(id=>card(g,id).name==='Lightning Energy'))fail('Discharge needs a Lightning Energy card to discard');
+ if(program.kind.startsWith('neo92:')){
+  if(['neo92:guiding-flame','neo92:pull-in','neo92:white-hot-flame'].includes(program.kind)&&extra.neo92Approved!==true)fail('Neo v092 selection not completed');
+  if(program.kind==='neo92:guiding-flame'){
+   if(p.bench.length>=5)fail('Guiding Flame requires Bench space');
+   const available=p.discard.flatMap((id,i)=>isBasicPokemon(card(g,id))?[i]:[]);
+   if(available.length&&!available.includes(extra.neo92DiscardIndex))fail('Guiding Flame requires discarded Basic or Baby Pokémon');
+   if(!available.length&&extra.neo92DiscardIndex!==undefined)fail('No Pokémon available in discard');
+  }
+  if(program.kind==='neo92:pull-in'&&extra.neo92PullIndex!==null){
+   if(!Number.isInteger(extra.neo92PullIndex)||!f.bench[extra.neo92PullIndex]||jawClampLocks(g,1-side))fail('Pull In selected an illegal opposing Pokémon');
+  }
+  if(program.kind==='neo92:white-hot-flame'){
+   const fire=u.energies.flatMap((id,i)=>card(g,id).name==='Fire Energy'?[i]:[]);
+   const lightning=u.energies.flatMap((id,i)=>card(g,id).name==='Lightning Energy'?[i]:[]);
+   if(extra.neo92MissingPayment){
+    if(fire.length&&lightning.length)fail('Energy available; White-Hot Flame payment required');
+   }else{
+    const picks=extra.neo92Payment;
+    if(!Array.isArray(picks)||picks.length!==2||new Set(picks).size!==2||picks.some(i=>!Number.isInteger(i)||!u.energies[i])||
+       !picks.some(i=>fire.includes(i))||!picks.some(i=>lightning.includes(i)))fail('White-Hot Flame requires one printed Fire and one printed Lightning Energy card');
+   }
+  }
+ }
  if(program.kind.startsWith('neo89:')){
   if(extra.neo89Answered!==true)fail('Neo v089 requires completion of its player choice');
   if(program.kind==='neo89:plasma'){
@@ -1361,7 +1384,7 @@ function resolveAttack(g,side,index,chosenBench,energyPicks,extra={}){
   STATUS.clearConditions(prior);clearBenchEffects(prior);
  }
  const coreContext={neo49Locked:Boolean(u.neo49LockOn?.expires>g.turnSerial&&f.active.neo49LockTarget?.side===side&&f.active.neo49LockTarget?.sourceId===u.id&&u.neo49LockOn.targetId===f.active.id),neo49Fossils:p.bench.filter(x=>['Omanyte','Omastar','Kabuto','Kabutops'].includes(card(g,x.id).name)).length,totalPokemon:g.players.reduce((n,owner)=>n+allPokemon(owner).length,0),selfWater:u.energies.filter(id=>card(g,id).name==='Water Energy').length,selfLightning:u.energies.filter(id=>card(g,id).name==='Lightning Energy').length,selfCounters:Math.floor(u.damage/10),defenderCounters:Math.floor(f.active.damage/10),benchCount:p.bench.length,enemyEnergy:f.active.energies.length,enemyRemainingHP:Math.max(0,maxHP(g,f.active)-f.active.damage),selfEnergy:u.energies.length,selfBasicTypes:new Set(u.energies.map(id=>card(g,id).name).filter(n=>['Grass Energy','Fire Energy','Water Energy','Lightning Energy','Psychic Energy','Fighting Energy'].includes(n))).size,murkrowBench:p.bench.filter(x=>effectiveCard(g,x).name==='Murkrow').length,opponentAllEnergy:[f.active,...f.bench].reduce((n,x)=>n+x.energies.length,0),enemySpecialEnergy:f.active.energies.filter(id=>(card(g,id).subtypes||[]).includes('Special')).length,defenderStatus:f.active.status,enemyBench:f.bench.length,topFireCount:p.deck.slice(-5).filter(id=>card(g,id).name==='Fire Energy').length,selfPoisoned:u.status==='Poisoned',nidokingOnBench:p.bench.some(x=>card(g,x.id).name==="Giovanni's Nidoking"),nightSpirits:allPokemon(p).filter(x=>["Sabrina's Gastly","Sabrina's Haunter","Sabrina's Gengar"].includes(card(g,x.id).name)).length,enemyMaxHP:maxHP(g,f.active),enemyFighting:effectiveCard(g,f.active).types?.includes('Fighting'),selfFireCards:u.energies.filter(id=>card(g,id).name==='Fire Energy').length,bellossomCount:allPokemon(p).filter(x=>card(g,x.id).name==='Bellossom').length,ownPokemonCount:allPokemon(p).length,discardEnergyCount:p.discard.filter(id=>isEnergy(card(g,id))).length,enemyBaby:['Elekid','Magby','Tyrogue','Igglybuff','Cleffa','Pichu','Smoochum'].includes(effectiveCard(g,f.active).name),enemyBasic:effectiveCard(g,f.active).subtypes?.includes('Basic'),damagedPreviousTurn:u.lastAttackImpact?.serial===g.turnSerial-1&&u.lastAttackImpact.damage>0,extraEnergies:(type)=>extraAttackEnergy(g,u,a,type),teamNameCount:(names,region)=> (region==='bench'?p.bench:allPokemon(p)).filter(x=>names.includes(card(g,x.id).name)).length,allNamedCount:(names)=>g.players.flatMap(allPokemon).filter(x=>names.includes(card(g,x.id).name)).length,enemyBenchCount:f.bench.length,darkDefender:card(g,f.active.id).name.startsWith('Dark '),topFiveEnergyCount:p.deck.slice(-5).filter(id=>isEnergy(card(g,id))).length,discardAmount:extra.theme?.sources?.length||0,flameHeads:extra.theme?.roll?.flips?.filter(Boolean).length||0};
- let roll=extra.preRoll||ATTACK.resolve(program,()=>next(g,2)===1,{...coreContext,optionalBoost:extra.neo89Boost,discardEnergyIndex:extra.neo89EnergyIndex,opponentOptDraw:extra.neo91OpponentOptDraw});
+ let roll=extra.preRoll||ATTACK.resolve(program,()=>next(g,2)===1,{...coreContext,optionalBoost:extra.neo89Boost,discardEnergyIndex:extra.neo89EnergyIndex,opponentOptDraw:extra.neo91OpponentOptDraw,neo92DiscardIndex:extra.neo92DiscardIndex,neo92MissingPayment:extra.neo92MissingPayment});
 
  // Neo v0.51: shared copy programs with explicit Bench targeting and
  // attached-Energy payments. Preserve Super Metronome's coin through choices.
@@ -1577,6 +1600,12 @@ function resolveAttack(g,side,index,chosenBench,energyPicks,extra={}){
    p.discard.push(u.energies.splice(i,1)[0]);
   extra.psyduckPaymentApplied=true;
  }
+ if(program.kind==='neo92:crushing-blow'&&roll.neo92DiscardOpponentEnergy&&f.active.energies.length>1&&!protectedEnergy(f.active)&&extra.neo92EnemyEnergy===undefined){
+  g.nextDecisionId++;g.pendingDecision=makeDecision({id:'neo92crush:'+g.nextDecisionId,actor:side,kind:'energy-discard',label:'Crushing Blow: choose an opposing Energy to discard',options:f.active.energies.map((id,i)=>({id:'energy:'+i,label:card(g,id).name})),min:1,max:1});
+  g.pendingAction={kind:'neo92_enemy_energy',side,attackIndex:index,roll};return;
+ }
+ if(program.kind==='neo92:crushing-blow'&&extra.neo92EnemyEnergy!==undefined&&(!Number.isInteger(extra.neo92EnemyEnergy)||!f.active.energies[extra.neo92EnemyEnergy]))fail('Invalid Crushing Blow Energy target');
+ if(program.kind==='neo92:crushing-blow'&&roll.neo92DiscardOpponentEnergy)roll.discardEnemyEnergy=true;
  // A heads-only Energy discard is chosen by the attacking player, with the
  // coin cached across the decision. No hidden opponent cards are exposed.
  if(program.kind==='gym:removal-beam'&&roll.discardEnemyEnergy&&!protectedEnergy(f.active)&&f.active.energies.length>1&&!Number.isInteger(extra.enemyEnergyIndex)){
