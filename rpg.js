@@ -83,6 +83,8 @@ for(const id of Object.keys(cast)){if(!state.bonds[id])state.bonds[id]={affectio
 STORY.normalize(state);
 WORLD.hydrate(state);
 ARC.hydrate(state);
+// Restored saves may already be beyond an optional cup's registration window.
+TOURNAMENTS.expire(state);
 for(const id of Object.keys(cast)){const old=state.bonds[id],current=state.relationships[id];
  if(!state.flags['newStoryMigrated_'+id]){for(const key of ['affection','trust','duels'])current[key]=Math.max(current[key]||0,old[key]||0);
  state.flags['newStoryMigrated_'+id]=true;}
