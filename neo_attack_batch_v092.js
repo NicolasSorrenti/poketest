@@ -39,6 +39,7 @@ function resolve(p,flip,ctx={}){
    if(ctx.neo92DiscardIndex!==undefined)r.neo92BenchFromDiscard=ctx.neo92DiscardIndex;
    break;
   case 'neo92:white-hot-flame':
+   if(ctx.neo92MissingPayment){r.damage=0;break;}
    r.neo92FireLightningPayment=true;
    if(!coin())r.selfDamage=30;
    break;
