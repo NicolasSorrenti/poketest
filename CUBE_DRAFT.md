@@ -37,3 +37,12 @@ The pool is roughly 65% Pokémon (weighted toward Basic Pokémon, balanced acros
 - The four-player championship has two semifinals, a final and a third-place match. The human plays a semifinal and either the final or third-place match. The other two games are CPU-vs-CPU, with each player using their drafted 40-card deck. Human draws require replay. Results and all four places are authoritative.
 - No human multiplayer drafting yet. CPU fixtures are simulated with the authoritative game reducer and AI for both sides, up to a bounded work budget. If a fixture has not resolved, its declared winner is determined by remaining Prizes, remaining Pokémon, then a reproducible seed tiebreak; the bracket labels this outcome.
 - Eligible handlers are more extensively covered than arbitrary archive cards but not proven perfectly accurate in every combination.
+
+## Multiplayer draft preview (/cube_room.html)
+- The host creates a six-character invite code and shares the generated room link.
+- Two to four human players can ready up, with empty seats filled by CPUs. Packs pass only after every player has picked; cards, picks, and submitted decks are private to their seat.
+- Each human stores its own reconnect token in browser session storage; no token appears in the invite link.
+- Rooms use in-memory server state and expire after six hours without activity.
+- A completed draft lets each player build and lock a 40-card deck with unlimited Basic Energy. Once locked, edits are rejected by the server.
+- **Online Cube duels are not wired yet.** This milestone delivers multiplayer drafting and deck submission. Future work must create online 40-card matches between human seats and connect their authoritative winners to the tournament bracket.
+- Room protocol lives in cube_room_service.js and /api/cube-room/*. Run node test_cube_room.js and node test_cube_room_http.js for seat privacy, complete four-human and mixed drafts, and HTTP authentication.

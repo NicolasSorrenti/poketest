@@ -1,0 +1,60 @@
+'use strict';
+const assert=require('node:assert/strict');
+const fs=require('node:fs'),path=require('node:path');
+const {chromium}=require('playwright');
+const {server}=require('../server');
+const artifacts=path.join(__dirname,'..','artifacts','rpg-browser');
+fs.mkdirSync(artifacts,{recursive:true});
+(async()=>{
+ let browser;
+ await new Promise(resolve=>server.listen(0,'127.0.0.1',resolve));
+ try{
+  browser=await chromium.launch({headless:true,args:['--no-sandbox']});
+  const origin='http://127.0.0.1:'+server.address().port;
+  const host=await browser.newPage({viewport:{width:1280,height:860}});
+  const guest=await browser.newPage({viewport:{width:390,height:844},isMobile:true,hasTouch:true});
+  const errors=[];
+  host.on('pageerror',err=>errors.push('host '+err.message));
+  guest.on('pageerror',err=>errors.push('guest '+err.message));
+  await host.goto(origin+'/cube_room.html');
+  await guest.goto(origin+'/cube_room.html');
+  await host.locator('#playerName').fill('Host');
+  await host.locator('#createRoom').click();
+  await host.locator('#room:not(.hidden)').waitFor({timeout:20000});
+  const title=await host.locator('#roomTitle').innerText();
+  const code=title.replace('Cube room ','').trim();
+  assert.match(code,/^[A-Z2-9]{6}$/);
+  await guest.locator('#playerName').fill('Friend');
+  await guest.locator('#roomCode').fill(code);
+  await guest.locator('#joinRoom').click();
+  await guest.locator('#room:not(.hidden)').waitFor({timeout:20000});
+  await host.waitForFunction(()=>document.querySelector('#roster')?.textContent.includes('Friend'),null,{timeout:20000});
+  await host.locator('#readyRoom').click();
+  await guest.locator('#readyRoom').click();
+  await host.locator('#beginDraft:enabled').waitFor({timeout:20000});
+  await host.locator('#beginDraft').click();
+  await Promise.all([host.locator('#draftArea:not(.hidden)').waitFor({timeout:25000}),
+   guest.locator('#draftArea:not(.hidden)').waitFor({timeout:25000})]);
+  assert.equal(await host.locator('#pack button').count(),15);
+  assert.equal(await guest.locator('#pack button').count(),15);
+  await host.locator('#pack button').first().click();
+  await host.getByText('Waiting for other drafters to choose…').waitFor({timeout:20000});
+  assert.equal(await host.locator('#pack button').count(),0,'Picking must hide private future cards');
+  assert.equal(await guest.locator('#pack button').count(),15);
+  await guest.locator('#pack button').first().click();
+  await host.waitForFunction(()=>document.querySelector('#pickCount')?.textContent==='1'&&document.querySelectorAll('#pack button').length===14,null,{timeout:30000});
+  await guest.waitForFunction(()=>document.querySelector('#pickCount')?.textContent==='1'&&document.querySelectorAll('#pack button').length===14,null,{timeout:30000});
+  const before=await host.evaluate(()=>JSON.parse(sessionStorage.getItem('neoCampusCubeRoomV1')));
+  await host.reload();
+  await host.locator('#draftArea:not(.hidden)').waitFor({timeout:20000});
+  const restored=await host.evaluate(()=>JSON.parse(sessionStorage.getItem('neoCampusCubeRoomV1')));
+  assert.deepEqual(before,restored,'Host should restore the exact same private seat');
+  await host.screenshot({path:path.join(artifacts,'cube-room-host.png'),fullPage:true});
+  await guest.screenshot({path:path.join(artifacts,'cube-room-mobile-guest.png'),fullPage:true});
+  assert.deepEqual(errors,[],'Both browser clients should have no JavaScript errors');
+  console.log('PASS Cube browser: 2 real browser clients, invite, ready, private pack pass, mobile viewport and reconnect');
+ }finally{
+  if(browser)await browser.close();
+  await new Promise(resolve=>server.close(resolve));
+ }
+})().catch(e=>{console.error(e);process.exitCode=1;});

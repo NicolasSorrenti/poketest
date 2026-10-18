@@ -9,6 +9,9 @@ on:
       - 'server.js'
       - 'tests/rpg_browser_smoke.js'
       - 'tests/online_browser_smoke.js'
+      - 'tests/cube_room_browser_smoke.js'
+      - 'cube_room*'
+      - 'cube.html'
       - 'online.html'
       - 'online.js'
       - '.github/workflows/rpg-browser.yml'
@@ -19,6 +22,9 @@ on:
       - 'server.js'
       - 'tests/rpg_browser_smoke.js'
       - 'tests/online_browser_smoke.js'
+      - 'tests/cube_room_browser_smoke.js'
+      - 'cube_room*'
+      - 'cube.html'
       - 'online.html'
       - 'online.js'
       - '.github/workflows/rpg-browser.yml'
@@ -39,6 +45,8 @@ jobs:
         run: node tests/rpg_browser_smoke.js
       - name: Test two real multiplayer browser clients
         run: node tests/online_browser_smoke.js
+      - name: Test two real Cube drafting browser clients
+        run: node tests/cube_room_browser_smoke.js
       - name: Preserve screenshots
         if: always()
         uses: actions/upload-artifact@v4
