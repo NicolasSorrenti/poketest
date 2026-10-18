@@ -17,7 +17,7 @@
  const publicPlaces=['shop','arcade','park','cafe','center','library'];
  function locationFor(npc,day,slot,events=[]){
   if(!templates[npc]||!Number.isInteger(day)||day<1||day>90||!Number.isInteger(slot)||slot<0||slot>2||day<start[npc])return null;
-  const override=events.find(e=>e.npc===npc&&e.start<=day&&e.end>=day&&e.slot===slot);
+  const override=events.find(e=>(e.npc===npc||e.participants?.includes(npc))&&e.start<=day&&e.end>=day&&e.slot===slot);
   if(override)return override.place;
   const week=Math.floor((day-1)/7),weekday=(day-1)%7;
   let place=templates[npc][weekday][slot];
