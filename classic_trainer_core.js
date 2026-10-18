@@ -708,7 +708,18 @@ function commit(g,plan,h){
     // Prize reveal flags are indexed to the physical Prize slots.
     // Taking one must shift the remaining cards' visibility together.
     owner.prizeFaceUp?.splice(idx,1);
-   }break;
+   }
+   if(pick('mode')===0){
+    // Treaty grants actual Prize cards. Taking the last Prize wins just as
+    // taking it after a Knock Out does; simultaneous final claims are a tie
+    // pending the historical sudden-death procedure.
+    const winners=[0,1].filter(side=>g.players[side].prizes.length===0);
+    if(winners.length){
+     g.over=true;g.winner=winners.length===1?winners[0]:null;
+     h.log(g,g.winner===null?'Simultaneous win conditions — sudden-death rematch required.':g.players[g.winner].name+' wins!');
+    }
+   }
+   break;
   }
   case "Brock's Protection":{
    const u=slot(p,pick('target'));if(!get(u.id).name.startsWith("Brock's "))throw Error('Protection requires Brock Pokémon');
