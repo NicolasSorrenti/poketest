@@ -1,6 +1,6 @@
 # Neo Campus TCG — gameplay engineering status
 
-**Updated:** 2026-10-17  
+**Updated:** 2026-10-18  
 **Repository:** `NicolasSorrenti/poketest`, branch `main`  
 **Scope:** original Base Set through Neo Destiny (Neo 4).
 
@@ -80,3 +80,11 @@ Small, sequential, independently tested commits:
 2. Extend Ecogym to rare duplicate-host and ownership-transfer paths with identity-based energy tracing; verify no false returns from Knock Outs and same-player costs.
 3. Run genuine two-browser acceptance for online face-up Prizes and Prize selection across reconnect/save/load, including Card-Flip Game, Here Comes Team Rocket!, Misty's Wish, Lt. Surge's Treaty and Impostor Invention.
 4. Re-run dedicated TCG, combined Node and CPU/multiplayer suites after fixes, and update this document only with reproducible pass/fail evidence.
+
+## 2026-10-18 — small verified milestone v0.80
+
+- Added `test_neo_batch_v080.js` covering old-era Confused retreat coin outcomes: a failed retreat discards the paid Energy, leaves the Active Pokémon Confused, and disallows another attempt; a successful retreat clears Confusion after the swap. A player-selected Energy payment is resolved before asserting the outcome.
+- Commits: `eed3dc99d9` (new regression) and `84c2846000` (fix decision-aware fixture). Both are forward-only commits on `main`.
+- **Dedicated TCG Gameplay Regression passed** on commit `84c2846000`: [workflow 39151437851](https://github.com/NicolasSorrenti/poketest/actions/runs/39151437851). Current scripted `npm test` contains **168 sequential commands**.
+- **Broader Node regression failed** for the same SHA: [workflow 39151437868](https://github.com/NicolasSorrenti/poketest/actions/runs/39151437868), with four failing RPG test cases. This is not a green repository-wide build. Treat RPG failures as a separate unresolved integration blocker and revalidate after concurrent agents fix them.
+- This milestone adds regression assurance to existing engine behavior; it does **not** add a new historical card handler or raise the authenticated-attack total.
