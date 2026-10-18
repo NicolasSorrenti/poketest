@@ -586,6 +586,37 @@ function performAction(g,side,cmd){
    g.pendingDecision=null;g.pendingAction=null;
    answerFinalAttack(g,pending.plan,answer);return;
   }
+  if(pending.kind==='neo92_choose'){
+   const owner=g.players[pending.side],enemy=g.players[1-pending.side],effect=pending.effect,picks=[...answer.selected];
+   if(effect==='guiding'){
+    if(picks.length!==1)fail('Guiding Flame requires a choice');
+    const ix=Number(picks[0].slice(8));
+    if(!Number.isInteger(ix)||!owner.discard[ix]||!isBasicPokemon(card(g,owner.discard[ix])))fail('Guiding Flame needs a discarded Basic or Baby Pokémon');
+    g.pendingDecision=null;g.pendingAction=null;
+    resolveAttack(g,pending.side,pending.attackIndex,undefined,undefined,{neo92Approved:true,neo92DiscardIndex:ix});return;
+   }
+   if(effect==='pull'){
+    const ix=answer.decline||!picks.length?null:Number(picks[0].slice(6));
+    if(ix!==null&&(!Number.isInteger(ix)||!enemy.bench[ix]))fail('Invalid Pull In target');
+    g.pendingDecision=null;g.pendingAction=null;
+    resolveAttack(g,pending.side,pending.attackIndex,undefined,undefined,{neo92Approved:true,neo92PullIndex:ix});return;
+   }
+   if(effect==='charizard'){
+    const ix=picks.map(id=>Number(id.slice(7)));
+    if(ix.length!==2||new Set(ix).size!==2||ix.some(i=>!Number.isInteger(i)||!owner.active.energies[i])||
+      !ix.some(i=>card(g,owner.active.energies[i]).name==='Fire Energy')||
+      !ix.some(i=>card(g,owner.active.energies[i]).name==='Lightning Energy'))fail('White-Hot Flame requires exactly one Fire Energy and one Lightning Energy');
+    g.pendingDecision=null;g.pendingAction=null;
+    resolveAttack(g,pending.side,pending.attackIndex,undefined,undefined,{neo92Approved:true,neo92Payment:ix});return;
+   }
+   fail('Unexpected v092 decision');
+  }
+  if(pending.kind==='neo92_enemy_energy'){
+   const i=Number(answer.selected[0]?.slice(7));
+   if(!Number.isInteger(i)||!g.players[1-pending.side].active?.energies[i])fail('Crushing Blow Energy target changed');
+   g.pendingDecision=null;g.pendingAction=null;
+   resolveAttack(g,pending.side,pending.attackIndex,undefined,undefined,{preRoll:pending.roll,neo92Approved:true,neo92EnemyEnergy:i,confusionChecked:true,attackPenaltyChecked:true});return;
+  }
   if(pending.kind==='neo91_draw'){
    const wantsCard=!answer.decline&&answer.selected.includes('choice:draw');
    g.pendingDecision=null;g.pendingAction=null;
