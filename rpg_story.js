@@ -220,6 +220,7 @@
   const s=normalize(state),b=s.relationships[e.npc],previous=e.prerequisite;
   return s.day>=e.start&&s.day<=e.end&&s.slot===e.slot&&place===e.place&&!s.storyDone[e.id]&&!s.storyMissed[e.id]&&(!previous||!!s.storyDone[previous])&&b.affection>=e.minBond;
  }
+ function linesFor(state,id){const e=ID.get(id);if(!e)return [];const flag=state?.storyFlags?.[e.prerequisite];const opening=e.openingByFlag?.[flag];return opening?[{...e.lines[0],text:opening},...e.lines.slice(1)]:e.lines;}
  function available(state,place=state.location){return E.filter(e=>qualifies(e,state,place));}
  function recordExpiry(state){
   normalize(state);const missed=[];
@@ -255,5 +256,5 @@
   }
   return faults;
  }
- return Object.freeze({events:E,byId:id=>ID.get(id),normalize,available,qualifies,recordExpiry,resolve,validate});
+ return Object.freeze({events:E,byId:id=>ID.get(id),normalize,available,qualifies,linesFor,recordExpiry,resolve,validate});
 });
