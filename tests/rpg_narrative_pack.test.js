@@ -60,6 +60,7 @@ test('every new scene has a legal window, reachable start and a stored consequen
   }
   assert.ok(STORY.available(state).some(x=>x.id===e.id),e.id+' not eligible');
   assert.equal(SCHEDULES.locationFor(e.npc,e.start,e.slot,[e]),e.place);
+  for(const person of e.participants||[])assert.equal(SCHEDULES.locationFor(person,e.start,e.slot,[e]),e.place,'guest missing from crossroads');
   const answer=STORY.resolve(state,e.id,0);
   assert.equal(answer.choice.flag,e.choices[0].flag);
   assert.equal(state.storyFlags[e.id],e.choices[0].flag);
