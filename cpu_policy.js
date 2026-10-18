@@ -394,12 +394,30 @@ function searchedCardValue(name,o){
  const battlefield=[p.active,...p.bench].filter(Boolean);
  if(matches.some(c=>isEnergy(c))){
   return 25+Math.max(0,...matches.filter(isEnergy).flatMap(c=>
-   battlefield.map(u=>{
+   battlefield.map((u,index)=>{
     const before=strongestAffordableAttack(u,q.active);
     const after=damageAfterAttachment(u,c.id,q.active);
     const useful=after>before?(after-before)*2+75:0;
     const filling=energyValue(u,c.id);
-    return useful+Math.max(0,filling);
+    const pool=energyPool(u),added=energyPool({energies:[c.id]});
+    // Colored requirements cannot be paid with unrelated Energy even if the
+    // attack also has Colorless costs. Fixes a searching CPU choosing Water
+    // for a Rattata over the second Fighting needed for Machop's Submission.
+    const colorMissing=(cost,available)=>{
+     const remain=[...available];let missing=0;
+     for(const type of cost.filter(t=>t!=='Colorless')){
+      let i=remain.indexOf(type);
+      if(i<0)i=remain.indexOf('Any');
+      if(i<0)missing++;else remain.splice(i,1);
+     }
+     return missing;
+    };
+    const coloredProgress=Math.max(0,...(card(u.id)?.attacks||[]).map(a=>{
+     const old=colorMissing(a.cost||[],pool);
+     const current=colorMissing(a.cost||[],[...pool,...added]);
+     return old>current?(index===0?125:36):0;
+    }));
+    return (useful+Math.max(0,filling)+coloredProgress)*(index===0?1.22:.58);
    })));
  }
  const pokemon=matches.filter(c=>c.supertype==='Pokémon');
