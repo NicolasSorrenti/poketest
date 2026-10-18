@@ -195,3 +195,29 @@ test('drawn bracket round remains available for a rematch',()=>{
  assert.equal(s.tournaments.neighborhood.results.length,1);
  assert.ok(r.elements.activities.children.some(x=>x.textContent.includes('Neighborhood Cup')));
 });
+
+test('an eliminated player can discover and finish a real relationship aftermath scene',()=>{
+ const r=launch({day:31,slot:2,location:'center',
+  tournaments:{neighborhood:{round:1,results:[],state:'eliminated'}}});
+ const event=r.elements.townEncounters.children.find(x=>x.children?.[0]?.textContent.includes('A Match Worth Remembering'));
+ assert.ok(event);event.onclick();
+ assert.equal(r.state().activeEncounter.phase,'choice');
+ r.elements.choices.children[0].onclick();r.elements.choices.children[0].onclick();
+ const s=r.state();
+ assert.ok(s.encountersDone.cup_neighborhood_rival);
+ assert.equal(s.relationships.reina.respect,2);
+ assert.equal(s.preparation,1);
+ assert.equal(s.day,32);
+ assert.equal(s.slot,0);
+});
+test('old saves past a missed cup can unlock an alternative NPC scene on load',()=>{
+ const r=launch({day:36,slot:0,location:'shop'});
+ assert.equal(r.state().tournaments.neighborhood.state,'missed');
+ const event=r.elements.townEncounters.children.find(x=>x.children?.[0]?.textContent.includes('A Seat at the Next Table'));
+ assert.ok(event,'Hana should offer a way forward after missing a cup');
+ event.onclick();r.elements.choices.children[0].onclick();r.elements.choices.children[0].onclick();
+ const s=r.state();
+ assert.ok(s.encountersDone.cup_neighborhood_return);
+ assert.equal(s.relationships.hana.trust,2);
+ assert.equal(s.day,36);assert.equal(s.slot,1);
+});

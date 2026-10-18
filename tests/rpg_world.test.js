@@ -11,12 +11,12 @@ function sample(overrides={}){
  STORY.normalize(s);W.hydrate(s);return s;
 }
 function peopleFor(s){return S.peopleAt(s.day,s.slot,s.location,STORY.events);}
-test('14 distinct location activities and 16 validated encounters',()=>{
+test('14 distinct location activities and 22 validated encounters',()=>{
  assert.deepEqual(W.validate(),[]);
  assert.equal(W.activities.length,14);
- assert.equal(W.encounters.length,16);
+ assert.equal(W.encounters.length,22);
  assert.equal(new Set(W.activities.map(a=>a.id)).size,14);
- assert.equal(new Set(W.encounters.map(e=>e.id)).size,16);
+ assert.equal(new Set(W.encounters.map(e=>e.id)).size,22);
  assert.deepEqual(new Set(W.activities.map(a=>a.place)),new Set(['home','shop','arcade','park','cafe','center','library']));
 });
 test('every authored encounter is reachable during its time window with the correct character present',()=>{
@@ -24,6 +24,7 @@ test('every authored encounter is reachable during its time window with the corr
   let found=false;
   for(let day=e.start;day<=e.end;day++)for(const slot of e.slots){
    const s=sample({day,slot,location:e.place});
+   if(e.requiresCup)s.tournaments={[e.requiresCup.id]:{round:e.requiresCup.minRound||0,results:[],state:e.requiresCup.states[0]}};
    if(e.npc)s.relationships[e.npc].affection=99;
    if(W.availableEncounters(s,peopleFor(s)).some(x=>x.id===e.id))found=true;
   }
@@ -115,4 +116,44 @@ test('hydration repairs old saves and respects stat bounds',()=>{
  assert.equal(s.focus,100);assert.equal(s.insight,0);assert.equal(s.preparation,3);
  assert.deepEqual(s.activityDone,{});assert.deepEqual(s.encountersDone,{});
  assert.equal(s.activeEncounter,null);
+});
+
+test('post-tournament scenes require actual stored outcomes, not calendar time alone',()=>{
+ const e=W.encounters.find(x=>x.id==='cup_neighborhood_rival');
+ const s=sample({day:31,slot:2,location:'center'});
+ s.relationships.reina.affection=10;
+ assert.ok(!W.availableEncounters(s,['reina']).some(x=>x.id===e.id));
+ s.tournaments={neighborhood:{state:'champion',round:3,results:[]}};
+ assert.ok(W.availableEncounters(s,['reina']).some(x=>x.id===e.id));
+ s.tournaments.neighborhood.state='missed';
+ assert.ok(!W.availableEncounters(s,['reina']).some(x=>x.id===e.id));
+});
+test('missing a tournament unlocks a different friendship opportunity',()=>{
+ const e=W.encounters.find(x=>x.id==='cup_neighborhood_return');
+ const s=sample({day:36,slot:0,location:'shop',tournaments:{neighborhood:{state:'missed',round:0,results:[]}}});
+ assert.ok(W.availableEncounters(s,['hana']).some(x=>x.id===e.id));
+ const reply=W.completeEncounter(s,e.id,0,['hana']);
+ assert.match(reply.summary,/practice/);
+ assert.equal(s.relationships.hana.trust,2);
+ assert.equal(s.preparation,1);
+ assert.throws(()=>W.completeEncounter(s,e.id,0,['hana']),/no longer available/);
+});
+test('championship between-round encounter needs bracket progression',()=>{
+ const e=W.encounters.find(x=>x.id==='cup_final_between_rounds');
+ const s=sample({day:88,slot:1,location:'arcade',tournaments:{championship:{state:'open',round:0,results:[]}}});
+ assert.ok(!W.availableEncounters(s,['kaede']).some(x=>x.id===e.id));
+ s.tournaments.championship.round=1;
+ assert.ok(W.availableEncounters(s,['kaede']).some(x=>x.id===e.id));
+ s.tournaments.championship.state='eliminated';
+ assert.ok(!W.availableEncounters(s,['kaede']).some(x=>x.id===e.id));
+});
+test('cup aftermath choices survive JSON reload and do not replay',()=>{
+ const e=W.encounters.find(x=>x.id==='cup_regional_numbers');
+ const s=sample({day:61,slot:0,location:'library',tournaments:{regional:{state:'eliminated',round:1,results:[]}}});
+ s.relationships.akari.affection=8;
+ assert.ok(W.availableEncounters(s,['akari']).some(x=>x.id===e.id));
+ W.completeEncounter(s,e.id,1,['akari']);
+ const restored=W.hydrate(JSON.parse(JSON.stringify(s)));
+ assert.ok(restored.encountersDone[e.id]);
+ assert.ok(!W.availableEncounters(restored,['akari']).some(x=>x.id===e.id));
 });
