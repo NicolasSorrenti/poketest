@@ -1,0 +1,15 @@
+name: Cube Draft Regression
+on:
+  pull_request:
+  push:
+    branches: [feature/cube-balance-tournament]
+jobs:
+  cube:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify drafting, CPU decks, 40-card battles and tournament
+        run: npm run test:cube
