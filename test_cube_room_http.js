@@ -8,9 +8,12 @@ const {server}=require('./server');
   const page=await fetch(base+'/cube_room.html');
   assert.equal(page.status,200);
   const html=await page.text();
-  for(const id of ['createRoom','joinRoom','roomCode','roster','pack','buildChoices','lockDeck'])
+  for(const id of ['createRoom','joinRoom','roomCode','roster','pack','roomDeckBuilder','lockDeck'])
    assert(html.includes('id="'+id+'"'),'Missing multiplayer interface '+id);
   assert.equal((await fetch(base+'/cube_room_client.js')).status,200);
+  assert.equal((await fetch(base+'/cube_builder_ui.js')).status,200);
+  assert.equal((await fetch(base+'/cube_builder.css')).status,200);
+
   assert.equal((await fetch(base+'/cube_room_service.js')).status,404,'Server room state must not be public');
   const req=async(path,payload,{code,token,origin}={})=>{
    const res=await fetch(base+'/api/cube-room/'+path,{

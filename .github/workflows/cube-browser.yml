@@ -6,6 +6,7 @@ on:
       - 'server.js'
       - 'tests/cube_room_browser_smoke.js'
       - 'tests/cube_art_browser_smoke.js'
+      - 'tests/cube_deck_builder_browser_smoke.js'
       - '.github/workflows/cube-browser.yml'
   push:
     branches: [main]
@@ -26,11 +27,15 @@ jobs:
         run: node tests/cube_room_browser_smoke.js
       - name: Check first-party Cube card artwork in solo and multiplayer browsers
         run: node tests/cube_art_browser_smoke.js
+      - name: Verify illustrated solo and multiplayer deck building
+        run: node tests/cube_deck_builder_browser_smoke.js
       - name: Preserve Cube screenshots
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: cube-multiplayer-screenshots
-          path: artifacts/rpg-browser/cube-room-*.png
+          path: |
+            artifacts/rpg-browser/cube-room-*.png
+            artifacts/rpg-browser/cube-deck-builder-*.png
           if-no-files-found: ignore
           retention-days: 7

@@ -53,15 +53,13 @@ input,select{background:#0b162e;border:1px solid #5c77a5;border-radius:9px;color
 <h2 id="draftHeading">Your pack</h2><p id="draftStatus" aria-live="polite"></p>
 <div class="columns"><div id="pack" class="pack"></div><aside><h3>Your drafted cards <span id="pickCount">0</span>/60</h3><div id="picks" class="picks"></div></aside></div>
 </section>
-<section id="deckArea" class="panel hidden">
-<h2>Build your 40-card deck</h2><p>Choose from cards you drafted and unlimited Basic Energy. You can edit until you lock the deck.</p>
-<p id="buildStatus" aria-live="polite"></p>
-<div class="buildgrid"><div>
-<div class="section"><h3>Drafted cards</h3><div class="buildchoices" id="buildChoices"></div></div>
-<div class="section"><h3>Basic Energy</h3><div class="buildchoices" id="energyChoices"></div></div>
-</div><div><h3>Deck contents</h3><div id="builtCards" class="picks"></div><div class="actions"><button class="primary" id="lockDeck">Lock 40-card deck</button></div></div></div>
-<p id="roomNext" class="muted"></p>
+<section id="deckArea" class="hidden" aria-label="Multiplayer Cube deck builder">
+<div id="roomDeckBuilder"></div>
+<div id="roomBuilderAction"><button class="primary" id="lockDeck" type="button">Lock 40-card deck</button></div>
+<p id="buildStatus" aria-live="polite"></p><p id="roomNext" class="muted"></p>
 </section>
 </section>
+<link rel="stylesheet" href="/cube_builder.css">
+<script src="/cube_builder_ui.js" defer></script>
 <script src="/cube_room_client.js" defer></script>
 </body></html>

@@ -138,7 +138,8 @@ class CubeService{
  card(id){
   const c=CATALOG.get(id);
   return {id,name:c.name,supertype:c.supertype,subtypes:c.subtypes||[],types:c.types||[],
-   evolvesFrom:c.evolvesFrom||null,hp:c.hp||null,images:c.images||{}};
+   evolvesFrom:c.evolvesFrom||null,hp:c.hp||null,images:c.images||{},
+   attacks:(c.attacks||[]).map(a=>({name:a.name,cost:a.cost||[],damage:a.damage||''}))};
  }
  pick(token,id,revision){
   const s=this.session(token),d=s.draft;

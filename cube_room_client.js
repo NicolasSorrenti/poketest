@@ -68,72 +68,30 @@
    store();render();
   });
  }
- function count(id){return deck.filter(x=>x===id).length;}
- function countName(name){
-  const ids=new Set(state.drafted.filter(c=>c.name===name).map(c=>c.id));
-  return [...ids].reduce((sum,id)=>sum+count(id),0);
- }
- function change(id,name,max,delta,energy){
-  if(state.seats[state.seat].deckReady||busy)return;
-  if(delta>0){
-   if(deck.length>=40||count(id)>=max||(!energy&&countName(name)>=4))return;
-   deck.push(id);
-  }else{
-   const i=deck.lastIndexOf(id);if(i<0)return;deck.splice(i,1);
-  }
-  renderBuild();
- }
- function row(name,id,max,energy=false){
-  const surface=document.createElement('div');surface.className='buildrow';
-  const label=document.createElement('span');label.textContent=name;surface.append(label);
-  const controls=document.createElement('div');
-  const minus=document.createElement('button');minus.type='button';minus.textContent='−';
-  minus.disabled=count(id)===0;minus.onclick=()=>change(id,name,max,-1,energy);
-  const amount=document.createElement('strong');amount.textContent=String(count(id))+(energy?'':'/'+max);
-  const plus=document.createElement('button');plus.type='button';plus.textContent='+';
-  plus.disabled=count(id)>=max||deck.length>=40||(!energy&&countName(name)>=4);
-  plus.onclick=()=>change(id,name,max,1,energy);
-  controls.append(minus,amount,plus);surface.append(controls);return surface;
- }
+ let visualBuilder=null;
  function renderBuild(){
   if(!state||!state.finished)return;
   const mine=state.seats[state.seat];
-  if(!deckInitialized){
-   deck=[...(state.ownDeck||state.suggestedDeck||[])];
-   deckInitialized=true;
+  if(!deckInitialized){deck=[...(state.ownDeck||state.suggestedDeck||[])];deckInitialized=true;}
+  if(!visualBuilder){
+   visualBuilder=window.CubeDeckBuilder.create({
+    root:$('roomDeckBuilder'),actionElement:$('roomBuilderAction'),
+    onChange:next=>{deck=next;renderBuild();}
+   });
   }
-  const choices=new Map();
-  for(const card of state.drafted){
-   const previous=choices.get(card.id);
-   if(previous)previous.n++;
-   else choices.set(card.id,{card,n:1});
-  }
-  $('buildChoices').replaceChildren();
-  for(const {card,n} of [...choices.values()].sort((a,b)=>a.card.name.localeCompare(b.card.name)))
-   $('buildChoices').append(row(card.name,card.id,n));
-  $('energyChoices').replaceChildren();
-  for(const type of TYPES){
-   $('energyChoices').append(row(type+' Energy',state.energyIds[type],40,true));
-  }
-  const summary=new Map();
-  for(const id of deck){
-   const name=state.drafted.find(c=>c.id===id)?.name||
-    TYPES.find(t=>state.energyIds[t]===id)+' Energy';
-   summary.set(name,(summary.get(name)||0)+1);
-  }
-  $('builtCards').replaceChildren();
-  for(const [name,n] of [...summary].sort((a,b)=>a[0].localeCompare(b[0]))){
-   const line=document.createElement('div');
-   line.textContent=n+' × '+name;$('builtCards').append(line);
-  }
-  const basics=deck.filter(id=>state.drafted.some(c=>c.id===id&&c.subtypes.includes('Basic'))).length;
-  $('buildStatus').textContent=mine.deckReady?'Your deck is locked.':
-   deck.length+'/40 cards · '+basics+' Basic Pokémon'+(deck.length===40&&basics?' · Ready to lock':'');
-  $('lockDeck').disabled=mine.deckReady||deck.length!==40||!basics;
+  visualBuilder.update({drafted:state.drafted,energyIds:state.energyIds,deck,
+   locked:mine.deckReady});
+  const basics=deck.filter(id=>state.drafted.some(c=>c.id===id&&
+   (c.subtypes.includes('Basic')||c.subtypes.includes('Baby')))).length;
+  const ready=deck.length===40&&basics>0;
+  $('lockDeck').disabled=mine.deckReady||!ready||busy;
   $('lockDeck').textContent=mine.deckReady?'Deck locked':'Lock 40-card deck';
+  $('buildStatus').textContent=mine.deckReady?'Your 40-card deck is locked.':
+   ready?'Deck ready: lock it when you are happy with your choices.':
+   'Choose '+(40-deck.length)+' more cards. At least one Basic Pokémon is required.';
   $('roomNext').textContent=state.allDecksReady?
-   'All human decks are locked. Multiplayer duel matchmaking is the next integration milestone; your drafted deck is ready.':
-   'After you lock your deck, the room will show which other players are ready. Multiplayer duels are not connected yet.';
+   'All human decks are locked. Multiplayer duel matchmaking is not connected yet.':
+   'Your deck is private to your seat. All players must lock their decks before the next stage.';
  }
  function render(){
   if(!state)return;
