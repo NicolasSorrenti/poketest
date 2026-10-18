@@ -10,7 +10,10 @@
  marina:[['park','cafe','park'],['park','shop','park'],['home','cafe','park'],['park','shop','cafe'],['park','center','park'],['shop','park','park'],['home','park','cafe']],
  kaede:[['home','arcade','arcade'],['shop','arcade','park'],['home','center','arcade'],['arcade','arcade','cafe'],['home','shop','arcade'],['center','arcade','park'],['home','park','arcade']]
  };
+ const PACK=typeof module==='object'&&module.exports?require('./rpg_narrative_pack'):window.NeoRpgNarrativePack;
+ Object.assign(templates,PACK.schedules);
  const start={hana:1,reina:1,shiori:1,yuna:1,akari:1,camila:1,marina:1,kaede:41};
+ Object.assign(start,PACK.arrivals);
  const publicPlaces=['shop','arcade','park','cafe','center','library'];
  function locationFor(npc,day,slot,events=[]){
   if(!templates[npc]||!Number.isInteger(day)||day<1||day>90||!Number.isInteger(slot)||slot<0||slot>2||day<start[npc])return null;
