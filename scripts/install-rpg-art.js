@@ -1,13 +1,13 @@
 'use strict';
-// Safe, dependency-free extractor for the optional Neo Harbor art archive.
+// Safe, dependency-free extractor for the complete Neo Harbor RPG art archive.
 // Only rpg-assets/ additions are installed. Canonical portraits are never overwritten.
 const fs = require('node:fs');
 const path = require('node:path');
 const crypto = require('node:crypto');
 const zlib = require('node:zlib');
 
-const ARCHIVE = 'asset-packs/neo_harbor_art_expansion_2026-10-17.zip';
-const EXPECTED_SHA256 = '2a7173080138c1264eb8d012d462a540c74c775507b1b756c46e1bd9545840ed';
+const ARCHIVE = 'asset-packs/neo_harbor_complete_art_pack_2026-10-18.zip';
+const EXPECTED_SHA256 = '6683a2ba03e30c88b6d8c493e238cc3822972f8efa499c93ea62686d1f1269d5';
 const LIMIT_BYTES = 64 * 1024 * 1024;
 const LIMIT_ENTRIES = 300;
 const ALLOWED_PREFIXES = [
