@@ -6,6 +6,8 @@ const Cube=require('./cube_draft');
 const {getPreset}=require('./cube_presets');
 const {cpuPick,buildCpuDeck,ENERGY_IDS}=require('./cube_strategy');
 const {CATALOG}=require('./headless_duel');
+const {makeSchedule,standings}=require('./cube_round_robin');
+const {simulateCpuMatch}=require('./cube_bracket');
 const LETTERS='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
 const randomCode=()=>Array.from(crypto.randomBytes(6),x=>LETTERS[x%LETTERS.length]).join('');
 const makeToken=()=>crypto.randomBytes(32).toString('base64url');
@@ -19,7 +21,8 @@ const normalizeName=(value,fallback)=>{
  return name;
 };
 class CubeRoomService{
- constructor({now=()=>Date.now(),ttlMs=6*60*60*1000,maxRooms=24}={}){
+ constructor({now=()=>Date.now(),ttlMs=6*60*60*1000,maxRooms=24,classic=null,online=null,simulateCpu=simulateCpuMatch}={}){
+  this.classic=classic;this.online=online;this.simulateCpu=simulateCpu;
   this.rooms=new Map();this.now=now;this.ttlMs=ttlMs;this.maxRooms=maxRooms;
  }
  prune(){for(const [code,room] of this.rooms)if(this.now()-room.updated>this.ttlMs)this.rooms.delete(code);}
@@ -107,10 +110,12 @@ class CubeRoomService{
   const validation=Cube.validateBuild(d.picks[seat],deck);
   if(!validation.valid)throw Error(validation.reason);
   room.seats[seat].deck=[...deck];room.revision++;
+  if(this.classic&&this.online)this.syncTournament(room);
   return this.view(room,seat);
  }
  state(code,token){
   const {room,seat}=this.authenticated(code,token);
+  if(this.classic&&this.online)this.syncTournament(room);
   return this.view(room,seat);
  }
  view(room,seat){
@@ -122,6 +127,24 @@ class CubeRoomService{
    humanCount:room.seats.filter(s=>!s.cpu).length,
    energyIds:ENERGY_IDS
   };
+  if(room.tournament){
+   const t=room.tournament,current=t.current;
+   const active=t.matches.find(x=>x.id===current?.id);
+   const ownSide=current?.seats.indexOf(seat)??-1;
+   const token=ownSide>=0&&current?.tokens?current.tokens[ownSide]:null;
+   base.status=t.finished?'complete':'tournament';
+   base.tournament={
+    finished:t.finished,matchIndex:t.matches.filter(x=>x.status==='complete').length,
+    totalMatches:t.matches.length,activeMatch:active?{id:active.id,seats:active.seats,
+     names:active.seats.map(i=>room.seats[i].name),status:active.status}:null,
+    matches:t.matches.map(m=>({id:m.id,seats:[...m.seats],
+     names:m.seats.map(i=>room.seats[i].name),winner:m.winner,
+     method:m.method,status:m.status,attempts:m.attempts})),
+    standings:standings(t.matches,room.seats.map(x=>x.name)),
+    yourMatch:token?{kind:current.kind,code:current.code||null,token,
+      opponent:room.seats[current.seats[1-ownSide]].name}:null
+   };
+  }
   if(!d)return base;
   const expected=d.round*d.cardsPerPack+d.pick,waiting=!d.done&&d.picks[seat].length>expected;
   // A suggestion is computed once per seat; repeated 2s room polls must not
@@ -142,6 +165,66 @@ class CubeRoomService{
    suggestedDeck:suggestion,
    ownDeck:me.deck?[...me.deck]:null,
    allDecksReady:d.done&&room.seats.every(s=>s.cpu||s.deck)};
+ }
+ // All six pairings are sequential. Each participant plays every other seat
+ // once; spectators/idle drafters never receive either opponent's credentials.
+ syncTournament(room){
+  if(!room.draft?.done||!room.seats.every(s=>s.cpu||s.deck))return;
+  if(!this.classic||!this.online)return;
+  if(!room.tournament){
+   const decks=room.seats.map((s,i)=>s.cpu?
+    buildCpuDeck(room.draft.picks[i],{preset:room.preset}):[...s.deck]);
+   room.tournament={decks,matches:makeSchedule(),current:null,finished:false};
+   room.revision++;
+  }
+  const t=room.tournament;
+  if(t.finished)return;
+  if(t.current){
+   const fixture=t.matches.find(m=>m.id===t.current.id);
+   let over=false,winner=null;
+   if(t.current.kind==='online'){
+    const onlineRoom=this.online.findRoom(t.current.code);
+    this.online.checkPresence(onlineRoom);
+    over=!!onlineRoom.game?.over;winner=onlineRoom.game?.winner;
+   }else if(t.current.kind==='cpu'){
+    const local=this.classic.session(t.current.tokens[0]);
+    over=!!local.game.over;winner=local.game.winner;
+   }
+   if(!over)return;
+   if(winner!==0&&winner!==1){
+    fixture.attempts++;t.current=null;room.revision++;
+   }else{
+    fixture.status='complete';fixture.winner=fixture.seats[winner];
+    // Local matches always play the human in side 0, even when the
+    // human occupies the second draft seat in this pairing.
+    if(t.current.kind==='cpu')fixture.winner=winner===0?t.current.humanSeat:t.current.cpuSeat;
+    fixture.method='played';t.current=null;room.revision++;
+   }
+  }
+  while(!t.finished&&!t.current){
+   const next=t.matches.find(m=>m.status!=='complete');
+   if(!next){t.finished=true;room.revision++;return;}
+   const [a,b]=next.seats,sa=room.seats[a],sb=room.seats[b];
+   if(sa.cpu&&sb.cpu){
+    const outcome=this.simulateCpu(t.decks[a],t.decks[b],
+     {seed:(room.seed+next.id*7349)>>>0,levelA:3,levelB:3});
+    if(outcome.winner!==0&&outcome.winner!==1)throw Error('CPU fixture did not produce a winner');
+    next.status='complete';next.winner=next.seats[outcome.winner];
+    next.method=outcome.method||'played';room.revision++;continue;
+   }
+   if(!sa.cpu&&!sb.cpu){
+    const match=this.online.createCubeMatch({decks:[t.decks[a],t.decks[b]],
+     names:[sa.name,sb.name],seed:(room.seed+next.id*7349)>>>0});
+    t.current={id:next.id,kind:'online',seats:[a,b],code:match.code,tokens:match.tokens};
+   }else{
+    const humanSeat=sa.cpu?b:a,cpuSeat=sa.cpu?a:b;
+    const match=this.classic.createCube({humanDeck:t.decks[humanSeat],cpuDeck:t.decks[cpuSeat],
+     name:room.seats[cpuSeat].name,difficulty:3,seed:(room.seed+next.id*7349)>>>0});
+    const tokens=[null,null];tokens[next.seats.indexOf(humanSeat)]=match.token;
+    t.current={id:next.id,kind:'cpu',seats:[a,b],humanSeat,cpuSeat,tokens};
+   }
+   next.status='active';room.revision++;
+  }
  }
  card(id){
   const c=CATALOG.get(id);

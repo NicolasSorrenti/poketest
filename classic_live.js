@@ -278,6 +278,18 @@
   renderDecisions();combat.update(current);reactions?.update(current);renderCPULog(v);
  }
  async function init(){
+  const cubeRoom=new URLSearchParams(location.search).get('cubeRoom');
+  if(cubeRoom&&/^[A-Z2-9]{6}$/.test(cubeRoom)){
+   const back=document.createElement('a');
+   back.href='/cube_room.html?room='+encodeURIComponent(cubeRoom);
+   back.textContent='← Return to Cube Championship';
+   back.setAttribute('aria-label','Return to your Cube championship standings');
+   Object.assign(back.style,{position:'fixed',right:'14px',top:'10px',zIndex:'9999',
+    background:'#ffd56f',color:'#17223e',fontWeight:'800',fontSize:'14px',
+    textDecoration:'none',padding:'10px 14px',borderRadius:'10px',
+    boxShadow:'0 4px 16px #0009'});
+   document.body.append(back);
+  }
   try{
    const data=await api('decks');for(const id of ['deck','opponent']){
     $(id).textContent='';for(const x of data.decks.filter(row=>id!=='opponent'||row.id!=='custom')){const option=document.createElement('option');option.value=x.id;option.textContent=x.name;$(id).append(option);}}

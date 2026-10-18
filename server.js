@@ -12,7 +12,7 @@ const online=new ClassicOnlineService();
 const {CubeService}=require('./cube_service');
 const cube=new CubeService();
 const {CubeRoomService}=require('./cube_room_service');
-const cubeRooms=new CubeRoomService();
+const cubeRooms=new CubeRoomService({classic,online});
 const {sendCardImage}=require('./cube_card_images');
 const sendJSON=(res,status,value)=>{res.writeHead(status,{'Content-Type':'application/json; charset=utf-8','Cache-Control':'no-store','X-Content-Type-Options':'nosniff'});res.end(JSON.stringify(value));};
 async function parseJSON(req){return new Promise((resolve,reject)=>{

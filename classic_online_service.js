@@ -38,6 +38,24 @@ class ClassicOnlineService {
   const token=makeToken(),room={code,players:[{token,name:playerName,deck,cards,ready:false,lastSeen:this.now()},null],spectators:new Map(),game:null,revision:0,updated:this.now(),chat:[],chatSeq:0,lastChatAt:[0,0]};
   this.rooms.set(code,room);return {token,...this.response(room,0)};
  }
+ // A Cube match is created by the trusted draft authority, never by a
+ // browser-provided 40-card deck. Both players receive separate room tokens.
+ createCubeMatch({decks,names,seed}={}){
+  this.prune();if(this.rooms.size>=this.maxRooms)throw Error('Online room limit reached');
+  if(!Array.isArray(decks)||decks.length!==2||!Array.isArray(names)||names.length!==2)
+   throw Error('Invalid Cube matchup');
+  const cleanNames=names.map((n,i)=>standardName(n,'Cube Player '+(i+1)));
+  const game=createGame({decks:decks.map(d=>[...d]),names:cleanNames,
+   format:'online-preview',deckSize:40,prizeCount:4,
+   seed:seed??crypto.randomBytes(4).readUInt32BE(0)});
+  let code;do{code=makeCode();}while(this.rooms.has(code));
+  const tokens=[makeToken(),makeToken()];
+  const room={code,players:tokens.map((token,i)=>({token,name:cleanNames[i],deck:'cube',
+   cards:[...decks[i]],ready:true,lastSeen:this.now()})),spectators:new Map(),
+   game,revision:0,updated:this.now(),chat:[],chatSeq:0,lastChatAt:[0,0],cube:true};
+  this.rooms.set(code,room);
+  return {code,tokens};
+ }
  join({code,deck='brushfire',customDeck,name='Player 2'}={}){
   const cards=selectDeck(deck,customDeck),playerName=standardName(name,'Player 2');
   const room=this.findRoom(code);if(room.players[1]||room.game)return this.watch({code,name:playerName});
