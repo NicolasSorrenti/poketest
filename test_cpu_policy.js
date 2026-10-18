@@ -1150,6 +1150,57 @@ const settings={level:3,personality:'balanced',side:1,seed:47};
  assert.ok(recovered.game.players[1].hand.includes(IDS.fight),
   'The actual game state must now contain legally recovered Fighting Energy');
 }
+{
+ // Computer Search must use the legal reducer two-card cost and private
+ // deck-choice prompt. The policy reads only revealed option labels, never
+ // the underlying face-down deck before that prompt exists.
+ const searchLab=[
+  ...Array(4).fill(IDS.machop),...Array(4).fill('base1-34'),
+  ...Array(2).fill(IDS.hit),...Array(2).fill(IDS.rat),
+  ...Array(4).fill('base1-71'),...Array(4).fill('base1-84'),
+  ...Array(4).fill(IDS.bill),...Array(4).fill('base1-81'),
+  ...Array(4).fill(IDS.potion),...Array(4).fill(IDS.switch),
+  ...Array(24).fill(IDS.fight)];
+ let game=createGame({decks:[searchLab,searchLab],format:'classic',seed:390145});
+ game=AI.driveSide(game,{side:0,level:5,seed:1}).game;
+ game=AI.driveSide(game,{side:1,level:5,seed:2}).game;
+ game.turn=1;game.round=5;game.turnSerial=11;
+ const p=game.players[1];
+ p.deck.push(...p.hand);p.hand=[];
+ if(p.active.id!==IDS.machop){
+  const ix=p.deck.indexOf(IDS.machop);
+  assert.ok(ix>=0);
+  const prior=p.active.id;p.active.id=p.deck[ix];p.deck[ix]=prior;
+ }
+ p.active.playedTurn=1;p.active.status=null;
+ const move=id=>{
+  const ix=p.deck.indexOf(id);
+  assert.ok(ix>=0,'A legal test deck must contain '+id);
+  return p.deck.splice(ix,1)[0];
+ };
+ p.active.energies.push(move(IDS.fight),move(IDS.fight));
+ p.energyUsed=false;
+ p.hand.push(move('base1-71'),move(IDS.potion),move(IDS.potion),move(IDS.fight));
+ const started=reduce(game,1,{type:'play_trainer',payload:{handIndex:0}});
+ assert.equal(started.ok,true,'Computer Search must initiate legal game-reducer prompts');
+ assert.equal(started.game.pendingDecision.kind,'cost');
+ assert.equal(started.game.pendingDecision.min,2);
+ const cfg={side:1,level:5,seed:4,comboSearch:true};
+ const cost=AI.chooseAction(started.game,cfg);
+ assert.equal(cost?.command.type,'choose');
+ assert.deepEqual([...cost.command.payload.selected].sort(),['n:1','n:2'],
+  'Search cost should use two surplus Potions, keeping the required Fighting Energy');
+ assert.equal(cost.game.pendingDecision.kind,'find');
+ assert.ok(cost.game.pendingDecision.options.some(x=>x.id.startsWith('deck:')&&x.label==='Machoke'));
+ const selected=AI.chooseAction(cost.game,cfg);
+ assert.equal(selected?.command.type,'choose');
+ const chosen=cost.game.pendingDecision.options.find(x=>
+  x.id===selected.command.payload.selected[0]);
+ assert.equal(chosen?.label,'Machoke',
+  'After lawful Computer Search selection, fetch the Active Machop Evolution');
+ assert.ok(selected.game.players[1].hand.includes('base1-34'));
+ assert.equal(selected.game.pendingDecision,null);
+}
 let duels=0,decisions=0,attacks=0,energy=0,evolutions=0,trainer=0;
 for(let seed=1;seed<=4;seed++){
  let game=createGame({decks:[deck,deck],seed:seed*1789,format:'classic'});
