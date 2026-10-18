@@ -1041,6 +1041,31 @@ function performAction(g,side,cmd){
    g.nextDecisionId++;g.pendingDecision=makeDecision({id:`conversion:${g.nextDecisionId}`,actor:side,kind:'energy-type',label:'Choose a Pokémon type',options:colors.map(x=>({id:`type:${x}`,label:x})),min:1,max:1,optional:program.kind==='conversion1'});
    g.pendingAction={kind:'attack_color',side,attackIndex:index};return;
   }
+  if(program.kind==='neo92:guiding-flame'){
+   if(p.bench.length>=5)fail('Guiding Flame cannot be used with a full Bench');
+   const options=p.discard.flatMap((id,i)=>isBasicPokemon(card(g,id))?[{id:'discard:'+i,label:card(g,id).name}]:[]);
+   if(options.length){
+    g.nextDecisionId++;g.pendingDecision=makeDecision({id:'neo92guiding:'+g.nextDecisionId,actor:side,kind:'discard-recovery',label:'Guiding Flame: choose a Basic or Baby Pokémon from discard',options,min:1,max:1});
+    g.pendingAction={kind:'neo92_choose',effect:'guiding',side,attackIndex:index};return;
+   }
+   resolveAttack(g,side,index,undefined,undefined,{neo92Approved:true});return;
+  }
+  if(program.kind==='neo92:pull-in'){
+   if(f.bench.length&&!jawClampLocks(g,1-side)){
+    g.nextDecisionId++;g.pendingDecision=makeDecision({id:'neo92pull:'+g.nextDecisionId,actor:side,kind:'pokemon-target',label:'Pull In: optionally switch an opposing Benched Pokémon into Active',options:f.bench.map((x,i)=>({id:'bench:'+i,label:publicName(g,x)})),min:0,max:1,optional:true});
+    g.pendingAction={kind:'neo92_choose',effect:'pull',side,attackIndex:index};return;
+   }
+   resolveAttack(g,side,index,undefined,undefined,{neo92Approved:true,neo92PullIndex:null});return;
+  }
+  if(program.kind==='neo92:white-hot-flame'){
+   const fire=u.energies.flatMap((id,i)=>card(g,id).name==='Fire Energy'?[i]:[]);
+   const lightning=u.energies.flatMap((id,i)=>card(g,id).name==='Lightning Energy'?[i]:[]);
+   if(!fire.length||!lightning.length){
+    resolveAttack(g,side,index,undefined,undefined,{neo92Approved:true,neo92MissingPayment:true});return;
+   }
+   g.nextDecisionId++;g.pendingDecision=makeDecision({id:'neo92flame:'+g.nextDecisionId,actor:side,kind:'energy-discard',label:'White-Hot Flame: choose one Fire Energy and one Lightning Energy',options:[...fire,...lightning].map(i=>({id:'energy:'+i,label:card(g,u.energies[i]).name})),min:2,max:2});
+   g.pendingAction={kind:'neo92_choose',effect:'charizard',side,attackIndex:index};return;
+  }
   if(program.kind==='neo91:sweet-kiss'){
    if(f.deck.length){
     g.nextDecisionId++;g.pendingDecision=makeDecision({id:'neo91sweet:'+g.nextDecisionId,actor:1-side,kind:'attack-option',
