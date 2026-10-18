@@ -68,7 +68,10 @@ function cpuPick(ids,picks){
  if(!Array.isArray(ids)||!ids.length)throw Error('CPU pack is empty');
  return [...ids].sort((a,b)=>score(b,picks)-score(a,picks)||a.localeCompare(b))[0];
 }
-function buildCpuDeck(picks){
+function buildCpuDeck(picks,{preset='balanced'}={}){
+ const mayhem=preset==='mayhem';
+ const basicTarget=mayhem?8:11,minimumBasics=mayhem?7:8;
+ const evolutionTarget=mayhem?3:6,trainerTarget=mayhem?16:11;
  if(!Array.isArray(picks)||!picks.length)throw Error('CPU has no drafted cards');
  const basics=picks.filter(id=>pokemon(id)&&isBasicPokemon(card(id)));
  if(!basics.length)throw Error('CPU drafted no Basic Pokémon');
@@ -90,11 +93,11 @@ function buildCpuDeck(picks){
  };
  const sortedBasics=[...basics].sort((a,b)=>affinity(b)-affinity(a)||a.localeCompare(b));
  for(const id of sortedBasics.filter(hasViable)){
-  if(selected.filter(x=>isBasicPokemon(card(x))).length>=11)break;
+  if(selected.filter(x=>isBasicPokemon(card(x))).length>=basicTarget)break;
   add(id);
  }
- if(selected.filter(x=>isBasicPokemon(card(x))).length<8){
-  for(const id of sortedBasics)if(selected.filter(x=>isBasicPokemon(card(x))).length<8)add(id);
+ if(selected.filter(x=>isBasicPokemon(card(x))).length<minimumBasics){
+  for(const id of sortedBasics)if(selected.filter(x=>isBasicPokemon(card(x))).length<minimumBasics)add(id);
  }
  const evolutions=picks.filter(id=>pokemon(id)&&!isBasicPokemon(card(id)));
  let evolved=true;
@@ -102,14 +105,14 @@ function buildCpuDeck(picks){
   evolved=false;
   const sorted=[...evolutions].sort((a,b)=>affinity(b)-affinity(a)||a.localeCompare(b));
   for(const id of sorted){
-   if(selected.filter(x=>!isBasicPokemon(card(x))).length>=6)break;
+   if(selected.filter(x=>!isBasicPokemon(card(x))).length>=evolutionTarget)break;
    if(hasViable(id)&&selected.some(x=>canEvolve(card(id),card(x)))&&add(id))evolved=true;
   }
  }
  const trainers=picks.filter(id=>card(id)?.supertype==='Trainer')
   .sort((a,b)=>score(b,selected)-score(a,selected)||a.localeCompare(b));
  for(const id of trainers){
-  if(selected.filter(x=>card(x).supertype==='Trainer').length>=11||selected.length>=24)break;
+  if(selected.filter(x=>card(x).supertype==='Trainer').length>=trainerTarget||selected.length>=24)break;
   add(id);
  }
  for(const id of sortedBasics)if(selected.length<23)add(id);
