@@ -705,6 +705,9 @@ function commit(g,plan,h){
     const owner=g.players[actor],idx=nums(d,'prize'+actor)[0];
     if(!Number.isInteger(idx)||!owner.prizes[idx])throw Error('Illegal Treaty prize');
     owner.hand.push(owner.prizes.splice(idx,1)[0]);
+    // Prize reveal flags are indexed to the physical Prize slots.
+    // Taking one must shift the remaining cards' visibility together.
+    owner.prizeFaceUp?.splice(idx,1);
    }break;
   }
   case "Brock's Protection":{
