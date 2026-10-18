@@ -166,6 +166,14 @@ GitHub Actions CPU AI regression additionally runs the existing Classic local CP
 - GitHub Actions `CPU Sequence Experiment` run `39088652333` completed with every unit test and all 520 matched matches passing. Latest separate full TCG regression on concurrent rules work encountered `test_gym_misty_wish_v078.js` expecting `hand:1` (CPU branch did not edit Trainer resolver or that test). Track the rules-owner fix separately.
 - Full study/reproduction in `docs/cpu-ai-trainer-search.md`. 95% higher-level win objective / ≤5% lower-tier upset target remains unmet, with historical rules, public information and fair randomness preserved.
 
+## Trainer → evolution → Energy → attack combinations (PR #12 extension)
+
+- Added experimental, default-OFF `comboSearch`, bounded to 96 own-state continuation nodes and up to three extra preparation actions. It can evaluate actual legal **Energy Retrieval** (one paid card from hand, Basic Energy recovered from public own discard) → evolution (e.g., Machop→Machoke) → once-per-turn Energy attachment → printed affordable attacks. PlusPower can supply a deterministic extra 10 damage and a real Prize KO. Both staged Retrieval choices are valued using the CPU's own allowed information.
+- This is deliberately not an omniscient full-game search: no hidden opponent cards, deck order, upcoming draws or coin rolls are exposed. Chaos Gym prevents deterministic Trainer projections. The authoritative headless reducer alone executes actions. A 60-card authentic Base Set `cpu_combo_lab` is available for **benchmark use only**, so actual gameplay decks were not altered.
+- First experiment FAILED badly: the additive scorer applied a -50 penalty to ordinary evolution and Energy moves that did not immediately complete an attack, resulting in 62–118 over 180 retail mirror games. This was fixed by preserving the baseline score for all non-improving setup actions and bounding positive bonuses. A regression explicitly protects these moves.
+- After the fix, 260 paired identical-Champion A/B matches using Blackout, Brock, Cold Fusion and the combo lab yielded **130–130**, no draws (29–31, 30–30, 29–31, 42–38 respectively). No reliable overall strength improvement, so `comboSearch` remains **OFF by default**. Dedicated CPU Combo Experiment CI adds full unit/live-service validation and legal arena checks.
+- New implementation and benchmark documentation: `docs/cpu-ai-combo-sequences.md`. User's desired ≤5% lower-tier upset objective still **NOT achieved**; fair stochastic outcomes are untouched.
+
 ## Known limitations and next work
 
 1. Verify green CI on all affected and full regression suites. 
