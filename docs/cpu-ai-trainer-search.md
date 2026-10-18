@@ -53,10 +53,25 @@ Adding actual Trainer-search decks produced a 360-game experiment:
 | Trouble Team Rocket (1351931) | 43 | 37 | 0 |
 | **Total** | **186** | **174** | **0** |
 
-**51.7%** decisive win rate is small and not enough to establish general
-strength. A separate pair of matched Brock/Trouble seeds was subsequently
-added to `.github/workflows/cpu-sequence-eval.yml` to check reproducibility.
-Do **not** promote to the Champion default without stronger controlled data.
+**51.7%** decisive win rate was small. A second set of independent
+Brock/Trouble cohorts (seeds 1451931 and 1551931) each reproduced **43–37**
+for the new CPU. The combined 520-game A/B result is:
+
+| Comparison | New AI wins | Original wins | Draws |
+| --- | ---: | ---: | ---: |
+| Original five deck cohorts | 186 | 174 | 0 |
+| Second Brock cohort | 43 | 37 | 0 |
+| Second Trouble cohort | 43 | 37 | 0 |
+| **Total, 520 games** | **272** | **248** | **0** |
+
+The new policy wins **52.31%** of decisive matches (Wilson 95% interval about
+**48.0%–56.6%**). It gives a repeatable small positive Gym/Rocket trend,
+but the overall interval still includes 50% and the first three decks were
+identical to baseline. **Not enough to promote to default.**
+
+Validated in GitHub Actions CPU Sequence Experiment run `39088652333`:
+all 520 matched games and the focused CPU tests passed, including historical
+Gym, Rocket and Neo formats.
 
 To reproduce an actual Gym search comparison:
 
