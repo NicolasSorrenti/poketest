@@ -134,9 +134,9 @@ const settings={level:3,personality:'balanced',side:1,seed:47};
  assert.throws(()=>profileForNpc('unknown'),/Unknown CPU NPC/);
  const service=new ClassicLocalService();
  const first=service.create({npc:'reina',seed:41,deck:'blackout',opponent:'brushfire'});
- assert.deepEqual(first.cpu,{level:4,personality:'aggressive',npc:'reina',advancedTactics:false});
+ assert.deepEqual(first.cpu,{level:4,personality:'aggressive',npc:'reina',advancedTactics:false,experimentalCombos:false});
  const second=service.create({npc:'reina',difficulty:1,personality:'defensive',seed:42});
- assert.deepEqual(second.cpu,{level:1,personality:'defensive',npc:'reina',advancedTactics:false},
+ assert.deepEqual(second.cpu,{level:1,personality:'defensive',npc:'reina',advancedTactics:false,experimentalCombos:false},
   'An RPG NPC identity must not constrain independent skill and temperament overrides');
 }
 {
@@ -635,6 +635,14 @@ const settings={level:3,personality:'balanced',side:1,seed:47};
   'Existing casual matches must preserve prior CPU policy by default');
  assert.throws(()=>local.create({advancedTactics:'yes'}),/boolean/);
  assert.throws(()=>local.create({advancedTactics:true,difficulty:2}),/require Expert or Champion/);
+ const combo=local.create({deck:'blackout',opponent:'blackout',seed:784,difficulty:5,experimentalCombos:true});
+ assert.equal(combo.cpu.experimentalCombos,true);
+ assert.equal(local.session(combo.token).cpuConfig.comboSearch,true,
+  'The real local duel engine must receive the experimental combo planning switch');
+ assert.equal(ordinary.cpu.experimentalCombos,false,
+  'Normal local CPU matches must not silently activate unproven combo planning');
+ assert.throws(()=>local.create({experimentalCombos:'yes'}),/boolean/);
+ assert.throws(()=>local.create({experimentalCombos:true,difficulty:3}),/require Expert or Champion/);
 }
 {
  for(let level=1;level<=5;level++){
