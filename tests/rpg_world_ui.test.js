@@ -2,7 +2,7 @@
 const test=require('node:test');
 const assert=require('node:assert/strict');
 const fs=require('node:fs'),path=require('node:path');
-const Pack=require('../rpg_narrative_pack'),Side=require('../rpg_side_quests'),Story=require('../rpg_story'),Schedules=require('../rpg_schedules'),World=require('../rpg_world'),Arc=require('../rpg_rival_arc'),Tournaments=require('../rpg_tournaments'),Epilogue=require('../rpg_epilogue'),Appointments=require('../rpg_appointments'),Bridge=require('../rpg_duel_bridge');
+const Pack=require('../rpg_narrative_pack'),Side=require('../rpg_side_quests'),Story=require('../rpg_story'),Schedules=require('../rpg_schedules'),World=require('../rpg_world'),Arc=require('../rpg_rival_arc'),Tournaments=require('../rpg_tournaments'),Epilogue=require('../rpg_epilogue'),Appointments=require('../rpg_appointments'),Intentions=require('../rpg_intentions'),Bridge=require('../rpg_duel_bridge');
 const js=fs.readFileSync(path.join(__dirname,'..','rpg.js'),'utf8');
 const html=fs.readFileSync(path.join(__dirname,'..','rpg.html'),'utf8');
 const ids=[...html.matchAll(/id="([^"]+)"/g)].map(x=>x[1]);
@@ -27,7 +27,7 @@ function launch(initial,approve=false){
  const doc={getElementById(id){if(!elements[id])throw Error('Missing '+id);return elements[id];},
   createElement(tag){return new FakeNode(tag);},body:new FakeNode('body'),
   addEventListener(name,cb){listeners['document:'+name]=cb;}};
- const win={NeoRpgNarrativePack:Pack,NeoRpgSideQuests:Side,NeoHarborStory:Story,NeoRpgSchedules:Schedules,NeoRpgWorld:World,NeoRpgRivalArc:Arc,NeoRpgTournaments:Tournaments,NeoRpgEpilogue:Epilogue,NeoRpgAppointments:Appointments,NeoRpgDuelBridge:Bridge,
+ const win={NeoRpgNarrativePack:Pack,NeoRpgSideQuests:Side,NeoHarborStory:Story,NeoRpgSchedules:Schedules,NeoRpgWorld:World,NeoRpgRivalArc:Arc,NeoRpgTournaments:Tournaments,NeoRpgEpilogue:Epilogue,NeoRpgAppointments:Appointments,NeoRpgIntentions:Intentions,NeoRpgDuelBridge:Bridge,
   addEventListener(name,cb){listeners[name]=cb;}};
  const local={getItem(k){return saved[k]||null;},setItem(k,v){saved[k]=String(v);}};
  const session={removeItem(){}};
@@ -348,4 +348,52 @@ test('skipping a booked meet-up only reduces trust once after its time has passe
  assert.equal(later.state().appointments[0].status,'missed');
  assert.equal(later.state().relationships.hana.trust,2);
  assert.equal(launch(later.state()).state().relationships.hana.trust,2);
+});
+
+test('daily intention: player chooses one social, duel or town focus, never all three',()=>{
+ const r=launch();
+ const buttons=r.elements.dailyIntention.children.filter(x=>x.className==='intention-choice');
+ assert.equal(buttons.length,3);
+ assert.match(buttons[0].children[1].textContent,/meet-up/);
+ buttons[2].onclick();
+ assert.equal(r.state().dailyIntention.id,'town');
+ assert.equal(r.elements.dailyIntention.children.filter(x=>x.className==='intention-choice').length,0);
+ const activity=r.elements.townActivities.children.find(x=>x.children?.[0]?.textContent.includes('Review your duel journal'));
+ activity.onclick();
+ assert.equal(r.state().dailyIntention.completed,true);
+ assert.equal(r.state().intentionsCompleted,1);
+ assert.equal(r.state().reputation,2);
+ assert.equal(r.state().credits,88);
+ assert.match(r.elements.dailyIntention.children[0].children[0].textContent,/COMPLETED/);
+});
+test('social daily intention can be fulfilled by a normal hangout, persisted exactly once',()=>{
+ const r=launch({day:5,slot:0,location:'shop'});
+ r.elements.dailyIntention.children.find(x=>x.children?.[0]?.textContent==='Make time for someone').onclick();
+ const hana=r.elements.people.children.find(x=>x.children[1]?.children[0]?.textContent==='Hana Mizuno');
+ assert.ok(hana);hana.onclick();
+ r.elements.choices.children.find(x=>x.textContent.includes('Spend time together')).onclick();
+ assert.equal(r.state().dailyIntention.completed,true);
+ assert.equal(r.state().intentionsCompleted,1);
+ assert.equal(r.state().focus,80);
+ assert.equal(r.state().insight,1);
+ assert.equal(launch(r.state()).state().intentionsCompleted,1);
+});
+test('duel intention counts authentic defeat, then resets cleanly the next day',()=>{
+ const r=launch({day:5,slot:2,location:'shop'});
+ r.elements.dailyIntention.children.find(x=>x.children?.[0]?.textContent==='Play a meaningful match').onclick();
+ const regular=r.elements.people.children.find(x=>!x.disabled);
+ assert.ok(regular);
+ regular.onclick();
+ r.elements.choices.children.find(x=>x.textContent.includes('Challenge to a duel')).onclick();
+ const d=r.state().pendingDuel;assert.ok(d);
+ const event={data:Bridge.message(d.id,1),origin:r.loc.origin,source:r.elements.battle.contentWindow};
+ r.listeners.message(event);
+ assert.equal(r.state().results.length,1);
+ assert.equal(r.state().preparation,1);
+ assert.equal(r.state().intentionsCompleted,1);
+ assert.equal(r.state().dailyIntention,null);
+ assert.equal(r.state().day,6);
+ r.listeners.message(event);
+ assert.equal(r.state().intentionsCompleted,1);
+ assert.equal(r.elements.dailyIntention.children.filter(x=>x.className==='intention-choice').length,3);
 });
