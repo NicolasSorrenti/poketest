@@ -160,7 +160,7 @@
   if(s.activeSideQuest){
    const p=s.sideQuests[s.activeSideQuest.id],q=MAP.get(s.activeSideQuest.id),stage=q?.stages[p?.step];
    if(!stage||p.status!=='active'||!['lines','choice','response','duel'].includes(s.activeSideQuest.phase)
-    ||(s.activeSideQuest.phase==='lines'&&(!Number.isInteger(s.activeSideQuest.index)||s.activeSideQuest.index<0||s.activeSideQuest.index>=stage.lines.length))
+    ||(s.activeSideQuest.phase==='lines'&&(!Number.isInteger(s.activeSideQuest.index)||s.activeSideQuest.index<0||s.activeSideQuest.index>=stage.lines.length+(stage.openingByFlag?.[p.history?.[p.step-1]?.flag]?1:0)))
     ||(s.activeSideQuest.phase==='response'&&(!Number.isInteger(s.activeSideQuest.choice)||!stage.choices?.[s.activeSideQuest.choice])))
     s.activeSideQuest=null;
   }
@@ -184,7 +184,7 @@
  function linesFor(s,id){
   hydrate(s);const x=current(s,MAP.get(id)||{});if(!x)return [];
   const earlier=x.progress?.history?.[x.index-1],opening=x.stage.openingByFlag?.[earlier?.flag];
-  return opening?[{...x.stage.lines[0],text:opening},...x.stage.lines.slice(1)]:x.stage.lines;
+  return opening?[x.stage.lines[0],{speaker:x.stage.npc,text:opening},...x.stage.lines.slice(1)]:x.stage.lines;
  }
  function begin(s,id,people=[]){
   hydrate(s);
