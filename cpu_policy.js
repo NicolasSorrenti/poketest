@@ -1280,7 +1280,12 @@ function comboSequenceBonus(action,o,cfg){
  // A combo can deserve a preparation action even if it does no damage on
  // its first step, but cannot justify spending resources with no attack gain.
  const reward=gain*2.15-bestDepth*9;
- return Math.max(-185,Math.min(270,reward<=0?-50:reward))*cfg.style.damage;
+ // Preparing an Energy or evolution can be essential even if it improves
+ // NEXT TURN rather than the projected attack right now. Never suppress the
+ // existing heuristic on a non-improving preparation; the initial experiment
+ // won just 10/60 Brock matches by over-penalizing such investments.
+ if(reward<=0)return action.type==='play_trainer'?-50*cfg.style.damage:0;
+ return Math.min(action.type==='play_trainer'?270:155,reward)*cfg.style.damage;
 }
 function chooseAction(game,raw={},memo={}){
  const cfg=configuration(raw),o=observation(game,cfg.side);
