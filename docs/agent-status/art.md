@@ -39,3 +39,10 @@ These are source-backed extracts of original generated Neo Harbor art sheets, **
 - New PNG source grids were inspected and cropped; new portraits are WebP with baked illustrated backgrounds, not transparently isolated standing sprites. Images and manifests verified locally, all ZIP CRCs clean, no duplicate archive paths.
 - Deployment installer now accepts **only the new version** and extracts additions into allowed `rpg-assets/` directories without overwriting canonical portraits. `package.json` build hooks are unchanged.
 - The actual ZIP is **not committed** to GitHub by this text-only API integration. Upload the single archive to `asset-packs/` (manual GitHub UI or Work cloud browser), then deploy. UI expression-switching requires a separate approved integration milestone.
+
+## 2026-10-18: Six missing supporting NPC portraits packaged
+- Created one additive cumulative archive `neo_harbor_complete_art_with_guests_2026-10-18.zip` in the ChatGPT conversation, **36,136,397 bytes**, SHA256 `bd784ecd1b22d06fa31624768357e0fa78952ba854557ef816bf1eb056b23972`.
+- Reused all 158 earlier image files *without regenerating them*, then added six newly generated transparent primary PNG portraits with exact game-root paths for Jun, Teo, Iris, Elio, Alma and Nereo, six compressed WebP alternatives and six menu avatars: **176 total image assets**.
+- All six were drawn against `rpg_narrative_pack.js`, `rpg_side_quests.js`, and `RPG_NARRATIVE_EXPANSION.md`. Generated at 1086×1448 with RGBA transparency and distinctive canonical uniforms/accessories. No new dialogue, event scripts, or sidequest modifications.
+- QA: 176 image files decoded, complete archive CRC and all 176 SHA256 entries validated; image source files and names compared with the character IDs used by `rpg.js` (`/rpg-assets/{id}.png`).
+- Build extractor and instructions updated to allow the six new root PNGs and manifests; if ZIP alone is uploaded under `asset-packs/`, Node hooks extract automatically. **Binary ZIP itself is not present in GitHub yet**. Directly unzipping at repo root and committing the PNGs also works.
