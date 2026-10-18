@@ -32,3 +32,10 @@ These are source-backed extracts of original generated Neo Harbor art sheets, **
 - Five automated tests cover idempotence, overwrite refusal, zip-slip, checksum pinning, symlink safety, and missing-archive behavior. Registered in Node CI.
 - `docs/ART_PACK_INSTALL.md` explains the one manual GitHub ZIP upload.
 - **Publication boundary:** This branch commits the build configuration and test harness only. Until the ZIP itself is uploaded to `asset-packs/`, GitHub and deployed sites do not contain the new binaries. Builds continue to show existing artwork.
+
+## 2026-10-18 — completed expression ZIP, pending binary upload
+- Rebuilt the *single, complete* `neo_harbor_complete_art_pack_2026-10-18.zip` in the conversation container, **20,160,888 bytes**, SHA-256 `6683a2ba03e30c88b6d8c493e238cc3822972f8efa499c93ea62686d1f1269d5`.
+- Preserves all 108 entries in the earlier pack, with 56 new image files: eight generated 6-panel source references and 48 independent labelled expression panels (neutral, happy, embarrassed, angry, surprised, flirty) for the eight established adult heroines.
+- New PNG source grids were inspected and cropped; new portraits are WebP with baked illustrated backgrounds, not transparently isolated standing sprites. Images and manifests verified locally, all ZIP CRCs clean, no duplicate archive paths.
+- Deployment installer now accepts **only the new version** and extracts additions into allowed `rpg-assets/` directories without overwriting canonical portraits. `package.json` build hooks are unchanged.
+- The actual ZIP is **not committed** to GitHub by this text-only API integration. Upload the single archive to `asset-packs/` (manual GitHub UI or Work cloud browser), then deploy. UI expression-switching requires a separate approved integration milestone.
