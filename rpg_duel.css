@@ -2,3 +2,21 @@
 body.rpg-duel #reset,body.rpg-duel .masthead nav a{display:none!important}
 body.rpg-duel .engine-badge{border-color:#d8749e;color:#ffd4e0}
 @media(prefers-reduced-motion:reduce){body.rpg-duel *{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+
+/* NPC reaction cut-ins are visible only in RPG duels and never intercept clicks. */
+.npc-reaction{display:none}
+body.rpg-duel .npc-reaction:not(.hidden){display:block;position:fixed;right:clamp(10px,2vw,30px);bottom:clamp(12px,3vh,32px);width:min(370px,calc(100vw - 24px));z-index:75;pointer-events:none;filter:drop-shadow(0 16px 24px #0009);animation:npc-reaction-in .25s ease-out}
+.npc-reaction-card{display:grid;grid-template-columns:118px 1fr;min-height:172px;overflow:hidden;border:1px solid #d4a6e4a6;border-radius:14px;background:linear-gradient(130deg,#281c3af0,#101a32f5);color:#fff}
+.npc-reaction-portrait{position:relative;align-self:stretch;overflow:hidden;background:radial-gradient(circle at 35% 40%,#9c72bc90,#35234a);display:flex;align-items:center;justify-content:center}
+.npc-reaction-portrait img{height:100%;width:100%;max-height:215px;object-fit:cover;object-position:top center}
+.npc-reaction-portrait.no-art::after{content:'✦';font-size:70px;color:#ffffff8c}
+.npc-reaction-copy{display:flex;flex-direction:column;justify-content:center;gap:5px;padding:14px 16px 14px 12px;min-width:0}
+.npc-reaction-tag{font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:#e9b9ff}
+.npc-reaction-name{font-size:16px;line-height:1.2;color:white}
+.npc-reaction-title{font-size:11px;letter-spacing:.1em;font-weight:800;color:#ffdf8f}
+.npc-reaction-copy p{font-size:13px;line-height:1.4;margin:2px 0 0;color:#f4ebf8}
+.npc-reaction-ko_taken .npc-reaction-card,.npc-reaction-hurt .npc-reaction-card{border-color:#ef8f8f}
+.npc-reaction-ko_scored .npc-reaction-card{border-color:#eac16a}
+@keyframes npc-reaction-in{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+@media(max-width:600px){.npc-reaction-card{grid-template-columns:90px 1fr;min-height:134px}.npc-reaction-copy{padding:9px 11px}.npc-reaction-portrait img{max-height:170px}}
+@media(prefers-reduced-motion:reduce){.npc-reaction{animation:none!important}}
