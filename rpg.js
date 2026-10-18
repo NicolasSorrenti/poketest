@@ -1,7 +1,7 @@
 'use strict';
 (()=>{
 const $=id=>document.getElementById(id),KEY='neoHarborRpgV1',STORY=window.NeoHarborStory,SCHEDULES=window.NeoRpgSchedules,WORLD=window.NeoRpgWorld,ARC=window.NeoRpgRivalArc,TOURNAMENTS=window.NeoRpgTournaments,BRIDGE=window.NeoRpgDuelBridge;
-const PACK=window.NeoRpgNarrativePack,SIDE=window.NeoRpgSideQuests,EPILOGUE=window.NeoRpgEpilogue,APPOINTMENTS=window.NeoRpgAppointments,INTENTIONS=window.NeoRpgIntentions;
+const PACK=window.NeoRpgNarrativePack,SIDE=window.NeoRpgSideQuests,EPILOGUE=window.NeoRpgEpilogue,APPOINTMENTS=window.NeoRpgAppointments,INTENTIONS=window.NeoRpgIntentions,CG=window.NeoRpgCGGallery;
 const periods=['Morning','Afternoon','Evening'];
 const places={
  home:['Your Apartment','Your base during the championship season.'],
@@ -64,7 +64,7 @@ function finishStory(){
  let result;try{result=STORY.resolve(state,a.id,a.choice)}catch(err){$('notice').textContent=err.message;return;}
  const id=e.npc,bond=state.bonds[id],updated=state.relationships[id];
  for(const metric of ['affection','trust','duels'])bond[metric]=Math.max(bond[metric]||0,updated[metric]||0);
- log('A memorable afternoon with '+cast[id].name+'.');recordIntention('story');
+ log('A memorable afternoon with '+cast[id].name+'.');recordCG('story_milestone',id);recordIntention('story');
  state.activeStory=null;advance();state.selected=id;
  persist();say(cast[id].name,result.choice.reply);
 }
@@ -135,7 +135,7 @@ SIDE.expire(state);
 ARC.hydrate(state);
 // Restored saves may already be beyond an optional cup's registration window.
 TOURNAMENTS.expire(state);
-APPOINTMENTS.hydrate(state);APPOINTMENTS.expire(state);INTENTIONS.hydrate(state);
+APPOINTMENTS.hydrate(state);APPOINTMENTS.expire(state);INTENTIONS.hydrate(state);CG.hydrate(state);
 for(const id of Object.keys(cast)){const old=state.bonds[id],current=state.relationships[id];
  if(!state.flags['newStoryMigrated_'+id]){for(const key of ['affection','trust','duels'])current[key]=Math.max(current[key]||0,old[key]||0);
  state.flags['newStoryMigrated_'+id]=true;}
@@ -145,6 +145,7 @@ STORY.recordExpiry(state);
 const persist=()=>localStorage.setItem(KEY,JSON.stringify(state));
 const log=t=>{state.journal.unshift(t);state.journal=state.journal.slice(0,25)};
 function recordIntention(kind){const result=INTENTIONS.record(state,kind);if(result)log('Daily priority fulfilled: '+result.title+' ('+result.rewardLabel+').');}
+function recordCG(kind,npc){const entries=CG.record(state,kind,npc);if(entries.length)log(entries.length+' new memory illustration'+(entries.length===1?'':'s')+' unlocked for the CG Gallery.');return entries;}
 let scene=state.scene&&typeof state.scene.speaker==='string'&&typeof state.scene.line==='string'&&Array.isArray(state.scene.choices)?state.scene:{speaker:'Narrator',line:'Ninety days. One championship. You came to Neo Harbor to win. Everyone else has their own plans.',choices:[]};
 const atKey=(id)=>state.day+':'+state.slot+':'+id;
 function advance(n=1){const beforeDay=state.day,beforeSlot=state.slot;for(let i=0;i<n;i++){state.slot++;if(state.slot>=3){state.slot=0;state.day++;}}if(state.day>90){state.day=91;state.ended=true;log('The Neo Harbor championship season has ended.');}
@@ -162,7 +163,7 @@ function publicAppointments(place){return [...APPOINTMENTS.overrides(state),...S
 function currentPeople(){if(state.day>90)return [];const regular=SCHEDULES.peopleAt(state.day,state.slot,state.location,publicAppointments(state.location));
 for(const e of eligibleStories())if(!regular.includes(e.npc))regular.push(e.npc);
 return regular;}
-function selectPerson(id){if(state.activeStory||state.activeEncounter||state.activeArc||!cast[id]||!currentPeople().includes(id))return;const c=cast[id],first=!state['met_'+id]&&!((id==='reina')&&state.metReina);state['met_'+id]=true;if(id==='reina')state.metReina=true;state.selected=id;persist();say(c.name,first?c.intro:c.repeat,options(id));}
+function selectPerson(id){if(state.activeStory||state.activeEncounter||state.activeArc||!cast[id]||!currentPeople().includes(id))return;const c=cast[id],first=!state['met_'+id]&&!((id==='reina')&&state.metReina);state['met_'+id]=true;if(id==='reina')state.metReina=true;state.selected=id;const memories=recordCG('meet',id);persist();say(c.name,first?c.intro:c.repeat,options(id));showCGMoment(memories[0]);}
 function options(id){const key=atKey(id),spentToday=!!state.hungOut[state.day+':'+id];
  const booked=APPOINTMENTS.active(state).find(e=>e.npc===id);
  return [
@@ -319,7 +320,7 @@ function act(action){
   const person=cast[plan.npc];
   try{
    APPOINTMENTS.attend(state,number,currentPeople());recordIntention('appointment');
-   log('Kept a planned meet-up with '+(person?.name||'a trainer')+'.');
+   log('Kept a planned meet-up with '+(person?.name||'a trainer')+'.');recordCG('appointment',plan.npc);
    advance();
    return say(person?.name||'Trainer','I am glad we made time for this. It is good to do something together away from the tournament noise.');
   }catch(err){$('notice').textContent=err.message;return;}
@@ -342,7 +343,8 @@ function act(action){
  if(type==='replay'){
   if(!EPILOGUE.completed(state))return;
   if(confirm('Start New Game+? Your completed season report will be archived. Relationships, standings and credits will reset.')){
-   state=EPILOGUE.replay(state,defaults);persist();location.reload();
+   const keepCG=JSON.parse(JSON.stringify({cgUnlocked:state.cgUnlocked,cgViewed:state.cgViewed}));
+   state=EPILOGUE.replay(state,defaults);Object.assign(state,keepCG);CG.hydrate(state);persist();location.reload();
   }
   return;
  }
@@ -351,9 +353,9 @@ function act(action){
  const c=cast[id],bond=state.bonds[id],key=atKey(id);
  if(type==='talk'){if(!state.talked[key]){state.talked[key]=true;bond.affection++;state.relationships[id].affection++;}persist();return say(c.name,c.talk[(state.day+bond.duels+bond.affection)%c.talk.length],options(id));}
  if(type==='flirt'){if(!state.talked['flirt:'+key]){state.talked['flirt:'+key]=true;bond.affection++;state.relationships[id].affection++;state.relationships[id].attraction++;}persist();return say(c.name,c.flirt,options(id));}
- if(type==='hang'){if(state.hungOut[state.day+':'+id])return say(c.name,'I enjoyed our time today. Let us make plans another day.',options(id));state.hungOut[state.day+':'+id]=true;bond.affection+=2;bond.trust++;state.relationships[id].affection+=2;state.relationships[id].trust++;log('Spent time with '+c.name+'.');recordIntention('hangout');advance();state.selected=null;return say(c.name,Array.isArray(c.hangouts)&&c.hangouts.length?c.hangouts[(state.day+bond.duels)%c.hangouts.length]:'That was a lovely way to spend part of the day. See you around.');}
+ if(type==='hang'){if(state.hungOut[state.day+':'+id])return say(c.name,'I enjoyed our time today. Let us make plans another day.',options(id));state.hungOut[state.day+':'+id]=true;bond.affection+=2;bond.trust++;state.relationships[id].affection+=2;state.relationships[id].trust++;log('Spent time with '+c.name+'.');recordIntention('hangout');const memories=recordCG('hangout',id);advance();state.selected=null;say(c.name,Array.isArray(c.hangouts)&&c.hangouts.length?c.hangouts[(state.day+bond.duels)%c.hangouts.length]:'That was a lovely way to spend part of the day. See you around.');showCGMoment(memories[0]);return;}
 }
-function duelUrl(duel){return '/classic_live.html?rpg=1&duelId='+encodeURIComponent(duel.id)+'&deck='+encodeURIComponent(duel.playerDeck)+'&opponent='+encodeURIComponent(duel.opponent)+'&npc='+encodeURIComponent(duel.npc)+'&npcName='+encodeURIComponent(cast[duel.npc].name);}
+function duelUrl(duel){return '/classic_live.html?rpg=1&duelId='+encodeURIComponent(duel.id)+'&deck='+encodeURIComponent(duel.playerDeck)+'&opponent='+encodeURIComponent(duel.opponent);}
 function startDuel(id,exhibition=null,arcEpisode=null,tournament=null,sideQuest=null){
  if(state.activeStory||state.activeEncounter||(state.activeArc&&state.activeArc.id!==arcEpisode)||(state.activeSideQuest&&state.activeSideQuest.id!==sideQuest?.id)||state.pendingDuel||state.day>90||!cast[id]||(!exhibition&&!tournament&&!currentPeople().includes(id)))return;
  if(sideQuest&&(!SIDE.canDuel(state,sideQuest.id,currentPeople())||SIDE.byId(sideQuest.id)?.stages[sideQuest.step]?.npc!==id))return;
@@ -361,7 +363,9 @@ function startDuel(id,exhibition=null,arcEpisode=null,tournament=null,sideQuest=
  const c=cast[id];
  state.pendingDuel={id:'npc-'+id+'-'+state.day+'-'+state.slot+'-'+state.results.length,npc:id,day:state.day,slot:state.slot,opponent:c.deck,playerDeck:state.playerDeck,resolved:false,eventKey:exhibition?exhibition.day+':'+exhibition.title:null,eventReward:exhibition?exhibition.reward:0,eventTitle:exhibition?exhibition.title:null,arcEpisode:arcEpisode||null,tournamentId:tournament?.tournamentId||null,tournamentRound:tournament?.tournamentRound??null,tournamentAttempt:tournament?.tournamentAttempt??null,sideQuestId:sideQuest?.id||null,sideQuestStage:sideQuest?.step??null};
  if(arcEpisode)state.activeArc=null;
+ const memories=recordCG('before_duel',id);
  persist();render();$('duel').hidden=false;$('battle').src=duelUrl(state.pendingDuel);
+ showCGMoment(memories[0]);
 }
 window.addEventListener('message',ev=>{
  const duel=state.pendingDuel;
@@ -378,6 +382,7 @@ window.addEventListener('message',ev=>{
   receipt.tournamentBonus={points:cupOutcome.points,credits:cupOutcome.credits,state:cupOutcome.state,round:cupOutcome.round};
   log(cupOutcome.title+': '+(cupOutcome.draw?'round drawn — replay available':cupOutcome.won?'round won':'eliminated')+'.');
  }
+ recordCG('after_duel',duel.npc);
  const personalOutcome=duel.arcEpisode?ARC.settleDuel(state,duel.arcEpisode,receipt):null;
   const sideOutcome=duel.sideQuestId?SIDE.settleDuel(state,duel,receipt):null;
   if(sideOutcome)log('Completed side quest: '+sideOutcome.title+'.');
@@ -441,6 +446,58 @@ function renderDailyIntention(locked){
  const count=document.createElement('small');count.className='intention-count';count.textContent=progress.completedCount+' priorities completed this season · resets tomorrow';
  root.append(count);
 }
+
+function showCGMoment(entry){
+ if(!entry||!CG.unlocked(state,entry.id))return;
+ const photo=document.createElement('img');
+ // An absent art file must never interrupt a duel, hangout, or story beat.
+ photo.onload=()=>{
+  if(entry.category==='pre_duel'&&!state.pendingDuel)return;
+  const modal=$('cgMoment'),root=$('cgMomentArt');root.replaceChildren(photo);
+  $('cgMomentTitle').textContent=entry.title;
+  $('cgMomentCaption').textContent=cast[entry.character]?.name||entry.character;
+  CG.markViewed(state,entry.id);persist();
+  if(!modal.open)modal.showModal();
+ };
+ photo.onerror=()=>{};
+ photo.alt=entry.title;photo.src=entry.path;
+}
+function showGalleryDetail(entry){
+ const root=$('galleryPreview');root.replaceChildren();
+ const title=document.createElement('h3');title.textContent=entry.title;
+ const text=document.createElement('p');text.textContent=(cast[entry.character]?.name||entry.character)+' · '+entry.category.replace('_',' ')+' · '+entry.hint;
+ const image=document.createElement('img');image.alt=entry.title;
+ const placeholder=document.createElement('p');placeholder.className='cg-pending';placeholder.textContent='Illustration not installed yet — the memory is unlocked, and its image is assigned to the art agent.';
+ image.onload=()=>{placeholder.hidden=true;image.hidden=false;};
+ image.onerror=()=>{image.hidden=true;placeholder.hidden=false;};
+ image.src=entry.path;
+ root.append(title,text,image,placeholder);
+ CG.markViewed(state,entry.id);persist();
+}
+function renderGallery(){
+ const root=$('galleryGrid');root.replaceChildren();
+ const all=CG.gallery(state,{character:$('galleryCharacter').value,category:$('galleryCategory').value});
+ const unlocked=all.filter(e=>e.unlocked).length;
+ $('galleryCount').textContent=unlocked+' / '+all.length+' memories unlocked · unopened images appear after the art pack is installed';
+ for(const entry of all){
+  const tile=document.createElement('button');tile.className='cg-tile'+(entry.unlocked?' unlocked':' locked');tile.disabled=!entry.unlocked;
+  const thumb=document.createElement('div');thumb.className='cg-thumb';
+  if(entry.unlocked){
+   const img=document.createElement('img');img.alt='';
+   img.onerror=()=>{img.hidden=true;};
+   img.src=entry.thumb;thumb.append(img);
+  }else{
+   const mystery=document.createElement('span');mystery.textContent='?';thumb.append(mystery);
+  }
+  const title=document.createElement('strong');title.textContent=entry.title;
+  const note=document.createElement('small');note.textContent=(cast[entry.character]?.name||entry.character)+' · '+(entry.unlocked?'View memory':'Locked · '+entry.hint);
+  tile.append(thumb,title,note);tile.onclick=()=>showGalleryDetail(entry);root.append(tile);
+ }
+}
+function openGallery(){
+ $('galleryPreview').replaceChildren();renderGallery();$('galleryDialog').showModal();
+}
+
 function renderBracketProgress(){
  const root=$('bracketProgress');root.replaceChildren();
  for(const cup of TOURNAMENTS.cups){
@@ -683,6 +740,10 @@ function render(){
  if($('deckPicker')?.options.length)$('deckPicker').value=state.playerDeck;
 }
 
+$('galleryBtn').onclick=openGallery;
+$('galleryClose').onclick=()=>$('galleryDialog').close();
+$('galleryCharacter').onchange=renderGallery;$('galleryCategory').onchange=renderGallery;
+$('cgMomentClose').onclick=()=>$('cgMoment').close();
 $('quickNext').onclick=()=>act('rest');$('quickHome').onclick=()=>act('home');$('calendarBtn').onclick=openCalendar;$('calendarClose').onclick=()=>$('calendarDialog').close();
 $('save').onclick=()=>{persist();$('notice').textContent='Campaign saved in this browser.'};
 $('dismissReceipt').onclick=()=>{state.lastDuelReceipt=null;persist();render();};

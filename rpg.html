@@ -30,6 +30,7 @@
   <div class="utilitybar">
     <div class="utility-left"><span class="live-dot"></span><span>NEO HARBOR · TOWN EXPLORATION</span><span class="utility-sep">/</span><span id="notice" aria-live="polite">Travel & talk are free · ⏳ actions advance time</span></div>
     <div class="utility-actions">
+      <button id="galleryBtn" class="toolbar-btn" type="button">▧ CG GALLERY</button>
       <button id="calendarBtn" class="toolbar-btn" type="button">▦ CALENDAR</button>
       <button id="quickHome" class="toolbar-btn" type="button">⌂ GO HOME</button>
       <button id="quickNext" class="time-advance" type="button">▶ NEXT PERIOD · ⏳</button>
@@ -144,6 +145,32 @@
  <div id="calendarEntries"></div>
 </dialog>
 
+<dialog id="galleryDialog" class="modal cg-dialog" aria-label="Unlocked event CG gallery">
+ <div class="modal-heading"><h2>▧ Neo Harbor Memories</h2><button id="galleryClose" type="button">✕ Close</button></div>
+ <p class="cg-intro">Discover personal moments by playing the RPG. Illustrations appear only after their art assets are installed.</p>
+ <div class="cg-filters">
+  <label for="galleryCharacter">Character</label><select id="galleryCharacter">
+   <option value="">All characters</option>
+   <option value="hana">Hana</option><option value="reina">Reina</option><option value="shiori">Shiori</option><option value="yuna">Yuna</option>
+   <option value="akari">Akari</option><option value="camila">Camila</option><option value="marina">Marina</option><option value="kaede">Kaede</option>
+  </select>
+  <label for="galleryCategory">Moment type</label><select id="galleryCategory">
+   <option value="">All types</option>
+   <option value="profile">First encounters</option><option value="pre_duel">Pre-duel</option>
+   <option value="social">Social</option><option value="special">Special / Comedy</option>
+  </select>
+ </div>
+ <p id="galleryCount" class="cg-count" aria-live="polite"></p>
+ <div id="galleryGrid" class="cg-grid"></div>
+ <div id="galleryPreview" class="cg-preview" aria-live="polite"></div>
+</dialog>
+
+<dialog id="cgMoment" class="modal cg-moment" aria-label="New character event illustration">
+ <div class="modal-heading"><h2 id="cgMomentTitle">New memory</h2><button id="cgMomentClose" type="button">Continue →</button></div>
+ <div id="cgMomentArt" class="cg-moment-art"></div>
+ <p id="cgMomentCaption"></p>
+</dialog>
+
 <div id="duel" hidden>
  <div class="duelhead"><strong>NEO CAMPUS · OFFICIAL TCG DUEL ENGINE</strong><span>The RPG clock advances after the match finishes.</span></div>
  <iframe id="battle" title="Neo Campus TCG Duel"></iframe>
@@ -161,6 +188,7 @@
 <script src="/rpg_epilogue.js"></script>
 <script src="/rpg_appointments.js"></script>
 <script src="/rpg_intentions.js"></script>
+<script src="/rpg_cg_gallery.js"></script>
 <script src="/rpg.js"></script>
 </body>
 </html>
