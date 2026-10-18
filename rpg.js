@@ -1,7 +1,7 @@
 'use strict';
 (()=>{
 const $=id=>document.getElementById(id),KEY='neoHarborRpgV1',STORY=window.NeoHarborStory,SCHEDULES=window.NeoRpgSchedules,WORLD=window.NeoRpgWorld,ARC=window.NeoRpgRivalArc,TOURNAMENTS=window.NeoRpgTournaments,BRIDGE=window.NeoRpgDuelBridge;
-const PACK=window.NeoRpgNarrativePack;
+const PACK=window.NeoRpgNarrativePack,EPILOGUE=window.NeoRpgEpilogue;
 const periods=['Morning','Afternoon','Evening'];
 const places={
  home:['Your Apartment','Your base during the championship season.'],
@@ -71,9 +71,11 @@ function finishStory(){
 
 function timeFlash(beforeDay,beforeSlot){const overlay=document.createElement('div');overlay.className='notice-pop';const heading=document.createElement('b');heading.textContent=state.day>90?'Season complete':state.day!==beforeDay?'A NEW DAY BEGINS':'TIME PASSES';const body=document.createElement('span');body.textContent=state.day>90?'Day 90 has ended.':('Day '+state.day+' · '+periods[state.slot]);overlay.append(heading,body);document.body.append(overlay);overlay.addEventListener('animationend',()=>overlay.remove());}
 
-function defaults(){return {day:1,slot:0,location:'home',metReina:false,reinaTrust:0,reinaDuels:0,results:[],flags:{intro:false},journal:['The 90-day season begins.'],pendingDuel:null,bonds:{},talked:{},hungOut:{},eventsDone:{},points:0,credits:80,playerDeck:'blackout',selected:null,ended:false,storyDone:{},storyMissed:{},relationships:{},routeOutcomes:{},partner:null,activeStory:null,activeEncounter:null,activeArc:null,arcFlags:{},arcOutcomes:{},activityDone:{},encountersDone:{},focus:75,insight:0,reputation:0,preparation:0,lastDuelReceipt:null,tournaments:{},scene:null}}
+function defaults(){return {day:1,slot:0,location:'home',metReina:false,reinaTrust:0,reinaDuels:0,results:[],flags:{intro:false},journal:['The 90-day season begins.'],pendingDuel:null,bonds:{},talked:{},hungOut:{},eventsDone:{},points:0,credits:80,playerDeck:'blackout',selected:null,ended:false,storyDone:{},storyMissed:{},relationships:{},routeOutcomes:{},partner:null,activeStory:null,activeEncounter:null,activeArc:null,arcFlags:{},arcOutcomes:{},activityDone:{},encountersDone:{},focus:75,insight:0,reputation:0,preparation:0,lastDuelReceipt:null,tournaments:{},campaignHistory:[],ngPlus:0,scene:null}}
 let state;try{state=JSON.parse(localStorage.getItem(KEY))||defaults();if(!Number.isInteger(state.day)||state.day<1||state.day>91)throw Error('Invalid save');}catch{state=defaults()}
 for(const [k,v] of Object.entries(defaults()))if(state[k]===undefined)state[k]=v;
+if(!Array.isArray(state.campaignHistory))state.campaignHistory=[];
+if(!Number.isInteger(state.ngPlus)||state.ngPlus<0)state.ngPlus=0;
 if(!places[state.location])state.location='home';
 if(!Number.isInteger(state.slot)||state.slot<0||state.slot>2)state.slot=0;
 for(const k of ['results','journal'])if(!Array.isArray(state[k]))state[k]=defaults()[k];
@@ -229,6 +231,13 @@ function act(action){
  if(type==='work')return performActivity('shop_shift');
  if(type==='practice')return state.location==='library'?performActivity('library_research'):state.location==='center'?performActivity('center_scrimmage'):performActivity('home_reflect');
  if(type==='rest'){if(state.day>90)return;advance();return say('Narrator','You take a break. Other lives in the town carry on.');}
+ if(type==='replay'){
+  if(!EPILOGUE.completed(state))return;
+  if(confirm('Start New Game+? Your completed season report will be archived. Relationships, standings and credits will reset.')){
+   state=EPILOGUE.replay(state,defaults);persist();location.reload();
+  }
+  return;
+ }
  if(type==='new'){if(confirm('Start a new season? This overwrites this browser save.')){state=defaults();for(const id of Object.keys(cast))state.bonds[id]={affection:0,trust:0,duels:0};persist();location.reload();}return;}
  if(!cast[id]||!currentPeople().includes(id))return say('Narrator','They have already moved on. Try another time.');
  const c=cast[id],bond=state.bonds[id],key=atKey(id);
@@ -312,6 +321,41 @@ function makeAvatar(id,size=''){
  img.onerror=()=>{img.style.display='none';const span=document.createElement('span');span.className='avatar-fallback';span.textContent=cast[id].name.split(' ').map(x=>x[0]).join('');img.parentElement.append(span);};
  return img;
 }
+function renderSeasonReport(){
+ const root=$('endSeason');root.replaceChildren();
+ const complete=EPILOGUE.completed(state);
+ root.hidden=!complete;
+ if(!complete)return;
+ const r=EPILOGUE.report(state);
+ root.className='campaign-complete season-finale';
+ const heading=document.createElement('h2');heading.textContent=r.title;
+ const preface=document.createElement('p');preface.className='finale-subtitle';
+ preface.textContent='NEO HARBOR · SEASON '+r.run+' · DAY 90 / 90';
+ const closing=document.createElement('p');closing.className='finale-closing';closing.textContent=r.closing;
+ const numbers=document.createElement('div');numbers.className='finale-stats';
+ const details=[['Duels',r.played],['Victories',r.wins],['Draws',r.draws],['Circuit points',r.points],['Stories',r.storyScenes],['Town encounters',r.encounters]];
+ for(const [key,value] of details){
+  const cell=document.createElement('div');cell.className='finale-stat';
+  const count=document.createElement('strong');count.textContent=String(value);
+  const label=document.createElement('small');label.textContent=key;cell.append(count,label);numbers.append(cell);
+ }
+ const trophyTitle=document.createElement('h3');trophyTitle.textContent='Your tournament record';
+ const trophies=document.createElement('div');trophies.className='finale-cups';
+ for(const cup of r.cups){
+  const el=document.createElement('div');el.className='finale-cup '+(cup.status==='champion'?'is-champion':'');
+  el.textContent=cup.title+' · '+(cup.status==='champion'?'Champion':cup.status==='eliminated'?'Eliminated after '+cup.roundsWon+' victories':cup.status==='missed'||cup.status==='expired'?'Not completed':cup.status);
+  trophies.append(el);
+ }
+ const social=document.createElement('p');social.className='finale-social';
+ social.textContent=r.partner?'A bond that continues: '+r.partner+'.':r.closest.length?'People you grew closest to: '+r.closest.map(x=>x.name).join(', ')+'.':'The people of Neo Harbor are still there for a return visit.';
+ const footer=document.createElement('div');footer.className='finale-actions';
+ const replay=document.createElement('button');replay.className='time-advance';
+ replay.textContent='↻ Start New Game+ · archive this season';replay.onclick=()=>act('replay');
+ const explanation=document.createElement('small');explanation.textContent='Replaying starts a fresh 90-day season. Reports and your selected deck preset carry over; credits, character bonds and brackets reset.';
+ footer.append(replay,explanation);
+ root.append(preface,heading,closing,numbers,trophyTitle,trophies,social,footer);
+}
+
 function render(){
  const ended=state.day>90,locked=!!state.activeStory||!!state.activeEncounter||!!state.activeArc||!!state.pendingDuel;
  const receipt=state.lastDuelReceipt;
@@ -447,6 +491,7 @@ function render(){
   const b=document.createElement('button');b.className='activity';b.textContent=label;b.disabled=(ended&&action!=='new'&&action!=='calendar')||(locked&&action!=='calendar');b.onclick=()=>act(action);$('activities').append(b);
  }
  renderBracketProgress();
+ renderSeasonReport();
  $('journal').replaceChildren();const stats=document.createElement('p');stats.className='stats';stats.textContent='🏆 '+state.points+' circuit points   ·   ◈ '+state.credits+' credits';$('journal').append(stats);
  for(const e of eventCards.filter(e=>e.day>=state.day).slice(0,2)){const p=document.createElement('p');p.textContent='DAY '+e.day+' · '+e.title+' ('+periods[e.slot]+')';$('journal').append(p)}
  for(const note of state.journal.slice(0,3)){const p=document.createElement('p');p.textContent='• '+note;$('journal').append(p)}
