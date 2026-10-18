@@ -78,3 +78,89 @@ body:has(.cube-builder-ui){max-width:1600px}
 #cbActionSlot button{width:100%;min-height:47px}
 @media(max-width:1080px){.cb-workspace{grid-template-columns:minmax(0,1.35fr) minmax(220px,.8fr)}.cb-selected{grid-column:1/-1;position:static}.cb-deck-list{max-height:300px}}
 @media(max-width:740px){.cb-header{display:block}.cb-progress{margin-top:12px}.cb-workspace{grid-template-columns:1fr}.cb-library,.cb-preview,.cb-selected{position:static;grid-column:auto}.cb-preview{max-width:100%}.cb-preview .cb-large{max-width:220px}.cb-grid{grid-template-columns:repeat(auto-fill,minmax(118px,1fr))}.cb-deck-list{max-height:unset}.cb-search input{max-width:150px}}
+
+
+/* Deck building is its own focused screen, not a subsection below the draft.
+   Keep the builder in the normal document flow so small screens can scroll. */
+body.cube-deck-mode{
+  max-width:none;
+  width:100%;
+  margin:0;
+  padding:0;
+  min-height:100svh;
+  background:linear-gradient(150deg,#101d37 0%,#0c1226 65%);
+}
+body.cube-deck-mode > header,
+body.cube-deck-mode > p:not(#error):not(#message),
+body.cube-deck-mode > .preset-picker,
+body.cube-deck-mode > #start,
+body.cube-deck-mode > #progress,
+body.cube-deck-mode > .layout,
+body.cube-deck-mode > #tournament,
+body.cube-deck-mode > #entrance,
+body.cube-deck-mode > #room > .panel,
+body.cube-deck-mode > #room > #draftArea,
+body.cube-deck-mode > #room > #roundRobinArea{
+  display:none!important;
+}
+body.cube-deck-mode > #builder,
+body.cube-deck-mode > #room > #deckArea{
+  display:block!important;
+  box-sizing:border-box;
+  width:100%;
+  max-width:1900px;
+  min-height:100svh;
+  padding:clamp(14px,2.5vw,40px);
+  margin:0 auto;
+}
+body.cube-deck-mode > #room{display:block!important;width:100%;max-width:none}
+.cube-build-context{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  flex-wrap:wrap;
+  gap:8px 24px;
+  margin-bottom:20px;
+  padding:0 0 14px;
+  border-bottom:1px solid #31456d;
+  color:#b8c9e7;
+  font-size:12px;
+  letter-spacing:.04em;
+}
+.cube-build-context strong{color:#ffdc84;letter-spacing:.1em}
+.cube-build-context span:nth-child(2){color:#e8f2ff;font-weight:750}
+body.cube-deck-mode #soloBuilderAction,
+body.cube-deck-mode #roomBuilderAction{margin-top:0}
+body.cube-deck-mode #error:not(:empty),
+body.cube-deck-mode #message:not(:empty){
+  position:fixed;
+  z-index:200;
+  top:12px;
+  left:50%;
+  transform:translateX(-50%);
+  width:max-content;
+  max-width:min(640px,calc(100vw - 30px));
+  border:1px solid #e99c9c;
+  border-radius:10px;
+  padding:12px 18px;
+  background:#481f35;
+  color:#ffe9e9;
+  text-align:center;
+  box-shadow:0 10px 30px #000a;
+}
+body.cube-deck-mode #error:empty,
+body.cube-deck-mode #message:empty{display:none}
+@media(min-width:1181px){
+  body.cube-deck-mode .cb-workspace{
+    grid-template-columns:minmax(0,1.85fr) minmax(245px,.83fr) minmax(295px,1fr);
+    gap:clamp(14px,1.4vw,26px);
+  }
+  body.cube-deck-mode .cb-grid{
+    grid-template-columns:repeat(auto-fill,minmax(140px,1fr));
+  }
+}
+@media(max-width:640px){
+  .cube-build-context{display:grid;gap:5px;font-size:11px}
+  body.cube-deck-mode > #builder,
+  body.cube-deck-mode > #room > #deckArea{padding:12px}
+}
