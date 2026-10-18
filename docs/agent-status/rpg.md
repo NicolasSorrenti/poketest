@@ -56,3 +56,20 @@ The RPG/VN agent owns `rpg.js`, `rpg_story.js`, `rpg_schedules.js`, `rpg_world.j
 
 ## Handoff
 Start from current `main` and review recent changes from other agents before editing. Keep changes RPG-scoped, use feature branches and PRs, and update this file on every milestone. Preserve gameplay freedom: dueling, social stories and activities are alternate meaningful paths, not a compulsory main quest.
+
+
+### 2026-10-18: Three-round tournament bracket milestone
+- Added \`rpg_tournaments.js\` with three separate, persistent, three-round cups: Neighborhood Cup (days 30–35), Regional Qualifier (days 60–67), Championship Bracket (days 88–90). Each has a fixed opponent sequence drawn from the established eight heroines.
+- The town activity panel offers the next bracket round when the player is at the Community Center within the cup's active dates. Matches launch the existing authoritative Classic CPU duel; win/loss/draw is derived only from its result.
+- A win advances to the next round and grants the round's tournament points/credits. A loss eliminates the player; a draw permits a rematch. Duplicate match notifications cannot award bonuses twice because settlement verifies the current round.
+- Progress lives in \`state.tournaments\` under the existing \`neoHarborRpgV1\` save key. Registration windows expire, and unfinished brackets are marked expired. Old single-match exhibition activities on these three event dates are superseded by the brackets; other exhibition events remain available.
+- Added \`tests/rpg_tournaments.test.js\` with seven cases covering advancement, duplicate settlement, losses, draws, JSON save/load, missed registration and championship expiry.
+- Checked JS syntax, HTML module loading, server whitelist and a simulated three-round championship victory sequence. **Not yet run:** full browser/Render match playthrough and the complete CI suite for this branch.
+- Integration contract: \`NeoRpgTournaments\` exposes \`hydrate\`, \`available\`, \`begin\`, \`settle\`, \`status\`, \`expire\`, \`validate\`. \`begin\` creates a descriptor for the existing \`startDuel\`; \`settle\` runs only after the authoritative Classic receipt. No card rules are duplicated.
+
+### Next priorities
+1. Show full bracket progress and outcome details in the calendar/side panel, and test long-running browser playthroughs.
+2. Add alternative participation and consolation paths for eliminated or late-arriving players; avoid hard-blocking social progression.
+3. Expand seven additional optional duel-and-choice character arcs.
+4. Integrate the shop and persistent card collection with existing deck APIs.
+5. Final campaign results, endings and replay support.
