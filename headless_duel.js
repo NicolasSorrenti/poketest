@@ -119,13 +119,14 @@ function setupHand(g,p){let retries=0;while(retries++<200){p.deck=shuffle(g,[...
  if(!p.hand.some(id=>isBasicPokemon(card(g,id))))fail(`${p.name} has no Basic Pokémon`);
  p.mulligans=retries-1;
 }
-function createGame({decks,names=['Player 1','Player 2'],seed=1,format='unrestricted'}={}){
+function createGame({decks,names=['Player 1','Player 2'],seed=1,format='unrestricted',deckSize=60,prizeCount=6}={}){
  if(!Array.isArray(decks)||decks.length!==2||!decks.every(Array.isArray))fail('Two decks are required');
  if(!Number.isSafeInteger(seed)||seed<0||seed>0xffffffff)fail('Invalid shuffle seed');
  if(!['unrestricted','classic','theme-expanded','gym-theme','gym-expanded','neo-theme','online-preview'].includes(format))fail('Unknown duel format');
- const game={format,phase:'setup',turn:0,round:1,turnSerial:0,over:false,winner:null,players:[],setupReady:[false,false],message:[],pendingDecision:null,pendingAction:null,nextDecisionId:0,rngState:seed>>>0,events:[]};
+ if(!((deckSize===60&&prizeCount===6)||(format==='online-preview'&&deckSize===40&&prizeCount===4)))fail('Unsupported deck and Prize configuration');
+ const game={format,deckSize,prizeCount,phase:'setup',turn:0,round:1,turnSerial:0,over:false,winner:null,players:[],setupReady:[false,false],message:[],pendingDecision:null,pendingAction:null,nextDecisionId:0,rngState:seed>>>0,events:[]};
  for(let side=0;side<2;side++){
-  const v=format==='classic'?CLASSIC.validateDeck(decks[side],CATALOG):format==='gym-theme'?CLASSIC.validateDeck(decks[side],CATALOG,{gym:true}):format==='gym-expanded'?CLASSIC.validateDeck(decks[side],CATALOG,{gymFull:true}):format==='neo-theme'?CLASSIC.validateDeck(decks[side],CATALOG,{neo:true}):format==='online-preview'?CLASSIC.validateDeck(decks[side],CATALOG,{gymFull:true,neo:true}):format==='theme-expanded'?CLASSIC.validateDeck(decks[side],CATALOG,{reprint:true}):validateDeck(decks[side],CATALOG);if(!v.valid)fail(`Invalid deck ${side}: ${v.errors.join('; ')}`);
+  const v=deckSize===40?validateDeck(decks[side],CATALOG,{size:40}):format==='classic'?CLASSIC.validateDeck(decks[side],CATALOG):format==='gym-theme'?CLASSIC.validateDeck(decks[side],CATALOG,{gym:true}):format==='gym-expanded'?CLASSIC.validateDeck(decks[side],CATALOG,{gymFull:true}):format==='neo-theme'?CLASSIC.validateDeck(decks[side],CATALOG,{neo:true}):format==='online-preview'?CLASSIC.validateDeck(decks[side],CATALOG,{gymFull:true,neo:true}):format==='theme-expanded'?CLASSIC.validateDeck(decks[side],CATALOG,{reprint:true}):validateDeck(decks[side],CATALOG);if(!v.valid)fail(`Invalid deck ${side}: ${v.errors.join('; ')}`);
   const p={name:String(names[side]||`Player ${side+1}`),deck:[...decks[side]],hand:[],prizes:[],discard:[],active:null,bench:[],energyUsed:false,retreated:false,turnPlays:[],mulligans:0};
   game.players.push(p);setupHand(game,p);
  }
@@ -771,7 +772,7 @@ function performAction(g,side,cmd){
   }else if(type==='setup_confirm'){
    if(!p.active)fail('Choose an Active Pokémon first');g.setupReady[side]=true;
    if(g.setupReady.every(Boolean)){
-    for(const owner of g.players)for(let i=0;i<6;i++)owner.prizes.push(owner.deck.pop());
+    for(const owner of g.players)for(let i=0;i<(g.prizeCount||6);i++)owner.prizes.push(owner.deck.pop());
     g.phase='game';draw(g,0);log(g,'Duel started.');
    }
   }else if(type==='concede'){g.over=true;g.winner=1-side;}
