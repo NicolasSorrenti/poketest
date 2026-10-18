@@ -12,7 +12,7 @@ test('four connected personal episodes are valid and independent from canonical 
  assert.deepEqual(A.validate(),[]);
  assert.equal(A.entries.length,4);
  assert.deepEqual(A.entries.map(x=>x.id),['reina_rival_1','reina_rival_2','reina_rival_trial','reina_rival_final']);
- assert.ok(STORY.events.filter(x=>x.npc==='reina').length===4);
+ assert.ok(STORY.events.filter(x=>x.id.startsWith('reina_route_')).length===4);
 });
 test('first episode requires a genuine prior match with Reina and her presence',()=>{
  const s=campaign();
