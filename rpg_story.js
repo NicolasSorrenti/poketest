@@ -212,6 +212,7 @@
   if(!state.storyMissed||typeof state.storyMissed!=='object')state.storyMissed={};
   if(!state.relationships||typeof state.relationships!=='object')state.relationships={};
   if(!('partner' in state))state.partner=null;
+  if(!state.storyFlags||typeof state.storyFlags!=='object'||Array.isArray(state.storyFlags))state.storyFlags={};
   for(const e of E)if(!state.relationships[e.npc])state.relationships[e.npc]={affection:0,trust:0,attraction:0,respect:0,duels:0};
   return state;
  }
@@ -239,6 +240,7 @@
   const b=state.relationships[e.npc];for(const [k,v] of Object.entries(choice.delta))b[k]=(b[k]||0)+v;
   if(choice.kind==='commit'){if(b.affection>=6&&b.trust>=3){state.partner=e.npc;state.routeOutcomes=state.routeOutcomes||{};state.routeOutcomes[e.npc]='romance';}else{state.routeOutcomes=state.routeOutcomes||{};state.routeOutcomes[e.npc]='friendship';}}
   if(choice.flag==='friendship'){state.routeOutcomes=state.routeOutcomes||{};state.routeOutcomes[e.npc]='friendship';}
+  if(choice.flag&&choice.flag!=='romance'&&choice.flag!=='friendship')state.storyFlags[e.id]=choice.flag;
   state.storyDone[e.id]={choice:choiceIndex,day:state.day};
   return {event:e,choice,partner:state.partner};
  }
