@@ -1200,6 +1200,15 @@ const settings={level:3,personality:'balanced',side:1,seed:47};
   'After lawful Computer Search selection, fetch the Active Machop Evolution');
  assert.ok(selected.game.players[1].hand.includes('base1-34'));
  assert.equal(selected.game.pendingDecision,null);
+ const played=AI.driveSide(selected.game,{side:1,level:5,seed:4,comboSearch:true,limit:100});
+ const actions=played.commands.map(x=>x.command.type);
+ assert.ok(actions.includes('evolve'),
+  'The searched Evolution must be available for actual same-turn play');
+ assert.ok(actions.includes('attach_energy'),
+  'After legal search and evolution, the CPU must attach its held Fighting Energy');
+ assert.ok(actions.includes('attack'),
+  'The completed Search to evolution to Energy sequence must finish with a real attack');
+ assert.equal(played.game.pendingDecision,null);
 }
 let duels=0,decisions=0,attacks=0,energy=0,evolutions=0,trainer=0;
 for(let seed=1;seed<=4;seed++){
