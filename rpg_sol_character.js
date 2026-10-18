@@ -1,0 +1,745 @@
+'use strict';
+/* Neo Harbor: adult summer host, visual bible and opt-in five-stage romance/friendship route. */
+(function(root,factory){const api=factory();if(typeof module==='object'&&module.exports)module.exports=api;if(root)root.NeoRpgSolCharacter=api;})(typeof window!=='undefined'?window:null,function(){
+ const cast={
+  "sol": {
+    "name": "Sol Varela",
+    "age": 26,
+    "deck": "hot_water",
+    "style": "Hot Water · Fire/Water surprise tempo",
+    "intro": "Hey, new face! Important question: are you wearing shoes you can run in? I've got a treasure map and a completely irresponsible amount of enthusiasm.",
+    "repeat": "There you are! I was deciding between a scavenger hunt, a snack contest, and sitting dramatically by the river. You're invited to all three.",
+    "talk": [
+      "Today's mission: find a card with an attack name that sounds like a terrible pickup line. Winner gets bragging rights.",
+      "Everyone asks why I'm in a bikini. Nobody asks why they're in boring pants. We've been investigating the wrong mystery.",
+      "I can plan an entire street festival from memory. Ask me what I want to do when I'm sad and my brain goes completely blank.",
+      "I used to think 'no thanks' meant someone didn't like me. Turns out sometimes people are just tired. Revolutionary.",
+      "Yes, I can sit still. Watch. ...Okay, seven seconds. That counts as meditation.",
+      "I wore a jacket to the tournament. It was mesh. Jun called it 'a start.' He's getting sentimental."
+    ],
+    "flirt": "Careful! I flirt back. But only if it's fun for both of us. Want to find out?",
+    "duelWin": "You beat me! Okay, you choose the victory snack. I'm only pretending not to be impressed.",
+    "duelLose": "Ha! My ridiculous combo worked! You owe me a rematch, and I owe you a drink.",
+    "hangouts": [
+      "Sol drags you through a five-stop waterfront scavenger hunt. The prize is a hand-drawn trophy on a napkin. She keeps the napkin.",
+      "You join her 'worst card-name pickup line' contest at the arcade. A shy beginner wins; Sol applauds the loudest.",
+      "You two test hilariously strange fruit-juice combinations at the café. She declares the purple one a marketing opportunity.",
+      "Sol packs a spontaneous sunset picnic, and—for once—does not schedule a single activity. She admits the silence is nice.",
+      "You help Sol run a deck-box fashion show and invite a nervous newcomer to judge. They decide that everybody wins."
+    ]
+  }
+};
+ const looks={
+  "sol": {
+    "silhouette": "Unambiguously adult, confident and curvy-athletic; a striking bikini-and-resort-streetwear silhouette in every setting, paired with lightweight coverups or practical layers where appropriate.",
+    "palette": "Lagoon turquoise, vivid coral pink, sunflower yellow and midnight navy accessories.",
+    "hair": "Very long, lively coral-pink waves with golden highlights, frequently in a high messy ponytail.",
+    "eyes": "Expressive sea-green eyes, sun freckles and naturally lively smile lines.",
+    "details": "Shell-and-sun earrings, stacked colorful bangles, waterproof deck case on a crossbody strap, playful enamel badges, practical sandals and spare dry cardigan.",
+    "expressions": "Huge daring grin, theatrical wink, mock shock, exuberant closed-eye laugh, unguarded worried stare, relieved soft smile when she realizes she can be quiet with someone.",
+    "outfits": [
+      "signature asymmetric turquoise/coral bikini with airy mesh layer and open tropical shirt",
+      "neon-magenta bikini with long open navy cardigan at evening events",
+      "swim top under oversized orange varsity shirt and denim shorts at arcade",
+      "raincoat over her trademark swimsuit on wet days",
+      "neat sleeveless coverup and shorts over bikini at tournament venues"
+    ],
+    "renderNotes": "SFW anime/JRPG romantic-comedy character, age 26; flirty and bold without nudity, lingerie framing or sexualized poses. Match the expressive, stylized proportions and clean full-color portrait style of Neo Harbor's adult cast."
+  }
+};
+ const schedules={
+  "sol": [
+    [
+      "park",
+      "park",
+      "cafe"
+    ],
+    [
+      "home",
+      "arcade",
+      "arcade"
+    ],
+    [
+      "park",
+      "shop",
+      "cafe"
+    ],
+    [
+      "home",
+      "park",
+      "center"
+    ],
+    [
+      "park",
+      "shop",
+      "arcade"
+    ],
+    [
+      "shop",
+      "center",
+      "park"
+    ],
+    [
+      "home",
+      "park",
+      "cafe"
+    ]
+  ]
+};
+ const arrivals={
+  "sol": 8
+};
+ const events=[
+  {
+    "id": "sol_route_1",
+    "title": "An Invitation With No Instructions",
+    "start": 8,
+    "end": 22,
+    "place": "park",
+    "slot": 1,
+    "minBond": 0,
+    "prerequisite": null,
+    "participants": [
+      "marina"
+    ],
+    "npc": "sol",
+    "chapter": 1,
+    "lines": [
+      {
+        "speaker": "sol",
+        "text": "You! Yes, you. How would you feel about becoming the founding champion of an event I invented twelve seconds ago?"
+      },
+      {
+        "speaker": "Protagonist",
+        "text": "Depends. What's the event?"
+      },
+      {
+        "speaker": "sol",
+        "text": "A treasure hunt! Somewhere here there's a plastic Psyduck. Find it, win a juice. Ignore that I lost it myself."
+      },
+      {
+        "speaker": "Protagonist",
+        "text": "Is wearing a bikini in the middle of town part of the rules?"
+      },
+      {
+        "speaker": "sol",
+        "text": "Nope. That's just Tuesday. The prize involves absolutely no mandatory swimwear."
+      },
+      {
+        "speaker": "marina",
+        "text": "Sol, you left the clue cards where the tide can reach them."
+      },
+      {
+        "speaker": "sol",
+        "text": "An aquatic difficulty modifier! ...Okay, not excellent. Will you two help me move them?"
+      },
+      {
+        "speaker": "Protagonist",
+        "text": "You're good at making accidents sound like adventures."
+      },
+      {
+        "speaker": "sol",
+        "text": "Only harmless ones. Come on, we've got a duck to find."
+      }
+    ],
+    "choices": [
+      {
+        "label": "Help turn the chaos into a real game",
+        "reply": "You organized my nonsense without making it boring. Are you some kind of wizard?",
+        "kind": "support",
+        "flag": "sol_help",
+        "delta": {
+          "affection": 2,
+          "trust": 2,
+          "respect": 0,
+          "attraction": 0
+        }
+      },
+      {
+        "label": "Ask whether everyone actually wants to play",
+        "reply": "Oh. You mean ask before I recruit half the neighborhood? ...Fair. That is a good rule.",
+        "kind": "honest",
+        "flag": "sol_ask",
+        "delta": {
+          "affection": 1,
+          "trust": 1,
+          "respect": 2,
+          "attraction": 0
+        }
+      },
+      {
+        "label": "Tell her the outfit makes her hard to ignore",
+        "reply": "Honey, I came dressed to be seen. But can you keep up with me?",
+        "kind": "flirt",
+        "flag": "sol_banter",
+        "delta": {
+          "affection": 2,
+          "trust": 1,
+          "respect": 0,
+          "attraction": 2
+        }
+      }
+    ]
+  },
+  {
+    "id": "sol_route_2",
+    "title": "The Worst Party in Neo Harbor",
+    "start": 26,
+    "end": 43,
+    "place": "arcade",
+    "slot": 2,
+    "minBond": 2,
+    "prerequisite": "sol_route_1",
+    "participants": [
+      "yuna"
+    ],
+    "npc": "sol",
+    "chapter": 1,
+    "lines": [
+      {
+        "speaker": "sol",
+        "text": "I booked an arcade party. Eight people RSVP'd. Two came. One is here to fix the pinball machine."
+      },
+      {
+        "speaker": "Protagonist",
+        "text": "So we're down to one?"
+      },
+      {
+        "speaker": "sol",
+        "text": "Two, if you stay. Three if we count the technician's emotional-support screwdriver."
+      },
+      {
+        "speaker": "yuna",
+        "text": "I didn't know this was a party. The flyer said 'unannounced surprise experience.'"
+      },
+      {
+        "speaker": "sol",
+        "text": "I was trying to make it irresistible."
+      },
+      {
+        "speaker": "Protagonist",
+        "text": "It was also impossible to know what you were signing up for."
+      },
+      {
+        "speaker": "sol",
+        "text": "Ugh. You're right. I keep treating 'surprise' as the same thing as 'fun.'"
+      },
+      {
+        "speaker": "yuna",
+        "text": "We could play a silly draft game. No audience required."
+      },
+      {
+        "speaker": "sol",
+        "text": "...Actually, that sounds nice."
+      }
+    ],
+    "choices": [
+      {
+        "label": "Host one ridiculous game with her",
+        "reply": "Two players, two sodas and the worst deck names imaginable. I'm having more fun than I planned.",
+        "kind": "support",
+        "flag": "sol_small",
+        "delta": {
+          "affection": 2,
+          "trust": 2,
+          "respect": 0,
+          "attraction": 0
+        }
+      },
+      {
+        "label": "Encourage clearer invitations next time",
+        "reply": "I'm scared they'll say no if they know what they're getting. That's my problem, not theirs.",
+        "kind": "honest",
+        "flag": "sol_clear",
+        "delta": {
+          "affection": 1,
+          "trust": 1,
+          "respect": 2,
+          "attraction": 0
+        }
+      },
+      {
+        "label": "Suggest a low-key date instead of a spectacle",
+        "reply": "A date? Wait, you're serious? Let's find out whether I can flirt without a microphone.",
+        "kind": "flirt",
+        "flag": "sol_date",
+        "delta": {
+          "affection": 2,
+          "trust": 1,
+          "respect": 0,
+          "attraction": 2
+        }
+      }
+    ],
+    "openingByFlag": {
+      "sol_help": "I still have that paper trophy from our duck hunt. I booked an arcade party. Eight people RSVP'd. Two came.",
+      "sol_ask": "I asked for RSVPs this time. Eight people said yes to an arcade party. Two came.",
+      "sol_banter": "Remember when you said I was impossible to ignore? Turns out my arcade flyer was easy to ignore. Eight RSVP'd; two came."
+    }
+  },
+  {
+    "id": "sol_route_3",
+    "title": "The Girl Who Never Cancels",
+    "start": 45,
+    "end": 62,
+    "place": "cafe",
+    "slot": 1,
+    "minBond": 4,
+    "prerequisite": "sol_route_2",
+    "participants": [
+      "alma"
+    ],
+    "npc": "sol",
+    "chapter": 2,
+    "lines": [
+      {
+        "speaker": "alma",
+        "text": "Sol's been here three hours. She's ordered one lemonade and made seven festival plans."
+      },
+      {
+        "speaker": "sol",
+        "text": "Six. Number four involved fireworks in a public library. Legally unsound."
+      },
+      {
+        "speaker": "Protagonist",
+        "text": "Why are you keeping so busy?"
+      },
+      {
+        "speaker": "sol",
+        "text": "Last year I tried to run a summer festival alone. Sponsors fell through. I cancelled it and told everybody it was 'rescheduled.'"
+      },
+      {
+        "speaker": "Protagonist",
+        "text": "You never told them what happened?"
+      },
+      {
+        "speaker": "sol",
+        "text": "I didn't want people who believed in me to find out I'd failed."
+      },
+      {
+        "speaker": "alma",
+        "text": "Half those people would've helped. You never asked."
+      },
+      {
+        "speaker": "sol",
+        "text": "I know. Asking feels scarier than announcing something exciting."
+      },
+      {
+        "speaker": "Protagonist",
+        "text": "You don't need a festival to make people want to be here."
+      },
+      {
+        "speaker": "sol",
+        "text": "That's lovely. I'm going to need time to believe it."
+      }
+    ],
+    "choices": [
+      {
+        "label": "Stay for lemonade and let her talk",
+        "reply": "You didn't try to fix me with a pep talk. I noticed. Thanks.",
+        "kind": "support",
+        "flag": "sol_listen",
+        "delta": {
+          "affection": 2,
+          "trust": 2,
+          "respect": 0,
+          "attraction": 0
+        }
+      },
+      {
+        "label": "Ask who she wants on the team this time",
+        "reply": "Not who'll clap for me. Who'll actually say 'stop' when I need it. Yeah, I know who to ask.",
+        "kind": "honest",
+        "flag": "sol_team",
+        "delta": {
+          "affection": 1,
+          "trust": 1,
+          "respect": 2,
+          "attraction": 0
+        }
+      },
+      {
+        "label": "Offer to be there even on a boring day",
+        "reply": "I may hold you to that. My definition of boring is a little experimental.",
+        "kind": "flirt",
+        "flag": "sol_ordinary",
+        "delta": {
+          "affection": 2,
+          "trust": 1,
+          "respect": 0,
+          "attraction": 2
+        }
+      }
+    ],
+    "openingByFlag": {
+      "sol_small": "That tiny arcade night was lovely. Alma says I've been making festival plans for three hours.",
+      "sol_clear": "I sent honest invitations this time. Alma says I've been planning follow-ups at her café for three hours.",
+      "sol_date": "About that date. I haven't forgotten. Alma says I've been rehearsing what to say for three hours."
+    }
+  },
+  {
+    "id": "sol_route_4",
+    "title": "The Forecast Says No",
+    "start": 64,
+    "end": 78,
+    "place": "center",
+    "slot": 1,
+    "minBond": 5,
+    "prerequisite": "sol_route_3",
+    "participants": [
+      "jun"
+    ],
+    "npc": "sol",
+    "chapter": 3,
+    "lines": [
+      {
+        "speaker": "jun",
+        "text": "I can't approve the riverside festival if the safety team says the water is unsafe."
+      },
+      {
+        "speaker": "sol",
+        "text": "I know. I've already written the cancellation notice."
+      },
+      {
+        "speaker": "Protagonist",
+        "text": "You sound like you're waiting for us to talk you out of it."
+      },
+      {
+        "speaker": "sol",
+        "text": "For two minutes, I was. Then I thought about the kids getting home after dark."
+      },
+      {
+        "speaker": "jun",
+        "text": "That is a responsible decision, Sol."
+      },
+      {
+        "speaker": "sol",
+        "text": "Please don't compliment me like that. It makes me feel like a grown-up."
+      },
+      {
+        "speaker": "Protagonist",
+        "text": "You can still make this weekend good."
+      },
+      {
+        "speaker": "sol",
+        "text": "The café has an indoor table. The arcade owes me a favor. No river, no big crowd—just people who want to come."
+      },
+      {
+        "speaker": "jun",
+        "text": "I'll help write the notice. In readable font this time."
+      },
+      {
+        "speaker": "sol",
+        "text": "Careful, Jun. One more sensible choice and you're on my planning committee."
+      }
+    ],
+    "choices": [
+      {
+        "label": "Help her build a small indoor event",
+        "reply": "I kept waiting for the grand version to save everything. Maybe the small version was real all along.",
+        "kind": "support",
+        "flag": "sol_safe",
+        "delta": {
+          "affection": 2,
+          "trust": 2,
+          "respect": 0,
+          "attraction": 0
+        }
+      },
+      {
+        "label": "Say you respect her decision to cancel",
+        "reply": "It felt awful. I also know it was right. Both things can be true.",
+        "kind": "honest",
+        "flag": "sol_boundary",
+        "delta": {
+          "affection": 1,
+          "trust": 1,
+          "respect": 2,
+          "attraction": 0
+        }
+      },
+      {
+        "label": "Ask her out after the event, no costumes required",
+        "reply": "No costumes? Cruel. But yes. Just the two of us sounds pretty amazing.",
+        "kind": "flirt",
+        "flag": "sol_after",
+        "delta": {
+          "affection": 2,
+          "trust": 1,
+          "respect": 0,
+          "attraction": 2
+        }
+      }
+    ],
+    "openingByFlag": {
+      "sol_listen": "I took a day to think after our talk. Jun's here with bad news about the waterfront festival.",
+      "sol_team": "I recruited a team. Jun is on it, and he's telling me the weather makes the waterfront festival unsafe.",
+      "sol_ordinary": "Turns out a quiet day includes tough phone calls. Jun says the waterfront isn't safe this weekend."
+    }
+  },
+  {
+    "id": "sol_route_5",
+    "title": "When the Music Stops",
+    "start": 79,
+    "end": 89,
+    "place": "park",
+    "slot": 2,
+    "minBond": 6,
+    "prerequisite": "sol_route_4",
+    "participants": [],
+    "npc": "sol",
+    "chapter": 3,
+    "lines": [
+      {
+        "speaker": "sol",
+        "text": "I brought two drinks, a blanket, and absolutely no activities. How's that for personal growth?"
+      },
+      {
+        "speaker": "Protagonist",
+        "text": "I'm suspicious. Where's the hidden scavenger hunt?"
+      },
+      {
+        "speaker": "sol",
+        "text": "Under that tree. Kidding! Look at your face."
+      },
+      {
+        "speaker": "Protagonist",
+        "text": "The indoor party went well. The kids stayed for hours."
+      },
+      {
+        "speaker": "sol",
+        "text": "And when they left, I didn't feel I'd failed. People can have fun and still go home. Who knew?"
+      },
+      {
+        "speaker": "Protagonist",
+        "text": "What made you want to meet tonight?"
+      },
+      {
+        "speaker": "sol",
+        "text": "I'm good at asking people to do something. I wanted to try asking you to be somewhere with me. No audience."
+      },
+      {
+        "speaker": "Protagonist",
+        "text": "You don't have to entertain me."
+      },
+      {
+        "speaker": "sol",
+        "text": "I know. I still want to make you laugh, though. That's different."
+      },
+      {
+        "speaker": "sol",
+        "text": "So... what are we when the music stops?"
+      }
+    ],
+    "choices": [
+      {
+        "label": "Tell her you want to be with her beyond summer",
+        "reply": "Then I have one scary plan: we keep showing up for each other, even when nothing special happens.",
+        "kind": "commit",
+        "flag": "romance",
+        "delta": {
+          "affection": 2,
+          "trust": 2,
+          "respect": 0,
+          "attraction": 2
+        }
+      },
+      {
+        "label": "Promise to make ridiculous memories as friends",
+        "reply": "Deal. First memory: I sat still for an entire sunset. Nobody will believe you.",
+        "kind": "friend",
+        "flag": "friendship",
+        "delta": {
+          "affection": 2,
+          "trust": 1,
+          "respect": 0,
+          "attraction": 0
+        }
+      },
+      {
+        "label": "Tell her she doesn't need to decide tonight",
+        "reply": "The kindest non-answer I've ever heard. Stay a little longer? I think I can enjoy not knowing.",
+        "kind": "honest",
+        "flag": "friendship",
+        "delta": {
+          "affection": 1,
+          "trust": 1,
+          "respect": 2,
+          "attraction": 0
+        }
+      }
+    ],
+    "openingByFlag": {
+      "sol_safe": "Our little indoor party was a hit. I brought two drinks, a blanket and absolutely no activities.",
+      "sol_boundary": "Cancelling the river plan was right. People understood. I brought two drinks and no activities tonight.",
+      "sol_after": "I remembered you asked me out after the party. I brought two drinks and no activities."
+    }
+  },
+  {
+    "id": "sol_alma_cross_1",
+    "title": "The Dress Code Is Common Sense",
+    "start": 32,
+    "end": 47,
+    "place": "cafe",
+    "slot": 2,
+    "minBond": 1,
+    "prerequisite": "sol_route_1",
+    "participants": [
+      "alma"
+    ],
+    "npc": "sol",
+    "chapter": 2,
+    "lines": [
+      {
+        "speaker": "sol",
+        "text": "Alma, your coffee machine is making a noise like a wounded Pidgeotto."
+      },
+      {
+        "speaker": "alma",
+        "text": "Steam valve. Also, you can't stand behind the counter in wet sandals."
+      },
+      {
+        "speaker": "sol",
+        "text": "Fair. The swimsuit stays; the puddles don't. I'll change shoes."
+      },
+      {
+        "speaker": "Protagonist",
+        "text": "That was easier than I expected."
+      },
+      {
+        "speaker": "alma",
+        "text": "I never said she couldn't dress like herself. I said I don't want anyone slipping."
+      },
+      {
+        "speaker": "sol",
+        "text": "See? Boundaries. Super attractive on other people; alarmingly hard when I need them."
+      },
+      {
+        "speaker": "alma",
+        "text": "Try telling Teo you can't host every event."
+      },
+      {
+        "speaker": "sol",
+        "text": "One terrifying thing at a time, please."
+      }
+    ],
+    "choices": [
+      {
+        "label": "Help make the café safer",
+        "reply": "We did something useful without a theme song. Don't tell anyone I'm becoming responsible.",
+        "kind": "support",
+        "flag": "sol_practical",
+        "delta": {
+          "affection": 2,
+          "trust": 2,
+          "respect": 0,
+          "attraction": 0
+        }
+      },
+      {
+        "label": "Point out Alma respected her style and set a clear boundary",
+        "reply": "It's possible to say no without rejecting a person. I should practice that.",
+        "kind": "honest",
+        "flag": "sol_respect",
+        "delta": {
+          "affection": 1,
+          "trust": 1,
+          "respect": 2,
+          "attraction": 0
+        }
+      }
+    ],
+    "openingByFlag": {
+      "sol_help": "After our duck hunt I swore I'd be practical at Alma's café. The coffee machine is making a noise like a Pidgeotto.",
+      "sol_ask": "I asked Alma about using her café. She said yes, with rules. Especially about the coffee machine.",
+      "sol_banter": "My swimsuit survived the duck hunt. Alma's coffee machine seems less resilient and sounds like a wounded Pidgeotto."
+    }
+  },
+  {
+    "id": "sol_marina_cross_1",
+    "title": "The River Doesn't RSVP",
+    "start": 54,
+    "end": 69,
+    "place": "park",
+    "slot": 0,
+    "minBond": 3,
+    "prerequisite": "sol_route_2",
+    "participants": [
+      "marina"
+    ],
+    "npc": "sol",
+    "chapter": 2,
+    "lines": [
+      {
+        "speaker": "marina",
+        "text": "The current is faster than yesterday. The ferry party needs to stay on shore."
+      },
+      {
+        "speaker": "sol",
+        "text": "We can move the games to the shelter. But people expected water balloons."
+      },
+      {
+        "speaker": "Protagonist",
+        "text": "Nobody has to get wet to have fun."
+      },
+      {
+        "speaker": "marina",
+        "text": "Please decide before everyone arrives. The river won't negotiate."
+      },
+      {
+        "speaker": "sol",
+        "text": "Okay. Shore it is. I'll send an update."
+      },
+      {
+        "speaker": "marina",
+        "text": "I didn't want to be the person who ruins your afternoon."
+      },
+      {
+        "speaker": "sol",
+        "text": "You're the person who noticed something I missed."
+      },
+      {
+        "speaker": "Protagonist",
+        "text": "And the balloons?"
+      },
+      {
+        "speaker": "sol",
+        "text": "We'll aim at targets. On land. Far away from the cards. You're all bossy and I adore it."
+      }
+    ],
+    "choices": [
+      {
+        "label": "Help run a safe dry-land game",
+        "reply": "People still laughed. Turns out danger wasn't the interesting part.",
+        "kind": "support",
+        "flag": "sol_safe_game",
+        "delta": {
+          "affection": 2,
+          "trust": 2,
+          "respect": 0,
+          "attraction": 0
+        }
+      },
+      {
+        "label": "Thank Marina for making the difficult call",
+        "reply": "She cares about people more than applause. I want to get better at that.",
+        "kind": "honest",
+        "flag": "sol_marina_trust",
+        "delta": {
+          "affection": 1,
+          "trust": 1,
+          "respect": 2,
+          "attraction": 0
+        }
+      }
+    ],
+    "openingByFlag": {
+      "sol_small": "After our tiny arcade party I promised a simpler event. Marina says the river may complicate that.",
+      "sol_clear": "I sent a real itinerary this time. Marina says the river doesn't read invitations.",
+      "sol_date": "That date is still on my mind, but first I owe a group of people an update about the river."
+    }
+  }
+];
+ function validate(){const issues=[];for(const e of events){if(e.choices.length<2||e.lines.length<6||e.npc!=='sol'||e.start<1||e.end>90||e.start>e.end)issues.push(e.id);if(e.prerequisite&&!events.some(x=>x.id===e.prerequisite))issues.push('missing dependency '+e.id);if(!e.choices.every(c=>c.label&&c.reply&&c.kind&&c.delta))issues.push('choice '+e.id);}return issues;}
+ return Object.freeze({cast,looks,schedules,arrivals,events,validate});
+});
