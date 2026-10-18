@@ -1020,8 +1020,9 @@ const settings={level:3,personality:'balanced',side:1,seed:47};
  lethal.self.active={id:IDS.hit,damage:0,playedTurn:3,energies:[IDS.fight],status:null};
  lethal.self.hand=['base1-84'];lethal.self.discard=[];
  lethal.opponent.active={id:IDS.rat,damage:0,energies:[],status:null};
- assert.ok(AI.comboSequenceBonus({type:'play_trainer',payload:{handIndex:0}},lethal,cfg)>150,
-  'PlusPower must secure a 10-damage-gap knockout before the attack');
+ const koBonus=AI.comboSequenceBonus({type:'play_trainer',payload:{handIndex:0}},lethal,cfg);
+ assert.ok(koBonus>150,
+  'PlusPower must secure a 10-damage-gap knockout before the attack; score '+koBonus);
  const untimely=structuredClone(lethal);untimely.opponent.active={...o.opponent.active};
  assert.ok(AI.comboSequenceBonus({type:'play_trainer',payload:{handIndex:0}},untimely,cfg)<
   AI.comboSequenceBonus({type:'play_trainer',payload:{handIndex:0}},lethal,cfg),
