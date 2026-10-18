@@ -16,6 +16,7 @@ for(let seed=1;seed<3000&&!(heads&&tails);seed++){
  const g=duel(seed*65536),before=g.players[0].active.energies.length;
  const result=applyCommand(g,0,{type:'retreat',payload:{slot:0}});
  assert.equal(result.ok,true,result.error);
+ if(g.pendingDecision){const d=g.pendingDecision;const choice=applyCommand(g,d.actor,{type:'choose',payload:{decisionId:d.id,selected:[d.options[0].id]}});assert.equal(choice.ok,true,choice.error);}
  if(g.players[0].active.id==='base1-58'){
   tails=true;
   assert.equal(g.players[0].active.status,'Confused');
