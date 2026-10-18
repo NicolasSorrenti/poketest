@@ -1289,10 +1289,20 @@ function comboSequenceBonus(action,o,cfg){
  // Chaos Gym first requires a coin flip and can redirect the Trainer.
  // Never treat a random, opponent-controlled result as a guaranteed line.
  if(card(o.stadium?.id)?.name==='Chaos Gym')return 0;
- // No Trainer in hand means there is no novel Trainer combo to search.
- // Keep the established evolution/Energy policy without burning DFS nodes.
- if(action.type!=='play_trainer'&&!o.self.hand.some(id=>
-  ['PlusPower','Energy Retrieval'].includes(card(id)?.name)))return 0;
+ // Once a search Trainer resolves, the resulting evolution and Energy are
+ // in our hand, but the Trainer itself is gone. Continue that concrete,
+ // visible two-card plan rather than abandoning it in favor of a random Bench
+ // attachment. No imaginary draws or extra attachments are allowed.
+ const hasTrainer=o.self.hand.some(id=>
+  ['PlusPower','Energy Retrieval'].includes(card(id)?.name));
+ const canFinishEvolution=!o.self.energyUsed&&o.self.active.playedTurn<o.round&&
+  o.self.hand.some(id=>isEnergy(card(id)))&&
+  o.self.hand.some(id=>{
+   const c=card(id);return c?.evolvesFrom&&canEvolve(c,card(o.self.active.id));
+  });
+ // Keep ordinary setup cheap unless an actual own-hand Trainer or a legal,
+ // immediate evolution+Energy chain is present.
+ if(action.type!=='play_trainer'&&!hasTrainer&&!canFinishEvolution)return 0;
  const root={...prepBoard(o),discard:[...(o.self.discard||[])],plusPower:0};
  const initial=comboValue(root,o);
  let best=-Infinity,bestDepth=0,nodes=0;
