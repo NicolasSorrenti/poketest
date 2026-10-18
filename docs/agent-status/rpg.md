@@ -103,3 +103,17 @@ Start from current `main` and review recent changes from other agents before edi
 3. Integrate card collecting/shop economy without compromising authentic deck legality.
 4. Add season closure and character epilogues that acknowledge both friendships and tournament outcomes.
 5. Run full Node CI, browser E2E, save migrations, and a complete 90-day campaign in a production-like environment.
+
+
+## Milestone: season report and New Game+ replay (2026-10-18)
+- Added the pure RPG module `rpg_epilogue.js`, exposed to the browser as `NeoRpgEpilogue` (CommonJS-compatible). The static server whitelist was extended only for this named file.
+- When Day 90 ends, the existing `#endSeason` panel displays a report based on actual player duel results, points, three cup outcomes, earned story events, discovered encounters, partner commitment and established friendships. It is hidden before the 90-day season ends; future plot details are not exposed.
+- New Game+ is optional and confirmation-gated. A finished season summary is appended to `campaignHistory` (at most 10) and the chosen deck preset is retained. All affection, story flags, cup standings, points, credits and duel history start fresh. No undeveloped collection data or card legality is claimed to carry over.
+- Old saves default `ngPlus` and `campaignHistory` safely; corrupt archive fields are repaired without discarding the original campaign.
+- Tests in `tests/rpg_epilogue.test.js` cover genuine results, romance and friendship distinction, nonmutating reports, JSON compatibility, replay reset and the archive size cap.
+- `tests/rpg_world_ui.test.js` covers report visibility only after Day 90, outcome text, and confirmed New Game+; browser-controller test fixtures load the new module.
+- `npm run test:rpg` includes the epilogue test file. **37 focused report/world/controller cases passed in a self-contained JavaScript harness.** This does not replace native CI, Render, or browser E2E verification.
+- This provides a campaign **summary and replay loop**, not the fully authored personal route endings. Existing four-scene heroine routes and the optional Reina storyline remain unchanged.
+
+### Next priority
+Fully scripted epilogue conversations per heroine that honor route decisions, then more connected duel-and-choice arcs and deeper NPC tournament bracket presentation. Keep these optional and do not impose a compulsory main quest.

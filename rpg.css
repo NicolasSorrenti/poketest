@@ -56,3 +56,19 @@
 .bracket-card small{font:600 11px 'Barlow Condensed',sans-serif;letter-spacing:.4px;color:#bdc6d6}
 .bracket-track{display:flex;gap:8px}.bracket-step{height:24px;flex:1;display:grid;place-items:center;border-radius:5px;border:1px solid #3f4a61;background:#172035;color:#8394ac;font:800 12px 'Barlow Condensed',sans-serif}
 .bracket-step.cleared{background:#315f57;border-color:#8cc4aa;color:#e7ffed}.bracket-step.current{background:#874766;border-color:#f9b9ca;color:white;box-shadow:0 0 8px #cc618444}.bracket-champion{border-color:#e3bc7e;background:linear-gradient(110deg,#51442f,#2a2c42)}.bracket-eliminated{opacity:.72}
+
+
+/* Finale / New Game+ report: rendered only after Day 90. */
+.season-finale{margin:15px 0;padding:24px;border:1px solid #be8c99;border-radius:15px;background:linear-gradient(140deg,#2e263e,#1b2940);box-shadow:0 18px 45px #0507127a}
+.season-finale h2{font:900 clamp(29px,3vw,43px)/1.1 'Barlow Condensed',sans-serif;color:#fff1e7;margin:8px 0 13px}
+.season-finale h3{font:800 19px 'Barlow Condensed',sans-serif;margin:24px 0 9px;color:#f9bfd1}
+.finale-subtitle{font:800 12px 'Barlow Condensed',sans-serif;letter-spacing:2px;color:#ffaec6}
+.finale-closing{font:500 15px/1.65 'Inter',sans-serif;max-width:720px;color:#f4d7e5}
+.finale-stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px;margin:20px 0}
+.finale-stat{border-radius:9px;background:#151b2a88;border:1px solid #665a72;padding:12px 9px;text-align:center;display:flex;flex-direction:column;gap:3px}
+.finale-stat strong{font:900 26px 'Barlow Condensed',sans-serif;color:#ffe1c7}
+.finale-stat small{font:600 11px 'Barlow Condensed',sans-serif;letter-spacing:.6px;color:#d4bfc9}
+.finale-cups{display:grid;gap:7px}.finale-cup{padding:11px 12px;background:#151e2dbf;border-radius:7px;border:1px solid #5c5869;font:700 13px 'Barlow Condensed',sans-serif;color:#ded3dd}.finale-cup.is-champion{border-color:#ecc38a;color:#ffedbd;background:#51433480}
+.finale-social{margin:17px 0;color:#ffd3dc;font-size:13px;line-height:1.6}
+.finale-actions{display:flex;align-items:center;gap:15px;flex-wrap:wrap;margin-top:18px}.finale-actions small{max-width:410px;line-height:1.5;color:#cdbcc8}.finale-actions button{flex-shrink:0}
+@media(max-width:700px){.season-finale{padding:17px}.finale-stats{grid-template-columns:repeat(2,minmax(0,1fr))}.finale-actions button{width:100%}}

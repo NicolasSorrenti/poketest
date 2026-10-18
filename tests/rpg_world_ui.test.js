@@ -2,7 +2,7 @@
 const test=require('node:test');
 const assert=require('node:assert/strict');
 const fs=require('node:fs'),path=require('node:path');
-const Pack=require('../rpg_narrative_pack'),Story=require('../rpg_story'),Schedules=require('../rpg_schedules'),World=require('../rpg_world'),Arc=require('../rpg_rival_arc'),Tournaments=require('../rpg_tournaments'),Bridge=require('../rpg_duel_bridge');
+const Pack=require('../rpg_narrative_pack'),Story=require('../rpg_story'),Schedules=require('../rpg_schedules'),World=require('../rpg_world'),Arc=require('../rpg_rival_arc'),Tournaments=require('../rpg_tournaments'),Epilogue=require('../rpg_epilogue'),Bridge=require('../rpg_duel_bridge');
 const js=fs.readFileSync(path.join(__dirname,'..','rpg.js'),'utf8');
 const html=fs.readFileSync(path.join(__dirname,'..','rpg.html'),'utf8');
 const ids=[...html.matchAll(/id="([^"]+)"/g)].map(x=>x[1]);
@@ -20,20 +20,20 @@ class FakeNode{
  remove(){this.removed=true;}
  showModal(){this.open=true;}close(){this.open=false;}
 }
-function launch(initial){
+function launch(initial,approve=false){
  const elements={},listeners={},saved={neoHarborRpgV1:initial?JSON.stringify(initial):null};
  for(const id of ids)elements[id]=new FakeNode(id==='deckPicker'?'select':'div');
  elements.battle.contentWindow={};
  const doc={getElementById(id){if(!elements[id])throw Error('Missing '+id);return elements[id];},
   createElement(tag){return new FakeNode(tag);},body:new FakeNode('body'),
   addEventListener(name,cb){listeners['document:'+name]=cb;}};
- const win={NeoRpgNarrativePack:Pack,NeoHarborStory:Story,NeoRpgSchedules:Schedules,NeoRpgWorld:World,NeoRpgRivalArc:Arc,NeoRpgTournaments:Tournaments,NeoRpgDuelBridge:Bridge,
+ const win={NeoRpgNarrativePack:Pack,NeoHarborStory:Story,NeoRpgSchedules:Schedules,NeoRpgWorld:World,NeoRpgRivalArc:Arc,NeoRpgTournaments:Tournaments,NeoRpgEpilogue:Epilogue,NeoRpgDuelBridge:Bridge,
   addEventListener(name,cb){listeners[name]=cb;}};
  const local={getItem(k){return saved[k]||null;},setItem(k,v){saved[k]=String(v);}};
  const session={removeItem(){}};
  const loc={origin:'http://localhost',href:'http://localhost/rpg.html',reload(){}};
  new Function('window','document','localStorage','sessionStorage','location','fetch','confirm',js)(
-  win,doc,local,session,loc,async()=>({ok:true,json:async()=>({decks:[{id:'blackout',name:'Blackout'}]})}),()=>false);
+  win,doc,local,session,loc,async()=>({ok:true,json:async()=>({decks:[{id:'blackout',name:'Blackout'}]})}),()=>approve);
  return {elements,listeners,loc,state:()=>JSON.parse(saved.neoHarborRpgV1)};
 }
 test('RPG boots at home with four life statistics and location activities',()=>{
@@ -220,4 +220,38 @@ test('old saves past a missed cup can unlock an alternative NPC scene on load',(
  assert.ok(s.encountersDone.cup_neighborhood_return);
  assert.equal(s.relationships.hana.trust,2);
  assert.equal(s.day,36);assert.equal(s.slot,1);
+});
+
+test('season epilogue remains hidden until the final period has passed',()=>{
+ const r=launch({day:90,slot:2,location:'home'});
+ assert.equal(r.elements.endSeason.hidden,true);
+ r.elements.quickNext.onclick();
+ const s=r.state();
+ assert.equal(s.day,91);
+ assert.equal(s.ended,true);
+ assert.equal(r.elements.endSeason.hidden,false);
+ assert.ok(r.elements.endSeason.children.some(x=>x.className==='finale-stats'));
+ const actions=r.elements.endSeason.children.find(x=>x.className==='finale-actions');
+ assert.ok(actions);assert.ok(actions.children[0].textContent.includes('New Game+'));
+});
+test('finale reflects the player actual match, cup and romantic relationship outcomes',()=>{
+ const r=launch({day:91,ended:true,slot:0,location:'home',points:36,
+  results:[{won:true,draw:false},{won:false,draw:false},{won:false,draw:true}],
+  tournaments:{championship:{state:'champion',round:3,results:[]}},
+  partner:'hana',relationships:{hana:{affection:10,trust:8,duels:1}}});
+ assert.equal(r.elements.endSeason.hidden,false);
+ const title=r.elements.endSeason.children.find(x=>x.tagName==='H2');
+ assert.equal(title.textContent,'The Harbor Champion');
+ const social=r.elements.endSeason.children.find(x=>x.className==='finale-social');
+ assert.ok(social.textContent.includes('Hana Mizuno'));
+});
+test('New Game+ records a report and starts fresh without stale romance or standings',()=>{
+ const r=launch({day:91,ended:true,slot:0,location:'home',credits:999,points:66,
+  results:[{won:true}],partner:'reina',relationships:{reina:{affection:9,trust:5}},
+  ngPlus:0},true);
+ const button=r.elements.endSeason.children.find(x=>x.className==='finale-actions').children[0];
+ button.onclick();const s=r.state();
+ assert.equal(s.day,1);assert.equal(s.ngPlus,1);assert.equal(s.credits,80);
+ assert.equal(s.points,0);assert.equal(s.partner,null);assert.equal(s.results.length,0);
+ assert.equal(s.campaignHistory.length,1);assert.equal(s.campaignHistory[0].partner,'Reina Kurogane');
 });
