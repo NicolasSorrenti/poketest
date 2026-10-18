@@ -54,6 +54,17 @@ class ClassicLocalService {
   const token=crypto.randomBytes(24).toString('base64url'),session={game,revision:0,updated:this.now(),token,deck,opponent,cpuConfig,npc:npc??null};
   this.sessions.set(token,session);return {token,...this.response(session)};
  }
+ createCube({humanDeck,cpuDeck,seed}={}){
+  this.prune();if(this.sessions.size>=this.maxSessions)throw Error('Too many active duels');
+  if(!Array.isArray(humanDeck)||!Array.isArray(cpuDeck))throw Error('Missing Cube decks');
+  const cpuConfig=configuration({level:3,personality:'balanced',seed:1});
+  let game=createGame({decks:[[...humanDeck],[...cpuDeck]],names:['You','Cube CPU'],format:'online-preview',
+   deckSize:40,prizeCount:4,seed:seed??crypto.randomBytes(4).readUInt32BE(0)});
+  game=driveBot(game,200,cpuConfig).game;
+  const token=crypto.randomBytes(24).toString('base64url');
+  const session={game,revision:0,updated:this.now(),token,deck:'cube',opponent:'cube',cpuConfig,npc:null};
+  this.sessions.set(token,session);return {token,...this.response(session)};
+ }
  session(token){this.prune();const s=this.sessions.get(token);if(!s)throw Error('Unknown or expired session');s.updated=this.now();return s;}
  response(s){const g=s.game,view=publicView(g,0);
   return {revision:s.revision,view,activity:publicActivity(g),format:g.format,winner:g.winner,turnSerial:g.turnSerial,cpu:{level:s.cpuConfig?.level??3,personality:s.cpuConfig?.personality??'balanced',npc:s.npc??null,
