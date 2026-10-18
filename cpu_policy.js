@@ -62,8 +62,10 @@ function configuration(raw={}){
  if(typeof actionDiscipline!=='boolean')throw Error('Invalid action-discipline setting');
  const trainerTactics=raw.trainerTactics??false;
  if(typeof trainerTactics!=='boolean')throw Error('Invalid trainer-tactics setting');
+ const trainerSelections=raw.trainerSelections??false;
+ if(typeof trainerSelections!=='boolean')throw Error('Invalid trainer-selections setting');
  return {level,personality,seed:raw.seed??1,side,planning,evolutionTempo,prizeRace,knockoutTempo,opponentResponse,
-  graduatedNoise,energyHorizon,turnSearch,actionDiscipline,trainerTactics,
+  graduatedNoise,energyHorizon,turnSearch,actionDiscipline,trainerTactics,trainerSelections,
   skill:(graduatedNoise?CALIBRATED_SKILLS:SKILLS)[level],style:PERSONALITIES[personality]};
 }
 // Seeded independent of the engine's private deck order and future RNG state.
@@ -381,8 +383,71 @@ function energyRemovalChoiceValue(unit,defender,energyIndex,enemy){
  const control=denied*2+(preventedKO?130:0)+removed*7;
  return enemy?control:-control;
 }
+// The chooser gets only printed names exposed by the authorized Trainer
+// decision. Search options reveal the CPU's own deck/discard (as they do to a
+// human searching their deck), never the opponent's concealed library.
+// Board-aware choices do not execute or inspect the reducer / future RNG.
+function searchedCardValue(name,o){
+ const matches=[...CATALOG.values()].filter(c=>c.name===name);
+ if(!matches.length)return 0;
+ const p=o.self,q=o.opponent;
+ const battlefield=[p.active,...p.bench].filter(Boolean);
+ if(matches.some(c=>isEnergy(c))){
+  return 25+Math.max(0,...matches.filter(isEnergy).flatMap(c=>
+   battlefield.map(u=>{
+    const before=strongestAffordableAttack(u,q.active);
+    const after=damageAfterAttachment(u,c.id,q.active);
+    const useful=after>before?(after-before)*2+75:0;
+    const filling=energyValue(u,c.id);
+    return useful+Math.max(0,filling);
+   })));
+ }
+ const pokemon=matches.filter(c=>c.supertype==='Pokémon');
+ if(pokemon.length){
+  const evolving=pokemon.some(c=>c.evolvesFrom&&battlefield.some(u=>canEvolve(c,card(u.id))));
+  const setup=pokemon.some(c=>isBasicPokemon(c)&&p.bench.length<5);
+  const duplicate=p.hand.filter(id=>card(id)?.name===name).length;
+  return (evolving?240:setup?130:45)+
+   Math.max(0,...pokemon.map(c=>(Number(c.hp)||0)*.2))-
+   duplicate*75;
+ }
+ const trainer=matches.some(c=>c.supertype==='Trainer');
+ if(trainer){
+  if(name==='Professor Oak'||name==='Professor Elm')return p.handCount<=2?190:65;
+  if(name==='Bill')return p.deckCount>3?185:20;
+  if(name==='Energy Removal')return q.active?.energies?.length?175:50;
+  if(name==='Switch')return p.active?.status?220:55;
+  if(name==='Gust of Wind')return q.bench.length?150:30;
+  return 80;
+ }
+ return 0;
+}
+function trainerSelectionValue(option,decision,o,cfg){
+ if(!cfg?.trainerSelections||cfg.level<4)return null;
+ const id=option.id,label=option.label||'',kind=decision.kind||'';
+ const ownedChoice=/^deck:|^hand:|^n:/.test(id);
+ if(!ownedChoice)return null;
+ const select=/^(find|recover|gearTrainer|rodCard|basic|evolution)$/.test(kind);
+ const discard=/^(cost|trade|discard)$/.test(kind);
+ if(!select&&!discard)return null;
+ const searched=searchedCardValue(label,o);
+ if(select)return searched;
+ // Payment from hand: the printed card label is revealed to this player.
+ // Keep matching evolution lines, color-critical Energy and useful Trainers.
+ // A basic with no Bench room is typically cheaper to give up.
+ if(discard){
+  const isEnergyName=/ Energy$/.test(label);
+  const isPokemonName=[...CATALOG.values()].some(c=>c.name===label&&c.supertype==='Pokémon');
+  const value=searched;
+  const penalty=isEnergyName?25:isPokemonName?15:5;
+  return 230-value-penalty;
+ }
+ return null;
+}
 function choiceValue(option,decision,o,cfg){
  const id=option.id,label=option.label||'',kind=decision.kind||'',ctx=decision.label||'';
+ const trained=trainerSelectionValue(option,decision,o,cfg);
+ if(trained!==null)return trained;
  if(/^prize:/.test(id))return 1;
  if(/^n:\d+$/.test(id)&&cfg?.level>=3){
   const index=Number(id.slice(2));
@@ -1056,4 +1121,4 @@ function driveSide(initial,{side=1,level=3,personality='balanced',seed=1,plannin
 }
 function driveBot(game,limit=200,config={}){return driveSide(game,{...config,side:1,limit});}
 function propose(game,config={}){return chooseAction(game,{...config,side:1});}
-module.exports={SKILLS,CALIBRATED_SKILLS,PERSONALITIES,configuration,observation,candidates,score,knockoutChance,planningBonus,evolutionTempoPenalty,prizeRaceBonus,knockoutTempoBonus,opponentResponseBonus,energyHorizonBonus,turnSequenceBonus,trainerTacticsBonus,chooseAction,driveSide,driveBot,propose};
+module.exports={SKILLS,CALIBRATED_SKILLS,PERSONALITIES,configuration,observation,candidates,score,knockoutChance,planningBonus,evolutionTempoPenalty,prizeRaceBonus,knockoutTempoBonus,opponentResponseBonus,energyHorizonBonus,turnSequenceBonus,trainerTacticsBonus,trainerSelectionValue,chooseAction,driveSide,driveBot,propose};
