@@ -270,6 +270,9 @@
    ['Ask what she wants to teach the next generation','That learning to lose is not the same as learning to disappear.','honest','shiori_teaches']
   ])
  ];
+ // Crossover participants have a real appointment at the story location.
+ const crossoverGuests={hana_cross_1:'teo',yuna_cross_1:'teo',camila_cross_1:'iris',marina_cross_1:'iris',reina_cross_1:'jun',akari_cross_1:'jun',kaede_cross_1:'teo',shiori_cross_1:'jun'};
+ for(const e of events)if(crossoverGuests[e.id])e.participants=[crossoverGuests[e.id]];
  function validate(){
   const errors=[],ids=new Set(events.map(e=>e.id)),known=new Set([...Object.keys(cast),...Object.keys(looks)]);
   if(ids.size!==events.length)errors.push('Duplicate narrative event');
