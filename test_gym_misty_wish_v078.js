@@ -30,8 +30,8 @@ function play(g){
  const g=game(['base1-101']),n=g.players[0].deck.length;
  play(g);choose(g,'choice:1');
  assert.equal(g.pendingDecision.actor,0,'Owner chooses replacement');
- assert.ok(g.pendingDecision.options.some(o=>o.id==='hand:1'));
- choose(g,'hand:1');
+ assert.ok(g.pendingDecision.options.some(o=>o.id==='n:1'));
+ choose(g,'n:1');
  assert.equal(g.players[0].prizes[0],'base1-101');
  assert.ok(g.players[0].hand.includes('base1-80'),'Original Prize added to hand');
  assert.equal(g.players[0].prizeFaceUp[0],false);
@@ -58,7 +58,7 @@ function play(g){
 }
 {
  const g=game(['base1-101']);g.prizesFaceUp=true;
- play(g);choose(g,'choice:1');choose(g,'hand:1');
+ play(g);choose(g,'choice:1');choose(g,'n:1');
  assert.equal(g.players[0].prizeFaceUp[0],false);
  assert.equal(publicView(g,null).players[0].revealedPrizes.length,3,
  'Global reveal continues to show replacement cards');
