@@ -53,7 +53,7 @@ function unit(id,round=0){return {id,under:[],energies:[],attachedTrainers:[],da
 function allPokemon(p){return [p.active,...p.bench].filter(Boolean);}
 function hasActiveEffect(u,key,g){return Boolean(u&&u[key]&&u[key].expires>g.turnSerial);}
 function clearBenchEffects(u){
- for(const key of ['shield','attackPenalty','noRetreat','attackLock','reactiveShield','swordsDance','amnesia','mirrorShell','destinyBond','lastAttackImpact','screech','noSwitch','gymGiantGrowth','gymInkSpurt','gymShadowImages','gymFireWall','gymCrosscounter','neo48Growl','neo48Slime','neo48PollenShieldUntil','neo48Endure','neo48MeanLook','neo48EndureUsed','neo48SlimeUntil','neo48CrunchUntil','neo49LockOn','neo49LockTarget','neo49Pursuit','neo49CounterUntil','neo49PoisonUntil','neo50LastAttack','neo50Observed'])delete u[key];
+ for(const key of ['shield','attackPenalty','noRetreat','attackLock','reactiveShield','swordsDance','amnesia','mirrorShell','destinyBond','lastAttackImpact','screech','noSwitch','gymGiantGrowth','gymInkSpurt','gymShadowImages','gymFireWall','gymCrosscounter','neo48Growl','neo48Slime','neo48PollenShieldUntil','neo48Endure','neo48MeanLook','neo48EndureUsed','neo48SlimeUntil','neo48CrunchUntil','neo49LockOn','neo49LockTarget','neo49Pursuit','neo49CounterUntil','neo49PoisonUntil','neo50LastAttack','neo50Observed','neo91IonGuard','neo91IonAttack','neo91CharmGuard','neo91CharmAttack'])delete u[key];
 }
 function familyCandidates(g,side,restriction){
  const p=g.players[side];return p.deck.flatMap((id,i)=>{
@@ -586,6 +586,12 @@ function performAction(g,side,cmd){
    g.pendingDecision=null;g.pendingAction=null;
    answerFinalAttack(g,pending.plan,answer);return;
   }
+  if(pending.kind==='neo91_draw'){
+   const wantsCard=!answer.decline&&answer.selected.includes('choice:draw');
+   g.pendingDecision=null;g.pendingAction=null;
+   resolveAttack(g,pending.side,pending.attackIndex,undefined,undefined,{neo91Answered:true,neo91OpponentOptDraw:wantsCard});
+   return;
+  }
   if(pending.kind==='neo90_target'){
    if(answer.decline||answer.selected.length!==1)fail('Attack needs a target on heads');
    const target=Number(answer.selected[0].slice(6));
@@ -1004,7 +1010,20 @@ function performAction(g,side,cmd){
    g.nextDecisionId++;g.pendingDecision=makeDecision({id:`conversion:${g.nextDecisionId}`,actor:side,kind:'energy-type',label:'Choose a Pokémon type',options:colors.map(x=>({id:`type:${x}`,label:x})),min:1,max:1,optional:program.kind==='conversion1'});
    g.pendingAction={kind:'attack_color',side,attackIndex:index};return;
   }
-  if(program.kind.startsWith('neo89:')){
+  if(program.kind==='neo91:sweet-kiss'){
+   if(f.deck.length){
+    g.nextDecisionId++;g.pendingDecision=makeDecision({id:'neo91sweet:'+g.nextDecisionId,actor:1-side,kind:'attack-option',
+     label:'Sweet Kiss: draw one card from your deck?',options:[{id:'choice:draw',label:'Draw one card'}],min:0,max:1,optional:true});
+    g.pendingAction={kind:'neo91_draw',side,attackIndex:index};
+    return;
+   }
+   resolveAttack(g,side,index,undefined,undefined,{neo91Answered:true,neo91OpponentOptDraw:false});return;
+  }
+  if(program.kind==='neo91:sweet-kiss'){
+  if(extra.neo91Answered!==true||typeof extra.neo91OpponentOptDraw!=='boolean')fail('Sweet Kiss needs an opponent-owned choice');
+  if(extra.neo91OpponentOptDraw&&!f.deck.length)fail('Sweet Kiss cannot draw from an empty deck');
+ }
+ if(program.kind.startsWith('neo89:')){
    if(program.kind==='neo89:plasma'){
     const eligible=p.discard.flatMap((id,i)=>isEnergy(card(g,id))?[{id:'discard:'+i,label:card(g,id).name}]:[]);
     if(eligible.length){
@@ -1286,7 +1305,7 @@ function resolveAttack(g,side,index,chosenBench,energyPicks,extra={}){
   STATUS.clearConditions(prior);clearBenchEffects(prior);
  }
  const coreContext={neo49Locked:Boolean(u.neo49LockOn?.expires>g.turnSerial&&f.active.neo49LockTarget?.side===side&&f.active.neo49LockTarget?.sourceId===u.id&&u.neo49LockOn.targetId===f.active.id),neo49Fossils:p.bench.filter(x=>['Omanyte','Omastar','Kabuto','Kabutops'].includes(card(g,x.id).name)).length,totalPokemon:g.players.reduce((n,owner)=>n+allPokemon(owner).length,0),selfWater:u.energies.filter(id=>card(g,id).name==='Water Energy').length,selfLightning:u.energies.filter(id=>card(g,id).name==='Lightning Energy').length,selfCounters:Math.floor(u.damage/10),defenderCounters:Math.floor(f.active.damage/10),benchCount:p.bench.length,enemyEnergy:f.active.energies.length,enemyRemainingHP:Math.max(0,maxHP(g,f.active)-f.active.damage),selfEnergy:u.energies.length,selfBasicTypes:new Set(u.energies.map(id=>card(g,id).name).filter(n=>['Grass Energy','Fire Energy','Water Energy','Lightning Energy','Psychic Energy','Fighting Energy'].includes(n))).size,murkrowBench:p.bench.filter(x=>effectiveCard(g,x).name==='Murkrow').length,opponentAllEnergy:[f.active,...f.bench].reduce((n,x)=>n+x.energies.length,0),enemySpecialEnergy:f.active.energies.filter(id=>(card(g,id).subtypes||[]).includes('Special')).length,defenderStatus:f.active.status,enemyBench:f.bench.length,topFireCount:p.deck.slice(-5).filter(id=>card(g,id).name==='Fire Energy').length,selfPoisoned:u.status==='Poisoned',nidokingOnBench:p.bench.some(x=>card(g,x.id).name==="Giovanni's Nidoking"),nightSpirits:allPokemon(p).filter(x=>["Sabrina's Gastly","Sabrina's Haunter","Sabrina's Gengar"].includes(card(g,x.id).name)).length,enemyMaxHP:maxHP(g,f.active),enemyFighting:effectiveCard(g,f.active).types?.includes('Fighting'),selfFireCards:u.energies.filter(id=>card(g,id).name==='Fire Energy').length,bellossomCount:allPokemon(p).filter(x=>card(g,x.id).name==='Bellossom').length,ownPokemonCount:allPokemon(p).length,discardEnergyCount:p.discard.filter(id=>isEnergy(card(g,id))).length,enemyBaby:['Elekid','Magby','Tyrogue','Igglybuff','Cleffa','Pichu','Smoochum'].includes(effectiveCard(g,f.active).name),enemyBasic:effectiveCard(g,f.active).subtypes?.includes('Basic'),damagedPreviousTurn:u.lastAttackImpact?.serial===g.turnSerial-1&&u.lastAttackImpact.damage>0,extraEnergies:(type)=>extraAttackEnergy(g,u,a,type),teamNameCount:(names,region)=> (region==='bench'?p.bench:allPokemon(p)).filter(x=>names.includes(card(g,x.id).name)).length,allNamedCount:(names)=>g.players.flatMap(allPokemon).filter(x=>names.includes(card(g,x.id).name)).length,enemyBenchCount:f.bench.length,darkDefender:card(g,f.active.id).name.startsWith('Dark '),topFiveEnergyCount:p.deck.slice(-5).filter(id=>isEnergy(card(g,id))).length,discardAmount:extra.theme?.sources?.length||0,flameHeads:extra.theme?.roll?.flips?.filter(Boolean).length||0};
- let roll=extra.preRoll||ATTACK.resolve(program,()=>next(g,2)===1,{...coreContext,optionalBoost:extra.neo89Boost,discardEnergyIndex:extra.neo89EnergyIndex});
+ let roll=extra.preRoll||ATTACK.resolve(program,()=>next(g,2)===1,{...coreContext,optionalBoost:extra.neo89Boost,discardEnergyIndex:extra.neo89EnergyIndex,opponentOptDraw:extra.neo91OpponentOptDraw});
 
  // Neo v0.51: shared copy programs with explicit Bench targeting and
  // attached-Energy payments. Preserve Super Metronome's coin through choices.
@@ -1563,6 +1582,13 @@ function resolveAttack(g,side,index,chosenBench,energyPicks,extra={}){
  const metalOnAttacker=specialEnergyCount(g,u,'Metal');
  if(metalOnAttacker&&!isMetalType(g,u))baseDamage=Math.max(0,baseDamage-10*metalOnAttacker);
  if(f.active.neo48Growl?.expires>g.turnSerial&&f.active.neo48Growl.sourceId===u.id)baseDamage=Math.max(0,baseDamage-10);
+ // Linked Neo defense effects reduce printed damage before Weakness/Resistance.
+ // Both halves of the link must survive, so switching either Active Pokémon
+ // clears the protection rather than transferring it to another same-name card.
+ if(f.active.neo91IonGuard?.expires>g.turnSerial&&u.neo91IonAttack?.expires>g.turnSerial&&
+    f.active.neo91IonGuard.key===u.neo91IonAttack.key)baseDamage=Math.max(0,baseDamage-10);
+ if(f.active.neo91CharmGuard?.expires>g.turnSerial&&u.neo91CharmAttack?.expires>g.turnSerial&&
+    f.active.neo91CharmGuard.key===u.neo91CharmAttack.key)baseDamage=Math.max(0,baseDamage-10);
  let dmg=roll.ignoreWR?baseDamage:calculateDamage(c,defCard,baseDamage,f.active,{
   ignoreResistance:roll.ignoreResistance||u.attachedTrainers.some(t=>card(g,t.id).name==='Magnifier')||(g.stadium&&card(g,g.stadium.id).name==='Pewter City Gym'&&c.name.startsWith("Brock's ")),
   ignoreWeakness:g.stadium&&card(g,g.stadium.id).name==='Cinnabar City Gym'&&c.types?.includes('Water')&&defCard.name.startsWith("Blaine's "),
@@ -1913,6 +1939,13 @@ function resolveAttack(g,side,index,chosenBench,energyPicks,extra={}){
  if(roll.healFromDamage){const amount=roll.healFromDamage==='seed'?(dmg?10:0):roll.healFromDamage==='half'?Math.ceil(dmg/20)*10:dmg;u.damage=Math.max(0,u.damage-amount);}
  if(roll.poisonIfDamaged&&dmg>0)applyCondition(g,f.active,'Poisoned');
  if(roll.screech)f.active.screech={expires:g.turnSerial+3};
+ if(roll.neo91PowerSilence&&(!shield?.allEffects||roll.ignoreDefendingEffects)&&effectiveCard(g,f.active).abilities?.some(a=>a.name))
+  f.active.powerSuppressedUntil=g.turnSerial+3;
+ if((roll.neo91Ion||roll.neo91Charm)&&(!shield?.allEffects||roll.ignoreDefendingEffects)){
+  const key=g.turnSerial+':'+side+':'+u.id,expires=g.turnSerial+2;
+  if(roll.neo91Ion){u.neo91IonGuard={key,expires};f.active.neo91IonAttack={key,expires};}
+  if(roll.neo91Charm){u.neo91CharmGuard={key,expires};f.active.neo91CharmAttack={key,expires};}
+ }
  if(roll.jawClamp||roll.neo50StickyLock){f.active.noRetreat={expires:g.turnSerial+2};f.active.noSwitch={expires:g.turnSerial+2,sourceId:u.id};}
  if(roll.charCounter&&(!shield?.allEffects||roll.ignoreDefendingEffects)&&!f.active.charCounter)f.active.charCounter=true;
  if(roll.discardSelfEnergyOnTails){const e=extra.neoDiscardIndex??0;if(!u.energies[e])fail('Fireworks Energy selection invalid');p.discard.push(u.energies.splice(e,1)[0]);}
@@ -1930,6 +1963,7 @@ function resolveAttack(g,side,index,chosenBench,energyPicks,extra={}){
  if(roll.targetDamage!==undefined){const target=chosenBench===-1?f.active:f.bench[chosenBench];if(chosenBench===-1)target.damage+=roll.targetDamage;else hitBench(f,target,roll.targetDamage);}
  if(roll.shuffleHandDraw){p.deck=shuffle(g,[...p.deck,...p.hand]);p.hand=[];draw(g,side,roll.shuffleHandDraw);}
  if(roll.draw)draw(g,side,roll.draw);
+ if(roll.neo91OpponentDraw)draw(g,1-side,1);
  if(roll.benchSide==='target'&&f.bench.length)hitBench(f,f.bench[chosenBench],roll.benchDamage);
  if(['self','both'].includes(roll.benchSide))for(const x of p.bench)hitBench(p,x,roll.benchDamage);
  if(['opponent','both'].includes(roll.benchSide))for(const x of f.bench)hitBench(f,x,roll.benchDamage);
