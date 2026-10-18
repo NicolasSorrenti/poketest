@@ -130,6 +130,8 @@
   }
  }
  function render(){
+  const entering=!!state.done&&!state.started&&!document.body.classList.contains('cube-deck-mode');
+  document.body.classList.toggle('cube-deck-mode',!!state.done&&!state.started);
   $('start').textContent='Restart Draft';
   $('progress').textContent=state.done?'Draft completed! Build your deck below.':
    'Pack '+(state.round+1)+' of '+state.packs+' · Pick '+(state.pick+1)+' of '+state.cardsPerPack;
@@ -146,6 +148,11 @@
   $('drafted').innerHTML=state.drafted.map((c,i)=>'<div class="row">'+(i+1)+'. '+esc(c.name)+'</div>').join('');
   renderBuilder();
   renderTournament();
+  if(entering){
+   window.scrollTo({top:0,behavior:'instant'});
+   const heading=$('builder').querySelector('.cb-header h2');
+   if(heading){heading.tabIndex=-1;heading.focus({preventScroll:true});}
+  }
  }
  async function play(){
   if(busy||!state?.done||deck.length!==40)return;
