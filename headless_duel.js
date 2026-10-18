@@ -586,6 +586,13 @@ function performAction(g,side,cmd){
    g.pendingDecision=null;g.pendingAction=null;
    answerFinalAttack(g,pending.plan,answer);return;
   }
+  if(pending.kind==='neo90_target'){
+   if(answer.decline||answer.selected.length!==1)fail('Attack needs a target on heads');
+   const target=Number(answer.selected[0].slice(6));
+   g.pendingDecision=null;g.pendingAction=null;
+   resolveAttack(g,pending.side,pending.attackIndex,target,undefined,{...pending.extra,preRoll:pending.roll,confusionChecked:true,attackPenaltyChecked:true});
+   return;
+  }
   if(pending.kind==='neo89_option'){
    const yes=!answer.decline&&answer.selected.includes('choice:yes');
    g.pendingDecision=null;g.pendingAction=null;
@@ -1467,6 +1474,24 @@ function resolveAttack(g,side,index,chosenBench,energyPicks,extra={}){
   g.nextDecisionId++;
   g.pendingDecision=makeDecision({id:`gymESP:${g.nextDecisionId}`,actor:side,kind:'gym-esp',label:`Sabrina’s ESP: re-flip all ${roll.flips.length} attack coin(s)?`,options:[{id:'choice:reroll',label:'Re-flip ALL coins'}],min:0,max:1,optional:true});
   g.pendingAction={kind:'sabrina_esp',side,attackIndex:index,roll,extra};return;
+ }
+ // Neo Revelation coin-dependent targeting: flip exactly once BEFORE asking
+ // for a target. If tails, the attack finishes without a meaningless prompt.
+ // Cache the rolled result across the player decision and enforce ownership.
+ if(program.kind.startsWith('neo90:')&&roll.neo90Target){
+  if(!Number.isInteger(chosenBench)){
+   const options=roll.neo90Target==='any'?[{id:'bench:-1',label:'Active: '+publicName(g,f.active)},...f.bench.map((x,i)=>({id:'bench:'+i,label:publicName(g,x)}))]:f.bench.map((x,i)=>({id:'bench:'+i,label:publicName(g,x)}));
+   if(!options.length)fail('No valid attack targets');
+   g.nextDecisionId++;
+   g.pendingDecision=makeDecision({id:'neo90target:'+g.nextDecisionId,actor:side,kind:'pokemon-target',label:a.name+': choose opposing Pokémon',options,min:1,max:1});
+   g.pendingAction={kind:'neo90_target',side,attackIndex:index,roll,extra};
+   return;
+  }
+  if(chosenBench!==-1&&!f.bench[chosenBench]||roll.neo90Target==='bench'&&chosenBench===-1||chosenBench< -1)fail('Invalid Neo v090 attack target');
+  if(roll.neo90Target==='any'){
+   if(chosenBench===-1){roll.damage=20;roll.ignoreWR=true;}
+   else{roll.benchSide='target';roll.benchDamage=20;}
+  }
  }
  // Keep the three initial ESP flips cached across choices. Pay extra attack
  // costs exactly once, after the optional Sabrina's ESP reroll window.
