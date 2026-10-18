@@ -45,7 +45,7 @@ function game(id,name){
  g.players[0].active=unit(id,{energies:printed(id,name).cost.map(t=>EN[t])});
  g.players[1].active=unit('base1-2',{energies:['base1-99','base1-98','base1-102']});
  g.players[0].bench=[unit('base1-44',{damage:20}),unit('base1-44',{damage:10})];
- g.players[1].bench=[unit('base1-44',{damage:30}),unit('base1-44',{damage:20})];
+ g.players[1].bench=[unit('base1-2',{damage:30}),unit('base1-2',{damage:20})];
  for(const p of g.players){p.hand=[];p.prizes=Array(6).fill('base1-99');}
  return g;
 }
