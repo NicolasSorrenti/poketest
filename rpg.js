@@ -236,7 +236,7 @@ function startDuel(id,exhibition=null,arcEpisode=null,tournament=null){
  if(state.activeStory||state.activeEncounter||(state.activeArc&&state.activeArc.id!==arcEpisode)||state.pendingDuel||state.day>90||!cast[id]||(!exhibition&&!tournament&&!currentPeople().includes(id)))return;
  if(arcEpisode&&(!state.activeArc||state.activeArc.phase!=='choice'||!ARC.available(state,currentPeople()).some(e=>e.id===arcEpisode)))return;
  const c=cast[id];
- state.pendingDuel={id:'npc-'+id+'-'+state.day+'-'+state.slot+'-'+state.results.length,npc:id,day:state.day,slot:state.slot,opponent:c.deck,playerDeck:state.playerDeck,resolved:false,eventKey:exhibition?exhibition.day+':'+exhibition.title:null,eventReward:exhibition?exhibition.reward:0,eventTitle:exhibition?exhibition.title:null,arcEpisode:arcEpisode||null,tournamentId:tournament?.tournamentId||null,tournamentRound:tournament?.tournamentRound??null};
+ state.pendingDuel={id:'npc-'+id+'-'+state.day+'-'+state.slot+'-'+state.results.length,npc:id,day:state.day,slot:state.slot,opponent:c.deck,playerDeck:state.playerDeck,resolved:false,eventKey:exhibition?exhibition.day+':'+exhibition.title:null,eventReward:exhibition?exhibition.reward:0,eventTitle:exhibition?exhibition.title:null,arcEpisode:arcEpisode||null,tournamentId:tournament?.tournamentId||null,tournamentRound:tournament?.tournamentRound??null,tournamentAttempt:tournament?.tournamentAttempt??null};
  if(arcEpisode)state.activeArc=null;
  persist();render();$('duel').hidden=false;$('battle').src=duelUrl(state.pendingDuel);
 }
@@ -248,7 +248,12 @@ window.addEventListener('message',ev=>{
  for(const note of receipt.notes)log(note);
  const preparationNote=WORLD.afterDuel(state,receipt);if(preparationNote)log(preparationNote);
  const cupOutcome=duel.tournamentId?TOURNAMENTS.settle(state,duel,receipt):null;
- if(cupOutcome)log(cupOutcome.title+': '+(cupOutcome.draw?'round drawn — replay available':cupOutcome.won?'round won':'eliminated')+'.');
+ if(cupOutcome){
+  receipt.points+=cupOutcome.points;
+  receipt.credits+=cupOutcome.credits;
+  receipt.tournamentBonus={points:cupOutcome.points,credits:cupOutcome.credits,state:cupOutcome.state,round:cupOutcome.round};
+  log(cupOutcome.title+': '+(cupOutcome.draw?'round drawn — replay available':cupOutcome.won?'round won':'eliminated')+'.');
+ }
  const personalOutcome=duel.arcEpisode?ARC.settleDuel(state,duel.arcEpisode,receipt):null;
  if(personalOutcome)log('A special rivalry challenge reached its result.');
  state.lastDuelReceipt=receipt;state.pendingDuel=null;
@@ -308,7 +313,7 @@ function render(){
  $('duelReceipt').hidden=!receipt;
  if(receipt){
   $('receiptTitle').textContent=receipt.outcome.toUpperCase()+' · '+receipt.name;
-  $('receiptDetails').textContent='+'+receipt.points+' circuit points · +'+receipt.credits+' credits · +'+receipt.trust+' trust'+(receipt.bonus?' (includes +'+receipt.bonus+' exhibition points)':'')+(receipt.trainingBonus?' · +'+receipt.trainingBonus+' training credits':'')+' · Time advanced one period.';
+  $('receiptDetails').textContent='+'+receipt.points+' circuit points · +'+receipt.credits+' credits · +'+receipt.trust+' trust'+(receipt.bonus?' (includes +'+receipt.bonus+' exhibition points)':'')+(receipt.trainingBonus?' · +'+receipt.trainingBonus+' training credits':'')+(receipt.tournamentBonus?.points?' · tournament bonus included':'')+' · Time advanced one period.';
   $('duelReceipt').classList.toggle('is-victory',receipt.outcome==='Victory');
  }
  $('whereLabel').textContent=state.location==='home'?'⌂  YOU ARE HOME':'●  YOU ARE HERE';
