@@ -73,7 +73,7 @@ function use(g,name){send(g,0,'attack',{attackIndex:CATALOG.get(g.players[0].act
  const before=g.players[1].deck.length;
  use(g,'Mountain Smasher');
  const heads=g.coinFlips.slice(-4).filter(x=>x.result==='heads').length;
- assert.equal(g.players[1].deck.length,before-heads);
+ assert.equal(g.players[1].deck.length,before-heads-1,'Mountain Smasher mills each heads, then opponent draws for next turn');
  assert.equal(g.players[1].active.damage,20*heads);
 }
 console.log('PASS Neo v087: 3 newly signed attacks, two retained v040 scripts, owned searches, tools and deck milling');
