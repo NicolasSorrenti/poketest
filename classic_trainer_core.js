@@ -720,8 +720,20 @@ function commit(g,plan,h){
   }
   case "Misty's Wish":{
    const idx=pick('prize'),prize=p.prizes[idx];
-   if(pick('permission')===1&&d.swap?.length){const from=pick('swap')>plan.handIndex?pick('swap')-1:pick('swap');const tmp=p.hand[from];p.hand[from]=prize;p.prizes[idx]=tmp;}
-   else h.draw(g,plan.side,1);break;
+   if(pick('permission')===1){
+    // Approval with no other hand card does not grant an undeserved draw.
+    if(d.swap?.length){
+     const from=pick('swap')>plan.handIndex?pick('swap')-1:pick('swap');
+     const tmp=p.hand[from];p.hand[from]=prize;p.prizes[idx]=tmp;
+     // Replacement is a new face-down Prize, not the revealed original.
+     if(p.prizeFaceUp)p.prizeFaceUp[idx]=false;
+    }
+   }else{
+    // The original Prize is returned face-down if permission was denied.
+    if(p.prizeFaceUp)p.prizeFaceUp[idx]=false;
+    h.draw(g,plan.side,1);
+   }
+   break;
   }
   case "Blaine's Quiz #2":{
    const idx=pick('question')>plan.handIndex?pick('question')-1:pick('question'),c=get(p.hand[idx]);
