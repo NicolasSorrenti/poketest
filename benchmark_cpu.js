@@ -102,8 +102,27 @@ function duel(opts,number,swap,decks){
  return {seed:opts.seed+number*11+101,swap,winner,finished:game.over,
   endReason,stats,logs};
 }
+// A symmetrical 60-card Base Set stress deck made only of authentic legal
+// cards. It deliberately exercises Retrieval -> Machoke + Energy and PlusPower
+// Prize KOs, which retail themes rarely draw together. Never changes cards
+// or outcomes once a match begins.
+const COMBO_LAB=[
+ ...Array(4).fill('base1-52'), // Machop
+ ...Array(4).fill('base1-34'), // Machoke
+ ...Array(2).fill('base1-7'),  // Hitmonchan
+ ...Array(2).fill('base1-61'), // Rattata
+ ...Array(4).fill('base1-81'), // Energy Retrieval
+ ...Array(4).fill('base1-84'), // PlusPower
+ ...Array(4).fill('base1-91'), // Bill
+ ...Array(4).fill('base1-88'), // Professor Oak
+ ...Array(4).fill('base1-94'), // Potion
+ ...Array(4).fill('base1-95'), // Switch
+ ...Array(24).fill('base1-97') // Fighting Energy
+];
 function arena(opts){
- const service=new ClassicLocalService(),decks=[service.decklist(opts.leftDeck),service.decklist(opts.rightDeck)];
+ const service=new ClassicLocalService();
+ const getDeck=name=>name==='cpu_combo_lab'?[...COMBO_LAB]:service.decklist(name);
+ const decks=[getDeck(opts.leftDeck),getDeck(opts.rightDeck)];
  const matches=[];
  for(let i=0;i<opts.pairs;i++)for(const swap of [false,true])matches.push(duel(opts,i,swap,decks));
  const conclusive=matches.filter(x=>x.winner!==null);
