@@ -273,6 +273,17 @@
  // Crossover participants have a real appointment at the story location.
  const crossoverGuests={hana_cross_1:'teo',yuna_cross_1:'teo',camila_cross_1:'iris',marina_cross_1:'iris',reina_cross_1:'jun',akari_cross_1:'jun',kaede_cross_1:'teo',shiori_cross_1:'jun'};
  for(const e of events)if(crossoverGuests[e.id])e.participants=[crossoverGuests[e.id]];
+ // The first line of a later guest chapter remembers the preceding answer.
+ // This is authored variation, not a generated dialogue or a rules change.
+ const callbacks={
+  jun_guest_2:{jun_reach_out:'The kid wrote back. Not to play yet. Just to say they got my message. That counts.',jun_explain:'I tried explaining the same rule without the lecture. They stayed for another game.'},
+  jun_guest_3:{jun_demo:'A beginner beat me last week. Properly beat me. I could not have been happier.',jun_learn:'A beginner explained a timing rule to me. I did not interrupt once. I deserve a medal.'},
+  teo_guest_2:{teo_listen:'I left an entire turn uncut in my last video. People noticed the players instead of me.',teo_credit:'I credited the players before the announcer for once. Nobody asked for their money back.'},
+  teo_guest_3:{teo_permission:'Kaede approved the recut. She even suggested a better ending than mine.',teo_correction:'The correction got fewer views. It also got a thank-you from Kaede. That matters more.'},
+  iris_guest_2:{iris_deliver:'The kids sent a drawing of a Pikachu riding a ferry. It is on my fridge now.',iris_record:'We found the anonymous donor. They asked us not to use their name, only to track the decks.'},
+  iris_guest_3:{iris_delegate:'My replacement ran the route without a single call to me. I saw my sister play.',iris_trust:'I switched my phone off for the match. The deliveries happened anyway. Imagine that.'}
+ };
+ for(const e of events)if(callbacks[e.id])e.openingByFlag=callbacks[e.id];
  function validate(){
   const errors=[],ids=new Set(events.map(e=>e.id)),known=new Set([...Object.keys(cast),...Object.keys(looks)]);
   if(ids.size!==events.length)errors.push('Duplicate narrative event');
