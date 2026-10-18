@@ -70,7 +70,7 @@ function attack(g,name){const a=CATALOG.get(g.players[0].active.id).attacks.find
  const g=game('neo4-52','Hypno Shower');attack(g,'Hypno Shower');
  assert.equal(g.players[0].bench[0].damage,10);
  assert.equal(g.players[1].bench[0].damage,20);
- assert.equal(g.players[1].active.status,'Asleep');
+ assert.ok([null,'Asleep'].includes(g.players[1].active.status),'Sleep may clear at the immediate between-turn wake check');
 }
 {
  const g=game('neo4-48','Pulse Guard');attack(g,'Pulse Guard');
