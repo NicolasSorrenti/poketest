@@ -1031,7 +1031,42 @@ const settings={level:3,personality:'balanced',side:1,seed:47};
   AI.comboChoiceValue({id:'n:1',label:'Machoke'},pay,owned,cfg),
   'Payment must not sacrifice the exact evolution the line needs');
  const recover={kind:'recover',label:'Recover 1 or 2 Basic Energy'};
- assert.ok(AI.comboChoiceValue({id:'n:0',label:'Fighting Energy'},recover,owned,cfg)>0);
+ assert.ok(AI.comboChoiceValue({id:'disc:0',label:'Fighting Energy'},recover,owned,cfg)>0,
+  'Real Energy Retrieval options are public disc: indices, not n: aliases');
+ assert.equal(AI.comboChoiceValue({id:'n:0',label:'Fighting Energy'},recover,owned,cfg),null,
+  'Cannot treat a hand index as the public discard pile');
+ assert.equal(AI.comboChoiceValue({id:'disc:0',label:'Water Energy'},recover,owned,cfg),null,
+  'A card name must match the public discard card at that exact index');
+ const paid=structuredClone(owned);
+ paid.decision={actor:1,id:'classic-trainer:5',kind:'cost',
+  label:'Choose one other card to discard',min:1,max:1,options:[
+   {id:'n:1',label:'Machoke'},{id:'n:2',label:'Potion'}]};
+ const choices=AI.candidates(paid,cfg,{powerKeys:new Set()});
+ assert.deepEqual(choices[0]?.payload.selected,['n:2'],
+  'Real pending decision generation must prioritize surplus Potion over playable Machoke');
+ // Computer Search has a 2-card payment from hand, then its own-deck options
+ // are presented with deck: indices. Never inspect the still-shuffled deck.
+ const computer=structuredClone(owned);
+ computer.pendingTrainerName='Computer Search';
+ computer.self.hand=['base1-71','base1-34',IDS.potion,IDS.rat];
+ const computerCost={kind:'cost',label:'Choose two other cards to discard'};
+ assert.ok(AI.comboChoiceValue({id:'n:2',label:'Potion'},computerCost,computer,cfg)>
+  AI.comboChoiceValue({id:'n:1',label:'Machoke'},computerCost,computer,cfg));
+ const computerSearch={kind:'find',label:'Search your deck for any card'};
+ assert.ok(AI.comboChoiceValue({id:'deck:9',label:'Machoke'},computerSearch,computer,cfg)>
+  AI.comboChoiceValue({id:'deck:8',label:'Rattata'},computerSearch,computer,cfg),
+  'Computer Search must prioritize a compatible Evolution in revealed legal options');
+ assert.equal(AI.comboChoiceValue({id:'disc:9',label:'Machoke'},computerSearch,computer,cfg),null,
+  'Never treat a public discard card as a searched, unknown deck card');
+ const superRetrieval=structuredClone(owned);
+ superRetrieval.pendingTrainerName='Super Energy Retrieval';
+ assert.ok(AI.comboChoiceValue({id:'disc:0',label:'Fighting Energy'},
+  {kind:'serEnergy',label:'Super Energy Retrieval: choose Basic Energy'},superRetrieval,cfg)>0,
+  'Super Energy Retrieval also uses disc: options for recovered energy');
+ assert.ok(AI.comboChoiceValue({id:'n:2',label:'Potion'},
+  {kind:'serCost',label:'Super Energy Retrieval: trade two hand cards'},superRetrieval,cfg)>
+  AI.comboChoiceValue({id:'n:1',label:'Machoke'},
+   {kind:'serCost',label:'Super Energy Retrieval: trade two hand cards'},superRetrieval,cfg));
  const hidden=structuredClone(g);hidden.pendingAction.plan.side=0;
  assert.equal(AI.observation(hidden,1).pendingTrainerName,null,
   'Opponent Trainer private choices must never be accessible to the CPU');
