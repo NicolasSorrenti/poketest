@@ -71,3 +71,24 @@ The deck IDs above are *current gameplay presets*, and not a claim that any card
 The expansion builds on `rpg_story.js`, `rpg_schedules.js`, `rpg.js`, the existing Classic duel engine, and browser save data. It does not replace any of them, nor does it change combat rules. Story IDs from the original thirty-two scenes remain stable for existing saves.
 
 Guest decks are selected using existing `deckOptions()` IDs. Future bespoke competitive archetypes should be introduced *only after* confirming card support and automated full-duel tests. The module is browser-static; server-side spoiler security, fully divergent multi-scene branches, custom deck lists and new final endings are separate future milestones.
+
+
+## Minor characters and optional side quests — added
+
+These characters are recurring **adult townspeople**, not new romance routes or replacements for the eight existing heroines. Each has its own weekly schedule, voice, visual direction and a live 60-card deck preset. Facial art has not been generated; the current UI uses its established fallback initials.
+
+| Character | Design direction | Dialogue voice | Existing duel deck |
+| --- | --- | --- | --- |
+| Elio Soto (19) | Amber and sky-blue varsity layers, repaired sneakers, slightly messy curls and an overstuffed binder | Hesitates, asks practical beginner questions and learns to own his choices | \`bodyguard\` |
+| Alma Serrano (35) | Sage/espresso café streetwear, low-bun hair, analog watch and apron | Dry, observant, supportive through specific practical actions rather than speeches | \`lockdown\` |
+| Nereo Paz (29) | Petrol-teal boatyard jacket, rust accents, working trousers and patched lanyard | Understated waterfront humor, notices logistics problems before people make accusations | \`cold_fusion\` |
+
+### Playable quests
+
+- **A Deck With Someone Else’s Name:** Elio learns that his cousin’s success is not a required blueprint for his own play. The player chooses whether to emphasize self-expression, fundamentals, affordable cards or matchup training. A real duel closes the quest on any result, with different replies and rewards for winning, losing or drawing.
+- **The Table Nobody Notices:** Alma and the community adapt the café and event signage so that the card club is genuinely easier to access. Involved characters include Jun and Shiori. Choices shape later dialogue and reward reputation, credits, focus or insight.
+- **The Ferry With Empty Seats:** Nereo, Iris, Teo and Marina coordinate card shipments and event access across the river. The problem is miscommunication and unreliable transit—not an invented thief or cartoon antagonist. Choices include written handoffs, notifications, backup noticeboards and future volunteer arrangements.
+
+Each quest has **three dated chapters**, each with a scheduled person and location. Earlier decisions change an extra dialogue beat in later chapters *without replacing essential context*. Quests persist in the browser save as \`sideQuests\` and \`activeSideQuest\`, appear on a dedicated side-quest panel and journal, and expire if their scene windows are missed. One-time rewards are applied only on completed decisions or authentic Classic duel receipts.
+
+The finale report counts completed side quests, but the main tournament brackets and existing relationship endings remain independent. The quest duels use the currently supported presets above, **not** unverified custom signature lists. See \`tests/rpg_side_quests.test.js\` and \`tests/rpg_world_ui.test.js\` for data, reward, reload, expiry and UI-flow regression coverage.
