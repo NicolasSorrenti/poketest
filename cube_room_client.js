@@ -93,6 +93,80 @@
    'All human decks are locked. Multiplayer duel matchmaking is not connected yet.':
    'Your deck is private to your seat. All players must lock their decks before the next stage.';
  }
+ function renderTournament(){
+  const t=state?.tournament;
+  $('roundRobinArea').classList.toggle('hidden',!t);
+  if(!t)return;
+  $('roomProgress').textContent=t.finished?'All six tournament matches completed.':
+   'Round-robin underway · Each player faces the other three seats once.';
+  $('rrProgress').textContent=t.finished?'Tournament complete':
+   'Completed '+t.matchIndex+' of '+t.totalMatches+' matches';
+  const active=$('rrActive');active.replaceChildren();
+  if(t.finished){
+   const row=document.createElement('strong');row.textContent='🏆 '+t.standings[0].name+' wins the Cube!';
+   active.append(row);
+  }else if(t.activeMatch){
+   const title=document.createElement('strong');
+   title.textContent='Match '+t.activeMatch.id+': '+t.activeMatch.names.join(' vs ');
+   active.append(title);
+   if(t.yourMatch){
+    const link=document.createElement('a');
+    if(t.yourMatch.kind==='online'){
+     link.href='/online.html?cubeRoom='+encodeURIComponent(code);
+     link.textContent='Play against '+t.yourMatch.opponent+' →';
+     link.addEventListener('click',()=>{
+      sessionStorage.setItem('neoOnlineRoom',t.yourMatch.code);
+      sessionStorage.setItem('neoOnlineToken',t.yourMatch.token);
+     });
+    }else{
+     link.href='/classic_live.html?cubeRoom='+encodeURIComponent(code);
+     link.textContent='Play against '+t.yourMatch.opponent+' (CPU) →';
+     link.addEventListener('click',()=>{
+      sessionStorage.setItem('neoClassicLiveToken',t.yourMatch.token);
+     });
+    }
+    active.append(link);
+   }else{
+    const text=document.createElement('span');text.className='waiting';
+    text.textContent='Waiting for this match to finish. Your turn is coming!';
+    active.append(text);
+   }
+  }
+  const fixtures=$('rrFixtures');fixtures.replaceChildren();
+  for(const match of t.matches){
+   const tile=document.createElement('div');
+   tile.className='rr-match '+(match.status==='complete'?'complete':
+    t.activeMatch?.id===match.id?'active':'');
+   const title=document.createElement('b');title.textContent='Match '+match.id+': '+match.names.join(' vs ');
+   const result=document.createElement('small');
+   result.textContent=match.status==='complete'?
+    'Winner: '+state.seats[match.winner].name+
+     (match.method&&match.method!=='played'?' · '+match.method+' tiebreak':''):
+    match.status==='active'?'Playing now':'Upcoming';
+   tile.append(title,result);fixtures.append(tile);
+  }
+  const standings=$('rrStandings');
+  standings.replaceChildren();
+  const table=document.createElement('table');
+  const head=document.createElement('thead'),tr=document.createElement('tr');
+  for(const label of ['Rank','Player','Played','W','L','Points']){
+   const th=document.createElement('th');th.textContent=label;tr.append(th);
+  }
+  head.append(tr);table.append(head);
+  const body=document.createElement('tbody');
+  for(const row of t.standings){
+   const tr=document.createElement('tr');
+   if(row.seat===state.seat)tr.className='me';
+   for(const value of [row.rank,row.name,row.played,row.wins,row.losses,row.points]){
+    const td=document.createElement('td');td.textContent=String(value);tr.append(td);
+   }
+   body.append(tr);
+  }
+  table.append(body);standings.append(table);
+  $('rrFooter').textContent=t.finished?
+   'Everyone has played three matches. Final standings are locked.':
+   'Keep this tab or return after your duel. The next pairing unlocks automatically.';
+ }
  function render(){
   if(!state)return;
   $('entrance').classList.add('hidden');$('room').classList.remove('hidden');
@@ -120,7 +194,8 @@
     state.finished?'All 60 picks complete. Build your decks!':
     'Pack '+(state.round+1)+' of '+state.packs+' · Pick '+(state.pick+1)+' of '+state.cardsPerPack;
   $('draftArea').classList.toggle('hidden',state.status!=='draft');
-  $('deckArea').classList.toggle('hidden',!state.finished);
+  $('deckArea').classList.toggle('hidden',!state.finished||!!state.tournament);
+  renderTournament();
   if(state.status==='draft'){
    $('draftHeading').textContent='Your pack · '+state.pack.length+' cards';
    $('draftStatus').textContent=state.waiting?'Waiting for other drafters to choose…':

@@ -27,6 +27,7 @@ input,select{background:#0b162e;border:1px solid #5c77a5;border-radius:9px;color
 .buildchoices{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:9px}.section{margin-bottom:22px}
 #buildStatus{font-weight:700;color:#fed988}
 @media(max-width:700px){.columns,.buildgrid{grid-template-columns:1fr}.pack{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.rr-progress{font-weight:800;font-size:20px;margin-bottom:14px;color:#ffd56f}.rr-active{border:1px solid #5b85bd;padding:16px;background:#233a61;border-radius:12px;margin:12px 0}.rr-active strong{display:block;margin-bottom:10px}.rr-active a{display:inline-block;background:#ffd56f;color:#102039;padding:12px 17px;border-radius:9px;font-weight:800;text-decoration:none}.rr-fixtures{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:8px;margin:16px 0}.rr-match{padding:10px;background:#233452;border-radius:9px;border:1px solid #455c82}.rr-match.active{border-color:#ffd56f}.rr-match.complete{border-color:#58cd9b}.rr-match b,.rr-match small{display:block}.rr-match small{color:#b3c8e3;margin-top:4px}.rr-standings{overflow-x:auto}.rr-standings table{width:100%;border-collapse:collapse;min-width:370px}.rr-standings th,.rr-standings td{text-align:left;padding:9px;border-bottom:1px solid #405475}.rr-standings th{color:#b8cdee}.rr-standings tr.me{background:#284875}.rr-active .waiting{color:#c3d5f1}
 </style></head>
 <body>
 <header><div><small>NEO CAMPUS · LIMITED FORMAT</small><h1>Multiplayer Cube Draft</h1></div><nav><a href="/cube.html">← Solo Cube</a></nav></header>
@@ -57,6 +58,16 @@ input,select{background:#0b162e;border:1px solid #5c77a5;border-radius:9px;color
 <div id="roomDeckBuilder"></div>
 <div id="roomBuilderAction"><button class="primary" id="lockDeck" type="button">Lock 40-card deck</button></div>
 <p id="buildStatus" aria-live="polite"></p><p id="roomNext" class="muted"></p>
+</section>
+<section id="roundRobinArea" class="panel hidden" aria-label="Cube round robin championship">
+<h2>Round-robin Championship</h2>
+<p>Every player faces all three opponents, one match at a time. Each player keeps the same drafted deck.</p>
+<div class="rr-progress" id="rrProgress" aria-live="polite"></div>
+<div id="rrActive" class="rr-active"></div>
+<div id="rrFixtures" class="rr-fixtures"></div>
+<h3>Standings</h3>
+<div id="rrStandings" class="rr-standings"></div>
+<p id="rrFooter" class="muted">Results are recorded automatically when each duel ends.</p>
 </section>
 </section>
 <link rel="stylesheet" href="/cube_builder.css">

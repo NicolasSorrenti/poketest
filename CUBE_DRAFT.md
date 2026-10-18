@@ -44,7 +44,7 @@ The default Balanced Cube is 156 Pokémon / 84 Trainers (roughly 65/35), with a 
 - Each human stores its own reconnect token in browser session storage; no token appears in the invite link.
 - Rooms use in-memory server state and expire after six hours without activity.
 - A completed draft lets each player build and lock a 40-card deck with unlimited Basic Energy. Once locked, edits are rejected by the server.
-- **Online Cube duels are not wired yet.** This milestone delivers multiplayer drafting and deck submission. Future work must create online 40-card matches between human seats and connect their authoritative winners to the tournament bracket.
+- **Online Cube duels are now wired to the round-robin tournament.** Once all human seats lock their decks, the server schedules six matches, one at a time. Every seat plays each other seat once (3 games per player).
 - Room protocol lives in cube_room_service.js and /api/cube-room/*. Run node test_cube_room.js and node test_cube_room_http.js for seat privacy, complete four-human and mixed drafts, and HTTP authentication.
 
 ## Themed Cube presets
@@ -61,3 +61,14 @@ The solo selector and multiplayer room host both use exactly the same server-app
 Every preset draws only from the supported historical theme-deck printings. Evolutions are admitted only when a compatible predecessor is somewhere in the final cube, and CPU decks must still obey 40-card construction rules. Drafting the whole evolution family is not automatic; it requires actual picks. Mono-type support is intentional in Elemental Rivals; specialized text-effect weighting nudges each type toward its archetype but does not create new custom Pokémon rules. All presets support reproducible seeds for testing.
 
 For verification, run `node test_cube_presets.js` or `npm run test:cube`. Competitive win-rate tuning across large numbers of matchups remains to be done.
+
+## Multiplayer round-robin (2–4 humans, CPU fills to four)
+- Everyone completes their 60 picks, builds a legal 40-card deck and locks it.
+- The tournament starts automatically when all humans have locked. All decks are frozen, including AI decks generated from the CPU drafters' own cards.
+- Six pairings are played one by one: seats 1–2, 3–4, 1–3, 2–4, 1–4, 2–3. Each seat has three opponents. For four humans, all six matches are online; rooms with fewer humans mix real online PvP, human-versus-CPU and engine-simulated CPU-versus-CPU matches.
+- The active human seats receive private match tokens and an on-screen Play button. Other players see who is playing and wait for their turn. A Return to Cube Championship shortcut appears in online and CPU duel pages.
+- Each online fixture uses the same authenticated WotC Pokémon engine as existing Classic multiplayer, configured for a 40-card deck and four Prize cards. Only its two assigned humans can play, and the server never accepts match results from the client.
+- Once a duel completes, polling the Cube room advances the tournament and updates standings. Human draws trigger an automatic rematch rather than arbitrarily awarding a winner.
+- Standings use 3 points per victory; tied records use the completed head-to-head result, then seat order, as the documented fallback.
+- Cube rooms and match services are in memory and can expire or be lost on server restart. Four-player tournaments deliberately play **one fixture at a time**, not several simultaneous duels.
+- End-to-end browser and service tests: `node test_cube_round_robin.js` and `node tests/cube_round_robin_browser_smoke.js`.
