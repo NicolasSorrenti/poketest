@@ -1827,6 +1827,7 @@ function resolveAttack(g,side,index,chosenBench,energyPicks,extra={}){
  if(roll.discardAllSelfEnergy){p.discard.push(...u.energies);u.energies=[];}
  if(roll.placeCounters)f.active.damage+=10*roll.placeCounters;
  if(roll.millOpponent)for(let i=0;i<roll.millOpponent&&f.deck.length;i++)f.discard.push(f.deck.pop());
+ if(roll.discardOpponentTools){for(const target of [f.active,...f.bench]){f.discard.push(...target.attachedTrainers.map(t=>t.id));target.attachedTrainers=[];}}
  if(roll.shuffleDiscardEnergies){const recycled=p.discard.filter(id=>isEnergy(card(g,id)));p.discard=p.discard.filter(id=>!isEnergy(card(g,id)));p.deck=shuffle(g,[...p.deck,...recycled]);}
  if(roll.healAllSelf)u.damage=0;
  if(roll.discardEnemyEnergy&&f.active.energies.length&&!f.active.attachedTrainers.some(t=>card(g,t.id).name==="Brock's Protection")){const k=extra.enemyEnergyIndex??0;f.discard.push(f.active.energies.splice(k,1)[0]);}
