@@ -14,7 +14,9 @@ const {server}=require('./server');
  try{
   let res=await fetch(base+'/cube.html');
   assert.equal(res.status,200);
-  assert((await res.text()).includes('deckStatus'),'Cube builder markup unavailable');
+  const cubeHtml=await res.text();
+  for(const id of ['deckStatus','tournament','roundList','standings','nextMatch','resumeMatch'])
+   assert(cubeHtml.includes('id="'+id+'"'),'Cube bracket markup missing '+id);
   res=await fetch(base+'/cube_client.js');
   assert.equal(res.status,200);
   assert((await res.text()).includes('/classic_live.html'),'Cube client duel navigation missing');
