@@ -1632,6 +1632,14 @@ function resolveAttack(g,side,index,chosenBench,energyPicks,extra={}){
  }
  if(program.kind==='mirror-move'){const impact=u.lastAttackImpact;roll={damage:impact.damage||0,status:impact.status||null,flips:[],ignoreWR:true};}
 
+ // Dark Gengar Pull In replaces the defender BEFORE damage and Sleep.
+ if(program.kind==='neo92:pull-in'&&extra.neo92PullIndex!==null&&extra.neo92PullIndex!==undefined){
+  if(jawClampLocks(g,1-side)||!f.bench[extra.neo92PullIndex])fail('Pull In no longer has a legal target');
+  const previous=f.active;
+  f.active=f.bench.splice(extra.neo92PullIndex,1,previous)[0];
+  STATUS.clearConditions(previous);clearBenchEffects(previous);
+  log(g,'Dark Gengar pulled '+publicName(g,f.active)+' into the Active spot.');
+ }
  // Flytrap switches the Defending Pokémon BEFORE calculating 20 attack damage.
  if(roll.gymFlytrap){const i=Number(extra.gymLastData?.bench?.[0]?.slice(6));if(!Number.isInteger(i)||!f.bench[i])fail('Illegal Flytrap replacement');const old=f.active;f.active=f.bench.splice(i,1,old)[0];STATUS.clearConditions(old);clearBenchEffects(old);}
  // Houndour Plunder discards ALL attached Trainer cards on the Defending
@@ -1938,6 +1946,10 @@ function resolveAttack(g,side,index,chosenBench,energyPicks,extra={}){
   if(roll.gymPainAmplifier){if(f.active.damage>0)f.active.damage+=10;for(const victim of f.bench)if(victim.damage>0)hitBench(f,victim,10);}
  if(roll.gymStorm)for(const owner of g.players)for(const victim of owner.bench)hitBench(owner,victim,20);
  if(roll.gymWaterRing)for(const owner of g.players)for(const victim of owner.bench)if(!card(g,victim.id).types?.includes('Water'))hitBench(owner,victim,10);
+ if(roll.neo92FireLightningPayment){
+  const picks=[...extra.neo92Payment].sort((a,b)=>b-a);
+  for(const i of picks)p.discard.push(u.energies.splice(i,1)[0]);
+ }
  if(roll.selfDamage)u.damage+=relaxing?Math.ceil(roll.selfDamage/20)*10:roll.selfDamage;
  if(roll.disableThisAttack)u.gymAttackCooldown={index,expires:g.turnSerial+3};
  if(roll.disableAllAttacks)u.gymAttackCooldown={index:null,expires:g.turnSerial+3};
@@ -2010,8 +2022,17 @@ function resolveAttack(g,side,index,chosenBench,energyPicks,extra={}){
  if(roll.millOpponent)for(let i=0;i<roll.millOpponent&&f.deck.length;i++)f.discard.push(f.deck.pop());
  if(roll.discardOpponentTools){for(const target of [f.active,...f.bench]){f.discard.push(...target.attachedTrainers.map(t=>t.id));target.attachedTrainers=[];}}
  if(roll.shuffleDiscardEnergies){const recycled=p.discard.filter(id=>isEnergy(card(g,id)));p.discard=p.discard.filter(id=>!isEnergy(card(g,id)));p.deck=shuffle(g,[...p.deck,...recycled]);}
+ if(roll.neo92HealDefender!==undefined){
+  f.active.damage=roll.neo92HealDefender==='all'?0:Math.max(0,f.active.damage-roll.neo92HealDefender);
+ }
+ if(roll.neo92BenchFromDiscard!==undefined){
+  const id=p.discard.splice(roll.neo92BenchFromDiscard,1)[0];
+  if(!id||p.bench.length>=5||!isBasicPokemon(card(g,id)))fail('Guiding Flame Bench card invalid');
+  const entrant=unit(id,g.round);p.bench.push(entrant);
+  if(isClassicRules(g))CLASSIC_POWERS.benched(g,side,entrant,classicHelpers());
+ }
  if(roll.healAllSelf)u.damage=0;
- if(roll.discardEnemyEnergy&&f.active.energies.length&&!f.active.attachedTrainers.some(t=>card(g,t.id).name==="Brock's Protection")){const k=extra.enemyEnergyIndex??0;f.discard.push(f.active.energies.splice(k,1)[0]);}
+ if(roll.discardEnemyEnergy&&f.active.energies.length&&!f.active.attachedTrainers.some(t=>card(g,t.id).name==="Brock's Protection")){const k=extra.neo92EnemyEnergy??extra.enemyEnergyIndex??0;f.discard.push(f.active.energies.splice(k,1)[0]);}
  if(roll.callFamily!==undefined){
   if(extra.familyIndex!==undefined){const k=extra.familyIndex;p.bench.push(unit(p.deck.splice(k,1)[0],g.round));}
   p.deck=shuffle(g,p.deck);
