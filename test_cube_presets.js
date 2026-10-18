@@ -49,10 +49,16 @@ for(const preset of PRESETS.filter(x=>x.id!=='balanced')){
   }
  }
  assert(draft.picks.every(p=>p.length===60));
+ const trainerCounts=[];
  for(const picks of draft.picks){
-  const deck=buildCpuDeck(picks);
+  const deck=buildCpuDeck(picks,{preset:preset.id});
   assert.equal(deck.length,40);
   assert.equal(C.validateBuild(picks,deck).valid,true,preset.name+' CPU deck illegal');
+  trainerCounts.push(deck.filter(id=>CATALOG.get(id)?.supertype==='Trainer').length);
+ }
+ if(preset.id==='mayhem'){
+  const avg=trainerCounts.reduce((sum,n)=>sum+n,0)/trainerCounts.length;
+  assert(avg>=11,'Trainer Mayhem CPU decks must actually play a Trainer-heavy configuration: '+avg);
  }
 }
 const solo=new CubeService();
