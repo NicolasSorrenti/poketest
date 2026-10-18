@@ -84,3 +84,22 @@ Start from current `main` and review recent changes from other agents before edi
 - Added three controller integration cases (three wins and rewards, elimination with continued free exploration, drawn-round retry) and two module cases (draw idempotency and invalid receipt), in addition to the original seven tournament tests.
 - **Local verification:** 20 focused tournament/UI tests passed using the source test fixtures in an isolated JavaScript execution harness; JavaScript parses. GitHub Actions full Node CI and live browser/Render end-to-end checks are not yet confirmed.
 - Next priorities: make NPC fixtures and bracket seeding visible if building full elimination trees; add participation after elimination, more personal routes, and eventually campaign endings.
+
+
+## Milestone: optional tournament aftermath and alternate social progression (2026-10-18)
+- Added six SFW character-specific encounters to the existing town-life data, with no new dialogue engine: Reina's neighborhood-cup reflection, Hana's alternative opportunity for a missed cup, Akari's regional analysis, Marina's missed-qualifier conversation, Kaede's between-rounds encounter, and Reina's championship aftermath.
+- Encounters require persisted tournament states (champion, eliminated, missed or expired), and one requires at least one completed championship round while registration remains open.
+- They respect NPC schedules, location and daypart; the same existing encounter choices affect affection, trust, respect, preparation, insight, focus or reputation. Completion and rewards persist under `encountersDone` and apply once.
+- Missed or expired brackets are reconciled on RPG load so older saves can see relevant alternative encounters without first passing time again.
+- NPC routes, work, free exploration, and regular duels remain accessible after cup defeat or absence. There is no mandatory central quest.
+- Updated the browser-controller test fixtures for the newly introduced `rpg_narrative_pack.js` module used by the RPG; preserved its established adult cast and story definitions.
+- `tests/rpg_world.test.js` now validates 22 encounters and their reachability, checks outcome gates and completed save roundtrips. `tests/rpg_world_ui.test.js` covers two outcome-sensitive interactions and restored missed registrations.
+- Verified all 28 focused world/controller scenarios in the isolated JavaScript test harness, plus syntax checks. The native Node CI suite and production browser/Render smoke are not yet confirmed.
+- Ownership: changes are RPG-only (`rpg_world.js`, `rpg.js`, two test fixtures, and this handoff). No TCG rules engine or art assets modified.
+
+### Continuation after this milestone
+1. Expand optional connected duel-and-choice relationship arcs for the other seven heroines, using established biographies and the tested Reina architecture.
+2. Evolve player-only three-round cup ladders toward full tournament brackets if NPC-vs-NPC fixtures can be modeled transparently.
+3. Integrate card collecting/shop economy without compromising authentic deck legality.
+4. Add season closure and character epilogues that acknowledge both friendships and tournament outcomes.
+5. Run full Node CI, browser E2E, save migrations, and a complete 90-day campaign in a production-like environment.
