@@ -150,3 +150,48 @@ test('in-progress rivalry dialogue resumes at the same line after save and reloa
  restored.elements.choices.children[0].onclick();
  assert.equal(restored.state().activeArc.index,2);
 });
+
+test('three tournament victories advance a saved championship bracket exactly once per duel',()=>{
+ const r=launch({day:30,slot:0,location:'center'});
+ assert.ok(r.elements.bracketProgress.children.some(x=>x.children[0].textContent==='Neighborhood Cup'));
+ for(let round=0;round<3;round++){
+  const button=r.elements.activities.children.find(x=>x.textContent.includes('Neighborhood Cup')&&x.textContent.includes('Round '+(round+1)));
+  assert.ok(button,'Missing round '+(round+1));
+  button.onclick();
+  const pending=r.state().pendingDuel;
+  assert.equal(pending.tournamentRound,round);
+  assert.equal(pending.tournamentId,'neighborhood');
+  const ev={origin:r.loc.origin,source:r.elements.battle.contentWindow,data:Bridge.message(pending.id,0)};
+  r.listeners.message(ev);r.listeners.message(ev);
+  assert.equal(r.state().tournaments.neighborhood.round,round+1);
+  assert.equal(r.state().results.length,round+1);
+ }
+ const complete=r.state();
+ assert.equal(complete.tournaments.neighborhood.state,'champion');
+ assert.equal(complete.points,36);
+ assert.equal(complete.credits,178);
+ assert.ok(r.elements.bracketProgress.children.some(x=>x.children[1].textContent.includes('CHAMPION')));
+});
+test('tournament defeat eliminates but never blocks home travel',()=>{
+ const r=launch({day:60,slot:0,location:'center'});
+ const cup=r.elements.activities.children.find(x=>x.textContent.includes('Regional Qualifier'));
+ assert.ok(cup);cup.onclick();
+ const pending=r.state().pendingDuel;
+ r.listeners.message({origin:r.loc.origin,source:r.elements.battle.contentWindow,data:Bridge.message(pending.id,1)});
+ assert.equal(r.state().tournaments.regional.state,'eliminated');
+ assert.equal(r.state().tournaments.regional.round,0);
+ assert.ok(r.elements.activities.children.every(x=>!x.textContent.includes('Regional Qualifier')));
+ assert.ok(!r.elements.quickHome.disabled);
+ r.elements.quickHome.onclick();assert.equal(r.state().location,'home');
+});
+test('drawn bracket round remains available for a rematch',()=>{
+ const r=launch({day:30,slot:0,location:'center'});
+ const round=r.elements.activities.children.find(x=>x.textContent.includes('Neighborhood Cup'));
+ assert.ok(round);round.onclick();
+ const d=r.state().pendingDuel;
+ r.listeners.message({origin:r.loc.origin,source:r.elements.battle.contentWindow,data:Bridge.message(d.id,null)});
+ const s=r.state();
+ assert.equal(s.tournaments.neighborhood.round,0);
+ assert.equal(s.tournaments.neighborhood.results.length,1);
+ assert.ok(r.elements.activities.children.some(x=>x.textContent.includes('Neighborhood Cup')));
+});
