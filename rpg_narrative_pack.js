@@ -284,6 +284,10 @@
   iris_guest_3:{iris_delegate:'My replacement ran the route without a single call to me. I saw my sister play.',iris_trust:'I switched my phone off for the match. The deliveries happened anyway. Imagine that.'}
  };
  for(const e of events)if(callbacks[e.id])e.openingByFlag=callbacks[e.id];
+ // Separate authoring file keeps this optional adult heroine's arc easy to extend.
+ const SOL=typeof module==='object'&&module.exports?require('./rpg_sol_character'):window.NeoRpgSolCharacter;
+ Object.assign(cast,SOL.cast);Object.assign(looks,SOL.looks);Object.assign(schedules,SOL.schedules);Object.assign(arrivals,SOL.arrivals);
+ events.push(...SOL.events);
  function validate(){
   const errors=[],ids=new Set(events.map(e=>e.id)),known=new Set([...Object.keys(cast),...Object.keys(looks)]);
   if(ids.size!==events.length)errors.push('Duplicate narrative event');
