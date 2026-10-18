@@ -88,8 +88,9 @@ function showSideQuest(){
 }
 function nextSideQuest(){
  const a=state.activeSideQuest;if(!a||a.phase!=='lines')return;
- const x=SIDE.byId(a.id);a.index++;
- if(a.index>=SIDE.linesFor(state,a.id).length)a.phase=x.stages[state.sideQuests[a.id].step].kind==='duel'?'duel':'choice';
+ const x=SIDE.byId(a.id),lineCount=SIDE.linesFor(state,a.id).length;
+ a.index++;
+ if(a.index>=lineCount)a.phase=x.stages[state.sideQuests[a.id].step].kind==='duel'?'duel':'choice';
  persist();render();
 }
 function chooseSideQuest(raw){
