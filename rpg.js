@@ -37,8 +37,8 @@ function renderStory(){
  const a=state.activeStory,e=STORY.byId(a.id);
  if(!e){state.activeStory=null;persist();return null;}
  if(a.phase==='lines'){
-  const line=e.lines[Math.min(a.index,e.lines.length-1)];
-  return {speaker:line.speaker==='Protagonist'?'You':(cast[line.speaker]?.name|| (line.speaker===e.npc?cast[e.npc].name:line.speaker)),line:line.text,choices:[[a.index<e.lines.length-1?'Continue ›':'Respond ›','storyNext']]};
+  const lines=STORY.linesFor(state,e.id),line=lines[Math.min(a.index,lines.length-1)];
+  return {speaker:line.speaker==='Protagonist'?'You':(cast[line.speaker]?.name|| (line.speaker===e.npc?cast[e.npc].name:line.speaker)),line:line.text,choices:[[a.index<lines.length-1?'Continue ›':'Respond ›','storyNext']]};
  }
  if(a.phase==='choice')return {speaker:cast[e.npc].name,line:'How will you respond?',choices:e.choices.map((c,i)=>[c.label,'storyChoice:'+i])};
  const chosen=e.choices[a.choice];
@@ -46,7 +46,7 @@ function renderStory(){
 }
 function advanceStory(){
  const a=state.activeStory;if(!a||a.phase!=='lines')return;
- const e=STORY.byId(a.id);a.index++;if(a.index>=e.lines.length)a.phase='choice';
+ const e=STORY.byId(a.id);a.index++;if(a.index>=STORY.linesFor(state,e.id).length)a.phase='choice';
  persist();render();
 }
 function chooseStory(raw){
