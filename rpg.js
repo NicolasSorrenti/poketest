@@ -396,7 +396,7 @@ function renderSeasonReport(){
  preface.textContent='NEO HARBOR · SEASON '+r.run+' · DAY 90 / 90';
  const closing=document.createElement('p');closing.className='finale-closing';closing.textContent=r.closing;
  const numbers=document.createElement('div');numbers.className='finale-stats';
- const details=[['Duels',r.played],['Victories',r.wins],['Draws',r.draws],['Circuit points',r.points],['Stories',r.storyScenes],['Town encounters',r.encounters]];
+ const details=[['Duels',r.played],['Victories',r.wins],['Draws',r.draws],['Circuit points',r.points],['Stories',r.storyScenes],['Town encounters',r.encounters],['Side quests',Object.values(state.sideQuests||{}).filter(q=>q?.status==='complete').length]];
  for(const [key,value] of details){
   const cell=document.createElement('div');cell.className='finale-stat';
   const count=document.createElement('strong');count.textContent=String(value);
