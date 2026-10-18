@@ -634,6 +634,10 @@ function commit(g,plan,h){
    if(nums(d,'oakReplace')[0]===1){
     const count=f.prizes.length;
     f.deck=h.shuffle(g,[...f.deck,...f.prizes]);f.prizes=[];
+    // The old face-up indices belonged to the shuffled-away Prize cards.
+    // Replacement cards are new face-down Prizes unless a global effect
+    // (Here Comes Team Rocket!) requires all Prize identities to stay public.
+    f.prizeFaceUp=[];
     for(let i=0;i<count;i++)f.prizes.push(f.deck.pop());
    }break;
   }

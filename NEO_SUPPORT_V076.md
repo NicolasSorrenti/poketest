@@ -1,0 +1,3 @@
+# Neo v0.76 — Prize reveal reset on replacement
+
+Impostor Professor Oak's Invention may shuffle every opposing Prize into its owner's deck and draw equally many replacement Prize cards face-down. It now clears the per-Prize `prizeFaceUp` metadata inherited from Card-Flip Game when replacement occurs, avoiding accidental public leaks of new Prize identities. Declining replacement keeps existing reveal flags. A globally active Here Comes Team Rocket! effect still displays all new Prizes. Regression coverage also checks original card conservation, public viewer masks, and subsequent Card-Flip Game eligibility.
