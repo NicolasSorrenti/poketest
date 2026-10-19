@@ -52,7 +52,12 @@
   next.campaignHistory=[...history,current].slice(-10);
   // Replay is a new campaign: preserve the preferred deck preset, but reset all social,
   // economic, bracket and competitive state. No unimplemented card-collection carry-over.
-  if(typeof state.playerDeck==='string'&&state.playerDeck.trim())next.playerDeck=state.playerDeck;
+  if(state.deckJourney?.starter){
+   // Each season begins with a fresh mixed-type starter choice; existing albums
+   // and completed-season records still carry over.
+   next.playerDeck='blackout';
+   next.deckJourney={starter:null,owned:{},deck:[],draft:null,packs:0,rewards:0};
+  }else if(typeof state.playerDeck==='string'&&state.playerDeck.trim())next.playerDeck=state.playerDeck;
   // The album is a cross-season collection, but unlocking a memory does not
   // preserve relationships, events or previous campaign progression.
   next.cgUnlocked=state.cgUnlocked&&typeof state.cgUnlocked==='object'&&!Array.isArray(state.cgUnlocked)?JSON.parse(JSON.stringify(state.cgUnlocked)):{};
