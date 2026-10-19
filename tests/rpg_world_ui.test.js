@@ -2,7 +2,7 @@
 const test=require('node:test');
 const assert=require('node:assert/strict');
 const fs=require('node:fs'),path=require('node:path');
-const Pack=require('../rpg_narrative_pack'),Side=require('../rpg_side_quests'),Story=require('../rpg_story'),Schedules=require('../rpg_schedules'),World=require('../rpg_world'),Arc=require('../rpg_rival_arc'),Tournaments=require('../rpg_tournaments'),Epilogue=require('../rpg_epilogue'),Appointments=require('../rpg_appointments'),Intentions=require('../rpg_intentions'),CG=require('../rpg_cg_gallery'),Planner=require('../rpg_daily_planner'),Bridge=require('../rpg_duel_bridge');
+const Pack=require('../rpg_narrative_pack'),Side=require('../rpg_side_quests'),Story=require('../rpg_story'),Schedules=require('../rpg_schedules'),World=require('../rpg_world'),Arc=require('../rpg_rival_arc'),Tournaments=require('../rpg_tournaments'),Epilogue=require('../rpg_epilogue'),Appointments=require('../rpg_appointments'),Intentions=require('../rpg_intentions'),CG=require('../rpg_cg_gallery'),Planner=require('../rpg_daily_planner'),Social=require('../rpg_social_activities'),Bridge=require('../rpg_duel_bridge');
 const js=fs.readFileSync(path.join(__dirname,'..','rpg.js'),'utf8');
 const html=fs.readFileSync(path.join(__dirname,'..','rpg.html'),'utf8');
 const ids=[...html.matchAll(/id="([^"]+)"/g)].map(x=>x[1]);
@@ -27,7 +27,7 @@ function launch(initial,approve=false){
  const doc={getElementById(id){if(!elements[id])throw Error('Missing '+id);return elements[id];},
   createElement(tag){return new FakeNode(tag);},body:new FakeNode('body'),
   addEventListener(name,cb){listeners['document:'+name]=cb;}};
- const win={NeoRpgNarrativePack:Pack,NeoRpgSideQuests:Side,NeoHarborStory:Story,NeoRpgSchedules:Schedules,NeoRpgWorld:World,NeoRpgRivalArc:Arc,NeoRpgTournaments:Tournaments,NeoRpgEpilogue:Epilogue,NeoRpgAppointments:Appointments,NeoRpgIntentions:Intentions,NeoRpgCGGallery:CG,NeoRpgDailyPlanner:Planner,NeoRpgDuelBridge:Bridge,
+ const win={NeoRpgNarrativePack:Pack,NeoRpgSideQuests:Side,NeoHarborStory:Story,NeoRpgSchedules:Schedules,NeoRpgWorld:World,NeoRpgRivalArc:Arc,NeoRpgTournaments:Tournaments,NeoRpgEpilogue:Epilogue,NeoRpgAppointments:Appointments,NeoRpgIntentions:Intentions,NeoRpgCGGallery:CG,NeoRpgDailyPlanner:Planner,NeoRpgSocialActivities:Social,NeoRpgDuelBridge:Bridge,
   addEventListener(name,cb){listeners[name]=cb;}};
  const local={getItem(k){return saved[k]||null;},setItem(k,v){saved[k]=String(v);}};
  const session={removeItem(){}};
@@ -469,4 +469,65 @@ test('planner does not offer shortcuts while player is in a committed story scen
  const r=launch({day:4,slot:0,location:'shop',activeStory:{id:'hana_route_1',phase:'lines',index:0}});
  assert.equal(r.elements.dailyPlanner.children.length,1);
  assert.match(r.elements.dailyPlanner.children[0].textContent,/Finish your current scene/);
+});
+
+test('social planner lists three personality-aware choices with cost and favorite hints',()=>{
+ const r=launch({day:1,slot:0,location:'shop'});
+ const hana=r.elements.people.children.find(x=>x.children?.[1]?.children?.[0]?.textContent==='Hana Mizuno');
+ assert.ok(hana);hana.onclick();
+ const plan=r.elements.choices.children.find(x=>x.textContent.includes('Choose a shared activity'));
+ assert.ok(plan);plan.onclick();
+ const choices=r.elements.choices.children;
+ assert.equal(choices.length,4);
+ const welcome=choices.find(x=>x.textContent.includes('Welcome a new player'));
+ assert.ok(welcome);assert.match(welcome.textContent,/Favorite/);
+ assert.match(welcome.textContent,/8 focus/);
+ assert.equal(r.state().slot,0,'reading social options is free');
+});
+test('real shared activity consumes one period, saves bond and cannot repeat alongside old hangout',()=>{
+ const r=launch({day:1,slot:0,location:'shop'});
+ r.elements.people.children.find(x=>x.children?.[1]?.children?.[0]?.textContent==='Hana Mizuno').onclick();
+ r.elements.choices.children.find(x=>x.textContent.includes('Choose a shared activity')).onclick();
+ r.elements.choices.children.find(x=>x.textContent.includes('Welcome a new player')).onclick();
+ const s=r.state();
+ assert.equal(s.slot,1);assert.equal(s.focus,67);assert.equal(s.hungOut['1:hana'],true);
+ assert.equal(s.socialHistory.hana.lastActivity,'shop_welcome');
+ assert.equal(s.relationships.hana.affection,2);assert.equal(s.relationships.hana.trust,1);
+ const reload=launch(s);
+ assert.equal(reload.state().socialHistory.hana.count,1);
+ reload.elements.people.children.find(x=>x.children?.[1]?.children?.[0]?.textContent==='Hana Mizuno').onclick();
+ assert.ok(reload.elements.choices.children.some(x=>x.textContent.includes('Already spent time today')));
+});
+test('competitive Reina outing increases respect without creating phantom TCG matches',()=>{
+ const r=launch({day:1,slot:1,location:'center'});
+ const reina=r.elements.people.children.find(x=>x.children?.[1]?.children?.[0]?.textContent==='Reina Kurogane');
+ assert.ok(reina);reina.onclick();
+ r.elements.choices.children.find(x=>x.textContent.includes('Choose a shared activity')).onclick();
+ const preferred=r.elements.choices.children.find(x=>x.textContent.includes('Practice tricky openings'));
+ assert.ok(preferred);assert.match(preferred.textContent,/Favorite/);
+ preferred.onclick();
+ const s=r.state();
+ assert.equal(s.relationships.reina.respect,2);assert.equal(s.socialHistory.reina.lastTag,'strategy');
+ assert.equal(s.pendingDuel,null);assert.equal(s.results.length,0);
+ assert.equal(s.slot,2);
+});
+test('insufficient resources leave social dialogue and campaign time unchanged',()=>{
+ const r=launch({day:1,slot:0,location:'shop',focus:0,credits:0});
+ r.elements.people.children.find(x=>x.children?.[1]?.children?.[0]?.textContent==='Hana Mizuno').onclick();
+ r.elements.choices.children.find(x=>x.textContent.includes('Choose a shared activity')).onclick();
+ const button=r.elements.choices.children.find(x=>x.textContent.includes('Customize deck sleeves'));
+ assert.match(button.textContent,/Not enough focus/);
+ const before=r.state();
+ assert.equal(button.disabled,true,'unaffordable activities cannot be clicked');
+ assert.match(button.title,/Not enough focus/);
+ const after=r.state();
+ assert.equal(after.slot,before.slot);assert.equal(after.focus,0);assert.equal(after.credits,0);
+ assert.equal(after.socialHistory.hana,undefined);assert.equal(after.hungOut['1:hana'],undefined);
+});
+test('guest cast can use the generic activity framework without changing authored character dialogue',()=>{
+ const r=launch({day:12,slot:1,location:'center'});
+ const person=r.elements.people.children.find(x=>x.children?.[1]?.children?.[0]?.textContent==='Jun Arai');
+ assert.ok(person,'Jun follows the current day-12 community center afternoon schedule');
+ person.onclick();
+ assert.ok(r.elements.choices.children.some(x=>x.textContent.includes('Choose a shared activity')));
 });
