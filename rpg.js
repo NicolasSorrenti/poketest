@@ -1017,15 +1017,21 @@ function refreshRpgPanels(){
   const active=button.dataset.panel===rpgActivePanel;button.classList.toggle('active',active);button.setAttribute('aria-pressed',String(active));
  }
 }
-function renderRpgCast(ids,locked){
+function renderRpgCast(ids,locked,shown,portraitId){
  const root=$('rpgSceneCast');if(!root)return;root.replaceChildren();
- if(state.location==='home'||!ids.length){root.hidden=true;return;}
+ const speaking=Object.keys(cast).find(id=>shown?.speaker===cast[id].name||shown?.speaker===id);
+ const focused=speaking||((shown?.line||locked)?portraitId:null);
+ const participants=[...new Set([...ids,focused].filter(id=>!!cast[id]))].slice(0,6);
+ if(state.location==='home'||!participants.length){root.hidden=true;return;}
  root.hidden=false;
- for(const id of ids.slice(0,6)){
-  if(!cast[id])continue;
-  const b=document.createElement('button');b.type='button';b.className='rpg-cast-member'+(state.selected===id?' selected':'');
-  b.disabled=locked;b.title='Talk to '+cast[id].name;b.setAttribute('aria-label','Talk to '+cast[id].name);
-  b.append(makeAvatar(id));const name=document.createElement('span');name.textContent=cast[id].name.split(' ')[0];b.append(name);
+ const inConversation=!!(shown?.line||locked)&&!!focused;
+ root.classList.toggle('is-conversation',inConversation);
+ for(const id of participants){
+  const b=document.createElement('button');b.type='button';
+  b.className='rpg-cast-member'+(id===focused&&inConversation?' is-speaking':inConversation?' is-listening':'');
+  b.disabled=locked||inConversation;b.title='Talk to '+cast[id].name;b.setAttribute('aria-label','Talk to '+cast[id].name);
+  b.append(makeAvatar(id));
+  const name=document.createElement('span');name.textContent=cast[id].name.split(' ')[0];b.append(name);
   b.onclick=()=>selectPerson(id);root.append(b);
  }
 }
@@ -1172,8 +1178,8 @@ function render(){
   const name=document.createElement('strong');name.textContent=c.name;const sub=document.createElement('small');sub.textContent=c.style;
   label.append(name,sub);b.append(avatar,label);b.onclick=()=>selectPerson(id);$('people').append(b);
  }
- renderRpgCast(locked&&portraitId?[portraitId]:people,locked);
- portraitRoot.hidden=!locked&&people.length>0&&state.location!=='home';
+ renderRpgCast(people,locked,shown,portraitId);
+ portraitRoot.hidden=state.location!=='home'&&(people.length>0||!!portraitId);
  $('storyEvents').replaceChildren();const stories=eligibleStories();
  for(const e of stories){
   const b=document.createElement('button');b.className='event-btn';b.disabled=locked;b.textContent='✦  '+e.title+' · ⏳ 1 period';
