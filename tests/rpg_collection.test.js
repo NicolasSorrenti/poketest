@@ -53,7 +53,7 @@ test('shop packs spend 20 credits for exactly ten owned cards; they cannot buy e
  assert.equal(s.deckJourney.lastPack.source,'shop');assert.equal(s.deckJourney.lastPack.cards.length,10);
  s.location='park';const original=JSON.stringify(s);
  assert.throws(()=>C.buyPack(s),/card shop/);assert.equal(JSON.stringify(s),original);
- s.location='shop';s.credits=19;assert.throws(()=>C.buyPack(s),/20 credits/);
+ s.location='shop';s.deckJourney.lastPack.opened=true;s.credits=19;assert.throws(()=>C.buyPack(s),/20 credits/);
 });
 test('real pending scenes block shop transactions and do not spend credits',()=>{
  const s=setup();C.choose(s,'ember_garden');s.pendingDuel={id:'test'};
@@ -130,7 +130,7 @@ test('new expanded collection cards survive save hydration',()=>{
 test('expansion shop has ten playable sets with discovery stats and starter availability',()=>{
  const s=setup();C.choose(s,'ember_garden');
  const offers=C.shopPacks(s);
- assert.equal(offers.length,10);
+ assert.equal(offers.length,11);
  assert.deepEqual(offers.map(x=>x.set),Object.keys(C.SETS));
  assert.equal(offers[0].unlocked,true);
  assert.equal(offers[0].price,20);
@@ -141,8 +141,8 @@ test('expansion shop has ten playable sets with discovery stats and starter avai
 test('packs unlock from bonds, a completed character story, tournament wins or day',()=>{
  const s=setup();C.choose(s,'ember_garden');
  const unlocked=set=>C.shopPacks(s).find(x=>x.set===set).unlocked;
- assert.equal(unlocked('base4'),false);
- s.relationships={camila:{affection:3}};assert.equal(unlocked('base4'),true);
+ assert.equal(unlocked('base5'),false);
+ s.relationships={camila:{affection:3}};assert.equal(unlocked('base5'),true);
  s.relationships={};s.storyDone={akari_route_1:{choice:0,day:1}};
  assert.equal(unlocked('gym2'),true);
  s.storyDone={};s.tournaments={regional:{state:'champion'}};
@@ -172,9 +172,9 @@ test('buy a Gym booster and preserve its cards after reload, without overwriting
  assert.deepEqual(restored.deckJourney,s.deckJourney);
 });
 test('Camila awards Team Rocket cards that remain in the owned collection',()=>{
- const s=setup();C.choose(s,'ember_garden');assert.equal(C.setForCharacter('camila'),'base4');
+ const s=setup();C.choose(s,'ember_garden');assert.equal(C.setForCharacter('camila'),'base5');
  C.reward(s,true,'camila',()=>0.5);
- assert.ok(Object.keys(s.deckJourney.owned).some(x=>x.startsWith('base4-')));
+ assert.ok(Object.keys(s.deckJourney.owned).some(x=>x.startsWith('base5-')));
  const restored=JSON.parse(JSON.stringify(s));C.hydrate(restored);
  assert.deepEqual(restored.deckJourney.owned,s.deckJourney.owned);
 });
