@@ -52,6 +52,16 @@ test('adding a second properly-authored JSON pack automatically registers it wit
  const invented=clone();invented.def.id='newheroine';invented.def.name='Mara Reed';
  invented.dir=path.join(__dirname,'..','characters','newheroine');
  invented.art.characterId='newheroine';invented.stories.characterId='newheroine';
+ invented.mandatory.characterId='newheroine';
+ for(const e of invented.mandatory.events){
+  e.id=e.id.replace(/^sol_/,'newheroine_');
+  e.characterId='newheroine';
+  for(const condition of e.trigger?.all||[]){
+   if(condition.storyDone)condition.storyDone=condition.storyDone.replace(/^sol_/,'newheroine_');
+   if(condition.relationship)condition.relationship.npc='newheroine';
+  }
+ }
+
  for(const e of invented.stories.events){
   e.id=e.id.replace(/^sol_/,'newheroine_');e.npc='newheroine';
   if(e.prerequisite)e.prerequisite=e.prerequisite.replace(/^sol_/,'newheroine_');

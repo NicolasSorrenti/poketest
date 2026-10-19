@@ -492,30 +492,6 @@ const packs=[
     }
    }
   ],
-  "art": {
-   "schemaVersion": 1,
-   "characterId": "elena",
-   "portrait": "/rpg-assets/characters/elena/portrait.png",
-   "expressions": {
-    "neutral": "/rpg-assets/characters/elena/expressions/neutral.webp",
-    "composed": "/rpg-assets/characters/elena/expressions/neutral.webp",
-    "focused": "/rpg-assets/characters/elena/expressions/worried.webp",
-    "soft": "/rpg-assets/characters/elena/expressions/soft.webp",
-    "intense": "/rpg-assets/characters/elena/expressions/surprised.webp"
-   },
-   "eventImages": [
-    {
-     "sceneId": "elena_route_1",
-     "path": "/rpg-assets/characters/elena/elena_after_hours.webp",
-     "prompt": "Adult 26 year old Elena Crowe, anime visual novel style, long dark brown hair in a low elegant twist, deep hazel-green eyes, perfect makeup and full lips, wearing a tailored charcoal blazer over cream silk blouse and pencil skirt, standing in a quiet café after work looking composed but slightly tired, refined beauty, fully clothed SFW, Neo Harbor aesthetic, bottom 20 percent clear for text"
-    },
-    {
-     "sceneId": "elena_route_3",
-     "path": "/rpg-assets/characters/elena/elena_unguarded.webp",
-     "prompt": "Adult 26 year old Elena Crowe sitting at a café table in the evening, long dark brown hair slightly loosened, deep hazel-green eyes with a rare soft expression, full lips, charcoal blazer draped over the chair, cream blouse with one extra button undone, refined and quietly vulnerable, anime visual novel CG, warm lighting, fully clothed SFW, Neo Harbor style, bottom 20 percent clear for dialogue"
-    }
-   ]
-  },
   "mandatoryEvents": [
    {
     "id": "elena_asks_for_help",
@@ -583,7 +559,31 @@ const packs=[
     ],
     "characterId": "elena"
    }
-  ]
+  ],
+  "art": {
+   "schemaVersion": 1,
+   "characterId": "elena",
+   "portrait": "/rpg-assets/characters/elena/portrait.png",
+   "expressions": {
+    "neutral": "/rpg-assets/characters/elena/expressions/neutral.webp",
+    "composed": "/rpg-assets/characters/elena/expressions/neutral.webp",
+    "focused": "/rpg-assets/characters/elena/expressions/worried.webp",
+    "soft": "/rpg-assets/characters/elena/expressions/soft.webp",
+    "intense": "/rpg-assets/characters/elena/expressions/surprised.webp"
+   },
+   "eventImages": [
+    {
+     "sceneId": "elena_route_1",
+     "path": "/rpg-assets/characters/elena/elena_after_hours.webp",
+     "prompt": "Adult 26 year old Elena Crowe, anime visual novel style, long dark brown hair in a low elegant twist, deep hazel-green eyes, perfect makeup and full lips, wearing a tailored charcoal blazer over cream silk blouse and pencil skirt, standing in a quiet café after work looking composed but slightly tired, refined beauty, fully clothed SFW, Neo Harbor aesthetic, bottom 20 percent clear for text"
+    },
+    {
+     "sceneId": "elena_route_3",
+     "path": "/rpg-assets/characters/elena/elena_unguarded.webp",
+     "prompt": "Adult 26 year old Elena Crowe sitting at a café table in the evening, long dark brown hair slightly loosened, deep hazel-green eyes with a rare soft expression, full lips, charcoal blazer draped over the chair, cream blouse with one extra button undone, refined and quietly vulnerable, anime visual novel CG, warm lighting, fully clothed SFW, Neo Harbor style, bottom 20 percent clear for dialogue"
+    }
+   ]
+  }
  },
  {
   "id": "jinx",
@@ -1251,40 +1251,6 @@ const packs=[
     }
    }
   ],
-  "art": {
-   "schemaVersion": 1,
-   "characterId": "jinx",
-   "portrait": "/rpg-assets/characters/jinx/neutral.png",
-   "expressions": {
-    "neutral": "/rpg-assets/characters/jinx/neutral.webp",
-    "smirk": "/rpg-assets/characters/jinx/smirk.webp",
-    "judgy": "/rpg-assets/characters/jinx/judgy.webp",
-    "fire": "/rpg-assets/characters/jinx/fire.webp",
-    "soft": "/rpg-assets/characters/jinx/soft.webp"
-   },
-   "eventImages": [
-    {
-     "sceneId": "jinx_route_1",
-     "path": "/rpg-assets/characters/jinx/jinx_arcade_challenge.webp",
-     "prompt": "Adult 18 year old Jinx Rivera, anime visual novel JRPG style, leaning against an arcade machine in black micro-shorts and cropped magenta tank, long silver-white hair with pink underlights, sharp amber eyes and signature smirk, heavy fanservice silhouette but fully clothed and SFW, neon arcade lighting, confident posture, bottom 20 percent clear for text"
-    },
-    {
-     "sceneId": "jinx_route_3",
-     "path": "/rpg-assets/characters/jinx/jinx_unguarded.webp",
-     "prompt": "Adult 18 year old Jinx Rivera sitting on a park bench at dusk, oversized open hoodie over her usual short outfit, long silver-pink hair down, rare unguarded soft expression instead of the usual smirk, cinematic anime VN composition, warm evening light, entirely SFW, bottom 20 percent clear for dialogue"
-    },
-    {
-     "sceneId": "jinx_marina_cross_1",
-     "path": "/rpg-assets/characters/jinx/jinx_marina_park.webp",
-     "prompt": "Adult 18 year old Jinx Rivera and Marina at a waterfront park railing, Jinx in micro-shorts + cropped top looking slightly annoyed but listening, long silver-pink hair, sharp amber eyes, heavy fanservice silhouette still fully clothed and SFW, Marina in practical clothes, daylight anime visual novel style, bottom 20 percent clear for text"
-    },
-    {
-     "sceneId": "jinx_alma_cross_1",
-     "path": "/rpg-assets/characters/jinx/jinx_alma_cafe.webp",
-     "prompt": "Adult 18 year old Jinx Rivera perched on a cafe counter being told to get down by Alma, Jinx in short skirt and cropped top with signature smirk, long silver-white hair with pink underlights, fanservicey but fully clothed SFW anime JRPG style, warm cafe interior, bottom 20 percent clear for dialogue"
-    }
-   ]
-  },
   "mandatoryEvents": [
    {
     "id": "jinx_after_setback",
@@ -1352,7 +1318,41 @@ const packs=[
     ],
     "characterId": "jinx"
    }
-  ]
+  ],
+  "art": {
+   "schemaVersion": 1,
+   "characterId": "jinx",
+   "portrait": "/rpg-assets/characters/jinx/neutral.png",
+   "expressions": {
+    "neutral": "/rpg-assets/characters/jinx/neutral.webp",
+    "smirk": "/rpg-assets/characters/jinx/smirk.webp",
+    "judgy": "/rpg-assets/characters/jinx/judgy.webp",
+    "fire": "/rpg-assets/characters/jinx/fire.webp",
+    "soft": "/rpg-assets/characters/jinx/soft.webp"
+   },
+   "eventImages": [
+    {
+     "sceneId": "jinx_route_1",
+     "path": "/rpg-assets/characters/jinx/jinx_arcade_challenge.webp",
+     "prompt": "Adult 18 year old Jinx Rivera, anime visual novel JRPG style, leaning against an arcade machine in black micro-shorts and cropped magenta tank, long silver-white hair with pink underlights, sharp amber eyes and signature smirk, heavy fanservice silhouette but fully clothed and SFW, neon arcade lighting, confident posture, bottom 20 percent clear for text"
+    },
+    {
+     "sceneId": "jinx_route_3",
+     "path": "/rpg-assets/characters/jinx/jinx_unguarded.webp",
+     "prompt": "Adult 18 year old Jinx Rivera sitting on a park bench at dusk, oversized open hoodie over her usual short outfit, long silver-pink hair down, rare unguarded soft expression instead of the usual smirk, cinematic anime VN composition, warm evening light, entirely SFW, bottom 20 percent clear for dialogue"
+    },
+    {
+     "sceneId": "jinx_marina_cross_1",
+     "path": "/rpg-assets/characters/jinx/jinx_marina_park.webp",
+     "prompt": "Adult 18 year old Jinx Rivera and Marina at a waterfront park railing, Jinx in micro-shorts + cropped top looking slightly annoyed but listening, long silver-pink hair, sharp amber eyes, heavy fanservice silhouette still fully clothed and SFW, Marina in practical clothes, daylight anime visual novel style, bottom 20 percent clear for text"
+    },
+    {
+     "sceneId": "jinx_alma_cross_1",
+     "path": "/rpg-assets/characters/jinx/jinx_alma_cafe.webp",
+     "prompt": "Adult 18 year old Jinx Rivera perched on a cafe counter being told to get down by Alma, Jinx in short skirt and cropped top with signature smirk, long silver-white hair with pink underlights, fanservicey but fully clothed SFW anime JRPG style, warm cafe interior, bottom 20 percent clear for dialogue"
+    }
+   ]
+  }
  },
  {
   "id": "luna",
@@ -1844,30 +1844,6 @@ const packs=[
     }
    }
   ],
-  "art": {
-   "schemaVersion": 1,
-   "characterId": "luna",
-   "portrait": "/rpg-assets/characters/luna/neutral.png",
-   "expressions": {
-    "neutral": "/rpg-assets/characters/luna/neutral.webp",
-    "shy": "/rpg-assets/characters/luna/shy.webp",
-    "panic": "/rpg-assets/characters/luna/panic.webp",
-    "blush": "/rpg-assets/characters/luna/blush.webp",
-    "happy": "/rpg-assets/characters/luna/happy.webp"
-   },
-   "eventImages": [
-    {
-     "sceneId": "luna_route_1",
-     "path": "/rpg-assets/characters/luna/luna_spill.webp",
-     "prompt": "Adult 18 year old Luna Quinn, soft anime visual novel style, extremely large breasts straining a too-small cream crop sweater, long pastel-lavender hair, violet eyes looking apologetic, she has just spilled a drink down her front, cardigan slipping off one shoulder, heavy unintentional fanservice, fully clothed SFW, café interior, Neo Harbor aesthetic, bottom 20 percent clear for text"
-    },
-    {
-     "sceneId": "luna_route_3",
-     "path": "/rpg-assets/characters/luna/luna_stretch.webp",
-     "prompt": "Adult 18 year old Luna Quinn reaching for a high shelf, soft curvy goddess body, large breasts pushed up by a tight pastel shirt that has ridden up, long lavender hair, slightly panicked expression, unintentional heavy fanservice, fully clothed SFW, shop interior, anime visual novel CG, Neo Harbor style, bottom 20 percent clear"
-    }
-   ]
-  },
   "mandatoryEvents": [
    {
     "id": "luna_tests_independence",
@@ -1935,7 +1911,31 @@ const packs=[
     ],
     "characterId": "luna"
    }
-  ]
+  ],
+  "art": {
+   "schemaVersion": 1,
+   "characterId": "luna",
+   "portrait": "/rpg-assets/characters/luna/neutral.png",
+   "expressions": {
+    "neutral": "/rpg-assets/characters/luna/neutral.webp",
+    "shy": "/rpg-assets/characters/luna/shy.webp",
+    "panic": "/rpg-assets/characters/luna/panic.webp",
+    "blush": "/rpg-assets/characters/luna/blush.webp",
+    "happy": "/rpg-assets/characters/luna/happy.webp"
+   },
+   "eventImages": [
+    {
+     "sceneId": "luna_route_1",
+     "path": "/rpg-assets/characters/luna/luna_spill.webp",
+     "prompt": "Adult 18 year old Luna Quinn, soft anime visual novel style, extremely large breasts straining a too-small cream crop sweater, long pastel-lavender hair, violet eyes looking apologetic, she has just spilled a drink down her front, cardigan slipping off one shoulder, heavy unintentional fanservice, fully clothed SFW, café interior, Neo Harbor aesthetic, bottom 20 percent clear for text"
+    },
+    {
+     "sceneId": "luna_route_3",
+     "path": "/rpg-assets/characters/luna/luna_stretch.webp",
+     "prompt": "Adult 18 year old Luna Quinn reaching for a high shelf, soft curvy goddess body, large breasts pushed up by a tight pastel shirt that has ridden up, long lavender hair, slightly panicked expression, unintentional heavy fanservice, fully clothed SFW, shop interior, anime visual novel CG, Neo Harbor style, bottom 20 percent clear"
+    }
+   ]
+  }
  },
  {
   "id": "rina",
@@ -2427,30 +2427,6 @@ const packs=[
     }
    }
   ],
-  "art": {
-   "schemaVersion": 1,
-   "characterId": "rina",
-   "portrait": "/rpg-assets/characters/rina/neutral.png",
-   "expressions": {
-    "neutral": "/rpg-assets/characters/rina/neutral.webp",
-    "sparkle": "/rpg-assets/characters/rina/sparkle.webp",
-    "determined": "/rpg-assets/characters/rina/determined.webp",
-    "shy": "/rpg-assets/characters/rina/shy.webp",
-    "stage": "/rpg-assets/characters/rina/stage.webp"
-   },
-   "eventImages": [
-    {
-     "sceneId": "rina_route_1",
-     "path": "/rpg-assets/characters/rina/rina_stage_after.webp",
-     "prompt": "Adult 18 year old Rina Hoshino, anime visual novel idol style, long pastel-pink hair in twin tails with ribbons, large aqua-blue eyes sparkling, wearing a short frilly stage skirt and cropped star-motif top with open sparkly jacket, bright cheerful smile, colorful and energetic, fully clothed SFW, Neo Harbor aesthetic, bottom 20 percent clear for text"
-    },
-    {
-     "sceneId": "rina_route_3",
-     "path": "/rpg-assets/characters/rina/rina_cards.webp",
-     "prompt": "Adult 18 year old Rina Hoshino sitting at a café table showing her card binder, long pastel-pink hair, genuine excited expression, still wearing parts of her idol outfit under a soft cardigan, large aqua eyes sparkling, anime visual novel CG, warm lighting, fully clothed SFW, Neo Harbor style, bottom 20 percent clear for dialogue"
-    }
-   ]
-  },
   "mandatoryEvents": [
    {
     "id": "rina_initiates_practice",
@@ -2518,7 +2494,31 @@ const packs=[
     ],
     "characterId": "rina"
    }
-  ]
+  ],
+  "art": {
+   "schemaVersion": 1,
+   "characterId": "rina",
+   "portrait": "/rpg-assets/characters/rina/neutral.png",
+   "expressions": {
+    "neutral": "/rpg-assets/characters/rina/neutral.webp",
+    "sparkle": "/rpg-assets/characters/rina/sparkle.webp",
+    "determined": "/rpg-assets/characters/rina/determined.webp",
+    "shy": "/rpg-assets/characters/rina/shy.webp",
+    "stage": "/rpg-assets/characters/rina/stage.webp"
+   },
+   "eventImages": [
+    {
+     "sceneId": "rina_route_1",
+     "path": "/rpg-assets/characters/rina/rina_stage_after.webp",
+     "prompt": "Adult 18 year old Rina Hoshino, anime visual novel idol style, long pastel-pink hair in twin tails with ribbons, large aqua-blue eyes sparkling, wearing a short frilly stage skirt and cropped star-motif top with open sparkly jacket, bright cheerful smile, colorful and energetic, fully clothed SFW, Neo Harbor aesthetic, bottom 20 percent clear for text"
+    },
+    {
+     "sceneId": "rina_route_3",
+     "path": "/rpg-assets/characters/rina/rina_cards.webp",
+     "prompt": "Adult 18 year old Rina Hoshino sitting at a café table showing her card binder, long pastel-pink hair, genuine excited expression, still wearing parts of her idol outfit under a soft cardigan, large aqua eyes sparkling, anime visual novel CG, warm lighting, fully clothed SFW, Neo Harbor style, bottom 20 percent clear for dialogue"
+    }
+   ]
+  }
  },
  {
   "id": "sierra",
@@ -3010,30 +3010,6 @@ const packs=[
     }
    }
   ],
-  "art": {
-   "schemaVersion": 1,
-   "characterId": "sierra",
-   "portrait": "/rpg-assets/characters/sierra/portrait.png",
-   "expressions": {
-    "neutral": "/rpg-assets/characters/sierra/neutral.webp",
-    "cool": "/rpg-assets/characters/sierra/cool.webp",
-    "focused": "/rpg-assets/characters/sierra/focused.webp",
-    "soft": "/rpg-assets/characters/sierra/soft.webp",
-    "tired": "/rpg-assets/characters/sierra/tired.webp"
-   },
-   "eventImages": [
-    {
-     "sceneId": "sierra_route_1",
-     "path": "/rpg-assets/characters/sierra/sierra_after_shoot.webp",
-     "prompt": "Adult 18 year old Sierra Holt, anime visual novel style, extremely slim with tiny breasts and large round heavy ass, long dark brunette hair, hazel-green eyes, wearing a coral string bikini with an open sheer cover-up, standing near a park bench looking slightly tired but guarded, heavy lower-body fanservice, fully clothed SFW, Neo Harbor aesthetic, bottom 20 percent clear for text"
-    },
-    {
-     "sceneId": "sierra_route_3",
-     "path": "/rpg-assets/characters/sierra/sierra_deck_talk.webp",
-     "prompt": "Adult 18 year old Sierra Holt sitting at a café table, long dark brunette hair, soft genuine expression while talking about cards, extremely slim upper body with tiny chest and large round ass visible even seated, casual crop top and tiny shorts, anime visual novel CG, warm lighting, fully clothed SFW, Neo Harbor style, bottom 20 percent clear for dialogue"
-    }
-   ]
-  },
   "mandatoryEvents": [
    {
     "id": "sierra_defines_boundaries",
@@ -3101,7 +3077,31 @@ const packs=[
     ],
     "characterId": "sierra"
    }
-  ]
+  ],
+  "art": {
+   "schemaVersion": 1,
+   "characterId": "sierra",
+   "portrait": "/rpg-assets/characters/sierra/portrait.png",
+   "expressions": {
+    "neutral": "/rpg-assets/characters/sierra/neutral.webp",
+    "cool": "/rpg-assets/characters/sierra/cool.webp",
+    "focused": "/rpg-assets/characters/sierra/focused.webp",
+    "soft": "/rpg-assets/characters/sierra/soft.webp",
+    "tired": "/rpg-assets/characters/sierra/tired.webp"
+   },
+   "eventImages": [
+    {
+     "sceneId": "sierra_route_1",
+     "path": "/rpg-assets/characters/sierra/sierra_after_shoot.webp",
+     "prompt": "Adult 18 year old Sierra Holt, anime visual novel style, extremely slim with tiny breasts and large round heavy ass, long dark brunette hair, hazel-green eyes, wearing a coral string bikini with an open sheer cover-up, standing near a park bench looking slightly tired but guarded, heavy lower-body fanservice, fully clothed SFW, Neo Harbor aesthetic, bottom 20 percent clear for text"
+    },
+    {
+     "sceneId": "sierra_route_3",
+     "path": "/rpg-assets/characters/sierra/sierra_deck_talk.webp",
+     "prompt": "Adult 18 year old Sierra Holt sitting at a café table, long dark brunette hair, soft genuine expression while talking about cards, extremely slim upper body with tiny chest and large round ass visible even seated, casual crop top and tiny shorts, anime visual novel CG, warm lighting, fully clothed SFW, Neo Harbor style, bottom 20 percent clear for dialogue"
+    }
+   ]
+  }
  },
  {
   "id": "sol",
@@ -3837,30 +3837,6 @@ const packs=[
     }
    }
   ],
-  "art": {
-   "schemaVersion": 1,
-   "characterId": "sol",
-   "portrait": "/rpg-assets/sol.png",
-   "expressions": {
-    "neutral": "/rpg-assets/characters/sol/neutral.webp",
-    "smile": "/rpg-assets/characters/sol/smile.webp",
-    "surprised": "/rpg-assets/characters/sol/surprised.webp",
-    "worried": "/rpg-assets/characters/sol/worried.webp",
-    "soft": "/rpg-assets/characters/sol/soft.webp"
-   },
-   "eventImages": [
-    {
-     "sceneId": "sol_route_1",
-     "path": "/rpg-assets/characters/sol/sol_scavenger_hunt.webp",
-     "prompt": "Adult 26 year old Sol Varela, anime visual novel JRPG, playful outdoor waterfront scavenger hunt, her turquoise/coral resort bikini under an open bright tropical shirt, sparkling joyful expression, entirely SFW, wide environmental CG; bottom 20 percent kept clear for text"
-    },
-    {
-     "sceneId": "sol_route_3",
-     "path": "/rpg-assets/characters/sol/sol_unguarded_cafe.webp",
-     "prompt": "Adult 26 year old Sol Varela in a relaxed cardigan over colorful resort wear, sitting quietly in cafe when festival plans go wrong; genuine vulnerable expression, cinematic anime VN composition, warm sunset atmosphere, SFW and character-led; bottom 20 percent clear for dialogue."
-    }
-   ]
-  },
   "mandatoryEvents": [
    {
     "id": "sol_invites_quiet",
@@ -3928,7 +3904,31 @@ const packs=[
     ],
     "characterId": "sol"
    }
-  ]
+  ],
+  "art": {
+   "schemaVersion": 1,
+   "characterId": "sol",
+   "portrait": "/rpg-assets/sol.png",
+   "expressions": {
+    "neutral": "/rpg-assets/characters/sol/neutral.webp",
+    "smile": "/rpg-assets/characters/sol/smile.webp",
+    "surprised": "/rpg-assets/characters/sol/surprised.webp",
+    "worried": "/rpg-assets/characters/sol/worried.webp",
+    "soft": "/rpg-assets/characters/sol/soft.webp"
+   },
+   "eventImages": [
+    {
+     "sceneId": "sol_route_1",
+     "path": "/rpg-assets/characters/sol/sol_scavenger_hunt.webp",
+     "prompt": "Adult 26 year old Sol Varela, anime visual novel JRPG, playful outdoor waterfront scavenger hunt, her turquoise/coral resort bikini under an open bright tropical shirt, sparkling joyful expression, entirely SFW, wide environmental CG; bottom 20 percent kept clear for text"
+    },
+    {
+     "sceneId": "sol_route_3",
+     "path": "/rpg-assets/characters/sol/sol_unguarded_cafe.webp",
+     "prompt": "Adult 26 year old Sol Varela in a relaxed cardigan over colorful resort wear, sitting quietly in cafe when festival plans go wrong; genuine vulnerable expression, cinematic anime VN composition, warm sunset atmosphere, SFW and character-led; bottom 20 percent clear for dialogue."
+    }
+   ]
+  }
  }
 ];
 const cast={},looks={},schedules={},arrivals={},events=[],mandatoryEvents=[];
