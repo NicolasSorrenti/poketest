@@ -113,7 +113,7 @@
   const body={deck,name:$('nickname').value,...(deck==='custom'?{customDeck:JSON.parse(localStorage.getItem('neoCampusCustomGymDeck')||'null')}:{}),...(suppliedCode?{code:suppliedCode}:{})};
   const data=await api(kind,{method:'POST',body:JSON.stringify(body)});
   feedback.reset();opponentActivity.clear();combat.reset();lobbyDeckDraft=null;token=data.token;roomCode=data.code;chatSeq=-1;seenChatSeq=-1;lastCoinSeq=null;lastKoFeedSeq=null;sessionStorage.setItem('neoOnlineToken',token);sessionStorage.setItem('neoOnlineRoom',roomCode);
-  current=data;render();
+  current=data;setHandVisible(true);render();
  }catch(e){$('startupError').textContent=e.message;}finally{busy=false;}}
  async function lobbyAction(path,payload={}){
   if(busy||!current||watching())return;
@@ -147,7 +147,7 @@
   $('fieldChoiceBar').classList.add('hidden');modalDecisionId=null;lastFieldDecisionId=null;
  }
  function newDuel(){lobbyDeckDraft=null;clearChoiceUi();opponentActivity.clear();combat.reset();chatSeq=-1;$('chatMessages').textContent='';feedback.reset();preview.hide();chatOpen=false;logOpen=false;handVisible=true;powersOpen=false;token=null;roomCode=null;current=null;selectedHand=null;targetMode=null;
-  sessionStorage.removeItem('neoOnlineToken');sessionStorage.removeItem('neoOnlineRoom');render();}
+  sessionStorage.removeItem('neoOnlineToken');sessionStorage.removeItem('neoOnlineRoom');setHandVisible(true);render();}
  async function refresh(){if(!token||!roomCode||busy)return;try{
   const state=await api('state?code='+encodeURIComponent(roomCode));
   $('networkStatus').textContent='Connected';
