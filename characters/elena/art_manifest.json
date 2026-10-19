@@ -1,13 +1,13 @@
 {
   "schemaVersion": 1,
   "characterId": "elena",
-  "portrait": "/rpg-assets/characters/elena/neutral.png",
+  "portrait": "/rpg-assets/characters/elena/portrait.png",
   "expressions": {
-    "neutral": "/rpg-assets/characters/elena/neutral.webp",
-    "composed": "/rpg-assets/characters/elena/composed.webp",
-    "focused": "/rpg-assets/characters/elena/focused.webp",
-    "soft": "/rpg-assets/characters/elena/soft.webp",
-    "intense": "/rpg-assets/characters/elena/intense.webp"
+    "neutral": "/rpg-assets/characters/elena/expressions/neutral.webp",
+    "composed": "/rpg-assets/characters/elena/expressions/neutral.webp",
+    "focused": "/rpg-assets/characters/elena/expressions/worried.webp",
+    "soft": "/rpg-assets/characters/elena/expressions/soft.webp",
+    "intense": "/rpg-assets/characters/elena/expressions/surprised.webp"
   },
   "eventImages": [
     {
