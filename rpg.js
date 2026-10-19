@@ -523,7 +523,7 @@ function showPackReveal(){
    button.className+=' revealed';button.replaceChildren();
    const detail=document.createElement('strong');detail.textContent=labelCard(id);
    const info=cardNames.get(id)||id;
-   const row=document.createElement('span');row.className='pack-card-number';row.textContent='CARD '+(index+1)+' / '+pack.cards.length+';
+   const row=document.createElement('span');row.className='pack-card-number';row.textContent='CARD '+(index+1)+' / '+pack.cards.length;
    button.append(row);
    const data=cardImages.get(id);
    if(data){
@@ -644,9 +644,9 @@ $('deckSave').onclick=()=>{
 $('deckDiscard').onclick=()=>closeDeckWorkshop(true);
 $('deckEditClose').onclick=()=>closeDeckWorkshop(true);
 async function loadCardNames(){
- try{const res=await fetch('/cards/base1.json');if(!res.ok)return;
-  const cards=await res.json();if(!Array.isArray(cards))return;
-  for(const c of cards)if(c?.id&&c.name){cardNames.set(c.id,c.name);if(/^https:\/\//.test(c.images?.small||''))cardImages.set(c.id,c.images.small);}
+ try{const files=await Promise.all(Object.keys(COLLECT.SETS).map(async set=>{const res=await fetch('/cards/'+set+'.json');return res.ok?res.json():[];}));
+  const cards=files.flat();
+  for(const c of cards)if(c?.id&&c.name){cardNames.set(c.id,c.name);if(/^https:\/\//.test(c.images?.small||''))cardImages.set(c.id,c.images.small);else cardImages.set(c.id,'/api/cube-card-image/'+encodeURIComponent(c.id));}
   renderCollection();
  }catch{}
 }
