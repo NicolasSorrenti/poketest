@@ -19,7 +19,8 @@
   base1:{name:'Base Set',size:102,rares:16},
   base2:{name:'Jungle',size:64,rares:16},
   base3:{name:'Fossil',size:62,rares:15},
-  base4:{name:'Team Rocket',size:130,rares:17},
+  base4:{name:'Base Set 2',size:130,rares:20},
+  base5:{name:'Team Rocket',size:83,rares:17},
   gym1:{name:'Gym Heroes',size:132,rares:19},
   gym2:{name:'Gym Challenge',size:132,rares:20},
   neo1:{name:'Neo Genesis',size:111,rares:19},
@@ -33,7 +34,8 @@
   {set:'base1',price:20,day:1,description:'The foundations of competitive play.'},
   {set:'base2',price:25,day:8,npc:'yuna',description:'Jungle partners and unexpected tricks.'},
   {set:'base3',price:25,day:14,npc:'reina',description:'Ancient Pokémon and fossil strategies.'},
-  {set:'base4',price:30,day:22,npc:'camila',description:'Dark evolutions and mischievous disruption.'},
+  {set:'base4',price:28,day:17,npc:'hana',description:'Classic reprints for familiar strategies.'},
+  {set:'base5',price:30,day:22,npc:'camila',description:'Dark evolutions and mischievous disruption.'},
   {set:'gym1',price:35,day:33,npc:'hana',cup:'neighborhood',description:'Leader Pokémon with their own tactics.'},
   {set:'gym2',price:38,day:43,npc:'akari',cup:'neighborhood',description:'Gym battles and signature strategies.'},
   {set:'neo1',price:40,day:48,npc:'akari',cup:'regional',description:'Johto discoveries and evolving teams.'},
@@ -42,7 +44,7 @@
   {set:'neo4',price:55,day:80,npc:'kaede',cup:'championship',description:'High-stakes cards for the season finale.'}
  ]);
 
- const CHARACTER_SETS=Object.freeze({hana:'base1',reina:'base3',shiori:'neo2',yuna:'base2',akari:'neo1',camila:'base4',marina:'neo3',kaede:'neo4',jinx:'neo4',luna:'neo3'});
+ const CHARACTER_SETS=Object.freeze({hana:'base1',reina:'base3',shiori:'neo2',yuna:'base2',akari:'neo1',camila:'base5',marina:'neo3',kaede:'neo4',jinx:'neo4',luna:'neo3'});
  const ENERGY=new Set(['base1-96','base1-97','base1-98','base1-99','base1-100','base1-101','base1-102']);
  const allAllowed=new Set([...starters.flatMap(s=>s.cards),...upgrade,...Object.keys(SETS).flatMap(set=>Array.from({length:SETS[set].size},(_,i)=>set+'-'+(i+1)))]);
  const rank=ids=>Object.fromEntries([...new Set(ids)].map(id=>[id,ids.filter(x=>x===id).length]));
