@@ -31,7 +31,7 @@ test('riverside beach scene is reachable in the existing park, not a nonexistent
  const s=state({location:'park',day:22,slot:1});
  assert.deepEqual(CG.record(s,'before_duel','marina').map(x=>x.id),['marina_riverside_predue']);
  const hang=CG.record(s,'hangout','marina').map(x=>x.id);
- assert.ok(hang.includes('marina_beach_towel'));
+ assert.ok(!hang.includes('marina_beach_towel'));
  assert.ok(hang.includes('marina_sunset_cards'));
 });
 test('post-arrival character is never unlocked before her established town entry',()=>{
@@ -45,9 +45,10 @@ test('social, special and before-duel moments are not granted by unrelated trigg
  const s=state({location:'arcade',slot:2,day:25});
  assert.equal(CG.record(s,'meet','yuna').length,1);
  const duel=CG.record(s,'before_duel','yuna');assert.equal(duel.length,1);
- const hang=CG.record(s,'hangout','yuna');assert.equal(hang.length,2);
+ const hang=CG.record(s,'hangout','yuna');assert.equal(hang.length,1);
  assert.deepEqual(CG.record(s,'after_duel','yuna'),[]);
  assert.deepEqual(CG.record(s,'appointment','yuna'),[]);
+ assert.deepEqual(CG.record(s,'situation','yuna'),[],'cannot unlock special art before the event resolves');
 });
 test('locked gallery reveals no titles or image paths and cannot mark views',()=>{
  const s=state({relationships:{hana:{affection:0}}});
@@ -85,4 +86,15 @@ test('only known unlocked images can be displayed; invalid seasons and negative 
 test('the manifest is ready for the art agent with exact uniquely addressed images',()=>{
  const paths=CG.catalog.flatMap(x=>[x.path,x.thumb]);assert.equal(new Set(paths).size,64);
  for(const path of paths)assert.match(path,/^\/rpg-assets\/events\/cg\/season01\/(?:thumbs\/)?[a-z0-9_]+\.webp$/);
+});
+
+test('special CG is exclusive to a verified, completed G5 situation event',()=>{
+ const s=state({day:20,slot:1,location:'park'});
+ assert.deepEqual(CG.record(s,'hangout','marina').map(x=>x.id),['marina_sunset_cards']);
+ assert.deepEqual(CG.record(s,'situation','marina',{eventId:'marina_beach_towel'}),[]);
+ s.situationDone={marina_beach_towel:{day:20,slot:1,choice:0}};
+ const unlocked=CG.record(s,'situation','marina',{eventId:'marina_beach_towel'});
+ assert.deepEqual(unlocked.map(x=>x.id),['marina_beach_towel']);
+ assert.deepEqual(CG.record(s,'situation','marina',{eventId:'marina_beach_towel'}),[]);
+ assert.equal(CG.gallery(s,{character:'marina'}).filter(x=>x.unlocked).length,2);
 });
