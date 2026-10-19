@@ -28,7 +28,7 @@ for(const [id,look] of Object.entries({...PACK.looks,...SIDE.looks}))if(cast[id]
 const eventCards=[{day:7,slot:1,place:'arcade',title:'Arcade Friendly Cup',reward:7},{day:14,slot:1,place:'center',title:'Club Exhibition',reward:9},{day:21,slot:2,place:'shop',title:'Card Shop Night',reward:8},{day:30,slot:1,place:'center',title:'Neighborhood Cup',reward:15},{day:42,slot:1,place:'arcade',title:'Open Challenge',reward:10},{day:60,slot:1,place:'center',title:'Regional Qualifier',reward:22},{day:75,slot:2,place:'shop',title:'Final Practice Meet',reward:12},{day:88,slot:1,place:'center',title:'Championship Opening',reward:20},{day:90,slot:1,place:'center',title:'Championship Finale Exhibition',reward:25}];
 
 
-function eligibleStories(){return STORY.available(state);}
+function eligibleStories(){return STORY.available(state).filter(e=>!e.evergreen||currentPeople().includes(e.npc));}
 function storyDialogueLines(id){const lines=STORY.linesFor(state,id);return RPGD?.storyLines(id,lines)||lines;}
 function startStory(id){
  if(state.activeSituation||state.activeSideQuest||state.activeStory||state.activeEncounter||state.activeArc||state.pendingDuel)return;
@@ -1404,14 +1404,19 @@ function render(){
   const avatar=document.createElement('span');avatar.className='person-avatar';avatar.append(makeAvatar(id));
   const label=document.createElement('span');label.className='person-info';
   const name=document.createElement('strong');name.textContent=c.name;const sub=document.createElement('small');sub.textContent=c.style;
-  label.append(name,sub);b.append(avatar,label);b.onclick=()=>selectPerson(id);$('people').append(b);
+  const bond=BONDS.progress(state,id,BOND_PLAN),chapter=document.createElement('small');
+  chapter.className='character-chapter-progress';chapter.textContent='♥ Character chapters '+bond.completed+' / '+bond.total+(state.bondTrials?.[id]?' · Personal challenge won':'');
+  label.append(name,sub,chapter);b.append(avatar,label);b.onclick=()=>selectPerson(id);$('people').append(b);
  }
  renderRpgCast(people,locked,shown,portraitId);
  portraitRoot.hidden=state.location!=='home'&&(people.length>0||!!portraitId);
  $('storyEvents').replaceChildren();const stories=eligibleStories();
  for(const e of stories){
   const b=document.createElement('button');b.className='event-btn';b.disabled=locked;b.textContent='✦  '+e.title+' · ⏳ 1 period';
-  const small=document.createElement('small');small.textContent=cast[e.npc].name+' · limited-time encounter';b.append(small);b.onclick=()=>startStory(e.id);$('storyEvents').append(b);
+  const chapter=BOND_PLAN.byEvent[e.id];
+  const small=document.createElement('small');
+  small.textContent=cast[e.npc].name+(chapter?' · Bond chapter '+chapter.chapter+' / 4':'')+(e.evergreen?' · available until season end':' · limited-time encounter');
+  b.append(small);b.onclick=()=>startStory(e.id);$('storyEvents').append(b);
  }
  const personalEpisodes=ARC.available(state,currentPeople());
  for(const episode of personalEpisodes){
