@@ -1,0 +1,157 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Neo Harbor story dialogue v1",
+  "type": "object",
+  "required": [
+    "schemaVersion",
+    "characterId",
+    "events"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "const": 1
+    },
+    "characterId": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_]{1,39}$"
+    },
+    "events": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "title",
+          "npc",
+          "start",
+          "end",
+          "place",
+          "slot",
+          "minBond",
+          "lines",
+          "choices"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9_]{1,39}$"
+          },
+          "title": {
+            "type": "string",
+            "minLength": 1
+          },
+          "npc": {
+            "type": "string"
+          },
+          "start": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 90
+          },
+          "end": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 90
+          },
+          "place": {
+            "enum": [
+              "shop",
+              "arcade",
+              "park",
+              "cafe",
+              "center",
+              "library"
+            ]
+          },
+          "slot": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 2
+          },
+          "minBond": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "prerequisite": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "participants": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "lines": {
+            "type": "array",
+            "minItems": 3,
+            "items": {
+              "type": "object",
+              "required": [
+                "speaker",
+                "text"
+              ],
+              "properties": {
+                "speaker": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "text": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              }
+            }
+          },
+          "choices": {
+            "type": "array",
+            "minItems": 2,
+            "items": {
+              "type": "object",
+              "required": [
+                "label",
+                "reply",
+                "kind",
+                "flag",
+                "delta"
+              ],
+              "properties": {
+                "label": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "reply": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "kind": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "flag": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "delta": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "number"
+                  }
+                }
+              }
+            }
+          },
+          "openingByFlag": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        }
+      }
+    }
+  }
+}
