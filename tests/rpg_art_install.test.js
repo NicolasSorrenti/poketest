@@ -6,7 +6,7 @@ const os = require('node:os');
 const path = require('node:path');
 const crypto = require('node:crypto');
 const zlib = require('node:zlib');
-const {install,parseZip,crc32,ARCHIVE,EXPECTED_SHA256}=require('../scripts/install-rpg-art');
+const {install,installG5,parseZip,crc32,ARCHIVE,EXPECTED_SHA256,G5_ARCHIVE,G5_EXPECTED_SHA256}=require('../scripts/install-rpg-art');
 function zipEntries(entries) {
   const locals=[],central=[];let offset=0;
   for(const [name,value] of entries){
@@ -79,4 +79,22 @@ test('supporting NPC portraits and guest manifest are permitted, but arbitrary r
  assert.equal(result.installed,5);
  assert.equal(fs.readFileSync(path.join(root,'rpg-assets/jun.png'),'utf8'),'image test data');
  assert.throws(()=>parseZip(zipEntries([['rpg-assets/unrelated.png','unsafe']])),/unexpected file/);
+}));
+
+test('optional G5 situation CG pack installs after the base and is safe to run twice',()=>withRepo(root=>{
+  assert.equal(installG5({root}).status,'missing');
+  const bytes=zipEntries([
+    ['rpg-assets/events/cg/season01/akari_notes_whirl.webp','sample full image'],
+    ['rpg-assets/events/cg/season01/thumbs/akari_notes_whirl.webp','sample thumb'],
+    ['rpg-assets/events/cg/season01/g5-art-manifest.json','{}']
+  ]);
+  const dest=path.join(root,G5_ARCHIVE);
+  fs.mkdirSync(path.dirname(dest),{recursive:true});
+  fs.writeFileSync(dest,bytes);
+  const first=installG5({root,expectedSha:sha(bytes)});
+  assert.equal(first.installed,3);
+  assert.equal(installG5({root,expectedSha:sha(bytes)}).skipped,3);
+  assert.throws(()=>installG5({root,expectedSha:'0'.repeat(64)}),/SHA-256/);
+  assert.match(G5_ARCHIVE,/^asset-packs\\\/.*\\.zip$/);
+  assert.match(G5_EXPECTED_SHA256,/^[a-f0-9]{64}$/);
 }));
