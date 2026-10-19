@@ -35,22 +35,22 @@ test('valid swaps preserve exactly 60 cards and save as separate editable draft'
  C.save(s);assert.ok(s.deckJourney.deck.includes(newCard[0]));assert.equal(s.deckJourney.draft,null);
  assert.equal(C.check(s.deckJourney.deck,s.deckJourney.owned).valid,true);
 });
-test('winning earns a five-card booster, losing cannot farm rewards',()=>{
+test('winning earns a ten-card booster, losing cannot farm rewards',()=>{
  const s=setup();C.choose(s,'tidal_circuit');
  const before=Object.values(s.deckJourney.owned).reduce((a,v)=>a+v,0);
  assert.equal(C.reward(s,false),null);assert.equal(s.deckJourney.rewards,0);
- const win=C.reward(s,true);assert.equal(win.length,5);assert.equal(s.deckJourney.rewards,1);
- assert.equal(Object.values(s.deckJourney.owned).reduce((a,v)=>a+v,0),before+5);
+ const win=C.reward(s,true);assert.equal(win.length,10);assert.equal(s.deckJourney.rewards,1);
+ assert.equal(Object.values(s.deckJourney.owned).reduce((a,v)=>a+v,0),before+10);
  assert.deepEqual(s.deckJourney.lastPack.cards,win);
  assert.equal(s.deckJourney.lastPack.source,'win');assert.equal(s.deckJourney.lastPack.opened,false);
  const again=C.reward(s,false);assert.equal(again,null);assert.equal(s.deckJourney.rewards,1);
 });
-test('shop packs spend 20 credits for exactly five owned cards; they cannot buy elsewhere or without funds',()=>{
+test('shop packs spend 20 credits for exactly ten owned cards; they cannot buy elsewhere or without funds',()=>{
  const s=setup();C.choose(s,'mind_and_muscle');
  const before=Object.values(s.deckJourney.owned).reduce((a,v)=>a+v,0);
- const cards=C.buyPack(s);assert.equal(cards.length,5);assert.equal(s.credits,60);assert.equal(s.deckJourney.packs,1);
- assert.equal(Object.values(s.deckJourney.owned).reduce((a,v)=>a+v,0),before+5);
- assert.equal(s.deckJourney.lastPack.source,'shop');assert.equal(s.deckJourney.lastPack.cards.length,5);
+ const cards=C.buyPack(s);assert.equal(cards.length,10);assert.equal(s.credits,60);assert.equal(s.deckJourney.packs,1);
+ assert.equal(Object.values(s.deckJourney.owned).reduce((a,v)=>a+v,0),before+10);
+ assert.equal(s.deckJourney.lastPack.source,'shop');assert.equal(s.deckJourney.lastPack.cards.length,10);
  s.location='park';const original=JSON.stringify(s);
  assert.throws(()=>C.buyPack(s),/card shop/);assert.equal(JSON.stringify(s),original);
  s.location='shop';s.credits=19;assert.throws(()=>C.buyPack(s),/20 credits/);
@@ -81,7 +81,7 @@ test('dedicated deck studio permits incomplete drafts but never saves an illegal
  const s=setup();C.choose(s,'tidal_circuit');
  const before=[...s.deckJourney.deck];const id=before[0];
  const draft=C.edit(s,id,-1);
- assert.equal(draft.length,59);assert.equal(s.deckJourney.deck.length,60);
+ assert.equal(draft.length,109);assert.equal(s.deckJourney.deck.length,60);
  assert.equal(C.check(draft,s.deckJourney.owned).valid,false);
  assert.throws(()=>C.save(s),/60 cards/);
  const unchanged=C.edit(s,id,+1);
@@ -98,11 +98,31 @@ test('deck studio strictly enforces ownership, available copies and Basic Pokém
  assert.throws(()=>C.edit(s,'base1-88',-1),/not in your deck/);
  const b=JSON.stringify(s.deckJourney.deck);assert.equal(JSON.stringify(s.deckJourney.deck),b);
 });
-test('unopened five-card booster persists on reload until player views it',()=>{
+test('unopened ten-card booster persists on reload until player views it',()=>{
  const s=setup();C.choose(s,'ember_garden');C.reward(s,true);
  const before=JSON.stringify(s.deckJourney);
  const reloaded=JSON.parse(JSON.stringify(s));C.hydrate(reloaded);
  assert.equal(JSON.stringify(reloaded.deckJourney),before);
  reloaded.deckJourney.lastPack.opened=true;C.hydrate(reloaded);
  assert.equal(reloaded.deckJourney.lastPack.opened,true);
+});
+
+test('character sets select random 10-card packs with a guaranteed rare and energy',()=>{
+ const s=setup();C.choose(s,'ember_garden');
+ for(const [npc,set] of Object.entries(C.CHARACTER_SETS)){
+  const ids=C.reward(s,true,npc);
+  assert.equal(ids.length,10);
+  assert.equal(s.deckJourney.lastPack.set,set);
+  assert.equal(s.deckJourney.lastPack.giver,npc);
+  assert.ok(ids.some(id=>C.ENERGY.has(id)));
+  assert.ok(ids.some(id=>id.startsWith(set+'-')&&Number(id.split('-')[1])<=C.SETS[set].rares));
+ }
+ const a=C.randomPack('base3',()=>0),b=C.randomPack('base3',()=>0.75);
+ assert.notDeepEqual(a,b,'different random outcomes must produce different packs');
+});
+test('new expanded collection cards survive save hydration',()=>{
+ const s=setup();C.choose(s,'tidal_circuit');C.reward(s,true,'kaede',()=>0.25);
+ const restored=JSON.parse(JSON.stringify(s));C.hydrate(restored);
+ assert.deepEqual(restored.deckJourney.lastPack,s.deckJourney.lastPack);
+ assert.ok(Object.keys(restored.deckJourney.owned).some(id=>id.startsWith('neo4-')));
 });

@@ -38,9 +38,8 @@
    if(!state?.deckJourney?.starter)throw Error('Start a campaign and choose your starter deck from Neo Harbor first.');
    if(state.pendingDuel)throw Error('Finish your current duel before editing. Your active duel uses a locked deck snapshot.');
    Core.hydrate(state);
-   const res=await fetch('/cards/base1.json');
-   if(!res.ok)throw Error('Cannot load your historical card library.');
-   const all=await res.json();
+   const libraries=await Promise.all(Object.keys(Core.SETS).map(async set=>{const res=await fetch('/cards/'+set+'.json');if(!res.ok)throw Error('Cannot load '+set+' card library.');return res.json();}));
+   const all=libraries.flat();
    if(!Array.isArray(all))throw Error('The historical card library could not be read.');
    const index=new Map(all.filter(c=>c?.id).map(c=>[c.id,c]));
    catalog=Object.keys(owned()).filter(id=>owned()[id]>0).map(id=>
