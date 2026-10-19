@@ -71,7 +71,7 @@
  async function start(){if(busy)return;busy=true;$('startupError').textContent='';try{
   const response=await api('create',{method:'POST',body:JSON.stringify({deck:$('deck').value,opponent:$('opponent').value,...($('deck').value==='custom'?{customDeck:JSON.parse(rpgMode?sessionStorage.getItem('neoRpgDeck:'+rpgDuelId)||'null':localStorage.getItem('neoCampusCustomGymDeck')||'null')}: {})})});
   feedback.reset();opponentActivity.clear();combat.reset();reactions?.reset();token=response.token;sessionStorage.setItem(rpgKey,token);current=response;
-  selectedHand=null;targetMode=null;decisionSelection.clear();handVisible=true;powersOpen=false;logOpen=false;lastCoinSeq=null;lastKoMessage="";render();
+  selectedHand=null;targetMode=null;decisionSelection.clear();handVisible=true;powersOpen=false;logOpen=false;lastCoinSeq=null;lastKoMessage="";setHandVisible(true);render();
  }catch(e){$('startupError').textContent=e.message;}finally{busy=false;}}
 
  function setHandVisible(visible){
@@ -171,7 +171,7 @@
   $('choiceModal').classList.add('hidden');$('choiceModal').setAttribute('aria-hidden','true');
   $('fieldChoiceBar').classList.add('hidden');modalDecisionId=null;lastFieldDecisionId=null;
  }
- function newDuel(){clearChoiceUi();opponentActivity.clear();combat.reset();reactions?.reset();feedback.reset();preview.hide();token=null;current=null;selectedHand=null;targetMode=null;handVisible=true;powersOpen=false;logOpen=false;document.body.classList.remove('duel-active','cpu-match');sessionStorage.removeItem(rpgKey);render();}
+ function newDuel(){clearChoiceUi();opponentActivity.clear();combat.reset();reactions?.reset();feedback.reset();preview.hide();token=null;current=null;selectedHand=null;targetMode=null;handVisible=true;powersOpen=false;logOpen=false;document.body.classList.remove('duel-active','cpu-match');sessionStorage.removeItem(rpgKey);setHandVisible(true);render();}
  function setTarget(type,payload,title,benchOnly=false){preview.hide();targetMode={type,payload,title,benchOnly};render();}
  function cancelTarget(){targetMode=null;selectedHand=null;preview.hide();render();}
  function pokemonNode(u,side,slot){
