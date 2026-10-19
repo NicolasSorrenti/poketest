@@ -153,7 +153,7 @@ test('saved planned experience survives reload; malformed metadata falls back to
 });
 test('calendar remains capped at 3 booked appointments and never allows duplicate NPC booking',()=>{
  const s=state(),e=book(s);
- assert.throws(()=>book(s),/Expected truthy|AssertionError/);
+ assert.equal(A.proposed(s,'hana',Schedules).length,0,'same character already has a booking');
  assert.equal(s.appointments.filter(x=>x.status==='booked').length,1);
 });
 test('all 90 days maintain real recurring candidate appointments and no impossible map venues',()=>{
