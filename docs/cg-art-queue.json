@@ -95,7 +95,7 @@
       "character": "hana",
       "id": "hana_apron_mixup",
       "category": "special",
-      "trigger": "hangout",
+      "trigger": "situation",
       "place": "shop",
       "minAffection": 5,
       "startDay": 9,
@@ -111,7 +111,8 @@
       "fanservice": 2,
       "path": "/rpg-assets/events/cg/season01/hana_apron_mixup.webp",
       "thumb": "/rpg-assets/events/cg/season01/thumbs/hana_apron_mixup.webp",
-      "dialogueSafe": "Bottom 20% clear for dialogue UI"
+      "dialogueSafe": "Bottom 20% clear for dialogue UI",
+      "situationId": "hana_apron_mixup"
     },
     {
       "character": "reina",
@@ -183,7 +184,7 @@
       "character": "reina",
       "id": "reina_rain_catch",
       "category": "special",
-      "trigger": "hangout",
+      "trigger": "situation",
       "place": "center",
       "minAffection": 5,
       "startDay": 21,
@@ -199,7 +200,8 @@
       "fanservice": 2,
       "path": "/rpg-assets/events/cg/season01/reina_rain_catch.webp",
       "thumb": "/rpg-assets/events/cg/season01/thumbs/reina_rain_catch.webp",
-      "dialogueSafe": "Bottom 20% clear for dialogue UI"
+      "dialogueSafe": "Bottom 20% clear for dialogue UI",
+      "situationId": "reina_rain_catch"
     },
     {
       "character": "shiori",
@@ -271,7 +273,7 @@
       "character": "shiori",
       "id": "shiori_bookstack_wobble",
       "category": "special",
-      "trigger": "hangout",
+      "trigger": "situation",
       "place": "library",
       "minAffection": 5,
       "startDay": 18,
@@ -287,7 +289,8 @@
       "fanservice": 2,
       "path": "/rpg-assets/events/cg/season01/shiori_bookstack_wobble.webp",
       "thumb": "/rpg-assets/events/cg/season01/thumbs/shiori_bookstack_wobble.webp",
-      "dialogueSafe": "Bottom 20% clear for dialogue UI"
+      "dialogueSafe": "Bottom 20% clear for dialogue UI",
+      "situationId": "shiori_bookstack_wobble"
     },
     {
       "character": "yuna",
@@ -359,7 +362,7 @@
       "character": "yuna",
       "id": "yuna_card_scatter",
       "category": "special",
-      "trigger": "hangout",
+      "trigger": "situation",
       "place": "arcade",
       "minAffection": 5,
       "startDay": 13,
@@ -375,7 +378,8 @@
       "fanservice": 2,
       "path": "/rpg-assets/events/cg/season01/yuna_card_scatter.webp",
       "thumb": "/rpg-assets/events/cg/season01/thumbs/yuna_card_scatter.webp",
-      "dialogueSafe": "Bottom 20% clear for dialogue UI"
+      "dialogueSafe": "Bottom 20% clear for dialogue UI",
+      "situationId": "yuna_card_scatter"
     },
     {
       "character": "akari",
@@ -447,7 +451,7 @@
       "character": "akari",
       "id": "akari_notes_whirl",
       "category": "special",
-      "trigger": "hangout",
+      "trigger": "situation",
       "place": "library",
       "minAffection": 5,
       "startDay": 15,
@@ -463,7 +467,8 @@
       "fanservice": 2,
       "path": "/rpg-assets/events/cg/season01/akari_notes_whirl.webp",
       "thumb": "/rpg-assets/events/cg/season01/thumbs/akari_notes_whirl.webp",
-      "dialogueSafe": "Bottom 20% clear for dialogue UI"
+      "dialogueSafe": "Bottom 20% clear for dialogue UI",
+      "situationId": "akari_notes_whirl"
     },
     {
       "character": "camila",
@@ -535,7 +540,7 @@
       "character": "camila",
       "id": "camila_windy_receipts",
       "category": "special",
-      "trigger": "hangout",
+      "trigger": "situation",
       "place": "cafe",
       "minAffection": 5,
       "startDay": 14,
@@ -551,7 +556,8 @@
       "fanservice": 2,
       "path": "/rpg-assets/events/cg/season01/camila_windy_receipts.webp",
       "thumb": "/rpg-assets/events/cg/season01/thumbs/camila_windy_receipts.webp",
-      "dialogueSafe": "Bottom 20% clear for dialogue UI"
+      "dialogueSafe": "Bottom 20% clear for dialogue UI",
+      "situationId": "camila_windy_receipts"
     },
     {
       "character": "marina",
@@ -623,7 +629,7 @@
       "character": "marina",
       "id": "marina_beach_towel",
       "category": "special",
-      "trigger": "hangout",
+      "trigger": "situation",
       "place": "park",
       "minAffection": 5,
       "startDay": 17,
@@ -639,7 +645,8 @@
       "fanservice": 2,
       "path": "/rpg-assets/events/cg/season01/marina_beach_towel.webp",
       "thumb": "/rpg-assets/events/cg/season01/thumbs/marina_beach_towel.webp",
-      "dialogueSafe": "Bottom 20% clear for dialogue UI"
+      "dialogueSafe": "Bottom 20% clear for dialogue UI",
+      "situationId": "marina_beach_towel"
     },
     {
       "character": "kaede",
@@ -711,7 +718,7 @@
       "character": "kaede",
       "id": "kaede_jacket_prank",
       "category": "special",
-      "trigger": "hangout",
+      "trigger": "situation",
       "place": "arcade",
       "minAffection": 5,
       "startDay": 49,
@@ -727,7 +734,8 @@
       "fanservice": 2,
       "path": "/rpg-assets/events/cg/season01/kaede_jacket_prank.webp",
       "thumb": "/rpg-assets/events/cg/season01/thumbs/kaede_jacket_prank.webp",
-      "dialogueSafe": "Bottom 20% clear for dialogue UI"
+      "dialogueSafe": "Bottom 20% clear for dialogue UI",
+      "situationId": "kaede_jacket_prank"
     }
   ]
 }

@@ -7,14 +7,14 @@
  if(root)root.NeoRpgDailyPlanner=api;
 })(typeof window!=='undefined'?window:null,function(){
  const periodNames=['morning','afternoon','evening'];
- const locked=s=>!!(s.pendingDuel||s.activeStory||s.activeSideQuest||s.activeEncounter||s.activeArc);
+ const locked=s=>!!(s.pendingDuel||s.activeStory||s.activeSideQuest||s.activeEncounter||s.activeArc||s.activeSituation);
  const stamp=(day,slot)=>(day-1)*3+slot;
  const safeName=(cast,id)=>cast[id]?.name||id.replace(/[_-]/g,' ').replace(/\b\w/g,x=>x.toUpperCase());
  const placeName=(places,id)=>places[id]?.[0]||id;
  function recommend(state,api={},options={}){
   if(!state||!Number.isInteger(state.day)||state.day<1||state.day>90||!Number.isInteger(state.slot)||state.slot<0||state.slot>2)return [];
   if(locked(state))return [];
-  const {schedules,appointments,story,side,world,tournaments,intentions,arc,social,cast={},places={},eventCards=[]}=api;
+  const {schedules,appointments,story,side,world,tournaments,intentions,arc,social,situations,cast={},places={},eventCards=[]}=api;
   if(!schedules||!appointments||!story||!side||!world||!tournaments||!intentions)throw Error('Missing RPG planner dependencies');
   // Modules normalize/hydrate their inputs. Only pass a clone: rendering the planner
   // must never change live campaign state, save data, or the authored story schedule.
@@ -62,6 +62,12 @@
   // period. A late/expired opportunity is never advertised as actionable.
   for(const place of validPlaces){
    const {draft,present}=snapshot(place);
+   if(situations)for(const e of situations.available(draft,present)){
+    add({kind:'situation',key:e.id,place,priority:86+(focus==='social'?13:0),
+     title:'Unexpected moment with '+safeName(cast,e.npc),
+     detail:'A playful, one-time encounter is happening '+(place===s.location?'here':'at '+placeName(places,place))+'. Costs '+e.focusCost+' focus and one period.',
+     focusId:'situationEvents'});
+   }
    for(const e of story.available(draft,place)){
     add({kind:'story',key:e.id,place,priority:82+(e.end===s.day?18:0)+(focus==='social'?13:0),
      title:'Personal story with '+safeName(cast,e.npc),
@@ -154,7 +160,7 @@
   // urgency. Never suppress a time-critical appointment or deadline.
   candidates.sort((a,b)=>b.priority-a.priority||a.day-b.day||a.slot-b.slot||a.id.localeCompare(b.id));
   const selected=[],families=new Set();
-  const family=c=>c.kind==='story'||c.kind==='story_soon'||c.kind==='sidequest'||c.kind==='sidequest_soon'||c.kind==='arc'||c.kind==='arc_soon'||c.kind==='social'?'social':c.kind==='tournament'||c.kind==='event'||c.kind==='tournament_soon'?'duel':c.kind;
+  const family=c=>c.kind==='story'||c.kind==='story_soon'||c.kind==='sidequest'||c.kind==='sidequest_soon'||c.kind==='arc'||c.kind==='arc_soon'||c.kind==='social'||c.kind==='situation'?'social':c.kind==='tournament'||c.kind==='event'||c.kind==='tournament_soon'?'duel':c.kind;
   for(const c of candidates){
    const fam=family(c);
    if(families.has(fam)&&c.priority<100)continue;

@@ -2,7 +2,7 @@
 const test=require('node:test');
 const assert=require('node:assert/strict');
 const fs=require('node:fs'),path=require('node:path');
-const Pack=require('../rpg_narrative_pack'),Side=require('../rpg_side_quests'),Story=require('../rpg_story'),Schedules=require('../rpg_schedules'),World=require('../rpg_world'),Arc=require('../rpg_rival_arc'),Tournaments=require('../rpg_tournaments'),Epilogue=require('../rpg_epilogue'),Appointments=require('../rpg_appointments'),Intentions=require('../rpg_intentions'),CG=require('../rpg_cg_gallery'),Planner=require('../rpg_daily_planner'),Social=require('../rpg_social_activities'),Dates=require('../rpg_planned_dates'),Bridge=require('../rpg_duel_bridge'),Pre=require('../rpg_preduel');
+const Pack=require('../rpg_narrative_pack'),Side=require('../rpg_side_quests'),Story=require('../rpg_story'),Schedules=require('../rpg_schedules'),World=require('../rpg_world'),Arc=require('../rpg_rival_arc'),Tournaments=require('../rpg_tournaments'),Epilogue=require('../rpg_epilogue'),Appointments=require('../rpg_appointments'),Intentions=require('../rpg_intentions'),CG=require('../rpg_cg_gallery'),Planner=require('../rpg_daily_planner'),Social=require('../rpg_social_activities'),Dates=require('../rpg_planned_dates'),Bridge=require('../rpg_duel_bridge'),Pre=require('../rpg_preduel'),Situations=require('../rpg_situations');
 const js=fs.readFileSync(path.join(__dirname,'..','rpg.js'),'utf8');
 const html=fs.readFileSync(path.join(__dirname,'..','rpg.html'),'utf8');
 const ids=[...html.matchAll(/id="([^"]+)"/g)].map(x=>x[1]);
@@ -27,7 +27,7 @@ function launch(initial,approve=false){
  const doc={getElementById(id){if(!elements[id])throw Error('Missing '+id);return elements[id];},
   createElement(tag){return new FakeNode(tag);},body:new FakeNode('body'),
   addEventListener(name,cb){listeners['document:'+name]=cb;}};
- const win={NeoRpgNarrativePack:Pack,NeoRpgSideQuests:Side,NeoHarborStory:Story,NeoRpgSchedules:Schedules,NeoRpgWorld:World,NeoRpgRivalArc:Arc,NeoRpgTournaments:Tournaments,NeoRpgEpilogue:Epilogue,NeoRpgAppointments:Appointments,NeoRpgIntentions:Intentions,NeoRpgCGGallery:CG,NeoRpgDailyPlanner:Planner,NeoRpgSocialActivities:Social,NeoRpgPlannedDates:Dates,NeoRpgPreDuel:Pre,NeoRpgDuelBridge:Bridge,
+ const win={NeoRpgNarrativePack:Pack,NeoRpgSideQuests:Side,NeoHarborStory:Story,NeoRpgSchedules:Schedules,NeoRpgWorld:World,NeoRpgRivalArc:Arc,NeoRpgTournaments:Tournaments,NeoRpgEpilogue:Epilogue,NeoRpgAppointments:Appointments,NeoRpgIntentions:Intentions,NeoRpgCGGallery:CG,NeoRpgDailyPlanner:Planner,NeoRpgSocialActivities:Social,NeoRpgPlannedDates:Dates,NeoRpgPreDuel:Pre,NeoRpgSituations:Situations,NeoRpgDuelBridge:Bridge,
   addEventListener(name,cb){listeners[name]=cb;}};
  const local={getItem(k){return saved[k]||null;},setItem(k,v){saved[k]=String(v);}};
  const session={removeItem(){}};
@@ -435,14 +435,14 @@ test('a genuine duel may unlock pre-duel art but still opens the authoritative i
  assert.equal(r.elements.duel.hidden,false);
  assert.match(r.elements.battle.src,/classic_live\.html/);
 });
-test('eligible riverside hangout unlocks special summer CG, then saves it after day rollover',()=>{
+test('ordinary riverside hangout does not grant situation-exclusive summer CG',()=>{
  const r=launch({day:20,slot:1,location:'park',relationships:{marina:{affection:7,trust:3}},bonds:{marina:{affection:7,trust:3,duels:0}}});
  const person=r.elements.people.children.find(x=>x.children[1]?.children[0]?.textContent==='Marina Aoki');
  assert.ok(person);person.onclick();
  r.elements.choices.children.find(x=>x.textContent.includes('Spend time together')).onclick();
- assert.ok(r.state().cgUnlocked.marina_beach_towel);
+ assert.equal(r.state().cgUnlocked.marina_beach_towel,undefined);
  const saved=launch(r.state()).state();
- assert.ok(saved.cgUnlocked.marina_beach_towel);
+ assert.equal(saved.cgUnlocked.marina_beach_towel,undefined);
  assert.ok(!saved.pendingDuel);
 });
 
@@ -686,4 +686,52 @@ test('G4: a migrated pending duel from an older save resumes directly, without a
  assert.equal(restored.state().pendingDuel.preview.phase,'launched');
  assert.equal(restored.elements.preDuelDialog.open,undefined);
  assert.match(restored.elements.battle.src,/classic_live\.html/);
+});
+
+test('G5: rare encounter offers real SFW scene, holds time during dialogue, then unlocks its exact CG',()=>{
+ const event=Situations.events.find(e=>e.npc==='hana');
+ const day=Array.from({length:event.end-event.start+1},(_,i)=>event.start+i)
+  .find(d=>Schedules.locationFor(event.npc,d,event.slot)===event.place&&Situations.chance(event,d,event.slot));
+ assert.ok(day,'event must have a scheduled opportunity');
+ const r=launch({day,slot:event.slot,location:event.place,focus:75,
+  relationships:{hana:{affection:8,trust:4}},bonds:{hana:{affection:8,trust:4,duels:0}}});
+ const entry=r.elements.situationEvents.children.find(x=>x.textContent.includes(event.title)||x.children[0]?.textContent.includes(event.title));
+ assert.ok(entry,'the optional G5 event should appear only when eligible');
+ assert.equal(r.state().cgUnlocked?.[event.id],undefined);
+ entry.onclick();
+ assert.equal(r.state().activeSituation.id,event.id);
+ assert.equal(r.state().day,day);assert.equal(r.state().focus,75);
+ assert.equal(r.elements.quickNext.disabled,true,'the ongoing VN scene locks other time actions');
+ const afterBegin=launch(r.state());
+ assert.equal(afterBegin.state().activeSituation.phase,'choice');
+ afterBegin.elements.choices.children[0].onclick();
+ assert.equal(afterBegin.state().activeSituation.phase,'response');
+ const beforeFinish=launch(afterBegin.state());
+ assert.equal(beforeFinish.state().activeSituation.choice,0);
+ beforeFinish.elements.choices.children[0].onclick();
+ const result=beforeFinish.state();
+ assert.equal(result.activeSituation,null);
+ assert.equal(result.situationDone[event.id].choice,0);
+ assert.equal(result.focus,69);
+ assert.equal(result.cgUnlocked[event.id].trigger,'situation');
+ assert.equal(result.hungOut[day+':hana'],true);
+ assert.equal(result.day*3+result.slot,day*3+event.slot+1);
+ const final=launch(result);
+ assert.equal(final.state().situationDone[event.id].choice,0);
+ assert.equal(final.state().cgUnlocked[event.id].trigger,'situation');
+});
+test('G5: surprising encounter can be declined without time, costs or affection progress',()=>{
+ const event=Situations.events.find(e=>e.npc==='hana');
+ const day=Array.from({length:event.end-event.start+1},(_,i)=>event.start+i)
+  .find(d=>Schedules.locationFor(event.npc,d,event.slot)===event.place&&Situations.chance(event,d,event.slot));
+ const r=launch({day,slot:event.slot,location:event.place,focus:75,
+  relationships:{hana:{affection:7,trust:3}},bonds:{hana:{affection:7,trust:3,duels:0}}});
+ const b=r.elements.situationEvents.children.find(x=>x.children?.[0]?.textContent.includes(event.title));
+ assert.ok(b);b.onclick();
+ const quit=r.elements.choices.children.find(x=>x.textContent.includes('Not now'));
+ assert.ok(quit);quit.onclick();
+ assert.equal(r.state().activeSituation,null);
+ assert.equal(r.state().day,day);assert.equal(r.state().slot,event.slot);
+ assert.equal(r.state().focus,75);assert.equal(r.state().situationDone[event.id],undefined);
+ assert.equal(r.state().cgUnlocked?.[event.id],undefined);
 });
