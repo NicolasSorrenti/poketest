@@ -2,7 +2,7 @@
   "description": "RPG battle cut-in art. Existing portraits are live today; additional expression images can be supplied later.",
   "characters": {
     "reina": {
-      "default": "/rpg-assets/reina.png"
+      "default": "/rpg-assets/characters/reina/portraits/primary.png"
     },
     "hana": {
       "default": "/rpg-assets/hana.png"

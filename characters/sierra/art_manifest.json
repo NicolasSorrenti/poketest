@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "characterId": "sierra",
-  "portrait": "/rpg-assets/characters/sierra/neutral.png",
+  "portrait": "/rpg-assets/characters/sierra/portrait.png",
   "expressions": {
     "neutral": "/rpg-assets/characters/sierra/neutral.webp",
     "cool": "/rpg-assets/characters/sierra/cool.webp",
