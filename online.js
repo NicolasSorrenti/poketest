@@ -85,7 +85,26 @@
  }
 
  async function send(action){if(!current||busy||watching())return;busy=true;clearError();try{
-  const result=await api('action',{method:'POST',body:JSON.stringify({code:roomCode,revision:current.revision,command:action})});
+  const post=revision=>api('action',{method:'POST',body:JSON.stringify({code:roomCode,revision,command:action})});
+  let result;
+  try{result=await post(current.revision);}
+  catch(e){
+   if(!/Stale match revision/.test(e.message))throw e;
+   // Opponent setup clicks can race a local button press. Re-sync first; only
+   // retry setup actions if OUR cards and field are still exactly unchanged.
+   const old=current,fresh=await api('state?code='+encodeURIComponent(roomCode));
+   current=fresh;render();
+   const slot=old.you,prior=old.view?.players?.[slot],next=fresh.view?.players?.[slot];
+   const unchanged=old.started&&fresh.started&&old.you===fresh.you&&
+    old.view?.phase==='setup'&&fresh.view?.phase==='setup'&&
+    !old.view?.pendingDecision&&!fresh.view?.pendingDecision&&
+    JSON.stringify(prior?.hand)===JSON.stringify(next?.hand)&&
+    JSON.stringify(prior?.active)===JSON.stringify(next?.active)&&
+    JSON.stringify(prior?.bench)===JSON.stringify(next?.bench);
+   if(!unchanged||!['setup_select','setup_undo','setup_confirm'].includes(action.type))
+    throw Error('The match advanced. Your cards are updated; please choose again.');
+   result=await post(fresh.revision);
+  }
   preview.hide();current=result;if(restoreHandAfterTarget){restoreHandAfterTarget=false;setHandOpen(true);}selectedHand=null;targetMode=null;decisionSelection.clear();render();
  }catch(e){fail(e);}finally{busy=false;render();}}
  async function openRoom(kind){if(busy)return;busy=true;$('startupError').textContent='';try{
@@ -162,25 +181,31 @@
  }
 
  function renderHandFan(ids){
-  const root=$('handFan');root.replaceChildren();
-  if(!ids?.length){root.classList.add('hidden');return;}
-  root.classList.remove('hidden');
-  const shown=ids.slice(0,12),middle=(shown.length-1)/2;
-  const gap=Math.min(59,510/Math.max(1,shown.length-1));
-  shown.forEach((id,i)=>{
-   const c=card(id),el=document.createElement('div'),src=picture(id);
-   el.className='hand-fan-card';
+  const root=$('handFan'),cards=Array.isArray(ids)?ids:[];
+  // The permanent fan uses the exact same click/preview handlers as the list hand.
+  // Every card is rendered; long hands scroll instead of silently hiding cards.
+  root.replaceChildren();root.classList.toggle('hidden',!cards.length);
+  if(!cards.length)return;
+  const compact=window.innerWidth<780;
+  const cardWidth=compact?72:100;
+  const available=Math.max(190,root.clientWidth||window.innerWidth*.48);
+  const minStep=compact?38:52,maxStep=compact?48:68;
+  const gap=Math.min(maxStep,Math.max(minStep,(available-cardWidth-24)/Math.max(1,cards.length-1)));
+  const width=Math.max(available,Math.ceil(gap*(cards.length-1)+cardWidth+24));
+  const track=document.createElement('div');track.className='hand-fan-track';track.style.width=width+'px';
+  const middle=(cards.length-1)/2,setup=current.view.phase==='setup';
+  cards.forEach((id,i)=>{
+   const el=handCard(id,i,setup);
+   el.type='button';
+   el.classList.remove('handcard');el.classList.add('hand-fan-card');
    el.style.setProperty('--fan-x',((i-middle)*gap).toFixed(1)+'px');
-   el.style.setProperty('--fan-y',(Math.abs(i-middle)*5).toFixed(1)+'px');
-   el.style.setProperty('--fan-angle',((i-middle)*4.8).toFixed(1)+'deg');
+   el.style.setProperty('--fan-y',(Math.abs(i-middle)*2.6).toFixed(1)+'px');
+   el.style.setProperty('--fan-angle',(Math.max(-22,Math.min(22,(i-middle)*4.5))).toFixed(1)+'deg');
    el.style.zIndex=String(i+1);
-   el.title=c.name;
-   if(src){const img=document.createElement('img');img.src=src;img.alt='';el.append(img);}
-   else{const name=document.createElement('span');name.textContent=c.name;el.append(name);}
-   root.append(el);
+   el.title=card(id).name+' — click to play or select';
+   track.append(el);
   });
-  if(ids.length>shown.length)root.dataset.extra='+'+(ids.length-shown.length);
-  else delete root.dataset.extra;
+  root.append(track);
  }
  function pendingPrizeChoice(){const d=current?.view?.pendingDecision;return !watching()&&d?.kind==='prize-card'&&d.actor===side()?d:null;}
  function choosePrize(id){const d=pendingPrizeChoice();if(!d||busy||!d.options?.some(o=>o.id===id))return;send(command('choose',{decisionId:d.id,selected:[id]}));}
@@ -516,6 +541,7 @@
    render();setInterval(refresh,1200);
   }catch(e){$('startupError').textContent=e.message||String(e);}
  }
+ window.addEventListener('resize',()=>{if(current?.view)renderHandFan(current.view.players[side()]?.hand);});
  $('handToggle').addEventListener('click',()=>setHandOpen(!handOpen));
  $('closeHand').addEventListener('click',()=>setHandOpen(false));
  $('powersToggle').addEventListener('click',()=>setPowersOpen(!powersOpen));

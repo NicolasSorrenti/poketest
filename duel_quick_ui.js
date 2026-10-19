@@ -41,12 +41,22 @@
   const cards=(unit?.energies||[]).map(id=>({id,card:getCard(id)}));
   if(!cards.length)return '';
   const shown=cards.slice(0,6),over=Math.max(0,cards.length-shown.length);
+  const types={
+   Grass:['grass','G','GRS'],Fire:['fire','F','FIR'],Water:['water','W','WAT'],
+   Lightning:['lightning','L','LGT'],Psychic:['psychic','P','PSY'],Fighting:['fighting','F','FGT'],
+   Colorless:['colorless','C','COL'],Darkness:['darkness','D','DRK'],Metal:['metal','M','MTL'],
+   Rainbow:['rainbow','R','RNB'],Miracle:['rainbow','M','MIR'],Recycle:['recycle','R','RCY'],
+   'Double Colorless':['colorless','2','DCE'],Potion:['special','+','PTN'],
+   'Full Heal':['special','+','FHL']
+  };
   const strips=shown.map(({card:c},i)=>{
-   const image=c.images?.small;
-   const inner=typeof image==='string'&&/^https:\/\//.test(image)?`<img src="${html(image)}" loading="lazy" alt="">`:`<span>${html((c.name||'?').replace(/ Energy$/,''))}</span>`;
-   return `<span class="attached-energy" title="${html(c.name)}" style="--energy-position:${i}">${inner}</span>`;
+   const name=String(c.name||'Unknown Energy');
+   const key=name.replace(/ Energy$/,'');
+   const [type,symbol,short]=types[key]||['special',key[0]||'?',(key.slice(0,3)||'ENG').toUpperCase()];
+   return `<span class="attached-energy energy-type-${type}" title="${html(name)}" aria-label="${html(name)}" style="--energy-position:${i}"><span class="energy-symbol">${html(symbol)}</span><span class="energy-label">${html(short)}</span></span>`;
   }).join('');
-  return `<span class="energy-peeks" aria-label="${cards.length} attached Energy cards">${strips}${over?`<span class="energy-overflow">+${over}</span>`:''}</span>`;
+  const title=cards.map(({card:c})=>c.name||'Unknown Energy').join(', ');
+  return `<span class="energy-peeks" title="${html(title)}" aria-label="${cards.length} attached Energy: ${html(title)}">${strips}${over?`<span class="energy-overflow">+${over}</span>`:''}</span>`;
  }
  function makeDuelFeedback(el){
   let last=null,removeTimer=null,changes=new Map();

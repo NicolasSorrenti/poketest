@@ -165,3 +165,130 @@ body.duel-active #undoBtn:disabled{opacity:.44;cursor:not-allowed}
 }
 @media(hover:none){body.duel-active .hand-panel .hand-fan{display:none!important}}
 @media(prefers-reduced-motion:reduce){body.duel-active .hand-fan-card{transition:none}}
+
+
+/* v0.41 — reserve a permanent, playable card fan below the battle field. */
+body.duel-active #duel:not(.hidden){grid-template-rows:auto auto minmax(0,1fr) 170px}
+body.duel-active .below .main-column{height:170px;gap:7px}
+body.duel-active .below .hand-panel{flex:1 1 auto;max-width:none;min-width:165px;position:relative;isolation:isolate}
+body.duel-active .below .turn-actions-panel{flex:0 0 min(390px,36%);min-width:0;align-items:center}
+body.duel-active .below .turn-actions-panel .turn-actions{flex-wrap:wrap;justify-content:center;align-content:center;row-gap:8px}
+body.duel-active .hand-toggle{
+ position:absolute;top:3px;left:8px;z-index:24;width:auto;max-width:calc(100% - 16px);
+ min-height:0!important;height:24px;padding:2px 8px;border:1px solid #558c97;
+ background:#133b4a;gap:5px;border-radius:7px
+}
+body.duel-active .hand-toggle:hover{background:#205f6c}
+body.duel-active .hand-toggle-label{font-size:11px}
+body.duel-active .hand-toggle-label::after{content:' · List';color:#91b7c4;font-weight:600}
+body.duel-active .hand-toggle .hand-peek,body.duel-active .hand-toggle .hand-chevron{display:none}
+body.duel-active .hand-panel .hand-fan,
+body.duel-active .hand-panel:not(.tray-open):hover .hand-fan:not(.hidden),
+body.duel-active .hand-panel:not(.tray-open):focus-within .hand-fan:not(.hidden){
+ display:block;position:absolute;left:2px;right:2px;top:26px;bottom:0;width:auto;height:auto;
+ z-index:15;pointer-events:auto;overflow-x:auto;overflow-y:hidden;filter:none;
+ scrollbar-width:thin;scrollbar-color:#76bac2 transparent;
+}
+body.duel-active .hand-panel .hand-fan.hidden{display:none!important}
+body.duel-active .hand-fan::before{display:none}
+body.duel-active .hand-fan-track{height:100%;min-height:0;position:relative}
+body.duel-active .hand-fan-card{
+ position:absolute;bottom:7px;left:calc(50% - 50px);width:100px;height:126px;
+ box-sizing:border-box;min-height:0;padding:0;display:block;overflow:hidden;
+ border:2px solid #80aeb9;border-radius:8px;background:#183d57;
+ transform-origin:center 105%;
+ transform:translateX(var(--fan-x)) translateY(var(--fan-y)) rotate(var(--fan-angle));
+ transition:transform .13s ease,border-color .13s ease,box-shadow .13s ease;
+ box-shadow:0 3px 13px #000b;cursor:pointer;pointer-events:auto;
+}
+body.duel-active .hand-fan-card img{width:100%;height:100%;display:block;object-fit:fill;pointer-events:none}
+body.duel-active .hand-fan-card strong,
+body.duel-active .hand-fan-card .handcard-type{display:none}
+body.duel-active .hand-fan-card:not(:has(img)) strong{
+ display:grid;place-items:center;height:100%;max-width:none;padding:5px;
+ font-size:10px;white-space:normal;overflow-wrap:anywhere
+}
+body.duel-active .hand-fan-card:is(:hover,:focus-visible){
+ z-index:200!important;border-color:#c3ffe0;
+ transform:translateX(var(--fan-x)) translateY(-9px) rotate(0deg) scale(1.03);
+ box-shadow:0 6px 22px #000e,0 0 13px #70e5c5;
+}
+body.duel-active .hand-fan-card.selected{border-color:#ffdf71;box-shadow:0 0 15px #ffd66c}
+body.duel-active .hand-fan-card:focus-visible{outline:2px solid #ffdd65;outline-offset:2px}
+body.duel-active .hand-tray-drawer{bottom:175px}
+/* Energy is a left-side rail: recognizable types and colors, never a strip above the art. */
+body.duel-active .stage .poke{position:relative;overflow:visible}
+body.duel-active .stage .pokemon-strip{padding-left:12px}
+body.duel-active .stage .poke .pokemon-face,
+body.duel-active .stage .poke:not(:has(.energy-peeks)) .pokemon-face{margin-top:0!important}
+body.duel-active .stage .poke:has(.energy-peeks){padding-top:3px}
+body.duel-active .stage .energy-peeks{
+ position:absolute;left:-11px;top:4px;display:flex;flex-direction:column;
+ align-items:flex-start;gap:2px;height:auto;min-width:0;width:27px;z-index:6;pointer-events:none
+}
+body.duel-active .stage .attached-energy{
+ position:relative;left:auto;top:auto;width:27px;height:25px;min-width:27px;
+ padding:1px;box-sizing:border-box;display:flex;flex-direction:column;
+ align-items:center;justify-content:center;gap:0;
+ border-radius:7px;border:1px solid #edf2ee99;
+ color:white;background:#405c6a;box-shadow:0 2px 5px #000d;
+ transform:none;overflow:hidden;flex-shrink:0
+}
+body.duel-active .stage .energy-symbol{font-size:11px;font-weight:1000;line-height:12px;color:inherit;text-shadow:0 1px 1px #0008}
+body.duel-active .stage .energy-label{font-size:7px;line-height:8px;font-weight:900;letter-spacing:0;color:inherit;text-shadow:0 1px 1px #0008}
+body.duel-active .stage .energy-overflow{
+ position:relative;top:auto;right:auto;background:#d8f4f0;color:#13444b;
+ border-radius:5px;font-size:10px;padding:2px 4px;box-shadow:0 2px 4px #0009
+}
+body.duel-active .stage .energy-type-grass{background:linear-gradient(#489c42,#216d39)}
+body.duel-active .stage .energy-type-fire{background:linear-gradient(#f8874c,#ac3d1d)}
+body.duel-active .stage .energy-type-water{background:linear-gradient(#42a4e4,#14579c)}
+body.duel-active .stage .energy-type-lightning{background:linear-gradient(#f7dd51,#b48e22);color:#372600}
+body.duel-active .stage .energy-type-psychic{background:linear-gradient(#be74c9,#733a93)}
+body.duel-active .stage .energy-type-fighting{background:linear-gradient(#cd9052,#84532b)}
+body.duel-active .stage .energy-type-colorless{background:linear-gradient(#c9cbd4,#717b8b);color:#152e3d}
+body.duel-active .stage .energy-type-darkness{background:linear-gradient(#59576a,#232636)}
+body.duel-active .stage .energy-type-metal{background:linear-gradient(#acbcc2,#587480);color:#102d3d}
+body.duel-active .stage .energy-type-rainbow{background:linear-gradient(125deg,#9c51be,#3c91d7,#5cba74,#edbd56,#d66b83)}
+body.duel-active .stage .energy-type-recycle{background:linear-gradient(#8dcb8e,#397b76)}
+body.duel-active .stage .energy-type-special{background:linear-gradient(#859ab0,#36586f)}
+@media(max-width:780px){
+ body.duel-active #duel:not(.hidden){grid-template-rows:auto auto minmax(0,1fr) 126px}
+ body.duel-active .below .main-column{height:126px}
+ body.duel-active .below .hand-panel{flex:1 1 auto;min-width:120px}
+ body.duel-active .below .turn-actions-panel{flex:0 0 125px}
+ body.duel-active .hand-toggle{top:2px;left:3px;height:22px;padding:1px 5px}
+ body.duel-active .hand-toggle-label{font-size:10px}
+ body.duel-active .hand-panel .hand-fan{top:24px}
+ body.duel-active .hand-fan-card{width:72px;height:89px;left:calc(50% - 36px);bottom:4px}
+ body.duel-active .hand-fan-card:is(:hover,:focus-visible){transform:translateX(var(--fan-x)) translateY(-5px) rotate(0deg) scale(1.02)}
+ body.duel-active .hand-tray-drawer{bottom:132px}
+ body.duel-active .stage .pokemon-strip{padding-left:7px}
+ body.duel-active .stage .energy-peeks{left:-7px;top:2px;width:18px;gap:1px}
+ body.duel-active .stage .attached-energy{width:18px;min-width:18px;height:19px;border-radius:4px;padding:0}
+ body.duel-active .stage .energy-symbol{font-size:9px;line-height:10px}
+ body.duel-active .stage .energy-label{font-size:6px;line-height:7px}
+ body.duel-active .stage .energy-overflow{font-size:8px;padding:1px 2px}
+}
+@media(max-height:690px) and (min-width:781px){
+ body.duel-active #duel:not(.hidden){grid-template-rows:auto auto minmax(0,1fr) 130px}
+ body.duel-active .below .main-column{height:130px}
+ body.duel-active .hand-fan-card{height:91px;width:74px;left:calc(50% - 37px)}
+ body.duel-active .hand-tray-drawer{bottom:136px}
+}
+@media(hover:none){body.duel-active .hand-panel .hand-fan:not(.hidden){display:block!important}}
+@media(prefers-reduced-motion:reduce){body.duel-active .hand-fan-card{transition:none}}
+
+
+/* Compact unusually large Energy stacks while keeping their types visible. */
+@media(min-width:781px){
+ body.duel-active .stage .energy-peeks:has(.attached-energy:nth-child(5)) .attached-energy{height:19px}
+ body.duel-active .stage .energy-peeks:has(.attached-energy:nth-child(5)) .energy-symbol{font-size:9px;line-height:9px}
+ body.duel-active .stage .energy-peeks:has(.attached-energy:nth-child(5)) .energy-label{font-size:6px;line-height:7px}
+}
+@media(max-width:780px){
+ body.duel-active .stage .energy-peeks:has(.attached-energy:nth-child(5)){
+  display:grid;grid-template-columns:repeat(2,18px);gap:1px;width:38px;left:-11px
+ }
+ body.duel-active .stage .energy-peeks:has(.attached-energy:nth-child(5)) .energy-overflow{grid-column:span 2;justify-self:start}
+}
