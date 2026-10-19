@@ -2,7 +2,7 @@
 const test=require('node:test');
 const assert=require('node:assert/strict');
 const fs=require('node:fs'),path=require('node:path');
-const Pack=require('../rpg_narrative_pack'),Side=require('../rpg_side_quests'),Story=require('../rpg_story'),Schedules=require('../rpg_schedules'),World=require('../rpg_world'),Arc=require('../rpg_rival_arc'),Tournaments=require('../rpg_tournaments'),Epilogue=require('../rpg_epilogue'),Appointments=require('../rpg_appointments'),Intentions=require('../rpg_intentions'),CG=require('../rpg_cg_gallery'),Planner=require('../rpg_daily_planner'),Social=require('../rpg_social_activities'),Dates=require('../rpg_planned_dates'),Bridge=require('../rpg_duel_bridge');
+const Pack=require('../rpg_narrative_pack'),Side=require('../rpg_side_quests'),Story=require('../rpg_story'),Schedules=require('../rpg_schedules'),World=require('../rpg_world'),Arc=require('../rpg_rival_arc'),Tournaments=require('../rpg_tournaments'),Epilogue=require('../rpg_epilogue'),Appointments=require('../rpg_appointments'),Intentions=require('../rpg_intentions'),CG=require('../rpg_cg_gallery'),Planner=require('../rpg_daily_planner'),Social=require('../rpg_social_activities'),Dates=require('../rpg_planned_dates'),Bridge=require('../rpg_duel_bridge'),Pre=require('../rpg_preduel');
 const js=fs.readFileSync(path.join(__dirname,'..','rpg.js'),'utf8');
 const html=fs.readFileSync(path.join(__dirname,'..','rpg.html'),'utf8');
 const ids=[...html.matchAll(/id="([^"]+)"/g)].map(x=>x[1]);
@@ -27,7 +27,7 @@ function launch(initial,approve=false){
  const doc={getElementById(id){if(!elements[id])throw Error('Missing '+id);return elements[id];},
   createElement(tag){return new FakeNode(tag);},body:new FakeNode('body'),
   addEventListener(name,cb){listeners['document:'+name]=cb;}};
- const win={NeoRpgNarrativePack:Pack,NeoRpgSideQuests:Side,NeoHarborStory:Story,NeoRpgSchedules:Schedules,NeoRpgWorld:World,NeoRpgRivalArc:Arc,NeoRpgTournaments:Tournaments,NeoRpgEpilogue:Epilogue,NeoRpgAppointments:Appointments,NeoRpgIntentions:Intentions,NeoRpgCGGallery:CG,NeoRpgDailyPlanner:Planner,NeoRpgSocialActivities:Social,NeoRpgPlannedDates:Dates,NeoRpgDuelBridge:Bridge,
+ const win={NeoRpgNarrativePack:Pack,NeoRpgSideQuests:Side,NeoHarborStory:Story,NeoRpgSchedules:Schedules,NeoRpgWorld:World,NeoRpgRivalArc:Arc,NeoRpgTournaments:Tournaments,NeoRpgEpilogue:Epilogue,NeoRpgAppointments:Appointments,NeoRpgIntentions:Intentions,NeoRpgCGGallery:CG,NeoRpgDailyPlanner:Planner,NeoRpgSocialActivities:Social,NeoRpgPlannedDates:Dates,NeoRpgPreDuel:Pre,NeoRpgDuelBridge:Bridge,
   addEventListener(name,cb){listeners[name]=cb;}};
  const local={getItem(k){return saved[k]||null;},setItem(k,v){saved[k]=String(v);}};
  const session={removeItem(){}};
@@ -79,7 +79,7 @@ test('duel battle result applies one preparation bonus only once',()=>{
  const hana=r.elements.people.children.find(x=>x.children[1]?.children[0]?.textContent==='Hana Mizuno');
  assert.ok(hana);hana.onclick();
  const challenge=r.elements.choices.children.find(x=>x.textContent.includes('Challenge to a duel'));
- assert.ok(challenge);challenge.onclick();
+ assert.ok(challenge);challenge.onclick();r.elements.preDuelSkip.onclick();
  const d=r.state().pendingDuel;assert.ok(d);
  const event={data:Bridge.message(d.id,0),origin:r.loc.origin,source:r.elements.battle.contentWindow};
  r.listeners.message(event);
@@ -123,6 +123,7 @@ test('a private rivalry challenge launches the Classic duel and records a defeat
  const pending=r.state().pendingDuel;
  assert.ok(pending);
  assert.equal(pending.arcEpisode,'reina_rival_trial');
+ r.elements.preDuelSkip.onclick();
  const event={data:Bridge.message(pending.id,1),origin:r.loc.origin,source:r.elements.battle.contentWindow};
  r.listeners.message(event);
  const state=r.state();
@@ -161,6 +162,7 @@ test('three tournament victories advance a saved championship bracket exactly on
   const pending=r.state().pendingDuel;
   assert.equal(pending.tournamentRound,round);
   assert.equal(pending.tournamentId,'neighborhood');
+  r.elements.preDuelSkip.onclick();
   const ev={origin:r.loc.origin,source:r.elements.battle.contentWindow,data:Bridge.message(pending.id,0)};
   r.listeners.message(ev);r.listeners.message(ev);
   assert.equal(r.state().tournaments.neighborhood.round,round+1);
@@ -177,6 +179,7 @@ test('tournament defeat eliminates but never blocks home travel',()=>{
  const cup=r.elements.activities.children.find(x=>x.textContent.includes('Regional Qualifier'));
  assert.ok(cup);cup.onclick();
  const pending=r.state().pendingDuel;
+ r.elements.preDuelSkip.onclick();
  r.listeners.message({origin:r.loc.origin,source:r.elements.battle.contentWindow,data:Bridge.message(pending.id,1)});
  assert.equal(r.state().tournaments.regional.state,'eliminated');
  assert.equal(r.state().tournaments.regional.round,0);
@@ -189,6 +192,7 @@ test('drawn bracket round remains available for a rematch',()=>{
  const round=r.elements.activities.children.find(x=>x.textContent.includes('Neighborhood Cup'));
  assert.ok(round);round.onclick();
  const d=r.state().pendingDuel;
+ r.elements.preDuelSkip.onclick();
  r.listeners.message({origin:r.loc.origin,source:r.elements.battle.contentWindow,data:Bridge.message(d.id,null)});
  const s=r.state();
  assert.equal(s.tournaments.neighborhood.round,0);
@@ -295,6 +299,7 @@ test('Elio quest launches a real deck duel and rewards a saved result only once'
  const pending=resumed.state().pendingDuel;
  assert.equal(pending.sideQuestId,'borrowed_deck');
  assert.equal(pending.opponent,'bodyguard');
+ resumed.elements.preDuelSkip.onclick();
  const ev={origin:resumed.loc.origin,source:resumed.elements.battle.contentWindow,data:Bridge.message(pending.id,1)};
  resumed.listeners.message(ev);
  const s=resumed.state(),credits=s.credits;
@@ -386,6 +391,7 @@ test('duel intention counts authentic defeat, then resets cleanly the next day',
  regular.onclick();
  r.elements.choices.children.find(x=>x.textContent.includes('Challenge to a duel')).onclick();
  const d=r.state().pendingDuel;assert.ok(d);
+ r.elements.preDuelSkip.onclick();
  const event={data:Bridge.message(d.id,1),origin:r.loc.origin,source:r.elements.battle.contentWindow};
  r.listeners.message(event);
  assert.equal(r.state().results.length,1);
@@ -421,6 +427,10 @@ test('a genuine duel may unlock pre-duel art but still opens the authoritative i
  assert.ok(person);person.onclick();
  r.elements.choices.children.find(x=>x.textContent.includes('Challenge to a duel')).onclick();
  assert.ok(r.state().pendingDuel);
+ assert.equal(r.state().cgUnlocked.hana_shop_challenge,undefined,'CG unlocks when the duel actually starts');
+ assert.equal(r.elements.duel.hidden,true);
+ assert.equal(r.elements.preDuelDialog.open,true);
+ r.elements.preDuelSkip.onclick();
  assert.ok(r.state().cgUnlocked.hana_shop_challenge);
  assert.equal(r.elements.duel.hidden,false);
  assert.match(r.elements.battle.src,/classic_live\.html/);
