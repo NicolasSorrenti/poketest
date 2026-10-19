@@ -1,7 +1,7 @@
 'use strict';
 (()=>{
 const $=id=>document.getElementById(id),KEY='neoHarborRpgV1',STORY=window.NeoHarborStory,SCHEDULES=window.NeoRpgSchedules,WORLD=window.NeoRpgWorld,ARC=window.NeoRpgRivalArc,TOURNAMENTS=window.NeoRpgTournaments,BRIDGE=window.NeoRpgDuelBridge;
-const PACK=window.NeoRpgNarrativePack,SIDE=window.NeoRpgSideQuests,EPILOGUE=window.NeoRpgEpilogue,APPOINTMENTS=window.NeoRpgAppointments,INTENTIONS=window.NeoRpgIntentions,CG=window.NeoRpgCGGallery,PLANNER=window.NeoRpgDailyPlanner,SOCIAL=window.NeoRpgSocialActivities,DATES=window.NeoRpgPlannedDates,PRE=window.NeoRpgPreDuel,SITUATIONS=window.NeoRpgSituations,JOURNEY=window.NeoRpgSeasonJourney,COLLECT=window.NeoRpgCollection,RPGD=window.NeoRpgDialogue,BONDS=window.NeoRpgBondRewards,PARTNER=window.NeoRpgPartnerDecks;
+const PACK=window.NeoRpgNarrativePack,SIDE=window.NeoRpgSideQuests,EPILOGUE=window.NeoRpgEpilogue,APPOINTMENTS=window.NeoRpgAppointments,INTENTIONS=window.NeoRpgIntentions,CG=window.NeoRpgCGGallery,PLANNER=window.NeoRpgDailyPlanner,SOCIAL=window.NeoRpgSocialActivities,DATES=window.NeoRpgPlannedDates,PRE=window.NeoRpgPreDuel,SITUATIONS=window.NeoRpgSituations,JOURNEY=window.NeoRpgSeasonJourney,COLLECT=window.NeoRpgCollection,RPGD=window.NeoRpgDialogue,BONDS=window.NeoRpgBondRewards,PARTNER=window.NeoRpgPartnerDecks,VN=window.NeoRpgConversations;
 const periods=['Morning','Afternoon','Evening'];
 const places={
  home:['Your Apartment','Your base during the championship season.'],
@@ -55,7 +55,7 @@ function chooseStory(raw){
  const a=state.activeStory;if(!a||a.phase!=='choice')return;
  const index=Number(raw),e=STORY.byId(a.id),choice=e.choices[index];
  if(!choice||!Number.isInteger(index))return;
- if(choice.kind==='commit'&&((state.partner&&state.partner!==e.npc)||state.relationships[e.npc].trust<3||state.relationships[e.npc].affection<6)){
+ if(choice.kind==='commit'&&!VN.commitmentReady(state,e.npc)){
   $('notice').textContent=state.partner&&state.partner!==e.npc?'You have already committed to another relationship.':'You need a stronger bond before taking this step.';return;
  }
  a.phase='response';a.choice=index;persist();render();
@@ -197,22 +197,21 @@ function publicAppointments(place){return [...APPOINTMENTS.overrides(state),...S
 function currentPeople(){if(state.day>90)return [];const regular=SCHEDULES.peopleAt(state.day,state.slot,state.location,publicAppointments(state.location));
 for(const e of eligibleStories())if(!regular.includes(e.npc))regular.push(e.npc);
 return regular;}
-function selectPerson(id){if(state.activeSituation||state.activeStory||state.activeEncounter||state.activeArc||!cast[id]||!currentPeople().includes(id))return;const c=cast[id],first=!state['met_'+id]&&!((id==='reina')&&state.metReina);state['met_'+id]=true;if(id==='reina')state.metReina=true;state.selected=id;const memories=recordCG('meet',id);persist();sayConversation(RPGD?.greetingLines(id,first?c.intro:c.repeat)||[{speaker:id,text:first?c.intro:c.repeat}],options(id));showCGMoment(memories[0]);}
-function options(id){const key=atKey(id),spentToday=!!state.hungOut[state.day+':'+id];
- const booked=APPOINTMENTS.active(state).find(e=>e.npc===id);
- return [
- [booked?'Meet-up scheduled · check upcoming plans':'Invite to a future meet-up · free',booked?'plans':'invite:'+id],
- [booked?'A meeting is already planned':'Plan an activity or date · free',booked?'plans':'dateInvite:'+id],
- ['Ask about their routine · free','where:'+id],
- [state.talked[key]?'Talk again · free (bond already earned)':'Talk · free · +1 affection','talk:'+id],
- [spentToday?'Shared outing completed today':'Choose a shared activity · ⏳ 1 period','socialPlan:'+id],
- [spentToday?'Already spent time today · free':'Spend time together · ⏳ 1 period · +2 affection / +1 trust','hang:'+id],
- ['Challenge to a duel · ⏳ 1 period · earn points, credits & trust','duel:'+id],
- ...(PARTNER.unlocked(state,id)&&state.deckJourney?.starter?[['✦ Edit '+cast[id].name.split(' ')[0]+'’s deck · free','partnerDeck:'+id]]:[]),
- ...(BONDS.canChallenge(state,id,BOND_PLAN)?[['✦ '+BONDS.TRIALS[id]+' · personal duel challenge','bondChallenge:'+id]]:[]),
- [state.talked['flirt:'+key]?'Playful remark again · free':'Playful remark · free · +1 affection','flirt:'+id],
- ['Goodbye · free','close']
- ];}
+function selectPerson(id){
+ if(state.activeSituation||state.activeStory||state.activeSideQuest||state.activeEncounter||state.activeArc||state.pendingDuel||!cast[id]||!currentPeople().includes(id))return;
+ const c=cast[id],first=!state['met_'+id]&&!((id==='reina')&&state.metReina);
+ const today=state.day+':'+id,fresh=!state.talked[today];
+ state['met_'+id]=true;
+ if(id==='reina')state.metReina=true;
+ state.talked[today]=true;
+ state.selected=id;
+ const memories=recordCG('meet',id);
+ persist();
+ sayConversation(VN.dialogue(state,id,c,RPGD,{first}),fresh?VN.choices(state,id):[]);
+ showCGMoment(memories[0]);
+}
+// Infrequent contextual invitations replace the permanent dialogue command list.
+function options(id){return VN.choices(state,id);}
 
 function plannedDateSlots(id){
  const times=APPOINTMENTS.proposed(state,id,SCHEDULES);
@@ -526,11 +525,17 @@ function act(action){
  if(type==='new'){if(confirm('Start a new season? This overwrites this browser save.')){state=defaults();state.deckJourney=COLLECT.fresh();for(const id of Object.keys(cast))state.bonds[id]={affection:0,trust:0,duels:0};persist();location.reload();}return;}
  if(!cast[id]||!currentPeople().includes(id))return say('Narrator','They have already moved on. Try another time.');
  const c=cast[id],bond=state.bonds[id],key=atKey(id);
- if(type==='talk'){if(!state.talked[key]){state.talked[key]=true;bond.affection++;state.relationships[id].affection++;}
-  const topic=(state.day+bond.duels+bond.affection)%c.talk.length,opening=c.talk[topic];
-  const lines=RPGD?.talkLines(id,topic,opening)||[{speaker:id,text:opening}];
-  persist();return sayConversation(lines,options(id));}
- if(type==='flirt'){if(!state.talked['flirt:'+key]){state.talked['flirt:'+key]=true;bond.affection++;state.relationships[id].affection++;state.relationships[id].attraction++;}const lines=RPGD?.flirtLines(id,c.flirt)||[{speaker:id,text:c.flirt}];persist();return sayConversation(lines,options(id));}
+ if(type==='talk'){
+  state.talked[state.day+':'+id]=true;
+  persist();
+  return sayConversation(VN.dialogue(state,id,c,RPGD),[]);
+ }
+ if(type==='flirt'){
+  state.talked['flirt:'+key]=true;
+  const lines=RPGD?.flirtLines(id,c.flirt)||[{speaker:'Protagonist',text:'I had something playful to say, but now I am reconsidering.'},{speaker:id,text:c.flirt}];
+  persist();
+  return sayConversation(lines,[]);
+ }
  if(type==='hang'){if(state.hungOut[state.day+':'+id])return say(c.name,'I enjoyed our time today. Let us make plans another day.',options(id));state.hungOut[state.day+':'+id]=true;bond.affection+=2;bond.trust++;state.relationships[id].affection+=2;state.relationships[id].trust++;log('Spent time with '+c.name+'.');recordIntention('hangout');const memories=recordCG('hangout',id);advance();state.selected=null;say(c.name,Array.isArray(c.hangouts)&&c.hangouts.length?c.hangouts[(state.day+bond.duels)%c.hangouts.length]:'That was a lovely way to spend part of the day. See you around.');showCGMoment(memories[0]);return;}
 }
 
@@ -1349,7 +1354,7 @@ function render(){
  $('homeBanner').textContent='YOUR APARTMENT  ·  DAY '+state.day+'  ·  '+periods[state.slot]+' — Prepare your deck, review your plans or rest.';
  let shown=showingSituation?showSituation():showingStory?renderStory():showingEncounter?showEncounter():showingArc?showArc():state.activeSideQuest?showSideQuest():scene;
  $('speaker').textContent=shown?.speaker||'Narrator';$('line').textContent=shown?.line||'The town is waiting.';$('choices').replaceChildren();
- const responseActions=new Set(['storyChoice','sideChoice','arcChoice','encounterChoice','situationChoice','sideDuel','sidePause','dateBook','dateActivity','dateSlot','book']);
+ const responseActions=new Set(['storyChoice','sideChoice','arcChoice','encounterChoice','situationChoice','sideDuel','sidePause','dateBook','dateActivity','dateSlot','book','socialPlan','dateInvite','flirt']);
  const isPlayerPrompt=!!shown?.choices?.some(([,action])=>responseActions.has(action.split(':')[0]));
  const promptRoot=$('playerChoicePrompt'),promptPanel=$('playerChoicePanel'),choiceList=$('choices');
  const newPlayerPrompt=!!(promptRoot?.hidden&&isPlayerPrompt);
@@ -1363,7 +1368,7 @@ function render(){
   const b=document.createElement('button');b.className='choice'+(action==='storyFinish'?' finish':'');b.textContent=label;
   if(action.startsWith('storyChoice:')){
    const event=STORY.byId(state.activeStory.id),chosen=event.choices[Number(action.split(':')[1])],bond=state.relationships[event.npc];
-   b.disabled=chosen.kind==='commit'&&((!!state.partner&&state.partner!==event.npc)||bond.trust<3||bond.affection<6);
+   b.disabled=chosen.kind==='commit'&&!VN.commitmentReady(state,event.npc);
    if(b.disabled)b.title='You need a stronger bond or you already have a partner.';
   }
   if(action.startsWith('socialDo:')){
