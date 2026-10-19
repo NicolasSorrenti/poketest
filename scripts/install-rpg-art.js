@@ -97,7 +97,7 @@ function parseZip(buffer) {
   ensure(found.length>0, 'no supported art assets found');
   return found;
 }
-function install({root=path.resolve(__dirname,'..'),archivePath=path.join(root,ARCHIVE),expectedSha=EXPECTED_SHA256,required=false}={}) {
+function install({root=path.resolve(__dirname,'..'),archivePath=path.join(root,ARCHIVE),expectedSha=EXPECTED_SHA256,required=false,skipExistingConflicts=false}={}) {
   if(!fs.existsSync(archivePath)){
     if(required) throw new Error('RPG art archive required but missing: '+archivePath);
     return {status:'missing',archivePath,installed:0,skipped:0};
@@ -107,7 +107,7 @@ function install({root=path.resolve(__dirname,'..'),archivePath=path.join(root,A
   const entries=parseZip(zip);
   // Check ALL destination conflicts before writing any file. Never replace canonical or manually edited assets.
   const rootReal=fs.realpathSync(root);
-  const targets=[];
+  const targets=[];let conflicts=0;
   for(const e of entries){
     const target=path.resolve(rootReal,e.name);
     ensure(target.startsWith(rootReal+path.sep), 'entry escapes repository: '+e.name);
@@ -117,7 +117,13 @@ function install({root=path.resolve(__dirname,'..'),archivePath=path.join(root,A
       parent=path.dirname(parent);
     }
     const exists=fs.existsSync(target);
-    if(exists) ensure(fs.statSync(target).isFile()&&hash(fs.readFileSync(target))===hash(e.bytes),'refusing to overwrite modified asset: '+e.name);
+    if(exists){
+      ensure(fs.statSync(target).isFile(),'destination is not a regular file: '+e.name);
+      if(hash(fs.readFileSync(target))!==hash(e.bytes)){
+        if(!skipExistingConflicts) throw new Error('RPG art archive: refusing to overwrite modified asset: '+e.name);
+        conflicts++;console.warn('[art] Preserving existing artwork instead of archived version: '+e.name);
+      }
+    }
     targets.push({...e,target,exists});
   }
   let installed=0,skipped=0;
@@ -126,11 +132,11 @@ function install({root=path.resolve(__dirname,'..'),archivePath=path.join(root,A
     fs.mkdirSync(path.dirname(e.target),{recursive:true});
     fs.writeFileSync(e.target,e.bytes,{flag:'wx'});installed++;
   }
-  return {status:'ok',archivePath,installed,skipped,sha256:expectedSha};
+  return {status:'ok',archivePath,installed,skipped,conflicts,sha256:expectedSha};
 }
 // Optional additional CG pack; same ZIP signature, bounds, path and overwrite checks.
 function installG5({root=path.resolve(__dirname,'..'),expectedSha=G5_EXPECTED_SHA256,required=false}={}) {
-  return install({root,archivePath:path.join(root,G5_ARCHIVE),expectedSha,required});
+  return install({root,archivePath:path.join(root,G5_ARCHIVE),expectedSha,required,skipExistingConflicts:true});
 }
 if(require.main===module){
   try{
