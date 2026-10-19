@@ -15,11 +15,25 @@
   tidal_circuit:['base1-9','base1-14','base1-21','base1-25','base1-35','base1-38','base1-41','base1-42','base1-53','base1-58','base1-59','base1-63','base1-64','base1-65','base1-67','base1-81','base1-82','base1-84','base1-88','base1-91','base1-92','base1-93','base1-94','base1-95','base1-100','base1-102'],
   mind_and_muscle:['base1-19','base1-29','base1-31','base1-32','base1-34','base1-43','base1-47','base1-49','base1-50','base1-52','base1-56','base1-62','base1-81','base1-82','base1-84','base1-88','base1-91','base1-92','base1-93','base1-94','base1-95','base1-97','base1-101']
  };
+ const SETS=Object.freeze({base1:{name:'Base Set',size:102,rares:16},base2:{name:'Jungle',size:64,rares:16},base3:{name:'Fossil',size:62,rares:15},neo1:{name:'Neo Genesis',size:111,rares:19},neo2:{name:'Neo Discovery',size:75,rares:17},neo3:{name:'Neo Revelation',size:66,rares:14},neo4:{name:'Neo Destiny',size:113,rares:16}});
+ const CHARACTER_SETS=Object.freeze({hana:'base1',reina:'base3',shiori:'neo2',yuna:'base2',akari:'neo1',camila:'base3',marina:'neo3',kaede:'neo4',jinx:'neo4',luna:'neo3'});
  const ENERGY=new Set(['base1-96','base1-97','base1-98','base1-99','base1-100','base1-101','base1-102']);
- const allAllowed=new Set([...starters.flatMap(s=>s.cards),...upgrade,...Object.values(poolByStarter).flat()]);
+ const allAllowed=new Set([...starters.flatMap(s=>s.cards),...upgrade,...Object.keys(SETS).flatMap(set=>Array.from({length:SETS[set].size},(_,i)=>set+'-'+(i+1)))]);
  const rank=ids=>Object.fromEntries([...new Set(ids)].map(id=>[id,ids.filter(x=>x===id).length]));
- const hash=str=>{let h=2166136261;for(const ch of str){h^=ch.charCodeAt(0);h=Math.imul(h,16777619)}return h>>>0};
- const sample=(starter,seed,i)=>{const pool=poolByStarter[starter]||upgrade;return pool[hash(seed+':'+i)%pool.length]};
+ const chooseRandom=(list,rng=Math.random)=>list[Math.min(list.length-1,Math.floor(Math.max(0,rng())*list.length))];
+ const setForCharacter=id=>CHARACTER_SETS[id]||'base1';
+ function randomPack(set,rng=Math.random){
+  const info=SETS[set]||SETS.base1,actual=SETS[set]?set:'base1';
+  const rare=chooseRandom(Array.from({length:info.rares},(_,i)=>actual+'-'+(i+1)),rng);
+  // Energy is guaranteed even when the expansion has no Basic Energy printing.
+  const energy=chooseRandom([...ENERGY].filter(id=>id!=='base1-96'),rng);
+  const all=Array.from({length:info.size-info.rares},(_,i)=>actual+'-'+(info.rares+i+1)).filter(id=>!ENERGY.has(id));
+  const cards=[rare,energy];
+  for(let i=0;i<8;i++)cards.push(chooseRandom(all,rng));
+  // Shuffle so the guaranteed cards are not revealed in a fixed position.
+  for(let i=cards.length-1;i>0;i--){const j=Math.min(i,Math.floor(Math.max(0,rng())*(i+1)));[cards[i],cards[j]]=[cards[j],cards[i]];}
+  return cards;
+ }
  function fresh(){return {starter:null,owned:{},deck:[],draft:null,packs:0,rewards:0,lastPack:null};}
  function hydrate(state){
   const x=state.deckJourney;if(x===null||x===undefined)return state;
@@ -31,7 +45,7 @@
   if(x.deck.length!==60)x.deck=byId.get(x.starter).cards.slice();
   for(const [id,n] of Object.entries(rank(x.deck)))x.owned[id]=Math.max(n,x.owned[id]||0);
   if(!Array.isArray(x.draft)||x.draft.length>60||x.draft.some(id=>!allAllowed.has(id)))x.draft=null;
-  if(!x.lastPack||!Array.isArray(x.lastPack.cards)||x.lastPack.cards.length!==5||x.lastPack.cards.some(id=>!allAllowed.has(id)))x.lastPack=null;
+  if(!x.lastPack||!Array.isArray(x.lastPack.cards)||![5,10].includes(x.lastPack.cards.length)||x.lastPack.cards.some(id=>!allAllowed.has(id)))x.lastPack=null;
   else{x.lastPack.source=x.lastPack.source==='win'?'win':'shop';x.lastPack.opened=x.lastPack.opened===true;}
   x.packs=Number.isInteger(x.packs)&&x.packs>=0?x.packs:0;x.rewards=Number.isInteger(x.rewards)&&x.rewards>=0?x.rewards:0;
   return state;
@@ -84,36 +98,25 @@
   if(!v.valid)throw Error(v.errors.join(' '));x.deck=[...x.draft];x.draft=null;return x.deck;
  }
  function cancel(state){if(state.deckJourney)state.deckJourney.draft=null}
- function grant(x,ids,source){
+ function grant(x,ids,source,set,giver){
   for(const id of ids)x.owned[id]=(x.owned[id]||0)+1;
-  x.lastPack={cards:[...ids],source,opened:false};
+  x.lastPack={cards:[...ids],source,set,giver:giver||null,opened:false};
   return ids;
  }
- function reward(state,win){
+ function reward(state,win,giver=null,rng=Math.random){
   const x=state.deckJourney;
   if(!x?.starter||!win)return null;
-  const pool=poolByStarter[x.starter]||upgrade,seed=x.starter+':win:'+x.rewards;
-  const start=hash(seed)%pool.length;
-  // At least one previously unowned printing while any remain in this pool.
-  const newCard=Array.from({length:pool.length},(_,i)=>pool[(start+i)%pool.length])
-    .find(id=>!x.owned[id]);
-  const ids=[newCard||sample(x.starter,seed,0)];
-  for(let i=1;i<5;i++){
-   let id=sample(x.starter,seed,i);
-   // Prefer distinct cards in each mini booster; keep all five valid.
-   for(let offset=0;offset<pool.length&&ids.includes(id);offset++)id=pool[(hash(seed+':'+i)+offset)%pool.length];
-   ids.push(id);
-  }
+  const set=setForCharacter(giver),ids=randomPack(set,rng);
   x.rewards++;
-  return grant(x,ids,'win');
+  return grant(x,ids,'win',set,giver);
  }
  function buyPack(state){const x=state.deckJourney;
   if(!x?.starter)throw Error('Choose your starter before opening packs');
   if(state.location!=='shop'||state.day>90)throw Error('Buy booster packs at the card shop');
   if(state.pendingDuel||state.activeStory||state.activeSideQuest||state.activeSituation||state.activeArc||state.activeEncounter)throw Error('Finish the current scene first');
   if((state.credits||0)<20)throw Error('A training pack costs 20 credits');
-  const seed=x.starter+':pack:'+x.packs,ids=Array.from({length:5},(_,i)=>sample(x.starter,seed,i));
-  state.credits-=20;x.packs++;return grant(x,ids,'shop');
+  const set='base1',ids=randomPack(set);
+  state.credits-=20;x.packs++;return grant(x,ids,'shop',set,null);
  }
- return Object.freeze({starters,upgrade,ENERGY,byId:id=>byId.get(id),fresh,hydrate,choose,check,draft,edit,change,save,cancel,reward,buyPack,rank});
+ return Object.freeze({starters,upgrade,ENERGY,SETS,CHARACTER_SETS,setForCharacter,randomPack,byId:id=>byId.get(id),fresh,hydrate,choose,check,draft,edit,change,save,cancel,reward,buyPack,rank});
 });
