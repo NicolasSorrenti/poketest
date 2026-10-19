@@ -288,6 +288,15 @@
  const SOL=typeof module==='object'&&module.exports?require('./rpg_sol_character'):window.NeoRpgSolCharacter;
  Object.assign(cast,SOL.cast);Object.assign(looks,SOL.looks);Object.assign(schedules,SOL.schedules);Object.assign(arrivals,SOL.arrivals);
  events.push(...SOL.events);
+ // Every other pack is auto-registered from the generated JSON registry.
+ // Sol remains exported under NeoRpgSolCharacter for existing tests and saves.
+ const REGISTRY=typeof module==='object'&&module.exports?require('./rpg_character_packs.generated'):window.NeoRpgCharacterPacks;
+ for(const entry of REGISTRY.packs){
+  if(entry.id==='sol')continue;
+  if(cast[entry.id])throw Error('Character pack conflicts with existing NPC: '+entry.id);
+  cast[entry.id]=entry.cast;looks[entry.id]=entry.looks;schedules[entry.id]=entry.schedule;
+  arrivals[entry.id]=entry.arrivalDay;events.push(...entry.events);
+ }
  function validate(){
   const errors=[],ids=new Set(events.map(e=>e.id)),known=new Set([...Object.keys(cast),...Object.keys(looks)]);
   if(ids.size!==events.length)errors.push('Duplicate narrative event');
