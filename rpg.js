@@ -208,6 +208,7 @@ function options(id){const key=atKey(id),spentToday=!!state.hungOut[state.day+':
  [spentToday?'Shared outing completed today':'Choose a shared activity · ⏳ 1 period','socialPlan:'+id],
  [spentToday?'Already spent time today · free':'Spend time together · ⏳ 1 period · +2 affection / +1 trust','hang:'+id],
  ['Challenge to a duel · ⏳ 1 period · earn points, credits & trust','duel:'+id],
+ ...(BONDS.canChallenge(state,id,BOND_PLAN)?[['✦ '+BONDS.TRIALS[id]+' · personal duel challenge','bondChallenge:'+id]]:[]),
  [state.talked['flirt:'+key]?'Playful remark again · free':'Playful remark · free · +1 affection','flirt:'+id],
  ['Goodbye · free','close']
  ];}
@@ -498,6 +499,10 @@ function act(action){
  if(type==='sleep'){if(state.location!=='home')return;const n=3-state.slot;advance(n);return say('Narrator','You wake up to a new day in Neo Harbor.');}
  if(type==='close'||type==='dismissDialogue')return closeSceneDialogue();
  if(type==='duel')return startDuel(id||state.selected,false);
+ if(type==='bondChallenge'){
+  if(BONDS.canChallenge(state,id,BOND_PLAN))return startDuel(id,null,null,null,null,true);
+  $('notice').textContent='Complete two bond chapters first.';return;
+ }
  if(type==='cup'){try{const match=TOURNAMENTS.begin(state,id);return startDuel(match.npc,null,null,match);}catch(err){return say('Tournament Desk',err.message);}}
  if(type==='event'){const e=scheduleEvent();if(!e)return;const opponents={7:'yuna',14:'reina',21:'hana',30:'reina',42:'kaede',60:'akari',75:'camila',88:'reina',90:'shiori'};return startDuel(opponents[e.day]||'reina',e);}
  if(type==='work')return performActivity('shop_shift');
@@ -799,14 +804,15 @@ function launchPreparedDuel(){
  $('battle').src=duelUrl(pending);
 }
 
-function startDuel(id,exhibition=null,arcEpisode=null,tournament=null,sideQuest=null){
+function startDuel(id,exhibition=null,arcEpisode=null,tournament=null,sideQuest=null,bondChallenge=false){
  if(state.deckJourney&&!state.deckJourney.starter){showStarterChoice();return;}
  if(state.deckJourney?.starter&&!COLLECT.check(state.deckJourney.deck,state.deckJourney.owned).valid){$('notice').textContent='Save a valid campaign deck before challenging another trainer.';return;}
  if(state.activeSituation||state.activeStory||state.activeEncounter||(state.activeArc&&state.activeArc.id!==arcEpisode)||(state.activeSideQuest&&state.activeSideQuest.id!==sideQuest?.id)||state.pendingDuel||state.day>90||!cast[id]||(!exhibition&&!tournament&&!currentPeople().includes(id)))return;
  if(sideQuest&&(!SIDE.canDuel(state,sideQuest.id,currentPeople())||SIDE.byId(sideQuest.id)?.stages[sideQuest.step]?.npc!==id))return;
+ if(bondChallenge&&!BONDS.canChallenge(state,id,BOND_PLAN))return;
  if(arcEpisode&&(!state.activeArc||state.activeArc.phase!=='choice'||!ARC.available(state,currentPeople()).some(e=>e.id===arcEpisode)))return;
  const c=cast[id];
- state.pendingDuel={id:'npc-'+id+'-'+state.day+'-'+state.slot+'-'+state.results.length,npc:id,day:state.day,slot:state.slot,opponent:c.deck,playerDeck:state.deckJourney?.starter?'custom':state.playerDeck,deckCards:state.deckJourney?.starter?[...state.deckJourney.deck]:null,resolved:false,eventKey:exhibition?exhibition.day+':'+exhibition.title:null,eventReward:exhibition?exhibition.reward:0,eventTitle:exhibition?exhibition.title:null,arcEpisode:arcEpisode||null,tournamentId:tournament?.tournamentId||null,tournamentRound:tournament?.tournamentRound??null,tournamentAttempt:tournament?.tournamentAttempt??null,sideQuestId:sideQuest?.id||null,sideQuestStage:sideQuest?.step??null};
+ state.pendingDuel={id:'npc-'+id+'-'+state.day+'-'+state.slot+'-'+state.results.length,npc:id,day:state.day,slot:state.slot,opponent:c.deck,playerDeck:state.deckJourney?.starter?'custom':state.playerDeck,deckCards:state.deckJourney?.starter?[...state.deckJourney.deck]:null,resolved:false,eventKey:exhibition?exhibition.day+':'+exhibition.title:null,eventReward:exhibition?exhibition.reward:0,eventTitle:exhibition?exhibition.title:null,arcEpisode:arcEpisode||null,tournamentId:tournament?.tournamentId||null,tournamentRound:tournament?.tournamentRound??null,tournamentAttempt:tournament?.tournamentAttempt??null,sideQuestId:sideQuest?.id||null,sideQuestStage:sideQuest?.step??null,bondChallenge:!!bondChallenge};
  if(arcEpisode)state.activeArc=null;
  PRE.stage(state.pendingDuel);
  persist();render();
@@ -832,6 +838,8 @@ window.addEventListener('message',ev=>{
  const personalOutcome=duel.arcEpisode?ARC.settleDuel(state,duel.arcEpisode,receipt):null;
   const sideOutcome=duel.sideQuestId?SIDE.settleDuel(state,duel,receipt):null;
   if(sideOutcome)log('Completed side quest: '+sideOutcome.title+'.');
+  const bondTrial=duel.bondChallenge?BONDS.settleChallenge(state,duel.npc,receipt.outcome==='Victory',BOND_PLAN,COLLECT):null;
+  if(bondTrial){receipt.credits+=bondTrial.credits;log(bondTrial.title+' completed: '+bondTrial.label+'.');}
  if(personalOutcome)log('A special rivalry challenge reached its result.');
  const awarded=COLLECT.reward(state,receipt.outcome==='Victory',duel.npc);
  if(awarded)log('Won a ten-card booster: '+awarded.map(labelCard).join(', ')+'.');
