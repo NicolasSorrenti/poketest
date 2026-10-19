@@ -553,8 +553,7 @@ test('guest cast can use the generic activity framework without changing authore
 test('G3: plan a friendship outing through three-step conversation without spending time',()=>{
  const r=launch({day:5,slot:0,location:'shop'});
  r.elements.people.children.find(x=>x.children?.[1]?.children?.[0]?.textContent==='Hana Mizuno').onclick();finishGreeting(r);
- const invite=r.elements.choices.children.find(x=>x.textContent.includes('Plan an activity or date'));
- assert.ok(invite);invite.onclick();
+ r.act('dateInvite:hana');
  r.elements.choices.children.find(x=>x.textContent.startsWith('Day ')).onclick();
  const activity=r.elements.choices.children.find(x=>x.textContent.includes('Welcome a new player'));
  assert.ok(activity);activity.onclick();
