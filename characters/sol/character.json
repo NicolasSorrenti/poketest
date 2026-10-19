@@ -1,0 +1,88 @@
+{
+  "schemaVersion": 1,
+  "id": "sol",
+  "name": "Sol Varela",
+  "age": 26,
+  "role": "romance",
+  "deck": "hot_water",
+  "style": "Hot Water · Fire/Water surprise tempo",
+  "dialogue": {
+    "intro": "Hey, new face! Important question: are you wearing shoes you can run in? I've got a treasure map and a completely irresponsible amount of enthusiasm.",
+    "repeat": "There you are! I was deciding between a scavenger hunt, a snack contest, and sitting dramatically by the river. You're invited to all three.",
+    "talk": [
+      "Today's mission: find a card with an attack name that sounds like a terrible pickup line. Winner gets bragging rights.",
+      "Everyone asks why I'm in a bikini. Nobody asks why they're in boring pants. We've been investigating the wrong mystery.",
+      "I can plan an entire street festival from memory. Ask me what I want to do when I'm sad and my brain goes completely blank.",
+      "I used to think 'no thanks' meant someone didn't like me. Turns out sometimes people are just tired. Revolutionary.",
+      "Yes, I can sit still. Watch. ...Okay, seven seconds. That counts as meditation.",
+      "I wore a jacket to the tournament. It was mesh. Jun called it 'a start.' He's getting sentimental."
+    ],
+    "flirt": "Careful! I flirt back. But only if it's fun for both of us. Want to find out?",
+    "duelWin": "You beat me! Okay, you choose the victory snack. I'm only pretending not to be impressed.",
+    "duelLose": "Ha! My ridiculous combo worked! You owe me a rematch, and I owe you a drink.",
+    "hangouts": [
+      "Sol drags you through a five-stop waterfront scavenger hunt. The prize is a hand-drawn trophy on a napkin. She keeps the napkin.",
+      "You join her 'worst card-name pickup line' contest at the arcade. A shy beginner wins; Sol applauds the loudest.",
+      "You two test hilariously strange fruit-juice combinations at the café. She declares the purple one a marketing opportunity.",
+      "Sol packs a spontaneous sunset picnic, and—for once—does not schedule a single activity. She admits the silence is nice.",
+      "You help Sol run a deck-box fashion show and invite a nervous newcomer to judge. They decide that everybody wins."
+    ]
+  },
+  "appearance": {
+    "silhouette": "Unambiguously adult, confident and curvy-athletic; a striking bikini-and-resort-streetwear silhouette in every setting, paired with lightweight coverups or practical layers where appropriate.",
+    "palette": "Lagoon turquoise, vivid coral pink, sunflower yellow and midnight navy accessories.",
+    "hair": "Very long, lively coral-pink waves with golden highlights, frequently in a high messy ponytail.",
+    "eyes": "Expressive sea-green eyes, sun freckles and naturally lively smile lines.",
+    "details": "Shell-and-sun earrings, stacked colorful bangles, waterproof deck case on a crossbody strap, playful enamel badges, practical sandals and spare dry cardigan.",
+    "expressions": "Huge daring grin, theatrical wink, mock shock, exuberant closed-eye laugh, unguarded worried stare, relieved soft smile when she realizes she can be quiet with someone.",
+    "outfits": [
+      "signature asymmetric turquoise/coral bikini with airy mesh layer and open tropical shirt",
+      "neon-magenta bikini with long open navy cardigan at evening events",
+      "swim top under oversized orange varsity shirt and denim shorts at arcade",
+      "raincoat over her trademark swimsuit on wet days",
+      "neat sleeveless coverup and shorts over bikini at tournament venues"
+    ],
+    "renderNotes": "SFW anime/JRPG romantic-comedy character, age 26; flirty and bold without nudity, lingerie framing or sexualized poses. Match the expressive, stylized proportions and clean full-color portrait style of Neo Harbor's adult cast."
+  },
+  "arrivalDay": 8,
+  "schedule": [
+    [
+      "park",
+      "park",
+      "cafe"
+    ],
+    [
+      "home",
+      "arcade",
+      "arcade"
+    ],
+    [
+      "park",
+      "shop",
+      "cafe"
+    ],
+    [
+      "home",
+      "park",
+      "center"
+    ],
+    [
+      "park",
+      "shop",
+      "arcade"
+    ],
+    [
+      "shop",
+      "center",
+      "park"
+    ],
+    [
+      "home",
+      "park",
+      "cafe"
+    ]
+  ],
+  "stories": "stories.json",
+  "artManifest": "art_manifest.json",
+  "bible": "bible.md"
+}
