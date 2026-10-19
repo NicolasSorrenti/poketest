@@ -166,3 +166,12 @@ test('all 90 days maintain real recurring candidate appointments and no impossib
   }
  }
 });
+
+test('legacy meet-up cannot stack with an earlier regular hangout on the same day',()=>{
+ const s=state(),time=A.proposed(s,'hana',Schedules)[0];
+ const e=A.book(s,'hana',time.day,time.slot,time.place,Schedules);
+ arrive(s,e);s.hungOut[s.day+':hana']=true;
+ const before=JSON.stringify(s);
+ assert.throws(()=>D.attend(s,e.id,['hana'],deps),/Already spent/);
+ assert.equal(JSON.stringify(s),before);
+});
