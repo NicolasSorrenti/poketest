@@ -31,7 +31,7 @@ function launch(initial,approve=false){
   addEventListener(name,cb){listeners[name]=cb;}};
  const local={getItem(k){return saved[k]||null;},setItem(k,v){saved[k]=String(v);}};
  const session={removeItem(){},setItem(){},getItem(){return null;}};
- const loc={origin:'http://localhost',href:'http://localhost/rpg.html',reload(){}};
+ const loc={origin:'http://localhost',href:'http://localhost/rpg.html',reload(){},assign(href){this.href=new URL(href,this.origin).href;}};
  new Function('window','document','localStorage','sessionStorage','location','fetch','confirm',js)(
   win,doc,local,session,loc,async()=>({ok:true,json:async()=>({decks:[{id:'blackout',name:'Blackout'}]})}),()=>approve);
  return {elements,listeners,loc,state:()=>JSON.parse(saved.neoHarborRpgV1)};
@@ -830,31 +830,23 @@ test('RPG collection: new players must choose one of three modest dual-type star
  assert.equal(s.playerDeck,'custom');
  assert.equal(r.elements.starterDialog.open,false);
  assert.equal(r.elements.deckPicker.disabled,true);
- assert.ok(r.elements.deckCollection.children.some(x=>x.textContent.includes('Edit your 60-card deck')));
+ assert.ok(r.elements.deckCollection.children.some(x=>x.textContent.includes('Build / edit your deck')));
 });
-test('RPG collection: buy a training pack at shop, edit a real owned upgrade and save without changing campaign time',()=>{
+test('RPG collection: a training pack unlocks owned cards and full Deck Studio navigation without advancing time',()=>{
  const r=launch({day:5,slot:0,location:'shop',credits:80,deckJourney:Collection.fresh()});
  r.elements.starterChoices.children[0].onclick();
- const original=r.state().deckJourney.deck;
+ const original=r.state().deckJourney.deck.join(',');
  const buy=r.elements.deckCollection.children.find(x=>x.textContent.includes('Buy training pack'));
  assert.ok(buy);buy.onclick();
  const afterPack=r.state();
  assert.equal(afterPack.credits,60);assert.equal(afterPack.deckJourney.packs,1);
  assert.equal(afterPack.day,5);assert.equal(afterPack.slot,0);
- const editor=r.elements.deckCollection.children.find(x=>x.textContent.includes('Edit your 60-card deck'));
- editor.onclick();assert.equal(r.elements.deckEditDialog.open,true);
- const counts=Collection.rank(original);
- const card=Object.keys(afterPack.deckJourney.owned).find(id=>!counts[id]);
- assert.ok(card,'pack should introduce at least one new candidate eventually');
- r.elements.deckRemove.value='base1-94';r.elements.deckAdd.value=card;
- r.elements.deckSwap.onclick();
- assert.equal(r.state().deckJourney.deck.join(','),original.join(','),'draft must not alter live duel deck');
- r.elements.deckSave.onclick();
- const saved=r.state();
- assert.equal(saved.deckJourney.deck.length,60);
- assert.ok(saved.deckJourney.deck.includes(card));
- assert.equal(saved.deckJourney.draft,null);
- assert.equal(saved.day,5);assert.equal(saved.slot,0);
+ assert.equal(afterPack.deckJourney.deck.join(','),original);
+ const editor=r.elements.deckCollection.children.find(x=>x.className==='studio-open');
+ assert.ok(editor,'Deck Studio should replace the old swap-card popup');
+ editor.onclick();
+ assert.match(r.loc.href,/rpg_deck_studio\\.html/);
+ assert.equal(r.state().day,5);assert.equal(r.state().slot,0);
 });
 test('RPG collection: pre-duel snapshot locks the actual 60 owned cards until the result',()=>{
  const r=launch({day:5,slot:0,location:'shop',deckJourney:Collection.fresh()});
@@ -864,7 +856,7 @@ test('RPG collection: pre-duel snapshot locks the actual 60 owned cards until th
  r.elements.choices.children.find(x=>x.textContent.includes('Challenge to a duel')).onclick();
  const pending=r.state().pendingDuel;
  assert.equal(pending.playerDeck,'custom');assert.equal(pending.deckCards.join(','),before);
- assert.equal(r.elements.deckCollection.children.find(x=>x.textContent.includes('Edit your 60-card deck')).disabled,true);
+ assert.equal(r.elements.deckCollection.children.find(x=>x.textContent.includes('Build / edit your deck')).disabled,true);
  r.elements.preDuelSkip.onclick();assert.match(r.elements.battle.src,/deck=custom/);
  r.listeners.message({origin:r.loc.origin,source:r.elements.battle.contentWindow,data:Bridge.message(pending.id,0)});
  assert.equal(r.state().deckJourney.rewards,1);
