@@ -3,7 +3,8 @@
 // isolated. The human receives ONLY an authorized view of game state.
 const crypto=require('node:crypto');
 const {createGame,reduce,CATALOG}=require('./headless_duel');
-const {publicView,publicActivity}=require('./duel_protocol');
+const {publicView,publicActivity,validateCommand}=require('./duel_protocol');
+const UNDO=require('./duel_undo');
 const {driveBot,configuration}=require('./classic_bot');
 const {profileForNpc}=require('./cpu_profiles');
 const {list}=require('./authentic_decks');
@@ -62,12 +63,12 @@ class ClassicLocalService {
    deckSize:40,prizeCount:4,seed:seed??crypto.randomBytes(4).readUInt32BE(0)});
   game=driveBot(game,200,cpuConfig).game;
   const token=crypto.randomBytes(24).toString('base64url');
-  const session={game,revision:0,updated:this.now(),token,deck:'cube',opponent:'cube',cpuConfig,npc:null};
+  const session={game,undoHistory:[],revision:0,updated:this.now(),token,deck:'cube',opponent:'cube',cpuConfig,npc:null};
   this.sessions.set(token,session);return {token,...this.response(session)};
  }
  session(token){this.prune();const s=this.sessions.get(token);if(!s)throw Error('Unknown or expired session');s.updated=this.now();return s;}
  response(s){const g=s.game,view=publicView(g,0);
-  return {revision:s.revision,view,activity:publicActivity(g),format:g.format,winner:g.winner,turnSerial:g.turnSerial,cpu:{level:s.cpuConfig?.level??3,personality:s.cpuConfig?.personality??'balanced',npc:s.npc??null,
+  return {revision:s.revision,view,activity:publicActivity(g),undo:{available:UNDO.available(s.undoHistory||[],g,0),label:s.undoHistory?.at(-1)?.label||null},format:g.format,winner:g.winner,turnSerial:g.turnSerial,cpu:{level:s.cpuConfig?.level??3,personality:s.cpuConfig?.personality??'balanced',npc:s.npc??null,
     advancedTactics:!!s.cpuConfig?.knockoutTempo},
    you:{energyUsed:!!g.players[0].energyUsed,retreated:!!g.players[0].retreated,stadiumUsed:g.players[0].stadiumUsedTurn===g.turnSerial},
    lastActions:g.events.slice(-8).map(e=>({side:e.side,type:e.type})),
@@ -77,10 +78,16 @@ class ClassicLocalService {
  action(token,raw,revision){const s=this.session(token);
   if(!Number.isSafeInteger(revision)||revision!==s.revision)throw Error('Stale match revision — refresh the duel');
   if(!raw||typeof raw!=='object')throw Error('Missing command');
-  const result=reduce(s.game,0,raw);
+  const cmd=validateCommand(raw);
+  s.undoHistory ||= [];
+  if(cmd.type==='undo'){
+   s.game=UNDO.undo(s.undoHistory,s.game,0);s.revision++;return this.response(s);
+  }
+  const result=reduce(s.game,0,cmd);
   if(!result.ok)throw Error(result.error||'Illegal command');
   // Bot failures must never commit partial human or computer actions.
   const {game}=driveBot(result.game,200,s.cpuConfig);
+  UNDO.record(s.undoHistory,s.game,game,0,cmd);
   s.game=game;s.revision++;return this.response(s);
  }
  decklist(id){if(!DECKS[id]||id==='custom')throw Error('Unknown theme deck');return EXPANDED[id]?[...EXPANDED[id]]:LAB[id]?[...LAB[id]]:DECKS[id].startsWith('retail:')?RETAIL.list(id):DECKS[id].startsWith('neo:')?NEO.list(id):DECKS[id].startsWith('discovery:')?DISCOVERY.list(id):DECKS[id].startsWith('destiny:')?DESTINY.list(id):list(DECKS[id]);}
