@@ -37,7 +37,7 @@ function validate(p,legalDecks=decks()){
   const flags=new Set();
   for(const c of e.choices){
    ensure(plain(c)&&words(c.label)&&words(c.reply)&&words(c.kind)&&words(c.flag)&&plain(c.delta),e.id+': invalid choice');
-   ensure(!flags.has(c.flag),e.id+': duplicate flag '+c.flag);flags.add(c.flag);
+   ensure(!flags.has(c.flag)||['friendship','romance'].includes(c.flag),e.id+': duplicate flag '+c.flag);flags.add(c.flag);
    ensure(Object.entries(c.delta).every(([k,v])=>metrics.has(k)&&Number.isFinite(v)),e.id+': invalid relationship delta');
   }
   if(e.participants!==undefined)ensure(Array.isArray(e.participants)&&e.participants.every(x=>slug.test(x)),e.id+': invalid participants');
