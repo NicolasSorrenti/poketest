@@ -79,7 +79,7 @@ test('resource depletion or missing NPC before resolution leaves state unchanged
  const e=S.events[3],s=ready(e,{day:firstDay(e)});
  S.start(s,e.id,[e.npc]);S.choose(s,0);s.focus=0;
  const before=JSON.stringify(s);
- assert.throws(()=>S.finish(s,[e.npc]),/not available|Not enough focus/);
+ assert.throws(()=>S.finish(s,[e.npc]),/no longer available|not available|Not enough focus/);
  assert.equal(JSON.stringify(s),before);
  s.focus=50;
  assert.throws(()=>S.finish(s,[]),/not available/);
