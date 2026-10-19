@@ -1,7 +1,7 @@
 'use strict';
 (()=>{
 const $=id=>document.getElementById(id),KEY='neoHarborRpgV1',STORY=window.NeoHarborStory,SCHEDULES=window.NeoRpgSchedules,WORLD=window.NeoRpgWorld,ARC=window.NeoRpgRivalArc,TOURNAMENTS=window.NeoRpgTournaments,BRIDGE=window.NeoRpgDuelBridge;
-const PACK=window.NeoRpgNarrativePack,SIDE=window.NeoRpgSideQuests,EPILOGUE=window.NeoRpgEpilogue,APPOINTMENTS=window.NeoRpgAppointments,INTENTIONS=window.NeoRpgIntentions,CG=window.NeoRpgCGGallery,PLANNER=window.NeoRpgDailyPlanner,SOCIAL=window.NeoRpgSocialActivities;
+const PACK=window.NeoRpgNarrativePack,SIDE=window.NeoRpgSideQuests,EPILOGUE=window.NeoRpgEpilogue,APPOINTMENTS=window.NeoRpgAppointments,INTENTIONS=window.NeoRpgIntentions,CG=window.NeoRpgCGGallery,PLANNER=window.NeoRpgDailyPlanner,SOCIAL=window.NeoRpgSocialActivities,DATES=window.NeoRpgPlannedDates;
 const periods=['Morning','Afternoon','Evening'];
 const places={
  home:['Your Apartment','Your base during the championship season.'],
@@ -135,7 +135,7 @@ SIDE.expire(state);
 ARC.hydrate(state);
 // Restored saves may already be beyond an optional cup's registration window.
 TOURNAMENTS.expire(state);
-APPOINTMENTS.hydrate(state);APPOINTMENTS.expire(state);INTENTIONS.hydrate(state);CG.hydrate(state);SOCIAL.hydrate(state);
+APPOINTMENTS.hydrate(state);APPOINTMENTS.expire(state);INTENTIONS.hydrate(state);CG.hydrate(state);SOCIAL.hydrate(state);DATES.hydrate(state,APPOINTMENTS,SOCIAL);
 for(const id of Object.keys(cast)){const old=state.bonds[id],current=state.relationships[id];
  if(!state.flags['newStoryMigrated_'+id]){for(const key of ['affection','trust','duels'])current[key]=Math.max(current[key]||0,old[key]||0);
  state.flags['newStoryMigrated_'+id]=true;}
@@ -168,6 +168,7 @@ function options(id){const key=atKey(id),spentToday=!!state.hungOut[state.day+':
  const booked=APPOINTMENTS.active(state).find(e=>e.npc===id);
  return [
  [booked?'Meet-up scheduled · check upcoming plans':'Invite to a future meet-up · free',booked?'plans':'invite:'+id],
+ [booked?'A meeting is already planned':'Plan an activity or date · free',booked?'plans':'dateInvite:'+id],
  ['Ask about their routine · free','where:'+id],
  [state.talked[key]?'Talk again · free (bond already earned)':'Talk · free · +1 affection','talk:'+id],
  [spentToday?'Shared outing completed today':'Choose a shared activity · ⏳ 1 period','socialPlan:'+id],
@@ -177,6 +178,12 @@ function options(id){const key=atKey(id),spentToday=!!state.hungOut[state.day+':
  ['Goodbye · free','close']
  ];}
 
+function plannedDateSlots(id){
+ const times=APPOINTMENTS.proposed(state,id,SCHEDULES);
+ const choices=times.map((time,i)=>['Day '+time.day+' · '+periods[time.slot]+' · '+places[time.place][0]+' · choose activity','dateSlot:'+id+':'+i]);
+ choices.push(['Back to conversation · free','back:'+id]);
+ return choices;
+}
 function sharedActivityChoices(id){
  const available=SOCIAL.options(state,id,currentPeople(),cast);
  return [...available.map(a=>[
@@ -303,6 +310,52 @@ function act(action){
  if(type==='arcChoice')return chooseArc(id);
  if(type==='arcFinish')return finishArc();
  if(state.activeStory||state.pendingDuel||state.activeEncounter||state.activeArc||state.activeSideQuest)return;
+
+ if(type==='dateInvite'){
+  if(!cast[id]||!currentPeople().includes(id))return;
+  const choices=plannedDateSlots(id);
+  return say(cast[id].name,choices.length===1?'I cannot commit to another meeting yet.':'Let us choose a day and plan what to do together.',
+    choices.length===1?options(id):choices);
+ }
+ if(type==='dateSlot'){
+  if(!cast[id]||!currentPeople().includes(id))return;
+  const target=APPOINTMENTS.proposed(state,id,SCHEDULES)[Number(part)];
+  if(!target)return say(cast[id].name,'That opening is gone.',plannedDateSlots(id));
+  const choices=DATES.options(state,id,target.place,SOCIAL,cast).map(a=>[
+   a.title+' · '+(a.affinity==='favorite'?'♥ Favorite':a.affinity==='neutral'?'● Familiar':'◇ New experience')
+    +' · '+a.focus+' focus'+(a.credits?' + '+a.credits+' credits':'')+' when we meet',
+   'dateActivity:'+id+':'+part+':'+a.id
+  ]);
+  choices.push(['Choose another day · free','dateInvite:'+id]);
+  return say(cast[id].name,'What should we do at '+places[target.place][0]+'? Costs are paid on arrival.',choices);
+ }
+ if(type==='dateActivity'){
+  if(!cast[id]||!currentPeople().includes(id))return;
+  const [,npc,index,activityId]=action.split(':');
+  const target=APPOINTMENTS.proposed(state,id,SCHEDULES)[Number(index)];
+  if(!target)return say(cast[id].name,'That time is unavailable.',plannedDateSlots(id));
+  const activity=DATES.options(state,id,target.place,SOCIAL,cast).find(a=>a.id===activityId);
+  if(!activity)return say(cast[id].name,'That activity cannot happen at this venue.',plannedDateSlots(id));
+  const choices=DATES.choices(state,id,target.place,activityId,SOCIAL,cast).map(t=>[
+   t.label+' · '+t.detail+(t.disabledReason?' · '+t.disabledReason:''),
+   'dateBook:'+id+':'+index+':'+activityId+':'+t.id
+  ]);
+  choices.push(['Choose another activity · free','dateSlot:'+id+':'+index]);
+  return say(cast[id].name,'How would you like to spend this time together?',choices);
+ }
+ if(type==='dateBook'){
+  if(!cast[id]||!currentPeople().includes(id))return;
+  const [,npc,index,activityId,tone]=action.split(':');
+  const target=APPOINTMENTS.proposed(state,id,SCHEDULES)[Number(index)];
+  if(!target)return say(cast[id].name,'That meeting time has passed.',plannedDateSlots(id));
+  try{
+   const plan=DATES.book(state,{npc:id,day:target.day,slot:target.slot,place:target.place,activityId,tone},
+    {appointments:APPOINTMENTS,schedules:SCHEDULES,social:SOCIAL,cast});
+   persist();
+   return say(cast[id].name,'It is a plan! Day '+plan.day+', '+periods[plan.slot].toLowerCase()+' at '+places[plan.place][0]+
+    '. We will '+(tone==='romantic'?'go on a date':tone==='rivalry'?'enjoy a friendly challenge':'spend time as friends')+'.',options(id));
+  }catch(err){return say(cast[id].name,err.message,plannedDateSlots(id));}
+ }
  if(type==='socialPlan')return planSharedActivity(id);
  if(type==='socialDo'){
   if(!cast[id]||!currentPeople().includes(id))return;
@@ -353,10 +406,14 @@ function act(action){
   if(!plan)return;
   const person=cast[plan.npc];
   try{
-   APPOINTMENTS.attend(state,number,currentPeople());recordIntention('appointment');
-   log('Kept a planned meet-up with '+(person?.name||'a trainer')+'.');recordCG('appointment',plan.npc);
+   const outcome=DATES.attend(state,number,currentPeople(),{appointments:APPOINTMENTS,social:SOCIAL,cast});
+   recordIntention('appointment');
+   log('Kept '+(outcome.tone==='romantic'?'a date':outcome.tone==='rivalry'?'a friendly challenge':'a friendship outing')+' with '+(person?.name||'a trainer')+'.');
+   const memories=recordCG('appointment',plan.npc);
+   if(!outcome.legacy)for(const cg of recordCG('hangout',plan.npc))if(!memories.some(x=>x.id===cg.id))memories.push(cg);
    advance();
-   return say(person?.name||'Trainer','I am glad we made time for this. It is good to do something together away from the tournament noise.');
+   say(person?.name||'Trainer',outcome.line);
+   showCGMoment(memories[0]);return;
   }catch(err){$('notice').textContent=err.message;return;}
  }
  if(type==='cancelPlan'){
@@ -435,11 +492,24 @@ function renderAppointments(locked){
   const name=document.createElement('strong');name.textContent=cast[meeting.npc]?.name||meeting.npc;
   const detail=document.createElement('small');detail.textContent='DAY '+meeting.day+' · '+periods[meeting.slot]+' · '+places[meeting.place]?.[0];
   entry.append(name,detail);
+  if(meeting.activityId){
+   const a=SOCIAL.activities.find(x=>x.id===meeting.activityId);
+   if(a){
+    const note=document.createElement('small');note.className='meeting-plan';
+    note.textContent=(meeting.socialTone==='romantic'?'♥ DATE':meeting.socialTone==='rivalry'?'⚔ CHALLENGE':'● FRIENDS')+
+      ' · '+a.title+' · '+a.focus+' focus'+(a.credits?' + '+a.credits+' credits':'')+' when we meet';
+    entry.append(note);
+   }
+  }
   const ready=meeting.day===state.day&&meeting.slot===state.slot;
   const controls=document.createElement('div');controls.className='meeting-actions';
   if(ready){
    if(meeting.place===state.location){
-    const attend=document.createElement('button');attend.className='meeting-attend';attend.textContent='Meet now · ⏳';attend.disabled=locked;attend.onclick=()=>act('attend:'+meeting.id);controls.append(attend);
+    const attend=document.createElement('button');attend.className='meeting-attend';
+    attend.textContent=meeting.socialTone==='romantic'?'Go on date · ⏳':meeting.activityId?'Enjoy outing · ⏳':'Meet now · ⏳';
+    const reason=DATES.canAttend(state,meeting,currentPeople(),{appointments:APPOINTMENTS,social:SOCIAL,cast});
+    attend.disabled=locked||!!reason;if(reason)attend.title=reason;
+    attend.onclick=()=>act('attend:'+meeting.id);controls.append(attend);
    }else{
     const travel=document.createElement('button');travel.className='meeting-attend';travel.textContent='Go there · free';travel.disabled=locked;travel.onclick=()=>{
      state.location=meeting.place;state.selected=null;persist();say('Planner','You arrive for your planned meet-up.');};controls.append(travel);
@@ -453,7 +523,7 @@ function renderAppointments(locked){
 
 
 function plannerDependencies(){return {schedules:SCHEDULES,appointments:APPOINTMENTS,story:STORY,side:SIDE,world:WORLD,
- tournaments:TOURNAMENTS,intentions:INTENTIONS,arc:ARC,cast,places,eventCards};}
+ tournaments:TOURNAMENTS,intentions:INTENTIONS,arc:ARC,social:SOCIAL,cast,places,eventCards};}
 function openPlannerSuggestion(id){
  const locked=!!state.activeStory||!!state.activeEncounter||!!state.activeArc||!!state.activeSideQuest||!!state.pendingDuel;
  if(locked||state.day>90)return;
@@ -713,6 +783,13 @@ function render(){
    const selection=SOCIAL.options(state,npc,currentPeople(),cast).find(x=>x.id===activityId);
    b.disabled=!selection||!!selection.disabledReason;
    if(b.disabled)b.title=selection?.disabledReason||'This activity is not available.';
+  }
+  if(action.startsWith('dateBook:')){
+   const [,npc,index,activityId,tone]=action.split(':');
+   const target=APPOINTMENTS.proposed(state,npc,SCHEDULES)[Number(index)];
+   const option=target?DATES.choices(state,npc,target.place,activityId,SOCIAL,cast).find(t=>t.id===tone):null;
+   b.disabled=!option||!!option.disabledReason;
+   if(b.disabled)b.title=option?.disabledReason||'That meeting time is no longer available.';
   }
   b.onclick=()=>act(action);$('choices').append(b);
  }

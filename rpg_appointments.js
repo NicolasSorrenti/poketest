@@ -68,17 +68,19 @@
   return active(state).filter(e=>e.day===day&&e.slot===slot)
    .map(e=>({npc:e.npc,place:e.place,start:day,end:day,slot}));
  }
- function attend(state,id,availablePeople=[]){
+ function attend(state,id,availablePeople=[],options={}){
   hydrate(state);
   const e=state.appointments.find(x=>x.id===id&&x.status==='booked');
   if(!e||e.day!==state.day||e.slot!==state.slot||e.place!==state.location)throw Error('Meet-up is not available here and now');
   if(!availablePeople.includes(e.npc))throw Error('Your guest is not here');
   const rel=state.relationships[e.npc]||(state.relationships[e.npc]={affection:0,trust:0,respect:0,attraction:0,duels:0});
   const bond=state.bonds[e.npc]||(state.bonds[e.npc]={affection:0,trust:0,duels:0});
-  rel.affection=Math.max(0,(rel.affection||0)+2);rel.trust=Math.max(0,(rel.trust||0)+1);
-  bond.affection=Math.max(0,(bond.affection||0)+2);bond.trust=Math.max(0,(bond.trust||0)+1);
+  if(options.grantRewards!==false){
+   rel.affection=Math.max(0,(rel.affection||0)+2);rel.trust=Math.max(0,(rel.trust||0)+1);
+   bond.affection=Math.max(0,(bond.affection||0)+2);bond.trust=Math.max(0,(bond.trust||0)+1);
+  }
   e.status='attended';e.completedDay=state.day;
-  return {entry:e,affection:2,trust:1};
+  return {entry:e,affection:options.grantRewards===false?0:2,trust:options.grantRewards===false?0:1};
  }
  function cancel(state,id){
   hydrate(state);

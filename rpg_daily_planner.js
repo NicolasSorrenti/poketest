@@ -14,7 +14,7 @@
  function recommend(state,api={},options={}){
   if(!state||!Number.isInteger(state.day)||state.day<1||state.day>90||!Number.isInteger(state.slot)||state.slot<0||state.slot>2)return [];
   if(locked(state))return [];
-  const {schedules,appointments,story,side,world,tournaments,intentions,arc,cast={},places={},eventCards=[]}=api;
+  const {schedules,appointments,story,side,world,tournaments,intentions,arc,social,cast={},places={},eventCards=[]}=api;
   if(!schedules||!appointments||!story||!side||!world||!tournaments||!intentions)throw Error('Missing RPG planner dependencies');
   // Modules normalize/hydrate their inputs. Only pass a clone: rendering the planner
   // must never change live campaign state, save data, or the authored story schedule.
@@ -48,11 +48,14 @@
    const when=stamp(plan.day,plan.slot),diff=when-now;
    if(diff<0||diff>3||!places[plan.place])continue;
    const future=diff!==0;
+   const activity=plan.activityId&&social?.activities?.find(x=>x.id===plan.activityId);
+   const label=plan.socialTone==='romantic'?'Date':plan.socialTone==='rivalry'?'Friendly challenge':activity?'Planned outing':'Meet-up';
+   const details=activity?' · '+activity.title+' ('+activity.focus+' focus'+(activity.credits?', '+activity.credits+' credits':'')+' at meeting)':'';
    add({kind:'appointment',key:String(plan.id),priority:future?diff===1?97:diff===2?70:52:160,
     place:plan.place,day:plan.day,slot:plan.slot,timing:future?'upcoming':'now',
-    title:future?'Meet-up coming up':'Meet-up happening now',
+    title:label+(future?' coming up':' happening now'),
     detail:(future?'Day '+plan.day+' · '+periodNames[plan.slot]+'. ':'')+
-     (safeName(cast,plan.npc))+' at '+placeName(places,plan.place)+(future?' — a time action may bring this closer.':' · one period to attend.'),
+     (safeName(cast,plan.npc))+' at '+placeName(places,plan.place)+details+(future?' — a time action may bring this closer.':' · one period to attend.'),
     focusId:'appointments'});
   }
   // Current-place and free-travel choices are evaluated for the very same
