@@ -1,7 +1,7 @@
 'use strict';
 (()=>{
 const $=id=>document.getElementById(id),KEY='neoHarborRpgV1',STORY=window.NeoHarborStory,SCHEDULES=window.NeoRpgSchedules,WORLD=window.NeoRpgWorld,ARC=window.NeoRpgRivalArc,TOURNAMENTS=window.NeoRpgTournaments,BRIDGE=window.NeoRpgDuelBridge;
-const PACK=window.NeoRpgNarrativePack,SIDE=window.NeoRpgSideQuests,EPILOGUE=window.NeoRpgEpilogue,APPOINTMENTS=window.NeoRpgAppointments,INTENTIONS=window.NeoRpgIntentions,CG=window.NeoRpgCGGallery,PLANNER=window.NeoRpgDailyPlanner,SOCIAL=window.NeoRpgSocialActivities,DATES=window.NeoRpgPlannedDates;
+const PACK=window.NeoRpgNarrativePack,SIDE=window.NeoRpgSideQuests,EPILOGUE=window.NeoRpgEpilogue,APPOINTMENTS=window.NeoRpgAppointments,INTENTIONS=window.NeoRpgIntentions,CG=window.NeoRpgCGGallery,PLANNER=window.NeoRpgDailyPlanner,SOCIAL=window.NeoRpgSocialActivities,DATES=window.NeoRpgPlannedDates,PRE=window.NeoRpgPreDuel;
 const periods=['Morning','Afternoon','Evening'];
 const places={
  home:['Your Apartment','Your base during the championship season.'],
@@ -127,6 +127,7 @@ if(!Number.isInteger(state.slot)||state.slot<0||state.slot>2)state.slot=0;
 for(const k of ['results','journal'])if(!Array.isArray(state[k]))state[k]=defaults()[k];
 for(const k of ['flags','bonds','talked','hungOut','eventsDone','storyDone','storyMissed','relationships','routeOutcomes'])if(!state[k]||typeof state[k]!=='object'||Array.isArray(state[k]))state[k]={};
 if(!state.pendingDuel?.id||!cast[state.pendingDuel?.npc])state.pendingDuel=null;
+if(state.pendingDuel)PRE.hydrate(state.pendingDuel);
 for(const id of Object.keys(cast)){if(!state.bonds[id])state.bonds[id]={affection:0,trust:0,duels:0};}
 STORY.normalize(state);
 WORLD.hydrate(state);
@@ -447,6 +448,56 @@ function act(action){
  if(type==='hang'){if(state.hungOut[state.day+':'+id])return say(c.name,'I enjoyed our time today. Let us make plans another day.',options(id));state.hungOut[state.day+':'+id]=true;bond.affection+=2;bond.trust++;state.relationships[id].affection+=2;state.relationships[id].trust++;log('Spent time with '+c.name+'.');recordIntention('hangout');const memories=recordCG('hangout',id);advance();state.selected=null;say(c.name,Array.isArray(c.hangouts)&&c.hangouts.length?c.hangouts[(state.day+bond.duels)%c.hangouts.length]:'That was a lovely way to spend part of the day. See you around.');showCGMoment(memories[0]);return;}
 }
 function duelUrl(duel){return '/classic_live.html?rpg=1&duelId='+encodeURIComponent(duel.id)+'&deck='+encodeURIComponent(duel.playerDeck)+'&opponent='+encodeURIComponent(duel.opponent)+'&npc='+encodeURIComponent(duel.npc)+'&npcName='+encodeURIComponent(cast[duel.npc].name);}
+
+function describePreparedDuel(){
+ return PRE.describe(state,state.pendingDuel,{cast,places,cg:CG,tournaments:TOURNAMENTS});
+}
+function showPreparedDuel(){
+ const pending=state.pendingDuel;
+ if(!PRE.isReady(pending))return;
+ const preview=describePreparedDuel();
+ if(!preview)return;
+ const modal=$('preDuelDialog'),art=$('preDuelArt');art.replaceChildren();
+ $('preDuelContext').textContent=preview.stake;
+ $('preDuelOpponent').textContent=preview.name;
+ $('preDuelDeck').textContent=preview.deckLabel+' · '+preview.place;
+ const line=preview.lines[pending.preview.index];
+ $('preDuelSpeaker').textContent=line.speaker;
+ $('preDuelLine').textContent=line.text;
+ $('preDuelNext').hidden=pending.preview.index>=preview.lines.length-1;
+ $('preDuelStart').hidden=pending.preview.index<preview.lines.length-1;
+ const placeholder=document.createElement('span');placeholder.className='preduel-placeholder';
+ placeholder.textContent='✦ '+preview.name+' · '+preview.place;
+ art.append(placeholder);
+ // Existing canonical portrait always serves as the artwork fallback.
+ const face=makeAvatar(preview.npc);face.className+=' preduel-portrait';art.append(face);
+ if(preview.artwork?.path){
+  const photo=document.createElement('img');
+  photo.className='preduel-cg';photo.alt=preview.artwork.title;
+  photo.onload=()=>{
+   if(!PRE.isReady(state.pendingDuel)||state.pendingDuel.id!==preview.id)return;
+   art.replaceChildren(photo);
+  };
+  photo.onerror=()=>{}; // Keep the portrait and scene dialogue if art is absent.
+  photo.src=preview.artwork.path;
+ }
+ if(!modal.open)modal.showModal();
+}
+function advancePreparedDuel(){
+ if(!PRE.advance(state.pendingDuel))return;
+ persist();showPreparedDuel();
+}
+function launchPreparedDuel(){
+ const pending=state.pendingDuel;
+ if(!PRE.launch(pending))return;
+ recordCG('before_duel',pending.npc);
+ persist();
+ if($('preDuelDialog').open)$('preDuelDialog').close();
+ render();
+ $('duel').hidden=false;
+ $('battle').src=duelUrl(pending);
+}
+
 function startDuel(id,exhibition=null,arcEpisode=null,tournament=null,sideQuest=null){
  if(state.activeStory||state.activeEncounter||(state.activeArc&&state.activeArc.id!==arcEpisode)||(state.activeSideQuest&&state.activeSideQuest.id!==sideQuest?.id)||state.pendingDuel||state.day>90||!cast[id]||(!exhibition&&!tournament&&!currentPeople().includes(id)))return;
  if(sideQuest&&(!SIDE.canDuel(state,sideQuest.id,currentPeople())||SIDE.byId(sideQuest.id)?.stages[sideQuest.step]?.npc!==id))return;
@@ -454,13 +505,14 @@ function startDuel(id,exhibition=null,arcEpisode=null,tournament=null,sideQuest=
  const c=cast[id];
  state.pendingDuel={id:'npc-'+id+'-'+state.day+'-'+state.slot+'-'+state.results.length,npc:id,day:state.day,slot:state.slot,opponent:c.deck,playerDeck:state.playerDeck,resolved:false,eventKey:exhibition?exhibition.day+':'+exhibition.title:null,eventReward:exhibition?exhibition.reward:0,eventTitle:exhibition?exhibition.title:null,arcEpisode:arcEpisode||null,tournamentId:tournament?.tournamentId||null,tournamentRound:tournament?.tournamentRound??null,tournamentAttempt:tournament?.tournamentAttempt??null,sideQuestId:sideQuest?.id||null,sideQuestStage:sideQuest?.step??null};
  if(arcEpisode)state.activeArc=null;
- const memories=recordCG('before_duel',id);
- persist();render();$('duel').hidden=false;$('battle').src=duelUrl(state.pendingDuel);
- showCGMoment(memories[0]);
+ PRE.stage(state.pendingDuel);
+ persist();render();
+ $('duel').hidden=true;$('battle').src='about:blank';
+ showPreparedDuel();
 }
 window.addEventListener('message',ev=>{
  const duel=state.pendingDuel;
- if(!BRIDGE.accepts(ev,location.origin,$('battle').contentWindow,duel))return;
+ if(PRE.isReady(duel)||!BRIDGE.accepts(ev,location.origin,$('battle').contentWindow,duel))return;
  const receipt=BRIDGE.settle(state,duel,ev.data.winner,cast[duel.npc].name);
  if(!receipt)return;
  for(const note of receipt.notes)log(note);
@@ -907,10 +959,20 @@ $('galleryBtn').onclick=openGallery;
 $('galleryClose').onclick=()=>$('galleryDialog').close();
 $('galleryCharacter').onchange=renderGallery;$('galleryCategory').onchange=renderGallery;
 $('cgMomentClose').onclick=()=>$('cgMoment').close();
+$('preDuelNext').onclick=advancePreparedDuel;
+$('preDuelStart').onclick=launchPreparedDuel;
+$('preDuelSkip').onclick=launchPreparedDuel;
+$('preDuelDialog').addEventListener('cancel',e=>e.preventDefault());
 $('quickNext').onclick=()=>act('rest');$('quickHome').onclick=()=>act('home');$('calendarBtn').onclick=openCalendar;$('calendarClose').onclick=()=>$('calendarDialog').close();
 $('save').onclick=()=>{persist();$('notice').textContent='Campaign saved in this browser.'};
 $('dismissReceipt').onclick=()=>{state.lastDuelReceipt=null;persist();render();};
 document.addEventListener('keydown',e=>{if((e.key===' '||e.code==='Space')&&!['INPUT','TEXTAREA','SELECT','BUTTON'].includes(e.target?.tagName)){if(state.activeStory?.phase==='lines'){e.preventDefault();act('storyNext');}else if(state.activeArc?.phase==='lines'){e.preventDefault();act('arcNext');}}});
 async function initDecks(){try{const res=await fetch('/api/classic/decks');if(!res.ok)throw Error('Could not load decks');const data=await res.json(),select=$('deckPicker');for(const d of data.decks.filter(x=>x.id!=='custom')){const o=document.createElement('option');o.value=d.id;o.textContent=d.name;select.append(o)}if([...select.options].some(o=>o.value===state.playerDeck))select.value=state.playerDeck;else{select.value='blackout';state.playerDeck='blackout'}select.onchange=()=>{if(state.pendingDuel||state.activeStory||state.activeSideQuest||state.ended){select.value=state.playerDeck;return;}state.playerDeck=select.value;persist()};}catch(e){$('notice').textContent='Deck list unavailable: '+e.message;}}
-persist();render();initDecks();if(state.pendingDuel){$('duel').hidden=false;$('battle').src=duelUrl(state.pendingDuel);}
+persist();render();initDecks();if(state.pendingDuel){
+ if(PRE.isReady(state.pendingDuel)){
+  $('duel').hidden=true;$('battle').src='about:blank';showPreparedDuel();
+ }else{
+  $('duel').hidden=false;$('battle').src=duelUrl(state.pendingDuel);
+ }
+}
 })();
