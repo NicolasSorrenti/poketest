@@ -1017,23 +1017,67 @@ function refreshRpgPanels(){
   const active=button.dataset.panel===rpgActivePanel;button.classList.toggle('active',active);button.setAttribute('aria-pressed',String(active));
  }
 }
+// Guest art includes separately exported expressions; original cast keeps its portrait.
+const expressionGuests=new Set(['alma','jun','nereo','teo','elio','sol']);
+function dialogueExpression(line){
+ const s=String(line||'').toLowerCase();
+ if(/[!?]{2}|\b(wow|what?!|seriously|no way)\b/.test(s))return 'surprised';
+ if(/\b(sorry|afraid|miss|alone|worried|sad|wish)\b/.test(s))return 'vulnerable';
+ if(/\b(never|stop|annoy|ridiculous|angry|hate)\b/.test(s))return 'irritated';
+ if(/\b(win|challenge|ready|promise|fight|battle|prove)\b/.test(s))return 'determined';
+ if(/[!]|\b(thanks|great|wonderful|happy|love|fun|glad)\b/.test(s))return 'happy';
+ return 'neutral';
+}
 function renderRpgCast(ids,locked,shown,portraitId){
- const root=$('rpgSceneCast');if(!root)return;root.replaceChildren();
+ const root=$('rpgSceneCast');if(!root)return;
  const speaking=Object.keys(cast).find(id=>shown?.speaker===cast[id].name||shown?.speaker===id);
  const focused=speaking||((shown?.line||locked)?portraitId:null);
  const participants=[...new Set([...ids,focused].filter(id=>!!cast[id]))].slice(0,6);
- if(state.location==='home'||!participants.length){root.hidden=true;return;}
+ if(state.location==='home'||!participants.length){root.hidden=true;root.replaceChildren();return;}
  root.hidden=false;
  const inConversation=!!(shown?.line||locked)&&!!focused;
  root.classList.toggle('is-conversation',inConversation);
+ // Preserve existing DOM nodes between dialogue lines so CSS transitions actually play.
+ const existing=new Map([...root.children].map(node=>[node.dataset.npc,node]));
  for(const id of participants){
-  const b=document.createElement('button');b.type='button';
-  b.className='rpg-cast-member'+(id===focused&&inConversation?' is-speaking':inConversation?' is-listening':'');
-  b.disabled=locked||inConversation;b.title='Talk to '+cast[id].name;b.setAttribute('aria-label','Talk to '+cast[id].name);
-  b.append(makeAvatar(id));
-  const name=document.createElement('span');name.textContent=cast[id].name.split(' ')[0];b.append(name);
-  b.onclick=()=>selectPerson(id);root.append(b);
+  let button=existing.get(id);
+  if(!button){
+   button=document.createElement('button');button.type='button';button.dataset.npc=id;
+   button.className='rpg-cast-member is-entering';
+   button.append(makeAvatar(id));
+   const name=document.createElement('span');name.textContent=cast[id].name.split(' ')[0];button.append(name);
+   button.onclick=()=>selectPerson(id);
+   button.addEventListener('animationend',()=>button.classList.remove('is-entering'),{once:true});
+  }
+  const active=inConversation&&id===focused;
+  button.classList.toggle('is-speaking',active);
+  button.classList.toggle('is-listening',inConversation&&!active);
+  button.disabled=locked||inConversation;
+  button.title='Talk to '+cast[id].name;
+  button.setAttribute('aria-label','Talk to '+cast[id].name);
+  const image=button.querySelector('img');
+  if(image){
+   const expression=active?dialogueExpression(shown?.line):'neutral';
+   const path=expressionGuests.has(id)?'/rpg-assets/characters/'+id+'/vn-expressions/'+expression+'.webp':(cast[id].portrait||'/rpg-assets/'+id+'.png');
+   if(image.getAttribute('src')!==path){
+    image.classList.remove('expression-change');
+    image.src=path;
+    // Fall back to the standard portrait when optional expression files are absent.
+    image.onerror=()=>{
+     const fallback=cast[id].portrait||'/rpg-assets/'+id+'.png';
+     if(image.getAttribute('src')!==fallback){image.src=fallback;return;}
+     image.style.display='none';
+     if(!button.querySelector('.avatar-fallback')){
+      const span=document.createElement('span');span.className='avatar-fallback';
+      span.textContent=cast[id].name.split(' ').map(x=>x[0]).join('');button.insertBefore(span,button.lastElementChild);
+     }
+    };
+    void image.offsetWidth;image.classList.add('expression-change');
+   }
+  }
+  root.append(button);existing.delete(id);
  }
+ for(const node of existing.values())node.remove();
 }
 function cleanRpgLabel(value){
  return String(value||'').replace(/\\s*·\\s*⏳[^·]*/g,'').replace(/\\s*·\\s*[+-]\\d+\\s*(?:affection|trust|focus|credits|points|pts|insight|reputation|preparation)(?:\\s*\\/\\s*[+-]\\d+\\s*\\w+)?/gi,'').replace(/\\s*·\\s*free(?:\\s*\\([^)]*\\))?/gi,'').replace(/\\s*·\\s*\\d+\\s*period\\(?s?\\)?/gi,'').trim();
