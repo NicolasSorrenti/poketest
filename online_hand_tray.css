@@ -122,3 +122,46 @@ body.duel-active .stage .territory .bench-zone .pokemon-strip{flex-wrap:nowrap}
  body.duel-active .stage .bench-zone .poke strong{font-size:8px;line-height:1.05}
  body.duel-active .stage .bench-zone .poke .hp-count{font-size:8px;line-height:1.1}
 }
+
+
+/* v0.40: compact, non-modal pinned hand and hover-only held-card fan. */
+body.duel-active .hand-tray-drawer{
+ max-height:min(340px,50dvh);
+ box-shadow:0 10px 45px #000d;
+}
+body.duel-active .below .hand{max-height:calc(min(340px,50dvh) - 78px)}
+body.duel-active .hand-panel .hand-fan{
+ display:none;position:fixed;bottom:68px;left:clamp(8px,3vw,48px);
+ width:min(620px,calc(100vw - 16px));height:225px;z-index:625;
+ pointer-events:none;filter:drop-shadow(0 14px 14px #0009);
+}
+body.duel-active .hand-panel:not(.tray-open):hover .hand-fan:not(.hidden),
+body.duel-active .hand-panel:not(.tray-open):focus-within .hand-fan:not(.hidden){display:block}
+body.duel-active .hand-fan::before{
+ content:'YOUR HAND · click to pin';position:absolute;left:12px;top:4px;
+ font-size:11px;letter-spacing:.08em;font-weight:900;color:#c8fff0;
+ background:#132e41eF;border:1px solid #5cc8b9;padding:5px 9px;border-radius:8px;
+}
+body.duel-active .hand-fan-card{
+ position:absolute;bottom:10px;left:calc(50% - 47px);
+ width:94px;height:132px;overflow:hidden;border-radius:7px;
+ border:2px solid #b8e3da;background:#294e66;
+ box-shadow:0 3px 15px #000a;
+ transform-origin:50% 120%;
+ transform:translateX(var(--fan-x)) translateY(var(--fan-y)) rotate(var(--fan-angle));
+}
+body.duel-active .hand-fan-card img{height:100%;width:100%;object-fit:cover;display:block}
+body.duel-active .hand-fan-card span{display:grid;place-items:center;height:100%;padding:6px;text-align:center;font-size:12px;font-weight:800;overflow-wrap:anywhere}
+body.duel-active #undoBtn{border-color:#80c6e1;background:#244b62;font-weight:800}
+body.duel-active #undoBtn:disabled{opacity:.44;cursor:not-allowed}
+@media(max-width:780px){
+ body.duel-active .hand-panel .hand-fan{height:190px;bottom:60px;left:7px}
+ body.duel-active .hand-fan-card{width:74px;height:105px;left:calc(50% - 37px)}
+ body.duel-active .hand-fan::before{font-size:9px}
+}
+@media(max-width:435px){
+ body.duel-active .below .turn-actions #undoBtn{font-size:0;padding:5px 5px}
+ body.duel-active .below .turn-actions #undoBtn::before{content:'↶';font-size:19px}
+}
+@media(hover:none){body.duel-active .hand-panel .hand-fan{display:none!important}}
+@media(prefers-reduced-motion:reduce){body.duel-active .hand-fan-card{transition:none}}
