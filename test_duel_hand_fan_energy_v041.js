@@ -29,7 +29,7 @@ assert.match(energyStack({energies:[...unit.energies,'fire','water']},id=>cards[
 assert.equal(energyStack({energies:[]},id=>cards[id]),'');
 for(const type of ['grass','fire','water','lightning','psychic','fighting','colorless','darkness','metal','rainbow','recycle','special'])
  assert.match(css,new RegExp('energy-type-'+type),'Energy must have a distinct readable color: '+type);
-assert.match(css,/\.stage \.energy-peeks\{[\s\S]*?left:-11px/,'Attached Energy rail starts at the left edge');
+assert.match(css,/\.poke \.energy-card-stack\{[\s\S]*?--energy-peek:29px/,'Attached cards peek behind Pokémon on their left edge');
 assert.match(css,/body\.duel-active \.hand-panel \.hand-fan,/,'Fan must always be displayed, not gated by hover');
 assert.match(css,/overflow-x:auto;overflow-y:hidden/,'Long fan must scroll horizontally');
 for(const file of ['online','classic_live']){
@@ -43,4 +43,4 @@ for(const file of ['online','classic_live']){
  assert.match(js,/root\.classList\.toggle\('hidden',!handVisible\|\|!cards\.length\)/,'Player can hide and restore the permanent hand');
  assert.match(js,/root\.append\(track\)/);
 }
-console.log('PASS v0.41: permanent interactive hand, full-card coverage, type-colored left Energy rail, mobile responsiveness and accessibility');
+console.log('PASS v0.41: permanent interactive hand, full-card coverage, type-colored mini Energy card fallback, mobile responsiveness and accessibility');
