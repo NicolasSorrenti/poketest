@@ -446,7 +446,7 @@ test('ordinary riverside hangout does not grant situation-exclusive summer CG',(
  const r=launch({day:20,slot:1,location:'park',relationships:{marina:{affection:7,trust:3}},bonds:{marina:{affection:7,trust:3,duels:0}}});
  const person=r.elements.people.children.find(x=>x.children[1]?.children[0]?.textContent==='Marina Aoki');
  assert.ok(person);person.onclick();finishGreeting(r);
- r.act('hang:hana');
+ r.act('hang:marina');
  assert.equal(r.state().cgUnlocked.marina_beach_towel,undefined);
  const saved=launch(r.state()).state();
  assert.equal(saved.cgUnlocked.marina_beach_towel,undefined);
@@ -519,7 +519,7 @@ test('competitive Reina outing increases respect without creating phantom TCG ma
  const r=launch({day:1,slot:1,location:'center'});
  const reina=r.elements.people.children.find(x=>x.children?.[1]?.children?.[0]?.textContent==='Reina Kurogane');
  assert.ok(reina);reina.onclick();finishGreeting(r);
- r.act('socialPlan:hana');
+ r.act('socialPlan:reina');
  const preferred=r.elements.choices.children.find(x=>x.textContent.includes('Practice tricky openings'));
  assert.ok(preferred);assert.match(preferred.textContent,/Favorite/);
  preferred.onclick();
