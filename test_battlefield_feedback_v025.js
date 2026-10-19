@@ -22,5 +22,5 @@ assert.equal(element.textContent,'YOUR DECISION');
 feedback.reset();assert.equal(element.textContent,'');
 assert.equal(classes.has('show'),false);
 const images=energyStack({energies:['base1-99','base1-98','base1-102','base1-99','base1-98','base1-102','base1-99']},id=>({name:id==='base1-99'?'Grass Energy':'Energy',images:{small:'https://example.org/'+id+'.png'}}));
-assert.match(images,/energy-overflow/);assert.match(images,/\+1/);assert.equal((images.match(/class="attached-energy energy-type-/g)||[]).length,6);
+assert.match(images,/energy-overflow/);assert.match(images,/\+1/);assert.equal((images.match(/class="attached-energy energy-card-mini energy-type-/g)||[]).length,6);
 console.log('PASS v0.25 action animations: turn changes, damage, Energy attachments, next decision, safe reset, 7-Energy peek overflow');
