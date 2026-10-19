@@ -1183,6 +1183,7 @@ async function initDecks(){
   if(state.deckJourney!==null){
    const opt=document.createElement('option');opt.value='custom';opt.textContent=state.deckJourney.starter?COLLECT.byId(state.deckJourney.starter).name+' · Your collection':'Choose your starter above';
    select.append(opt);select.value='custom';select.disabled=true;
+   select.onchange=()=>{select.value='custom';};
   }else{
    const res=await fetch('/api/classic/decks');if(!res.ok)throw Error('Could not load decks');
    const data=await res.json();for(const d of data.decks.filter(x=>x.id!=='custom')){
