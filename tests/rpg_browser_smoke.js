@@ -55,6 +55,17 @@ const readState=page=>page.evaluate(()=>JSON.parse(localStorage.getItem('neoHarb
    if(await dismiss.isVisible())await dismiss.click();
    await page.locator('#rpgSceneCast .rpg-cast-member[data-npc="yuna"]').click();
   }
+  // CG rewards can trigger an illustration overlay during unrelated story beats.
+  // Close it before choosing the duel so a modal never masks gameplay controls.
+  await page.evaluate(()=>{
+   const cg=document.querySelector('#cgMoment');
+   if(!cg)return;
+   if(cg.open)cg.close();
+   // CG art loads asynchronously and can open after the duel button becomes
+   // visible; keep this browser-only smoke focused on starting the duel.
+   new MutationObserver(()=>{if(cg.open)cg.close()})
+    .observe(cg,{attributes:true,attributeFilter:['open']});
+  });
   await page.locator('#choices button').filter({hasText:'Challenge to a duel'}).click();
   await page.locator('#preDuelDialog').waitFor({state:'visible'});
   let staged=await readState(page);
@@ -80,6 +91,26 @@ const readState=page=>page.evaluate(()=>JSON.parse(localStorage.getItem('neoHarb
   const inner=page.frameLocator('#battle');
   await inner.locator('#phaseText').waitFor({timeout:45000});
   assert.equal(await inner.locator('#turnCoach').count(),1);
+  const energyArtGeometry=await inner.locator('.stage').evaluate(stage=>{
+     const box=document.createElement('button');box.className='poke';
+     box.style.position='absolute';box.style.left='180px';box.style.top='160px';
+     box.innerHTML=window.NeoDuelUI.energyStack({energies:['fire','water','fire']},
+      id=>({name:id==='fire'?'Fire Energy':'Water Energy',
+        images:{small:'https://assets.tcgdex.net/en/base/base1/98/low.webp'}}))+
+      '<span class="pokemon-face"></span>';
+     stage.append(box);
+     const stack=box.querySelector('.energy-card-stack'),minis=[...box.querySelectorAll('.energy-card-mini')];
+     const face=box.querySelector('.pokemon-face'),art=minis[0].querySelector('img');
+     const fr=face.getBoundingClientRect(),er=minis[0].getBoundingClientRect();
+     const result={count:minis.length,actualArt:!!art,extendsLeft:er.left<fr.left,
+      overlapsFace:er.right>fr.left,visible:er.width>20&&er.height>30,
+      layered:Number(getComputedStyle(face).zIndex)>Number(getComputedStyle(stack).zIndex),
+      pointerSafe:getComputedStyle(stack).pointerEvents==='none'};
+     box.remove();return result;
+    });
+    assert.equal(energyArtGeometry.count,3,'All attached Energy mini cards are rendered');
+    for(const key of ['actualArt','extendsLeft','overlapsFace','visible','layered','pointerSafe'])
+     assert.ok(energyArtGeometry[key],key+' — Energy must peek as a real card from underneath Pokémon');
   await inner.locator('#handFan .hand-fan-card').first().waitFor({state:'visible'});
   const handGeometry=await inner.locator('#handFan .hand-fan-card').first().evaluate(card=>{
    const rect=card.getBoundingClientRect();
@@ -139,6 +170,17 @@ const readState=page=>page.evaluate(()=>JSON.parse(localStorage.getItem('neoHarb
    if(await dismiss.isVisible())await dismiss.click();
    await page.locator('#rpgSceneCast .rpg-cast-member[data-npc="yuna"]').click();
   }
+  // CG rewards can trigger an illustration overlay during unrelated story beats.
+  // Close it before choosing the duel so a modal never masks gameplay controls.
+  await page.evaluate(()=>{
+   const cg=document.querySelector('#cgMoment');
+   if(!cg)return;
+   if(cg.open)cg.close();
+   // CG art loads asynchronously and can open after the duel button becomes
+   // visible; keep this browser-only smoke focused on starting the duel.
+   new MutationObserver(()=>{if(cg.open)cg.close()})
+    .observe(cg,{attributes:true,attributeFilter:['open']});
+  });
   await page.locator('#choices button').filter({hasText:'Challenge to a duel'}).click();
   await page.locator('#preDuelDialog').waitFor({state:'visible'});
   const secondStaged=(await readState(page)).pendingDuel;
