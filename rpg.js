@@ -163,6 +163,13 @@ INTENTIONS.hydrate(state); // Expire yesterday's optional choice before saving t
 for(const plan of missedAppointments)log('You missed your planned meet-up with '+(cast[plan.npc]?.name||'a trainer')+'.');
 persist();timeFlash(beforeDay,beforeSlot);}
 function say(speaker,line,choices=[]){scene={speaker,line,choices};state.scene=scene;persist();render();}
+function closeSceneDialogue(){
+ if(state.activeSituation||state.activeStory||state.activeEncounter||state.activeArc||state.activeSideQuest||state.pendingDuel)return;
+ state.selected=null;
+ scene={speaker:'Narrator',line:'',choices:[]};
+ state.scene=scene;
+ persist();render();
+}
 function publicAppointments(place){return [...APPOINTMENTS.overrides(state),...STORY.available(state,place),...SIDE.appointments(state)];}
 function currentPeople(){if(state.day>90)return [];const regular=SCHEDULES.peopleAt(state.day,state.slot,state.location,publicAppointments(state.location));
 for(const e of eligibleStories())if(!regular.includes(e.npc))regular.push(e.npc);
@@ -465,7 +472,7 @@ function act(action){
  if(type==='home'){state.location='home';state.selected=null;persist();return say('Narrator','Back home. The championship posters on the wall remind you why you came.');}
  if(type==='where'){const c=cast[id],visit=SCHEDULES.nextVisit(id,state.day,state.slot,[]);return say('Narrator',c.name+(visit?' is usually around '+places[visit.place][0]+' on day '+visit.day+', '+periods[visit.slot]+'.':' has no announced public visits in the coming week.'),options(id));}
  if(type==='sleep'){if(state.location!=='home')return;const n=3-state.slot;advance(n);return say('Narrator','You wake up to a new day in Neo Harbor.');}
- if(type==='close'){state.selected=null;persist();return say('Narrator','The town has a rhythm of its own. You are beginning to hear it.');}
+ if(type==='close'||type==='dismissDialogue')return closeSceneDialogue();
  if(type==='duel')return startDuel(id||state.selected,false);
  if(type==='cup'){try{const match=TOURNAMENTS.begin(state,id);return startDuel(match.npc,null,null,match);}catch(err){return say('Tournament Desk',err.message);}}
  if(type==='event'){const e=scheduleEvent();if(!e)return;const opponents={7:'yuna',14:'reina',21:'hana',30:'reina',42:'kaede',60:'akari',75:'camila',88:'reina',90:'shiori'};return startDuel(opponents[e.day]||'reina',e);}
@@ -1037,7 +1044,7 @@ function simplifyRpgLabels(){
 }
 function renderRpgActions(locked,shown){
  const dock=$('rpgActionDock');if(!dock)return;
- const hasDialogue=locked||((shown?.choices?.length||0)>0)||!!(state.selected&&shown?.speaker!=='Narrator'&&shown?.line);
+ const hasDialogue=locked||((shown?.choices?.length||0)>0)||!!(shown?.line);
  $('dialogue').hidden=!hasDialogue;
  dock.hidden=hasDialogue;
  if(hasDialogue)return;
@@ -1132,6 +1139,10 @@ function render(){
    if(b.disabled)b.title=option?.disabledReason||'That meeting time is no longer available.';
   }
   b.onclick=()=>act(action);$('choices').append(b);
+ }
+ if(!locked&&shown?.line&&!shown?.choices?.length){
+  const b=document.createElement('button');b.className='choice finish';b.textContent='Continue ›';
+  b.onclick=()=>closeSceneDialogue();$('choices').append(b);
  }
  $('townRadar').replaceChildren();
  const elsewhere=[];
@@ -1275,7 +1286,7 @@ $('preDuelDialog').addEventListener('cancel',e=>e.preventDefault());
 $('quickNext').onclick=()=>act('rest');$('quickHome').onclick=()=>act('home');$('calendarBtn').onclick=openCalendar;$('calendarClose').onclick=()=>$('calendarDialog').close();
 $('save').onclick=()=>{persist();$('notice').textContent='Campaign saved in this browser.'};
 $('dismissReceipt').onclick=()=>{state.lastDuelReceipt=null;persist();render();};
-document.addEventListener('keydown',e=>{if((e.key===' '||e.code==='Space')&&!['INPUT','TEXTAREA','SELECT','BUTTON'].includes(e.target?.tagName)){if(state.activeStory?.phase==='lines'){e.preventDefault();act('storyNext');}else if(state.activeArc?.phase==='lines'){e.preventDefault();act('arcNext');}}});
+document.addEventListener('keydown',e=>{if((e.key===' '||e.code==='Space')&&!['INPUT','TEXTAREA','SELECT','BUTTON'].includes(e.target?.tagName)){if(state.activeStory?.phase==='lines'){e.preventDefault();act('storyNext');}else if(state.activeArc?.phase==='lines'){e.preventDefault();act('arcNext');}else if(!$('dialogue').hidden&&!state.activeSituation&&!state.activeStory&&!state.activeEncounter&&!state.activeArc&&!state.activeSideQuest&&!state.pendingDuel&&!scene.choices?.length){e.preventDefault();closeSceneDialogue();}}});
 async function initDecks(){
  try{
   const select=$('deckPicker');select.replaceChildren();
