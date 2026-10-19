@@ -463,6 +463,158 @@
   marina:["The river isn't the only nice thing about this place.","I meant that I'm happy you're here.","Oh. Well, then I'm happy you're here too."],
   kaede:["You make getting into trouble sound tempting.","Maybe I do want to be trouble with you.","That's the kind of offer I could get used to."]
  };
+
+ const extraFlirt={
+  "jinx": [
+    "Is there room beside you, or is that seat a challenge?",
+    "I came for the match. Staying to talk is the surprise.",
+    "Huh. Fine. But you're buying the post-match fries."
+  ],
+  "luna": [
+    "I was hoping we'd find a quieter corner.",
+    "Not to rescue you. Just to spend some time together.",
+    "Oh... then I'd really like that. I'll try not to spill anything."
+  ],
+  "sol": [
+    "What if we skipped the big event and just took a walk?",
+    "Only if you want to. No surprise obstacle course.",
+    "Then yes! Though I make no promises about the conversation."
+  ],
+  "rina": [
+    "Can I ask for an encore without the stage lights?",
+    "The part where you're yourself, not performing.",
+    "That's my favorite version too. I'd love to share it."
+  ],
+  "elena": [
+    "I'd like to see you when the schedule isn't the boss.",
+    "I wanted to ask about dinner, not an appointment.",
+    "You have my attention. Present your very informal proposal."
+  ],
+  "sierra": [
+    "You have a minute before your next shoot?",
+    "I wanted to talk to you, not the camera.",
+    "That answer is rarer than you think. I'll make time."
+  ],
+  "iris": [
+    "You're always carrying half the town on your shoulders.",
+    "Then let me carry a box while you pick where we get tea.",
+    "A useful offer and a pleasant one. Careful, I may accept both."
+  ],
+  "jun": [
+    "You aren't on duty right now, are you?",
+    "Then I'd like your opinion on something other than my deck.",
+    "That's unexpected. Sit down and ask me properly."
+  ],
+  "teo": [
+    "Could you keep this off the microphone?",
+    "I like hearing you talk when the audience isn't listening.",
+    "For once I genuinely don't have a prepared line."
+  ],
+  "elio": [
+    "Your sleeves are fine. I was hoping you might stay.",
+    "Only if you're comfortable. We can just compare collections.",
+    "I think I'd like that. That sounds really nice."
+  ],
+  "alma": [
+    "Is this a terrible time to ask for company?",
+    "Not as a customer. As someone who enjoys talking to you.",
+    "Then wait until the lunch crowd clears. I'll save a chair."
+  ],
+  "nereo": [
+    "You look like you could use a better day.",
+    "I'd offer you the company, if the weather cooperates.",
+    "It doesn't have to. I'm starting to like your company anyway."
+  ]
+};
+ Object.assign(flirt,extraFlirt);
+ // Introduction and repeat greetings also let the protagonist answer naturally.
+ const greetings={
+  "hana": [
+    "You always make the shop feel welcoming.",
+    "I try. It's easier when familiar faces actually stop to talk."
+  ],
+  "reina": [
+    "I figured you'd have something to say about my last match.",
+    "Only if you're prepared to hear what I noticed."
+  ],
+  "shiori": [
+    "Is this a good time to join you?",
+    "Yes. I was hoping you'd stay long enough for a proper conversation."
+  ],
+  "yuna": [
+    "Should I be worried about what you're planning?",
+    "Very worried. Or thrilled. I'm working on the distinction."
+  ],
+  "akari": [
+    "Do you have a theory about why I'm here?",
+    "Several. But perhaps you could save me the work and tell me."
+  ],
+  "camila": [
+    "Do I need an appointment to talk to you?",
+    "Only if you're selling something. For a friend, I have a minute."
+  ],
+  "marina": [
+    "Mind if I stay a moment?",
+    "Not at all. I like watching the river with someone who doesn't rush."
+  ],
+  "kaede": [
+    "Is this a challenge or a greeting?",
+    "Whichever one you're brave enough to answer."
+  ],
+  "jinx": [
+    "I was going to ask you about your deck.",
+    "Good. Skip the awkward part and show me what you've got."
+  ],
+  "luna": [
+    "I'm fine. Are you okay?",
+    "Oh! Yes, I think so. Thanks for asking instead of assuming."
+  ],
+  "sol": [
+    "I should have guessed you were planning something.",
+    "I have three ideas. You get to veto every one of them."
+  ],
+  "rina": [
+    "I'm here for the cards, actually.",
+    "Really? Then let's get somewhere we can talk without a spotlight."
+  ],
+  "elena": [
+    "No account questions. Promise.",
+    "A refreshing change. Then I can afford a few minutes."
+  ],
+  "sierra": [
+    "I was hoping to talk about deck choices.",
+    "You have no idea how good it feels to hear that first."
+  ],
+  "jun": [
+    "Off the clock?",
+    "Off the clock. Which means I might actually relax while we talk."
+  ],
+  "teo": [
+    "Can I interview the interviewer?",
+    "For once? Sure. But don't expect a polished answer."
+  ],
+  "iris": [
+    "Do you need a hand before we talk?",
+    "You noticed the boxes. That already makes this a better day."
+  ],
+  "elio": [
+    "You're not bothering me. I came to say hi.",
+    "Really? Okay. I'd like to talk for a while, then."
+  ],
+  "alma": [
+    "Could we sit where it's quieter?",
+    "Of course. There is always room for a conversation here."
+  ],
+  "nereo": [
+    "Do you have a minute?",
+    "If the tide gives us one. I can spare two."
+  ]
+};
+ function greetingLines(npc,opening){
+  const beats=greetings[npc];
+  return beats?[{speaker:npc,text:opening},{speaker:'Protagonist',text:beats[0]},
+   {speaker:npc,text:beats[1]}]:[{speaker:npc,text:opening}];
+ }
  function flirtLines(npc,reply){
   const beats=flirt[npc];
   if(!beats)return [{speaker:npc,text:reply}];
@@ -481,5 +633,5 @@
   if(!add)return base;
   return [...base,{speaker:'Protagonist',text:add[0]},{speaker:match[1],text:add[1]}];
  }
- return Object.freeze({talkLines,flirtLines,storyLines});
+ return Object.freeze({talkLines,flirtLines,greetingLines,storyLines});
 });
