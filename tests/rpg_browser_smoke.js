@@ -9,6 +9,16 @@ const artifacts=path.join(__dirname,'..','artifacts','rpg-browser');
 fs.mkdirSync(artifacts,{recursive:true});
 const save=async(page,name)=>page.screenshot({path:path.join(artifacts,name),fullPage:true});
 const readState=page=>page.evaluate(()=>JSON.parse(localStorage.getItem('neoHarborRpgV1')||'{}'));
+const acknowledgeMandatory=async(page)=>{
+ for(let step=0;step<40;step++){
+  const active=(await readState(page)).mandatoryEventState?.active;
+  if(!active)return;
+  const button=page.locator('#choices button').first();
+  await button.waitFor({state:'visible'});
+  await button.click();
+ }
+ assert.equal((await readState(page)).mandatoryEventState?.active,null,'mandatory queue must not stall the browser workflow');
+};
 (async()=>{
  let browser;
  await new Promise((resolve,reject)=>server.listen(0,'127.0.0.1',err=>err?reject(err):resolve()));
@@ -53,6 +63,7 @@ const readState=page=>page.evaluate(()=>JSON.parse(localStorage.getItem('neoHarb
   {
    const dismiss=page.locator('#choices button').filter({hasText:'Continue'});
    if(await dismiss.isVisible())await dismiss.click();
+   await acknowledgeMandatory(page);
    await page.locator('#rpgSceneCast .rpg-cast-member[data-npc="yuna"]').click();
 
   }
@@ -73,7 +84,7 @@ const readState=page=>page.evaluate(()=>JSON.parse(localStorage.getItem('neoHarb
    if(await next.count()&&!await next.first().isHidden())await next.first().click();
    else break;
   }
-  await page.locator('#choices button').filter({hasText:'Challenge to a duel'}).click();
+  await page.locator('#characterActions button').filter({hasText:'Duel'}).click();
   await page.locator('#preDuelDialog').waitFor({state:'visible'});
   let staged=await readState(page);
   assert.equal(staged.pendingDuel?.preview?.phase,'ready','Preview must be first, not an already running match');
@@ -175,6 +186,7 @@ const readState=page=>page.evaluate(()=>JSON.parse(localStorage.getItem('neoHarb
   {
    const dismiss=page.locator('#choices button').filter({hasText:'Continue'});
    if(await dismiss.isVisible())await dismiss.click();
+   await acknowledgeMandatory(page);
    await page.locator('#rpgSceneCast .rpg-cast-member[data-npc="yuna"]').click();
 
   }
@@ -195,7 +207,7 @@ const readState=page=>page.evaluate(()=>JSON.parse(localStorage.getItem('neoHarb
    if(await next.count()&&!await next.first().isHidden())await next.first().click();
    else break;
   }
-  await page.locator('#choices button').filter({hasText:'Challenge to a duel'}).click();
+  await page.locator('#characterActions button').filter({hasText:'Duel'}).click();
   await page.locator('#preDuelDialog').waitFor({state:'visible'});
   const secondStaged=(await readState(page)).pendingDuel;
   assert.equal(secondStaged.preview.phase,'ready');
