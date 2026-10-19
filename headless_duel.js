@@ -586,6 +586,18 @@ function performAction(g,side,cmd){
    g.pendingDecision=null;g.pendingAction=null;
    answerFinalAttack(g,pending.plan,answer);return;
   }
+  if(pending.kind==='neo93_grab'){
+   if(answer.decline||answer.selected.length!==1)fail('Grab requires one attached Trainer choice');
+   const match=/^tool:(-?\\d+):(\\d+)$/.exec(answer.selected[0]);
+   if(!match)fail('Grab target is invalid');
+   const slot=Number(match[1]),index=Number(match[2]);
+   const defender=g.players[1-pending.side],host=slot===-1?defender.active:defender.bench[slot];
+   if(!Number.isInteger(slot)||slot< -1||!Number.isInteger(index)||!host?.attachedTrainers?.[index]||
+     card(g,host.attachedTrainers[index].id).supertype!=='Trainer')fail('Grab target is no longer attached');
+   g.pendingDecision=null;g.pendingAction=null;
+   resolveAttack(g,pending.side,pending.attackIndex,undefined,undefined,{neo93Approved:true,neo93Slot:slot,neo93ToolIndex:index});
+   return;
+  }
   if(pending.kind==='neo92_choose'){
    const owner=g.players[pending.side],enemy=g.players[1-pending.side],effect=pending.effect,picks=[...answer.selected];
    if(effect==='guiding'){
@@ -1041,6 +1053,16 @@ function performAction(g,side,cmd){
    g.nextDecisionId++;g.pendingDecision=makeDecision({id:`conversion:${g.nextDecisionId}`,actor:side,kind:'energy-type',label:'Choose a Pokémon type',options:colors.map(x=>({id:`type:${x}`,label:x})),min:1,max:1,optional:program.kind==='conversion1'});
    g.pendingAction={kind:'attack_color',side,attackIndex:index};return;
   }
+  if(program.kind==='neo93:aipom-grab'){
+   const options=[[-1,f.active],...f.bench.map((pokemon,i)=>[i,pokemon])].flatMap(([slot,pokemon])=>
+    (pokemon?.attachedTrainers||[]).flatMap((t,i)=>
+     card(g,t.id).supertype==='Trainer'?[{id:'tool:'+slot+':'+i,label:publicName(g,pokemon)+': '+card(g,t.id).name}]:[]));
+   if(options.length){
+    g.nextDecisionId++;g.pendingDecision=makeDecision({id:'neo93grab:'+g.nextDecisionId,actor:side,kind:'trainer-target',label:'Aipom Grab: choose an attached opposing Trainer card',options,min:1,max:1});
+    g.pendingAction={kind:'neo93_grab',side,attackIndex:index};return;
+   }
+   resolveAttack(g,side,index,undefined,undefined,{neo93Approved:true,neo93NoTarget:true});return;
+  }
   if(program.kind==='neo92:guiding-flame'){
    if(p.bench.length>=5)fail('Guiding Flame cannot be used with a full Bench');
    const options=p.discard.flatMap((id,i)=>isBasicPokemon(card(g,id))?[{id:'discard:'+i,label:card(g,id).name}]:[]);
@@ -1263,6 +1285,16 @@ function resolveAttack(g,side,index,chosenBench,energyPicks,extra={}){
   if(p.bench.length&&(!Number.isInteger(extra.neo47BenchIndex)||!p.bench[extra.neo47BenchIndex]))fail('Electric Current requires a valid Bench target');
  }
  if(program.kind==='neo47:discharge'&&!u.energies.some(id=>card(g,id).name==='Lightning Energy'))fail('Discharge needs a Lightning Energy card to discard');
+ if(program.kind==='neo93:aipom-grab'){
+  if(extra.neo93Approved!==true)fail('Grab requires an authorized selection');
+  const targets=[f.active,...f.bench].filter(Boolean).flatMap(pokemon=>(pokemon.attachedTrainers||[]).filter(t=>card(g,t.id).supertype==='Trainer'));
+  if(!targets.length){if(!extra.neo93NoTarget)fail('Grab had no targets');}
+  else{
+   const slot=extra.neo93Slot,tool=extra.neo93ToolIndex,target=slot===-1?f.active:f.bench[slot];
+   if(!Number.isInteger(slot)||slot< -1||!Number.isInteger(tool)||!target?.attachedTrainers?.[tool]||
+      card(g,target.attachedTrainers[tool].id).supertype!=='Trainer')fail('Invalid Grab selection');
+  }
+ }
  if(program.kind.startsWith('neo92:')){
   if(['neo92:guiding-flame','neo92:pull-in','neo92:white-hot-flame'].includes(program.kind)&&extra.neo92Approved!==true)fail('Neo v092 selection not completed');
   if(program.kind==='neo92:guiding-flame'){
@@ -2020,6 +2052,12 @@ function resolveAttack(g,side,index,chosenBench,energyPicks,extra={}){
  if(roll.discardAllSelfEnergy){p.discard.push(...u.energies);u.energies=[];}
  if(roll.placeCounters)f.active.damage+=10*roll.placeCounters;
  if(roll.millOpponent)for(let i=0;i<roll.millOpponent&&f.deck.length;i++)f.discard.push(f.deck.pop());
+ if(roll.neo93ReturnTrainer&&!extra.neo93NoTarget){
+  const host=extra.neo93Slot===-1?f.active:f.bench[extra.neo93Slot];
+  const trainer=host.attachedTrainers.splice(extra.neo93ToolIndex,1)[0];
+  f.deck=shuffle(g,[...f.deck,trainer.id]);
+  log(g,'Aipom returned '+card(g,trainer.id).name+' to the opponent deck.');
+ }
  if(roll.discardOpponentTools){for(const target of [f.active,...f.bench]){f.discard.push(...target.attachedTrainers.map(t=>t.id));target.attachedTrainers=[];}}
  if(roll.shuffleDiscardEnergies){const recycled=p.discard.filter(id=>isEnergy(card(g,id)));p.discard=p.discard.filter(id=>!isEnergy(card(g,id)));p.deck=shuffle(g,[...p.deck,...recycled]);}
  if(roll.neo92HealDefender!==undefined){
