@@ -1,7 +1,7 @@
 'use strict';
 (()=>{
 const $=id=>document.getElementById(id),KEY='neoHarborRpgV1',STORY=window.NeoHarborStory,SCHEDULES=window.NeoRpgSchedules,WORLD=window.NeoRpgWorld,ARC=window.NeoRpgRivalArc,TOURNAMENTS=window.NeoRpgTournaments,BRIDGE=window.NeoRpgDuelBridge;
-const PACK=window.NeoRpgNarrativePack,SIDE=window.NeoRpgSideQuests,EPILOGUE=window.NeoRpgEpilogue,APPOINTMENTS=window.NeoRpgAppointments,INTENTIONS=window.NeoRpgIntentions,CG=window.NeoRpgCGGallery,PLANNER=window.NeoRpgDailyPlanner;
+const PACK=window.NeoRpgNarrativePack,SIDE=window.NeoRpgSideQuests,EPILOGUE=window.NeoRpgEpilogue,APPOINTMENTS=window.NeoRpgAppointments,INTENTIONS=window.NeoRpgIntentions,CG=window.NeoRpgCGGallery,PLANNER=window.NeoRpgDailyPlanner,SOCIAL=window.NeoRpgSocialActivities;
 const periods=['Morning','Afternoon','Evening'];
 const places={
  home:['Your Apartment','Your base during the championship season.'],
@@ -117,7 +117,7 @@ function pauseSideQuest(){
 
 function timeFlash(beforeDay,beforeSlot){const overlay=document.createElement('div');overlay.className='notice-pop';const heading=document.createElement('b');heading.textContent=state.day>90?'Season complete':state.day!==beforeDay?'A NEW DAY BEGINS':'TIME PASSES';const body=document.createElement('span');body.textContent=state.day>90?'Day 90 has ended.':('Day '+state.day+' · '+periods[state.slot]);overlay.append(heading,body);document.body.append(overlay);overlay.addEventListener('animationend',()=>overlay.remove());}
 
-function defaults(){return {sideQuests:{},activeSideQuest:null,day:1,slot:0,location:'home',metReina:false,reinaTrust:0,reinaDuels:0,results:[],flags:{intro:false},journal:['The 90-day season begins.'],pendingDuel:null,bonds:{},talked:{},hungOut:{},eventsDone:{},points:0,credits:80,playerDeck:'blackout',selected:null,ended:false,storyDone:{},storyMissed:{},relationships:{},routeOutcomes:{},partner:null,activeStory:null,activeEncounter:null,activeArc:null,arcFlags:{},arcOutcomes:{},activityDone:{},encountersDone:{},focus:75,insight:0,reputation:0,preparation:0,lastDuelReceipt:null,tournaments:{},campaignHistory:[],ngPlus:0,appointments:[],appointmentSeq:0,scene:null}}
+function defaults(){return {sideQuests:{},activeSideQuest:null,day:1,slot:0,location:'home',metReina:false,reinaTrust:0,reinaDuels:0,results:[],flags:{intro:false},journal:['The 90-day season begins.'],pendingDuel:null,bonds:{},talked:{},hungOut:{},eventsDone:{},points:0,credits:80,playerDeck:'blackout',selected:null,ended:false,storyDone:{},storyMissed:{},relationships:{},routeOutcomes:{},partner:null,activeStory:null,activeEncounter:null,activeArc:null,arcFlags:{},arcOutcomes:{},activityDone:{},encountersDone:{},focus:75,insight:0,reputation:0,preparation:0,lastDuelReceipt:null,tournaments:{},campaignHistory:[],ngPlus:0,appointments:[],appointmentSeq:0,scene:null,socialHistory:{}}}
 let state;try{state=JSON.parse(localStorage.getItem(KEY))||defaults();if(!Number.isInteger(state.day)||state.day<1||state.day>91)throw Error('Invalid save');}catch{state=defaults()}
 for(const [k,v] of Object.entries(defaults()))if(state[k]===undefined)state[k]=v;
 if(!Array.isArray(state.campaignHistory))state.campaignHistory=[];
@@ -135,7 +135,7 @@ SIDE.expire(state);
 ARC.hydrate(state);
 // Restored saves may already be beyond an optional cup's registration window.
 TOURNAMENTS.expire(state);
-APPOINTMENTS.hydrate(state);APPOINTMENTS.expire(state);INTENTIONS.hydrate(state);CG.hydrate(state);
+APPOINTMENTS.hydrate(state);APPOINTMENTS.expire(state);INTENTIONS.hydrate(state);CG.hydrate(state);SOCIAL.hydrate(state);
 for(const id of Object.keys(cast)){const old=state.bonds[id],current=state.relationships[id];
  if(!state.flags['newStoryMigrated_'+id]){for(const key of ['affection','trust','duels'])current[key]=Math.max(current[key]||0,old[key]||0);
  state.flags['newStoryMigrated_'+id]=true;}
@@ -170,12 +170,30 @@ function options(id){const key=atKey(id),spentToday=!!state.hungOut[state.day+':
  [booked?'Meet-up scheduled · check upcoming plans':'Invite to a future meet-up · free',booked?'plans':'invite:'+id],
  ['Ask about their routine · free','where:'+id],
  [state.talked[key]?'Talk again · free (bond already earned)':'Talk · free · +1 affection','talk:'+id],
+ [spentToday?'Shared outing completed today':'Choose a shared activity · ⏳ 1 period','socialPlan:'+id],
  [spentToday?'Already spent time today · free':'Spend time together · ⏳ 1 period · +2 affection / +1 trust','hang:'+id],
  ['Challenge to a duel · ⏳ 1 period · earn points, credits & trust','duel:'+id],
  [state.talked['flirt:'+key]?'Playful remark again · free':'Playful remark · free · +1 affection','flirt:'+id],
  ['Goodbye · free','close']
  ];}
 
+function sharedActivityChoices(id){
+ const available=SOCIAL.options(state,id,currentPeople(),cast);
+ return [...available.map(a=>[
+   a.title+' · '+(a.affinity==='favorite'?'♥ Favorite':a.affinity==='neutral'?'● Familiar':'◇ Something new')
+   +' · ⏳ 1 period · '+a.focus+' focus'+(a.credits?' + '+a.credits+' credits':'')
+   +(a.disabledReason?' · '+a.disabledReason:''),
+   'socialDo:'+id+':'+a.id
+ ]),['Back to conversation · free','back:'+id]];
+}
+function planSharedActivity(id){
+ if(!cast[id]||!currentPeople().includes(id))return;
+ const choices=sharedActivityChoices(id);
+ if(!choices.length)return say(cast[id].name,'We could plan something another time.',options(id));
+ const hint='What shall we do together? Favorite activities deepen our bond; rival-style practice builds respect. '
+  +'Trying something different is worthwhile too, and varying plans keeps them fresh.';
+ return say(cast[id].name,hint,choices);
+}
 function showEncounter(){
  const a=state.activeEncounter,e=a&&WORLD.byEncounter(a.id);
  if(!e)return null;
@@ -285,6 +303,22 @@ function act(action){
  if(type==='arcChoice')return chooseArc(id);
  if(type==='arcFinish')return finishArc();
  if(state.activeStory||state.pendingDuel||state.activeEncounter||state.activeArc||state.activeSideQuest)return;
+ if(type==='socialPlan')return planSharedActivity(id);
+ if(type==='socialDo'){
+  if(!cast[id]||!currentPeople().includes(id))return;
+  try{
+   const outcome=SOCIAL.complete(state,id,part,currentPeople(),cast);
+   log('Shared '+outcome.title.toLowerCase()+' with '+cast[id].name
+     +' · +'+outcome.affection+' affection, +'+outcome.trust+' trust, +'+outcome.respect+' respect.');
+   recordIntention('hangout');
+   const memories=recordCG('hangout',id);
+   advance();
+   say(cast[id].name,outcome.line);
+   showCGMoment(memories[0]);return;
+  }catch(err){
+   return say(cast[id].name,err.message,sharedActivityChoices(id));
+  }
+ }
  if(type==='intention'){
   try{const goal=INTENTIONS.choose(state,id);log('Today’s priority: '+goal.title+'.');persist();render();}
   catch(err){$('notice').textContent=err.message;}
