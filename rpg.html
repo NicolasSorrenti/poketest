@@ -139,6 +139,7 @@
         <div class="sidebar-title"><span>YOUR DECK</span><small>CHOOSE FOR NEXT DUEL</small></div>
         <label class="decklabel" for="deckPicker">ACTIVE 60-CARD DECK</label>
         <select id="deckPicker"></select>
+        <div id="deckCollection" class="deck-collection" aria-live="polite"></div>
       </section>
       <section class="side-section">
         <div class="sidebar-title"><span>SEASON JOURNAL</span><small>NO SPOILERS</small></div>
@@ -201,6 +202,26 @@
   </div>
  </div>
 </dialog>
+<dialog id="starterDialog" class="modal deck-starter-dialog" aria-label="Choose your RPG starter deck">
+ <h2>Choose your first 60-card deck</h2>
+ <p>Three modest mixed-type teams. Earn cards, buy training packs, and improve your list across the 90-day season. Your choice is permanent for this run.</p>
+ <div id="starterChoices" class="starter-choices"></div>
+</dialog>
+<dialog id="deckEditDialog" class="modal deck-workshop-dialog" aria-label="Build your RPG deck">
+ <div class="modal-heading"><h2>◆ Deck Workshop</h2><button id="deckEditClose" type="button">✕ Close</button></div>
+ <p id="deckEditStats" aria-live="polite"></p>
+ <div class="deck-workshop-controls">
+  <label>Replace from deck<select id="deckRemove"></select></label>
+  <label>With owned card<select id="deckAdd"></select></label>
+ </div>
+ <div class="deck-workshop-buttons">
+  <button id="deckSwap" type="button">Swap one card · free</button>
+  <button id="deckSave" type="button">Save 60-card deck</button>
+  <button id="deckDiscard" type="button">Discard draft</button>
+ </div>
+ <p id="deckEditError" role="status"></p>
+ <div id="deckList" class="deck-workshop-list"></div>
+</dialog>
 <div id="duel" hidden>
  <div class="duelhead"><strong>NEO CAMPUS · OFFICIAL TCG DUEL ENGINE</strong><span>The RPG clock advances after the match finishes.</span></div>
  <iframe id="battle" title="Neo Campus TCG Duel"></iframe>
@@ -225,6 +246,7 @@
 <script src="/rpg_planned_dates.js"></script>
 <script src="/rpg_preduel.js"></script>\n<script src="/rpg_situations.js"></script>
 <script src="/rpg_season_journey.js"></script>
+<script src="/rpg_collection.js"></script>
 <script src="/rpg.js"></script>
 </body>
 </html>

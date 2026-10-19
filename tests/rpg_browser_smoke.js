@@ -18,6 +18,10 @@ const readState=page=>page.evaluate(()=>JSON.parse(localStorage.getItem('neoHarb
   const page=await browser.newPage({viewport:{width:1400,height:900},deviceScaleFactor:1});
   const errors=[];page.on('pageerror',err=>errors.push('RPG: '+err.message));
   await page.goto(origin+'/rpg.html',{waitUntil:'domcontentloaded',timeout:45000});
+  await page.locator('#starterDialog').waitFor({state:'visible'});
+  assert.equal(await page.locator('#starterChoices button').count(),3);
+  await page.locator('#starterChoices button').filter({hasText:'Tidal Circuit'}).click();
+  assert.equal((await readState(page)).deckJourney.starter,'tidal_circuit');
   await page.locator('#places .place').first().waitFor();
   assert.equal(await page.locator('#places .place').count(),7);
   await page.locator('#whereLabel').getByText(/YOU ARE HOME/).waitFor();
@@ -46,6 +50,8 @@ const readState=page=>page.evaluate(()=>JSON.parse(localStorage.getItem('neoHarb
   await page.locator('#preDuelStart').click();
   const pending=(await readState(page)).pendingDuel;
   assert.equal(pending.preview.phase,'launched');
+  assert.equal(pending.playerDeck,'custom');
+  assert.equal(pending.deckCards.length,60);
   await page.locator('#duel iframe').waitFor();
   assert.ok(pending?.id,'NPC challenge creates a campaign duel');
   await page.waitForFunction(id=>!!sessionStorage.getItem('neoRpgDuelToken:'+encodeURIComponent(id)),pending.id,{timeout:45000});
@@ -86,6 +92,7 @@ const readState=page=>page.evaluate(()=>JSON.parse(localStorage.getItem('neoHarb
   assert.equal(state.pendingDuel,null);
   assert.equal(state.results.length,1);
   assert.equal(state.results[0].won,false);
+  assert.equal(state.deckJourney.rewards,0,'losses cannot invent card rewards');
   assert.equal(state.points,1);
   assert.equal(state.credits,85);
   assert.equal(state.slot,2,'CPU match should consume one period');

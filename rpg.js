@@ -1,7 +1,7 @@
 'use strict';
 (()=>{
 const $=id=>document.getElementById(id),KEY='neoHarborRpgV1',STORY=window.NeoHarborStory,SCHEDULES=window.NeoRpgSchedules,WORLD=window.NeoRpgWorld,ARC=window.NeoRpgRivalArc,TOURNAMENTS=window.NeoRpgTournaments,BRIDGE=window.NeoRpgDuelBridge;
-const PACK=window.NeoRpgNarrativePack,SIDE=window.NeoRpgSideQuests,EPILOGUE=window.NeoRpgEpilogue,APPOINTMENTS=window.NeoRpgAppointments,INTENTIONS=window.NeoRpgIntentions,CG=window.NeoRpgCGGallery,PLANNER=window.NeoRpgDailyPlanner,SOCIAL=window.NeoRpgSocialActivities,DATES=window.NeoRpgPlannedDates,PRE=window.NeoRpgPreDuel,SITUATIONS=window.NeoRpgSituations,JOURNEY=window.NeoRpgSeasonJourney;
+const PACK=window.NeoRpgNarrativePack,SIDE=window.NeoRpgSideQuests,EPILOGUE=window.NeoRpgEpilogue,APPOINTMENTS=window.NeoRpgAppointments,INTENTIONS=window.NeoRpgIntentions,CG=window.NeoRpgCGGallery,PLANNER=window.NeoRpgDailyPlanner,SOCIAL=window.NeoRpgSocialActivities,DATES=window.NeoRpgPlannedDates,PRE=window.NeoRpgPreDuel,SITUATIONS=window.NeoRpgSituations,JOURNEY=window.NeoRpgSeasonJourney,COLLECT=window.NeoRpgCollection;
 const periods=['Morning','Afternoon','Evening'];
 const places={
  home:['Your Apartment','Your base during the championship season.'],
@@ -117,9 +117,12 @@ function pauseSideQuest(){
 
 function timeFlash(beforeDay,beforeSlot){const overlay=document.createElement('div');overlay.className='notice-pop';const heading=document.createElement('b');heading.textContent=state.day>90?'Season complete':state.day!==beforeDay?'A NEW DAY BEGINS':'TIME PASSES';const body=document.createElement('span');body.textContent=state.day>90?'Day 90 has ended.':('Day '+state.day+' · '+periods[state.slot]);overlay.append(heading,body);document.body.append(overlay);overlay.addEventListener('animationend',()=>overlay.remove());}
 
-function defaults(){return {sideQuests:{},activeSideQuest:null,day:1,slot:0,location:'home',metReina:false,reinaTrust:0,reinaDuels:0,results:[],flags:{intro:false},journal:['The 90-day season begins.'],pendingDuel:null,bonds:{},talked:{},hungOut:{},eventsDone:{},points:0,credits:80,playerDeck:'blackout',selected:null,ended:false,storyDone:{},storyMissed:{},relationships:{},routeOutcomes:{},partner:null,activeStory:null,activeEncounter:null,activeArc:null,arcFlags:{},arcOutcomes:{},activityDone:{},encountersDone:{},focus:75,insight:0,reputation:0,preparation:0,lastDuelReceipt:null,tournaments:{},campaignHistory:[],ngPlus:0,appointments:[],appointmentSeq:0,scene:null,socialHistory:{},situationDone:{},activeSituation:null}}
+function defaults(){return {sideQuests:{},activeSideQuest:null,day:1,slot:0,location:'home',metReina:false,reinaTrust:0,reinaDuels:0,results:[],flags:{intro:false},journal:['The 90-day season begins.'],pendingDuel:null,bonds:{},talked:{},hungOut:{},eventsDone:{},points:0,credits:80,playerDeck:'blackout',selected:null,ended:false,storyDone:{},storyMissed:{},relationships:{},routeOutcomes:{},partner:null,activeStory:null,activeEncounter:null,activeArc:null,arcFlags:{},arcOutcomes:{},activityDone:{},encountersDone:{},focus:75,insight:0,reputation:0,preparation:0,lastDuelReceipt:null,tournaments:{},campaignHistory:[],ngPlus:0,appointments:[],appointmentSeq:0,scene:null,socialHistory:{},situationDone:{},activeSituation:null,deckJourney:null}}
+const hadCampaignSave=!!localStorage.getItem(KEY);
 let state;try{state=JSON.parse(localStorage.getItem(KEY))||defaults();if(!Number.isInteger(state.day)||state.day<1||state.day>91)throw Error('Invalid save');}catch{state=defaults()}
 for(const [k,v] of Object.entries(defaults()))if(state[k]===undefined)state[k]=v;
+if(!hadCampaignSave)state.deckJourney=COLLECT.fresh();
+COLLECT.hydrate(state);
 if(!Array.isArray(state.campaignHistory))state.campaignHistory=[];
 if(!Number.isInteger(state.ngPlus)||state.ngPlus<0)state.ngPlus=0;
 if(!places[state.location])state.location='home';
@@ -476,13 +479,123 @@ function act(action){
   }
   return;
  }
- if(type==='new'){if(confirm('Start a new season? This overwrites this browser save.')){state=defaults();for(const id of Object.keys(cast))state.bonds[id]={affection:0,trust:0,duels:0};persist();location.reload();}return;}
+ if(type==='new'){if(confirm('Start a new season? This overwrites this browser save.')){state=defaults();state.deckJourney=COLLECT.fresh();for(const id of Object.keys(cast))state.bonds[id]={affection:0,trust:0,duels:0};persist();location.reload();}return;}
  if(!cast[id]||!currentPeople().includes(id))return say('Narrator','They have already moved on. Try another time.');
  const c=cast[id],bond=state.bonds[id],key=atKey(id);
  if(type==='talk'){if(!state.talked[key]){state.talked[key]=true;bond.affection++;state.relationships[id].affection++;}persist();return say(c.name,c.talk[(state.day+bond.duels+bond.affection)%c.talk.length],options(id));}
  if(type==='flirt'){if(!state.talked['flirt:'+key]){state.talked['flirt:'+key]=true;bond.affection++;state.relationships[id].affection++;state.relationships[id].attraction++;}persist();return say(c.name,c.flirt,options(id));}
  if(type==='hang'){if(state.hungOut[state.day+':'+id])return say(c.name,'I enjoyed our time today. Let us make plans another day.',options(id));state.hungOut[state.day+':'+id]=true;bond.affection+=2;bond.trust++;state.relationships[id].affection+=2;state.relationships[id].trust++;log('Spent time with '+c.name+'.');recordIntention('hangout');const memories=recordCG('hangout',id);advance();state.selected=null;say(c.name,Array.isArray(c.hangouts)&&c.hangouts.length?c.hangouts[(state.day+bond.duels)%c.hangouts.length]:'That was a lovely way to spend part of the day. See you around.');showCGMoment(memories[0]);return;}
 }
+
+const cardNames=new Map();
+const labelCard=id=>cardNames.get(id)||id.replace('base1-','Base #');
+function controlsLocked(){return state.day>90||!!state.pendingDuel||!!state.activeSituation||!!state.activeStory||!!state.activeSideQuest||!!state.activeArc||!!state.activeEncounter;}
+function showStarterChoice(){
+ if(controlsLocked())return;
+ const root=$('starterChoices');root.replaceChildren();
+ for(const starter of COLLECT.starters){
+  const button=document.createElement('button');button.className='starter-choice';
+  const heading=document.createElement('strong');heading.textContent=starter.name+' · '+starter.types.join(' / ');
+  const detail=document.createElement('small');detail.textContent=starter.description+' · 60 cards · 20 Pokémon / 16 Trainers / 24 Energy';
+  button.append(heading,detail);
+  button.onclick=()=>{
+   if(controlsLocked())return;
+   try{COLLECT.choose(state,starter.id);log('Chose '+starter.name+' as your first deck.');persist();
+    if($('starterDialog').open)$('starterDialog').close();
+    say('Narrator','Your '+starter.name+' deck is ready. Visit the card shop for packs, win cards in duels and improve your deck at home.');
+   }catch(e){$('notice').textContent=e.message;}
+  };
+  root.append(button);
+ }
+ if(!$('starterDialog').open)$('starterDialog').showModal();
+}
+function renderCollection(){
+ const root=$('deckCollection');root.replaceChildren();
+ const journey=state.deckJourney,locked=controlsLocked();
+ if(journey===null){
+  const p=document.createElement('p');p.textContent='Legacy campaign: your current theme deck remains available. Switch to a limited collection whenever you want a new challenge.';
+  const btn=document.createElement('button');btn.textContent='Begin starter-deck journey';btn.disabled=locked;
+  btn.onclick=showStarterChoice;root.append(p,btn);return;
+ }
+ if(!journey.starter){
+  const btn=document.createElement('button');btn.textContent='Choose one of three mixed-type starters';btn.disabled=locked;
+  btn.onclick=showStarterChoice;root.append(btn);return;
+ }
+ const starter=COLLECT.byId(journey.starter);
+ const picker=$('deckPicker');
+ if(picker.options?.length!==1||picker.options[0]?.value!=='custom'){
+  picker.replaceChildren();
+  const opt=document.createElement('option');opt.value='custom';opt.textContent=starter.name+' · Your collection';picker.append(opt);
+ }else picker.options[0].textContent=starter.name+' · Your collection';
+ picker.value='custom';picker.disabled=true;
+ const total=Object.values(journey.owned).reduce((a,n)=>a+n,0);
+ const summary=document.createElement('p');summary.textContent=starter.name+' · 60-card deck · '+total+' owned cards · '+journey.packs+' packs opened';
+ const edit=document.createElement('button');edit.textContent='Edit your 60-card deck · free';edit.disabled=locked;edit.onclick=openDeckWorkshop;
+ root.append(summary,edit);
+ if(state.location==='shop'){
+  const buy=document.createElement('button');buy.textContent='Buy training pack · 5 cards · 20 credits';
+  buy.disabled=locked||state.credits<20;
+  buy.onclick=()=>{
+   try{const cards=COLLECT.buyPack(state);log('Opened a training pack: '+cards.map(labelCard).join(', ')+'.');persist();say('Card Shop','Five new cards added to your collection: '+cards.map(labelCard).join(', ')+'. Edit your deck whenever you want.');}
+   catch(e){$('notice').textContent=e.message;}
+  };
+  root.append(buy);
+ }
+}
+function renderDeckWorkshop(){
+ const j=state.deckJourney;if(!j?.starter)return;
+ const draft=COLLECT.draft(state),owned=j.owned;
+ const counts=COLLECT.rank(draft),remove=$('deckRemove'),add=$('deckAdd');
+ const previousRemove=remove.value,previousAdd=add.value;
+ remove.replaceChildren();add.replaceChildren();
+ const label=(id,n)=>labelCard(id)+' · '+n+' copy'+(n===1?'':'ies');
+ for(const [id,n] of Object.entries(counts)){
+  const option=document.createElement('option');option.value=id;option.textContent=label(id,n);remove.append(option);
+ }
+ for(const [id,n] of Object.entries(owned)){
+  if(!n)continue;
+  const option=document.createElement('option');option.value=id;option.textContent=label(id,n)+' owned / '+(counts[id]||0)+' in deck';add.append(option);
+ }
+ if(counts[previousRemove])remove.value=previousRemove;
+ if(owned[previousAdd])add.value=previousAdd;
+ const valid=COLLECT.check(draft,owned);
+ $('deckEditStats').textContent=COLLECT.byId(j.starter).name+' · '+draft.length+'/60 cards · '+(valid.valid?'Ready to battle':'Deck needs attention');
+ $('deckEditError').textContent=valid.errors[0]||'Swap any card you own, one for one. Only your saved deck goes into battle.';
+ const list=$('deckList');list.replaceChildren();
+ for(const [id,n] of Object.entries(counts)){
+  const item=document.createElement('span');item.textContent=n+'× '+labelCard(id);list.append(item);
+ }
+}
+function openDeckWorkshop(){
+ if(controlsLocked()||!state.deckJourney?.starter)return;
+ COLLECT.draft(state);renderDeckWorkshop();persist();
+ if(!$('deckEditDialog').open)$('deckEditDialog').showModal();
+}
+function closeDeckWorkshop(discard){
+ if(discard)COLLECT.cancel(state);
+ if($('deckEditDialog').open)$('deckEditDialog').close();
+ persist();render();
+}
+$('starterDialog').addEventListener('cancel',e=>{if(state.deckJourney&&!state.deckJourney.starter)e.preventDefault();});
+$('deckSwap').onclick=()=>{
+ try{
+  COLLECT.change(state,$('deckRemove').value,$('deckAdd').value);persist();renderDeckWorkshop();
+ }catch(e){$('deckEditError').textContent=e.message;}
+};
+$('deckSave').onclick=()=>{
+ try{COLLECT.save(state);log('Saved a revised 60-card deck.');closeDeckWorkshop(false);}
+ catch(e){$('deckEditError').textContent=e.message;}
+};
+$('deckDiscard').onclick=()=>closeDeckWorkshop(true);
+$('deckEditClose').onclick=()=>closeDeckWorkshop(true);
+async function loadCardNames(){
+ try{const res=await fetch('/cards/base1.json');if(!res.ok)return;
+  const cards=await res.json();if(!Array.isArray(cards))return;
+  for(const c of cards)if(c?.id&&c.name)cardNames.set(c.id,c.name);
+  renderCollection();
+ }catch{}
+}
+
 function duelUrl(duel){return '/classic_live.html?rpg=1&duelId='+encodeURIComponent(duel.id)+'&deck='+encodeURIComponent(duel.playerDeck)+'&opponent='+encodeURIComponent(duel.opponent)+'&npc='+encodeURIComponent(duel.npc)+'&npcName='+encodeURIComponent(cast[duel.npc].name);}
 
 function describePreparedDuel(){
@@ -531,15 +644,18 @@ function launchPreparedDuel(){
  if($('preDuelDialog').open)$('preDuelDialog').close();
  render();
  $('duel').hidden=false;
+ if(pending.deckCards)sessionStorage.setItem('neoRpgDeck:'+pending.id,JSON.stringify(pending.deckCards));
  $('battle').src=duelUrl(pending);
 }
 
 function startDuel(id,exhibition=null,arcEpisode=null,tournament=null,sideQuest=null){
+ if(state.deckJourney&&!state.deckJourney.starter){showStarterChoice();return;}
+ if(state.deckJourney?.starter&&!COLLECT.check(state.deckJourney.deck,state.deckJourney.owned).valid){$('notice').textContent='Save a valid campaign deck before challenging another trainer.';return;}
  if(state.activeSituation||state.activeStory||state.activeEncounter||(state.activeArc&&state.activeArc.id!==arcEpisode)||(state.activeSideQuest&&state.activeSideQuest.id!==sideQuest?.id)||state.pendingDuel||state.day>90||!cast[id]||(!exhibition&&!tournament&&!currentPeople().includes(id)))return;
  if(sideQuest&&(!SIDE.canDuel(state,sideQuest.id,currentPeople())||SIDE.byId(sideQuest.id)?.stages[sideQuest.step]?.npc!==id))return;
  if(arcEpisode&&(!state.activeArc||state.activeArc.phase!=='choice'||!ARC.available(state,currentPeople()).some(e=>e.id===arcEpisode)))return;
  const c=cast[id];
- state.pendingDuel={id:'npc-'+id+'-'+state.day+'-'+state.slot+'-'+state.results.length,npc:id,day:state.day,slot:state.slot,opponent:c.deck,playerDeck:state.playerDeck,resolved:false,eventKey:exhibition?exhibition.day+':'+exhibition.title:null,eventReward:exhibition?exhibition.reward:0,eventTitle:exhibition?exhibition.title:null,arcEpisode:arcEpisode||null,tournamentId:tournament?.tournamentId||null,tournamentRound:tournament?.tournamentRound??null,tournamentAttempt:tournament?.tournamentAttempt??null,sideQuestId:sideQuest?.id||null,sideQuestStage:sideQuest?.step??null};
+ state.pendingDuel={id:'npc-'+id+'-'+state.day+'-'+state.slot+'-'+state.results.length,npc:id,day:state.day,slot:state.slot,opponent:c.deck,playerDeck:state.deckJourney?.starter?'custom':state.playerDeck,deckCards:state.deckJourney?.starter?[...state.deckJourney.deck]:null,resolved:false,eventKey:exhibition?exhibition.day+':'+exhibition.title:null,eventReward:exhibition?exhibition.reward:0,eventTitle:exhibition?exhibition.title:null,arcEpisode:arcEpisode||null,tournamentId:tournament?.tournamentId||null,tournamentRound:tournament?.tournamentRound??null,tournamentAttempt:tournament?.tournamentAttempt??null,sideQuestId:sideQuest?.id||null,sideQuestStage:sideQuest?.step??null};
  if(arcEpisode)state.activeArc=null;
  PRE.stage(state.pendingDuel);
  persist();render();
@@ -566,8 +682,11 @@ window.addEventListener('message',ev=>{
   const sideOutcome=duel.sideQuestId?SIDE.settleDuel(state,duel,receipt):null;
   if(sideOutcome)log('Completed side quest: '+sideOutcome.title+'.');
  if(personalOutcome)log('A special rivalry challenge reached its result.');
+ const awarded=COLLECT.reward(state,receipt.outcome==='Victory');
+ if(awarded)log('Won a new card for your collection: '+labelCard(awarded)+'.');
  state.lastDuelReceipt=receipt;state.pendingDuel=null;
  sessionStorage.removeItem(BRIDGE.sessionKey(duel.id));
+ sessionStorage.removeItem('neoRpgDeck:'+duel.id);
  advance();$('duel').hidden=true;$('battle').src='about:blank';
  const c=cast[duel.npc];say(c.name,sideOutcome?.text||personalOutcome|| (receipt.outcome==='Victory'?c.duelWin:receipt.outcome==='Draw'?'A hard-fought draw. Let us play again.':c.duelLose));
 });
@@ -860,6 +979,7 @@ function renderSeasonReport(){
 
 function render(){
  renderJourney();
+ renderCollection();
  const ended=state.day>90,locked=!!state.activeSituation||!!state.activeStory||!!state.activeEncounter||!!state.activeArc||!!state.activeSideQuest||!!state.pendingDuel;
  renderPlanner(locked);
  renderDailyIntention(locked);
@@ -1047,7 +1167,7 @@ function render(){
  for(const e of eventCards.filter(e=>e.day>=state.day).slice(0,2)){const p=document.createElement('p');p.textContent='DAY '+e.day+' · '+e.title+' ('+periods[e.slot]+')';$('journal').append(p)}
  for(const note of state.journal.slice(0,3)){const p=document.createElement('p');p.textContent='• '+note;$('journal').append(p)}
  $('notice').textContent=state.activeSituation?'Unexpected encounter in progress — finish the scene to continue.':state.activeSideQuest?'Side quest in progress — finish the scene to continue.':state.activeStory?'Story in progress: complete this scene to continue.':state.activeArc?'A private rivalry chapter is in progress.':state.activeEncounter?'Local encounter in progress — make your decision.':state.pendingDuel?'Your duel is in progress.':'Travel & talk are free · ⏳ actions advance time';
- $('deckPicker').disabled=locked||ended;
+ $('deckPicker').disabled=locked||ended||!!state.deckJourney;
  if($('deckPicker')?.options.length)$('deckPicker').value=state.playerDeck;
 }
 
@@ -1063,12 +1183,31 @@ $('quickNext').onclick=()=>act('rest');$('quickHome').onclick=()=>act('home');$(
 $('save').onclick=()=>{persist();$('notice').textContent='Campaign saved in this browser.'};
 $('dismissReceipt').onclick=()=>{state.lastDuelReceipt=null;persist();render();};
 document.addEventListener('keydown',e=>{if((e.key===' '||e.code==='Space')&&!['INPUT','TEXTAREA','SELECT','BUTTON'].includes(e.target?.tagName)){if(state.activeStory?.phase==='lines'){e.preventDefault();act('storyNext');}else if(state.activeArc?.phase==='lines'){e.preventDefault();act('arcNext');}}});
-async function initDecks(){try{const res=await fetch('/api/classic/decks');if(!res.ok)throw Error('Could not load decks');const data=await res.json(),select=$('deckPicker');for(const d of data.decks.filter(x=>x.id!=='custom')){const o=document.createElement('option');o.value=d.id;o.textContent=d.name;select.append(o)}if([...select.options].some(o=>o.value===state.playerDeck))select.value=state.playerDeck;else{select.value='blackout';state.playerDeck='blackout'}select.onchange=()=>{if(state.pendingDuel||state.activeStory||state.activeSideQuest||state.ended){select.value=state.playerDeck;return;}state.playerDeck=select.value;persist()};}catch(e){$('notice').textContent='Deck list unavailable: '+e.message;}}
-persist();render();initDecks();if(state.pendingDuel){
+async function initDecks(){
+ try{
+  const select=$('deckPicker');select.replaceChildren();
+  if(state.deckJourney!==null){
+   const opt=document.createElement('option');opt.value='custom';opt.textContent=state.deckJourney.starter?COLLECT.byId(state.deckJourney.starter).name+' · Your collection':'Choose your starter above';
+   select.append(opt);select.value='custom';select.disabled=true;
+   select.onchange=()=>{select.value='custom';};
+  }else{
+   const res=await fetch('/api/classic/decks');if(!res.ok)throw Error('Could not load decks');
+   const data=await res.json();for(const d of data.decks.filter(x=>x.id!=='custom')){
+    const opt=document.createElement('option');opt.value=d.id;opt.textContent=d.name;select.append(opt);
+   }
+   if([...select.options].some(o=>o.value===state.playerDeck))select.value=state.playerDeck;
+   else{select.value='blackout';state.playerDeck='blackout';}
+   select.onchange=()=>{if(controlsLocked()){select.value=state.playerDeck;return;}state.playerDeck=select.value;persist();};
+  }
+ }catch(e){$('notice').textContent='Deck list unavailable: '+e.message;}
+}
+persist();render();initDecks();loadCardNames();if(state.deckJourney&&!state.deckJourney.starter&&!state.ended&&!state.pendingDuel)showStarterChoice();if(state.pendingDuel){
  if(PRE.isReady(state.pendingDuel)){
   $('duel').hidden=true;$('battle').src='about:blank';showPreparedDuel();
  }else{
-  $('duel').hidden=false;$('battle').src=duelUrl(state.pendingDuel);
+  $('duel').hidden=false;
+  if(state.pendingDuel.deckCards)sessionStorage.setItem('neoRpgDeck:'+state.pendingDuel.id,JSON.stringify(state.pendingDuel.deckCards));
+  $('battle').src=duelUrl(state.pendingDuel);
  }
 }
 })();
