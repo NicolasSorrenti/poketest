@@ -2,7 +2,7 @@
 const test=require('node:test');
 const assert=require('node:assert/strict');
 const fs=require('node:fs'),path=require('node:path');
-const Pack=require('../rpg_narrative_pack'),Side=require('../rpg_side_quests'),Story=require('../rpg_story'),Schedules=require('../rpg_schedules'),World=require('../rpg_world'),Arc=require('../rpg_rival_arc'),Tournaments=require('../rpg_tournaments'),Epilogue=require('../rpg_epilogue'),Appointments=require('../rpg_appointments'),Intentions=require('../rpg_intentions'),CG=require('../rpg_cg_gallery'),Planner=require('../rpg_daily_planner'),Social=require('../rpg_social_activities'),Dates=require('../rpg_planned_dates'),Bridge=require('../rpg_duel_bridge'),Pre=require('../rpg_preduel'),Collection=require('../rpg_collection'),Journey=require('../rpg_season_journey'),Situations=require('../rpg_situations');
+const Pack=require('../rpg_narrative_pack'),Side=require('../rpg_side_quests'),Story=require('../rpg_story'),Schedules=require('../rpg_schedules'),World=require('../rpg_world'),Arc=require('../rpg_rival_arc'),Tournaments=require('../rpg_tournaments'),Epilogue=require('../rpg_epilogue'),Appointments=require('../rpg_appointments'),Intentions=require('../rpg_intentions'),CG=require('../rpg_cg_gallery'),Planner=require('../rpg_daily_planner'),Social=require('../rpg_social_activities'),Dates=require('../rpg_planned_dates'),Bridge=require('../rpg_duel_bridge'),Pre=require('../rpg_preduel'),Collection=require('../rpg_collection'),Journey=require('../rpg_season_journey'),Situations=require('../rpg_situations'),Dialogue=require('../rpg_dialogue');
 const js=fs.readFileSync(path.join(__dirname,'..','rpg.js'),'utf8');
 const html=fs.readFileSync(path.join(__dirname,'..','rpg.html'),'utf8');
 const ids=[...html.matchAll(/id="([^"]+)"/g)].map(x=>x[1]);
@@ -27,7 +27,7 @@ function launch(initial,approve=false){
  const doc={getElementById(id){if(!elements[id])throw Error('Missing '+id);return elements[id];},
   createElement(tag){return new FakeNode(tag);},body:new FakeNode('body'),
   addEventListener(name,cb){listeners['document:'+name]=cb;}};
- const win={NeoRpgNarrativePack:Pack,NeoRpgSideQuests:Side,NeoHarborStory:Story,NeoRpgSchedules:Schedules,NeoRpgWorld:World,NeoRpgRivalArc:Arc,NeoRpgTournaments:Tournaments,NeoRpgEpilogue:Epilogue,NeoRpgAppointments:Appointments,NeoRpgIntentions:Intentions,NeoRpgCGGallery:CG,NeoRpgDailyPlanner:Planner,NeoRpgSocialActivities:Social,NeoRpgPlannedDates:Dates,NeoRpgPreDuel:Pre,NeoRpgCollection:Collection,NeoRpgSeasonJourney:Journey,NeoRpgSituations:Situations,NeoRpgDuelBridge:Bridge,
+ const win={NeoRpgNarrativePack:Pack,NeoRpgSideQuests:Side,NeoHarborStory:Story,NeoRpgSchedules:Schedules,NeoRpgWorld:World,NeoRpgRivalArc:Arc,NeoRpgTournaments:Tournaments,NeoRpgEpilogue:Epilogue,NeoRpgAppointments:Appointments,NeoRpgIntentions:Intentions,NeoRpgCGGallery:CG,NeoRpgDailyPlanner:Planner,NeoRpgSocialActivities:Social,NeoRpgPlannedDates:Dates,NeoRpgPreDuel:Pre,NeoRpgCollection:Collection,NeoRpgSeasonJourney:Journey,NeoRpgSituations:Situations,NeoRpgDuelBridge:Bridge,NeoRpgDialogue:Dialogue,
   addEventListener(name,cb){listeners[name]=cb;}};
  const local={getItem(k){return saved[k]||null;},setItem(k,v){saved[k]=String(v);}};
  const session={removeItem(){},setItem(){},getItem(){return null;}};
@@ -902,4 +902,38 @@ test('shop booster reveal survives page reload without charging another 20 credi
  again.elements.packContinue.onclick();
  const final=launch(again.state());
  assert.equal(final.elements.packDialog.open,undefined);
+});
+
+test('daily Talk is an actual NPC / protagonist exchange, with no extra time cost',()=>{
+ const r=launch({day:1,slot:0,location:'shop'});
+ const hana=r.elements.people.children.find(x=>x.children?.[1]?.children?.[0]?.textContent==='Hana Mizuno');
+ assert.ok(hana);hana.onclick();
+ const talk=r.elements.choices.children.find(x=>x.textContent.startsWith('Talk'));
+ assert.ok(talk);talk.onclick();
+ const first=r.elements.line.textContent;
+ assert.equal(r.elements.speaker.textContent,'Hana Mizuno');
+ assert.equal(r.elements.choices.children.length,1,'chat should advance one line at a time');
+ r.elements.choices.children[0].onclick();
+ assert.equal(r.elements.speaker.textContent,'You','the protagonist must speak back');
+ r.elements.choices.children[0].onclick();
+ assert.equal(r.elements.speaker.textContent,'Hana Mizuno','NPC responds to the player');
+ r.elements.choices.children[0].onclick();
+ assert.equal(r.elements.speaker.textContent,'You');
+ r.elements.choices.children[0].onclick();
+ assert.equal(r.elements.speaker.textContent,'Hana Mizuno');
+ assert.notEqual(r.elements.line.textContent,first);
+ assert.ok(r.elements.choices.children.some(x=>x.textContent.includes('Goodbye')),'action menu returns after the exchange');
+ assert.equal(r.state().day,1);assert.equal(r.state().slot,0);
+ assert.ok(r.state().scene.dialogue.length>=5,'save should preserve the conversation');
+});
+test('story responses float to the center while the dialogue line remains visible',()=>{
+ const r=launch({day:5,slot:0,location:'shop',activeStory:{id:'hana_route_1',phase:'lines',index:0}});
+ assert.equal(r.elements.playerChoicePrompt.hidden,true);
+ const stages=Dialogue.storyLines('hana_route_1',Story.linesFor(r.state(),'hana_route_1'));
+ assert.equal(stages.length,5,'authored routes should have two additional spoken beats');
+ for(let i=0;i<stages.length;i++)r.elements.choices.children[0].onclick();
+ assert.equal(r.elements.playerChoicePrompt.hidden,false);
+ assert.equal(r.elements.choices.parentElement,r.elements.playerChoicePanel);
+ assert.ok(r.elements.choices.children.length>=2,'response prompts should offer meaningful choices');
+ assert.ok(r.elements.line.textContent);
 });
