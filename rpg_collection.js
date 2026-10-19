@@ -10,11 +10,16 @@
  ]);
  const byId=new Map(starters.map(s=>[s.id,s]));
  const upgrade=['base1-88','base1-84','base1-93','base1-91','base1-95','base1-23','base1-12','base1-14','base1-25','base1-64','base1-9','base1-21','base1-32','base1-29','base1-34','base1-19','base1-30','base1-42','base1-77','base1-92','base1-94','base1-81','base1-82','base1-90','base1-46','base1-44','base1-63','base1-58','base1-43','base1-52','base1-98','base1-99','base1-100','base1-102','base1-101','base1-97'];
+ const poolByStarter={
+  ember_garden:['base1-12','base1-23','base1-24','base1-30','base1-44','base1-45','base1-46','base1-54','base1-60','base1-66','base1-68','base1-81','base1-82','base1-83','base1-84','base1-88','base1-91','base1-92','base1-93','base1-94','base1-95','base1-98','base1-99'],
+  tidal_circuit:['base1-9','base1-14','base1-21','base1-25','base1-35','base1-38','base1-41','base1-42','base1-53','base1-58','base1-59','base1-63','base1-64','base1-65','base1-67','base1-81','base1-82','base1-84','base1-88','base1-91','base1-92','base1-93','base1-94','base1-95','base1-100','base1-102'],
+  mind_and_muscle:['base1-19','base1-29','base1-31','base1-32','base1-34','base1-43','base1-47','base1-49','base1-50','base1-52','base1-56','base1-62','base1-81','base1-82','base1-84','base1-88','base1-91','base1-92','base1-93','base1-94','base1-95','base1-97','base1-101']
+ };
  const ENERGY=new Set(['base1-96','base1-97','base1-98','base1-99','base1-100','base1-101','base1-102']);
- const allAllowed=new Set([...starters.flatMap(s=>s.cards),...upgrade]);
+ const allAllowed=new Set([...starters.flatMap(s=>s.cards),...upgrade,...Object.values(poolByStarter).flat()]);
  const rank=ids=>Object.fromEntries([...new Set(ids)].map(id=>[id,ids.filter(x=>x===id).length]));
  const hash=str=>{let h=2166136261;for(const ch of str){h^=ch.charCodeAt(0);h=Math.imul(h,16777619)}return h>>>0};
- const sample=(seed,i)=>upgrade[hash(seed+':'+i)%upgrade.length];
+ const sample=(starter,seed,i)=>{const pool=poolByStarter[starter]||upgrade;return pool[hash(seed+':'+i)%pool.length]};
  function fresh(){return {starter:null,owned:{},deck:[],draft:null,packs:0,rewards:0};}
  function hydrate(state){
   const x=state.deckJourney;if(x===null||x===undefined)return state;
@@ -63,14 +68,14 @@
  }
  function cancel(state){if(state.deckJourney)state.deckJourney.draft=null}
  function reward(state,win){const x=state.deckJourney;if(!x?.starter||!win)return null;
-  const id=sample(x.starter+':win:'+x.rewards,x.rewards);x.owned[id]=(x.owned[id]||0)+1;x.rewards++;return id;
+  const id=sample(x.starter,x.starter+':win:'+x.rewards,x.rewards);x.owned[id]=(x.owned[id]||0)+1;x.rewards++;return id;
  }
  function buyPack(state){const x=state.deckJourney;
   if(!x?.starter)throw Error('Choose your starter before opening packs');
   if(state.location!=='shop'||state.day>90)throw Error('Buy booster packs at the card shop');
   if(state.pendingDuel||state.activeStory||state.activeSideQuest||state.activeSituation||state.activeArc||state.activeEncounter)throw Error('Finish the current scene first');
   if((state.credits||0)<20)throw Error('A training pack costs 20 credits');
-  const seed=x.starter+':pack:'+x.packs,ids=Array.from({length:5},(_,i)=>sample(seed,i));
+  const seed=x.starter+':pack:'+x.packs,ids=Array.from({length:5},(_,i)=>sample(x.starter,seed,i));
   state.credits-=20;x.packs++;for(const id of ids)x.owned[id]=(x.owned[id]||0)+1;return ids;
  }
  return Object.freeze({starters,upgrade,ENERGY,byId:id=>byId.get(id),fresh,hydrate,choose,check,draft,change,save,cancel,reward,buyPack,rank});
