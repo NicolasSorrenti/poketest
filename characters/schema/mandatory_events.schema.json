@@ -1,0 +1,38 @@
+{
+ "$schema":"https://json-schema.org/draft/2020-12/schema",
+ "title":"Neo Harbor optional mandatory character events",
+ "type":"object","additionalProperties":false,
+ "required":["schemaVersion","characterId","events"],
+ "properties":{
+  "schemaVersion":{"const":1},
+  "characterId":{"type":"string","pattern":"^[a-z][a-z0-9_]+$"},
+  "events":{"type":"array","items":{"$ref":"#/$defs/event"}}
+ },
+ "$defs":{
+  "predicate":{
+   "oneOf":[
+    {"type":"object","required":["all"],"additionalProperties":false,"properties":{"all":{"type":"array","minItems":1,"items":{"$ref":"#/$defs/predicate"}}}},
+    {"type":"object","required":["any"],"additionalProperties":false,"properties":{"any":{"type":"array","minItems":1,"items":{"$ref":"#/$defs/predicate"}}}},
+    {"type":"object","required":["not"],"additionalProperties":false,"properties":{"not":{"$ref":"#/$defs/predicate"}}},
+    {"type":"object","required":["dayGte"],"additionalProperties":false,"properties":{"dayGte":{"type":"integer","minimum":1,"maximum":91}}},
+    {"type":"object","required":["dayLte"],"additionalProperties":false,"properties":{"dayLte":{"type":"integer","minimum":1,"maximum":91}}},
+    {"type":"object","required":["storyDone"],"additionalProperties":false,"properties":{"storyDone":{"type":"string"}}},
+    {"type":"object","required":["flag"],"additionalProperties":false,"properties":{"flag":{"type":"string"}}},
+    {"type":"object","required":["eventSeen"],"additionalProperties":false,"properties":{"eventSeen":{"type":"string"}}},
+    {"type":"object","required":["duelCountGte"],"additionalProperties":false,"properties":{"duelCountGte":{"type":"integer","minimum":0}}},
+    {"type":"object","required":["tournamentState"],"additionalProperties":false,"properties":{"tournamentState":{"type":"object","additionalProperties":false,"required":["id","state"],"properties":{"id":{"type":"string"},"state":{"type":"string"}}}}},
+    {"type":"object","required":["relationship"],"additionalProperties":false,"properties":{"relationship":{"type":"object","required":["npc","metric","gte"],"additionalProperties":false,"properties":{"npc":{"type":"string"},"metric":{"enum":["affection","trust","respect","attraction"]},"gte":{"type":"number","minimum":0}}}}}
+   ]
+  },
+  "line":{"type":"object","required":["speaker","text"],"properties":{"speaker":{"type":"string"},"text":{"type":"string","minLength":1}},"additionalProperties":false},
+  "choice":{"type":"object","required":["label","reply"],"properties":{"label":{"type":"string","minLength":1},"reply":{"type":"string","minLength":1},"flag":{"type":"string"},"effects":{"type":"object","additionalProperties":false,"properties":{"flags":{"type":"array","items":{"type":"string"}}}}},"additionalProperties":false},
+  "event":{"type":"object","required":["id","kind","priority","earliestDay","trigger","delivery","timeCost","lines","choices"],"properties":{
+   "id":{"type":"string","pattern":"^[a-z][a-z0-9_]+$"},"kind":{"const":"bond"},"priority":{"type":"integer","minimum":0,"maximum":9999},
+   "earliestDay":{"type":"integer","minimum":1,"maximum":91},"trigger":{"$ref":"#/$defs/predicate"},
+   "delivery":{"enum":["remote_or_present","remote","present"]},"timeCost":{"const":0},
+   "expiry":{"const":"never"},"fallback":{"const":"queue"},
+   "title":{"type":"string"},"lines":{"type":"array","minItems":1,"items":{"$ref":"#/$defs/line"}},
+   "choices":{"type":"array","minItems":1,"items":{"$ref":"#/$defs/choice"}}
+  },"additionalProperties":false}
+ }
+}

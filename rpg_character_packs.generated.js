@@ -515,7 +515,8 @@ const packs=[
      "prompt": "Adult 26 year old Elena Crowe sitting at a café table in the evening, long dark brown hair slightly loosened, deep hazel-green eyes with a rare soft expression, full lips, charcoal blazer draped over the chair, cream blouse with one extra button undone, refined and quietly vulnerable, anime visual novel CG, warm lighting, fully clothed SFW, Neo Harbor style, bottom 20 percent clear for dialogue"
     }
    ]
-  }
+  },
+  "mandatoryEvents": []
  },
  {
   "id": "jinx",
@@ -1216,7 +1217,8 @@ const packs=[
      "prompt": "Adult 18 year old Jinx Rivera perched on a cafe counter being told to get down by Alma, Jinx in short skirt and cropped top with signature smirk, long silver-white hair with pink underlights, fanservicey but fully clothed SFW anime JRPG style, warm cafe interior, bottom 20 percent clear for dialogue"
     }
    ]
-  }
+  },
+  "mandatoryEvents": []
  },
  {
   "id": "luna",
@@ -1731,7 +1733,8 @@ const packs=[
      "prompt": "Adult 18 year old Luna Quinn reaching for a high shelf, soft curvy goddess body, large breasts pushed up by a tight pastel shirt that has ridden up, long lavender hair, slightly panicked expression, unintentional heavy fanservice, fully clothed SFW, shop interior, anime visual novel CG, Neo Harbor style, bottom 20 percent clear"
     }
    ]
-  }
+  },
+  "mandatoryEvents": []
  },
  {
   "id": "rina",
@@ -2246,7 +2249,8 @@ const packs=[
      "prompt": "Adult 18 year old Rina Hoshino sitting at a café table showing her card binder, long pastel-pink hair, genuine excited expression, still wearing parts of her idol outfit under a soft cardigan, large aqua eyes sparkling, anime visual novel CG, warm lighting, fully clothed SFW, Neo Harbor style, bottom 20 percent clear for dialogue"
     }
    ]
-  }
+  },
+  "mandatoryEvents": []
  },
  {
   "id": "sierra",
@@ -2761,7 +2765,8 @@ const packs=[
      "prompt": "Adult 18 year old Sierra Holt sitting at a café table, long dark brunette hair, soft genuine expression while talking about cards, extremely slim upper body with tiny chest and large round ass visible even seated, casual crop top and tiny shorts, anime visual novel CG, warm lighting, fully clothed SFW, Neo Harbor style, bottom 20 percent clear for dialogue"
     }
    ]
-  }
+  },
+  "mandatoryEvents": []
  },
  {
   "id": "sol",
@@ -3520,10 +3525,11 @@ const packs=[
      "prompt": "Adult 26 year old Sol Varela in a relaxed cardigan over colorful resort wear, sitting quietly in cafe when festival plans go wrong; genuine vulnerable expression, cinematic anime VN composition, warm sunset atmosphere, SFW and character-led; bottom 20 percent clear for dialogue."
     }
    ]
-  }
+  },
+  "mandatoryEvents": []
  }
 ];
-const cast={},looks={},schedules={},arrivals={},events=[];
-for(const p of packs){cast[p.id]=p.cast;looks[p.id]=p.looks;schedules[p.id]=p.schedule;arrivals[p.id]=p.arrivalDay;events.push(...p.events);}
-return Object.freeze({packs,cast,looks,schedules,arrivals,events,byId:id=>packs.find(p=>p.id===id)||null});
+const cast={},looks={},schedules={},arrivals={},events=[],mandatoryEvents=[];
+for(const p of packs){cast[p.id]=p.cast;looks[p.id]=p.looks;schedules[p.id]=p.schedule;arrivals[p.id]=p.arrivalDay;events.push(...p.events);mandatoryEvents.push(...p.mandatoryEvents);}
+return Object.freeze({packs,cast,looks,schedules,arrivals,events,mandatoryEvents,byId:id=>packs.find(p=>p.id===id)||null});
 });

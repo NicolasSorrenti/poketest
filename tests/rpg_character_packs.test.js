@@ -91,3 +91,20 @@ test('browser and server register the pack bundle before any story module',()=>{
  assert.match(narrative,/for\(const entry of REGISTRY\.packs\)/);
  assert.match(app,/cast\[id\]\.portrait/);
 });
+
+
+test('optional mandatory JSON is bundled and invalid predicates/dependencies are rejected',()=>{
+ const p=clone();
+ p.mandatory={schemaVersion:1,characterId:'sol',events:[{
+  id:'sol_extra_scene',kind:'bond',priority:60,earliestDay:44,
+  trigger:{all:[{storyDone:'sol_route_2'},{relationship:{npc:'sol',metric:'trust',gte:2}}]},
+  delivery:'remote_or_present',timeCost:0,lines:[{speaker:'sol',text:'A quiet evening.'}],
+  choices:[{label:'Sure',reply:'Thanks.',flag:'quiet_yes'},{label:'Not now',reply:'No rush.',flag:'quiet_no'}]
+ }]};
+ assert.equal(tools.validate(p),true);
+ const built=tools.bundle([p]);
+ const ctx={module:{exports:{}},window:{}};vm.runInNewContext(built,ctx);
+ assert.equal(ctx.module.exports.mandatoryEvents[0].characterId,'sol');
+ p.mandatory.events[0].trigger={eval:'globalThis'};assert.throws(()=>tools.validate(p),/unsupported predicate/);
+ p.mandatory.events[0].trigger={eventSeen:'sol_extra_scene'};assert.throws(()=>tools.validate(p),/Circular/);
+});

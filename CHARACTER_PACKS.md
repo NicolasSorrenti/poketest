@@ -78,3 +78,35 @@ Sol's stable `sol_route_1` ... `sol_route_5` identifiers have not changed. **Do 
 - Packs are installed in the repository, then built and deployed; **not** uploaded by arbitrary web players at runtime. This keeps the hosted game safe and deterministic.
 - The importer refuses ID collisions, requires valid assets and never overwrites an existing character. If the source is a ZIP, extract its contents into exactly one pack folder or at archive root.
 - A pack creates story chapters and standard hangouts but does not yet create arbitrary new gameplay systems, locations, tournaments, battle abilities or scene-specific CG triggers. These require engine features or another content pipeline.
+
+
+## Optional mandatory relationship scenes
+
+Character authors may add a fifth JSON file, \`mandatory_events.json\`. Omitting it preserves all existing pack behavior. Import/build copies and validates it automatically; no RPG engine modification is needed.
+
+\`\`\`json
+{
+  "schemaVersion": 1,
+  "characterId": "sol",
+  "events": [{
+    "id": "sol_asks_for_company",
+    "kind": "bond",
+    "priority": 60,
+    "earliestDay": 44,
+    "trigger": { "all": [
+      { "storyDone": "sol_route_2" },
+      { "relationship": { "npc": "sol", "metric": "trust", "gte": 2 } }
+    ] },
+    "delivery": "remote_or_present",
+    "timeCost": 0,
+    "expiry": "never",
+    "lines": [{ "speaker": "sol", "text": "Can we just spend an afternoon talking?" }],
+    "choices": [
+      { "label": "I'd like that.", "reply": "Me too.", "flag": "sol_company_yes" },
+      { "label": "Maybe another day.", "reply": "Of course.", "flag": "sol_company_no" }
+    ]
+  }]
+}
+\`\`\`
+
+The importer supplies \`characterId\` to each event, checks names against existing optional story IDs, validates character and story references and rejects circular \`eventSeen\` dependencies. Only declarative predicates are accepted: \`all\`, \`any\`, \`not\`, \`dayGte\`, \`dayLte\`, \`storyDone\`, \`flag\`, \`relationship\`, \`duelCountGte\`, \`tournamentState\`, \`eventSeen\`. Relationship metrics are \`affection\`, \`trust\`, \`respect\`, and \`attraction\`. A mandatory scene must cost zero time and must not set commitment or relationship rewards. Optional route chapters remain unchanged.
