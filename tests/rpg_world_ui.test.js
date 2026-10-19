@@ -517,16 +517,17 @@ test('insufficient resources leave social dialogue and campaign time unchanged',
  r.elements.choices.children.find(x=>x.textContent.includes('Choose a shared activity')).onclick();
  const button=r.elements.choices.children.find(x=>x.textContent.includes('Customize deck sleeves'));
  assert.match(button.textContent,/Not enough focus/);
- const before=r.state();button.onclick();
+ const before=r.state();
+ assert.equal(button.disabled,true,'unaffordable activities cannot be clicked');
+ assert.match(button.title,/Not enough focus/);
  const after=r.state();
  assert.equal(after.slot,before.slot);assert.equal(after.focus,0);assert.equal(after.credits,0);
  assert.equal(after.socialHistory.hana,undefined);assert.equal(after.hungOut['1:hana'],undefined);
- assert.match(r.elements.line.textContent,/Not enough focus/);
 });
 test('guest cast can use the generic activity framework without changing authored character dialogue',()=>{
- const r=launch({day:12,slot:1,location:'shop'});
+ const r=launch({day:12,slot:1,location:'center'});
  const person=r.elements.people.children.find(x=>x.children?.[1]?.children?.[0]?.textContent==='Jun Arai');
- if(!person)return; // guest is on another scheduled venue today
+ assert.ok(person,'Jun follows the current day-12 community center afternoon schedule');
  person.onclick();
  assert.ok(r.elements.choices.children.some(x=>x.textContent.includes('Choose a shared activity')));
 });
