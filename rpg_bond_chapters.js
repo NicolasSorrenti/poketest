@@ -171,6 +171,47 @@
   ['Play slowly and enjoy the morning','I used to call this wasting daylight. I think I was wrong.','support','nereo_still_water']
  ])
  ];
+ // Follow-up dialogue responds to the player's previous decision without changing
+ // eligibility or replacing any existing character route.
+ const openingByFlag={
+  elio_bond_2:{
+   elio_companion:'I saved you a seat yesterday. Then I realized I was allowed to sit there even if you were late.',
+   elio_invitation:'I asked a stranger to play. My voice shook, but they said yes. I think that counts as progress.'
+  },
+  elio_bond_3:{
+   elio_good_loss:'I looked back at that losing turn. I still think it was the right play. So I finally registered for the bracket.',
+   elio_small_wins:'My notebook has four good decisions on the first page now. I signed up for the bracket before I could talk myself out of it.'
+  },
+  elio_bond_4:{
+   elio_stayed:'You watched the whole match even after I fell behind. I did not need you to fix anything. That was new.',
+   elio_kept_calm:'I used the opening we practiced while everybody was watching. For once my hands remembered what my head knew.'
+  },
+  alma_bond_2:{
+   alma_open_table:'The window table filled with new faces today. I nearly forgot to eat because I was pleased with myself.',
+   alma_no_standings:'The first no-standings night was a success. Then I spent three hours washing cups.'
+  },
+  alma_bond_3:{
+   alma_rest:'I took another hour off last week. Nothing caught fire. That will sound less remarkable someday.',
+   alma_sketch:'I found my old pencils. The napkins are now full of Pokémon drawings that customers keep trying to buy.'
+  },
+  alma_bond_4:{
+   alma_long_table:'Those long tables are still together. Nobody has asked to separate winners from losers since.',
+   alma_first_seats:'The shy players keep choosing their own seats now. I hardly recognize the place, in the best way.'
+  },
+  nereo_bond_2:{
+   nereo_dock_game:'I kept my deck in my jacket last week. It was nice having something to reach for that was not a wrench.',
+   nereo_defense:'I tried that defensive line you suggested. It worked beautifully right up until my opponent played a card I forgot existed.'
+  },
+  nereo_bond_3:{
+   nereo_supply:'The community supply box is full already. Nobody asked me to organize it, which might be the nicest part.',
+   nereo_trust:'The batteries came back with a note. No coins this time. A direct conversation really is an underrated invention.'
+  },
+  nereo_bond_4:{
+   nereo_shelter:'That match under the shelter is still the only tournament I have seen where the weather got zero complaints.',
+   nereo_safe:'The postponed players showed up smiling the next morning. Nobody was left behind or sent into bad weather.'
+  }
+ };
+ for(const e of events)if(openingByFlag[e.id])e.openingByFlag=openingByFlag[e.id];
  return Object.freeze({events,validate:()=>{
   const errors=[],ids=new Set();
   for(const e of events){if(ids.has(e.id))errors.push('Duplicate '+e.id);ids.add(e.id);
