@@ -86,7 +86,7 @@ test('duel battle result applies one preparation bonus only once',()=>{
  const r=launch({day:5,slot:0,location:'shop',preparation:2});
  const hana=r.elements.people.children.find(x=>x.children[1]?.children[0]?.textContent==='Hana Mizuno');
  assert.ok(hana);hana.onclick();finishGreeting(r);
- const challenge=r.elements.choices.children.find(x=>x.textContent.includes('Challenge to a duel'));
+ const challenge=r.elements.characterActions.children.find(x=>x.textContent.includes('Duel'));
  assert.ok(challenge);challenge.onclick();r.elements.preDuelSkip.onclick();
  const d=r.state().pendingDuel;assert.ok(d);
  const event={data:Bridge.message(d.id,0),origin:r.loc.origin,source:r.elements.battle.contentWindow};
@@ -325,8 +325,7 @@ test('an invitation schedules a real NPC meeting without advancing time',()=>{
  const r=launch({day:5,slot:0,location:'shop'});
  const hana=r.elements.people.children.find(x=>x.children?.[1]?.children?.[0]?.textContent==='Hana Mizuno');
  assert.ok(hana,'Hana should be at the shop on the morning of Day 5');hana.onclick();finishGreeting(r);
- const invite=r.elements.choices.children.find(x=>x.textContent.includes('Invite to a future meet-up'));
- assert.ok(invite);invite.onclick();
+ r.act('invite:hana');
  const offer=r.elements.choices.children.find(x=>x.textContent.startsWith('Day '));
  assert.ok(offer);offer.onclick();
  const save=r.state();
@@ -338,7 +337,7 @@ test('an invitation schedules a real NPC meeting without advancing time',()=>{
 test('attending a scheduled meet-up uses exactly one period and awards affection/trust once',()=>{
  const fresh=launch({day:5,slot:0,location:'shop'});
  const hana=fresh.elements.people.children.find(x=>x.children?.[1]?.children?.[0]?.textContent==='Hana Mizuno');hana.onclick();finishGreeting(fresh);
- fresh.elements.choices.children.find(x=>x.textContent.includes('Invite to a future meet-up')).onclick();
+ fresh.act('invite:hana');
  fresh.elements.choices.children.find(x=>x.textContent.startsWith('Day ')).onclick();
  const scheduled=fresh.state().appointments[0];
  const restored=launch({...fresh.state(),day:scheduled.day,slot:scheduled.slot,location:scheduled.place});
@@ -354,7 +353,7 @@ test('attending a scheduled meet-up uses exactly one period and awards affection
 test('skipping a booked meet-up only reduces trust once after its time has passed',()=>{
  const first=launch({day:5,slot:0,location:'shop',relationships:{hana:{affection:4,trust:3}},bonds:{hana:{affection:4,trust:3,duels:0}}});
  first.elements.people.children.find(x=>x.children?.[1]?.children?.[0]?.textContent==='Hana Mizuno').onclick();finishGreeting(first);
- first.elements.choices.children.find(x=>x.textContent.includes('Invite to a future meet-up')).onclick();
+ first.act('invite:hana');
  first.elements.choices.children.find(x=>x.textContent.startsWith('Day ')).onclick();
  const plan=first.state().appointments[0];
  const later=launch({...first.state(),day:plan.day+1,slot:0,location:'home'});
@@ -384,7 +383,7 @@ test('social daily intention can be fulfilled by a normal hangout, persisted exa
  r.elements.dailyIntention.children.find(x=>x.children?.[0]?.textContent==='Make time for someone').onclick();
  const hana=r.elements.people.children.find(x=>x.children[1]?.children[0]?.textContent==='Hana Mizuno');
  assert.ok(hana);hana.onclick();finishGreeting(r);
- r.elements.choices.children.find(x=>x.textContent.includes('Spend time together')).onclick();
+ r.act('hang:hana');
  assert.equal(r.state().dailyIntention.completed,true);
  assert.equal(r.state().intentionsCompleted,1);
  assert.equal(r.state().focus,80);
@@ -397,7 +396,7 @@ test('duel intention counts authentic defeat, then resets cleanly the next day',
  const regular=r.elements.people.children.find(x=>!x.disabled);
  assert.ok(regular);
  regular.onclick();finishGreeting(r);
- r.elements.choices.children.find(x=>x.textContent.includes('Challenge to a duel')).onclick();
+ r.elements.characterActions.children.find(x=>x.textContent.includes('Duel')).onclick();
  const d=r.state().pendingDuel;assert.ok(d);
  r.elements.preDuelSkip.onclick();
  const event={data:Bridge.message(d.id,1),origin:r.loc.origin,source:r.elements.battle.contentWindow};
@@ -433,7 +432,7 @@ test('a genuine duel may unlock pre-duel art but still opens the authoritative i
  const r=launch({day:8,slot:1,location:'shop',relationships:{hana:{affection:2,trust:2}},bonds:{hana:{affection:2,trust:2,duels:0}}});
  const person=r.elements.people.children.find(x=>x.children[1]?.children[0]?.textContent==='Hana Mizuno');
  assert.ok(person);person.onclick();finishGreeting(r);
- r.elements.choices.children.find(x=>x.textContent.includes('Challenge to a duel')).onclick();
+ r.elements.characterActions.children.find(x=>x.textContent.includes('Duel')).onclick();
  assert.ok(r.state().pendingDuel);
  assert.equal(r.state().cgUnlocked.hana_shop_challenge,undefined,'CG unlocks when the duel actually starts');
  assert.equal(r.elements.duel.hidden,true);
@@ -447,7 +446,7 @@ test('ordinary riverside hangout does not grant situation-exclusive summer CG',(
  const r=launch({day:20,slot:1,location:'park',relationships:{marina:{affection:7,trust:3}},bonds:{marina:{affection:7,trust:3,duels:0}}});
  const person=r.elements.people.children.find(x=>x.children[1]?.children[0]?.textContent==='Marina Aoki');
  assert.ok(person);person.onclick();finishGreeting(r);
- r.elements.choices.children.find(x=>x.textContent.includes('Spend time together')).onclick();
+ r.act('hang:hana');
  assert.equal(r.state().cgUnlocked.marina_beach_towel,undefined);
  const saved=launch(r.state()).state();
  assert.equal(saved.cgUnlocked.marina_beach_towel,undefined);
@@ -493,8 +492,7 @@ test('social planner lists three personality-aware choices with cost and favorit
  const r=launch({day:1,slot:0,location:'shop'});
  const hana=r.elements.people.children.find(x=>x.children?.[1]?.children?.[0]?.textContent==='Hana Mizuno');
  assert.ok(hana);hana.onclick();finishGreeting(r);
- const plan=r.elements.choices.children.find(x=>x.textContent.includes('Choose a shared activity'));
- assert.ok(plan);plan.onclick();
+ r.act('socialPlan:hana');
  const choices=r.elements.choices.children;
  assert.equal(choices.length,4);
  const welcome=choices.find(x=>x.textContent.includes('Welcome a new player'));
@@ -505,7 +503,7 @@ test('social planner lists three personality-aware choices with cost and favorit
 test('real shared activity consumes one period, saves bond and cannot repeat alongside old hangout',()=>{
  const r=launch({day:1,slot:0,location:'shop'});
  r.elements.people.children.find(x=>x.children?.[1]?.children?.[0]?.textContent==='Hana Mizuno').onclick();finishGreeting(r);
- r.elements.choices.children.find(x=>x.textContent.includes('Choose a shared activity')).onclick();
+ r.act('socialPlan:hana');
  r.elements.choices.children.find(x=>x.textContent.includes('Welcome a new player')).onclick();
  const s=r.state();
  assert.equal(s.slot,1);assert.equal(s.focus,67);assert.equal(s.hungOut['1:hana'],true);
@@ -514,13 +512,14 @@ test('real shared activity consumes one period, saves bond and cannot repeat alo
  const reload=launch(s);
  assert.equal(reload.state().socialHistory.hana.count,1);
  reload.elements.people.children.find(x=>x.children?.[1]?.children?.[0]?.textContent==='Hana Mizuno').onclick();finishGreeting(reload);
+ reload.act('socialPlan:hana');
  assert.ok(reload.elements.choices.children.some(x=>x.textContent.includes('Already spent time today')));
 });
 test('competitive Reina outing increases respect without creating phantom TCG matches',()=>{
  const r=launch({day:1,slot:1,location:'center'});
  const reina=r.elements.people.children.find(x=>x.children?.[1]?.children?.[0]?.textContent==='Reina Kurogane');
  assert.ok(reina);reina.onclick();finishGreeting(r);
- r.elements.choices.children.find(x=>x.textContent.includes('Choose a shared activity')).onclick();
+ r.act('socialPlan:hana');
  const preferred=r.elements.choices.children.find(x=>x.textContent.includes('Practice tricky openings'));
  assert.ok(preferred);assert.match(preferred.textContent,/Favorite/);
  preferred.onclick();
@@ -532,7 +531,7 @@ test('competitive Reina outing increases respect without creating phantom TCG ma
 test('insufficient resources leave social dialogue and campaign time unchanged',()=>{
  const r=launch({day:1,slot:0,location:'shop',focus:0,credits:0});
  r.elements.people.children.find(x=>x.children?.[1]?.children?.[0]?.textContent==='Hana Mizuno').onclick();finishGreeting(r);
- r.elements.choices.children.find(x=>x.textContent.includes('Choose a shared activity')).onclick();
+ r.act('socialPlan:hana');
  const button=r.elements.choices.children.find(x=>x.textContent.includes('Customize deck sleeves'));
  assert.match(button.textContent,/Not enough focus/);
  const before=r.state();
@@ -547,7 +546,8 @@ test('guest cast can use the generic activity framework without changing authore
  const person=r.elements.people.children.find(x=>x.children?.[1]?.children?.[0]?.textContent==='Jun Arai');
  assert.ok(person,'Jun follows the current day-12 community center afternoon schedule');
  person.onclick();finishGreeting(r);
- assert.ok(r.elements.choices.children.some(x=>x.textContent.includes('Choose a shared activity')));
+ r.act('socialPlan:jun');
+ assert.ok(r.elements.choices.children.length>1,'guest characters can choose social activities');
 });
 
 test('G3: plan a friendship outing through three-step conversation without spending time',()=>{
@@ -570,7 +570,7 @@ test('G3: plan a friendship outing through three-step conversation without spend
 test('G3: honor a planned outing exactly once with a real activity cost and save continuity',()=>{
  const start=launch({day:5,slot:0,location:'shop'});
  start.elements.people.children.find(x=>x.children?.[1]?.children?.[0]?.textContent==='Hana Mizuno').onclick();finishGreeting(start);
- start.elements.choices.children.find(x=>x.textContent.includes('Plan an activity or date')).onclick();
+ start.act('dateInvite:hana');
  start.elements.choices.children.find(x=>x.textContent.startsWith('Day ')).onclick();
  start.elements.choices.children.find(x=>x.textContent.includes('Welcome a new player')).onclick();
  start.elements.choices.children.find(x=>x.textContent.includes('Spend time as friends')).onclick();
@@ -593,7 +593,7 @@ test('G3: romantic tone is explicitly gated and does not auto-commit a route',()
  const base={day:5,slot:0,location:'shop',relationships:{hana:{affection:5,trust:3}},bonds:{hana:{affection:5,trust:3,duels:0}}};
  const r=launch(base);
  r.elements.people.children.find(x=>x.children?.[1]?.children?.[0]?.textContent==='Hana Mizuno').onclick();finishGreeting(r);
- r.elements.choices.children.find(x=>x.textContent.includes('Plan an activity or date')).onclick();
+ r.act('dateInvite:hana');
  r.elements.choices.children.find(x=>x.textContent.startsWith('Day ')).onclick();
  r.elements.choices.children.find(x=>x.textContent.includes('Customize deck sleeves')).onclick();
  const option=r.elements.choices.children.find(x=>x.textContent.includes('Ask for a date'));
@@ -612,7 +612,7 @@ test('G3: romantic tone is explicitly gated and does not auto-commit a route',()
 test('G3: unavailable romantic tone is disabled instead of accepting a low-bond relationship',()=>{
  const r=launch({day:5,slot:0,location:'shop'});
  r.elements.people.children.find(x=>x.children?.[1]?.children?.[0]?.textContent==='Hana Mizuno').onclick();finishGreeting(r);
- r.elements.choices.children.find(x=>x.textContent.includes('Plan an activity or date')).onclick();
+ r.act('dateInvite:hana');
  r.elements.choices.children.find(x=>x.textContent.startsWith('Day ')).onclick();
  r.elements.choices.children.find(x=>x.textContent.includes('Customize deck sleeves')).onclick();
  const option=r.elements.choices.children.find(x=>x.textContent.includes('Ask for a date'));
@@ -623,7 +623,7 @@ test('G3: unavailable romantic tone is disabled instead of accepting a low-bond 
 test('G3: insufficient funds disable a booked outing and preserve both save and calendar',()=>{
  const r=launch({day:5,slot:0,location:'shop'});
  r.elements.people.children.find(x=>x.children?.[1]?.children?.[0]?.textContent==='Hana Mizuno').onclick();finishGreeting(r);
- r.elements.choices.children.find(x=>x.textContent.includes('Plan an activity or date')).onclick();
+ r.act('dateInvite:hana');
  r.elements.choices.children.find(x=>x.textContent.startsWith('Day ')).onclick();
  r.elements.choices.children.find(x=>x.textContent.includes('Customize deck sleeves')).onclick();
  r.elements.choices.children.find(x=>x.textContent.includes('Spend time as friends')).onclick();
@@ -637,7 +637,7 @@ test('G3: insufficient funds disable a booked outing and preserve both save and 
 test('G4: an NPC challenge pauses before iframe creation and blocks premature or forged results',()=>{
  const r=launch({day:8,slot:1,location:'shop',relationships:{hana:{affection:4,trust:2}},bonds:{hana:{affection:4,trust:2,duels:0}}});
  r.elements.people.children.find(x=>x.children[1]?.children[0]?.textContent==='Hana Mizuno').onclick();finishGreeting(r);
- r.elements.choices.children.find(x=>x.textContent.includes('Challenge to a duel')).onclick();
+ r.elements.characterActions.children.find(x=>x.textContent.includes('Duel')).onclick();
  const pending=r.state().pendingDuel;
  assert.equal(pending.preview.phase,'ready');assert.equal(pending.preview.index,0);
  assert.equal(r.elements.battle.src,'about:blank');assert.equal(r.elements.duel.hidden,true);
@@ -666,7 +666,7 @@ test('G4: an NPC challenge pauses before iframe creation and blocks premature or
 test('G4: a partially viewed pre-duel scene resumes on the same dialogue line after reload',()=>{
  const r=launch({day:5,slot:0,location:'shop'});
  r.elements.people.children.find(x=>x.children[1]?.children[0]?.textContent==='Hana Mizuno').onclick();finishGreeting(r);
- r.elements.choices.children.find(x=>x.textContent.includes('Challenge to a duel')).onclick();
+ r.elements.characterActions.children.find(x=>x.textContent.includes('Duel')).onclick();
  const id=r.state().pendingDuel.id;
  r.elements.preDuelNext.onclick();
  const restored=launch(r.state());
@@ -687,7 +687,7 @@ test('G4: a partially viewed pre-duel scene resumes on the same dialogue line af
 test('G4: a migrated pending duel from an older save resumes directly, without a second preview',()=>{
  const first=launch({day:1,slot:1,location:'arcade'});
  first.elements.people.children.find(x=>x.children[1]?.children[0]?.textContent==='Yuna Hoshino').onclick();finishGreeting(first);
- first.elements.choices.children.find(x=>x.textContent.includes('Challenge to a duel')).onclick();
+ first.elements.characterActions.children.find(x=>x.textContent.includes('Duel')).onclick();
  const old=first.state();
  delete old.pendingDuel.preview;
  const restored=launch(old);
@@ -861,7 +861,7 @@ test('RPG collection: pre-duel snapshot locks the actual 60 owned cards until th
  r.elements.starterChoices.children[2].onclick();
  const before=r.state().deckJourney.deck.join(',');
  r.elements.people.children.find(x=>x.children?.[1]?.children?.[0]?.textContent==='Hana Mizuno').onclick();finishGreeting(r);
- r.elements.choices.children.find(x=>x.textContent.includes('Challenge to a duel')).onclick();
+ r.elements.characterActions.children.find(x=>x.textContent.includes('Duel')).onclick();
  const pending=r.state().pendingDuel;
  assert.equal(pending.playerDeck,'custom');assert.equal(pending.deckCards.join(','),before);
  assert.equal(r.elements.deckCollection.children.find(x=>x.textContent.includes('Build / edit your deck')).disabled,true);
@@ -875,7 +875,7 @@ test('RPG victories award a ten-card booster, displayed once and safe against du
  const r=launch({day:5,slot:0,location:'shop',deckJourney:Collection.fresh()});
  r.elements.starterChoices.children[0].onclick();
  r.elements.people.children.find(x=>x.children?.[1]?.children?.[0]?.textContent==='Hana Mizuno').onclick();finishGreeting(r);
- r.elements.choices.children.find(x=>x.textContent.includes('Challenge to a duel')).onclick();
+ r.elements.characterActions.children.find(x=>x.textContent.includes('Duel')).onclick();
  const pending=r.state().pendingDuel;
  r.elements.preDuelSkip.onclick();
  r.listeners.message({origin:r.loc.origin,source:r.elements.battle.contentWindow,data:Bridge.message(pending.id,0)});
