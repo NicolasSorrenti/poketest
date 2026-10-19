@@ -492,11 +492,24 @@ function renderAppointments(locked){
   const name=document.createElement('strong');name.textContent=cast[meeting.npc]?.name||meeting.npc;
   const detail=document.createElement('small');detail.textContent='DAY '+meeting.day+' · '+periods[meeting.slot]+' · '+places[meeting.place]?.[0];
   entry.append(name,detail);
+  if(meeting.activityId){
+   const a=SOCIAL.activities.find(x=>x.id===meeting.activityId);
+   if(a){
+    const note=document.createElement('small');note.className='meeting-plan';
+    note.textContent=(meeting.socialTone==='romantic'?'♥ DATE':meeting.socialTone==='rivalry'?'⚔ CHALLENGE':'● FRIENDS')+
+      ' · '+a.title+' · '+a.focus+' focus'+(a.credits?' + '+a.credits+' credits':'')+' when we meet';
+    entry.append(note);
+   }
+  }
   const ready=meeting.day===state.day&&meeting.slot===state.slot;
   const controls=document.createElement('div');controls.className='meeting-actions';
   if(ready){
    if(meeting.place===state.location){
-    const attend=document.createElement('button');attend.className='meeting-attend';attend.textContent='Meet now · ⏳';attend.disabled=locked;attend.onclick=()=>act('attend:'+meeting.id);controls.append(attend);
+    const attend=document.createElement('button');attend.className='meeting-attend';
+    attend.textContent=meeting.socialTone==='romantic'?'Go on date · ⏳':meeting.activityId?'Enjoy outing · ⏳':'Meet now · ⏳';
+    const reason=DATES.canAttend(state,meeting,currentPeople(),{appointments:APPOINTMENTS,social:SOCIAL,cast});
+    attend.disabled=locked||!!reason;if(reason)attend.title=reason;
+    attend.onclick=()=>act('attend:'+meeting.id);controls.append(attend);
    }else{
     const travel=document.createElement('button');travel.className='meeting-attend';travel.textContent='Go there · free';travel.disabled=locked;travel.onclick=()=>{
      state.location=meeting.place;state.selected=null;persist();say('Planner','You arrive for your planned meet-up.');};controls.append(travel);
@@ -770,6 +783,13 @@ function render(){
    const selection=SOCIAL.options(state,npc,currentPeople(),cast).find(x=>x.id===activityId);
    b.disabled=!selection||!!selection.disabledReason;
    if(b.disabled)b.title=selection?.disabledReason||'This activity is not available.';
+  }
+  if(action.startsWith('dateBook:')){
+   const [,npc,index,activityId,tone]=action.split(':');
+   const target=APPOINTMENTS.proposed(state,npc,SCHEDULES)[Number(index)];
+   const option=target?DATES.choices(state,npc,target.place,activityId,SOCIAL,cast).find(t=>t.id===tone):null;
+   b.disabled=!option||!!option.disabledReason;
+   if(b.disabled)b.title=option?.disabledReason||'That meeting time is no longer available.';
   }
   b.onclick=()=>act(action);$('choices').append(b);
  }
