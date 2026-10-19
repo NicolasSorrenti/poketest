@@ -7,7 +7,7 @@ const html=fs.readFileSync('classic_live.html','utf8'),css=fs.readFileSync('cpu_
 new vm.Script(js,{filename:'classic_live.js'});
 for(const sheet of ['classic_live.css','online_compact.css','online_hand_tray.css','cpu_parity.css'])assert.ok(html.includes('href="'+sheet+'"'),'Missing shared styles: '+sheet);
 for(const id of ['myBench','enemyBench','myActive','enemyActive','handToggle','handTray','handPeek','closeHand','powersToggle','powerDrawer','closePowers','myDeckCount','oppDeckCount','myDiscardBtn','oppDiscardBtn','pileModal','closePile','prizeChoicePanel','logToggle','logDrawer','closeLog','coinFx','koFx'])assert.ok(html.includes('id="'+id+'"'),'Missing shared CPU control: '+id);
-for(const handler of ['setHandOpen','setPowersOpen','setLogOpen','renderHandPeek','pendingPrizeChoice','choosePrize','renderPrizeFallback','openDiscard','renderCoin','renderKnockOut','renderCPULog'])assert.match(js,new RegExp('function '+handler+'\\('));
+for(const handler of ['setHandVisible','setPowersOpen','setLogOpen','renderHandPeek','pendingPrizeChoice','choosePrize','renderPrizeFallback','openDiscard','renderCoin','renderKnockOut','renderCPULog'])assert.match(js,new RegExp('function '+handler+'\\('));
 assert.match(js,/finally\{busy=false;render\(\);\}/,'Prize choices must be enabled after in-flight action');
 assert.match(js,/function choosePrize\(id\)\{[^\n]*d\.options\?\.some\(o=>o\.id===id\)/,'Prize options must be server validated');
 assert.match(css,/\.log-drawer|#logDrawer/);
