@@ -977,7 +977,82 @@ function renderSeasonReport(){
  root.append(preface,heading,closing,numbers,trophyTitle,trophies,social,past,footer);
 }
 
+// Presentation-only navigation: game state and action handlers remain authoritative.
+const rpgPanelGroups={
+ scene:['WHO\'S HERE','YOUR DAY','TOWN LIFE'],
+ stories:['STORY OPPORTUNITIES','UNEXPECTED MOMENTS','SIDE QUESTS','LOCAL ENCOUNTERS'],
+ plans:['WHAT NEXT?','TODAY\'S PRIORITY','UPCOMING PLANS','AROUND TOWN NOW'],
+ progress:['YOUR 90-DAY JOURNEY','TOURNAMENT BRACKETS','YOUR DECK','SEASON JOURNAL']
+};
+let rpgActivePanel='plans',rpgLocalTab='people';
+function ensureRpgLayout(){
+ const sidebar=document.querySelector('.sidebar'),sceneRoot=$('scene');
+ if(!sidebar||!sceneRoot||$('rpgPanelTabs'))return;
+ const nav=document.createElement('nav');nav.id='rpgPanelTabs';nav.className='rpg-panel-tabs';nav.setAttribute('aria-label','RPG information');
+ for(const [id,label] of Object.entries({plans:'Today',stories:'Stories',progress:'Progress'})){
+  const b=document.createElement('button');b.type='button';b.dataset.panel=id;b.textContent=label;
+  b.onclick=()=>{rpgActivePanel=id;refreshRpgPanels();};nav.append(b);
+ }
+ sidebar.prepend(nav);
+ const castRoot=document.createElement('div');castRoot.id='rpgSceneCast';castRoot.className='rpg-scene-cast';castRoot.setAttribute('aria-label','Characters at this location');
+ sceneRoot.append(castRoot);
+ const dock=document.createElement('section');dock.id='rpgActionDock';dock.className='rpg-action-dock';
+ dock.setAttribute('aria-label','Things to do here');sceneRoot.append(dock);
+}
+function refreshRpgPanels(){
+ const sidebar=document.querySelector('.sidebar');if(!sidebar)return;
+ for(const section of sidebar.querySelectorAll(':scope > .side-section')){
+  const heading=section.querySelector('.sidebar-title span')?.textContent||'';
+  const group=Object.entries(rpgPanelGroups).find(([,names])=>names.some(name=>heading.includes(name)))?.[0]||'progress';
+  section.hidden=group!==rpgActivePanel;
+ }
+ for(const button of $('rpgPanelTabs')?.querySelectorAll('button')||[]){
+  const active=button.dataset.panel===rpgActivePanel;button.classList.toggle('active',active);button.setAttribute('aria-pressed',String(active));
+ }
+}
+function renderRpgCast(ids,locked){
+ const root=$('rpgSceneCast');if(!root)return;root.replaceChildren();
+ if(state.location==='home'||!ids.length){root.hidden=true;return;}
+ root.hidden=false;
+ for(const id of ids.slice(0,6)){
+  if(!cast[id])continue;
+  const b=document.createElement('button');b.type='button';b.className='rpg-cast-member'+(state.selected===id?' selected':'');
+  b.disabled=locked;b.title='Talk to '+cast[id].name;b.setAttribute('aria-label','Talk to '+cast[id].name);
+  b.append(makeAvatar(id));const name=document.createElement('span');name.textContent=cast[id].name.split(' ')[0];b.append(name);
+  b.onclick=()=>selectPerson(id);root.append(b);
+ }
+}
+function renderRpgActions(locked,shown){
+ const dock=$('rpgActionDock');if(!dock)return;
+ const hasDialogue=locked||((shown?.choices?.length||0)>0)||!!(state.selected&&shown?.speaker!=='Narrator'&&shown?.line);
+ $('dialogue').hidden=!hasDialogue;
+ dock.hidden=hasDialogue;
+ if(hasDialogue)return;
+ dock.replaceChildren();
+ const header=document.createElement('div');header.className='rpg-dock-header';
+ const heading=document.createElement('strong');heading.textContent='Explore '+places[state.location][0];
+ header.append(heading);
+ const tabs=document.createElement('div');tabs.className='rpg-dock-tabs';
+ for(const [id,title] of [['people','Characters'],['stories','Events'],['activities','Activities']]){
+  const b=document.createElement('button');b.textContent=title;b.className=id===rpgLocalTab?'active':'';
+  b.setAttribute('aria-pressed',String(id===rpgLocalTab));b.onclick=()=>{rpgLocalTab=id;renderRpgActions(false,{speaker:'Narrator',line:'',choices:[]});};
+  tabs.append(b);
+ }
+ header.append(tabs);dock.append(header);
+ const body=document.createElement('div');body.className='rpg-dock-items';
+ const ids=rpgLocalTab==='people'?['people']:rpgLocalTab==='stories'?['storyEvents','situationEvents','sideQuestEvents','townEncounters']:['townActivities','activities'];
+ for(const id of ids)for(const source of $(id)?.children||[]){
+  if(source.tagName!=='BUTTON'||source.disabled)continue;
+  const b=document.createElement('button');b.className='rpg-dock-action';
+  const text=source.querySelector('strong')?.textContent||source.textContent||'';
+  b.textContent=text.replace(/\\s*·\\s*⏳[^·]*/g,'').replace(/\\s*·\\s*\\+\\d+[^·]*/g,'').trim();
+  b.onclick=()=>source.click();body.append(b);
+ }
+ if(!body.children.length){const p=document.createElement('p');p.textContent=rpgLocalTab==='people'?'Nobody is around right now. Try another period.':'Nothing available here right now.';body.append(p);}
+ dock.append(body);
+}
 function render(){
+ ensureRpgLayout();
  renderJourney();
  renderCollection();
  const ended=state.day>90,locked=!!state.activeSituation||!!state.activeStory||!!state.activeEncounter||!!state.activeArc||!!state.activeSideQuest||!!state.pendingDuel;
@@ -1073,6 +1148,7 @@ function render(){
   const name=document.createElement('strong');name.textContent=c.name;const sub=document.createElement('small');sub.textContent=c.style;
   label.append(name,sub);b.append(avatar,label);b.onclick=()=>selectPerson(id);$('people').append(b);
  }
+ renderRpgCast(people,locked);
  $('storyEvents').replaceChildren();const stories=eligibleStories();
  for(const e of stories){
   const b=document.createElement('button');b.className='event-btn';b.disabled=locked;b.textContent='✦  '+e.title+' · ⏳ 1 period';
@@ -1167,6 +1243,8 @@ function render(){
  for(const e of eventCards.filter(e=>e.day>=state.day).slice(0,2)){const p=document.createElement('p');p.textContent='DAY '+e.day+' · '+e.title+' ('+periods[e.slot]+')';$('journal').append(p)}
  for(const note of state.journal.slice(0,3)){const p=document.createElement('p');p.textContent='• '+note;$('journal').append(p)}
  $('notice').textContent=state.activeSituation?'Unexpected encounter in progress — finish the scene to continue.':state.activeSideQuest?'Side quest in progress — finish the scene to continue.':state.activeStory?'Story in progress: complete this scene to continue.':state.activeArc?'A private rivalry chapter is in progress.':state.activeEncounter?'Local encounter in progress — make your decision.':state.pendingDuel?'Your duel is in progress.':'Travel & talk are free · ⏳ actions advance time';
+ refreshRpgPanels();
+ renderRpgActions(locked,shown);
  $('deckPicker').disabled=locked||ended||!!state.deckJourney;
  if($('deckPicker')?.options.length)$('deckPicker').value=state.playerDeck;
 }
