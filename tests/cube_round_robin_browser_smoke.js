@@ -41,7 +41,8 @@ const {server,cubeRooms,online}=require('../server');
    await page.locator('#roundRobinArea:not(.hidden)').waitFor({timeout:20000});
    assert.equal(await page.locator('#rrFixtures .rr-match').count(),6);
    await page.locator('#rrActive a').waitFor({timeout:10000});
-   assert((await page.locator('#rrActive').innerText()).includes('Alice vs Bob'));
+   assert((await page.locator('#rrActive').innerText()).includes(i===0?'Bob':'Alice'));
+   assert.equal(await page.locator('#rrFixtures .rr-match.active').count(),1,'One active human game plus CPU fixture');
    pages.push(page);
   }
   await Promise.all(pages.map(page=>page.locator('#rrActive a').click()));
