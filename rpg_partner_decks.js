@@ -45,7 +45,7 @@
    const basicEnergy=c.supertype==='Energy'&&/^(Grass|Fire|Water|Lightning|Psychic|Fighting) Energy$/i.test(c.name||'');
    if(!basicEnergy)nameCount[c.name]=(nameCount[c.name]||0)+n;
   }
-  for(const [name,n] of Object.entries(nameCount))if(n>4)errors.push('Four-copy rule exceeded for '+name+'.');
+  for(const [name,n] of Object.entries(nameCount))if(n>(name==='Miracle Energy'?1:4))errors.push('Copy limit exceeded for '+name+'.');
   if(!basics)errors.push('Keep at least one Basic Pokémon.');
   const originalKept=Object.entries(qty).reduce((n,[id,amount])=>n+Math.min(amount,base[id]||0),0);
   if(originalKept<30)errors.push('Keep at least 30 cards from your partner’s original deck.');
