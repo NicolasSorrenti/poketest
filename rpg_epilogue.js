@@ -18,6 +18,10 @@
    closeness:(b.affection||0)+(b.trust||0)+(b.respect||0)+(b.attraction||0)}))
    .sort((a,b)=>b.closeness-a.closeness||a.name.localeCompare(b.name));
   const partner=state.partner?displayName(state.partner):null;
+  const sidequests=Object.values(state.sideQuests||{}).filter(q=>q?.status==='complete').length;
+  const appointments=Object.values(state.appointments||{}).filter(q=>q?.status==='attended').length;
+  const situations=Object.keys(state.situationDone||{}).filter(id=>state.situationDone[id]?.day>0).length;
+  const galleryEarned=Object.values(state.cgUnlocked||{}).filter(x=>x&&Number.isInteger(x.day)&&x.day>0&&x.day<=90).length;
   let title,closing;
   if(cupStates[2].status==='champion'){title='The Harbor Champion';closing='You faced the final bracket and earned a place in the town’s tournament history.';}
   else if(partner){title='A Connection Beyond the Circuit';closing='The tournament season ends, but the relationship you chose is only beginning.';}
@@ -29,7 +33,8 @@
    day:Math.min(90,Math.max(1,state.day||90)),title,closing,played:duels.length,wins:win,draws:draw,losses:Math.max(0,duels.length-win-draw),
    points:state.points||0,credits:state.credits||0,cups:cupStates,champions:champions.length,
    partner,closest:friendships.slice(0,3),knownCharacters:friendships.length,
-   storyScenes:Object.keys(state.storyDone||{}).length,encounters:Object.keys(state.encountersDone||{}).length,
+   storyScenes:Object.keys(state.storyDone||{}).filter(id=>!!state.storyDone[id]).length,encounters:Object.keys(state.encountersDone||{}).length,
+   sidequests,appointments,situations,galleryEarned,
    run:(Number.isInteger(state.ngPlus)&&state.ngPlus>=0?state.ngPlus:0)+1
   };
  }
@@ -45,6 +50,10 @@
   // Replay is a new campaign: preserve the preferred deck preset, but reset all social,
   // economic, bracket and competitive state. No unimplemented card-collection carry-over.
   if(typeof state.playerDeck==='string'&&state.playerDeck.trim())next.playerDeck=state.playerDeck;
+  // The album is a cross-season collection, but unlocking a memory does not
+  // preserve relationships, events or previous campaign progression.
+  next.cgUnlocked=state.cgUnlocked&&typeof state.cgUnlocked==='object'&&!Array.isArray(state.cgUnlocked)?JSON.parse(JSON.stringify(state.cgUnlocked)):{};
+  next.cgViewed=state.cgViewed&&typeof state.cgViewed==='object'&&!Array.isArray(state.cgViewed)?JSON.parse(JSON.stringify(state.cgViewed)):{};
   return next;
  }
  return Object.freeze({report,replay,completed,displayName});

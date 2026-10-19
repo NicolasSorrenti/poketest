@@ -80,6 +80,10 @@
     </section>
 
     <aside class="sidebar">
+      <section class="side-section journey-section">
+        <div class="sidebar-title"><span>✦ YOUR 90-DAY JOURNEY</span><small>CAMPAIGN PROGRESS</small></div>
+        <div id="journeyProgress" class="journey-progress" aria-live="polite"></div>
+      </section>
       <section class="side-section planner-section">
         <div class="sidebar-title"><span>✦ WHAT NEXT?</span><small>LIVE DAILY GUIDE</small></div>
         <div id="dailyPlanner" class="daily-planner" aria-label="Contextual suggestions for this game period" aria-live="polite"></div>
@@ -168,7 +172,9 @@
    <option value="social">Social</option><option value="special">Special / Comedy</option>
   </select>
  </div>
+ <label class="cg-unseen-label" for="galleryUnseen"><input type="checkbox" id="galleryUnseen" /> Only new memories I haven't viewed</label>
  <p id="galleryCount" class="cg-count" aria-live="polite"></p>
+ <div id="galleryProgress" class="cg-progress" aria-label="Gallery completion by character and scene type"></div>
  <div id="galleryGrid" class="cg-grid"></div>
  <div id="galleryPreview" class="cg-preview" aria-live="polite"></div>
 </dialog>
@@ -218,6 +224,7 @@
 <script src="/rpg_social_activities.js"></script>
 <script src="/rpg_planned_dates.js"></script>
 <script src="/rpg_preduel.js"></script>\n<script src="/rpg_situations.js"></script>
+<script src="/rpg_season_journey.js"></script>
 <script src="/rpg.js"></script>
 </body>
 </html>

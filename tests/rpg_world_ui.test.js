@@ -2,7 +2,7 @@
 const test=require('node:test');
 const assert=require('node:assert/strict');
 const fs=require('node:fs'),path=require('node:path');
-const Pack=require('../rpg_narrative_pack'),Side=require('../rpg_side_quests'),Story=require('../rpg_story'),Schedules=require('../rpg_schedules'),World=require('../rpg_world'),Arc=require('../rpg_rival_arc'),Tournaments=require('../rpg_tournaments'),Epilogue=require('../rpg_epilogue'),Appointments=require('../rpg_appointments'),Intentions=require('../rpg_intentions'),CG=require('../rpg_cg_gallery'),Planner=require('../rpg_daily_planner'),Social=require('../rpg_social_activities'),Dates=require('../rpg_planned_dates'),Bridge=require('../rpg_duel_bridge'),Pre=require('../rpg_preduel'),Situations=require('../rpg_situations');
+const Pack=require('../rpg_narrative_pack'),Side=require('../rpg_side_quests'),Story=require('../rpg_story'),Schedules=require('../rpg_schedules'),World=require('../rpg_world'),Arc=require('../rpg_rival_arc'),Tournaments=require('../rpg_tournaments'),Epilogue=require('../rpg_epilogue'),Appointments=require('../rpg_appointments'),Intentions=require('../rpg_intentions'),CG=require('../rpg_cg_gallery'),Planner=require('../rpg_daily_planner'),Social=require('../rpg_social_activities'),Dates=require('../rpg_planned_dates'),Bridge=require('../rpg_duel_bridge'),Pre=require('../rpg_preduel'),Journey=require('../rpg_season_journey'),Situations=require('../rpg_situations');
 const js=fs.readFileSync(path.join(__dirname,'..','rpg.js'),'utf8');
 const html=fs.readFileSync(path.join(__dirname,'..','rpg.html'),'utf8');
 const ids=[...html.matchAll(/id="([^"]+)"/g)].map(x=>x[1]);
@@ -27,7 +27,7 @@ function launch(initial,approve=false){
  const doc={getElementById(id){if(!elements[id])throw Error('Missing '+id);return elements[id];},
   createElement(tag){return new FakeNode(tag);},body:new FakeNode('body'),
   addEventListener(name,cb){listeners['document:'+name]=cb;}};
- const win={NeoRpgNarrativePack:Pack,NeoRpgSideQuests:Side,NeoHarborStory:Story,NeoRpgSchedules:Schedules,NeoRpgWorld:World,NeoRpgRivalArc:Arc,NeoRpgTournaments:Tournaments,NeoRpgEpilogue:Epilogue,NeoRpgAppointments:Appointments,NeoRpgIntentions:Intentions,NeoRpgCGGallery:CG,NeoRpgDailyPlanner:Planner,NeoRpgSocialActivities:Social,NeoRpgPlannedDates:Dates,NeoRpgPreDuel:Pre,NeoRpgSituations:Situations,NeoRpgDuelBridge:Bridge,
+ const win={NeoRpgNarrativePack:Pack,NeoRpgSideQuests:Side,NeoHarborStory:Story,NeoRpgSchedules:Schedules,NeoRpgWorld:World,NeoRpgRivalArc:Arc,NeoRpgTournaments:Tournaments,NeoRpgEpilogue:Epilogue,NeoRpgAppointments:Appointments,NeoRpgIntentions:Intentions,NeoRpgCGGallery:CG,NeoRpgDailyPlanner:Planner,NeoRpgSocialActivities:Social,NeoRpgPlannedDates:Dates,NeoRpgPreDuel:Pre,NeoRpgSeasonJourney:Journey,NeoRpgSituations:Situations,NeoRpgDuelBridge:Bridge,
   addEventListener(name,cb){listeners[name]=cb;}};
  const local={getItem(k){return saved[k]||null;},setItem(k,v){saved[k]=String(v);}};
  const session={removeItem(){}};
@@ -419,7 +419,7 @@ test('gallery opens with 32 locked CGs; a real first encounter reveals only its 
  const tile=r.elements.galleryGrid.children.find(x=>!x.disabled);
  tile.onclick();
  assert.match(r.elements.galleryPreview.children[0].textContent,/Warm Welcome/);
- assert.equal(r.state().cgViewed.hana_first_meeting,true);
+ assert.equal(r.state().cgViewed.hana_first_meeting,undefined,'missing image is earned but not viewed');
 });
 test('a genuine duel may unlock pre-duel art but still opens the authoritative iframe with no image files',()=>{
  const r=launch({day:8,slot:1,location:'shop',relationships:{hana:{affection:2,trust:2}},bonds:{hana:{affection:2,trust:2,duels:0}}});
@@ -734,4 +734,86 @@ test('G5: surprising encounter can be declined without time, costs or affection 
  assert.equal(r.state().day,day);assert.equal(r.state().slot,event.slot);
  assert.equal(r.state().focus,75);assert.equal(r.state().situationDone[event.id],undefined);
  assert.equal(r.state().cgUnlocked?.[event.id],undefined);
+});
+
+test('G6: journey panel exposes meaningful milestones and opens the real memory album',()=>{
+ const r=launch({day:46,slot:1,location:'home'});
+ assert.ok(r.elements.journeyProgress.children.length>=5);
+ const overview=r.elements.journeyProgress.children[0];
+ assert.match(overview.textContent,/Season 1.*Day 46 \/ 90.*0\/32 memories/);
+ const progress=r.elements.journeyProgress.children.find(x=>x.className==='journey-track');
+ assert.equal(progress.children[0].style.width,'0%');
+ const open=r.elements.journeyProgress.children.find(x=>x.className==='journey-gallery');
+ assert.ok(open);
+ open.onclick();
+ assert.equal(r.elements.galleryDialog.open,true);
+ assert.equal(r.elements.galleryGrid.children.length,32);
+ assert.equal(r.elements.galleryProgress.children.length,12);
+ assert.match(r.elements.galleryCount.textContent,/0\/32 overall/);
+});
+test('G6: gallery shows earned vs viewed correctly and the unseen filter hides locked art',()=>{
+ const r=launch({day:12,slot:0,location:'home',
+  cgUnlocked:{hana_first_meeting:{day:3,slot:0,trigger:'meet'},reina_rival_intro:{day:5,slot:0,trigger:'meet'}},
+  cgViewed:{hana_first_meeting:true}});
+ r.elements.journeyProgress.children.find(x=>x.className==='journey-gallery').onclick();
+ assert.match(r.elements.galleryCount.textContent,/2\/32 overall.*1 earned but not yet viewed/);
+ r.elements.galleryUnseen.checked=true;r.elements.galleryUnseen.onchange();
+ assert.equal(r.elements.galleryGrid.children.length,1);
+ assert.match(r.elements.galleryGrid.children[0].children[2].textContent,/Reina/);
+ r.elements.galleryGrid.children[0].onclick();
+ // Image binary is missing in the controller fixture: gallery inspection is not an actual view.
+ assert.equal(r.state().cgViewed.reina_rival_intro,undefined);
+ assert.equal(r.state().cgViewed.hana_first_meeting,true);
+ r.elements.galleryUnseen.checked=false;r.elements.galleryUnseen.onchange();
+ assert.equal(r.elements.galleryGrid.children.length,32);
+});
+test('G6: end of season displays accurate social summary and previous-run archive',()=>{
+ const r=launch({day:91,ended:true,slot:0,location:'home',
+  points:54,appointments:[{id:1,npc:'hana',day:10,slot:1,place:'shop',status:'attended'},
+   {id:2,npc:'reina',day:11,slot:1,place:'center',status:'missed'}],
+  situationDone:{hana_apron_mixup:{day:20,slot:1,choice:1}},
+  cgUnlocked:{hana_first_meeting:{day:2,slot:0,trigger:'meet'}},
+  campaignHistory:[{run:1,title:'The People Who Stayed',wins:2,points:13,galleryEarned:1}]});
+ const numbers=r.elements.endSeason.children.find(x=>x.className==='finale-stats');
+ const pairs=numbers.children.map(x=>[x.children[1].textContent,x.children[0].textContent]);
+ assert.ok(pairs.some(x=>x[0]==='Plans kept'&&x[1]==='1'));
+ assert.ok(pairs.some(x=>x[0]==='Special moments'&&x[1]==='1'));
+ assert.ok(pairs.some(x=>x[0]==='Gallery memories'&&x[1]==='1'));
+ const archive=r.elements.endSeason.children.find(x=>x.className==='finale-archive');
+ assert.ok(archive);assert.ok(archive.children.some(x=>x.textContent.includes('Season 1')));
+});
+test('G6: New Game+ archives the run, preserves memories but resets G5 special-event availability',()=>{
+ const r=launch({day:91,ended:true,slot:0,location:'home',ngPlus:0,points:15,
+  situationDone:{hana_apron_mixup:{day:10,slot:1,choice:0}},
+  relationships:{hana:{affection:10,trust:8}},
+  cgUnlocked:{hana_first_meeting:{day:1,slot:0,trigger:'meet'}},
+  cgViewed:{hana_first_meeting:true}},true);
+ const button=r.elements.endSeason.children.find(x=>x.className==='finale-actions').children[0];
+ button.onclick();const after=r.state();
+ assert.equal(after.day,1);assert.equal(after.ngPlus,1);
+ assert.equal(after.situationDone.hana_apron_mixup,undefined);
+ assert.equal(after.cgUnlocked.hana_first_meeting.day,1);
+ assert.equal(after.cgViewed.hana_first_meeting,true);
+ assert.equal(after.relationships.hana?.affection,undefined);
+ assert.equal(after.campaignHistory.length,1);
+ assert.equal(after.campaignHistory[0].situations,1);
+ const reloaded=launch(after);
+ assert.match(reloaded.elements.journeyProgress.children[0].textContent,/Season 2/);
+ assert.match(reloaded.elements.galleryCount.textContent||'',/^$/);
+ reloaded.elements.journeyProgress.children.find(x=>x.className==='journey-gallery').onclick();
+ assert.match(reloaded.elements.galleryCount.textContent,/1\/32 overall/);
+});
+test('G6: completing a 90-day season by normal period advancement stops at day 91 and offers replay',()=>{
+ const r=launch({day:1,slot:0,location:'home'});
+ for(let i=0;i<270;i++){
+  assert.equal(r.elements.quickNext.disabled,false,'day '+r.state().day+' slot '+r.state().slot);
+  r.elements.quickNext.onclick();
+ }
+ const end=r.state();
+ assert.equal(end.day,91);assert.equal(end.slot,0);assert.equal(end.ended,true);
+ assert.equal(end.pendingDuel,null);assert.equal(end.activeSituation,null);
+ assert.equal(r.elements.quickNext.disabled,true);
+ assert.equal(r.elements.endSeason.hidden,false);
+ assert.ok(r.elements.endSeason.children.some(x=>x.className==='finale-actions'));
+ assert.match(r.elements.journeyProgress.children[2].children[0].textContent,/Your season is complete/);
 });

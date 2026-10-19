@@ -1,7 +1,7 @@
 'use strict';
 (()=>{
 const $=id=>document.getElementById(id),KEY='neoHarborRpgV1',STORY=window.NeoHarborStory,SCHEDULES=window.NeoRpgSchedules,WORLD=window.NeoRpgWorld,ARC=window.NeoRpgRivalArc,TOURNAMENTS=window.NeoRpgTournaments,BRIDGE=window.NeoRpgDuelBridge;
-const PACK=window.NeoRpgNarrativePack,SIDE=window.NeoRpgSideQuests,EPILOGUE=window.NeoRpgEpilogue,APPOINTMENTS=window.NeoRpgAppointments,INTENTIONS=window.NeoRpgIntentions,CG=window.NeoRpgCGGallery,PLANNER=window.NeoRpgDailyPlanner,SOCIAL=window.NeoRpgSocialActivities,DATES=window.NeoRpgPlannedDates,PRE=window.NeoRpgPreDuel,SITUATIONS=window.NeoRpgSituations;
+const PACK=window.NeoRpgNarrativePack,SIDE=window.NeoRpgSideQuests,EPILOGUE=window.NeoRpgEpilogue,APPOINTMENTS=window.NeoRpgAppointments,INTENTIONS=window.NeoRpgIntentions,CG=window.NeoRpgCGGallery,PLANNER=window.NeoRpgDailyPlanner,SOCIAL=window.NeoRpgSocialActivities,DATES=window.NeoRpgPlannedDates,PRE=window.NeoRpgPreDuel,SITUATIONS=window.NeoRpgSituations,JOURNEY=window.NeoRpgSeasonJourney;
 const periods=['Morning','Afternoon','Evening'];
 const places={
  home:['Your Apartment','Your base during the championship season.'],
@@ -472,8 +472,7 @@ function act(action){
  if(type==='replay'){
   if(!EPILOGUE.completed(state))return;
   if(confirm('Start New Game+? Your completed season report will be archived. Relationships, standings and credits will reset.')){
-   const keepCG=JSON.parse(JSON.stringify({cgUnlocked:state.cgUnlocked,cgViewed:state.cgViewed}));
-   state=EPILOGUE.replay(state,defaults);Object.assign(state,keepCG);CG.hydrate(state);persist();location.reload();
+   state=EPILOGUE.replay(state,defaults);CG.hydrate(state);persist();location.reload();
   }
   return;
  }
@@ -706,18 +705,29 @@ function showGalleryDetail(entry){
  const text=document.createElement('p');text.textContent=(cast[entry.character]?.name||entry.character)+' · '+entry.category.replace('_',' ')+' · '+entry.hint;
  const image=document.createElement('img');image.alt=entry.title;
  const placeholder=document.createElement('p');placeholder.className='cg-pending';placeholder.textContent='Illustration not installed yet — the memory is unlocked, and its image is assigned to the art agent.';
- image.onload=()=>{placeholder.hidden=true;image.hidden=false;};
+ image.onload=()=>{placeholder.hidden=true;image.hidden=false;CG.markViewed(state,entry.id);persist();renderGallery();};
  image.onerror=()=>{image.hidden=true;placeholder.hidden=false;};
  image.src=entry.path;
  root.append(title,text,image,placeholder);
- CG.markViewed(state,entry.id);persist();
 }
 function renderGallery(){
  const root=$('galleryGrid');root.replaceChildren();
  const all=CG.gallery(state,{character:$('galleryCharacter').value,category:$('galleryCategory').value});
+ const visible=$('galleryUnseen').checked?all.filter(e=>e.unlocked&&!e.viewed):all;
  const unlocked=all.filter(e=>e.unlocked).length;
- $('galleryCount').textContent=unlocked+' / '+all.length+' memories unlocked · unopened images appear after the art pack is installed';
- for(const entry of all){
+ const summary=JOURNEY.gallerySummary(state,CG),newCount=summary.unlocked-summary.viewed;
+ $('galleryCount').textContent=unlocked+' / '+all.length+' in this filter · '+summary.unlocked+'/'+summary.total+
+  ' overall ('+summary.percent+'%) · '+newCount+' earned but not yet viewed · '+visible.length+' shown';
+ const progress=$('galleryProgress');progress.replaceChildren();
+ for(const [id,stat] of Object.entries(summary.byCategory)){
+  const item=document.createElement('span');item.className='cg-progress-chip';
+  item.textContent=stat.label+': '+stat.unlocked+'/'+stat.total;progress.append(item);
+ }
+ for(const [id,stat] of Object.entries(summary.byCharacter)){
+  const name=document.createElement('span');name.className='cg-character-progress';
+  name.textContent=(cast[id]?.name||id)+': '+stat.unlocked+'/'+stat.total;progress.append(name);
+ }
+ for(const entry of visible){
   const tile=document.createElement('button');tile.className='cg-tile'+(entry.unlocked?' unlocked':' locked');tile.disabled=!entry.unlocked;
   const thumb=document.createElement('div');thumb.className='cg-thumb';
   if(entry.unlocked){
@@ -782,6 +792,26 @@ function makeAvatar(id,size=''){
  img.onerror=()=>{img.style.display='none';const span=document.createElement('span');span.className='avatar-fallback';span.textContent=cast[id].name.split(' ').map(x=>x[0]).join('');img.parentElement.append(span);};
  return img;
 }
+
+function renderJourney(){
+ const root=$('journeyProgress');root.replaceChildren();
+ const stats=JOURNEY.currentRun(state,CG);
+ const overview=document.createElement('p');overview.className='journey-overview';
+ overview.textContent='Season '+stats.run+' · Day '+stats.day+' / 90 · '+stats.gallery.unlocked+'/'+stats.gallery.total+' memories across runs';
+ root.append(overview);
+ const progress=document.createElement('div');progress.className='journey-track';
+ const fill=document.createElement('div');fill.className='journey-fill';fill.style.width=Math.max(0,Math.min(100,stats.gallery.percent))+'%';
+ progress.append(fill);root.append(progress);
+ for(const item of JOURNEY.milestones(state,CG)){
+  const p=document.createElement('p');p.className='journey-goal';
+  const title=document.createElement('strong');title.textContent=item.title;
+  const body=document.createElement('span');body.textContent=item.detail;
+  p.append(title,body);root.append(p);
+ }
+ const open=document.createElement('button');open.className='journey-gallery';
+ open.textContent='Open memory album · '+stats.gallery.unlocked+'/'+stats.gallery.total;
+ open.onclick=openGallery;root.append(open);
+}
 function renderSeasonReport(){
  const root=$('endSeason');root.replaceChildren();
  const complete=EPILOGUE.completed(state);
@@ -794,7 +824,7 @@ function renderSeasonReport(){
  preface.textContent='NEO HARBOR · SEASON '+r.run+' · DAY 90 / 90';
  const closing=document.createElement('p');closing.className='finale-closing';closing.textContent=r.closing;
  const numbers=document.createElement('div');numbers.className='finale-stats';
- const details=[['Duels',r.played],['Victories',r.wins],['Draws',r.draws],['Circuit points',r.points],['Stories',r.storyScenes],['Town encounters',r.encounters],['Side quests',Object.values(state.sideQuests||{}).filter(q=>q?.status==='complete').length]];
+ const details=[['Duels',r.played],['Victories',r.wins],['Draws',r.draws],['Circuit points',r.points],['Stories',r.storyScenes],['Town encounters',r.encounters],['Side quests',r.sidequests],['Plans kept',r.appointments],['Special moments',r.situations],['Gallery memories',r.galleryEarned]];
  for(const [key,value] of details){
   const cell=document.createElement('div');cell.className='finale-stat';
   const count=document.createElement('strong');count.textContent=String(value);
@@ -814,10 +844,22 @@ function renderSeasonReport(){
  replay.textContent='↻ Start New Game+ · archive this season';replay.onclick=()=>act('replay');
  const explanation=document.createElement('small');explanation.textContent='Replaying starts a fresh 90-day season. Reports and your selected deck preset carry over; credits, character bonds and brackets reset.';
  footer.append(replay,explanation);
- root.append(preface,heading,closing,numbers,trophyTitle,trophies,social,footer);
+ const history=JOURNEY.archive(state),past=document.createElement('div');
+ past.className='finale-archive';
+ const archiveHeading=document.createElement('h3');archiveHeading.textContent='Your earlier seasons';
+ past.append(archiveHeading);
+ if(!history.length){
+  const first=document.createElement('p');first.textContent='Your first season will be saved here when you choose New Game+.';past.append(first);
+ }else for(const season of history){
+  const row=document.createElement('p');row.className='finale-archive-entry';
+  row.textContent='Season '+season.run+' · '+season.title+' · '+season.wins+' wins · '+season.points+' points · '+season.memories+' collected memories';
+  past.append(row);
+ }
+ root.append(preface,heading,closing,numbers,trophyTitle,trophies,social,past,footer);
 }
 
 function render(){
+ renderJourney();
  const ended=state.day>90,locked=!!state.activeSituation||!!state.activeStory||!!state.activeEncounter||!!state.activeArc||!!state.activeSideQuest||!!state.pendingDuel;
  renderPlanner(locked);
  renderDailyIntention(locked);
@@ -1011,7 +1053,7 @@ function render(){
 
 $('galleryBtn').onclick=openGallery;
 $('galleryClose').onclick=()=>$('galleryDialog').close();
-$('galleryCharacter').onchange=renderGallery;$('galleryCategory').onchange=renderGallery;
+$('galleryCharacter').onchange=renderGallery;$('galleryCategory').onchange=renderGallery;$('galleryUnseen').onchange=renderGallery;
 $('cgMomentClose').onclick=()=>$('cgMoment').close();
 $('preDuelNext').onclick=advancePreparedDuel;
 $('preDuelStart').onclick=launchPreparedDuel;
