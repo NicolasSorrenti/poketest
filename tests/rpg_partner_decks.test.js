@@ -5,7 +5,8 @@ const {ClassicLocalService}=require('../classic_local_service');
 const STORY=require('../rpg_story'),BONDS=require('../rpg_bond_rewards');
 const PACK=require('../rpg_narrative_pack'),SIDE=require('../rpg_side_quests');
 const heroes=['hana','reina','shiori','yuna','akari','camila','marina','kaede'];
-const cast=Object.assign(Object.fromEntries(heroes.map(id=>[id,{name:id}])),PACK.cast,SIDE.cast);
+const originalDecks={hana:'power_reserve',reina:'blackout',shiori:'overgrowth',yuna:'zap',akari:'gym_new_voltage',camila:'rocket_lab',marina:'water_blast',kaede:'rocket_lab'};
+const cast=Object.assign(Object.fromEntries(heroes.map(id=>[id,{name:id,deck:originalDecks[id]}])),PACK.cast,SIDE.cast);
 const chapters=BONDS.build(STORY.events,cast);
 const state=(npc='reina')=>({day:20,credits:50,storyDone:{
  [chapters.byNpc[npc][0]]:{day:7},[chapters.byNpc[npc][1]]:{day:18}

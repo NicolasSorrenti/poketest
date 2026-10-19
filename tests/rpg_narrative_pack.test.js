@@ -23,7 +23,7 @@ test('the expansion preserves eight heroine routes and adds three adult non-roma
  for(const id of oldCast)assert.equal(STORY.events.filter(e=>e.id.startsWith(id+'_route_')).length,4);
  for(const id of guests){
   assert.ok(PACK.cast[id].age>=18);
-  assert.equal(STORY.events.filter(e=>e.id.startsWith(id+'_guest_')).length,3);
+  assert.ok(STORY.events.filter(e=>e.id.startsWith(id+'_guest_')).length>=3,'the original three guest chapters must remain');
   assert.ok(PACK.looks[id].hair&&PACK.looks[id].silhouette&&PACK.looks[id].expressions);
  }
  for(const id of [...oldCast,...guests])assert.ok(PACK.looks[id]?.palette,id+' has no palette');
