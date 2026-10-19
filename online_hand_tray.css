@@ -399,3 +399,158 @@ body.duel-active #handTray{display:none!important}
 @media(prefers-reduced-motion:reduce){
  body.duel-active .hand-fan-card{transition:none}
 }
+
+
+/* v0.44 Physical TCG attachments. Shared by online and CPU/RPG/Cube.
+   Energy ART is tucked under the left edge of each Pokémon (not an icon rail).
+   The face is drawn above the Energy stack, just like overlapping real cards. */
+body.duel-active .stage .poke{
+ position:relative;
+ overflow:visible;
+ isolation:isolate;
+}
+body.duel-active .stage .poke .pokemon-face{
+ position:relative;
+ z-index:2;
+}
+body.duel-active .stage .poke .energy-card-stack{
+ --energy-card-width:46px;
+ --energy-card-height:64px;
+ --energy-peek:29px;
+ --energy-step:6px;
+ display:block;
+ position:absolute;
+ top:7px;
+ left:calc(-1 * var(--energy-peek));
+ min-width:0;
+ width:var(--energy-card-width);
+ height:calc(var(--energy-card-height) + 5 * var(--energy-step));
+ z-index:1;
+ pointer-events:none;
+ overflow:visible;
+ background:none;
+}
+body.duel-active .stage .poke .energy-card-stack .energy-card-mini{
+ display:block;
+ box-sizing:border-box;
+ position:absolute;
+ left:calc(var(--energy-position) * -1.8px);
+ top:calc(var(--energy-position) * var(--energy-step));
+ width:var(--energy-card-width);
+ min-width:0;
+ height:var(--energy-card-height);
+ padding:0;
+ margin:0;
+ border:1px solid #d5e1d7;
+ border-radius:3px;
+ overflow:hidden;
+ z-index:var(--energy-position);
+ transform:rotate(calc((var(--energy-position) - 2) * -1deg));
+ transform-origin:65% 80%;
+ box-shadow:-2px 2px 5px #0009;
+}
+body.duel-active .stage .poke .energy-card-stack .energy-card-art{
+ display:block;
+ width:100%;
+ height:100%;
+ max-height:none;
+ border:0;
+ border-radius:0;
+ object-fit:fill;
+ background:transparent;
+}
+body.duel-active .stage .poke .energy-card-stack .energy-card-fallback{
+ display:flex;
+ width:100%;
+ height:100%;
+ flex-direction:column;
+ align-items:center;
+ justify-content:center;
+ gap:2px;
+ background:transparent;
+ color:inherit;
+ text-shadow:0 1px 2px #0009;
+}
+body.duel-active .stage .poke .energy-card-stack .energy-card-fallback .energy-symbol{
+ font-size:18px;
+ line-height:20px;
+}
+body.duel-active .stage .poke .energy-card-stack .energy-card-fallback .energy-label{
+ font-size:8px;
+ font-weight:900;
+ line-height:10px;
+}
+body.duel-active .stage .poke .energy-card-stack .energy-overflow{
+ position:absolute;
+ top:calc(var(--energy-card-height) + 5 * var(--energy-step) - 10px);
+ left:-13px;
+ right:auto;
+ font-size:10px;
+ line-height:13px;
+ background:#e9fff4;
+ color:#0d4a42;
+ border:1px solid #7caea2;
+ border-radius:5px;
+ padding:1px 4px;
+ z-index:8;
+ box-shadow:0 2px 5px #000a;
+}
+body.duel-active .stage .bench-zone .pokemon-strip{
+ gap:18px;
+ padding-left:31px;
+}
+body.duel-active .stage .bench-zone .poke .energy-card-stack{
+ --energy-card-width:32px;
+ --energy-card-height:44px;
+ --energy-peek:19px;
+ --energy-step:4px;
+ top:4px;
+}
+body.duel-active .stage .bench-zone .poke .energy-card-stack .energy-card-fallback .energy-symbol{
+ font-size:12px;
+ line-height:14px;
+}
+body.duel-active .stage .bench-zone .poke .energy-card-stack .energy-card-fallback .energy-label{
+ font-size:7px;
+ line-height:8px;
+}
+/* Keep the active slot's center alignment; its energy cards can fan into
+   the free space on the left without displacing the Pokémon artwork. */
+body.duel-active .stage .active-zone .pokemon-strip{overflow:visible}
+@media(max-width:780px){
+ body.duel-active .stage .bench-zone .pokemon-strip{
+  gap:10px;
+  padding-left:22px;
+ }
+ body.duel-active .stage .poke .energy-card-stack{
+  --energy-card-width:30px;
+  --energy-card-height:42px;
+  --energy-peek:19px;
+  --energy-step:4px;
+  top:3px;
+  display:block;
+  width:var(--energy-card-width);
+  height:calc(var(--energy-card-height) + 5 * var(--energy-step));
+  left:calc(-1 * var(--energy-peek));
+ }
+ body.duel-active .stage .poke .energy-card-stack .energy-card-mini{
+  width:var(--energy-card-width);
+  min-width:0;
+  height:var(--energy-card-height);
+ }
+ body.duel-active .stage .bench-zone .poke .energy-card-stack{
+  --energy-card-width:24px;
+  --energy-card-height:34px;
+  --energy-peek:14px;
+  --energy-step:3px;
+ }
+ body.duel-active .stage .poke .energy-card-stack .energy-card-fallback .energy-symbol{
+  font-size:11px;line-height:12px
+ }
+ body.duel-active .stage .poke .energy-card-stack .energy-card-fallback .energy-label{
+  font-size:6px;line-height:7px
+ }
+ body.duel-active .stage .poke .energy-card-stack .energy-overflow{
+  font-size:8px;line-height:9px;padding:1px 2px;left:-6px
+ }
+}
