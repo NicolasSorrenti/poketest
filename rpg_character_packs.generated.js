@@ -556,7 +556,7 @@ const packs=[
       "label": "Tell her she doesn't need to decide tonight",
       "reply": "The kindest non-answer I've ever heard. Stay a little longer? I think I can enjoy not knowing.",
       "kind": "honest",
-      "flag": "friendship",
+      "flag": "sol_open_ended",
       "delta": {
        "affection": 1,
        "trust": 1,
