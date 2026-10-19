@@ -778,7 +778,7 @@ function openCalendar(){
  $('calendarDialog').showModal();
 }
 function makeAvatar(id,size=''){
- const img=document.createElement('img');img.src='/rpg-assets/'+id+'.png';img.alt=cast[id].name;img.loading='lazy';
+ const img=document.createElement('img');img.src=cast[id].portrait||'/rpg-assets/'+id+'.png';img.alt=cast[id].name;img.loading='lazy';
  img.onerror=()=>{img.style.display='none';const span=document.createElement('span');span.className='avatar-fallback';span.textContent=cast[id].name.split(' ').map(x=>x[0]).join('');img.parentElement.append(span);};
  return img;
 }
