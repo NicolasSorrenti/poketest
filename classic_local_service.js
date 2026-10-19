@@ -49,7 +49,7 @@ class ClassicLocalService {
   const deckCards=id=>id==='custom'?[...customDeck]:EXPANDED[id]?[...EXPANDED[id]]:LAB[id]?[...LAB[id]]:DECKS[id].startsWith('retail:')?RETAIL.list(id):DECKS[id].startsWith('neo:')?NEO.list(id):DECKS[id].startsWith('discovery:')?DISCOVERY.list(id):DECKS[id].startsWith('destiny:')?DESTINY.list(id):list(DECKS[id]);
   if(customOpponentDeck!==undefined){
    if(!Array.isArray(customOpponentDeck)||customOpponentDeck.length!==60||
-    !customOpponentDeck.every(id=>typeof id==='string'&&/^([a-z0-9]+)-\\d+$/.test(id)))
+    !customOpponentDeck.every(id=>typeof id==='string'&&/^([a-z0-9]+)-\d+$/.test(id)))
     throw Error('Partner deck must contain exactly 60 valid card IDs');
    const legality=validateDeck(customOpponentDeck,CATALOG);
    if(!legality.valid)throw Error('Illegal partner deck: '+legality.errors[0]);
