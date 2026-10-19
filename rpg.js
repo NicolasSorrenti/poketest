@@ -634,13 +634,57 @@ function renderCollection(){
  studio.onclick=()=>{persist();location.assign('/rpg_deck_studio.html');};
  root.append(summary,studio);
  if(state.location==='shop'){
-  const buy=document.createElement('button');buy.textContent='Buy training pack · 5 cards · 20 credits';
-  buy.disabled=locked||state.credits<20;
-  buy.onclick=()=>{
-   try{const cards=COLLECT.buyPack(state);log('Opened a training pack: '+cards.map(labelCard).join(', ')+'.');persist();say('Card Shop','Ten new cards added to your collection. Open your pack, then visit the Deck Studio to build with them.');showPackReveal();}
-   catch(e){$('notice').textContent=e.message;}
-  };
-  root.append(buy);
+  const shop=document.createElement('button');
+  shop.className='studio-open';
+  shop.textContent='✦ Browse booster packs · The Lucky Draw';
+  shop.disabled=locked||state.day>90;
+  shop.onclick=openBoosterShop;
+  root.append(shop);
+
+ }
+}
+function openBoosterShop(){
+ if(controlsLocked()||state.day>90||state.location!=='shop'||!state.deckJourney?.starter)return;
+ renderBoosterShop();
+ if(!$('boosterShopDialog').open)$('boosterShopDialog').showModal();
+}
+function purchaseBoosterPack(set){
+ try{
+  const cards=COLLECT.buyPack(state,set);
+  const name=COLLECT.SETS[set].name;
+  log('Opened '+name+' booster: '+cards.map(labelCard).join(', ')+'.');
+  persist();
+  if($('boosterShopDialog').open)$('boosterShopDialog').close();
+  say('Card Shop','Your '+name+' booster is ready! See what you pulled, then visit the Deck Studio to use your new cards.');
+  showPackReveal();
+ }catch(e){
+  $('boosterShopStatus').textContent=e.message;
+  renderBoosterShop(e.message);
+ }
+}
+function renderBoosterShop(message=''){
+ const root=$('boosterShopGrid');root.replaceChildren();
+ $('boosterShopBalance').textContent='◈ '+(state.credits||0)+' credits · Day '+state.day;
+ $('boosterShopStatus').textContent=message;
+ for(const offer of COLLECT.shopPacks(state)){
+  const box=document.createElement('article');box.className='booster-offer'+(offer.unlocked?'':' is-locked');
+  const eyebrow=document.createElement('small');eyebrow.className='booster-offer-edition';eyebrow.textContent=offer.unlocked?'AVAILABLE BOOSTER':'LOCKED BOOSTER';
+  const title=document.createElement('h3');title.textContent=offer.name;
+  const desc=document.createElement('p');desc.textContent=offer.description;
+  const progress=document.createElement('div');progress.className='booster-collection-progress';
+  const track=document.createElement('div');track.className='booster-collection-track';
+  const fill=document.createElement('span');fill.style.width=offer.completion+'%';track.append(fill);
+  const count=document.createElement('small');count.textContent=offer.owned+' / '+offer.total+' cards discovered · '+offer.completion+'%';
+  progress.append(track,count);
+  const reason=document.createElement('p');reason.className='booster-offer-unlock';
+  reason.textContent=offer.unlocked?'Ten random cards · rare + Basic Energy guaranteed':offer.unlockHint;
+  const buy=document.createElement('button');buy.type='button';buy.className='booster-offer-buy';
+  const affordable=(state.credits||0)>=offer.price;
+  buy.disabled=!offer.unlocked||!affordable||controlsLocked();
+  buy.textContent=offer.unlocked?'Buy · '+offer.price+' credits':'Unlock to buy · '+offer.price+' credits';
+  if(offer.unlocked&&!affordable)reason.textContent='Need '+(offer.price-(state.credits||0))+' more credits · '+reason.textContent;
+  buy.onclick=()=>purchaseBoosterPack(offer.set);
+  box.append(eyebrow,title,desc,progress,reason,buy);root.append(box);
  }
 }
 function renderDeckWorkshop(){
@@ -677,6 +721,7 @@ function closeDeckWorkshop(discard){
  if($('deckEditDialog').open)$('deckEditDialog').close();
  persist();render();
 }
+$('boosterShopClose').onclick=()=> $('boosterShopDialog').close();
 $('starterDialog').addEventListener('cancel',e=>{if(state.deckJourney&&!state.deckJourney.starter)e.preventDefault();});
 $('deckSwap').onclick=()=>{
  try{
