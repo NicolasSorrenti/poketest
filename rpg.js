@@ -530,12 +530,34 @@ function showPackReveal(){
  const portrait=$('packGiver');portrait.replaceChildren();
  const caption=$('packGiverName');caption.textContent=giver?cast[giver].name+' gives you a '+setName+' booster':'The Lucky Draw · '+setName+' booster';
  if(giver){
-  const fallback=()=>{portrait.replaceChildren(makeAvatar(giver));};
-  fallback();
-  const art=new Image();art.alt=cast[giver].name+' presenting a booster';art.className='pack-giver-art';
+  // Show a known portrait immediately while optional artwork loads.
+  const showPortrait=()=>portrait.replaceChildren(makeAvatar(giver));
+  showPortrait();
+  const base='/rpg-assets/characters/'+encodeURIComponent(giver)+'/';
+  const candidates=[
+   base+'events/booster.webp',
+   base+'vn-expressions/surprised.webp',
+   base+'vn-expressions/surprised.png',
+   base+'vn-expressions/surprise.webp',
+   base+'vn-expressions/surprise.png',
+   base+'portraits/surprised.webp',
+   base+'portraits/surprised.png',
+   base+'portraits/surprise.webp',
+   base+'portraits/surprise.png',
+   base+'events/surprised.webp',
+   base+'events/surprised.png'
+  ];
+  const art=new Image();
+  art.alt=cast[giver].name+' presenting a booster';
+  art.className='pack-giver-art';
+  let attempt=0;
+  const tryNext=()=>{
+   if(attempt<candidates.length)art.src=candidates[attempt++];
+   else showPortrait();
+  };
   art.onload=()=>portrait.replaceChildren(art);
-  art.onerror=()=>{};
-  art.src='/rpg-assets/characters/'+giver+'/events/booster.webp';
+  art.onerror=tryNext;
+  tryNext();
  }
  const target=$('packCards');target.replaceChildren();
  const cards=[];
