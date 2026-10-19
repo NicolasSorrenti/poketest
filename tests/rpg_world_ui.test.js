@@ -2,7 +2,7 @@
 const test=require('node:test');
 const assert=require('node:assert/strict');
 const fs=require('node:fs'),path=require('node:path');
-const Pack=require('../rpg_narrative_pack'),Side=require('../rpg_side_quests'),Story=require('../rpg_story'),Schedules=require('../rpg_schedules'),World=require('../rpg_world'),Arc=require('../rpg_rival_arc'),Tournaments=require('../rpg_tournaments'),Epilogue=require('../rpg_epilogue'),Appointments=require('../rpg_appointments'),Intentions=require('../rpg_intentions'),CG=require('../rpg_cg_gallery'),Bridge=require('../rpg_duel_bridge');
+const Pack=require('../rpg_narrative_pack'),Side=require('../rpg_side_quests'),Story=require('../rpg_story'),Schedules=require('../rpg_schedules'),World=require('../rpg_world'),Arc=require('../rpg_rival_arc'),Tournaments=require('../rpg_tournaments'),Epilogue=require('../rpg_epilogue'),Appointments=require('../rpg_appointments'),Intentions=require('../rpg_intentions'),CG=require('../rpg_cg_gallery'),Planner=require('../rpg_daily_planner'),Bridge=require('../rpg_duel_bridge');
 const js=fs.readFileSync(path.join(__dirname,'..','rpg.js'),'utf8');
 const html=fs.readFileSync(path.join(__dirname,'..','rpg.html'),'utf8');
 const ids=[...html.matchAll(/id="([^"]+)"/g)].map(x=>x[1]);
@@ -27,7 +27,7 @@ function launch(initial,approve=false){
  const doc={getElementById(id){if(!elements[id])throw Error('Missing '+id);return elements[id];},
   createElement(tag){return new FakeNode(tag);},body:new FakeNode('body'),
   addEventListener(name,cb){listeners['document:'+name]=cb;}};
- const win={NeoRpgNarrativePack:Pack,NeoRpgSideQuests:Side,NeoHarborStory:Story,NeoRpgSchedules:Schedules,NeoRpgWorld:World,NeoRpgRivalArc:Arc,NeoRpgTournaments:Tournaments,NeoRpgEpilogue:Epilogue,NeoRpgAppointments:Appointments,NeoRpgIntentions:Intentions,NeoRpgCGGallery:CG,NeoRpgDuelBridge:Bridge,
+ const win={NeoRpgNarrativePack:Pack,NeoRpgSideQuests:Side,NeoHarborStory:Story,NeoRpgSchedules:Schedules,NeoRpgWorld:World,NeoRpgRivalArc:Arc,NeoRpgTournaments:Tournaments,NeoRpgEpilogue:Epilogue,NeoRpgAppointments:Appointments,NeoRpgIntentions:Intentions,NeoRpgCGGallery:CG,NeoRpgDailyPlanner:Planner,NeoRpgDuelBridge:Bridge,
   addEventListener(name,cb){listeners[name]=cb;}};
  const local={getItem(k){return saved[k]||null;},setItem(k,v){saved[k]=String(v);}};
  const session={removeItem(){}};
@@ -434,4 +434,39 @@ test('eligible riverside hangout unlocks special summer CG, then saves it after 
  const saved=launch(r.state()).state();
  assert.ok(saved.cgUnlocked.marina_beach_towel);
  assert.ok(!saved.pendingDuel);
+});
+
+test('contextual day planner shows grounded cards without changing period or campaign resources',()=>{
+ const r=launch(),before=r.state();
+ assert.ok(r.elements.dailyPlanner.children.length>0&&r.elements.dailyPlanner.children.length<=3);
+ assert.ok(r.elements.dailyPlanner.children.some(x=>x.className.includes('planner-card')));
+ const after=r.state();assert.equal(after.day,before.day);assert.equal(after.slot,before.slot);assert.equal(after.credits,before.credits);
+});
+test('planner travel shortcut changes only location and never advances time',()=>{
+ const r=launch({day:30,slot:1,location:'home'});
+ const target=r.elements.dailyPlanner.children.find(x=>x.children?.[1]?.textContent.includes('Neighborhood Cup'));
+ assert.ok(target,'an active tournament must be discoverable in the planner');
+ const go=target.children.find(x=>x.className==='planner-action');assert.ok(go);
+ go.onclick();
+ const next=r.state();
+ assert.equal(next.location,'center');assert.equal(next.day,30);assert.equal(next.slot,1);
+ assert.ok(r.elements.activities.children.some(x=>x.textContent.includes('Neighborhood Cup')));
+ assert.equal(next.pendingDuel,null,'planner only navigates, never starts a duel');
+});
+test('planner prioritizes scheduled appointment and does not auto-attend it',()=>{
+ const seed=launch({day:4,slot:0,location:'shop'});
+ const offered=Appointments.proposed(seed.state(),'hana',Schedules)[0];assert.ok(offered);
+ const prepared={...seed.state(),day:offered.day,slot:offered.slot,location:'home',
+  appointments:[{id:1,npc:'hana',day:offered.day,slot:offered.slot,place:offered.place,status:'booked',bookedDay:4}],appointmentSeq:1};
+ const r=launch(prepared),first=r.elements.dailyPlanner.children[0];
+ assert.match(first.children[1].textContent,/Meet-up happening now/);
+ assert.equal(r.state().appointments[0].status,'booked');
+ first.children.find(x=>x.className==='planner-action').onclick();
+ const saved=r.state();assert.equal(saved.location,offered.place);assert.equal(saved.appointments[0].status,'booked');
+ assert.equal(saved.slot,offered.slot);
+});
+test('planner does not offer shortcuts while player is in a committed story scene',()=>{
+ const r=launch({day:4,slot:0,location:'shop',activeStory:{id:'hana_route_1',phase:'lines',index:0}});
+ assert.equal(r.elements.dailyPlanner.children.length,1);
+ assert.match(r.elements.dailyPlanner.children[0].textContent,/Finish your current scene/);
 });

@@ -1,7 +1,7 @@
 'use strict';
 (()=>{
 const $=id=>document.getElementById(id),KEY='neoHarborRpgV1',STORY=window.NeoHarborStory,SCHEDULES=window.NeoRpgSchedules,WORLD=window.NeoRpgWorld,ARC=window.NeoRpgRivalArc,TOURNAMENTS=window.NeoRpgTournaments,BRIDGE=window.NeoRpgDuelBridge;
-const PACK=window.NeoRpgNarrativePack,SIDE=window.NeoRpgSideQuests,EPILOGUE=window.NeoRpgEpilogue,APPOINTMENTS=window.NeoRpgAppointments,INTENTIONS=window.NeoRpgIntentions,CG=window.NeoRpgCGGallery;
+const PACK=window.NeoRpgNarrativePack,SIDE=window.NeoRpgSideQuests,EPILOGUE=window.NeoRpgEpilogue,APPOINTMENTS=window.NeoRpgAppointments,INTENTIONS=window.NeoRpgIntentions,CG=window.NeoRpgCGGallery,PLANNER=window.NeoRpgDailyPlanner;
 const periods=['Morning','Afternoon','Evening'];
 const places={
  home:['Your Apartment','Your base during the championship season.'],
@@ -417,6 +417,51 @@ function renderAppointments(locked){
  }
 }
 
+
+function plannerDependencies(){return {schedules:SCHEDULES,appointments:APPOINTMENTS,story:STORY,side:SIDE,world:WORLD,
+ tournaments:TOURNAMENTS,intentions:INTENTIONS,arc:ARC,cast,places,eventCards};}
+function openPlannerSuggestion(id){
+ const locked=!!state.activeStory||!!state.activeEncounter||!!state.activeArc||!!state.activeSideQuest||!!state.pendingDuel;
+ if(locked||state.day>90)return;
+ // Revalidate before taking a UI action: no stale appointment / NPC / event shortcuts.
+ const pick=PLANNER.recommend(state,plannerDependencies()).find(x=>x.id===id);
+ if(!pick||pick.timing!=='now'||!places[pick.place])return;
+ if(pick.place!==state.location){
+  state.location=pick.place;state.selected=null;persist();
+  say('Planner','You head to '+places[pick.place][0]+'. '+places[pick.place][1]+' No time has passed.');
+ }else{
+  const section=$(pick.focusId);
+  section?.scrollIntoView?.({behavior:'smooth',block:'nearest'});
+  $('notice').textContent='This opportunity is available here. Choose its action below when you are ready.';
+ }
+}
+function renderPlanner(locked){
+ const root=$('dailyPlanner');root.replaceChildren();
+ if(state.day>90){
+  const p=document.createElement('p');p.className='planner-empty';p.textContent='Your 90-day season is complete. See your report and gallery.';root.append(p);return;
+ }
+ if(locked){
+  const p=document.createElement('p');p.className='planner-empty';p.textContent='Finish your current scene or duel to explore more opportunities.';root.append(p);return;
+ }
+ const suggestions=PLANNER.recommend(state,plannerDependencies());
+ if(!suggestions.length){
+  const p=document.createElement('p');p.className='planner-empty';p.textContent='Nothing urgent right now. Explore, practice, or take a well-earned break.';root.append(p);return;
+ }
+ for(const item of suggestions){
+  const card=document.createElement('div');card.className='planner-card'+(item.timing==='upcoming'?' planner-soon':'');
+  const meta=document.createElement('small');meta.className='planner-meta';
+  meta.textContent=item.timing==='upcoming'?'COMING UP · DAY '+item.day+' · '+periods[item.slot]:
+    (item.place===state.location?'HERE NOW':'FREE TRAVEL')+' · '+(item.timeCost?'⏳ 1 PERIOD':'FREE');
+  const heading=document.createElement('strong');heading.textContent=item.title;
+  const desc=document.createElement('p');desc.textContent=item.detail;
+  card.append(meta,heading,desc);
+  if(item.action!=='none'){
+   const b=document.createElement('button');b.className='planner-action';b.textContent=item.action==='travel'?'Go to '+places[item.place][0]+' · free':'Show me where · free';
+   b.onclick=()=>openPlannerSuggestion(item.id);card.append(b);
+  }
+  root.append(card);
+ }
+}
 function renderDailyIntention(locked){
  const root=$('dailyIntention');root.replaceChildren();
  const progress=INTENTIONS.status(state);
@@ -581,6 +626,7 @@ function renderSeasonReport(){
 
 function render(){
  const ended=state.day>90,locked=!!state.activeStory||!!state.activeEncounter||!!state.activeArc||!!state.activeSideQuest||!!state.pendingDuel;
+ renderPlanner(locked);
  renderDailyIntention(locked);
  const receipt=state.lastDuelReceipt;
  $('duelReceipt').hidden=!receipt;
