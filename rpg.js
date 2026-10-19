@@ -571,10 +571,9 @@ function renderCollection(){
  picker.value='custom';picker.disabled=true;
  const total=Object.values(journey.owned).reduce((a,n)=>a+n,0);
  const summary=document.createElement('p');summary.textContent=starter.name+' · 60-card deck · '+total+' owned cards · '+journey.packs+' packs opened';
- const studio=document.createElement('button');studio.className='studio-open';studio.textContent='✦ Open full Deck Studio · free';studio.disabled=locked;
+ const studio=document.createElement('button');studio.className='studio-open';studio.textContent='✦ Build / edit your deck';studio.disabled=locked;
  studio.onclick=()=>{persist();location.assign('/rpg_deck_studio.html');};
- const edit=document.createElement('button');edit.textContent='Edit your 60-card deck · free';edit.disabled=locked;edit.onclick=openDeckWorkshop;
- root.append(summary,studio,edit);
+ root.append(summary,studio);
  if(state.location==='shop'){
   const buy=document.createElement('button');buy.textContent='Buy training pack · 5 cards · 20 credits';
   buy.disabled=locked||state.credits<20;
