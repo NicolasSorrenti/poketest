@@ -40,7 +40,7 @@ for(const file of ['online','classic_live']){
  assert.match(js,/const el=handCard\(id,i,setup\)/,'Fan reuses standard gameplay click handler');
  assert.match(js,/cards\.forEach\(\(id,i\)=>/,'All hand cards must render, not just the first twelve');
  assert.match(js,/el\.classList\.remove\('handcard'\);el\.classList\.add\('hand-fan-card'\)/);
- assert.match(js,/root\.classList\.toggle\('hidden',!cards\.length\)/);
+ assert.match(js,/root\.classList\.toggle\('hidden',!handVisible\|\|!cards\.length\)/,'Player can hide and restore the permanent hand');
  assert.match(js,/root\.append\(track\)/);
 }
 console.log('PASS v0.41: permanent interactive hand, full-card coverage, type-colored left Energy rail, mobile responsiveness and accessibility');
