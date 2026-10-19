@@ -30,7 +30,7 @@ for(const [id,look] of Object.entries({...PACK.looks,...SIDE.looks}))if(cast[id]
 const eventCards=[{day:7,slot:1,place:'arcade',title:'Arcade Friendly Cup',reward:7},{day:14,slot:1,place:'center',title:'Club Exhibition',reward:9},{day:21,slot:2,place:'shop',title:'Card Shop Night',reward:8},{day:30,slot:1,place:'center',title:'Neighborhood Cup',reward:15},{day:42,slot:1,place:'arcade',title:'Open Challenge',reward:10},{day:60,slot:1,place:'center',title:'Regional Qualifier',reward:22},{day:75,slot:2,place:'shop',title:'Final Practice Meet',reward:12},{day:88,slot:1,place:'center',title:'Championship Opening',reward:20},{day:90,slot:1,place:'center',title:'Championship Finale Exhibition',reward:25}];
 
 
-function eligibleStories(){return STORY.available(state).filter(e=>!e.evergreen||currentPeople().includes(e.npc));}
+function eligibleStories(){const nearby=SCHEDULES.peopleAt(state.day,state.slot,state.location,publicAppointments(state.location));return STORY.available(state).filter(e=>!e.evergreen||nearby.includes(e.npc));}
 function storyDialogueLines(id){const lines=STORY.linesFor(state,id);return RPGD?.storyLines(id,lines)||lines;}
 function startStory(id){
  if(state.activeSituation||state.activeSideQuest||state.activeStory||state.activeEncounter||state.activeArc||state.pendingDuel)return;
@@ -186,11 +186,12 @@ function renderMandatory(){
  if(a.phase==='lines'){
   const line=e.lines[a.index]||e.lines[e.lines.length-1];
   const name=line.speaker==='Protagonist'?'You':cast[line.speaker]?.name||line.speaker;
-  return {speaker:name,line:mandatoryText(line.text),choices:[[a.index<e.lines.length-1?'Continue ›':'Respond ›','mandatoryNext']]};
+  const remote=e.kind==='bond'&&(e.delivery==='remote'||!SCHEDULES.peopleAt(state.day,state.slot,state.location,publicAppointments(state.location)).includes(e.characterId));
+  return {speaker:remote&&cast[line.speaker]?'✉ '+name+' · message':name,line:mandatoryText(line.text),choices:[[a.index<e.lines.length-1?'Continue ›':'Respond ›','mandatoryNext']]};
  }
  if(a.phase==='choice')return {speaker:cast[e.characterId]?.name||'Narrator',line:'How will you respond?',choices:e.choices.map((c,i)=>[c.label,'mandatoryChoice:'+i])};
  const choice=e.choices[a.choice];
- return {speaker:cast[e.characterId]?.name||'Narrator',line:mandatoryText(choice?.reply||''),choices:[['Continue story ›','mandatoryFinish']]};
+ return {speaker:e.kind==='bond'?'✉ '+(cast[e.characterId]?.name||e.characterId)+' · message':'Narrator',line:mandatoryText(choice?.reply||''),choices:[['Continue story ›','mandatoryFinish']]};
 }
 function mandatoryAction(type,id){
  if(!MANDATORY||!state.mandatoryEventState?.active)return false;
@@ -1161,7 +1162,7 @@ function renderJourney(){
  open.onclick=openGallery;root.append(open);
 }
 function mandatoryClosureDue(){
- return !!MANDATORY&&MANDATORY_EVENTS.some(e=>e.closure&&!state.mandatoryEventState?.seen?.[e.id]&&state.day>=e.earliestDay);
+ return !!MANDATORY&&MANDATORY_EVENTS.some(e=>e.kind==='season'&&!state.mandatoryEventState?.seen?.[e.id]&&state.day>=e.earliestDay);
 }
 function renderSeasonReport(){
  const root=$('endSeason');root.replaceChildren();

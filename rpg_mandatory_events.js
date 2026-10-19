@@ -121,7 +121,7 @@
   const stamp=state.day+':'+state.slot;
   const index=m.pending.findIndex(p=>{
    const e=events.find(x=>x.id===p.id);
-   return e&&(m.lastPlayedStamp!==stamp||e.closure===true)&&testPredicate(e.trigger,state);
+   return e&&(m.lastPlayedStamp!==stamp||e.closure===true||state.day>90)&&testPredicate(e.trigger,state);
   });
   if(index<0)return null;
   const item=m.pending.splice(index,1)[0];

@@ -409,7 +409,7 @@
     [
       "Would you rather I looked at the deck?",
       "No. I only wanted to know if you were paying attention.",
-      "I am.",
+      "I am, and I am practicing saying it without apologizing.",
       "Then you may continue."
     ]
   ],

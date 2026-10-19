@@ -26,6 +26,18 @@ on:
       - '.github/workflows/rpg-regression.yml'
 
 jobs:
+  mandatory-system:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify mandatory scheduler and generated character registry
+        run: |
+          node --test tests/rpg_mandatory_events.test.js
+          npm run characters:check
   node-rpg:
     runs-on: ubuntu-latest
     timeout-minutes: 10
