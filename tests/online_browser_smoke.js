@@ -53,7 +53,22 @@ fs.mkdirSync(artifacts,{recursive:true});
    assert.equal(await basic.count(),1,'A Basic Pokémon must be clickable from the fan');
    const handBefore=await handCards.count();
    await basic.click();
-   await page.locator('#myActive .poke').waitFor({state:'visible',timeout:25000});
+   const activeAppeared=await page.locator('#myActive .poke').waitFor({state:'visible',timeout:6000}).then(()=>true,()=>false);
+   if(!activeAppeared){
+    const debug=await page.evaluate(async()=>{
+     const token=sessionStorage.getItem('neoOnlineToken'),code=sessionStorage.getItem('neoOnlineRoom');
+     const headers={'X-Duel-Token':token};
+     const res=await fetch('/api/online/state?code='+encodeURIComponent(code),{headers});
+     const state=await res.json();
+     return {error:document.querySelector('#error')?.textContent,
+      html:document.querySelector('#myActive')?.innerHTML?.slice(0,200),
+      hand:document.querySelector('#handFan')?.textContent?.slice(0,250),
+      phase:state.view?.phase,
+      active:state.view?.players?.[state.you]?.active,
+      revision:state.revision};
+    });
+    throw Error('Fan Basic selection did not produce a visible Active Pokémon: '+JSON.stringify(debug));
+   }
    assert.equal(await page.locator('#handFan .hand-fan-card').count(),handBefore-1,
     'Playing a card from fan updates the authoritative hand');
   }
