@@ -52,7 +52,7 @@ const {server,cubeRooms,online}=require('../server');
     null,{timeout:8000});
    assert(await page.locator('a[aria-label="Return to your Cube championship standings"]').isVisible());
   }
-  const r=cubeRooms.room(host.code).tournament.current;
+  const r=cubeRooms.room(host.code).tournament.active.get(1);
   assert.equal(r.kind,'online');
   assert.equal(online.session(r.code,r.tokens[0]).side,0);
   assert.equal(online.session(r.code,r.tokens[1]).side,1);
