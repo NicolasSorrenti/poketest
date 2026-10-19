@@ -945,3 +945,21 @@ test('story responses float to the center while the dialogue line remains visibl
  assert.ok(r.elements.choices.children.length>=2,'response prompts should offer meaningful choices');
  assert.ok(r.elements.line.textContent);
 });
+
+test('a first meeting plays its greeting scene before actions and survives reload',()=>{
+ const r=launch({day:1,slot:0,location:'shop'});
+ const hana=r.elements.people.children.find(x=>x.children?.[1]?.children?.[0]?.textContent==='Hana Mizuno');
+ assert.ok(hana);hana.onclick();
+ assert.equal(r.elements.speaker.textContent,'Hana Mizuno');
+ assert.equal(r.elements.choices.children.length,1);
+ assert.equal(r.state().scene.index,0);
+ r.elements.choices.children[0].onclick();
+ assert.equal(r.elements.speaker.textContent,'You');
+ const reloaded=launch(r.state());
+ assert.equal(reloaded.elements.speaker.textContent,'You','the same line should resume after refresh');
+ assert.equal(reloaded.state().scene.index,1);
+ reloaded.elements.choices.children[0].onclick();
+ assert.equal(reloaded.elements.speaker.textContent,'Hana Mizuno');
+ assert.ok(reloaded.elements.choices.children.some(x=>x.textContent.includes('Talk')));
+ assert.equal(reloaded.state().slot,0);
+});
