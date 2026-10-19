@@ -46,3 +46,9 @@ These are source-backed extracts of original generated Neo Harbor art sheets, **
 - All six were drawn against `rpg_narrative_pack.js`, `rpg_side_quests.js`, and `RPG_NARRATIVE_EXPANSION.md`. Generated at 1086×1448 with RGBA transparency and distinctive canonical uniforms/accessories. No new dialogue, event scripts, or sidequest modifications.
 - QA: 176 image files decoded, complete archive CRC and all 176 SHA256 entries validated; image source files and names compared with the character IDs used by `rpg.js` (`/rpg-assets/{id}.png`).
 - Build extractor and instructions updated to allow the six new root PNGs and manifests; if ZIP alone is uploaded under `asset-packs/`, Node hooks extract automatically. **Binary ZIP itself is not present in GitHub yet**. Directly unzipping at repo root and committing the PNGs also works.
+
+## 2026-10-18 — G5 scene-art pack prepared
+- Eight previously generated illustrations encoded to 1920×1080 sRGB WebP and eight 640×360 thumbnails, using the G5 event IDs in `docs/cg-art-queue.json`.
+- Separate additive ZIP: `neo_harbor_g5_situation_cgs_2026-10-18.zip` (3,600,073 bytes), SHA-256 `9806efda37ef03fd8409a550a4e3cca120673052e930a56ecda170f518fdcf27`. 18 archive entries including a manifest and README. Integrity and 16 image dimensions verified.
+- 3 scenes match reasonably; 5 are provisional action mismatches, flagged in manifest and `docs/G5_ART_UPLOAD.md`. No artwork regeneration or changes to existing portraits.
+- Updated script to optionally extract this second archive when committed to `asset-packs/`; **binary ZIP is not present in GitHub until user uploads it**.
