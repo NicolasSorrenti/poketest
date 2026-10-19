@@ -93,9 +93,9 @@
     if(a.damage)line.append(node('b','',a.damage));
     panel.append(line);
    }
-   panel.append(node('p','cb-muted',group(c)==='Energy'?
-    config.collectionLabel?'Owned: '+limits.get(c.id)+' · In deck: '+amount(c.id):
-    'Add unlimited Basic Energy to your deck.':
+   panel.append(node('p','cb-muted',config.collectionLabel?
+    'Owned: '+limits.get(c.id)+' · In deck: '+amount(c.id):
+    group(c)==='Energy'?'Add unlimited Basic Energy to your deck.':
     'Drafted: '+limits.get(c.id)+' · In deck: '+amount(c.id)));
    if(!locked){
     const add=node('button','cb-preview-add','+ Add '+c.name);
