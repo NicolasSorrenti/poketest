@@ -77,13 +77,13 @@
   "character": "hana",
   "id": "hana_apron_mixup",
   "category": "special",
-  "trigger": "hangout",
+  "trigger": "situation",
   "place": "shop",
   "minAffection": 5,
   "startDay": 9,
   "slot": 1,
   "title": "An Apron Too Many",
-  "hint": "Spend an afternoon at the shop after getting closer to Hana.",
+  "hint": "Spend an afternoon at the shop after getting closer to Hana. Discover a rare situational moment.",
   "scene": "Trying on a promotional apron over her fully worn outfit, Hana accidentally tangles its long ties with her card case. She catches the player laughing and makes a mock-indignant face.",
   "composition": "Mid-shot from doorway, apron and sleeves clearly readable; avoid a dressing-room voyeur viewpoint.",
   "outfit": "Fully clothed shop outfit and bright promotional apron; modest playful silhouette.",
@@ -93,7 +93,8 @@
   "fanservice": 2,
   "path": "/rpg-assets/events/cg/season01/hana_apron_mixup.webp",
   "thumb": "/rpg-assets/events/cg/season01/thumbs/hana_apron_mixup.webp",
-  "dialogueSafe": "Bottom 20% clear for dialogue UI"
+  "dialogueSafe": "Bottom 20% clear for dialogue UI",
+  "situationId": "hana_apron_mixup"
  },
  {
   "character": "reina",
@@ -165,13 +166,13 @@
   "character": "reina",
   "id": "reina_rain_catch",
   "category": "special",
-  "trigger": "hangout",
+  "trigger": "situation",
   "place": "center",
   "minAffection": 5,
   "startDay": 21,
   "slot": 2,
   "title": "Not So Impeccable",
-  "hint": "See Reina on a quiet evening after building trust.",
+  "hint": "See Reina on a quiet evening after building trust. Discover a rare situational moment.",
   "scene": "A sudden splash from a faulty roof gutter catches Reina as she returns from practice. Her neatly kept hair is a mess, and she glares before laughing with the player.",
   "composition": "Three-quarter upper-body cinematic shot; comedic water droplets, no clothing transparency.",
   "outfit": "Fully covered jersey, jacket closed; damp hair and neat deck case protected under arm.",
@@ -181,7 +182,8 @@
   "fanservice": 2,
   "path": "/rpg-assets/events/cg/season01/reina_rain_catch.webp",
   "thumb": "/rpg-assets/events/cg/season01/thumbs/reina_rain_catch.webp",
-  "dialogueSafe": "Bottom 20% clear for dialogue UI"
+  "dialogueSafe": "Bottom 20% clear for dialogue UI",
+  "situationId": "reina_rain_catch"
  },
  {
   "character": "shiori",
@@ -253,13 +255,13 @@
   "character": "shiori",
   "id": "shiori_bookstack_wobble",
   "category": "special",
-  "trigger": "hangout",
+  "trigger": "situation",
   "place": "library",
   "minAffection": 5,
   "startDay": 18,
   "slot": 1,
   "title": "The Wobbling Book Stack",
-  "hint": "Visit the library with Shiori once you have become close.",
+  "hint": "Visit the library with Shiori once you have become close. Discover a rare situational moment.",
   "scene": "Shiori reaches for a high shelf while carrying books. A stack topples and she steadies her layered skirt and coat with one hand as you rush to catch the books; she blushes at the awkward dance.",
   "composition": "Whimsical side shot showing safe footing and falling books; no voyeur/under-skirt angle.",
   "outfit": "Canonical layered fully covered skirt, long coat, sturdy boots.",
@@ -269,7 +271,8 @@
   "fanservice": 2,
   "path": "/rpg-assets/events/cg/season01/shiori_bookstack_wobble.webp",
   "thumb": "/rpg-assets/events/cg/season01/thumbs/shiori_bookstack_wobble.webp",
-  "dialogueSafe": "Bottom 20% clear for dialogue UI"
+  "dialogueSafe": "Bottom 20% clear for dialogue UI",
+  "situationId": "shiori_bookstack_wobble"
  },
  {
   "character": "yuna",
@@ -341,13 +344,13 @@
   "character": "yuna",
   "id": "yuna_card_scatter",
   "category": "special",
-  "trigger": "hangout",
+  "trigger": "situation",
   "place": "arcade",
   "minAffection": 5,
   "startDay": 13,
   "slot": 2,
   "title": "Cardstorm Catastrophe",
-  "hint": "Hang out with Yuna one evening after becoming friends.",
+  "hint": "Hang out with Yuna one evening after becoming friends. Discover a rare situational moment.",
   "scene": "Yuna bends to gather a shower of fallen sleeves while her oversized jacket gets caught on a chair. She notices the player's attempt to help and shoots a mischievous, teasing grin.",
   "composition": "Comic cinematic eye-level side composition, focused on expressive pose, sleeves and face; no undergarment view.",
   "outfit": "Fully covered shorts and patterned tights under her signature oversized jacket.",
@@ -357,7 +360,8 @@
   "fanservice": 2,
   "path": "/rpg-assets/events/cg/season01/yuna_card_scatter.webp",
   "thumb": "/rpg-assets/events/cg/season01/thumbs/yuna_card_scatter.webp",
-  "dialogueSafe": "Bottom 20% clear for dialogue UI"
+  "dialogueSafe": "Bottom 20% clear for dialogue UI",
+  "situationId": "yuna_card_scatter"
  },
  {
   "character": "akari",
@@ -429,13 +433,13 @@
   "character": "akari",
   "id": "akari_notes_whirl",
   "category": "special",
-  "trigger": "hangout",
+  "trigger": "situation",
   "place": "library",
   "minAffection": 5,
   "startDay": 15,
   "slot": 1,
   "title": "Out of Control Variables",
-  "hint": "Visit Akari for afternoon study after building a bond.",
+  "hint": "Visit Akari for afternoon study after building a bond. Discover a rare situational moment.",
   "scene": "A gust from an open window sends Akari's color-coded research notes flying. She lunges to catch the pages, her blazer flaring, and fixes the player with a hilariously helpless stare.",
   "composition": "Dynamic mid-shot from the side, floating sheets and ponytail motion, safe fully clothed angle.",
   "outfit": "Canonical fully covered utility blazer and cargo skirt; glasses slightly askew.",
@@ -445,7 +449,8 @@
   "fanservice": 2,
   "path": "/rpg-assets/events/cg/season01/akari_notes_whirl.webp",
   "thumb": "/rpg-assets/events/cg/season01/thumbs/akari_notes_whirl.webp",
-  "dialogueSafe": "Bottom 20% clear for dialogue UI"
+  "dialogueSafe": "Bottom 20% clear for dialogue UI",
+  "situationId": "akari_notes_whirl"
  },
  {
   "character": "camila",
@@ -517,13 +522,13 @@
   "character": "camila",
   "id": "camila_windy_receipts",
   "category": "special",
-  "trigger": "hangout",
+  "trigger": "situation",
   "place": "cafe",
   "minAffection": 5,
   "startDay": 14,
   "slot": 1,
   "title": "The Wind's Counteroffer",
-  "hint": "Visit the café with Camila after earning her trust.",
+  "hint": "Visit the café with Camila after earning her trust. Discover a rare situational moment.",
   "scene": "A breeze from the riverside catches Camila's long coat and sends trade receipts fluttering. She uses a hand to secure the coat, then strikes an exaggerated fashion pose to cover the mishap.",
   "composition": "Comic editorial three-quarter shot; coat lining catching light, no exposed underwear.",
   "outfit": "Tailored trousers and fully worn fitted vest beneath dramatic burgundy coat.",
@@ -533,7 +538,8 @@
   "fanservice": 2,
   "path": "/rpg-assets/events/cg/season01/camila_windy_receipts.webp",
   "thumb": "/rpg-assets/events/cg/season01/thumbs/camila_windy_receipts.webp",
-  "dialogueSafe": "Bottom 20% clear for dialogue UI"
+  "dialogueSafe": "Bottom 20% clear for dialogue UI",
+  "situationId": "camila_windy_receipts"
  },
  {
   "character": "marina",
@@ -605,13 +611,13 @@
   "character": "marina",
   "id": "marina_beach_towel",
   "category": "special",
-  "trigger": "hangout",
+  "trigger": "situation",
   "place": "park",
   "minAffection": 5,
   "startDay": 17,
   "slot": 1,
   "title": "The Stubborn Beach Towel",
-  "hint": "Spend an afternoon on the riverside sandbar once Marina trusts you.",
+  "hint": "Spend an afternoon on the riverside sandbar once Marina trusts you. Discover a rare situational moment.",
   "scene": "After a swim, Marina tries to tame an unruly beach towel that the wind keeps wrapping around her shoulders; she catches the player helping with a bashful laugh.",
   "composition": "Tasteful full-figure beach scene from eye level, expression central; no nudity or accidental exposure.",
   "outfit": "Fully worn modest one-piece swimwear with opaque towel or cover-up, shell clip and braid.",
@@ -621,7 +627,8 @@
   "fanservice": 2,
   "path": "/rpg-assets/events/cg/season01/marina_beach_towel.webp",
   "thumb": "/rpg-assets/events/cg/season01/thumbs/marina_beach_towel.webp",
-  "dialogueSafe": "Bottom 20% clear for dialogue UI"
+  "dialogueSafe": "Bottom 20% clear for dialogue UI",
+  "situationId": "marina_beach_towel"
  },
  {
   "character": "kaede",
@@ -693,13 +700,13 @@
   "character": "kaede",
   "id": "kaede_jacket_prank",
   "category": "special",
-  "trigger": "hangout",
+  "trigger": "situation",
   "place": "arcade",
   "minAffection": 5,
   "startDay": 49,
   "slot": 2,
   "title": "The Jacket Trap",
-  "hint": "Share a late arcade evening with Kaede after growing closer.",
+  "hint": "Share a late arcade evening with Kaede after growing closer. Discover a rare situational moment.",
   "scene": "Kaede attempts to show off a dramatic spin but snags the strap of her deck bag on her jacket. She recovers with a daring smirk and accuses the player of setting a trap.",
   "composition": "Dynamic mid-shot at eye level, comic motion with jacket and bag, modest fully covered silhouette.",
   "outfit": "Signature leather jacket, asymmetrical tee, utility belt and opaque leggings.",
@@ -709,12 +716,13 @@
   "fanservice": 2,
   "path": "/rpg-assets/events/cg/season01/kaede_jacket_prank.webp",
   "thumb": "/rpg-assets/events/cg/season01/thumbs/kaede_jacket_prank.webp",
-  "dialogueSafe": "Bottom 20% clear for dialogue UI"
+  "dialogueSafe": "Bottom 20% clear for dialogue UI",
+  "situationId": "kaede_jacket_prank"
  }
 ];
  const categories=Object.freeze(['profile','pre_duel','social','special']);
  const map=new Map(catalog.map(x=>[x.id,x]));
- const validTriggers=new Set(['meet','before_duel','hangout','appointment','story_milestone','after_duel']);
+ const validTriggers=new Set(['meet','before_duel','hangout','situation','appointment','story_milestone','after_duel']);
  function hydrate(state){
   if(!state||typeof state!=='object')throw Error('Invalid campaign state');
   if(!state.cgUnlocked||typeof state.cgUnlocked!=='object'||Array.isArray(state.cgUnlocked))state.cgUnlocked={};
@@ -737,13 +745,15 @@
   const affection=Math.max(0,Number.isFinite(bond?.affection)?bond.affection:Number.isFinite(legacy?.affection)?legacy.affection:0);
   return affection>=entry.minAffection;
  }
- function record(state,trigger,npc){
+ function record(state,trigger,npc,context=null){
   hydrate(state);
   if(!Number.isInteger(state.day)||state.day<1||state.day>90||!Number.isInteger(state.slot)||state.slot<0||state.slot>2)return [];
   if(!validTriggers.has(trigger)||typeof npc!=='string')return [];
   const unlocked=[];
   for(const entry of catalog){
    if(state.cgUnlocked[entry.id]||!eligible(state,entry,trigger,npc))continue;
+   if(trigger==='situation'&&(!context||context.eventId!==entry.situationId
+     ||!state.situationDone?.[entry.situationId]))continue;
    state.cgUnlocked[entry.id]={day:state.day,slot:state.slot,trigger};
    unlocked.push(entry);
   }
@@ -763,6 +773,7 @@
   for(const e of catalog){
    if(seen.has(e.id))errors.push('Duplicate ID '+e.id);seen.add(e.id);
    if(!categories.includes(e.category)||!validTriggers.has(e.trigger))errors.push('Unsupported type '+e.id);
+   if(e.category==='special'&&e.situationId!==e.id)errors.push('Invalid situation CG '+e.id);
    if(!/^[a-z_0-9]+$/.test(e.id)||!e.scene||!e.composition||!e.outfit||!e.expression||!e.environment||!e.dialogueSafe)errors.push('Incomplete CG brief '+e.id);
    if(e.startDay<1||e.startDay>90||e.minAffection<0||e.fanservice<0||e.fanservice>3)errors.push('Invalid gate '+e.id);
    if(e.path.endsWith('.png')||!e.path.endsWith(e.id+'.webp'))errors.push('Invalid asset path '+e.id);
