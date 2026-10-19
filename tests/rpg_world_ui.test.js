@@ -817,3 +817,56 @@ test('G6: completing a 90-day season by normal period advancement stops at day 9
  assert.ok(r.elements.endSeason.children.some(x=>x.className==='finale-actions'));
  assert.match(r.elements.journeyProgress.children[2].children[0].textContent,/Your season is complete/);
 });
+
+test('RPG collection: new players must choose one of three modest dual-type starters',()=>{
+ const r=launch();
+ assert.equal(r.elements.starterDialog.open,true);
+ assert.equal(r.elements.starterChoices.children.length,3);
+ assert.deepEqual(r.elements.starterChoices.children.map(x=>x.children[0].textContent.includes(' / ')),[true,true,true]);
+ r.elements.starterChoices.children[1].onclick();
+ const s=r.state();
+ assert.equal(s.deckJourney.starter,'tidal_circuit');
+ assert.equal(s.deckJourney.deck.length,60);
+ assert.equal(s.playerDeck,'custom');
+ assert.equal(r.elements.starterDialog.open,false);
+ assert.equal(r.elements.deckPicker.disabled,true);
+ assert.ok(r.elements.deckCollection.children.some(x=>x.textContent.includes('Edit your 60-card deck')));
+});
+test('RPG collection: buy a training pack at shop, edit a real owned upgrade and save without changing campaign time',()=>{
+ const r=launch({day:5,slot:0,location:'shop',credits:80,deckJourney:Collection.fresh()});
+ r.elements.starterChoices.children[0].onclick();
+ const original=r.state().deckJourney.deck;
+ const buy=r.elements.deckCollection.children.find(x=>x.textContent.includes('Buy training pack'));
+ assert.ok(buy);buy.onclick();
+ const afterPack=r.state();
+ assert.equal(afterPack.credits,60);assert.equal(afterPack.deckJourney.packs,1);
+ assert.equal(afterPack.day,5);assert.equal(afterPack.slot,0);
+ const editor=r.elements.deckCollection.children.find(x=>x.textContent.includes('Edit your 60-card deck'));
+ editor.onclick();assert.equal(r.elements.deckEditDialog.open,true);
+ const counts=Collection.rank(original);
+ const card=Object.keys(afterPack.deckJourney.owned).find(id=>!counts[id]);
+ assert.ok(card,'pack should introduce at least one new candidate eventually');
+ r.elements.deckRemove.value='base1-94';r.elements.deckAdd.value=card;
+ r.elements.deckSwap.onclick();
+ assert.equal(r.state().deckJourney.deck.join(','),original.join(','),'draft must not alter live duel deck');
+ r.elements.deckSave.onclick();
+ const saved=r.state();
+ assert.equal(saved.deckJourney.deck.length,60);
+ assert.ok(saved.deckJourney.deck.includes(card));
+ assert.equal(saved.deckJourney.draft,null);
+ assert.equal(saved.day,5);assert.equal(saved.slot,0);
+});
+test('RPG collection: pre-duel snapshot locks the actual 60 owned cards until the result',()=>{
+ const r=launch({day:5,slot:0,location:'shop',deckJourney:Collection.fresh()});
+ r.elements.starterChoices.children[2].onclick();
+ const before=r.state().deckJourney.deck.join(',');
+ r.elements.people.children.find(x=>x.children?.[1]?.children?.[0]?.textContent==='Hana Mizuno').onclick();
+ r.elements.choices.children.find(x=>x.textContent.includes('Challenge to a duel')).onclick();
+ const pending=r.state().pendingDuel;
+ assert.equal(pending.playerDeck,'custom');assert.equal(pending.deckCards.join(','),before);
+ assert.equal(r.elements.deckCollection.children.find(x=>x.textContent.includes('Edit your 60-card deck')).disabled,true);
+ r.elements.preDuelSkip.onclick();assert.match(r.elements.battle.src,/deck=custom/);
+ r.listeners.message({origin:r.loc.origin,source:r.elements.battle.contentWindow,data:Bridge.message(pending.id,0)});
+ assert.equal(r.state().deckJourney.rewards,1);
+ assert.equal(r.state().pendingDuel,null);
+});
