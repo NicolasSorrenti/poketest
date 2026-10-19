@@ -1,7 +1,7 @@
 'use strict';
 (()=>{
 const $=id=>document.getElementById(id),KEY='neoHarborRpgV1',STORY=window.NeoHarborStory,SCHEDULES=window.NeoRpgSchedules,WORLD=window.NeoRpgWorld,ARC=window.NeoRpgRivalArc,TOURNAMENTS=window.NeoRpgTournaments,BRIDGE=window.NeoRpgDuelBridge;
-const PACK=window.NeoRpgNarrativePack,SIDE=window.NeoRpgSideQuests,EPILOGUE=window.NeoRpgEpilogue,APPOINTMENTS=window.NeoRpgAppointments,INTENTIONS=window.NeoRpgIntentions,CG=window.NeoRpgCGGallery,PLANNER=window.NeoRpgDailyPlanner,SOCIAL=window.NeoRpgSocialActivities,DATES=window.NeoRpgPlannedDates,PRE=window.NeoRpgPreDuel,SITUATIONS=window.NeoRpgSituations,JOURNEY=window.NeoRpgSeasonJourney,COLLECT=window.NeoRpgCollection,RPGD=window.NeoRpgDialogue;
+const PACK=window.NeoRpgNarrativePack,SIDE=window.NeoRpgSideQuests,EPILOGUE=window.NeoRpgEpilogue,APPOINTMENTS=window.NeoRpgAppointments,INTENTIONS=window.NeoRpgIntentions,CG=window.NeoRpgCGGallery,PLANNER=window.NeoRpgDailyPlanner,SOCIAL=window.NeoRpgSocialActivities,DATES=window.NeoRpgPlannedDates,PRE=window.NeoRpgPreDuel,SITUATIONS=window.NeoRpgSituations,JOURNEY=window.NeoRpgSeasonJourney,COLLECT=window.NeoRpgCollection,RPGD=window.NeoRpgDialogue,BONDS=window.NeoRpgBondRewards;
 const periods=['Morning','Afternoon','Evening'];
 const places={
  home:['Your Apartment','Your base during the championship season.'],
@@ -23,6 +23,7 @@ const cast={
  kaede:{name:'Kaede Arashi',age:22,deck:'rocket_lab',style:'Dark Pokémon · Disruption',locs:['arcade','center','park'],slots:[1,2],days:[0,1,3,4,6],start:40,intro:'So you are the local hotshot? Cute town you have here.',repeat:'Still trying to figure me out? Keep trying.',talk:['Reputations are just stories that got repeated too many times.','I came here for strong opponents, not polite applause.','Sometimes the best move is the one nobody expects you to make.'],flirt:'Heh. You are going to be trouble, aren’t you?',duelWin:'Not bad. You might actually be fun.',duelLose:'That expression on your face? Worth the trip.'}
 };
 Object.assign(cast,PACK.cast,SIDE.cast);
+const BOND_PLAN=BONDS.build(STORY.events,cast);
 for(const [id,look] of Object.entries({...PACK.looks,...SIDE.looks}))if(cast[id])cast[id].appearance=look;
 const eventCards=[{day:7,slot:1,place:'arcade',title:'Arcade Friendly Cup',reward:7},{day:14,slot:1,place:'center',title:'Club Exhibition',reward:9},{day:21,slot:2,place:'shop',title:'Card Shop Night',reward:8},{day:30,slot:1,place:'center',title:'Neighborhood Cup',reward:15},{day:42,slot:1,place:'arcade',title:'Open Challenge',reward:10},{day:60,slot:1,place:'center',title:'Regional Qualifier',reward:22},{day:75,slot:2,place:'shop',title:'Final Practice Meet',reward:12},{day:88,slot:1,place:'center',title:'Championship Opening',reward:20},{day:90,slot:1,place:'center',title:'Championship Finale Exhibition',reward:25}];
 
@@ -65,9 +66,11 @@ function finishStory(){
  let result;try{result=STORY.resolve(state,a.id,a.choice)}catch(err){$('notice').textContent=err.message;return;}
  const id=e.npc,bond=state.bonds[id],updated=state.relationships[id];
  for(const metric of ['affection','trust','duels'])bond[metric]=Math.max(bond[metric]||0,updated[metric]||0);
+ const chapterReward=BONDS.reward(state,e,BOND_PLAN,COLLECT);
  log('A memorable afternoon with '+cast[id].name+'.');recordCG('story_milestone',id);recordIntention('story');
+ if(chapterReward)log('Bond chapter '+chapterReward.chapter+' reward from '+cast[id].name+': '+chapterReward.label+'.');
  state.activeStory=null;advance();state.selected=id;
- persist();say(cast[id].name,result.choice.reply);
+ persist();say(cast[id].name,result.choice.reply+(chapterReward?'\n\n★ Chapter reward: '+chapterReward.label:''));
 }
 
 
@@ -648,9 +651,9 @@ function openBoosterShop(){
  renderBoosterShop();
  if(!$('boosterShopDialog').open)$('boosterShopDialog').showModal();
 }
-function purchaseBoosterPack(set){
+function purchaseBoosterPack(set,useVoucher=false){
  try{
-  const cards=COLLECT.buyPack(state,set);
+  const cards=useVoucher?COLLECT.redeemVoucher(state,set):COLLECT.buyPack(state,set);
   const name=COLLECT.SETS[set].name;
   log('Opened '+name+' booster: '+cards.map(labelCard).join(', ')+'.');
   persist();
@@ -681,10 +684,11 @@ function renderBoosterShop(message=''){
    offer.unlockHint.replace('bond with '+offer.npc,'bond with '+(cast[offer.npc]?.name||offer.npc));
   const buy=document.createElement('button');buy.type='button';buy.className='booster-offer-buy';
   const affordable=(state.credits||0)>=offer.price;
-  buy.disabled=!offer.unlocked||!affordable||controlsLocked();
-  buy.textContent=offer.unlocked?'Buy · '+offer.price+' credits':'Unlock to buy · '+offer.price+' credits';
-  if(offer.unlocked&&!affordable)reason.textContent='Need '+(offer.price-(state.credits||0))+' more credits · '+reason.textContent;
-  buy.onclick=()=>purchaseBoosterPack(offer.set);
+  buy.disabled=!offer.unlocked||(!affordable&&!offer.vouchers)||controlsLocked();
+  buy.textContent=offer.vouchers?'Redeem reward · free ('+offer.vouchers+')':offer.unlocked?'Buy · '+offer.price+' credits':'Unlock to buy · '+offer.price+' credits';
+  if(offer.unlocked&&!affordable&&!offer.vouchers)reason.textContent='Need '+(offer.price-(state.credits||0))+' more credits · '+reason.textContent;
+  if(offer.vouchers)reason.textContent='Character chapter gift · one ten-card booster';
+  buy.onclick=()=>purchaseBoosterPack(offer.set,offer.vouchers>0);
   box.append(eyebrow,title,desc,progress,reason,buy);root.append(box);
  }
 }
