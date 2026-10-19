@@ -278,3 +278,17 @@ body.duel-active .stage .energy-type-special{background:linear-gradient(#859ab0,
 }
 @media(hover:none){body.duel-active .hand-panel .hand-fan:not(.hidden){display:block!important}}
 @media(prefers-reduced-motion:reduce){body.duel-active .hand-fan-card{transition:none}}
+
+
+/* Compact unusually large Energy stacks while keeping their types visible. */
+@media(min-width:781px){
+ body.duel-active .stage .energy-peeks:has(.attached-energy:nth-child(5)) .attached-energy{height:19px}
+ body.duel-active .stage .energy-peeks:has(.attached-energy:nth-child(5)) .energy-symbol{font-size:9px;line-height:9px}
+ body.duel-active .stage .energy-peeks:has(.attached-energy:nth-child(5)) .energy-label{font-size:6px;line-height:7px}
+}
+@media(max-width:780px){
+ body.duel-active .stage .energy-peeks:has(.attached-energy:nth-child(5)){
+  display:grid;grid-template-columns:repeat(2,18px);gap:1px;width:38px;left:-11px
+ }
+ body.duel-active .stage .energy-peeks:has(.attached-energy:nth-child(5)) .energy-overflow{grid-column:span 2;justify-self:start}
+}
