@@ -100,6 +100,22 @@
    ["You don't sound like someone who wants to leave.","That's the problem. I've never had to be good at staying."]
   ]
  };
+ const flirt={
+  hana:["I was hoping I'd run into you today.","Should I give you a warning next time?","No. Just give me a moment to stop blushing."],
+  reina:["You know, you look good when you're determined.","Only when you keep listening.","Then you'd better give me something worth listening to."],
+  shiori:["I was hoping you'd save a quiet moment for me.","Then I'll be direct again: I like being here with you.","...You may stay as long as you like."],
+  yuna:["I think you're the most entertaining person in town.","Finally, a combo that worked on the first try.","Careful. I may expect that kind of confidence from now on."],
+  akari:["I wanted to see if I could surprise you.","For the record, I like the way you look at me.","That is an observation I need more time to evaluate."],
+  camila:["For once, I'm not interested in making a trade.","I was hoping for your company.","Then the evening might be more valuable than I expected."],
+  marina:["The river isn't the only nice thing about this place.","I meant that I'm happy you're here.","Oh. Well, then I'm happy you're here too."],
+  kaede:["You make getting into trouble sound tempting.","Maybe I do want to be trouble with you.","That's the kind of offer I could get used to."]
+ };
+ function flirtLines(npc,reply){
+  const beats=flirt[npc];
+  if(!beats)return [{speaker:npc,text:reply}];
+  return [{speaker:'Protagonist',text:beats[0]},{speaker:npc,text:reply},
+   {speaker:'Protagonist',text:beats[1]},{speaker:npc,text:beats[2]}];
+ }
  function talkLines(npc,topicIndex,opening){
   const options=talk[npc],beats=options?.[topicIndex%options.length];
   if(!beats)return [{speaker:npc,text:opening}];
@@ -112,5 +128,5 @@
   if(!add)return base;
   return [...base,{speaker:'Protagonist',text:add[0]},{speaker:match[1],text:add[1]}];
  }
- return Object.freeze({talkLines,storyLines});
+ return Object.freeze({talkLines,flirtLines,storyLines});
 });
