@@ -2,7 +2,7 @@
 const test=require('node:test');
 const assert=require('node:assert/strict');
 const fs=require('node:fs'),path=require('node:path');
-const Pack=require('../rpg_narrative_pack'),Side=require('../rpg_side_quests'),Story=require('../rpg_story'),Schedules=require('../rpg_schedules'),World=require('../rpg_world'),Arc=require('../rpg_rival_arc'),Tournaments=require('../rpg_tournaments'),Epilogue=require('../rpg_epilogue'),Appointments=require('../rpg_appointments'),Intentions=require('../rpg_intentions'),CG=require('../rpg_cg_gallery'),Planner=require('../rpg_daily_planner'),Social=require('../rpg_social_activities'),Dates=require('../rpg_planned_dates'),Bridge=require('../rpg_duel_bridge'),Pre=require('../rpg_preduel'),Journey=require('../rpg_season_journey'),Situations=require('../rpg_situations');
+const Pack=require('../rpg_narrative_pack'),Side=require('../rpg_side_quests'),Story=require('../rpg_story'),Schedules=require('../rpg_schedules'),World=require('../rpg_world'),Arc=require('../rpg_rival_arc'),Tournaments=require('../rpg_tournaments'),Epilogue=require('../rpg_epilogue'),Appointments=require('../rpg_appointments'),Intentions=require('../rpg_intentions'),CG=require('../rpg_cg_gallery'),Planner=require('../rpg_daily_planner'),Social=require('../rpg_social_activities'),Dates=require('../rpg_planned_dates'),Bridge=require('../rpg_duel_bridge'),Pre=require('../rpg_preduel'),Collection=require('../rpg_collection'),Journey=require('../rpg_season_journey'),Situations=require('../rpg_situations');
 const js=fs.readFileSync(path.join(__dirname,'..','rpg.js'),'utf8');
 const html=fs.readFileSync(path.join(__dirname,'..','rpg.html'),'utf8');
 const ids=[...html.matchAll(/id="([^"]+)"/g)].map(x=>x[1]);
@@ -27,10 +27,10 @@ function launch(initial,approve=false){
  const doc={getElementById(id){if(!elements[id])throw Error('Missing '+id);return elements[id];},
   createElement(tag){return new FakeNode(tag);},body:new FakeNode('body'),
   addEventListener(name,cb){listeners['document:'+name]=cb;}};
- const win={NeoRpgNarrativePack:Pack,NeoRpgSideQuests:Side,NeoHarborStory:Story,NeoRpgSchedules:Schedules,NeoRpgWorld:World,NeoRpgRivalArc:Arc,NeoRpgTournaments:Tournaments,NeoRpgEpilogue:Epilogue,NeoRpgAppointments:Appointments,NeoRpgIntentions:Intentions,NeoRpgCGGallery:CG,NeoRpgDailyPlanner:Planner,NeoRpgSocialActivities:Social,NeoRpgPlannedDates:Dates,NeoRpgPreDuel:Pre,NeoRpgSeasonJourney:Journey,NeoRpgSituations:Situations,NeoRpgDuelBridge:Bridge,
+ const win={NeoRpgNarrativePack:Pack,NeoRpgSideQuests:Side,NeoHarborStory:Story,NeoRpgSchedules:Schedules,NeoRpgWorld:World,NeoRpgRivalArc:Arc,NeoRpgTournaments:Tournaments,NeoRpgEpilogue:Epilogue,NeoRpgAppointments:Appointments,NeoRpgIntentions:Intentions,NeoRpgCGGallery:CG,NeoRpgDailyPlanner:Planner,NeoRpgSocialActivities:Social,NeoRpgPlannedDates:Dates,NeoRpgPreDuel:Pre,NeoRpgCollection:Collection,NeoRpgSeasonJourney:Journey,NeoRpgSituations:Situations,NeoRpgDuelBridge:Bridge,
   addEventListener(name,cb){listeners[name]=cb;}};
  const local={getItem(k){return saved[k]||null;},setItem(k,v){saved[k]=String(v);}};
- const session={removeItem(){}};
+ const session={removeItem(){},setItem(){},getItem(){return null;}};
  const loc={origin:'http://localhost',href:'http://localhost/rpg.html',reload(){}};
  new Function('window','document','localStorage','sessionStorage','location','fetch','confirm',js)(
   win,doc,local,session,loc,async()=>({ok:true,json:async()=>({decks:[{id:'blackout',name:'Blackout'}]})}),()=>approve);
