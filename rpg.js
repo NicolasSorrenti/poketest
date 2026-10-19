@@ -677,7 +677,8 @@ function renderBoosterShop(message=''){
   const count=document.createElement('small');count.textContent=offer.owned+' / '+offer.total+' cards discovered · '+offer.completion+'%';
   progress.append(track,count);
   const reason=document.createElement('p');reason.className='booster-offer-unlock';
-  reason.textContent=offer.unlocked?'Ten random cards · rare + Basic Energy guaranteed':offer.unlockHint;
+  reason.textContent=offer.unlocked?'Ten random cards · rare + Basic Energy guaranteed':
+   offer.unlockHint.replace('bond with '+offer.npc,'bond with '+(cast[offer.npc]?.name||offer.npc));
   const buy=document.createElement('button');buy.type='button';buy.className='booster-offer-buy';
   const affordable=(state.credits||0)>=offer.price;
   buy.disabled=!offer.unlocked||!affordable||controlsLocked();
@@ -1267,6 +1268,13 @@ function renderRpgActions(locked,shown){
   const text=source.querySelector('strong')?.textContent||source.textContent||'';
   b.textContent=text.replace(/\s*·\s*⏳[^·]*/g,'').replace(/\s*·\s*\+\d+[^·]*/g,'').trim();
   b.onclick=()=>source.click();body.append(b);
+ }
+ if(rpgLocalTab==='activities'&&state.location==='shop'&&state.deckJourney?.starter&&!controlsLocked()){
+  const shop=document.createElement('button');
+  shop.type='button';shop.className='rpg-dock-action booster-shop-entry';
+  shop.textContent='✦ Browse booster packs · free';
+  shop.onclick=openBoosterShop;
+  body.prepend(shop);
  }
  if(!body.children.length){const p=document.createElement('p');p.textContent=rpgLocalTab==='people'?'Nobody is around right now. Try another period.':'Nothing available here right now.';body.append(p);}
  dock.append(body);
