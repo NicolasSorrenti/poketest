@@ -35,6 +35,14 @@ const {server}=require('./server');
   assert.equal(b.status,200);
   const guest=b.body;
   assert.notEqual(host.token,guest.token);
+  const chat=await req('chat',{text:'Hello, drafters!'},{code:room,token:host.token});
+  assert.equal(chat.status,200);
+  assert.equal(chat.body.chatMessages[0].text,'Hello, drafters!');
+  assert.equal((await req('state',undefined,{code:room,token:guest.token})).body.chatMessages[0].name,'Player A');
+  assert.equal((await req('chat',{text:'Second too soon'},{code:room,token:host.token})).status,400);
+  assert.equal((await req('chat',{text:'Nope'},{code:room,token:'x'.repeat(43)})).status,401);
+  assert.equal((await req('watch',{matchId:1},{code:room,token:guest.token})).status,400,
+   'Spectating is only available after a match starts');
   assert.equal((await req('state',undefined,{code:room,token:'f'.repeat(43)})).status,401);
   assert.equal((await req('start',{}, {code:room,token:guest.token})).status,400);
   assert.equal((await req('ready',{ready:true},{code:room,token:host.token})).status,200);
