@@ -33,7 +33,7 @@ const readState=page=>page.evaluate(()=>JSON.parse(localStorage.getItem('neoHarb
   await page.locator('#rpgDeckBuilder .cb-tile').first().locator('.cb-qty-btn').first().click();
   assert.match(await page.locator('#cbTotal').textContent(),/59 \/ 60/);
   assert.equal(await page.locator('#saveDeck').isDisabled(),true,'Illegal 59-card draft cannot save');
-  await page.locator('#rpgDeckBuilder .cb-tile[data-id="'+removedCardId+'"] .cb-qty-btn').click();
+  await page.locator('#rpgDeckBuilder .cb-tile[data-id="'+removedCardId+'"] .cb-qty-btn').last().click();
   assert.match(await page.locator('#cbTotal').textContent(),/60 \/ 60/);
   await page.locator('#saveDeck').click();
   assert.equal((await readState(page)).deckJourney.deck.length,60);
