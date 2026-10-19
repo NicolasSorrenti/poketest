@@ -36,7 +36,7 @@ test('new game, free travel, NPC challenge, duel result, reload and second duel'
  app.ids.quickNext.onclick();s=app.read();assert.equal(s.slot,1);
  assert.ok(app.ids.people.children.some(x=>label(x).includes('Yuna Hoshino')));
  click(app.ids.people,'Yuna Hoshino');
- click(app.ids.choices,'Challenge to a duel');
+ click(app.ids.characterActions,'Duel');
  assert.equal(app.read().pendingDuel.preview.phase,'ready');app.ids.preDuelSkip.onclick();
  s=app.read();const first=s.pendingDuel;assert.ok(first.id);assert.match(app.ids.battle.src,/duelId=/);
  app.send(BRIDGE.message('stale-duel',0));assert.equal(app.read().results.length,0);
@@ -48,7 +48,7 @@ test('new game, free travel, NPC challenge, duel result, reload and second duel'
  app=boot(store,sessions);s=app.read();
  assert.equal(s.slot,2);assert.equal(s.location,'arcade');assert.equal(s.results.length,1);
  assert.equal(s.lastDuelReceipt.outcome,'Victory');
- click(app.ids.people,'Yuna Hoshino');click(app.ids.choices,'Challenge to a duel');app.ids.preDuelSkip.onclick();
+ click(app.ids.people,'Yuna Hoshino');click(app.ids.characterActions,'Duel');app.ids.preDuelSkip.onclick();
  s=app.read();const second=s.pendingDuel;assert.notEqual(second.id,first.id);
  app.send(BRIDGE.message(first.id,0));assert.equal(app.read().results.length,1);
  app.send(BRIDGE.message(second.id,1));s=app.read();
@@ -64,7 +64,7 @@ test('NPC route dialogue survives refresh and Space key progresses authored scen
  app=boot(store);assert.ok(app.ids.storyEvents.children.some(x=>label(x).includes('Too Many Promises')));
  click(app.ids.storyEvents,'Too Many Promises');
  const advance=()=>app.listeners.keydown({key:' ',target:{tagName:'BODY'},preventDefault(){}});
- advance();advance();advance();
+ for(let step=0;step<20&&app.read().activeStory?.phase==='lines';step++)advance();
  assert.equal(app.read().activeStory.phase,'choice');
  click(app.ids.choices,'Help her finish before opening');
  assert.equal(app.read().activeStory.phase,'response');

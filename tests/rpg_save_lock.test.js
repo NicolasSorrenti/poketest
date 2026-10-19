@@ -45,7 +45,7 @@ test('a pending duel locks navigation and the deck, restores after refresh, and 
  const saved=new Map(),sessions=new Map();let app=boot(saved,sessions);
  click(app.ids.townRadar,'Marina Aoki');
  click(app.ids.people,'Marina Aoki');
- click(app.ids.choices,'Challenge to a duel');
+ click(app.ids.characterActions,'Duel');
  assert.equal(app.ids.battle.src,'about:blank');
  app.ids.preDuelSkip.onclick();
  const pending=app.read().pendingDuel;
@@ -66,7 +66,7 @@ test('a pending duel locks navigation and the deck, restores after refresh, and 
  assert.equal(app.read().results.length,1);
  assert.equal(app.read().pendingDuel,null);
  assert.equal(app.ids.deckPicker.disabled,true,'Preset switcher remains locked during RPG collection progression');
- assert.equal(app.ids.deckCollection.children.find(x=>x.textContent.includes('Edit your 60-card deck')).disabled,false,'The collection workshop becomes available again');
+ assert.equal(app.ids.deckCollection.children.find(x=>x.textContent.includes('Build / edit your deck')).disabled,false,'The collection workshop becomes available again');
  assert.equal(sessions.has(BRIDGE.sessionKey(pending.id)),false,'Finished token is released');
  assert.equal(app.read().slot,1);
  assert.equal(app.read().relationships.marina.duels,1);
