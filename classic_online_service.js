@@ -2,6 +2,7 @@
 // Invite-only, in-memory authority for two human players. No bot, no browser game state.
 const crypto = require('node:crypto');
 const {createGame,reduce} = require('./headless_duel');
+const UNDO=require('./duel_undo');
 const {publicView,publicActivity} = require('./duel_protocol');
 const {ClassicLocalService,DECKS,deckOptions} = require('./classic_local_service');
 const {countCards} = require('./core_rules');
@@ -89,7 +90,7 @@ class ClassicOnlineService {
   return {spectator:side===null,spectatorCount:[...room.spectators.values()].filter(v=>this.now()-v.lastSeen<10000).length,presence:room.players.map(p=>p?{connected:this.now()-p.lastSeen<6000,secondsUntilForfeit:Math.max(0,Math.ceil((DISCONNECT_MS-(this.now()-p.lastSeen))/1000))}:null),code:room.code,revision:room.revision,you:side,joined:!!room.players[1],started:!!g,
    players:room.players.map(p=>p?{name:p.name,deck:p.deck,ready:p.ready}:null),
    chatSeq:room.chatSeq,chatMessages:room.chat.map(m=>({...m})),
-   ...(g?{view:publicView(g,side),activity:publicActivity(g),feed:[...(g.matchFeed||[]).slice(-90)],turnSerial:g.turnSerial,winner:g.winner,format:g.format,
+   ...(g?{undo:{available:side!==null&&UNDO.available(room.undoHistory||[],g,side),label:side!==null&&UNDO.available(room.undoHistory||[],g,side)?room.undoHistory.at(-1).label:null},view:publicView(g,side),activity:publicActivity(g),feed:[...(g.matchFeed||[]).slice(-90)],turnSerial:g.turnSerial,winner:g.winner,format:g.format,
     me:side===null?{energyUsed:false,retreated:false,stadiumUsed:false}:{energyUsed:!!g.players[side].energyUsed,retreated:!!g.players[side].retreated,stadiumUsed:g.players[side].stadiumUsedTurn===g.turnSerial},
     setupConfirmed:side!==null&&!!g.setupReady[side],
     counts:g.players.map(countCards)}:{} )};
@@ -147,8 +148,14 @@ class ClassicOnlineService {
   const {room,side}=this.session(code,token);this.checkPresence(room);this.checkRevision(room,revision);if(side===null)throw Error('Unauthorized spectator action');
   if(!room.game)throw Error('Duel has not started');
   const raw=validateCommand(command);
+  room.undoHistory ||= [];
+  if(raw.type==='undo'){
+   room.game=UNDO.undo(room.undoHistory,room.game,side);
+   this.bump(room);return this.response(room,side);
+  }
   // reduce is pure and rejects an unauthorized action without modifying the room.
   const result=reduce(room.game,side,raw);if(!result.ok)throw Error(result.error||'Illegal action');
+  UNDO.record(room.undoHistory,room.game,result.game,side,raw);
   room.game=result.game;this.bump(room);return this.response(room,side);
  }
  chatMessage(code,token,{text}={}){
