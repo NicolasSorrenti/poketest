@@ -68,6 +68,7 @@
   if(!entry||entry.status!=='booked'||s.day!==entry.day||s.slot!==entry.slot
      ||s.location!==entry.place||!people.includes(entry.npc))return 'Your guest is not here for this plan';
   if(s.pendingDuel||s.activeStory||s.activeSideQuest||s.activeArc||s.activeEncounter)return 'Finish the current scene first';
+  if(s.hungOut?.[s.day+':'+entry.npc])return 'Already spent time together today';
   if(!entry.activityId)return null; // older save, plain scheduled conversation
   const act=social.options(s,entry.npc,people,cast).find(a=>a.id===entry.activityId);
   if(!act)return 'The selected activity is not available at this venue';
