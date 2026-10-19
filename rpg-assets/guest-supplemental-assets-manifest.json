@@ -1,0 +1,156 @@
+{
+  "pack": "Neo Harbor RPG — guest supplemental assets",
+  "version": "2026-10-19-guest-supplement-1",
+  "characters": {
+    "jun": {
+      "name": "Jun Arai",
+      "role": "Tournament referee",
+      "altOutfit": {
+        "path": "rpg-assets/characters/jun/outfits/alt-outfit.png",
+        "size": [
+          1086,
+          1448
+        ],
+        "transparent": true
+      },
+      "chibiSheet": {
+        "path": "rpg-assets/characters/jun/chibi/trio-sheet.png",
+        "size": [
+          1448,
+          1086
+        ],
+        "transparent": true,
+        "poses": [
+          "idle",
+          "happy-wave",
+          "determined"
+        ]
+      }
+    },
+    "teo": {
+      "name": "Teo Álvarez",
+      "role": "Amateur announcer",
+      "altOutfit": {
+        "path": "rpg-assets/characters/teo/outfits/alt-outfit.png",
+        "size": [
+          1086,
+          1448
+        ],
+        "transparent": true
+      },
+      "chibiSheet": {
+        "path": "rpg-assets/characters/teo/chibi/trio-sheet.png",
+        "size": [
+          1448,
+          1086
+        ],
+        "transparent": true,
+        "poses": [
+          "idle",
+          "happy-wave",
+          "determined"
+        ]
+      }
+    },
+    "iris": {
+      "name": "Iris Navarro",
+      "role": "Riverside courier",
+      "altOutfit": {
+        "path": "rpg-assets/characters/iris/outfits/alt-outfit.png",
+        "size": [
+          1086,
+          1448
+        ],
+        "transparent": true
+      },
+      "chibiSheet": {
+        "path": "rpg-assets/characters/iris/chibi/trio-sheet.png",
+        "size": [
+          1448,
+          1086
+        ],
+        "transparent": true,
+        "poses": [
+          "idle",
+          "happy-wave",
+          "determined"
+        ]
+      }
+    },
+    "elio": {
+      "name": "Elio Soto",
+      "role": "Beginner card player",
+      "altOutfit": {
+        "path": "rpg-assets/characters/elio/outfits/alt-outfit.png",
+        "size": [
+          1086,
+          1448
+        ],
+        "transparent": true
+      },
+      "chibiSheet": {
+        "path": "rpg-assets/characters/elio/chibi/trio-sheet.png",
+        "size": [
+          1448,
+          1086
+        ],
+        "transparent": true,
+        "poses": [
+          "idle",
+          "happy-wave",
+          "determined"
+        ]
+      }
+    },
+    "alma": {
+      "name": "Alma Serrano",
+      "role": "Café owner",
+      "altOutfit": {
+        "path": "rpg-assets/characters/alma/outfits/alt-outfit.png",
+        "size": [
+          1086,
+          1448
+        ],
+        "transparent": true
+      },
+      "chibiSheet": {
+        "path": "rpg-assets/characters/alma/chibi/trio-sheet.png",
+        "size": [
+          1448,
+          1086
+        ],
+        "transparent": true,
+        "poses": [
+          "idle",
+          "happy-wave",
+          "determined"
+        ]
+      }
+    },
+    "nereo": {
+      "name": "Nereo Paz",
+      "role": "Boatyard regular",
+      "altOutfit": {
+        "path": "rpg-assets/characters/nereo/outfits/alt-outfit.png",
+        "size": [
+          1086,
+          1448
+        ],
+        "transparent": true
+      },
+      "chibiSheet": {
+        "path": "rpg-assets/characters/nereo/chibi/trio-sheet.png",
+        "size": [
+          1448,
+          1086
+        ],
+        "transparent": true,
+        "poses": [
+          "idle",
+          "happy-wave",
+          "determined"
+        ]
+      }
+    }
+  }
+}

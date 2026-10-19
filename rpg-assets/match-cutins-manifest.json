@@ -1,0 +1,148 @@
+{
+  "pack": "Neo Harbor RPG — match cut-in expansion",
+  "version": "2026-10-18-cutins-1",
+  "description": "Battle cut-in images for the main cast and supporting NPCs, intended for in-match dramatic character callouts.",
+  "layoutGuidance": "Use as rectangular splash art overlays during match intro, attack declaration, prize take, or victory cue.",
+  "files": {
+    "hana": {
+      "name": "Hana Mizuno",
+      "path": "rpg-assets/characters/hana/cutins/match-cutin.webp",
+      "source": "main-cast-sheet",
+      "role": "main cast",
+      "size": [
+        354,
+        535
+      ]
+    },
+    "reina": {
+      "name": "Reina Kurogane",
+      "path": "rpg-assets/characters/reina/cutins/match-cutin.webp",
+      "source": "main-cast-sheet",
+      "role": "main cast",
+      "size": [
+        354,
+        535
+      ]
+    },
+    "shiori": {
+      "name": "Shiori Tsukishima",
+      "path": "rpg-assets/characters/shiori/cutins/match-cutin.webp",
+      "source": "main-cast-sheet",
+      "role": "main cast",
+      "size": [
+        354,
+        535
+      ]
+    },
+    "yuna": {
+      "name": "Yuna Hoshino",
+      "path": "rpg-assets/characters/yuna/cutins/match-cutin.webp",
+      "source": "main-cast-sheet",
+      "role": "main cast",
+      "size": [
+        354,
+        535
+      ]
+    },
+    "akari": {
+      "name": "Akari",
+      "path": "rpg-assets/characters/akari/cutins/match-cutin.webp",
+      "source": "main-cast-sheet",
+      "role": "main cast",
+      "size": [
+        354,
+        535
+      ]
+    },
+    "camila": {
+      "name": "Camila",
+      "path": "rpg-assets/characters/camila/cutins/match-cutin.webp",
+      "source": "main-cast-sheet",
+      "role": "main cast",
+      "size": [
+        354,
+        535
+      ]
+    },
+    "marina": {
+      "name": "Marina",
+      "path": "rpg-assets/characters/marina/cutins/match-cutin.webp",
+      "source": "main-cast-sheet",
+      "role": "main cast",
+      "size": [
+        354,
+        535
+      ]
+    },
+    "kaede": {
+      "name": "Kaede",
+      "path": "rpg-assets/characters/kaede/cutins/match-cutin.webp",
+      "source": "main-cast-sheet",
+      "role": "main cast",
+      "size": [
+        354,
+        535
+      ]
+    },
+    "jun": {
+      "name": "Jun Arai",
+      "path": "rpg-assets/characters/jun/cutins/match-cutin.webp",
+      "source": "guest-cast-sheet",
+      "role": "supporting NPC",
+      "size": [
+        504,
+        504
+      ]
+    },
+    "teo": {
+      "name": "Teo Álvarez",
+      "path": "rpg-assets/characters/teo/cutins/match-cutin.webp",
+      "source": "guest-cast-sheet",
+      "role": "supporting NPC",
+      "size": [
+        504,
+        504
+      ]
+    },
+    "iris": {
+      "name": "Iris Navarro",
+      "path": "rpg-assets/characters/iris/cutins/match-cutin.webp",
+      "source": "guest-cast-sheet",
+      "role": "supporting NPC",
+      "size": [
+        504,
+        504
+      ]
+    },
+    "elio": {
+      "name": "Elio Soto",
+      "path": "rpg-assets/characters/elio/cutins/match-cutin.webp",
+      "source": "guest-cast-sheet",
+      "role": "supporting NPC",
+      "size": [
+        504,
+        504
+      ]
+    },
+    "alma": {
+      "name": "Alma Serrano",
+      "path": "rpg-assets/characters/alma/cutins/match-cutin.webp",
+      "source": "guest-cast-sheet",
+      "role": "supporting NPC",
+      "size": [
+        504,
+        504
+      ]
+    },
+    "nereo": {
+      "name": "Nereo Paz",
+      "path": "rpg-assets/characters/nereo/cutins/match-cutin.webp",
+      "source": "guest-cast-sheet",
+      "role": "supporting NPC",
+      "size": [
+        504,
+        504
+      ]
+    }
+  }
+}

@@ -1,0 +1,224 @@
+{
+  "pack": "Neo Harbor RPG — New supporting NPC portraits",
+  "version": "2026-10-18-guests-1",
+  "authoritativeSources": [
+    "rpg_narrative_pack.js",
+    "rpg_side_quests.js",
+    "RPG_NARRATIVE_EXPANSION.md"
+  ],
+  "characterIds": [
+    "jun",
+    "teo",
+    "iris",
+    "elio",
+    "alma",
+    "nereo"
+  ],
+  "assetRoot": "rpg-assets",
+  "gameIntegration": "rpg.js makeAvatar automatically loads /rpg-assets/{id}.png; root files in this pack activate these NPCs without source-code changes.",
+  "newCharacters": {
+    "jun": {
+      "id": "jun",
+      "name": "Jun Arai",
+      "age": 28,
+      "role": "Tournament referee",
+      "type": "adult supporting NPC (non-romance route)",
+      "bible": "rpg_narrative_pack.js",
+      "palette": [
+        "smoke navy",
+        "pale mint",
+        "brushed steel"
+      ],
+      "gamePortrait": "rpg-assets/jun.png",
+      "master": "rpg-assets/characters/jun/portraits/primary.webp",
+      "avatar": "rpg-assets/ui/avatars/jun.webp",
+      "transparent": true,
+      "primaryDimensions": [
+        1086,
+        1448
+      ],
+      "note": "The root PNG is the actual rpg.js live image reference, retained byte-for-byte from generated artwork; master WebP and small avatar are optimized versions, not regenerated images.",
+      "vnExpressionSheet": "rpg-assets/characters/jun/reference/expression-master.webp",
+      "vnExpressions": {
+        "neutral": "rpg-assets/characters/jun/vn-expressions/neutral.webp",
+        "happy": "rpg-assets/characters/jun/vn-expressions/happy.webp",
+        "surprised": "rpg-assets/characters/jun/vn-expressions/surprised.webp",
+        "determined": "rpg-assets/characters/jun/vn-expressions/determined.webp",
+        "irritated": "rpg-assets/characters/jun/vn-expressions/irritated.webp",
+        "vulnerable": "rpg-assets/characters/jun/vn-expressions/vulnerable.webp"
+      },
+      "altOutfit": "rpg-assets/characters/jun/outfits/alt-outfit.png",
+      "chibiSheet": "rpg-assets/characters/jun/chibi/trio-sheet.png"
+    },
+    "teo": {
+      "id": "teo",
+      "name": "Teo Álvarez",
+      "age": 24,
+      "role": "Amateur announcer",
+      "type": "adult supporting NPC (non-romance route)",
+      "bible": "rpg_narrative_pack.js",
+      "palette": [
+        "tangerine",
+        "violet",
+        "navy"
+      ],
+      "gamePortrait": "rpg-assets/teo.png",
+      "master": "rpg-assets/characters/teo/portraits/primary.webp",
+      "avatar": "rpg-assets/ui/avatars/teo.webp",
+      "transparent": true,
+      "primaryDimensions": [
+        1086,
+        1448
+      ],
+      "note": "The root PNG is the actual rpg.js live image reference, retained byte-for-byte from generated artwork; master WebP and small avatar are optimized versions, not regenerated images.",
+      "vnExpressionSheet": "rpg-assets/characters/teo/reference/expression-master.webp",
+      "vnExpressions": {
+        "neutral": "rpg-assets/characters/teo/vn-expressions/neutral.webp",
+        "happy": "rpg-assets/characters/teo/vn-expressions/happy.webp",
+        "surprised": "rpg-assets/characters/teo/vn-expressions/surprised.webp",
+        "determined": "rpg-assets/characters/teo/vn-expressions/determined.webp",
+        "irritated": "rpg-assets/characters/teo/vn-expressions/irritated.webp",
+        "vulnerable": "rpg-assets/characters/teo/vn-expressions/vulnerable.webp"
+      },
+      "altOutfit": "rpg-assets/characters/teo/outfits/alt-outfit.png",
+      "chibiSheet": "rpg-assets/characters/teo/chibi/trio-sheet.png"
+    },
+    "iris": {
+      "id": "iris",
+      "name": "Iris Navarro",
+      "age": 26,
+      "role": "Riverside courier",
+      "type": "adult supporting NPC (non-romance route)",
+      "bible": "rpg_narrative_pack.js",
+      "palette": [
+        "deep teal",
+        "rust orange",
+        "graphite"
+      ],
+      "gamePortrait": "rpg-assets/iris.png",
+      "master": "rpg-assets/characters/iris/portraits/primary.webp",
+      "avatar": "rpg-assets/ui/avatars/iris.webp",
+      "transparent": true,
+      "primaryDimensions": [
+        1086,
+        1448
+      ],
+      "note": "The root PNG is the actual rpg.js live image reference, retained byte-for-byte from generated artwork; master WebP and small avatar are optimized versions, not regenerated images.",
+      "vnExpressionSheet": "rpg-assets/characters/iris/reference/expression-master.webp",
+      "vnExpressions": {
+        "neutral": "rpg-assets/characters/iris/vn-expressions/neutral.webp",
+        "happy": "rpg-assets/characters/iris/vn-expressions/happy.webp",
+        "surprised": "rpg-assets/characters/iris/vn-expressions/surprised.webp",
+        "determined": "rpg-assets/characters/iris/vn-expressions/determined.webp",
+        "irritated": "rpg-assets/characters/iris/vn-expressions/irritated.webp",
+        "vulnerable": "rpg-assets/characters/iris/vn-expressions/vulnerable.webp"
+      },
+      "altOutfit": "rpg-assets/characters/iris/outfits/alt-outfit.png",
+      "chibiSheet": "rpg-assets/characters/iris/chibi/trio-sheet.png"
+    },
+    "elio": {
+      "id": "elio",
+      "name": "Elio Soto",
+      "age": 19,
+      "role": "Beginner card player",
+      "type": "adult supporting NPC (non-romance route)",
+      "bible": "rpg_side_quests.js",
+      "palette": [
+        "sky blue",
+        "amber",
+        "charcoal"
+      ],
+      "gamePortrait": "rpg-assets/elio.png",
+      "master": "rpg-assets/characters/elio/portraits/primary.webp",
+      "avatar": "rpg-assets/ui/avatars/elio.webp",
+      "transparent": true,
+      "primaryDimensions": [
+        1086,
+        1448
+      ],
+      "note": "The root PNG is the actual rpg.js live image reference, retained byte-for-byte from generated artwork; master WebP and small avatar are optimized versions, not regenerated images.",
+      "vnExpressionSheet": "rpg-assets/characters/elio/reference/expression-master.webp",
+      "vnExpressions": {
+        "neutral": "rpg-assets/characters/elio/vn-expressions/neutral.webp",
+        "happy": "rpg-assets/characters/elio/vn-expressions/happy.webp",
+        "surprised": "rpg-assets/characters/elio/vn-expressions/surprised.webp",
+        "determined": "rpg-assets/characters/elio/vn-expressions/determined.webp",
+        "irritated": "rpg-assets/characters/elio/vn-expressions/irritated.webp",
+        "vulnerable": "rpg-assets/characters/elio/vn-expressions/vulnerable.webp"
+      },
+      "altOutfit": "rpg-assets/characters/elio/outfits/alt-outfit.png",
+      "chibiSheet": "rpg-assets/characters/elio/chibi/trio-sheet.png"
+    },
+    "alma": {
+      "id": "alma",
+      "name": "Alma Serrano",
+      "age": 35,
+      "role": "Café owner",
+      "type": "adult supporting NPC (non-romance route)",
+      "bible": "rpg_side_quests.js",
+      "palette": [
+        "espresso",
+        "sage",
+        "cream"
+      ],
+      "gamePortrait": "rpg-assets/alma.png",
+      "master": "rpg-assets/characters/alma/portraits/primary.webp",
+      "avatar": "rpg-assets/ui/avatars/alma.webp",
+      "transparent": true,
+      "primaryDimensions": [
+        1086,
+        1448
+      ],
+      "note": "The root PNG is the actual rpg.js live image reference, retained byte-for-byte from generated artwork; master WebP and small avatar are optimized versions, not regenerated images.",
+      "vnExpressionSheet": "rpg-assets/characters/alma/reference/expression-master.webp",
+      "vnExpressions": {
+        "neutral": "rpg-assets/characters/alma/vn-expressions/neutral.webp",
+        "happy": "rpg-assets/characters/alma/vn-expressions/happy.webp",
+        "surprised": "rpg-assets/characters/alma/vn-expressions/surprised.webp",
+        "determined": "rpg-assets/characters/alma/vn-expressions/determined.webp",
+        "irritated": "rpg-assets/characters/alma/vn-expressions/irritated.webp",
+        "vulnerable": "rpg-assets/characters/alma/vn-expressions/vulnerable.webp"
+      },
+      "altOutfit": "rpg-assets/characters/alma/outfits/alt-outfit.png",
+      "chibiSheet": "rpg-assets/characters/alma/chibi/trio-sheet.png"
+    },
+    "nereo": {
+      "id": "nereo",
+      "name": "Nereo Paz",
+      "age": 29,
+      "role": "Boatyard regular",
+      "type": "adult supporting NPC (non-romance route)",
+      "bible": "rpg_side_quests.js",
+      "palette": [
+        "petrol teal",
+        "orange rust",
+        "washed navy"
+      ],
+      "gamePortrait": "rpg-assets/nereo.png",
+      "master": "rpg-assets/characters/nereo/portraits/primary.webp",
+      "avatar": "rpg-assets/ui/avatars/nereo.webp",
+      "transparent": true,
+      "primaryDimensions": [
+        1086,
+        1448
+      ],
+      "note": "The root PNG is the actual rpg.js live image reference, retained byte-for-byte from generated artwork; master WebP and small avatar are optimized versions, not regenerated images.",
+      "vnExpressionSheet": "rpg-assets/characters/nereo/reference/expression-master.webp",
+      "vnExpressions": {
+        "neutral": "rpg-assets/characters/nereo/vn-expressions/neutral.webp",
+        "happy": "rpg-assets/characters/nereo/vn-expressions/happy.webp",
+        "surprised": "rpg-assets/characters/nereo/vn-expressions/surprised.webp",
+        "determined": "rpg-assets/characters/nereo/vn-expressions/determined.webp",
+        "irritated": "rpg-assets/characters/nereo/vn-expressions/irritated.webp",
+        "vulnerable": "rpg-assets/characters/nereo/vn-expressions/vulnerable.webp"
+      },
+      "altOutfit": "rpg-assets/characters/nereo/outfits/alt-outfit.png",
+      "chibiSheet": "rpg-assets/characters/nereo/chibi/trio-sheet.png"
+    }
+  },
+  "excluded": [
+    "Eight pre-existing female lead portraits are unchanged",
+    "No new expression variants have been produced for guest characters",
+    "The six new NPCs are supporting cast; no romantic story routes are assigned"
+  ]
+}

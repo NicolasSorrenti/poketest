@@ -1,0 +1,96 @@
+{
+  "pack": "Neo Harbor RPG — supporting NPC VN expressions",
+  "version": "2026-10-18-guests-expr-1",
+  "characters": {
+    "alma": {
+      "name": "Alma Serrano",
+      "age": 35,
+      "role": "Café owner",
+      "sheet": "rpg-assets/characters/alma/reference/expression-master.webp",
+      "format": "opaque WebP VN illustration panel (not a transparent sprite)",
+      "expressions": {
+        "neutral": "rpg-assets/characters/alma/vn-expressions/neutral.webp",
+        "happy": "rpg-assets/characters/alma/vn-expressions/happy.webp",
+        "surprised": "rpg-assets/characters/alma/vn-expressions/surprised.webp",
+        "determined": "rpg-assets/characters/alma/vn-expressions/determined.webp",
+        "irritated": "rpg-assets/characters/alma/vn-expressions/irritated.webp",
+        "vulnerable": "rpg-assets/characters/alma/vn-expressions/vulnerable.webp"
+      }
+    },
+    "jun": {
+      "name": "Jun Arai",
+      "age": 28,
+      "role": "Tournament referee",
+      "sheet": "rpg-assets/characters/jun/reference/expression-master.webp",
+      "format": "opaque WebP VN illustration panel (not a transparent sprite)",
+      "expressions": {
+        "neutral": "rpg-assets/characters/jun/vn-expressions/neutral.webp",
+        "happy": "rpg-assets/characters/jun/vn-expressions/happy.webp",
+        "surprised": "rpg-assets/characters/jun/vn-expressions/surprised.webp",
+        "determined": "rpg-assets/characters/jun/vn-expressions/determined.webp",
+        "irritated": "rpg-assets/characters/jun/vn-expressions/irritated.webp",
+        "vulnerable": "rpg-assets/characters/jun/vn-expressions/vulnerable.webp"
+      }
+    },
+    "nereo": {
+      "name": "Nereo Paz",
+      "age": 29,
+      "role": "Boatyard regular",
+      "sheet": "rpg-assets/characters/nereo/reference/expression-master.webp",
+      "format": "opaque WebP VN illustration panel (not a transparent sprite)",
+      "expressions": {
+        "neutral": "rpg-assets/characters/nereo/vn-expressions/neutral.webp",
+        "happy": "rpg-assets/characters/nereo/vn-expressions/happy.webp",
+        "surprised": "rpg-assets/characters/nereo/vn-expressions/surprised.webp",
+        "determined": "rpg-assets/characters/nereo/vn-expressions/determined.webp",
+        "irritated": "rpg-assets/characters/nereo/vn-expressions/irritated.webp",
+        "vulnerable": "rpg-assets/characters/nereo/vn-expressions/vulnerable.webp"
+      }
+    },
+    "teo": {
+      "name": "Teo Álvarez",
+      "age": 24,
+      "role": "Amateur announcer",
+      "sheet": "rpg-assets/characters/teo/reference/expression-master.webp",
+      "format": "opaque WebP VN illustration panel (not a transparent sprite)",
+      "expressions": {
+        "neutral": "rpg-assets/characters/teo/vn-expressions/neutral.webp",
+        "happy": "rpg-assets/characters/teo/vn-expressions/happy.webp",
+        "surprised": "rpg-assets/characters/teo/vn-expressions/surprised.webp",
+        "determined": "rpg-assets/characters/teo/vn-expressions/determined.webp",
+        "irritated": "rpg-assets/characters/teo/vn-expressions/irritated.webp",
+        "vulnerable": "rpg-assets/characters/teo/vn-expressions/vulnerable.webp"
+      }
+    },
+    "elio": {
+      "name": "Elio Soto",
+      "age": 19,
+      "role": "Beginner card player",
+      "sheet": "rpg-assets/characters/elio/reference/expression-master.webp",
+      "format": "opaque WebP VN illustration panel (not a transparent sprite)",
+      "expressions": {
+        "neutral": "rpg-assets/characters/elio/vn-expressions/neutral.webp",
+        "happy": "rpg-assets/characters/elio/vn-expressions/happy.webp",
+        "surprised": "rpg-assets/characters/elio/vn-expressions/surprised.webp",
+        "determined": "rpg-assets/characters/elio/vn-expressions/determined.webp",
+        "irritated": "rpg-assets/characters/elio/vn-expressions/irritated.webp",
+        "vulnerable": "rpg-assets/characters/elio/vn-expressions/vulnerable.webp"
+      }
+    },
+    "iris": {
+      "name": "Iris Navarro",
+      "age": 26,
+      "role": "Riverside courier",
+      "sheet": "rpg-assets/characters/iris/reference/expression-master.webp",
+      "format": "opaque WebP VN illustration panel (not a transparent sprite)",
+      "expressions": {
+        "neutral": "rpg-assets/characters/iris/vn-expressions/neutral.webp",
+        "happy": "rpg-assets/characters/iris/vn-expressions/happy.webp",
+        "surprised": "rpg-assets/characters/iris/vn-expressions/surprised.webp",
+        "determined": "rpg-assets/characters/iris/vn-expressions/determined.webp",
+        "irritated": "rpg-assets/characters/iris/vn-expressions/irritated.webp",
+        "vulnerable": "rpg-assets/characters/iris/vn-expressions/vulnerable.webp"
+      }
+    }
+  }
+}

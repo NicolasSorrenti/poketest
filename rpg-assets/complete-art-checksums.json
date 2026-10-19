@@ -1,0 +1,1294 @@
+{
+  "version": "2026-10-19-complete-guests-sol-gallery-1",
+  "imageCount": 322,
+  "images": {
+    "rpg-assets/alma.png": {
+      "sha256": "4a0760928ab313c9fb5bfc39b8c225d8e7a8da6f332a27429daaa7cbc889d2d3",
+      "bytes": 2192505
+    },
+    "rpg-assets/characters/akari/chibi/back.png": {
+      "sha256": "fbc4a017f99c6d0af8df4d9d8c613ff98ad98b2edafa8783db3738df5d4ec34c",
+      "bytes": 75378
+    },
+    "rpg-assets/characters/akari/chibi/front.png": {
+      "sha256": "2674d2ab819273e4ddf52485daa7cbd2553c0971b5ea3ee4421796707e78c146",
+      "bytes": 86144
+    },
+    "rpg-assets/characters/akari/chibi/side.png": {
+      "sha256": "a6e171f552d8a60ec3a34c0cfb41d717540558ad9f39855450b2bf9d69554a41",
+      "bytes": 68447
+    },
+    "rpg-assets/characters/akari/cutins/match-cutin.webp": {
+      "sha256": "d4a620dbaafd47b38338d33d43074373e7b04e746b457d86b70fe74ac22d5f05",
+      "bytes": 101814
+    },
+    "rpg-assets/characters/akari/expressions/determined.png": {
+      "sha256": "f302768c9e1e587ffd228cfae19dbcd55f602ab315f5bd3b9fa845fbe4241054",
+      "bytes": 60306
+    },
+    "rpg-assets/characters/akari/expressions/flustered.png": {
+      "sha256": "8774320bde4382484223c79aeda91feedab444f0c18d0d9aef1b665fe6d3bb69",
+      "bytes": 63908
+    },
+    "rpg-assets/characters/akari/expressions/happy.png": {
+      "sha256": "5c661864ab3ee64ec2c8fef2da2c5a13cd08827e0dd9c2669e1a9512a2605b45",
+      "bytes": 56780
+    },
+    "rpg-assets/characters/akari/expressions/neutral.png": {
+      "sha256": "1d27368b51a4e0a3d12fdfbbdd0f0a381947e8c1a0716bc0171847a02a88f9a4",
+      "bytes": 56765
+    },
+    "rpg-assets/characters/akari/outfits/streetwear-preview.png": {
+      "sha256": "d1c631af1b59fda5abbeeb5aafa28262c4bccb560f8f7539ee10af5949888232",
+      "bytes": 290439
+    },
+    "rpg-assets/characters/akari/portraits/primary.png": {
+      "sha256": "a1078e3153c9a80b39ed48bbe487c002c3f7815cd5251c7fefe49118bf573f24",
+      "bytes": 331678
+    },
+    "rpg-assets/characters/akari/reference/expression-master.webp": {
+      "sha256": "a5c0465fc69f67862534f8a3f67140ea16b811762e42305a34f6bf3d0e85c298",
+      "bytes": 608760
+    },
+    "rpg-assets/characters/akari/vn-expressions/angry.webp": {
+      "sha256": "f7de0d4db9efcbda55f88f59fda1e10962110939878e4702166fe7836a92e59c",
+      "bytes": 86190
+    },
+    "rpg-assets/characters/akari/vn-expressions/embarrassed.webp": {
+      "sha256": "ff71b5028b92226f30766c4c54d89fa4fa19ac6997ff2f937cf9c0b375f75f7c",
+      "bytes": 86530
+    },
+    "rpg-assets/characters/akari/vn-expressions/flirty.webp": {
+      "sha256": "d67459832838f87d155d6e4065d8cc1dde0929f71b092c65a0aa09591ddeeac1",
+      "bytes": 81624
+    },
+    "rpg-assets/characters/akari/vn-expressions/happy.webp": {
+      "sha256": "bf93c073522f8eb61a3662376ad4be8906c35cd92c1850859586388879e1f69e",
+      "bytes": 90994
+    },
+    "rpg-assets/characters/akari/vn-expressions/neutral.webp": {
+      "sha256": "c7dee090ba5eda2c5f3f7a2e599c362f78245894edcc702b635ccdbf97988f10",
+      "bytes": 83986
+    },
+    "rpg-assets/characters/akari/vn-expressions/surprised.webp": {
+      "sha256": "dfc431eafa6c55651d5f56dff8cda5898f49eda4eb8abedce902c934774dc07f",
+      "bytes": 83506
+    },
+    "rpg-assets/characters/alma/chibi/trio-sheet.png": {
+      "sha256": "30eab60bc16e3803138f323589d68f16e8da99184cc8ce036af3b0100ea1c616",
+      "bytes": 2330475
+    },
+    "rpg-assets/characters/alma/cutins/match-cutin.webp": {
+      "sha256": "4dc838e6be7451e4c98500e82c11af86b2c7f0dfc97c4e9c990f2e71f399338c",
+      "bytes": 145976
+    },
+    "rpg-assets/characters/alma/outfits/alt-outfit.png": {
+      "sha256": "2a30f18acfd205950d36ec5e10f06e1a6c8746fa58b36cbc9f0940674292f1b0",
+      "bytes": 937157
+    },
+    "rpg-assets/characters/alma/portraits/primary.webp": {
+      "sha256": "0a063ebf0b950bc88d45dbbf268f859dc6e55672814bf7f6f7824437b1f77a07",
+      "bytes": 312012
+    },
+    "rpg-assets/characters/alma/reference/expression-master.webp": {
+      "sha256": "3391d66712555a55322d30cef2d429ea5f7b0f6adafe5519a51451d742b6f8d7",
+      "bytes": 422092
+    },
+    "rpg-assets/characters/alma/vn-expressions/determined.webp": {
+      "sha256": "24d068ae322b19d2b4d2f4cf72de23b837da8ef33555c4f265f20fe8ccb37744",
+      "bytes": 70986
+    },
+    "rpg-assets/characters/alma/vn-expressions/happy.webp": {
+      "sha256": "525b028f0f3ea5891adab9e2ed1ec27c27ba6b011f90745d5f4242db6dcd7c9e",
+      "bytes": 70404
+    },
+    "rpg-assets/characters/alma/vn-expressions/irritated.webp": {
+      "sha256": "65e653fb5b75e30dee77d414347c08275ee69c85ff0e2b4024b3e0fd525651dd",
+      "bytes": 71330
+    },
+    "rpg-assets/characters/alma/vn-expressions/neutral.webp": {
+      "sha256": "994c658fc34bade8fbd7a2d89fa1d676f66de3b046d797b2345b188a593f13a9",
+      "bytes": 70040
+    },
+    "rpg-assets/characters/alma/vn-expressions/surprised.webp": {
+      "sha256": "ce5e029cf363586163283efa155b224a155652a919415c3b4ba7cab2d6a9d496",
+      "bytes": 69266
+    },
+    "rpg-assets/characters/alma/vn-expressions/vulnerable.webp": {
+      "sha256": "cb1d4ce8c635328e8f3c7c920d48bfff601c819d2d09678721d2fdd746e48ce2",
+      "bytes": 71194
+    },
+    "rpg-assets/characters/camila/chibi/back.png": {
+      "sha256": "24a653ad1176c3552e2ae98357e25b36f5b09d27547282bcbe2b5e51dcd785c9",
+      "bytes": 81023
+    },
+    "rpg-assets/characters/camila/chibi/front.png": {
+      "sha256": "e0d21d2c264cf24588188dbd1acfad9f7c45098ae31d7ef8bc8d0200f2ec63ce",
+      "bytes": 94931
+    },
+    "rpg-assets/characters/camila/chibi/side.png": {
+      "sha256": "1fa852be0636f575fc1adfc82da0b8ff61ef065a0e31f8a3f3b9606472854cf6",
+      "bytes": 76000
+    },
+    "rpg-assets/characters/camila/cutins/match-cutin.webp": {
+      "sha256": "f56e5f58b293b7b3193eddd0a9e24a665ee69df503f18c9596c507c9f64b32b3",
+      "bytes": 101946
+    },
+    "rpg-assets/characters/camila/expressions/determined.png": {
+      "sha256": "515bc3a7613e97b350440619a6cb3e6cbca32c6e7a73a0804ee7991afdc4e44e",
+      "bytes": 62709
+    },
+    "rpg-assets/characters/camila/expressions/flustered.png": {
+      "sha256": "8278ebedb8224cb240ed36e2c685d260a834b8298e1a0a1a40c5b65d0a189c1b",
+      "bytes": 64252
+    },
+    "rpg-assets/characters/camila/expressions/happy.png": {
+      "sha256": "8aad7dfa846a51f76db93f1cb91a4c0e31c79fee9b3319ba42a8bbe55673aa4e",
+      "bytes": 60916
+    },
+    "rpg-assets/characters/camila/expressions/neutral.png": {
+      "sha256": "8a5b8a4ebb3d447f62a9e06d69342bd0444f71b6f9ee4535ad969ec87bbd51fc",
+      "bytes": 60122
+    },
+    "rpg-assets/characters/camila/outfits/streetwear-preview.png": {
+      "sha256": "fd9fcc9fd12e8b911ab207c50230f2aa79bf2ebefd17d9e93c2a15b69b5fcb25",
+      "bytes": 340349
+    },
+    "rpg-assets/characters/camila/portraits/primary.png": {
+      "sha256": "3011b1a8ed2bd8a29a57b59f578e4e3effa25dce23861f739b1ecbc3247dba95",
+      "bytes": 322880
+    },
+    "rpg-assets/characters/camila/reference/expression-master.webp": {
+      "sha256": "b7426c84b7a99cb1473d9d0d4cb275a429431aa9a6267b27cc2df5c927d11fb2",
+      "bytes": 601866
+    },
+    "rpg-assets/characters/camila/vn-expressions/angry.webp": {
+      "sha256": "b6ed9e31b2f43b1cea76e026ee7f340f987161a79b8b2d9d6b66b24c44fb34d6",
+      "bytes": 84664
+    },
+    "rpg-assets/characters/camila/vn-expressions/embarrassed.webp": {
+      "sha256": "e350ffb639df0a89a723b22e7e2a9fdeb2ca6fcaac949bf0d0a72f9833f651d8",
+      "bytes": 83938
+    },
+    "rpg-assets/characters/camila/vn-expressions/flirty.webp": {
+      "sha256": "2fbb37e6d8b6d45312fa465794237afc4bcb16d95b7f990950f66099ed348ce3",
+      "bytes": 80998
+    },
+    "rpg-assets/characters/camila/vn-expressions/happy.webp": {
+      "sha256": "a7a752df146b2b89be91c6ff57db33159005c469e0bf97bca2652cc1c963ec2a",
+      "bytes": 87564
+    },
+    "rpg-assets/characters/camila/vn-expressions/neutral.webp": {
+      "sha256": "c40f89f41f9e95f100dcf9488f7240037e0d4ab061f13d2d500b73c15ffc9588",
+      "bytes": 84874
+    },
+    "rpg-assets/characters/camila/vn-expressions/surprised.webp": {
+      "sha256": "2e0bd48ad8a13c43fd0abf1bf3277dbd14ddf2c53684e6ee742cde9cc47d9d22",
+      "bytes": 86098
+    },
+    "rpg-assets/characters/elio/chibi/trio-sheet.png": {
+      "sha256": "3c80b614af4742f191d074a860a861ea146e711f61173cdf488010be845d891f",
+      "bytes": 2458674
+    },
+    "rpg-assets/characters/elio/cutins/match-cutin.webp": {
+      "sha256": "505fedf50688334f45f00eb7078f24da0b5c4ce3014bf81fa76076b0bc424401",
+      "bytes": 147146
+    },
+    "rpg-assets/characters/elio/outfits/alt-outfit.png": {
+      "sha256": "1111542b69e9486cdf5e58c30e2424aa5eaa1a605b30c24057bc9f165b5a5b08",
+      "bytes": 1438936
+    },
+    "rpg-assets/characters/elio/portraits/primary.webp": {
+      "sha256": "7d5e197817e43c792db0e1008f306989a9425d95dc9320e6062b32902832ffa9",
+      "bytes": 397240
+    },
+    "rpg-assets/characters/elio/reference/expression-master.webp": {
+      "sha256": "d44fb475eddbcd05cb2f571457e52c74839b397775f511109452dd496cbb2e5a",
+      "bytes": 514436
+    },
+    "rpg-assets/characters/elio/vn-expressions/determined.webp": {
+      "sha256": "b2e779c068cfbbb6d974c105e4132260be532e8a70b360c7f8db9880b1f87514",
+      "bytes": 86036
+    },
+    "rpg-assets/characters/elio/vn-expressions/happy.webp": {
+      "sha256": "f4727e3fcca4eda4da972763c014fed5d2c54572f59f0db92850edda4eaf58e4",
+      "bytes": 84918
+    },
+    "rpg-assets/characters/elio/vn-expressions/irritated.webp": {
+      "sha256": "f7dc5d676f94778488c64394664b032f265b438eece2ad625b4cec52c54e2b7d",
+      "bytes": 85196
+    },
+    "rpg-assets/characters/elio/vn-expressions/neutral.webp": {
+      "sha256": "cf5f626d0847aeb7fb15172a06a27b3aa3e4693c341e4440d36ec8c95a37d73f",
+      "bytes": 85930
+    },
+    "rpg-assets/characters/elio/vn-expressions/surprised.webp": {
+      "sha256": "4d912fca35ccaf13920a7f257a361f867928872a0c8fa172048d6c5875c25d8a",
+      "bytes": 85562
+    },
+    "rpg-assets/characters/elio/vn-expressions/vulnerable.webp": {
+      "sha256": "fa06fa65fb2684b77d60cd9b77e028861550c71a7719b827672a93cc00fbe677",
+      "bytes": 85642
+    },
+    "rpg-assets/characters/hana/chibi/back.png": {
+      "sha256": "bc73947206e79522bf74534e1c9973bfd44f9ff50ebafb89b39bfdd0cbaa4a8a",
+      "bytes": 79766
+    },
+    "rpg-assets/characters/hana/chibi/front.png": {
+      "sha256": "43d79ed271334d6e8dd4b171e9d25ec96a786eea9659a32837692dbe6544fb3b",
+      "bytes": 92897
+    },
+    "rpg-assets/characters/hana/chibi/side.png": {
+      "sha256": "e475b0c2cbe3c2f2d3af07e9176055cfe068267fd69d0084f58e3bbb48a38d2c",
+      "bytes": 75066
+    },
+    "rpg-assets/characters/hana/cutins/match-cutin.webp": {
+      "sha256": "14cb1f349b25a9ca815034d18502f9e070df7673b434a6b6e19ea485e0a8d36f",
+      "bytes": 106886
+    },
+    "rpg-assets/characters/hana/expressions/determined.png": {
+      "sha256": "b357077f5dda96a0f7ca8553b8055f62b65986ddf81acc0303e1b42180128b5f",
+      "bytes": 58059
+    },
+    "rpg-assets/characters/hana/expressions/flustered.png": {
+      "sha256": "7ef3318e5c993fcc31b6b87bd2b3abff1dbc24b946302105440e0780e5ec8a19",
+      "bytes": 61195
+    },
+    "rpg-assets/characters/hana/expressions/happy.png": {
+      "sha256": "756f87f605724faffe47d55f20b6317d45439b4b63050da94976c1b270204b98",
+      "bytes": 55585
+    },
+    "rpg-assets/characters/hana/expressions/neutral.png": {
+      "sha256": "3f758b1a7ae3b8d80758b5b9fec5f8ba208c50e183ca6d185a519ff899e3f166",
+      "bytes": 55487
+    },
+    "rpg-assets/characters/hana/outfits/streetwear-preview.png": {
+      "sha256": "706bfa9d848a04256f353cd02005bae606ba50bea2eb735ef324892e2ceb91c7",
+      "bytes": 351465
+    },
+    "rpg-assets/characters/hana/portraits/primary.png": {
+      "sha256": "7a2d1ab57cd07188e33343984a65eb5b3139d5fcf247bc4ec49d325b01a42f9d",
+      "bytes": 360452
+    },
+    "rpg-assets/characters/hana/reference/expression-master.webp": {
+      "sha256": "a456bfc9f70937e881138a1bbb070ba8a45537b8dc1b621048eac9dfdb2db67e",
+      "bytes": 684854
+    },
+    "rpg-assets/characters/hana/vn-expressions/angry.webp": {
+      "sha256": "ba99b1126df258b44c3c204c67b88d0ce62865d633102417d6ea06c8ee56d51e",
+      "bytes": 103338
+    },
+    "rpg-assets/characters/hana/vn-expressions/embarrassed.webp": {
+      "sha256": "5ced5db80fff9607b311498d14548f30ca684d31ce6da8a641984abeea686e00",
+      "bytes": 96428
+    },
+    "rpg-assets/characters/hana/vn-expressions/flirty.webp": {
+      "sha256": "16503fa705f3f7981d0ba0c42f59ac754372eecfb055c122970ece88f507d7ad",
+      "bytes": 94058
+    },
+    "rpg-assets/characters/hana/vn-expressions/happy.webp": {
+      "sha256": "4496bb178a99108ab36f8dc575fda91585d2a3b88aeec327e0a0537cc71df403",
+      "bytes": 99688
+    },
+    "rpg-assets/characters/hana/vn-expressions/neutral.webp": {
+      "sha256": "86a78f5db04edc1c6f52664e9df2dbc9c5f0399b044f3ae4c110724e2ec27d60",
+      "bytes": 99966
+    },
+    "rpg-assets/characters/hana/vn-expressions/surprised.webp": {
+      "sha256": "9740907237c71cc74e341a5e613251ed1f9327e2db9aef7f4874bb303d2ec06b",
+      "bytes": 97424
+    },
+    "rpg-assets/characters/iris/chibi/trio-sheet.png": {
+      "sha256": "61b7ea032f095165bf8aa271e6fca9357f9481aa10926c49b0ab4b8024f2ea21",
+      "bytes": 2562960
+    },
+    "rpg-assets/characters/iris/cutins/match-cutin.webp": {
+      "sha256": "bab60b6ddc229e6fc829e10f7d0c1e86128756519a675eb13552b20eb21c4a11",
+      "bytes": 152768
+    },
+    "rpg-assets/characters/iris/outfits/alt-outfit.png": {
+      "sha256": "d7e169aead220f49f7abdaa78db071d86c11336dda7d466f9ca01d0c1a7666d5",
+      "bytes": 1258406
+    },
+    "rpg-assets/characters/iris/portraits/primary.webp": {
+      "sha256": "a26a22371a319fd13fe9285354d7f7ee696faadbe1fb1068172f9b77f02bcc0e",
+      "bytes": 381780
+    },
+    "rpg-assets/characters/iris/reference/expression-master.webp": {
+      "sha256": "1f886859997cd5295cd54c34e1317c9c9a10c55d4ca85184625986b9459a704d",
+      "bytes": 567086
+    },
+    "rpg-assets/characters/iris/vn-expressions/determined.webp": {
+      "sha256": "c3f2107e53e823dc5fabdcaf818499c752cff9833ad34de274e5aa474aa32242",
+      "bytes": 92056
+    },
+    "rpg-assets/characters/iris/vn-expressions/happy.webp": {
+      "sha256": "c7e7783a6a2e77ca5b2c597442baa08d418f9111d6cf3413440c71d1755334c4",
+      "bytes": 91208
+    },
+    "rpg-assets/characters/iris/vn-expressions/irritated.webp": {
+      "sha256": "2f65b2a98d366c841a23fd713fcc7769e7951a283cc5bea7d930459b458a39f7",
+      "bytes": 92260
+    },
+    "rpg-assets/characters/iris/vn-expressions/neutral.webp": {
+      "sha256": "c8502ad972212ccd973a92cae3d85f76740d2b83fe70fe2c7be00f955575f16e",
+      "bytes": 91078
+    },
+    "rpg-assets/characters/iris/vn-expressions/surprised.webp": {
+      "sha256": "5b1789d372f690728e502ca9224131b59cea5dcc06ba57ee7361b730745120df",
+      "bytes": 91134
+    },
+    "rpg-assets/characters/iris/vn-expressions/vulnerable.webp": {
+      "sha256": "e0f2a73eae569f7eec41f2c1bc4596cd5ec16f72d038ea6a6b28d111b0cc1fe5",
+      "bytes": 91388
+    },
+    "rpg-assets/characters/jun/chibi/trio-sheet.png": {
+      "sha256": "686e8c8a5c4479f8fe189479a64e6dd300a68975a5c1f5702cab740841325254",
+      "bytes": 2298098
+    },
+    "rpg-assets/characters/jun/cutins/match-cutin.webp": {
+      "sha256": "7e24978f9e933af17316cbca5c2b448a57417cf340f07753b3dd271a3884a766",
+      "bytes": 135158
+    },
+    "rpg-assets/characters/jun/outfits/alt-outfit.png": {
+      "sha256": "6c274a08393d309a0940709718a2c8f4349131a6ab425c992c3cce8465c56011",
+      "bytes": 1298671
+    },
+    "rpg-assets/characters/jun/portraits/primary.webp": {
+      "sha256": "db9567cbe1b414a5fab5595127a82b7d46ad4104b43d3aba5a8ea44d87e8fb9e",
+      "bytes": 259974
+    },
+    "rpg-assets/characters/jun/reference/expression-master.webp": {
+      "sha256": "8d0e5e60cca235b712d04168d7c449ab9ea25e8bdafb2b9823c812cf42406b6a",
+      "bytes": 579600
+    },
+    "rpg-assets/characters/jun/vn-expressions/determined.webp": {
+      "sha256": "f870b526441dffaed527505560e60cd1670fe220b94fda7b75d587bf505aa2af",
+      "bytes": 97432
+    },
+    "rpg-assets/characters/jun/vn-expressions/happy.webp": {
+      "sha256": "47bb1fa2ff3668a0e800d3684d326c533b84d71b0d42ce9e390bfc739aeb0411",
+      "bytes": 94892
+    },
+    "rpg-assets/characters/jun/vn-expressions/irritated.webp": {
+      "sha256": "44c4d1a2ee02271968b0455e8195dddb30105cb2be8af80e34b391949e6f4776",
+      "bytes": 99642
+    },
+    "rpg-assets/characters/jun/vn-expressions/neutral.webp": {
+      "sha256": "7260bac10193614371815643d0492c6ec922d9991e1262349e87dd69e7dc8732",
+      "bytes": 91498
+    },
+    "rpg-assets/characters/jun/vn-expressions/surprised.webp": {
+      "sha256": "221a1a8bbff5ffc8506a979d54b85b26254f514a187db6b66e768d31a61b2112",
+      "bytes": 91744
+    },
+    "rpg-assets/characters/jun/vn-expressions/vulnerable.webp": {
+      "sha256": "8730ba257fac21b4a7707761637e286832383f22ce2c58d5d889544eacc450e0",
+      "bytes": 92600
+    },
+    "rpg-assets/characters/kaede/chibi/back.png": {
+      "sha256": "7d90f987784aba961b47f0ac8b6d587afddec8f3ca8671362218f2538f329c44",
+      "bytes": 77565
+    },
+    "rpg-assets/characters/kaede/chibi/front.png": {
+      "sha256": "8d1ac26b091b15910b82cd694c3cfc152476683a829670144b715e9287b9a526",
+      "bytes": 90009
+    },
+    "rpg-assets/characters/kaede/chibi/side.png": {
+      "sha256": "ee5e5a5a5e64dcc7d4ad362f203307ac9d7a927d8e51062265af9b9f4d9fec0c",
+      "bytes": 73399
+    },
+    "rpg-assets/characters/kaede/cutins/match-cutin.webp": {
+      "sha256": "59cd28833d87d58e743d13257ec9d07d367c435841ed734760b1a0318d273c89",
+      "bytes": 108634
+    },
+    "rpg-assets/characters/kaede/expressions/determined.png": {
+      "sha256": "431f1c937886b56c48a7a38d1f1d3d4b215a930e62a1a7ae46c582cac70afcdd",
+      "bytes": 78533
+    },
+    "rpg-assets/characters/kaede/expressions/flustered.png": {
+      "sha256": "c639f093185f9d3f9745aef901f3d3d09f41ec8aff50841cd99b5c5147c5d6ea",
+      "bytes": 83967
+    },
+    "rpg-assets/characters/kaede/expressions/happy.png": {
+      "sha256": "4dbb84296fdbddcb01d5e0699e95db68805d8be6a6c72185877b65dbb61b10a3",
+      "bytes": 79220
+    },
+    "rpg-assets/characters/kaede/expressions/neutral.png": {
+      "sha256": "f14d7171ab574e1365af64a9410df74a35f4ab6d6c88269981b0d7f45ebe539e",
+      "bytes": 78384
+    },
+    "rpg-assets/characters/kaede/outfits/streetwear-preview.png": {
+      "sha256": "f0f0f0f8ba0cbff8d2ad677c505252cb5fd98b09cb497cb1b71a4d3f64da7952",
+      "bytes": 358418
+    },
+    "rpg-assets/characters/kaede/portraits/primary.png": {
+      "sha256": "77ee52595c710b843d79b2bbe14d25f0b0ac7bbc2a24a661e13e1e5851c9c055",
+      "bytes": 328408
+    },
+    "rpg-assets/characters/kaede/reference/expression-master.webp": {
+      "sha256": "987256974b824f31752e98531f4ed985674f355cc8ee5dbbdc8c9a3ec33515e9",
+      "bytes": 605138
+    },
+    "rpg-assets/characters/kaede/vn-expressions/angry.webp": {
+      "sha256": "c8eaab1df30c2c7a313ffbf7ee566843063a2e908afd5972711e79a90f57d054",
+      "bytes": 85856
+    },
+    "rpg-assets/characters/kaede/vn-expressions/embarrassed.webp": {
+      "sha256": "95ed96307b99e20ab8c6564bcb45ec432540b4f0f602d5c63f65c484868de636",
+      "bytes": 84606
+    },
+    "rpg-assets/characters/kaede/vn-expressions/flirty.webp": {
+      "sha256": "dc33b39307ea473a978825c4c2038132a655798dccb98838e90d6bf8f5e51919",
+      "bytes": 83656
+    },
+    "rpg-assets/characters/kaede/vn-expressions/happy.webp": {
+      "sha256": "07172bef06f9e9279caf2b04b3be7eb6f580c6b2c990afbe1489f061dec45139",
+      "bytes": 84172
+    },
+    "rpg-assets/characters/kaede/vn-expressions/neutral.webp": {
+      "sha256": "04acd64bd440a9616cc269497db154a80c260e04affe192a5fee236942144766",
+      "bytes": 82912
+    },
+    "rpg-assets/characters/kaede/vn-expressions/surprised.webp": {
+      "sha256": "aa1ecec181c46d533d0f92a742be8cab0b6c43c5ac436b568e77aa98b0487a40",
+      "bytes": 81892
+    },
+    "rpg-assets/characters/marina/chibi/back.png": {
+      "sha256": "2cf54ea05e6a211e2f6b13fd28812470ec46847f1f798a70ebf787816f5fdb38",
+      "bytes": 76300
+    },
+    "rpg-assets/characters/marina/chibi/front.png": {
+      "sha256": "cd45b6d404a11294279ca297fb2e4938d5ed41bc2e5027eaceacec67c5a2ab11",
+      "bytes": 91146
+    },
+    "rpg-assets/characters/marina/chibi/side.png": {
+      "sha256": "995ff747f93b3617d1e888d6dcf803f737aa9f55fd7e3dd8a2c48cf3cc3bc84f",
+      "bytes": 75287
+    },
+    "rpg-assets/characters/marina/cutins/match-cutin.webp": {
+      "sha256": "07fbc0f34d583ff1160da211b7271549345a2bd4bf9322deae99db48f2ca712b",
+      "bytes": 110498
+    },
+    "rpg-assets/characters/marina/expressions/determined.png": {
+      "sha256": "f2efa4c686cb5cc479906e36c750b4e60cf70fda1f61f7a0adbcec78e0737782",
+      "bytes": 70220
+    },
+    "rpg-assets/characters/marina/expressions/flustered.png": {
+      "sha256": "03bf67da0f7f8bfa55dda2cb203f1011dea62bdb1d9f9dd4764955656d5c2177",
+      "bytes": 69419
+    },
+    "rpg-assets/characters/marina/expressions/happy.png": {
+      "sha256": "b445656df229dd129619bc5bacb0150e6e648440a87992b8917156013d859537",
+      "bytes": 66262
+    },
+    "rpg-assets/characters/marina/expressions/neutral.png": {
+      "sha256": "0b7c5b41318d2180b29f4246e8bed65a3dcbd9e96a6ead0f96e3a532b96b57cf",
+      "bytes": 65821
+    },
+    "rpg-assets/characters/marina/outfits/streetwear-preview.png": {
+      "sha256": "c1e374aae51956b8d87192eb1789042a9f872a0d1549039978fbf337e235bf74",
+      "bytes": 356544
+    },
+    "rpg-assets/characters/marina/portraits/primary.png": {
+      "sha256": "0556f7dd1f6160caca3bbf68006b457f9b60a630bff993ae999db7a31b2c0b49",
+      "bytes": 344851
+    },
+    "rpg-assets/characters/marina/reference/expression-master.webp": {
+      "sha256": "aa11268da144d76132438e33e8ed54c5c0c87a4700462c48c5126ba571b604ee",
+      "bytes": 660024
+    },
+    "rpg-assets/characters/marina/vn-expressions/angry.webp": {
+      "sha256": "51458d8679412b6aae82e37668c6667320f0a976125b0961950c38fa683ccf52",
+      "bytes": 96788
+    },
+    "rpg-assets/characters/marina/vn-expressions/embarrassed.webp": {
+      "sha256": "cb759577c795e3d6d45d813f5da8e79abdd604e51e4daf57b910603617541dab",
+      "bytes": 90642
+    },
+    "rpg-assets/characters/marina/vn-expressions/flirty.webp": {
+      "sha256": "4a5964517571ba4770dc3c01c09a0041d4c90bbde5a568054a85dab28d9365f1",
+      "bytes": 85248
+    },
+    "rpg-assets/characters/marina/vn-expressions/happy.webp": {
+      "sha256": "901fe0a4c55a95ccb9607f4abef05b812336cc7900a5ded814ad3a8fe8fe7da0",
+      "bytes": 96416
+    },
+    "rpg-assets/characters/marina/vn-expressions/neutral.webp": {
+      "sha256": "3546243d9a40ad783ced64039ca9b44107970d7041f816c79eb18fd515bb501c",
+      "bytes": 94904
+    },
+    "rpg-assets/characters/marina/vn-expressions/surprised.webp": {
+      "sha256": "71717336fe3eae39eaeefea62e50a4d09d433d5451ebad23427273b59d20d982",
+      "bytes": 91138
+    },
+    "rpg-assets/characters/nereo/chibi/trio-sheet.png": {
+      "sha256": "7078cfb41e2cef85584b0139fa53882543f4907c2a44a936e952a4657db2924c",
+      "bytes": 2819318
+    },
+    "rpg-assets/characters/nereo/cutins/match-cutin.webp": {
+      "sha256": "7b74269f3b014025f6f36c582280c39699a08c9f84d30fda926823e8626f114f",
+      "bytes": 154380
+    },
+    "rpg-assets/characters/nereo/outfits/alt-outfit.png": {
+      "sha256": "d274ef77d487fd3c3c0012898e7473fdedfdbedc86a520b31e6972fd11cd9c8a",
+      "bytes": 1414810
+    },
+    "rpg-assets/characters/nereo/portraits/primary.webp": {
+      "sha256": "69976bfff54baaa676f1e9dd156949ba56f2705016deb06d43cc8d419039b80b",
+      "bytes": 397874
+    },
+    "rpg-assets/characters/nereo/reference/expression-master.webp": {
+      "sha256": "8723884b7293b72044a24bcfc689ecd8ac530c27fb63d560ac38647f0823c4a7",
+      "bytes": 582606
+    },
+    "rpg-assets/characters/nereo/vn-expressions/determined.webp": {
+      "sha256": "8dc2ef34946e11ff8a8e95c8327d9753328e3e72d799cd89e374d665f2da609b",
+      "bytes": 98094
+    },
+    "rpg-assets/characters/nereo/vn-expressions/happy.webp": {
+      "sha256": "f2c67e73846b83fb5617b84449d5d39a1aca8a7f73b89b425c9f7946b7e1a4c8",
+      "bytes": 95790
+    },
+    "rpg-assets/characters/nereo/vn-expressions/irritated.webp": {
+      "sha256": "ac34931746cfcb9c7c725ee6dda9b3b97bc7bc945b5347a778c9ae95025610a8",
+      "bytes": 97944
+    },
+    "rpg-assets/characters/nereo/vn-expressions/neutral.webp": {
+      "sha256": "a0cfc05b460aee387797118a96f922721aef9fa070b57a6d17eb3a3991f62482",
+      "bytes": 94702
+    },
+    "rpg-assets/characters/nereo/vn-expressions/surprised.webp": {
+      "sha256": "555328f1e72b896c8c9c334bf7645a185702043919b5f7a8631b687fa2e1a450",
+      "bytes": 95734
+    },
+    "rpg-assets/characters/nereo/vn-expressions/vulnerable.webp": {
+      "sha256": "7e435bdb3195e1db4e3582fd61f23c0a898dba44776f8d47572c3f2916e5adfc",
+      "bytes": 95514
+    },
+    "rpg-assets/characters/reina/chibi/back.png": {
+      "sha256": "4067b420eec802094dddabde03bc6f11512db47b5fc6dc86c411c2325a2cc0ea",
+      "bytes": 79385
+    },
+    "rpg-assets/characters/reina/chibi/front.png": {
+      "sha256": "9b81ec098439b0cc6dac321b19f4056cecd3c1ff69c0c01a5760117dd99b29c9",
+      "bytes": 88547
+    },
+    "rpg-assets/characters/reina/chibi/side.png": {
+      "sha256": "5f0e5f5090e231bc2bea970925d447ab8bdd8c29291c622d196e8ff92798a7f9",
+      "bytes": 74405
+    },
+    "rpg-assets/characters/reina/cutins/match-cutin.webp": {
+      "sha256": "7c37e44271fede8f4b943ba2232ce1c39b6b6226d656bb0707eead91e80185b3",
+      "bytes": 106376
+    },
+    "rpg-assets/characters/reina/expressions/determined.png": {
+      "sha256": "34cbbea8e7d26a57aab19253bc2c2542664a3532c9855b183829f526fac155f9",
+      "bytes": 61232
+    },
+    "rpg-assets/characters/reina/expressions/flustered.png": {
+      "sha256": "a5641c9188a28ccbb026b3e2051ad99c48d2638b303e5188088203b1d84dcc0f",
+      "bytes": 61594
+    },
+    "rpg-assets/characters/reina/expressions/happy.png": {
+      "sha256": "a2bf8591f9a2976e306aa1d26ece31cc1cc0bd5fddbd75b1d1156741797ec018",
+      "bytes": 56160
+    },
+    "rpg-assets/characters/reina/expressions/neutral.png": {
+      "sha256": "7e5db9a560d63a06cb676dbe0bb5b137bcb045efc9a723186e01e60b7f4759d2",
+      "bytes": 57135
+    },
+    "rpg-assets/characters/reina/outfits/streetwear-preview.png": {
+      "sha256": "c366cc985f70f5b443648645276d99d12d52435c8a8836df5df4532f0f7ed6ef",
+      "bytes": 344123
+    },
+    "rpg-assets/characters/reina/portraits/primary.png": {
+      "sha256": "932b1b47a2a3f7df1a8ec0426a78c09764f709fa5d357794d7bb7a4c54161186",
+      "bytes": 344353
+    },
+    "rpg-assets/characters/reina/reference/expression-master.webp": {
+      "sha256": "f154f6e62be559c0c2612b228a1d993436c55211ccf4754d4b959a19cf02ca95",
+      "bytes": 613720
+    },
+    "rpg-assets/characters/reina/vn-expressions/angry.webp": {
+      "sha256": "46ffb1c4fb676f7f7681dde7c8680399749dc725fbd963d1c8fee15cdda44028",
+      "bytes": 86900
+    },
+    "rpg-assets/characters/reina/vn-expressions/embarrassed.webp": {
+      "sha256": "347d55a0adc40fda5eca0c2514c2ae2beb29b8b0c0f9d0d8749013c4e96e5c39",
+      "bytes": 86224
+    },
+    "rpg-assets/characters/reina/vn-expressions/flirty.webp": {
+      "sha256": "ab3eb1473962ef44aa847533be9cdffdb9e5620d81f6a149711fe7d76b4180c9",
+      "bytes": 81298
+    },
+    "rpg-assets/characters/reina/vn-expressions/happy.webp": {
+      "sha256": "1526ef3d73927d73a26136d4beabae210dd98e0e272cb2897b8999b08bfb3921",
+      "bytes": 84644
+    },
+    "rpg-assets/characters/reina/vn-expressions/neutral.webp": {
+      "sha256": "f9889f435b61152f91e20ed9b24138c072eae9960aaa9c92983db86866ac2d77",
+      "bytes": 87180
+    },
+    "rpg-assets/characters/reina/vn-expressions/surprised.webp": {
+      "sha256": "6af47a8a43f4d82d0b6495924637379181c410fd2a30a05fc7ea0b4a82afe9e1",
+      "bytes": 85512
+    },
+    "rpg-assets/characters/shiori/chibi/back.png": {
+      "sha256": "4cc02d80d9d76ce5994109dc3b10828e174af46c8eada520ab46434a7d2e6581",
+      "bytes": 77843
+    },
+    "rpg-assets/characters/shiori/chibi/front.png": {
+      "sha256": "4bbd489b2ca3aa09d08154f5f15ab3c2b894a5b4c46442407c84d99fb06fbd41",
+      "bytes": 91646
+    },
+    "rpg-assets/characters/shiori/chibi/side.png": {
+      "sha256": "b4a8e40d4abf71e5afd4cbf0ea77e6df4ba01c767cb1a4c287c2f6c78ed34f5f",
+      "bytes": 76337
+    },
+    "rpg-assets/characters/shiori/cutins/match-cutin.webp": {
+      "sha256": "8e7e59090486f2f8b5e176c486aa490450d4ed41800992c0fe9c24481e1a439a",
+      "bytes": 110766
+    },
+    "rpg-assets/characters/shiori/expressions/determined.png": {
+      "sha256": "3bf467dde13383af05326d001c353ee23e423870c0a33b5491320fcba7630ed2",
+      "bytes": 59150
+    },
+    "rpg-assets/characters/shiori/expressions/flustered.png": {
+      "sha256": "565bf354a18eca4fe88ab70f918ee69e620a98677a95a75b8cc93c6a94cb0494",
+      "bytes": 60868
+    },
+    "rpg-assets/characters/shiori/expressions/happy.png": {
+      "sha256": "aa54f49a73a5915f410454a03aeb151bbbfc6c25d4f5593f33a29f3d861aa387",
+      "bytes": 54044
+    },
+    "rpg-assets/characters/shiori/expressions/neutral.png": {
+      "sha256": "912762b4a6c0ca30e0d901912e94ef89b4d0cd73025a7745d10b6fb4ee3edb5c",
+      "bytes": 53870
+    },
+    "rpg-assets/characters/shiori/outfits/streetwear-preview.png": {
+      "sha256": "dd4a446ac0e8b1d17f8202812fe46518bdc551571ca540eac2ab3edd08ff7777",
+      "bytes": 351500
+    },
+    "rpg-assets/characters/shiori/portraits/primary.png": {
+      "sha256": "fca1bbedb04a8d4ae3601bea165570d2573f4934018b9e9a6d937d1f7bddce78",
+      "bytes": 323046
+    },
+    "rpg-assets/characters/shiori/reference/expression-master.webp": {
+      "sha256": "1dbaded9396f14ee084a889f8085060ad403748ba55c10421182124fa2da206f",
+      "bytes": 691766
+    },
+    "rpg-assets/characters/shiori/vn-expressions/angry.webp": {
+      "sha256": "2f8e2af9ae7f1048f91cf25915ab3e7fc8dcf305ad8cbd05bb6dc9305dc84b9a",
+      "bytes": 96536
+    },
+    "rpg-assets/characters/shiori/vn-expressions/embarrassed.webp": {
+      "sha256": "0cc94e6fdbed92d863186adb6f742c62c59a99a1b6c84c86795ec065ee8f1176",
+      "bytes": 90874
+    },
+    "rpg-assets/characters/shiori/vn-expressions/flirty.webp": {
+      "sha256": "261622362118eef687a4aaccf5b3b5e3e797131c29263de1fa5719a8c4d56f0b",
+      "bytes": 89444
+    },
+    "rpg-assets/characters/shiori/vn-expressions/happy.webp": {
+      "sha256": "6589aa58f2fa29d638a7cbd97a201951cb4842cc60c4e8d9db9073e61c4e5a04",
+      "bytes": 99518
+    },
+    "rpg-assets/characters/shiori/vn-expressions/neutral.webp": {
+      "sha256": "a62280ecf7c7fff212396c79fac9d6e5f8252a931dcfc1cebb20d7511150c041",
+      "bytes": 98274
+    },
+    "rpg-assets/characters/shiori/vn-expressions/surprised.webp": {
+      "sha256": "10c8d0899d97a1a597f16ac09795f47d4939a57b6fb4b371ed790e4f7c61637e",
+      "bytes": 97092
+    },
+    "rpg-assets/characters/sol/expressions/neutral.png": {
+      "sha256": "5987a457f7d7c7f0435227ff1f0688ca496fe6e83e175a9797e05d4ce7768bc6",
+      "bytes": 2885831
+    },
+    "rpg-assets/characters/sol/expressions/smile.png": {
+      "sha256": "f5a79b0432c6884aaab4a88338a5566c3b5e0d761d40e2145692279fab4aef30",
+      "bytes": 2914860
+    },
+    "rpg-assets/characters/sol/expressions/soft.png": {
+      "sha256": "44a7a3e491d9d142dc592bca0ab216120f3da4eb95ae78f5b27a979b7f48f402",
+      "bytes": 2763182
+    },
+    "rpg-assets/characters/sol/expressions/surprised.png": {
+      "sha256": "9b0558151986d39015f4f3ec2974c21b06878c59ce4918b30348aa40706c65f0",
+      "bytes": 2773271
+    },
+    "rpg-assets/characters/sol/expressions/worried.png": {
+      "sha256": "5cd755382d095ce315b3d8135b1df4ebb717a6e23559b7810a70f9eb010f0ae7",
+      "bytes": 2712785
+    },
+    "rpg-assets/characters/sol/portraits/primary.png": {
+      "sha256": "434e2baef6f90f05404074dc9329e989db24cee18827551426b06834941c9157",
+      "bytes": 3039488
+    },
+    "rpg-assets/characters/teo/chibi/trio-sheet.png": {
+      "sha256": "4a1e580aea51d5bf35135d86e08f4def44bd2565e163cde32e18ef961160c525",
+      "bytes": 2588697
+    },
+    "rpg-assets/characters/teo/cutins/match-cutin.webp": {
+      "sha256": "cae5b7a9a42347a6c5c772e96f543f52ab8bd5ebe82a1abccdb03e770ea0b2c5",
+      "bytes": 152512
+    },
+    "rpg-assets/characters/teo/outfits/alt-outfit.png": {
+      "sha256": "b6392d13775d73191ec25b7c0ec9b9369c1a5ff80d5c699ebc3f79bf19d8518b",
+      "bytes": 970210
+    },
+    "rpg-assets/characters/teo/portraits/primary.webp": {
+      "sha256": "afd07e536f4f8b547be4c79f67a0440395687678c9f6ffdb46c28e20fd079f52",
+      "bytes": 417624
+    },
+    "rpg-assets/characters/teo/reference/expression-master.webp": {
+      "sha256": "e1bf98c78131e636600a80db18c54537dd55a51a6f3612e3e6fca400213da30b",
+      "bytes": 545248
+    },
+    "rpg-assets/characters/teo/vn-expressions/determined.webp": {
+      "sha256": "3d53f741d9e29fe835121635b7c782a36bbd623658b3fe88ffd62c22496449cc",
+      "bytes": 91354
+    },
+    "rpg-assets/characters/teo/vn-expressions/happy.webp": {
+      "sha256": "4551202f3cd9089e07a66ba6733619320c248d41118cdb825d9d0f8379fbafbf",
+      "bytes": 90658
+    },
+    "rpg-assets/characters/teo/vn-expressions/irritated.webp": {
+      "sha256": "e2672531370ccca3bfb7b517137ba8eb542eb779d656d6e5d2864480fe96ebea",
+      "bytes": 91722
+    },
+    "rpg-assets/characters/teo/vn-expressions/neutral.webp": {
+      "sha256": "e3b1e6c5e5fd4340092ef60bbc47118afd90800b42a495c396cd2b7a09314359",
+      "bytes": 90240
+    },
+    "rpg-assets/characters/teo/vn-expressions/surprised.webp": {
+      "sha256": "c6d1c931bc59ad174f170582fa6119682fd4f10da7f2c8309fd6378b8a1d9db0",
+      "bytes": 90320
+    },
+    "rpg-assets/characters/teo/vn-expressions/vulnerable.webp": {
+      "sha256": "3a2e029e146b0d3a7e2b459d47e2951600a5091495af360a7cd05965b9b27b82",
+      "bytes": 90736
+    },
+    "rpg-assets/characters/yuna/chibi/back.png": {
+      "sha256": "b5896371240a8f0a06d67793064b48871900f1241b463d18d321d80d910d8efc",
+      "bytes": 76389
+    },
+    "rpg-assets/characters/yuna/chibi/front.png": {
+      "sha256": "670c42e3ed4386a2cfdb6e83377d29db32b29d4fb54e739ef36a57980cb94368",
+      "bytes": 89771
+    },
+    "rpg-assets/characters/yuna/chibi/side.png": {
+      "sha256": "21f8bb759faf3486c4636a32ea6a4cc3c8400a209d10ee60ed883edcda114dca",
+      "bytes": 76171
+    },
+    "rpg-assets/characters/yuna/cutins/match-cutin.webp": {
+      "sha256": "31baf10d7b47bfa5d45d7a8713edbda3452bf037497033ef69464d736769a5b3",
+      "bytes": 115846
+    },
+    "rpg-assets/characters/yuna/expressions/determined.png": {
+      "sha256": "77e22b656948d175610cc44cfd94126f14f38a5b02ad54ccc3ffde35c5dc4b27",
+      "bytes": 64951
+    },
+    "rpg-assets/characters/yuna/expressions/flustered.png": {
+      "sha256": "734b390844da9e2604153a0739de3b291052e3676b9acae7cff3f91d82b031ef",
+      "bytes": 65954
+    },
+    "rpg-assets/characters/yuna/expressions/happy.png": {
+      "sha256": "281379e26f15a51d36066e4059c4c80b44dadb953c46108b20f8d25b54c1cf1a",
+      "bytes": 62127
+    },
+    "rpg-assets/characters/yuna/expressions/neutral.png": {
+      "sha256": "0fae8f15613777657993a5cd55b251981382d14b12e59bc7fded7f22ee2e709e",
+      "bytes": 61446
+    },
+    "rpg-assets/characters/yuna/outfits/streetwear-preview.png": {
+      "sha256": "2a9a999e206bfb50bd92cc5a387051f5724e3df7c77c6ab96e608883d7b4dc37",
+      "bytes": 350239
+    },
+    "rpg-assets/characters/yuna/portraits/primary.png": {
+      "sha256": "31a53858755b4520a495d72129bc54eb2a815884086d69ae7405fc97ba30fd02",
+      "bytes": 372815
+    },
+    "rpg-assets/characters/yuna/reference/expression-master.webp": {
+      "sha256": "d2fa509a2f89a79a75ff800f9052adf541d7a13edf53334ed6362f2887ed12ad",
+      "bytes": 705130
+    },
+    "rpg-assets/characters/yuna/vn-expressions/angry.webp": {
+      "sha256": "0292ce37aceaef1d129d6f6e90f57bb27d9fe6c00f35c68681817ead442533db",
+      "bytes": 102306
+    },
+    "rpg-assets/characters/yuna/vn-expressions/embarrassed.webp": {
+      "sha256": "189ce8839b08710345f8f0c71ee70e106ceb5a67c4e11b71b9f5754112f2cda3",
+      "bytes": 100676
+    },
+    "rpg-assets/characters/yuna/vn-expressions/flirty.webp": {
+      "sha256": "a35585ab22b430106a930ceda672f5e7f967d9488ea26f140ea8d48602759eeb",
+      "bytes": 97680
+    },
+    "rpg-assets/characters/yuna/vn-expressions/happy.webp": {
+      "sha256": "c8c1c2babefa3ec7e04ba795c924ba16da385237937b9ce7ca8737629c232d14",
+      "bytes": 102218
+    },
+    "rpg-assets/characters/yuna/vn-expressions/neutral.webp": {
+      "sha256": "51d3688f702624971470db782bb7771cedde14692a43c2134d4119e46c39d187",
+      "bytes": 101908
+    },
+    "rpg-assets/characters/yuna/vn-expressions/surprised.webp": {
+      "sha256": "c3576e5f086a7b638e1004a8011cd8c7813b278106b544198b3a3a84d6d48c65",
+      "bytes": 102804
+    },
+    "rpg-assets/cutins/reference/guest-cast-sheet.png": {
+      "sha256": "656c7145d1c3e65cb5c1c693b1df123d0a86dbd11675e54381840c82b1c67fd1",
+      "bytes": 3729189
+    },
+    "rpg-assets/cutins/reference/main-cast-sheet.png": {
+      "sha256": "c47f8e2a33b4baf753faaa8732f6f7b01dd6de4c28b81fe728bb97a7ee747642",
+      "bytes": 3683434
+    },
+    "rpg-assets/elio.png": {
+      "sha256": "139de112915a3a8fedde3b49b9857891aa23c05eb2566e03b33ee48af7edd4f5",
+      "bytes": 2447281
+    },
+    "rpg-assets/events/cg/akari-library.webp": {
+      "sha256": "0784d0d8ad9516f6442eeee3a18f785b4ebe1cf9e5525c6894d1d4d528b3d806",
+      "bytes": 61970
+    },
+    "rpg-assets/events/cg/camila-cafe.webp": {
+      "sha256": "f4da1377750643befa3b4ec2fae1b51a9f8f689cbd0f298750f25850ecdad095",
+      "bytes": 63984
+    },
+    "rpg-assets/events/cg/hana-card-shop.webp": {
+      "sha256": "f8bbe0e42c57dfcf1423ae19d0abde926d9cf1c3371731a4573070ed5ce64486",
+      "bytes": 70502
+    },
+    "rpg-assets/events/cg/marina-riverside.webp": {
+      "sha256": "9a0778ce0df1aadfabbff3a6e8c99773bfaabe3a62928bb58f516abfe1d373ea",
+      "bytes": 68788
+    },
+    "rpg-assets/events/cg/reina-after-hours.webp": {
+      "sha256": "c278f876dacf94bcd198cf2bc625c537927c79626994825f3d1a0caa9d4ba2b9",
+      "bytes": 61976
+    },
+    "rpg-assets/events/cg/season01/akari_card_club_predue.webp": {
+      "sha256": "56e9f6ebd886a85079cff3e08ea0cd069516241197407fbed9631dff3cbcc4c7",
+      "bytes": 361504
+    },
+    "rpg-assets/events/cg/season01/akari_creative_workshop.webp": {
+      "sha256": "58b15970cd7be159e3fd66f4567ce15ca3bc8a71b69a5c024e4a0b14e145f655",
+      "bytes": 474858
+    },
+    "rpg-assets/events/cg/season01/akari_first_meeting.webp": {
+      "sha256": "f4147a9e361495614f3b19d1279818ae6c84e030d7abcebe46c376ca41dacf47",
+      "bytes": 424954
+    },
+    "rpg-assets/events/cg/season01/akari_notes_whirl.webp": {
+      "sha256": "7bb21458dd3953ac6a5d7f26dfbfa4d8a74ca432e14c18be92791d0c998b7e24",
+      "bytes": 394708
+    },
+    "rpg-assets/events/cg/season01/camila_cafe_conversation.webp": {
+      "sha256": "5dda9e5361e79fae167206c4c52310e6169b62a217cd6670ed2a3411d382343e",
+      "bytes": 410380
+    },
+    "rpg-assets/events/cg/season01/camila_first_meeting.webp": {
+      "sha256": "e42159359f0ab6c5c0bb42c8a9a43a3abdd676e69206af13ea9dbed689d4aa6d",
+      "bytes": 460060
+    },
+    "rpg-assets/events/cg/season01/camila_harbor_predue.webp": {
+      "sha256": "7faac9a6bfd8def25b38e42651d65a90aa67b2a218a4be3eca3fbf23a34c4934",
+      "bytes": 407896
+    },
+    "rpg-assets/events/cg/season01/camila_windy_receipts.webp": {
+      "sha256": "1be0114fceb2c4f5e2a4b8ab2ef27cd5769d83650dc272c63cefc431773bbc95",
+      "bytes": 442668
+    },
+    "rpg-assets/events/cg/season01/hana_apron_mixup.webp": {
+      "sha256": "744279473cc81d255fcb9bb788066ba0228fbec873a4fcdff6b781aea8e4375e",
+      "bytes": 410430
+    },
+    "rpg-assets/events/cg/season01/hana_first_meeting.webp": {
+      "sha256": "9c7f6d953e50b12386517e0d3c8c4667e90d92c52fd44a1a0855065118b2c607",
+      "bytes": 466034
+    },
+    "rpg-assets/events/cg/season01/hana_flyer_afternoon.webp": {
+      "sha256": "6cdc03a2e2ed9a71e6e1ed2b8a88b94db5a695cb4520bad7a962390fc345576b",
+      "bytes": 538644
+    },
+    "rpg-assets/events/cg/season01/hana_shop_challenge.webp": {
+      "sha256": "27ae533a4522bca0f0809b79fd017488dd9a59edf76c8c04fe8fd6bb9ac524e6",
+      "bytes": 454824
+    },
+    "rpg-assets/events/cg/season01/kaede_first_meeting.webp": {
+      "sha256": "d81d87e6b7213adcbb2f1bcce3b4bd7c47b114470283e7b9711a666660b19364",
+      "bytes": 458866
+    },
+    "rpg-assets/events/cg/season01/kaede_jacket_prank.webp": {
+      "sha256": "d2b3e107d8b01746bbfb61538bfdec53c508a2eac18a18c9212c8cc6d6c5bfe3",
+      "bytes": 519102
+    },
+    "rpg-assets/events/cg/season01/kaede_park_social.webp": {
+      "sha256": "791f6b445f7abfcbb929c2dc836ba43dc35e936c08e0e8ae8d10b8cf2552506e",
+      "bytes": 441594
+    },
+    "rpg-assets/events/cg/season01/kaede_rooftop_predue.webp": {
+      "sha256": "2f69136c4254dc645d99a8f243e317c8702cb331358805d3b83873ea92589c14",
+      "bytes": 495278
+    },
+    "rpg-assets/events/cg/season01/marina_beach_towel.webp": {
+      "sha256": "7ba92042f23a9ce06a629db4883e6ceb86892b4f76b79b2f7527450cea256f5f",
+      "bytes": 539002
+    },
+    "rpg-assets/events/cg/season01/marina_first_meeting.webp": {
+      "sha256": "7d2d262ebf9258f9f846eb590bea5ab321e95f8bef8404c8bfec13b132406c9b",
+      "bytes": 460226
+    },
+    "rpg-assets/events/cg/season01/marina_harbor_predue.webp": {
+      "sha256": "bb33e4ee70cd49d477bc67c38ee5b14993283ceda7eb2eb87c629736a5271393",
+      "bytes": 498348
+    },
+    "rpg-assets/events/cg/season01/marina_sunset_social.webp": {
+      "sha256": "5ce496dfe7f54de85b92f5b2b4e97a237d13984c9957188455055563a794f9e0",
+      "bytes": 497966
+    },
+    "rpg-assets/events/cg/season01/reina_center_predue.webp": {
+      "sha256": "29cf3cb4defad6ff13c93f033a92dd7d8bb5763c4399af151354e92b2e06d6fa",
+      "bytes": 418808
+    },
+    "rpg-assets/events/cg/season01/reina_rain_catch.webp": {
+      "sha256": "123e4bbd7f0d21064d511d3ceac7b538cd3f0f3011c7d561b1ed16279342ef3c",
+      "bytes": 416284
+    },
+    "rpg-assets/events/cg/season01/reina_rival_intro.webp": {
+      "sha256": "54454f9f02dd5feef5b4cf08bce5d0d60d9ce9ee51cb8a542feeeced3702693e",
+      "bytes": 469418
+    },
+    "rpg-assets/events/cg/season01/reina_training_break.webp": {
+      "sha256": "707070fe08b8c19997e5da8efbcea743b15cc2bfa41c860eb249613e62877c98",
+      "bytes": 429922
+    },
+    "rpg-assets/events/cg/season01/shiori_bookstack_wobble.webp": {
+      "sha256": "9c805d3a5aed2ad393f29c1d16b0cce416a1953f5661676b1ffe19cd1bad99fc",
+      "bytes": 417514
+    },
+    "rpg-assets/events/cg/season01/shiori_cafe_conversation.webp": {
+      "sha256": "21431e85782dc4f6f716ed18fb866bb392255ef42dc05540fc9dbd25048323f7",
+      "bytes": 481152
+    },
+    "rpg-assets/events/cg/season01/shiori_first_page.webp": {
+      "sha256": "405ddc4843e4e1f41ec70b57089f508ede15ae26ae18ac6228af2f0bff071894",
+      "bytes": 372890
+    },
+    "rpg-assets/events/cg/season01/shiori_library_predue.webp": {
+      "sha256": "044231e38aaec33c81be1bf90906a441d7d2b2c24b6da1bc4ebed21bb86ad0db",
+      "bytes": 400998
+    },
+    "rpg-assets/events/cg/season01/thumbs/akari_card_club_predue.webp": {
+      "sha256": "9951b2b365d094cda0525370cbd42d9154098c4380ebbc02f49f2f09bbc14c73",
+      "bytes": 62136
+    },
+    "rpg-assets/events/cg/season01/thumbs/akari_creative_workshop.webp": {
+      "sha256": "2d69628f18f00b91a25864760e4c248b735da42f86d10d057c32374434dad2bf",
+      "bytes": 81592
+    },
+    "rpg-assets/events/cg/season01/thumbs/akari_first_meeting.webp": {
+      "sha256": "de194f87b8d669b382bea593f0512110dd109801ce1eb23ac931afd14b059455",
+      "bytes": 79910
+    },
+    "rpg-assets/events/cg/season01/thumbs/akari_notes_whirl.webp": {
+      "sha256": "40ba5ffe944dd35f1229e7b42cb5b4c4d8a8ea18b6b37de4e0bb00a50da8b0e1",
+      "bytes": 68308
+    },
+    "rpg-assets/events/cg/season01/thumbs/camila_cafe_conversation.webp": {
+      "sha256": "f044442ab118caa5cb5a82aa238c49b7636fb46618c1b678fb3e46ba8092bbb5",
+      "bytes": 71660
+    },
+    "rpg-assets/events/cg/season01/thumbs/camila_first_meeting.webp": {
+      "sha256": "40253aceb9317d391102d31decc9c47c60a5896eb1f57be988df6dacee017b89",
+      "bytes": 83428
+    },
+    "rpg-assets/events/cg/season01/thumbs/camila_harbor_predue.webp": {
+      "sha256": "19d01c10c04620cb985281f00bcf28f4281efe823e73d552600c19bb620ca25c",
+      "bytes": 70432
+    },
+    "rpg-assets/events/cg/season01/thumbs/camila_windy_receipts.webp": {
+      "sha256": "a370cc5e8a042731481851834ecf084f859f370840d0cf6c0d3e1affdaa20046",
+      "bytes": 81134
+    },
+    "rpg-assets/events/cg/season01/thumbs/hana_apron_mixup.webp": {
+      "sha256": "5475fb86ee3757e3d72a8e438dacef1846095b21af37454731c4b37d4aea662f",
+      "bytes": 75712
+    },
+    "rpg-assets/events/cg/season01/thumbs/hana_first_meeting.webp": {
+      "sha256": "28184b32748039066cfe687c4814a287bd05b15f7be1577059bd4e3534896dac",
+      "bytes": 85096
+    },
+    "rpg-assets/events/cg/season01/thumbs/hana_flyer_afternoon.webp": {
+      "sha256": "4bc7aea4567aa969ff694b0c1cc7236807033e5cf376d7d8eb1c7f47d0f8a66b",
+      "bytes": 89382
+    },
+    "rpg-assets/events/cg/season01/thumbs/hana_shop_challenge.webp": {
+      "sha256": "89d1816af62bd87b7a2fb00deb974e0fd86e6b93a66566e107eb4366f911a275",
+      "bytes": 75244
+    },
+    "rpg-assets/events/cg/season01/thumbs/kaede_first_meeting.webp": {
+      "sha256": "34b1ec0a7d30ff9129043a1f1e88c4ed3778c3526d5f54aad398a9d4e0de0eab",
+      "bytes": 81314
+    },
+    "rpg-assets/events/cg/season01/thumbs/kaede_jacket_prank.webp": {
+      "sha256": "d50e1ba1ae75d1da94c4fdc1485b3b2e33468537a303660dbc0e85addb391691",
+      "bytes": 88658
+    },
+    "rpg-assets/events/cg/season01/thumbs/kaede_park_social.webp": {
+      "sha256": "464b4cc91cef2e06aa209168bd19270fde0a837b2017f5144bc2b4ad2a938c83",
+      "bytes": 80222
+    },
+    "rpg-assets/events/cg/season01/thumbs/kaede_rooftop_predue.webp": {
+      "sha256": "8e65995c829d5105c7589e98d5887460a7a44dc0791c7435aa44c5c565fabd39",
+      "bytes": 87732
+    },
+    "rpg-assets/events/cg/season01/thumbs/marina_beach_towel.webp": {
+      "sha256": "b3aeb48a21860779a747e89283a79467f4c13d669a1600c74a412b736d8c40c6",
+      "bytes": 91476
+    },
+    "rpg-assets/events/cg/season01/thumbs/marina_first_meeting.webp": {
+      "sha256": "f831da4784f99fcd97f3d6f08c046890d719acae32c9448740459e9d62ee37ad",
+      "bytes": 81314
+    },
+    "rpg-assets/events/cg/season01/thumbs/marina_harbor_predue.webp": {
+      "sha256": "7c70aa0b113cff72eee112021a9667667dd6f57ca9f0f2f7f7ecdad22fb2cd0f",
+      "bytes": 83106
+    },
+    "rpg-assets/events/cg/season01/thumbs/marina_sunset_social.webp": {
+      "sha256": "71a90b3438ba0ec217150149900e7e56dc8c18db3de9c868dca2f6749ca6d80e",
+      "bytes": 85156
+    },
+    "rpg-assets/events/cg/season01/thumbs/reina_center_predue.webp": {
+      "sha256": "31ec21eeb3c609dcb3a6a1d7a231279ddafd683a6fac7282ac6b7d058c69af3d",
+      "bytes": 73954
+    },
+    "rpg-assets/events/cg/season01/thumbs/reina_rain_catch.webp": {
+      "sha256": "f07e19ea113753d91bc916a5cc0eb7d6aab65349a89e352d911e9e0330756e36",
+      "bytes": 75794
+    },
+    "rpg-assets/events/cg/season01/thumbs/reina_rival_intro.webp": {
+      "sha256": "8d7076131a68db78f6fe6a1c02a014a2f127fdb342832fa14fdd10bdf5fc4e6d",
+      "bytes": 81120
+    },
+    "rpg-assets/events/cg/season01/thumbs/reina_training_break.webp": {
+      "sha256": "575972f216292718ba2195cbb831354eae27a675905689c053eb0681e9d29186",
+      "bytes": 72626
+    },
+    "rpg-assets/events/cg/season01/thumbs/shiori_bookstack_wobble.webp": {
+      "sha256": "7ea45104d3601edb41f8b10fb77dada499986a446d4bc35e57ae6433c452584a",
+      "bytes": 77200
+    },
+    "rpg-assets/events/cg/season01/thumbs/shiori_cafe_conversation.webp": {
+      "sha256": "30cf81907e49ae12665ce839b6c5b06d4d1f658c5ddb872b3033efbf8767daa2",
+      "bytes": 83852
+    },
+    "rpg-assets/events/cg/season01/thumbs/shiori_first_page.webp": {
+      "sha256": "d77435ce92c8603b41a30728411df4d65bd39437ac6e01121e331ac2648f59d7",
+      "bytes": 63814
+    },
+    "rpg-assets/events/cg/season01/thumbs/shiori_library_predue.webp": {
+      "sha256": "5b0573b2c95a6cc14baef9c0a192f5e4fe563f6793fd7f5d0a3e0cc3f5f625cc",
+      "bytes": 71976
+    },
+    "rpg-assets/events/cg/season01/thumbs/yuna_arcade_predue.webp": {
+      "sha256": "ba78863a8d0dea9f08527ff6dcedb7a3c153026a104d085cc96bfd62efe7ba51",
+      "bytes": 90140
+    },
+    "rpg-assets/events/cg/season01/thumbs/yuna_arcade_victory.webp": {
+      "sha256": "9f8f4ce8cc18480eef54b25624fd3d7c10811a4049038baac2cdcd1016603874",
+      "bytes": 78508
+    },
+    "rpg-assets/events/cg/season01/thumbs/yuna_arrival.webp": {
+      "sha256": "40d13131a931654a8b4b2b9c5f2c85768c7422a7922d892473bd13e4a33dd48c",
+      "bytes": 93614
+    },
+    "rpg-assets/events/cg/season01/thumbs/yuna_card_scatter.webp": {
+      "sha256": "cc9a3cfeab99f896ea09c758ceda3ce915b3b1c75e85355fe6ee08f029532bde",
+      "bytes": 87564
+    },
+    "rpg-assets/events/cg/season01/yuna_arcade_predue.webp": {
+      "sha256": "86ccc439cef66f9bfd072ca65c426860e4a35237b9bea021cfa2706eb949f150",
+      "bytes": 521266
+    },
+    "rpg-assets/events/cg/season01/yuna_arcade_victory.webp": {
+      "sha256": "f625f8e9b69402aeddcbca9c07be3773a70c3548e6e375afc0d750dee82e8078",
+      "bytes": 429880
+    },
+    "rpg-assets/events/cg/season01/yuna_arrival.webp": {
+      "sha256": "f99b105943d6e666376f524dc63d80c7a9bf1c3e2e46ffb087ddb309c8b5f5a6",
+      "bytes": 508232
+    },
+    "rpg-assets/events/cg/season01/yuna_card_scatter.webp": {
+      "sha256": "67d1805a32b6a1475feae67e1bb32a3deb9bf792c6d49a7630ab4d5132d56d6d",
+      "bytes": 499594
+    },
+    "rpg-assets/events/cg/sol/sol_quiet_cafe.webp": {
+      "sha256": "08c4a72fe2ec9e57301651d3fb2cca6f1bc02c0153e8f033442c23fcd74d4e74",
+      "bytes": 524752
+    },
+    "rpg-assets/events/cg/sol/sol_scavenger_hunt.webp": {
+      "sha256": "476eda4b282eadecc1a193c2dc616d25267ded859174cfe7f2379bc68293ba28",
+      "bytes": 602832
+    },
+    "rpg-assets/events/cg/sol/thumbs/sol_quiet_cafe.webp": {
+      "sha256": "8dd269681ff0e46e8e5f68e9d6dbf6a6d8b28135cd05730da349b88414b532e1",
+      "bytes": 84954
+    },
+    "rpg-assets/events/cg/sol/thumbs/sol_scavenger_hunt.webp": {
+      "sha256": "6449d40dff47125c8335ccf876511ab9d082d20d3ff1fcca101f6963f65eb084",
+      "bytes": 102684
+    },
+    "rpg-assets/events/cg/yuna-arcade.webp": {
+      "sha256": "fcb68fc90f2f4f8a0561f5b1e6f3e610c8d2c5f9004a91557efcb568329cdcb7",
+      "bytes": 84150
+    },
+    "rpg-assets/iris.png": {
+      "sha256": "699a6aa5d2b2d8933041e469f9bd5018372d1d5deafee3377c1a9a81923f4032",
+      "bytes": 2371064
+    },
+    "rpg-assets/jun.png": {
+      "sha256": "095ae392028a10bf3466a9ec2e2c8f07e151a410b7947ebe0d3263ecae309be4",
+      "bytes": 2014570
+    },
+    "rpg-assets/locations/panoramas/arcade-evening.webp": {
+      "sha256": "ed3e1417cd602959839d16671bfa8662173fe121227abf18bbda6b8dd22fb3a0",
+      "bytes": 77008
+    },
+    "rpg-assets/locations/panoramas/cafe-evening.webp": {
+      "sha256": "4c9cc51f6d74204f33d80c9be5f1e409c00172e2e43557555213f6f2099b66ad",
+      "bytes": 74558
+    },
+    "rpg-assets/locations/panoramas/center-day.webp": {
+      "sha256": "f81bcf590b6e9482ee3d1144703646f11156e6bd3685a4fac74b174ce2ad2dcf",
+      "bytes": 68040
+    },
+    "rpg-assets/locations/panoramas/docks-sunset.webp": {
+      "sha256": "d4635340aa30228bef748088db2c79c8363d743aa01bbf3393f2d793b372bf59",
+      "bytes": 63004
+    },
+    "rpg-assets/locations/panoramas/home-day.webp": {
+      "sha256": "2b7b3cdfe22385e55599eeef01659412b6708d8ac95a96e78348928b9e071b7b",
+      "bytes": 66108
+    },
+    "rpg-assets/locations/panoramas/library-day.webp": {
+      "sha256": "4553610c20afa5a591ba13cb5eb316c405da6f63a71a1badf1d16c3bcdfd371b",
+      "bytes": 66294
+    },
+    "rpg-assets/locations/panoramas/park-day.webp": {
+      "sha256": "1cf4be4076ac48994a1146624e79b6017c0d5af22fd4ca9efce2ee2d39ec049f",
+      "bytes": 78346
+    },
+    "rpg-assets/locations/panoramas/shop-day.webp": {
+      "sha256": "61aa0109c6933017a951f15377c50f972ea7a22a47d002eca009face364920f0",
+      "bytes": 70706
+    },
+    "rpg-assets/nereo.png": {
+      "sha256": "ce4002563e5bc1702d88ba28d1addb666935840a25a84a60bca7feaa6c6eb9e7",
+      "bytes": 2443165
+    },
+    "rpg-assets/sol.png": {
+      "sha256": "434e2baef6f90f05404074dc9329e989db24cee18827551426b06834941c9157",
+      "bytes": 3039488
+    },
+    "rpg-assets/teo.png": {
+      "sha256": "9f12a2b0a950df88ee6f1aaa07caae9b3fb07f881e0c644a077f449cafa95f01",
+      "bytes": 2405543
+    },
+    "rpg-assets/ui/avatars/akari.webp": {
+      "sha256": "c9f237888361c8cb2675c70d38681fa34374572df10b2f71ac214ad9de4c43fe",
+      "bytes": 17164
+    },
+    "rpg-assets/ui/avatars/alma.webp": {
+      "sha256": "a5f59e9d298e44cd508466c3fb86e14c7bcb71467d97857d8c430e7680b0db1b",
+      "bytes": 30262
+    },
+    "rpg-assets/ui/avatars/camila.webp": {
+      "sha256": "bfd6b93a8682d0016c1266748048ec81b9e6b8c5e698ba7b522968faf541f571",
+      "bytes": 18438
+    },
+    "rpg-assets/ui/avatars/elio.webp": {
+      "sha256": "a964fb232f119d1d02549bb36e8a8b27f7b7d7c429179d882a8d232e3abf410a",
+      "bytes": 34984
+    },
+    "rpg-assets/ui/avatars/hana.webp": {
+      "sha256": "ac6d3ec2a30473ac6497ce63cb12e71b69e6cb4c172e543bb429488b578961a1",
+      "bytes": 20782
+    },
+    "rpg-assets/ui/avatars/iris.webp": {
+      "sha256": "e719248d46717b823e7ef578b72d1144348250d078d667f431e5707a6df7d43d",
+      "bytes": 33634
+    },
+    "rpg-assets/ui/avatars/jun.webp": {
+      "sha256": "190159e95b0eb680bc042e4a20d5bfd43bc4531ea8729010b24d08a7886faa68",
+      "bytes": 26256
+    },
+    "rpg-assets/ui/avatars/kaede.webp": {
+      "sha256": "a3521685d795b425cc87d1cd34c87f9d92f8eebcf25a34ab52bb04a0137a9d91",
+      "bytes": 17228
+    },
+    "rpg-assets/ui/avatars/marina.webp": {
+      "sha256": "b0f695c01b9f337c338d1011ed297bcf859f5f728498ce892a7612d8a8b9fac3",
+      "bytes": 19062
+    },
+    "rpg-assets/ui/avatars/nereo.webp": {
+      "sha256": "9bc38aa6f0c7115b0fec5eab61065428e4c104a648170e2be8a414f3ca59fa70",
+      "bytes": 33698
+    },
+    "rpg-assets/ui/avatars/reina.webp": {
+      "sha256": "541b5988bbdca178fa27808897a6ad44d7cfd7bbc9bdbee3aa16f9438e96b376",
+      "bytes": 19372
+    },
+    "rpg-assets/ui/avatars/shiori.webp": {
+      "sha256": "169995e971a7a68a0cde676ae8104d5ab50859dd2dfcf2d7a84a8a6a6086c1c9",
+      "bytes": 17904
+    },
+    "rpg-assets/ui/avatars/sol.webp": {
+      "sha256": "f8f1cd31972468efd05a82bdd59b7abab40673d94dac5fe7c0829856b1bdf121",
+      "bytes": 31282
+    },
+    "rpg-assets/ui/avatars/teo.webp": {
+      "sha256": "e42517c4493a0400a8dd04e86a0e6d66f9c638b6e962bcd2e196782801bf38e5",
+      "bytes": 39388
+    },
+    "rpg-assets/ui/avatars/yuna.webp": {
+      "sha256": "9301fe36e8a0f40ed48ebff721baa282364c251440328a76fe0f4a6be17783d0",
+      "bytes": 25106
+    },
+    "rpg-assets/ui/frames/nameplate-akari.png": {
+      "sha256": "3865a5d4be9966b274a6199910c628dff3f97027bd84805935a0d104cf45de11",
+      "bytes": 627
+    },
+    "rpg-assets/ui/frames/nameplate-camila.png": {
+      "sha256": "5bdf3a02505252d1f9162498d54f038d90f1bed2c3164cc6d2c72a8f0ab8d4c4",
+      "bytes": 630
+    },
+    "rpg-assets/ui/frames/nameplate-hana.png": {
+      "sha256": "bf67cce35f247d4499a25085d2891c038566d72cbe4ba0eaf0f96241b58bb560",
+      "bytes": 626
+    },
+    "rpg-assets/ui/frames/nameplate-kaede.png": {
+      "sha256": "b40fabc429e35cd146acd05735984ece3659561af76ed3a62b065572e2954267",
+      "bytes": 628
+    },
+    "rpg-assets/ui/frames/nameplate-marina.png": {
+      "sha256": "d8337fe62903c84ecc143e8a02e59e353b633dc8688b35d2472f6f0bc6bded73",
+      "bytes": 628
+    },
+    "rpg-assets/ui/frames/nameplate-reina.png": {
+      "sha256": "91f4d85b7b32556fee679247e452937d282d9b58671a41d51299178ca3615e94",
+      "bytes": 624
+    },
+    "rpg-assets/ui/frames/nameplate-shiori.png": {
+      "sha256": "dd82bf8f983ab7a2d502712fa3ad58f0a96d5b728ac805993460b21784abca8a",
+      "bytes": 627
+    },
+    "rpg-assets/ui/frames/nameplate-yuna.png": {
+      "sha256": "a40a05e7b363a4424ffeefa827ef673c4d81ba3924bbc3be30a07d7c82690e45",
+      "bytes": 628
+    }
+  }
+}

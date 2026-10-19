@@ -1,0 +1,57 @@
+{
+  "pack": "Neo Harbor RPG — complete art + 6 guest NPC portraits",
+  "version": "2026-10-19-complete-guests-sol-gallery-1",
+  "previousArtManifest": "rpg-assets/manifest.art-expansion.json",
+  "previousExpressionManifest": "rpg-assets/characters/vn-expressions-manifest.json",
+  "newGuestManifest": "rpg-assets/guest-portraits-manifest.json",
+  "mainCharacterIds": [
+    "hana",
+    "reina",
+    "shiori",
+    "yuna",
+    "akari",
+    "camila",
+    "marina",
+    "kaede"
+  ],
+  "guestCharacterIds": [
+    "jun",
+    "teo",
+    "iris",
+    "elio",
+    "alma",
+    "nereo"
+  ],
+  "newPortraitFiles": [
+    "rpg-assets/jun.png",
+    "rpg-assets/teo.png",
+    "rpg-assets/iris.png",
+    "rpg-assets/elio.png",
+    "rpg-assets/alma.png",
+    "rpg-assets/nereo.png"
+  ],
+  "installation": "Unzip at repo root, commit rpg-assets/ files, deploy; source UI loads new guests using exact root PNG names.",
+  "originalArtImageCount": 158,
+  "newImageCount": 18,
+  "imageCount": 322,
+  "guestExpressionManifest": "rpg-assets/guest-vn-expressions-manifest.json",
+  "newGuestExpressionImageCount": 42,
+  "notes": "Preserves all previously packaged images without regeneration and adds six-expression VN sheets for the six supporting NPCs. Added 14 match cut-ins plus 2 reference sheet images. Added six guest alternate outfit renders and six guest chibi trio sheets. Added full season01 gallery pack and Sol Varela portrait/expression/event assets.",
+  "matchCutinManifest": "rpg-assets/match-cutins-manifest.json",
+  "matchCutinCount": 14,
+  "matchCutinReferenceSheetCount": 2,
+  "previousImageCount": 218,
+  "guestSupplementalManifest": "rpg-assets/guest-supplemental-assets-manifest.json",
+  "guestAltOutfitCount": 6,
+  "guestChibiSheetCount": 6,
+  "galleryManifest": "rpg-assets/events/cg/season01/season01-gallery-manifest.json",
+  "gallerySceneCount": 32,
+  "galleryImageCount": 64,
+  "solManifest": "rpg-assets/characters/sol/art_manifest.json",
+  "solExpressionCount": 5,
+  "solEventCount": 2,
+  "solAvatar": "rpg-assets/ui/avatars/sol.webp",
+  "specialCharacterIds": [
+    "sol"
+  ]
+}
