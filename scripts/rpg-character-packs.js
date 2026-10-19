@@ -5,6 +5,8 @@ const ROOT=path.resolve(__dirname,'..'),DIR=path.join(ROOT,'characters'),OUT=pat
 const places=new Set(['home','shop','arcade','park','cafe','center','library']);
 const slug=/^[a-z][a-z0-9_]{1,39}$/,artPath=/^\/rpg-assets\/[a-zA-Z0-9_/-]+\.(png|webp|jpe?g)$/i;
 const metrics=new Set(['affection','trust','respect','attraction','duels']);
+const legacyCharacterIds=['hana','reina','shiori','yuna','akari','camila','marina','kaede'];
+
 const plain=x=>x!==null&&typeof x==='object'&&!Array.isArray(x),words=x=>typeof x==='string'&&x.trim().length>0;
 function ensure(ok,msg){if(!ok)throw Error('Character Pack: '+msg);}
 function json(filename){try{return JSON.parse(fs.readFileSync(filename,'utf8'));}catch(e){throw Error(filename+': '+e.message);}}
@@ -49,7 +51,7 @@ function validate(p,legalDecks=decks()){
  if(p.mandatory!==null&&p.mandatory!==undefined){
   ensure(plain(p.mandatory)&&p.mandatory.schemaVersion===1&&p.mandatory.characterId===id&&Array.isArray(p.mandatory.events),id+': invalid mandatory_events.json');
   ensure(p.mandatory.events.every(e=>e.kind==='bond'),id+': character packs may only declare bond events');
-  const castIds=new Set([...Object.keys(require('../rpg_narrative_pack').cast),id]);
+  const castIds=new Set([...legacyCharacterIds,...Object.keys(require('../rpg_narrative_pack').cast),...Object.keys(require('../rpg_side_quests').cast),id]);
   const storyIds=[...require('../rpg_story').events.map(e=>e.id),...s.events.map(e=>e.id)];
   const problems=MANDATORY.validate(compiledMandatory(p),{characterIds:castIds,storyIds});
   ensure(problems.length===0,id+': '+problems.join('; '));
@@ -68,7 +70,7 @@ function discover(){
  const legal=decks(),packs=folders.map(name=>read(path.join(DIR,name))),ids=new Set();
  for(const p of packs){validate(p,legal);for(const e of p.stories.events){ensure(!ids.has(e.id),'duplicate scene ID '+e.id);ids.add(e.id);}}
  const allMandatory=packs.flatMap(compiledMandatory),allStoryIds=[...require('../rpg_story').events.map(e=>e.id),...ids];
- const errors=MANDATORY.validate(allMandatory,{characterIds:[...Object.keys(require('../rpg_narrative_pack').cast),...packs.map(p=>p.def.id)],storyIds:allStoryIds});
+ const errors=MANDATORY.validate(allMandatory,{characterIds:[...legacyCharacterIds,...Object.keys(require('../rpg_narrative_pack').cast),...Object.keys(require('../rpg_side_quests').cast),...packs.map(p=>p.def.id)],storyIds:allStoryIds});
  ensure(!errors.length,errors.join('; '));
  return packs;
 }
@@ -98,7 +100,7 @@ function seasonBundle(){
  ensure(plain(data)&&data.schemaVersion===1&&Array.isArray(data.events),'invalid season events data');
  ensure(data.events.every(e=>e.kind==='season'&&e.delivery==='world'),'world file must only contain season events');
  const packs=discover(),all=[...data.events,...packs.flatMap(compiledMandatory)];
- const errors=MANDATORY.validate(all,{characterIds:[...Object.keys(require('../rpg_narrative_pack').cast),...packs.map(p=>p.def.id)],storyIds:[...require('../rpg_story').events.map(e=>e.id),...packs.flatMap(p=>p.stories.events.map(e=>e.id))]});
+ const errors=MANDATORY.validate(all,{characterIds:[...legacyCharacterIds,...Object.keys(require('../rpg_narrative_pack').cast),...Object.keys(require('../rpg_side_quests').cast),...packs.map(p=>p.def.id)],storyIds:[...require('../rpg_story').events.map(e=>e.id),...packs.flatMap(p=>p.stories.events.map(e=>e.id))]});
  ensure(!errors.length,errors.join('; '));
  return "'use strict';\n// AUTO-GENERATED from rpg_season_events.json by scripts/rpg-character-packs.js.\n"+
  "(function(root,factory){const api=factory();if(typeof module==='object'&&module.exports)module.exports=api;if(root)root.NeoRpgSeasonEvents=api;})(typeof window!=='undefined'?window:null,function(){return Object.freeze({events:"+JSON.stringify(data.events)+"});});\n";
