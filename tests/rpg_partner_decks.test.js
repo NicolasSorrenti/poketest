@@ -38,7 +38,7 @@ test('partner edits preserve original deck, protected Pokémon, and at least hal
  while(zero.length<60)zero.push(original.find(id=>catalog.get(id)?.supertype==='Energy'));
  assert.equal(PARTNER.check(zero,ctx).valid,false);
  assert.match(PARTNER.check(zero,ctx).errors.join(' '),/signature Pokémon/);
- assert.throws(()=>PARTNER.save(s,'reina',source,zero,ctx),/signature Pokémon/);
+ assert.throws(()=>PARTNER.save(s,'reina',source,zero,ctx),/Not enough copies|signature Pokémon/);
 });
 test('owned additions affect partner decks but never consume cards from player collection',()=>{
  const {s,source,original,ctx}=setup();
@@ -80,4 +80,18 @@ test('Classic CPU engine accepts legal edited partner decks and rejects invalid 
  assert.ok(service.session(playable.token).game.players[1]);
  assert.throws(()=>service.create({deck:'brushfire',opponent:source,customOpponentDeck:Array(60).fill('nonsense-1'),seed:15}),/Illegal partner deck/);
  assert.throws(()=>service.create({deck:'brushfire',opponent:source,customOpponentDeck:copy.slice(1),seed:15}),/60 valid card IDs/);
+});
+
+test('partner deck builder scripts load and the RPG duel bridge forwards snapshots to Classic',()=>{
+ const fs=require('node:fs'),path=require('node:path'),root=path.join(__dirname,'..');
+ const html=fs.readFileSync(path.join(root,'rpg_deck_studio.html'),'utf8');
+ const rpg=fs.readFileSync(path.join(root,'rpg.js'),'utf8');
+ const live=fs.readFileSync(path.join(root,'classic_live.js'),'utf8');
+ const server=fs.readFileSync(path.join(root,'server.js'),'utf8');
+ assert.match(html,/\/rpg_partner_decks\.js/);
+ assert.match(html,/\/rpg_partner_deck_studio\.js/);
+ assert.match(rpg,/PARTNER\.snapshot/);
+ assert.match(rpg,/neoRpgNpcDeck:/);
+ assert.match(live,/customOpponentDeck/);
+ assert.match(server,/\/rpg_partner_deck_studio\.js/);
 });
