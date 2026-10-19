@@ -95,6 +95,6 @@ test('optional G5 situation CG pack installs after the base and is safe to run t
   assert.equal(first.installed,3);
   assert.equal(installG5({root,expectedSha:sha(bytes)}).skipped,3);
   assert.throws(()=>installG5({root,expectedSha:'0'.repeat(64)}),/SHA-256/);
-  assert.match(G5_ARCHIVE,/^asset-packs\\\/.*\\.zip$/);
+  assert.ok(G5_ARCHIVE.startsWith('asset-packs/') && G5_ARCHIVE.endsWith('.zip'));
   assert.match(G5_EXPECTED_SHA256,/^[a-f0-9]{64}$/);
 }));
