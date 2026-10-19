@@ -36,6 +36,14 @@ function launch(initial,approve=false){
   win,doc,local,session,loc,async()=>({ok:true,json:async()=>({decks:[{id:'blackout',name:'Blackout'}]})}),()=>approve,function MockImage(){return new FakeNode('img');});
  return {elements,listeners,loc,state:()=>JSON.parse(saved.neoHarborRpgV1)};
 }
+function finishGreeting(app){
+ let steps=0;
+ while(steps++<5&&app.state().scene?.dialogue?.length>1&&
+   app.state().scene.index<app.state().scene.dialogue.length-1){
+  const advance=app.elements.choices.children.find(x=>x.textContent.includes('Continue'));
+  assert.ok(advance,'Conversation needs a Continue action');advance.onclick();
+ }
+}
 test('RPG boots at home with four life statistics and location activities',()=>{
  const r=launch();
  assert.match(r.elements.whereLabel.textContent,/HOME/);
@@ -77,7 +85,7 @@ test('encounter resumes through a reload and rewards exactly once',()=>{
 test('duel battle result applies one preparation bonus only once',()=>{
  const r=launch({day:5,slot:0,location:'shop',preparation:2});
  const hana=r.elements.people.children.find(x=>x.children[1]?.children[0]?.textContent==='Hana Mizuno');
- assert.ok(hana);hana.onclick();
+ assert.ok(hana);hana.onclick();finishGreeting(r);
  const challenge=r.elements.choices.children.find(x=>x.textContent.includes('Challenge to a duel'));
  assert.ok(challenge);challenge.onclick();r.elements.preDuelSkip.onclick();
  const d=r.state().pendingDuel;assert.ok(d);
@@ -316,7 +324,7 @@ test('Elio quest launches a real deck duel and rewards a saved result only once'
 test('an invitation schedules a real NPC meeting without advancing time',()=>{
  const r=launch({day:5,slot:0,location:'shop'});
  const hana=r.elements.people.children.find(x=>x.children?.[1]?.children?.[0]?.textContent==='Hana Mizuno');
- assert.ok(hana,'Hana should be at the shop on the morning of Day 5');hana.onclick();
+ assert.ok(hana,'Hana should be at the shop on the morning of Day 5');hana.onclick();finishGreeting(r);
  const invite=r.elements.choices.children.find(x=>x.textContent.includes('Invite to a future meet-up'));
  assert.ok(invite);invite.onclick();
  const offer=r.elements.choices.children.find(x=>x.textContent.startsWith('Day '));
@@ -329,7 +337,7 @@ test('an invitation schedules a real NPC meeting without advancing time',()=>{
 });
 test('attending a scheduled meet-up uses exactly one period and awards affection/trust once',()=>{
  const fresh=launch({day:5,slot:0,location:'shop'});
- const hana=fresh.elements.people.children.find(x=>x.children?.[1]?.children?.[0]?.textContent==='Hana Mizuno');hana.onclick();
+ const hana=fresh.elements.people.children.find(x=>x.children?.[1]?.children?.[0]?.textContent==='Hana Mizuno');hana.onclick();finishGreeting(fresh);
  fresh.elements.choices.children.find(x=>x.textContent.includes('Invite to a future meet-up')).onclick();
  fresh.elements.choices.children.find(x=>x.textContent.startsWith('Day ')).onclick();
  const scheduled=fresh.state().appointments[0];
@@ -345,7 +353,7 @@ test('attending a scheduled meet-up uses exactly one period and awards affection
 });
 test('skipping a booked meet-up only reduces trust once after its time has passed',()=>{
  const first=launch({day:5,slot:0,location:'shop',relationships:{hana:{affection:4,trust:3}},bonds:{hana:{affection:4,trust:3,duels:0}}});
- first.elements.people.children.find(x=>x.children?.[1]?.children?.[0]?.textContent==='Hana Mizuno').onclick();
+ first.elements.people.children.find(x=>x.children?.[1]?.children?.[0]?.textContent==='Hana Mizuno').onclick();finishGreeting(first);
  first.elements.choices.children.find(x=>x.textContent.includes('Invite to a future meet-up')).onclick();
  first.elements.choices.children.find(x=>x.textContent.startsWith('Day ')).onclick();
  const plan=first.state().appointments[0];
@@ -375,7 +383,7 @@ test('social daily intention can be fulfilled by a normal hangout, persisted exa
  const r=launch({day:5,slot:0,location:'shop'});
  r.elements.dailyIntention.children.find(x=>x.children?.[0]?.textContent==='Make time for someone').onclick();
  const hana=r.elements.people.children.find(x=>x.children[1]?.children[0]?.textContent==='Hana Mizuno');
- assert.ok(hana);hana.onclick();
+ assert.ok(hana);hana.onclick();finishGreeting(r);
  r.elements.choices.children.find(x=>x.textContent.includes('Spend time together')).onclick();
  assert.equal(r.state().dailyIntention.completed,true);
  assert.equal(r.state().intentionsCompleted,1);
@@ -388,7 +396,7 @@ test('duel intention counts authentic defeat, then resets cleanly the next day',
  r.elements.dailyIntention.children.find(x=>x.children?.[0]?.textContent==='Play a meaningful match').onclick();
  const regular=r.elements.people.children.find(x=>!x.disabled);
  assert.ok(regular);
- regular.onclick();
+ regular.onclick();finishGreeting(r);
  r.elements.choices.children.find(x=>x.textContent.includes('Challenge to a duel')).onclick();
  const d=r.state().pendingDuel;assert.ok(d);
  r.elements.preDuelSkip.onclick();
@@ -412,7 +420,7 @@ test('gallery opens with 32 locked CGs; a real first encounter reveals only its 
  assert.equal(r.elements.galleryGrid.children.filter(x=>!x.disabled).length,0);
  r.elements.galleryClose.onclick();
  const person=r.elements.people.children.find(x=>x.children[1]?.children[0]?.textContent==='Hana Mizuno');
- assert.ok(person);person.onclick();
+ assert.ok(person);person.onclick();finishGreeting(r);
  assert.equal(r.state().cgUnlocked.hana_first_meeting.day,5);
  r.elements.galleryBtn.onclick();
  assert.equal(r.elements.galleryGrid.children.filter(x=>!x.disabled).length,1);
@@ -424,7 +432,7 @@ test('gallery opens with 32 locked CGs; a real first encounter reveals only its 
 test('a genuine duel may unlock pre-duel art but still opens the authoritative iframe with no image files',()=>{
  const r=launch({day:8,slot:1,location:'shop',relationships:{hana:{affection:2,trust:2}},bonds:{hana:{affection:2,trust:2,duels:0}}});
  const person=r.elements.people.children.find(x=>x.children[1]?.children[0]?.textContent==='Hana Mizuno');
- assert.ok(person);person.onclick();
+ assert.ok(person);person.onclick();finishGreeting(r);
  r.elements.choices.children.find(x=>x.textContent.includes('Challenge to a duel')).onclick();
  assert.ok(r.state().pendingDuel);
  assert.equal(r.state().cgUnlocked.hana_shop_challenge,undefined,'CG unlocks when the duel actually starts');
@@ -438,7 +446,7 @@ test('a genuine duel may unlock pre-duel art but still opens the authoritative i
 test('ordinary riverside hangout does not grant situation-exclusive summer CG',()=>{
  const r=launch({day:20,slot:1,location:'park',relationships:{marina:{affection:7,trust:3}},bonds:{marina:{affection:7,trust:3,duels:0}}});
  const person=r.elements.people.children.find(x=>x.children[1]?.children[0]?.textContent==='Marina Aoki');
- assert.ok(person);person.onclick();
+ assert.ok(person);person.onclick();finishGreeting(r);
  r.elements.choices.children.find(x=>x.textContent.includes('Spend time together')).onclick();
  assert.equal(r.state().cgUnlocked.marina_beach_towel,undefined);
  const saved=launch(r.state()).state();
@@ -484,7 +492,7 @@ test('planner does not offer shortcuts while player is in a committed story scen
 test('social planner lists three personality-aware choices with cost and favorite hints',()=>{
  const r=launch({day:1,slot:0,location:'shop'});
  const hana=r.elements.people.children.find(x=>x.children?.[1]?.children?.[0]?.textContent==='Hana Mizuno');
- assert.ok(hana);hana.onclick();
+ assert.ok(hana);hana.onclick();finishGreeting(r);
  const plan=r.elements.choices.children.find(x=>x.textContent.includes('Choose a shared activity'));
  assert.ok(plan);plan.onclick();
  const choices=r.elements.choices.children;
@@ -496,7 +504,7 @@ test('social planner lists three personality-aware choices with cost and favorit
 });
 test('real shared activity consumes one period, saves bond and cannot repeat alongside old hangout',()=>{
  const r=launch({day:1,slot:0,location:'shop'});
- r.elements.people.children.find(x=>x.children?.[1]?.children?.[0]?.textContent==='Hana Mizuno').onclick();
+ r.elements.people.children.find(x=>x.children?.[1]?.children?.[0]?.textContent==='Hana Mizuno').onclick();finishGreeting(r);
  r.elements.choices.children.find(x=>x.textContent.includes('Choose a shared activity')).onclick();
  r.elements.choices.children.find(x=>x.textContent.includes('Welcome a new player')).onclick();
  const s=r.state();
@@ -505,13 +513,13 @@ test('real shared activity consumes one period, saves bond and cannot repeat alo
  assert.equal(s.relationships.hana.affection,2);assert.equal(s.relationships.hana.trust,1);
  const reload=launch(s);
  assert.equal(reload.state().socialHistory.hana.count,1);
- reload.elements.people.children.find(x=>x.children?.[1]?.children?.[0]?.textContent==='Hana Mizuno').onclick();
+ reload.elements.people.children.find(x=>x.children?.[1]?.children?.[0]?.textContent==='Hana Mizuno').onclick();finishGreeting(reload);
  assert.ok(reload.elements.choices.children.some(x=>x.textContent.includes('Already spent time today')));
 });
 test('competitive Reina outing increases respect without creating phantom TCG matches',()=>{
  const r=launch({day:1,slot:1,location:'center'});
  const reina=r.elements.people.children.find(x=>x.children?.[1]?.children?.[0]?.textContent==='Reina Kurogane');
- assert.ok(reina);reina.onclick();
+ assert.ok(reina);reina.onclick();finishGreeting(r);
  r.elements.choices.children.find(x=>x.textContent.includes('Choose a shared activity')).onclick();
  const preferred=r.elements.choices.children.find(x=>x.textContent.includes('Practice tricky openings'));
  assert.ok(preferred);assert.match(preferred.textContent,/Favorite/);
@@ -523,7 +531,7 @@ test('competitive Reina outing increases respect without creating phantom TCG ma
 });
 test('insufficient resources leave social dialogue and campaign time unchanged',()=>{
  const r=launch({day:1,slot:0,location:'shop',focus:0,credits:0});
- r.elements.people.children.find(x=>x.children?.[1]?.children?.[0]?.textContent==='Hana Mizuno').onclick();
+ r.elements.people.children.find(x=>x.children?.[1]?.children?.[0]?.textContent==='Hana Mizuno').onclick();finishGreeting(r);
  r.elements.choices.children.find(x=>x.textContent.includes('Choose a shared activity')).onclick();
  const button=r.elements.choices.children.find(x=>x.textContent.includes('Customize deck sleeves'));
  assert.match(button.textContent,/Not enough focus/);
@@ -538,13 +546,13 @@ test('guest cast can use the generic activity framework without changing authore
  const r=launch({day:12,slot:1,location:'center'});
  const person=r.elements.people.children.find(x=>x.children?.[1]?.children?.[0]?.textContent==='Jun Arai');
  assert.ok(person,'Jun follows the current day-12 community center afternoon schedule');
- person.onclick();
+ person.onclick();finishGreeting(r);
  assert.ok(r.elements.choices.children.some(x=>x.textContent.includes('Choose a shared activity')));
 });
 
 test('G3: plan a friendship outing through three-step conversation without spending time',()=>{
  const r=launch({day:5,slot:0,location:'shop'});
- r.elements.people.children.find(x=>x.children?.[1]?.children?.[0]?.textContent==='Hana Mizuno').onclick();
+ r.elements.people.children.find(x=>x.children?.[1]?.children?.[0]?.textContent==='Hana Mizuno').onclick();finishGreeting(r);
  const invite=r.elements.choices.children.find(x=>x.textContent.includes('Plan an activity or date'));
  assert.ok(invite);invite.onclick();
  r.elements.choices.children.find(x=>x.textContent.startsWith('Day ')).onclick();
@@ -561,7 +569,7 @@ test('G3: plan a friendship outing through three-step conversation without spend
 });
 test('G3: honor a planned outing exactly once with a real activity cost and save continuity',()=>{
  const start=launch({day:5,slot:0,location:'shop'});
- start.elements.people.children.find(x=>x.children?.[1]?.children?.[0]?.textContent==='Hana Mizuno').onclick();
+ start.elements.people.children.find(x=>x.children?.[1]?.children?.[0]?.textContent==='Hana Mizuno').onclick();finishGreeting(start);
  start.elements.choices.children.find(x=>x.textContent.includes('Plan an activity or date')).onclick();
  start.elements.choices.children.find(x=>x.textContent.startsWith('Day ')).onclick();
  start.elements.choices.children.find(x=>x.textContent.includes('Welcome a new player')).onclick();
@@ -584,7 +592,7 @@ test('G3: honor a planned outing exactly once with a real activity cost and save
 test('G3: romantic tone is explicitly gated and does not auto-commit a route',()=>{
  const base={day:5,slot:0,location:'shop',relationships:{hana:{affection:5,trust:3}},bonds:{hana:{affection:5,trust:3,duels:0}}};
  const r=launch(base);
- r.elements.people.children.find(x=>x.children?.[1]?.children?.[0]?.textContent==='Hana Mizuno').onclick();
+ r.elements.people.children.find(x=>x.children?.[1]?.children?.[0]?.textContent==='Hana Mizuno').onclick();finishGreeting(r);
  r.elements.choices.children.find(x=>x.textContent.includes('Plan an activity or date')).onclick();
  r.elements.choices.children.find(x=>x.textContent.startsWith('Day ')).onclick();
  r.elements.choices.children.find(x=>x.textContent.includes('Customize deck sleeves')).onclick();
@@ -603,7 +611,7 @@ test('G3: romantic tone is explicitly gated and does not auto-commit a route',()
 });
 test('G3: unavailable romantic tone is disabled instead of accepting a low-bond relationship',()=>{
  const r=launch({day:5,slot:0,location:'shop'});
- r.elements.people.children.find(x=>x.children?.[1]?.children?.[0]?.textContent==='Hana Mizuno').onclick();
+ r.elements.people.children.find(x=>x.children?.[1]?.children?.[0]?.textContent==='Hana Mizuno').onclick();finishGreeting(r);
  r.elements.choices.children.find(x=>x.textContent.includes('Plan an activity or date')).onclick();
  r.elements.choices.children.find(x=>x.textContent.startsWith('Day ')).onclick();
  r.elements.choices.children.find(x=>x.textContent.includes('Customize deck sleeves')).onclick();
@@ -614,7 +622,7 @@ test('G3: unavailable romantic tone is disabled instead of accepting a low-bond 
 });
 test('G3: insufficient funds disable a booked outing and preserve both save and calendar',()=>{
  const r=launch({day:5,slot:0,location:'shop'});
- r.elements.people.children.find(x=>x.children?.[1]?.children?.[0]?.textContent==='Hana Mizuno').onclick();
+ r.elements.people.children.find(x=>x.children?.[1]?.children?.[0]?.textContent==='Hana Mizuno').onclick();finishGreeting(r);
  r.elements.choices.children.find(x=>x.textContent.includes('Plan an activity or date')).onclick();
  r.elements.choices.children.find(x=>x.textContent.startsWith('Day ')).onclick();
  r.elements.choices.children.find(x=>x.textContent.includes('Customize deck sleeves')).onclick();
@@ -628,7 +636,7 @@ test('G3: insufficient funds disable a booked outing and preserve both save and 
 
 test('G4: an NPC challenge pauses before iframe creation and blocks premature or forged results',()=>{
  const r=launch({day:8,slot:1,location:'shop',relationships:{hana:{affection:4,trust:2}},bonds:{hana:{affection:4,trust:2,duels:0}}});
- r.elements.people.children.find(x=>x.children[1]?.children[0]?.textContent==='Hana Mizuno').onclick();
+ r.elements.people.children.find(x=>x.children[1]?.children[0]?.textContent==='Hana Mizuno').onclick();finishGreeting(r);
  r.elements.choices.children.find(x=>x.textContent.includes('Challenge to a duel')).onclick();
  const pending=r.state().pendingDuel;
  assert.equal(pending.preview.phase,'ready');assert.equal(pending.preview.index,0);
@@ -657,7 +665,7 @@ test('G4: an NPC challenge pauses before iframe creation and blocks premature or
 });
 test('G4: a partially viewed pre-duel scene resumes on the same dialogue line after reload',()=>{
  const r=launch({day:5,slot:0,location:'shop'});
- r.elements.people.children.find(x=>x.children[1]?.children[0]?.textContent==='Hana Mizuno').onclick();
+ r.elements.people.children.find(x=>x.children[1]?.children[0]?.textContent==='Hana Mizuno').onclick();finishGreeting(r);
  r.elements.choices.children.find(x=>x.textContent.includes('Challenge to a duel')).onclick();
  const id=r.state().pendingDuel.id;
  r.elements.preDuelNext.onclick();
@@ -678,7 +686,7 @@ test('G4: a partially viewed pre-duel scene resumes on the same dialogue line af
 });
 test('G4: a migrated pending duel from an older save resumes directly, without a second preview',()=>{
  const first=launch({day:1,slot:1,location:'arcade'});
- first.elements.people.children.find(x=>x.children[1]?.children[0]?.textContent==='Yuna Hoshino').onclick();
+ first.elements.people.children.find(x=>x.children[1]?.children[0]?.textContent==='Yuna Hoshino').onclick();finishGreeting(first);
  first.elements.choices.children.find(x=>x.textContent.includes('Challenge to a duel')).onclick();
  const old=first.state();
  delete old.pendingDuel.preview;
@@ -852,7 +860,7 @@ test('RPG collection: pre-duel snapshot locks the actual 60 owned cards until th
  const r=launch({day:5,slot:0,location:'shop',deckJourney:Collection.fresh()});
  r.elements.starterChoices.children[2].onclick();
  const before=r.state().deckJourney.deck.join(',');
- r.elements.people.children.find(x=>x.children?.[1]?.children?.[0]?.textContent==='Hana Mizuno').onclick();
+ r.elements.people.children.find(x=>x.children?.[1]?.children?.[0]?.textContent==='Hana Mizuno').onclick();finishGreeting(r);
  r.elements.choices.children.find(x=>x.textContent.includes('Challenge to a duel')).onclick();
  const pending=r.state().pendingDuel;
  assert.equal(pending.playerDeck,'custom');assert.equal(pending.deckCards.join(','),before);
@@ -866,7 +874,7 @@ test('RPG collection: pre-duel snapshot locks the actual 60 owned cards until th
 test('RPG victories award a ten-card booster, displayed once and safe against duplicate match receipts',()=>{
  const r=launch({day:5,slot:0,location:'shop',deckJourney:Collection.fresh()});
  r.elements.starterChoices.children[0].onclick();
- r.elements.people.children.find(x=>x.children?.[1]?.children?.[0]?.textContent==='Hana Mizuno').onclick();
+ r.elements.people.children.find(x=>x.children?.[1]?.children?.[0]?.textContent==='Hana Mizuno').onclick();finishGreeting(r);
  r.elements.choices.children.find(x=>x.textContent.includes('Challenge to a duel')).onclick();
  const pending=r.state().pendingDuel;
  r.elements.preDuelSkip.onclick();
@@ -907,7 +915,7 @@ test('shop booster reveal survives page reload without charging another 20 credi
 test('daily Talk is an actual NPC / protagonist exchange, with no extra time cost',()=>{
  const r=launch({day:1,slot:0,location:'shop'});
  const hana=r.elements.people.children.find(x=>x.children?.[1]?.children?.[0]?.textContent==='Hana Mizuno');
- assert.ok(hana);hana.onclick();
+ assert.ok(hana);hana.onclick();finishGreeting(r);
  const talk=r.elements.choices.children.find(x=>x.textContent.startsWith('Talk'));
  assert.ok(talk);talk.onclick();
  const first=r.elements.line.textContent;
