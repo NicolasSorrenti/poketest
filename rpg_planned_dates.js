@@ -22,7 +22,7 @@
    if(!romanticTags.has(activity.tag))return 'Choose a relaxed, creative or playful activity for a date';
    if(s.partner&&s.partner!==npc)return 'You are already committed to someone else';
    const relationship=s.relationships?.[npc]||s.bonds?.[npc]||{};
-   if((relationship.affection||0)<4||(relationship.trust||0)<2)return 'Build affection (4) and trust (2) before suggesting a date';
+   if((relationship.affection||0)<3||(relationship.trust||0)<1)return 'Build a genuine connection before suggesting a date (3 affection, 1 trust)';
   }
   return null;
  }
