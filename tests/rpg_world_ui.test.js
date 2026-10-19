@@ -514,8 +514,11 @@ test('real shared activity consumes one period, saves bond and cannot repeat alo
  const reload=launch(s);
  assert.equal(reload.state().socialHistory.hana.count,1);
  reload.elements.people.children.find(x=>x.children?.[1]?.children?.[0]?.textContent==='Hana Mizuno').onclick();finishGreeting(reload);
- reload.act('socialPlan:hana');
- assert.ok(reload.elements.choices.children.some(x=>x.textContent.includes('Already spent time today')));
+ const beforeRepeat=reload.state();
+ reload.act('socialDo:hana:shop_welcome');
+ assert.equal(reload.state().socialHistory.hana.count,1,'same-day activity cannot repeat');
+ assert.deepEqual(reload.state().relationships.hana,beforeRepeat.relationships.hana,'repeat grants no extra bonds');
+ assert.equal(reload.state().slot,beforeRepeat.slot,'repeat consumes no additional time');
 });
 test('competitive Reina outing increases respect without creating phantom TCG matches',()=>{
  const r=launch({day:1,slot:1,location:'center'});
@@ -845,7 +848,9 @@ test('RPG collection: a training pack unlocks owned cards and full Deck Studio n
  const r=launch({day:5,slot:0,location:'shop',credits:80,deckJourney:Collection.fresh()});
  r.elements.starterChoices.children[0].onclick();
  const original=r.state().deckJourney.deck.join(',');
- const buy=r.elements.deckCollection.children.find(x=>x.textContent.includes('Buy training pack'));
+ const store=r.elements.deckCollection.children.find(x=>x.textContent.includes('Browse booster packs'));
+ assert.ok(store,'boosters are purchased in the shop UI, not the collection summary');store.onclick();
+ const buy=r.elements.boosterShopGrid.children.flatMap(x=>x.children).find(x=>x.className==='booster-offer-buy'&&!x.disabled&&x.textContent.includes('Buy'));
  assert.ok(buy);buy.onclick();
  const afterPack=r.state();
  assert.equal(afterPack.credits,60);assert.equal(afterPack.deckJourney.packs,1);
@@ -901,7 +906,10 @@ test('RPG victories award a ten-card booster, displayed once and safe against du
 test('shop booster reveal survives page reload without charging another 20 credits',()=>{
  const r=launch({day:5,slot:0,location:'shop',credits:80,deckJourney:Collection.fresh()});
  r.elements.starterChoices.children[1].onclick();
- r.elements.deckCollection.children.find(x=>x.textContent.includes('Buy training pack')).onclick();
+ const store=r.elements.deckCollection.children.find(x=>x.textContent.includes('Browse booster packs'));
+ assert.ok(store);store.onclick();
+ const buy=r.elements.boosterShopGrid.children.flatMap(x=>x.children).find(x=>x.className==='booster-offer-buy'&&!x.disabled&&x.textContent.includes('Buy'));
+ assert.ok(buy);buy.onclick();
  assert.equal(r.state().credits,60);
  assert.equal(r.elements.packCards.children.length,10);
  const again=launch(r.state());
@@ -917,8 +925,8 @@ test('daily Talk is an actual NPC / protagonist exchange, with no extra time cos
  const r=launch({day:1,slot:0,location:'shop'});
  const hana=r.elements.people.children.find(x=>x.children?.[1]?.children?.[0]?.textContent==='Hana Mizuno');
  assert.ok(hana);hana.onclick();finishGreeting(r);
- const talk=r.elements.choices.children.find(x=>x.textContent.startsWith('Talk'));
- assert.ok(talk);talk.onclick();
+ const talk=r.elements.characterActions.children.find(x=>x.textContent.includes('Talk'));
+ assert.ok(talk,'current VN keeps free Talk in the compact character action bar');talk.onclick();
  const first=r.elements.line.textContent;
  assert.equal(r.elements.speaker.textContent,'Hana Mizuno');
  assert.equal(r.elements.choices.children.length,1,'chat should advance one line at a time');
@@ -931,7 +939,7 @@ test('daily Talk is an actual NPC / protagonist exchange, with no extra time cos
  r.elements.choices.children[0].onclick();
  assert.equal(r.elements.speaker.textContent,'Hana Mizuno');
  assert.notEqual(r.elements.line.textContent,first);
- assert.ok(r.elements.choices.children.some(x=>x.textContent.includes('Goodbye')),'action menu returns after the exchange');
+ assert.ok(r.elements.characterActions.children.some(x=>x.textContent.includes('Talk')),'talk remains available outside the dialogue box');
  assert.equal(r.state().day,1);assert.equal(r.state().slot,0);
  assert.ok(r.state().scene.dialogue.length>=5,'save should preserve the conversation');
 });
@@ -961,7 +969,7 @@ test('a first meeting plays its greeting scene before actions and survives reloa
  assert.equal(reloaded.state().scene.index,1);
  reloaded.elements.choices.children[0].onclick();
  assert.equal(reloaded.elements.speaker.textContent,'Hana Mizuno');
- assert.ok(reloaded.elements.choices.children.some(x=>x.textContent.includes('Talk')));
+ assert.ok(reloaded.elements.characterActions.children.some(x=>x.textContent.includes('Talk')),'action bar returns after greeting');
  assert.equal(reloaded.state().slot,0);
 });
 
@@ -1020,7 +1028,7 @@ test('occasional natural dialogue invitation opens the existing social system wi
   .find(({day,slot,place})=>place&&place!=='home'&&
    Conversations.choices({day,slot,hungOut:{},appointments:[]},'hana').some(([,action])=>action==='socialPlan:hana'));
  assert.ok(match,'Hana offers an optional invitation somewhere in the opening weeks');
- const r=launch(match),hana=r.elements.people.children.find(x=>x.children?.[1]?.children?.[0]?.textContent==='Hana Mizuno');
+ const r=launch({...match,location:match.place}),hana=r.elements.people.children.find(x=>x.children?.[1]?.children?.[0]?.textContent==='Hana Mizuno');
  assert.ok(hana);hana.onclick();finishGreeting(r);
  const before=r.state();
  assert.equal(before.relationships.hana.affection,0);
