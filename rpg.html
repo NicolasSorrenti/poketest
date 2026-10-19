@@ -214,6 +214,13 @@
  <p>Three modest mixed-type teams. Earn cards, buy training packs, and improve your list across the 90-day season. Your choice is permanent for this run.</p>
  <div id="starterChoices" class="starter-choices"></div>
 </dialog>
+<dialog id="boosterShopDialog" class="modal booster-shop-dialog" aria-label="The Lucky Draw booster shop">
+ <div class="modal-heading"><div><small>THE LUCKY DRAW · NEO HARBOR</small><h2>Booster Shop</h2></div><button id="boosterShopClose" type="button">✕ Close</button></div>
+ <p>Ten random cards per pack · At least one rare and one Basic Energy. Unlock expansions through the season, relationships, and tournaments.</p>
+ <div class="booster-shop-balance" id="boosterShopBalance" aria-live="polite"></div>
+ <div class="booster-shop-grid" id="boosterShopGrid" aria-label="Available and locked booster packs"></div>
+ <p id="boosterShopStatus" class="booster-shop-status" aria-live="polite"></p>
+</dialog>
 <dialog id="packDialog" class="modal pack-reveal-dialog" aria-label="Open your ten-card booster" aria-modal="true">
  <div class="pack-reveal-header"><div><small>✦ NEO HARBOR · CARD REWARDS</small><h2 id="packTitle">Booster Pack</h2><p>Ten random cards, including a rare and an Energy. Tap to reveal them.</p></div></div>
  <div class="pack-giver"><div id="packGiver" class="pack-giver-image"></div><strong id="packGiverName"></strong></div>
