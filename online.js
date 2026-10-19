@@ -35,7 +35,7 @@
  const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
  let modalDecisionId=null,lastFieldDecisionId=null;
  let token=null,roomCode=null,current=null,selectedHand=null,targetMode=null,busy=false,decisionSelection=new Set(),lastDecision=null,chatSeq=-1,chatBusy=false;
- let handOpen=false,powersOpen=false,chatOpen=false,logOpen=false,seenChatSeq=-1,lastCoinSeq=null,coinQueue=[],coinTimer=null,lastKoFeedSeq=null;
+ let handOpen=false,restoreHandAfterTarget=false,powersOpen=false,chatOpen=false,logOpen=false,seenChatSeq=-1,lastCoinSeq=null,coinQueue=[],coinTimer=null,lastKoFeedSeq=null;
  const watching=()=>!!current?.spectator;
  const side=()=>current?.you??0;
  const command=(type,payload={})=>({type,payload});
@@ -86,14 +86,14 @@
 
  async function send(action){if(!current||busy||watching())return;busy=true;clearError();try{
   const result=await api('action',{method:'POST',body:JSON.stringify({code:roomCode,revision:current.revision,command:action})});
-  preview.hide();current=result;if(action.type!=='choose')setHandOpen(false);selectedHand=null;targetMode=null;decisionSelection.clear();render();
+  preview.hide();current=result;if(restoreHandAfterTarget){restoreHandAfterTarget=false;setHandOpen(true);}selectedHand=null;targetMode=null;decisionSelection.clear();render();
  }catch(e){fail(e);}finally{busy=false;render();}}
  async function openRoom(kind){if(busy)return;busy=true;$('startupError').textContent='';try{
   const deck=$('deck').value;
   const suppliedCode=$('joinCode').value.trim().toUpperCase();
   const body={deck,name:$('nickname').value,...(deck==='custom'?{customDeck:JSON.parse(localStorage.getItem('neoCampusCustomGymDeck')||'null')}:{}),...(suppliedCode?{code:suppliedCode}:{})};
   const data=await api(kind,{method:'POST',body:JSON.stringify(body)});
-  feedback.reset();opponentActivity.clear();combat.reset();lobbyDeckDraft=null;token=data.token;roomCode=data.code;chatSeq=-1;seenChatSeq=-1;lastCoinSeq=null;lastKoFeedSeq=null;sessionStorage.setItem('neoOnlineToken',token);sessionStorage.setItem('neoOnlineRoom',roomCode);
+  feedback.reset();opponentActivity.clear();combat.reset();lobbyDeckDraft=null;restoreHandAfterTarget=false;token=data.token;roomCode=data.code;chatSeq=-1;seenChatSeq=-1;lastCoinSeq=null;lastKoFeedSeq=null;sessionStorage.setItem('neoOnlineToken',token);sessionStorage.setItem('neoOnlineRoom',roomCode);
   current=data;render();
  }catch(e){$('startupError').textContent=e.message;}finally{busy=false;}}
  async function lobbyAction(path,payload={}){
@@ -135,7 +135,7 @@
   renderChat(state);
   if(!current||state.revision!==current.revision){const previous=current?.view?.pendingDecision?.id;
    preview.hide();current=state; if(previous!==state.view?.pendingDecision?.id)decisionSelection.clear();
-   selectedHand=null;targetMode=null;render();}
+   restoreHandAfterTarget=false;selectedHand=null;targetMode=null;render();}
   else{current.presence=state.presence;current.spectatorCount=state.spectatorCount;renderPresence();}
  }catch(e){if($('networkStatus'))$('networkStatus').textContent='Disconnected';}
  }
@@ -159,6 +159,28 @@
   if(watching()){root.textContent='Hidden';return;}
   if(!ids?.length){const s=document.createElement('span');s.className='hand-peek-empty';s.textContent='Empty';root.append(s);return;}
   ids.slice(0,3).forEach((id,i)=>{const s=document.createElement('span');s.className='peek-card peek-card-'+i;const src=picture(id);if(src){const img=document.createElement('img');img.alt='';img.src=src;s.append(img);}else{s.textContent='🎴';}root.append(s);});
+ }
+
+ function renderHandFan(ids){
+  const root=$('handFan');root.replaceChildren();
+  if(!ids?.length){root.classList.add('hidden');return;}
+  root.classList.remove('hidden');
+  const shown=ids.slice(0,12),middle=(shown.length-1)/2;
+  const gap=Math.min(59,510/Math.max(1,shown.length-1));
+  shown.forEach((id,i)=>{
+   const c=card(id),el=document.createElement('div'),src=picture(id);
+   el.className='hand-fan-card';
+   el.style.setProperty('--fan-x',((i-middle)*gap).toFixed(1)+'px');
+   el.style.setProperty('--fan-y',(Math.abs(i-middle)*5).toFixed(1)+'px');
+   el.style.setProperty('--fan-angle',((i-middle)*4.8).toFixed(1)+'deg');
+   el.style.zIndex=String(i+1);
+   el.title=c.name;
+   if(src){const img=document.createElement('img');img.src=src;img.alt='';el.append(img);}
+   else{const name=document.createElement('span');name.textContent=c.name;el.append(name);}
+   root.append(el);
+  });
+  if(ids.length>shown.length)root.dataset.extra='+'+(ids.length-shown.length);
+  else delete root.dataset.extra;
  }
  function pendingPrizeChoice(){const d=current?.view?.pendingDecision;return !watching()&&d?.kind==='prize-card'&&d.actor===side()?d:null;}
  function choosePrize(id){const d=pendingPrizeChoice();if(!d||busy||!d.options?.some(o=>o.id===id))return;send(command('choose',{decisionId:d.id,selected:[id]}));}
@@ -289,8 +311,8 @@
    if(!watching())$('lobbyMessage').textContent=!current.joined?'Waiting for your friend to join…':!current.players.every(p=>p.ready)?'Both players must click Ready.':'Both players ready. Host can start the duel.';
   }
  }
- function setTarget(type,payload,title,benchOnly=false){preview.hide();targetMode={type,payload,title,benchOnly};render();}
- function cancelTarget(){targetMode=null;selectedHand=null;preview.hide();render();}
+ function setTarget(type,payload,title,benchOnly=false){preview.hide();if(handOpen){restoreHandAfterTarget=true;setHandOpen(false);}targetMode={type,payload,title,benchOnly};render();}
+ function cancelTarget(){targetMode=null;selectedHand=null;preview.hide();if(restoreHandAfterTarget){restoreHandAfterTarget=false;setHandOpen(true);}render();}
  function pokemonNode(u,ownerRelative,slot){
   const hidden=Boolean(u.secretPlanFaceDown);
   const c=hidden?{name:'Face-down Pokémon',hp:'10',types:['Colorless'],supertype:'Pokémon',subtypes:['Basic'],attacks:[]}:card(u.id),src=hidden?'neo_card_back.svg':picture(u.id),attached=Array.isArray(u.energies)?u.energies:[];
@@ -342,7 +364,7 @@
    if((c.supertype==='Energy'||(c.supertype==='Pokémon'&&c.evolvesFrom))){
     if(selectedHand===index&&targetMode){cancelTarget();return;}
     selectedHand=index;
-    preview.hide();setHandOpen(false);
+    preview.hide();
     setTarget(c.supertype==='Energy'?'attach_energy':'evolve',{handIndex:index},
       c.supertype==='Energy'?`Attach ${c.name} — choose Pokémon`:`Evolve into ${c.name} — choose Pokémon`);
     return;
@@ -433,7 +455,7 @@
   renderPrizes(you.prizeCount,cpu.prizeCount);renderFaceUpPrizes();renderPrizeFallback();renderPresence();renderCoin(v);renderKnockOut(v);
   ux.renderGuide($('turnCoach'),{view:v,me:side(),energyUsed:current.me.energyUsed,targetMode,card,setupConfirmed:current.setupConfirmed});
   setZone('enemyActive',cpu,-1);setZone('enemyBench',cpu,0);setZone('myActive',you,-1);setZone('myBench',you,0);
-  $('handAmount').textContent=`(${you.handCount||0}${watching()?' hidden':''})`;renderHandPeek(you.hand);$('hand').textContent='';(you.hand||[]).forEach((id,i)=>$('hand').append(handCard(id,i,v.phase==='setup')));
+  $('handAmount').textContent=`(${you.handCount||0}${watching()?' hidden':''})`;renderHandPeek(you.hand);renderHandFan(you.hand);$('hand').textContent='';(you.hand||[]).forEach((id,i)=>$('hand').append(handCard(id,i,v.phase==='setup')));
   renderHandActions();$('attacks').textContent='';$('powers').textContent='';
   if(you.active){
    const active=card(you.active.id);
@@ -454,6 +476,8 @@
   const actionsDisabled=watching()||!yourTurn||v.phase!=='game'||!!v.pendingDecision||v.over;
   $('retreatBtn').disabled=actionsDisabled||!you.bench.length;
   $('retreatBtn').title=actionsDisabled?'Retreat on your turn after resolving any choices.':!you.bench.length?'You need a Benched Pokémon to retreat.':'Choose a Benched Pokémon to replace your Active Pokémon.';
+  $('undoBtn').disabled=busy||watching()||!current.undo?.available;
+  $('undoBtn').title=current.undo?.available?'Undo '+current.undo.label:'Available only before random actions, drawing cards, or turn changes';
   $('endBtn').disabled=actionsDisabled;
   $('concedeBtn').disabled=watching()||v.over||v.phase!=='game';
   $('history').textContent='';(v.messages||[]).forEach(x=>{const li=document.createElement('li');li.textContent=x;$('history').append(li);});
@@ -522,6 +546,7 @@
  $('leaveLobby').addEventListener('click',async()=>{if(!current)return;try{await api('leave',{method:'POST',body:JSON.stringify({code:roomCode,revision:current.revision})});newDuel();}catch(e){$('lobbyError').textContent=e.message;}});
  $('copyInvite').addEventListener('click',async()=>{try{if(navigator.clipboard){await navigator.clipboard.writeText($('roomLink').value);}else{$('roomLink').select();document.execCommand('copy');}$('copyInvite').textContent='Copied!';}catch{$('roomLink').select();$('copyInvite').textContent='Select and copy link';}});
  $('reset').addEventListener('click',newDuel);
+ $('undoBtn').addEventListener('click',()=>send(command('undo')));
  $('endBtn').addEventListener('click',()=>send(command('end_turn')));
  $('retreatBtn').addEventListener('click',()=>setTarget('retreat',{},'Choose Benched replacement',true));
  $('concedeBtn').addEventListener('click',()=>{if(confirm('Concede this duel?'))send(command('concede'));});

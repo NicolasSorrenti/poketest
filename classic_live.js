@@ -38,7 +38,7 @@
  const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
  let modalDecisionId=null,lastFieldDecisionId=null;
  let token=null,current=null,selectedHand=null,targetMode=null,busy=false,decisionSelection=new Set();
- let handOpen=false,powersOpen=false,logOpen=false,lastCoinSeq=null,coinQueue=[],coinTimer=null,lastKoMessage="";
+ let handOpen=false,restoreHandAfterTarget=false,powersOpen=false,logOpen=false,lastCoinSeq=null,coinQueue=[],coinTimer=null,lastKoMessage="";
  const command=(type,payload={})=>({type,payload});
  async function api(path,opts={}){
   const headers={'Content-Type':'application/json',...(token?{'X-Duel-Token':token}:{})};
@@ -61,7 +61,8 @@
  async function send(action){if(!current||busy)return;busy=true;clearError();try{
   const result=await api('action',{method:'POST',body:JSON.stringify({revision:current.revision,command:action})});
   const beforePrizes=current?.view?.players?.map(p=>p.prizeCount);preview.hide();current=result;
-  if(action.type!=='choose')setHandOpen(false);selectedHand=null;targetMode=null;decisionSelection.clear();render();
+  if(restoreHandAfterTarget){restoreHandAfterTarget=false;setHandOpen(true);}
+  selectedHand=null;targetMode=null;decisionSelection.clear();render();
   // Let a final knockout reaction appear before returning to the RPG map.
   const prizes=current.view.players;
   const finalKo=rpgMode&&current.view.over&&beforePrizes&&prizes.some((p,i)=>typeof beforePrizes[i]==='number'&&p.prizeCount<beforePrizes[i]);
@@ -70,7 +71,7 @@
  async function start(){if(busy)return;busy=true;$('startupError').textContent='';try{
   const response=await api('create',{method:'POST',body:JSON.stringify({deck:$('deck').value,opponent:$('opponent').value,...($('deck').value==='custom'?{customDeck:JSON.parse(localStorage.getItem('neoCampusCustomGymDeck')||'null')}: {})})});
   feedback.reset();opponentActivity.clear();combat.reset();reactions?.reset();token=response.token;sessionStorage.setItem(rpgKey,token);current=response;
-  selectedHand=null;targetMode=null;decisionSelection.clear();handOpen=false;powersOpen=false;logOpen=false;lastCoinSeq=null;lastKoMessage="";render();
+  selectedHand=null;targetMode=null;decisionSelection.clear();handOpen=false;restoreHandAfterTarget=false;powersOpen=false;logOpen=false;lastCoinSeq=null;lastKoMessage="";render();
  }catch(e){$('startupError').textContent=e.message;}finally{busy=false;}}
 
  function setHandOpen(open){handOpen=!!open;$('handTray').classList.toggle('hidden',!handOpen);$('handPanel').classList.toggle('tray-open',handOpen);$('handToggle').setAttribute('aria-expanded',String(handOpen));$('handToggle').setAttribute('aria-label',handOpen?'Close hand':'Open hand');if(handOpen)setPowersOpen(false);}
@@ -79,6 +80,28 @@
  function renderHandPeek(ids){const root=$('handPeek');root.replaceChildren();
   if(!ids?.length){const t=document.createElement('span');t.className='hand-peek-empty';t.textContent='Empty';root.append(t);return;}
   for(const [i,id] of ids.slice(0,3).entries()){const c=document.createElement('span');c.className='peek-card peek-card-'+i;const src=picture(id);if(src){const img=document.createElement('img');img.src=src;img.alt='';c.append(img);}else c.textContent='🎴';root.append(c);}
+ }
+
+ function renderHandFan(ids){
+  const root=$('handFan');root.replaceChildren();
+  if(!ids?.length){root.classList.add('hidden');return;}
+  root.classList.remove('hidden');
+  const shown=ids.slice(0,12),middle=(shown.length-1)/2;
+  const gap=Math.min(59,510/Math.max(1,shown.length-1));
+  shown.forEach((id,i)=>{
+   const c=card(id),el=document.createElement('div'),src=picture(id);
+   el.className='hand-fan-card';
+   el.style.setProperty('--fan-x',((i-middle)*gap).toFixed(1)+'px');
+   el.style.setProperty('--fan-y',(Math.abs(i-middle)*5).toFixed(1)+'px');
+   el.style.setProperty('--fan-angle',((i-middle)*4.8).toFixed(1)+'deg');
+   el.style.zIndex=String(i+1);
+   el.title=c.name;
+   if(src){const img=document.createElement('img');img.src=src;img.alt='';el.append(img);}
+   else{const name=document.createElement('span');name.textContent=c.name;el.append(name);}
+   root.append(el);
+  });
+  if(ids.length>shown.length)root.dataset.extra='+'+(ids.length-shown.length);
+  else delete root.dataset.extra;
  }
  function pendingPrizeChoice(){const d=current?.view?.pendingDecision;return d?.kind==='prize-card'&&d.actor===0?d:null;}
  function choosePrize(id){const d=pendingPrizeChoice();if(!d||busy||!d.options?.some(o=>o.id===id))return;send(command('choose',{decisionId:d.id,selected:[id]}));}
@@ -132,8 +155,8 @@
   $('fieldChoiceBar').classList.add('hidden');modalDecisionId=null;lastFieldDecisionId=null;
  }
  function newDuel(){clearChoiceUi();opponentActivity.clear();combat.reset();reactions?.reset();feedback.reset();preview.hide();token=null;current=null;selectedHand=null;targetMode=null;handOpen=false;powersOpen=false;logOpen=false;document.body.classList.remove('duel-active','cpu-match');sessionStorage.removeItem(rpgKey);render();}
- function setTarget(type,payload,title,benchOnly=false){preview.hide();setHandOpen(false);targetMode={type,payload,title,benchOnly};render();}
- function cancelTarget(){targetMode=null;selectedHand=null;preview.hide();render();}
+ function setTarget(type,payload,title,benchOnly=false){preview.hide();if(handOpen){restoreHandAfterTarget=true;setHandOpen(false);}targetMode={type,payload,title,benchOnly};render();}
+ function cancelTarget(){targetMode=null;selectedHand=null;preview.hide();if(restoreHandAfterTarget){restoreHandAfterTarget=false;setHandOpen(true);}render();}
  function pokemonNode(u,side,slot){
   const b=document.createElement('button');b.className='poke'+(u.damage>=Number(card(u.id).hp)?' broken':'');
   const c=card(u.id),src=picture(u.id);
@@ -270,7 +293,7 @@
   $('myDiscardBtn').querySelector('b').textContent=you.discard.length;$('oppDiscardBtn').querySelector('b').textContent=cpu.discard.length;
   ux.renderGuide($('turnCoach'),{view:v,me:0,energyUsed:current.you.energyUsed,targetMode,card});
   setZone('enemyActive',cpu,-1);setZone('enemyBench',cpu,0);setZone('myActive',you,-1);setZone('myBench',you,0);
-  $('handAmount').textContent=`(${you.hand.length})`;renderHandPeek(you.hand);$('hand').textContent='';you.hand.forEach((id,i)=>$('hand').append(handCard(id,i,v.phase==='setup')));
+  $('handAmount').textContent=`(${you.hand.length})`;renderHandPeek(you.hand);renderHandFan(you.hand);$('hand').textContent='';you.hand.forEach((id,i)=>$('hand').append(handCard(id,i,v.phase==='setup')));
   renderHandActions();$('attacks').textContent='';$('powers').textContent='';
   if(you.active){
    const active=card(you.active.id);
@@ -291,6 +314,8 @@
   const actionsDisabled=!yourTurn||v.phase!=='game'||!!v.pendingDecision||v.over;
   $('retreatBtn').disabled=actionsDisabled||!you.bench.length;
   $('retreatBtn').title=actionsDisabled?'Retreat on your turn after resolving any choices.':!you.bench.length?'You need a Benched Pokémon to retreat.':'Choose a Benched Pokémon to replace your Active Pokémon.';
+  $('undoBtn').disabled=busy||!current.undo?.available;
+  $('undoBtn').title=current.undo?.available?'Undo '+current.undo.label:'Available only before random actions, drawing cards, or turn changes';
   $('endBtn').disabled=actionsDisabled;
   $('concedeBtn').disabled=v.over||v.phase!=='game'||!yourTurn;
   $('history').textContent='';(v.messages||[]).forEach(x=>{const li=document.createElement('li');li.textContent=x;$('history').append(li);});
@@ -335,6 +360,7 @@
  $('logToggle').addEventListener('click',()=>setLogOpen(!logOpen));$('closeLog').addEventListener('click',()=>setLogOpen(false));
  $('myDiscardBtn').addEventListener('click',()=>openDiscard(0));$('oppDiscardBtn').addEventListener('click',()=>openDiscard(1));
  $('closePile').addEventListener('click',()=>$('pileModal').classList.add('hidden'));$('pileModal').addEventListener('click',e=>{if(e.target===$('pileModal'))$('pileModal').classList.add('hidden');});
+ $('undoBtn').addEventListener('click',()=>send(command('undo')));
  $('endBtn').addEventListener('click',()=>send(command('end_turn')));
  $('retreatBtn').addEventListener('click',()=>setTarget('retreat',{},'Choose Benched replacement',true));
  $('concedeBtn').addEventListener('click',()=>{if(confirm('Concede this duel?'))send(command('concede'));});
