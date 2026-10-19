@@ -146,3 +146,20 @@ test('all character chapter chains can resolve in order and grant only one miles
   assert.ok(s.deckJourney.owned[BONDS.SIGNATURES[npc]]>=1);
  }
 });
+
+test('later supporting chapters react to previous choices, not only affection totals',()=>{
+ for(const npc of Object.keys(SIDE.cast)){
+  const s=make();STORY.normalize(s);
+  const [first,second]=PLAN.byNpc[npc].map(id=>STORY.byId(id));
+  assert.ok(second.openingByFlag,second.id+' has remembered-choice lines');
+  s.day=first.start;s.slot=first.slot;s.location=first.place;
+  STORY.resolve(s,first.id,0);
+  const a=STORY.linesFor(s,second.id)[0].text;
+  const alt=make();STORY.normalize(alt);
+  alt.day=first.start;alt.slot=first.slot;alt.location=first.place;
+  STORY.resolve(alt,first.id,1);
+  const b=STORY.linesFor(alt,second.id)[0].text;
+  assert.notEqual(a,b,npc+' must remember what was said');
+  assert.notEqual(a,second.lines[0].text,npc+' should adapt its follow-up scene');
+ }
+});
