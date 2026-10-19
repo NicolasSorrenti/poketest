@@ -69,12 +69,13 @@
    const affection=Math.max(Number(state?.relationships?.[offer.npc]?.affection)||0,Number(state?.bonds?.[offer.npc]?.affection)||0);
    const story=offer.npc&&Object.keys(state?.storyDone||{}).some(id=>id.startsWith(offer.npc+'_route_')&&state.storyDone[id]);
    const cup=offer.cup&&state?.tournaments?.[offer.cup]?.state==='champion';
-   const unlocked=!offer.npc||state?.day>=offer.day||affection>=3||!!story||!!cup||unique>0;
+   const vouchers=state?.deckJourney?.vouchers?.[set]||0;
+   const unlocked=!offer.npc||state?.day>=offer.day||affection>=3||!!story||!!cup||unique>0||vouchers>0;
    const hint=offer.npc?'Day '+offer.day+' · bond with '+offer.npc+' · or win matching cards'+(offer.cup?' · '+offer.cup+' cup':''):'Available from Day 1';
-   return {...offer,name:info.name,total:info.size,owned:unique,completion:Math.round(100*unique/info.size),unlocked,unlockHint:hint};
+   return {...offer,name:info.name,total:info.size,owned:unique,completion:Math.round(100*unique/info.size),unlocked,vouchers,unlockHint:hint};
   });
  }
- function fresh(){return {starter:null,owned:{},deck:[],draft:null,packs:0,rewards:0,lastPack:null};}
+ function fresh(){return {starter:null,owned:{},deck:[],draft:null,packs:0,rewards:0,lastPack:null,vouchers:{}};}
  function hydrate(state){
   const x=state.deckJourney;if(x===null||x===undefined)return state;
   if(!x||typeof x!=='object'||Array.isArray(x)){state.deckJourney=fresh();return state}
@@ -86,13 +87,15 @@
   for(const [id,n] of Object.entries(rank(x.deck)))x.owned[id]=Math.max(n,x.owned[id]||0);
   if(!Array.isArray(x.draft)||x.draft.length>60||x.draft.some(id=>!allAllowed.has(id)))x.draft=null;
   if(!x.lastPack||!Array.isArray(x.lastPack.cards)||![5,10].includes(x.lastPack.cards.length)||x.lastPack.cards.some(id=>!allAllowed.has(id)))x.lastPack=null;
-  else{x.lastPack.source=x.lastPack.source==='win'?'win':'shop';x.lastPack.opened=x.lastPack.opened===true;}
+  else{x.lastPack.source=['win','shop','gift'].includes(x.lastPack.source)?x.lastPack.source:'shop';x.lastPack.opened=x.lastPack.opened===true;}
+  if(!x.vouchers||typeof x.vouchers!=='object'||Array.isArray(x.vouchers))x.vouchers={};
+  for(const [set,n] of Object.entries(x.vouchers))if(!SETS[set]||!Number.isInteger(n)||n<0||n>99)delete x.vouchers[set];
   x.packs=Number.isInteger(x.packs)&&x.packs>=0?x.packs:0;x.rewards=Number.isInteger(x.rewards)&&x.rewards>=0?x.rewards:0;
   return state;
  }
  function choose(state,id){if(state.deckJourney?.starter)throw Error('Starter deck already chosen');
   const starter=byId.get(id);if(!starter)throw Error('Choose one of the three starter decks');
-  state.deckJourney={starter:id,owned:rank(starter.cards),deck:[...starter.cards],draft:null,packs:0,rewards:0,lastPack:null};state.playerDeck='custom';
+  state.deckJourney={starter:id,owned:rank(starter.cards),deck:[...starter.cards],draft:null,packs:0,rewards:0,lastPack:null,vouchers:{}};state.playerDeck='custom';
   return starter;
  }
  function check(deck,owned){
@@ -162,5 +165,26 @@
   const ids=randomPack(set,rng);
   state.credits-=offer.price;x.packs++;return grant(x,ids,'shop',set,null);
  }
- return Object.freeze({starters,upgrade,ENERGY,SETS,SHOP_OFFERS,shopPacks,CHARACTER_SETS,setForCharacter,randomPack,byId:id=>byId.get(id),fresh,hydrate,choose,check,draft,edit,change,save,cancel,reward,buyPack,rank});
+ function awardSignature(state,id){
+  if(!state?.deckJourney?.starter||!allAllowed.has(id))throw Error('Invalid signature card');
+  const owned=state.deckJourney.owned;owned[id]=(owned[id]||0)+1;
+  return id;
+ }
+ function awardVoucher(state,set){
+  if(!state?.deckJourney?.starter||!SETS[set])throw Error('Invalid booster voucher');
+  const vouchers=state.deckJourney.vouchers||(state.deckJourney.vouchers={});
+  vouchers[set]=(vouchers[set]||0)+1;return vouchers[set];
+ }
+ function redeemVoucher(state,set,rng=Math.random){
+  const x=state?.deckJourney;
+  if(!x?.starter||!SETS[set])throw Error('Invalid booster voucher');
+  if(state.location!=='shop'||state.day>90)throw Error('Redeem booster vouchers at the card shop');
+  if(state.pendingDuel||state.activeStory||state.activeSideQuest||state.activeSituation||state.activeArc||state.activeEncounter)throw Error('Finish the current scene first');
+  if(x.lastPack&&!x.lastPack.opened)throw Error('Reveal your previous booster before opening another');
+  if(!x.vouchers?.[set])throw Error('You have no '+SETS[set].name+' booster vouchers');
+  const ids=randomPack(set,rng);
+  x.vouchers[set]--;x.packs++;
+  return grant(x,ids,'gift',set,null);
+ }
+ return Object.freeze({starters,upgrade,ENERGY,SETS,SHOP_OFFERS,shopPacks,canOwn:id=>allAllowed.has(id),awardSignature,awardVoucher,redeemVoucher,CHARACTER_SETS,setForCharacter,randomPack,byId:id=>byId.get(id),fresh,hydrate,choose,check,draft,edit,change,save,cancel,reward,buyPack,rank});
 });
