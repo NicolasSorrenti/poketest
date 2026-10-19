@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Deck Studio · Neo Harbor RPG</title>
+<link rel="stylesheet" href="/cube_builder.css">
+<link rel="stylesheet" href="/rpg_deck_studio.css">
+</head>
+<body class="rpg-deck-mode">
+<header class="topbar">
+ <a class="back" href="/rpg.html">← Back to Neo Harbor</a>
+ <div class="brand"><span class="star">✦</span><div><small>NEO HARBOR RPG</small><h1>DECK STUDIO</h1></div></div>
+ <div id="deckProfile" class="profile">Your collection</div>
+</header>
+<main id="deckStudio" class="studio" hidden>
+ <div class="studio-context"><span>YOUR COLLECTION · 60-CARD FORMAT</span><span id="collectionSize"></span></div>
+ <div id="rpgDeckBuilder" aria-label="RPG 60-card deck builder"></div>
+ <div id="rpgBuilderActions" class="studio-actions">
+  <p id="saveStatus" role="status" aria-live="polite">Your deck is saved.</p>
+  <button id="saveDeck" class="primary" type="button">Save 60-card deck</button>
+  <button id="discardDraft" class="muted" type="button">Discard changes</button>
+ </div>
+</main>
+<div id="studioError" class="studio-error" role="alert" hidden></div>
+<script src="/rpg_collection.js"></script>
+<script src="/cube_builder_ui.js"></script>
+<script src="/rpg_deck_studio.js" defer></script>
+</body></html>

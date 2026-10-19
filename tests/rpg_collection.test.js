@@ -35,18 +35,22 @@ test('valid swaps preserve exactly 60 cards and save as separate editable draft'
  C.save(s);assert.ok(s.deckJourney.deck.includes(newCard[0]));assert.equal(s.deckJourney.draft,null);
  assert.equal(C.check(s.deckJourney.deck,s.deckJourney.owned).valid,true);
 });
-test('winning earns exactly one card, losing cannot farm rewards',()=>{
+test('winning earns a five-card booster, losing cannot farm rewards',()=>{
  const s=setup();C.choose(s,'tidal_circuit');
  const before=Object.values(s.deckJourney.owned).reduce((a,v)=>a+v,0);
  assert.equal(C.reward(s,false),null);assert.equal(s.deckJourney.rewards,0);
- const win=C.reward(s,true);assert.ok(win);assert.equal(s.deckJourney.rewards,1);
- assert.equal(Object.values(s.deckJourney.owned).reduce((a,v)=>a+v,0),before+1);
+ const win=C.reward(s,true);assert.equal(win.length,5);assert.equal(s.deckJourney.rewards,1);
+ assert.equal(Object.values(s.deckJourney.owned).reduce((a,v)=>a+v,0),before+5);
+ assert.deepEqual(s.deckJourney.lastPack.cards,win);
+ assert.equal(s.deckJourney.lastPack.source,'win');assert.equal(s.deckJourney.lastPack.opened,false);
+ const again=C.reward(s,false);assert.equal(again,null);assert.equal(s.deckJourney.rewards,1);
 });
 test('shop packs spend 20 credits for exactly five owned cards; they cannot buy elsewhere or without funds',()=>{
  const s=setup();C.choose(s,'mind_and_muscle');
  const before=Object.values(s.deckJourney.owned).reduce((a,v)=>a+v,0);
  const cards=C.buyPack(s);assert.equal(cards.length,5);assert.equal(s.credits,60);assert.equal(s.deckJourney.packs,1);
  assert.equal(Object.values(s.deckJourney.owned).reduce((a,v)=>a+v,0),before+5);
+ assert.equal(s.deckJourney.lastPack.source,'shop');assert.equal(s.deckJourney.lastPack.cards.length,5);
  s.location='park';const original=JSON.stringify(s);
  assert.throws(()=>C.buyPack(s),/card shop/);assert.equal(JSON.stringify(s),original);
  s.location='shop';s.credits=19;assert.throws(()=>C.buyPack(s),/20 credits/);
@@ -71,4 +75,34 @@ test('New Game+ resets RPG deck progress but preserves the gallery',()=>{
  const r=E.replay(s,()=>({...setup(),deckJourney:null}));
  assert.equal(r.deckJourney.starter,null);assert.equal(r.playerDeck,'blackout');
  assert.equal(r.cgUnlocked.hana_first_meeting.day,1);
+});
+
+test('dedicated deck studio permits incomplete drafts but never saves an illegal 59-card list',()=>{
+ const s=setup();C.choose(s,'tidal_circuit');
+ const before=[...s.deckJourney.deck];const id=before[0];
+ const draft=C.edit(s,id,-1);
+ assert.equal(draft.length,59);assert.equal(s.deckJourney.deck.length,60);
+ assert.equal(C.check(draft,s.deckJourney.owned).valid,false);
+ assert.throws(()=>C.save(s),/60 cards/);
+ const unchanged=C.edit(s,id,+1);
+ assert.equal(unchanged.length,60);
+ assert.equal(C.check(unchanged,s.deckJourney.owned).valid,true);
+ C.save(s);assert.equal(s.deckJourney.deck.length,60);
+});
+test('deck studio strictly enforces ownership, available copies and Basic Pokémon',()=>{
+ const s=setup();C.choose(s,'ember_garden');
+ assert.throws(()=>C.edit(s,'base1-46',1),/Remove a card/);
+ C.edit(s,'base1-46',-1);
+ assert.throws(()=>C.edit(s,'base1-88',1),/another copy/);
+ C.edit(s,'base1-46',1);
+ assert.throws(()=>C.edit(s,'base1-88',-1),/not in your deck/);
+ const b=JSON.stringify(s.deckJourney.deck);assert.equal(JSON.stringify(s.deckJourney.deck),b);
+});
+test('unopened five-card booster persists on reload until player views it',()=>{
+ const s=setup();C.choose(s,'ember_garden');C.reward(s,true);
+ const before=JSON.stringify(s.deckJourney);
+ const reloaded=JSON.parse(JSON.stringify(s));C.hydrate(reloaded);
+ assert.equal(JSON.stringify(reloaded.deckJourney),before);
+ reloaded.deckJourney.lastPack.opened=true;C.hydrate(reloaded);
+ assert.equal(reloaded.deckJourney.lastPack.opened,true);
 });

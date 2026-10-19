@@ -494,7 +494,41 @@ function act(action){
  if(type==='hang'){if(state.hungOut[state.day+':'+id])return say(c.name,'I enjoyed our time today. Let us make plans another day.',options(id));state.hungOut[state.day+':'+id]=true;bond.affection+=2;bond.trust++;state.relationships[id].affection+=2;state.relationships[id].trust++;log('Spent time with '+c.name+'.');recordIntention('hangout');const memories=recordCG('hangout',id);advance();state.selected=null;say(c.name,Array.isArray(c.hangouts)&&c.hangouts.length?c.hangouts[(state.day+bond.duels)%c.hangouts.length]:'That was a lovely way to spend part of the day. See you around.');showCGMoment(memories[0]);return;}
 }
 
-const cardNames=new Map();
+const cardNames=new Map(),cardImages=new Map();
+
+function showPackReveal(){
+ const pack=state.deckJourney?.lastPack,modal=$('packDialog');
+ if(!pack||pack.opened||modal.open)return;
+ $('packTitle').textContent=pack.source==='win'?'Victory Booster · Five Cards':'Training Booster · Five Cards';
+ const target=$('packCards');target.replaceChildren();
+ const cards=[];
+ for(const [index,id] of pack.cards.entries()){
+  const button=document.createElement('button');button.type='button';button.className='pack-card';button.title='Reveal card '+(index+1);
+  const back=document.createElement('span');back.className='pack-card-back';back.textContent='✦';button.append(back);
+  const reveal=()=>{
+   if(button.className.includes('revealed'))return;
+   button.className+=' revealed';button.replaceChildren();
+   const detail=document.createElement('strong');detail.textContent=labelCard(id);
+   const info=cardNames.get(id)||id;
+   const row=document.createElement('span');row.className='pack-card-number';row.textContent='CARD '+(index+1)+' / 5';
+   button.append(row);
+   const data=cardImages.get(id);
+   if(data){
+    const img=document.createElement('img');img.alt=info;img.src=data;img.loading='lazy';img.onerror=()=>img.replaceWith(document.createTextNode('✦'));
+    button.append(img);
+   }else{
+    const symbol=document.createElement('span');symbol.className='pack-card-placeholder';symbol.textContent='✦';button.append(symbol);
+   }
+   button.append(detail);
+  };
+  button.onclick=reveal;cards.push(reveal);target.append(button);
+ }
+ $('packRevealAll').onclick=()=>cards.forEach(show=>show());
+ $('packContinue').onclick=()=>{pack.opened=true;persist();modal.close();};
+ modal.addEventListener('cancel',e=>e.preventDefault(),{once:true});
+ modal.showModal();
+}
+
 const labelCard=id=>cardNames.get(id)||id.replace('base1-','Base #');
 function controlsLocked(){return state.day>90||!!state.pendingDuel||!!state.activeSituation||!!state.activeStory||!!state.activeSideQuest||!!state.activeArc||!!state.activeEncounter;}
 function showStarterChoice(){
@@ -537,13 +571,15 @@ function renderCollection(){
  picker.value='custom';picker.disabled=true;
  const total=Object.values(journey.owned).reduce((a,n)=>a+n,0);
  const summary=document.createElement('p');summary.textContent=starter.name+' · 60-card deck · '+total+' owned cards · '+journey.packs+' packs opened';
+ const studio=document.createElement('button');studio.className='studio-open';studio.textContent='✦ Open full Deck Studio · free';studio.disabled=locked;
+ studio.onclick=()=>{persist();location.assign('/rpg_deck_studio.html');};
  const edit=document.createElement('button');edit.textContent='Edit your 60-card deck · free';edit.disabled=locked;edit.onclick=openDeckWorkshop;
- root.append(summary,edit);
+ root.append(summary,studio,edit);
  if(state.location==='shop'){
   const buy=document.createElement('button');buy.textContent='Buy training pack · 5 cards · 20 credits';
   buy.disabled=locked||state.credits<20;
   buy.onclick=()=>{
-   try{const cards=COLLECT.buyPack(state);log('Opened a training pack: '+cards.map(labelCard).join(', ')+'.');persist();say('Card Shop','Five new cards added to your collection: '+cards.map(labelCard).join(', ')+'. Edit your deck whenever you want.');}
+   try{const cards=COLLECT.buyPack(state);log('Opened a training pack: '+cards.map(labelCard).join(', ')+'.');persist();say('Card Shop','Five new cards added to your collection. Open your pack, then visit the Deck Studio to build with them.');showPackReveal();}
    catch(e){$('notice').textContent=e.message;}
   };
   root.append(buy);
@@ -598,7 +634,7 @@ $('deckEditClose').onclick=()=>closeDeckWorkshop(true);
 async function loadCardNames(){
  try{const res=await fetch('/cards/base1.json');if(!res.ok)return;
   const cards=await res.json();if(!Array.isArray(cards))return;
-  for(const c of cards)if(c?.id&&c.name)cardNames.set(c.id,c.name);
+  for(const c of cards)if(c?.id&&c.name){cardNames.set(c.id,c.name);if(/^https:\/\//.test(c.images?.small||''))cardImages.set(c.id,c.images.small);}
   renderCollection();
  }catch{}
 }
@@ -690,12 +726,13 @@ window.addEventListener('message',ev=>{
   if(sideOutcome)log('Completed side quest: '+sideOutcome.title+'.');
  if(personalOutcome)log('A special rivalry challenge reached its result.');
  const awarded=COLLECT.reward(state,receipt.outcome==='Victory');
- if(awarded)log('Won a new card for your collection: '+labelCard(awarded)+'.');
+ if(awarded)log('Won a five-card booster: '+awarded.map(labelCard).join(', ')+'.');
  state.lastDuelReceipt=receipt;state.pendingDuel=null;
  sessionStorage.removeItem(BRIDGE.sessionKey(duel.id));
  sessionStorage.removeItem('neoRpgDeck:'+duel.id);
  advance();$('duel').hidden=true;$('battle').src='about:blank';
  const c=cast[duel.npc];say(c.name,sideOutcome?.text||personalOutcome|| (receipt.outcome==='Victory'?c.duelWin:receipt.outcome==='Draw'?'A hard-fought draw. Let us play again.':c.duelLose));
+ if(awarded)showPackReveal();
 });
 function renderAppointments(locked){
  const root=$('appointments');root.replaceChildren();
@@ -993,6 +1030,7 @@ const rpgPanelGroups={
 };
 let rpgActivePanel='plans',rpgLocalTab='people';
 function ensureRpgLayout(){
+ if(typeof document.querySelector!=='function')return;
  const sidebar=document.querySelector('.sidebar'),sceneRoot=$('scene');
  if(!sidebar||!sceneRoot||$('rpgPanelTabs'))return;
  const nav=document.createElement('nav');nav.id='rpgPanelTabs';nav.className='rpg-panel-tabs';nav.setAttribute('aria-label','RPG information');
@@ -1007,6 +1045,7 @@ function ensureRpgLayout(){
  dock.setAttribute('aria-label','Things to do here');sceneRoot.append(dock);
 }
 function refreshRpgPanels(){
+ if(typeof document.querySelector!=='function')return;
  const sidebar=document.querySelector('.sidebar');if(!sidebar)return;
  for(const section of sidebar.querySelectorAll(':scope > .side-section')){
   const heading=section.querySelector('.sidebar-title span')?.textContent||'';
@@ -1029,6 +1068,7 @@ function dialogueExpression(line){
  return 'neutral';
 }
 function renderRpgCast(ids,locked,shown,portraitId){
+ if(typeof document.querySelector!=='function')return;
  const root=$('rpgSceneCast');if(!root)return;
  const speaking=Object.keys(cast).find(id=>shown?.speaker===cast[id].name||shown?.speaker===id);
  const focused=speaking||((shown?.line||locked)?portraitId:null);
@@ -1088,6 +1128,7 @@ function cleanRpgLabel(value){
   .trim();
 }
 function simplifyRpgLabels(){
+ if(typeof document.querySelector!=='function')return;
  for(const id of ['choices','storyEvents','situationEvents','townActivities','townEncounters','sideQuestEvents','activities']){
   const root=$(id);if(!root)continue;
   for(const button of root.querySelectorAll('button')){
@@ -1098,6 +1139,7 @@ function simplifyRpgLabels(){
  }
 }
 function renderRpgActions(locked,shown){
+ if(typeof document.querySelector!=='function')return;
  const dock=$('rpgActionDock');if(!dock)return;
  const hasDialogue=locked||((shown?.choices?.length||0)>0)||!!(shown?.line);
  $('dialogue').hidden=!hasDialogue;
@@ -1120,7 +1162,7 @@ function renderRpgActions(locked,shown){
   if(source.tagName!=='BUTTON'||source.disabled)continue;
   const b=document.createElement('button');b.className='rpg-dock-action';
   const text=source.querySelector('strong')?.textContent||source.textContent||'';
-  b.textContent=text.replace(/\\s*·\\s*⏳[^·]*/g,'').replace(/\\s*·\\s*\\+\\d+[^·]*/g,'').trim();
+  b.textContent=text.replace(/\s*·\s*⏳[^·]*/g,'').replace(/\s*·\s*\+\d+[^·]*/g,'').trim();
   b.onclick=()=>source.click();body.append(b);
  }
  if(!body.children.length){const p=document.createElement('p');p.textContent=rpgLocalTab==='people'?'Nobody is around right now. Try another period.':'Nothing available here right now.';body.append(p);}
@@ -1330,6 +1372,7 @@ function render(){
  if($('deckPicker')?.options.length)$('deckPicker').value=state.playerDeck;
 }
 
+$('deckStudioBtn').onclick=()=>{if(!controlsLocked()&&state.deckJourney?.starter){persist();location.assign('/rpg_deck_studio.html');}};
 $('galleryBtn').onclick=openGallery;
 $('galleryClose').onclick=()=>$('galleryDialog').close();
 $('galleryCharacter').onchange=renderGallery;$('galleryCategory').onchange=renderGallery;$('galleryUnseen').onchange=renderGallery;
@@ -1360,7 +1403,7 @@ async function initDecks(){
   }
  }catch(e){$('notice').textContent='Deck list unavailable: '+e.message;}
 }
-persist();render();initDecks();loadCardNames();if(state.deckJourney&&!state.deckJourney.starter&&!state.ended&&!state.pendingDuel)showStarterChoice();if(state.pendingDuel){
+persist();render();initDecks();loadCardNames();if(state.deckJourney&&!state.deckJourney.starter&&!state.ended&&!state.pendingDuel)showStarterChoice();if(state.deckJourney?.lastPack&&!state.deckJourney.lastPack.opened&&!state.pendingDuel)showPackReveal();if(state.pendingDuel){
  if(PRE.isReady(state.pendingDuel)){
   $('duel').hidden=true;$('battle').src='about:blank';showPreparedDuel();
  }else{

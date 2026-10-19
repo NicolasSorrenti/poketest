@@ -23,7 +23,10 @@
   });
   n.src=src[0];return n;
  }
- function create({root,actionElement,onChange}){
+ function create({root,actionElement,onChange,config={}}){
+  const targetSize=Number.isInteger(config.targetSize)&&config.targetSize>0?config.targetSize:40;
+  const unlimitedIds=new Set(config.unlimitedIds||[]);
+  const nameLimit=config.nameLimit!==false;
   if(!root||typeof onChange!=='function')throw Error('Missing Cube builder root/callback');
   root.classList.add('cube-builder-ui');
   root.innerHTML=[
@@ -38,14 +41,19 @@
    '<div id="cbDeckList"></div><div id="cbActionSlot"></div></aside></div>'
   ].join('');
   const $=id=>root.querySelector('#'+id);
+  if(config.eyebrow)root.querySelector('.cb-eyebrow').textContent=config.eyebrow;
+  if(config.heading)root.querySelector('.cb-header h2').textContent=config.heading;
+  if(config.description)root.querySelector('.cb-header p').textContent=config.description;
+  if(config.collectionLabel)$('cbSearch').placeholder='Search '+config.collectionLabel;
+  if(config.canClear===false)$('cbClear').hidden=true;
   if(actionElement)$('cbActionSlot').append(actionElement);
   let filter='all',query='',sort='name',selectedId=null,deck=[],locked=false,cards=[],limits=new Map(),index=new Map();
   const amount=id=>deck.filter(x=>x===id).length;
   const basic=id=>{const c=index.get(id);return c?.supertype==='Pokémon'&&(c.subtypes||[]).some(x=>x==='Basic'||x==='Baby');};
   const group=c=>GROUPS.includes(c?.supertype)?c.supertype:'Trainer';
   const sameName=name=>deck.filter(id=>index.get(id)?.name===name).length;
-  const canAdd=c=>!locked&&deck.length<40&&amount(c.id)<(limits.get(c.id)||0)&&
-   (group(c)==='Energy'||sameName(c.name)<4);
+  const canAdd=c=>!locked&&deck.length<targetSize&&amount(c.id)<(limits.get(c.id)||0)&&
+   (unlimitedIds.has(c.id)||(!nameLimit?amount(c.id)<4:group(c)==='Energy'||sameName(c.name)<4));
   const canRemove=c=>!locked&&amount(c.id)>0;
   function change(c,by){
    if((by>0&&!canAdd(c))||(by<0&&!canRemove(c)))return;
@@ -86,6 +94,7 @@
     panel.append(line);
    }
    panel.append(node('p','cb-muted',group(c)==='Energy'?
+    config.collectionLabel?'Owned: '+limits.get(c.id)+' · In deck: '+amount(c.id):
     'Add unlimited Basic Energy to your deck.':
     'Drafted: '+limits.get(c.id)+' · In deck: '+amount(c.id)));
    if(!locked){
@@ -128,14 +137,17 @@
    if(!pool.children.length)pool.append(node('p','cb-empty','No cards match your search.'));
   }
   function showDeck(){
-   $('cbTotal').textContent=deck.length+' / 40 cards';
-   $('cbDeckTotal').textContent=deck.length+' / 40 cards';
-   $('cbFill').style.width=Math.min(100,deck.length/40*100)+'%';
+   $('cbTotal').textContent=deck.length+' / '+targetSize+' cards';
+   $('cbDeckTotal').textContent=deck.length+' / '+targetSize+' cards';
+   $('cbFill').style.width=Math.min(100,deck.length/targetSize*100)+'%';
    const basics=deck.filter(basic).length;
-   $('cbValidation').textContent=locked?'Deck locked':deck.length===40?
-    basics?'✓ Ready to play':'Add at least one Basic Pokémon':
-    (40-deck.length)+' more cards · '+basics+' Basic Pokémon';
-   $('cbValidation').classList.toggle('ready',deck.length===40&&basics>0);
+   const validation=typeof config.validate==='function'?config.validate(deck):null;
+   const ready=validation?validation.valid:deck.length===targetSize&&basics>0;
+   $('cbValidation').textContent=locked?'Deck locked':validation?
+    ready?'✓ Legal deck — ready to save':validation.errors?.[0]||'Deck needs attention':
+    ready?'✓ Ready to play':deck.length===targetSize?'Add at least one Basic Pokémon':
+    (targetSize-deck.length)+' more cards · '+basics+' Basic Pokémon';
+   $('cbValidation').classList.toggle('ready',ready);
    const chosen=GROUPS.map(g=>[g,cards.filter(c=>group(c)===g&&amount(c.id))]);
    const breakdown=$('cbBreakdown');breakdown.replaceChildren();
    const list=$('cbDeckList');list.replaceChildren();
@@ -165,15 +177,15 @@
    if(locked||!deck.length||!confirm('Remove all cards from your deck?'))return;
    deck=[];onChange([]);render();
   };
-  return {update({drafted=[],energyIds={},deck:nextDeck=[],locked:isLocked=false}={}){
+  return {update({drafted=[],energyIds={},deck:nextDeck=[],locked:isLocked=false,ownedCounts=null}={}){
    deck=[...nextDeck];locked=isLocked;limits=new Map();index=new Map();
    for(const c of drafted){
-    limits.set(c.id,(limits.get(c.id)||0)+1);index.set(c.id,c);
+    limits.set(c.id,ownedCounts?Math.max(0,ownedCounts[c.id]||0):(limits.get(c.id)||0)+1);index.set(c.id,c);
    }
    for(const type of TYPES){
     const id=energyIds[type];if(typeof id!=='string')continue;
     index.set(id,{id,name:type+' Energy',supertype:'Energy',subtypes:[],types:[type],images:{}});
-    limits.set(id,40);
+    limits.set(id,targetSize);
    }
    cards=[...index.values()];
    if(!index.has(selectedId))selectedId=drafted[0]?.id||cards[0]?.id||null;

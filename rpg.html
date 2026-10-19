@@ -30,6 +30,7 @@
   <div class="utilitybar">
     <div class="utility-left"><span class="live-dot"></span><span>NEO HARBOR · TOWN EXPLORATION</span><span class="utility-sep">/</span><span id="notice" aria-live="polite">Travel & talk are free · ⏳ actions advance time</span></div>
     <div class="utility-actions">
+      <button id="deckStudioBtn" class="toolbar-btn" type="button">▣ DECK STUDIO</button>
       <button id="galleryBtn" class="toolbar-btn" type="button">▧ CG GALLERY</button>
       <button id="calendarBtn" class="toolbar-btn" type="button">▦ CALENDAR</button>
       <button id="quickHome" class="toolbar-btn" type="button">⌂ GO HOME</button>
@@ -206,6 +207,11 @@
  <h2>Choose your first 60-card deck</h2>
  <p>Three modest mixed-type teams. Earn cards, buy training packs, and improve your list across the 90-day season. Your choice is permanent for this run.</p>
  <div id="starterChoices" class="starter-choices"></div>
+</dialog>
+<dialog id="packDialog" class="modal pack-reveal-dialog" aria-label="Open your five-card booster" aria-modal="true">
+ <div class="pack-reveal-header"><div><small>✦ NEO HARBOR · CARD REWARDS</small><h2 id="packTitle">Booster Pack</h2><p>Five cards have been added to your collection. Tap each card to reveal it.</p></div></div>
+ <div id="packCards" class="pack-reveal-cards" aria-label="Five new cards"></div>
+ <div class="pack-reveal-actions"><button id="packRevealAll" type="button">Reveal all five</button><button id="packContinue" type="button">Continue adventure →</button></div>
 </dialog>
 <dialog id="deckEditDialog" class="modal deck-workshop-dialog" aria-label="Build your RPG deck">
  <div class="modal-heading"><h2>◆ Deck Workshop</h2><button id="deckEditClose" type="button">✕ Close</button></div>

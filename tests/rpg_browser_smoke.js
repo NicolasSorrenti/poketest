@@ -22,6 +22,24 @@ const readState=page=>page.evaluate(()=>JSON.parse(localStorage.getItem('neoHarb
   assert.equal(await page.locator('#starterChoices button').count(),3);
   await page.locator('#starterChoices button').filter({hasText:'Tidal Circuit'}).click();
   assert.equal((await readState(page)).deckJourney.starter,'tidal_circuit');
+  // This is a dedicated page, not the old two-select card-swap popup.
+  await page.locator('#rpgPanelTabs button[data-panel="progress"]').click();
+  await page.locator('#deckCollection .studio-open').click();
+  await page.waitForURL(/rpg_deck_studio\.html/);
+  await page.locator('#deckStudio').waitFor({state:'visible'});
+  assert.equal(await page.locator('#collectionCards .collect-card').count()>10,true);
+  assert.match(await page.locator('#deckSize').textContent(),/60 \/ 60/);
+  const removedCardId=await page.locator('#collectionCards .collect-card').first().getAttribute('data-id');
+  await page.locator('#collectionCards .collect-card').first().locator('.card-tools .remove').click();
+  assert.match(await page.locator('#deckSize').textContent(),/59 \/ 60/);
+  assert.equal(await page.locator('#saveDeck').isDisabled(),true,'Illegal 59-card draft cannot save');
+  await page.locator('#collectionCards .collect-card[data-id="'+removedCardId+'"] .card-tools .add').click();
+  assert.match(await page.locator('#deckSize').textContent(),/60 \/ 60/);
+  await page.locator('#saveDeck').click();
+  assert.equal((await readState(page)).deckJourney.deck.length,60);
+  await save(page,'01-deck-studio.png');
+  await page.locator('.back').click();
+  await page.waitForURL(/rpg\.html/);
   await page.locator('#places .place').first().waitFor();
   assert.equal(await page.locator('#places .place').count(),7);
   await page.locator('#whereLabel').getByText(/YOU ARE HOME/).waitFor();
@@ -32,7 +50,11 @@ const readState=page=>page.evaluate(()=>JSON.parse(localStorage.getItem('neoHarb
   let state=await readState(page);
   assert.equal(state.day,1);assert.equal(state.slot,1);assert.equal(state.location,'arcade');
 
-  await page.locator('#people .person').filter({hasText:'Yuna Hoshino'}).click();
+  {
+   const dismiss=page.locator('#choices button').filter({hasText:'Continue'});
+   if(await dismiss.isVisible())await dismiss.click();
+   await page.locator('#rpgSceneCast .rpg-cast-member[data-npc="yuna"]').click();
+  }
   await page.locator('#choices button').filter({hasText:'Challenge to a duel'}).click();
   await page.locator('#preDuelDialog').waitFor({state:'visible'});
   let staged=await readState(page);
@@ -101,7 +123,11 @@ const readState=page=>page.evaluate(()=>JSON.parse(localStorage.getItem('neoHarb
   await page.reload({waitUntil:'domcontentloaded'});
   assert.equal((await readState(page)).results.length,1,'Refresh must never duplicate result');
   // Rechallenge in the same evening, then complete another actual Classic session.
-  await page.locator('#people .person').filter({hasText:'Yuna Hoshino'}).click();
+  {
+   const dismiss=page.locator('#choices button').filter({hasText:'Continue'});
+   if(await dismiss.isVisible())await dismiss.click();
+   await page.locator('#rpgSceneCast .rpg-cast-member[data-npc="yuna"]').click();
+  }
   await page.locator('#choices button').filter({hasText:'Challenge to a duel'}).click();
   await page.locator('#preDuelDialog').waitFor({state:'visible'});
   const secondStaged=(await readState(page)).pendingDuel;
