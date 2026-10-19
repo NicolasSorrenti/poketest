@@ -5,7 +5,27 @@
  if(typeof module==='object'&&module.exports)module.exports=api;
  if(root)root.NeoRpgMatchReactions=api;
 })(typeof window==='undefined'?null:window,function(){
- const PORTRAITS={hana:'/rpg-assets/hana.png',reina:'/rpg-assets/reina.png',shiori:'/rpg-assets/shiori.png',yuna:'/rpg-assets/yuna.png',akari:'/rpg-assets/akari.png',camila:'/rpg-assets/camila.png',marina:'/rpg-assets/marina.png',kaede:'/rpg-assets/kaede.png'};
+ const PORTRAITS=Object.freeze({
+  hana:'/rpg-assets/hana.png',
+  reina:'/rpg-assets/characters/reina/portraits/primary.png',
+  shiori:'/rpg-assets/shiori.png',
+  yuna:'/rpg-assets/yuna.png',
+  akari:'/rpg-assets/akari.png',
+  camila:'/rpg-assets/camila.png',
+  marina:'/rpg-assets/marina.png',
+  kaede:'/rpg-assets/kaede.png',
+  jun:'/rpg-assets/jun.png',
+  teo:'/rpg-assets/teo.png',
+  iris:'/rpg-assets/iris.png',
+  elio:'/rpg-assets/elio.png',
+  alma:'/rpg-assets/alma.png',
+  nereo:'/rpg-assets/nereo.png',
+  elena:'/rpg-assets/characters/elena/portrait.png',
+  jinx:'/rpg-assets/characters/jinx/neutral.png',
+  luna:'/rpg-assets/characters/luna/neutral.png',
+  sierra:'/rpg-assets/characters/sierra/portrait.png',
+  sol:'/rpg-assets/sol.png'
+ });
  const LABELS={attack:['ATTACK!','They go on the offensive'],play_card:['A CARD UP THEIR SLEEVE','A new play'],evolve:['EVOLUTION!','Their team grows stronger'],power:['POKÉMON POWER!','A special play'],hurt:['UNDER PRESSURE','Their Pokémon takes a hit'],ko_taken:['POKÉMON DOWN!','You took one of their Prizes'],ko_scored:['A KNOCKOUT!','They take a Prize']};
  const GENERIC={attack:'Here comes my next attack!',play_card:'I have a play in mind.',evolve:'Things are getting interesting.',power:'Time for a little surprise!',hurt:'That hit harder than I expected.',ko_taken:'That was a good knockout. I am not finished yet.',ko_scored:'That is one step closer!'};
  const VOICES={
@@ -62,7 +82,12 @@
  function assetFor(manifest,npcId,kind){
   const entry=manifest?.characters?.[npcId];
   const candidate=(entry&&typeof entry==='object'&&(entry[kind]||entry.default))||PORTRAITS[npcId];
-  return typeof candidate==='string'&&/^\/rpg-assets\/[a-z0-9/_-]+\.(?:png|webp|jpe?g)$/i.test(candidate)?candidate:null;
+  const belongsToNpc=path=>path.startsWith('/rpg-assets/'+npcId+'.')||
+   path.startsWith('/rpg-assets/characters/'+npcId+'/')||
+   path.startsWith('/rpg-assets/reactions/'+npcId+'/');
+  const valid=path=>typeof path==='string'&&/^\/rpg-assets\/[a-z0-9/_-]+\.(?:png|webp|jpe?g)$/i.test(path)&&belongsToNpc(path);
+  // Invalid/misassigned images must never display a different character.
+  return valid(candidate)?candidate:(valid(PORTRAITS[npcId])?PORTRAITS[npcId]:null);
  }
  function makeExperience({element,npcId,npcName,random=Math.random}={}){
   const director=createDirector({npcId,npcName,random});
