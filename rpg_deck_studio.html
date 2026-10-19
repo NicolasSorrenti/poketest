@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Deck Studio · Neo Harbor RPG</title><link rel="stylesheet" href="/rpg_deck_studio.css"></head>
+<body>
+<header class="topbar">
+ <a class="back" href="/rpg.html">← Back to Neo Harbor</a>
+ <div class="brand"><span class="star">✦</span><div><small>NEO HARBOR RPG</small><h1>DECK STUDIO</h1></div></div>
+ <div id="deckProfile" class="profile">Your collection</div>
+</header>
+<main id="deckStudio" class="studio" hidden>
+ <section class="studio-intro">
+  <div><span class="eyebrow">MAKE EVERY CARD COUNT</span><h2>Build your own path to the championship.</h2>
+   <p>Only cards you own can join your deck. Remove cards and add new finds from booster packs. Changes do not affect live matches until saved.</p>
+  </div>
+  <div class="score"><strong id="deckSize">60 / 60</strong><span>DECK CARDS</span><strong id="collectionSize">0</strong><span>CARDS OWNED</span></div>
+ </section>
+ <section class="toolbar" aria-label="Deck editor">
+  <div class="metrics" id="deckMetrics" aria-label="Pokémon Trainer Energy counts"></div>
+  <div class="savebar">
+   <span id="saveStatus" role="status" aria-live="polite">Ready</span>
+   <button id="discardDraft" class="muted" type="button">Discard edits</button>
+   <button id="saveDeck" class="primary" type="button">Save deck</button>
+  </div>
+ </section>
+ <div class="columns">
+  <section class="collection panel" aria-label="Your card collection">
+   <div class="panel-heading"><div><small>01 · CARD BINDER</small><h2>Your Collection</h2></div><span id="ownedCount" class="count"></span></div>
+   <div class="filters">
+    <input id="cardSearch" type="search" placeholder="Search cards by name…" aria-label="Search owned cards">
+    <select id="kindFilter" aria-label="Filter card type"><option value="">All cards</option><option value="Pokémon">Pokémon</option><option value="Trainer">Trainers</option><option value="Energy">Energy</option></select>
+    <select id="sortFilter" aria-label="Sort cards"><option value="name">Name</option><option value="unused">Not in deck first</option><option value="owned">Most owned</option></select>
+   </div>
+   <div id="collectionCards" class="collection-grid" aria-live="polite"></div>
+  </section>
+  <section class="mydeck panel" aria-label="Your working 60-card deck">
+   <div class="panel-heading"><div><small>02 · YOUR BATTLE LIST</small><h2>Current Deck</h2></div><span id="deckValidity" class="count"></span></div>
+   <div id="deckGroups" class="deck-groups"></div>
+  </section>
+  <aside class="preview panel" aria-label="Selected card details">
+   <div class="panel-heading"><div><small>03 · CARD INSPECTOR</small><h2>Card Details</h2></div></div>
+   <div id="selectedImage" class="selected-image"></div>
+   <div id="selectedDescription" class="selected-description"><p>Select any card to inspect it.</p></div>
+  </aside>
+ </div>
+</main>
+<div id="studioError" class="studio-error" role="alert" hidden></div>
+<script src="/rpg_collection.js"></script><script src="/rpg_deck_studio.js" defer></script>
+</body></html>

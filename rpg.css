@@ -225,3 +225,25 @@
 .rpg-scene-cast:not(.is-conversation) .rpg-cast-member{transition:transform .28s ease,opacity .28s ease,filter .28s ease}
 .dialogue:not([hidden]){animation:rpgPortraitEnter .2s ease-out}
 @media(prefers-reduced-motion:reduce){.rpg-cast-member.is-entering,.rpg-cast-member img.expression-change,.dialogue:not([hidden]){animation:none!important}}
+
+/* Earned five-card booster reveal, shared by real duel prizes and shop purchases. */
+.deck-collection .studio-open{background:linear-gradient(110deg,#8d4d75,#ae729d);border:1px solid #f1b9d5;font-weight:900;letter-spacing:.4px}
+.pack-reveal-dialog{width:min(1050px,96vw);max-height:94vh;overflow:auto;background:radial-gradient(circle at top,#372640,#111b2c 65%);border:1px solid #c995b2;border-radius:16px;padding:25px;color:#f6eff8;box-shadow:0 25px 80px #000a}
+.pack-reveal-dialog::backdrop{background:#070917d9;backdrop-filter:blur(6px)}
+.pack-reveal-header{display:flex;justify-content:center;text-align:center}
+.pack-reveal-header h2{font:900 clamp(27px,4vw,44px) 'Barlow Condensed',sans-serif;margin:3px;color:#ffe0f1}
+.pack-reveal-header small{color:#f9a8ce;letter-spacing:2px;font-size:11px;font-weight:900}
+.pack-reveal-header p{color:#d3c9e0;font-size:13px}
+.pack-reveal-cards{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px;margin:18px 0}
+.pack-card{display:flex;align-items:center;justify-content:center;flex-direction:column;gap:8px;min-height:240px;min-width:0;border:2px solid #af88ae;border-radius:13px;color:#ffe5f7;background:linear-gradient(140deg,#392a58,#211d44 60%,#51315a);box-shadow:0 6px 15px #05081488;cursor:pointer;transition:transform .22s ease,background .22s}
+.pack-card:hover{transform:translateY(-5px)}.pack-card-back{font-size:70px;text-shadow:0 0 40px #d5b4f1}
+.pack-card.revealed{background:#242e44;border-color:#eec2d8;padding:8px;justify-content:start}
+.pack-card img{width:100%;max-height:205px;object-fit:contain;border-radius:6px}
+.pack-card strong{font:800 14px/1.1 'Barlow Condensed',sans-serif;overflow-wrap:anywhere;text-align:center}
+.pack-card-number{font:800 9px 'Barlow Condensed',sans-serif;letter-spacing:1px;color:#eeaad1}
+.pack-card-placeholder{font-size:58px;color:#e8add7;display:grid;place-items:center;flex:1}
+.pack-reveal-actions{display:flex;justify-content:center;gap:12px;flex-wrap:wrap}
+.pack-reveal-actions button{padding:13px 22px;color:#fff;background:#774269;border:1px solid #c58ab4;font:800 15px 'Barlow Condensed',sans-serif;border-radius:7px}
+.pack-reveal-actions #packContinue{color:#25102f;background:#f3bed7}
+@media(max-width:800px){.pack-reveal-cards{grid-template-columns:repeat(3,minmax(0,1fr))}.pack-card{min-height:195px}.pack-card img{max-height:145px}}
+@media(max-width:510px){.pack-reveal-dialog{padding:14px}.pack-reveal-cards{grid-template-columns:repeat(2,minmax(0,1fr))}.pack-card{min-height:175px}}

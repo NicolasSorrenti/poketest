@@ -870,3 +870,44 @@ test('RPG collection: pre-duel snapshot locks the actual 60 owned cards until th
  assert.equal(r.state().deckJourney.rewards,1);
  assert.equal(r.state().pendingDuel,null);
 });
+
+test('RPG victories award a five-card booster, displayed once and safe against duplicate match receipts',()=>{
+ const r=launch({day:5,slot:0,location:'shop',deckJourney:Collection.fresh()});
+ r.elements.starterChoices.children[0].onclick();
+ r.elements.people.children.find(x=>x.children?.[1]?.children?.[0]?.textContent==='Hana Mizuno').onclick();
+ r.elements.choices.children.find(x=>x.textContent.includes('Challenge to a duel')).onclick();
+ const pending=r.state().pendingDuel;
+ r.elements.preDuelSkip.onclick();
+ r.listeners.message({origin:r.loc.origin,source:r.elements.battle.contentWindow,data:Bridge.message(pending.id,0)});
+ const s=r.state();
+ assert.equal(s.deckJourney.rewards,1);
+ assert.equal(s.deckJourney.lastPack.source,'win');
+ assert.equal(s.deckJourney.lastPack.cards.length,5);
+ assert.equal(r.elements.packDialog.open,true);
+ assert.equal(r.elements.packCards.children.length,5);
+ assert.match(r.elements.packTitle.textContent,/Victory Booster/);
+ r.elements.packRevealAll.onclick();
+ assert.ok(r.elements.packCards.children.every(x=>x.className.includes('revealed')));
+ const count=Object.values(s.deckJourney.owned).reduce((a,b)=>a+b,0);
+ r.listeners.message({origin:r.loc.origin,source:r.elements.battle.contentWindow,data:Bridge.message(pending.id,0)});
+ assert.equal(Object.values(r.state().deckJourney.owned).reduce((a,b)=>a+b,0),count);
+ r.elements.packContinue.onclick();
+ assert.equal(r.state().deckJourney.lastPack.opened,true);
+ assert.equal(r.elements.packDialog.open,false);
+ const reload=launch(r.state());
+ assert.equal(reload.elements.packDialog.open,undefined,'already opened booster must not reappear');
+});
+test('shop booster reveal survives page reload without charging another 20 credits',()=>{
+ const r=launch({day:5,slot:0,location:'shop',credits:80,deckJourney:Collection.fresh()});
+ r.elements.starterChoices.children[1].onclick();
+ r.elements.deckCollection.children.find(x=>x.textContent.includes('Buy training pack')).onclick();
+ assert.equal(r.state().credits,60);
+ assert.equal(r.elements.packCards.children.length,5);
+ const again=launch(r.state());
+ assert.equal(again.elements.packDialog.open,true);
+ assert.equal(again.state().credits,60);
+ assert.equal(again.state().deckJourney.packs,1);
+ again.elements.packContinue.onclick();
+ const final=launch(again.state());
+ assert.equal(final.elements.packDialog.open,undefined);
+});

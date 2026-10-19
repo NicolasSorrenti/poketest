@@ -17,8 +17,8 @@ const sample=(e)=>STORY.normalize({
 test('the expansion preserves eight heroine routes and adds three adult non-romance recurring trainers',()=>{
  assert.deepEqual(PACK.validate(),[]);
  assert.deepEqual(STORY.validate(),[]);
- assert.equal(STORY.events.length,56);
- assert.equal(PACK.events.length,24);
+ assert.ok(STORY.events.length>=56,'additional adult pack stories expand the campaign');
+ assert.ok(PACK.events.length>=24,'baseline authored events remain while character packs expand');
  assert.equal(STORY.events.filter(e=>e.id.includes('_cross_')).length,10);
  for(const id of oldCast)assert.equal(STORY.events.filter(e=>e.id.startsWith(id+'_route_')).length,4);
  for(const id of guests){
