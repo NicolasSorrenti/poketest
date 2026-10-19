@@ -499,7 +499,20 @@ const cardNames=new Map(),cardImages=new Map();
 function showPackReveal(){
  const pack=state.deckJourney?.lastPack,modal=$('packDialog');
  if(!pack||pack.opened||modal.open)return;
- $('packTitle').textContent=pack.source==='win'?'Victory Booster · Five Cards':'Training Booster · Five Cards';
+ $('packTitle').textContent=pack.source==='win'?'Victory Booster · Ten Cards':'Training Booster · Ten Cards';
+ const giver=pack.giver&&cast[pack.giver]?pack.giver:null;
+ const setName=COLLECT.SETS[pack.set]?.name||'Base Set';
+ $('packTitle').textContent=setName+' · 10-card booster';
+ const portrait=$('packGiver');portrait.replaceChildren();
+ const caption=$('packGiverName');caption.textContent=giver?cast[giver].name+' gives you a '+setName+' booster':'The Lucky Draw · '+setName+' booster';
+ if(giver){
+  const fallback=()=>{portrait.replaceChildren(makeAvatar(giver));};
+  fallback();
+  const art=new Image();art.alt=cast[giver].name+' presenting a booster';art.className='pack-giver-art';
+  art.onload=()=>portrait.replaceChildren(art);
+  art.onerror=()=>{};
+  art.src='/rpg-assets/characters/'+giver+'/events/booster.webp';
+ }
  const target=$('packCards');target.replaceChildren();
  const cards=[];
  for(const [index,id] of pack.cards.entries()){
@@ -510,7 +523,7 @@ function showPackReveal(){
    button.className+=' revealed';button.replaceChildren();
    const detail=document.createElement('strong');detail.textContent=labelCard(id);
    const info=cardNames.get(id)||id;
-   const row=document.createElement('span');row.className='pack-card-number';row.textContent='CARD '+(index+1)+' / 5';
+   const row=document.createElement('span');row.className='pack-card-number';row.textContent='CARD '+(index+1)+' / '+pack.cards.length+';
    button.append(row);
    const data=cardImages.get(id);
    if(data){
@@ -578,7 +591,7 @@ function renderCollection(){
   const buy=document.createElement('button');buy.textContent='Buy training pack · 5 cards · 20 credits';
   buy.disabled=locked||state.credits<20;
   buy.onclick=()=>{
-   try{const cards=COLLECT.buyPack(state);log('Opened a training pack: '+cards.map(labelCard).join(', ')+'.');persist();say('Card Shop','Five new cards added to your collection. Open your pack, then visit the Deck Studio to build with them.');showPackReveal();}
+   try{const cards=COLLECT.buyPack(state);log('Opened a training pack: '+cards.map(labelCard).join(', ')+'.');persist();say('Card Shop','Ten new cards added to your collection. Open your pack, then visit the Deck Studio to build with them.');showPackReveal();}
    catch(e){$('notice').textContent=e.message;}
   };
   root.append(buy);
@@ -724,8 +737,8 @@ window.addEventListener('message',ev=>{
   const sideOutcome=duel.sideQuestId?SIDE.settleDuel(state,duel,receipt):null;
   if(sideOutcome)log('Completed side quest: '+sideOutcome.title+'.');
  if(personalOutcome)log('A special rivalry challenge reached its result.');
- const awarded=COLLECT.reward(state,receipt.outcome==='Victory');
- if(awarded)log('Won a five-card booster: '+awarded.map(labelCard).join(', ')+'.');
+ const awarded=COLLECT.reward(state,receipt.outcome==='Victory',duel.npc);
+ if(awarded)log('Won a ten-card booster: '+awarded.map(labelCard).join(', ')+'.');
  state.lastDuelReceipt=receipt;state.pendingDuel=null;
  sessionStorage.removeItem(BRIDGE.sessionKey(duel.id));
  sessionStorage.removeItem('neoRpgDeck:'+duel.id);
