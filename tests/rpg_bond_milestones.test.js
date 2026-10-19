@@ -123,3 +123,26 @@ test('browser script order and public routes include new modules',()=>{
  assert.match(game,/BONDS\.reward/);
  assert.match(game,/BONDS\.progress/);
 });
+
+
+test('all character chapter chains can resolve in order and grant only one milestone reward per scene',()=>{
+ for(const npc of Object.keys(cast)){
+  const s=make();STORY.normalize(s);const ids=PLAN.byNpc[npc];
+  for(const id of ids){
+   const e=STORY.byId(id);
+   s.day=e.start;s.slot=e.slot;s.location=e.place;
+   s.relationships[npc].affection=Math.max(s.relationships[npc].affection,e.minBond,6);
+   s.relationships[npc].trust=Math.max(s.relationships[npc].trust,3);
+   assert.equal(STORY.qualifies(e,s),true,npc+' must be able to reach '+id);
+   const index=e.choices.findIndex(choice=>choice.kind!=='commit');
+   assert.ok(index>=0,npc+' scene must offer a non-exclusive decision');
+   STORY.resolve(s,id,index);
+   const reward=BONDS.reward(s,e,PLAN,COLLECT);
+   assert.ok(reward,npc+' must receive milestone '+id);
+  }
+  assert.equal(BONDS.progress(s,npc,PLAN).completed,4);
+  assert.equal(s.credits,68);
+  assert.equal(s.deckJourney.vouchers[COLLECT.setForCharacter(npc)],2);
+  assert.ok(s.deckJourney.owned[BONDS.SIGNATURES[npc]]>=1);
+ }
+});
