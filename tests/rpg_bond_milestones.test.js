@@ -14,7 +14,7 @@ test('every playable NPC has four authored relationship chapters, a signature an
  assert.deepEqual(STORY.validate(),[]);
  assert.deepEqual(BONDC.validate(),[]);
  assert.deepEqual(BONDS.validate(STORY.events,cast),[]);
- assert.equal(Object.keys(cast).length,17);
+ assert.ok(Object.keys(cast).length>=20,'includes the three newer character packs');
  assert.equal(Object.keys(PLAN.byNpc).length,Object.keys(cast).length);
  for(const npc of Object.keys(cast)){
   assert.equal(PLAN.byNpc[npc].length,4,npc);
