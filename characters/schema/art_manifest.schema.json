@@ -1,0 +1,57 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Neo Harbor art handoff manifest v1",
+  "type": "object",
+  "required": [
+    "schemaVersion",
+    "characterId",
+    "portrait"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "const": 1
+    },
+    "characterId": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_]{1,39}$"
+    },
+    "portrait": {
+      "$ref": "#/$defs/image"
+    },
+    "expressions": {
+      "type": "object",
+      "additionalProperties": {
+        "$ref": "#/$defs/image"
+      }
+    },
+    "eventImages": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "sceneId",
+          "path",
+          "prompt"
+        ],
+        "properties": {
+          "sceneId": {
+            "type": "string"
+          },
+          "path": {
+            "$ref": "#/$defs/image"
+          },
+          "prompt": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "image": {
+      "type": "string",
+      "pattern": "^/rpg-assets/[a-zA-Z0-9_/-]+\\.(png|webp|jpg|jpeg)$"
+    }
+  }
+}
