@@ -1,0 +1,1049 @@
+{
+  "schemaVersion": 1,
+  "pack": "Neo Harbor season01 complete gallery package",
+  "generatedFrom": "Previously generated images in this conversation. No duplicate generation during packaging.",
+  "paths": "rpg-assets/events/cg/season01/<id>.webp and rpg-assets/events/cg/season01/thumbs/<id>.webp",
+  "fullSize": [
+    1920,
+    1080
+  ],
+  "thumbSize": [
+    640,
+    360
+  ],
+  "sceneCount": 32,
+  "categories": {
+    "g5_situation": 8,
+    "story_first_meeting": 8,
+    "story_preduel": 8,
+    "story_social": 8
+  },
+  "scenes": {
+    "hana_apron_mixup": {
+      "character": "hana",
+      "category": "g5_situation",
+      "full": "rpg-assets/events/cg/season01/hana_apron_mixup.webp",
+      "thumbnail": "rpg-assets/events/cg/season01/thumbs/hana_apron_mixup.webp",
+      "reviewStatus": "different_moment",
+      "note": "Illustration depicts Hana catching falling books in a library, not the scripted card-shop apron mix-up.",
+      "sourceImageFilename": "accidente_entre_libros_en_la_biblioteca.png",
+      "sourceImageSha256": "74f31fb2b63c2819b1c223f282240ede9e9275dbdee80ee38faff7bee3e9bc89",
+      "sourceSize": [
+        1672,
+        941
+      ]
+    },
+    "reina_rain_catch": {
+      "character": "reina",
+      "category": "g5_situation",
+      "full": "rpg-assets/events/cg/season01/reina_rain_catch.webp",
+      "thumbnail": "rpg-assets/events/cg/season01/thumbs/reina_rain_catch.webp",
+      "reviewStatus": "different_moment",
+      "note": "Illustration depicts Reina at a sunset overlook, not the scripted rain mishap.",
+      "sourceImageFilename": "reina_kurogane_al_atardecer_urbano.png",
+      "sourceImageSha256": "32b47cb4c88a1f348b66ad7cc33745d634d25803b5ac138af7d6e06c3869a09d",
+      "sourceSize": [
+        1672,
+        941
+      ]
+    },
+    "shiori_bookstack_wobble": {
+      "character": "shiori",
+      "category": "g5_situation",
+      "full": "rpg-assets/events/cg/season01/shiori_bookstack_wobble.webp",
+      "thumbnail": "rpg-assets/events/cg/season01/thumbs/shiori_bookstack_wobble.webp",
+      "reviewStatus": "different_moment",
+      "note": "Illustration depicts Shiori at a waterside night table, not the scripted wobbling book-stack scene.",
+      "sourceImageFilename": "shiori_junto_al_puerto_lunar.png",
+      "sourceImageSha256": "871ae330fad93aa3ef8fca81487502cea315d66af1d02f6710c6fe30e4d3b87b",
+      "sourceSize": [
+        1672,
+        941
+      ]
+    },
+    "yuna_card_scatter": {
+      "character": "yuna",
+      "category": "g5_situation",
+      "full": "rpg-assets/events/cg/season01/yuna_card_scatter.webp",
+      "thumbnail": "rpg-assets/events/cg/season01/thumbs/yuna_card_scatter.webp",
+      "reviewStatus": "different_moment",
+      "note": "Illustration depicts Yuna at an arcade machine, not the scripted scattered card sleeves.",
+      "sourceImageFilename": "yuna_brilla_en_el_arcade_neón.png",
+      "sourceImageSha256": "2956b6106a8b15204ea4c93ba673643d05f2785d9cadebdd508cb8c0ab07c1fd",
+      "sourceSize": [
+        1672,
+        941
+      ]
+    },
+    "akari_notes_whirl": {
+      "character": "akari",
+      "category": "g5_situation",
+      "full": "rpg-assets/events/cg/season01/akari_notes_whirl.webp",
+      "thumbnail": "rpg-assets/events/cg/season01/thumbs/akari_notes_whirl.webp",
+      "reviewStatus": "approximate_match",
+      "note": "Flying notes, research materials and startled expression closely match the intended scene.",
+      "sourceImageFilename": "akari_y_sus_apuntes_al_viento.png",
+      "sourceImageSha256": "264121e89b6d24df2edecae5e095dec51494842f27fb35acc79dad011ecba15d",
+      "sourceSize": [
+        1672,
+        941
+      ]
+    },
+    "camila_windy_receipts": {
+      "character": "camila",
+      "category": "g5_situation",
+      "full": "rpg-assets/events/cg/season01/camila_windy_receipts.webp",
+      "thumbnail": "rpg-assets/events/cg/season01/thumbs/camila_windy_receipts.webp",
+      "reviewStatus": "approximate_match",
+      "note": "Windblown papers by a riverside cafe closely match the intended event.",
+      "sourceImageFilename": "café_junto_al_puerto_al_viento.png",
+      "sourceImageSha256": "fecde9c9d0844c2995f8aeb89870019f0b44982179ca26759885f8e6fd3f9276",
+      "sourceSize": [
+        1672,
+        941
+      ]
+    },
+    "marina_beach_towel": {
+      "character": "marina",
+      "category": "g5_situation",
+      "full": "rpg-assets/events/cg/season01/marina_beach_towel.webp",
+      "thumbnail": "rpg-assets/events/cg/season01/thumbs/marina_beach_towel.webp",
+      "reviewStatus": "approximate_match",
+      "note": "Shoreline, towel and summer mood broadly match the intended scene.",
+      "sourceImageFilename": "marina_en_la_orilla_bajo_el_sol_estival.png",
+      "sourceImageSha256": "42c3764149d47352ad5b16c571464d451b73e755b8c919c90f040e8ab9ce9121",
+      "sourceSize": [
+        1672,
+        941
+      ]
+    },
+    "kaede_jacket_prank": {
+      "character": "kaede",
+      "category": "g5_situation",
+      "full": "rpg-assets/events/cg/season01/kaede_jacket_prank.webp",
+      "thumbnail": "rpg-assets/events/cg/season01/thumbs/kaede_jacket_prank.webp",
+      "reviewStatus": "different_moment",
+      "note": "Illustration depicts Kaede in rain by neon vending machines, not the scripted jacket prank.",
+      "sourceImageFilename": "kaede_bajo_la_lluvia_de_neón.png",
+      "sourceImageSha256": "cc2fa344e6cfa37329ed3260284a47de104dc7fbbe6170674031005b8be9b2ae",
+      "sourceSize": [
+        1672,
+        941
+      ]
+    },
+    "hana_first_meeting": {
+      "character": "hana",
+      "category": "story_first_meeting",
+      "full": "rpg-assets/events/cg/season01/hana_first_meeting.webp",
+      "thumbnail": "rpg-assets/events/cg/season01/thumbs/hana_first_meeting.webp",
+      "reviewStatus": "provisional",
+      "note": "Generated scene used as Hana first meeting illustration.",
+      "sourceImageFilename": "bienvenida_al_paseo_del_puerto.png",
+      "sourceImageSha256": "f8656032740fb6dcb66dc22092cf17f9877af1062fdeafd6cdd38dfca9dc4aae",
+      "sourceSize": [
+        1672,
+        941
+      ]
+    },
+    "hana_shop_challenge": {
+      "character": "hana",
+      "category": "story_preduel",
+      "full": "rpg-assets/events/cg/season01/hana_shop_challenge.webp",
+      "thumbnail": "rpg-assets/events/cg/season01/thumbs/hana_shop_challenge.webp",
+      "reviewStatus": "provisional",
+      "note": "Generated scene used as Hana card-shop challenge illustration.",
+      "sourceImageFilename": "desafío_de_cartas_en_la_tienda.png",
+      "sourceImageSha256": "53d95b5a780559cd2cf9fc4ec84193ff19d2105a637629a8d1f155f9c8b527db",
+      "sourceSize": [
+        1672,
+        941
+      ]
+    },
+    "hana_flyer_afternoon": {
+      "character": "hana",
+      "category": "story_social",
+      "full": "rpg-assets/events/cg/season01/hana_flyer_afternoon.webp",
+      "thumbnail": "rpg-assets/events/cg/season01/thumbs/hana_flyer_afternoon.webp",
+      "reviewStatus": "provisional",
+      "note": "Generated scene used as Hana flyer-afternoon/social illustration.",
+      "sourceImageFilename": "hana_mizuno_en_el_paseo_marítimo_al_atardecer.png",
+      "sourceImageSha256": "d1eb6642dc65168942064ecc9afd4fcb5c2fa48acc22ac29305ddd6e275eb03f",
+      "sourceSize": [
+        1672,
+        941
+      ]
+    },
+    "reina_rival_intro": {
+      "character": "reina",
+      "category": "story_first_meeting",
+      "full": "rpg-assets/events/cg/season01/reina_rival_intro.webp",
+      "thumbnail": "rpg-assets/events/cg/season01/thumbs/reina_rival_intro.webp",
+      "reviewStatus": "provisional",
+      "note": "Generated scene used as Reina rival-intro illustration.",
+      "sourceImageFilename": "reina_kurogane_en_el_puerto_al_anochecer.png",
+      "sourceImageSha256": "8b57e468f642c3493bf08cda68d5cc7064666554b2393534349d5a021412892e",
+      "sourceSize": [
+        1672,
+        941
+      ]
+    },
+    "reina_center_predue": {
+      "character": "reina",
+      "category": "story_preduel",
+      "full": "rpg-assets/events/cg/season01/reina_center_predue.webp",
+      "thumbnail": "rpg-assets/events/cg/season01/thumbs/reina_center_predue.webp",
+      "reviewStatus": "provisional",
+      "note": "Generated scene used as Reina pre-duel illustration.",
+      "sourceImageFilename": "desafío_al_anochecer_en_la_arena.png",
+      "sourceImageSha256": "7ef1f50d53dd459c5d1e05daa0ee36d7cdcfe4d8790f9e3954b29d0a6bb715f0",
+      "sourceSize": [
+        1672,
+        941
+      ]
+    },
+    "reina_training_break": {
+      "character": "reina",
+      "category": "story_social",
+      "full": "rpg-assets/events/cg/season01/reina_training_break.webp",
+      "thumbnail": "rpg-assets/events/cg/season01/thumbs/reina_training_break.webp",
+      "reviewStatus": "provisional",
+      "note": "Generated scene used as Reina training-break/social illustration.",
+      "sourceImageFilename": "atardecer_en_el_dojo_del_tejado.png",
+      "sourceImageSha256": "7095fed947a5fa298a91fb26103d84a3c37dc5238fb4b73e66ceeca482820d50",
+      "sourceSize": [
+        1672,
+        941
+      ]
+    },
+    "shiori_first_page": {
+      "character": "shiori",
+      "category": "story_first_meeting",
+      "full": "rpg-assets/events/cg/season01/shiori_first_page.webp",
+      "thumbnail": "rpg-assets/events/cg/season01/thumbs/shiori_first_page.webp",
+      "reviewStatus": "provisional",
+      "note": "Generated scene used as Shiori first-meeting illustration.",
+      "sourceImageFilename": "shiori_en_la_biblioteca_dorada.png",
+      "sourceImageSha256": "be07cc1aa3050a5a7002e5a574cb668a7673b08b4e1be73e4bf80a5ceafc712c",
+      "sourceSize": [
+        1672,
+        941
+      ]
+    },
+    "shiori_library_predue": {
+      "character": "shiori",
+      "category": "story_preduel",
+      "full": "rpg-assets/events/cg/season01/shiori_library_predue.webp",
+      "thumbnail": "rpg-assets/events/cg/season01/thumbs/shiori_library_predue.webp",
+      "reviewStatus": "provisional",
+      "note": "Generated scene used as Shiori pre-duel/library illustration.",
+      "sourceImageFilename": "shiori_tsukishima_en_la_biblioteca_lunar.png",
+      "sourceImageSha256": "a88761506cdd59d6f81548f3859c3d384f4420f633a0a685cecba71131c76663",
+      "sourceSize": [
+        1672,
+        941
+      ]
+    },
+    "shiori_cafe_conversation": {
+      "character": "shiori",
+      "category": "story_social",
+      "full": "rpg-assets/events/cg/season01/shiori_cafe_conversation.webp",
+      "thumbnail": "rpg-assets/events/cg/season01/thumbs/shiori_cafe_conversation.webp",
+      "reviewStatus": "provisional",
+      "note": "Generated scene used as Shiori cafe-conversation/social illustration.",
+      "sourceImageFilename": "café_dorado_junto_al_puerto.png",
+      "sourceImageSha256": "5794fdb3ceb61313d4656990ac2810c17b8ee51bddc42a9bad45b94eb6d086f5",
+      "sourceSize": [
+        1672,
+        941
+      ]
+    },
+    "yuna_arrival": {
+      "character": "yuna",
+      "category": "story_first_meeting",
+      "full": "rpg-assets/events/cg/season01/yuna_arrival.webp",
+      "thumbnail": "rpg-assets/events/cg/season01/thumbs/yuna_arrival.webp",
+      "reviewStatus": "provisional",
+      "note": "Generated scene used as Yuna first-meeting/arrival illustration.",
+      "sourceImageFilename": "yuna_en_el_arcade_neón.png",
+      "sourceImageSha256": "4040ae9a58413f46c3f243d1b499787050395be8946c0112253f640798232834",
+      "sourceSize": [
+        1672,
+        941
+      ]
+    },
+    "yuna_arcade_predue": {
+      "character": "yuna",
+      "category": "story_preduel",
+      "full": "rpg-assets/events/cg/season01/yuna_arcade_predue.webp",
+      "thumbnail": "rpg-assets/events/cg/season01/thumbs/yuna_arcade_predue.webp",
+      "reviewStatus": "provisional",
+      "note": "Generated scene used as Yuna pre-duel illustration.",
+      "sourceImageFilename": "desafío_neón_de_cartas_en_el_arcade.png",
+      "sourceImageSha256": "32a8b129391c9cfb7fb666bff859d0da32af9a01bea8065b755ea1c4e5f9a785",
+      "sourceSize": [
+        1672,
+        941
+      ]
+    },
+    "yuna_arcade_victory": {
+      "character": "yuna",
+      "category": "story_social",
+      "full": "rpg-assets/events/cg/season01/yuna_arcade_victory.webp",
+      "thumbnail": "rpg-assets/events/cg/season01/thumbs/yuna_arcade_victory.webp",
+      "reviewStatus": "provisional",
+      "note": "Generated scene used as Yuna social/arcade illustration.",
+      "sourceImageFilename": "victoria_neón_en_el_arcade.png",
+      "sourceImageSha256": "0f3605615e83c2b21d1d66205351f92efa4683ce88a718d204c557023383d03f",
+      "sourceSize": [
+        1672,
+        941
+      ]
+    },
+    "akari_first_meeting": {
+      "character": "akari",
+      "category": "story_first_meeting",
+      "full": "rpg-assets/events/cg/season01/akari_first_meeting.webp",
+      "thumbnail": "rpg-assets/events/cg/season01/thumbs/akari_first_meeting.webp",
+      "reviewStatus": "provisional",
+      "note": "Generated scene used as Akari first-meeting illustration.",
+      "sourceImageFilename": "encuentro_primaveral_entre_apuntes_y_pétalos.png",
+      "sourceImageSha256": "75beb95d22aaeed0c91e4a172dabaeaa9de4c51027ef56619527a7c2ada42a8e",
+      "sourceSize": [
+        1672,
+        941
+      ]
+    },
+    "akari_card_club_predue": {
+      "character": "akari",
+      "category": "story_preduel",
+      "full": "rpg-assets/events/cg/season01/akari_card_club_predue.webp",
+      "thumbnail": "rpg-assets/events/cg/season01/thumbs/akari_card_club_predue.webp",
+      "reviewStatus": "provisional",
+      "note": "Generated scene used as Akari pre-duel/card-club illustration.",
+      "sourceImageFilename": "akari_en_el_club_de_cartas.png",
+      "sourceImageSha256": "ce4956c8f07e004b6260928d88ed9ab005c67c22abf221bfcdb6dca3ef430544",
+      "sourceSize": [
+        1672,
+        941
+      ]
+    },
+    "akari_creative_workshop": {
+      "character": "akari",
+      "category": "story_social",
+      "full": "rpg-assets/events/cg/season01/akari_creative_workshop.webp",
+      "thumbnail": "rpg-assets/events/cg/season01/thumbs/akari_creative_workshop.webp",
+      "reviewStatus": "provisional",
+      "note": "Generated scene used as Akari social/workshop illustration.",
+      "sourceImageFilename": "akari_en_su_estudio_creativo_al_atardecer.png",
+      "sourceImageSha256": "4e9cf95d4d6720dbd51e2d315739a1746f0fbf1ac86a77669905768c1642e6d8",
+      "sourceSize": [
+        1672,
+        941
+      ]
+    },
+    "camila_first_meeting": {
+      "character": "camila",
+      "category": "story_first_meeting",
+      "full": "rpg-assets/events/cg/season01/camila_first_meeting.webp",
+      "thumbnail": "rpg-assets/events/cg/season01/thumbs/camila_first_meeting.webp",
+      "reviewStatus": "provisional",
+      "note": "Generated scene used as Camila first-meeting illustration.",
+      "sourceImageFilename": "camila_vega_en_el_paseo_del_puerto.png",
+      "sourceImageSha256": "1793f8d1a890ad24b64712f5a05fb271cdaff82e5cd289c566d116b4bd83e96b",
+      "sourceSize": [
+        1672,
+        941
+      ]
+    },
+    "camila_harbor_predue": {
+      "character": "camila",
+      "category": "story_preduel",
+      "full": "rpg-assets/events/cg/season01/camila_harbor_predue.webp",
+      "thumbnail": "rpg-assets/events/cg/season01/thumbs/camila_harbor_predue.webp",
+      "reviewStatus": "provisional",
+      "note": "Generated scene used as Camila pre-duel illustration.",
+      "sourceImageFilename": "camila_vega_al_atardecer_del_puerto.png",
+      "sourceImageSha256": "7ff41e6c22ceb7ae678c1c5a9a348cf898645322825fc91129614a55f49be53d",
+      "sourceSize": [
+        1672,
+        941
+      ]
+    },
+    "camila_cafe_conversation": {
+      "character": "camila",
+      "category": "story_social",
+      "full": "rpg-assets/events/cg/season01/camila_cafe_conversation.webp",
+      "thumbnail": "rpg-assets/events/cg/season01/thumbs/camila_cafe_conversation.webp",
+      "reviewStatus": "provisional",
+      "note": "Generated scene used as Camila cafe/social illustration.",
+      "sourceImageFilename": "camila_en_el_café_del_puerto.png",
+      "sourceImageSha256": "3c7fe5d0f68a3d46b25baf301ae6a2022d2494e2f3402118aba978ba9442635f",
+      "sourceSize": [
+        1672,
+        941
+      ]
+    },
+    "marina_first_meeting": {
+      "character": "marina",
+      "category": "story_first_meeting",
+      "full": "rpg-assets/events/cg/season01/marina_first_meeting.webp",
+      "thumbnail": "rpg-assets/events/cg/season01/thumbs/marina_first_meeting.webp",
+      "reviewStatus": "provisional",
+      "note": "Generated scene used as Marina first-meeting illustration.",
+      "sourceImageFilename": "marina_junto_al_mar_brillante.png",
+      "sourceImageSha256": "52e7b41e0e1db4d7abc15c9879abd16391a7fa6d6c1657c07aeb0e2852f68ff2",
+      "sourceSize": [
+        1672,
+        941
+      ]
+    },
+    "marina_harbor_predue": {
+      "character": "marina",
+      "category": "story_preduel",
+      "full": "rpg-assets/events/cg/season01/marina_harbor_predue.webp",
+      "thumbnail": "rpg-assets/events/cg/season01/thumbs/marina_harbor_predue.webp",
+      "reviewStatus": "provisional",
+      "note": "Generated scene used as Marina pre-duel illustration.",
+      "sourceImageFilename": "desafío_al_atardecer_en_el_puerto.png",
+      "sourceImageSha256": "adcf4d136d9089571b220ec2ed8ce88e8d24f76b5753822987ff3fd5d9d1496b",
+      "sourceSize": [
+        1672,
+        941
+      ]
+    },
+    "marina_sunset_social": {
+      "character": "marina",
+      "category": "story_social",
+      "full": "rpg-assets/events/cg/season01/marina_sunset_social.webp",
+      "thumbnail": "rpg-assets/events/cg/season01/thumbs/marina_sunset_social.webp",
+      "reviewStatus": "provisional",
+      "note": "Generated scene used as Marina social/sunset illustration.",
+      "sourceImageFilename": "marina_al_atardecer_frente_al_puerto.png",
+      "sourceImageSha256": "e33c486e042e7f6cb5643a1a7f3cfd3f9e2c9c3f743686cc956096008aa325c7",
+      "sourceSize": [
+        1672,
+        941
+      ]
+    },
+    "kaede_first_meeting": {
+      "character": "kaede",
+      "category": "story_first_meeting",
+      "full": "rpg-assets/events/cg/season01/kaede_first_meeting.webp",
+      "thumbnail": "rpg-assets/events/cg/season01/thumbs/kaede_first_meeting.webp",
+      "reviewStatus": "provisional",
+      "note": "Generated scene used as Kaede first-meeting illustration.",
+      "sourceImageFilename": "invitación_punk_en_neo_harbor.png",
+      "sourceImageSha256": "7ecc58d8a63d3bbaf3b09508d6a49487c35dbae365aca621d61f5d6138bc3dc7",
+      "sourceSize": [
+        1672,
+        941
+      ]
+    },
+    "kaede_rooftop_predue": {
+      "character": "kaede",
+      "category": "story_preduel",
+      "full": "rpg-assets/events/cg/season01/kaede_rooftop_predue.webp",
+      "thumbnail": "rpg-assets/events/cg/season01/thumbs/kaede_rooftop_predue.webp",
+      "reviewStatus": "provisional",
+      "note": "Generated scene used as Kaede pre-duel/rooftop illustration.",
+      "sourceImageFilename": "duelo_neón_en_la_azotea.png",
+      "sourceImageSha256": "64ab62cc7e2e1828946cab0819ee57d48e84ebefad4a1cc2740d16c3d9876626",
+      "sourceSize": [
+        1672,
+        941
+      ]
+    },
+    "kaede_park_social": {
+      "character": "kaede",
+      "category": "story_social",
+      "full": "rpg-assets/events/cg/season01/kaede_park_social.webp",
+      "thumbnail": "rpg-assets/events/cg/season01/thumbs/kaede_park_social.webp",
+      "reviewStatus": "provisional",
+      "note": "Generated scene used as Kaede park/social illustration.",
+      "sourceImageFilename": "kaede_al_atardecer_en_el_parque_urbano.png",
+      "sourceImageSha256": "f67c3cfd1942d2fc5e1fa4182ad04aaa13c5bc27bdbf6e2a30812687eed6e670",
+      "sourceSize": [
+        1672,
+        941
+      ]
+    }
+  },
+  "files": [
+    {
+      "path": "rpg-assets/events/cg/season01/hana_apron_mixup.webp",
+      "sha256": "744279473cc81d255fcb9bb788066ba0228fbec873a4fcdff6b781aea8e4375e",
+      "bytes": 410430,
+      "width": 1920,
+      "height": 1080,
+      "format": "WEBP",
+      "colorspace": "sRGB"
+    },
+    {
+      "path": "rpg-assets/events/cg/season01/thumbs/hana_apron_mixup.webp",
+      "sha256": "5475fb86ee3757e3d72a8e438dacef1846095b21af37454731c4b37d4aea662f",
+      "bytes": 75712,
+      "width": 640,
+      "height": 360,
+      "format": "WEBP",
+      "colorspace": "sRGB"
+    },
+    {
+      "path": "rpg-assets/events/cg/season01/reina_rain_catch.webp",
+      "sha256": "123e4bbd7f0d21064d511d3ceac7b538cd3f0f3011c7d561b1ed16279342ef3c",
+      "bytes": 416284,
+      "width": 1920,
+      "height": 1080,
+      "format": "WEBP",
+      "colorspace": "sRGB"
+    },
+    {
+      "path": "rpg-assets/events/cg/season01/thumbs/reina_rain_catch.webp",
+      "sha256": "f07e19ea113753d91bc916a5cc0eb7d6aab65349a89e352d911e9e0330756e36",
+      "bytes": 75794,
+      "width": 640,
+      "height": 360,
+      "format": "WEBP",
+      "colorspace": "sRGB"
+    },
+    {
+      "path": "rpg-assets/events/cg/season01/shiori_bookstack_wobble.webp",
+      "sha256": "9c805d3a5aed2ad393f29c1d16b0cce416a1953f5661676b1ffe19cd1bad99fc",
+      "bytes": 417514,
+      "width": 1920,
+      "height": 1080,
+      "format": "WEBP",
+      "colorspace": "sRGB"
+    },
+    {
+      "path": "rpg-assets/events/cg/season01/thumbs/shiori_bookstack_wobble.webp",
+      "sha256": "7ea45104d3601edb41f8b10fb77dada499986a446d4bc35e57ae6433c452584a",
+      "bytes": 77200,
+      "width": 640,
+      "height": 360,
+      "format": "WEBP",
+      "colorspace": "sRGB"
+    },
+    {
+      "path": "rpg-assets/events/cg/season01/yuna_card_scatter.webp",
+      "sha256": "67d1805a32b6a1475feae67e1bb32a3deb9bf792c6d49a7630ab4d5132d56d6d",
+      "bytes": 499594,
+      "width": 1920,
+      "height": 1080,
+      "format": "WEBP",
+      "colorspace": "sRGB"
+    },
+    {
+      "path": "rpg-assets/events/cg/season01/thumbs/yuna_card_scatter.webp",
+      "sha256": "cc9a3cfeab99f896ea09c758ceda3ce915b3b1c75e85355fe6ee08f029532bde",
+      "bytes": 87564,
+      "width": 640,
+      "height": 360,
+      "format": "WEBP",
+      "colorspace": "sRGB"
+    },
+    {
+      "path": "rpg-assets/events/cg/season01/akari_notes_whirl.webp",
+      "sha256": "7bb21458dd3953ac6a5d7f26dfbfa4d8a74ca432e14c18be92791d0c998b7e24",
+      "bytes": 394708,
+      "width": 1920,
+      "height": 1080,
+      "format": "WEBP",
+      "colorspace": "sRGB"
+    },
+    {
+      "path": "rpg-assets/events/cg/season01/thumbs/akari_notes_whirl.webp",
+      "sha256": "40ba5ffe944dd35f1229e7b42cb5b4c4d8a8ea18b6b37de4e0bb00a50da8b0e1",
+      "bytes": 68308,
+      "width": 640,
+      "height": 360,
+      "format": "WEBP",
+      "colorspace": "sRGB"
+    },
+    {
+      "path": "rpg-assets/events/cg/season01/camila_windy_receipts.webp",
+      "sha256": "1be0114fceb2c4f5e2a4b8ab2ef27cd5769d83650dc272c63cefc431773bbc95",
+      "bytes": 442668,
+      "width": 1920,
+      "height": 1080,
+      "format": "WEBP",
+      "colorspace": "sRGB"
+    },
+    {
+      "path": "rpg-assets/events/cg/season01/thumbs/camila_windy_receipts.webp",
+      "sha256": "a370cc5e8a042731481851834ecf084f859f370840d0cf6c0d3e1affdaa20046",
+      "bytes": 81134,
+      "width": 640,
+      "height": 360,
+      "format": "WEBP",
+      "colorspace": "sRGB"
+    },
+    {
+      "path": "rpg-assets/events/cg/season01/marina_beach_towel.webp",
+      "sha256": "7ba92042f23a9ce06a629db4883e6ceb86892b4f76b79b2f7527450cea256f5f",
+      "bytes": 539002,
+      "width": 1920,
+      "height": 1080,
+      "format": "WEBP",
+      "colorspace": "sRGB"
+    },
+    {
+      "path": "rpg-assets/events/cg/season01/thumbs/marina_beach_towel.webp",
+      "sha256": "b3aeb48a21860779a747e89283a79467f4c13d669a1600c74a412b736d8c40c6",
+      "bytes": 91476,
+      "width": 640,
+      "height": 360,
+      "format": "WEBP",
+      "colorspace": "sRGB"
+    },
+    {
+      "path": "rpg-assets/events/cg/season01/kaede_jacket_prank.webp",
+      "sha256": "d2b3e107d8b01746bbfb61538bfdec53c508a2eac18a18c9212c8cc6d6c5bfe3",
+      "bytes": 519102,
+      "width": 1920,
+      "height": 1080,
+      "format": "WEBP",
+      "colorspace": "sRGB"
+    },
+    {
+      "path": "rpg-assets/events/cg/season01/thumbs/kaede_jacket_prank.webp",
+      "sha256": "d50e1ba1ae75d1da94c4fdc1485b3b2e33468537a303660dbc0e85addb391691",
+      "bytes": 88658,
+      "width": 640,
+      "height": 360,
+      "format": "WEBP",
+      "colorspace": "sRGB"
+    },
+    {
+      "path": "rpg-assets/events/cg/season01/hana_first_meeting.webp",
+      "sha256": "9c7f6d953e50b12386517e0d3c8c4667e90d92c52fd44a1a0855065118b2c607",
+      "bytes": 466034,
+      "width": 1920,
+      "height": 1080,
+      "format": "WEBP",
+      "colorspace": "sRGB"
+    },
+    {
+      "path": "rpg-assets/events/cg/season01/thumbs/hana_first_meeting.webp",
+      "sha256": "28184b32748039066cfe687c4814a287bd05b15f7be1577059bd4e3534896dac",
+      "bytes": 85096,
+      "width": 640,
+      "height": 360,
+      "format": "WEBP",
+      "colorspace": "sRGB"
+    },
+    {
+      "path": "rpg-assets/events/cg/season01/hana_shop_challenge.webp",
+      "sha256": "27ae533a4522bca0f0809b79fd017488dd9a59edf76c8c04fe8fd6bb9ac524e6",
+      "bytes": 454824,
+      "width": 1920,
+      "height": 1080,
+      "format": "WEBP",
+      "colorspace": "sRGB"
+    },
+    {
+      "path": "rpg-assets/events/cg/season01/thumbs/hana_shop_challenge.webp",
+      "sha256": "89d1816af62bd87b7a2fb00deb974e0fd86e6b93a66566e107eb4366f911a275",
+      "bytes": 75244,
+      "width": 640,
+      "height": 360,
+      "format": "WEBP",
+      "colorspace": "sRGB"
+    },
+    {
+      "path": "rpg-assets/events/cg/season01/hana_flyer_afternoon.webp",
+      "sha256": "6cdc03a2e2ed9a71e6e1ed2b8a88b94db5a695cb4520bad7a962390fc345576b",
+      "bytes": 538644,
+      "width": 1920,
+      "height": 1080,
+      "format": "WEBP",
+      "colorspace": "sRGB"
+    },
+    {
+      "path": "rpg-assets/events/cg/season01/thumbs/hana_flyer_afternoon.webp",
+      "sha256": "4bc7aea4567aa969ff694b0c1cc7236807033e5cf376d7d8eb1c7f47d0f8a66b",
+      "bytes": 89382,
+      "width": 640,
+      "height": 360,
+      "format": "WEBP",
+      "colorspace": "sRGB"
+    },
+    {
+      "path": "rpg-assets/events/cg/season01/reina_rival_intro.webp",
+      "sha256": "54454f9f02dd5feef5b4cf08bce5d0d60d9ce9ee51cb8a542feeeced3702693e",
+      "bytes": 469418,
+      "width": 1920,
+      "height": 1080,
+      "format": "WEBP",
+      "colorspace": "sRGB"
+    },
+    {
+      "path": "rpg-assets/events/cg/season01/thumbs/reina_rival_intro.webp",
+      "sha256": "8d7076131a68db78f6fe6a1c02a014a2f127fdb342832fa14fdd10bdf5fc4e6d",
+      "bytes": 81120,
+      "width": 640,
+      "height": 360,
+      "format": "WEBP",
+      "colorspace": "sRGB"
+    },
+    {
+      "path": "rpg-assets/events/cg/season01/reina_center_predue.webp",
+      "sha256": "29cf3cb4defad6ff13c93f033a92dd7d8bb5763c4399af151354e92b2e06d6fa",
+      "bytes": 418808,
+      "width": 1920,
+      "height": 1080,
+      "format": "WEBP",
+      "colorspace": "sRGB"
+    },
+    {
+      "path": "rpg-assets/events/cg/season01/thumbs/reina_center_predue.webp",
+      "sha256": "31ec21eeb3c609dcb3a6a1d7a231279ddafd683a6fac7282ac6b7d058c69af3d",
+      "bytes": 73954,
+      "width": 640,
+      "height": 360,
+      "format": "WEBP",
+      "colorspace": "sRGB"
+    },
+    {
+      "path": "rpg-assets/events/cg/season01/reina_training_break.webp",
+      "sha256": "707070fe08b8c19997e5da8efbcea743b15cc2bfa41c860eb249613e62877c98",
+      "bytes": 429922,
+      "width": 1920,
+      "height": 1080,
+      "format": "WEBP",
+      "colorspace": "sRGB"
+    },
+    {
+      "path": "rpg-assets/events/cg/season01/thumbs/reina_training_break.webp",
+      "sha256": "575972f216292718ba2195cbb831354eae27a675905689c053eb0681e9d29186",
+      "bytes": 72626,
+      "width": 640,
+      "height": 360,
+      "format": "WEBP",
+      "colorspace": "sRGB"
+    },
+    {
+      "path": "rpg-assets/events/cg/season01/shiori_first_page.webp",
+      "sha256": "405ddc4843e4e1f41ec70b57089f508ede15ae26ae18ac6228af2f0bff071894",
+      "bytes": 372890,
+      "width": 1920,
+      "height": 1080,
+      "format": "WEBP",
+      "colorspace": "sRGB"
+    },
+    {
+      "path": "rpg-assets/events/cg/season01/thumbs/shiori_first_page.webp",
+      "sha256": "d77435ce92c8603b41a30728411df4d65bd39437ac6e01121e331ac2648f59d7",
+      "bytes": 63814,
+      "width": 640,
+      "height": 360,
+      "format": "WEBP",
+      "colorspace": "sRGB"
+    },
+    {
+      "path": "rpg-assets/events/cg/season01/shiori_library_predue.webp",
+      "sha256": "044231e38aaec33c81be1bf90906a441d7d2b2c24b6da1bc4ebed21bb86ad0db",
+      "bytes": 400998,
+      "width": 1920,
+      "height": 1080,
+      "format": "WEBP",
+      "colorspace": "sRGB"
+    },
+    {
+      "path": "rpg-assets/events/cg/season01/thumbs/shiori_library_predue.webp",
+      "sha256": "5b0573b2c95a6cc14baef9c0a192f5e4fe563f6793fd7f5d0a3e0cc3f5f625cc",
+      "bytes": 71976,
+      "width": 640,
+      "height": 360,
+      "format": "WEBP",
+      "colorspace": "sRGB"
+    },
+    {
+      "path": "rpg-assets/events/cg/season01/shiori_cafe_conversation.webp",
+      "sha256": "21431e85782dc4f6f716ed18fb866bb392255ef42dc05540fc9dbd25048323f7",
+      "bytes": 481152,
+      "width": 1920,
+      "height": 1080,
+      "format": "WEBP",
+      "colorspace": "sRGB"
+    },
+    {
+      "path": "rpg-assets/events/cg/season01/thumbs/shiori_cafe_conversation.webp",
+      "sha256": "30cf81907e49ae12665ce839b6c5b06d4d1f658c5ddb872b3033efbf8767daa2",
+      "bytes": 83852,
+      "width": 640,
+      "height": 360,
+      "format": "WEBP",
+      "colorspace": "sRGB"
+    },
+    {
+      "path": "rpg-assets/events/cg/season01/yuna_arrival.webp",
+      "sha256": "f99b105943d6e666376f524dc63d80c7a9bf1c3e2e46ffb087ddb309c8b5f5a6",
+      "bytes": 508232,
+      "width": 1920,
+      "height": 1080,
+      "format": "WEBP",
+      "colorspace": "sRGB"
+    },
+    {
+      "path": "rpg-assets/events/cg/season01/thumbs/yuna_arrival.webp",
+      "sha256": "40d13131a931654a8b4b2b9c5f2c85768c7422a7922d892473bd13e4a33dd48c",
+      "bytes": 93614,
+      "width": 640,
+      "height": 360,
+      "format": "WEBP",
+      "colorspace": "sRGB"
+    },
+    {
+      "path": "rpg-assets/events/cg/season01/yuna_arcade_predue.webp",
+      "sha256": "86ccc439cef66f9bfd072ca65c426860e4a35237b9bea021cfa2706eb949f150",
+      "bytes": 521266,
+      "width": 1920,
+      "height": 1080,
+      "format": "WEBP",
+      "colorspace": "sRGB"
+    },
+    {
+      "path": "rpg-assets/events/cg/season01/thumbs/yuna_arcade_predue.webp",
+      "sha256": "ba78863a8d0dea9f08527ff6dcedb7a3c153026a104d085cc96bfd62efe7ba51",
+      "bytes": 90140,
+      "width": 640,
+      "height": 360,
+      "format": "WEBP",
+      "colorspace": "sRGB"
+    },
+    {
+      "path": "rpg-assets/events/cg/season01/yuna_arcade_victory.webp",
+      "sha256": "f625f8e9b69402aeddcbca9c07be3773a70c3548e6e375afc0d750dee82e8078",
+      "bytes": 429880,
+      "width": 1920,
+      "height": 1080,
+      "format": "WEBP",
+      "colorspace": "sRGB"
+    },
+    {
+      "path": "rpg-assets/events/cg/season01/thumbs/yuna_arcade_victory.webp",
+      "sha256": "9f8f4ce8cc18480eef54b25624fd3d7c10811a4049038baac2cdcd1016603874",
+      "bytes": 78508,
+      "width": 640,
+      "height": 360,
+      "format": "WEBP",
+      "colorspace": "sRGB"
+    },
+    {
+      "path": "rpg-assets/events/cg/season01/akari_first_meeting.webp",
+      "sha256": "f4147a9e361495614f3b19d1279818ae6c84e030d7abcebe46c376ca41dacf47",
+      "bytes": 424954,
+      "width": 1920,
+      "height": 1080,
+      "format": "WEBP",
+      "colorspace": "sRGB"
+    },
+    {
+      "path": "rpg-assets/events/cg/season01/thumbs/akari_first_meeting.webp",
+      "sha256": "de194f87b8d669b382bea593f0512110dd109801ce1eb23ac931afd14b059455",
+      "bytes": 79910,
+      "width": 640,
+      "height": 360,
+      "format": "WEBP",
+      "colorspace": "sRGB"
+    },
+    {
+      "path": "rpg-assets/events/cg/season01/akari_card_club_predue.webp",
+      "sha256": "56e9f6ebd886a85079cff3e08ea0cd069516241197407fbed9631dff3cbcc4c7",
+      "bytes": 361504,
+      "width": 1920,
+      "height": 1080,
+      "format": "WEBP",
+      "colorspace": "sRGB"
+    },
+    {
+      "path": "rpg-assets/events/cg/season01/thumbs/akari_card_club_predue.webp",
+      "sha256": "9951b2b365d094cda0525370cbd42d9154098c4380ebbc02f49f2f09bbc14c73",
+      "bytes": 62136,
+      "width": 640,
+      "height": 360,
+      "format": "WEBP",
+      "colorspace": "sRGB"
+    },
+    {
+      "path": "rpg-assets/events/cg/season01/akari_creative_workshop.webp",
+      "sha256": "58b15970cd7be159e3fd66f4567ce15ca3bc8a71b69a5c024e4a0b14e145f655",
+      "bytes": 474858,
+      "width": 1920,
+      "height": 1080,
+      "format": "WEBP",
+      "colorspace": "sRGB"
+    },
+    {
+      "path": "rpg-assets/events/cg/season01/thumbs/akari_creative_workshop.webp",
+      "sha256": "2d69628f18f00b91a25864760e4c248b735da42f86d10d057c32374434dad2bf",
+      "bytes": 81592,
+      "width": 640,
+      "height": 360,
+      "format": "WEBP",
+      "colorspace": "sRGB"
+    },
+    {
+      "path": "rpg-assets/events/cg/season01/camila_first_meeting.webp",
+      "sha256": "e42159359f0ab6c5c0bb42c8a9a43a3abdd676e69206af13ea9dbed689d4aa6d",
+      "bytes": 460060,
+      "width": 1920,
+      "height": 1080,
+      "format": "WEBP",
+      "colorspace": "sRGB"
+    },
+    {
+      "path": "rpg-assets/events/cg/season01/thumbs/camila_first_meeting.webp",
+      "sha256": "40253aceb9317d391102d31decc9c47c60a5896eb1f57be988df6dacee017b89",
+      "bytes": 83428,
+      "width": 640,
+      "height": 360,
+      "format": "WEBP",
+      "colorspace": "sRGB"
+    },
+    {
+      "path": "rpg-assets/events/cg/season01/camila_harbor_predue.webp",
+      "sha256": "7faac9a6bfd8def25b38e42651d65a90aa67b2a218a4be3eca3fbf23a34c4934",
+      "bytes": 407896,
+      "width": 1920,
+      "height": 1080,
+      "format": "WEBP",
+      "colorspace": "sRGB"
+    },
+    {
+      "path": "rpg-assets/events/cg/season01/thumbs/camila_harbor_predue.webp",
+      "sha256": "19d01c10c04620cb985281f00bcf28f4281efe823e73d552600c19bb620ca25c",
+      "bytes": 70432,
+      "width": 640,
+      "height": 360,
+      "format": "WEBP",
+      "colorspace": "sRGB"
+    },
+    {
+      "path": "rpg-assets/events/cg/season01/camila_cafe_conversation.webp",
+      "sha256": "5dda9e5361e79fae167206c4c52310e6169b62a217cd6670ed2a3411d382343e",
+      "bytes": 410380,
+      "width": 1920,
+      "height": 1080,
+      "format": "WEBP",
+      "colorspace": "sRGB"
+    },
+    {
+      "path": "rpg-assets/events/cg/season01/thumbs/camila_cafe_conversation.webp",
+      "sha256": "f044442ab118caa5cb5a82aa238c49b7636fb46618c1b678fb3e46ba8092bbb5",
+      "bytes": 71660,
+      "width": 640,
+      "height": 360,
+      "format": "WEBP",
+      "colorspace": "sRGB"
+    },
+    {
+      "path": "rpg-assets/events/cg/season01/marina_first_meeting.webp",
+      "sha256": "7d2d262ebf9258f9f846eb590bea5ab321e95f8bef8404c8bfec13b132406c9b",
+      "bytes": 460226,
+      "width": 1920,
+      "height": 1080,
+      "format": "WEBP",
+      "colorspace": "sRGB"
+    },
+    {
+      "path": "rpg-assets/events/cg/season01/thumbs/marina_first_meeting.webp",
+      "sha256": "f831da4784f99fcd97f3d6f08c046890d719acae32c9448740459e9d62ee37ad",
+      "bytes": 81314,
+      "width": 640,
+      "height": 360,
+      "format": "WEBP",
+      "colorspace": "sRGB"
+    },
+    {
+      "path": "rpg-assets/events/cg/season01/marina_harbor_predue.webp",
+      "sha256": "bb33e4ee70cd49d477bc67c38ee5b14993283ceda7eb2eb87c629736a5271393",
+      "bytes": 498348,
+      "width": 1920,
+      "height": 1080,
+      "format": "WEBP",
+      "colorspace": "sRGB"
+    },
+    {
+      "path": "rpg-assets/events/cg/season01/thumbs/marina_harbor_predue.webp",
+      "sha256": "7c70aa0b113cff72eee112021a9667667dd6f57ca9f0f2f7f7ecdad22fb2cd0f",
+      "bytes": 83106,
+      "width": 640,
+      "height": 360,
+      "format": "WEBP",
+      "colorspace": "sRGB"
+    },
+    {
+      "path": "rpg-assets/events/cg/season01/marina_sunset_social.webp",
+      "sha256": "5ce496dfe7f54de85b92f5b2b4e97a237d13984c9957188455055563a794f9e0",
+      "bytes": 497966,
+      "width": 1920,
+      "height": 1080,
+      "format": "WEBP",
+      "colorspace": "sRGB"
+    },
+    {
+      "path": "rpg-assets/events/cg/season01/thumbs/marina_sunset_social.webp",
+      "sha256": "71a90b3438ba0ec217150149900e7e56dc8c18db3de9c868dca2f6749ca6d80e",
+      "bytes": 85156,
+      "width": 640,
+      "height": 360,
+      "format": "WEBP",
+      "colorspace": "sRGB"
+    },
+    {
+      "path": "rpg-assets/events/cg/season01/kaede_first_meeting.webp",
+      "sha256": "d81d87e6b7213adcbb2f1bcce3b4bd7c47b114470283e7b9711a666660b19364",
+      "bytes": 458866,
+      "width": 1920,
+      "height": 1080,
+      "format": "WEBP",
+      "colorspace": "sRGB"
+    },
+    {
+      "path": "rpg-assets/events/cg/season01/thumbs/kaede_first_meeting.webp",
+      "sha256": "34b1ec0a7d30ff9129043a1f1e88c4ed3778c3526d5f54aad398a9d4e0de0eab",
+      "bytes": 81314,
+      "width": 640,
+      "height": 360,
+      "format": "WEBP",
+      "colorspace": "sRGB"
+    },
+    {
+      "path": "rpg-assets/events/cg/season01/kaede_rooftop_predue.webp",
+      "sha256": "2f69136c4254dc645d99a8f243e317c8702cb331358805d3b83873ea92589c14",
+      "bytes": 495278,
+      "width": 1920,
+      "height": 1080,
+      "format": "WEBP",
+      "colorspace": "sRGB"
+    },
+    {
+      "path": "rpg-assets/events/cg/season01/thumbs/kaede_rooftop_predue.webp",
+      "sha256": "8e65995c829d5105c7589e98d5887460a7a44dc0791c7435aa44c5c565fabd39",
+      "bytes": 87732,
+      "width": 640,
+      "height": 360,
+      "format": "WEBP",
+      "colorspace": "sRGB"
+    },
+    {
+      "path": "rpg-assets/events/cg/season01/kaede_park_social.webp",
+      "sha256": "791f6b445f7abfcbb929c2dc836ba43dc35e936c08e0e8ae8d10b8cf2552506e",
+      "bytes": 441594,
+      "width": 1920,
+      "height": 1080,
+      "format": "WEBP",
+      "colorspace": "sRGB"
+    },
+    {
+      "path": "rpg-assets/events/cg/season01/thumbs/kaede_park_social.webp",
+      "sha256": "464b4cc91cef2e06aa209168bd19270fde0a837b2017f5144bc2b4ad2a938c83",
+      "bytes": 80222,
+      "width": 640,
+      "height": 360,
+      "format": "WEBP",
+      "colorspace": "sRGB"
+    }
+  ]
+}

@@ -1,0 +1,153 @@
+{
+  "pack": "Neo Harbor RPG — expanded expressions and existing art",
+  "version": "2026-10-18-1",
+  "characters": {
+    "hana": {
+      "name": "Hana Mizuno",
+      "age": 20,
+      "expressions": {
+        "neutral": "rpg-assets/characters/hana/vn-expressions/neutral.webp",
+        "happy": "rpg-assets/characters/hana/vn-expressions/happy.webp",
+        "embarrassed": "rpg-assets/characters/hana/vn-expressions/embarrassed.webp",
+        "angry": "rpg-assets/characters/hana/vn-expressions/angry.webp",
+        "surprised": "rpg-assets/characters/hana/vn-expressions/surprised.webp",
+        "flirty": "rpg-assets/characters/hana/vn-expressions/flirty.webp"
+      },
+      "source": "single six-panel generated expression sheet",
+      "format": "opaque WebP VN illustration panel (not a transparent sprite)",
+      "colorIdentity": "preserved from established Neo Harbor character bible",
+      "sheet": "rpg-assets/characters/hana/reference/expression-master.webp"
+    },
+    "reina": {
+      "name": "Reina Kurogane",
+      "age": 21,
+      "expressions": {
+        "neutral": "rpg-assets/characters/reina/vn-expressions/neutral.webp",
+        "happy": "rpg-assets/characters/reina/vn-expressions/happy.webp",
+        "embarrassed": "rpg-assets/characters/reina/vn-expressions/embarrassed.webp",
+        "angry": "rpg-assets/characters/reina/vn-expressions/angry.webp",
+        "surprised": "rpg-assets/characters/reina/vn-expressions/surprised.webp",
+        "flirty": "rpg-assets/characters/reina/vn-expressions/flirty.webp"
+      },
+      "source": "single six-panel generated expression sheet",
+      "format": "opaque WebP VN illustration panel (not a transparent sprite)",
+      "colorIdentity": "preserved from established Neo Harbor character bible",
+      "sheet": "rpg-assets/characters/reina/reference/expression-master.webp"
+    },
+    "shiori": {
+      "name": "Shiori Tsukishima",
+      "age": 23,
+      "expressions": {
+        "neutral": "rpg-assets/characters/shiori/vn-expressions/neutral.webp",
+        "happy": "rpg-assets/characters/shiori/vn-expressions/happy.webp",
+        "embarrassed": "rpg-assets/characters/shiori/vn-expressions/embarrassed.webp",
+        "angry": "rpg-assets/characters/shiori/vn-expressions/angry.webp",
+        "surprised": "rpg-assets/characters/shiori/vn-expressions/surprised.webp",
+        "flirty": "rpg-assets/characters/shiori/vn-expressions/flirty.webp"
+      },
+      "source": "single six-panel generated expression sheet",
+      "format": "opaque WebP VN illustration panel (not a transparent sprite)",
+      "colorIdentity": "preserved from established Neo Harbor character bible",
+      "sheet": "rpg-assets/characters/shiori/reference/expression-master.webp"
+    },
+    "yuna": {
+      "name": "Yuna Hoshino",
+      "age": 19,
+      "expressions": {
+        "neutral": "rpg-assets/characters/yuna/vn-expressions/neutral.webp",
+        "happy": "rpg-assets/characters/yuna/vn-expressions/happy.webp",
+        "embarrassed": "rpg-assets/characters/yuna/vn-expressions/embarrassed.webp",
+        "angry": "rpg-assets/characters/yuna/vn-expressions/angry.webp",
+        "surprised": "rpg-assets/characters/yuna/vn-expressions/surprised.webp",
+        "flirty": "rpg-assets/characters/yuna/vn-expressions/flirty.webp"
+      },
+      "source": "single six-panel generated expression sheet",
+      "format": "opaque WebP VN illustration panel (not a transparent sprite)",
+      "colorIdentity": "preserved from established Neo Harbor character bible",
+      "sheet": "rpg-assets/characters/yuna/reference/expression-master.webp"
+    },
+    "akari": {
+      "name": "Akari Fujimoto",
+      "age": 22,
+      "expressions": {
+        "neutral": "rpg-assets/characters/akari/vn-expressions/neutral.webp",
+        "happy": "rpg-assets/characters/akari/vn-expressions/happy.webp",
+        "embarrassed": "rpg-assets/characters/akari/vn-expressions/embarrassed.webp",
+        "angry": "rpg-assets/characters/akari/vn-expressions/angry.webp",
+        "surprised": "rpg-assets/characters/akari/vn-expressions/surprised.webp",
+        "flirty": "rpg-assets/characters/akari/vn-expressions/flirty.webp"
+      },
+      "source": "single six-panel generated expression sheet",
+      "format": "opaque WebP VN illustration panel (not a transparent sprite)",
+      "colorIdentity": "preserved from established Neo Harbor character bible",
+      "sheet": "rpg-assets/characters/akari/reference/expression-master.webp"
+    },
+    "camila": {
+      "name": "Camila Vega",
+      "age": 24,
+      "expressions": {
+        "neutral": "rpg-assets/characters/camila/vn-expressions/neutral.webp",
+        "happy": "rpg-assets/characters/camila/vn-expressions/happy.webp",
+        "embarrassed": "rpg-assets/characters/camila/vn-expressions/embarrassed.webp",
+        "angry": "rpg-assets/characters/camila/vn-expressions/angry.webp",
+        "surprised": "rpg-assets/characters/camila/vn-expressions/surprised.webp",
+        "flirty": "rpg-assets/characters/camila/vn-expressions/flirty.webp"
+      },
+      "source": "single six-panel generated expression sheet",
+      "format": "opaque WebP VN illustration panel (not a transparent sprite)",
+      "colorIdentity": "preserved from established Neo Harbor character bible",
+      "sheet": "rpg-assets/characters/camila/reference/expression-master.webp"
+    },
+    "marina": {
+      "name": "Marina Aoki",
+      "age": 21,
+      "expressions": {
+        "neutral": "rpg-assets/characters/marina/vn-expressions/neutral.webp",
+        "happy": "rpg-assets/characters/marina/vn-expressions/happy.webp",
+        "embarrassed": "rpg-assets/characters/marina/vn-expressions/embarrassed.webp",
+        "angry": "rpg-assets/characters/marina/vn-expressions/angry.webp",
+        "surprised": "rpg-assets/characters/marina/vn-expressions/surprised.webp",
+        "flirty": "rpg-assets/characters/marina/vn-expressions/flirty.webp"
+      },
+      "source": "single six-panel generated expression sheet",
+      "format": "opaque WebP VN illustration panel (not a transparent sprite)",
+      "colorIdentity": "preserved from established Neo Harbor character bible",
+      "sheet": "rpg-assets/characters/marina/reference/expression-master.webp"
+    },
+    "kaede": {
+      "name": "Kaede Arashi",
+      "age": 22,
+      "expressions": {
+        "neutral": "rpg-assets/characters/kaede/vn-expressions/neutral.webp",
+        "happy": "rpg-assets/characters/kaede/vn-expressions/happy.webp",
+        "embarrassed": "rpg-assets/characters/kaede/vn-expressions/embarrassed.webp",
+        "angry": "rpg-assets/characters/kaede/vn-expressions/angry.webp",
+        "surprised": "rpg-assets/characters/kaede/vn-expressions/surprised.webp",
+        "flirty": "rpg-assets/characters/kaede/vn-expressions/flirty.webp"
+      },
+      "source": "single six-panel generated expression sheet",
+      "format": "opaque WebP VN illustration panel (not a transparent sprite)",
+      "colorIdentity": "preserved from established Neo Harbor character bible",
+      "sheet": "rpg-assets/characters/kaede/reference/expression-master.webp"
+    }
+  },
+  "expressionOrder": [
+    "neutral",
+    "happy",
+    "embarrassed",
+    "angry",
+    "surprised",
+    "flirty"
+  ],
+  "expressionCount": 48,
+  "originalPack": "Neo Harbor 2026-10-17 expansion preserved in this ZIP",
+  "originalCharacterManifest": "rpg-assets/manifest.art-expansion.json",
+  "newImages": 56,
+  "sourceConsistency": "Each 6-expression set was extracted from one coherent original AI-generated sheet. Faces, palette, outfit and accessories remain consistent across panels.",
+  "limitations": [
+    "These are cropped, opaque illustrated panels, not alpha-cutout standing sprites.",
+    "Portraits are each 353–356 px wide; do not claim 4K masters.",
+    "Images were generated for the eight existing heroines. New NPCs authored by another agent are not in this version.",
+    "Existing root rpg-assets/{id}.png portraits are not replaced."
+  ]
+}

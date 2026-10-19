@@ -1,0 +1,821 @@
+{
+  "count": 102,
+  "files": [
+    {
+      "path": "characters/akari/chibi/back.png",
+      "width": 103,
+      "height": 299,
+      "mode": "RGBA",
+      "bytes": 75378,
+      "sha256": "fbc4a017f99c6d0af8df4d9d8c613ff98ad98b2edafa8783db3738df5d4ec34c"
+    },
+    {
+      "path": "characters/akari/chibi/front.png",
+      "width": 117,
+      "height": 299,
+      "mode": "RGBA",
+      "bytes": 86144,
+      "sha256": "2674d2ab819273e4ddf52485daa7cbd2553c0971b5ea3ee4421796707e78c146"
+    },
+    {
+      "path": "characters/akari/chibi/side.png",
+      "width": 99,
+      "height": 299,
+      "mode": "RGBA",
+      "bytes": 68447,
+      "sha256": "a6e171f552d8a60ec3a34c0cfb41d717540558ad9f39855450b2bf9d69554a41"
+    },
+    {
+      "path": "characters/akari/expressions/determined.png",
+      "width": 259,
+      "height": 121,
+      "mode": "RGBA",
+      "bytes": 60306,
+      "sha256": "f302768c9e1e587ffd228cfae19dbcd55f602ab315f5bd3b9fa845fbe4241054"
+    },
+    {
+      "path": "characters/akari/expressions/flustered.png",
+      "width": 263,
+      "height": 121,
+      "mode": "RGBA",
+      "bytes": 63908,
+      "sha256": "8774320bde4382484223c79aeda91feedab444f0c18d0d9aef1b665fe6d3bb69"
+    },
+    {
+      "path": "characters/akari/expressions/happy.png",
+      "width": 242,
+      "height": 121,
+      "mode": "RGBA",
+      "bytes": 56780,
+      "sha256": "5c661864ab3ee64ec2c8fef2da2c5a13cd08827e0dd9c2669e1a9512a2605b45"
+    },
+    {
+      "path": "characters/akari/expressions/neutral.png",
+      "width": 244,
+      "height": 121,
+      "mode": "RGBA",
+      "bytes": 56765,
+      "sha256": "1d27368b51a4e0a3d12fdfbbdd0f0a381947e8c1a0716bc0171847a02a88f9a4"
+    },
+    {
+      "path": "characters/akari/outfits/streetwear-preview.png",
+      "width": 171,
+      "height": 850,
+      "mode": "RGBA",
+      "bytes": 290439,
+      "sha256": "d1c631af1b59fda5abbeeb5aafa28262c4bccb560f8f7539ee10af5949888232"
+    },
+    {
+      "path": "characters/akari/portraits/primary.png",
+      "width": 376,
+      "height": 506,
+      "mode": "RGB",
+      "bytes": 331678,
+      "sha256": "a1078e3153c9a80b39ed48bbe487c002c3f7815cd5251c7fefe49118bf573f24"
+    },
+    {
+      "path": "characters/camila/chibi/back.png",
+      "width": 103,
+      "height": 299,
+      "mode": "RGBA",
+      "bytes": 81023,
+      "sha256": "24a653ad1176c3552e2ae98357e25b36f5b09d27547282bcbe2b5e51dcd785c9"
+    },
+    {
+      "path": "characters/camila/chibi/front.png",
+      "width": 117,
+      "height": 299,
+      "mode": "RGBA",
+      "bytes": 94931,
+      "sha256": "e0d21d2c264cf24588188dbd1acfad9f7c45098ae31d7ef8bc8d0200f2ec63ce"
+    },
+    {
+      "path": "characters/camila/chibi/side.png",
+      "width": 99,
+      "height": 299,
+      "mode": "RGBA",
+      "bytes": 76000,
+      "sha256": "1fa852be0636f575fc1adfc82da0b8ff61ef065a0e31f8a3f3b9606472854cf6"
+    },
+    {
+      "path": "characters/camila/expressions/determined.png",
+      "width": 259,
+      "height": 121,
+      "mode": "RGBA",
+      "bytes": 62709,
+      "sha256": "515bc3a7613e97b350440619a6cb3e6cbca32c6e7a73a0804ee7991afdc4e44e"
+    },
+    {
+      "path": "characters/camila/expressions/flustered.png",
+      "width": 263,
+      "height": 121,
+      "mode": "RGBA",
+      "bytes": 64252,
+      "sha256": "8278ebedb8224cb240ed36e2c685d260a834b8298e1a0a1a40c5b65d0a189c1b"
+    },
+    {
+      "path": "characters/camila/expressions/happy.png",
+      "width": 242,
+      "height": 121,
+      "mode": "RGBA",
+      "bytes": 60916,
+      "sha256": "8aad7dfa846a51f76db93f1cb91a4c0e31c79fee9b3319ba42a8bbe55673aa4e"
+    },
+    {
+      "path": "characters/camila/expressions/neutral.png",
+      "width": 244,
+      "height": 121,
+      "mode": "RGBA",
+      "bytes": 60122,
+      "sha256": "8a5b8a4ebb3d447f62a9e06d69342bd0444f71b6f9ee4535ad969ec87bbd51fc"
+    },
+    {
+      "path": "characters/camila/outfits/streetwear-preview.png",
+      "width": 171,
+      "height": 850,
+      "mode": "RGBA",
+      "bytes": 340349,
+      "sha256": "fd9fcc9fd12e8b911ab207c50230f2aa79bf2ebefd17d9e93c2a15b69b5fcb25"
+    },
+    {
+      "path": "characters/camila/portraits/primary.png",
+      "width": 376,
+      "height": 506,
+      "mode": "RGB",
+      "bytes": 322880,
+      "sha256": "3011b1a8ed2bd8a29a57b59f578e4e3effa25dce23861f739b1ecbc3247dba95"
+    },
+    {
+      "path": "characters/hana/chibi/back.png",
+      "width": 103,
+      "height": 299,
+      "mode": "RGBA",
+      "bytes": 79766,
+      "sha256": "bc73947206e79522bf74534e1c9973bfd44f9ff50ebafb89b39bfdd0cbaa4a8a"
+    },
+    {
+      "path": "characters/hana/chibi/front.png",
+      "width": 117,
+      "height": 299,
+      "mode": "RGBA",
+      "bytes": 92897,
+      "sha256": "43d79ed271334d6e8dd4b171e9d25ec96a786eea9659a32837692dbe6544fb3b"
+    },
+    {
+      "path": "characters/hana/chibi/side.png",
+      "width": 99,
+      "height": 299,
+      "mode": "RGBA",
+      "bytes": 75066,
+      "sha256": "e475b0c2cbe3c2f2d3af07e9176055cfe068267fd69d0084f58e3bbb48a38d2c"
+    },
+    {
+      "path": "characters/hana/expressions/determined.png",
+      "width": 259,
+      "height": 114,
+      "mode": "RGBA",
+      "bytes": 58059,
+      "sha256": "b357077f5dda96a0f7ca8553b8055f62b65986ddf81acc0303e1b42180128b5f"
+    },
+    {
+      "path": "characters/hana/expressions/flustered.png",
+      "width": 263,
+      "height": 114,
+      "mode": "RGBA",
+      "bytes": 61195,
+      "sha256": "7ef3318e5c993fcc31b6b87bd2b3abff1dbc24b946302105440e0780e5ec8a19"
+    },
+    {
+      "path": "characters/hana/expressions/happy.png",
+      "width": 242,
+      "height": 114,
+      "mode": "RGBA",
+      "bytes": 55585,
+      "sha256": "756f87f605724faffe47d55f20b6317d45439b4b63050da94976c1b270204b98"
+    },
+    {
+      "path": "characters/hana/expressions/neutral.png",
+      "width": 244,
+      "height": 114,
+      "mode": "RGBA",
+      "bytes": 55487,
+      "sha256": "3f758b1a7ae3b8d80758b5b9fec5f8ba208c50e183ca6d185a519ff899e3f166"
+    },
+    {
+      "path": "characters/hana/outfits/streetwear-preview.png",
+      "width": 171,
+      "height": 850,
+      "mode": "RGBA",
+      "bytes": 351465,
+      "sha256": "706bfa9d848a04256f353cd02005bae606ba50bea2eb735ef324892e2ceb91c7"
+    },
+    {
+      "path": "characters/hana/portraits/primary.png",
+      "width": 376,
+      "height": 507,
+      "mode": "RGB",
+      "bytes": 360452,
+      "sha256": "7a2d1ab57cd07188e33343984a65eb5b3139d5fcf247bc4ec49d325b01a42f9d"
+    },
+    {
+      "path": "characters/kaede/chibi/back.png",
+      "width": 103,
+      "height": 299,
+      "mode": "RGBA",
+      "bytes": 77565,
+      "sha256": "7d90f987784aba961b47f0ac8b6d587afddec8f3ca8671362218f2538f329c44"
+    },
+    {
+      "path": "characters/kaede/chibi/front.png",
+      "width": 117,
+      "height": 299,
+      "mode": "RGBA",
+      "bytes": 90009,
+      "sha256": "8d1ac26b091b15910b82cd694c3cfc152476683a829670144b715e9287b9a526"
+    },
+    {
+      "path": "characters/kaede/chibi/side.png",
+      "width": 99,
+      "height": 299,
+      "mode": "RGBA",
+      "bytes": 73399,
+      "sha256": "ee5e5a5a5e64dcc7d4ad362f203307ac9d7a927d8e51062265af9b9f4d9fec0c"
+    },
+    {
+      "path": "characters/kaede/expressions/determined.png",
+      "width": 259,
+      "height": 154,
+      "mode": "RGBA",
+      "bytes": 78533,
+      "sha256": "431f1c937886b56c48a7a38d1f1d3d4b215a930e62a1a7ae46c582cac70afcdd"
+    },
+    {
+      "path": "characters/kaede/expressions/flustered.png",
+      "width": 263,
+      "height": 154,
+      "mode": "RGBA",
+      "bytes": 83967,
+      "sha256": "c639f093185f9d3f9745aef901f3d3d09f41ec8aff50841cd99b5c5147c5d6ea"
+    },
+    {
+      "path": "characters/kaede/expressions/happy.png",
+      "width": 242,
+      "height": 154,
+      "mode": "RGBA",
+      "bytes": 79220,
+      "sha256": "4dbb84296fdbddcb01d5e0699e95db68805d8be6a6c72185877b65dbb61b10a3"
+    },
+    {
+      "path": "characters/kaede/expressions/neutral.png",
+      "width": 244,
+      "height": 154,
+      "mode": "RGBA",
+      "bytes": 78384,
+      "sha256": "f14d7171ab574e1365af64a9410df74a35f4ab6d6c88269981b0d7f45ebe539e"
+    },
+    {
+      "path": "characters/kaede/outfits/streetwear-preview.png",
+      "width": 171,
+      "height": 850,
+      "mode": "RGBA",
+      "bytes": 358418,
+      "sha256": "f0f0f0f8ba0cbff8d2ad677c505252cb5fd98b09cb497cb1b71a4d3f64da7952"
+    },
+    {
+      "path": "characters/kaede/portraits/primary.png",
+      "width": 376,
+      "height": 506,
+      "mode": "RGB",
+      "bytes": 328408,
+      "sha256": "77ee52595c710b843d79b2bbe14d25f0b0ac7bbc2a24a661e13e1e5851c9c055"
+    },
+    {
+      "path": "characters/marina/chibi/back.png",
+      "width": 103,
+      "height": 299,
+      "mode": "RGBA",
+      "bytes": 76300,
+      "sha256": "2cf54ea05e6a211e2f6b13fd28812470ec46847f1f798a70ebf787816f5fdb38"
+    },
+    {
+      "path": "characters/marina/chibi/front.png",
+      "width": 117,
+      "height": 299,
+      "mode": "RGBA",
+      "bytes": 91146,
+      "sha256": "cd45b6d404a11294279ca297fb2e4938d5ed41bc2e5027eaceacec67c5a2ab11"
+    },
+    {
+      "path": "characters/marina/chibi/side.png",
+      "width": 99,
+      "height": 299,
+      "mode": "RGBA",
+      "bytes": 75287,
+      "sha256": "995ff747f93b3617d1e888d6dcf803f737aa9f55fd7e3dd8a2c48cf3cc3bc84f"
+    },
+    {
+      "path": "characters/marina/expressions/determined.png",
+      "width": 259,
+      "height": 129,
+      "mode": "RGBA",
+      "bytes": 70220,
+      "sha256": "f2efa4c686cb5cc479906e36c750b4e60cf70fda1f61f7a0adbcec78e0737782"
+    },
+    {
+      "path": "characters/marina/expressions/flustered.png",
+      "width": 263,
+      "height": 129,
+      "mode": "RGBA",
+      "bytes": 69419,
+      "sha256": "03bf67da0f7f8bfa55dda2cb203f1011dea62bdb1d9f9dd4764955656d5c2177"
+    },
+    {
+      "path": "characters/marina/expressions/happy.png",
+      "width": 242,
+      "height": 129,
+      "mode": "RGBA",
+      "bytes": 66262,
+      "sha256": "b445656df229dd129619bc5bacb0150e6e648440a87992b8917156013d859537"
+    },
+    {
+      "path": "characters/marina/expressions/neutral.png",
+      "width": 244,
+      "height": 129,
+      "mode": "RGBA",
+      "bytes": 65821,
+      "sha256": "0b7c5b41318d2180b29f4246e8bed65a3dcbd9e96a6ead0f96e3a532b96b57cf"
+    },
+    {
+      "path": "characters/marina/outfits/streetwear-preview.png",
+      "width": 171,
+      "height": 850,
+      "mode": "RGBA",
+      "bytes": 356544,
+      "sha256": "c1e374aae51956b8d87192eb1789042a9f872a0d1549039978fbf337e235bf74"
+    },
+    {
+      "path": "characters/marina/portraits/primary.png",
+      "width": 376,
+      "height": 506,
+      "mode": "RGB",
+      "bytes": 344851,
+      "sha256": "0556f7dd1f6160caca3bbf68006b457f9b60a630bff993ae999db7a31b2c0b49"
+    },
+    {
+      "path": "characters/reina/chibi/back.png",
+      "width": 103,
+      "height": 299,
+      "mode": "RGBA",
+      "bytes": 79385,
+      "sha256": "4067b420eec802094dddabde03bc6f11512db47b5fc6dc86c411c2325a2cc0ea"
+    },
+    {
+      "path": "characters/reina/chibi/front.png",
+      "width": 117,
+      "height": 299,
+      "mode": "RGBA",
+      "bytes": 88547,
+      "sha256": "9b81ec098439b0cc6dac321b19f4056cecd3c1ff69c0c01a5760117dd99b29c9"
+    },
+    {
+      "path": "characters/reina/chibi/side.png",
+      "width": 99,
+      "height": 299,
+      "mode": "RGBA",
+      "bytes": 74405,
+      "sha256": "5f0e5f5090e231bc2bea970925d447ab8bdd8c29291c622d196e8ff92798a7f9"
+    },
+    {
+      "path": "characters/reina/expressions/determined.png",
+      "width": 259,
+      "height": 117,
+      "mode": "RGBA",
+      "bytes": 61232,
+      "sha256": "34cbbea8e7d26a57aab19253bc2c2542664a3532c9855b183829f526fac155f9"
+    },
+    {
+      "path": "characters/reina/expressions/flustered.png",
+      "width": 263,
+      "height": 117,
+      "mode": "RGBA",
+      "bytes": 61594,
+      "sha256": "a5641c9188a28ccbb026b3e2051ad99c48d2638b303e5188088203b1d84dcc0f"
+    },
+    {
+      "path": "characters/reina/expressions/happy.png",
+      "width": 242,
+      "height": 117,
+      "mode": "RGBA",
+      "bytes": 56160,
+      "sha256": "a2bf8591f9a2976e306aa1d26ece31cc1cc0bd5fddbd75b1d1156741797ec018"
+    },
+    {
+      "path": "characters/reina/expressions/neutral.png",
+      "width": 244,
+      "height": 117,
+      "mode": "RGBA",
+      "bytes": 57135,
+      "sha256": "7e5db9a560d63a06cb676dbe0bb5b137bcb045efc9a723186e01e60b7f4759d2"
+    },
+    {
+      "path": "characters/reina/outfits/streetwear-preview.png",
+      "width": 171,
+      "height": 850,
+      "mode": "RGBA",
+      "bytes": 344123,
+      "sha256": "c366cc985f70f5b443648645276d99d12d52435c8a8836df5df4532f0f7ed6ef"
+    },
+    {
+      "path": "characters/reina/portraits/primary.png",
+      "width": 376,
+      "height": 507,
+      "mode": "RGB",
+      "bytes": 344353,
+      "sha256": "932b1b47a2a3f7df1a8ec0426a78c09764f709fa5d357794d7bb7a4c54161186"
+    },
+    {
+      "path": "characters/shiori/chibi/back.png",
+      "width": 103,
+      "height": 299,
+      "mode": "RGBA",
+      "bytes": 77843,
+      "sha256": "4cc02d80d9d76ce5994109dc3b10828e174af46c8eada520ab46434a7d2e6581"
+    },
+    {
+      "path": "characters/shiori/chibi/front.png",
+      "width": 117,
+      "height": 299,
+      "mode": "RGBA",
+      "bytes": 91646,
+      "sha256": "4bbd489b2ca3aa09d08154f5f15ab3c2b894a5b4c46442407c84d99fb06fbd41"
+    },
+    {
+      "path": "characters/shiori/chibi/side.png",
+      "width": 99,
+      "height": 299,
+      "mode": "RGBA",
+      "bytes": 76337,
+      "sha256": "b4a8e40d4abf71e5afd4cbf0ea77e6df4ba01c767cb1a4c287c2f6c78ed34f5f"
+    },
+    {
+      "path": "characters/shiori/expressions/determined.png",
+      "width": 259,
+      "height": 118,
+      "mode": "RGBA",
+      "bytes": 59150,
+      "sha256": "3bf467dde13383af05326d001c353ee23e423870c0a33b5491320fcba7630ed2"
+    },
+    {
+      "path": "characters/shiori/expressions/flustered.png",
+      "width": 263,
+      "height": 118,
+      "mode": "RGBA",
+      "bytes": 60868,
+      "sha256": "565bf354a18eca4fe88ab70f918ee69e620a98677a95a75b8cc93c6a94cb0494"
+    },
+    {
+      "path": "characters/shiori/expressions/happy.png",
+      "width": 242,
+      "height": 118,
+      "mode": "RGBA",
+      "bytes": 54044,
+      "sha256": "aa54f49a73a5915f410454a03aeb151bbbfc6c25d4f5593f33a29f3d861aa387"
+    },
+    {
+      "path": "characters/shiori/expressions/neutral.png",
+      "width": 244,
+      "height": 118,
+      "mode": "RGBA",
+      "bytes": 53870,
+      "sha256": "912762b4a6c0ca30e0d901912e94ef89b4d0cd73025a7745d10b6fb4ee3edb5c"
+    },
+    {
+      "path": "characters/shiori/outfits/streetwear-preview.png",
+      "width": 171,
+      "height": 850,
+      "mode": "RGBA",
+      "bytes": 351500,
+      "sha256": "dd4a446ac0e8b1d17f8202812fe46518bdc551571ca540eac2ab3edd08ff7777"
+    },
+    {
+      "path": "characters/shiori/portraits/primary.png",
+      "width": 376,
+      "height": 507,
+      "mode": "RGB",
+      "bytes": 323046,
+      "sha256": "fca1bbedb04a8d4ae3601bea165570d2573f4934018b9e9a6d937d1f7bddce78"
+    },
+    {
+      "path": "characters/yuna/chibi/back.png",
+      "width": 103,
+      "height": 299,
+      "mode": "RGBA",
+      "bytes": 76389,
+      "sha256": "b5896371240a8f0a06d67793064b48871900f1241b463d18d321d80d910d8efc"
+    },
+    {
+      "path": "characters/yuna/chibi/front.png",
+      "width": 117,
+      "height": 299,
+      "mode": "RGBA",
+      "bytes": 89771,
+      "sha256": "670c42e3ed4386a2cfdb6e83377d29db32b29d4fb54e739ef36a57980cb94368"
+    },
+    {
+      "path": "characters/yuna/chibi/side.png",
+      "width": 99,
+      "height": 299,
+      "mode": "RGBA",
+      "bytes": 76171,
+      "sha256": "21f8bb759faf3486c4636a32ea6a4cc3c8400a209d10ee60ed883edcda114dca"
+    },
+    {
+      "path": "characters/yuna/expressions/determined.png",
+      "width": 259,
+      "height": 117,
+      "mode": "RGBA",
+      "bytes": 64951,
+      "sha256": "77e22b656948d175610cc44cfd94126f14f38a5b02ad54ccc3ffde35c5dc4b27"
+    },
+    {
+      "path": "characters/yuna/expressions/flustered.png",
+      "width": 263,
+      "height": 117,
+      "mode": "RGBA",
+      "bytes": 65954,
+      "sha256": "734b390844da9e2604153a0739de3b291052e3676b9acae7cff3f91d82b031ef"
+    },
+    {
+      "path": "characters/yuna/expressions/happy.png",
+      "width": 242,
+      "height": 117,
+      "mode": "RGBA",
+      "bytes": 62127,
+      "sha256": "281379e26f15a51d36066e4059c4c80b44dadb953c46108b20f8d25b54c1cf1a"
+    },
+    {
+      "path": "characters/yuna/expressions/neutral.png",
+      "width": 244,
+      "height": 117,
+      "mode": "RGBA",
+      "bytes": 61446,
+      "sha256": "0fae8f15613777657993a5cd55b251981382d14b12e59bc7fded7f22ee2e709e"
+    },
+    {
+      "path": "characters/yuna/outfits/streetwear-preview.png",
+      "width": 171,
+      "height": 850,
+      "mode": "RGBA",
+      "bytes": 350239,
+      "sha256": "2a9a999e206bfb50bd92cc5a387051f5724e3df7c77c6ab96e608883d7b4dc37"
+    },
+    {
+      "path": "characters/yuna/portraits/primary.png",
+      "width": 376,
+      "height": 507,
+      "mode": "RGB",
+      "bytes": 372815,
+      "sha256": "31a53858755b4520a495d72129bc54eb2a815884086d69ae7405fc97ba30fd02"
+    },
+    {
+      "path": "events/cg/akari-library.webp",
+      "width": 681,
+      "height": 269,
+      "mode": "RGB",
+      "bytes": 61970,
+      "sha256": "0784d0d8ad9516f6442eeee3a18f785b4ebe1cf9e5525c6894d1d4d528b3d806"
+    },
+    {
+      "path": "events/cg/camila-cafe.webp",
+      "width": 693,
+      "height": 267,
+      "mode": "RGB",
+      "bytes": 63984,
+      "sha256": "f4da1377750643befa3b4ec2fae1b51a9f8f689cbd0f298750f25850ecdad095"
+    },
+    {
+      "path": "events/cg/hana-card-shop.webp",
+      "width": 680,
+      "height": 268,
+      "mode": "RGB",
+      "bytes": 70502,
+      "sha256": "f8bbe0e42c57dfcf1423ae19d0abde926d9cf1c3371731a4573070ed5ce64486"
+    },
+    {
+      "path": "events/cg/marina-riverside.webp",
+      "width": 694,
+      "height": 275,
+      "mode": "RGB",
+      "bytes": 68788,
+      "sha256": "9a0778ce0df1aadfabbff3a6e8c99773bfaabe3a62928bb58f516abfe1d373ea"
+    },
+    {
+      "path": "events/cg/reina-after-hours.webp",
+      "width": 694,
+      "height": 270,
+      "mode": "RGB",
+      "bytes": 61976,
+      "sha256": "c278f876dacf94bcd198cf2bc625c537927c79626994825f3d1a0caa9d4ba2b9"
+    },
+    {
+      "path": "events/cg/yuna-arcade.webp",
+      "width": 681,
+      "height": 279,
+      "mode": "RGB",
+      "bytes": 84150,
+      "sha256": "fcb68fc90f2f4f8a0561f5b1e6f3e610c8d2c5f9004a91557efcb568329cdcb7"
+    },
+    {
+      "path": "locations/panoramas/arcade-evening.webp",
+      "width": 679,
+      "height": 223,
+      "mode": "RGB",
+      "bytes": 77008,
+      "sha256": "ed3e1417cd602959839d16671bfa8662173fe121227abf18bbda6b8dd22fb3a0"
+    },
+    {
+      "path": "locations/panoramas/cafe-evening.webp",
+      "width": 681,
+      "height": 238,
+      "mode": "RGB",
+      "bytes": 74558,
+      "sha256": "4c9cc51f6d74204f33d80c9be5f1e409c00172e2e43557555213f6f2099b66ad"
+    },
+    {
+      "path": "locations/panoramas/center-day.webp",
+      "width": 684,
+      "height": 236,
+      "mode": "RGB",
+      "bytes": 68040,
+      "sha256": "f81bcf590b6e9482ee3d1144703646f11156e6bd3685a4fac74b174ce2ad2dcf"
+    },
+    {
+      "path": "locations/panoramas/docks-sunset.webp",
+      "width": 686,
+      "height": 210,
+      "mode": "RGB",
+      "bytes": 63004,
+      "sha256": "d4635340aa30228bef748088db2c79c8363d743aa01bbf3393f2d793b372bf59"
+    },
+    {
+      "path": "locations/panoramas/home-day.webp",
+      "width": 679,
+      "height": 205,
+      "mode": "RGB",
+      "bytes": 66108,
+      "sha256": "2b7b3cdfe22385e55599eeef01659412b6708d8ac95a96e78348928b9e071b7b"
+    },
+    {
+      "path": "locations/panoramas/library-day.webp",
+      "width": 681,
+      "height": 210,
+      "mode": "RGB",
+      "bytes": 66294,
+      "sha256": "4553610c20afa5a591ba13cb5eb316c405da6f63a71a1badf1d16c3bcdfd371b"
+    },
+    {
+      "path": "locations/panoramas/park-day.webp",
+      "width": 684,
+      "height": 223,
+      "mode": "RGB",
+      "bytes": 78346,
+      "sha256": "1cf4be4076ac48994a1146624e79b6017c0d5af22fd4ca9efce2ee2d39ec049f"
+    },
+    {
+      "path": "locations/panoramas/shop-day.webp",
+      "width": 683,
+      "height": 211,
+      "mode": "RGB",
+      "bytes": 70706,
+      "sha256": "61aa0109c6933017a951f15377c50f972ea7a22a47d002eca009face364920f0"
+    },
+    {
+      "path": "ui/avatars/akari.webp",
+      "width": 224,
+      "height": 224,
+      "mode": "RGB",
+      "bytes": 17164,
+      "sha256": "c9f237888361c8cb2675c70d38681fa34374572df10b2f71ac214ad9de4c43fe"
+    },
+    {
+      "path": "ui/avatars/camila.webp",
+      "width": 224,
+      "height": 224,
+      "mode": "RGB",
+      "bytes": 18438,
+      "sha256": "bfd6b93a8682d0016c1266748048ec81b9e6b8c5e698ba7b522968faf541f571"
+    },
+    {
+      "path": "ui/avatars/hana.webp",
+      "width": 224,
+      "height": 224,
+      "mode": "RGB",
+      "bytes": 20782,
+      "sha256": "ac6d3ec2a30473ac6497ce63cb12e71b69e6cb4c172e543bb429488b578961a1"
+    },
+    {
+      "path": "ui/avatars/kaede.webp",
+      "width": 224,
+      "height": 224,
+      "mode": "RGB",
+      "bytes": 17228,
+      "sha256": "a3521685d795b425cc87d1cd34c87f9d92f8eebcf25a34ab52bb04a0137a9d91"
+    },
+    {
+      "path": "ui/avatars/marina.webp",
+      "width": 224,
+      "height": 224,
+      "mode": "RGB",
+      "bytes": 19062,
+      "sha256": "b0f695c01b9f337c338d1011ed297bcf859f5f728498ce892a7612d8a8b9fac3"
+    },
+    {
+      "path": "ui/avatars/reina.webp",
+      "width": 224,
+      "height": 224,
+      "mode": "RGB",
+      "bytes": 19372,
+      "sha256": "541b5988bbdca178fa27808897a6ad44d7cfd7bbc9bdbee3aa16f9438e96b376"
+    },
+    {
+      "path": "ui/avatars/shiori.webp",
+      "width": 224,
+      "height": 224,
+      "mode": "RGB",
+      "bytes": 17904,
+      "sha256": "169995e971a7a68a0cde676ae8104d5ab50859dd2dfcf2d7a84a8a6a6086c1c9"
+    },
+    {
+      "path": "ui/avatars/yuna.webp",
+      "width": 224,
+      "height": 224,
+      "mode": "RGB",
+      "bytes": 25106,
+      "sha256": "9301fe36e8a0f40ed48ebff721baa282364c251440328a76fe0f4a6be17783d0"
+    },
+    {
+      "path": "ui/frames/nameplate-akari.png",
+      "width": 384,
+      "height": 90,
+      "mode": "RGBA",
+      "bytes": 627,
+      "sha256": "3865a5d4be9966b274a6199910c628dff3f97027bd84805935a0d104cf45de11"
+    },
+    {
+      "path": "ui/frames/nameplate-camila.png",
+      "width": 384,
+      "height": 90,
+      "mode": "RGBA",
+      "bytes": 630,
+      "sha256": "5bdf3a02505252d1f9162498d54f038d90f1bed2c3164cc6d2c72a8f0ab8d4c4"
+    },
+    {
+      "path": "ui/frames/nameplate-hana.png",
+      "width": 384,
+      "height": 90,
+      "mode": "RGBA",
+      "bytes": 626,
+      "sha256": "bf67cce35f247d4499a25085d2891c038566d72cbe4ba0eaf0f96241b58bb560"
+    },
+    {
+      "path": "ui/frames/nameplate-kaede.png",
+      "width": 384,
+      "height": 90,
+      "mode": "RGBA",
+      "bytes": 628,
+      "sha256": "b40fabc429e35cd146acd05735984ece3659561af76ed3a62b065572e2954267"
+    },
+    {
+      "path": "ui/frames/nameplate-marina.png",
+      "width": 384,
+      "height": 90,
+      "mode": "RGBA",
+      "bytes": 628,
+      "sha256": "d8337fe62903c84ecc143e8a02e59e353b633dc8688b35d2472f6f0bc6bded73"
+    },
+    {
+      "path": "ui/frames/nameplate-reina.png",
+      "width": 384,
+      "height": 90,
+      "mode": "RGBA",
+      "bytes": 624,
+      "sha256": "91f4d85b7b32556fee679247e452937d282d9b58671a41d51299178ca3615e94"
+    },
+    {
+      "path": "ui/frames/nameplate-shiori.png",
+      "width": 384,
+      "height": 90,
+      "mode": "RGBA",
+      "bytes": 627,
+      "sha256": "dd82bf8f983ab7a2d502712fa3ad58f0a96d5b728ac805993460b21784abca8a"
+    },
+    {
+      "path": "ui/frames/nameplate-yuna.png",
+      "width": 384,
+      "height": 90,
+      "mode": "RGBA",
+      "bytes": 628,
+      "sha256": "a40a05e7b363a4424ffeefa827ef673c4d81ba3924bbc3be30a07d7c82690e45"
+    }
+  ]
+}

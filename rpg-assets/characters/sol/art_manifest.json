@@ -1,0 +1,39 @@
+{
+  "character": "Sol Varela",
+  "id": "sol",
+  "status": "adult original character",
+  "packVersion": "2026-10-19-sol-1",
+  "portrait": "rpg-assets/sol.png",
+  "portraitStructured": "rpg-assets/characters/sol/portraits/primary.png",
+  "avatar": "rpg-assets/ui/avatars/sol.webp",
+  "expressions": {
+    "neutral": "rpg-assets/characters/sol/expressions/neutral.png",
+    "smile": "rpg-assets/characters/sol/expressions/smile.png",
+    "surprised": "rpg-assets/characters/sol/expressions/surprised.png",
+    "worried": "rpg-assets/characters/sol/expressions/worried.png",
+    "soft": "rpg-assets/characters/sol/expressions/soft.png"
+  },
+  "events": {
+    "sol_scavenger_hunt": {
+      "full": "rpg-assets/events/cg/sol/sol_scavenger_hunt.webp",
+      "thumbnail": "rpg-assets/events/cg/sol/thumbs/sol_scavenger_hunt.webp",
+      "label": "Scavenger hunt event CG",
+      "sourceFile": "aventura_tropical_en_el_puertoભળ.png",
+      "sourceSize": [
+        1672,
+        941
+      ]
+    },
+    "sol_quiet_cafe": {
+      "full": "rpg-assets/events/cg/sol/sol_quiet_cafe.webp",
+      "thumbnail": "rpg-assets/events/cg/sol/thumbs/sol_quiet_cafe.webp",
+      "label": "Quiet sunset café event CG",
+      "sourceFile": "atardecer_tropical_junto_al_mar.png",
+      "sourceSize": [
+        1672,
+        941
+      ]
+    }
+  },
+  "notes": "Added based on the Sol character bible referenced in the repository and the generated assets from this conversation."
+}

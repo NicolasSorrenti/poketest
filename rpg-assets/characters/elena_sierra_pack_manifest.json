@@ -1,0 +1,144 @@
+{
+  "schemaVersion": 1,
+  "packVersion": "2026-10-19-provisional-v1",
+  "characters": {
+    "elena": {
+      "portrait": "rpg-assets/characters/elena/portrait.png",
+      "expressions": [
+        "rpg-assets/characters/elena/expressions/neutral.webp",
+        "rpg-assets/characters/elena/expressions/smile.webp",
+        "rpg-assets/characters/elena/expressions/surprised.webp",
+        "rpg-assets/characters/elena/expressions/worried.webp",
+        "rpg-assets/characters/elena/expressions/soft.webp"
+      ],
+      "cgs": [
+        "rpg-assets/events/cg/elena/harbor_night.webp",
+        "rpg-assets/events/cg/elena/cafe_evening.webp"
+      ],
+      "thumbnails": [
+        "rpg-assets/events/cg/elena/thumbs/harbor_night.webp",
+        "rpg-assets/events/cg/elena/thumbs/cafe_evening.webp"
+      ]
+    },
+    "sierra": {
+      "portrait": "rpg-assets/characters/sierra/portrait.png",
+      "expressions": [
+        "rpg-assets/characters/sierra/expressions/neutral.webp",
+        "rpg-assets/characters/sierra/expressions/smile.webp",
+        "rpg-assets/characters/sierra/expressions/surprised.webp",
+        "rpg-assets/characters/sierra/expressions/annoyed.webp",
+        "rpg-assets/characters/sierra/expressions/soft_flirty.webp"
+      ],
+      "cgs": [
+        "rpg-assets/events/cg/sierra/harbor_meeting.webp",
+        "rpg-assets/events/cg/sierra/harbor_sunset.webp"
+      ],
+      "thumbnails": [
+        "rpg-assets/events/cg/sierra/thumbs/harbor_meeting.webp",
+        "rpg-assets/events/cg/sierra/thumbs/harbor_sunset.webp"
+      ]
+    }
+  },
+  "notes": [
+    "Packaged from generated artwork in this conversation.",
+    "Includes a portrait style guide to standardize future portrait generation."
+  ],
+  "checksums": {
+    "rpg-assets/characters/elena/portrait.png": {
+      "sha256": "96171332dc9fab806a59ff4447bd397f67f1650c930acbdbe204fc39c7a6cc39",
+      "bytes": 1491897
+    },
+    "rpg-assets/characters/elena/expressions/neutral.webp": {
+      "sha256": "5e1a451ce592083d3328e0f8b7f61cc793507578751e1a336e392c744841127c",
+      "bytes": 29978
+    },
+    "rpg-assets/characters/elena/expressions/smile.webp": {
+      "sha256": "d2365bbc0c16eff79401e8016844f9d5be824679f058986c1da73bec3bb8c1c6",
+      "bytes": 31716
+    },
+    "rpg-assets/characters/elena/expressions/surprised.webp": {
+      "sha256": "5964b51ac41fcf0d882f7da99a0165c6de8068e46db627ab0cc74a1bd76c824c",
+      "bytes": 28962
+    },
+    "rpg-assets/characters/elena/expressions/worried.webp": {
+      "sha256": "d8e2815986b3369c926814667da511fb3a059e1ce1e53b5815382c281b9bd5b9",
+      "bytes": 30708
+    },
+    "rpg-assets/characters/elena/expressions/soft.webp": {
+      "sha256": "0f6833c1e2fe80eba549478ed45dcf6769a0393900b3d2f65f13f653a8d307af",
+      "bytes": 31620
+    },
+    "rpg-assets/characters/elena/reference/expression_sheet.png": {
+      "sha256": "a18a7b20c5845e38faa679a0733f39f6a7ade4c9ef2fec1ac9fda5505e1f58dc",
+      "bytes": 2564220
+    },
+    "rpg-assets/characters/elena/reference/portrait_source.png": {
+      "sha256": "4b719e750051d87381b67b73e8ae80a26c25c3ff4bee47f7bcc1991b9161d360",
+      "bytes": 1513790
+    },
+    "rpg-assets/events/cg/elena/harbor_night.webp": {
+      "sha256": "bc343455c34d4417408e23bee4de247c0c7b55489ef442340d0286a01866595d",
+      "bytes": 350896
+    },
+    "rpg-assets/events/cg/elena/thumbs/harbor_night.webp": {
+      "sha256": "c0ce58c9e124431ed326e3c3f14803b78110a47c201beb4f3e9dba0297b0db6a",
+      "bytes": 60670
+    },
+    "rpg-assets/events/cg/elena/cafe_evening.webp": {
+      "sha256": "298b45d4d368102e7fd4df5bfbd6f0da74f26d4bc69a0e20f1bbe300fa3f525c",
+      "bytes": 315822
+    },
+    "rpg-assets/events/cg/elena/thumbs/cafe_evening.webp": {
+      "sha256": "f344d781d764ea7329c91f83b1c1c333cefe912d396116779019381b990f2c0b",
+      "bytes": 56358
+    },
+    "rpg-assets/characters/sierra/portrait.png": {
+      "sha256": "c87a4635c92433975ce1e8ed937d1ac126d11632529e2dec6b47f7b2bc12e9c5",
+      "bytes": 2523333
+    },
+    "rpg-assets/characters/sierra/expressions/neutral.webp": {
+      "sha256": "9cf60ed0be30692cb09c56b55b14cf152337f43613fc288acef462f122a2e4f6",
+      "bytes": 35804
+    },
+    "rpg-assets/characters/sierra/expressions/smile.webp": {
+      "sha256": "0462c89604459057f60f536f8e8d754748b8052fe1bd902137824deea2f21736",
+      "bytes": 35556
+    },
+    "rpg-assets/characters/sierra/expressions/surprised.webp": {
+      "sha256": "a764c1bfc6b49e163172c9687a12e7a0f2f0fa093e69554aca85b6d6ae5fa28a",
+      "bytes": 36182
+    },
+    "rpg-assets/characters/sierra/expressions/annoyed.webp": {
+      "sha256": "882c95b20604fce5f6075f47cdc40ffa092f1b0ff2cae101bbf6ebff191c74fa",
+      "bytes": 34724
+    },
+    "rpg-assets/characters/sierra/expressions/soft_flirty.webp": {
+      "sha256": "826959a00f0e387639399ba409f510b59361d3a9638982449b52db9904497dbc",
+      "bytes": 35486
+    },
+    "rpg-assets/characters/sierra/reference/expression_sheet.png": {
+      "sha256": "64e3a0736624e9ed3aaee230af08f7d81ff722751f80a1e45f95b24577c512a2",
+      "bytes": 2553689
+    },
+    "rpg-assets/characters/sierra/reference/portrait_source.png": {
+      "sha256": "69728af9515a8326306932903884b117a5f65ff19de2bae47575ee13e9e6ec24",
+      "bytes": 2545226
+    },
+    "rpg-assets/events/cg/sierra/harbor_meeting.webp": {
+      "sha256": "9cbbd7dffd07880e0879ecb66e07ea6513cf65eaf0317375d9e2b433d7096f1d",
+      "bytes": 460240
+    },
+    "rpg-assets/events/cg/sierra/thumbs/harbor_meeting.webp": {
+      "sha256": "edf75c9f866ae4136bd37a773004ae4785447c2bb8e7f0f37a504960f3858472",
+      "bytes": 81956
+    },
+    "rpg-assets/events/cg/sierra/harbor_sunset.webp": {
+      "sha256": "ebcd675b00924cce9eed42c5178fe1959576ab38634a858b1c1e3e757fabaac2",
+      "bytes": 435900
+    },
+    "rpg-assets/events/cg/sierra/thumbs/harbor_sunset.webp": {
+      "sha256": "8121f4d7c468c70cedde79dab961549dcc883faf58eb0bb80aede21f4e10ae10",
+      "bytes": 74460
+    }
+  }
+}

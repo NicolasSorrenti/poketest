@@ -1,0 +1,411 @@
+{
+  "schemaVersion": 1,
+  "characterId": "rina",
+  "events": [
+    {
+      "id": "rina_route_1",
+      "title": "After the Final Song",
+      "start": 7,
+      "end": 20,
+      "place": "park",
+      "slot": 2,
+      "minBond": 0,
+      "prerequisite": null,
+      "participants": [],
+      "npc": "rina",
+      "chapter": 1,
+      "lines": [
+        {
+          "speaker": "rina",
+          "text": "Ah, you stayed until the end! Most people leave after the last encore. Did you like the show?"
+        },
+        {
+          "speaker": "Protagonist",
+          "text": "I did. But I also noticed the deck box on your bag."
+        },
+        {
+          "speaker": "rina",
+          "text": "You… noticed that? Usually people only see the ribbons and the lights."
+        },
+        {
+          "speaker": "Protagonist",
+          "text": "Do you play?"
+        },
+        {
+          "speaker": "rina",
+          "text": "Play? I live for it! The stage is fun, but opening a new pack still makes my heart race more than any spotlight."
+        },
+        {
+          "speaker": "rina",
+          "text": "Want to see my binder? I keep it with me even on show days."
+        }
+      ],
+      "choices": [
+        {
+          "label": "Ask to see her favorite cards",
+          "reply": "Really?! Okay, okay, sit down — these are my babies!",
+          "kind": "support",
+          "flag": "rina_binder",
+          "delta": {
+            "affection": 2,
+            "trust": 2,
+            "respect": 1,
+            "attraction": 0
+          }
+        },
+        {
+          "label": "Tell her the real smile just now was better than the stage one",
+          "reply": "Ehh?! Don’t say that so suddenly… but thank you.",
+          "kind": "honest",
+          "flag": "rina_real",
+          "delta": {
+            "affection": 2,
+            "trust": 1,
+            "respect": 1,
+            "attraction": 1
+          }
+        },
+        {
+          "label": "Tease her gently about being an idol who loves Grass-types",
+          "reply": "Hey! Grass-types are cool! Don’t make fun of my perfect evolution lines!",
+          "kind": "flirt",
+          "flag": "rina_tease",
+          "delta": {
+            "affection": 2,
+            "trust": 1,
+            "respect": 0,
+            "attraction": 2
+          }
+        }
+      ]
+    },
+    {
+      "id": "rina_route_2",
+      "title": "Between Rehearsals",
+      "start": 24,
+      "end": 38,
+      "place": "arcade",
+      "slot": 1,
+      "minBond": 2,
+      "prerequisite": "rina_route_1",
+      "participants": [],
+      "npc": "rina",
+      "chapter": 1,
+      "lines": [
+        {
+          "speaker": "rina",
+          "text": "I only have thirty minutes before vocal practice, but I ran here anyway. Priorities!"
+        },
+        {
+          "speaker": "Protagonist",
+          "text": "You skipped for a match?"
+        },
+        {
+          "speaker": "rina",
+          "text": "I can practice scales anytime. Good local players are harder to find!"
+        },
+        {
+          "speaker": "Protagonist",
+          "text": "Your manager knows?"
+        },
+        {
+          "speaker": "rina",
+          "text": "She thinks I’m reviewing choreography. What she doesn’t know won’t hurt the set list."
+        },
+        {
+          "speaker": "rina",
+          "text": "Ready? I even brought my serious face today."
+        }
+      ],
+      "choices": [
+        {
+          "label": "Play her seriously and don’t go easy",
+          "reply": "Yes! That’s what I wanted! No special idol treatment!",
+          "kind": "support",
+          "flag": "rina_serious",
+          "delta": {
+            "affection": 2,
+            "trust": 2,
+            "respect": 1,
+            "attraction": 0
+          }
+        },
+        {
+          "label": "Ask if the idol life ever gets in the way of the game",
+          "reply": "Sometimes… but I make it work. The game is the part that keeps me grounded.",
+          "kind": "honest",
+          "flag": "rina_grounded",
+          "delta": {
+            "affection": 2,
+            "trust": 1,
+            "respect": 1,
+            "attraction": 1
+          }
+        },
+        {
+          "label": "Tell her she looks happiest when she’s holding cards",
+          "reply": "You keep noticing the real things… It’s a little embarrassing, but I like it.",
+          "kind": "flirt",
+          "flag": "rina_happy",
+          "delta": {
+            "affection": 2,
+            "trust": 1,
+            "respect": 0,
+            "attraction": 2
+          }
+        }
+      ],
+      "openingByFlag": {
+        "rina_binder": "You looked at my binder last time. I’ve been thinking about which cards to show you next!",
+        "rina_real": "You said my real smile was better. I’ve been practicing not hiding it as much.",
+        "rina_tease": "You teased me about Grass-types. I’m still defending them with my whole heart!"
+      }
+    },
+    {
+      "id": "rina_route_3",
+      "title": "The Part She Doesn’t Perform",
+      "start": 42,
+      "end": 56,
+      "place": "cafe",
+      "slot": 1,
+      "minBond": 4,
+      "prerequisite": "rina_route_2",
+      "participants": [],
+      "npc": "rina",
+      "chapter": 2,
+      "lines": [
+        {
+          "speaker": "rina",
+          "text": "No cameras, no manager, no set list. Just cards and tea. This is my favorite kind of day."
+        },
+        {
+          "speaker": "Protagonist",
+          "text": "You seem different when it’s just the game."
+        },
+        {
+          "speaker": "rina",
+          "text": "Because I don’t have to be ‘Rina the Idol’ here. I can just be the girl who gets too excited about energy acceleration."
+        },
+        {
+          "speaker": "Protagonist",
+          "text": "I like that girl."
+        },
+        {
+          "speaker": "rina",
+          "text": "You do? Most people only meet the sparkly version. The quiet card-obsessed one is… newer for me to show."
+        },
+        {
+          "speaker": "rina",
+          "text": "But I think I want to show her more."
+        }
+      ],
+      "choices": [
+        {
+          "label": "Tell her both versions are worth knowing",
+          "reply": "Both…? Okay. I’ll try to believe that.",
+          "kind": "support",
+          "flag": "rina_both",
+          "delta": {
+            "affection": 3,
+            "trust": 2,
+            "respect": 1,
+            "attraction": 0
+          }
+        },
+        {
+          "label": "Ask what she wants beyond the next stage show",
+          "reply": "No one from the agency ever asks me that. Thank you for asking.",
+          "kind": "honest",
+          "flag": "rina_future",
+          "delta": {
+            "affection": 2,
+            "trust": 2,
+            "respect": 1,
+            "attraction": 1
+          }
+        },
+        {
+          "label": "Say you fell for the card-obsessed version first",
+          "reply": "That’s… really unfairly sweet. My heart just did a little jump.",
+          "kind": "flirt",
+          "flag": "rina_fell",
+          "delta": {
+            "affection": 2,
+            "trust": 1,
+            "respect": 0,
+            "attraction": 3
+          }
+        }
+      ],
+      "openingByFlag": {
+        "rina_serious": "You played me for real last time. So I’m being real with you now.",
+        "rina_grounded": "You asked if the idol life gets in the way. Today it doesn’t. Today is just us.",
+        "rina_happy": "You said I look happiest with cards. I’m testing that theory right now."
+      }
+    },
+    {
+      "id": "rina_route_4",
+      "title": "Encore for Two",
+      "start": 60,
+      "end": 74,
+      "place": "park",
+      "slot": 2,
+      "minBond": 5,
+      "prerequisite": "rina_route_3",
+      "participants": [],
+      "npc": "rina",
+      "chapter": 3,
+      "lines": [
+        {
+          "speaker": "rina",
+          "text": "I finished early today. No encore for the crowd… but I saved one for you."
+        },
+        {
+          "speaker": "Protagonist",
+          "text": "A private encore?"
+        },
+        {
+          "speaker": "rina",
+          "text": "Just a song I like. And then maybe a match under the lights of the streetlamps. Is that okay?"
+        },
+        {
+          "speaker": "Protagonist",
+          "text": "More than okay."
+        },
+        {
+          "speaker": "rina",
+          "text": "Good. Because I’ve been practicing both the song and the deck. I wanted them to be ready at the same time."
+        },
+        {
+          "speaker": "rina",
+          "text": "You’re the first person I’ve wanted to share both with."
+        }
+      ],
+      "choices": [
+        {
+          "label": "Listen to the song, then play her with everything you have",
+          "reply": "That’s the best answer you could have given me.",
+          "kind": "support",
+          "flag": "rina_share",
+          "delta": {
+            "affection": 3,
+            "trust": 2,
+            "respect": 1,
+            "attraction": 1
+          }
+        },
+        {
+          "label": "Tell her you’re honored she chose you for both",
+          "reply": "Honored… That’s a big word. But I feel the same way about showing you.",
+          "kind": "honest",
+          "flag": "rina_honored",
+          "delta": {
+            "affection": 2,
+            "trust": 2,
+            "respect": 1,
+            "attraction": 1
+          }
+        },
+        {
+          "label": "Close the distance after the song and stay close",
+          "reply": "The streetlamps are really bright tonight… or maybe that’s just my face.",
+          "kind": "flirt",
+          "flag": "rina_close",
+          "delta": {
+            "affection": 2,
+            "trust": 1,
+            "respect": 0,
+            "attraction": 3
+          }
+        }
+      ],
+      "openingByFlag": {
+        "rina_both": "You said both versions were worth knowing. So I’m giving you both tonight.",
+        "rina_future": "You asked what I wanted beyond the next show. Part of the answer is this.",
+        "rina_fell": "You said you fell for the card-obsessed version first. I’m still replaying that."
+      }
+    },
+    {
+      "id": "rina_route_5",
+      "title": "Main Set",
+      "start": 78,
+      "end": 90,
+      "place": "cafe",
+      "slot": 2,
+      "minBond": 6,
+      "prerequisite": "rina_route_4",
+      "participants": [],
+      "npc": "rina",
+      "chapter": 4,
+      "lines": [
+        {
+          "speaker": "rina",
+          "text": "I told my manager I’m taking a real day off. No appearances, no photos, no rehearsals. Just cards and you."
+        },
+        {
+          "speaker": "Protagonist",
+          "text": "That’s a big step for you."
+        },
+        {
+          "speaker": "rina",
+          "text": "It is. I used to think I had to keep the idol and the player in separate boxes. You made me realize I don’t."
+        },
+        {
+          "speaker": "Protagonist",
+          "text": "And now?"
+        },
+        {
+          "speaker": "rina",
+          "text": "Now I want both. The stage when I choose it… and someone who stays for the matches after the lights go down."
+        },
+        {
+          "speaker": "rina",
+          "text": "Are you that someone?"
+        }
+      ],
+      "choices": [
+        {
+          "label": "Tell her you’re staying for every set — stage and table",
+          "reply": "Then it’s a deal. Official. Binder-certified.",
+          "kind": "support",
+          "flag": "rina_stay",
+          "delta": {
+            "affection": 3,
+            "trust": 2,
+            "respect": 1,
+            "attraction": 1
+          }
+        },
+        {
+          "label": "Kiss her and let the answer be clear",
+          "reply": "Ah… okay. That was a very clear answer.",
+          "kind": "flirt",
+          "flag": "rina_kiss",
+          "delta": {
+            "affection": 2,
+            "trust": 1,
+            "respect": 0,
+            "attraction": 3
+          }
+        },
+        {
+          "label": "Say you want the real Rina, sparkles and serious plays included",
+          "reply": "The real me… You keep choosing her. I’m going to keep choosing you too.",
+          "kind": "honest",
+          "flag": "rina_realme",
+          "delta": {
+            "affection": 2,
+            "trust": 3,
+            "respect": 1,
+            "attraction": 1
+          }
+        }
+      ],
+      "openingByFlag": {
+        "rina_share": "You shared the song and the match with me. I’m still glowing about it.",
+        "rina_honored": "You said you were honored. I’ve been carrying that word around all week.",
+        "rina_close": "You stayed close after the song. The streetlamps aren’t the only thing that felt bright."
+      }
+    }
+  ]
+}

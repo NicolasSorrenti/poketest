@@ -1,0 +1,304 @@
+{
+  "pack": "Neo Harbor RPG asset expansion",
+  "version": "art-2026-10-17-1",
+  "installationRoot": "rpg-assets",
+  "contentRating": "SFW; established heroine cast ages 19-24",
+  "characters": {
+    "hana": {
+      "name": "Hana Mizuno",
+      "age": 20,
+      "visualIdentity": "pink hair / mint varsity jacket / warm community player",
+      "accentColor": "#ee799d",
+      "primary": "rpg-assets/characters/hana/portraits/primary.png",
+      "avatar": "rpg-assets/ui/avatars/hana.webp",
+      "outfits": {
+        "streetwear_preview": "rpg-assets/characters/hana/outfits/streetwear-preview.png"
+      },
+      "expressions": {
+        "neutral": "rpg-assets/characters/hana/expressions/neutral.png",
+        "happy": "rpg-assets/characters/hana/expressions/happy.png",
+        "flustered": "rpg-assets/characters/hana/expressions/flustered.png",
+        "determined": "rpg-assets/characters/hana/expressions/determined.png"
+      },
+      "chibiStudies": {
+        "front": "rpg-assets/characters/hana/chibi/front.png",
+        "side": "rpg-assets/characters/hana/chibi/side.png",
+        "back": "rpg-assets/characters/hana/chibi/back.png"
+      },
+      "productionNotes": [
+        "Do not automatically replace the existing root rpg-assets/hana.png until artist review.",
+        "Character art extracted from generated multi-panel sources. Opaque chibi cards retain original artwork details; not isolated walk-cycle sprites."
+      ]
+    },
+    "reina": {
+      "name": "Reina Kurogane",
+      "age": 21,
+      "visualIdentity": "black hair red streaks / oxblood biker jacket / rival",
+      "accentColor": "#c94c57",
+      "primary": "rpg-assets/characters/reina/portraits/primary.png",
+      "avatar": "rpg-assets/ui/avatars/reina.webp",
+      "outfits": {
+        "streetwear_preview": "rpg-assets/characters/reina/outfits/streetwear-preview.png"
+      },
+      "expressions": {
+        "neutral": "rpg-assets/characters/reina/expressions/neutral.png",
+        "happy": "rpg-assets/characters/reina/expressions/happy.png",
+        "flustered": "rpg-assets/characters/reina/expressions/flustered.png",
+        "determined": "rpg-assets/characters/reina/expressions/determined.png"
+      },
+      "chibiStudies": {
+        "front": "rpg-assets/characters/reina/chibi/front.png",
+        "side": "rpg-assets/characters/reina/chibi/side.png",
+        "back": "rpg-assets/characters/reina/chibi/back.png"
+      },
+      "productionNotes": [
+        "Do not automatically replace the existing root rpg-assets/reina.png until artist review.",
+        "Character art extracted from generated multi-panel sources. Opaque chibi cards retain original artwork details; not isolated walk-cycle sprites."
+      ]
+    },
+    "shiori": {
+      "name": "Shiori Tsukishima",
+      "age": 23,
+      "visualIdentity": "lavender silver hair / tailored gold accented layers / strategist",
+      "accentColor": "#9982ca",
+      "primary": "rpg-assets/characters/shiori/portraits/primary.png",
+      "avatar": "rpg-assets/ui/avatars/shiori.webp",
+      "outfits": {
+        "streetwear_preview": "rpg-assets/characters/shiori/outfits/streetwear-preview.png"
+      },
+      "expressions": {
+        "neutral": "rpg-assets/characters/shiori/expressions/neutral.png",
+        "happy": "rpg-assets/characters/shiori/expressions/happy.png",
+        "flustered": "rpg-assets/characters/shiori/expressions/flustered.png",
+        "determined": "rpg-assets/characters/shiori/expressions/determined.png"
+      },
+      "chibiStudies": {
+        "front": "rpg-assets/characters/shiori/chibi/front.png",
+        "side": "rpg-assets/characters/shiori/chibi/side.png",
+        "back": "rpg-assets/characters/shiori/chibi/back.png"
+      },
+      "productionNotes": [
+        "Do not automatically replace the existing root rpg-assets/shiori.png until artist review.",
+        "Character art extracted from generated multi-panel sources. Opaque chibi cards retain original artwork details; not isolated walk-cycle sprites."
+      ]
+    },
+    "yuna": {
+      "name": "Yuna Hoshino",
+      "age": 19,
+      "visualIdentity": "vivid blue twin-tails / yellow arcade jacket / energetic",
+      "accentColor": "#e2b442",
+      "primary": "rpg-assets/characters/yuna/portraits/primary.png",
+      "avatar": "rpg-assets/ui/avatars/yuna.webp",
+      "outfits": {
+        "streetwear_preview": "rpg-assets/characters/yuna/outfits/streetwear-preview.png"
+      },
+      "expressions": {
+        "neutral": "rpg-assets/characters/yuna/expressions/neutral.png",
+        "happy": "rpg-assets/characters/yuna/expressions/happy.png",
+        "flustered": "rpg-assets/characters/yuna/expressions/flustered.png",
+        "determined": "rpg-assets/characters/yuna/expressions/determined.png"
+      },
+      "chibiStudies": {
+        "front": "rpg-assets/characters/yuna/chibi/front.png",
+        "side": "rpg-assets/characters/yuna/chibi/side.png",
+        "back": "rpg-assets/characters/yuna/chibi/back.png"
+      },
+      "productionNotes": [
+        "Do not automatically replace the existing root rpg-assets/yuna.png until artist review.",
+        "Character art extracted from generated multi-panel sources. Opaque chibi cards retain original artwork details; not isolated walk-cycle sprites."
+      ]
+    },
+    "akari": {
+      "name": "Akari Fujimoto",
+      "age": 22,
+      "visualIdentity": "auburn bob and glasses / lavender cardigan / analytical",
+      "accentColor": "#c97c94",
+      "primary": "rpg-assets/characters/akari/portraits/primary.png",
+      "avatar": "rpg-assets/ui/avatars/akari.webp",
+      "outfits": {
+        "streetwear_preview": "rpg-assets/characters/akari/outfits/streetwear-preview.png"
+      },
+      "expressions": {
+        "neutral": "rpg-assets/characters/akari/expressions/neutral.png",
+        "happy": "rpg-assets/characters/akari/expressions/happy.png",
+        "flustered": "rpg-assets/characters/akari/expressions/flustered.png",
+        "determined": "rpg-assets/characters/akari/expressions/determined.png"
+      },
+      "chibiStudies": {
+        "front": "rpg-assets/characters/akari/chibi/front.png",
+        "side": "rpg-assets/characters/akari/chibi/side.png",
+        "back": "rpg-assets/characters/akari/chibi/back.png"
+      },
+      "productionNotes": [
+        "Do not automatically replace the existing root rpg-assets/akari.png until artist review.",
+        "Character art extracted from generated multi-panel sources. Opaque chibi cards retain original artwork details; not isolated walk-cycle sprites."
+      ]
+    },
+    "camila": {
+      "name": "Camila Vega",
+      "age": 24,
+      "visualIdentity": "caramel hair / black and magenta chic / merchant",
+      "accentColor": "#c7874b",
+      "primary": "rpg-assets/characters/camila/portraits/primary.png",
+      "avatar": "rpg-assets/ui/avatars/camila.webp",
+      "outfits": {
+        "streetwear_preview": "rpg-assets/characters/camila/outfits/streetwear-preview.png"
+      },
+      "expressions": {
+        "neutral": "rpg-assets/characters/camila/expressions/neutral.png",
+        "happy": "rpg-assets/characters/camila/expressions/happy.png",
+        "flustered": "rpg-assets/characters/camila/expressions/flustered.png",
+        "determined": "rpg-assets/characters/camila/expressions/determined.png"
+      },
+      "chibiStudies": {
+        "front": "rpg-assets/characters/camila/chibi/front.png",
+        "side": "rpg-assets/characters/camila/chibi/side.png",
+        "back": "rpg-assets/characters/camila/chibi/back.png"
+      },
+      "productionNotes": [
+        "Do not automatically replace the existing root rpg-assets/camila.png until artist review.",
+        "Character art extracted from generated multi-panel sources. Opaque chibi cards retain original artwork details; not isolated walk-cycle sprites."
+      ]
+    },
+    "marina": {
+      "name": "Marina Aoki",
+      "age": 21,
+      "visualIdentity": "teal hair / blue jacket / riverside gentle",
+      "accentColor": "#72adcc",
+      "primary": "rpg-assets/characters/marina/portraits/primary.png",
+      "avatar": "rpg-assets/ui/avatars/marina.webp",
+      "outfits": {
+        "streetwear_preview": "rpg-assets/characters/marina/outfits/streetwear-preview.png"
+      },
+      "expressions": {
+        "neutral": "rpg-assets/characters/marina/expressions/neutral.png",
+        "happy": "rpg-assets/characters/marina/expressions/happy.png",
+        "flustered": "rpg-assets/characters/marina/expressions/flustered.png",
+        "determined": "rpg-assets/characters/marina/expressions/determined.png"
+      },
+      "chibiStudies": {
+        "front": "rpg-assets/characters/marina/chibi/front.png",
+        "side": "rpg-assets/characters/marina/chibi/side.png",
+        "back": "rpg-assets/characters/marina/chibi/back.png"
+      },
+      "productionNotes": [
+        "Do not automatically replace the existing root rpg-assets/marina.png until artist review.",
+        "Character art extracted from generated multi-panel sources. Opaque chibi cards retain original artwork details; not isolated walk-cycle sprites."
+      ]
+    },
+    "kaede": {
+      "name": "Kaede Arashi",
+      "age": 22,
+      "visualIdentity": "silver hair pink highlights / black violet techwear / defiant",
+      "accentColor": "#a076d5",
+      "primary": "rpg-assets/characters/kaede/portraits/primary.png",
+      "avatar": "rpg-assets/ui/avatars/kaede.webp",
+      "outfits": {
+        "streetwear_preview": "rpg-assets/characters/kaede/outfits/streetwear-preview.png"
+      },
+      "expressions": {
+        "neutral": "rpg-assets/characters/kaede/expressions/neutral.png",
+        "happy": "rpg-assets/characters/kaede/expressions/happy.png",
+        "flustered": "rpg-assets/characters/kaede/expressions/flustered.png",
+        "determined": "rpg-assets/characters/kaede/expressions/determined.png"
+      },
+      "chibiStudies": {
+        "front": "rpg-assets/characters/kaede/chibi/front.png",
+        "side": "rpg-assets/characters/kaede/chibi/side.png",
+        "back": "rpg-assets/characters/kaede/chibi/back.png"
+      },
+      "productionNotes": [
+        "Do not automatically replace the existing root rpg-assets/kaede.png until artist review.",
+        "Character art extracted from generated multi-panel sources. Opaque chibi cards retain original artwork details; not isolated walk-cycle sprites."
+      ]
+    }
+  },
+  "locations": {
+    "home": {
+      "time": "day",
+      "panorama": "rpg-assets/locations/panoramas/home-day.webp",
+      "quality": "concept-crop 16:5-ish; existing root backgrounds remain canonical"
+    },
+    "shop": {
+      "time": "day",
+      "panorama": "rpg-assets/locations/panoramas/shop-day.webp",
+      "quality": "concept-crop 16:5-ish; existing root backgrounds remain canonical"
+    },
+    "arcade": {
+      "time": "evening",
+      "panorama": "rpg-assets/locations/panoramas/arcade-evening.webp",
+      "quality": "concept-crop 16:5-ish; existing root backgrounds remain canonical"
+    },
+    "park": {
+      "time": "day",
+      "panorama": "rpg-assets/locations/panoramas/park-day.webp",
+      "quality": "concept-crop 16:5-ish; existing root backgrounds remain canonical"
+    },
+    "cafe": {
+      "time": "evening",
+      "panorama": "rpg-assets/locations/panoramas/cafe-evening.webp",
+      "quality": "concept-crop 16:5-ish; existing root backgrounds remain canonical"
+    },
+    "center": {
+      "time": "day",
+      "panorama": "rpg-assets/locations/panoramas/center-day.webp",
+      "quality": "concept-crop 16:5-ish; existing root backgrounds remain canonical"
+    },
+    "library": {
+      "time": "day",
+      "panorama": "rpg-assets/locations/panoramas/library-day.webp",
+      "quality": "concept-crop 16:5-ish; existing root backgrounds remain canonical"
+    },
+    "docks": {
+      "time": "sunset",
+      "panorama": "rpg-assets/locations/panoramas/docks-sunset.webp",
+      "quality": "concept-crop 16:5-ish; existing root backgrounds remain canonical"
+    }
+  },
+  "events": {
+    "hana-card-shop": {
+      "character": "hana",
+      "image": "rpg-assets/events/cg/hana-card-shop.webp",
+      "status": "illustrated scene candidate, manually assign to RPG story beat"
+    },
+    "reina-after-hours": {
+      "character": "reina",
+      "image": "rpg-assets/events/cg/reina-after-hours.webp",
+      "status": "illustrated scene candidate, manually assign to RPG story beat"
+    },
+    "yuna-arcade": {
+      "character": "yuna",
+      "image": "rpg-assets/events/cg/yuna-arcade.webp",
+      "status": "illustrated scene candidate, manually assign to RPG story beat"
+    },
+    "marina-riverside": {
+      "character": "marina",
+      "image": "rpg-assets/events/cg/marina-riverside.webp",
+      "status": "illustrated scene candidate, manually assign to RPG story beat"
+    },
+    "akari-library": {
+      "character": "akari",
+      "image": "rpg-assets/events/cg/akari-library.webp",
+      "status": "illustrated scene candidate, manually assign to RPG story beat"
+    },
+    "camila-cafe": {
+      "character": "camila",
+      "image": "rpg-assets/events/cg/camila-cafe.webp",
+      "status": "illustrated scene candidate, manually assign to RPG story beat"
+    }
+  },
+  "ui": {
+    "nameplateTemplate": "rpg-assets/ui/frames/nameplate-{characterId}.png"
+  },
+  "quality": {
+    "primary": "Clean native-resolution extracts from generated multi-character art (not 4K standalone masters)",
+    "fullbody": "Preview alpha matting has possible pale-background halos; fashion-concept only.",
+    "expressions": "Four actual expressive cropped panels per character, full eyes and intact anatomy, baked game-caption ribbon; native ~240x120 px. NOT full VN portrait poses.",
+    "chibi": "3 illustrated NPC chibi stickers per character (front / side / back) with transparent rounded outside; original panel backgrounds preserved to avoid inaccurate segmentation. NOT transparent silhouettes or working animation frames.",
+    "locations": "Panoramic generated concept crops, not high-resolution replacement for repository backgrounds",
+    "eventCG": "Crops of generated story-scene artwork; narrative examples only, not automatically activated in RPG."
+  },
+  "sourceAttribution": "Original AI-generated Neo Harbor character, portrait, expression, chibi, environment and event sheets from this conversation; no external downloaded art.",
+  "safeToReplaceExisting": false,
+  "webIntegration": "See README.md and integration.example.js; assets use additive paths only."
+}

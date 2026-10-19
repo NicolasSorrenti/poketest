@@ -1,0 +1,261 @@
+{
+  "imageCount": 64,
+  "images": {
+    "rpg-assets/events/cg/season01/hana_apron_mixup.webp": {
+      "sha256": "744279473cc81d255fcb9bb788066ba0228fbec873a4fcdff6b781aea8e4375e",
+      "bytes": 410430
+    },
+    "rpg-assets/events/cg/season01/thumbs/hana_apron_mixup.webp": {
+      "sha256": "5475fb86ee3757e3d72a8e438dacef1846095b21af37454731c4b37d4aea662f",
+      "bytes": 75712
+    },
+    "rpg-assets/events/cg/season01/reina_rain_catch.webp": {
+      "sha256": "123e4bbd7f0d21064d511d3ceac7b538cd3f0f3011c7d561b1ed16279342ef3c",
+      "bytes": 416284
+    },
+    "rpg-assets/events/cg/season01/thumbs/reina_rain_catch.webp": {
+      "sha256": "f07e19ea113753d91bc916a5cc0eb7d6aab65349a89e352d911e9e0330756e36",
+      "bytes": 75794
+    },
+    "rpg-assets/events/cg/season01/shiori_bookstack_wobble.webp": {
+      "sha256": "9c805d3a5aed2ad393f29c1d16b0cce416a1953f5661676b1ffe19cd1bad99fc",
+      "bytes": 417514
+    },
+    "rpg-assets/events/cg/season01/thumbs/shiori_bookstack_wobble.webp": {
+      "sha256": "7ea45104d3601edb41f8b10fb77dada499986a446d4bc35e57ae6433c452584a",
+      "bytes": 77200
+    },
+    "rpg-assets/events/cg/season01/yuna_card_scatter.webp": {
+      "sha256": "67d1805a32b6a1475feae67e1bb32a3deb9bf792c6d49a7630ab4d5132d56d6d",
+      "bytes": 499594
+    },
+    "rpg-assets/events/cg/season01/thumbs/yuna_card_scatter.webp": {
+      "sha256": "cc9a3cfeab99f896ea09c758ceda3ce915b3b1c75e85355fe6ee08f029532bde",
+      "bytes": 87564
+    },
+    "rpg-assets/events/cg/season01/akari_notes_whirl.webp": {
+      "sha256": "7bb21458dd3953ac6a5d7f26dfbfa4d8a74ca432e14c18be92791d0c998b7e24",
+      "bytes": 394708
+    },
+    "rpg-assets/events/cg/season01/thumbs/akari_notes_whirl.webp": {
+      "sha256": "40ba5ffe944dd35f1229e7b42cb5b4c4d8a8ea18b6b37de4e0bb00a50da8b0e1",
+      "bytes": 68308
+    },
+    "rpg-assets/events/cg/season01/camila_windy_receipts.webp": {
+      "sha256": "1be0114fceb2c4f5e2a4b8ab2ef27cd5769d83650dc272c63cefc431773bbc95",
+      "bytes": 442668
+    },
+    "rpg-assets/events/cg/season01/thumbs/camila_windy_receipts.webp": {
+      "sha256": "a370cc5e8a042731481851834ecf084f859f370840d0cf6c0d3e1affdaa20046",
+      "bytes": 81134
+    },
+    "rpg-assets/events/cg/season01/marina_beach_towel.webp": {
+      "sha256": "7ba92042f23a9ce06a629db4883e6ceb86892b4f76b79b2f7527450cea256f5f",
+      "bytes": 539002
+    },
+    "rpg-assets/events/cg/season01/thumbs/marina_beach_towel.webp": {
+      "sha256": "b3aeb48a21860779a747e89283a79467f4c13d669a1600c74a412b736d8c40c6",
+      "bytes": 91476
+    },
+    "rpg-assets/events/cg/season01/kaede_jacket_prank.webp": {
+      "sha256": "d2b3e107d8b01746bbfb61538bfdec53c508a2eac18a18c9212c8cc6d6c5bfe3",
+      "bytes": 519102
+    },
+    "rpg-assets/events/cg/season01/thumbs/kaede_jacket_prank.webp": {
+      "sha256": "d50e1ba1ae75d1da94c4fdc1485b3b2e33468537a303660dbc0e85addb391691",
+      "bytes": 88658
+    },
+    "rpg-assets/events/cg/season01/hana_first_meeting.webp": {
+      "sha256": "9c7f6d953e50b12386517e0d3c8c4667e90d92c52fd44a1a0855065118b2c607",
+      "bytes": 466034
+    },
+    "rpg-assets/events/cg/season01/thumbs/hana_first_meeting.webp": {
+      "sha256": "28184b32748039066cfe687c4814a287bd05b15f7be1577059bd4e3534896dac",
+      "bytes": 85096
+    },
+    "rpg-assets/events/cg/season01/hana_shop_challenge.webp": {
+      "sha256": "27ae533a4522bca0f0809b79fd017488dd9a59edf76c8c04fe8fd6bb9ac524e6",
+      "bytes": 454824
+    },
+    "rpg-assets/events/cg/season01/thumbs/hana_shop_challenge.webp": {
+      "sha256": "89d1816af62bd87b7a2fb00deb974e0fd86e6b93a66566e107eb4366f911a275",
+      "bytes": 75244
+    },
+    "rpg-assets/events/cg/season01/hana_flyer_afternoon.webp": {
+      "sha256": "6cdc03a2e2ed9a71e6e1ed2b8a88b94db5a695cb4520bad7a962390fc345576b",
+      "bytes": 538644
+    },
+    "rpg-assets/events/cg/season01/thumbs/hana_flyer_afternoon.webp": {
+      "sha256": "4bc7aea4567aa969ff694b0c1cc7236807033e5cf376d7d8eb1c7f47d0f8a66b",
+      "bytes": 89382
+    },
+    "rpg-assets/events/cg/season01/reina_rival_intro.webp": {
+      "sha256": "54454f9f02dd5feef5b4cf08bce5d0d60d9ce9ee51cb8a542feeeced3702693e",
+      "bytes": 469418
+    },
+    "rpg-assets/events/cg/season01/thumbs/reina_rival_intro.webp": {
+      "sha256": "8d7076131a68db78f6fe6a1c02a014a2f127fdb342832fa14fdd10bdf5fc4e6d",
+      "bytes": 81120
+    },
+    "rpg-assets/events/cg/season01/reina_center_predue.webp": {
+      "sha256": "29cf3cb4defad6ff13c93f033a92dd7d8bb5763c4399af151354e92b2e06d6fa",
+      "bytes": 418808
+    },
+    "rpg-assets/events/cg/season01/thumbs/reina_center_predue.webp": {
+      "sha256": "31ec21eeb3c609dcb3a6a1d7a231279ddafd683a6fac7282ac6b7d058c69af3d",
+      "bytes": 73954
+    },
+    "rpg-assets/events/cg/season01/reina_training_break.webp": {
+      "sha256": "707070fe08b8c19997e5da8efbcea743b15cc2bfa41c860eb249613e62877c98",
+      "bytes": 429922
+    },
+    "rpg-assets/events/cg/season01/thumbs/reina_training_break.webp": {
+      "sha256": "575972f216292718ba2195cbb831354eae27a675905689c053eb0681e9d29186",
+      "bytes": 72626
+    },
+    "rpg-assets/events/cg/season01/shiori_first_page.webp": {
+      "sha256": "405ddc4843e4e1f41ec70b57089f508ede15ae26ae18ac6228af2f0bff071894",
+      "bytes": 372890
+    },
+    "rpg-assets/events/cg/season01/thumbs/shiori_first_page.webp": {
+      "sha256": "d77435ce92c8603b41a30728411df4d65bd39437ac6e01121e331ac2648f59d7",
+      "bytes": 63814
+    },
+    "rpg-assets/events/cg/season01/shiori_library_predue.webp": {
+      "sha256": "044231e38aaec33c81be1bf90906a441d7d2b2c24b6da1bc4ebed21bb86ad0db",
+      "bytes": 400998
+    },
+    "rpg-assets/events/cg/season01/thumbs/shiori_library_predue.webp": {
+      "sha256": "5b0573b2c95a6cc14baef9c0a192f5e4fe563f6793fd7f5d0a3e0cc3f5f625cc",
+      "bytes": 71976
+    },
+    "rpg-assets/events/cg/season01/shiori_cafe_conversation.webp": {
+      "sha256": "21431e85782dc4f6f716ed18fb866bb392255ef42dc05540fc9dbd25048323f7",
+      "bytes": 481152
+    },
+    "rpg-assets/events/cg/season01/thumbs/shiori_cafe_conversation.webp": {
+      "sha256": "30cf81907e49ae12665ce839b6c5b06d4d1f658c5ddb872b3033efbf8767daa2",
+      "bytes": 83852
+    },
+    "rpg-assets/events/cg/season01/yuna_arrival.webp": {
+      "sha256": "f99b105943d6e666376f524dc63d80c7a9bf1c3e2e46ffb087ddb309c8b5f5a6",
+      "bytes": 508232
+    },
+    "rpg-assets/events/cg/season01/thumbs/yuna_arrival.webp": {
+      "sha256": "40d13131a931654a8b4b2b9c5f2c85768c7422a7922d892473bd13e4a33dd48c",
+      "bytes": 93614
+    },
+    "rpg-assets/events/cg/season01/yuna_arcade_predue.webp": {
+      "sha256": "86ccc439cef66f9bfd072ca65c426860e4a35237b9bea021cfa2706eb949f150",
+      "bytes": 521266
+    },
+    "rpg-assets/events/cg/season01/thumbs/yuna_arcade_predue.webp": {
+      "sha256": "ba78863a8d0dea9f08527ff6dcedb7a3c153026a104d085cc96bfd62efe7ba51",
+      "bytes": 90140
+    },
+    "rpg-assets/events/cg/season01/yuna_arcade_victory.webp": {
+      "sha256": "f625f8e9b69402aeddcbca9c07be3773a70c3548e6e375afc0d750dee82e8078",
+      "bytes": 429880
+    },
+    "rpg-assets/events/cg/season01/thumbs/yuna_arcade_victory.webp": {
+      "sha256": "9f8f4ce8cc18480eef54b25624fd3d7c10811a4049038baac2cdcd1016603874",
+      "bytes": 78508
+    },
+    "rpg-assets/events/cg/season01/akari_first_meeting.webp": {
+      "sha256": "f4147a9e361495614f3b19d1279818ae6c84e030d7abcebe46c376ca41dacf47",
+      "bytes": 424954
+    },
+    "rpg-assets/events/cg/season01/thumbs/akari_first_meeting.webp": {
+      "sha256": "de194f87b8d669b382bea593f0512110dd109801ce1eb23ac931afd14b059455",
+      "bytes": 79910
+    },
+    "rpg-assets/events/cg/season01/akari_card_club_predue.webp": {
+      "sha256": "56e9f6ebd886a85079cff3e08ea0cd069516241197407fbed9631dff3cbcc4c7",
+      "bytes": 361504
+    },
+    "rpg-assets/events/cg/season01/thumbs/akari_card_club_predue.webp": {
+      "sha256": "9951b2b365d094cda0525370cbd42d9154098c4380ebbc02f49f2f09bbc14c73",
+      "bytes": 62136
+    },
+    "rpg-assets/events/cg/season01/akari_creative_workshop.webp": {
+      "sha256": "58b15970cd7be159e3fd66f4567ce15ca3bc8a71b69a5c024e4a0b14e145f655",
+      "bytes": 474858
+    },
+    "rpg-assets/events/cg/season01/thumbs/akari_creative_workshop.webp": {
+      "sha256": "2d69628f18f00b91a25864760e4c248b735da42f86d10d057c32374434dad2bf",
+      "bytes": 81592
+    },
+    "rpg-assets/events/cg/season01/camila_first_meeting.webp": {
+      "sha256": "e42159359f0ab6c5c0bb42c8a9a43a3abdd676e69206af13ea9dbed689d4aa6d",
+      "bytes": 460060
+    },
+    "rpg-assets/events/cg/season01/thumbs/camila_first_meeting.webp": {
+      "sha256": "40253aceb9317d391102d31decc9c47c60a5896eb1f57be988df6dacee017b89",
+      "bytes": 83428
+    },
+    "rpg-assets/events/cg/season01/camila_harbor_predue.webp": {
+      "sha256": "7faac9a6bfd8def25b38e42651d65a90aa67b2a218a4be3eca3fbf23a34c4934",
+      "bytes": 407896
+    },
+    "rpg-assets/events/cg/season01/thumbs/camila_harbor_predue.webp": {
+      "sha256": "19d01c10c04620cb985281f00bcf28f4281efe823e73d552600c19bb620ca25c",
+      "bytes": 70432
+    },
+    "rpg-assets/events/cg/season01/camila_cafe_conversation.webp": {
+      "sha256": "5dda9e5361e79fae167206c4c52310e6169b62a217cd6670ed2a3411d382343e",
+      "bytes": 410380
+    },
+    "rpg-assets/events/cg/season01/thumbs/camila_cafe_conversation.webp": {
+      "sha256": "f044442ab118caa5cb5a82aa238c49b7636fb46618c1b678fb3e46ba8092bbb5",
+      "bytes": 71660
+    },
+    "rpg-assets/events/cg/season01/marina_first_meeting.webp": {
+      "sha256": "7d2d262ebf9258f9f846eb590bea5ab321e95f8bef8404c8bfec13b132406c9b",
+      "bytes": 460226
+    },
+    "rpg-assets/events/cg/season01/thumbs/marina_first_meeting.webp": {
+      "sha256": "f831da4784f99fcd97f3d6f08c046890d719acae32c9448740459e9d62ee37ad",
+      "bytes": 81314
+    },
+    "rpg-assets/events/cg/season01/marina_harbor_predue.webp": {
+      "sha256": "bb33e4ee70cd49d477bc67c38ee5b14993283ceda7eb2eb87c629736a5271393",
+      "bytes": 498348
+    },
+    "rpg-assets/events/cg/season01/thumbs/marina_harbor_predue.webp": {
+      "sha256": "7c70aa0b113cff72eee112021a9667667dd6f57ca9f0f2f7f7ecdad22fb2cd0f",
+      "bytes": 83106
+    },
+    "rpg-assets/events/cg/season01/marina_sunset_social.webp": {
+      "sha256": "5ce496dfe7f54de85b92f5b2b4e97a237d13984c9957188455055563a794f9e0",
+      "bytes": 497966
+    },
+    "rpg-assets/events/cg/season01/thumbs/marina_sunset_social.webp": {
+      "sha256": "71a90b3438ba0ec217150149900e7e56dc8c18db3de9c868dca2f6749ca6d80e",
+      "bytes": 85156
+    },
+    "rpg-assets/events/cg/season01/kaede_first_meeting.webp": {
+      "sha256": "d81d87e6b7213adcbb2f1bcce3b4bd7c47b114470283e7b9711a666660b19364",
+      "bytes": 458866
+    },
+    "rpg-assets/events/cg/season01/thumbs/kaede_first_meeting.webp": {
+      "sha256": "34b1ec0a7d30ff9129043a1f1e88c4ed3778c3526d5f54aad398a9d4e0de0eab",
+      "bytes": 81314
+    },
+    "rpg-assets/events/cg/season01/kaede_rooftop_predue.webp": {
+      "sha256": "2f69136c4254dc645d99a8f243e317c8702cb331358805d3b83873ea92589c14",
+      "bytes": 495278
+    },
+    "rpg-assets/events/cg/season01/thumbs/kaede_rooftop_predue.webp": {
+      "sha256": "8e65995c829d5105c7589e98d5887460a7a44dc0791c7435aa44c5c565fabd39",
+      "bytes": 87732
+    },
+    "rpg-assets/events/cg/season01/kaede_park_social.webp": {
+      "sha256": "791f6b445f7abfcbb929c2dc836ba43dc35e936c08e0e8ae8d10b8cf2552506e",
+      "bytes": 441594
+    },
+    "rpg-assets/events/cg/season01/thumbs/kaede_park_social.webp": {
+      "sha256": "464b4cc91cef2e06aa209168bd19270fde0a837b2017f5144bc2b4ad2a938c83",
+      "bytes": 80222
+    }
+  }
+}

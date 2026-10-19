@@ -1,0 +1,506 @@
+{
+  "rpg-assets/characters/hana/reference/expression-master.webp": {
+    "sha256": "a456bfc9f70937e881138a1bbb070ba8a45537b8dc1b621048eac9dfdb2db67e",
+    "dimensions": [
+      1122,
+      1402
+    ],
+    "format": "webp",
+    "role": "source-reference"
+  },
+  "rpg-assets/characters/hana/vn-expressions/neutral.webp": {
+    "sha256": "86a78f5db04edc1c6f52664e9df2dbc9c5f0399b044f3ae4c110724e2ec27d60",
+    "dimensions": [
+      354,
+      676
+    ],
+    "format": "webp",
+    "role": "VN dialogue expression"
+  },
+  "rpg-assets/characters/hana/vn-expressions/happy.webp": {
+    "sha256": "4496bb178a99108ab36f8dc575fda91585d2a3b88aeec327e0a0537cc71df403",
+    "dimensions": [
+      356,
+      676
+    ],
+    "format": "webp",
+    "role": "VN dialogue expression"
+  },
+  "rpg-assets/characters/hana/vn-expressions/embarrassed.webp": {
+    "sha256": "5ced5db80fff9607b311498d14548f30ca684d31ce6da8a641984abeea686e00",
+    "dimensions": [
+      353,
+      676
+    ],
+    "format": "webp",
+    "role": "VN dialogue expression"
+  },
+  "rpg-assets/characters/hana/vn-expressions/angry.webp": {
+    "sha256": "ba99b1126df258b44c3c204c67b88d0ce62865d633102417d6ea06c8ee56d51e",
+    "dimensions": [
+      354,
+      674
+    ],
+    "format": "webp",
+    "role": "VN dialogue expression"
+  },
+  "rpg-assets/characters/hana/vn-expressions/surprised.webp": {
+    "sha256": "9740907237c71cc74e341a5e613251ed1f9327e2db9aef7f4874bb303d2ec06b",
+    "dimensions": [
+      356,
+      674
+    ],
+    "format": "webp",
+    "role": "VN dialogue expression"
+  },
+  "rpg-assets/characters/hana/vn-expressions/flirty.webp": {
+    "sha256": "16503fa705f3f7981d0ba0c42f59ac754372eecfb055c122970ece88f507d7ad",
+    "dimensions": [
+      353,
+      674
+    ],
+    "format": "webp",
+    "role": "VN dialogue expression"
+  },
+  "rpg-assets/characters/reina/reference/expression-master.webp": {
+    "sha256": "f154f6e62be559c0c2612b228a1d993436c55211ccf4754d4b959a19cf02ca95",
+    "dimensions": [
+      1122,
+      1402
+    ],
+    "format": "webp",
+    "role": "source-reference"
+  },
+  "rpg-assets/characters/reina/vn-expressions/neutral.webp": {
+    "sha256": "f9889f435b61152f91e20ed9b24138c072eae9960aaa9c92983db86866ac2d77",
+    "dimensions": [
+      354,
+      676
+    ],
+    "format": "webp",
+    "role": "VN dialogue expression"
+  },
+  "rpg-assets/characters/reina/vn-expressions/happy.webp": {
+    "sha256": "1526ef3d73927d73a26136d4beabae210dd98e0e272cb2897b8999b08bfb3921",
+    "dimensions": [
+      356,
+      676
+    ],
+    "format": "webp",
+    "role": "VN dialogue expression"
+  },
+  "rpg-assets/characters/reina/vn-expressions/embarrassed.webp": {
+    "sha256": "347d55a0adc40fda5eca0c2514c2ae2beb29b8b0c0f9d0d8749013c4e96e5c39",
+    "dimensions": [
+      353,
+      676
+    ],
+    "format": "webp",
+    "role": "VN dialogue expression"
+  },
+  "rpg-assets/characters/reina/vn-expressions/angry.webp": {
+    "sha256": "46ffb1c4fb676f7f7681dde7c8680399749dc725fbd963d1c8fee15cdda44028",
+    "dimensions": [
+      354,
+      674
+    ],
+    "format": "webp",
+    "role": "VN dialogue expression"
+  },
+  "rpg-assets/characters/reina/vn-expressions/surprised.webp": {
+    "sha256": "6af47a8a43f4d82d0b6495924637379181c410fd2a30a05fc7ea0b4a82afe9e1",
+    "dimensions": [
+      356,
+      674
+    ],
+    "format": "webp",
+    "role": "VN dialogue expression"
+  },
+  "rpg-assets/characters/reina/vn-expressions/flirty.webp": {
+    "sha256": "ab3eb1473962ef44aa847533be9cdffdb9e5620d81f6a149711fe7d76b4180c9",
+    "dimensions": [
+      353,
+      674
+    ],
+    "format": "webp",
+    "role": "VN dialogue expression"
+  },
+  "rpg-assets/characters/shiori/reference/expression-master.webp": {
+    "sha256": "1dbaded9396f14ee084a889f8085060ad403748ba55c10421182124fa2da206f",
+    "dimensions": [
+      1122,
+      1402
+    ],
+    "format": "webp",
+    "role": "source-reference"
+  },
+  "rpg-assets/characters/shiori/vn-expressions/neutral.webp": {
+    "sha256": "a62280ecf7c7fff212396c79fac9d6e5f8252a931dcfc1cebb20d7511150c041",
+    "dimensions": [
+      354,
+      676
+    ],
+    "format": "webp",
+    "role": "VN dialogue expression"
+  },
+  "rpg-assets/characters/shiori/vn-expressions/happy.webp": {
+    "sha256": "6589aa58f2fa29d638a7cbd97a201951cb4842cc60c4e8d9db9073e61c4e5a04",
+    "dimensions": [
+      356,
+      676
+    ],
+    "format": "webp",
+    "role": "VN dialogue expression"
+  },
+  "rpg-assets/characters/shiori/vn-expressions/embarrassed.webp": {
+    "sha256": "0cc94e6fdbed92d863186adb6f742c62c59a99a1b6c84c86795ec065ee8f1176",
+    "dimensions": [
+      353,
+      676
+    ],
+    "format": "webp",
+    "role": "VN dialogue expression"
+  },
+  "rpg-assets/characters/shiori/vn-expressions/angry.webp": {
+    "sha256": "2f8e2af9ae7f1048f91cf25915ab3e7fc8dcf305ad8cbd05bb6dc9305dc84b9a",
+    "dimensions": [
+      354,
+      674
+    ],
+    "format": "webp",
+    "role": "VN dialogue expression"
+  },
+  "rpg-assets/characters/shiori/vn-expressions/surprised.webp": {
+    "sha256": "10c8d0899d97a1a597f16ac09795f47d4939a57b6fb4b371ed790e4f7c61637e",
+    "dimensions": [
+      356,
+      674
+    ],
+    "format": "webp",
+    "role": "VN dialogue expression"
+  },
+  "rpg-assets/characters/shiori/vn-expressions/flirty.webp": {
+    "sha256": "261622362118eef687a4aaccf5b3b5e3e797131c29263de1fa5719a8c4d56f0b",
+    "dimensions": [
+      353,
+      674
+    ],
+    "format": "webp",
+    "role": "VN dialogue expression"
+  },
+  "rpg-assets/characters/yuna/reference/expression-master.webp": {
+    "sha256": "d2fa509a2f89a79a75ff800f9052adf541d7a13edf53334ed6362f2887ed12ad",
+    "dimensions": [
+      1122,
+      1402
+    ],
+    "format": "webp",
+    "role": "source-reference"
+  },
+  "rpg-assets/characters/yuna/vn-expressions/neutral.webp": {
+    "sha256": "51d3688f702624971470db782bb7771cedde14692a43c2134d4119e46c39d187",
+    "dimensions": [
+      354,
+      676
+    ],
+    "format": "webp",
+    "role": "VN dialogue expression"
+  },
+  "rpg-assets/characters/yuna/vn-expressions/happy.webp": {
+    "sha256": "c8c1c2babefa3ec7e04ba795c924ba16da385237937b9ce7ca8737629c232d14",
+    "dimensions": [
+      356,
+      676
+    ],
+    "format": "webp",
+    "role": "VN dialogue expression"
+  },
+  "rpg-assets/characters/yuna/vn-expressions/embarrassed.webp": {
+    "sha256": "189ce8839b08710345f8f0c71ee70e106ceb5a67c4e11b71b9f5754112f2cda3",
+    "dimensions": [
+      353,
+      676
+    ],
+    "format": "webp",
+    "role": "VN dialogue expression"
+  },
+  "rpg-assets/characters/yuna/vn-expressions/angry.webp": {
+    "sha256": "0292ce37aceaef1d129d6f6e90f57bb27d9fe6c00f35c68681817ead442533db",
+    "dimensions": [
+      354,
+      674
+    ],
+    "format": "webp",
+    "role": "VN dialogue expression"
+  },
+  "rpg-assets/characters/yuna/vn-expressions/surprised.webp": {
+    "sha256": "c3576e5f086a7b638e1004a8011cd8c7813b278106b544198b3a3a84d6d48c65",
+    "dimensions": [
+      356,
+      674
+    ],
+    "format": "webp",
+    "role": "VN dialogue expression"
+  },
+  "rpg-assets/characters/yuna/vn-expressions/flirty.webp": {
+    "sha256": "a35585ab22b430106a930ceda672f5e7f967d9488ea26f140ea8d48602759eeb",
+    "dimensions": [
+      353,
+      674
+    ],
+    "format": "webp",
+    "role": "VN dialogue expression"
+  },
+  "rpg-assets/characters/akari/reference/expression-master.webp": {
+    "sha256": "a5c0465fc69f67862534f8a3f67140ea16b811762e42305a34f6bf3d0e85c298",
+    "dimensions": [
+      1122,
+      1402
+    ],
+    "format": "webp",
+    "role": "source-reference"
+  },
+  "rpg-assets/characters/akari/vn-expressions/neutral.webp": {
+    "sha256": "c7dee090ba5eda2c5f3f7a2e599c362f78245894edcc702b635ccdbf97988f10",
+    "dimensions": [
+      354,
+      676
+    ],
+    "format": "webp",
+    "role": "VN dialogue expression"
+  },
+  "rpg-assets/characters/akari/vn-expressions/happy.webp": {
+    "sha256": "bf93c073522f8eb61a3662376ad4be8906c35cd92c1850859586388879e1f69e",
+    "dimensions": [
+      356,
+      676
+    ],
+    "format": "webp",
+    "role": "VN dialogue expression"
+  },
+  "rpg-assets/characters/akari/vn-expressions/embarrassed.webp": {
+    "sha256": "ff71b5028b92226f30766c4c54d89fa4fa19ac6997ff2f937cf9c0b375f75f7c",
+    "dimensions": [
+      353,
+      676
+    ],
+    "format": "webp",
+    "role": "VN dialogue expression"
+  },
+  "rpg-assets/characters/akari/vn-expressions/angry.webp": {
+    "sha256": "f7de0d4db9efcbda55f88f59fda1e10962110939878e4702166fe7836a92e59c",
+    "dimensions": [
+      354,
+      674
+    ],
+    "format": "webp",
+    "role": "VN dialogue expression"
+  },
+  "rpg-assets/characters/akari/vn-expressions/surprised.webp": {
+    "sha256": "dfc431eafa6c55651d5f56dff8cda5898f49eda4eb8abedce902c934774dc07f",
+    "dimensions": [
+      356,
+      674
+    ],
+    "format": "webp",
+    "role": "VN dialogue expression"
+  },
+  "rpg-assets/characters/akari/vn-expressions/flirty.webp": {
+    "sha256": "d67459832838f87d155d6e4065d8cc1dde0929f71b092c65a0aa09591ddeeac1",
+    "dimensions": [
+      353,
+      674
+    ],
+    "format": "webp",
+    "role": "VN dialogue expression"
+  },
+  "rpg-assets/characters/camila/reference/expression-master.webp": {
+    "sha256": "b7426c84b7a99cb1473d9d0d4cb275a429431aa9a6267b27cc2df5c927d11fb2",
+    "dimensions": [
+      1122,
+      1402
+    ],
+    "format": "webp",
+    "role": "source-reference"
+  },
+  "rpg-assets/characters/camila/vn-expressions/neutral.webp": {
+    "sha256": "c40f89f41f9e95f100dcf9488f7240037e0d4ab061f13d2d500b73c15ffc9588",
+    "dimensions": [
+      354,
+      676
+    ],
+    "format": "webp",
+    "role": "VN dialogue expression"
+  },
+  "rpg-assets/characters/camila/vn-expressions/happy.webp": {
+    "sha256": "a7a752df146b2b89be91c6ff57db33159005c469e0bf97bca2652cc1c963ec2a",
+    "dimensions": [
+      356,
+      676
+    ],
+    "format": "webp",
+    "role": "VN dialogue expression"
+  },
+  "rpg-assets/characters/camila/vn-expressions/embarrassed.webp": {
+    "sha256": "e350ffb639df0a89a723b22e7e2a9fdeb2ca6fcaac949bf0d0a72f9833f651d8",
+    "dimensions": [
+      353,
+      676
+    ],
+    "format": "webp",
+    "role": "VN dialogue expression"
+  },
+  "rpg-assets/characters/camila/vn-expressions/angry.webp": {
+    "sha256": "b6ed9e31b2f43b1cea76e026ee7f340f987161a79b8b2d9d6b66b24c44fb34d6",
+    "dimensions": [
+      354,
+      674
+    ],
+    "format": "webp",
+    "role": "VN dialogue expression"
+  },
+  "rpg-assets/characters/camila/vn-expressions/surprised.webp": {
+    "sha256": "2e0bd48ad8a13c43fd0abf1bf3277dbd14ddf2c53684e6ee742cde9cc47d9d22",
+    "dimensions": [
+      356,
+      674
+    ],
+    "format": "webp",
+    "role": "VN dialogue expression"
+  },
+  "rpg-assets/characters/camila/vn-expressions/flirty.webp": {
+    "sha256": "2fbb37e6d8b6d45312fa465794237afc4bcb16d95b7f990950f66099ed348ce3",
+    "dimensions": [
+      353,
+      674
+    ],
+    "format": "webp",
+    "role": "VN dialogue expression"
+  },
+  "rpg-assets/characters/marina/reference/expression-master.webp": {
+    "sha256": "aa11268da144d76132438e33e8ed54c5c0c87a4700462c48c5126ba571b604ee",
+    "dimensions": [
+      1122,
+      1402
+    ],
+    "format": "webp",
+    "role": "source-reference"
+  },
+  "rpg-assets/characters/marina/vn-expressions/neutral.webp": {
+    "sha256": "3546243d9a40ad783ced64039ca9b44107970d7041f816c79eb18fd515bb501c",
+    "dimensions": [
+      354,
+      676
+    ],
+    "format": "webp",
+    "role": "VN dialogue expression"
+  },
+  "rpg-assets/characters/marina/vn-expressions/happy.webp": {
+    "sha256": "901fe0a4c55a95ccb9607f4abef05b812336cc7900a5ded814ad3a8fe8fe7da0",
+    "dimensions": [
+      356,
+      676
+    ],
+    "format": "webp",
+    "role": "VN dialogue expression"
+  },
+  "rpg-assets/characters/marina/vn-expressions/embarrassed.webp": {
+    "sha256": "cb759577c795e3d6d45d813f5da8e79abdd604e51e4daf57b910603617541dab",
+    "dimensions": [
+      353,
+      676
+    ],
+    "format": "webp",
+    "role": "VN dialogue expression"
+  },
+  "rpg-assets/characters/marina/vn-expressions/angry.webp": {
+    "sha256": "51458d8679412b6aae82e37668c6667320f0a976125b0961950c38fa683ccf52",
+    "dimensions": [
+      354,
+      674
+    ],
+    "format": "webp",
+    "role": "VN dialogue expression"
+  },
+  "rpg-assets/characters/marina/vn-expressions/surprised.webp": {
+    "sha256": "71717336fe3eae39eaeefea62e50a4d09d433d5451ebad23427273b59d20d982",
+    "dimensions": [
+      356,
+      674
+    ],
+    "format": "webp",
+    "role": "VN dialogue expression"
+  },
+  "rpg-assets/characters/marina/vn-expressions/flirty.webp": {
+    "sha256": "4a5964517571ba4770dc3c01c09a0041d4c90bbde5a568054a85dab28d9365f1",
+    "dimensions": [
+      353,
+      674
+    ],
+    "format": "webp",
+    "role": "VN dialogue expression"
+  },
+  "rpg-assets/characters/kaede/reference/expression-master.webp": {
+    "sha256": "987256974b824f31752e98531f4ed985674f355cc8ee5dbbdc8c9a3ec33515e9",
+    "dimensions": [
+      1122,
+      1402
+    ],
+    "format": "webp",
+    "role": "source-reference"
+  },
+  "rpg-assets/characters/kaede/vn-expressions/neutral.webp": {
+    "sha256": "04acd64bd440a9616cc269497db154a80c260e04affe192a5fee236942144766",
+    "dimensions": [
+      354,
+      676
+    ],
+    "format": "webp",
+    "role": "VN dialogue expression"
+  },
+  "rpg-assets/characters/kaede/vn-expressions/happy.webp": {
+    "sha256": "07172bef06f9e9279caf2b04b3be7eb6f580c6b2c990afbe1489f061dec45139",
+    "dimensions": [
+      356,
+      676
+    ],
+    "format": "webp",
+    "role": "VN dialogue expression"
+  },
+  "rpg-assets/characters/kaede/vn-expressions/embarrassed.webp": {
+    "sha256": "95ed96307b99e20ab8c6564bcb45ec432540b4f0f602d5c63f65c484868de636",
+    "dimensions": [
+      353,
+      676
+    ],
+    "format": "webp",
+    "role": "VN dialogue expression"
+  },
+  "rpg-assets/characters/kaede/vn-expressions/angry.webp": {
+    "sha256": "c8eaab1df30c2c7a313ffbf7ee566843063a2e908afd5972711e79a90f57d054",
+    "dimensions": [
+      354,
+      674
+    ],
+    "format": "webp",
+    "role": "VN dialogue expression"
+  },
+  "rpg-assets/characters/kaede/vn-expressions/surprised.webp": {
+    "sha256": "aa1ecec181c46d533d0f92a742be8cab0b6c43c5ac436b568e77aa98b0487a40",
+    "dimensions": [
+      356,
+      674
+    ],
+    "format": "webp",
+    "role": "VN dialogue expression"
+  },
+  "rpg-assets/characters/kaede/vn-expressions/flirty.webp": {
+    "sha256": "dc33b39307ea473a978825c4c2038132a655798dccb98838e90d6bf8f5e51919",
+    "dimensions": [
+      353,
+      674
+    ],
+    "format": "webp",
+    "role": "VN dialogue expression"
+  }
+}

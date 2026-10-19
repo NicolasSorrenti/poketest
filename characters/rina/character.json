@@ -1,0 +1,60 @@
+{
+  "schemaVersion": 1,
+  "id": "rina",
+  "name": "Rina Hoshino",
+  "age": 18,
+  "role": "romance",
+  "deck": "overgrowth",
+  "style": "Overgrowth · pure Grass beatdown",
+  "dialogue": {
+    "intro": "Ah! You’re a trainer, right? I can always tell! I’m Rina — yes, that Rina from the weekend stage shows. But more importantly… do you play the TCG?!",
+    "repeat": "You’re back! Did you bring new cards? Or just here to watch me practice my smile? Both are fine, honestly.",
+    "talk": [
+      "People think the idol stuff is my whole life. It’s not. My real life starts when I open my binder.",
+      "I have a full set of every Grass-type promo from the last three years. Don’t tell my manager, she thinks I only collect official merch.",
+      "Stage lights are bright, but nothing beats the feeling of resolving a perfect evolution chain on turn two.",
+      "I practiced my wink for three hours yesterday… and then spent four more hours testing a new deck. Priorities!",
+      "Sometimes fans ask me to sign cards. Those are my favorite days.",
+      "If I ever get a big contract, the first thing I’m buying is a display case for my holographic collection. The second is better stage outfits."
+    ],
+    "flirt": "Ehh? You’re looking at me like that… Is it the idol thing or the fact that I just said I love Grass-types more than anything?",
+    "duelWin": "Yay! Wait—was that too loud? Sorry! I’m just really happy when a match goes well!",
+    "duelLose": "Aww… okay, okay, I see the mistake. Rematch? Please? I’ll bring snacks!",
+    "hangouts": [
+      "Rina drags you to the arcade still in her practice stage outfit and spends the whole time talking about evolution lines while perfectly hitting every high score.",
+      "A quiet café meeting turns into her showing you her phone’s locked wallpaper — a custom illustration of her favorite Pokémon — and getting genuinely shy about it.",
+      "She practices a new song for you in the park, then immediately switches to explaining why her current deck needs one more supporter.",
+      "You catch her between rehearsals reviewing card lists on a tablet, still wearing the sparkly jacket from her last performance.",
+      "A late library session ends with her whispering excited theories about upcoming sets so she doesn’t get shushed, eyes sparkling the whole time."
+    ]
+  },
+  "appearance": {
+    "silhouette": "Unambiguously adult 18-year-old with a bright, youthful idol figure — slim waist, soft curves, and an energetic, bouncing posture that matches her stage presence.",
+    "palette": "Candy pink, white, sky blue, and soft gold accents. Lots of sparkle and clean pastels.",
+    "hair": "Long, wavy pastel-pink hair usually worn in high twin tails with big ribbons, or loose with a single star clip when she’s off-stage.",
+    "eyes": "Large, bright aqua-blue eyes that sparkle constantly, especially when she talks about Pokémon.",
+    "details": "Star-shaped earrings, a small microphone-shaped necklace she never takes off, glittery stage makeup that she only half-removes after shows, and a custom deck box covered in stickers.",
+    "expressions": "Default bright idol smile, genuine wide-eyed excitement when cards are involved, determined pout during matches, soft shy blush when complimented on her real hobbies, sparkling ‘stage mode’ wink.",
+    "outfits": [
+      "signature idol stage outfit: short frilly skirt, cropped top with star motifs, thigh-high socks, and a light open jacket covered in rhinestones",
+      "practice version: the same silhouette but simpler fabrics and less glitter",
+      "casual day: oversized hoodie with a Pokémon print, short shorts, and the twin tails still perfectly done",
+      "tournament look: neat blouse and skirt that still look cute and youthful, star hair clips kept in",
+      "evening off: soft pastel cardigan over a simple dress, hair down, still somehow looking like she stepped off a stage"
+    ],
+    "renderNotes": "SFW anime/JRPG idol-romance style, age 18. Bright, colorful, energetic. Emphasize the cute idol aesthetic with short skirts, cropped tops, twin tails, and sparkly details. She should look like a rising pop idol who also happens to be a serious TCG player. No nudity. Match Neo Harbor’s clean, lively aesthetic with lots of pink and light."
+  },
+  "arrivalDay": 7,
+  "schedule": [
+    ["arcade", "park", "cafe"],
+    ["shop", "arcade", "park"],
+    ["home", "shop", "arcade"],
+    ["park", "cafe", "arcade"],
+    ["arcade", "shop", "park"],
+    ["cafe", "park", "arcade"],
+    ["home", "arcade", "cafe"]
+  ],
+  "stories": "stories.json",
+  "artManifest": "art_manifest.json",
+  "bible": "bible.md"
+}
