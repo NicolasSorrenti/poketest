@@ -612,7 +612,7 @@ function renderAppointments(locked){
 
 
 function plannerDependencies(){return {schedules:SCHEDULES,appointments:APPOINTMENTS,story:STORY,side:SIDE,world:WORLD,
- tournaments:TOURNAMENTS,intentions:INTENTIONS,arc:ARC,social:SOCIAL,cast,places,eventCards};}
+ tournaments:TOURNAMENTS,intentions:INTENTIONS,arc:ARC,social:SOCIAL,situations:SITUATIONS,cast,places,eventCards};}
 function openPlannerSuggestion(id){
  const locked=!!state.activeSituation||!!state.activeStory||!!state.activeEncounter||!!state.activeArc||!!state.activeSideQuest||!!state.pendingDuel;
  if(locked||state.day>90)return;
