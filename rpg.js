@@ -1425,6 +1425,26 @@ function render(){
   label.append(name,sub,chapter);b.append(avatar,label);b.onclick=()=>selectPerson(id);$('people').append(b);
  }
  renderRpgCast(people,locked,shown,portraitId);
+ const characterActions=$('characterActions');
+ if(characterActions){
+  const selected=state.selected&&people.includes(state.selected)&&!locked?state.selected:null;
+  characterActions.hidden=!selected;
+  characterActions.replaceChildren();
+  if(selected){
+   const display=cast[selected].name.split(' ')[0],buttons=[
+    ['☏ Talk',()=>selectPerson(selected),'Talk to '+cast[selected].name],
+    ['⚔ Duel',()=>startDuel(selected),'Challenge '+cast[selected].name+' to a duel']
+   ];
+   if(PARTNER.unlocked(state,selected)&&state.deckJourney?.starter)
+    buttons.push(['▤ Deck',()=>act('partnerDeck:'+selected),'Edit '+display+'’s deck']);
+   for(const [label,action,title] of buttons){
+    const button=document.createElement('button');
+    button.type='button';button.className='character-action-btn';
+    button.textContent=label;button.title=title;button.onclick=action;
+    characterActions.append(button);
+   }
+  }
+ }
  portraitRoot.hidden=state.location!=='home'&&(people.length>0||!!portraitId);
  $('storyEvents').replaceChildren();const stories=eligibleStories();
  for(const e of stories){
