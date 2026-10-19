@@ -32,8 +32,8 @@ function launch(initial,approve=false){
  const local={getItem(k){return saved[k]||null;},setItem(k,v){saved[k]=String(v);}};
  const session={removeItem(){},setItem(){},getItem(){return null;}};
  const loc={origin:'http://localhost',href:'http://localhost/rpg.html',reload(){},assign(href){this.href=new URL(href,this.origin).href;}};
- new Function('window','document','localStorage','sessionStorage','location','fetch','confirm',js)(
-  win,doc,local,session,loc,async()=>({ok:true,json:async()=>({decks:[{id:'blackout',name:'Blackout'}]})}),()=>approve);
+ new Function('window','document','localStorage','sessionStorage','location','fetch','confirm','Image',js)(
+  win,doc,local,session,loc,async()=>({ok:true,json:async()=>({decks:[{id:'blackout',name:'Blackout'}]})}),()=>approve,function MockImage(){return new FakeNode('img');});
  return {elements,listeners,loc,state:()=>JSON.parse(saved.neoHarborRpgV1)};
 }
 test('RPG boots at home with four life statistics and location activities',()=>{
@@ -845,7 +845,7 @@ test('RPG collection: a training pack unlocks owned cards and full Deck Studio n
  const editor=r.elements.deckCollection.children.find(x=>x.className==='studio-open');
  assert.ok(editor,'Deck Studio should replace the old swap-card popup');
  editor.onclick();
- assert.match(r.loc.href,/rpg_deck_studio\\.html/);
+ assert.match(r.loc.href,/rpg_deck_studio\.html/);
  assert.equal(r.state().day,5);assert.equal(r.state().slot,0);
 });
 test('RPG collection: pre-duel snapshot locks the actual 60 owned cards until the result',()=>{
