@@ -170,7 +170,7 @@
   const compact=window.innerWidth<780;
   const cardWidth=compact?72:100;
   const available=Math.max(190,root.clientWidth||window.innerWidth*.48);
-  const minStep=compact?27:36,maxStep=compact?48:68;
+  const minStep=compact?38:52,maxStep=compact?48:68;
   const gap=Math.min(maxStep,Math.max(minStep,(available-cardWidth-24)/Math.max(1,cards.length-1)));
   const width=Math.max(available,Math.ceil(gap*(cards.length-1)+cardWidth+24));
   const track=document.createElement('div');track.className='hand-fan-track';track.style.width=width+'px';
