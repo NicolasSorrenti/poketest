@@ -1,0 +1,60 @@
+{
+  "schemaVersion": 1,
+  "id": "sierra",
+  "name": "Sierra Holt",
+  "age": 18,
+  "role": "romance",
+  "deck": "blackout",
+  "style": "Blackout · pure disruption control",
+  "dialogue": {
+    "intro": "You’re staring. Everyone does. If you’re here for a photo or an autograph, I’m off the clock. If you’re here to talk cards… then we can talk.",
+    "repeat": "Still hanging around? Most people lose interest once the bikini comes off. You must actually like the game.",
+    "talk": [
+      "Modeling pays the bills. The TCG is the only thing that doesn’t feel like a performance.",
+      "People assume I’m dumb because of how I look on the beach. I let them. It’s easier than correcting them every time.",
+      "My agent keeps trying to book me for more ‘lifestyle’ shoots. I keep asking if any of them involve a tournament table.",
+      "I can hold a smile for three hours straight under lights. Sitting down for a real match still makes me more nervous.",
+      "The worst part of the job isn’t the comments. It’s how few people ever ask what I actually care about.",
+      "I keep a full binder of old school cards in my bag between shoots. Don’t tell my manager."
+    ],
+    "flirt": "Careful. Most guys who flirt with me only want the version that exists in photos. You sure you’re different?",
+    "duelWin": "Huh. You actually made me work for it. That’s rarer than a first-edition holographic.",
+    "duelLose": "Okay, that one hurt. Rematch when I’m not still thinking about lighting setups.",
+    "hangouts": [
+      "Sierra shows up to the arcade still in a light cover-up over her shoot bikini. She spends the whole time talking strategy and only notices people staring when you point it out.",
+      "You catch her between jobs reviewing deck lists on her phone while sitting on a park bench in full model hair and makeup. She looks more relaxed talking about disruption packages than she does in any photo.",
+      "She invites you to a quiet café after a shoot. She peels off the performance smile the second she sits down and starts complaining about how hard it is to find good local players who don’t just want pictures.",
+      "A late library session turns into her explaining why she loves control decks while still wearing the tiny shorts from her last booking. She never once adjusts them for the camera that isn’t there.",
+      "She challenges you to a best-of-three and gets genuinely competitive. The model persona disappears completely until the last prize card is taken."
+    ]
+  },
+  "appearance": {
+    "silhouette": "Unambiguously adult 18-year-old, extremely slim and long-legged with a tiny chest and a disproportionately large, round, heavy ass. Narrow waist, flat stomach, model proportions that are intentionally bottom-heavy.",
+    "palette": "Warm brunette, deep bronze skin tones, black, white, and coral/orange accents from her swimwear.",
+    "hair": "Long, straight dark brunette hair usually worn loose or in a high sleek ponytail that swings past her waist.",
+    "eyes": "Sharp hazel-green eyes that look bored or guarded until the topic turns to cards.",
+    "details": "Minimal jewelry for shoots, a thin gold waist chain she often forgets to remove, a small deck box she carries everywhere, and a permanent slight model posture that softens when she’s comfortable.",
+    "expressions": "Default cool/distant model face, rare genuine smile when talking strategy, focused competitive stare during matches, tired half-lidded look after long shoots, soft almost shy expression when someone actually listens to her about the game.",
+    "outfits": [
+      "signature string bikini in coral or black (her actual job), often with a sheer open cover-up or oversized shirt thrown on afterward",
+      "tiny denim shorts that barely cover the bottom of her ass + cropped tank for casual days",
+      "tournament look: fitted black crop top, high-waisted shorts that still emphasize her hips and ass, sneakers",
+      "library/café: oversized hoodie that still can’t hide the silhouette, bike shorts",
+      "evening: simple slip dress that clings to her lower half and leaves almost nothing to the imagination from behind"
+    ],
+    "renderNotes": "SFW anime/JRPG style, age 18. Emphasize the extreme contrast: very slim upper body with tiny breasts and a large, round, heavy ass. She should look like a professional bikini model even in casual clothes. No nudity. When in swimwear keep it standard bikini (string or sport style). Match Neo Harbor’s clean, colorful aesthetic. Her body is deliberately fanservice-oriented but her face and posture should show she’s not performing for the player unless she’s working."
+  },
+  "arrivalDay": 18,
+  "schedule": [
+    ["park", "cafe", "arcade"],
+    ["shop", "park", "cafe"],
+    ["home", "shop", "arcade"],
+    ["park", "library", "cafe"],
+    ["arcade", "shop", "park"],
+    ["cafe", "park", "arcade"],
+    ["home", "library", "cafe"]
+  ],
+  "stories": "stories.json",
+  "artManifest": "art_manifest.json",
+  "bible": "bible.md"
+}

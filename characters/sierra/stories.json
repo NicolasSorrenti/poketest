@@ -1,0 +1,411 @@
+{
+  "schemaVersion": 1,
+  "characterId": "sierra",
+  "events": [
+    {
+      "id": "sierra_route_1",
+      "title": "After the Shoot",
+      "start": 18,
+      "end": 32,
+      "place": "park",
+      "slot": 1,
+      "minBond": 0,
+      "prerequisite": null,
+      "participants": [],
+      "npc": "sierra",
+      "chapter": 1,
+      "lines": [
+        {
+          "speaker": "sierra",
+          "text": "If you’re looking for a photo, the session’s over. I’m off the clock."
+        },
+        {
+          "speaker": "Protagonist",
+          "text": "I was actually going to ask if you play."
+        },
+        {
+          "speaker": "sierra",
+          "text": "...Play what?"
+        },
+        {
+          "speaker": "Protagonist",
+          "text": "TCG. You’ve got a deck box on your bag."
+        },
+        {
+          "speaker": "sierra",
+          "text": "Most people don’t notice that. They stop at the bikini."
+        },
+        {
+          "speaker": "sierra",
+          "text": "You actually want to talk cards?"
+        }
+      ],
+      "choices": [
+        {
+          "label": "Ask what she mains",
+          "reply": "Blackout. Control. I like making people miserable in sixty cards or less.",
+          "kind": "support",
+          "flag": "sierra_deck",
+          "delta": {
+            "affection": 2,
+            "trust": 2,
+            "respect": 1,
+            "attraction": 0
+          }
+        },
+        {
+          "label": "Admit you noticed the deck box first",
+          "reply": "That’s... new. Most people don’t even see it.",
+          "kind": "honest",
+          "flag": "sierra_notice",
+          "delta": {
+            "affection": 2,
+            "trust": 1,
+            "respect": 1,
+            "attraction": 1
+          }
+        },
+        {
+          "label": "Say the bikini is hard to ignore but the cards are more interesting",
+          "reply": "At least you’re honest about both. I’ll take it.",
+          "kind": "flirt",
+          "flag": "sierra_honest",
+          "delta": {
+            "affection": 1,
+            "trust": 1,
+            "respect": 0,
+            "attraction": 2
+          }
+        }
+      ]
+    },
+    {
+      "id": "sierra_route_2",
+      "title": "Between Bookings",
+      "start": 35,
+      "end": 48,
+      "place": "cafe",
+      "slot": 1,
+      "minBond": 2,
+      "prerequisite": "sierra_route_1",
+      "participants": [],
+      "npc": "sierra",
+      "chapter": 1,
+      "lines": [
+        {
+          "speaker": "sierra",
+          "text": "I have forty minutes before the next location. Don’t waste them on small talk."
+        },
+        {
+          "speaker": "Protagonist",
+          "text": "Then tell me why control."
+        },
+        {
+          "speaker": "sierra",
+          "text": "Because the board is the only place I get to decide what happens. Everything else is someone else’s shot list."
+        },
+        {
+          "speaker": "Protagonist",
+          "text": "You sound like you hate the job."
+        },
+        {
+          "speaker": "sierra",
+          "text": "I don’t hate the money. I hate that it’s the only thing most people think I’m for."
+        },
+        {
+          "speaker": "sierra",
+          "text": "You’re still here. That’s either impressive or suspicious."
+        }
+      ],
+      "choices": [
+        {
+          "label": "Ask her about a specific matchup",
+          "reply": "Okay. You’re actually serious about this. Fine, let’s talk tempo.",
+          "kind": "support",
+          "flag": "sierra_matchup",
+          "delta": {
+            "affection": 2,
+            "trust": 2,
+            "respect": 1,
+            "attraction": 0
+          }
+        },
+        {
+          "label": "Tell her you like the version that talks about cards",
+          "reply": "Most people never get that far. Don’t make me regret showing it.",
+          "kind": "honest",
+          "flag": "sierra_version",
+          "delta": {
+            "affection": 2,
+            "trust": 1,
+            "respect": 1,
+            "attraction": 1
+          }
+        },
+        {
+          "label": "Point out she lights up when she talks strategy",
+          "reply": "...Shut up. You’re not supposed to notice that.",
+          "kind": "flirt",
+          "flag": "sierra_lightup",
+          "delta": {
+            "affection": 2,
+            "trust": 1,
+            "respect": 0,
+            "attraction": 2
+          }
+        }
+      ],
+      "openingByFlag": {
+        "sierra_deck": "You asked about my deck last time. Still want to hear the ugly details?",
+        "sierra_notice": "You noticed the deck box first. That’s still weird. In a good way.",
+        "sierra_honest": "You were honest about the bikini and the cards. Most people only manage one."
+      }
+    },
+    {
+      "id": "sierra_route_3",
+      "title": "The Only Place That Feels Real",
+      "start": 52,
+      "end": 65,
+      "place": "arcade",
+      "slot": 2,
+      "minBond": 4,
+      "prerequisite": "sierra_route_2",
+      "participants": [],
+      "npc": "sierra",
+      "chapter": 2,
+      "lines": [
+        {
+          "speaker": "sierra",
+          "text": "I cancelled a fitting for this. Don’t make it boring."
+        },
+        {
+          "speaker": "Protagonist",
+          "text": "You’re really skipping work for a match?"
+        },
+        {
+          "speaker": "sierra",
+          "text": "The fitting was just more standing around looking pretty. This is the only place I don’t have to perform."
+        },
+        {
+          "speaker": "Protagonist",
+          "text": "You look happier here."
+        },
+        {
+          "speaker": "sierra",
+          "text": "Don’t say that out loud. I have a reputation to maintain."
+        },
+        {
+          "speaker": "sierra",
+          "text": "...But yeah. I am."
+        }
+      ],
+      "choices": [
+        {
+          "label": "Play her seriously and don’t hold back",
+          "reply": "Good. I hate when people go easy because of how I look.",
+          "kind": "support",
+          "flag": "sierra_serious",
+          "delta": {
+            "affection": 2,
+            "trust": 2,
+            "respect": 2,
+            "attraction": 0
+          }
+        },
+        {
+          "label": "Tell her she doesn’t have to perform around you",
+          "reply": "That’s a dangerous thing to say to someone who gets paid to perform.",
+          "kind": "honest",
+          "flag": "sierra_noperform",
+          "delta": {
+            "affection": 2,
+            "trust": 2,
+            "respect": 1,
+            "attraction": 1
+          }
+        },
+        {
+          "label": "Admit you like both versions of her",
+          "reply": "Both, huh? Most people pick one and stick to it. You’re greedy.",
+          "kind": "flirt",
+          "flag": "sierra_both",
+          "delta": {
+            "affection": 2,
+            "trust": 1,
+            "respect": 0,
+            "attraction": 2
+          }
+        }
+      ],
+      "openingByFlag": {
+        "sierra_matchup": "You actually talked matchups with me. So I showed up ready.",
+        "sierra_version": "You said you liked the version that talks about cards. Here she is.",
+        "sierra_lightup": "You noticed I light up. Annoying. Accurate. Let’s play."
+      }
+    },
+    {
+      "id": "sierra_route_4",
+      "title": "Off the Clock",
+      "start": 68,
+      "end": 80,
+      "place": "cafe",
+      "slot": 1,
+      "minBond": 5,
+      "prerequisite": "sierra_route_3",
+      "participants": [],
+      "npc": "sierra",
+      "chapter": 3,
+      "lines": [
+        {
+          "speaker": "sierra",
+          "text": "No shoot today. No makeup. No stylist. Just me and a deck."
+        },
+        {
+          "speaker": "Protagonist",
+          "text": "Suits you."
+        },
+        {
+          "speaker": "sierra",
+          "text": "You keep saying things like that. It’s starting to mess with my usual script."
+        },
+        {
+          "speaker": "Protagonist",
+          "text": "Maybe the script needed rewriting."
+        },
+        {
+          "speaker": "sierra",
+          "text": "Careful. If you keep treating me like a person who plays cards instead of a body that sells bikinis, I might get used to it."
+        },
+        {
+          "speaker": "sierra",
+          "text": "And I don’t get used to things easily."
+        }
+      ],
+      "choices": [
+        {
+          "label": "Tell her you want her to get used to it",
+          "reply": "...Okay. Then don’t disappear when the novelty wears off.",
+          "kind": "support",
+          "flag": "sierra_usedto",
+          "delta": {
+            "affection": 3,
+            "trust": 2,
+            "respect": 1,
+            "attraction": 1
+          }
+        },
+        {
+          "label": "Ask what she wants beyond the next tournament",
+          "reply": "No one asks me that. Most people stop at the next booking.",
+          "kind": "honest",
+          "flag": "sierra_future",
+          "delta": {
+            "affection": 2,
+            "trust": 2,
+            "respect": 1,
+            "attraction": 1
+          }
+        },
+        {
+          "label": "Say you like the real her more than the photos",
+          "reply": "That’s a hell of a thing to say to a model. Don’t take it back.",
+          "kind": "flirt",
+          "flag": "sierra_real",
+          "delta": {
+            "affection": 2,
+            "trust": 1,
+            "respect": 0,
+            "attraction": 3
+          }
+        }
+      ],
+      "openingByFlag": {
+        "sierra_serious": "You played me for real. So I’m showing up for real.",
+        "sierra_noperform": "You said I don’t have to perform. I’m testing that.",
+        "sierra_both": "You said you liked both versions. Today you get the unstyled one."
+      }
+    },
+    {
+      "id": "sierra_route_5",
+      "title": "Main Phase",
+      "start": 82,
+      "end": 90,
+      "place": "arcade",
+      "slot": 2,
+      "minBond": 6,
+      "prerequisite": "sierra_route_4",
+      "participants": [],
+      "npc": "sierra",
+      "chapter": 4,
+      "lines": [
+        {
+          "speaker": "sierra",
+          "text": "I turned down a campaign for this weekend. Full day of matches instead."
+        },
+        {
+          "speaker": "Protagonist",
+          "text": "That’s a big deal for you."
+        },
+        {
+          "speaker": "sierra",
+          "text": "It is. I’m still going to model. The money’s too good and I’m good at it. But I’m done pretending the cards are just a hobby I hide."
+        },
+        {
+          "speaker": "Protagonist",
+          "text": "And me?"
+        },
+        {
+          "speaker": "sierra",
+          "text": "You’re the first person who made the game feel more important than the job. That’s... rare."
+        },
+        {
+          "speaker": "sierra",
+          "text": "So. Are you staying for the long game or just this season?"
+        }
+      ],
+      "choices": [
+        {
+          "label": "Tell her you’re in for the long game",
+          "reply": "Good. Because I’m not great at short-term anything.",
+          "kind": "support",
+          "flag": "sierra_long",
+          "delta": {
+            "affection": 3,
+            "trust": 2,
+            "respect": 1,
+            "attraction": 1
+          }
+        },
+        {
+          "label": "Kiss her and let the answer be physical",
+          "reply": "...Okay. That works too.",
+          "kind": "flirt",
+          "flag": "sierra_kiss",
+          "delta": {
+            "affection": 2,
+            "trust": 1,
+            "respect": 0,
+            "attraction": 3
+          }
+        },
+        {
+          "label": "Say you’ll be there for both the cards and the rest of her",
+          "reply": "Both. You keep choosing both. I’m starting to believe you.",
+          "kind": "honest",
+          "flag": "sierra_bothsides",
+          "delta": {
+            "affection": 2,
+            "trust": 3,
+            "respect": 1,
+            "attraction": 1
+          }
+        }
+      ],
+      "openingByFlag": {
+        "sierra_usedto": "You told me to get used to being treated like a person. I’m trying.",
+        "sierra_future": "You asked what I wanted beyond the next tournament. I’m still answering that.",
+        "sierra_real": "You said you liked the real me more than the photos. I’m holding you to it."
+      }
+    }
+  ]
+}

@@ -1,0 +1,411 @@
+{
+  "schemaVersion": 1,
+  "characterId": "elena",
+  "events": [
+    {
+      "id": "elena_route_1",
+      "title": "After Closing",
+      "start": 10,
+      "end": 24,
+      "place": "cafe",
+      "slot": 2,
+      "minBond": 0,
+      "prerequisite": null,
+      "participants": [],
+      "npc": "elena",
+      "chapter": 1,
+      "lines": [
+        {
+          "speaker": "elena",
+          "text": "The branch is closed. If this is about an account, it will have to wait until morning."
+        },
+        {
+          "speaker": "Protagonist",
+          "text": "It’s not about an account."
+        },
+        {
+          "speaker": "elena",
+          "text": "Then I am at a loss. Most people only seek me out for professional reasons."
+        },
+        {
+          "speaker": "Protagonist",
+          "text": "I saw you looking at a deck list earlier."
+        },
+        {
+          "speaker": "elena",
+          "text": "...You are observant. That is either useful or inconvenient."
+        },
+        {
+          "speaker": "elena",
+          "text": "Very well. You have five minutes. Use them carefully."
+        }
+      ],
+      "choices": [
+        {
+          "label": "Ask about her preferred strategy",
+          "reply": "Control. Always control. I dislike leaving outcomes to chance.",
+          "kind": "support",
+          "flag": "elena_strategy",
+          "delta": {
+            "affection": 1,
+            "trust": 2,
+            "respect": 2,
+            "attraction": 0
+          }
+        },
+        {
+          "label": "Comment on how composed she stays even off the clock",
+          "reply": "Composure is not a switch I turn off. It is simply how I move through the world.",
+          "kind": "honest",
+          "flag": "elena_composed",
+          "delta": {
+            "affection": 1,
+            "trust": 1,
+            "respect": 2,
+            "attraction": 1
+          }
+        },
+        {
+          "label": "Hold her gaze a moment longer than necessary",
+          "reply": "You have unusual eyes for someone making idle conversation. Do not make a habit of it.",
+          "kind": "flirt",
+          "flag": "elena_gaze",
+          "delta": {
+            "affection": 2,
+            "trust": 0,
+            "respect": 1,
+            "attraction": 2
+          }
+        }
+      ]
+    },
+    {
+      "id": "elena_route_2",
+      "title": "Scheduled Exception",
+      "start": 28,
+      "end": 42,
+      "place": "library",
+      "slot": 1,
+      "minBond": 2,
+      "prerequisite": "elena_route_1",
+      "participants": [],
+      "npc": "elena",
+      "chapter": 1,
+      "lines": [
+        {
+          "speaker": "elena",
+          "text": "I adjusted my evening review to include this. Do not make me regret the exception."
+        },
+        {
+          "speaker": "Protagonist",
+          "text": "You actually cleared time?"
+        },
+        {
+          "speaker": "elena",
+          "text": "I clear time for things I have judged worth the cost. The judgment is still under evaluation."
+        },
+        {
+          "speaker": "Protagonist",
+          "text": "Harsh."
+        },
+        {
+          "speaker": "elena",
+          "text": "Accurate. I prefer accuracy to comfort."
+        },
+        {
+          "speaker": "elena",
+          "text": "You may sit. The light is better on this side of the table."
+        }
+      ],
+      "choices": [
+        {
+          "label": "Discuss a specific control line with her",
+          "reply": "You prepared. I appreciate people who do not waste the time I allocate.",
+          "kind": "support",
+          "flag": "elena_prepared",
+          "delta": {
+            "affection": 2,
+            "trust": 2,
+            "respect": 1,
+            "attraction": 0
+          }
+        },
+        {
+          "label": "Ask what she does when plans fail",
+          "reply": "I revise. Quickly. And I do not announce the revision until it is complete.",
+          "kind": "honest",
+          "flag": "elena_revise",
+          "delta": {
+            "affection": 1,
+            "trust": 2,
+            "respect": 1,
+            "attraction": 1
+          }
+        },
+        {
+          "label": "Tell her the exception feels significant",
+          "reply": "Do not inflate it. And do not look at me like that while saying it.",
+          "kind": "flirt",
+          "flag": "elena_significant",
+          "delta": {
+            "affection": 2,
+            "trust": 1,
+            "respect": 0,
+            "attraction": 2
+          }
+        }
+      ],
+      "openingByFlag": {
+        "elena_strategy": "You asked about strategy. I have continued that evaluation.",
+        "elena_composed": "You commented on my composure. It remains intact. For now.",
+        "elena_gaze": "You held my gaze longer than necessary last time. I have not forgotten."
+      }
+    },
+    {
+      "id": "elena_route_3",
+      "title": "The Crack in the Schedule",
+      "start": 46,
+      "end": 60,
+      "place": "cafe",
+      "slot": 2,
+      "minBond": 4,
+      "prerequisite": "elena_route_2",
+      "participants": [],
+      "npc": "elena",
+      "chapter": 2,
+      "lines": [
+        {
+          "speaker": "elena",
+          "text": "I left the blazer at the office. Do not read anything into it."
+        },
+        {
+          "speaker": "Protagonist",
+          "text": "It looks different."
+        },
+        {
+          "speaker": "elena",
+          "text": "Everything looks different when the structure is removed. That is why I prefer the structure."
+        },
+        {
+          "speaker": "Protagonist",
+          "text": "And yet you’re here without it."
+        },
+        {
+          "speaker": "elena",
+          "text": "A temporary variance. I will correct it tomorrow."
+        },
+        {
+          "speaker": "elena",
+          "text": "You are looking at my mouth. Is there a reason?"
+        }
+      ],
+      "choices": [
+        {
+          "label": "Say you were just listening carefully",
+          "reply": "Then continue. I am still deciding whether this conversation is efficient.",
+          "kind": "support",
+          "flag": "elena_listen",
+          "delta": {
+            "affection": 2,
+            "trust": 2,
+            "respect": 1,
+            "attraction": 0
+          }
+        },
+        {
+          "label": "Admit the softer look suits her",
+          "reply": "Softer is not a word I encourage. But I will allow the observation this once.",
+          "kind": "honest",
+          "flag": "elena_softer",
+          "delta": {
+            "affection": 2,
+            "trust": 1,
+            "respect": 1,
+            "attraction": 2
+          }
+        },
+        {
+          "label": "Hold her eyes and tell her the control is part of the appeal",
+          "reply": "You are playing a dangerous game with someone who calculates risk for a living.",
+          "kind": "flirt",
+          "flag": "elena_risk",
+          "delta": {
+            "affection": 2,
+            "trust": 1,
+            "respect": 0,
+            "attraction": 3
+          }
+        }
+      ],
+      "openingByFlag": {
+        "elena_prepared": "You arrived prepared last time. I adjusted my own preparations accordingly.",
+        "elena_revise": "You asked what I do when plans fail. Today’s plan has already required a minor revision.",
+        "elena_significant": "You called the exception significant. I am still weighing that assessment."
+      }
+    },
+    {
+      "id": "elena_route_4",
+      "title": "Unscheduled",
+      "start": 64,
+      "end": 78,
+      "place": "park",
+      "slot": 1,
+      "minBond": 5,
+      "prerequisite": "elena_route_3",
+      "participants": [],
+      "npc": "elena",
+      "chapter": 3,
+      "lines": [
+        {
+          "speaker": "elena",
+          "text": "This was not on my calendar. I am aware of the irony."
+        },
+        {
+          "speaker": "Protagonist",
+          "text": "You came anyway."
+        },
+        {
+          "speaker": "elena",
+          "text": "Yes. I am still examining why."
+        },
+        {
+          "speaker": "Protagonist",
+          "text": "Maybe you wanted to."
+        },
+        {
+          "speaker": "elena",
+          "text": "Want is an imprecise variable. I prefer clearer metrics."
+        },
+        {
+          "speaker": "elena",
+          "text": "And yet here I am, walking without a destination and allowing the conversation to drift. This is unlike me."
+        }
+      ],
+      "choices": [
+        {
+          "label": "Tell her you like this version of her",
+          "reply": "Then you are accepting a version I do not fully understand yet. That is a risk.",
+          "kind": "support",
+          "flag": "elena_version",
+          "delta": {
+            "affection": 3,
+            "trust": 2,
+            "respect": 1,
+            "attraction": 1
+          }
+        },
+        {
+          "label": "Ask if the loss of control is as frightening as she expected",
+          "reply": "It is quieter than I anticipated. That may be the more dangerous part.",
+          "kind": "honest",
+          "flag": "elena_quiet",
+          "delta": {
+            "affection": 2,
+            "trust": 2,
+            "respect": 1,
+            "attraction": 1
+          }
+        },
+        {
+          "label": "Close the distance slightly and wait",
+          "reply": "You are testing the boundary. I have not moved away. Take that as the data it is.",
+          "kind": "flirt",
+          "flag": "elena_boundary",
+          "delta": {
+            "affection": 2,
+            "trust": 1,
+            "respect": 0,
+            "attraction": 3
+          }
+        }
+      ],
+      "openingByFlag": {
+        "elena_listen": "You listened carefully last time. I am still speaking.",
+        "elena_softer": "You said softer suited me. I have not corrected the record.",
+        "elena_risk": "You called the control part of the appeal. I am still calculating the exposure."
+      }
+    },
+    {
+      "id": "elena_route_5",
+      "title": "Ledger Closed",
+      "start": 80,
+      "end": 90,
+      "place": "cafe",
+      "slot": 2,
+      "minBond": 6,
+      "prerequisite": "elena_route_4",
+      "participants": [],
+      "npc": "elena",
+      "chapter": 4,
+      "lines": [
+        {
+          "speaker": "elena",
+          "text": "I have reviewed the last several weeks. The deviations from my usual pattern are significant."
+        },
+        {
+          "speaker": "Protagonist",
+          "text": "And the conclusion?"
+        },
+        {
+          "speaker": "elena",
+          "text": "That I have allowed one person more access than is strictly efficient. And that I do not wish to revoke it."
+        },
+        {
+          "speaker": "Protagonist",
+          "text": "That’s a big statement coming from you."
+        },
+        {
+          "speaker": "elena",
+          "text": "I do not make small statements when the data is clear."
+        },
+        {
+          "speaker": "elena",
+          "text": "So. Are you prepared to remain a variable I no longer try to eliminate?"
+        }
+      ],
+      "choices": [
+        {
+          "label": "Tell her you’re staying",
+          "reply": "Then the ledger is updated. Do not make me revise it again without cause.",
+          "kind": "support",
+          "flag": "elena_stay",
+          "delta": {
+            "affection": 3,
+            "trust": 2,
+            "respect": 1,
+            "attraction": 1
+          }
+        },
+        {
+          "label": "Kiss her carefully and let the answer be physical",
+          "reply": "...That was not a scheduled action. I will allow it.",
+          "kind": "flirt",
+          "flag": "elena_kiss",
+          "delta": {
+            "affection": 2,
+            "trust": 1,
+            "respect": 0,
+            "attraction": 3
+          }
+        },
+        {
+          "label": "Say you want both the controlled version and the one that slips",
+          "reply": "Both. You continue to request both. Very well. I will attempt to provide them.",
+          "kind": "honest",
+          "flag": "elena_both",
+          "delta": {
+            "affection": 2,
+            "trust": 3,
+            "respect": 1,
+            "attraction": 1
+          }
+        }
+      ],
+      "openingByFlag": {
+        "elena_version": "You said you liked this version. I have continued to allow it.",
+        "elena_quiet": "You asked about the quiet loss of control. It has not become louder.",
+        "elena_boundary": "You tested the boundary. I am still standing on the same side of it."
+      }
+    }
+  ]
+}

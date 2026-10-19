@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "characterId": "elena",
+  "portrait": "/rpg-assets/characters/elena/neutral.png",
+  "expressions": {
+    "neutral": "/rpg-assets/characters/elena/neutral.webp",
+    "composed": "/rpg-assets/characters/elena/composed.webp",
+    "focused": "/rpg-assets/characters/elena/focused.webp",
+    "soft": "/rpg-assets/characters/elena/soft.webp",
+    "intense": "/rpg-assets/characters/elena/intense.webp"
+  },
+  "eventImages": [
+    {
+      "sceneId": "elena_route_1",
+      "path": "/rpg-assets/characters/elena/elena_after_hours.webp",
+      "prompt": "Adult 26 year old Elena Crowe, anime visual novel style, long dark brown hair in a low elegant twist, deep hazel-green eyes, perfect makeup and full lips, wearing a tailored charcoal blazer over cream silk blouse and pencil skirt, standing in a quiet café after work looking composed but slightly tired, refined beauty, fully clothed SFW, Neo Harbor aesthetic, bottom 20 percent clear for text"
+    },
+    {
+      "sceneId": "elena_route_3",
+      "path": "/rpg-assets/characters/elena/elena_unguarded.webp",
+      "prompt": "Adult 26 year old Elena Crowe sitting at a café table in the evening, long dark brown hair slightly loosened, deep hazel-green eyes with a rare soft expression, full lips, charcoal blazer draped over the chair, cream blouse with one extra button undone, refined and quietly vulnerable, anime visual novel CG, warm lighting, fully clothed SFW, Neo Harbor style, bottom 20 percent clear for dialogue"
+    }
+  ]
+}

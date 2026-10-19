@@ -1,0 +1,60 @@
+{
+  "schemaVersion": 1,
+  "id": "elena",
+  "name": "Elena Crowe",
+  "age": 26,
+  "role": "romance",
+  "deck": "power_reserve",
+  "style": "Power Reserve · calculated Jungle control",
+  "dialogue": {
+    "intro": "Good afternoon. I don’t usually speak with people outside of scheduled appointments… but you seem determined. Elena Crowe. How can I help you?",
+    "repeat": "You’re persistent. Most people take the hint after the first polite dismissal. What is it this time?",
+    "talk": [
+      "I prefer structure. The bank runs on it. So do I.",
+      "People often mistake composure for coldness. I simply see no benefit in unnecessary emotion during work hours.",
+      "My makeup is not for attention. It is part of the uniform. Presentation matters when people trust you with their money.",
+      "I play the TCG the same way I handle accounts: carefully, with contingency plans, and without wasted moves.",
+      "Evenings are for review and quiet. I don’t often make exceptions.",
+      "You have a habit of looking at my eyes when I speak. Most clients look at the numbers instead."
+    ],
+    "flirt": "That is a bold tone to take with me. I hope you have considered the consequences.",
+    "duelWin": "A clean victory. You adapted well. I respect that.",
+    "duelLose": "Unexpected. I will review the game state. Expect a stronger performance next time.",
+    "hangouts": [
+      "Elena meets you after closing hours in a quiet café, still in her full office attire. She removes her blazer only after confirming no one from the bank is nearby.",
+      "A rare library evening where she reviews deck lists with the same focus she gives financial reports. Her lipstick never once smudges.",
+      "She agrees to a short walk in the park after work. Her heels click precisely; she never once loses her posture even on uneven paths.",
+      "You catch her at the arcade on a weekend. She is still wearing a crisp blouse and pencil skirt, looking mildly out of place and completely unbothered by it.",
+      "A late conversation at the café turns into her admitting, very quietly, that control is easier than uncertainty. She looks away the moment the words leave her mouth."
+    ]
+  },
+  "appearance": {
+    "silhouette": "Unambiguously adult 26-year-old with a refined, elegant, and quietly stunning figure. Soft but defined curves, full hips, and a poised posture that makes even simple office clothing look intentional and attractive.",
+    "palette": "Deep charcoal, cream white, soft black, and muted burgundy accents. Makeup in classic rose and neutral tones.",
+    "hair": "Long, straight dark brown hair usually worn in a low elegant twist or loose with a single polished clip. Never a strand out of place during work hours.",
+    "eyes": "Deep, striking hazel-green eyes with a calm, assessing quality. Easy to get lost in; she rarely breaks eye contact first.",
+    "details": "Immaculate makeup with emphasis on full, well-defined lips and subtle but precise eyeliner. Small gold watch, simple stud earrings, and a leather work bag that never looks overstuffed.",
+    "expressions": "Default composed and slightly distant professional smile, rare soft unguarded look when her control slips, focused analytical stare during matches, faint amused curve of the lips when someone surprises her, quiet intensity when she is truly paying attention.",
+    "outfits": [
+      "signature tailored charcoal blazer over a cream silk blouse, fitted pencil skirt, low heels",
+      "black fitted dress with a structured blazer for formal bank days",
+      "weekend variation: the same blouse and skirt without the blazer, still perfectly pressed",
+      "rare casual: soft knit sweater and tailored trousers that still look expensive and controlled",
+      "evening: the office blouse unbuttoned one extra button and the blazer left open, the only visible crack in the armor"
+    ],
+    "renderNotes": "SFW anime/JRPG romantic-comedy style, age 26. Elegant, reserved beauty. Emphasize the refined figure beneath professional clothing, perfect makeup, full lips, and especially the deep, captivating eyes. Clothing should always look expensive and intentional. No casual fanservice posing; her attractiveness comes from composure and quiet intensity. Match Neo Harbor’s clean, polished aesthetic."
+  },
+  "arrivalDay": 10,
+  "schedule": [
+    ["center", "cafe", "home"],
+    ["center", "library", "cafe"],
+    ["center", "shop", "home"],
+    ["center", "cafe", "library"],
+    ["center", "park", "cafe"],
+    ["library", "cafe", "home"],
+    ["home", "cafe", "library"]
+  ],
+  "stories": "stories.json",
+  "artManifest": "art_manifest.json",
+  "bible": "bible.md"
+}
