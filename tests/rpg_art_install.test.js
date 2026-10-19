@@ -98,3 +98,19 @@ test('optional G5 situation CG pack installs after the base and is safe to run t
   assert.ok(G5_ARCHIVE.startsWith('asset-packs/') && G5_ARCHIVE.endsWith('.zip'));
   assert.match(G5_EXPECTED_SHA256,/^[a-f0-9]{64}$/);
 }));
+
+// Optional G5 artwork must never replace newer checked-in CGs or abort deployment.
+test('optional G5 preserves existing differing artwork and installs missing scenes',()=>withRepo(root=>{
+ const existing=path.join(root,'rpg-assets/events/cg/season01/akari_notes_whirl.webp');
+ fs.mkdirSync(path.dirname(existing),{recursive:true});fs.writeFileSync(existing,'newer committed artwork');
+ const bytes=zipEntries([
+  ['rpg-assets/events/cg/season01/akari_notes_whirl.webp','older ZIP artwork'],
+  ['rpg-assets/events/cg/season01/new_scene.webp','new optional scene']
+ ]);
+ const dest=path.join(root,G5_ARCHIVE);fs.mkdirSync(path.dirname(dest),{recursive:true});fs.writeFileSync(dest,bytes);
+ const result=installG5({root,expectedSha:sha(bytes)});
+ assert.equal(result.installed,1);assert.equal(result.skipped,1);assert.equal(result.conflicts,1);
+ assert.equal(fs.readFileSync(existing,'utf8'),'newer committed artwork');
+ assert.equal(fs.readFileSync(path.join(root,'rpg-assets/events/cg/season01/new_scene.webp'),'utf8'),'new optional scene');
+ assert.equal(installG5({root,expectedSha:sha(bytes)}).installed,0);
+}));
