@@ -14,6 +14,7 @@
   commit:{affection:2,trust:1,respect:0,attraction:2}
  };
  const PACK=typeof module==='object'&&module.exports?require('./rpg_narrative_pack'):window.NeoRpgNarrativePack;
+ const BONDC=typeof module==='object'&&module.exports?require('./rpg_bond_chapters'):window.NeoRpgBondChapters;
  const E=[];
  function arc(npc,rows){
   rows.forEach((r,index)=>{
@@ -205,7 +206,7 @@
  ]);
  // Keep the original four-scene heroine routes stable for existing saves.
  // Add optional guest and crossover episodes without renumbering those routes.
- E.push(...PACK.events);
+ E.push(...PACK.events,...BONDC.events);
  const ID=new Map(E.map(e=>[e.id,e]));
  function normalize(state){
   if(!state.storyDone||typeof state.storyDone!=='object')state.storyDone={};
@@ -225,6 +226,7 @@
  function recordExpiry(state){
   normalize(state);const missed=[];
   for(const e of E){
+   if(e.evergreen)continue;
    if(state.day>e.end&&!state.storyDone[e.id]&&!state.storyMissed[e.id]){
     state.storyMissed[e.id]=true;
     if(!e.prerequisite||state.storyDone[e.prerequisite])missed.push(e);
@@ -250,7 +252,7 @@
   for(const e of E){
    if(seen.has(e.id))faults.push('Duplicate '+e.id);seen.add(e.id);
    if(e.start>e.end||e.start<1||e.end>90||e.slot<0||e.slot>2)faults.push('Invalid window '+e.id);
-   if(e.prerequisite){const prev=ID.get(e.prerequisite);if(!prev||prev.end>=e.end)faults.push('Bad link '+e.id);}
+   if(e.prerequisite){const prev=ID.get(e.prerequisite);if(!prev||(!e.evergreen&&prev.end>=e.end))faults.push('Bad link '+e.id);}
    if(e.choices.length<2||!e.lines.length||!e.choices.every(c=>c.label&&c.reply&&c.delta))faults.push('Incomplete '+e.id);
    if(e.lines.some(line=>!line.speaker||!line.text))faults.push('Invalid dialogue '+e.id);
   }
