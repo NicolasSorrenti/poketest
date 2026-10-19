@@ -15,8 +15,34 @@
   tidal_circuit:['base1-9','base1-14','base1-21','base1-25','base1-35','base1-38','base1-41','base1-42','base1-53','base1-58','base1-59','base1-63','base1-64','base1-65','base1-67','base1-81','base1-82','base1-84','base1-88','base1-91','base1-92','base1-93','base1-94','base1-95','base1-100','base1-102'],
   mind_and_muscle:['base1-19','base1-29','base1-31','base1-32','base1-34','base1-43','base1-47','base1-49','base1-50','base1-52','base1-56','base1-62','base1-81','base1-82','base1-84','base1-88','base1-91','base1-92','base1-93','base1-94','base1-95','base1-97','base1-101']
  };
- const SETS=Object.freeze({base1:{name:'Base Set',size:102,rares:16},base2:{name:'Jungle',size:64,rares:16},base3:{name:'Fossil',size:62,rares:15},neo1:{name:'Neo Genesis',size:111,rares:19},neo2:{name:'Neo Discovery',size:75,rares:17},neo3:{name:'Neo Revelation',size:66,rares:14},neo4:{name:'Neo Destiny',size:113,rares:16}});
- const CHARACTER_SETS=Object.freeze({hana:'base1',reina:'base3',shiori:'neo2',yuna:'base2',akari:'neo1',camila:'base3',marina:'neo3',kaede:'neo4',jinx:'neo4',luna:'neo3'});
+ const SETS=Object.freeze({
+  base1:{name:'Base Set',size:102,rares:16},
+  base2:{name:'Jungle',size:64,rares:16},
+  base3:{name:'Fossil',size:62,rares:15},
+  base4:{name:'Team Rocket',size:130,rares:17},
+  gym1:{name:'Gym Heroes',size:132,rares:19},
+  gym2:{name:'Gym Challenge',size:132,rares:20},
+  neo1:{name:'Neo Genesis',size:111,rares:19},
+  neo2:{name:'Neo Discovery',size:75,rares:17},
+  neo3:{name:'Neo Revelation',size:66,rares:14},
+  neo4:{name:'Neo Destiny',size:113,rares:16}
+ });
+ // Every product can be obtained by day progression, relationships, or earlier accomplishments.
+ // No rare card / collection-completion grind is necessary to finish the story.
+ const SHOP_OFFERS=Object.freeze([
+  {set:'base1',price:20,day:1,description:'The foundations of competitive play.'},
+  {set:'base2',price:25,day:8,npc:'yuna',description:'Jungle partners and unexpected tricks.'},
+  {set:'base3',price:25,day:14,npc:'reina',description:'Ancient Pokémon and fossil strategies.'},
+  {set:'base4',price:30,day:22,npc:'camila',description:'Dark evolutions and mischievous disruption.'},
+  {set:'gym1',price:35,day:33,npc:'hana',cup:'neighborhood',description:'Leader Pokémon with their own tactics.'},
+  {set:'gym2',price:38,day:43,npc:'akari',cup:'neighborhood',description:'Gym battles and signature strategies.'},
+  {set:'neo1',price:40,day:48,npc:'akari',cup:'regional',description:'Johto discoveries and evolving teams.'},
+  {set:'neo2',price:45,day:58,npc:'shiori',description:'New evolutions and precise tactics.'},
+  {set:'neo3',price:50,day:68,npc:'marina',cup:'regional',description:'Powerful choices from Johto.'},
+  {set:'neo4',price:55,day:80,npc:'kaede',cup:'championship',description:'High-stakes cards for the season finale.'}
+ ]);
+
+ const CHARACTER_SETS=Object.freeze({hana:'base1',reina:'base3',shiori:'neo2',yuna:'base2',akari:'neo1',camila:'base4',marina:'neo3',kaede:'neo4',jinx:'neo4',luna:'neo3'});
  const ENERGY=new Set(['base1-96','base1-97','base1-98','base1-99','base1-100','base1-101','base1-102']);
  const allAllowed=new Set([...starters.flatMap(s=>s.cards),...upgrade,...Object.keys(SETS).flatMap(set=>Array.from({length:SETS[set].size},(_,i)=>set+'-'+(i+1)))]);
  const rank=ids=>Object.fromEntries([...new Set(ids)].map(id=>[id,ids.filter(x=>x===id).length]));
@@ -33,6 +59,18 @@
   // Shuffle so the guaranteed cards are not revealed in a fixed position.
   for(let i=cards.length-1;i>0;i--){const j=Math.min(i,Math.floor(Math.max(0,rng())*(i+1)));[cards[i],cards[j]]=[cards[j],cards[i]];}
   return cards;
+ }
+ function shopPacks(state){
+  const owned=state?.deckJourney?.owned||{};
+  return SHOP_OFFERS.map(offer=>{
+   const set=offer.set,info=SETS[set],unique=Object.keys(owned).filter(id=>id.startsWith(set+'-')&&owned[id]>0).length;
+   const affection=Math.max(Number(state?.relationships?.[offer.npc]?.affection)||0,Number(state?.bonds?.[offer.npc]?.affection)||0);
+   const story=offer.npc&&Object.keys(state?.storyDone||{}).some(id=>id.startsWith(offer.npc+'_route_')&&state.storyDone[id]);
+   const cup=offer.cup&&state?.tournaments?.[offer.cup]?.state==='champion';
+   const unlocked=!offer.npc||state?.day>=offer.day||affection>=3||!!story||!!cup||unique>0;
+   const hint=offer.npc?'Day '+offer.day+' · bond with '+offer.npc+' · or win matching cards'+(offer.cup?' · '+offer.cup+' cup':''):'Available from Day 1';
+   return {...offer,name:info.name,total:info.size,owned:unique,completion:Math.round(100*unique/info.size),unlocked,unlockHint:hint};
+  });
  }
  function fresh(){return {starter:null,owned:{},deck:[],draft:null,packs:0,rewards:0,lastPack:null};}
  function hydrate(state){
@@ -110,13 +148,17 @@
   x.rewards++;
   return grant(x,ids,'win',set,giver);
  }
- function buyPack(state){const x=state.deckJourney;
+ function buyPack(state,set='base1',rng=Math.random){const x=state?.deckJourney;
   if(!x?.starter)throw Error('Choose your starter before opening packs');
   if(state.location!=='shop'||state.day>90)throw Error('Buy booster packs at the card shop');
   if(state.pendingDuel||state.activeStory||state.activeSideQuest||state.activeSituation||state.activeArc||state.activeEncounter)throw Error('Finish the current scene first');
-  if((state.credits||0)<20)throw Error('A training pack costs 20 credits');
-  const set='base1',ids=randomPack(set);
-  state.credits-=20;x.packs++;return grant(x,ids,'shop',set,null);
+  if(x.lastPack&&!x.lastPack.opened)throw Error('Reveal your previous booster before buying another');
+  const offer=shopPacks(state).find(p=>p.set===set);
+  if(!offer)throw Error('This booster does not exist');
+  if(!offer.unlocked)throw Error(offer.name+' is not unlocked yet');
+  if((state.credits||0)<offer.price)throw Error('A '+offer.name+' pack costs '+offer.price+' credits');
+  const ids=randomPack(set,rng);
+  state.credits-=offer.price;x.packs++;return grant(x,ids,'shop',set,null);
  }
- return Object.freeze({starters,upgrade,ENERGY,SETS,CHARACTER_SETS,setForCharacter,randomPack,byId:id=>byId.get(id),fresh,hydrate,choose,check,draft,edit,change,save,cancel,reward,buyPack,rank});
+ return Object.freeze({starters,upgrade,ENERGY,SETS,SHOP_OFFERS,shopPacks,CHARACTER_SETS,setForCharacter,randomPack,byId:id=>byId.get(id),fresh,hydrate,choose,check,draft,edit,change,save,cancel,reward,buyPack,rank});
 });
