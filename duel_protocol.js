@@ -2,7 +2,7 @@
 const {decisionForViewer}=require('./decision_core');
 const CLASSIC_POWERS=require('./classic_power_core');
 // Transport-agnostic definitions: the same command is used for local, CPU, and online play.
-const ACTIONS=Object.freeze(['setup_select','setup_undo','setup_confirm','bench','evolve','attach_energy','play_trainer','use_stadium','attack','retreat','use_power','reveal_secret','choose','end_turn','concede']);
+const ACTIONS=Object.freeze(['setup_select','setup_undo','setup_confirm','bench','evolve','attach_energy','play_trainer','use_stadium','attack','retreat','use_power','reveal_secret','choose','end_turn','concede','undo']);
 const KNOWN=new Set(ACTIONS);
 function validateCommand(input){
  if(!input||typeof input!=='object'||Array.isArray(input))throw Error('Command must be an object');
