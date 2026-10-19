@@ -803,3 +803,7 @@ Create a cinematic original anime visual-novel CG in Neo Harbor, an adult slice-
 
 ## Handoff to gameplay
 The image agent does not edit `rpg.js`, story events or TCG rules. Commit only approved image assets plus delivery manifest; any planned special-story unlock that needs new authored scenes should be coordinated with the story agent by CG ID instead of inventing spoilers.
+
+## G5 integration (do not regenerate existing CG requests)
+
+The eight **special** scene IDs above are now earned exclusively by completing their corresponding optional G5 situational events at the correct public location, time, and affection threshold. Generic hangouts no longer unlock these eight CGs. Their camera, wardrobe, composition, and named asset paths are **unchanged**: do not duplicate art or create another eight names. Confirm what artwork is already delivered before generating; the game continues with the portrait/text fallback when it is missing. Maintain age-appropriate adult-only SFW playful comedy, no nudity, underwear exposure, or voyeuristic angles.
