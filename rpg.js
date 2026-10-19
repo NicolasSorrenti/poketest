@@ -708,6 +708,12 @@ function render(){
    b.disabled=chosen.kind==='commit'&&((!!state.partner&&state.partner!==event.npc)||bond.trust<3||bond.affection<6);
    if(b.disabled)b.title='You need a stronger bond or you already have a partner.';
   }
+  if(action.startsWith('socialDo:')){
+   const [,npc,activityId]=action.split(':');
+   const selection=SOCIAL.options(state,npc,currentPeople(),cast).find(x=>x.id===activityId);
+   b.disabled=!selection||!!selection.disabledReason;
+   if(b.disabled)b.title=selection?.disabledReason||'This activity is not available.';
+  }
   b.onclick=()=>act(action);$('choices').append(b);
  }
  $('townRadar').replaceChildren();
