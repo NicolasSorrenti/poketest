@@ -1,49 +1,42 @@
-@import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700;800;900&family=Inter:wght@400;500;600;700;800&display=swap');
-:root{color-scheme:dark;font-family:Inter,system-ui,sans-serif;background:#090f20;color:#f5eefa}
-*{box-sizing:border-box}body{margin:0;min-height:100vh;background:radial-gradient(circle at 66% -15%,#39243e 0,#121d30 45%,#090f20 100%)}
-button,input,select{font:inherit}button{cursor:pointer}button:disabled{cursor:not-allowed;opacity:.45}a{color:inherit;text-decoration:none}
-.topbar{min-height:90px;background:#121c2bd9;border-bottom:1px solid #4b364f;display:flex;align-items:center;justify-content:space-between;gap:15px;padding:15px 4vw}
-.brand{display:flex;align-items:center;gap:12px}.brand small,.eyebrow,.panel-heading small{color:#eba6c7;font-size:11px;font-weight:800;letter-spacing:2px}
-.brand h1{font:900 27px/1 'Barlow Condensed',sans-serif;letter-spacing:3px;margin:2px 0}
-.star{font-size:35px;color:#f2c3dd}.back{border:1px solid #876c93;padding:12px 16px;border-radius:9px;color:#dcd7ee;font-weight:700;font-size:13px}.back:hover{background:#30243f}
-.profile{font:700 15px 'Barlow Condensed',sans-serif;color:#f4bdd6}
-.studio{max-width:1680px;margin:0 auto;padding:25px 3vw 60px}.studio-intro{display:flex;justify-content:space-between;align-items:start;gap:30px;padding:19px 6px 27px}
-.studio-intro h2{font:900 clamp(28px,3vw,42px)/1.04 'Barlow Condensed',sans-serif;margin:10px 0 6px;color:#fff}
-.studio-intro p{max-width:700px;color:#b4c0d3;font-size:13px;line-height:1.65;margin:0}
-.score{display:grid;grid-template-columns:auto auto;gap:3px 12px;align-items:center;white-space:nowrap}.score strong{font:900 27px 'Barlow Condensed',sans-serif;color:#f0b6d5}.score span{font-size:10px;color:#a4b4cf;letter-spacing:1px}
-.toolbar{position:sticky;top:0;z-index:3;display:flex;justify-content:space-between;align-items:center;gap:15px;padding:12px 16px;background:#1e2840fa;border:1px solid #56516a;border-radius:11px;margin-bottom:17px;box-shadow:0 5px 17px #0005}
-.metrics{display:flex;gap:10px;flex-wrap:wrap}.metric{font:800 14px 'Barlow Condensed',sans-serif;background:#15243b;border:1px solid #3c5970;padding:7px 12px;border-radius:8px}
-.metric b{color:#fff;font-size:18px;margin-right:5px}.savebar{display:flex;align-items:center;gap:8px}.savebar span{font-size:11px;color:#f8d9eb;max-width:340px}
-button.primary{border:1px solid #f6b5d4;color:#151222;background:#f2b1d2;font-weight:900;padding:11px 17px;border-radius:7px}
-button.muted{border:1px solid #817389;color:#f6ddec;background:#3b3853;padding:11px 14px;border-radius:7px}
-.columns{display:grid;grid-template-columns:minmax(360px,1.35fr) minmax(330px,1fr) minmax(240px,.7fr);gap:16px;align-items:start}
-.panel{min-width:0;background:#121d31;border:1px solid #3d475f;border-radius:12px;overflow:hidden}
-.panel-heading{display:flex;justify-content:space-between;gap:9px;align-items:center;padding:17px 17px 14px;border-bottom:1px solid #36425a}
-.panel-heading h2{font:800 25px 'Barlow Condensed',sans-serif;line-height:1;margin:4px 0 0;letter-spacing:.5px}
-.count{color:#f0b7d0;font:800 13px 'Barlow Condensed',sans-serif}.filters{display:flex;gap:7px;flex-wrap:wrap;padding:12px 13px}
-.filters input,.filters select{background:#0b1527;border:1px solid #465270;color:#f0eaf8;border-radius:7px;padding:11px;font-size:12px;min-width:100px}
-.filters input{flex:1 1 160px}.collection-grid{padding:8px 12px 15px;display:grid;grid-template-columns:repeat(auto-fill,minmax(118px,1fr));gap:12px;max-height:calc(100vh - 280px);overflow:auto}
-.collect-card{position:relative;display:flex;flex-direction:column;gap:6px;background:#202b43;border:1px solid #586781;border-radius:9px;padding:8px;min-width:0;transition:border-color .12s,transform .12s}
-.collect-card:hover,.collect-card.selected{border-color:#ec9dca}.collect-card:hover{transform:translateY(-2px)}
-.card-art{width:100%;aspect-ratio:245/342;object-fit:cover;border-radius:5px;background:linear-gradient(145deg,#603f75,#243857);color:#dee7f7}
-.art-fallback{display:grid;place-items:center;padding:8px;overflow-wrap:anywhere;text-align:center;font:800 17px 'Barlow Condensed',sans-serif}
-.collect-card strong{font:800 15px/1.15 'Barlow Condensed',sans-serif;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.collect-card small{font-size:10px;color:#b3c1d4}
-.card-qty{position:absolute;top:13px;right:13px;z-index:1;padding:3px 5px;background:#0a1529ee;border-radius:5px;font:900 12px 'Barlow Condensed',sans-serif}
-.card-tools{display:grid;grid-template-columns:1fr 1fr;gap:5px;margin-top:auto}
-.card-tools button{min-height:32px;border-radius:6px;border:1px solid #846b95;background:#493456;color:#f7e3f3;font-size:12px;font-weight:900}
-.card-tools .add{background:#794b7c;border-color:#c897c9}
-.deck-groups{padding:10px 14px 22px;max-height:calc(100vh - 240px);overflow:auto}
-.deck-group{margin-bottom:14px}.deck-group h3{display:flex;justify-content:space-between;align-items:center;margin:10px 0;padding-bottom:7px;border-bottom:1px solid #384560;font:900 17px 'Barlow Condensed',sans-serif;color:#dfb4d0}
-.deck-entry{display:flex;align-items:center;gap:10px;background:#1f2c43;border:1px solid #38465e;padding:6px;margin:6px 0;border-radius:7px}
-.deck-entry .card-mini{width:37px;height:53px;object-fit:cover;border-radius:3px;background:#3a3863}
-.deck-entry-details{flex:1;min-width:0}.deck-entry strong{font-size:12px;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.deck-entry small{font-size:10px;color:#afbdd0}
-.deck-entry button{width:32px;height:32px;border:1px solid #885d85;background:#47304f;border-radius:6px;color:#ffecf8;font-weight:900}
-.preview{position:sticky;top:91px}.selected-image{padding:20px;min-height:240px;display:grid;place-items:center}
-.selected-image img{display:block;max-width:100%;max-height:360px;border-radius:10px;box-shadow:0 10px 24px #000a}
-.selected-description{padding:0 17px 20px;color:#cbd4e5;font-size:12px;line-height:1.6}
-.selected-description h3{font:900 23px 'Barlow Condensed',sans-serif;color:#fff;margin:0}
-.selected-description p{margin:8px 0}.selected-description .meta{color:#e3a5c7}
-.studio-error{max-width:700px;margin:50px auto;padding:24px;background:#4a2537;border:1px solid #eaabc0;border-radius:10px;color:#fff;font-weight:700}
-@media(max-width:1190px){.columns{grid-template-columns:1fr 1fr}.preview{position:static;grid-column:1/-1;display:grid;grid-template-columns:250px 1fr;align-items:center}.preview .panel-heading{grid-column:1/-1}.selected-image{min-height:180px}.selected-image img{max-height:230px}}
-@media(max-width:690px){.topbar{padding:12px 14px;flex-wrap:wrap}.brand{order:-1}.back{padding:9px 11px}.profile{font-size:11px}.studio{padding:12px}.studio-intro{gap:7px;flex-wrap:wrap}.score{grid-template-columns:auto auto}.toolbar{top:0;display:block}.metrics{margin-bottom:9px}.savebar{flex-wrap:wrap}.columns{grid-template-columns:1fr}.collection-grid{max-height:none;grid-template-columns:repeat(auto-fill,minmax(108px,1fr))}.deck-groups{max-height:none}.preview{grid-column:auto;display:block}.savebar span{flex-basis:100%}.panel-heading{padding:12px}.collect-card{padding:6px}}
+@import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800;900&family=Inter:wght@400;500;600;700;800&display=swap');
+:root{color-scheme:dark;font-family:Inter,system-ui,sans-serif;background:#0b1224;color:#eef4ff}
+*{box-sizing:border-box}
+body.rpg-deck-mode,body.rpg-deck-mode:has(.cube-builder-ui){
+ margin:0;max-width:none;width:100%;min-height:100vh;
+ background:radial-gradient(ellipse at 20% -10%,#2b2a48 0%,transparent 45%),linear-gradient(145deg,#0b1328,#111a30)
+}
+button,input,select{font:inherit}
+button{cursor:pointer}
+button:disabled{cursor:not-allowed}
+a{color:inherit;text-decoration:none}
+[hidden]{display:none!important}
+.topbar{
+ display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;
+ gap:12px;padding:16px clamp(16px,2.5vw,45px);min-height:88px;
+ background:#131a30;border-bottom:1px solid #4e4264
+}
+.back{border:1px solid #72688c;border-radius:9px;padding:11px 14px;font-size:13px;font-weight:700;color:#e1ddf0}
+.back:hover,.back:focus-visible{background:#303452}
+.brand{display:flex;align-items:center;gap:11px}
+.brand .star{font-size:28px;color:#ff9ebb}
+.brand small{color:#efa1c0;font-size:10px;font-weight:800;letter-spacing:1.5px}
+.brand h1{margin:2px 0 0;color:#fff;font:900 27px/1 'Barlow Condensed',sans-serif;letter-spacing:1.4px}
+.profile{color:#f8b9d0;font:700 15px 'Barlow Condensed',sans-serif}
+.studio{width:100%;max-width:1900px;margin:0 auto;padding:clamp(14px,2.5vw,40px)}
+.studio-context{display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap;margin-bottom:20px;padding-bottom:13px;border-bottom:1px solid #34456b;color:#c8d5ef;font-size:11px;letter-spacing:1.3px;font-weight:800}
+.studio-context span:last-child{color:#f0bad1}
+.studio-actions{display:grid;gap:10px}
+.studio-actions p{color:#c4d0e8;font-size:12px;line-height:1.5;margin:0 0 3px}
+.studio-actions button{border:1px solid #657fab;border-radius:9px;color:#eaf1ff;background:#26395d;padding:12px;font-size:13px;font-weight:800}
+.studio-actions .primary{background:linear-gradient(135deg,#a34c7d,#d0678a);color:white;border-color:#f5a6bf}
+.studio-actions button:hover:not(:disabled){filter:brightness(1.13)}
+.studio-actions button:disabled{opacity:.38}
+.studio-error{max-width:750px;padding:22px;margin:40px auto;border:1px solid #ef8ba8;border-radius:12px;background:#3a2037;color:#ffe8ee;line-height:1.6}
+.rpg-deck-mode .cube-builder-ui .cb-header h2{font-family:'Barlow Condensed',sans-serif;font-weight:900;letter-spacing:.3px}
+.rpg-deck-mode .cube-builder-ui .cb-eyebrow{color:#f0a3c3}
+.rpg-deck-mode .cube-builder-ui .cb-progress{background:#202848;border-color:#63537b}
+.rpg-deck-mode .cube-builder-ui .cb-tab.active{background:#633c69;border-color:#ed9fbb}
+.rpg-deck-mode .cube-builder-ui .cb-tile.active,.rpg-deck-mode .cube-builder-ui .cb-tile:focus-within{border-color:#eba6c1;box-shadow:0 0 0 2px #efa0c444}
+.rpg-deck-mode .cube-builder-ui .cb-tile:hover{border-color:#a5bffc}
+.rpg-deck-mode .cube-builder-ui .cb-preview-add{background:#6e476e;border-color:#e1a1c5}
+@media(max-width:700px){.topbar{align-items:flex-start}.brand{order:-1;width:100%}.studio-context{gap:7px}}
