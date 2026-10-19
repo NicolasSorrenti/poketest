@@ -1276,6 +1276,7 @@ function render(){
  const responseActions=new Set(['storyChoice','sideChoice','arcChoice','encounterChoice','situationChoice','sideDuel','sidePause','dateBook','dateActivity','dateSlot','book']);
  const isPlayerPrompt=!!shown?.choices?.some(([,action])=>responseActions.has(action.split(':')[0]));
  const promptRoot=$('playerChoicePrompt'),promptPanel=$('playerChoicePanel'),choiceList=$('choices');
+ const newPlayerPrompt=!!(promptRoot?.hidden&&isPlayerPrompt);
  if(promptRoot&&promptPanel){
   promptRoot.hidden=!isPlayerPrompt;
   const desiredParent=isPlayerPrompt?promptPanel:$('dialogue');
@@ -1303,6 +1304,10 @@ function render(){
    if(b.disabled)b.title=option?.disabledReason||'That meeting time is no longer available.';
   }
   b.onclick=()=>act(action);$('choices').append(b);
+ }
+ if(newPlayerPrompt){
+  const first=[...choiceList.children].find(b=>!b.disabled);
+  if(typeof first?.focus==='function')first.focus({preventScroll:true});
  }
  if(!locked&&shown?.line&&!shown?.choices?.length){
   const b=document.createElement('button');b.className='choice finish';b.textContent='Continue ›';
