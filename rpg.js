@@ -1080,7 +1080,12 @@ function renderRpgCast(ids,locked,shown,portraitId){
  for(const node of existing.values())node.remove();
 }
 function cleanRpgLabel(value){
- return String(value||'').replace(/\\s*·\\s*⏳[^·]*/g,'').replace(/\\s*·\\s*[+-]\\d+\\s*(?:affection|trust|focus|credits|points|pts|insight|reputation|preparation)(?:\\s*\\/\\s*[+-]\\d+\\s*\\w+)?/gi,'').replace(/\\s*·\\s*free(?:\\s*\\([^)]*\\))?/gi,'').replace(/\\s*·\\s*\\d+\\s*period\\(?s?\\)?/gi,'').trim();
+ return String(value||'')
+  .replace(/\s*·\s*⏳[^·]*/g,'')
+  .replace(/\s*·\s*[+-]\d+\s*(?:affection|trust|focus|credits|points|pts|insight|reputation|preparation)(?:\s*\/\s*[+-]\d+\s*\w+)?/gi,'')
+  .replace(/\s*·\s*free(?:\s*\([^)]*\))?/gi,'')
+  .replace(/\s*·\s*\d+\s*period(?:\(s\))?/gi,'')
+  .trim();
 }
 function simplifyRpgLabels(){
  for(const id of ['choices','storyEvents','situationEvents','townActivities','townEncounters','sideQuestEvents','activities']){
