@@ -85,7 +85,26 @@
  }
 
  async function send(action){if(!current||busy||watching())return;busy=true;clearError();try{
-  const result=await api('action',{method:'POST',body:JSON.stringify({code:roomCode,revision:current.revision,command:action})});
+  const post=revision=>api('action',{method:'POST',body:JSON.stringify({code:roomCode,revision,command:action})});
+  let result;
+  try{result=await post(current.revision);}
+  catch(e){
+   if(!/Stale match revision/.test(e.message))throw e;
+   // Opponent setup clicks can race a local button press. Re-sync first; only
+   // retry setup actions if OUR cards and field are still exactly unchanged.
+   const old=current,fresh=await api('state?code='+encodeURIComponent(roomCode));
+   current=fresh;render();
+   const slot=old.you,prior=old.view?.players?.[slot],next=fresh.view?.players?.[slot];
+   const unchanged=old.started&&fresh.started&&old.you===fresh.you&&
+    old.view?.phase==='setup'&&fresh.view?.phase==='setup'&&
+    !old.view?.pendingDecision&&!fresh.view?.pendingDecision&&
+    JSON.stringify(prior?.hand)===JSON.stringify(next?.hand)&&
+    JSON.stringify(prior?.active)===JSON.stringify(next?.active)&&
+    JSON.stringify(prior?.bench)===JSON.stringify(next?.bench);
+   if(!unchanged||!['setup_select','setup_undo','setup_confirm'].includes(action.type))
+    throw Error('The match advanced. Your cards are updated; please choose again.');
+   result=await post(fresh.revision);
+  }
   preview.hide();current=result;if(restoreHandAfterTarget){restoreHandAfterTarget=false;setHandOpen(true);}selectedHand=null;targetMode=null;decisionSelection.clear();render();
  }catch(e){fail(e);}finally{busy=false;render();}}
  async function openRoom(kind){if(busy)return;busy=true;$('startupError').textContent='';try{
