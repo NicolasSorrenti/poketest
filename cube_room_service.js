@@ -49,7 +49,7 @@ class CubeRoomService{
   const token=makeToken();
   const room={code,preset,seed:seed??crypto.randomBytes(4).readUInt32BE(0),
    seats:[{name:normalizeName(name,'Host'),token,cpu:false,ready:false,deck:null}],
-   draft:null,revision:0,updated:this.now()};
+   draft:null,revision:0,updated:this.now(),chat:[],chatSeq:0,lastChatAt:[]};
   this.rooms.set(code,room);
   return {token,...this.view(room,0)};
  }
@@ -93,15 +93,53 @@ class CubeRoomService{
   if(!Number.isInteger(round)||!Number.isInteger(pick)||round!==d.round||pick!==d.pick)
    throw Error('Stale Cube pack cursor');
   if(typeof id!=='string'||id.length>40)throw Error('Invalid card ID');
-  Cube.draftPick(d,seat,id);
-  room.revision++;
-  // A picked seat must not see the next passed pack until everyone has picked.
-  if(room.seats.filter(s=>!s.cpu).every((s,i)=>d.picks[i].length===d.round*d.cardsPerPack+d.pick+1)){
+  const cursor=d.round*d.cardsPerPack+d.pick;
+  if(d.picks[seat].length===cursor+1){
+   // The pack has not passed yet. Restore the previous copy and exchange
+   // just this seat's reserved pick; never change another player's pack.
+   const old=d.picks[seat][cursor],pack=d.available[seat];
+   if(id!==old){
+    const at=pack.indexOf(id);
+    if(at<0)throw Error('Card not in current pack');
+    pack.splice(at,1);pack.push(old);d.picks[seat][cursor]=id;
+    room.revision++;
+   }
+  }else{
+   Cube.draftPick(d,seat,id);
+   room.revision++;
+  }
+  // Once the final human selects, CPU drafters commit their own choices.
+  // Only then do packs pass; an earlier human pick is never prematurely final.
+  const humans=room.seats.map((s,i)=>s.cpu?null:i).filter(x=>x!==null);
+  if(humans.every(i=>d.picks[i].length===cursor+1)){
    for(let i=0;i<d.players;i++)if(room.seats[i].cpu){
     Cube.draftPick(d,i,cpuPick(Cube.availableForSeat(d,i),d.picks[i]));
    }
   }
   return this.view(room,seat);
+ }
+ chatMessage(code,token,{text}={}){
+  const {room,seat}=this.authenticated(code,token);
+  if(typeof text!=='string'||!text.trim()||text.length>280||/[\\x00-\\x08\\x0b\\x0c\\x0e-\\x1f]/.test(text))
+   throw Error('Chat message must contain 1–280 printable characters');
+  if(this.now()-(room.lastChatAt[seat]??-Infinity)<750)throw Error('Please wait before sending another message');
+  room.lastChatAt[seat]=this.now();
+  room.chatSeq++;
+  room.chat.push({seq:room.chatSeq,seat,name:room.seats[seat].name,text:text.trim(),at:this.now()});
+  if(room.chat.length>100)room.chat.splice(0,room.chat.length-100);
+  room.revision++;
+  return this.view(room,seat);
+ }
+ watch(code,token,{matchId}={}){
+  const {room,seat}=this.authenticated(code,token);
+  if(!Number.isInteger(matchId)||!room.tournament)throw Error('Unknown Cube match');
+  const m=room.tournament.matches.find(x=>x.id===matchId);
+  const active=room.tournament.active.get(matchId);
+  if(!m||m.status!=='active'||!active||active.kind!=='online')
+   throw Error('This match cannot be spectated');
+  if(m.seats.includes(seat))throw Error('Use your match link to play instead');
+  const spectator=this.online.watch({code:active.code,name:room.seats[seat].name});
+  return {code:active.code,token:spectator.token,matchId};
  }
  submit(code,token,deck){
   const {room,seat}=this.authenticated(code,token),d=room.draft;
@@ -147,6 +185,7 @@ class CubeRoomService{
   }
   if(!d)return base;
   const expected=d.round*d.cardsPerPack+d.pick,waiting=!d.done&&d.picks[seat].length>expected;
+  const selectedId=waiting?d.picks[seat][expected]:null;
   // A suggestion is computed once per seat; repeated 2s room polls must not
   // rebuild an AI deck or leak the other seats' strategic card choices.
   let suggestion=null;
@@ -160,7 +199,10 @@ class CubeRoomService{
    suggestion=room.suggestedDecks.get(seat);
   }
   return {...base,round:d.round,pick:d.pick,packs:d.packs,cardsPerPack:d.cardsPerPack,waiting,
-   pack:waiting?[]:Cube.availableForSeat(d,seat).map(id=>this.card(id)),
+   // While waiting, return the ORIGINAL pack including this seat's reserved
+   // copy. Only the owner can see or change that provisional selection.
+   selectedId,
+   pack:(waiting?[...d.available[seat],selectedId]:Cube.availableForSeat(d,seat)).map(id=>this.card(id)),
    drafted:d.picks[seat].map(id=>this.card(id)),
    suggestedDeck:suggestion,
    ownDeck:me.deck?[...me.deck]:null,
