@@ -522,6 +522,12 @@ function renderCollection(){
   btn.onclick=showStarterChoice;root.append(btn);return;
  }
  const starter=COLLECT.byId(journey.starter);
+ const picker=$('deckPicker');
+ if(picker.options?.length!==1||picker.options[0]?.value!=='custom'){
+  picker.replaceChildren();
+  const opt=document.createElement('option');opt.value='custom';opt.textContent=starter.name+' · Your collection';picker.append(opt);
+ }else picker.options[0].textContent=starter.name+' · Your collection';
+ picker.value='custom';picker.disabled=true;
  const total=Object.values(journey.owned).reduce((a,n)=>a+n,0);
  const summary=document.createElement('p');summary.textContent=starter.name+' · 60-card deck · '+total+' owned cards · '+journey.packs+' packs opened';
  const edit=document.createElement('button');edit.textContent='Edit your 60-card deck · free';edit.disabled=locked;edit.onclick=openDeckWorkshop;
