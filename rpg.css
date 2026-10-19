@@ -226,7 +226,7 @@
 .dialogue:not([hidden]){animation:rpgPortraitEnter .2s ease-out}
 @media(prefers-reduced-motion:reduce){.rpg-cast-member.is-entering,.rpg-cast-member img.expression-change,.dialogue:not([hidden]){animation:none!important}}
 
-/* Earned five-card booster reveal, shared by real duel prizes and shop purchases. */
+/* Earned ten-card booster reveal, shared by real duel prizes and shop purchases. */
 .deck-collection .studio-open{background:linear-gradient(110deg,#8d4d75,#ae729d);border:1px solid #f1b9d5;font-weight:900;letter-spacing:.4px}
 .pack-reveal-dialog{width:min(1050px,96vw);max-height:94vh;overflow:auto;background:radial-gradient(circle at top,#372640,#111b2c 65%);border:1px solid #c995b2;border-radius:16px;padding:25px;color:#f6eff8;box-shadow:0 25px 80px #000a}
 .pack-reveal-dialog::backdrop{background:#070917d9;backdrop-filter:blur(6px)}
@@ -247,3 +247,13 @@
 .pack-reveal-actions #packContinue{color:#25102f;background:#f3bed7}
 @media(max-width:800px){.pack-reveal-cards{grid-template-columns:repeat(3,minmax(0,1fr))}.pack-card{min-height:195px}.pack-card img{max-height:145px}}
 @media(max-width:510px){.pack-reveal-dialog{padding:14px}.pack-reveal-cards{grid-template-columns:repeat(2,minmax(0,1fr))}.pack-card{min-height:175px}}
+
+/* Character-specific pack presentation; event art overlays a canonical portrait fallback. */
+.pack-giver{display:flex;flex-direction:column;align-items:center;gap:8px;margin:12px auto 6px}
+.pack-giver-image{height:170px;width:min(390px,90%);display:flex;justify-content:center;align-items:center;overflow:hidden;border-radius:12px;background:radial-gradient(ellipse at center,#644469,#1d2439);border:1px solid #a87ca3}
+.pack-giver-image img{display:block;max-height:100%;max-width:100%;width:auto;object-fit:contain}
+.pack-giver-image img.pack-giver-art{width:100%;height:100%;max-width:none;object-fit:cover}
+.pack-giver strong{font:800 16px 'Barlow Condensed',sans-serif;letter-spacing:.7px;color:#ffd8e9;text-align:center}
+.pack-reveal-cards{grid-template-columns:repeat(5,minmax(0,1fr))}
+.pack-card{min-height:210px}
+@media(max-width:650px){.pack-giver-image{height:125px}.pack-reveal-cards{grid-template-columns:repeat(2,minmax(0,1fr))}.pack-card{min-height:165px}}
