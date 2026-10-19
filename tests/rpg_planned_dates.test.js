@@ -50,7 +50,7 @@ test('attended friendship outing charges actual resources and uses exactly one s
  assert.throws(()=>D.attend(s,e.id,['hana'],deps));
 });
 test('a date requires meaningful prior affection/trust and an explicit accepted invitation',()=>{
- const s=state({relationships:{hana:{affection:3,trust:3}},bonds:{hana:{affection:3,trust:3}}});
+ const s=state({relationships:{hana:{affection:2,trust:1}},bonds:{hana:{affection:2,trust:1}}});
  const time=A.proposed(s,'hana',Schedules)[0];
  const act=S.activities.find(x=>x.place===time.place&&['quiet','creative','collection','adventure','playful'].includes(x.tag));
  assert.ok(act);
