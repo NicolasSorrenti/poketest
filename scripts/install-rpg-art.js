@@ -8,6 +8,8 @@ const zlib = require('node:zlib');
 
 const ARCHIVE = 'asset-packs/neo_harbor_complete_art_with_guests_2026-10-18.zip';
 const EXPECTED_SHA256 = 'bd784ecd1b22d06fa31624768357e0fa78952ba854557ef816bf1eb056b23972';
+const G5_ARCHIVE = 'asset-packs/neo_harbor_g5_situation_cgs_2026-10-18.zip';
+const G5_EXPECTED_SHA256 = '9806efda37ef03fd8409a550a4e3cca120673052e930a56ecda170f518fdcf27';
 const LIMIT_BYTES = 64 * 1024 * 1024;
 const LIMIT_ENTRIES = 300;
 const ALLOWED_PREFIXES = [
@@ -126,11 +128,18 @@ function install({root=path.resolve(__dirname,'..'),archivePath=path.join(root,A
   }
   return {status:'ok',archivePath,installed,skipped,sha256:expectedSha};
 }
+// Optional additional CG pack; same ZIP signature, bounds, path and overwrite checks.
+function installG5({root=path.resolve(__dirname,'..'),expectedSha=G5_EXPECTED_SHA256,required=false}={}) {
+  return install({root,archivePath:path.join(root,G5_ARCHIVE),expectedSha,required});
+}
 if(require.main===module){
   try{
     const result=install({required:process.argv.includes('--required')||process.env.RPG_ART_REQUIRED==='1'});
-    if(result.status==='missing')console.log('[art] ZIP not present yet. Existing RPG art remains available. Upload '+ARCHIVE+' to activate expansion.');
-    else console.log('[art] Installed '+result.installed+' asset files; '+result.skipped+' already verified.');
+    if(result.status==='missing')console.log('[art] Base ZIP not present. Existing RPG art remains available.');
+    else console.log('[art] Base: installed '+result.installed+' asset files; '+result.skipped+' already verified.');
+    const g5=installG5();
+    if(g5.status==='missing')console.log('[art] Optional G5 event CG ZIP not present yet.');
+    else console.log('[art] G5: installed '+g5.installed+' scene files; '+g5.skipped+' already verified.');
   }catch(err){console.error(err.message);process.exitCode=1;}
 }
-module.exports={ARCHIVE,EXPECTED_SHA256,parseZip,install,crc32};
+module.exports={ARCHIVE,EXPECTED_SHA256,G5_ARCHIVE,G5_EXPECTED_SHA256,parseZip,install,installG5,crc32};
