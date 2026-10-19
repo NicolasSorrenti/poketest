@@ -47,8 +47,21 @@ fs.mkdirSync(artifacts,{recursive:true});
    assert.equal(await handCards.count(),listCount,'Every hand card must be accessible in the fan');
    const handRect=await page.locator('#handFan').boundingBox();
    const fieldRect=await page.locator('.stage').boundingBox();
-   assert.ok(handRect&&fieldRect&&handRect.y>=fieldRect.y+fieldRect.height-2,
-    'Always-on fan must reserve space BELOW the battlefield');
+   const cardRect=await handCards.first().boundingBox();
+   const bounds=page.viewportSize();
+   assert.ok(handRect&&fieldRect&&cardRect,'Hand and battlefield need measurable geometry');
+   assert.ok(handRect.x<=24&&handRect.y<fieldRect.y+fieldRect.height,
+    'Floating hand must be anchored on the lower-left over battlefield space');
+   assert.ok(cardRect.y>=0&&cardRect.y+cardRect.height<bounds.height-36,
+    'Entire clickable card must be above the lower edge, never cropped by the old 54px row');
+   assert.ok(cardRect.height>=85,'Card needs enough visual area to be recognizable');
+   const panel=page.locator('#handPanel');
+   assert.ok((await panel.boundingBox()).width<8,'Old boxed hand panel must not consume width');
+   await page.locator('#handToggle').click();
+   assert.equal(await page.locator('#handFan').isVisible(),false,'Hand toggle hides cards');
+   await page.locator('#handToggle').click();
+   assert.equal(await page.locator('#handFan').isVisible(),true,'Hand toggle restores cards');
+   assert.equal(await page.locator('#handFan .hand-fan-card').count(),listCount);
    const basic=handCards.filter({hasText:'Basic Pokémon'}).first();
    assert.equal(await basic.count(),1,'A Basic Pokémon must be clickable from the fan');
    const handBefore=await handCards.count();
