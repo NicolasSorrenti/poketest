@@ -120,7 +120,8 @@ class CubeRoomService{
  }
  chatMessage(code,token,{text}={}){
   const {room,seat}=this.authenticated(code,token);
-  if(typeof text!=='string'||!text.trim()||text.length>280||/[\\x00-\\x08\\x0b\\x0c\\x0e-\\x1f]/.test(text))
+  if(typeof text!=='string'||!text.trim()||text.length>280||
+   [...text].some(ch=>ch.charCodeAt(0)<32&&ch.charCodeAt(0)!==10&&ch.charCodeAt(0)!==9))
    throw Error('Chat message must contain 1–280 printable characters');
   if(this.now()-(room.lastChatAt[seat]??-Infinity)<750)throw Error('Please wait before sending another message');
   room.lastChatAt[seat]=this.now();
