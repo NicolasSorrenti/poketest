@@ -80,6 +80,17 @@ const readState=page=>page.evaluate(()=>JSON.parse(localStorage.getItem('neoHarb
   const inner=page.frameLocator('#battle');
   await inner.locator('#phaseText').waitFor({timeout:45000});
   assert.equal(await inner.locator('#turnCoach').count(),1);
+  await inner.locator('#handFan .hand-fan-card').first().waitFor({state:'visible'});
+  const handGeometry=await inner.locator('#handFan .hand-fan-card').first().evaluate(card=>{
+   const rect=card.getBoundingClientRect();
+   return {top:rect.top,bottom:rect.bottom,height:rect.height,viewport:document.documentElement.clientHeight};
+  });
+  assert.ok(handGeometry.height>=65&&handGeometry.top>=0&&handGeometry.bottom<handGeometry.viewport-25,
+   'CPU/RPG hand card must stay fully visible inside the iframe, not clipped by compact last row');
+  await inner.locator('#handToggle').click();
+  assert.equal(await inner.locator('#handFan').isVisible(),false);
+  await inner.locator('#handToggle').click();
+  assert.equal(await inner.locator('#handFan').isVisible(),true);
   await save(page,'02-campaign-duel.png');
   // A reload DURING the match must resume the same server-authoritative session.
   const tokenBefore=await page.evaluate(id=>sessionStorage.getItem('neoRpgDuelToken:'+encodeURIComponent(id)),pending.id);

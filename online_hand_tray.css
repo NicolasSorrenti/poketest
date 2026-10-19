@@ -292,3 +292,110 @@ body.duel-active .stage .energy-type-special{background:linear-gradient(#859ab0,
  }
  body.duel-active .stage .energy-peeks:has(.attached-energy:nth-child(5)) .energy-overflow{grid-column:span 2;justify-self:start}
 }
+
+
+/* v0.42: hand floats over EMPTY left field space; no bottom hand panel.
+   The CPU stylesheet historically forced a 54px last row, clipping the 170px
+   inline fan. The floating fan must not depend on the duel grid's last row. */
+body.duel-active #duel:not(.hidden){
+ grid-template-rows:auto auto minmax(0,1fr) 54px!important;
+}
+body.duel-active .below,
+body.duel-active .below .main-column{
+ height:54px;min-height:0;overflow:visible!important;background:transparent;
+}
+body.duel-active .below .main-column{
+ display:flex;justify-content:flex-end;align-items:center;gap:0;
+}
+body.duel-active .below .hand-panel{
+ display:block!important;position:static!important;flex:0 0 0!important;
+ width:0!important;min-width:0!important;max-width:0!important;
+ height:0!important;min-height:0!important;padding:0!important;
+ border:0!important;border-radius:0!important;background:transparent!important;
+ box-shadow:none!important;isolation:auto;overflow:visible!important;
+ pointer-events:none;
+}
+body.duel-active .below .turn-actions-panel{
+ flex:0 0 auto;width:min(520px,calc(100vw - 24px));height:50px;
+ min-width:0;padding:4px 8px;pointer-events:auto;overflow:visible;
+}
+body.duel-active .below .turn-actions-panel .turn-actions{
+ display:flex;align-items:center;justify-content:flex-end;
+ flex-wrap:nowrap;gap:4px;min-height:0;
+}
+body.duel-active .below .turn-actions-panel .turn-actions button{
+ flex:0 1 auto;min-width:0;white-space:nowrap;
+}
+body.duel-active .hand-toggle{
+ position:fixed!important;top:auto!important;bottom:9px!important;
+ left:13px!important;right:auto!important;width:auto!important;height:36px!important;
+ min-height:36px!important;max-width:none!important;padding:4px 11px!important;
+ display:flex;align-items:center;gap:7px;pointer-events:auto;
+ color:#e1fff8;border:1px solid #6ad2b9;border-radius:10px;
+ background:linear-gradient(140deg,#174d58,#0d3145);
+ box-shadow:0 6px 19px #000a;z-index:690;
+}
+body.duel-active .hand-toggle:hover{background:#206777}
+body.duel-active .hand-toggle .hand-peek{display:none}
+body.duel-active .hand-toggle-label{font-size:12px}
+body.duel-active .hand-toggle-label::after{content:none}
+body.duel-active #handVisibilityIcon{font-size:17px;color:#b5ffe4}
+body.duel-active .hand-panel .hand-fan,
+body.duel-active .hand-panel:not(.tray-open):hover .hand-fan:not(.hidden),
+body.duel-active .hand-panel:not(.tray-open):focus-within .hand-fan:not(.hidden){
+ display:block;position:fixed!important;
+ top:auto!important;left:12px!important;right:auto!important;
+ bottom:57px!important;width:min(650px,calc(100vw - 24px))!important;
+ max-width:calc(100vw - 24px);height:200px!important;
+ z-index:680;pointer-events:auto;overflow-x:auto;overflow-y:hidden;
+ filter:none;background:transparent;border:0;border-radius:0;
+ scrollbar-width:thin;scrollbar-color:#6eb4c588 transparent;
+}
+body.duel-active .hand-panel .hand-fan.hidden{display:none!important}
+body.duel-active .hand-fan-track{height:100%;position:relative}
+body.duel-active .hand-fan-card{
+ left:16px!important;bottom:9px;width:110px;height:149px;
+ transform-origin:50% 111%;
+ transform:translateX(var(--fan-x)) translateY(var(--fan-y)) rotate(var(--fan-angle));
+}
+body.duel-active .hand-fan-card:is(:hover,:focus-visible){
+ z-index:200!important;
+ transform:translateX(var(--fan-x)) translateY(-18px) rotate(0deg) scale(1.06);
+}
+body.duel-active .hand-fan-card.hand-inactive:not(.selected){filter:brightness(.65)}
+body.duel-active .hand-fan-card.selected{
+ border-color:#ffe483;box-shadow:0 0 0 2px #ecc766,0 4px 18px #000b;
+}
+body.duel-active #handTray{display:none!important}
+@media(max-width:780px){
+ body.duel-active #duel:not(.hidden){grid-template-rows:auto auto minmax(0,1fr) 78px!important}
+ body.duel-active .below,body.duel-active .below .main-column{height:78px}
+ body.duel-active .below .turn-actions-panel{
+  width:min(100%,calc(100vw - 12px));height:74px;padding:3px 5px;
+ }
+ body.duel-active .below .turn-actions-panel .turn-actions{
+  justify-content:center;flex-wrap:wrap;column-gap:5px;row-gap:3px
+ }
+ body.duel-active .hand-toggle{bottom:85px!important;left:8px!important;height:30px!important;min-height:30px!important;font-size:11px}
+ body.duel-active .hand-panel .hand-fan,
+ body.duel-active .hand-panel:not(.tray-open):hover .hand-fan:not(.hidden),
+ body.duel-active .hand-panel:not(.tray-open):focus-within .hand-fan:not(.hidden){
+  bottom:120px!important;left:8px!important;
+  width:calc(100vw - 16px)!important;height:125px!important;
+ }
+ body.duel-active .hand-fan-card{left:8px!important;bottom:6px;width:72px;height:96px}
+ body.duel-active .hand-fan-card:is(:hover,:focus-visible){
+  transform:translateX(var(--fan-x)) translateY(-7px) rotate(0deg) scale(1.03)
+ }
+}
+@media(max-height:580px){
+ body.duel-active .hand-panel .hand-fan,
+ body.duel-active .hand-panel:not(.tray-open):hover .hand-fan:not(.hidden),
+ body.duel-active .hand-panel:not(.tray-open):focus-within .hand-fan:not(.hidden){
+  height:109px!important
+ }
+ body.duel-active .hand-fan-card{height:83px;width:64px}
+}
+@media(prefers-reduced-motion:reduce){
+ body.duel-active .hand-fan-card{transition:none}
+}
