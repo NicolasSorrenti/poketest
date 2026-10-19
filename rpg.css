@@ -320,3 +320,17 @@
 .booster-shop-status{min-height:18px;color:#ffbed2!important;font-weight:700}
 @media(max-width:620px){.booster-shop-dialog{width:96vw;padding:13px}.booster-shop-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}.booster-offer{padding:10px}.booster-offer h3{font-size:19px}.booster-offer .booster-offer-unlock{min-height:unset}}
 @media(max-width:390px){.booster-shop-grid{grid-template-columns:1fr}}
+
+/* Context actions live outside visual-novel dialogue: talking is the default click. */
+.character-actions[hidden]{display:none!important}
+.character-actions{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:9px;
+ padding:10px 14px;background:linear-gradient(90deg,#192238,#25213b,#192238);
+ border-block:1px solid #776086}
+.character-action-btn{display:inline-flex;align-items:center;justify-content:center;
+ min-width:105px;min-height:40px;padding:9px 17px;border:1px solid #d3a3c2;
+ border-radius:9px;color:#ffeef8;background:#4b3458;
+ font:800 13px 'Barlow Condensed',sans-serif;letter-spacing:.35px;cursor:pointer;
+ transition:background .14s ease,border-color .14s ease,transform .14s ease}
+.character-action-btn:hover,.character-action-btn:focus-visible{background:#78507b;border-color:#ffd3e5;transform:translateY(-1px)}
+.character-action-btn:focus-visible{outline:2px solid #f8d1e9;outline-offset:2px}
+@media(max-width:580px){.character-actions{gap:6px;padding:8px}.character-action-btn{min-width:0;flex:1 1 auto;padding:8px 10px}}
