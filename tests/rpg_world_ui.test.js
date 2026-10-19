@@ -995,14 +995,36 @@ test('talking repeatedly on the same day cannot farm affection, trust or time',(
  assert.equal(after.hungOut['5:hana'],undefined);
 });
 test('a trusted character exposes deck collaboration outside the dialogue box',()=>{
- const r=launch({day:24,slot:1,location:'cafe',storyDone:{hana_route_1:{day:5,choice:0},hana_route_2:{day:24,choice:0}},deckJourney:Collection.fresh()});
+ const day=Array.from({length:18},(_,i)=>24+i).find(d=>
+  [0,1,2].some(slot=>Schedules.locationFor('hana',d,slot)!=='home'));
+ assert.ok(day,'Hana has a public visit during this chapter');
+ const slot=[0,1,2].find(n=>Schedules.locationFor('hana',day,n)!=='home');
+ const place=Schedules.locationFor('hana',day,slot);
+ const r=launch({day,slot,location:place,storyDone:{hana_route_1:{day:5,choice:0},hana_route_2:{day:24,choice:0}},deckJourney:Collection.fresh()});
  r.elements.starterChoices.children[0].onclick();
  const people=r.elements.people.children.filter(x=>x.children?.[1]?.children?.[0]?.textContent==='Hana Mizuno');
- if(!people.length)return; // character scheduling is independent of collaboration
+ assert.ok(people.length,'partner deck editing is accessible when the NPC is present');
  people[0].onclick();
  const deck=r.elements.characterActions.children.find(x=>x.textContent.includes('Deck'));
  assert.ok(deck,'the third button becomes available once the relationship unlocks it');
  assert.equal(r.elements.choices.children.some(x=>x.textContent.includes('Edit')),false);
  deck.onclick();
  assert.match(r.loc.href,/rpg_deck_studio\.html\?partner=hana/);
+});
+
+test('occasional natural dialogue invitation opens the existing social system without a command list',()=>{
+ const match=Array.from({length:35},(_,i)=>i+1).flatMap(day=>
+  [0,1,2].map(slot=>({day,slot,place:Schedules.locationFor('hana',day,slot)})))
+  .find(({day,slot,place})=>place&&place!=='home'&&
+   Conversations.choices({day,slot,hungOut:{},appointments:[]},'hana').some(([,action])=>action==='socialPlan:hana'));
+ assert.ok(match,'Hana offers an optional invitation somewhere in the opening weeks');
+ const r=launch(match),hana=r.elements.people.children.find(x=>x.children?.[1]?.children?.[0]?.textContent==='Hana Mizuno');
+ assert.ok(hana);hana.onclick();finishGreeting(r);
+ const before=r.state();
+ assert.equal(before.relationships.hana.affection,0);
+ const invite=r.elements.choices.children.find(x=>x.textContent.includes('something together'));
+ assert.ok(invite,'contextual invitation appears during a real VN conversation');
+ invite.onclick();
+ assert.ok(r.elements.choices.children.some(x=>x.textContent.includes('Welcome a new player')||x.textContent.includes('activity')));
+ assert.equal(r.state().relationships.hana.affection,0,'planning an activity is not a bond reward');
 });
