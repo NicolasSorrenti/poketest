@@ -1022,6 +1022,19 @@ function renderRpgCast(ids,locked){
   b.onclick=()=>selectPerson(id);root.append(b);
  }
 }
+function cleanRpgLabel(value){
+ return String(value||'').replace(/\\s*·\\s*⏳[^·]*/g,'').replace(/\\s*·\\s*[+-]\\d+\\s*(?:affection|trust|focus|credits|points|pts|insight|reputation|preparation)(?:\\s*\\/\\s*[+-]\\d+\\s*\\w+)?/gi,'').replace(/\\s*·\\s*free(?:\\s*\\([^)]*\\))?/gi,'').replace(/\\s*·\\s*\\d+\\s*period\\(?s?\\)?/gi,'').trim();
+}
+function simplifyRpgLabels(){
+ for(const id of ['choices','storyEvents','situationEvents','townActivities','townEncounters','sideQuestEvents','activities']){
+  const root=$(id);if(!root)continue;
+  for(const button of root.querySelectorAll('button')){
+   const walk=document.createTreeWalker(button,NodeFilter.SHOW_TEXT);
+   const nodes=[];while(walk.nextNode())nodes.push(walk.currentNode);
+   for(const node of nodes)node.nodeValue=cleanRpgLabel(node.nodeValue);
+  }
+ }
+}
 function renderRpgActions(locked,shown){
  const dock=$('rpgActionDock');if(!dock)return;
  const hasDialogue=locked||((shown?.choices?.length||0)>0)||!!(state.selected&&shown?.speaker!=='Narrator'&&shown?.line);
@@ -1148,7 +1161,8 @@ function render(){
   const name=document.createElement('strong');name.textContent=c.name;const sub=document.createElement('small');sub.textContent=c.style;
   label.append(name,sub);b.append(avatar,label);b.onclick=()=>selectPerson(id);$('people').append(b);
  }
- renderRpgCast(people,locked);
+ renderRpgCast(locked&&portraitId?[portraitId]:people,locked);
+ portraitRoot.hidden=!locked&&people.length>0&&state.location!=='home';
  $('storyEvents').replaceChildren();const stories=eligibleStories();
  for(const e of stories){
   const b=document.createElement('button');b.className='event-btn';b.disabled=locked;b.textContent='✦  '+e.title+' · ⏳ 1 period';
@@ -1243,6 +1257,7 @@ function render(){
  for(const e of eventCards.filter(e=>e.day>=state.day).slice(0,2)){const p=document.createElement('p');p.textContent='DAY '+e.day+' · '+e.title+' ('+periods[e.slot]+')';$('journal').append(p)}
  for(const note of state.journal.slice(0,3)){const p=document.createElement('p');p.textContent='• '+note;$('journal').append(p)}
  $('notice').textContent=state.activeSituation?'Unexpected encounter in progress — finish the scene to continue.':state.activeSideQuest?'Side quest in progress — finish the scene to continue.':state.activeStory?'Story in progress: complete this scene to continue.':state.activeArc?'A private rivalry chapter is in progress.':state.activeEncounter?'Local encounter in progress — make your decision.':state.pendingDuel?'Your duel is in progress.':'Travel & talk are free · ⏳ actions advance time';
+ simplifyRpgLabels();
  refreshRpgPanels();
  renderRpgActions(locked,shown);
  $('deckPicker').disabled=locked||ended||!!state.deckJourney;
