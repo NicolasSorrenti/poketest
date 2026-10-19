@@ -81,7 +81,7 @@ test('dedicated deck studio permits incomplete drafts but never saves an illegal
  const s=setup();C.choose(s,'tidal_circuit');
  const before=[...s.deckJourney.deck];const id=before[0];
  const draft=C.edit(s,id,-1);
- assert.equal(draft.length,109);assert.equal(s.deckJourney.deck.length,60);
+ assert.equal(draft.length,59);assert.equal(s.deckJourney.deck.length,60);
  assert.equal(C.check(draft,s.deckJourney.owned).valid,false);
  assert.throws(()=>C.save(s),/60 cards/);
  const unchanged=C.edit(s,id,+1);
@@ -125,4 +125,56 @@ test('new expanded collection cards survive save hydration',()=>{
  const restored=JSON.parse(JSON.stringify(s));C.hydrate(restored);
  assert.deepEqual(restored.deckJourney.lastPack,s.deckJourney.lastPack);
  assert.ok(Object.keys(restored.deckJourney.owned).some(id=>id.startsWith('neo4-')));
+});
+
+test('expansion shop has ten playable sets with discovery stats and starter availability',()=>{
+ const s=setup();C.choose(s,'ember_garden');
+ const offers=C.shopPacks(s);
+ assert.equal(offers.length,10);
+ assert.deepEqual(offers.map(x=>x.set),Object.keys(C.SETS));
+ assert.equal(offers[0].unlocked,true);
+ assert.equal(offers[0].price,20);
+ assert.ok(offers[0].completion>0);
+ assert.equal(offers.find(x=>x.set==='neo4').unlocked,false);
+ for(const offer of offers)assert.ok(offer.owned<=offer.total&&offer.completion>=0&&offer.completion<=100);
+});
+test('packs unlock from bonds, a completed character story, tournament wins or day',()=>{
+ const s=setup();C.choose(s,'ember_garden');
+ const unlocked=set=>C.shopPacks(s).find(x=>x.set===set).unlocked;
+ assert.equal(unlocked('base4'),false);
+ s.relationships={camila:{affection:3}};assert.equal(unlocked('base4'),true);
+ s.relationships={};s.storyDone={akari_route_1:{choice:0,day:1}};
+ assert.equal(unlocked('gym2'),true);
+ s.storyDone={};s.tournaments={regional:{state:'champion'}};
+ assert.equal(unlocked('neo1'),true);
+ s.tournaments={};s.day=80;
+ assert.equal(C.shopPacks(s).every(x=>x.unlocked),true);
+});
+test('locked or unknown packs do not charge money or change ownership',()=>{
+ const s=setup();C.choose(s,'ember_garden');const before=JSON.stringify(s);
+ assert.throws(()=>C.buyPack(s,'neo4'),/not unlocked/);
+ assert.throws(()=>C.buyPack(s,'missing-set'),/does not exist/);
+ assert.equal(JSON.stringify(s),before);
+});
+test('buy a Gym booster and preserve its cards after reload, without overwriting unrevealed packs',()=>{
+ const s=setup();C.choose(s,'mind_and_muscle');s.day=34;s.credits=90;
+ const first=C.buyPack(s,'gym1',()=>0.25);
+ assert.equal(first.length,10);assert.equal(s.credits,55);assert.equal(s.deckJourney.packs,1);
+ assert.equal(s.deckJourney.lastPack.set,'gym1');
+ assert.ok(first.some(id=>id.startsWith('gym1-')&&Number(id.split('-')[1])<=C.SETS.gym1.rares));
+ assert.ok(first.some(id=>C.ENERGY.has(id)));
+ const before=JSON.stringify(s);
+ assert.throws(()=>C.buyPack(s,'base1'),/Reveal your previous booster/);
+ assert.equal(JSON.stringify(s),before);
+ s.deckJourney.lastPack.opened=true;
+ C.buyPack(s,'base1',()=>0.5);assert.equal(s.credits,35);
+ const restored=JSON.parse(JSON.stringify(s));C.hydrate(restored);
+ assert.deepEqual(restored.deckJourney,s.deckJourney);
+});
+test('Camila awards Team Rocket cards that remain in the owned collection',()=>{
+ const s=setup();C.choose(s,'ember_garden');assert.equal(C.setForCharacter('camila'),'base4');
+ C.reward(s,true,'camila',()=>0.5);
+ assert.ok(Object.keys(s.deckJourney.owned).some(x=>x.startsWith('base4-')));
+ const restored=JSON.parse(JSON.stringify(s));C.hydrate(restored);
+ assert.deepEqual(restored.deckJourney.owned,s.deckJourney.owned);
 });
