@@ -194,7 +194,7 @@ function publicAppointments(place){return [...APPOINTMENTS.overrides(state),...S
 function currentPeople(){if(state.day>90)return [];const regular=SCHEDULES.peopleAt(state.day,state.slot,state.location,publicAppointments(state.location));
 for(const e of eligibleStories())if(!regular.includes(e.npc))regular.push(e.npc);
 return regular;}
-function selectPerson(id){if(state.activeSituation||state.activeStory||state.activeEncounter||state.activeArc||!cast[id]||!currentPeople().includes(id))return;const c=cast[id],first=!state['met_'+id]&&!((id==='reina')&&state.metReina);state['met_'+id]=true;if(id==='reina')state.metReina=true;state.selected=id;const memories=recordCG('meet',id);persist();say(c.name,first?c.intro:c.repeat,options(id));showCGMoment(memories[0]);}
+function selectPerson(id){if(state.activeSituation||state.activeStory||state.activeEncounter||state.activeArc||!cast[id]||!currentPeople().includes(id))return;const c=cast[id],first=!state['met_'+id]&&!((id==='reina')&&state.metReina);state['met_'+id]=true;if(id==='reina')state.metReina=true;state.selected=id;const memories=recordCG('meet',id);persist();sayConversation(RPGD?.greetingLines(id,first?c.intro:c.repeat)||[{speaker:id,text:first?c.intro:c.repeat}],options(id));showCGMoment(memories[0]);}
 function options(id){const key=atKey(id),spentToday=!!state.hungOut[state.day+':'+id];
  const booked=APPOINTMENTS.active(state).find(e=>e.npc===id);
  return [
