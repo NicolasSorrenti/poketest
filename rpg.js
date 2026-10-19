@@ -295,9 +295,9 @@ function showSituation(){
  const a=state.activeSituation,e=SITUATIONS.byId(a?.id);
  if(!e)return null;
  if(a.phase==='choice')return {speaker:cast[e.npc]?.name||'Trainer',line:e.intro,
-  choices:e.options.map((o,i)=>[o.label+' · ⏳ 1 period · '+e.focusCost+' focus','situationChoice:'+i])};
+  choices:[...e.options.map((o,i)=>[o.label+' · ⏳ 1 period · '+e.focusCost+' focus','situationChoice:'+i]),['Not now · free','situationCancel']]};
  return {speaker:cast[e.npc]?.name||'Trainer',line:e.options[a.choice].response,
-  choices:[['Save this memory · ⏳ 1 period','situationFinish']]};
+  choices:[['Save this memory · ⏳ 1 period','situationFinish'],['Leave this moment · free','situationCancel']]};
 }
 function beginSituation(id){
  if(state.activeSituation||state.activeStory||state.activeSideQuest||state.activeArc||state.activeEncounter||state.pendingDuel)return;
@@ -326,6 +326,7 @@ function finishSituation(){
 function scheduleEvent(){return eventCards.find(e=>e.day===state.day&&e.slot===state.slot&&e.place===state.location&&!state.eventsDone[e.day+':'+e.title]);}
 function act(action){
  const [type,id,part]=action.split(':');
+ if(type==='situationCancel'){state.activeSituation=null;state.selected=null;return say('Narrator','You decide to leave the moment for another time. No time passes.');}
  if(type==='situationChoice')return chooseSituation(id);
  if(type==='situationFinish')return finishSituation();
  if(type==='situation')return beginSituation(id);
