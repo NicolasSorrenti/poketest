@@ -773,7 +773,7 @@ function showPreparedDuel(){
  const modal=$('preDuelDialog'),art=$('preDuelArt');art.replaceChildren();
  $('preDuelContext').textContent=preview.stake;
  $('preDuelOpponent').textContent=preview.name;
- $('preDuelDeck').textContent=preview.deckLabel+' · '+preview.place;
+ $('preDuelDeck').textContent=preview.deckLabel+(pending.customOpponentDeck?' · YOUR COLLABORATIVE BUILD':'')+' · '+preview.place;
  const line=preview.lines[pending.preview.index];
  $('preDuelSpeaker').textContent=line.speaker;
  $('preDuelLine').textContent=line.text;
@@ -809,6 +809,7 @@ function launchPreparedDuel(){
  render();
  $('duel').hidden=false;
  if(pending.deckCards)sessionStorage.setItem('neoRpgDeck:'+pending.id,JSON.stringify(pending.deckCards));
+ if(pending.customOpponentDeck)sessionStorage.setItem('neoRpgNpcDeck:'+pending.id,JSON.stringify(pending.customOpponentDeck));
  $('battle').src=duelUrl(pending);
 }
 
