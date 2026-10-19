@@ -15,6 +15,7 @@
  };
  const PACK=typeof module==='object'&&module.exports?require('./rpg_narrative_pack'):window.NeoRpgNarrativePack;
  const BONDC=typeof module==='object'&&module.exports?require('./rpg_bond_chapters'):window.NeoRpgBondChapters;
+ const VN=typeof module==='object'&&module.exports?require('./rpg_conversations'):window.NeoRpgConversations;
  const E=[];
  function arc(npc,rows){
   rows.forEach((r,index)=>{
@@ -219,7 +220,7 @@
  }
  function qualifies(e,state,place=state.location){
   const s=normalize(state),b=s.relationships[e.npc],previous=e.prerequisite;
-  return s.day>=e.start&&s.day<=e.end&&s.slot===e.slot&&place===e.place&&!s.storyDone[e.id]&&!s.storyMissed[e.id]&&(!previous||!!s.storyDone[previous])&&b.affection>=e.minBond;
+  return s.day>=e.start&&s.day<=e.end&&s.slot===e.slot&&place===e.place&&!s.storyDone[e.id]&&!s.storyMissed[e.id]&&(!previous||!!s.storyDone[previous])&&b.affection>=VN.bondNeeded(e);
  }
  function linesFor(state,id){const e=ID.get(id);if(!e)return [];const flag=state?.storyFlags?.[e.prerequisite];const opening=e.openingByFlag?.[flag];return opening?[{...e.lines[0],text:opening},...e.lines.slice(1)]:e.lines;}
  function available(state,place=state.location){return E.filter(e=>qualifies(e,state,place));}
@@ -239,9 +240,9 @@
   if(!qualifies(e,state))throw Error('Story event is no longer available');
   const choice=e.choices[choiceIndex];if(!choice)throw Error('Invalid story choice');
   if(choice.kind==='commit'&&state.partner&&state.partner!==e.npc)throw Error('Already committed to another relationship');
-  if(choice.kind==='commit'&&(state.relationships[e.npc].affection<6||state.relationships[e.npc].trust<3))throw Error('A deeper bond is required');
+  if(choice.kind==='commit'&&!VN.commitmentReady(state,e.npc))throw Error('A deeper bond is required');
   const b=state.relationships[e.npc];for(const [k,v] of Object.entries(choice.delta))b[k]=(b[k]||0)+v;
-  if(choice.kind==='commit'){if(b.affection>=6&&b.trust>=3){state.partner=e.npc;state.routeOutcomes=state.routeOutcomes||{};state.routeOutcomes[e.npc]='romance';}else{state.routeOutcomes=state.routeOutcomes||{};state.routeOutcomes[e.npc]='friendship';}}
+  if(choice.kind==='commit'){if(VN.commitmentReady(state,e.npc)){state.partner=e.npc;state.routeOutcomes=state.routeOutcomes||{};state.routeOutcomes[e.npc]='romance';}else{state.routeOutcomes=state.routeOutcomes||{};state.routeOutcomes[e.npc]='friendship';}}
   if(choice.flag==='friendship'){state.routeOutcomes=state.routeOutcomes||{};state.routeOutcomes[e.npc]='friendship';}
   if(choice.flag&&choice.flag!=='romance'&&choice.flag!=='friendship')state.storyFlags[e.id]=choice.flag;
   state.storyDone[e.id]={choice:choiceIndex,day:state.day};
