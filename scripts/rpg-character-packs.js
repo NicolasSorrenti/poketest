@@ -15,6 +15,7 @@ function validate(p,legalDecks=decks()){
  ensure(plain(d)&&d.schemaVersion===1&&slug.test(id)&&id===path.basename(p.dir),'schemaVersion 1 and folder-matching lowercase ID required');
  ensure(words(d.name)&&Number.isInteger(d.age)&&d.age>=18&&d.age<=100,id+': character must be a named adult');
  ensure(['romance','friendship','supporting'].includes(d.role),id+': invalid role');
+ ensure(!['hana','reina','shiori','yuna','akari','camila','marina','kaede','jun','teo','iris','elio','alma','nereo'].includes(id),id+': character ID is reserved for existing built-in cast');
  ensure(legalDecks.has(d.deck),id+': unavailable Classic deck '+d.deck);
  ensure(words(d.style)&&Number.isInteger(d.arrivalDay)&&d.arrivalDay>=1&&d.arrivalDay<=90,id+': style and arrivalDay required');
  ensure(d.stories==='stories.json'&&d.artManifest==='art_manifest.json'&&d.bible==='bible.md',id+': standard linked filenames required');
@@ -103,9 +104,12 @@ function importFolder(source){
     else ensure(e.isFile()&&/\.(png|webp|jpe?g)$/i.test(e.name)&&fs.statSync(path.join(folder,e.name)).size<=12*1024*1024,'invalid image '+e.name);
    }}safe(assets);fs.cpSync(assets,path.join(stage,'assets'),{recursive:true});
   }
-  validate(read(stage));
+  const candidate=read(stage);validate(candidate);
+  const existing=discover(),existingScenes=new Set(existing.flatMap(x=>x.stories.events.map(e=>e.id)));
+  for(const event of candidate.stories.events)ensure(!existingScenes.has(event.id),'scene ID already exists in another pack: '+event.id);
   fs.mkdirSync(DIR,{recursive:true});fs.cpSync(stage,destination,{recursive:true,force:false,errorOnExist:true});
-  build(true);return d.id;
+  try{build(true);}catch(error){fs.rmSync(destination,{recursive:true,force:true});throw error;}
+  return d.id;
  }finally{fs.rmSync(tmp,{recursive:true,force:true});}
 }
 function importZip(filename){
