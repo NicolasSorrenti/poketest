@@ -1,0 +1,60 @@
+{
+  "schemaVersion": 1,
+  "id": "jinx",
+  "name": "Jinx Rivera",
+  "age": 18,
+  "role": "romance",
+  "deck": "zap",
+  "style": "Zap! · pure Lightning aggression",
+  "dialogue": {
+    "intro": "Oh great, another face. Don't waste my time unless you can actually keep up. Name's Jinx. Try not to stare too hard—I charge for the privilege.",
+    "repeat": "Still hovering? Either challenge me or say something interesting. Standing there looking useful isn't a personality.",
+    "talk": [
+      "Most people here play like they're afraid of their own cards. I don't have that problem.",
+      "Yes, I dress like this on purpose. No, I don't need your opinion on it. Keep looking though—it's free entertainment for me.",
+      "I don't do 'cute and approachable.' If you want soft, go find someone else. If you want someone who'll actually push you, stay.",
+      "Losing doesn't bother me. Looking stupid does. Big difference.",
+      "You ever notice how many people pretend they don't care what others think? Liars. I just stopped pretending.",
+      "Arcade high scores, tournament brackets, who shows up when it actually matters—those are the only rankings that count."
+    ],
+    "flirt": "Careful. I bite. And I don't always warn first. Still want to find out?",
+    "duelWin": "Huh. You actually made me work for that. Don't get used to the compliment.",
+    "duelLose": "Lucky shot. Or maybe you're not completely hopeless. Rematch. Now.",
+    "hangouts": [
+      "Jinx drags you into a best-of-three at the arcade and talks trash the entire time—until she loses the final game and goes quiet for a full thirty seconds.",
+      "You catch her at the shop testing every possible crop-top and short combination. She asks which one is more distracting, then judges your answer harder than the clothes.",
+      "A late café run turns into her dissecting every other player's tells while she steals half your fries and pretends she isn't enjoying the company.",
+      "She challenges you to a waterfront sprint in the middle of the afternoon heat. When you both collapse on the grass she actually laughs without the usual edge.",
+      "Tournament night and she insists you stand right next to her bench. Every time someone stares she smirks at you like the two of you are in on the same joke."
+    ]
+  },
+  "appearance": {
+    "silhouette": "Unambiguously adult 18-year-old, lean-athletic with deliberate curves, long legs, and a confident, almost aggressive posture. Designed to look like she walked out of a fanservice magazine but still fully clothed in every scene.",
+    "palette": "Electric magenta, black, silver-white, and sharp neon pink accents.",
+    "hair": "Very long, straight silver-white hair with vivid neon-pink underlights and a few face-framing strands; usually worn loose or in a high messy ponytail that still swings past her hips.",
+    "eyes": "Sharp amber-gold eyes that almost always look half-lidded and judgmental until something genuinely amuses her.",
+    "details": "Multiple ear piercings, thin black choker, fingerless gloves, small lightning-bolt pendant, deck case worn like a hip bag, and an ever-present half-smirk.",
+    "expressions": "Default bored/judgy stare, sudden wicked grin, eye-roll of pure disdain, rare unguarded soft look when she thinks no one is watching, competitive fire when a duel gets serious.",
+    "outfits": [
+      "signature black micro-shorts + cropped magenta tank that ends well above the navel, open short jacket, thigh-high socks",
+      "tiny pleated skirt + tied-up white shirt that barely stays closed, same thigh-highs",
+      "sport bikini top under an oversized open zip hoodie and bike shorts for arcade days",
+      "high-cut one-piece swimsuit with side cutouts and a sheer cover-up for waterfront events",
+      "tournament look: fitted black crop hoodie, low-rise shorts, and the same long silver-pink hair left completely free"
+    ],
+    "renderNotes": "SFW anime/JRPG romantic-comedy style, age 18. Heavy fanservice silhouette and outfit design (short hems, midriff, high legs, cleavage emphasis) but zero nudity, no lingerie-as-clothing, no sexualized poses beyond confident stance and smirk. Match Neo Harbor's clean, colorful, expressive adult-cast aesthetic."
+  },
+  "arrivalDay": 12,
+  "schedule": [
+    ["arcade", "arcade", "cafe"],
+    ["shop", "park", "arcade"],
+    ["home", "shop", "arcade"],
+    ["park", "cafe", "center"],
+    ["arcade", "shop", "park"],
+    ["shop", "arcade", "cafe"],
+    ["home", "park", "arcade"]
+  ],
+  "stories": "stories.json",
+  "artManifest": "art_manifest.json",
+  "bible": "bible.md"
+}

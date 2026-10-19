@@ -1,0 +1,584 @@
+{
+  "schemaVersion": 1,
+  "characterId": "jinx",
+  "events": [
+    {
+      "id": "jinx_route_1",
+      "title": "Don’t Stare Too Long",
+      "start": 12,
+      "end": 24,
+      "place": "arcade",
+      "slot": 1,
+      "minBond": 0,
+      "prerequisite": null,
+      "participants": [],
+      "npc": "jinx",
+      "chapter": 1,
+      "lines": [
+        {
+          "speaker": "jinx",
+          "text": "You’re new. Or at least new to standing in my line of sight. Name?"
+        },
+        {
+          "speaker": "Protagonist",
+          "text": "Depends who’s asking."
+        },
+        {
+          "speaker": "jinx",
+          "text": "Jinx. And I ask because people who hover without a reason usually turn into a problem."
+        },
+        {
+          "speaker": "Protagonist",
+          "text": "Maybe I just like the view."
+        },
+        {
+          "speaker": "jinx",
+          "text": "Bold. Most people pretend they’re not looking. At least you’re honest about it."
+        },
+        {
+          "speaker": "jinx",
+          "text": "Still. Looking is free. Keeping my attention isn’t. You play, or are you just window shopping?"
+        }
+      ],
+      "choices": [
+        {
+          "label": "Challenge her to a match right now",
+          "reply": "Finally. Someone who doesn’t waste time. Don’t cry when I wipe the floor with you.",
+          "kind": "support",
+          "flag": "jinx_challenge",
+          "delta": {
+            "affection": 1,
+            "trust": 1,
+            "respect": 2,
+            "attraction": 1
+          }
+        },
+        {
+          "label": "Tell her the attitude is part of the appeal",
+          "reply": "Oh, so you like the sharp edges. Dangerous preference. I might start testing that.",
+          "kind": "flirt",
+          "flag": "jinx_edge",
+          "delta": {
+            "affection": 2,
+            "trust": 0,
+            "respect": 1,
+            "attraction": 2
+          }
+        },
+        {
+          "label": "Ask if she always opens with threats",
+          "reply": "Threats? That was me being polite. You should see me when I’m actually annoyed.",
+          "kind": "honest",
+          "flag": "jinx_honest",
+          "delta": {
+            "affection": 1,
+            "trust": 2,
+            "respect": 1,
+            "attraction": 0
+          }
+        }
+      ]
+    },
+    {
+      "id": "jinx_route_2",
+      "title": "High Score or High Horse",
+      "start": 28,
+      "end": 42,
+      "place": "arcade",
+      "slot": 2,
+      "minBond": 2,
+      "prerequisite": "jinx_route_1",
+      "participants": [],
+      "npc": "jinx",
+      "chapter": 1,
+      "lines": [
+        {
+          "speaker": "jinx",
+          "text": "You’re still here. Either you’re stubborn or you have terrible taste in people."
+        },
+        {
+          "speaker": "Protagonist",
+          "text": "Maybe both."
+        },
+        {
+          "speaker": "jinx",
+          "text": "At least own it. Most of the regulars here fold the second I raise an eyebrow."
+        },
+        {
+          "speaker": "Protagonist",
+          "text": "You enjoy that a little too much."
+        },
+        {
+          "speaker": "jinx",
+          "text": "Obviously. What’s the point of being good if nobody notices? Same goes for the rest of the package."
+        },
+        {
+          "speaker": "jinx",
+          "text": "You’re staring again. Either sit down and play or admit you just like the show."
+        }
+      ],
+      "choices": [
+        {
+          "label": "Sit down and play her seriously",
+          "reply": "Good. I hate when people treat matches like background noise.",
+          "kind": "support",
+          "flag": "jinx_serious",
+          "delta": {
+            "affection": 2,
+            "trust": 2,
+            "respect": 1,
+            "attraction": 0
+          }
+        },
+        {
+          "label": "Admit you like both the game and the show",
+          "reply": "Honest and shameless. I can work with that. Don’t expect me to make it easy though.",
+          "kind": "flirt",
+          "flag": "jinx_show",
+          "delta": {
+            "affection": 2,
+            "trust": 1,
+            "respect": 0,
+            "attraction": 2
+          }
+        },
+        {
+          "label": "Ask what happens when someone actually beats her",
+          "reply": "...Rare. And usually temporary. But I’ll remember the ones who can.",
+          "kind": "honest",
+          "flag": "jinx_remember",
+          "delta": {
+            "affection": 1,
+            "trust": 1,
+            "respect": 2,
+            "attraction": 1
+          }
+        }
+      ],
+      "openingByFlag": {
+        "jinx_challenge": "You challenged me last time. Cute. Most people don’t follow through.",
+        "jinx_edge": "Still into the sharp edges? Bold of you.",
+        "jinx_honest": "You asked if I always open with threats. Today I’m feeling generous. Almost."
+      }
+    },
+    {
+      "id": "jinx_route_3",
+      "title": "When the Smirk Slips",
+      "start": 46,
+      "end": 60,
+      "place": "park",
+      "slot": 1,
+      "minBond": 4,
+      "prerequisite": "jinx_route_2",
+      "participants": [],
+      "npc": "jinx",
+      "chapter": 2,
+      "lines": [
+        {
+          "speaker": "jinx",
+          "text": "Don’t make a big deal out of this. I just needed air that didn’t smell like arcade carpet."
+        },
+        {
+          "speaker": "Protagonist",
+          "text": "You okay?"
+        },
+        {
+          "speaker": "jinx",
+          "text": "Define okay. I lost a match I should’ve won because I got distracted by someone talking behind me. Petty, I know."
+        },
+        {
+          "speaker": "Protagonist",
+          "text": "You care more than you let on."
+        },
+        {
+          "speaker": "jinx",
+          "text": "Obviously. Looking like I don’t care is half the fun. The other half is actually being better than everyone else."
+        },
+        {
+          "speaker": "jinx",
+          "text": "...You’re not saying anything. That’s either really smart or really annoying."
+        }
+      ],
+      "choices": [
+        {
+          "label": "Sit with her in silence for a bit",
+          "reply": "Weirdly... not terrible. Don’t get used to the quiet version of me.",
+          "kind": "support",
+          "flag": "jinx_quiet",
+          "delta": {
+            "affection": 2,
+            "trust": 2,
+            "respect": 1,
+            "attraction": 0
+          }
+        },
+        {
+          "label": "Tell her she doesn’t have to perform right now",
+          "reply": "That obvious, huh? Fine. Temporary truce. No performance. Just... this.",
+          "kind": "honest",
+          "flag": "jinx_truce",
+          "delta": {
+            "affection": 2,
+            "trust": 2,
+            "respect": 1,
+            "attraction": 1
+          }
+        },
+        {
+          "label": "Tease her gently about the rare soft look",
+          "reply": "Shut up. And don’t you dare tell anyone I can look like that.",
+          "kind": "flirt",
+          "flag": "jinx_soft",
+          "delta": {
+            "affection": 2,
+            "trust": 1,
+            "respect": 0,
+            "attraction": 2
+          }
+        }
+      ],
+      "openingByFlag": {
+        "jinx_serious": "You played me seriously last time. So I figured you could handle seeing me when I’m actually pissed.",
+        "jinx_show": "You said you liked the show. This is the part where the lights dim for a second.",
+        "jinx_remember": "You asked what happens when someone beats me. This is the quieter version of that feeling."
+      }
+    },
+    {
+      "id": "jinx_route_4",
+      "title": "Own It or Lose It",
+      "start": 64,
+      "end": 76,
+      "place": "center",
+      "slot": 1,
+      "minBond": 5,
+      "prerequisite": "jinx_route_3",
+      "participants": [],
+      "npc": "jinx",
+      "chapter": 3,
+      "lines": [
+        {
+          "speaker": "jinx",
+          "text": "Tournament bracket’s up. I’m in the top half. You’re either going to be in my way or on my side. Pick."
+        },
+        {
+          "speaker": "Protagonist",
+          "text": "You’re asking for help?"
+        },
+        {
+          "speaker": "jinx",
+          "text": "I’m asking if you’re useful. Different question."
+        },
+        {
+          "speaker": "Protagonist",
+          "text": "And if I say I just want to watch you play?"
+        },
+        {
+          "speaker": "jinx",
+          "text": "...Then sit where I can see you. And don’t look away when it gets close. I notice."
+        },
+        {
+          "speaker": "jinx",
+          "text": "Also—whatever this is between us? Own it or drop it. I don’t do half-measures."
+        }
+      ],
+      "choices": [
+        {
+          "label": "Tell her you’re staying for the long game",
+          "reply": "Good. Because I was about to get really annoying if you flaked.",
+          "kind": "support",
+          "flag": "jinx_stay",
+          "delta": {
+            "affection": 2,
+            "trust": 2,
+            "respect": 1,
+            "attraction": 1
+          }
+        },
+        {
+          "label": "Admit you want both the wins and her",
+          "reply": "Greedy. I like it. Don’t make me regret giving you the real answer.",
+          "kind": "flirt",
+          "flag": "jinx_greedy",
+          "delta": {
+            "affection": 2,
+            "trust": 1,
+            "respect": 0,
+            "attraction": 2
+          }
+        },
+        {
+          "label": "Say you’ll support her either way",
+          "reply": "Support is nice. Loyalty is rarer. I’ll remember which one you actually deliver.",
+          "kind": "honest",
+          "flag": "jinx_loyalty",
+          "delta": {
+            "affection": 1,
+            "trust": 2,
+            "respect": 2,
+            "attraction": 0
+          }
+        }
+      ],
+      "openingByFlag": {
+        "jinx_quiet": "You sat with me when I was quiet. So I’m trusting you with the louder version again.",
+        "jinx_truce": "Temporary truce is over. Time to see if you meant what you said in the park.",
+        "jinx_soft": "You saw the soft look. Don’t think that means I’ll go easy on the bracket."
+      }
+    },
+    {
+      "id": "jinx_route_5",
+      "title": "No More Performance",
+      "start": 80,
+      "end": 90,
+      "place": "cafe",
+      "slot": 2,
+      "minBond": 6,
+      "prerequisite": "jinx_route_4",
+      "participants": [],
+      "npc": "jinx",
+      "chapter": 4,
+      "lines": [
+        {
+          "speaker": "jinx",
+          "text": "Tournament’s over. I placed where I wanted. You’re still here. So either you’re a glutton for punishment or this is actually something."
+        },
+        {
+          "speaker": "Protagonist",
+          "text": "What do you want it to be?"
+        },
+        {
+          "speaker": "jinx",
+          "text": "I want someone who doesn’t flinch when I’m sharp and doesn’t treat me like a prize when I’m soft. Rare combination."
+        },
+        {
+          "speaker": "Protagonist",
+          "text": "And you think that’s me?"
+        },
+        {
+          "speaker": "jinx",
+          "text": "I’m starting to. Which is terrifying, by the way. I don’t usually let people get this close without a fight."
+        },
+        {
+          "speaker": "jinx",
+          "text": "So... your move. No audience. No scoreboard. Just us."
+        }
+      ],
+      "choices": [
+        {
+          "label": "Tell her you want the real version, sharp edges and all",
+          "reply": "Then stop looking at me like I’m about to vanish. I’m not going anywhere. Not tonight.",
+          "kind": "support",
+          "flag": "jinx_real",
+          "delta": {
+            "affection": 3,
+            "trust": 2,
+            "respect": 1,
+            "attraction": 1
+          }
+        },
+        {
+          "label": "Close the distance and kiss her",
+          "reply": "...Took you long enough. Don’t stop now.",
+          "kind": "flirt",
+          "flag": "jinx_kiss",
+          "delta": {
+            "affection": 2,
+            "trust": 1,
+            "respect": 0,
+            "attraction": 3
+          }
+        },
+        {
+          "label": "Ask if she’s ready to stop performing completely",
+          "reply": "With you? Yeah. I think I am. Scary answer, but it’s the true one.",
+          "kind": "honest",
+          "flag": "jinx_ready",
+          "delta": {
+            "affection": 2,
+            "trust": 3,
+            "respect": 1,
+            "attraction": 1
+          }
+        }
+      ],
+      "openingByFlag": {
+        "jinx_stay": "You said you were staying for the long game. Guess the long game is now.",
+        "jinx_greedy": "You wanted the wins and me. You got the wins. Now decide about the rest.",
+        "jinx_loyalty": "You talked about loyalty. Tonight I’m calling that bluff—or that promise."
+      }
+    },
+    {
+      "id": "jinx_marina_cross_1",
+      "title": "Safety First, Attitude Second",
+      "start": 35,
+      "end": 48,
+      "place": "park",
+      "slot": 0,
+      "minBond": 2,
+      "prerequisite": "jinx_route_1",
+      "participants": ["marina"],
+      "npc": "jinx",
+      "chapter": 2,
+      "lines": [
+        {
+          "speaker": "marina",
+          "text": "Jinx, the railing by the water is still wet. Those sandals are a slip waiting to happen."
+        },
+        {
+          "speaker": "jinx",
+          "text": "I’ve been walking in worse. But fine—point taken. Happy?"
+        },
+        {
+          "speaker": "marina",
+          "text": "I’d be happier if you stopped treating every safety note like a personal attack."
+        },
+        {
+          "speaker": "Protagonist",
+          "text": "She’s not wrong about the railing."
+        },
+        {
+          "speaker": "jinx",
+          "text": "Traitor. …Okay, maybe both of you have a point. I still look good doing the safe thing though."
+        },
+        {
+          "speaker": "marina",
+          "text": "Looking good and staying upright can coexist. Shocking, I know."
+        },
+        {
+          "speaker": "jinx",
+          "text": "Don’t get used to me agreeing with you. It’s temporary."
+        }
+      ],
+      "choices": [
+        {
+          "label": "Side with Marina on the safety call",
+          "reply": "Ugh. Fine. You’re both annoying when you’re right.",
+          "kind": "honest",
+          "flag": "jinx_marina_safety",
+          "delta": {
+            "affection": 1,
+            "trust": 1,
+            "respect": 2,
+            "attraction": 0
+          }
+        },
+        {
+          "label": "Tease Jinx for actually listening",
+          "reply": "Shut up. I can be reasonable. Occasionally. Don’t tell anyone.",
+          "kind": "flirt",
+          "flag": "jinx_marina_tease",
+          "delta": {
+            "affection": 2,
+            "trust": 1,
+            "respect": 0,
+            "attraction": 2
+          }
+        },
+        {
+          "label": "Offer to help move whatever she’s setting up",
+          "reply": "Useful and not lecturing me. Rare combination. Come on then.",
+          "kind": "support",
+          "flag": "jinx_marina_help",
+          "delta": {
+            "affection": 2,
+            "trust": 2,
+            "respect": 1,
+            "attraction": 0
+          }
+        }
+      ],
+      "openingByFlag": {
+        "jinx_challenge": "After you challenged me at the arcade I figured I could handle a little park setup. Marina has opinions about my footwear.",
+        "jinx_edge": "You liked the sharp edges. Marina likes me not falling into the water. We’re negotiating.",
+        "jinx_honest": "You asked if I always open with threats. Marina opens with safety lectures. We’re both consistent."
+      }
+    },
+    {
+      "id": "jinx_alma_cross_1",
+      "title": "The Counter Is Not a Runway",
+      "start": 55,
+      "end": 68,
+      "place": "cafe",
+      "slot": 1,
+      "minBond": 3,
+      "prerequisite": "jinx_route_2",
+      "participants": ["alma"],
+      "npc": "jinx",
+      "chapter": 2,
+      "lines": [
+        {
+          "speaker": "alma",
+          "text": "Jinx. Off the counter. Customers need space and I need my insurance rates to stay reasonable."
+        },
+        {
+          "speaker": "jinx",
+          "text": "I’m not even blocking anyone. I’m elevating the aesthetic."
+        },
+        {
+          "speaker": "alma",
+          "text": "You’re elevating my blood pressure. Sit like a normal person or go be dramatic somewhere else."
+        },
+        {
+          "speaker": "Protagonist",
+          "text": "She’s got a point about the counter."
+        },
+        {
+          "speaker": "jinx",
+          "text": "Everyone’s a critic today. Fine. Chair. Happy?"
+        },
+        {
+          "speaker": "alma",
+          "text": "Mildly. Thank you for not making me throw you out in front of the afternoon regulars."
+        },
+        {
+          "speaker": "jinx",
+          "text": "I can be civilized. When it amuses me. You’re welcome."
+        }
+      ],
+      "choices": [
+        {
+          "label": "Defend Jinx’s right to be extra (within reason)",
+          "reply": "See? Someone gets it. Drama is a service.",
+          "kind": "support",
+          "flag": "jinx_alma_defend",
+          "delta": {
+            "affection": 2,
+            "trust": 1,
+            "respect": 0,
+            "attraction": 1
+          }
+        },
+        {
+          "label": "Agree with Alma and tell Jinx to pick her battles",
+          "reply": "…Annoying. Accurate. I’ll save the theatrics for people who deserve them.",
+          "kind": "honest",
+          "flag": "jinx_alma_pick",
+          "delta": {
+            "affection": 1,
+            "trust": 2,
+            "respect": 2,
+            "attraction": 0
+          }
+        },
+        {
+          "label": "Offer to buy both of them something so the tension drops",
+          "reply": "Bribery. Classy. I’ll allow it this once.",
+          "kind": "flirt",
+          "flag": "jinx_alma_bribe",
+          "delta": {
+            "affection": 2,
+            "trust": 1,
+            "respect": 0,
+            "attraction": 2
+          }
+        }
+      ],
+      "openingByFlag": {
+        "jinx_serious": "You played me seriously at the arcade. Alma is now playing me seriously about café furniture.",
+        "jinx_show": "You said you liked the show. Alma prefers the show stay off her counter.",
+        "jinx_remember": "You asked what happens when someone beats me. Alma just beat me at café rules."
+      }
+    }
+  ]
+}
+
