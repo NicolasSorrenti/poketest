@@ -18,7 +18,7 @@ const ATTACK=require('./attack_effects_core');
 const POWERS=require('./classic_power_core');
 const TRAINERS=require('./classic_trainer_core');
 const FORMAT=require('./classic_format');
-const {countCards}=require('./core_rules');
+const {countCards,validateDeck}=require('./core_rules');
 const DECKS=Object.freeze({
  blackout:'base1:Blackout', brushfire:'base1:Brushfire', overgrowth:'base1:Overgrowth',
  zap:'base1:Zap!', power_reserve:'base2:Power Reserve', water_blast:'base2:Water Blast',
@@ -34,7 +34,7 @@ class ClassicLocalService {
   this.sessions=new Map();this.now=now;this.ttlMs=ttlMs;this.maxSessions=maxSessions;
  }
  prune(){for(const [token,r] of this.sessions)if(this.now()-r.updated>this.ttlMs)this.sessions.delete(token);}
- create({deck='blackout',opponent='brushfire',customDeck,seed,difficulty,personality,aiSeed=1,npc,advancedTactics=false}={}){
+ create({deck='blackout',opponent='brushfire',customDeck,customOpponentDeck,seed,difficulty,personality,aiSeed=1,npc,advancedTactics=false}={}){
   this.prune();if(this.sessions.size>=this.maxSessions)throw Error('Too many active duels');
   if(!DECKS[deck]||!DECKS[opponent])throw Error('Unknown Classic deck');
   if(seed!==undefined&&(!Number.isSafeInteger(seed)||seed<0||seed>0xffffffff))throw Error('Invalid seed');
@@ -47,8 +47,17 @@ class ClassicLocalService {
   if(deck!=='custom'&&customDeck!==undefined)throw Error('Unexpected custom deck');
   if(opponent==='custom')throw Error('CPU deck must be a preset');
   const deckCards=id=>id==='custom'?[...customDeck]:EXPANDED[id]?[...EXPANDED[id]]:LAB[id]?[...LAB[id]]:DECKS[id].startsWith('retail:')?RETAIL.list(id):DECKS[id].startsWith('neo:')?NEO.list(id):DECKS[id].startsWith('discovery:')?DISCOVERY.list(id):DECKS[id].startsWith('destiny:')?DESTINY.list(id):list(DECKS[id]);
-  const playerCards=deckCards(deck),cpuCards=deckCards(opponent);
-  const expanded=deck==='custom'||EXPANDED[deck]||EXPANDED[opponent]||[...playerCards,...cpuCards].some(id=>id.startsWith('gym')&&!RETAIL.gymIds.includes(id));
+  if(customOpponentDeck!==undefined){
+   if(!Array.isArray(customOpponentDeck)||customOpponentDeck.length!==60||
+    !customOpponentDeck.every(id=>typeof id==='string'&&/^([a-z0-9]+)-\\d+$/.test(id)))
+    throw Error('Partner deck must contain exactly 60 valid card IDs');
+   const legality=validateDeck(customOpponentDeck,CATALOG);
+   if(!legality.valid)throw Error('Illegal partner deck: '+legality.errors[0]);
+   if(customOpponentDeck.some(id=>!FORMAT.SET_NAMES[id.split('-')[0]]))
+    throw Error('Partner deck contains cards outside the historical campaign');
+  }
+  const playerCards=deckCards(deck),cpuCards=customOpponentDeck?[...customOpponentDeck]:deckCards(opponent);
+  const expanded=deck==='custom'||customOpponentDeck!==undefined||EXPANDED[deck]||EXPANDED[opponent]||[...playerCards,...cpuCards].some(id=>id.startsWith('gym')&&!RETAIL.gymIds.includes(id));
   const format=[...playerCards,...cpuCards].some(id=>['neo1','neo2','neo3','neo4'].some(set=>id.startsWith(set+'-')))?(expanded?'online-preview':'neo-theme'):expanded?'gym-expanded':RETAIL.meta[deck]?.gym||RETAIL.meta[opponent]?.gym?'gym-theme':[...playerCards,...cpuCards].some(id=>id.startsWith('base4'))?'theme-expanded':'classic';
   let game=createGame({decks:[playerCards,cpuCards],names:['You','Classic CPU'],format,seed:seed??crypto.randomBytes(4).readUInt32BE(0)});
   game=driveBot(game,200,cpuConfig).game;
