@@ -1,6 +1,6 @@
 'use strict';
 const test=require('node:test'),assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm');
-const PACK=require('../rpg_narrative_pack'),SIDE=require('../rpg_side_quests'),STORY=require('../rpg_story'),SCHEDULES=require('../rpg_schedules'),WORLD=require('../rpg_world'),ARC=require('../rpg_rival_arc'),TOURNAMENTS=require('../rpg_tournaments'),EPILOGUE=require('../rpg_epilogue'),APPOINTMENTS=require('../rpg_appointments'),INTENTIONS=require('../rpg_intentions'),CG=require('../rpg_cg_gallery'),PLANNER=require('../rpg_daily_planner'),SOCIAL=require('../rpg_social_activities'),DATES=require('../rpg_planned_dates'),BRIDGE=require('../rpg_duel_bridge');
+const PACK=require('../rpg_narrative_pack'),SIDE=require('../rpg_side_quests'),STORY=require('../rpg_story'),SCHEDULES=require('../rpg_schedules'),WORLD=require('../rpg_world'),ARC=require('../rpg_rival_arc'),TOURNAMENTS=require('../rpg_tournaments'),EPILOGUE=require('../rpg_epilogue'),APPOINTMENTS=require('../rpg_appointments'),INTENTIONS=require('../rpg_intentions'),CG=require('../rpg_cg_gallery'),PLANNER=require('../rpg_daily_planner'),SOCIAL=require('../rpg_social_activities'),DATES=require('../rpg_planned_dates'),PRE=require('../rpg_preduel'),BRIDGE=require('../rpg_duel_bridge');
 const script=fs.readFileSync('rpg.js','utf8');
 const KEY='neoHarborRpgV1';
 class Element{
@@ -14,7 +14,7 @@ class Element{
 function boot(saved=new Map(),sessions=new Map()){
  const ids={},listeners={},document={body:new Element('body'),getElementById(id){return ids[id]??(ids[id]=new Element(id==='deckPicker'?'select':id==='battle'?'iframe':'div'));},createElement(tag){return new Element(tag);},addEventListener(type,fn){listeners[type]=fn;}};
  ids.battle=new Element('iframe');ids.battle.contentWindow={};
- const window={NeoRpgNarrativePack:PACK,NeoRpgSideQuests:SIDE,NeoHarborStory:STORY,NeoRpgSchedules:SCHEDULES,NeoRpgWorld:WORLD,NeoRpgRivalArc:ARC,NeoRpgTournaments:TOURNAMENTS,NeoRpgEpilogue:EPILOGUE,NeoRpgAppointments:APPOINTMENTS,NeoRpgIntentions:INTENTIONS,NeoRpgCGGallery:CG,NeoRpgDailyPlanner:PLANNER,NeoRpgSocialActivities:SOCIAL,NeoRpgPlannedDates:DATES,NeoRpgDuelBridge:BRIDGE,addEventListener(type,fn){listeners[type]=fn;}};
+ const window={NeoRpgNarrativePack:PACK,NeoRpgSideQuests:SIDE,NeoHarborStory:STORY,NeoRpgSchedules:SCHEDULES,NeoRpgWorld:WORLD,NeoRpgRivalArc:ARC,NeoRpgTournaments:TOURNAMENTS,NeoRpgEpilogue:EPILOGUE,NeoRpgAppointments:APPOINTMENTS,NeoRpgIntentions:INTENTIONS,NeoRpgCGGallery:CG,NeoRpgDailyPlanner:PLANNER,NeoRpgSocialActivities:SOCIAL,NeoRpgPlannedDates:DATES,NeoRpgPreDuel:PRE,NeoRpgDuelBridge:BRIDGE,addEventListener(type,fn){listeners[type]=fn;}};
  const localStorage={getItem:k=>saved.has(k)?saved.get(k):null,setItem:(k,v)=>saved.set(k,v)};
  const sessionStorage={getItem:k=>sessions.get(k)||null,setItem:(k,v)=>sessions.set(k,v),removeItem:k=>sessions.delete(k)};
  const fetch=async()=>({ok:true,json:async()=>({decks:[{id:'blackout',name:'Blackout'},{id:'brushfire',name:'Brushfire'}]})});
@@ -42,6 +42,8 @@ test('a pending duel locks navigation and the deck, restores after refresh, and 
  click(app.ids.townRadar,'Marina Aoki');
  click(app.ids.people,'Marina Aoki');
  click(app.ids.choices,'Challenge to a duel');
+ assert.equal(app.ids.battle.src,'about:blank');
+ app.ids.preDuelSkip.onclick();
  const pending=app.read().pendingDuel;
  assert.ok(pending?.id);
  assert.equal(app.ids.deckPicker.disabled,true,'Deck must lock as soon as the iframe launches');

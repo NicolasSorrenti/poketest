@@ -30,8 +30,23 @@ const readState=page=>page.evaluate(()=>JSON.parse(localStorage.getItem('neoHarb
 
   await page.locator('#people .person').filter({hasText:'Yuna Hoshino'}).click();
   await page.locator('#choices button').filter({hasText:'Challenge to a duel'}).click();
-  await page.locator('#duel iframe').waitFor();
+  await page.locator('#preDuelDialog').waitFor({state:'visible'});
+  let staged=await readState(page);
+  assert.equal(staged.pendingDuel?.preview?.phase,'ready','Preview must be first, not an already running match');
+  assert.equal(await page.locator('#duel').isVisible(),false);
+  assert.equal(await page.locator('#battle').getAttribute('src'),'about:blank');
+  // Reloading DURING the scene must restore the same duel identity and dialogue.
+  const stagedId=staged.pendingDuel.id;
+  await page.reload({waitUntil:'domcontentloaded'});
+  await page.locator('#preDuelDialog').waitFor({state:'visible'});
+  assert.equal((await readState(page)).pendingDuel.id,stagedId);
+  await page.locator('#preDuelNext').click();
+  assert.equal((await readState(page)).pendingDuel.preview.index,1);
+  assert.equal(await page.locator('#preDuelStart').isVisible(),true);
+  await page.locator('#preDuelStart').click();
   const pending=(await readState(page)).pendingDuel;
+  assert.equal(pending.preview.phase,'launched');
+  await page.locator('#duel iframe').waitFor();
   assert.ok(pending?.id,'NPC challenge creates a campaign duel');
   await page.waitForFunction(id=>!!sessionStorage.getItem('neoRpgDuelToken:'+encodeURIComponent(id)),pending.id,{timeout:45000});
   const inner=page.frameLocator('#battle');
@@ -81,6 +96,10 @@ const readState=page=>page.evaluate(()=>JSON.parse(localStorage.getItem('neoHarb
   // Rechallenge in the same evening, then complete another actual Classic session.
   await page.locator('#people .person').filter({hasText:'Yuna Hoshino'}).click();
   await page.locator('#choices button').filter({hasText:'Challenge to a duel'}).click();
+  await page.locator('#preDuelDialog').waitFor({state:'visible'});
+  const secondStaged=(await readState(page)).pendingDuel;
+  assert.equal(secondStaged.preview.phase,'ready');
+  await page.locator('#preDuelSkip').click();
   const second=(await readState(page)).pendingDuel;
   assert.ok(second?.id&&second.id!==pending.id,'Consecutive duels need different identities');
   await page.waitForFunction(id=>!!sessionStorage.getItem('neoRpgDuelToken:'+encodeURIComponent(id)),second.id,{timeout:45000});
@@ -113,7 +132,7 @@ const readState=page=>page.evaluate(()=>JSON.parse(localStorage.getItem('neoHarb
    await duelPage.close();
   }
   assert.deepEqual(errors,[],'Browser JavaScript exceptions');
-  console.log('PASS Chromium RPG: new campaign, travel, time, NPC, actual server duel concession, iframe return, rewards, refresh, mobile screenshot, CPU/online shared controls');
+  console.log('PASS Chromium RPG pre-duel cinematic: preview-first, scene reload, explicit Start, Skip, authoritative new campaign, travel, time, NPC, actual server duel concession, iframe return, rewards, refresh, mobile screenshot, CPU/online shared controls');
  }finally{
   if(browser)await browser.close();
   await new Promise((resolve,reject)=>server.close(err=>err?reject(err):resolve()));

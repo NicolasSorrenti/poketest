@@ -124,3 +124,25 @@
 .planner-action:hover:not(:disabled){background:#a84b76}
 .planner-empty{color:#b6bfce;line-height:1.55;margin:0;padding:9px 1px}
 @media(max-width:730px){.planner-card{gap:5px;padding:10px}.planner-card strong{font-size:16px}}
+
+/* G4 cinematic staging: no battle iframe is mounted until the Start/Skip action. */
+.preduel-dialog{width:min(1040px,96vw);max-height:95vh;padding:0;overflow:auto;background:#101725;color:#f7edf5;border:1px solid #b86f93;border-radius:14px;box-shadow:0 25px 85px #050615bb}
+.preduel-dialog::backdrop{background:#040812de;backdrop-filter:blur(8px)}
+.preduel-top{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:13px 18px;background:#26213a;border-bottom:1px solid #5e456b}
+.preduel-eyebrow{font:800 14px 'Barlow Condensed',sans-serif;color:#f4b8cf;letter-spacing:1.5px}
+.preduel-context{font:600 11px/1.45 'Barlow Condensed',sans-serif;color:#ded1e5;text-align:right}
+.preduel-art{position:relative;min-height:220px;aspect-ratio:16/7;overflow:hidden;background:radial-gradient(ellipse at 55% 20%,#453450,#1b2440 60%,#111724)}
+.preduel-art img.preduel-cg{width:100%;height:100%;object-fit:cover;display:block;position:absolute;inset:0}
+.preduel-art .preduel-portrait{max-height:95%;height:100%;width:auto;max-width:75%;object-fit:contain;position:absolute;bottom:0;right:3%}
+.preduel-art .preduel-placeholder{display:grid;place-items:center;position:absolute;inset:0;padding:18px;color:#d7c1cf;text-align:center;font:700 17px 'Barlow Condensed',sans-serif}
+.preduel-body{display:grid;gap:13px;padding:15px 20px 20px}
+.preduel-nameplate{display:flex;flex-wrap:wrap;justify-content:space-between;gap:6px;font:800 20px 'Barlow Condensed',sans-serif;color:#fff}
+.preduel-nameplate span{font:600 12px 'Barlow Condensed',sans-serif;color:#bcb8ce}
+.preduel-dialogue{min-height:80px;padding:13px 16px;background:#26243b;border-left:3px solid #d885a7;border-radius:7px}
+.preduel-dialogue strong{font:800 16px 'Barlow Condensed',sans-serif;color:#f7c1d5}
+.preduel-dialogue p{font-size:15px;line-height:1.55;margin:6px 0 0;color:#f1eaf2}
+.preduel-actions{display:flex;flex-wrap:wrap;gap:9px;justify-content:flex-end}
+.preduel-actions button{min-height:44px;padding:11px 15px;font:800 14px 'Barlow Condensed',sans-serif}
+#preDuelSkip{margin-right:auto;background:#262840;border:1px solid #665a73}
+#preDuelStart,#preDuelNext{background:#984d78;color:#fff;border-color:#d68baa}
+@media(max-width:600px){.preduel-dialog{max-height:93vh;width:97vw}.preduel-top{display:block;padding:10px 12px}.preduel-context{display:block;text-align:left;margin-top:5px}.preduel-art{aspect-ratio:4/3;min-height:210px}.preduel-body{padding:10px;gap:9px}.preduel-actions button{flex:1 1 160px}.preduel-dialogue{min-height:90px}}
