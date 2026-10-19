@@ -55,6 +55,9 @@ const readState=page=>page.evaluate(()=>JSON.parse(localStorage.getItem('neoHarb
    if(await dismiss.isVisible())await dismiss.click();
    await page.locator('#rpgSceneCast .rpg-cast-member[data-npc="yuna"]').click();
   }
+  // CG rewards can trigger an illustration overlay during unrelated story beats.
+  // Close it before choosing the duel so a modal never masks gameplay controls.
+  if(await page.locator('#cgMoment[open]').count())await page.locator('#cgMomentClose').click();
   await page.locator('#choices button').filter({hasText:'Challenge to a duel'}).click();
   await page.locator('#preDuelDialog').waitFor({state:'visible'});
   let staged=await readState(page);
@@ -159,6 +162,9 @@ const readState=page=>page.evaluate(()=>JSON.parse(localStorage.getItem('neoHarb
    if(await dismiss.isVisible())await dismiss.click();
    await page.locator('#rpgSceneCast .rpg-cast-member[data-npc="yuna"]').click();
   }
+  // CG rewards can trigger an illustration overlay during unrelated story beats.
+  // Close it before choosing the duel so a modal never masks gameplay controls.
+  if(await page.locator('#cgMoment[open]').count())await page.locator('#cgMomentClose').click();
   await page.locator('#choices button').filter({hasText:'Challenge to a duel'}).click();
   await page.locator('#preDuelDialog').waitFor({state:'visible'});
   const secondStaged=(await readState(page)).pendingDuel;
