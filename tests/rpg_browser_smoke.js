@@ -54,12 +54,7 @@ const readState=page=>page.evaluate(()=>JSON.parse(localStorage.getItem('neoHarb
    const dismiss=page.locator('#choices button').filter({hasText:'Continue'});
    if(await dismiss.isVisible())await dismiss.click();
    await page.locator('#rpgSceneCast .rpg-cast-member[data-npc="yuna"]').click();
-   // Conversations now include a protagonist response before action selection.
-   for(let beat=0;beat<3;beat++){
-    const next=page.locator('#choices button').filter({hasText:'Continue'});
-    if(await next.count()&&!await next.first().isHidden())await next.first().click();
-    else break;
-   }
+
   }
   // CG rewards can trigger an illustration overlay during unrelated story beats.
   // Close it before choosing the duel so a modal never masks gameplay controls.
@@ -72,6 +67,12 @@ const readState=page=>page.evaluate(()=>JSON.parse(localStorage.getItem('neoHarb
    new MutationObserver(()=>{if(cg.open)cg.close()})
     .observe(cg,{attributes:true,attributeFilter:['open']});
   });
+  // Finish the new greeting after any first-meeting art overlay is dismissed.
+  for(let beat=0;beat<3;beat++){
+   const next=page.locator('#choices button').filter({hasText:'Continue'});
+   if(await next.count()&&!await next.first().isHidden())await next.first().click();
+   else break;
+  }
   await page.locator('#choices button').filter({hasText:'Challenge to a duel'}).click();
   await page.locator('#preDuelDialog').waitFor({state:'visible'});
   let staged=await readState(page);
@@ -175,12 +176,7 @@ const readState=page=>page.evaluate(()=>JSON.parse(localStorage.getItem('neoHarb
    const dismiss=page.locator('#choices button').filter({hasText:'Continue'});
    if(await dismiss.isVisible())await dismiss.click();
    await page.locator('#rpgSceneCast .rpg-cast-member[data-npc="yuna"]').click();
-   // Conversations now include a protagonist response before action selection.
-   for(let beat=0;beat<3;beat++){
-    const next=page.locator('#choices button').filter({hasText:'Continue'});
-    if(await next.count()&&!await next.first().isHidden())await next.first().click();
-    else break;
-   }
+
   }
   // CG rewards can trigger an illustration overlay during unrelated story beats.
   // Close it before choosing the duel so a modal never masks gameplay controls.
@@ -193,6 +189,12 @@ const readState=page=>page.evaluate(()=>JSON.parse(localStorage.getItem('neoHarb
    new MutationObserver(()=>{if(cg.open)cg.close()})
     .observe(cg,{attributes:true,attributeFilter:['open']});
   });
+  // Finish the new greeting after any first-meeting art overlay is dismissed.
+  for(let beat=0;beat<3;beat++){
+   const next=page.locator('#choices button').filter({hasText:'Continue'});
+   if(await next.count()&&!await next.first().isHidden())await next.first().click();
+   else break;
+  }
   await page.locator('#choices button').filter({hasText:'Challenge to a duel'}).click();
   await page.locator('#preDuelDialog').waitFor({state:'visible'});
   const secondStaged=(await readState(page)).pendingDuel;
