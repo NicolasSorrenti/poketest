@@ -1,7 +1,7 @@
 'use strict';
 (()=>{
 const $=id=>document.getElementById(id),KEY='neoHarborRpgV1',STORY=window.NeoHarborStory,SCHEDULES=window.NeoRpgSchedules,WORLD=window.NeoRpgWorld,ARC=window.NeoRpgRivalArc,TOURNAMENTS=window.NeoRpgTournaments,BRIDGE=window.NeoRpgDuelBridge;
-const PACK=window.NeoRpgNarrativePack,SIDE=window.NeoRpgSideQuests,EPILOGUE=window.NeoRpgEpilogue,APPOINTMENTS=window.NeoRpgAppointments,INTENTIONS=window.NeoRpgIntentions,CG=window.NeoRpgCGGallery,PLANNER=window.NeoRpgDailyPlanner,SOCIAL=window.NeoRpgSocialActivities,DATES=window.NeoRpgPlannedDates,PRE=window.NeoRpgPreDuel,SITUATIONS=window.NeoRpgSituations,JOURNEY=window.NeoRpgSeasonJourney,COLLECT=window.NeoRpgCollection;
+const PACK=window.NeoRpgNarrativePack,SIDE=window.NeoRpgSideQuests,EPILOGUE=window.NeoRpgEpilogue,APPOINTMENTS=window.NeoRpgAppointments,INTENTIONS=window.NeoRpgIntentions,CG=window.NeoRpgCGGallery,PLANNER=window.NeoRpgDailyPlanner,SOCIAL=window.NeoRpgSocialActivities,DATES=window.NeoRpgPlannedDates,PRE=window.NeoRpgPreDuel,SITUATIONS=window.NeoRpgSituations,JOURNEY=window.NeoRpgSeasonJourney,COLLECT=window.NeoRpgCollection,RPGD=window.NeoRpgDialogue;
 const periods=['Morning','Afternoon','Evening'];
 const places={
  home:['Your Apartment','Your base during the championship season.'],
@@ -28,6 +28,7 @@ const eventCards=[{day:7,slot:1,place:'arcade',title:'Arcade Friendly Cup',rewar
 
 
 function eligibleStories(){return STORY.available(state);}
+function storyDialogueLines(id){const lines=STORY.linesFor(state,id);return RPGD?.storyLines(id,lines)||lines;}
 function startStory(id){
  if(state.activeSituation||state.activeSideQuest||state.activeStory||state.activeEncounter||state.activeArc||state.pendingDuel)return;
  const e=eligibleStories().find(e=>e.id===id);if(!e)return;
@@ -37,7 +38,7 @@ function renderStory(){
  const a=state.activeStory,e=STORY.byId(a.id);
  if(!e){state.activeStory=null;persist();return null;}
  if(a.phase==='lines'){
-  const lines=STORY.linesFor(state,e.id),line=lines[Math.min(a.index,lines.length-1)];
+  const lines=storyDialogueLines(e.id),line=lines[Math.min(a.index,lines.length-1)];
   return {speaker:line.speaker==='Protagonist'?'You':(cast[line.speaker]?.name|| (line.speaker===e.npc?cast[e.npc].name:line.speaker)),line:line.text,choices:[[a.index<lines.length-1?'Continue ›':'Respond ›','storyNext']]};
  }
  if(a.phase==='choice')return {speaker:cast[e.npc].name,line:'How will you respond?',choices:e.choices.map((c,i)=>[c.label,'storyChoice:'+i])};
@@ -46,7 +47,7 @@ function renderStory(){
 }
 function advanceStory(){
  const a=state.activeStory;if(!a||a.phase!=='lines')return;
- const e=STORY.byId(a.id);a.index++;if(a.index>=STORY.linesFor(state,e.id).length)a.phase='choice';
+ const e=STORY.byId(a.id);a.index++;if(a.index>=storyDialogueLines(e.id).length)a.phase='choice';
  persist();render();
 }
 function chooseStory(raw){
@@ -163,6 +164,25 @@ INTENTIONS.hydrate(state); // Expire yesterday's optional choice before saving t
 for(const plan of missedAppointments)log('You missed your planned meet-up with '+(cast[plan.npc]?.name||'a trainer')+'.');
 persist();timeFlash(beforeDay,beforeSlot);}
 function say(speaker,line,choices=[]){scene={speaker,line,choices};state.scene=scene;persist();render();}
+function sayConversation(lines,afterChoices=[]){
+ if(!Array.isArray(lines)||!lines.length)return;
+ const script=lines.filter(x=>x&&typeof x.text==='string'&&typeof x.speaker==='string');
+ if(!script.length)return;
+ const first=script[0];
+ scene={speaker:first.speaker==='Protagonist'?'You':cast[first.speaker]?.name||first.speaker,
+  line:first.text,choices:script.length>1?[['Continue ›','chatNext']]:afterChoices,
+  dialogue:script,index:0,afterChoices};
+ state.scene=scene;persist();render();
+}
+function advanceConversation(){
+ if(!Array.isArray(scene.dialogue)||scene.index>=scene.dialogue.length-1)return;
+ scene.index++;
+ const next=scene.dialogue[scene.index];
+ scene.speaker=next.speaker==='Protagonist'?'You':cast[next.speaker]?.name||next.speaker;
+ scene.line=next.text;
+ scene.choices=scene.index===scene.dialogue.length-1?scene.afterChoices:[['Continue ›','chatNext']];
+ state.scene=scene;persist();render();
+}
 function closeSceneDialogue(){
  if(state.activeSituation||state.activeStory||state.activeEncounter||state.activeArc||state.activeSideQuest||state.pendingDuel)return;
  state.selected=null;
@@ -336,6 +356,7 @@ function finishSituation(){
 function scheduleEvent(){return eventCards.find(e=>e.day===state.day&&e.slot===state.slot&&e.place===state.location&&!state.eventsDone[e.day+':'+e.title]);}
 function act(action){
  const [type,id,part]=action.split(':');
+ if(type==='chatNext')return advanceConversation();
  if(type==='situationCancel'){state.activeSituation=null;state.selected=null;return say('Narrator','You decide to leave the moment for another time. No time passes.');}
  if(type==='situationChoice')return chooseSituation(id);
  if(type==='situationFinish')return finishSituation();
@@ -489,7 +510,10 @@ function act(action){
  if(type==='new'){if(confirm('Start a new season? This overwrites this browser save.')){state=defaults();state.deckJourney=COLLECT.fresh();for(const id of Object.keys(cast))state.bonds[id]={affection:0,trust:0,duels:0};persist();location.reload();}return;}
  if(!cast[id]||!currentPeople().includes(id))return say('Narrator','They have already moved on. Try another time.');
  const c=cast[id],bond=state.bonds[id],key=atKey(id);
- if(type==='talk'){if(!state.talked[key]){state.talked[key]=true;bond.affection++;state.relationships[id].affection++;}persist();return say(c.name,c.talk[(state.day+bond.duels+bond.affection)%c.talk.length],options(id));}
+ if(type==='talk'){if(!state.talked[key]){state.talked[key]=true;bond.affection++;state.relationships[id].affection++;}
+  const topic=(state.day+bond.duels+bond.affection)%c.talk.length,opening=c.talk[topic];
+  const lines=RPGD?.talkLines(id,topic,opening)||[{speaker:id,text:opening}];
+  persist();return sayConversation(lines,options(id));}
  if(type==='flirt'){if(!state.talked['flirt:'+key]){state.talked['flirt:'+key]=true;bond.affection++;state.relationships[id].affection++;state.relationships[id].attraction++;}persist();return say(c.name,c.flirt,options(id));}
  if(type==='hang'){if(state.hungOut[state.day+':'+id])return say(c.name,'I enjoyed our time today. Let us make plans another day.',options(id));state.hungOut[state.day+':'+id]=true;bond.affection+=2;bond.trust++;state.relationships[id].affection+=2;state.relationships[id].trust++;log('Spent time with '+c.name+'.');recordIntention('hangout');const memories=recordCG('hangout',id);advance();state.selected=null;say(c.name,Array.isArray(c.hangouts)&&c.hangouts.length?c.hangouts[(state.day+bond.duels)%c.hangouts.length]:'That was a lovely way to spend part of the day. See you around.');showCGMoment(memories[0]);return;}
 }
@@ -1227,6 +1251,15 @@ function render(){
  $('homeBanner').textContent='YOUR APARTMENT  ·  DAY '+state.day+'  ·  '+periods[state.slot]+' — Prepare your deck, review your plans or rest.';
  let shown=showingSituation?showSituation():showingStory?renderStory():showingEncounter?showEncounter():showingArc?showArc():state.activeSideQuest?showSideQuest():scene;
  $('speaker').textContent=shown?.speaker||'Narrator';$('line').textContent=shown?.line||'The town is waiting.';$('choices').replaceChildren();
+ const responseActions=new Set(['storyChoice','sideChoice','arcChoice','encounterChoice','situationChoice','sideDuel','sidePause']);
+ const isPlayerPrompt=!!shown?.choices?.some(([,action])=>responseActions.has(action.split(':')[0]));
+ const promptRoot=$('playerChoicePrompt'),promptPanel=$('playerChoicePanel'),choiceList=$('choices');
+ if(promptRoot&&promptPanel){
+  promptRoot.hidden=!isPlayerPrompt;
+  const desiredParent=isPlayerPrompt?promptPanel:$('dialogue');
+  if(choiceList.parentElement!==desiredParent)desiredParent.append(choiceList);
+  choiceList.classList.toggle('centered',isPlayerPrompt);
+ }
  for(const [label,action] of shown.choices||[]){
   const b=document.createElement('button');b.className='choice'+(action==='storyFinish'?' finish':'');b.textContent=label;
   if(action.startsWith('storyChoice:')){
@@ -1396,7 +1429,7 @@ $('preDuelDialog').addEventListener('cancel',e=>e.preventDefault());
 $('quickNext').onclick=()=>act('rest');$('quickHome').onclick=()=>act('home');$('calendarBtn').onclick=openCalendar;$('calendarClose').onclick=()=>$('calendarDialog').close();
 $('save').onclick=()=>{persist();$('notice').textContent='Campaign saved in this browser.'};
 $('dismissReceipt').onclick=()=>{state.lastDuelReceipt=null;persist();render();};
-document.addEventListener('keydown',e=>{if((e.key===' '||e.code==='Space')&&!['INPUT','TEXTAREA','SELECT','BUTTON'].includes(e.target?.tagName)){if(state.activeStory?.phase==='lines'){e.preventDefault();act('storyNext');}else if(state.activeArc?.phase==='lines'){e.preventDefault();act('arcNext');}else if(!$('dialogue').hidden&&!state.activeSituation&&!state.activeStory&&!state.activeEncounter&&!state.activeArc&&!state.activeSideQuest&&!state.pendingDuel&&!scene.choices?.length){e.preventDefault();closeSceneDialogue();}}});
+document.addEventListener('keydown',e=>{if((e.key===' '||e.code==='Space')&&!['INPUT','TEXTAREA','SELECT','BUTTON'].includes(e.target?.tagName)){if(scene.dialogue&&scene.index<scene.dialogue.length-1&&!state.activeStory&&!state.activeArc&&!state.activeSideQuest){e.preventDefault();act('chatNext');}else if(state.activeStory?.phase==='lines'){e.preventDefault();act('storyNext');}else if(state.activeArc?.phase==='lines'){e.preventDefault();act('arcNext');}else if(!$('dialogue').hidden&&!state.activeSituation&&!state.activeStory&&!state.activeEncounter&&!state.activeArc&&!state.activeSideQuest&&!state.pendingDuel&&!scene.choices?.length){e.preventDefault();closeSceneDialogue();}}});
 async function initDecks(){
  try{
   const select=$('deckPicker');select.replaceChildren();
