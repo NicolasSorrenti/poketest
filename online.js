@@ -16,7 +16,7 @@
  const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
  let modalDecisionId=null,lastFieldDecisionId=null;
  let token=null,roomCode=null,current=null,selectedHand=null,targetMode=null,busy=false,decisionSelection=new Set(),lastDecision=null,chatSeq=-1,chatBusy=false;
- let handOpen=false,powersOpen=false,chatOpen=false,logOpen=false,seenChatSeq=-1,lastCoinSeq=null,coinQueue=[],coinTimer=null,lastKoFeedSeq=null;
+ let handOpen=false,restoreHandAfterTarget=false,powersOpen=false,chatOpen=false,logOpen=false,seenChatSeq=-1,lastCoinSeq=null,coinQueue=[],coinTimer=null,lastKoFeedSeq=null;
  const watching=()=>!!current?.spectator;
  const side=()=>current?.you??0;
  const command=(type,payload={})=>({type,payload});
@@ -67,14 +67,14 @@
 
  async function send(action){if(!current||busy||watching())return;busy=true;clearError();try{
   const result=await api('action',{method:'POST',body:JSON.stringify({code:roomCode,revision:current.revision,command:action})});
-  preview.hide();current=result;selectedHand=null;targetMode=null;decisionSelection.clear();render();
+  preview.hide();current=result;if(restoreHandAfterTarget){restoreHandAfterTarget=false;setHandOpen(true);}selectedHand=null;targetMode=null;decisionSelection.clear();render();
  }catch(e){fail(e);}finally{busy=false;render();}}
  async function openRoom(kind){if(busy)return;busy=true;$('startupError').textContent='';try{
   const deck=$('deck').value;
   const suppliedCode=$('joinCode').value.trim().toUpperCase();
   const body={deck,name:$('nickname').value,...(deck==='custom'?{customDeck:JSON.parse(localStorage.getItem('neoCampusCustomGymDeck')||'null')}:{}),...(suppliedCode?{code:suppliedCode}:{})};
   const data=await api(kind,{method:'POST',body:JSON.stringify(body)});
-  feedback.reset();opponentActivity.clear();combat.reset();lobbyDeckDraft=null;token=data.token;roomCode=data.code;chatSeq=-1;seenChatSeq=-1;lastCoinSeq=null;lastKoFeedSeq=null;sessionStorage.setItem('neoOnlineToken',token);sessionStorage.setItem('neoOnlineRoom',roomCode);
+  feedback.reset();opponentActivity.clear();combat.reset();lobbyDeckDraft=null;restoreHandAfterTarget=false;token=data.token;roomCode=data.code;chatSeq=-1;seenChatSeq=-1;lastCoinSeq=null;lastKoFeedSeq=null;sessionStorage.setItem('neoOnlineToken',token);sessionStorage.setItem('neoOnlineRoom',roomCode);
   current=data;render();
  }catch(e){$('startupError').textContent=e.message;}finally{busy=false;}}
  async function lobbyAction(path,payload={}){
@@ -116,7 +116,7 @@
   renderChat(state);
   if(!current||state.revision!==current.revision){const previous=current?.view?.pendingDecision?.id;
    preview.hide();current=state; if(previous!==state.view?.pendingDecision?.id)decisionSelection.clear();
-   selectedHand=null;targetMode=null;render();}
+   restoreHandAfterTarget=false;selectedHand=null;targetMode=null;render();}
   else{current.presence=state.presence;current.spectatorCount=state.spectatorCount;renderPresence();}
  }catch(e){if($('networkStatus'))$('networkStatus').textContent='Disconnected';}
  }
@@ -292,8 +292,8 @@
    if(!watching())$('lobbyMessage').textContent=!current.joined?'Waiting for your friend to join…':!current.players.every(p=>p.ready)?'Both players must click Ready.':'Both players ready. Host can start the duel.';
   }
  }
- function setTarget(type,payload,title,benchOnly=false){preview.hide();targetMode={type,payload,title,benchOnly};render();}
- function cancelTarget(){targetMode=null;selectedHand=null;preview.hide();render();}
+ function setTarget(type,payload,title,benchOnly=false){preview.hide();if(handOpen){restoreHandAfterTarget=true;setHandOpen(false);}targetMode={type,payload,title,benchOnly};render();}
+ function cancelTarget(){targetMode=null;selectedHand=null;preview.hide();if(restoreHandAfterTarget){restoreHandAfterTarget=false;setHandOpen(true);}render();}
  function pokemonNode(u,ownerRelative,slot){
   const hidden=Boolean(u.secretPlanFaceDown);
   const c=hidden?{name:'Face-down Pokémon',hp:'10',types:['Colorless'],supertype:'Pokémon',subtypes:['Basic'],attacks:[]}:card(u.id),src=hidden?'neo_card_back.svg':picture(u.id),attached=Array.isArray(u.energies)?u.energies:[];
