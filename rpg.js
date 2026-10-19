@@ -523,7 +523,7 @@ function showPackReveal(){
   };
   button.onclick=reveal;cards.push(reveal);target.append(button);
  }
- $('packRevealAll').onclick=()=>cards.forEach(reveal);
+ $('packRevealAll').onclick=()=>cards.forEach(show=>show());
  $('packContinue').onclick=()=>{pack.opened=true;persist();modal.close();};
  modal.addEventListener('cancel',e=>e.preventDefault(),{once:true});
  modal.showModal();
