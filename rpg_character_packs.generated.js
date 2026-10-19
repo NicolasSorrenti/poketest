@@ -2275,7 +2275,7 @@ const packs=[
     "A late library session turns into her explaining why she loves control decks while still wearing the tiny shorts from her last booking. She never once adjusts them for the camera that isn’t there.",
     "She challenges you to a best-of-three and gets genuinely competitive. The model persona disappears completely until the last prize card is taken."
    ],
-   "portrait": "/rpg-assets/characters/sierra/neutral.png"
+   "portrait": "/rpg-assets/characters/sierra/portrait.png"
   },
   "looks": {
    "silhouette": "Unambiguously adult 18-year-old, extremely slim and long-legged with a tiny chest and a disproportionately large, round, heavy ass. Narrow waist, flat stomach, model proportions that are intentionally bottom-heavy.",
@@ -2741,7 +2741,7 @@ const packs=[
   "art": {
    "schemaVersion": 1,
    "characterId": "sierra",
-   "portrait": "/rpg-assets/characters/sierra/neutral.png",
+   "portrait": "/rpg-assets/characters/sierra/portrait.png",
    "expressions": {
     "neutral": "/rpg-assets/characters/sierra/neutral.webp",
     "cool": "/rpg-assets/characters/sierra/cool.webp",
