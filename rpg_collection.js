@@ -44,7 +44,7 @@
   {set:'neo4',price:55,day:80,npc:'kaede',cup:'championship',description:'High-stakes cards for the season finale.'}
  ]);
 
- const CHARACTER_SETS=Object.freeze({hana:'base1',reina:'base3',shiori:'neo2',yuna:'base2',akari:'neo1',camila:'base5',marina:'neo3',kaede:'neo4',jinx:'neo4',luna:'neo3'});
+ const CHARACTER_SETS=Object.freeze({hana:'base1',reina:'base3',shiori:'neo2',yuna:'base2',akari:'neo1',camila:'base5',marina:'neo3',kaede:'neo4',jinx:'neo4',luna:'neo3',elena:'base2',rina:'base1',sierra:'base5',sol:'base1',jun:'base3',teo:'base2',iris:'neo1',elio:'base3',alma:'base2',nereo:'neo3'});
  const ENERGY=new Set(['base1-96','base1-97','base1-98','base1-99','base1-100','base1-101','base1-102']);
  const allAllowed=new Set([...starters.flatMap(s=>s.cards),...upgrade,...Object.keys(SETS).flatMap(set=>Array.from({length:SETS[set].size},(_,i)=>set+'-'+(i+1)))]);
  const rank=ids=>Object.fromEntries([...new Set(ids)].map(id=>[id,ids.filter(x=>x===id).length]));
