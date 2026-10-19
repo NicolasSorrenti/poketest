@@ -68,7 +68,13 @@
  }
  function cancel(state){if(state.deckJourney)state.deckJourney.draft=null}
  function reward(state,win){const x=state.deckJourney;if(!x?.starter||!win)return null;
-  const id=sample(x.starter,x.starter+':win:'+x.rewards,x.rewards);x.owned[id]=(x.owned[id]||0)+1;x.rewards++;return id;
+  const pool=poolByStarter[x.starter]||upgrade,seed=x.starter+':win:'+x.rewards;
+  const start=hash(seed)%pool.length;
+  // First rewards should introduce useful upgrades rather than immediately
+  // duplicating all the weak cards already supplied in the starter.
+  const next=Array.from({length:pool.length},(_,i)=>pool[(start+i)%pool.length]).find(id=>!x.owned[id]);
+  const id=next||sample(x.starter,seed,x.rewards);
+  x.owned[id]=(x.owned[id]||0)+1;x.rewards++;return id;
  }
  function buyPack(state){const x=state.deckJourney;
   if(!x?.starter)throw Error('Choose your starter before opening packs');
