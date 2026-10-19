@@ -8,6 +8,14 @@
   jun:'base3-1',teo:'base2-44',iris:'neo1-2',jinx:'base1-14',
   luna:'base3-10',sol:'base1-36',elio:'base3-9',alma:'base2-11',nereo:'base3-42'
  });
+ const TRIALS=Object.freeze({
+  hana:'Teamwork Exhibition',reina:'No-Excuses Rematch',shiori:'Endgame Study',
+  yuna:'Chaos Showcase',akari:'Pattern Test',camila:'Collector’s Wager',
+  marina:'Patience Trial',kaede:'Disruption Trial',jun:'Fair-Play Clinic',
+  teo:'Live Broadcast Duel',iris:'Courier Challenge',jinx:'Lightning Sprint',
+  luna:'Tidal Balance',sol:'Hot-and-Cold Match',elio:'The Brave First Game',
+  alma:'Quiet-Table Duel',nereo:'Against the Current'
+ });
  const KEY=/_(?:route|guest|bond)_\d+$/;
  function build(events,cast){
   const byNpc={},byEvent={};
@@ -28,6 +36,7 @@
    const chapters=plan.byNpc[npc]||[];
    if(!c.name||chapters.length!==4)errors.push(npc+': expected four authored character milestones');
    if(!SIGNATURES[npc])errors.push(npc+': missing signature card');
+   if(!TRIALS[npc])errors.push(npc+': missing personal duel challenge');
   }
   return errors;
  }
@@ -57,5 +66,19 @@
   state.milestoneRewards[event.id]={npc,chapter:number,day:state.day};
   return {npc,chapter:number,label:out.join(' · '),credits,set,signature};
  }
- return Object.freeze({SIGNATURES,build,validate,progress,reward});
+ function canChallenge(state,npc,plan){
+  const p=progress(state,npc,plan);
+  return p.total===4&&p.completed>=2&&!state?.bondTrials?.[npc];
+ }
+ function settleChallenge(state,npc,won,plan,collection){
+  if(!won||!canChallenge(state,npc,plan))return null;
+  if(!state.bondTrials||typeof state.bondTrials!=='object'||Array.isArray(state.bondTrials))state.bondTrials={};
+  if(state.bondTrials[npc])return null;
+  const credits=12,set=collection.setForCharacter(npc);
+  state.credits=(state.credits||0)+credits;
+  if(state.deckJourney?.starter)collection.awardVoucher(state,set);
+  state.bondTrials[npc]={day:state.day,credits,set};
+  return {title:TRIALS[npc],credits,set,label:'+'+credits+' credits'+(state.deckJourney?.starter?' · one '+collection.SETS[set].name+' booster voucher':'')};
+ }
+ return Object.freeze({SIGNATURES,TRIALS,build,validate,progress,reward,canChallenge,settleChallenge});
 });
