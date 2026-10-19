@@ -8,6 +8,9 @@ on:
       - 'rpg.css'
       - 'tests/rpg_*.test.js'
       - 'package.json'
+      - 'characters/**'
+      - 'scripts/rpg-character-packs.js'
+      - 'CHARACTER_PACKS.md'
       - '.github/workflows/rpg-regression.yml'
   push:
     branches: [main]
@@ -17,6 +20,9 @@ on:
       - 'rpg.css'
       - 'tests/rpg_*.test.js'
       - 'package.json'
+      - 'characters/**'
+      - 'scripts/rpg-character-packs.js'
+      - 'CHARACTER_PACKS.md'
       - '.github/workflows/rpg-regression.yml'
 
 jobs:
