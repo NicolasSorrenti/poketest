@@ -72,10 +72,19 @@ For verification, run `node test_cube_presets.js` or `npm run test:cube`. Compet
 ## Multiplayer round-robin (2–4 humans, CPU fills to four)
 - Everyone completes their 60 picks, builds a legal 40-card deck and locks it.
 - The tournament starts automatically when all humans have locked. All decks are frozen, including AI decks generated from the CPU drafters' own cards.
-- Six pairings are played one by one: seats 1–2, 3–4, 1–3, 2–4, 1–4, 2–3. Each seat has three opponents. For four humans, all six matches are online; rooms with fewer humans mix real online PvP, human-versus-CPU and engine-simulated CPU-versus-CPU matches.
+- Six round-robin pairings are scheduled: seats 1–2, 3–4, 1–3, 2–4, 1–4, 2–3. **Disjoint matches run simultaneously:** when seats 1–2 are playing, seats 3–4 can battle at the same time. Everyone plays three opponents. Rooms with fewer humans mix online PvP, human-vs-CPU, and real-engine CPU-vs-CPU simulation.
 - The active human seats receive private match tokens and an on-screen Play button. Other players see who is playing and wait for their turn. A Return to Cube Championship shortcut appears in online and CPU duel pages.
 - Each online fixture uses the same authenticated WotC Pokémon engine as existing Classic multiplayer, configured for a 40-card deck and four Prize cards. Only its two assigned humans can play, and the server never accepts match results from the client.
 - Once a duel completes, polling the Cube room advances the tournament and updates standings. Human draws trigger an automatic rematch rather than arbitrarily awarding a winner.
 - Standings use 3 points per victory; tied records use the completed head-to-head result, then seat order, as the documented fallback.
-- Cube rooms and match services are in memory and can expire or be lost on server restart. Four-player tournaments deliberately play **one fixture at a time**, not several simultaneous duels.
+- Cube rooms and match services are still in memory and can expire or be lost on server restart. At most two non-overlapping matches play simultaneously in a four-seat Cube.
 - End-to-end browser and service tests: `node test_cube_round_robin.js` and `node tests/cube_round_robin_browser_smoke.js`.
+
+## Multiplayer playtest UX
+- **Provisional pack choice:** clicking a draft card immediately shows Saving feedback, then highlights it. Until all other seats select their cards and the pack passes, the owner can click a different card to change the pending pick. The currently selected card remains in the visible pack, but other players' packs and selections stay private. The server validates replacements.
+- **Card previews:** hover over (or keyboard-focus) any card in the current pack or the drafted-card list to display a large version of its art, name, type, HP, and attacks.
+- **Concurrent duels:** each free pair can start a server-authoritative duel without waiting for unrelated matches; result polls independently conclude finished matches and start the next available opponent pairing. No seat receives two simultaneously active assignments.
+- **Watch other people:** a tournament seat can spectate an in-progress human-vs-human game for which they are not a participant. The Cube server issues a read-only spectator token; no deck or opponent token is exposed. CPU duels are not currently watchable.
+- **Tournament chat:** authenticated room-wide text chat, maximum 280 characters per message, rate-limited at 750 ms and capped at 100 messages, displayed using safe text rendering.
+- **Automatic return:** when a player's or spectator's Cube duel finishes, the result remains on-screen for four seconds before navigating back to the tournament room. A manual Return shortcut remains available.
+- Regression tests: `test_cube_room.js`, `test_cube_room_http.js`, `test_cube_round_robin.js`, `tests/cube_room_browser_smoke.js`, `tests/cube_round_robin_browser_smoke.js`, `tests/cube_parallel_browser_smoke.js`.
