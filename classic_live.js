@@ -19,7 +19,7 @@
  const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
  let modalDecisionId=null,lastFieldDecisionId=null;
  let token=null,current=null,selectedHand=null,targetMode=null,busy=false,decisionSelection=new Set();
- let handOpen=false,powersOpen=false,logOpen=false,lastCoinSeq=null,coinQueue=[],coinTimer=null,lastKoMessage="";
+ let handOpen=false,restoreHandAfterTarget=false,powersOpen=false,logOpen=false,lastCoinSeq=null,coinQueue=[],coinTimer=null,lastKoMessage="";
  const command=(type,payload={})=>({type,payload});
  async function api(path,opts={}){
   const headers={'Content-Type':'application/json',...(token?{'X-Duel-Token':token}:{})};
@@ -42,6 +42,7 @@
  async function send(action){if(!current||busy)return;busy=true;clearError();try{
   const result=await api('action',{method:'POST',body:JSON.stringify({revision:current.revision,command:action})});
   const beforePrizes=current?.view?.players?.map(p=>p.prizeCount);preview.hide();current=result;
+  if(restoreHandAfterTarget){restoreHandAfterTarget=false;setHandOpen(true);}
   selectedHand=null;targetMode=null;decisionSelection.clear();render();
   // Let a final knockout reaction appear before returning to the RPG map.
   const prizes=current.view.players;
@@ -51,7 +52,7 @@
  async function start(){if(busy)return;busy=true;$('startupError').textContent='';try{
   const response=await api('create',{method:'POST',body:JSON.stringify({deck:$('deck').value,opponent:$('opponent').value,...($('deck').value==='custom'?{customDeck:JSON.parse(localStorage.getItem('neoCampusCustomGymDeck')||'null')}: {})})});
   feedback.reset();opponentActivity.clear();combat.reset();reactions?.reset();token=response.token;sessionStorage.setItem(rpgKey,token);current=response;
-  selectedHand=null;targetMode=null;decisionSelection.clear();handOpen=false;powersOpen=false;logOpen=false;lastCoinSeq=null;lastKoMessage="";render();
+  selectedHand=null;targetMode=null;decisionSelection.clear();handOpen=false;restoreHandAfterTarget=false;powersOpen=false;logOpen=false;lastCoinSeq=null;lastKoMessage="";render();
  }catch(e){$('startupError').textContent=e.message;}finally{busy=false;}}
 
  function setHandOpen(open){handOpen=!!open;$('handTray').classList.toggle('hidden',!handOpen);$('handPanel').classList.toggle('tray-open',handOpen);$('handToggle').setAttribute('aria-expanded',String(handOpen));$('handToggle').setAttribute('aria-label',handOpen?'Close hand':'Open hand');if(handOpen)setPowersOpen(false);}
@@ -135,8 +136,8 @@
   $('fieldChoiceBar').classList.add('hidden');modalDecisionId=null;lastFieldDecisionId=null;
  }
  function newDuel(){clearChoiceUi();opponentActivity.clear();combat.reset();reactions?.reset();feedback.reset();preview.hide();token=null;current=null;selectedHand=null;targetMode=null;handOpen=false;powersOpen=false;logOpen=false;document.body.classList.remove('duel-active','cpu-match');sessionStorage.removeItem(rpgKey);render();}
- function setTarget(type,payload,title,benchOnly=false){preview.hide();targetMode={type,payload,title,benchOnly};render();}
- function cancelTarget(){targetMode=null;selectedHand=null;preview.hide();render();}
+ function setTarget(type,payload,title,benchOnly=false){preview.hide();if(handOpen){restoreHandAfterTarget=true;setHandOpen(false);}targetMode={type,payload,title,benchOnly};render();}
+ function cancelTarget(){targetMode=null;selectedHand=null;preview.hide();if(restoreHandAfterTarget){restoreHandAfterTarget=false;setHandOpen(true);}render();}
  function pokemonNode(u,side,slot){
   const b=document.createElement('button');b.className='poke'+(u.damage>=Number(card(u.id).hp)?' broken':'');
   const c=card(u.id),src=picture(u.id);
