@@ -435,14 +435,14 @@ test('a genuine duel may unlock pre-duel art but still opens the authoritative i
  assert.equal(r.elements.duel.hidden,false);
  assert.match(r.elements.battle.src,/classic_live\.html/);
 });
-test('eligible riverside hangout unlocks special summer CG, then saves it after day rollover',()=>{
+test('ordinary riverside hangout does not grant situation-exclusive summer CG',()=>{
  const r=launch({day:20,slot:1,location:'park',relationships:{marina:{affection:7,trust:3}},bonds:{marina:{affection:7,trust:3,duels:0}}});
  const person=r.elements.people.children.find(x=>x.children[1]?.children[0]?.textContent==='Marina Aoki');
  assert.ok(person);person.onclick();
  r.elements.choices.children.find(x=>x.textContent.includes('Spend time together')).onclick();
- assert.ok(r.state().cgUnlocked.marina_beach_towel);
+ assert.equal(r.state().cgUnlocked.marina_beach_towel,undefined);
  const saved=launch(r.state()).state();
- assert.ok(saved.cgUnlocked.marina_beach_towel);
+ assert.equal(saved.cgUnlocked.marina_beach_towel,undefined);
  assert.ok(!saved.pendingDuel);
 });
 
