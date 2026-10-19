@@ -273,7 +273,7 @@
  function eligible(s,e,people=[]){
   if(!e||!Number.isInteger(s.day)||s.day<e.start||s.day>e.end||s.day>90
    ||s.slot!==e.slot||s.location!==e.place||s.situationDone?.[e.id]
-   ||s.hungOut?.[s.day+':'+e.npc]||!people.includes(e.npc))return false;
+   ||s.hungOut?.[s.day+':'+e.npc]||!people.includes(e.npc)||(s.focus||0)<e.focusCost)return false;
   const bond=s.relationships?.[e.npc]||s.bonds?.[e.npc]||{};
   if((bond.affection||0)<e.minAffection||(bond.trust||0)<e.minTrust)return false;
   return chance(e,s.day,s.slot);
