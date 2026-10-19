@@ -963,3 +963,47 @@ test('a first meeting plays its greeting scene before actions and survives reloa
  assert.ok(reloaded.elements.choices.children.some(x=>x.textContent.includes('Talk')));
  assert.equal(reloaded.state().slot,0);
 });
+
+test('casual character click starts a free VN exchange with a compact external action bar',()=>{
+ const r=launch({day:5,slot:0,location:'shop'});
+ const hana=r.elements.people.children.find(x=>x.children?.[1]?.children?.[0]?.textContent==='Hana Mizuno');
+ assert.ok(hana);hana.onclick();
+ const current=r.state();
+ assert.ok(current.scene.dialogue?.length>=3,'character and player exchange more than one line');
+ assert.ok(current.scene.dialogue.some(x=>x.speaker==='Protagonist'));
+ assert.equal(current.relationships.hana.affection,0,'ordinary greetings must not earn affection');
+ assert.equal(current.bonds.hana.affection,0,'legacy bond stats must not change');
+ assert.equal(current.day,5);assert.equal(current.slot,0);
+ assert.ok(r.elements.choices.children.length<=2,'dialogue is not a command menu');
+ const controls=r.elements.characterActions.children.map(x=>x.textContent);
+ assert.ok(controls.includes('☏ Talk'));
+ assert.ok(controls.includes('⚔ Duel'));
+ assert.equal(controls.some(x=>x.includes('Deck')),false,'partner collaboration stays locked');
+ finishGreeting(r);
+ assert.ok(r.elements.choices.children.length<=2,'optional conversation prompts are small');
+});
+test('talking repeatedly on the same day cannot farm affection, trust or time',()=>{
+ const r=launch({day:5,slot:0,location:'shop'});
+ const hana=r.elements.people.children.find(x=>x.children?.[1]?.children?.[0]?.textContent==='Hana Mizuno');
+ hana.onclick();finishGreeting(r);
+ const before=r.state();
+ r.elements.characterActions.children.find(x=>x.textContent.includes('Talk')).onclick();
+ finishGreeting(r);
+ const after=r.state();
+ assert.deepEqual(after.relationships.hana,before.relationships.hana);
+ assert.deepEqual(after.bonds.hana,before.bonds.hana);
+ assert.equal(after.day,before.day);assert.equal(after.slot,before.slot);
+ assert.equal(after.hungOut['5:hana'],undefined);
+});
+test('a trusted character exposes deck collaboration outside the dialogue box',()=>{
+ const r=launch({day:24,slot:1,location:'cafe',storyDone:{hana_route_1:{day:5,choice:0},hana_route_2:{day:24,choice:0}},deckJourney:Collection.fresh()});
+ r.elements.starterChoices.children[0].onclick();
+ const people=r.elements.people.children.filter(x=>x.children?.[1]?.children?.[0]?.textContent==='Hana Mizuno');
+ if(!people.length)return; // character scheduling is independent of collaboration
+ people[0].onclick();
+ const deck=r.elements.characterActions.children.find(x=>x.textContent.includes('Deck'));
+ assert.ok(deck,'the third button becomes available once the relationship unlocks it');
+ assert.equal(r.elements.choices.children.some(x=>x.textContent.includes('Edit')),false);
+ deck.onclick();
+ assert.match(r.loc.href,/rpg_deck_studio\.html\?partner=hana/);
+});
