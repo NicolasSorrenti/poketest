@@ -98,6 +98,8 @@ test('browser and server register the pack bundle before any story module',()=>{
  assert.ok(html.indexOf('/rpg_character_packs.generated.js')<html.indexOf('/rpg_sol_character.js'));
  assert.ok(html.indexOf('/rpg_sol_character.js')<html.indexOf('/rpg_narrative_pack.js'));
  assert.match(server,/pathname==='\/rpg_character_packs\.generated\.js'/);
+ assert.match(server,/pathname==='\/rpg_mandatory_events\.js'/);
+ assert.match(server,/pathname==='\/rpg_season_events\.js'/);
  assert.match(narrative,/for\(const entry of REGISTRY\.packs\)/);
  assert.match(app,/cast\[id\]\.portrait/);
 });
