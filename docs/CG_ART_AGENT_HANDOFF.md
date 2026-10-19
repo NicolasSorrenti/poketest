@@ -98,7 +98,7 @@ Create a cinematic original anime visual-novel CG in Neo Harbor, an adult slice-
 
 ### 04. hana_apron_mixup — An Apron Too Many
 
-**Character:** hana; **Type:** special; **Gameplay unlock:** hangout, shop, affection ≥ 5, day ≥ 9, period afternoon. **Fan-service intensity:** 2/3.
+**Character:** hana; **Type:** special; **Gameplay unlock:** situation-specific event completed, shop, affection ≥ 5, day ≥ 9, period afternoon. **Fan-service intensity:** 2/3.
 
 **IMAGE GENERATION PROMPT:**
 
@@ -194,7 +194,7 @@ Create a cinematic original anime visual-novel CG in Neo Harbor, an adult slice-
 
 ### 08. reina_rain_catch — Not So Impeccable
 
-**Character:** reina; **Type:** special; **Gameplay unlock:** hangout, center, affection ≥ 5, day ≥ 21, period evening. **Fan-service intensity:** 2/3.
+**Character:** reina; **Type:** special; **Gameplay unlock:** situation-specific event completed, center, affection ≥ 5, day ≥ 21, period evening. **Fan-service intensity:** 2/3.
 
 **IMAGE GENERATION PROMPT:**
 
@@ -290,7 +290,7 @@ Create a cinematic original anime visual-novel CG in Neo Harbor, an adult slice-
 
 ### 12. shiori_bookstack_wobble — The Wobbling Book Stack
 
-**Character:** shiori; **Type:** special; **Gameplay unlock:** hangout, library, affection ≥ 5, day ≥ 18, period afternoon. **Fan-service intensity:** 2/3.
+**Character:** shiori; **Type:** special; **Gameplay unlock:** situation-specific event completed, library, affection ≥ 5, day ≥ 18, period afternoon. **Fan-service intensity:** 2/3.
 
 **IMAGE GENERATION PROMPT:**
 
@@ -386,7 +386,7 @@ Create a cinematic original anime visual-novel CG in Neo Harbor, an adult slice-
 
 ### 16. yuna_card_scatter — Cardstorm Catastrophe
 
-**Character:** yuna; **Type:** special; **Gameplay unlock:** hangout, arcade, affection ≥ 5, day ≥ 13, period evening. **Fan-service intensity:** 2/3.
+**Character:** yuna; **Type:** special; **Gameplay unlock:** situation-specific event completed, arcade, affection ≥ 5, day ≥ 13, period evening. **Fan-service intensity:** 2/3.
 
 **IMAGE GENERATION PROMPT:**
 
@@ -482,7 +482,7 @@ Create a cinematic original anime visual-novel CG in Neo Harbor, an adult slice-
 
 ### 20. akari_notes_whirl — Out of Control Variables
 
-**Character:** akari; **Type:** special; **Gameplay unlock:** hangout, library, affection ≥ 5, day ≥ 15, period afternoon. **Fan-service intensity:** 2/3.
+**Character:** akari; **Type:** special; **Gameplay unlock:** situation-specific event completed, library, affection ≥ 5, day ≥ 15, period afternoon. **Fan-service intensity:** 2/3.
 
 **IMAGE GENERATION PROMPT:**
 
@@ -578,7 +578,7 @@ Create a cinematic original anime visual-novel CG in Neo Harbor, an adult slice-
 
 ### 24. camila_windy_receipts — The Wind's Counteroffer
 
-**Character:** camila; **Type:** special; **Gameplay unlock:** hangout, cafe, affection ≥ 5, day ≥ 14, period afternoon. **Fan-service intensity:** 2/3.
+**Character:** camila; **Type:** special; **Gameplay unlock:** situation-specific event completed, cafe, affection ≥ 5, day ≥ 14, period afternoon. **Fan-service intensity:** 2/3.
 
 **IMAGE GENERATION PROMPT:**
 
@@ -674,7 +674,7 @@ Create a cinematic original anime visual-novel CG in Neo Harbor, an adult slice-
 
 ### 28. marina_beach_towel — The Stubborn Beach Towel
 
-**Character:** marina; **Type:** special; **Gameplay unlock:** hangout, park, affection ≥ 5, day ≥ 17, period afternoon. **Fan-service intensity:** 2/3.
+**Character:** marina; **Type:** special; **Gameplay unlock:** situation-specific event completed, park, affection ≥ 5, day ≥ 17, period afternoon. **Fan-service intensity:** 2/3.
 
 **IMAGE GENERATION PROMPT:**
 
@@ -770,7 +770,7 @@ Create a cinematic original anime visual-novel CG in Neo Harbor, an adult slice-
 
 ### 32. kaede_jacket_prank — The Jacket Trap
 
-**Character:** kaede; **Type:** special; **Gameplay unlock:** hangout, arcade, affection ≥ 5, day ≥ 49, period evening. **Fan-service intensity:** 2/3.
+**Character:** kaede; **Type:** special; **Gameplay unlock:** situation-specific event completed, arcade, affection ≥ 5, day ≥ 49, period evening. **Fan-service intensity:** 2/3.
 
 **IMAGE GENERATION PROMPT:**
 
