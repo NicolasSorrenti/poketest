@@ -93,6 +93,7 @@
   use_power:{icon:'✹',kind:'power',verb:'used a Pokémon Power'},
   use_stadium:{icon:'⌂',kind:'trainer',verb:'used a Stadium'},
   retreat:{icon:'⇄',kind:'switch',verb:'retreated'},
+  undo:{icon:'↶',kind:'choice',verb:'undid their last move'},
   choose:{icon:'◈',kind:'choice',verb:'made a choice'},
   end_turn:{icon:'⏭',kind:'turn',verb:'ended their turn'},
   concede:{icon:'★',kind:'turn',verb:'conceded'},
@@ -107,6 +108,7 @@
   let text=opponentName+' '+spec.verb;
   if(event.type==='attack')text=opponentName+' used '+(label||'an attack')+(name?' with '+name:'');
   else if(event.type==='use_power')text=opponentName+' used '+(label||'a Pokémon Power')+(name?' ('+name+')':'');
+  else if(event.type==='undo')text=opponentName+' undid '+(label||'their last move');
   else if(event.type==='retreat')text=opponentName+' retreated'+(name?' '+name:'');
   else if(event.type==='use_stadium')text=opponentName+' used '+(name||'a Stadium');
   else if(name&&['play_trainer','attach_energy','evolve','bench'].includes(event.type))text+=' '+name;
