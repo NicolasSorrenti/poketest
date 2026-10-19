@@ -50,9 +50,16 @@ function fourHuman(){
    const after=srv.pick(code,players[i].token,{id:card.id,round:before.round,pick:before.pick});
    if(i===0&&turns===0){
     assert.equal(after.waiting,true);
-    assert.deepEqual(after.pack,[],'A seat must not see the next pack before others pick');
+    assert.equal(after.pack.length,15,'Reserved choice remains visible until pack passes');
+    assert.equal(after.selectedId,card.id);
     assert.equal(srv.state(code,players[1].token).pack.length,15);
-    assert.throws(()=>srv.pick(code,players[0].token,{id:card.id,round:0,pick:0}),/already picked/);
+    const alternative=after.pack.find(x=>x.id!==card.id);
+    if(alternative){
+     const changed=srv.pick(code,players[0].token,{id:alternative.id,round:0,pick:0});
+     assert.equal(changed.selectedId,alternative.id,'Seat may change its pending selection');
+     assert.equal(changed.drafted.length,1);
+     assert.equal(changed.pack.length,15);
+    }
    }
   }
   turns++;

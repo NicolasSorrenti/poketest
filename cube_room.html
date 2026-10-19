@@ -18,6 +18,25 @@ input,select{background:#0b162e;border:1px solid #5c77a5;border-radius:9px;color
 .pack{display:grid;grid-template-columns:repeat(auto-fill,minmax(145px,1fr));gap:12px}
 .card{padding:10px;background:#223251;border:1px solid #47638d;border-radius:12px;text-align:left;min-height:105px}
 .card img{width:100%;aspect-ratio:2.5/3.5;object-fit:contain}.card-art-fallback{width:100%;aspect-ratio:2.5/3.5;display:grid;place-items:center;padding:12px;text-align:center;border-radius:8px;background:linear-gradient(145deg,#364c76,#171e3b);font-size:13px;color:#c5d2ef}.card strong{display:block}.card small{color:#b5c5e3}
+.card{position:relative;transition:border-color .13s,box-shadow .13s,transform .13s}
+.card.picking{border-color:#ffd56f;box-shadow:0 0 0 3px #ffd56f66;transform:translateY(-3px)}
+.card.selected{border-color:#50e3a4;box-shadow:0 0 0 3px #50e3a466;background:#234a52}
+.card.selected::after{content:'✓ Selected · Click another to change';position:absolute;inset:auto 6px 6px;background:#0d473d;color:#dcfff3;border-radius:8px;padding:7px 4px;font-size:11px;font-weight:800;text-align:center}
+.card.selected{padding-bottom:48px}
+.card:focus-visible{outline:3px solid #ffd56f;outline-offset:3px}
+.picks div{cursor:default}.picks .pick-card{display:block;width:100%;text-align:left;background:transparent;border:0;border-bottom:1px solid #374765;border-radius:0;padding:7px;color:#d5e6ff;cursor:help}
+.picks .pick-card:hover,.picks .pick-card:focus-visible{color:#ffd56f;background:#233d65}
+#draftStatus.pick-waiting{color:#6ceac0;font-weight:800}
+.cube-hover-preview{position:fixed;z-index:999;right:18px;top:50%;transform:translateY(-50%);width:min(260px,45vw);padding:12px;background:#152a50;border:2px solid #89afe3;border-radius:14px;box-shadow:0 12px 45px #000c;pointer-events:none}
+.cube-hover-preview img{width:100%;max-height:62vh;object-fit:contain}
+.cube-hover-preview strong{display:block;margin:7px 0 3px}.cube-hover-preview p{font-size:12px;margin:3px 0}
+.cube-chat{margin-top:22px;background:#12213c;border:1px solid #405d88;border-radius:13px;padding:16px}
+.cube-chat h3{margin:0 0 6px}.cube-chat-messages{height:190px;overflow-y:auto;background:#0c1830;border-radius:9px;padding:10px;display:flex;flex-direction:column;gap:7px}
+.cube-chat-entry{font-size:13px;overflow-wrap:anywhere}.cube-chat-entry b{color:#ffe09a;margin-right:6px}
+.cube-chat form{display:flex;gap:8px;margin-top:10px}.cube-chat form input{flex:1}
+.rr-match .watch-btn{margin-top:10px;padding:7px 10px;background:#2b5482;color:#fff;border-radius:8px;font-weight:750}
+@media(max-width:700px){.cube-hover-preview{right:8px;top:12px;transform:none;width:165px;max-height:60vh}.cube-chat form{flex-wrap:wrap}.cube-chat form input{width:100%;flex-basis:100%}}
+
 .roster{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
 .seat{background:#243454;padding:12px;border-radius:11px}.seat strong,.seat small{display:block}.seat small{color:#b4c5e3;margin-top:6px}
 .picks{max-height:420px;overflow:auto;display:grid;gap:4px}.picks div{border-bottom:1px solid #374765;padding:5px;font-size:13px}
@@ -52,7 +71,8 @@ input,select{background:#0b162e;border:1px solid #5c77a5;border-radius:9px;color
 </div>
 <section id="draftArea" class="panel hidden">
 <h2 id="draftHeading">Your pack</h2><p id="draftStatus" aria-live="polite"></p>
-<div class="columns"><div id="pack" class="pack"></div><aside><h3>Your drafted cards <span id="pickCount">0</span>/60</h3><div id="picks" class="picks"></div></aside></div>
+<div class="columns"><div id="pack" class="pack"></div><aside><h3>Your drafted cards <span id="pickCount">0</span>/60</h3><p class="muted">Hover or focus a card to inspect it.</p><div id="picks" class="picks"></div></aside></div>
+<div id="cubeHoverPreview" class="cube-hover-preview hidden" aria-hidden="true"></div>
 </section>
 <section id="deckArea" class="hidden" aria-label="Multiplayer Cube deck builder">
 <div class="cube-build-context" aria-label="Cube stage"><strong>NEO CAMPUS TCG</strong><span>MULTIPLAYER CUBE · DECK BUILDING</span><span id="cubeRoomBuildContext">60 cards drafted · Build your 40-card deck</span></div>
@@ -62,13 +82,18 @@ input,select{background:#0b162e;border:1px solid #5c77a5;border-radius:9px;color
 </section>
 <section id="roundRobinArea" class="panel hidden" aria-label="Cube round robin championship">
 <h2>Round-robin Championship</h2>
-<p>Every player faces all three opponents, one match at a time. Each player keeps the same drafted deck.</p>
+<p>Each player faces every opponent once. Two matches can run simultaneously when different players are available. Your drafted deck stays locked.</p>
 <div class="rr-progress" id="rrProgress" aria-live="polite"></div>
 <div id="rrActive" class="rr-active"></div>
 <div id="rrFixtures" class="rr-fixtures"></div>
 <h3>Standings</h3>
 <div id="rrStandings" class="rr-standings"></div>
 <p id="rrFooter" class="muted">Results are recorded automatically when each duel ends.</p>
+<section id="cubeChatPanel" class="cube-chat" aria-label="Cube tournament chat">
+<h3>Cube room chat</h3><p class="muted">Chat with your fellow drafters between matches.</p>
+<div id="cubeChatMessages" class="cube-chat-messages" role="log" aria-live="polite"></div>
+<form id="cubeChatForm"><input id="cubeChatInput" maxlength="280" placeholder="Send a message to the tournament…" autocomplete="off" aria-label="Message to Cube players"><button class="primary" type="submit">Send</button></form>
+</section>
 </section>
 </section>
 <link rel="stylesheet" href="/cube_builder.css">

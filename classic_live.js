@@ -3,6 +3,25 @@
 // Every button sends a typed command to the same server-side Classic reducer.
 (()=>{
  const $=id=>document.getElementById(id);
+ const cubeRoomCode=new URLSearchParams(location.search).get('cubeRoom');
+ let cubeReturnTimer=null;
+ function returnToCubeWhenDone(){
+  if(!cubeRoomCode||!/^([A-Z2-9]){6}$/.test(cubeRoomCode)||!current?.view?.over)return;
+  if(cubeReturnTimer)return;
+  // Let the finishing animation/results remain visible briefly, then take
+  // everyone (including spectators) back to the tournament automatically.
+  const note=document.createElement('div');note.id='cubeReturnNotice';
+  note.textContent='Match complete · Returning to Cube tournament in 4 seconds…';
+  Object.assign(note.style,{position:'fixed',left:'50%',bottom:'22px',
+   transform:'translateX(-50%)',background:'#162744',color:'#ffe39b',
+   border:'2px solid #f1ce77',borderRadius:'12px',zIndex:10000,
+   padding:'12px 19px',fontWeight:'800',textAlign:'center'});
+  document.body.append(note);
+  cubeReturnTimer=setTimeout(()=>{
+   location.assign('/cube_room.html?room='+encodeURIComponent(cubeRoomCode));
+  },4000);
+ }
+
  const rpgParams=new URLSearchParams(location.search),rpgMode=rpgParams.get('rpg')==='1',rpgDuelId=rpgParams.get('duelId');
  const rpgKey=rpgMode&&rpgDuelId?window.NeoRpgDuelBridge.sessionKey(rpgDuelId):'neoClassicLiveToken';
  const rpgNpc=rpgMode?rpgParams.get('npc'):null;
@@ -233,7 +252,7 @@
    acts.append(btn('Confirm opening setup',()=>send(command('setup_confirm')),'primary',!v.players[0].active));
   }else{title.textContent='YOUR NEXT MOVE';description.textContent='Click a Trainer or Basic Pokémon to play it. Select Energy or Evolution, then click a highlighted Pokémon. Use the attack buttons beside your Active Pokémon.';}
  }
- function render(){const has=Boolean(current);document.body.classList.toggle('duel-active',has);document.body.classList.toggle('cpu-match',has);$('lobby').classList.toggle('hidden',has);$('duel').classList.toggle('hidden',!has);if(!has)return;
+ function render(){returnToCubeWhenDone();const has=Boolean(current);document.body.classList.toggle('duel-active',has);document.body.classList.toggle('cpu-match',has);$('lobby').classList.toggle('hidden',has);$('duel').classList.toggle('hidden',!has);if(!has)return;
   feedback.update(current,0);opponentActivity.update(current,0,'Classic CPU');
   const v=current.view,you=v.players[0],cpu=v.players[1],yourTurn=v.turn===0&&!v.over;
   document.querySelector('.stage').classList.toggle('your-turn',yourTurn&&v.phase==='game'&&!v.pendingDecision);

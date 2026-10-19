@@ -3,6 +3,25 @@
 // Every button sends a typed command to the same server-side Classic reducer.
 (()=>{
  const $=id=>document.getElementById(id);
+ const cubeRoomCode=new URLSearchParams(location.search).get('cubeRoom');
+ let cubeReturnTimer=null;
+ function returnToCubeWhenDone(){
+  if(!cubeRoomCode||!/^([A-Z2-9]){6}$/.test(cubeRoomCode)||!current?.view?.over)return;
+  if(cubeReturnTimer)return;
+  // Let the finishing animation/results remain visible briefly, then take
+  // everyone (including spectators) back to the tournament automatically.
+  const note=document.createElement('div');note.id='cubeReturnNotice';
+  note.textContent='Match complete · Returning to Cube tournament in 4 seconds…';
+  Object.assign(note.style,{position:'fixed',left:'50%',bottom:'22px',
+   transform:'translateX(-50%)',background:'#162744',color:'#ffe39b',
+   border:'2px solid #f1ce77',borderRadius:'12px',zIndex:10000,
+   padding:'12px 19px',fontWeight:'800',textAlign:'center'});
+  document.body.append(note);
+  cubeReturnTimer=setTimeout(()=>{
+   location.assign('/cube_room.html?room='+encodeURIComponent(cubeRoomCode));
+  },4000);
+ }
+
  const cards=new Map();
  const deckNames=new Map();
  let lobbyDeckDraft=null;
@@ -440,7 +459,7 @@
   $('history').textContent='';(v.messages||[]).forEach(x=>{const li=document.createElement('li');li.textContent=x;$('history').append(li);});
   renderDecisions();combat.update(current);renderMatchFeed();
  }
- function render(){try{performRender();}catch(error){
+ function render(){try{performRender();returnToCubeWhenDone();}catch(error){
   console.error('Neo Campus online UI render failed',error);
   // Preserve the last intact card elements; show a recoverable error rather than going blank.
   fail(new Error('The battlefield could not be redrawn: '+(error.message||String(error))+' — refresh to recover.'));

@@ -35,6 +35,14 @@ const {server}=require('./server');
   assert.equal(b.status,200);
   const guest=b.body;
   assert.notEqual(host.token,guest.token);
+  const chat=await req('chat',{text:'Hello, drafters!'},{code:room,token:host.token});
+  assert.equal(chat.status,200);
+  assert.equal(chat.body.chatMessages[0].text,'Hello, drafters!');
+  assert.equal((await req('state',undefined,{code:room,token:guest.token})).body.chatMessages[0].name,'Player A');
+  assert.equal((await req('chat',{text:'Second too soon'},{code:room,token:host.token})).status,400);
+  assert.equal((await req('chat',{text:'Nope'},{code:room,token:'x'.repeat(43)})).status,401);
+  assert.equal((await req('watch',{matchId:1},{code:room,token:guest.token})).status,400,
+   'Spectating is only available after a match starts');
   assert.equal((await req('state',undefined,{code:room,token:'f'.repeat(43)})).status,401);
   assert.equal((await req('start',{}, {code:room,token:guest.token})).status,400);
   assert.equal((await req('ready',{ready:true},{code:room,token:host.token})).status,200);
@@ -52,9 +60,17 @@ const {server}=require('./server');
   const result=await req('pick',{id:first,round:0,pick:0},{code:room,token:host.token});
   assert.equal(result.status,200,'Host pick failed: '+result.body.error);
   assert.equal(result.body.waiting,true);
-  assert.equal(result.body.pack.length,0);
+  assert.equal(result.body.pack.length,15,'Provisional pack stays visible');
+  assert.equal(result.body.selectedId,first);
   const repeated=await req('pick',{id:first,round:0,pick:0},{code:room,token:host.token});
-  assert.equal(repeated.status,400,'Duplicate pick must be rejected');
+  assert.equal(repeated.status,200,'Selecting the same card is idempotent');
+  const otherCard=result.body.pack.find(c=>c.id!==first);
+  if(otherCard){
+   const changed=await req('pick',{id:otherCard.id,round:0,pick:0},{code:room,token:host.token});
+   assert.equal(changed.status,200);
+   assert.equal(changed.body.selectedId,otherCard.id);
+   assert.equal(changed.body.drafted.length,1);
+  }
   const fromGuest=await req('state',undefined,{code:room,token:guest.token});
   assert.equal(fromGuest.body.pack.length,15,'Guest still has private pack');
   const guestPick=await req('pick',{id:fromGuest.body.pack[0].id,round:0,pick:0},{code:room,token:guest.token});

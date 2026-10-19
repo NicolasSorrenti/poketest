@@ -100,6 +100,12 @@ async function cubeRoomAPI(req,res,pathName){
    return sendJSON(res,401,{error:'Cube room credentials required'});
   if(pathName==='/api/cube-room/state'&&req.method==='GET')
    return sendJSON(res,200,cubeRooms.state(code,token));
+  if(req.method==='POST'&&pathName==='/api/cube-room/watch'){
+   return sendJSON(res,200,cubeRooms.watch(code,token,await parseJSON(req)));
+  }
+  if(req.method==='POST'&&pathName==='/api/cube-room/chat'){
+   return sendJSON(res,200,cubeRooms.chatMessage(code,token,await parseJSON(req)));
+  }
   if(req.method==='POST'&&['ready','start','pick','submit'].some(action=>pathName==='/api/cube-room/'+action)){
    const body=await parseJSON(req);
    const result=pathName.endsWith('/ready')?cubeRooms.ready(code,token,body.ready):
