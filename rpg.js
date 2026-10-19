@@ -540,6 +540,7 @@ function act(action){
 }
 
 const cardNames=new Map(),cardImages=new Map();
+let packArtSerial=0;
 
 function showPackReveal(){
  const pack=state.deckJourney?.lastPack,modal=$('packDialog');
@@ -549,10 +550,11 @@ function showPackReveal(){
  const setName=COLLECT.SETS[pack.set]?.name||'Base Set';
  $('packTitle').textContent=setName+' · 10-card booster';
  const portrait=$('packGiver');portrait.replaceChildren();
+ const request=++packArtSerial; // An earlier booster image must never overwrite this giver.
  const caption=$('packGiverName');caption.textContent=giver?cast[giver].name+' gives you a '+setName+' booster':'The Lucky Draw · '+setName+' booster';
  if(giver){
   // Show a known portrait immediately while optional artwork loads.
-  const showPortrait=()=>portrait.replaceChildren(makeAvatar(giver));
+  const showPortrait=()=>{if(request===packArtSerial)portrait.replaceChildren(makeAvatar(giver));};
   showPortrait();
   const base='/rpg-assets/characters/'+encodeURIComponent(giver)+'/';
   const candidates=[
@@ -573,10 +575,11 @@ function showPackReveal(){
   art.className='pack-giver-art';
   let attempt=0;
   const tryNext=()=>{
+   if(request!==packArtSerial)return;
    if(attempt<candidates.length)art.src=candidates[attempt++];
    else showPortrait();
   };
-  art.onload=()=>portrait.replaceChildren(art);
+  art.onload=()=>{if(request===packArtSerial)portrait.replaceChildren(art);};
   art.onerror=tryNext;
   tryNext();
  }
@@ -1189,7 +1192,13 @@ function refreshRpgPanels(){
  }
 }
 // Guest art includes separately exported expressions; original cast keeps its portrait.
-const expressionGuests=new Set(['alma','jun','nereo','teo','elio','sol']);
+const expressionGuests=new Set(['alma','jun','nereo','teo','elio']);
+const solExpressions={neutral:'neutral',surprised:'surprised',vulnerable:'worried',irritated:'worried',determined:'neutral',happy:'smile'};
+function scenePortraitSource(id,expression){
+ if(expressionGuests.has(id))return '/rpg-assets/characters/'+id+'/vn-expressions/'+expression+'.webp';
+ if(id==='sol')return '/rpg-assets/characters/sol/expressions/'+(solExpressions[expression]||'neutral')+'.png';
+ return cast[id].portrait||'/rpg-assets/'+id+'.png';
+}
 function dialogueExpression(line){
  const s=String(line||'').toLowerCase();
  if(/[!?]{2}|\b(wow|what?!|seriously|no way)\b/.test(s))return 'surprised';
@@ -1203,11 +1212,13 @@ function renderRpgCast(ids,locked,shown,portraitId){
  if(typeof document.querySelector!=='function')return;
  const root=$('rpgSceneCast');if(!root)return;
  const speaking=Object.keys(cast).find(id=>shown?.speaker===cast[id].name||shown?.speaker===id);
- const focused=speaking||((shown?.line||locked)?portraitId:null);
- const participants=[...new Set([...ids,focused].filter(id=>!!cast[id]))].slice(0,6);
+ // An NPC must not appear to be speaking during the player's or narrator's lines.
+ const focused=speaking||null;
+ // Keep the actual speaker visible even in crowded locations (six-character cap).
+ const participants=[...new Set([focused,...ids,portraitId].filter(id=>!!cast[id]))].slice(0,6);
  if(state.location==='home'||!participants.length){root.hidden=true;root.replaceChildren();return;}
  root.hidden=false;
- const inConversation=!!(shown?.line||locked)&&!!focused;
+ const inConversation=!!(shown?.line||locked);
  root.classList.toggle('is-conversation',inConversation);
  // Preserve existing DOM nodes between dialogue lines so CSS transitions actually play.
  const existing=new Map([...root.children].map(node=>[node.dataset.npc,node]));
@@ -1230,7 +1241,7 @@ function renderRpgCast(ids,locked,shown,portraitId){
   const image=button.querySelector('img');
   if(image){
    const expression=active?dialogueExpression(shown?.line):'neutral';
-   const path=expressionGuests.has(id)?'/rpg-assets/characters/'+id+'/vn-expressions/'+expression+'.webp':(cast[id].portrait||'/rpg-assets/'+id+'.png');
+   const path=scenePortraitSource(id,expression);
    if(image.getAttribute('src')!==path){
     image.classList.remove('expression-change');
     image.src=path;
