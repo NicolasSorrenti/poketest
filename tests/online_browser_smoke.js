@@ -40,6 +40,22 @@ fs.mkdirSync(artifacts,{recursive:true});
     assert.equal(await page.locator('#'+id).count(),1,'Missing shared duel interaction '+id);
    }
    assert.equal(await page.locator('.arena-layout').count(),1);
+   assert.equal(await page.locator('#handFan').isVisible(),true,'Permanent hand fan must be visible without hover');
+   const handCards=page.locator('#handFan .hand-fan-card');
+   assert.ok(await handCards.count()>0,'Opening hand must have playable fan cards');
+   const listCount=await page.locator('#hand .handcard').count();
+   assert.equal(await handCards.count(),listCount,'Every hand card must be accessible in the fan');
+   const handRect=await page.locator('#handFan').boundingBox();
+   const fieldRect=await page.locator('.stage').boundingBox();
+   assert.ok(handRect&&fieldRect&&handRect.y>=fieldRect.y+fieldRect.height-2,
+    'Always-on fan must reserve space BELOW the battlefield');
+   const basic=handCards.filter({hasText:'Basic Pokémon'}).first();
+   assert.equal(await basic.count(),1,'A Basic Pokémon must be clickable from the fan');
+   const handBefore=await handCards.count();
+   await basic.click();
+   await page.locator('#myActive .poke').waitFor({state:'visible',timeout:25000});
+   assert.equal(await page.locator('#handFan .hand-fan-card').count(),handBefore-1,
+    'Playing a card from fan updates the authoritative hand');
   }
   await host.screenshot({path:path.join(artifacts,'05-online-host-duel.png'),fullPage:true});
   await guest.screenshot({path:path.join(artifacts,'06-online-guest-duel.png'),fullPage:true});
