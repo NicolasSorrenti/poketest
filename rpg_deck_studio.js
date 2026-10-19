@@ -2,6 +2,7 @@
 // RPG adapter for the same visual deck builder used by solo and multiplayer Cube.
 // Collection ownership, saved decks and duel snapshots remain governed by NeoRpgCollection.
 (()=>{
+ if(new URLSearchParams(location.search).has('partner'))return;
  const $=id=>document.getElementById(id);
  const KEY='neoHarborRpgV1',Core=window.NeoRpgCollection,Builder=window.CubeDeckBuilder;
  let state=null,builder=null,notice='',catalog=[];
