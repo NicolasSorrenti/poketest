@@ -3,6 +3,521 @@
 (function(root,factory){const api=factory();if(typeof module==='object'&&module.exports)module.exports=api;if(root)root.NeoRpgCharacterPacks=api;})(typeof window!=='undefined'?window:null,function(){
 const packs=[
  {
+  "id": "elena",
+  "cast": {
+   "name": "Elena Crowe",
+   "age": 26,
+   "deck": "power_reserve",
+   "style": "Power Reserve · calculated Jungle control",
+   "intro": "Good afternoon. I don’t usually speak with people outside of scheduled appointments… but you seem determined. Elena Crowe. How can I help you?",
+   "repeat": "You’re persistent. Most people take the hint after the first polite dismissal. What is it this time?",
+   "talk": [
+    "I prefer structure. The bank runs on it. So do I.",
+    "People often mistake composure for coldness. I simply see no benefit in unnecessary emotion during work hours.",
+    "My makeup is not for attention. It is part of the uniform. Presentation matters when people trust you with their money.",
+    "I play the TCG the same way I handle accounts: carefully, with contingency plans, and without wasted moves.",
+    "Evenings are for review and quiet. I don’t often make exceptions.",
+    "You have a habit of looking at my eyes when I speak. Most clients look at the numbers instead."
+   ],
+   "flirt": "That is a bold tone to take with me. I hope you have considered the consequences.",
+   "duelWin": "A clean victory. You adapted well. I respect that.",
+   "duelLose": "Unexpected. I will review the game state. Expect a stronger performance next time.",
+   "hangouts": [
+    "Elena meets you after closing hours in a quiet café, still in her full office attire. She removes her blazer only after confirming no one from the bank is nearby.",
+    "A rare library evening where she reviews deck lists with the same focus she gives financial reports. Her lipstick never once smudges.",
+    "She agrees to a short walk in the park after work. Her heels click precisely; she never once loses her posture even on uneven paths.",
+    "You catch her at the arcade on a weekend. She is still wearing a crisp blouse and pencil skirt, looking mildly out of place and completely unbothered by it.",
+    "A late conversation at the café turns into her admitting, very quietly, that control is easier than uncertainty. She looks away the moment the words leave her mouth."
+   ],
+   "portrait": "/rpg-assets/characters/elena/portrait.png"
+  },
+  "looks": {
+   "silhouette": "Unambiguously adult 26-year-old with a refined, elegant, and quietly stunning figure. Soft but defined curves, full hips, and a poised posture that makes even simple office clothing look intentional and attractive.",
+   "palette": "Deep charcoal, cream white, soft black, and muted burgundy accents. Makeup in classic rose and neutral tones.",
+   "hair": "Long, straight dark brown hair usually worn in a low elegant twist or loose with a single polished clip. Never a strand out of place during work hours.",
+   "eyes": "Deep, striking hazel-green eyes with a calm, assessing quality. Easy to get lost in; she rarely breaks eye contact first.",
+   "details": "Immaculate makeup with emphasis on full, well-defined lips and subtle but precise eyeliner. Small gold watch, simple stud earrings, and a leather work bag that never looks overstuffed.",
+   "expressions": "Default composed and slightly distant professional smile, rare soft unguarded look when her control slips, focused analytical stare during matches, faint amused curve of the lips when someone surprises her, quiet intensity when she is truly paying attention.",
+   "outfits": [
+    "signature tailored charcoal blazer over a cream silk blouse, fitted pencil skirt, low heels",
+    "black fitted dress with a structured blazer for formal bank days",
+    "weekend variation: the same blouse and skirt without the blazer, still perfectly pressed",
+    "rare casual: soft knit sweater and tailored trousers that still look expensive and controlled",
+    "evening: the office blouse unbuttoned one extra button and the blazer left open, the only visible crack in the armor"
+   ],
+   "renderNotes": "SFW anime/JRPG romantic-comedy style, age 26. Elegant, reserved beauty. Emphasize the refined figure beneath professional clothing, perfect makeup, full lips, and especially the deep, captivating eyes. Clothing should always look expensive and intentional. No casual fanservice posing; her attractiveness comes from composure and quiet intensity. Match Neo Harbor’s clean, polished aesthetic."
+  },
+  "schedule": [
+   [
+    "center",
+    "cafe",
+    "home"
+   ],
+   [
+    "center",
+    "library",
+    "cafe"
+   ],
+   [
+    "center",
+    "shop",
+    "home"
+   ],
+   [
+    "center",
+    "cafe",
+    "library"
+   ],
+   [
+    "center",
+    "park",
+    "cafe"
+   ],
+   [
+    "library",
+    "cafe",
+    "home"
+   ],
+   [
+    "home",
+    "cafe",
+    "library"
+   ]
+  ],
+  "arrivalDay": 10,
+  "events": [
+   {
+    "id": "elena_route_1",
+    "title": "After Closing",
+    "start": 10,
+    "end": 24,
+    "place": "cafe",
+    "slot": 2,
+    "minBond": 0,
+    "prerequisite": null,
+    "participants": [],
+    "npc": "elena",
+    "chapter": 1,
+    "lines": [
+     {
+      "speaker": "elena",
+      "text": "The branch is closed. If this is about an account, it will have to wait until morning."
+     },
+     {
+      "speaker": "Protagonist",
+      "text": "It’s not about an account."
+     },
+     {
+      "speaker": "elena",
+      "text": "Then I am at a loss. Most people only seek me out for professional reasons."
+     },
+     {
+      "speaker": "Protagonist",
+      "text": "I saw you looking at a deck list earlier."
+     },
+     {
+      "speaker": "elena",
+      "text": "...You are observant. That is either useful or inconvenient."
+     },
+     {
+      "speaker": "elena",
+      "text": "Very well. You have five minutes. Use them carefully."
+     }
+    ],
+    "choices": [
+     {
+      "label": "Ask about her preferred strategy",
+      "reply": "Control. Always control. I dislike leaving outcomes to chance.",
+      "kind": "support",
+      "flag": "elena_strategy",
+      "delta": {
+       "affection": 1,
+       "trust": 2,
+       "respect": 2,
+       "attraction": 0
+      }
+     },
+     {
+      "label": "Comment on how composed she stays even off the clock",
+      "reply": "Composure is not a switch I turn off. It is simply how I move through the world.",
+      "kind": "honest",
+      "flag": "elena_composed",
+      "delta": {
+       "affection": 1,
+       "trust": 1,
+       "respect": 2,
+       "attraction": 1
+      }
+     },
+     {
+      "label": "Hold her gaze a moment longer than necessary",
+      "reply": "You have unusual eyes for someone making idle conversation. Do not make a habit of it.",
+      "kind": "flirt",
+      "flag": "elena_gaze",
+      "delta": {
+       "affection": 2,
+       "trust": 0,
+       "respect": 1,
+       "attraction": 2
+      }
+     }
+    ]
+   },
+   {
+    "id": "elena_route_2",
+    "title": "Scheduled Exception",
+    "start": 28,
+    "end": 42,
+    "place": "library",
+    "slot": 1,
+    "minBond": 2,
+    "prerequisite": "elena_route_1",
+    "participants": [],
+    "npc": "elena",
+    "chapter": 1,
+    "lines": [
+     {
+      "speaker": "elena",
+      "text": "I adjusted my evening review to include this. Do not make me regret the exception."
+     },
+     {
+      "speaker": "Protagonist",
+      "text": "You actually cleared time?"
+     },
+     {
+      "speaker": "elena",
+      "text": "I clear time for things I have judged worth the cost. The judgment is still under evaluation."
+     },
+     {
+      "speaker": "Protagonist",
+      "text": "Harsh."
+     },
+     {
+      "speaker": "elena",
+      "text": "Accurate. I prefer accuracy to comfort."
+     },
+     {
+      "speaker": "elena",
+      "text": "You may sit. The light is better on this side of the table."
+     }
+    ],
+    "choices": [
+     {
+      "label": "Discuss a specific control line with her",
+      "reply": "You prepared. I appreciate people who do not waste the time I allocate.",
+      "kind": "support",
+      "flag": "elena_prepared",
+      "delta": {
+       "affection": 2,
+       "trust": 2,
+       "respect": 1,
+       "attraction": 0
+      }
+     },
+     {
+      "label": "Ask what she does when plans fail",
+      "reply": "I revise. Quickly. And I do not announce the revision until it is complete.",
+      "kind": "honest",
+      "flag": "elena_revise",
+      "delta": {
+       "affection": 1,
+       "trust": 2,
+       "respect": 1,
+       "attraction": 1
+      }
+     },
+     {
+      "label": "Tell her the exception feels significant",
+      "reply": "Do not inflate it. And do not look at me like that while saying it.",
+      "kind": "flirt",
+      "flag": "elena_significant",
+      "delta": {
+       "affection": 2,
+       "trust": 1,
+       "respect": 0,
+       "attraction": 2
+      }
+     }
+    ],
+    "openingByFlag": {
+     "elena_strategy": "You asked about strategy. I have continued that evaluation.",
+     "elena_composed": "You commented on my composure. It remains intact. For now.",
+     "elena_gaze": "You held my gaze longer than necessary last time. I have not forgotten."
+    }
+   },
+   {
+    "id": "elena_route_3",
+    "title": "The Crack in the Schedule",
+    "start": 46,
+    "end": 60,
+    "place": "cafe",
+    "slot": 2,
+    "minBond": 4,
+    "prerequisite": "elena_route_2",
+    "participants": [],
+    "npc": "elena",
+    "chapter": 2,
+    "lines": [
+     {
+      "speaker": "elena",
+      "text": "I left the blazer at the office. Do not read anything into it."
+     },
+     {
+      "speaker": "Protagonist",
+      "text": "It looks different."
+     },
+     {
+      "speaker": "elena",
+      "text": "Everything looks different when the structure is removed. That is why I prefer the structure."
+     },
+     {
+      "speaker": "Protagonist",
+      "text": "And yet you’re here without it."
+     },
+     {
+      "speaker": "elena",
+      "text": "A temporary variance. I will correct it tomorrow."
+     },
+     {
+      "speaker": "elena",
+      "text": "You are looking at my mouth. Is there a reason?"
+     }
+    ],
+    "choices": [
+     {
+      "label": "Say you were just listening carefully",
+      "reply": "Then continue. I am still deciding whether this conversation is efficient.",
+      "kind": "support",
+      "flag": "elena_listen",
+      "delta": {
+       "affection": 2,
+       "trust": 2,
+       "respect": 1,
+       "attraction": 0
+      }
+     },
+     {
+      "label": "Admit the softer look suits her",
+      "reply": "Softer is not a word I encourage. But I will allow the observation this once.",
+      "kind": "honest",
+      "flag": "elena_softer",
+      "delta": {
+       "affection": 2,
+       "trust": 1,
+       "respect": 1,
+       "attraction": 2
+      }
+     },
+     {
+      "label": "Hold her eyes and tell her the control is part of the appeal",
+      "reply": "You are playing a dangerous game with someone who calculates risk for a living.",
+      "kind": "flirt",
+      "flag": "elena_risk",
+      "delta": {
+       "affection": 2,
+       "trust": 1,
+       "respect": 0,
+       "attraction": 3
+      }
+     }
+    ],
+    "openingByFlag": {
+     "elena_prepared": "You arrived prepared last time. I adjusted my own preparations accordingly.",
+     "elena_revise": "You asked what I do when plans fail. Today’s plan has already required a minor revision.",
+     "elena_significant": "You called the exception significant. I am still weighing that assessment."
+    }
+   },
+   {
+    "id": "elena_route_4",
+    "title": "Unscheduled",
+    "start": 64,
+    "end": 78,
+    "place": "park",
+    "slot": 1,
+    "minBond": 5,
+    "prerequisite": "elena_route_3",
+    "participants": [],
+    "npc": "elena",
+    "chapter": 3,
+    "lines": [
+     {
+      "speaker": "elena",
+      "text": "This was not on my calendar. I am aware of the irony."
+     },
+     {
+      "speaker": "Protagonist",
+      "text": "You came anyway."
+     },
+     {
+      "speaker": "elena",
+      "text": "Yes. I am still examining why."
+     },
+     {
+      "speaker": "Protagonist",
+      "text": "Maybe you wanted to."
+     },
+     {
+      "speaker": "elena",
+      "text": "Want is an imprecise variable. I prefer clearer metrics."
+     },
+     {
+      "speaker": "elena",
+      "text": "And yet here I am, walking without a destination and allowing the conversation to drift. This is unlike me."
+     }
+    ],
+    "choices": [
+     {
+      "label": "Tell her you like this version of her",
+      "reply": "Then you are accepting a version I do not fully understand yet. That is a risk.",
+      "kind": "support",
+      "flag": "elena_version",
+      "delta": {
+       "affection": 3,
+       "trust": 2,
+       "respect": 1,
+       "attraction": 1
+      }
+     },
+     {
+      "label": "Ask if the loss of control is as frightening as she expected",
+      "reply": "It is quieter than I anticipated. That may be the more dangerous part.",
+      "kind": "honest",
+      "flag": "elena_quiet",
+      "delta": {
+       "affection": 2,
+       "trust": 2,
+       "respect": 1,
+       "attraction": 1
+      }
+     },
+     {
+      "label": "Close the distance slightly and wait",
+      "reply": "You are testing the boundary. I have not moved away. Take that as the data it is.",
+      "kind": "flirt",
+      "flag": "elena_boundary",
+      "delta": {
+       "affection": 2,
+       "trust": 1,
+       "respect": 0,
+       "attraction": 3
+      }
+     }
+    ],
+    "openingByFlag": {
+     "elena_listen": "You listened carefully last time. I am still speaking.",
+     "elena_softer": "You said softer suited me. I have not corrected the record.",
+     "elena_risk": "You called the control part of the appeal. I am still calculating the exposure."
+    }
+   },
+   {
+    "id": "elena_route_5",
+    "title": "Ledger Closed",
+    "start": 80,
+    "end": 90,
+    "place": "cafe",
+    "slot": 2,
+    "minBond": 6,
+    "prerequisite": "elena_route_4",
+    "participants": [],
+    "npc": "elena",
+    "chapter": 4,
+    "lines": [
+     {
+      "speaker": "elena",
+      "text": "I have reviewed the last several weeks. The deviations from my usual pattern are significant."
+     },
+     {
+      "speaker": "Protagonist",
+      "text": "And the conclusion?"
+     },
+     {
+      "speaker": "elena",
+      "text": "That I have allowed one person more access than is strictly efficient. And that I do not wish to revoke it."
+     },
+     {
+      "speaker": "Protagonist",
+      "text": "That’s a big statement coming from you."
+     },
+     {
+      "speaker": "elena",
+      "text": "I do not make small statements when the data is clear."
+     },
+     {
+      "speaker": "elena",
+      "text": "So. Are you prepared to remain a variable I no longer try to eliminate?"
+     }
+    ],
+    "choices": [
+     {
+      "label": "Tell her you’re staying",
+      "reply": "Then the ledger is updated. Do not make me revise it again without cause.",
+      "kind": "support",
+      "flag": "elena_stay",
+      "delta": {
+       "affection": 3,
+       "trust": 2,
+       "respect": 1,
+       "attraction": 1
+      }
+     },
+     {
+      "label": "Kiss her carefully and let the answer be physical",
+      "reply": "...That was not a scheduled action. I will allow it.",
+      "kind": "flirt",
+      "flag": "elena_kiss",
+      "delta": {
+       "affection": 2,
+       "trust": 1,
+       "respect": 0,
+       "attraction": 3
+      }
+     },
+     {
+      "label": "Say you want both the controlled version and the one that slips",
+      "reply": "Both. You continue to request both. Very well. I will attempt to provide them.",
+      "kind": "honest",
+      "flag": "elena_both",
+      "delta": {
+       "affection": 2,
+       "trust": 3,
+       "respect": 1,
+       "attraction": 1
+      }
+     }
+    ],
+    "openingByFlag": {
+     "elena_version": "You said you liked this version. I have continued to allow it.",
+     "elena_quiet": "You asked about the quiet loss of control. It has not become louder.",
+     "elena_boundary": "You tested the boundary. I am still standing on the same side of it."
+    }
+   }
+  ],
+  "art": {
+   "schemaVersion": 1,
+   "characterId": "elena",
+   "portrait": "/rpg-assets/characters/elena/portrait.png",
+   "expressions": {
+    "neutral": "/rpg-assets/characters/elena/expressions/neutral.webp",
+    "composed": "/rpg-assets/characters/elena/expressions/neutral.webp",
+    "focused": "/rpg-assets/characters/elena/expressions/worried.webp",
+    "soft": "/rpg-assets/characters/elena/expressions/soft.webp",
+    "intense": "/rpg-assets/characters/elena/expressions/surprised.webp"
+   },
+   "eventImages": [
+    {
+     "sceneId": "elena_route_1",
+     "path": "/rpg-assets/characters/elena/elena_after_hours.webp",
+     "prompt": "Adult 26 year old Elena Crowe, anime visual novel style, long dark brown hair in a low elegant twist, deep hazel-green eyes, perfect makeup and full lips, wearing a tailored charcoal blazer over cream silk blouse and pencil skirt, standing in a quiet café after work looking composed but slightly tired, refined beauty, fully clothed SFW, Neo Harbor aesthetic, bottom 20 percent clear for text"
+    },
+    {
+     "sceneId": "elena_route_3",
+     "path": "/rpg-assets/characters/elena/elena_unguarded.webp",
+     "prompt": "Adult 26 year old Elena Crowe sitting at a café table in the evening, long dark brown hair slightly loosened, deep hazel-green eyes with a rare soft expression, full lips, charcoal blazer draped over the chair, cream blouse with one extra button undone, refined and quietly vulnerable, anime visual novel CG, warm lighting, fully clothed SFW, Neo Harbor style, bottom 20 percent clear for dialogue"
+    }
+   ]
+  }
+ },
+ {
   "id": "jinx",
   "cast": {
    "name": "Jinx Rivera",
@@ -1214,6 +1729,1036 @@ const packs=[
      "sceneId": "luna_route_3",
      "path": "/rpg-assets/characters/luna/luna_stretch.webp",
      "prompt": "Adult 18 year old Luna Quinn reaching for a high shelf, soft curvy goddess body, large breasts pushed up by a tight pastel shirt that has ridden up, long lavender hair, slightly panicked expression, unintentional heavy fanservice, fully clothed SFW, shop interior, anime visual novel CG, Neo Harbor style, bottom 20 percent clear"
+    }
+   ]
+  }
+ },
+ {
+  "id": "rina",
+  "cast": {
+   "name": "Rina Hoshino",
+   "age": 18,
+   "deck": "overgrowth",
+   "style": "Overgrowth · pure Grass beatdown",
+   "intro": "Ah! You’re a trainer, right? I can always tell! I’m Rina — yes, that Rina from the weekend stage shows. But more importantly… do you play the TCG?!",
+   "repeat": "You’re back! Did you bring new cards? Or just here to watch me practice my smile? Both are fine, honestly.",
+   "talk": [
+    "People think the idol stuff is my whole life. It’s not. My real life starts when I open my binder.",
+    "I have a full set of every Grass-type promo from the last three years. Don’t tell my manager, she thinks I only collect official merch.",
+    "Stage lights are bright, but nothing beats the feeling of resolving a perfect evolution chain on turn two.",
+    "I practiced my wink for three hours yesterday… and then spent four more hours testing a new deck. Priorities!",
+    "Sometimes fans ask me to sign cards. Those are my favorite days.",
+    "If I ever get a big contract, the first thing I’m buying is a display case for my holographic collection. The second is better stage outfits."
+   ],
+   "flirt": "Ehh? You’re looking at me like that… Is it the idol thing or the fact that I just said I love Grass-types more than anything?",
+   "duelWin": "Yay! Wait—was that too loud? Sorry! I’m just really happy when a match goes well!",
+   "duelLose": "Aww… okay, okay, I see the mistake. Rematch? Please? I’ll bring snacks!",
+   "hangouts": [
+    "Rina drags you to the arcade still in her practice stage outfit and spends the whole time talking about evolution lines while perfectly hitting every high score.",
+    "A quiet café meeting turns into her showing you her phone’s locked wallpaper — a custom illustration of her favorite Pokémon — and getting genuinely shy about it.",
+    "She practices a new song for you in the park, then immediately switches to explaining why her current deck needs one more supporter.",
+    "You catch her between rehearsals reviewing card lists on a tablet, still wearing the sparkly jacket from her last performance.",
+    "A late library session ends with her whispering excited theories about upcoming sets so she doesn’t get shushed, eyes sparkling the whole time."
+   ],
+   "portrait": "/rpg-assets/characters/rina/neutral.png"
+  },
+  "looks": {
+   "silhouette": "Unambiguously adult 18-year-old with a bright, youthful idol figure — slim waist, soft curves, and an energetic, bouncing posture that matches her stage presence.",
+   "palette": "Candy pink, white, sky blue, and soft gold accents. Lots of sparkle and clean pastels.",
+   "hair": "Long, wavy pastel-pink hair usually worn in high twin tails with big ribbons, or loose with a single star clip when she’s off-stage.",
+   "eyes": "Large, bright aqua-blue eyes that sparkle constantly, especially when she talks about Pokémon.",
+   "details": "Star-shaped earrings, a small microphone-shaped necklace she never takes off, glittery stage makeup that she only half-removes after shows, and a custom deck box covered in stickers.",
+   "expressions": "Default bright idol smile, genuine wide-eyed excitement when cards are involved, determined pout during matches, soft shy blush when complimented on her real hobbies, sparkling ‘stage mode’ wink.",
+   "outfits": [
+    "signature idol stage outfit: short frilly skirt, cropped top with star motifs, thigh-high socks, and a light open jacket covered in rhinestones",
+    "practice version: the same silhouette but simpler fabrics and less glitter",
+    "casual day: oversized hoodie with a Pokémon print, short shorts, and the twin tails still perfectly done",
+    "tournament look: neat blouse and skirt that still look cute and youthful, star hair clips kept in",
+    "evening off: soft pastel cardigan over a simple dress, hair down, still somehow looking like she stepped off a stage"
+   ],
+   "renderNotes": "SFW anime/JRPG idol-romance style, age 18. Bright, colorful, energetic. Emphasize the cute idol aesthetic with short skirts, cropped tops, twin tails, and sparkly details. She should look like a rising pop idol who also happens to be a serious TCG player. No nudity. Match Neo Harbor’s clean, lively aesthetic with lots of pink and light."
+  },
+  "schedule": [
+   [
+    "arcade",
+    "park",
+    "cafe"
+   ],
+   [
+    "shop",
+    "arcade",
+    "park"
+   ],
+   [
+    "home",
+    "shop",
+    "arcade"
+   ],
+   [
+    "park",
+    "cafe",
+    "arcade"
+   ],
+   [
+    "arcade",
+    "shop",
+    "park"
+   ],
+   [
+    "cafe",
+    "park",
+    "arcade"
+   ],
+   [
+    "home",
+    "arcade",
+    "cafe"
+   ]
+  ],
+  "arrivalDay": 7,
+  "events": [
+   {
+    "id": "rina_route_1",
+    "title": "After the Final Song",
+    "start": 7,
+    "end": 20,
+    "place": "park",
+    "slot": 2,
+    "minBond": 0,
+    "prerequisite": null,
+    "participants": [],
+    "npc": "rina",
+    "chapter": 1,
+    "lines": [
+     {
+      "speaker": "rina",
+      "text": "Ah, you stayed until the end! Most people leave after the last encore. Did you like the show?"
+     },
+     {
+      "speaker": "Protagonist",
+      "text": "I did. But I also noticed the deck box on your bag."
+     },
+     {
+      "speaker": "rina",
+      "text": "You… noticed that? Usually people only see the ribbons and the lights."
+     },
+     {
+      "speaker": "Protagonist",
+      "text": "Do you play?"
+     },
+     {
+      "speaker": "rina",
+      "text": "Play? I live for it! The stage is fun, but opening a new pack still makes my heart race more than any spotlight."
+     },
+     {
+      "speaker": "rina",
+      "text": "Want to see my binder? I keep it with me even on show days."
+     }
+    ],
+    "choices": [
+     {
+      "label": "Ask to see her favorite cards",
+      "reply": "Really?! Okay, okay, sit down — these are my babies!",
+      "kind": "support",
+      "flag": "rina_binder",
+      "delta": {
+       "affection": 2,
+       "trust": 2,
+       "respect": 1,
+       "attraction": 0
+      }
+     },
+     {
+      "label": "Tell her the real smile just now was better than the stage one",
+      "reply": "Ehh?! Don’t say that so suddenly… but thank you.",
+      "kind": "honest",
+      "flag": "rina_real",
+      "delta": {
+       "affection": 2,
+       "trust": 1,
+       "respect": 1,
+       "attraction": 1
+      }
+     },
+     {
+      "label": "Tease her gently about being an idol who loves Grass-types",
+      "reply": "Hey! Grass-types are cool! Don’t make fun of my perfect evolution lines!",
+      "kind": "flirt",
+      "flag": "rina_tease",
+      "delta": {
+       "affection": 2,
+       "trust": 1,
+       "respect": 0,
+       "attraction": 2
+      }
+     }
+    ]
+   },
+   {
+    "id": "rina_route_2",
+    "title": "Between Rehearsals",
+    "start": 24,
+    "end": 38,
+    "place": "arcade",
+    "slot": 1,
+    "minBond": 2,
+    "prerequisite": "rina_route_1",
+    "participants": [],
+    "npc": "rina",
+    "chapter": 1,
+    "lines": [
+     {
+      "speaker": "rina",
+      "text": "I only have thirty minutes before vocal practice, but I ran here anyway. Priorities!"
+     },
+     {
+      "speaker": "Protagonist",
+      "text": "You skipped for a match?"
+     },
+     {
+      "speaker": "rina",
+      "text": "I can practice scales anytime. Good local players are harder to find!"
+     },
+     {
+      "speaker": "Protagonist",
+      "text": "Your manager knows?"
+     },
+     {
+      "speaker": "rina",
+      "text": "She thinks I’m reviewing choreography. What she doesn’t know won’t hurt the set list."
+     },
+     {
+      "speaker": "rina",
+      "text": "Ready? I even brought my serious face today."
+     }
+    ],
+    "choices": [
+     {
+      "label": "Play her seriously and don’t go easy",
+      "reply": "Yes! That’s what I wanted! No special idol treatment!",
+      "kind": "support",
+      "flag": "rina_serious",
+      "delta": {
+       "affection": 2,
+       "trust": 2,
+       "respect": 1,
+       "attraction": 0
+      }
+     },
+     {
+      "label": "Ask if the idol life ever gets in the way of the game",
+      "reply": "Sometimes… but I make it work. The game is the part that keeps me grounded.",
+      "kind": "honest",
+      "flag": "rina_grounded",
+      "delta": {
+       "affection": 2,
+       "trust": 1,
+       "respect": 1,
+       "attraction": 1
+      }
+     },
+     {
+      "label": "Tell her she looks happiest when she’s holding cards",
+      "reply": "You keep noticing the real things… It’s a little embarrassing, but I like it.",
+      "kind": "flirt",
+      "flag": "rina_happy",
+      "delta": {
+       "affection": 2,
+       "trust": 1,
+       "respect": 0,
+       "attraction": 2
+      }
+     }
+    ],
+    "openingByFlag": {
+     "rina_binder": "You looked at my binder last time. I’ve been thinking about which cards to show you next!",
+     "rina_real": "You said my real smile was better. I’ve been practicing not hiding it as much.",
+     "rina_tease": "You teased me about Grass-types. I’m still defending them with my whole heart!"
+    }
+   },
+   {
+    "id": "rina_route_3",
+    "title": "The Part She Doesn’t Perform",
+    "start": 42,
+    "end": 56,
+    "place": "cafe",
+    "slot": 1,
+    "minBond": 4,
+    "prerequisite": "rina_route_2",
+    "participants": [],
+    "npc": "rina",
+    "chapter": 2,
+    "lines": [
+     {
+      "speaker": "rina",
+      "text": "No cameras, no manager, no set list. Just cards and tea. This is my favorite kind of day."
+     },
+     {
+      "speaker": "Protagonist",
+      "text": "You seem different when it’s just the game."
+     },
+     {
+      "speaker": "rina",
+      "text": "Because I don’t have to be ‘Rina the Idol’ here. I can just be the girl who gets too excited about energy acceleration."
+     },
+     {
+      "speaker": "Protagonist",
+      "text": "I like that girl."
+     },
+     {
+      "speaker": "rina",
+      "text": "You do? Most people only meet the sparkly version. The quiet card-obsessed one is… newer for me to show."
+     },
+     {
+      "speaker": "rina",
+      "text": "But I think I want to show her more."
+     }
+    ],
+    "choices": [
+     {
+      "label": "Tell her both versions are worth knowing",
+      "reply": "Both…? Okay. I’ll try to believe that.",
+      "kind": "support",
+      "flag": "rina_both",
+      "delta": {
+       "affection": 3,
+       "trust": 2,
+       "respect": 1,
+       "attraction": 0
+      }
+     },
+     {
+      "label": "Ask what she wants beyond the next stage show",
+      "reply": "No one from the agency ever asks me that. Thank you for asking.",
+      "kind": "honest",
+      "flag": "rina_future",
+      "delta": {
+       "affection": 2,
+       "trust": 2,
+       "respect": 1,
+       "attraction": 1
+      }
+     },
+     {
+      "label": "Say you fell for the card-obsessed version first",
+      "reply": "That’s… really unfairly sweet. My heart just did a little jump.",
+      "kind": "flirt",
+      "flag": "rina_fell",
+      "delta": {
+       "affection": 2,
+       "trust": 1,
+       "respect": 0,
+       "attraction": 3
+      }
+     }
+    ],
+    "openingByFlag": {
+     "rina_serious": "You played me for real last time. So I’m being real with you now.",
+     "rina_grounded": "You asked if the idol life gets in the way. Today it doesn’t. Today is just us.",
+     "rina_happy": "You said I look happiest with cards. I’m testing that theory right now."
+    }
+   },
+   {
+    "id": "rina_route_4",
+    "title": "Encore for Two",
+    "start": 60,
+    "end": 74,
+    "place": "park",
+    "slot": 2,
+    "minBond": 5,
+    "prerequisite": "rina_route_3",
+    "participants": [],
+    "npc": "rina",
+    "chapter": 3,
+    "lines": [
+     {
+      "speaker": "rina",
+      "text": "I finished early today. No encore for the crowd… but I saved one for you."
+     },
+     {
+      "speaker": "Protagonist",
+      "text": "A private encore?"
+     },
+     {
+      "speaker": "rina",
+      "text": "Just a song I like. And then maybe a match under the lights of the streetlamps. Is that okay?"
+     },
+     {
+      "speaker": "Protagonist",
+      "text": "More than okay."
+     },
+     {
+      "speaker": "rina",
+      "text": "Good. Because I’ve been practicing both the song and the deck. I wanted them to be ready at the same time."
+     },
+     {
+      "speaker": "rina",
+      "text": "You’re the first person I’ve wanted to share both with."
+     }
+    ],
+    "choices": [
+     {
+      "label": "Listen to the song, then play her with everything you have",
+      "reply": "That’s the best answer you could have given me.",
+      "kind": "support",
+      "flag": "rina_share",
+      "delta": {
+       "affection": 3,
+       "trust": 2,
+       "respect": 1,
+       "attraction": 1
+      }
+     },
+     {
+      "label": "Tell her you’re honored she chose you for both",
+      "reply": "Honored… That’s a big word. But I feel the same way about showing you.",
+      "kind": "honest",
+      "flag": "rina_honored",
+      "delta": {
+       "affection": 2,
+       "trust": 2,
+       "respect": 1,
+       "attraction": 1
+      }
+     },
+     {
+      "label": "Close the distance after the song and stay close",
+      "reply": "The streetlamps are really bright tonight… or maybe that’s just my face.",
+      "kind": "flirt",
+      "flag": "rina_close",
+      "delta": {
+       "affection": 2,
+       "trust": 1,
+       "respect": 0,
+       "attraction": 3
+      }
+     }
+    ],
+    "openingByFlag": {
+     "rina_both": "You said both versions were worth knowing. So I’m giving you both tonight.",
+     "rina_future": "You asked what I wanted beyond the next show. Part of the answer is this.",
+     "rina_fell": "You said you fell for the card-obsessed version first. I’m still replaying that."
+    }
+   },
+   {
+    "id": "rina_route_5",
+    "title": "Main Set",
+    "start": 78,
+    "end": 90,
+    "place": "cafe",
+    "slot": 2,
+    "minBond": 6,
+    "prerequisite": "rina_route_4",
+    "participants": [],
+    "npc": "rina",
+    "chapter": 4,
+    "lines": [
+     {
+      "speaker": "rina",
+      "text": "I told my manager I’m taking a real day off. No appearances, no photos, no rehearsals. Just cards and you."
+     },
+     {
+      "speaker": "Protagonist",
+      "text": "That’s a big step for you."
+     },
+     {
+      "speaker": "rina",
+      "text": "It is. I used to think I had to keep the idol and the player in separate boxes. You made me realize I don’t."
+     },
+     {
+      "speaker": "Protagonist",
+      "text": "And now?"
+     },
+     {
+      "speaker": "rina",
+      "text": "Now I want both. The stage when I choose it… and someone who stays for the matches after the lights go down."
+     },
+     {
+      "speaker": "rina",
+      "text": "Are you that someone?"
+     }
+    ],
+    "choices": [
+     {
+      "label": "Tell her you’re staying for every set — stage and table",
+      "reply": "Then it’s a deal. Official. Binder-certified.",
+      "kind": "support",
+      "flag": "rina_stay",
+      "delta": {
+       "affection": 3,
+       "trust": 2,
+       "respect": 1,
+       "attraction": 1
+      }
+     },
+     {
+      "label": "Kiss her and let the answer be clear",
+      "reply": "Ah… okay. That was a very clear answer.",
+      "kind": "flirt",
+      "flag": "rina_kiss",
+      "delta": {
+       "affection": 2,
+       "trust": 1,
+       "respect": 0,
+       "attraction": 3
+      }
+     },
+     {
+      "label": "Say you want the real Rina, sparkles and serious plays included",
+      "reply": "The real me… You keep choosing her. I’m going to keep choosing you too.",
+      "kind": "honest",
+      "flag": "rina_realme",
+      "delta": {
+       "affection": 2,
+       "trust": 3,
+       "respect": 1,
+       "attraction": 1
+      }
+     }
+    ],
+    "openingByFlag": {
+     "rina_share": "You shared the song and the match with me. I’m still glowing about it.",
+     "rina_honored": "You said you were honored. I’ve been carrying that word around all week.",
+     "rina_close": "You stayed close after the song. The streetlamps aren’t the only thing that felt bright."
+    }
+   }
+  ],
+  "art": {
+   "schemaVersion": 1,
+   "characterId": "rina",
+   "portrait": "/rpg-assets/characters/rina/neutral.png",
+   "expressions": {
+    "neutral": "/rpg-assets/characters/rina/neutral.webp",
+    "sparkle": "/rpg-assets/characters/rina/sparkle.webp",
+    "determined": "/rpg-assets/characters/rina/determined.webp",
+    "shy": "/rpg-assets/characters/rina/shy.webp",
+    "stage": "/rpg-assets/characters/rina/stage.webp"
+   },
+   "eventImages": [
+    {
+     "sceneId": "rina_route_1",
+     "path": "/rpg-assets/characters/rina/rina_stage_after.webp",
+     "prompt": "Adult 18 year old Rina Hoshino, anime visual novel idol style, long pastel-pink hair in twin tails with ribbons, large aqua-blue eyes sparkling, wearing a short frilly stage skirt and cropped star-motif top with open sparkly jacket, bright cheerful smile, colorful and energetic, fully clothed SFW, Neo Harbor aesthetic, bottom 20 percent clear for text"
+    },
+    {
+     "sceneId": "rina_route_3",
+     "path": "/rpg-assets/characters/rina/rina_cards.webp",
+     "prompt": "Adult 18 year old Rina Hoshino sitting at a café table showing her card binder, long pastel-pink hair, genuine excited expression, still wearing parts of her idol outfit under a soft cardigan, large aqua eyes sparkling, anime visual novel CG, warm lighting, fully clothed SFW, Neo Harbor style, bottom 20 percent clear for dialogue"
+    }
+   ]
+  }
+ },
+ {
+  "id": "sierra",
+  "cast": {
+   "name": "Sierra Holt",
+   "age": 18,
+   "deck": "blackout",
+   "style": "Blackout · pure disruption control",
+   "intro": "You’re staring. Everyone does. If you’re here for a photo or an autograph, I’m off the clock. If you’re here to talk cards… then we can talk.",
+   "repeat": "Still hanging around? Most people lose interest once the bikini comes off. You must actually like the game.",
+   "talk": [
+    "Modeling pays the bills. The TCG is the only thing that doesn’t feel like a performance.",
+    "People assume I’m dumb because of how I look on the beach. I let them. It’s easier than correcting them every time.",
+    "My agent keeps trying to book me for more ‘lifestyle’ shoots. I keep asking if any of them involve a tournament table.",
+    "I can hold a smile for three hours straight under lights. Sitting down for a real match still makes me more nervous.",
+    "The worst part of the job isn’t the comments. It’s how few people ever ask what I actually care about.",
+    "I keep a full binder of old school cards in my bag between shoots. Don’t tell my manager."
+   ],
+   "flirt": "Careful. Most guys who flirt with me only want the version that exists in photos. You sure you’re different?",
+   "duelWin": "Huh. You actually made me work for it. That’s rarer than a first-edition holographic.",
+   "duelLose": "Okay, that one hurt. Rematch when I’m not still thinking about lighting setups.",
+   "hangouts": [
+    "Sierra shows up to the arcade still in a light cover-up over her shoot bikini. She spends the whole time talking strategy and only notices people staring when you point it out.",
+    "You catch her between jobs reviewing deck lists on her phone while sitting on a park bench in full model hair and makeup. She looks more relaxed talking about disruption packages than she does in any photo.",
+    "She invites you to a quiet café after a shoot. She peels off the performance smile the second she sits down and starts complaining about how hard it is to find good local players who don’t just want pictures.",
+    "A late library session turns into her explaining why she loves control decks while still wearing the tiny shorts from her last booking. She never once adjusts them for the camera that isn’t there.",
+    "She challenges you to a best-of-three and gets genuinely competitive. The model persona disappears completely until the last prize card is taken."
+   ],
+   "portrait": "/rpg-assets/characters/sierra/neutral.png"
+  },
+  "looks": {
+   "silhouette": "Unambiguously adult 18-year-old, extremely slim and long-legged with a tiny chest and a disproportionately large, round, heavy ass. Narrow waist, flat stomach, model proportions that are intentionally bottom-heavy.",
+   "palette": "Warm brunette, deep bronze skin tones, black, white, and coral/orange accents from her swimwear.",
+   "hair": "Long, straight dark brunette hair usually worn loose or in a high sleek ponytail that swings past her waist.",
+   "eyes": "Sharp hazel-green eyes that look bored or guarded until the topic turns to cards.",
+   "details": "Minimal jewelry for shoots, a thin gold waist chain she often forgets to remove, a small deck box she carries everywhere, and a permanent slight model posture that softens when she’s comfortable.",
+   "expressions": "Default cool/distant model face, rare genuine smile when talking strategy, focused competitive stare during matches, tired half-lidded look after long shoots, soft almost shy expression when someone actually listens to her about the game.",
+   "outfits": [
+    "signature string bikini in coral or black (her actual job), often with a sheer open cover-up or oversized shirt thrown on afterward",
+    "tiny denim shorts that barely cover the bottom of her ass + cropped tank for casual days",
+    "tournament look: fitted black crop top, high-waisted shorts that still emphasize her hips and ass, sneakers",
+    "library/café: oversized hoodie that still can’t hide the silhouette, bike shorts",
+    "evening: simple slip dress that clings to her lower half and leaves almost nothing to the imagination from behind"
+   ],
+   "renderNotes": "SFW anime/JRPG style, age 18. Emphasize the extreme contrast: very slim upper body with tiny breasts and a large, round, heavy ass. She should look like a professional bikini model even in casual clothes. No nudity. When in swimwear keep it standard bikini (string or sport style). Match Neo Harbor’s clean, colorful aesthetic. Her body is deliberately fanservice-oriented but her face and posture should show she’s not performing for the player unless she’s working."
+  },
+  "schedule": [
+   [
+    "park",
+    "cafe",
+    "arcade"
+   ],
+   [
+    "shop",
+    "park",
+    "cafe"
+   ],
+   [
+    "home",
+    "shop",
+    "arcade"
+   ],
+   [
+    "park",
+    "library",
+    "cafe"
+   ],
+   [
+    "arcade",
+    "shop",
+    "park"
+   ],
+   [
+    "cafe",
+    "park",
+    "arcade"
+   ],
+   [
+    "home",
+    "library",
+    "cafe"
+   ]
+  ],
+  "arrivalDay": 18,
+  "events": [
+   {
+    "id": "sierra_route_1",
+    "title": "After the Shoot",
+    "start": 18,
+    "end": 32,
+    "place": "park",
+    "slot": 1,
+    "minBond": 0,
+    "prerequisite": null,
+    "participants": [],
+    "npc": "sierra",
+    "chapter": 1,
+    "lines": [
+     {
+      "speaker": "sierra",
+      "text": "If you’re looking for a photo, the session’s over. I’m off the clock."
+     },
+     {
+      "speaker": "Protagonist",
+      "text": "I was actually going to ask if you play."
+     },
+     {
+      "speaker": "sierra",
+      "text": "...Play what?"
+     },
+     {
+      "speaker": "Protagonist",
+      "text": "TCG. You’ve got a deck box on your bag."
+     },
+     {
+      "speaker": "sierra",
+      "text": "Most people don’t notice that. They stop at the bikini."
+     },
+     {
+      "speaker": "sierra",
+      "text": "You actually want to talk cards?"
+     }
+    ],
+    "choices": [
+     {
+      "label": "Ask what she mains",
+      "reply": "Blackout. Control. I like making people miserable in sixty cards or less.",
+      "kind": "support",
+      "flag": "sierra_deck",
+      "delta": {
+       "affection": 2,
+       "trust": 2,
+       "respect": 1,
+       "attraction": 0
+      }
+     },
+     {
+      "label": "Admit you noticed the deck box first",
+      "reply": "That’s... new. Most people don’t even see it.",
+      "kind": "honest",
+      "flag": "sierra_notice",
+      "delta": {
+       "affection": 2,
+       "trust": 1,
+       "respect": 1,
+       "attraction": 1
+      }
+     },
+     {
+      "label": "Say the bikini is hard to ignore but the cards are more interesting",
+      "reply": "At least you’re honest about both. I’ll take it.",
+      "kind": "flirt",
+      "flag": "sierra_honest",
+      "delta": {
+       "affection": 1,
+       "trust": 1,
+       "respect": 0,
+       "attraction": 2
+      }
+     }
+    ]
+   },
+   {
+    "id": "sierra_route_2",
+    "title": "Between Bookings",
+    "start": 35,
+    "end": 48,
+    "place": "cafe",
+    "slot": 1,
+    "minBond": 2,
+    "prerequisite": "sierra_route_1",
+    "participants": [],
+    "npc": "sierra",
+    "chapter": 1,
+    "lines": [
+     {
+      "speaker": "sierra",
+      "text": "I have forty minutes before the next location. Don’t waste them on small talk."
+     },
+     {
+      "speaker": "Protagonist",
+      "text": "Then tell me why control."
+     },
+     {
+      "speaker": "sierra",
+      "text": "Because the board is the only place I get to decide what happens. Everything else is someone else’s shot list."
+     },
+     {
+      "speaker": "Protagonist",
+      "text": "You sound like you hate the job."
+     },
+     {
+      "speaker": "sierra",
+      "text": "I don’t hate the money. I hate that it’s the only thing most people think I’m for."
+     },
+     {
+      "speaker": "sierra",
+      "text": "You’re still here. That’s either impressive or suspicious."
+     }
+    ],
+    "choices": [
+     {
+      "label": "Ask her about a specific matchup",
+      "reply": "Okay. You’re actually serious about this. Fine, let’s talk tempo.",
+      "kind": "support",
+      "flag": "sierra_matchup",
+      "delta": {
+       "affection": 2,
+       "trust": 2,
+       "respect": 1,
+       "attraction": 0
+      }
+     },
+     {
+      "label": "Tell her you like the version that talks about cards",
+      "reply": "Most people never get that far. Don’t make me regret showing it.",
+      "kind": "honest",
+      "flag": "sierra_version",
+      "delta": {
+       "affection": 2,
+       "trust": 1,
+       "respect": 1,
+       "attraction": 1
+      }
+     },
+     {
+      "label": "Point out she lights up when she talks strategy",
+      "reply": "...Shut up. You’re not supposed to notice that.",
+      "kind": "flirt",
+      "flag": "sierra_lightup",
+      "delta": {
+       "affection": 2,
+       "trust": 1,
+       "respect": 0,
+       "attraction": 2
+      }
+     }
+    ],
+    "openingByFlag": {
+     "sierra_deck": "You asked about my deck last time. Still want to hear the ugly details?",
+     "sierra_notice": "You noticed the deck box first. That’s still weird. In a good way.",
+     "sierra_honest": "You were honest about the bikini and the cards. Most people only manage one."
+    }
+   },
+   {
+    "id": "sierra_route_3",
+    "title": "The Only Place That Feels Real",
+    "start": 52,
+    "end": 65,
+    "place": "arcade",
+    "slot": 2,
+    "minBond": 4,
+    "prerequisite": "sierra_route_2",
+    "participants": [],
+    "npc": "sierra",
+    "chapter": 2,
+    "lines": [
+     {
+      "speaker": "sierra",
+      "text": "I cancelled a fitting for this. Don’t make it boring."
+     },
+     {
+      "speaker": "Protagonist",
+      "text": "You’re really skipping work for a match?"
+     },
+     {
+      "speaker": "sierra",
+      "text": "The fitting was just more standing around looking pretty. This is the only place I don’t have to perform."
+     },
+     {
+      "speaker": "Protagonist",
+      "text": "You look happier here."
+     },
+     {
+      "speaker": "sierra",
+      "text": "Don’t say that out loud. I have a reputation to maintain."
+     },
+     {
+      "speaker": "sierra",
+      "text": "...But yeah. I am."
+     }
+    ],
+    "choices": [
+     {
+      "label": "Play her seriously and don’t hold back",
+      "reply": "Good. I hate when people go easy because of how I look.",
+      "kind": "support",
+      "flag": "sierra_serious",
+      "delta": {
+       "affection": 2,
+       "trust": 2,
+       "respect": 2,
+       "attraction": 0
+      }
+     },
+     {
+      "label": "Tell her she doesn’t have to perform around you",
+      "reply": "That’s a dangerous thing to say to someone who gets paid to perform.",
+      "kind": "honest",
+      "flag": "sierra_noperform",
+      "delta": {
+       "affection": 2,
+       "trust": 2,
+       "respect": 1,
+       "attraction": 1
+      }
+     },
+     {
+      "label": "Admit you like both versions of her",
+      "reply": "Both, huh? Most people pick one and stick to it. You’re greedy.",
+      "kind": "flirt",
+      "flag": "sierra_both",
+      "delta": {
+       "affection": 2,
+       "trust": 1,
+       "respect": 0,
+       "attraction": 2
+      }
+     }
+    ],
+    "openingByFlag": {
+     "sierra_matchup": "You actually talked matchups with me. So I showed up ready.",
+     "sierra_version": "You said you liked the version that talks about cards. Here she is.",
+     "sierra_lightup": "You noticed I light up. Annoying. Accurate. Let’s play."
+    }
+   },
+   {
+    "id": "sierra_route_4",
+    "title": "Off the Clock",
+    "start": 68,
+    "end": 80,
+    "place": "cafe",
+    "slot": 1,
+    "minBond": 5,
+    "prerequisite": "sierra_route_3",
+    "participants": [],
+    "npc": "sierra",
+    "chapter": 3,
+    "lines": [
+     {
+      "speaker": "sierra",
+      "text": "No shoot today. No makeup. No stylist. Just me and a deck."
+     },
+     {
+      "speaker": "Protagonist",
+      "text": "Suits you."
+     },
+     {
+      "speaker": "sierra",
+      "text": "You keep saying things like that. It’s starting to mess with my usual script."
+     },
+     {
+      "speaker": "Protagonist",
+      "text": "Maybe the script needed rewriting."
+     },
+     {
+      "speaker": "sierra",
+      "text": "Careful. If you keep treating me like a person who plays cards instead of a body that sells bikinis, I might get used to it."
+     },
+     {
+      "speaker": "sierra",
+      "text": "And I don’t get used to things easily."
+     }
+    ],
+    "choices": [
+     {
+      "label": "Tell her you want her to get used to it",
+      "reply": "...Okay. Then don’t disappear when the novelty wears off.",
+      "kind": "support",
+      "flag": "sierra_usedto",
+      "delta": {
+       "affection": 3,
+       "trust": 2,
+       "respect": 1,
+       "attraction": 1
+      }
+     },
+     {
+      "label": "Ask what she wants beyond the next tournament",
+      "reply": "No one asks me that. Most people stop at the next booking.",
+      "kind": "honest",
+      "flag": "sierra_future",
+      "delta": {
+       "affection": 2,
+       "trust": 2,
+       "respect": 1,
+       "attraction": 1
+      }
+     },
+     {
+      "label": "Say you like the real her more than the photos",
+      "reply": "That’s a hell of a thing to say to a model. Don’t take it back.",
+      "kind": "flirt",
+      "flag": "sierra_real",
+      "delta": {
+       "affection": 2,
+       "trust": 1,
+       "respect": 0,
+       "attraction": 3
+      }
+     }
+    ],
+    "openingByFlag": {
+     "sierra_serious": "You played me for real. So I’m showing up for real.",
+     "sierra_noperform": "You said I don’t have to perform. I’m testing that.",
+     "sierra_both": "You said you liked both versions. Today you get the unstyled one."
+    }
+   },
+   {
+    "id": "sierra_route_5",
+    "title": "Main Phase",
+    "start": 82,
+    "end": 90,
+    "place": "arcade",
+    "slot": 2,
+    "minBond": 6,
+    "prerequisite": "sierra_route_4",
+    "participants": [],
+    "npc": "sierra",
+    "chapter": 4,
+    "lines": [
+     {
+      "speaker": "sierra",
+      "text": "I turned down a campaign for this weekend. Full day of matches instead."
+     },
+     {
+      "speaker": "Protagonist",
+      "text": "That’s a big deal for you."
+     },
+     {
+      "speaker": "sierra",
+      "text": "It is. I’m still going to model. The money’s too good and I’m good at it. But I’m done pretending the cards are just a hobby I hide."
+     },
+     {
+      "speaker": "Protagonist",
+      "text": "And me?"
+     },
+     {
+      "speaker": "sierra",
+      "text": "You’re the first person who made the game feel more important than the job. That’s... rare."
+     },
+     {
+      "speaker": "sierra",
+      "text": "So. Are you staying for the long game or just this season?"
+     }
+    ],
+    "choices": [
+     {
+      "label": "Tell her you’re in for the long game",
+      "reply": "Good. Because I’m not great at short-term anything.",
+      "kind": "support",
+      "flag": "sierra_long",
+      "delta": {
+       "affection": 3,
+       "trust": 2,
+       "respect": 1,
+       "attraction": 1
+      }
+     },
+     {
+      "label": "Kiss her and let the answer be physical",
+      "reply": "...Okay. That works too.",
+      "kind": "flirt",
+      "flag": "sierra_kiss",
+      "delta": {
+       "affection": 2,
+       "trust": 1,
+       "respect": 0,
+       "attraction": 3
+      }
+     },
+     {
+      "label": "Say you’ll be there for both the cards and the rest of her",
+      "reply": "Both. You keep choosing both. I’m starting to believe you.",
+      "kind": "honest",
+      "flag": "sierra_bothsides",
+      "delta": {
+       "affection": 2,
+       "trust": 3,
+       "respect": 1,
+       "attraction": 1
+      }
+     }
+    ],
+    "openingByFlag": {
+     "sierra_usedto": "You told me to get used to being treated like a person. I’m trying.",
+     "sierra_future": "You asked what I wanted beyond the next tournament. I’m still answering that.",
+     "sierra_real": "You said you liked the real me more than the photos. I’m holding you to it."
+    }
+   }
+  ],
+  "art": {
+   "schemaVersion": 1,
+   "characterId": "sierra",
+   "portrait": "/rpg-assets/characters/sierra/neutral.png",
+   "expressions": {
+    "neutral": "/rpg-assets/characters/sierra/neutral.webp",
+    "cool": "/rpg-assets/characters/sierra/cool.webp",
+    "focused": "/rpg-assets/characters/sierra/focused.webp",
+    "soft": "/rpg-assets/characters/sierra/soft.webp",
+    "tired": "/rpg-assets/characters/sierra/tired.webp"
+   },
+   "eventImages": [
+    {
+     "sceneId": "sierra_route_1",
+     "path": "/rpg-assets/characters/sierra/sierra_after_shoot.webp",
+     "prompt": "Adult 18 year old Sierra Holt, anime visual novel style, extremely slim with tiny breasts and large round heavy ass, long dark brunette hair, hazel-green eyes, wearing a coral string bikini with an open sheer cover-up, standing near a park bench looking slightly tired but guarded, heavy lower-body fanservice, fully clothed SFW, Neo Harbor aesthetic, bottom 20 percent clear for text"
+    },
+    {
+     "sceneId": "sierra_route_3",
+     "path": "/rpg-assets/characters/sierra/sierra_deck_talk.webp",
+     "prompt": "Adult 18 year old Sierra Holt sitting at a café table, long dark brunette hair, soft genuine expression while talking about cards, extremely slim upper body with tiny chest and large round ass visible even seated, casual crop top and tiny shorts, anime visual novel CG, warm lighting, fully clothed SFW, Neo Harbor style, bottom 20 percent clear for dialogue"
     }
    ]
   }
