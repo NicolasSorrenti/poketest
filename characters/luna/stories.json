@@ -1,0 +1,411 @@
+{
+  "schemaVersion": 1,
+  "characterId": "luna",
+  "events": [
+    {
+      "id": "luna_route_1",
+      "title": "Sorry About the Spill",
+      "start": 15,
+      "end": 28,
+      "place": "cafe",
+      "slot": 1,
+      "minBond": 0,
+      "prerequisite": null,
+      "participants": [],
+      "npc": "luna",
+      "chapter": 1,
+      "lines": [
+        {
+          "speaker": "luna",
+          "text": "Oh no—watch out!"
+        },
+        {
+          "speaker": "Protagonist",
+          "text": "It's fine, it only got a little on me."
+        },
+        {
+          "speaker": "luna",
+          "text": "I'm so sorry! I was trying to carry both drinks and my bag and... I do this a lot."
+        },
+        {
+          "speaker": "Protagonist",
+          "text": "You okay?"
+        },
+        {
+          "speaker": "luna",
+          "text": "Y-yes. Just embarrassed. Again. My sweater is all wet now too..."
+        },
+        {
+          "speaker": "luna",
+          "text": "Please don't look. It's clinging and I can't fix it properly here."
+        }
+      ],
+      "choices": [
+        {
+          "label": "Offer her your jacket so she can cover up",
+          "reply": "You're really kind... Thank you. I'll wash it and return it, I promise!",
+          "kind": "support",
+          "flag": "luna_jacket",
+          "delta": {
+            "affection": 2,
+            "trust": 2,
+            "respect": 1,
+            "attraction": 0
+          }
+        },
+        {
+          "label": "Gently tell her it's fine and not to worry",
+          "reply": "You're not mad...? Most people get annoyed when I soak them.",
+          "kind": "honest",
+          "flag": "luna_calm",
+          "delta": {
+            "affection": 2,
+            "trust": 1,
+            "respect": 1,
+            "attraction": 1
+          }
+        },
+        {
+          "label": "Look away politely while she adjusts",
+          "reply": "You're not staring... That actually helps. Thank you.",
+          "kind": "flirt",
+          "flag": "luna_lookaway",
+          "delta": {
+            "affection": 1,
+            "trust": 1,
+            "respect": 0,
+            "attraction": 2
+          }
+        }
+      ]
+    },
+    {
+      "id": "luna_route_2",
+      "title": "High Shelves and Low Awareness",
+      "start": 30,
+      "end": 44,
+      "place": "shop",
+      "slot": 1,
+      "minBond": 2,
+      "prerequisite": "luna_route_1",
+      "participants": [],
+      "npc": "luna",
+      "chapter": 1,
+      "lines": [
+        {
+          "speaker": "luna",
+          "text": "Excuse me... could you help me reach that box? I keep stretching and it still won't budge."
+        },
+        {
+          "speaker": "Protagonist",
+          "text": "Sure."
+        },
+        {
+          "speaker": "luna",
+          "text": "Thank you so much! I always feel bad asking. My arms just aren't long enough and everything is so high."
+        },
+        {
+          "speaker": "Protagonist",
+          "text": "You almost had it."
+        },
+        {
+          "speaker": "luna",
+          "text": "Did I? My shirt keeps riding up when I try... I should really get new clothes. These never stay where they should."
+        },
+        {
+          "speaker": "luna",
+          "text": "Why are you looking at the floor? Did I drop something else?"
+        }
+      ],
+      "choices": [
+        {
+          "label": "Get the box for her without comment",
+          "reply": "You're so reliable. I wish I could stop needing help all the time.",
+          "kind": "support",
+          "flag": "luna_help",
+          "delta": {
+            "affection": 2,
+            "trust": 2,
+            "respect": 1,
+            "attraction": 0
+          }
+        },
+        {
+          "label": "Softly suggest her shirt might be the problem",
+          "reply": "Is it...? Oh no, is it that obvious? I thought it was fine!",
+          "kind": "honest",
+          "flag": "luna_shirt",
+          "delta": {
+            "affection": 1,
+            "trust": 1,
+            "respect": 1,
+            "attraction": 2
+          }
+        },
+        {
+          "label": "Tease her gently about how hard she was trying",
+          "reply": "D-don't laugh! I was really giving it my all...",
+          "kind": "flirt",
+          "flag": "luna_tease",
+          "delta": {
+            "affection": 2,
+            "trust": 1,
+            "respect": 0,
+            "attraction": 2
+          }
+        }
+      ],
+      "openingByFlag": {
+        "luna_jacket": "You lent me your jacket last time. I still have it... clean, I promise. Could you help me with this shelf?",
+        "luna_calm": "You were so calm when I spilled everything. Maybe you can help me with something that doesn't involve liquids?",
+        "luna_lookaway": "You looked away when my sweater got wet. That was really considerate. Could you help me reach this?"
+      }
+    },
+    {
+      "id": "luna_route_3",
+      "title": "The Stretch That Broke the Silence",
+      "start": 48,
+      "end": 62,
+      "place": "shop",
+      "slot": 2,
+      "minBond": 4,
+      "prerequisite": "luna_route_2",
+      "participants": [],
+      "npc": "luna",
+      "chapter": 2,
+      "lines": [
+        {
+          "speaker": "luna",
+          "text": "Almost... just a little more..."
+        },
+        {
+          "speaker": "Protagonist",
+          "text": "Luna, your shirt—"
+        },
+        {
+          "speaker": "luna",
+          "text": "Hmm? Did it ride up again? I felt a breeze. Hold on, I'll fix it."
+        },
+        {
+          "speaker": "Protagonist",
+          "text": "Maybe I should just get it for you."
+        },
+        {
+          "speaker": "luna",
+          "text": "You're staring at the wall really hard. Did I do something weird again?"
+        },
+        {
+          "speaker": "luna",
+          "text": "People do that a lot around me. I never know why. Is my hair messy?"
+        }
+      ],
+      "choices": [
+        {
+          "label": "Just get the item and change the subject",
+          "reply": "You're the best. I don't know what I'd do without people like you.",
+          "kind": "support",
+          "flag": "luna_cover",
+          "delta": {
+            "affection": 2,
+            "trust": 2,
+            "respect": 1,
+            "attraction": 0
+          }
+        },
+        {
+          "label": "Gently explain that her body draws attention",
+          "reply": "M-my body...? Oh. Oh no. Is that why everyone keeps looking?",
+          "kind": "honest",
+          "flag": "luna_realize",
+          "delta": {
+            "affection": 1,
+            "trust": 2,
+            "respect": 1,
+            "attraction": 2
+          }
+        },
+        {
+          "label": "Tell her she looks good even when she's struggling",
+          "reply": "Y-you think so? Even when I'm making a mess of everything?",
+          "kind": "flirt",
+          "flag": "luna_compliment",
+          "delta": {
+            "affection": 2,
+            "trust": 1,
+            "respect": 0,
+            "attraction": 3
+          }
+        }
+      ],
+      "openingByFlag": {
+        "luna_help": "You helped me last time without making me feel useless. I'm trying the high shelf again... poorly.",
+        "luna_shirt": "You mentioned my shirt before. I tried a different one. It still doesn't behave.",
+        "luna_tease": "You teased me last time. Please be nice while I fail at reaching things again."
+      }
+    },
+    {
+      "id": "luna_route_4",
+      "title": "Falling Into Understanding",
+      "start": 65,
+      "end": 78,
+      "place": "park",
+      "slot": 1,
+      "minBond": 5,
+      "prerequisite": "luna_route_3",
+      "participants": [],
+      "npc": "luna",
+      "chapter": 3,
+      "lines": [
+        {
+          "speaker": "luna",
+          "text": "I tripped on nothing again. You caught me. Thank you."
+        },
+        {
+          "speaker": "Protagonist",
+          "text": "You okay?"
+        },
+        {
+          "speaker": "luna",
+          "text": "Physically yes. Emotionally... I've been thinking about what you said. About people looking."
+        },
+        {
+          "speaker": "Protagonist",
+          "text": "Yeah?"
+        },
+        {
+          "speaker": "luna",
+          "text": "I always thought I was just clumsy and awkward. I never considered that my body might be... noticeable."
+        },
+        {
+          "speaker": "luna",
+          "text": "Is it bad that I still don't really know how to feel about it?"
+        }
+      ],
+      "choices": [
+        {
+          "label": "Tell her she’s still the same kind person",
+          "reply": "That helps. A lot. I was worried everything would feel different.",
+          "kind": "support",
+          "flag": "luna_same",
+          "delta": {
+            "affection": 3,
+            "trust": 2,
+            "respect": 1,
+            "attraction": 1
+          }
+        },
+        {
+          "label": "Say it’s okay to take time figuring it out",
+          "reply": "You’re patient with me. Most people just stare or laugh.",
+          "kind": "honest",
+          "flag": "luna_time",
+          "delta": {
+            "affection": 2,
+            "trust": 2,
+            "respect": 1,
+            "attraction": 1
+          }
+        },
+        {
+          "label": "Admit you’ve noticed, but you like her for more than that",
+          "reply": "You... noticed? And you still talk to me like this? That’s really nice.",
+          "kind": "flirt",
+          "flag": "luna_notice",
+          "delta": {
+            "affection": 2,
+            "trust": 1,
+            "respect": 0,
+            "attraction": 3
+          }
+        }
+      ],
+      "openingByFlag": {
+        "luna_cover": "You always cover for me. Even when I make it hard.",
+        "luna_realize": "I’ve been thinking about what you said in the shop. About why people look.",
+        "luna_compliment": "You said I looked good even when I was struggling. I’ve been replaying that a lot."
+      }
+    },
+    {
+      "id": "luna_route_5",
+      "title": "Still Clumsy, Still Me",
+      "start": 80,
+      "end": 90,
+      "place": "cafe",
+      "slot": 2,
+      "minBond": 6,
+      "prerequisite": "luna_route_4",
+      "participants": [],
+      "npc": "luna",
+      "chapter": 4,
+      "lines": [
+        {
+          "speaker": "luna",
+          "text": "I ordered without spilling anything today. Personal record."
+        },
+        {
+          "speaker": "Protagonist",
+          "text": "Proud of you."
+        },
+        {
+          "speaker": "luna",
+          "text": "I still don’t really understand why my body gets so much attention. But I’m trying not to let it scare me."
+        },
+        {
+          "speaker": "Protagonist",
+          "text": "How’s that going?"
+        },
+        {
+          "speaker": "luna",
+          "text": "Better when you’re around. You never made me feel like I was just... that. You always treated me like Luna."
+        },
+        {
+          "speaker": "luna",
+          "text": "If I trip again, will you still catch me?"
+        }
+      ],
+      "choices": [
+        {
+          "label": "Promise you’ll always catch her",
+          "reply": "Then I’ll try not to be too scared of falling.",
+          "kind": "support",
+          "flag": "luna_catch",
+          "delta": {
+            "affection": 3,
+            "trust": 2,
+            "respect": 1,
+            "attraction": 1
+          }
+        },
+        {
+          "label": "Tell her you like every part of her, clumsy included",
+          "reply": "Even the clumsy parts...? You’re really something.",
+          "kind": "flirt",
+          "flag": "luna_like",
+          "delta": {
+            "affection": 2,
+            "trust": 1,
+            "respect": 0,
+            "attraction": 3
+          }
+        },
+        {
+          "label": "Say you’ll be there while she figures herself out",
+          "reply": "That’s all I need. Someone patient. Someone who stays.",
+          "kind": "honest",
+          "flag": "luna_stay",
+          "delta": {
+            "affection": 2,
+            "trust": 3,
+            "respect": 1,
+            "attraction": 1
+          }
+        }
+      ],
+      "openingByFlag": {
+        "luna_same": "You said I was still the same person. I’ve been holding onto that.",
+        "luna_time": "You told me it was okay to take time. I think I’m ready to talk about it more.",
+        "luna_notice": "You admitted you noticed. And you still wanted to keep talking to me."
+      }
+    }
+  ]
+}

@@ -1,0 +1,60 @@
+{
+  "schemaVersion": 1,
+  "id": "luna",
+  "name": "Luna Quinn",
+  "age": 18,
+  "role": "romance",
+  "deck": "water_blast",
+  "style": "Water Blast · gentle tempo control",
+  "dialogue": {
+    "intro": "O-oh! Sorry, I almost walked into you... again. I'm Luna. Are you okay? I didn't step on your foot, did I?",
+    "repeat": "Hi again! I was just... trying not to drop anything this time. How's your day going?",
+    "talk": [
+      "I practiced shuffling for an hour and still sent cards flying. The shop lady was very patient with me.",
+      "People keep offering to carry things for me. I always say I can manage, and then I immediately drop them.",
+      "Do you think my shirts are too small? They keep riding up when I reach for high shelves. I should buy bigger ones... eventually.",
+      "I tripped on the arcade stairs yesterday and somehow ended up with my skirt flipped. Three people helped me up. It was so embarrassing.",
+      "I like quiet places. Libraries are nice until I knock over a whole shelf by accident.",
+      "Everyone says I should be more careful. I am careful! The ground just doesn't agree with me."
+    ],
+    "flirt": "Y-you're looking at me funny again... Is there something on my face? Or did my shirt slip?",
+    "duelWin": "I won...? Oh no, did I do something wrong? You played really well!",
+    "duelLose": "Aww, I lost again. But it was fun! Can we play one more? I'll try not to drop my cards this time.",
+    "hangouts": [
+      "Luna insists on carrying the drinks and immediately spills one down the front of her shirt. She apologizes for ten minutes straight while trying to dab it dry.",
+      "You help her reach a high shelf at the shop. She stretches up on her toes, shirt riding up completely, and only notices when you look away.",
+      "A quiet park walk turns into her tripping over nothing and landing in your arms. She stays there a second too long before panicking and apologizing.",
+      "At the café she drops her spoon, bends to pick it up, and her top gapes open. She has no idea why the table next to you goes silent.",
+      "She tries to high-five you after a duel and misses, spinning herself around and nearly falling into a display. You catch her. She turns bright red."
+    ]
+  },
+  "appearance": {
+    "silhouette": "Unambiguously adult 18-year-old with an extremely soft, heavy-chested, wide-hipped goddess figure. Large natural breasts that strain every top she wears, soft stomach, thick thighs. She has no awareness of how eye-catching her body is.",
+    "palette": "Soft lavender, cream white, pale pink, and gentle sky blue.",
+    "hair": "Long, slightly wavy pastel-lavender hair usually worn loose or in a loose low ponytail that falls past her lower back.",
+    "eyes": "Large soft violet eyes that look permanently a little worried or apologetic.",
+    "details": "Simple silver necklace, small round glasses that constantly slide down her nose, soft cardigan that never stays closed, and a tendency for her clothes to shift at the worst moments.",
+    "expressions": "Soft shy smile, wide-eyed panic when she trips, embarrassed blush covering her whole face, rare genuine happy look when she doesn't mess something up, distracted thoughtful expression while adjusting her clothes without realizing the effect.",
+    "outfits": [
+      "signature soft cream crop sweater that is clearly one size too small in the chest, high-waisted shorts, loose cardigan that slips off one shoulder",
+      "pastel pink button-up shirt that strains at the bust and comes untucked constantly, pleated skirt",
+      "oversized hoodie she thinks hides everything (it doesn't), bike shorts",
+      "simple sundress that becomes dangerously low-cut when she bends over",
+      "tournament day: neat blouse that still pulls tight across her chest the moment she raises her arms"
+    ],
+    "renderNotes": "SFW anime/JRPG romantic-comedy style, age 18. Emphasize the extreme soft curves and large breasts in a natural way. Clothing should look slightly too tight or constantly shifting (riding up, gaping, slipping) so she is unintentionally sexy without ever posing for it. No nudity, no lingerie framing. Soft lighting, gentle expressions, Neo Harbor colorful aesthetic."
+  },
+  "arrivalDay": 15,
+  "schedule": [
+    ["library", "cafe", "home"],
+    ["shop", "library", "cafe"],
+    ["home", "park", "library"],
+    ["cafe", "shop", "park"],
+    ["library", "home", "cafe"],
+    ["shop", "park", "library"],
+    ["home", "cafe", "library"]
+  ],
+  "stories": "stories.json",
+  "artManifest": "art_manifest.json",
+  "bible": "bible.md"
+}
