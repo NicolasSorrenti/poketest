@@ -38,8 +38,12 @@
   node.append(prizeSection(`${opponentName} PRIZES`,opponentCount),prizeSection('YOUR PRIZES',ownCount));
  }
  function energyStack(unit,getCard){
-  const cards=(unit?.energies||[]).map(id=>({id,card:getCard(id)}));
-  if(!cards.length)return '';
+  // All authoritative duel modes (CPU, RPG, online and Cube) use this same
+  // miniature-card stack. The actual card art slides out from underneath the
+  // left edge of each Pokémon, like physical attached Energy cards.
+  const ids=Array.isArray(unit?.energies)?unit.energies:[];
+  if(!ids.length)return '';
+  const cards=ids.map(id=>getCard(id)||{});
   const shown=cards.slice(0,6),over=Math.max(0,cards.length-shown.length);
   const types={
    Grass:['grass','G','GRS'],Fire:['fire','F','FIR'],Water:['water','W','WAT'],
@@ -49,14 +53,18 @@
    'Double Colorless':['colorless','2','DCE'],Potion:['special','+','PTN'],
    'Full Heal':['special','+','FHL']
   };
-  const strips=shown.map(({card:c},i)=>{
+  const minis=shown.map((c,i)=>{
    const name=String(c.name||'Unknown Energy');
    const key=name.replace(/ Energy$/,'');
    const [type,symbol,short]=types[key]||['special',key[0]||'?',(key.slice(0,3)||'ENG').toUpperCase()];
-   return `<span class="attached-energy energy-type-${type}" title="${html(name)}" aria-label="${html(name)}" style="--energy-position:${i}"><span class="energy-symbol">${html(symbol)}</span><span class="energy-label">${html(short)}</span></span>`;
+   const url=c.images?.small;
+   const art=typeof url==='string'&&/^https:\/\//.test(url)
+    ?`<img class="energy-card-art" src="${html(url)}" alt="" loading="lazy">`
+    :`<span class="energy-card-fallback"><span class="energy-symbol">${html(symbol)}</span><span class="energy-label">${html(short)}</span></span>`;
+   return `<span class="attached-energy energy-card-mini energy-type-${type}" title="${html(name)}" style="--energy-position:${i}">${art}</span>`;
   }).join('');
-  const title=cards.map(({card:c})=>c.name||'Unknown Energy').join(', ');
-  return `<span class="energy-peeks" title="${html(title)}" aria-label="${cards.length} attached Energy: ${html(title)}">${strips}${over?`<span class="energy-overflow">+${over}</span>`:''}</span>`;
+  const names=cards.map(c=>String(c.name||'Unknown Energy')).join(', ');
+  return `<span class="energy-peeks energy-card-stack" title="${html(names)}" aria-label="${cards.length} attached Energy: ${html(names)}">${minis}${over?`<span class="energy-overflow">+${over}</span>`:''}</span>`;
  }
  function makeDuelFeedback(el){
   let last=null,removeTimer=null,changes=new Map();
