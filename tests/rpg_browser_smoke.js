@@ -80,6 +80,26 @@ const readState=page=>page.evaluate(()=>JSON.parse(localStorage.getItem('neoHarb
   const inner=page.frameLocator('#battle');
   await inner.locator('#phaseText').waitFor({timeout:45000});
   assert.equal(await inner.locator('#turnCoach').count(),1);
+  const energyArtGeometry=await inner.locator('.stage').evaluate(stage=>{
+     const box=document.createElement('button');box.className='poke';
+     box.style.position='absolute';box.style.left='180px';box.style.top='160px';
+     box.innerHTML=window.NeoDuelUI.energyStack({energies:['fire','water','fire']},
+      id=>({name:id==='fire'?'Fire Energy':'Water Energy',
+        images:{small:'https://assets.tcgdex.net/en/base/base1/98/low.webp'}}))+
+      '<span class="pokemon-face"></span>';
+     stage.append(box);
+     const stack=box.querySelector('.energy-card-stack'),minis=[...box.querySelectorAll('.energy-card-mini')];
+     const face=box.querySelector('.pokemon-face'),art=minis[0].querySelector('img');
+     const fr=face.getBoundingClientRect(),er=minis[0].getBoundingClientRect();
+     const result={count:minis.length,actualArt:!!art,extendsLeft:er.left<fr.left,
+      overlapsFace:er.right>fr.left,visible:er.width>20&&er.height>30,
+      layered:Number(getComputedStyle(face).zIndex)>Number(getComputedStyle(stack).zIndex),
+      pointerSafe:getComputedStyle(stack).pointerEvents==='none'};
+     box.remove();return result;
+    });
+    assert.equal(energyArtGeometry.count,3,'All attached Energy mini cards are rendered');
+    for(const key of ['actualArt','extendsLeft','overlapsFace','visible','layered','pointerSafe'])
+     assert.ok(energyArtGeometry[key],key+' — Energy must peek as a real card from underneath Pokémon');
   await inner.locator('#handFan .hand-fan-card').first().waitFor({state:'visible'});
   const handGeometry=await inner.locator('#handFan .hand-fan-card').first().evaluate(card=>{
    const rect=card.getBoundingClientRect();
