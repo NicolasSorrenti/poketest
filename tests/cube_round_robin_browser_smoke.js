@@ -59,7 +59,9 @@ const {server,cubeRooms,online}=require('../server');
   const game=online.findRoom(r.code).game;
   assert.equal(game.deckSize,40);assert.equal(game.prizeCount,4);
   game.over=true;game.winner=0;
-  await Promise.all(pages.map(p=>p.locator('a[aria-label="Return to your Cube championship standings"]').click()));
+  online.bump(online.findRoom(r.code));
+  // Browser should return by itself after a short result countdown.
+  await Promise.all(pages.map(p=>p.waitForURL(/cube_room\.html\?room=/,{timeout:16000})));
   for(const page of pages){
    await page.locator('#roundRobinArea:not(.hidden)').waitFor({timeout:20000});
    await page.waitForFunction(()=>document.querySelector('#rrProgress')?.textContent?.includes('2 of 6'),
@@ -68,7 +70,7 @@ const {server,cubeRooms,online}=require('../server');
    assert((await page.locator('#rrStandings').innerText()).includes('Bob'));
   }
   assert.deepEqual(errors,[]);
-  console.log('PASS Cube round-robin browser: two live clients, secure PvP navigation, 40/4 game, return and standings');
+  console.log('PASS Cube round-robin browser: two live clients, secure PvP navigation, 40/4 game, automatic tournament return and standings');
  }finally{
   if(browser)await browser.close();
   await new Promise(resolve=>server.close(resolve));
