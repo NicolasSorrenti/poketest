@@ -3,6 +3,1222 @@
 (function(root,factory){const api=factory();if(typeof module==='object'&&module.exports)module.exports=api;if(root)root.NeoRpgCharacterPacks=api;})(typeof window!=='undefined'?window:null,function(){
 const packs=[
  {
+  "id": "jinx",
+  "cast": {
+   "name": "Jinx Rivera",
+   "age": 18,
+   "deck": "zap",
+   "style": "Zap! · pure Lightning aggression",
+   "intro": "Oh great, another face. Don't waste my time unless you can actually keep up. Name's Jinx. Try not to stare too hard—I charge for the privilege.",
+   "repeat": "Still hovering? Either challenge me or say something interesting. Standing there looking useful isn't a personality.",
+   "talk": [
+    "Most people here play like they're afraid of their own cards. I don't have that problem.",
+    "Yes, I dress like this on purpose. No, I don't need your opinion on it. Keep looking though—it's free entertainment for me.",
+    "I don't do 'cute and approachable.' If you want soft, go find someone else. If you want someone who'll actually push you, stay.",
+    "Losing doesn't bother me. Looking stupid does. Big difference.",
+    "You ever notice how many people pretend they don't care what others think? Liars. I just stopped pretending.",
+    "Arcade high scores, tournament brackets, who shows up when it actually matters—those are the only rankings that count."
+   ],
+   "flirt": "Careful. I bite. And I don't always warn first. Still want to find out?",
+   "duelWin": "Huh. You actually made me work for that. Don't get used to the compliment.",
+   "duelLose": "Lucky shot. Or maybe you're not completely hopeless. Rematch. Now.",
+   "hangouts": [
+    "Jinx drags you into a best-of-three at the arcade and talks trash the entire time—until she loses the final game and goes quiet for a full thirty seconds.",
+    "You catch her at the shop testing every possible crop-top and short combination. She asks which one is more distracting, then judges your answer harder than the clothes.",
+    "A late café run turns into her dissecting every other player's tells while she steals half your fries and pretends she isn't enjoying the company.",
+    "She challenges you to a waterfront sprint in the middle of the afternoon heat. When you both collapse on the grass she actually laughs without the usual edge.",
+    "Tournament night and she insists you stand right next to her bench. Every time someone stares she smirks at you like the two of you are in on the same joke."
+   ],
+   "portrait": "/rpg-assets/characters/jinx/neutral.png"
+  },
+  "looks": {
+   "silhouette": "Unambiguously adult 18-year-old, lean-athletic with deliberate curves, long legs, and a confident, almost aggressive posture. Designed to look like she walked out of a fanservice magazine but still fully clothed in every scene.",
+   "palette": "Electric magenta, black, silver-white, and sharp neon pink accents.",
+   "hair": "Very long, straight silver-white hair with vivid neon-pink underlights and a few face-framing strands; usually worn loose or in a high messy ponytail that still swings past her hips.",
+   "eyes": "Sharp amber-gold eyes that almost always look half-lidded and judgmental until something genuinely amuses her.",
+   "details": "Multiple ear piercings, thin black choker, fingerless gloves, small lightning-bolt pendant, deck case worn like a hip bag, and an ever-present half-smirk.",
+   "expressions": "Default bored/judgy stare, sudden wicked grin, eye-roll of pure disdain, rare unguarded soft look when she thinks no one is watching, competitive fire when a duel gets serious.",
+   "outfits": [
+    "signature black micro-shorts + cropped magenta tank that ends well above the navel, open short jacket, thigh-high socks",
+    "tiny pleated skirt + tied-up white shirt that barely stays closed, same thigh-highs",
+    "sport bikini top under an oversized open zip hoodie and bike shorts for arcade days",
+    "high-cut one-piece swimsuit with side cutouts and a sheer cover-up for waterfront events",
+    "tournament look: fitted black crop hoodie, low-rise shorts, and the same long silver-pink hair left completely free"
+   ],
+   "renderNotes": "SFW anime/JRPG romantic-comedy style, age 18. Heavy fanservice silhouette and outfit design (short hems, midriff, high legs, cleavage emphasis) but zero nudity, no lingerie-as-clothing, no sexualized poses beyond confident stance and smirk. Match Neo Harbor's clean, colorful, expressive adult-cast aesthetic."
+  },
+  "schedule": [
+   [
+    "arcade",
+    "arcade",
+    "cafe"
+   ],
+   [
+    "shop",
+    "park",
+    "arcade"
+   ],
+   [
+    "home",
+    "shop",
+    "arcade"
+   ],
+   [
+    "park",
+    "cafe",
+    "center"
+   ],
+   [
+    "arcade",
+    "shop",
+    "park"
+   ],
+   [
+    "shop",
+    "arcade",
+    "cafe"
+   ],
+   [
+    "home",
+    "park",
+    "arcade"
+   ]
+  ],
+  "arrivalDay": 12,
+  "events": [
+   {
+    "id": "jinx_route_1",
+    "title": "Don’t Stare Too Long",
+    "start": 12,
+    "end": 24,
+    "place": "arcade",
+    "slot": 1,
+    "minBond": 0,
+    "prerequisite": null,
+    "participants": [],
+    "npc": "jinx",
+    "chapter": 1,
+    "lines": [
+     {
+      "speaker": "jinx",
+      "text": "You’re new. Or at least new to standing in my line of sight. Name?"
+     },
+     {
+      "speaker": "Protagonist",
+      "text": "Depends who’s asking."
+     },
+     {
+      "speaker": "jinx",
+      "text": "Jinx. And I ask because people who hover without a reason usually turn into a problem."
+     },
+     {
+      "speaker": "Protagonist",
+      "text": "Maybe I just like the view."
+     },
+     {
+      "speaker": "jinx",
+      "text": "Bold. Most people pretend they’re not looking. At least you’re honest about it."
+     },
+     {
+      "speaker": "jinx",
+      "text": "Still. Looking is free. Keeping my attention isn’t. You play, or are you just window shopping?"
+     }
+    ],
+    "choices": [
+     {
+      "label": "Challenge her to a match right now",
+      "reply": "Finally. Someone who doesn’t waste time. Don’t cry when I wipe the floor with you.",
+      "kind": "support",
+      "flag": "jinx_challenge",
+      "delta": {
+       "affection": 1,
+       "trust": 1,
+       "respect": 2,
+       "attraction": 1
+      }
+     },
+     {
+      "label": "Tell her the attitude is part of the appeal",
+      "reply": "Oh, so you like the sharp edges. Dangerous preference. I might start testing that.",
+      "kind": "flirt",
+      "flag": "jinx_edge",
+      "delta": {
+       "affection": 2,
+       "trust": 0,
+       "respect": 1,
+       "attraction": 2
+      }
+     },
+     {
+      "label": "Ask if she always opens with threats",
+      "reply": "Threats? That was me being polite. You should see me when I’m actually annoyed.",
+      "kind": "honest",
+      "flag": "jinx_honest",
+      "delta": {
+       "affection": 1,
+       "trust": 2,
+       "respect": 1,
+       "attraction": 0
+      }
+     }
+    ]
+   },
+   {
+    "id": "jinx_route_2",
+    "title": "High Score or High Horse",
+    "start": 28,
+    "end": 42,
+    "place": "arcade",
+    "slot": 2,
+    "minBond": 2,
+    "prerequisite": "jinx_route_1",
+    "participants": [],
+    "npc": "jinx",
+    "chapter": 1,
+    "lines": [
+     {
+      "speaker": "jinx",
+      "text": "You’re still here. Either you’re stubborn or you have terrible taste in people."
+     },
+     {
+      "speaker": "Protagonist",
+      "text": "Maybe both."
+     },
+     {
+      "speaker": "jinx",
+      "text": "At least own it. Most of the regulars here fold the second I raise an eyebrow."
+     },
+     {
+      "speaker": "Protagonist",
+      "text": "You enjoy that a little too much."
+     },
+     {
+      "speaker": "jinx",
+      "text": "Obviously. What’s the point of being good if nobody notices? Same goes for the rest of the package."
+     },
+     {
+      "speaker": "jinx",
+      "text": "You’re staring again. Either sit down and play or admit you just like the show."
+     }
+    ],
+    "choices": [
+     {
+      "label": "Sit down and play her seriously",
+      "reply": "Good. I hate when people treat matches like background noise.",
+      "kind": "support",
+      "flag": "jinx_serious",
+      "delta": {
+       "affection": 2,
+       "trust": 2,
+       "respect": 1,
+       "attraction": 0
+      }
+     },
+     {
+      "label": "Admit you like both the game and the show",
+      "reply": "Honest and shameless. I can work with that. Don’t expect me to make it easy though.",
+      "kind": "flirt",
+      "flag": "jinx_show",
+      "delta": {
+       "affection": 2,
+       "trust": 1,
+       "respect": 0,
+       "attraction": 2
+      }
+     },
+     {
+      "label": "Ask what happens when someone actually beats her",
+      "reply": "...Rare. And usually temporary. But I’ll remember the ones who can.",
+      "kind": "honest",
+      "flag": "jinx_remember",
+      "delta": {
+       "affection": 1,
+       "trust": 1,
+       "respect": 2,
+       "attraction": 1
+      }
+     }
+    ],
+    "openingByFlag": {
+     "jinx_challenge": "You challenged me last time. Cute. Most people don’t follow through.",
+     "jinx_edge": "Still into the sharp edges? Bold of you.",
+     "jinx_honest": "You asked if I always open with threats. Today I’m feeling generous. Almost."
+    }
+   },
+   {
+    "id": "jinx_route_3",
+    "title": "When the Smirk Slips",
+    "start": 46,
+    "end": 60,
+    "place": "park",
+    "slot": 1,
+    "minBond": 4,
+    "prerequisite": "jinx_route_2",
+    "participants": [],
+    "npc": "jinx",
+    "chapter": 2,
+    "lines": [
+     {
+      "speaker": "jinx",
+      "text": "Don’t make a big deal out of this. I just needed air that didn’t smell like arcade carpet."
+     },
+     {
+      "speaker": "Protagonist",
+      "text": "You okay?"
+     },
+     {
+      "speaker": "jinx",
+      "text": "Define okay. I lost a match I should’ve won because I got distracted by someone talking behind me. Petty, I know."
+     },
+     {
+      "speaker": "Protagonist",
+      "text": "You care more than you let on."
+     },
+     {
+      "speaker": "jinx",
+      "text": "Obviously. Looking like I don’t care is half the fun. The other half is actually being better than everyone else."
+     },
+     {
+      "speaker": "jinx",
+      "text": "...You’re not saying anything. That’s either really smart or really annoying."
+     }
+    ],
+    "choices": [
+     {
+      "label": "Sit with her in silence for a bit",
+      "reply": "Weirdly... not terrible. Don’t get used to the quiet version of me.",
+      "kind": "support",
+      "flag": "jinx_quiet",
+      "delta": {
+       "affection": 2,
+       "trust": 2,
+       "respect": 1,
+       "attraction": 0
+      }
+     },
+     {
+      "label": "Tell her she doesn’t have to perform right now",
+      "reply": "That obvious, huh? Fine. Temporary truce. No performance. Just... this.",
+      "kind": "honest",
+      "flag": "jinx_truce",
+      "delta": {
+       "affection": 2,
+       "trust": 2,
+       "respect": 1,
+       "attraction": 1
+      }
+     },
+     {
+      "label": "Tease her gently about the rare soft look",
+      "reply": "Shut up. And don’t you dare tell anyone I can look like that.",
+      "kind": "flirt",
+      "flag": "jinx_soft",
+      "delta": {
+       "affection": 2,
+       "trust": 1,
+       "respect": 0,
+       "attraction": 2
+      }
+     }
+    ],
+    "openingByFlag": {
+     "jinx_serious": "You played me seriously last time. So I figured you could handle seeing me when I’m actually pissed.",
+     "jinx_show": "You said you liked the show. This is the part where the lights dim for a second.",
+     "jinx_remember": "You asked what happens when someone beats me. This is the quieter version of that feeling."
+    }
+   },
+   {
+    "id": "jinx_route_4",
+    "title": "Own It or Lose It",
+    "start": 64,
+    "end": 76,
+    "place": "center",
+    "slot": 1,
+    "minBond": 5,
+    "prerequisite": "jinx_route_3",
+    "participants": [],
+    "npc": "jinx",
+    "chapter": 3,
+    "lines": [
+     {
+      "speaker": "jinx",
+      "text": "Tournament bracket’s up. I’m in the top half. You’re either going to be in my way or on my side. Pick."
+     },
+     {
+      "speaker": "Protagonist",
+      "text": "You’re asking for help?"
+     },
+     {
+      "speaker": "jinx",
+      "text": "I’m asking if you’re useful. Different question."
+     },
+     {
+      "speaker": "Protagonist",
+      "text": "And if I say I just want to watch you play?"
+     },
+     {
+      "speaker": "jinx",
+      "text": "...Then sit where I can see you. And don’t look away when it gets close. I notice."
+     },
+     {
+      "speaker": "jinx",
+      "text": "Also—whatever this is between us? Own it or drop it. I don’t do half-measures."
+     }
+    ],
+    "choices": [
+     {
+      "label": "Tell her you’re staying for the long game",
+      "reply": "Good. Because I was about to get really annoying if you flaked.",
+      "kind": "support",
+      "flag": "jinx_stay",
+      "delta": {
+       "affection": 2,
+       "trust": 2,
+       "respect": 1,
+       "attraction": 1
+      }
+     },
+     {
+      "label": "Admit you want both the wins and her",
+      "reply": "Greedy. I like it. Don’t make me regret giving you the real answer.",
+      "kind": "flirt",
+      "flag": "jinx_greedy",
+      "delta": {
+       "affection": 2,
+       "trust": 1,
+       "respect": 0,
+       "attraction": 2
+      }
+     },
+     {
+      "label": "Say you’ll support her either way",
+      "reply": "Support is nice. Loyalty is rarer. I’ll remember which one you actually deliver.",
+      "kind": "honest",
+      "flag": "jinx_loyalty",
+      "delta": {
+       "affection": 1,
+       "trust": 2,
+       "respect": 2,
+       "attraction": 0
+      }
+     }
+    ],
+    "openingByFlag": {
+     "jinx_quiet": "You sat with me when I was quiet. So I’m trusting you with the louder version again.",
+     "jinx_truce": "Temporary truce is over. Time to see if you meant what you said in the park.",
+     "jinx_soft": "You saw the soft look. Don’t think that means I’ll go easy on the bracket."
+    }
+   },
+   {
+    "id": "jinx_route_5",
+    "title": "No More Performance",
+    "start": 80,
+    "end": 90,
+    "place": "cafe",
+    "slot": 2,
+    "minBond": 6,
+    "prerequisite": "jinx_route_4",
+    "participants": [],
+    "npc": "jinx",
+    "chapter": 4,
+    "lines": [
+     {
+      "speaker": "jinx",
+      "text": "Tournament’s over. I placed where I wanted. You’re still here. So either you’re a glutton for punishment or this is actually something."
+     },
+     {
+      "speaker": "Protagonist",
+      "text": "What do you want it to be?"
+     },
+     {
+      "speaker": "jinx",
+      "text": "I want someone who doesn’t flinch when I’m sharp and doesn’t treat me like a prize when I’m soft. Rare combination."
+     },
+     {
+      "speaker": "Protagonist",
+      "text": "And you think that’s me?"
+     },
+     {
+      "speaker": "jinx",
+      "text": "I’m starting to. Which is terrifying, by the way. I don’t usually let people get this close without a fight."
+     },
+     {
+      "speaker": "jinx",
+      "text": "So... your move. No audience. No scoreboard. Just us."
+     }
+    ],
+    "choices": [
+     {
+      "label": "Tell her you want the real version, sharp edges and all",
+      "reply": "Then stop looking at me like I’m about to vanish. I’m not going anywhere. Not tonight.",
+      "kind": "support",
+      "flag": "jinx_real",
+      "delta": {
+       "affection": 3,
+       "trust": 2,
+       "respect": 1,
+       "attraction": 1
+      }
+     },
+     {
+      "label": "Close the distance and kiss her",
+      "reply": "...Took you long enough. Don’t stop now.",
+      "kind": "flirt",
+      "flag": "jinx_kiss",
+      "delta": {
+       "affection": 2,
+       "trust": 1,
+       "respect": 0,
+       "attraction": 3
+      }
+     },
+     {
+      "label": "Ask if she’s ready to stop performing completely",
+      "reply": "With you? Yeah. I think I am. Scary answer, but it’s the true one.",
+      "kind": "honest",
+      "flag": "jinx_ready",
+      "delta": {
+       "affection": 2,
+       "trust": 3,
+       "respect": 1,
+       "attraction": 1
+      }
+     }
+    ],
+    "openingByFlag": {
+     "jinx_stay": "You said you were staying for the long game. Guess the long game is now.",
+     "jinx_greedy": "You wanted the wins and me. You got the wins. Now decide about the rest.",
+     "jinx_loyalty": "You talked about loyalty. Tonight I’m calling that bluff—or that promise."
+    }
+   },
+   {
+    "id": "jinx_marina_cross_1",
+    "title": "Safety First, Attitude Second",
+    "start": 35,
+    "end": 48,
+    "place": "park",
+    "slot": 0,
+    "minBond": 2,
+    "prerequisite": "jinx_route_1",
+    "participants": [
+     "marina"
+    ],
+    "npc": "jinx",
+    "chapter": 2,
+    "lines": [
+     {
+      "speaker": "marina",
+      "text": "Jinx, the railing by the water is still wet. Those sandals are a slip waiting to happen."
+     },
+     {
+      "speaker": "jinx",
+      "text": "I’ve been walking in worse. But fine—point taken. Happy?"
+     },
+     {
+      "speaker": "marina",
+      "text": "I’d be happier if you stopped treating every safety note like a personal attack."
+     },
+     {
+      "speaker": "Protagonist",
+      "text": "She’s not wrong about the railing."
+     },
+     {
+      "speaker": "jinx",
+      "text": "Traitor. …Okay, maybe both of you have a point. I still look good doing the safe thing though."
+     },
+     {
+      "speaker": "marina",
+      "text": "Looking good and staying upright can coexist. Shocking, I know."
+     },
+     {
+      "speaker": "jinx",
+      "text": "Don’t get used to me agreeing with you. It’s temporary."
+     }
+    ],
+    "choices": [
+     {
+      "label": "Side with Marina on the safety call",
+      "reply": "Ugh. Fine. You’re both annoying when you’re right.",
+      "kind": "honest",
+      "flag": "jinx_marina_safety",
+      "delta": {
+       "affection": 1,
+       "trust": 1,
+       "respect": 2,
+       "attraction": 0
+      }
+     },
+     {
+      "label": "Tease Jinx for actually listening",
+      "reply": "Shut up. I can be reasonable. Occasionally. Don’t tell anyone.",
+      "kind": "flirt",
+      "flag": "jinx_marina_tease",
+      "delta": {
+       "affection": 2,
+       "trust": 1,
+       "respect": 0,
+       "attraction": 2
+      }
+     },
+     {
+      "label": "Offer to help move whatever she’s setting up",
+      "reply": "Useful and not lecturing me. Rare combination. Come on then.",
+      "kind": "support",
+      "flag": "jinx_marina_help",
+      "delta": {
+       "affection": 2,
+       "trust": 2,
+       "respect": 1,
+       "attraction": 0
+      }
+     }
+    ],
+    "openingByFlag": {
+     "jinx_challenge": "After you challenged me at the arcade I figured I could handle a little park setup. Marina has opinions about my footwear.",
+     "jinx_edge": "You liked the sharp edges. Marina likes me not falling into the water. We’re negotiating.",
+     "jinx_honest": "You asked if I always open with threats. Marina opens with safety lectures. We’re both consistent."
+    }
+   },
+   {
+    "id": "jinx_alma_cross_1",
+    "title": "The Counter Is Not a Runway",
+    "start": 55,
+    "end": 68,
+    "place": "cafe",
+    "slot": 1,
+    "minBond": 3,
+    "prerequisite": "jinx_route_2",
+    "participants": [
+     "alma"
+    ],
+    "npc": "jinx",
+    "chapter": 2,
+    "lines": [
+     {
+      "speaker": "alma",
+      "text": "Jinx. Off the counter. Customers need space and I need my insurance rates to stay reasonable."
+     },
+     {
+      "speaker": "jinx",
+      "text": "I’m not even blocking anyone. I’m elevating the aesthetic."
+     },
+     {
+      "speaker": "alma",
+      "text": "You’re elevating my blood pressure. Sit like a normal person or go be dramatic somewhere else."
+     },
+     {
+      "speaker": "Protagonist",
+      "text": "She’s got a point about the counter."
+     },
+     {
+      "speaker": "jinx",
+      "text": "Everyone’s a critic today. Fine. Chair. Happy?"
+     },
+     {
+      "speaker": "alma",
+      "text": "Mildly. Thank you for not making me throw you out in front of the afternoon regulars."
+     },
+     {
+      "speaker": "jinx",
+      "text": "I can be civilized. When it amuses me. You’re welcome."
+     }
+    ],
+    "choices": [
+     {
+      "label": "Defend Jinx’s right to be extra (within reason)",
+      "reply": "See? Someone gets it. Drama is a service.",
+      "kind": "support",
+      "flag": "jinx_alma_defend",
+      "delta": {
+       "affection": 2,
+       "trust": 1,
+       "respect": 0,
+       "attraction": 1
+      }
+     },
+     {
+      "label": "Agree with Alma and tell Jinx to pick her battles",
+      "reply": "…Annoying. Accurate. I’ll save the theatrics for people who deserve them.",
+      "kind": "honest",
+      "flag": "jinx_alma_pick",
+      "delta": {
+       "affection": 1,
+       "trust": 2,
+       "respect": 2,
+       "attraction": 0
+      }
+     },
+     {
+      "label": "Offer to buy both of them something so the tension drops",
+      "reply": "Bribery. Classy. I’ll allow it this once.",
+      "kind": "flirt",
+      "flag": "jinx_alma_bribe",
+      "delta": {
+       "affection": 2,
+       "trust": 1,
+       "respect": 0,
+       "attraction": 2
+      }
+     }
+    ],
+    "openingByFlag": {
+     "jinx_serious": "You played me seriously at the arcade. Alma is now playing me seriously about café furniture.",
+     "jinx_show": "You said you liked the show. Alma prefers the show stay off her counter.",
+     "jinx_remember": "You asked what happens when someone beats me. Alma just beat me at café rules."
+    }
+   }
+  ],
+  "art": {
+   "schemaVersion": 1,
+   "characterId": "jinx",
+   "portrait": "/rpg-assets/characters/jinx/neutral.png",
+   "expressions": {
+    "neutral": "/rpg-assets/characters/jinx/neutral.webp",
+    "smirk": "/rpg-assets/characters/jinx/smirk.webp",
+    "judgy": "/rpg-assets/characters/jinx/judgy.webp",
+    "fire": "/rpg-assets/characters/jinx/fire.webp",
+    "soft": "/rpg-assets/characters/jinx/soft.webp"
+   },
+   "eventImages": [
+    {
+     "sceneId": "jinx_route_1",
+     "path": "/rpg-assets/characters/jinx/jinx_arcade_challenge.webp",
+     "prompt": "Adult 18 year old Jinx Rivera, anime visual novel JRPG style, leaning against an arcade machine in black micro-shorts and cropped magenta tank, long silver-white hair with pink underlights, sharp amber eyes and signature smirk, heavy fanservice silhouette but fully clothed and SFW, neon arcade lighting, confident posture, bottom 20 percent clear for text"
+    },
+    {
+     "sceneId": "jinx_route_3",
+     "path": "/rpg-assets/characters/jinx/jinx_unguarded.webp",
+     "prompt": "Adult 18 year old Jinx Rivera sitting on a park bench at dusk, oversized open hoodie over her usual short outfit, long silver-pink hair down, rare unguarded soft expression instead of the usual smirk, cinematic anime VN composition, warm evening light, entirely SFW, bottom 20 percent clear for dialogue"
+    },
+    {
+     "sceneId": "jinx_marina_cross_1",
+     "path": "/rpg-assets/characters/jinx/jinx_marina_park.webp",
+     "prompt": "Adult 18 year old Jinx Rivera and Marina at a waterfront park railing, Jinx in micro-shorts + cropped top looking slightly annoyed but listening, long silver-pink hair, sharp amber eyes, heavy fanservice silhouette still fully clothed and SFW, Marina in practical clothes, daylight anime visual novel style, bottom 20 percent clear for text"
+    },
+    {
+     "sceneId": "jinx_alma_cross_1",
+     "path": "/rpg-assets/characters/jinx/jinx_alma_cafe.webp",
+     "prompt": "Adult 18 year old Jinx Rivera perched on a cafe counter being told to get down by Alma, Jinx in short skirt and cropped top with signature smirk, long silver-white hair with pink underlights, fanservicey but fully clothed SFW anime JRPG style, warm cafe interior, bottom 20 percent clear for dialogue"
+    }
+   ]
+  }
+ },
+ {
+  "id": "luna",
+  "cast": {
+   "name": "Luna Quinn",
+   "age": 18,
+   "deck": "water_blast",
+   "style": "Water Blast · gentle tempo control",
+   "intro": "O-oh! Sorry, I almost walked into you... again. I'm Luna. Are you okay? I didn't step on your foot, did I?",
+   "repeat": "Hi again! I was just... trying not to drop anything this time. How's your day going?",
+   "talk": [
+    "I practiced shuffling for an hour and still sent cards flying. The shop lady was very patient with me.",
+    "People keep offering to carry things for me. I always say I can manage, and then I immediately drop them.",
+    "Do you think my shirts are too small? They keep riding up when I reach for high shelves. I should buy bigger ones... eventually.",
+    "I tripped on the arcade stairs yesterday and somehow ended up with my skirt flipped. Three people helped me up. It was so embarrassing.",
+    "I like quiet places. Libraries are nice until I knock over a whole shelf by accident.",
+    "Everyone says I should be more careful. I am careful! The ground just doesn't agree with me."
+   ],
+   "flirt": "Y-you're looking at me funny again... Is there something on my face? Or did my shirt slip?",
+   "duelWin": "I won...? Oh no, did I do something wrong? You played really well!",
+   "duelLose": "Aww, I lost again. But it was fun! Can we play one more? I'll try not to drop my cards this time.",
+   "hangouts": [
+    "Luna insists on carrying the drinks and immediately spills one down the front of her shirt. She apologizes for ten minutes straight while trying to dab it dry.",
+    "You help her reach a high shelf at the shop. She stretches up on her toes, shirt riding up completely, and only notices when you look away.",
+    "A quiet park walk turns into her tripping over nothing and landing in your arms. She stays there a second too long before panicking and apologizing.",
+    "At the café she drops her spoon, bends to pick it up, and her top gapes open. She has no idea why the table next to you goes silent.",
+    "She tries to high-five you after a duel and misses, spinning herself around and nearly falling into a display. You catch her. She turns bright red."
+   ],
+   "portrait": "/rpg-assets/characters/luna/neutral.png"
+  },
+  "looks": {
+   "silhouette": "Unambiguously adult 18-year-old with an extremely soft, heavy-chested, wide-hipped goddess figure. Large natural breasts that strain every top she wears, soft stomach, thick thighs. She has no awareness of how eye-catching her body is.",
+   "palette": "Soft lavender, cream white, pale pink, and gentle sky blue.",
+   "hair": "Long, slightly wavy pastel-lavender hair usually worn loose or in a loose low ponytail that falls past her lower back.",
+   "eyes": "Large soft violet eyes that look permanently a little worried or apologetic.",
+   "details": "Simple silver necklace, small round glasses that constantly slide down her nose, soft cardigan that never stays closed, and a tendency for her clothes to shift at the worst moments.",
+   "expressions": "Soft shy smile, wide-eyed panic when she trips, embarrassed blush covering her whole face, rare genuine happy look when she doesn't mess something up, distracted thoughtful expression while adjusting her clothes without realizing the effect.",
+   "outfits": [
+    "signature soft cream crop sweater that is clearly one size too small in the chest, high-waisted shorts, loose cardigan that slips off one shoulder",
+    "pastel pink button-up shirt that strains at the bust and comes untucked constantly, pleated skirt",
+    "oversized hoodie she thinks hides everything (it doesn't), bike shorts",
+    "simple sundress that becomes dangerously low-cut when she bends over",
+    "tournament day: neat blouse that still pulls tight across her chest the moment she raises her arms"
+   ],
+   "renderNotes": "SFW anime/JRPG romantic-comedy style, age 18. Emphasize the extreme soft curves and large breasts in a natural way. Clothing should look slightly too tight or constantly shifting (riding up, gaping, slipping) so she is unintentionally sexy without ever posing for it. No nudity, no lingerie framing. Soft lighting, gentle expressions, Neo Harbor colorful aesthetic."
+  },
+  "schedule": [
+   [
+    "library",
+    "cafe",
+    "home"
+   ],
+   [
+    "shop",
+    "library",
+    "cafe"
+   ],
+   [
+    "home",
+    "park",
+    "library"
+   ],
+   [
+    "cafe",
+    "shop",
+    "park"
+   ],
+   [
+    "library",
+    "home",
+    "cafe"
+   ],
+   [
+    "shop",
+    "park",
+    "library"
+   ],
+   [
+    "home",
+    "cafe",
+    "library"
+   ]
+  ],
+  "arrivalDay": 15,
+  "events": [
+   {
+    "id": "luna_route_1",
+    "title": "Sorry About the Spill",
+    "start": 15,
+    "end": 28,
+    "place": "cafe",
+    "slot": 1,
+    "minBond": 0,
+    "prerequisite": null,
+    "participants": [],
+    "npc": "luna",
+    "chapter": 1,
+    "lines": [
+     {
+      "speaker": "luna",
+      "text": "Oh no—watch out!"
+     },
+     {
+      "speaker": "Protagonist",
+      "text": "It's fine, it only got a little on me."
+     },
+     {
+      "speaker": "luna",
+      "text": "I'm so sorry! I was trying to carry both drinks and my bag and... I do this a lot."
+     },
+     {
+      "speaker": "Protagonist",
+      "text": "You okay?"
+     },
+     {
+      "speaker": "luna",
+      "text": "Y-yes. Just embarrassed. Again. My sweater is all wet now too..."
+     },
+     {
+      "speaker": "luna",
+      "text": "Please don't look. It's clinging and I can't fix it properly here."
+     }
+    ],
+    "choices": [
+     {
+      "label": "Offer her your jacket so she can cover up",
+      "reply": "You're really kind... Thank you. I'll wash it and return it, I promise!",
+      "kind": "support",
+      "flag": "luna_jacket",
+      "delta": {
+       "affection": 2,
+       "trust": 2,
+       "respect": 1,
+       "attraction": 0
+      }
+     },
+     {
+      "label": "Gently tell her it's fine and not to worry",
+      "reply": "You're not mad...? Most people get annoyed when I soak them.",
+      "kind": "honest",
+      "flag": "luna_calm",
+      "delta": {
+       "affection": 2,
+       "trust": 1,
+       "respect": 1,
+       "attraction": 1
+      }
+     },
+     {
+      "label": "Look away politely while she adjusts",
+      "reply": "You're not staring... That actually helps. Thank you.",
+      "kind": "flirt",
+      "flag": "luna_lookaway",
+      "delta": {
+       "affection": 1,
+       "trust": 1,
+       "respect": 0,
+       "attraction": 2
+      }
+     }
+    ]
+   },
+   {
+    "id": "luna_route_2",
+    "title": "High Shelves and Low Awareness",
+    "start": 30,
+    "end": 44,
+    "place": "shop",
+    "slot": 1,
+    "minBond": 2,
+    "prerequisite": "luna_route_1",
+    "participants": [],
+    "npc": "luna",
+    "chapter": 1,
+    "lines": [
+     {
+      "speaker": "luna",
+      "text": "Excuse me... could you help me reach that box? I keep stretching and it still won't budge."
+     },
+     {
+      "speaker": "Protagonist",
+      "text": "Sure."
+     },
+     {
+      "speaker": "luna",
+      "text": "Thank you so much! I always feel bad asking. My arms just aren't long enough and everything is so high."
+     },
+     {
+      "speaker": "Protagonist",
+      "text": "You almost had it."
+     },
+     {
+      "speaker": "luna",
+      "text": "Did I? My shirt keeps riding up when I try... I should really get new clothes. These never stay where they should."
+     },
+     {
+      "speaker": "luna",
+      "text": "Why are you looking at the floor? Did I drop something else?"
+     }
+    ],
+    "choices": [
+     {
+      "label": "Get the box for her without comment",
+      "reply": "You're so reliable. I wish I could stop needing help all the time.",
+      "kind": "support",
+      "flag": "luna_help",
+      "delta": {
+       "affection": 2,
+       "trust": 2,
+       "respect": 1,
+       "attraction": 0
+      }
+     },
+     {
+      "label": "Softly suggest her shirt might be the problem",
+      "reply": "Is it...? Oh no, is it that obvious? I thought it was fine!",
+      "kind": "honest",
+      "flag": "luna_shirt",
+      "delta": {
+       "affection": 1,
+       "trust": 1,
+       "respect": 1,
+       "attraction": 2
+      }
+     },
+     {
+      "label": "Tease her gently about how hard she was trying",
+      "reply": "D-don't laugh! I was really giving it my all...",
+      "kind": "flirt",
+      "flag": "luna_tease",
+      "delta": {
+       "affection": 2,
+       "trust": 1,
+       "respect": 0,
+       "attraction": 2
+      }
+     }
+    ],
+    "openingByFlag": {
+     "luna_jacket": "You lent me your jacket last time. I still have it... clean, I promise. Could you help me with this shelf?",
+     "luna_calm": "You were so calm when I spilled everything. Maybe you can help me with something that doesn't involve liquids?",
+     "luna_lookaway": "You looked away when my sweater got wet. That was really considerate. Could you help me reach this?"
+    }
+   },
+   {
+    "id": "luna_route_3",
+    "title": "The Stretch That Broke the Silence",
+    "start": 48,
+    "end": 62,
+    "place": "shop",
+    "slot": 2,
+    "minBond": 4,
+    "prerequisite": "luna_route_2",
+    "participants": [],
+    "npc": "luna",
+    "chapter": 2,
+    "lines": [
+     {
+      "speaker": "luna",
+      "text": "Almost... just a little more..."
+     },
+     {
+      "speaker": "Protagonist",
+      "text": "Luna, your shirt—"
+     },
+     {
+      "speaker": "luna",
+      "text": "Hmm? Did it ride up again? I felt a breeze. Hold on, I'll fix it."
+     },
+     {
+      "speaker": "Protagonist",
+      "text": "Maybe I should just get it for you."
+     },
+     {
+      "speaker": "luna",
+      "text": "You're staring at the wall really hard. Did I do something weird again?"
+     },
+     {
+      "speaker": "luna",
+      "text": "People do that a lot around me. I never know why. Is my hair messy?"
+     }
+    ],
+    "choices": [
+     {
+      "label": "Just get the item and change the subject",
+      "reply": "You're the best. I don't know what I'd do without people like you.",
+      "kind": "support",
+      "flag": "luna_cover",
+      "delta": {
+       "affection": 2,
+       "trust": 2,
+       "respect": 1,
+       "attraction": 0
+      }
+     },
+     {
+      "label": "Gently explain that her body draws attention",
+      "reply": "M-my body...? Oh. Oh no. Is that why everyone keeps looking?",
+      "kind": "honest",
+      "flag": "luna_realize",
+      "delta": {
+       "affection": 1,
+       "trust": 2,
+       "respect": 1,
+       "attraction": 2
+      }
+     },
+     {
+      "label": "Tell her she looks good even when she's struggling",
+      "reply": "Y-you think so? Even when I'm making a mess of everything?",
+      "kind": "flirt",
+      "flag": "luna_compliment",
+      "delta": {
+       "affection": 2,
+       "trust": 1,
+       "respect": 0,
+       "attraction": 3
+      }
+     }
+    ],
+    "openingByFlag": {
+     "luna_help": "You helped me last time without making me feel useless. I'm trying the high shelf again... poorly.",
+     "luna_shirt": "You mentioned my shirt before. I tried a different one. It still doesn't behave.",
+     "luna_tease": "You teased me last time. Please be nice while I fail at reaching things again."
+    }
+   },
+   {
+    "id": "luna_route_4",
+    "title": "Falling Into Understanding",
+    "start": 65,
+    "end": 78,
+    "place": "park",
+    "slot": 1,
+    "minBond": 5,
+    "prerequisite": "luna_route_3",
+    "participants": [],
+    "npc": "luna",
+    "chapter": 3,
+    "lines": [
+     {
+      "speaker": "luna",
+      "text": "I tripped on nothing again. You caught me. Thank you."
+     },
+     {
+      "speaker": "Protagonist",
+      "text": "You okay?"
+     },
+     {
+      "speaker": "luna",
+      "text": "Physically yes. Emotionally... I've been thinking about what you said. About people looking."
+     },
+     {
+      "speaker": "Protagonist",
+      "text": "Yeah?"
+     },
+     {
+      "speaker": "luna",
+      "text": "I always thought I was just clumsy and awkward. I never considered that my body might be... noticeable."
+     },
+     {
+      "speaker": "luna",
+      "text": "Is it bad that I still don't really know how to feel about it?"
+     }
+    ],
+    "choices": [
+     {
+      "label": "Tell her she’s still the same kind person",
+      "reply": "That helps. A lot. I was worried everything would feel different.",
+      "kind": "support",
+      "flag": "luna_same",
+      "delta": {
+       "affection": 3,
+       "trust": 2,
+       "respect": 1,
+       "attraction": 1
+      }
+     },
+     {
+      "label": "Say it’s okay to take time figuring it out",
+      "reply": "You’re patient with me. Most people just stare or laugh.",
+      "kind": "honest",
+      "flag": "luna_time",
+      "delta": {
+       "affection": 2,
+       "trust": 2,
+       "respect": 1,
+       "attraction": 1
+      }
+     },
+     {
+      "label": "Admit you’ve noticed, but you like her for more than that",
+      "reply": "You... noticed? And you still talk to me like this? That’s really nice.",
+      "kind": "flirt",
+      "flag": "luna_notice",
+      "delta": {
+       "affection": 2,
+       "trust": 1,
+       "respect": 0,
+       "attraction": 3
+      }
+     }
+    ],
+    "openingByFlag": {
+     "luna_cover": "You always cover for me. Even when I make it hard.",
+     "luna_realize": "I’ve been thinking about what you said in the shop. About why people look.",
+     "luna_compliment": "You said I looked good even when I was struggling. I’ve been replaying that a lot."
+    }
+   },
+   {
+    "id": "luna_route_5",
+    "title": "Still Clumsy, Still Me",
+    "start": 80,
+    "end": 90,
+    "place": "cafe",
+    "slot": 2,
+    "minBond": 6,
+    "prerequisite": "luna_route_4",
+    "participants": [],
+    "npc": "luna",
+    "chapter": 4,
+    "lines": [
+     {
+      "speaker": "luna",
+      "text": "I ordered without spilling anything today. Personal record."
+     },
+     {
+      "speaker": "Protagonist",
+      "text": "Proud of you."
+     },
+     {
+      "speaker": "luna",
+      "text": "I still don’t really understand why my body gets so much attention. But I’m trying not to let it scare me."
+     },
+     {
+      "speaker": "Protagonist",
+      "text": "How’s that going?"
+     },
+     {
+      "speaker": "luna",
+      "text": "Better when you’re around. You never made me feel like I was just... that. You always treated me like Luna."
+     },
+     {
+      "speaker": "luna",
+      "text": "If I trip again, will you still catch me?"
+     }
+    ],
+    "choices": [
+     {
+      "label": "Promise you’ll always catch her",
+      "reply": "Then I’ll try not to be too scared of falling.",
+      "kind": "support",
+      "flag": "luna_catch",
+      "delta": {
+       "affection": 3,
+       "trust": 2,
+       "respect": 1,
+       "attraction": 1
+      }
+     },
+     {
+      "label": "Tell her you like every part of her, clumsy included",
+      "reply": "Even the clumsy parts...? You’re really something.",
+      "kind": "flirt",
+      "flag": "luna_like",
+      "delta": {
+       "affection": 2,
+       "trust": 1,
+       "respect": 0,
+       "attraction": 3
+      }
+     },
+     {
+      "label": "Say you’ll be there while she figures herself out",
+      "reply": "That’s all I need. Someone patient. Someone who stays.",
+      "kind": "honest",
+      "flag": "luna_stay",
+      "delta": {
+       "affection": 2,
+       "trust": 3,
+       "respect": 1,
+       "attraction": 1
+      }
+     }
+    ],
+    "openingByFlag": {
+     "luna_same": "You said I was still the same person. I’ve been holding onto that.",
+     "luna_time": "You told me it was okay to take time. I think I’m ready to talk about it more.",
+     "luna_notice": "You admitted you noticed. And you still wanted to keep talking to me."
+    }
+   }
+  ],
+  "art": {
+   "schemaVersion": 1,
+   "characterId": "luna",
+   "portrait": "/rpg-assets/characters/luna/neutral.png",
+   "expressions": {
+    "neutral": "/rpg-assets/characters/luna/neutral.webp",
+    "shy": "/rpg-assets/characters/luna/shy.webp",
+    "panic": "/rpg-assets/characters/luna/panic.webp",
+    "blush": "/rpg-assets/characters/luna/blush.webp",
+    "happy": "/rpg-assets/characters/luna/happy.webp"
+   },
+   "eventImages": [
+    {
+     "sceneId": "luna_route_1",
+     "path": "/rpg-assets/characters/luna/luna_spill.webp",
+     "prompt": "Adult 18 year old Luna Quinn, soft anime visual novel style, extremely large breasts straining a too-small cream crop sweater, long pastel-lavender hair, violet eyes looking apologetic, she has just spilled a drink down her front, cardigan slipping off one shoulder, heavy unintentional fanservice, fully clothed SFW, café interior, Neo Harbor aesthetic, bottom 20 percent clear for text"
+    },
+    {
+     "sceneId": "luna_route_3",
+     "path": "/rpg-assets/characters/luna/luna_stretch.webp",
+     "prompt": "Adult 18 year old Luna Quinn reaching for a high shelf, soft curvy goddess body, large breasts pushed up by a tight pastel shirt that has ridden up, long lavender hair, slightly panicked expression, unintentional heavy fanservice, fully clothed SFW, shop interior, anime visual novel CG, Neo Harbor style, bottom 20 percent clear"
+    }
+   ]
+  }
+ },
+ {
   "id": "sol",
   "cast": {
    "name": "Sol Varela",

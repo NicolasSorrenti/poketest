@@ -20,7 +20,7 @@
  const rank=ids=>Object.fromEntries([...new Set(ids)].map(id=>[id,ids.filter(x=>x===id).length]));
  const hash=str=>{let h=2166136261;for(const ch of str){h^=ch.charCodeAt(0);h=Math.imul(h,16777619)}return h>>>0};
  const sample=(starter,seed,i)=>{const pool=poolByStarter[starter]||upgrade;return pool[hash(seed+':'+i)%pool.length]};
- function fresh(){return {starter:null,owned:{},deck:[],draft:null,packs:0,rewards:0};}
+ function fresh(){return {starter:null,owned:{},deck:[],draft:null,packs:0,rewards:0,lastPack:null};}
  function hydrate(state){
   const x=state.deckJourney;if(x===null||x===undefined)return state;
   if(!x||typeof x!=='object'||Array.isArray(x)){state.deckJourney=fresh();return state}
@@ -30,13 +30,15 @@
   x.deck=Array.isArray(x.deck)&&x.deck.length===60?x.deck.filter(id=>allAllowed.has(id)):byId.get(x.starter).cards.slice();
   if(x.deck.length!==60)x.deck=byId.get(x.starter).cards.slice();
   for(const [id,n] of Object.entries(rank(x.deck)))x.owned[id]=Math.max(n,x.owned[id]||0);
-  if(!Array.isArray(x.draft)||x.draft.some(id=>!allAllowed.has(id)))x.draft=null;
+  if(!Array.isArray(x.draft)||x.draft.length>60||x.draft.some(id=>!allAllowed.has(id)))x.draft=null;
+  if(!x.lastPack||!Array.isArray(x.lastPack.cards)||x.lastPack.cards.length!==5||x.lastPack.cards.some(id=>!allAllowed.has(id)))x.lastPack=null;
+  else{x.lastPack.source=x.lastPack.source==='win'?'win':'shop';x.lastPack.opened=x.lastPack.opened===true;}
   x.packs=Number.isInteger(x.packs)&&x.packs>=0?x.packs:0;x.rewards=Number.isInteger(x.rewards)&&x.rewards>=0?x.rewards:0;
   return state;
  }
  function choose(state,id){if(state.deckJourney?.starter)throw Error('Starter deck already chosen');
   const starter=byId.get(id);if(!starter)throw Error('Choose one of the three starter decks');
-  state.deckJourney={starter:id,owned:rank(starter.cards),deck:[...starter.cards],draft:null,packs:0,rewards:0};state.playerDeck='custom';
+  state.deckJourney={starter:id,owned:rank(starter.cards),deck:[...starter.cards],draft:null,packs:0,rewards:0,lastPack:null};state.playerDeck='custom';
   return starter;
  }
  function check(deck,owned){
@@ -63,18 +65,47 @@
   const v=check(updated,x.owned);if(!v.valid)throw Error(v.errors[0]);
   x.draft=updated;return updated;
  }
+ function edit(state,id,quantity){
+  const x=state.deckJourney,prior=draft(state);
+  if(!allAllowed.has(id)||!Number.isInteger(quantity)||Math.abs(quantity)!==1)throw Error('Invalid deck edit');
+  const updated=[...prior],counts=rank(updated);
+  if(quantity<0){
+   const at=updated.lastIndexOf(id);if(at<0)throw Error('This card is not in your deck');
+   updated.splice(at,1);
+  }else{
+   if(updated.length>=60)throw Error('Remove a card before adding another');
+   if((counts[id]||0)>=(x.owned[id]||0))throw Error('You do not own another copy of this card');
+   if(!ENERGY.has(id)&&(counts[id]||0)>=4)throw Error('Four-copy limit reached');
+   updated.push(id);
+  }
+  x.draft=updated;return updated;
+ }
  function save(state){const x=state.deckJourney;draft(state);const v=check(x.draft,x.owned);
   if(!v.valid)throw Error(v.errors.join(' '));x.deck=[...x.draft];x.draft=null;return x.deck;
  }
  function cancel(state){if(state.deckJourney)state.deckJourney.draft=null}
- function reward(state,win){const x=state.deckJourney;if(!x?.starter||!win)return null;
+ function grant(x,ids,source){
+  for(const id of ids)x.owned[id]=(x.owned[id]||0)+1;
+  x.lastPack={cards:[...ids],source,opened:false};
+  return ids;
+ }
+ function reward(state,win){
+  const x=state.deckJourney;
+  if(!x?.starter||!win)return null;
   const pool=poolByStarter[x.starter]||upgrade,seed=x.starter+':win:'+x.rewards;
   const start=hash(seed)%pool.length;
-  // First rewards should introduce useful upgrades rather than immediately
-  // duplicating all the weak cards already supplied in the starter.
-  const next=Array.from({length:pool.length},(_,i)=>pool[(start+i)%pool.length]).find(id=>!x.owned[id]);
-  const id=next||sample(x.starter,seed,x.rewards);
-  x.owned[id]=(x.owned[id]||0)+1;x.rewards++;return id;
+  // At least one previously unowned printing while any remain in this pool.
+  const newCard=Array.from({length:pool.length},(_,i)=>pool[(start+i)%pool.length])
+    .find(id=>!x.owned[id]);
+  const ids=[newCard||sample(x.starter,seed,0)];
+  for(let i=1;i<5;i++){
+   let id=sample(x.starter,seed,i);
+   // Prefer distinct cards in each mini booster; keep all five valid.
+   for(let offset=0;offset<pool.length&&ids.includes(id);offset++)id=pool[(hash(seed+':'+i)+offset)%pool.length];
+   ids.push(id);
+  }
+  x.rewards++;
+  return grant(x,ids,'win');
  }
  function buyPack(state){const x=state.deckJourney;
   if(!x?.starter)throw Error('Choose your starter before opening packs');
@@ -82,7 +113,7 @@
   if(state.pendingDuel||state.activeStory||state.activeSideQuest||state.activeSituation||state.activeArc||state.activeEncounter)throw Error('Finish the current scene first');
   if((state.credits||0)<20)throw Error('A training pack costs 20 credits');
   const seed=x.starter+':pack:'+x.packs,ids=Array.from({length:5},(_,i)=>sample(x.starter,seed,i));
-  state.credits-=20;x.packs++;for(const id of ids)x.owned[id]=(x.owned[id]||0)+1;return ids;
+  state.credits-=20;x.packs++;return grant(x,ids,'shop');
  }
- return Object.freeze({starters,upgrade,ENERGY,byId:id=>byId.get(id),fresh,hydrate,choose,check,draft,change,save,cancel,reward,buyPack,rank});
+ return Object.freeze({starters,upgrade,ENERGY,byId:id=>byId.get(id),fresh,hydrate,choose,check,draft,edit,change,save,cancel,reward,buyPack,rank});
 });
