@@ -486,6 +486,110 @@ function act(action){
  if(type==='flirt'){if(!state.talked['flirt:'+key]){state.talked['flirt:'+key]=true;bond.affection++;state.relationships[id].affection++;state.relationships[id].attraction++;}persist();return say(c.name,c.flirt,options(id));}
  if(type==='hang'){if(state.hungOut[state.day+':'+id])return say(c.name,'I enjoyed our time today. Let us make plans another day.',options(id));state.hungOut[state.day+':'+id]=true;bond.affection+=2;bond.trust++;state.relationships[id].affection+=2;state.relationships[id].trust++;log('Spent time with '+c.name+'.');recordIntention('hangout');const memories=recordCG('hangout',id);advance();state.selected=null;say(c.name,Array.isArray(c.hangouts)&&c.hangouts.length?c.hangouts[(state.day+bond.duels)%c.hangouts.length]:'That was a lovely way to spend part of the day. See you around.');showCGMoment(memories[0]);return;}
 }
+
+const cardNames=new Map();
+const labelCard=id=>cardNames.get(id)||id.replace('base1-','Base #');
+function controlsLocked(){return state.day>90||!!state.pendingDuel||!!state.activeSituation||!!state.activeStory||!!state.activeSideQuest||!!state.activeArc||!!state.activeEncounter;}
+function showStarterChoice(){
+ if(controlsLocked())return;
+ const root=$('starterChoices');root.replaceChildren();
+ for(const starter of COLLECT.starters){
+  const button=document.createElement('button');button.className='starter-choice';
+  const heading=document.createElement('strong');heading.textContent=starter.name+' · '+starter.types.join(' / ');
+  const detail=document.createElement('small');detail.textContent=starter.description+' · 60 cards · 20 Pokémon / 16 Trainers / 24 Energy';
+  button.append(heading,detail);
+  button.onclick=()=>{
+   if(controlsLocked())return;
+   try{COLLECT.choose(state,starter.id);log('Chose '+starter.name+' as your first deck.');persist();
+    if($('starterDialog').open)$('starterDialog').close();
+    say('Narrator','Your '+starter.name+' deck is ready. Visit the card shop for packs, win cards in duels and improve your deck at home.');
+   }catch(e){$('notice').textContent=e.message;}
+  };
+  root.append(button);
+ }
+ if(!$('starterDialog').open)$('starterDialog').showModal();
+}
+function renderCollection(){
+ const root=$('deckCollection');root.replaceChildren();
+ const journey=state.deckJourney,locked=controlsLocked();
+ if(journey===null){
+  const p=document.createElement('p');p.textContent='Legacy campaign: your current theme deck remains available. Switch to a limited collection whenever you want a new challenge.';
+  const btn=document.createElement('button');btn.textContent='Begin starter-deck journey';btn.disabled=locked;
+  btn.onclick=showStarterChoice;root.append(p,btn);return;
+ }
+ if(!journey.starter){
+  const btn=document.createElement('button');btn.textContent='Choose one of three mixed-type starters';btn.disabled=locked;
+  btn.onclick=showStarterChoice;root.append(btn);return;
+ }
+ const starter=COLLECT.byId(journey.starter);
+ const total=Object.values(journey.owned).reduce((a,n)=>a+n,0);
+ const summary=document.createElement('p');summary.textContent=starter.name+' · 60-card deck · '+total+' owned cards · '+journey.packs+' packs opened';
+ const edit=document.createElement('button');edit.textContent='Edit your 60-card deck · free';edit.disabled=locked;edit.onclick=openDeckWorkshop;
+ root.append(summary,edit);
+ if(state.location==='shop'){
+  const buy=document.createElement('button');buy.textContent='Buy training pack · 5 cards · 20 credits';
+  buy.disabled=locked||state.credits<20;
+  buy.onclick=()=>{
+   try{const cards=COLLECT.buyPack(state);log('Opened a training pack: '+cards.map(labelCard).join(', ')+'.');persist();say('Card Shop','Five new cards added to your collection: '+cards.map(labelCard).join(', ')+'. Edit your deck whenever you want.');}
+   catch(e){$('notice').textContent=e.message;}
+  };
+  root.append(buy);
+ }
+}
+function renderDeckWorkshop(){
+ const j=state.deckJourney;if(!j?.starter)return;
+ const draft=COLLECT.draft(state),owned=j.owned;
+ const counts=COLLECT.rank(draft),remove=$('deckRemove'),add=$('deckAdd');
+ const previousRemove=remove.value,previousAdd=add.value;
+ remove.replaceChildren();add.replaceChildren();
+ const label=(id,n)=>labelCard(id)+' · '+n+' copy'+(n===1?'':'ies');
+ for(const [id,n] of Object.entries(counts)){
+  const option=document.createElement('option');option.value=id;option.textContent=label(id,n);remove.append(option);
+ }
+ for(const [id,n] of Object.entries(owned)){
+  if(!n)continue;
+  const option=document.createElement('option');option.value=id;option.textContent=label(id,n)+' owned / '+(counts[id]||0)+' in deck';add.append(option);
+ }
+ if(counts[previousRemove])remove.value=previousRemove;
+ if(owned[previousAdd])add.value=previousAdd;
+ const valid=COLLECT.check(draft,owned);
+ $('deckEditStats').textContent=COLLECT.byId(j.starter).name+' · '+draft.length+'/60 cards · '+(valid.valid?'Ready to battle':'Deck needs attention');
+ $('deckEditError').textContent=valid.errors[0]||'Swap any card you own, one for one. Only your saved deck goes into battle.';
+ const list=$('deckList');list.replaceChildren();
+ for(const [id,n] of Object.entries(counts)){
+  const item=document.createElement('span');item.textContent=n+'× '+labelCard(id);list.append(item);
+ }
+}
+function openDeckWorkshop(){
+ if(controlsLocked()||!state.deckJourney?.starter)return;
+ COLLECT.draft(state);renderDeckWorkshop();persist();
+ if(!$('deckEditDialog').open)$('deckEditDialog').showModal();
+}
+function closeDeckWorkshop(discard){
+ if(discard)COLLECT.cancel(state);
+ if($('deckEditDialog').open)$('deckEditDialog').close();
+ persist();render();
+}
+$('starterDialog').addEventListener('cancel',e=>{if(state.deckJourney&&!state.deckJourney.starter)e.preventDefault();});
+$('deckSwap').onclick=()=>{
+ try{
+  COLLECT.change(state,$('deckRemove').value,$('deckAdd').value);persist();renderDeckWorkshop();
+ }catch(e){$('deckEditError').textContent=e.message;}
+};
+$('deckSave').onclick=()=>{
+ try{COLLECT.save(state);log('Saved a revised 60-card deck.');closeDeckWorkshop(false);}
+ catch(e){$('deckEditError').textContent=e.message;}
+};
+$('deckDiscard').onclick=()=>closeDeckWorkshop(true);
+$('deckEditClose').onclick=()=>closeDeckWorkshop(true);
+async function loadCardNames(){
+ try{const res=await fetch('/cards/base1.json');if(!res.ok)return;
+  const cards=await res.json();if(!Array.isArray(cards))return;
+  for(const c of cards)if(c?.id&&c.name)cardNames.set(c.id,c.name);
+  renderCollection();
+ }catch{}
+}
+
 function duelUrl(duel){return '/classic_live.html?rpg=1&duelId='+encodeURIComponent(duel.id)+'&deck='+encodeURIComponent(duel.playerDeck)+'&opponent='+encodeURIComponent(duel.opponent)+'&npc='+encodeURIComponent(duel.npc)+'&npcName='+encodeURIComponent(cast[duel.npc].name);}
 
 function describePreparedDuel(){
@@ -1073,8 +1177,24 @@ $('quickNext').onclick=()=>act('rest');$('quickHome').onclick=()=>act('home');$(
 $('save').onclick=()=>{persist();$('notice').textContent='Campaign saved in this browser.'};
 $('dismissReceipt').onclick=()=>{state.lastDuelReceipt=null;persist();render();};
 document.addEventListener('keydown',e=>{if((e.key===' '||e.code==='Space')&&!['INPUT','TEXTAREA','SELECT','BUTTON'].includes(e.target?.tagName)){if(state.activeStory?.phase==='lines'){e.preventDefault();act('storyNext');}else if(state.activeArc?.phase==='lines'){e.preventDefault();act('arcNext');}}});
-async function initDecks(){try{const res=await fetch('/api/classic/decks');if(!res.ok)throw Error('Could not load decks');const data=await res.json(),select=$('deckPicker');for(const d of data.decks.filter(x=>x.id!=='custom')){const o=document.createElement('option');o.value=d.id;o.textContent=d.name;select.append(o)}if([...select.options].some(o=>o.value===state.playerDeck))select.value=state.playerDeck;else{select.value='blackout';state.playerDeck='blackout'}select.onchange=()=>{if(state.pendingDuel||state.activeStory||state.activeSideQuest||state.ended){select.value=state.playerDeck;return;}state.playerDeck=select.value;persist()};}catch(e){$('notice').textContent='Deck list unavailable: '+e.message;}}
-persist();render();initDecks();if(state.pendingDuel){
+async function initDecks(){
+ try{
+  const select=$('deckPicker');select.replaceChildren();
+  if(state.deckJourney!==null){
+   const opt=document.createElement('option');opt.value='custom';opt.textContent=state.deckJourney.starter?COLLECT.byId(state.deckJourney.starter).name+' · Your collection':'Choose your starter above';
+   select.append(opt);select.value='custom';select.disabled=true;
+  }else{
+   const res=await fetch('/api/classic/decks');if(!res.ok)throw Error('Could not load decks');
+   const data=await res.json();for(const d of data.decks.filter(x=>x.id!=='custom')){
+    const opt=document.createElement('option');opt.value=d.id;opt.textContent=d.name;select.append(opt);
+   }
+   if([...select.options].some(o=>o.value===state.playerDeck))select.value=state.playerDeck;
+   else{select.value='blackout';state.playerDeck='blackout';}
+   select.onchange=()=>{if(controlsLocked()){select.value=state.playerDeck;return;}state.playerDeck=select.value;persist();};
+  }
+ }catch(e){$('notice').textContent='Deck list unavailable: '+e.message;}
+}
+persist();render();initDecks();loadCardNames();if(state.deckJourney&&!state.deckJourney.starter&&!state.ended&&!state.pendingDuel)showStarterChoice();if(state.pendingDuel){
  if(PRE.isReady(state.pendingDuel)){
   $('duel').hidden=true;$('battle').src='about:blank';showPreparedDuel();
  }else{
