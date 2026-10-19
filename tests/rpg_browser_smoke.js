@@ -57,7 +57,15 @@ const readState=page=>page.evaluate(()=>JSON.parse(localStorage.getItem('neoHarb
   }
   // CG rewards can trigger an illustration overlay during unrelated story beats.
   // Close it before choosing the duel so a modal never masks gameplay controls.
-  if(await page.locator('#cgMoment[open]').count())await page.locator('#cgMomentClose').click();
+  await page.evaluate(()=>{
+   const cg=document.querySelector('#cgMoment');
+   if(!cg)return;
+   if(cg.open)cg.close();
+   // CG art loads asynchronously and can open after the duel button becomes
+   // visible; keep this browser-only smoke focused on starting the duel.
+   new MutationObserver(()=>{if(cg.open)cg.close()})
+    .observe(cg,{attributes:true,attributeFilter:['open']});
+  });
   await page.locator('#choices button').filter({hasText:'Challenge to a duel'}).click();
   await page.locator('#preDuelDialog').waitFor({state:'visible'});
   let staged=await readState(page);
@@ -164,7 +172,15 @@ const readState=page=>page.evaluate(()=>JSON.parse(localStorage.getItem('neoHarb
   }
   // CG rewards can trigger an illustration overlay during unrelated story beats.
   // Close it before choosing the duel so a modal never masks gameplay controls.
-  if(await page.locator('#cgMoment[open]').count())await page.locator('#cgMomentClose').click();
+  await page.evaluate(()=>{
+   const cg=document.querySelector('#cgMoment');
+   if(!cg)return;
+   if(cg.open)cg.close();
+   // CG art loads asynchronously and can open after the duel button becomes
+   // visible; keep this browser-only smoke focused on starting the duel.
+   new MutationObserver(()=>{if(cg.open)cg.close()})
+    .observe(cg,{attributes:true,attributeFilter:['open']});
+  });
   await page.locator('#choices button').filter({hasText:'Challenge to a duel'}).click();
   await page.locator('#preDuelDialog').waitFor({state:'visible'});
   const secondStaged=(await readState(page)).pendingDuel;
