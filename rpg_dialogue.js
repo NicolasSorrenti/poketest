@@ -626,12 +626,191 @@
   if(!beats)return [{speaker:npc,text:opening}];
   return [{speaker:npc,text:opening},...beats.map((text,i)=>({speaker:i%2?'npc':'Protagonist',text})).map(x=>({...x,speaker:x.speaker==='npc'?npc:x.speaker}))];
  }
+
+ // These paired beats deepen every character-pack route without changing its choices.
+ const guestRouteBeats={
+  "jinx": [
+    [
+      "A reputation is a lot to carry into a conversation.",
+      "You should see how much easier it is to carry when people stop pretending to be polite."
+    ],
+    [
+      "Have you ever wanted to play without an audience?",
+      "More than I admit. It might be nice to lose or win without a hundred comments."
+    ],
+    [
+      "You don't have to be impressive every minute.",
+      "That's a dangerous thing to say to me. I might actually test it."
+    ],
+    [
+      "I'm not here to watch you prove yourself to everyone.",
+      "Good. Because what I want to know is whether you'll keep showing up when nobody's keeping score."
+    ],
+    [
+      "I don't need you to be invincible.",
+      "That's lucky. I'm getting tired of pretending that I am."
+    ]
+  ],
+  "luna": [
+    [
+      "I can stand where you have a little privacy.",
+      "You'd do that? Thank you. I hate making everybody stop what they're doing."
+    ],
+    [
+      "You're allowed to ask for a hand.",
+      "I know. I just always worry I'm making someone's day more difficult."
+    ],
+    [
+      "Let's figure out what you need first.",
+      "You always make the next step feel smaller. I appreciate that."
+    ],
+    [
+      "Nobody needs you to have an answer right away.",
+      "Even if I keep overthinking it? ...Okay. I'll try being patient with myself."
+    ],
+    [
+      "I can't promise to stop every stumble.",
+      "I know. It matters more that you'll laugh with me afterward, not at me."
+    ]
+  ],
+  "sol": [
+    [
+      "Do people ever get to say no to your games?",
+      "They should. I'm starting to think a good invitation is one people can decline."
+    ],
+    [
+      "Maybe two people can still make a good evening.",
+      "That is suspiciously sensible. I like it much more than I expected."
+    ],
+    [
+      "It doesn't have to be spectacular to matter.",
+      "Then perhaps we can just stay here until the lemonade gets warm."
+    ],
+    [
+      "You're still giving everyone something fun to look forward to.",
+      "Only this time I'm remembering to tell them what it actually is."
+    ],
+    [
+      "I like you just as much when nothing is happening.",
+      "Then maybe this quiet moment deserves its own place on the calendar."
+    ]
+  ],
+  "rina": [
+    [
+      "I brought a deck too, if you'd rather skip the fan talk.",
+      "Oh, I would love that. Everyone else has already asked about the last song."
+    ],
+    [
+      "You don't have to make this a performance.",
+      "Good. Because the game is the one place I can forget whether anybody's watching."
+    ],
+    [
+      "The quiet version of you can be excited too.",
+      "She is. She's just a little afraid the world won't recognize her."
+    ],
+    [
+      "You don't have to prove either one to me.",
+      "Then I can just enjoy the song, the cards and the company."
+    ],
+    [
+      "What if we make room for the stage and the table?",
+      "That's what I want. I don't want to lose one part of myself to keep the other."
+    ]
+  ],
+  "elena": [
+    [
+      "Five minutes is plenty if we both mean what we say.",
+      "Interesting. Most people would ask for another ten."
+    ],
+    [
+      "You don't have to account for every pleasant moment.",
+      "I do not know how to stop counting. But perhaps I can try."
+    ],
+    [
+      "You don't need to call every unexpected thing a mistake.",
+      "That suggestion is irritatingly reasonable. I may consider it."
+    ],
+    [
+      "Would it help if we walked without choosing a destination?",
+      "In theory, no. In practice... keep walking."
+    ],
+    [
+      "You don't have to organize how this turns out.",
+      "A rare offer. Uncertainty is easier to face when someone chooses to remain."
+    ]
+  ],
+  "sierra": [
+    [
+      "It must be tiring being recognized for only one thing.",
+      "It is. Which is why hearing you ask about my deck catches me off guard."
+    ],
+    [
+      "Can I ask what you want, not what they booked you for?",
+      "A real match. Maybe a quiet meal. Nothing anyone needs to photograph."
+    ],
+    [
+      "Then this room can belong to you.",
+      "I like that. The cards don't care how I look under studio lights."
+    ],
+    [
+      "I'm interested in you, not the version people buy tickets to see.",
+      "That's what I've been hoping you'd say. I wasn't sure I believed it."
+    ],
+    [
+      "You don't have to hide the part that loves this game.",
+      "I won't. Whatever happens with us, I'm done pretending the deck box is just an accessory."
+    ]
+  ]
+};
+ const finalLegacyBeats={
+  "hana": [
+    "And what do you want after everybody goes home?",
+    "A day when I choose who to be with, instead of who needs my help."
+  ],
+  "reina": [
+    "If we don't turn this into a contest, would that be so bad?",
+    "It might be the first challenge I can't solve by practicing harder."
+  ],
+  "shiori": [
+    "What if the future isn't another version of the past?",
+    "Then perhaps I'll finally be willing to meet it without fear."
+  ],
+  "yuna": [
+    "You don't have to be funny every time I look at you.",
+    "Then I might have to learn another way to tell you I'm happy."
+  ],
+  "akari": [
+    "Could we make a choice without calculating the odds?",
+    "For this one? Yes. I think I finally can."
+  ],
+  "camila": [
+    "And if nobody is trying to win this conversation?",
+    "Then maybe we can both afford to be honest."
+  ],
+  "marina": [
+    "The decision is yours, even if I'm standing beside you.",
+    "It helps more than you know to have someone say that."
+  ],
+  "kaede": [
+    "Staying doesn't mean you lose the freedom to leave.",
+    "No. But it might mean I finally find something worth returning to."
+  ]
+};
  function storyLines(id,base){
   if(!Array.isArray(base)||base.length<2)return base;
-  const match=/^([a-z]+)_route_([1-3])$/.exec(id);
-  const add=match&&route[match[1]]?.[Number(match[2])-1];
-  if(!add)return base;
-  return [...base,{speaker:'Protagonist',text:add[0]},{speaker:match[1],text:add[1]}];
+  const match=/^([a-z]+)_route_([1-5])$/.exec(id);
+  if(!match)return base;
+  const [,npc,num]=match,index=Number(num)-1;
+  const extended=guestRouteBeats[npc]?.[index];
+  const legacy=route[npc]?.[index]||(index===3?finalLegacyBeats[npc]:null);
+  if(extended){
+   // Character-pack routes already end with the NPC's question to the player.
+   // Insert the exchange before that question so the decision still makes sense.
+   const beat=[{speaker:'Protagonist',text:extended[0]},{speaker:npc,text:extended[1]}];
+   return [...base.slice(0,-1),...beat,base[base.length-1]];
+  }
+  if(!legacy)return base;
+  return [...base,{speaker:'Protagonist',text:legacy[0]},{speaker:npc,text:legacy[1]}];
  }
  return Object.freeze({talkLines,flirtLines,greetingLines,storyLines});
 });
