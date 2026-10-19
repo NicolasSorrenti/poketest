@@ -5,7 +5,10 @@
  akari:'Akari Fujimoto',camila:'Camila Vega',marina:'Marina Aoki',kaede:'Kaede Arashi',
  jun:'Jun Arai',sol:'Sol Varela'};
  const cups=[['neighborhood','Neighborhood Cup'],['regional','Regional Qualifier'],['championship','Championship Bracket']];
- function displayName(id){return names[id]||String(id||'Someone').replace(/[_-]+/g,' ').replace(/\b\w/g,x=>x.toUpperCase());}
+ function displayName(id){
+  const registry=typeof module==='object'&&module.exports?require('./rpg_character_packs.generated'):window.NeoRpgCharacterPacks;
+  return registry?.cast?.[id]?.name||names[id]||String(id||'Someone').replace(/[_-]+/g,' ').replace(/\b\w/g,x=>x.toUpperCase());
+ }
  function report(state){
   if(!state||typeof state!=='object')throw Error('Invalid RPG season');
   const duels=Array.isArray(state.results)?state.results:[],win=duels.filter(x=>x.won===true).length,draw=duels.filter(x=>x.draw===true).length;
