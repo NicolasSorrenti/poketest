@@ -588,7 +588,7 @@ function performAction(g,side,cmd){
   }
   if(pending.kind==='neo93_grab'){
    if(answer.decline||answer.selected.length!==1)fail('Grab requires one attached Trainer choice');
-   const match=/^tool:(-?\\d+):(\\d+)$/.exec(answer.selected[0]);
+   const match=/^tool:(-?\d+):(\d+)$/.exec(answer.selected[0]);
    if(!match)fail('Grab target is invalid');
    const slot=Number(match[1]),index=Number(match[2]);
    const defender=g.players[1-pending.side],host=slot===-1?defender.active:defender.bench[slot];
