@@ -93,14 +93,25 @@ function copyImages(p){
   fs.mkdirSync(path.dirname(target),{recursive:true});fs.copyFileSync(file,target);
  }}walk();
 }
+function seasonBundle(){
+ const data=json(path.join(ROOT,'rpg_season_events.json'));
+ ensure(plain(data)&&data.schemaVersion===1&&Array.isArray(data.events),'invalid season events data');
+ ensure(data.events.every(e=>e.kind==='season'&&e.delivery==='world'),'world file must only contain season events');
+ const packs=discover(),all=[...data.events,...packs.flatMap(compiledMandatory)];
+ const errors=MANDATORY.validate(all,{characterIds:[...Object.keys(require('../rpg_narrative_pack').cast),...packs.map(p=>p.def.id)],storyIds:[...require('../rpg_story').events.map(e=>e.id),...packs.flatMap(p=>p.stories.events.map(e=>e.id))]});
+ ensure(!errors.length,errors.join('; '));
+ return "'use strict';\n// AUTO-GENERATED from rpg_season_events.json by scripts/rpg-character-packs.js.\n"+
+ "(function(root,factory){const api=factory();if(typeof module==='object'&&module.exports)module.exports=api;if(root)root.NeoRpgSeasonEvents=api;})(typeof window!=='undefined'?window:null,function(){return Object.freeze({events:"+JSON.stringify(data.events)+"});});\n";
+}
 function build(write=true){
  const packs=discover(),output=bundle(packs);
- if(write){for(const p of packs)copyImages(p);fs.writeFileSync(OUT,output);}
+ if(write){for(const p of packs)copyImages(p);fs.writeFileSync(OUT,output);fs.writeFileSync(path.join(ROOT,'rpg_season_events.js'),seasonBundle());}
  return {packs,output};
 }
 function check(){
  const {packs,output}=build(false);
  ensure(fs.existsSync(OUT)&&fs.readFileSync(OUT,'utf8')===output,'generated asset stale: npm run characters:build');
+ ensure(fs.existsSync(path.join(ROOT,'rpg_season_events.js'))&&fs.readFileSync(path.join(ROOT,'rpg_season_events.js'),'utf8')===seasonBundle(),'generated season events stale: npm run characters:build');
  return packs;
 }
 function importFolder(source){
@@ -150,4 +161,4 @@ if(require.main===module){try{
  else if(mode==='import'){ensure(process.argv[3],'usage: import <folder-or-zip>');console.log('Imported:',/\.zip$/i.test(process.argv[3])?importZip(process.argv[3]):importFolder(process.argv[3]));}
  else throw Error('Unknown mode '+mode);
 }catch(err){console.error(err.message);process.exitCode=1;}}
-module.exports={discover,validate,build,check,importFolder,importZip,bundle};
+module.exports={discover,validate,build,check,importFolder,importZip,bundle,seasonBundle};

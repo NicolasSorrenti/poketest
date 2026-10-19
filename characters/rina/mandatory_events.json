@@ -1,0 +1,71 @@
+{
+  "schemaVersion": 1,
+  "characterId": "rina",
+  "events": [
+    {
+      "id": "rina_initiates_practice",
+      "title": "Practice on Her Terms",
+      "kind": "bond",
+      "priority": 60,
+      "earliestDay": 30,
+      "trigger": {
+        "all": [
+          {
+            "storyDone": "rina_route_2"
+          },
+          {
+            "relationship": {
+              "npc": "rina",
+              "metric": "trust",
+              "gte": 2
+            }
+          }
+        ]
+      },
+      "delivery": "remote_or_present",
+      "timeCost": 0,
+      "fallback": "queue",
+      "expiry": "never",
+      "lines": [
+        {
+          "speaker": "rina",
+          "text": "Hey! It is me. I finished the rehearsal early, and I actually asked for this break."
+        },
+        {
+          "speaker": "Protagonist",
+          "text": "You asked for time off to practice your deck? Your manager agreed?"
+        },
+        {
+          "speaker": "rina",
+          "text": "Yes. I did not sneak out. I told her this matters to me, even when nobody is watching."
+        },
+        {
+          "speaker": "rina",
+          "text": "I have a few new openings to test. There is no audience to impress. Would you like to join me sometime?"
+        }
+      ],
+      "choices": [
+        {
+          "label": "I would like that. Let us set a time.",
+          "reply": "Deal! We can play when we both have room for it.",
+          "flag": "rina_practice_yes",
+          "effects": {
+            "flags": [
+              "rina_practice_yes"
+            ]
+          }
+        },
+        {
+          "label": "Not right now, but thanks for asking.",
+          "reply": "No pressure. I am proud I could ask you honestly.",
+          "flag": "rina_practice_no",
+          "effects": {
+            "flags": [
+              "rina_practice_no"
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

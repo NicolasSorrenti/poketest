@@ -1,0 +1,71 @@
+{
+  "schemaVersion": 1,
+  "characterId": "jinx",
+  "events": [
+    {
+      "id": "jinx_after_setback",
+      "title": "Off the Scoreboard",
+      "kind": "bond",
+      "priority": 60,
+      "earliestDay": 40,
+      "trigger": {
+        "all": [
+          {
+            "storyDone": "jinx_route_2"
+          },
+          {
+            "relationship": {
+              "npc": "jinx",
+              "metric": "respect",
+              "gte": 2
+            }
+          }
+        ]
+      },
+      "delivery": "remote_or_present",
+      "timeCost": 0,
+      "fallback": "queue",
+      "expiry": "never",
+      "lines": [
+        {
+          "speaker": "jinx",
+          "text": "I lost a match I thought I had solved. Go on, say something clever."
+        },
+        {
+          "speaker": "Protagonist",
+          "text": "Would you rather talk about the game or leave it alone?"
+        },
+        {
+          "speaker": "jinx",
+          "text": "Huh. I expected you to pretend it did not matter. It does. I made a bad read."
+        },
+        {
+          "speaker": "jinx",
+          "text": "If you ever want to look at that turn with me, I might even listen. No promises."
+        }
+      ],
+      "choices": [
+        {
+          "label": "We can study the board, no excuses.",
+          "reply": "Fine. Bring your sharpest notes. I need something better than sympathy.",
+          "flag": "jinx_review_yes",
+          "effects": {
+            "flags": [
+              "jinx_review_yes"
+            ]
+          }
+        },
+        {
+          "label": "You do not owe me a replay of that loss.",
+          "reply": "Good. I wanted you to know anyway.",
+          "flag": "jinx_review_no",
+          "effects": {
+            "flags": [
+              "jinx_review_no"
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

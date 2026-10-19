@@ -172,17 +172,25 @@ function maybeStartMandatory(){
     ||$('cgMoment')?.open||$('preDuelDialog')?.open||$('galleryDialog')?.open||$('calendarDialog')?.open)return;
  if(MANDATORY.takeNext(state,MANDATORY_EVENTS)){persist();}
 }
+function mandatoryText(value){
+ const results=Array.isArray(state.results)?state.results:[],wins=results.filter(x=>x.won===true).length;
+ const championship=state.tournaments?.championship?.state;
+ const standings=championship==='champion'?'You earned the championship title.':championship==='eliminated'?'The championship bracket ended before the title match.':'The championship title was not yours this season.';
+ const friends=Object.entries(state.relationships||{}).filter(([,v])=>v&&(v.trust>0||v.affection>0)).sort((a,b)=>(b[1].trust||0)+(b[1].affection||0)-(a[1].trust||0)-(a[1].affection||0)).slice(0,2).map(([id])=>cast[id]?.name||id);
+ const closest=state.partner?'You chose to share part of this journey with '+(cast[state.partner]?.name||state.partner)+'.':friends.length?'Friends you met along the way include '+friends.join(' and ')+'.':'You made your own way through the town, on your own terms.';
+ return String(value||'').replace(/\{\{(seasonRecord|championshipRecord|friendshipRecord)\}\}/g,(_,key)=>({seasonRecord:results.length+' duels, '+wins+' victories',championshipRecord:standings,friendshipRecord:closest})[key]);
+}
 function renderMandatory(){
  const a=state.mandatoryEventState?.active,e=MANDATORY_EVENTS.find(x=>x.id===a?.id);
  if(!a||!e)return null;
  if(a.phase==='lines'){
   const line=e.lines[a.index]||e.lines[e.lines.length-1];
   const name=line.speaker==='Protagonist'?'You':cast[line.speaker]?.name||line.speaker;
-  return {speaker:name,line:line.text,choices:[[a.index<e.lines.length-1?'Continue ›':'Respond ›','mandatoryNext']]};
+  return {speaker:name,line:mandatoryText(line.text),choices:[[a.index<e.lines.length-1?'Continue ›':'Respond ›','mandatoryNext']]};
  }
  if(a.phase==='choice')return {speaker:cast[e.characterId]?.name||'Narrator',line:'How will you respond?',choices:e.choices.map((c,i)=>[c.label,'mandatoryChoice:'+i])};
  const choice=e.choices[a.choice];
- return {speaker:cast[e.characterId]?.name||'Narrator',line:choice?.reply||'',choices:[['Continue story ›','mandatoryFinish']]};
+ return {speaker:cast[e.characterId]?.name||'Narrator',line:mandatoryText(choice?.reply||''),choices:[['Continue story ›','mandatoryFinish']]};
 }
 function mandatoryAction(type,id){
  if(!MANDATORY||!state.mandatoryEventState?.active)return false;

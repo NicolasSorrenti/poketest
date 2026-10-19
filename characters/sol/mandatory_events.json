@@ -1,0 +1,71 @@
+{
+  "schemaVersion": 1,
+  "characterId": "sol",
+  "events": [
+    {
+      "id": "sol_invites_quiet",
+      "title": "A Plan With No Plan",
+      "kind": "bond",
+      "priority": 60,
+      "earliestDay": 44,
+      "trigger": {
+        "all": [
+          {
+            "storyDone": "sol_route_2"
+          },
+          {
+            "relationship": {
+              "npc": "sol",
+              "metric": "trust",
+              "gte": 2
+            }
+          }
+        ]
+      },
+      "delivery": "remote_or_present",
+      "timeCost": 0,
+      "fallback": "queue",
+      "expiry": "never",
+      "lines": [
+        {
+          "speaker": "sol",
+          "text": "Hey, stranger. I was about to invite you to a wildly complicated adventure."
+        },
+        {
+          "speaker": "Protagonist",
+          "text": "And what did you come up with?"
+        },
+        {
+          "speaker": "sol",
+          "text": "Nothing. Not a scavenger hunt. Not a surprise. I just wondered if you would sit with me."
+        },
+        {
+          "speaker": "sol",
+          "text": "The last party taught me something: being with someone does not need a program. So... no rules today?"
+        }
+      ],
+      "choices": [
+        {
+          "label": "We could watch the harbor for a while.",
+          "reply": "That sounds weirdly perfect. I will try not to turn the clouds into a contest.",
+          "flag": "sol_quiet_yes",
+          "effects": {
+            "flags": [
+              "sol_quiet_yes"
+            ]
+          }
+        },
+        {
+          "label": "I cannot today. Thanks for asking.",
+          "reply": "An honest no. I can handle that. There will be other sunsets.",
+          "flag": "sol_quiet_no",
+          "effects": {
+            "flags": [
+              "sol_quiet_no"
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

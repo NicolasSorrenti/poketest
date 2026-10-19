@@ -516,7 +516,74 @@ const packs=[
     }
    ]
   },
-  "mandatoryEvents": []
+  "mandatoryEvents": [
+   {
+    "id": "elena_asks_for_help",
+    "title": "The Unscheduled Hour",
+    "kind": "bond",
+    "priority": 60,
+    "earliestDay": 36,
+    "trigger": {
+     "all": [
+      {
+       "storyDone": "elena_route_2"
+      },
+      {
+       "relationship": {
+        "npc": "elena",
+        "metric": "trust",
+        "gte": 2
+       }
+      }
+     ]
+    },
+    "delivery": "remote_or_present",
+    "timeCost": 0,
+    "fallback": "queue",
+    "expiry": "never",
+    "lines": [
+     {
+      "speaker": "elena",
+      "text": "I have a problem I cannot fit into a tidy calendar slot."
+     },
+     {
+      "speaker": "Protagonist",
+      "text": "That sounds unlike you. Is everything okay?"
+     },
+     {
+      "speaker": "elena",
+      "text": "I promised to organize the community study night, and the room booking collapsed. I know how to fix plans, but I am less practiced at asking people for help."
+     },
+     {
+      "speaker": "elena",
+      "text": "Would you be willing to look at the alternatives with me when you are free?"
+     }
+    ],
+    "choices": [
+     {
+      "label": "I can help you think it through.",
+      "reply": "Thank you. I will bring the messy draft, not just the polished version.",
+      "flag": "elena_help_yes",
+      "effects": {
+       "flags": [
+        "elena_help_yes"
+       ]
+      }
+     },
+     {
+      "label": "I am busy today, but you can ask others too.",
+      "reply": "You are right. Asking is not an imposition, even when the answer is no.",
+      "flag": "elena_help_no",
+      "effects": {
+       "flags": [
+        "elena_help_no"
+       ]
+      }
+     }
+    ],
+    "characterId": "elena"
+   }
+  ]
  },
  {
   "id": "jinx",
@@ -1218,7 +1285,74 @@ const packs=[
     }
    ]
   },
-  "mandatoryEvents": []
+  "mandatoryEvents": [
+   {
+    "id": "jinx_after_setback",
+    "title": "Off the Scoreboard",
+    "kind": "bond",
+    "priority": 60,
+    "earliestDay": 40,
+    "trigger": {
+     "all": [
+      {
+       "storyDone": "jinx_route_2"
+      },
+      {
+       "relationship": {
+        "npc": "jinx",
+        "metric": "respect",
+        "gte": 2
+       }
+      }
+     ]
+    },
+    "delivery": "remote_or_present",
+    "timeCost": 0,
+    "fallback": "queue",
+    "expiry": "never",
+    "lines": [
+     {
+      "speaker": "jinx",
+      "text": "I lost a match I thought I had solved. Go on, say something clever."
+     },
+     {
+      "speaker": "Protagonist",
+      "text": "Would you rather talk about the game or leave it alone?"
+     },
+     {
+      "speaker": "jinx",
+      "text": "Huh. I expected you to pretend it did not matter. It does. I made a bad read."
+     },
+     {
+      "speaker": "jinx",
+      "text": "If you ever want to look at that turn with me, I might even listen. No promises."
+     }
+    ],
+    "choices": [
+     {
+      "label": "We can study the board, no excuses.",
+      "reply": "Fine. Bring your sharpest notes. I need something better than sympathy.",
+      "flag": "jinx_review_yes",
+      "effects": {
+       "flags": [
+        "jinx_review_yes"
+       ]
+      }
+     },
+     {
+      "label": "You do not owe me a replay of that loss.",
+      "reply": "Good. I wanted you to know anyway.",
+      "flag": "jinx_review_no",
+      "effects": {
+       "flags": [
+        "jinx_review_no"
+       ]
+      }
+     }
+    ],
+    "characterId": "jinx"
+   }
+  ]
  },
  {
   "id": "luna",
@@ -1734,7 +1868,74 @@ const packs=[
     }
    ]
   },
-  "mandatoryEvents": []
+  "mandatoryEvents": [
+   {
+    "id": "luna_tests_independence",
+    "title": "Her Own Line",
+    "kind": "bond",
+    "priority": 60,
+    "earliestDay": 40,
+    "trigger": {
+     "all": [
+      {
+       "storyDone": "luna_route_2"
+      },
+      {
+       "relationship": {
+        "npc": "luna",
+        "metric": "trust",
+        "gte": 2
+       }
+      }
+     ]
+    },
+    "delivery": "remote_or_present",
+    "timeCost": 0,
+    "fallback": "queue",
+    "expiry": "never",
+    "lines": [
+     {
+      "speaker": "luna",
+      "text": "I rebuilt my deck. Alone. Do not look so surprised."
+     },
+     {
+      "speaker": "Protagonist",
+      "text": "What did you change?"
+     },
+     {
+      "speaker": "luna",
+      "text": "I took out the flashy combo everyone told me I needed. I want to see whether my idea can stand on its own."
+     },
+     {
+      "speaker": "luna",
+      "text": "You can test it with me, but promise you will not solve my turns for me."
+     }
+    ],
+    "choices": [
+     {
+      "label": "Deal. I will play seriously and let you decide.",
+      "reply": "That is exactly what I wanted to hear.",
+      "flag": "luna_test_yes",
+      "effects": {
+       "flags": [
+        "luna_test_yes"
+       ]
+      }
+     },
+     {
+      "label": "I cannot test it now, but it is your deck.",
+      "reply": "Yes! I want the decision to be mine, even if I lose.",
+      "flag": "luna_test_no",
+      "effects": {
+       "flags": [
+        "luna_test_no"
+       ]
+      }
+     }
+    ],
+    "characterId": "luna"
+   }
+  ]
  },
  {
   "id": "rina",
@@ -2250,7 +2451,74 @@ const packs=[
     }
    ]
   },
-  "mandatoryEvents": []
+  "mandatoryEvents": [
+   {
+    "id": "rina_initiates_practice",
+    "title": "Practice on Her Terms",
+    "kind": "bond",
+    "priority": 60,
+    "earliestDay": 30,
+    "trigger": {
+     "all": [
+      {
+       "storyDone": "rina_route_2"
+      },
+      {
+       "relationship": {
+        "npc": "rina",
+        "metric": "trust",
+        "gte": 2
+       }
+      }
+     ]
+    },
+    "delivery": "remote_or_present",
+    "timeCost": 0,
+    "fallback": "queue",
+    "expiry": "never",
+    "lines": [
+     {
+      "speaker": "rina",
+      "text": "Hey! It is me. I finished the rehearsal early, and I actually asked for this break."
+     },
+     {
+      "speaker": "Protagonist",
+      "text": "You asked for time off to practice your deck? Your manager agreed?"
+     },
+     {
+      "speaker": "rina",
+      "text": "Yes. I did not sneak out. I told her this matters to me, even when nobody is watching."
+     },
+     {
+      "speaker": "rina",
+      "text": "I have a few new openings to test. There is no audience to impress. Would you like to join me sometime?"
+     }
+    ],
+    "choices": [
+     {
+      "label": "I would like that. Let us set a time.",
+      "reply": "Deal! We can play when we both have room for it.",
+      "flag": "rina_practice_yes",
+      "effects": {
+       "flags": [
+        "rina_practice_yes"
+       ]
+      }
+     },
+     {
+      "label": "Not right now, but thanks for asking.",
+      "reply": "No pressure. I am proud I could ask you honestly.",
+      "flag": "rina_practice_no",
+      "effects": {
+       "flags": [
+        "rina_practice_no"
+       ]
+      }
+     }
+    ],
+    "characterId": "rina"
+   }
+  ]
  },
  {
   "id": "sierra",
@@ -2766,7 +3034,74 @@ const packs=[
     }
    ]
   },
-  "mandatoryEvents": []
+  "mandatoryEvents": [
+   {
+    "id": "sierra_defines_boundaries",
+    "title": "Both Sides of the Lens",
+    "kind": "bond",
+    "priority": 60,
+    "earliestDay": 48,
+    "trigger": {
+     "all": [
+      {
+       "storyDone": "sierra_route_2"
+      },
+      {
+       "relationship": {
+        "npc": "sierra",
+        "metric": "respect",
+        "gte": 2
+       }
+      }
+     ]
+    },
+    "delivery": "remote_or_present",
+    "timeCost": 0,
+    "fallback": "queue",
+    "expiry": "never",
+    "lines": [
+     {
+      "speaker": "sierra",
+      "text": "My photo shoot moved onto the day I had reserved for tournament practice. Everyone thinks I should pick one dream."
+     },
+     {
+      "speaker": "Protagonist",
+      "text": "Do you have to choose forever, or just work out tomorrow?"
+     },
+     {
+      "speaker": "sierra",
+      "text": "That is the question I needed. I love both. I just need people to respect the time I set aside for each."
+     },
+     {
+      "speaker": "sierra",
+      "text": "Would you help me test a shorter practice plan sometime? Only when we both agree on a time."
+     }
+    ],
+    "choices": [
+     {
+      "label": "Of course. Your time belongs to you.",
+      "reply": "Thank you. I can be serious about both without apologizing.",
+      "flag": "sierra_plan_yes",
+      "effects": {
+       "flags": [
+        "sierra_plan_yes"
+       ]
+      }
+     },
+     {
+      "label": "I am booked, but your boundaries make sense.",
+      "reply": "No problem. I can make my own plan too.",
+      "flag": "sierra_plan_no",
+      "effects": {
+       "flags": [
+        "sierra_plan_no"
+       ]
+      }
+     }
+    ],
+    "characterId": "sierra"
+   }
+  ]
  },
  {
   "id": "sol",
@@ -3526,7 +3861,74 @@ const packs=[
     }
    ]
   },
-  "mandatoryEvents": []
+  "mandatoryEvents": [
+   {
+    "id": "sol_invites_quiet",
+    "title": "A Plan With No Plan",
+    "kind": "bond",
+    "priority": 60,
+    "earliestDay": 44,
+    "trigger": {
+     "all": [
+      {
+       "storyDone": "sol_route_2"
+      },
+      {
+       "relationship": {
+        "npc": "sol",
+        "metric": "trust",
+        "gte": 2
+       }
+      }
+     ]
+    },
+    "delivery": "remote_or_present",
+    "timeCost": 0,
+    "fallback": "queue",
+    "expiry": "never",
+    "lines": [
+     {
+      "speaker": "sol",
+      "text": "Hey, stranger. I was about to invite you to a wildly complicated adventure."
+     },
+     {
+      "speaker": "Protagonist",
+      "text": "And what did you come up with?"
+     },
+     {
+      "speaker": "sol",
+      "text": "Nothing. Not a scavenger hunt. Not a surprise. I just wondered if you would sit with me."
+     },
+     {
+      "speaker": "sol",
+      "text": "The last party taught me something: being with someone does not need a program. So... no rules today?"
+     }
+    ],
+    "choices": [
+     {
+      "label": "We could watch the harbor for a while.",
+      "reply": "That sounds weirdly perfect. I will try not to turn the clouds into a contest.",
+      "flag": "sol_quiet_yes",
+      "effects": {
+       "flags": [
+        "sol_quiet_yes"
+       ]
+      }
+     },
+     {
+      "label": "I cannot today. Thanks for asking.",
+      "reply": "An honest no. I can handle that. There will be other sunsets.",
+      "flag": "sol_quiet_no",
+      "effects": {
+       "flags": [
+        "sol_quiet_no"
+       ]
+      }
+     }
+    ],
+    "characterId": "sol"
+   }
+  ]
  }
 ];
 const cast={},looks={},schedules={},arrivals={},events=[],mandatoryEvents=[];

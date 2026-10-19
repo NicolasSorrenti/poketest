@@ -1,0 +1,71 @@
+{
+  "schemaVersion": 1,
+  "characterId": "luna",
+  "events": [
+    {
+      "id": "luna_tests_independence",
+      "title": "Her Own Line",
+      "kind": "bond",
+      "priority": 60,
+      "earliestDay": 40,
+      "trigger": {
+        "all": [
+          {
+            "storyDone": "luna_route_2"
+          },
+          {
+            "relationship": {
+              "npc": "luna",
+              "metric": "trust",
+              "gte": 2
+            }
+          }
+        ]
+      },
+      "delivery": "remote_or_present",
+      "timeCost": 0,
+      "fallback": "queue",
+      "expiry": "never",
+      "lines": [
+        {
+          "speaker": "luna",
+          "text": "I rebuilt my deck. Alone. Do not look so surprised."
+        },
+        {
+          "speaker": "Protagonist",
+          "text": "What did you change?"
+        },
+        {
+          "speaker": "luna",
+          "text": "I took out the flashy combo everyone told me I needed. I want to see whether my idea can stand on its own."
+        },
+        {
+          "speaker": "luna",
+          "text": "You can test it with me, but promise you will not solve my turns for me."
+        }
+      ],
+      "choices": [
+        {
+          "label": "Deal. I will play seriously and let you decide.",
+          "reply": "That is exactly what I wanted to hear.",
+          "flag": "luna_test_yes",
+          "effects": {
+            "flags": [
+              "luna_test_yes"
+            ]
+          }
+        },
+        {
+          "label": "I cannot test it now, but it is your deck.",
+          "reply": "Yes! I want the decision to be mine, even if I lose.",
+          "flag": "luna_test_no",
+          "effects": {
+            "flags": [
+              "luna_test_no"
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

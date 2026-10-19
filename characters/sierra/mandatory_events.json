@@ -1,0 +1,71 @@
+{
+  "schemaVersion": 1,
+  "characterId": "sierra",
+  "events": [
+    {
+      "id": "sierra_defines_boundaries",
+      "title": "Both Sides of the Lens",
+      "kind": "bond",
+      "priority": 60,
+      "earliestDay": 48,
+      "trigger": {
+        "all": [
+          {
+            "storyDone": "sierra_route_2"
+          },
+          {
+            "relationship": {
+              "npc": "sierra",
+              "metric": "respect",
+              "gte": 2
+            }
+          }
+        ]
+      },
+      "delivery": "remote_or_present",
+      "timeCost": 0,
+      "fallback": "queue",
+      "expiry": "never",
+      "lines": [
+        {
+          "speaker": "sierra",
+          "text": "My photo shoot moved onto the day I had reserved for tournament practice. Everyone thinks I should pick one dream."
+        },
+        {
+          "speaker": "Protagonist",
+          "text": "Do you have to choose forever, or just work out tomorrow?"
+        },
+        {
+          "speaker": "sierra",
+          "text": "That is the question I needed. I love both. I just need people to respect the time I set aside for each."
+        },
+        {
+          "speaker": "sierra",
+          "text": "Would you help me test a shorter practice plan sometime? Only when we both agree on a time."
+        }
+      ],
+      "choices": [
+        {
+          "label": "Of course. Your time belongs to you.",
+          "reply": "Thank you. I can be serious about both without apologizing.",
+          "flag": "sierra_plan_yes",
+          "effects": {
+            "flags": [
+              "sierra_plan_yes"
+            ]
+          }
+        },
+        {
+          "label": "I am booked, but your boundaries make sense.",
+          "reply": "No problem. I can make my own plan too.",
+          "flag": "sierra_plan_no",
+          "effects": {
+            "flags": [
+              "sierra_plan_no"
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

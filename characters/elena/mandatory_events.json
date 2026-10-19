@@ -1,0 +1,71 @@
+{
+  "schemaVersion": 1,
+  "characterId": "elena",
+  "events": [
+    {
+      "id": "elena_asks_for_help",
+      "title": "The Unscheduled Hour",
+      "kind": "bond",
+      "priority": 60,
+      "earliestDay": 36,
+      "trigger": {
+        "all": [
+          {
+            "storyDone": "elena_route_2"
+          },
+          {
+            "relationship": {
+              "npc": "elena",
+              "metric": "trust",
+              "gte": 2
+            }
+          }
+        ]
+      },
+      "delivery": "remote_or_present",
+      "timeCost": 0,
+      "fallback": "queue",
+      "expiry": "never",
+      "lines": [
+        {
+          "speaker": "elena",
+          "text": "I have a problem I cannot fit into a tidy calendar slot."
+        },
+        {
+          "speaker": "Protagonist",
+          "text": "That sounds unlike you. Is everything okay?"
+        },
+        {
+          "speaker": "elena",
+          "text": "I promised to organize the community study night, and the room booking collapsed. I know how to fix plans, but I am less practiced at asking people for help."
+        },
+        {
+          "speaker": "elena",
+          "text": "Would you be willing to look at the alternatives with me when you are free?"
+        }
+      ],
+      "choices": [
+        {
+          "label": "I can help you think it through.",
+          "reply": "Thank you. I will bring the messy draft, not just the polished version.",
+          "flag": "elena_help_yes",
+          "effects": {
+            "flags": [
+              "elena_help_yes"
+            ]
+          }
+        },
+        {
+          "label": "I am busy today, but you can ask others too.",
+          "reply": "You are right. Asking is not an imposition, even when the answer is no.",
+          "flag": "elena_help_no",
+          "effects": {
+            "flags": [
+              "elena_help_no"
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}
