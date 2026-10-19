@@ -16,7 +16,7 @@ test('validation rejects unknown keys, references, speaker, reserved names and e
  assert.ok(M.validate([a],{storyIds:['a']}).some(x=>/reserved/.test(x)));
 });
 test('missed calendar day is never lost, and subsequent queue remains stable',()=>{
- const events=[scene('start'),scene('cup','season',29)];
+ const events=[scene('start','season',1,60),scene('cup','season',29)];
  const s=init(32,2);
  M.queue(s,events);assert.deepEqual(s.mandatoryEventState.pending.map(x=>x.id),['start','cup']);
  M.queue(s,events);assert.equal(s.mandatoryEventState.pending.length,2);

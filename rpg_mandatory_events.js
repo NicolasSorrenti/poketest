@@ -6,7 +6,7 @@
 })(typeof window!=='undefined'?window:null,function(){
  const plain=x=>!!x&&typeof x==='object'&&!Array.isArray(x);
  const int=x=>Number.isInteger(x);
- const validId=x=>typeof x==='string'&&/^[a-z][a-z0-9_]{1,79}$/.test(x);
+ const validId=x=>typeof x==='string'&&/^[a-z][a-z0-9_]{0,79}$/.test(x);
  const metrics=new Set(['affection','trust','respect','attraction']);
  const predicates=new Set(['dayGte','dayLte','storyDone','flag','relationship','duelCountGte','tournamentState','eventSeen','all','any','not']);
  function testPredicate(p,state){
@@ -61,7 +61,7 @@
    if(!Array.isArray(e.lines)||!e.lines.length||e.lines.some(l=>!plain(l)||typeof l.text!=='string'||!l.text.trim()||typeof l.speaker!=='string'||!(l.speaker==='Narrator'||l.speaker==='Protagonist'||(!context.characterIds||known.has(l.speaker)))))errors.push(id+': invalid lines/speakers');
    if(!Array.isArray(e.choices)||e.choices.length<1||e.choices.some(c=>!plain(c)||typeof c.label!=='string'||!c.label.trim()||typeof c.reply!=='string'||!c.reply.trim()||(c.flag!==undefined&&!validId(c.flag))||(c.effects!==undefined&&(!plain(c.effects)||Object.keys(c.effects).some(k=>k!=='flags')||!Array.isArray(c.effects.flags)||c.effects.flags.some(f=>!validId(f))))))errors.push(id+': invalid choices');
    if(e.choices?.some(c=>c.kind==='commit'||c.effects?.partner||c.effects?.relationship))errors.push(id+': mandatory scenes cannot force romance or relationship changes');
-   const deps=new Set();check(e.trigger,id+'.trigger',deps);e._depsUnused=undefined; // no mutation of source
+   const deps=new Set();check(e.trigger,id+'.trigger',deps);
   }
   const edges=new Map();
   for(const [id,e] of byId){
