@@ -687,3 +687,51 @@ test('G4: a migrated pending duel from an older save resumes directly, without a
  assert.equal(restored.elements.preDuelDialog.open,undefined);
  assert.match(restored.elements.battle.src,/classic_live\.html/);
 });
+
+test('G5: rare encounter offers real SFW scene, holds time during dialogue, then unlocks its exact CG',()=>{
+ const event=Situations.events.find(e=>e.npc==='hana');
+ const day=Array.from({length:event.end-event.start+1},(_,i)=>event.start+i)
+  .find(d=>Schedules.locationFor(event.npc,d,event.slot)===event.place&&Situations.chance(event,d,event.slot));
+ assert.ok(day,'event must have a scheduled opportunity');
+ const r=launch({day,slot:event.slot,location:event.place,focus:75,
+  relationships:{hana:{affection:8,trust:4}},bonds:{hana:{affection:8,trust:4,duels:0}}});
+ const entry=r.elements.situationEvents.children.find(x=>x.textContent.includes(event.title)||x.children[0]?.textContent.includes(event.title));
+ assert.ok(entry,'the optional G5 event should appear only when eligible');
+ assert.equal(r.state().cgUnlocked?.[event.id],undefined);
+ entry.onclick();
+ assert.equal(r.state().activeSituation.id,event.id);
+ assert.equal(r.state().day,day);assert.equal(r.state().focus,75);
+ assert.equal(r.elements.quickNext.disabled,true,'the ongoing VN scene locks other time actions');
+ const afterBegin=launch(r.state());
+ assert.equal(afterBegin.state().activeSituation.phase,'choice');
+ afterBegin.elements.choices.children[0].onclick();
+ assert.equal(afterBegin.state().activeSituation.phase,'response');
+ const beforeFinish=launch(afterBegin.state());
+ assert.equal(beforeFinish.state().activeSituation.choice,0);
+ beforeFinish.elements.choices.children[0].onclick();
+ const result=beforeFinish.state();
+ assert.equal(result.activeSituation,null);
+ assert.equal(result.situationDone[event.id].choice,0);
+ assert.equal(result.focus,69);
+ assert.equal(result.cgUnlocked[event.id].trigger,'situation');
+ assert.equal(result.hungOut[day+':hana'],true);
+ assert.equal(result.day*3+result.slot,day*3+event.slot+1);
+ const final=launch(result);
+ assert.equal(final.state().situationDone[event.id].choice,0);
+ assert.equal(final.state().cgUnlocked[event.id].trigger,'situation');
+});
+test('G5: surprising encounter can be declined without time, costs or affection progress',()=>{
+ const event=Situations.events.find(e=>e.npc==='hana');
+ const day=Array.from({length:event.end-event.start+1},(_,i)=>event.start+i)
+  .find(d=>Schedules.locationFor(event.npc,d,event.slot)===event.place&&Situations.chance(event,d,event.slot));
+ const r=launch({day,slot:event.slot,location:event.place,focus:75,
+  relationships:{hana:{affection:7,trust:3}},bonds:{hana:{affection:7,trust:3,duels:0}}});
+ const b=r.elements.situationEvents.children.find(x=>x.children?.[0]?.textContent.includes(event.title));
+ assert.ok(b);b.onclick();
+ const quit=r.elements.choices.children.find(x=>x.textContent.includes('Not now'));
+ assert.ok(quit);quit.onclick();
+ assert.equal(r.state().activeSituation,null);
+ assert.equal(r.state().day,day);assert.equal(r.state().slot,event.slot);
+ assert.equal(r.state().focus,75);assert.equal(r.state().situationDone[event.id],undefined);
+ assert.equal(r.state().cgUnlocked?.[event.id],undefined);
+});
