@@ -1,0 +1,187 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Neo Harbor Character Pack v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "id",
+    "name",
+    "age",
+    "role",
+    "deck",
+    "style",
+    "dialogue",
+    "appearance",
+    "arrivalDay",
+    "schedule",
+    "stories",
+    "artManifest",
+    "bible"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "const": 1
+    },
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_]{1,39}$"
+    },
+    "name": {
+      "type": "string",
+      "minLength": 2
+    },
+    "age": {
+      "type": "integer",
+      "minimum": 18,
+      "maximum": 100
+    },
+    "role": {
+      "enum": [
+        "romance",
+        "friendship",
+        "supporting"
+      ]
+    },
+    "deck": {
+      "type": "string",
+      "minLength": 1
+    },
+    "style": {
+      "type": "string",
+      "minLength": 1
+    },
+    "arrivalDay": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 90
+    },
+    "stories": {
+      "const": "stories.json"
+    },
+    "artManifest": {
+      "const": "art_manifest.json"
+    },
+    "bible": {
+      "const": "bible.md"
+    },
+    "dialogue": {
+      "type": "object",
+      "required": [
+        "intro",
+        "repeat",
+        "flirt",
+        "duelWin",
+        "duelLose",
+        "talk",
+        "hangouts"
+      ],
+      "properties": {
+        "intro": {
+          "type": "string",
+          "minLength": 1
+        },
+        "repeat": {
+          "type": "string",
+          "minLength": 1
+        },
+        "flirt": {
+          "type": "string",
+          "minLength": 1
+        },
+        "duelWin": {
+          "type": "string",
+          "minLength": 1
+        },
+        "duelLose": {
+          "type": "string",
+          "minLength": 1
+        },
+        "talk": {
+          "type": "array",
+          "minItems": 2,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "hangouts": {
+          "type": "array",
+          "minItems": 2,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    },
+    "appearance": {
+      "type": "object",
+      "required": [
+        "silhouette",
+        "palette",
+        "hair",
+        "expressions",
+        "renderNotes"
+      ],
+      "properties": {
+        "silhouette": {
+          "type": "string",
+          "minLength": 1
+        },
+        "palette": {
+          "type": "string",
+          "minLength": 1
+        },
+        "hair": {
+          "type": "string",
+          "minLength": 1
+        },
+        "eyes": {
+          "type": "string",
+          "minLength": 1
+        },
+        "details": {
+          "type": "string",
+          "minLength": 1
+        },
+        "expressions": {
+          "type": "string",
+          "minLength": 1
+        },
+        "renderNotes": {
+          "type": "string",
+          "minLength": 1
+        },
+        "outfits": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    },
+    "schedule": {
+      "type": "array",
+      "minItems": 7,
+      "maxItems": 7,
+      "items": {
+        "type": "array",
+        "minItems": 3,
+        "maxItems": 3,
+        "items": {
+          "enum": [
+            "home",
+            "shop",
+            "arcade",
+            "park",
+            "cafe",
+            "center",
+            "library"
+          ]
+        }
+      }
+    }
+  }
+}
