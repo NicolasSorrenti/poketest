@@ -54,8 +54,8 @@ test('a pending duel locks navigation and the deck, restores after refresh, and 
  await new Promise(resolve=>setImmediate(resolve)); // Let asynchronous deck listing finish.
  app.ids.deckPicker.value='brushfire';
  app.ids.deckPicker.onchange();
- assert.equal(app.read().playerDeck,'blackout','Programmatic change cannot replace a running deck');
- assert.equal(app.ids.deckPicker.value,'blackout','Selector reverts to authoritative campaign deck');
+ assert.equal(app.read().playerDeck,'custom','Programmatic change cannot replace an owned RPG deck');
+ assert.equal(app.ids.deckPicker.value,'custom','Selector reverts to RPG collection deck');
  sessions.set(BRIDGE.sessionKey(pending.id),'session-token');
  app=boot(saved,sessions);
  assert.equal(app.ids.deckPicker.disabled,true,'Restored duel keeps selectors locked');
@@ -63,7 +63,8 @@ test('a pending duel locks navigation and the deck, restores after refresh, and 
  app.send(BRIDGE.message(pending.id,0));
  assert.equal(app.read().results.length,1);
  assert.equal(app.read().pendingDuel,null);
- assert.equal(app.ids.deckPicker.disabled,false,'Deck unlocks after returning from battle');
+ assert.equal(app.ids.deckPicker.disabled,true,'Preset switcher remains locked during RPG collection progression');
+ assert.equal(app.ids.deckCollection.children.find(x=>x.textContent.includes('Edit your 60-card deck')).disabled,false,'The collection workshop becomes available again');
  assert.equal(sessions.has(BRIDGE.sessionKey(pending.id)),false,'Finished token is released');
  assert.equal(app.read().slot,1);
  assert.equal(app.read().relationships.marina.duels,1);
