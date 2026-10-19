@@ -21,7 +21,7 @@
  const allAllowed=new Set([...starters.flatMap(s=>s.cards),...upgrade,...Object.keys(SETS).flatMap(set=>Array.from({length:SETS[set].size},(_,i)=>set+'-'+(i+1)))]);
  const rank=ids=>Object.fromEntries([...new Set(ids)].map(id=>[id,ids.filter(x=>x===id).length]));
  const chooseRandom=(list,rng=Math.random)=>list[Math.min(list.length-1,Math.floor(Math.max(0,rng())*list.length))];
- const setForCharacter=id=>CHARACTER_SETS[id]||'base1';
+ const setForCharacter=id=>{if(!id)return 'base1';if(CHARACTER_SETS[id])return CHARACTER_SETS[id];const sets=Object.keys(SETS);let hash=2166136261;for(const letter of id){hash^=letter.charCodeAt(0);hash=Math.imul(hash,16777619);}return sets[(hash>>>0)%sets.length];};
  function randomPack(set,rng=Math.random){
   const info=SETS[set]||SETS.base1,actual=SETS[set]?set:'base1';
   const rare=chooseRandom(Array.from({length:info.rares},(_,i)=>actual+'-'+(i+1)),rng);
