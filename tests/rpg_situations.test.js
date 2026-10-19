@@ -82,7 +82,7 @@ test('resource depletion or missing NPC before resolution leaves state unchanged
  assert.throws(()=>S.finish(s,[e.npc]),/no longer available|not available|Not enough focus/);
  assert.equal(JSON.stringify(s),before);
  s.focus=50;
- assert.throws(()=>S.finish(s,[]),/not available/);
+ assert.throws(()=>S.finish(s,[]),/no longer available/);
 });
 test('a finished situational event unlocks only its own special CG exactly once',()=>{
  const e=S.events[0],s=ready(e,{day:firstDay(e)});
