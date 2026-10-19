@@ -3,6 +3,7 @@ const test=require('node:test');
 const assert=require('node:assert/strict');
 const fs=require('node:fs'),path=require('node:path');
 const Pack=require('../rpg_narrative_pack'),Side=require('../rpg_side_quests'),Story=require('../rpg_story'),Schedules=require('../rpg_schedules'),World=require('../rpg_world'),Arc=require('../rpg_rival_arc'),Tournaments=require('../rpg_tournaments'),Epilogue=require('../rpg_epilogue'),Appointments=require('../rpg_appointments'),Intentions=require('../rpg_intentions'),CG=require('../rpg_cg_gallery'),Planner=require('../rpg_daily_planner'),Social=require('../rpg_social_activities'),Dates=require('../rpg_planned_dates'),Bridge=require('../rpg_duel_bridge'),Pre=require('../rpg_preduel'),Collection=require('../rpg_collection'),Journey=require('../rpg_season_journey'),Situations=require('../rpg_situations'),Dialogue=require('../rpg_dialogue'),BondRewards=require('../rpg_bond_rewards'),Conversations=require('../rpg_conversations'),PartnerDecks=require('../rpg_partner_decks');
+const Mandatory=require('../rpg_mandatory_events'),Season=require('../rpg_season_events'),Registry=require('../rpg_character_packs.generated');
 const js=fs.readFileSync(path.join(__dirname,'..','rpg.js'),'utf8').replace(/\}\)\(\);\s*$/, 'window.__testRpgAction=act;})();');
 const html=fs.readFileSync(path.join(__dirname,'..','rpg.html'),'utf8');
 const ids=[...html.matchAll(/id="([^"]+)"/g)].map(x=>x[1]);
@@ -20,7 +21,7 @@ class FakeNode{
  remove(){this.removed=true;}
  showModal(){this.open=true;}close(){this.open=false;}
 }
-function launch(initial,approve=false){
+function launch(initial,approve=false,mandatory=false){
  const elements={},listeners={},saved={neoHarborRpgV1:initial?JSON.stringify(initial):null};
  for(const id of ids)elements[id]=new FakeNode(id==='deckPicker'?'select':'div');
  elements.battle.contentWindow={};
@@ -29,6 +30,7 @@ function launch(initial,approve=false){
   addEventListener(name,cb){listeners['document:'+name]=cb;}};
  const win={NeoRpgNarrativePack:Pack,NeoRpgSideQuests:Side,NeoHarborStory:Story,NeoRpgSchedules:Schedules,NeoRpgWorld:World,NeoRpgRivalArc:Arc,NeoRpgTournaments:Tournaments,NeoRpgEpilogue:Epilogue,NeoRpgAppointments:Appointments,NeoRpgIntentions:Intentions,NeoRpgCGGallery:CG,NeoRpgDailyPlanner:Planner,NeoRpgSocialActivities:Social,NeoRpgPlannedDates:Dates,NeoRpgPreDuel:Pre,NeoRpgCollection:Collection,NeoRpgSeasonJourney:Journey,NeoRpgSituations:Situations,NeoRpgDuelBridge:Bridge,NeoRpgDialogue:Dialogue,NeoRpgBondRewards:BondRewards,NeoRpgConversations:Conversations,NeoRpgPartnerDecks:PartnerDecks,
   addEventListener(name,cb){listeners[name]=cb;}};
+ if(mandatory){win.NeoRpgMandatoryEvents=Mandatory;win.NeoRpgSeasonEvents=Season;win.NeoRpgCharacterPacks=Registry;}
  const local={getItem(k){return saved[k]||null;},setItem(k,v){saved[k]=String(v);}};
  const session={removeItem(){},setItem(){},getItem(){return null;}};
  const loc={origin:'http://localhost',href:'http://localhost/rpg.html',reload(){},assign(href){this.href=new URL(href,this.origin).href;}};
@@ -1027,4 +1029,59 @@ test('occasional natural dialogue invitation opens the existing social system wi
  invite.onclick();
  assert.ok(r.elements.choices.children.some(x=>x.textContent.includes('Welcome a new player')||x.textContent.includes('activity')));
  assert.equal(r.state().relationships.hana.affection,0,'planning an activity is not a bond reward');
+});
+
+
+test('mandatory earned bond beat persists its exact dialogue position and supports a neutral no',()=>{
+ const seen=Object.fromEntries(Season.events.filter(e=>e.earliestDay<=35).map(e=>[e.id,{day:e.earliestDay,slot:0,choice:0}]));
+ const base={day:35,slot:0,location:'home',deckJourney:null,scene:{speaker:'Narrator',line:'',choices:[]},
+  storyDone:{rina_route_2:{day:27,choice:1}},
+  relationships:{rina:{affection:3,trust:3,respect:2,attraction:0,duels:0}},
+  mandatoryEventState:{seen,pending:[],active:null,lastPlayedStamp:null}};
+ let r=launch(base,false,true);
+ assert.equal(r.state().mandatoryEventState.active?.id,'rina_initiates_practice');
+ assert.equal(r.elements.quickNext.disabled,true,'the action bar is locked during mandatory scenes');
+ assert.match(r.elements.speaker.textContent,/Rina/);
+ assert.match(r.elements.speaker.textContent,/message/,'remote scene must not teleport the NPC');
+ const start={day:r.state().day,slot:r.state().slot};
+ r.act('mandatoryNext');
+ const line=r.state().mandatoryEventState.active.index;
+ r=launch(r.state(),false,true);
+ assert.equal(r.state().mandatoryEventState.active.index,line,'saved line resumed');
+ for(let i=0;i<20&&r.state().mandatoryEventState.active?.phase==='lines';i++)r.act('mandatoryNext');
+ assert.equal(r.state().mandatoryEventState.active.phase,'choice');
+ assert.ok(r.elements.choices.children.some(x=>x.textContent.includes('Not right now')));
+ r.act('mandatoryChoice:1');
+ r=launch(r.state(),false,true);
+ assert.equal(r.state().mandatoryEventState.active.phase,'response');
+ r.act('mandatoryFinish');
+ assert.equal(r.state().mandatoryEventState.active,null);
+ assert.equal(r.state().mandatoryEventState.seen.rina_initiates_practice.choice,1);
+ assert.equal(r.state().flags.rina_practice_no,true);
+ assert.equal(r.state().partner,null);
+ assert.equal(r.state().storyDone.rina_route_2.day,27);
+ assert.equal(r.state().day,start.day);
+ assert.equal(r.state().slot,start.slot);
+ r=launch({...r.state(),scene:{speaker:'Narrator',line:'',choices:[]}},false,true);
+ assert.equal(r.state().mandatoryEventState.active,null,'no duplicate on reload');
+ assert.equal(r.state().mandatoryEventState.seen.rina_initiates_practice.choice,1);
+});
+
+test('season closure blocks epilogue, uses actual tournament history and enables replay afterward',()=>{
+ const seen=Object.fromEntries(Season.events.filter(e=>!e.closure).map(e=>[e.id,{day:e.earliestDay,slot:0,choice:0}]));
+ const initial={day:91,slot:0,ended:true,location:'home',deckJourney:null,
+  scene:{speaker:'Narrator',line:'',choices:[]},results:[],mandatoryEventState:{seen,pending:[],active:null,lastPlayedStamp:null}};
+ const r=launch(initial,false,true);
+ assert.equal(r.state().mandatoryEventState.active?.id,'neo_season_closure');
+ assert.equal(r.elements.endSeason.hidden,true,'season report is held until closure');
+ r.act('mandatoryNext');
+ assert.match(r.elements.line.textContent,/0 duels, 0 victories/);
+ assert.match(r.elements.line.textContent,/not yours this season/);
+ for(let i=0;i<20&&r.state().mandatoryEventState.active?.phase==='lines';i++)r.act('mandatoryNext');
+ assert.equal(r.state().mandatoryEventState.active.phase,'choice');
+ r.act('mandatoryChoice:1');
+ r.act('mandatoryFinish');
+ assert.equal(r.state().mandatoryEventState.seen.neo_season_closure.choice,1);
+ assert.equal(r.elements.endSeason.hidden,false);
+ assert.equal(r.state().day,91);
 });
