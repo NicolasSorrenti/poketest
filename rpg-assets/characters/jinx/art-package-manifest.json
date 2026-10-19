@@ -1,0 +1,210 @@
+{
+  "schemaVersion": 1,
+  "characterId": "jinx",
+  "characterName": "Jinx Rivera",
+  "packVersion": "2026-10-19-concept-crops-v1",
+  "installation": "Unzip in repository root, then force-add ignored rpg-assets/characters/jinx files if committing.",
+  "primaryPortrait": "rpg-assets/characters/jinx/neutral.png",
+  "expressions": {
+    "neutral": "rpg-assets/characters/jinx/neutral.webp",
+    "smirk": "rpg-assets/characters/jinx/smirk.webp",
+    "fire": "rpg-assets/characters/jinx/fire.webp",
+    "judgy": "rpg-assets/characters/jinx/judgy.webp",
+    "soft": "rpg-assets/characters/jinx/soft.webp"
+  },
+  "cutins": [
+    "rpg-assets/characters/jinx/cutins/battle_smirk.webp",
+    "rpg-assets/characters/jinx/cutins/battle_fierce.webp"
+  ],
+  "conceptCGs": [
+    "rpg-assets/characters/jinx/concept-cgs/neon_alley.webp",
+    "rpg-assets/characters/jinx/concept-cgs/bedroom_afterhours.webp",
+    "rpg-assets/characters/jinx/concept-cgs/bar_conversation.webp",
+    "rpg-assets/characters/jinx/concept-cgs/rooftop_night.webp"
+  ],
+  "referenceSheets": [
+    "rpg-assets/characters/jinx/reference/jinx_character_sheet_01.png",
+    "rpg-assets/characters/jinx/reference/jinx_character_sheet_02.png"
+  ],
+  "sourceArtworkStatus": "PROVISIONAL — these existing sheets use dark-purple hair and pink eyes, conflicting with the canon silver-white hair and amber eyes. Portrait and expressions are crops from sheets, not independent full-resolution generation.",
+  "eventCGStatus": "NOT COMPLETE — the four exact script CGs are not present. Concept scenes are intentionally not installed at their canonical scene paths.",
+  "scriptedMissingEventIds": [
+    "jinx_route_1",
+    "jinx_route_3",
+    "jinx_marina_cross_1",
+    "jinx_alma_cross_1"
+  ],
+  "files": {
+    "rpg-assets/characters/jinx/neutral.png": {
+      "sha256": "1914035290662f9a92f5849c176473d9010017313f68de84678908346794344c",
+      "bytes": 719345,
+      "size": [
+        418,
+        986
+      ],
+      "mode": "RGBA"
+    },
+    "rpg-assets/characters/jinx/neutral.webp": {
+      "sha256": "a5611f430585224239f17c23ceea5c365a26cb11a3267715884ddf0219d92abd",
+      "bytes": 19214,
+      "size": [
+        189,
+        303
+      ],
+      "mode": "RGB"
+    },
+    "rpg-assets/characters/jinx/smirk.webp": {
+      "sha256": "4e98f458a8688248dbc5d1c6a2616379a20847f34e797b69c85bac235830e6d3",
+      "bytes": 20378,
+      "size": [
+        204,
+        303
+      ],
+      "mode": "RGB"
+    },
+    "rpg-assets/characters/jinx/fire.webp": {
+      "sha256": "c25cc03bbc5592cacc4295c92904cc65fe36edd7ea852155937227b352ae4649",
+      "bytes": 21180,
+      "size": [
+        208,
+        303
+      ],
+      "mode": "RGB"
+    },
+    "rpg-assets/characters/jinx/judgy.webp": {
+      "sha256": "7a6ca2d912f768bbc63659449d8dbfb6ee1d2e81f1e272c847e1e0776601af22",
+      "bytes": 22606,
+      "size": [
+        215,
+        303
+      ],
+      "mode": "RGB"
+    },
+    "rpg-assets/characters/jinx/soft.webp": {
+      "sha256": "9f048c52e2ae2fcf82b0a8a3452db2d64e0b046686e0d3ff8d0e529460fd0f2b",
+      "bytes": 21906,
+      "size": [
+        216,
+        303
+      ],
+      "mode": "RGB"
+    },
+    "rpg-assets/characters/jinx/cutins/battle_smirk.webp": {
+      "sha256": "7b09a15cb53138a166755c0995fa73b491f8d6a04746f3168d180871525303b8",
+      "bytes": 39074,
+      "size": [
+        525,
+        250
+      ],
+      "mode": "RGB"
+    },
+    "rpg-assets/characters/jinx/cutins/battle_fierce.webp": {
+      "sha256": "cf38d9ce5b257ebc9837f280d68df767c12aefb8744ca40a360141e7837c32a9",
+      "bytes": 41422,
+      "size": [
+        554,
+        250
+      ],
+      "mode": "RGB"
+    },
+    "rpg-assets/characters/jinx/concept-cgs/neon_alley.webp": {
+      "sha256": "b16a59d3b6210ee67ab9c14712d1b126c6f48348016c54bebb4f1c7932387d07",
+      "bytes": 79076,
+      "size": [
+        556,
+        462
+      ],
+      "mode": "RGB"
+    },
+    "rpg-assets/characters/jinx/concept-cgs/thumbs/neon_alley.webp": {
+      "sha256": "0b94b967acb84870f67737ff22126688e788de9f12c42eb0a42349a72410d336",
+      "bytes": 53438,
+      "size": [
+        640,
+        360
+      ],
+      "mode": "RGB"
+    },
+    "rpg-assets/characters/jinx/concept-cgs/bedroom_afterhours.webp": {
+      "sha256": "20b8d500ec32d31eaadf1f4f7fda7d1c56adeac5b989b01f457e4c661c092bd1",
+      "bytes": 71078,
+      "size": [
+        558,
+        463
+      ],
+      "mode": "RGB"
+    },
+    "rpg-assets/characters/jinx/concept-cgs/thumbs/bedroom_afterhours.webp": {
+      "sha256": "afcc18ef4094154b7bf5cd288d89a41af88da42da16be999f050ed0567d9e37a",
+      "bytes": 50028,
+      "size": [
+        640,
+        360
+      ],
+      "mode": "RGB"
+    },
+    "rpg-assets/characters/jinx/concept-cgs/bar_conversation.webp": {
+      "sha256": "338f85fd7d51fcfde5797e950fce07bc877faf02c862e2ede408ddda33833f02",
+      "bytes": 54146,
+      "size": [
+        582,
+        338
+      ],
+      "mode": "RGB"
+    },
+    "rpg-assets/characters/jinx/concept-cgs/thumbs/bar_conversation.webp": {
+      "sha256": "d30025146609d67172279f37e3ba30a5f5f8662eaca6a69dc77f486de2a84d45",
+      "bytes": 48106,
+      "size": [
+        640,
+        360
+      ],
+      "mode": "RGB"
+    },
+    "rpg-assets/characters/jinx/concept-cgs/rooftop_night.webp": {
+      "sha256": "b2cf4e6cca028f2a4c6635f29700fa458df8d213b447e4062202ab8d78a62c48",
+      "bytes": 39450,
+      "size": [
+        497,
+        338
+      ],
+      "mode": "RGB"
+    },
+    "rpg-assets/characters/jinx/concept-cgs/thumbs/rooftop_night.webp": {
+      "sha256": "adfd4550b7c71276fc100165c1ed637b3a86050a6124d910d7e7c96df5ea805d",
+      "bytes": 38076,
+      "size": [
+        640,
+        360
+      ],
+      "mode": "RGB"
+    },
+    "rpg-assets/characters/jinx/reference/jinx_character_sheet_01.png": {
+      "sha256": "a65d2b1a75afc397ad1c624f9a08784d51f8415053e5129c2f719f66d1d7ea4c",
+      "bytes": 2703823,
+      "size": [
+        1536,
+        1024
+      ],
+      "mode": "RGB"
+    },
+    "rpg-assets/characters/jinx/reference/jinx_character_sheet_02.png": {
+      "sha256": "39d97bba5078ed2557e2e2e80edf6aeb1634ac5023c524f4fe5d950db14e3b36",
+      "bytes": 2606244,
+      "size": [
+        1536,
+        1024
+      ],
+      "mode": "RGB"
+    },
+    "rpg-assets/characters/jinx/previews/avatar_concept.webp": {
+      "sha256": "8230e6240abc38c34121fa1239a5331f165c6274a5abec778d0bbb99a070c8fd",
+      "bytes": 24534,
+      "size": [
+        256,
+        256
+      ],
+      "mode": "RGB"
+    }
+  }
+}

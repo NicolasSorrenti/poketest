@@ -1,0 +1,166 @@
+{
+  "schemaVersion": 1,
+  "characterId": "luna",
+  "characterName": "Luna",
+  "packVersion": "2026-10-19-provisional-v1",
+  "installation": "Unzip in repository root, then force-add ignored rpg-assets/characters/luna files if committing.",
+  "primaryPortrait": "rpg-assets/characters/luna/neutral.png",
+  "expressions": {
+    "neutral": "rpg-assets/characters/luna/neutral.webp",
+    "smile": "rpg-assets/characters/luna/smile.webp",
+    "surprised": "rpg-assets/characters/luna/surprised.webp",
+    "judgy": "rpg-assets/characters/luna/judgy.webp",
+    "soft": "rpg-assets/characters/luna/soft.webp"
+  },
+  "cutins": [
+    "rpg-assets/characters/luna/cutins/battle_smile.webp",
+    "rpg-assets/characters/luna/cutins/battle_allure.webp"
+  ],
+  "conceptCGs": [
+    "rpg-assets/characters/luna/concept-cgs/terrace_night.webp",
+    "rpg-assets/characters/luna/concept-cgs/harbor_cafe.webp"
+  ],
+  "referenceSheets": [
+    "rpg-assets/characters/luna/reference/luna_character_sheet_01.png",
+    "rpg-assets/characters/luna/reference/luna_character_sheet_02.png"
+  ],
+  "sourceArtworkStatus": "PROVISIONAL — packaged from the generated Luna images in this conversation. No repository art manifest was available during packaging, so filenames are generic but game-ready.",
+  "eventCGStatus": "CONCEPT ONLY — two polished scene illustrations plus thumbnails are included, but not mapped to canonical scripted event IDs.",
+  "files": {
+    "rpg-assets/characters/luna/neutral.png": {
+      "sha256": "922857a2a5ada68e615ea0f3548c1b0085ff50ed036f87b59336316e7a5e33d3",
+      "bytes": 985757,
+      "size": [
+        600,
+        1000
+      ],
+      "mode": "RGBA"
+    },
+    "rpg-assets/characters/luna/previews/avatar_concept.webp": {
+      "sha256": "782de67140d7f21f4601b9632d3587d1161906b9c2c1e4e3530bcc395db77f3d",
+      "bytes": 26368,
+      "size": [
+        256,
+        256
+      ],
+      "mode": "RGB"
+    },
+    "rpg-assets/characters/luna/neutral.webp": {
+      "sha256": "7c608dcbaabeeee010dfd4f2407346188d9de3bbc4ee8cbb86b89d1f61cb383e",
+      "bytes": 32236,
+      "size": [
+        220,
+        320
+      ],
+      "mode": "RGB"
+    },
+    "rpg-assets/characters/luna/smile.webp": {
+      "sha256": "7ba0ab4b3b8ee8255887bba06ce4814bb13cf3dfeaa180e30b4cf31d8f226f2e",
+      "bytes": 31774,
+      "size": [
+        220,
+        320
+      ],
+      "mode": "RGB"
+    },
+    "rpg-assets/characters/luna/surprised.webp": {
+      "sha256": "a1554c57edca369d4bafe8b9b897b066259afc4989904f2273bb9c08f9e8343e",
+      "bytes": 32532,
+      "size": [
+        220,
+        320
+      ],
+      "mode": "RGB"
+    },
+    "rpg-assets/characters/luna/judgy.webp": {
+      "sha256": "f5eb87475754c2ad34bc0bf4653c44978de363734811da49ad1f2a022e5aa937",
+      "bytes": 30636,
+      "size": [
+        220,
+        320
+      ],
+      "mode": "RGB"
+    },
+    "rpg-assets/characters/luna/soft.webp": {
+      "sha256": "ddcc3e319760915cc6e16101a99dd08b718cb9745c1dd8f04c4178d114dbad61",
+      "bytes": 32308,
+      "size": [
+        220,
+        320
+      ],
+      "mode": "RGB"
+    },
+    "rpg-assets/characters/luna/cutins/battle_smile.webp": {
+      "sha256": "998ad6eef2e3631257506893263ae0e0d519dd89f4e82ecd2afbfe14e89192f1",
+      "bytes": 54820,
+      "size": [
+        560,
+        260
+      ],
+      "mode": "RGB"
+    },
+    "rpg-assets/characters/luna/cutins/battle_allure.webp": {
+      "sha256": "ed6b0090759daaf9aa50c6c38669425298504dd632a01ec402bfca207d58c984",
+      "bytes": 58186,
+      "size": [
+        560,
+        260
+      ],
+      "mode": "RGB"
+    },
+    "rpg-assets/characters/luna/concept-cgs/terrace_night.webp": {
+      "sha256": "1657d9554392e440e6bc3861f6836c1f3009e7305672e50d017bb4b11705d411",
+      "bytes": 454624,
+      "size": [
+        1672,
+        941
+      ],
+      "mode": "RGB"
+    },
+    "rpg-assets/characters/luna/concept-cgs/thumbs/terrace_night.webp": {
+      "sha256": "2ea980294cc33a092ad1227f66c969dabce753f37a053a9ec07485d50b700f45",
+      "bytes": 91368,
+      "size": [
+        640,
+        360
+      ],
+      "mode": "RGB"
+    },
+    "rpg-assets/characters/luna/concept-cgs/harbor_cafe.webp": {
+      "sha256": "00542d991f71fedbf23cd6345fcb2cb87082845238e5091c02753d922dc3cad2",
+      "bytes": 449520,
+      "size": [
+        1672,
+        941
+      ],
+      "mode": "RGB"
+    },
+    "rpg-assets/characters/luna/concept-cgs/thumbs/harbor_cafe.webp": {
+      "sha256": "4d0d7a51f91515298ff5dfed797eec8a8c8f3df8434c1167230853a0fe9997cd",
+      "bytes": 89492,
+      "size": [
+        640,
+        360
+      ],
+      "mode": "RGB"
+    },
+    "rpg-assets/characters/luna/reference/luna_character_sheet_01.png": {
+      "sha256": "385b9a4ce2792afc26d136f99363f36e3fededba2453671da2e3968ed290ef8d",
+      "bytes": 2113134,
+      "size": [
+        1086,
+        1448
+      ],
+      "mode": "RGBA"
+    },
+    "rpg-assets/characters/luna/reference/luna_character_sheet_02.png": {
+      "sha256": "2b226d148d91400d5e64f38f45457223e2c261e9ee5465afa846dc2e94050180",
+      "bytes": 2994252,
+      "size": [
+        1086,
+        1448
+      ],
+      "mode": "RGBA"
+    }
+  }
+}
