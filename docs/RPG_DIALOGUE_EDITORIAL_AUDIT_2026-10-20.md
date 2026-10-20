@@ -44,6 +44,19 @@ Future content is now governed by the narrator/subtext guidance in `docs/rpg-nat
 
 The latest code-level integrity check loaded 32 stories through the actual modules, verified their narration and choice metadata, and reported no authoring-schema errors. Full browser and regression workflow status should be checked from the latest GitHub Actions run, since other UI changes were concurrently landing on main.
 
+## Third milestone: supporting cast, world events and everyday conversations
+
+- Rewrote **all nine** stages of Elio, Alma and Nereo's supporting side quests, while keeping each stage's six-line footprint, event IDs, original choice flags, duel rewards and branch conditions. The ensemble scenes use other NPCs' comments where a redundant second narrator beat would slow the exchange.
+- Rewrote **26** side-quest choice responses and conditional callbacks to respond to specifics rather than abstract lessons.
+- Rewrote **all six season-wide mandatory events** as short town vignettes, preserving flag effects and the three actual-results tokens in the season closure.
+- Rewrote the **Rina and Sol earned bond invitations**, retaining their four-line save index, remote-or-present delivery behavior, event triggers and neutral-decline flags. Their text works both spoken and as a message.
+- Revised **24 everyday topics and their 24 matching exchanges** for Hana, Reina, Shiori, Yuna, Akari, Camila, Marina and Kaede; revised **18 everyday topics/exchanges** for Elio, Alma, Nereo, Jun, Teo and Iris.
+- Found a dialogue-source precedence bug: the original six guest characters' newer topic-specific dialogue was unintentionally overridden by stale supplemental arrays. Changed the merge so explicit maps always win, and added a dedicated regression test. This is a live behavior fix, not merely a text edit.
+- Adjusted the mandatory event renderer to attribute season replies to their actual NPC, and label earned bond replies as messages **only if the character is remote**.
+- Added dedicated prose/metadata regression checks in `tests/rpg_editorial_consistency.test.js` and updated the house style in `docs/rpg-natural-conversations.md`.
+
+**Verification:** content modules parsed and the character-pack and season-event data were synchronized with generated files. The full GitHub Actions RPG suite is the final regression gate; record its passing run explicitly when it completes. No claim is made that every incidental tooltip, battle bark or image-prompt caption has received line-by-line signoff.
+
 ## Remaining priority findings
 
 ### High — finale outcomes do not match the romance writing
