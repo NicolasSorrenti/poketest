@@ -779,6 +779,14 @@ function renderBoosterShop(message=''){
   const fill=document.createElement('span');fill.style.width=offer.completion+'%';track.append(fill);
   const count=document.createElement('small');count.textContent=offer.owned+' / '+offer.total+' cards discovered · '+offer.completion+'%';
   progress.append(track,count);
+  const targets=(state.deckStrategy?.wishlist||[]).filter(id=>
+   id.startsWith(offer.set+'-')&&!(state.deckJourney?.owned?.[id]>0));
+  if(targets.length){
+   const tip=document.createElement('small');tip.className='booster-offer-targets';
+   tip.textContent='✦ '+targets.length+' missing tracked card'+(targets.length===1?'':'s')+
+    ' in this set · packs are randomized';
+   progress.append(tip);
+  }
   const reason=document.createElement('p');reason.className='booster-offer-unlock';
   reason.textContent=offer.unlocked?'Ten random cards · rare + Basic Energy guaranteed':
    offer.unlockHint.replace('bond with '+offer.npc,'bond with '+(cast[offer.npc]?.name||offer.npc));
