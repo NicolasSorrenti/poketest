@@ -10,22 +10,22 @@
     "intro": "You’re staring. Everyone does. If you’re here for a photo or an autograph, I’m off the clock. If you’re here to talk cards… then we can talk.",
     "repeat": "Still hanging around? Most people lose interest once the bikini comes off. You must actually like the game.",
     "talk": [
-      "Modeling pays the bills. The TCG is the only thing that doesn’t feel like a performance.",
-      "People assume I’m dumb because of how I look on the beach. I let them. It’s easier than correcting them every time.",
-      "My agent keeps trying to book me for more ‘lifestyle’ shoots. I keep asking if any of them involve a tournament table.",
-      "I can hold a smile for three hours straight under lights. Sitting down for a real match still makes me more nervous.",
-      "The worst part of the job isn’t the comments. It’s how few people ever ask what I actually care about.",
-      "I keep a full binder of old school cards in my bag between shoots. Don’t tell my manager."
+      "I've got a sunrise shoot tomorrow. Good money, terrible call time. If I can get one game in tonight, I'll survive.",
+      "People see the beach photos and assume I can't count prize cards. Sometimes it's useful to let them underestimate me.",
+      "My agent booked another lifestyle campaign. I asked her to leave me Saturday afternoon for the tournament. We negotiated.",
+      "I can hold a smile for three hours under a hot light. Somehow I still get nervous over a match I actually care about.",
+      "A photographer asked what I do for fun and laughed when I said cards. So I showed him how to play. He lost.",
+      "I keep a battered Trainer card from my first deck in my bag. It's in an ugly sleeve, and I'm not changing it."
     ],
     "flirt": "Careful. Most guys who flirt with me only want the version that exists in photos. You sure you’re different?",
     "duelWin": "Huh. You actually made me work for it. That’s rarer than a first-edition holographic.",
     "duelLose": "Okay, that one hurt. Rematch when I’m not still thinking about lighting setups.",
     "hangouts": [
-      "Sierra shows up to the arcade still in a light cover-up over her shoot bikini. She spends the whole time talking strategy and only notices people staring when you point it out.",
-      "You catch her between jobs reviewing deck lists on her phone while sitting on a park bench in full model hair and makeup. She looks more relaxed talking about disruption packages than she does in any photo.",
-      "She invites you to a quiet café after a shoot. She peels off the performance smile the second she sits down and starts complaining about how hard it is to find good local players who don’t just want pictures.",
-      "A late library session turns into her explaining why she loves control decks while still wearing the tiny shorts from her last booking. She never once adjusts them for the camera that isn’t there.",
-      "She challenges you to a best-of-three and gets genuinely competitive. The model persona disappears completely until the last prize card is taken."
+      "Sierra arrives at the arcade in a cover-up straight from a beach shoot. She pulls a deck list from her bag, points to three cards she wants to cut, and asks you to argue with her.",
+      "Between jobs, Sierra tests a disruption-heavy opening on her phone at the park. When you point out a weak turn, she makes you replay it until one of you changes their mind.",
+      "At the café she orders something strong, kicks off the heels she wore all day, and asks about your last match before you can ask about the photoshoot.",
+      "In the library, Sierra shows you her oldest Trainer card. The sleeve is scratched, the corner is bent, and she remembers the exact turn it won her first game.",
+      "After a close best-of-three, Sierra laughs at the move that beat her, writes it down on the back of a receipt, and insists you play again next weekend."
     ]
   },
   "appearance": {
@@ -46,13 +46,41 @@
   },
   "arrivalDay": 18,
   "schedule": [
-    ["park", "cafe", "arcade"],
-    ["shop", "park", "cafe"],
-    ["home", "shop", "arcade"],
-    ["park", "library", "cafe"],
-    ["arcade", "shop", "park"],
-    ["cafe", "park", "arcade"],
-    ["home", "library", "cafe"]
+    [
+      "park",
+      "cafe",
+      "arcade"
+    ],
+    [
+      "shop",
+      "park",
+      "cafe"
+    ],
+    [
+      "home",
+      "shop",
+      "arcade"
+    ],
+    [
+      "park",
+      "library",
+      "cafe"
+    ],
+    [
+      "arcade",
+      "shop",
+      "park"
+    ],
+    [
+      "cafe",
+      "park",
+      "arcade"
+    ],
+    [
+      "home",
+      "library",
+      "cafe"
+    ]
   ],
   "stories": "stories.json",
   "artManifest": "art_manifest.json",
