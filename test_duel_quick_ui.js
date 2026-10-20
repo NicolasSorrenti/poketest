@@ -2,6 +2,7 @@
 const assert=require('node:assert/strict');
 const fs=require('node:fs');
 const {legalTarget,drawPrizes}=require('./duel_quick_ui');
+const {handIntent}=require('./duel_shared_components');
 const catalog={a:{name:'Charmander'},b:{name:'Charmeleon'},c:{name:"Brock's Vulpix"}};
 const lookup=id=>catalog[id]||{};
 const evolve={name:'Charmeleon',evolvesFrom:'Charmander'};
@@ -23,6 +24,10 @@ try{
  assert.equal(node.children[1].children[2].children.filter(x=>!x.className.includes('prize-taken')).length,4);
  assert.ok(!JSON.stringify(node).includes('base1-'), 'Prize card IDs must not be revealed');
 } finally {global.document=old;}
+assert.equal(handIntent({card:{name:'Switch',supertype:'Trainer'},index:0,canAct:true}).type,'play_trainer','One-click Trainer');
+assert.equal(handIntent({card:{name:'Bulbasaur',supertype:'Pokémon',subtypes:['Basic']},index:0,canAct:true}).type,'bench','One-click Basic');
+assert.equal(handIntent({card:{name:'Grass Energy',supertype:'Energy'},index:0,canAct:true}).type,'attach_energy','Two-click Energy target');
+assert.equal(handIntent({card:{name:'Ivysaur',supertype:'Pokémon',evolvesFrom:'Bulbasaur'},index:0,canAct:true}).type,'evolve','Two-click evolution target');
 for(const file of ['online','classic_live']){
  const html=fs.readFileSync(__dirname+'/'+file+'.html','utf8');const js=fs.readFileSync(__dirname+'/'+file+'.js','utf8');
  assert.match(html,/id="prizeRail"/,file+' Prize rail');
@@ -31,9 +36,9 @@ for(const file of ['online','classic_live']){
  assert.match(html,/id="cardPreview"/,file+' card magnifier');
  assert.match(js,/preview\.attach\(b,id\)/,file+' hand previews');
  assert.match(js,/preview\.attach\(b,u\.id,u\)/,file+' played Pokémon previews');
- assert.match(js,/send\(command\('play_trainer'/,file+' one-click Trainer');
- assert.match(js,/send\(command\('bench'/,file+' one-click basic Pokémon');
- assert.match(js,/setTarget\(c\.supertype==='Energy'\?'attach_energy':'evolve'/,file+' two-click attach/evolve');
+ assert.match(js,/shared\.handIntent\(/,file+' must use shared card intent policy');
+ assert.match(js,/send\(command\(intent\.type,intent\.payload\)\)/,file+' must send typed commands selected by shared policy');
+ assert.match(js,/setTarget\(intent\.type,intent\.payload,intent\.title\)/,file+' must keep two-click target selection');
  assert.match(js,/function cancelTarget/,file+' cancel');
  assert.match(js,/quick\.drawPrizes/,file+' state-driven prizes');
  assert.match(js,/send\(command\('attack'/,file+' server-approved attacks');
