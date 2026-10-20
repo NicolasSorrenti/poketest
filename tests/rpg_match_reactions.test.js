@@ -118,8 +118,8 @@ assert.equal(reactAfter(battle({damage:0}),battle({damage:55,status:'Asleep'})).
  'Weakness outranks simultaneous new status and big hit');
 assert.equal(reactAfter(battle({damage:0},'my-fire'),
  battle({damage:55},'my-fire')).kind,'big_hit','Heavy direct attack triggers special expression');
-assert.equal(reactAfter(battle({damage:0}),battle({damage:30}),{actor:1}),null,
- 'CPU self-attack or turn effects must never masquerade as a human Weakness hit');
+assert.equal(reactAfter(battle({damage:0}),battle({damage:30}),{actor:1}).kind,'attack',
+ 'Only a player attack may trigger a Weakness reaction, not the CPU’s own move');
 assert.equal(reactAfter(battle({damage:0}),battle({damage:30}),{type:'play_trainer'}),null,
  'Damage changes outside attacks are not misclassified as Weakness hits');
 assert.equal(reactAfter(battle({damage:0}),battle({damage:30},'my-lightning',[5,6])).kind,'ko_taken',
