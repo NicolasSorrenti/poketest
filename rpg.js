@@ -993,7 +993,7 @@ window.addEventListener('message',ev=>{
   const bondTrial=duel.bondChallenge?BONDS.settleChallenge(state,duel.npc,receipt.outcome==='Victory',BOND_PLAN,COLLECT):null;
   if(bondTrial){receipt.credits+=bondTrial.credits;log(bondTrial.title+' completed: '+bondTrial.label+'.');}
  if(personalOutcome)log('A special rivalry challenge reached its result.');
- const turningPoint=CONSEQ.record(state,duel,receipt);
+ const turningPoint=CONSEQ.record(state,duel,receipt,{cupOutcome,competitiveOutcome});
  if(turningPoint?.highlight)log('A turning point with '+cast[duel.npc].name+'. You can reflect at the Community Center.');
  const awarded=COLLECT.reward(state,receipt.outcome==='Victory',duel.npc);
  if(awarded)log('Won a ten-card booster: '+awarded.map(labelCard).join(', ')+'.');
