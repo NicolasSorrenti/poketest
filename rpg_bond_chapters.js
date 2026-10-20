@@ -36,33 +36,15 @@
   ['Offer to sit down beside him','If you are there, maybe I can concentrate on the cards instead of the room.','support','elio_companion'],
   ['Practice how to ask for a match','Hi, want to play? ...I said it. I actually said it without apologizing.','challenge','elio_invitation']
  ]),
- E('elio_bond_2','elio','The Practice Hand',30,'library',0,2,'elio_bond_1',[
-  'I wrote down every mistake in my last three games. The notebook is getting heavy.',
-  'How many good decisions did you write down?',
-  'Good decisions do not need fixing. At least that is what I told myself.',
-  'A good choice can lose to a lucky draw.',
-  'So I should record what I was thinking, not just whether I won? That sounds less miserable.'
- ],[
+ E('elio_bond_2','elio','The Practice Hand',30,'library',0,2,'elio_bond_1',[{"speaker":"elio","text":"I filled two pages with mistakes. See? Red ink everywhere."},{"speaker":"Protagonist","text":"You won a prize on turn three. That's not on here."},{"speaker":"elio","text":"That's because I lost the next turn."},{"speaker":"Narrator","text":"He turns the page back, finds the turn, and adds one short line in blue."},{"speaker":"elio","text":"Okay. I did one thing right. Can you help me find another?"}],[
   ['Help him identify a clever losing turn','I think that was the first time I felt proud of a game I lost.','honest','elio_good_loss'],
   ['Challenge him to write three things he did well','Three? You are ruthless. ...All right, I found four.','support','elio_small_wins']
  ]),
- E('elio_bond_3','elio','The Open Challenge',51,'center',1,4,'elio_bond_2',[
-  'I signed up. It is only a friendly bracket, but my hands are shaking so much I almost dropped the registration slip.',
-  'You can withdraw if you need to.',
-  'I know. That is why staying means something.',
-  'What would you like me to do?',
-  'Stay and watch. Not to cheer every move. Just so there is one familiar face when I look up.'
- ],[
+ E('elio_bond_3','elio','The Open Challenge',51,'center',1,4,'elio_bond_2',[{"speaker":"elio","text":"I put my name on the bracket. It's there. In actual ink."},{"speaker":"Protagonist","text":"You're holding the registration slip upside down."},{"speaker":"elio","text":"Oh. Right. Good catch."},{"speaker":"Narrator","text":"He turns it around, checks the number, and steps toward the tables as his name is called."},{"speaker":"elio","text":"Could you watch the first game? You don't have to cheer. Just... be there."}],[
   ['Stay through the match, whatever the result','I lost game one and came back for game two. I did not know I could do that.','support','elio_stayed'],
   ['Remind him of the plan he practiced','I heard myself think instead of all the noise. That was enough.','challenge','elio_kept_calm']
  ]),
- E('elio_bond_4','elio','A Deck of His Own',73,'shop',1,6,'elio_bond_3',[
-  'I peeled the old Champion sticker off the deck box. I kept it, just not on the lid anymore.',
-  'Did you replace it?',
-  'With my own handwriting. It says Elio. Slightly crooked, which seems fair.',
-  'You could have kept the old name.',
-  'I can still love where the cards came from without pretending I am the person who played them first.'
- ],[
+ E('elio_bond_4','elio','A Deck of His Own',73,'shop',1,6,'elio_bond_3',[{"speaker":"elio","text":"New deck box. Same cards, mostly. Different name on top."},{"speaker":"Protagonist","text":"You wrote your own?"},{"speaker":"elio","text":"A bit crooked, but I wasn't going to redo it."},{"speaker":"Narrator","text":"The old Champion sticker is tucked carefully inside the lid, not thrown away."},{"speaker":"elio","text":"Want the first game against it? I'm not giving you a free win."}],[
   ['Ask him what his favorite card is now','Not even a rare. Just the one I picked because I wanted it there.','support','elio_own_name'],
   ['Offer to be the first challenger of his new deck','You are on. And I am not going to apologize for trying to beat you.','challenge','elio_first_challenge']
  ]),
@@ -70,33 +52,15 @@
   ['Help set up a welcoming table for newcomers','The first customer sat down without asking permission. Good. That is exactly what I hoped.','support','alma_open_table'],
   ['Suggest a no-pressure game night','A night where nobody keeps standings. I may put that on the chalkboard.','honest','alma_no_standings']
  ]),
- E('alma_bond_2','alma','After the Rush',29,'cafe',2,2,'alma_bond_1',[
-  'I have reheated this tea three times. It has been an ambitious day.',
-  'You always know when everyone else needs to stop.',
-  'I have learned that I am considerably worse at noticing when I need to.',
-  'The cafe can survive without you for an hour.',
-  'Yes. I just need to believe it long enough to lock the door.'
- ],[
+ E('alma_bond_2','alma','After the Rush',29,'cafe',2,2,'alma_bond_1',[{"speaker":"alma","text":"I've reheated this tea three times. I should charge myself rent for the kettle."},{"speaker":"Protagonist","text":"You could take the next hour off."},{"speaker":"alma","text":"And leave the café to survive without its fearless leader?"},{"speaker":"Narrator","text":"She reaches for the cup, checks the time, and finally sits at the empty window table."},{"speaker":"alma","text":"All right. One hour. You're in charge of the mugs. Just the mugs."}],[
   ['Take the closing shift while she takes a break','I sat by the window. No receipts, no schedules. Just tea that was actually hot.','support','alma_rest'],
   ['Ask her what she misses doing for fun','I used to draw the strangest little card illustrations. Maybe I still have my pencils.','honest','alma_sketch']
  ]),
- E('alma_bond_3','alma','No Trophy Required',49,'cafe',1,4,'alma_bond_2',[
-  'A regular asked whether the cafe will host the winners party. Then another asked if the losers could come too.',
-  'What did you tell them?',
-  'I said anybody who played has a seat. Apparently that answer was controversial.',
-  'Do you want help explaining why?',
-  'No. I want you to help arrange the chairs. A room can make the argument better than a speech.'
- ],[
+ E('alma_bond_3','alma','No Trophy Required',49,'cafe',1,4,'alma_bond_2',[{"speaker":"alma","text":"One player asked if the losers are invited to the café night. I couldn't believe the question."},{"speaker":"Protagonist","text":"What did you tell them?"},{"speaker":"alma","text":"They can pay for their own soup like everybody else."},{"speaker":"Narrator","text":"She pulls two smaller tables together, then steps back to judge the space."},{"speaker":"alma","text":"Help with this one? The whole bracket ought to fit."}],[
   ['Arrange one long shared table','I watched two rivals trade advice over soup. Better than any trophy display.','support','alma_long_table'],
   ['Invite the shy competitors to choose seats first','Nobody had to announce that they felt out of place. They simply belonged.','honest','alma_first_seats']
  ]),
- E('alma_bond_4','alma','A Quiet Invitation',72,'cafe',2,6,'alma_bond_3',[
-  'The sign says Closed. I am still pouring two cups of tea, so I suppose the sign is lying.',
-  'Should I come back tomorrow?',
-  'No. I wanted one evening where I did not have to be the host, the referee, or the person with the spare napkins.',
-  'Then who do you want to be?',
-  'Someone who is allowed to sit and enjoy a game with a friend. You brought your deck, yes?'
- ],[
+ E('alma_bond_4','alma','A Quiet Invitation',72,'cafe',2,6,'alma_bond_3',[{"speaker":"alma","text":"The sign says closed. Don't tell the regulars I let you in."},{"speaker":"Protagonist","text":"I can leave if it's a bad time."},{"speaker":"alma","text":"It's fine. I set a second cup out, didn't I?"},{"speaker":"Narrator","text":"Alma pulls out a chair, sets her apron behind the counter, and opens a deck box."},{"speaker":"alma","text":"Pick a side. No customers, no complaints, and you're not allowed to order anything."}],[
   ['Offer a quiet game without stakes','Finally. A match where I do not have to clean up anybody else’s feelings afterward.','support','alma_quiet_game'],
   ['Ask her to pick the game and the music','You always notice when I am trying to work instead of enjoy myself. Thank you.','honest','alma_evening']
  ]),
@@ -104,33 +68,15 @@
   ['Play a few casual hands by the dock','Well, that was unexpectedly relaxing. You did not once ask when the ferry leaves.','support','nereo_dock_game'],
   ['Ask him to teach you his defensive deck','At last, someone who understands that preparing for trouble is not pessimism.','challenge','nereo_defense']
  ]),
- E('nereo_bond_2','nereo','The Spare Battery',40,'shop',1,2,'nereo_bond_1',[
-  'Somebody borrowed the spare batteries from my deck box. They left a thank-you note and three coins.',
-  'That seems almost fair.',
-  'It is not the money. It is that they thought I would say no if they asked.',
-  'Maybe they are used to being told no.',
-  'Then I would rather change that than spend another morning annoyed at a mystery thief.'
- ],[
+ E('nereo_bond_2','nereo','The Spare Battery',40,'shop',1,2,'nereo_bond_1',[{"speaker":"nereo","text":"Someone borrowed the spare batteries from my deck box. Left three coins and a thank-you note."},{"speaker":"Protagonist","text":"Better than leaving nothing, I suppose."},{"speaker":"nereo","text":"They could've asked. I always keep more than I need."},{"speaker":"Narrator","text":"He turns the handwritten note over once, folds it and puts it in his pocket."},{"speaker":"nereo","text":"Could we put a labeled supply box by the counter? Maybe they'll ask next time."}],[
   ['Help set up a labeled community supply box','Everyone started adding things to it. Even the shop. I did not see that coming.','support','nereo_supply'],
   ['Suggest asking people to return supplies themselves','Turns out they did. Apparently a direct question is still useful technology.','honest','nereo_trust']
  ]),
- E('nereo_bond_3','nereo','Against the Current',58,'park',2,4,'nereo_bond_2',[
-  'The ferry will not run tonight. The wind is too strong. That is not a negotiable decision.',
-  'Someone sounded angry at the dock.',
-  'A kid promised to bring a deck to the evening match. I get why missing it hurts.',
-  'Could we bring the match here instead?',
-  'Here, under the shelter, with everybody watching? I would like to see the river try to stop that.'
- ],[
+ E('nereo_bond_3','nereo','Against the Current',58,'park',2,4,'nereo_bond_2',[{"speaker":"nereo","text":"Ferry's not running tonight. I put the notice up before the wind took it out of my hands."},{"speaker":"Protagonist","text":"The kids were expecting their match across the river."},{"speaker":"nereo","text":"I know. One's been staring at the empty landing for an hour."},{"speaker":"Narrator","text":"The covered seating area is dry; two benches are already arranged across from one another."},{"speaker":"nereo","text":"Think we can get a game going under there? I'll fetch the spare playmat."}],[
   ['Organize the sheltered match','The kid got the game they wanted. The river kept its temper. Everybody wins.','support','nereo_shelter'],
   ['Help announce a fair postponement','Nobody felt forgotten. That was worth more than forcing a dangerous crossing.','honest','nereo_safe']
  ]),
- E('nereo_bond_4','nereo','The Crossing',79,'park',0,6,'nereo_bond_3',[
-  'It is calm today. Almost suspiciously calm. I brought my deck and no tools.',
-  'That might be a first.',
-  'Do not spread that around. I have a reputation to maintain.',
-  'Are you heading somewhere?',
-  'Not yet. For once there is no emergency. I thought we could have a game without asking what might go wrong.'
- ],[
+ E('nereo_bond_4','nereo','The Crossing',79,'park',0,6,'nereo_bond_3',[{"speaker":"nereo","text":"Look. Empty tool bag. I brought a deck instead."},{"speaker":"Protagonist","text":"Should I be worried?"},{"speaker":"nereo","text":"Probably. I might do something wildly irresponsible, like take a morning off."},{"speaker":"Narrator","text":"He sits beneath the ferry schedule without glancing up at it."},{"speaker":"nereo","text":"Deal. If anyone asks about the tide, I'm blaming you."}],[
   ['Challenge him to play the boldest line in his hand','Terrible idea. We should absolutely do that again sometime.','challenge','nereo_bold'],
   ['Play slowly and enjoy the morning','I used to call this wasting daylight. I think I was wrong.','support','nereo_still_water']
  ])
