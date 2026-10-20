@@ -89,34 +89,61 @@
   // Invalid/misassigned images must never display a different character.
   return valid(candidate)?candidate:(valid(PORTRAITS[npcId])?PORTRAITS[npcId]:null);
  }
- function makeExperience({element,npcId,npcName,random=Math.random}={}){
+ // Never make players wait for ordinary reactions; the KO cut-in can last a little longer.
+ const isClutch=kind=>kind==='ko_taken'||kind==='ko_scored';
+ const priorityFor=kind=>isClutch(kind)?3:kind==='evolve'||kind==='power'?2:1;
+ const durationFor=(kind,reduced=false)=>reduced?260:isClutch(kind)?1280:900;
+ function makeExperience({element,npcId,npcName,random=Math.random,doc=typeof document==='undefined'?null:document,
+  schedule=setTimeout,cancel=clearTimeout,media=typeof window==='undefined'?null:window}={}){
   const director=createDirector({npcId,npcName,random});
-  let manifest=null,queue=[],active=false,timer=null;
-  const reduced=()=>typeof window!=='undefined'&&!!window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
-  function hide(){if(timer)clearTimeout(timer);timer=null;active=false;element?.classList.add('hidden');element?.replaceChildren();}
-  function reset(){director.reset();queue=[];hide();}
+  let manifest=null,queued=null,active=false,currentPriority=0,timer=null;
+  const reduced=()=>!!media?.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches;
+  function hide(){
+   if(timer!==null)cancel(timer);
+   timer=null;active=false;currentPriority=0;
+   element?.classList.add('hidden');element?.replaceChildren();
+  }
+  function reset(){director.reset();queued=null;hide();}
   function pump(){
-   if(active||!queue.length||!element)return;
-   const reaction=queue.shift();active=true;
-   const card=document.createElement('div');card.className='npc-reaction-card npc-reaction-'+reaction.kind;
-   const portrait=document.createElement('div');portrait.className='npc-reaction-portrait';
+   if(active||!queued||!element||!doc)return;
+   const reaction=queued;queued=null;active=true;currentPriority=priorityFor(reaction.kind);
+   const card=doc.createElement('div');card.className='npc-reaction-card npc-reaction-'+reaction.kind+(isClutch(reaction.kind)?' is-finisher':'');
+   const portrait=doc.createElement('div');portrait.className='npc-reaction-portrait';
    const src=assetFor(manifest,npcId,reaction.imageKey);
    if(src){
-    const img=document.createElement('img');img.alt='';img.src=src;
+    const img=doc.createElement('img');img.alt='';img.src=src;
     img.onerror=()=>{const fallback=PORTRAITS[npcId];if(fallback&&img.getAttribute('src')!==fallback){img.src=fallback;}else{img.remove();portrait.classList.add('no-art');}};
     portrait.append(img);
    }else portrait.classList.add('no-art');
-   const copy=document.createElement('div');copy.className='npc-reaction-copy';
-   const tag=document.createElement('span');tag.className='npc-reaction-tag';tag.textContent=reaction.subtitle;
-   const name=document.createElement('strong');name.className='npc-reaction-name';name.textContent=reaction.npcName;
-   const title=document.createElement('span');title.className='npc-reaction-title';title.textContent=reaction.title;
-   const line=document.createElement('p');line.textContent='“'+reaction.line+'”';
+   const copy=doc.createElement('div');copy.className='npc-reaction-copy';
+   const tag=doc.createElement('span');tag.className='npc-reaction-tag';tag.textContent=reaction.subtitle;
+   const name=doc.createElement('strong');name.className='npc-reaction-name';name.textContent=reaction.npcName;
+   const title=doc.createElement('span');title.className='npc-reaction-title';title.textContent=reaction.title;
+   const line=doc.createElement('p');line.textContent='“'+reaction.line+'”';
    copy.append(tag,name,title,line);card.append(portrait,copy);
    element.replaceChildren(card);element.classList.remove('hidden');
-   timer=setTimeout(()=>{timer=null;element.classList.add('hidden');element.replaceChildren();active=false;pump();},reduced()?1800:2900);
+   const showingPriority=currentPriority;
+   timer=schedule(()=>{
+    // Stale completion timers cannot clear a newer cut-in.
+    if(currentPriority!==showingPriority)return;
+    timer=null;hide();pump();
+   },durationFor(reaction.kind,reduced()));
   }
-  function update(data){const reaction=director.update(data);if(reaction){if(queue.length<2)queue.push(reaction);pump();}return reaction;}
-  return {update,reset,setManifest:value=>{manifest=value;},get count(){return director.count;}};
+  function update(data){
+   const reaction=director.update(data);
+   if(!reaction)return null;
+   const priority=priorityFor(reaction.kind);
+   if(active&&priority===3&&priority>currentPriority){
+    // A knockout cuts through an ordinary queued quip.
+    queued=null;hide();
+   }
+   if(!active)queued=reaction;
+   else if(!queued||priority>priorityFor(queued.kind))queued=reaction;
+   pump();
+   return reaction;
+  }
+  return {update,reset,setManifest:value=>{manifest=value;},get count(){return director.count;},
+   get active(){return active;},get queued(){return queued?.kind||null;}};
  }
- return {createDirector,makeExperience,assetFor,MAX_REACTIONS};
+ return {createDirector,makeExperience,assetFor,MAX_REACTIONS,priorityFor,durationFor};
 });
