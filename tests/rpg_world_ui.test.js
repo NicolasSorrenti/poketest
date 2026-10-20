@@ -995,7 +995,8 @@ test('story responses float to the center while the dialogue line remains visibl
  const r=launch({day:5,slot:0,location:'shop',activeStory:{id:'hana_route_1',phase:'lines',index:0}});
  assert.equal(r.elements.playerChoicePrompt.hidden,true);
  const stages=Dialogue.storyLines('hana_route_1',Story.linesFor(r.state(),'hana_route_1'));
- assert.equal(stages.length,5,'authored routes should have two additional spoken beats');
+ assert.equal(stages.length,Story.linesFor(r.state(),'hana_route_1').length,'narration-led chapters keep their authored pacing');
+ assert.equal(stages[0].speaker,'Narrator');
  for(let i=0;i<stages.length;i++)r.elements.choices.children[0].onclick();
  assert.equal(r.elements.playerChoicePrompt.hidden,false);
  assert.equal(r.elements.choices.parentElement,r.elements.playerChoicePanel);
