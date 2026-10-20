@@ -10,7 +10,7 @@ const ids=[...html.matchAll(/id="([^"]+)"/g)].map(x=>x[1]);
 
 class FakeNode{
  constructor(tag='div'){
-  this.tagName=tag.toUpperCase();this.children=[];this.options=[];this.style={};this.className='';
+  this.tagName=tag.toUpperCase();this.children=[];this.options=[];this.style={setProperty(name,value){this[name]=String(value);}};this.className='';
   this.dataset={};this.hidden=false;this.disabled=false;this.textContent='';this.title='';this.value='';this.src='';
   this.classList={toggle:(name,on)=>{if(on&&!this.className.includes(name))this.className+=' '+name;if(!on)this.className=this.className.replace(name,'');}};
  }
