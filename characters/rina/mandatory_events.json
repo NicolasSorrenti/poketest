@@ -29,25 +29,25 @@
       "lines": [
         {
           "speaker": "rina",
-          "text": "Hey! It is me. I finished the rehearsal early, and I actually asked for this break."
+          "text": "This is going to sound ridiculous, but I put a practice match on my rehearsal calendar."
         },
         {
           "speaker": "Protagonist",
-          "text": "You asked for time off to practice your deck? Your manager agreed?"
+          "text": "Did your manager approve it?"
         },
         {
           "speaker": "rina",
-          "text": "Yes. I did not sneak out. I told her this matters to me, even when nobody is watching."
+          "text": "She asked if it was a new song. I said no. The drummer offered to test my deck after soundcheck anyway."
         },
         {
           "speaker": "rina",
-          "text": "I have a few new openings to test. There is no audience to impress. Would you like to join me sometime?"
+          "text": "I've got two openings I can't decide between. Would you play a few hands with me sometime?"
         }
       ],
       "choices": [
         {
-          "label": "I would like that. Let us set a time.",
-          "reply": "Deal! We can play when we both have room for it.",
+          "label": "I'd love to. You pick the table.",
+          "reply": "Yes! And bring that awful disruption deck. I need the practice.",
           "flag": "rina_practice_yes",
           "effects": {
             "flags": [
@@ -56,8 +56,8 @@
           }
         },
         {
-          "label": "Not right now, but thanks for asking.",
-          "reply": "No pressure. I am proud I could ask you honestly.",
+          "label": "I can't make it this week.",
+          "reply": "Okay! Send me a message when you've got an evening free.",
           "flag": "rina_practice_no",
           "effects": {
             "flags": [
