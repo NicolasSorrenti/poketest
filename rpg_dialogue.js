@@ -848,6 +848,9 @@
 };
  function storyLines(id,base){
   if(!Array.isArray(base)||base.length<2)return base;
+  // Narration-led legacy chapters are complete scenes. Do not append the old
+  // generic two-line moral after a carefully staged final question.
+  if(base.some(line=>line.speaker==='Narrator'))return base;
   const match=/^([a-z]+)_route_([1-5])$/.exec(id);
   if(!match)return base;
   const [,npc,num]=match,index=Number(num)-1;
