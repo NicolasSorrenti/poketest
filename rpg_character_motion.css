@@ -1,0 +1,67 @@
+/* Neo Campus character choreography: fast portraits, manga-style dialogue, gentle focus. */
+.rpg-scene-cast .rpg-cast-member{isolation:isolate;transform-origin:center bottom}
+.rpg-scene-cast .rpg-cast-member.is-entering{
+ animation:neo-cast-slide .42s cubic-bezier(.16,.9,.32,1.08) both;
+ animation-delay:calc(var(--cast-order,0) * 65ms)
+}
+.rpg-scene-cast .rpg-cast-member::before{
+ content:"";position:absolute;inset:auto 8% 28px;z-index:-1;height:56%;
+ background:radial-gradient(ellipse at center,#ee80b638,transparent 68%);opacity:0;transform:scale(.75);
+ transition:opacity .18s ease,transform .2s ease;pointer-events:none
+}
+.rpg-scene-cast.is-conversation .rpg-cast-member.is-speaking::before{opacity:1;transform:scale(1.12)}
+.rpg-scene-cast.is-conversation .rpg-cast-member.is-speaking{z-index:4;filter:brightness(1.06) drop-shadow(0 16px 24px #000d)}
+.rpg-scene-cast.is-conversation .rpg-cast-member.is-speaking span:last-child{
+ background:linear-gradient(100deg,#c44981,#702d60);box-shadow:0 5px 0 #1e1426ad,0 0 19px #ed8db059;
+ border-color:#ffd7e8;transform:skewX(-5deg);font-size:clamp(14px,1.6vw,20px)
+}
+.rpg-scene-cast .rpg-cast-member:not(:disabled):hover::before,
+.rpg-scene-cast .rpg-cast-member:not(:disabled):focus-visible::before{opacity:.75;transform:scale(1)}
+.rpg-scene-cast .rpg-cast-member span:last-child{transition:background .17s ease,border-color .17s ease,transform .17s ease}
+.dialogue:not([hidden]){
+ border-left:7px solid #f58eb3;border-radius:5px 14px 14px 5px;
+ background:linear-gradient(105deg,#0e1226f5,#241a35f2 62%,#281d38f5);
+ box-shadow:0 16px 48px #000c;
+}
+.dialogue-title #speaker{
+ display:inline-block;padding:4px 16px 4px 12px;
+ margin:-7px 0 0 -11px;min-width:90px;
+ background:linear-gradient(105deg,#a44576,#71315d);color:#fff;
+ clip-path:polygon(0 0,95% 0,100% 28%,96% 100%,0 100%);
+ font:900 clamp(18px,2.2vw,26px)/1.15 'Barlow Condensed',sans-serif;
+ letter-spacing:.04em
+}
+.dialogue .vn-label{color:#f3a8c8;font-size:11px}
+.dialogue #line{font-size:clamp(15px,1.2vw,18px);line-height:1.6;max-width:780px}
+.dialogue .choice:not(:disabled){
+ border-color:#ba789a;border-left:3px solid #df86ad;
+ transition:transform .13s ease,background .13s ease,border-color .13s ease
+}
+.dialogue .choice:not(:disabled):hover,.dialogue .choice:not(:disabled):focus-visible{
+ border-color:#ffd1e7;background:#784065;transform:translateX(4px)
+}
+.player-choice-panel{border-radius:7px 18px 8px 16px;border-left:6px solid #f9a3c4;box-shadow:0 26px 75px #070a18db}
+.player-choice-panel .choice-list.centered .choice{
+ border-radius:3px 9px 9px 3px;border-left:4px solid #e3a7be;padding:13px 18px;
+ background:linear-gradient(105deg,#333047,#292d45);
+}
+.player-choice-panel .choice-list.centered .choice:focus-visible{
+ background:#954b75;border-left-color:#ffe2ed;outline:2px solid #fff;outline-offset:2px
+}
+@keyframes neo-cast-slide{
+ 0%{opacity:0;transform:translateY(48px) translateX(-12px) scale(.94);filter:brightness(.75)}
+ 62%{opacity:1;transform:translateY(-6px) translateX(1px) scale(1.015);filter:brightness(1.1)}
+ 100%{opacity:1;transform:translateY(0) translateX(0) scale(1);filter:brightness(1)}
+}
+@media(max-width:700px){
+ .rpg-scene-cast .rpg-cast-member.is-entering{animation-duration:.32s;animation-delay:calc(var(--cast-order,0)*35ms)}
+ .dialogue:not([hidden]){border-left-width:4px}
+ .dialogue-title #speaker{padding:5px 11px;min-width:0}
+ .dialogue #line{font-size:14px}
+}
+@media(prefers-reduced-motion:reduce){
+ .rpg-scene-cast .rpg-cast-member.is-entering,.rpg-scene-cast .rpg-cast-member::before,
+ .rpg-scene-cast .rpg-cast-member span:last-child,.dialogue .choice:not(:disabled){
+ animation:none!important;transition:none!important
+ }
+}
