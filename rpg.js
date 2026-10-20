@@ -2,7 +2,7 @@
 (()=>{
 const $=id=>document.getElementById(id),KEY='neoHarborRpgV1',STORY=window.NeoHarborStory,SCHEDULES=window.NeoRpgSchedules,WORLD=window.NeoRpgWorld,ARC=window.NeoRpgRivalArc,TOURNAMENTS=window.NeoRpgTournaments,COMPETE=window.NeoRpgCompetitiveLoop,BRIDGE=window.NeoRpgDuelBridge;
 const PACK=window.NeoRpgNarrativePack,SIDE=window.NeoRpgSideQuests,EPILOGUE=window.NeoRpgEpilogue,APPOINTMENTS=window.NeoRpgAppointments,INTENTIONS=window.NeoRpgIntentions,CG=window.NeoRpgCGGallery,PLANNER=window.NeoRpgDailyPlanner,SOCIAL=window.NeoRpgSocialActivities,DATES=window.NeoRpgPlannedDates,PRE=window.NeoRpgPreDuel,SITUATIONS=window.NeoRpgSituations,JOURNEY=window.NeoRpgSeasonJourney,COLLECT=window.NeoRpgCollection,RPGD=window.NeoRpgDialogue,BONDS=window.NeoRpgBondRewards,PARTNER=window.NeoRpgPartnerDecks,VN=window.NeoRpgConversations;
-const MANDATORY=window.NeoRpgMandatoryEvents||null,REACT=window.NeoRpgReactivity,COMMUNITY=window.NeoRpgCommunity;
+const MANDATORY=window.NeoRpgMandatoryEvents||null,REACT=window.NeoRpgReactivity,COMMUNITY=window.NeoRpgCommunity,CONSEQ=window.NeoRpgConsequences;
 const MANDATORY_EVENTS=[...(window.NeoRpgSeasonEvents?.events||[]),...(window.NeoRpgCharacterPacks?.mandatoryEvents||[])];
 const periods=['Morning','Afternoon','Evening'];
 const places={
@@ -132,7 +132,7 @@ function timeFlash(beforeDay,beforeSlot,source='activity'){
  overlay.addEventListener('animationend',()=>overlay.remove());
 }
 
-function defaults(){return {sideQuests:{},activeSideQuest:null,day:1,slot:0,location:'home',metReina:false,reinaTrust:0,reinaDuels:0,results:[],flags:{intro:false},journal:['The 90-day season begins.'],pendingDuel:null,bonds:{},talked:{},hungOut:{},eventsDone:{},points:0,credits:80,playerDeck:'blackout',selected:null,ended:false,storyDone:{},storyMissed:{},relationships:{},routeOutcomes:{},partner:null,activeStory:null,activeEncounter:null,activeArc:null,arcFlags:{},arcOutcomes:{},activityDone:{},encountersDone:{},focus:75,insight:0,reputation:0,preparation:0,lastDuelReceipt:null,tournaments:{},campaignHistory:[],ngPlus:0,appointments:[],appointmentSeq:0,scene:null,socialHistory:{},situationDone:{},activeSituation:null,deckJourney:null,competitive:null,npcReactivity:null,community:null,mandatoryEventState:null}}
+function defaults(){return {sideQuests:{},activeSideQuest:null,day:1,slot:0,location:'home',metReina:false,reinaTrust:0,reinaDuels:0,results:[],flags:{intro:false},journal:['The 90-day season begins.'],pendingDuel:null,bonds:{},talked:{},hungOut:{},eventsDone:{},points:0,credits:80,playerDeck:'blackout',selected:null,ended:false,storyDone:{},storyMissed:{},relationships:{},routeOutcomes:{},partner:null,activeStory:null,activeEncounter:null,activeArc:null,arcFlags:{},arcOutcomes:{},activityDone:{},encountersDone:{},focus:75,insight:0,reputation:0,preparation:0,lastDuelReceipt:null,tournaments:{},campaignHistory:[],ngPlus:0,appointments:[],appointmentSeq:0,scene:null,socialHistory:{},situationDone:{},activeSituation:null,deckJourney:null,competitive:null,npcReactivity:null,community:null,consequences:null,mandatoryEventState:null}}
 const hadCampaignSave=!!localStorage.getItem(KEY);
 let state;try{state=JSON.parse(localStorage.getItem(KEY))||defaults();if(!Number.isInteger(state.day)||state.day<1||state.day>91)throw Error('Invalid save');}catch{state=defaults()}
 for(const [k,v] of Object.entries(defaults()))if(state[k]===undefined)state[k]=v;
@@ -157,6 +157,7 @@ TOURNAMENTS.expire(state);
 COMPETE.hydrate(state);
 REACT.hydrate(state);
 COMMUNITY.hydrate(state);
+CONSEQ.hydrate(state);
 APPOINTMENTS.hydrate(state);APPOINTMENTS.expire(state);INTENTIONS.hydrate(state);CG.hydrate(state);SOCIAL.hydrate(state);DATES.hydrate(state,APPOINTMENTS,SOCIAL);SITUATIONS.hydrate(state);
 for(const id of Object.keys(cast)){const old=state.bonds[id],current=state.relationships[id];
  if(!state.flags['newStoryMigrated_'+id]){for(const key of ['affection','trust','duels'])current[key]=Math.max(current[key]||0,old[key]||0);
@@ -279,7 +280,7 @@ function selectPerson(id){
  state.selected=id;
  const memories=recordCG('meet',id);
  persist();
- const context=first?null:REACT.reaction(state,id,c,cast,COMMUNITY);
+ const context=first?null:REACT.reaction(state,id,c,cast,COMMUNITY,CONSEQ);
  sayConversation(context?.lines||VN.dialogue(state,id,c,RPGD,{first}),fresh?VN.choices(state,id):[],context?.id||null);
  showCGMoment(memories[0]);
 }
@@ -457,6 +458,21 @@ function act(action){
  if(type==='arcChoice')return chooseArc(id);
  if(type==='arcFinish')return finishArc();
  if(state.activeSituation||state.activeStory||state.pendingDuel||state.activeEncounter||state.activeArc||state.activeSideQuest||state.mandatoryEventState?.active)return;
+ if(type==='consequenceChoice'){
+  const id0=scene.consequenceId,answer=id0?CONSEQ.resolve(state,id0,id):null;
+  if(!answer)return;
+  log('After the match: '+CONSEQ.PATHS[id].label.toLowerCase()+'.');
+  return sayConversation(answer.lines,[]);
+ }
+ if(type==='consequence'){
+  const event=CONSEQ.opportunities(state)[0];if(!event)return;
+  if(state.location!=='center'){
+   state.location='center';state.selected=null;persist();
+   return say('Narrator','You arrive at the Community Center, where you can review your last match. No time passes.');
+  }
+  scene={...CONSEQ.prompt(event,cast[event.npc]?.name||'your rival'),consequenceId:event.id};
+  state.scene=scene;persist();render();return;
+ }
 
  if(type==='dateInvite'){
   if(!cast[id]||!currentPeople().includes(id))return;
@@ -606,7 +622,7 @@ function act(action){
  if(type==='talk'){
   state.talked[state.day+':'+id]=true;
   persist();
-  const context=REACT.reaction(state,id,c,cast,COMMUNITY);
+  const context=REACT.reaction(state,id,c,cast,COMMUNITY,CONSEQ);
   return sayConversation(context?.lines||VN.dialogue(state,id,c,RPGD),[],context?.id||null);
  }
  if(type==='flirt'){
@@ -867,7 +883,8 @@ async function loadCardNames(){
 function duelUrl(duel){return '/classic_live.html?rpg=1&duelId='+encodeURIComponent(duel.id)+'&deck='+encodeURIComponent(duel.playerDeck)+'&opponent='+encodeURIComponent(duel.opponent)+'&npc='+encodeURIComponent(duel.npc)+'&npcName='+encodeURIComponent(cast[duel.npc].name);}
 
 function describePreparedDuel(){
- return PRE.describe(state,state.pendingDuel,{cast,places,cg:CG,tournaments:TOURNAMENTS,reactivity:REACT});
+ return PRE.describe(state,state.pendingDuel,{cast,places,cg:CG,tournaments:TOURNAMENTS,
+  reactivity:{preDuelLine:(s,d)=>CONSEQ.preDuel(s,d.npc)||REACT.preDuelLine(s,d)}});
 }
 function showPreparedDuel(){
  const pending=state.pendingDuel;
@@ -971,6 +988,8 @@ window.addEventListener('message',ev=>{
   const bondTrial=duel.bondChallenge?BONDS.settleChallenge(state,duel.npc,receipt.outcome==='Victory',BOND_PLAN,COLLECT):null;
   if(bondTrial){receipt.credits+=bondTrial.credits;log(bondTrial.title+' completed: '+bondTrial.label+'.');}
  if(personalOutcome)log('A special rivalry challenge reached its result.');
+ const turningPoint=CONSEQ.record(state,duel,receipt);
+ if(turningPoint?.highlight)log('A turning point with '+cast[duel.npc].name+'. You can reflect at the Community Center.');
  const awarded=COLLECT.reward(state,receipt.outcome==='Victory',duel.npc);
  if(awarded)log('Won a ten-card booster: '+awarded.map(labelCard).join(', ')+'.');
  state.lastDuelReceipt=receipt;state.pendingDuel=null;
@@ -1217,6 +1236,15 @@ function renderCompetitiveCircuit(locked){
  const board=document.createElement('button');board.type='button';board.className='activity';
  board.textContent='▦ Community Board · NPC standings, rivalries & club news';
  board.disabled=locked;board.onclick=openCommunityBoard;root.append(board);
+ const turning=CONSEQ.opportunities(state)[0];
+ if(turning){
+  const reflect=document.createElement('button');reflect.type='button';reflect.className='activity';
+  reflect.disabled=locked;
+  reflect.textContent=(state.location==='center'?'↗ Reflect on your match with ':'↗ Visit the Center to reflect on ')+
+   (cast[turning.npc]?.name||'a rival')+' · free';
+  reflect.onclick=()=>act('consequence');
+  root.append(reflect);
+ }
  const entries=COMPETE.available(state);
  for(const entry of entries){
   const button=document.createElement('button');button.type='button';button.className='activity';button.disabled=locked;
@@ -1357,7 +1385,15 @@ function renderSeasonReport(){
   row.textContent='Season '+season.run+' · '+season.title+' · '+season.wins+' wins · '+season.points+' points · '+season.memories+' collected memories';
   past.append(row);
  }
- root.append(preface,heading,closing,numbers,trophyTitle,trophies,social,past,footer);
+ if(r.seasonLessons?.length){
+  const lessons=document.createElement('section');lessons.className='finale-lessons';
+  const title=document.createElement('h3');title.textContent='What changed along the way';
+  lessons.append(title);
+  for(const line of r.seasonLessons){
+   const item=document.createElement('p');item.textContent=line;lessons.append(item);
+  }
+  root.append(preface,heading,closing,numbers,trophyTitle,trophies,social,lessons,past,footer);
+ }else root.append(preface,heading,closing,numbers,trophyTitle,trophies,social,past,footer);
 }
 
 // Presentation-only navigation: game state and action handlers remain authoritative.
@@ -1670,7 +1706,7 @@ function render(){
   const bond=BONDS.progress(state,id,BOND_PLAN),chapter=document.createElement('small');
   chapter.className='character-chapter-progress';chapter.textContent='♥ Character chapters '+bond.completed+' / '+bond.total+(state.bondTrials?.[id]?' · Personal challenge won':'');
   label.append(name,sub,chapter);
-  if(!locked&&state['met_'+id]&&REACT.reaction(state,id,c,cast,COMMUNITY)){
+  if(!locked&&state['met_'+id]&&REACT.reaction(state,id,c,cast,COMMUNITY,CONSEQ)){
    const cue=document.createElement('small');cue.className='character-reaction-hint';cue.textContent='✦ Something to say';
    label.append(cue);
   }
