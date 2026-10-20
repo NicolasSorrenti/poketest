@@ -1498,12 +1498,14 @@ function render(){
  const previousLocation=lastRenderedLocation;
  lastRenderedLocation=state.location;
  if(previousLocation&&previousLocation!==state.location){
+  window.NeoRpgInterface?.onLocationChange?.();
   window.NeoRpgTimeTransitions?.presentTravel?.({
    from:places[previousLocation]?.[0]||previousLocation,
    to:places[state.location]?.[0]||state.location
   });
  }
  ensureRpgLayout();
+ window.NeoRpgInterface?.init?.();
  maybeStartMandatory();
  renderJourney();
  renderCollection();
