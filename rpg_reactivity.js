@@ -9,12 +9,12 @@
  const VOICE=Object.freeze({
   "hana": {
     "win": [
-      "You changed plans halfway through and still kept your team together.",
-      "The next match will teach us something different. I hope we both remember to have fun."
+      "You caught me with that switch. I should've read the Bench.",
+      "I wrote the turn down on a receipt, then spilled tea on it."
     ],
     "loss": [
-      "I watched you keep trying even when the board looked awful.",
-      "Come back when you feel ready. The shop will still have a seat for you."
+      "I finally got Wigglytuff working. Did you see the setup?",
+      "Come by the shop. I can show you the list if you'd like."
     ],
     "draw": [
       "Neither of us wanted to leave that table, did we?",
@@ -29,12 +29,12 @@
       "Winning or losing does not change who gets a place at our table."
     ],
     "missed": [
-      "I kept your spot until I realized you could not make it.",
-      "Please send word next time. We can always find another afternoon."
+      "I left a chair out for you until closing.",
+      "It's all right. Next time just give me a heads-up, okay?"
     ],
     "kept": [
-      "It was nice to spend some time together outside the usual rush.",
-      "I almost forgot what we were supposed to be in a hurry for."
+      "I'm still laughing about the game after everyone went home.",
+      "The shop was quieter with just two decks on the table. I liked it."
     ],
     "preWin": "You surprised me last time. I brought a new plan!",
     "preLoss": "A rematch? Great. I was hoping we would try again.",
@@ -42,12 +42,12 @@
   },
   "reina": {
     "win": [
-      "You broke through my opening. I went home and replayed the turns.",
-      "Do not expect me to hand you that line twice."
+      "That first knockout was mine to lose. I know exactly where.",
+      "Don't expect the same opening next time."
     ],
     "loss": [
-      "You saw what happens when a plan has a hole in it.",
-      "If you want a rematch, bring an answer. Not an excuse."
+      "You gave away the second turn. You know that, right?",
+      "Here. I'll show you the line I was waiting for."
     ],
     "draw": [
       "We both had a chance to finish that game.",
@@ -62,12 +62,12 @@
       "Make sure you remember the turns, not just what they printed next to your name."
     ],
     "missed": [
-      "You were not where you said you would be.",
-      "I do not need an apology performance. Just be clear with me next time."
+      "You weren't there. I played someone else.",
+      "If you want another match, just say when."
     ],
     "kept": [
-      "You actually showed up when you said you would.",
-      "Good. Reliability matters outside the duel table too."
+      "You actually turned up early. Good.",
+      "Let's make that our regular table. The lighting's better."
     ],
     "preWin": "I studied the last loss. Try that again.",
     "preLoss": "You know how the last game ended. Change something.",
@@ -75,12 +75,12 @@
   },
   "shiori": {
     "win": [
-      "I have been thinking about the turn when you changed your mind.",
-      "You seemed to listen to the game instead of forcing it."
+      "You saw the safe move and took the risky one instead.",
+      "I've replayed it twice. It still holds up."
     ],
     "loss": [
-      "I hope you did not remember only the last attack.",
-      "There was an earlier choice worth keeping for next time."
+      "You nearly had me with that last switch.",
+      "Would you like to see what I had in hand?"
     ],
     "draw": [
       "That game left us both with an unfinished question.",
@@ -95,12 +95,12 @@
       "The most important decisions rarely fit on the scoreboard."
     ],
     "missed": [
-      "I waited a little while, then took my book home.",
-      "I would rather know the truth about your day than have you promise something impossible."
+      "I finished my book before you arrived.",
+      "No apology needed. A short message would've been enough."
     ],
     "kept": [
-      "I liked how little we needed to plan once we were together.",
-      "Sometimes a quiet afternoon is enough."
+      "The café was almost empty by the time we looked up.",
+      "I'd like another afternoon like that, if you would."
     ],
     "preWin": "You saw an opening I missed. I remember it.",
     "preLoss": "We both learned something last time. Shall we test it?",
@@ -108,12 +108,12 @@
   },
   "yuna": {
     "win": [
-      "You actually beat my magnificent scheme. Rude.",
-      "I have already thought of three even worse schemes."
+      "You broke my magnificent combo. Very rude.",
+      "I've invented a worse one already. Want a preview?"
     ],
     "loss": [
-      "And that is why you never underestimate the dramatic reveal!",
-      "I am granting you a rematch for the sequel."
+      "I got the knockout! With the silly deck!",
+      "Okay, I may have practiced it all night. Don't tell anyone."
     ],
     "draw": [
       "A DRAW? That is not an ending. That is a cliffhanger!",
@@ -128,12 +128,12 @@
       "I want the one with the embarrassing bits left in."
     ],
     "missed": [
-      "I made up an entire speech for when you arrived.",
-      "Now it will have to wait for our director’s cut."
+      "I saved the arcade's best chair for you.",
+      "It wobbles. Honestly, maybe I did you a favor."
     ],
     "kept": [
-      "I still cannot believe you went along with that idea.",
-      "Excellent decision. Questionable judgment. Ten out of ten."
+      "We stayed until the machines turned themselves off.",
+      "I can't believe you helped me test that deck twenty times."
     ],
     "preWin": "I have prepared an even bigger plot twist.",
     "preLoss": "Welcome to the sequel. I expect special effects!",
@@ -141,12 +141,12 @@
   },
   "akari": {
     "win": [
-      "My notes from our last game were wrong in one important place.",
-      "You adapted sooner than I predicted. I have corrected the model."
+      "I misread your second turn. It bothers me more than losing.",
+      "I changed one assumption. You can probably guess which."
     ],
     "loss": [
-      "The last match exposed a consistency problem.",
-      "I would start with your opening hands before replacing any single card."
+      "That opening still needs another Basic.",
+      "I checked the probabilities, but you can see it without a chart."
     ],
     "draw": [
       "Our last sample did not support either conclusion.",
@@ -161,12 +161,12 @@
       "It tells me what happened, but not every decision you made."
     ],
     "missed": [
-      "I removed our meeting from the schedule when you did not arrive.",
-      "I would prefer a short message to an inaccurate calendar."
+      "I had already ordered the tea.",
+      "It was cold by the time I revised the schedule. Please message me next time."
     ],
     "kept": [
-      "That was a pleasantly efficient use of an afternoon.",
-      "And, for the record, I enjoyed the unstructured parts."
+      "You were eleven minutes early. Again.",
+      "I deliberately left the rest of the afternoon blank. It went surprisingly well."
     ],
     "preWin": "Your last result changed my estimates.",
     "preLoss": "I adjusted my list after our previous match.",
@@ -174,12 +174,12 @@
   },
   "camila": {
     "win": [
-      "You called my bluff beautifully in our last game.",
-      "I am going to have to negotiate a better position next time."
+      "You were right to hold that Trainer. I would've sold it too early.",
+      "Don't get smug, darling. I'm still going to offer a rematch."
     ],
     "loss": [
-      "The last game was expensive for you, darling.",
-      "A lesson is worth keeping only if you know what it cost."
+      "That was expensive, wasn't it?",
+      "I brought my notes. No charge for the first bit of advice."
     ],
     "draw": [
       "Neither of us could close the deal.",
@@ -194,12 +194,12 @@
       "That kind of attention can become an opportunity. Or a liability."
     ],
     "missed": [
-      "I do not mind a change of plans.",
-      "I do mind finding out about it after I have arrived."
+      "I ordered two coffees. I drank both.",
+      "I can forgive a late arrival. Being stood up is harder to negotiate."
     ],
     "kept": [
-      "You kept your word, which is rarer than a shiny card.",
-      "I enjoyed the company, too. But do not quote me on that."
+      "That dinner ran longer than I expected.",
+      "No, I wasn't watching the clock. Don't start."
     ],
     "preWin": "One bad trade is enough. I renegotiated my strategy.",
     "preLoss": "Shall we see whether fortune favors the prepared?",
@@ -207,12 +207,12 @@
   },
   "marina": {
     "win": [
-      "I keep thinking about how patiently you set up that win.",
-      "Sometimes the best turn is the one where you do not rush."
+      "You waited until the last possible turn to play that.",
+      "I thought you had nothing. Then you showed me the Switch."
     ],
     "loss": [
-      "That match got away from you, but not all at once.",
-      "We can look at the turning point together if you want."
+      "My hand finally cooperated. Yours didn't.",
+      "Could we try again with the same decks? I'm curious."
     ],
     "draw": [
       "We never quite found the current that would carry us through.",
@@ -227,12 +227,12 @@
       "There is room to breathe, even after a very public result."
     ],
     "missed": [
-      "I took the long way home when you did not arrive.",
-      "It is all right to change plans. I would just like to know."
+      "I waited until the ferry left.",
+      "Next time send me a note. I'd rather know you're all right."
     ],
     "kept": [
-      "I am glad we had time to walk without worrying about standings.",
-      "I would like to do it again, whenever it feels right."
+      "We took the long path by the water.",
+      "There's another one on the other bank. Perhaps next time?"
     ],
     "preWin": "I remember how you found that opening.",
     "preLoss": "This time I want to try something different.",
@@ -240,12 +240,12 @@
   },
   "kaede": {
     "win": [
-      "You caught me off guard last time. I liked that.",
-      "Now I am going to try returning the favor."
+      "You got me. Clean as anything.",
+      "I've been thinking about that line since I got on the train."
     ],
     "loss": [
-      "You fell for it. I almost felt bad. Almost.",
-      "Try something that makes me actually work next time."
+      "That wasn't even my best hand.",
+      "You looked ready for a rematch before we finished packing."
     ],
     "draw": [
       "We left unfinished business on the table.",
@@ -260,12 +260,12 @@
       "I am more interested in whether you still play boldly afterward."
     ],
     "missed": [
-      "You did not show. I found someone else to annoy.",
-      "If you want to make a plan, make one you can keep."
+      "I waited around longer than I meant to.",
+      "Next time I won't. Unless you ask nicely."
     ],
     "kept": [
-      "You were actually fun company without a scoreboard.",
-      "Do not tell anyone I said that."
+      "I nearly took the last train without saying goodbye.",
+      "Next time I'll bring the spare deck. You can pick."
     ],
     "preWin": "Oh, I remember losing to you. Here is my answer.",
     "preLoss": "I hope you have something less predictable this time.",
@@ -273,12 +273,12 @@
   },
   "elena": {
     "win": [
-      "I reviewed our previous match. Your decisions were more deliberate than I expected.",
-      "I have updated my assessment. That does not mean I am conceding the next one."
+      "I underestimated your switch target. That was my mistake.",
+      "I've made a note of it. No need to look so pleased."
     ],
     "loss": [
-      "The last result was not inevitable.",
-      "The relevant question is which contingency you did not prepare."
+      "You pressed on the turn I expected you to pass.",
+      "It might be worth checking the board before our next game."
     ],
     "draw": [
       "Our match ended without resolution. I have kept my notes.",
@@ -306,12 +306,12 @@
   },
   "jinx": {
     "win": [
-      "You got me good. I could not even fake being bored.",
-      "Next time I am bringing a trick you have not seen."
+      "I saw the knockout. Didn't think you'd actually take it.",
+      "Fine. I want that game back. With better cards."
     ],
     "loss": [
-      "I am still laughing about that last turn.",
-      "Come back with something dangerous. I hate easy rematches."
+      "You walked right into the trap. I nearly felt bad.",
+      "Nearly. Don't start with me."
     ],
     "draw": [
       "A tie? Boring. Actually, no. That was kind of perfect.",
@@ -339,12 +339,12 @@
   },
   "luna": {
     "win": [
-      "I was so focused on your last attack that I almost missed the setup.",
-      "I want to test that kind of patience in my own deck."
+      "I thought your Active was stuck. You found a way out.",
+      "Can we look at that turn again? I want to learn it."
     ],
     "loss": [
-      "I saw exactly where I lost track of the board.",
-      "I am going to practice it rather than ask you to fix it for me."
+      "I got the Energy right this time!",
+      "Sorry. That sounded boastful. ...No, actually, I'm happy."
     ],
     "draw": [
       "Nobody could finish that game.",
@@ -372,12 +372,12 @@
   },
   "rina": {
     "win": [
-      "I keep replaying the last match between rehearsals.",
-      "I have room in my schedule for a rematch, even if I have to make it."
+      "You hit that knockout right before I expected you to switch.",
+      "I was thinking about it during soundcheck. Don't tell the drummer."
     ],
     "loss": [
-      "You saw how carefully I practiced that opening, right?",
-      "I had to find the time. I wanted to."
+      "That opening finally worked. I tested it between rehearsals.",
+      "My pianist said she'd never seen me shuffle so fast."
     ],
     "draw": [
       "We ran out of answers before we ran out of energy.",
@@ -405,12 +405,12 @@
   },
   "sierra": {
     "win": [
-      "I have been thinking about how you adjusted under pressure.",
-      "It reminded me of making a choice while everyone is watching."
+      "You waited for my draw to run out. Very patient.",
+      "I saw it on the replay. That was clever."
     ],
     "loss": [
-      "It was not your day at the table.",
-      "That does not mean anyone else gets to write your next move."
+      "You didn't see the disruption coming.",
+      "I've got the list here if you want to compare openings."
     ],
     "draw": [
       "We both held our ground right to the end.",
@@ -438,12 +438,12 @@
   },
   "sol": {
     "win": [
-      "That was a stronger finish than I expected.",
-      "I liked having a plan that made room for surprises."
+      "You stole the finale! I had a whole speech ready.",
+      "I'll have to save it for the rematch."
     ],
     "loss": [
-      "You did not get the result you wanted last time.",
-      "We can just play again. It does not have to become a big event."
+      "Yes! The completely impractical deck won!",
+      "I promise I'll only remind you once. Maybe twice."
     ],
     "draw": [
       "Neither of us got to call that one.",
