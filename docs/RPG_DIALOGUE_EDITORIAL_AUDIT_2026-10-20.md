@@ -32,6 +32,18 @@ This is an editorial **audit plus targeted rewrite**, not a claim that every str
 7. **Extended route dialogue:** `rpg_dialogue.js` insertions updated to reflect the new story beats for Luna, Sierra, Rina, Jinx and Elena; an invalid 'sideboard plan' Pokémon TCG reference was corrected.
 8. **Generated assets:** `rpg_character_packs.generated.js` updated after every pack edit; scene IDs, story prerequisites, choice kinds and flags retained.
 
+## Second milestone: narration-led legacy stories (2026-10-20)
+
+The eight original heroine routes have now been rewritten, **32 of 32 chapters**, in `rpg_legacy_scenes.js`. Each chapter uses a compact staged exchange: narrator setting, specific character dialogue, protagonist response, another revealing beat, and a choice anchored in what actually happened. Characters are not required to describe their own gestures or recite the moral of the scene. The old generic two-line expansion is bypassed for these fully authored chapters.
+
+Updated the live story graph, RPG HTML script order, server allowlist, and VN styling so `Narrator` lines display as descriptive text. Original IDs, windows, relationship increments, friendship/romance branch kinds, and save state shape remain untouched. All 32 scenes have regression checks for choice compatibility and script loading.
+
+The first scenes of **Elio, Alma and Nereo's three side quests** also gained stage descriptions rather than expository dialogue; the existing quest reward and progression machinery stays unchanged. Additional supporting-quest scenes remain editorial candidates.
+
+Future content is now governed by the narrator/subtext guidance in `docs/rpg-natural-conversations.md`, inspired by Persona 4's social-link presentation without copying dialogue or events.
+
+The latest code-level integrity check loaded 32 stories through the actual modules, verified their narration and choice metadata, and reported no authoring-schema errors. Full browser and regression workflow status should be checked from the latest GitHub Actions run, since other UI changes were concurrently landing on main.
+
 ## Remaining priority findings
 
 ### High — finale outcomes do not match the romance writing
