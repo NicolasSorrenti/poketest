@@ -12,6 +12,10 @@ assert.match(css,/bottom:57px!important/,'Fan is above bottom toolbar');
 assert.match(css,/left:12px!important/,'Hand floats on left');
 assert.match(css,/#handTray\{display:none!important/,'Legacy boxed drawer no longer opens over play');
 assert.match(css,/\.hand-fan-card\.hand-inactive/,'Other cards visually recede during target selection');
+const shared=fs.readFileSync('duel_shared_components.js','utf8');
+assert.match(shared,/const el=makeCard\(id,i,phase==='setup'\)/);
+assert.match(shared,/if\(targetMode&&selectedHand!==null&&selectedHand!==i\)el\.classList\.add\('hand-inactive'\)/);
+assert.match(shared,/root\.scrollLeft=oldScroll/,'Shared fan preserves scrolling');
 for(const file of ['online','classic_live']){
  const html=fs.readFileSync(file+'.html','utf8'),js=fs.readFileSync(file+'.js','utf8');
  for(const id of ['handFan','handToggle','handVisibilityText','handVisibilityIcon'])
@@ -21,9 +25,8 @@ for(const file of ['online','classic_live']){
  assert.match(js,/function setHandVisible\(visible\)/);
  assert.match(js,/\$\('handToggle'\)\.addEventListener\('click',\(\)=>setHandVisible\(!handVisible\)\)/);
  assert.match(js,/renderHandFan\(you\.hand\)/);
- assert.match(js,/const el=handCard\(id,i,setup\)/,'Fan cards reuse legal duel actions');
- assert.match(js,/if\(targetMode&&selectedHand!==null&&selectedHand!==i\)el\.classList\.add\('hand-inactive'\)/);
+ assert.match(js,/shared\.renderHandFan\(/,'Fan rendering comes from shared component');
+ assert.match(js,/makeCard:handCard/,'Shared fan keeps original playable-card handler');
  assert.doesNotMatch(js,/setHandOpen\(/,'Old modal hand controls must not re-open drawer');
- assert.match(js,/root\.scrollLeft=oldScroll/,'Long hand scrolling is preserved across renders');
 }
 console.log('PASS floating hand: no boxed footer, viewport-safe card rail, hide/show, selection, scroll preservation');
