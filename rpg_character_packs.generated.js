@@ -449,9 +449,9 @@ const packs=[
     ],
     "choices": [
      {
-      "label": "Tell her you'll be there",
-      "reply": "Then I'll leave next Friday blank. Deliberately.",
-      "kind": "support",
+      "label": "Suggest staying friends and meeting for more quiet games",
+      "reply": "I'd enjoy that. Next Friday, then. I can bring the deck you asked about.",
+      "kind": "friend",
       "flag": "elena_stay",
       "delta": {
        "affection": 3,
@@ -461,9 +461,9 @@ const packs=[
       }
      },
      {
-      "label": "Ask whether you can kiss her",
-      "reply": "Yes. I was hoping you would ask without making a proposal.",
-      "kind": "flirt",
+      "label": "Tell her you want to date her, not just exchange appointments",
+      "reply": "Yes. I was going to ask you myself, but apparently my timing needs work.",
+      "kind": "commit",
       "flag": "elena_kiss",
       "delta": {
        "affection": 2,
@@ -473,8 +473,8 @@ const packs=[
       }
      },
      {
-      "label": "Suggest walking together without planning a route",
-      "reply": "Good. We can change direction when we feel like it. This is already highly irregular.",
+      "label": "Take a walk together and leave the future undecided",
+      "reply": "Good. There's a street I haven't explored. Shall we start there?",
       "kind": "honest",
       "flag": "elena_both",
       "delta": {
@@ -1032,9 +1032,9 @@ const packs=[
     ],
     "choices": [
      {
-      "label": "Tell her you're here for the person, not the reputation",
-      "reply": "Good. Because I'm not always easy to deal with, and I'm done pretending otherwise.",
-      "kind": "support",
+      "label": "Tell her you want to stay friends and keep challenging her",
+      "reply": "Good. I need somebody who'll call my bluffs, not another fan club.",
+      "kind": "friend",
       "flag": "jinx_real",
       "delta": {
        "affection": 3,
@@ -1044,9 +1044,9 @@ const packs=[
       }
      },
      {
-      "label": "Kiss her instead of turning it into another argument",
-      "reply": "Finally. You were taking forever.",
-      "kind": "flirt",
+      "label": "Tell her you want to be together, not just trade dares",
+      "reply": "Then say it properly. ...Yeah. I want that too. Now come here.",
+      "kind": "commit",
       "flag": "jinx_kiss",
       "delta": {
        "affection": 2,
@@ -1056,8 +1056,8 @@ const packs=[
       }
      },
      {
-      "label": "Ask whether she'd rather take things slowly",
-      "reply": "Slowly? Fine. But I'm keeping the right to tease you about it.",
+      "label": "Tell her you'd rather find out what this could be without rushing",
+      "reply": "Fine. But I'm still saving you a seat next time. Don't make me regret it.",
       "kind": "honest",
       "flag": "jinx_ready",
       "delta": {
@@ -1801,9 +1801,9 @@ const packs=[
     ],
     "choices": [
      {
-      "label": "Make plans to keep playing together",
-      "reply": "Then I'll bring the playmat. You bring a deck that doesn't go easy on me.",
-      "kind": "support",
+      "label": "Ask to keep meeting as friends and deckbuilding partners",
+      "reply": "I'd love that. And I'm choosing my own sixty cards next time. Deal?",
+      "kind": "friend",
       "flag": "luna_catch",
       "delta": {
        "affection": 3,
@@ -1813,9 +1813,9 @@ const packs=[
       }
      },
      {
-      "label": "Tell her you'd like it to be a date",
-      "reply": "A date? ...Yes. I'd like that very much. We can still bring our cards, right?",
-      "kind": "flirt",
+      "label": "Ask her on a real date, and mean more than just one",
+      "reply": "Yes! I'd really like that. Could we still bring our decks? ...Maybe after dinner.",
+      "kind": "commit",
       "flag": "luna_like",
       "delta": {
        "affection": 2,
@@ -1825,8 +1825,8 @@ const packs=[
       }
      },
      {
-      "label": "Let her set the pace and choose what comes next",
-      "reply": "Thank you. I want to see what we can become without rushing to decide everything.",
+      "label": "Let her decide what comes next, without making a promise tonight",
+      "reply": "Thank you. I don't have to decide everything at once. How about another game next week?",
       "kind": "honest",
       "flag": "luna_stay",
       "delta": {
@@ -2384,9 +2384,9 @@ const packs=[
     ],
     "choices": [
      {
-      "label": "Tell her you'd like to spend more Saturdays together",
-      "reply": "Not just Saturdays, I hope. ...Oh no, I said that out loud.",
-      "kind": "support",
+      "label": "Promise you'll keep showing up as a friend and practice partner",
+      "reply": "Please do! The drummer still thinks I make up half these card names. I need backup.",
+      "kind": "friend",
       "flag": "rina_stay",
       "delta": {
        "affection": 3,
@@ -2396,9 +2396,9 @@ const packs=[
       }
      },
      {
-      "label": "Kiss her when the rehearsal ends",
-      "reply": "You could have warned me! ...Actually, don't warn me next time.",
-      "kind": "flirt",
+      "label": "Tell her you want to be her partner beyond the stage",
+      "reply": "I was hoping you'd say that. Come to the next show as my date? I'll save you a seat.",
+      "kind": "commit",
       "flag": "rina_kiss",
       "delta": {
        "affection": 2,
@@ -2408,8 +2408,8 @@ const packs=[
       }
      },
      {
-      "label": "Ask what she wants after the season",
-      "reply": "More music, more matches, and maybe you on the other side of the table. That sounds pretty good.",
+      "label": "Ask what she wants after the season, without deciding for her",
+      "reply": "A new song, a new deck, and a Saturday that isn't booked solid. Let's start there.",
       "kind": "honest",
       "flag": "rina_realme",
       "delta": {
@@ -2967,9 +2967,9 @@ const packs=[
     ],
     "choices": [
      {
-      "label": "Say yes and promise a rematch after dinner",
-      "reply": "Deal. But I'm warning you, I'm reviewing your last game over dessert.",
-      "kind": "support",
+      "label": "Accept dinner as friends and promise an honest rematch",
+      "reply": "Deal. But I'm still going over your deck list during dessert. Fair warning.",
+      "kind": "friend",
       "flag": "sierra_long",
       "delta": {
        "affection": 3,
@@ -2979,9 +2979,9 @@ const packs=[
       }
      },
      {
-      "label": "Ask if you can kiss her before dinner",
-      "reply": "I was going to say yes. I just wanted to see how long you'd take to ask.",
-      "kind": "flirt",
+      "label": "Ask her to make the next dinner a proper date",
+      "reply": "I thought you'd never ask. No camera crew, no schedule. Just us. And actual food.",
+      "kind": "commit",
       "flag": "sierra_kiss",
       "delta": {
        "affection": 2,
@@ -2991,8 +2991,8 @@ const packs=[
       }
      },
      {
-      "label": "Tell her you'd like to keep making time for each other",
-      "reply": "Good. I don't want a grand promise. I want the next Saturday. And the one after that.",
+      "label": "Tell her you'd like more time together, without fixing a label yet",
+      "reply": "Then keep next Saturday free. We'll figure out the rest after dinner.",
       "kind": "honest",
       "flag": "sierra_bothsides",
       "delta": {
