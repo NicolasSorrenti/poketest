@@ -65,20 +65,23 @@
   }
   return {played:matches.length,wins,losses,draws,streak,latest:latest?latest.won?'Victory':latest.draw?'Draw':'Defeat':null};
  }
- function record(s,duel,receipt){
+ function record(s,duel,receipt,settled={}){
   if(!valid(s)||!valid(duel)||!valid(receipt)||!OUTCOMES.has(receipt.outcome)||
    !receipt.duelId||receipt.duelId!==duel.id||receipt.npc!==duel.npc||
    !Number.isInteger(s.day)||s.day<1||s.day>91)return null;
   const result=(Array.isArray(s.results)?s.results:[]).find(r=>r?.id===receipt.duelId&&r?.npc===receipt.npc);
-  if(!result|| (result.draw?'Draw':result.won?'Victory':'Defeat')!==receipt.outcome)return null;
+  if(!result||!Number.isInteger(duel.day)||duel.day!==result.day||duel.day>s.day||
+   (result.draw?'Draw':result.won?'Victory':'Defeat')!==receipt.outcome)return null;
   const c=hydrate(s);
   if(c.processed[receipt.duelId])return null;
   const prior=previous(s,duel.npc,receipt.duelId);
   const comeback=receipt.outcome==='Victory'&&prior?.won===false&&!prior?.draw;
   const reversed=receipt.outcome==='Defeat'&&prior?.won===true&&!prior?.draw;
   const doubleLoss=receipt.outcome==='Defeat'&&prior?.won===false&&!prior?.draw;
-  const cup=typeof duel.tournamentId==='string'&&['neighborhood','regional','championship'].includes(duel.tournamentId)?duel.tournamentId:null;
-  const local=duel.competitiveKind==='local';
+  // A real bracket or local must separately accept this receipt before it earns a public consequence.
+  const cup=valid(settled.cupOutcome)&&['neighborhood','regional','championship'].includes(duel.tournamentId)?
+   duel.tournamentId:null;
+  const local=duel.competitiveKind==='local'&&valid(settled.competitiveOutcome);
   const status=receipt.outcome==='Victory'?'won':receipt.outcome==='Draw'?'drew':'lost';
   const kind=cup&&receipt.outcome==='Defeat'?'cup_setback':
    comeback?'comeback':doubleLoss?'losing_streak':reversed?'reversal':
