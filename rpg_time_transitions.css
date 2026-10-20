@@ -89,3 +89,15 @@
  .neo-timefx__graphic,.neo-timefx__interior{animation:none}
 }
 @keyframes neo-time-reduced{0%{opacity:0}10%,80%{opacity:1}100%{opacity:0}}
+
+/* Rapid right-to-left wipes distinguish free travel from spending a period. */
+.neo-timefx--travel{--fx-accent:#55e5d9;--fx-dark:#1b3b4c;animation-name:neo-time-travel}
+.neo-timefx--travel .neo-timefx__dates,.neo-timefx--travel .neo-timefx__weekday,.neo-timefx--travel .neo-timefx__skip{display:none}
+.neo-timefx--travel .neo-timefx__title{font-size:clamp(48px,9vw,118px);overflow-wrap:anywhere}
+.neo-timefx--travel .neo-timefx__subtitle{font-size:clamp(12px,2vw,19px)}
+@keyframes neo-time-travel{
+ 0%{transform:translateX(105%) skewX(-9deg)}
+ 28%,62%{transform:translateX(0) skewX(0)}
+ 100%{transform:translateX(-105%) skewX(9deg)}
+}
+@media(max-width:600px){.neo-timefx--travel .neo-timefx__title{font-size:clamp(38px,10vw,72px)}}
