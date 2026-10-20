@@ -783,15 +783,18 @@
   const previous=lastMatch(s,npc,receipt.duelId);
   const local=d.competitiveKind==='local';
   const turn=previous&&previous.won!==('Victory'===receipt.outcome)&&!previous.draw&&receipt.outcome!=='Draw';
-  if(local&&receipt.outcome==='Victory'&&d.competitiveRound===1){
+  if(local&&receipt.outcome==='Victory'&&d.competitiveRound===1)
    return voice.postLocal||DEFAULT.postLocal;
-  }
-  if(turn&&receipt.outcome==='Victory')return (character?.duelWin||'You won.')+' And after our last game, that is quite a turnaround.';
-  if(turn&&receipt.outcome==='Defeat')return (character?.duelLose||'You lost.')+' Last time went differently. I knew you would make me work.';
   if(receipt.outcome==='Draw')return voice.draw[0];
-  if(!VOICE[npc])return receipt.outcome==='Victory'?(character?.duelWin||DEFAULT.win[0]):
-   (character?.duelLose||DEFAULT.loss[0]);
-  return receipt.outcome==='Victory'?voice.win[0]:voice.loss[0];
+  // Character packs remain the source of truth for their own victory/defeat
+  // lines; the reaction matrix provides separate match memories and cut-ins.
+  const legacy=new Set(['hana','reina','shiori','yuna','akari','camila','marina','kaede']);
+  const authored=legacy.has(npc)?null:receipt.outcome==='Victory'?character?.duelWin:character?.duelLose;
+  const base=typeof authored==='string'&&authored.trim()?authored:
+   receipt.outcome==='Victory'?(voice.win?.[0]||character?.duelWin||DEFAULT.win[0]):
+   (voice.loss?.[0]||character?.duelLose||DEFAULT.loss[0]);
+  if(turn)return base+' That went differently from last time. Want another game?';
+  return base;
  }
  return Object.freeze({VOICE,reaction,hydrate,mark,seen,lastMatch,preDuelLine,afterDuel});
 });
