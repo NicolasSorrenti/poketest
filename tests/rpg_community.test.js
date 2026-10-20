@@ -89,3 +89,14 @@ test('invalid schedules or missing cast cannot fabricate off-screen match',()=>{
  assert.deepEqual(COMMUNITY.sync(s,5,{cast:{},schedules:{peopleAt:()=>[]}}),[]);
  assert.equal(COMMUNITY.rank(s).length,0);
 });
+
+test('main cast has distinct reactions to off-screen club results and friendships',()=>{
+ const ids=['hana','reina','shiori','yuna','akari','camila','marina','kaede','elena','jinx','luna','rina','sierra','sol'];
+ for(const id of ids)for(const tone of ['win','loss','meet'])
+  assert.ok(COMMUNITY.VOICES[id]?.[tone],id+' missing '+tone+' reaction');
+ const history={lastResolvedDay:4,events:[{id:'club-match-4',kind:'match',day:4,slot:1,place:'center',
+  pair:'akari:reina',a:'akari',b:'reina',winner:'reina',loser:'akari'}]};
+ const s=make(5);s.community=history;
+ assert.notEqual(COMMUNITY.dialogue(s,'reina',cast).lines[0].text,
+  COMMUNITY.dialogue(s,'akari',cast).lines[0].text);
+});
