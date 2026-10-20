@@ -684,16 +684,8 @@ function showPackReveal(){
   const base='/rpg-assets/characters/'+encodeURIComponent(giver)+'/';
   const candidates=[
    base+'events/booster.webp',
-   base+'vn-expressions/surprised.webp',
-   base+'vn-expressions/surprised.png',
-   base+'vn-expressions/surprise.webp',
-   base+'vn-expressions/surprise.png',
-   base+'portraits/surprised.webp',
-   base+'portraits/surprised.png',
-   base+'portraits/surprise.webp',
-   base+'portraits/surprise.png',
-   base+'events/surprised.webp',
-   base+'events/surprised.png'
+   base+'events/booster.png',
+   '/rpg-assets/reactions/'+encodeURIComponent(giver)+'/attack.png'
   ];
   const art=new Image();
   art.alt=cast[giver].name+' presenting a booster';
@@ -1042,7 +1034,7 @@ window.addEventListener('message',ev=>{
   duel,cupOutcome,competitiveOutcome,receipt
  });
  const shown=window.NeoRpgVictoryPresentation?.show?.({
-  receipt,hasBooster:!!awarded,avatar:makeAvatar(duel.npc),
+  receipt,hasBooster:!!awarded,avatar:makeAvatar(duel.npc),npcId:duel.npc,
   presentation:tournamentPresentation,onContinue:continueAfterResult
  });
  if(!shown)continueAfterResult();
