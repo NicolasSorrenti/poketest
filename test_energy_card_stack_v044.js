@@ -21,8 +21,8 @@ assert.match(art,/energy-card-fallback/,'Cards without art keep a colored text f
 assert.doesNotMatch(art,/javascript:alert/,'Image source must reject non-HTTPS URLs');
 assert.match(art,/Odd &amp; &lt;Energy&gt;/,'Names must be escaped safely');
 assert.equal(energyStack({energies:[]},lookup),'');
-assert.match(energyStack({energies:['w','w','w','w','w','w','f']},lookup),/energy-overflow">\+1/);
-assert.equal((energyStack({energies:['w','w','w','w','w','w','f']},lookup).match(/energy-card-mini/g)||[]).length,6);
+assert.match(energyStack({energies:['w','w','w','w','w','w','f']},lookup),/energy-overflow">\+3/);
+assert.equal((energyStack({energies:['w','w','w','w','w','w','f']},lookup).match(/energy-card-mini/g)||[]).length,4);
 const catalogEnergy=[...CATALOG.values()].find(c=>c.supertype==='Energy'&&/^https:\/\//.test(c.images?.small||''));
 assert.ok(catalogEnergy,'Expected historical Energy card images in the catalog');
 assert.match(energyStack({energies:[catalogEnergy.id]},id=>CATALOG.get(id)),/energy-card-art/);
