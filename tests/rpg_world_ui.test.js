@@ -13,7 +13,13 @@ class FakeNode{
  constructor(tag='div'){
   this.tagName=tag.toUpperCase();this.children=[];this.options=[];this.style={setProperty(name,value){this[name]=String(value);}};this.className='';
   this.dataset={};this.hidden=false;this.disabled=false;this.textContent='';this.title='';this.value='';this.src='';
-  this.classList={toggle:(name,on)=>{if(on&&!this.className.includes(name))this.className+=' '+name;if(!on)this.className=this.className.replace(name,'');}};
+  this.nodeType=1;
+  this.classList={
+   contains:name=>this.className.split(/\s+/).includes(name),
+   add:name=>{if(!this.className.split(/\s+/).includes(name))this.className=(this.className+' '+name).trim();},
+   remove:name=>{this.className=this.className.split(/\s+/).filter(x=>x&&x!==name).join(' ');},
+   toggle:(name,on)=>{if(on===undefined)on=!this.classList.contains(name);if(on)this.classList.add(name);else this.classList.remove(name);}
+  };
  }
  append(...nodes){
   for(const x of nodes){
@@ -21,6 +27,21 @@ class FakeNode{
    this.children.push(x);x.parentElement=this;
   }
   if(this.tagName==='SELECT')this.options=this.children;
+ }
+ get firstChild(){return this.children[0]||null;}
+ prepend(...nodes){
+  const before=this.firstChild;
+  for(const node of nodes)this.insertBefore(node,before);
+ }
+ querySelector(selector){
+  const matches=node=>selector.startsWith('.')?node.className?.split(/\s+/).includes(selector.slice(1)):selector.startsWith('#')?node.id===selector.slice(1):node.tagName?.toLowerCase()===selector.toLowerCase();
+  const queue=[...this.children];
+  while(queue.length){const node=queue.shift();if(matches(node))return node;queue.unshift(...(node.children||[]));}
+  return null;
+ }
+ replaceWith(node){
+  if(!this.parentElement)return;
+  const parent=this.parentElement;parent.insertBefore(node,this);this.remove();
  }
  insertBefore(node,reference){
   if(node.parentElement)node.parentElement.children=node.parentElement.children.filter(n=>n!==node);
@@ -50,7 +71,9 @@ function launch(initial,approve=false,mandatory=false){
  for(const id of ids)elements[id]=new FakeNode(id==='deckPicker'?'select':'div');
  elements.battle.contentWindow={};
  const doc={getElementById(id){if(!elements[id])throw Error('Missing '+id);return elements[id];},
-  createElement(tag){return new FakeNode(tag);},body:new FakeNode('body'),
+  createElement(tag){return new FakeNode(tag);},
+  createTextNode(text){const node=new FakeNode('#text');node.nodeType=3;node.nodeValue=String(text);node.textContent=String(text);return node;},
+  body:new FakeNode('body'),
   addEventListener(name,cb){listeners['document:'+name]=cb;}};
  const win={NeoRpgRenderPerf:RenderPerf,NeoRpgNarrativePack:Pack,NeoRpgSideQuests:Side,NeoHarborStory:Story,NeoRpgSchedules:Schedules,NeoRpgWorld:World,NeoRpgRivalArc:Arc,NeoRpgTournaments:Tournaments,NeoRpgCompetitiveLoop:Competitive,NeoRpgReactivity:Reactivity,NeoRpgCommunity:Community,NeoRpgConsequences:Consequences,NeoRpgTournamentPresentation:TournamentPresentation,NeoRpgEpilogue:Epilogue,NeoRpgAppointments:Appointments,NeoRpgIntentions:Intentions,NeoRpgCGGallery:CG,NeoRpgDailyPlanner:Planner,NeoRpgSocialActivities:Social,NeoRpgPlannedDates:Dates,NeoRpgPreDuel:Pre,NeoRpgCollection:Collection,NeoRpgSeasonJourney:Journey,NeoRpgSituations:Situations,NeoRpgDuelBridge:Bridge,NeoRpgDialogue:Dialogue,NeoRpgBondRewards:BondRewards,NeoRpgConversations:Conversations,NeoRpgPartnerDecks:PartnerDecks,
   addEventListener(name,cb){listeners[name]=cb;}};
