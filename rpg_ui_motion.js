@@ -80,6 +80,13 @@
   return {init,toggle,close,onLocationChange:()=>close(),get active(){return active;}};
  }
  const controller=createController();
+ // Navigation is a standalone UI dependency, not contingent on the RPG render()
+ // pipeline completing successfully. The HTML loads this script after both panels.
+ if(root?.document){
+  if(root.document.readyState==='loading')
+   root.document.addEventListener('DOMContentLoaded',()=>controller.init(),{once:true});
+  else controller.init();
+ }
  return {
   nextDrawer,createController,
   init:()=>controller.init(),
