@@ -22,6 +22,22 @@
    reply:'One match cannot decide who belongs at the table. I am glad you came back.',
    ending:'You learned that the people across the card table mattered as much as any result.'}
  });
+ const VOICES=Object.freeze({
+  hana:{study:'You went back over our game? I saved a few turns in my notes, too.',challenge:'A rematch sounds fun. No pressure to make it perfect.',perspective:'I am glad you came back to the table. There is always room here.'},
+  reina:{study:'You went back over our game. Good. I have been studying the opening too.',challenge:'You are asking for another chance. Bring a different plan this time.',perspective:'One loss is not a verdict. The way you return matters more.'},
+  shiori:{study:'I wondered if you would notice that earlier decision, not just the final turn.',challenge:'Another match may help us understand the first one.',perspective:'You gave yourself space to think. That is rarely wasted.'},
+  yuna:{study:'You made notes? That is either dedication or the world’s nerdiest detective story.',challenge:'A sequel! I will handle the dramatic announcement.',perspective:'Good. One bad ending does not mean the whole season is a tragedy.'},
+  akari:{study:'Your review isolates a useful mistake. That is more reliable than assigning blame.',challenge:'Another trial should tell us if your adjustments actually work.',perspective:'A single match is a very small sample. I approve of your restraint.'},
+  camila:{study:'You went over the cost of that turn. Excellent. Most people only count the prize.',challenge:'Another match is a wager. At least now you know the stakes.',perspective:'Not every loss must be repaid. Some are worth learning from.'},
+  marina:{study:'You watched the current change rather than fighting it. That is a good place to start.',challenge:'When you are ready, we can take another run at that match.',perspective:'I am glad you let yourself be more than the last score.'},
+  kaede:{study:'You actually studied what happened? Fine. Now I need a new trick.',challenge:'There you are. I was getting bored without a rematch.',perspective:'You are tougher than a bad day. Do not let anyone tell you otherwise.'},
+  elena:{study:'I appreciate a player who investigates the actual decision, not the excuse.',challenge:'A rematch is a useful experiment, provided you change the variables.',perspective:'Your judgment should not be hostage to a public result.'},
+  jinx:{study:'Whoa, you analyzed that disaster? I was going to frame it.',challenge:'Yes! Give me another ridiculous match to talk about.',perspective:'You still showed up. That is the interesting part, not the scoreboard.'},
+  luna:{study:'I tried that too. Writing down the mistake made it less frightening.',challenge:'I would like to see your next attempt. I am trying a new idea myself.',perspective:'It helps knowing that one loss does not have to decide everything.'},
+  rina:{study:'You found time to review between everything else. I know how hard that can be.',challenge:'We can make time for another game. I really want to.',perspective:'The day was still worth having, even without the result we wanted.'},
+  sierra:{study:'That choice belonged to you. It is worth knowing why you made it.',challenge:'The next match is yours to choose, not the audience’s.',perspective:'Do not let the people watching write the story for you.'},
+  sol:{study:'Okay, look at you, taking this seriously. I kind of love the focus.',challenge:'Another game? I will make room for it.',perspective:'We can play badly and still have an excellent afternoon.'}
+ });
  const MAX_RECORDS=110;
  function hydrate(state){
   if(!valid(state.consequences))state.consequences={};
@@ -114,7 +130,7 @@
   if(!chosen)return null;
   const choice=c.choices[chosen.id],path=PATHS[choice.path];
   return {id:'react:choice:'+npc+':'+chosen.duelId,kind:'consequence',day:choice.day,
-   lines:[{speaker:npc,text:path.followup},
+   lines:[{speaker:npc,text:VOICES[npc]?.[choice.path]||path.followup},
     {speaker:'Protagonist',text:'That match stayed with me.'},
     {speaker:npc,text:path.reply}]};
  }
@@ -124,7 +140,7 @@
   const chosen=c.events.slice().reverse().find(e=>e.npc===npc&&valid(c.choices[e.id])&&
    s.day-c.choices[e.id].day<=14&&s.day>=c.choices[e.id].day);
   const path=chosen&&PATHS[c.choices[chosen.id].path];
-  return path?path.followup:null;
+  return path?(VOICES[npc]?.[c.choices[chosen.id].path]||path.followup):null;
  }
  function ending(s){
   const c=s?.consequences;
@@ -146,5 +162,5 @@
   return {comebacks,reversals,reflections:decisions.length,
    choices:paths.filter(x=>x.count>0),lines:lines.slice(0,3)};
  }
- return Object.freeze({PATHS,hydrate,previous,trend,record,opportunities,prompt,resolve,reaction,preDuel,ending});
+ return Object.freeze({PATHS,VOICES,hydrate,previous,trend,record,opportunities,prompt,resolve,reaction,preDuel,ending});
 });
