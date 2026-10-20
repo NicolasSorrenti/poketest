@@ -63,6 +63,7 @@ try{
  grids[1].children[2].onClick();assert.equal(selected,'prize:2');
  UI.renderPrizeFallback({container:dialog,decision:option,busy:false,button,choose:id=>selected=id});
  assert.equal(dialog.children[2].children.length,2);
+ for(let i=0;i<6;i++)grids[0].append(node()); // quick.drawPrizes fills both rails in production.
  const faceUpView={players:[{revealedPrizes:[{index:0,id:'enemy'}]},{revealedPrizes:[{index:2,id:'mine'}]}]};
  UI.renderFaceUpPrizes({rail,view:faceUpView,me:1,getCard:id=>({name:id})});
  assert.equal(grids[0].children[0].textContent,'enemy','Opposite seat reveals to top Prize rail');
