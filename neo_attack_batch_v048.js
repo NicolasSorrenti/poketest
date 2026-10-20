@@ -6,6 +6,7 @@ const kinds={
  'neo1-9|Elemental Blast':'elemental-blast',
  'neo1-12|Zzzap':'zzzap',
  'neo1-18|Flame Wheel':'flame-wheel',
+ 'neo1-34|Discharge':'lightning-discharge',
  'neo1-24|Mean Look':'mean-look',
  'neo1-24|Feint Attack':'feint-attack',
  'neo1-28|Pollen Shield':'pollen-shield',
@@ -44,6 +45,12 @@ function resolve(p,flip,ctx={}){
   case 'elemental-blast':o.neo48DiscardColors=true;break;
   case 'zzzap':o.damage=0;o.neo48Zzzap=true;break;
   case 'flame-wheel':o.benchSide='both';o.benchDamage=20;o.neo48EnergyDiscard=3;break;
+  case 'lightning-discharge':{
+   const qty=Math.max(0,ctx.selfLightningCards||0);
+   o.flips=Array.from({length:qty},()=>Boolean(flip()));
+   o.damage=o.flips.filter(Boolean).length*30;
+   o.neo48DiscardAllLightning=true;break;
+  }
   case 'mean-look':o.damage=0;o.neo48MeanLook=true;break;
   case 'feint-attack':o.targetDamage=p.damage||20;o.damage=0;o.ignoreWR=true;o.ignoreDefendingEffects=true;break;
   case 'pollen-shield':o.neo48PollenShield=true;break;
