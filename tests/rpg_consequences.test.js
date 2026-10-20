@@ -6,7 +6,8 @@ function add(s,npc,id,day,outcome,other={}){
  const r={id,npc,day,won:outcome==='Victory',draw:outcome==='Draw'};
  s.results.push(r);s.day=day;
  const duel={id,npc,day,...other},receipt={duelId:id,npc,outcome};
- return C.record(s,duel,receipt);
+ return C.record(s,duel,receipt,other.tournamentId?{cupOutcome:{state:'eliminated',won:false}}:
+  other.competitiveKind?{competitiveOutcome:{won:false}}:{});
 }
 test('only a receipt matching an actual settled duel can create narrative consequences',()=>{
  const s=fresh();
@@ -105,4 +106,17 @@ test('the main cast has distinct follow-ups for all three recovery choices',()=>
  const s=fresh();const e=add(s,'reina','a',12,'Defeat');C.resolve(s,e.id,'study');
  assert.match(C.reaction(s,'reina').lines[0].text,/went back over our game/i);
  assert.match(C.preDuel(s,'reina'),/went back over our game/i);
+});
+
+test('unsanctioned metadata cannot fabricate a Cup or Local accomplishment',()=>{
+ const s=fresh();
+ const event=add(s,'reina','unsanctioned',12,'Defeat');
+ assert.equal(event.kind,'setback');
+ const next={id:'fake-cup',npc:'reina',day:12,tournamentId:'championship'};
+ s.results.push({id:next.id,npc:next.npc,day:12,won:false,draw:false});
+ const falseCup=C.record(s,next,{duelId:next.id,npc:'reina',outcome:'Defeat'});
+ assert.notEqual(falseCup.kind,'cup_setback');
+ const wrongDay=C.record(s,{id:'fake-day',npc:'reina',day:11},
+  {duelId:'fake-day',npc:'reina',outcome:'Defeat'});
+ assert.equal(wrongDay,null);
 });
