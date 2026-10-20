@@ -2530,22 +2530,22 @@ const packs=[
    "intro": "You’re staring. Everyone does. If you’re here for a photo or an autograph, I’m off the clock. If you’re here to talk cards… then we can talk.",
    "repeat": "Still hanging around? Most people lose interest once the bikini comes off. You must actually like the game.",
    "talk": [
-    "Modeling pays the bills. The TCG is the only thing that doesn’t feel like a performance.",
-    "People assume I’m dumb because of how I look on the beach. I let them. It’s easier than correcting them every time.",
-    "My agent keeps trying to book me for more ‘lifestyle’ shoots. I keep asking if any of them involve a tournament table.",
-    "I can hold a smile for three hours straight under lights. Sitting down for a real match still makes me more nervous.",
-    "The worst part of the job isn’t the comments. It’s how few people ever ask what I actually care about.",
-    "I keep a full binder of old school cards in my bag between shoots. Don’t tell my manager."
+    "I've got a sunrise shoot tomorrow. Good money, terrible call time. If I can get one game in tonight, I'll survive.",
+    "People see the beach photos and assume I can't count prize cards. Sometimes it's useful to let them underestimate me.",
+    "My agent booked another lifestyle campaign. I asked her to leave me Saturday afternoon for the tournament. We negotiated.",
+    "I can hold a smile for three hours under a hot light. Somehow I still get nervous over a match I actually care about.",
+    "A photographer asked what I do for fun and laughed when I said cards. So I showed him how to play. He lost.",
+    "I keep a battered Trainer card from my first deck in my bag. It's in an ugly sleeve, and I'm not changing it."
    ],
    "flirt": "Careful. Most guys who flirt with me only want the version that exists in photos. You sure you’re different?",
    "duelWin": "Huh. You actually made me work for it. That’s rarer than a first-edition holographic.",
    "duelLose": "Okay, that one hurt. Rematch when I’m not still thinking about lighting setups.",
    "hangouts": [
-    "Sierra shows up to the arcade still in a light cover-up over her shoot bikini. She spends the whole time talking strategy and only notices people staring when you point it out.",
-    "You catch her between jobs reviewing deck lists on her phone while sitting on a park bench in full model hair and makeup. She looks more relaxed talking about disruption packages than she does in any photo.",
-    "She invites you to a quiet café after a shoot. She peels off the performance smile the second she sits down and starts complaining about how hard it is to find good local players who don’t just want pictures.",
-    "A late library session turns into her explaining why she loves control decks while still wearing the tiny shorts from her last booking. She never once adjusts them for the camera that isn’t there.",
-    "She challenges you to a best-of-three and gets genuinely competitive. The model persona disappears completely until the last prize card is taken."
+    "Sierra arrives at the arcade in a cover-up straight from a beach shoot. She pulls a deck list from her bag, points to three cards she wants to cut, and asks you to argue with her.",
+    "Between jobs, Sierra tests a disruption-heavy opening on her phone at the park. When you point out a weak turn, she makes you replay it until one of you changes their mind.",
+    "At the café she orders something strong, kicks off the heels she wore all day, and asks about your last match before you can ask about the photoshoot.",
+    "In the library, Sierra shows you her oldest Trainer card. The sleeve is scratched, the corner is bent, and she remembers the exact turn it won her first game.",
+    "After a close best-of-three, Sierra laughs at the move that beat her, writes it down on the back of a receipt, and insists you play again next weekend."
    ],
    "portrait": "/rpg-assets/characters/sierra/portrait.png"
   },
@@ -2619,33 +2619,33 @@ const packs=[
     "lines": [
      {
       "speaker": "sierra",
-      "text": "If you’re looking for a photo, the session’s over. I’m off the clock."
+      "text": "If you're here for photos, the crew packed up ten minutes ago."
      },
      {
       "speaker": "Protagonist",
-      "text": "I was actually going to ask if you play."
+      "text": "No photos. I saw the deck box next to your bag."
      },
      {
       "speaker": "sierra",
-      "text": "...Play what?"
+      "text": "Then you have better eyes than half the people on that set. It's mine."
      },
      {
       "speaker": "Protagonist",
-      "text": "TCG. You’ve got a deck box on your bag."
+      "text": "What do you play?"
      },
      {
       "speaker": "sierra",
-      "text": "Most people don’t notice that. They stop at the bikini."
+      "text": "Blackout. I like making my opponent work for every card they keep."
      },
      {
       "speaker": "sierra",
-      "text": "You actually want to talk cards?"
+      "text": "I've got a few minutes before my ride. Show me your list and I'll show you mine."
      }
     ],
     "choices": [
      {
-      "label": "Ask what she mains",
-      "reply": "Blackout. Control. I like making people miserable in sixty cards or less.",
+      "label": "Ask which cards make Blackout work",
+      "reply": "Energy denial. Hand disruption. Nothing glamorous until the other player can't do anything useful.",
       "kind": "support",
       "flag": "sierra_deck",
       "delta": {
@@ -2656,8 +2656,8 @@ const packs=[
       }
      },
      {
-      "label": "Admit you noticed the deck box first",
-      "reply": "That’s... new. Most people don’t even see it.",
+      "label": "Tell her the deck box caught your eye before the camera did",
+      "reply": "Ha. The deck box is chipped and covered in tape, so that's a first.",
       "kind": "honest",
       "flag": "sierra_notice",
       "delta": {
@@ -2668,8 +2668,8 @@ const packs=[
       }
      },
      {
-      "label": "Say the bikini is hard to ignore but the cards are more interesting",
-      "reply": "At least you’re honest about both. I’ll take it.",
+      "label": "Admit the shoot looked great, then ask for a match",
+      "reply": "Thank you. Now let's find out whether you're as good at shuffling as you are at talking.",
       "kind": "flirt",
       "flag": "sierra_honest",
       "delta": {
@@ -2696,33 +2696,33 @@ const packs=[
     "lines": [
      {
       "speaker": "sierra",
-      "text": "I have forty minutes before the next location. Don’t waste them on small talk."
+      "text": "Forty minutes before my next booking. I brought a stopwatch."
      },
      {
       "speaker": "Protagonist",
-      "text": "Then tell me why control."
+      "text": "You actually timed us?"
      },
      {
       "speaker": "sierra",
-      "text": "Because the board is the only place I get to decide what happens. Everything else is someone else’s shot list."
+      "text": "I told my agent I'd be ready when the car came. I meant it."
      },
      {
       "speaker": "Protagonist",
-      "text": "You sound like you hate the job."
+      "text": "All right. What are we testing?"
      },
      {
       "speaker": "sierra",
-      "text": "I don’t hate the money. I hate that it’s the only thing most people think I’m for."
+      "text": "My opening turns. I keep burning my hand too early, then pretending it was bad luck."
      },
      {
       "speaker": "sierra",
-      "text": "You’re still here. That’s either impressive or suspicious."
+      "text": "Deal five. I'll tell you when you're making excuses."
      }
     ],
     "choices": [
      {
-      "label": "Ask her about a specific matchup",
-      "reply": "Okay. You’re actually serious about this. Fine, let’s talk tempo.",
+      "label": "Run opening hands and challenge her sequencing",
+      "reply": "Good. If I misplay, call it. Don't rescue me with a compliment.",
       "kind": "support",
       "flag": "sierra_matchup",
       "delta": {
@@ -2733,8 +2733,8 @@ const packs=[
       }
      },
      {
-      "label": "Tell her you like the version that talks about cards",
-      "reply": "Most people never get that far. Don’t make me regret showing it.",
+      "label": "Ask why she keeps the bookings so tightly scheduled",
+      "reply": "I like the work. I just want to keep some hours for things that are mine.",
       "kind": "honest",
       "flag": "sierra_version",
       "delta": {
@@ -2745,8 +2745,8 @@ const packs=[
       }
      },
      {
-      "label": "Point out she lights up when she talks strategy",
-      "reply": "...Shut up. You’re not supposed to notice that.",
+      "label": "Tease her about needing a stopwatch for a friendly match",
+      "reply": "A friendly match? You brought the scary deck. I had to protect my afternoon.",
       "kind": "flirt",
       "flag": "sierra_lightup",
       "delta": {
@@ -2778,33 +2778,33 @@ const packs=[
     "lines": [
      {
       "speaker": "sierra",
-      "text": "I cancelled a fitting for this. Don’t make it boring."
+      "text": "I lost to a kid who kept the same Basic in play for half the match."
      },
      {
       "speaker": "Protagonist",
-      "text": "You’re really skipping work for a match?"
+      "text": "Ouch. What happened?"
      },
      {
       "speaker": "sierra",
-      "text": "The fitting was just more standing around looking pretty. This is the only place I don’t have to perform."
+      "text": "I spent three turns waiting for a perfect hand and forgot to put pressure on the board."
      },
      {
       "speaker": "Protagonist",
-      "text": "You look happier here."
+      "text": "So you're changing the list?"
      },
      {
       "speaker": "sierra",
-      "text": "Don’t say that out loud. I have a reputation to maintain."
+      "text": "Maybe. First I'm changing how I play it. Will you run the same opening against me?"
      },
      {
       "speaker": "sierra",
-      "text": "...But yeah. I am."
+      "text": "And no going easy because I'm sulking. I'm already doing enough of that for both of us."
      }
     ],
     "choices": [
      {
-      "label": "Play her seriously and don’t hold back",
-      "reply": "Good. I hate when people go easy because of how I look.",
+      "label": "Run the matchup until she finds a better line",
+      "reply": "There. That's the turn. I kept overthinking a move I already had.",
       "kind": "support",
       "flag": "sierra_serious",
       "delta": {
@@ -2815,8 +2815,8 @@ const packs=[
       }
      },
      {
-      "label": "Tell her she doesn’t have to perform around you",
-      "reply": "That’s a dangerous thing to say to someone who gets paid to perform.",
+      "label": "Tell her one bad game doesn't invalidate the deck",
+      "reply": "I know. I'm annoyed at myself, not the cards. Give me five minutes.",
       "kind": "honest",
       "flag": "sierra_noperform",
       "delta": {
@@ -2827,8 +2827,8 @@ const packs=[
       }
      },
      {
-      "label": "Admit you like both versions of her",
-      "reply": "Both, huh? Most people pick one and stick to it. You’re greedy.",
+      "label": "Offer a friendly wager on the next practice match",
+      "reply": "If I win, you buy the snacks. If you win... you also buy the snacks. Kidding.",
       "kind": "flirt",
       "flag": "sierra_both",
       "delta": {
@@ -2860,33 +2860,33 @@ const packs=[
     "lines": [
      {
       "speaker": "sierra",
-      "text": "No shoot today. No makeup. No stylist. Just me and a deck."
+      "text": "I told my agent I can't take Sunday calls anymore. That's my practice block."
      },
      {
       "speaker": "Protagonist",
-      "text": "Suits you."
+      "text": "Did she take it well?"
      },
      {
       "speaker": "sierra",
-      "text": "You keep saying things like that. It’s starting to mess with my usual script."
+      "text": "She said I was making her job harder. I told her I'm still showing up Monday."
      },
      {
       "speaker": "Protagonist",
-      "text": "Maybe the script needed rewriting."
+      "text": "So you didn't quit the campaign?"
      },
      {
       "speaker": "sierra",
-      "text": "Careful. If you keep treating me like a person who plays cards instead of a body that sells bikinis, I might get used to it."
+      "text": "Why would I? I like the work. I also like this. I'm done letting the calendar choose for me."
      },
      {
       "speaker": "sierra",
-      "text": "And I don’t get used to things easily."
+      "text": "I reserved this table for an hour. Want to help me see if the new list holds up?"
      }
     ],
     "choices": [
      {
-      "label": "Tell her you want her to get used to it",
-      "reply": "...Okay. Then don’t disappear when the novelty wears off.",
+      "label": "Accept the practice session and respect her schedule",
+      "reply": "Perfect. Then let's spend the first ten minutes fixing the Energy curve.",
       "kind": "support",
       "flag": "sierra_usedto",
       "delta": {
@@ -2897,8 +2897,8 @@ const packs=[
       }
      },
      {
-      "label": "Ask what she wants beyond the next tournament",
-      "reply": "No one asks me that. Most people stop at the next booking.",
+      "label": "Ask what else she'd like to make time for",
+      "reply": "A whole afternoon with nothing booked, eventually. I might not even bring my phone.",
       "kind": "honest",
       "flag": "sierra_future",
       "delta": {
@@ -2909,8 +2909,8 @@ const packs=[
       }
      },
      {
-      "label": "Say you like the real her more than the photos",
-      "reply": "That’s a hell of a thing to say to a model. Don’t take it back.",
+      "label": "Say you'll be glad to see her on and off the tournament table",
+      "reply": "Careful. I could get used to someone who doesn't make it an either-or question.",
       "kind": "flirt",
       "flag": "sierra_real",
       "delta": {
@@ -2942,33 +2942,33 @@ const packs=[
     "lines": [
      {
       "speaker": "sierra",
-      "text": "I turned down a campaign for this weekend. Full day of matches instead."
+      "text": "I turned down an extra campaign this weekend. The cup's on Saturday."
      },
      {
       "speaker": "Protagonist",
-      "text": "That’s a big deal for you."
+      "text": "Big match?"
      },
      {
       "speaker": "sierra",
-      "text": "It is. I’m still going to model. The money’s too good and I’m good at it. But I’m done pretending the cards are just a hobby I hide."
+      "text": "Big enough for me. The agent wasn't happy, but I gave her the dates weeks ago."
      },
      {
       "speaker": "Protagonist",
-      "text": "And me?"
+      "text": "How are you feeling?"
      },
      {
       "speaker": "sierra",
-      "text": "You’re the first person who made the game feel more important than the job. That’s... rare."
+      "text": "Nervous. Excited. A little furious at that same opening hand I keep drawing."
      },
      {
       "speaker": "sierra",
-      "text": "So. Are you staying for the long game or just this season?"
+      "text": "After the cup, whether you win or lose, would you come get dinner with me? No cameras, but cards are allowed."
      }
     ],
     "choices": [
      {
-      "label": "Tell her you’re in for the long game",
-      "reply": "Good. Because I’m not great at short-term anything.",
+      "label": "Say yes and promise a rematch after dinner",
+      "reply": "Deal. But I'm warning you, I'm reviewing your last game over dessert.",
       "kind": "support",
       "flag": "sierra_long",
       "delta": {
@@ -2979,8 +2979,8 @@ const packs=[
       }
      },
      {
-      "label": "Kiss her and let the answer be physical",
-      "reply": "...Okay. That works too.",
+      "label": "Kiss her and tell her you meant to ask first",
+      "reply": "I was going to say yes either way. You just skipped my favorite part of teasing you.",
       "kind": "flirt",
       "flag": "sierra_kiss",
       "delta": {
@@ -2991,8 +2991,8 @@ const packs=[
       }
      },
      {
-      "label": "Say you’ll be there for both the cards and the rest of her",
-      "reply": "Both. You keep choosing both. I’m starting to believe you.",
+      "label": "Tell her you'd like to keep making time for each other",
+      "reply": "Good. I don't want a grand promise. I want the next Saturday. And the one after that.",
       "kind": "honest",
       "flag": "sierra_bothsides",
       "delta": {
