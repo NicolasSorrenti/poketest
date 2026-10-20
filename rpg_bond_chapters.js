@@ -14,49 +14,25 @@
  function E(id,npc,title,start,place,slot,minBond,previous,lines,answers){
   return {id,npc,title,start,end:90,place,slot,minBond,
    prerequisite:previous||null,evergreen:true,chapter:start<=30?1:start<=60?2:3,
-   lines:lines.map((text,i)=>({speaker:i%2?'Protagonist':npc,text})),
+   lines:lines.map((value,i)=>typeof value==='string'?{speaker:i%2?'Protagonist':npc,text:value}:value),
    choices:answers.map(([label,reply,kind,flag])=>({
     label,reply,kind,flag,delta:{...deltas[kind]}
    }))};
  }
  const events=[
- E('jun_guest_4','jun','A Match Without a Whistle',83,'center',1,6,'jun_guest_3',[
-  'No score slips today. No ruling desk. Just two seats, two decks, and a clock I promise not to stare at.',
-  'You do know how to take a day off?',
-  'Not yet. I am running an experiment. The hypothesis is that I can enjoy a match without being responsible for everybody in it.',
-  'Then you will have to trust the other players to solve their own arguments.',
-  'I used to confuse being needed with being helpful. Perhaps teaching someone to judge for themselves is the better job.'
- ],[
+ E('jun_guest_4','jun','A Match Without a Whistle',83,'center',1,6,'jun_guest_3',[{"speaker":"Narrator","text":"The community center has closed its registration desk. Jun sets two decks on the only table without a rulebook."},{"speaker":"jun","text":"I even took my judge badge off. Apparently I'm allowed to do that."},{"speaker":"Protagonist","text":"Does the clock need to stay on the table?"},{"speaker":"Narrator","text":"Jun looks at it, then puts it face down beside his keys."},{"speaker":"jun","text":"Good catch. Cut my deck before I change my mind."}],[
   ['Play without asking him to referee','That was the first match in years where I actually heard the music in the room.','support','jun_unofficiated'],
   ['Ask him to teach you how to judge fairly','You listened instead of hunting for a shortcut. That makes my work worth doing.','honest','jun_fair_play']
  ]),
- E('teo_guest_4','teo','The Quiet Broadcast',79,'arcade',2,6,'teo_guest_3',[
-  'I have a new recording. No intro music. No dramatic zoom. I let the players talk, even when they pause for ages.',
-  'You, not talking? The town might declare an emergency.',
-  'I know. It turns out those silences are where you hear somebody deciding whether to risk everything.',
-  'Did people stay to listen?',
-  'Some left. Others stayed for the entire game. I think I finally know which audience I want.'
- ],[
+ E('teo_guest_4','teo','The Quiet Broadcast',79,'arcade',2,6,'teo_guest_3',[{"speaker":"Narrator","text":"The arcade speaker crackles, then falls silent. Teo has set out a recording without his usual introduction."},{"speaker":"teo","text":"Tell me if this is boring. I left the whole third turn in."},{"speaker":"Protagonist","text":"The bit where nobody says anything?"},{"speaker":"Narrator","text":"On the screen, one player reaches for a card, stops, and sits back. Teo lets the silence run."},{"speaker":"teo","text":"Yeah. That bit. I nearly cut it three times."}],[
   ['Encourage him to publish the uncut match','I did. Someone wrote that they felt like they were at the table. Best review of my life.','support','teo_real_match'],
   ['Offer to co-commentate without talking over players','Deal. If either of us interrupts a good decision, we owe everyone snacks.','challenge','teo_shared_mic']
  ]),
- E('iris_guest_4','iris','The Route Home',85,'park',0,6,'iris_guest_3',[
-  'I took my first actual day off. Everyone got their cards. Nobody called me. The river remained exactly where I left it.',
-  'And what did you do with the free afternoon?',
-  'I watched my sister duel. I nearly told her how to play her first three turns.',
-  'You stopped yourself?',
-  'She lost, laughed, and asked for another game. I could have missed that trying to keep everything running.'
- ],[
+ E('iris_guest_4','iris','The Route Home',85,'park',0,6,'iris_guest_3',[{"speaker":"Narrator","text":"At the riverside bench, Iris has left her delivery bag at home. In her hand is a tournament ticket creased along every edge."},{"speaker":"iris","text":"My sister lost in the first round. Asked for another match before we'd even left the room."},{"speaker":"Protagonist","text":"Did you give her advice?"},{"speaker":"Narrator","text":"Iris shakes her head and folds the ticket into a small square."},{"speaker":"iris","text":"For once, no. I bought us ice cream. She talked the whole way home."}],[
   ['Celebrate that she was simply there','It is strange, being proud of something you did not arrange. I think I like it.','support','iris_present'],
   ['Suggest she make this a regular tradition','One afternoon every week. It is on the calendar now, and this time I will keep it.','honest','iris_weekly']
  ]),
- E('elio_bond_1','elio','A Seat at the Table',7,'shop',1,0,null,[
-  'Every time I walk into the card shop, the tables look full. I know there is space, technically.',
-  'You are holding your deck like it might escape.',
-  'I keep waiting for someone to tell me I am at the wrong table. Is it embarrassing to ask to join?',
-  'Most people are happy to have someone to play against.',
-  'That is easy for someone who can make eye contact before shuffling.'
- ],[
+ E('elio_bond_1','elio','A Seat at the Table',7,'shop',1,0,null,[{"speaker":"Narrator","text":"The shop's last free chair sits across from a noisy four-player table. Elio stops just short of it."},{"speaker":"elio","text":"I think they're playing doubles. Or maybe there's room for one more."},{"speaker":"Protagonist","text":"We could ask."},{"speaker":"Narrator","text":"He checks the deck in his hands, squares its edges, and steps closer."},{"speaker":"elio","text":"Hi. Is anyone using this chair?"}],[
   ['Offer to sit down beside him','If you are there, maybe I can concentrate on the cards instead of the room.','support','elio_companion'],
   ['Practice how to ask for a match','Hi, want to play? ...I said it. I actually said it without apologizing.','challenge','elio_invitation']
  ]),
@@ -90,13 +66,7 @@
   ['Ask him what his favorite card is now','Not even a rare. Just the one I picked because I wanted it there.','support','elio_own_name'],
   ['Offer to be the first challenger of his new deck','You are on. And I am not going to apologize for trying to beat you.','challenge','elio_first_challenge']
  ]),
- E('alma_bond_1','alma','The Table by the Window',8,'cafe',1,0,null,[
-  'That table has been empty all week. People assume it is reserved because it is the best one.',
-  'Is it reserved?',
-  'Only for someone who needs a quiet place. Sometimes that is a champion. Sometimes it is someone who lost their first match.',
-  'You make room for both?',
-  'Someone has to remind them that a person does not become more valuable when the score changes.'
- ],[
+ E('alma_bond_1','alma','The Table by the Window',8,'cafe',1,0,null,[{"speaker":"Narrator","text":"The table by the café window is empty. Alma wipes an invisible spot from the wood while a new player peers in through the door."},{"speaker":"alma","text":"Everyone thinks that one's reserved. I should probably take the little sign down."},{"speaker":"Protagonist","text":"Would you like me to move it?"},{"speaker":"Narrator","text":"The newcomer steps inside, still holding a deck box against their chest."},{"speaker":"alma","text":"Leave the sign. Turn it around so it says 'Take a seat.'"}],[
   ['Help set up a welcoming table for newcomers','The first customer sat down without asking permission. Good. That is exactly what I hoped.','support','alma_open_table'],
   ['Suggest a no-pressure game night','A night where nobody keeps standings. I may put that on the chalkboard.','honest','alma_no_standings']
  ]),
@@ -130,13 +100,7 @@
   ['Offer a quiet game without stakes','Finally. A match where I do not have to clean up anybody else’s feelings afterward.','support','alma_quiet_game'],
   ['Ask her to pick the game and the music','You always notice when I am trying to work instead of enjoy myself. Thank you.','honest','alma_evening']
  ]),
- E('nereo_bond_1','nereo','A Different Kind of Weather',20,'park',0,0,null,[
-  'The river rose overnight. By noon the ferry will still be running, but everybody will complain about the delay.',
-  'You say that like a forecast.',
-  'It is. People are more predictable than clouds. Unless there is a tournament.',
-  'You ever play when you are off duty?',
-  'Only when someone persuades me that a game is not another job with worse paperwork.'
- ],[
+ E('nereo_bond_1','nereo','A Different Kind of Weather',20,'park',0,0,null,[{"speaker":"Narrator","text":"The ferry noticeboard lists a thirty-minute delay. Nereo has taped the corners down against the wind."},{"speaker":"nereo","text":"I'll get a dozen questions about that before lunch. The sea's not taking complaints."},{"speaker":"Protagonist","text":"Do you ever get to play when you're off duty?"},{"speaker":"Narrator","text":"Nereo digs a worn deck box out from beneath a stack of boarding slips."},{"speaker":"nereo","text":"Only when somebody convinces me not to call it overtime."}],[
   ['Play a few casual hands by the dock','Well, that was unexpectedly relaxing. You did not once ask when the ferry leaves.','support','nereo_dock_game'],
   ['Ask him to teach you his defensive deck','At last, someone who understands that preparing for trouble is not pessimism.','challenge','nereo_defense']
  ]),
