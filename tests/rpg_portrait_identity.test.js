@@ -39,7 +39,14 @@ for(const pack of packs.packs){
 }
 const manifest=JSON.parse(fs.readFileSync(path.join(root,'rpg-assets/reactions/manifest.json'),'utf8'));
 for(const [id,entry] of Object.entries(manifest.characters)){
- assert.equal(reactions.assetFor(manifest,id,'attack'),canonical[id],id+': reaction manifest diverges from the RPG portrait');
+ const attack=reactions.assetFor(manifest,id,'attack');
+ assert.equal(attack,entry.attack||canonical[id],id+': reaction must use installed NPC-specific art');
+ assert.ok(onDisk(attack),id+': reaction artwork is missing');
+ for(const kind of ['weakness_hit','status_hit','big_hit','hurt']){
+  const image=reactions.assetFor(manifest,id,kind);
+  assert.ok(onDisk(image),id+': '+kind+' expression must exist');
+  assert.ok(image.startsWith('/rpg-assets/characters/'+id+'/')||image.startsWith('/rpg-assets/reactions/'+id+'/')||image.startsWith('/rpg-assets/'+id+'.'),id+': '+kind+' must not borrow another character');
+ }
 }
 assert.equal(reactions.assetFor({characters:{reina:{attack:'/rpg-assets/characters/jinx/neutral.webp'}}},'reina','attack'),canonical.reina,'Cross-NPC references must fall back to the correct character');
 assert.equal(reactions.assetFor({},'rina','attack'),null,'Missing Rina art must never borrow a different NPC');
