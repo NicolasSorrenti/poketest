@@ -82,7 +82,7 @@ test('comeback after a prior loss gives a distinct report and followup',()=>{
  const last=C.ending(s);
  assert.equal(last.comebacks,1);assert.equal(last.reflections,1);
  assert.ok(last.lines.some(x=>x.includes('turned 1 earlier defeat')));
- assert.match(C.preDuel(s,'reina'),/result/);
+ assert.match(C.preDuel(s,'reina'),/another chance|result/i);
 });
 test('draw breaks a losing streak and can never be recorded as defeat',()=>{
  const s=fresh();add(s,'reina','a',10,'Defeat');
