@@ -605,3 +605,82 @@ body.duel-active .stage .pokemon-tool-badge{
  body.duel-active .stage .pokemon-tools{right:-3px;bottom:12px;max-width:78%}
  body.duel-active .stage .pokemon-tool-badge{font-size:8px;padding:2px 4px}
 }
+
+/* v0.45 — Full-height physical card attachments.
+   Cards extend horizontally behind each Pokémon, rather than tiny badges or
+   vertically staggered stacks. Keep each card's exposed edge discernible. */
+body.duel-active .stage .poke{
+ --attachment-height:calc(100% - 7px);
+ --attachment-width:clamp(73px,7.4vw,103px);
+ --attachment-peek:clamp(13px,1.65vw,23px);
+ --attachment-overlap:clamp(9px,1.1vw,15px);
+ border-color:transparent;
+ background:transparent;
+ box-shadow:none;
+ overflow:visible;
+}
+body.duel-active .stage .poke .pokemon-face{
+ z-index:4;
+ border:0;
+ border-radius:5px;
+ box-shadow:0 3px 10px #0009;
+}
+body.duel-active .stage .poke .energy-peeks.energy-card-stack,
+body.duel-active .stage .poke .energy-peeks:has(.attached-energy:nth-child(5)){
+ display:block;
+ position:absolute;
+ top:3px;
+ left:calc(-1 * var(--attachment-peek));
+ height:var(--attachment-height);
+ width:var(--attachment-width);
+ min-width:0;
+ max-width:none;
+ z-index:1;
+ overflow:visible;
+ pointer-events:none;
+}
+body.duel-active .stage .poke .energy-card-stack .attached-energy.energy-card-mini,
+body.duel-active .stage .energy-peeks:has(.attached-energy:nth-child(5)) .attached-energy{
+ display:block;
+ position:absolute;
+ top:0;
+ left:calc(var(--energy-position) * -1 * var(--attachment-overlap));
+ width:var(--attachment-width);
+ min-width:0;
+ height:100%;
+ margin:0;
+ padding:0;
+ border:1px solid #e3eadf;
+ border-radius:5px;
+ box-shadow:-2px 2px 5px #000b;
+ overflow:hidden;
+ transform:none;
+ z-index:calc(3 - var(--energy-position));
+}
+body.duel-active .stage .poke .energy-card-stack .energy-card-art{
+ display:block;width:100%;height:100%;max-height:none;object-fit:fill;
+}
+body.duel-active .stage .poke .energy-card-stack .energy-overflow{
+ position:absolute;top:auto;bottom:-7px;left:-22px;z-index:12;
+}
+body.duel-active .stage .poke .pokemon-tools{
+ right:calc(-1 * var(--attachment-peek));top:3px;bottom:auto;
+ max-width:calc(100% - 12px);z-index:5;
+}
+body.duel-active .stage .poke .pokemon-tool-badge{
+ border-radius:4px;background:#253445ed;
+ box-shadow:0 2px 5px #000a;
+}
+body.duel-active .stage .bench-zone .poke{
+ --attachment-width:clamp(65px,6vw,90px);
+ --attachment-peek:14px;
+ --attachment-overlap:9px;
+}
+@media(max-width:780px){
+ body.duel-active .stage .poke{
+  --attachment-width:70px;--attachment-peek:13px;--attachment-overlap:9px;
+ }
+ body.duel-active .stage .bench-zone .poke{
+  --attachment-width:58px;--attachment-peek:11px;--attachment-overlap:7px;
+ }
+}
