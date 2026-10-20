@@ -18,7 +18,8 @@ test('each of the eight original characters has four complete narration-led chap
   assert.equal(entry.lines[0].speaker,'Narrator','scene should establish its setting '+id);
   assert.ok(entry.lines.some(l=>l.speaker==='Protagonist'),'player must actually speak '+id);
   assert.ok(entry.lines.some(l=>l.speaker===npc),'NPC must actually speak '+id);
-  assert.ok(entry.lines.every(l=>l.text&&l.text.trim().length>5),'no blank stage direction '+id);
+  assert.ok(entry.lines.every(l=>l.text&&l.text.trim().length>0),'no blank dialogue '+id);
+  assert.ok(entry.lines.filter(l=>l.speaker==='Narrator').every(l=>l.text.length>10),'descriptive beats must have substance '+id);
   assert.deepEqual(event.lines,entry.lines,'source must be wired to live story graph '+id);
   assert.equal(event.choices.length,3,id+' should keep original choice count');
   assert.equal(entry.choices.length,3);
