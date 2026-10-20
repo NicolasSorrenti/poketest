@@ -39,7 +39,7 @@ const acknowledgeMandatory=async(page)=>{
   await mapSheet.waitFor({state:'visible'});
   assert.equal(await mapSheet.getAttribute('aria-hidden'),'false');
   const bounds=await mapSheet.boundingBox();
-  assert.ok(bounds&&bounds.left>=0&&bounds.right<=361&&bounds.top>=0&&bounds.bottom<=641,
+  assert.ok(bounds&&bounds.x>=0&&bounds.x+bounds.width<=361&&bounds.y>=0&&bounds.y+bounds.height<=641,
    'Town map must fit inside the mobile viewport');
   assert.equal(await page.locator('#places .place').count(),7);
   assert.equal(await page.locator('#rpgMapPanel .rpg-drawer-close').isVisible(),true);
@@ -74,7 +74,7 @@ const acknowledgeMandatory=async(page)=>{
   await save(page,'01-deck-studio.png');
   await page.locator('.back').click();
   await page.waitForURL(/rpg\.html/);
-  await page.locator('#places .place').first().waitFor();
+  await page.locator('#places .place').first().waitFor({state:'attached'});
   assert.equal(await page.locator('#places .place').count(),7);
   await page.locator('#whereLabel').getByText(/YOU ARE HOME/).waitFor();
   await save(page,'01-home.png');
