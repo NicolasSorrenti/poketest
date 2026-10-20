@@ -1,0 +1,30 @@
+/* Optional audio controls: small menu, never a persistent sidebar. */
+/* Ensure a scrollable mobile toolbar never clips the open settings menu. */
+.utilitybar:has(.rpg-audio-settings[open]){position:relative;z-index:37}
+.utilitybar .utility-actions:has(.rpg-audio-settings[open]){overflow:visible;flex-wrap:wrap}
+.rpg-audio-settings{position:relative;flex:none;z-index:36}
+.rpg-audio-settings>summary{list-style:none;cursor:pointer;min-height:39px;min-width:84px;
+ display:flex;align-items:center;justify-content:center;padding:8px 12px;
+ background:#243146;border:1px solid #9a759d;border-radius:8px;color:#ffdfeb;
+ font:900 12px 'Barlow Condensed',sans-serif;letter-spacing:.075em;
+ transition:background .14s ease,transform .14s ease}
+.rpg-audio-settings>summary::-webkit-details-marker{display:none}
+.rpg-audio-settings[open]>summary,.rpg-audio-settings>summary:hover{background:#87436f;transform:translateY(-1px)}
+.rpg-audio-settings>summary:focus-visible{outline:3px solid #ffd7aa;outline-offset:2px}
+.rpg-audio-menu{position:absolute;top:calc(100% + 8px);right:0;width:min(290px,calc(100vw - 25px));
+ display:grid;gap:13px;background:linear-gradient(155deg,#25213e,#101e2f);
+ border:1px solid #e1a3c2;border-radius:11px;padding:16px;box-shadow:0 20px 60px #030711d9;
+ color:#ffdfec}
+.rpg-audio-menu button{font:900 16px 'Barlow Condensed',sans-serif;background:#813e67;border-color:#e5a4bc;min-height:39px}
+.rpg-audio-menu label{display:grid;gap:7px;font:900 13px 'Barlow Condensed',sans-serif;letter-spacing:.09em}
+.rpg-audio-menu label.rpg-audio-ambience{display:flex;align-items:center;gap:10px;min-height:34px}
+.rpg-audio-menu input[type=range]{width:100%;accent-color:#f6a6cb;touch-action:pan-x}
+.rpg-audio-menu input[type=checkbox]{width:19px;height:19px;accent-color:#b96297}
+.rpg-audio-menu small{font-size:11px;line-height:1.35;color:#bdb7cf;letter-spacing:0}
+@media(max-width:700px){
+ .rpg-audio-settings{flex:none}
+ .rpg-audio-settings>summary{min-width:83px}
+ /* The scrollable toolbar must not clip the menu: reposition over the scene. */
+ .rpg-audio-settings .rpg-audio-menu{position:fixed;top:min(200px,25vh);left:12px;right:auto;max-width:calc(100vw - 24px)}
+}
+@media(prefers-reduced-motion:reduce){.rpg-audio-settings>summary{transition:none}}

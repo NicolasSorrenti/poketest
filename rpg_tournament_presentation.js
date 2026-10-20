@@ -95,6 +95,7 @@
    image.onerror=()=>{image.remove();picture.append(make('span','neo-tournament-versus__fallback',model.opponent.split(' ').map(x=>x[0]).join('')));};
    image.src=model.portrait;picture.append(image);
    inner.append(header,title,round,names,picture);overlay.append(inner);doc.body.append(overlay);
+   win?.NeoRpgAudio?.play?.(model.isFinal?'final':'versus');
    active=overlay;
    timer=schedule(clear,reduced()?170:880);
    return true;

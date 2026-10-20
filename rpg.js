@@ -121,8 +121,13 @@ function pauseSideQuest(){
  state.activeSideQuest=null;persist();say('Narrator','You agree to return when you are ready to play. No time has passed.');
 }
 
+function audioForTime(change){
+ const kind=window.NeoRpgTimeTransitions?.plan?.(change)?.kind;
+ if(kind)window.NeoRpgAudio?.play?.(kind==='season'?'finale':kind==='day'?'day':kind==='sleep'?'sleep':'period');
+}
 function timeFlash(beforeDay,beforeSlot,source='activity'){
  const change={beforeDay,beforeSlot,afterDay:state.day,afterSlot:state.slot,source};
+ audioForTime(change);
  // Presentation follows the already-committed RPG time state; it never owns state changes.
  if(window.NeoRpgTimeTransitions?.present){window.NeoRpgTimeTransitions.present(change);return;}
  const overlay=document.createElement('div');overlay.className='notice-pop';
@@ -640,7 +645,7 @@ let pendingDuelTimeShift=null;
 function finishDuelRewardPresentation(){
  const transition=pendingDuelTimeShift;pendingDuelTimeShift=null;
  // The world clock and all rewards were already persisted before results appeared.
- if(transition)window.NeoRpgTimeTransitions?.present?.(transition);
+ if(transition){audioForTime(transition);window.NeoRpgTimeTransitions?.present?.(transition);}
 }
 
 function showPackReveal(){
@@ -692,8 +697,9 @@ function showPackReveal(){
   const button=document.createElement('button');button.type='button';button.className='pack-card';button.title='Reveal card '+(index+1);
   button.style.setProperty('--card-position',String(index));
   const back=document.createElement('span');back.className='pack-card-back';back.textContent='✦';button.append(back);
-  const reveal=()=>{
+  const reveal=(silent=false)=>{
    if(button.className.includes('revealed'))return;
+   if(!silent)window.NeoRpgAudio?.play?.('flip');
    button.className+=' revealed';button.replaceChildren();
    const detail=document.createElement('strong');detail.textContent=labelCard(id);
    const info=cardNames.get(id)||id;
@@ -710,10 +716,11 @@ function showPackReveal(){
   };
   button.onclick=reveal;cards.push(reveal);target.append(button);
  }
- $('packRevealAll').onclick=()=>cards.forEach(show=>show());
+ $('packRevealAll').onclick=()=>{cards.forEach(show=>show(true));window.NeoRpgAudio?.play?.('flip');};
  $('packContinue').onclick=()=>{pack.opened=true;persist();modal.close();finishDuelRewardPresentation();};
  modal.oncancel=e=>e.preventDefault(); // One handler, even after opening dozens of packs.
  modal.showModal();
+ window.NeoRpgAudio?.play?.('booster');
 }
 
 const labelCard=id=>cardNames.get(id)||id.replace('base1-','Base #');
@@ -931,6 +938,7 @@ function launchPreparedDuel(){
  if($('preDuelDialog').open)$('preDuelDialog').close();
  render();
  $('duel').hidden=false;
+ window.NeoRpgAudio?.setPaused?.(true);
  if(pending.deckCards)sessionStorage.setItem('neoRpgDeck:'+pending.id,JSON.stringify(pending.deckCards));
  if(pending.customOpponentDeck)sessionStorage.setItem('neoRpgNpcDeck:'+pending.id,JSON.stringify(pending.customOpponentDeck));
  $('battle').src=duelUrl(pending);
@@ -1003,6 +1011,7 @@ window.addEventListener('message',ev=>{
   sessionStorage.removeItem('neoRpgNpcDeck:'+duel.id);
  const duelBeforeTime={beforeDay:state.day,beforeSlot:state.slot};
  advance(1,'duel',true);$('duel').hidden=true;$('battle').src='about:blank';
+ window.NeoRpgAudio?.setPaused?.(false);
  pendingDuelTimeShift={...duelBeforeTime,afterDay:state.day,afterSlot:state.slot,source:'duel'};
  const c=cast[duel.npc];say(c.name,sideOutcome?.text||personalOutcome||REACT.afterDuel(state,duel,receipt,c)|| (receipt.outcome==='Victory'?c.duelWin:receipt.outcome==='Draw'?'A hard-fought draw. Let us play again.':c.duelLose));
  const continueAfterResult=()=>{
@@ -1598,12 +1607,14 @@ function render(){
  const previousLocation=lastRenderedLocation;
  lastRenderedLocation=state.location;
  if(previousLocation&&previousLocation!==state.location){
+  window.NeoRpgAudio?.play?.('travel');
   window.NeoRpgInterface?.onLocationChange?.();
   window.NeoRpgTimeTransitions?.presentTravel?.({
    from:places[previousLocation]?.[0]||previousLocation,
    to:places[state.location]?.[0]||state.location
   });
  }
+ window.NeoRpgAudio?.setScene?.(state.location,state.slot);
  ensureRpgLayout();
  window.NeoRpgInterface?.init?.();
  maybeStartMandatory();
@@ -1897,6 +1908,7 @@ async function initDecks(){
   }
  }catch(e){$('notice').textContent='Deck list unavailable: '+e.message;}
 }
+window.NeoRpgAudio?.init?.();
 persist();render();initDecks();loadCardNames();if(state.deckJourney&&!state.deckJourney.starter&&!state.ended&&!state.pendingDuel)showStarterChoice();if(state.deckJourney?.lastPack&&!state.deckJourney.lastPack.opened&&!state.pendingDuel)showPackReveal();if(state.pendingDuel){
  if(state.pendingDuel.deckCards)sessionStorage.setItem('neoRpgDeck:'+state.pendingDuel.id,JSON.stringify(state.pendingDuel.deckCards));
  if(state.pendingDuel.customOpponentDeck)sessionStorage.setItem('neoRpgNpcDeck:'+state.pendingDuel.id,JSON.stringify(state.pendingDuel.customOpponentDeck));
@@ -1904,6 +1916,7 @@ persist();render();initDecks();loadCardNames();if(state.deckJourney&&!state.deck
   $('duel').hidden=true;$('battle').src='about:blank';showPreparedDuel();
  }else{
   $('duel').hidden=false;
+  window.NeoRpgAudio?.setPaused?.(true);
   $('battle').src=duelUrl(state.pendingDuel);
  }
 }

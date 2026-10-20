@@ -71,6 +71,7 @@
    button.onclick=finish;
    dialog.oncancel=event=>{event.preventDefault();finish();};
    dialog.showModal();
+   if(typeof window!=='undefined')window.NeoRpgAudio?.play?.(details.competition==='champion'?'champion':details.kind==='victory'?'victory':'result');
    button.focus?.({preventScroll:true});
    return true;
   }
