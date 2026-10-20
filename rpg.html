@@ -11,6 +11,7 @@
 <link rel="stylesheet" href="/rpg_character_motion.css">
 <link rel="stylesheet" href="/rpg_victory_presentation.css">
 <link rel="stylesheet" href="/rpg_tournament_presentation.css">
+<link rel="stylesheet" href="/rpg_audio.css">
 </head>
 <body>
 <div id="app">
@@ -35,6 +36,19 @@
   <div class="utilitybar">
     <div class="utility-left"><span class="live-dot"></span><span>NEO HARBOR · TOWN EXPLORATION</span><span class="utility-sep">/</span><span id="notice" aria-live="polite">Travel & talk are free · ⏳ actions advance time</span></div>
     <div class="utility-actions">
+      <details class="rpg-audio-settings">
+        <summary id="rpgSoundLabel" aria-label="Sound settings">♫ SOUND</summary>
+        <div class="rpg-audio-menu" aria-label="Audio preferences">
+          <button id="rpgSoundToggle" type="button" aria-pressed="true">SFX ON</button>
+          <label for="rpgSoundVolume">VOLUME
+            <input id="rpgSoundVolume" type="range" min="0" max="100" step="5" value="35" aria-label="Sound effects volume">
+          </label>
+          <label class="rpg-audio-ambience" for="rpgAmbienceToggle">
+            <input id="rpgAmbienceToggle" type="checkbox"> AMBIENCE
+          </label>
+          <small>Audio starts when you interact. Ambience is optional.</small>
+        </div>
+      </details>
       <button id="rpgMapToggle" class="toolbar-btn rpg-nav-toggle" type="button" aria-controls="rpgMapPanel" aria-expanded="false" aria-label="Open town map">☷ MAP</button>
       <button id="rpgInfoToggle" class="toolbar-btn rpg-nav-toggle" type="button" aria-controls="rpgInfoPanel" aria-expanded="false" aria-label="Open story and progress panels">✧ INFO</button>
       <button id="deckStudioBtn" class="toolbar-btn" type="button">▣ DECK STUDIO</button>
@@ -320,6 +334,7 @@
 <script src="/rpg_partner_decks.js"></script>
 <script src="/rpg_mandatory_events.js"></script>
 <script src="/rpg_season_events.js"></script>
+<script src="/rpg_audio.js"></script>
 <script src="/rpg_time_transitions.js"></script>
 <script src="/rpg_ui_motion.js"></script>
 <script src="/rpg_character_motion.js"></script>
