@@ -2113,33 +2113,33 @@ const packs=[
     "lines": [
      {
       "speaker": "rina",
-      "text": "I only have thirty minutes before vocal practice, but I ran here anyway. Priorities!"
+      "text": "I've got half an hour before vocal warm-ups. I brought a deck and an alarm. This is efficiency."
      },
      {
       "speaker": "Protagonist",
-      "text": "You skipped for a match?"
+      "text": "You set an alarm for cards?"
      },
      {
       "speaker": "rina",
-      "text": "I can practice scales anytime. Good local players are harder to find!"
+      "text": "For rehearsal! Don't worry. My band would never let me forget a call time."
      },
      {
       "speaker": "Protagonist",
-      "text": "Your manager knows?"
+      "text": "And you want to spend your break playing?"
      },
      {
       "speaker": "rina",
-      "text": "She thinks I’m reviewing choreography. What she doesn’t know won’t hurt the set list."
+      "text": "Only if you promise not to treat this like a fan meet. I need someone who'll actually challenge me."
      },
      {
       "speaker": "rina",
-      "text": "Ready? I even brought my serious face today."
+      "text": "Look, I even brought my serious sleeves. Purple means business."
      }
     ],
     "choices": [
      {
-      "label": "Play her seriously and don’t go easy",
-      "reply": "Yes! That’s what I wanted! No special idol treatment!",
+      "label": "Give her a serious practice match",
+      "reply": "Yes! Thank you. Now stop smiling at me and shuffle.",
       "kind": "support",
       "flag": "rina_serious",
       "delta": {
@@ -2150,8 +2150,8 @@ const packs=[
       }
      },
      {
-      "label": "Ask if the idol life ever gets in the way of the game",
-      "reply": "Sometimes… but I make it work. The game is the part that keeps me grounded.",
+      "label": "Ask how she balances rehearsal and tournaments",
+      "reply": "Not gracefully. My rehearsal bag has three deck boxes and not enough spare socks.",
       "kind": "honest",
       "flag": "rina_grounded",
       "delta": {
@@ -2162,8 +2162,8 @@ const packs=[
       }
      },
      {
-      "label": "Tell her she looks happiest when she’s holding cards",
-      "reply": "You keep noticing the real things… It’s a little embarrassing, but I like it.",
+      "label": "Tell her she's adorable when she gets competitive",
+      "reply": "That's not fair! I spent ages perfecting this intimidating face.",
       "kind": "flirt",
       "flag": "rina_happy",
       "delta": {
@@ -2195,33 +2195,33 @@ const packs=[
     "lines": [
      {
       "speaker": "rina",
-      "text": "No cameras, no manager, no set list. Just cards and tea. This is my favorite kind of day."
+      "text": "I wrote tomorrow's set list on the back of my deck notes. Guess which one needs more work."
      },
      {
       "speaker": "Protagonist",
-      "text": "You seem different when it’s just the game."
+      "text": "How's rehearsal going?"
      },
      {
       "speaker": "rina",
-      "text": "Because I don’t have to be ‘Rina the Idol’ here. I can just be the girl who gets too excited about energy acceleration."
+      "text": "Good! I keep mixing up the transitions. The drummer asked if I was calling attacks."
      },
      {
       "speaker": "Protagonist",
-      "text": "I like that girl."
+      "text": "You could bring the cards to rehearsal."
      },
      {
       "speaker": "rina",
-      "text": "You do? Most people only meet the sparkly version. The quiet card-obsessed one is… newer for me to show."
+      "text": "I did. They all have favorite Pokémon now. I thought they'd laugh, but they've been helping me test."
      },
      {
       "speaker": "rina",
-      "text": "But I think I want to show her more."
+      "text": "Want to hear the chorus? I borrowed the rhythm from the shuffling game at the shop."
      }
     ],
     "choices": [
      {
-      "label": "Tell her both versions are worth knowing",
-      "reply": "Both…? Okay. I’ll try to believe that.",
+      "label": "Ask to hear the song and help test the deck",
+      "reply": "Okay! But you have to promise not to call the chorus a bad matchup if I mess up.",
       "kind": "support",
       "flag": "rina_both",
       "delta": {
@@ -2232,8 +2232,8 @@ const packs=[
       }
      },
      {
-      "label": "Ask what she wants beyond the next stage show",
-      "reply": "No one from the agency ever asks me that. Thank you for asking.",
+      "label": "Ask what she would change if the show were entirely hers",
+      "reply": "I'd add a song the whole band writes together. No choreography for that one.",
       "kind": "honest",
       "flag": "rina_future",
       "delta": {
@@ -2244,8 +2244,8 @@ const packs=[
       }
      },
      {
-      "label": "Say you fell for the card-obsessed version first",
-      "reply": "That’s… really unfairly sweet. My heart just did a little jump.",
+      "label": "Tell her you like seeing her this excited",
+      "reply": "I'm trying not to bounce in my seat. It's not working, is it?",
       "kind": "flirt",
       "flag": "rina_fell",
       "delta": {
@@ -2359,33 +2359,33 @@ const packs=[
     "lines": [
      {
       "speaker": "rina",
-      "text": "I told my manager I’m taking a real day off. No appearances, no photos, no rehearsals. Just cards and you."
+      "text": "I asked my manager to leave Saturday free. The shop's doing a charity match, and my band offered to play afterward."
      },
      {
       "speaker": "Protagonist",
-      "text": "That’s a big step for you."
+      "text": "Cards and a concert on the same day?"
      },
      {
       "speaker": "rina",
-      "text": "It is. I used to think I had to keep the idol and the player in separate boxes. You made me realize I don’t."
+      "text": "Yeah! The set list's nearly done. Finding a rhyme for Bulbasaur is harder than it sounds."
      },
      {
       "speaker": "Protagonist",
-      "text": "And now?"
+      "text": "You don't have to put Pokémon in every song."
      },
      {
       "speaker": "rina",
-      "text": "Now I want both. The stage when I choose it… and someone who stays for the matches after the lights go down."
+      "text": "I know. But I'd like to try. I'm tired of waiting for someone else to decide which parts of my life go together."
      },
      {
       "speaker": "rina",
-      "text": "Are you that someone?"
+      "text": "There's still one thing I haven't figured out. Will you be there when the lights go down?"
      }
     ],
     "choices": [
      {
-      "label": "Tell her you’re staying for every set — stage and table",
-      "reply": "Then it’s a deal. Official. Binder-certified.",
+      "label": "Tell her you'd like to spend more Saturdays together",
+      "reply": "Not just Saturdays, I hope. ...Oh no, I said that out loud.",
       "kind": "support",
       "flag": "rina_stay",
       "delta": {
@@ -2396,8 +2396,8 @@ const packs=[
       }
      },
      {
-      "label": "Kiss her and let the answer be clear",
-      "reply": "Ah… okay. That was a very clear answer.",
+      "label": "Kiss her when the rehearsal ends",
+      "reply": "You could have warned me! ...Actually, don't warn me next time.",
       "kind": "flirt",
       "flag": "rina_kiss",
       "delta": {
@@ -2408,8 +2408,8 @@ const packs=[
       }
      },
      {
-      "label": "Say you want the real Rina, sparkles and serious plays included",
-      "reply": "The real me… You keep choosing her. I’m going to keep choosing you too.",
+      "label": "Ask what she wants after the season",
+      "reply": "More music, more matches, and maybe you on the other side of the table. That sounds pretty good.",
       "kind": "honest",
       "flag": "rina_realme",
       "delta": {
