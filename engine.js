@@ -1747,7 +1747,7 @@ class Engine{
   if(/^During your opponent's next turn, (?:any|all) damage done (?:to (?:this Pokémon|[\w'’ .-]+) )?by attacks is reduced by (\d+) \(after applying Weakness and Resistance\)\.$/i.test(t))return 'defendReduce';
   // Historically printed damage/effect protection. Restrict patterns to complete sentences.
   if(/^Flip a coin\. If heads, during your opponent's next turn, prevent all effects of attacks, including damage, done to [^.]+\.$/i.test(t))return 'agilityShield';
-  if(/^Discard 1 Energy card attached to [^.]+ in order (?:to |)use this attack\. During your opponent's next turn, prevent all effects of attacks, including damage, done to [^.]+\.$/i.test(t))return 'barrierShield';
+  if(/^Discard 1 (?:Fire )?Energy card attached to [^.]+ in order (?:to |)use this attack\. During your opponent's next turn, prevent all effects of attacks, including damage, done to [^.]+\.$/i.test(t))return 'barrierShield';
   if(/^Discard 1 Energy card attached to [^.]+ in order (?:to |)use this attack\. Remove all damage counters from [^.]+\.$/i.test(t))return 'recoverFull';
   if(/^Remove all damage counters from [^.]+\. [^.]+ is now Asleep\.$/i.test(t))return 'restHeal';
   if(/^Whenever an attack does damage to [^(]+\(after applying Weakness and Resistance\) during your opponent's next turn, that attack only does half the damage to [^(]+\(rounded down to the nearest 10\)\. \(Any other effects still happen\.\)$/i.test(t))return 'halfShield';
@@ -1832,7 +1832,7 @@ class Engine{
   if(/^Flip a coin\. If heads, this attack does (\d+) more damage\.$/i.test(t))return 'bonus';
   if(/^Flip a coin\. If tails, this attack does nothing\.$/i.test(t))return 'fail';
   if(/^Discard all Energy cards attached to (?:this Pokémon|[\w'’ -]+) in order to use this attack\.$/i.test(t))return 'discardAll';
-  if(/^Discard (\d+) Energy cards? attached to (?:this Pokémon|[\w'’ -]+) in order to use this attack\.$/i.test(t))return 'discardSome';
+  if(/^Discard (\d+) (?:Fire )?Energy cards? attached to (?:this Pokémon|[\w'’ -]+) in order to use this attack\.$/i.test(t))return 'discardSome';
   if(/^Remove (?:1|one|2|two) damage counters? from (?:this Pokémon|[\w'’ -]+)\.$/i.test(t))return 'heal';
   if(/^Flip a coin\. If tails, this attack does nothing\. Either way, you can't use this attack again as long as [^.]+ stays in play[^]*$/i.test(t))return 'oncePerPlayCoin';
   if(/^Discard 1 Energy card attached to [^.]+ in order to use this attack\. If a Pok[eé]mon Knocks Out [^.]+ during your opponent's next turn, Knock Out that Pok[eé]mon\.$/i.test(t))return 'destinyBond';
@@ -1994,10 +1994,17 @@ class Engine{
  }
  if(copyOverride&&!this.copyable(a,copyOverride.mode))return false;
  if(copyOverride&&!['metronome','sketch'].includes(copyOverride.mode)){
-  const count=pattern==='discardSome'?Number(t.match(/Discard (\d+) Energy/i)?.[1]||0):pattern==='discardAll'?u.energies.length:pattern==='discardOneRequired'?1:0;
+  const count=pattern==='discardSome'?Number(t.match(/Discard (\d+) (?:Fire )?Energy/i)?.[1]||0):pattern==='discardAll'?u.energies.length:pattern==='discardOneRequired'?1:0;
   if(u.energies.length<count)return false;
  }
  if(pattern==='batch55'){const kind=batch55Kind(c,a),d=this.batch55Ready;if(kind==='birthdaySurprise')dmg=d.birthday&&d.heads?80:30;if(kind==='esp')dmg=d.heads===2?20:0;if(kind==='catPunch')dmg=d.heads?20:0;if(kind==='crystalWave')dmg=d.heads?40:30;if(kind==='dustDevil')dmg=0;}
+ // Typed discard costs check the kind of Energy an attached card supplies.
+ const fireDiscardIndices=()=>u.energies.flatMap((id,index)=>
+  ['Fire Energy','Rainbow Energy','Miracle Energy'].includes(lookup.get(id)?.name)?[index]:[]);
+ const typedFirePayment=/^Discard (?:\d+ )?Fire Energy card/i.test(t);
+ const paidCount=pattern==='discardSome'?Number(t.match(/Discard (\d+) (?:Fire )?Energy/i)?.[1]||0):pattern==='discardOneRequired'?1:0;
+ if(!copyOverride?.mode?.match(/^(metronome|sketch)$/)&&typedFirePayment&&
+    ['discardSome','discardOneRequired'].includes(pattern)&&fireDiscardIndices().length<paidCount)return false;
  const attackTargetAtStart=f.active,damageBeforeAttack=f.active.damage,previousStatus=f.active.status,previousPoison=f.active.poison;
  const defendingTeamAtStart=[f.active,...f.bench].filter(Boolean);
  if(!pattern){this.log(`${a.name} is not scripted yet and cannot be used.`);render();return false}let batch43=null; if(pattern==='batch43'){batch43=batch43Effect(this,batch43Id(a),a,u,f.active,p,f);if(!batch43.ok)return false;dmg=batch43.dmg;pendingStatus=batch43.status||null;}let batch44=null; if(pattern==='batch44'){batch44=batch44Effect(this,batch44Id(a),a,u,p,f);if(!batch44.ok)return false;dmg=batch44.dmg;pendingStatus=batch44.status||null;}let batch46=null;
@@ -2412,8 +2419,18 @@ if(a.name==='Water Gun'&&/Does 10 damage plus 10 more damage for each Water Ener
  if(pattern==='coinShuffleSelf'&&!coin(a.name+' — stay')){p.deck=shuffle([...p.deck,u.id,...u.under,...u.energies]);p.active=p.bench.shift()||null}
  let self=['recoil','coinRecoil'].includes(pattern)&&t.match(/does (\d+) damage to itself/i);if(self&&(pattern!=='coinRecoil'||!coin(a.name+' — recoil')))u.damage+=+self[1];if(doubleRecoil){const recoil=Number(t.match(/does (\d+) damage to itself/i)?.[1]||0);u.damage+=recoil}
  const waivedCost=copyOverride&&['metronome','sketch'].includes(copyOverride.mode);
- const discard=!waivedCost&&['discardAll','discardSome'].includes(pattern)&&t.match(/Discard (all|\d+) Energy cards? attached/i);if(discard){let n=discard[1]==='all'?u.energies.length:+discard[1];p.discard.push(...u.energies.splice(0,n))}
- if(pattern==='discardOneRequired'&&!waivedCost)p.discard.push(u.energies.pop())
+ const discard=!waivedCost&&['discardAll','discardSome'].includes(pattern)&&t.match(/Discard (all|\d+) (?:Fire )?Energy cards? attached/i);
+ if(discard){
+  const n=discard[1]==='all'?u.energies.length:+discard[1];
+  if(typedFirePayment){
+   const chosen=fireDiscardIndices().slice(0,n);
+   for(const i of chosen.sort((a,b)=>b-a))p.discard.push(u.energies.splice(i,1)[0]);
+  }else p.discard.push(...u.energies.splice(0,n));
+ }
+ if(pattern==='discardOneRequired'&&!waivedCost){
+  const i=typedFirePayment?fireDiscardIndices()[0]:u.energies.length-1;
+  p.discard.push(u.energies.splice(i,1)[0]);
+ }
  if(pattern==='heal'){const count=/\b(?:2|two)\b/i.test(t)?2:1;u.damage=Math.max(0,u.damage-count*10);this.log(`${c.name} healed ${count*10} damage.`)}
  if(pattern==='drainDamage'){const half=/equal to half/i.test(t);u.damage=Math.max(0,u.damage-(half?Math.ceil(dmg/20)*10:dmg))}
  if(pattern==='leechSeed'&&dmg>0)u.damage=Math.max(0,u.damage-10*Number(t.match(/remove (\d+) damage counter/i)?.[1]||1))
