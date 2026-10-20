@@ -1747,7 +1747,7 @@ class Engine{
   if(/^During your opponent's next turn, (?:any|all) damage done (?:to (?:this Pokémon|[\w'’ .-]+) )?by attacks is reduced by (\d+) \(after applying Weakness and Resistance\)\.$/i.test(t))return 'defendReduce';
   // Historically printed damage/effect protection. Restrict patterns to complete sentences.
   if(/^Flip a coin\. If heads, during your opponent's next turn, prevent all effects of attacks, including damage, done to [^.]+\.$/i.test(t))return 'agilityShield';
-  if(/^Discard 1 (?:Fire )?Energy card attached to [^.]+ in order (?:to |)use this attack\. During your opponent's next turn, prevent all effects of attacks, including damage, done to [^.]+\.$/i.test(t))return 'barrierShield';
+  if(/^Discard 1 Energy card attached to [^.]+ in order (?:to |)use this attack\. During your opponent's next turn, prevent all effects of attacks, including damage, done to [^.]+\.$/i.test(t))return 'barrierShield';
   if(/^Discard 1 Energy card attached to [^.]+ in order (?:to |)use this attack\. Remove all damage counters from [^.]+\.$/i.test(t))return 'recoverFull';
   if(/^Remove all damage counters from [^.]+\. [^.]+ is now Asleep\.$/i.test(t))return 'restHeal';
   if(/^Whenever an attack does damage to [^(]+\(after applying Weakness and Resistance\) during your opponent's next turn, that attack only does half the damage to [^(]+\(rounded down to the nearest 10\)\. \(Any other effects still happen\.\)$/i.test(t))return 'halfShield';
@@ -1817,7 +1817,7 @@ class Engine{
   if(/^If the Defending Pok[eé]mon has any Energy cards attached to it, choose 1 and discard it\.$/i.test(t))return 'discardDefenderEnergy';
   if(/^Flip a coin\. If heads, Defending Pok[eé]mon is now (Poisoned|Paralyzed)\.$/i.test(t))return 'coinStatus';
   if(/^Does (\d+) damage times the number of Energy cards attached to the Defending Pok[eé]mon\.$/i.test(t))return 'defenderEnergyTimes';
-  if(/^Discard 1 Energy card attached to [^.]+ or this attack does nothing\.$/i.test(t))return 'discardOneRequired';
+  if(/^Discard 1 (?:Fire )?Energy card attached to [^.]+ or this attack does nothing\.$/i.test(t))return 'discardOneRequired';
   if(/^Does damage equal to half the Defending Pok[eé]mon's remaining HP \(rounded down to the nearest 10\)\.$/i.test(t))return 'halfRemainingHPDown';
   if(/^Flip a coin\. If heads, the Defending Pok[eé]mon is now Poisoned; if tails, it is now Confused\.$/i.test(t))return 'poisonOrConfuse';
   if(/^Both the Defending Pok[eé]mon and [^.]+ are now Confused \(after doing damage\)\.$/i.test(t))return 'bothConfused';
