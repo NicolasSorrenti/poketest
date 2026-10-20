@@ -1,0 +1,118 @@
+'use strict';
+// Shared, transport-neutral battle UI. Solo, online, Cube and RPG all use
+// these renderers. Never calculate game results or send commands here.
+(function(root,factory){
+ const api=factory();
+ if(typeof module==='object'&&module.exports)module.exports=api;
+ if(root)root.NeoBattleComponents=api;
+})(typeof window==='undefined'?null:window,function(){
+ const escape=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+ function renderHandPeek({root,ids,picture,hidden=false}){
+  root.replaceChildren();
+  if(hidden){root.textContent='Hidden';return;}
+  if(!ids?.length){const el=document.createElement('span');el.className='hand-peek-empty';el.textContent='Empty';root.append(el);return;}
+  ids.slice(0,3).forEach((id,i)=>{
+   const el=document.createElement('span');el.className='peek-card peek-card-'+i;
+   const src=picture(id);
+   if(src){const img=document.createElement('img');img.src=src;img.alt='';el.append(img);}
+   else el.textContent='🎴';
+   root.append(el);
+  });
+ }
+ function renderHandFan({root,ids,visible=true,phase,selectedHand=null,targetMode=null,makeCard,getCard,viewportWidth}){
+  const cards=Array.isArray(ids)?ids:[];
+  const oldScroll=root.scrollLeft;
+  root.replaceChildren();
+  root.classList.toggle('hidden',!visible||!cards.length);
+  if(!visible||!cards.length)return;
+  const width=Number.isFinite(viewportWidth)?viewportWidth:window.innerWidth;
+  const compact=width<780,cardWidth=compact?72:100;
+  const available=Math.max(190,root.clientWidth||width*.48);
+  const gap=Math.min(compact?48:68,Math.max(compact?38:52,(available-cardWidth-24)/Math.max(1,cards.length-1)));
+  const track=document.createElement('div');track.className='hand-fan-track';
+  track.style.width=Math.max(available,Math.ceil(gap*(cards.length-1)+cardWidth+24))+'px';
+  const middle=(cards.length-1)/2;
+  cards.forEach((id,i)=>{
+   const el=makeCard(id,i,phase==='setup');
+   el.type='button';el.classList.remove('handcard');el.classList.add('hand-fan-card');
+   el.style.setProperty('--fan-x',(i*gap).toFixed(1)+'px');
+   if(targetMode&&selectedHand!==null&&selectedHand!==i)el.classList.add('hand-inactive');
+   el.style.setProperty('--fan-y',(Math.abs(i-middle)*2.6).toFixed(1)+'px');
+   el.style.setProperty('--fan-angle',Math.max(-22,Math.min(22,(i-middle)*4.5)).toFixed(1)+'deg');
+   el.style.zIndex=String(i+1);
+   el.title=getCard(id).name+' — click to play or select';
+   track.append(el);
+  });
+  root.append(track);root.scrollLeft=oldScroll;
+ }
+ // Card visuals are shared; ownership, visibility and legal target callbacks
+ // stay in the mode-specific controller.
+ function pokemonFace({unit,card,source,energyStack,vitals}){
+  const attached=Array.isArray(unit.energies)?unit.energies:[];
+  return energyStack({...unit,energies:attached})+
+   '<span class="pokemon-face">'+(source?'<img loading="lazy" alt="" src="'+escape(source)+'">':'<div class="empty">'+escape(card.name)+'</div>')+'</span>'+
+   '<strong>'+escape(card.name)+'</strong>'+vitals(unit,card)+
+   '<span class="stats">'+attached.length+' energy attached</span>';
+ }
+ function renderAttacks({root,unit,view,me,getCard,enabled,button,onAttack,attackReason}){
+  root.replaceChildren();
+  if(!unit){root.innerHTML='<span class="hint">Choose an Active Pokémon</span>';return;}
+  const active=getCard(unit.id);
+  (unit.effectiveAttacks||active.attacks||[]).forEach((attack,index)=>{
+   const el=button('',()=>onAttack(index),'attack-action',!enabled);
+   const cost=(attack.cost||[]).map(type=>'<span class="energy-pip energy-'+escape(String(type).toLowerCase())+'">'+escape(String(type)[0])+'</span>').join('');
+   el.innerHTML='<span class="attack-name">'+escape(attack.name)+'</span><span class="attack-cost">'+(cost||'<small>FREE</small>')+'</span><strong class="attack-damage">'+escape(attack.damage||'—')+'</strong>'+(attack.text?'<span class="attack-effect">'+escape(attack.text)+'</span>':'');
+   el.title=attack.text||attack.name;
+   el.setAttribute('aria-label',attack.name+', cost '+((attack.cost||[]).join(', ')||'free')+', damage '+(attack.damage||'effect'));
+   const reason=attackReason({view,me,attack,unit,getCard});
+   if(reason){el.title=reason;if(!enabled)el.setAttribute('aria-disabled','true');const warning=document.createElement('span');warning.className='attack-warning';warning.textContent=reason;el.append(warning);}
+   root.append(el);
+  });
+ }
+ function renderFaceUpPrizes({rail,view,me,getCard}){
+  if(!view?.players)return;
+  const groups=rail.querySelectorAll('.prize-group');
+  for(const [railIndex,owner] of [[0,1-me],[1,me]]){
+   const grid=groups[railIndex]?.querySelector('.prize-grid');if(!grid)continue;
+   for(const {index,id} of view.players[owner]?.revealedPrizes||[]){
+    const el=grid.children[index];if(!el||!id)continue;
+    const name=getCard(id).name;
+    el.classList.add('prize-face-up');el.title='Face-up Prize: '+name;
+    el.setAttribute('aria-label','Face-up Prize '+(index+1)+': '+name);
+    el.textContent=name;
+    el.style.fontSize='10px';el.style.overflow='hidden';el.style.overflowWrap='anywhere';
+   }
+  }
+ }
+ function prizeOptions(decision){
+  return (decision?.options||[]).map(option=>{
+   const match=/^prize:([0-5])$/.exec(option.id);
+   return match?{id:option.id,index:Number(match[1])}:null;
+  }).filter(Boolean);
+ }
+ function renderPrizeRail({rail,decision,busy,button,choose}){
+  if(!decision)return;
+  const group=rail.querySelectorAll('.prize-group')[1],grid=group?.querySelector('.prize-grid');
+  if(!grid)return;
+  group.classList.add('prize-awaiting');
+  grid.setAttribute('role','group');grid.setAttribute('aria-label','Choose your Prize card');grid.replaceChildren();
+  const options=new Map(prizeOptions(decision).map(x=>[x.index,x]));
+  for(let index=0;index<6;index++){
+   const option=options.get(index);
+   if(!option){const el=document.createElement('span');el.className='prize-back prize-taken';grid.append(el);continue;}
+   const el=button(String(index+1),()=>choose(option.id),'prize-back prize-select',busy);
+   el.title='Take Prize '+(index+1);el.setAttribute('aria-label','Take Prize '+(index+1));
+   grid.append(el);
+  }
+ }
+ function renderPrizeFallback({container,decision,busy,button,choose}){
+  container.replaceChildren();container.classList.toggle('hidden',!decision);
+  if(!decision)return;
+  const title=document.createElement('strong');title.textContent='🎁 Choose a Prize';
+  const info=document.createElement('span');info.textContent='Select a highlighted Prize or a number here';
+  const options=document.createElement('div');options.className='prize-choices';
+  for(const option of prizeOptions(decision))options.append(button('🎴 '+(option.index+1),()=>choose(option.id),'prize-option',busy));
+  container.append(title,info,options);
+ }
+ return {renderHandPeek,renderHandFan,pokemonFace,renderAttacks,renderFaceUpPrizes,renderPrizeRail,renderPrizeFallback,prizeOptions};
+});
