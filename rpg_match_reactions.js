@@ -272,7 +272,7 @@
  function makeExperience({element,npcId,npcName,random=Math.random,doc=typeof document==='undefined'?null:document,
   schedule=setTimeout,cancel=clearTimeout,media=typeof window==='undefined'?null:window}={}){
   const director=createDirector({npcId,npcName,random});
-  let manifest=null,queued=null,active=false,currentPriority=0,timer=null;
+  let manifest=null,queued=null,active=false,currentPriority=0,timer=null,preloadImages=[];
   const reduced=()=>!!media?.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches;
   function hide(){
    if(timer!==null)cancel(timer);
@@ -288,11 +288,11 @@
    const src=assetFor(manifest,npcId,reaction.imageKey);
    if(src){
     const img=doc.createElement('img');img.alt='';img.src=src;
+    const attempted=new Set([src]);
     img.onerror=()=>{
-     const original=img.getAttribute('src');
-     const preferred=assetFor(manifest,npcId,'default'),legacy=PORTRAITS[npcId];
-     const fallback=[preferred,legacy].find(path=>path&&path!==original);
-     if(fallback)img.src=fallback;
+     const fallback=[assetFor(manifest,npcId,'default'),PORTRAITS[npcId]]
+      .find(path=>path&&!attempted.has(path));
+     if(fallback){attempted.add(fallback);img.src=fallback;}
      else{img.remove();portrait.classList.add('no-art');}
     };
     portrait.append(img);
@@ -328,9 +328,10 @@
   return {update,reset,setManifest:value=>{
     manifest=value;
     // Preload the RPG character art, including the attack pose, before combat.
+    preloadImages=[];
     if(typeof media?.Image==='function'){
      for(const path of new Set([assetFor(manifest,npcId,'attack'),assetFor(manifest,npcId,'default')].filter(Boolean))){
-      const image=new media.Image();image.src=path;
+      const image=new media.Image();image.src=path;preloadImages.push(image);
      }
     }
    },get count(){return director.count;},
