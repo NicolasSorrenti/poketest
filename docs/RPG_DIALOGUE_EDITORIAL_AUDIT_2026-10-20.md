@@ -55,7 +55,7 @@ The latest code-level integrity check loaded 32 stories through the actual modul
 - Adjusted the mandatory event renderer to attribute season replies to their actual NPC, and label earned bond replies as messages **only if the character is remote**.
 - Added dedicated prose/metadata regression checks in `tests/rpg_editorial_consistency.test.js` and updated the house style in `docs/rpg-natural-conversations.md`.
 
-**Verification:** content modules parsed and the character-pack and season-event data were synchronized with generated files. The full GitHub Actions RPG suite is the final regression gate; record its passing run explicitly when it completes. No claim is made that every incidental tooltip, battle bark or image-prompt caption has received line-by-line signoff.
+**Verification:** content modules parsed and the character-pack and season-event data were synchronized with generated files. The full GitHub Actions **RPG Regression Suite passed** on commit `c7b9778737baeaa80acb44293d32131b360dc072` ([run 39430094392](https://github.com/NicolasSorrenti/poketest/actions/runs/39430094392)), including the mandatory-event scheduler, JSON character-pack checks, and narrative/UI regression tests. No claim is made that every incidental tooltip, battle bark or image-prompt caption has received line-by-line signoff.
 
 ## Remaining priority findings
 
