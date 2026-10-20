@@ -1205,7 +1205,7 @@ test('RPG reacts to a recent personal loss without time or affection rewards and
  person.onclick();
  const key=r.state().scene.reactionId;
  assert.match(key,/react:duel:reina:earlier-reina/);
- assert.match(r.state().scene.line,/last game|last match|plan has a hole/);
+ assert.equal(r.state().scene.line,Reactivity.VOICE.reina.loss[0],'recovery scene uses Reina\'s actual voiced line');
  assert.equal(r.state().day,5);assert.equal(r.state().slot,1);
  assert.equal(r.state().npcReactivity.seen[key],undefined,'opening the scene must not consume it');
  finishGreeting(r);
@@ -1244,7 +1244,7 @@ test('RPG rematches show character memory in preview and provide contextual duel
  r.listeners.message({data:Bridge.message(pending.id,1),origin:r.loc.origin,source:r.elements.battle.contentWindow});
  assert.equal(r.state().results.length,2);
  assert.equal(r.state().lastDuelReceipt.outcome,'Defeat');
- assert.match(r.state().scene.line,/Last time went differently|last game|previous match/i);
+ assert.match(r.state().scene.line,/differently from last time/i,'rematch follow-up acknowledges the earlier result');
 });
 
 test('club results accrue on day changes, not on renders, and the board displays standings without time cost',()=>{
