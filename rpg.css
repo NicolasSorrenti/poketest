@@ -355,3 +355,8 @@
 .finale-lessons{margin-top:18px;padding:16px 20px;border:1px solid #655676;border-radius:12px;background:linear-gradient(120deg,#2b273f,#18233b)}
 .finale-lessons h3{font:800 20px 'Barlow Condensed',sans-serif;color:#ffdfeb;letter-spacing:.6px;margin:0 0 10px}
 .finale-lessons p{color:#e5e2f1;font-size:14px;line-height:1.6;margin:6px 0}
+
+/* Persona-style narrative beats: actions belong to the scene, not the NPC. */
+.dialogue.is-narration{border-left-color:#86a5be;background:linear-gradient(105deg,#141b2bef,#1a2234f0)}
+.dialogue.is-narration .dialogue-title #speaker{color:#b6cfde;font-size:17px;letter-spacing:1.2px;text-transform:uppercase}
+.dialogue.is-narration #line{font-style:italic;color:#e4ebf5;line-height:1.7}
