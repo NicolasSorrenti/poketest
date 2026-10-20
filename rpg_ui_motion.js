@@ -83,10 +83,13 @@
  const host=typeof window==='undefined'?null:window;
  // Navigation is a standalone UI dependency, not contingent on the RPG render()
  // pipeline completing successfully. The HTML loads this script after both panels.
- if(host?.document){
-  if(host.document.readyState==='loading')
-   host.document.addEventListener('DOMContentLoaded',()=>controller.init(),{once:true});
+ if(host){
+  const browserDoc=host.document|| (typeof document==='undefined'?null:document);
+  if(browserDoc){
+  if(browserDoc.readyState==='loading')
+   browserDoc.addEventListener('DOMContentLoaded',()=>controller.init(),{once:true});
   else controller.init();
+  }
  }
  return {
   nextDrawer,createController,
