@@ -14,6 +14,15 @@ const sample=(stage,extra={})=>{
 };
 const present=s=>SCHEDULES.peopleAt(s.day,s.slot,s.location,[...SIDE.appointments(s)]);
 
+test('supporting quests use description instead of forcing NPCs to narrate their actions',()=>{
+ for(const quest of SIDE.quests){
+  const first=quest.stages[0];
+  assert.equal(first.lines.length,6,quest.id+' keeps its choice timing');
+  assert.equal(first.lines[0].speaker,'Narrator',quest.id+' establishes the setting');
+  assert.ok(first.lines.some(x=>x.speaker===first.npc),quest.id+' still has a speaking NPC');
+  assert.ok(first.lines.every(x=>typeof x.text==='string'&&x.text.length>5));
+ }
+});
 test('three non-romance townspeople have visual direction, valid schedules and legal Classic deck presets',()=>{
  assert.deepEqual(SIDE.validate(),[]);
  assert.deepEqual(SCHEDULES.validate(),[]);
