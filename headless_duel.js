@@ -1509,10 +1509,11 @@ function resolveAttack(g,side,index,chosenBench,energyPicks,extra={}){
   }else if(kind==='collect-fire'){
    pickables.push(...p.discard.flatMap((id,i)=>card(g,id).name==='Fire Energy'?[{id:`discard:${i}`,label:card(g,id).name}]:[]));max=Math.min(1,pickables.length);label='Collect Fire: attach a Fire Energy from your discard';
   }else if(kind==='flame-wheel'||kind==='flamethrower'||kind==='elemental-blast'){
-   pickables.push(...u.energies.map((id,i)=>({id:`energy:${i}`,label:card(g,id).name})));
+   pickables.push(...u.energies.flatMap((id,i)=>kind==='flamethrower'&&card(g,id).name!=='Fire Energy'?[]:[{id:`energy:${i}`,label:card(g,id).name}]));
    min=max=kind==='flame-wheel'||kind==='elemental-blast'?3:Math.min(1,pickables.length);
    if(kind==='elemental-blast'&&!['Fire','Water','Lightning'].every(name=>u.energies.some(id=>card(g,id).name===name+' Energy')))fail('Elemental Blast requires one attached Fire, Water and Lightning Energy card');
    if(kind==='flame-wheel'&&u.energies.length<3)fail('Flame Wheel requires three attached Energy cards');
+   if(kind==='flamethrower'&&!pickables.length)fail('Flamethrower requires a Fire Energy card to discard');
    label=kind==='elemental-blast'?'Elemental Blast: choose one Fire, Water and Lightning Energy to discard':`Choose ${min} Energy card(s) to discard`;
   }
   if(!extra.neo48Answered&&pickables.length&&max>0){
@@ -1529,6 +1530,7 @@ function resolveAttack(g,side,index,chosenBench,energyPicks,extra={}){
   if(['flame-wheel','flamethrower','elemental-blast'].includes(kind)){
    const picks=nums('energy'),expected=kind==='flamethrower'?Math.min(1,u.energies.length):3;
    if(picks.length!==expected||picks.some(i=>!Number.isInteger(i)||i<0||i>=u.energies.length))fail('Invalid Neo attack Energy discard');
+   if(kind==='flamethrower'&&picks.some(i=>card(g,u.energies[i])?.name!=='Fire Energy'))fail('Flamethrower must discard a Fire Energy card');
    if(kind==='elemental-blast'&&(!['Fire Energy','Water Energy','Lightning Energy'].every(name=>picks.some(i=>card(g,u.energies[i]).name===name))||new Set(picks).size!==3))fail('Elemental Blast needs Fire, Water and Lightning Energy');
   }
   extra.neo48Choices=choices;
