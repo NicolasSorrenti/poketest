@@ -86,6 +86,19 @@ The **full RPG Regression Suite passed** after the relationship, supporting scen
 
 The remaining work is a final long-tail audit of labels, ambient tooltips, edge-case dialogue variants and consistency across other independently maintained UI features. Official TCG card texts must remain canonical because they drive game mechanics.
 
+## Relationship continuity and dialogue-completion follow-up
+
+This subsequent editorial pass revisits the deeper supporting stories and crossovers specifically for **line-to-line causality** and the rule that characters should not announce actions already visible to the player.
+
+- Revised all **15** supplemental bond and guest chapters in `rpg_bond_chapters.js` while retaining their five-line save/resume positions, IDs, choices, kinds, flags and rewards. Corrected the **nine** sets of previous-choice opening variants so the next protagonist line responds to the correct event.
+- Revised the **eight** original-cast crossover scenes in `rpg_narrative_pack.js`; fixed Shiori's scheduled community-center scene, which was previously staged in a library.
+- Revised all **four** Jinx/Sol crossovers in the source character packs, then synchronized `rpg_character_packs.generated.js`. These include physically plausible blocking, different motivations for the two NPCs in a scene, and specific replies to the player's choices.
+- Confirmed the five guest romance endings already have explicit `friend`/`commit`/`honest` choices plus a conservative legacy-save recovery path. Added regression coverage in `tests/rpg_story.test.js`; no romance mechanics were needlessly overwritten.
+- Fixed a separate repeated-dialogue bug in `rpg.js`: after the player reads the chosen reply and finishes a story, side quest, town encounter, rivalry scene or situation, that exact line no longer plays a second time. Chapter rewards remain in the journal and display as a brief notice.
+- Added `tests/rpg_crossovers_editorial.test.js` and browser-facing completion checks to verify crossover speakers, previous-choice variants, branch flags, pack bundle synchronization and clean scene endings.
+
+The prose has been validated with the RPG regression suite. No claim is made that every peripheral tooltip and battle-system string has received a complete in-browser review.
+
 ## Remaining priority findings
 
 ### Resolved — five guest romance finales are recorded correctly
