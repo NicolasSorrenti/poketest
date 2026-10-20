@@ -40,3 +40,16 @@ test('history is capped and replay requires a finished season',()=>{
  assert.equal(E.replay(old,defaults).campaignHistory.length,10);
  old.day=40;old.ended=false;assert.throws(()=>E.replay(old,defaults),/Finish/);
 });
+
+test('a season records meaningful response to a setback without changing established endings',()=>{
+ const C=require('../rpg_consequences');
+ const s={...defaults(),day:12,location:'center',results:[{id:'duel',npc:'reina',day:12,won:false,draw:false}]};
+ const e=C.record(s,{id:'duel',npc:'reina',day:12},{duelId:'duel',npc:'reina',outcome:'Defeat'});
+ assert.ok(C.resolve(s,e.id,'perspective'));s.day=91;s.ended=true;
+ const report=E.report(s);assert.equal(report.title,'A Season of Challengers');
+ assert.equal(report.turningPoints.reflections,1);
+ assert.ok(report.seasonLessons[0].includes('people across the card table'));
+ const next=E.replay(s,defaults);
+ assert.equal(next.campaignHistory[0].turningPoints.reflections,1);
+ assert.equal(next.consequences,undefined,'new campaigns do not inherit reflection choices');
+});
