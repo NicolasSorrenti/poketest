@@ -96,3 +96,13 @@ test('bounded saved event log and safe reports ignore corrupted legacy values',(
  assert.equal(s.consequences.events.length,110);
  assert.ok(C.ending(s).comebacks>0);
 });
+
+test('the main cast has distinct follow-ups for all three recovery choices',()=>{
+ const ids=['hana','reina','shiori','yuna','akari','camila','marina','kaede','elena','jinx','luna','rina','sierra','sol'];
+ for(const id of ids)for(const approach of Object.keys(C.PATHS))
+  assert.ok(C.VOICES[id]?.[approach],id+':'+approach+' lacks a distinct line');
+ assert.notEqual(C.VOICES.reina.study,C.VOICES.yuna.study);
+ const s=fresh();const e=add(s,'reina','a',12,'Defeat');C.resolve(s,e.id,'study');
+ assert.match(C.reaction(s,'reina').lines[0].text,/went back over our game/i);
+ assert.match(C.preDuel(s,'reina'),/went back over our game/i);
+});
