@@ -1,0 +1,62 @@
+{
+  "schemaVersion": 1,
+  "pack": "Neo Campus additional crossover compositions",
+  "created": "2026-10-20",
+  "status": "PROVISIONAL_COMPOSITE",
+  "formats": {
+    "full": "1920x1080 WebP",
+    "thumbnail": "640x360 WebP"
+  },
+  "scenes": [
+    {
+      "id": "jinx_alma_cafe_concept",
+      "title": "Jinx and Alma at the caf\u00e9",
+      "relatedEvent": "jinx_alma_cross_1",
+      "full": "rpg-assets/events/cg/concepts/jinx_alma_cafe_concept.webp",
+      "thumbnail": "rpg-assets/events/cg/concepts/thumbs/jinx_alma_cafe_concept.webp",
+      "note": "Original character cutouts over caf\u00e9 scene; non-canonical pose illustration",
+      "full_sha256": "a761714aeebe3ae92f072dbe21faf58ca2cf71819b1b82ed04c5e1892327920b"
+    },
+    {
+      "id": "jinx_marina_riverside_concept",
+      "title": "Jinx meets Marina at the riverside",
+      "relatedEvent": "jinx_marina_cross_1",
+      "full": "rpg-assets/events/cg/concepts/jinx_marina_riverside_concept.webp",
+      "thumbnail": "rpg-assets/events/cg/concepts/thumbs/jinx_marina_riverside_concept.webp",
+      "note": "Both characters appear together at waterfront; pose is provisional",
+      "full_sha256": "c1f450e1af0688b96a866ca7b82e813fe969e0c6130380bb622cd7ad170f523d"
+    },
+    {
+      "id": "sol_alma_cafe_concept",
+      "title": "Sol and Alma planning the next event",
+      "relatedEvent": "sol_alma_cross",
+      "full": "rpg-assets/events/cg/concepts/sol_alma_cafe_concept.webp",
+      "thumbnail": "rpg-assets/events/cg/concepts/thumbs/sol_alma_cafe_concept.webp",
+      "note": "Two character cutouts in the warm caf\u00e9; dialogue storyboard concept",
+      "full_sha256": "0f004934354f4c500b3c4e11c47f245c1e8d6ae3b70252bce87616492ccf4652"
+    },
+    {
+      "id": "sol_marina_waterfront_concept",
+      "title": "Sol and Marina waterfront plans",
+      "relatedEvent": "sol_marina_cross",
+      "full": "rpg-assets/events/cg/concepts/sol_marina_waterfront_concept.webp",
+      "thumbnail": "rpg-assets/events/cg/concepts/thumbs/sol_marina_waterfront_concept.webp",
+      "note": "Conceptual shoreline conversation, outfits based on approved portraits",
+      "full_sha256": "5eb886905e6981f2a23dfaf9f726d3149e2275ec11baa65d66d197fc2ff68075"
+    },
+    {
+      "id": "luna_cafe_evening_concept",
+      "title": "Luna at the evening caf\u00e9",
+      "relatedEvent": "luna_cafe_reflection",
+      "full": "rpg-assets/events/cg/concepts/luna_cafe_evening_concept.webp",
+      "thumbnail": "rpg-assets/events/cg/concepts/thumbs/luna_cafe_evening_concept.webp",
+      "note": "Moon-themed character cutout in a twilight caf\u00e9, not a high-shelf scene",
+      "full_sha256": "d770b9a21116d560b094dcfd26d2a7c66db1102bf4b10f7292958e1f966bedf5"
+    }
+  ],
+  "warnings": [
+    "New compositions made from already-approved transparent portrait assets and previously generated location backgrounds. They are not fresh individually illustrated poses.",
+    "Intentionally staged under rpg-assets/events/cg/concepts/ rather than overwriting game-mapped canonical CG filenames.",
+    "The original scene illustrations still need to be individually illustrated for animation and story fidelity."
+  ]
+}

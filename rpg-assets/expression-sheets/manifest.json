@@ -1,0 +1,207 @@
+{
+  "pack": "Neo Harbor expression sheets",
+  "version": "2026-10-19-v1",
+  "count": 20,
+  "files": {
+    "rpg-assets/expression-sheets/hana.png": {
+      "source": "hoja_de_expresiones_de_chica_anime_rosa.png",
+      "size": [
+        1983,
+        793
+      ],
+      "mode": "RGBA",
+      "sha256": "449bbf036eafc54cbf94230a6a234f4565c3a04f742d5819d1d6542fb4ada050",
+      "bytes": 3098365
+    },
+    "rpg-assets/expression-sheets/reina.png": {
+      "source": "hoja_de_expresiones_de_guerrera_urbana.png",
+      "size": [
+        1983,
+        793
+      ],
+      "mode": "RGBA",
+      "sha256": "d8b80f0307a141f81e4e93e6d954ef66d18a1978366659eb8dc2e1ea8957281a",
+      "bytes": 3026311
+    },
+    "rpg-assets/expression-sheets/shiori.png": {
+      "source": "hoja_de_expresiones_de_dama_aristócrata_anime.png",
+      "size": [
+        1983,
+        793
+      ],
+      "mode": "RGBA",
+      "sha256": "71e61c63dfeb34a7979030ca46b7c955522f9f77dc2e09cc6aaa476e2d932463",
+      "bytes": 2974258
+    },
+    "rpg-assets/expression-sheets/yuna.png": {
+      "source": "yuna_cinco_expresiones_cyber_ani95.png",
+      "size": [
+        1983,
+        793
+      ],
+      "mode": "RGBA",
+      "sha256": "1a10cfb8f0da84154f7e7174ba377d6b556fafe36b7968c2048a7939a48896bb",
+      "bytes": 3230787
+    },
+    "rpg-assets/expression-sheets/akari.png": {
+      "source": "línea_de_expresiones_de_akari.png",
+      "size": [
+        1983,
+        793
+      ],
+      "mode": "RGBA",
+      "sha256": "b0cf4241f211f9393224bc822c2f4dbbb7c9364afd20555d9c7768a36b218863",
+      "bytes": 2955253
+    },
+    "rpg-assets/expression-sheets/camila.png": {
+      "source": "hoja_de_expresiones_anime_en_cinco_poses.png",
+      "size": [
+        1983,
+        793
+      ],
+      "mode": "RGBA",
+      "sha256": "5f92adb521d7ca8bc888f37e92e1d8038561b7e8e30aa0572c4cadae044e1b70",
+      "bytes": 2828496
+    },
+    "rpg-assets/expression-sheets/marina.png": {
+      "source": "hoja_de_expresiones_de_chica_anime_tropical.png",
+      "size": [
+        1983,
+        793
+      ],
+      "mode": "RGBA",
+      "sha256": "775baa936f597078c5fc1b112ecc134db0129b966a44ce993aba9faa90765c1a",
+      "bytes": 3130762
+    },
+    "rpg-assets/expression-sheets/kaede.png": {
+      "source": "hoja_de_expresiones_góticas_de_kaede.png",
+      "size": [
+        1983,
+        793
+      ],
+      "mode": "RGBA",
+      "sha256": "3b0f0270bf493e97dd823f15bfabceca6ccb27d4ff9dbca864dd6187e64f1035",
+      "bytes": 3094281
+    },
+    "rpg-assets/expression-sheets/sol.png": {
+      "source": "hoja_de_expresiones_tropicales_en_anime.png",
+      "size": [
+        1672,
+        941
+      ],
+      "mode": "RGBA",
+      "sha256": "999fde6499a05412dbf2dc1f447b34012df1821fd25f6237958d6001570e110f",
+      "bytes": 3486038
+    },
+    "rpg-assets/expression-sheets/jinx.png": {
+      "source": "lámina_de_expresiones_punk_en_rosa_y_negro.png",
+      "size": [
+        1672,
+        941
+      ],
+      "mode": "RGBA",
+      "sha256": "d043ecb5ddae31516e59a184b4ccb535e93a2662e3d3a655bb38aae67edfeb77",
+      "bytes": 3217765
+    },
+    "rpg-assets/expression-sheets/luna.png": {
+      "source": "hoja_de_expresiones_de_dama_celestial.png",
+      "size": [
+        1672,
+        941
+      ],
+      "mode": "RGBA",
+      "sha256": "ab10ba37c92647e2ee39d667b0e3116051c2e600a359569c88728e88a407b234",
+      "bytes": 3437492
+    },
+    "rpg-assets/expression-sheets/elena.png": {
+      "source": "hoja_de_expresiones_de_mujer_elegante.png",
+      "size": [
+        1672,
+        941
+      ],
+      "mode": "RGBA",
+      "sha256": "d64faf9cb27defc0f30fbe000101fcd11b4d7902a71920af028c7f972754f936",
+      "bytes": 2775857
+    },
+    "rpg-assets/expression-sheets/sierra.png": {
+      "source": "hoja_de_expresiones_de_sierra_en_verano.png",
+      "size": [
+        1672,
+        941
+      ],
+      "mode": "RGBA",
+      "sha256": "0dc1ae4a27a185b0689981eec1793f8f59ae64613b40a33fc0df5359963d12e8",
+      "bytes": 3289101
+    },
+    "rpg-assets/expression-sheets/rina.png": {
+      "source": "set_de_expresiones_de_idol_rosa.png",
+      "size": [
+        1672,
+        941
+      ],
+      "mode": "RGBA",
+      "sha256": "3abfe33b498f4ea08180cf860e5c48d98ccda7053d3ee5de4b221a5a8a4e29eb",
+      "bytes": 3319859
+    },
+    "rpg-assets/expression-sheets/jun.png": {
+      "source": "hoja_de_expresiones_del_carismático_anfitrión_azul.png",
+      "size": [
+        1672,
+        941
+      ],
+      "mode": "RGBA",
+      "sha256": "61ef255be712d8244f3b475b0bcffda9175140b49353466272786e2cb479366e",
+      "bytes": 2622013
+    },
+    "rpg-assets/expression-sheets/teo.png": {
+      "source": "hoja_de_expresiones_de_personaje_anime.png",
+      "size": [
+        1672,
+        941
+      ],
+      "mode": "RGBA",
+      "sha256": "3c65e227ab67a8bffa76a0afd7ae5ce597fd8ec64632696fcd419786e0ee1ae3",
+      "bytes": 3024132
+    },
+    "rpg-assets/expression-sheets/iris.png": {
+      "source": "lámina_de_expresiones_anime_en_cinco_poses.png",
+      "size": [
+        1672,
+        941
+      ],
+      "mode": "RGBA",
+      "sha256": "3004abae13cc8588857a2358e313851265fe8a591b004761481e0b871e6cb6fc",
+      "bytes": 3044682
+    },
+    "rpg-assets/expression-sheets/elio.png": {
+      "source": "hoja_de_expresiones_estelares_anime.png",
+      "size": [
+        1672,
+        941
+      ],
+      "mode": "RGBA",
+      "sha256": "7fe4efabfbde8b896694284766d873a54d9d36673c43cae083b69c19f2e5067e",
+      "bytes": 2888137
+    },
+    "rpg-assets/expression-sheets/alma.png": {
+      "source": "hoja_de_expresiones_de_alma.png",
+      "size": [
+        1983,
+        793
+      ],
+      "mode": "RGBA",
+      "sha256": "91377100584281918091a2fc6b3837ead6cde94c6d29a0eb33c04edc126f7ade",
+      "bytes": 2870177
+    },
+    "rpg-assets/expression-sheets/nereo.png": {
+      "source": "hoja_de_expresiones_de_nereo.png",
+      "size": [
+        1983,
+        793
+      ],
+      "mode": "RGBA",
+      "sha256": "c54ffcb86e2103a1656fd38a7af9763e4d9d5d83f2ac7e8f121940664b2ebac6",
+      "bytes": 2814375
+    }
+  }
+}

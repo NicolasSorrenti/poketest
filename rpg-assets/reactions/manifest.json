@@ -1,29 +1,91 @@
 {
-  "description": "RPG battle cut-in art. Existing portraits are live today; additional expression images can be supplied later.",
+  "description": "Transparent attack cut-ins for all 20 Neo Campus RPG characters, composited from approved portraits. Other event types fall back to the approved character portraits.",
   "characters": {
+<<<<<<< Updated upstream
     "reina": {
       "default": "/rpg-assets/characters/reina/portraits/primary.png"
     },
+=======
+>>>>>>> Stashed changes
     "hana": {
-      "default": "/rpg-assets/hana.png"
+      "default": "/rpg-assets/hana.png",
+      "attack": "/rpg-assets/reactions/hana/attack.png"
+    },
+    "reina": {
+      "default": "/rpg-assets/reina.png",
+      "attack": "/rpg-assets/reactions/reina/attack.png"
     },
     "shiori": {
-      "default": "/rpg-assets/shiori.png"
+      "default": "/rpg-assets/shiori.png",
+      "attack": "/rpg-assets/reactions/shiori/attack.png"
     },
     "yuna": {
-      "default": "/rpg-assets/yuna.png"
+      "default": "/rpg-assets/yuna.png",
+      "attack": "/rpg-assets/reactions/yuna/attack.png"
     },
     "akari": {
-      "default": "/rpg-assets/akari.png"
+      "default": "/rpg-assets/akari.png",
+      "attack": "/rpg-assets/reactions/akari/attack.png"
     },
     "camila": {
-      "default": "/rpg-assets/camila.png"
+      "default": "/rpg-assets/camila.png",
+      "attack": "/rpg-assets/reactions/camila/attack.png"
     },
     "marina": {
-      "default": "/rpg-assets/marina.png"
+      "default": "/rpg-assets/marina.png",
+      "attack": "/rpg-assets/reactions/marina/attack.png"
     },
     "kaede": {
-      "default": "/rpg-assets/kaede.png"
+      "default": "/rpg-assets/kaede.png",
+      "attack": "/rpg-assets/reactions/kaede/attack.png"
+    },
+    "sol": {
+      "default": "/rpg-assets/sol.png",
+      "attack": "/rpg-assets/reactions/sol/attack.png"
+    },
+    "jinx": {
+      "default": "/rpg-assets/jinx.png",
+      "attack": "/rpg-assets/reactions/jinx/attack.png"
+    },
+    "luna": {
+      "default": "/rpg-assets/luna.png",
+      "attack": "/rpg-assets/reactions/luna/attack.png"
+    },
+    "elena": {
+      "default": "/rpg-assets/elena.png",
+      "attack": "/rpg-assets/reactions/elena/attack.png"
+    },
+    "sierra": {
+      "default": "/rpg-assets/sierra.png",
+      "attack": "/rpg-assets/reactions/sierra/attack.png"
+    },
+    "rina": {
+      "default": "/rpg-assets/rina.png",
+      "attack": "/rpg-assets/reactions/rina/attack.png"
+    },
+    "jun": {
+      "default": "/rpg-assets/jun.png",
+      "attack": "/rpg-assets/reactions/jun/attack.png"
+    },
+    "teo": {
+      "default": "/rpg-assets/teo.png",
+      "attack": "/rpg-assets/reactions/teo/attack.png"
+    },
+    "iris": {
+      "default": "/rpg-assets/iris.png",
+      "attack": "/rpg-assets/reactions/iris/attack.png"
+    },
+    "elio": {
+      "default": "/rpg-assets/elio.png",
+      "attack": "/rpg-assets/reactions/elio/attack.png"
+    },
+    "alma": {
+      "default": "/rpg-assets/alma.png",
+      "attack": "/rpg-assets/reactions/alma/attack.png"
+    },
+    "nereo": {
+      "default": "/rpg-assets/nereo.png",
+      "attack": "/rpg-assets/reactions/nereo/attack.png"
     }
   }
 }

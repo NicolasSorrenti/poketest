@@ -1,0 +1,171 @@
+{
+  "name": "Neo Campus RPG – character-route storyboard concepts",
+  "date": "2026-10-20",
+  "status": "provisional_visual_concepts",
+  "count": 6,
+  "warning": "These are Photoshop-style compositions made from approved character cutout portraits and existing location panoramas. They are NOT bespoke hand-illustrated event CGs and do not fully depict their script-specific actions; use for layout tests or as temporary placeholders.",
+  "scenes": [
+    {
+      "sceneId": "jinx_alma_cafe",
+      "character": "jinx",
+      "title": "A Counter Too Far",
+      "path": "rpg-assets/characters/jinx/concept-cgs/jinx_alma_cafe.webp",
+      "thumb": "rpg-assets/characters/jinx/concept-cgs/thumbs/jinx_alma_cafe.webp",
+      "source": "composited character portrait + Neo Harbor location panorama",
+      "status": "provisional_concept",
+      "note": "Jinx teases Alma in the cafe; character interaction concept",
+      "fullSize": [
+        1920,
+        1080
+      ],
+      "thumbSize": [
+        640,
+        360
+      ]
+    },
+    {
+      "sceneId": "luna_shelf_mishap",
+      "character": "luna",
+      "title": "One Shelf Too High",
+      "path": "rpg-assets/characters/luna/concept-cgs/luna_shelf_mishap.webp",
+      "thumb": "rpg-assets/characters/luna/concept-cgs/thumbs/luna_shelf_mishap.webp",
+      "source": "composited character portrait + Neo Harbor location panorama",
+      "status": "provisional_concept",
+      "note": "Luna catches sight of a book or card binder on a high shelf; pose is provisional",
+      "fullSize": [
+        1920,
+        1080
+      ],
+      "thumbSize": [
+        640,
+        360
+      ]
+    },
+    {
+      "sceneId": "sierra_shoot_break",
+      "character": "sierra",
+      "title": "Between Shoots",
+      "path": "rpg-assets/characters/sierra/concept-cgs/sierra_shoot_break.webp",
+      "thumb": "rpg-assets/characters/sierra/concept-cgs/thumbs/sierra_shoot_break.webp",
+      "source": "composited character portrait + Neo Harbor location panorama",
+      "status": "provisional_concept",
+      "note": "Sierra takes a break near the waterfront after a photoshoot; pose is provisional",
+      "fullSize": [
+        1920,
+        1080
+      ],
+      "thumbSize": [
+        640,
+        360
+      ]
+    },
+    {
+      "sceneId": "elena_after_work",
+      "character": "elena",
+      "title": "A Quiet Hour",
+      "path": "rpg-assets/characters/elena/concept-cgs/elena_after_work.webp",
+      "thumb": "rpg-assets/characters/elena/concept-cgs/thumbs/elena_after_work.webp",
+      "source": "composited character portrait + Neo Harbor location panorama",
+      "status": "provisional_concept",
+      "note": "Elena decompresses at an evening cafe after work; pose is provisional",
+      "fullSize": [
+        1920,
+        1080
+      ],
+      "thumbSize": [
+        640,
+        360
+      ]
+    },
+    {
+      "sceneId": "jinx_quiet_park",
+      "character": "jinx",
+      "title": "An Unexpected Quiet",
+      "path": "rpg-assets/characters/jinx/concept-cgs/jinx_quiet_park.webp",
+      "thumb": "rpg-assets/characters/jinx/concept-cgs/thumbs/jinx_quiet_park.webp",
+      "source": "composited character portrait + Neo Harbor location panorama",
+      "status": "provisional_concept",
+      "note": "A quiet side of Jinx in the park at dusk; pose is provisional",
+      "fullSize": [
+        1920,
+        1080
+      ],
+      "thumbSize": [
+        640,
+        360
+      ]
+    },
+    {
+      "sceneId": "sol_scavenger_day",
+      "character": "sol",
+      "title": "The Harbor Hunt",
+      "path": "rpg-assets/characters/sol/concept-cgs/sol_scavenger_day.webp",
+      "thumb": "rpg-assets/characters/sol/concept-cgs/thumbs/sol_scavenger_day.webp",
+      "source": "composited character portrait + Neo Harbor location panorama",
+      "status": "provisional_concept",
+      "note": "Sol invites the player on a riverside scavenger hunt; pose is provisional",
+      "fullSize": [
+        1920,
+        1080
+      ],
+      "thumbSize": [
+        640,
+        360
+      ]
+    }
+  ],
+  "files": {
+    "rpg-assets/characters/jinx/concept-cgs/jinx_alma_cafe.webp": {
+      "bytes": 309442,
+      "sha256": "745cc795c3ea90cb4e9edb07723c2614a67374c6eb0440b2b07462e413eea08a"
+    },
+    "rpg-assets/characters/jinx/concept-cgs/thumbs/jinx_alma_cafe.webp": {
+      "bytes": 42660,
+      "sha256": "2bc009ffc8e27e7b1a711f69fe0a5b4f538ab70b88fa86d9122e9fbbd78677a3"
+    },
+    "rpg-assets/characters/luna/concept-cgs/luna_shelf_mishap.webp": {
+      "bytes": 311332,
+      "sha256": "d159b902ba00450b8692e506afae5b04918b9e2d27f657be6eacbe5786047ee1"
+    },
+    "rpg-assets/characters/luna/concept-cgs/thumbs/luna_shelf_mishap.webp": {
+      "bytes": 46092,
+      "sha256": "0ce11eb6a3b092fb961cd4392190b6d4f787bba28d021ad5418a8c4541e7cc13"
+    },
+    "rpg-assets/characters/sierra/concept-cgs/sierra_shoot_break.webp": {
+      "bytes": 294826,
+      "sha256": "19f8326ebd16a7a1d2960e72f7d18fb17567ee056dfd9840d117f480637a0103"
+    },
+    "rpg-assets/characters/sierra/concept-cgs/thumbs/sierra_shoot_break.webp": {
+      "bytes": 43324,
+      "sha256": "d25030d2b78f910539bca061de368cf4ea1140c76dd84b11d34a949e153153f9"
+    },
+    "rpg-assets/characters/elena/concept-cgs/elena_after_work.webp": {
+      "bytes": 164396,
+      "sha256": "d0b8807bf9ba4ee17daa3fcbd618f5fd9783311665f97eb403de6f36d2f6e274"
+    },
+    "rpg-assets/characters/elena/concept-cgs/thumbs/elena_after_work.webp": {
+      "bytes": 26570,
+      "sha256": "bf7a968ce975207197c69f46424e81cd6e62aacfcffccce25444c2f1c87ceb39"
+    },
+    "rpg-assets/characters/jinx/concept-cgs/jinx_quiet_park.webp": {
+      "bytes": 225436,
+      "sha256": "4d968813d5bd28c2772502537f3c0fac28834f81b33e74cf2a5d0f01bab16f37"
+    },
+    "rpg-assets/characters/jinx/concept-cgs/thumbs/jinx_quiet_park.webp": {
+      "bytes": 33302,
+      "sha256": "b859a437265ef6d582f673c89108c9e9673cf7c350b260ef72fbc400e85d655a"
+    },
+    "rpg-assets/characters/sol/concept-cgs/sol_scavenger_day.webp": {
+      "bytes": 346242,
+      "sha256": "8de541893c2d9a10b8891208b10f9bd7c82587f06ccd2b68231279eb8cb5d802"
+    },
+    "rpg-assets/characters/sol/concept-cgs/thumbs/sol_scavenger_day.webp": {
+      "bytes": 50198,
+      "sha256": "9ef851ec6f36d6fa0b010774e56e13d46a088a037826b24abe8e195cf938e440"
+    },
+    "PREVIEW.jpg": {
+      "bytes": 382053,
+      "sha256": "0ddde200a1685d7f20791cc4029946984e77cc018de513e6c9a74e6b1b62aec6"
+    }
+  }
+}

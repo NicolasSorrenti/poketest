@@ -1,0 +1,135 @@
+{
+  "pack": "Neo Campus RPG - 20 canon-derived transparent attack cut-ins",
+  "version": "2026-10-20-complete",
+  "characterCount": 20,
+  "canvas": [
+    1280,
+    720
+  ],
+  "characterIds": [
+    "hana",
+    "reina",
+    "shiori",
+    "yuna",
+    "akari",
+    "camila",
+    "marina",
+    "kaede",
+    "sol",
+    "jinx",
+    "luna",
+    "elena",
+    "sierra",
+    "rina",
+    "jun",
+    "teo",
+    "iris",
+    "elio",
+    "alma",
+    "nereo"
+  ],
+  "source": "same 20 root canon portraits in this archive; no newly generated faces",
+  "note": "Reaction attack cut-ins contain composited motion streaks and approved character art, on transparent PNG canvases.",
+  "files": {
+    "hana": {
+      "path": "rpg-assets/reactions/hana/attack.png",
+      "sha256": "97a609bdd6da8a0c450d2ad89cb82b9d8a262721edff15a9813a1b0154113e8b",
+      "bytes": 1207176
+    },
+    "reina": {
+      "path": "rpg-assets/reactions/reina/attack.png",
+      "sha256": "a5d85ae1e499de6677821a77fceb45ca72746cdc6caa9867c9be41ca5af8cb23",
+      "bytes": 1187416
+    },
+    "shiori": {
+      "path": "rpg-assets/reactions/shiori/attack.png",
+      "sha256": "21f79d4de445dd08fda29eeb07e773d420c9bebb2044de6d00ce0adfda5b05a5",
+      "bytes": 1213074
+    },
+    "yuna": {
+      "path": "rpg-assets/reactions/yuna/attack.png",
+      "sha256": "c2a067fd1a5322744df211126ac6f98f0fbb38105c42b1725ac614e2f1ed8474",
+      "bytes": 1324250
+    },
+    "akari": {
+      "path": "rpg-assets/reactions/akari/attack.png",
+      "sha256": "9b2f53f928b244bc588b79522c3a5b49904101a6a041c886c85bb87347dbe566",
+      "bytes": 1100717
+    },
+    "camila": {
+      "path": "rpg-assets/reactions/camila/attack.png",
+      "sha256": "207c2b20bd1db8cb73299e1b82ed5ac91e15b7df36d31fdcf352819de55668bc",
+      "bytes": 1159508
+    },
+    "marina": {
+      "path": "rpg-assets/reactions/marina/attack.png",
+      "sha256": "a5a8cc777f0c9adaa6faf6bc1d340ea45c8126315309c2954e75ebbdd6feeba8",
+      "bytes": 1189930
+    },
+    "kaede": {
+      "path": "rpg-assets/reactions/kaede/attack.png",
+      "sha256": "899f00e60ac9090c21c3d1c07585c06ec2d9a4773671843b950f9c3597547440",
+      "bytes": 1155929
+    },
+    "sol": {
+      "path": "rpg-assets/reactions/sol/attack.png",
+      "sha256": "21121e5800d2b452998b798c76b2ce49620173731ed07a8b6c21d7684ba44111",
+      "bytes": 994006
+    },
+    "jinx": {
+      "path": "rpg-assets/reactions/jinx/attack.png",
+      "sha256": "a4d4c567d6c4567b6474170d711cbed4c759d6c9f367ab107b7345fe94031628",
+      "bytes": 691004
+    },
+    "luna": {
+      "path": "rpg-assets/reactions/luna/attack.png",
+      "sha256": "a77ddd5f2f3b532ff03adc57735dd282d74d9ca0980b8582f0d3f384d1122b15",
+      "bytes": 799361
+    },
+    "elena": {
+      "path": "rpg-assets/reactions/elena/attack.png",
+      "sha256": "fe81fc9f3b87a1f7b850c96e9e480a11ed459136f38ee41f7df6c6514dd90487",
+      "bytes": 436570
+    },
+    "sierra": {
+      "path": "rpg-assets/reactions/sierra/attack.png",
+      "sha256": "46330d35826ac8c63ded25c7c66cdd747e5c6d78ac14ac784b4482352f080e4e",
+      "bytes": 907043
+    },
+    "rina": {
+      "path": "rpg-assets/reactions/rina/attack.png",
+      "sha256": "2fdc59a29155d94bdd6584e3fbb3660fd6be5b7054fe5e2c606ee5725e9f9ee4",
+      "bytes": 1010967
+    },
+    "jun": {
+      "path": "rpg-assets/reactions/jun/attack.png",
+      "sha256": "38c64e5d9767ce5c6671ad2c393f436a582d7ec866a0e305bc9d893b285b6992",
+      "bytes": 699625
+    },
+    "teo": {
+      "path": "rpg-assets/reactions/teo/attack.png",
+      "sha256": "5f6f987ee0803122d8a2a03e4f4bc5a3ca6f347cda6d2336fd834de824c03a8d",
+      "bytes": 706800
+    },
+    "iris": {
+      "path": "rpg-assets/reactions/iris/attack.png",
+      "sha256": "e3c2e9a5be9e843952a36db209ce17312451df95a99b487ed035f00563f21eea",
+      "bytes": 623089
+    },
+    "elio": {
+      "path": "rpg-assets/reactions/elio/attack.png",
+      "sha256": "373b87e1813e903d67ba043c1c6947b39cfa4a79c81e7bb5486e9475b2287a78",
+      "bytes": 653442
+    },
+    "alma": {
+      "path": "rpg-assets/reactions/alma/attack.png",
+      "sha256": "2e554ccb0ad6bbff4fa068f0b8ba127b3e452c68d2b6af231d9e2619826c310f",
+      "bytes": 601772
+    },
+    "nereo": {
+      "path": "rpg-assets/reactions/nereo/attack.png",
+      "sha256": "be139e86d2e3b68a265f6f94fd4bb3163d236ea6e0a6869f3cb6fac5361692bf",
+      "bytes": 708693
+    }
+  }
+}

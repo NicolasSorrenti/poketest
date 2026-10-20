@@ -1,0 +1,238 @@
+{
+  "pack": "Neo Harbor consistent portrait refresh + updated supporting women",
+  "version": "2026-10-19-portraits-plus-v1",
+  "characterCount": 20,
+  "installation": "Unzip at the repository root so files land in rpg-assets/{id}.png",
+  "updatedPortraits": [
+    "jinx",
+    "luna",
+    "elena",
+    "sierra",
+    "iris"
+  ],
+  "keptAsRequested": [
+    "alma"
+  ],
+  "files": {
+    "rpg-assets/hana.png": {
+      "source": "chica_sakura_con_estilo_y_encanto.png",
+      "size": [
+        1024,
+        1536
+      ],
+      "mode": "RGBA",
+      "hasAlphaChannel": true,
+      "sha256": "bac1e332a9c435214870ab33fa8ac45b9865494c6226741df275457f92479257",
+      "bytes": 2671534
+    },
+    "rpg-assets/reina.png": {
+      "source": "guerrera_carmesí_de_mirada_dorada.png",
+      "size": [
+        1024,
+        1536
+      ],
+      "mode": "RGBA",
+      "hasAlphaChannel": true,
+      "sha256": "a042fde75a277be94dd81764151b9229f38c6335896b81ae732c61871724d1d7",
+      "bytes": 2626467
+    },
+    "rpg-assets/shiori.png": {
+      "source": "shiori_elegancia_en_tonos_lavanda_y_oro.png",
+      "size": [
+        1024,
+        1536
+      ],
+      "mode": "RGBA",
+      "hasAlphaChannel": true,
+      "sha256": "a9b9f1dda665d9067d26c19eb605ffafdc66d3758f5eb5d2885add0766aa4f12",
+      "bytes": 2630682
+    },
+    "rpg-assets/yuna.png": {
+      "source": "ídolo_cyberpunk_de_cabello_azul.png",
+      "size": [
+        1024,
+        1536
+      ],
+      "mode": "RGBA",
+      "hasAlphaChannel": true,
+      "sha256": "c9481994482454f1e93cf763797f94184fef857b680f75a5d488f747d91a64a5",
+      "bytes": 2850302
+    },
+    "rpg-assets/akari.png": {
+      "source": "chica_anime_con_gafas_y_portapapeles.png",
+      "size": [
+        1024,
+        1536
+      ],
+      "mode": "RGBA",
+      "hasAlphaChannel": true,
+      "sha256": "94881aa9e7a5673ea309dd69128fbb740d7716f0201f2893630471438e107d2c",
+      "bytes": 2470873
+    },
+    "rpg-assets/camila.png": {
+      "source": "camila_glamour_anime_de_oficina.png",
+      "size": [
+        1024,
+        1536
+      ],
+      "mode": "RGBA",
+      "hasAlphaChannel": true,
+      "sha256": "047b4a1ad97fe25f75a9ff0457b896d4019570b29490158a06b271aa2b2da5dc",
+      "bytes": 2454934
+    },
+    "rpg-assets/marina.png": {
+      "source": "marina_invita_al_verano.png",
+      "size": [
+        1024,
+        1536
+      ],
+      "mode": "RGBA",
+      "hasAlphaChannel": true,
+      "sha256": "68a243e5c6640722628cdefe78a39c4baa5775c592d7cdb9dea7e83bbd45af4c",
+      "bytes": 2695437
+    },
+    "rpg-assets/kaede.png": {
+      "source": "astuta_punk_de_cabello_plateado_y_rosa.png",
+      "size": [
+        1024,
+        1536
+      ],
+      "mode": "RGBA",
+      "hasAlphaChannel": true,
+      "sha256": "1a1f8ad11c1daa0af7bf3c560ae3bb6acc5e3790ec97762ca68d8a998b5e3357",
+      "bytes": 2619618
+    },
+    "rpg-assets/sol.png": {
+      "source": "chica_tropical_de_cabello_coral_y_turquesa.png",
+      "size": [
+        1024,
+        1536
+      ],
+      "mode": "RGBA",
+      "hasAlphaChannel": true,
+      "sha256": "32b8db5618deae6fb770cd2259d0fae6c71cae9b6445dfb08daa1dc64e499739",
+      "bytes": 2971554
+    },
+    "rpg-assets/jinx.png": {
+      "source": "vixena_cyberpunk_de_cabello_rosa.png",
+      "size": [
+        1024,
+        1536
+      ],
+      "mode": "RGBA",
+      "hasAlphaChannel": true,
+      "sha256": "d604b4a2de1746746f6e91808da9bf9428455291087fc9b0337fc75b04c24b3e",
+      "bytes": 2228432
+    },
+    "rpg-assets/luna.png": {
+      "source": "diosa_celestial_gótica_en_vestido_de_gala.png",
+      "size": [
+        1024,
+        1536
+      ],
+      "mode": "RGBA",
+      "hasAlphaChannel": true,
+      "sha256": "ffd66ab2bc4ea474ab564c6b5fe561d3c78649990f595ff5a5a9735c16cf7058",
+      "bytes": 2755800
+    },
+    "rpg-assets/elena.png": {
+      "source": "ejecutiva_glamorosa_en_traje_azul_marino.png",
+      "size": [
+        1024,
+        1536
+      ],
+      "mode": "RGBA",
+      "hasAlphaChannel": true,
+      "sha256": "53a1765e0b0223c43b9a10c2d418f886deb0c37af4d367a142e78b480d38dfc2",
+      "bytes": 1594302
+    },
+    "rpg-assets/sierra.png": {
+      "source": "diosa_tropical_de_verano.png",
+      "size": [
+        1024,
+        1536
+      ],
+      "mode": "RGBA",
+      "hasAlphaChannel": true,
+      "sha256": "0d96e6829ec58c001d2b847f94d741150092530397b642ca9ebb6bd85ea2e1fe",
+      "bytes": 2603904
+    },
+    "rpg-assets/rina.png": {
+      "source": "ídolo_pastel_de_estrellas_y_corazones.png",
+      "size": [
+        1024,
+        1536
+      ],
+      "mode": "RGBA",
+      "hasAlphaChannel": true,
+      "sha256": "8d072f4ce7ed13d40f7aa9b863ea5c6fe1fda23357f2a8d911d5a0422d4b18fb",
+      "bytes": 2870081
+    },
+    "rpg-assets/jun.png": {
+      "source": "anfitrión_carismático_de_azul_y_oro.png",
+      "size": [
+        1024,
+        1536
+      ],
+      "mode": "RGBA",
+      "hasAlphaChannel": true,
+      "sha256": "93f6d57ebaed5673c71d4d9447e09088d5ab7b0caa766067b8ebc15471a0e9c6",
+      "bytes": 2164359
+    },
+    "rpg-assets/teo.png": {
+      "source": "joven_aventurero_con_portafolio_estelar.png",
+      "size": [
+        1024,
+        1536
+      ],
+      "mode": "RGBA",
+      "hasAlphaChannel": true,
+      "sha256": "5d74543cbc2be1c088651996df8b89fdb6f10cf870cd38150668fb6c55938fe9",
+      "bytes": 2271491
+    },
+    "rpg-assets/iris.png": {
+      "source": "mensajera_urbana_de_cabello_coral.png",
+      "size": [
+        1024,
+        1536
+      ],
+      "mode": "RGBA",
+      "hasAlphaChannel": true,
+      "sha256": "6a02a16d9c886008766f971754a0b05ec54d8c0de3d6e3c97682dc6389c14ebb",
+      "bytes": 2033312
+    },
+    "rpg-assets/elio.png": {
+      "source": "joven_de_estrellas_con_cuaderno.png",
+      "size": [
+        1024,
+        1536
+      ],
+      "mode": "RGBA",
+      "hasAlphaChannel": true,
+      "sha256": "2902f1df48ed43dbbaad5b6c24b8a90ae44fe9e22ff841225e39ccdeee8bb348",
+      "bytes": 2184026
+    },
+    "rpg-assets/alma.png": {
+      "source": "barista_de_encanto_terracota.png",
+      "size": [
+        1024,
+        1536
+      ],
+      "mode": "RGBA",
+      "hasAlphaChannel": true,
+      "sha256": "629fcd12c98a71154824bf5dce293440f1ccace1f77645b1d3b58606ea958610",
+      "bytes": 2203850
+    },
+    "rpg-assets/nereo.png": {
+      "source": "mecánico_náutico_de_mirada_desafiante.png",
+      "size": [
+        1024,
+        1536
+      ],
+      "mode": "RGBA",
+      "hasAlphaChannel": true,
+      "sha256": "b2a2576a22afd5e98d7947be77974901918cc42d30ea207acf267979d23456ab",
+      "bytes": 2444245
+    }
+  }
+}
