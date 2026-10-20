@@ -124,6 +124,7 @@ const server=http.createServer((req,res)=>{
  let url;try{url=new URL(req.url,'http://localhost');}catch{res.writeHead(400).end('Bad request');return;}
  let pathname;try{pathname=decodeURIComponent(url.pathname);}catch{res.writeHead(400).end('Bad request');return;}
  if(pathname.split('/').includes('..')){res.writeHead(403).end('Forbidden');return;}
+ if(pathname==='/'){res.writeHead(302,{'Location':'/play.html','Cache-Control':'no-store'});res.end();return;}
  if(pathname.startsWith('/api/cube-card-image/')){sendCardImage(req,res,pathname);return;}
  if(pathname.startsWith('/api/cube-room/')){cubeRoomAPI(req,res,pathname);return;}
  if(pathname.startsWith('/api/cube/')){cubeAPI(req,res,pathname);return;}
