@@ -14,6 +14,25 @@
 </header>
 <main id="deckStudio" class="studio" hidden>
  <div class="studio-context"><span>YOUR COLLECTION · 60-CARD FORMAT</span><span id="collectionSize"></span></div>
+ <section id="strategyLab" class="strategy-lab" aria-label="Deck strategy lab">
+  <div class="strategy-title"><span>✦ STRATEGY LAB</span><small>SCOUT · IMPROVE · COLLECT</small></div>
+  <div id="strategySummary" class="strategy-summary"></div>
+  <div class="strategy-grid">
+   <div class="strategy-pane"><h2>Owned-card upgrades</h2><p>Legal one-for-one experiments using cards you own. Apply to your draft, then save separately.</p><div id="strategySwaps"></div></div>
+   <div class="strategy-pane"><h2>Cards to pursue</h2><p>Track up to eight historical cards. Packs are random; this is a planning list, not a purchase guarantee.</p>
+    <label for="strategySearch">Find a card</label><input id="strategySearch" autocomplete="off" placeholder="Search cards by name…" />
+    <div id="strategySearchResults" class="strategy-search-results"></div>
+    <div id="strategyGoals" class="strategy-goals"></div>
+    <h3>Possible future upgrades</h3><div id="strategyProspects" class="strategy-prospects"></div>
+   </div>
+   <div class="strategy-pane"><h2>Booster priorities</h2><p>Which expansions contain your missing tracked cards?</p><div id="strategyPacks"></div></div>
+   <div class="strategy-pane"><h2>Opponent scouting</h2><p>Review a known rival's usual theme deck. The actual battle can differ if you've collaborated on their build.</p>
+    <label for="strategyOpponent">Rival</label><select id="strategyOpponent"></select>
+    <button id="strategyScout" type="button">Review matchup</button><div id="strategyScoutResult" aria-live="polite"></div>
+   </div>
+  </div>
+  <p id="strategyStatus" class="strategy-status" role="status" aria-live="polite"></p>
+ </section>
  <div id="rpgDeckBuilder" aria-label="RPG 60-card deck builder"></div>
  <div id="rpgBuilderActions" class="studio-actions">
   <p id="saveStatus" role="status" aria-live="polite">Your deck is saved.</p>
@@ -22,6 +41,11 @@
  </div>
 </main>
 <div id="studioError" class="studio-error" role="alert" hidden></div>
+<script src="/rpg_character_packs.generated.js"></script>
+<script src="/rpg_sol_character.js"></script>
+<script src="/rpg_narrative_pack.js"></script>
+<script src="/rpg_side_quests.js"></script>
+<script src="/rpg_strategy.js"></script>
 <script src="/rpg_collection.js"></script>
 <script src="/rpg_bond_rewards.js"></script>
 <script src="/rpg_partner_decks.js"></script>
