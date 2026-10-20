@@ -40,3 +40,25 @@ a{color:inherit;text-decoration:none}
 .rpg-deck-mode .cube-builder-ui .cb-tile:hover{border-color:#a5bffc}
 .rpg-deck-mode .cube-builder-ui .cb-preview-add{background:#6e476e;border-color:#e1a1c5}
 @media(max-width:700px){.topbar{align-items:flex-start}.brand{order:-1;width:100%}.studio-context{gap:7px}}
+
+/* Strategy Lab: compact actionable planning, no extra sidebar or separate deck editor. */
+.strategy-lab{margin-bottom:24px;border:1px solid #5d547a;border-radius:15px;background:linear-gradient(135deg,#1e2844,#211a35);padding:clamp(12px,2vw,22px)}
+.strategy-title{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;border-bottom:1px solid #4e506f;padding-bottom:12px;margin-bottom:14px;color:#ffe4ef;font:900 21px 'Barlow Condensed',sans-serif;letter-spacing:1px}
+.strategy-title small{color:#c3b5d8;font-size:11px}
+.strategy-summary{color:#c6daf3;font-size:13px;padding:9px 0 15px;line-height:1.5}
+.strategy-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}
+.strategy-pane{border:1px solid #465171;background:#111c32a8;border-radius:12px;padding:14px;min-width:0}
+.strategy-pane h2{margin:0 0 5px;color:#fff;font:800 19px 'Barlow Condensed',sans-serif}
+.strategy-pane h3{margin:16px 0 6px;color:#ffc6dc;font:800 15px 'Barlow Condensed',sans-serif}
+.strategy-pane>p,.strategy-pane .strategy-option p{font-size:12px;color:#bfcce4;line-height:1.45;margin:5px 0}
+.strategy-pane label{display:block;margin:12px 0 5px;font-size:12px;font-weight:700;color:#e0def4}
+.strategy-pane input,.strategy-pane select{width:100%;background:#12172c;border:1px solid #7484ab;border-radius:8px;padding:9px 10px;color:#fff}
+.strategy-option{border:1px solid #3d516d;border-radius:9px;background:#1a2841;padding:9px 11px;margin:8px 0}
+.strategy-option .strategy-option-title{font-weight:700;color:#f9d4e5;font-size:13px}
+.strategy-pane button{display:inline-flex;align-items:center;justify-content:center;text-align:left;margin:5px 0 0;padding:8px 10px;border-radius:8px;border:1px solid #9277a6;background:#4a365e;color:#fff;font-size:12px;font-weight:700}
+.strategy-pane button:disabled{opacity:.42}
+.strategy-pane button:hover:not(:disabled){border-color:#f6bad3;background:#62416a}
+.strategy-search-results{display:grid;grid-template-columns:repeat(auto-fit,minmax(165px,1fr));gap:5px;max-height:176px;overflow-y:auto;margin:5px 0}
+.strategy-search-results button{margin:0;justify-content:flex-start}
+.strategy-status{min-height:16px;color:#ffcae1;font-size:12px;margin:10px 0 0}
+@media(max-width:850px){.strategy-grid{grid-template-columns:1fr}}
