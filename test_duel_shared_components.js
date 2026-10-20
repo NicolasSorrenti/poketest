@@ -59,7 +59,7 @@ try{
  let selected=null;
  UI.renderPrizeRail({rail,decision:option,busy:false,button,choose:id=>selected=id});
  assert.equal(grids[1].children.length,6);
- assert.equal(grids[1].children[1].classList.contains('prize-taken'),true);
+ assert.match(grids[1].children[1].className,/prize-taken/);
  grids[1].children[2].onClick();assert.equal(selected,'prize:2');
  UI.renderPrizeFallback({container:dialog,decision:option,busy:false,button,choose:id=>selected=id});
  assert.equal(dialog.children[2].children.length,2);
