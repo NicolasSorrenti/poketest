@@ -54,13 +54,16 @@
   if(!d||!cast[d.npc])return null;
   const character=cast[d.npc],place=places[s.location]?.[0]||'Neo Harbor';
   const cup=tournaments?.cups?.find(c=>c.id===d.tournamentId);
-  const stake=d.eventTitle?'Special event · '+d.eventTitle:
+  const stake=d.competitiveTitle?'Local circuit · '+d.competitiveTitle:
+   d.eventTitle?'Special event · '+d.eventTitle:
    cup?'Official tournament · '+cup.title+' · Round '+(d.tournamentRound+1):
    d.sideQuestId?'Side quest · a meaningful challenge':
    d.arcEpisode?'Personal rivalry · a decisive match':
    'Friendly challenge · an authentic Pokémon TCG duel';
   const artwork=compatibleCG(s,d,cg);
-  const intro=d.eventTitle?'The crowd is gathering for '+d.eventTitle+'.':
+  const intro=d.competitiveKind==='daily'?'A new training opponent has been drawn for today.':
+   d.competitiveKind==='local'?'The local players gather around the tournament table. Every round matters.':
+   d.eventTitle?'The crowd is gathering for '+d.eventTitle+'.':
    cup?'A tournament round awaits you. The bracket is on the line.':
    d.sideQuestId?'An unfinished promise has brought you to this duel.':
    d.arcEpisode?'This match means more than another point in the standings.':
