@@ -17,7 +17,12 @@ server.listen(0,'127.0.0.1', async () => {
    await new Promise(resolve=>setTimeout(resolve,50));
   }
   assert.ok(running,'Server did not start');
-  const html=await (await fetch(url+'/')).text();
+  const launcher=await (await fetch(url+'/')).text();
+  assert.match(launcher,/data-mode="cube"/,'Home must offer Cube');
+  assert.match(launcher,/data-mode="single"/,'Home must offer Single Match');
+  assert.match(launcher,/id="soloLink"/);
+  assert.match(launcher,/id="multiLink"/);
+  const html=await (await fetch(url+'/index.html')).text();
   assert.match(html,/id="newGame"/);
   assert.match(html,/id="hand"/);
   assert.match(html,/id="confirmSetup"/);
@@ -33,7 +38,7 @@ server.listen(0,'127.0.0.1', async () => {
    assert.equal((await fetch(url+'/'+filename)).status,404);
   }
   assert.equal((await fetch(url+'/..%2F..%2Fetc%2Fpasswd')).status,403);
-  console.log('PASS HTTP integration: game UI, all Trainer scripts, historical sets, 404 and traversal rejection');
+  console.log('PASS HTTP integration: game launcher, legacy archive, Trainer scripts, historical sets, 404 and traversal rejection');
  }catch(error){console.error(error);process.exitCode=1;}
  finally{child.kill('SIGTERM');}
 });
