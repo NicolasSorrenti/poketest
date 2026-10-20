@@ -1364,22 +1364,22 @@ const packs=[
    "intro": "O-oh! Sorry, I almost walked into you... again. I'm Luna. Are you okay? I didn't step on your foot, did I?",
    "repeat": "Hi again! I was just... trying not to drop anything this time. How's your day going?",
    "talk": [
-    "I practiced shuffling for an hour and still sent cards flying. The shop lady was very patient with me.",
-    "People keep offering to carry things for me. I always say I can manage, and then I immediately drop them.",
-    "Do you think my shirts are too small? They keep riding up when I reach for high shelves. I should buy bigger ones... eventually.",
-    "I tripped on the arcade stairs yesterday and somehow ended up with my skirt flipped. Three people helped me up. It was so embarrassing.",
-    "I like quiet places. Libraries are nice until I knock over a whole shelf by accident.",
-    "Everyone says I should be more careful. I am careful! The ground just doesn't agree with me."
+    "I spent an hour practicing my shuffle. One card ended up in my shoe. I still can't explain how.",
+    "The shop owner offered to carry my boxes again. I wish people would ask before taking everything out of my hands.",
+    "Every time I reach for the top shelf, my sweater rides up and I forget which box I wanted. I should ask them to move the supplies.",
+    "I tripped on the arcade stairs yesterday. Someone found my deck box under the pinball machine before I even noticed it was missing.",
+    "I went to the library to read old tournament reports and almost pulled down a whole shelf trying to reach the last one.",
+    "I got through a whole match without dropping a card! Then I tripped over my chair. Gravity still has the lead."
    ],
    "flirt": "Y-you're looking at me funny again... Is there something on my face? Or did my shirt slip?",
    "duelWin": "I won...? Oh no, did I do something wrong? You played really well!",
    "duelLose": "Aww, I lost again. But it was fun! Can we play one more? I'll try not to drop my cards this time.",
    "hangouts": [
-    "Luna insists on carrying the drinks and immediately spills one down the front of her shirt. She apologizes for ten minutes straight while trying to dab it dry.",
-    "You help her reach a high shelf at the shop. She stretches up on her toes, shirt riding up completely, and only notices when you look away.",
-    "A quiet park walk turns into her tripping over nothing and landing in your arms. She stays there a second too long before panicking and apologizing.",
-    "At the café she drops her spoon, bends to pick it up, and her top gapes open. She has no idea why the table next to you goes silent.",
-    "She tries to high-five you after a duel and misses, spinning herself around and nearly falling into a display. You catch her. She turns bright red."
+    "At the café, Luna insists on bringing the drinks and spills one onto her sweater. After you move the playmat out of the way, she laughs at herself and asks if you can help find a towel.",
+    "At the shop, Luna reaches for the top shelf, tugs her riding sweater back into place, then asks the owner to put the beginner supplies somewhere everyone can reach.",
+    "Luna stumbles on a loose stone during your park walk. Once she's steady, she pulls a folded tournament bracket from her pocket and starts asking you about your next matchup.",
+    "Over coffee, Luna brings out a handwritten list of plays she wants to practice. She drops her pencil under the table, blushes when her cardigan slips, then gets right back to explaining her plan.",
+    "Luna misses a high-five after a duel and nearly knocks over her deck box. She catches it herself this time, grins, and demands a rematch."
    ],
    "portrait": "/rpg-assets/characters/luna/neutral.png"
   },
@@ -1453,33 +1453,33 @@ const packs=[
     "lines": [
      {
       "speaker": "luna",
-      "text": "Oh no—watch out!"
+      "text": "Ah—sorry! I thought I had both cups. Your cards didn't get wet, did they?"
      },
      {
       "speaker": "Protagonist",
-      "text": "It's fine, it only got a little on me."
+      "text": "Just the table. Are you okay?"
      },
      {
       "speaker": "luna",
-      "text": "I'm so sorry! I was trying to carry both drinks and my bag and... I do this a lot."
+      "text": "I am. I was bringing drinks to the practice group before they started without me."
      },
      {
       "speaker": "Protagonist",
-      "text": "You okay?"
+      "text": "They can get their own drinks, you know."
      },
      {
       "speaker": "luna",
-      "text": "Y-yes. Just embarrassed. Again. My sweater is all wet now too..."
+      "text": "I know. I'm trying to be useful, but now I've got tea on my sweater and everyone's cleaning up after me."
      },
      {
       "speaker": "luna",
-      "text": "Please don't look. It's clinging and I can't fix it properly here."
+      "text": "Could you watch my deck a second? I need two hands and a towel."
      }
     ],
     "choices": [
      {
-      "label": "Offer her your jacket so she can cover up",
-      "reply": "You're really kind... Thank you. I'll wash it and return it, I promise!",
+      "label": "Offer your jacket while she dries off",
+      "reply": "Thank you. You can have it back as soon as I find somewhere to hang this sweater.",
       "kind": "support",
       "flag": "luna_jacket",
       "delta": {
@@ -1490,8 +1490,8 @@ const packs=[
       }
      },
      {
-      "label": "Gently tell her it's fine and not to worry",
-      "reply": "You're not mad...? Most people get annoyed when I soak them.",
+      "label": "Help clean up and tell her nobody's upset",
+      "reply": "Oh. Good. I always assume I've ruined everyone's day when I spill something.",
       "kind": "honest",
       "flag": "luna_calm",
       "delta": {
@@ -1502,8 +1502,8 @@ const packs=[
       }
      },
      {
-      "label": "Look away politely while she adjusts",
-      "reply": "You're not staring... That actually helps. Thank you.",
+      "label": "Move the playmat and give her a little privacy",
+      "reply": "You noticed I needed space. That's really kind of you.",
       "kind": "flirt",
       "flag": "luna_lookaway",
       "delta": {
@@ -1530,33 +1530,33 @@ const packs=[
     "lines": [
      {
       "speaker": "luna",
-      "text": "Excuse me... could you help me reach that box? I keep stretching and it still won't budge."
+      "text": "Excuse me—could you hold that box? I can't quite reach the last row."
      },
      {
       "speaker": "Protagonist",
-      "text": "Sure."
+      "text": "Sure. What's in it?"
      },
      {
       "speaker": "luna",
-      "text": "Thank you so much! I always feel bad asking. My arms just aren't long enough and everything is so high."
+      "text": "Sleeves for the beginner night. I promised I'd help set up the tables."
      },
      {
       "speaker": "Protagonist",
-      "text": "You almost had it."
+      "text": "You're doing all that by yourself?"
      },
      {
       "speaker": "luna",
-      "text": "Did I? My shirt keeps riding up when I try... I should really get new clothes. These never stay where they should."
+      "text": "Trying to. This shelf and my sweater are both conspiring against me today."
      },
      {
       "speaker": "luna",
-      "text": "Why are you looking at the floor? Did I drop something else?"
+      "text": "I'm asking them to move the supplies lower next time. This is ridiculous."
      }
     ],
     "choices": [
      {
-      "label": "Get the box for her without comment",
-      "reply": "You're so reliable. I wish I could stop needing help all the time.",
+      "label": "Hold the box steady while she gets it down",
+      "reply": "Thanks! I've got it from here. ...Probably. No, really, I've got it.",
       "kind": "support",
       "flag": "luna_help",
       "delta": {
@@ -1567,8 +1567,8 @@ const packs=[
       }
      },
      {
-      "label": "Softly suggest her shirt might be the problem",
-      "reply": "Is it...? Oh no, is it that obvious? I thought it was fine!",
+      "label": "Suggest moving the beginner supplies to an easier shelf",
+      "reply": "Oh! You're right. Other people must struggle with this shelf too.",
       "kind": "honest",
       "flag": "luna_shirt",
       "delta": {
@@ -1579,8 +1579,8 @@ const packs=[
       }
      },
      {
-      "label": "Tease her gently about how hard she was trying",
-      "reply": "D-don't laugh! I was really giving it my all...",
+      "label": "Tease her about declaring war on the shelving",
+      "reply": "It's an unfair fight. The shelf has a height advantage.",
       "kind": "flirt",
       "flag": "luna_tease",
       "delta": {
@@ -1612,33 +1612,33 @@ const packs=[
     "lines": [
      {
       "speaker": "luna",
-      "text": "Almost... just a little more..."
+      "text": "Yes! I finally got the Energy count right. Wait—don't move that box!"
      },
      {
       "speaker": "Protagonist",
-      "text": "Luna, your shirt—"
+      "text": "You rebuilt the deck?"
      },
      {
       "speaker": "luna",
-      "text": "Hmm? Did it ride up again? I felt a breeze. Hold on, I'll fix it."
+      "text": "I took out the cards everyone kept insisting I needed. I've lost two practice games already."
      },
      {
       "speaker": "Protagonist",
-      "text": "Maybe I should just get it for you."
+      "text": "And how do you feel about that?"
      },
      {
       "speaker": "luna",
-      "text": "You're staring at the wall really hard. Did I do something weird again?"
+      "text": "Strangely good. At least they were my mistakes. ...Oh, I stood up too fast and knocked the deck over."
      },
      {
       "speaker": "luna",
-      "text": "People do that a lot around me. I never know why. Is my hair messy?"
+      "text": "Could you help me gather the cards? I want to put them back in order myself."
      }
     ],
     "choices": [
      {
-      "label": "Just get the item and change the subject",
-      "reply": "You're the best. I don't know what I'd do without people like you.",
+      "label": "Help gather the cards without rebuilding her deck",
+      "reply": "Thanks. I know where every card goes. For once, I really do.",
       "kind": "support",
       "flag": "luna_cover",
       "delta": {
@@ -1649,8 +1649,8 @@ const packs=[
       }
      },
      {
-      "label": "Gently explain that her body draws attention",
-      "reply": "M-my body...? Oh. Oh no. Is that why everyone keeps looking?",
+      "label": "Ask what she learned from the two losses",
+      "reply": "That I need a better opening hand plan. And maybe fewer copies of my favorite Pokémon.",
       "kind": "honest",
       "flag": "luna_realize",
       "delta": {
@@ -1661,8 +1661,8 @@ const packs=[
       }
      },
      {
-      "label": "Tell her she looks good even when she's struggling",
-      "reply": "Y-you think so? Even when I'm making a mess of everything?",
+      "label": "Tell her you're impressed she trusted her own idea",
+      "reply": "Really? I was scared you'd say I should put the old combo back in.",
       "kind": "flirt",
       "flag": "luna_compliment",
       "delta": {
@@ -1694,33 +1694,33 @@ const packs=[
     "lines": [
      {
       "speaker": "luna",
-      "text": "I tripped on nothing again. You caught me. Thank you."
+      "text": "I asked the shop owner to lower the supplies shelf. She said yes. It took me all week to ask."
      },
      {
       "speaker": "Protagonist",
-      "text": "You okay?"
+      "text": "That sounds like a win."
      },
      {
       "speaker": "luna",
-      "text": "Physically yes. Emotionally... I've been thinking about what you said. About people looking."
+      "text": "It did. Then someone picked up my deck in the middle of a turn to 'help' me."
      },
      {
       "speaker": "Protagonist",
-      "text": "Yeah?"
+      "text": "What did you do?"
      },
      {
       "speaker": "luna",
-      "text": "I always thought I was just clumsy and awkward. I never considered that my body might be... noticeable."
+      "text": "Asked for it back. My hands were shaking, but I said it. And I finished the match."
      },
      {
       "speaker": "luna",
-      "text": "Is it bad that I still don't really know how to feel about it?"
+      "text": "I don't mind help. I just want to be the one who asks for it."
      }
     ],
     "choices": [
      {
-      "label": "Tell her she’s still the same kind person",
-      "reply": "That helps. A lot. I was worried everything would feel different.",
+      "label": "Tell her she handled the situation well",
+      "reply": "It felt awful for five seconds. Then it felt wonderful.",
       "kind": "support",
       "flag": "luna_same",
       "delta": {
@@ -1731,8 +1731,8 @@ const packs=[
       }
      },
      {
-      "label": "Say it’s okay to take time figuring it out",
-      "reply": "You’re patient with me. Most people just stare or laugh.",
+      "label": "Ask how she wants you to help during matches",
+      "reply": "Ask me first. Even if I'm clearly losing. Especially then.",
       "kind": "honest",
       "flag": "luna_time",
       "delta": {
@@ -1743,8 +1743,8 @@ const packs=[
       }
      },
      {
-      "label": "Admit you’ve noticed, but you like her for more than that",
-      "reply": "You... noticed? And you still talk to me like this? That’s really nice.",
+      "label": "Admit you like how determined she's becoming",
+      "reply": "I feel determined, until I open my mouth. But I think that's still progress.",
       "kind": "flirt",
       "flag": "luna_notice",
       "delta": {
@@ -1776,33 +1776,33 @@ const packs=[
     "lines": [
      {
       "speaker": "luna",
-      "text": "I ordered without spilling anything today. Personal record."
+      "text": "I brought an extra playmat today. And I checked the chair legs. Twice."
      },
      {
       "speaker": "Protagonist",
-      "text": "Proud of you."
+      "text": "Prepared for anything?"
      },
      {
       "speaker": "luna",
-      "text": "I still don’t really understand why my body gets so much attention. But I’m trying not to let it scare me."
+      "text": "Not anything. I still dropped my deck on the way in. But I picked it up and kept going."
      },
      {
       "speaker": "Protagonist",
-      "text": "How’s that going?"
+      "text": "How did the tournament go?"
      },
      {
       "speaker": "luna",
-      "text": "Better when you’re around. You never made me feel like I was just... that. You always treated me like Luna."
+      "text": "Lost the first round, won the second. My list, my decisions. I didn't apologize once."
      },
      {
       "speaker": "luna",
-      "text": "If I trip again, will you still catch me?"
+      "text": "Would you play with me again next week? I'd like you there, even if I lose."
      }
     ],
     "choices": [
      {
-      "label": "Promise you’ll always catch her",
-      "reply": "Then I’ll try not to be too scared of falling.",
+      "label": "Make plans to keep playing together",
+      "reply": "Then I'll bring the playmat. You bring a deck that doesn't go easy on me.",
       "kind": "support",
       "flag": "luna_catch",
       "delta": {
@@ -1813,8 +1813,8 @@ const packs=[
       }
      },
      {
-      "label": "Tell her you like every part of her, clumsy included",
-      "reply": "Even the clumsy parts...? You’re really something.",
+      "label": "Tell her you'd like it to be a date",
+      "reply": "A date? ...Yes. I'd like that very much. We can still bring our cards, right?",
       "kind": "flirt",
       "flag": "luna_like",
       "delta": {
@@ -1825,8 +1825,8 @@ const packs=[
       }
      },
      {
-      "label": "Say you’ll be there while she figures herself out",
-      "reply": "That’s all I need. Someone patient. Someone who stays.",
+      "label": "Let her set the pace and choose what comes next",
+      "reply": "Thank you. I want to see what we can become without rushing to decide everything.",
       "kind": "honest",
       "flag": "luna_stay",
       "delta": {
