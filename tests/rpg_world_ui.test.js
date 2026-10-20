@@ -3,7 +3,7 @@ const test=require('node:test');
 const assert=require('node:assert/strict');
 const fs=require('node:fs'),path=require('node:path');
 const Pack=require('../rpg_narrative_pack'),Side=require('../rpg_side_quests'),Story=require('../rpg_story'),Schedules=require('../rpg_schedules'),World=require('../rpg_world'),Arc=require('../rpg_rival_arc'),Tournaments=require('../rpg_tournaments'),Epilogue=require('../rpg_epilogue'),Appointments=require('../rpg_appointments'),Intentions=require('../rpg_intentions'),CG=require('../rpg_cg_gallery'),Planner=require('../rpg_daily_planner'),Social=require('../rpg_social_activities'),Dates=require('../rpg_planned_dates'),Bridge=require('../rpg_duel_bridge'),Pre=require('../rpg_preduel'),Collection=require('../rpg_collection'),Journey=require('../rpg_season_journey'),Situations=require('../rpg_situations'),Dialogue=require('../rpg_dialogue'),BondRewards=require('../rpg_bond_rewards'),Conversations=require('../rpg_conversations'),PartnerDecks=require('../rpg_partner_decks');
-const Mandatory=require('../rpg_mandatory_events'),Season=require('../rpg_season_events'),Registry=require('../rpg_character_packs.generated');
+const Mandatory=require('../rpg_mandatory_events'),Season=require('../rpg_season_events'),Registry=require('../rpg_character_packs.generated'),Competitive=require('../rpg_competitive_loop');
 const js=fs.readFileSync(path.join(__dirname,'..','rpg.js'),'utf8').replace(/\}\)\(\);\s*$/, 'window.__testRpgAction=act;})();');
 const html=fs.readFileSync(path.join(__dirname,'..','rpg.html'),'utf8');
 const ids=[...html.matchAll(/id="([^"]+)"/g)].map(x=>x[1]);
@@ -28,7 +28,7 @@ function launch(initial,approve=false,mandatory=false){
  const doc={getElementById(id){if(!elements[id])throw Error('Missing '+id);return elements[id];},
   createElement(tag){return new FakeNode(tag);},body:new FakeNode('body'),
   addEventListener(name,cb){listeners['document:'+name]=cb;}};
- const win={NeoRpgNarrativePack:Pack,NeoRpgSideQuests:Side,NeoHarborStory:Story,NeoRpgSchedules:Schedules,NeoRpgWorld:World,NeoRpgRivalArc:Arc,NeoRpgTournaments:Tournaments,NeoRpgEpilogue:Epilogue,NeoRpgAppointments:Appointments,NeoRpgIntentions:Intentions,NeoRpgCGGallery:CG,NeoRpgDailyPlanner:Planner,NeoRpgSocialActivities:Social,NeoRpgPlannedDates:Dates,NeoRpgPreDuel:Pre,NeoRpgCollection:Collection,NeoRpgSeasonJourney:Journey,NeoRpgSituations:Situations,NeoRpgDuelBridge:Bridge,NeoRpgDialogue:Dialogue,NeoRpgBondRewards:BondRewards,NeoRpgConversations:Conversations,NeoRpgPartnerDecks:PartnerDecks,
+ const win={NeoRpgNarrativePack:Pack,NeoRpgSideQuests:Side,NeoHarborStory:Story,NeoRpgSchedules:Schedules,NeoRpgWorld:World,NeoRpgRivalArc:Arc,NeoRpgTournaments:Tournaments,NeoRpgCompetitiveLoop:Competitive,NeoRpgEpilogue:Epilogue,NeoRpgAppointments:Appointments,NeoRpgIntentions:Intentions,NeoRpgCGGallery:CG,NeoRpgDailyPlanner:Planner,NeoRpgSocialActivities:Social,NeoRpgPlannedDates:Dates,NeoRpgPreDuel:Pre,NeoRpgCollection:Collection,NeoRpgSeasonJourney:Journey,NeoRpgSituations:Situations,NeoRpgDuelBridge:Bridge,NeoRpgDialogue:Dialogue,NeoRpgBondRewards:BondRewards,NeoRpgConversations:Conversations,NeoRpgPartnerDecks:PartnerDecks,
   addEventListener(name,cb){listeners[name]=cb;}};
  if(mandatory){win.NeoRpgMandatoryEvents=Mandatory;win.NeoRpgSeasonEvents=Season;win.NeoRpgCharacterPacks=Registry;}
  const local={getItem(k){return saved[k]||null;},setItem(k,v){saved[k]=String(v);}};
@@ -1092,4 +1092,55 @@ test('season closure blocks epilogue, uses actual tournament history and enables
  assert.equal(r.state().mandatoryEventState.seen.neo_season_closure.choice,1);
  assert.equal(r.elements.endSeason.hidden,false);
  assert.equal(r.state().day,91);
+});
+
+test('Saturday locals are playable through the existing duel flow, paying each bonus once',()=>{
+ const firstState={day:6,slot:0,location:'shop',deckJourney:Collection.fresh()};
+ Collection.choose(firstState,'ember_garden');
+ const r=launch(firstState);
+ const local=r.elements.competitiveEvents.children.find(x=>x.className==='activity'&&x.textContent===''&&x.children?.[0]?.textContent.includes('Saturday Local'));
+ assert.ok(local,'Saturday Local appears in the RPG circuit');
+ local.onclick();
+ let d=r.state().pendingDuel;
+ assert.equal(d.competitiveKind,'local');
+ assert.equal(d.competitiveRound,0);
+ r.elements.preDuelSkip.onclick();
+ const event={data:Bridge.message(d.id,0),origin:r.loc.origin,source:r.elements.battle.contentWindow};
+ r.listeners.message(event);
+ let saved=r.state();
+ assert.equal(saved.competitive.locals['1'].round,1);
+ assert.equal(saved.points,8);
+ assert.equal(saved.credits,105);
+ r.listeners.message(event);
+ assert.equal(r.state().points,8,'duplicate duel receipt cannot award points again');
+ const second=r.elements.competitiveEvents.children.find(x=>x.children?.[0]?.textContent.includes('Round 2/2'));
+ assert.ok(second,'second round appears after a win');
+ second.onclick();
+ d=r.state().pendingDuel;
+ r.elements.preDuelSkip.onclick();
+ r.listeners.message({data:Bridge.message(d.id,0),origin:r.loc.origin,source:r.elements.battle.contentWindow});
+ saved=r.state();
+ assert.equal(saved.competitive.locals['1'].status,'champion');
+ assert.equal(saved.deckJourney.vouchers.base1,1);
+ assert.equal(saved.points,28);
+ assert.equal(saved.credits,150);
+ assert.equal(r.elements.competitiveEvents.children.some(x=>x.children?.[0]?.textContent.includes('Round 2/2')),false);
+});
+
+test('daily challenges use the standard pre-duel stage and refresh on the following day',()=>{
+ const r=launch({day:4,slot:2,location:'center'});
+ const challenge=r.elements.competitiveEvents.children.find(x=>x.children?.[0]?.textContent.includes('Daily Training'));
+ assert.ok(challenge);
+ challenge.onclick();
+ const d=r.state().pendingDuel;
+ assert.equal(d.competitiveId,'daily-4');
+ assert.equal(d.competitiveKind,'daily');
+ r.elements.preDuelSkip.onclick();
+ r.listeners.message({data:Bridge.message(d.id,1),origin:r.loc.origin,source:r.elements.battle.contentWindow});
+ const s=r.state();
+ assert.equal(s.day,5);
+ assert.equal(s.competitive.daily['4'].outcome,'Defeat');
+ assert.equal(s.competitive.daily['5'],undefined);
+ const again=r.elements.competitiveEvents.children.find(x=>x.children?.[0]?.textContent.includes('Daily Training'));
+ assert.ok(again);
 });
