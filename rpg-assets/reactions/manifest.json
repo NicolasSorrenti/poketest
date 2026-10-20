@@ -38,19 +38,19 @@
       "attack": "/rpg-assets/reactions/sol/attack.png"
     },
     "jinx": {
-      "default": "/rpg-assets/jinx.png",
+      "default": "/rpg-assets/characters/jinx/neutral.png",
       "attack": "/rpg-assets/reactions/jinx/attack.png"
     },
     "luna": {
-      "default": "/rpg-assets/luna.png",
+      "default": "/rpg-assets/characters/luna/neutral.png",
       "attack": "/rpg-assets/reactions/luna/attack.png"
     },
     "elena": {
-      "default": "/rpg-assets/elena.png",
+      "default": "/rpg-assets/characters/elena/portrait.png",
       "attack": "/rpg-assets/reactions/elena/attack.png"
     },
     "sierra": {
-      "default": "/rpg-assets/sierra.png",
+      "default": "/rpg-assets/characters/sierra/portrait.png",
       "attack": "/rpg-assets/reactions/sierra/attack.png"
     },
     "rina": {
