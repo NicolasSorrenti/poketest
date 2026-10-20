@@ -1233,3 +1233,61 @@ test('NPC can discuss their independently earned club result without affection o
  assert.equal(r.state().points,before.points);assert.equal(r.state().credits,before.credits);
  assert.equal(r.state().relationships.reina.affection,before.bond);
 });
+
+test('verified duel defeat offers a one-time voluntary reflection without rewards or time cost',()=>{
+ const r=launch({day:5,slot:1,location:'center',met_reina:true,metReina:true});
+ r.act('duel:reina');
+ const duel=r.state().pendingDuel;assert.ok(duel);r.elements.preDuelSkip.onclick();
+ const msg={data:Bridge.message(duel.id,1),origin:r.loc.origin,source:r.elements.battle.contentWindow};
+ r.listeners.message(msg);
+ assert.equal(r.state().results.length,1);assert.equal(r.state().consequences.events.length,1);
+ assert.equal(r.state().consequences.events[0].kind,'setback');
+ const reflect=r.elements.competitiveEvents.children.find(x=>x.textContent.includes('Reflect on your match'));
+ assert.ok(reflect,'a free setback scene becomes available in the center');
+ const before={day:r.state().day,slot:r.state().slot,points:r.state().points,credits:r.state().credits,
+  relationship:JSON.stringify(r.state().relationships.reina)};
+ r.act('close');reflect.onclick();
+ assert.ok(r.state().scene.consequenceId,'specific past duel anchored to reflection');
+ assert.equal(r.state().scene.choices.length,4,'three approaches and a free exit');
+ r.act('consequenceChoice:study');
+ assert.equal(Object.keys(r.state().consequences.choices).length,1);
+ assert.equal(r.state().scene.dialogue.length,3);
+ assert.equal(r.state().day,before.day);assert.equal(r.state().slot,before.slot);
+ assert.equal(r.state().points,before.points);assert.equal(r.state().credits,before.credits);
+ assert.equal(JSON.stringify(r.state().relationships.reina),before.relationship);
+ finishGreeting(r);
+ r.act('close');
+ const continuation=r.elements.people.children.find(x=>x.children?.[1]?.children?.[0]?.textContent==='Reina Kurogane');
+ assert.ok(continuation);
+ continuation.onclick();
+ assert.equal(r.state().scene.reactionId,'react:choice:reina:'+duel.id);
+ assert.match(r.state().scene.line,/went back over our game/i);
+ const second=launch(r.state());
+ assert.equal(Consequences.opportunities(second.state()).length,0,'completed choice survives reload');
+ second.listeners.message(msg);
+ assert.equal(second.state().results.length,1,'duplicate battle message never changes history');
+});
+test('unfinished reflection survives reload, but cancellation never spends the event',()=>{
+ const r=launch({day:5,slot:1,location:'center',met_reina:true,metReina:true});
+ r.act('duel:reina');const duel=r.state().pendingDuel;r.elements.preDuelSkip.onclick();
+ r.listeners.message({data:Bridge.message(duel.id,1),origin:r.loc.origin,source:r.elements.battle.contentWindow});
+ r.act('close');r.act('consequence');
+ const pending=r.state().scene.consequenceId;assert.ok(pending);
+ const restored=launch(r.state());assert.equal(restored.state().scene.consequenceId,pending);
+ restored.act('close');
+ assert.equal(Object.keys(restored.state().consequences.choices).length,0);
+ restored.act('consequence');restored.act('consequenceChoice:perspective');
+ assert.equal(restored.state().consequences.choices[pending].path,'perspective');
+});
+test('ending uses actual comeback and reflection path but never invents a partner',()=>{
+ const s={day:91,ended:true,results:[{id:'loss',npc:'reina',day:9,won:false,draw:false},
+  {id:'win',npc:'reina',day:12,won:true,draw:false}],partner:null,relationships:{},tournaments:{}};
+ const c={processed:{loss:true,win:true},events:[{id:'turn:loss',npc:'reina',day:9,duelId:'loss',kind:'setback'},
+  {id:'turn:win',npc:'reina',day:12,duelId:'win',kind:'comeback'}],
+  choices:{'turn:win':{eventId:'turn:win',kind:'comeback',path:'challenge',day:12}}};
+ s.consequences=c;
+ const report=Epilogue.report(s);
+ assert.equal(report.partner,null);assert.equal(report.turningPoints.comebacks,1);
+ assert.equal(report.turningPoints.reflections,1);
+ assert.ok(report.seasonLessons.some(line=>line.includes('earlier defeat')));
+});
