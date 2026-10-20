@@ -1658,6 +1658,11 @@ function render(){
     ['☏ Talk',()=>selectPerson(selected),'Talk to '+cast[selected].name],
     ['⚔ Duel',()=>startDuel(selected),'Challenge '+cast[selected].name+' to a duel']
    ];
+   if(state.deckJourney?.starter){
+    buttons.push(['⌕ Scout',()=>{
+     persist();location.assign('/rpg_deck_studio.html?scout='+encodeURIComponent(selected));
+    },'Review '+cast[selected].name+'’s usual theme deck and plan your upgrades']);
+   }
    if(PARTNER.unlocked(state,selected)&&state.deckJourney?.starter)
     buttons.push(['▤ Deck',()=>act('partnerDeck:'+selected),'Edit '+display+'’s deck']);
    for(const [label,action,title] of buttons){
