@@ -78,3 +78,17 @@ body[data-rpg-drawer="map"] .layout>.locations-panel,body[data-rpg-drawer="info"
  .layout>.locations-panel,.layout>.sidebar,.utilitybar .rpg-nav-toggle,.rpg-dock-action,.rpg-dock-tabs button,
  .rpg-drawer-backdrop:not([hidden]),.layout>.sidebar .side-section,.rpg-action-dock{animation:none!important;transition:none!important}
 }
+
+/* Touch-friendly sheets keep their own scroll and an always reachable exit. */
+body.rpg-drawer-open{overflow:hidden}
+.layout>.locations-panel,.layout>.sidebar{min-height:0;overflow-x:hidden;overflow-y:auto;-webkit-overflow-scrolling:touch;touch-action:pan-y}
+.rpg-drawer-header{position:sticky;top:-12px;z-index:12;display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:54px;margin:-8px -5px 14px;padding:7px 8px;background:linear-gradient(100deg,#172139,#201930);border-bottom:1px solid #6e5077}
+.rpg-drawer-header strong{font:900 18px 'Barlow Condensed',sans-serif;letter-spacing:1.1px;color:#ffd1e8}
+.rpg-drawer-close{flex:none;display:grid;place-items:center;width:44px;height:44px;padding:0;border:1px solid #c485ab;background:#51304d;color:white;font-size:20px;line-height:1}
+.rpg-drawer-close:hover,.rpg-drawer-close:focus-visible{background:#a14369}
+.layout>.sidebar .rpg-panel-tabs{top:42px;grid-template-columns:repeat(4,minmax(0,1fr));gap:4px}
+@media(max-width:700px){
+ .layout>.locations-panel,.layout>.sidebar{top:max(8px,env(safe-area-inset-top));bottom:max(8px,env(safe-area-inset-bottom));max-height:calc(100dvh - max(8px,env(safe-area-inset-top)) - max(8px,env(safe-area-inset-bottom)))}
+ .layout>.sidebar .rpg-panel-tabs button{padding:10px 2px;font-size:13px}
+ .utilitybar .utility-actions{overscroll-behavior-x:contain;scroll-padding-inline:8px}
+}

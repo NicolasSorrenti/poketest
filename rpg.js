@@ -1409,7 +1409,7 @@ function ensureRpgLayout(){
  const sidebar=document.querySelector('.sidebar'),sceneRoot=$('scene');
  if(!sidebar||!sceneRoot||$('rpgPanelTabs'))return;
  const nav=document.createElement('nav');nav.id='rpgPanelTabs';nav.className='rpg-panel-tabs';nav.setAttribute('aria-label','RPG information');
- for(const [id,label] of Object.entries({plans:'Today',stories:'Stories',progress:'Progress'})){
+ for(const [id,label] of Object.entries({scene:'Here',plans:'Today',stories:'Stories',progress:'Progress'})){
   const b=document.createElement('button');b.type='button';b.dataset.panel=id;b.textContent=label;
   b.onclick=()=>{rpgActivePanel=id;refreshRpgPanels();};nav.append(b);
  }

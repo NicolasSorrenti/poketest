@@ -32,7 +32,31 @@ const acknowledgeMandatory=async(page)=>{
   assert.equal(await page.locator('#starterChoices button').count(),3);
   await page.locator('#starterChoices button').filter({hasText:'Tidal Circuit'}).click();
   assert.equal((await readState(page)).deckJourney.starter,'tidal_circuit');
+  // Phone-width navigation: both sheets must open, fit the screen and dismiss.
+  await page.setViewportSize({width:360,height:640});
+  await page.locator('#rpgMapToggle').click();
+  const mapSheet=page.locator('#rpgMapPanel');
+  await mapSheet.waitFor({state:'visible'});
+  assert.equal(await mapSheet.getAttribute('aria-hidden'),'false');
+  const bounds=await mapSheet.boundingBox();
+  assert.ok(bounds&&bounds.left>=0&&bounds.right<=361&&bounds.top>=0&&bounds.bottom<=641,
+   'Town map must fit inside the mobile viewport');
+  assert.equal(await page.locator('#places .place').count(),7);
+  assert.equal(await page.locator('#rpgMapPanel .rpg-drawer-close').isVisible(),true);
+  await page.locator('#rpgMapPanel .rpg-drawer-close').click();
+  assert.equal(await mapSheet.isVisible(),false);
+  await page.locator('#rpgInfoToggle').click();
+  const infoSheet=page.locator('#rpgInfoPanel');
+  await infoSheet.waitFor({state:'visible'});
+  await page.locator('#rpgPanelTabs button[data-panel="scene"]').click();
+  assert.equal(await page.locator('#people').isVisible(),true,'Nearby details must not be lost behind an unreachable tab');
+  await page.locator('#rpgPanelTabs button[data-panel="progress"]').click();
+  assert.equal(await page.locator('#journeyProgress').isVisible(),true);
+  await page.keyboard.press('Escape');
+  assert.equal(await infoSheet.isVisible(),false);
+  await page.setViewportSize({width:1400,height:900});
   // This is a dedicated page, not the old two-select card-swap popup.
+  await page.locator('#rpgInfoToggle').click();
   await page.locator('#rpgPanelTabs button[data-panel="progress"]').click();
   await page.locator('#deckCollection .studio-open').click();
   await page.waitForURL(/rpg_deck_studio\.html/);
@@ -55,6 +79,7 @@ const acknowledgeMandatory=async(page)=>{
   await page.locator('#whereLabel').getByText(/YOU ARE HOME/).waitFor();
   await save(page,'01-home.png');
 
+  await page.locator('#rpgMapToggle').click();
   await page.locator('#places .place').filter({hasText:'Pixel Palace'}).click();
   await page.locator('#quickNext').click();
   let state=await readState(page);
