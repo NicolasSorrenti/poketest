@@ -318,5 +318,5 @@
   return {update,reset,setManifest:value=>{manifest=value;},get count(){return director.count;},
    get active(){return active;},get queued(){return queued?.kind||null;}};
  }
- return {createDirector,makeExperience,assetFor,MAX_REACTIONS,priorityFor,durationFor};
+ return {createDirector,makeExperience,assetFor,MAX_REACTIONS,priorityFor,durationFor,VOICES};
 });
