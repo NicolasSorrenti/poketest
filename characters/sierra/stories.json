@@ -365,9 +365,9 @@
       ],
       "choices": [
         {
-          "label": "Say yes and promise a rematch after dinner",
-          "reply": "Deal. But I'm warning you, I'm reviewing your last game over dessert.",
-          "kind": "support",
+          "label": "Accept dinner as friends and promise an honest rematch",
+          "reply": "Deal. But I'm still going over your deck list during dessert. Fair warning.",
+          "kind": "friend",
           "flag": "sierra_long",
           "delta": {
             "affection": 3,
@@ -377,9 +377,9 @@
           }
         },
         {
-          "label": "Ask if you can kiss her before dinner",
-          "reply": "I was going to say yes. I just wanted to see how long you'd take to ask.",
-          "kind": "flirt",
+          "label": "Ask her to make the next dinner a proper date",
+          "reply": "I thought you'd never ask. No camera crew, no schedule. Just us. And actual food.",
+          "kind": "commit",
           "flag": "sierra_kiss",
           "delta": {
             "affection": 2,
@@ -389,8 +389,8 @@
           }
         },
         {
-          "label": "Tell her you'd like to keep making time for each other",
-          "reply": "Good. I don't want a grand promise. I want the next Saturday. And the one after that.",
+          "label": "Tell her you'd like more time together, without fixing a label yet",
+          "reply": "Then keep next Saturday free. We'll figure out the rest after dinner.",
           "kind": "honest",
           "flag": "sierra_bothsides",
           "delta": {
