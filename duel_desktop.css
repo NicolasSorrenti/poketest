@@ -1,0 +1,150 @@
+/* Desktop duel composition (>=781px).
+   Rules and authoritative decisions remain in the common duel client.
+   This stylesheet is deliberately independent of the mobile layout. */
+@media (min-width:781px){
+ body.duel-active .stage .arena-layout{min-width:0}
+ body.duel-active .stage .territory .field-row,
+ body.duel-active .stage .territory .field-row.bottom{
+  gap:10px;
+  padding:10px clamp(14px,2.1vw,32px);
+ }
+ body.duel-active .stage .territory .zone h3{
+  margin:0 0 6px;
+  letter-spacing:.17em;
+  color:#bad3e2;
+ }
+ body.duel-active .stage .territory .bench-zone .pokemon-strip{
+  display:flex;
+  justify-content:center;
+  align-items:flex-start;
+  gap:clamp(10px,1.5vw,22px);
+  padding:4px 30px 8px;
+  width:100%;
+  max-width:100%;
+  overflow:visible;
+ }
+ body.duel-active .stage .territory .bench-zone .poke{
+  box-sizing:border-box;
+  width:clamp(76px,8.3vw,116px);
+  max-width:calc((100% - 88px)/5);
+  flex:0 1 auto;
+  min-width:0;
+  min-height:0;
+  max-height:none;
+  padding:3px;
+  gap:4px;
+  --attachment-height:clamp(65px,9.3dvh,104px);
+  --attachment-width:clamp(60px,6.8vw,91px);
+  --attachment-peek:13px;
+  --tool-peek:13px;
+  --attachment-overlap:8px;
+  --tool-overlap:8px;
+ }
+ body.duel-active .stage .territory .active-zone .poke{
+  width:clamp(108px,10.4vw,144px);
+  max-height:none;
+  min-height:0;
+  padding:3px;
+  gap:5px;
+  --attachment-height:clamp(91px,12dvh,132px);
+  --attachment-width:clamp(88px,9vw,117px);
+  --attachment-peek:20px;
+  --tool-peek:20px;
+  --attachment-overlap:12px;
+  --tool-overlap:12px;
+ }
+ body.duel-active .stage .territory .poke .pokemon-face{
+  height:var(--attachment-height)!important;
+  max-height:none;
+  margin-top:0!important;
+  width:100%;
+  overflow:hidden;
+  border:1px solid #d1dddf55;
+  border-radius:5px;
+  background:#102b40;
+ }
+ body.duel-active .stage .territory .poke .pokemon-face img{
+  width:100%;
+  height:100%;
+  max-height:none;
+  object-fit:contain;
+  border-radius:4px;
+ }
+ body.duel-active .stage .territory .poke strong{
+  max-width:100%;
+  font-size:clamp(10px,1vw,12px);
+  line-height:1.2;
+  text-shadow:0 1px 3px #000c;
+ }
+ body.duel-active .stage .territory .bench-zone .poke strong{font-size:10px}
+ body.duel-active .stage .territory .poke .stats{display:none}
+ body.duel-active .stage .territory .active-with-attacks{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) minmax(108px,144px) minmax(220px,1fr);
+  align-items:center;
+  justify-content:center;
+  width:100%;
+  max-width:100%;
+  gap:clamp(10px,2vw,24px);
+ }
+ body.duel-active .stage .territory .active-with-attacks .active-slot{
+  grid-column:2;
+  width:100%;
+  min-width:0;
+  max-width:144px;
+  justify-content:center;
+  overflow:visible;
+ }
+ body.duel-active .stage .territory .active-with-attacks .inline-attack-panel{
+  grid-column:3;
+  width:100%;
+  max-width:370px;
+  min-width:0;
+  justify-self:start;
+  padding:7px 10px;
+  border-radius:10px;
+  background:#0b2230a3;
+  border:1px solid #32566c75;
+ }
+ body.duel-active .stage .territory .active-with-attacks .inline-attacks{gap:6px}
+ body.duel-active .stage .territory .poke .energy-card-stack .energy-card-art,
+ body.duel-active .stage .territory .poke .pokemon-tools .tool-card-art{
+  object-fit:cover;
+ }
+ body.duel-active .stage .territory .poke .energy-card-stack .attached-energy.energy-card-mini::before{
+  font-size:11px;
+ }
+ body.duel-active .stage .territory .bench-zone .poke .energy-card-stack .attached-energy.energy-card-mini::before{
+  font-size:9px;
+ }
+ body.duel-active .stage .territory .pokemon-strip .poke:is(:focus-visible,:hover,.legal,.decision-target){z-index:25}
+ body.duel-active .stage .territory .poke.legal{
+  outline:2px solid #66f4c3;
+  outline-offset:2px;
+ }
+ body.duel-active .stage .territory .poke.legal::after{right:-6px;top:-9px}
+ body.duel-active .stage .territory .poke:not(.legal):hover .pokemon-face{
+  box-shadow:0 7px 20px #000d,0 0 0 1px #9cead578;
+ }
+ body.duel-active .stage .territory .bench-zone .pokemon-strip .poke:focus-visible{
+  outline:2px solid #ffdd90;
+  outline-offset:2px;
+ }
+}
+@media (min-width:781px) and (max-width:1030px){
+ body.duel-active .stage .territory .active-with-attacks{
+  grid-template-columns:minmax(0,.35fr) minmax(96px,130px) minmax(150px,1fr);
+ }
+ body.duel-active .stage .territory .active-zone .poke{
+  width:clamp(98px,11.6vw,126px);
+  --attachment-height:clamp(78px,10.5dvh,110px);
+ }
+ body.duel-active .stage .territory .bench-zone .pokemon-strip{
+  gap:8px;
+  padding-inline:23px;
+ }
+ body.duel-active .stage .territory .bench-zone .poke{
+  max-width:calc((100% - 40px)/5);
+  --attachment-overlap:6px;--tool-overlap:6px;
+ }
+}
