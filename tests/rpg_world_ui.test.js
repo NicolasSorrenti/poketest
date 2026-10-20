@@ -1196,3 +1196,40 @@ test('RPG rematches show character memory in preview and provide contextual duel
  assert.equal(r.state().lastDuelReceipt.outcome,'Defeat');
  assert.match(r.state().scene.line,/Last time went differently|last game|previous match/i);
 });
+
+test('club results accrue on day changes, not on renders, and the board displays standings without time cost',()=>{
+ const r=launch({day:1,slot:2,location:'home'});
+ const zero=r.state();
+ assert.equal(zero.community.events.length,0,'No future NPC events at game start');
+ for(let i=0;i<10;i++)r.act('sleep');
+ const s=r.state();
+ assert.equal(s.day,11);
+ assert.ok(s.community.events.length>=2,'NPCs play and socialize while days pass');
+ const before=JSON.stringify(s.community),points=s.points,credits=s.credits;
+ const board=r.elements.competitiveEvents.children.find(x=>x.textContent.includes('Community Board'));
+ assert.ok(board,'A dedicated club board is available from the circuit');
+ board.onclick();
+ assert.equal(r.elements.communityDialog.open,true);
+ assert.ok(r.elements.communityStandings.children.length>0);
+ assert.ok(r.elements.communityNews.children.length>0);
+ assert.equal(JSON.stringify(r.state().community),before,'Opening the board must be read-only');
+ assert.equal(r.state().points,points);assert.equal(r.state().credits,credits);
+ assert.equal(r.state().results.length,0,'Off-screen club results are not real player duels');
+});
+test('NPC can discuss their independently earned club result without affection or reward farming',()=>{
+ const history={lastResolvedDay:4,events:[{id:'club-match-4',kind:'match',day:4,slot:1,
+  place:'center',pair:'akari:reina',a:'akari',b:'reina',winner:'reina',loser:'akari',rivalry:false}],
+  standings:{akari:{wins:0,losses:1},reina:{wins:1,losses:0}},links:{'akari:reina':{matches:1,meetings:0}}};
+ const r=launch({day:5,slot:1,location:'center',met_reina:true,metReina:true,community:history});
+ const person=r.elements.people.children.find(x=>x.children?.[1]?.children?.[0]?.textContent==='Reina Kurogane');
+ assert.ok(person,'Reina is present to discuss an off-screen club match');
+ assert.ok(person.children[1].children.some(x=>x.textContent.includes('Something to say')));
+ person.onclick();
+ assert.equal(r.state().scene.reactionId,'react:community:reina:club-match-4');
+ assert.match(r.state().scene.line,/Akari/i);
+ const before={points:r.state().points,credits:r.state().credits,bond:r.state().relationships.reina.affection};
+ finishGreeting(r);
+ assert.equal(r.state().npcReactivity.seen['react:community:reina:club-match-4'],true);
+ assert.equal(r.state().points,before.points);assert.equal(r.state().credits,before.credits);
+ assert.equal(r.state().relationships.reina.affection,before.bond);
+});
