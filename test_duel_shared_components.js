@@ -39,6 +39,18 @@ try{
  UI.renderHandFan({root:fan,ids:[],visible:true,phase:'game',makeCard,getCard:id=>({name:id}),viewportWidth:400});
  assert.equal(fan.classList.contains('hidden'),true);
 
+ const handFace=UI.handCardFace({card:{name:'Pikachu <script>'},source:'/image?x="onerror="',handType:'Basic Pokémon'});
+ assert.match(handFace,/Pikachu &lt;script&gt;/);assert.doesNotMatch(handFace,/<script>/);
+ const zone=node();
+ UI.renderZone({root:zone,team:{active:{id:'active'},bench:[{id:'left'},{id:'right'}]},active:true,createPokemon:unit=>{const el=node();el.textContent=unit.id;return el;}});
+ assert.equal(zone.children[0].textContent,'active');
+ UI.renderZone({root:zone,team:{active:{id:'active'},bench:[{id:'left'},{id:'right'}]},active:false,createPokemon:unit=>{const el=node();el.textContent=unit.id;return el;}});
+ assert.deepEqual(zone.children.map(x=>x.textContent),['left','right']);
+ UI.renderZone({root:zone,team:{active:null,bench:[]},active:false,createPokemon:()=>node()});
+ assert.equal(zone.children[0].textContent,'Empty Bench');
+ UI.renderZone({root:zone,team:{active:null,bench:[]},active:true,createPokemon:()=>node()});
+ assert.equal(zone.children[0].textContent,'Not selected');
+ 
  const face=UI.pokemonFace({unit:{energies:['grass'],damage:10},card:{name:'Test <Pokémon>'},source:'x" onerror="alert(1)',energyStack:()=>'<span>Energy</span>',vitals:()=>'<b>HP</b>'});
  assert.match(face,/Energy/);assert.match(face,/HP/);assert.match(face,/1 energy attached/);
  assert.doesNotMatch(face,/<Pokémon>/);assert.doesNotMatch(face,/src="x" onerror=/);
@@ -73,7 +85,7 @@ try{
  const classic=fs.readFileSync(__dirname+'/classic_live.js','utf8');
  const online=fs.readFileSync(__dirname+'/online.js','utf8');
  for(const [mode,client] of [['solo',classic],['multiplayer',online]]){
-  for(const method of ['renderHandPeek','renderHandFan','pokemonFace','renderAttacks','renderFaceUpPrizes','renderPrizeRail','renderPrizeFallback'])
+  for(const method of ['renderHandPeek','renderHandFan','handCardFace','renderZone','pokemonFace','renderAttacks','renderFaceUpPrizes','renderPrizeRail','renderPrizeFallback'])
    assert.ok(client.includes('shared.'+method),mode+' must use common '+method);
   assert.doesNotMatch(client,/b\.innerHTML=quick\.energyStack/,'Pokémon visuals must not diverge');
  }
