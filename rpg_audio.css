@@ -1,4 +1,7 @@
 /* Optional audio controls: small menu, never a persistent sidebar. */
+/* Ensure a scrollable mobile toolbar never clips the open settings menu. */
+.utilitybar:has(.rpg-audio-settings[open]){position:relative;z-index:37}
+.utilitybar .utility-actions:has(.rpg-audio-settings[open]){overflow:visible;flex-wrap:wrap}
 .rpg-audio-settings{position:relative;flex:none;z-index:36}
 .rpg-audio-settings>summary{list-style:none;cursor:pointer;min-height:39px;min-width:84px;
  display:flex;align-items:center;justify-content:center;padding:8px 12px;
