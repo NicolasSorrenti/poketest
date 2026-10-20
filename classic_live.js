@@ -62,16 +62,27 @@
  function fail(e){$('error').textContent=e.message||String(e);$('error').classList.remove('hidden');}
  function clearError(){$('error').textContent='';$('error').classList.add('hidden');}
 
- const CPU_ACTION_PAUSE_MS=1800;
+ const CPU_ACTION_PAUSE_MS=1800,CPU_ATTACK_PAUSE_MS=2400,RPG_ATTACK_PAUSE_MS=3300;
+ const lastEventSeq=actions=>(Array.isArray(actions)?actions:[]).reduce(
+  (max,event)=>Number.isSafeInteger(event?.seq)?Math.max(max,event.seq):max,0);
  async function playCpuPlayback(result,epoch){
   const snapshots=Array.isArray(result.cpuPlayback)?result.cpuPlayback:[];
   // These are chronological public snapshots from the authoritative server,
   // not client-side re-executions of card effects or CPU decisions.
+  let previousSeq=lastEventSeq(current?.activity);
   for(const frame of [...snapshots,result]){
    if(epoch!==playbackEpoch)return false;
+   const cpuAttacked=frame.activity?.some(event=>
+    event.side===1&&event.type==='attack'&&event.seq>previousSeq);
+   previousSeq=lastEventSeq(frame.activity);
    current=frame===result?result:{...result,...frame};
    render();
-   if(frame!==result)await new Promise(resolve=>setTimeout(resolve,CPU_ACTION_PAUSE_MS));
+   if(frame!==result){
+    // RPG attacks must hold until the illustrated NPC cut-in has completed.
+    // Other modes still receive a readable attack animation, but no NPC art.
+    const duration=cpuAttacked?(rpgMode?RPG_ATTACK_PAUSE_MS:CPU_ATTACK_PAUSE_MS):CPU_ACTION_PAUSE_MS;
+    await new Promise(resolve=>setTimeout(resolve,duration));
+   }
   }
   return true;
  }
@@ -99,7 +110,7 @@
    // Let a final knockout reaction appear before returning to the RPG map.
    const prizes=current.view.players;
    const finalKo=rpgMode&&current.view.over&&beforePrizes&&prizes.some((p,i)=>typeof beforePrizes[i]==='number'&&p.prizeCount<beforePrizes[i]);
-   if(finalKo)setTimeout(notifyRpg,1900);else notifyRpg();
+   if(finalKo)setTimeout(notifyRpg,3000);else notifyRpg();
   }catch(e){if(epoch===playbackEpoch)fail(e);}
   finally{if(epoch===playbackEpoch){busy=false;render();}}
  }
