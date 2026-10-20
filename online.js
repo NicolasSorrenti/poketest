@@ -28,6 +28,7 @@
  const quick=window.NeoDuelUI;
  const ux=window.NeoExperienceUI;
  const presentation=window.NeoBattlePresentation;
+ const shared=window.NeoBattleComponents;
  const preview=quick.makePreview($('cardPreview'),id=>card(id));
  const feedback=quick.makeDuelFeedback($('duelFeedback'));
  const combat=presentation.makeBattlePresentation({stage:document.querySelector('.stage'),popup:$('combatFx'),timeline:$('actionTimeline'),getCard:id=>cards.get(id)||{name:String(id)},me:()=>side(),opponentName:()=>current?.players?.[1-side()]?.name||'Opponent'});
@@ -183,84 +184,14 @@
   $('handVisibilityText').textContent=handVisible?'Hide hand':'Show hand';
  }
  function setPowersOpen(open){powersOpen=!!open;$('powerDrawer').classList.toggle('hidden',!powersOpen);$('powersToggle').setAttribute('aria-expanded',String(powersOpen));}
- function renderHandPeek(ids){const root=$('handPeek');root.replaceChildren();
-  if(watching()){root.textContent='Hidden';return;}
-  if(!ids?.length){const s=document.createElement('span');s.className='hand-peek-empty';s.textContent='Empty';root.append(s);return;}
-  ids.slice(0,3).forEach((id,i)=>{const s=document.createElement('span');s.className='peek-card peek-card-'+i;const src=picture(id);if(src){const img=document.createElement('img');img.alt='';img.src=src;s.append(img);}else{s.textContent='🎴';}root.append(s);});
- }
-
- function renderHandFan(ids){
-  const root=$('handFan'),cards=Array.isArray(ids)?ids:[];
-  // The permanent fan uses the exact same click/preview handlers as the list hand.
-  // Every card is rendered; long hands scroll instead of silently hiding cards.
-  const oldScroll=root.scrollLeft;
-  root.replaceChildren();root.classList.toggle('hidden',!handVisible||!cards.length);
-  if(!cards.length)return;
-  const compact=window.innerWidth<780;
-  const cardWidth=compact?72:100;
-  const available=Math.max(190,root.clientWidth||window.innerWidth*.48);
-  const minStep=compact?38:52,maxStep=compact?48:68;
-  const gap=Math.min(maxStep,Math.max(minStep,(available-cardWidth-24)/Math.max(1,cards.length-1)));
-  const width=Math.max(available,Math.ceil(gap*(cards.length-1)+cardWidth+24));
-  const track=document.createElement('div');track.className='hand-fan-track';track.style.width=width+'px';
-  const middle=(cards.length-1)/2,setup=current.view.phase==='setup';
-  cards.forEach((id,i)=>{
-   const el=handCard(id,i,setup);
-   el.type='button';
-   el.classList.remove('handcard');el.classList.add('hand-fan-card');
-   el.style.setProperty('--fan-x',(i*gap).toFixed(1)+'px');
-   if(targetMode&&selectedHand!==null&&selectedHand!==i)el.classList.add('hand-inactive');
-   el.style.setProperty('--fan-y',(Math.abs(i-middle)*2.6).toFixed(1)+'px');
-   el.style.setProperty('--fan-angle',(Math.max(-22,Math.min(22,(i-middle)*4.5))).toFixed(1)+'deg');
-   el.style.zIndex=String(i+1);
-   el.title=card(id).name+' — click to play or select';
-   track.append(el);
-  });
-  root.append(track);root.scrollLeft=oldScroll;
- }
- function pendingPrizeChoice(){const d=current?.view?.pendingDecision;return !watching()&&d?.kind==='prize-card'&&d.actor===side()?d:null;}
+ function renderHandPeek(ids){shared.renderHandPeek({root:$('handPeek'),ids,picture,hidden:watching()});}
+  function renderHandFan(ids){shared.renderHandFan({root:$('handFan'),ids,visible:handVisible,phase:current.view.phase,selectedHand,targetMode,makeCard:handCard,getCard:card,viewportWidth:window.innerWidth});}
+  function pendingPrizeChoice(){const d=current?.view?.pendingDecision;return !watching()&&d?.kind==='prize-card'&&d.actor===side()?d:null;}
  function choosePrize(id){const d=pendingPrizeChoice();if(!d||busy||!d.options?.some(o=>o.id===id))return;send(command('choose',{decisionId:d.id,selected:[id]}));}
- function renderFaceUpPrizes(){
-  if(!current?.view)return;
-  const groups=$('prizeRail').querySelectorAll('.prize-group');
-  // The rail orders opponent's Prizes first, regardless of which seat owns
-  // this browser; spectators are presented from seat 0's perspective.
-  for(const [rail,player] of [[0,1-side()],[1,side()]]){
-   const grid=groups[rail]?.querySelector('.prize-grid');if(!grid)continue;
-   for(const {index,id} of current.view.players[player]?.revealedPrizes||[]){
-    const el=grid.children[index];if(!el||!id)continue;
-    const name=card(id).name;
-    el.classList.add('prize-face-up');el.title='Face-up Prize: '+name;
-    el.setAttribute('aria-label','Face-up Prize '+(index+1)+': '+name);
-    el.textContent=name;el.style.fontSize='10px';
-    el.style.overflow='hidden';el.style.overflowWrap='anywhere';
-   }
-  }
- }
- function renderPrizes(ownCount,opponentCount){
-  const d=pendingPrizeChoice();if(!d)return;
-  const section=$('prizeRail').querySelectorAll('.prize-group')[1];if(!section)return;
-  const grid=section.querySelector('.prize-grid');if(!grid)return;
-  section.classList.add('prize-awaiting');grid.setAttribute('role','group');grid.setAttribute('aria-label','Choose your Prize card');grid.replaceChildren();
-  const options=new Map((d.options||[]).map(o=>[Number(/^prize:(\d+)$/.exec(o.id)?.[1]),o]));
-  for(let i=0;i<6;i++){
-   const option=options.get(i);
-   if(!option){const slot=document.createElement('span');slot.className='prize-back prize-taken';grid.append(slot);continue;}
-   const button=btn(String(i+1),()=>choosePrize(option.id),'prize-back prize-select',busy);
-   button.title='Take Prize '+(i+1);button.setAttribute('aria-label','Take Prize '+(i+1));grid.append(button);
-  }
- }
- function renderPrizeFallback(){
-  const d=pendingPrizeChoice(),dialog=$('prizeChoicePanel');
-  dialog.replaceChildren();dialog.classList.toggle('hidden',!d);
-  if(!d)return;
-  const title=document.createElement('strong');title.textContent='🎁 Choose a Prize';
-  const hint=document.createElement('span');hint.textContent='Tap your glowing Prize on the left, or choose a number here:';
-  const buttons=document.createElement('div');buttons.className='prize-choices';
-  for(const option of d.options||[]){const n=Number(/^prize:(\d+)$/.exec(option.id)?.[1]);buttons.append(btn('🎴 '+(n+1),()=>choosePrize(option.id),'prize-option',busy));}
-  dialog.append(title,hint,buttons);
- }
- function openDiscard(owner){
+ function renderFaceUpPrizes(){shared.renderFaceUpPrizes({rail:$('prizeRail'),view:current?.view,me:side(),getCard:card});}
+  function renderPrizes(ownCount,opponentCount){shared.renderPrizeRail({rail:$('prizeRail'),decision:pendingPrizeChoice(),busy,button:btn,choose:choosePrize});}
+  function renderPrizeFallback(){shared.renderPrizeFallback({container:$('prizeChoicePanel'),decision:pendingPrizeChoice(),busy,button:btn,choose:choosePrize});}
+  function openDiscard(owner){
   const p=current?.view?.players?.[owner];if(!p)return;
   $('pileTitle').textContent=`${current.players[owner]?.name||'Trainer'} — discard pile (${p.discard.length})`;
   const list=$('pileCards');list.replaceChildren();
@@ -354,8 +285,7 @@
   const c=hidden?{name:'Face-down Pokémon',hp:'10',types:['Colorless'],supertype:'Pokémon',subtypes:['Basic'],attacks:[]}:card(u.id),src=hidden?'neo_card_back.svg':picture(u.id),attached=Array.isArray(u.energies)?u.energies:[];
   const b=document.createElement('button');b.className='poke'+(u.damage>=Number(c.hp)?' broken':'');
   b.classList.add(...[feedback.unitClass(ownerRelative===0?current.you:1-current.you,slot)].filter(Boolean));
-  b.innerHTML=quick.energyStack({...u,energies:attached},card)+`<span class="pokemon-face">`+(src?`<img loading="lazy" alt="" src="${esc(src)}">`:`<div class="empty">${esc(c.name)}</div>`)+`</span>`+
-   `<strong>${esc(c.name)}</strong>`+ux.vitals(u,c)+`<span class="stats">${attached.length} energy attached</span>`;
+  b.innerHTML=shared.pokemonFace({unit:u,card:c,source:src,energyStack:unit=>quick.energyStack(unit,card),vitals:ux.vitals});
   b.setAttribute('aria-label',(ownerRelative===0?'Your ':'Opponent ')+c.name);
   preview.attach(b,u.id,u);
   const decisionTargets=fieldDecision(),decision=current.view.pendingDecision;
@@ -507,19 +437,8 @@
   setZone('enemyActive',cpu,-1);setZone('enemyBench',cpu,0);setZone('myActive',you,-1);setZone('myBench',you,0);
   $('handAmount').textContent=`(${you.handCount||0}${watching()?' hidden':''})`;renderHandPeek(you.hand);renderHandFan(you.hand);$('hand').textContent='';(you.hand||[]).forEach((id,i)=>$('hand').append(handCard(id,i,v.phase==='setup')));
   renderHandActions();$('attacks').textContent='';$('powers').textContent='';
-  if(you.active){
-   const active=card(you.active.id);
-   const attackEnabled=!watching()&&v.phase==='game'&&!v.over&&yourTurn&&!v.pendingDecision;
-   (you.active.effectiveAttacks||active.attacks||[]).forEach((a,i)=>{
-    const b=btn('',()=>send(command('attack',{attackIndex:i})),'attack-action',!attackEnabled);
-    const energy=(a.cost||[]).map(t=>`<span class="energy-pip energy-${esc(String(t).toLowerCase())}">${esc(String(t)[0])}</span>`).join('');
-    b.innerHTML=`<span class="attack-name">${esc(a.name)}</span><span class="attack-cost">${energy||'<small>FREE</small>'}</span><strong class="attack-damage">${esc(a.damage||'—')}</strong>${a.text?`<span class="attack-effect">${esc(a.text)}</span>`:''}`;
-    b.title=a.text||a.name;b.setAttribute('aria-label',`${a.name}, cost ${(a.cost||[]).join(', ')||'free'}, damage ${a.damage||'effect'}`);
-    const reason=presentation.attackReason({view:v,me:side(),attack:a,unit:you.active,getCard:card});
-   if(reason){b.title=reason;if(!attackEnabled)b.setAttribute('aria-disabled','true');const why=document.createElement('span');why.className='attack-warning';why.textContent=reason;b.append(why);}
-   $('attacks').append(b);
-   });
-  }else $('attacks').innerHTML='<span class="hint">Choose an Active Pokémon</span>';
+  const attackEnabled=!watching()&&v.phase==='game'&&!v.over&&yourTurn&&!v.pendingDecision;
+  shared.renderAttacks({root:$('attacks'),unit:you.active,view:v,me:side(),getCard:card,enabled:attackEnabled,button:btn,onAttack:index=>send(command('attack',{attackIndex:index})),attackReason:presentation.attackReason});
   if(v.phase==='game'&&!v.over&&yourTurn&&!v.pendingDecision&&you.active){
    [you.active,...you.bench].forEach((u,i)=>{if(u?.secretPlanFaceDown){$('powers').append(btn(`🎴 Reveal Secret Plan (${i===0?'Active':'Bench '+i})`,()=>send(command('reveal_secret',{slot:i-1}))));return;}const c=card(u.id);(c.abilities||[]).forEach(a=>{if(a.name)$('powers').append(btn(`✦ ${a.name} (${i===0?'Active':'Bench '+i})`,()=>send(command('use_power',{slot:i-1}))));});});
   }
