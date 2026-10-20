@@ -155,13 +155,10 @@
  function showInfo(c,u){$('decisionTitle').textContent=c.name;
   $('decisionText').textContent=[`HP ${c.hp??'-'} · ${c.types?.join('/')||c.supertype}`,u?`Damage ${u.damage||0} · Attached Energy ${u.energies.map(id=>card(id).name).join(', ')||'none'}`:'',...(c.attacks||[]).map(a=>`${a.name} — ${a.damage||'effect'}: ${a.text||''}`),...(c.abilities||[]).map(a=>`${a.name}: ${a.text||''}`)].filter(Boolean).join(' · ');
  }
- function setZone(elementId,team,slot){const el=$(elementId);el.textContent='';if(slot===-1){
-  if(team.active)el.append(pokemonNode(team.active,team===current.view.players[0]?0:1,-1));else el.innerHTML='<div class="empty">Not selected</div>';
- }else{if(!team.bench.length)el.innerHTML='<div class="empty">Empty Bench</div>';
-  team.bench.forEach((u,i)=>el.append(pokemonNode(u,team===current.view.players[0]?0:1,i)));}}
+ function setZone(elementId,team,slot){shared.renderZone({root:$(elementId),team,active:slot===-1,createPokemon:(unit,index)=>pokemonNode(unit,team===current.view.players[0]?0:1,index)});}
  function handCard(id,index,setup){const c=card(id),b=document.createElement('button'),src=picture(id);
   b.className='handcard'+(selectedHand===index?' selected':'');
-  b.innerHTML=(src?`<img loading="lazy" alt="" src="${esc(src)}">`:'')+`<strong>${esc(c.name)}</strong><span class="handcard-type">${esc(ux.handType(c))}</span>`;
+  b.innerHTML=shared.handCardFace({card:c,source:src,handType:ux.handType(c)});
   b.setAttribute('aria-label',`${c.name} · ${c.supertype}`);
   preview.attach(b,id);
   b.addEventListener('click',()=>{
