@@ -696,7 +696,7 @@ function showPackReveal(){
  }
  $('packRevealAll').onclick=()=>cards.forEach(show=>show());
  $('packContinue').onclick=()=>{pack.opened=true;persist();modal.close();finishDuelRewardPresentation();};
- modal.addEventListener('cancel',e=>e.preventDefault(),{once:true});
+ modal.oncancel=e=>e.preventDefault(); // One handler, even after opening dozens of packs.
  modal.showModal();
 }
 
