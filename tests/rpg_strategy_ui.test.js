@@ -29,6 +29,7 @@ function makeCards(){
 }
 async function launch(options={}){
  const state=options.state||seed(),nodes=Object.fromEntries(ids.map(id=>[id,new Node(id==='strategyOpponent'?'select':'div')]));
+ nodes.deckStudio.hidden=true;nodes.studioError.hidden=true; // Match the HTML initial hidden attributes.
  const saved={neoHarborRpgV1:JSON.stringify(state)},builder={updates:[],onChange:null};
  const collections=makeCards(),decks=Array(60).fill('base2-17');
  const w={NeoRpgCollection:Core,NeoRpgStrategy:Strategy,
