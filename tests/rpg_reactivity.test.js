@@ -114,3 +114,15 @@ test('imported NPC keeps its character-pack post-duel voice, not a generic victo
  assert.equal(R.afterDuel(state,{npc:'jun'},{duelId:'now',outcome:'Victory'},character),character.duelWin);
  assert.equal(R.afterDuel(state,{npc:'jun'},{duelId:'now',outcome:'Defeat'},character),character.duelLose);
 });
+
+test('a deliberate recovery choice takes precedence over generic recent loss chatter',()=>{
+ const C=require('../rpg_consequences');
+ const state=s({day:12,results:[duel('reina','defeat',12,false)]});
+ C.record(state,{id:'defeat',npc:'reina',day:12},{duelId:'defeat',npc:'reina',outcome:'Defeat'});
+ const e=C.opportunities(state)[0];assert.ok(C.resolve({...state,location:'center'},e.id,'study'));
+ // Above resolution uses the same nested state tracker and is recorded on the saved object.
+ const context=R.reaction(state,'reina',null,null,null,C);
+ assert.equal(context.kind,'consequence');assert.match(context.id,/react:choice:/);
+ R.mark(state,context.id);
+ assert.equal(R.reaction(state,'reina',null,null,null,C).kind,'loss');
+});
