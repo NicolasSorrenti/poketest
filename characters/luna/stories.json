@@ -365,9 +365,9 @@
       ],
       "choices": [
         {
-          "label": "Make plans to keep playing together",
-          "reply": "Then I'll bring the playmat. You bring a deck that doesn't go easy on me.",
-          "kind": "support",
+          "label": "Ask to keep meeting as friends and deckbuilding partners",
+          "reply": "I'd love that. And I'm choosing my own sixty cards next time. Deal?",
+          "kind": "friend",
           "flag": "luna_catch",
           "delta": {
             "affection": 3,
@@ -377,9 +377,9 @@
           }
         },
         {
-          "label": "Tell her you'd like it to be a date",
-          "reply": "A date? ...Yes. I'd like that very much. We can still bring our cards, right?",
-          "kind": "flirt",
+          "label": "Ask her on a real date, and mean more than just one",
+          "reply": "Yes! I'd really like that. Could we still bring our decks? ...Maybe after dinner.",
+          "kind": "commit",
           "flag": "luna_like",
           "delta": {
             "affection": 2,
@@ -389,8 +389,8 @@
           }
         },
         {
-          "label": "Let her set the pace and choose what comes next",
-          "reply": "Thank you. I want to see what we can become without rushing to decide everything.",
+          "label": "Let her decide what comes next, without making a promise tonight",
+          "reply": "Thank you. I don't have to decide everything at once. How about another game next week?",
           "kind": "honest",
           "flag": "luna_stay",
           "delta": {
