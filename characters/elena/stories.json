@@ -365,9 +365,9 @@
       ],
       "choices": [
         {
-          "label": "Tell her you'll be there",
-          "reply": "Then I'll leave next Friday blank. Deliberately.",
-          "kind": "support",
+          "label": "Suggest staying friends and meeting for more quiet games",
+          "reply": "I'd enjoy that. Next Friday, then. I can bring the deck you asked about.",
+          "kind": "friend",
           "flag": "elena_stay",
           "delta": {
             "affection": 3,
@@ -377,9 +377,9 @@
           }
         },
         {
-          "label": "Ask whether you can kiss her",
-          "reply": "Yes. I was hoping you would ask without making a proposal.",
-          "kind": "flirt",
+          "label": "Tell her you want to date her, not just exchange appointments",
+          "reply": "Yes. I was going to ask you myself, but apparently my timing needs work.",
+          "kind": "commit",
           "flag": "elena_kiss",
           "delta": {
             "affection": 2,
@@ -389,8 +389,8 @@
           }
         },
         {
-          "label": "Suggest walking together without planning a route",
-          "reply": "Good. We can change direction when we feel like it. This is already highly irregular.",
+          "label": "Take a walk together and leave the future undecided",
+          "reply": "Good. There's a street I haven't explored. Shall we start there?",
           "kind": "honest",
           "flag": "elena_both",
           "delta": {
