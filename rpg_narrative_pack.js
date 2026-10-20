@@ -14,11 +14,7 @@
    name:'Jun Arai',age:28,deck:'fossil_lab',style:'Fossil control · Deliberate play',
    intro:'Before you ask: I am off duty. You can call me Jun, and yes, I still check whether you shuffled.',
    repeat:'Good to see you. I was counting score slips, so this is an improvement.',
-   talk:[
-    'The best judges never become the story. That is harder than it sounds.',
-    'I used to build decks around doing nothing. A lot can happen in a turn when you choose not to rush.',
-    'That table has a loose leg. I have recorded it as a safety concern and as a personal insult.'
-   ],
+   talk:["A player gave me a trophy for 'Most Annoying Ruling.' It's on my desk.","I once won a match by passing three turns in a row. The spectators hated me.","That table has a loose leg. I consider it a personal insult."],
    flirt:'Flattering, but I am here for the cards. Try that line on someone who did not hear it from three challengers today.',
    duelWin:'Clean lines. You won because you left yourself options.',
    duelLose:'You rushed the final turn. I would like to show you why, if you have a minute.'
@@ -27,11 +23,7 @@
    name:'Teo Álvarez',age:24,deck:'hotfoot',style:'Hotfoot · Fast tempo',
    intro:'The rookie! Give me one sentence for the announcer booth. No pressure. Okay, some pressure.',
    repeat:'Great timing. My microphone is working, which is more than I can say for my plan.',
-   talk:[
-    'A silent crowd can be a wonderful crowd. I am still learning not to fear it.',
-    'Yuna says I make every match sound like the final. I say every match deserves a little drama.',
-    'If I say a joke twice, that usually means the first time was an accident.'
-   ],
+   talk:["My microphone died during the best play of the match. The crowd noticed before I did.","Yuna says I make every match sound like the final. She's only slightly exaggerating.","If I tell a joke twice, that means the first time was probably an accident."],
    flirt:'That is going straight into my collection of things I wish I had said first.',
    duelWin:'Oof. That was a spectacularly quiet way to beat me. Respect.',
    duelLose:'That was fast, right? I know I am not supposed to be proud of the losing part.'
@@ -40,11 +32,7 @@
    name:'Iris Navarro',age:26,deck:'cold_fusion',style:'Cold Fusion · Patient adaptability',
    intro:'If the boxes are late, blame the tide. If they are early, you can thank me.',
    repeat:'You look less lost than the last time we met. That is progress.',
-   talk:[
-    'A card box looks light until you carry twenty of them up the dock stairs.',
-    'Marina knows when the river is changing. I only know how stubborn I have to be about it.',
-    'Everyone likes the evening tournament. Not many people ask who puts the chairs away.'
-   ],
+   talk:["A card box looks light until you carry twenty of them up the dock stairs.","Marina called the high tide before the ferry captain did. I owe her lunch.","Everyone likes the evening tournament. Guess who puts the chairs away."],
    flirt:'You are charming, but first help me carry these. Then we will see if you are useful as well.',
    duelWin:'Good match. I should have read that current a turn earlier.',
    duelLose:'A slow start does not bother me. Being careless about it does.'
