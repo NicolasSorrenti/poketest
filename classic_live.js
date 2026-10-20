@@ -162,21 +162,16 @@
   b.setAttribute('aria-label',`${c.name} · ${c.supertype}`);
   preview.attach(b,id);
   b.addEventListener('click',()=>{
-   if(setup){if(c.supertype==='Pokémon'&&c.subtypes?.includes('Basic'))send(command('setup_select',{handIndex:index}));else preview.inspect(id);return;}
-   const v=current.view, canAct=v.phase==='game'&&v.turn===0&&!v.pendingDecision&&!v.over;
-   if(!canAct){preview.inspect(id);return;}
-   if(c.supertype==='Energy'&&current.you.energyUsed){fail(new Error('You have already attached an Energy this turn.'));return;}
-   if(c.supertype==='Trainer'){preview.hide();send(command('play_trainer',{handIndex:index}));return;}
-   if(c.supertype==='Pokémon'&&c.subtypes?.includes('Basic')){preview.hide();send(command('bench',{handIndex:index}));return;}
-   // Clicking Energy or an Evolution immediately enters target-selection mode.
-   if((c.supertype==='Energy'||(c.supertype==='Pokémon'&&c.evolvesFrom))){
-    if(selectedHand===index&&targetMode){cancelTarget();return;}
-    selectedHand=index;
-    preview.hide();
-    setTarget(c.supertype==='Energy'?'attach_energy':'evolve',{handIndex:index},
-      c.supertype==='Energy'?`Attach ${c.name} — choose Pokémon`:`Evolve into ${c.name} — choose Pokémon`);
-    return;
-   }
+   const v=current.view;
+   const intent=shared.handIntent({card:c,index,setup,setupConfirmed:false,
+    canAct:v.phase==='game'&&v.turn===0&&!v.pendingDecision&&!v.over,
+    energyUsed:!!current.you?.energyUsed,selectedHand,targetMode});
+   if(intent.kind==='none')return;
+   if(intent.kind==='inspect'){preview.inspect(id);return;}
+   if(intent.kind==='error'){fail(new Error(intent.message));return;}
+   if(intent.kind==='command'){if(intent.type!=='setup_select')preview.hide();send(command(intent.type,intent.payload));return;}
+   if(intent.kind==='cancel'){cancelTarget();return;}
+   if(intent.kind==='target'){selectedHand=index;preview.hide();setTarget(intent.type,intent.payload,intent.title);return;}
    selectedHand=index;targetMode=null;preview.inspect(id);render();
   });return b;
  }
