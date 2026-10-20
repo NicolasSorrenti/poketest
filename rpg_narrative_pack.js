@@ -70,102 +70,39 @@
    lines:lines.map(([speaker,text])=>({speaker,text})),choices:choices.map(x=>C(...x))};
  }
  const events=[
-  S('jun_guest_1','jun','An Appeal to the Rules',11,25,'library',1,0,null,[
-   ['jun','The ruling was correct. That does not mean it was kind.'],
-   ['Protagonist','You can be both, can’t you?'],
-   ['jun','I thought so. Then two children argued over a prize card, and I heard myself sound like a handbook.'],
-   ['Protagonist','What happened afterward?'],
-   ['jun','One stopped coming to the club. I kept the rulebook. I would rather have kept the player.'],
-   ['jun','Sorry. That was a strange answer to “Is this chair taken?”']
-  ],[
+  S('jun_guest_1','jun','An Appeal to the Rules',11,25,'library',1,0,null,[["Narrator","At the library, Jun closes a rulebook beside a tournament slip. Someone has circled a disputed ruling in red."],["jun","I made the right call. You'd think I'd be happier about it."],["Protagonist","What happened after the match?"],["jun","One of the kids packed up and left before I could explain."],["Narrator","Jun taps the folded slip against the book, then leaves it there without filing it."],["jun","Next time I see them, I'm going to ask how they're doing before I mention the rule."]],[
    ['Offer to talk to the player with him','I might take you up on that. I am better with rules than apologies.','support','jun_reach_out'],
    ['Tell him a fair ruling still needs an explanation','A fair point. I can explain a ruling without making someone feel small.','honest','jun_explain']
   ]),
-  S('jun_guest_2','jun','The Table Nobody Books',37,52,'center',0,2,'jun_guest_1',[
-   ['jun','Nobody signs up for the beginner table anymore.'],
-   ['Protagonist','Have you asked why?'],
-   ['jun','They say they are not ready. I used to tell them to practice.'],
-   ['Protagonist','That is a fairly lonely way to learn.'],
-   ['jun','Exactly. I have two spare decks and a stubborn habit I would like to break.'],
-   ['jun','Will you play the first demonstration? Deliberately badly is also acceptable.']
-  ],[
+  S('jun_guest_2','jun','The Table Nobody Books',37,52,'center',0,2,'jun_guest_1',[["jun","The beginner table is empty again. I even straightened the chairs."],["Protagonist","Did anyone sign up?"],["Narrator","Two untouched starter decks sit beside a handwritten 'Anyone welcome' sign."],["jun","Three people came over, looked at the sign, and walked away."],["Protagonist","Want me to sit down first?"],["jun","Please. And if someone makes a mistake, let them finish their turn before we jump in."]],[
    ['Volunteer to lose gracefully to a beginner','I suspect you will find losing gracefully is the harder skill. Thank you.','support','jun_demo'],
    ['Suggest he let beginners teach the rules back','That is unexpectedly clever. I can stop lecturing and start listening.','honest','jun_learn']
   ]),
-  S('jun_guest_3','jun','A Signature on the Slip',66,82,'cafe',2,4,'jun_guest_2',[
-   ['jun','The table is full now. Last week they argued about which deck box was luckiest.'],
-   ['Protagonist','Did you issue a ruling?'],
-   ['jun','No. I have finally learned when not to interfere.'],
-   ['jun','The child who stopped coming came back yesterday. I owe them an apology, not a trophy.'],
-   ['Protagonist','Are you going to give it?'],
-   ['jun','I wrote it down. Now I have to say it out loud.']
-  ],[
+  S('jun_guest_3','jun','A Signature on the Slip',66,82,'cafe',2,4,'jun_guest_2',[["jun","The beginner table is full. Someone's arguing about which deck box brings luck."],["Protagonist","You going to make a ruling?"],["Narrator","Jun sets a score slip on the table. The child's name is written carefully on the back."],["jun","No. But there's somebody here I owe an apology to."],["Protagonist","Want some company?"],["jun","Afterward, maybe. I need to go over there myself."]],[
    ['Tell him you will stay until he is ready','Stay for the coffee instead. I know what to say, and I should say it myself.','support','jun_accountable'],
    ['Encourage him to say the apology without a speech','One sentence, then listen. Right. I can do that.','honest','jun_direct']
   ]),
-  S('teo_guest_1','teo','Dead Air',5,17,'arcade',1,0,null,[
-   ['teo','There is a seven-second silence in yesterday’s recording. Seven. Entire. Seconds.'],
-   ['Protagonist','People were watching the match.'],
-   ['teo','They might have thought the mic died. Or that I did.'],
-   ['Protagonist','Did you miss a play while you were talking?'],
-   ['teo','...A really good one. Yuna noticed. I pretended I meant to.'],
-   ['teo','All right. Maybe I need to learn the difference between filling air and saying something.']
-  ],[
+  S('teo_guest_1','teo','Dead Air',5,17,'arcade',1,0,null,[["Narrator","Teo replays seven seconds of silence on his recording. The red recording light stays on long after the clip ends."],["teo","There. Right after the third turn. I thought the microphone died."],["Protagonist","You can hear the players talking about their hands."],["teo","Yeah. And then I shouted over the best move of the game."],["Narrator","He rewinds to the same moment, this time without turning up the volume."],["teo","Okay. This one stays in the edit. My commentary can go."]],[
    ['Ask him to describe one turn without jokes','That was strangely thrilling. I could actually hear the cards.','support','teo_listen'],
    ['Point out that the players are the main attraction','That stings because it is correct. I will try being the frame, not the picture.','honest','teo_credit']
   ]),
-  S('teo_guest_2','teo','The Highlight Reel',26,43,'shop',2,2,'teo_guest_1',[
-   ['teo','I cut a montage of the qualifiers. It looks amazing.'],
-   ['Protagonist','Why are you not posting it?'],
-   ['teo','The funny parts make Kaede look like a bully. Out of context, that is an easy story to sell.'],
-   ['Protagonist','Was she bullying anyone?'],
-   ['teo','No. She stayed afterward and helped someone rebuild their deck. Nobody filmed that.'],
-   ['teo','I can lose views, or I can let a lie become the thing everybody remembers.']
-  ],[
+  S('teo_guest_2','teo','The Highlight Reel',26,43,'shop',2,2,'teo_guest_1',[["teo","I made a highlight reel. Kaede looks terrifying in it."],["Protagonist","Isn't that what she wanted?"],["Narrator","The paused footage shows her laughing. An earlier shot catches someone else turning away from the camera."],["teo","Not if I cut out the bit where she helps that player afterward."],["Protagonist","Did you ask her to look at the edit?"],["teo","Not yet. I should. Before I post a version of her she won't recognize."]],[
    ['Help him recut the footage and ask Kaede first','That takes longer. It will also be hers to approve. Let us do that.','support','teo_permission'],
    ['Tell him to remove the misleading clips','I owe her the truth more than I owe the channel a punchline.','honest','teo_correction']
   ]),
-  S('teo_guest_3','teo','A Mic Left on the Table',60,78,'arcade',2,4,'teo_guest_2',[
-   ['teo','No one asked me to host the final. I took it personally for exactly three hours.'],
-   ['Protagonist','And after three hours?'],
-   ['teo','I found out the volunteer crew needed someone to teach new commentators.'],
-   ['teo','I was ready to complain, then one of them asked how I know when to stop talking.'],
-   ['Protagonist','I would pay to hear that answer.'],
-   ['teo','You and me both. I think I am finally learning it.']
-  ],[
+  S('teo_guest_3','teo','A Mic Left on the Table',60,78,'arcade',2,4,'teo_guest_2',[["teo","They didn't ask me to host the final. I wrote half a complaint before I saw the volunteer sheet."],["Protagonist","What was on the sheet?"],["Narrator","A second column lists training for new commentators. Teo's name has been penciled beside it."],["teo","Someone asked if I could teach them to call a match."],["Protagonist","You can do that?"],["teo","I can teach them when to stop talking. Possibly. I'm still testing that lesson on myself."]],[
    ['Offer to be the first practice audience','Only if you give me brutally useful notes. I trust you for those now.','support','teo_mentor'],
    ['Suggest the best commentary starts with curiosity','Not with my name in lights? You are ruining my brand. In a good way.','honest','teo_curiosity']
   ]),
-  S('iris_guest_1','iris','The Unclaimed Box',10,24,'park',0,0,null,[
-   ['iris','Three decks, no return address, and a note that says “for whoever needs them.”'],
-   ['Protagonist','Sounds like a nice surprise.'],
-   ['iris','Maybe. But the club keeps a record of donations. Otherwise things go missing and nobody knows who to ask.'],
-   ['Protagonist','You think it is suspicious?'],
-   ['iris','I think good intentions work better when people can count on them.'],
-   ['iris','I will carry the box. Can you help me find out who should receive it?']
-  ],[
+  S('iris_guest_1','iris','The Unclaimed Box',10,24,'park',0,0,null,[["Narrator","Three donated deck boxes sit on the dock office counter. The attached note reads 'for whoever needs them.'"],["iris","No return address. The kids will love these, if the club can record where they go."],["Protagonist","Do you know who they're for?"],["iris","Not yet. We have six children waiting for a practice deck."],["Narrator","She places the note in a clear sleeve and sets two boxes by the delivery ledger."],["iris","Help me check the list? I'd rather nobody end up empty-handed."]],[
    ['Offer to deliver the decks together','Good. Let us get them to the kids who have been sharing one old deck.','support','iris_deliver'],
    ['Suggest checking with the shop before giving them away','Paperwork first, generosity second. Boring, and probably wise.','honest','iris_record']
   ]),
-  S('iris_guest_2','iris','Last Ferry',32,49,'shop',1,2,'iris_guest_1',[
-   ['iris','I could make the delivery today, but I would miss my sister’s exhibition match.'],
-   ['Protagonist','Can someone cover the route?'],
-   ['iris','I trained a replacement. Then I kept answering every call instead of letting them work.'],
-   ['Protagonist','Sounds familiar.'],
-   ['iris','Yeah. Hana said the same thing, with considerably more tact.'],
-   ['iris','My sister saved me a seat. I cannot keep telling her “next time.”']
-  ],[
+  S('iris_guest_2','iris','Last Ferry',32,49,'shop',1,2,'iris_guest_1',[["iris","I could take this delivery, but my sister's match is this afternoon."],["Protagonist","Didn't you train someone to cover for you?"],["Narrator","Her phone lights up. A message from the new driver says the route is already loaded."],["iris","I keep checking whether they need me. They haven't asked once."],["Protagonist","Will you go to the match?"],["iris","Yeah. They saved me a seat. I'm going to try actually sitting in it."]],[
    ['Help write a handoff list, then send Iris to the match','You make a convincing argument for not being indispensable. I will go.','support','iris_delegate'],
    ['Tell her trusting a replacement is part of training them','They cannot learn while I hover. All right. Phone on silent.','honest','iris_trust']
   ]),
-  S('iris_guest_3','iris','Low Tide, Full Tables',68,84,'park',2,4,'iris_guest_2',[
-   ['iris','The club asked me to coordinate deliveries next season.'],
-   ['Protagonist','You sound worried.'],
-   ['iris','If I say yes, I will have to organize the work instead of doing it all myself.'],
-   ['Protagonist','Do you want the job?'],
-   ['iris','I do. I also want evenings with my family. Those things should not be enemies.'],
-   ['iris','Do not give me an answer. Just remind me I said that if I forget.']
-  ],[
+  S('iris_guest_3','iris','Low Tide, Full Tables',68,84,'park',2,4,'iris_guest_2',[["iris","The club offered me next season's delivery schedule. Coordinator, not driver."],["Protagonist","That's good news, isn't it?"],["Narrator","A fresh timetable has an empty column marked 'Backup crew.' Iris runs her finger along it."],["iris","If I take it, I'm filling that column before I agree to anything."],["Protagonist","And the evenings?"],["iris","Mine. My sister's already asked me to come to the next event."]],[
    ['Promise to remind her to keep her evenings','Deal. I will write it on the schedule where I cannot ignore it.','support','iris_balance'],
    ['Ask her to make the boundaries part of the offer','Hours, backup crew, and weekends. I can ask for those without apologizing.','honest','iris_terms']
   ]),
