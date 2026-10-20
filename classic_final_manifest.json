@@ -165,7 +165,7 @@
       "Fire",
       "Fire"
     ],
-    "text": "Flip a number of coins equal to the number of Energy cards attached to Dark Charizard. This attack does 50 damage times the number of heads. Discard a number of Energy cards attached to Dark Charizard equal to the number of heads.",
+    "text": "Flip a number of coins equal to the number of Fire Energy cards attached to Dark Charizard. This attack does 50 damage times the number of heads. Discard a number of Fire Energy cards attached to Dark Charizard equal to the number of heads.",
     "kind": "continuous-fireball"
   },
   {
@@ -201,7 +201,7 @@
       "Fire",
       "Fire"
     ],
-    "text": "Flip a number of coins equal to the number of Energy cards attached to Dark Charizard. This attack does 50 damage times the number of heads. Discard a number of Energy cards attached to Dark Charizard equal to the number of heads.",
+    "text": "Flip a number of coins equal to the number of Fire Energy cards attached to Dark Charizard. This attack does 50 damage times the number of heads. Discard a number of Fire Energy cards attached to Dark Charizard equal to the number of heads.",
     "kind": "continuous-fireball"
   },
   {
@@ -226,7 +226,7 @@
       "Fire",
       "Fire"
     ],
-    "text": "Use this attack only if there are any Energy cards attached to Dark Charmeleon. Flip a coin. If heads, discard 1 of those Energy cards. If tails, this attack does nothing (not even damage).",
+    "text": "Use this attack only if there are any Fire Energy cards attached to Dark Charmeleon. Flip a coin. If heads, discard 1 of those Energy cards. If tails, this attack does nothing (not even damage).",
     "kind": "fireball"
   },
   {
@@ -250,7 +250,7 @@
       "Fire",
       "Fire"
     ],
-    "text": "Use this attack only if there are any Energy cards attached to Dark Flareon. Flip a coin. If heads, discard 1 of those Energy cards and this attack does 30 damage plus 20 more damage. If tails, this attack does 30 damage.",
+    "text": "Use this attack only if there are any Fire Energy cards attached to Dark Flareon. Flip a coin. If heads, discard 1 of those Energy cards and this attack does 30 damage plus 20 more damage. If tails, this attack does 30 damage.",
     "kind": "playing-with-fire"
   },
   {
