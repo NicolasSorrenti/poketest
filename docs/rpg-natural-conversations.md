@@ -42,3 +42,15 @@ Run `npm run test:rpg`; key regression files are `tests/rpg_conversations.test.j
 Suggested review method: read the scene **without speaker names** and ask whether the NPC is still recognizable; read just the narration and see whether the physical story is understandable; then play each choice and verify that the response acknowledges it. Keep IDs, flags, chapter windows and choice kinds stable when rewriting a shipped route.
 
 The original eight characters' revised source is `rpg_legacy_scenes.js` (32 scenes). Their metadata and mechanical outcome branches remain in `rpg_story.js`. The six guest character packs retain their original JSON schemas; any new narrated line can be authored directly there and then regenerated with `npm run characters:build`.
+
+
+### Mandatory events and ambient lines
+
+- **Season events are global.** The scheduler can play them from any location, so write their narration as a short, town-wide vignette or notice rather than asserting that the player just walked into a specific room. A town milestone may contain a character conversation, but it must not depend on a character's current schedule.
+- **Bond events can be remote messages.** For `delivery: "remote_or_present"`, dialogue must make sense both face-to-face and as a short text exchange. Don't say "look at this photo", point to a chair, or describe a physical movement the player cannot witness unless the event engine branches its presentation by delivery mode.
+- **Use the actual speaker.** Player-facing replies after choices should be attributed to the responding NPC, not automatically marked as Narrator. Set `speaker: "Narrator"` only for descriptive prose, environmental clues and dynamically generated season records.
+- **Avoid stock therapeutic answers.** Replace "you don't have to prove yourself" and "I feel seen" with a response to something specific: a bad opening hand, a missed ferry, a table blocking an aisle, or an awkward invitation.
+- **Keep short replies short.** "No.", "Seriously?", and "Five." are valid lines; quality tests should reject empty dialogue rather than enforce long sentences.
+- **Don't lose writing to fallbacks.** `rpg_dialogue.js` has topic-specific exchanges and older supplemental arrays. Never allow a generic fallback array to overwrite a direct character-and-topic match. Add a regression test whenever introducing another dialogue source.
+- **Preserve existing save positions.** When editing mandatory and bond events, preserve their IDs, choices and established event flags; if changing the number of lines for a scene already in a save, test how an in-progress index resumes.
+- After touching `characters/*/mandatory_events.json` or `rpg_season_events.json`, regenerate and verify `rpg_character_packs.generated.js` / `rpg_season_events.js` with `npm run characters:build` and `npm run characters:check`. A generated registry is not a second source to author independently.
