@@ -1144,8 +1144,8 @@ const packs=[
       }
      },
      {
-      "label": "Offer to help move whatever she’s setting up",
-      "reply": "Useful and not lecturing me. Rare combination. Come on then.",
+      "label": "Suggest taking the longer, dry path together",
+      "reply": "Practical and not lecturing me. Fine, show me the way.",
       "kind": "support",
       "flag": "jinx_marina_help",
       "delta": {
@@ -2979,8 +2979,8 @@ const packs=[
       }
      },
      {
-      "label": "Kiss her and tell her you meant to ask first",
-      "reply": "I was going to say yes either way. You just skipped my favorite part of teasing you.",
+      "label": "Ask if you can kiss her before dinner",
+      "reply": "I was going to say yes. I just wanted to see how long you'd take to ask.",
       "kind": "flirt",
       "flag": "sierra_kiss",
       "delta": {
