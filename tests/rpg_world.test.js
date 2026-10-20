@@ -11,6 +11,19 @@ function sample(overrides={}){
  STORY.normalize(s);W.hydrate(s);return s;
 }
 function peopleFor(s){return S.peopleAt(s.day,s.slot,s.location,STORY.events);}
+test('all ambient encounters and everyday activities have grounded text and correct presentation ownership',()=>{
+ const fs=require('node:fs'),path=require('node:path');
+ const ui=fs.readFileSync(path.join(__dirname,'..','rpg.js'),'utf8');
+ assert.match(ui,/if\(a\.phase==='choice'\)return \{speaker:'Narrator',line:e\.intro/,'environmental introductions are narration');
+ assert.match(ui,/speaker:e\.npc\?name:'Narrator',line:decision\.reply/,'NPC encounter response keeps the NPC speaker');
+ assert.match(ui,/say\('Narrator',result\.summary\)/,'activity feedback cannot be attributed to unrelated NPCs');
+ for(const e of W.encounters){
+  assert.ok(e.intro.length>50,'scene is too generic '+e.id);
+  assert.equal(e.choices.length,2,e.id+' must keep both choices');
+  assert.ok(e.choices.every(c=>typeof c.reply==='string'&&c.reply.length>=35),e.id+' is missing an authored response');
+ }
+ for(const a of W.activities)assert.ok(a.text.length>45,a.id+' needs useful environmental feedback');
+});
 test('14 distinct location activities and 22 validated encounters',()=>{
  assert.deepEqual(W.validate(),[]);
  assert.equal(W.activities.length,14);
