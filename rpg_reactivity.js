@@ -55,15 +55,18 @@
   m.seen[id]=true;return true;
  }
  function lastMatch(s,npc,exclude=null){
-  return (Array.isArray(s?.results)?s.results:[]).filter(x=>validRecord(x)&&x.npc===npc&&x.id!==exclude&&x.day<=s.day)
-   .sort((a,b)=>b.day-a.day).at(0)||null;
+  return (Array.isArray(s?.results)?s.results:[]).map((row,index)=>({row,index}))
+   .filter(x=>validRecord(x.row)&&x.row.npc===npc&&x.row.id!==exclude&&x.row.day<=s.day)
+   .sort((a,b)=>b.row.day-a.row.day||b.index-a.index)[0]?.row||null;
  }
- function reaction(s,npc){
+ function reaction(s,npc,character=null){
   if(!plain(s)||typeof npc!=='string'||!goodDay(s.day)||s.day>90)return null;
   const candidate=[];
   function add(priority,id,kind,day,dialogue,asked='How have things been since then?'){
    if(!goodDay(day)||day>s.day||seen(s,id))return;
-   const voice=lines(npc,kind);
+   let voice=lines(npc,kind);
+   if(!VOICE[npc]&&kind==='win'&&typeof character?.duelWin==='string')voice=[character.duelWin,voice[1]];
+   if(!VOICE[npc]&&kind==='loss'&&typeof character?.duelLose==='string')voice=[character.duelLose,voice[1]];
    candidate.push({priority,id,kind,day,lines:[rec(npc,voice[0]),protagonist(asked),rec(npc,voice[1])]});
   }
   const match=lastMatch(s,npc);
@@ -118,6 +121,7 @@
   if(!s||!d||typeof d.npc!=='string')return null;
   const prev=lastMatch(s,d.npc,d.id);
   if(!prev||s.day-prev.day>14)return null;
+  if(prev.draw)return 'We left our last game unfinished. Shall we try again?';
   return (VOICE[d.npc]||DEFAULT)[prev.won?'preWin':'preLoss']||DEFAULT.preLoss;
  }
  function afterDuel(s,d,receipt,character){
