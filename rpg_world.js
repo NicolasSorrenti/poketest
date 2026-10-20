@@ -7,21 +7,281 @@
  if(root)root.NeoRpgWorld=api;
 })(typeof window!=='undefined'?window:null,function(){
  const activities=[
- {id:'home_reflect',place:'home',slots:[0,1,2],title:'Review your duel journal',cost:0,focus:5,change:{insight:2,preparation:1},text:'You find a better line of play in the notes from your recent matches.'},
- {id:'home_recharge',place:'home',slots:[0,1,2],title:'Take a proper break',cost:0,focus:0,change:{focus:30},text:'The apartment is quiet. A proper break makes tomorrow feel manageable.'},
- {id:'shop_shift',place:'shop',slots:[0,1],title:'Help behind the counter',cost:0,focus:12,change:{credits:18,reputation:1},npc:'hana',bond:{trust:1},text:'A steady shift earns credits and earns you a reputation for reliability.'},
- {id:'shop_trade',place:'shop',slots:[1,2],title:'Study the trading binder',cost:0,focus:8,change:{insight:2,reputation:1},npc:'camila',bond:{affection:1},text:'You learn why the most memorable trades are about people, not prices.'},
- {id:'arcade_combo',place:'arcade',slots:[1,2],title:'Run the combo challenge',cost:5,focus:10,change:{insight:2,preparation:1},npc:'yuna',bond:{affection:1},text:'A spectacular failure teaches you almost as much as a spectacular success.'},
- {id:'arcade_scores',place:'arcade',slots:[1,2],title:'Climb the score board',cost:4,focus:12,change:{reputation:2,insight:1},npc:'kaede',bond:{respect:1},text:'Your name moves upward. A few of the regulars start paying attention.'},
- {id:'park_walk',place:'park',slots:[0,1,2],title:'Walk along the waterfront',cost:0,focus:0,change:{focus:20},npc:'marina',bond:{trust:1},text:'The river gives you a much-needed moment away from competitive play.'},
- {id:'park_flyers',place:'park',slots:[0,1],title:'Help with community flyers',cost:0,focus:8,change:{reputation:2,credits:6},npc:'hana',bond:{affection:1},text:'A small afternoon favor reminds the neighborhood that you are part of it.'},
- {id:'cafe_shift',place:'cafe',slots:[0,1],title:'Cover the café rush',cost:0,focus:14,change:{credits:16,reputation:1},npc:'camila',bond:{trust:1},text:'It is not glamorous, but the café rush pays and brings new acquaintances.'},
- {id:'cafe_listen',place:'cafe',slots:[1,2],title:'Join the strategy table',cost:3,focus:7,change:{insight:2,focus:3},npc:'shiori',bond:{affection:1},text:'A conversation over warm drinks becomes an unexpectedly useful lesson.'},
- {id:'center_scrimmage',place:'center',slots:[1,2],title:'Practice tournament openings',cost:0,focus:15,change:{preparation:2,insight:1},npc:'reina',bond:{respect:1},text:'You run the difficult opening hands again and again until they feel familiar.'},
- {id:'center_volunteer',place:'center',slots:[0,1],title:'Volunteer at the duel tables',cost:0,focus:10,change:{credits:8,reputation:3},npc:'akari',bond:{trust:1},text:'You learn the tempo of a tournament from the people running it.'},
- {id:'library_research',place:'library',slots:[0,1],title:'Research historical matchups',cost:0,focus:10,change:{insight:3,preparation:1},npc:'akari',bond:{respect:1},text:'Old tournament reports reveal a weakness you had overlooked.'},
- {id:'library_read',place:'library',slots:[0,1,2],title:'Find some quiet and read',cost:0,focus:0,change:{focus:16,insight:1},npc:'shiori',bond:{trust:1},text:'The quiet makes it easier to think through the season ahead.'}
- ];
+  {
+    "id": "home_reflect",
+    "place": "home",
+    "slots": [
+      0,
+      1,
+      2
+    ],
+    "title": "Review your duel journal",
+    "cost": 0,
+    "focus": 5,
+    "change": {
+      "insight": 2,
+      "preparation": 1
+    },
+    "text": "The journal falls open to a match you nearly forgot. One line in the margin makes more sense on a second look."
+  },
+  {
+    "id": "home_recharge",
+    "place": "home",
+    "slots": [
+      0,
+      1,
+      2
+    ],
+    "title": "Take a proper break",
+    "cost": 0,
+    "focus": 0,
+    "change": {
+      "focus": 30
+    },
+    "text": "The phone goes quiet. You eat something, put the deck boxes away, and finally get an evening without a bracket."
+  },
+  {
+    "id": "shop_shift",
+    "place": "shop",
+    "slots": [
+      0,
+      1
+    ],
+    "title": "Help behind the counter",
+    "cost": 0,
+    "focus": 12,
+    "change": {
+      "credits": 18,
+      "reputation": 1
+    },
+    "npc": "hana",
+    "bond": {
+      "trust": 1
+    },
+    "text": "By closing time the sleeves are restocked and the counter is clear. Your pay is waiting by the register."
+  },
+  {
+    "id": "shop_trade",
+    "place": "shop",
+    "slots": [
+      1,
+      2
+    ],
+    "title": "Study the trading binder",
+    "cost": 0,
+    "focus": 8,
+    "change": {
+      "insight": 2,
+      "reputation": 1
+    },
+    "npc": "camila",
+    "bond": {
+      "affection": 1
+    },
+    "text": "A binder page holds three versions of the same card. The price tags tell only half the story."
+  },
+  {
+    "id": "arcade_combo",
+    "place": "arcade",
+    "slots": [
+      1,
+      2
+    ],
+    "title": "Run the combo challenge",
+    "cost": 5,
+    "focus": 10,
+    "change": {
+      "insight": 2,
+      "preparation": 1
+    },
+    "npc": "yuna",
+    "bond": {
+      "affection": 1
+    },
+    "text": "The first combo fails. So does the second. By the fifth attempt, you've found the card that keeps causing trouble."
+  },
+  {
+    "id": "arcade_scores",
+    "place": "arcade",
+    "slots": [
+      1,
+      2
+    ],
+    "title": "Climb the score board",
+    "cost": 4,
+    "focus": 12,
+    "change": {
+      "reputation": 2,
+      "insight": 1
+    },
+    "npc": "kaede",
+    "bond": {
+      "respect": 1
+    },
+    "text": "A new set of initials appears higher on the score board. Two regulars glance up from their drinks."
+  },
+  {
+    "id": "park_walk",
+    "place": "park",
+    "slots": [
+      0,
+      1,
+      2
+    ],
+    "title": "Walk along the waterfront",
+    "cost": 0,
+    "focus": 0,
+    "change": {
+      "focus": 20
+    },
+    "npc": "marina",
+    "bond": {
+      "trust": 1
+    },
+    "text": "The ferry horn fades behind you. You take the longer path along the railings before heading home."
+  },
+  {
+    "id": "park_flyers",
+    "place": "park",
+    "slots": [
+      0,
+      1
+    ],
+    "title": "Help with community flyers",
+    "cost": 0,
+    "focus": 8,
+    "change": {
+      "reputation": 2,
+      "credits": 6
+    },
+    "npc": "hana",
+    "bond": {
+      "affection": 1
+    },
+    "text": "By afternoon, the event flyers have reached every noticeboard along the waterfront. One is already crooked."
+  },
+  {
+    "id": "cafe_shift",
+    "place": "cafe",
+    "slots": [
+      0,
+      1
+    ],
+    "title": "Cover the café rush",
+    "cost": 0,
+    "focus": 14,
+    "change": {
+      "credits": 16,
+      "reputation": 1
+    },
+    "npc": "camila",
+    "bond": {
+      "trust": 1
+    },
+    "text": "The lunch rush leaves a mountain of cups and a handful of tips. Someone has drawn a smile on your order pad."
+  },
+  {
+    "id": "cafe_listen",
+    "place": "cafe",
+    "slots": [
+      1,
+      2
+    ],
+    "title": "Join the strategy table",
+    "cost": 3,
+    "focus": 7,
+    "change": {
+      "insight": 2,
+      "focus": 3
+    },
+    "npc": "shiori",
+    "bond": {
+      "affection": 1
+    },
+    "text": "At the strategy table, a single misplayed Trainer sparks twenty minutes of argument and a much better opening."
+  },
+  {
+    "id": "center_scrimmage",
+    "place": "center",
+    "slots": [
+      1,
+      2
+    ],
+    "title": "Practice tournament openings",
+    "cost": 0,
+    "focus": 15,
+    "change": {
+      "preparation": 2,
+      "insight": 1
+    },
+    "npc": "reina",
+    "bond": {
+      "respect": 1
+    },
+    "text": "You shuffle another awkward starting hand, then another. By the last game, the first turn comes more easily."
+  },
+  {
+    "id": "center_volunteer",
+    "place": "center",
+    "slots": [
+      0,
+      1
+    ],
+    "title": "Volunteer at the duel tables",
+    "cost": 0,
+    "focus": 10,
+    "change": {
+      "credits": 8,
+      "reputation": 3
+    },
+    "npc": "akari",
+    "bond": {
+      "trust": 1
+    },
+    "text": "Someone loses a match slip. You find it under a chair before the next round is announced."
+  },
+  {
+    "id": "library_research",
+    "place": "library",
+    "slots": [
+      0,
+      1
+    ],
+    "title": "Research historical matchups",
+    "cost": 0,
+    "focus": 10,
+    "change": {
+      "insight": 3,
+      "preparation": 1
+    },
+    "npc": "akari",
+    "bond": {
+      "respect": 1
+    },
+    "text": "A yellowed tournament report contains exactly the matchup you were wondering about. Somebody has circled the key turn."
+  },
+  {
+    "id": "library_read",
+    "place": "library",
+    "slots": [
+      0,
+      1,
+      2
+    ],
+    "title": "Find some quiet and read",
+    "cost": 0,
+    "focus": 0,
+    "change": {
+      "focus": 16,
+      "insight": 1
+    },
+    "npc": "shiori",
+    "bond": {
+      "trust": 1
+    },
+    "text": "The reading room is nearly empty. You finish a chapter before noticing how late it's become."
+  }
+];
  function choice(label,reply,delta){return {label,reply,delta};}
  const encounters=[
   {
