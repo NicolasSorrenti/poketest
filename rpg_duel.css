@@ -3,20 +3,64 @@ body.rpg-duel #reset,body.rpg-duel .masthead nav a{display:none!important}
 body.rpg-duel .engine-badge{border-color:#d8749e;color:#ffd4e0}
 @media(prefers-reduced-motion:reduce){body.rpg-duel *{animation-duration:.01ms!important;transition-duration:.01ms!important}}
 
-/* NPC reaction cut-ins are visible only in RPG duels and never intercept clicks. */
+/* NPC reactions are 0.9-second Persona-inspired cinematic slashes, not modal cards.
+   The transparent viewport never intercepts battle actions or choices. */
 .npc-reaction{display:none}
-body.rpg-duel .npc-reaction:not(.hidden){display:block;position:fixed;right:clamp(10px,2vw,30px);bottom:clamp(12px,3vh,32px);width:min(370px,calc(100vw - 24px));z-index:75;pointer-events:none;filter:drop-shadow(0 16px 24px #0009);animation:npc-reaction-in .25s ease-out}
-.npc-reaction-card{display:grid;grid-template-columns:118px 1fr;min-height:172px;overflow:hidden;border:1px solid #d4a6e4a6;border-radius:14px;background:linear-gradient(130deg,#281c3af0,#101a32f5);color:#fff}
-.npc-reaction-portrait{position:relative;align-self:stretch;overflow:hidden;background:radial-gradient(circle at 35% 40%,#9c72bc90,#35234a);display:flex;align-items:center;justify-content:center}
-.npc-reaction-portrait img{height:100%;width:100%;max-height:215px;object-fit:cover;object-position:top center}
+body.rpg-duel .npc-reaction:not(.hidden){
+ display:flex;position:fixed;inset:0;align-items:center;justify-content:center;
+ z-index:75;pointer-events:none;overflow:hidden;
+}
+.npc-reaction-card{
+ --cutin-accent:#ef8bab;
+ width:min(1160px,100vw);height:clamp(145px,32vh,274px);min-height:0;
+ position:relative;display:grid;grid-template-columns:minmax(120px,36%) minmax(0,1fr);
+ background:linear-gradient(106deg,#681f52 0%,#25213df7 36%,#0f1729f5 100%);
+ border:0;border-top:5px solid var(--cutin-accent);border-bottom:5px solid var(--cutin-accent);
+ box-shadow:0 20px 70px #020414b9,0 0 0 1px #ffbbd648;overflow:visible;isolation:isolate;
+ transform:skewX(-8deg);animation:npc-cut-in .9s cubic-bezier(.13,.73,.23,1) both;
+}
+.npc-reaction-card::before{
+ content:"";position:absolute;inset:-8px -14px;z-index:-1;pointer-events:none;
+ background:linear-gradient(120deg,transparent 0 25%,#ffffff16 25% 26%,transparent 26% 62%,var(--cutin-accent) 62% 63%,transparent 63%);
+}
+.npc-reaction-card.is-finisher{
+ --cutin-accent:#f2ce79;background:linear-gradient(102deg,#6c3c32,#31253dec 36%,#111524);
+ animation-duration:1.28s;
+}
+.npc-reaction-ko_taken,.npc-reaction-hurt{--cutin-accent:#ef8298}
+.npc-reaction-portrait{
+ position:relative;align-self:stretch;min-width:0;overflow:hidden;
+ background:radial-gradient(ellipse at center,#ffffff20,transparent 75%);
+ display:flex;align-items:center;justify-content:center;transform:skewX(8deg);
+}
+.npc-reaction-portrait img{
+ display:block;width:100%;height:calc(100% + 40px);max-height:none;
+ object-fit:contain;object-position:center bottom;filter:drop-shadow(8px 5px 7px #000a);
+ animation:npc-cut-portrait .25s ease-out both;
+}
 .npc-reaction-portrait.no-art::after{content:'✦';font-size:70px;color:#ffffff8c}
-.npc-reaction-copy{display:flex;flex-direction:column;justify-content:center;gap:5px;padding:14px 16px 14px 12px;min-width:0}
-.npc-reaction-tag{font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:#e9b9ff}
-.npc-reaction-name{font-size:16px;line-height:1.2;color:white}
-.npc-reaction-title{font-size:11px;letter-spacing:.1em;font-weight:800;color:#ffdf8f}
-.npc-reaction-copy p{font-size:13px;line-height:1.4;margin:2px 0 0;color:#f4ebf8}
-.npc-reaction-ko_taken .npc-reaction-card,.npc-reaction-hurt .npc-reaction-card{border-color:#ef8f8f}
-.npc-reaction-ko_scored .npc-reaction-card{border-color:#eac16a}
-@keyframes npc-reaction-in{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
-@media(max-width:600px){.npc-reaction-card{grid-template-columns:90px 1fr;min-height:134px}.npc-reaction-copy{padding:9px 11px}.npc-reaction-portrait img{max-height:170px}}
-@media(prefers-reduced-motion:reduce){.npc-reaction{animation:none!important}}
+.npc-reaction-copy{
+ display:flex;flex-direction:column;justify-content:center;gap:4px;min-width:0;
+ padding:12px 28px;transform:skewX(8deg);color:white;text-shadow:0 2px 8px #000a
+}
+.npc-reaction-tag{font:900 clamp(10px,1.2vw,15px) 'Barlow Condensed',sans-serif;letter-spacing:.17em;text-transform:uppercase;color:#fbd4e2}
+.npc-reaction-name{font:900 clamp(23px,3.5vw,48px)/1 'Barlow Condensed',sans-serif;color:white;text-transform:uppercase}
+.npc-reaction-title{font:900 clamp(13px,2vw,24px)/1 'Barlow Condensed',sans-serif;letter-spacing:.11em;color:#ffda93}
+.npc-reaction-copy p{font:700 clamp(12px,1.35vw,19px)/1.25 'Barlow Condensed',sans-serif;margin:4px 0 0;color:#fff2f9;max-width:56ch}
+@keyframes npc-cut-in{
+ 0%{opacity:0;translate:110vw 0;scale:.94 1}
+ 19%{opacity:1;translate:0 0;scale:1}
+ 71%{opacity:1;translate:0 0}
+ 100%{opacity:0;translate:-110vw 0;scale:1 1}
+}
+@keyframes npc-cut-portrait{from{opacity:.45;translate:48px 0}to{opacity:1;translate:0 0}}
+@media(max-width:600px){
+ .npc-reaction-card{height:clamp(120px,26vh,185px);grid-template-columns:35% 65%;border-width:3px;transform:skewX(-5deg)}
+ .npc-reaction-portrait,.npc-reaction-copy{transform:skewX(5deg)}
+ .npc-reaction-copy{padding:8px 13px;gap:3px}
+ .npc-reaction-name{font-size:clamp(18px,5.5vw,27px)}
+ .npc-reaction-copy p{font-size:clamp(11px,3vw,14px);line-height:1.18}
+}
+@media(prefers-reduced-motion:reduce){
+ .npc-reaction-card,.npc-reaction-card.is-finisher,.npc-reaction-portrait img{animation:none!important}
+}
