@@ -67,10 +67,10 @@ for(const [id,kind] of [['base5-4','continuous-fireball'],['base5-21','continuou
 }
 // Typhlosion Flame Wheel, explicitly 3 Fire rather than any 3 Energy.
 {
- const g=game('neo1-18',[F,F,F,G]);
+ const g=game('neo1-18',[F,F,F,F,G]);
  const d=attack(g,'Flame Wheel');
- assert.deepEqual(d.options.map(o=>o.id),['energy:0','energy:1','energy:2']);
- wrong(g,['energy:0','energy:1','energy:3']);
+ assert.deepEqual(d.options.map(o=>o.id),['energy:0','energy:1','energy:2','energy:3']);
+ wrong(g,['energy:0','energy:1','energy:4']);
  valid(g,['energy:0','energy:1','energy:2']);
  assert.ok(g.players[0].discard.every(id=>id===F));
 }
