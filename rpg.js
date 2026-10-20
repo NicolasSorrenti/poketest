@@ -334,9 +334,9 @@ function showEncounter(){
  const a=state.activeEncounter,e=a&&WORLD.byEncounter(a.id);
  if(!e)return null;
  const name=e.npc?cast[e.npc].name:'Neo Harbor';
- if(a.phase==='choice')return {speaker:name,line:e.intro,choices:e.choices.map((c,i)=>[c.label,'encounterChoice:'+i])};
+ if(a.phase==='choice')return {speaker:'Narrator',line:e.intro,choices:e.choices.map((c,i)=>[c.label,'encounterChoice:'+i])};
  const decision=e.choices[a.choice];
- return {speaker:name,line:decision.reply,choices:[['Continue · ⏳ 1 period','encounterFinish']]};
+ return {speaker:e.npc?name:'Narrator',line:decision.reply,choices:[['Continue · ⏳ 1 period','encounterFinish']]};
 }
 function startEncounter(id){
  if(state.activeStory||state.activeEncounter||state.activeArc||state.pendingDuel||state.day>90)return;
@@ -366,7 +366,7 @@ function performActivity(id){
  catch(err){$('notice').textContent=err.message;return;}
  const place=state.location;
  log('Activity completed at '+places[place][0]+': '+result.summary);recordIntention('activity');
- advance();persist();say(result.person?cast[result.person].name:'Narrator',result.summary+(result.person?' You also made a good impression.':''));
+ advance();persist();say('Narrator',result.summary);
 }
 
 
