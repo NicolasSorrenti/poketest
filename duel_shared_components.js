@@ -45,6 +45,25 @@
   });
   root.append(track);root.scrollLeft=oldScroll;
  }
+ // Returns an input intent, never a game command by itself. The host
+ // controller owns turn entitlement, networking, feedback and rendering.
+ function handIntent({card,index,setup=false,setupConfirmed=false,canAct=false,energyUsed=false,selectedHand=null,targetMode=null}){
+  if(setup){
+   if(setupConfirmed)return {kind:'none'};
+   return card.supertype==='Pokémon'&&card.subtypes?.includes('Basic')?
+    {kind:'command',type:'setup_select',payload:{handIndex:index}}:{kind:'inspect'};
+  }
+  if(!canAct)return {kind:'inspect'};
+  if(card.supertype==='Energy'&&energyUsed)return {kind:'error',message:'You have already attached an Energy this turn.'};
+  if(card.supertype==='Trainer')return {kind:'command',type:'play_trainer',payload:{handIndex:index}};
+  if(card.supertype==='Pokémon'&&card.subtypes?.includes('Basic'))return {kind:'command',type:'bench',payload:{handIndex:index}};
+  if(card.supertype==='Energy'||card.supertype==='Pokémon'&&card.evolvesFrom){
+   if(selectedHand===index&&targetMode)return {kind:'cancel'};
+   return {kind:'target',type:card.supertype==='Energy'?'attach_energy':'evolve',payload:{handIndex:index},
+    title:card.supertype==='Energy'?'Attach '+card.name+' — choose Pokémon':'Evolve into '+card.name+' — choose Pokémon'};
+  }
+  return {kind:'select'};
+ }
  function handCardFace({card,source,handType}){
   return (source?'<img loading="lazy" alt="" src="'+escape(source)+'">':'')+
    '<strong>'+escape(card.name)+'</strong><span class="handcard-type">'+escape(handType)+'</span>';
@@ -128,5 +147,5 @@
   for(const option of prizeOptions(decision))options.append(button('🎴 '+(option.index+1),()=>choose(option.id),'prize-option',busy));
   container.append(title,info,options);
  }
- return {renderHandPeek,renderHandFan,handCardFace,renderZone,pokemonFace,renderAttacks,renderFaceUpPrizes,renderPrizeRail,renderPrizeFallback,prizeOptions};
+ return {renderHandPeek,renderHandFan,handIntent,handCardFace,renderZone,pokemonFace,renderAttacks,renderFaceUpPrizes,renderPrizeRail,renderPrizeFallback,prizeOptions};
 });
