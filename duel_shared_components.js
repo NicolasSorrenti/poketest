@@ -45,6 +45,20 @@
   });
   root.append(track);root.scrollLeft=oldScroll;
  }
+ function handCardFace({card,source,handType}){
+  return (source?'<img loading="lazy" alt="" src="'+escape(source)+'">':'')+
+   '<strong>'+escape(card.name)+'</strong><span class="handcard-type">'+escape(handType)+'</span>';
+ }
+ function renderZone({root,team,active,createPokemon}){
+  if(active){
+   if(team?.active)root.replaceChildren(createPokemon(team.active,-1));
+   else{const el=document.createElement('div');el.className='empty';el.textContent='Not selected';root.replaceChildren(el);}
+   return;
+  }
+  const bench=team?.bench||[];
+  if(!bench.length){const el=document.createElement('div');el.className='empty';el.textContent='Empty Bench';root.replaceChildren(el);return;}
+  root.replaceChildren(...bench.map((unit,index)=>createPokemon(unit,index)));
+ }
  // Card visuals are shared; ownership, visibility and legal target callbacks
  // stay in the mode-specific controller.
  function pokemonFace({unit,card,source,energyStack,vitals}){
@@ -114,5 +128,5 @@
   for(const option of prizeOptions(decision))options.append(button('🎴 '+(option.index+1),()=>choose(option.id),'prize-option',busy));
   container.append(title,info,options);
  }
- return {renderHandPeek,renderHandFan,pokemonFace,renderAttacks,renderFaceUpPrizes,renderPrizeRail,renderPrizeFallback,prizeOptions};
+ return {renderHandPeek,renderHandFan,handCardFace,renderZone,pokemonFace,renderAttacks,renderFaceUpPrizes,renderPrizeRail,renderPrizeFallback,prizeOptions};
 });
