@@ -20,18 +20,18 @@
     "chance": 75,
     "focusCost": 6,
     "title": "Promotional Apron Trouble",
-    "intro": "A ribbon from the shop's promotional apron has tangled around Hana's card case.",
+    "intro": "The shop doorbell rings as Hana reaches for a deck box. A promotional apron ribbon pulls a pile of sleeves toward the counter's edge.",
     "options": [
       {
         "label": "Help untangle the ribbon",
-        "response": "You steady the card case while she laughs at the ridiculous knot.",
+        "response": "Oh, thank you. If that box fell, I'd be sorting sleeves until tomorrow. Now, which end of this thing is the knot?",
         "affection": 1,
         "trust": 2,
         "respect": 0
       },
       {
         "label": "Make a joke about the new uniform",
-        "response": "Hana strikes a heroic shop-assistant pose. Neither of you can keep a straight face.",
+        "response": "Don't laugh! They said one size fits all. I think they meant one size fits a chair.",
         "affection": 2,
         "trust": 1,
         "respect": 0
@@ -51,18 +51,18 @@
     "chance": 75,
     "focusCost": 6,
     "title": "Rain Check",
-    "intro": "A leaking gutter splashes near Reina at the Community Center entrance after practice.",
+    "intro": "Rain drums on the community center awning. A broken gutter splashes across Reina's deck bag; she lifts the bag but stays in the rain.",
     "options": [
       {
         "label": "Offer your jacket",
-        "response": "Reina rolls her eyes at first, then offers a rare appreciative smile.",
+        "response": "Keep it. You're getting soaked. ...Actually, could you hold my deck while I sort this out?",
         "affection": 1,
         "trust": 2,
         "respect": 0
       },
       {
         "label": "Challenge her to a dramatic rematch pose",
-        "response": "She turns the mishap into an absurdly intimidating victory stance.",
+        "response": "Very funny. If the rain gets another turn, I'm conceding and going inside. Coming?",
         "affection": 2,
         "trust": 1,
         "respect": 1
@@ -82,18 +82,18 @@
     "chance": 75,
     "focusCost": 6,
     "title": "The Wobbling Shelf",
-    "intro": "Shiori is trying to balance too many books as a stack starts wobbling.",
+    "intro": "At the library, Shiori reaches for the last tournament archive. The stack in her arms tilts dangerously toward the floor.",
     "options": [
       {
         "label": "Catch the falling books",
-        "response": "Together you rescue the stack before it crashes, laughing at your clumsy teamwork.",
+        "response": "Thank you. I was hoping to leave without becoming the library's cautionary example.",
         "affection": 1,
         "trust": 2,
         "respect": 0
       },
       {
         "label": "Offer to carry the rest",
-        "response": "Shiori accepts your help with a grateful, surprised smile.",
+        "response": "The heavy ones are at the bottom. If you take those, I might get to keep my dignity.",
         "affection": 2,
         "trust": 1,
         "respect": 0
@@ -113,18 +113,18 @@
     "chance": 75,
     "focusCost": 6,
     "title": "Cardstorm at the Arcade",
-    "intro": "Yuna has scattered card sleeves around a stool and her jacket is caught on its edge.",
+    "intro": "A deck sleeve skates across the arcade floor, followed by another. Yuna's jacket is hooked on the stool she knocked against chasing them.",
     "options": [
       {
         "label": "Gather sleeves together",
-        "response": "You make a ridiculous game of catching each card sleeve before it lands.",
+        "response": "I call the blue ones! No, wait, that's cheating. You've already got more than me.",
         "affection": 1,
         "trust": 2,
         "respect": 0
       },
       {
         "label": "Strike an over-the-top heroic pose",
-        "response": "Yuna starts laughing so hard she forgets the jacket is tangled.",
+        "response": "You look ridiculous. Absolutely heroic, but ridiculous. Okay, now help me get off this stool.",
         "affection": 2,
         "trust": 1,
         "respect": 0
@@ -144,18 +144,18 @@
     "chance": 75,
     "focusCost": 6,
     "title": "Out of Control Variables",
-    "intro": "A breeze through the library window sends Akari's painstaking notes into the air.",
+    "intro": "A gust through the library window lifts Akari's numbered notes off the table. One sheet lands upside down in your lap.",
     "options": [
       {
         "label": "Catch the notes in order",
-        "response": "Akari is impressed by your quick thinking; she jokes about impossible probability.",
+        "response": "Page six goes before seven, obviously. ...Sorry. Thank you. The wind doesn't respect numbering.",
         "affection": 1,
         "trust": 2,
         "respect": 0
       },
       {
         "label": "Help without worrying about order",
-        "response": "She discovers there is value in laughing at a plan that went wrong.",
+        "response": "They're all here? That's something. Give me a minute; apparently I can survive an unnumbered stack.",
         "affection": 2,
         "trust": 1,
         "respect": 0
@@ -175,18 +175,18 @@
     "chance": 75,
     "focusCost": 6,
     "title": "The Wind's Counteroffer",
-    "intro": "The café terrace breeze sends Camila's trade receipts fluttering across the table.",
+    "intro": "A breeze catches Camila's trade ledger on the café terrace. Receipts flutter beneath the neighboring tables.",
     "options": [
       {
         "label": "Help collect the receipts",
-        "response": "Camila thanks you and tells an unexpectedly sincere story about one of the cards.",
+        "response": "Careful with the blue one. That's a trade I still owe somebody for. And thank you, darling.",
         "affection": 1,
         "trust": 2,
         "respect": 0
       },
       {
         "label": "Invent a dramatic bargaining ritual",
-        "response": "Camila puts on a theatrical act that turns the accident into a shared joke.",
+        "response": "An outrageous price. I'll pay you in coffee and one completely useless uncommon. Final offer.",
         "affection": 2,
         "trust": 1,
         "respect": 0
@@ -206,18 +206,18 @@
     "chance": 75,
     "focusCost": 6,
     "title": "The Stubborn Beach Towel",
-    "intro": "After a swim at the riverside sandbar, Marina keeps losing her towel to the breeze.",
+    "intro": "At the riverside sandbar, Marina chases a towel that keeps catching the breeze. Her deck box is safe beneath a dry bag.",
     "options": [
       {
         "label": "Hold the towel while she folds it",
-        "response": "Marina laughs softly as you rescue the enormous towel without getting the deck box wet.",
+        "response": "Got it. Hold tight until I fold this corner. There. One victory I wasn't expecting today.",
         "affection": 1,
         "trust": 2,
         "respect": 0
       },
       {
         "label": "Challenge the wind to a rematch",
-        "response": "Your ridiculous strategy makes Marina laugh until she can barely speak.",
+        "response": "If you win, please teach me how. I've been losing this battle since lunch.",
         "affection": 2,
         "trust": 1,
         "respect": 0
@@ -237,18 +237,18 @@
     "chance": 75,
     "focusCost": 6,
     "title": "The Jacket Trap",
-    "intro": "Kaede's deck bag has caught on her jacket during a dramatic spin at the arcade.",
+    "intro": "At the arcade, Kaede's deck-bag strap catches on her jacket buckle as she turns toward an empty table. The bag stops; she doesn't.",
     "options": [
       {
         "label": "Help free the bag",
-        "response": "Kaede accepts your help with a mock-grudging smile.",
+        "response": "Don't say a word. Actually, hold this buckle. ...Thanks. You saw nothing.",
         "affection": 1,
         "trust": 2,
         "respect": 0
       },
       {
         "label": "Pretend to announce a surprise match",
-        "response": "She joins the absurd performance and bows as the crowd claps.",
+        "response": "Ladies and gentlemen, the undefeated jacket! Next challenger, a stubborn piece of luggage. Now get me loose.",
         "affection": 2,
         "trust": 1,
         "respect": 1
