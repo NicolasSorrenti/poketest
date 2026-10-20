@@ -45,6 +45,19 @@ function publicView(game,viewer){
    publicPlayers[viewer].privateMessages=[...(own.privateLog||[]).slice(-15)];
   }
  }
+ const projectedDecision=decisionForViewer(game.pendingDecision,viewer);
+ // Only the acting player may inspect their own complete deck during an
+ // authorized deck search. Ineligible entries are display-only, never valid IDs.
+ if(projectedDecision&&viewer!==null&&projectedDecision.actor===viewer&&
+    projectedDecision.options?.some(o=>/^deck:\\d+$/.test(o.id))&&
+    /^(find|search|recover|basic|energy)$/i.test(projectedDecision.kind||'')){
+  const eligible=new Set(projectedDecision.options.map(o=>o.id));
+  const C=require('./headless_duel').CATALOG;
+  projectedDecision.displayDeck=game.players[viewer].deck.map((id,index)=>({
+   id:'deck:'+index,cardId:id,label:C.get(id)?.name||'Unknown card',
+   eligible:eligible.has('deck:'+index)
+  }));
+ }
  return {phase:game.phase,turn:game.turn,round:game.round,over:!!game.over,stadium:game.stadium?{id:game.stadium.id,owner:game.stadium.owner}:null,players:publicPlayers,messages:[...(game.message||[]).slice(0,20)],pendingDecision:decisionForViewer(game.pendingDecision,viewer),coinFlips:[...(game.coinFlips||[]).slice(-40)]};
 }
 // Exact ordered public actions, with opaque sequence numbers for polling clients.
