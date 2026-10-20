@@ -71,72 +71,72 @@
  }
  const events=[
   S('jun_guest_1','jun','An Appeal to the Rules',11,25,'library',1,0,null,[["Narrator","At the library, Jun closes a rulebook beside a tournament slip. Someone has circled a disputed ruling in red."],["jun","I made the right call. You'd think I'd be happier about it."],["Protagonist","What happened after the match?"],["jun","One of the kids packed up and left before I could explain."],["Narrator","Jun taps the folded slip against the book, then leaves it there without filing it."],["jun","Next time I see them, I'm going to ask how they're doing before I mention the rule."]],[
-   ['Offer to talk to the player with him','I might take you up on that. I am better with rules than apologies.','support','jun_reach_out'],
-   ['Tell him a fair ruling still needs an explanation','A fair point. I can explain a ruling without making someone feel small.','honest','jun_explain']
+   ['Offer to talk to the player with him','I hope they\'ll talk to me. Can you help me find out when they\'re next at the club?','support','jun_reach_out'],
+   ['Tell him a fair ruling still needs an explanation','You\'re right. I should have said why I made the call, not just quoted a rule.','honest','jun_explain']
   ]),
   S('jun_guest_2','jun','The Table Nobody Books',37,52,'center',0,2,'jun_guest_1',[["jun","The beginner table is empty again. I even straightened the chairs."],["Protagonist","Did anyone sign up?"],["Narrator","Two untouched starter decks sit beside a handwritten 'Anyone welcome' sign."],["jun","Three people came over, looked at the sign, and walked away."],["Protagonist","Want me to sit down first?"],["jun","Please. And if someone makes a mistake, let them finish their turn before we jump in."]],[
-   ['Volunteer to lose gracefully to a beginner','I suspect you will find losing gracefully is the harder skill. Thank you.','support','jun_demo'],
-   ['Suggest he let beginners teach the rules back','That is unexpectedly clever. I can stop lecturing and start listening.','honest','jun_learn']
+   ['Volunteer to lose gracefully to a beginner','Sit opposite me. I\'ll play the first game badly so you don\'t have to.','support','jun_demo'],
+   ['Suggest he let beginners teach the rules back','They get to explain the turn back to me? Good. I might learn something too.','honest','jun_learn']
   ]),
   S('jun_guest_3','jun','A Signature on the Slip',66,82,'cafe',2,4,'jun_guest_2',[["jun","The beginner table is full. Someone's arguing about which deck box brings luck."],["Protagonist","You going to make a ruling?"],["Narrator","Jun sets a score slip on the table. The child's name is written carefully on the back."],["jun","No. But there's somebody here I owe an apology to."],["Protagonist","Want some company?"],["jun","Afterward, maybe. I need to go over there myself."]],[
-   ['Tell him you will stay until he is ready','Stay for the coffee instead. I know what to say, and I should say it myself.','support','jun_accountable'],
-   ['Encourage him to say the apology without a speech','One sentence, then listen. Right. I can do that.','honest','jun_direct']
+   ['Tell him you will stay until he is ready','After coffee, yes. But I should speak to them on my own first.','support','jun_accountable'],
+   ['Encourage him to say the apology without a speech','One sentence, then let them answer. All right. Here goes.','honest','jun_direct']
   ]),
   S('teo_guest_1','teo','Dead Air',5,17,'arcade',1,0,null,[["Narrator","Teo replays seven seconds of silence on his recording. The red recording light stays on long after the clip ends."],["teo","There. Right after the third turn. I thought the microphone died."],["Protagonist","You can hear the players talking about their hands."],["teo","Yeah. And then I shouted over the best move of the game."],["Narrator","He rewinds to the same moment, this time without turning up the volume."],["teo","Okay. This one stays in the edit. My commentary can go."]],[
-   ['Ask him to describe one turn without jokes','That was strangely thrilling. I could actually hear the cards.','support','teo_listen'],
-   ['Point out that the players are the main attraction','That stings because it is correct. I will try being the frame, not the picture.','honest','teo_credit']
+   ['Ask him to describe one turn without jokes','All right, turn three, no jokes. ...That\'s harder than it sounds.','support','teo_listen'],
+   ['Point out that the players are the main attraction','The players did all the work. I\'ll try letting people hear it.','honest','teo_credit']
   ]),
   S('teo_guest_2','teo','The Highlight Reel',26,43,'shop',2,2,'teo_guest_1',[["teo","I made a highlight reel. Kaede looks terrifying in it."],["Protagonist","Isn't that what she wanted?"],["Narrator","The paused footage shows her laughing. An earlier shot catches someone else turning away from the camera."],["teo","Not if I cut out the bit where she helps that player afterward."],["Protagonist","Did you ask her to look at the edit?"],["teo","Not yet. I should. Before I post a version of her she won't recognize."]],[
-   ['Help him recut the footage and ask Kaede first','That takes longer. It will also be hers to approve. Let us do that.','support','teo_permission'],
-   ['Tell him to remove the misleading clips','I owe her the truth more than I owe the channel a punchline.','honest','teo_correction']
+   ['Help him recut the footage and ask Kaede first','I\'ll send Kaede the new cut before it goes up. Will you watch it with me?','support','teo_permission'],
+   ['Tell him to remove the misleading clips','You\'re right. I\'ll take those shots out and tell her why.','honest','teo_correction']
   ]),
   S('teo_guest_3','teo','A Mic Left on the Table',60,78,'arcade',2,4,'teo_guest_2',[["teo","They didn't ask me to host the final. I wrote half a complaint before I saw the volunteer sheet."],["Protagonist","What was on the sheet?"],["Narrator","A second column lists training for new commentators. Teo's name has been penciled beside it."],["teo","Someone asked if I could teach them to call a match."],["Protagonist","You can do that?"],["teo","I can teach them when to stop talking. Possibly. I'm still testing that lesson on myself."]],[
-   ['Offer to be the first practice audience','Only if you give me brutally useful notes. I trust you for those now.','support','teo_mentor'],
-   ['Suggest the best commentary starts with curiosity','Not with my name in lights? You are ruining my brand. In a good way.','honest','teo_curiosity']
+   ['Offer to be the first practice audience','Brutal notes? Wonderful. My ego needs a few good bruises.','support','teo_mentor'],
+   ['Suggest the best commentary starts with curiosity','Not my name in lights? Fine. Maybe the match deserves the headline.','honest','teo_curiosity']
   ]),
   S('iris_guest_1','iris','The Unclaimed Box',10,24,'park',0,0,null,[["Narrator","Three donated deck boxes sit on the dock office counter. The attached note reads 'for whoever needs them.'"],["iris","No return address. The kids will love these, if the club can record where they go."],["Protagonist","Do you know who they're for?"],["iris","Not yet. We have six children waiting for a practice deck."],["Narrator","She places the note in a clear sleeve and sets two boxes by the delivery ledger."],["iris","Help me check the list? I'd rather nobody end up empty-handed."]],[
-   ['Offer to deliver the decks together','Good. Let us get them to the kids who have been sharing one old deck.','support','iris_deliver'],
-   ['Suggest checking with the shop before giving them away','Paperwork first, generosity second. Boring, and probably wise.','honest','iris_record']
+   ['Offer to deliver the decks together','The club\'s beginner list is in the office. Come on, let\'s check the names.','support','iris_deliver'],
+   ['Suggest checking with the shop before giving them away','Paperwork first. Then the kids can play. I\'ll get the pen.','honest','iris_record']
   ]),
   S('iris_guest_2','iris','Last Ferry',32,49,'shop',1,2,'iris_guest_1',[["iris","I could take this delivery, but my sister's match is this afternoon."],["Protagonist","Didn't you train someone to cover for you?"],["Narrator","Her phone lights up. A message from the new driver says the route is already loaded."],["iris","I keep checking whether they need me. They haven't asked once."],["Protagonist","Will you go to the match?"],["iris","Yeah. They saved me a seat. I'm going to try actually sitting in it."]],[
-   ['Help write a handoff list, then send Iris to the match','You make a convincing argument for not being indispensable. I will go.','support','iris_delegate'],
-   ['Tell her trusting a replacement is part of training them','They cannot learn while I hover. All right. Phone on silent.','honest','iris_trust']
+   ['Help write a handoff list, then send Iris to the match','There\'s the handoff sheet. The new driver\'s already on the road. I\'m going to the match.','support','iris_delegate'],
+   ['Tell her trusting a replacement is part of training them','Phone on silent. If something breaks, they\'ll know how to call the office.','honest','iris_trust']
   ]),
   S('iris_guest_3','iris','Low Tide, Full Tables',68,84,'park',2,4,'iris_guest_2',[["iris","The club offered me next season's delivery schedule. Coordinator, not driver."],["Protagonist","That's good news, isn't it?"],["Narrator","A fresh timetable has an empty column marked 'Backup crew.' Iris runs her finger along it."],["iris","If I take it, I'm filling that column before I agree to anything."],["Protagonist","And the evenings?"],["iris","Mine. My sister's already asked me to come to the next event."]],[
-   ['Promise to remind her to keep her evenings','Deal. I will write it on the schedule where I cannot ignore it.','support','iris_balance'],
-   ['Ask her to make the boundaries part of the offer','Hours, backup crew, and weekends. I can ask for those without apologizing.','honest','iris_terms']
+   ['Promise to remind her to keep her evenings','Put it in writing. If I start booking every evening again, point to the timetable.','support','iris_balance'],
+   ['Ask her to make the boundaries part of the offer','Backup crew, set hours, weekends off. All right. I\'ll ask for that.','honest','iris_terms']
   ]),
   S('hana_cross_1','hana','The Extra Table',25,39,'shop',1,1,'hana_route_1',[["Narrator","The shop's last empty table bears a handwritten 'BEGINNERS' sign. Beside it, Teo has already unpacked a microphone."],["hana","I need that table by six. The kids are bringing their starter decks."],["teo","And my stream starts at six. I've advertised it for two weeks."],["Protagonist","Could you shorten the stream and let them use the table afterward?"],["Narrator","Teo studies his schedule. Hana waits, one hand still on the back of the chair."],["hana","I can help set up the camera if we can clear the space by seven."]],[
-   ['Propose a shorter stream and a longer beginner session','An actual compromise. I should have asked instead of worrying.','support','hana_shared_table'],
-   ['Encourage Hana to tell Teo what she needs','Okay. Teo, I need that table by six. And I am asking, not apologizing.','honest','hana_boundary']
+   ['Propose a shorter stream and a longer beginner session','Teo, seven o\'clock. I\'ll help you pack the camera, but I need the table afterward.','support','hana_shared_table'],
+   ['Encourage Hana to tell Teo what she needs','Teo, I need that table for the kids by seven. Can we do that?','honest','hana_boundary']
   ]),
   S('yuna_cross_1','yuna','The Match Without Applause',34,49,'arcade',2,2,'yuna_route_1',[["Narrator","At the arcade, Teo has brought a microphone to Yuna's private test table. The cable is coiled neatly beneath his chair."],["yuna","I don't want a recording tonight. I've got a deck to fix."],["teo","It's switched off. See? No light."],["Protagonist","Then you could both play a few hands."],["Narrator","Yuna slides a sleeved deck toward Teo without looking at the microphone."],["yuna","Here. It's awful against Water. Show me why."]],[
-   ['Offer to test the serious list with them','Nobody is recording it. Thank you. That is exactly the kind of pressure I need.','support','yuna_private_test'],
-   ['Tell Teo that Yuna has already made her choice','Thanks. I was trying to say that without turning it into a performance.','honest','yuna_boundary']
+   ['Offer to test the serious list with them','Thank you. Deal the ugly hands first. I want to know how badly this list loses.','support','yuna_private_test'],
+   ['Tell Teo that Yuna has already made her choice','It\'s fine, Teo. Just take the microphone home after the match.','honest','yuna_boundary']
   ]),
   S('camila_cross_1','camila','Inventory of Trust',36,52,'shop',1,1,'camila_route_1',[["Narrator","Seven prize decks lie across the shop counter. The delivery manifest, pinned beneath a paperweight, calls for eight."],["camila","We're a deck short. Iris, tell me that's a printing error."],["iris","The eighth box was damaged. I didn't want to pass it on as a prize."],["Protagonist","There's a spare deck in the display case, isn't there?"],["Narrator","Camila unlocks the case, pauses over the price tag, and takes out the box."],["camila","I'll lend it if we put the replacement in writing. Someone hand me a pen."]],[
-   ['Suggest Camila lend the spare deck and document it','Lend, not give away. You are annoyingly good at finding a third option.','support','camila_lend'],
-   ['Ask the organizers to decide openly','You are right. I should not turn a community decision into my private burden.','honest','camila_transparent']
+   ['Suggest Camila lend the spare deck and document it','A loan, not a gift. Now that I can put in the ledger.','support','camila_lend'],
+   ['Ask the organizers to decide openly','Let\'s let the tournament staff choose. It\'s their event, after all.','honest','camila_transparent']
   ]),
   S('marina_cross_1','marina','A Weather Window',39,55,'park',2,1,'marina_route_1',[["Narrator","The ferry timetable rattles in its frame. Marina watches the waves climbing higher than the steps at the landing."],["marina","The qualifier starts before some players will get here if the boats run late."],["iris","I warned the organizers. They're still using the old start time."],["Protagonist","Can the registration desk stay open longer?"],["Narrator","Marina takes out her phone. The organizer's number is on the back of her event flyer."],["marina","I'm calling them. Can you help me explain what the crossing's like today?"]],[
-   ['Help Marina contact the organizers','They agreed to allow late arrivals. That is one less person left on the dock.','support','marina_access'],
-   ['Encourage her to make the argument herself','I did not need anyone to speak for me. I just needed the nerve to call.','honest','marina_voice']
+   ['Help Marina contact the organizers','They said late arrivals can register. I\'ll put a note at the landing.','support','marina_access'],
+   ['Encourage her to make the argument herself','They agreed! I\'ll tell the ferry captain before the next crossing.','honest','marina_voice']
   ]),
   S('reina_cross_1','reina','A Correct Loss',47,63,'center',2,2,'reina_route_2',[["Narrator","At the community center, Reina folds a corrected match slip so tightly that its edges crease."],["reina","Jun let the attack be replayed. He was right. I still hate it."],["jun","You agreed to the correction before the next turn. That's all anyone asked."],["Protagonist","Want to test the matchup again without the mistake?"],["Narrator","Reina unfolds the slip, notices the crease, and smooths it against the table."],["reina","Yes. Same decks. No favors. I want to know what the game should've looked like."]],[
-   ['Offer to test the corrected matchup with her','No sympathy games. Full strength. Good. You know me.','support','reina_rebuild'],
-   ['Point out she admitted the error without excuses','Do not make a ceremony of it. ...But thank you for noticing.','honest','reina_own_error']
+   ['Offer to test the corrected matchup with her','Full strength. The corrected matchup. No shortcuts.','support','reina_rebuild'],
+   ['Point out she admitted the error without excuses','I admitted the mistake. Now let me do something about it. Cut the deck.','honest','reina_own_error']
   ]),
   S('akari_cross_1','akari','A Model of Fairness',51,66,'library',1,2,'akari_route_2',[["Narrator","Akari's seating chart fills an entire noticeboard. Jun points to three consecutive rows with the same name highlighted."],["akari","It's a fair distribution by ranking. I checked twice."],["jun","That beginner has been paired against three champions."],["Protagonist","Does the model track who comes back the following week?"],["Narrator","Akari checks the small print at the bottom of the chart. Her pencil stays in place above an empty column."],["akari","No. It doesn't. I should ask the beginner before I revise anything."]],[
-   ['Help her interview the new players','I kept treating discomfort as noise. It was data I should have asked about.','support','akari_interviews'],
-   ['Ask her to publish the model’s limits before using it','A model should disclose what it cannot measure. I will add that.','honest','akari_limits']
+   ['Help her interview the new players','We\'ll ask whether the pairings felt fair. That\'s missing from my sheet.','support','akari_interviews'],
+   ['Ask her to publish the model’s limits before using it','I\'ll add a note on the board. The numbers don\'t say everything.','honest','akari_limits']
   ]),
   S('kaede_cross_1','kaede','A Cut That Matters',62,77,'arcade',2,1,'kaede_route_1',[["Narrator","At the arcade, a clip of Kaede's last match plays on three phones. The handshake at the end has been cut."],["kaede","Now everybody thinks I stormed off. You shared that, Teo."],["teo","I did. I should've watched the whole match first."],["Protagonist","Can you post the full recording alongside the clip?"],["Narrator","Teo opens the upload screen and passes the phone toward Kaede."],["kaede","Show the correction as loudly as the mistake. Then we're square."]],[
-   ['Support Kaede without speaking for her','I can defend myself. Still... it is easier with someone listening.','support','kaede_own_story'],
-   ['Ask Teo to publish the correction with equal visibility','Good. An apology that nobody sees is just a private comfort.','honest','kaede_public_correction']
+   ['Support Kaede without speaking for her','I\'m not asking you to fight my battles. Just don\'t share that clip again.','support','kaede_own_story'],
+   ['Ask Teo to publish the correction with equal visibility','Same audience, same volume. Thanks. That\'s all I wanted.','honest','kaede_public_correction']
   ]),
   S('shiori_cross_1','shiori','The Second Opinion',60,76,'center',2,2,'shiori_route_2',[["Narrator","Jun brings an old score sheet to the library. Shiori opens it at a corner worn thin from being folded."],["shiori","That's the tournament I keep talking about. I remember the last turn too clearly."],["jun","The ruling was disputed. It doesn't tell us whether you played well."],["Protagonist","Would you want to play a match here, without a crowd?"],["Narrator","Shiori closes the folder but leaves her deck case on the table."],["shiori","I think I would. Just one game. And please don't ask about the score sheet again tonight."]],[
-   ['Offer a friendly match with no audience','I would like that. A game with no burden on it. Just cards and company.','support','shiori_no_stakes'],
-   ['Ask what she wants to teach the next generation','That learning to lose is not the same as learning to disappear.','honest','shiori_teaches']
+   ['Offer a friendly match with no audience','I\'d like that. No bracket. Just one game after tea.','support','shiori_no_stakes'],
+   ['Ask what she wants to teach the next generation','I might run a beginner table again. One step at a time.','honest','shiori_teaches']
   ])
  ];
  // Crossover participants have a real appointment at the story location.
