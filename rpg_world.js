@@ -24,100 +24,772 @@
  ];
  function choice(label,reply,delta){return {label,reply,delta};}
  const encounters=[
- {id:'shop_opening',place:'shop',npc:'hana',start:3,end:17,slots:[0],minBond:0,title:'Before the Doors Open',intro:'A pile of unopened boxes is balanced precariously behind the counter. Someone looks relieved to see a familiar face.',choices:[
-  choice('Stay to help', 'The shelves look much better with two people working.',{reputation:1,trust:2,affection:1,focus:-6}),
-  choice('Show a quicker way to organize', 'An improvised system makes the morning surprisingly easy.',{insight:2,respect:1,affection:1})]},
- {id:'shop_trade_night',place:'shop',npc:'camila',start:19,end:36,slots:[1,2],minBond:1,title:'The Unusual Trade',intro:'A collector hesitates over two cards while the regulars gather to watch.',choices:[
-  choice('Make a fair proposal','Everyone leaves smiling, which feels like a victory.',{trust:2,reputation:2,credits:-5}),
-  choice('Ask what the card means to them','The answer changes the whole conversation.',{affection:2,insight:1})]},
- {id:'shop_late_match',place:'shop',npc:'reina',start:62,end:82,slots:[1,2],minBond:2,title:'An Empty Practice Table',intro:'The last table is still set for a match, though the crowd has gone.',choices:[
-  choice('Offer to test difficult hands','There is no audience, just an honest exchange of ideas.',{respect:2,preparation:1,focus:-8}),
-  choice('Suggest a break from competition','The evening ends in rare, comfortable silence.',{affection:2,trust:1})]},
- {id:'arcade_joke',place:'arcade',npc:'yuna',start:7,end:23,slots:[1,2],minBond:0,title:'One More Attempt',intro:'A ridiculous deck experiment draws a curious crowd.',choices:[
-  choice('Join the experiment','The results are chaotic and surprisingly educational.',{affection:2,insight:1}),
-  choice('Offer some tactical advice','A tiny adjustment produces a spectacular result.',{respect:1,preparation:1,trust:1})]},
- {id:'arcade_challenge',place:'arcade',npc:'kaede',start:44,end:65,slots:[1,2],minBond:0,title:'The New Challenger',intro:'An unfamiliar competitor has taken over the corner table, looking unimpressed.',choices:[
-  choice('Welcome her to the scene','A hint of a smile suggests the welcome landed.',{affection:1,trust:2}),
-  choice('Discuss the toughest opponents','Now she seems genuinely interested.',{respect:2,insight:1})]},
- {id:'park_riverside',place:'park',npc:'marina',start:8,end:27,slots:[0,2],minBond:0,title:'By the Water',intro:'The riverside path is unusually peaceful, even with a busy circuit week approaching.',choices:[
-  choice('Enjoy the quiet together','It is a relief to spend time without chasing a result.',{trust:2,focus:12}),
-  choice('Ask about her next challenge','An honest conversation leaves both of you a little braver.',{affection:1,respect:1,preparation:1})]},
- {id:'park_communal',place:'park',npc:null,start:18,end:42,slots:[0,1],minBond:0,title:'A Neighborhood Favor',intro:'A few volunteers are setting up the park for a community event.',choices:[
-  choice('Give them a hand','Neighbors start recognizing you for something beyond your deck.',{reputation:3,focus:-8}),
-  choice('Share a few spare supplies','A small contribution makes a surprisingly big difference.',{reputation:2,credits:-6,insight:1})]},
- {id:'cafe_old_story',place:'cafe',npc:'shiori',start:17,end:36,slots:[0,2],minBond:1,title:'An Old Photograph',intro:'A faded picture on the wall starts an unexpected conversation.',choices:[
-  choice('Listen without pressing','Some memories are best shared slowly.',{trust:2,affection:1}),
-  choice('Offer a new perspective','The conversation continues long after the drinks go cold.',{respect:2,insight:1})]},
- {id:'cafe_neighbors',place:'cafe',npc:null,start:28,end:58,slots:[1],minBond:0,title:'The Regulars’ Table',intro:'A few local players are debating which strategy defines the town.',choices:[
-  choice('Join the discussion','Your name starts turning up in conversations around the circuit.',{reputation:2,insight:1}),
-  choice('Offer to buy a round of snacks','You hear an impressive number of terrible deck ideas.',{credits:-7,reputation:2,focus:5})]},
- {id:'cafe_trade',place:'cafe',npc:'camila',start:62,end:81,slots:[2],minBond:2,title:'No Business Tonight',intro:'For once, there are no cards on the café table.',choices:[
-  choice('Ask how she is doing','An ordinary question turns into an unexpectedly sincere evening.',{trust:2,affection:1}),
-  choice('Tell her about your own worries','An unguarded moment brings an equal measure of honesty.',{affection:2,trust:1})]},
- {id:'center_coach',place:'center',npc:'reina',start:11,end:32,slots:[1,2],minBond:0,title:'Training Partners',intro:'The practice room is still open, and a fierce player is looking for a challenge.',choices:[
-  choice('Ask her to critique your game','The criticism is brutal, precise and useful.',{respect:2,preparation:1,focus:-8}),
-  choice('Encourage her to take a break','You get a rare laugh instead of another lecture.',{affection:2,focus:5})]},
- {id:'center_volunteers',place:'center',npc:'akari',start:48,end:70,slots:[1],minBond:1,title:'The Results Board',intro:'Someone has been comparing the circuit rankings with a very complicated spreadsheet.',choices:[
-  choice('Help check the rankings','The numbers are useful, but the teamwork is better.',{trust:1,respect:1,insight:2}),
-  choice('Suggest a different way to measure progress','An unexpectedly thoughtful discussion follows.',{affection:1,respect:2})]},
- {id:'library_notes',place:'library',npc:'akari',start:13,end:35,slots:[0,1],minBond:0,title:'Margin Notes',intro:'Someone has covered an otherwise ordinary match report in tiny annotations.',choices:[
-  choice('Study the pattern together','A fresh calculation improves both your plans.',{trust:1,insight:2,preparation:1}),
-  choice('Question the key assumption','The disagreement ends in a respectful smile.',{respect:2,affection:1})]},
- {id:'library_silence',place:'library',npc:'shiori',start:48,end:74,slots:[0,1,2],minBond:1,title:'The Quiet Corner',intro:'An otherwise deserted reading room has one occupied table.',choices:[
-  choice('Share a quiet hour','The silence feels companionable rather than empty.',{trust:2,focus:10}),
-  choice('Exchange favorite books','A new topic creates a natural reason to meet again.',{affection:2,insight:1})]},
- {id:'home_postcard',place:'home',npc:null,start:10,end:28,slots:[2],minBond:0,title:'A Postcard From Home',intro:'There is a handwritten note waiting on your desk.',choices:[
-  choice('Write an honest reply','Putting your thoughts into words helps you see the season clearly.',{focus:15,insight:2}),
-  choice('Pin it beside your tournament calendar','A little encouragement makes the next day easier.',{focus:25,reputation:1})]},
- {id:'home_reflection',place:'home',npc:null,start:60,end:83,slots:[0,2],minBond:0,title:'The Unmarked Date',intro:'There is one more blank page in your journal than you expected.',choices:[
-  choice('List what has changed','The progress that matters extends beyond the rankings.',{insight:3,focus:10}),
-  choice('Make time for the people who matter','You leave the page open as a reminder.',{focus:20,reputation:1})]}
-,
- // Optional tournament aftermath: the result matters, but no cup is required for the campaign.
- {id:'cup_neighborhood_rival',place:'center',npc:'reina',start:31,end:49,slots:[1,2],minBond:0,
-  requiresCup:{id:'neighborhood',states:['champion','eliminated']},
-  title:'A Match Worth Remembering',
-  intro:'Reina is putting away the community center tables. She taps the corner of your old tournament score sheet and raises an eyebrow.',
-  choices:[
-   choice('Ask her to analyze the toughest turn','She draws three quick arrows on the score sheet. The next game already feels closer.',{insight:2,preparation:1,respect:2}),
-   choice('Admit what the cup meant to you','Her answer comes without the usual teasing. The result is not the whole story.',{trust:2,affection:1,reputation:1})]},
- {id:'cup_neighborhood_return',place:'shop',npc:'hana',start:36,end:54,slots:[0,1],minBond:0,
-  requiresCup:{id:'neighborhood',states:['missed','expired']},
-  title:'A Seat at the Next Table',
-  intro:'The neighborhood cup is over. Hana finds you studying the old sign-up sheet with a look she recognizes immediately.',
-  choices:[
-   choice('Ask for help preparing for the next chance','She clears a table and quietly promises to save an evening for practice.',{trust:2,affection:1,preparation:1}),
-   choice('Volunteer to help the next event run smoothly','The list of volunteers gets one name longer. The room feels more welcoming.',{reputation:3,affection:1,credits:6})]},
- {id:'cup_regional_numbers',place:'library',npc:'akari',start:61,end:80,slots:[0,1],minBond:0,
-  requiresCup:{id:'regional',states:['champion','eliminated']},
-  title:'What the Numbers Leave Out',
-  intro:'Akari has a stack of match notes from the regional qualifier. One page has your name circled in precise handwriting.',
-  choices:[
-   choice('Study your strongest decision together','She nods at your reasoning, then offers a more difficult puzzle to solve.',{insight:3,respect:2}),
-   choice('Ask about the things statistics cannot measure','For a moment, she forgets to take notes and simply enjoys the conversation.',{affection:2,trust:1,focus:8})]},
- {id:'cup_regional_new_tide',place:'park',npc:'marina',start:68,end:87,slots:[0,2],minBond:0,
-  requiresCup:{id:'regional',states:['missed','expired']},
-  title:'Another Way Forward',
-  intro:'Marina sits by the river with a folded qualifier schedule. She makes room on the bench before you say a word.',
-  choices:[
-   choice('Plan your own challenge away from the circuit','The river keeps moving. So will the two of you.',{affection:2,trust:1,focus:15}),
-   choice('Talk about returning to competition on your terms','A calmer plan takes shape, with room for both training and ordinary life.',{insight:2,preparation:1,respect:1})]},
- {id:'cup_final_between_rounds',place:'arcade',npc:'kaede',start:88,end:90,slots:[1,2],minBond:0,
-  requiresCup:{id:'championship',states:['open'],minRound:1},
-  title:'Between the Rounds',
-  intro:'Kaede spots your unfinished bracket on a tournament flyer and blocks your path with a mischievous grin.',
-  choices:[
-   choice('Share the opening you are still working on','She laughs at the obvious mistake and helps you fix it anyway.',{preparation:1,insight:2,respect:1}),
-   choice('Take one evening away from the pressure','The arcade lights feel warm rather than loud. Tomorrow can wait a little.',{focus:20,trust:1,affection:1})]},
- {id:'cup_final_afterglow',place:'center',npc:'reina',start:88,end:90,slots:[1,2],minBond:0,
-  requiresCup:{id:'championship',states:['champion','eliminated']},
-  title:'When the Crowd Goes Home',
-  intro:'There are no spectators left at the final tournament table. Reina sets down two cups of water and finally stops checking the clock.',
-  choices:[
-   choice('Thank her for pushing you all season','She gives you a rare unguarded smile. Rivalry always had room for respect.',{trust:2,affection:1,reputation:2}),
-   choice('Ask for one more friendly practice together','A new hand of cards appears on the table before you have finished asking.',{preparation:1,respect:2,focus:-5})]}
-
- ];
+  {
+    "id": "shop_opening",
+    "place": "shop",
+    "npc": "hana",
+    "start": 3,
+    "end": 17,
+    "slots": [
+      0
+    ],
+    "minBond": 0,
+    "title": "Before the Doors Open",
+    "intro": "The shop's delivery boxes block the tournament table. Hana balances scissors on the counter while searching for the packing list.",
+    "choices": [
+      {
+        "label": "Stay to help",
+        "reply": "You got that end? Good. I think there's actually a table underneath.",
+        "delta": {
+          "reputation": 1,
+          "trust": 2,
+          "affection": 1,
+          "focus": -6
+        }
+      },
+      {
+        "label": "Show a quicker way to organize",
+        "reply": "Label the piles by set? Why didn't I think of that an hour ago?",
+        "delta": {
+          "insight": 2,
+          "respect": 1,
+          "affection": 1
+        }
+      }
+    ]
+  },
+  {
+    "id": "shop_trade_night",
+    "place": "shop",
+    "npc": "camila",
+    "start": 19,
+    "end": 36,
+    "slots": [
+      1,
+      2
+    ],
+    "minBond": 1,
+    "title": "The Unusual Trade",
+    "intro": "At the shop, a collector holds two worn cards beneath the display lamp. Camila studies the scratched sleeve more closely than either card.",
+    "choices": [
+      {
+        "label": "Make a fair proposal",
+        "reply": "That's fair. Let me get sleeves for both of you before somebody changes their mind.",
+        "delta": {
+          "trust": 2,
+          "reputation": 2,
+          "credits": -5
+        }
+      },
+      {
+        "label": "Ask what the card means to them",
+        "reply": "Ask him about the creased card. There's a reason he won't let go of it.",
+        "delta": {
+          "affection": 2,
+          "insight": 1
+        }
+      }
+    ]
+  },
+  {
+    "id": "shop_late_match",
+    "place": "shop",
+    "npc": "reina",
+    "start": 62,
+    "end": 82,
+    "slots": [
+      1,
+      2
+    ],
+    "minBond": 2,
+    "title": "An Empty Practice Table",
+    "intro": "Only one table lamp is still on at the shop. Reina has dealt two opening hands onto opposite sides of the mat.",
+    "choices": [
+      {
+        "label": "Offer to test difficult hands",
+        "reply": "You want to test the ugly hands? Good. Take the worse one.",
+        "delta": {
+          "respect": 2,
+          "preparation": 1,
+          "focus": -8
+        }
+      },
+      {
+        "label": "Suggest a break from competition",
+        "reply": "Food first? Fine. But you're choosing somewhere that doesn't close early.",
+        "delta": {
+          "affection": 2,
+          "trust": 1
+        }
+      }
+    ]
+  },
+  {
+    "id": "arcade_joke",
+    "place": "arcade",
+    "npc": "yuna",
+    "start": 7,
+    "end": 23,
+    "slots": [
+      1,
+      2
+    ],
+    "minBond": 0,
+    "title": "One More Attempt",
+    "intro": "A crowd surrounds Yuna's table at the arcade. She's written 'PLAN A' on a sleeve and crossed it out four times.",
+    "choices": [
+      {
+        "label": "Join the experiment",
+        "reply": "That went spectacularly wrong. Again! Before anybody learns from it.",
+        "delta": {
+          "affection": 2,
+          "insight": 1
+        }
+      },
+      {
+        "label": "Offer some tactical advice",
+        "reply": "Wait. If we change this Trainer, it can fail in a completely new way.",
+        "delta": {
+          "respect": 1,
+          "preparation": 1,
+          "trust": 1
+        }
+      }
+    ]
+  },
+  {
+    "id": "arcade_challenge",
+    "place": "arcade",
+    "npc": "kaede",
+    "start": 44,
+    "end": 65,
+    "slots": [
+      1,
+      2
+    ],
+    "minBond": 0,
+    "title": "The New Challenger",
+    "intro": "At the arcade, a stranger in a patched jacket has claimed the last free card table. Kaede looks up over her freshly shuffled deck.",
+    "choices": [
+      {
+        "label": "Welcome her to the scene",
+        "reply": "Local hospitality. I could get used to that. Know anyone worth playing?",
+        "delta": {
+          "affection": 1,
+          "trust": 2
+        }
+      },
+      {
+        "label": "Discuss the toughest opponents",
+        "reply": "Toughest opponent? Finally, a question with an interesting answer.",
+        "delta": {
+          "respect": 2,
+          "insight": 1
+        }
+      }
+    ]
+  },
+  {
+    "id": "park_riverside",
+    "place": "park",
+    "npc": "marina",
+    "start": 8,
+    "end": 27,
+    "slots": [
+      0,
+      2
+    ],
+    "minBond": 0,
+    "title": "By the Water",
+    "intro": "The last ferry crosses the water. Marina has left enough space on the bench for another person.",
+    "choices": [
+      {
+        "label": "Enjoy the quiet together",
+        "reply": "There's a quieter path past the railing. The sunset's better from there.",
+        "delta": {
+          "trust": 2,
+          "focus": 12
+        }
+      },
+      {
+        "label": "Ask about her next challenge",
+        "reply": "I still have that tournament flyer. It's in my bag somewhere.",
+        "delta": {
+          "affection": 1,
+          "respect": 1,
+          "preparation": 1
+        }
+      }
+    ]
+  },
+  {
+    "id": "park_communal",
+    "place": "park",
+    "npc": null,
+    "start": 18,
+    "end": 42,
+    "slots": [
+      0,
+      1
+    ],
+    "minBond": 0,
+    "title": "A Neighborhood Favor",
+    "intro": "A volunteer struggles to keep a folding table upright. The wind sends event flyers across the grass.",
+    "choices": [
+      {
+        "label": "Give them a hand",
+        "reply": "The table finally stays level with a folded leaflet beneath its short leg.",
+        "delta": {
+          "reputation": 3,
+          "focus": -8
+        }
+      },
+      {
+        "label": "Share a few spare supplies",
+        "reply": "The organizers discover they've got enough pencils and cups for the afternoon.",
+        "delta": {
+          "reputation": 2,
+          "credits": -6,
+          "insight": 1
+        }
+      }
+    ]
+  },
+  {
+    "id": "cafe_old_story",
+    "place": "cafe",
+    "npc": "shiori",
+    "start": 17,
+    "end": 36,
+    "slots": [
+      0,
+      2
+    ],
+    "minBond": 1,
+    "title": "An Old Photograph",
+    "intro": "Shiori pauses beneath an old photograph near the café door. Someone has written a tournament date on the frame.",
+    "choices": [
+      {
+        "label": "Listen without pressing",
+        "reply": "I knew her. She's in the back row. We were always late for round one.",
+        "delta": {
+          "trust": 2,
+          "affection": 1
+        }
+      },
+      {
+        "label": "Offer a new perspective",
+        "reply": "I'd forgotten how young we all looked in that picture.",
+        "delta": {
+          "respect": 2,
+          "insight": 1
+        }
+      }
+    ]
+  },
+  {
+    "id": "cafe_neighbors",
+    "place": "cafe",
+    "npc": null,
+    "start": 28,
+    "end": 58,
+    "slots": [
+      1
+    ],
+    "minBond": 0,
+    "title": "The Regulars’ Table",
+    "intro": "Three café regulars argue over a deck list scribbled on a menu. Every Trainer has a question mark next to it.",
+    "choices": [
+      {
+        "label": "Join the discussion",
+        "reply": "Someone hands you the pencil. The debate shifts to which card anyone would actually draw.",
+        "delta": {
+          "reputation": 2,
+          "insight": 1
+        }
+      },
+      {
+        "label": "Offer to buy a round of snacks",
+        "reply": "A bowl of snacks lands on the table. The argument continues between mouthfuls.",
+        "delta": {
+          "credits": -7,
+          "reputation": 2,
+          "focus": 5
+        }
+      }
+    ]
+  },
+  {
+    "id": "cafe_trade",
+    "place": "cafe",
+    "npc": "camila",
+    "start": 62,
+    "end": 81,
+    "slots": [
+      2
+    ],
+    "minBond": 2,
+    "title": "No Business Tonight",
+    "intro": "Camila has left her card binder under the café table. The two coffees between you are already going cold.",
+    "choices": [
+      {
+        "label": "Ask how she is doing",
+        "reply": "Today? Fine. A little tired, actually. Don't tell the collectors.",
+        "delta": {
+          "trust": 2,
+          "affection": 1
+        }
+      },
+      {
+        "label": "Tell her about your own worries",
+        "reply": "I'd have guessed that worried you. Here, take the last biscuit.",
+        "delta": {
+          "affection": 2,
+          "trust": 1
+        }
+      }
+    ]
+  },
+  {
+    "id": "center_coach",
+    "place": "center",
+    "npc": "reina",
+    "start": 11,
+    "end": 32,
+    "slots": [
+      1,
+      2
+    ],
+    "minBond": 0,
+    "title": "Training Partners",
+    "intro": "Reina tests an opening hand in the empty practice room, with another deck set up across from hers.",
+    "choices": [
+      {
+        "label": "Ask her to critique your game",
+        "reply": "Show me the turn before that. No, earlier. There's your problem.",
+        "delta": {
+          "respect": 2,
+          "preparation": 1,
+          "focus": -8
+        }
+      },
+      {
+        "label": "Encourage her to take a break",
+        "reply": "A break? You planning to beat me by feeding me snacks? ...Might work.",
+        "delta": {
+          "affection": 2,
+          "focus": 5
+        }
+      }
+    ]
+  },
+  {
+    "id": "center_volunteers",
+    "place": "center",
+    "npc": "akari",
+    "start": 48,
+    "end": 70,
+    "slots": [
+      1
+    ],
+    "minBond": 1,
+    "title": "The Results Board",
+    "intro": "Akari has ruled a grid across the community-center noticeboard. One row is missing a result.",
+    "choices": [
+      {
+        "label": "Help check the rankings",
+        "reply": "Ah, you're right. That score belongs on the next row. Hand me the pencil.",
+        "delta": {
+          "trust": 1,
+          "respect": 1,
+          "insight": 2
+        }
+      },
+      {
+        "label": "Suggest a different way to measure progress",
+        "reply": "We could track the first-time players who returned. ...I'll need another column.",
+        "delta": {
+          "affection": 1,
+          "respect": 2
+        }
+      }
+    ]
+  },
+  {
+    "id": "library_notes",
+    "place": "library",
+    "npc": "akari",
+    "start": 13,
+    "end": 35,
+    "slots": [
+      0,
+      1
+    ],
+    "minBond": 0,
+    "title": "Margin Notes",
+    "intro": "At the library, Akari has filled the margin of a match report with tiny arrows. One points back to the opening turn.",
+    "choices": [
+      {
+        "label": "Study the pattern together",
+        "reply": "There. That's the hand I couldn't explain. Look at the Energy count.",
+        "delta": {
+          "trust": 1,
+          "insight": 2,
+          "preparation": 1
+        }
+      },
+      {
+        "label": "Question the key assumption",
+        "reply": "I was treating the draw as certain. You're right; it isn't.",
+        "delta": {
+          "respect": 2,
+          "affection": 1
+        }
+      }
+    ]
+  },
+  {
+    "id": "library_silence",
+    "place": "library",
+    "npc": "shiori",
+    "start": 48,
+    "end": 74,
+    "slots": [
+      0,
+      1,
+      2
+    ],
+    "minBond": 1,
+    "title": "The Quiet Corner",
+    "intro": "In the library's back room, Shiori has left the chair opposite her pulled out. A book lies open between two cups of tea.",
+    "choices": [
+      {
+        "label": "Share a quiet hour",
+        "reply": "This section gets better on the next page. Shall I spoil it?",
+        "delta": {
+          "trust": 2,
+          "focus": 10
+        }
+      },
+      {
+        "label": "Exchange favorite books",
+        "reply": "You've read that one? I never meet anyone who's finished the second half.",
+        "delta": {
+          "affection": 2,
+          "insight": 1
+        }
+      }
+    ]
+  },
+  {
+    "id": "home_postcard",
+    "place": "home",
+    "npc": null,
+    "start": 10,
+    "end": 28,
+    "slots": [
+      2
+    ],
+    "minBond": 0,
+    "title": "A Postcard From Home",
+    "intro": "A postcard sits beside your deck list at home. Somebody has drawn a tiny Poké Ball beneath an untidy signature.",
+    "choices": [
+      {
+        "label": "Write an honest reply",
+        "reply": "Your reply fills the back of a scrap tournament handout. You fold it beside the door.",
+        "delta": {
+          "focus": 15,
+          "insight": 2
+        }
+      },
+      {
+        "label": "Pin it beside your tournament calendar",
+        "reply": "The postcard takes its place by the calendar, its bent corner catching the morning light.",
+        "delta": {
+          "focus": 25,
+          "reputation": 1
+        }
+      }
+    ]
+  },
+  {
+    "id": "home_reflection",
+    "place": "home",
+    "npc": null,
+    "start": 60,
+    "end": 83,
+    "slots": [
+      0,
+      2
+    ],
+    "minBond": 0,
+    "title": "The Unmarked Date",
+    "intro": "Your duel journal is open at its last empty page. There's a tea ring on the cover and a longer list of names than when you arrived.",
+    "choices": [
+      {
+        "label": "List what has changed",
+        "reply": "You jot down three matches worth keeping, including one you lost. The page isn't blank anymore.",
+        "delta": {
+          "insight": 3,
+          "focus": 10
+        }
+      },
+      {
+        "label": "Make time for the people who matter",
+        "reply": "Two names go into the margin. You leave enough room to add more.",
+        "delta": {
+          "focus": 20,
+          "reputation": 1
+        }
+      }
+    ]
+  },
+  {
+    "id": "cup_neighborhood_rival",
+    "place": "center",
+    "npc": "reina",
+    "start": 31,
+    "end": 49,
+    "slots": [
+      1,
+      2
+    ],
+    "minBond": 0,
+    "requiresCup": {
+      "id": "neighborhood",
+      "states": [
+        "champion",
+        "eliminated"
+      ]
+    },
+    "title": "A Match Worth Remembering",
+    "intro": "Reina is stacking chairs after the Neighborhood Cup. She slides the old score sheet across the table without looking up.",
+    "choices": [
+      {
+        "label": "Ask her to analyze the toughest turn",
+        "reply": "Here. That's the turn I wanted to ask about. What would you change?",
+        "delta": {
+          "insight": 2,
+          "preparation": 1,
+          "respect": 2
+        }
+      },
+      {
+        "label": "Admit what the cup meant to you",
+        "reply": "For what it's worth, you showed up. That's more than half the predictions managed.",
+        "delta": {
+          "trust": 2,
+          "affection": 1,
+          "reputation": 1
+        }
+      }
+    ]
+  },
+  {
+    "id": "cup_neighborhood_return",
+    "place": "shop",
+    "npc": "hana",
+    "start": 36,
+    "end": 54,
+    "slots": [
+      0,
+      1
+    ],
+    "minBond": 0,
+    "requiresCup": {
+      "id": "neighborhood",
+      "states": [
+        "missed",
+        "expired"
+      ]
+    },
+    "title": "A Seat at the Next Table",
+    "intro": "Hana packs away the Neighborhood Cup sign-up sheets. An unopened pack of sleeves is balanced on the register.",
+    "choices": [
+      {
+        "label": "Ask for help preparing for the next chance",
+        "reply": "I'll save a table for practice next week. Bring the deck you're actually playing.",
+        "delta": {
+          "trust": 2,
+          "affection": 1,
+          "preparation": 1
+        }
+      },
+      {
+        "label": "Volunteer to help the next event run smoothly",
+        "reply": "Great. Volunteers meet before opening. Remind me to bring enough pens.",
+        "delta": {
+          "reputation": 3,
+          "affection": 1,
+          "credits": 6
+        }
+      }
+    ]
+  },
+  {
+    "id": "cup_regional_numbers",
+    "place": "library",
+    "npc": "akari",
+    "start": 61,
+    "end": 80,
+    "slots": [
+      0,
+      1
+    ],
+    "minBond": 0,
+    "requiresCup": {
+      "id": "regional",
+      "states": [
+        "champion",
+        "eliminated"
+      ]
+    },
+    "title": "What the Numbers Leave Out",
+    "intro": "At the library, Akari has sorted Regional Qualifier notes into neat piles. One sheet bears your name in red pencil.",
+    "choices": [
+      {
+        "label": "Study your strongest decision together",
+        "reply": "Tell me why you held that card. I'm trying not to guess before you answer.",
+        "delta": {
+          "insight": 3,
+          "respect": 2
+        }
+      },
+      {
+        "label": "Ask about the things statistics cannot measure",
+        "reply": "Numbers won't tell me who stayed to cheer in the last round. Maybe we should ask.",
+        "delta": {
+          "affection": 2,
+          "trust": 1,
+          "focus": 8
+        }
+      }
+    ]
+  },
+  {
+    "id": "cup_regional_new_tide",
+    "place": "park",
+    "npc": "marina",
+    "start": 68,
+    "end": 87,
+    "slots": [
+      0,
+      2
+    ],
+    "minBond": 0,
+    "requiresCup": {
+      "id": "regional",
+      "states": [
+        "missed",
+        "expired"
+      ]
+    },
+    "title": "Another Way Forward",
+    "intro": "Marina sits near the ferry landing with a folded Regional Qualifier schedule. She pats the bench beside her.",
+    "choices": [
+      {
+        "label": "Plan your own challenge away from the circuit",
+        "reply": "There's a little event outside town next month. I could show you the flyer.",
+        "delta": {
+          "affection": 2,
+          "trust": 1,
+          "focus": 15
+        }
+      },
+      {
+        "label": "Talk about returning to competition on your terms",
+        "reply": "If you want another qualifier, we can practice first. The river can wait.",
+        "delta": {
+          "insight": 2,
+          "preparation": 1,
+          "respect": 1
+        }
+      }
+    ]
+  },
+  {
+    "id": "cup_final_between_rounds",
+    "place": "arcade",
+    "npc": "kaede",
+    "start": 88,
+    "end": 90,
+    "slots": [
+      1,
+      2
+    ],
+    "minBond": 0,
+    "requiresCup": {
+      "id": "championship",
+      "states": [
+        "open"
+      ],
+      "minRound": 1
+    },
+    "title": "Between the Rounds",
+    "intro": "Kaede spots the championship bracket tucked into your deck box at the arcade. She taps an empty result square.",
+    "choices": [
+      {
+        "label": "Share the opening you are still working on",
+        "reply": "You can do better than that opening. Come on, deal it again.",
+        "delta": {
+          "preparation": 1,
+          "insight": 2,
+          "respect": 1
+        }
+      },
+      {
+        "label": "Take one evening away from the pressure",
+        "reply": "One evening off? Then I'm picking the arcade machine. Beat my high score.",
+        "delta": {
+          "focus": 20,
+          "trust": 1,
+          "affection": 1
+        }
+      }
+    ]
+  },
+  {
+    "id": "cup_final_afterglow",
+    "place": "center",
+    "npc": "reina",
+    "start": 88,
+    "end": 90,
+    "slots": [
+      1,
+      2
+    ],
+    "minBond": 0,
+    "requiresCup": {
+      "id": "championship",
+      "states": [
+        "champion",
+        "eliminated"
+      ]
+    },
+    "title": "When the Crowd Goes Home",
+    "intro": "The final tournament table is empty except for two cups of water. Reina moves a chair out with her foot.",
+    "choices": [
+      {
+        "label": "Thank her for pushing you all season",
+        "reply": "Yeah, you pushed me too. Don't get sentimental or I'll ask for another game.",
+        "delta": {
+          "trust": 2,
+          "affection": 1,
+          "reputation": 2
+        }
+      },
+      {
+        "label": "Ask for one more friendly practice together",
+        "reply": "I've got one more match in me. No crowd, no prizes. Cut my deck.",
+        "delta": {
+          "preparation": 1,
+          "respect": 2,
+          "focus": -5
+        }
+      }
+    ]
+  }
+];
  const IDs=new Map(activities.map(a=>[a.id,a])),EVENTS=new Map(encounters.map(e=>[e.id,e]));
  const caps={focus:100,preparation:3,insight:99,reputation:100,credits:999999};
  function hydrate(state){
