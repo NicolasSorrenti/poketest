@@ -14,6 +14,13 @@
   draw:'AN UNFINISHED RIVALRY'
  };
  const format=(value)=>'+'+Math.max(0,Number.isFinite(Number(value))?Math.trunc(Number(value)):0);
+ // A dedicated result illustration can be installed per NPC without changing
+ // game code. Until then, use that same NPC's existing attack cut-in.
+ const resultArtSources=npcId=>{
+  if(typeof npcId!=='string'||!/^[a-z0-9_-]+$/.test(npcId))return [];
+  const prefix='/rpg-assets/characters/'+npcId+'/events/battle-result';
+  return [prefix+'.webp',prefix+'.png','/rpg-assets/reactions/'+npcId+'/attack.png'];
+ };
  function model(receipt,{hasBooster=false,presentation=null}={}){
   if(!receipt||!Object.prototype.hasOwnProperty.call(KINDS,receipt.outcome))return null;
   const kind=KINDS[receipt.outcome];
@@ -29,9 +36,9 @@
   });
  }
  function createPresenter({document:doc=typeof document==='undefined'?null:document}={}){
-  let pending=null;
+  let pending=null,portraitRequest=0;
   const byId=id=>doc?.getElementById?.(id);
-  function show({receipt,hasBooster=false,avatar=null,presentation=null,onContinue=()=>{}}={}){
+  function show({receipt,hasBooster=false,avatar=null,npcId=null,presentation=null,onContinue=()=>{}}={}){
    const details=model(receipt,{hasBooster,presentation});
    const dialog=byId('victoryDialog');
    if(!details||!dialog||dialog.open)return false;
@@ -58,13 +65,33 @@
     const name=doc.createElement('small');name.textContent=label;
     metric.append(amount,name);stats.append(metric);
    }
+   // Keep the existing NPC avatar only while artwork loads or as the very
+   // last fallback. No other NPC's art may appear during a failed request.
+   const request=++portraitRequest;
    art.replaceChildren();if(avatar)art.append(avatar);
+   const sources=resultArtSources(npcId);
+   if(sources.length){
+    const img=doc.createElement('img');
+    img.alt=details.opponent+' after the duel';
+    img.loading='eager';
+    img.className='victory-result-art';
+    let index=0;
+    img.onload=()=>{
+     if(request===portraitRequest&&dialog.open)art.replaceChildren(img);
+    };
+    img.onerror=()=>{
+     if(request!==portraitRequest)return;
+     if(index<sources.length)img.src=sources[index++];
+     // If the cut-in is also missing, retain the regular avatar/initials.
+    };
+    img.src=sources[index++];
+   }
    button.textContent=details.action;
    pending={done:false,onContinue};
    function finish(){
     const item=pending;
     if(!item||item.done)return;
-    item.done=true;pending=null;
+    item.done=true;pending=null;portraitRequest++;
     if(dialog.open)dialog.close();
     item.onContinue();
    }
@@ -78,5 +105,5 @@
   return {show,get active(){return !!pending;}};
  }
  const presenter=createPresenter();
- return {model,createPresenter,show:opts=>presenter.show(opts)};
+ return {model,createPresenter,resultArtSources,show:opts=>presenter.show(opts)};
 });
