@@ -76,7 +76,8 @@ function finishStory(){
  log('Finished '+e.title+' with '+cast[id].name+'.');recordCG('story_milestone',id);recordIntention('story');
  if(chapterReward)log('Bond chapter '+chapterReward.chapter+' reward from '+cast[id].name+': '+chapterReward.label+'.');
  state.activeStory=null;advance();state.selected=id;
- persist();say(cast[id].name,result.choice.reply+(chapterReward?'\n\n★ Chapter reward: '+chapterReward.label:''));
+ persist();closeSceneDialogue();
+ if(chapterReward)$('notice').textContent='★ Chapter reward: '+chapterReward.label;
 }
 
 
@@ -121,7 +122,7 @@ function finishSideQuest(){
  let result;try{result=SIDE.finishChoice(state,a.id,i,currentPeople());}
  catch(err){$('notice').textContent=err.message;return;}
  log((result.done?'Completed':'Progressed')+' side quest: '+result.title+'.');recordIntention('sideQuest');
- advance();persist();say(cast[owner].name,result.reply);
+ advance();persist();closeSceneDialogue();
 }
 function pauseSideQuest(){
  if(state.activeSideQuest?.phase!=='duel')return;
@@ -357,8 +358,7 @@ function finishEncounter(){
  try{report=WORLD.completeEncounter(state,a.id,a.choice,currentPeople());}
  catch(err){$('notice').textContent=err.message;return;}
  state.activeEncounter=null;recordIntention('encounter');log('Encounter at '+places[e.place][0]+': '+e.title+'.');
- advance();persist();
- say(e.npc?cast[e.npc].name:'Narrator',report.summary);
+ advance();persist();closeSceneDialogue();
 }
 function performActivity(id){
  if(state.activeStory||state.activeEncounter||state.activeArc||state.pendingDuel||state.day>90)return;
@@ -417,8 +417,7 @@ function finishArc(){
  state.activeArc=null;
  log('Finished '+ARC.byId(id).title+' with '+cast.reina.name+'.');recordIntention('arc');
  if(report.ending)log('A personal chapter reached its conclusion.');
- advance();persist();
- say(cast.reina.name,report.text);
+ advance();persist();closeSceneDialogue();
 }
 
 
@@ -449,7 +448,7 @@ function finishSituation(){
   recordIntention('hangout');
   const memories=recordCG('situation',event.npc,{eventId:event.id});
   advance();
-  say(cast[event.npc].name,outcome.response);
+  closeSceneDialogue();
   showCGMoment(memories[0]);
  }catch(err){$('notice').textContent=err.message;}
 }
