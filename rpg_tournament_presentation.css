@@ -72,3 +72,21 @@
  .neo-tournament-versus::before,.neo-bracket-round.is-current{animation:none!important}
 }
 @keyframes neo-tvs-reduced{from{opacity:0}20%,85%{opacity:1}to{opacity:0}}
+
+/* Before the opening hand, the existing VN duel preparation gets tournament stakes. */
+.preduel-dialog[data-circuit="official"],.preduel-dialog[data-circuit="local"]{
+ border-top:5px solid #ffc98d;border-color:#bb789d;box-shadow:0 30px 100px #070914e5
+}
+.preduel-dialog[data-circuit="official"] .preduel-top,.preduel-dialog[data-circuit="local"] .preduel-top{
+ background:linear-gradient(100deg,#8d3b65,#372b47 70%,#1b2740)
+}
+.preduel-dialog[data-circuit="official"] .preduel-eyebrow,.preduel-dialog[data-circuit="local"] .preduel-eyebrow{
+ font-size:clamp(13px,1.75vw,20px);color:#ffdbb4;letter-spacing:.13em
+}
+.preduel-dialog[data-circuit="official"] .preduel-nameplate strong,.preduel-dialog[data-circuit="local"] .preduel-nameplate strong{
+ font:900 clamp(24px,3vw,39px)/1 'Barlow Condensed',sans-serif;color:#ffe6b7;text-transform:uppercase;
+ transform:skewX(-5deg)
+}
+.preduel-dialog[data-circuit="official"] .preduel-art,.preduel-dialog[data-circuit="local"] .preduel-art{
+ border-bottom:4px solid #eab88c;background:radial-gradient(circle at 76% 40%,#84507e,#29223e 54%,#121b33)
+}
