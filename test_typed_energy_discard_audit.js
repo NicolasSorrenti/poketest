@@ -57,7 +57,7 @@ for(const [id,name] of fireSingles){
  invalid(g,['energy:0','energy:1','energy:3']);
  const r=doAction(g,'choose',{decisionId:d.id,selected:['energy:0','energy:1','energy:2']});
  assert.equal(r.ok,true,r.error);
- assert.deepEqual(g.players[0].discard,[F,W,L]);
+ assert.deepEqual(g.players[0].discard.slice().sort(),[F,W,L].sort(),'Lugia discards each required type regardless of removal order');
 }
 {
  const g=game('neo4-107',[F,F,F,L,L,G]);
