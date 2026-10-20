@@ -1,6 +1,6 @@
 'use strict';
 const assert=require('node:assert/strict');
-const {plan,createPresenter}=require('./rpg_time_transitions');
+const {plan,planTravel,createPresenter}=require('./rpg_time_transitions');
 
 function transition(beforeDay,beforeSlot,afterDay,afterSlot,source){
  return plan({beforeDay,beforeSlot,afterDay,afterSlot,source});
@@ -91,4 +91,21 @@ function fakeDOM(reduced=false){
  env.presenter.dismiss();
  assert.equal(env.elements.length,0);
 }
-console.log('RPG calendar/period/sleep transitions: planning, DOM lifecycle, cancellation and reduced-motion checks passed.');
+assert.equal(planTravel({from:'The Lucky Draw',to:'Pixel Palace'}).title,'PIXEL PALACE');
+assert.equal(planTravel({from:'Pixel Palace',to:'Pixel Palace'}),null);
+assert.equal(planTravel({from:'',to:'Pixel Palace'}),null);
+{
+ const env=fakeDOM();
+ env.presenter.present({beforeDay:5,beforeSlot:2,afterDay:6,afterSlot:0});
+ const protectedCalendar=env.elements[0];
+ assert.equal(env.presenter.presentTravel({from:'Arcade',to:'Park'}),null,'travel must not interrupt calendar');
+ assert.equal(env.elements[0],protectedCalendar);
+ env.presenter.dismiss();
+ const travel=env.presenter.presentTravel({from:'The Lucky Draw',to:'Pixel Palace'});
+ assert.equal(travel.kind,'travel');
+ assert.equal(travel.durationMs,440);
+ assert.match(env.elements[0].className,/neo-timefx--travel/);
+ env.presenter.dismiss();
+ assert.equal(env.elements.length,0);
+}
+console.log('RPG time and travel transitions: planning, DOM lifecycle, priority, skip and reduced-motion checks passed.');
