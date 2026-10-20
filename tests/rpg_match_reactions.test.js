@@ -3,6 +3,17 @@ const assert=require('node:assert/strict');
 const fs=require('node:fs');
 const path=require('node:path');
 const reactions=require('../rpg_match_reactions');
+const castIds=['hana','reina','shiori','yuna','akari','camila','marina','kaede','jinx','luna','sol','rina','elena','sierra','jun','teo','iris','elio','alma','nereo'];
+const expectedKinds=['attack','play_card','evolve','power','hurt','ko_taken','ko_scored'];
+assert.deepEqual(Object.keys(reactions.VOICES).sort(),castIds.sort(),'every existing RPG opponent must have authored cut-ins');
+for(const [id,voice] of Object.entries(reactions.VOICES)){
+ assert.deepEqual(Object.keys(voice).sort(),expectedKinds.slice().sort(),'missing cut-in kinds for '+id);
+ assert.ok(Object.values(voice).every(line=>typeof line==='string'&&line.trim().length>5),'blank or meaningless cut-in for '+id);
+}
+for(const kind of expectedKinds){
+ const utterances=Object.values(reactions.VOICES).map(voice=>voice[kind]);
+ assert.equal(new Set(utterances).size,20,'duplicated generic '+kind+' line between distinct NPCs');
+}
 const mkView=(human=6,cpu=6,cpuDamage=0,phase='game')=>({phase,over:phase==='done',players:[{prizeCount:human},{prizeCount:cpu,active:{id:'char',damage:cpuDamage},bench:[]}]});
 const act=(seq,side,type,label)=>({seq,side,type,label});
 const d=reactions.createDirector({npcId:'reina',npcName:'Reina Kurogane',random:()=>0});
