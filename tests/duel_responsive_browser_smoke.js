@@ -102,6 +102,45 @@ fs.mkdirSync(out,{recursive:true});
    console.log('PASS duel responsive '+spec.name+' '+spec.width+'x'+spec.height);
    await page.close();
   }
+  // Real duel controllers must rebuild the hand after the user closes it.
+  // A synthetic DOM-only toggle would miss the previous stateful bug.
+  const reopen=async (page,label)=>{
+   await page.locator('#duel:not(.hidden)').waitFor({timeout:25000});
+   const fan=page.locator('#handFan'),cards=page.locator('#handFan .hand-fan-card');
+   await cards.first().waitFor({state:'visible',timeout:25000});
+   const original=await cards.count();assert.ok(original>0,label+' needs actual cards');
+   await page.locator('#handToggle').click();
+   assert.equal(await fan.isVisible(),false,label+' closing should hide the hand');
+   assert.equal(await page.locator('#handToggle').getAttribute('aria-expanded'),'false');
+   await page.locator('#handToggle').click();
+   await cards.first().waitFor({state:'visible',timeout:6000});
+   assert.equal(await cards.count(),original,label+' reopening must rebuild every card');
+   assert.equal(await page.locator('#handToggle').getAttribute('aria-expanded'),'true');
+   console.log('PASS mobile hand close/reopen '+label);
+  };
+  const cpu=await browser.newPage({viewport:{width:390,height:844}});
+  await cpu.goto(url+'/classic_live.html',{waitUntil:'domcontentloaded'});
+  await cpu.locator('#newDuel').click();
+  await reopen(cpu,'CPU / RPG');
+  await cpu.close();
+
+  const host=await browser.newPage({viewport:{width:390,height:844}});
+  const guest=await browser.newPage({viewport:{width:390,height:844}});
+  await Promise.all([host.goto(url+'/online.html'),guest.goto(url+'/online.html')]);
+  await host.locator('#nickname').fill('MobileHost');
+  await host.locator('#createRoom').click();
+  await host.locator('#roomCode').waitFor({state:'visible',timeout:25000});
+  const room=(await host.locator('#roomCode').innerText()).trim();
+  await guest.locator('#nickname').fill('MobileGuest');
+  await guest.locator('#joinCode').fill(room);
+  await guest.locator('#joinRoom').click();
+  await guest.locator('#roomCode').waitFor({state:'visible',timeout:25000});
+  await host.locator('#readyBtn').click();
+  await guest.locator('#readyBtn').click();
+  await host.locator('#startMatch:enabled').waitFor({state:'visible',timeout:25000});
+  await host.locator('#startMatch').click();
+  await reopen(host,'online');
+  await host.close();await guest.close();
  }finally{
   if(browser)await browser.close();
   await new Promise(resolve=>server.close(resolve));
