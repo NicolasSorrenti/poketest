@@ -751,20 +751,20 @@
       "Oh, I would love that. Everyone else has already asked about the last song."
     ],
     [
-      "You don't have to make this a performance.",
-      "Good. Because the game is the one place I can forget whether anybody's watching."
+      "I like that you remembered rehearsal and still made time to play.",
+      "That's why I brought the timer. If I'm late, my drummer will kill me."
     ],
     [
-      "The quiet version of you can be excited too.",
-      "She is. She's just a little afraid the world won't recognize her."
+      "Sounds like the stage and your deck are starting to share ideas.",
+      "They are! My bandmates keep sneaking Pokémon jokes into the lyrics."
     ],
     [
       "You don't have to prove either one to me.",
       "Then I can just enjoy the song, the cards and the company."
     ],
     [
-      "What if we make room for the stage and the table?",
-      "That's what I want. I don't want to lose one part of myself to keep the other."
+      "And what if the charity show goes wrong?",
+      "Then we'll laugh about it, try again, and I'll still be glad I played."
     ]
   ],
   "elena": [
