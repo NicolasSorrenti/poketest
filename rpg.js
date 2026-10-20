@@ -2,7 +2,7 @@
 (()=>{
 const $=id=>document.getElementById(id),KEY='neoHarborRpgV1',STORY=window.NeoHarborStory,SCHEDULES=window.NeoRpgSchedules,WORLD=window.NeoRpgWorld,ARC=window.NeoRpgRivalArc,TOURNAMENTS=window.NeoRpgTournaments,COMPETE=window.NeoRpgCompetitiveLoop,BRIDGE=window.NeoRpgDuelBridge;
 const PACK=window.NeoRpgNarrativePack,SIDE=window.NeoRpgSideQuests,EPILOGUE=window.NeoRpgEpilogue,APPOINTMENTS=window.NeoRpgAppointments,INTENTIONS=window.NeoRpgIntentions,CG=window.NeoRpgCGGallery,PLANNER=window.NeoRpgDailyPlanner,SOCIAL=window.NeoRpgSocialActivities,DATES=window.NeoRpgPlannedDates,PRE=window.NeoRpgPreDuel,SITUATIONS=window.NeoRpgSituations,JOURNEY=window.NeoRpgSeasonJourney,COLLECT=window.NeoRpgCollection,RPGD=window.NeoRpgDialogue,BONDS=window.NeoRpgBondRewards,PARTNER=window.NeoRpgPartnerDecks,VN=window.NeoRpgConversations;
-const MANDATORY=window.NeoRpgMandatoryEvents||null;
+const MANDATORY=window.NeoRpgMandatoryEvents||null,REACT=window.NeoRpgReactivity;
 const MANDATORY_EVENTS=[...(window.NeoRpgSeasonEvents?.events||[]),...(window.NeoRpgCharacterPacks?.mandatoryEvents||[])];
 const periods=['Morning','Afternoon','Evening'];
 const places={
@@ -123,7 +123,7 @@ function pauseSideQuest(){
 
 function timeFlash(beforeDay,beforeSlot){const overlay=document.createElement('div');overlay.className='notice-pop';const heading=document.createElement('b');heading.textContent=state.day>90?'Season complete':state.day!==beforeDay?'A NEW DAY BEGINS':'TIME PASSES';const body=document.createElement('span');body.textContent=state.day>90?'Day 90 has ended.':('Day '+state.day+' · '+periods[state.slot]);overlay.append(heading,body);document.body.append(overlay);overlay.addEventListener('animationend',()=>overlay.remove());}
 
-function defaults(){return {sideQuests:{},activeSideQuest:null,day:1,slot:0,location:'home',metReina:false,reinaTrust:0,reinaDuels:0,results:[],flags:{intro:false},journal:['The 90-day season begins.'],pendingDuel:null,bonds:{},talked:{},hungOut:{},eventsDone:{},points:0,credits:80,playerDeck:'blackout',selected:null,ended:false,storyDone:{},storyMissed:{},relationships:{},routeOutcomes:{},partner:null,activeStory:null,activeEncounter:null,activeArc:null,arcFlags:{},arcOutcomes:{},activityDone:{},encountersDone:{},focus:75,insight:0,reputation:0,preparation:0,lastDuelReceipt:null,tournaments:{},campaignHistory:[],ngPlus:0,appointments:[],appointmentSeq:0,scene:null,socialHistory:{},situationDone:{},activeSituation:null,deckJourney:null,competitive:null,mandatoryEventState:null}}
+function defaults(){return {sideQuests:{},activeSideQuest:null,day:1,slot:0,location:'home',metReina:false,reinaTrust:0,reinaDuels:0,results:[],flags:{intro:false},journal:['The 90-day season begins.'],pendingDuel:null,bonds:{},talked:{},hungOut:{},eventsDone:{},points:0,credits:80,playerDeck:'blackout',selected:null,ended:false,storyDone:{},storyMissed:{},relationships:{},routeOutcomes:{},partner:null,activeStory:null,activeEncounter:null,activeArc:null,arcFlags:{},arcOutcomes:{},activityDone:{},encountersDone:{},focus:75,insight:0,reputation:0,preparation:0,lastDuelReceipt:null,tournaments:{},campaignHistory:[],ngPlus:0,appointments:[],appointmentSeq:0,scene:null,socialHistory:{},situationDone:{},activeSituation:null,deckJourney:null,competitive:null,npcReactivity:null,mandatoryEventState:null}}
 const hadCampaignSave=!!localStorage.getItem(KEY);
 let state;try{state=JSON.parse(localStorage.getItem(KEY))||defaults();if(!Number.isInteger(state.day)||state.day<1||state.day>91)throw Error('Invalid save');}catch{state=defaults()}
 for(const [k,v] of Object.entries(defaults()))if(state[k]===undefined)state[k]=v;
@@ -146,6 +146,7 @@ ARC.hydrate(state);
 // Restored saves may already be beyond an optional cup's registration window.
 TOURNAMENTS.expire(state);
 COMPETE.hydrate(state);
+REACT.hydrate(state);
 APPOINTMENTS.hydrate(state);APPOINTMENTS.expire(state);INTENTIONS.hydrate(state);CG.hydrate(state);SOCIAL.hydrate(state);DATES.hydrate(state,APPOINTMENTS,SOCIAL);SITUATIONS.hydrate(state);
 for(const id of Object.keys(cast)){const old=state.bonds[id],current=state.relationships[id];
  if(!state.flags['newStoryMigrated_'+id]){for(const key of ['affection','trust','duels'])current[key]=Math.max(current[key]||0,old[key]||0);
@@ -218,14 +219,14 @@ INTENTIONS.hydrate(state); // Expire yesterday's optional choice before saving t
 for(const plan of missedAppointments)log('You missed your planned meet-up with '+(cast[plan.npc]?.name||'a trainer')+'.');
 queueMandatory();persist();timeFlash(beforeDay,beforeSlot);}
 function say(speaker,line,choices=[]){scene={speaker,line,choices};state.scene=scene;persist();render();}
-function sayConversation(lines,afterChoices=[]){
+function sayConversation(lines,afterChoices=[],reactionId=null){
  if(!Array.isArray(lines)||!lines.length)return;
  const script=lines.filter(x=>x&&typeof x.text==='string'&&typeof x.speaker==='string');
  if(!script.length)return;
  const first=script[0];
  scene={speaker:first.speaker==='Protagonist'?'You':cast[first.speaker]?.name||first.speaker,
   line:first.text,choices:script.length>1?[['Continue ›','chatNext']]:afterChoices,
-  dialogue:script,index:0,afterChoices};
+  dialogue:script,index:0,afterChoices,reactionId};
  state.scene=scene;persist();render();
 }
 function advanceConversation(){
@@ -235,6 +236,8 @@ function advanceConversation(){
  scene.speaker=next.speaker==='Protagonist'?'You':cast[next.speaker]?.name||next.speaker;
  scene.line=next.text;
  scene.choices=scene.index===scene.dialogue.length-1?scene.afterChoices:[['Continue ›','chatNext']];
+ // Do not consume an acknowledgement until the player actually reads its final line.
+ if(scene.index===scene.dialogue.length-1&&scene.reactionId)REACT.mark(state,scene.reactionId);
  state.scene=scene;persist();render();
 }
 function closeSceneDialogue(){
@@ -258,7 +261,8 @@ function selectPerson(id){
  state.selected=id;
  const memories=recordCG('meet',id);
  persist();
- sayConversation(VN.dialogue(state,id,c,RPGD,{first}),fresh?VN.choices(state,id):[]);
+ const context=first?null:REACT.reaction(state,id);
+ sayConversation(context?.lines||VN.dialogue(state,id,c,RPGD,{first}),fresh?VN.choices(state,id):[],context?.id||null);
  showCGMoment(memories[0]);
 }
 // Infrequent contextual invitations replace the permanent dialogue command list.
@@ -584,7 +588,8 @@ function act(action){
  if(type==='talk'){
   state.talked[state.day+':'+id]=true;
   persist();
-  return sayConversation(VN.dialogue(state,id,c,RPGD),[]);
+  const context=REACT.reaction(state,id);
+  return sayConversation(context?.lines||VN.dialogue(state,id,c,RPGD),[],context?.id||null);
  }
  if(type==='flirt'){
   state.talked['flirt:'+key]=true;
@@ -827,7 +832,7 @@ async function loadCardNames(){
 function duelUrl(duel){return '/classic_live.html?rpg=1&duelId='+encodeURIComponent(duel.id)+'&deck='+encodeURIComponent(duel.playerDeck)+'&opponent='+encodeURIComponent(duel.opponent)+'&npc='+encodeURIComponent(duel.npc)+'&npcName='+encodeURIComponent(cast[duel.npc].name);}
 
 function describePreparedDuel(){
- return PRE.describe(state,state.pendingDuel,{cast,places,cg:CG,tournaments:TOURNAMENTS});
+ return PRE.describe(state,state.pendingDuel,{cast,places,cg:CG,tournaments:TOURNAMENTS,reactivity:REACT});
 }
 function showPreparedDuel(){
  const pending=state.pendingDuel;
@@ -938,7 +943,7 @@ window.addEventListener('message',ev=>{
  sessionStorage.removeItem('neoRpgDeck:'+duel.id);
   sessionStorage.removeItem('neoRpgNpcDeck:'+duel.id);
  advance();$('duel').hidden=true;$('battle').src='about:blank';
- const c=cast[duel.npc];say(c.name,sideOutcome?.text||personalOutcome|| (receipt.outcome==='Victory'?c.duelWin:receipt.outcome==='Draw'?'A hard-fought draw. Let us play again.':c.duelLose));
+ const c=cast[duel.npc];say(c.name,sideOutcome?.text||personalOutcome||REACT.afterDuel(state,duel,receipt,c)|| (receipt.outcome==='Victory'?c.duelWin:receipt.outcome==='Draw'?'A hard-fought draw. Let us play again.':c.duelLose));
  if(awarded)showPackReveal();
 });
 function renderAppointments(locked){
@@ -1543,7 +1548,12 @@ function render(){
   const name=document.createElement('strong');name.textContent=c.name;const sub=document.createElement('small');sub.textContent=c.style;
   const bond=BONDS.progress(state,id,BOND_PLAN),chapter=document.createElement('small');
   chapter.className='character-chapter-progress';chapter.textContent='♥ Character chapters '+bond.completed+' / '+bond.total+(state.bondTrials?.[id]?' · Personal challenge won':'');
-  label.append(name,sub,chapter);b.append(avatar,label);b.onclick=()=>selectPerson(id);$('people').append(b);
+  label.append(name,sub,chapter);
+  if(!locked&&state['met_'+id]&&REACT.reaction(state,id)){
+   const cue=document.createElement('small');cue.className='character-reaction-hint';cue.textContent='✦ Something to say';
+   label.append(cue);
+  }
+  b.append(avatar,label);b.onclick=()=>selectPerson(id);$('people').append(b);
  }
  renderRpgCast(people,locked,shown,portraitId);
  const characterActions=$('characterActions');
