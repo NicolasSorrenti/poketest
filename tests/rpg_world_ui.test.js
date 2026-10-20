@@ -1121,7 +1121,8 @@ test('Saturday locals are playable through the existing duel flow, paying each b
  r.listeners.message({data:Bridge.message(d.id,0),origin:r.loc.origin,source:r.elements.battle.contentWindow});
  saved=r.state();
  assert.equal(saved.competitive.locals['1'].status,'champion');
- assert.equal(saved.deckJourney.vouchers.base1,1);
+ assert.equal(Object.values(saved.deckJourney.vouchers).reduce((sum,n)=>sum+n,0),1,
+  'local champion earns one booster voucher from a currently unlocked expansion');
  assert.equal(saved.points,28);
  assert.equal(saved.credits,150);
  assert.equal(r.elements.competitiveEvents.children.some(x=>x.children?.[0]?.textContent.includes('Round 2/2')),false);
