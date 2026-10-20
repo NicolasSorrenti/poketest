@@ -9,6 +9,22 @@
  const CLUB=['center','shop','arcade'],SOCIAL=['cafe','park','library'];
  const SKILL=Object.freeze({hana:5,reina:8,shiori:7,yuna:5,akari:8,camila:7,marina:6,kaede:9,
   jinx:7,luna:5,rina:6,elena:7,sol:5,sierra:7,jun:6,teo:5,iris:7});
+ const VOICES=Object.freeze({
+  hana:{win:'It was a close one! I was cheering for both of us by the end.',loss:'They deserved that win, but I want to keep learning.',meet:'We ended up talking about helping the newer players feel welcome.'},
+  reina:{win:'I spotted a gap in their opening and took it. They will fix it next time.',loss:'They read my setup. I am not giving them the same opening twice.',meet:'It turns out we both spend far too much time studying deck lists.'},
+  shiori:{win:'That game rewarded patience rather than force.',loss:'I mistook quiet confidence for an easy position.',meet:'We shared a peaceful conversation that had nothing to do with winning.'},
+  yuna:{win:'You missed my dramatic final turn! Even I thought it was ridiculous.',loss:'My incredible plot twist was cancelled by an even bigger one.',meet:'We came up with a truly terrible idea for an arcade tournament.'},
+  akari:{win:'The match aligned surprisingly well with my opening-hand calculations.',loss:'I have already identified two assumptions that need revising.',meet:'We compared notes about what makes a player change their mind.'},
+  camila:{win:'An excellent return on one carefully timed risk, darling.',loss:'That deal went in their favor. It will not stay that way forever.',meet:'We debated whether the story behind a card can matter more than its price.'},
+  marina:{win:'I waited until the right moment and the game finally turned.',loss:'I hurried through a turn that needed more patience.',meet:'We talked about taking a break by the river after the season.'},
+  kaede:{win:'They thought they had me. That was the fun part.',loss:'They got me this time. I almost enjoyed losing.',meet:'Somehow we ended up comparing the worst places we have travelled to play.'},
+  elena:{win:'My contingency plan worked precisely when I needed it.',loss:'I underestimated one risk. My notes are already updated.',meet:'We had a refreshingly practical conversation about time and priorities.'},
+  jinx:{win:'They fell for it! No, I am not explaining the trick.',loss:'Okay, that was a spectacular disaster. I want a rematch.',meet:'We started talking and nearly got thrown out for laughing.'},
+  luna:{win:'My own idea worked! I was trying not to second-guess it.',loss:'It did not work, but I know what I want to practice.',meet:'We talked about the decks we want to learn, not just the ones we own.'},
+  rina:{win:'I squeezed in a practice session and it actually paid off.',loss:'I knew I needed another rehearsal for that opening.',meet:'We compared calendars and found one small afternoon just to talk.'},
+  sierra:{win:'It felt good to make a decision without anyone telling me what to play.',loss:'A crowd watched me lose. I am still glad I sat down.',meet:'We had a conversation where nobody needed anything from us.'},
+  sol:{win:'That was unexpectedly fun. I might actually be improving.',loss:'I lost and still had a pretty good afternoon.',meet:'We talked about something ordinary for once. I liked that.'}
+ });
  const valid=x=>!!x&&typeof x==='object'&&!Array.isArray(x);
  const hash=s=>{let n=2166136261;for(const c of String(s))n=Math.imul(n^c.charCodeAt(0),16777619)>>>0;return n>>>0;};
  const pair=(a,b)=>[a,b].sort().join(':');
@@ -117,15 +133,16 @@
   const other=event.a===npc?event.b:event.a,otherName=name(other,cast);
   let lines;
   if(event.kind==='match'){
-   const winner=event.winner===npc;
-   lines=[winner?'I played '+otherName+' at the club. That match took more thought than I expected.':
-     otherName+' got the better of me at the club. I have been thinking about the opening.',
+   const winner=event.winner===npc,personality=VOICES[npc];
+   const base=winner?'I played '+otherName+' at the club. That match took more thought than I expected.':
+     otherName+' got the better of me at the club. I have been thinking about the opening.';
+   lines=[(personality?.[winner?'win':'loss']||base)+' It was against '+otherName+'.',
     'Are you planning to play each other again?',
     event.rivalry?'We have faced each other enough times that the rematch feels personal.':
      winner?'Probably. A good result is no reason to stop practicing.':
       'Yes. I have an idea I want to test next time.'];
   }else{
-   lines=['I ran into '+otherName+' away from the card tables.',
+   lines=[(VOICES[npc]?.meet||'We had a chance to talk away from the card tables.')+' I ran into '+otherName+'.',
     'How was it to talk without a match to worry about?',
     event.friendship?'We keep finding something new to talk about. It is becoming a nice habit.':
      'It was good. It turns out we have more in common than decks.'];
@@ -133,5 +150,5 @@
   return {id,kind:'community',day:event.day,lines:[{speaker:npc,text:lines[0]},
    {speaker:'Protagonist',text:lines[1]},{speaker:npc,text:lines[2]}]};
  }
- return Object.freeze({SKILL,CLUB,SOCIAL,hash,hydrate,pairCandidates,simulate,sync,rank,recent,describe,forCharacter,dialogue});
+ return Object.freeze({SKILL,VOICES,CLUB,SOCIAL,hash,hydrate,pairCandidates,simulate,sync,rank,recent,describe,forCharacter,dialogue});
 });
