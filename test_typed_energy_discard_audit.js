@@ -37,7 +37,9 @@ const fireSingles=[
 for(const [id,name] of fireSingles){
  const card=CATALOG.get(id),a=card.attacks.find(a=>a.name===name);
  assert.match(a.text,/Discard (?:1|a) Fire Energy card attached to/,id+' missing printed type');
- assert.ok(ATTACK.compile(a),id+' attack cannot compile');
+ const program=ATTACK.compile(a);
+ assert.ok(program,id+' attack cannot compile');
+ if(id==='neo4-50')assert.equal(program.onlyType,'Fire','Compiler must preserve typed Fire Energy: '+JSON.stringify(program));
  const g=game(id),d=attack(g,name);
  assert.ok(d,id+' should let player choose between multiple attached Fire cards');
  assert.deepEqual(d.options.map(o=>o.id),['energy:0','energy:1','energy:2','energy:3'],id+' offered wrong Energy');
