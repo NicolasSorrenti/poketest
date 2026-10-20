@@ -48,7 +48,7 @@ for(const [id,kind] of [['base5-4','continuous-fireball'],['base5-21','continuou
  assert.match(a.text,/Fire Energy cards attached to/,id+' type information lost');
  assert.equal(ATTACK.compile(a)?.kind,kind);
  let prompted=false;
- for(let seed=0;seed<25;seed++){
+ for(const seed of [0x80000000,0xffffffff,0x70000000,0x90000000,0xffff0000,0x75000000,0x12345678,0x87654321,0,1,2]){
   const g=game(id,[F,F,F,G],seed);
   const d=attack(g,name);
   if(!d)continue;
