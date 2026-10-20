@@ -107,7 +107,7 @@
     catch(err){say(err.message);}
    });swaps.append(box);
   }
-  const targets=$('strategyGoals');targets.replaceChildren(),saved=Plan.goals(state,index,Core);
+  const targets=$('strategyGoals'),saved=Plan.goals(state,index,Core);targets.replaceChildren();
   if(!saved.length)paragraph(targets,'No targets yet. Search for cards or follow a suggested upgrade.');
   for(const item of saved){
    const box=document.createElement('div');box.className='strategy-option';
