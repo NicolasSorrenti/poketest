@@ -1107,7 +1107,8 @@ test('mandatory earned bond beat persists its exact dialogue position and suppor
  assert.equal(r.state().mandatoryEventState.active.index,line,'saved line resumed');
  for(let i=0;i<20&&r.state().mandatoryEventState.active?.phase==='lines';i++)r.act('mandatoryNext');
  assert.equal(r.state().mandatoryEventState.active.phase,'choice');
- assert.ok(r.elements.choices.children.some(x=>x.textContent.includes('Not right now')));
+ const decline=Registry.mandatoryEvents.find(e=>e.id==='rina_initiates_practice').choices[1].label;
+ assert.ok(r.elements.choices.children.some(x=>x.textContent.includes(decline)),'the neutral decline must remain available');
  r.act('mandatoryChoice:1');
  r=launch(r.state(),false,true);
  assert.equal(r.state().mandatoryEventState.active.phase,'response');
