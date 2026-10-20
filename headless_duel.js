@@ -626,8 +626,7 @@ function performAction(g,side,cmd){
    if(effect==='charizard'){
     const ix=picks.map(id=>Number(id.slice(7)));
     if(ix.length!==2||new Set(ix).size!==2||ix.some(i=>!Number.isInteger(i)||!owner.active.energies[i])||
-      !ix.some(i=>card(g,owner.active.energies[i]).name==='Fire Energy')||
-      !ix.some(i=>card(g,owner.active.energies[i]).name==='Lightning Energy'))fail('White-Hot Flame requires exactly one Fire Energy and one Lightning Energy');
+      !canPayTypedDiscard(g,owner.active,['Fire','Lightning'],ix))fail('White-Hot Flame requires exactly one Fire Energy and one Lightning Energy');
     g.pendingDecision=null;g.pendingAction=null;
     resolveAttack(g,pending.side,pending.attackIndex,undefined,undefined,{neo92Approved:true,neo92Payment:ix});return;
    }
@@ -1090,12 +1089,12 @@ function performAction(g,side,cmd){
    resolveAttack(g,side,index,undefined,undefined,{neo92Approved:true,neo92PullIndex:null});return;
   }
   if(program.kind==='neo92:white-hot-flame'){
-   const fire=u.energies.flatMap((id,i)=>card(g,id).name==='Fire Energy'?[i]:[]);
-   const lightning=u.energies.flatMap((id,i)=>card(g,id).name==='Lightning Energy'?[i]:[]);
-   if(!fire.length||!lightning.length){
+   const fire=u.energies.flatMap((id,i)=>attachedEnergyMatchesType(g,id,'Fire')?[i]:[]);
+   const lightning=u.energies.flatMap((id,i)=>attachedEnergyMatchesType(g,id,'Lightning')?[i]:[]);
+   if(!canPayTypedDiscard(g,u,['Fire','Lightning'])){
     resolveAttack(g,side,index,undefined,undefined,{neo92Approved:true,neo92MissingPayment:true});return;
    }
-   g.nextDecisionId++;g.pendingDecision=makeDecision({id:'neo92flame:'+g.nextDecisionId,actor:side,kind:'energy-discard',label:'White-Hot Flame: choose one Fire Energy and one Lightning Energy',options:[...fire,...lightning].map(i=>({id:'energy:'+i,label:card(g,u.energies[i]).name})),min:2,max:2});
+   g.nextDecisionId++;g.pendingDecision=makeDecision({id:'neo92flame:'+g.nextDecisionId,actor:side,kind:'energy-discard',label:'White-Hot Flame: choose one Fire Energy and one Lightning Energy',options:[...new Set([...fire,...lightning])].map(i=>({id:'energy:'+i,label:card(g,u.energies[i]).name})),min:2,max:2});
    g.pendingAction={kind:'neo92_choose',effect:'charizard',side,attackIndex:index};return;
   }
   if(program.kind==='neo91:sweet-kiss'){
@@ -1317,14 +1316,12 @@ function resolveAttack(g,side,index,chosenBench,energyPicks,extra={}){
    if(!Number.isInteger(extra.neo92PullIndex)||!f.bench[extra.neo92PullIndex]||jawClampLocks(g,1-side))fail('Pull In selected an illegal opposing Pokémon');
   }
   if(program.kind==='neo92:white-hot-flame'){
-   const fire=u.energies.flatMap((id,i)=>card(g,id).name==='Fire Energy'?[i]:[]);
-   const lightning=u.energies.flatMap((id,i)=>card(g,id).name==='Lightning Energy'?[i]:[]);
    if(extra.neo92MissingPayment){
-    if(fire.length&&lightning.length)fail('Energy available; White-Hot Flame payment required');
+    if(canPayTypedDiscard(g,u,['Fire','Lightning']))fail('Energy available; White-Hot Flame payment required');
    }else{
     const picks=extra.neo92Payment;
     if(!Array.isArray(picks)||picks.length!==2||new Set(picks).size!==2||picks.some(i=>!Number.isInteger(i)||!u.energies[i])||
-       !picks.some(i=>fire.includes(i))||!picks.some(i=>lightning.includes(i)))fail('White-Hot Flame requires one printed Fire and one printed Lightning Energy card');
+       !canPayTypedDiscard(g,u,['Fire','Lightning'],picks))fail('White-Hot Flame requires one printed Fire and one printed Lightning Energy card');
    }
   }
  }
@@ -2019,7 +2016,7 @@ function resolveAttack(g,side,index,chosenBench,energyPicks,extra={}){
  if(roll.disableThisAttack)u.gymAttackCooldown={index,expires:g.turnSerial+3};
  if(roll.disableAllAttacks)u.gymAttackCooldown={index:null,expires:g.turnSerial+3};
  if(roll.discardAllTypeEnergy){
-  for(let i=u.energies.length-1;i>=0;i--)if(card(g,u.energies[i]).name===roll.discardAllTypeEnergy+' Energy')p.discard.push(u.energies.splice(i,1)[0]);
+  for(let i=u.energies.length-1;i>=0;i--)if(attachedEnergyMatchesType(g,u.energies[i],roll.discardAllTypeEnergy))p.discard.push(u.energies.splice(i,1)[0]);
  }
  if(roll.discardStadium&&g.stadium){g.players[g.stadium.owner].discard.push(g.stadium.id);delete g.players[g.stadium.owner].stadium;g.stadium=null;}
  if(roll.healOwnTeam)for(const x of allPokemon(p))x.damage=Math.max(0,x.damage-roll.healOwnTeam);
