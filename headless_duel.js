@@ -351,7 +351,7 @@ function themeAttackPlan(g,plan){
   if(kind==='rushing-flames')ctx.flameHeads=data.sources.filter(()=>next(g,2)===1).length;
   data.roll=ATTACK.resolve(program,()=>next(g,2)===1,ctx);
  }
- const heads=data.roll.flips[0],pickEnergy=()=>energy(p),fire=()=>energy(p).filter((_,i)=>card(g,u.energies[i]).name==='Fire Energy');
+ const heads=data.roll.flips[0],pickEnergy=()=>energy(p),fire=()=>energy(p).filter((_,i)=>attachedEnergyMatchesType(g,u.energies[i],'Fire'));
  if(['call-brock','call-misty'].includes(kind)&&heads&&p.bench.length<5){
   const owner=kind==='call-brock'?"Brock's ":"Misty's ",options=top(p.deck,c=>isBasicPokemon(c)&&c.name.startsWith(owner));
   if(!data.search&&prompt('search',side,options,0,Math.min(1,options.length),'Call for Friend: choose a Basic Pokémon',true))return;
@@ -372,7 +372,7 @@ function themeAttackPlan(g,plan){
  }
  if(kind==='hind-kick'&&heads&&p.bench.length&&!data.bench&&prompt('bench',side,bench(p),1,1,'Hind Kick: choose new Active'))return;
  if(kind==='ball-of-flame'){
-  if(u.energies.length&&!data.fire&&prompt('fire',side,pickEnergy(),0,1,'Ball of Flame: optionally discard an Energy',true))return;
+  if(fire().length&&!data.fire&&prompt('fire',side,fire(),0,1,'Ball of Flame: optionally discard a Fire Energy',true))return;
   if(data.fire?.length&&f.bench.length&&!data.bench&&prompt('bench',side,bench(f),1,1,'Ball of Flame: choose Bench damage'))return;
  }
  if(kind==='call-back'&&f.bench.length<5){
