@@ -5,6 +5,17 @@ const {server}=require('../server');
  await new Promise((resolve,reject)=>server.listen(0,'127.0.0.1',err=>err?reject(err):resolve()));
  const origin='http://127.0.0.1:'+server.address().port;
  try{
+  // Browser navigation once silently broke because a referenced script returned 404.
+  const documentResponse=await fetch(origin+'/rpg.html');
+  assert.equal(documentResponse.status,200,'RPG entrypoint must load');
+  const pageHtml=await documentResponse.text();
+  const scriptPaths=[...pageHtml.matchAll(/<script\\s+src="(\\/[^"]+\\.js)"/g)].map(match=>match[1]);
+  assert.ok(scriptPaths.includes('/rpg_ui_motion.js'),'RPG navigation script must be included');
+  for(const script of scriptPaths){
+   const response=await fetch(origin+script,{method:'HEAD'});
+   assert.equal(response.status,200,script+' referenced by RPG must be served');
+   assert.match(response.headers.get('content-type')||'',/text\\/javascript/,script+' must have JS content type');
+  }
   for(const path of ['/rpg_match_reactions.js','/rpg_competitive_loop.js','/rpg_reactivity.js','/rpg_community.js','/rpg_consequences.js','/rpg_strategy.js','/rpg-assets/reactions/manifest.json']){
    const response=await fetch(origin+path);
    assert.equal(response.status,200,path+' must be served to the RPG duel iframe');
