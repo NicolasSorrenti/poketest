@@ -80,7 +80,7 @@
    cup?'Your pairing is posted under '+cup.title+'. Someone pulls out the chair opposite you.':
    d.sideQuestId?'The promised match is here. A fresh playmat waits between the two decks.':
    d.arcEpisode?'The table is ready. Neither of you reaches for a card just yet.':
-   'Two decks land on the table at '+place+'. Your opponent offers theirs for a cut.';
+   'You settle in for a match at '+place+'. Your opponent offers their deck for a cut.';
   const response=reactivity?.preDuelLine?.(s,d)||(Array.isArray(character.preDuelLines)&&typeof character.preDuelLines[0]==='string'
    ?character.preDuelLines[0]:lines[d.npc]||'Ready when you are.');
   return {id:d.id,npc:d.npc,name:character.name,place,stake,artwork,
