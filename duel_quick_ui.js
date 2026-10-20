@@ -205,7 +205,9 @@
    const c=getCard(id);shownId=id;
    const src=c.images?.large||c.images?.small;
    const img=typeof src==='string'&&/^https:\/\//.test(src)?`<img class="preview-art" src="${html(src)}" alt="${html(c.name)} card artwork">`:'';
-   const extra=unit?`<p>Damage: ${html(unit.damage||0)} · Attached Energy: ${html((unit.energies||[]).length)}</p>`:'';
+   const attachedEnergy=unit?.energies?.map(id=>getCard(id)?.name||String(id))||[];
+   const attachedTools=unit?.attachedTrainers?.map(t=>getCard(typeof t==='string'?t:t?.id)?.name||'Attached Trainer')||[];
+   const extra=unit?`<p>Damage: ${html(unit.damage||0)} · ${attachedEnergy.length} attached Energy</p><p>Energy: ${html(attachedEnergy.join(', ')||'None')}</p><p>Attached Trainers: ${html(attachedTools.join(', ')||'None')}</p>`:'';
    const attacks=(c.attacks||[]).map(a=>`<div class="preview-effect"><strong>${html(a.name)}</strong> ${html((a.cost||[]).join(' / '))} ${html(a.damage||'')}<p>${html(a.text||'')}</p></div>`).join('');
    const powers=(c.abilities||[]).map(a=>`<div class="preview-effect"><strong>${html(a.name||'Pokémon Power')}</strong><p>${html(a.text||'')}</p></div>`).join('');
    panel.innerHTML=`<button type="button" class="preview-close" aria-label="Close card preview">×</button>${img}<div class="preview-data"><strong>${html(c.name)}</strong> <small>${html(c.hp?`${c.hp} HP`:(c.supertype||''))}</small>${extra}${attacks}${powers}</div>`;
