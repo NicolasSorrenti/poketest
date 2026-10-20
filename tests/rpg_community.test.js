@@ -73,7 +73,7 @@ test('rivalries and friendships emerge across repeated independent encounters',(
  assert.ok(Object.values(s.community.links).some(x=>x.matches>=2),'some club rivals should meet again');
 });
 test('character-specific community memory is a read-only three-line scene',()=>{
- const s=make(60);COMMUNITY.sync(s,59,deps);
+ const s=make(1);COMMUNITY.sync(s,59,deps);
  const match=COMMUNITY.recent(s,90).find(e=>e.day>=55);
  assert.ok(match);
  s.day=match.day+1;
