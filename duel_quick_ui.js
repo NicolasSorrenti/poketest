@@ -43,11 +43,21 @@
   // left edge of each Pokémon, like physical attached Energy cards.
   const ids=Array.isArray(unit?.energies)?unit.energies:[];
   const tools=Array.isArray(unit?.attachedTrainers)?unit.attachedTrainers:[];
-  const toolNames=tools.map(t=>String(getCard(typeof t==='string'?t:t?.id)?.name||'Attached Trainer'));
-  const toolBadges=toolNames.length?`<span class="pokemon-tools" title="${html(toolNames.join(', '))}" aria-label="Attached Trainers: ${html(toolNames.join(', '))}">${toolNames.map(n=>`<span class="pokemon-tool-badge" title="${html(n)}">🛡 ${html(n)}</span>`).join('')}</span>`:'';
+  const toolCards=tools.map(t=>getCard(typeof t==='string'?t:t?.id)||{name:'Attached Trainer'});
+  const toolNames=toolCards.map(c=>String(c.name||'Attached Trainer'));
+  const toolLimit=3;
+  const visibleTools=toolCards.slice(0,toolLimit);
+  const toolOver=Math.max(0,toolCards.length-visibleTools.length);
+  const toolBadges=toolCards.length?`<span class="pokemon-tools tool-card-stack" title="${html(toolNames.join(', '))}" aria-label="${toolCards.length} attached Trainers: ${html(toolNames.join(', '))}">${visibleTools.map((c,i)=>{
+   const name=String(c.name||'Attached Trainer'),url=c.images?.small;
+   const art=typeof url==='string'&&/^https:\/\//.test(url)
+    ?`<img class="tool-card-art" src="${html(url)}" alt="" loading="lazy">`
+    :`<span class="tool-card-fallback">TRAINER<span>${html(name)}</span></span>`;
+   return `<span class="pokemon-tool-card" title="${html(name)}" style="--tool-position:${i}">${art}</span>`;
+  }).join('')}${toolOver?`<span class="tool-overflow" aria-label="${toolOver} more attached Trainers">+${toolOver}</span>`:''}</span>`:'';
   if(!ids.length)return toolBadges;
   const cards=ids.map(id=>getCard(id)||{});
-  const shown=cards.slice(0,6),over=Math.max(0,cards.length-shown.length);
+  const shown=cards.slice(0,4),over=Math.max(0,cards.length-shown.length);
   const types={
    Grass:['grass','G','GRS'],Fire:['fire','F','FIR'],Water:['water','W','WAT'],
    Lightning:['lightning','L','LGT'],Psychic:['psychic','P','PSY'],Fighting:['fighting','F','FGT'],
@@ -64,7 +74,7 @@
    const art=typeof url==='string'&&/^https:\/\//.test(url)
     ?`<img class="energy-card-art" src="${html(url)}" alt="" loading="lazy">`
     :`<span class="energy-card-fallback"><span class="energy-symbol">${html(symbol)}</span><span class="energy-label">${html(short)}</span></span>`;
-   return `<span class="attached-energy energy-card-mini energy-type-${type}" title="${html(name)}" style="--energy-position:${i}">${art}</span>`;
+   return `<span class="attached-energy energy-card-mini energy-type-${type}" title="${html(name)}" data-symbol="${html(symbol)}" style="--energy-position:${i}">${art}</span>`;
   }).join('');
   const names=cards.map(c=>String(c.name||'Unknown Energy')).join(', ');
   return `<span class="energy-peeks energy-card-stack" title="${html(names)}" aria-label="${cards.length} attached Energy: ${html(names)}">${minis}${over?`<span class="energy-overflow">+${over}</span>`:''}</span>${toolBadges}`;
