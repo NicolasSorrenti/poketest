@@ -24,7 +24,7 @@ for(const [key,effect] of Object.entries(defs)){
  const program=Object.freeze(effect==='spark'
   ?{kind:'bench-target',damage:30,benchDamage:10}
   :effect==='fire-blast'
-  ?{kind:'energy-discard',damage:50,quantity:1,subject:'Light Ninetales',onlyType:null}
+  ?{kind:'energy-discard',damage:50,quantity:1,subject:'Light Ninetales',onlyType:'Fire'}
   :{kind:'neo83:'+effect,damage:Number.parseInt(attack.damage,10)||0});
  const before=signatures.get(signature);
  if(before&&JSON.stringify(before)!==JSON.stringify(program))throw Error('Conflicting Neo printing '+key);
