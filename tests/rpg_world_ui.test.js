@@ -1003,6 +1003,12 @@ test('story responses float to the center while the dialogue line remains visibl
  assert.ok(r.elements.choices.children.length>=2,'response prompts should offer meaningful choices');
  assert.equal(r.elements.line.textContent,stages.at(-1).text,'choice prompt preserves the last spoken line');
  assert.equal(r.elements.speaker.textContent,'Hana Mizuno','the last line retains its real speaker');
+ r.elements.choices.children[0].onclick();
+ assert.equal(r.state().activeStory.phase,'response');
+ const finalReply=r.elements.line.textContent;
+ r.elements.choices.children[0].onclick();
+ assert.equal(r.state().activeStory,null,'finished story is no longer active');
+ assert.notEqual(r.state().scene.line,finalReply,'the finished response must not play twice');
 });
 
 test('a first meeting plays its greeting scene before actions and survives reload',()=>{
