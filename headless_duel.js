@@ -1554,7 +1554,7 @@ function resolveAttack(g,side,index,chosenBench,energyPicks,extra={}){
   if(['flame-wheel','flamethrower','elemental-blast','burning-flame','psyburst'].includes(kind)){
    const picks=nums('energy');
    const expected=kind==='flame-wheel'||kind==='elemental-blast'?3:
-    kind==='burning-flame'?Math.min(roll.neo48BurningHeads,pickables.length):Math.min(1,pickables.length);
+    kind==='burning-flame'?(roll.neo48EnergyDiscard||0):Math.min(1,pickables.length);
    if(picks.length!==expected||new Set(picks).size!==expected||
       picks.some(i=>!Number.isInteger(i)||i<0||i>=u.energies.length))
     fail('Invalid Neo attack Energy discard');
