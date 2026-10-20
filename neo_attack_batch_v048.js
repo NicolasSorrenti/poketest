@@ -1,6 +1,6 @@
 'use strict';
 // Neo milestone: exact imported attack signatures only. Never compile by name.
-const cards=[...require('./cards/neo1.json'),...require('./cards/neo2.json')];
+const cards=[...require('./cards/neo1.json'),...require('./cards/neo2.json'),...require('./cards/neo4.json')];
 const kinds={
  'neo1-3|Sweet Nectar':'sweet-nectar',
  'neo1-9|Elemental Blast':'elemental-blast',
@@ -21,7 +21,9 @@ const kinds={
  'neo2-17|Shockwave':'shockwave',
  'neo2-18|Triple Poison':'triple-poison',
  'neo2-61|Burst':'burst',
- 'neo2-71|Slime':'slime'
+ 'neo2-71|Slime':'slime',
+ 'neo4-46|Burning Flame':'burning-flame',
+ 'neo4-109|Psyburst':'psyburst'
 };
 const programs=new Map();
 for(const [key,kind] of Object.entries(kinds)){
@@ -51,6 +53,8 @@ function resolve(p,flip,ctx={}){
   case 'growth':o.damage=0;if(coin())o.neo48Growth=true;break;
   case 'crunch':o.neo48Crunch=true;break;
   case 'flamethrower':o.neo48EnergyDiscard=1;break;
+  case 'burning-flame':{const heads=Number(coin())+Number(coin());o.neo48BurningHeads=heads;o.damage=30+heads*20;break;}
+  case 'psyburst':o.neo48EnergyDiscard=1;o.damage=40+(ctx.enemyEnergy||0)*10;break;
   case 'collect-fire':o.neo48CollectFire=true;break;
   case 'trample':o.neo48Trample=true;break;
   case 'shockwave':o.damage=0;o.neo48Shockwave=true;o.neo48ShockwaveDamage=coin();break;
