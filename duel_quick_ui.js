@@ -42,7 +42,10 @@
   // miniature-card stack. The actual card art slides out from underneath the
   // left edge of each Pokémon, like physical attached Energy cards.
   const ids=Array.isArray(unit?.energies)?unit.energies:[];
-  if(!ids.length)return '';
+  const tools=Array.isArray(unit?.attachedTrainers)?unit.attachedTrainers:[];
+  const toolNames=tools.map(t=>String(getCard(typeof t==='string'?t:t?.id)?.name||'Attached Trainer'));
+  const toolBadges=toolNames.length?`<span class="pokemon-tools" title="${html(toolNames.join(', '))}" aria-label="Attached Trainers: ${html(toolNames.join(', '))}">${toolNames.map(n=>`<span class="pokemon-tool-badge" title="${html(n)}">🛡 ${html(n)}</span>`).join('')}</span>`:'';
+  if(!ids.length)return toolBadges;
   const cards=ids.map(id=>getCard(id)||{});
   const shown=cards.slice(0,6),over=Math.max(0,cards.length-shown.length);
   const types={
@@ -64,7 +67,7 @@
    return `<span class="attached-energy energy-card-mini energy-type-${type}" title="${html(name)}" style="--energy-position:${i}">${art}</span>`;
   }).join('');
   const names=cards.map(c=>String(c.name||'Unknown Energy')).join(', ');
-  return `<span class="energy-peeks energy-card-stack" title="${html(names)}" aria-label="${cards.length} attached Energy: ${html(names)}">${minis}${over?`<span class="energy-overflow">+${over}</span>`:''}</span>`;
+  return `<span class="energy-peeks energy-card-stack" title="${html(names)}" aria-label="${cards.length} attached Energy: ${html(names)}">${minis}${over?`<span class="energy-overflow">+${over}</span>`:''}</span>${toolBadges}`;
  }
  function makeDuelFeedback(el){
   let last=null,removeTimer=null,changes=new Map();
