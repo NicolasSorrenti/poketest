@@ -365,9 +365,9 @@
       ],
       "choices": [
         {
-          "label": "Tell her you're here for the person, not the reputation",
-          "reply": "Good. Because I'm not always easy to deal with, and I'm done pretending otherwise.",
-          "kind": "support",
+          "label": "Tell her you want to stay friends and keep challenging her",
+          "reply": "Good. I need somebody who'll call my bluffs, not another fan club.",
+          "kind": "friend",
           "flag": "jinx_real",
           "delta": {
             "affection": 3,
@@ -377,9 +377,9 @@
           }
         },
         {
-          "label": "Kiss her instead of turning it into another argument",
-          "reply": "Finally. You were taking forever.",
-          "kind": "flirt",
+          "label": "Tell her you want to be together, not just trade dares",
+          "reply": "Then say it properly. ...Yeah. I want that too. Now come here.",
+          "kind": "commit",
           "flag": "jinx_kiss",
           "delta": {
             "affection": 2,
@@ -389,8 +389,8 @@
           }
         },
         {
-          "label": "Ask whether she'd rather take things slowly",
-          "reply": "Slowly? Fine. But I'm keeping the right to tease you about it.",
+          "label": "Tell her you'd rather find out what this could be without rushing",
+          "reply": "Fine. But I'm still saving you a seat next time. Don't make me regret it.",
           "kind": "honest",
           "flag": "jinx_ready",
           "delta": {
