@@ -1090,38 +1090,38 @@ const packs=[
     "chapter": 2,
     "lines": [
      {
-      "speaker": "marina",
-      "text": "Jinx, the railing by the water is still wet. Those sandals are a slip waiting to happen."
-     },
-     {
       "speaker": "jinx",
-      "text": "I’ve been walking in worse. But fine—point taken. Happy?"
+      "text": "I know the railing's wet. These boots have survived worse."
      },
      {
       "speaker": "marina",
-      "text": "I’d be happier if you stopped treating every safety note like a personal attack."
+      "text": "Your boots aren't the problem. Look where the boardwalk dips."
+     },
+     {
+      "speaker": "Narrator",
+      "text": "A puddle has collected around a loose plank. Marina tests it with the toe of her shoe."
      },
      {
       "speaker": "Protagonist",
-      "text": "She’s not wrong about the railing."
+      "text": "There's a dry path behind the benches."
      },
      {
       "speaker": "jinx",
-      "text": "Traitor. …Okay, maybe both of you have a point. I still look good doing the safe thing though."
+      "text": "The long way? Obviously you'd pick the long way."
      },
      {
       "speaker": "marina",
-      "text": "Looking good and staying upright can coexist. Shocking, I know."
+      "text": "It goes past the little card stand. We can stop there."
      },
      {
       "speaker": "jinx",
-      "text": "Don’t get used to me agreeing with you. It’s temporary."
+      "text": "Fine. But I'm not carrying either of your deck boxes."
      }
     ],
     "choices": [
      {
       "label": "Side with Marina on the safety call",
-      "reply": "Ugh. Fine. You’re both annoying when you’re right.",
+      "reply": "Fine. Marina wins this round. She can buy the snacks if we survive the walk.",
       "kind": "honest",
       "flag": "jinx_marina_safety",
       "delta": {
@@ -1133,7 +1133,7 @@ const packs=[
      },
      {
       "label": "Tease Jinx for actually listening",
-      "reply": "Shut up. I can be reasonable. Occasionally. Don’t tell anyone.",
+      "reply": "I can admit when she's right. Once. Do not make it a recurring event.",
       "kind": "flirt",
       "flag": "jinx_marina_tease",
       "delta": {
@@ -1145,7 +1145,7 @@ const packs=[
      },
      {
       "label": "Suggest taking the longer, dry path together",
-      "reply": "Practical and not lecturing me. Fine, show me the way.",
+      "reply": "A path without puddles? Wonderful. Now show me where the card stand is.",
       "kind": "support",
       "flag": "jinx_marina_help",
       "delta": {
@@ -1157,9 +1157,9 @@ const packs=[
      }
     ],
     "openingByFlag": {
-     "jinx_challenge": "After you challenged me at the arcade I figured I could handle a little park setup. Marina has opinions about my footwear.",
-     "jinx_edge": "You liked the sharp edges. Marina likes me not falling into the water. We’re negotiating.",
-     "jinx_honest": "You asked if I always open with threats. Marina opens with safety lectures. We’re both consistent."
+     "jinx_challenge": "You challenged me at the arcade. A damp boardwalk shouldn't be harder than that.",
+     "jinx_edge": "You liked the dangerous look. Marina would prefer that I didn't break my neck before the next match.",
+     "jinx_honest": "I said I'm not always threatening people. Now apparently my boots are threatening Marina."
     }
    },
    {
@@ -1178,38 +1178,38 @@ const packs=[
     "chapter": 2,
     "lines": [
      {
-      "speaker": "alma",
-      "text": "Jinx. Off the counter. Customers need space and I need my insurance rates to stay reasonable."
-     },
-     {
       "speaker": "jinx",
-      "text": "I’m not even blocking anyone. I’m elevating the aesthetic."
+      "text": "I'm not standing on the counter. I'm sitting. There's a difference."
      },
      {
       "speaker": "alma",
-      "text": "You’re elevating my blood pressure. Sit like a normal person or go be dramatic somewhere else."
+      "text": "And I'm not kicking you out. I'm asking you to use a chair."
+     },
+     {
+      "speaker": "Narrator",
+      "text": "The stack of paper cups wobbles as Jinx shifts her weight. Alma steadies it with one hand."
      },
      {
       "speaker": "Protagonist",
-      "text": "She’s got a point about the counter."
+      "text": "There's an empty booth right over there."
      },
      {
       "speaker": "jinx",
-      "text": "Everyone’s a critic today. Fine. Chair. Happy?"
+      "text": "The one with the terrible view of the wall?"
      },
      {
       "speaker": "alma",
-      "text": "Mildly. Thank you for not making me throw you out in front of the afternoon regulars."
+      "text": "It has the best view of the cake display. That's more important."
      },
      {
       "speaker": "jinx",
-      "text": "I can be civilized. When it amuses me. You’re welcome."
+      "text": "...All right. But I want the chocolate one."
      }
     ],
     "choices": [
      {
       "label": "Defend Jinx’s right to be extra (within reason)",
-      "reply": "See? Someone gets it. Drama is a service.",
+      "reply": "Thank you. Finally, somebody recognizes a performance when they see one. I'll use the booth.",
       "kind": "support",
       "flag": "jinx_alma_defend",
       "delta": {
@@ -1221,7 +1221,7 @@ const packs=[
      },
      {
       "label": "Agree with Alma and tell Jinx to pick her battles",
-      "reply": "…Annoying. Accurate. I’ll save the theatrics for people who deserve them.",
+      "reply": "Yeah, I know. The cups nearly went flying. Come on, let's sit down.",
       "kind": "honest",
       "flag": "jinx_alma_pick",
       "delta": {
@@ -1233,7 +1233,7 @@ const packs=[
      },
      {
       "label": "Offer to buy both of them something so the tension drops",
-      "reply": "Bribery. Classy. I’ll allow it this once.",
+      "reply": "Chocolate cake for both of them? You're going to go broke keeping the peace.",
       "kind": "flirt",
       "flag": "jinx_alma_bribe",
       "delta": {
@@ -1245,9 +1245,9 @@ const packs=[
      }
     ],
     "openingByFlag": {
-     "jinx_serious": "You played me seriously at the arcade. Alma is now playing me seriously about café furniture.",
-     "jinx_show": "You said you liked the show. Alma prefers the show stay off her counter.",
-     "jinx_remember": "You asked what happens when someone beats me. Alma just beat me at café rules."
+     "jinx_serious": "You took my match seriously at the arcade. Alma's taking the café furniture even more seriously.",
+     "jinx_show": "You said you liked the show. Apparently there's a strict no-shows-on-the-counter policy.",
+     "jinx_remember": "You asked what happens when someone beats me. Alma just beat me with a chair."
     }
    }
   ],
@@ -3693,37 +3693,37 @@ const packs=[
      },
      {
       "speaker": "alma",
-      "text": "Steam valve. Also, you can't stand behind the counter in wet sandals."
+      "text": "Steam valve. Also, the tiles are wet by your shoes."
+     },
+     {
+      "speaker": "Narrator",
+      "text": "Sol follows a small trail of water from the door to her sandals. She steps onto the dry mat."
      },
      {
       "speaker": "sol",
-      "text": "Fair. The swimsuit stays; the puddles don't. I'll change shoes."
+      "text": "Ah. That's on me. Where's the mop?"
      },
      {
       "speaker": "Protagonist",
-      "text": "That was easier than I expected."
+      "text": "You brought a mop to the party?"
      },
      {
       "speaker": "alma",
-      "text": "I never said she couldn't dress like herself. I said I don't want anyone slipping."
+      "text": "Under the sink. She can borrow mine."
      },
      {
       "speaker": "sol",
-      "text": "See? Boundaries. Super attractive on other people; alarmingly hard when I need them."
+      "text": "I'm keeping the swimsuit. Just not the puddles."
      },
      {
       "speaker": "alma",
-      "text": "Try telling Teo you can't host every event."
-     },
-     {
-      "speaker": "sol",
-      "text": "One terrifying thing at a time, please."
+      "text": "Works for me. Watch the cord when you go past the counter."
      }
     ],
     "choices": [
      {
       "label": "Help make the café safer",
-      "reply": "We did something useful without a theme song. Don't tell anyone I'm becoming responsible.",
+      "reply": "Mop first, party second. I'll put that on a banner. A very small banner.",
       "kind": "support",
       "flag": "sol_practical",
       "delta": {
@@ -3735,7 +3735,7 @@ const packs=[
      },
      {
       "label": "Point out Alma respected her style and set a clear boundary",
-      "reply": "It's possible to say no without rejecting a person. I should practice that.",
+      "reply": "Okay, fair point. She didn't ask me to change, just to keep the floor dry.",
       "kind": "honest",
       "flag": "sol_respect",
       "delta": {
@@ -3747,9 +3747,9 @@ const packs=[
      }
     ],
     "openingByFlag": {
-     "sol_help": "After our duck hunt I swore I'd be practical at Alma's café. The coffee machine is making a noise like a Pidgeotto.",
-     "sol_ask": "I asked Alma about using her café. She said yes, with rules. Especially about the coffee machine.",
-     "sol_banter": "My swimsuit survived the duck hunt. Alma's coffee machine seems less resilient and sounds like a wounded Pidgeotto."
+     "sol_help": "I promised to be practical after the duck hunt, Alma. Your coffee machine is testing my resolve.",
+     "sol_ask": "I asked before planning anything here, Alma. I just didn't ask what that noise from the coffee machine was.",
+     "sol_banter": "The duck hunt survived the swimsuit. I'm not sure your coffee machine will survive the afternoon."
     }
    },
    {
@@ -3769,31 +3769,31 @@ const packs=[
     "lines": [
      {
       "speaker": "marina",
-      "text": "The current is faster than yesterday. The ferry party needs to stay on shore."
+      "text": "The current's faster today. We're keeping the games on shore."
      },
      {
       "speaker": "sol",
-      "text": "We can move the games to the shelter. But people expected water balloons."
+      "text": "But I bought water balloons! Enough to terrify a small army."
+     },
+     {
+      "speaker": "Narrator",
+      "text": "At the landing, a rope swings hard against the post. The ferry crew has already put out the warning sign."
      },
      {
       "speaker": "Protagonist",
-      "text": "Nobody has to get wet to have fun."
-     },
-     {
-      "speaker": "marina",
-      "text": "Please decide before everyone arrives. The river won't negotiate."
+      "text": "The shelter has room for everyone."
      },
      {
       "speaker": "sol",
-      "text": "Okay. Shore it is. I'll send an update."
+      "text": "And no waves. Or heroic rescues. Tragic."
      },
      {
       "speaker": "marina",
-      "text": "I didn't want to be the person who ruins your afternoon."
+      "text": "You can still have the party. Just not in the river."
      },
      {
       "speaker": "sol",
-      "text": "You're the person who noticed something I missed."
+      "text": "Okay. I'll send the new location. Somebody help me carry the targets."
      },
      {
       "speaker": "Protagonist",
@@ -3801,13 +3801,13 @@ const packs=[
      },
      {
       "speaker": "sol",
-      "text": "We'll aim at targets. On land. Far away from the cards. You're all bossy and I adore it."
+      "text": "Dry-land targets. We can be ridiculous safely. That counts."
      }
     ],
     "choices": [
      {
       "label": "Help run a safe dry-land game",
-      "reply": "People still laughed. Turns out danger wasn't the interesting part.",
+      "reply": "Yes! Someone take the balloons. I'll take the targets. Nobody stands near the water.",
       "kind": "support",
       "flag": "sol_safe_game",
       "delta": {
@@ -3819,7 +3819,7 @@ const packs=[
      },
      {
       "label": "Thank Marina for making the difficult call",
-      "reply": "She cares about people more than applause. I want to get better at that.",
+      "reply": "Marina's right. We're moving the games up the hill. I'd rather explain that than explain a rescue.",
       "kind": "honest",
       "flag": "sol_marina_trust",
       "delta": {
@@ -3831,9 +3831,9 @@ const packs=[
      }
     ],
     "openingByFlag": {
-     "sol_small": "I'm glad the small arcade party worked out, Sol. The river is going to complicate your next event, though.",
-     "sol_clear": "Thank you for sending me a proper itinerary, Sol. Unfortunately, the river didn't read it.",
-     "sol_date": "I don't need the details of your date, Sol. I do need to tell you the river's too rough for the ferry party."
+     "sol_small": "The arcade party sounded fun, Sol. The ferry party needs a change of venue. Look at that current.",
+     "sol_clear": "Thanks for sending an actual itinerary, Sol. I'm afraid the river hasn't read it.",
+     "sol_date": "I won't interrupt your plans, Sol. I just need to tell you the landing isn't safe for the ferry party."
     }
    }
   ],
