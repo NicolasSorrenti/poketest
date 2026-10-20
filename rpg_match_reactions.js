@@ -216,8 +216,8 @@
  const maxSeq=actions=>actions.reduce((n,e)=>Number.isSafeInteger(e?.seq)?Math.max(n,e.seq):n,0);
  const summary=view=>({prizes:[prizeCount(view?.players?.[0]),prizeCount(view?.players?.[1])],cpuUnits:[view?.players?.[1]?.active,...(view?.players?.[1]?.bench||[])].filter(Boolean).map(u=>({id:u.id,damage:Number(u.damage)||0}))});
  function createDirector({npcId,npcName='Opponent',random=Math.random}={}){
-  let previous=null,lastSeq=0,lastReactionSeq=-Infinity,count=0;
-  function reset(){previous=null;lastSeq=0;lastReactionSeq=-Infinity;count=0;}
+  let previous=null,lastSeq=0,lastReactionSeq=-Infinity,count=0,attackShown=false;
+  function reset(){previous=null;lastSeq=0;lastReactionSeq=-Infinity;count=0;attackShown=false;}
   function update(data){
    const view=data?.view;if(!view||!Array.isArray(view.players)||view.players.length<2)return null;
    const all=Array.isArray(data.activity)?data.activity:[];
@@ -243,10 +243,13 @@
    }
    if(!kind||(view.phase!=='game'&&kind!=='ko_taken'&&kind!=='ko_scored'))return null;
    const keyMoment=kind==='ko_taken'||kind==='ko_scored';
-   if(!keyMoment&&(count>=MAX_REACTIONS-1||nextSeq-lastReactionSeq<3))return null;
-   if((typeof random==='function'?random():Math.random())>=CHANCES[kind])return null;
+   // The first CPU attack in an RPG duel always introduces the rival visually.
+   // Later reactions remain selective, with a slot reserved for a knockout.
+   const firstAttack=kind==='attack'&&!attackShown;
+   if(!keyMoment&&(count>=MAX_REACTIONS-1||(!firstAttack&&nextSeq-lastReactionSeq<3)))return null;
+   if(!firstAttack&&(typeof random==='function'?random():Math.random())>=CHANCES[kind])return null;
    const titles=LABELS[kind],line=(VOICES[npcId]&&VOICES[npcId][kind])||GENERIC[kind];
-   lastReactionSeq=nextSeq;count++;
+   lastReactionSeq=nextSeq;count++;if(kind==='attack')attackShown=true;
    return {npcId,npcName,kind,title:titles[0],subtitle:kind==='attack'&&event?.label?'Attack: '+String(event.label).slice(0,64):titles[1],line,index:count,imageKey:kind};
   }
   return {update,reset,get count(){return count;}};
@@ -261,10 +264,11 @@
   // Invalid/misassigned images must never display a different character.
   return valid(candidate)?candidate:(valid(PORTRAITS[npcId])?PORTRAITS[npcId]:null);
  }
- // Never make players wait for ordinary reactions; the KO cut-in can last a little longer.
+ // Presentation duration is independent of movement accessibility preferences.
+ // In reduced-motion mode the static card remains readable for just as long.
  const isClutch=kind=>kind==='ko_taken'||kind==='ko_scored';
  const priorityFor=kind=>isClutch(kind)?3:kind==='evolve'||kind==='power'?2:1;
- const durationFor=(kind,reduced=false)=>reduced?260:isClutch(kind)?1280:900;
+ const durationFor=(kind,reduced=false)=>kind==='attack'?2800:isClutch(kind)?2600:1650;
  function makeExperience({element,npcId,npcName,random=Math.random,doc=typeof document==='undefined'?null:document,
   schedule=setTimeout,cancel=clearTimeout,media=typeof window==='undefined'?null:window}={}){
   const director=createDirector({npcId,npcName,random});
@@ -284,7 +288,13 @@
    const src=assetFor(manifest,npcId,reaction.imageKey);
    if(src){
     const img=doc.createElement('img');img.alt='';img.src=src;
-    img.onerror=()=>{const fallback=PORTRAITS[npcId];if(fallback&&img.getAttribute('src')!==fallback){img.src=fallback;}else{img.remove();portrait.classList.add('no-art');}};
+    img.onerror=()=>{
+     const original=img.getAttribute('src');
+     const preferred=assetFor(manifest,npcId,'default'),legacy=PORTRAITS[npcId];
+     const fallback=[preferred,legacy].find(path=>path&&path!==original);
+     if(fallback)img.src=fallback;
+     else{img.remove();portrait.classList.add('no-art');}
+    };
     portrait.append(img);
    }else portrait.classList.add('no-art');
    const copy=doc.createElement('div');copy.className='npc-reaction-copy';
@@ -315,7 +325,15 @@
    pump();
    return reaction;
   }
-  return {update,reset,setManifest:value=>{manifest=value;},get count(){return director.count;},
+  return {update,reset,setManifest:value=>{
+    manifest=value;
+    // Preload the RPG character art, including the attack pose, before combat.
+    if(typeof media?.Image==='function'){
+     for(const path of new Set([assetFor(manifest,npcId,'attack'),assetFor(manifest,npcId,'default')].filter(Boolean))){
+      const image=new media.Image();image.src=path;
+     }
+    }
+   },get count(){return director.count;},
    get active(){return active;},get queued(){return queued?.kind||null;}};
  }
  return {createDirector,makeExperience,assetFor,MAX_REACTIONS,priorityFor,durationFor,VOICES};
