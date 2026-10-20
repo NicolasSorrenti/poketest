@@ -20,8 +20,10 @@ assert.match(script,/RPG_ATTACK_PAUSE_MS=3300/,'RPG attack frame must hold long 
 assert.match(script,/event\.side===1&&event\.type==='attack'&&event\.seq>previousSeq/,
  'Slower attack timing applies only to fresh CPU attacks, not old log entries');
 assert.match(script,/await playCpuPlayback\(result,epoch\)/,'CPU frame playback must finish before turn unlocks');
-assert.match(script,/rpgMode\|\|!rpgNpc/,'Only RPG matches show character portraits');
-assert.match(html,/id="rpgOpponentPortrait"/,'Battle header must have portrait mount');
+assert.match(script,/rpgMode&&rpgNpc/,'NPC cut-ins only initialize in RPG battles');
+assert.doesNotMatch(html,/id="rpgOpponentPortrait"/,'The permanent NPC portrait has been removed');
+assert.match(html,/id="opponentLabel"/,'NPC name remains in the shared header');
 const rpgCss=fs.readFileSync(__dirname+'/rpg_duel.css','utf8');
-assert.match(rpgCss,/body\.rpg-duel \.rpg-opponent-portrait/,'Character portrait is RPG-scoped');
+assert.doesNotMatch(rpgCss,/rpg-opponent-portrait/,'No unused permanent portrait CSS remains');
+assert.match(rpgCss,/body\.rpg-duel \.npc-reaction/,'Temporary cut-ins still have RPG-only styling');
 console.log(`PASS authoritative browser assets: ${references.length} referenced DOM elements found, unique ids, script parses, no legacy rule-engine loading`);
