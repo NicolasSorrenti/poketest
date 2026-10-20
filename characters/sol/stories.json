@@ -508,37 +508,37 @@
         },
         {
           "speaker": "alma",
-          "text": "Steam valve. Also, you can't stand behind the counter in wet sandals."
+          "text": "Steam valve. Also, the tiles are wet by your shoes."
+        },
+        {
+          "speaker": "Narrator",
+          "text": "Sol follows a small trail of water from the door to her sandals. She steps onto the dry mat."
         },
         {
           "speaker": "sol",
-          "text": "Fair. The swimsuit stays; the puddles don't. I'll change shoes."
+          "text": "Ah. That's on me. Where's the mop?"
         },
         {
           "speaker": "Protagonist",
-          "text": "That was easier than I expected."
+          "text": "You brought a mop to the party?"
         },
         {
           "speaker": "alma",
-          "text": "I never said she couldn't dress like herself. I said I don't want anyone slipping."
+          "text": "Under the sink. She can borrow mine."
         },
         {
           "speaker": "sol",
-          "text": "See? Boundaries. Super attractive on other people; alarmingly hard when I need them."
+          "text": "I'm keeping the swimsuit. Just not the puddles."
         },
         {
           "speaker": "alma",
-          "text": "Try telling Teo you can't host every event."
-        },
-        {
-          "speaker": "sol",
-          "text": "One terrifying thing at a time, please."
+          "text": "Works for me. Watch the cord when you go past the counter."
         }
       ],
       "choices": [
         {
           "label": "Help make the café safer",
-          "reply": "We did something useful without a theme song. Don't tell anyone I'm becoming responsible.",
+          "reply": "Mop first, party second. I'll put that on a banner. A very small banner.",
           "kind": "support",
           "flag": "sol_practical",
           "delta": {
@@ -550,7 +550,7 @@
         },
         {
           "label": "Point out Alma respected her style and set a clear boundary",
-          "reply": "It's possible to say no without rejecting a person. I should practice that.",
+          "reply": "Okay, fair point. She didn't ask me to change, just to keep the floor dry.",
           "kind": "honest",
           "flag": "sol_respect",
           "delta": {
@@ -562,9 +562,9 @@
         }
       ],
       "openingByFlag": {
-        "sol_help": "After our duck hunt I swore I'd be practical at Alma's café. The coffee machine is making a noise like a Pidgeotto.",
-        "sol_ask": "I asked Alma about using her café. She said yes, with rules. Especially about the coffee machine.",
-        "sol_banter": "My swimsuit survived the duck hunt. Alma's coffee machine seems less resilient and sounds like a wounded Pidgeotto."
+        "sol_help": "I promised to be practical after the duck hunt, Alma. Your coffee machine is testing my resolve.",
+        "sol_ask": "I asked before planning anything here, Alma. I just didn't ask what that noise from the coffee machine was.",
+        "sol_banter": "The duck hunt survived the swimsuit. I'm not sure your coffee machine will survive the afternoon."
       }
     },
     {
@@ -584,31 +584,31 @@
       "lines": [
         {
           "speaker": "marina",
-          "text": "The current is faster than yesterday. The ferry party needs to stay on shore."
+          "text": "The current's faster today. We're keeping the games on shore."
         },
         {
           "speaker": "sol",
-          "text": "We can move the games to the shelter. But people expected water balloons."
+          "text": "But I bought water balloons! Enough to terrify a small army."
+        },
+        {
+          "speaker": "Narrator",
+          "text": "At the landing, a rope swings hard against the post. The ferry crew has already put out the warning sign."
         },
         {
           "speaker": "Protagonist",
-          "text": "Nobody has to get wet to have fun."
-        },
-        {
-          "speaker": "marina",
-          "text": "Please decide before everyone arrives. The river won't negotiate."
+          "text": "The shelter has room for everyone."
         },
         {
           "speaker": "sol",
-          "text": "Okay. Shore it is. I'll send an update."
+          "text": "And no waves. Or heroic rescues. Tragic."
         },
         {
           "speaker": "marina",
-          "text": "I didn't want to be the person who ruins your afternoon."
+          "text": "You can still have the party. Just not in the river."
         },
         {
           "speaker": "sol",
-          "text": "You're the person who noticed something I missed."
+          "text": "Okay. I'll send the new location. Somebody help me carry the targets."
         },
         {
           "speaker": "Protagonist",
@@ -616,13 +616,13 @@
         },
         {
           "speaker": "sol",
-          "text": "We'll aim at targets. On land. Far away from the cards. You're all bossy and I adore it."
+          "text": "Dry-land targets. We can be ridiculous safely. That counts."
         }
       ],
       "choices": [
         {
           "label": "Help run a safe dry-land game",
-          "reply": "People still laughed. Turns out danger wasn't the interesting part.",
+          "reply": "Yes! Someone take the balloons. I'll take the targets. Nobody stands near the water.",
           "kind": "support",
           "flag": "sol_safe_game",
           "delta": {
@@ -634,7 +634,7 @@
         },
         {
           "label": "Thank Marina for making the difficult call",
-          "reply": "She cares about people more than applause. I want to get better at that.",
+          "reply": "Marina's right. We're moving the games up the hill. I'd rather explain that than explain a rescue.",
           "kind": "honest",
           "flag": "sol_marina_trust",
           "delta": {
@@ -646,9 +646,9 @@
         }
       ],
       "openingByFlag": {
-        "sol_small": "I'm glad the small arcade party worked out, Sol. The river is going to complicate your next event, though.",
-        "sol_clear": "Thank you for sending me a proper itinerary, Sol. Unfortunately, the river didn't read it.",
-        "sol_date": "I don't need the details of your date, Sol. I do need to tell you the river's too rough for the ferry party."
+        "sol_small": "The arcade party sounded fun, Sol. The ferry party needs a change of venue. Look at that current.",
+        "sol_clear": "Thanks for sending an actual itinerary, Sol. I'm afraid the river hasn't read it.",
+        "sol_date": "I won't interrupt your plans, Sol. I just need to tell you the landing isn't safe for the ferry party."
       }
     }
   ]
