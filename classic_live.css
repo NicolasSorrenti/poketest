@@ -295,3 +295,13 @@ button.attack-action:disabled .attack-warning{color:#b6b2a3}
  .choice-dialog .choice-list label.illustrated-choice{padding:7px}
  .choice-dialog .choice-list .choice-card-art{width:min(100%,110px)}
 }
+
+/* Ordered selections: the order of clicks is part of the Pokédex decision. */
+.choice-dialog .illustrated-choice .selection-order{
+ position:absolute;top:3px;right:3px;display:grid;place-items:center;
+ min-width:28px;height:28px;padding:0 5px;border-radius:999px;
+ background:#ffe49b;color:#172c38;font-weight:900;font-size:14px;
+ box-shadow:0 2px 8px #000a;z-index:2
+}
+.choice-dialog .choice-card-label{display:block;min-width:0;font-weight:750;overflow-wrap:anywhere}
+.choice-dialog .illustrated-choice:has(.selection-order){border-color:#f9dd86;background:#35524a}
