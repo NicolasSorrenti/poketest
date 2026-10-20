@@ -25,6 +25,7 @@
  const rpgParams=new URLSearchParams(location.search),rpgMode=rpgParams.get('rpg')==='1',rpgDuelId=rpgParams.get('duelId');
  const rpgKey=rpgMode&&rpgDuelId?window.NeoRpgDuelBridge.sessionKey(rpgDuelId):'neoClassicLiveToken';
  const rpgNpc=rpgMode?rpgParams.get('npc'):null;
+ const opponentName=rpgMode?(rpgParams.get('npcName')||'Opponent'):'Classic CPU';
  const reactions=rpgMode&&rpgNpc?window.NeoRpgMatchReactions.makeExperience({element:$('npcReaction'),npcId:rpgNpc,npcName:rpgParams.get('npcName')||'Opponent'}):null;
  function notifyRpg(){if(rpgMode&&rpgDuelId&&current?.view?.over&&(current.winner===null||current.winner===0||current.winner===1))window.parent.postMessage(window.NeoRpgDuelBridge.message(rpgDuelId,current.winner),location.origin);}
  const cards=new Map();
@@ -34,11 +35,12 @@
  const shared=window.NeoBattleComponents;
  const preview=quick.makePreview($('cardPreview'),id=>card(id));
  const feedback=quick.makeDuelFeedback($('duelFeedback'));
- const combat=presentation.makeBattlePresentation({stage:document.querySelector('.stage'),popup:$('combatFx'),timeline:$('actionTimeline'),getCard:id=>cards.get(id)||{name:String(id)},me:()=>0,opponentName:()=>'Classic CPU'});
+ const combat=presentation.makeBattlePresentation({stage:document.querySelector('.stage'),popup:$('combatFx'),timeline:$('actionTimeline'),getCard:id=>cards.get(id)||{name:String(id)},me:()=>0,opponentName:()=>opponentName});
  const opponentActivity=quick.makeOpponentActivity({status:$('opponentActivityStatus'),overlay:$('opponentActionFx'),arena:document.querySelector('.stage'),getCard:id=>cards.get(id)||{name:String(id)},suppressCombat:true});
  const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
  let modalDecisionId=null,lastFieldDecisionId=null;
  let token=null,current=null,selectedHand=null,targetMode=null,busy=false,decisionSelection=new Set();
+ let playbackEpoch=0;
  let handVisible=true,powersOpen=false,logOpen=false,lastCoinSeq=null,coinQueue=[],coinTimer=null,lastKoMessage="";
  const command=(type,payload={})=>({type,payload});
  async function api(path,opts={}){
@@ -59,16 +61,47 @@
  function btn(text,handler,cls='',disabled=false){const b=document.createElement('button');b.textContent=text;b.className=cls;b.disabled=disabled;b.addEventListener('click',handler);return b;}
  function fail(e){$('error').textContent=e.message||String(e);$('error').classList.remove('hidden');}
  function clearError(){$('error').textContent='';$('error').classList.add('hidden');}
- async function send(action){if(!current||busy)return;busy=true;clearError();try{
-  const result=await api('action',{method:'POST',body:JSON.stringify({revision:current.revision,command:action})});
-  const beforePrizes=current?.view?.players?.map(p=>p.prizeCount);preview.hide();current=result;
-  
-  selectedHand=null;targetMode=null;decisionSelection.clear();render();
-  // Let a final knockout reaction appear before returning to the RPG map.
-  const prizes=current.view.players;
-  const finalKo=rpgMode&&current.view.over&&beforePrizes&&prizes.some((p,i)=>typeof beforePrizes[i]==='number'&&p.prizeCount<beforePrizes[i]);
-  if(finalKo)setTimeout(notifyRpg,1900);else notifyRpg();
- }catch(e){fail(e);}finally{busy=false;render();}}
+
+ const CPU_ACTION_PAUSE_MS=1800;
+ async function playCpuPlayback(result,epoch){
+  const snapshots=Array.isArray(result.cpuPlayback)?result.cpuPlayback:[];
+  // These are chronological public snapshots from the authoritative server,
+  // not client-side re-executions of card effects or CPU decisions.
+  for(const frame of [...snapshots,result]){
+   if(epoch!==playbackEpoch)return false;
+   current=frame===result?result:{...result,...frame};
+   render();
+   if(frame!==result)await new Promise(resolve=>setTimeout(resolve,CPU_ACTION_PAUSE_MS));
+  }
+  return true;
+ }
+ function showRpgOpponent(){
+  if(!rpgMode||!rpgNpc)return;
+  const portrait=$('rpgOpponentPortrait');
+  const source=window.NeoRpgMatchReactions.assetFor(null,rpgNpc,'default');
+  if(source){
+   const img=document.createElement('img');img.src=source;img.alt='';
+   img.onerror=()=>{img.remove();portrait.classList.add('no-art');};
+   portrait.append(img);
+  }else portrait.classList.add('no-art');
+  portrait.classList.remove('hidden');
+  $('opponentLabel').textContent=opponentName;
+ }
+ async function send(action){if(!current||busy)return;busy=true;clearError();
+  const epoch=playbackEpoch;
+  try{
+   const result=await api('action',{method:'POST',body:JSON.stringify({revision:current.revision,command:action})});
+   if(epoch!==playbackEpoch)return;
+   const beforePrizes=current?.view?.players?.map(p=>p.prizeCount);
+   preview.hide();selectedHand=null;targetMode=null;decisionSelection.clear();
+   if(!await playCpuPlayback(result,epoch))return;
+   // Let a final knockout reaction appear before returning to the RPG map.
+   const prizes=current.view.players;
+   const finalKo=rpgMode&&current.view.over&&beforePrizes&&prizes.some((p,i)=>typeof beforePrizes[i]==='number'&&p.prizeCount<beforePrizes[i]);
+   if(finalKo)setTimeout(notifyRpg,1900);else notifyRpg();
+  }catch(e){if(epoch===playbackEpoch)fail(e);}
+  finally{if(epoch===playbackEpoch){busy=false;render();}}
+ }
  async function start(){if(busy)return;busy=true;$('startupError').textContent='';try{
   const partnerCards=rpgMode&&rpgDuelId?sessionStorage.getItem('neoRpgNpcDeck:'+rpgDuelId):null;
   const response=await api('create',{method:'POST',body:JSON.stringify({
@@ -127,7 +160,7 @@
   $('choiceModal').classList.add('hidden');$('choiceModal').setAttribute('aria-hidden','true');
   $('fieldChoiceBar').classList.add('hidden');modalDecisionId=null;lastFieldDecisionId=null;
  }
- function newDuel(){clearChoiceUi();opponentActivity.clear();combat.reset();reactions?.reset();feedback.reset();preview.hide();token=null;current=null;selectedHand=null;targetMode=null;handVisible=true;powersOpen=false;logOpen=false;document.body.classList.remove('duel-active','cpu-match');sessionStorage.removeItem(rpgKey);setHandVisible(true);render();}
+ function newDuel(){playbackEpoch++;busy=false;clearChoiceUi();opponentActivity.clear();combat.reset();reactions?.reset();feedback.reset();preview.hide();token=null;current=null;selectedHand=null;targetMode=null;handVisible=true;powersOpen=false;logOpen=false;document.body.classList.remove('duel-active','cpu-match');sessionStorage.removeItem(rpgKey);setHandVisible(true);render();}
  function setTarget(type,payload,title,benchOnly=false){preview.hide();targetMode={type,payload,title,benchOnly};render();}
  function cancelTarget(){targetMode=null;selectedHand=null;preview.hide();render();}
  function pokemonNode(u,side,slot){
@@ -255,7 +288,7 @@
   }else{title.textContent='YOUR NEXT MOVE';description.textContent='Click a Trainer or Basic Pokémon to play it. Select Energy or Evolution, then click a highlighted Pokémon. Use the attack buttons beside your Active Pokémon.';}
  }
  function render(){returnToCubeWhenDone();const has=Boolean(current);document.body.classList.toggle('duel-active',has);document.body.classList.toggle('cpu-match',has);$('lobby').classList.toggle('hidden',has);$('duel').classList.toggle('hidden',!has);if(!has)return;
-  feedback.update(current,0);opponentActivity.update(current,0,'Classic CPU');
+  feedback.update(current,0);opponentActivity.update(current,0,opponentName);
   const v=current.view,you=v.players[0],cpu=v.players[1],yourTurn=v.turn===0&&!v.over;
   document.querySelector('.stage').classList.toggle('your-turn',yourTurn&&v.phase==='game'&&!v.pendingDecision);
   $('phaseText').textContent=v.over?'DUEL COMPLETE':v.phase==='setup'?'Opening setup':yourTurn?'Your turn':'CPU turn';
@@ -274,12 +307,12 @@
   setZone('enemyActive',cpu,-1);setZone('enemyBench',cpu,0);setZone('myActive',you,-1);setZone('myBench',you,0);
   $('handAmount').textContent=`(${you.hand.length})`;renderHandPeek(you.hand);renderHandFan(you.hand);$('hand').textContent='';you.hand.forEach((id,i)=>$('hand').append(handCard(id,i,v.phase==='setup')));
   renderHandActions();$('attacks').textContent='';$('powers').textContent='';
-  const attackEnabled=v.phase==='game'&&!v.over&&yourTurn&&!v.pendingDecision;
+  const attackEnabled=v.phase==='game'&&!v.over&&yourTurn&&!v.pendingDecision&&!busy;
   shared.renderAttacks({root:$('attacks'),unit:you.active,view:v,me:0,getCard:card,enabled:attackEnabled,button:btn,onAttack:index=>send(command('attack',{attackIndex:index})),attackReason:presentation.attackReason});
   if(v.phase==='game'&&!v.over&&yourTurn&&!v.pendingDecision&&you.active){
    [you.active,...you.bench].forEach((u,i)=>{if(u?.secretPlanFaceDown){$('powers').append(btn(`🎴 Reveal Secret Plan (${i===0?'Active':'Bench '+i})`,()=>send(command('reveal_secret',{slot:i-1}))));return;}const c=card(u.id);(c.abilities||[]).forEach(a=>{if(a.name)$('powers').append(btn(`✦ ${a.name} (${i===0?'Active':'Bench '+i})`,()=>send(command('use_power',{slot:i-1}))));});});
   }
-  const actionsDisabled=!yourTurn||v.phase!=='game'||!!v.pendingDecision||v.over;
+  const actionsDisabled=busy||!yourTurn||v.phase!=='game'||!!v.pendingDecision||v.over;
   $('retreatBtn').disabled=actionsDisabled||!you.bench.length;
   $('retreatBtn').title=actionsDisabled?'Retreat on your turn after resolving any choices.':!you.bench.length?'You need a Benched Pokémon to retreat.':'Choose a Benched Pokémon to replace your Active Pokémon.';
   $('undoBtn').disabled=busy||!current.undo?.available;
@@ -309,6 +342,7 @@
    if(localStorage.getItem('neoCampusCustomGymDeck'))$('deck').value='custom';
    await Promise.all(['base1','base2','base3','base4','base5','gym1','gym2','neo1','neo2','neo3','neo4'].map(async set=>{const r=await fetch(`/cards/${set}.json`);if(!r.ok)throw Error(`Cannot load ${set}`);const arr=await r.json();for(const c of arr)cards.set(c.id,c);}));
    document.body.classList.toggle('rpg-duel',rpgMode);
+   showRpgOpponent();
    if(reactions)fetch('/rpg-assets/reactions/manifest.json').then(r=>r.ok?r.json():null).then(m=>reactions.setManifest(m)).catch(()=>{});
   if(rpgMode&&!rpgDuelId)throw Error('Open RPG duels from Neo Harbor.');
   if(rpgMode){
