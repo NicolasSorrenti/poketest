@@ -1,18 +1,12 @@
 {
   "description": "Transparent attack cut-ins for all 20 Neo Campus RPG characters, composited from approved portraits. Other event types fall back to the approved character portraits.",
   "characters": {
-<<<<<<< Updated upstream
-    "reina": {
-      "default": "/rpg-assets/characters/reina/portraits/primary.png"
-    },
-=======
->>>>>>> Stashed changes
     "hana": {
       "default": "/rpg-assets/hana.png",
       "attack": "/rpg-assets/reactions/hana/attack.png"
     },
     "reina": {
-      "default": "/rpg-assets/reina.png",
+      "default": "/rpg-assets/characters/reina/portraits/primary.png",
       "attack": "/rpg-assets/reactions/reina/attack.png"
     },
     "shiori": {
