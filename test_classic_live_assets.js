@@ -16,6 +16,9 @@ assert.ok(style.length>1000);
 assert.match(html,/battle_decision_ui\.js/,'Both duel clients load the common selection helper');
 assert.match(script,/fieldDecision\(/,'Battlefield decision targets must be wired in');
 assert.match(script,/CPU_ACTION_PAUSE_MS=1800/,'CPU turn must pause between actions');
+assert.match(script,/RPG_ATTACK_PAUSE_MS=3300/,'RPG attack frame must hold long enough to show NPC artwork');
+assert.match(script,/event\.side===1&&event\.type==='attack'&&event\.seq>previousSeq/,
+ 'Slower attack timing applies only to fresh CPU attacks, not old log entries');
 assert.match(script,/await playCpuPlayback\(result,epoch\)/,'CPU frame playback must finish before turn unlocks');
 assert.match(script,/rpgMode\|\|!rpgNpc/,'Only RPG matches show character portraits');
 assert.match(html,/id="rpgOpponentPortrait"/,'Battle header must have portrait mount');
