@@ -1,6 +1,6 @@
 'use strict';
 const assert=require('node:assert/strict');
-const {model,createPresenter}=require('./rpg_victory_presentation');
+const {model,createPresenter,resultArtSources}=require('./rpg_victory_presentation');
 
 const receipt={outcome:'Victory',name:'Reina Kurogane',points:8,credits:15,trust:2};
 assert.equal(model(receipt,{hasBooster:true}).title,'VICTORY!');
@@ -61,4 +61,43 @@ assert.equal(presenter.show({receipt:{outcome:'Draw',name:'Shiori',points:1,cred
 assert.equal(dialog.dataset.outcome,'draw');
 nodes.victoryContinue.onclick();
 assert.equal(claimed,3);
+
+// Art selection is presentation only and never depends on a reward transaction.
+assert.deepEqual(resultArtSources('reina'),[
+ '/rpg-assets/characters/reina/events/battle-result.webp',
+ '/rpg-assets/characters/reina/events/battle-result.png',
+ '/rpg-assets/reactions/reina/attack.png'
+],'Dedicated post-battle art must fall back to this NPC’s existing cut-in');
+assert.deepEqual(resultArtSources('../jinx'),[],'Reject invalid character IDs in generated art paths');
+assert.deepEqual(resultArtSources(''),[]);
+
+const createdImages=[];
+const artPresenter=createPresenter({document:{
+ getElementById:id=>nodes[id],
+ createElement(tag){const element=node(tag);if(tag==='img')createdImages.push(element);return element;}
+}});
+const oldAvatar=node('img');
+assert.equal(artPresenter.show({receipt,npcId:'reina',avatar:oldAvatar}),true);
+const resultArt=createdImages.at(-1);
+assert.equal(resultArt.src,'/rpg-assets/characters/reina/events/battle-result.webp');
+assert.equal(nodes.victoryPortrait.children[0],oldAvatar,'Regular avatar stays during download');
+resultArt.onerror();
+assert.equal(resultArt.src,'/rpg-assets/characters/reina/events/battle-result.png');
+resultArt.onerror();
+assert.equal(resultArt.src,'/rpg-assets/reactions/reina/attack.png','Missing dedicated image uses cut-in');
+resultArt.onload();
+assert.equal(nodes.victoryPortrait.children[0],resultArt,'Loaded NPC cut-in replaces temporary avatar');
+nodes.victoryContinue.onclick();
+assert.equal(dialog.open,false);
+
+const secondAvatar=node('img');
+assert.equal(artPresenter.show({receipt:{...receipt,name:'Sol'},npcId:'sol',avatar:secondAvatar}),true);
+const newArt=createdImages.at(-1);
+resultArt.onload();
+assert.equal(nodes.victoryPortrait.children[0],secondAvatar,'Stale image callbacks cannot replace a newer NPC');
+newArt.onerror();
+newArt.onerror();
+newArt.onerror();
+assert.equal(nodes.victoryPortrait.children[0],secondAvatar,'Keep standard avatar when every art source fails');
+nodes.victoryContinue.onclick();
 console.log('RPG victory presentation: receipt metrics, non-blocking handoff, single-claim, defeat/draw and Escape passed.');
