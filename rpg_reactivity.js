@@ -9,12 +9,12 @@
  const VOICE=Object.freeze({
   "hana": {
     "win": [
-      "You caught me with that switch. I should've read the Bench.",
-      "I wrote the turn down on a receipt, then spilled tea on it."
+      "I really thought I could hold you off a little longer.",
+      "Would you play that deck again? I want another look at it."
     ],
     "loss": [
-      "I finally got Wigglytuff working. Did you see the setup?",
-      "Come by the shop. I can show you the list if you'd like."
+      "That was close! I'm glad my list held together.",
+      "Come by the shop if you want to compare decks."
     ],
     "draw": [
       "Neither of us wanted to leave that table, did we?",
@@ -42,12 +42,12 @@
   },
   "reina": {
     "win": [
-      "That first knockout was mine to lose. I know exactly where.",
-      "Don't expect the same opening next time."
+      "You got me this time. I won't pretend otherwise.",
+      "I'm already changing the list for the rematch."
     ],
     "loss": [
-      "You gave away the second turn. You know that, right?",
-      "Here. I'll show you the line I was waiting for."
+      "Good game. I found what I was looking for.",
+      "Now I want to see what you change before next time."
     ],
     "draw": [
       "We both had a chance to finish that game.",
@@ -75,12 +75,12 @@
   },
   "shiori": {
     "win": [
-      "You saw the safe move and took the risky one instead.",
-      "I've replayed it twice. It still holds up."
+      "You made me reconsider what I thought I knew.",
+      "There's a line I'd like to discuss, if you have time."
     ],
     "loss": [
-      "You nearly had me with that last switch.",
-      "Would you like to see what I had in hand?"
+      "I haven't played that carefully in ages.",
+      "I'd be glad to go over the game with you."
     ],
     "draw": [
       "That game left us both with an unfinished question.",
@@ -108,12 +108,12 @@
   },
   "yuna": {
     "win": [
-      "You broke my magnificent combo. Very rude.",
-      "I've invented a worse one already. Want a preview?"
+      "You beat my magnificent scheme. Rude.",
+      "I've got an even worse one waiting in the wings."
     ],
     "loss": [
-      "I got the knockout! With the silly deck!",
-      "Okay, I may have practiced it all night. Don't tell anyone."
+      "It worked! My very silly deck worked!",
+      "Okay. Don't tell anyone how long I practiced."
     ],
     "draw": [
       "A DRAW? That is not an ending. That is a cliffhanger!",
@@ -141,12 +141,12 @@
   },
   "akari": {
     "win": [
-      "I misread your second turn. It bothers me more than losing.",
-      "I changed one assumption. You can probably guess which."
+      "My estimate was wrong. Annoyingly wrong.",
+      "Would you tell me what you were thinking before we shuffled?"
     ],
     "loss": [
-      "That opening still needs another Basic.",
-      "I checked the probabilities, but you can see it without a chart."
+      "That result favors my list, but it's only one game.",
+      "Want to try the same matchup again?"
     ],
     "draw": [
       "Our last sample did not support either conclusion.",
@@ -174,12 +174,12 @@
   },
   "camila": {
     "win": [
-      "You were right to hold that Trainer. I would've sold it too early.",
-      "Don't get smug, darling. I'm still going to offer a rematch."
+      "Well played, darling. I did not see that coming.",
+      "I'll demand another round once I've renegotiated with my own deck."
     ],
     "loss": [
       "That was expensive, wasn't it?",
-      "I brought my notes. No charge for the first bit of advice."
+      "At least neither of us put any rare cards on the table."
     ],
     "draw": [
       "Neither of us could close the deal.",
@@ -207,12 +207,12 @@
   },
   "marina": {
     "win": [
-      "You waited until the last possible turn to play that.",
-      "I thought you had nothing. Then you showed me the Switch."
+      "I thought I had more time. Apparently not.",
+      "Would you mind another game when the café's quieter?"
     ],
     "loss": [
-      "My hand finally cooperated. Yours didn't.",
-      "Could we try again with the same decks? I'm curious."
+      "Oh. I actually pulled that off.",
+      "I'm going to want a rematch before I forget how this felt."
     ],
     "draw": [
       "We never quite found the current that would carry us through.",
@@ -241,11 +241,11 @@
   "kaede": {
     "win": [
       "You got me. Clean as anything.",
-      "I've been thinking about that line since I got on the train."
+      "I'll be back when I have a better answer."
     ],
     "loss": [
-      "That wasn't even my best hand.",
-      "You looked ready for a rematch before we finished packing."
+      "I knew you wouldn't make it easy.",
+      "You looked ready for another game before we'd finished packing."
     ],
     "draw": [
       "We left unfinished business on the table.",
@@ -273,12 +273,12 @@
   },
   "elena": {
     "win": [
-      "I underestimated your switch target. That was my mistake.",
-      "I've made a note of it. No need to look so pleased."
+      "That was a sound finish. I misjudged the risk.",
+      "I have a few adjustments to make before we play again."
     ],
     "loss": [
-      "You pressed on the turn I expected you to pass.",
-      "It might be worth checking the board before our next game."
+      "That was a useful test for my list.",
+      "I'd prefer another game before drawing conclusions."
     ],
     "draw": [
       "Our match ended without resolution. I have kept my notes.",
@@ -306,12 +306,12 @@
   },
   "jinx": {
     "win": [
-      "I saw the knockout. Didn't think you'd actually take it.",
-      "Fine. I want that game back. With better cards."
+      "Okay, you got me. Don't get comfortable.",
+      "I'm coming back with something nastier next time."
     ],
     "loss": [
-      "You walked right into the trap. I nearly felt bad.",
-      "Nearly. Don't start with me."
+      "Ha! That went better than I planned.",
+      "What, you didn't think I could keep a straight face?"
     ],
     "draw": [
       "A tie? Boring. Actually, no. That was kind of perfect.",
@@ -339,12 +339,12 @@
   },
   "luna": {
     "win": [
-      "I thought your Active was stuck. You found a way out.",
-      "Can we look at that turn again? I want to learn it."
+      "You won! I had a plan for once, too.",
+      "Could we try the matchup again? I think I'm getting the hang of it."
     ],
     "loss": [
-      "I got the Energy right this time!",
-      "Sorry. That sounded boastful. ...No, actually, I'm happy."
+      "I won? Oh, wow.",
+      "I was so sure I'd get the turns mixed up. One more game?"
     ],
     "draw": [
       "Nobody could finish that game.",
@@ -372,12 +372,12 @@
   },
   "rina": {
     "win": [
-      "You hit that knockout right before I expected you to switch.",
-      "I was thinking about it during soundcheck. Don't tell the drummer."
+      "Okay, that was good. I'm impressed.",
+      "Can we go through it after rehearsal? I want another try."
     ],
     "loss": [
-      "That opening finally worked. I tested it between rehearsals.",
-      "My pianist said she'd never seen me shuffle so fast."
+      "Yes! I've been practicing for this.",
+      "My bandmates are never going to hear the end of it."
     ],
     "draw": [
       "We ran out of answers before we ran out of energy.",
@@ -405,12 +405,12 @@
   },
   "sierra": {
     "win": [
-      "You waited for my draw to run out. Very patient.",
-      "I saw it on the replay. That was clever."
+      "Well played. I'd have liked a different result.",
+      "I can make time for a rematch after the next shoot."
     ],
     "loss": [
-      "You didn't see the disruption coming.",
-      "I've got the list here if you want to compare openings."
+      "That went my way. Good game.",
+      "You want to see the deck list before the next one?"
     ],
     "draw": [
       "We both held our ground right to the end.",
@@ -438,12 +438,12 @@
   },
   "sol": {
     "win": [
-      "You stole the finale! I had a whole speech ready.",
-      "I'll have to save it for the rematch."
+      "No! You stole my grand finale.",
+      "Fine. I'll prepare a much more dramatic rematch."
     ],
     "loss": [
-      "Yes! The completely impractical deck won!",
-      "I promise I'll only remind you once. Maybe twice."
+      "I won! Quick, somebody get the confetti.",
+      "Relax. The confetti is metaphorical. Mostly."
     ],
     "draw": [
       "Neither of us got to call that one.",
@@ -471,12 +471,12 @@
   },
   "jun": {
     "win": [
-      "I saw that switch you saved. That was clever.",
-      "I marked the turn down, if you'd like the replay."
+      "Good game. You found a way through my setup.",
+      "I put the score sheet aside, if you'd like to review it."
     ],
     "loss": [
-      "You left your Bench open on turn three.",
-      "I've got the score sheet here. Want to look?"
+      "That went my way. Good game.",
+      "I've got time for a second round if you do."
     ],
     "draw": [
       "We ran out of time, not ideas.",
@@ -504,12 +504,12 @@
   },
   "teo": {
     "win": [
-      "You stole the show right at the end!",
-      "I'm going to need a better closing line next time."
+      "You won! I'd better revise my closing speech.",
+      "Want a rematch? I can improvise the ending."
     ],
     "loss": [
-      "That knockout deserved a microphone.",
-      "I promise not to reenact it. Unless you ask."
+      "And that's a win! Sorry, I do that automatically.",
+      "I promise to commentate the next one at a reasonable volume."
     ],
     "draw": [
       "And that's a cliffhanger, folks.",
@@ -537,12 +537,12 @@
   },
   "iris": {
     "win": [
-      "That last turn was tight. You made it work.",
-      "I nearly forgot which prize was yours."
+      "You beat me to it. Fair enough.",
+      "I have another delivery after this, but I'll find time for a rematch."
     ],
     "loss": [
-      "You were one card away from turning it.",
-      "Want a fresh deck? The sleeves on that one are going."
+      "That was tighter than I expected.",
+      "I've got a few more minutes before I have to go."
     ],
     "draw": [
       "Neither of us could close it out.",
@@ -570,12 +570,12 @@
   },
   "elio": {
     "win": [
-      "I thought my opening was safe. It really wasn't.",
-      "Could you show me that middle turn again?"
+      "You got me. I was really trying, too.",
+      "Would you show me what you'd change in my deck?"
     ],
     "loss": [
       "I won? ...Sorry. Good game.",
-      "I practiced that one all week. My cousin will never believe me."
+      "Can we do another once I stop shaking?"
     ],
     "draw": [
       "We both had the answer, just not the cards.",
@@ -603,12 +603,12 @@
   },
   "alma": {
     "win": [
-      "You found the mistake in my setup.",
-      "I'll make a note after I get the lunch rush sorted."
+      "You got me there. Nicely done.",
+      "Want something to drink before the next game?"
     ],
     "loss": [
-      "That was a good match. You want something to drink?",
-      "Don't look at me like I cheated. I just read the card."
+      "Good game. I had to work for that.",
+      "Give me a minute to get the kettle before round two."
     ],
     "draw": [
       "Neither of us made it across the finish line.",
@@ -636,12 +636,12 @@
   },
   "nereo": {
     "win": [
-      "You took the only dry route I had left.",
-      "Good call. I was too busy protecting my Active."
+      "You beat me. Nothing wrong with admitting it.",
+      "I'll tinker with the list after the ferry run."
     ],
     "loss": [
-      "Got across at last.",
-      "Don't worry, I'll lose the next one on purpose. Kidding."
+      "Well, that one made it across the river.",
+      "I've got an hour before the next crossing if you want another."
     ],
     "draw": [
       "Stuck at the landing, both of us.",
