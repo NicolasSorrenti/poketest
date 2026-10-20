@@ -5,8 +5,8 @@ const Collection=require('../rpg_collection');
 const Registry=require('../rpg_character_packs.generated'),Narrative=require('../rpg_narrative_pack'),Side=require('../rpg_side_quests');
 const s=(overrides={})=>({day:20,slot:1,results:[],appointments:[],tournaments:{},competitive:{locals:{}},storyDone:{},...overrides});
 const duel=(npc,id,day,won,draw=false)=>({id,npc,day,won,draw});
-test('all 14 primary characters have distinct authored responses across duels, cup and appointments',()=>{
- const ids=['hana','reina','shiori','yuna','akari','camila','marina','kaede','elena','jinx','luna','rina','sierra','sol'];
+test('all 20 characters have distinct authored responses across duels, cup and appointments',()=>{
+ const ids=['hana','reina','shiori','yuna','akari','camila','marina','kaede','elena','jinx','luna','rina','sierra','sol','jun','teo','iris','elio','alma','nereo'];
  const all=[...Object.keys(Narrative.cast),...Object.keys(Side.cast),...Object.keys(Registry.cast||{})];
  for(const id of ids){
   assert.ok(R.VOICE[id],id);
@@ -97,15 +97,16 @@ test('pre-duel rematch banter is derived from legitimate previous results withou
 test('after-duel responses reflect comeback, weekly championship and ties',()=>{
  const state=s({results:[duel('reina','older',12,false),duel('reina','now',20,true)]});
  const receipt={duelId:'now',outcome:'Victory'};
- assert.match(R.afterDuel(state,{npc:'reina'},receipt,{duelWin:'Great victory!'}),/turnaround/);
+ assert.match(R.afterDuel(state,{npc:'reina'},receipt,{duelWin:'Great victory!'}),/differently from last time/);
  assert.match(R.afterDuel(state,{npc:'reina',competitiveKind:'local',competitiveRound:1},receipt),/local/i);
  assert.match(R.afterDuel(state,{npc:'reina'}, {...receipt,outcome:'Draw'}),/chance|finish|question|never/i);
 });
-test('unrecognized pack character safely uses neutral contextual phrasing',()=>{
+test('supporting characters keep their individual match memories rather than neutral fallbacks',()=>{
  const state=s({results:[duel('jun','jun-match',20,true)]});
  const r=R.reaction(state,'jun');assert.equal(r.kind,'win');
  assert.equal(r.lines[0].speaker,'jun');
- assert.equal(r.lines[0].text,'I have been thinking about our last match.');
+ assert.equal(r.lines[0].text,R.VOICE.jun.win[0]);
+ assert.notEqual(r.lines[0].text,R.VOICE.teo.win[0]);
 });
 
 test('imported NPC keeps its character-pack post-duel voice, not a generic victory template',()=>{
