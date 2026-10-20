@@ -44,7 +44,11 @@ function renderStory(){
   const lines=storyDialogueLines(e.id),line=lines[Math.min(a.index,lines.length-1)];
   return {speaker:line.speaker==='Protagonist'?'You':(cast[line.speaker]?.name|| (line.speaker===e.npc?cast[e.npc].name:line.speaker)),line:line.text,choices:[[a.index<lines.length-1?'Continue ›':'Respond ›','storyNext']]};
  }
- if(a.phase==='choice')return {speaker:cast[e.npc].name,line:'How will you respond?',choices:e.choices.map((c,i)=>[c.label,'storyChoice:'+i])};
+ if(a.phase==='choice'){
+  // Keep the actual final line on screen while response choices are shown.
+  const last=storyDialogueLines(e.id).at(-1);
+  return {speaker:last?.speaker==='Protagonist'?'You':(cast[last?.speaker]?.name||last?.speaker||cast[e.npc].name),line:last?.text||'',choices:e.choices.map((c,i)=>[c.label,'storyChoice:'+i])};
+ }
  const chosen=e.choices[a.choice];
  return {speaker:cast[e.npc].name,line:chosen.reply,choices:[['Finish scene · ⏳ 1 period','storyFinish']]};
 }
@@ -89,7 +93,10 @@ function showSideQuest(){
   return {speaker:line.speaker==='Protagonist'?'You':cast[line.speaker]?.name||line.speaker,line:line.text,choices:[[a.index<lines.length-1?'Continue ›':'Respond ›','sideNext']]};
  }
  if(a.phase==='duel')return {speaker:cast[e.npc].name,line:'Ready for a real match? No special rules, no going easy.',choices:[['Play the match · ⏳ 1 period','sideDuel'],['Not right now · free','sidePause']]};
- if(a.phase==='choice')return {speaker:cast[e.npc].name,line:'What would you suggest?',choices:e.choices.map((c,i)=>[c.label,'sideChoice:'+i])};
+ if(a.phase==='choice'){
+  const last=SIDE.linesFor(state,a.id).at(-1);
+  return {speaker:last?.speaker==='Protagonist'?'You':(cast[last?.speaker]?.name||last?.speaker||cast[e.npc].name),line:last?.text||'',choices:e.choices.map((c,i)=>[c.label,'sideChoice:'+i])};
+ }
  return {speaker:cast[e.npc].name,line:e.choices[a.choice].reply,choices:[['Finish chapter · ⏳ 1 period','sideFinish']]};
 }
 function nextSideQuest(){
@@ -207,7 +214,12 @@ function renderMandatory(){
   const remote=e.kind==='bond'&&(e.delivery==='remote'||!SCHEDULES.peopleAt(state.day,state.slot,state.location,publicAppointments(state.location)).includes(e.characterId));
   return {speaker:remote&&cast[line.speaker]?'✉ '+name+' · message':name,line:mandatoryText(line.text),choices:[[a.index<e.lines.length-1?'Continue ›':'Respond ›','mandatoryNext']]};
  }
- if(a.phase==='choice')return {speaker:cast[e.characterId]?.name||'Narrator',line:'How will you respond?',choices:e.choices.map((c,i)=>[c.label,'mandatoryChoice:'+i])};
+ if(a.phase==='choice'){
+  const last=e.lines.at(-1);
+  const remote=e.kind==='bond'&&(e.delivery==='remote'||!SCHEDULES.peopleAt(state.day,state.slot,state.location,publicAppointments(state.location)).includes(e.characterId));
+  const speaker=last?.speaker==='Protagonist'?'You':(cast[last?.speaker]?.name||last?.speaker||'Narrator');
+  return {speaker:remote&&cast[last?.speaker]?'✉ '+speaker+' · message':speaker,line:mandatoryText(last?.text||''),choices:e.choices.map((c,i)=>[c.label,'mandatoryChoice:'+i])};
+ }
  const choice=e.choices[a.choice];
  const responseActor=[...e.lines].reverse().find(line=>cast[line.speaker])?.speaker;
  const remoteReply=e.kind==='bond'&&(e.delivery==='remote'||!SCHEDULES.peopleAt(state.day,state.slot,state.location,publicAppointments(state.location)).includes(e.characterId));
