@@ -47,7 +47,7 @@
    ["Does the schedule ever change?","Frequently. That's why I leave room for contingencies.","Including conversations like this?","I have recently begun to reserve a small amount of time for those."],
    ["So you never lose your temper at work?","Of course I do. I simply wait until the client has left.","Then what happens?","I take a walk. Occasionally a very long one."],
    ["You make it sound like armor.","In a sense. But I also happen to enjoy dressing well.","Fair point.","Thank you. I dislike being turned into somebody else's metaphor."],
-   ["What if your opponent does something absurd?","Then I check whether it's genuinely absurd or whether I missed a line.","And if you missed it?","I write it down. Pride is a poor substitute for a sideboard plan."],
+   ["What if your opponent does something absurd?","Then I check whether it's genuinely absurd or whether I missed a line.","And if you missed it?","I write it down. Pride is a poor substitute for learning the matchup."],
    ["Is that why you're here tonight?","I finished my work. I could have gone home.","But you didn't.","No. I am allowing myself to enjoy that decision."],
    ["You caught me. I was trying to read your reaction.","How disappointing. I was hoping you were listening to the point.","I was. I disagree with one part.","Good. That is much more interesting." ]
   ],
@@ -715,12 +715,12 @@
       "You always make the next step feel smaller. I appreciate that."
     ],
     [
-      "Nobody needs you to have an answer right away.",
-      "Even if I keep overthinking it? ...Okay. I'll try being patient with myself."
+      "Sounds like you found the words when it mattered.",
+      "I almost handed the deck back anyway. But I finished my turn first."
     ],
     [
-      "I can't promise to stop every stumble.",
-      "I know. It matters more that you'll laugh with me afterward, not at me."
+      "If you drop your deck, I'll help pick it up. I won't play your turns for you.",
+      "That's exactly what I want. Someone who laughs with me and lets me make my own calls."
     ]
   ],
   "sol": [
@@ -791,24 +791,24 @@
   ],
   "sierra": [
     [
-      "It must be tiring being recognized for only one thing.",
-      "It is. Which is why hearing you ask about my deck catches me off guard."
+      "That sounds like an annoying deck to play against.",
+      "It is. That's the point. I spent weeks tuning it on the train."
     ],
     [
-      "Can I ask what you want, not what they booked you for?",
-      "A real match. Maybe a quiet meal. Nothing anyone needs to photograph."
+      "You said you were burning your hand too early. Want to try a slower opening?",
+      "Yes. I've been rushing the draw because I hate passing with cards in hand."
     ],
     [
-      "Then this room can belong to you.",
-      "I like that. The cards don't care how I look under studio lights."
+      "Do you want me to repeat exactly what that kid played?",
+      "Please. I keep hearing that same mistake in my head. Give me a chance to fix it."
     ],
     [
-      "I'm interested in you, not the version people buy tickets to see.",
-      "That's what I've been hoping you'd say. I wasn't sure I believed it."
+      "I'm glad you kept both things instead of having to pick one.",
+      "Turns out I can handle both if I stop letting other people book all my time."
     ],
     [
-      "You don't have to hide the part that loves this game.",
-      "I won't. Whatever happens with us, I'm done pretending the deck box is just an accessory."
+      "So dinner's on whether or not you make it past the first round?",
+      "Exactly. And don't give me that pity smile if I lose. I want a rematch."
     ]
   ]
 };
