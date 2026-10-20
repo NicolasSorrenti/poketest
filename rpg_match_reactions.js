@@ -122,6 +122,7 @@
    const line=doc.createElement('p');line.textContent='“'+reaction.line+'”';
    copy.append(tag,name,title,line);card.append(portrait,copy);
    element.replaceChildren(card);element.classList.remove('hidden');
+   media?.NeoRpgAudio?.play?.(isClutch(reaction.kind)?'knockout':'cutin');
    const showingPriority=currentPriority;
    timer=schedule(()=>{
     // Stale completion timers cannot clear a newer cut-in.
