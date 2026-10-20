@@ -44,7 +44,7 @@ global.window={matchMedia:()=>({matches:true})};
   assert.match(html,/battle_presentation_ui.js/);
  }
  for(const file of ['classic_live.js','online.js']){
-  const src=fs.readFileSync(__dirname+'/'+file,'utf8');assert.match(src,/combat.update\(current\)/);assert.match(src,/presentation.attackReason\(/);
+  const src=fs.readFileSync(__dirname+'/'+file,'utf8');assert.match(src,/combat.update\(current\)/);assert.match(src,/shared\.renderAttacks\(/);assert.match(src,/attackReason:presentation\.attackReason/);
  }
  console.log('PASS v0.36: public actions, attack and evolution cues, HP deltas, turn guidance, poll idempotence and two UIs');
  }finally{global.document=originalDocument;global.window=originalWindow;}})();
