@@ -55,7 +55,7 @@
   {kind:'switch-defender',re:/^If your opponent has any Benched Pokémon, he or she chooses 1 of them and switches it with the Defending Pokémon\. \(Do the damage before switching the Pokémon\.\)$/i},
   {kind:'switch-attacker',re:/^If your opponent has any Benched Pokémon, choose 1 of them and switch it with (?:the Defending Pokémon|his or her Active Pokémon)\.$/i},
   {kind:'switch-self',re:/^Switch (.+) with 1 of your Benched Pokémon\.$/i},
-  {kind:'energy-discard',re:/^Discard (\d+) (Fire )?Energy cards? attached to (.+) in order to use this attack\.$/i},
+  {kind:'energy-discard',re:/^Discard (\d+|a) (Fire |Water |Lightning |Grass |Psychic |Fighting |Metal |Darkness )?Energy cards? attached to (.+) in order to use this attack\.$/i},
   {kind:'bench-splash-coin',re:/^Flip a coin\. If heads, this attack does (\d+) damage to each of your opponent's Benched Pokémon\. If tails, this attack does (\d+) damage to each of your own Benched Pokémon\. \(Don't apply Weakness and Resistance for Benched Pokémon\.\)$/i}
  ];
  function numericDamage(value){return /^\d*$/.test(value)?Number(value||0):null;}
@@ -150,7 +150,7 @@
     return Object.freeze({kind,damage:n,selfDamage,subject:m[1]});
    }
    if(kind==='energy-discard'){
-    const n=numericDamage(damage),quantity=Number(m[1]),onlyType=m[2]?'Fire':null;
+    const n=numericDamage(damage),quantity=m[1].toLowerCase()==='a'?1:Number(m[1]),onlyType=m[2]?.trim()||null;
     if(n===null||quantity<1||quantity>6)return null;
     return Object.freeze({kind,damage:n,quantity,onlyType,subject:m[3]});
    }
