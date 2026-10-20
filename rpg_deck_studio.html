@@ -14,8 +14,8 @@
 </header>
 <main id="deckStudio" class="studio" hidden>
  <div class="studio-context"><span>YOUR COLLECTION · 60-CARD FORMAT</span><span id="collectionSize"></span></div>
- <section id="strategyLab" class="strategy-lab" aria-label="Deck strategy lab">
-  <div class="strategy-title"><span>✦ STRATEGY LAB</span><small>SCOUT · IMPROVE · COLLECT</small></div>
+ <details id="strategyLab" class="strategy-lab" aria-label="Deck strategy lab">
+  <summary class="strategy-title"><span>✦ STRATEGY LAB</span><small>SCOUT · IMPROVE · COLLECT · TAP TO OPEN</small></summary>
   <div id="strategySummary" class="strategy-summary"></div>
   <div class="strategy-grid">
    <div class="strategy-pane"><h2>Owned-card upgrades</h2><p>Legal one-for-one experiments using cards you own. Apply to your draft, then save separately.</p><div id="strategySwaps"></div></div>
@@ -32,7 +32,7 @@
    </div>
   </div>
   <p id="strategyStatus" class="strategy-status" role="status" aria-live="polite"></p>
- </section>
+ </details>
  <div id="rpgDeckBuilder" aria-label="RPG 60-card deck builder"></div>
  <div id="rpgBuilderActions" class="studio-actions">
   <p id="saveStatus" role="status" aria-live="polite">Your deck is saved.</p>
