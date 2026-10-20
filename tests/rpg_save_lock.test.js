@@ -6,7 +6,7 @@ const COMPETE=require('../rpg_competitive_loop'),REACT=require('../rpg_reactivit
 const script=fs.readFileSync('rpg.js','utf8');
 const KEY='neoHarborRpgV1';
 class Element{
- constructor(tag='div'){this.tagName=tag.toUpperCase();this.children=[];this.className='';this.dataset={};this.classList={add(){},remove(){},toggle(){}};this.textContent='';this.hidden=false;this.style={};this.attrs={};this.value='';this.src='';if(this.tagName==='SELECT')this.options=[];}
+ constructor(tag='div'){this.tagName=tag.toUpperCase();this.children=[];this.className='';this.dataset={};this.classList={add(){},remove(){},toggle(){}};this.textContent='';this.hidden=false;this.style={setProperty(name,value){this[name]=String(value);}};this.attrs={};this.value='';this.src='';if(this.tagName==='SELECT')this.options=[];}
  append(...nodes){this.children.push(...nodes);if(this.options)this.options=this.children;}
  replaceChildren(...nodes){this.children=[...nodes];if(this.options)this.options=this.children;}
  querySelectorAll(){return [];}
