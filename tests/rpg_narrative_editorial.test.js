@@ -7,6 +7,7 @@ const Story=require('../rpg_story');
 const Bonds=require('../rpg_bond_chapters');
 const Dialogue=require('../rpg_dialogue');
 const Packs=require('../rpg_character_packs.generated');
+const Native=require('../rpg_narrative_pack');
 
 test('all fifteen supporting bond chapters keep stable mechanics while using visual story beats',()=>{
  assert.equal(Bonds.events.length,15);
@@ -44,6 +45,25 @@ test('four crossover scenes keep both character voices and previous-choice openi
    assert.equal(lines[0].speaker,e.lines[0].speaker);
   }
   assert.deepEqual(Packs.events.find(x=>x.id===id)?.lines,e.lines,'registry out of sync '+id);
+ }
+});
+
+test('nine recurring guest chapters and eight original-cast crossovers keep believable staged speakers',()=>{
+ const ids=['jun_guest_1','jun_guest_2','jun_guest_3','teo_guest_1','teo_guest_2','teo_guest_3','iris_guest_1','iris_guest_2','iris_guest_3',
+  'hana_cross_1','yuna_cross_1','camila_cross_1','marina_cross_1','reina_cross_1','akari_cross_1','kaede_cross_1','shiori_cross_1'];
+ assert.deepEqual(Native.validate(),[]);
+ for(const id of ids){
+  const e=Story.byId(id);
+  assert.ok(e,'missing native scene '+id);
+  assert.equal(e.lines.length,6,'preserve in-progress save indices '+id);
+  assert.ok(e.lines.some(l=>l.speaker==='Narrator'),'no scene description '+id);
+  assert.ok(e.lines.some(l=>l.speaker==='Protagonist'),'no player exchange '+id);
+  assert.equal(e.choices.length,2,'branch count changed '+id);
+  assert.strictEqual(Dialogue.storyLines(id,e.lines),e.lines,'do not add generic moral '+id);
+  for(const [flag,opening] of Object.entries(e.openingByFlag||{})){
+   assert.equal(e.lines[0].speaker,e.npc,'conditional dialogue belongs to NPC '+id);
+   assert.equal(Story.linesFor({storyFlags:{[e.prerequisite]:flag}},id)[0].text,opening,'branch continuity '+id);
+  }
  }
 });
 
