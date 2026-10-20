@@ -76,7 +76,11 @@
      return aScore-bScore||(counts[b]-counts[a])||a.localeCompare(b);
     });
    for(const remove of candidates){
-    if(kind==='pokemon'&&card.subtypes?.includes('Stage 1')&&catalog.get(remove)?.name===card.evolvesFrom&&counts[remove]<=1)continue;
+    // Never suggest cutting the only Basic or intermediate evolution supporting a current evolution.
+    if(kind==='pokemon'&&counts[remove]<=1&&deck.some(id=>
+      catalog.get(id)?.evolvesFrom===catalog.get(remove)?.name))continue;
+    if(kind==='pokemon'&&card.subtypes?.includes('Stage 1')&&
+      catalog.get(remove)?.name===card.evolvesFrom&&counts[remove]<=1)continue;
     const next=[...deck],pos=next.indexOf(remove);next[pos]=add;
     if(!core.check(next,owned).valid)continue;
     const existing=relevant(catalog.get(remove),p),gain=value-existing;
