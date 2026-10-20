@@ -342,33 +342,33 @@ const packs=[
     "lines": [
      {
       "speaker": "elena",
-      "text": "This was not on my calendar. I am aware of the irony."
+      "text": "This wasn't on my calendar. I checked twice on the way over."
      },
      {
       "speaker": "Protagonist",
-      "text": "You came anyway."
+      "text": "You still came."
      },
      {
       "speaker": "elena",
-      "text": "Yes. I am still examining why."
+      "text": "I did. I even brought the wrong shoes for the gravel."
      },
      {
       "speaker": "Protagonist",
-      "text": "Maybe you wanted to."
+      "text": "You could have changed your mind."
      },
      {
       "speaker": "elena",
-      "text": "Want is an imprecise variable. I prefer clearer metrics."
+      "text": "I almost did. Then I realized I was looking forward to it."
      },
      {
       "speaker": "elena",
-      "text": "And yet here I am, walking without a destination and allowing the conversation to drift. This is unlike me."
+      "text": "Now you've heard me admit that. Don't make it into a public announcement."
      }
     ],
     "choices": [
      {
-      "label": "Tell her you like this version of her",
-      "reply": "Then you are accepting a version I do not fully understand yet. That is a risk.",
+      "label": "Tell her you're glad she came",
+      "reply": "So am I. I'm still trying to get used to saying things that simply.",
       "kind": "support",
       "flag": "elena_version",
       "delta": {
@@ -379,8 +379,8 @@ const packs=[
       }
      },
      {
-      "label": "Ask if the loss of control is as frightening as she expected",
-      "reply": "It is quieter than I anticipated. That may be the more dangerous part.",
+      "label": "Ask whether she was nervous about coming",
+      "reply": "Very. I rearranged my bag three times before leaving.",
       "kind": "honest",
       "flag": "elena_quiet",
       "delta": {
@@ -391,8 +391,8 @@ const packs=[
       }
      },
      {
-      "label": "Close the distance slightly and wait",
-      "reply": "You are testing the boundary. I have not moved away. Take that as the data it is.",
+      "label": "Walk a little closer and let her choose the pace",
+      "reply": "You're giving me a choice without turning it into a test. I appreciate that.",
       "kind": "flirt",
       "flag": "elena_boundary",
       "delta": {
@@ -424,33 +424,33 @@ const packs=[
     "lines": [
      {
       "speaker": "elena",
-      "text": "I have reviewed the last several weeks. The deviations from my usual pattern are significant."
+      "text": "I stared at my calendar for ten minutes before coming. There was nothing scheduled."
      },
      {
       "speaker": "Protagonist",
-      "text": "And the conclusion?"
+      "text": "Is that a problem?"
      },
      {
       "speaker": "elena",
-      "text": "That I have allowed one person more access than is strictly efficient. And that I do not wish to revoke it."
+      "text": "Ordinarily I would have invented an errand. Today I chose not to."
      },
      {
       "speaker": "Protagonist",
-      "text": "That’s a big statement coming from you."
+      "text": "So what do you want?"
      },
      {
       "speaker": "elena",
-      "text": "I do not make small statements when the data is clear."
+      "text": "Coffee. A walk. You, if you're willing. There. I've said it plainly."
      },
      {
       "speaker": "elena",
-      "text": "So. Are you prepared to remain a variable I no longer try to eliminate?"
+      "text": "Would you like to see me again next week? No appointment required."
      }
     ],
     "choices": [
      {
-      "label": "Tell her you’re staying",
-      "reply": "Then the ledger is updated. Do not make me revise it again without cause.",
+      "label": "Tell her you'll be there",
+      "reply": "Then I'll leave next Friday blank. Deliberately.",
       "kind": "support",
       "flag": "elena_stay",
       "delta": {
@@ -461,8 +461,8 @@ const packs=[
       }
      },
      {
-      "label": "Kiss her carefully and let the answer be physical",
-      "reply": "...That was not a scheduled action. I will allow it.",
+      "label": "Ask whether you can kiss her",
+      "reply": "Yes. I was hoping you would ask without making a proposal.",
       "kind": "flirt",
       "flag": "elena_kiss",
       "delta": {
@@ -473,8 +473,8 @@ const packs=[
       }
      },
      {
-      "label": "Say you want both the controlled version and the one that slips",
-      "reply": "Both. You continue to request both. Very well. I will attempt to provide them.",
+      "label": "Suggest walking together without planning a route",
+      "reply": "Good. We can change direction when we feel like it. This is already highly irregular.",
       "kind": "honest",
       "flag": "elena_both",
       "delta": {
@@ -684,33 +684,33 @@ const packs=[
     "lines": [
      {
       "speaker": "jinx",
-      "text": "You’re new. Or at least new to standing in my line of sight. Name?"
+      "text": "You're new. Or at least I haven't seen that deck box before. Name?"
      },
      {
       "speaker": "Protagonist",
-      "text": "Depends who’s asking."
+      "text": "Is that how you welcome everyone?"
      },
      {
       "speaker": "jinx",
-      "text": "Jinx. And I ask because people who hover without a reason usually turn into a problem."
+      "text": "Only people who stop at my practice table. I'm Jinx."
      },
      {
       "speaker": "Protagonist",
-      "text": "Maybe I just like the view."
+      "text": "Saw your high score. You play cards too?"
      },
      {
       "speaker": "jinx",
-      "text": "Bold. Most people pretend they’re not looking. At least you’re honest about it."
+      "text": "Better than arcade shooters. Those machines never bluff, which is boring."
      },
      {
       "speaker": "jinx",
-      "text": "Still. Looking is free. Keeping my attention isn’t. You play, or are you just window shopping?"
+      "text": "There's an empty table. Are you sitting down or just studying the competition?"
      }
     ],
     "choices": [
      {
-      "label": "Challenge her to a match right now",
-      "reply": "Finally. Someone who doesn’t waste time. Don’t cry when I wipe the floor with you.",
+      "label": "Challenge her to a match",
+      "reply": "Finally. Someone who actually brought a deck. Don't expect an easy game.",
       "kind": "support",
       "flag": "jinx_challenge",
       "delta": {
@@ -721,8 +721,8 @@ const packs=[
       }
      },
      {
-      "label": "Tell her the attitude is part of the appeal",
-      "reply": "Oh, so you like the sharp edges. Dangerous preference. I might start testing that.",
+      "label": "Tell her you're impressed by her confidence",
+      "reply": "You should be. Keep the compliments short, though. I'm trying to shuffle.",
       "kind": "flirt",
       "flag": "jinx_edge",
       "delta": {
@@ -733,8 +733,8 @@ const packs=[
       }
      },
      {
-      "label": "Ask if she always opens with threats",
-      "reply": "Threats? That was me being polite. You should see me when I’m actually annoyed.",
+      "label": "Ask whether she's always this welcoming",
+      "reply": "This is welcoming. The regulars get a lot worse.",
       "kind": "honest",
       "flag": "jinx_honest",
       "delta": {
@@ -823,9 +823,9 @@ const packs=[
      }
     ],
     "openingByFlag": {
-     "jinx_challenge": "You challenged me last time. Cute. Most people don’t follow through.",
+     "jinx_challenge": "You challenged me last time. Most people talk big until the match starts.",
      "jinx_edge": "Still into the sharp edges? Bold of you.",
-     "jinx_honest": "You asked if I always open with threats. Today I’m feeling generous. Almost."
+     "jinx_honest": "You asked whether I'm always this welcoming. Today I'm charging admission."
     }
    },
    {
@@ -1007,33 +1007,33 @@ const packs=[
     "lines": [
      {
       "speaker": "jinx",
-      "text": "Tournament’s over. I placed where I wanted. You’re still here. So either you’re a glutton for punishment or this is actually something."
+      "text": "The bracket's finished. I'm still annoyed about one turn, and I'm not telling you which."
      },
      {
       "speaker": "Protagonist",
-      "text": "What do you want it to be?"
+      "text": "Would it help to talk it through?"
      },
      {
       "speaker": "jinx",
-      "text": "I want someone who doesn’t flinch when I’m sharp and doesn’t treat me like a prize when I’m soft. Rare combination."
+      "text": "Maybe later. Right now I'd rather talk to you without someone else listening."
      },
      {
       "speaker": "Protagonist",
-      "text": "And you think that’s me?"
+      "text": "That sounds serious."
      },
      {
       "speaker": "jinx",
-      "text": "I’m starting to. Which is terrifying, by the way. I don’t usually let people get this close without a fight."
+      "text": "It is. I want someone who pushes back when I'm unbearable and stays when I stop trying to win the conversation."
      },
      {
       "speaker": "jinx",
-      "text": "So... your move. No audience. No scoreboard. Just us."
+      "text": "So tell me what you want. No scoreboard, no audience."
      }
     ],
     "choices": [
      {
-      "label": "Tell her you want the real version, sharp edges and all",
-      "reply": "Then stop looking at me like I’m about to vanish. I’m not going anywhere. Not tonight.",
+      "label": "Tell her you're here for the person, not the reputation",
+      "reply": "Good. Because I'm not always easy to deal with, and I'm done pretending otherwise.",
       "kind": "support",
       "flag": "jinx_real",
       "delta": {
@@ -1044,8 +1044,8 @@ const packs=[
       }
      },
      {
-      "label": "Close the distance and kiss her",
-      "reply": "...Took you long enough. Don’t stop now.",
+      "label": "Kiss her instead of turning it into another argument",
+      "reply": "Finally. You were taking forever.",
       "kind": "flirt",
       "flag": "jinx_kiss",
       "delta": {
@@ -1056,8 +1056,8 @@ const packs=[
       }
      },
      {
-      "label": "Ask if she’s ready to stop performing completely",
-      "reply": "With you? Yeah. I think I am. Scary answer, but it’s the true one.",
+      "label": "Ask whether she'd rather take things slowly",
+      "reply": "Slowly? Fine. But I'm keeping the right to tease you about it.",
       "kind": "honest",
       "flag": "jinx_ready",
       "delta": {
@@ -1070,7 +1070,7 @@ const packs=[
     ],
     "openingByFlag": {
      "jinx_stay": "You said you were staying for the long game. Guess the long game is now.",
-     "jinx_greedy": "You wanted the wins and me. You got the wins. Now decide about the rest.",
+     "jinx_greedy": "You wanted the wins and me. I'm still deciding which is more frightening.",
      "jinx_loyalty": "You talked about loyalty. Tonight I’m calling that bluff—or that promise."
     }
    },
