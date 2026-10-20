@@ -246,7 +246,9 @@
    // The first CPU attack in an RPG duel always introduces the rival visually.
    // Later reactions remain selective, with a slot reserved for a knockout.
    const firstAttack=kind==='attack'&&!attackShown;
-   if(!keyMoment&&(count>=MAX_REACTIONS-1||(!firstAttack&&nextSeq-lastReactionSeq<3)))return null;
+   // Reserve one ordinary slot for that first attack as well as the KO slot.
+   const normalCap=MAX_REACTIONS-(attackShown||firstAttack?1:2);
+   if(!keyMoment&&(count>=normalCap||(!firstAttack&&nextSeq-lastReactionSeq<3)))return null;
    if(!firstAttack&&(typeof random==='function'?random():Math.random())>=CHANCES[kind])return null;
    const titles=LABELS[kind],line=(VOICES[npcId]&&VOICES[npcId][kind])||GENERIC[kind];
    lastReactionSeq=nextSeq;count++;if(kind==='attack')attackShown=true;
