@@ -45,3 +45,63 @@ test('romance commitments exclude alternative commitments without blocking frien
  assert.equal(STORY.resolve(st,two.id,1).choice.kind,'friend');
  assert.equal(st.partner,one.npc);
 });
+
+const newerHeroines=['jinx','luna','rina','elena','sierra'];
+test('guest romantic finale choices record a committed partner',()=>{
+ for(const npc of newerHeroines){
+  const e=STORY.byId(npc+'_route_5');
+  assert.ok(e,npc+' missing finale');
+  assert.deepEqual(e.choices.map(c=>c.kind),['friend','commit','honest']);
+  const st=sample();st.day=e.start;st.slot=e.slot;st.location=e.place;
+  st.storyDone[e.prerequisite]={choice:0,day:e.start-1};
+  st.relationships[npc].affection=9;st.relationships[npc].trust=5;
+  STORY.resolve(st,e.id,1);
+  assert.equal(st.partner,npc);
+  assert.equal(st.routeOutcomes[npc],'romance');
+  assert.equal(st.storyDone[e.id].choice,1);
+ }
+});
+test('guest friendship and undecided endings remain non-exclusive',()=>{
+ for(const npc of newerHeroines)for(const idx of [0,2]){
+  const e=STORY.byId(npc+'_route_5'),st=sample();
+  st.day=e.start;st.slot=e.slot;st.location=e.place;
+  st.storyDone[e.prerequisite]={choice:0,day:e.start-1};
+  st.relationships[npc].affection=9;st.relationships[npc].trust=4;
+  STORY.resolve(st,e.id,idx);
+  assert.equal(st.partner,null,'unexpected partner for '+npc);
+  if(idx===0)assert.equal(st.routeOutcomes[npc],'friendship');
+ }
+});
+test('legacy romantic saves recover only an unambiguous partner',()=>{
+ for(const npc of newerHeroines){
+  const st=sample();st.storyDone[npc+'_route_5']={day:84,choice:1};
+  st.relationships[npc].affection=8;st.relationships[npc].trust=3;
+  STORY.normalize(st);
+  assert.equal(st.partner,npc);
+  assert.equal(st.routeOutcomes[npc],'romance');
+ }
+ const multiple=sample();
+ for(const npc of newerHeroines.slice(0,2)){
+  multiple.storyDone[npc+'_route_5']={day:84,choice:1};
+  multiple.relationships[npc]={affection:9,trust:4};
+ }
+ STORY.normalize(multiple);
+ assert.equal(multiple.partner,null,'ambiguity must not silently pick a partner');
+ const friendship=sample();friendship.storyDone.jinx_route_5={day:83,choice:1};friendship.routeOutcomes={jinx:'friendship'};
+ friendship.relationships.jinx={affection:9,trust:4};
+ STORY.normalize(friendship);assert.equal(friendship.partner,null);
+ const existing=sample();existing.partner='hana';existing.storyDone.jinx_route_5={day:83,choice:1};existing.relationships.jinx={affection:9,trust:4};
+ STORY.normalize(existing);assert.equal(existing.partner,'hana');
+});
+test('a second guest commitment is blocked without preventing friendship',()=>{
+ const first=STORY.byId('jinx_route_5'),second=STORY.byId('rina_route_5'),st=sample();
+ for(const e of [first,second]){
+  st.storyDone[e.prerequisite]={day:e.start-1,choice:0};
+  st.relationships[e.npc].affection=10;st.relationships[e.npc].trust=5;
+ }
+ st.day=first.start;st.slot=first.slot;st.location=first.place;STORY.resolve(st,first.id,1);
+ st.day=second.start;st.slot=second.slot;st.location=second.place;
+ assert.throws(()=>STORY.resolve(st,second.id,1),/Already committed/);
+ assert.equal(STORY.resolve(st,second.id,0).choice.kind,'friend');
+ assert.equal(st.partner,'jinx');
+});
