@@ -85,7 +85,7 @@ const acknowledgeMandatory=async(page)=>{
    else break;
   }
   // Optional social invitations can remain after the greeting; decline before dueling.
-  const politeExit=page.locator('#choices button').filter({hasText:/I should get going|Maybe another time|Leave it there/});
+  var politeExit=page.locator('#choices button').filter({hasText:/I should get going|Maybe another time|Leave it there/});
   if(await politeExit.count()&&!await politeExit.first().isHidden())await politeExit.first().click();
   await page.locator('#characterActions button').filter({hasText:'Duel'}).click();
   await page.locator('#preDuelDialog').waitFor({state:'visible'});
@@ -211,7 +211,7 @@ const acknowledgeMandatory=async(page)=>{
    else break;
   }
   // Optional social invitations can remain after the greeting; decline before dueling.
-  const politeExit=page.locator('#choices button').filter({hasText:/I should get going|Maybe another time|Leave it there/});
+  var politeExit=page.locator('#choices button').filter({hasText:/I should get going|Maybe another time|Leave it there/});
   if(await politeExit.count()&&!await politeExit.first().isHidden())await politeExit.first().click();
   await page.locator('#characterActions button').filter({hasText:'Duel'}).click();
   await page.locator('#preDuelDialog').waitFor({state:'visible'});
