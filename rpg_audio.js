@@ -171,7 +171,7 @@
   };
  }
  const controller=createController();
- return {KEY,DEFAULTS,settings,cueFor,scenePitch,createController,
+ return {KEY,DEFAULTS,parseSettings:settings,cueFor,scenePitch,createController,
   init:options=>controller.init(options),unlock:()=>controller.unlock(),
   play:name=>controller.play(name),setScene:(place,slot)=>controller.setScene(place,slot),
   setPaused:value=>controller.setPaused(value),
