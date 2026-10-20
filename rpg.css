@@ -349,3 +349,9 @@
 .club-news-entry p{margin:4px 0 0;color:#f0ebef;font-size:13px;line-height:1.4}
 .community-connections{display:flex;flex-wrap:wrap;gap:8px}
 .club-link{border:1px solid #67547f;border-radius:8px;background:#30283b;padding:8px 10px;margin:0;font-size:13px}
+
+
+/* Milestone 5: outcome-specific season memories, kept inside the finale, not another sidebar. */
+.finale-lessons{margin-top:18px;padding:16px 20px;border:1px solid #655676;border-radius:12px;background:linear-gradient(120deg,#2b273f,#18233b)}
+.finale-lessons h3{font:800 20px 'Barlow Condensed',sans-serif;color:#ffdfeb;letter-spacing:.6px;margin:0 0 10px}
+.finale-lessons p{color:#e5e2f1;font-size:14px;line-height:1.6;margin:6px 0}
