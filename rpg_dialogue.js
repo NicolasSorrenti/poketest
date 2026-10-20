@@ -59,46 +59,14 @@
    ["You could tell them what you care about.","I do. The decent ones remember. The others get one polite correction.","That sounds exhausting.","Sometimes. Then I sit down and shuffle. That part's mine."],
    ["What's the card you never leave behind?","A beat-up Trainer from my first deck. Not worth much on paper.","Why keep it?","Because I won my first match with it. You can't put a price on that." ]
   ],
-  hana:[
-   ["Sounds like you want everyone to have a chance.","Exactly. Sometimes winning feels better when everybody gets to play.","Even if it makes the deck less efficient?","Maybe not every game has to be the championship final."],
-   ["Is the next cup making you nervous?","A little. I keep smiling so everyone else can relax.","Who helps you relax?","You just asked a surprisingly difficult question."],
-   ["You like the quiet shop?","It is the only time I can hear myself think between shuffling cards.","Then why invite me over?","Because quiet doesn't have to mean being alone."]
-  ],
-  reina:[
-   ["And what about when the opening goes wrong?","Then you find out whether you brought a strategy or just a good hand.","You say that like you've lost on purpose.","I don't lose on purpose. I do remember why I lost."],
-   ["You noticed me talking to people?","I notice when someone spends more time socializing than practicing.","Maybe listening to people is practice, too.","...Fine. That is at least an argument worth considering."],
-   ["Have I earned anything yet?","You have earned the right to sit across from me again.","That almost sounded friendly.","Don't let it go to your head."]
-  ],
-  shiori:[
-   ["So what did you learn from my last match?","That you listen to what the cards are telling you, even when you don't like it.","I thought I was just improvising.","Sometimes that is what listening looks like."],
-   ["Do you ever miss sitting at the table?","More often than I admit.","Then why stay behind the crowd?","Because watching is safe. Playing makes your choices real."],
-   ["Does silence bother you?","Only when someone fills it because they are frightened of it.","And if I stay a while without talking?","I think that would be lovely."]
-  ],
-  yuna:[
-   ["Does your surprise plan ever survive turn three?","Not often, but when it does you should see their faces!","I want a front-row seat for that.","Then you are officially part of the audience. No refunds."],
-   ["What happens when the joke stops being funny?","I come up with a louder one. It's a terrible system.","You could just tell people you're disappointed.","Whoa. You really do go straight for the boss fight."],
-   ["What's the latest unreasonable combo?","One part brilliance, two parts bad decisions.","And the fourth part?","You, apparently. You're helping me test it."]
-  ],
-  akari:[
-   ["What assumption does mine reveal?","That you believe a surprising play can compensate for imperfect consistency.","And do you think I'm wrong?","I think I'd like to collect more evidence."],
-   ["Would you change anything about my last deck?","Three cards. But I would rather you discover why.","That's a very specific kind of cruelty.","I prefer to call it guided research."],
-   ["Are you running numbers on me right now?","Only in a very informal sense.","That sounds suspiciously like yes.","It is a statistically defensible yes."]
-  ],
-  camila:[
-   ["Do you have a story for every card?","The interesting ones. Nobody remembers a price tag forever.","What about a trade you regret?","Oh, darling. Those are usually the best stories."],
-   ["Is there such a thing as a fair trade?","Of course. The problem is getting two people to agree on what fair means.","So what matters to you?","That neither person wishes they'd never met."],
-   ["You're accusing me of bluffing?","I'm complimenting your composure.","How would I know the difference?","You wouldn't. That's why it's fun."]
-  ],
-  marina:[
-   ["Does the river help you think?","It reminds me there's a world beyond tomorrow's match.","Maybe we could walk here after a tournament.","I'd like that. Even if we don't win anything."],
-   ["You sound like you've been waiting.","I have. Sometimes I mistake patience for courage.","How do you tell the difference?","I think you have to actually take the first step."],
-   ["What would you try if nobody were watching?","Something I'm not already good at.","And if somebody was cheering for you?","That might make it a little easier."]
-  ],
-  kaede:[
-   ["And what about the stories you tell about yourself?","Those are the dangerous ones. You start believing them.","Is that why you came here?","Maybe I wanted to see who I am somewhere new."],
-   ["Then what are you looking for?","A player who makes me put away all my excuses.","That's a high bar.","Good. I didn't travel all this way for an easy match."],
-   ["Is it always about the unexpected move?","It's about making a choice you can actually own.","Even when it costs you the match?","Especially then."]
-  ],
+  hana:[["You took one out of your own deck?","Just for tonight. Wigglytuff will have to manage.","And if it loses?","Then I can blame the table that borrowed my best card. Convenient, right?"],["Did you check the registration?","Twice. The handwriting is terrible.","Who do you think it is?","Yuna says it isn't her. That makes her my first suspect."],["Were you enjoying those five minutes?","I was. The tea was even still hot.","I could come back later.","No, stay. Just help me find the sleeves when the rush starts."]],
+  reina:[["Bad shuffle?","Bad list. Shuffling doesn't put Basics into a deck that doesn't have enough.","You already changed it?","Twice. I want another test before I pretend I fixed it."],["Barely. It almost worked, though.","That's what she says about everything.","You watched us?","I could hear her from across the center. So could everyone else."],["You remember which Trainer I played?","I remember mistakes. Especially expensive ones.","That's almost flattering.","Then don't give me the same mistake twice."]],
+  shiori:[["He was protecting his Active?","That was part of it. Watch when he finally used it.","He waited for the bench to fill.","Precisely. I wish I had spotted it sooner."],["Can I see it?","Maybe another time. Some of the handwriting is a little painful to read.","Then why carry it?","I keep meaning to put it away. Perhaps today isn't the day."],["What are you reading?","A tournament account from a few years ago. It's rather dramatic.","More dramatic than this café?","Considerably. Nobody in the book has spilled tea yet."]],
+  yuna:[["Did it win?","No! But it made an excellent noise when it failed.","You're putting that in the next deck?","Obviously. I can't abandon a card with such stage presence."],["Was the replay that bad?","I missed a knockout. A whole knockout! It was sitting there waving at me.","Are you fixing the line?","Right after I finish being furious at myself for ten minutes."],["Does the deck work?","Define 'work.' It produces a memorable experience.","So not yet.","Rude. Accurate, but rude. Help me shuffle."]],
+  akari:[["Lunch?","You were distracted by the snack cart. It's a legitimate variable.","What are the other theories?","One is a bluff. The other makes you look very clever, so I won't spoil it."],["How long did it take?","Long enough for the library to close around me.","Was it worth it?","Ask me after I play ten games. I refuse to celebrate a sample of one."],["Am I on it?","You are in the untitled column.","That sounds ominous.","You keep changing sleeves. I'm waiting until you commit."]],
+  camila:[["You'd buy a damaged card?","If it has a good story. And a suitably damaged price.","You always haggle this much?","Only when I think I can win. Which is most days, darling."],["Was the trade unfair?","Very. They didn't know what they had.","You could have taken it.","And I would have had to see them every Saturday. Terrible for business."],["I was trying not to look disappointed.","You nearly succeeded.","Nearly?","Your fingers stopped shuffling. Small detail. Very revealing."]],
+  marina:[["How late?","Twenty minutes. The captain said the tide wasn't helping.","Did you miss anything?","Only the quiet part of my morning. I could still use some tea."],["Have you signed it yet?","Not yet. I know, I know.","You brought a pen.","I did. I thought if I brought the pen, the rest might follow."],["Does that change how the ferry runs?","It changes how everyone walks along the dock.","You know the weather that well?","Not well enough to trust it without looking twice."]],
+  kaede:[["Was it you?","Of course. But I wanted to see whether they'd ask a second question.","Did they?","Nope. People are disappointingly easy to frighten."],["You beat the score?","Briefly. A kid took it back before I finished my soda.","Going to try again?","I'm deciding whether the soda was the problem."],["Did you tell your opponent?","I almost did. Then I remembered they had a train to catch too.","Will you show me instead?","Only if you're willing to tell me when I'm wrong."]],
   elio:[["You don't have to impress everyone.","I know that in theory. My hands haven't caught up.","Want to run a few turns together?","Only if you promise not to laugh at the opening hand."]],
   alma:[["Does running the café ever get quiet?","Once in a while, just after the morning rush.","And what do you do then?","Sit down for five minutes before someone finds me."]],
   nereo:[["Is there a trick to staying calm?","There's a trick to looking calm. That's different.","Care to share it?","You start by breathing before you draw."]],
