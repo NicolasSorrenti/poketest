@@ -7,6 +7,19 @@ const ready=(e,extra={})=>({day:e.start,slot:e.slot,location:e.place,focus:50,cr
  bonds:Object.fromEntries(npcs.map(n=>[n,{affection:10,trust:4,duels:0}])),
  hungOut:{},situationDone:{},activeSituation:null,...extra});
 const firstDay=e=>{for(let day=e.start;day<=e.end;day++)if(Schedules.locationFor(e.npc,day,e.slot)===e.place&&S.chance(e,day,e.slot))return day;return null};
+test('narrated situations have character-spoken responses rather than third-person explanations',()=>{
+ const fs=require('node:fs'),path=require('node:path');
+ const rpg=fs.readFileSync(path.join(__dirname,'..','rpg.js'),'utf8');
+ assert.match(rpg,/if\(a\.phase==='choice'\)return \{speaker:'Narrator',line:e\.intro/,'the scene introduction must be narrator text');
+ for(const e of S.events){
+  assert.ok(e.intro.length>40,'missing physical context for '+e.id);
+  assert.equal(e.options.length,2);
+  for(const option of e.options){
+   assert.ok(option.response.length>=30,'missing response '+e.id);
+   assert.doesNotMatch(option.response,/^(?:You |She |He |Hana |Reina |Shiori |Yuna |Akari |Camila |Marina |Kaede )/i,'response should sound spoken by its NPC '+e.id);
+  }
+ }
+});
 test('all eight already-planned CGs have unique real-life event definitions',()=>{
  assert.deepEqual(S.validate(),[]);assert.equal(S.events.length,8);
  assert.equal(new Set(S.events.map(x=>x.id)).size,8);
