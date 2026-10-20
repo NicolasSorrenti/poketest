@@ -59,7 +59,7 @@
    .filter(x=>validRecord(x.row)&&x.row.npc===npc&&x.row.id!==exclude&&x.row.day<=s.day)
    .sort((a,b)=>b.row.day-a.row.day||b.index-a.index)[0]?.row||null;
  }
- function reaction(s,npc,character=null){
+ function reaction(s,npc,character=null,cast=null,community=null){
   if(!plain(s)||typeof npc!=='string'||!goodDay(s.day)||s.day>90)return null;
   const candidate=[];
   function add(priority,id,kind,day,dialogue,asked='How have things been since then?'){
@@ -114,6 +114,10 @@
      protagonist('Did anything about it change for you?'),
      rec(npc,'I am still working that out. But I appreciated being able to say it aloud.')]});
   }
+  // Ambient NPC-vs-NPC club and friendship moments sit below authored personal scenes.
+  // They describe witnessed community life, never award relationship points.
+  const club=community?.dialogue?.(s,npc,cast);
+  if(club&&!seen(s,club.id))candidate.push({...club,priority:55});
   candidate.sort((a,b)=>b.priority-a.priority||b.day-a.day||a.id.localeCompare(b.id));
   return candidate[0]||null;
  }
