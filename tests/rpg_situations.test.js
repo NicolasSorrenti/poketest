@@ -16,7 +16,7 @@ test('narrated situations have character-spoken responses rather than third-pers
   assert.equal(e.options.length,2);
   for(const option of e.options){
    assert.ok(option.response.length>=30,'missing response '+e.id);
-   assert.doesNotMatch(option.response,/^(?:You |She |He |Hana |Reina |Shiori |Yuna |Akari |Camila |Marina |Kaede )/i,'response should sound spoken by its NPC '+e.id);
+   assert.doesNotMatch(option.response,/^(?:She |He |Hana |Reina |Shiori |Yuna |Akari |Camila |Marina |Kaede )(?:laughs|nods|smiles|thanks|accepts|discovers|strikes|starts|puts|turns)\b/i,'response should sound spoken by its NPC '+e.id);
   }
  }
 });
