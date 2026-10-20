@@ -823,7 +823,7 @@ function chooseAction(game,raw={},memo={}){
  }
  return null;
 }
-function driveSide(initial,{side=1,level=3,personality='balanced',seed=1,planning,evolutionTempo,prizeRace,knockoutTempo,opponentResponse,graduatedNoise,energyHorizon,limit=200}={}){
+function driveSide(initial,{side=1,level=3,personality='balanced',seed=1,planning,evolutionTempo,prizeRace,knockoutTempo,opponentResponse,graduatedNoise,energyHorizon,limit=200,onStep=null}={}){
  let game=initial,steps=0;const commands=[],memo={trainers:0,powers:0,powerKeys:new Set(),stadium:false};
  while(!game.over&&steps<limit){
   const beforeTurn=game.turnSerial;
@@ -839,6 +839,7 @@ function driveSide(initial,{side=1,level=3,personality='balanced',seed=1,plannin
   commands.push({side,command:a,score:next.score,alternatives:next.alternatives,
    probedCandidates:next.probedCandidates,rejectedCandidates:next.rejectedCandidates});
   game=next.game;steps++;
+  if(onStep)onStep(game,a,steps);
   if(beforeTurn!==game.turnSerial){memo.trainers=0;memo.powers=0;memo.powerKeys.clear();memo.stadium=false;}
   if(a.type==='end_turn'&&game.turn===side&&!game.pendingDecision&&!game.over)throw Error('CPU did not advance turn');
  }
