@@ -107,3 +107,10 @@ test('unrecognized pack character safely uses neutral contextual phrasing',()=>{
  assert.equal(r.lines[0].speaker,'jun');
  assert.equal(r.lines[0].text,'I have been thinking about our last match.');
 });
+
+test('imported NPC keeps its character-pack post-duel voice, not a generic victory template',()=>{
+ const character={duelWin:'I did not expect that clever attack!',duelLose:'I planned for this rematch.'};
+ const state=s({results:[duel('jun','now',20,true)]});
+ assert.equal(R.afterDuel(state,{npc:'jun'},{duelId:'now',outcome:'Victory'},character),character.duelWin);
+ assert.equal(R.afterDuel(state,{npc:'jun'},{duelId:'now',outcome:'Defeat'},character),character.duelLose);
+});
