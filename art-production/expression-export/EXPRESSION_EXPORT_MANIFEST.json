@@ -1,0 +1,2039 @@
+{
+  "pack": "Neo Campus TCG — individual VN expression sprite exports",
+  "created": "2026-10-20",
+  "inputArchive": "neo_campus_all_regenerated_art_2026-10-20.zip",
+  "characters": 20,
+  "variants": 101,
+  "spriteFiles": 101,
+  "faceFiles": 101,
+  "totalImages": 202,
+  "mode": "extracted from existing approved expression sheets; NOT newly illustrated scenes",
+  "productionWarnings": [
+    "These are cropped derivatives of existing character expression sheets, not newly drawn faces.",
+    "Some adjacent poses touch in the master sheets; review crops in game before declaring final production-ready.",
+    "The five or six variants are assigned broadly by visual order; re-label if the narrative requires precise expressions.",
+    "Scene CG generation attempted but unrelated renders were rejected and excluded."
+  ],
+  "items": [
+    {
+      "character": "hana",
+      "variant": "neutral",
+      "source": "rpg-assets/expression-sheets/hana.png",
+      "column": 1,
+      "sourceCount": 5,
+      "spritePath": "rpg-assets/characters/hana/expression-portraits/neutral.webp",
+      "facePath": "rpg-assets/characters/hana/expression-faces/neutral.webp",
+      "dimensions": {
+        "sprite": [
+          512,
+          1024
+        ],
+        "face": [
+          280,
+          380
+        ]
+      },
+      "note": "panel extracted from source sheet; face cropped for UI; source sheet may have adjacent hair/outfit edge overlap"
+    },
+    {
+      "character": "hana",
+      "variant": "happy",
+      "source": "rpg-assets/expression-sheets/hana.png",
+      "column": 2,
+      "sourceCount": 5,
+      "spritePath": "rpg-assets/characters/hana/expression-portraits/happy.webp",
+      "facePath": "rpg-assets/characters/hana/expression-faces/happy.webp",
+      "dimensions": {
+        "sprite": [
+          512,
+          1024
+        ],
+        "face": [
+          280,
+          380
+        ]
+      },
+      "note": "panel extracted from source sheet; face cropped for UI; source sheet may have adjacent hair/outfit edge overlap"
+    },
+    {
+      "character": "hana",
+      "variant": "surprised",
+      "source": "rpg-assets/expression-sheets/hana.png",
+      "column": 3,
+      "sourceCount": 5,
+      "spritePath": "rpg-assets/characters/hana/expression-portraits/surprised.webp",
+      "facePath": "rpg-assets/characters/hana/expression-faces/surprised.webp",
+      "dimensions": {
+        "sprite": [
+          512,
+          1024
+        ],
+        "face": [
+          280,
+          380
+        ]
+      },
+      "note": "panel extracted from source sheet; face cropped for UI; source sheet may have adjacent hair/outfit edge overlap"
+    },
+    {
+      "character": "hana",
+      "variant": "concerned",
+      "source": "rpg-assets/expression-sheets/hana.png",
+      "column": 4,
+      "sourceCount": 5,
+      "spritePath": "rpg-assets/characters/hana/expression-portraits/concerned.webp",
+      "facePath": "rpg-assets/characters/hana/expression-faces/concerned.webp",
+      "dimensions": {
+        "sprite": [
+          512,
+          1024
+        ],
+        "face": [
+          280,
+          380
+        ]
+      },
+      "note": "panel extracted from source sheet; face cropped for UI; source sheet may have adjacent hair/outfit edge overlap"
+    },
+    {
+      "character": "hana",
+      "variant": "soft",
+      "source": "rpg-assets/expression-sheets/hana.png",
+      "column": 5,
+      "sourceCount": 5,
+      "spritePath": "rpg-assets/characters/hana/expression-portraits/soft.webp",
+      "facePath": "rpg-assets/characters/hana/expression-faces/soft.webp",
+      "dimensions": {
+        "sprite": [
+          512,
+          1024
+        ],
+        "face": [
+          280,
+          380
+        ]
+      },
+      "note": "panel extracted from source sheet; face cropped for UI; source sheet may have adjacent hair/outfit edge overlap"
+    },
+    {
+      "character": "reina",
+      "variant": "neutral",
+      "source": "rpg-assets/expression-sheets/reina.png",
+      "column": 1,
+      "sourceCount": 5,
+      "spritePath": "rpg-assets/characters/reina/expression-portraits/neutral.webp",
+      "facePath": "rpg-assets/characters/reina/expression-faces/neutral.webp",
+      "dimensions": {
+        "sprite": [
+          512,
+          1024
+        ],
+        "face": [
+          280,
+          380
+        ]
+      },
+      "note": "panel extracted from source sheet; face cropped for UI; source sheet may have adjacent hair/outfit edge overlap"
+    },
+    {
+      "character": "reina",
+      "variant": "happy",
+      "source": "rpg-assets/expression-sheets/reina.png",
+      "column": 2,
+      "sourceCount": 5,
+      "spritePath": "rpg-assets/characters/reina/expression-portraits/happy.webp",
+      "facePath": "rpg-assets/characters/reina/expression-faces/happy.webp",
+      "dimensions": {
+        "sprite": [
+          512,
+          1024
+        ],
+        "face": [
+          280,
+          380
+        ]
+      },
+      "note": "panel extracted from source sheet; face cropped for UI; source sheet may have adjacent hair/outfit edge overlap"
+    },
+    {
+      "character": "reina",
+      "variant": "surprised",
+      "source": "rpg-assets/expression-sheets/reina.png",
+      "column": 3,
+      "sourceCount": 5,
+      "spritePath": "rpg-assets/characters/reina/expression-portraits/surprised.webp",
+      "facePath": "rpg-assets/characters/reina/expression-faces/surprised.webp",
+      "dimensions": {
+        "sprite": [
+          512,
+          1024
+        ],
+        "face": [
+          280,
+          380
+        ]
+      },
+      "note": "panel extracted from source sheet; face cropped for UI; source sheet may have adjacent hair/outfit edge overlap"
+    },
+    {
+      "character": "reina",
+      "variant": "concerned",
+      "source": "rpg-assets/expression-sheets/reina.png",
+      "column": 4,
+      "sourceCount": 5,
+      "spritePath": "rpg-assets/characters/reina/expression-portraits/concerned.webp",
+      "facePath": "rpg-assets/characters/reina/expression-faces/concerned.webp",
+      "dimensions": {
+        "sprite": [
+          512,
+          1024
+        ],
+        "face": [
+          280,
+          380
+        ]
+      },
+      "note": "panel extracted from source sheet; face cropped for UI; source sheet may have adjacent hair/outfit edge overlap"
+    },
+    {
+      "character": "reina",
+      "variant": "soft",
+      "source": "rpg-assets/expression-sheets/reina.png",
+      "column": 5,
+      "sourceCount": 5,
+      "spritePath": "rpg-assets/characters/reina/expression-portraits/soft.webp",
+      "facePath": "rpg-assets/characters/reina/expression-faces/soft.webp",
+      "dimensions": {
+        "sprite": [
+          512,
+          1024
+        ],
+        "face": [
+          280,
+          380
+        ]
+      },
+      "note": "panel extracted from source sheet; face cropped for UI; source sheet may have adjacent hair/outfit edge overlap"
+    },
+    {
+      "character": "shiori",
+      "variant": "neutral",
+      "source": "rpg-assets/expression-sheets/shiori.png",
+      "column": 1,
+      "sourceCount": 5,
+      "spritePath": "rpg-assets/characters/shiori/expression-portraits/neutral.webp",
+      "facePath": "rpg-assets/characters/shiori/expression-faces/neutral.webp",
+      "dimensions": {
+        "sprite": [
+          512,
+          1024
+        ],
+        "face": [
+          280,
+          380
+        ]
+      },
+      "note": "panel extracted from source sheet; face cropped for UI; source sheet may have adjacent hair/outfit edge overlap"
+    },
+    {
+      "character": "shiori",
+      "variant": "happy",
+      "source": "rpg-assets/expression-sheets/shiori.png",
+      "column": 2,
+      "sourceCount": 5,
+      "spritePath": "rpg-assets/characters/shiori/expression-portraits/happy.webp",
+      "facePath": "rpg-assets/characters/shiori/expression-faces/happy.webp",
+      "dimensions": {
+        "sprite": [
+          512,
+          1024
+        ],
+        "face": [
+          280,
+          380
+        ]
+      },
+      "note": "panel extracted from source sheet; face cropped for UI; source sheet may have adjacent hair/outfit edge overlap"
+    },
+    {
+      "character": "shiori",
+      "variant": "surprised",
+      "source": "rpg-assets/expression-sheets/shiori.png",
+      "column": 3,
+      "sourceCount": 5,
+      "spritePath": "rpg-assets/characters/shiori/expression-portraits/surprised.webp",
+      "facePath": "rpg-assets/characters/shiori/expression-faces/surprised.webp",
+      "dimensions": {
+        "sprite": [
+          512,
+          1024
+        ],
+        "face": [
+          280,
+          380
+        ]
+      },
+      "note": "panel extracted from source sheet; face cropped for UI; source sheet may have adjacent hair/outfit edge overlap"
+    },
+    {
+      "character": "shiori",
+      "variant": "concerned",
+      "source": "rpg-assets/expression-sheets/shiori.png",
+      "column": 4,
+      "sourceCount": 5,
+      "spritePath": "rpg-assets/characters/shiori/expression-portraits/concerned.webp",
+      "facePath": "rpg-assets/characters/shiori/expression-faces/concerned.webp",
+      "dimensions": {
+        "sprite": [
+          512,
+          1024
+        ],
+        "face": [
+          280,
+          380
+        ]
+      },
+      "note": "panel extracted from source sheet; face cropped for UI; source sheet may have adjacent hair/outfit edge overlap"
+    },
+    {
+      "character": "shiori",
+      "variant": "soft",
+      "source": "rpg-assets/expression-sheets/shiori.png",
+      "column": 5,
+      "sourceCount": 5,
+      "spritePath": "rpg-assets/characters/shiori/expression-portraits/soft.webp",
+      "facePath": "rpg-assets/characters/shiori/expression-faces/soft.webp",
+      "dimensions": {
+        "sprite": [
+          512,
+          1024
+        ],
+        "face": [
+          280,
+          380
+        ]
+      },
+      "note": "panel extracted from source sheet; face cropped for UI; source sheet may have adjacent hair/outfit edge overlap"
+    },
+    {
+      "character": "yuna",
+      "variant": "neutral",
+      "source": "rpg-assets/expression-sheets/yuna.png",
+      "column": 1,
+      "sourceCount": 5,
+      "spritePath": "rpg-assets/characters/yuna/expression-portraits/neutral.webp",
+      "facePath": "rpg-assets/characters/yuna/expression-faces/neutral.webp",
+      "dimensions": {
+        "sprite": [
+          512,
+          1024
+        ],
+        "face": [
+          280,
+          380
+        ]
+      },
+      "note": "panel extracted from source sheet; face cropped for UI; source sheet may have adjacent hair/outfit edge overlap"
+    },
+    {
+      "character": "yuna",
+      "variant": "happy",
+      "source": "rpg-assets/expression-sheets/yuna.png",
+      "column": 2,
+      "sourceCount": 5,
+      "spritePath": "rpg-assets/characters/yuna/expression-portraits/happy.webp",
+      "facePath": "rpg-assets/characters/yuna/expression-faces/happy.webp",
+      "dimensions": {
+        "sprite": [
+          512,
+          1024
+        ],
+        "face": [
+          280,
+          380
+        ]
+      },
+      "note": "panel extracted from source sheet; face cropped for UI; source sheet may have adjacent hair/outfit edge overlap"
+    },
+    {
+      "character": "yuna",
+      "variant": "surprised",
+      "source": "rpg-assets/expression-sheets/yuna.png",
+      "column": 3,
+      "sourceCount": 5,
+      "spritePath": "rpg-assets/characters/yuna/expression-portraits/surprised.webp",
+      "facePath": "rpg-assets/characters/yuna/expression-faces/surprised.webp",
+      "dimensions": {
+        "sprite": [
+          512,
+          1024
+        ],
+        "face": [
+          280,
+          380
+        ]
+      },
+      "note": "panel extracted from source sheet; face cropped for UI; source sheet may have adjacent hair/outfit edge overlap"
+    },
+    {
+      "character": "yuna",
+      "variant": "concerned",
+      "source": "rpg-assets/expression-sheets/yuna.png",
+      "column": 4,
+      "sourceCount": 5,
+      "spritePath": "rpg-assets/characters/yuna/expression-portraits/concerned.webp",
+      "facePath": "rpg-assets/characters/yuna/expression-faces/concerned.webp",
+      "dimensions": {
+        "sprite": [
+          512,
+          1024
+        ],
+        "face": [
+          280,
+          380
+        ]
+      },
+      "note": "panel extracted from source sheet; face cropped for UI; source sheet may have adjacent hair/outfit edge overlap"
+    },
+    {
+      "character": "yuna",
+      "variant": "soft",
+      "source": "rpg-assets/expression-sheets/yuna.png",
+      "column": 5,
+      "sourceCount": 5,
+      "spritePath": "rpg-assets/characters/yuna/expression-portraits/soft.webp",
+      "facePath": "rpg-assets/characters/yuna/expression-faces/soft.webp",
+      "dimensions": {
+        "sprite": [
+          512,
+          1024
+        ],
+        "face": [
+          280,
+          380
+        ]
+      },
+      "note": "panel extracted from source sheet; face cropped for UI; source sheet may have adjacent hair/outfit edge overlap"
+    },
+    {
+      "character": "akari",
+      "variant": "neutral",
+      "source": "rpg-assets/expression-sheets/akari.png",
+      "column": 1,
+      "sourceCount": 5,
+      "spritePath": "rpg-assets/characters/akari/expression-portraits/neutral.webp",
+      "facePath": "rpg-assets/characters/akari/expression-faces/neutral.webp",
+      "dimensions": {
+        "sprite": [
+          512,
+          1024
+        ],
+        "face": [
+          280,
+          380
+        ]
+      },
+      "note": "panel extracted from source sheet; face cropped for UI; source sheet may have adjacent hair/outfit edge overlap"
+    },
+    {
+      "character": "akari",
+      "variant": "happy",
+      "source": "rpg-assets/expression-sheets/akari.png",
+      "column": 2,
+      "sourceCount": 5,
+      "spritePath": "rpg-assets/characters/akari/expression-portraits/happy.webp",
+      "facePath": "rpg-assets/characters/akari/expression-faces/happy.webp",
+      "dimensions": {
+        "sprite": [
+          512,
+          1024
+        ],
+        "face": [
+          280,
+          380
+        ]
+      },
+      "note": "panel extracted from source sheet; face cropped for UI; source sheet may have adjacent hair/outfit edge overlap"
+    },
+    {
+      "character": "akari",
+      "variant": "surprised",
+      "source": "rpg-assets/expression-sheets/akari.png",
+      "column": 3,
+      "sourceCount": 5,
+      "spritePath": "rpg-assets/characters/akari/expression-portraits/surprised.webp",
+      "facePath": "rpg-assets/characters/akari/expression-faces/surprised.webp",
+      "dimensions": {
+        "sprite": [
+          512,
+          1024
+        ],
+        "face": [
+          280,
+          380
+        ]
+      },
+      "note": "panel extracted from source sheet; face cropped for UI; source sheet may have adjacent hair/outfit edge overlap"
+    },
+    {
+      "character": "akari",
+      "variant": "concerned",
+      "source": "rpg-assets/expression-sheets/akari.png",
+      "column": 4,
+      "sourceCount": 5,
+      "spritePath": "rpg-assets/characters/akari/expression-portraits/concerned.webp",
+      "facePath": "rpg-assets/characters/akari/expression-faces/concerned.webp",
+      "dimensions": {
+        "sprite": [
+          512,
+          1024
+        ],
+        "face": [
+          280,
+          380
+        ]
+      },
+      "note": "panel extracted from source sheet; face cropped for UI; source sheet may have adjacent hair/outfit edge overlap"
+    },
+    {
+      "character": "akari",
+      "variant": "soft",
+      "source": "rpg-assets/expression-sheets/akari.png",
+      "column": 5,
+      "sourceCount": 5,
+      "spritePath": "rpg-assets/characters/akari/expression-portraits/soft.webp",
+      "facePath": "rpg-assets/characters/akari/expression-faces/soft.webp",
+      "dimensions": {
+        "sprite": [
+          512,
+          1024
+        ],
+        "face": [
+          280,
+          380
+        ]
+      },
+      "note": "panel extracted from source sheet; face cropped for UI; source sheet may have adjacent hair/outfit edge overlap"
+    },
+    {
+      "character": "camila",
+      "variant": "neutral",
+      "source": "rpg-assets/expression-sheets/camila.png",
+      "column": 1,
+      "sourceCount": 5,
+      "spritePath": "rpg-assets/characters/camila/expression-portraits/neutral.webp",
+      "facePath": "rpg-assets/characters/camila/expression-faces/neutral.webp",
+      "dimensions": {
+        "sprite": [
+          512,
+          1024
+        ],
+        "face": [
+          280,
+          380
+        ]
+      },
+      "note": "panel extracted from source sheet; face cropped for UI; source sheet may have adjacent hair/outfit edge overlap"
+    },
+    {
+      "character": "camila",
+      "variant": "happy",
+      "source": "rpg-assets/expression-sheets/camila.png",
+      "column": 2,
+      "sourceCount": 5,
+      "spritePath": "rpg-assets/characters/camila/expression-portraits/happy.webp",
+      "facePath": "rpg-assets/characters/camila/expression-faces/happy.webp",
+      "dimensions": {
+        "sprite": [
+          512,
+          1024
+        ],
+        "face": [
+          280,
+          380
+        ]
+      },
+      "note": "panel extracted from source sheet; face cropped for UI; source sheet may have adjacent hair/outfit edge overlap"
+    },
+    {
+      "character": "camila",
+      "variant": "surprised",
+      "source": "rpg-assets/expression-sheets/camila.png",
+      "column": 3,
+      "sourceCount": 5,
+      "spritePath": "rpg-assets/characters/camila/expression-portraits/surprised.webp",
+      "facePath": "rpg-assets/characters/camila/expression-faces/surprised.webp",
+      "dimensions": {
+        "sprite": [
+          512,
+          1024
+        ],
+        "face": [
+          280,
+          380
+        ]
+      },
+      "note": "panel extracted from source sheet; face cropped for UI; source sheet may have adjacent hair/outfit edge overlap"
+    },
+    {
+      "character": "camila",
+      "variant": "concerned",
+      "source": "rpg-assets/expression-sheets/camila.png",
+      "column": 4,
+      "sourceCount": 5,
+      "spritePath": "rpg-assets/characters/camila/expression-portraits/concerned.webp",
+      "facePath": "rpg-assets/characters/camila/expression-faces/concerned.webp",
+      "dimensions": {
+        "sprite": [
+          512,
+          1024
+        ],
+        "face": [
+          280,
+          380
+        ]
+      },
+      "note": "panel extracted from source sheet; face cropped for UI; source sheet may have adjacent hair/outfit edge overlap"
+    },
+    {
+      "character": "camila",
+      "variant": "soft",
+      "source": "rpg-assets/expression-sheets/camila.png",
+      "column": 5,
+      "sourceCount": 5,
+      "spritePath": "rpg-assets/characters/camila/expression-portraits/soft.webp",
+      "facePath": "rpg-assets/characters/camila/expression-faces/soft.webp",
+      "dimensions": {
+        "sprite": [
+          512,
+          1024
+        ],
+        "face": [
+          280,
+          380
+        ]
+      },
+      "note": "panel extracted from source sheet; face cropped for UI; source sheet may have adjacent hair/outfit edge overlap"
+    },
+    {
+      "character": "marina",
+      "variant": "neutral",
+      "source": "rpg-assets/expression-sheets/marina.png",
+      "column": 1,
+      "sourceCount": 5,
+      "spritePath": "rpg-assets/characters/marina/expression-portraits/neutral.webp",
+      "facePath": "rpg-assets/characters/marina/expression-faces/neutral.webp",
+      "dimensions": {
+        "sprite": [
+          512,
+          1024
+        ],
+        "face": [
+          280,
+          380
+        ]
+      },
+      "note": "panel extracted from source sheet; face cropped for UI; source sheet may have adjacent hair/outfit edge overlap"
+    },
+    {
+      "character": "marina",
+      "variant": "happy",
+      "source": "rpg-assets/expression-sheets/marina.png",
+      "column": 2,
+      "sourceCount": 5,
+      "spritePath": "rpg-assets/characters/marina/expression-portraits/happy.webp",
+      "facePath": "rpg-assets/characters/marina/expression-faces/happy.webp",
+      "dimensions": {
+        "sprite": [
+          512,
+          1024
+        ],
+        "face": [
+          280,
+          380
+        ]
+      },
+      "note": "panel extracted from source sheet; face cropped for UI; source sheet may have adjacent hair/outfit edge overlap"
+    },
+    {
+      "character": "marina",
+      "variant": "surprised",
+      "source": "rpg-assets/expression-sheets/marina.png",
+      "column": 3,
+      "sourceCount": 5,
+      "spritePath": "rpg-assets/characters/marina/expression-portraits/surprised.webp",
+      "facePath": "rpg-assets/characters/marina/expression-faces/surprised.webp",
+      "dimensions": {
+        "sprite": [
+          512,
+          1024
+        ],
+        "face": [
+          280,
+          380
+        ]
+      },
+      "note": "panel extracted from source sheet; face cropped for UI; source sheet may have adjacent hair/outfit edge overlap"
+    },
+    {
+      "character": "marina",
+      "variant": "concerned",
+      "source": "rpg-assets/expression-sheets/marina.png",
+      "column": 4,
+      "sourceCount": 5,
+      "spritePath": "rpg-assets/characters/marina/expression-portraits/concerned.webp",
+      "facePath": "rpg-assets/characters/marina/expression-faces/concerned.webp",
+      "dimensions": {
+        "sprite": [
+          512,
+          1024
+        ],
+        "face": [
+          280,
+          380
+        ]
+      },
+      "note": "panel extracted from source sheet; face cropped for UI; source sheet may have adjacent hair/outfit edge overlap"
+    },
+    {
+      "character": "marina",
+      "variant": "soft",
+      "source": "rpg-assets/expression-sheets/marina.png",
+      "column": 5,
+      "sourceCount": 5,
+      "spritePath": "rpg-assets/characters/marina/expression-portraits/soft.webp",
+      "facePath": "rpg-assets/characters/marina/expression-faces/soft.webp",
+      "dimensions": {
+        "sprite": [
+          512,
+          1024
+        ],
+        "face": [
+          280,
+          380
+        ]
+      },
+      "note": "panel extracted from source sheet; face cropped for UI; source sheet may have adjacent hair/outfit edge overlap"
+    },
+    {
+      "character": "kaede",
+      "variant": "neutral",
+      "source": "rpg-assets/expression-sheets/kaede.png",
+      "column": 1,
+      "sourceCount": 5,
+      "spritePath": "rpg-assets/characters/kaede/expression-portraits/neutral.webp",
+      "facePath": "rpg-assets/characters/kaede/expression-faces/neutral.webp",
+      "dimensions": {
+        "sprite": [
+          512,
+          1024
+        ],
+        "face": [
+          280,
+          380
+        ]
+      },
+      "note": "panel extracted from source sheet; face cropped for UI; source sheet may have adjacent hair/outfit edge overlap"
+    },
+    {
+      "character": "kaede",
+      "variant": "happy",
+      "source": "rpg-assets/expression-sheets/kaede.png",
+      "column": 2,
+      "sourceCount": 5,
+      "spritePath": "rpg-assets/characters/kaede/expression-portraits/happy.webp",
+      "facePath": "rpg-assets/characters/kaede/expression-faces/happy.webp",
+      "dimensions": {
+        "sprite": [
+          512,
+          1024
+        ],
+        "face": [
+          280,
+          380
+        ]
+      },
+      "note": "panel extracted from source sheet; face cropped for UI; source sheet may have adjacent hair/outfit edge overlap"
+    },
+    {
+      "character": "kaede",
+      "variant": "surprised",
+      "source": "rpg-assets/expression-sheets/kaede.png",
+      "column": 3,
+      "sourceCount": 5,
+      "spritePath": "rpg-assets/characters/kaede/expression-portraits/surprised.webp",
+      "facePath": "rpg-assets/characters/kaede/expression-faces/surprised.webp",
+      "dimensions": {
+        "sprite": [
+          512,
+          1024
+        ],
+        "face": [
+          280,
+          380
+        ]
+      },
+      "note": "panel extracted from source sheet; face cropped for UI; source sheet may have adjacent hair/outfit edge overlap"
+    },
+    {
+      "character": "kaede",
+      "variant": "concerned",
+      "source": "rpg-assets/expression-sheets/kaede.png",
+      "column": 4,
+      "sourceCount": 5,
+      "spritePath": "rpg-assets/characters/kaede/expression-portraits/concerned.webp",
+      "facePath": "rpg-assets/characters/kaede/expression-faces/concerned.webp",
+      "dimensions": {
+        "sprite": [
+          512,
+          1024
+        ],
+        "face": [
+          280,
+          380
+        ]
+      },
+      "note": "panel extracted from source sheet; face cropped for UI; source sheet may have adjacent hair/outfit edge overlap"
+    },
+    {
+      "character": "kaede",
+      "variant": "soft",
+      "source": "rpg-assets/expression-sheets/kaede.png",
+      "column": 5,
+      "sourceCount": 5,
+      "spritePath": "rpg-assets/characters/kaede/expression-portraits/soft.webp",
+      "facePath": "rpg-assets/characters/kaede/expression-faces/soft.webp",
+      "dimensions": {
+        "sprite": [
+          512,
+          1024
+        ],
+        "face": [
+          280,
+          380
+        ]
+      },
+      "note": "panel extracted from source sheet; face cropped for UI; source sheet may have adjacent hair/outfit edge overlap"
+    },
+    {
+      "character": "sol",
+      "variant": "neutral",
+      "source": "rpg-assets/expression-sheets/sol.png",
+      "column": 1,
+      "sourceCount": 5,
+      "spritePath": "rpg-assets/characters/sol/expression-portraits/neutral.webp",
+      "facePath": "rpg-assets/characters/sol/expression-faces/neutral.webp",
+      "dimensions": {
+        "sprite": [
+          512,
+          1024
+        ],
+        "face": [
+          280,
+          380
+        ]
+      },
+      "note": "panel extracted from source sheet; face cropped for UI; source sheet may have adjacent hair/outfit edge overlap"
+    },
+    {
+      "character": "sol",
+      "variant": "happy",
+      "source": "rpg-assets/expression-sheets/sol.png",
+      "column": 2,
+      "sourceCount": 5,
+      "spritePath": "rpg-assets/characters/sol/expression-portraits/happy.webp",
+      "facePath": "rpg-assets/characters/sol/expression-faces/happy.webp",
+      "dimensions": {
+        "sprite": [
+          512,
+          1024
+        ],
+        "face": [
+          280,
+          380
+        ]
+      },
+      "note": "panel extracted from source sheet; face cropped for UI; source sheet may have adjacent hair/outfit edge overlap"
+    },
+    {
+      "character": "sol",
+      "variant": "surprised",
+      "source": "rpg-assets/expression-sheets/sol.png",
+      "column": 3,
+      "sourceCount": 5,
+      "spritePath": "rpg-assets/characters/sol/expression-portraits/surprised.webp",
+      "facePath": "rpg-assets/characters/sol/expression-faces/surprised.webp",
+      "dimensions": {
+        "sprite": [
+          512,
+          1024
+        ],
+        "face": [
+          280,
+          380
+        ]
+      },
+      "note": "panel extracted from source sheet; face cropped for UI; source sheet may have adjacent hair/outfit edge overlap"
+    },
+    {
+      "character": "sol",
+      "variant": "concerned",
+      "source": "rpg-assets/expression-sheets/sol.png",
+      "column": 4,
+      "sourceCount": 5,
+      "spritePath": "rpg-assets/characters/sol/expression-portraits/concerned.webp",
+      "facePath": "rpg-assets/characters/sol/expression-faces/concerned.webp",
+      "dimensions": {
+        "sprite": [
+          512,
+          1024
+        ],
+        "face": [
+          280,
+          380
+        ]
+      },
+      "note": "panel extracted from source sheet; face cropped for UI; source sheet may have adjacent hair/outfit edge overlap"
+    },
+    {
+      "character": "sol",
+      "variant": "soft",
+      "source": "rpg-assets/expression-sheets/sol.png",
+      "column": 5,
+      "sourceCount": 5,
+      "spritePath": "rpg-assets/characters/sol/expression-portraits/soft.webp",
+      "facePath": "rpg-assets/characters/sol/expression-faces/soft.webp",
+      "dimensions": {
+        "sprite": [
+          512,
+          1024
+        ],
+        "face": [
+          280,
+          380
+        ]
+      },
+      "note": "panel extracted from source sheet; face cropped for UI; source sheet may have adjacent hair/outfit edge overlap"
+    },
+    {
+      "character": "jinx",
+      "variant": "neutral",
+      "source": "rpg-assets/expression-sheets/jinx.png",
+      "column": 1,
+      "sourceCount": 6,
+      "spritePath": "rpg-assets/characters/jinx/expression-portraits/neutral.webp",
+      "facePath": "rpg-assets/characters/jinx/expression-faces/neutral.webp",
+      "dimensions": {
+        "sprite": [
+          512,
+          1024
+        ],
+        "face": [
+          280,
+          380
+        ]
+      },
+      "note": "panel extracted from source sheet; face cropped for UI; source sheet may have adjacent hair/outfit edge overlap"
+    },
+    {
+      "character": "jinx",
+      "variant": "smirk",
+      "source": "rpg-assets/expression-sheets/jinx.png",
+      "column": 2,
+      "sourceCount": 6,
+      "spritePath": "rpg-assets/characters/jinx/expression-portraits/smirk.webp",
+      "facePath": "rpg-assets/characters/jinx/expression-faces/smirk.webp",
+      "dimensions": {
+        "sprite": [
+          512,
+          1024
+        ],
+        "face": [
+          280,
+          380
+        ]
+      },
+      "note": "panel extracted from source sheet; face cropped for UI; source sheet may have adjacent hair/outfit edge overlap"
+    },
+    {
+      "character": "jinx",
+      "variant": "happy",
+      "source": "rpg-assets/expression-sheets/jinx.png",
+      "column": 3,
+      "sourceCount": 6,
+      "spritePath": "rpg-assets/characters/jinx/expression-portraits/happy.webp",
+      "facePath": "rpg-assets/characters/jinx/expression-faces/happy.webp",
+      "dimensions": {
+        "sprite": [
+          512,
+          1024
+        ],
+        "face": [
+          280,
+          380
+        ]
+      },
+      "note": "panel extracted from source sheet; face cropped for UI; source sheet may have adjacent hair/outfit edge overlap"
+    },
+    {
+      "character": "jinx",
+      "variant": "surprised",
+      "source": "rpg-assets/expression-sheets/jinx.png",
+      "column": 4,
+      "sourceCount": 6,
+      "spritePath": "rpg-assets/characters/jinx/expression-portraits/surprised.webp",
+      "facePath": "rpg-assets/characters/jinx/expression-faces/surprised.webp",
+      "dimensions": {
+        "sprite": [
+          512,
+          1024
+        ],
+        "face": [
+          280,
+          380
+        ]
+      },
+      "note": "panel extracted from source sheet; face cropped for UI; source sheet may have adjacent hair/outfit edge overlap"
+    },
+    {
+      "character": "jinx",
+      "variant": "annoyed",
+      "source": "rpg-assets/expression-sheets/jinx.png",
+      "column": 5,
+      "sourceCount": 6,
+      "spritePath": "rpg-assets/characters/jinx/expression-portraits/annoyed.webp",
+      "facePath": "rpg-assets/characters/jinx/expression-faces/annoyed.webp",
+      "dimensions": {
+        "sprite": [
+          512,
+          1024
+        ],
+        "face": [
+          280,
+          380
+        ]
+      },
+      "note": "panel extracted from source sheet; face cropped for UI; source sheet may have adjacent hair/outfit edge overlap"
+    },
+    {
+      "character": "jinx",
+      "variant": "playful",
+      "source": "rpg-assets/expression-sheets/jinx.png",
+      "column": 6,
+      "sourceCount": 6,
+      "spritePath": "rpg-assets/characters/jinx/expression-portraits/playful.webp",
+      "facePath": "rpg-assets/characters/jinx/expression-faces/playful.webp",
+      "dimensions": {
+        "sprite": [
+          512,
+          1024
+        ],
+        "face": [
+          280,
+          380
+        ]
+      },
+      "note": "panel extracted from source sheet; face cropped for UI; source sheet may have adjacent hair/outfit edge overlap"
+    },
+    {
+      "character": "luna",
+      "variant": "neutral",
+      "source": "rpg-assets/expression-sheets/luna.png",
+      "column": 1,
+      "sourceCount": 5,
+      "spritePath": "rpg-assets/characters/luna/expression-portraits/neutral.webp",
+      "facePath": "rpg-assets/characters/luna/expression-faces/neutral.webp",
+      "dimensions": {
+        "sprite": [
+          512,
+          1024
+        ],
+        "face": [
+          280,
+          380
+        ]
+      },
+      "note": "panel extracted from source sheet; face cropped for UI; source sheet may have adjacent hair/outfit edge overlap"
+    },
+    {
+      "character": "luna",
+      "variant": "happy",
+      "source": "rpg-assets/expression-sheets/luna.png",
+      "column": 2,
+      "sourceCount": 5,
+      "spritePath": "rpg-assets/characters/luna/expression-portraits/happy.webp",
+      "facePath": "rpg-assets/characters/luna/expression-faces/happy.webp",
+      "dimensions": {
+        "sprite": [
+          512,
+          1024
+        ],
+        "face": [
+          280,
+          380
+        ]
+      },
+      "note": "panel extracted from source sheet; face cropped for UI; source sheet may have adjacent hair/outfit edge overlap"
+    },
+    {
+      "character": "luna",
+      "variant": "surprised",
+      "source": "rpg-assets/expression-sheets/luna.png",
+      "column": 3,
+      "sourceCount": 5,
+      "spritePath": "rpg-assets/characters/luna/expression-portraits/surprised.webp",
+      "facePath": "rpg-assets/characters/luna/expression-faces/surprised.webp",
+      "dimensions": {
+        "sprite": [
+          512,
+          1024
+        ],
+        "face": [
+          280,
+          380
+        ]
+      },
+      "note": "panel extracted from source sheet; face cropped for UI; source sheet may have adjacent hair/outfit edge overlap"
+    },
+    {
+      "character": "luna",
+      "variant": "concerned",
+      "source": "rpg-assets/expression-sheets/luna.png",
+      "column": 4,
+      "sourceCount": 5,
+      "spritePath": "rpg-assets/characters/luna/expression-portraits/concerned.webp",
+      "facePath": "rpg-assets/characters/luna/expression-faces/concerned.webp",
+      "dimensions": {
+        "sprite": [
+          512,
+          1024
+        ],
+        "face": [
+          280,
+          380
+        ]
+      },
+      "note": "panel extracted from source sheet; face cropped for UI; source sheet may have adjacent hair/outfit edge overlap"
+    },
+    {
+      "character": "luna",
+      "variant": "soft",
+      "source": "rpg-assets/expression-sheets/luna.png",
+      "column": 5,
+      "sourceCount": 5,
+      "spritePath": "rpg-assets/characters/luna/expression-portraits/soft.webp",
+      "facePath": "rpg-assets/characters/luna/expression-faces/soft.webp",
+      "dimensions": {
+        "sprite": [
+          512,
+          1024
+        ],
+        "face": [
+          280,
+          380
+        ]
+      },
+      "note": "panel extracted from source sheet; face cropped for UI; source sheet may have adjacent hair/outfit edge overlap"
+    },
+    {
+      "character": "elena",
+      "variant": "neutral",
+      "source": "rpg-assets/expression-sheets/elena.png",
+      "column": 1,
+      "sourceCount": 5,
+      "spritePath": "rpg-assets/characters/elena/expression-portraits/neutral.webp",
+      "facePath": "rpg-assets/characters/elena/expression-faces/neutral.webp",
+      "dimensions": {
+        "sprite": [
+          512,
+          1024
+        ],
+        "face": [
+          280,
+          380
+        ]
+      },
+      "note": "panel extracted from source sheet; face cropped for UI; source sheet may have adjacent hair/outfit edge overlap"
+    },
+    {
+      "character": "elena",
+      "variant": "happy",
+      "source": "rpg-assets/expression-sheets/elena.png",
+      "column": 2,
+      "sourceCount": 5,
+      "spritePath": "rpg-assets/characters/elena/expression-portraits/happy.webp",
+      "facePath": "rpg-assets/characters/elena/expression-faces/happy.webp",
+      "dimensions": {
+        "sprite": [
+          512,
+          1024
+        ],
+        "face": [
+          280,
+          380
+        ]
+      },
+      "note": "panel extracted from source sheet; face cropped for UI; source sheet may have adjacent hair/outfit edge overlap"
+    },
+    {
+      "character": "elena",
+      "variant": "surprised",
+      "source": "rpg-assets/expression-sheets/elena.png",
+      "column": 3,
+      "sourceCount": 5,
+      "spritePath": "rpg-assets/characters/elena/expression-portraits/surprised.webp",
+      "facePath": "rpg-assets/characters/elena/expression-faces/surprised.webp",
+      "dimensions": {
+        "sprite": [
+          512,
+          1024
+        ],
+        "face": [
+          280,
+          380
+        ]
+      },
+      "note": "panel extracted from source sheet; face cropped for UI; source sheet may have adjacent hair/outfit edge overlap"
+    },
+    {
+      "character": "elena",
+      "variant": "concerned",
+      "source": "rpg-assets/expression-sheets/elena.png",
+      "column": 4,
+      "sourceCount": 5,
+      "spritePath": "rpg-assets/characters/elena/expression-portraits/concerned.webp",
+      "facePath": "rpg-assets/characters/elena/expression-faces/concerned.webp",
+      "dimensions": {
+        "sprite": [
+          512,
+          1024
+        ],
+        "face": [
+          280,
+          380
+        ]
+      },
+      "note": "panel extracted from source sheet; face cropped for UI; source sheet may have adjacent hair/outfit edge overlap"
+    },
+    {
+      "character": "elena",
+      "variant": "soft",
+      "source": "rpg-assets/expression-sheets/elena.png",
+      "column": 5,
+      "sourceCount": 5,
+      "spritePath": "rpg-assets/characters/elena/expression-portraits/soft.webp",
+      "facePath": "rpg-assets/characters/elena/expression-faces/soft.webp",
+      "dimensions": {
+        "sprite": [
+          512,
+          1024
+        ],
+        "face": [
+          280,
+          380
+        ]
+      },
+      "note": "panel extracted from source sheet; face cropped for UI; source sheet may have adjacent hair/outfit edge overlap"
+    },
+    {
+      "character": "sierra",
+      "variant": "neutral",
+      "source": "rpg-assets/expression-sheets/sierra.png",
+      "column": 1,
+      "sourceCount": 5,
+      "spritePath": "rpg-assets/characters/sierra/expression-portraits/neutral.webp",
+      "facePath": "rpg-assets/characters/sierra/expression-faces/neutral.webp",
+      "dimensions": {
+        "sprite": [
+          512,
+          1024
+        ],
+        "face": [
+          280,
+          380
+        ]
+      },
+      "note": "panel extracted from source sheet; face cropped for UI; source sheet may have adjacent hair/outfit edge overlap"
+    },
+    {
+      "character": "sierra",
+      "variant": "happy",
+      "source": "rpg-assets/expression-sheets/sierra.png",
+      "column": 2,
+      "sourceCount": 5,
+      "spritePath": "rpg-assets/characters/sierra/expression-portraits/happy.webp",
+      "facePath": "rpg-assets/characters/sierra/expression-faces/happy.webp",
+      "dimensions": {
+        "sprite": [
+          512,
+          1024
+        ],
+        "face": [
+          280,
+          380
+        ]
+      },
+      "note": "panel extracted from source sheet; face cropped for UI; source sheet may have adjacent hair/outfit edge overlap"
+    },
+    {
+      "character": "sierra",
+      "variant": "surprised",
+      "source": "rpg-assets/expression-sheets/sierra.png",
+      "column": 3,
+      "sourceCount": 5,
+      "spritePath": "rpg-assets/characters/sierra/expression-portraits/surprised.webp",
+      "facePath": "rpg-assets/characters/sierra/expression-faces/surprised.webp",
+      "dimensions": {
+        "sprite": [
+          512,
+          1024
+        ],
+        "face": [
+          280,
+          380
+        ]
+      },
+      "note": "panel extracted from source sheet; face cropped for UI; source sheet may have adjacent hair/outfit edge overlap"
+    },
+    {
+      "character": "sierra",
+      "variant": "concerned",
+      "source": "rpg-assets/expression-sheets/sierra.png",
+      "column": 4,
+      "sourceCount": 5,
+      "spritePath": "rpg-assets/characters/sierra/expression-portraits/concerned.webp",
+      "facePath": "rpg-assets/characters/sierra/expression-faces/concerned.webp",
+      "dimensions": {
+        "sprite": [
+          512,
+          1024
+        ],
+        "face": [
+          280,
+          380
+        ]
+      },
+      "note": "panel extracted from source sheet; face cropped for UI; source sheet may have adjacent hair/outfit edge overlap"
+    },
+    {
+      "character": "sierra",
+      "variant": "soft",
+      "source": "rpg-assets/expression-sheets/sierra.png",
+      "column": 5,
+      "sourceCount": 5,
+      "spritePath": "rpg-assets/characters/sierra/expression-portraits/soft.webp",
+      "facePath": "rpg-assets/characters/sierra/expression-faces/soft.webp",
+      "dimensions": {
+        "sprite": [
+          512,
+          1024
+        ],
+        "face": [
+          280,
+          380
+        ]
+      },
+      "note": "panel extracted from source sheet; face cropped for UI; source sheet may have adjacent hair/outfit edge overlap"
+    },
+    {
+      "character": "rina",
+      "variant": "neutral",
+      "source": "rpg-assets/expression-sheets/rina.png",
+      "column": 1,
+      "sourceCount": 5,
+      "spritePath": "rpg-assets/characters/rina/expression-portraits/neutral.webp",
+      "facePath": "rpg-assets/characters/rina/expression-faces/neutral.webp",
+      "dimensions": {
+        "sprite": [
+          512,
+          1024
+        ],
+        "face": [
+          280,
+          380
+        ]
+      },
+      "note": "panel extracted from source sheet; face cropped for UI; source sheet may have adjacent hair/outfit edge overlap"
+    },
+    {
+      "character": "rina",
+      "variant": "happy",
+      "source": "rpg-assets/expression-sheets/rina.png",
+      "column": 2,
+      "sourceCount": 5,
+      "spritePath": "rpg-assets/characters/rina/expression-portraits/happy.webp",
+      "facePath": "rpg-assets/characters/rina/expression-faces/happy.webp",
+      "dimensions": {
+        "sprite": [
+          512,
+          1024
+        ],
+        "face": [
+          280,
+          380
+        ]
+      },
+      "note": "panel extracted from source sheet; face cropped for UI; source sheet may have adjacent hair/outfit edge overlap"
+    },
+    {
+      "character": "rina",
+      "variant": "surprised",
+      "source": "rpg-assets/expression-sheets/rina.png",
+      "column": 3,
+      "sourceCount": 5,
+      "spritePath": "rpg-assets/characters/rina/expression-portraits/surprised.webp",
+      "facePath": "rpg-assets/characters/rina/expression-faces/surprised.webp",
+      "dimensions": {
+        "sprite": [
+          512,
+          1024
+        ],
+        "face": [
+          280,
+          380
+        ]
+      },
+      "note": "panel extracted from source sheet; face cropped for UI; source sheet may have adjacent hair/outfit edge overlap"
+    },
+    {
+      "character": "rina",
+      "variant": "concerned",
+      "source": "rpg-assets/expression-sheets/rina.png",
+      "column": 4,
+      "sourceCount": 5,
+      "spritePath": "rpg-assets/characters/rina/expression-portraits/concerned.webp",
+      "facePath": "rpg-assets/characters/rina/expression-faces/concerned.webp",
+      "dimensions": {
+        "sprite": [
+          512,
+          1024
+        ],
+        "face": [
+          280,
+          380
+        ]
+      },
+      "note": "panel extracted from source sheet; face cropped for UI; source sheet may have adjacent hair/outfit edge overlap"
+    },
+    {
+      "character": "rina",
+      "variant": "soft",
+      "source": "rpg-assets/expression-sheets/rina.png",
+      "column": 5,
+      "sourceCount": 5,
+      "spritePath": "rpg-assets/characters/rina/expression-portraits/soft.webp",
+      "facePath": "rpg-assets/characters/rina/expression-faces/soft.webp",
+      "dimensions": {
+        "sprite": [
+          512,
+          1024
+        ],
+        "face": [
+          280,
+          380
+        ]
+      },
+      "note": "panel extracted from source sheet; face cropped for UI; source sheet may have adjacent hair/outfit edge overlap"
+    },
+    {
+      "character": "jun",
+      "variant": "neutral",
+      "source": "rpg-assets/expression-sheets/jun.png",
+      "column": 1,
+      "sourceCount": 5,
+      "spritePath": "rpg-assets/characters/jun/expression-portraits/neutral.webp",
+      "facePath": "rpg-assets/characters/jun/expression-faces/neutral.webp",
+      "dimensions": {
+        "sprite": [
+          512,
+          1024
+        ],
+        "face": [
+          280,
+          380
+        ]
+      },
+      "note": "panel extracted from source sheet; face cropped for UI; source sheet may have adjacent hair/outfit edge overlap"
+    },
+    {
+      "character": "jun",
+      "variant": "happy",
+      "source": "rpg-assets/expression-sheets/jun.png",
+      "column": 2,
+      "sourceCount": 5,
+      "spritePath": "rpg-assets/characters/jun/expression-portraits/happy.webp",
+      "facePath": "rpg-assets/characters/jun/expression-faces/happy.webp",
+      "dimensions": {
+        "sprite": [
+          512,
+          1024
+        ],
+        "face": [
+          280,
+          380
+        ]
+      },
+      "note": "panel extracted from source sheet; face cropped for UI; source sheet may have adjacent hair/outfit edge overlap"
+    },
+    {
+      "character": "jun",
+      "variant": "surprised",
+      "source": "rpg-assets/expression-sheets/jun.png",
+      "column": 3,
+      "sourceCount": 5,
+      "spritePath": "rpg-assets/characters/jun/expression-portraits/surprised.webp",
+      "facePath": "rpg-assets/characters/jun/expression-faces/surprised.webp",
+      "dimensions": {
+        "sprite": [
+          512,
+          1024
+        ],
+        "face": [
+          280,
+          380
+        ]
+      },
+      "note": "panel extracted from source sheet; face cropped for UI; source sheet may have adjacent hair/outfit edge overlap"
+    },
+    {
+      "character": "jun",
+      "variant": "concerned",
+      "source": "rpg-assets/expression-sheets/jun.png",
+      "column": 4,
+      "sourceCount": 5,
+      "spritePath": "rpg-assets/characters/jun/expression-portraits/concerned.webp",
+      "facePath": "rpg-assets/characters/jun/expression-faces/concerned.webp",
+      "dimensions": {
+        "sprite": [
+          512,
+          1024
+        ],
+        "face": [
+          280,
+          380
+        ]
+      },
+      "note": "panel extracted from source sheet; face cropped for UI; source sheet may have adjacent hair/outfit edge overlap"
+    },
+    {
+      "character": "jun",
+      "variant": "soft",
+      "source": "rpg-assets/expression-sheets/jun.png",
+      "column": 5,
+      "sourceCount": 5,
+      "spritePath": "rpg-assets/characters/jun/expression-portraits/soft.webp",
+      "facePath": "rpg-assets/characters/jun/expression-faces/soft.webp",
+      "dimensions": {
+        "sprite": [
+          512,
+          1024
+        ],
+        "face": [
+          280,
+          380
+        ]
+      },
+      "note": "panel extracted from source sheet; face cropped for UI; source sheet may have adjacent hair/outfit edge overlap"
+    },
+    {
+      "character": "teo",
+      "variant": "neutral",
+      "source": "rpg-assets/expression-sheets/teo.png",
+      "column": 1,
+      "sourceCount": 5,
+      "spritePath": "rpg-assets/characters/teo/expression-portraits/neutral.webp",
+      "facePath": "rpg-assets/characters/teo/expression-faces/neutral.webp",
+      "dimensions": {
+        "sprite": [
+          512,
+          1024
+        ],
+        "face": [
+          280,
+          380
+        ]
+      },
+      "note": "panel extracted from source sheet; face cropped for UI; source sheet may have adjacent hair/outfit edge overlap"
+    },
+    {
+      "character": "teo",
+      "variant": "happy",
+      "source": "rpg-assets/expression-sheets/teo.png",
+      "column": 2,
+      "sourceCount": 5,
+      "spritePath": "rpg-assets/characters/teo/expression-portraits/happy.webp",
+      "facePath": "rpg-assets/characters/teo/expression-faces/happy.webp",
+      "dimensions": {
+        "sprite": [
+          512,
+          1024
+        ],
+        "face": [
+          280,
+          380
+        ]
+      },
+      "note": "panel extracted from source sheet; face cropped for UI; source sheet may have adjacent hair/outfit edge overlap"
+    },
+    {
+      "character": "teo",
+      "variant": "surprised",
+      "source": "rpg-assets/expression-sheets/teo.png",
+      "column": 3,
+      "sourceCount": 5,
+      "spritePath": "rpg-assets/characters/teo/expression-portraits/surprised.webp",
+      "facePath": "rpg-assets/characters/teo/expression-faces/surprised.webp",
+      "dimensions": {
+        "sprite": [
+          512,
+          1024
+        ],
+        "face": [
+          280,
+          380
+        ]
+      },
+      "note": "panel extracted from source sheet; face cropped for UI; source sheet may have adjacent hair/outfit edge overlap"
+    },
+    {
+      "character": "teo",
+      "variant": "concerned",
+      "source": "rpg-assets/expression-sheets/teo.png",
+      "column": 4,
+      "sourceCount": 5,
+      "spritePath": "rpg-assets/characters/teo/expression-portraits/concerned.webp",
+      "facePath": "rpg-assets/characters/teo/expression-faces/concerned.webp",
+      "dimensions": {
+        "sprite": [
+          512,
+          1024
+        ],
+        "face": [
+          280,
+          380
+        ]
+      },
+      "note": "panel extracted from source sheet; face cropped for UI; source sheet may have adjacent hair/outfit edge overlap"
+    },
+    {
+      "character": "teo",
+      "variant": "soft",
+      "source": "rpg-assets/expression-sheets/teo.png",
+      "column": 5,
+      "sourceCount": 5,
+      "spritePath": "rpg-assets/characters/teo/expression-portraits/soft.webp",
+      "facePath": "rpg-assets/characters/teo/expression-faces/soft.webp",
+      "dimensions": {
+        "sprite": [
+          512,
+          1024
+        ],
+        "face": [
+          280,
+          380
+        ]
+      },
+      "note": "panel extracted from source sheet; face cropped for UI; source sheet may have adjacent hair/outfit edge overlap"
+    },
+    {
+      "character": "iris",
+      "variant": "neutral",
+      "source": "rpg-assets/expression-sheets/iris.png",
+      "column": 1,
+      "sourceCount": 5,
+      "spritePath": "rpg-assets/characters/iris/expression-portraits/neutral.webp",
+      "facePath": "rpg-assets/characters/iris/expression-faces/neutral.webp",
+      "dimensions": {
+        "sprite": [
+          512,
+          1024
+        ],
+        "face": [
+          280,
+          380
+        ]
+      },
+      "note": "panel extracted from source sheet; face cropped for UI; source sheet may have adjacent hair/outfit edge overlap"
+    },
+    {
+      "character": "iris",
+      "variant": "happy",
+      "source": "rpg-assets/expression-sheets/iris.png",
+      "column": 2,
+      "sourceCount": 5,
+      "spritePath": "rpg-assets/characters/iris/expression-portraits/happy.webp",
+      "facePath": "rpg-assets/characters/iris/expression-faces/happy.webp",
+      "dimensions": {
+        "sprite": [
+          512,
+          1024
+        ],
+        "face": [
+          280,
+          380
+        ]
+      },
+      "note": "panel extracted from source sheet; face cropped for UI; source sheet may have adjacent hair/outfit edge overlap"
+    },
+    {
+      "character": "iris",
+      "variant": "surprised",
+      "source": "rpg-assets/expression-sheets/iris.png",
+      "column": 3,
+      "sourceCount": 5,
+      "spritePath": "rpg-assets/characters/iris/expression-portraits/surprised.webp",
+      "facePath": "rpg-assets/characters/iris/expression-faces/surprised.webp",
+      "dimensions": {
+        "sprite": [
+          512,
+          1024
+        ],
+        "face": [
+          280,
+          380
+        ]
+      },
+      "note": "panel extracted from source sheet; face cropped for UI; source sheet may have adjacent hair/outfit edge overlap"
+    },
+    {
+      "character": "iris",
+      "variant": "concerned",
+      "source": "rpg-assets/expression-sheets/iris.png",
+      "column": 4,
+      "sourceCount": 5,
+      "spritePath": "rpg-assets/characters/iris/expression-portraits/concerned.webp",
+      "facePath": "rpg-assets/characters/iris/expression-faces/concerned.webp",
+      "dimensions": {
+        "sprite": [
+          512,
+          1024
+        ],
+        "face": [
+          280,
+          380
+        ]
+      },
+      "note": "panel extracted from source sheet; face cropped for UI; source sheet may have adjacent hair/outfit edge overlap"
+    },
+    {
+      "character": "iris",
+      "variant": "soft",
+      "source": "rpg-assets/expression-sheets/iris.png",
+      "column": 5,
+      "sourceCount": 5,
+      "spritePath": "rpg-assets/characters/iris/expression-portraits/soft.webp",
+      "facePath": "rpg-assets/characters/iris/expression-faces/soft.webp",
+      "dimensions": {
+        "sprite": [
+          512,
+          1024
+        ],
+        "face": [
+          280,
+          380
+        ]
+      },
+      "note": "panel extracted from source sheet; face cropped for UI; source sheet may have adjacent hair/outfit edge overlap"
+    },
+    {
+      "character": "elio",
+      "variant": "neutral",
+      "source": "rpg-assets/expression-sheets/elio.png",
+      "column": 1,
+      "sourceCount": 5,
+      "spritePath": "rpg-assets/characters/elio/expression-portraits/neutral.webp",
+      "facePath": "rpg-assets/characters/elio/expression-faces/neutral.webp",
+      "dimensions": {
+        "sprite": [
+          512,
+          1024
+        ],
+        "face": [
+          280,
+          380
+        ]
+      },
+      "note": "panel extracted from source sheet; face cropped for UI; source sheet may have adjacent hair/outfit edge overlap"
+    },
+    {
+      "character": "elio",
+      "variant": "happy",
+      "source": "rpg-assets/expression-sheets/elio.png",
+      "column": 2,
+      "sourceCount": 5,
+      "spritePath": "rpg-assets/characters/elio/expression-portraits/happy.webp",
+      "facePath": "rpg-assets/characters/elio/expression-faces/happy.webp",
+      "dimensions": {
+        "sprite": [
+          512,
+          1024
+        ],
+        "face": [
+          280,
+          380
+        ]
+      },
+      "note": "panel extracted from source sheet; face cropped for UI; source sheet may have adjacent hair/outfit edge overlap"
+    },
+    {
+      "character": "elio",
+      "variant": "surprised",
+      "source": "rpg-assets/expression-sheets/elio.png",
+      "column": 3,
+      "sourceCount": 5,
+      "spritePath": "rpg-assets/characters/elio/expression-portraits/surprised.webp",
+      "facePath": "rpg-assets/characters/elio/expression-faces/surprised.webp",
+      "dimensions": {
+        "sprite": [
+          512,
+          1024
+        ],
+        "face": [
+          280,
+          380
+        ]
+      },
+      "note": "panel extracted from source sheet; face cropped for UI; source sheet may have adjacent hair/outfit edge overlap"
+    },
+    {
+      "character": "elio",
+      "variant": "concerned",
+      "source": "rpg-assets/expression-sheets/elio.png",
+      "column": 4,
+      "sourceCount": 5,
+      "spritePath": "rpg-assets/characters/elio/expression-portraits/concerned.webp",
+      "facePath": "rpg-assets/characters/elio/expression-faces/concerned.webp",
+      "dimensions": {
+        "sprite": [
+          512,
+          1024
+        ],
+        "face": [
+          280,
+          380
+        ]
+      },
+      "note": "panel extracted from source sheet; face cropped for UI; source sheet may have adjacent hair/outfit edge overlap"
+    },
+    {
+      "character": "elio",
+      "variant": "soft",
+      "source": "rpg-assets/expression-sheets/elio.png",
+      "column": 5,
+      "sourceCount": 5,
+      "spritePath": "rpg-assets/characters/elio/expression-portraits/soft.webp",
+      "facePath": "rpg-assets/characters/elio/expression-faces/soft.webp",
+      "dimensions": {
+        "sprite": [
+          512,
+          1024
+        ],
+        "face": [
+          280,
+          380
+        ]
+      },
+      "note": "panel extracted from source sheet; face cropped for UI; source sheet may have adjacent hair/outfit edge overlap"
+    },
+    {
+      "character": "alma",
+      "variant": "neutral",
+      "source": "rpg-assets/expression-sheets/alma.png",
+      "column": 1,
+      "sourceCount": 5,
+      "spritePath": "rpg-assets/characters/alma/expression-portraits/neutral.webp",
+      "facePath": "rpg-assets/characters/alma/expression-faces/neutral.webp",
+      "dimensions": {
+        "sprite": [
+          512,
+          1024
+        ],
+        "face": [
+          280,
+          380
+        ]
+      },
+      "note": "panel extracted from source sheet; face cropped for UI; source sheet may have adjacent hair/outfit edge overlap"
+    },
+    {
+      "character": "alma",
+      "variant": "happy",
+      "source": "rpg-assets/expression-sheets/alma.png",
+      "column": 2,
+      "sourceCount": 5,
+      "spritePath": "rpg-assets/characters/alma/expression-portraits/happy.webp",
+      "facePath": "rpg-assets/characters/alma/expression-faces/happy.webp",
+      "dimensions": {
+        "sprite": [
+          512,
+          1024
+        ],
+        "face": [
+          280,
+          380
+        ]
+      },
+      "note": "panel extracted from source sheet; face cropped for UI; source sheet may have adjacent hair/outfit edge overlap"
+    },
+    {
+      "character": "alma",
+      "variant": "surprised",
+      "source": "rpg-assets/expression-sheets/alma.png",
+      "column": 3,
+      "sourceCount": 5,
+      "spritePath": "rpg-assets/characters/alma/expression-portraits/surprised.webp",
+      "facePath": "rpg-assets/characters/alma/expression-faces/surprised.webp",
+      "dimensions": {
+        "sprite": [
+          512,
+          1024
+        ],
+        "face": [
+          280,
+          380
+        ]
+      },
+      "note": "panel extracted from source sheet; face cropped for UI; source sheet may have adjacent hair/outfit edge overlap"
+    },
+    {
+      "character": "alma",
+      "variant": "concerned",
+      "source": "rpg-assets/expression-sheets/alma.png",
+      "column": 4,
+      "sourceCount": 5,
+      "spritePath": "rpg-assets/characters/alma/expression-portraits/concerned.webp",
+      "facePath": "rpg-assets/characters/alma/expression-faces/concerned.webp",
+      "dimensions": {
+        "sprite": [
+          512,
+          1024
+        ],
+        "face": [
+          280,
+          380
+        ]
+      },
+      "note": "panel extracted from source sheet; face cropped for UI; source sheet may have adjacent hair/outfit edge overlap"
+    },
+    {
+      "character": "alma",
+      "variant": "soft",
+      "source": "rpg-assets/expression-sheets/alma.png",
+      "column": 5,
+      "sourceCount": 5,
+      "spritePath": "rpg-assets/characters/alma/expression-portraits/soft.webp",
+      "facePath": "rpg-assets/characters/alma/expression-faces/soft.webp",
+      "dimensions": {
+        "sprite": [
+          512,
+          1024
+        ],
+        "face": [
+          280,
+          380
+        ]
+      },
+      "note": "panel extracted from source sheet; face cropped for UI; source sheet may have adjacent hair/outfit edge overlap"
+    },
+    {
+      "character": "nereo",
+      "variant": "neutral",
+      "source": "rpg-assets/expression-sheets/nereo.png",
+      "column": 1,
+      "sourceCount": 5,
+      "spritePath": "rpg-assets/characters/nereo/expression-portraits/neutral.webp",
+      "facePath": "rpg-assets/characters/nereo/expression-faces/neutral.webp",
+      "dimensions": {
+        "sprite": [
+          512,
+          1024
+        ],
+        "face": [
+          280,
+          380
+        ]
+      },
+      "note": "panel extracted from source sheet; face cropped for UI; source sheet may have adjacent hair/outfit edge overlap"
+    },
+    {
+      "character": "nereo",
+      "variant": "happy",
+      "source": "rpg-assets/expression-sheets/nereo.png",
+      "column": 2,
+      "sourceCount": 5,
+      "spritePath": "rpg-assets/characters/nereo/expression-portraits/happy.webp",
+      "facePath": "rpg-assets/characters/nereo/expression-faces/happy.webp",
+      "dimensions": {
+        "sprite": [
+          512,
+          1024
+        ],
+        "face": [
+          280,
+          380
+        ]
+      },
+      "note": "panel extracted from source sheet; face cropped for UI; source sheet may have adjacent hair/outfit edge overlap"
+    },
+    {
+      "character": "nereo",
+      "variant": "surprised",
+      "source": "rpg-assets/expression-sheets/nereo.png",
+      "column": 3,
+      "sourceCount": 5,
+      "spritePath": "rpg-assets/characters/nereo/expression-portraits/surprised.webp",
+      "facePath": "rpg-assets/characters/nereo/expression-faces/surprised.webp",
+      "dimensions": {
+        "sprite": [
+          512,
+          1024
+        ],
+        "face": [
+          280,
+          380
+        ]
+      },
+      "note": "panel extracted from source sheet; face cropped for UI; source sheet may have adjacent hair/outfit edge overlap"
+    },
+    {
+      "character": "nereo",
+      "variant": "concerned",
+      "source": "rpg-assets/expression-sheets/nereo.png",
+      "column": 4,
+      "sourceCount": 5,
+      "spritePath": "rpg-assets/characters/nereo/expression-portraits/concerned.webp",
+      "facePath": "rpg-assets/characters/nereo/expression-faces/concerned.webp",
+      "dimensions": {
+        "sprite": [
+          512,
+          1024
+        ],
+        "face": [
+          280,
+          380
+        ]
+      },
+      "note": "panel extracted from source sheet; face cropped for UI; source sheet may have adjacent hair/outfit edge overlap"
+    },
+    {
+      "character": "nereo",
+      "variant": "soft",
+      "source": "rpg-assets/expression-sheets/nereo.png",
+      "column": 5,
+      "sourceCount": 5,
+      "spritePath": "rpg-assets/characters/nereo/expression-portraits/soft.webp",
+      "facePath": "rpg-assets/characters/nereo/expression-faces/soft.webp",
+      "dimensions": {
+        "sprite": [
+          512,
+          1024
+        ],
+        "face": [
+          280,
+          380
+        ]
+      },
+      "note": "panel extracted from source sheet; face cropped for UI; source sheet may have adjacent hair/outfit edge overlap"
+    }
+  ]
+}

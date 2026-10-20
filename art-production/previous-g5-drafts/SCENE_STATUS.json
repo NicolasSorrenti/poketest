@@ -1,0 +1,49 @@
+{
+  "title": "Neo Campus G5 scene-aligned compositing drafts",
+  "date": "2026-10-20",
+  "count": 5,
+  "status": "PROVISIONAL NOT FINAL ART",
+  "purpose": "Readable original-character previews for the five story CGs that were previously wrong. Produced after image generation repeatedly ignored character identity. These should be replaced by newly painted/AI-generated full scenes, and are not presented as final art.",
+  "scenes": [
+    {
+      "id": "hana_apron_mixup",
+      "character": "hana",
+      "visual_event": "Card-shop apron and deck case mix-up",
+      "full": "rpg-assets/events/cg/season01/hana_apron_mixup.webp",
+      "thumb": "rpg-assets/events/cg/season01/thumbs/hana_apron_mixup.webp",
+      "status": "PROVISIONAL - approved character sprite composited over existing background with event props, NOT bespoke generated scene art"
+    },
+    {
+      "id": "reina_rain_catch",
+      "character": "reina",
+      "visual_event": "Sudden spray from the training-center gutter",
+      "full": "rpg-assets/events/cg/season01/reina_rain_catch.webp",
+      "thumb": "rpg-assets/events/cg/season01/thumbs/reina_rain_catch.webp",
+      "status": "PROVISIONAL - approved character sprite composited over existing background with event props, NOT bespoke generated scene art"
+    },
+    {
+      "id": "shiori_bookstack_wobble",
+      "character": "shiori",
+      "visual_event": "Book stack starting to topple in the library",
+      "full": "rpg-assets/events/cg/season01/shiori_bookstack_wobble.webp",
+      "thumb": "rpg-assets/events/cg/season01/thumbs/shiori_bookstack_wobble.webp",
+      "status": "PROVISIONAL - approved character sprite composited over existing background with event props, NOT bespoke generated scene art"
+    },
+    {
+      "id": "yuna_card_scatter",
+      "character": "yuna",
+      "visual_event": "Scattered card sleeves and arcade challenge",
+      "full": "rpg-assets/events/cg/season01/yuna_card_scatter.webp",
+      "thumb": "rpg-assets/events/cg/season01/thumbs/yuna_card_scatter.webp",
+      "status": "PROVISIONAL - approved character sprite composited over existing background with event props, NOT bespoke generated scene art"
+    },
+    {
+      "id": "kaede_jacket_prank",
+      "character": "kaede",
+      "visual_event": "Jacket caught in the strap of a card bag",
+      "full": "rpg-assets/events/cg/season01/kaede_jacket_prank.webp",
+      "thumb": "rpg-assets/events/cg/season01/thumbs/kaede_jacket_prank.webp",
+      "status": "PROVISIONAL - approved character sprite composited over existing background with event props, NOT bespoke generated scene art"
+    }
+  ]
+}
