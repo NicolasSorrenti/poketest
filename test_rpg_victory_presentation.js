@@ -1,6 +1,16 @@
 'use strict';
 const assert=require('node:assert/strict');
 const {model,createPresenter,resultArtSources}=require('./rpg_victory_presentation');
+const fs=require('node:fs');
+const path=require('node:path');
+const rpgSource=fs.readFileSync(path.join(__dirname,'rpg.js'),'utf8');
+assert.match(rpgSource,/avatar:makeAvatar\(duel\.npc\),npcId:duel\.npc/,
+ 'Battle results must pass NPC identity to the dedicated artwork resolver');
+const boosterRoutine=rpgSource.slice(rpgSource.indexOf('function showPackReveal()'),rpgSource.indexOf("const target=$('packCards')"));
+assert.match(boosterRoutine,/rpg-assets\/reactions.*attack\.png/,
+ 'Booster reveal must fall back to NPC attack cut-in');
+assert.doesNotMatch(boosterRoutine,/vn-expressions\/surpris|portraits\/surpris|events\/surpris/,
+ 'Generic surprised artwork should no longer replace an absent booster illustration');
 
 const receipt={outcome:'Victory',name:'Reina Kurogane',points:8,credits:15,trust:2};
 assert.equal(model(receipt,{hasBooster:true}).title,'VICTORY!');
