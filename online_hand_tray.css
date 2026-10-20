@@ -684,3 +684,138 @@ body.duel-active .stage .bench-zone .poke{
   --attachment-width:58px;--attachment-peek:11px;--attachment-overlap:7px;
  }
 }
+
+/* v0.46 — Attached cards on BOTH sides: Energy left, Trainers right.
+   Match the visible Pokémon-card image height rather than the entire button
+   (which also contains name/HP). Bounded fans protect five-card mobile benches. */
+body.duel-active .stage .poke{
+ --attachment-height:108px;
+ --attachment-width:clamp(64px,7vw,96px);
+ --attachment-peek:18px;
+ --attachment-overlap:10px;
+ --tool-peek:18px;
+ --tool-overlap:10px;
+ overflow:visible;
+}
+body.duel-active .stage .poke .energy-peeks.energy-card-stack{
+ top:4px;height:var(--attachment-height);width:var(--attachment-width);
+ left:calc(-1 * var(--attachment-peek));z-index:2;
+}
+body.duel-active .stage .poke .energy-card-stack .attached-energy.energy-card-mini{
+ top:0;height:100%;
+ left:calc(var(--energy-position) * -1 * var(--attachment-overlap));
+ width:var(--attachment-width);
+ z-index:calc(8 - var(--energy-position));
+ transform:none;
+ border-radius:4px;
+ border:1px solid #edebdf;
+ box-shadow:-2px 2px 5px #000c;
+}
+body.duel-active .stage .poke .energy-card-stack .attached-energy.energy-card-mini::before{
+ content:attr(data-symbol);
+ position:absolute;z-index:4;top:5%;bottom:5%;left:0;
+ width:calc(var(--attachment-peek) - 3px);
+ display:flex;align-items:center;justify-content:center;
+ background:var(--attachment-edge,#546273);
+ box-shadow:1px 0 3px #0006;
+ color:#fff;font-size:10px;font-weight:900;
+ text-shadow:0 1px 2px #0009;
+ border-radius:1px;
+}
+body.duel-active .stage .poke .energy-type-grass{--attachment-edge:#379449}
+body.duel-active .stage .poke .energy-type-fire{--attachment-edge:#d74c2d}
+body.duel-active .stage .poke .energy-type-water{--attachment-edge:#2385c8}
+body.duel-active .stage .poke .energy-type-lightning{--attachment-edge:#e5c32a}
+body.duel-active .stage .poke .energy-type-psychic{--attachment-edge:#9a54aa}
+body.duel-active .stage .poke .energy-type-fighting{--attachment-edge:#b2763d}
+body.duel-active .stage .poke .energy-type-colorless{--attachment-edge:#858d9b}
+body.duel-active .stage .poke .energy-type-darkness{--attachment-edge:#4d415f}
+body.duel-active .stage .poke .energy-type-metal{--attachment-edge:#78939c}
+body.duel-active .stage .poke .energy-type-rainbow{--attachment-edge:#a44cbb}
+body.duel-active .stage .poke .energy-type-recycle{--attachment-edge:#5c9b7b}
+body.duel-active .stage .poke .energy-type-special{--attachment-edge:#48677f}
+body.duel-active .stage .poke .energy-card-stack .energy-overflow{
+ top:auto;bottom:-8px;left:calc(-3 * var(--attachment-overlap) - 10px);
+ z-index:12;margin:0;min-width:21px;
+}
+body.duel-active .stage .poke .pokemon-tools.tool-card-stack{
+ display:block;position:absolute;top:4px;bottom:auto;
+ right:calc(-1 * var(--tool-peek));width:var(--attachment-width);
+ height:var(--attachment-height);max-width:none;
+ overflow:visible;z-index:2;pointer-events:none;
+}
+body.duel-active .stage .poke .pokemon-tools .pokemon-tool-card{
+ position:absolute;top:0;right:calc(var(--tool-position) * -1 * var(--tool-overlap));
+ display:block;width:var(--attachment-width);height:100%;
+ border:1px solid #ecedf0;border-radius:4px;
+ background:#404f60;box-shadow:2px 2px 5px #000c;
+ overflow:hidden;z-index:calc(8 - var(--tool-position));
+}
+body.duel-active .stage .poke .pokemon-tools .pokemon-tool-card::after{
+ content:"";position:absolute;top:5%;bottom:5%;right:0;
+ width:calc(var(--tool-peek) - 3px);
+ background:linear-gradient(#d7dfe7,#607c95);
+ border-left:1px solid #e9eef0aa;
+ box-shadow:-1px 0 3px #0006;
+ border-radius:1px;
+}
+body.duel-active .stage .poke .pokemon-tools .tool-card-art{
+ display:block;width:100%;height:100%;object-fit:fill;border:0;
+}
+body.duel-active .stage .poke .pokemon-tools .tool-card-fallback{
+ display:flex;flex-direction:column;align-items:center;justify-content:center;
+ width:100%;height:100%;gap:4px;
+ background:linear-gradient(155deg,#dce7eb,#71899d);
+ color:#142d42;font-weight:900;font-size:9px;
+}
+body.duel-active .stage .poke .pokemon-tools .tool-card-fallback span{
+ max-width:96%;font-size:8px;overflow:hidden;line-height:1.1;
+}
+body.duel-active .stage .poke .pokemon-tools .tool-overflow{
+ position:absolute;bottom:-8px;right:calc(-2 * var(--tool-overlap) - 13px);
+ z-index:12;min-width:21px;text-align:center;
+ padding:2px 4px;border-radius:999px;
+ color:#183241;background:#deeff6;font-size:10px;font-weight:900;
+ box-shadow:0 2px 4px #000a;
+}
+body.duel-active .stage .poke:focus-visible,
+body.duel-active .stage .poke:hover{z-index:15}
+body.duel-active .stage .bench-zone .poke{
+ --attachment-height:clamp(55px,7.2dvh,82px);
+ --attachment-width:clamp(49px,5.5vw,72px);
+ --attachment-peek:12px;--tool-peek:12px;
+ --attachment-overlap:7px;--tool-overlap:7px;
+ overflow:visible;
+}
+@media(min-width:1000px) and (min-height:780px){
+ body.duel-active .stage .poke{--attachment-height:clamp(80px,11dvh,104px)}
+}
+@media(max-width:780px){
+ body.duel-active .stage .poke{
+  --attachment-height:clamp(36px,7.3dvh,64px);
+  --attachment-width:clamp(37px,7vw,65px);
+  --attachment-peek:11px;--tool-peek:11px;
+  --attachment-overlap:6px;--tool-overlap:6px;
+ }
+ body.duel-active .stage .bench-zone .poke{
+  --attachment-height:39px;
+  --attachment-width:35px;
+  --attachment-peek:9px;--tool-peek:9px;
+  --attachment-overlap:5px;--tool-overlap:5px;
+  overflow:visible;
+ }
+ body.duel-active .stage .poke .energy-card-stack .attached-energy.energy-card-mini::before{font-size:8px}
+ body.duel-active .stage .poke .pokemon-tools .tool-card-fallback{font-size:7px}
+ body.duel-active .stage .poke .pokemon-tools .tool-card-fallback span{font-size:6px}
+}
+@media(max-width:435px){
+ body.duel-active .stage .poke{--attachment-height:clamp(35px,6.5dvh,56px)}
+ body.duel-active .stage .bench-zone .poke{
+  --attachment-peek:6px;--tool-peek:6px;
+  --attachment-overlap:3px;--tool-overlap:3px;
+ }
+ body.duel-active .stage .bench-zone .poke .energy-card-stack .attached-energy.energy-card-mini::before{
+  width:5px;font-size:0;
+ }
+ body.duel-active .stage .bench-zone .poke .pokemon-tools .pokemon-tool-card::after{width:5px}
+}
