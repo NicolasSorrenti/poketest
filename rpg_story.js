@@ -16,6 +16,7 @@
  const PACK=typeof module==='object'&&module.exports?require('./rpg_narrative_pack'):window.NeoRpgNarrativePack;
  const BONDC=typeof module==='object'&&module.exports?require('./rpg_bond_chapters'):window.NeoRpgBondChapters;
  const VN=typeof module==='object'&&module.exports?require('./rpg_conversations'):window.NeoRpgConversations;
+ const SCENES=typeof module==='object'&&module.exports?require('./rpg_legacy_scenes'):window.NeoRpgLegacyScenes;
  const E=[];
  function arc(npc,rows){
   rows.forEach((r,index)=>{
@@ -205,6 +206,19 @@
    ['Offer a friendship that survives distance','Then do not lose my number.','friend','friendship'],
    ['Tell her the decision is still hers','It is. And I finally think I can make it.','honest','friendship']]]
  ]);
+ // The original characters now use six-beat authored scenes with explicit
+ // narration. Only prose changes; preserve route IDs, prerequisites, windows,
+ // choice kinds, flags and relationship deltas for existing saves.
+ for(const e of E){
+  const revision=SCENES.byId(e.id);
+  if(!revision)continue;
+  if(revision.choices.length!==e.choices.length)throw Error('Scene choice count changed: '+e.id);
+  e.lines=revision.lines.map(line=>({...line}));
+  e.choices.forEach((choice,index)=>{
+   choice.label=revision.choices[index].label;
+   choice.reply=revision.choices[index].reply;
+  });
+ }
  // Keep the original four-scene heroine routes stable for existing saves.
  // Add optional guest and crossover episodes without renumbering those routes.
  E.push(...PACK.events,...BONDC.events);
