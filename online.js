@@ -456,8 +456,9 @@
    if(d.kind==='arrange')description.textContent='Select cards in order: #1 will be on TOP of your deck and drawn next. Tap an already selected card to remove it.';
    if(/^New Pokédex:/.test(d.label||''))description.textContent=d.label+'. The card you choose now goes in this numbered draw position.';
    const choices=document.createElement('div');choices.className='choice-list';
-   d.options.forEach(item=>{
+   (d.displayDeck||d.options).forEach(item=>{
     const row=document.createElement('label'),input=document.createElement('input');input.type=d.max===1?'radio':'checkbox';input.name=d.id;input.value=item.id;input.checked=decisionSelection.has(item.id);
+    if(item.eligible===false){input.disabled=true;row.classList.add('choice-ineligible');row.title='This card cannot be chosen for this effect';}
     row.classList.add('illustrated-choice');
     const candidate=item.cardId?card(item.cardId):[...cards.values()].find(c=>c.name===item.label||item.label?.endsWith(': '+c.name)||item.label?.startsWith(c.name+' ('));
     const src=candidate?.images?.small;
