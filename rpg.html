@@ -9,6 +9,7 @@
 <link rel="stylesheet" href="/rpg_time_transitions.css">
 <link rel="stylesheet" href="/rpg_ui_motion.css">
 <link rel="stylesheet" href="/rpg_character_motion.css">
+<link rel="stylesheet" href="/rpg_victory_presentation.css">
 </head>
 <body>
 <div id="app">
@@ -243,8 +244,23 @@
  <div class="booster-shop-grid" id="boosterShopGrid" aria-label="Available and locked booster packs"></div>
  <p id="boosterShopStatus" class="booster-shop-status" aria-live="polite"></p>
 </dialog>
+<dialog id="victoryDialog" class="victory-dialog" aria-label="Duel results" aria-modal="true">
+ <div class="victory-stage">
+  <div class="victory-copy">
+   <span class="victory-overline">✦ NEO HARBOR · DUEL RESULT</span>
+   <strong id="victoryOutcome" class="victory-title">VICTORY!</strong>
+   <span id="victorySubtitle" class="victory-subtitle">ONE STEP CLOSER TO THE CHAMPIONSHIP</span>
+   <span id="victoryOpponent" class="victory-opponent">VS RIVAL</span>
+  </div>
+  <div id="victoryPortrait" class="victory-portrait" aria-label="Opponent portrait"></div>
+ </div>
+ <div class="victory-footer">
+  <div id="victoryStats" class="victory-stats" aria-label="Duel rewards"></div>
+  <button id="victoryContinue" class="victory-continue" type="button">CONTINUE ADVENTURE →</button>
+ </div>
+</dialog>
 <dialog id="packDialog" class="modal pack-reveal-dialog" aria-label="Open your ten-card booster" aria-modal="true">
- <div class="pack-reveal-header"><div><small>✦ NEO HARBOR · CARD REWARDS</small><h2 id="packTitle">Booster Pack</h2><p>Ten random cards, including a rare and an Energy. Tap to reveal them.</p></div></div>
+ <div class="pack-reveal-header"><div><small id="packEyebrow">✦ NEO HARBOR · CARD REWARDS</small><h2 id="packTitle">Booster Pack</h2><p id="packDescription">Ten cards, including a rare and an Energy. Tap to reveal them.</p></div></div>
  <div class="pack-giver"><div id="packGiver" class="pack-giver-image"></div><strong id="packGiverName"></strong></div>
  <div id="packCards" class="pack-reveal-cards" aria-label="Ten new cards"></div>
  <div class="pack-reveal-actions"><button id="packRevealAll" type="button">Reveal all ten</button><button id="packContinue" type="button">Continue adventure →</button></div>
@@ -303,6 +319,7 @@
 <script src="/rpg_time_transitions.js"></script>
 <script src="/rpg_ui_motion.js"></script>
 <script src="/rpg_character_motion.js"></script>
+<script src="/rpg_victory_presentation.js"></script>
 <script src="/rpg.js"></script>
 </body>
 </html>
