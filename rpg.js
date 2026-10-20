@@ -50,7 +50,7 @@ function renderStory(){
   return {speaker:last?.speaker==='Protagonist'?'You':(cast[last?.speaker]?.name||last?.speaker||cast[e.npc].name),line:last?.text||'',choices:e.choices.map((c,i)=>[c.label,'storyChoice:'+i])};
  }
  const chosen=e.choices[a.choice];
- return {speaker:cast[e.npc].name,line:chosen.reply,choices:[['Finish scene · ⏳ 1 period','storyFinish']]};
+ return {speaker:cast[e.npc].name,line:chosen.reply,choices:[['Finish scene','storyFinish']]};
 }
 function advanceStory(){
  const a=state.activeStory;if(!a||a.phase!=='lines')return;
@@ -73,7 +73,7 @@ function finishStory(){
  const id=e.npc,bond=state.bonds[id],updated=state.relationships[id];
  for(const metric of ['affection','trust','duels'])bond[metric]=Math.max(bond[metric]||0,updated[metric]||0);
  const chapterReward=BONDS.reward(state,e,BOND_PLAN,COLLECT);
- log('A memorable afternoon with '+cast[id].name+'.');recordCG('story_milestone',id);recordIntention('story');
+ log('Finished '+e.title+' with '+cast[id].name+'.');recordCG('story_milestone',id);recordIntention('story');
  if(chapterReward)log('Bond chapter '+chapterReward.chapter+' reward from '+cast[id].name+': '+chapterReward.label+'.');
  state.activeStory=null;advance();state.selected=id;
  persist();say(cast[id].name,result.choice.reply+(chapterReward?'\n\n★ Chapter reward: '+chapterReward.label:''));
@@ -92,12 +92,12 @@ function showSideQuest(){
   const lines=SIDE.linesFor(state,a.id),line=lines[Math.min(a.index,lines.length-1)];
   return {speaker:line.speaker==='Protagonist'?'You':cast[line.speaker]?.name||line.speaker,line:line.text,choices:[[a.index<lines.length-1?'Continue ›':'Respond ›','sideNext']]};
  }
- if(a.phase==='duel')return {speaker:cast[e.npc].name,line:'Ready for a real match? No special rules, no going easy.',choices:[['Play the match · ⏳ 1 period','sideDuel'],['Not right now · free','sidePause']]};
+ if(a.phase==='duel')return {speaker:cast[e.npc].name,line:'Ready for a real match? No special rules, no going easy.',choices:[['Play the match','sideDuel'],['Not right now','sidePause']]};
  if(a.phase==='choice'){
   const last=SIDE.linesFor(state,a.id).at(-1);
   return {speaker:last?.speaker==='Protagonist'?'You':(cast[last?.speaker]?.name||last?.speaker||cast[e.npc].name),line:last?.text||'',choices:e.choices.map((c,i)=>[c.label,'sideChoice:'+i])};
  }
- return {speaker:cast[e.npc].name,line:e.choices[a.choice].reply,choices:[['Finish chapter · ⏳ 1 period','sideFinish']]};
+ return {speaker:cast[e.npc].name,line:e.choices[a.choice].reply,choices:[['Finish chapter','sideFinish']]};
 }
 function nextSideQuest(){
  const a=state.activeSideQuest;if(!a||a.phase!=='lines')return;
@@ -336,7 +336,7 @@ function showEncounter(){
  const name=e.npc?cast[e.npc].name:'Neo Harbor';
  if(a.phase==='choice')return {speaker:'Narrator',line:e.intro,choices:e.choices.map((c,i)=>[c.label,'encounterChoice:'+i])};
  const decision=e.choices[a.choice];
- return {speaker:e.npc?name:'Narrator',line:decision.reply,choices:[['Continue · ⏳ 1 period','encounterFinish']]};
+ return {speaker:e.npc?name:'Narrator',line:decision.reply,choices:[['Continue','encounterFinish']]};
 }
 function startEncounter(id){
  if(state.activeStory||state.activeEncounter||state.activeArc||state.pendingDuel||state.day>90)return;
@@ -356,7 +356,7 @@ function finishEncounter(){
  const e=WORLD.byEncounter(a.id);let report;
  try{report=WORLD.completeEncounter(state,a.id,a.choice,currentPeople());}
  catch(err){$('notice').textContent=err.message;return;}
- state.activeEncounter=null;recordIntention('encounter');log('An everyday encounter at '+places[e.place][0]+' left an impression.');
+ state.activeEncounter=null;recordIntention('encounter');log('Encounter at '+places[e.place][0]+': '+e.title+'.');
  advance();persist();
  say(e.npc?cast[e.npc].name:'Narrator',report.summary);
 }
@@ -382,8 +382,11 @@ function showArc(){
   const lines=ARC.linesFor(state,a.id),line=lines[Math.min(a.index,lines.length-1)];
   return {speaker:line[0]==='You'?'You':line[0],line:line[1],choices:[[a.index<lines.length-1?'Continue ›':'Respond ›','arcNext']]};
  }
- if(a.phase==='choice')return {speaker:cast.reina.name,line:e.duel?'Do you want to play the match now?':'How will you answer?',choices:e.choices.map((choice,i)=>[choice.label,'arcChoice:'+i])};
- return {speaker:cast.reina.name,line:e.choices[a.choice].reply,choices:[['Finish conversation · ⏳ 1 period','arcFinish']]};
+ if(a.phase==='choice'){
+  const last=ARC.linesFor(state,a.id).at(-1);
+  return {speaker:last?.[0]==='You'?'You':(last?.[0]||cast.reina.name),line:last?.[1]||'',choices:e.choices.map((choice,i)=>[choice.label,'arcChoice:'+i])};
+ }
+ return {speaker:cast.reina.name,line:e.choices[a.choice].reply,choices:[['Finish conversation','arcFinish']]};
 }
 function advanceArc(){
  const a=state.activeArc;if(!a||a.phase!=='lines')return;
@@ -412,7 +415,7 @@ function finishArc(){
  catch(err){$('notice').textContent=err.message;return;}
  const id=a.id;
  state.activeArc=null;
- log('A meaningful conversation with '+cast.reina.name+' brought the rivalry forward.');recordIntention('arc');
+ log('Finished '+ARC.byId(id).title+' with '+cast.reina.name+'.');recordIntention('arc');
  if(report.ending)log('A personal chapter reached its conclusion.');
  advance();persist();
  say(cast.reina.name,report.text);
@@ -423,9 +426,9 @@ function showSituation(){
  const a=state.activeSituation,e=SITUATIONS.byId(a?.id);
  if(!e)return null;
  if(a.phase==='choice')return {speaker:'Narrator',line:e.intro,
-  choices:[...e.options.map((o,i)=>[o.label+' · ⏳ 1 period · '+e.focusCost+' focus','situationChoice:'+i]),['Not now · free','situationCancel']]};
+  choices:[...e.options.map((o,i)=>[o.label,'situationChoice:'+i]),['Not now','situationCancel']]};
  return {speaker:cast[e.npc]?.name||'Trainer',line:e.options[a.choice].response,
-  choices:[['Save this memory · ⏳ 1 period','situationFinish'],['Leave this moment · free','situationCancel']]};
+  choices:[['Keep this memory','situationFinish'],['Leave this moment','situationCancel']]};
 }
 function beginSituation(id){
  if(state.activeSituation||state.activeStory||state.activeSideQuest||state.activeArc||state.activeEncounter||state.pendingDuel)return;
