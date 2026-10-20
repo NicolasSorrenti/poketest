@@ -103,8 +103,7 @@
   alma:[["Does running the café ever get quiet?","Once in a while, just after the morning rush.","And what do you do then?","Sit down for five minutes before someone finds me."]],
   nereo:[["Is there a trick to staying calm?","There's a trick to looking calm. That's different.","Care to share it?","You start by breathing before you draw."]],
   teo:[["Do you ever get tired of narrating everything?","Only when nobody is listening.","Well, you've got an audience.","Then I'd better make this one count."]],
-  jun:[["You watch a lot of matches, don't you?","More than I play. You see a different side of people.","What have you learned?","That fairness matters most when someone is upset."]],
-  sol:[["Do you ever stop making plans?","Sometimes. Those tend to be my best days.","Maybe today could be one of those days.","You're a bad influence on my calendar."]]
+  jun:[["You watch a lot of matches, don't you?","More than I play. You see a different side of people.","What have you learned?","That fairness matters most when someone is upset."]]
  };
  // Two authored beats after the existing protagonist/NPC exchange.
  // Preserves the event's original final question and all outcome flags.
@@ -502,7 +501,11 @@
     ]
   ]
 };
- Object.assign(talk,extendedTalk);
+ // Keep the explicitly paired character-pack dialogue above. Older supplemental
+ // arrays are only fallbacks for supporting NPCs without a direct topic map.
+ for(const [id,beats] of Object.entries(extendedTalk)){
+  if(!Object.prototype.hasOwnProperty.call(talk,id))talk[id]=beats;
+ }
  const flirt={
   hana:["I was hoping I'd run into you today.","Should I give you a warning next time?","No. Just give me a moment to stop blushing."],
   reina:["You know, you look good when you're determined.","Only when you keep listening.","Then you'd better give me something worth listening to."],
