@@ -453,12 +453,25 @@
    }
 
    description.textContent=`Choose ${d.min===d.max?d.min:`${d.min}–${d.max}`} option(s). ${d.optional?'You may decline.':'This choice is mandatory.'}`;
+   if(d.kind==='arrange')description.textContent='Select cards in order: #1 will be on TOP of your deck and drawn next. Tap an already selected card to remove it.';
+   if(/^New Pokédex:/.test(d.label||''))description.textContent=d.label+'. The card you choose now goes in this numbered draw position.';
    const choices=document.createElement('div');choices.className='choice-list';
    d.options.forEach(item=>{
     const row=document.createElement('label'),input=document.createElement('input');input.type=d.max===1?'radio':'checkbox';input.name=d.id;input.value=item.id;input.checked=decisionSelection.has(item.id);
+    row.classList.add('illustrated-choice');
+    const candidate=item.cardId?card(item.cardId):[...cards.values()].find(c=>c.name===item.label||item.label?.endsWith(': '+c.name)||item.label?.startsWith(c.name+' ('));
+    const src=candidate?.images?.small;
+    if(typeof src==='string'&&/^https:\/\//.test(src)){
+     const art=document.createElement('img');art.className='choice-card-art';art.src=src;art.alt=candidate.name||'';art.loading='lazy';row.append(art);
+    }
     input.addEventListener('change',()=>{
      if(d.max===1)decisionSelection.clear();if(input.checked)decisionSelection.add(item.id);else decisionSelection.delete(item.id);
-     renderDecisions();});row.append(input,document.createTextNode(item.label));choices.append(row);
+     renderDecisions();});row.append(input);
+    const ordered=d.kind==='arrange'||/^New Pokédex:/.test(d.label||'');
+    const position=ordered?[...decisionSelection].indexOf(item.id)+1:0;
+    if(position){const badge=document.createElement('span');badge.className='selection-order';badge.textContent='#'+position;row.append(badge);}
+    const caption=document.createElement('span');caption.className='choice-card-label';caption.textContent=item.label;row.append(caption);
+    choices.append(row);
    });opts.append(choices);
    acts.append(btn('Confirm selection',()=>send(command('choose',{decisionId:d.id,selected:[...decisionSelection]})),'primary',decisionSelection.size<d.min||decisionSelection.size>d.max));
    if(d.optional)acts.append(btn('Decline',()=>send(command('choose',{decisionId:d.id,decline:true}))));
