@@ -1410,7 +1410,7 @@ function renderRpgCast(ids,locked,shown,portraitId){
    button.append(makeAvatar(id));
    const name=document.createElement('span');name.textContent=cast[id].name.split(' ')[0];button.append(name);
    button.onclick=()=>selectPerson(id);
-   button.addEventListener('animationend',()=>button.classList.remove('is-entering'),{once:true});
+   button.addEventListener('animationend',event=>{if(event.target===button)button.classList.remove('is-entering');});
   }
   button.style.setProperty('--cast-order',String(participants.indexOf(id)));
   const active=inConversation&&id===focused;
