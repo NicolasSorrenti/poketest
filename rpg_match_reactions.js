@@ -26,8 +26,8 @@
   sierra:'/rpg-assets/characters/sierra/portrait.png',
   sol:'/rpg-assets/sol.png'
  });
- const LABELS={attack:['ATTACK!','Their Pokémon attacks'],play_card:['NEW PLAY','They put a card into play'],evolve:['EVOLUTION!','A Pokémon evolves'],power:['POKÉMON POWER!','A special effect'],hurt:['BIG HIT','Their Pokémon takes damage'],ko_taken:['POKÉMON DOWN!','You take a Prize'],ko_scored:['A KNOCKOUT!','They take a Prize']};
- const GENERIC={attack:'Here goes.',play_card:'I can work with this.',evolve:'There we go.',power:'Try this one.',hurt:'Ouch. Good hit.',ko_taken:'You got me there.',ko_scored:'That is one down.'};
+ const LABELS={attack:['ATTACK!','Their Pokémon attacks'],play_card:['NEW PLAY','They put a card into play'],evolve:['EVOLUTION!','A Pokémon evolves'],power:['POKÉMON POWER!','A special effect'],hurt:['HIT!','Their Pokémon takes damage'],big_hit:['BIG HIT!','A powerful blow'],weakness_hit:['IT’S SUPER EFFECTIVE!','Their Pokémon was hit for Weakness'],status_hit:['STATUS TROUBLE!','A Special Condition was inflicted'],ko_taken:['POKÉMON DOWN!','You take a Prize'],ko_scored:['A KNOCKOUT!','They take a Prize']};
+ const GENERIC={attack:'Here goes.',play_card:'I can work with this.',evolve:'There we go.',power:'Try this one.',hurt:'Ouch. Good hit.',big_hit:'That hit harder than I expected.',weakness_hit:'I should have seen that matchup coming.',status_hit:'That condition complicates things.',ko_taken:'You got me there.',ko_scored:'That is one down.'};
  const VOICES={
   "hana": {
     "attack": "Okay, here we go!",
@@ -210,12 +210,62 @@
     "ko_scored": "Got it. No cameras needed."
   }
 };
- const CHANCES={attack:.82,play_card:.52,evolve:.85,power:.65,hurt:.7,ko_taken:1,ko_scored:.95};
+ const CONTEXT_VOICES={
+  hana:{weakness_hit:"Oh no—that's the worst matchup!",status_hit:"Hey, hang in there, okay?",big_hit:"Whoa! That really hurt!"},
+  reina:{weakness_hit:"I should have switched. My mistake.",status_hit:"You've thrown off my tempo.",big_hit:"Hmph. That was a serious hit."},
+  shiori:{weakness_hit:"I overlooked the type advantage.",status_hit:"This condition changes my options.",big_hit:"I underestimated that attack."},
+  yuna:{weakness_hit:"Wait, that was super effective?!",status_hit:"No, no, don't fall asleep now!",big_hit:"Okay, that was way too close!"},
+  akari:{weakness_hit:"That matchup is less favorable than I thought.",status_hit:"A status effect. How inconvenient.",big_hit:"That was a sharp move."},
+  camila:{weakness_hit:"You spotted my weak point. Cute.",status_hit:"That's going to make things interesting.",big_hit:"Well played. I felt that one."},
+  marina:{weakness_hit:"Oh, I should have seen that coming.",status_hit:"Easy now. We'll get through it.",big_hit:"That's a bigger wave than I expected."},
+  kaede:{weakness_hit:"Tch. Wrong Pokémon for this fight.",status_hit:"Seriously? Now I have to work around that.",big_hit:"Not bad. Don't get comfortable."},
+  sol:{weakness_hit:"Oops. I walked right into that.",status_hit:"Hey! That's a dirty little trick.",big_hit:"Okay, okay, you got my attention!"},
+  jinx:{weakness_hit:"That was a bad matchup. I know.",status_hit:"Great. Now I can't move how I want.",big_hit:"...I felt that. Keep going."},
+  luna:{weakness_hit:"I knew this matchup was dangerous.",status_hit:"That's going to slow us down.",big_hit:"Oh! That was stronger than I expected."},
+  elena:{weakness_hit:"I missed the obvious weakness.",status_hit:"That changes the whole plan.",big_hit:"All right. You caught me off guard."},
+  sierra:{weakness_hit:"That's not making the highlight reel.",status_hit:"Wonderful. Now we're poisoned, too.",big_hit:"Ouch. No retakes on that one."},
+  rina:{weakness_hit:"That's exactly what I was afraid of.",status_hit:"A condition, now? Think, think.",big_hit:"Wow. That hit hard."},
+  jun:{weakness_hit:"Right. Of course that type beats mine.",status_hit:"That is going to be a problem.",big_hit:"Ow. You weren't kidding."},
+  teo:{weakness_hit:"I brought the wrong answer to this matchup.",status_hit:"That's not in my plan.",big_hit:"I need to respect that damage."},
+  iris:{weakness_hit:"I should have predicted that advantage.",status_hit:"This is a frustrating complication.",big_hit:"That was a clean, brutal hit."},
+  elio:{weakness_hit:"I read that matchup badly.",status_hit:"Great. Another thing to recover from.",big_hit:"You nearly had me there."},
+  alma:{weakness_hit:"Ah. You found the opening.",status_hit:"That condition makes this delicate.",big_hit:"Okay. I need a different approach."},
+  nereo:{weakness_hit:"A type advantage. Clever choice.",status_hit:"I will need to play around that.",big_hit:"A substantial hit. Understood."}
+ };
+ const CHANCES={attack:.82,play_card:.52,evolve:.85,power:.65,hurt:.7,big_hit:1,weakness_hit:1,status_hit:1,ko_taken:1,ko_scored:.95};
  const MAX_REACTIONS=6;
  const prizeCount=player=>Number.isFinite(player?.prizeCount)?player.prizeCount:null;
  const maxSeq=actions=>actions.reduce((n,e)=>Number.isSafeInteger(e?.seq)?Math.max(n,e.seq):n,0);
- const summary=view=>({prizes:[prizeCount(view?.players?.[0]),prizeCount(view?.players?.[1])],cpuUnits:[view?.players?.[1]?.active,...(view?.players?.[1]?.bench||[])].filter(Boolean).map(u=>({id:u.id,damage:Number(u.damage)||0}))});
- function createDirector({npcId,npcName='Opponent',random=Math.random}={}){
+ const summary=view=>{
+  const opponent=view?.players?.[1],active=opponent?.active;
+  return {
+   prizes:[prizeCount(view?.players?.[0]),prizeCount(opponent)],
+   playerActive:view?.players?.[0]?.active?.id||null,
+   cpuActive:active?{id:active.id,damage:Number(active.damage)||0,status:active.status||null,
+    poison:!!active.poison,poisonDamage:Number(active.poisonDamage)||0,
+    burn:!!(active.burn||active.burned),weaknessOverride:active.weaknessOverride||null}:null,
+   cpuUnits:[active,...(opponent?.bench||[])].filter(Boolean).map(u=>({id:u.id,damage:Number(u.damage)||0}))
+  };
+ };
+ const normalizedType=t=>String(t||'').toLowerCase().trim();
+ // The Classic engine uses the first attacker's type and honors a current
+ // weakness override (Conversion etc.). Damage must actually increase.
+ function hitsWeakness(before,getCard){
+  if(!before?.playerActive||!before?.cpuActive||typeof getCard!=='function')return false;
+  const attackType=normalizedType(getCard(before.playerActive)?.types?.[0]);
+  const defender=before.cpuActive;
+  const weakness=defender.weaknessOverride?[defender.weaknessOverride]:
+   (getCard(defender.id)?.weaknesses||[]).map(w=>typeof w==='string'?w:w?.type);
+  return Boolean(attackType)&&weakness.some(w=>normalizedType(w)===attackType);
+ }
+ function gotStatus(before,after){
+  if(!before||!after||before.id!==after.id)return false;
+  return Boolean((after.status&&after.status!==before.status)||
+   (!before.poison&&after.poison)||
+   (after.poisonDamage>0&&after.poisonDamage>before.poisonDamage)||
+   (!before.burn&&after.burn));
+ }
+ function createDirector({npcId,npcName='Opponent',random=Math.random,getCard=()=>null}={}){
   let previous=null,lastSeq=0,lastReactionSeq=-Infinity,count=0,attackShown=false;
   function reset(){previous=null;lastSeq=0;lastReactionSeq=-Infinity;count=0;attackShown=false;}
   function update(data){
@@ -233,24 +283,35 @@
    if(koTaken)kind='ko_taken';
    else if(koScored)kind='ko_scored';
    else {
-    const cpu=fresh.filter(a=>a.side===1);
-    const kinds={attack:'attack',play_trainer:'play_card',evolve:'evolve',use_power:'power',use_stadium:'play_card',bench:'play_card'};
-    event=cpu.slice().reverse().find(a=>kinds[a.type]);
-    if(event)kind=kinds[event.type];
-    else if(fresh.some(a=>a.side===0&&a.type==='attack')){
-     if(now.cpuUnits.some(u=>prior.cpuUnits.some(p=>p.id===u.id&&u.damage>p.damage)))kind='hurt';
+    const playerAttacked=fresh.some(a=>a.side===0&&a.type==='attack');
+    const sameActive=prior.cpuActive&&now.cpuActive&&prior.cpuActive.id===now.cpuActive.id;
+    const activeDamage=sameActive?Math.max(0,now.cpuActive.damage-prior.cpuActive.damage):0;
+    const hitAnyUnit=now.cpuUnits.some(u=>prior.cpuUnits.some(p=>p.id===u.id&&u.damage>p.damage));
+    if(playerAttacked&&activeDamage>0&&hitsWeakness(prior,getCard))kind='weakness_hit';
+    else if(playerAttacked&&sameActive&&gotStatus(prior.cpuActive,now.cpuActive))kind='status_hit';
+    else if(playerAttacked&&activeDamage>=40)kind='big_hit';
+    else if(playerAttacked&&hitAnyUnit)kind='hurt';
+    else {
+     const cpu=fresh.filter(a=>a.side===1);
+     const kinds={attack:'attack',play_trainer:'play_card',evolve:'evolve',use_power:'power',use_stadium:'play_card',bench:'play_card'};
+     event=cpu.slice().reverse().find(a=>kinds[a.type]);
+     if(event)kind=kinds[event.type];
     }
    }
    if(!kind||(view.phase!=='game'&&kind!=='ko_taken'&&kind!=='ko_scored'))return null;
    const keyMoment=kind==='ko_taken'||kind==='ko_scored';
+   const contextual=kind==='weakness_hit'||kind==='status_hit'||kind==='big_hit';
    // The first CPU attack in an RPG duel always introduces the rival visually.
    // Later reactions remain selective, with a slot reserved for a knockout.
    const firstAttack=kind==='attack'&&!attackShown;
    // Reserve one ordinary slot for that first attack as well as the KO slot.
-   const normalCap=MAX_REACTIONS-(attackShown||firstAttack?1:2);
-   if(!keyMoment&&(count>=normalCap||(!firstAttack&&nextSeq-lastReactionSeq<3)))return null;
-   if(!firstAttack&&(typeof random==='function'?random():Math.random())>=CHANCES[kind])return null;
-   const titles=LABELS[kind],line=(VOICES[npcId]&&VOICES[npcId][kind])||GENERIC[kind];
+   const normalCap=MAX_REACTIONS-(attackShown||firstAttack?2:3);
+   // Reserve a slot for a meaningful battle reaction and one for a KO.
+   if(!keyMoment&&count>=(contextual?MAX_REACTIONS-1:normalCap))return null;
+   if(!keyMoment&&!contextual&&!firstAttack&&nextSeq-lastReactionSeq<3)return null;
+   if(!contextual&&!firstAttack&&(typeof random==='function'?random():Math.random())>=CHANCES[kind])return null;
+   const titles=LABELS[kind];
+   const line=CONTEXT_VOICES[npcId]?.[kind]||VOICES[npcId]?.[kind]||VOICES[npcId]?.hurt||GENERIC[kind];
    lastReactionSeq=nextSeq;count++;if(kind==='attack')attackShown=true;
    return {npcId,npcName,kind,title:titles[0],subtitle:kind==='attack'&&event?.label?'Attack: '+String(event.label).slice(0,64):titles[1],line,index:count,imageKey:kind};
   }
@@ -269,11 +330,11 @@
  // Presentation duration is independent of movement accessibility preferences.
  // In reduced-motion mode the static card remains readable for just as long.
  const isClutch=kind=>kind==='ko_taken'||kind==='ko_scored';
- const priorityFor=kind=>isClutch(kind)?3:kind==='evolve'||kind==='power'?2:1;
- const durationFor=(kind,reduced=false)=>kind==='attack'?2800:isClutch(kind)?2600:1650;
- function makeExperience({element,npcId,npcName,random=Math.random,doc=typeof document==='undefined'?null:document,
+ const priorityFor=kind=>isClutch(kind)?3:['weakness_hit','status_hit','big_hit','evolve','power'].includes(kind)?2:1;
+ const durationFor=(kind,reduced=false)=>kind==='attack'?2800:isClutch(kind)?2600:['weakness_hit','status_hit','big_hit'].includes(kind)?2300:1650;
+ function makeExperience({element,npcId,npcName,random=Math.random,getCard=()=>null,doc=typeof document==='undefined'?null:document,
   schedule=setTimeout,cancel=clearTimeout,media=typeof window==='undefined'?null:window}={}){
-  const director=createDirector({npcId,npcName,random});
+  const director=createDirector({npcId,npcName,random,getCard});
   let manifest=null,queued=null,active=false,currentPriority=0,timer=null,preloadImages=[];
   const reduced=()=>!!media?.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches;
   function hide(){
