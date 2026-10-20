@@ -72,19 +72,20 @@
    doc.addEventListener('keydown',onKey);
    // Existing action and location buttons remain authoritative.
    mapPanel.addEventListener('click',event=>{
-    if(event.target?.closest?.('#places button'))close();
+    if(event.target?.closest?.('#places button'))close({returnFocus:true});
    });
    apply(null);
    return true;
   }
-  return {init,toggle,close,onLocationChange:()=>close(),get active(){return active;}};
+  return {init,toggle,close,onLocationChange:()=>close({returnFocus:true}),get active(){return active;}};
  }
  const controller=createController();
+ const host=typeof window==='undefined'?null:window;
  // Navigation is a standalone UI dependency, not contingent on the RPG render()
  // pipeline completing successfully. The HTML loads this script after both panels.
- if(root?.document){
-  if(root.document.readyState==='loading')
-   root.document.addEventListener('DOMContentLoaded',()=>controller.init(),{once:true});
+ if(host?.document){
+  if(host.document.readyState==='loading')
+   host.document.addEventListener('DOMContentLoaded',()=>controller.init(),{once:true});
   else controller.init();
  }
  return {
