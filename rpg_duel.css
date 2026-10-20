@@ -3,12 +3,12 @@ body.rpg-duel #reset,body.rpg-duel .masthead nav a{display:none!important}
 body.rpg-duel .engine-badge{border-color:#d8749e;color:#ffd4e0}
 @media(prefers-reduced-motion:reduce){body.rpg-duel *{animation-duration:.01ms!important;transition-duration:.01ms!important}}
 
-/* NPC reactions are 0.9-second Persona-inspired cinematic slashes, not modal cards.
-   The transparent viewport never intercepts battle actions or choices. */
+/* Character cut-ins remain on screen long enough to identify the NPC and
+   attack. They never intercept battle actions or card choices. */
 .npc-reaction{display:none}
 body.rpg-duel .npc-reaction:not(.hidden){
  display:flex;position:fixed;inset:0;align-items:center;justify-content:center;
- z-index:75;pointer-events:none;overflow:hidden;
+ z-index:680;pointer-events:none;overflow:hidden;
 }
 .npc-reaction-card{
  --cutin-accent:#ef8bab;
@@ -17,15 +17,16 @@ body.rpg-duel .npc-reaction:not(.hidden){
  background:linear-gradient(106deg,#681f52 0%,#25213df7 36%,#0f1729f5 100%);
  border:0;border-top:5px solid var(--cutin-accent);border-bottom:5px solid var(--cutin-accent);
  box-shadow:0 20px 70px #020414b9,0 0 0 1px #ffbbd648;overflow:visible;isolation:isolate;
- transform:skewX(-8deg);animation:npc-cut-in .9s cubic-bezier(.13,.73,.23,1) both;
+ transform:skewX(-8deg);animation:npc-cut-in 1.65s cubic-bezier(.13,.73,.23,1) both;
 }
 .npc-reaction-card::before{
  content:"";position:absolute;inset:-8px -14px;z-index:-1;pointer-events:none;
  background:linear-gradient(120deg,transparent 0 25%,#ffffff16 25% 26%,transparent 26% 62%,var(--cutin-accent) 62% 63%,transparent 63%);
 }
+.npc-reaction-card.npc-reaction-attack{animation-duration:2.8s}
 .npc-reaction-card.is-finisher{
  --cutin-accent:#f2ce79;background:linear-gradient(102deg,#6c3c32,#31253dec 36%,#111524);
- animation-duration:1.28s;
+ animation-duration:2.6s;
 }
 .npc-reaction-ko_taken,.npc-reaction-hurt{--cutin-accent:#ef8298}
 .npc-reaction-portrait{
@@ -49,8 +50,8 @@ body.rpg-duel .npc-reaction:not(.hidden){
 .npc-reaction-copy p{font:700 clamp(12px,1.35vw,19px)/1.25 'Barlow Condensed',sans-serif;margin:4px 0 0;color:#fff2f9;max-width:56ch}
 @keyframes npc-cut-in{
  0%{opacity:0;translate:110vw 0;scale:.94 1}
- 19%{opacity:1;translate:0 0;scale:1}
- 71%{opacity:1;translate:0 0}
+ 10%{opacity:1;translate:0 0;scale:1}
+ 84%{opacity:1;translate:0 0}
  100%{opacity:0;translate:-110vw 0;scale:1 1}
 }
 @keyframes npc-cut-portrait{from{opacity:.45;translate:48px 0}to{opacity:1;translate:0 0}}
