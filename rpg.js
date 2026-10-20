@@ -875,6 +875,8 @@ function showPreparedDuel(){
  const preview=describePreparedDuel();
  if(!preview)return;
  const modal=$('preDuelDialog'),art=$('preDuelArt');art.replaceChildren();
+ const matchStyle=window.NeoRpgTournamentPresentation?.matchModel?.(pending,{cast,cups:TOURNAMENTS.cups});
+ modal.dataset.circuit=matchStyle?.kind||'friendly';
  $('preDuelContext').textContent=preview.stake;
  $('preDuelOpponent').textContent=preview.name;
  $('preDuelDeck').textContent=preview.deckLabel+(pending.customOpponentDeck?' · YOUR COLLABORATIVE BUILD':'')+' · '+preview.place;
@@ -915,6 +917,9 @@ function launchPreparedDuel(){
  if(pending.deckCards)sessionStorage.setItem('neoRpgDeck:'+pending.id,JSON.stringify(pending.deckCards));
  if(pending.customOpponentDeck)sessionStorage.setItem('neoRpgNpcDeck:'+pending.id,JSON.stringify(pending.customOpponentDeck));
  $('battle').src=duelUrl(pending);
+ // Only important circuit matches get the fast, nonblocking versus intro.
+ const presentation=window.NeoRpgTournamentPresentation;
+ if(presentation?.matchModel)presentation.show(presentation.matchModel(pending,{cast,cups:TOURNAMENTS.cups}));
 }
 
 function startDuel(id,exhibition=null,arcEpisode=null,tournament=null,sideQuest=null,bondChallenge=false,competition=null){
@@ -988,8 +993,12 @@ window.addEventListener('message',ev=>{
   }else finishDuelRewardPresentation();
  };
  // Result first, then the earned booster, then the time wipe. No extra engine settlement.
+ const tournamentPresentation=window.NeoRpgTournamentPresentation?.celebrationModel?.({
+  duel,cupOutcome,competitiveOutcome,receipt
+ });
  const shown=window.NeoRpgVictoryPresentation?.show?.({
-  receipt,hasBooster:!!awarded,avatar:makeAvatar(duel.npc),onContinue:continueAfterResult
+  receipt,hasBooster:!!awarded,avatar:makeAvatar(duel.npc),
+  presentation:tournamentPresentation,onContinue:continueAfterResult
  });
  if(!shown)continueAfterResult();
 });
@@ -1248,25 +1257,27 @@ function renderCompetitiveCircuit(locked){
 function renderBracketProgress(){
  const root=$('bracketProgress');root.replaceChildren();
  for(const cup of TOURNAMENTS.cups){
-  const step=TOURNAMENTS.status(state,cup.id),card=document.createElement('div');
-  card.className='bracket-card '+(step.state==='champion'?'bracket-champion':step.state==='eliminated'?'bracket-eliminated':'');
-  const title=document.createElement('strong');title.textContent=cup.title;
-  const label=document.createElement('small');
-  if(step.state==='champion')label.textContent='🏆 CHAMPION · 3 / 3 wins';
-  else if(step.state==='eliminated')label.textContent='Eliminated · '+step.round+' round'+(step.round===1?'':'s')+' won';
-  else if(step.state==='expired'||step.state==='missed')label.textContent='Registration closed';
-  else if(state.day<cup.day)label.textContent='Opens Day '+cup.day+' · at '+places[cup.place][0];
-  else if(state.day>cup.end)label.textContent='Registration closed';
-  else label.textContent='Round '+(step.round+1)+' / 3 · '+cast[step.opponent].name;
-  const track=document.createElement('div');track.className='bracket-track';
-  for(let i=0;i<cup.rounds.length;i++){
-   const round=document.createElement('span');
-   round.className='bracket-step '+(i<step.round?'cleared':i===step.round&&step.state==='open'&&state.day>=cup.day&&state.day<=cup.end?'current':'');
-   round.textContent=i<step.round?'✓':String(i+1);
-   round.title='Round '+(i+1)+(i<step.round?' · won':'');
-   track.append(round);
+  const progress=TOURNAMENTS.status(state,cup.id);
+  const model=window.NeoRpgTournamentPresentation?.bracketModel?.(cup,progress,state.day,cast);
+  if(!model)continue;
+  const card=document.createElement('section');
+  card.className='bracket-card neo-circuit-card'+(model.state==='champion'?' bracket-champion':'')+
+   (model.state==='eliminated'?' bracket-eliminated':'');
+  card.setAttribute('aria-label',model.title+' · '+model.headline);
+  const title=document.createElement('strong');title.className='neo-bracket-title';title.textContent=model.title;
+  const label=document.createElement('span');label.className='neo-bracket-status';label.textContent=model.headline;
+  const rounds=document.createElement('div');rounds.className='neo-bracket-rounds';
+  for(const item of model.rows){
+   const row=document.createElement('div');
+   row.className='neo-bracket-round'+(item.label==='CLEARED'?' is-cleared':'')+
+    (item.current?' is-current':'')+(item.label==='ELIMINATED'?' is-eliminated':'');
+   row.setAttribute('aria-label','Round '+item.round+': '+item.opponent+' · '+item.label);
+   const number=document.createElement('span');number.className='neo-bracket-round__num';number.textContent=String(item.round).padStart(2,'0');
+   const name=document.createElement('span');name.className='neo-bracket-round__name';name.textContent=item.opponent;
+   const result=document.createElement('span');result.className='neo-bracket-round__state';result.textContent=item.label;
+   row.append(number,name,result);rounds.append(row);
   }
-  card.append(title,label,track);root.append(card);
+  card.append(title,label,rounds);root.append(card);
  }
 }
 
