@@ -50,7 +50,7 @@
    &&(!e.place||e.place===s.location)&&(e.slot===null||e.slot===s.slot)
    &&s.day>=e.startDay&&affection>=e.minAffection)||null;
  }
- function describe(s,d,{cast={},places={},cg,tournaments}={}){
+ function describe(s,d,{cast={},places={},cg,tournaments,reactivity}={}){
   if(!d||!cast[d.npc])return null;
   const character=cast[d.npc],place=places[s.location]?.[0]||'Neo Harbor';
   const cup=tournaments?.cups?.find(c=>c.id===d.tournamentId);
@@ -68,8 +68,8 @@
    d.sideQuestId?'An unfinished promise has brought you to this duel.':
    d.arcEpisode?'This match means more than another point in the standings.':
    'You both settle in for a match at '+place+'.';
-  const response=Array.isArray(character.preDuelLines)&&typeof character.preDuelLines[0]==='string'
-   ?character.preDuelLines[0]:lines[d.npc]||'Ready when you are. Let us play a good match.';
+  const response=reactivity?.preDuelLine?.(s,d)||(Array.isArray(character.preDuelLines)&&typeof character.preDuelLines[0]==='string'
+   ?character.preDuelLines[0]:lines[d.npc]||'Ready when you are. Let us play a good match.');
   return {id:d.id,npc:d.npc,name:character.name,place,stake,artwork,
    lines:[{speaker:'Narrator',text:intro},{speaker:character.name,text:response}],
    deckLabel:character.style||'A personal deck',day:d.day,slot:d.slot};
