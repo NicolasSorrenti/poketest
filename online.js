@@ -176,7 +176,10 @@
  function setHandVisible(visible){
   handVisible=!!visible;
   const fan=$('handFan'),toggle=$('handToggle');
-  fan.classList.toggle('hidden',!handVisible||!fan.querySelector('.hand-fan-card'));
+  // renderHandFan clears its DOM when closed. Rebuild it from the current
+  // private hand before making it visible again (especially on touch screens).
+  if(current?.view)renderHandFan(current.view.players[side()]?.hand);
+  else fan.classList.toggle('hidden',true);
   toggle.setAttribute('aria-expanded',String(handVisible));
   toggle.setAttribute('aria-label',handVisible?'Hide hand':'Show hand');
   toggle.setAttribute('aria-pressed',String(!handVisible));
