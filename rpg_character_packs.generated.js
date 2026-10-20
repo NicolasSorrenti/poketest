@@ -1960,7 +1960,7 @@ const packs=[
    "hangouts": [
     "Rina drags you to the arcade still in her practice stage outfit and spends the whole time talking about evolution lines while perfectly hitting every high score.",
     "A quiet café meeting turns into her showing you her phone’s locked wallpaper — a custom illustration of her favorite Pokémon — and getting genuinely shy about it.",
-    "She practices a new song for you in the park, then immediately switches to explaining why her current deck needs one more supporter.",
+    "She practices a new song for you in the park, then immediately switches to explaining why her current deck needs another draw Trainer.",
     "You catch her between rehearsals reviewing card lists on a tablet, still wearing the sparkly jacket from her last performance.",
     "A late library session ends with her whispering excited theories about upcoming sets so she doesn’t get shushed, eyes sparkling the whole time."
    ],
