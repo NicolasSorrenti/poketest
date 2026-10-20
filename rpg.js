@@ -1,6 +1,6 @@
 'use strict';
 (()=>{
-const $=id=>document.getElementById(id),KEY='neoHarborRpgV1',STORY=window.NeoHarborStory,SCHEDULES=window.NeoRpgSchedules,WORLD=window.NeoRpgWorld,ARC=window.NeoRpgRivalArc,TOURNAMENTS=window.NeoRpgTournaments,BRIDGE=window.NeoRpgDuelBridge;
+const $=id=>document.getElementById(id),KEY='neoHarborRpgV1',STORY=window.NeoHarborStory,SCHEDULES=window.NeoRpgSchedules,WORLD=window.NeoRpgWorld,ARC=window.NeoRpgRivalArc,TOURNAMENTS=window.NeoRpgTournaments,COMPETE=window.NeoRpgCompetitiveLoop,BRIDGE=window.NeoRpgDuelBridge;
 const PACK=window.NeoRpgNarrativePack,SIDE=window.NeoRpgSideQuests,EPILOGUE=window.NeoRpgEpilogue,APPOINTMENTS=window.NeoRpgAppointments,INTENTIONS=window.NeoRpgIntentions,CG=window.NeoRpgCGGallery,PLANNER=window.NeoRpgDailyPlanner,SOCIAL=window.NeoRpgSocialActivities,DATES=window.NeoRpgPlannedDates,PRE=window.NeoRpgPreDuel,SITUATIONS=window.NeoRpgSituations,JOURNEY=window.NeoRpgSeasonJourney,COLLECT=window.NeoRpgCollection,RPGD=window.NeoRpgDialogue,BONDS=window.NeoRpgBondRewards,PARTNER=window.NeoRpgPartnerDecks,VN=window.NeoRpgConversations;
 const MANDATORY=window.NeoRpgMandatoryEvents||null;
 const MANDATORY_EVENTS=[...(window.NeoRpgSeasonEvents?.events||[]),...(window.NeoRpgCharacterPacks?.mandatoryEvents||[])];
@@ -123,7 +123,7 @@ function pauseSideQuest(){
 
 function timeFlash(beforeDay,beforeSlot){const overlay=document.createElement('div');overlay.className='notice-pop';const heading=document.createElement('b');heading.textContent=state.day>90?'Season complete':state.day!==beforeDay?'A NEW DAY BEGINS':'TIME PASSES';const body=document.createElement('span');body.textContent=state.day>90?'Day 90 has ended.':('Day '+state.day+' · '+periods[state.slot]);overlay.append(heading,body);document.body.append(overlay);overlay.addEventListener('animationend',()=>overlay.remove());}
 
-function defaults(){return {sideQuests:{},activeSideQuest:null,day:1,slot:0,location:'home',metReina:false,reinaTrust:0,reinaDuels:0,results:[],flags:{intro:false},journal:['The 90-day season begins.'],pendingDuel:null,bonds:{},talked:{},hungOut:{},eventsDone:{},points:0,credits:80,playerDeck:'blackout',selected:null,ended:false,storyDone:{},storyMissed:{},relationships:{},routeOutcomes:{},partner:null,activeStory:null,activeEncounter:null,activeArc:null,arcFlags:{},arcOutcomes:{},activityDone:{},encountersDone:{},focus:75,insight:0,reputation:0,preparation:0,lastDuelReceipt:null,tournaments:{},campaignHistory:[],ngPlus:0,appointments:[],appointmentSeq:0,scene:null,socialHistory:{},situationDone:{},activeSituation:null,deckJourney:null,mandatoryEventState:null}}
+function defaults(){return {sideQuests:{},activeSideQuest:null,day:1,slot:0,location:'home',metReina:false,reinaTrust:0,reinaDuels:0,results:[],flags:{intro:false},journal:['The 90-day season begins.'],pendingDuel:null,bonds:{},talked:{},hungOut:{},eventsDone:{},points:0,credits:80,playerDeck:'blackout',selected:null,ended:false,storyDone:{},storyMissed:{},relationships:{},routeOutcomes:{},partner:null,activeStory:null,activeEncounter:null,activeArc:null,arcFlags:{},arcOutcomes:{},activityDone:{},encountersDone:{},focus:75,insight:0,reputation:0,preparation:0,lastDuelReceipt:null,tournaments:{},campaignHistory:[],ngPlus:0,appointments:[],appointmentSeq:0,scene:null,socialHistory:{},situationDone:{},activeSituation:null,deckJourney:null,competitive:null,mandatoryEventState:null}}
 const hadCampaignSave=!!localStorage.getItem(KEY);
 let state;try{state=JSON.parse(localStorage.getItem(KEY))||defaults();if(!Number.isInteger(state.day)||state.day<1||state.day>91)throw Error('Invalid save');}catch{state=defaults()}
 for(const [k,v] of Object.entries(defaults()))if(state[k]===undefined)state[k]=v;
@@ -145,6 +145,7 @@ SIDE.expire(state);
 ARC.hydrate(state);
 // Restored saves may already be beyond an optional cup's registration window.
 TOURNAMENTS.expire(state);
+COMPETE.hydrate(state);
 APPOINTMENTS.hydrate(state);APPOINTMENTS.expire(state);INTENTIONS.hydrate(state);CG.hydrate(state);SOCIAL.hydrate(state);DATES.hydrate(state,APPOINTMENTS,SOCIAL);SITUATIONS.hydrate(state);
 for(const id of Object.keys(cast)){const old=state.bonds[id],current=state.relationships[id];
  if(!state.flags['newStoryMigrated_'+id]){for(const key of ['affection','trust','duels'])current[key]=Math.max(current[key]||0,old[key]||0);
@@ -562,6 +563,10 @@ function act(action){
   $('notice').textContent='Complete two bond chapters first.';return;
  }
  if(type==='cup'){try{const match=TOURNAMENTS.begin(state,id);return startDuel(match.npc,null,null,match);}catch(err){return say('Tournament Desk',err.message);}}
+ if(type==='competitive'){
+  try{const match=COMPETE.begin(state,id);return startDuel(match.npc,null,null,null,null,false,match);}
+  catch(err){return say('Circuit Desk',err.message);}
+ }
  if(type==='event'){const e=scheduleEvent();if(!e)return;const opponents={7:'yuna',14:'reina',21:'hana',30:'reina',42:'kaede',60:'akari',75:'camila',88:'reina',90:'shiori'};return startDuel(opponents[e.day]||'reina',e);}
  if(type==='work')return performActivity('shop_shift');
  if(type==='practice')return state.location==='library'?performActivity('library_research'):state.location==='center'?performActivity('center_scrimmage'):performActivity('home_reflect');
@@ -872,15 +877,19 @@ function launchPreparedDuel(){
  $('battle').src=duelUrl(pending);
 }
 
-function startDuel(id,exhibition=null,arcEpisode=null,tournament=null,sideQuest=null,bondChallenge=false){
+function startDuel(id,exhibition=null,arcEpisode=null,tournament=null,sideQuest=null,bondChallenge=false,competition=null){
  if(state.deckJourney&&!state.deckJourney.starter){showStarterChoice();return;}
  if(state.deckJourney?.starter&&!COLLECT.check(state.deckJourney.deck,state.deckJourney.owned).valid){$('notice').textContent='Save a valid campaign deck before challenging another trainer.';return;}
- if(state.activeSituation||state.activeStory||state.activeEncounter||(state.activeArc&&state.activeArc.id!==arcEpisode)||(state.activeSideQuest&&state.activeSideQuest.id!==sideQuest?.id)||state.pendingDuel||state.day>90||!cast[id]||(!exhibition&&!tournament&&!currentPeople().includes(id)))return;
+ if(state.activeSituation||state.activeStory||state.activeEncounter||(state.activeArc&&state.activeArc.id!==arcEpisode)||(state.activeSideQuest&&state.activeSideQuest.id!==sideQuest?.id)||state.pendingDuel||state.day>90||!cast[id]||(!exhibition&&!tournament&&!competition&&!currentPeople().includes(id)))return;
+ if(competition&&!COMPETE.available(state).some(e=>e.id===competition.id&&e.npc===id))return;
  if(sideQuest&&(!SIDE.canDuel(state,sideQuest.id,currentPeople())||SIDE.byId(sideQuest.id)?.stages[sideQuest.step]?.npc!==id))return;
  if(bondChallenge&&!BONDS.canChallenge(state,id,BOND_PLAN))return;
  if(arcEpisode&&(!state.activeArc||state.activeArc.phase!=='choice'||!ARC.available(state,currentPeople()).some(e=>e.id===arcEpisode)))return;
  const c=cast[id],npcEditedCards=PARTNER.snapshot(state,id,c.deck);
- state.pendingDuel={id:'npc-'+id+'-'+state.day+'-'+state.slot+'-'+state.results.length,npc:id,day:state.day,slot:state.slot,opponent:c.deck,playerDeck:state.deckJourney?.starter?'custom':state.playerDeck,deckCards:state.deckJourney?.starter?[...state.deckJourney.deck]:null,resolved:false,eventKey:exhibition?exhibition.day+':'+exhibition.title:null,eventReward:exhibition?exhibition.reward:0,eventTitle:exhibition?exhibition.title:null,arcEpisode:arcEpisode||null,tournamentId:tournament?.tournamentId||null,tournamentRound:tournament?.tournamentRound??null,tournamentAttempt:tournament?.tournamentAttempt??null,sideQuestId:sideQuest?.id||null,sideQuestStage:sideQuest?.step??null,bondChallenge:!!bondChallenge,customOpponentDeck:npcEditedCards};
+ state.pendingDuel={id:'npc-'+id+'-'+state.day+'-'+state.slot+'-'+state.results.length,npc:id,day:state.day,slot:state.slot,opponent:c.deck,playerDeck:state.deckJourney?.starter?'custom':state.playerDeck,deckCards:state.deckJourney?.starter?[...state.deckJourney.deck]:null,resolved:false,eventKey:exhibition?exhibition.day+':'+exhibition.title:null,eventReward:exhibition?exhibition.reward:0,eventTitle:exhibition?exhibition.title:null,arcEpisode:arcEpisode||null,tournamentId:tournament?.tournamentId||null,tournamentRound:tournament?.tournamentRound??null,tournamentAttempt:tournament?.tournamentAttempt??null,sideQuestId:sideQuest?.id||null,sideQuestStage:sideQuest?.step??null,bondChallenge:!!bondChallenge,customOpponentDeck:npcEditedCards,
+  competitiveKind:competition?.kind||null,competitiveId:competition?.id||null,
+  competitiveWeek:competition?.week??null,competitiveRound:competition?.round??null,
+  competitiveTitle:competition?.title||null};
  if(arcEpisode)state.activeArc=null;
  PRE.stage(state.pendingDuel);
  if(npcEditedCards)sessionStorage.setItem('neoRpgNpcDeck:'+state.pendingDuel.id,JSON.stringify(npcEditedCards));
@@ -902,6 +911,18 @@ window.addEventListener('message',ev=>{
   receipt.credits+=cupOutcome.credits;
   receipt.tournamentBonus={points:cupOutcome.points,credits:cupOutcome.credits,state:cupOutcome.state,round:cupOutcome.round};
   log(cupOutcome.title+': '+(cupOutcome.draw?'round drawn — replay available':cupOutcome.won?'round won':'eliminated')+'.');
+ }
+ const competitiveOutcome=duel.competitiveKind?COMPETE.settle(state,duel,receipt):null;
+ if(competitiveOutcome){
+  receipt.points+=competitiveOutcome.points;
+  receipt.credits+=competitiveOutcome.credits;
+  receipt.competitiveBonus={points:competitiveOutcome.points,credits:competitiveOutcome.credits,champion:competitiveOutcome.champion};
+  log(competitiveOutcome.message);
+  if(competitiveOutcome.voucher&&state.deckJourney?.starter){
+   const set=COLLECT.shopPacks(state).filter(offer=>offer.unlocked).at(-1)?.set||'base1';
+   COLLECT.awardVoucher(state,set);
+   log('Saturday Local prize: one '+COLLECT.SETS[set].name+' booster voucher. Redeem it at The Lucky Draw.');
+  }
  }
  recordCG('after_duel',duel.npc);
  const personalOutcome=duel.arcEpisode?ARC.settleDuel(state,duel.arcEpisode,receipt):null;
@@ -1095,6 +1116,37 @@ function openGallery(){
  $('galleryPreview').replaceChildren();renderGallery();$('galleryDialog').showModal();
 }
 
+function renderCompetitiveCircuit(locked){
+ const root=$('competitiveEvents');if(!root)return;
+ root.replaceChildren();
+ const entries=COMPETE.available(state);
+ for(const entry of entries){
+  const button=document.createElement('button');button.type='button';button.className='activity';button.disabled=locked;
+  const title=document.createElement('strong');title.textContent='⚔ '+entry.title;
+  const detail=document.createElement('small');detail.textContent=(cast[entry.npc]?.name||'Circuit trainer')+' · '+entry.description;
+  button.append(title,detail);button.onclick=()=>act('competitive:'+entry.id);root.append(button);
+ }
+ const c=COMPETE.hydrate(state),local=COMPETE.localProgress(state);
+ if(state.location!=='center'&&state.day>=2&&state.day<=90&&!c.daily[state.day]){
+  const button=document.createElement('button');button.className='activity';button.disabled=locked;
+  button.textContent='Train at the Community Center';
+  button.onclick=()=>{state.location='center';state.selected=null;persist();say('Narrator','The practice tables are set up for today’s rotating challenge.');};
+  root.append(button);
+ }
+ if(state.location!=='shop'&&state.day<=90&&COMPETE.localDay(state.day)&&local.status==='open'&&(local.round>0||state.slot<=1)){
+  const button=document.createElement('button');button.className='activity';button.disabled=locked;
+  button.textContent='Visit today’s Saturday Local at The Lucky Draw';
+  button.onclick=()=>{state.location='shop';state.selected=null;persist();say('Narrator','The local circuit has gathered for its weekly matches.');};
+  root.append(button);
+ }
+ const hint=document.createElement('p');hint.className='empty-note';
+ const next=COMPETE.upcoming(state);
+ hint.textContent=(state.day<=90&&COMPETE.localDay(state.day)&&local.status==='champion'?'You won this week’s local!':
+  state.day<=90&&COMPETE.localDay(state.day)&&local.status==='eliminated'?'This week’s local is over for you.':
+  next?'Next Saturday Local: Day '+next+' at The Lucky Draw. Two rounds, one day.':'The competitive season has ended.')+
+  ' Daily challenges run at the Community Center and refresh each new day.';
+ root.append(hint);
+}
 function renderBracketProgress(){
  const root=$('bracketProgress');root.replaceChildren();
  for(const cup of TOURNAMENTS.cups){
@@ -1347,14 +1399,14 @@ function renderRpgActions(locked,shown){
  const heading=document.createElement('strong');heading.textContent='Explore '+places[state.location][0];
  header.append(heading);
  const tabs=document.createElement('div');tabs.className='rpg-dock-tabs';
- for(const [id,title] of [['people','Characters'],['stories','Events'],['activities','Activities']]){
+ for(const [id,title] of [['people','Characters'],['stories','Events'],['circuit','Circuit'],['activities','Activities']]){
   const b=document.createElement('button');b.textContent=title;b.className=id===rpgLocalTab?'active':'';
   b.setAttribute('aria-pressed',String(id===rpgLocalTab));b.onclick=()=>{rpgLocalTab=id;renderRpgActions(false,{speaker:'Narrator',line:'',choices:[]});};
   tabs.append(b);
  }
  header.append(tabs);dock.append(header);
  const body=document.createElement('div');body.className='rpg-dock-items';
- const ids=rpgLocalTab==='people'?['people']:rpgLocalTab==='stories'?['storyEvents','situationEvents','sideQuestEvents','townEncounters']:['townActivities','activities'];
+ const ids=rpgLocalTab==='people'?['people']:rpgLocalTab==='stories'?['storyEvents','situationEvents','sideQuestEvents','townEncounters']:rpgLocalTab==='circuit'?['competitiveEvents']:['townActivities','activities'];
  for(const id of ids)for(const source of $(id)?.children||[]){
   if(source.tagName!=='BUTTON'||source.disabled)continue;
   const b=document.createElement('button');b.className='rpg-dock-action';
@@ -1384,7 +1436,7 @@ function render(){
  $('duelReceipt').hidden=!receipt;
  if(receipt){
   $('receiptTitle').textContent=receipt.outcome.toUpperCase()+' · '+receipt.name;
-  $('receiptDetails').textContent='+'+receipt.points+' circuit points · +'+receipt.credits+' credits · +'+receipt.trust+' trust'+(receipt.bonus?' (includes +'+receipt.bonus+' exhibition points)':'')+(receipt.trainingBonus?' · +'+receipt.trainingBonus+' training credits':'')+(receipt.tournamentBonus?.points?' · tournament bonus included':'')+' · Time advanced one period.';
+  $('receiptDetails').textContent='+'+receipt.points+' circuit points · +'+receipt.credits+' credits · +'+receipt.trust+' trust'+(receipt.bonus?' (includes +'+receipt.bonus+' exhibition points)':'')+(receipt.trainingBonus?' · +'+receipt.trainingBonus+' training credits':'')+(receipt.tournamentBonus?.points?' · tournament bonus included':'')+(receipt.competitiveBonus?' · local circuit bonus included':'')+' · Time advanced one period.';
   $('duelReceipt').classList.toggle('is-victory',receipt.outcome==='Victory');
  }
  $('whereLabel').textContent=state.location==='home'?'⌂  YOU ARE HOME':'●  YOU ARE HERE';
@@ -1606,6 +1658,7 @@ function render(){
   const b=document.createElement('button');b.className='activity';b.textContent=label;b.disabled=(ended&&action!=='new'&&action!=='calendar')||(locked&&action!=='calendar');b.onclick=()=>act(action);$('activities').append(b);
  }
  renderBracketProgress();
+ renderCompetitiveCircuit(locked);
  renderAppointments(locked);
  renderSeasonReport();
  $('journal').replaceChildren();const stats=document.createElement('p');stats.className='stats';stats.textContent='🏆 '+state.points+' circuit points   ·   ◈ '+state.credits+' credits';$('journal').append(stats);
