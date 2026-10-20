@@ -59,7 +59,7 @@
    .filter(x=>validRecord(x.row)&&x.row.npc===npc&&x.row.id!==exclude&&x.row.day<=s.day)
    .sort((a,b)=>b.row.day-a.row.day||b.index-a.index)[0]?.row||null;
  }
- function reaction(s,npc,character=null,cast=null,community=null){
+ function reaction(s,npc,character=null,cast=null,community=null,consequences=null){
   if(!plain(s)||typeof npc!=='string'||!goodDay(s.day)||s.day>90)return null;
   const candidate=[];
   function add(priority,id,kind,day,dialogue,asked='How have things been since then?'){
@@ -69,6 +69,9 @@
    if(!VOICE[npc]&&kind==='loss'&&typeof character?.duelLose==='string')voice=[character.duelLose,voice[1]];
    candidate.push({priority,id,kind,day,lines:[rec(npc,voice[0]),protagonist(asked),rec(npc,voice[1])]});
   }
+  // Choice-based follow-ups take priority over generic result reactions.
+  const chosen=consequences?.reaction?.(s,npc);
+  if(chosen&&!seen(s,chosen.id))candidate.push({...chosen,priority:108});
   const match=lastMatch(s,npc);
   if(match&&s.day-match.day<=5){
    const kind=match.draw?'draw':match.won?'win':'loss';
