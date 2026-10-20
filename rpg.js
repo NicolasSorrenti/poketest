@@ -1916,6 +1916,7 @@ persist();render();initDecks();loadCardNames();if(state.deckJourney&&!state.deck
   $('duel').hidden=true;$('battle').src='about:blank';showPreparedDuel();
  }else{
   $('duel').hidden=false;
+  window.NeoRpgAudio?.setPaused?.(true);
   $('battle').src=duelUrl(state.pendingDuel);
  }
 }
