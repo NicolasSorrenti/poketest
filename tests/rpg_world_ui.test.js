@@ -1001,7 +1001,8 @@ test('story responses float to the center while the dialogue line remains visibl
  assert.equal(r.elements.playerChoicePrompt.hidden,false);
  assert.equal(r.elements.choices.parentElement,r.elements.playerChoicePanel);
  assert.ok(r.elements.choices.children.length>=2,'response prompts should offer meaningful choices');
- assert.ok(r.elements.line.textContent);
+ assert.equal(r.elements.line.textContent,stages.at(-1).text,'choice prompt preserves the last spoken line');
+ assert.equal(r.elements.speaker.textContent,'Hana Mizuno','the last line retains its real speaker');
 });
 
 test('a first meeting plays its greeting scene before actions and survives reload',()=>{
