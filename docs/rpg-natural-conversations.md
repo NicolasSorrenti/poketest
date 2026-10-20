@@ -54,3 +54,13 @@ The original eight characters' revised source is `rpg_legacy_scenes.js` (32 scen
 - **Don't lose writing to fallbacks.** `rpg_dialogue.js` has topic-specific exchanges and older supplemental arrays. Never allow a generic fallback array to overwrite a direct character-and-topic match. Add a regression test whenever introducing another dialogue source.
 - **Preserve existing save positions.** When editing mandatory and bond events, preserve their IDs, choices and established event flags; if changing the number of lines for a scene already in a save, test how an in-progress index resumes.
 - After touching `characters/*/mandatory_events.json` or `rpg_season_events.json`, regenerate and verify `rpg_character_packs.generated.js` / `rpg_season_events.js` with `npm run characters:build` and `npm run characters:check`. A generated registry is not a second source to author independently.
+
+### Relationship finale decisions and crossovers
+
+- **Make relationship intentions explicit.** A final romantic choice must use `kind: "commit"`; an explicit platonic choice uses `kind: "friend"`. An honest but undecided choice remains uncommitted. Do not infer a relationship from a kiss, flirtation, affectionate stat gain or supportive answer alone.
+- **Do not change existing scene identity.** Keep five-part guest route IDs, choice indices, prerequisite flags, eligibility windows and existing `flag` values when upgrading relationship choice kinds; maintain save and UI compatibility.
+- **Legacy saved kisses/dates:** a previously chosen index-1 romantic finale can recover a partner only when there is one qualifying candidate and no established partner or conflicting outcome. Never invent a choice between two completed routes. Add targeted old-save regressions.
+- **Crossovers need all participants.** Check that both named NPCs speak with their own voices; let the protagonist contribute. Use a short `Narrator` line for actions rather than making an NPC describe a gesture.
+- **Branch openings must keep their owner.** The `openingByFlag` text replaces a scene's first line. If that line is conditional NPC dialogue, the first speaker must remain that NPC, not be silently changed to `Narrator`.
+- **Choices should finish the conversation.** Retain the last authored character line while showing response options. Don't insert a generic `How will you answer?` / `What would you suggest?` bubble that interrupts the scene.
+- **Descriptions and responses differ.** Opening scene and activity result text belongs to `Narrator`; actual character replies belong to the character. Avoid printing focus gains, affection numbers or one-period labels inside centered VN decision options.
