@@ -47,6 +47,18 @@ assert.equal(roll.update({view:mkView(),activity:[act(500,1,'attack')]}),null,'R
 const noLuck=reactions.createDirector({npcId:'hana',random:()=>.999});
 noLuck.update({view:mkView(),activity:[]});
 assert.equal(noLuck.update({view:mkView(),activity:[act(1,1,'play_trainer')]}),null,'Normal events are optional');
+const firstAttack=reactions.createDirector({npcId:'reina',random:()=>.999});
+firstAttack.update({view:mkView(),activity:[]});
+assert.equal(firstAttack.update({view:mkView(),activity:[act(1,1,'attack','Flamethrower')]}).kind,'attack',
+ 'The first CPU attack in RPG always displays its character cut-in');
+assert.equal(firstAttack.update({view:mkView(),activity:[act(5,1,'attack','Slash')]}),null,
+ 'Later attacks still use the limited/random reaction system');
+firstAttack.reset();
+assert.equal(firstAttack.update({view:mkView(),activity:[act(100,1,'attack')]}),null,'Loading never replays old NPC cut-ins');
+assert.equal(firstAttack.update({view:mkView(),activity:[act(101,1,'attack')]}).kind,'attack','Reset permits the first cinematic again');
+assert.equal(reactions.durationFor('attack'),2800,'Attack artwork must remain readable');
+assert.equal(reactions.durationFor('attack',true),2800,'Reduced motion must not hide the image early');
+assert.equal(reactions.durationFor('ko_scored'),2600,'Finishing reaction remains visible');
 assert.equal(reactions.assetFor({characters:{reina:{attack:'/rpg-assets/reactions/reina/attack.webp'}}},'reina','attack'),'/rpg-assets/reactions/reina/attack.webp');
 assert.equal(reactions.assetFor({characters:{reina:{attack:'https://host.test/image.png'}}},'reina','attack'),'/rpg-assets/characters/reina/portraits/primary.png','Reject remote art, keep own portrait');
 assert.equal(reactions.assetFor({characters:{reina:{attack:'/rpg-assets/characters/hana/vn-expressions/neutral.webp'}}},'reina','attack'),'/rpg-assets/characters/reina/portraits/primary.png','Never display another NPC from a misassigned art manifest');
@@ -67,6 +79,10 @@ assert.match(html,/id="npcReaction"/);
 assert.match(html,/src="rpg_match_reactions.js"/);
 assert.match(js,/rpgMode&&rpgNpc/,'Non-RPG CPU duel does not show NPC reactions');
 assert.match(js,/reactions\?\.update\(current\)/,'Reactions observe battle updates');
-assert.match(js,/setTimeout\(notifyRpg,1900\)/,'Final knockout gets a visible beat');
+assert.match(js,/setTimeout\(notifyRpg,3000\)/,'Final knockout waits for the complete NPC image');
 assert.match(rpg,/encodeURIComponent\(duel.npc\)/,'NPC identity is passed to classic duel');
+const css=fs.readFileSync(path.join(__dirname,'../rpg_duel.css'),'utf8');
+assert.match(css,/z-index:680/,'NPC artwork overlays the generic attack banner');
+assert.match(css,/\.npc-reaction-card\.npc-reaction-attack\{animation-duration:2\.8s\}/,
+ 'NPC attack animation must match its 2.8-second lifetime');
 console.log('PASS RPG NPC cut-ins: action feed, damage, KO, final KO, cooldown, cap, art, integration');
