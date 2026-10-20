@@ -79,11 +79,14 @@ const acknowledgeMandatory=async(page)=>{
     .observe(cg,{attributes:true,attributeFilter:['open']});
   });
   // Finish the new greeting after any first-meeting art overlay is dismissed.
-  for(let beat=0;beat<3;beat++){
+  for(let beat=0;beat<8;beat++){
    const next=page.locator('#choices button').filter({hasText:'Continue'});
    if(await next.count()&&!await next.first().isHidden())await next.first().click();
    else break;
   }
+  // Optional social invitations can remain after the greeting; decline before dueling.
+  const politeExit=page.locator('#choices button').filter({hasText:/I should get going|Maybe another time|Leave it there/});
+  if(await politeExit.count()&&!await politeExit.first().isHidden())await politeExit.first().click();
   await page.locator('#characterActions button').filter({hasText:'Duel'}).click();
   await page.locator('#preDuelDialog').waitFor({state:'visible'});
   let staged=await readState(page);
@@ -202,11 +205,14 @@ const acknowledgeMandatory=async(page)=>{
     .observe(cg,{attributes:true,attributeFilter:['open']});
   });
   // Finish the new greeting after any first-meeting art overlay is dismissed.
-  for(let beat=0;beat<3;beat++){
+  for(let beat=0;beat<8;beat++){
    const next=page.locator('#choices button').filter({hasText:'Continue'});
    if(await next.count()&&!await next.first().isHidden())await next.first().click();
    else break;
   }
+  // Optional social invitations can remain after the greeting; decline before dueling.
+  const politeExit=page.locator('#choices button').filter({hasText:/I should get going|Maybe another time|Leave it there/});
+  if(await politeExit.count()&&!await politeExit.first().isHidden())await politeExit.first().click();
   await page.locator('#characterActions button').filter({hasText:'Duel'}).click();
   await page.locator('#preDuelDialog').waitFor({state:'visible'});
   const secondStaged=(await readState(page)).pendingDuel;
