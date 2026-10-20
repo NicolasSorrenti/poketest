@@ -48,10 +48,11 @@ test('all 30 added-character route chapters retain player choices after an extra
  }
 });
 
-test('legacy finale routes gain a back-and-forth and non-route encounters are unchanged',()=>{
- for(const id of regular){
-  const key=id+'_route_4',original=Story.linesFor({storyFlags:{}},key);
-  assert.equal(Dialogue.storyLines(key,original).length,original.length+2,key);
+test('narration-led original routes do not acquire redundant generic dialogue',()=>{
+ for(const id of regular)for(let chapter=1;chapter<=4;chapter++){
+  const key=id+'_route_'+chapter,original=Story.linesFor({storyFlags:{}},key);
+  assert.ok(original.some(x=>x.speaker==='Narrator'),key+' should contain description');
+  assert.strictEqual(Dialogue.storyLines(key,original),original,key+' must not append canned reassurance');
  }
  const event=Pack.events.find(x=>!/\broute\b/.test(x.id)&&Array.isArray(x.lines));
  assert.ok(event,'need a crossover encounter');
