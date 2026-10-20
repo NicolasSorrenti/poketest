@@ -91,9 +91,9 @@
   // cost, not an optional damage bonus. The authoritative reducer already
   // prompts the attacker for the exact Energy cards and commits both atomically.
   if(attack.name==='Searing Flames'&&damage==='60'&&
-     text==='Discard 2 Energy cards attached to Entei or this attack does nothing.'&&
+     text==='Discard 2 Fire Energy cards attached to Entei or this attack does nothing.'&&
      JSON.stringify(attack.cost)===JSON.stringify(['Fire','Fire','Fire']))
-   return Object.freeze({kind:'energy-discard',damage:60,quantity:2,onlyType:null,subject:'Entei'});
+   return Object.freeze({kind:'energy-discard',damage:60,quantity:2,onlyType:'Fire',subject:'Entei'});
   // Base Set 2 Poliwrath has an equivalent printing with slightly different
   // Water Gun wording. Keep the exact historical damage semantics.
   if(attack.name==='Water Gun'&&damage==='30+'&&text==="Does 30 damage plus 10 more damage for each Water Energy attached to Poliwrath but not used to pay for this attack's Energy cost. Extra Energy after the 2nd doesn't count."&&JSON.stringify(attack.cost)===JSON.stringify(['Water','Water','Colorless']))
