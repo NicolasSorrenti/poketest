@@ -1255,7 +1255,14 @@ function renderCompetitiveCircuit(locked){
  root.append(hint);
 }
 function renderBracketProgress(){
- const root=$('bracketProgress');root.replaceChildren();
+ const root=$('bracketProgress');if(!root)return;
+ // Keep bracket DOM stable across ordinary dialogue renders; only game progress updates it.
+ const stamp=JSON.stringify([state.day,...TOURNAMENTS.cups.map(cup=>{
+  const current=TOURNAMENTS.status(state,cup.id);
+  return [cup.id,current.state,current.round,current.results?.length||0];
+ })]);
+ if(root.dataset.tournamentStamp===stamp)return;
+ root.dataset.tournamentStamp=stamp;root.replaceChildren();
  for(const cup of TOURNAMENTS.cups){
   const progress=TOURNAMENTS.status(state,cup.id);
   const model=window.NeoRpgTournamentPresentation?.bracketModel?.(cup,progress,state.day,cast);
