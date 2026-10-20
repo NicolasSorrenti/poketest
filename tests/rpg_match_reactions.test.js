@@ -41,7 +41,9 @@ for(let i=1;i<=30;i++)roll.update({view:mkView(),activity:[act(i*4,1,'attack')]}
 assert.equal(roll.count,4,'Reserve a contextual reaction and knockout even after generic attacks');
 assert.equal(roll.update({view:mkView(5,6),activity:[act(125,0,'attack')]}).kind,'ko_taken');
 assert.equal(roll.count,5);
-assert.equal(roll.update({view:mkView(4,6),activity:[act(130,0,'attack')]}),null,'Enforce hard cap');
+assert.equal(roll.update({view:mkView(4,6),activity:[act(130,0,'attack')]}).kind,'ko_taken','An additional KO may consume the final reserved reaction');
+assert.equal(roll.count,6);
+assert.equal(roll.update({view:mkView(3,6),activity:[act(135,0,'attack')]}),null,'Enforce hard cap');
 roll.reset();assert.equal(roll.count,0);
 assert.equal(roll.update({view:mkView(),activity:[act(500,1,'attack')]}),null,'Reset ignores past actions');
 const noLuck=reactions.createDirector({npcId:'hana',random:()=>.999});
