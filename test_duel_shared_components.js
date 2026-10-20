@@ -36,6 +36,12 @@ try{
  assert.equal(fan.children[0].children[1].classList.contains('hand-inactive'),false);
  assert.equal(fan.children[0].children[3].classList.contains('hand-fan-card'),true);
  fan.children[0].children[1].onClick();assert.equal(clicks,1,'Original click handler preserved');
+ UI.renderHandFan({root:fan,ids:['a','b','c','d'],visible:false,phase:'game',makeCard,getCard:id=>({name:id}),viewportWidth:400});
+ assert.equal(fan.children.length,0,'Closing the hand removes its old cards');
+ assert.equal(fan.classList.contains('hidden'),true);
+ UI.renderHandFan({root:fan,ids:['a','b','c','d'],visible:true,phase:'game',makeCard,getCard:id=>({name:id}),viewportWidth:400});
+ assert.equal(fan.children[0].children.length,4,'Reopening the hand must recreate cards without a state refresh');
+ assert.equal(fan.classList.contains('hidden'),false);
  UI.renderHandFan({root:fan,ids:[],visible:true,phase:'game',makeCard,getCard:id=>({name:id}),viewportWidth:400});
  assert.equal(fan.classList.contains('hidden'),true);
 
