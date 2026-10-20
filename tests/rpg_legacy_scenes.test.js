@@ -44,8 +44,10 @@ test('RPG HTML loads scene prose before the story engine, and narrator receives 
  const html=fs.readFileSync(path.join(__dirname,'..','rpg.html'),'utf8');
  const css=fs.readFileSync(path.join(__dirname,'..','rpg.css'),'utf8');
  const main=fs.readFileSync(path.join(__dirname,'..','rpg.js'),'utf8');
+ const server=fs.readFileSync(path.join(__dirname,'..','server.js'),'utf8');
  assert.ok(html.includes('/rpg_legacy_scenes.js'));
  assert.ok(html.indexOf('/rpg_legacy_scenes.js')<html.indexOf('/rpg_story.js'));
  assert.match(css,/\.dialogue\.is-narration/);
  assert.match(main,/shown\?\.speaker==='Narrator'/);
+ for(const script of ['rpg_legacy_scenes.js','rpg_render_perf.js','rpg_audio.js'])assert.ok(server.includes("pathname==='/"+script+"'"),'missing hosted asset '+script);
 });
