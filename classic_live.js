@@ -284,6 +284,13 @@
    const choices=document.createElement('div');choices.className='choice-list';
    d.options.forEach(item=>{
     const row=document.createElement('label'),input=document.createElement('input');input.type=d.max===1?'radio':'checkbox';input.name=d.id;input.value=item.id;input.checked=decisionSelection.has(item.id);
+    row.classList.add('illustrated-choice');
+    // Selection options keep their authoritative IDs; art is presentation only.
+    const candidate=item.cardId?card(item.cardId):[...cards.values()].find(c=>c.name===item.label||item.label?.endsWith(': '+c.name)||item.label?.startsWith(c.name+' ('));
+    const src=candidate?.images?.small;
+    if(typeof src==='string'&&/^https:\/\//.test(src)){
+     const art=document.createElement('img');art.className='choice-card-art';art.src=src;art.alt=candidate.name||'';art.loading='lazy';row.append(art);
+    }
     input.addEventListener('change',()=>{
      if(d.max===1)decisionSelection.clear();if(input.checked)decisionSelection.add(item.id);else decisionSelection.delete(item.id);
      renderDecisions();});row.append(input,document.createTextNode(item.label));choices.append(row);
