@@ -27,7 +27,9 @@ const fs=require('node:fs');
 for(const page of ['classic_live.html','online.html']){
  const html=fs.readFileSync(__dirname+'/'+page,'utf8');assert.match(html,/id="turnCoach"/);assert.match(html,/duel_experience_ui\.js/);
 }
+const shared=fs.readFileSync(__dirname+'/duel_shared_components.js','utf8');
+assert.match(shared,/class="attack-effect"/,'Attacks are presented by the common renderer');
 for(const page of ['classic_live.js','online.js']){
- const js=fs.readFileSync(__dirname+'/'+page,'utf8');assert.match(js,/ux\.vitals\(/);assert.match(js,/ux\.renderGuide\(/);assert.match(js,/class="attack-effect"/);
+ const js=fs.readFileSync(__dirname+'/'+page,'utf8');assert.match(js,/vitals:ux\.vitals/);assert.match(js,/ux\.renderGuide\(/);assert.match(js,/shared\.renderAttacks\(/);
 }
 console.log('PASS v0.35 HP, statuses, hand types, turn coaching both seats and visible attacks');
