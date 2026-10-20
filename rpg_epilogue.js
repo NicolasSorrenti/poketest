@@ -1,6 +1,7 @@
 'use strict';
 /* End-of-season report and replay archival: only consumes RPG state, never changes TCG combat. */
 (function(root,factory){const api=factory();if(typeof module==='object'&&module.exports)module.exports=api;if(root)root.NeoRpgEpilogue=api;})(typeof window!=='undefined'?window:null,function(){
+ const CONSEQ=typeof module==='object'&&module.exports?require('./rpg_consequences'):window.NeoRpgConsequences;
  const names={hana:'Hana Mizuno',reina:'Reina Kurogane',shiori:'Shiori Tsukishima',yuna:'Yuna Hoshino',
  akari:'Akari Fujimoto',camila:'Camila Vega',marina:'Marina Aoki',kaede:'Kaede Arashi',
  jun:'Jun Arai',sol:'Sol Varela'};
@@ -32,8 +33,10 @@
   else if(friendships.length){title='The People Who Stayed';closing='Not every meaningful victory happens under the tournament lights.';}
   else if(duels.length){title='A Season of Challengers';closing='You kept showing up to play, learn, and discover what this town could offer.';}
   else{title='Ninety Days in Neo Harbor';closing='The season has ended, but every path you took made it your own.';}
+  const turningPoints=CONSEQ?.ending(state)||{comebacks:0,reflections:0,choices:[],lines:[]};
   return {
    day:Math.min(90,Math.max(1,state.day||90)),title,closing,played:duels.length,wins:win,draws:draw,losses:Math.max(0,duels.length-win-draw),
+   turningPoints,seasonLessons:turningPoints.lines,
    points:state.points||0,credits:state.credits||0,cups:cupStates,champions:champions.length,
    partner,closest:friendships.slice(0,3),knownCharacters:friendships.length,
    storyScenes:Object.keys(state.storyDone||{}).filter(id=>!!state.storyDone[id]).length,encounters:Object.keys(state.encountersDone||{}).length,
