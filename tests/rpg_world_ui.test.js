@@ -891,7 +891,8 @@ test('RPG victories award a ten-card booster, displayed once and safe against du
  assert.equal(s.deckJourney.lastPack.cards.length,10);
  assert.equal(r.elements.packDialog.open,true);
  assert.equal(r.elements.packCards.children.length,10);
- assert.match(r.elements.packTitle.textContent,/10-card booster/);
+ assert.match(r.elements.packTitle.textContent,/VICTORY BOOSTER/);
+ assert.match(r.elements.packDescription.textContent,/10 cards/);
  r.elements.packRevealAll.onclick();
  assert.ok(r.elements.packCards.children.every(x=>x.className.includes('revealed')));
  const count=Object.values(s.deckJourney.owned).reduce((a,b)=>a+b,0);
