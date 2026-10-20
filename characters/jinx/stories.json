@@ -477,8 +477,8 @@
           }
         },
         {
-          "label": "Offer to help move whatever she’s setting up",
-          "reply": "Useful and not lecturing me. Rare combination. Come on then.",
+          "label": "Suggest taking the longer, dry path together",
+          "reply": "Practical and not lecturing me. Fine, show me the way.",
           "kind": "support",
           "flag": "jinx_marina_help",
           "delta": {
