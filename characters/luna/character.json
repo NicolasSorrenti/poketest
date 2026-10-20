@@ -10,22 +10,22 @@
     "intro": "O-oh! Sorry, I almost walked into you... again. I'm Luna. Are you okay? I didn't step on your foot, did I?",
     "repeat": "Hi again! I was just... trying not to drop anything this time. How's your day going?",
     "talk": [
-      "I practiced shuffling for an hour and still sent cards flying. The shop lady was very patient with me.",
-      "People keep offering to carry things for me. I always say I can manage, and then I immediately drop them.",
-      "Do you think my shirts are too small? They keep riding up when I reach for high shelves. I should buy bigger ones... eventually.",
-      "I tripped on the arcade stairs yesterday and somehow ended up with my skirt flipped. Three people helped me up. It was so embarrassing.",
-      "I like quiet places. Libraries are nice until I knock over a whole shelf by accident.",
-      "Everyone says I should be more careful. I am careful! The ground just doesn't agree with me."
+      "I spent an hour practicing my shuffle. One card ended up in my shoe. I still can't explain how.",
+      "The shop owner offered to carry my boxes again. I wish people would ask before taking everything out of my hands.",
+      "Every time I reach for the top shelf, my sweater rides up and I forget which box I wanted. I should ask them to move the supplies.",
+      "I tripped on the arcade stairs yesterday. Someone found my deck box under the pinball machine before I even noticed it was missing.",
+      "I went to the library to read old tournament reports and almost pulled down a whole shelf trying to reach the last one.",
+      "I got through a whole match without dropping a card! Then I tripped over my chair. Gravity still has the lead."
     ],
     "flirt": "Y-you're looking at me funny again... Is there something on my face? Or did my shirt slip?",
     "duelWin": "I won...? Oh no, did I do something wrong? You played really well!",
     "duelLose": "Aww, I lost again. But it was fun! Can we play one more? I'll try not to drop my cards this time.",
     "hangouts": [
-      "Luna insists on carrying the drinks and immediately spills one down the front of her shirt. She apologizes for ten minutes straight while trying to dab it dry.",
-      "You help her reach a high shelf at the shop. She stretches up on her toes, shirt riding up completely, and only notices when you look away.",
-      "A quiet park walk turns into her tripping over nothing and landing in your arms. She stays there a second too long before panicking and apologizing.",
-      "At the café she drops her spoon, bends to pick it up, and her top gapes open. She has no idea why the table next to you goes silent.",
-      "She tries to high-five you after a duel and misses, spinning herself around and nearly falling into a display. You catch her. She turns bright red."
+      "At the café, Luna insists on bringing the drinks and spills one onto her sweater. After you move the playmat out of the way, she laughs at herself and asks if you can help find a towel.",
+      "At the shop, Luna reaches for the top shelf, tugs her riding sweater back into place, then asks the owner to put the beginner supplies somewhere everyone can reach.",
+      "Luna stumbles on a loose stone during your park walk. Once she's steady, she pulls a folded tournament bracket from her pocket and starts asking you about your next matchup.",
+      "Over coffee, Luna brings out a handwritten list of plays she wants to practice. She drops her pencil under the table, blushes when her cardigan slips, then gets right back to explaining her plan.",
+      "Luna misses a high-five after a duel and nearly knocks over her deck box. She catches it herself this time, grins, and demands a rematch."
     ]
   },
   "appearance": {
@@ -46,13 +46,41 @@
   },
   "arrivalDay": 15,
   "schedule": [
-    ["library", "cafe", "home"],
-    ["shop", "library", "cafe"],
-    ["home", "park", "library"],
-    ["cafe", "shop", "park"],
-    ["library", "home", "cafe"],
-    ["shop", "park", "library"],
-    ["home", "cafe", "library"]
+    [
+      "library",
+      "cafe",
+      "home"
+    ],
+    [
+      "shop",
+      "library",
+      "cafe"
+    ],
+    [
+      "home",
+      "park",
+      "library"
+    ],
+    [
+      "cafe",
+      "shop",
+      "park"
+    ],
+    [
+      "library",
+      "home",
+      "cafe"
+    ],
+    [
+      "shop",
+      "park",
+      "library"
+    ],
+    [
+      "home",
+      "cafe",
+      "library"
+    ]
   ],
   "stories": "stories.json",
   "artManifest": "art_manifest.json",
