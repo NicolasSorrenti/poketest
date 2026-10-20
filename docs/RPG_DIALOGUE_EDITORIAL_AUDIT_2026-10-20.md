@@ -82,6 +82,8 @@ A full successful RPG regression run at commit `018a81cba93519f93fe1f813d3714d68
 - **UI text:** Reina's rivalry choices now stay anchored to her actual preceding dialogue. Centered story/quest/situational response choices no longer show redundant duration and focus-cost clutter. Activity and chapter journal entries avoid speculative statements about emotional growth.
 - Added comprehensive regression tests for five finale commitment choices, old-save migration, branch exclusion, narrator staging, previous-choice-specific opening variants, native guest continuity, and VN decision copy.
 
+The **full RPG Regression Suite passed** after the relationship, supporting scene, crossover and UI edits: [GitHub Actions run 39441782081](https://github.com/NicolasSorrenti/poketest/actions/runs/39441782081), commit `b93a7a7e5af67b6e8c79b5b832b38b3cee2a2b82`. This covers character-pack generation checks, mandatory-event behavior, save/load checks and the new editorial assertions.
+
 The remaining work is a final long-tail audit of labels, ambient tooltips, edge-case dialogue variants and consistency across other independently maintained UI features. Official TCG card texts must remain canonical because they drive game mechanics.
 
 ## Remaining priority findings
