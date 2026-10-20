@@ -410,7 +410,7 @@ function finishArc(){
 function showSituation(){
  const a=state.activeSituation,e=SITUATIONS.byId(a?.id);
  if(!e)return null;
- if(a.phase==='choice')return {speaker:cast[e.npc]?.name||'Trainer',line:e.intro,
+ if(a.phase==='choice')return {speaker:'Narrator',line:e.intro,
   choices:[...e.options.map((o,i)=>[o.label+' · ⏳ 1 period · '+e.focusCost+' focus','situationChoice:'+i]),['Not now · free','situationCancel']]};
  return {speaker:cast[e.npc]?.name||'Trainer',line:e.options[a.choice].response,
   choices:[['Save this memory · ⏳ 1 period','situationFinish'],['Leave this moment · free','situationCancel']]};
