@@ -26,9 +26,12 @@
  const rpgKey=rpgMode&&rpgDuelId?window.NeoRpgDuelBridge.sessionKey(rpgDuelId):'neoClassicLiveToken';
  const rpgNpc=rpgMode?rpgParams.get('npc'):null;
  const opponentName=rpgMode?(rpgParams.get('npcName')||'Opponent'):'Classic CPU';
- const reactions=rpgMode&&rpgNpc?window.NeoRpgMatchReactions.makeExperience({element:$('npcReaction'),npcId:rpgNpc,npcName:rpgParams.get('npcName')||'Opponent'}):null;
- function notifyRpg(){if(rpgMode&&rpgDuelId&&current?.view?.over&&(current.winner===null||current.winner===0||current.winner===1))window.parent.postMessage(window.NeoRpgDuelBridge.message(rpgDuelId,current.winner),location.origin);}
  const cards=new Map();
+ const reactions=rpgMode&&rpgNpc?window.NeoRpgMatchReactions.makeExperience({
+  element:$('npcReaction'),npcId:rpgNpc,npcName:opponentName,
+  getCard:id=>cards.get(id)||null
+ }):null;
+ function notifyRpg(){if(rpgMode&&rpgDuelId&&current?.view?.over&&(current.winner===null||current.winner===0||current.winner===1))window.parent.postMessage(window.NeoRpgDuelBridge.message(rpgDuelId,current.winner),location.origin);}
  const quick=window.NeoDuelUI;
  const ux=window.NeoExperienceUI;
  const presentation=window.NeoBattlePresentation;
