@@ -57,6 +57,20 @@ The latest code-level integrity check loaded 32 stories through the actual modul
 
 **Verification:** content modules parsed and the character-pack and season-event data were synchronized with generated files. The full GitHub Actions **RPG Regression Suite passed** on commit `c7b9778737baeaa80acb44293d32131b360dc072` ([run 39430094392](https://github.com/NicolasSorrenti/poketest/actions/runs/39430094392)), including the mandatory-event scheduler, JSON character-pack checks, and narrative/UI regression tests. No claim is made that every incidental tooltip, battle bark or image-prompt caption has received line-by-line signoff.
 
+## Fourth milestone: battle dialogue, special moments and everyday world prose
+
+- **All 20 current battle opponents** now have seven distinct short cut-in lines: attack, card play, evolution, Pokémon Power, damage, knockout taken and knockout scored (**140 authored reactions**). We retain the existing 5–6-reaction director limit, priorities, and portrait-safety logic.
+- **All 20 pre-duel previews** have individual NPC openings plus concise context for cup, friendly, rivalry and side-quest matches; existing save-compatible two-line previews and duel-confirmation gates remain unchanged.
+- **All eight optional situational scenes** received more specific setups and direct character responses. Opening descriptions are attributed to Narrator in the live UI, not to an NPC speaking in third person.
+- **All 22 ambient town encounters** now use concrete environmental setups. NPC responses are conversational; non-NPC outcomes remain narrator prose. Preserved encounter windows, prerequisite cup outcomes, choice deltas, completion IDs and save keys.
+- **All 14 repeatable town activities** now report tangible details rather than moral conclusions about friendship, preparation, or personal growth. These are always narrated, even when an NPC happens to be present.
+- **All 20 RPG characters** now have character-specific post-duel memories and acknowledgements in `rpg_reactivity.js`, with supporting cast no longer falling back to one shared template. Character packs still take precedence for their own authored final victory/defeat barks.
+- **Response UI:** route, mandatory-event and supporting-quest choices preserve the final authored spoken line, instead of switching to an artificial "How will you respond?" or "What would you suggest?" speech bubble.
+- Avoided invented details in post-duel dialogue: outcome-only history does **not** prove which Pokémon, Trainer, Switch or knockout was played. Reactions describe plausible character responses to the verified result, not an unsourced turn-by-turn recap.
+- Added regression coverage for battle voice completeness, pre-duel distinctness, natural special-scene responses, correct narration ownership and preserving the actual final line during decisions.
+
+A full successful RPG regression run at commit `018a81cba93519f93fe1f813d3714d68ff300049` is recorded in [GitHub Actions run 39437392722](https://github.com/NicolasSorrenti/poketest/actions/runs/39437392722). The final additional narrator-ownership test is checked by the next CI run.
+
 ## Remaining priority findings
 
 ### High — finale outcomes do not match the romance writing
