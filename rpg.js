@@ -209,7 +209,8 @@ function renderMandatory(){
  }
  if(a.phase==='choice')return {speaker:cast[e.characterId]?.name||'Narrator',line:'How will you respond?',choices:e.choices.map((c,i)=>[c.label,'mandatoryChoice:'+i])};
  const choice=e.choices[a.choice];
- return {speaker:e.kind==='bond'?'✉ '+(cast[e.characterId]?.name||e.characterId)+' · message':'Narrator',line:mandatoryText(choice?.reply||''),choices:[['Continue story ›','mandatoryFinish']]};
+ const responseActor=[...e.lines].reverse().find(line=>cast[line.speaker])?.speaker;
+ return {speaker:e.kind==='bond'?'✉ '+(cast[e.characterId]?.name||e.characterId)+' · message':(cast[responseActor]?.name||'Narrator'),line:mandatoryText(choice?.reply||''),choices:[['Continue story ›','mandatoryFinish']]};
 }
 function mandatoryAction(type,id){
  if(!MANDATORY||!state.mandatoryEventState?.active)return false;
