@@ -230,6 +230,19 @@
   if(!('partner' in state))state.partner=null;
   if(!state.storyFlags||typeof state.storyFlags!=='object'||Array.isArray(state.storyFlags))state.storyFlags={};
   for(const e of E)if(!state.relationships[e.npc])state.relationships[e.npc]={affection:0,trust:0,attraction:0,respect:0,duels:0};
+  // Earlier builds saved the five guests' openly romantic second finale
+  // options without a partner, because those options used kind:'flirt'.
+  // Restore a *single* unambiguous prior choice on load. Never guess a
+  // partner when multiple routes were completed or one already exists.
+  if(!state.partner){
+   const legacy=['jinx','luna','rina','elena','sierra'].filter(npc=>
+    state.storyDone[npc+'_route_5']?.choice===1&&!state.routeOutcomes?.[npc]);
+   if(legacy.length===1&&VN.commitmentReady(state,legacy[0])){
+    state.partner=legacy[0];
+    state.routeOutcomes=state.routeOutcomes||{};
+    state.routeOutcomes[legacy[0]]='romance';
+   }
+  }
   return state;
  }
  function qualifies(e,state,place=state.location){
@@ -257,7 +270,7 @@
   if(choice.kind==='commit'&&!VN.commitmentReady(state,e.npc))throw Error('A deeper bond is required');
   const b=state.relationships[e.npc];for(const [k,v] of Object.entries(choice.delta))b[k]=(b[k]||0)+v;
   if(choice.kind==='commit'){if(VN.commitmentReady(state,e.npc)){state.partner=e.npc;state.routeOutcomes=state.routeOutcomes||{};state.routeOutcomes[e.npc]='romance';}else{state.routeOutcomes=state.routeOutcomes||{};state.routeOutcomes[e.npc]='friendship';}}
-  if(choice.flag==='friendship'){state.routeOutcomes=state.routeOutcomes||{};state.routeOutcomes[e.npc]='friendship';}
+  if(choice.kind==='friend'||choice.flag==='friendship'){state.routeOutcomes=state.routeOutcomes||{};state.routeOutcomes[e.npc]='friendship';}
   if(choice.flag&&choice.flag!=='romance'&&choice.flag!=='friendship')state.storyFlags[e.id]=choice.flag;
   state.storyDone[e.id]={choice:choiceIndex,day:state.day};
   return {event:e,choice,partner:state.partner};
