@@ -125,8 +125,10 @@ test('encounter resumes through a reload and rewards exactly once',()=>{
  const second=launch(first.state());
  second.elements.choices.children[0].onclick();
  assert.equal(second.state().activeEncounter.phase,'response');
+ const spokenReply=second.elements.line.textContent;
  second.elements.choices.children[0].onclick();
  const saved=second.state();
+ assert.notEqual(saved.scene.line,spokenReply,'completed encounter must not repeat its reply');
  assert.equal(saved.day,11);assert.equal(saved.slot,0);
  assert.equal(saved.encountersDone.home_postcard.choice,0);
  assert.equal(saved.activeEncounter,null);
