@@ -49,6 +49,16 @@ function attachedEnergyMatchesType(g,id,type){
  const name=card(g,id).name;
  return name===type+' Energy'||name==='Rainbow Energy'||name==='Miracle Energy';
 }
+// Match each printed Energy type to a DISTINCT attached card; one Rainbow
+// card cannot pay two separate cards' discard requirements.
+function canPayTypedDiscard(g,u,types,indices=u.energies.map((_,i)=>i)){
+ const solve=(position,used)=>{
+  if(position===types.length)return true;
+  return indices.some(i=>!used.has(i)&&attachedEnergyMatchesType(g,u.energies[i],types[position])&&
+   solve(position+1,new Set([...used,i])));
+ };
+ return solve(0,new Set());
+}
 function unit(id,round=0){return {id,under:[],energies:[],attachedTrainers:[],damage:0,status:null,poison:false,playedTurn:round};}
 function allPokemon(p){return [p.active,...p.bench].filter(Boolean);}
 function hasActiveEffect(u,key,g){return Boolean(u&&u[key]&&u[key].expires>g.turnSerial);}
@@ -1508,13 +1518,27 @@ function resolveAttack(g,side,index,chosenBench,energyPicks,extra={}){
    pickables.push(...p.hand.flatMap((id,i)=>isEnergy(card(g,id))?[{id:`hand:${i}`,label:card(g,id).name}]:[]));max=Math.min(2,pickables.length);label='Growth: attach up to 2 Energy from hand';
   }else if(kind==='collect-fire'){
    pickables.push(...p.discard.flatMap((id,i)=>card(g,id).name==='Fire Energy'?[{id:`discard:${i}`,label:card(g,id).name}]:[]));max=Math.min(1,pickables.length);label='Collect Fire: attach a Fire Energy from your discard';
-  }else if(kind==='flame-wheel'||kind==='flamethrower'||kind==='elemental-blast'){
-   pickables.push(...u.energies.flatMap((id,i)=>kind==='flamethrower'&&card(g,id).name!=='Fire Energy'?[]:[{id:`energy:${i}`,label:card(g,id).name}]));
-   min=max=kind==='flame-wheel'||kind==='elemental-blast'?3:Math.min(1,pickables.length);
-   if(kind==='elemental-blast'&&!['Fire','Water','Lightning'].every(name=>u.energies.some(id=>card(g,id).name===name+' Energy')))fail('Elemental Blast requires one attached Fire, Water and Lightning Energy card');
+  }else if(['flame-wheel','flamethrower','elemental-blast','burning-flame','psyburst'].includes(kind)){
+   const fireOnly=['flamethrower','burning-flame','psyburst'].includes(kind);
+   const types=['Fire','Water','Lightning'];
+   pickables.push(...u.energies.flatMap((id,i)=>
+    fireOnly&&!attachedEnergyMatchesType(g,id,'Fire')||
+    kind==='elemental-blast'&&!types.some(t=>attachedEnergyMatchesType(g,id,t))
+    ?[]:[{id:`energy:${i}`,label:card(g,id).name}]));
+   min=max=kind==='flame-wheel'||kind==='elemental-blast'?3:
+    kind==='burning-flame'?roll.neo48BurningHeads:1;
+   if(kind==='elemental-blast'&&!canPayTypedDiscard(g,u,types))
+    fail('Elemental Blast requires three separate Energy cards providing Fire, Water and Lightning');
    if(kind==='flame-wheel'&&u.energies.length<3)fail('Flame Wheel requires three attached Energy cards');
    if(kind==='flamethrower'&&!pickables.length)fail('Flamethrower requires a Fire Energy card to discard');
-   label=kind==='elemental-blast'?'Elemental Blast: choose one Fire, Water and Lightning Energy to discard':`Choose ${min} Energy card(s) to discard`;
+   if(kind==='burning-flame'){
+    if(pickables.length<roll.neo48BurningHeads){roll.damage=0;min=max=0;}
+    else roll.neo48EnergyDiscard=roll.neo48BurningHeads;
+   }
+   if(kind==='psyburst'&&!pickables.length){roll.damage=0;roll.neo48EnergyDiscard=0;min=max=0;}
+   label=kind==='elemental-blast'?'Elemental Blast: discard one Fire, one Water and one Lightning Energy':
+    kind==='burning-flame'?`Burning Flame: discard ${max} Fire Energy`:
+    kind==='psyburst'?'Psyburst: discard 1 Fire Energy':`Choose ${max} Energy card(s) to discard`;
   }
   if(!extra.neo48Answered&&pickables.length&&max>0){
    g.nextDecisionId++;g.pendingDecision=makeDecision({id:`neo48:${g.nextDecisionId}`,actor,kind:'neo-attack-choice',label,options:pickables,min,max,optional:min===0});
@@ -1527,11 +1551,18 @@ function resolveAttack(g,side,index,chosenBench,energyPicks,extra={}){
   if(kind==='sweet-nectar'&&roll.healFullChoice){const picks=nums('own');if(picks.length>1||picks.length&&!(picks[0]===-1?p.active:p.bench[picks[0]])?.damage)fail('Illegal Sweet Nectar target');}
   if(kind==='growth'&&roll.neo48Growth){const picks=nums('hand');if(picks.length>2||picks.some(i=>!Number.isInteger(i)||i<0||i>=p.hand.length||!isEnergy(card(g,p.hand[i]))))fail('Illegal Growth energy');}
   if(kind==='collect-fire'){const picks=nums('discard');if(picks.length>1||picks.some(i=>!Number.isInteger(i)||card(g,p.discard[i])?.name!=='Fire Energy'))fail('Illegal Collect Fire target');}
-  if(['flame-wheel','flamethrower','elemental-blast'].includes(kind)){
-   const picks=nums('energy'),expected=kind==='flamethrower'?Math.min(1,u.energies.length):3;
-   if(picks.length!==expected||picks.some(i=>!Number.isInteger(i)||i<0||i>=u.energies.length))fail('Invalid Neo attack Energy discard');
-   if(kind==='flamethrower'&&picks.some(i=>card(g,u.energies[i])?.name!=='Fire Energy'))fail('Flamethrower must discard a Fire Energy card');
-   if(kind==='elemental-blast'&&(!['Fire Energy','Water Energy','Lightning Energy'].every(name=>picks.some(i=>card(g,u.energies[i]).name===name))||new Set(picks).size!==3))fail('Elemental Blast needs Fire, Water and Lightning Energy');
+  if(['flame-wheel','flamethrower','elemental-blast','burning-flame','psyburst'].includes(kind)){
+   const picks=nums('energy');
+   const expected=kind==='flame-wheel'||kind==='elemental-blast'?3:
+    kind==='burning-flame'?Math.min(roll.neo48BurningHeads,pickables.length):Math.min(1,pickables.length);
+   if(picks.length!==expected||new Set(picks).size!==expected||
+      picks.some(i=>!Number.isInteger(i)||i<0||i>=u.energies.length))
+    fail('Invalid Neo attack Energy discard');
+   if(['flamethrower','burning-flame','psyburst'].includes(kind)&&
+      picks.some(i=>!attachedEnergyMatchesType(g,u.energies[i],'Fire')))
+    fail('Attack requires Fire Energy cards to discard');
+   if(kind==='elemental-blast'&&!canPayTypedDiscard(g,u,['Fire','Water','Lightning'],picks))
+    fail('Elemental Blast needs distinct Fire, Water and Lightning Energy payments');
   }
   extra.neo48Choices=choices;
  }
