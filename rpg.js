@@ -218,7 +218,7 @@ function mandatoryAction(type,id){
 }
 
 const atKey=(id)=>state.day+':'+state.slot+':'+id;
-function advance(n=1,transitionSource='activity'){const beforeDay=state.day,beforeSlot=state.slot;for(let i=0;i<n;i++){state.slot++;if(state.slot>=3){state.slot=0;state.day++;}}if(state.day>90){state.day=91;state.ended=true;log('The Neo Harbor championship season has ended.');}
+function advance(n=1,transitionSource='activity',suppressTimeFlash=false){const beforeDay=state.day,beforeSlot=state.slot;for(let i=0;i<n;i++){state.slot++;if(state.slot>=3){state.slot=0;state.day++;}}if(state.day>90){state.day=91;state.ended=true;log('The Neo Harbor championship season has ended.');}
 state.selected=null;
 if(state.day>beforeDay){
  WORLD.newDay(state,state.day-beforeDay);
@@ -234,7 +234,7 @@ const missedQuests=SIDE.expire(state);if(missedQuests.length)log('A local side-q
 const missedAppointments=APPOINTMENTS.expire(state);
 INTENTIONS.hydrate(state); // Expire yesterday's optional choice before saving the new day.
 for(const plan of missedAppointments)log('You missed your planned meet-up with '+(cast[plan.npc]?.name||'a trainer')+'.');
-queueMandatory();persist();timeFlash(beforeDay,beforeSlot,transitionSource);}
+queueMandatory();persist();if(!suppressTimeFlash)timeFlash(beforeDay,beforeSlot,transitionSource);}
 function say(speaker,line,choices=[]){scene={speaker,line,choices};state.scene=scene;persist();render();}
 function sayConversation(lines,afterChoices=[],reactionId=null){
  if(!Array.isArray(lines)||!lines.length)return;
@@ -620,14 +620,22 @@ function act(action){
 
 const cardNames=new Map(),cardImages=new Map();
 let packArtSerial=0;
+let pendingDuelTimeShift=null;
+function finishDuelRewardPresentation(){
+ const transition=pendingDuelTimeShift;pendingDuelTimeShift=null;
+ // The world clock and all rewards were already persisted before results appeared.
+ if(transition)window.NeoRpgTimeTransitions?.present?.(transition);
+}
 
 function showPackReveal(){
  const pack=state.deckJourney?.lastPack,modal=$('packDialog');
  if(!pack||pack.opened||modal.open)return;
- $('packTitle').textContent=pack.source==='win'?'Victory Booster · Ten Cards':'Training Booster · Ten Cards';
+ const isVictory=pack.source==='win';
  const giver=pack.giver&&cast[pack.giver]?pack.giver:null;
  const setName=COLLECT.SETS[pack.set]?.name||'Base Set';
- $('packTitle').textContent=setName+' · 10-card booster';
+ $('packEyebrow').textContent=isVictory?'✦ DUEL REWARD · YOUR CARDS':'✦ NEO HARBOR · CARD REWARDS';
+ $('packTitle').textContent=isVictory?'VICTORY BOOSTER':'NEW BOOSTER';
+ $('packDescription').textContent=setName+' · '+pack.cards.length+' cards. Tap to flip individual cards, or reveal them all.';
  const portrait=$('packGiver');portrait.replaceChildren();
  const request=++packArtSerial; // An earlier booster image must never overwrite this giver.
  const caption=$('packGiverName');caption.textContent=giver?cast[giver].name+' gives you a '+setName+' booster':'The Lucky Draw · '+setName+' booster';
@@ -666,6 +674,7 @@ function showPackReveal(){
  const cards=[];
  for(const [index,id] of pack.cards.entries()){
   const button=document.createElement('button');button.type='button';button.className='pack-card';button.title='Reveal card '+(index+1);
+  button.style.setProperty('--card-position',String(index));
   const back=document.createElement('span');back.className='pack-card-back';back.textContent='✦';button.append(back);
   const reveal=()=>{
    if(button.className.includes('revealed'))return;
@@ -686,7 +695,7 @@ function showPackReveal(){
   button.onclick=reveal;cards.push(reveal);target.append(button);
  }
  $('packRevealAll').onclick=()=>cards.forEach(show=>show());
- $('packContinue').onclick=()=>{pack.opened=true;persist();modal.close();};
+ $('packContinue').onclick=()=>{pack.opened=true;persist();modal.close();finishDuelRewardPresentation();};
  modal.addEventListener('cancel',e=>e.preventDefault(),{once:true});
  modal.showModal();
 }
@@ -968,9 +977,21 @@ window.addEventListener('message',ev=>{
  sessionStorage.removeItem(BRIDGE.sessionKey(duel.id));
  sessionStorage.removeItem('neoRpgDeck:'+duel.id);
   sessionStorage.removeItem('neoRpgNpcDeck:'+duel.id);
- advance();$('duel').hidden=true;$('battle').src='about:blank';
+ const duelBeforeTime={beforeDay:state.day,beforeSlot:state.slot};
+ advance(1,'duel',true);$('duel').hidden=true;$('battle').src='about:blank';
+ pendingDuelTimeShift={...duelBeforeTime,afterDay:state.day,afterSlot:state.slot,source:'duel'};
  const c=cast[duel.npc];say(c.name,sideOutcome?.text||personalOutcome||REACT.afterDuel(state,duel,receipt,c)|| (receipt.outcome==='Victory'?c.duelWin:receipt.outcome==='Draw'?'A hard-fought draw. Let us play again.':c.duelLose));
- if(awarded)showPackReveal();
+ const continueAfterResult=()=>{
+  if(awarded){
+   showPackReveal();
+   if(!$('packDialog').open)finishDuelRewardPresentation();
+  }else finishDuelRewardPresentation();
+ };
+ // Result first, then the earned booster, then the time wipe. No extra engine settlement.
+ const shown=window.NeoRpgVictoryPresentation?.show?.({
+  receipt,hasBooster:!!awarded,avatar:makeAvatar(duel.npc),onContinue:continueAfterResult
+ });
+ if(!shown)continueAfterResult();
 });
 function renderAppointments(locked){
  const root=$('appointments');root.replaceChildren();
