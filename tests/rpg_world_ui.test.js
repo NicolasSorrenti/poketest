@@ -1145,3 +1145,52 @@ test('daily challenges use the standard pre-duel stage and refresh on the follow
  const again=r.elements.competitiveEvents.children.find(x=>x.children?.[0]?.textContent.includes('Daily Training'));
  assert.ok(again);
 });
+
+test('RPG reacts to a recent personal loss without time or affection rewards and remembers the exchange',()=>{
+ const seed={day:5,slot:1,location:'center',met_reina:true,metReina:true,
+  results:[{id:'earlier-reina',npc:'reina',day:4,won:false,draw:false}]};
+ const r=launch(seed),person=r.elements.people.children.find(x=>x.children?.[1]?.children?.[0]?.textContent==='Reina Kurogane');
+ assert.ok(person,'Reina must be present at the Community Center');
+ assert.ok(person.children[1].children.some(n=>n.textContent==='✦ Something to say'));
+ person.onclick();
+ const key=r.state().scene.reactionId;
+ assert.match(key,/react:duel:reina:earlier-reina/);
+ assert.match(r.state().scene.line,/last game|last match|plan has a hole/);
+ assert.equal(r.state().day,5);assert.equal(r.state().slot,1);
+ assert.equal(r.state().npcReactivity.seen[key],undefined,'opening the scene must not consume it');
+ finishGreeting(r);
+ assert.equal(r.state().npcReactivity.seen[key],true);
+ assert.equal(r.state().relationships.reina.affection,0,'no daily affection grind');
+ const saved=r.state();const again=launch(saved);
+ assert.equal(Reactivity.reaction(again.state(),'reina'),null);
+});
+test('closing a reaction before finishing it leaves the conversation available',()=>{
+ const seed={day:5,slot:1,location:'center',met_reina:true,metReina:true,
+  results:[{id:'older-reina',npc:'reina',day:4,won:true,draw:false}]};
+ const r=launch(seed),person=()=>r.elements.people.children.find(x=>x.children?.[1]?.children?.[0]?.textContent==='Reina Kurogane');
+ person().onclick();
+ const key=r.state().scene.reactionId;
+ assert.ok(key);
+ r.act('dismissDialogue');
+ assert.ok(!r.state().npcReactivity.seen[key],'closing before last line must not mark the memory');
+ person().onclick();
+ assert.equal(r.state().scene.reactionId,key);
+ finishGreeting(r);
+ assert.equal(r.state().npcReactivity.seen[key],true);
+});
+test('RPG rematches show character memory in preview and provide contextual duel followup',()=>{
+ const r=launch({day:5,slot:1,location:'center',met_reina:true,metReina:true,
+  results:[{id:'reina-original',npc:'reina',day:4,won:true,draw:false}]});
+ const person=r.elements.people.children.find(x=>x.children?.[1]?.children?.[0]?.textContent==='Reina Kurogane');
+ assert.ok(person);
+ person.onclick();finishGreeting(r);
+ const duelBtn=r.elements.characterActions.children.find(x=>x.textContent.includes('Duel'));
+ assert.ok(duelBtn);duelBtn.onclick();
+ assert.match(r.elements.preDuelLine.textContent,/last loss|previous result|recalculated|last/i);
+ r.elements.preDuelSkip.onclick();
+ const pending=r.state().pendingDuel;
+ r.listeners.message({data:Bridge.message(pending.id,1),origin:r.loc.origin,source:r.elements.battle.contentWindow});
+ assert.equal(r.state().results.length,2);
+ assert.equal(r.state().lastDuelReceipt.outcome,'Defeat');
+ assert.match(r.state().scene.line,/Last time went differently|last game|previous match/i);
+});
