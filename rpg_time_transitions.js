@@ -35,6 +35,16 @@
       durationMs:DURATIONS[kind]
     });
   }
+  function planTravel(change){
+    const from=typeof change?.from==='string'?change.from.trim():'';
+    const to=typeof change?.to==='string'?change.to.trim():'';
+    if(!from||!to||from===to)return null;
+    return Object.freeze({
+      kind:'travel',period:'travel',title:to.toUpperCase(),
+      eyebrow:'NEO HARBOR / EXPLORATION',subtitle:'NOW ARRIVING',
+      oldDate:'',newDate:'',weekday:'',durationMs:440
+    });
+  }
   function createPresenter(options={}){
     const doc=options.document||((typeof document!=='undefined')?document:null);
     const win=options.window||((typeof window!=='undefined')?window:null);
@@ -57,8 +67,10 @@
       element.remove();
     }
     function present(change){
-      const result=plan(change);
+      const result=change?.kind==='travel'?planTravel(change):plan(change);
       if(!result)return null;
+      // An ordinary location reveal cannot replace a day/period transition.
+      if(result.kind==='travel'&&current&&current.plan?.kind!=='travel')return null;
       dismiss(); // New transitions supersede old ones; no stale overlay or timer.
       if(!doc?.body||typeof doc.createElement!=='function')return result;
       const reduced=!!win?.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches;
@@ -96,11 +108,11 @@
       doc.addEventListener?.('keydown',onKey,true);
       doc.body.append(element);
       const timer=setTimer(dismiss,(reduced?140:result.durationMs)+100);
-      current={element,timer,onKey,finishAnimation};
+      current={element,timer,onKey,finishAnimation,plan:result};
       return result;
     }
-    return {present,dismiss,get active(){return !!current;}};
+    return {present,presentTravel:detail=>present({...detail,kind:'travel'}),dismiss,get active(){return !!current;}};
   }
   const defaultPresenter=createPresenter();
-  return {plan,createPresenter,present:detail=>defaultPresenter.present(detail),dismiss:()=>defaultPresenter.dismiss()};
+  return {plan,planTravel,createPresenter,present:detail=>defaultPresenter.present(detail),presentTravel:detail=>defaultPresenter.presentTravel(detail),dismiss:()=>defaultPresenter.dismiss()};
 });

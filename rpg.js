@@ -1338,7 +1338,7 @@ const rpgPanelGroups={
  plans:['WHAT NEXT?','TODAY\'S PRIORITY','UPCOMING PLANS','AROUND TOWN NOW'],
  progress:['YOUR 90-DAY JOURNEY','TOURNAMENT BRACKETS','YOUR DECK','SEASON JOURNAL']
 };
-let rpgActivePanel='plans',rpgLocalTab='people';
+let rpgActivePanel='plans',rpgLocalTab='people',lastRenderedLocation=null;
 function ensureRpgLayout(){
  if(typeof document.querySelector!=='function')return;
  const sidebar=document.querySelector('.sidebar'),sceneRoot=$('scene');
@@ -1494,6 +1494,15 @@ function renderRpgActions(locked,shown){
  dock.append(body);
 }
 function render(){
+ // Detect actual location changes after the first render; navigation remains free.
+ const previousLocation=lastRenderedLocation;
+ lastRenderedLocation=state.location;
+ if(previousLocation&&previousLocation!==state.location){
+  window.NeoRpgTimeTransitions?.presentTravel?.({
+   from:places[previousLocation]?.[0]||previousLocation,
+   to:places[state.location]?.[0]||state.location
+  });
+ }
  ensureRpgLayout();
  maybeStartMandatory();
  renderJourney();
