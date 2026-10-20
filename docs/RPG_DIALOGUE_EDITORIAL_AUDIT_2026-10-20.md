@@ -71,11 +71,24 @@ The latest code-level integrity check loaded 32 stories through the actual modul
 
 A full successful RPG regression run at commit `018a81cba93519f93fe1f813d3714d68ff300049` is recorded in [GitHub Actions run 39437392722](https://github.com/NicolasSorrenti/poketest/actions/runs/39437392722). The final narrator-ownership and activity/encounter tests also **passed**, in [run 39437564357](https://github.com/NicolasSorrenti/poketest/actions/runs/39437564357) at commit `76a2d817d3aea477cb514d4f92d94dd84466269c`.
 
+## Fifth milestone: meaningful bond chapters, crossovers and consistent relationship outcomes
+
+**Now implemented on main:**
+- **Five guest romance finales:** Jinx, Luna, Rina, Elena and Sierra now offer clearly differentiated friendship (`friend`), romantic commitment (`commit`) and open-ended (`honest`) choices in their chapter-five scenes. The historic option indexes, choice flags, relationship deltas and prerequisites are unchanged, so conversations and dependent conditions retain continuity.
+- **Recorded relationships:** `rpg_story.js` now applies the friendship outcome when `choice.kind === 'friend'`, records `partner` and romance only on an explicit `commit` option, and rejects attempts to commit to another partner. An older save with exactly **one** compatible previously completed guest romantic option can recover that relationship; ambiguous multi-romance saves and existing partner choices are left untouched.
+- **Supporting depth:** All **15** bond/guest chapter scenes in `rpg_bond_chapters.js` now have natural speaker-to-speaker exchanges with concrete stage directions. All 30 choice responses and 18 prior-choice-specific opening lines were tightened. Save-index-sensitive chapters retain five lines and all event metadata.
+- **Guest crossovers:** The four character-pack Jinx/Sol crossover scenes with Alma/Marina now use genuine ensemble dialogue and short Narrator beats. They preserve the earlier choice's opening variant, and avoid giving Jinx's dialogue to Marina or Alma.
+- **Native supporting stories:** `rpg_narrative_pack.js` now has **nine** revised Jun/Teo/Iris chapters and **eight** original-cast crossovers, with descriptions and grounded conversations. Their 34 branch responses no longer read like moral summaries. All 17 retain six-line staging, scene IDs and choice metadata.
+- **UI text:** Reina's rivalry choices now stay anchored to her actual preceding dialogue. Centered story/quest/situational response choices no longer show redundant duration and focus-cost clutter. Activity and chapter journal entries avoid speculative statements about emotional growth.
+- Added comprehensive regression tests for five finale commitment choices, old-save migration, branch exclusion, narrator staging, previous-choice-specific opening variants, native guest continuity, and VN decision copy.
+
+The remaining work is a final long-tail audit of labels, ambient tooltips, edge-case dialogue variants and consistency across other independently maintained UI features. Official TCG card texts must remain canonical because they drive game mechanics.
+
 ## Remaining priority findings
 
-### High — finale outcomes do not match the romance writing
+### Resolved — five guest romance finales are recorded correctly
 
-Five character-pack romantic finales — Jinx, Luna, Rina, Elena and Sierra — currently have only `support`, `honest` and/or `flirt` choice kinds. `rpg_story.js` records partnership when `choice.kind === 'commit'`, while Sol has an explicit `commit` and `friend` branch. Consequently, apparently romantic endings from those five packs are not mechanically recorded as committed relationships. This is **not fixed by the dialogue edits**, and needs a deliberate narrative-systems update, legacy save handling, and regression tests.
+Finale index 1 is now an explicit romantic commitment and index 0 is an explicit friendship branch for Jinx, Luna, Rina, Elena and Sierra; the third remains open-ended. Old-save romance recovery is deliberately conservative. The behavior has dedicated regression coverage in `tests/rpg_guest_romance.test.js`.
 
 ### Medium — voice continuity across content layers
 
