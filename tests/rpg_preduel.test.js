@@ -5,6 +5,20 @@ const cast={hana:{name:'Hana Mizuno',style:'Teamwork'},reina:{name:'Reina Kuroga
 const places={shop:['The Lucky Draw'],center:['Community Center'],arcade:['Pixel Palace']};
 const fresh=(other={})=>({day:8,slot:1,location:'shop',relationships:{hana:{affection:5},reina:{affection:0}},...other});
 const duel=(extra={})=>({id:'npc-hana-8-1-0',npc:'hana',day:8,slot:1,opponent:'power_reserve',playerDeck:'blackout',...extra});
+test('all twenty opponents have distinct in-character pre-match invitations',()=>{
+ const ids=['hana','reina','shiori','yuna','akari','camila','marina','kaede','jinx','luna','sol','rina','elena','sierra','jun','teo','iris','elio','alma','nereo'];
+ const everyone=Object.fromEntries(ids.map(id=>[id,{name:id,style:'Personal deck'}]));
+ const lines=ids.map(id=>{
+  const d=duel({npc:id,id:'match-'+id});
+  const scene=PRE.describe(fresh(),d,{cast:everyone,places});
+  assert.equal(scene.lines.length,2,'save-compatible two-line preview '+id);
+  assert.equal(scene.lines[0].speaker,'Narrator');
+  assert.equal(scene.lines[1].speaker,id);
+  assert.ok(scene.lines[1].text.length>20,'missing authored line '+id);
+  return scene.lines[1].text;
+ });
+ assert.equal(new Set(lines).size,ids.length,'distinct characters should not share pre-duel scripts');
+});
 test('staging is explicit, persists readiness and never launches on description',()=>{
  const d=duel();PRE.stage(d);
  assert.equal(PRE.isReady(d),true);assert.equal(PRE.isLaunched(d),false);
