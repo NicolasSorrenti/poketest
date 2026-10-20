@@ -69,10 +69,12 @@ assert.equal(widgets.rpgInfoToggle.focused,true,'Escape returns focus to the ope
 widgets.rpgMapToggle.click();
 mapPanel.click({target:{closest(selector){return selector==='#places button'?{}:null}}});
 assert.equal(nav.active,null,'selecting a location closes the map');
+assert.equal(widgets.rpgMapToggle.focused,true,'travel must restore focus outside the now-inert drawer');
 
 widgets.rpgInfoToggle.click();
 nav.onLocationChange();
 assert.equal(nav.active,null,'travel always closes information panel');
+assert.equal(widgets.rpgInfoToggle.focused,true,'automatic location change returns focus to info toggle');
 
 widgets.rpgMapToggle.click();
 mapPanel.closeButton.click();
