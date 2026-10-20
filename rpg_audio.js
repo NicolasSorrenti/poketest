@@ -32,7 +32,7 @@
   if(!value||typeof value!=='object'||Array.isArray(value))return {...DEFAULTS};
   return {
    enabled:typeof value.enabled==='boolean'?value.enabled:DEFAULTS.enabled,
-   volume:value.volume===undefined?DEFAULTS.volume:clamp(value.volume),
+   volume:value.volume===undefined||value.volume===null||!Number.isFinite(Number(value.volume))?DEFAULTS.volume:clamp(value.volume),
    ambience:typeof value.ambience==='boolean'?value.ambience:DEFAULTS.ambience
   };
  }
@@ -93,7 +93,14 @@
    const nodes=ambienceNodes;ambienceNodes=null;
    try{nodes.gain.gain.setTargetAtTime(0,context.currentTime,.055);}catch{}
    // Stopping nodes releases CPU and prevents a lingering continuous audio signal.
-   for(const osc of nodes.oscillators)try{osc.stop(context.currentTime+.25);}catch{}
+   let remaining=nodes.oscillators.length;
+   for(const osc of nodes.oscillators){
+    osc.onended=()=>{
+     try{osc.disconnect();}catch{}
+     if(--remaining===0)try{nodes.gain.disconnect();}catch{}
+    };
+    try{osc.stop(context.currentTime+.25);}catch{osc.onended?.();}
+   }
   }
   function updateAmbience(){
    if(!context||!activated||!config.enabled||!config.ambience||config.volume===0||paused||doc?.hidden){
