@@ -65,18 +65,3 @@ body.rpg-duel .npc-reaction:not(.hidden){
 @media(prefers-reduced-motion:reduce){
  .npc-reaction-card,.npc-reaction-card.is-finisher,.npc-reaction-portrait img{animation:none!important}
 }
-
-/* Display the opponent artwork only for story battles, never Cube/Single Match. */
-body.rpg-duel .rpg-opponent-portrait{width:66px;height:78px;flex:0 0 66px;
- border-radius:8px;border:1px solid #d68ca8;
- background:linear-gradient(135deg,#343c61,#151b33);
- display:flex;align-items:flex-end;justify-content:center;overflow:hidden;
- box-shadow:0 0 14px #cc61933d}
-body.rpg-duel .rpg-opponent-portrait img{width:100%;height:100%;
- object-fit:contain;object-position:center bottom}
-body.rpg-duel .rpg-opponent-portrait.no-art::after{
- content:'✦';font-size:34px;color:#e9bfd9;margin:auto}
-@media(max-width:600px){
- body.rpg-duel .rpg-opponent-portrait{width:46px;height:54px;flex-basis:46px}
- body.rpg-duel .opponent-territory .trainerlabel{gap:7px}
-}
