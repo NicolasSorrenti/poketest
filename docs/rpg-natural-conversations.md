@@ -25,3 +25,20 @@ This replaces the permanent 8–10-command character menu with a VN-first design
 New JSON character packs continue to define their intro, repeat, personality, story dialogue, and authored choices. Never insert universal stat-granting menu actions into their greetings. Use organically different lines for NPC voices, and reserve consequential choice prompts for important situations.
 
 Run `npm run test:rpg`; key regression files are `tests/rpg_conversations.test.js`, `tests/rpg_story.test.js`, and `tests/rpg_world_ui.test.js`. Additional checks cover planned dates, situations, and the CG gallery.
+
+
+## Narrative direction — quiet subtext, Persona 4-inspired pacing
+
+**Never make a character say what the player can already see.** Physical activity, glances, hesitations, and changed behavior belong in `Narrator` beats, not in a speech. In a story event's `lines` array, use `{"speaker":"Narrator","text":"..."}` for short descriptions; protagonist and NPC lines keep their normal speaker IDs. The RPG visually distinguishes the narration from dialogue.
+
+- **Description instead of self-commentary.** Bad: NPC says "I lower my head and nervously fiddle with my cards because I'm embarrassed." Better: Narrator says "The card sleeve bends between her fingers. She sets it down before it creases." NPC says "You didn't see that."
+- **Evidence before explanation.** A missed train, an untouched second cup, a deck with a crossed-out list, or a player asking for one more game can communicate a change more naturally than "You helped me grow" or "I'm finally learning to trust."
+- **Conversational economy.** Two short lines and one pause often convey more than a monologue. Characters interrupt, disagree, joke, dodge, or change the subject; emotional breakthroughs should be rare and character-specific.
+- **Dialogue must be reactive.** Each response should relate directly to the preceding remark or visible action. Avoid isolated aphorisms, repeated reassurances and therapist-style speeches.
+- **Choices must have distinct, believable responses.** Don't make every branch equally flattering or romantic. Friendship and graceful refusals should remain valid; never claim a date, victory or commitment that mechanics haven't recorded.
+- **Stay inside the scene.** Use location-specific objects and stakes (bracket, deck box, ferry, receipt, café aisle); avoid imported TCG-era mechanics such as the later Supporter Trainer subtype.
+- **Short screen-sized beats.** Write scene descriptions as compact, concrete moments rather than paragraphs of prose. Avoid copying characters, text or exact scenes from Persona; borrow the narrative economy, ordinary-life specificity, and social-link subtext.
+
+Suggested review method: read the scene **without speaker names** and ask whether the NPC is still recognizable; read just the narration and see whether the physical story is understandable; then play each choice and verify that the response acknowledges it. Keep IDs, flags, chapter windows and choice kinds stable when rewriting a shipped route.
+
+The original eight characters' revised source is `rpg_legacy_scenes.js` (32 scenes). Their metadata and mechanical outcome branches remain in `rpg_story.js`. The six guest character packs retain their original JSON schemas; any new narrated line can be authored directly there and then regenerated with `npm run characters:build`.
