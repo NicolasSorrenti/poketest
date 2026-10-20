@@ -1572,35 +1572,56 @@ function renderRpgActions(locked,shown){
  $('dialogue').hidden=!hasDialogue;
  dock.hidden=hasDialogue;
  if(hasDialogue)return;
- dock.replaceChildren();
- const header=document.createElement('div');header.className='rpg-dock-header';
- const heading=document.createElement('strong');heading.textContent='Explore '+places[state.location][0];
- header.append(heading);
- const tabs=document.createElement('div');tabs.className='rpg-dock-tabs';
- for(const [id,title] of [['people','Characters'],['stories','Events'],['circuit','Circuit'],['activities','Activities']]){
-  const b=document.createElement('button');b.textContent=title;b.className=id===rpgLocalTab?'active':'';
-  b.setAttribute('aria-pressed',String(id===rpgLocalTab));b.onclick=()=>{rpgLocalTab=id;renderRpgActions(false,{speaker:'Narrator',line:'',choices:[]});};
-  tabs.append(b);
+ // The dock persists across dialogue/season updates: never throw away focused tabs
+ // or the user's scroll position just to refresh event availability.
+ let header=dock.querySelector('.rpg-dock-header');
+ let body=dock.querySelector('.rpg-dock-items');
+ if(!header||!body){
+  dock.replaceChildren();
+  header=document.createElement('div');header.className='rpg-dock-header';
+  const heading=document.createElement('strong');heading.className='rpg-dock-heading';
+  header.append(heading);
+  const tabs=document.createElement('div');tabs.className='rpg-dock-tabs';
+  for(const [id,title] of [['people','Characters'],['stories','Events'],['circuit','Circuit'],['activities','Activities']]){
+   const button=document.createElement('button');button.type='button';button.dataset.tab=id;
+   button.textContent=title;
+   button.onclick=()=>{rpgLocalTab=id;renderRpgActions(false,{speaker:'Narrator',line:'',choices:[]});};
+   tabs.append(button);
+  }
+  header.append(tabs);body=document.createElement('div');body.className='rpg-dock-items';
+  dock.append(header,body);
  }
- header.append(tabs);dock.append(header);
- const body=document.createElement('div');body.className='rpg-dock-items';
+ header.querySelector('.rpg-dock-heading').textContent='Explore '+places[state.location][0];
+ for(const button of header.querySelectorAll('[data-tab]')){
+  const selected=button.dataset.tab===rpgLocalTab;
+  button.classList.toggle('active',selected);button.setAttribute('aria-pressed',String(selected));
+ }
+ const entries=[];
  const ids=rpgLocalTab==='people'?['people']:rpgLocalTab==='stories'?['storyEvents','situationEvents','sideQuestEvents','townEncounters']:rpgLocalTab==='circuit'?['competitiveEvents']:['townActivities','activities'];
- for(const id of ids)for(const source of $(id)?.children||[]){
-  if(source.tagName!=='BUTTON'||source.disabled)continue;
-  const b=document.createElement('button');b.className='rpg-dock-action';
-  const text=source.querySelector('strong')?.textContent||source.textContent||'';
-  b.textContent=text.replace(/\s*·\s*⏳[^·]*/g,'').replace(/\s*·\s*\+\d+[^·]*/g,'').trim();
-  b.onclick=()=>source.click();body.append(b);
+ for(const id of ids){
+  const sources=[...($(id)?.children||[])];
+  for(let i=0;i<sources.length;i++){
+   const source=sources[i];if(source.tagName!=='BUTTON'||source.disabled)continue;
+   const text=source.querySelector('strong')?.textContent||source.textContent||'';
+   const label=text.replace(/\s*·\s*⏳[^·]*/g,'').replace(/\s*·\s*\+\d+[^·]*/g,'').trim();
+   entries.push({key:id+':'+i+':'+label,label,onClick:()=>source.click()});
+  }
  }
  if(rpgLocalTab==='activities'&&state.location==='shop'&&state.deckJourney?.starter&&!controlsLocked()){
-  const shop=document.createElement('button');
-  shop.type='button';shop.className='rpg-dock-action booster-shop-entry';
-  shop.textContent='✦ Browse booster packs · free';
-  shop.onclick=openBoosterShop;
-  body.prepend(shop);
+  entries.unshift({key:'shop:booster',label:'✦ Browse booster packs',onClick:openBoosterShop});
  }
- if(!body.children.length){const p=document.createElement('p');p.textContent=rpgLocalTab==='people'?'Nobody is around right now. Try another period.':'Nothing available here right now.';body.append(p);}
- dock.append(body);
+ window.NeoRpgRenderPerf.reconcileKeyed(body,entries,
+  ()=>{const button=document.createElement('button');button.type='button';button.className='rpg-dock-action';return button;},
+  (button,item)=>{
+   if(button.textContent!==item.label)button.textContent=item.label;
+   button.onclick=item.onClick;
+   button.classList.toggle('booster-shop-entry',item.key==='shop:booster');
+  });
+ if(!entries.length){
+  const p=document.createElement('p');p.className='empty-note';
+  p.textContent=rpgLocalTab==='people'?'Nobody is around right now. Try another period.':'Nothing available here right now.';
+  body.append(p);
+ }
 }
 function render(){
  // Detect actual location changes after the first render; navigation remains free.
@@ -1641,14 +1662,27 @@ function render(){
  $('quickNext').textContent=state.slot===2?'☾ END DAY · ⏳':'▶ NEXT PERIOD · ⏳';
  $('quickNext').disabled=ended||locked;
  $('quickHome').disabled=locked||state.location==='home';
- $('places').replaceChildren();
- for(const [id,[name,detail]] of Object.entries(places)){
-  const b=document.createElement('button');b.className='place '+(id===state.location?'selected':'');
-  const glyph={home:'⌂',shop:'♠',arcade:'✦',park:'❀',cafe:'☕',center:'♜',library:'▤'}[id];
-  b.textContent=glyph+'  '+name;b.disabled=locked;b.setAttribute('aria-current',id===state.location?'location':'false');b.onclick=()=>{state.location=id;state.selected=null;persist();say('Narrator',detail)};
-  const status=document.createElement('span');status.className='place-status';const count=state.day<=90?SCHEDULES.peopleAt(state.day,state.slot,id,publicAppointments(id)).length:0;
-   status.textContent=id===state.location?'HERE':count?count+' HERE':'›';b.append(status);$('places').append(b);
- }
+ const placeEntries=Object.entries(places).map(([id,[name,detail]])=>({key:id,id,name,detail}));
+ window.NeoRpgRenderPerf.reconcileKeyed($('places'),placeEntries,
+  ()=>{const button=document.createElement('button');button.type='button';const status=document.createElement('span');
+   status.className='place-status';button.append(status);return button;},
+  (button,item)=>{
+   const {id,name,detail}=item;
+   const glyph={home:'⌂',shop:'♠',arcade:'✦',park:'❀',cafe:'☕',center:'♜',library:'▤'}[id];
+   const selected=id===state.location;
+   const desired=glyph+'  '+name;
+   if(button.firstChild?.nodeType===3){
+    if(button.firstChild.nodeValue!==desired)button.firstChild.nodeValue=desired;
+   }else button.prepend(document.createTextNode(desired));
+   button.className='place'+(selected?' selected':'');
+   button.disabled=locked;
+   button.setAttribute('aria-current',selected?'location':'false');
+   button.onclick=()=>{state.location=id;state.selected=null;persist();say('Narrator',detail);};
+   const status=button.querySelector('.place-status');
+   const count=state.day<=90?SCHEDULES.peopleAt(state.day,state.slot,id,publicAppointments(id)).length:0;
+   const label=selected?'HERE':count?count+' HERE':'›';
+   if(status.textContent!==label)status.textContent=label;
+  });
  $('placeTitle').textContent=places[state.location][0];$('placeDetail').textContent=places[state.location][1];
  const bgFiles={home:'home.jpg',shop:state.slot===2?'card-shop-evening.png':'card-shop-day.png',arcade:'arcade.jpg',park:'park.jpg',cafe:'cafe.jpg',center:'center.jpg',library:'library.jpg'};
  $('scene').style.backgroundImage="linear-gradient(0deg,#090b18ec 0%,#090b1860 80%),url('/rpg-assets/"+bgFiles[state.location]+"')";
@@ -1660,8 +1694,12 @@ function render(){
  const showingEncounter=state.activeEncounter?WORLD.byEncounter(state.activeEncounter.id):null;
  const showingArc=state.activeArc?ARC.byId(state.activeArc.id):null;
  const sideQuest=state.activeSideQuest?SIDE.byId(state.activeSideQuest.id):null,sideOwner=sideQuest?.stages[state.sideQuests[state.activeSideQuest?.id]?.step]?.npc;
-  const portraitId=mandatoryPortrait||showingSituation?.npc||showingStory?.npc||showingEncounter?.npc||(showingArc?'reina':null)||sideOwner||state.selected,portraitRoot=$('portrait');portraitRoot.replaceChildren();
- if(portraitId&&cast[portraitId])portraitRoot.append(makeAvatar(portraitId));
+  const portraitId=mandatoryPortrait||showingSituation?.npc||showingStory?.npc||showingEncounter?.npc||(showingArc?'reina':null)||sideOwner||state.selected,portraitRoot=$('portrait');
+ const nextPortrait=portraitId&&cast[portraitId]?portraitId:'';
+ if(portraitRoot.dataset.npc!==nextPortrait){
+  portraitRoot.dataset.npc=nextPortrait;portraitRoot.replaceChildren();
+  if(nextPortrait)portraitRoot.append(makeAvatar(nextPortrait));
+ }
  $('homeBanner').hidden=state.location!=='home'||!!portraitId;
  $('homeBanner').textContent='YOUR APARTMENT  ·  DAY '+state.day+'  ·  '+periods[state.slot]+' — Prepare your deck, review your plans or rest.';
  let shown=showingMandatory?renderMandatory():showingSituation?showSituation():showingStory?renderStory():showingEncounter?showEncounter():showingArc?showArc():state.activeSideQuest?showSideQuest():scene;
