@@ -1184,6 +1184,8 @@ test('RPG rematches show character memory in preview and provide contextual duel
  const person=r.elements.people.children.find(x=>x.children?.[1]?.children?.[0]?.textContent==='Reina Kurogane');
  assert.ok(person);
  person.onclick();finishGreeting(r);r.act('dismissDialogue');
+ assert.equal(r.state().selected,'reina','talking should not deselect the character');
+ assert.ok(r.elements.characterActions.children.some(b=>b.textContent.includes('Duel')),'Duel button remains accessible');
  r.act('duel:reina');
  r.elements.preDuelNext.onclick();
  assert.match(r.elements.preDuelLine.textContent,/last loss|previous result|recalculated|last/i);
