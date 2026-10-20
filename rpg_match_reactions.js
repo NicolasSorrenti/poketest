@@ -319,13 +319,19 @@
  }
  function assetFor(manifest,npcId,kind){
   const entry=manifest?.characters?.[npcId];
-  const candidate=(entry&&typeof entry==='object'&&(entry[kind]||entry.default))||PORTRAITS[npcId];
-  const belongsToNpc=path=>path.startsWith('/rpg-assets/'+npcId+'.')||
+  const belongsToNpc=path=>typeof path==='string'&&(
+   path.startsWith('/rpg-assets/'+npcId+'.')||
    path.startsWith('/rpg-assets/characters/'+npcId+'/')||
-   path.startsWith('/rpg-assets/reactions/'+npcId+'/');
+   path.startsWith('/rpg-assets/reactions/'+npcId+'/'));
   const valid=path=>typeof path==='string'&&/^\/rpg-assets\/[a-z0-9/_-]+\.(?:png|webp|jpe?g)$/i.test(path)&&belongsToNpc(path);
-  // Invalid/misassigned images must never display a different character.
-  return valid(candidate)?candidate:(valid(PORTRAITS[npcId])?PORTRAITS[npcId]:null);
+  // Prefer the event's real expression, then a compatible reaction from the
+  // same NPC. A malformed or cross-character manifest entry is never trusted.
+  const kinds={weakness_hit:['weakness_hit','hurt','ko_taken'],
+   status_hit:['status_hit','hurt'],big_hit:['big_hit','hurt'],
+   hurt:['hurt','big_hit'],ko_taken:['ko_taken','hurt'],
+   ko_scored:['ko_scored'],attack:['attack']};
+  const candidates=[...(kinds[kind]||[kind]).map(name=>entry?.[name]),entry?.default,PORTRAITS[npcId]];
+  return candidates.find(valid)||null;
  }
  // Presentation duration is independent of movement accessibility preferences.
  // In reduced-motion mode the static card remains readable for just as long.
@@ -393,7 +399,8 @@
     // Preload the RPG character art, including the attack pose, before combat.
     preloadImages=[];
     if(typeof media?.Image==='function'){
-     for(const path of new Set([assetFor(manifest,npcId,'attack'),assetFor(manifest,npcId,'default')].filter(Boolean))){
+     for(const path of new Set(['attack','weakness_hit','status_hit','big_hit','hurt','ko_taken','ko_scored','default']
+      .map(kind=>assetFor(manifest,npcId,kind)).filter(Boolean))){
       const image=new media.Image();image.src=path;preloadImages.push(image);
      }
     }
