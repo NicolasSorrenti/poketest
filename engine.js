@@ -1817,7 +1817,7 @@ class Engine{
   if(/^If the Defending Pok[eé]mon has any Energy cards attached to it, choose 1 and discard it\.$/i.test(t))return 'discardDefenderEnergy';
   if(/^Flip a coin\. If heads, Defending Pok[eé]mon is now (Poisoned|Paralyzed)\.$/i.test(t))return 'coinStatus';
   if(/^Does (\d+) damage times the number of Energy cards attached to the Defending Pok[eé]mon\.$/i.test(t))return 'defenderEnergyTimes';
-  if(/^Discard 1 (?:Fire )?Energy card attached to [^.]+ or this attack does nothing\.$/i.test(t))return 'discardOneRequired';
+  if(/^Discard 1 Energy card attached to [^.]+ or this attack does nothing\.$/i.test(t)||(a?.name==='Flamethrower'&&/^Discard 1 Fire Energy card attached to [^.]+ or this attack does nothing\.$/i.test(t)))return 'discardOneRequired';
   if(/^Does damage equal to half the Defending Pok[eé]mon's remaining HP \(rounded down to the nearest 10\)\.$/i.test(t))return 'halfRemainingHPDown';
   if(/^Flip a coin\. If heads, the Defending Pok[eé]mon is now Poisoned; if tails, it is now Confused\.$/i.test(t))return 'poisonOrConfuse';
   if(/^Both the Defending Pok[eé]mon and [^.]+ are now Confused \(after doing damage\)\.$/i.test(t))return 'bothConfused';
@@ -1832,7 +1832,7 @@ class Engine{
   if(/^Flip a coin\. If heads, this attack does (\d+) more damage\.$/i.test(t))return 'bonus';
   if(/^Flip a coin\. If tails, this attack does nothing\.$/i.test(t))return 'fail';
   if(/^Discard all Energy cards attached to (?:this Pokémon|[\w'’ -]+) in order to use this attack\.$/i.test(t))return 'discardAll';
-  if(/^Discard (\d+) (?:Fire )?Energy cards? attached to (?:this Pokémon|[\w'’ -]+) in order to use this attack\.$/i.test(t))return 'discardSome';
+  if(/^Discard (\d+) Energy cards? attached to (?:this Pokémon|[\w'’ -]+) in order to use this attack\.$/i.test(t)||(a?.name==='Flamethrower'&&/^Discard (\d+) Fire Energy cards? attached to (?:this Pokémon|[\w'’ -]+) in order to use this attack\.$/i.test(t)))return 'discardSome';
   if(/^Remove (?:1|one|2|two) damage counters? from (?:this Pokémon|[\w'’ -]+)\.$/i.test(t))return 'heal';
   if(/^Flip a coin\. If tails, this attack does nothing\. Either way, you can't use this attack again as long as [^.]+ stays in play[^]*$/i.test(t))return 'oncePerPlayCoin';
   if(/^Discard 1 Energy card attached to [^.]+ in order to use this attack\. If a Pok[eé]mon Knocks Out [^.]+ during your opponent's next turn, Knock Out that Pok[eé]mon\.$/i.test(t))return 'destinyBond';
