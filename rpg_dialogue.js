@@ -681,8 +681,8 @@
  const guestRouteBeats={
   "jinx": [
     [
-      "A reputation is a lot to carry into a conversation.",
-      "You should see how much easier it is to carry when people stop pretending to be polite."
+      "You make everybody prove they're worth your time?",
+      "Only the people who look like they'd enjoy proving me wrong."
     ],
     [
       "Have you ever wanted to play without an audience?",
@@ -785,8 +785,8 @@
       "In theory, no. In practice... keep walking."
     ],
     [
-      "You don't have to organize how this turns out.",
-      "A rare offer. Uncertainty is easier to face when someone chooses to remain."
+      "Are you sure you're all right leaving next Friday open?",
+      "No. That's part of why I want to try it."
     ]
   ],
   "sierra": [
