@@ -147,6 +147,33 @@ const acknowledgeMandatory=async(page)=>{
   const inner=page.frameLocator('#battle');
   await inner.locator('#phaseText').waitFor({timeout:45000});
   assert.equal(await inner.locator('#turnCoach').count(),1);
+  // In a real campaign iframe the opponent's attack art must be visible two
+  // seconds after appearing. This visual-only rehearsal does not change rules.
+  const attackArt=await inner.locator('.stage').evaluate(async stage=>{
+   const overlay=document.createElement('div');overlay.className='npc-reaction hidden';
+   stage.append(overlay);
+   const demo=window.NeoRpgMatchReactions.makeExperience({
+    element:overlay,npcId:'yuna',npcName:'Yuna Hoshino',random:()=>.999
+   });
+   const manifest=await fetch('/rpg-assets/reactions/manifest.json').then(r=>r.json());
+   demo.setManifest(manifest);
+   const view={phase:'game',over:false,players:[{prizeCount:6},{prizeCount:6,active:{id:'base1-1',damage:0},bench:[]}]};
+   demo.update({view,activity:[]});
+   demo.update({view,activity:[{seq:1,side:1,type:'attack',label:'Tackle'}]});
+   await new Promise(resolve=>setTimeout(resolve,2050));
+   const card=overlay.querySelector('.npc-reaction-card');
+   const img=overlay.querySelector('img');
+   const style=card&&getComputedStyle(card);
+   const result={
+    visible:!!card&&!overlay.classList.contains('hidden')&&Number(style.opacity)>.95,
+    correctImage:!!img?.src.includes('/rpg-assets/reactions/yuna/attack.png')&&img.naturalWidth>0,
+    overlaysAttack:Number(getComputedStyle(overlay).zIndex)>Number(getComputedStyle(document.querySelector('#combatFx')).zIndex)
+   };
+   demo.reset();overlay.remove();return result;
+  });
+  assert.ok(attackArt.visible,'NPC attack artwork must remain on screen for two seconds');
+  assert.ok(attackArt.correctImage,'NPC cut-in must load the correct character-specific image');
+  assert.ok(attackArt.overlaysAttack,'NPC artwork must render above the generic attack banner');
   const energyArtGeometry=await inner.locator('.stage').evaluate(stage=>{
      const box=document.createElement('button');box.className='poke';
      box.style.position='absolute';box.style.left='180px';box.style.top='160px';
