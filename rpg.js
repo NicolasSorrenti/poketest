@@ -1712,9 +1712,12 @@ function render(){
  $('homeBanner').hidden=state.location!=='home'||!!portraitId;
  $('homeBanner').textContent='YOUR APARTMENT  ·  DAY '+state.day+'  ·  '+periods[state.slot]+' — Prepare your deck, review your plans or rest.';
  let shown=showingMandatory?renderMandatory():showingSituation?showSituation():showingStory?renderStory():showingEncounter?showEncounter():showingArc?showArc():state.activeSideQuest?showSideQuest():scene;
- $('speaker').textContent=shown?.speaker||'Narrator';$('line').textContent=shown?.line||'The town is waiting.';
- // Narrator beats describe movement and subtext; they are not spoken lines.
- $('dialogue').classList.toggle('is-narration',shown?.speaker==='Narrator');
+ // Narration is visually distinguished by italics, without an unnecessary speaker label.
+ const isNarration=shown?.speaker==='Narrator';
+ $('speaker').textContent=isNarration?'':(shown?.speaker||'');
+ $('speaker').hidden=isNarration;
+ $('line').textContent=shown?.line||'The town is waiting.';
+ $('dialogue').classList.toggle('is-narration',isNarration);
  $('choices').replaceChildren();
  const responseActions=new Set(['mandatoryChoice','storyChoice','sideChoice','arcChoice','encounterChoice','situationChoice','sideDuel','sidePause','dateBook','dateActivity','dateSlot','book','socialPlan','dateInvite','flirt']);
  const isPlayerPrompt=!!shown?.choices?.some(([,action])=>responseActions.has(action.split(':')[0]));
