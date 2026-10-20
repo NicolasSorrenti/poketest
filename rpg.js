@@ -1368,11 +1368,15 @@ function refreshRpgPanels(){
 }
 // Guest art includes separately exported expressions; original cast keeps its portrait.
 const expressionGuests=new Set(['alma','jun','nereo','teo','elio']);
+// Cache failed optional variants so dialogue does not repeatedly request missing art.
+const failedScenePortraits=new Set();
 const solExpressions={neutral:'neutral',surprised:'surprised',vulnerable:'worried',irritated:'worried',determined:'neutral',happy:'smile'};
 function scenePortraitSource(id,expression){
- if(expressionGuests.has(id))return '/rpg-assets/characters/'+id+'/vn-expressions/'+expression+'.webp';
- if(id==='sol')return '/rpg-assets/characters/sol/expressions/'+(solExpressions[expression]||'neutral')+'.png';
- return cast[id].portrait||'/rpg-assets/'+id+'.png';
+ const fallback=cast[id].portrait||'/rpg-assets/'+id+'.png';
+ let candidate=fallback;
+ if(expressionGuests.has(id))candidate='/rpg-assets/characters/'+id+'/vn-expressions/'+expression+'.webp';
+ if(id==='sol')candidate='/rpg-assets/characters/sol/expressions/'+(solExpressions[expression]||'neutral')+'.png';
+ return failedScenePortraits.has(candidate)?fallback:candidate;
 }
 function dialogueExpression(line){
  const s=String(line||'').toLowerCase();
@@ -1393,7 +1397,8 @@ function renderRpgCast(ids,locked,shown,portraitId){
  const participants=[...new Set([focused,...ids,portraitId].filter(id=>!!cast[id]))].slice(0,6);
  if(state.location==='home'||!participants.length){root.hidden=true;root.replaceChildren();return;}
  root.hidden=false;
- const inConversation=!!(shown?.line||locked);
+ // Narrator and player lines should not dim every NPC in the location.
+ const inConversation=!!focused&&!!(shown?.line||locked);
  root.classList.toggle('is-conversation',inConversation);
  // Preserve existing DOM nodes between dialogue lines so CSS transitions actually play.
  const existing=new Map([...root.children].map(node=>[node.dataset.npc,node]));
@@ -1407,6 +1412,7 @@ function renderRpgCast(ids,locked,shown,portraitId){
    button.onclick=()=>selectPerson(id);
    button.addEventListener('animationend',()=>button.classList.remove('is-entering'),{once:true});
   }
+  button.style.setProperty('--cast-order',String(participants.indexOf(id)));
   const active=inConversation&&id===focused;
   button.classList.toggle('is-speaking',active);
   button.classList.toggle('is-listening',inConversation&&!active);
@@ -1415,22 +1421,33 @@ function renderRpgCast(ids,locked,shown,portraitId){
   button.setAttribute('aria-label','Talk to '+cast[id].name);
   const image=button.querySelector('img');
   if(image){
-   const expression=active?dialogueExpression(shown?.line):'neutral';
+   const expression=active?(window.NeoRpgCharacterMotion?.emotion?.(shown?.expression,dialogueExpression(shown?.line))||dialogueExpression(shown?.line)):'neutral';
    const path=scenePortraitSource(id,expression);
    if(image.getAttribute('src')!==path){
+    const fallback=cast[id].portrait||'/rpg-assets/'+id+'.png';
     image.classList.remove('expression-change');
-    image.src=path;
-    // Fall back to the standard portrait when optional expression files are absent.
+    image.style.display='';
     image.onerror=()=>{
-     const fallback=cast[id].portrait||'/rpg-assets/'+id+'.png';
-     if(image.getAttribute('src')!==fallback){image.src=fallback;return;}
+     // Ignore asynchronous failures from an older portrait request.
+     const failed=image.getAttribute('src');
+     if(failed!==path&&failed!==fallback)return;
+     if(failed===path&&path!==fallback){
+      failedScenePortraits.add(path);
+      image.src=fallback;
+      return;
+     }
      image.style.display='none';
      if(!button.querySelector('.avatar-fallback')){
       const span=document.createElement('span');span.className='avatar-fallback';
       span.textContent=cast[id].name.split(' ').map(x=>x[0]).join('');button.insertBefore(span,button.lastElementChild);
      }
     };
-    void image.offsetWidth;image.classList.add('expression-change');
+    image.onload=()=>{
+     image.style.display='';
+     button.querySelector('.avatar-fallback')?.remove();
+    };
+    image.src=path;
+    if(!window.NeoRpgCharacterMotion?.expressionChange?.(image))image.classList.add('expression-change');
    }
   }
   root.append(button);existing.delete(id);
@@ -1753,6 +1770,10 @@ function render(){
  simplifyRpgLabels();
  refreshRpgPanels();
  renderRpgActions(locked,shown);
+ window.NeoRpgCharacterMotion?.update?.({
+  location:state.location,speaker:shown?.speaker||'',line:shown?.line||'',
+  dialogue:$('dialogue'),speakerElement:$('speaker'),lineElement:$('line')
+ });
  $('deckPicker').disabled=locked||ended||!!state.deckJourney;
  if($('deckPicker')?.options.length)$('deckPicker').value=state.playerDeck;
 }
