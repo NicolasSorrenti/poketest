@@ -26,18 +26,190 @@
   sierra:'/rpg-assets/characters/sierra/portrait.png',
   sol:'/rpg-assets/sol.png'
  });
- const LABELS={attack:['ATTACK!','They go on the offensive'],play_card:['A CARD UP THEIR SLEEVE','A new play'],evolve:['EVOLUTION!','Their team grows stronger'],power:['POKÉMON POWER!','A special play'],hurt:['UNDER PRESSURE','Their Pokémon takes a hit'],ko_taken:['POKÉMON DOWN!','You took one of their Prizes'],ko_scored:['A KNOCKOUT!','They take a Prize']};
- const GENERIC={attack:'Here comes my next attack!',play_card:'I have a play in mind.',evolve:'Things are getting interesting.',power:'Time for a little surprise!',hurt:'That hit harder than I expected.',ko_taken:'That was a good knockout. I am not finished yet.',ko_scored:'That is one step closer!'};
+ const LABELS={attack:['ATTACK!','Their Pokémon attacks'],play_card:['NEW PLAY','They put a card into play'],evolve:['EVOLUTION!','A Pokémon evolves'],power:['POKÉMON POWER!','A special effect'],hurt:['BIG HIT','Their Pokémon takes damage'],ko_taken:['POKÉMON DOWN!','You take a Prize'],ko_scored:['A KNOCKOUT!','They take a Prize']};
+ const GENERIC={attack:'Here goes.',play_card:'I can work with this.',evolve:'There we go.',power:'Try this one.',hurt:'Ouch. Good hit.',ko_taken:'You got me there.',ko_scored:'That is one down.'};
  const VOICES={
-  reina:{attack:'Keep up. I am not holding back.',play_card:'I kept this card for a reason.',evolve:'Now things get serious.',power:'Try finding a way around this.',hurt:'Tch. You found an opening.',ko_taken:'Fine. That was a clean knockout.',ko_scored:'Do not fall behind now.'},
-  hana:{attack:'Everyone, let us give it our best!',play_card:'I think this will help!',evolve:'Look how far we have come!',power:'A little teamwork goes a long way!',hurt:'Ouch. Are you okay over there?',ko_taken:'Aw, poor thing. We can bounce back!',ko_scored:'We did it! That was amazing!'},
-  shiori:{attack:'Let us see how this unfolds.',play_card:'This changes our options.',evolve:'Patience has its rewards.',power:'There is another way forward.',hurt:'I underestimated that line of play.',ko_taken:'Well observed. You earned that.',ko_scored:'A quiet move can still be decisive.'},
-  yuna:{attack:'Here comes the exciting part!',play_card:'Surprise! Did you see that coming?',evolve:'Plot twist! An upgrade!',power:'A completely reasonable surprise!',hurt:'Whoa! That was not in the script!',ko_taken:'Nooo, my dramatic comeback arc!',ko_scored:'YES! The crowd goes wild!'},
-  akari:{attack:'Testing my damage hypothesis.',play_card:'A statistically useful option.',evolve:'An improvement to my position.',power:'Let us adjust the variables.',hurt:'That outcome was outside my estimate.',ko_taken:'I will need to revise my model.',ko_scored:'The prediction holds.'},
-  camila:{attack:'Shall we raise the stakes?',play_card:'Darling, I never show my whole hand.',evolve:'An excellent investment.',power:'There is always another angle.',hurt:'Oh? That cost me more than expected.',ko_taken:'Expensive lesson. Nicely played.',ko_scored:'Such a profitable exchange.'},
-  marina:{attack:'All right. Here we go!',play_card:'I saved this for a good moment.',evolve:'Our patience is paying off.',power:'The current is changing.',hurt:'Oh! That startled me.',ko_taken:'It is okay. We will keep going.',ko_scored:'One wave at a time!'},
-  kaede:{attack:'Try dodging this one.',play_card:'Oh, you are going to hate this.',evolve:'Now you have my attention.',power:'Watch your step.',hurt:'Ha! That actually stung.',ko_taken:'Not bad. Do it again if you can.',ko_scored:'Too easy. Make me work for it.'}
- };
+  "hana": {
+    "attack": "Okay, here we go!",
+    "play_card": "I think this might help.",
+    "evolve": "Aw, you grew up!",
+    "power": "Come on, just one more trick.",
+    "hurt": "Oh! That was a big one.",
+    "ko_taken": "Oh no. I should've switched it out.",
+    "ko_scored": "We got one! Sorry—I'm excited."
+  },
+  "reina": {
+    "attack": "Keep up. I'm not waiting for you.",
+    "play_card": "Was hoping I'd draw that.",
+    "evolve": "Now try it.",
+    "power": "Let's see you deal with this.",
+    "hurt": "Tch. I left that open.",
+    "ko_taken": "I saw that coming. Too late, though.",
+    "ko_scored": "One down. Still plenty to do."
+  },
+  "shiori": {
+    "attack": "Shall we?",
+    "play_card": "I thought this might come in handy.",
+    "evolve": "There you are.",
+    "power": "There's another possibility.",
+    "hurt": "I should have considered that.",
+    "ko_taken": "Ah. I held the wrong card.",
+    "ko_scored": "That took longer than I expected."
+  },
+  "yuna": {
+    "attack": "All right, audience of one!",
+    "play_card": "Ooh, guess what I found.",
+    "evolve": "It gets bigger! It gets worse!",
+    "power": "Watch this. No, really, watch.",
+    "hurt": "That's not how the trick goes!",
+    "ko_taken": "No! The important one!",
+    "ko_scored": "YES! That actually worked!"
+  },
+  "akari": {
+    "attack": "Let's test the damage.",
+    "play_card": "Interesting draw.",
+    "evolve": "That improves things.",
+    "power": "The numbers favor this.",
+    "hurt": "Hm. That changes the odds.",
+    "ko_taken": "I missed a whole line there.",
+    "ko_scored": "As expected. More or less."
+  },
+  "camila": {
+    "attack": "Shall we make this interesting?",
+    "play_card": "Now, this one I didn't trade away.",
+    "evolve": "An upgrade. Very tasteful.",
+    "power": "Here's the catch, darling.",
+    "hurt": "Oof. That one's going to cost me.",
+    "ko_taken": "I should have taken your last offer.",
+    "ko_scored": "And that, darling, is a good deal."
+  },
+  "marina": {
+    "attack": "Let's give it a try.",
+    "play_card": "Oh, I was hoping for that.",
+    "evolve": "There. A little more room to breathe.",
+    "power": "I think this could work.",
+    "hurt": "Oh! I didn't see that coming.",
+    "ko_taken": "I should've kept it on the Bench.",
+    "ko_scored": "We did it. Are you all right?"
+  },
+  "kaede": {
+    "attack": "Heads up.",
+    "play_card": "Knew I was saving that for something.",
+    "evolve": "Now we're getting somewhere.",
+    "power": "Don't say I didn't warn you.",
+    "hurt": "Ha! Okay, that hurt.",
+    "ko_taken": "Nice. I almost want a replay.",
+    "ko_scored": "Finally. Your turn to sweat."
+  },
+  "jun": {
+    "attack": "Your turn. Watch the timing.",
+    "play_card": "I have an answer to that.",
+    "evolve": "Right on schedule.",
+    "power": "Here's the ruling in action.",
+    "hurt": "Ah. Fair play.",
+    "ko_taken": "No argument. You earned it.",
+    "ko_scored": "That was legal. And rather satisfying."
+  },
+  "teo": {
+    "attack": "And here we go!",
+    "play_card": "Oh, this is a good one.",
+    "evolve": "The sequel just got bigger!",
+    "power": "You are going to want to see this.",
+    "hurt": "Ouch! No, no, we're fine.",
+    "ko_taken": "That wasn't how I called it!",
+    "ko_scored": "A knockout! Did you see that?"
+  },
+  "iris": {
+    "attack": "All right. Let's work.",
+    "play_card": "There it is. Found it.",
+    "evolve": "Good, that buys us time.",
+    "power": "We have another option.",
+    "hurt": "Ow. Right where it hurts.",
+    "ko_taken": "Should've kept that one safe.",
+    "ko_scored": "That's one less problem to carry."
+  },
+  "elio": {
+    "attack": "Okay. I practiced this.",
+    "play_card": "Oh! I know what to do with this.",
+    "evolve": "I actually have the next stage!",
+    "power": "Wait, I can use this now.",
+    "hurt": "Ah. Should've seen that.",
+    "ko_taken": "Oh, that was my favorite.",
+    "ko_scored": "Did that count? It counted!"
+  },
+  "alma": {
+    "attack": "Right, let's get on with it.",
+    "play_card": "Good. That's the one.",
+    "evolve": "Well, look at you.",
+    "power": "I've got a little something here.",
+    "hurt": "Careful. That was a good hit.",
+    "ko_taken": "Mm. I was too slow.",
+    "ko_scored": "Good. Tea's on me after this."
+  },
+  "nereo": {
+    "attack": "Let's see if it holds.",
+    "play_card": "There's the spare part.",
+    "evolve": "Finally, a bit of progress.",
+    "power": "Got one more trick in the box.",
+    "hurt": "Well, that knocked something loose.",
+    "ko_taken": "That's one way to sink my plans.",
+    "ko_scored": "Made it across. Just."
+  },
+  "jinx": {
+    "attack": "Try and stop me.",
+    "play_card": "I love it when this shows up.",
+    "evolve": "Oh, now we're talking.",
+    "power": "Bet you didn't plan for this.",
+    "hurt": "Ha! I left the door wide open.",
+    "ko_taken": "Okay. That one was ugly.",
+    "ko_scored": "There we go. Don't blink."
+  },
+  "luna": {
+    "attack": "All right. Cards on the table.",
+    "play_card": "Oh! I found it.",
+    "evolve": "It evolved! Wait, no, that's right.",
+    "power": "I've got something for this.",
+    "hurt": "Ow. I didn't protect it enough.",
+    "ko_taken": "Oh no. That was the one I needed.",
+    "ko_scored": "I did it! I mean—we did it."
+  },
+  "sol": {
+    "attack": "Ready? On three. Two—",
+    "play_card": "I brought a surprise. A normal-sized one.",
+    "evolve": "Ta-da! That's a bigger problem.",
+    "power": "Watch the next bit. It's good.",
+    "hurt": "Hey! Those were my plans!",
+    "ko_taken": "Nooo. Farewell, brave little guy.",
+    "ko_scored": "One point for the home team!"
+  },
+  "rina": {
+    "attack": "One, two, and—go!",
+    "play_card": "Yes! Right on cue.",
+    "evolve": "There you are. Perfect timing.",
+    "power": "This is the good part.",
+    "hurt": "Oh! That was offbeat.",
+    "ko_taken": "I should have seen that turn coming.",
+    "ko_scored": "We got it! Somebody cue the music."
+  },
+  "elena": {
+    "attack": "Your move after this.",
+    "play_card": "I've been holding this.",
+    "evolve": "That should be sufficient.",
+    "power": "There is a better line.",
+    "hurt": "Hm. I misjudged the risk.",
+    "ko_taken": "Yes, that's a costly mistake.",
+    "ko_scored": "A clean knockout. I'll take it."
+  },
+  "sierra": {
+    "attack": "Let's see what you've got.",
+    "play_card": "Finally. I was waiting on this.",
+    "evolve": "New look. Same plan.",
+    "power": "You missed one thing.",
+    "hurt": "Ouch. That's going on the reel.",
+    "ko_taken": "I really should have switched.",
+    "ko_scored": "Got it. No cameras needed."
+  }
+};
  const CHANCES={attack:.82,play_card:.52,evolve:.85,power:.65,hurt:.7,ko_taken:1,ko_scored:.95};
  const MAX_REACTIONS=6;
  const prizeCount=player=>Number.isFinite(player?.prizeCount)?player.prizeCount:null;
