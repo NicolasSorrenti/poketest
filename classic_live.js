@@ -75,10 +75,11 @@
   }
   return true;
  }
- function showRpgOpponent(){
+ function showRpgOpponent(manifest=null){
   if(!rpgMode||!rpgNpc)return;
   const portrait=$('rpgOpponentPortrait');
-  const source=window.NeoRpgMatchReactions.assetFor(null,rpgNpc,'default');
+  portrait.replaceChildren();portrait.classList.remove('no-art');
+  const source=window.NeoRpgMatchReactions.assetFor(manifest,rpgNpc,'default');
   if(source){
    const img=document.createElement('img');img.src=source;img.alt='';
    img.onerror=()=>{img.remove();portrait.classList.add('no-art');};
@@ -343,7 +344,7 @@
    await Promise.all(['base1','base2','base3','base4','base5','gym1','gym2','neo1','neo2','neo3','neo4'].map(async set=>{const r=await fetch(`/cards/${set}.json`);if(!r.ok)throw Error(`Cannot load ${set}`);const arr=await r.json();for(const c of arr)cards.set(c.id,c);}));
    document.body.classList.toggle('rpg-duel',rpgMode);
    showRpgOpponent();
-   if(reactions)fetch('/rpg-assets/reactions/manifest.json').then(r=>r.ok?r.json():null).then(m=>reactions.setManifest(m)).catch(()=>{});
+   if(reactions)fetch('/rpg-assets/reactions/manifest.json').then(r=>r.ok?r.json():null).then(m=>{reactions.setManifest(m);showRpgOpponent(m);}).catch(()=>{});
   if(rpgMode&&!rpgDuelId)throw Error('Open RPG duels from Neo Harbor.');
   if(rpgMode){
      const params=new URLSearchParams(location.search);
