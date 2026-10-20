@@ -22,14 +22,14 @@ assert.match(html,/energy-label">WAT/);
 assert.match(html,/energy-label">PSY/);
 assert.match(html,/data-symbol="F"/);
 assert.equal((html.match(/class="attached-energy/g)||[]).length,4,'Large attachments must use a bounded fan');
-assert.match(html,/energy-overflow">\\+2/);
+assert.match(html,/energy-overflow">\+2/);
 assert.match(html,/Unusual &amp; &lt;Special&gt;/,'Tooltip must describe hidden cards safely');
 const special=energyStack({energies:['double','custom']},id=>cards[id]);
 assert.match(special,/energy-type-colorless/);
 assert.match(special,/energy-type-special/);
 assert.match(special,/energy-label">DCE/);
 assert.match(special,/Unusual &amp; &lt;Special&gt;/);
-assert.match(energyStack({energies:[...unit.energies,'fire','water']},id=>cards[id]),/energy-overflow">\\+4/);
+assert.match(energyStack({energies:[...unit.energies,'fire','water']},id=>cards[id]),/energy-overflow">\+4/);
 assert.equal(energyStack({energies:[]},id=>cards[id]),'');
 for(const type of ['grass','fire','water','lightning','psychic','fighting','colorless','darkness','metal','rainbow','recycle','special'])
  assert.match(css,new RegExp('energy-type-'+type),'Energy must have a distinct readable color: '+type);
