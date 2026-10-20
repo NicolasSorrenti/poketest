@@ -136,6 +136,8 @@
   if(turn&&receipt.outcome==='Victory')return (character?.duelWin||'You won.')+' And after our last game, that is quite a turnaround.';
   if(turn&&receipt.outcome==='Defeat')return (character?.duelLose||'You lost.')+' Last time went differently. I knew you would make me work.';
   if(receipt.outcome==='Draw')return voice.draw[0];
+  if(!VOICE[npc])return receipt.outcome==='Victory'?(character?.duelWin||DEFAULT.win[0]):
+   (character?.duelLose||DEFAULT.loss[0]);
   return receipt.outcome==='Victory'?voice.win[0]:voice.loss[0];
  }
  return Object.freeze({VOICE,reaction,hydrate,mark,seen,lastMatch,preDuelLine,afterDuel});
