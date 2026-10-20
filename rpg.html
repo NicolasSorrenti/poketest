@@ -7,6 +7,7 @@
 <title>Neo Harbor — TCG RPG</title>
 <link rel="stylesheet" href="/rpg.css">
 <link rel="stylesheet" href="/rpg_time_transitions.css">
+<link rel="stylesheet" href="/rpg_ui_motion.css">
 </head>
 <body>
 <div id="app">
@@ -31,6 +32,8 @@
   <div class="utilitybar">
     <div class="utility-left"><span class="live-dot"></span><span>NEO HARBOR · TOWN EXPLORATION</span><span class="utility-sep">/</span><span id="notice" aria-live="polite">Travel & talk are free · ⏳ actions advance time</span></div>
     <div class="utility-actions">
+      <button id="rpgMapToggle" class="toolbar-btn rpg-nav-toggle" type="button" aria-controls="rpgMapPanel" aria-expanded="false" aria-label="Open town map">☷ MAP</button>
+      <button id="rpgInfoToggle" class="toolbar-btn rpg-nav-toggle" type="button" aria-controls="rpgInfoPanel" aria-expanded="false" aria-label="Open story and progress panels">✧ INFO</button>
       <button id="deckStudioBtn" class="toolbar-btn" type="button">▣ DECK STUDIO</button>
       <button id="galleryBtn" class="toolbar-btn" type="button">▧ CG GALLERY</button>
       <button id="calendarBtn" class="toolbar-btn" type="button">▦ CALENDAR</button>
@@ -45,8 +48,9 @@
     <button id="dismissReceipt" type="button">Continue exploring →</button>
   </section>
 
+  <button id="rpgDrawerBackdrop" class="rpg-drawer-backdrop" type="button" aria-label="Close navigation panel" hidden></button>
   <main class="layout">
-    <aside class="locations-panel">
+    <aside id="rpgMapPanel" class="locations-panel" aria-label="Town map" aria-hidden="true">
       <div class="panel-label">NEIGHBORHOODS</div>
       <h2>Explore the town</h2>
       <p>Choose where to go. Traveling does not consume time.</p>
@@ -88,7 +92,7 @@
       <div class="campaign-complete" id="endSeason" hidden></div>
     </section>
 
-    <aside class="sidebar">
+    <aside id="rpgInfoPanel" class="sidebar" aria-label="Story and progress" aria-hidden="true">
       <section class="side-section journey-section">
         <div class="sidebar-title"><span>✦ YOUR 90-DAY JOURNEY</span><small>CAMPAIGN PROGRESS</small></div>
         <div id="journeyProgress" class="journey-progress" aria-live="polite"></div>
@@ -296,6 +300,7 @@
 <script src="/rpg_mandatory_events.js"></script>
 <script src="/rpg_season_events.js"></script>
 <script src="/rpg_time_transitions.js"></script>
+<script src="/rpg_ui_motion.js"></script>
 <script src="/rpg.js"></script>
 </body>
 </html>
