@@ -365,9 +365,9 @@
       ],
       "choices": [
         {
-          "label": "Tell her you'd like to spend more Saturdays together",
-          "reply": "Not just Saturdays, I hope. ...Oh no, I said that out loud.",
-          "kind": "support",
+          "label": "Promise you'll keep showing up as a friend and practice partner",
+          "reply": "Please do! The drummer still thinks I make up half these card names. I need backup.",
+          "kind": "friend",
           "flag": "rina_stay",
           "delta": {
             "affection": 3,
@@ -377,9 +377,9 @@
           }
         },
         {
-          "label": "Kiss her when the rehearsal ends",
-          "reply": "You could have warned me! ...Actually, don't warn me next time.",
-          "kind": "flirt",
+          "label": "Tell her you want to be her partner beyond the stage",
+          "reply": "I was hoping you'd say that. Come to the next show as my date? I'll save you a seat.",
+          "kind": "commit",
           "flag": "rina_kiss",
           "delta": {
             "affection": 2,
@@ -389,8 +389,8 @@
           }
         },
         {
-          "label": "Ask what she wants after the season",
-          "reply": "More music, more matches, and maybe you on the other side of the table. That sounds pretty good.",
+          "label": "Ask what she wants after the season, without deciding for her",
+          "reply": "A new song, a new deck, and a Saturday that isn't booked solid. Let's start there.",
           "kind": "honest",
           "flag": "rina_realme",
           "delta": {
