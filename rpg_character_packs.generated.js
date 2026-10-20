@@ -2455,25 +2455,25 @@ const packs=[
     "lines": [
      {
       "speaker": "rina",
-      "text": "Hey! It is me. I finished the rehearsal early, and I actually asked for this break."
+      "text": "This is going to sound ridiculous, but I put a practice match on my rehearsal calendar."
      },
      {
       "speaker": "Protagonist",
-      "text": "You asked for time off to practice your deck? Your manager agreed?"
+      "text": "Did your manager approve it?"
      },
      {
       "speaker": "rina",
-      "text": "Yes. I did not sneak out. I told her this matters to me, even when nobody is watching."
+      "text": "She asked if it was a new song. I said no. The drummer offered to test my deck after soundcheck anyway."
      },
      {
       "speaker": "rina",
-      "text": "I have a few new openings to test. There is no audience to impress. Would you like to join me sometime?"
+      "text": "I've got two openings I can't decide between. Would you play a few hands with me sometime?"
      }
     ],
     "choices": [
      {
-      "label": "I would like that. Let us set a time.",
-      "reply": "Deal! We can play when we both have room for it.",
+      "label": "I'd love to. You pick the table.",
+      "reply": "Yes! And bring that awful disruption deck. I need the practice.",
       "flag": "rina_practice_yes",
       "effects": {
        "flags": [
@@ -2482,8 +2482,8 @@ const packs=[
       }
      },
      {
-      "label": "Not right now, but thanks for asking.",
-      "reply": "No pressure. I am proud I could ask you honestly.",
+      "label": "I can't make it this week.",
+      "reply": "Okay! Send me a message when you've got an evening free.",
       "flag": "rina_practice_no",
       "effects": {
        "flags": [
@@ -3865,25 +3865,25 @@ const packs=[
     "lines": [
      {
       "speaker": "sol",
-      "text": "Hey, stranger. I was about to invite you to a wildly complicated adventure."
+      "text": "Important question: does a sunset count as an event if I don't print tickets?"
      },
      {
       "speaker": "Protagonist",
-      "text": "And what did you come up with?"
+      "text": "Are you planning something?"
      },
      {
       "speaker": "sol",
-      "text": "Nothing. Not a scavenger hunt. Not a surprise. I just wondered if you would sit with me."
+      "text": "Jun confiscated my clipboard. I was going to argue, but the harbor looks pretty good without a schedule."
      },
      {
       "speaker": "sol",
-      "text": "The last party taught me something: being with someone does not need a program. So... no rules today?"
+      "text": "I can bring lemonade. Want to sit by the water for a bit? That's the entire invitation. Suspicious, I know."
      }
     ],
     "choices": [
      {
-      "label": "We could watch the harbor for a while.",
-      "reply": "That sounds weirdly perfect. I will try not to turn the clouds into a contest.",
+      "label": "Lemonade and a sunset sound good.",
+      "reply": "Great. I'll bring two cups and exactly zero whistles.",
       "flag": "sol_quiet_yes",
       "effects": {
        "flags": [
@@ -3892,8 +3892,8 @@ const packs=[
       }
      },
      {
-      "label": "I cannot today. Thanks for asking.",
-      "reply": "An honest no. I can handle that. There will be other sunsets.",
+      "label": "Not today. Rain check?",
+      "reply": "Absolutely. I might even manage to keep the lemonade cold until next time.",
       "flag": "sol_quiet_no",
       "effects": {
        "flags": [
