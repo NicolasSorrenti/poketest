@@ -334,3 +334,18 @@
 .character-action-btn:hover,.character-action-btn:focus-visible{background:#78507b;border-color:#ffd3e5;transform:translateY(-1px)}
 .character-action-btn:focus-visible{outline:2px solid #f8d1e9;outline-offset:2px}
 @media(max-width:580px){.character-actions{gap:6px;padding:8px}.character-action-btn{min-width:0;flex:1 1 auto;padding:8px 10px}}
+
+
+/* Milestone 3: club board stays behind an intentional action, not another tall sidebar. */
+.community-dialog{width:min(92vw,740px);max-height:85vh;overflow-y:auto}
+.community-dialog h3{font:800 18px 'Barlow Condensed',sans-serif;letter-spacing:.7px;margin:18px 0 8px;color:#ffdfc7}
+.community-standings{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:7px}
+.club-standing{display:flex;justify-content:space-between;gap:12px;align-items:center;border:1px solid #46516b;border-radius:8px;background:#1c2738;padding:9px 11px}
+.club-standing strong{font:700 14px 'Barlow Condensed',sans-serif;color:#fff}
+.club-standing span{font:700 12px 'Barlow Condensed',sans-serif;color:#bfe4ff;white-space:nowrap}
+.community-news{display:grid;gap:7px}
+.club-news-entry{padding:9px 12px;border:1px solid #45516b;border-radius:8px;background:#1e293d}
+.club-news-entry small{font:700 10px 'Barlow Condensed',sans-serif;letter-spacing:1px;color:#b4c5de}
+.club-news-entry p{margin:4px 0 0;color:#f0ebef;font-size:13px;line-height:1.4}
+.community-connections{display:flex;flex-wrap:wrap;gap:8px}
+.club-link{border:1px solid #67547f;border-radius:8px;background:#30283b;padding:8px 10px;margin:0;font-size:13px}
