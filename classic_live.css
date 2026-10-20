@@ -282,3 +282,16 @@ button.attack-action:disabled .attack-warning{color:#b6b2a3}
  white-space: normal;
  line-height: 1.1;
 }
+
+/* Card-first selection dialog, sized for readable artwork on desktop and phones. */
+.choice-dialog{width:min(860px,calc(100vw - 24px))}
+.choice-dialog .choice-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(145px,1fr));gap:12px;max-height:min(60dvh,620px);overflow:auto}
+.choice-dialog .choice-list label.illustrated-choice{display:flex;flex-direction:column;align-items:center;gap:8px;min-height:100px;padding:10px;cursor:pointer;text-align:center;position:relative}
+.choice-dialog .choice-list .choice-card-art{display:block;width:min(100%,145px);aspect-ratio:245/342;object-fit:contain;filter:drop-shadow(0 4px 8px #0008)}
+.choice-dialog .choice-list label.illustrated-choice:has(input:checked){outline:2px solid #d9f5a5;outline-offset:-3px}
+.choice-dialog .choice-list label.illustrated-choice:focus-within{box-shadow:0 0 0 3px #a4f3e9}
+@media(max-width:520px){
+ .choice-dialog .choice-list{grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}
+ .choice-dialog .choice-list label.illustrated-choice{padding:7px}
+ .choice-dialog .choice-list .choice-card-art{width:min(100%,110px)}
+}
