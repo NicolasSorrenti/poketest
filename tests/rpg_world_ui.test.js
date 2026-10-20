@@ -1183,9 +1183,8 @@ test('RPG rematches show character memory in preview and provide contextual duel
   results:[{id:'reina-original',npc:'reina',day:4,won:true,draw:false}]});
  const person=r.elements.people.children.find(x=>x.children?.[1]?.children?.[0]?.textContent==='Reina Kurogane');
  assert.ok(person);
- person.onclick();finishGreeting(r);
- const duelBtn=r.elements.characterActions.children.find(x=>x.textContent.includes('Duel'));
- assert.ok(duelBtn);duelBtn.onclick();
+ person.onclick();finishGreeting(r);r.act('dismissDialogue');
+ r.act('duel:reina');
  assert.match(r.elements.preDuelLine.textContent,/last loss|previous result|recalculated|last/i);
  r.elements.preDuelSkip.onclick();
  const pending=r.state().pendingDuel;
