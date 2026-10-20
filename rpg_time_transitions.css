@@ -101,3 +101,13 @@
  100%{transform:translateX(-105%) skewX(9deg)}
 }
 @media(max-width:600px){.neo-timefx--travel .neo-timefx__title{font-size:clamp(38px,10vw,72px)}}
+
+/* Travel's late animation-name override must not cancel reduced motion. */
+@media(prefers-reduced-motion:reduce){
+ .neo-timefx--travel,.neo-timefx--travel.neo-timefx--reduced{
+  animation-name:neo-time-reduced!important;
+  animation-duration:var(--neo-timefx-duration)!important;
+  transform:none!important;
+ }
+ .neo-timefx--travel .neo-timefx__lines{animation:none!important}
+}
