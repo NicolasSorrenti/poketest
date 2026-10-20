@@ -94,10 +94,25 @@ class ClassicLocalService {
   }
   const result=reduce(s.game,0,cmd);
   if(!result.ok)throw Error(result.error||'Illegal command');
+  // Preserve the single authoritative CPU result, but return safe public
+  // snapshots so the browser can display each CPU action in order.
+  // Never serialize a game, command payload, or the CPU's private hand/deck.
+  const cpuTurn=result.game.phase==='game'&&(result.game.turn===1||result.game.pendingDecision?.actor===1);
+  const playback=[];
+  const capture=game=>playback.push({
+   view:publicView(game,0),activity:publicActivity(game),turnSerial:game.turnSerial,winner:game.winner,
+   you:{energyUsed:!!game.players[0].energyUsed,retreated:!!game.players[0].retreated,
+    stadiumUsed:game.players[0].stadiumUsedTurn===game.turnSerial}
+  });
+  if(cpuTurn)capture(result.game); // First show the end of the player's action.
   // Bot failures must never commit partial human or computer actions.
-  const {game}=driveBot(result.game,200,s.cpuConfig);
+  const {game}=driveBot(result.game,200,cpuTurn?{...s.cpuConfig,onStep:capture}:s.cpuConfig);
   UNDO.record(s.undoHistory,s.game,game,0,cmd);
-  s.game=game;s.revision++;return this.response(s);
+  s.game=game;s.revision++;
+  const response=this.response(s);
+  // The last snapshot is already the authoritative final response.
+  if(playback.length>1)response.cpuPlayback=playback.slice(0,-1);
+  return response;
  }
  decklist(id){if(!DECKS[id]||id==='custom')throw Error('Unknown theme deck');return EXPANDED[id]?[...EXPANDED[id]]:LAB[id]?[...LAB[id]]:DECKS[id].startsWith('retail:')?RETAIL.list(id):DECKS[id].startsWith('neo:')?NEO.list(id):DECKS[id].startsWith('discovery:')?DISCOVERY.list(id):DECKS[id].startsWith('destiny:')?DESTINY.list(id):list(DECKS[id]);}
  catalog(){return [...CATALOG.values()].filter(c=>['base1','base2','base3','base4','base5','gym1','gym2'].some(set=>c.id.startsWith(set+'-'))||NEO.neoIds.includes(c.id)||DISCOVERY.neoIds.includes(c.id)||DESTINY.neoIds.includes(c.id)||require('./neo_bonus_pool').ids.includes(c.id)||require('./neo_v040_pool').ids.includes(c.id)||require('./neo_v046_pool').ids.includes(c.id)||require('./neo_v047_pool').ids.includes(c.id)||require('./neo_v048_pool').ids.includes(c.id)||require('./neo_v049_pool').ids.includes(c.id)||require('./neo_v050_pool').ids.includes(c.id)||require('./neo_v051_pool').ids.includes(c.id)||require('./neo_v052_pool').ids.includes(c.id)||require('./neo_v053_pool').ids.includes(c.id)||require('./neo_v054_pool').ids.includes(c.id)||require('./neo_v055_pool').ids.includes(c.id)||require('./neo_v056_pool').ids.includes(c.id)||require('./neo_v061_pool').ids.includes(c.id)||require('./neo_v062_pool').ids.includes(c.id)||require('./neo_v063_pool').ids.includes(c.id)||require('./neo_v064_pool').ids.includes(c.id)||require('./neo_v065_pool').ids.includes(c.id)||require('./neo_v066_pool').ids.includes(c.id)||require('./neo_v084_pool').ids.includes(c.id));}
