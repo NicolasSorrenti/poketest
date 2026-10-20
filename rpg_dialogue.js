@@ -9,6 +9,56 @@
  // Each daily topic starts with the NPC's existing line. These four lines
  // turn that line into a conversation rather than a one-line stat interaction.
  const talk={
+  // Character-pack conversations: each follow-up responds to that character's
+  // actual topic instead of falling back to a generic question and random next line.
+  jinx:[
+   ["So what's the play when your first hand is terrible?","You make a plan with the five cards you wanted to throw away.","That sounds like experience.","It sounds like a very expensive series of mistakes."],
+   ["And if somebody does have an opinion?","They can say it. I can ignore it. We're both having a wonderful day.","You make it sound easy.","It took practice. So did these boots."],
+   ["You're offering coaching, then?","I'm offering to beat you until you stop making the same mistake.","That is a strange sales pitch.","Good thing I'm not charging. Yet."],
+   ["I'd be embarrassed by that misplay too.","I replayed it in my head all night. The crowd forgot in ten minutes.","Did you find the better move?","Three of them. I hate that part."],
+   ["Even you?","Especially me. I just refuse to let strangers write my whole personality.","Is that why you tease them first?","Sometimes. Don't look so pleased with yourself."],
+   ["What about the people who stay after the bracket's done?","They're harder to rank. Usually worth more, too.","That sounded almost sentimental.","You heard nothing. Shuffle." ]
+  ],
+  luna:[
+   ["Did the cards survive?","All but one sleeve. I found it stuck to my shoe on the way home.","You can practice with my deck sometime.","Could we use a playmat? The floor has seen enough of my cards."],
+   ["It's all right to accept help sometimes.","I know. I just want people to ask before taking everything out of my hands.","Then I'll ask. Want a hand?","Yes, please. With the top box. I can carry the rest."],
+   ["Maybe the shelf is just badly designed.","Do you think so? I was blaming the sweater again.","We could ask them to move the boxes lower.","That would help everyone, wouldn't it? Oh. I like that idea."],
+   ["Were you hurt?","Only my pride. Someone found my missing deck box under the stairs.","At least it came back.","With all sixty cards. I counted them twice."],
+   ["What do you read when you're not rearranging the shelves?","Old tournament reports. I like seeing how a match turns on one small choice.","You keep notes?","Little ones. I'm trying to learn rather than just apologize for losing."],
+   ["You do seem to have a rivalry with gravity.","And it keeps winning. But I managed a whole match without dropping a card.","That's worth celebrating.","Quietly, please. I might knock over the celebration." ]
+  ],
+  sol:[
+   ["What have you found so far?","A move called Tail Whip. Not romantic, but it has potential.","You cannot use a card name as a pickup line.","Not with that attitude you can't."],
+   ["What about weather-appropriate shoes?","A shocking attack on my personal brand.","So you'll bring shoes next time?","Of course. I've lost enough sandals to the harbor."],
+   ["Maybe we could just do nothing for a bit.","Nothing? Do I need to bring snacks for nothing?","Only if you want them.","Oh. That sounds suspiciously nice."],
+   ["I used to think I was letting someone down by saying no.","And then you met people with actual lives and bedtimes.","Still learning?","I'm trying. You can turn down my next idea without a three-page apology."],
+   ["Should I start counting again?","Please don't. The pressure is unbearable.","We could walk instead.","Walking is sitting still with better scenery. Approved."],
+   ["I bet Jun had something to say about the rest of it.","He said I'd get cold after sunset. He was right. Infuriating man.","So you borrowed a coat?","No. I took his. He knows where to find it." ]
+  ],
+  rina:[
+   ["You say that as if collecting is a secret identity.","It sort of is! My stage bag has a false bottom for my deck.","Is that really necessary?","Not remotely. But it feels like a spy movie, so I'm keeping it."],
+   ["Which promo are you proudest of finding?","The one with the bent corner. I traded for it when I was little.","A bent card?","The kid who traded it taught me how to play. I couldn't replace that memory."],
+   ["What's your favorite part of that opening?","When the second Pokémon lands and I know the deck is doing what I built it to do.","Even when the next draw is awful?","Especially then. That's when I find out whether my plan was any good."],
+   ["Did you remember to sleep at all?","Barely. I accidentally sang my matchup notes during warm-ups.","Did anyone notice?","My pianist did. She wants a rematch now."],
+   ["Have you ever signed a card in the wrong place?","Once. I wrote my name across the attack text. I felt terrible.","What did the fan say?","She laughed and asked me to sign the sleeve instead. Much smarter."],
+   ["And what would you put next to the display case?","A tiny practice table. One that doesn't wobble when I shuffle.","That sounds more useful than a trophy.","Don't tell my manager. She already has a shelf picked out." ]
+  ],
+  elena:[
+   ["Does the schedule ever change?","Frequently. That's why I leave room for contingencies.","Including conversations like this?","I have recently begun to reserve a small amount of time for those."],
+   ["So you never lose your temper at work?","Of course I do. I simply wait until the client has left.","Then what happens?","I take a walk. Occasionally a very long one."],
+   ["You make it sound like armor.","In a sense. But I also happen to enjoy dressing well.","Fair point.","Thank you. I dislike being turned into somebody else's metaphor."],
+   ["What if your opponent does something absurd?","Then I check whether it's genuinely absurd or whether I missed a line.","And if you missed it?","I write it down. Pride is a poor substitute for a sideboard plan."],
+   ["Is that why you're here tonight?","I finished my work. I could have gone home.","But you didn't.","No. I am allowing myself to enjoy that decision."],
+   ["You caught me. I was trying to read your reaction.","How disappointing. I was hoping you were listening to the point.","I was. I disagree with one part.","Good. That is much more interesting." ]
+  ],
+  sierra:[
+   ["You can like the job and still need a break.","Exactly. I just wish people stopped treating a good paycheck like it answered every question.","Is your next shoot nearby?","Unfortunately. There's sand in my deck sleeves again."],
+   ["Does letting them underestimate you help at the table?","Sometimes. Then they see a hand disruption play and suddenly remember my name.","And if they still don't?","Their loss. I still get to play my turn."],
+   ["What would your dream booking look like?","An actual day off after it. Maybe a tournament where nobody asks for a photo mid-match.","No glamorous backdrop?","Give me a folding table with enough room for both decks. Luxury."],
+   ["Nervous about losing?","About forgetting a play I know. The camera doesn't care about misplays; my opponent does.","You rehearse openings?","On the train. My manager thinks I'm learning lines."],
+   ["You could tell them what you care about.","I do. The decent ones remember. The others get one polite correction.","That sounds exhausting.","Sometimes. Then I sit down and shuffle. That part's mine."],
+   ["What's the card you never leave behind?","A beat-up Trainer from my first deck. Not worth much on paper.","Why keep it?","Because I won my first match with it. You can't put a price on that." ]
+  ],
   hana:[
    ["Sounds like you want everyone to have a chance.","Exactly. Sometimes winning feels better when everybody gets to play.","Even if it makes the deck less efficient?","Maybe not every game has to be the championship final."],
    ["Is the next cup making you nervous?","A little. I keep smiling so everyone else can relax.","Who helps you relax?","You just asked a surprisingly difficult question."],
