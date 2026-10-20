@@ -121,7 +121,16 @@ function pauseSideQuest(){
  state.activeSideQuest=null;persist();say('Narrator','You agree to return when you are ready to play. No time has passed.');
 }
 
-function timeFlash(beforeDay,beforeSlot){const overlay=document.createElement('div');overlay.className='notice-pop';const heading=document.createElement('b');heading.textContent=state.day>90?'Season complete':state.day!==beforeDay?'A NEW DAY BEGINS':'TIME PASSES';const body=document.createElement('span');body.textContent=state.day>90?'Day 90 has ended.':('Day '+state.day+' · '+periods[state.slot]);overlay.append(heading,body);document.body.append(overlay);overlay.addEventListener('animationend',()=>overlay.remove());}
+function timeFlash(beforeDay,beforeSlot,source='activity'){
+ const change={beforeDay,beforeSlot,afterDay:state.day,afterSlot:state.slot,source};
+ // Presentation follows the already-committed RPG time state; it never owns state changes.
+ if(window.NeoRpgTimeTransitions?.present){window.NeoRpgTimeTransitions.present(change);return;}
+ const overlay=document.createElement('div');overlay.className='notice-pop';
+ const heading=document.createElement('b');heading.textContent=state.day>90?'Season complete':state.day!==beforeDay?'A NEW DAY BEGINS':'TIME PASSES';
+ const body=document.createElement('span');body.textContent=state.day>90?'Day 90 has ended.':'Day '+state.day+' · '+periods[state.slot];
+ overlay.append(heading,body);document.body.append(overlay);
+ overlay.addEventListener('animationend',()=>overlay.remove());
+}
 
 function defaults(){return {sideQuests:{},activeSideQuest:null,day:1,slot:0,location:'home',metReina:false,reinaTrust:0,reinaDuels:0,results:[],flags:{intro:false},journal:['The 90-day season begins.'],pendingDuel:null,bonds:{},talked:{},hungOut:{},eventsDone:{},points:0,credits:80,playerDeck:'blackout',selected:null,ended:false,storyDone:{},storyMissed:{},relationships:{},routeOutcomes:{},partner:null,activeStory:null,activeEncounter:null,activeArc:null,arcFlags:{},arcOutcomes:{},activityDone:{},encountersDone:{},focus:75,insight:0,reputation:0,preparation:0,lastDuelReceipt:null,tournaments:{},campaignHistory:[],ngPlus:0,appointments:[],appointmentSeq:0,scene:null,socialHistory:{},situationDone:{},activeSituation:null,deckJourney:null,competitive:null,npcReactivity:null,community:null,mandatoryEventState:null}}
 const hadCampaignSave=!!localStorage.getItem(KEY);
@@ -209,7 +218,7 @@ function mandatoryAction(type,id){
 }
 
 const atKey=(id)=>state.day+':'+state.slot+':'+id;
-function advance(n=1){const beforeDay=state.day,beforeSlot=state.slot;for(let i=0;i<n;i++){state.slot++;if(state.slot>=3){state.slot=0;state.day++;}}if(state.day>90){state.day=91;state.ended=true;log('The Neo Harbor championship season has ended.');}
+function advance(n=1,transitionSource='activity'){const beforeDay=state.day,beforeSlot=state.slot;for(let i=0;i<n;i++){state.slot++;if(state.slot>=3){state.slot=0;state.day++;}}if(state.day>90){state.day=91;state.ended=true;log('The Neo Harbor championship season has ended.');}
 state.selected=null;
 if(state.day>beforeDay){
  WORLD.newDay(state,state.day-beforeDay);
@@ -225,7 +234,7 @@ const missedQuests=SIDE.expire(state);if(missedQuests.length)log('A local side-q
 const missedAppointments=APPOINTMENTS.expire(state);
 INTENTIONS.hydrate(state); // Expire yesterday's optional choice before saving the new day.
 for(const plan of missedAppointments)log('You missed your planned meet-up with '+(cast[plan.npc]?.name||'a trainer')+'.');
-queueMandatory();persist();timeFlash(beforeDay,beforeSlot);}
+queueMandatory();persist();timeFlash(beforeDay,beforeSlot,transitionSource);}
 function say(speaker,line,choices=[]){scene={speaker,line,choices};state.scene=scene;persist();render();}
 function sayConversation(lines,afterChoices=[],reactionId=null){
  if(!Array.isArray(lines)||!lines.length)return;
@@ -561,7 +570,7 @@ function act(action){
  }
  if(type==='home'){state.location='home';state.selected=null;persist();return say('Narrator','Back home. The championship posters on the wall remind you why you came.');}
  if(type==='where'){const c=cast[id],visit=SCHEDULES.nextVisit(id,state.day,state.slot,[]);return say('Narrator',c.name+(visit?' is usually around '+places[visit.place][0]+' on day '+visit.day+', '+periods[visit.slot]+'.':' has no announced public visits in the coming week.'),options(id));}
- if(type==='sleep'){if(state.location!=='home')return;const n=3-state.slot;advance(n);return say('Narrator','You wake up to a new day in Neo Harbor.');}
+ if(type==='sleep'){if(state.location!=='home')return;const n=3-state.slot;advance(n,'sleep');return say('Narrator','You wake up to a new day in Neo Harbor.');}
  if(type==='close'||type==='dismissDialogue')return closeSceneDialogue();
  if(type==='duel')return startDuel(id||state.selected,false);
  if(type==='partnerDeck'){

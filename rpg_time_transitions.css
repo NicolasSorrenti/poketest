@@ -1,0 +1,91 @@
+/* Neo Harbor presentation: fast GPU-friendly sliding calendar and time-of-day wipes. */
+.neo-timefx{
+ --neo-timefx-duration:680ms;--fx-accent:#fa80ad;--fx-dark:#21142d;
+ position:fixed;inset:0;z-index:220;isolation:isolate;overflow:hidden;
+ display:grid;place-items:center;background:linear-gradient(115deg,var(--fx-dark) 8%,#101627 55%,#2e2140);
+ box-shadow:0 0 80px #000b;color:#fff;cursor:pointer;
+ animation:neo-time-slide var(--neo-timefx-duration) cubic-bezier(.65,.03,.23,.97) both;will-change:transform
+}
+.neo-timefx--morning{--fx-accent:#ffba85;--fx-dark:#65415c}
+.neo-timefx--afternoon{--fx-accent:#ff80a8;--fx-dark:#692f55}
+.neo-timefx--evening{--fx-accent:#b69dff;--fx-dark:#28244f}
+.neo-timefx--day{--fx-accent:#ffb1d2;--fx-dark:#43315b}
+.neo-timefx--sleep{--fx-accent:#ffe0a7;--fx-dark:#1a2352}
+.neo-timefx--season{--fx-accent:#ffcc77;--fx-dark:#60424a}
+.neo-timefx--day,.neo-timefx--sleep,.neo-timefx--season{animation-name:neo-time-calendar}
+.neo-timefx__graphic{
+ position:absolute;inset:-20% -10%;pointer-events:none;opacity:.85;
+ background:linear-gradient(124deg,transparent 0 24%,var(--fx-accent) 24% 26%,transparent 26% 100%),
+ linear-gradient(140deg,transparent 0 58%,#f6dbe51a 58% 65%,transparent 65%),
+ radial-gradient(ellipse at 78% 20%,var(--fx-accent),transparent 36%);
+ transform:skewX(-16deg);animation:neo-time-shapes var(--neo-timefx-duration) ease-out both
+}
+.neo-timefx__lines{position:absolute;inset:0;pointer-events:none;opacity:.3;
+ background:repeating-linear-gradient(165deg,transparent 0 19px,#fff2 20px 21px,transparent 22px 64px);
+ mask-image:linear-gradient(90deg,transparent,#000 45%,transparent)}
+.neo-timefx__interior{
+ position:relative;z-index:1;display:flex;flex-direction:column;align-items:flex-start;
+ width:min(1060px,92vw);padding:clamp(22px,5vw,58px);border-left:clamp(6px,1vw,13px) solid var(--fx-accent);
+ text-shadow:0 5px 18px #0808199e;animation:neo-time-title var(--neo-timefx-duration) ease-out both
+}
+.neo-timefx__eyebrow,.neo-timefx__subtitle,.neo-timefx__weekday,.neo-timefx__dates,.neo-timefx__skip{
+ font-family:'Barlow Condensed','Arial Narrow',sans-serif;font-weight:900;letter-spacing:.17em}
+.neo-timefx__eyebrow{font-size:clamp(12px,2vw,19px);color:var(--fx-accent)}
+.neo-timefx__title{
+ display:block;margin:5px 0 0;line-height:.86;white-space:normal;
+ font:900 clamp(55px,12vw,174px)/.86 'Barlow Condensed','Arial Narrow',sans-serif;
+ letter-spacing:-.025em;text-transform:uppercase;transform:skewX(-7deg)
+}
+.neo-timefx--day .neo-timefx__title,.neo-timefx--sleep .neo-timefx__title{font-size:clamp(60px,11vw,142px)}
+.neo-timefx__subtitle{margin-top:clamp(10px,2vw,24px);font-size:clamp(13px,2.25vw,25px)}
+.neo-timefx__dates{
+ display:flex;align-items:center;gap:clamp(8px,2vw,24px);
+ margin-top:clamp(8px,1.5vw,17px);font-size:clamp(16px,3vw,29px)
+}
+.neo-timefx__old-day{color:#dbcbd3;text-decoration:line-through;text-decoration-thickness:2px;opacity:.72}
+.neo-timefx__new-day{color:var(--fx-accent)}
+.neo-timefx__arrow{font-size:1.1em}
+.neo-timefx--period .neo-timefx__old-day,.neo-timefx--period .neo-timefx__arrow{display:none}
+.neo-timefx__weekday{
+ position:absolute;right:clamp(9px,2vw,34px);top:clamp(6px,2vw,25px);
+ color:#ffffffa8;font-size:clamp(12px,2vw,19px)
+}
+.neo-timefx__skip{
+ align-self:flex-end;margin-top:15px;padding:7px 14px;color:#fff;
+ background:#ffffff17;border:1px solid #ffffff6b;border-radius:3px;font-size:12px;cursor:pointer
+}
+.neo-timefx__skip:hover,.neo-timefx__skip:focus-visible{background:var(--fx-accent);color:#161321;outline:2px solid #fff}
+@keyframes neo-time-slide{
+ 0%{transform:translateX(-105%) skewX(-7deg)}
+ 24%,67%{transform:translateX(0) skewX(0)}
+ 100%{transform:translateX(105%) skewX(7deg)}
+}
+@keyframes neo-time-calendar{
+ 0%{transform:translateY(-105%) skewY(-2deg)}
+ 22%,70%{transform:translateY(0) skewY(0)}
+ 100%{transform:translateY(105%) skewY(2deg)}
+}
+@keyframes neo-time-title{
+ 0%,16%{opacity:0;transform:translateY(26px) scale(.96)}
+ 33%,68%{opacity:1;transform:translateY(0) scale(1)}
+ 90%,100%{opacity:0;transform:translateY(-12px) scale(1.02)}
+}
+@keyframes neo-time-shapes{
+ 0%{transform:translateX(-30%) skewX(-16deg)}
+ 65%{transform:translateX(0) skewX(-16deg)}
+ 100%{transform:translateX(35%) skewX(-16deg)}
+}
+@media(max-width:600px){
+ .neo-timefx__interior{padding:22px;width:96vw}
+ .neo-timefx__title{font-size:clamp(48px,13vw,87px)}
+ .neo-timefx--day .neo-timefx__title,.neo-timefx--sleep .neo-timefx__title{font-size:clamp(49px,12vw,80px)}
+ .neo-timefx__weekday{position:static;margin-top:12px}
+ .neo-timefx__skip{align-self:flex-start}
+}
+@media(prefers-reduced-motion:reduce){
+ .neo-timefx,.neo-timefx--day,.neo-timefx--sleep,.neo-timefx--season{
+  animation:neo-time-reduced var(--neo-timefx-duration) linear both
+ }
+ .neo-timefx__graphic,.neo-timefx__interior{animation:none}
+}
+@keyframes neo-time-reduced{0%{opacity:0}10%,80%{opacity:1}100%{opacity:0}}
