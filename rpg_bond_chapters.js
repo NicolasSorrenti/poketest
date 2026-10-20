@@ -48,43 +48,43 @@
  // Follow-up dialogue responds to the player's previous decision without changing
  // eligibility or replacing any existing character route.
  const openingByFlag={
-  elio_bond_2:{
-   elio_companion:'I sat down without asking you to come in with me this time. Took a while, but I did.',
-   elio_invitation:'I asked a stranger for a match yesterday. They said yes before I could change my mind.'
+  "elio_bond_2": {
+    "elio_companion": "I sat down at the crowded table without asking you to come with me. Wrote everything down afterward.",
+    "elio_invitation": "I asked a stranger for a match. My notebook's full of red ink from it."
   },
-  elio_bond_3:{
-   elio_good_loss:'I lost again, but I kept the turn we reviewed. That\'s why I signed up.',
-   elio_small_wins:'My notebook has four good plays on the first page. I signed up before I could talk myself out of it.'
+  "elio_bond_3": {
+    "elio_good_loss": "That last loss didn't stop me. I signed up for the next event. Look, there's my name.",
+    "elio_small_wins": "I found four good plays in my notes, then signed up before I could change my mind."
   },
-  elio_bond_4:{
-   elio_stayed:'You watched the whole match, even when I was behind. I noticed.',
-   elio_kept_calm:'I used the opening we tested. My hands almost stopped shaking after turn two.'
+  "elio_bond_4": {
+    "elio_stayed": "You stayed for the whole tournament, so I wanted to show you this new deck box.",
+    "elio_kept_calm": "The opening we practiced worked. I finally got a deck box with my own name on it."
   },
-  alma_bond_2:{
-   alma_open_table:'The window table filled up yesterday. I\'m going to need a second one soon.',
-   alma_no_standings:'They played all evening without a bracket. Took me hours to wash the cups afterward.'
+  "alma_bond_2": {
+    "alma_open_table": "The window table filled up yesterday. I barely had time to finish one cup.",
+    "alma_no_standings": "They played until closing without a bracket. I reheated this tea three times."
   },
-  alma_bond_3:{
-   alma_rest:'I took another afternoon off. Nobody burned the place down. Remarkable, really.',
-   alma_sketch:'Found my pencils. The regulars keep asking which Pokémon I\'m drawing next.'
+  "alma_bond_3": {
+    "alma_rest": "I took the afternoon off. Came back to a sign-up sheet for another club night.",
+    "alma_sketch": "The regulars asked me to draw a poster for the next café night. Might need an extra table, too."
   },
-  alma_bond_4:{
-   alma_long_table:'The long tables are still together. Nobody\'s bothered separating them since.',
-   alma_first_seats:'New players started picking their own seats. I don\'t have to rescue anyone from the door.'
+  "alma_bond_4": {
+    "alma_long_table": "The long tables are still together from last week. Don't tell anyone I let you in after closing.",
+    "alma_first_seats": "The new players took the window seats without asking. I've closed early tonight; don't tell the regulars."
   },
-  nereo_bond_2:{
-   nereo_dock_game:'I kept the deck in my jacket last week instead of my toolbox. Strange feeling.',
-   nereo_defense:'Your defensive line worked until I forgot that Trainer existed. Back to the drawing board.'
+  "nereo_bond_2": {
+    "nereo_dock_game": "After our game at the dock, somebody took the spare batteries from my deck box.",
+    "nereo_defense": "I finally found an answer to that defensive deck. Then somebody borrowed the batteries from my card case."
   },
-  nereo_bond_3:{
-   nereo_supply:'The supply box is full already. Half the stuff came from people I didn\'t even ask.',
-   nereo_trust:'The batteries came back. With a note, no coins. That\'s more like it.'
+  "nereo_bond_3": {
+    "nereo_supply": "The supply tin is full, which is good. Tonight's ferry is canceled and the club kids are waiting.",
+    "nereo_trust": "All my batteries came back. Just in time for the ferry to be canceled and the kids to get stranded."
   },
-  nereo_bond_4:{
-   nereo_shelter:'They\'re still talking about that match under the shelter. Not a word about the ferry.',
-   nereo_safe:'The postponed players all came back the next morning. The weather was better; so were their moods.'
+  "nereo_bond_4": {
+    "nereo_shelter": "They haven't stopped talking about that match under the shelter. I've got the morning off, for once.",
+    "nereo_safe": "Everyone returned for the postponed game. And I finally booked a morning off for myself."
   }
- };
+};
  for(const e of events)if(openingByFlag[e.id])e.openingByFlag=openingByFlag[e.id];
  return Object.freeze({events,validate:()=>{
   const errors=[],ids=new Set();
