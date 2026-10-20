@@ -106,91 +106,35 @@
    ['Promise to remind her to keep her evenings','Deal. I will write it on the schedule where I cannot ignore it.','support','iris_balance'],
    ['Ask her to make the boundaries part of the offer','Hours, backup crew, and weekends. I can ask for those without apologizing.','honest','iris_terms']
   ]),
-  S('hana_cross_1','hana','The Extra Table',25,39,'shop',1,1,'hana_route_1',[
-   ['hana','The beginners need a table, and Teo booked the last one for a livestream.'],
-   ['teo','I booked it two weeks ago! But I did not know the new players were coming.'],
-   ['Protagonist','Can either event move?'],
-   ['hana','I could ask. I am just tired of being the person who disappoints someone.'],
-   ['teo','You are allowed to disappoint me. I have experience with it.'],
-   ['hana','That is not as comforting as you think.']
-  ],[
+  S('hana_cross_1','hana','The Extra Table',25,39,'shop',1,1,'hana_route_1',[["Narrator","The shop's last empty table bears a handwritten 'BEGINNERS' sign. Beside it, Teo has already unpacked a microphone."],["hana","I need that table by six. The kids are bringing their starter decks."],["teo","And my stream starts at six. I've advertised it for two weeks."],["Protagonist","Could you shorten the stream and let them use the table afterward?"],["Narrator","Teo studies his schedule. Hana waits, one hand still on the back of the chair."],["hana","I can help set up the camera if we can clear the space by seven."]],[
    ['Propose a shorter stream and a longer beginner session','An actual compromise. I should have asked instead of worrying.','support','hana_shared_table'],
    ['Encourage Hana to tell Teo what she needs','Okay. Teo, I need that table by six. And I am asking, not apologizing.','honest','hana_boundary']
   ]),
-  S('yuna_cross_1','yuna','The Match Without Applause',34,49,'arcade',2,2,'yuna_route_1',[
-   ['yuna','Teo brought a microphone to our private testing night.'],
-   ['teo','It was switched off! Emotionally it was still on, admittedly.'],
-   ['Protagonist','Yuna, do you want an audience?'],
-   ['yuna','Not tonight. If I lose, I want to know whether the deck is bad, not whether the joke worked.'],
-   ['teo','I can sit down and shuffle instead.'],
-   ['yuna','Good. You have two hands and a suspiciously empty bench.']
-  ],[
+  S('yuna_cross_1','yuna','The Match Without Applause',34,49,'arcade',2,2,'yuna_route_1',[["Narrator","At the arcade, Teo has brought a microphone to Yuna's private test table. The cable is coiled neatly beneath his chair."],["yuna","I don't want a recording tonight. I've got a deck to fix."],["teo","It's switched off. See? No light."],["Protagonist","Then you could both play a few hands."],["Narrator","Yuna slides a sleeved deck toward Teo without looking at the microphone."],["yuna","Here. It's awful against Water. Show me why."]],[
    ['Offer to test the serious list with them','Nobody is recording it. Thank you. That is exactly the kind of pressure I need.','support','yuna_private_test'],
    ['Tell Teo that Yuna has already made her choice','Thanks. I was trying to say that without turning it into a performance.','honest','yuna_boundary']
   ]),
-  S('camila_cross_1','camila','Inventory of Trust',36,52,'shop',1,1,'camila_route_1',[
-   ['camila','The delivery manifest says eight prize decks. Iris brought seven.'],
-   ['iris','The eighth was damaged. I separated it rather than hand someone a ruined prize.'],
-   ['Protagonist','Is there a replacement?'],
-   ['camila','There is. It is valuable, and I had been saving it for a trade.'],
-   ['iris','The tournament is this weekend. If you need a witness, I will sign the report.'],
-   ['camila','I believe you. I just did not expect the right choice to be so expensive.']
-  ],[
+  S('camila_cross_1','camila','Inventory of Trust',36,52,'shop',1,1,'camila_route_1',[["Narrator","Seven prize decks lie across the shop counter. The delivery manifest, pinned beneath a paperweight, calls for eight."],["camila","We're a deck short. Iris, tell me that's a printing error."],["iris","The eighth box was damaged. I didn't want to pass it on as a prize."],["Protagonist","There's a spare deck in the display case, isn't there?"],["Narrator","Camila unlocks the case, pauses over the price tag, and takes out the box."],["camila","I'll lend it if we put the replacement in writing. Someone hand me a pen."]],[
    ['Suggest Camila lend the spare deck and document it','Lend, not give away. You are annoyingly good at finding a third option.','support','camila_lend'],
    ['Ask the organizers to decide openly','You are right. I should not turn a community decision into my private burden.','honest','camila_transparent']
   ]),
-  S('marina_cross_1','marina','A Weather Window',39,55,'park',2,1,'marina_route_1',[
-   ['marina','Iris says the water will rise again by morning. The tournament ferry is still scheduled.'],
-   ['iris','I said the route may be delayed. There is a difference.'],
-   ['Protagonist','Could the registration desk stay open longer?'],
-   ['marina','I would hate for someone to miss a match because they live across the river.'],
-   ['iris','Then call the organizers now, not tomorrow when the boats are already late.'],
-   ['marina','I will. I think I am done waiting for someone else to speak first.']
-  ],[
+  S('marina_cross_1','marina','A Weather Window',39,55,'park',2,1,'marina_route_1',[["Narrator","The ferry timetable rattles in its frame. Marina watches the waves climbing higher than the steps at the landing."],["marina","The qualifier starts before some players will get here if the boats run late."],["iris","I warned the organizers. They're still using the old start time."],["Protagonist","Can the registration desk stay open longer?"],["Narrator","Marina takes out her phone. The organizer's number is on the back of her event flyer."],["marina","I'm calling them. Can you help me explain what the crossing's like today?"]],[
    ['Help Marina contact the organizers','They agreed to allow late arrivals. That is one less person left on the dock.','support','marina_access'],
    ['Encourage her to make the argument herself','I did not need anyone to speak for me. I just needed the nerve to call.','honest','marina_voice']
   ]),
-  S('reina_cross_1','reina','A Correct Loss',47,63,'center',2,2,'reina_route_2',[
-   ['reina','Jun ruled that my opponent could replay the attack. He was right.'],
-   ['jun','That may be the least reassuring compliment I have heard today.'],
-   ['Protagonist','Then why are you still angry?'],
-   ['reina','Because I built the whole game around that mistake. It was a stupid plan, and now everyone has seen it.'],
-   ['jun','You both agreed to the correction. The crowd will remember the match less than you think.'],
-   ['reina','Easy for the man who does not have to play the rematch.']
-  ],[
+  S('reina_cross_1','reina','A Correct Loss',47,63,'center',2,2,'reina_route_2',[["Narrator","At the community center, Reina folds a corrected match slip so tightly that its edges crease."],["reina","Jun let the attack be replayed. He was right. I still hate it."],["jun","You agreed to the correction before the next turn. That's all anyone asked."],["Protagonist","Want to test the matchup again without the mistake?"],["Narrator","Reina unfolds the slip, notices the crease, and smooths it against the table."],["reina","Yes. Same decks. No favors. I want to know what the game should've looked like."]],[
    ['Offer to test the corrected matchup with her','No sympathy games. Full strength. Good. You know me.','support','reina_rebuild'],
    ['Point out she admitted the error without excuses','Do not make a ceremony of it. ...But thank you for noticing.','honest','reina_own_error']
   ]),
-  S('akari_cross_1','akari','A Model of Fairness',51,66,'library',1,2,'akari_route_2',[
-   ['akari','Jun rejected my seating algorithm. It is statistically fair.'],
-   ['jun','It seats the same beginner next to three champions in a row.'],
-   ['Protagonist','Does your model measure whether people come back next week?'],
-   ['akari','No. It measures match strength and waiting time.'],
-   ['jun','Both are useful. Neither tells the whole story.'],
-   ['akari','I hate when a missing variable turns out to be a person.']
-  ],[
+  S('akari_cross_1','akari','A Model of Fairness',51,66,'library',1,2,'akari_route_2',[["Narrator","Akari's seating chart fills an entire noticeboard. Jun points to three consecutive rows with the same name highlighted."],["akari","It's a fair distribution by ranking. I checked twice."],["jun","That beginner has been paired against three champions."],["Protagonist","Does the model track who comes back the following week?"],["Narrator","Akari checks the small print at the bottom of the chart. Her pencil stays in place above an empty column."],["akari","No. It doesn't. I should ask the beginner before I revise anything."]],[
    ['Help her interview the new players','I kept treating discomfort as noise. It was data I should have asked about.','support','akari_interviews'],
    ['Ask her to publish the model’s limits before using it','A model should disclose what it cannot measure. I will add that.','honest','akari_limits']
   ]),
-  S('kaede_cross_1','kaede','A Cut That Matters',62,77,'arcade',2,1,'kaede_route_1',[
-   ['kaede','That clip of my match is everywhere. They edited out the handshake.'],
-   ['teo','I did not cut it. But I amplified it before I watched the whole thing.'],
-   ['Protagonist','You could both leave it alone.'],
-   ['kaede','I could. Then people who have never met me would decide who I am.'],
-   ['teo','I can post the complete recording and explain what I got wrong.'],
-   ['kaede','Do it. And next time, ask the person you are filming.']
-  ],[
+  S('kaede_cross_1','kaede','A Cut That Matters',62,77,'arcade',2,1,'kaede_route_1',[["Narrator","At the arcade, a clip of Kaede's last match plays on three phones. The handshake at the end has been cut."],["kaede","Now everybody thinks I stormed off. You shared that, Teo."],["teo","I did. I should've watched the whole match first."],["Protagonist","Can you post the full recording alongside the clip?"],["Narrator","Teo opens the upload screen and passes the phone toward Kaede."],["kaede","Show the correction as loudly as the mistake. Then we're square."]],[
    ['Support Kaede without speaking for her','I can defend myself. Still... it is easier with someone listening.','support','kaede_own_story'],
    ['Ask Teo to publish the correction with equal visibility','Good. An apology that nobody sees is just a private comfort.','honest','kaede_public_correction']
   ]),
-  S('shiori_cross_1','shiori','The Second Opinion',60,76,'center',2,2,'shiori_route_2',[
-   ['shiori','Jun found the score sheet from my last tournament.'],
-   ['jun','It is not evidence of a bad player, only a disputed ruling.'],
-   ['Protagonist','Would replaying the match change anything?'],
-   ['shiori','No. That is what I needed to hear. I kept imagining one more game could undo it.'],
-   ['jun','We can acknowledge what happened without inventing a different past.'],
-   ['shiori','Then perhaps I can stop asking that match to decide who I am.']
-  ],[
+  S('shiori_cross_1','shiori','The Second Opinion',60,76,'center',2,2,'shiori_route_2',[["Narrator","Jun brings an old score sheet to the library. Shiori opens it at a corner worn thin from being folded."],["shiori","That's the tournament I keep talking about. I remember the last turn too clearly."],["jun","The ruling was disputed. It doesn't tell us whether you played well."],["Protagonist","Would you want to play a match here, without a crowd?"],["Narrator","Shiori closes the folder but leaves her deck case on the table."],["shiori","I think I would. Just one game. And please don't ask about the score sheet again tonight."]],[
    ['Offer a friendly match with no audience','I would like that. A game with no burden on it. Just cards and company.','support','shiori_no_stakes'],
    ['Ask what she wants to teach the next generation','That learning to lose is not the same as learning to disappear.','honest','shiori_teaches']
   ])
