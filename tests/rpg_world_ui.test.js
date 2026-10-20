@@ -1185,6 +1185,7 @@ test('RPG rematches show character memory in preview and provide contextual duel
  assert.ok(person);
  person.onclick();finishGreeting(r);r.act('dismissDialogue');
  r.act('duel:reina');
+ r.elements.preDuelNext.onclick();
  assert.match(r.elements.preDuelLine.textContent,/last loss|previous result|recalculated|last/i);
  r.elements.preDuelSkip.onclick();
  const pending=r.state().pendingDuel;
