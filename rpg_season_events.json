@@ -21,25 +21,33 @@
       "lines": [
         {
           "speaker": "Narrator",
-          "text": "Day one. Across Neo Harbor, handwritten signs and official brackets share the same windows. The circuit is underway."
+          "text": "A crooked OPEN sign swings above the card shop door. Inside, a half-finished tournament bracket shares the counter with a pile of unopened packs."
         },
         {
           "speaker": "hana",
-          "text": "There are ninety days to build a deck and make a name. Some people come to win. Some people come to find their people."
+          "text": "You must be the new challenger. Sorry about the mess. The bracket printer has opinions."
         },
         {
           "speaker": "Protagonist",
-          "text": "And if I do not know which yet?"
+          "text": "Is it always this busy?"
         },
         {
           "speaker": "hana",
-          "text": "Then that is what the season is for. No one gets to decide it for you."
+          "text": "Not usually before breakfast. Here, take a schedule. The first event's on the back."
+        },
+        {
+          "speaker": "Narrator",
+          "text": "Hana tries to straighten the sign through the glass. It swings the other way."
+        },
+        {
+          "speaker": "hana",
+          "text": "You'll learn your way around. And if you don't, the shop's hard to miss."
         }
       ],
       "choices": [
         {
           "label": "I want to test my best ideas.",
-          "reply": "That is the spirit. I cannot wait to see what you bring.",
+          "reply": "Good. Try something strange in a practice game before you bring it to the cup.",
           "flag": "welcome_compete",
           "effects": {
             "flags": [
@@ -49,7 +57,7 @@
         },
         {
           "label": "I want to understand this town first.",
-          "reply": "There is plenty of room for that too. Welcome.",
+          "reply": "Then start with the café. Ask Alma what you should see first.",
           "flag": "welcome_explore",
           "effects": {
             "flags": [
@@ -79,25 +87,33 @@
       "lines": [
         {
           "speaker": "Narrator",
-          "text": "At the community center, the tournament noticeboard is crowded with requests for volunteers, equipment and practice partners."
+          "text": "A noticeboard outside the community center is crowded with volunteers' names and a handwritten request for spare sleeves."
         },
         {
           "speaker": "shiori",
-          "text": "The exhibitions are exciting, but the circuit needs people who will still be here when the applause stops."
+          "text": "Someone's been erasing the same sign-up line for three days."
         },
         {
           "speaker": "Protagonist",
-          "text": "Is this about the tournament?"
+          "text": "The beginner's table?"
         },
         {
           "speaker": "shiori",
-          "text": "Not only. Some beginners cannot afford a spare deck or find a patient teacher. They deserve a place at these tables."
+          "text": "Mm. They have two decks for six players. The owner of the shop lent them both."
+        },
+        {
+          "speaker": "Narrator",
+          "text": "A child approaches with a battered binder. Shiori pulls out a chair before returning to the board."
+        },
+        {
+          "speaker": "shiori",
+          "text": "If you have a little time after your next match, they'd welcome another opponent."
         }
       ],
       "choices": [
         {
           "label": "I can offer advice when I have time.",
-          "reply": "That would mean more than you know.",
+          "reply": "Thank you. Even one game would help. They keep running out of practice partners.",
           "flag": "community_volunteer",
           "effects": {
             "flags": [
@@ -107,7 +123,7 @@
         },
         {
           "label": "I will cheer the volunteers on.",
-          "reply": "Support has many shapes. Thank you for listening.",
+          "reply": "I'll tell them there's another friendly face in the crowd.",
           "flag": "community_encourage",
           "effects": {
             "flags": [
@@ -137,25 +153,33 @@
       "lines": [
         {
           "speaker": "Narrator",
-          "text": "The card shop is louder than usual. The Neighborhood Cup is coming, but nobody knows whose draws will hold together."
+          "text": "At the card shop, people crowd around a bracket penciled onto the back of a shipping carton. The Neighborhood Cup is tomorrow."
         },
         {
           "speaker": "reina",
-          "text": "People are making predictions like the cards have already been dealt."
+          "text": "Half those predictions are wrong already. They listed someone who's out of town."
         },
         {
           "speaker": "Protagonist",
-          "text": "Are you nervous?"
+          "text": "You sound awfully sure of yourself."
         },
         {
           "speaker": "reina",
-          "text": "Prepared. Different thing. You should be too, whether you enter or not."
+          "text": "I'm sure of the matchup. The cards can still make a fool of me."
+        },
+        {
+          "speaker": "Narrator",
+          "text": "Reina flips a single test card onto the table, then leaves the rest of the deck face down."
+        },
+        {
+          "speaker": "reina",
+          "text": "Got a minute? I want to see whether this opening's as bad as it looks."
         }
       ],
       "choices": [
         {
           "label": "I will review my opening hands.",
-          "reply": "A practical answer. Good.",
+          "reply": "Good. Deal seven. We can find the ugly draws before tomorrow.",
           "flag": "cup_practice",
           "effects": {
             "flags": [
@@ -165,7 +189,7 @@
         },
         {
           "label": "I want to see who surprises everyone.",
-          "reply": "Then keep your eyes on the tables, not just the standings.",
+          "reply": "If you're watching, pay attention to the quiet games. That's where the strange decks hide.",
           "flag": "cup_watch",
           "effects": {
             "flags": [
@@ -195,25 +219,33 @@
       "lines": [
         {
           "speaker": "Narrator",
-          "text": "The community center pins up the Regional Qualifier schedule. Some hopeful trainers gather around it; others keep working on their decks."
+          "text": "A new qualifier bracket has been pinned above the community center's old results. Beside it sits a box of mismatched pens."
         },
         {
           "speaker": "akari",
-          "text": "A bracket measures one weekend. It does not measure every good decision made all season."
+          "text": "Someone filled in the finalist before registration closed."
         },
         {
           "speaker": "Protagonist",
-          "text": "Still, people have invested so much time."
+          "text": "That's a confident prediction."
         },
         {
           "speaker": "akari",
-          "text": "That is why we should make the event welcoming, whether someone qualifies or simply comes to watch."
+          "text": "Or lazy bookkeeping. They're not remotely the same thing."
+        },
+        {
+          "speaker": "Narrator",
+          "text": "She quietly crosses out the penciled name and offers the marker to the next player waiting in line."
+        },
+        {
+          "speaker": "akari",
+          "text": "We should make sure everyone gets their place on the sheet first. After that, let them surprise us."
         }
       ],
       "choices": [
         {
           "label": "I will prepare what I can.",
-          "reply": "Excellent. A sound plan, without pretending the future is certain.",
+          "reply": "Then bring the list you've actually tested. I'll be curious how it holds up.",
           "flag": "qualifier_prepare",
           "effects": {
             "flags": [
@@ -223,7 +255,7 @@
         },
         {
           "label": "I will support the players who enter.",
-          "reply": "A strong community requires both players and witnesses.",
+          "reply": "I'll save a seat by the last table. Those games are usually better than the predictions.",
           "flag": "qualifier_support",
           "effects": {
             "flags": [
@@ -253,25 +285,33 @@
       "lines": [
         {
           "speaker": "Narrator",
-          "text": "Posters for the championship cover the harbor. Players are comparing notes; friends make plans to watch the final matches."
+          "text": "Championship posters have gone up along the waterfront. In the shop window, a sun-faded schedule from the first week still hangs beneath the new one."
         },
         {
           "speaker": "hana",
-          "text": "It is strange how quickly ninety days can become a stack of memories."
+          "text": "Look at that. I never took the old schedule down."
         },
         {
           "speaker": "Protagonist",
-          "text": "The last games are still ahead."
+          "text": "You could leave it there."
         },
         {
           "speaker": "hana",
-          "text": "Exactly. Nothing is decided by a poster. We can show up for what matters, whatever the bracket says."
+          "text": "It has someone's tea stain on it. And the wrong start time for the second cup."
+        },
+        {
+          "speaker": "Narrator",
+          "text": "She smooths one corner against the glass, careful not to tear the paper."
+        },
+        {
+          "speaker": "hana",
+          "text": "After the final, I'm making everybody bring a deck back here. Win or lose."
         }
       ],
       "choices": [
         {
           "label": "One more practice session sounds right.",
-          "reply": "Then give yourself a real break afterward.",
+          "reply": "All right, but eat something before the match. You keep forgetting.",
           "flag": "finale_focus",
           "effects": {
             "flags": [
@@ -281,7 +321,7 @@
         },
         {
           "label": "I want to thank the people who helped.",
-          "reply": "I think they would love to hear it.",
+          "reply": "You should. I still have the signup sheet from the first week.",
           "flag": "finale_gratitude",
           "effects": {
             "flags": [
@@ -312,29 +352,37 @@
       "lines": [
         {
           "speaker": "Narrator",
-          "text": "The final day passes. Neo Harbor turns its lights down, but the decks and stories will come out again tomorrow."
+          "text": "The last tournament notices come down. The shop keeps one page from the final results book on the counter."
+        },
+        {
+          "speaker": "Narrator",
+          "text": "The season record reads: {{seasonRecord}}. {{championshipRecord}}"
+        },
+        {
+          "speaker": "Narrator",
+          "text": "A second page holds the names from your time around town. {{friendshipRecord}}"
         },
         {
           "speaker": "shiori",
-          "text": "The record is yours: {{seasonRecord}}. {{championshipRecord}}"
-        },
-        {
-          "speaker": "shiori",
-          "text": "{{friendshipRecord}}"
+          "text": "The café's still open, if you want to sit for a while."
         },
         {
           "speaker": "Protagonist",
-          "text": "It was not the season I could have predicted on day one."
+          "text": "Feels strange without another round on the schedule."
+        },
+        {
+          "speaker": "Narrator",
+          "text": "Shiori closes the results book and leaves it beside the spare decks."
         },
         {
           "speaker": "shiori",
-          "text": "That is why it belongs to you. Your choices mattered beyond the scoreboard."
+          "text": "Then perhaps next time we can play without looking at the clock."
         }
       ],
       "choices": [
         {
           "label": "I am ready for whatever comes next.",
-          "reply": "Then carry that experience with you. The harbor will remember.",
+          "reply": "I'll put the kettle on. Someone will arrive with a deck before the water boils.",
           "flag": "season_keep_going",
           "effects": {
             "flags": [
@@ -344,7 +392,7 @@
         },
         {
           "label": "I want a moment to remember it.",
-          "reply": "Take all the time you need. This chapter is yours.",
+          "reply": "There's no rush. The chairs aren't going anywhere.",
           "flag": "season_reflect",
           "effects": {
             "flags": [
