@@ -242,7 +242,8 @@ function advanceConversation(){
 }
 function closeSceneDialogue(){
  if(state.activeSituation||state.activeStory||state.activeEncounter||state.activeArc||state.activeSideQuest||state.pendingDuel||state.mandatoryEventState?.active)return;
- state.selected=null;
+ // Keep the current character selected after casual dialogue so Duel and Deck actions remain accessible.
+ if(!state.selected||!cast[state.selected]||!currentPeople().includes(state.selected))state.selected=null;
  scene={speaker:'Narrator',line:'',choices:[]};
  state.scene=scene;
  persist();render();
@@ -261,7 +262,7 @@ function selectPerson(id){
  state.selected=id;
  const memories=recordCG('meet',id);
  persist();
- const context=first?null:REACT.reaction(state,id);
+ const context=first?null:REACT.reaction(state,id,c);
  sayConversation(context?.lines||VN.dialogue(state,id,c,RPGD,{first}),fresh?VN.choices(state,id):[],context?.id||null);
  showCGMoment(memories[0]);
 }
@@ -588,7 +589,7 @@ function act(action){
  if(type==='talk'){
   state.talked[state.day+':'+id]=true;
   persist();
-  const context=REACT.reaction(state,id);
+  const context=REACT.reaction(state,id,c);
   return sayConversation(context?.lines||VN.dialogue(state,id,c,RPGD),[],context?.id||null);
  }
  if(type==='flirt'){
@@ -1549,7 +1550,7 @@ function render(){
   const bond=BONDS.progress(state,id,BOND_PLAN),chapter=document.createElement('small');
   chapter.className='character-chapter-progress';chapter.textContent='♥ Character chapters '+bond.completed+' / '+bond.total+(state.bondTrials?.[id]?' · Personal challenge won':'');
   label.append(name,sub,chapter);
-  if(!locked&&state['met_'+id]&&REACT.reaction(state,id)){
+  if(!locked&&state['met_'+id]&&REACT.reaction(state,id,c)){
    const cue=document.createElement('small');cue.className='character-reaction-hint';cue.textContent='✦ Something to say';
    label.append(cue);
   }
