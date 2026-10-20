@@ -54,6 +54,11 @@ assert.equal(reactions.assetFor({},'jinx','attack'),'/rpg-assets/characters/jinx
 assert.equal(reactions.assetFor({},'sierra','attack'),'/rpg-assets/characters/sierra/portrait.png','Use Sierra installed portrait');
 assert.equal(reactions.assetFor({},'rina','attack'),null,'Uninstalled art must not borrow another character portrait');
 assert.equal(reactions.assetFor({},'reina','attack'),'/rpg-assets/characters/reina/portraits/primary.png');
+const installedManifest=JSON.parse(fs.readFileSync(path.join(__dirname,'../rpg-assets/reactions/manifest.json'),'utf8'));
+assert.equal(Object.keys(installedManifest.characters).length,20,'NPC artwork manifest must load for the whole cast');
+assert.equal(reactions.assetFor(installedManifest,'reina','default'),'/rpg-assets/characters/reina/portraits/primary.png','Reina uses her own approved portrait');
+assert.equal(reactions.assetFor(installedManifest,'rina','default'),'/rpg-assets/rina.png','Rina uses the installed manifest artwork');
+
 assert.equal(reactions.assetFor({},'unknown_npc','attack'),null,'Unknown NPC gets silhouette');
 const js=fs.readFileSync(path.join(__dirname,'../classic_live.js'),'utf8');
 const html=fs.readFileSync(path.join(__dirname,'../classic_live.html'),'utf8');
