@@ -232,7 +232,7 @@ function finalChoice(g,plan,stage,actor,options,{min=1,max=min,optional=false,la
 }
 function planFinalAttack(g,side,attackIndex,program,plan={side,attackIndex,data:{}}){
  const p=g.players[side],f=g.players[1-side],u=p.active,a=effectiveCard(g,u).attacks[attackIndex],kind=program.kind, data=plan.data;
- const energyOptions=()=>u.energies.map((id,i)=>({id:`energy:${i}`,label:`${i+1}: ${card(g,id).name}`}));
+ const energyOptions=(type=null)=>u.energies.flatMap((id,i)=>!type||attachedEnergyMatchesType(g,id,type)?[{id:`energy:${i}`,label:`${i+1}: ${card(g,id).name}`}]:[]);
  const benchOptions=(owner)=>owner.bench.map((x,i)=>({id:`bench:${i}`,label:publicName(g,x)}));
  const finish=()=>resolveAttack(g,side,attackIndex, data.target, data.energyPicks,{...data,finalApproved:true});
  if(['barrier','destiny-bond','third-eye','scavenge'].includes(kind)&&!data.energyPicks){
@@ -294,11 +294,13 @@ function planFinalAttack(g,side,attackIndex,program,plan={side,attackIndex,data:
   finalChoice(g,plan,'energy-destination',side,benchOptions(p),{label:`Energy Bomb: destination for Energy ${index+1} of ${u.energies.length}`});return;
  }
  if(['continuous-fireball','fireball','playing-with-fire','fascinate'].includes(kind)&&!data.preRoll){
-  data.preRoll=ATTACK.resolve(program,()=>next(g,2)===1,{selfEnergy:u.energies.length});
+  const fire=u.energies.filter(id=>attachedEnergyMatchesType(g,id,'Fire')).length;
+  if(['fireball','playing-with-fire'].includes(kind)&&!fire)fail(a.name+' requires attached Fire Energy');
+  data.preRoll=ATTACK.resolve(program,()=>next(g,2)===1,{selfEnergy:kind==='continuous-fireball'?fire:u.energies.length});
  }
  if(['continuous-fireball','fireball','playing-with-fire'].includes(kind)&&data.preRoll.discardHeadCount>0&&!data.energyPicks){
   const qty=data.preRoll.discardHeadCount;
-  finalChoice(g,plan,'pay-energy',side,energyOptions(),{min:qty,max:qty,label:`${a.name}: discard ${qty} Energy card(s)`});return;
+  finalChoice(g,plan,'pay-energy',side,energyOptions('Fire'),{min:qty,max:qty,label:`${a.name}: discard ${qty} Fire Energy card(s)`});return;
  }
  if(kind==='fascinate'){
   if(!f.bench.length)fail('Fascinate requires an opposing Benched Pokémon');
@@ -1342,7 +1344,7 @@ function resolveAttack(g,side,index,chosenBench,energyPicks,extra={}){
  if(FINAL_KINDS.has(program.kind)){
   if(['barrier','destiny-bond','scavenge','third-eye'].includes(program.kind)||['continuous-fireball','fireball','playing-with-fire'].includes(program.kind)&&extra.preRoll?.discardHeadCount){
    const quantity=['continuous-fireball','fireball','playing-with-fire'].includes(program.kind)?extra.preRoll.discardHeadCount:1;
-   if(!Array.isArray(energyPicks)||energyPicks.length!==quantity||new Set(energyPicks).size!==quantity||energyPicks.some(i=>!Number.isInteger(i)||i<0||i>=u.energies.length))fail('Invalid final attack Energy selection');
+   if(!Array.isArray(energyPicks)||energyPicks.length!==quantity||new Set(energyPicks).size!==quantity||energyPicks.some(i=>!Number.isInteger(i)||i<0||i>=u.energies.length||['continuous-fireball','fireball','playing-with-fire'].includes(program.kind)&&!attachedEnergyMatchesType(g,u.energies[i],'Fire')))fail('Invalid final attack Energy selection');
   }
   if(program.kind==='fascinate'&&!f.bench.length)fail('Fascinate requires an opponent Bench');
   if(program.kind==='amnesia'||program.kind==='copy-attack'){
@@ -1516,7 +1518,7 @@ function resolveAttack(g,side,index,chosenBench,energyPicks,extra={}){
   }else if(kind==='collect-fire'){
    pickables.push(...p.discard.flatMap((id,i)=>card(g,id).name==='Fire Energy'?[{id:`discard:${i}`,label:card(g,id).name}]:[]));max=Math.min(1,pickables.length);label='Collect Fire: attach a Fire Energy from your discard';
   }else if(['flame-wheel','flamethrower','elemental-blast','burning-flame','psyburst'].includes(kind)){
-   const fireOnly=['flamethrower','burning-flame','psyburst'].includes(kind);
+   const fireOnly=['flame-wheel','flamethrower','burning-flame','psyburst'].includes(kind);
    const types=['Fire','Water','Lightning'];
    pickables.push(...u.energies.flatMap((id,i)=>
     fireOnly&&!attachedEnergyMatchesType(g,id,'Fire')||
@@ -1526,7 +1528,7 @@ function resolveAttack(g,side,index,chosenBench,energyPicks,extra={}){
     kind==='burning-flame'?roll.neo48BurningHeads:1;
    if(kind==='elemental-blast'&&!canPayTypedDiscard(g,u,types))
     fail('Elemental Blast requires three separate Energy cards providing Fire, Water and Lightning');
-   if(kind==='flame-wheel'&&u.energies.length<3)fail('Flame Wheel requires three attached Energy cards');
+   if(kind==='flame-wheel'&&pickables.length<3)fail('Flame Wheel requires three attached Fire Energy cards');
    if(kind==='flamethrower'&&!pickables.length)fail('Flamethrower requires a Fire Energy card to discard');
    if(kind==='burning-flame'){
     if(pickables.length<roll.neo48BurningHeads){roll.damage=0;min=max=0;}
@@ -1555,7 +1557,7 @@ function resolveAttack(g,side,index,chosenBench,energyPicks,extra={}){
    if(picks.length!==expected||new Set(picks).size!==expected||
       picks.some(i=>!Number.isInteger(i)||i<0||i>=u.energies.length))
     fail('Invalid Neo attack Energy discard');
-   if(['flamethrower','burning-flame','psyburst'].includes(kind)&&
+   if(['flame-wheel','flamethrower','burning-flame','psyburst'].includes(kind)&&
       picks.some(i=>!attachedEnergyMatchesType(g,u.energies[i],'Fire')))
     fail('Attack requires Fire Energy cards to discard');
    if(kind==='elemental-blast'&&!canPayTypedDiscard(g,u,['Fire','Water','Lightning'],picks))
