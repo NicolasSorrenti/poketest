@@ -305,3 +305,13 @@ button.attack-action:disabled .attack-warning{color:#b6b2a3}
 }
 .choice-dialog .choice-card-label{display:block;min-width:0;font-weight:750;overflow-wrap:anywhere}
 .choice-dialog .illustrated-choice:has(.selection-order){border-color:#f9dd86;background:#35524a}
+
+/* Read-only deck inventory: preserve every card in deck searches but visually
+   distinguish entries that the authoritative reducer will not accept. */
+.choice-dialog .choice-list label.choice-ineligible{
+ opacity:.40;filter:grayscale(1);cursor:not-allowed;
+ background:#182d3b;border-color:#425261
+}
+.choice-dialog .choice-list label.choice-ineligible .choice-card-art{filter:grayscale(1)}
+.choice-dialog .choice-list label.choice-ineligible input{pointer-events:none}
+.choice-dialog .choice-list label.choice-ineligible:hover{opacity:.56}
