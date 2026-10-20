@@ -69,7 +69,7 @@ The latest code-level integrity check loaded 32 stories through the actual modul
 - Avoided invented details in post-duel dialogue: outcome-only history does **not** prove which Pokémon, Trainer, Switch or knockout was played. Reactions describe plausible character responses to the verified result, not an unsourced turn-by-turn recap.
 - Added regression coverage for battle voice completeness, pre-duel distinctness, natural special-scene responses, correct narration ownership and preserving the actual final line during decisions.
 
-A full successful RPG regression run at commit `018a81cba93519f93fe1f813d3714d68ff300049` is recorded in [GitHub Actions run 39437392722](https://github.com/NicolasSorrenti/poketest/actions/runs/39437392722). The final additional narrator-ownership test is checked by the next CI run.
+A full successful RPG regression run at commit `018a81cba93519f93fe1f813d3714d68ff300049` is recorded in [GitHub Actions run 39437392722](https://github.com/NicolasSorrenti/poketest/actions/runs/39437392722). The final narrator-ownership and activity/encounter tests also **passed**, in [run 39437564357](https://github.com/NicolasSorrenti/poketest/actions/runs/39437564357) at commit `76a2d817d3aea477cb514d4f92d94dd84466269c`.
 
 ## Remaining priority findings
 
