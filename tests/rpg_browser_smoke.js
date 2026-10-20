@@ -37,9 +37,13 @@ const acknowledgeMandatory=async(page)=>{
   await page.locator('#rpgMapToggle').click();
   const mapSheet=page.locator('#rpgMapPanel');
   await mapSheet.waitFor({state:'visible'});
+  await page.waitForFunction(()=>{
+   const r=document.getElementById('rpgMapPanel')?.getBoundingClientRect();
+   return !!r&&r.x>=-0.5&&r.right<=innerWidth+0.5&&r.y>=-0.5&&r.bottom<=innerHeight+0.5;
+  },null,{timeout:5000}); // Slide-in motion takes ~240ms.
   assert.equal(await mapSheet.getAttribute('aria-hidden'),'false');
   const bounds=await mapSheet.boundingBox();
-  assert.ok(bounds&&bounds.x>=0&&bounds.x+bounds.width<=361&&bounds.y>=0&&bounds.y+bounds.height<=641,
+  assert.ok(bounds&&bounds.x>=-0.5&&bounds.x+bounds.width<=361&&bounds.y>=-0.5&&bounds.y+bounds.height<=641,
    'Town map must fit inside the mobile viewport');
   assert.equal(await page.locator('#places .place').count(),7);
   assert.equal(await page.locator('#rpgMapPanel .rpg-drawer-close').isVisible(),true);
@@ -48,6 +52,12 @@ const acknowledgeMandatory=async(page)=>{
   await page.locator('#rpgInfoToggle').click();
   const infoSheet=page.locator('#rpgInfoPanel');
   await infoSheet.waitFor({state:'visible'});
+  await page.waitForFunction(()=>{
+   const r=document.getElementById('rpgInfoPanel')?.getBoundingClientRect();
+   return !!r&&r.x>=-0.5&&r.right<=innerWidth+0.5&&r.y>=-0.5&&r.bottom<=innerHeight+0.5;
+  },null,{timeout:5000});
+  assert.equal(await infoSheet.getAttribute('aria-hidden'),'false');
+  assert.equal(await page.locator('#rpgInfoToggle').getAttribute('aria-expanded'),'true');
   await page.locator('#rpgPanelTabs button[data-panel="scene"]').click();
   assert.equal(await page.locator('#people').isVisible(),true,'Nearby details must not be lost behind an unreachable tab');
   await page.locator('#rpgPanelTabs button[data-panel="progress"]').click();
