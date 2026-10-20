@@ -27,9 +27,11 @@ const act=(g,side,type,payload={})=>{const r=applyCommand(g,side,{type,payload})
  }
  const local=fs.readFileSync(require.resolve('./classic_live.js'),'utf8');
  const online=fs.readFileSync(require.resolve('./online.js'),'utf8');
- assert.ok(local.includes('groups[1-owner]'),'Local CPU UI needs opponent/own rail inversion');
- assert.ok(online.includes('[[0,1-side()],[1,side()]]'),'Online UI needs dynamic seat mapping');
- assert.ok(online.includes('renderFaceUpPrizes()')&&online.includes('revealedPrizes'));
+ const shared=fs.readFileSync(require.resolve('./duel_shared_components.js'),'utf8');
+ assert.ok(local.includes('shared.renderFaceUpPrizes')&&local.includes('me:0'),'Local CPU UI uses player 0 perspective');
+ assert.ok(online.includes('shared.renderFaceUpPrizes')&&online.includes('me:side()'),'Online UI uses local or spectated perspective');
+ assert.ok(shared.includes('[[0,1-me],[1,me]]'),'Both UI modes invert top/bottom Prize rails from local seat');
+ assert.ok(online.includes('renderFaceUpPrizes()')&&shared.includes('revealedPrizes'),'Publicly revealed Prizes come from shared renderer');
  const clone=structuredClone(g);
  assert.deepEqual(publicView(clone,null).players[1].revealedPrizes,publicView(g,null).players[1].revealedPrizes);
 }
