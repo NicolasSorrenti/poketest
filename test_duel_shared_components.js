@@ -39,6 +39,20 @@ try{
  UI.renderHandFan({root:fan,ids:[],visible:true,phase:'game',makeCard,getCard:id=>({name:id}),viewportWidth:400});
  assert.equal(fan.classList.contains('hidden'),true);
 
+ const basic={name:'Bulbasaur',supertype:'Pokémon',subtypes:['Basic']};
+ const energy={name:'Grass Energy',supertype:'Energy'};
+ const evolution={name:'Ivysaur',supertype:'Pokémon',evolvesFrom:'Bulbasaur'};
+ assert.deepEqual(UI.handIntent({card:basic,index:3,setup:true}),{kind:'command',type:'setup_select',payload:{handIndex:3}});
+ assert.equal(UI.handIntent({card:basic,index:3,setup:true,setupConfirmed:true}).kind,'none');
+ assert.equal(UI.handIntent({card:energy,index:0,setup:true}).kind,'inspect');
+ assert.equal(UI.handIntent({card:energy,index:1,canAct:false}).kind,'inspect','Cannot play while observing');
+ assert.equal(UI.handIntent({card:energy,index:1,canAct:true,energyUsed:true}).kind,'error');
+ assert.deepEqual(UI.handIntent({card:{name:'Switch',supertype:'Trainer'},index:2,canAct:true}),{kind:'command',type:'play_trainer',payload:{handIndex:2}});
+ assert.equal(UI.handIntent({card:basic,index:0,canAct:true}).type,'bench');
+ assert.equal(UI.handIntent({card:energy,index:0,canAct:true}).type,'attach_energy');
+ assert.equal(UI.handIntent({card:evolution,index:0,canAct:true}).type,'evolve');
+ assert.equal(UI.handIntent({card:energy,index:1,canAct:true,selectedHand:1,targetMode:{type:'attach_energy'}}).kind,'cancel');
+ assert.equal(UI.handIntent({card:{name:'Other',supertype:'Pokémon'},index:0,canAct:true}).kind,'select');
  const handFace=UI.handCardFace({card:{name:'Pikachu <script>'},source:'/image?x="onerror="',handType:'Basic Pokémon'});
  assert.match(handFace,/Pikachu &lt;script&gt;/);assert.doesNotMatch(handFace,/<script>/);
  const zone=node();
@@ -85,7 +99,7 @@ try{
  const classic=fs.readFileSync(__dirname+'/classic_live.js','utf8');
  const online=fs.readFileSync(__dirname+'/online.js','utf8');
  for(const [mode,client] of [['solo',classic],['multiplayer',online]]){
-  for(const method of ['renderHandPeek','renderHandFan','handCardFace','renderZone','pokemonFace','renderAttacks','renderFaceUpPrizes','renderPrizeRail','renderPrizeFallback'])
+  for(const method of ['renderHandPeek','renderHandFan','handIntent','handCardFace','renderZone','pokemonFace','renderAttacks','renderFaceUpPrizes','renderPrizeRail','renderPrizeFallback'])
    assert.ok(client.includes('shared.'+method),mode+' must use common '+method);
   assert.doesNotMatch(client,/b\.innerHTML=quick\.energyStack/,'Pokémon visuals must not diverge');
  }
