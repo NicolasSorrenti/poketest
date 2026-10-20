@@ -377,8 +377,8 @@
           }
         },
         {
-          "label": "Kiss her and tell her you meant to ask first",
-          "reply": "I was going to say yes either way. You just skipped my favorite part of teasing you.",
+          "label": "Ask if you can kiss her before dinner",
+          "reply": "I was going to say yes. I just wanted to see how long you'd take to ask.",
           "kind": "flirt",
           "flag": "sierra_kiss",
           "delta": {
