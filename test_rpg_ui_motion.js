@@ -85,4 +85,28 @@ widgets.rpgMapToggle.click();
 widgets.rpgDrawerBackdrop.click();
 assert.equal(nav.active,null,'backdrop closes the menu');
 
+// Browser-like boot: the module must attach click handlers even when the RPG's
+// main render loop has not started or fails elsewhere.
+const vm=require('node:vm'),fs=require('node:fs');
+const onPage={rpgMapToggle:element(),rpgInfoToggle:element(),rpgDrawerBackdrop:element(),
+ rpgMapPanel:element(),rpgInfoPanel:element()};
+onPage.rpgMapPanel.closeButton=element();
+onPage.rpgInfoPanel.closeButton=element();
+const pageDocument={
+ readyState:'complete',
+ body:{dataset:{},classList:{toggle(){}}},
+ getElementById:id=>onPage[id]||null,
+ addEventListener(){}
+};
+const pageWindow={document:pageDocument};
+vm.runInNewContext(fs.readFileSync('rpg_ui_motion.js','utf8'),
+ {window:pageWindow,document:pageDocument});
+assert.equal(pageWindow.NeoRpgInterface.init(),false,'browser module must self-initialize');
+onPage.rpgMapToggle.click();
+assert.equal(pageDocument.body.dataset.rpgDrawer,'map','Map works without the RPG bootstrap');
+onPage.rpgInfoToggle.click();
+assert.equal(pageDocument.body.dataset.rpgDrawer,'info','Info works without the RPG bootstrap');
+onPage.rpgInfoPanel.closeButton.click();
+assert.equal(pageDocument.body.dataset.rpgDrawer,'closed');
+
 console.log('RPG scene-first navigation: toggles, focus, Escape, travel, location selection and backdrop passed.');
