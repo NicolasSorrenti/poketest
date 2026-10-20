@@ -424,15 +424,15 @@
       "lines": [
         {
           "speaker": "jinx",
-          "text": "I know the railing's wet. These boots have survived worse."
+          "text": "These boots have handled worse planks than that."
         },
         {
           "speaker": "marina",
-          "text": "Your boots aren't the problem. Look where the boardwalk dips."
+          "text": "Please look where it dips before you tell me about your boots."
         },
         {
           "speaker": "Narrator",
-          "text": "A puddle has collected around a loose plank. Marina tests it with the toe of her shoe."
+          "text": "A loose board shifts beside a puddle on the riverwalk. Marina keeps a hand on the railing rather than testing it."
         },
         {
           "speaker": "Protagonist",
@@ -440,21 +440,21 @@
         },
         {
           "speaker": "jinx",
-          "text": "The long way? Obviously you'd pick the long way."
+          "text": "The long way round? You'd really choose the long way?"
         },
         {
           "speaker": "marina",
-          "text": "It goes past the little card stand. We can stop there."
+          "text": "It goes past that little card stand. There's decent tea there, too."
         },
         {
           "speaker": "jinx",
-          "text": "Fine. But I'm not carrying either of your deck boxes."
+          "text": "You could have led with tea. But I'm not carrying anyone's deck boxes."
         }
       ],
       "choices": [
         {
           "label": "Side with Marina on the safety call",
-          "reply": "Fine. Marina wins this round. She can buy the snacks if we survive the walk.",
+          "reply": "Fine. We're going around. Marina can pick the snacks for her victory speech.",
           "kind": "honest",
           "flag": "jinx_marina_safety",
           "delta": {
@@ -466,7 +466,7 @@
         },
         {
           "label": "Tease Jinx for actually listening",
-          "reply": "I can admit when she's right. Once. Do not make it a recurring event.",
+          "reply": "I heard her the first time. And she was right. Don't make a souvenir of it.",
           "kind": "flirt",
           "flag": "jinx_marina_tease",
           "delta": {
@@ -478,7 +478,7 @@
         },
         {
           "label": "Suggest taking the longer, dry path together",
-          "reply": "A path without puddles? Wonderful. Now show me where the card stand is.",
+          "reply": "Good. There's a card stand down there, isn't there? I could eat.",
           "kind": "support",
           "flag": "jinx_marina_help",
           "delta": {
@@ -490,9 +490,9 @@
         }
       ],
       "openingByFlag": {
-        "jinx_challenge": "You challenged me at the arcade. A damp boardwalk shouldn't be harder than that.",
-        "jinx_edge": "You liked the dangerous look. Marina would prefer that I didn't break my neck before the next match.",
-        "jinx_honest": "I said I'm not always threatening people. Now apparently my boots are threatening Marina."
+        "jinx_challenge": "We argued about bad odds at the arcade. Those odds didn't involve breaking an ankle on this boardwalk.",
+        "jinx_edge": "Yes, the boots look dangerous. Have you seen that boardwalk, Marina?",
+        "jinx_honest": "I told you I can listen when someone has a point. I just don't think my boots are the issue."
       }
     },
     {
@@ -512,37 +512,37 @@
       "lines": [
         {
           "speaker": "jinx",
-          "text": "I'm not standing on the counter. I'm sitting. There's a difference."
+          "text": "I'm not standing on the counter. I'm sitting. Huge difference."
         },
         {
           "speaker": "alma",
-          "text": "And I'm not kicking you out. I'm asking you to use a chair."
+          "text": "It's where I serve drinks, Jinx. That's the difference I'm worried about."
         },
         {
           "speaker": "Narrator",
-          "text": "The stack of paper cups wobbles as Jinx shifts her weight. Alma steadies it with one hand."
+          "text": "A stack of paper cups tilts as Jinx shifts her weight. Alma catches it without taking her eyes off Jinx."
         },
         {
           "speaker": "Protagonist",
-          "text": "There's an empty booth right over there."
+          "text": "There's a booth by the window. You can see the cake display from there."
         },
         {
           "speaker": "jinx",
-          "text": "The one with the terrible view of the wall?"
+          "text": "The one with an actual view? Finally, a reasonable suggestion."
         },
         {
           "speaker": "alma",
-          "text": "It has the best view of the cake display. That's more important."
+          "text": "There's a menu on the table. Please use the chair that comes with it."
         },
         {
           "speaker": "jinx",
-          "text": "...All right. But I want the chocolate one."
+          "text": "Fine. But I'm ordering chocolate cake on principle."
         }
       ],
       "choices": [
         {
           "label": "Defend Jinx’s right to be extra (within reason)",
-          "reply": "Thank you. Finally, somebody recognizes a performance when they see one. I'll use the booth.",
+          "reply": "Thank you. I can make a perfectly good entrance from a normal chair, you know.",
           "kind": "support",
           "flag": "jinx_alma_defend",
           "delta": {
@@ -554,7 +554,7 @@
         },
         {
           "label": "Agree with Alma and tell Jinx to pick her battles",
-          "reply": "Yeah, I know. The cups nearly went flying. Come on, let's sit down.",
+          "reply": "Yeah, yeah. I saw the cups. I'm moving. Nobody needs a speech about it.",
           "kind": "honest",
           "flag": "jinx_alma_pick",
           "delta": {
@@ -566,7 +566,7 @@
         },
         {
           "label": "Offer to buy both of them something so the tension drops",
-          "reply": "Chocolate cake for both of them? You're going to go broke keeping the peace.",
+          "reply": "Chocolate cake for everyone? You're going to go broke negotiating peace treaties.",
           "kind": "flirt",
           "flag": "jinx_alma_bribe",
           "delta": {
@@ -578,9 +578,9 @@
         }
       ],
       "openingByFlag": {
-        "jinx_serious": "You took my match seriously at the arcade. Alma's taking the café furniture even more seriously.",
-        "jinx_show": "You said you liked the show. Apparently there's a strict no-shows-on-the-counter policy.",
-        "jinx_remember": "You asked what happens when someone beats me. Alma just beat me with a chair."
+        "jinx_serious": "You took my arcade match seriously. Alma seems equally serious about my seat on this counter.",
+        "jinx_show": "You liked the show, but Alma says sitting on her counter isn't part of the act.",
+        "jinx_remember": "You asked what happens when someone beats me. Apparently Alma's about to do it with a chair."
       }
     }
   ]
