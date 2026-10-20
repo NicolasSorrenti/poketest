@@ -1,0 +1,378 @@
+{
+  "title": "Neo Campus TCG — close-up NPC battle reaction portraits",
+  "version": "2026-10-20-closeups-v1",
+  "characters": {
+    "hana": {
+      "gamePath": "rpg-assets/reactions/hana/attack.png",
+      "sourcePath": "art-production/source-battle-closeups/hana.png",
+      "sourceFilename": "hana_explosión_de_pétalos_y_energía.png",
+      "sourceDimensions": [
+        1672,
+        941
+      ],
+      "exportDimensions": [
+        1280,
+        720
+      ],
+      "crop": "none",
+      "sourceSha256": "6a767dc3e142a3cf375cb431c76595624e0f45b46b13d2ffae0f0cb4f649b877",
+      "exportSha256": "b76ed8a738760369ec590a8d870223f293ee4f524cb8f74e9540c525e197f8f5",
+      "originalBytes": 2884117,
+      "exportBytes": 1801950
+    },
+    "reina": {
+      "gamePath": "rpg-assets/reactions/reina/attack.png",
+      "sourcePath": "art-production/source-battle-closeups/reina.png",
+      "sourceFilename": "guerrera_de_cuero_rojo_y_energía_carmesí.png",
+      "sourceDimensions": [
+        1672,
+        941
+      ],
+      "exportDimensions": [
+        1280,
+        720
+      ],
+      "crop": "none",
+      "sourceSha256": "a25d0bcc3a659d1d793ad54293b89b98bb53406acb4a3dcfb94c950ec34b5ad1",
+      "exportSha256": "607988756ec3bbfd03b8f874a5c0cdff0bd9fb97a384ac23284f2864aa754696",
+      "originalBytes": 2872867,
+      "exportBytes": 1792713
+    },
+    "shiori": {
+      "gamePath": "rpg-assets/reactions/shiori/attack.png",
+      "sourcePath": "art-production/source-battle-closeups/shiori.png",
+      "sourceFilename": "retrato_mágico_de_shiori_con_cartas_astrales.png",
+      "sourceDimensions": [
+        1672,
+        941
+      ],
+      "exportDimensions": [
+        1280,
+        720
+      ],
+      "crop": "none",
+      "sourceSha256": "a1490640570010862f1b0f862b8e7633618712cd9cfbd2ee61a891e73ac5ffdb",
+      "exportSha256": "95060b64ec02743d095b354f6a5a158ca1c90910910293bf58239c66ae0b4ab4",
+      "originalBytes": 2986223,
+      "exportBytes": 1847754
+    },
+    "yuna": {
+      "gamePath": "rpg-assets/reactions/yuna/attack.png",
+      "sourcePath": "art-production/source-battle-closeups/yuna.png",
+      "sourceFilename": "ídolo_cibernética_yuna_en_acción.png",
+      "sourceDimensions": [
+        1672,
+        941
+      ],
+      "exportDimensions": [
+        1280,
+        720
+      ],
+      "crop": "none",
+      "sourceSha256": "b4502e11f02badca9623b5371b5791b20e761279da6bddb7fe79dcbf1193d525",
+      "exportSha256": "beb7db3fa3fdd7db6a140240f30bc41ab9a426f80208ca573d5f80e4758519a8",
+      "originalBytes": 2767346,
+      "exportBytes": 1750611
+    },
+    "akari": {
+      "gamePath": "rpg-assets/reactions/akari/attack.png",
+      "sourcePath": "art-production/source-battle-closeups/akari.png",
+      "sourceFilename": "akari_y_sus_cartas_holográficas.png",
+      "sourceDimensions": [
+        1672,
+        941
+      ],
+      "exportDimensions": [
+        1280,
+        720
+      ],
+      "crop": "none",
+      "sourceSha256": "26f087c7c3be89a0a3b05a67c51ecfa34bb90fd70b01f1550d8556f5b07dcd84",
+      "exportSha256": "f2c43182c7c4465f52f6ce7a60c97ca6a34c5890d866f1423f09d59aa8ca72e7",
+      "originalBytes": 2723735,
+      "exportBytes": 1704185
+    },
+    "camila": {
+      "gamePath": "rpg-assets/reactions/camila/attack.png",
+      "sourcePath": "art-production/source-battle-closeups/camila.png",
+      "sourceFilename": "retrato_mágico_de_rubia_glamorosa.png",
+      "sourceDimensions": [
+        1672,
+        941
+      ],
+      "exportDimensions": [
+        1280,
+        720
+      ],
+      "crop": "none",
+      "sourceSha256": "bebae2866369552c9adc43f6f25114a9e36a7e1b27e0ec7ff5d003b3bdf99cdd",
+      "exportSha256": "637858596016c4622f8f3e72934e06729648b372efaaff44bb81e2552bc23146",
+      "originalBytes": 2672340,
+      "exportBytes": 1669099
+    },
+    "marina": {
+      "gamePath": "rpg-assets/reactions/marina/attack.png",
+      "sourcePath": "art-production/source-battle-closeups/marina.png",
+      "sourceFilename": "retrato_anime_entre_agua_y_luz_dorada.png",
+      "sourceDimensions": [
+        1672,
+        941
+      ],
+      "exportDimensions": [
+        1280,
+        720
+      ],
+      "crop": "none",
+      "sourceSha256": "3ec2740a88b0a66b3f7bfdb8a63168838be3c4fea1613797ebc2c1a478533380",
+      "exportSha256": "48860570967f545c264aa126493c1d1859128fa8ee1aad0ab1300e127a4f83f1",
+      "originalBytes": 2907098,
+      "exportBytes": 1803219
+    },
+    "kaede": {
+      "gamePath": "rpg-assets/reactions/kaede/attack.png",
+      "sourcePath": "art-production/source-battle-closeups/kaede.png",
+      "sourceFilename": "kaede_actitud_punk_neón.png",
+      "sourceDimensions": [
+        1672,
+        941
+      ],
+      "exportDimensions": [
+        1280,
+        720
+      ],
+      "crop": "none",
+      "sourceSha256": "2a4751566671d9d0b69e5a21eff95df93668f2f44caf42a34eac3070d218c349",
+      "exportSha256": "31493fc07c2991e5dbacdf4e0865f35336aaad362c81f4cae971a3bbecf6c98d",
+      "originalBytes": 2839683,
+      "exportBytes": 1747267
+    },
+    "jinx": {
+      "gamePath": "rpg-assets/reactions/jinx/attack.png",
+      "sourcePath": "art-production/source-battle-closeups/jinx.png",
+      "sourceFilename": "ídola_gótica_de_batalla_neon.png",
+      "sourceDimensions": [
+        1672,
+        941
+      ],
+      "exportDimensions": [
+        1280,
+        720
+      ],
+      "crop": "none",
+      "sourceSha256": "fc2457375b110c4c413ec6ac79d39df267540620a414f8ddba76a066deb93c61",
+      "exportSha256": "ebe454f6fd800eed181bc88a3a51c40f4475f2a0b2ec87f071d683c1c72808af",
+      "originalBytes": 2819314,
+      "exportBytes": 1758339
+    },
+    "luna": {
+      "gamePath": "rpg-assets/reactions/luna/attack.png",
+      "sourcePath": "art-production/source-battle-closeups/luna.png",
+      "sourceFilename": "hechicera_lunar_de_glamour_gótico.png",
+      "sourceDimensions": [
+        1672,
+        941
+      ],
+      "exportDimensions": [
+        1280,
+        720
+      ],
+      "crop": "none",
+      "sourceSha256": "8dd30f200070bca02ca18de73443c286c02b2e7dcf75144571ec8e4ee6fd3023",
+      "exportSha256": "72a74c5f922506651903ac425c4a078247462057e5d871bbceb83eddbefa8e35",
+      "originalBytes": 2978384,
+      "exportBytes": 1837264
+    },
+    "sol": {
+      "gamePath": "rpg-assets/reactions/sol/attack.png",
+      "sourcePath": "art-production/source-battle-closeups/sol.png",
+      "sourceFilename": "corte_veraniego_entre_flores_y_agua.png",
+      "sourceDimensions": [
+        1448,
+        1086
+      ],
+      "exportDimensions": [
+        1280,
+        720
+      ],
+      "crop": "none",
+      "sourceSha256": "24061c7cbe5b97013482b7bb61dc53f8e62f295616ea8826a8ddbd0c0e6ee7f8",
+      "exportSha256": "c37f06db317c6538c400e55f124944d4ffe05041113c9ef188e7f33f4c29dc20",
+      "originalBytes": 3207653,
+      "exportBytes": 1533359
+    },
+    "sierra": {
+      "gamePath": "rpg-assets/reactions/sierra/attack.png",
+      "sourcePath": "art-production/source-battle-closeups/sierra.png",
+      "sourceFilename": "sierra_holt_aventura_de_cartas_tropicales.png",
+      "sourceDimensions": [
+        1448,
+        1086
+      ],
+      "exportDimensions": [
+        1280,
+        720
+      ],
+      "crop": "none",
+      "sourceSha256": "4514681fdb77436280a1b4bd61f5a863e834768de74d5f8b29240c40591c8a41",
+      "exportSha256": "86b96dde587a3e2336c2a10636334e80b6ba7a18a191dd59af5b01566a29fe24",
+      "originalBytes": 2986905,
+      "exportBytes": 1402752
+    },
+    "elena": {
+      "gamePath": "rpg-assets/reactions/elena/attack.png",
+      "sourcePath": "art-production/source-battle-closeups/elena.png",
+      "sourceFilename": "ejecutiva_del_as_dorado.png",
+      "sourceDimensions": [
+        1448,
+        1086
+      ],
+      "exportDimensions": [
+        1280,
+        720
+      ],
+      "crop": "none",
+      "sourceSha256": "4c503b8d8a712b31f2f80db130dee22df01846f2672fdc37690be455763eb586",
+      "exportSha256": "879ffefdc8530b3812b72b3066ba4c933b0ad152c924b336c992376d69dcae66",
+      "originalBytes": 2073695,
+      "exportBytes": 996898
+    },
+    "rina": {
+      "gamePath": "rpg-assets/reactions/rina/attack.png",
+      "sourcePath": "art-production/source-battle-closeups/rina.png",
+      "sourceFilename": "ídolo_pop_con_cartas_estelares.png",
+      "sourceDimensions": [
+        1448,
+        1086
+      ],
+      "exportDimensions": [
+        1280,
+        720
+      ],
+      "crop": "none",
+      "sourceSha256": "8aa0009278254ca2318b54d81e129158764347841ef8f560599501b3b538af74",
+      "exportSha256": "9c6941a5a7399a0aa0ab94c5864b066a40c6b628048492d1edde4af1e0e335b9",
+      "originalBytes": 2768163,
+      "exportBytes": 1343027
+    },
+    "alma": {
+      "gamePath": "rpg-assets/reactions/alma/attack.png",
+      "sourcePath": "art-production/source-battle-closeups/alma.png",
+      "sourceFilename": "barista_de_café_dorado_en_acción.png",
+      "sourceDimensions": [
+        1448,
+        1086
+      ],
+      "exportDimensions": [
+        1280,
+        720
+      ],
+      "crop": "none",
+      "sourceSha256": "6c7a51ce40205824a6b4c0e75b910bae41754eb084056de45af0a1895b9023a3",
+      "exportSha256": "890bc1b57588c757aa7934417ff896e9b6f76859157260500997c43c7cac0939",
+      "originalBytes": 2751839,
+      "exportBytes": 1306291
+    },
+    "iris": {
+      "gamePath": "rpg-assets/reactions/iris/attack.png",
+      "sourcePath": "art-production/source-battle-closeups/iris.png",
+      "sourceFilename": "guerrera_urbana_con_carta_de_ola_cromática.png",
+      "sourceDimensions": [
+        1448,
+        1086
+      ],
+      "exportDimensions": [
+        1280,
+        720
+      ],
+      "crop": "none",
+      "sourceSha256": "df9058e02079cbe7bb305730a75cfef211a6e29f64287da60fd35bf1a41ddce3",
+      "exportSha256": "0a3b8b5c683c35356ae12fcb55ae3eb710359fd7fd28a2432e41e8f6710c57f8",
+      "originalBytes": 2630390,
+      "exportBytes": 1256706
+    },
+    "jun": {
+      "gamePath": "rpg-assets/reactions/jun/attack.png",
+      "sourcePath": "art-production/source-battle-closeups/jun.png",
+      "sourceFilename": "jun_carta_dorada_y_desafío.png",
+      "sourceDimensions": [
+        1448,
+        1086
+      ],
+      "exportDimensions": [
+        1280,
+        720
+      ],
+      "crop": "none",
+      "sourceSha256": "7fa79606b20cbfef2f9620b575ee568d1269175aa89c345ca01f8871c94ffe75",
+      "exportSha256": "c7d0025aea4fbe34f2b7f40d5f9c1ee483d5a7787205375f5c959a4df97db27f",
+      "originalBytes": 2354189,
+      "exportBytes": 1112692
+    },
+    "nereo": {
+      "gamePath": "rpg-assets/reactions/nereo/attack.png",
+      "sourcePath": "art-production/source-battle-closeups/nereo.png",
+      "sourceFilename": "mecánico_náutico_con_energía_acuática.png",
+      "sourceDimensions": [
+        1448,
+        1086
+      ],
+      "exportDimensions": [
+        1280,
+        720
+      ],
+      "crop": "none",
+      "sourceSha256": "309a658c786c3c707f2a17d1dbb031b4568f462c98b7b25feed2339cf1da095a",
+      "exportSha256": "35dc37e70bdd2f03dc87c0e113beebf6fa17aba9fb884eb161cdde28808223c6",
+      "originalBytes": 2777329,
+      "exportBytes": 1315109
+    },
+    "teo": {
+      "gamePath": "rpg-assets/reactions/teo/attack.png",
+      "sourcePath": "art-production/source-battle-closeups/teo.png",
+      "sourceFilename": "teo_alvarez_duelo_estelar.png",
+      "sourceDimensions": [
+        1448,
+        1086
+      ],
+      "exportDimensions": [
+        1280,
+        720
+      ],
+      "crop": "none",
+      "sourceSha256": "474e63a11932e76f8c0f349fc081891f66a214ccb7c3b31ed690180f38bd7a7b",
+      "exportSha256": "42fe1d124eeeade1d455ca8bca18eac109fac2854e1a68fe1d8d4f949e0724ea",
+      "originalBytes": 2835470,
+      "exportBytes": 1357448
+    },
+    "elio": {
+      "gamePath": "rpg-assets/reactions/elio/attack.png",
+      "sourcePath": "art-production/source-battle-closeups/elio.png",
+      "sourceFilename": "detective_de_cartas_celestiales.png",
+      "sourceDimensions": [
+        1448,
+        1086
+      ],
+      "exportDimensions": [
+        1280,
+        720
+      ],
+      "crop": "none",
+      "sourceSha256": "a62a28b6a740f2bafb0dac6a94fcefc1357c9646c41dd4ef9298b0ce4d614c41",
+      "exportSha256": "86d2f60caa869bb346ecf85001a06666906fa50430857af365bf141e055a08cd",
+      "originalBytes": 3143107,
+      "exportBytes": 1475123
+    }
+  },
+  "targetSize": [
+    1280,
+    720
+  ],
+  "content": "20 original transparent PNG renders and 20 normalized game-ready transparent PNG cut-ins",
+  "notes": [
+    "The original renders are preserved without modifications under art-production/source-battle-closeups/.",
+    "The ready-to-use images are at rpg-assets/reactions/{character}/attack.png.",
+    "The 4:3 originals are letterboxed with transparent pixels to avoid cropping character anatomy.",
+    "These assets cover the attack reaction only; other reaction types still use fallback unless added separately.",
+    "A new reactions manifest is included; existing default characters point to the standard approved portraits."
+  ]
+}

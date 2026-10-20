@@ -1,0 +1,160 @@
+{
+  "pack": "Neo Campus / Neo Harbor — Character route CG draft batch",
+  "version": "2026-10-20-cg-draft-1",
+  "status": "PROVISIONAL COMPOSITES; not fully illustrated scene art",
+  "format": "1920x1080 WebP and 640x360 thumbnails",
+  "sceneCount": 10,
+  "eventScenes": {
+    "rina_stage_after": {
+      "character": "rina",
+      "eventArtPath": "rpg-assets/characters/rina/rina_stage_after.webp",
+      "thumbnail": "rpg-assets/characters/rina/thumbs/rina_stage_after.webp",
+      "dimensions": [
+        1920,
+        1080
+      ],
+      "scene": "Post-show moment",
+      "artType": "composited draft",
+      "backgroundSource": "rpg-assets/locations/panoramas/center-day.webp",
+      "portraitSource": "rpg-assets/rina.png",
+      "canonicalManifestPath": true,
+      "sha256": "876514ee41c49c1c0825a91161ed5ff2c34da556d60e9587e2f6833089644bf4"
+    },
+    "rina_cards": {
+      "character": "rina",
+      "eventArtPath": "rpg-assets/characters/rina/rina_cards.webp",
+      "thumbnail": "rpg-assets/characters/rina/thumbs/rina_cards.webp",
+      "dimensions": [
+        1920,
+        1080
+      ],
+      "scene": "The card collection",
+      "artType": "composited draft",
+      "backgroundSource": "rpg-assets/locations/panoramas/cafe-evening.webp",
+      "portraitSource": "rpg-assets/rina.png",
+      "canonicalManifestPath": true,
+      "sha256": "7fb47b64b895dc891f44a625ec377d02da05a810be918dc2c8c3aad1a9a84209"
+    },
+    "jinx_arcade_challenge": {
+      "character": "jinx",
+      "eventArtPath": "rpg-assets/characters/jinx/jinx_arcade_challenge.webp",
+      "thumbnail": "rpg-assets/characters/jinx/thumbs/jinx_arcade_challenge.webp",
+      "dimensions": [
+        1920,
+        1080
+      ],
+      "scene": "The arcade challenge",
+      "artType": "composited draft",
+      "backgroundSource": "rpg-assets/locations/panoramas/arcade-evening.webp",
+      "portraitSource": "rpg-assets/jinx.png",
+      "canonicalManifestPath": true,
+      "sha256": "998a7fa37c4d270c222f92d664a92048724fa2df31e7c888b72310445272e59d"
+    },
+    "jinx_unguarded": {
+      "character": "jinx",
+      "eventArtPath": "rpg-assets/characters/jinx/jinx_unguarded.webp",
+      "thumbnail": "rpg-assets/characters/jinx/thumbs/jinx_unguarded.webp",
+      "dimensions": [
+        1920,
+        1080
+      ],
+      "scene": "The quiet evening",
+      "artType": "composited draft",
+      "backgroundSource": "rpg-assets/locations/panoramas/park-day.webp",
+      "portraitSource": "rpg-assets/jinx.png",
+      "canonicalManifestPath": true,
+      "sha256": "a4e5a0f598e9e671e118cf0f6e199961d6c0f8c57773e05e9d92d890d6e98a05"
+    },
+    "elena_after_hours": {
+      "character": "elena",
+      "eventArtPath": "rpg-assets/characters/elena/elena_after_hours.webp",
+      "thumbnail": "rpg-assets/characters/elena/thumbs/elena_after_hours.webp",
+      "dimensions": [
+        1920,
+        1080
+      ],
+      "scene": "After office hours",
+      "artType": "composited draft",
+      "backgroundSource": "rpg-assets/locations/panoramas/cafe-evening.webp",
+      "portraitSource": "rpg-assets/elena.png",
+      "canonicalManifestPath": true,
+      "sha256": "2772a8ed957e45cd14747b3912fe703ee6fb68569bdaa1b993e4ba1317261663"
+    },
+    "elena_unguarded": {
+      "character": "elena",
+      "eventArtPath": "rpg-assets/characters/elena/elena_unguarded.webp",
+      "thumbnail": "rpg-assets/characters/elena/thumbs/elena_unguarded.webp",
+      "dimensions": [
+        1920,
+        1080
+      ],
+      "scene": "A quieter conversation",
+      "artType": "composited draft",
+      "backgroundSource": "rpg-assets/locations/panoramas/cafe-evening.webp",
+      "portraitSource": "rpg-assets/elena.png",
+      "canonicalManifestPath": true,
+      "sha256": "7836b22f6a32ebd5094eb4e15dce10108327492222c4e2a5ad0871b169aeea60"
+    },
+    "sierra_after_shoot": {
+      "character": "sierra",
+      "eventArtPath": "rpg-assets/characters/sierra/sierra_after_shoot.webp",
+      "thumbnail": "rpg-assets/characters/sierra/thumbs/sierra_after_shoot.webp",
+      "dimensions": [
+        1920,
+        1080
+      ],
+      "scene": "After the photo shoot",
+      "artType": "composited draft",
+      "backgroundSource": "rpg-assets/locations/panoramas/park-day.webp",
+      "portraitSource": "rpg-assets/sierra.png",
+      "canonicalManifestPath": true,
+      "sha256": "bc3ee4d160e7a8f1d39c62e0b3c34bdcaaefa271ee5efebf9368ded1f0bd351a"
+    },
+    "sierra_deck_talk": {
+      "character": "sierra",
+      "eventArtPath": "rpg-assets/characters/sierra/sierra_deck_talk.webp",
+      "thumbnail": "rpg-assets/characters/sierra/thumbs/sierra_deck_talk.webp",
+      "dimensions": [
+        1920,
+        1080
+      ],
+      "scene": "Talking about decks",
+      "artType": "composited draft",
+      "backgroundSource": "rpg-assets/locations/panoramas/cafe-evening.webp",
+      "portraitSource": "rpg-assets/sierra.png",
+      "canonicalManifestPath": true,
+      "sha256": "44055c2bfdb1bf1d694181951a32c527f9dfc3f0ba89551b6db60e50d5270bcf"
+    },
+    "sol_scavenger_hunt": {
+      "character": "sol",
+      "eventArtPath": "rpg-assets/characters/sol/sol_scavenger_hunt.webp",
+      "thumbnail": "rpg-assets/characters/sol/thumbs/sol_scavenger_hunt.webp",
+      "dimensions": [
+        1920,
+        1080
+      ],
+      "scene": "Waterfront scavenger hunt",
+      "artType": "composited draft",
+      "backgroundSource": "rpg-assets/locations/panoramas/docks-sunset.webp",
+      "portraitSource": "rpg-assets/sol.png",
+      "canonicalManifestPath": true,
+      "sha256": "22ccaa009bf4719dee91b306e06307f5e7d74d720fb53693cdc362ae2b31ddab"
+    },
+    "sol_unguarded_cafe": {
+      "character": "sol",
+      "eventArtPath": "rpg-assets/characters/sol/sol_unguarded_cafe.webp",
+      "thumbnail": "rpg-assets/characters/sol/thumbs/sol_unguarded_cafe.webp",
+      "dimensions": [
+        1920,
+        1080
+      ],
+      "scene": "Unexpectedly quiet",
+      "artType": "composited draft",
+      "backgroundSource": "rpg-assets/locations/panoramas/cafe-evening.webp",
+      "portraitSource": "rpg-assets/sol.png",
+      "canonicalManifestPath": true,
+      "sha256": "73bc3ad4991f936ae871f39a55ca33c74bba529aa50702f5e978e4a2f234bcfb"
+    }
+  },
+  "disclaimer": "These images were composited from the already-approved transparent portraits and existing game panoramas after attempts to generate bespoke illustrated scenes produced unrelated multi-character collages. Replace with hand-illustrated or individually generated final CGs when available. No script or existing art is overwritten except exact requested event paths on extraction."
+}

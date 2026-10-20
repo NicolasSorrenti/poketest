@@ -1,0 +1,110 @@
+{
+  "pack": "Neo Campus TCG cumulative regenerated art — updated 2026-10-20",
+  "sourceZip": "neo_campus_all_regenerated_art_2026-10-20.zip",
+  "addedExpressionZip": "neo_campus_missing_expression_sprites_batch_2026-10-20.zip",
+  "preservedProvisionalDraftsZip": "neo_campus_g5_story_aligned_drafts_2026-10-20.zip",
+  "scenePolicy": "Five new standalone CGs supersede older G5 composites; drafts retained only under art-production/; no duplicate game paths",
+  "originals": [
+    "art-production/original-story-renders/hana_enredada_con_su_delantal_en_la_tienda_tcg.png",
+    "art-production/original-story-renders/reina_bajo_la_lluvia_en_el_puerto.png",
+    "art-production/original-story-renders/shiori_y_los_libros_dorados.png",
+    "art-production/original-story-renders/yuna_y_las_cartas_del_nexus_arcade.png",
+    "art-production/original-story-renders/kaede_atrapada_entre_cadenas_al_atardecer.png"
+  ],
+  "scenes": [
+    {
+      "id": "hana_apron_mixup",
+      "character": "Hana",
+      "description": "Hana catches herself in the promotional apron straps at the card-shop counter.",
+      "source": "art-production/original-story-renders/hana_enredada_con_su_delantal_en_la_tienda_tcg.png",
+      "sourceSha256": "a883d7db1fe09fb06b791fc9f2f0fb1ea8c4f5bc7ce046527a28f07d5659531b",
+      "full": "rpg-assets/events/cg/season01/hana_apron_mixup.webp",
+      "thumb": "rpg-assets/events/cg/season01/thumbs/hana_apron_mixup.webp",
+      "fullDimensions": [
+        1920,
+        1080
+      ],
+      "thumbDimensions": [
+        640,
+        360
+      ],
+      "status": "standalone illustrated CG; replaces previous provisional composite; reviewer may still refine framing"
+    },
+    {
+      "id": "reina_rain_catch",
+      "character": "Reina",
+      "description": "Reina is splashed by leaking water outside the training center.",
+      "source": "art-production/original-story-renders/reina_bajo_la_lluvia_en_el_puerto.png",
+      "sourceSha256": "aa2739534ac963a6b0d52019f16f9b42de9a0968d19fed8f980bc0fb8e349464",
+      "full": "rpg-assets/events/cg/season01/reina_rain_catch.webp",
+      "thumb": "rpg-assets/events/cg/season01/thumbs/reina_rain_catch.webp",
+      "fullDimensions": [
+        1920,
+        1080
+      ],
+      "thumbDimensions": [
+        640,
+        360
+      ],
+      "status": "standalone illustrated CG; replaces previous provisional composite; reviewer may still refine framing"
+    },
+    {
+      "id": "shiori_bookstack_wobble",
+      "character": "Shiori",
+      "description": "Shiori reaches to stop falling books in the library.",
+      "source": "art-production/original-story-renders/shiori_y_los_libros_dorados.png",
+      "sourceSha256": "93eab1b759b77ef218cee1c11544b8dbac2df6637bac5c70be6b45c35b459e45",
+      "full": "rpg-assets/events/cg/season01/shiori_bookstack_wobble.webp",
+      "thumb": "rpg-assets/events/cg/season01/thumbs/shiori_bookstack_wobble.webp",
+      "fullDimensions": [
+        1920,
+        1080
+      ],
+      "thumbDimensions": [
+        640,
+        360
+      ],
+      "status": "standalone illustrated CG; replaces previous provisional composite; reviewer may still refine framing"
+    },
+    {
+      "id": "yuna_card_scatter",
+      "character": "Yuna",
+      "description": "Yuna gathers her scattered trading cards at the arcade club.",
+      "source": "art-production/original-story-renders/yuna_y_las_cartas_del_nexus_arcade.png",
+      "sourceSha256": "367f072edba10eab22aec2883b847443282b109966d0f1f8d00d9bfd881f9d7c",
+      "full": "rpg-assets/events/cg/season01/yuna_card_scatter.webp",
+      "thumb": "rpg-assets/events/cg/season01/thumbs/yuna_card_scatter.webp",
+      "fullDimensions": [
+        1920,
+        1080
+      ],
+      "thumbDimensions": [
+        640,
+        360
+      ],
+      "status": "standalone illustrated CG; replaces previous provisional composite; reviewer may still refine framing"
+    },
+    {
+      "id": "kaede_jacket_prank",
+      "character": "Kaede",
+      "description": "Kaede struggles with her bag strap snagged by the railing.",
+      "source": "art-production/original-story-renders/kaede_atrapada_entre_cadenas_al_atardecer.png",
+      "sourceSha256": "3a10f9f9b2b5d5025fd553b4d29d67b90658f48a2bcaacb8d26a35e3cd1290e2",
+      "full": "rpg-assets/events/cg/season01/kaede_jacket_prank.webp",
+      "thumb": "rpg-assets/events/cg/season01/thumbs/kaede_jacket_prank.webp",
+      "fullDimensions": [
+        1920,
+        1080
+      ],
+      "thumbDimensions": [
+        640,
+        360
+      ],
+      "status": "standalone illustrated CG; replaces previous provisional composite; reviewer may still refine framing"
+    }
+  ],
+  "expressionVariants": 101,
+  "expressionPortraits": 101,
+  "expressionPreviews": 1,
+  "archivedDraftAssets": 10
+}
