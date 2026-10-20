@@ -1,0 +1,48 @@
+name: Responsive Duel Chromium
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'duel_desktop.css'
+      - 'duel_mobile.css'
+      - 'online_hand_tray.css'
+      - 'classic_live.css'
+      - 'duel_quick_ui.js'
+      - 'online.html'
+      - 'classic_live.html'
+      - 'tests/duel_responsive_browser_smoke.js'
+      - '.github/workflows/duel-browser.yml'
+  pull_request:
+    paths:
+      - 'duel_desktop.css'
+      - 'duel_mobile.css'
+      - 'online_hand_tray.css'
+      - 'classic_live.css'
+      - 'duel_quick_ui.js'
+      - 'online.html'
+      - 'classic_live.html'
+      - 'tests/duel_responsive_browser_smoke.js'
+      - '.github/workflows/duel-browser.yml'
+jobs:
+  layout:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install Chromium smoke dependency
+        run: npm install --no-save --ignore-scripts playwright@1.56.1
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+      - name: Verify responsive duel card geometry and touch actions
+        run: node tests/duel_responsive_browser_smoke.js
+      - name: Keep desktop and phone screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: duel-responsive-screenshots
+          path: artifacts/rpg-browser/duel-layout-*.png
+          if-no-files-found: ignore
+          retention-days: 7
