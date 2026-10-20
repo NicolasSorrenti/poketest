@@ -36,15 +36,18 @@ for(const type of ['grass','fire','water','lightning','psychic','fighting','colo
 assert.match(css,/\.poke \.energy-card-stack\{[\s\S]*?--energy-peek:29px/,'Attached cards peek behind Pokémon on their left edge');
 assert.match(css,/body\.duel-active \.hand-panel \.hand-fan,/,'Fan must always be displayed, not gated by hover');
 assert.match(css,/overflow-x:auto;overflow-y:hidden/,'Long fan must scroll horizontally');
+const shared=fs.readFileSync('duel_shared_components.js','utf8');
+assert.match(shared,/const el=makeCard\(id,i,phase==='setup'\)/,'Shared fan must reuse the existing playable handCard callback');
+assert.match(shared,/cards\.forEach\(\(id,i\)=>/,'Shared fan must render all hand cards');
+assert.match(shared,/el\.classList\.remove\('handcard'\);el\.classList\.add\('hand-fan-card'\)/);
+assert.match(shared,/root\.classList\.toggle\('hidden',!visible\|\|!cards\.length\)/);
+assert.match(shared,/root\.append\(track\)/);
 for(const file of ['online','classic_live']){
  const js=fs.readFileSync(file+'.js','utf8');
  const markup=fs.readFileSync(file+'.html','utf8');
  assert.match(markup,/id="handFan"[^>]*role="group"/);
  assert.doesNotMatch(markup,/id="handFan"[^>]*aria-hidden="true"/,'Interactive controls must be available to screen readers');
- assert.match(js,/const el=handCard\(id,i,setup\)/,'Fan reuses standard gameplay click handler');
- assert.match(js,/cards\.forEach\(\(id,i\)=>/,'All hand cards must render, not just the first twelve');
- assert.match(js,/el\.classList\.remove\('handcard'\);el\.classList\.add\('hand-fan-card'\)/);
- assert.match(js,/root\.classList\.toggle\('hidden',!handVisible\|\|!cards\.length\)/,'Player can hide and restore the permanent hand');
- assert.match(js,/root\.append\(track\)/);
+ assert.match(js,/shared\.renderHandFan\(/,'All clients use the common fan');
+ assert.match(js,/makeCard:handCard/,'Clients preserve gameplay card click handlers');
 }
 console.log('PASS v0.41: permanent interactive hand, full-card coverage, type-colored mini Energy card fallback, mobile responsiveness and accessibility');
