@@ -1,0 +1,74 @@
+/* Neo Harbor competitive circuit: fast nonblocking versus wipe and readable bracket tree. */
+.neo-tournament-versus{
+ position:fixed;inset:0;z-index:105;pointer-events:none;display:grid;place-items:center;
+ overflow:hidden;color:#fff;background:linear-gradient(118deg,#211328fa,#40203edc 48%,#0c1b32ef);
+ animation:neo-tvs-out 880ms cubic-bezier(.16,.72,.32,1) both;
+}
+.neo-tournament-versus::before{content:"";position:absolute;inset:-30% -10%;z-index:0;pointer-events:none;
+ background:repeating-linear-gradient(137deg,#ffffff0b 0 5px,transparent 5px 62px);
+ transform:skewX(-16deg);animation:neo-tvs-stripes 880ms linear both}
+.neo-tournament-versus__inner{position:relative;width:min(1100px,96vw);padding:clamp(18px,4vw,52px);
+ border-left:clamp(7px,1.2vw,15px) solid #ffb1d4;min-height:210px;display:flex;flex-direction:column;
+ justify-content:center;gap:7px;isolation:isolate}
+.neo-tournament-versus__eyebrow,.neo-tournament-versus__round{font:900 clamp(12px,2vw,22px) 'Barlow Condensed',sans-serif;
+ color:#ffd3ed;letter-spacing:.18em}
+.neo-tournament-versus__event{font:900 clamp(25px,4.4vw,59px)/1 'Barlow Condensed',sans-serif;letter-spacing:.015em;
+ color:#ffd5a1;transform:skewX(-7deg);text-transform:uppercase}
+.neo-tournament-versus__names{display:flex;align-items:center;gap:clamp(8px,2vw,24px);width:72%;min-width:0;margin-top:12px}
+.neo-tournament-versus__you,.neo-tournament-versus__opponent{font:900 clamp(39px,7vw,99px)/.88 'Barlow Condensed',sans-serif;
+ text-transform:uppercase;text-shadow:4px 5px 0 #0d14248c;overflow-wrap:anywhere;max-width:45%}
+.neo-tournament-versus__opponent{color:#ffbee1}
+.neo-tournament-versus__vs{font:900 clamp(24px,4vw,60px)/1 'Barlow Condensed',sans-serif;color:#ffd39b;
+ border:3px solid #ffd39b;transform:rotate(-10deg);padding:2px 8px}
+.neo-tournament-versus__portrait{position:absolute;z-index:-1;right:-2%;bottom:-65px;height:125%;width:37%;
+ display:flex;align-items:flex-end;justify-content:center;filter:drop-shadow(0 15px 18px #030914bc)}
+.neo-tournament-versus__portrait img{width:100%;height:100%;object-fit:contain;object-position:bottom center}
+.neo-tournament-versus__fallback{font:900 150px 'Barlow Condensed',sans-serif;color:#ffffff70}
+@keyframes neo-tvs-out{0%{opacity:0;transform:translateX(-105%)}21%{opacity:1;transform:translateX(0)}
+ 71%{opacity:1;transform:translateX(0)}100%{opacity:0;transform:translateX(105%)}}
+@keyframes neo-tvs-stripes{from{translate:-20% 0}to{translate:25% 0}}
+/* Historic tournament results always display the actual opponent for each round. */
+.bracket-card.neo-circuit-card{padding:13px;gap:9px;border-radius:7px;border-left:5px solid #cc8cb3;
+ background:linear-gradient(112deg,#32233f,#18223b)}
+.neo-circuit-card .neo-bracket-title{font:900 19px 'Barlow Condensed',sans-serif;color:#fff4df}
+.neo-circuit-card .neo-bracket-status{font:900 12px 'Barlow Condensed',sans-serif;color:#efbedc;letter-spacing:.1em}
+.neo-bracket-rounds{display:flex;flex-direction:column;gap:5px}
+.neo-bracket-round{display:grid;grid-template-columns:27px minmax(0,1fr) auto;gap:8px;align-items:center;
+ min-height:43px;border:1px solid #54516a;background:#11192b9e;padding:5px 9px;position:relative;
+ transition:border-color .15s ease,background .15s ease}
+.neo-bracket-round::before{content:"";position:absolute;left:12px;top:100%;height:6px;border-left:2px solid #765973}
+.neo-bracket-round:last-child::before{display:none}
+.neo-bracket-round__num{font:900 17px 'Barlow Condensed',sans-serif;color:#f6add1}
+.neo-bracket-round__name{font:800 13px 'Barlow Condensed',sans-serif;color:#f9edf6;min-width:0;overflow-wrap:anywhere}
+.neo-bracket-round__state{font:900 10px 'Barlow Condensed',sans-serif;color:#afa6c2;letter-spacing:.05em;white-space:nowrap}
+.neo-bracket-round.is-cleared{border-color:#80c5b2;background:#19463d8a}
+.neo-bracket-round.is-cleared .neo-bracket-round__state{color:#aff6d8}
+.neo-bracket-round.is-current{border-color:#f1a2c3;background:#693654a6;animation:neo-bracket-pulse .42s ease-out}
+.neo-bracket-round.is-current .neo-bracket-round__state{color:#ffd0e5}
+.neo-bracket-round.is-eliminated{border-color:#a76575}
+.neo-bracket-round.is-eliminated .neo-bracket-round__state{color:#ffadbb}
+.neo-circuit-card.bracket-champion{border-left-color:#ffd28c;background:linear-gradient(110deg,#67513e,#2c2c46)}
+.neo-circuit-card.bracket-champion .neo-bracket-title{color:#ffe4a6}
+@keyframes neo-bracket-pulse{from{transform:translateX(8px);opacity:.6}to{transform:translateX(0);opacity:1}}
+/* Add unique tournament identity to the existing authoritative victory panel. */
+.victory-dialog[data-competition="champion"]{border-top:7px solid #ffd28b}
+.victory-dialog[data-competition="champion"] .victory-stage{
+ background:linear-gradient(120deg,#825438 0%,#612e53 47%,#171d32 95%)}
+.victory-dialog[data-competition="champion"] .victory-title{font-size:clamp(43px,7.5vw,108px);color:#ffe1a8}
+.victory-dialog[data-competition="round"] .victory-title{font-size:clamp(57px,9vw,112px)}
+.victory-dialog .victory-competition{margin:8px 0 0;font:900 clamp(13px,2vw,22px) 'Barlow Condensed',sans-serif;
+ color:#ffe0ad;letter-spacing:.1em;text-transform:uppercase}
+@media(max-width:650px){
+ .neo-tournament-versus__inner{padding:17px;min-height:220px}
+ .neo-tournament-versus__names{width:100%;position:relative;z-index:1;padding-right:21%}
+ .neo-tournament-versus__you,.neo-tournament-versus__opponent{font-size:clamp(27px,8vw,52px)}
+ .neo-tournament-versus__event{font-size:clamp(24px,6vw,38px)}
+ .neo-tournament-versus__portrait{right:-14%;height:93%;width:44%;bottom:-23px;opacity:.8}
+ .neo-bracket-round{grid-template-columns:22px minmax(0,1fr) auto;gap:5px}
+ .neo-bracket-round__state{font-size:9px}
+}
+@media(prefers-reduced-motion:reduce){
+ .neo-tournament-versus{animation:neo-tvs-reduced 170ms linear both}
+ .neo-tournament-versus::before,.neo-bracket-round.is-current{animation:none!important}
+}
+@keyframes neo-tvs-reduced{from{opacity:0}20%,85%{opacity:1}to{opacity:0}}
