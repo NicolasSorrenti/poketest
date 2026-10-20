@@ -19,11 +19,15 @@ fs.mkdirSync(out,{recursive:true});
    {name:'desktop',width:1440,height:900,mobile:false},
    {name:'compact-desktop',width:900,height:740,mobile:false},
    {name:'phone',width:390,height:844,mobile:true},
-   {name:'small-phone',width:320,height:640,mobile:true}
+   {name:'small-phone',width:320,height:640,mobile:true},
+   {name:'breakpoint-mobile',width:780,height:740,mobile:true},
+   {name:'breakpoint-desktop',width:781,height:740,mobile:false},
+   {name:'cpu-desktop',page:'classic_live.html',width:1440,height:900,mobile:false},
+   {name:'cpu-phone',page:'classic_live.html',width:390,height:844,mobile:true}
   ]){
    const page=await browser.newPage({viewport:{width:spec.width,height:spec.height},deviceScaleFactor:1});
    const errors=[];page.on('pageerror',e=>errors.push(e.message));
-   await page.goto(url+'/online.html',{waitUntil:'domcontentloaded'});
+   await page.goto(url+'/'+(spec.page||'online.html'),{waitUntil:'domcontentloaded'});
    await page.waitForFunction(()=>typeof window.NeoDuelUI?.energyStack==='function');
    const geometry=await page.evaluate(()=>{
     document.body.classList.add('duel-active');
