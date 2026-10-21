@@ -11,6 +11,10 @@ assert(created.pack.some(c=>c.id===created.recommendedId),'Advice must refer to 
 const token=created.token;
 assert.equal(typeof token,'string');
 assert.equal(created.pack.length,15);
+assert.equal(created.cubePool.length,240,'Solo must expose complete generated Cube');
+assert(created.cubePool.every(c=>c.id&&c.name&&Array.isArray(c.subtypes)));
+assert(created.cubePool.some(c=>c.supertype==='Pokémon'));
+assert(created.cubePool.some(c=>c.supertype==='Trainer'));
 assert.equal(created.drafted.length,0);
 assert.equal(created.opponentCounts.length,3);
 assert.throws(()=>service.view('bad-token'),/Unknown or expired/);
