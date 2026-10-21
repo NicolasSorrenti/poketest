@@ -120,10 +120,14 @@
  }
  function packAdvice(s,all,core){
   if(!s?.deckJourney?.starter)return [];
-  const wanted=goals(s,all,core).filter(x=>x.owned===0),desired=new Map();
-  for(const x of wanted)desired.set(x.set,(desired.get(x.set)||0)+1);
-  return core.shopPacks(s).map(x=>({...x,targets:desired.get(x.set)||0}))
-   .sort((a,b)=>b.targets-a.targets||Number(b.unlocked)-Number(a.unlocked)||a.price-b.price);
+  const wanted=goals(s,all,core).filter(x=>x.owned===0);
+  // Theme pools span multiple expansions and grow when new printings unlock.
+  // Only advertise goals that actually have a chance of appearing right now.
+  return core.themedPacks(s).map(pack=>({
+   ...pack,targets:pack.unlocked?wanted.filter(x=>core.themeContains(s,pack.id,x.id)).length:0,
+   futureTargets:wanted.filter(x=>pack.sources.includes(x.set)).length
+  })).sort((a,b)=>b.targets-a.targets||Number(b.unlocked)-Number(a.unlocked)||
+   b.futureTargets-a.futureTargets||a.price-b.price);
  }
  function scout(deckIds,all,s){
   const catalog=index(all),ids=(Array.isArray(deckIds)?deckIds:[]).filter(id=>catalog.has(id));
