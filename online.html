@@ -39,7 +39,7 @@
    <section class="territory player-territory">
     <div class="field-row bottom"><div class="zone active-zone"><h3>YOUR ACTIVE</h3>
      <div class="active-with-attacks"><div id="myActive" class="pokemon-strip active-slot"></div>
-     <div class="inline-attack-panel"><h4>ATTACKS</h4><div id="attacks" class="inline-attacks"></div></div></div></div>
+     <div id="fieldAttackDock" class="field-attack-dock"><div id="attackPanel" class="inline-attack-panel"><h4>ATTACKS</h4><div id="attacks" class="inline-attacks"></div></div></div></div></div>
      <div class="zone bench-zone"><h3>YOUR BENCH</h3><div id="myBench" class="pokemon-strip"></div></div></div>
     <div class="trainerbar player"><div class="trainerlabel"><span>★</span><div><strong id="yourLabel">YOU</strong><small id="myStats"></small></div></div><div class="pile-tools"><span class="deck-counter" id="myDeckCount" aria-label="Your deck count">▣ <b>0</b></span><button id="myDiscardBtn" type="button" class="pile-button">♻ Discard <b>0</b></button><span id="energyStatus" class="tag"></span></div></div>
    </section>
@@ -59,7 +59,7 @@
    <div id="hand" class="hand"></div><div id="cardActions" class="actions"></div>
   </div>
  </section>
- <section class="panel turn-actions-panel"><div class="turn-actions"><button id="powersToggle" type="button" aria-expanded="false">✦ Powers</button><button id="undoBtn" type="button" disabled title="Undo your last safe move">↶ Undo</button><button id="retreatBtn">⇆ Retreat</button><button id="endBtn" class="primary">End turn →</button><button id="concedeBtn" class="danger">Concede</button></div>
+ <section class="panel turn-actions-panel"><div id="desktopAttackDock" class="desktop-attack-dock" aria-label="Available attacks"></div><div class="turn-actions"><button id="powersToggle" type="button" aria-expanded="false">✦ Powers</button><button id="undoBtn" type="button" disabled title="Undo your last safe move">↶ Undo</button><button id="retreatBtn">⇆ Retreat</button><button id="endBtn" class="primary">End turn →</button><button id="concedeBtn" class="danger">Concede</button></div>
   <div id="powerDrawer" class="power-drawer hidden"><div class="tray-heading"><strong>POKÉMON POWERS</strong><button id="closePowers" type="button">✕ Close</button></div><div id="powers" class="actions"></div></div>
  </section></div>
  <div class="side-column"><div id="choiceDock"><section class="panel decision" id="decisionBox"><h3 id="decisionTitle">YOUR NEXT MOVE</h3><p id="decisionText" class="hint"></p><div id="decisionOptions"></div><div id="decisionActions" class="actions"></div></section><div id="chatDuelDock"></div><section id="logDrawer" class="panel log-drawer hidden"><header><h3>MATCH LOG</h3><button id="closeLog" type="button">✕</button></header><div class="log-scroll"><ol id="actionTimeline" class="action-timeline" aria-label="Public action timeline"></ol><ol id="history" class="history hidden"></ol></div></section></div></div>
@@ -74,6 +74,6 @@
 <footer>Fan-made rules prototype. Not affiliated with Nintendo, The Pokémon Company or Wizards of the Coast. Free hosts may sleep and restart; in-memory games are lost when they restart.</footer>
 <div id="choiceModal" class="choice-modal hidden" aria-hidden="true"><div class="choice-dialog" id="choiceModalContent" role="dialog" aria-modal="true" aria-label="Card effect choice" tabindex="-1"></div></div>
 <div id="pileModal" class="pile-modal hidden" role="dialog" aria-modal="true" aria-label="Discard pile"><div class="pile-dialog"><div class="pile-dialog-heading"><h3 id="pileTitle">Discard pile</h3><button id="closePile" type="button">✕ Close</button></div><div id="pileCards" class="pile-cards"></div></div></div><div id="cardPreview" class="card-preview hidden" role="dialog" aria-label="Enlarged card preview"></div>
-<script src="core_rules.js"></script><script src="duel_quick_ui.js"></script><script src="battle_decision_ui.js"></script><script src="duel_experience_ui.js"></script><script src="battle_presentation_ui.js"></script>
+<script src="core_rules.js"></script><script src="duel_quick_ui.js"></script><script src="battle_decision_ui.js"></script><script src="duel_experience_ui.js"></script><script src="battle_presentation_ui.js"></script><script src="duel_action_rail.js"></script>
 <script src="duel_shared_components.js"></script>
 <script src="online.js" defer></script></body></html>

@@ -45,6 +45,10 @@ assert.match(reference,/width:min\(100%,1450px\);height:calc\(100dvh - 16px\)/,'
 assert.match(reference,/grid-template-columns:minmax\(680px,1040px\) var\(--match-rail\)!important/,'desktop board and utility rail keep deliberate proportions');
 assert.match(reference,/\.hand-panel\{[\s\S]*?background:transparent!important/,'the hand floats below the table instead of looking like a dashboard panel');
 assert.match(reference,/\.hand-fan-card\{[\s\S]*?max-height:135px!important[\s\S]*?aspect-ratio:245\/342!important/,'the floating hand has bounded, physical card proportions');
+assert.match(reference,/v0\.83 — one desktop action rail/,'desktop exposes one consolidated action rail');
+assert.match(reference,/\.desktop-attack-dock button\.attack-action/,'attacks receive compact rail-specific controls');
+assert.match(reference,/\.desktop-attack-dock \.inline-attack-panel:not\(:has\(button:not\(:disabled\)\)\)\{display:none!important\}/,'setup does not show unusable attacks');
+assert.match(reference,/grid-template-columns:repeat\(3,minmax\(0,1fr\)\)!important/,'utility commands fit below attacks without a third dashboard row');
 for(const [file,css] of [['desktop',desktop],['mobile',mobile]]){
  assert.equal((css.match(/\{/g)||[]).length,(css.match(/\}/g)||[]).length,file+' rules must have balanced braces');
  assert.match(css,/body\.duel-active/,file+' should affect active duels only');

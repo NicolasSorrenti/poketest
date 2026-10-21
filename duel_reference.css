@@ -222,3 +222,52 @@
  body.duel-active .stage .territory .active-zone .poke{--attachment-height:74px!important}
  body.duel-active .stage .territory .bench-zone .poke{--attachment-height:42px!important}
 }
+
+/* v0.83 — one desktop action rail. The same live attack buttons are reparented
+   at the desktop breakpoint; mobile keeps them alongside the Active Pokémon. */
+@media (min-width:781px){
+ body.duel-active.attacks-in-rail .stage .field-attack-dock{display:none!important}
+ body.duel-active.attacks-in-rail .stage .active-with-attacks{
+  display:grid!important;grid-template-columns:minmax(0,1fr) minmax(104px,128px) minmax(0,1fr)!important;
+ }
+ body.duel-active.attacks-in-rail .stage .active-with-attacks .active-slot{grid-column:2!important}
+ body.duel-active .desktop-attack-dock{display:block;min-height:0;overflow:auto;scrollbar-width:thin}
+ body.duel-active .desktop-attack-dock:empty{display:none}
+ body.duel-active .desktop-attack-dock .inline-attack-panel{
+  display:block!important;width:100%!important;min-width:0!important;max-width:none!important;
+  margin:0!important;padding:0 0 6px!important;border:0!important;border-bottom:1px solid #3d4854!important;
+  border-radius:0!important;background:transparent!important;box-shadow:none!important;
+ }
+ body.duel-active .desktop-attack-dock .inline-attack-panel:not(:has(button:not(:disabled))){display:none!important}
+ body.duel-active .desktop-attack-dock .inline-attack-panel h4{
+  margin:0 0 5px!important;color:#aeb9c7!important;font-size:9px!important;letter-spacing:.14em!important;
+ }
+ body.duel-active .desktop-attack-dock .inline-attacks{display:grid!important;gap:4px!important}
+ body.duel-active .desktop-attack-dock button.attack-action{
+  min-height:33px!important;padding:4px 7px!important;border-radius:6px!important;
+  grid-template-columns:minmax(0,1fr) auto auto!important;gap:5px!important;
+  background:#294b39!important;border-color:#557b62!important;
+ }
+ body.duel-active .desktop-attack-dock button.attack-action:not(:disabled):hover{background:#35694b!important;border-color:#70b886!important}
+ body.duel-active .desktop-attack-dock .attack-name{font-size:10px!important}
+ body.duel-active .desktop-attack-dock .attack-damage{font-size:11px!important}
+ body.duel-active .desktop-attack-dock .energy-pip{width:15px!important;height:15px!important;font-size:8px!important}
+ body.duel-active .desktop-attack-dock .attack-effect,
+ body.duel-active .desktop-attack-dock .attack-warning{display:none!important}
+ body.duel-active #duel>.below>.main-column>.turn-actions-panel{
+  display:flex!important;flex-direction:column!important;gap:6px!important;padding:8px!important;overflow:hidden!important;
+ }
+ body.duel-active #duel>.below .turn-actions-panel .turn-actions{
+  display:grid!important;flex:1 1 auto;min-height:0;
+  grid-template-columns:repeat(3,minmax(0,1fr))!important;
+  grid-template-rows:repeat(2,minmax(30px,1fr))!important;gap:5px!important;
+ }
+ body.duel-active #duel>.below .turn-actions-panel .turn-actions button{
+  min-height:30px!important;padding:3px 5px!important;font-size:10px!important;
+ }
+ body.duel-active #duel>.below .turn-actions-panel #powersToggle{grid-column:1;grid-row:1}
+ body.duel-active #duel>.below .turn-actions-panel #undoBtn{grid-column:2;grid-row:1}
+ body.duel-active #duel>.below .turn-actions-panel #retreatBtn{grid-column:3;grid-row:1}
+ body.duel-active #duel>.below .turn-actions-panel #endBtn{grid-column:1 / 3!important;grid-row:2}
+ body.duel-active #duel>.below .turn-actions-panel #concedeBtn{grid-column:3!important;grid-row:2}
+}
