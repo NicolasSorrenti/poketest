@@ -54,13 +54,14 @@
   const cards=last.drafted||[],deck=last.deck||[],chosen=deck.length?deck.map(id=>cards.find(c=>c.id===id)).filter(Boolean):cards;
   const chips=healthPanel.querySelector('.ca-chips'),note=healthPanel.querySelector('.ca-muted');chips.replaceChildren();
   const mon=chosen.filter(c=>c.supertype==='Pokémon'),basics=mon.filter(isBasic),evolutions=mon.filter(c=>!isBasic(c)),trainers=chosen.filter(c=>c.supertype==='Trainer');
-  for(const [name,n] of [['Basics',basics.length],['Evolutions',evolutions.length],['Trainers',trainers.length]])chips.append(el('span','ca-chip',name+': '+n));
+  for(const [name,n] of [['Deck cards',deck.length||'—'],['Basics',basics.length],['Evolutions',evolutions.length],['Trainers',trainers.length]])chips.append(el('span','ca-chip',name+': '+n));
   const missing=evolutions.filter(c=>!mon.some(p=>p.name===c.evolvesFrom));
   const needed=[...new Set(mon.flatMap(c=>(c.attacks||[]).flatMap(a=>(a.cost||[]).filter(t=>TYPES.includes(t)))))];
   const lines=[];
   if(!basics.length)lines.push('No Basic Pokémon selected yet.');
   if(missing.length)lines.push(missing.length+' evolution card(s) without a matching lower stage: '+[...new Set(missing.map(c=>c.name))].slice(0,4).join(', '));
   if(needed.length)lines.push('Attack Energy colors: '+needed.join(', '));
+  if(deck.length){const energyCount=deck.length-chosen.length;lines.push('Basic Energy cards: '+energyCount);if(deck.length!==40)lines.push('Deck needs '+(40-deck.length)+' cards to reach 40.');}
   note.textContent=(deck.length?'Current deck · ':'Current draft · ')+(lines.join(' ')||'No obvious evolution gaps detected.')+' Energy quantities are not validated here.';
   note.className='ca-muted '+(missing.length||!basics.length?'ca-warning':'ca-positive');
  }
@@ -103,6 +104,11 @@
  window.CubeAnalysis={update({pool,drafted,pack,deck}){
   ensure();last={pool:pool||[],drafted:drafted||[],pack:pack||[],deck:deck||[]};
   root.hidden=!pool;pickPanel.hidden=!pool;healthPanel.hidden=!pool;
-  if(!pool)return;drawComposition();drawPicks();drawHealth();highlight();
+  if(!pool)return;
+  const builder=document.getElementById('builder'),roomBuilder=document.getElementById('deckArea');
+  const activeBuild=(builder&&!builder.classList.contains('hidden')?builder:null)||(roomBuilder&&!roomBuilder.classList.contains('hidden')?roomBuilder:null);
+  if(activeBuild){if(healthPanel.parentElement!==activeBuild)activeBuild.insertBefore(healthPanel,activeBuild.firstChild);}
+  else if(healthPanel.previousElementSibling!==pickPanel)pickPanel.insertAdjacentElement('afterend',healthPanel);
+  drawComposition();drawPicks();drawHealth();highlight();
  },preview:openPreview};
 })();
