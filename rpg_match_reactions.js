@@ -366,6 +366,7 @@
     };
     portrait.append(img);
    }else portrait.classList.add('no-art');
+   media?.NeoRpgDiscreetAvatars?.set?.(portrait,npcId,reaction.imageKey||reaction.kind,reaction.npcName);
    const copy=doc.createElement('div');copy.className='npc-reaction-copy';
    const tag=doc.createElement('span');tag.className='npc-reaction-tag';tag.textContent=reaction.subtitle;
    const name=doc.createElement('strong');name.className='npc-reaction-name';name.textContent=reaction.npcName;
