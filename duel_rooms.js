@@ -20,8 +20,8 @@ class RoomCoordinator {
  dispatch(code,playerToken,rawCommand,expectedRevision){const {r,side}=this.authorize(code,playerToken);if(!r.game)throw Error('Game has not started');if(expectedRevision!==r.revision)throw Error('Stale game revision');const command=validateCommand(rawCommand);
   // Pending choices may belong to the non-active player. Adapter must determine entitlement.
   if(r.game.pendingDecision){
-   if(command.type!=='choose')throw Error('A decision must be resolved first');
-   validateAnswer(r.game.pendingDecision,side,command.payload);
+   if(!['choose','cancel_choice'].includes(command.type))throw Error('A decision must be resolved first');
+   if(command.type==='choose')validateAnswer(r.game.pendingDecision,side,command.payload);
   }else{
    if(command.type==='choose')throw Error('No pending decision');
    const setupAction=r.game.phase==='setup'&&['setup_select','setup_undo','setup_confirm','concede'].includes(command.type);
