@@ -81,3 +81,26 @@ test('impossible Trader and Item Finder searches are rejected before any mandato
   assert.equal(g.pendingDecision,null);
  }
 });
+
+test('Pokémon Breeder only offers Stage 2 cards with a compatible Basic already in play',()=>{
+ const {createGame,applyCommand}=require('../headless_duel');
+ const cards=[...Array(4).fill('base1-44'),...Array(56).fill('base1-99')];
+ const game=()=>{const g=createGame({decks:[cards,cards],format:'classic',seed:322});
+  g.phase='game';g.turn=0;g.round=3;g.turnSerial=4;
+  g.players[0].active={id:'base1-44',under:[],energies:[],attachedTrainers:[],damage:0,status:null,playedTurn:1};
+  g.players[0].hand=['base1-76','base5-30','base1-99'];
+  g.players[0].deck=['base1-99','base1-44'];
+  return g;
+ };
+ const noOddish=game(),before=JSON.stringify(noOddish);
+ const rejected=applyCommand(noOddish,0,{type:'play_trainer',payload:{handIndex:0}});
+ assert.equal(rejected.ok,false);
+ assert.match(rejected.error,/Pokémon Breeder.*matching Basic/);
+ assert.equal(JSON.stringify(noOddish),before,'rejected Trainer is atomic');
+ const withOddish=game();
+ withOddish.players[0].bench=[{id:'base5-63',under:[],energies:[],attachedTrainers:[],damage:0,status:null,playedTurn:1}];
+ const opened=applyCommand(withOddish,0,{type:'play_trainer',payload:{handIndex:0}});
+ assert.equal(opened.ok,true,opened.error);
+ assert.equal(withOddish.pendingDecision?.kind,'evolution');
+ assert.ok(withOddish.pendingDecision.options.some(x=>x.label==='Dark Vileplume'));
+});
