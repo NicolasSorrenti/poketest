@@ -17,8 +17,8 @@ const CHAPTER_CREDITS=[0,10,15,18,25];
 const rngFrom=seed=>{let value=seed>>>0;return()=>((value=(Math.imul(value,1664525)+1013904223)>>>0)/4294967296);};
 const sum=o=>Object.values(o||{}).reduce((n,c)=>n+c,0);
 
-function simulate(config,seed=1){
- const rng=rngFrom(seed),s={
+function simulate(config,seed=1,options={}){
+ const rng=rngFrom(seed),cardRng=rngFrom(seed^0x9e3779b9),s={
   day:1,slot:0,location:'shop',credits:80,points:0,results:[],pendingDuel:null,
   playerDeck:'blackout',deckJourney:Collection.fresh(),relationships:{},bonds:{},storyDone:{},tournaments:{}
  };
@@ -50,8 +50,13 @@ function simulate(config,seed=1){
     s.pendingDuel=null;
     if(!receipt)throw Error('Rejected synthetic duel receipt '+id);
     earnings+=s.credits-before;
+    // Comparison-only reconstruction of the previous 15-credit uncapped income.
+    // Production always uses the actual credit calculation in Bridge.settle.
+    if(options.uncappedCredits===true&&victory&&receipt.credits===8){
+     s.credits+=7;earnings+=7;
+    }
     if(victory)wins++;else losses++;
-    if(Collection.reward(s,victory,npc,rng,{day,duelId:id})){
+    if(Collection.reward(s,victory,npc,cardRng,{day,duelId:id})){
      miniPacks++;
      s.deckJourney.lastPack.opened=true;
     }
@@ -66,7 +71,7 @@ function simulate(config,seed=1){
   for(const [set,count] of Object.entries({...s.deckJourney.vouchers})){
    for(let i=0;i<count;i++){
     if(s.deckJourney.lastPack)s.deckJourney.lastPack.opened=true;
-    Collection.redeemVoucher(s,set,rng);s.deckJourney.lastPack.opened=true;
+    Collection.redeemVoucher(s,set,cardRng);s.deckJourney.lastPack.opened=true;
     voucherPacks++;
    }
   }
@@ -75,7 +80,7 @@ function simulate(config,seed=1){
   const unlocked=Collection.shopPacks(s).filter(p=>p.unlocked),offer=unlocked[unlocked.length-1];
   while(offer&&s.credits>=offer.price){
    if(s.deckJourney.lastPack)s.deckJourney.lastPack.opened=true;
-   Collection.buyPack(s,offer.set,rng);s.deckJourney.lastPack.opened=true;
+   Collection.buyPack(s,offer.set,cardRng);s.deckJourney.lastPack.opened=true;
    shopPacks++;boughtBySet[offer.set]=(boughtBySet[offer.set]||0)+1;
   }
  }
@@ -83,6 +88,21 @@ function simulate(config,seed=1){
   remainingCredits:s.credits,miniPacks,shopPacks,voucherPacks,signatureCards,
   totalCardCopies:sum(s.deckJourney.owned),distinctCards:Object.keys(s.deckJourney.owned).length,
   boughtBySet};
+}
+function compare(runs=200){
+ if(!Number.isInteger(runs)||runs<1||runs>1000)throw Error('Choose 1..1000 samples');
+ return SCENARIOS.map(config=>{
+  const capped=Array.from({length:runs},(_,i)=>simulate(config,2026+i));
+  const uncapped=Array.from({length:runs},(_,i)=>simulate(config,2026+i,{uncappedCredits:true}));
+  const avg=(items,key)=>Number((items.reduce((sum,row)=>sum+row[key],0)/runs).toFixed(1));
+  if(capped.some((row,i)=>row.wins!==uncapped[i].wins))throw Error('Duel results changed between income scenarios');
+  return {scenario:config.id,runs,
+   capped:{earnedCredits:avg(capped,'earnedCredits'),shopPacks:avg(capped,'shopPacks'),totalCardCopies:avg(capped,'totalCardCopies')},
+   uncapped:{earnedCredits:avg(uncapped,'earnedCredits'),shopPacks:avg(uncapped,'shopPacks'),totalCardCopies:avg(uncapped,'totalCardCopies')},
+   difference:{earnedCredits:Number((avg(capped,'earnedCredits')-avg(uncapped,'earnedCredits')).toFixed(1)),
+    shopPacks:Number((avg(capped,'shopPacks')-avg(uncapped,'shopPacks')).toFixed(1))}
+  };
+ });
 }
 function report(runs=200){
  if(!Number.isInteger(runs)||runs<1||runs>1000)throw Error('Choose 1..1000 samples');
@@ -96,6 +116,6 @@ function report(runs=200){
 }
 if(require.main===module){
  const value=process.argv[2]?Number(process.argv[2]):200;
- process.stdout.write(JSON.stringify({model:'Synthetic campaign schedules (not actual duel/AI outcomes)',scenarios:report(value)},null,2)+'\n');
+ process.stdout.write(JSON.stringify({model:'Synthetic campaign schedules (not actual duel/AI outcomes)',scenarios:report(value),comparison:compare(value)},null,2)+'\n');
 }
-module.exports={SCENARIOS,simulate,report};
+module.exports={SCENARIOS,simulate,report,compare};
