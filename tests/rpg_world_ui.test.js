@@ -958,9 +958,11 @@ test('RPG victories award a five-card mini booster, displayed once and safe agai
  const reload=launch(r.state());
  assert.equal(reload.elements.packDialog.open,undefined,'already opened booster must not reappear');
 });
-test('shop booster reveal survives page reload without charging another 20 credits',()=>{
- const r=launch({day:5,slot:0,location:'shop',credits:80,deckJourney:Collection.fresh()});
- r.elements.starterChoices.children[1].onclick();
+test('paid themed booster reveal survives page reload without charging again',()=>{
+ const initial={day:5,slot:0,location:'shop',credits:80,deckJourney:Collection.fresh()};
+ Collection.choose(initial,'tidal_circuit');
+ initial.deckJourney.welcomePacks=0; // Migrated save or player who already claimed both welcome picks.
+ const r=launch(initial);
  const store=r.elements.deckCollection.children.find(x=>x.textContent.includes('Browse booster packs'));
  assert.ok(store);store.onclick();
  const buy=r.elements.boosterShopGrid.children.flatMap(x=>x.children).find(x=>x.className==='booster-offer-buy'&&!x.disabled&&x.textContent.includes('Buy'));
