@@ -79,7 +79,11 @@ function score(id,picks){
 }
 function cpuPick(ids,picks){
  if(!Array.isArray(ids)||!ids.length)throw Error('CPU pack is empty');
- return [...ids].sort((a,b)=>score(b,picks)-score(a,picks)||a.localeCompare(b))[0];
+ // Cache each pack's scores: a room refresh must not re-run strategic planning
+ // for the same card dozens of times inside Array.sort's comparator.
+ const ranked=new Map();
+ for(const id of ids)if(!ranked.has(id))ranked.set(id,score(id,picks));
+ return [...ids].sort((a,b)=>ranked.get(b)-ranked.get(a)||a.localeCompare(b))[0];
 }
 function buildCpuDeck(picks,{preset='balanced'}={}){
  const mayhem=preset==='mayhem';
