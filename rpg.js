@@ -145,7 +145,7 @@ function timeFlash(beforeDay,beforeSlot,source='activity'){
  overlay.addEventListener('animationend',()=>overlay.remove());
 }
 
-function defaults(){return {sideQuests:{},activeSideQuest:null,day:1,slot:0,location:'home',metReina:false,reinaTrust:0,reinaDuels:0,results:[],flags:{intro:false},journal:['The 90-day season begins.'],pendingDuel:null,bonds:{},talked:{},hungOut:{},eventsDone:{},points:0,credits:80,playerDeck:'blackout',selected:null,ended:false,storyDone:{},storyMissed:{},relationships:{},routeOutcomes:{},partner:null,activeStory:null,activeEncounter:null,activeArc:null,arcFlags:{},arcOutcomes:{},activityDone:{},encountersDone:{},focus:75,insight:0,reputation:0,preparation:0,lastDuelReceipt:null,tournaments:{},campaignHistory:[],ngPlus:0,appointments:[],appointmentSeq:0,scene:null,socialHistory:{},situationDone:{},activeSituation:null,deckJourney:null,competitive:null,npcReactivity:null,community:null,consequences:null,mandatoryEventState:null}}
+function defaults(){return {sideQuests:{},activeSideQuest:null,day:1,slot:0,location:'home',metReina:false,reinaTrust:0,reinaDuels:0,results:[],flags:{intro:false},journal:['The 90-day season begins.'],pendingDuel:null,bonds:{},talked:{},hungOut:{},eventsDone:{},points:0,credits:80,playerDeck:'blackout',selected:null,ended:false,storyDone:{},storyMissed:{},relationships:{},routeOutcomes:{},partner:null,activeStory:null,activeEncounter:null,activeArc:null,arcFlags:{},arcOutcomes:{},activityDone:{},encountersDone:{},focus:75,insight:0,reputation:0,preparation:0,lastDuelReceipt:null,tournaments:{},campaignHistory:[],ngPlus:0,appointments:[],appointmentSeq:0,scene:null,socialHistory:{},situationDone:{},activeSituation:null,deckJourney:null,competitive:null,npcReactivity:null,community:null,consequences:null,mandatoryEventState:null,playmatGifts:{},playmatSelected:'aurora'}}
 const hadCampaignSave=!!localStorage.getItem(KEY);
 let state;try{state=JSON.parse(localStorage.getItem(KEY))||defaults();if(!Number.isInteger(state.day)||state.day<1||state.day>91)throw Error('Invalid save');}catch{state=defaults()}
 for(const [k,v] of Object.entries(defaults()))if(state[k]===undefined)state[k]=v;
@@ -929,7 +929,7 @@ async function loadCardNames(){
  }catch{}
 }
 
-function duelUrl(duel){return '/classic_live.html?rpg=1&duelId='+encodeURIComponent(duel.id)+'&deck='+encodeURIComponent(duel.playerDeck)+'&opponent='+encodeURIComponent(duel.opponent)+'&npc='+encodeURIComponent(duel.npc)+'&npcName='+encodeURIComponent(cast[duel.npc].name)+'&npcTier='+encodeURIComponent(duel.npcDeckTier||1);}
+function duelUrl(duel){const mats=window.NeoDuelPlaymats,gifts=mats.gifted(state),owned=mats.available(gifts).map(m=>m.id);const chosen=mats.choose(state.playmatSelected,owned);return '/classic_live.html?rpg=1&mat='+encodeURIComponent(chosen)+'&giftMats='+encodeURIComponent(gifts.join(','))+'&duelId='+encodeURIComponent(duel.id)+'&deck='+encodeURIComponent(duel.playerDeck)+'&opponent='+encodeURIComponent(duel.opponent)+'&npc='+encodeURIComponent(duel.npc)+'&npcName='+encodeURIComponent(cast[duel.npc].name)+'&npcTier='+encodeURIComponent(duel.npcDeckTier||1);}
 
 function describePreparedDuel(){
  return PRE.describe(state,state.pendingDuel,{cast,places,cg:CG,tournaments:TOURNAMENTS,
@@ -1015,6 +1015,12 @@ function startDuel(id,exhibition=null,arcEpisode=null,tournament=null,sideQuest=
 }
 window.addEventListener('message',ev=>{
  const duel=state.pendingDuel;
+ if(ev.data?.type==='neo-rpg-playmat-selected'){
+  if(!window.NeoRpgDuelBridge.acceptsPlaymat(ev,location.origin,$('battle').contentWindow,duel))return;
+  const allowed=window.NeoDuelPlaymats.available(window.NeoDuelPlaymats.gifted(state)).map(m=>m.id);
+  if(!allowed.includes(ev.data.playmat))return;
+  state.playmatSelected=ev.data.playmat;persist();return;
+ }
  if(PRE.isReady(duel)||!BRIDGE.accepts(ev,location.origin,$('battle').contentWindow,duel))return;
  const receipt=BRIDGE.settle(state,duel,ev.data.winner,cast[duel.npc].name);
  if(!receipt)return;

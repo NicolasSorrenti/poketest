@@ -4,6 +4,7 @@
  function sessionKey(id){if(typeof id!=='string'||!id.trim())throw Error('Missing duel ID');return 'neoRpgDuelToken:'+encodeURIComponent(id);}
  function message(id,winner){sessionKey(id);if(winner!==null&&winner!==0&&winner!==1)throw Error('Invalid winner');return {type:'neo-rpg-duel-finished',duelId:id,winner};}
  function accepts(ev,origin,frame,pending){const x=ev?.data;return !!pending&&!pending.resolved&&!!frame&&ev.origin===origin&&ev.source===frame&&x?.type==='neo-rpg-duel-finished'&&x.duelId===pending.id&&(x.winner===null||x.winner===0||x.winner===1);}
+ function acceptsPlaymat(ev,origin,frame,pending){const x=ev?.data;return !!pending&&!pending.resolved&&!!frame&&ev.origin===origin&&ev.source===frame&&x?.type==='neo-rpg-playmat-selected'&&x.duelId===pending.id&&typeof x.playmat==='string';}
  function settle(s,d,winner,name){
   if(!d||s.pendingDuel?.id!==d.id||s.results.some(x=>x.id===d.id)||(winner!==null&&winner!==0&&winner!==1))return null;
   const b=s.bonds[d.npc],r=s.relationships[d.npc];if(!b||!r)return null;
@@ -26,5 +27,5 @@
   if(ordinaryWin&&credits===8)notes.push('Routine win reward: 8 credits (two full-credit ordinary wins already earned this week).');
   return {duelId:d.id,npc:d.npc,name,outcome,points:points+bonus,credits,trust,bonus,notes};
  }
- return {sessionKey,message,accepts,settle};
+ return {sessionKey,message,accepts,acceptsPlaymat,settle};
 });

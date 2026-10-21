@@ -63,8 +63,12 @@
    collection.awardSignature(state,signature);
    out.push('a signature card');
   }
+  if(number===2){
+   if(!state.playmatGifts||typeof state.playmatGifts!=='object'||Array.isArray(state.playmatGifts))state.playmatGifts={};
+   state.playmatGifts[npc]=true;out.push('a personal playmat');
+  }
   state.milestoneRewards[event.id]={npc,chapter:number,day:state.day};
-  return {npc,chapter:number,label:out.join(' · '),credits,set,signature};
+  return {npc,chapter:number,label:out.join(' · '),credits,set,signature,playmat:number===2?'npc-'+npc:null};
  }
  function canChallenge(state,npc,plan){
   const p=progress(state,npc,plan);
