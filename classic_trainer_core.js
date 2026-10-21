@@ -447,6 +447,15 @@ function prompt(g,plan,helpers){
   if(n)return multi('opponentBasics',side,a,0,n,'Choose opponent Basics to Bench',true);
   d.opponentBasics=[];
  }
+ // Prevent mandatory choice chains that cannot finish. Item Finder can
+ // recover a Trainer already in the discard OR one discarded to pay its cost.
+ // Pokémon Trader needs a Pokémon both to offer and to find in the deck.
+ if(name==='Item Finder'&&!disc(p,c=>c.supertype==='Trainer').length
+  &&!hchoices(c=>c.supertype==='Trainer').length)throw Error('Item Finder has no Trainer to recover');
+ if(name==='Pokémon Trader'){
+  if(!hchoices(pokemon).length)throw Error('Pokémon Trader needs a Pokémon in hand');
+  if(!deck(pokemon).length)throw Error('Pokémon Trader has no Pokémon left in deck');
+ }
  if(name==='Blaine'&&!p.hand.some((id,i)=>i!==plan.handIndex&&get(id).name==='Fire Energy'))throw Error('Blaine requires Fire Energy to attach');
  const cost2=['Computer Search','Item Finder','Maintenance'];
  if(cost2.includes(name) && !chosen(d,'cost')){
