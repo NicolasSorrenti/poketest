@@ -64,8 +64,18 @@ fs.mkdirSync(out,{recursive:true});
     const actions=[...document.querySelectorAll('.turn-actions-panel .turn-actions button')].map(box);
     const desktopSheet=[...document.styleSheets].find(s=>s.href?.includes('duel_desktop.css'));
     const mobileSheet=[...document.styleSheets].find(s=>s.href?.includes('duel_mobile.css'));
+    const log=document.getElementById('logDrawer');
+    const logHidden=getComputedStyle(log).display;
+    log.classList.remove('hidden');
+    const logShown=getComputedStyle(log).display,logRect=box(log);
+    log.classList.add('hidden');
+    const logHiddenAgain=getComputedStyle(log).display;
+    const stageRect=box(document.querySelector('.stage'));
+    const duelRect=box(document.getElementById('duel'));
     return {
      face,energy,tool,cards,actions,
+     logHidden,logShown,logRect,logHiddenAgain,stageRect,duelRect,
+     logToggleDisplay:getComputedStyle(document.getElementById('logToggle')).display,
      benchDisplay:getComputedStyle(bench).display,
      benchCols:getComputedStyle(bench).gridTemplateColumns,
      actionDisplay:getComputedStyle(document.querySelector('.turn-actions-panel .turn-actions')).display,
@@ -84,6 +94,14 @@ fs.mkdirSync(out,{recursive:true});
    assert.equal(geometry.toolCount,3);
    assert.equal(geometry.energyOverflow,true);
    assert.equal(geometry.toolOverflow,true);
+   assert.equal(geometry.logHidden,'none','log should start closed');
+   assert.equal(geometry.logHiddenAgain,'none','closing log must remove it from layout');
+   assert.notEqual(geometry.logShown,'none','opening log must show history');
+   assert.notEqual(geometry.logToggleDisplay,'none','Log button must be accessible');
+   assert.ok(geometry.logRect.width<=360&&geometry.logRect.height<=340,'Log drawer must stay compact');
+   assert.ok(geometry.logRect.right<=spec.width+2,'Log drawer must stay inside screen');
+   if(!spec.mobile)assert.ok(geometry.stageRect.width>geometry.duelRect.width*.87,
+    'Desktop battlefield must not lose a third of its width to an empty log rail');
    assert.ok(geometry.energy.x<geometry.face.x,'Energy must peek left of Pokémon');
    assert.ok(geometry.tool.right>geometry.face.right,'Trainer must peek right of Pokémon');
    assert.ok(Math.abs(geometry.energy.height-geometry.face.height)<4,'Energy should match Pokémon art height');
@@ -96,7 +114,7 @@ fs.mkdirSync(out,{recursive:true});
     assert.equal(geometry.benchDisplay,'grid','Mobile Bench must be a 5-slot grid');
     assert.equal(geometry.actionDisplay,'grid','Touch commands must use a separate 2-row grid');
     assert.ok(geometry.actions.every(a=>a.height>=38),'Touch actions must not shrink below 38px');
-   }else assert.equal(geometry.benchDisplay,'flex','Desktop Bench should use the wider fan');
+   }else assert.equal(geometry.benchDisplay,'grid','Desktop Bench should use the five-slot tabletop grid');
    await page.screenshot({path:path.join(out,'duel-layout-'+spec.name+'.png'),fullPage:true});
    assert.deepEqual(errors,[],spec.name+' has JavaScript errors');
    console.log('PASS duel responsive '+spec.name+' '+spec.width+'x'+spec.height);
@@ -117,6 +135,13 @@ fs.mkdirSync(out,{recursive:true});
    assert.equal(await cards.count(),original,label+' reopening must rebuild every card');
    assert.equal(await page.locator('#handToggle').getAttribute('aria-expanded'),'true');
    console.log('PASS mobile hand close/reopen '+label);
+   const log=page.locator('#logDrawer');
+   assert.equal(await log.isVisible(),false,label+' log starts closed');
+   await page.locator('#logToggle').click();
+   assert.equal(await log.isVisible(),true,label+' log opens on request');
+   await page.locator('#closeLog').click();
+   assert.equal(await log.isVisible(),false,label+' log closes again');
+   console.log('PASS optional log open/close '+label);
   };
   const cpu=await browser.newPage({viewport:{width:390,height:844}});
   await cpu.goto(url+'/classic_live.html',{waitUntil:'domcontentloaded'});
