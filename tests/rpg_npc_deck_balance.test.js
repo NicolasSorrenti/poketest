@@ -61,3 +61,23 @@ test('CPU avoids Item Finder with no recoverable Trainer rather than stranding a
  info.self.deckCount=0;
  assert.equal(trainerOpportunity(info,'Computer Search',cfg),false);
 });
+
+test('impossible Trader and Item Finder searches are rejected before any mandatory choice',()=>{
+ const {createGame,applyCommand}=require('../headless_duel');
+ const cards=[...Array(4).fill('base1-44'),...Array(56).fill('base1-99')];
+ for(const [trainer,hand,discard,deck,error] of [
+  ['base1-77',['base1-77','base1-44','base1-99'],[],Array(10).fill('base1-99'),/Pokémon Trader.*deck/],
+  ['base1-74',['base1-74','base1-44','base1-99'],[],Array(10).fill('base1-99'),/Item Finder.*Trainer/]
+ ]){
+  const g=createGame({decks:[cards,cards],format:'classic',seed:42});
+  g.phase='game';g.turn=0;g.turnSerial=4;g.round=3;
+  g.players[0].active={id:'base1-44',under:[],energies:[],attachedTrainers:[],damage:0,status:null,playedTurn:0};
+  g.players[0].hand=hand;g.players[0].discard=discard;g.players[0].deck=deck;
+  const original=JSON.stringify(g);
+  const response=applyCommand(g,0,{type:'play_trainer',payload:{handIndex:0}});
+  assert.equal(response.ok,false,trainer+' must reject an impossible effect');
+  assert.match(response.error,error);
+  assert.equal(JSON.stringify(g),original,'illegal play must not strand the game or mutate cards');
+  assert.equal(g.pendingDecision,null);
+ }
+});
