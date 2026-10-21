@@ -18,11 +18,18 @@ Engine.prototype.resolveKO = function(...args) {
    const finish=key=>{
     if(!options.some(x=>x.index===key))return false;
     if(this._trainer60ExpPrompt?.victim!==victim)return false;
-    this._trainer60ExpPrompt=null;victim._trainer59ExpHandled=true;
+    // Validate the target and Energy before consuming the pending interrupt.
+    // A stale choice must not silently turn an optional EXP.ALL transfer into a KO.
+    let transfer=null;
     if(key!=='skip'){
      const [slot,index]=key.split(':').map(Number),target=owner.bench[slot];
      const chosenEnergy=victim.energies[index],tool=target?.attachedTrainers?.find(x=>lookup.get(x.id)?.name==='EXP.ALL');
      if(!target||!tool||!isBasicEnergyCard(lookup.get(chosenEnergy)))return false;
+     transfer={target,index,chosenEnergy,tool};
+    }
+    this._trainer60ExpPrompt=null;victim._trainer59ExpHandled=true;
+    if(transfer){
+     const {target,index,chosenEnergy,tool}=transfer;
      victim.energies.splice(index,1);target.energies.push(chosenEnergy);
      target.attachedTrainers.splice(target.attachedTrainers.indexOf(tool),1);owner.discard.push(tool.id);
      this.log(`EXP.ALL transferred ${lookup.get(chosenEnergy).name} to ${this.card(target)?.name}.`);
