@@ -24,10 +24,10 @@ jobs:
       - name: Simulate paired headless Classic duels
         run: |
           set +e
-          node scripts/benchmark-rpg-npc-decks.js --npcs reina,hana,camila --starters ember_garden --pairs 1 --max-turns 65 > rpg-npc-deck-benchmark.json
+          node scripts/benchmark-rpg-npc-decks.js --npcs reina,hana,camila,marina,shiori,yuna --starters ember_garden,tidal_circuit,mind_and_muscle --pairs 4 --max-turns 75 > rpg-npc-deck-benchmark.json
           result=$?
           set -e
-          node -e 'const x=require("./rpg-npc-deck-benchmark.json"); for(const row of x.totals) console.log(row.stage+": "+row.cpuWins+" NPC wins, "+row.playerWins+" player wins, "+row.draws+" draws/timeouts; NPC decisive win rate "+row.npcWinRateDecisive); console.log("Match errors:",x.errors.length); for(const error of x.errors)console.error(JSON.stringify(error)); for(const row of x.cases) console.log(row.stage+" "+row.npc+": NPC "+row.cpuWins+"-"+row.playerWins+" ("+row.drawsOrTimeouts+" draw/timeout), "+row.cpuDeckChanges+" altered NPC slots");'
+          node -e 'const x=require("./rpg-npc-deck-benchmark.json"); for(const row of x.totals) console.log(row.stage+": "+row.cpuWins+" NPC wins, "+row.playerWins+" player wins, "+row.draws+" draws/timeouts; NPC decisive win rate "+row.npcWinRateDecisive); console.log("Match errors:",x.errors.length); for(const error of x.errors)console.error(JSON.stringify(error)); for(const row of x.cases) console.log(row.stage+" "+row.npc+"/"+row.starter+": NPC "+row.cpuWins+"-"+row.playerWins+" ("+row.drawsOrTimeouts+" draw/timeout), "+row.cpuDeckChanges+" altered NPC slots");'
           exit "$result"
       - name: Upload match results and deck diagnostics
         if: always()
