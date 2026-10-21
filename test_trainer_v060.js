@@ -163,6 +163,14 @@ check('Chaos Gym replay does not erase an identical Trainer already in rival dis
   assert.ok(p.discard.includes('base1-91'));
  }finally{vm.runInContext('coin=__originalCoin',ctx)}
 });
+check('Chaos Gym refuses unreplayable cards without mutating rival hand',()=>{
+ const {g,p,f}=fresh();
+ const handBefore=f.hand.slice(),discardBefore=f.discard.slice(),turnBefore=g.turn;
+ assert.equal(g._trainer60RivalReplay('gym2-102'),false);
+ assert.deepEqual(f.hand,handBefore);
+ assert.deepEqual(f.discard,discardBefore);
+ assert.equal(g.turn,turnBefore);
+});
 check('Chaos Gym can redirect an Energy Search using RIVAL deck and choices',()=>{
  const id=data.find(c=>c.name==='Energy Search'&&c.supertype==='Trainer').id;
  const {g,p,f}=fresh({hand:[id]});g.stadium={id:'gym2-102',owner:1};
