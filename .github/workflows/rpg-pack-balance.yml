@@ -36,6 +36,14 @@ jobs:
           set -e
           node -e 'const x=require("./rpg-pack-matchups.json"); for(const s of x.aggregate)console.log("Day "+s.day+" "+s.style+": "+s.playerWins+"-"+s.npcWins+" ("+s.draws+" draws), win rate "+s.playerWinRate); for(const e of x.errors)console.error(JSON.stringify(e));'
           exit "$result"
+      - name: Larger Day 45 and Day 60 NPC matchup sample
+        run: |
+          set +e
+          node scripts/benchmark-rpg-pack-strategies.js --duels --days 45,60 --seeds 3 --pairs 1 --starters ember_garden,tidal_circuit --npcs hana,reina,camila,marina,shiori,yuna --max-turns 70 > rpg-pack-midgame.json
+          result=$?
+          set -e
+          node -e 'const x=require("./rpg-pack-midgame.json"); for(const s of x.aggregate)console.log("Day "+s.day+" "+s.style+": "+s.playerWins+"-"+s.npcWins+" ("+s.draws+" draws), player win rate "+s.playerWinRate); for(const s of x.opponents)console.log("Day "+s.day+" vs "+s.npc+": player "+s.playerWins+" NPC "+s.npcWins+" draws "+s.draws+" rate "+s.playerWinRate); for(const e of x.errors)console.error(JSON.stringify(e));'
+          exit "$result"
       - name: Save benchmark datasets
         if: always()
         uses: actions/upload-artifact@v4
@@ -44,4 +52,5 @@ jobs:
           path: |
             rpg-pack-readiness.json
             rpg-pack-matchups.json
+            rpg-pack-midgame.json
           if-no-files-found: ignore
