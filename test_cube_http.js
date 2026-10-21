@@ -24,15 +24,17 @@ const {server}=require('./server');
    const resource=await fetch(base+asset);
    assert.equal(resource.status,200,'Visual builder asset missing: '+asset);
   }
-  for(const id of ['soloDeckBuilder','soloBuilderAction'])assert(cubeHtml.includes('id="'+id+'"'));
+  for(const id of ['soloDeckBuilder','soloBuilderAction','cpuDifficulty','matchCpuDifficulty','packSort','showPickHelp'])assert(cubeHtml.includes('id="'+id+'"'));
   const formats=await api('presets');
   assert.equal(formats.status,200);
   assert.deepEqual(formats.body.presets.map(p=>p.id),['balanced','foundations','elemental','neo','rocket','mayhem']);
   assert.equal((await api('state')).status,401);
-  const created=await api('create','POST',{seed:475});
+  const created=await api('create','POST',{seed:475,difficulty:5});
   assert.equal(created.status,200);
   token=created.body.token;
   assert.equal(created.body.pack.length,15);
+  assert.equal(created.body.difficulty,5);
+  assert(created.body.pack.some(c=>c.id===created.body.recommendedId));
   let state=created.body;
   for(let i=0;i<60;i++){
    const pick=await api('pick','POST',{id:state.pack[0].id,revision:state.revision});
@@ -42,11 +44,13 @@ const {server}=require('./server');
   assert.equal(state.done,true);
   assert.equal(state.suggestedDeck.length,40);
   assert.equal((await api('start','POST',{revision:state.revision,deck:['bad']})).status,400);
-  const started=await api('start','POST',{revision:state.revision,deck:state.suggestedDeck});
+  assert.equal((await api('start','POST',{revision:state.revision,deck:state.suggestedDeck,difficulty:6})).status,400);
+  const started=await api('start','POST',{revision:state.revision,deck:state.suggestedDeck,difficulty:2});
   assert.equal(started.status,200,'Could not launch Cube: '+started.body.error);
   const duel=await api('state','GET',undefined,started.body.duelToken,'classic');
   assert.equal(duel.status,200);
   assert.deepEqual(duel.body.counts,[40,40]);
+  assert.equal(duel.body.cpu.level,1,'Rookie must respect chosen difficulty');
   assert.equal((await api('start','POST',{revision:state.revision,deck:state.suggestedDeck})).status,409);
   // Exercise the real HTTP bracket with a deterministic CPU fixture stub.
   // The actual CPU-vs-CPU engine is covered by test_cube_simulation.js.
@@ -68,6 +72,7 @@ const {server}=require('./server');
   assert.equal(next.status,200,'Next match should start: '+next.body.error);
   assert.notEqual(next.body.duelToken,active);
   active=next.body.duelToken;
+  assert.equal(classic.session(active).cpuConfig.level,3,'Champion scales with chosen difficulty');
   const final=classic.session(active).game;
   final.over=true;final.winner=0;
   progress=await api('state');
