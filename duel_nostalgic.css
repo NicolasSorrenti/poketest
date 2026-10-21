@@ -479,3 +479,96 @@ body.duel-active .prize-choice-panel{z-index:190}
 @media (prefers-reduced-motion:reduce){
  body.duel-active .hand-fan-card{transition:none}
 }
+
+/* v0.80 — definitive hand dock.
+   Older presentation layers experimented with a zero-sized floating hand.
+   Keep the authoritative renderer, but give it one real, measurable region so
+   setup can never start with the player's cards off-screen. */
+@media (min-width:781px){
+ body.duel-active #duel:not(.hidden){
+  --neo-hand-row:clamp(196px,27dvh,274px);
+  grid-template-rows:auto minmax(0,1fr) var(--neo-hand-row)!important;
+ }
+ body.duel-active #duel>.below>.main-column>.hand-panel{
+  display:block!important;position:relative!important;
+  width:100%!important;height:100%!important;
+  min-width:0!important;min-height:0!important;max-width:none!important;
+  padding:34px 8px 7px!important;overflow:hidden!important;
+  pointer-events:auto!important;isolation:isolate;
+  border:1px solid #3f4b59!important;border-radius:11px!important;
+  background:#222a35!important;box-shadow:inset 0 1px #ffffff0b!important;
+ }
+ body.duel-active #duel>.below>.main-column>.hand-panel .hand-toggle{
+  position:absolute!important;inset:5px auto auto 8px!important;
+  width:auto!important;height:25px!important;min-height:25px!important;
+  padding:2px 9px!important;z-index:4;pointer-events:auto;
+  border:1px solid #566479!important;border-radius:6px!important;
+  background:#2b3644!important;box-shadow:none!important;
+ }
+ body.duel-active #duel>.below>.main-column>.hand-panel .hand-fan:not(.hidden){
+  display:block!important;position:relative!important;
+  inset:auto!important;width:100%!important;height:100%!important;
+  max-width:none!important;padding:0!important;overflow-x:auto!important;
+  overflow-y:hidden!important;z-index:2;pointer-events:auto;
+  background:transparent!important;border:0!important;box-shadow:none!important;
+ }
+ body.duel-active #duel>.below>.main-column>.hand-panel .hand-fan-track{
+  display:flex!important;position:relative!important;align-items:flex-end!important;
+  gap:9px!important;width:max-content!important;min-width:100%!important;
+  height:100%!important;padding:0 8px!important;
+ }
+ body.duel-active #duel>.below>.main-column>.hand-panel .hand-fan-card{
+  position:relative!important;inset:auto!important;
+  flex:0 0 clamp(94px,8.8vw,132px)!important;
+  width:clamp(94px,8.8vw,132px)!important;height:100%!important;
+  max-height:100%!important;transform:none!important;
+ }
+ body.duel-active #duel>.below>.main-column>.hand-panel .hand-fan-card:is(:hover,:focus-visible),
+ body.duel-active #duel>.below>.main-column>.hand-panel .hand-fan-card.selected{
+  transform:translateY(-7px)!important;
+ }
+ body.duel-active #duel>.below>.main-column>.turn-actions-panel{
+  max-height:var(--neo-hand-row);
+ }
+}
+@media (max-width:780px){
+ body.duel-active #duel:not(.hidden){
+  grid-template-rows:auto auto minmax(0,1fr) 222px!important;
+ }
+ body.duel-active .below,
+ body.duel-active .below .main-column{height:222px!important;min-height:222px!important}
+ body.duel-active .below .main-column{
+  display:flex!important;flex-direction:column!important;gap:4px!important;
+ }
+ body.duel-active .below .hand-panel{
+  display:block!important;position:relative!important;
+  flex:1 1 auto!important;width:100%!important;height:auto!important;
+  min-width:0!important;min-height:122px!important;max-width:none!important;
+  padding:29px 4px 4px!important;overflow:hidden!important;
+  pointer-events:auto!important;border:1px solid #3f4b59!important;
+  border-radius:9px!important;background:#222a35!important;
+ }
+ body.duel-active .below .hand-panel .hand-toggle{
+  position:absolute!important;inset:3px auto auto 5px!important;
+  height:23px!important;min-height:23px!important;padding:1px 7px!important;
+  box-shadow:none!important;z-index:4;
+ }
+ body.duel-active .below .hand-panel .hand-fan:not(.hidden){
+  display:block!important;position:relative!important;inset:auto!important;
+  width:100%!important;height:100%!important;max-width:none!important;
+  padding:0!important;overflow-x:auto!important;overflow-y:hidden!important;
+  pointer-events:auto;z-index:2;
+ }
+ body.duel-active .below .hand-panel .hand-fan-track{
+  display:flex!important;position:relative!important;align-items:flex-end!important;
+  gap:6px!important;width:max-content!important;min-width:100%!important;
+  height:100%!important;padding:0 4px!important;
+ }
+ body.duel-active .below .hand-panel .hand-fan-card{
+  position:relative!important;inset:auto!important;transform:none!important;
+  flex:0 0 72px!important;width:72px!important;height:100%!important;
+ }
+ body.duel-active .below .turn-actions-panel{
+  flex:0 0 91px!important;width:100%!important;height:91px!important;
+ }
+}
