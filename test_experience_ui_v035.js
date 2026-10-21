@@ -13,9 +13,10 @@ assert.equal(ux.handType(cardId.en),'Energy');assert.equal(ux.handType(cardId.ev
 const you={bench:[{id:'ba'}],hand:['en','ba','ev']},opponent={bench:[],hand:[]};
 const base={phase:'game',over:false,turn:0,players:[you,opponent],pendingDecision:null};
 let guide=ux.guide({view:base,card,energyUsed:false});
-assert.equal(guide.kind,'turn');assert.match(guide.tip,/attach one Energy/);
-assert.equal(guide.chips[1].label,'Bench 1/5');
-guide=ux.guide({view:base,card,energyUsed:true});assert.equal(guide.chips[0].done,true);assert.match(guide.tip,/Basic Pokémon/);
+assert.equal(guide.kind,'turn');assert.doesNotMatch(guide.tip,/Energy/);
+assert.equal(guide.chips[0].label,'Bench 1/5');
+assert.ok(!guide.chips.some(chip=>/Energy/i.test(chip.label)),'No permanent Energy turn badge');
+guide=ux.guide({view:base,card,energyUsed:true});assert.equal(guide.chips[0].label,'Bench 1/5');assert.match(guide.tip,/Basic Pokémon/);
 assert.equal(ux.guide({view:{...base,turn:1},me:0,card}).kind,'waiting');
 assert.equal(ux.guide({view:{...base,phase:'setup'},me:0,card}).kind,'setup');
 assert.equal(ux.guide({view:{...base,pendingDecision:{actor:0}},me:0,card}).kind,'decision');
