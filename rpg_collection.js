@@ -49,17 +49,30 @@
  const allAllowed=new Set([...starters.flatMap(s=>s.cards),...upgrade,...Object.keys(SETS).flatMap(set=>Array.from({length:SETS[set].size},(_,i)=>set+'-'+(i+1)))]);
  const rank=ids=>Object.fromEntries([...new Set(ids)].map(id=>[id,ids.filter(x=>x===id).length]));
  const chooseRandom=(list,rng=Math.random)=>list[Math.min(list.length-1,Math.floor(Math.max(0,rng())*list.length))];
+ // Historical rarity indexes sourced from PokemonTCG/pokemon-tcg-data/cards/en.
+ // Includes Rare Trainers, duplicate non-holo rares and Shining/Secret printings.
+ const PACK_RARITIES=Object.freeze({"base1":{"holo":[[1,16]],"rare":[[17,22],[70,79]],"uncommon":[[23,42],[80,90],[96,96]],"common":[[43,69],[91,95]],"secret":[],"energy":[[97,102]]},"base2":{"holo":[[1,16]],"rare":[[17,32]],"uncommon":[[33,48]],"common":[[49,64]],"secret":[],"energy":[]},"base3":{"holo":[[1,15]],"rare":[[16,30]],"uncommon":[[31,45],[58,58]],"common":[[46,57],[59,62]],"secret":[],"energy":[]},"base4":{"holo":[[1,20]],"rare":[[21,32],[101,108]],"uncommon":[[33,64],[109,117],[124,124]],"common":[[65,100],[118,123]],"secret":[],"energy":[[125,130]]},"base5":{"holo":[[1,17]],"rare":[[18,31],[71,72],[80,80]],"uncommon":[[32,48],[73,77],[81,82]],"common":[[49,70],[78,79]],"secret":[[83,83]],"energy":[]},"gym1":{"holo":[[1,19]],"rare":[[20,34],[97,104]],"uncommon":[[35,60],[105,120]],"common":[[61,96],[121,126]],"secret":[],"energy":[[127,132]]},"gym2":{"holo":[[1,20]],"rare":[[21,30],[100,110]],"uncommon":[[31,59],[111,123]],"common":[[60,99],[124,126]],"secret":[],"energy":[[127,132]]},"neo1":{"holo":[[1,19]],"rare":[[20,25],[83,90],[104,105]],"uncommon":[[26,52],[91,98]],"common":[[53,82],[99,103]],"secret":[],"energy":[[106,111]]},"neo2":{"holo":[[1,17]],"rare":[[18,36]],"uncommon":[[37,52],[72,74]],"common":[[53,71],[75,75]],"secret":[],"energy":[]},"neo3":{"holo":[[1,14]],"rare":[[15,27]],"uncommon":[[28,40],[60,63]],"common":[[41,59],[64,64]],"secret":[[65,66]],"energy":[]},"neo4":{"holo":[[1,16]],"rare":[[17,30],[92,96]],"uncommon":[[31,60],[97,103]],"common":[[61,91],[104,105]],"secret":[[106,113]],"energy":[]}});
+ const expandRanges=(set,ranges)=>ranges.flatMap(([from,to])=>Array.from({length:to-from+1},(_,i)=>set+'-'+(from+i)));
+ const PACK_POOLS=Object.freeze(Object.fromEntries(Object.entries(PACK_RARITIES).map(([set,groups])=>
+  [set,Object.fromEntries(Object.entries(groups).map(([rarity,ranges])=>[rarity,expandRanges(set,ranges)]))])));
+ const packRarity=id=>{
+  if(typeof id!=='string')return null;
+  const split=id.lastIndexOf('-'),pool=PACK_POOLS[id.slice(0,split)];
+  return pool?(Object.keys(pool).find(rarity=>pool[rarity].includes(id))||null):null;
+ };
  const setForCharacter=id=>{if(!id)return 'base1';if(CHARACTER_SETS[id])return CHARACTER_SETS[id];const sets=Object.keys(SETS);let hash=2166136261;for(const letter of id){hash^=letter.charCodeAt(0);hash=Math.imul(hash,16777619);}return sets[(hash>>>0)%sets.length];};
  function randomPack(set,rng=Math.random,count=10){
   if(count!==5&&count!==10)throw Error('Only five- and ten-card packs are supported');
-  const info=SETS[set]||SETS.base1,actual=SETS[set]?set:'base1';
-  const rare=chooseRandom(Array.from({length:info.rares},(_,i)=>actual+'-'+(i+1)),rng);
-  // Energy is guaranteed even when the expansion has no Basic Energy printing.
+  const actual=PACK_POOLS[set]?set:'base1',pool=PACK_POOLS[actual];
+  // Tuned game probabilities: 25% holo, plus 1% Secret/Shining in eligible sets.
+  const roll=Math.max(0,Math.min(0.999999,rng())),hasSecret=pool.secret.length>0;
+  const rarity=hasSecret&&roll<0.01?'secret':roll<(hasSecret?0.26:0.25)?'holo':'rare';
+  const rare=chooseRandom(pool[rarity].length?pool[rarity]:pool.rare,rng);
+  // Basic Energy always comes from Base Set, even when the chosen set has none.
   const energy=chooseRandom([...ENERGY].filter(id=>id!=='base1-96'),rng);
-  const all=Array.from({length:info.size-info.rares},(_,i)=>actual+'-'+(info.rares+i+1)).filter(id=>!ENERGY.has(id));
-  const cards=[rare,energy];
-  for(let i=0;i<count-2;i++)cards.push(chooseRandom(all,rng));
-  // Shuffle so the guaranteed cards are not revealed in a fixed position.
+  const cards=[rare,energy],uncommons=count===5?1:3,commons=count===5?2:5;
+  for(let i=0;i<uncommons;i++)cards.push(chooseRandom(pool.uncommon,rng));
+  for(let i=0;i<commons;i++)cards.push(chooseRandom(pool.common,rng));
   for(let i=cards.length-1;i>0;i--){const j=Math.min(i,Math.floor(Math.max(0,rng())*(i+1)));[cards[i],cards[j]]=[cards[j],cards[i]];}
   return cards;
  }
@@ -218,5 +231,5 @@
   x.vouchers[set]--;x.packs++;
   return grant(x,ids,'gift',set,null);
  }
- return Object.freeze({starters,upgrade,ENERGY,SETS,SHOP_OFFERS,shopPacks,canOwn:id=>allAllowed.has(id),awardSignature,awardVoucher,redeemVoucher,CHARACTER_SETS,setForCharacter,randomPack,byId:id=>byId.get(id),fresh,hydrate,choose,check,draft,edit,change,save,cancel,reward,buyPack,rank});
+ return Object.freeze({starters,upgrade,ENERGY,SETS,SHOP_OFFERS,shopPacks,canOwn:id=>allAllowed.has(id),awardSignature,awardVoucher,redeemVoucher,CHARACTER_SETS,setForCharacter,randomPack,packRarity,PACK_POOLS,byId:id=>byId.get(id),fresh,hydrate,choose,check,draft,edit,change,save,cancel,reward,buyPack,rank});
 });

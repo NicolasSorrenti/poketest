@@ -926,7 +926,7 @@ test('RPG collection: pre-duel snapshot locks the actual 60 owned cards until th
  assert.equal(r.state().pendingDuel,null);
 });
 
-test('RPG victories award a ten-card booster, displayed once and safe against duplicate match receipts',()=>{
+test('RPG victories award a five-card mini booster, displayed once and safe against duplicate match receipts',()=>{
  const r=launch({day:5,slot:0,location:'shop',deckJourney:Collection.fresh()});
  r.elements.starterChoices.children[0].onclick();
  r.elements.people.children.find(x=>x.children?.[1]?.children?.[0]?.textContent==='Hana Mizuno').onclick();finishGreeting(r);
@@ -937,11 +937,11 @@ test('RPG victories award a ten-card booster, displayed once and safe against du
  const s=r.state();
  assert.equal(s.deckJourney.rewards,1);
  assert.equal(s.deckJourney.lastPack.source,'win');
- assert.equal(s.deckJourney.lastPack.cards.length,10);
+ assert.equal(s.deckJourney.lastPack.cards.length,5);
  assert.equal(r.elements.packDialog.open,true);
- assert.equal(r.elements.packCards.children.length,10);
- assert.match(r.elements.packTitle.textContent,/VICTORY BOOSTER/);
- assert.match(r.elements.packDescription.textContent,/10 cards/);
+ assert.equal(r.elements.packCards.children.length,5);
+ assert.match(r.elements.packTitle.textContent,/VICTORY MINI BOOSTER/);
+ assert.match(r.elements.packDescription.textContent,/5 cards/);
  r.elements.packRevealAll.onclick();
  assert.ok(r.elements.packCards.children.every(x=>x.className.includes('revealed')));
  const count=Object.values(s.deckJourney.owned).reduce((a,b)=>a+b,0);

@@ -117,7 +117,7 @@ test('character rewards draw five-card packs with guaranteed rare and energy',()
   assert.equal(s.deckJourney.lastPack.set,set);
   assert.equal(s.deckJourney.lastPack.giver,npc);
   assert.ok(ids.some(id=>C.ENERGY.has(id)));
-  assert.ok(ids.some(id=>id.startsWith(set+'-')&&Number(id.split('-')[1])<=C.SETS[set].rares));
+  assert.ok(ids.some(id=>id.startsWith(set+'-')&&['rare','holo','secret'].includes(C.packRarity(id))));
  }
  const a=C.randomPack('base3',()=>0),b=C.randomPack('base3',()=>0.75);
  assert.notDeepEqual(a,b,'different random outcomes must produce different packs');
@@ -163,7 +163,7 @@ test('buy a Gym booster and preserve its cards after reload, without overwriting
  const first=C.buyPack(s,'gym1',()=>0.25);
  assert.equal(first.length,10);assert.equal(s.credits,55);assert.equal(s.deckJourney.packs,1);
  assert.equal(s.deckJourney.lastPack.set,'gym1');
- assert.ok(first.some(id=>id.startsWith('gym1-')&&Number(id.split('-')[1])<=C.SETS.gym1.rares));
+ assert.ok(first.some(id=>id.startsWith('gym1-')&&['rare','holo','secret'].includes(C.packRarity(id))));
  assert.ok(first.some(id=>C.ENERGY.has(id)));
  const before=JSON.stringify(s);
  assert.throws(()=>C.buyPack(s,'base1'),/Reveal your previous booster/);
@@ -225,4 +225,38 @@ test('late-set win rewards obey expansion unlock pacing and preserve legacy save
  const late=C.reward(legacy,true,'kaede',()=>0.3,{duelId:'late'});
  assert.equal(late.length,5);
  assert.equal(legacy.deckJourney.lastPack.set,'neo4');
+});
+
+test('historical rarities classify all eleven sets with no holes or overlaps',()=>{
+ for(const [set,meta] of Object.entries(C.SETS)){
+  const ids=Object.values(C.PACK_POOLS[set]).flat();
+  assert.equal(ids.length,meta.size,set);
+  assert.equal(new Set(ids).size,meta.size,set);
+  for(let n=1;n<=meta.size;n++)assert.ok(C.packRarity(set+'-'+n),set+'-'+n);
+ }
+ assert.equal(C.packRarity('base1-4'),'holo');
+ assert.equal(C.packRarity('base1-71'),'rare'); // Computer Search
+ assert.equal(C.packRarity('base1-88'),'uncommon'); // Professor Oak
+ assert.equal(C.packRarity('base5-83'),'secret'); // Dark Raichu
+ assert.equal(C.packRarity('neo4-107'),'secret'); // Shining Charizard
+ assert.equal(C.packRarity('base1-98'),'energy');
+ assert.equal(C.packRarity('not-a-card'),null);
+});
+test('five- and ten-card packs use correct Common, Uncommon, Rare and Energy slots',()=>{
+ for(const set of Object.keys(C.SETS))for(const [size,common,uncommon] of [[5,2,1],[10,5,3]]){
+  const cards=C.randomPack(set,()=>0.5,size),kinds=cards.map(C.packRarity);
+  assert.equal(cards.length,size);
+  assert.equal(kinds.filter(k=>k==='common').length,common,set+' commons');
+  assert.equal(kinds.filter(k=>k==='uncommon').length,uncommon,set+' uncommons');
+  assert.equal(kinds.filter(k=>k==='energy').length,1,set+' basic Energy');
+  assert.equal(kinds.filter(k=>['holo','rare','secret'].includes(k)).length,1,set+' rare slot');
+ }
+});
+test('rare slot distinguishes Holo, non-holo and Shining without a forced holo every pack',()=>{
+ const pick=(set,roll)=>{let i=0;return C.randomPack(set,()=>i++===0?roll:0.5,5).map(C.packRarity);};
+ assert.equal(pick('base1',0.1).filter(k=>k==='holo').length,1);
+ assert.equal(pick('base1',0.8).filter(k=>k==='rare').length,1);
+ assert.equal(pick('neo4',0).filter(k=>k==='secret').length,1);
+ assert.equal(pick('neo4',0.1).filter(k=>k==='holo').length,1);
+ assert.equal(pick('neo4',0.8).filter(k=>k==='rare').length,1);
 });
