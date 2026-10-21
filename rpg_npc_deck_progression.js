@@ -153,6 +153,8 @@ function baselineUpgrade({npc,tier,original,catalog}){
 // Keep original tier recipes as a reproducible control group. The live RPG
 // applies only per-character changes evaluated in mirrored CPU duels.
 const BALANCED_SWAPS=Object.freeze({
+ reina:[['base1-7','base1-56'],['base1-92','base1-95'],['base1-92','base1-94'],
+  ['base1-79','base1-80']],
  yuna:[['base1-58','base1-20'],['base1-58','base1-20']],
  camila:[['base5-25','base5-41'],['base5-25','base5-31'],
   ['base1-102','base1-99'],['base1-102','base1-99']]
