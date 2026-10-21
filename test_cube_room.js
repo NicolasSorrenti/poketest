@@ -90,13 +90,18 @@ function fourHuman(){
 }
 function mixed(){
  const srv=new CubeRoomService();
- const host=srv.create({name:'Host',seed:475});
+ assert.throws(()=>srv.create({name:'Invalid',difficulty:0}),/difficulty/);
+ assert.throws(()=>srv.create({name:'Invalid',difficulty:6}),/difficulty/);
+ const host=srv.create({name:'Host',seed:475,difficulty:4});
+ assert.equal(host.difficulty,4);
  const guest=srv.join({code:host.code,name:'Friend'});
  srv.ready(host.code,host.token,true);
  srv.ready(host.code,guest.token,true);
  let a=srv.start(host.code,host.token);
  assert.equal(a.seats.length,4);
  assert.equal(a.seats.filter(s=>s.cpu).length,2);
+ assert.equal(a.difficulty,4);
+ assert(a.pack.some(c=>c.id===a.recommendedId));
  assert.equal(a.seats[2].name,'Cube CPU A');
  for(let i=0;i<60;i++){
   const first=srv.state(host.code,host.token);
@@ -104,6 +109,7 @@ function mixed(){
   srv.pick(host.code,host.token,{id:selectedBasic(first).id,round:first.round,pick:first.pick});
   a=srv.pick(host.code,guest.token,{id:selectedBasic(second).id,round:second.round,pick:second.pick});
   assert.equal(a.seats[2].pickCount,i+1,'CPU must draft when both humans have picked');
+  if(!a.finished)assert(a.pack.some(c=>c.id===a.recommendedId));
  }
  assert.equal(a.status,'build');
  assert.equal(a.seats.every(s=>s.pickCount===60),true);
