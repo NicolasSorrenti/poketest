@@ -443,4 +443,16 @@ check('EXP.ALL always offers a choice, even with one Basic Energy and one receiv
  assert.ok(p.discard.includes('base1-98'));
  assert.ok(p.bench[0].attachedTrainers.some(t=>t.id==='neo4-93'));
 });
+check('Koga Ninja Trick rejects a stale Bench choice without consuming the Tool',()=>{
+ const {g,p}=fresh({meActive:'gym2-42',foeActive:'base1-58',myBench:['base1-35'],enemyEnergy:['base1-98']});
+ p.active.attachedTrainers=[{id:'gym2-115'}];g.turn=1;
+ assert.equal(g.attack(0,null,true),false);
+ const req=vm.runInContext('deckSearchRequest',ctx);
+ const original=p.active,tool=p.active.attachedTrainers[0];
+ p.bench.length=0;
+ assert.equal(req.execute(0),false);
+ assert.equal(p.active,original);
+ assert.ok(p.active.attachedTrainers.includes(tool));
+ assert.ok(g._trainer60NinjaPending);
+});
 console.log(`PASS v0.6.0: ${tests} human Trainer timing, choices, and damage outcome scenarios`);
