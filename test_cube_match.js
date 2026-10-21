@@ -6,7 +6,7 @@ const {CATALOG,createGame}=require('./headless_duel');
 const {isBasicPokemon}=require('./core_rules');
 const C=require('./cube_draft');
 const cubes=new CubeService(),classic=new ClassicLocalService({maxSessions:8});
-let state=cubes.create({seed:475}),token=state.token;
+let state=cubes.create({seed:475,difficulty:5}),token=state.token;
 assert.equal(state.started,false);
 assert.throws(()=>cubes.start(token,[],state.revision,classic),/Draft must be completed/);
 for(let i=0;i<60;i++){
@@ -24,6 +24,13 @@ const launched=cubes.start(token,state.suggestedDeck,state.revision,classic);
 assert.equal(typeof launched.duelToken,'string');
 assert.throws(()=>cubes.start(token,state.suggestedDeck,state.revision,classic),/Stale draft revision|already started/);
 const duel=classic.state(launched.duelToken);
+assert.equal(duel.cpu.level,4,'Rookie should play one tier below selected level');
+const captured=[];
+for(const seat of [1,2,3]){
+ cubes.launch(cubes.session(token),{createCube:args=>{captured.push(args);return {token:'mock'};}},seat);
+}
+assert.deepEqual(captured.map(x=>x.difficulty),[4,5,5],
+ 'Solo tournament difficulty should scale by rival tier and clamp to 1–5');
 assert.equal(duel.format,'online-preview');
 assert.deepEqual(duel.counts,[40,40]);
 assert.equal(classic.session(launched.duelToken).game.deckSize,40);
