@@ -7,9 +7,9 @@ const PROFILES=Object.freeze({
  shiori:{ace:'base1-17',trainers:['base1-88','base1-77','base1-71','base1-74']}, // Beedrill / evolution
  yuna:{ace:'base1-10',trainers:['base1-84','base1-74','base1-71','base1-88']}, // Mewtwo / surprises
  akari:{trainers:['base1-79','base1-71','base1-74','base1-92']}, // disruption
- camila:{ace:'base5-25',trainers:['base1-79','base1-71','base1-75','base1-74']}, // Dark Gyarados
+ camila:{ace:'base5-25',trainers:['base1-79','base1-71','base1-75','base1-74'],energyCorrection:{from:'base1-98',to:'base1-99'}}, // Grass/Water Rocket
  marina:{ace:'base2-12',trainers:['base1-77','base1-71','base1-88','base1-74']}, // Vaporeon
- kaede:{ace:'base5-31',trainers:['base1-79','base1-75','base1-71','base1-74']}, // Dark Weezing
+ kaede:{ace:'base5-31',trainers:['base1-79','base1-75','base1-71','base1-74'],energyCorrection:{from:'base1-98',to:'base1-99'}}, // Grass/Water Rocket
  jun:{ace:'base3-21',trainers:['base1-71','base1-79','base1-88','base1-74']},
  teo:{ace:'neo1-7',trainers:['base1-84','base1-88','base1-71','base1-74']},
  iris:{ace:'neo1-8',trainers:['base1-77','base1-71','base1-88','base1-74']},
@@ -86,6 +86,13 @@ function upgrade({npc,tier,original,catalog}){
  const out=[...original];
  if(tier===1)return out;
  const profile=PROFILES[npc]||DEFAULT;
+ // The original Rocket lab list includes eight Fire Energy, but its Dark
+ // Golbat/Muk/Weezing attackers require Grass and none of its attackers
+ // require Fire. Correct only the NPC's progressed copy, never the shared lab
+ // theme or other modes. All original Energy card rules remain untouched.
+ const fix=profile.energyCorrection;
+ if(fix&&catalog.get(fix.from)?.supertype==='Energy'&&catalog.get(fix.to)?.supertype==='Energy')
+  for(let i=0;i<out.length;i++)if(out[i]===fix.from)out[i]=fix.to;
  function insert(id,kind){
   const card=catalog.get(id);if(!card)return false;
   if(!isBasicEnergy(card)&&cardNameCount(out,card.name,catalog)>=4)return false;
