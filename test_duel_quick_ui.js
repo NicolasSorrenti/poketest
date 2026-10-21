@@ -1,7 +1,7 @@
 'use strict';
 const assert=require('node:assert/strict');
 const fs=require('node:fs');
-const {legalTarget,drawPrizes}=require('./duel_quick_ui');
+const {legalTarget,drawPrizes,makeTransientToast}=require('./duel_quick_ui');
 const {handIntent}=require('./duel_shared_components');
 const catalog={a:{name:'Charmander'},b:{name:'Charmeleon'},c:{name:"Brock's Vulpix"}};
 const lookup=id=>catalog[id]||{};
@@ -34,6 +34,10 @@ for(const file of ['online','classic_live']){
  assert.match(html,/class="active-with-attacks"/,file+' attacks next to active');
  assert.match(html,/src="duel_quick_ui\.js"/,file+' shared component');
  assert.match(html,/id="cardPreview"/,file+' card magnifier');
+ assert.match(html,/id="energyLimitToast"/,file+' brief Energy warning target');
+ assert.doesNotMatch(html,/id="energyStatus"/,file+' no Energy status badge');
+ assert.match(js,/quick\.makeTransientToast\(\$\('energyLimitToast'\)\)/,file+' reusable auto-dismiss warning');
+ assert.match(js,/showEnergyLimitToast\(intent\.message\)/,file+' rejected Energy attaches do not open a persistent error banner');
  assert.match(js,/preview\.attach\(b,id\)/,file+' hand previews');
  assert.match(js,/preview\.attach\(b,u\.id,u\)/,file+' played Pokémon previews');
  assert.match(js,/shared\.handIntent\(/,file+' must use shared card intent policy');
@@ -43,4 +47,13 @@ for(const file of ['online','classic_live']){
  assert.match(js,/quick\.drawPrizes/,file+' state-driven prizes');
  assert.match(js,/send\(command\('attack'/,file+' server-approved attacks');
 }
+const toastClasses=new Set(),toastEl={textContent:'',classList:{add:x=>toastClasses.add(x),remove:x=>toastClasses.delete(x)}};
+const showToast=makeTransientToast(toastEl,5);
+showToast('You have already attached an Energy this turn.');
+assert.ok(toastClasses.has('show'),'Energy warning is shown only on a rejected action');
+assert.match(toastEl.textContent,/already attached/);
+setTimeout(()=>{
+ assert.ok(!toastClasses.has('show'),'Energy warning auto-dismisses');
+ assert.equal(toastEl.textContent,'','Dismissed warning leaves no stale live-region text');
+},15);
 console.log('PASS quick duel UI: legal evolution targeting, round restrictions, Prize stacks, preview and accelerated actions for online/local clients');
