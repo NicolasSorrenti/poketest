@@ -129,10 +129,10 @@
   for(const item of plan.filter(x=>x.targets).slice(0,5)){
    const box=document.createElement('div');box.className='strategy-option';
    paragraph(box,item.name+' · '+item.targets+' missing target'+(item.targets===1?'':'s'),'strategy-option-title');
-   paragraph(box,item.unlocked?'Unlocked · '+item.price+' credits per random pack':'Locked · '+item.unlockHint);
+   paragraph(box,item.unlocked?'Available · '+item.price+' credits per ten-card booster':'Locked · '+item.unlockHint);
    offers.append(box);
   }
-  if(!plan.some(x=>x.targets))paragraph(offers,'Track missing cards to see which sets can contain them. No pack guarantees any specific card.');
+  if(!plan.some(x=>x.targets))paragraph(offers,'Track missing cards to find themed packs that could contain them. Older packs can gain new cards when expansions unlock.');
   renderSearch();
  }
  async function boot(){
