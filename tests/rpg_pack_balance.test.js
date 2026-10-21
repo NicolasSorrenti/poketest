@@ -9,7 +9,7 @@ test('five checkpoints, three starters and five strategies are explicitly modele
  assert.deepEqual(P.DAYS,[15,30,45,60,80]);
  assert.deepEqual(P.STYLES,['mixed','toolkit','evolution','arena','latest']);
  assert.deepEqual(P.STARTERS,Collection.starters.map(x=>x.id));
- assert.deepEqual(P.NPCS,['hana','reina','camila']);
+ assert.deepEqual(P.NPCS,['hana','reina','camila','marina','shiori','yuna']);
 });
 test('identical seed and plan yields identical legal owned-card decks and income',()=>{
  for(const plan of P.STYLES){
