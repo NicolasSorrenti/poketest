@@ -138,6 +138,14 @@ fs.mkdirSync(out,{recursive:true});
    const log=page.locator('#logDrawer');
    assert.equal(await log.isVisible(),false,label+' log starts closed');
    await page.locator('#logToggle').click();
+   if(!await log.isVisible()){
+    console.log('Log visibility diagnostic',label,await page.evaluate(()=>{
+     const node=document.getElementById('logDrawer');
+     const inspect=n=>({tag:n.tagName,id:n.id,cls:n.className,display:getComputedStyle(n).display,visibility:getComputedStyle(n).visibility,rect:{width:n.getBoundingClientRect().width,height:n.getBoundingClientRect().height}});
+     const chain=[];for(let n=node;n&&chain.length<7;n=n.parentElement)chain.push(inspect(n));
+     return {chain,expanded:document.getElementById('logToggle').getAttribute('aria-expanded'),body:document.body.className};
+    }));
+   }
    assert.equal(await log.isVisible(),true,label+' log opens on request');
    await page.locator('#closeLog').click();
    assert.equal(await log.isVisible(),false,label+' log closes again');
