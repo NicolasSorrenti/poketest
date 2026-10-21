@@ -58,7 +58,7 @@
   if(busy)return;
   busy=true;say('');
   try{await task();}catch(e){say(e.message||String(e));}
-  finally{busy=false;}
+  finally{busy=false;if(state?.finished&&!state.tournament)renderBuild();}
  }
  async function createOrJoin(isJoin){
   await act(async()=>{
