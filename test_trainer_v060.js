@@ -413,4 +413,22 @@ check("Misty's Duel correctly redraws five cards for the coin-flip winner",()=>{
  try{assert.equal(heads.g.trainer58(0),true);assert.equal(heads.p.hand.length,5);assert.deepEqual(heads.f.hand,['base1-97']);}
  finally{vm.runInContext('coin=__originalCoin',ctx)}
 });
+check('EXP.ALL stale choice cannot clear a pending KO decision',()=>{
+ const {g,p}=fresh({myBench:['base1-35','base1-53']});
+ g.turn=1;g.turnSerial=10;p.active.damage=500;p.active.incomingAttack={turnSerial:10,damage:200};
+ p.active.energies=['base1-98','base1-97'];
+ p.bench[0].attachedTrainers=[{id:'neo4-93'}];p.bench[1].attachedTrainers=[{id:'neo4-93'}];
+ g.resolveKO();
+ const req=vm.runInContext('deckSearchRequest',ctx);
+ assert.ok(req?.defenderPrompt);
+ // The offered Energy or Tool can disappear while a choice is pending.
+ p.bench[0].attachedTrainers.length=0;
+ assert.equal(req.execute('0:0'),false);
+ assert.ok(g._trainer60ExpPrompt);
+ assert.equal(vm.runInContext('deckSearchRequest',ctx),req);
+ assert.equal(p.active.energies.length,2);
+ assert.equal(req.execute('1:1'),true);
+ assert.equal(g._trainer60ExpPrompt,null);
+ assert.ok(p.discard.includes('neo4-93'));
+});
 console.log(`PASS v0.6.0: ${tests} human Trainer timing, choices, and damage outcome scenarios`);
