@@ -69,7 +69,7 @@
    // last fallback. No other NPC's art may appear during a failed request.
    const request=++portraitRequest;
    art.replaceChildren();if(avatar)art.append(avatar);
-   if(npcId)win?.NeoRpgDiscreetAvatars?.set?.(art,npcId,details.kind==='victory'?'happy':'vulnerable',details.opponent);
+   if(npcId&&typeof window!=='undefined')window.NeoRpgDiscreetAvatars?.set?.(art,npcId,details.kind==='victory'?'happy':'vulnerable',details.opponent);
    const sources=resultArtSources(npcId);
    if(sources.length){
     const img=doc.createElement('img');
@@ -78,7 +78,7 @@
     img.className='victory-result-art';
     let index=0;
     img.onload=()=>{
-     if(request===portraitRequest&&dialog.open){art.replaceChildren(img);if(npcId)win?.NeoRpgDiscreetAvatars?.set?.(art,npcId,details.kind==='victory'?'happy':'vulnerable',details.opponent);}
+     if(request===portraitRequest&&dialog.open){art.replaceChildren(img);if(npcId&&typeof window!=='undefined')window.NeoRpgDiscreetAvatars?.set?.(art,npcId,details.kind==='victory'?'happy':'vulnerable',details.opponent);}
     };
     img.onerror=()=>{
      if(request!==portraitRequest)return;
