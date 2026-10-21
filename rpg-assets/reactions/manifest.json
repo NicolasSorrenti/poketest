@@ -9,7 +9,8 @@
       "big_hit": "/rpg-assets/characters/hana/expressions/flustered.png",
       "hurt": "/rpg-assets/characters/hana/expressions/flustered.png",
       "ko_taken": "/rpg-assets/characters/hana/expressions/flustered.png",
-      "ko_scored": "/rpg-assets/characters/hana/vn-expressions/happy.webp"
+      "ko_scored": "/rpg-assets/characters/hana/vn-expressions/happy.webp",
+      "match_cutin": "/rpg-assets/characters/hana/cutins/match-cutin.webp"
     },
     "reina": {
       "default": "/rpg-assets/characters/reina/portraits/primary.png",
@@ -19,7 +20,8 @@
       "big_hit": "/rpg-assets/characters/reina/expressions/flustered.png",
       "hurt": "/rpg-assets/characters/reina/expressions/flustered.png",
       "ko_taken": "/rpg-assets/characters/reina/expressions/flustered.png",
-      "ko_scored": "/rpg-assets/characters/reina/vn-expressions/happy.webp"
+      "ko_scored": "/rpg-assets/characters/reina/vn-expressions/happy.webp",
+      "match_cutin": "/rpg-assets/characters/reina/cutins/match-cutin.webp"
     },
     "shiori": {
       "default": "/rpg-assets/shiori.png",
@@ -29,7 +31,8 @@
       "big_hit": "/rpg-assets/characters/shiori/expressions/flustered.png",
       "hurt": "/rpg-assets/characters/shiori/expressions/flustered.png",
       "ko_taken": "/rpg-assets/characters/shiori/expressions/flustered.png",
-      "ko_scored": "/rpg-assets/characters/shiori/vn-expressions/happy.webp"
+      "ko_scored": "/rpg-assets/characters/shiori/vn-expressions/happy.webp",
+      "match_cutin": "/rpg-assets/characters/shiori/cutins/match-cutin.webp"
     },
     "yuna": {
       "default": "/rpg-assets/yuna.png",
@@ -39,7 +42,8 @@
       "big_hit": "/rpg-assets/characters/yuna/expressions/flustered.png",
       "hurt": "/rpg-assets/characters/yuna/expressions/flustered.png",
       "ko_taken": "/rpg-assets/characters/yuna/expressions/flustered.png",
-      "ko_scored": "/rpg-assets/characters/yuna/vn-expressions/happy.webp"
+      "ko_scored": "/rpg-assets/characters/yuna/vn-expressions/happy.webp",
+      "match_cutin": "/rpg-assets/characters/yuna/cutins/match-cutin.webp"
     },
     "akari": {
       "default": "/rpg-assets/akari.png",
@@ -49,7 +53,8 @@
       "big_hit": "/rpg-assets/characters/akari/expressions/flustered.png",
       "hurt": "/rpg-assets/characters/akari/expressions/flustered.png",
       "ko_taken": "/rpg-assets/characters/akari/expressions/flustered.png",
-      "ko_scored": "/rpg-assets/characters/akari/vn-expressions/happy.webp"
+      "ko_scored": "/rpg-assets/characters/akari/vn-expressions/happy.webp",
+      "match_cutin": "/rpg-assets/characters/akari/cutins/match-cutin.webp"
     },
     "camila": {
       "default": "/rpg-assets/camila.png",
@@ -59,7 +64,8 @@
       "big_hit": "/rpg-assets/characters/camila/expressions/flustered.png",
       "hurt": "/rpg-assets/characters/camila/expressions/flustered.png",
       "ko_taken": "/rpg-assets/characters/camila/expressions/flustered.png",
-      "ko_scored": "/rpg-assets/characters/camila/vn-expressions/happy.webp"
+      "ko_scored": "/rpg-assets/characters/camila/vn-expressions/happy.webp",
+      "match_cutin": "/rpg-assets/characters/camila/cutins/match-cutin.webp"
     },
     "marina": {
       "default": "/rpg-assets/marina.png",
@@ -69,7 +75,8 @@
       "big_hit": "/rpg-assets/characters/marina/expressions/flustered.png",
       "hurt": "/rpg-assets/characters/marina/expressions/flustered.png",
       "ko_taken": "/rpg-assets/characters/marina/expressions/flustered.png",
-      "ko_scored": "/rpg-assets/characters/marina/vn-expressions/happy.webp"
+      "ko_scored": "/rpg-assets/characters/marina/vn-expressions/happy.webp",
+      "match_cutin": "/rpg-assets/characters/marina/cutins/match-cutin.webp"
     },
     "kaede": {
       "default": "/rpg-assets/kaede.png",
@@ -79,7 +86,8 @@
       "big_hit": "/rpg-assets/characters/kaede/expressions/flustered.png",
       "hurt": "/rpg-assets/characters/kaede/expressions/flustered.png",
       "ko_taken": "/rpg-assets/characters/kaede/expressions/flustered.png",
-      "ko_scored": "/rpg-assets/characters/kaede/vn-expressions/happy.webp"
+      "ko_scored": "/rpg-assets/characters/kaede/vn-expressions/happy.webp",
+      "match_cutin": "/rpg-assets/characters/kaede/cutins/match-cutin.webp"
     },
     "sol": {
       "default": "/rpg-assets/sol.png",
@@ -131,7 +139,8 @@
       "big_hit": "/rpg-assets/characters/jun/vn-expressions/vulnerable.webp",
       "hurt": "/rpg-assets/characters/jun/vn-expressions/vulnerable.webp",
       "ko_taken": "/rpg-assets/characters/jun/vn-expressions/vulnerable.webp",
-      "ko_scored": "/rpg-assets/characters/jun/vn-expressions/happy.webp"
+      "ko_scored": "/rpg-assets/characters/jun/vn-expressions/happy.webp",
+      "match_cutin": "/rpg-assets/characters/jun/cutins/match-cutin.webp"
     },
     "teo": {
       "default": "/rpg-assets/teo.png",
@@ -141,7 +150,8 @@
       "big_hit": "/rpg-assets/characters/teo/vn-expressions/vulnerable.webp",
       "hurt": "/rpg-assets/characters/teo/vn-expressions/vulnerable.webp",
       "ko_taken": "/rpg-assets/characters/teo/vn-expressions/vulnerable.webp",
-      "ko_scored": "/rpg-assets/characters/teo/vn-expressions/happy.webp"
+      "ko_scored": "/rpg-assets/characters/teo/vn-expressions/happy.webp",
+      "match_cutin": "/rpg-assets/characters/teo/cutins/match-cutin.webp"
     },
     "iris": {
       "default": "/rpg-assets/iris.png",
@@ -151,7 +161,8 @@
       "big_hit": "/rpg-assets/characters/iris/vn-expressions/vulnerable.webp",
       "hurt": "/rpg-assets/characters/iris/vn-expressions/vulnerable.webp",
       "ko_taken": "/rpg-assets/characters/iris/vn-expressions/vulnerable.webp",
-      "ko_scored": "/rpg-assets/characters/iris/vn-expressions/happy.webp"
+      "ko_scored": "/rpg-assets/characters/iris/vn-expressions/happy.webp",
+      "match_cutin": "/rpg-assets/characters/iris/cutins/match-cutin.webp"
     },
     "elio": {
       "default": "/rpg-assets/elio.png",
@@ -161,7 +172,8 @@
       "big_hit": "/rpg-assets/characters/elio/vn-expressions/vulnerable.webp",
       "hurt": "/rpg-assets/characters/elio/vn-expressions/vulnerable.webp",
       "ko_taken": "/rpg-assets/characters/elio/vn-expressions/vulnerable.webp",
-      "ko_scored": "/rpg-assets/characters/elio/vn-expressions/happy.webp"
+      "ko_scored": "/rpg-assets/characters/elio/vn-expressions/happy.webp",
+      "match_cutin": "/rpg-assets/characters/elio/cutins/match-cutin.webp"
     },
     "alma": {
       "default": "/rpg-assets/alma.png",
@@ -171,7 +183,8 @@
       "big_hit": "/rpg-assets/characters/alma/vn-expressions/vulnerable.webp",
       "hurt": "/rpg-assets/characters/alma/vn-expressions/vulnerable.webp",
       "ko_taken": "/rpg-assets/characters/alma/vn-expressions/vulnerable.webp",
-      "ko_scored": "/rpg-assets/characters/alma/vn-expressions/happy.webp"
+      "ko_scored": "/rpg-assets/characters/alma/vn-expressions/happy.webp",
+      "match_cutin": "/rpg-assets/characters/alma/cutins/match-cutin.webp"
     },
     "nereo": {
       "default": "/rpg-assets/nereo.png",
@@ -181,7 +194,8 @@
       "big_hit": "/rpg-assets/characters/nereo/vn-expressions/vulnerable.webp",
       "hurt": "/rpg-assets/characters/nereo/vn-expressions/vulnerable.webp",
       "ko_taken": "/rpg-assets/characters/nereo/vn-expressions/vulnerable.webp",
-      "ko_scored": "/rpg-assets/characters/nereo/vn-expressions/happy.webp"
+      "ko_scored": "/rpg-assets/characters/nereo/vn-expressions/happy.webp",
+      "match_cutin": "/rpg-assets/characters/nereo/cutins/match-cutin.webp"
     }
   }
 }
