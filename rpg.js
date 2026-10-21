@@ -920,7 +920,8 @@ function showPreparedDuel(){
  modal.dataset.circuit=matchStyle?.kind||'friendly';
  $('preDuelContext').textContent=preview.stake;
  $('preDuelOpponent').textContent=preview.name;
- $('preDuelDeck').textContent=preview.deckLabel+(pending.customOpponentDeck?' · YOUR COLLABORATIVE BUILD':pending.npcDeckTier===3?' · ACT III · EXPERT DECK':pending.npcDeckTier===2?' · ACT II · REFINED DECK':'')+' · '+preview.place;
+ const accelerated=pending.npcDeckTier>(pending.day<=30?1:pending.day<=60?2:3);
+ $('preDuelDeck').textContent=preview.deckLabel+(pending.customOpponentDeck?' · YOUR COLLABORATIVE BUILD':pending.npcDeckTier===3?' · EXPERT DECK'+(accelerated?' · PERSONAL MILESTONE':''):pending.npcDeckTier===2?' · REFINED DECK'+(accelerated?' · PERSONAL MILESTONE':''):'')+' · '+preview.place;
  const line=preview.lines[pending.preview.index];
  $('preDuelSpeaker').textContent=line.speaker;
  $('preDuelLine').textContent=line.text;
