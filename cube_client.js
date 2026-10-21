@@ -47,7 +47,7 @@
  async function start(){
   if(busy)return;busy=true;$('error').textContent='';
   try{
-   const result=await request('create',{method:'POST',body:JSON.stringify({preset:$('presetSelect').value})});
+   const result=await request('create',{method:'POST',body:JSON.stringify({preset:$('presetSelect').value,difficulty:Number($('cpuDifficulty').value)})});
    token=result.token;sessionStorage.setItem('neoCubeDraftToken',token);
    state=result;deck=[];deckInitialized=false;render();
   }catch(e){$('error').textContent=e.message;}finally{busy=false;}
@@ -129,20 +129,47 @@
    busy=false;
   }
  }
+ function arrangedPack(cards){
+  const order=$('packSort').value;
+  if(order==='pack')return cards;
+  return [...cards].sort((a,b)=>order==='name'?
+   a.name.localeCompare(b.name)||a.id.localeCompare(b.id):
+   (a.supertype==='Pokémon'?0:1)-(b.supertype==='Pokémon'?0:1)||
+   a.name.localeCompare(b.name)||a.id.localeCompare(b.id));
+ }
+ function cardKind(c){
+  return c.supertype==='Trainer'?'Trainer':
+   (c.subtypes||[]).includes('Baby')?'Baby Pokémon':
+   (c.subtypes||[]).includes('Basic')?'Basic Pokémon':
+   c.evolvesFrom?'Evolves from '+c.evolvesFrom:'Evolution Pokémon';
+ }
  function render(){
   const entering=!!state.done&&!state.started&&!document.body.classList.contains('cube-deck-mode');
   document.body.classList.toggle('cube-deck-mode',!!state.done&&!state.started);
   $('start').textContent='Restart Draft';
+  $('start').setAttribute('aria-label','Restart the draft with the selected format and difficulty');
   $('progress').textContent=state.done?'Draft completed! Build your deck below.':
    'Pack '+(state.round+1)+' of '+state.packs+' · Pick '+(state.pick+1)+' of '+state.cardsPerPack;
   $('packTitle').textContent=state.done?'All packs completed':'Pick one card · '+(presets.find(p=>p.id===state.preset)?.name||'Cube');
   $('total').textContent=state.drafted.length;
+  $('cpuDifficulty').title='Current difficulty: '+(state.difficulty??3)+'. Changes apply to a new draft.';
+  const recommended=state.pack.find(c=>c.id===state.recommendedId);
+  const guide=$('showPickHelp').checked&&recommended;
+  $('pickAdvice').textContent=guide?'Suggested pick: '+recommended.name+
+   ' · Based on your drafted Pokémon, attack costs and evolution lines.':'';
   $('pack').replaceChildren();
-  state.pack.forEach(c=>{
+  arrangedPack(state.pack).forEach(c=>{
    const b=document.createElement('button');b.className='card';b.type='button';
    const title=document.createElement('strong');title.textContent=c.name;
    const detail=document.createElement('small');detail.textContent=c.supertype+' · '+c.types.join(', ');
    b.append(cardArt(c),title,detail);
+   const kind=document.createElement('span');kind.className='card-kind';
+   kind.textContent=cardKind(c);b.append(kind);
+   if(guide&&c.id===state.recommendedId){
+    b.classList.add('suggested');
+    const badge=document.createElement('span');badge.className='pick-badge';
+    badge.textContent='Suggested pick';b.append(badge);
+   }
    b.addEventListener('click',()=>pick(c.id));$('pack').append(b);
   });
   $('drafted').innerHTML=state.drafted.map((c,i)=>'<div class="row">'+(i+1)+'. '+esc(c.name)+'</div>').join('');
@@ -170,6 +197,8 @@
   catch{sessionStorage.removeItem('neoCubeDraftToken');token=null;}
  }
  $('presetSelect').addEventListener('change',showPreset);
+ $('packSort').addEventListener('change',()=>{if(state)render();});
+ $('showPickHelp').addEventListener('change',()=>{if(state)render();});
  loadPresets();
  $('start').addEventListener('click',start);
  $('restartBuilder').addEventListener('click',()=>{
