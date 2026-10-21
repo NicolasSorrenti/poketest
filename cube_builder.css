@@ -51,7 +51,7 @@ body:has(.cube-builder-ui){max-width:1600px}
 .cb-attack span{color:#bdd0e7;font-size:10px}
 .cb-preview-add{border:1px solid #6ea6e8;background:#224d7d;color:#edf7ff;width:100%;padding:10px;font-weight:800;border-radius:8px;cursor:pointer}
 .cb-preview-add:disabled{opacity:.35}
-.cb-selected-title{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.cb-selected-title{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}.cb-selected-actions{display:flex;gap:6px;flex-wrap:wrap}
 .cb-selected-title h3{font-size:21px;margin:0}
 .cb-selected-title button{background:none;border:1px solid #3e618f;color:#9fc2f3;font-size:11px;padding:7px 9px;border-radius:7px;cursor:pointer}
 .cb-selected-title button:disabled{opacity:.3}
