@@ -15,6 +15,8 @@ jobs:
         run: |
           node --check duel_playmats.js
           node --check classic_live.js
+          node --check duel_action_rail.js
+          node test_duel_action_rail.js
           node --check rpg.js
           node --check rpg_match_reactions.js
           node --check rpg_match_chat.js
