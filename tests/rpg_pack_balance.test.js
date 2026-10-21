@@ -72,25 +72,25 @@ test('CLI validation and inexpensive readiness report expose meaningful cross-pl
  assert.deepEqual(a.errors,[]);
 });
 
-test('hypothetical price trials keep real pack contents and use the same income budget',()=>{
- const fixed=P.collect('ember_garden',45,'evolution',2026);
- const pricier=P.collect('ember_garden',45,'evolution',2026,{evolution:26});
- assert.equal(fixed.budget,pricier.budget);
- assert.ok(pricier.purchasedPacks<=fixed.purchasedPacks);
- assert.ok(pricier.spent<=pricier.budget);
- assert.equal(pricier.remaining,pricier.budget-pricier.spent);
- const normal=P.collect('tidal_circuit',45,'toolkit',2026);
- const cheaper=P.collect('tidal_circuit',45,'toolkit',2026,{toolkit:22});
- assert.equal(normal.budget,cheaper.budget);
- assert.ok(cheaper.purchasedPacks>=normal.purchasedPacks);
- assert.equal(Core.validateDeck(pricier.deck,CATALOG).valid,true);
- assert.equal(Core.validateDeck(cheaper.deck,CATALOG).valid,true);
- assert.equal(Collection.THEMED_PACKS.find(x=>x.id==='evolution').price,22,'never change actual prices in a trial');
- assert.equal(Collection.THEMED_PACKS.find(x=>x.id==='toolkit').price,24);
+test('counterfactual old pricing uses the same budget without altering live booster prices',()=>{
+ const balanced=P.collect('ember_garden',45,'evolution',2026);
+ const original=P.collect('ember_garden',45,'evolution',2026,{evolution:22});
+ assert.equal(balanced.budget,original.budget);
+ assert.ok(balanced.purchasedPacks<=original.purchasedPacks);
+ assert.ok(balanced.spent<=balanced.budget);
+ assert.equal(balanced.remaining,balanced.budget-balanced.spent);
+ const current=P.collect('tidal_circuit',45,'toolkit',2026);
+ const previous=P.collect('tidal_circuit',45,'toolkit',2026,{toolkit:24});
+ assert.equal(current.budget,previous.budget);
+ assert.ok(current.purchasedPacks>=previous.purchasedPacks);
+ assert.equal(Core.validateDeck(balanced.deck,CATALOG).valid,true);
+ assert.equal(Core.validateDeck(previous.deck,CATALOG).valid,true);
+ assert.equal(Collection.THEMED_PACKS.find(x=>x.id==='evolution').price,26,'A/B trials never mutate live prices');
+ assert.equal(Collection.THEMED_PACKS.find(x=>x.id==='toolkit').price,22);
 });
 test('trial pricing arguments are validated and never leak into normal defaults',()=>{
- const parsed=P.parse(['--prices','evolution=26,toolkit=22','--days','45']);
- assert.deepEqual(parsed.prices,{evolution:26,toolkit:22});
+ const parsed=P.parse(['--prices','evolution=22,toolkit=24','--days','45']);
+ assert.deepEqual(parsed.prices,{evolution:22,toolkit:24});
  assert.deepEqual(P.parse([]).prices,{});
  for(const malformed of ['not-a-theme=20','evolution=0','toolkit=10.1','evolution=101']){
   assert.throws(()=>P.parse(['--prices',malformed]),/Invalid hypothetical pack price/);
