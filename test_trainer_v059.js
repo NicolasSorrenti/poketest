@@ -33,6 +33,17 @@ test('Secret Plan puts any card facedown, then discards non-Basic without a Priz
  assert.equal(g.trainer59(0,[1]),true);assert.equal(p.bench.length,1);assert.equal(g.card(p.bench[0]).name,'Face-down Pokémon');
  p.bench[0].damage=10;g.resolveKO();assert.equal(p.bench.length,0);assert.ok(p.discard.includes('base1-98'));assert.equal(f.prizes.length,before);
 });
+test('Secret Plan rejects a pending choice if the Bench becomes full',()=>{
+ const {g,p}=fresh({hand:['gym2-107','base1-98']});
+ assert.equal(g.trainer59(0),null);
+ const pending=vm.runInContext('deckSearchRequest',ctx);
+ assert.ok(pending);
+ const make=vm.runInContext('unit',ctx);
+ p.bench=Array.from({length:5},()=>make('base1-50'));
+ assert.equal(pending.execute(1),false);
+ assert.deepEqual(p.hand,['gym2-107','base1-98']);
+ assert.equal(p.bench.length,5);
+});
 test('Secret Plan reveals Basic Pokémon correctly',()=>{
  const {g,p}=fresh({hand:['gym2-107','base1-50']});assert.equal(g.trainer59(0,[1]),true);
  const u=p.bench[0];assert.equal(g.revealSecretPlan(u),true);assert.equal(g.card(u).name,'Gastly');assert.equal(p.bench.length,1);
