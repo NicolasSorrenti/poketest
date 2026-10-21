@@ -55,9 +55,10 @@ test('booster advice recommends thematic packs that can actually supply wishlist
  advice=Lab.packAdvice(s,index,Core);
  assert.ok(advice.find(x=>x.id==='johto').unlocked);
  assert.ok(advice.find(x=>x.id==='johto').targets>=1);
- assert.ok(advice.find(x=>x.id==='arena').targets>=1);
+ assert.equal(advice.find(x=>x.id==='evolution').targets,2,'old Evolution pack now spans multiple unlocked sets');
+ assert.equal(advice.find(x=>x.id==='arena').targets,0,'do not pretend all rares exist in the Arena basic pool');
  s.deckJourney.owned['base2-17']=1;
- assert.equal(Lab.packAdvice(s,index,Core).find(x=>x.id==='arena').targets,0);
+ assert.equal(Lab.packAdvice(s,index,Core).find(x=>x.id==='evolution').targets,1);
 });
 test('profile reports 60-card composition and common Pokémon types without editing the save',()=>{
  const s=state(),index=cards(),snapshot=JSON.stringify(s);
