@@ -11,19 +11,24 @@ const RIVALS=Object.freeze([
  {name:'Cube Champion',level:4,personality:'balanced'}
 ]);
 const NAMES=['You',...RIVALS.map(x=>x.name)];
+const validateDifficulty=value=>{
+ if(!Number.isInteger(value)||value<1||value>5)throw Error('CPU difficulty must be 1–5');
+ return value;
+};
+const rivalLevel=(difficulty,seat)=>Math.min(5,Math.max(1,difficulty+RIVALS[seat-1].level-3));
 const other=(seats,winner)=>seats.find(x=>x!==winner);
 const match=(id,seats)=>({id,seats:[...seats],winner:null,method:null,status:seats.length?'waiting':'pending'});
 
 class CubeService{
  constructor({simulateCpu=simulateCpuMatch}={}){this.sessions=new Map();this.simulateCpu=simulateCpu;}
- create({seed,preset='balanced'}={}){
-  getPreset(preset);
+ create({seed,preset='balanced',difficulty=3}={}){
+  getPreset(preset);validateDifficulty(difficulty);
   if(seed!==undefined&&(!Number.isSafeInteger(seed)||seed<0||seed>0xffffffff))throw Error('Invalid cube seed');
   for(const [key,session] of this.sessions)if(Date.now()-session.updated>90*60*1000)this.sessions.delete(key);
   if(this.sessions.size>=32)throw Error('Too many active cube drafts');
   const realSeed=seed??crypto.randomBytes(4).readUInt32BE(0),draft=C.makeDraft({seed:realSeed,preset});
   const token=crypto.randomBytes(24).toString('base64url');
-  this.sessions.set(token,{draft,seed:realSeed,revision:0,updated:Date.now()});
+  this.sessions.set(token,{draft,seed:realSeed,difficulty,revision:0,updated:Date.now()});
   return {token,...this.view(token)};
  }
  session(token){
@@ -43,7 +48,9 @@ class CubeService{
     const m=t.matches[id];
     return id==='final'?[m.winner,other(m.seats,m.winner)]:[m.winner,other(m.seats,m.winner)];
    }).map((seat,i)=>({place:i+1,name:NAMES[seat]})):null;
-  return {preset:d.preset||'balanced',revision:s.revision,round:d.round,pick:d.pick,packs:d.packs,cardsPerPack:d.cardsPerPack,done:d.done,
+  return {preset:d.preset||'balanced',difficulty:s.difficulty??3,
+    recommendedId:d.done?null:cpuPick(C.availableForSeat(d,0),d.picks[0]),
+    revision:s.revision,round:d.round,pick:d.pick,packs:d.packs,cardsPerPack:d.cardsPerPack,done:d.done,
    pack:C.availableForSeat(d,0).map(id=>this.card(id)),drafted:d.picks[0].map(id=>this.card(id)),
    opponentCounts:d.picks.slice(1).map(a=>a.length),started:!!t,
    tournament:t?{
@@ -61,7 +68,7 @@ class CubeService{
   const rival=RIVALS[opponentSeat-1];
   if(!rival)throw Error('Invalid Cube opponent');
   return classic.createCube({humanDeck:s.tournament.decks[0],cpuDeck:s.tournament.decks[opponentSeat],
-   difficulty:rival.level,personality:rival.personality,name:rival.name});
+   difficulty:rivalLevel(s.difficulty??3,opponentSeat),personality:rival.personality,name:rival.name});
  }
  start(token,deck,revision,classic){
   const s=this.session(token);
@@ -85,7 +92,7 @@ class CubeService{
   if(m.seats.length!==2||m.seats.includes(0))throw Error('Not a CPU bracket fixture');
   const [a,b]=m.seats,result=this.simulateCpu(t.decks[a],t.decks[b],{
    seed:(s.seed+id.length*12347)>>>0,
-   levelA:RIVALS[a-1].level,levelB:RIVALS[b-1].level
+   levelA:rivalLevel(s.difficulty??3,a),levelB:rivalLevel(s.difficulty??3,b)
   });
   if(!result||(result.winner!==0&&result.winner!==1))throw Error('CPU fixture requires a winner');
   m.winner=m.seats[result.winner];m.method=result.method||'played';m.status='complete';
