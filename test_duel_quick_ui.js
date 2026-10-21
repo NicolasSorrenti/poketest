@@ -56,4 +56,19 @@ setTimeout(()=>{
  assert.ok(!toastClasses.has('show'),'Energy warning auto-dismisses');
  assert.equal(toastEl.textContent,'','Dismissed warning leaves no stale live-region text');
 },15);
+// Keep the compact phone composition isolated from PC, and available to
+// both solo/RPG/Cube and online matches without changing the duel renderer.
+const mobileStyles=fs.readFileSync(__dirname+'/duel_mobile_reference.css','utf8');
+assert.match(mobileStyles,/^\/\*[\s\S]*?\*\/\s*@media \(max-width:780px\)/);
+assert.doesNotMatch(mobileStyles,/@media\s*\(min-width:/);
+assert.equal((mobileStyles.match(/%3Crect x=/g)||[]).length,5,'five mobile bench slots');
+for(const page of ['classic_live.html','online.html']){
+ const html=fs.readFileSync(__dirname+'/'+page,'utf8');
+ const mobileLink='href="duel_mobile_reference.css?v=1" media="(max-width: 780px)"';
+ assert.ok(html.includes(mobileLink),page+' loads mobile CSS only below 781px');
+ assert.ok(html.lastIndexOf(mobileLink)>html.lastIndexOf('duel_observability_rail.css'),page+' keeps mobile overrides last');
+ for(const id of ['handToggle','handFan','myBench','myActive','endBtn','logToggle','logDrawer']){
+  assert.ok(html.includes('id="'+id+'"'),page+' retains '+id+' control');
+ }
+}
 console.log('PASS quick duel UI: legal evolution targeting, round restrictions, Prize stacks, preview and accelerated actions for online/local clients');
