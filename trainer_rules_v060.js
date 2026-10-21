@@ -184,6 +184,8 @@ Engine.prototype._trainer60MayRivalReplay=function(card){
  return !excluded.has(card.name)&&(TRAINER58.has(card.name)||['Potion','Switch','Gust of Wind','Energy Removal','Bill','Professor Oak'].includes(card.name));
 };
 Engine.prototype._trainer60RivalReplay=function(id){
+ // Only recognized, replayable Trainers can enter the temporary rival hand.
+ if(!id||!this._trainer60MayRivalReplay(lookup.get(id)||{}))return false;
  const oldTurn=this.turn,opponent=this.players[1-oldTurn],lastDeckSearch=deckSearchRequest;
  const originalHandCopies=opponent.hand.filter(cardId=>cardId===id).length;
  const originalDiscardCopies=opponent.discard.filter(cardId=>cardId===id).length;
