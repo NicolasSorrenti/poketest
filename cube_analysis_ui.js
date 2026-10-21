@@ -80,10 +80,23 @@
   const buttons=[...document.querySelectorAll('#pack button.card')];
   buttons.forEach((btn,i)=>{
    const c=cards[i];if(!c)return;
-   const count=c.evolvesFrom?drafted.filter(p=>p.name===c.evolvesFrom).length:0;
+   const current=cards.find(p=>p.id===btn.dataset.caId)||cards[i];
+   const count=current.evolvesFrom?drafted.filter(p=>p.name===current.evolvesFrom).length:0;
    let tag=btn.querySelector('.ca-match');if(tag)tag.remove();
-   if(count){tag=el('span','ca-match','✓ '+count+' '+c.evolvesFrom+' drafted');btn.append(tag);}
-   if(!btn.dataset.caPreview){btn.dataset.caPreview='1';btn.addEventListener('contextmenu',e=>{e.preventDefault();const current=last.pack?.find(x=>x.id===btn.dataset.caId);if(current)openPreview(current);});}
+   if(count){tag=el('span','ca-match','✓ '+count+' '+current.evolvesFrom+' drafted');btn.append(tag);}
+   if(!btn.dataset.caPreview){
+    btn.dataset.caPreview='1';
+    const show=()=>{const card=last.pack?.find(x=>x.id===btn.dataset.caId);if(card)openPreview(card);};
+    btn.addEventListener('contextmenu',e=>{e.preventDefault();show();});
+    btn.addEventListener('keydown',e=>{if(e.key.toLowerCase()==='i'){e.preventDefault();show();}});
+    let timer=null,suppress=false;
+    btn.addEventListener('touchstart',()=>{suppress=false;clearTimeout(timer);timer=setTimeout(()=>{suppress=true;show();},550);},{passive:true});
+    btn.addEventListener('touchend',()=>clearTimeout(timer),{passive:true});
+    btn.addEventListener('touchcancel',()=>{clearTimeout(timer);suppress=false;},{passive:true});
+    btn.addEventListener('touchmove',()=>clearTimeout(timer),{passive:true});
+    btn.addEventListener('click',e=>{if(suppress){e.preventDefault();e.stopImmediatePropagation();suppress=false;}},true);
+    btn.setAttribute('title',(btn.title?btn.title+' · ':'')+'Hold to inspect card · Press I to inspect');
+   }
    btn.dataset.caId=c.id;
   });
  }
