@@ -185,6 +185,18 @@ check('Chaos Gym refuses replay after duel ends without modifying rival cards',(
  assert.equal(g._trainer60RivalReplay('base1-91'),false);
  assert.deepEqual(f.hand,beforeHand);
 });
+check('Chaos Gym failed Energy Search replay rolls back both players and choices',()=>{
+ const id=data.find(c=>c.name==='Energy Search'&&c.supertype==='Trainer').id;
+ const {g,p,f}=fresh({hand:[]});
+ f.deck=['base1-58']; // no Basic Energy, so redirected Energy Search cannot complete
+ f.hand=['base1-91'];f.discard=['base1-98'];
+ const before=JSON.stringify(g.players),turn=g.turn,stadium=g.stadium;
+ assert.equal(g._trainer60RivalReplay(id),false);
+ assert.equal(JSON.stringify(g.players),before);
+ assert.equal(g.turn,turn);
+ assert.equal(g.stadium,stadium);
+ assert.equal(vm.runInContext('deckSearchRequest',ctx),null);
+});
 check('Chaos Gym refuses unreplayable cards without mutating rival hand',()=>{
  const {g,p,f}=fresh();
  const handBefore=f.hand.slice(),discardBefore=f.discard.slice(),turnBefore=g.turn;
