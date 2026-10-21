@@ -23,6 +23,7 @@
   root.dataset.rpgDiscreet=value?'on':'off';
   if(save){try{window.localStorage.setItem(key,value?'1':'0');}catch{/* Private browsing can block storage. */}}
   refreshButton();
+  window.NeoRpgDiscreetAvatars?.refresh?.();
  }
  // Set the root attribute before page content renders to avoid a flash of art.
  apply(fromStorage(),false);
