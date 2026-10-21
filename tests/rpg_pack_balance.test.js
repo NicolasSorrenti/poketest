@@ -53,7 +53,7 @@ test('checkpoints use honest legal owned copies for all three starter choices',(
   }
   assert.ok(late.purchasedPacks>early.purchasedPacks,'affordable packs accumulate throughout campaign');
   assert.ok(late.totalCopies>early.totalCopies);
- });
+ }
 });
 test('CLI validation and inexpensive readiness report expose meaningful cross-plan comparisons',()=>{
  assert.deepEqual(P.parse(['--days','15,45','--styles','toolkit,evolution','--seeds','2']).days,[15,45]);
