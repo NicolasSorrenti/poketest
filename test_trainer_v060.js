@@ -143,6 +143,16 @@ check('Chaos Gym can redirect Bill to its rival when the coin fails',()=>{
   assert.equal(f.hand.length,2);assert.ok(!f.discard.includes('base1-91'));
  }finally{vm.runInContext('coin=__originalCoin',ctx)}
 });
+check('Chaos Gym replay preserves an identical Trainer already in rival hand',()=>{
+ const {g,p,f}=fresh({hand:['base1-91']});g.stadium={id:'gym2-102',owner:1};
+ f.hand=['base1-91'];
+ ctx.__originalCoin=vm.runInContext('coin',ctx);vm.runInContext('coin=()=>false',ctx);
+ try{
+  assert.equal(g.trainer(0),true);
+  assert.equal(f.hand.filter(id=>id==='base1-91').length,1);
+  assert.ok(p.discard.includes('base1-91'));
+ }finally{vm.runInContext('coin=__originalCoin',ctx)}
+});
 check('Chaos Gym can redirect an Energy Search using RIVAL deck and choices',()=>{
  const id=data.find(c=>c.name==='Energy Search'&&c.supertype==='Trainer').id;
  const {g,p,f}=fresh({hand:[id]});g.stadium={id:'gym2-102',owner:1};
