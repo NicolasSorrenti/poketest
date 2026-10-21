@@ -11,7 +11,7 @@ test('each proposed recipe is legal at both tiers and never edits shared source 
  for(const [npc,variants] of Object.entries(VARIANTS)){
   const theme=service.decklist(Trial.PRESETS[npc]),before=JSON.stringify(theme);
   for(const tier of [1,2,3]){
-   const baseline=NPC.upgrade({npc,tier,original:theme,catalog:CATALOG});
+   const baseline=NPC.baselineUpgrade({npc,tier,original:theme,catalog:CATALOG});
    for(const variant of variants){
     const cards=candidate({npc,tier,original:theme,catalog:CATALOG,variant});
     assert.equal(cards.length,60);
@@ -67,4 +67,21 @@ test('benchmark validates inputs and preserves independent duel choice paths',()
  assert.throws(()=>Trial.parse(['--pairs','0']),/Invalid pairs/);
  const service=new ClassicLocalService(),src=service.decklist('blackout');
  assert.throws(()=>candidate({npc:'reina',tier:2,original:src,catalog:CATALOG,variant:'unknown'}),/Unknown candidate/);
+});
+
+test('production Yuna and Camila tunes match measured candidates and retain original baselines',()=>{
+ const service=new ClassicLocalService();
+ const chosen=[['yuna','zap','electabuzz-pair'],['camila','rocket_lab','rocket-hybrid']];
+ for(const [npc,theme,variant] of chosen){
+  const original=service.decklist(theme);
+  const act1=NPC.upgrade({npc,tier:1,original,catalog:CATALOG});
+  assert.deepEqual(act1,original,npc+' Act I must remain original');
+  for(const tier of [2,3]){
+   const tuned=NPC.upgrade({npc,tier,original,catalog:CATALOG});
+   const compared=candidate({npc,tier,original,catalog:CATALOG,variant});
+   assert.deepEqual(tuned,compared,npc+' Act '+tier+' should match the exact measured 60 cards');
+   const baseline=NPC.baselineUpgrade({npc,tier,original,catalog:CATALOG});
+   assert.notDeepEqual(tuned,baseline);
+  }
+ }
 });
