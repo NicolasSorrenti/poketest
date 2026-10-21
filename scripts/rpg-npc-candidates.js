@@ -17,7 +17,7 @@ function candidate({npc,tier,original,catalog,variant='baseline'}){
    const index=cards.indexOf(from);
    if(index<0)throw Error('Candidate '+npc+'/'+variant+' lacks '+from);
    const name=catalog.get(to).name;
-   if(cards.filter(id=>catalog.get(id)?.name===name).length>=4)throw Error('Candidate exceeds four '+name);
+   if(catalog.get(to).supertype!=='Energy'&&cards.filter(id=>catalog.get(id)?.name===name).length>=4)throw Error('Candidate exceeds four '+name);
    cards[index]=to;
   }
  }
