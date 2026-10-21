@@ -9,7 +9,8 @@ test('balance model is deterministic, uses real reward receipts and does not alt
  assert.equal(a.voucherPacks,2);
  assert.equal(a.signatureCards,1);
  assert.ok(a.miniPacks<=26);
- assert.equal(a.totalCardCopies,60+a.miniPacks*5+a.shopPacks*10+a.voucherPacks*10+a.signatureCards);
+ assert.equal(a.welcomeMini,2);
+ assert.equal(a.totalCardCopies,60+a.welcomeMini*5+a.miniPacks*5+a.shopPacks*10+a.voucherPacks*10+a.signatureCards);
 });
 test('regular and duel-heavy scenarios scale without unlimited free mini-boosters',()=>{
  const a=simulate(SCENARIOS[1],123),b=simulate(SCENARIOS[2],123);
