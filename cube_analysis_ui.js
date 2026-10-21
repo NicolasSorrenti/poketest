@@ -40,7 +40,18 @@
  }
  function drawPicks(){
   const picks=last.drafted||[],selector=pickPanel.querySelector('select'),group=selector.value,box=pickPanel.querySelector('.ca-list');box.replaceChildren();
-  const rows=picks.map((c,i)=>({c,i,key:group==='type'?(c.types||[])[0]||c.supertype:group==='stage'?stage(c):group==='family'?c.evolvesFrom||c.name:String(i).padStart(3,'0')}));
+  const pool=last.pool||[];
+  const familyRoot=c=>{
+   let current=c,seen=new Set();
+   while(current.evolvesFrom&&!seen.has(current.name)){
+    seen.add(current.name);
+    const parent=[...picks,...pool].find(p=>p.name===current.evolvesFrom);
+    if(!parent)return current.evolvesFrom;
+    current=parent;
+   }
+   return current.name;
+  };
+  const rows=picks.map((c,i)=>({c,i,key:group==='type'?(c.types||[])[0]||c.supertype:group==='stage'?stage(c):group==='family'?familyRoot(c):String(i).padStart(3,'0')}));
   if(group!=='history')rows.sort((a,b)=>a.key.localeCompare(b.key)||a.c.name.localeCompare(b.c.name));
   let prior='';
   rows.forEach(({c,i,key})=>{
