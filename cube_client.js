@@ -50,7 +50,7 @@
    const result=await request('create',{method:'POST',body:JSON.stringify({preset:$('presetSelect').value,difficulty:Number($('cpuDifficulty').value)})});
    token=result.token;sessionStorage.setItem('neoCubeDraftToken',token);
    state=result;deck=[];deckInitialized=false;render();
-  }catch(e){$('error').textContent=e.message;}finally{busy=false;}
+  }catch(e){$('error').textContent=e.message;}finally{busy=false;if(state?.done&&!state.started)renderBuilder();}
  }
  async function pick(id){
   if(busy||!state||state.done)return;busy=true;$('error').textContent='';
