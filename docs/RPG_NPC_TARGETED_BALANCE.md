@@ -30,7 +30,7 @@ The reproducible experiment in `scripts/benchmark-rpg-npc-candidates.js` used ge
 
 **Camila, Acts II/III:** Substitute one Dark Gyarados for **Dark Muk**, another for **Dark Weezing**, and two Water Energy for Grass Energy. There are still compatible Magikarp, Grimer and Koffing Basics, and the full Oddish → Dark Gloom → Dark Vileplume chain. No stronger new card printing is invented; no Trainer-lock rule is changed.
 
-**Reina, Acts II/III — provisional:** Substitute one extra Hitmonchan for an Onix, two Energy Removal for Switch and Potion, and Super Energy Removal for Defender. This reduces stacked early fighting pressure and repeated Energy denial without deleting her signature Fighting identity or core search/tempo Trainers. In Act III she still has two Hitmonchan, two Energy Removal, two Gust of Wind, Computer Search and Item Finder. The initial softer variants did **not** significantly affect her matchup win rate, so a stronger recipe was selected for a further matched trial. **Do not claim measured improvement for this final Reina variant until its follow-up real-engine run is complete.**
+**Reina, Acts II/III — provisional:** Substitute one extra Hitmonchan for an Onix, two Energy Removal for Switch and Potion, and Super Energy Removal for Defender. This reduces stacked early fighting pressure and repeated Energy denial without deleting her signature Fighting identity or core search/tempo Trainers. In Act III she still has two Hitmonchan, two Energy Removal, two Gust of Wind, Computer Search and Item Finder. The initial softer variants did **not** significantly affect her matchup win rate, so a stronger recipe was selected for a further matched trial. The follow-up mirrored matches completed: the fair-rival recipe won **21/24** at Day 45 (baseline 20/24), **18/24** at Day 60 (baseline 19/24), and **20/24** at Day 80 (baseline 22/24). This is a modest reduction in late-game pressure, **not evidence of statistical balance**. [Passing matched workflow](https://github.com/NicolasSorrenti/poketest/actions/runs/39614908880).
 
 ## Reproduction
 
@@ -45,6 +45,6 @@ npm run balance:npc-tuning -- --days 45,60,80 --npcs reina,yuna,camila --styles 
 
 - Equal level-3 CPU agents are **not** a proxy for human match outcomes or actual character-specific CPU personalities.
 - Two–three random seeds and 24–36 games per candidate/checkpoint have considerable uncertainty. Do not balance against individual one-game swings.
-- The more conservative Yuna and Camila recipes have initial matched head-to-head evidence. Reina's newer fair-rival variant has passed deterministic legality and exact candidate-parity checks but its larger mirrored-game experiment is pending.
+- The more conservative Yuna and Camila recipes have initial matched head-to-head evidence. Reina's fair-rival variant completed its mirrored games, but 24 games per checkpoint are not enough to claim the remaining advantage has been eliminated.
 - Real campaign progress can accelerate a character's tier after story milestones. The benchmark intentionally uses only calendar tiers.
 - No economy settings, booster rates, social rewards, or original attacks/Pokémon Powers change in this milestone.
