@@ -211,7 +211,7 @@ class CubeRoomService{
   const past=waiting?d.picks[seat].slice(0,-1):d.picks[seat];
   const recommendedId=!d.done&&offered.length?cpuPick(offered,past):null;
   return {...base,round:d.round,pick:d.pick,packs:d.packs,cardsPerPack:d.cardsPerPack,waiting,recommendedId,
-    cubePool:d.rounds.flat(2).map(id=>{const c=CATALOG.get(id);return {id,name:c.name,supertype:c.supertype,types:c.types||[]};}),
+    cubePool:d.rounds.flat(2).map(id=>{const c=CATALOG.get(id);return {id,name:c.name,supertype:c.supertype,types:c.types||[],subtypes:c.subtypes||[],evolvesFrom:c.evolvesFrom||null};}),
    // While waiting, return the ORIGINAL pack including this seat's reserved
    // copy. Only the owner can see or change that provisional selection.
    selectedId,
