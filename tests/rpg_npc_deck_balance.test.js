@@ -48,3 +48,16 @@ test('the player growth model does not mutate starter recipes or global collecti
  assert.deepEqual(Collection.starters.map(s=>s.cards),before);
  assert.equal(Bench.modifications(before[0],before[0]),0);
 });
+test('CPU avoids Item Finder with no recoverable Trainer rather than stranding a duel',()=>{
+ const {trainerOpportunity}=require('../cpu_policy');
+ const info={self:{active:null,bench:[],discard:[],deckCount:10},opponent:{active:null,bench:[]}};
+ const cfg={level:3};
+ assert.equal(trainerOpportunity(info,'Item Finder',cfg),false);
+ info.self.discard.push('base1-98'); // Fire Energy is not a recoverable Trainer
+ assert.equal(trainerOpportunity(info,'Item Finder',cfg),false);
+ info.self.discard.push('base1-94'); // Potion is a Trainer
+ assert.equal(trainerOpportunity(info,'Item Finder',cfg),true);
+ assert.equal(trainerOpportunity(info,'Computer Search',cfg),true);
+ info.self.deckCount=0;
+ assert.equal(trainerOpportunity(info,'Computer Search',cfg),false);
+});
