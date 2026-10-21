@@ -320,3 +320,17 @@ button.attack-action:disabled .attack-warning{color:#b6b2a3}
 .energy-limit-toast{position:fixed;z-index:10050;top:max(12px,env(safe-area-inset-top));left:50%;transform:translate(-50%,-8px);max-width:min(340px,calc(100vw - 32px));padding:9px 14px;border:1px solid #e2b85d;border-radius:9px;background:#192a35f5;color:#ffe8b2;box-shadow:0 8px 24px #0008;text-align:center;font-size:13px;font-weight:650;line-height:1.35;opacity:0;visibility:hidden;pointer-events:none;transition:opacity .16s ease,transform .16s ease,visibility .16s}
 .energy-limit-toast.show{opacity:1;visibility:visible;transform:translate(-50%,0)}
 @media(prefers-reduced-motion:reduce){.energy-limit-toast{transition:none}}
+
+/* Readable ten-HP damage tokens for both field zones. */
+.poke .pokemon-card-stage{position:relative;display:block;width:100%;min-width:0}
+.poke .pokemon-card-stage .pokemon-face{width:100%}
+.poke .damage-pips{position:absolute;top:50%;right:-12px;transform:translateY(-50%);display:flex!important;flex-direction:column;flex-wrap:wrap;align-content:center;gap:2px;max-height:100%;pointer-events:none;z-index:8}
+.poke .damage-pip{display:block;width:9px;height:9px;flex:none;border:1.5px solid #e9f3df;border-radius:50%;background:#10271bb8;box-shadow:0 1px 3px #0009}
+.poke .damage-pip.filled{background:#ec6553;border-color:#ffe8ce;box-shadow:0 0 4px #ed7259a0}
+body.duel-active .stage .territory .bench-zone .poke .damage-pips{right:-10px;gap:1px}
+body.duel-active .stage .territory .bench-zone .poke .damage-pip{width:6px;height:6px;border-width:1px}
+.card-preview .preview-life,.card-preview .preview-energy{margin:8px 0;padding:8px;background:#1b3540;border-radius:7px}
+.card-preview .preview-life-label{display:flex;justify-content:space-between;gap:8px;margin-bottom:5px}
+.card-preview .preview-life-track{height:10px;border-radius:8px;background:#553533;overflow:hidden}
+.card-preview .preview-life-track>span{display:block;height:100%;border-radius:inherit;background:linear-gradient(90deg,#6dde92,#bbdf6c)}
+.card-preview .preview-energy{display:flex;flex-direction:column;gap:3px}
