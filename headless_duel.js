@@ -417,6 +417,13 @@ function promptBenchGuard(g,queue){
 function performAction(g,side,cmd){
  const p=g.players[side],f=g.players[1-side],v=cmd.payload||{},type=cmd.type;
  if(g.pendingDecision){
+  if(type==='cancel_choice'){
+   if(v.decisionId!==g.pendingDecision.id)fail('Stale or missing decision id');
+   if(!CLASSIC_TRAINERS.canCancel(g,side))
+    fail('This choice can no longer be cancelled: a card effect or private reveal has started');
+   g.pendingDecision=null;g.pendingAction=null;
+   return; // The Trainer and its costs are still in their original zones.
+  }
   if(type!=='choose')fail('Resolve the pending decision first');
   const answer=validateAnswer(g.pendingDecision,side,v),pending=g.pendingAction;
   if(!pending)fail('Pending action is missing');
