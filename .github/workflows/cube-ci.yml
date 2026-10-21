@@ -14,6 +14,7 @@ on:
       - 'headless_duel.js'
       - 'core_rules.js'
       - 'package.json'
+      - 'server.js'
       - '.github/workflows/cube-ci.yml'
   pull_request:
     paths:
@@ -27,7 +28,12 @@ on:
       - 'headless_duel.js'
       - 'core_rules.js'
       - 'package.json'
+      - 'server.js'
   workflow_dispatch:
+
+concurrency:
+  group: cube-tests-${{ github.ref }}
+  cancel-in-progress: true
 
 permissions:
   contents: read
