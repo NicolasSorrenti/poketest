@@ -711,29 +711,6 @@ body.duel-active .stage .poke .energy-card-stack .attached-energy.energy-card-mi
  border:1px solid #edebdf;
  box-shadow:-2px 2px 5px #000c;
 }
-body.duel-active .stage .poke .energy-card-stack .attached-energy.energy-card-mini::before{
- content:attr(data-symbol);
- position:absolute;z-index:4;top:5%;bottom:5%;left:0;
- width:calc(var(--attachment-peek) - 3px);
- display:flex;align-items:center;justify-content:center;
- background:var(--attachment-edge,#546273);
- box-shadow:1px 0 3px #0006;
- color:#fff;font-size:10px;font-weight:900;
- text-shadow:0 1px 2px #0009;
- border-radius:1px;
-}
-body.duel-active .stage .poke .energy-type-grass{--attachment-edge:#379449}
-body.duel-active .stage .poke .energy-type-fire{--attachment-edge:#d74c2d}
-body.duel-active .stage .poke .energy-type-water{--attachment-edge:#2385c8}
-body.duel-active .stage .poke .energy-type-lightning{--attachment-edge:#e5c32a}
-body.duel-active .stage .poke .energy-type-psychic{--attachment-edge:#9a54aa}
-body.duel-active .stage .poke .energy-type-fighting{--attachment-edge:#b2763d}
-body.duel-active .stage .poke .energy-type-colorless{--attachment-edge:#858d9b}
-body.duel-active .stage .poke .energy-type-darkness{--attachment-edge:#4d415f}
-body.duel-active .stage .poke .energy-type-metal{--attachment-edge:#78939c}
-body.duel-active .stage .poke .energy-type-rainbow{--attachment-edge:#a44cbb}
-body.duel-active .stage .poke .energy-type-recycle{--attachment-edge:#5c9b7b}
-body.duel-active .stage .poke .energy-type-special{--attachment-edge:#48677f}
 body.duel-active .stage .poke .energy-card-stack .energy-overflow{
  top:auto;bottom:-8px;left:calc(-3 * var(--attachment-overlap) - 10px);
  z-index:12;margin:0;min-width:21px;
@@ -804,7 +781,6 @@ body.duel-active .stage .bench-zone .poke{
   --attachment-overlap:5px;--tool-overlap:5px;
   overflow:visible;
  }
- body.duel-active .stage .poke .energy-card-stack .attached-energy.energy-card-mini::before{font-size:8px}
  body.duel-active .stage .poke .pokemon-tools .tool-card-fallback{font-size:7px}
  body.duel-active .stage .poke .pokemon-tools .tool-card-fallback span{font-size:6px}
 }
@@ -813,9 +789,6 @@ body.duel-active .stage .bench-zone .poke{
  body.duel-active .stage .bench-zone .poke{
   --attachment-peek:6px;--tool-peek:6px;
   --attachment-overlap:3px;--tool-overlap:3px;
- }
- body.duel-active .stage .bench-zone .poke .energy-card-stack .attached-energy.energy-card-mini::before{
-  width:5px;font-size:0;
  }
  body.duel-active .stage .bench-zone .poke .pokemon-tools .pokemon-tool-card::after{width:5px}
 }
