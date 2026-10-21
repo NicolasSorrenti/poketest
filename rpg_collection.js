@@ -98,13 +98,10 @@
    const sources=availableThemeSets(state,pack),unlocked=themeUnlocked(state,pack);
    const possible=new Set(['rare','holo','secret'].flatMap(kind=>selectThemePool(sources,kind,pack.rare))
     .concat(selectThemePool(sources,'uncommon',pack.uncommon),selectThemePool(sources,'common',pack.common)));
-   // Other slots are unrestricted in non-specialist packs, so the list includes
-   // every realistically obtainable card, not just the featured subset.
-   if(pack.guaranteedUncommon||pack.guaranteedCommon){
-    for(const rarity of ['uncommon','common'])for(const id of selectThemePool(sources,rarity))possible.add(id);
-   }else{
-    for(const rarity of ['uncommon','common'])for(const id of selectThemePool(sources,rarity))possible.add(id);
-   }
+   // Paid ten-card packs include unrestricted Common/Uncommon slots, even
+   // when the featured slots are guaranteed to match the theme.
+   for(const rarity of ['uncommon','common'])
+    for(const id of selectThemePool(sources,rarity))possible.add(id);
    for(const id of [...ENERGY].filter(x=>x!=='base1-96'))possible.add(id);
    const unique=[...possible].filter(id=>(owned[id]||0)>0).length;
    return {...pack,unlocked,sources,futureSources:[...pack.sources],owned:unique,total:possible.size,
@@ -114,14 +111,16 @@
   });
  }
  function themeContains(state,themeId,cardId){
-  const offer=themedPacks(state).find(x=>x.id===themeId);
-  if(!offer||!offer.unlocked)return false;
+  const theme=THEMED_BY_ID.get(themeId);
+  if(!theme||!themeUnlocked(state,theme))return false;
   if(ENERGY.has(cardId)&&cardId!=='base1-96')return true;
-  if(!offer.sources.includes(cardId?.split('-')[0]))return false;
-  const role=THEMED_BY_ID.get(themeId);
-  return ['rare','holo','secret','uncommon','common'].some(kind=>
-   selectThemePool(offer.sources,kind,kind==='uncommon'?role.uncommon:kind==='common'?role.common:role.rare).includes(cardId))
-   || ['common','uncommon'].some(kind=>selectThemePool(offer.sources,kind).includes(cardId));
+  const sources=availableThemeSets(state,theme),set=cardId?.split('-')[0],rarity=packRarity(cardId);
+  if(!sources.includes(set))return false;
+  // Ten-card packs always have unrestricted Common and Uncommon slots beyond
+  // the featured guaranteed cards. Rare slot uses the exact themed subpool.
+  if(rarity==='common'||rarity==='uncommon')return true;
+  return ['rare','holo','secret'].includes(rarity)&&
+   selectThemePool(sources,rarity,theme.rare).includes(cardId);
  }
  function randomThemedPack(state,themeId,rng=Math.random,count=10){
   if(count!==5&&count!==10)throw Error('Only five- and ten-card packs are supported');
