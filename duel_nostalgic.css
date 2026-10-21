@@ -323,10 +323,12 @@ body.duel-active .prize-choice-panel{z-index:190}
  }
  body.duel-active #choiceDock>#decisionBox:not(.active) #decisionOptions:empty,
  body.duel-active #choiceDock>#decisionBox:not(.active) #decisionActions:empty{display:none}
- body.duel-active #choiceDock>#logDrawer{
+ body.duel-active #choiceDock>#logDrawer:not(.hidden){
   display:flex!important;flex:1 1 auto;min-height:0;margin:0;padding:0;
   flex-direction:column;border-color:#3d4857;background:#232a35;
  }
+ /* Hidden history must never occupy a permanent match panel. */
+ body.duel-active #choiceDock>#logDrawer.hidden{display:none!important}
  body.duel-active #choiceDock>#logDrawer header{
   flex:none;padding:10px 12px;border-bottom:1px solid #3d4857;
  }
@@ -334,7 +336,7 @@ body.duel-active .prize-choice-panel{z-index:190}
   flex:1;min-height:0;max-height:none;overflow:auto;padding:3px 10px 10px;
  }
  body.duel-active #choiceDock>#logDrawer #closeLog,
- body.duel-active .toolbar #logToggle{display:none}
+ body.duel-active .toolbar #logToggle{display:inline-flex;align-items:center;justify-content:center}
  body.duel-active #duel>.below>.main-column>.turn-actions-panel{
   grid-column:2;grid-row:3;width:100%!important;height:100%!important;
   min-height:0!important;padding:8px!important;background:#232a35;
