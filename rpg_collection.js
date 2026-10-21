@@ -90,7 +90,7 @@
   if(!x.lastPack||!Array.isArray(x.lastPack.cards)||![5,10].includes(x.lastPack.cards.length)||x.lastPack.cards.some(id=>!allAllowed.has(id)))x.lastPack=null;
   else{x.lastPack.source=['win','shop','gift'].includes(x.lastPack.source)?x.lastPack.source:'shop';x.lastPack.opened=x.lastPack.opened===true;}
   if(!Array.isArray(x.pendingPacks))x.pendingPacks=[];
-  x.pendingPacks=x.pendingPacks.filter(p=>p&&Array.isArray(p.cards)&&[5,10].includes(p.cards.length)&&p.cards.every(id=>allAllowed.has(id))&&['win','shop','gift'].includes(p.source)).slice(0,90);
+  x.pendingPacks=x.pendingPacks.filter(p=>p&&Array.isArray(p.cards)&&[5,10].includes(p.cards.length)&&p.cards.every(id=>allAllowed.has(id))&&['win','shop','gift'].includes(p.source));
   for(const p of x.pendingPacks)p.opened=false;
   for(const key of ['weeklyWins','weeklyPacks','rewardedDuels'])
    if(!x[key]||typeof x[key]!=='object'||Array.isArray(x[key]))x[key]={};
