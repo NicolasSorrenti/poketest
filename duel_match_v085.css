@@ -65,6 +65,12 @@
  body.duel-active .stage .territory .poke:hover .pokemon-face,body.duel-active .stage .territory .poke:focus-visible .pokemon-face{transform:translateY(-3px);box-shadow:0 9px 18px #06140dc7,0 0 0 2px #dce9b980}
  body.duel-active .stage .territory .active-with-attacks{display:grid!important;grid-template-columns:minmax(0,1fr) minmax(112px,148px) minmax(155px,1fr);gap:12px;width:100%;align-items:center}
  body.duel-active .stage .territory .active-with-attacks .active-slot{grid-column:2;justify-self:center}
+ /* The dock is a direct grid child; the attack panel lives *inside* it.
+    Position the wrapper to the right of the Active card, not the panel. */
+ body.duel-active .stage .territory .active-with-attacks #fieldAttackDock{
+  grid-column:3;grid-row:1;align-self:center;justify-self:start;
+  width:min(100%,300px);min-width:0;max-width:100%;
+ }
  body.duel-active .stage .territory .active-with-attacks .inline-attack-panel{grid-column:3;width:min(100%,300px);padding:6px 8px;background:#17251fe8;border:1px solid #78906f85;border-radius:8px;box-shadow:0 4px 12px #08180f80}
  body.duel-active .stage .battleline{height:8px;min-height:8px;background:#202832}
  body.duel-active .stage .battleline #turnChip{animation:referenceTurnPulse 2.2s ease-in-out infinite}
