@@ -176,6 +176,7 @@
   });
   $('drafted').innerHTML=state.drafted.map((c,i)=>'<div class="row">'+(i+1)+'. '+esc(c.name)+'</div>').join('');
   renderBuilder();
+  window.CubeAnalysis?.update({pool:state.cubePool,drafted:state.drafted,pack:arrangedPack(state.pack),deck});
   renderTournament();
   if(entering){
    window.scrollTo({top:0,behavior:'instant'});
