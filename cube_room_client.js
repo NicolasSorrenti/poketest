@@ -309,6 +309,7 @@
    });
   }
   if(state.finished)renderBuild();
+  window.CubeAnalysis?.update({pool:state.cubePool,drafted:state.drafted,pack:state.status==='draft'?arrangedPack(state.pack):[],deck});
   if(entering){
    window.scrollTo({top:0,behavior:'instant'});
    const heading=$('deckArea').querySelector('.cb-header h2');
