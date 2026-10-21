@@ -486,7 +486,15 @@ function prompt(g,plan,helpers){
   if(!deck(pokemon).length)throw Error('Pokémon Trader has no Pokémon left in deck');
  }
  if(name==='Blaine'&&!p.hand.some((id,i)=>i!==plan.handIndex&&get(id).name==='Fire Energy'))throw Error('Blaine requires Fire Energy to attach');
- const cost2=['Computer Search','Item Finder','Maintenance'];
+ // Maintenance returns two *other* cards to the deck, it never discards them.
+ // Keep its choice separate from the discard-cost Trainers so the UI explains
+ // the action correctly before the player commits the selection.
+ if(name==='Maintenance'&&!chosen(d,'cost')){
+  const candidates=hchoices();
+  if(candidates.length<2)throw Error('Maintenance needs two other cards in hand');
+  return multi('cost',side,candidates,2,2,'Maintenance: choose 2 other cards to shuffle into your deck, then draw 1');
+ }
+ const cost2=['Computer Search','Item Finder'];
  if(cost2.includes(name) && !chosen(d,'cost')){
   if(hchoices().length<2)throw Error(name+' needs two other cards to discard/return');
   return multi('cost',side,hchoices(),2,2,'Choose two cards from your hand');
@@ -588,7 +596,12 @@ function commit(g,plan,h){
 
  if(chosen(d,'stadiumCost'))p.discard.push(...take(p.hand,picks('stadiumCost').map(i=>i>plan.handIndex?i-1:i)));
  if(['Computer Search','Item Finder',"Imposter Oak's Revenge",'Energy Retrieval'].includes(name))p.discard.push(...take(p.hand,picks('cost').map(i=>i>plan.handIndex?i-1:i)));
- if(name==='Maintenance')p.deck.push(...take(p.hand,picks('cost').map(i=>i>plan.handIndex?i-1:i)));
+ if(name==='Maintenance'){
+  const selected=picks('cost');
+  if(selected.length!==2||new Set(selected).size!==2||selected.includes(plan.handIndex))
+   throw Error('Maintenance requires exactly two other hand cards');
+  p.deck.push(...take(p.hand,selected.map(i=>i>plan.handIndex?i-1:i)));
+ }
  switch(name){
 
 

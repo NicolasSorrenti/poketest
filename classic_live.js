@@ -260,7 +260,9 @@
     return;
    }
 
-   description.textContent=`Choose ${d.min===d.max?d.min:`${d.min}–${d.max}`} option(s). ${d.optional?'You may decline.':'This choice is mandatory.'}`;
+   description.textContent=`Choose ${d.min===d.max?d.min:`${d.min}–${d.max}`} option(s) · ${decisionSelection.size}/${d.max} selected. ${d.optional?'You may decline.':'This choice is mandatory.'}`;
+   if((d.label||'').startsWith('Maintenance:'))
+    description.textContent=`Select 2 other cards (${decisionSelection.size}/2). They return to your deck; Maintenance is discarded and you draw 1 card.`;
    if(d.kind==='arrange')description.textContent='Select cards in order: #1 will be on TOP of your deck and drawn next. Tap an already selected card to remove it.';
    if(/^New Pokédex:/.test(d.label||''))description.textContent=d.label+'. The card you choose now goes in this numbered draw position.';
    const choices=document.createElement('div');choices.className='choice-list';
@@ -275,7 +277,11 @@
      const art=document.createElement('img');art.className='choice-card-art';art.src=src;art.alt=candidate.name||'';art.loading='lazy';row.append(art);
     }
     input.addEventListener('change',()=>{
-     if(d.max===1)decisionSelection.clear();if(input.checked)decisionSelection.add(item.id);else decisionSelection.delete(item.id);
+     if(d.max===1)decisionSelection.clear();
+     if(input.checked&&decisionSelection.size<d.max)decisionSelection.add(item.id);
+     else if(!input.checked)decisionSelection.delete(item.id);
+     // Once the allowed number is reached, ignore further checks rather
+     // than building an invalid choice that silently disables confirmation.
      renderDecisions();});row.append(input);
     const ordered=d.kind==='arrange'||/^New Pokédex:/.test(d.label||'');
     const position=ordered?[...decisionSelection].indexOf(item.id)+1:0;

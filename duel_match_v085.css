@@ -458,3 +458,40 @@ body.duel-active .duel-utility-toolbar #stadiumText:empty{display:none!important
   max-height:min(220px,calc(100dvh - 185px))!important;
  }
 }
+
+
+/* Card-effect decisions were correctly moved into #choiceModal by JS, but
+   online_compact.css still applies position:fixed;top/right to #decisionBox.
+   Restore normal flow inside the centered dialog in every battle mode. */
+body.duel-active #choiceModal:not(.hidden){
+ display:grid!important;
+ place-items:center!important;
+}
+body.duel-active #choiceModal .choice-dialog{
+ width:min(540px,100%);
+ max-width:100%;
+ max-height:min(86dvh,760px);
+ overflow-y:auto;
+}
+body.duel-active #choiceModal #decisionBox:not(.hidden){
+ position:static!important;
+ inset:auto!important;
+ top:auto!important;
+ right:auto!important;
+ bottom:auto!important;
+ left:auto!important;
+ transform:none!important;
+ width:100%!important;
+ max-width:none!important;
+ max-height:none!important;
+ margin:0!important;
+ z-index:auto!important;
+ overflow:visible!important;
+ padding:clamp(14px,3vw,24px)!important;
+ border:2px solid #76e7ca!important;
+ border-radius:17px!important;
+ background:linear-gradient(145deg,#173648,#0f2439)!important;
+ box-shadow:0 24px 85px #000e!important;
+}
+body.duel-active #choiceModal #decisionTitle{font-size:clamp(17px,3vw,22px)!important}
+body.duel-active #choiceModal #decisionText{font-size:14px!important;line-height:1.45}
