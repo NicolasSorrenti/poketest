@@ -98,7 +98,7 @@
    el.title=attack.text||attack.name;
    el.setAttribute('aria-label',attack.name+', cost '+((attack.cost||[]).join(', ')||'free')+', damage '+(attack.damage||'effect'));
    const reason=attackReason({view,me,attack,unit,getCard});
-   if(reason){el.title=reason;if(!enabled)el.setAttribute('aria-disabled','true');const warning=document.createElement('span');warning.className='attack-warning';warning.textContent=reason;el.append(warning);}
+   if(reason){el.title=reason;if(!enabled)el.setAttribute('aria-disabled','true');}
    root.append(el);
   });
  }
