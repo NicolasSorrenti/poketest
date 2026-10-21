@@ -373,6 +373,7 @@
     text.append(heading,hint);bar.append(text);
     if(d.max>1){bar.append(btn('Confirm selection',()=>send(command('choose',{decisionId:d.id,selected:[...decisionSelection]})),'primary',decisionSelection.size<d.min||decisionSelection.size>d.max));}
     if(d.optional)bar.append(btn('Decline',()=>send(command('choose',{decisionId:d.id,decline:true})),'secondary'));
+    if(d.cancelable)bar.append(btn('↶ Cancel card',()=>send(command('cancel_choice',{decisionId:d.id})),'secondary'));
     return;
    }
 
@@ -400,6 +401,7 @@
    });opts.append(choices);
    acts.append(btn('Confirm selection',()=>send(command('choose',{decisionId:d.id,selected:[...decisionSelection]})),'primary',decisionSelection.size<d.min||decisionSelection.size>d.max));
    if(d.optional)acts.append(btn('Decline',()=>send(command('choose',{decisionId:d.id,decline:true}))));
+   if(d.cancelable)acts.append(btn('↶ Cancel card (Esc)',()=>send(command('cancel_choice',{decisionId:d.id})),'secondary'));
   }else if(d){title.textContent='Opponent is choosing';description.textContent='Waiting for the other player to resolve their choice.';}
   else if(v.over){title.textContent='DUEL COMPLETE';description.textContent=watching()?(current.winner===null?'Draw!':`${current.players[current.winner]?.name||'A player'} won.`):current.winner===side()?'You won!':current.winner===1-side()?'Your friend won.':'A draw!';acts.append(btn('Leave finished duel',newDuel,'primary'));}
   else if(watching()){title.textContent='SPECTATING';description.textContent='You can watch the public field and chat. Both players’ hands and face-down Prizes remain private.';}
@@ -514,6 +516,6 @@
  $('endBtn').addEventListener('click',()=>send(command('end_turn')));
  $('retreatBtn').addEventListener('click',()=>setTarget('retreat',{},'Choose Benched replacement',true));
  $('concedeBtn').addEventListener('click',()=>{if(confirm('Concede this duel?'))send(command('concede'));});
- document.addEventListener('keydown',e=>{if(e.key==='Escape'){if(targetMode){e.preventDefault();cancelTarget();}else if(handVisible){setHandVisible(false);}else if(powersOpen){setPowersOpen(false);}}});
+ document.addEventListener('keydown',e=>{if(e.key==='Escape'){const d=current?.view?.pendingDecision;if(d?.cancelable&&!busy){e.preventDefault();send(command('cancel_choice',{decisionId:d.id}));return;}if(targetMode){e.preventDefault();cancelTarget();}else if(handVisible){setHandVisible(false);}else if(powersOpen){setPowersOpen(false);}}});
  init();
 })();
