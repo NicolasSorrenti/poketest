@@ -134,6 +134,11 @@ function evaluate(options){
    const seed=options.seed+stage.tier*100003+options.npcs.indexOf(npc)*1709+INITIAL.indexOf(starter)*731;
    const opts=argumentsOf(['--pairs',String(options.pairs),'--max-turns',String(options.maxTurns),
     '--seed',String(seed),'--left-level','3','--right-level','3']);
+   // The RPG's player deck is a custom deck, so ClassicLocalService uses its
+   // expanded format. The generic CPU benchmark defaults to Base–Rocket Classic.
+   // Do not silently exclude legal Gym, Base Set 2 or Neo collection upgrades.
+   const includesNeo=[...player.cards,...cards].some(id=>/^neo[1-4]-/.test(id));
+   opts.format=includesNeo?'online-preview':'gym-expanded';
    const games=[];
    for(let k=0;k<options.pairs;k++)for(const swap of [false,true]){
     try{games.push(duel(opts,k,swap,[player.cards,cards]));}
