@@ -143,3 +143,20 @@ test('NPC rewards use thematic pools without bypassing the weekly mini cap or gi
  const allowed=C.themedPacks(s).find(x=>x.id==='mystery').sources;
  assert.ok(late.every(id=>C.ENERGY.has(id)||allowed.includes(id.split('-')[0])));
 });
+
+test('Gym Leader evolutions are paired with their actual owned-family Basics, not ordinary namesakes',()=>{
+ const {canEvolve}=require('../core_rules');
+ const all=['base1','base2','base3','base4','base5','gym1','gym2'].flatMap(set=>require('../cards/'+set+'.json'));
+ const byId=new Map(all.map(card=>[card.id,card]));
+ const s=campaign('mind_and_muscle');s.day=38;
+ let gymPairs=0;
+ for(let i=0;i<120;i++){
+  const ids=C.randomThemedPack(s,'evolution',seed(i*41),10);
+  const valid=ids.filter(id=>byId.get(id)?.subtypes?.includes('Stage 1'))
+   .filter(id=>ids.some(bid=>byId.get(bid)?.subtypes?.includes('Basic')&&
+    canEvolve(byId.get(id),byId.get(bid))));
+  assert.ok(valid.length>0,'Evolution pack must include a legal Basic + Stage 1 pair');
+  gymPairs+=valid.filter(id=>id.startsWith('gym')).length;
+ }
+ assert.ok(gymPairs>0,'once Gym Heroes unlocks, Evolution Workshop should sometimes have a valid Gym family');
+});
