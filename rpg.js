@@ -675,11 +675,12 @@ function showPackReveal(){
  $('packTitle').textContent=isVictory?(pack.cards.length===10?(pack.kind==='championship'?'CHAMPION BOOSTER':'VICTORY BOOSTER'):'VICTORY MINI BOOSTER'):'NEW BOOSTER';
  $('packDescription').textContent=setName+' · '+pack.cards.length+' cards. Tap to flip individual cards, or reveal them all.';
  const portrait=$('packGiver');portrait.replaceChildren();
+ if(giver)window.NeoRpgDiscreetAvatars?.set?.(portrait,giver,'happy',cast[giver].name);
  const request=++packArtSerial; // An earlier booster image must never overwrite this giver.
  const caption=$('packGiverName');caption.textContent=giver?cast[giver].name+' gives you a '+setName+' booster':'The Lucky Draw · '+setName+' booster';
  if(giver){
   // Show a known portrait immediately while optional artwork loads.
-  const showPortrait=()=>{if(request===packArtSerial)portrait.replaceChildren(makeAvatar(giver));};
+  const showPortrait=()=>{if(request===packArtSerial){portrait.replaceChildren(makeAvatar(giver));window.NeoRpgDiscreetAvatars?.set?.(portrait,giver,'happy',cast[giver].name);}};
   showPortrait();
   const base='/rpg-assets/characters/'+encodeURIComponent(giver)+'/';
   const candidates=[
@@ -696,7 +697,7 @@ function showPackReveal(){
    if(attempt<candidates.length)art.src=candidates[attempt++];
    else showPortrait();
   };
-  art.onload=()=>{if(request===packArtSerial)portrait.replaceChildren(art);};
+  art.onload=()=>{if(request===packArtSerial){portrait.replaceChildren(art);window.NeoRpgDiscreetAvatars?.set?.(portrait,giver,'happy',cast[giver].name);}};
   art.onerror=tryNext;
   tryNext();
  }
@@ -930,12 +931,14 @@ function showPreparedDuel(){
  art.append(placeholder);
  // Existing canonical portrait always serves as the artwork fallback.
  const face=makeAvatar(preview.npc);face.className+=' preduel-portrait';art.append(face);
+ window.NeoRpgDiscreetAvatars?.set?.(art,preview.npc,'determined',preview.name);
  if(preview.artwork?.path){
   const photo=document.createElement('img');
   photo.className='preduel-cg';photo.alt=preview.artwork.title;
   photo.onload=()=>{
    if(!PRE.isReady(state.pendingDuel)||state.pendingDuel.id!==preview.id)return;
    art.replaceChildren(photo);
+   window.NeoRpgDiscreetAvatars?.set?.(art,preview.npc,'determined',preview.name);
   };
   photo.onerror=()=>{}; // Keep the portrait and scene dialogue if art is absent.
   photo.src=preview.artwork.path;
@@ -1048,6 +1051,7 @@ window.addEventListener('message',ev=>{
   receipt,hasBooster:!!awarded,avatar:makeAvatar(duel.npc),npcId:duel.npc,
   presentation:tournamentPresentation,onContinue:continueAfterResult
  });
+ if(shown)window.NeoRpgDiscreetAvatars?.set?.($('victoryPortrait'),duel.npc,receipt.outcome==='Victory'?'happy':'vulnerable',cast[duel.npc].name);
  if(!shown)continueAfterResult();
 });
 function renderAppointments(locked){
@@ -1170,6 +1174,7 @@ function showCGMoment(entry){
  photo.onload=()=>{
   if(entry.category==='pre_duel'&&!state.pendingDuel)return;
   const modal=$('cgMoment'),root=$('cgMomentArt');root.replaceChildren(photo);
+  window.NeoRpgDiscreetAvatars?.set?.(root,entry.character,'surprised',cast[entry.character]?.name||entry.character);
   $('cgMomentTitle').textContent=entry.title;
   $('cgMomentCaption').textContent=cast[entry.character]?.name||entry.character;
   CG.markViewed(state,entry.id);persist();
@@ -1188,6 +1193,7 @@ function showGalleryDetail(entry){
  image.onerror=()=>{image.hidden=true;placeholder.hidden=false;};
  image.src=entry.path;
  root.append(title,text,image,placeholder);
+ window.NeoRpgDiscreetAvatars?.set?.(root,entry.character,'neutral',cast[entry.character]?.name||entry.character);
 }
 function renderGallery(){
  const root=$('galleryGrid');root.replaceChildren();
@@ -1213,6 +1219,7 @@ function renderGallery(){
    const img=document.createElement('img');img.alt='';
    img.onerror=()=>{img.hidden=true;};
    img.src=entry.thumb;thumb.append(img);
+   window.NeoRpgDiscreetAvatars?.set?.(thumb,entry.character,'neutral',cast[entry.character]?.name||entry.character);
   }else{
    const mystery=document.createElement('span');mystery.textContent='?';thumb.append(mystery);
   }
@@ -1535,6 +1542,7 @@ function renderRpgCast(ids,locked,shown,portraitId){
   const image=button.querySelector('img');
   if(image){
    const expression=active?(window.NeoRpgCharacterMotion?.emotion?.(shown?.expression,dialogueExpression(shown?.line))||dialogueExpression(shown?.line)):'neutral';
+   window.NeoRpgDiscreetAvatars?.set?.(button,id,expression,cast[id].name);
    const path=scenePortraitSource(id,expression);
    if(image.getAttribute('src')!==path){
     const fallback=cast[id].portrait||'/rpg-assets/'+id+'.png';
@@ -1720,7 +1728,9 @@ function render(){
  if(portraitRoot.dataset.npc!==nextPortrait){
   portraitRoot.dataset.npc=nextPortrait;portraitRoot.replaceChildren();
   if(nextPortrait)portraitRoot.append(makeAvatar(nextPortrait));
+  else delete portraitRoot.dataset.rpgSafeId;
  }
+ if(nextPortrait)window.NeoRpgDiscreetAvatars?.set?.(portraitRoot,nextPortrait,'neutral',cast[nextPortrait].name);
  $('homeBanner').hidden=state.location!=='home'||!!portraitId;
  $('homeBanner').textContent='YOUR APARTMENT  ·  DAY '+state.day+'  ·  '+periods[state.slot]+' — Prepare your deck, review your plans or rest.';
  let shown=showingMandatory?renderMandatory():showingSituation?showSituation():showingStory?renderStory():showingEncounter?showEncounter():showingArc?showArc():state.activeSideQuest?showSideQuest():scene;
@@ -1795,6 +1805,7 @@ function render(){
  for(const id of people){
   const c=cast[id],b=document.createElement('button');b.className='person'+(state.selected===id?' selected':'');b.disabled=locked;
   const avatar=document.createElement('span');avatar.className='person-avatar';avatar.dataset.initials=c.name.split(' ').map(part=>part[0]).join('').slice(0,2).toUpperCase();avatar.append(makeAvatar(id));
+  window.NeoRpgDiscreetAvatars?.set?.(avatar,id,'neutral',c.name);
   const label=document.createElement('span');label.className='person-info';
   const name=document.createElement('strong');name.textContent=c.name;const sub=document.createElement('small');sub.textContent=c.style;
   const bond=BONDS.progress(state,id,BOND_PLAN),chapter=document.createElement('small');
