@@ -2,7 +2,12 @@
 const assert=require('node:assert/strict');
 const {CubeService}=require('./cube_service');
 const service=new CubeService();
-const created=service.create({seed:475});
+assert.throws(()=>service.create({seed:475,difficulty:0}),/difficulty/);
+assert.throws(()=>service.create({seed:475,difficulty:6}),/difficulty/);
+assert.throws(()=>service.create({seed:475,difficulty:'5'}),/difficulty/);
+const created=service.create({seed:475,difficulty:5});
+assert.equal(created.difficulty,5);
+assert(created.pack.some(c=>c.id===created.recommendedId),'Advice must refer to current pack');
 const token=created.token;
 assert.equal(typeof token,'string');
 assert.equal(created.pack.length,15);
@@ -15,6 +20,7 @@ while(!state.done){
  assert(card&&card.id&&card.name,'Pack card must have a safe public summary');
  assert.throws(()=>service.pick(token,'not-in-pack',state.revision),/Card not in current pack/);
  state=service.pick(token,card.id,state.revision);
+ if(!state.done)assert(state.pack.some(c=>c.id===state.recommendedId));
  turns++;
  assert.equal(state.drafted.length,turns);
  assert(state.opponentCounts.every(n=>n===turns),'CPU must pick every round');
