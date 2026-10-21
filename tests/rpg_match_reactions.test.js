@@ -72,6 +72,11 @@ const installedManifest=JSON.parse(fs.readFileSync(path.join(__dirname,'../rpg-a
 assert.equal(Object.keys(installedManifest.characters).length,20,'NPC artwork manifest must load for the whole cast');
 assert.equal(reactions.assetFor(installedManifest,'reina','default'),'/rpg-assets/characters/reina/portraits/primary.png','Reina uses her own approved portrait');
 assert.equal(reactions.assetFor(installedManifest,'rina','default'),'/rpg-assets/rina.png','Rina uses the installed manifest artwork');
+assert.equal(reactions.assetFor(installedManifest,'reina','attack'),'/rpg-assets/reactions/reina/attack.png','Attack uses dedicated widescreen art');
+assert.equal(reactions.assetFor(installedManifest,'reina','power'),'/rpg-assets/characters/reina/cutins/match-cutin.webp','Powers use installed battle cut-ins');
+assert.equal(reactions.assetFor(installedManifest,'reina','evolve'),'/rpg-assets/characters/reina/cutins/match-cutin.webp','Evolution uses installed battle art');
+assert.equal(reactions.assetFor(installedManifest,'jinx','power'),'/rpg-assets/characters/jinx/neutral.png','Missing match cut-in falls back to the correct portrait');
+assert.ok(fs.readFileSync(path.join(__dirname,'../rpg_duel.css'),'utf8').includes('has-wide-action-art'),'Widescreen styles must exist');
 
 
 const cards={
