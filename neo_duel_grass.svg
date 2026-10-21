@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 180" width="180" height="180">
+<g fill="none" stroke-linecap="round">
+<g stroke="#183b20" stroke-width="2" opacity=".25">
+<path d="M12 35l-5-10m5 10 1-16m0 16 9-12M65 84l-8-12m8 12 1-18m0 18 8-10M144 43l-7-13m7 13 2-20m-2 20 8-13M104 142l-7-11m7 11 2-14m-2 14 8-11M28 154l-8-13m8 13 1-19m-1 19 9-12"/>
+</g>
+<g stroke="#83b353" stroke-width="1.5" opacity=".28">
+<path d="M24 76l-4-9m4 9 1-12m-1 12 7-10M116 26l-6-10m6 10 1-13m-1 13 7-8M155 117l-8-8m8 8 1-13m-1 13 8-8M72 156l-6-8m6 8 1-14m-1 14 8-8"/>
+</g>
+<g stroke="#224f29" stroke-width="1" opacity=".18">
+<path d="M38 13l8 6m39 38 13-4m37 36-8-7M16 114l11 5m128 39-7-7M99 97l-12 8M54 129l-7-6"/>
+</g>
+</g>
+<g fill="#1f5024" opacity=".12"><ellipse cx="33" cy="37" rx="23" ry="8" transform="rotate(-20 33 37)"/><ellipse cx="139" cy="91" rx="26" ry="9" transform="rotate(28 139 91)"/><ellipse cx="69" cy="175" rx="30" ry="8"/></g>
+</svg>
