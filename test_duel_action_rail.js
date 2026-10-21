@@ -18,17 +18,22 @@ function node(id){
 }
 const panel=node('attackPanel'),field=node('fieldAttackDock'),rail=node('desktopAttackDock');
 field.append(panel);
-const body={classes:new Set(),classList:{toggle(name,on){on?body.classes.add(name):body.classes.delete(name);}}};
+rail.append(panel); // Restore from a previous desktop layout on page boot.
+const body={classes:new Set(['attacks-in-rail']),classList:{
+ toggle(name,on){on?body.classes.add(name):body.classes.delete(name);},
+ remove(name){body.classes.delete(name);}
+}};
 const doc={body,getElementById:id=>({attackPanel:panel,fieldAttackDock:field,desktopAttackDock:rail})[id]};
 const viewport={matches:true,listener:null,addEventListener(_,fn){this.listener=fn;},removeEventListener(){this.listener=null;}};
 const controller=api.createController(doc,viewport);
-assert.equal(panel.parentElement,rail,'desktop docks the live attack panel in the command rail');
-assert.ok(body.classes.has('attacks-in-rail'));
-assert.equal(rail.hidden,false);
+assert.equal(panel.parentElement,field,'desktop attacks sit next to the Active Pokémon');
+assert.equal(body.classes.has('attacks-in-rail'),false,'legacy relocation class removed');
+assert.equal(rail.hidden,true,'unused desktop action dock stays hidden');
 viewport.matches=false;viewport.listener();
-assert.equal(panel.parentElement,field,'mobile restores the same attack panel beside the Active Pokémon');
-assert.equal(body.classes.has('attacks-in-rail'),false);
-assert.equal(rail.hidden,true);
+assert.equal(panel.parentElement,field,'mobile keeps attacks beside Active');
+viewport.matches=true;viewport.listener();
+assert.equal(panel.parentElement,field,'switching back to desktop never moves attack buttons');
+assert.equal(field.children.filter(x=>x===panel).length,1,'one authoritative attack panel');
 controller.destroy();
 
 for(const file of ['classic_live.html','online.html']){
@@ -39,4 +44,6 @@ for(const file of ['classic_live.html','online.html']){
  assert.match(html,/src="duel_action_rail\.js"/);
  assert.ok(html.indexOf('duel_action_rail.js')<html.indexOf(file==='online.html'?'online.js':'classic_live.js'),'rail mounts before the duel client renders attacks');
 }
-console.log('PASS responsive action rail: one live attack panel, desktop dock and mobile restoration');
+const desktopCss=fs.readFileSync('duel_match_v085.css','utf8');
+assert.match(desktopCss,/\\.active-with-attacks #fieldAttackDock\\s*\\{[^}]*grid-column:3/,'field attack dock stays to the right of the Active Pokémon');
+console.log('PASS responsive attacks: field-side placement on desktop and mobile');
