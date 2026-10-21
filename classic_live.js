@@ -26,6 +26,21 @@
  const rpgKey=rpgMode&&rpgDuelId?window.NeoRpgDuelBridge.sessionKey(rpgDuelId):'neoClassicLiveToken';
  const rpgNpc=rpgMode?rpgParams.get('npc'):null;
  const opponentName=rpgMode?(rpgParams.get('npcName')||'Opponent'):'Classic CPU';
+ const mats=window.NeoDuelPlaymats;
+ const gifts=rpgMode?(rpgParams.get('giftMats')||'').split(',').filter(Boolean):Object.keys(mats.themes);
+ const matOptions=mats.available(gifts),matIds=matOptions.map(m=>m.id);
+ let selectedMat=mats.choose(rpgMode?rpgParams.get('mat'):localStorage.getItem('neoCampusPlaymat'),matIds);
+ const matSelect=$('playmatSelect');
+ for(const mat of matOptions){const option=document.createElement('option');option.value=mat.id;option.textContent=mat.name;matSelect.append(option);}
+ matSelect.value=selectedMat;
+ function updatePlaymats(){mats.apply(document.querySelector('.player-territory'),selectedMat);mats.apply(document.querySelector('.opponent-territory'),rpgMode&&mats.themes[rpgNpc]?'npc-'+rpgNpc:'heritage');}
+ matSelect.addEventListener('change',()=>{
+  selectedMat=mats.choose(matSelect.value,matIds);
+  if(rpgMode&&rpgDuelId)window.parent.postMessage({type:'neo-rpg-playmat-selected',duelId:rpgDuelId,playmat:selectedMat},location.origin);
+  else localStorage.setItem('neoCampusPlaymat',selectedMat);
+  updatePlaymats();
+ });
+ updatePlaymats();
  const cards=new Map();
  const reactions=rpgMode&&rpgNpc?window.NeoRpgMatchReactions.makeExperience({
   element:$('npcReaction'),npcId:rpgNpc,npcName:opponentName,
