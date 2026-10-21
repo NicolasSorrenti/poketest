@@ -32,6 +32,9 @@ function fourHuman(){
  assert.equal(state.status,'draft');
  assert.equal(state.seats.length,4);
  assert.equal(state.pack.length,15);
+ assert.equal(state.cubePool.length,240,'Room must expose complete generated Cube');
+ assert(state.cubePool.every(c=>c.id&&c.name&&Array.isArray(c.subtypes)));
+ assert.deepEqual(srv.state(code,players[1].token).cubePool,state.cubePool,'Seats should see the same Cube');
  assert.throws(()=>srv.join({code,name:'Intruder'}),/already started/);
  const a=srv.state(code,host.token),b=srv.state(code,players[1].token);
  assert.equal(a.seat,0);assert.equal(b.seat,1);
