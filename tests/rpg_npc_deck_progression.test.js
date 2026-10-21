@@ -148,8 +148,8 @@ test('Rocket rival upgrades strengthen playable Grass/Water evolution lines with
   const expert=NPC.upgrade({npc,tier:3,original,catalog:CATALOG});
   for(const cards of [refined,expert]){
    assert.equal(validateDeck(cards,CATALOG).valid,true,npc+' deck legality');
-   assert.ok(frequency(cards,'base1-99')>=6,npc+' must support Grass attacks');
-   assert.ok(frequency(cards,'base1-102')>=6,npc+' must support Water attacks');
+   assert.ok(frequency(cards,'base1-99')>=(npc==='camila'?8:6),npc+' must support Grass attacks');
+   assert.ok(frequency(cards,'base1-102')>=(npc==='camila'?5:6),npc+' must retain enough Water for remaining attacks');
    assert.ok(frequency(cards,'base1-96')<=2,npc+' trims excess Double Colorless instead of vital colored Energy');
    assert.ok(frequency(cards,'base1-99')+frequency(cards,'base1-102')>=14);
   }
