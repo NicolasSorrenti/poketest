@@ -455,4 +455,14 @@ check('Koga Ninja Trick rejects a stale Bench choice without consuming the Tool'
  assert.ok(p.active.attachedTrainers.includes(tool));
  assert.ok(g._trainer60NinjaPending);
 });
+check('Charity stale prompt cannot attack after the Active Pokemon changes',()=>{
+ const {g,p,f}=fresh({meActive:'base1-58',foeActive:'base1-35',myEnergy:['base1-98'],myBench:['base1-50']});
+ p.active.attachedTrainers=[{id:'gym1-99'}];
+ assert.equal(g.attack(0,null,true),null);
+ const req=vm.runInContext('deckSearchRequest',ctx),old=p.active;
+ [p.active,p.bench[0]]=[p.bench[0],p.active];
+ assert.equal(req.execute(0),false);
+ assert.equal(f.active.damage,0);
+ assert.ok(old.attachedTrainers.some(t=>t.id==='gym1-99'));
+});
 console.log(`PASS v0.6.0: ${tests} human Trainer timing, choices, and damage outcome scenarios`);
