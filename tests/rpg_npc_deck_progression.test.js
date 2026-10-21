@@ -88,7 +88,9 @@ test('RPG opponent progression never alters the authoritative player starting de
  const recipe=NPC.upgrade({npc:'reina',tier:3,original:source,catalog:CATALOG});
  assert.equal(recipe.length,60);
  assert.deepEqual(service.decklist('blackout'),source,'shared preset must not be modified by RPG progression');
- assert.equal(recipe.filter(id=>id==='base1-7').length,3,'Reina gains additional Hitmonchan copies');
+ assert.equal(recipe.filter(id=>id==='base1-7').length,2,'Reina retains stronger Hitmonchan pressure without stacking a third copy');
+ assert.equal(recipe.filter(id=>id==='base1-92').length,2,'Reina keeps two Energy Removal, not four');
+ assert.equal(recipe.filter(id=>id==='base1-79').length,0,'Reina gives up Super Energy Removal counterplay lock');
  assert.equal(recipe.filter(id=>id==='base1-71').length,1,'Reina gains Computer Search');
  assert.ok(recipe.includes('base1-74'),'Reina gains Item Finder');
 });
