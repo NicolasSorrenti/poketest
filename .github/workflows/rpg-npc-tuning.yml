@@ -7,6 +7,8 @@ on:
       - 'scripts/rpg-npc-candidates.js'
       - 'scripts/benchmark-rpg-npc-candidates.js'
       - 'tests/rpg_npc_candidate_balance.test.js'
+      - 'rpg_npc_deck_progression.js'
+      - 'scripts/benchmark-rpg-pack-strategies.js'
       - '.github/workflows/rpg-npc-tuning.yml'
   workflow_dispatch:
 
@@ -25,6 +27,8 @@ jobs:
           node-version: '22'
       - name: Validate candidate deck legality and preserved source themes
         run: node --test tests/rpg_npc_candidate_balance.test.js
+      - name: Check campaign NPC progression regressions
+        run: node --test tests/rpg_npc_deck_progression.test.js tests/rpg_npc_deck_balance.test.js tests/rpg_pack_balance.test.js
       - name: Run matched mirrored live-engine duels across three checkpoints
         run: |
           set +e
@@ -39,4 +43,24 @@ jobs:
         with:
           name: rpg-npc-tuning-candidates
           path: npc-tuning-candidates.json
+          if-no-files-found: ignore
+
+  story-progression:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Compare normal and story-accelerated campaign rival progression
+        run: |
+          node scripts/benchmark-rpg-npc-candidates.js --days 45,60,80 --styles mixed,evolution,toolkit --starters ember_garden,tidal_circuit --npcs reina,yuna,camila --seeds 2 --pairs 1 --npc-tier story > npc-story-progression.json
+          node -e 'const x=require("./npc-story-progression.json");if(x.errors.length)process.exit(1);for(const r of x.rows.filter(r=>r.variant!=="baseline"))console.log(r.day,r.npc,r.variant,r.games,r.npcWins,r.playerWins,r.draws);'
+      - name: Upload story-progressed matchup data
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: rpg-story-progressed-npc-matchups
+          path: npc-story-progression.json
           if-no-files-found: ignore
