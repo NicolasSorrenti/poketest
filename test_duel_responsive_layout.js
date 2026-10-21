@@ -31,7 +31,7 @@ for(const file of ['online.html','classic_live.html']){
  assert.ok(html.indexOf('online_hand_tray.css')<html.indexOf('duel_desktop.css'),file+' responsive overrides must load last');
  assert.match(html,/href="duel_nostalgic\.css"/,file+' must load the tabletop theme');
  assert.ok(html.indexOf('duel_mobile.css')<html.indexOf('duel_nostalgic.css'),file+' tabletop styles must be last in the cascade');
- assert.match(html,/href="duel_match_v085\.css\?v=85"/,file+' must load the cache-busted final match presentation');
+ assert.match(html,/href="duel_match_v085\.css\?v=86"/,file+' must load the cache-busted final match presentation');
  assert.ok(html.indexOf('duel_nostalgic.css')<html.indexOf('duel_match_v085.css'),file+' final match presentation must own the cascade');
 }
 assert.match(reference,/grid-template-columns:minmax\(0,1fr\) var\(--match-rail\)/,'reference layout keeps the table beside its match rail');
@@ -41,6 +41,7 @@ assert.match(reference,/@keyframes referenceCardArrive/,'reference presentation 
 assert.match(reference,/\.hand-panel \.hand-fan-card\{[\s\S]*?aspect-ratio:245\/342!important/,'hand cards preserve the physical card ratio');
 assert.match(reference,/\.hand-panel \.hand-fan-card img\{[\s\S]*?object-fit:contain!important/,'hand artwork cannot stretch');
 assert.match(reference,/v0\.82 — reference composition pass/,'the final desktop pass treats the duel as one composed game table');
+assert.ok(reference.includes('.active-with-attacks:has(.inline-attack-panel:not(:has(button:not(:disabled)))) .active-slot'),'the desktop setup selector must close every :has() before the active slot');
 assert.match(reference,/width:min\(100%,1450px\);height:calc\(100dvh - 16px\)/,'desktop match shell is centered and height-locked');
 assert.match(reference,/grid-template-columns:minmax\(680px,1040px\) var\(--match-rail\)!important/,'desktop board and utility rail keep deliberate proportions');
 assert.match(reference,/\.hand-panel\{[\s\S]*?background:transparent!important/,'the hand floats below the table instead of looking like a dashboard panel');

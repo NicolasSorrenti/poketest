@@ -175,7 +175,7 @@
   width:min(100%,270px)!important;padding:5px 7px!important;opacity:.96;
  }
  body.duel-active .stage .territory .active-with-attacks .inline-attack-panel:not(:has(button:not(:disabled))){display:none!important}
- body.duel-active .stage .territory .active-with-attacks:has(.inline-attack-panel:not(:has(button:not(:disabled))) .active-slot{grid-column:2!important}
+ body.duel-active .stage .territory .active-with-attacks:has(.inline-attack-panel:not(:has(button:not(:disabled)))) .active-slot{grid-column:2!important}
  body.duel-active .stage .trainerlabel{padding:4px 8px 4px 5px!important}
  body.duel-active .stage .trainerlabel>span{width:28px!important;height:28px!important;flex-basis:28px!important}
  body.duel-active .stage .pile-tools{left:8px!important}
@@ -276,6 +276,10 @@
 /* v0.84 — screenshot corrections: panels stay in their cells, Bench cards are
    artwork-first, and the hand control no longer consumes a card-height row. */
 @media (min-width:781px){
+ /* Match guidance already lives in the decision rail. Duplicate banners over
+    the playmat hide cards and make the board feel cramped. */
+ body.duel-active .stage>.turn-coach,
+ body.duel-active .stage>.opponent-activity-status{display:none!important}
  body.duel-active #duel>.below>.side-column{
   position:relative!important;min-height:0!important;overflow:hidden!important;
  }
