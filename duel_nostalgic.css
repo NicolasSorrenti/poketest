@@ -85,6 +85,7 @@ body.duel-active .stage .deck-counter{
  padding:3px 8px;min-height:28px;min-width:0;font-size:11px;color:#d0d9e0;
  white-space:nowrap;
 }
+body.duel-active .stage .deck-counter{font-size:0!important}
 body.duel-active .stage .deck-counter b,
 body.duel-active .stage .pile-button b{color:#fff;font-size:14px}
 body.duel-active .stage .deck-counter::before{
@@ -183,8 +184,19 @@ body.duel-active .stage .prize-group .prize-grid{
  grid-column:1;grid-row:1 / 3;display:grid;grid-template-columns:28px;
  width:28px;height:38px;max-width:none;gap:0;
 }
-body.duel-active .stage .prize-group:not(.prize-awaiting) .prize-back:not(:first-child){
+/* Keep all revealed Prize cards visible (Card-Flip Game and similar effects). */
+body.duel-active .stage .prize-group:not(.prize-awaiting):not(:has(.prize-face-up)) .prize-back:not(:first-child){
  display:none;
+}
+body.duel-active .stage .prize-group:has(.prize-face-up){
+ display:block;width:150px;
+}
+body.duel-active .stage .prize-group:has(.prize-face-up) .prize-grid{
+ display:grid;grid-template-columns:repeat(3,minmax(0,1fr));
+ width:100%;height:auto;gap:3px;margin-top:4px;
+}
+body.duel-active .stage .prize-group:has(.prize-face-up) .prize-back{
+ width:100%;height:42px;
 }
 body.duel-active .stage .prize-group .prize-back{
  width:28px;height:38px;min-height:0;border-radius:3px;
