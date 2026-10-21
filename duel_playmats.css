@@ -5,3 +5,18 @@
 .duel-playmat-picker{display:flex;align-items:center;gap:6px;font-size:12px;font-weight:800;color:#d7edf6}
 .duel-playmat-picker select{max-width:158px;min-width:90px;padding:6px;border:1px solid #648088;border-radius:7px;background:#162b3b;color:white}
 @media(max-width:780px){.duel-playmat-picker{font-size:10px}.duel-playmat-picker select{max-width:112px;padding:5px}}
+
+/* Mobile deliberately uses the existing grass battlefield, not a scaled desktop
+   playmat. Keep the selection and gifts stored so switching to desktop restores
+   the player's chosen mat; do not change duel state or card interactions. */
+@media (max-width:780px) {
+ body.duel-active .stage .territory[data-playmat]::before {
+  content:none!important;
+  display:none!important;
+  background-image:none!important;
+ }
+ body.duel-active .duel-playmat-picker,
+ body.duel-active #playmatSelect {
+  display:none!important;
+ }
+}
