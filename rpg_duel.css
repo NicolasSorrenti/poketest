@@ -39,6 +39,17 @@ body.rpg-duel .npc-reaction:not(.hidden){
  object-fit:contain;object-position:center bottom;filter:drop-shadow(8px 5px 7px #000a);
  animation:npc-cut-portrait .25s ease-out both;
 }
+.npc-reaction-card.has-wide-action-art{grid-template-columns:minmax(0,49%) minmax(0,1fr)}
+.npc-reaction-card.has-wide-action-art .npc-reaction-portrait img{
+ width:100%;height:100%;object-fit:cover;object-position:50% 45%;filter:none;
+}
+.npc-reaction-card.has-wide-action-art .npc-reaction-portrait::after{
+ content:"";position:absolute;inset:0;pointer-events:none;
+ background:linear-gradient(90deg,transparent 68%,#25213ddd 100%);
+}
+.npc-reaction-card.has-match-art .npc-reaction-portrait img{
+ height:100%;width:100%;object-fit:contain;object-position:center bottom;
+}
 .npc-reaction-portrait.no-art::after{content:'✦';font-size:70px;color:#ffffff8c}
 .npc-reaction-copy{
  display:flex;flex-direction:column;justify-content:center;gap:4px;min-width:0;
@@ -56,11 +67,22 @@ body.rpg-duel .npc-reaction:not(.hidden){
 }
 @keyframes npc-cut-portrait{from{opacity:.45;translate:48px 0}to{opacity:1;translate:0 0}}
 @media(max-width:600px){
- .npc-reaction-card{height:clamp(120px,26vh,185px);grid-template-columns:35% 65%;border-width:3px;transform:skewX(-5deg)}
+ /* Panoramic attack art should not shrink into a narrow, letterboxed portrait. */
+ .npc-reaction-card{height:clamp(160px,29dvh,222px);grid-template-columns:minmax(0,43%) minmax(0,1fr);border-width:3px;transform:skewX(-5deg)}
+ .npc-reaction-card.has-wide-action-art{grid-template-columns:minmax(0,50%) minmax(0,1fr)}
  .npc-reaction-portrait,.npc-reaction-copy{transform:skewX(5deg)}
- .npc-reaction-copy{padding:8px 13px;gap:3px}
- .npc-reaction-name{font-size:clamp(18px,5.5vw,27px)}
- .npc-reaction-copy p{font-size:clamp(11px,3vw,14px);line-height:1.18}
+ .npc-reaction-copy{padding:8px 10px 8px 6px;gap:3px}
+ .npc-reaction-tag{font-size:11px;letter-spacing:.05em}
+ .npc-reaction-name{font-size:clamp(18px,5.5vw,27px);line-height:1}
+ .npc-reaction-title{font-size:clamp(13px,3.7vw,19px);line-height:1.05;letter-spacing:.04em}
+ .npc-reaction-copy p{font-size:clamp(11px,3vw,14px);line-height:1.2}
+}
+@media(max-width:350px){
+ .npc-reaction-tag{font-size:10px;letter-spacing:0}
+ .npc-reaction-copy p{font-size:11px}
+}
+@media(max-height:410px){
+ .npc-reaction-card{height:min(182px,72dvh)}
 }
 @media(prefers-reduced-motion:reduce){
  .npc-reaction-card,.npc-reaction-card.is-finisher,.npc-reaction-portrait img{animation:none!important}
