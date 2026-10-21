@@ -41,9 +41,9 @@ for(const file of ['classic_live.html','online.html']){
  assert.match(html,/id="fieldAttackDock"/);
  assert.match(html,/id="desktopAttackDock"/);
  assert.match(html,/id="attackPanel"/);
- assert.match(html,/src="duel_action_rail\.js"/);
+ assert.match(html,/src="duel_action_rail\.js(?:\?v=\d+)?"/);
  assert.ok(html.indexOf('duel_action_rail.js')<html.indexOf(file==='online.html'?'online.js':'classic_live.js'),'rail mounts before the duel client renders attacks');
 }
 const desktopCss=fs.readFileSync('duel_match_v085.css','utf8');
-assert.match(desktopCss,/\\.active-with-attacks #fieldAttackDock\\s*\\{[^}]*grid-column:3/,'field attack dock stays to the right of the Active Pokémon');
+assert.match(desktopCss,/\.active-with-attacks #fieldAttackDock\s*\{[^}]*grid-column:3/,'field attack dock stays to the right of the Active Pokémon');
 console.log('PASS responsive attacks: field-side placement on desktop and mobile');
