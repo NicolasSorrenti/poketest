@@ -82,3 +82,13 @@ test('RPG snapshots a tier at challenge time and forwards it to the existing Cla
  assert.match(live,/npcDeckId:rpgNpc,npcDeckTier:/);
  assert.match(live,/customOpponentDeck/);
 });
+
+test('RPG opponent progression never alters the authoritative player's starting deck',()=>{
+ const source=service.decklist('blackout');
+ const recipe=NPC.upgrade({npc:'reina',tier:3,original:source,catalog:CATALOG});
+ assert.equal(recipe.length,60);
+ assert.deepEqual(service.decklist('blackout'),source,'shared preset must not be modified by RPG progression');
+ assert.equal(recipe.filter(id=>id==='base1-7').length,3,'Reina gains additional Hitmonchan copies');
+ assert.equal(recipe.filter(id=>id==='base1-71').length,1,'Reina gains Computer Search');
+ assert.ok(recipe.includes('base1-74'),'Reina gains Item Finder');
+});
