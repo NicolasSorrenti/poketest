@@ -36,7 +36,7 @@ Each row displays *player wins as a percentage of decisive CPU matches*.
 | 60 | 8% | 27% | 25% | 33% | 8% |
 | 80 | 36% | 25% | 33% | 33% | 42% |
 
-Six matches per starter/strategy/day NPC? Each cell contained 10–12 decisive games, so **do not use this run alone to rank packs**.
+Each cell contained twelve total games (two starters × three NPCs × two seat orders) and 10–12 decisive outcomes, so **do not use this run alone to rank packs**.
 
 ## Larger Day 45/60 sample — 720 real-engine matches
 
