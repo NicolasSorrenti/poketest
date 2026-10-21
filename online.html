@@ -25,7 +25,7 @@
 </section>
 <section id="duel" class="hidden">
  <div class="toolbar"><div class="turn-summary"><span class="signal"></span><span id="phaseText">Waiting…</span></div><div id="scoreline"></div><span id="stadiumText" class="tag"></span><span id="networkStatus" class="tag">Connected</span><span id="presenceNotice" class="tag"></span><span id="spectatorCount" class="tag hidden"></span><button id="logToggle" class="panel-toggle" type="button" aria-expanded="false">☷ Log</button><button id="chatToggle" class="panel-toggle" type="button" aria-expanded="false">💬 Chat <span id="unreadBadge" class="unread-badge hidden">0</span></button><button id="reset">Leave duel</button></div>
- <div id="error" class="error hidden" role="alert"></div><div id="duelFeedback" class="duel-feedback" aria-live="polite" aria-atomic="true"></div>
+ <div id="error" class="error hidden" role="alert"></div><div id="energyLimitToast" class="energy-limit-toast" role="status" aria-live="polite" aria-atomic="true"></div><div id="duelFeedback" class="duel-feedback" aria-live="polite" aria-atomic="true"></div>
  <div id="prizeChoicePanel" class="prize-choice-panel hidden" role="group" aria-label="Choose a Prize"></div>
  <div class="stage"><div id="turnCoach" class="turn-coach" aria-live="polite"></div><div id="fieldChoiceBar" class="field-choice-bar hidden" aria-live="polite"></div><div id="opponentActivityStatus" class="opponent-activity-status" role="status" aria-live="polite" aria-atomic="true"></div><div id="opponentActionFx" class="opponent-action-fx hidden" aria-hidden="true"></div><div id="coinFx" class="coin-fx hidden" aria-live="polite"></div><div id="koFx" class="ko-fx hidden" role="status" aria-live="polite"></div><div id="combatFx" class="combat-fx hidden" role="status" aria-live="polite" aria-atomic="true"></div><div class="arena-layout">
   <aside id="prizeRail" class="prize-sidebar" aria-label="Prize cards next to each player's field"></aside>
@@ -41,7 +41,7 @@
      <div class="active-with-attacks"><div id="myActive" class="pokemon-strip active-slot"></div>
      <div id="fieldAttackDock" class="field-attack-dock"><div id="attackPanel" class="inline-attack-panel"><h4>ATTACKS</h4><div id="attacks" class="inline-attacks"></div></div></div></div></div>
      <div class="zone bench-zone"><h3>YOUR BENCH</h3><div id="myBench" class="pokemon-strip"></div></div></div>
-    <div class="trainerbar player"><div class="trainerlabel"><span>★</span><div><strong id="yourLabel">YOU</strong><small id="myStats"></small></div></div><div class="pile-tools"><span class="deck-counter" id="myDeckCount" aria-label="Your deck count">▣ <b>0</b></span><button id="myDiscardBtn" type="button" class="pile-button">♻ Discard <b>0</b></button><span id="energyStatus" class="tag"></span></div></div>
+    <div class="trainerbar player"><div class="trainerlabel"><span>★</span><div><strong id="yourLabel">YOU</strong><small id="myStats"></small></div></div><div class="pile-tools"><span class="deck-counter" id="myDeckCount" aria-label="Your deck count">▣ <b>0</b></span><button id="myDiscardBtn" type="button" class="pile-button">♻ Discard <b>0</b></button></div></div>
    </section>
   </div>
  </div></div>
