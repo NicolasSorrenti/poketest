@@ -317,21 +317,25 @@
   }
   return {update,reset,get count(){return count;}};
  }
- function assetFor(manifest,npcId,kind){
+ function assetCandidates(manifest,npcId,kind){
   const entry=manifest?.characters?.[npcId];
   const belongsToNpc=path=>typeof path==='string'&&(
    path.startsWith('/rpg-assets/'+npcId+'.')||
    path.startsWith('/rpg-assets/characters/'+npcId+'/')||
    path.startsWith('/rpg-assets/reactions/'+npcId+'/'));
   const valid=path=>typeof path==='string'&&/^\/rpg-assets\/[a-z0-9/_-]+\.(?:png|webp|jpe?g)$/i.test(path)&&belongsToNpc(path);
-  // Prefer the event's real expression, then a compatible reaction from the
-  // same NPC. A malformed or cross-character manifest entry is never trusted.
+  // Attack uses widescreen action art. Cards, Powers and evolutions can use
+  // the character's dedicated alternate match cut-in rather than neutral art.
   const kinds={weakness_hit:['weakness_hit','hurt','ko_taken'],
    status_hit:['status_hit','hurt'],big_hit:['big_hit','hurt'],
    hurt:['hurt','big_hit'],ko_taken:['ko_taken','hurt'],
-   ko_scored:['ko_scored'],attack:['attack']};
-  const candidates=[...(kinds[kind]||[kind]).map(name=>entry?.[name]),entry?.default,PORTRAITS[npcId]];
-  return candidates.find(valid)||null;
+   ko_scored:['ko_scored','match_cutin'],
+   play_card:['play_card','match_cutin'],evolve:['evolve','match_cutin'],
+   power:['power','match_cutin'],attack:['attack','match_cutin']};
+  return [...new Set([...(kinds[kind]||[kind]).map(name=>entry?.[name]),entry?.default,PORTRAITS[npcId]].filter(valid))];
+ }
+ function assetFor(manifest,npcId,kind){
+  return assetCandidates(manifest,npcId,kind)[0]||null;
  }
  // Presentation duration is independent of movement accessibility preferences.
  // In reduced-motion mode the static card remains readable for just as long.
@@ -352,18 +356,26 @@
   function pump(){
    if(active||!queued||!element||!doc)return;
    const reaction=queued;queued=null;active=true;currentPriority=priorityFor(reaction.kind);
-   const card=doc.createElement('div');card.className='npc-reaction-card npc-reaction-'+reaction.kind+(isClutch(reaction.kind)?' is-finisher':'');
+   const card=doc.createElement('div');
+   const baseClass='npc-reaction-card npc-reaction-'+reaction.kind+(isClutch(reaction.kind)?' is-finisher':'');
+   card.className=baseClass;
    const portrait=doc.createElement('div');portrait.className='npc-reaction-portrait';
-   const src=assetFor(manifest,npcId,reaction.imageKey);
-   if(src){
-    const img=doc.createElement('img');img.alt='';img.src=src;
-    const attempted=new Set([src]);
-    img.onerror=()=>{
-     const fallback=[assetFor(manifest,npcId,'default'),PORTRAITS[npcId]]
-      .find(path=>path&&!attempted.has(path));
-     if(fallback){attempted.add(fallback);img.src=fallback;}
-     else{img.remove();portrait.classList.add('no-art');}
+   const candidates=assetCandidates(manifest,npcId,reaction.imageKey);
+   if(candidates.length){
+    const img=doc.createElement('img');img.alt='';
+    let assetIndex=0;
+    const showAsset=()=>{
+     const path=candidates[assetIndex];
+     card.className=baseClass+
+      (/^\/rpg-assets\/reactions\/[a-z0-9_-]+\/attack\.(?:png|webp|jpe?g)$/i.test(path)?' has-wide-action-art':'')+
+      (/\/cutins\/match-cutin\.webp$/i.test(path)?' has-match-art':'');
+     img.src=path;
     };
+    img.onerror=()=>{
+     if(++assetIndex<candidates.length)showAsset();
+     else{img.remove();card.className=baseClass;portrait.classList.add('no-art');}
+    };
+    showAsset();
     portrait.append(img);
    }else portrait.classList.add('no-art');
    media?.NeoRpgDiscreetAvatars?.set?.(portrait,npcId,reaction.imageKey||reaction.kind,reaction.npcName);
@@ -400,7 +412,7 @@
     // Preload the RPG character art, including the attack pose, before combat.
     preloadImages=[];
     if(typeof media?.Image==='function'){
-     for(const path of new Set(['attack','weakness_hit','status_hit','big_hit','hurt','ko_taken','ko_scored','default']
+     for(const path of new Set(['attack','play_card','evolve','power','weakness_hit','status_hit','big_hit','hurt','ko_taken','ko_scored','default']
       .map(kind=>assetFor(manifest,npcId,kind)).filter(Boolean))){
       const image=new media.Image();image.src=path;preloadImages.push(image);
      }
