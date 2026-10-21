@@ -5,11 +5,22 @@ const fs=require('node:fs');
 const desktop=fs.readFileSync('duel_desktop.css','utf8');
 const mobile=fs.readFileSync('duel_mobile.css','utf8');
 const shared=fs.readFileSync('online_hand_tray.css','utf8');
+const tabletop=fs.readFileSync('duel_nostalgic.css','utf8');
+const grass=fs.readFileSync('neo_duel_grass.svg','utf8');
+assert.match(grass,/<svg\b/,'playmat texture must be an SVG asset');
+assert.equal((tabletop.match(/\{/g)||[]).length,(tabletop.match(/\}/g)||[]).length,'tabletop CSS braces are balanced');
+assert.match(tabletop,/body\.duel-active/,'the visual redesign should only style active duels');
+assert.match(tabletop,/grid-template-columns:repeat\(5,minmax\(0,1fr\)\)/,'mobile Bench keeps 5 positions');
+assert.match(tabletop,/\.hand-fan-track\{/,'cards must remain visible in the horizontal hand tray');
+assert.match(tabletop,/\.prize-group\.prize-awaiting/,'interactive Prize selection must remain accessible');
+assert.doesNotMatch(tabletop,/\.poke\s*\{[^}]*pointer-events\s*:\s*none/,'playmat must not disable target clicks');
 for(const file of ['online.html','classic_live.html']){
  const html=fs.readFileSync(file,'utf8');
  assert.match(html,/href="duel_desktop\.css" media="\(min-width: 781px\)"/,file+' must load desktop presentation');
  assert.match(html,/href="duel_mobile\.css" media="\(max-width: 780px\)"/,file+' must load touch presentation');
  assert.ok(html.indexOf('online_hand_tray.css')<html.indexOf('duel_desktop.css'),file+' responsive overrides must load last');
+ assert.match(html,/href="duel_nostalgic\.css"/,file+' must load the tabletop theme');
+ assert.ok(html.indexOf('duel_mobile.css')<html.indexOf('duel_nostalgic.css'),file+' tabletop styles must be last in the cascade');
 }
 for(const [file,css] of [['desktop',desktop],['mobile',mobile]]){
  assert.equal((css.match(/\{/g)||[]).length,(css.match(/\}/g)||[]).length,file+' rules must have balanced braces');
