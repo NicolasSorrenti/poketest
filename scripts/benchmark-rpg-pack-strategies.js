@@ -12,8 +12,9 @@ const {argumentsOf,duel,wilson}=require('../benchmark_cpu');
 const DAYS=Object.freeze([15,30,45,60,80]);
 const STYLES=Object.freeze(['mixed','toolkit','evolution','arena','latest']);
 const STARTERS=Object.freeze(Collection.starters.map(s=>s.id));
-const NPCS=Object.freeze(['hana','reina','camila']);
-const NPC_PRESETS=Object.freeze({hana:'power_reserve',reina:'blackout',camila:'rocket_lab'});
+const NPCS=Object.freeze(['hana','reina','camila','marina','shiori','yuna']);
+const NPC_PRESETS=Object.freeze({hana:'power_reserve',reina:'blackout',camila:'rocket_lab',
+ marina:'water_blast',shiori:'overgrowth',yuna:'zap'});
 const TRAINER_VALUE=Object.freeze({
  'Computer Search':105,'Professor Oak':97,'Item Finder':89,'Bill':83,
  'Gust of Wind':82,'PlusPower':75,'Pokémon Trader':72,'Energy Removal':71,
@@ -243,7 +244,13 @@ function evaluate(opts){
   }
   const npcWins=games.filter(g=>g.winner===1).length,
    playerWins=games.filter(g=>g.winner===0).length,decisive=npcWins+playerWins;
-  rows.push({day,style,starter,samples:collections.length,
+  const byNpc=opts.npcs.map(npc=>{
+   const subset=games.filter(g=>g.opponent===npc),p=subset.filter(g=>g.winner===0).length,
+    n=subset.filter(g=>g.winner===1).length;
+   return {npc,games:subset.length,playerWins:p,npcWins:n,draws:subset.length-p-n,
+    playerWinRate:p+n?p/(p+n):null};
+  });
+  rows.push({day,style,starter,byNpc,samples:collections.length,
    budget:mean(collections,'budget'),spent:mean(collections,'spent'),
    purchasedPacks:mean(collections,'purchasedPacks'),freeRewards:mean(collections,'freeRewards'),
    totalCopies:mean(collections,'totalCopies'),uniqueCards:mean(collections,'uniqueCards'),
@@ -266,7 +273,15 @@ function evaluate(opts){
    games:n,playerWins:wins,npcWins:losses,draws:n-wins-losses,
    playerWinRate:wins+losses?wins/(wins+losses):null};
  }));
- return {method:'Fixed identical 12 credits/day income, same two free welcomes and 2 weekly NPC minis; shop visit each day, paid plans at actual current costs; distinct pack RNG by day; legal owned-card deck swaps; mirrored level-3 CPU reducer games when --duels is supplied.',parameters:opts,aggregate,rows,errors,
+ const opponents=opts.days.flatMap(day=>opts.npcs.map(npc=>{
+  const rowsFor=rows.filter(r=>r.day===day).flatMap(r=>r.byNpc).filter(r=>r.npc===npc);
+  const wins=rowsFor.reduce((n,r)=>n+r.playerWins,0),
+   losses=rowsFor.reduce((n,r)=>n+r.npcWins,0),
+   draws=rowsFor.reduce((n,r)=>n+r.draws,0);
+  return {day,npc,playerWins:wins,npcWins:losses,draws,
+   playerWinRate:wins+losses?wins/(wins+losses):null};
+ }));
+ return {method:'Fixed identical 12 credits/day income, same two free welcomes and 2 weekly NPC minis; shop visit each day, paid plans at actual current costs; distinct pack RNG by day; legal owned-card deck swaps; mirrored level-3 CPU reducer games when --duels is supplied.',parameters:opts,aggregate,opponents,rows,errors,
   warning:'Modelled money/time/duel wins and heuristic deck construction, not player telemetry. Small paired samples do not prove competitive equivalence.'};
 }
 if(require.main===module){
