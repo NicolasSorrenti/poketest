@@ -1350,3 +1350,23 @@ test('ending uses actual comeback and reflection path but never invents a partne
  assert.equal(report.turningPoints.reflections,1);
  assert.ok(report.seasonLessons.some(line=>line.includes('earlier defeat')));
 });
+
+test('RPG assigns NPC deck recipes by campaign act and preserves their tier in pending duels',()=>{
+ for(const [day,tier] of [[5,1],[31,2],[61,3]]){
+  const r=launch({day,slot:0,location:'shop',deckJourney:Collection.fresh()});
+  r.elements.starterChoices.children[0].onclick();
+  const hana=r.elements.people.children.find(x=>x.children?.[1]?.children?.[0]?.textContent==='Hana Mizuno');
+  assert.ok(hana,'Hana is at the shop on day '+day);
+  hana.onclick();finishGreeting(r);
+  const challenge=r.elements.characterActions.children.find(x=>x.textContent.includes('Duel'));
+  assert.ok(challenge,'challenge available on day '+day);
+  challenge.onclick();
+  const pending=r.state().pendingDuel;
+  assert.ok(pending,'duel saved on day '+day);
+  assert.equal(pending.npcDeckTier,tier);
+  assert.equal(pending.opponent,'power_reserve');
+  const restored=launch(r.state());
+  assert.equal(restored.state().pendingDuel.npcDeckTier,tier,'reload cannot advance an already committed duel');
+  assert.equal(restored.state().pendingDuel.opponent,'power_reserve');
+ }
+});
