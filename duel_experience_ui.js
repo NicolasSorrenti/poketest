@@ -33,12 +33,9 @@
   if(view.turn!==me)return {kind:'waiting',title:'Opponent’s turn',tip:'Inspect the battlefield while you wait.',chips:[]};
   if(targetMode)return {kind:'targeting',title:targetMode.title||'Choose a Pokémon',tip:'Click an outlined Pokémon on your field, or press Esc to cancel.',chips:[]};
   const hand=you?.hand||[],types=hand.map(id=>handType(card(id)));
-  const hasEnergy=types.includes('Energy')&&!energyUsed;
   const canBench=types.includes('Basic Pokémon')&&(you?.bench?.length||0)<5;
-  let tip='Play Trainers, use a Pokémon Power, attack, or end your turn.';
-  if(hasEnergy)tip='You can attach one Energy this turn: select it in your hand, then choose a highlighted Pokémon.';
-  else if(canBench)tip='You can play a Basic Pokémon to your Bench, use a Trainer, or attack.';
-  return {kind:'turn',title:'Your turn — plan your move',tip,chips:[{label:energyUsed?'Energy attached':'Energy available',done:energyUsed},{label:`Bench ${you?.bench?.length||0}/5`,done:false},{label:'Attacking ends your turn',done:false}]};
+  const tip=canBench?'You can play a Basic Pokémon to your Bench, use a Trainer, or attack.':'Play cards from your hand, use a Pokémon Power, attack, or end your turn.';
+  return {kind:'turn',title:'Your turn — plan your move',tip,chips:[{label:`Bench ${you?.bench?.length||0}/5`,done:false},{label:'Attacking ends your turn',done:false}]};
  }
  function renderGuide(node,args){
   if(!node)return;
