@@ -75,7 +75,15 @@
  body.duel-active .stage .prize-group .prize-grid{display:grid!important;grid-template-columns:repeat(2,30px)!important;justify-content:center;gap:3px!important;width:100%!important;height:auto!important}
  body.duel-active .stage .prize-group .prize-back{display:block!important;width:30px!important;height:42px!important;min-height:42px!important}
  body.duel-active .stage .prize-group .prize-taken{visibility:hidden}
- body.duel-active .hand-fan-card{transition:transform .15s ease,box-shadow .15s ease,filter .15s ease}
+ body.duel-active #duel>.below>.main-column>.hand-panel .hand-fan-card{
+  aspect-ratio:245/342!important;height:100%!important;width:auto!important;
+  max-width:none!important;flex:0 0 auto!important;overflow:hidden;
+  transition:transform .15s ease,box-shadow .15s ease,filter .15s ease;
+ }
+ body.duel-active #duel>.below>.main-column>.hand-panel .hand-fan-card img{
+  display:block;width:100%!important;height:100%!important;
+  max-width:100%;max-height:100%;object-fit:contain!important;object-position:center;
+ }
  body.duel-active .hand-fan-card:is(:hover,:focus-visible),body.duel-active .hand-fan-card.selected{z-index:12!important}
  body.duel-active .stage .poke.legal .pokemon-face{animation:referenceLegalTarget 1.05s ease-in-out infinite}
  body.duel-active .stage .poke{animation:referenceCardArrive .2s ease-out both}
@@ -86,6 +94,11 @@
  body.duel-active .stage .territory .bench-zone .pokemon-strip>.empty{grid-column:1/-1;width:100%;min-height:30px;border:0;background:transparent;color:#eff6e071;font-size:8px;text-transform:uppercase}
  body.duel-active .stage .prize-group .prize-back{display:block!important}
  body.duel-active .stage .poke.legal .pokemon-face{animation:referenceLegalTarget 1.05s ease-in-out infinite}
+ body.duel-active .below .hand-panel .hand-fan-card{
+  aspect-ratio:245/342!important;height:100%!important;width:auto!important;
+  flex:0 0 auto!important;max-width:none!important;
+ }
+ body.duel-active .below .hand-panel .hand-fan-card img{object-fit:contain!important}
 }
 @keyframes referenceCardArrive{from{opacity:.25;transform:translateY(7px) scale(.97)}to{opacity:1;transform:translateY(0) scale(1)}}
 @keyframes referenceLegalTarget{0%,100%{box-shadow:0 5px 12px #07190da8,0 0 0 2px #63eeb999}50%{box-shadow:0 7px 18px #07190dc7,0 0 0 4px #75ffd0c4}}

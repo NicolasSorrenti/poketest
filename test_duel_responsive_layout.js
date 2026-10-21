@@ -38,6 +38,8 @@ assert.match(reference,/grid-template-columns:minmax\(0,1fr\) var\(--match-rail\
 assert.match(reference,/grid-template-columns:repeat\(5,minmax\(0,1fr\)\)/,'reference Bench exposes five physical positions');
 assert.match(reference,/grid-template-columns:repeat\(2,30px\)!important/,'reference Prize area shows the six-card 2x3 stack');
 assert.match(reference,/@keyframes referenceCardArrive/,'reference presentation animates card arrival');
+assert.match(reference,/\.hand-panel \.hand-fan-card\{[\s\S]*?aspect-ratio:245\/342!important/,'hand cards preserve the physical card ratio');
+assert.match(reference,/\.hand-panel \.hand-fan-card img\{[\s\S]*?object-fit:contain!important/,'hand artwork cannot stretch');
 for(const [file,css] of [['desktop',desktop],['mobile',mobile]]){
  assert.equal((css.match(/\{/g)||[]).length,(css.match(/\}/g)||[]).length,file+' rules must have balanced braces');
  assert.match(css,/body\.duel-active/,file+' should affect active duels only');
