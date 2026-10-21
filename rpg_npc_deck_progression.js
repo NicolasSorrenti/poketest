@@ -108,7 +108,7 @@ function focusCamila(cards,tier,catalog){
  }
  return cards;
 }
-function upgrade({npc,tier,original,catalog}){
+function baselineUpgrade({npc,tier,original,catalog}){
  if(!Array.isArray(original)||original.length!==60)throw Error('NPC progression requires a valid 60-card theme deck');
  if(!Number.isInteger(tier)||tier<1||tier>3)throw Error('Invalid NPC deck tier');
  if(!(catalog instanceof Map))throw Error('NPC progression requires the authoritative card catalogue');
@@ -150,6 +150,9 @@ function upgrade({npc,tier,original,catalog}){
  }
  return out;
 }
-const api=Object.freeze({PROFILES,tierForDay,tierForOpponent,upgrade,eligible,count});
+// Separating the historical pre-calibration upgrade preserves a trustworthy
+// control group for future mirrored CPU-vs-CPU deck tuning experiments.
+function upgrade(args){return baselineUpgrade(args);}
+const api=Object.freeze({PROFILES,tierForDay,tierForOpponent,upgrade,baselineUpgrade,eligible,count});
 if(typeof module==='object'&&module.exports)module.exports=api;
 if(typeof window!=='undefined')window.NeoRpgNpcDeckProgression=api;
