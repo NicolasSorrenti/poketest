@@ -348,3 +348,113 @@
  body.duel-active .stage .territory .bench-zone .poke{--attachment-height:58px!important}
  body.duel-active .stage .territory .bench-zone .pokemon-strip{min-height:64px!important}
 }
+
+/* v0.87 — Restore battlefield-first composition.
+   The old desktop grid reserved the whole right side for a forced-open log.
+   Utility history is a bounded opt-in drawer; setup/target guidance remains
+   accessible without reserving a column through the whole match. */
+body.duel-active #choiceDock>#logDrawer.hidden{
+ display:none!important;
+}
+body.duel-active #choiceDock>#logDrawer:not(.hidden){
+ display:flex!important;flex-direction:column!important;
+ position:fixed!important;inset:auto 12px 12px auto!important;
+ z-index:850!important;
+ width:min(350px,calc(100vw - 24px))!important;
+ height:min(330px,55dvh)!important;min-height:0!important;max-height:min(330px,55dvh)!important;
+ margin:0!important;padding:0!important;
+ overflow:hidden!important;transform:none!important;
+ border:1px solid #536475!important;border-radius:12px!important;
+ background:#1e2733f8!important;box-shadow:0 16px 50px #000b!important;
+}
+body.duel-active #choiceDock>#logDrawer .log-scroll{
+ flex:1 1 auto;min-height:0!important;max-height:none!important;
+ overflow-y:auto!important;overscroll-behavior:contain;
+}
+body.duel-active #choiceDock>#logDrawer header{
+ flex:0 0 auto;display:flex!important;align-items:center;
+ gap:10px;justify-content:space-between;
+ background:#273241!important;color:#e9f0f7!important;
+}
+body.duel-active #choiceDock>#logDrawer #closeLog{
+ display:inline-flex!important;align-items:center;justify-content:center;
+ min-width:38px;min-height:34px;cursor:pointer;
+}
+body.duel-active #logToggle{
+ display:inline-flex!important;align-items:center;justify-content:center;
+ cursor:pointer;
+}
+body.duel-active .duel-utility-toolbar{justify-content:flex-end;gap:8px}
+body.duel-active .duel-utility-toolbar>.turn-summary{margin-right:auto}
+body.duel-active .duel-utility-toolbar #stadiumText:empty{display:none!important}
+
+@media (min-width:781px){
+ body.duel-active #duel:not(.hidden){
+  --hand-row:clamp(162px,22dvh,228px);
+  width:min(100%,1500px)!important;
+  grid-template-columns:minmax(0,1fr) clamp(258px,23vw,342px)!important;
+  grid-template-rows:34px minmax(0,1fr) var(--hand-row)!important;
+ }
+ body.duel-active #duel:not(.hidden):not(:has(> .toolbar)){
+  grid-template-rows:minmax(0,1fr) var(--hand-row)!important;
+ }
+ body.duel-active #duel>.toolbar{
+  grid-column:1/-1!important;grid-row:1!important;
+ }
+ body.duel-active #duel>.stage{
+  grid-column:1/-1!important;grid-row:2!important;
+  min-width:0!important;max-width:100%!important;
+ }
+ body.duel-active #duel:not(:has(> .toolbar))>.stage{grid-row:1!important}
+ body.duel-active #duel>.below>.main-column>.hand-panel{
+  grid-column:1!important;grid-row:3!important;
+ }
+ body.duel-active #duel:not(:has(> .toolbar))>.below>.main-column>.hand-panel{
+  grid-row:2!important;
+ }
+ body.duel-active #duel>.below>.main-column>.turn-actions-panel{
+  grid-column:2!important;grid-row:3!important;
+ }
+ body.duel-active #duel:not(:has(> .toolbar))>.below>.main-column>.turn-actions-panel{
+  grid-row:2!important;
+ }
+ /* Remove the phantom right rail. Contents are fixed only while requested. */
+ body.duel-active #duel>.below>.side-column,
+ body.duel-active #duel>.below>.side-column>#choiceDock,
+ body.duel-active #duel>.below>.side-column>#choiceDock>#chatDuelDock{
+  display:contents!important;
+  border:0!important;box-shadow:none!important;background:none!important;
+ }
+ body.duel-active #choiceDock>#decisionBox.hidden{display:none!important}
+ body.duel-active #choiceDock>#decisionBox:not(.hidden){
+  position:fixed!important;inset:52px 14px auto auto!important;
+  z-index:510!important;
+  width:min(315px,calc(100vw - 28px))!important;
+  height:auto!important;max-height:min(48dvh,370px)!important;
+  margin:0!important;padding:12px!important;overflow:auto!important;
+  background:#202b37f5!important;border:1px solid #586779!important;
+  border-radius:11px!important;box-shadow:0 10px 30px #000a!important;
+ }
+ body.duel-active #choiceDock>#logDrawer:not(.hidden){
+  bottom:calc(var(--hand-row) + 20px)!important;
+ }
+ /* Preserve the player's room to inspect hand cards while the log is open. */
+ body.duel-active #duel>.below>.main-column>.turn-actions-panel{
+  justify-content:space-between!important;
+ }
+}
+@media (max-width:780px){
+ body.duel-active #choiceDock>#logDrawer:not(.hidden){
+  bottom:calc(clamp(186px,28dvh,244px) + 9px)!important;
+  max-height:min(300px,calc(100dvh - 245px))!important;
+  height:min(300px,calc(100dvh - 245px))!important;
+ }
+ body.duel-active #logToggle{min-height:34px}
+}
+@media (max-height:660px) and (max-width:780px){
+ body.duel-active #choiceDock>#logDrawer:not(.hidden){
+  bottom:168px!important;
+  height:min(220px,calc(100dvh - 185px))!important;
+  max-height:min(220px,calc(100dvh - 185px))!important;
+ }
+}
