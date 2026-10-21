@@ -296,9 +296,9 @@
   feedback.update(current,0);opponentActivity.update(current,0,opponentName);
   const v=current.view,you=v.players[0],cpu=v.players[1],yourTurn=v.turn===0&&!v.over;
   document.querySelector('.stage').classList.toggle('your-turn',yourTurn&&v.phase==='game'&&!v.pendingDecision);
-  $('phaseText').textContent=v.over?'DUEL COMPLETE':v.phase==='setup'?'Opening setup':yourTurn?'Your turn':'CPU turn';
+
   quick.drawPrizes($('prizeRail'),you.prizeCount,cpu.prizeCount,'CPU');renderPrizes();renderFaceUpPrizes();renderPrizeFallback();renderCoin(v);renderKnockOut(v);
-  $('turnChip').textContent='TURN '+(current.turnSerial+1);$('scoreline').textContent=`Your Prizes ${you.prizeCount} · CPU Prizes ${cpu.prizeCount}`;
+  $('turnChip').textContent='TURN '+(current.turnSerial+1);
   $('stadiumText').textContent=v.stadium?`Stadium: ${card(v.stadium.id).name}`:'';
   if(['neo4-99','neo3-61','neo4-95','neo4-100'].includes(v.stadium?.id)&&v.phase==='game'&&yourTurn&&!v.pendingDecision){
    $('stadiumText').append(btn(current.you.stadiumUsed?' • Used this turn':' ↻ Use Stadium',()=>send(command('use_stadium')),'subtle',!!current.you.stadiumUsed));
