@@ -1,0 +1,86 @@
+/* v0.91 — Desktop observability rail. The battlefield and its tools never sit under the log/chat. */
+@media (min-width: 781px) {
+ body.duel-active #duel:not(.hidden) {
+  --neo-hand-row:clamp(155px,21dvh,210px);
+  --hand-row:var(--neo-hand-row);
+  width:100%!important;
+  max-width:none!important;
+  grid-template-columns:minmax(0,4fr) minmax(245px,1fr)!important;
+  grid-template-rows:34px minmax(0,1fr) var(--neo-hand-row)!important;
+  column-gap:10px!important;
+ }
+ body.duel-active #duel>.toolbar {grid-column:1/-1!important;grid-row:1!important}
+ body.duel-active #duel>.stage {
+  grid-column:1!important;grid-row:2!important;
+  min-width:0!important;min-height:0!important;max-width:100%!important;
+ }
+ body.duel-active #duel>.below,
+ body.duel-active #duel>.below>.main-column{display:contents!important}
+ body.duel-active #duel>.below>.main-column>.hand-panel {
+  grid-column:1!important;grid-row:3!important;
+ }
+ body.duel-active #duel>.below>.main-column>.turn-actions-panel{
+  grid-column:2!important;grid-row:3!important;
+  height:100%!important;max-height:none!important;
+ }
+ body.duel-active #duel>.below>.side-column {
+  display:flex!important;flex-direction:column!important;
+  grid-column:2!important;grid-row:2!important;
+  min-width:0!important;min-height:0!important;overflow:hidden!important;
+  gap:0!important;background:#1d2631!important;
+  border:1px solid #455564!important;border-radius:11px!important;
+ }
+ body.duel-active #duel>.below>.side-column>#choiceDock {
+  display:flex!important;flex:1 1 auto!important;flex-direction:column!important;
+  min-height:0!important;width:100%!important;overflow:hidden!important;gap:0!important;
+ }
+ body.duel-active #choiceDock>#chatDuelDock{
+  display:flex!important;flex:1 1 42%!important;min-height:0!important;overflow:hidden!important;
+  background:transparent!important;
+ }
+ body.duel-active #chatDuelDock>#roomChat,
+ body.duel-active #chatDuelDock>#roomChat.hidden{
+  display:flex!important;position:static!important;inset:auto!important;
+  flex:1 1 auto!important;flex-direction:column!important;
+  width:100%!important;height:100%!important;max-height:none!important;
+  min-width:0!important;min-height:0!important;margin:0!important;
+  padding:9px!important;transform:none!important;box-shadow:none!important;
+  border:0!important;border-radius:0!important;background:transparent!important;
+  overflow:hidden!important;
+ }
+ body.duel-active #chatDuelDock .chat-messages{
+  flex:1 1 auto!important;min-height:0!important;max-height:none!important;
+  overflow-y:auto!important;
+ }
+ body.duel-active #chatDuelDock .chat-form{flex:0 0 auto!important}
+ body.duel-active #choiceDock>#logDrawer,
+ body.duel-active #choiceDock>#logDrawer.hidden,
+ body.duel-active #choiceDock>#logDrawer:not(.hidden){
+  display:flex!important;position:static!important;inset:auto!important;
+  z-index:auto!important;flex:1 1 58%!important;flex-direction:column!important;
+  width:100%!important;height:auto!important;min-height:0!important;max-height:none!important;
+  margin:0!important;padding:0!important;transform:none!important;box-shadow:none!important;
+  border:0!important;border-top:1px solid #455564!important;border-radius:0!important;
+  background:transparent!important;overflow:hidden!important;
+ }
+ body.duel-active #choiceDock>#logDrawer .log-scroll{
+  flex:1 1 auto!important;min-height:0!important;max-height:none!important;
+  overflow-y:auto!important;padding:7px!important;
+ }
+ body.duel-active #choiceDock>#logDrawer .action-timeline{max-height:none!important;overflow:visible!important}
+ body.duel-active #choiceDock>#logDrawer header{padding:8px 10px!important}
+ body.duel-active #logToggle,
+ body.duel-active #chatToggle,
+ body.duel-active #choiceDock>#logDrawer #closeLog,
+ body.duel-active #chatDuelDock #closeChat{display:none!important}
+ /* The pending decision still uses its dedicated modal; never cover the field. */
+ body.duel-active #choiceDock>#decisionBox:not(.hidden){display:none!important}
+ body.duel-active .stage .territory .field-row,
+ body.duel-active .stage .territory .field-row.bottom{padding-left:80px!important;padding-right:78px!important}
+ body.duel-active .stage .territory .bench-zone .pokemon-strip{width:min(84%,620px)!important}
+}
+/* On narrow displays, use the existing opt-in drawers and preserve the full field width. */
+@media (max-width:780px){
+ body.duel-active #choiceDock>#logDrawer.hidden,
+ body.duel-active #chatDuelDock>#roomChat.hidden{display:none!important}
+}
