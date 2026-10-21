@@ -59,17 +59,19 @@ function buildPlayerDeck(starterId,stage,seed=1){
  Collection.choose(state,starterId);
  const initial=[...state.deckJourney.deck],rng=rngFor(seed);
  const packs=stage.shopPacks+stage.miniPacks;
- const drawnBySet={};
+ const drawnByTheme={};
  for(let n=0;n<packs;n++){
   const simulatedDay=Math.min(stage.day,Math.max(1,Math.floor((n+1)*stage.day/(packs+1))));
-  const available=Collection.SHOP_OFFERS.filter(x=>x.day<=simulatedDay);
-  const latest=available.at(-1)?.set||'base1';
-  // Baseline set draws remain useful for early evolution / Trainer support.
-  const set=n%3===0?'base1':latest;
+  // Opening two different starter mini packs mirrors the actual campaign.
+  // Later purchases rotate among the available themed offers, so base-era
+  // Trainer and evolution pools remain useful after Neo expansions unlock.
+  const available=Collection.themedPacks({day:simulatedDay,deckJourney:state.deckJourney})
+   .filter(offer=>offer.unlocked);
+  const theme=n===0?'arena':n===1?'evolution':available[(n+2)%available.length].id;
   const quantity=n<stage.miniPacks?5:10;
-  const pulled=Collection.randomPack(set,rng,quantity);
+  const pulled=Collection.randomThemedPack({day:simulatedDay,deckJourney:state.deckJourney},theme,rng,quantity);
   for(const id of pulled)state.deckJourney.owned[id]=(state.deckJourney.owned[id]||0)+1;
-  drawnBySet[set]=(drawnBySet[set]||0)+1;
+  drawnByTheme[theme]=(drawnByTheme[theme]||0)+1;
  }
  const deck=[...initial],owned=state.deckJourney.owned;
  const score=id=>TRAINER_PRIORITY[CATALOG.get(id)?.name]||0;
@@ -98,7 +100,7 @@ function buildPlayerDeck(starterId,stage,seed=1){
  const ownedCheck=Collection.check(deck,owned);
  if(!legality.valid||!ownedCheck.valid)throw Error('Invalid simulated '+stage.id+' player deck: '+legality.errors.concat(ownedCheck.errors).join('; '));
  return {cards:deck,earnedCopies:Object.values(owned).reduce((n,c)=>n+c,0),
-  upgrades:modifications(initial,deck),packsDrawn:packs,drawnBySet,metrics:metrics(deck)};
+  upgrades:modifications(initial,deck),packsDrawn:packs,drawnByTheme,metrics:metrics(deck)};
 }
 function parse(argv){
  const options={npcs:['reina','hana','camila','marina'],starters:INITIAL,pairs:1,maxTurns:70,seed:72026,stages:['early','mid','late']};
