@@ -9,9 +9,9 @@ const {driveSide,configuration}=require('./cpu_policy');
 const {ClassicLocalService}=require('./classic_local_service');
 
 function argumentsOf(argv){
- const opts={pairs:8,maxTurns:90,seed:7391,leftLevel:5,rightLevel:1,personality:'balanced',leftDeck:'blackout',rightDeck:'blackout',leftPlanning:null,rightPlanning:null,leftEvolutionTempo:null,rightEvolutionTempo:null,leftPrizeRace:null,rightPrizeRace:null,leftKnockoutTempo:null,rightKnockoutTempo:null,leftOpponentResponse:null,rightOpponentResponse:null,leftGraduatedNoise:null,rightGraduatedNoise:null,leftEnergyHorizon:null,rightEnergyHorizon:null,targetUpsetRate:0.05,logs:null};
+ const opts={pairs:8,maxTurns:90,seed:7391,leftLevel:5,rightLevel:1,personality:'balanced',leftPersonality:null,rightPersonality:null,leftDeck:'blackout',rightDeck:'blackout',leftPlanning:null,rightPlanning:null,leftEvolutionTempo:null,rightEvolutionTempo:null,leftPrizeRace:null,rightPrizeRace:null,leftKnockoutTempo:null,rightKnockoutTempo:null,leftOpponentResponse:null,rightOpponentResponse:null,leftGraduatedNoise:null,rightGraduatedNoise:null,leftEnergyHorizon:null,rightEnergyHorizon:null,targetUpsetRate:0.05,logs:null};
  const keys={'--pairs':'pairs','--max-turns':'maxTurns','--seed':'seed','--left-level':'leftLevel','--right-level':'rightLevel',
-  '--personality':'personality','--left-deck':'leftDeck','--right-deck':'rightDeck',
+  '--personality':'personality','--left-personality':'leftPersonality','--right-personality':'rightPersonality','--left-deck':'leftDeck','--right-deck':'rightDeck',
   '--left-planning':'leftPlanning','--right-planning':'rightPlanning',
   '--left-evolution-tempo':'leftEvolutionTempo','--right-evolution-tempo':'rightEvolutionTempo',
   '--left-prize-race':'leftPrizeRace','--right-prize-race':'rightPrizeRace',
@@ -31,8 +31,8 @@ function argumentsOf(argv){
  if(!Number.isInteger(opts.pairs)||opts.pairs<1||opts.pairs>1000)throw Error('pairs must be between 1 and 1000');
  if(!Number.isInteger(opts.maxTurns)||opts.maxTurns<1||opts.maxTurns>1000)throw Error('Invalid max-turns');
  if(!Number.isFinite(opts.targetUpsetRate)||opts.targetUpsetRate<0||opts.targetUpsetRate>=.5)throw Error('Invalid target upset rate');
- configuration({level:opts.leftLevel,personality:opts.personality,planning:opts.leftPlanning??undefined,evolutionTempo:opts.leftEvolutionTempo??undefined,prizeRace:opts.leftPrizeRace??undefined,knockoutTempo:opts.leftKnockoutTempo??undefined,opponentResponse:opts.leftOpponentResponse??undefined,graduatedNoise:opts.leftGraduatedNoise??undefined,energyHorizon:opts.leftEnergyHorizon??undefined});
- configuration({level:opts.rightLevel,personality:opts.personality,planning:opts.rightPlanning??undefined,evolutionTempo:opts.rightEvolutionTempo??undefined,prizeRace:opts.rightPrizeRace??undefined,knockoutTempo:opts.rightKnockoutTempo??undefined,opponentResponse:opts.rightOpponentResponse??undefined,graduatedNoise:opts.rightGraduatedNoise??undefined,energyHorizon:opts.rightEnergyHorizon??undefined});
+ configuration({level:opts.leftLevel,personality:opts.leftPersonality??opts.personality,planning:opts.leftPlanning??undefined,evolutionTempo:opts.leftEvolutionTempo??undefined,prizeRace:opts.leftPrizeRace??undefined,knockoutTempo:opts.leftKnockoutTempo??undefined,opponentResponse:opts.leftOpponentResponse??undefined,graduatedNoise:opts.leftGraduatedNoise??undefined,energyHorizon:opts.leftEnergyHorizon??undefined});
+ configuration({level:opts.rightLevel,personality:opts.rightPersonality??opts.personality,planning:opts.rightPlanning??undefined,evolutionTempo:opts.rightEvolutionTempo??undefined,prizeRace:opts.rightPrizeRace??undefined,knockoutTempo:opts.rightKnockoutTempo??undefined,opponentResponse:opts.rightOpponentResponse??undefined,graduatedNoise:opts.rightGraduatedNoise??undefined,energyHorizon:opts.rightEnergyHorizon??undefined});
  return opts;
 }
 function wilson(wins,n,z=1.96){
@@ -42,8 +42,8 @@ function wilson(wins,n,z=1.96){
  return {lower:Math.max(0,mid-half),upper:Math.min(1,mid+half)};
 }
 function duel(opts,number,swap,decks){
- const profile=[{level:opts.leftLevel,personality:opts.personality,planning:opts.leftPlanning??undefined,evolutionTempo:opts.leftEvolutionTempo??undefined,prizeRace:opts.leftPrizeRace??undefined,knockoutTempo:opts.leftKnockoutTempo??undefined,opponentResponse:opts.leftOpponentResponse??undefined,graduatedNoise:opts.leftGraduatedNoise??undefined,energyHorizon:opts.leftEnergyHorizon??undefined,seed:opts.seed+number*4001+13},
-                {level:opts.rightLevel,personality:opts.personality,planning:opts.rightPlanning??undefined,evolutionTempo:opts.rightEvolutionTempo??undefined,prizeRace:opts.rightPrizeRace??undefined,knockoutTempo:opts.rightKnockoutTempo??undefined,opponentResponse:opts.rightOpponentResponse??undefined,graduatedNoise:opts.rightGraduatedNoise??undefined,energyHorizon:opts.rightEnergyHorizon??undefined,seed:opts.seed+number*4001+31}];
+ const profile=[{level:opts.leftLevel,personality:opts.leftPersonality??opts.personality,planning:opts.leftPlanning??undefined,evolutionTempo:opts.leftEvolutionTempo??undefined,prizeRace:opts.leftPrizeRace??undefined,knockoutTempo:opts.leftKnockoutTempo??undefined,opponentResponse:opts.leftOpponentResponse??undefined,graduatedNoise:opts.leftGraduatedNoise??undefined,energyHorizon:opts.leftEnergyHorizon??undefined,seed:opts.seed+number*4001+13},
+                {level:opts.rightLevel,personality:opts.rightPersonality??opts.personality,planning:opts.rightPlanning??undefined,evolutionTempo:opts.rightEvolutionTempo??undefined,prizeRace:opts.rightPrizeRace??undefined,knockoutTempo:opts.rightKnockoutTempo??undefined,opponentResponse:opts.rightOpponentResponse??undefined,graduatedNoise:opts.rightGraduatedNoise??undefined,energyHorizon:opts.rightEnergyHorizon??undefined,seed:opts.seed+number*4001+31}];
  const roleForSide=swap?[1,0]:[0,1];
  const source=swap?[decks[1],decks[0]]:decks;
  let game=createGame({decks:source,format:opts.format||'classic',seed:opts.seed+number*11+101});
