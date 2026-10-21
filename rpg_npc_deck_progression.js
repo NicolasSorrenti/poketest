@@ -54,7 +54,8 @@ function cutFor(cards,added,catalog,kind){
   for(let i=0;i<cards.length;i++)if(catalog.get(cards[i])?.name===name)picks.push(i);
  }
  const energyTotal=cards.filter(id=>isBasicEnergy(catalog.get(id))).length;
- if(energyTotal>16){
+ // Retain at least twelve Basic Energy (additional Double Colorless cards are untouched).
+ if(energyTotal>12){
   const colors=[...new Set(cards.filter(id=>isBasicEnergy(catalog.get(id))))];
   colors.sort((a,b)=>count(cards,b)-count(cards,a)||a.localeCompare(b));
   for(const id of colors)for(let i=0;i<cards.length;i++)if(cards[i]===id)picks.push(i);
