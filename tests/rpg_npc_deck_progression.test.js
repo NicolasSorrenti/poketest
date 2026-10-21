@@ -151,8 +151,35 @@ test('Rocket rival upgrades strengthen playable Grass/Water evolution lines with
    assert.ok(frequency(cards,'base1-96')<=2,npc+' trims excess Double Colorless instead of vital colored Energy');
    assert.ok(frequency(cards,'base1-99')+frequency(cards,'base1-102')>=14);
   }
-  assert.ok(frequency(refined,'base5-41')>=frequency(original,'base5-41')+1,npc+' reinforces Dark Muk line');
+  if(npc==='kaede')assert.ok(frequency(refined,'base5-41')>=frequency(original,'base5-41')+1,
+   'Kaede reinforces Dark Muk while retaining her Dark Weezing identity');
+  else assert.equal(frequency(refined,'base5-30'),1,'Camila unlocks Dark Vileplume control in Act II');
   assert.ok(frequency(expert,'base5-25')>=frequency(original,'base5-25'),npc+' keeps Dark Gyarados playable');
   assert.deepEqual(service.decklist('rocket_lab'),original,'shared lab deck is never mutated');
  }
+});
+
+test('Camila develops the genuine Team Rocket Dark Vileplume chain, not unsupported Stage 2 filler',()=>{
+ const {canEvolve}=require('../core_rules');
+ const original=service.decklist('rocket_lab');
+ const first=NPC.upgrade({npc:'camila',tier:1,original,catalog:CATALOG});
+ const mid=NPC.upgrade({npc:'camila',tier:2,original,catalog:CATALOG});
+ const late=NPC.upgrade({npc:'camila',tier:3,original,catalog:CATALOG});
+ const count=(cards,id)=>cards.filter(x=>x===id).length;
+ assert.deepEqual(first,original,'early Camila keeps the original Rocket recipe');
+ for(const deck of [mid,late]){
+  assert.equal(deck.length,60);
+  assert.equal(validateDeck(deck,CATALOG).valid,true);
+  assert.equal(count(deck,'base5-70'),0,'Zubat line yields to more focused strategy');
+  assert.equal(count(deck,'base5-24'),0,'Dark Golbat should not be stranded');
+  assert.equal(count(deck,'base1-99')>=6,true,'retain Grass Energy for Dark Vileplume');
+ }
+ assert.deepEqual([count(mid,'base5-63'),count(mid,'base5-36'),count(mid,'base5-30')],[2,2,1]);
+ assert.deepEqual([count(late,'base5-63'),count(late,'base5-36'),count(late,'base5-30')],[3,3,2]);
+ assert.ok(canEvolve(CATALOG.get('base5-36'),CATALOG.get('base5-63')),'Oddish evolves into Dark Gloom');
+ assert.ok(canEvolve(CATALOG.get('base5-30'),CATALOG.get('base5-36')),'Dark Gloom evolves into Dark Vileplume');
+ assert.ok(canEvolve(CATALOG.get('base5-13'),CATALOG.get('base5-36')),'holo printing uses same evolution rule');
+ assert.equal(canEvolve(CATALOG.get('base5-30'),CATALOG.get('base1-37')),false,
+  'normal Gloom cannot illegally substitute for Dark Gloom');
+ assert.deepEqual(service.decklist('rocket_lab'),original,'the source lab deck remains untouched');
 });
