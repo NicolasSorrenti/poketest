@@ -4,7 +4,7 @@
 const trainer61PreviousAttack=Engine.prototype.attack;
 function trainer61Protected(u){return Boolean((u?.attachedTrainers||[]).some(t=>lookup.get(t.id)?.name==="Brock's Protection"));}
 function trainer61EnergySnapshot(g,side){
- return [side.active,...side.bench].filter(Boolean).map(u=>({unit:u,energy:u.energies.slice(),discard:side.discard.slice(),hand:side.hand.slice(),deck:side.deck.slice(),otherUnits:[side.active,...side.bench].filter(v=>v&&v!==u).map(v=>({unit:v,energy:v.energies.slice()}))}));
+ return [side.active,...side.bench].filter(Boolean).map(u=>({unit:u,protectedAtStart:trainer61Protected(u),energy:u.energies.slice(),discard:side.discard.slice(),hand:side.hand.slice(),deck:side.deck.slice(),otherUnits:[side.active,...side.bench].filter(v=>v&&v!==u).map(v=>({unit:v,energy:v.energies.slice()}))}));
 }
 function trainer61Count(list,id){return list.filter(x=>x===id).length;}
 // Opponent attack effects cannot strip Energy from Brock's protected Pokémon.
@@ -12,9 +12,9 @@ function trainer61Count(list,id){return list.filter(x=>x===id).length;}
 // KO discards do not qualify. This also handles multiple copies of one Energy.
 Engine.prototype.trainer61RestoreOpposingEnergy=function(side,snapshots){
  const gym=lookup.get(this.stadium?.id)?.name==='Ecogym';
- for(const {unit,energy,discard,hand,deck,otherUnits} of snapshots){
+ for(const {unit,protectedAtStart,energy,discard,hand,deck,otherUnits} of snapshots){
   if(!([side.active,...side.bench].includes(unit)))continue; // a Knock Out, not an Energy-removal event
-  const protectedUnit=trainer61Protected(unit);
+  const protectedUnit=protectedAtStart===undefined?trainer61Protected(unit):protectedAtStart;
   const before=new Map(),after=new Map();
   for(const id of energy)before.set(id,(before.get(id)||0)+1);
   for(const id of unit.energies)after.set(id,(after.get(id)||0)+1);
