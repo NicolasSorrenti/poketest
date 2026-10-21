@@ -7,6 +7,7 @@ const {publicView,publicActivity,validateCommand}=require('./duel_protocol');
 const UNDO=require('./duel_undo');
 const {driveBot,configuration}=require('./classic_bot');
 const {profileForNpc}=require('./cpu_profiles');
+const NPC_DECKS=require('./rpg_npc_deck_progression');
 const {list}=require('./authentic_decks');
 const {LAB}=require('./classic_live_decks');
 const RETAIL=require('./retail_theme_decks');
@@ -34,11 +35,13 @@ class ClassicLocalService {
   this.sessions=new Map();this.now=now;this.ttlMs=ttlMs;this.maxSessions=maxSessions;
  }
  prune(){for(const [token,r] of this.sessions)if(this.now()-r.updated>this.ttlMs)this.sessions.delete(token);}
- create({deck='blackout',opponent='brushfire',customDeck,customOpponentDeck,seed,difficulty,personality,aiSeed=1,npc,advancedTactics=false}={}){
+ create({deck='blackout',opponent='brushfire',customDeck,customOpponentDeck,seed,difficulty,personality,aiSeed=1,npc,npcDeckTier=1,advancedTactics=false}={}){
   this.prune();if(this.sessions.size>=this.maxSessions)throw Error('Too many active duels');
   if(!DECKS[deck]||!DECKS[opponent])throw Error('Unknown Classic deck');
   if(seed!==undefined&&(!Number.isSafeInteger(seed)||seed<0||seed>0xffffffff))throw Error('Invalid seed');
   if(typeof advancedTactics!=='boolean')throw Error('advancedTactics must be a boolean');
+  if(!Number.isInteger(npcDeckTier)||npcDeckTier<1||npcDeckTier>3)throw Error('Invalid RPG NPC deck tier');
+  if(npcDeckTier>1&&(typeof npc!=='string'||!npc))throw Error('RPG NPC identity required for deck progression');
   const defaults=npc===undefined?{level:3,personality:'balanced'}:profileForNpc(npc);
   if(advancedTactics&&(difficulty??defaults.level)<4)throw Error('Advanced tactics require Expert or Champion level');
   const cpuConfig=configuration({level:difficulty??defaults.level,personality:personality??defaults.personality,seed:aiSeed,
@@ -56,12 +59,19 @@ class ClassicLocalService {
    if(customOpponentDeck.some(id=>!FORMAT.SET_NAMES[id.split('-')[0]]))
     throw Error('Partner deck contains cards outside the historical campaign');
   }
-  const playerCards=deckCards(deck),cpuCards=customOpponentDeck?[...customOpponentDeck]:deckCards(opponent);
+  const playerCards=deckCards(deck);
+  // The player-edited partner recipe always wins over the automatic act upgrade.
+  let cpuCards=customOpponentDeck?[...customOpponentDeck]:deckCards(opponent);
+  if(!customOpponentDeck&&npcDeckTier>1){
+   cpuCards=NPC_DECKS.upgrade({npc,tier:npcDeckTier,original:cpuCards,catalog:CATALOG});
+   const legality=validateDeck(cpuCards,CATALOG);
+   if(!legality.valid)throw Error('Invalid progressed NPC deck: '+legality.errors[0]);
+  }
   const expanded=deck==='custom'||customOpponentDeck!==undefined||EXPANDED[deck]||EXPANDED[opponent]||[...playerCards,...cpuCards].some(id=>id.startsWith('gym')&&!RETAIL.gymIds.includes(id));
   const format=[...playerCards,...cpuCards].some(id=>['neo1','neo2','neo3','neo4'].some(set=>id.startsWith(set+'-')))?(expanded?'online-preview':'neo-theme'):expanded?'gym-expanded':RETAIL.meta[deck]?.gym||RETAIL.meta[opponent]?.gym?'gym-theme':[...playerCards,...cpuCards].some(id=>id.startsWith('base4'))?'theme-expanded':'classic';
   let game=createGame({decks:[playerCards,cpuCards],names:['You','Classic CPU'],format,seed:seed??crypto.randomBytes(4).readUInt32BE(0)});
   game=driveBot(game,200,cpuConfig).game;
-  const token=crypto.randomBytes(24).toString('base64url'),session={game,revision:0,updated:this.now(),token,deck,opponent,cpuConfig,npc:npc??null};
+  const token=crypto.randomBytes(24).toString('base64url'),session={game,revision:0,updated:this.now(),token,deck,opponent,cpuConfig,npc:npc??null,npcDeckTier:customOpponentDeck?null:npcDeckTier};
   this.sessions.set(token,session);return {token,...this.response(session)};
  }
  createCube({humanDeck,cpuDeck,seed,difficulty=3,personality='balanced',name='Cube CPU'}={}){
@@ -78,7 +88,7 @@ class ClassicLocalService {
  session(token){this.prune();const s=this.sessions.get(token);if(!s)throw Error('Unknown or expired session');s.updated=this.now();return s;}
  response(s){const g=s.game,view=publicView(g,0);
   return {revision:s.revision,view,activity:publicActivity(g),undo:{available:UNDO.available(s.undoHistory||[],g,0),label:s.undoHistory?.at(-1)?.label||null},format:g.format,winner:g.winner,turnSerial:g.turnSerial,cpu:{level:s.cpuConfig?.level??3,personality:s.cpuConfig?.personality??'balanced',npc:s.npc??null,
-    advancedTactics:!!s.cpuConfig?.knockoutTempo},
+    advancedTactics:!!s.cpuConfig?.knockoutTempo,deckTier:s.npcDeckTier??null},
    you:{energyUsed:!!g.players[0].energyUsed,retreated:!!g.players[0].retreated,stadiumUsed:g.players[0].stadiumUsedTurn===g.turnSerial},
    lastActions:g.events.slice(-8).map(e=>({side:e.side,type:e.type})),
    counts:g.players.map(p=>countCards(p))};
