@@ -929,7 +929,7 @@ async function loadCardNames(){
  }catch{}
 }
 
-function duelUrl(duel){const mats=window.NeoDuelPlaymats,gifts=mats.gifted(state),owned=mats.available(gifts).map(m=>m.id);const chosen=mats.choose(state.playmatSelected,owned);return '/classic_live.html?rpg=1&mat='+encodeURIComponent(chosen)+'&giftMats='+encodeURIComponent(gifts.join(','))+'&duelId='+encodeURIComponent(duel.id)+'&deck='+encodeURIComponent(duel.playerDeck)+'&opponent='+encodeURIComponent(duel.opponent)+'&npc='+encodeURIComponent(duel.npc)+'&npcName='+encodeURIComponent(cast[duel.npc].name)+'&npcTier='+encodeURIComponent(duel.npcDeckTier||1);}
+function duelUrl(duel){const mats=window.NeoDuelPlaymats,gifts=mats?.gifted?.(state)||[],owned=mats?.available?.(gifts).map(m=>m.id)||['aurora'];const chosen=mats?.choose?.(state.playmatSelected,owned)||'aurora';return '/classic_live.html?rpg=1&mat='+encodeURIComponent(chosen)+'&giftMats='+encodeURIComponent(gifts.join(','))+'&duelId='+encodeURIComponent(duel.id)+'&deck='+encodeURIComponent(duel.playerDeck)+'&opponent='+encodeURIComponent(duel.opponent)+'&npc='+encodeURIComponent(duel.npc)+'&npcName='+encodeURIComponent(cast[duel.npc].name)+'&npcTier='+encodeURIComponent(duel.npcDeckTier||1);}
 
 function describePreparedDuel(){
  return PRE.describe(state,state.pendingDuel,{cast,places,cg:CG,tournaments:TOURNAMENTS,
