@@ -3,7 +3,7 @@
 // Candidate substitutions preserve 60-card size and all printed card behavior.
 const NPC=require('../rpg_npc_deck_progression');
 const VARIANTS=Object.freeze({
- reina:['baseline','soft-ace','soft-disruption','measured-hybrid'],
+ reina:['baseline','soft-ace','soft-disruption','measured-hybrid','gentle-denial','fair-rival','no-lock'],
  yuna:['baseline','electabuzz-pair','electabuzz-trio','psychic-lightning'],
  camila:['baseline','muk-tempo','weezing-tempo','rocket-hybrid']
 });
@@ -28,6 +28,13 @@ function candidate({npc,tier,original,catalog,variant='baseline'}){
    swap('base1-79','base1-94'); // Super Energy Removal -> Potion
   }
   if(variant==='measured-hybrid')swap('base1-92','base1-95');
+  if(['gentle-denial','fair-rival','no-lock'].includes(variant)){
+   if(variant!=='no-lock')swap('base1-7','base1-56'); // Retain at least one Hitmonchan.
+   swap('base1-92','base1-95'); // Replace one denial card with retreat counterplay.
+   swap('base1-92','base1-94'); // Replace another with healing.
+   if(variant==='fair-rival'||variant==='no-lock')
+    swap('base1-79','base1-80'); // Super Removal -> Defender, not more raw damage.
+  }
  }else if(npc==='yuna'){
   if(variant==='electabuzz-pair'||variant==='electabuzz-trio'||variant==='psychic-lightning')
    swap('base1-58','base1-20',2); // Pikachu -> Electabuzz, Lightning cost remains payable
