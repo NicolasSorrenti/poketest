@@ -150,7 +150,7 @@ function pickTheme(style,day,number,state){
  }
  throw Error('Unknown strategy '+style);
 }
-function collect(starter,day,style,seed){
+function collect(starter,day,style,seed,prices={}){
  if(!STARTERS.includes(starter)||!DAYS.includes(day)||!STYLES.includes(style))throw Error('Invalid acquisition scenario');
  const state={day:1,slot:0,credits:80,location:'shop',results:[],deckJourney:Collection.fresh()};
  Collection.choose(state,starter);
@@ -173,8 +173,12 @@ function collect(starter,day,style,seed){
   const offer=Collection.themedPacks(state).find(o=>o.id===theme);
   // A plan waits for its selected product to be affordable rather than
   // silently substituting a cheaper different pack.
-  if(offer&&offer.unlocked&&state.credits>=offer.price){
-   const price=offer.price;
+  const price=prices[theme]??offer?.price;
+  if(offer&&offer.unlocked&&state.credits>=price){
+   // A/B evaluation of hypothetical pack pricing while leaving the actual
+   // shop untouched. Reconcile the difference *before* its authoritative
+   // normal 10-card purchase; committed engine prices are unaffected.
+   state.credits+=offer.price-price;
    Collection.buyThemedPack(state,theme,random(hash(baseSeed+'/paid/'+d)));
    state.deckJourney.lastPack.opened=true;
    spent+=price;packs++;boughtByTheme[theme]=(boughtByTheme[theme]||0)+1;
@@ -189,7 +193,7 @@ function collect(starter,day,style,seed){
 }
 function parse(argv){
  const opts={days:[...DAYS],styles:[...STYLES],starters:[...STARTERS],npcs:[...NPCS],
-  seeds:2,pairs:1,seed:20261021,maxTurns:70,duels:false};
+  seeds:2,pairs:1,seed:20261021,maxTurns:70,duels:false,prices:{}};
  for(let i=0;i<argv.length;i++){
   const key=argv[i];if(key==='--duels'){opts.duels=true;continue;}
   const value=argv[++i];if(value===undefined)throw Error('Missing value for '+key);
@@ -201,6 +205,15 @@ function parse(argv){
   else if(key==='--pairs')opts.pairs=Number(value);
   else if(key==='--max-turns')opts.maxTurns=Number(value);
   else if(key==='--seed')opts.seed=Number(value);
+  else if(key==='--prices'){
+   for(const change of value.split(',')){
+    const [theme,amount,...extra]=change.split('=');
+    if(extra.length||!Collection.THEMED_PACKS.some(p=>p.id===theme)||
+      !Number.isInteger(Number(amount))||Number(amount)<15||Number(amount)>100)
+     throw Error('Invalid hypothetical pack price '+change);
+    opts.prices[theme]=Number(amount);
+   }
+  }
   else throw Error('Unknown option '+key);
  }
  if(opts.days.some(x=>!DAYS.includes(x))||!opts.days.length)throw Error('Invalid checkpoints');
@@ -225,7 +238,7 @@ function evaluate(opts){
  for(const day of opts.days)for(const style of opts.styles)for(const starter of opts.starters){
   const games=[],collections=[];
   for(let rep=0;rep<opts.seeds;rep++){
-   const sample=collect(starter,day,style,opts.seed+rep);
+   const sample=collect(starter,day,style,opts.seed+rep,opts.prices);
    collections.push(sample);
    if(!opts.duels)continue;
    for(const npc of opts.npcs){
