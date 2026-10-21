@@ -431,4 +431,16 @@ check('EXP.ALL stale choice cannot clear a pending KO decision',()=>{
  assert.equal(g._trainer60ExpPrompt,null);
  assert.ok(p.discard.includes('neo4-93'));
 });
+check('EXP.ALL always offers a choice, even with one Basic Energy and one receiver',()=>{
+ const {g,p}=fresh({myBench:['base1-35']});
+ g.turn=1;g.turnSerial=10;p.active.damage=500;p.active.incomingAttack={turnSerial:10,damage:200};
+ p.active.energies=['base1-98'];p.bench[0].attachedTrainers=[{id:'neo4-93'}];
+ g.resolveKO();
+ const req=vm.runInContext('deckSearchRequest',ctx);
+ assert.ok(req?.defenderPrompt);
+ assert.equal(p.bench[0].energies.length,0);
+ assert.equal(req.execute('skip'),true);
+ assert.ok(p.discard.includes('base1-98'));
+ assert.ok(p.bench[0].attachedTrainers.some(t=>t.id==='neo4-93'));
+});
 console.log(`PASS v0.6.0: ${tests} human Trainer timing, choices, and damage outcome scenarios`);
