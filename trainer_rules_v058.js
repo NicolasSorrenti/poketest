@@ -410,6 +410,9 @@ Engine.prototype.trainer58=function(handIndex, provided){
    };
    return selectPokemon('Choose Pokémon to receive '+name,p,predicate,slot=>{
     const u=slot===-1?p.active:p.bench[slot];
+    // Recheck pending Tool selections: a target can evolve, leave play,
+    // or stop being eligible before the player confirms the choice.
+    if(!u||!predicate(u)||!p.hand.includes(c.id))return false;
     u.attachedTrainers.push({id:c.id,expireAtEndSerial:['Magnifier','Charity','Sabrina\'s ESP'].includes(name)?game.turnSerial:null});
     const idx=p.hand.indexOf(c.id);p.hand.splice(idx,1);clear();game.log(`${name} attached to ${game.card(u)?.name}.`);render();return true;
    });
