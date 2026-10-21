@@ -5,6 +5,9 @@ on:
     paths:
       - 'duel_desktop.css'
       - 'duel_mobile.css'
+      - 'duel_nostalgic.css'
+      - 'neo_duel_grass.svg'
+      - 'test_duel_responsive_layout.js'
       - 'online_hand_tray.css'
       - 'classic_live.css'
       - 'duel_quick_ui.js'
