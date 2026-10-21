@@ -18,6 +18,9 @@ assert.match(tabletop,/#duel:not\(\.hidden\)\{[\s\S]*?grid-template-columns:minm
 assert.match(tabletop,/#logDrawer\{[\s\S]*?display:flex!important/,'desktop event history remains visible during play');
 assert.match(tabletop,/\.turn-actions-panel\{[\s\S]*?grid-column:2;grid-row:3/,'desktop actions sit below the match rail');
 assert.match(tabletop,/\.hand-panel\{[\s\S]*?grid-column:1;grid-row:3/,'desktop hand remains directly below the battlefield');
+assert.match(tabletop,/v0\.80 — definitive hand dock/,'the final cascade must replace the legacy zero-sized floating hand');
+assert.match(tabletop,/\.hand-panel \.hand-fan:not\(\.hidden\)\{[\s\S]*?display:block!important;position:relative!important/,'visible hand has a measurable in-flow region');
+assert.match(tabletop,/\.hand-panel\{[\s\S]*?min-height:122px!important/,'mobile setup reserves visible height for cards');
 assert.doesNotMatch(tabletop,/\.poke\s*\{[^}]*pointer-events\s*:\s*none/,'playmat must not disable target clicks');
 for(const file of ['online.html','classic_live.html']){
  const html=fs.readFileSync(file,'utf8');
