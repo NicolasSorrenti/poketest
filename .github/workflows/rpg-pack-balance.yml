@@ -1,0 +1,47 @@
+name: RPG Pack Balance Checkpoints
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/benchmark-rpg-pack-strategies.js'
+      - 'tests/rpg_pack_balance.test.js'
+      - '.github/workflows/rpg-pack-balance.yml'
+  workflow_dispatch:
+
+concurrency:
+  group: rpg-pack-balance-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  checkpoints:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Test legal acquisition and deck-building
+        run: node --test tests/rpg_pack_balance.test.js
+      - name: Compare five campaign checkpoints and pack choices
+        run: |
+          node scripts/benchmark-rpg-pack-strategies.js --seeds 2 > rpg-pack-readiness.json
+          node -e 'const report=require("./rpg-pack-readiness.json"); for(const x of report.aggregate)console.log("Day "+x.day+" "+x.style+": "+x.packs.toFixed(1)+" paid packs, "+x.workableEvolutions.toFixed(2)+" live evolutions, "+x.trainerValue.toFixed(0)+" trainer score, "+x.pokemonValue.toFixed(0)+" Pokemon score"); if(report.errors.length)process.exit(1);'
+      - name: Actual mirrored engine matches (five checkpoints)
+        run: |
+          set +e
+          node scripts/benchmark-rpg-pack-strategies.js --duels --seeds 1 --pairs 1 --starters ember_garden,tidal_circuit --npcs hana,reina,camila --max-turns 70 > rpg-pack-matchups.json
+          result=$?
+          set -e
+          node -e 'const x=require("./rpg-pack-matchups.json"); for(const s of x.aggregate)console.log("Day "+s.day+" "+s.style+": "+s.playerWins+"-"+s.npcWins+" ("+s.draws+" draws), win rate "+s.playerWinRate); for(const e of x.errors)console.error(JSON.stringify(e));'
+          exit "$result"
+      - name: Save benchmark datasets
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: rpg-pack-balance
+          path: |
+            rpg-pack-readiness.json
+            rpg-pack-matchups.json
+          if-no-files-found: ignore
