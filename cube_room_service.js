@@ -11,6 +11,10 @@ const {simulateCpuMatch}=require('./cube_bracket');
 const LETTERS='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
 const randomCode=()=>Array.from(crypto.randomBytes(6),x=>LETTERS[x%LETTERS.length]).join('');
 const makeToken=()=>crypto.randomBytes(32).toString('base64url');
+const validateDifficulty=value=>{
+ if(!Number.isInteger(value)||value<1||value>5)throw Error('CPU difficulty must be 1–5');
+ return value;
+};
 const normalizeCode=value=>{
  if(typeof value!=='string'||!/^([A-Z2-9]){6}$/i.test(value.trim()))throw Error('Invalid Cube room code');
  return value.trim().toUpperCase();
@@ -40,14 +44,14 @@ class CubeRoomService{
   room.updated=this.now();
   return {room,seat};
  }
- create({name='Host',seed,preset='balanced'}={}){
-  getPreset(preset);
+ create({name='Host',seed,preset='balanced',difficulty=3}={}){
+  getPreset(preset);validateDifficulty(difficulty);
   this.prune();
   if(this.rooms.size>=this.maxRooms)throw Error('Cube room limit reached');
   if(seed!==undefined&&(!Number.isSafeInteger(seed)||seed<0||seed>0xffffffff))throw Error('Invalid Cube seed');
   let code;do{code=randomCode();}while(this.rooms.has(code));
   const token=makeToken();
-  const room={code,preset,seed:seed??crypto.randomBytes(4).readUInt32BE(0),
+  const room={code,preset,difficulty,seed:seed??crypto.randomBytes(4).readUInt32BE(0),
    seats:[{name:normalizeName(name,'Host'),token,cpu:false,ready:false,deck:null}],
    draft:null,revision:0,updated:this.now(),chat:[],chatSeq:0,lastChatAt:[]};
   this.rooms.set(code,room);
@@ -159,7 +163,7 @@ class CubeRoomService{
  }
  view(room,seat){
   const d=room.draft,me=room.seats[seat],base={
-   code:room.code,preset:room.preset,seat,revision:room.revision,host:seat===0,
+   code:room.code,preset:room.preset,difficulty:room.difficulty??3,seat,revision:room.revision,host:seat===0,
    status:!d?'lobby':d.done?'build':'draft',finished:!!d?.done,
    seats:room.seats.map((s,i)=>({seat:i,name:s.name,cpu:s.cpu,ready:s.ready,
     pickCount:d?d.picks[i].length:0,deckReady:!!s.deck})),
@@ -203,11 +207,14 @@ class CubeRoomService{
    }
    suggestion=room.suggestedDecks.get(seat);
   }
-  return {...base,round:d.round,pick:d.pick,packs:d.packs,cardsPerPack:d.cardsPerPack,waiting,
+  const offered=waiting?[...d.available[seat],selectedId]:Cube.availableForSeat(d,seat);
+  const past=waiting?d.picks[seat].slice(0,-1):d.picks[seat];
+  const recommendedId=!d.done&&offered.length?cpuPick(offered,past):null;
+  return {...base,round:d.round,pick:d.pick,packs:d.packs,cardsPerPack:d.cardsPerPack,waiting,recommendedId,
    // While waiting, return the ORIGINAL pack including this seat's reserved
    // copy. Only the owner can see or change that provisional selection.
    selectedId,
-   pack:(waiting?[...d.available[seat],selectedId]:Cube.availableForSeat(d,seat)).map(id=>this.card(id)),
+   pack:offered.map(id=>this.card(id)),
    drafted:d.picks[seat].map(id=>this.card(id)),
    suggestedDeck:suggestion,
    ownDeck:me.deck?[...me.deck]:null,
@@ -263,7 +270,7 @@ class CubeRoomService{
     const [a,b]=next.seats,sa=room.seats[a],sb=room.seats[b];
     if(sa.cpu&&sb.cpu){
      const outcome=this.simulateCpu(t.decks[a],t.decks[b],
-      {seed:(room.seed+next.id*7349+next.attempts)>>>0,levelA:3,levelB:3});
+      {seed:(room.seed+next.id*7349+next.attempts)>>>0,levelA:room.difficulty??3,levelB:room.difficulty??3});
      if(outcome.winner!==0&&outcome.winner!==1)throw Error('CPU fixture did not produce a winner');
      next.status='complete';next.winner=next.seats[outcome.winner];
      next.method=outcome.method||'played';room.revision++;changed=true;break;
@@ -276,7 +283,7 @@ class CubeRoomService{
     }else{
      const humanSeat=sa.cpu?b:a,cpuSeat=sa.cpu?a:b;
      const match=this.classic.createCube({humanDeck:t.decks[humanSeat],cpuDeck:t.decks[cpuSeat],
-      name:room.seats[cpuSeat].name,difficulty:3,
+      name:room.seats[cpuSeat].name,difficulty:room.difficulty??3,
       seed:(room.seed+next.id*7349+next.attempts)>>>0});
      const tokens=[null,null];tokens[next.seats.indexOf(humanSeat)]=match.token;
      current={id:next.id,kind:'cpu',seats:[a,b],humanSeat,cpuSeat,tokens};
