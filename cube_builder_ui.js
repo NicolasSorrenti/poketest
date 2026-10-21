@@ -36,7 +36,7 @@
    '<div class="cb-search"><input id="cbSearch" type="search" aria-label="Search drafted cards" placeholder="Search cards">',
    '<select id="cbSort" aria-label="Sort cards"><option value="name">Name A–Z</option><option value="count">Most drafted</option><option value="type">Type</option></select></div></div>',
    '<div id="cbPool"></div></section><aside class="cb-preview"><div class="cb-caption">CARD PREVIEW</div><div id="cbPreview"></div></aside>',
-   '<aside class="cb-selected"><div class="cb-selected-title"><h3>Selected deck</h3><button id="cbClear" type="button">Clear deck</button></div>',
+   '<aside class="cb-selected"><div class="cb-selected-title"><h3>Selected deck</h3><div class="cb-selected-actions"><button id="cbRestore" type="button" hidden>Restore suggestion</button><button id="cbClear" type="button">Clear deck</button></div></div>',
    '<div class="cb-summary"><strong id="cbDeckTotal">0 / 40 cards</strong><div id="cbBreakdown"></div></div>',
    '<div id="cbDeckList"></div><div id="cbActionSlot"></div></aside></div>'
   ].join('');
@@ -47,7 +47,7 @@
   if(config.collectionLabel)$('cbSearch').placeholder='Search '+config.collectionLabel;
   if(config.canClear===false)$('cbClear').hidden=true;
   if(actionElement)$('cbActionSlot').append(actionElement);
-  let filter='all',query='',sort='name',selectedId=null,deck=[],locked=false,cards=[],limits=new Map(),index=new Map();
+  let filter='all',query='',sort='name',selectedId=null,deck=[],locked=false,cards=[],limits=new Map(),index=new Map(),suggestedDeck=null;
   const amount=id=>deck.filter(x=>x===id).length;
   const basic=id=>{const c=index.get(id);return c?.supertype==='Pokémon'&&(c.subtypes||[]).some(x=>x==='Basic'||x==='Baby');};
   const group=c=>GROUPS.includes(c?.supertype)?c.supertype:'Trainer';
@@ -169,15 +169,25 @@
    }
    if(!list.children.length)list.append(node('p','cb-empty','No cards selected yet.'));
    $('cbClear').disabled=locked||!deck.length;
+  const restore=$('cbRestore');
+  restore.hidden=!suggestedDeck||locked;
+  restore.disabled=!suggestedDeck||locked||
+   (suggestedDeck.length===deck.length&&suggestedDeck.every((id,i)=>deck[i]===id));
   }
   function render(){showPool();showPreview();showDeck();}
   $('cbSearch').oninput=e=>{query=e.target.value;showPool();};
   $('cbSort').onchange=e=>{sort=e.target.value;showPool();};
+  $('cbRestore').onclick=()=>{
+   if(locked||!suggestedDeck||suggestedDeck.length!==targetSize)return;
+   if(deck.length&&!confirm('Replace your current deck with the suggested build?'))return;
+   deck=[...suggestedDeck];onChange([...deck]);render();
+  };
   $('cbClear').onclick=()=>{
    if(locked||!deck.length||!confirm('Remove all cards from your deck?'))return;
    deck=[];onChange([]);render();
   };
-  return {update({drafted=[],energyIds={},deck:nextDeck=[],locked:isLocked=false,ownedCounts=null}={}){
+  return {update({drafted=[],energyIds={},deck:nextDeck=[],locked:isLocked=false,ownedCounts=null,suggestedDeck:recommendation=null}={}){
+   suggestedDeck=Array.isArray(recommendation)?[...recommendation]:null;
    deck=[...nextDeck];locked=isLocked;limits=new Map();index=new Map();
    for(const c of drafted){
     limits.set(c.id,ownedCounts?Math.max(0,ownedCounts[c.id]||0):(limits.get(c.id)||0)+1);index.set(c.id,c);
