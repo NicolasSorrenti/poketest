@@ -35,13 +35,13 @@ class ClassicLocalService {
   this.sessions=new Map();this.now=now;this.ttlMs=ttlMs;this.maxSessions=maxSessions;
  }
  prune(){for(const [token,r] of this.sessions)if(this.now()-r.updated>this.ttlMs)this.sessions.delete(token);}
- create({deck='blackout',opponent='brushfire',customDeck,customOpponentDeck,seed,difficulty,personality,aiSeed=1,npc,npcDeckTier=1,advancedTactics=false}={}){
+ create({deck='blackout',opponent='brushfire',customDeck,customOpponentDeck,seed,difficulty,personality,aiSeed=1,npc,npcDeckId,npcDeckTier=1,advancedTactics=false}={}){
   this.prune();if(this.sessions.size>=this.maxSessions)throw Error('Too many active duels');
   if(!DECKS[deck]||!DECKS[opponent])throw Error('Unknown Classic deck');
   if(seed!==undefined&&(!Number.isSafeInteger(seed)||seed<0||seed>0xffffffff))throw Error('Invalid seed');
   if(typeof advancedTactics!=='boolean')throw Error('advancedTactics must be a boolean');
   if(!Number.isInteger(npcDeckTier)||npcDeckTier<1||npcDeckTier>3)throw Error('Invalid RPG NPC deck tier');
-  if(npcDeckTier>1&&(typeof npc!=='string'||!npc))throw Error('RPG NPC identity required for deck progression');
+  if(npcDeckTier>1&&(typeof npcDeckId!=='string'||!/^[a-z][a-z0-9_]*$/.test(npcDeckId)))throw Error('RPG NPC identity required for deck progression');
   const defaults=npc===undefined?{level:3,personality:'balanced'}:profileForNpc(npc);
   if(advancedTactics&&(difficulty??defaults.level)<4)throw Error('Advanced tactics require Expert or Champion level');
   const cpuConfig=configuration({level:difficulty??defaults.level,personality:personality??defaults.personality,seed:aiSeed,
@@ -63,7 +63,7 @@ class ClassicLocalService {
   // The player-edited partner recipe always wins over the automatic act upgrade.
   let cpuCards=customOpponentDeck?[...customOpponentDeck]:deckCards(opponent);
   if(!customOpponentDeck&&npcDeckTier>1){
-   cpuCards=NPC_DECKS.upgrade({npc,tier:npcDeckTier,original:cpuCards,catalog:CATALOG});
+   cpuCards=NPC_DECKS.upgrade({npc:npcDeckId,tier:npcDeckTier,original:cpuCards,catalog:CATALOG});
    const legality=validateDeck(cpuCards,CATALOG);
    if(!legality.valid)throw Error('Invalid progressed NPC deck: '+legality.errors[0]);
   }
