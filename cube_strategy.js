@@ -49,19 +49,32 @@ function score(id,picks){
  const c=card(id);
  if(!c)return -Infinity;
  const name=c.name||'',seen=picks.map(card),basics=seen.filter(isBasicPokemon);
+ const copies=seen.filter(x=>x.name===name).length;
+ // More than four copies of a name cannot be played in a 40-card deck.
+ if(copies>=4)return -100;
  if(c.supertype==='Trainer'){
   const trainers=seen.filter(x=>x.supertype==='Trainer').length;
-  return 7+(trainers<12?2:0)+(/Bill|Oak|Elm|Search|Gust|Switch|Potion|Energy Retrieval|Computer/i.test(name)?4:0);
+  const utility=/Bill|Oak|Elm|Search|Gust|Switch|Potion|Energy Retrieval|Computer/i.test(name)?6:0;
+  return 7+(trainers<12?3:trainers>=20?-5:0)+utility-
+   (picks.length<15&&basics.length<5?4:0)-Math.max(0,copies-1)*2;
  }
- const colors=colorPlan(picks),family=seen.some(x=>canEvolve(c,x));
+ const basic=isBasicPokemon(c),family=seen.some(x=>canEvolve(c,x));
+ // Before selecting a Basic, don't force every possible pick to Fighting.
+ const colors=basics.length?colorPlan(picks):
+  [...new Set(requiredTypes(c))].filter(t=>TYPES.includes(t));
  const related=seen.filter(x=>x.types?.some(t=>c.types?.includes(t))).length;
- let result=isBasicPokemon(c)?11:family?12:2;
- if(basics.length<8&&isBasicPokemon(c))result+=7;
- if(!isBasicPokemon(c)&&!family)result-=8;
+ const progress=picks.length;
+ let result=basic?11:family?12:2;
+ if(basic&&basics.length<8)result+=progress<25?10:16;
+ if(basic&&basics.length>=14)result-=6;
+ if(!basic&&!family)result-=progress<20?12:8;
  result+=coverageScore(c,colors);
  result+=Math.min(5,related)*0.7;
- if(seen.some(x=>canEvolve(x,c)))result+=6;
- if(seen.filter(x=>x.name===name).length>=4)result-=9;
+ // Complete evolution chains; don't spend picks on unsupported evolutions.
+ if(seen.some(x=>canEvolve(x,c)))result+=8;
+ if(family)result+=Math.min(6,seen.filter(x=>canEvolve(c,x)).length*2);
+ if(copies>=2)result-=copies*3;
+ if(progress>=42&&!basic&&!family)result-=8;
  return result;
 }
 function cpuPick(ids,picks){
