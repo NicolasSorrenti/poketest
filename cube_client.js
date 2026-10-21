@@ -61,7 +61,8 @@
  function renderBuilder(){
   $('builder').classList.toggle('hidden',!state.done||state.started);
   if(!state.done||state.started)return;
-  if(!deckInitialized){deck=[...(state.suggestedDeck||[])];deckInitialized=true;}
+  if(!deckInitialized){deck=[...(state.suggestedDeck||[])];deckInitialized=true;
+   $('matchCpuDifficulty').value=String(state.difficulty??3);}
   if(!visualBuilder){
    visualBuilder=window.CubeDeckBuilder.create({
     root:$('soloDeckBuilder'),actionElement:$('soloBuilderAction'),
@@ -125,7 +126,7 @@
    location.assign('/classic_live.html');
   }catch(e){
    $('error').textContent=e.message;
-   try{state=await request('state');render();}catch{}
+   try{state=await request('state');$('cpuDifficulty').value=String(state.difficulty??3);render();}catch{}
    busy=false;
   }
  }
@@ -185,7 +186,7 @@
   if(busy||!state?.done||deck.length!==40)return;
   busy=true;$('error').textContent='';
   try{
-   const result=await request('start',{method:'POST',body:JSON.stringify({revision:state.revision,deck})});
+   const result=await request('start',{method:'POST',body:JSON.stringify({revision:state.revision,deck,difficulty:Number($('matchCpuDifficulty').value)})});
    sessionStorage.setItem('neoClassicLiveToken',result.duelToken);
    location.assign('/classic_live.html');
   }catch(e){$('error').textContent=e.message;busy=false;renderBuilder();}
