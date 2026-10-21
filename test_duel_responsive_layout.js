@@ -49,6 +49,13 @@ assert.match(reference,/v0\.83 — one desktop action rail/,'desktop exposes one
 assert.match(reference,/\.desktop-attack-dock button\.attack-action/,'attacks receive compact rail-specific controls');
 assert.match(reference,/\.desktop-attack-dock \.inline-attack-panel:not\(:has\(button:not\(:disabled\)\)\)\{display:none!important\}/,'setup does not show unusable attacks');
 assert.match(reference,/grid-template-columns:repeat\(3,minmax\(0,1fr\)\)!important/,'utility commands fit below attacks without a third dashboard row');
+assert.match(reference,/v0\.84 — screenshot corrections/,'the final cascade addresses the observed overlay and card-density defects');
+assert.match(reference,/#logDrawer:not\(\.hidden\)\{[\s\S]*?position:static!important[\s\S]*?max-height:none!important/,'the desktop log cannot escape and cover the match');
+assert.match(reference,/\.player-territory \.trainerlabel\{display:none!important\}/,'redundant player summary is removed from the playmat');
+assert.match(reference,/\.bench-zone \.poke>strong,[\s\S]*?\.bench-zone \.poke>\.hp-count\{display:none!important\}/,'Bench cards do not sacrifice artwork to duplicate labels');
+assert.match(reference,/\.bench-zone \.poke>\.vitals/,'Bench cards hide the complete duplicate HP component');
+assert.match(reference,/\.hand-toggle #handVisibilityText,[\s\S]*?display:none!important/,'the desktop hand toggle is icon-only');
+assert.match(reference,/\.hand-fan:not\(\.hidden\)\{[\s\S]*?inset:0!important[\s\S]*?height:100%!important/,'the hand uses its full row instead of reserving a title strip');
 for(const [file,css] of [['desktop',desktop],['mobile',mobile]]){
  assert.equal((css.match(/\{/g)||[]).length,(css.match(/\}/g)||[]).length,file+' rules must have balanced braces');
  assert.match(css,/body\.duel-active/,file+' should affect active duels only');
