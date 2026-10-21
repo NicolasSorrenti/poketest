@@ -44,16 +44,20 @@ test('wishlist rejects unknown cards, energy, and over eight goals',()=>{
  assert.throws(()=>Lab.toggle(s,'base2-9',Core,index),/up to 8/);
  assert.equal(Lab.goals(s,index,Core).length,8);
 });
-test('booster advice maps unowned goals to the correct sets and respects unlocks',()=>{
+test('booster advice recommends thematic packs that can actually supply wishlist cards',()=>{
  const s=state(),index=cards();
  Lab.toggle(s,'base2-17',Core,index);Lab.toggle(s,'neo4-4',Core,index);
- const advice=Lab.packAdvice(s,index,Core),jungle=advice.find(x=>x.set==='base2'),neo=advice.find(x=>x.set==='neo4');
- assert.equal(jungle.targets,1);assert.equal(neo.targets,1);
- assert.equal(jungle.unlocked,false);assert.equal(neo.unlocked,false);
+ let advice=Lab.packAdvice(s,index,Core);
+ assert.ok(advice.some(x=>x.id==='arena'&&x.unlocked));
+ assert.equal(advice.find(x=>x.id==='evolution').targets,0,'locked Jungle/Neo printings must not be advertised');
+ assert.equal(advice.find(x=>x.id==='johto').targets,0,'locked packs have zero currently available targets');
  s.day=90;
- assert.equal(Lab.packAdvice(s,index,Core).find(x=>x.set==='neo4').unlocked,true);
+ advice=Lab.packAdvice(s,index,Core);
+ assert.ok(advice.find(x=>x.id==='johto').unlocked);
+ assert.ok(advice.find(x=>x.id==='johto').targets>=1);
+ assert.ok(advice.find(x=>x.id==='arena').targets>=1);
  s.deckJourney.owned['base2-17']=1;
- assert.equal(Lab.packAdvice(s,index,Core).find(x=>x.set==='base2').targets,0);
+ assert.equal(Lab.packAdvice(s,index,Core).find(x=>x.id==='arena').targets,0);
 });
 test('profile reports 60-card composition and common Pokémon types without editing the save',()=>{
  const s=state(),index=cards(),snapshot=JSON.stringify(s);
