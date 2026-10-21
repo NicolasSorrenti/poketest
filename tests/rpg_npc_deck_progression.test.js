@@ -83,7 +83,7 @@ test('RPG snapshots a tier at challenge time and forwards it to the existing Cla
  assert.match(live,/customOpponentDeck/);
 });
 
-test('RPG opponent progression never alters the authoritative player's starting deck',()=>{
+test('RPG opponent progression never alters the authoritative player starting deck',()=>{
  const source=service.decklist('blackout');
  const recipe=NPC.upgrade({npc:'reina',tier:3,original:source,catalog:CATALOG});
  assert.equal(recipe.length,60);
