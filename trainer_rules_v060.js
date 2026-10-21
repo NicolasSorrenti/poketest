@@ -90,6 +90,9 @@ Engine.prototype.attack=function(i,benchTarget=null,deferTurnEnd=false,searchCho
    ...owner.bench.map((u,index)=>({index,name:'Switch to '+(this.card(u)?.name||'Pokémon')}))];
   deckSearchRequest={label:"Koga's Ninja Trick: rival is attacking. Choose whether to switch before the attack resolves.",defenderPrompt:true,options,execute:choice=>{
    if(!options.some(x=>x.index===choice)||!this._trainer60NinjaPending)return false;
+   // A pending defender choice may outlive its original Bench or Tool.
+   // Reject stale selections without consuming the Tool or resuming the attack.
+   if(choice!==-1&&(!owner.bench[choice]||!owner.active?.attachedTrainers?.includes(ninja)))return false;
    if(choice!==-1){
     const previous=owner.active;[owner.active,owner.bench[choice]]=[owner.bench[choice],owner.active];
     previous.attachedTrainers.splice(previous.attachedTrainers.indexOf(ninja),1);
