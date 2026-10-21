@@ -222,10 +222,13 @@
    const img=typeof src==='string'&&/^https:\/\//.test(src)?`<img class="preview-art" src="${html(src)}" alt="${html(c.name)} card artwork">`:'';
    const attachedEnergy=unit?.energies?.map(id=>getCard(id)?.name||String(id))||[];
    const attachedTools=unit?.attachedTrainers?.map(t=>getCard(typeof t==='string'?t:t?.id)?.name||'Attached Trainer')||[];
+   const hp=Math.max(0,Number(c.hp)||0),remaining=Math.max(0,hp-Math.max(0,Number(unit?.damage)||0));
+   const life=unit&&hp?'<div class="preview-life"><div class="preview-life-label"><strong>HP remaining</strong><span>'+remaining+' / '+hp+'</span></div><div class="preview-life-track" role="progressbar" aria-label="HP remaining" aria-valuemin="0" aria-valuemax="'+hp+'" aria-valuenow="'+remaining+'"><span style="width:'+Math.min(100,remaining/hp*100)+'%"></span></div></div>':'';
+   const energySummary=unit?'<div class="preview-energy"><strong>Attached Energy: '+attachedEnergy.length+'</strong><span>'+html(attachedEnergy.join(', ')||'None')+'</span></div>':'';
    const extra=unit?`<p>Damage: ${html(unit.damage||0)} · ${attachedEnergy.length} attached Energy</p><p>Energy: ${html(attachedEnergy.join(', ')||'None')}</p><p>Attached Trainers: ${html(attachedTools.join(', ')||'None')}</p>`:'';
    const attacks=(c.attacks||[]).map(a=>`<div class="preview-effect"><strong>${html(a.name)}</strong> ${html((a.cost||[]).join(' / '))} ${html(a.damage||'')}<p>${html(a.text||'')}</p></div>`).join('');
    const powers=(c.abilities||[]).map(a=>`<div class="preview-effect"><strong>${html(a.name||'Pokémon Power')}</strong><p>${html(a.text||'')}</p></div>`).join('');
-   panel.innerHTML=`<button type="button" class="preview-close" aria-label="Close card preview">×</button>${img}<div class="preview-data"><strong>${html(c.name)}</strong> <small>${html(c.hp?`${c.hp} HP`:(c.supertype||''))}</small>${extra}${attacks}${powers}</div>`;
+   panel.innerHTML=`<button type="button" class="preview-close" aria-label="Close card preview">×</button>${img}<div class="preview-data"><strong>${html(c.name)}</strong> <small>${html(c.hp?`${c.hp} HP`:(c.supertype||''))}</small>${life}${energySummary}${extra}${attacks}${powers}</div>`;
    panel.querySelector('.preview-close').addEventListener('click',hide);
    panel.classList.toggle('text-only',!img);
   }
@@ -240,6 +243,7 @@
   }
   panel.addEventListener('pointerleave',()=>{if(!pinned)hide();});
   document.addEventListener('keydown',e=>{if(e.key==='Escape'&&pinned)hide();});
+  document.addEventListener('pointerdown',e=>{if(pinned&&!panel.contains(e.target))hide();});
   return {attach,inspect:(id,unit)=>show(id,unit,window.innerWidth/2-145,window.innerHeight/2-180,true),hide};
  }
  root.NeoDuelUI={legalTarget,drawPrizes,makePreview,energyStack,makeDuelFeedback,makeTransientToast,makeOpponentActivity,actionDescription,newActivitySince,slots};
