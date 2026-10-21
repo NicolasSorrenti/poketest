@@ -15,7 +15,7 @@ node --test tests/rpg_npc_deck_balance.test.js tests/rpg_npc_deck_progression.te
 
 The GitHub Actions `RPG NPC Deck Balance Benchmark` workflow runs the same matrix on changes to RPG NPC recipes, uploads `rpg-npc-deck-benchmark.json` and publishes per-match-up outcomes.
 
-`scripts/benchmark-rpg-npc-decks.js` simulates an early/mid/late player collection by generating actual rarity-aware game boosters from unlocked sets, then upgrading the player's original 60-card starter deck using **only owned** Trainer cards. It uses `benchmark_cpu.duel` and the actual Classic reducer to play both decks with identical level-3 CPU policies. Every seed is tested with both seat orders. Deck legality and conservation are checked by the genuine rule engine. The benchmark selects `gym-expanded` or `online-preview` for campaign cards outside the original Base–Rocket format.
+`scripts/benchmark-rpg-npc-decks.js` simulates an early/mid/late player collection by opening the current **Game Boy-inspired themed boosters** from legally unlocked historical expansion pools, then upgrading the player's original 60-card starter deck using **only owned** Trainer cards. It uses `benchmark_cpu.duel` and the actual Classic reducer to play both decks with identical level-3 CPU policies. Every seed is tested with both seat orders. Deck legality and conservation are checked by the genuine rule engine. The benchmark selects `gym-expanded` or `online-preview` for campaign cards outside the original Base–Rocket format.
 
 ### Limitations
 
@@ -24,7 +24,10 @@ The GitHub Actions `RPG NPC Deck Balance Benchmark` workflow runs the same matri
 - The NPCs all use fixed CPU level 3 in this test, deliberately separating deck recipes from character-specific CPU skill; actual RPG NPC skill profiles may vary.
 - A match unfinished by the configured turn limit is counted as a draw/timeout, not a win.
 
-## Results (432 matches, 4 mirrored pairs / NPC / player starter / stage)
+## Historical results before the themed booster update (432 matches)
+
+**Historical baseline only:** The win totals below were recorded when modeled player collections used original expansion-specific packs. The current benchmark uses thematic packs and its match outcomes must be remeasured; do not compare new outputs against these as identical player-deck conditions.
+
 
 Each NPC row has 24 games per stage. Scores are NPC wins, with ties/timeouts excluded only from the numerator. All 432 games were played without benchmark errors on [GitHub Actions run 39554539555](https://github.com/NicolasSorrenti/poketest/actions/runs/39554539555).
 
