@@ -68,7 +68,7 @@
     onChange:next=>{deck=next;renderBuilder();}
    });
   }
-  visualBuilder.update({drafted:state.drafted,energyIds:state.energyIds,deck});
+  visualBuilder.update({drafted:state.drafted,energyIds:state.energyIds,deck,suggestedDeck:state.suggestedDeck});
   const basics=deck.filter(id=>state.drafted.some(c=>c.id===id&&
    (c.subtypes.includes('Basic')||c.subtypes.includes('Baby')))).length;
   const ready=deck.length===40&&basics>0;
