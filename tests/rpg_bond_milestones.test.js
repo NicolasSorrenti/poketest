@@ -97,7 +97,7 @@ test('redeeming a story voucher costs no credits, yields ten random cards and re
  assert.equal(s.deckJourney.lastPack.source,'gift');
  assert.equal(s.deckJourney.lastPack.set,set);
  assert.ok(cards.some(id=>COLLECT.ENERGY.has(id)));
- assert.ok(cards.some(id=>id.startsWith(set+'-')&&Number(id.split('-')[1])<=COLLECT.SETS[set].rares));
+ assert.ok(cards.some(id=>id.startsWith(set+'-')&&['rare','holo','secret'].includes(COLLECT.packRarity(id))));
  const restored=JSON.parse(JSON.stringify(s));COLLECT.hydrate(restored);
  assert.deepEqual(restored.deckJourney,s.deckJourney);
  assert.throws(()=>COLLECT.redeemVoucher(s,set),/Reveal your previous booster/);
