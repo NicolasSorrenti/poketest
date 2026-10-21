@@ -44,13 +44,13 @@ jobs:
           set -e
           node -e 'const x=require("./rpg-pack-midgame.json"); for(const s of x.aggregate)console.log("Day "+s.day+" "+s.style+": "+s.playerWins+"-"+s.npcWins+" ("+s.draws+" draws), player win rate "+s.playerWinRate); for(const s of x.opponents)console.log("Day "+s.day+" vs "+s.npc+": player "+s.playerWins+" NPC "+s.npcWins+" draws "+s.draws+" rate "+s.playerWinRate); for(const e of x.errors)console.error(JSON.stringify(e));'
           exit "$result"
-      - name: Check hypothetical Evolution and Toolkit pricing against the same seeds
+      - name: Compare previous Evolution and Toolkit prices against the balanced shop
         run: |
           set +e
-          node scripts/benchmark-rpg-pack-strategies.js --duels --days 45,60 --styles evolution,toolkit --seeds 3 --pairs 1 --starters ember_garden,tidal_circuit --npcs hana,reina,camila,marina,shiori,yuna --prices evolution=26,toolkit=22 --max-turns 70 > rpg-pack-price-trial.json
+          node scripts/benchmark-rpg-pack-strategies.js --duels --days 45,60 --styles evolution,toolkit --seeds 3 --pairs 1 --starters ember_garden,tidal_circuit --npcs hana,reina,camila,marina,shiori,yuna --prices evolution=22,toolkit=24 --max-turns 70 > rpg-pack-price-previous.json
           result=$?
           set -e
-          node -e 'const x=require("./rpg-pack-price-trial.json"); for(const s of x.aggregate)console.log("TRIAL Day "+s.day+" "+s.style+": "+s.playerWins+"-"+s.npcWins+" ("+s.draws+" draws), player rate "+s.playerWinRate+", paid packs "+s.packs); for(const e of x.errors)console.error(JSON.stringify(e));'
+          node -e 'const x=require("./rpg-pack-price-previous.json"); for(const s of x.aggregate)console.log("PREVIOUS PRICES Day "+s.day+" "+s.style+": "+s.playerWins+"-"+s.npcWins+" ("+s.draws+" draws), player rate "+s.playerWinRate+", paid packs "+s.packs); for(const e of x.errors)console.error(JSON.stringify(e));'
           exit "$result"
       - name: Save benchmark datasets
         if: always()
@@ -61,5 +61,5 @@ jobs:
             rpg-pack-readiness.json
             rpg-pack-matchups.json
             rpg-pack-midgame.json
-            rpg-pack-price-trial.json
+            rpg-pack-price-previous.json
           if-no-files-found: ignore
