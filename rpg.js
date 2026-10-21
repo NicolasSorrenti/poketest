@@ -904,7 +904,7 @@ async function loadCardNames(){
  }catch{}
 }
 
-function duelUrl(duel){return '/classic_live.html?rpg=1&duelId='+encodeURIComponent(duel.id)+'&deck='+encodeURIComponent(duel.playerDeck)+'&opponent='+encodeURIComponent(duel.opponent)+'&npc='+encodeURIComponent(duel.npc)+'&npcName='+encodeURIComponent(cast[duel.npc].name);}
+function duelUrl(duel){return '/classic_live.html?rpg=1&duelId='+encodeURIComponent(duel.id)+'&deck='+encodeURIComponent(duel.playerDeck)+'&opponent='+encodeURIComponent(duel.opponent)+'&npc='+encodeURIComponent(duel.npc)+'&npcName='+encodeURIComponent(cast[duel.npc].name)+'&npcTier='+encodeURIComponent(duel.npcDeckTier||1);}
 
 function describePreparedDuel(){
  return PRE.describe(state,state.pendingDuel,{cast,places,cg:CG,tournaments:TOURNAMENTS,
@@ -920,7 +920,7 @@ function showPreparedDuel(){
  modal.dataset.circuit=matchStyle?.kind||'friendly';
  $('preDuelContext').textContent=preview.stake;
  $('preDuelOpponent').textContent=preview.name;
- $('preDuelDeck').textContent=preview.deckLabel+(pending.customOpponentDeck?' · YOUR COLLABORATIVE BUILD':'')+' · '+preview.place;
+ $('preDuelDeck').textContent=preview.deckLabel+(pending.customOpponentDeck?' · YOUR COLLABORATIVE BUILD':pending.npcDeckTier===3?' · ACT III · EXPERT DECK':pending.npcDeckTier===2?' · ACT II · REFINED DECK':'')+' · '+preview.place;
  const line=preview.lines[pending.preview.index];
  $('preDuelSpeaker').textContent=line.speaker;
  $('preDuelLine').textContent=line.text;
@@ -975,10 +975,11 @@ function startDuel(id,exhibition=null,arcEpisode=null,tournament=null,sideQuest=
  if(bondChallenge&&!BONDS.canChallenge(state,id,BOND_PLAN))return;
  if(arcEpisode&&(!state.activeArc||state.activeArc.phase!=='choice'||!ARC.available(state,currentPeople()).some(e=>e.id===arcEpisode)))return;
  const c=cast[id],npcEditedCards=PARTNER.snapshot(state,id,c.deck);
+ const npcDeckTier=state.day<=30?1:state.day<=60?2:3;
  state.pendingDuel={id:'npc-'+id+'-'+state.day+'-'+state.slot+'-'+state.results.length,npc:id,day:state.day,slot:state.slot,opponent:c.deck,playerDeck:state.deckJourney?.starter?'custom':state.playerDeck,deckCards:state.deckJourney?.starter?[...state.deckJourney.deck]:null,resolved:false,eventKey:exhibition?exhibition.day+':'+exhibition.title:null,eventReward:exhibition?exhibition.reward:0,eventTitle:exhibition?exhibition.title:null,arcEpisode:arcEpisode||null,tournamentId:tournament?.tournamentId||null,tournamentRound:tournament?.tournamentRound??null,tournamentAttempt:tournament?.tournamentAttempt??null,sideQuestId:sideQuest?.id||null,sideQuestStage:sideQuest?.step??null,bondChallenge:!!bondChallenge,customOpponentDeck:npcEditedCards,
   competitiveKind:competition?.kind||null,competitiveId:competition?.id||null,
   competitiveWeek:competition?.week??null,competitiveRound:competition?.round??null,
-  competitiveTitle:competition?.title||null};
+  competitiveTitle:competition?.title||null,npcDeckTier};
  if(arcEpisode)state.activeArc=null;
  PRE.stage(state.pendingDuel);
  if(npcEditedCards)sessionStorage.setItem('neoRpgNpcDeck:'+state.pendingDuel.id,JSON.stringify(npcEditedCards));
