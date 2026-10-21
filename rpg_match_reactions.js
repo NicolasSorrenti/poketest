@@ -343,7 +343,7 @@
  const priorityFor=kind=>isClutch(kind)?3:['weakness_hit','status_hit','big_hit','evolve','power'].includes(kind)?2:1;
  const durationFor=(kind,reduced=false)=>kind==='attack'?2800:isClutch(kind)?2600:['weakness_hit','status_hit','big_hit'].includes(kind)?2300:1650;
  function makeExperience({element,npcId,npcName,random=Math.random,getCard=()=>null,doc=typeof document==='undefined'?null:document,
-  schedule=setTimeout,cancel=clearTimeout,media=typeof window==='undefined'?null:window}={}){
+  onShow=()=>{},schedule=setTimeout,cancel=clearTimeout,media=typeof window==='undefined'?null:window}={}){
   const director=createDirector({npcId,npcName,random,getCard});
   let manifest=null,queued=null,active=false,currentPriority=0,timer=null,preloadImages=[];
   const reduced=()=>!!media?.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches;
@@ -386,6 +386,7 @@
    const line=doc.createElement('p');line.textContent='“'+reaction.line+'”';
    copy.append(tag,name,title,line);card.append(portrait,copy);
    element.replaceChildren(card);element.classList.remove('hidden');
+   onShow(reaction);
    media?.NeoRpgAudio?.play?.(isClutch(reaction.kind)?'knockout':'cutin');
    const showingPriority=currentPriority;
    timer=schedule(()=>{

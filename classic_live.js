@@ -42,8 +42,11 @@
  });
  updatePlaymats();
  const cards=new Map();
+ const npcChat=rpgMode?window.NeoRpgMatchChat.make({container:$('rpgDialogueMessages'),key:'neoRpgDuelChat:'+rpgDuelId}):null;
+ let npcChatOpen=false;
+ function toggleNpcChat(open){npcChatOpen=!!open;$('rpgReactionChat').classList.toggle('hidden',!npcChatOpen);$('rpgChatToggle').setAttribute('aria-expanded',String(npcChatOpen));}
  const reactions=rpgMode&&rpgNpc?window.NeoRpgMatchReactions.makeExperience({
-  element:$('npcReaction'),npcId:rpgNpc,npcName:opponentName,
+  element:$('npcReaction'),npcId:rpgNpc,npcName:opponentName,onShow:reaction=>npcChat?.push(reaction),
   getCard:id=>cards.get(id)||null
  }):null;
  function notifyRpg(){if(rpgMode&&rpgDuelId&&current?.view?.over&&(current.winner===null||current.winner===0||current.winner===1))window.parent.postMessage(window.NeoRpgDuelBridge.message(rpgDuelId,current.winner),location.origin);}
@@ -128,7 +131,7 @@
    ...($('deck').value==='custom'?{customDeck:JSON.parse(rpgMode?sessionStorage.getItem('neoRpgDeck:'+rpgDuelId)||'null':localStorage.getItem('neoCampusCustomGymDeck')||'null')}:{}),
    ...(partnerCards?{customOpponentDeck:JSON.parse(partnerCards)}:{})
   })});
-  feedback.reset();opponentActivity.clear();combat.reset();reactions?.reset();token=response.token;sessionStorage.setItem(rpgKey,token);current=response;
+  feedback.reset();opponentActivity.clear();combat.reset();reactions?.reset();npcChat?.reset();token=response.token;sessionStorage.setItem(rpgKey,token);current=response;
   selectedHand=null;targetMode=null;decisionSelection.clear();handVisible=true;powersOpen=false;logOpen=false;lastCoinSeq=null;lastKoMessage="";setHandVisible(true);render();
  }catch(e){$('startupError').textContent=e.message;}finally{busy=false;}}
 
@@ -179,7 +182,7 @@
   $('choiceModal').classList.add('hidden');$('choiceModal').setAttribute('aria-hidden','true');
   $('fieldChoiceBar').classList.add('hidden');modalDecisionId=null;lastFieldDecisionId=null;
  }
- function newDuel(){playbackEpoch++;busy=false;clearChoiceUi();opponentActivity.clear();combat.reset();reactions?.reset();feedback.reset();preview.hide();token=null;current=null;selectedHand=null;targetMode=null;handVisible=true;powersOpen=false;logOpen=false;setLogOpen(false);document.body.classList.remove('duel-active','cpu-match');sessionStorage.removeItem(rpgKey);setHandVisible(true);render();}
+ function newDuel(){npcChat?.reset();toggleNpcChat(false);playbackEpoch++;busy=false;clearChoiceUi();opponentActivity.clear();combat.reset();reactions?.reset();feedback.reset();preview.hide();token=null;current=null;selectedHand=null;targetMode=null;handVisible=true;powersOpen=false;logOpen=false;setLogOpen(false);document.body.classList.remove('duel-active','cpu-match');sessionStorage.removeItem(rpgKey);setHandVisible(true);render();}
  function setTarget(type,payload,title,benchOnly=false){preview.hide();targetMode={type,payload,title,benchOnly};render();}
  function cancelTarget(){targetMode=null;selectedHand=null;preview.hide();render();}
  function pokemonNode(u,side,slot){
@@ -382,6 +385,7 @@
    render();
   }catch(e){$('startupError').textContent=e.message||String(e);}
  }
+ $('rpgChatToggle').addEventListener('click',()=>toggleNpcChat(!npcChatOpen));$('closeRpgChat').addEventListener('click',()=>toggleNpcChat(false));
  $('newDuel').addEventListener('click',start);$('reset').addEventListener('click',newDuel);
  window.addEventListener('resize',()=>{if(current?.view)renderHandFan(current.view.players[0]?.hand);});
  $('handToggle').addEventListener('click',()=>setHandVisible(!handVisible));$('closeHand').addEventListener('click',()=>setHandVisible(false));
