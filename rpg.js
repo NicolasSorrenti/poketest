@@ -670,7 +670,7 @@ function showPackReveal(){
  if(!pack||pack.opened||modal.open)return;
  const isVictory=pack.source==='win';
  const giver=pack.giver&&cast[pack.giver]?pack.giver:null;
- const setName=COLLECT.SETS[pack.set]?.name||'Base Set';
+ const setName=COLLECT.THEMED_PACKS?.find(x=>x.id===pack.theme)?.name||COLLECT.SETS[pack.set]?.name||'Base Set';
  $('packEyebrow').textContent=isVictory?'✦ DUEL REWARD · YOUR CARDS':'✦ NEO HARBOR · CARD REWARDS';
  $('packTitle').textContent=isVictory?(pack.cards.length===10?(pack.kind==='championship'?'CHAMPION BOOSTER':'VICTORY BOOSTER'):'VICTORY MINI BOOSTER'):'NEW BOOSTER';
  $('packDescription').textContent=setName+' · '+pack.cards.length+' cards. Tap to flip individual cards, or reveal them all.';
@@ -800,14 +800,17 @@ function openBoosterShop(){
  renderBoosterShop();
  if(!$('boosterShopDialog').open)$('boosterShopDialog').showModal();
 }
-function purchaseBoosterPack(set,useVoucher=false){
+function purchaseBoosterPack(packId,useVoucher=false){
  try{
-  const cards=useVoucher?COLLECT.redeemVoucher(state,set):COLLECT.buyPack(state,set);
-  const name=COLLECT.SETS[set].name;
+  const cards=useVoucher?COLLECT.redeemVoucher(state,packId):COLLECT.buyThemedPack(state,packId);
+  const opened=state.deckJourney?.lastPack;
+  const name=COLLECT.THEMED_PACKS?.find(x=>x.id===opened?.theme)?.name||
+   COLLECT.SETS[packId]?.name||'Booster';
+  const welcome=opened?.kind==='welcome';
   log('Opened '+name+' booster: '+cards.map(labelCard).join(', ')+'.');
   persist();
   if($('boosterShopDialog').open)$('boosterShopDialog').close();
-  say('Card Shop','Your '+name+' booster is ready! See what you pulled, then visit the Deck Studio to use your new cards.');
+  say('Card Shop',(welcome?'Your welcome ':'Your ')+name+' booster is ready! Reveal your cards, then use the Deck Studio to improve your deck.');
   showPackReveal();
  }catch(e){
   $('boosterShopStatus').textContent=e.message;
@@ -816,37 +819,59 @@ function purchaseBoosterPack(set,useVoucher=false){
 }
 function renderBoosterShop(message=''){
  const root=$('boosterShopGrid');root.replaceChildren();
- $('boosterShopBalance').textContent='◈ '+(state.credits||0)+' credits · Day '+state.day;
- $('boosterShopStatus').textContent=message;
- for(const offer of COLLECT.shopPacks(state)){
+ const remaining=state.deckJourney?.welcomePacks||0;
+ $('boosterShopBalance').textContent='◈ '+(state.credits||0)+' credits · Day '+state.day+
+  (remaining?' · '+remaining+' welcome mini pack'+(remaining===1?'':'s')+' to choose':'');
+ $('boosterShopStatus').textContent=message||
+  (remaining?'Choose any two opening mini packs for free. All three starter varieties stay in the shop afterward.':'Each pack has its own card pool. Earlier packs stay useful even as later eras unlock.');
+ const wishes=(state.deckStrategy?.wishlist||[]).filter(id=>!(state.deckJourney?.owned?.[id]>0));
+ for(const offer of COLLECT.themedPacks(state)){
   const box=document.createElement('article');box.className='booster-offer'+(offer.unlocked?'':' is-locked');
-  const eyebrow=document.createElement('small');eyebrow.className='booster-offer-edition';eyebrow.textContent=offer.unlocked?'AVAILABLE BOOSTER':'LOCKED BOOSTER';
+  const eyebrow=document.createElement('small');eyebrow.className='booster-offer-edition';
+  eyebrow.textContent=offer.unlocked?'THEMED BOOSTER · AVAILABLE':'THEMED BOOSTER · LOCKED';
   const title=document.createElement('h3');title.textContent=offer.name;
   const desc=document.createElement('p');desc.textContent=offer.description;
+  const sources=document.createElement('small');sources.className='booster-offer-edition';
+  sources.textContent='PRINTINGS · '+(offer.sources.length?offer.sources.slice(0,3).map(s=>COLLECT.SETS[s]?.name||s).join(' · ')+(offer.sources.length>3?' · +'+(offer.sources.length-3)+' more':''):'Not yet discovered');
   const progress=document.createElement('div');progress.className='booster-collection-progress';
   const track=document.createElement('div');track.className='booster-collection-track';
   const fill=document.createElement('span');fill.style.width=offer.completion+'%';track.append(fill);
-  const count=document.createElement('small');count.textContent=offer.owned+' / '+offer.total+' cards discovered · '+offer.completion+'%';
+  const count=document.createElement('small');count.textContent=offer.owned+' / '+offer.total+' possible cards discovered · '+offer.completion+'%';
   progress.append(track,count);
-  const targets=(state.deckStrategy?.wishlist||[]).filter(id=>
-   id.startsWith(offer.set+'-')&&!(state.deckJourney?.owned?.[id]>0));
+  const targets=wishes.filter(id=>COLLECT.themeContains(state,offer.id,id));
   if(targets.length){
    const tip=document.createElement('small');tip.className='booster-offer-targets';
    tip.textContent='✦ '+targets.length+' missing tracked card'+(targets.length===1?'':'s')+
-    ' in this set · packs are randomized';
+    ' could appear here · no card guaranteed';
    progress.append(tip);
   }
   const reason=document.createElement('p');reason.className='booster-offer-unlock';
-  reason.textContent=offer.unlocked?'Ten random cards · rare + Basic Energy guaranteed':
-   offer.unlockHint.replace('bond with '+offer.npc,'bond with '+(cast[offer.npc]?.name||offer.npc));
+  const free=offer.welcome>0&&offer.unlocked;
+  reason.textContent=!offer.unlocked?offer.unlockHint:
+   free?'Welcome choice · five cards · one Rare and one Basic Energy':
+   'Ten cards · one Rare and one Basic Energy · original card rarities';
   const buy=document.createElement('button');buy.type='button';buy.className='booster-offer-buy';
   const affordable=(state.credits||0)>=offer.price;
-  buy.disabled=!offer.unlocked||(!affordable&&!offer.vouchers)||controlsLocked();
-  buy.textContent=offer.vouchers?'Redeem reward · free ('+offer.vouchers+')':offer.unlocked?'Buy · '+offer.price+' credits':'Unlock to buy · '+offer.price+' credits';
-  if(offer.unlocked&&!affordable&&!offer.vouchers)reason.textContent='Need '+(offer.price-(state.credits||0))+' more credits · '+reason.textContent;
-  if(offer.vouchers)reason.textContent='Character chapter gift · one ten-card booster';
-  buy.onclick=()=>purchaseBoosterPack(offer.set,offer.vouchers>0);
-  box.append(eyebrow,title,desc,progress,reason,buy);root.append(box);
+  buy.disabled=!offer.unlocked||(!free&&!affordable)||controlsLocked();
+  buy.textContent=free?'Choose free mini pack · '+offer.welcome+' left':
+   offer.unlocked?'Buy · '+offer.price+' credits':'Unlocks later';
+  if(offer.unlocked&&!free&&!affordable)
+   reason.textContent='Need '+(offer.price-(state.credits||0))+' more credits · '+reason.textContent;
+  buy.onclick=()=>purchaseBoosterPack(offer.id,false);
+  box.append(eyebrow,title,desc,sources,progress,reason,buy);root.append(box);
+ }
+ // Chapter and tournament rewards earned in old or current saves remain
+ // redeemable as their original source-set vouchers, separate from the new shop.
+ for(const offer of COLLECT.shopPacks(state).filter(x=>x.vouchers>0)){
+  const box=document.createElement('article');box.className='booster-offer';
+  const eyebrow=document.createElement('small');eyebrow.className='booster-offer-edition';
+  eyebrow.textContent='EARNED EXPANSION VOUCHER';
+  const title=document.createElement('h3');title.textContent=offer.name+' · '+offer.vouchers+' free';
+  const desc=document.createElement('p');desc.textContent='A ten-card reward from '+offer.name+' (original expansion printings).';
+  const button=document.createElement('button');button.type='button';button.className='booster-offer-buy';
+  button.textContent='Redeem gift voucher · free';button.disabled=controlsLocked();
+  button.onclick=()=>purchaseBoosterPack(offer.set,true);
+  box.append(eyebrow,title,desc,button);root.append(box);
  }
 }
 function renderDeckWorkshop(){
