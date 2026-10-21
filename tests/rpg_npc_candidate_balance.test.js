@@ -101,3 +101,27 @@ test('campaign benchmark distinguishes calendar tiers from early story advanceme
  assert.throws(()=>Trial.parse(['--player-level','0']),/Invalid player CPU level/);
  assert.throws(()=>Trial.parse(['--npc-level','4']),/Invalid NPC CPU level/);
 });
+
+
+test('production-only benchmark uses real RPG skill and character personalities',()=>{
+ const {argumentsOf}=require('../benchmark_cpu');
+ for(const [npc,variant,level,personality] of [
+  ['reina','fair-rival',4,'aggressive'],['yuna','electabuzz-pair',2,'risk_taking'],
+  ['camila','rocket-hybrid',4,'tactical']]){
+  assert.deepEqual(Trial.variantsFor(npc,'production'),['baseline',variant]);
+  assert.deepEqual(Trial.npcCpu(npc,{npcProfile:'character'}),{level,personality});
+ }
+ const args=Trial.parse(['--npc-profile','character','--selection','production','--player-level','4','--npc-level','5']);
+ assert.equal(args.npcProfile,'character');
+ assert.equal(args.selection,'production');
+ assert.equal(args.playerLevel,4);
+ assert.deepEqual(Trial.npcCpu('reina',args),{level:4,personality:'aggressive'});
+ assert.deepEqual(Trial.npcCpu('reina',{npcProfile:'uniform',npcLevel:5}),{level:5,personality:'balanced'});
+ assert.throws(()=>Trial.parse(['--npc-profile','random']),/Invalid NPC profile mode/);
+ assert.throws(()=>Trial.parse(['--selection','bad']),/Invalid variant selection/);
+ const duelOpts=argumentsOf(['--left-level','3','--right-level','4',
+  '--left-personality','balanced','--right-personality','aggressive']);
+ assert.equal(duelOpts.leftPersonality,'balanced');
+ assert.equal(duelOpts.rightPersonality,'aggressive');
+ assert.throws(()=>argumentsOf(['--right-personality','nonexistent']),/Unknown CPU personality/);
+});
