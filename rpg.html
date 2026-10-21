@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#111224">
 <title>Neo Harbor — TCG RPG</title>
+<script src="/rpg_discreet.js"></script>
 <link rel="stylesheet" href="/rpg.css">
 <link rel="stylesheet" href="/rpg_time_transitions.css">
 <link rel="stylesheet" href="/rpg_ui_motion.css">
@@ -12,6 +13,7 @@
 <link rel="stylesheet" href="/rpg_victory_presentation.css">
 <link rel="stylesheet" href="/rpg_tournament_presentation.css">
 <link rel="stylesheet" href="/rpg_audio.css">
+<link rel="stylesheet" href="/rpg_discreet.css">
 </head>
 <body>
 <div id="app">
@@ -49,6 +51,7 @@
           <small>Audio starts when you interact. Ambience is optional.</small>
         </div>
       </details>
+      <button id="rpgDiscreetToggle" class="toolbar-btn" type="button" aria-pressed="false" title="Hide character and event illustrations">◇ DISCREET OFF</button>
       <button id="rpgMapToggle" class="toolbar-btn rpg-nav-toggle" type="button" aria-controls="rpgMapPanel" aria-expanded="false" aria-label="Open town map">☷ MAP</button>
       <button id="rpgInfoToggle" class="toolbar-btn rpg-nav-toggle" type="button" aria-controls="rpgInfoPanel" aria-expanded="false" aria-label="Open story and progress panels">✧ INFO</button>
       <button id="deckStudioBtn" class="toolbar-btn" type="button">▣ DECK STUDIO</button>
@@ -89,6 +92,7 @@
           <span id="placeDetail">Your base during the championship season.</span>
         </div>
         <div class="home-banner" id="homeBanner">YOUR APARTMENT — Prepare, plan or rest.</div>
+        <div class="rpg-discreet-stage" aria-hidden="true"><span class="rpg-discreet-stage__symbol">N/H</span><span class="rpg-discreet-stage__subtitle">STORY · TACTICS · CONNECTIONS</span></div>
         <div id="portrait" class="portrait" aria-label="Character illustration"></div>
         <div id="dialogue" class="dialogue" aria-live="polite">
           <div class="dialogue-title"><span id="speaker">Narrator</span><span class="vn-label">NEO HARBOR / STORY</span></div>
