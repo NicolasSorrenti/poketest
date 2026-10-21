@@ -268,6 +268,10 @@ function trainerOpportunity(o,name,cfg){
  if(name==='Switch')return p.bench.length>0;
  if(name==='Gust of Wind')return q.bench.length>0;
  if(name==='Pokémon Center')return own.some(u=>u.damage>=10);
+ // Item Finder requires a Trainer already in discard before its two-card cost.
+ // Playing it without a target strands a mandatory choice on the genuine reducer.
+ if(name==='Item Finder')return (p.discard||[]).some(id=>card(id)?.supertype==='Trainer');
+ if(name==='Computer Search')return p.deckCount>0;
  if(name==='Bill')return p.deckCount>(cfg.level>=4?2:0);
  if(name==='Professor Oak')return p.deckCount>(cfg.level>=4?7:0);
  return true;
@@ -848,4 +852,4 @@ function driveSide(initial,{side=1,level=3,personality='balanced',seed=1,plannin
 }
 function driveBot(game,limit=200,config={}){return driveSide(game,{...config,side:1,limit});}
 function propose(game,config={}){return chooseAction(game,{...config,side:1});}
-module.exports={SKILLS,CALIBRATED_SKILLS,PERSONALITIES,configuration,observation,candidates,score,knockoutChance,planningBonus,evolutionTempoPenalty,prizeRaceBonus,knockoutTempoBonus,opponentResponseBonus,energyHorizonBonus,chooseAction,driveSide,driveBot,propose};
+module.exports={SKILLS,CALIBRATED_SKILLS,PERSONALITIES,configuration,observation,trainerOpportunity,candidates,score,knockoutChance,planningBonus,evolutionTempoPenalty,prizeRaceBonus,knockoutTempoBonus,opponentResponseBonus,energyHorizonBonus,chooseAction,driveSide,driveBot,propose};
