@@ -135,3 +135,24 @@ test('NPC progression browser global matches authoritative Node exports',()=>{
  const html=fs.readFileSync(path.join(__dirname,'..','rpg.html'),'utf8');
  assert.match(html,/<script src="\/rpg_npc_deck_progression\.js"><\/script>/);
 });
+
+test('Rocket rival upgrades strengthen playable Grass/Water evolution lines without starving Energy',()=>{
+ const original=service.decklist('rocket_lab'),frequency=(ids,id)=>ids.filter(x=>x===id).length;
+ assert.equal(frequency(original,'base1-99'),8,'shared Rocket source already contains Grass Energy');
+ assert.equal(frequency(original,'base1-102'),8,'shared Rocket source contains Water Energy');
+ assert.equal(frequency(original,'base1-98'),0,'do not invent an off-color Fire Energy issue');
+ for(const npc of ['camila','kaede']){
+  const refined=NPC.upgrade({npc,tier:2,original,catalog:CATALOG});
+  const expert=NPC.upgrade({npc,tier:3,original,catalog:CATALOG});
+  for(const cards of [refined,expert]){
+   assert.equal(validateDeck(cards,CATALOG).valid,true,npc+' deck legality');
+   assert.ok(frequency(cards,'base1-99')>=6,npc+' must support Grass attacks');
+   assert.ok(frequency(cards,'base1-102')>=6,npc+' must support Water attacks');
+   assert.ok(frequency(cards,'base1-96')<=2,npc+' trims excess Double Colorless instead of vital colored Energy');
+   assert.ok(frequency(cards,'base1-99')+frequency(cards,'base1-102')>=14);
+  }
+  assert.ok(frequency(refined,'base5-41')>=frequency(original,'base5-41')+1,npc+' reinforces Dark Muk line');
+  assert.ok(frequency(expert,'base5-25')>=frequency(original,'base5-25'),npc+' keeps Dark Gyarados playable');
+  assert.deepEqual(service.decklist('rocket_lab'),original,'shared lab deck is never mutated');
+ }
+});
