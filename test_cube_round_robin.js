@@ -10,11 +10,12 @@ function run(humans){
  let clock=100000;
  const classic=new ClassicLocalService({maxSessions:20});
  const online=new ClassicOnlineService({maxRooms:20,now:()=>clock});
- let cpuCalls=0;
- const rooms=new CubeRoomService({classic,online,now:()=>clock,simulateCpu:()=>{
-  cpuCalls++;return {winner:cpuCalls%2,method:'played',actions:32};
+ let cpuCalls=0,cpuLevels=[];
+ const rooms=new CubeRoomService({classic,online,now:()=>clock,simulateCpu:(a,b,opts)=>{
+  cpuCalls++;cpuLevels.push([opts.levelA,opts.levelB]);return {winner:cpuCalls%2,method:'played',actions:32};
  }});
- const players=[rooms.create({name:'Player 1',seed:145,preset:'balanced'})];
+ const players=[rooms.create({name:'Player 1',seed:145,preset:'balanced',difficulty:5})];
+ assert.equal(players[0].difficulty,5);
  const code=players[0].code;
  for(let i=1;i<humans;i++)players.push(rooms.join({code,name:'Player '+(i+1)}));
  for(const p of players)rooms.ready(code,p.token,true);
@@ -87,7 +88,8 @@ function run(humans){
     game.over=true;game.winner=m.id%2;
    }else{
     const token=session.tokens[session.seats.indexOf(session.humanSeat)];
-    const game=classic.session(token).game;
+    assert.equal(classic.session(token).cpuConfig.level,5,'Host CPU difficulty must reach matches');
+     const game=classic.session(token).game;
     assert.equal(game.deckSize,40);assert.equal(game.prizeCount,4);
     game.over=true;game.winner=m.id%2;
    }
@@ -108,6 +110,7 @@ function run(humans){
  assert.equal(t.standings.reduce((x,r)=>x+r.wins,0),6);
  assert.equal(t.standings.reduce((x,r)=>x+r.losses,0),6);
  assert.equal(cpuCalls,humans===4?0:humans===3?0:1);
+  assert(cpuLevels.every(x=>x[0]===5&&x[1]===5),'CPU-only fixtures respect difficulty');
  assert.deepEqual(t.activeMatches,[]);
  assert.deepEqual(rooms.state(code,players[0].token).tournament.matches,t.matches,
   'State polling must be idempotent after tournament completion');
