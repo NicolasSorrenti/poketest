@@ -28,7 +28,7 @@ jobs:
       - name: Run matched mirrored live-engine duels across three checkpoints
         run: |
           set +e
-          node scripts/benchmark-rpg-npc-candidates.js --days 45,60,80 --styles mixed,evolution,toolkit --starters ember_garden,tidal_circuit --seeds 2 --pairs 1 > npc-tuning-candidates.json
+          node scripts/benchmark-rpg-npc-candidates.js --days 45,60,80 --styles mixed,evolution,toolkit --starters ember_garden,tidal_circuit --npcs reina --seeds 3 --pairs 1 > npc-tuning-candidates.json
           result=$?
           set -e
           node -e 'const x=require("./npc-tuning-candidates.json"); for(const group of x.comparisons){console.log("DAY "+group.day+" "+group.npc+" BASELINE NPC "+group.baselineNpcWins+" player "+group.baselinePlayerWins);for(const v of group.variants)console.log("  "+v.name+": NPC "+v.npcWins+", player "+v.playerWins+", draws "+v.draws+", change "+v.npcWinDelta);}for(const error of x.errors)console.error(JSON.stringify(error));'
