@@ -17,6 +17,7 @@
  body.rpg-duel.duel-active #chatDuelDock .rpg-chat-heading{padding:9px;border-bottom:1px solid #496277}
  body.rpg-duel.duel-active #chatDuelDock .rpg-dialogue-messages{flex:1 1 auto;max-height:none}
  body.rpg-duel.duel-active #closeRpgChat{display:none}
+ body.duel-active:not(.rpg-duel) #choiceDock>#chatDuelDock{display:none!important}
  body.duel-active:not(.rpg-duel) #choiceDock>#logDrawer{flex:1 1 100%!important}
 }
 @media(max-width:780px){
