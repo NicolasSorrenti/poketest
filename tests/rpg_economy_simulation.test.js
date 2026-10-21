@@ -1,7 +1,7 @@
 'use strict';
 const test=require('node:test');
 const assert=require('node:assert/strict');
-const {SCENARIOS,simulate,report}=require('../scripts/simulate-rpg-economy');
+const {SCENARIOS,simulate,report,compare}=require('../scripts/simulate-rpg-economy');
 test('balance model is deterministic, uses real reward receipts and does not alter the game state',()=>{
  const a=simulate(SCENARIOS[0],123),b=simulate(SCENARIOS[0],123);
  assert.deepEqual(a,b);
@@ -25,4 +25,17 @@ test('model reports bounded, reproducible ranges and rejects bad sample counts',
  assert.equal(report(3).length,3);
  assert.throws(()=>report(0),/1..1000/);
  assert.throws(()=>report(1001),/1..1000/);
+});
+
+test('weekly credits reduce grinder income while preserving matched duel outcomes',()=>{
+ const regular=simulate(SCENARIOS[1],321),grinder=simulate(SCENARIOS[2],321);
+ const regularOld=simulate(SCENARIOS[1],321,{uncappedCredits:true});
+ const grinderOld=simulate(SCENARIOS[2],321,{uncappedCredits:true});
+ assert.equal(regular.wins,regularOld.wins);
+ assert.equal(grinder.wins,grinderOld.wins);
+ assert.ok(regular.earnedCredits<=regularOld.earnedCredits);
+ assert.ok(grinder.earnedCredits<grinderOld.earnedCredits);
+ assert.ok(grinder.shopPacks<=grinderOld.shopPacks);
+ assert.deepEqual(compare(3),compare(3));
+ assert.ok(compare(3).every(x=>x.capped.earnedCredits<=x.uncapped.earnedCredits));
 });
