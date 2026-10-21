@@ -1,0 +1,84 @@
+/* Discreet Mode is deliberately visual-only; battle cards and game state are untouched. */
+:root[data-rpg-discreet="on"] #scene{
+ background-image:radial-gradient(circle at 62% 36%,#29425a 0%,#131f32 44%,#0a1322 100%)!important;
+}
+:root[data-rpg-discreet="on"] #scene::before{
+ content:"";position:absolute;inset:0;z-index:0;pointer-events:none;
+ background:linear-gradient(90deg,#ffffff07 1px,transparent 1px),
+ linear-gradient(#ffffff07 1px,transparent 1px);
+ background-size:42px 42px;mask-image:linear-gradient(transparent,#0007 45%,transparent);
+}
+.rpg-discreet-stage{display:none}
+:root[data-rpg-discreet="on"] .rpg-discreet-stage{
+ position:absolute;inset:24% 8% 27%;z-index:1;pointer-events:none;
+ display:flex;align-items:center;justify-content:center;flex-direction:column;
+ gap:8px;text-align:center;color:#b9cadb;
+}
+.rpg-discreet-stage__symbol{font:900 clamp(62px,12vw,160px)/1 'Barlow Condensed',sans-serif;opacity:.13;letter-spacing:.05em}
+.rpg-discreet-stage__subtitle{font:800 12px 'Barlow Condensed',sans-serif;letter-spacing:.3em;opacity:.55}
+:root[data-rpg-discreet="on"] #rpgDiscreetToggle{background:#224e60;border-color:#8cbacc;color:#e9f9ff}
+:root[data-rpg-discreet="on"] #portrait,
+:root[data-rpg-discreet="on"] .rpg-cast-member img,
+:root[data-rpg-discreet="on"] .rpg-cast-member .avatar-fallback,
+:root[data-rpg-discreet="on"] .person-avatar img,
+:root[data-rpg-discreet="on"] .person-avatar .avatar-fallback,
+:root[data-rpg-discreet="on"] .preduel-art img,
+:root[data-rpg-discreet="on"] #packGiver img,
+:root[data-rpg-discreet="on"] #victoryPortrait img,
+:root[data-rpg-discreet="on"] #victoryPortrait .avatar-fallback,
+:root[data-rpg-discreet="on"] #cgMomentArt img,
+:root[data-rpg-discreet="on"] #galleryGrid .cg-thumb img,
+:root[data-rpg-discreet="on"] #galleryPreview img,
+:root[data-rpg-discreet="on"] .neo-tournament-versus__portrait,
+:root[data-rpg-discreet="on"] .npc-reaction-portrait {display:none!important}
+:root[data-rpg-discreet="on"] .rpg-scene-cast{align-items:center;justify-content:center;gap:clamp(6px,1.5vw,20px)}
+:root[data-rpg-discreet="on"] .rpg-cast-member{
+ flex:0 1 170px;min-width:0;max-width:185px;height:clamp(126px,40%,190px);
+ border:1px solid #7796af;background:linear-gradient(145deg,#20374edc,#152437ef);
+ box-shadow:0 12px 32px #050c1a8a;border-radius:12px;filter:none;
+ justify-content:center;gap:5px;
+}
+:root[data-rpg-discreet="on"] .rpg-cast-member::before{
+ content:attr(data-initials);display:grid;place-items:center;width:66px;height:66px;
+ border:1px solid #6786a8;border-radius:50%;color:#f3f7fc;
+ font:900 35px 'Barlow Condensed',sans-serif;letter-spacing:.04em;
+ background:#1d2e47;
+}
+:root[data-rpg-discreet="on"] .rpg-cast-member span:last-child{
+ border:0;background:none;color:#d5e7f3;padding:2px 4px;text-align:center;
+ font:800 16px 'Barlow Condensed',sans-serif;
+}
+:root[data-rpg-discreet="on"] .rpg-scene-cast.is-conversation .rpg-cast-member.is-speaking{
+ border-color:#ffd6a3;box-shadow:0 0 0 2px #c1a67a66,0 12px 30px #0007;
+ transform:translateY(-8px) scale(1.04);
+}
+:root[data-rpg-discreet="on"] .person-avatar::after{
+ content:attr(data-initials);color:#e4edf7;font:900 21px 'Barlow Condensed',sans-serif;
+}
+:root[data-rpg-discreet="on"] .preduel-art,
+:root[data-rpg-discreet="on"] #packGiver,
+:root[data-rpg-discreet="on"] #victoryPortrait,
+:root[data-rpg-discreet="on"] #cgMomentArt,
+:root[data-rpg-discreet="on"] #galleryPreview,
+:root[data-rpg-discreet="on"] #galleryGrid .cg-thumb{
+ background:radial-gradient(circle at 40% 30%,#2b4961,#152438 74%);
+}
+:root[data-rpg-discreet="on"] .preduel-art::after,
+:root[data-rpg-discreet="on"] #packGiver::after,
+:root[data-rpg-discreet="on"] #victoryPortrait::after,
+:root[data-rpg-discreet="on"] #cgMomentArt::after,
+:root[data-rpg-discreet="on"] #galleryPreview::after,
+:root[data-rpg-discreet="on"] #galleryGrid .cg-thumb::after{
+ content:"◈  NEO HARBOR";display:grid;place-items:center;min-height:110px;
+ width:100%;height:100%;color:#b8c9d9;letter-spacing:.18em;
+ font:900 clamp(14px,2vw,24px) 'Barlow Condensed',sans-serif;
+}
+:root[data-rpg-discreet="on"] #galleryGrid .cg-thumb::after{min-height:0;font-size:12px}
+:root[data-rpg-discreet="on"] .npc-reaction-card{grid-template-columns:minmax(0,1fr)!important}
+:root[data-rpg-discreet="on"] .npc-reaction-copy{width:100%;max-width:100%;padding-left:clamp(12px,4vw,50px)}
+@media(max-width:700px){
+ :root[data-rpg-discreet="on"] .rpg-scene-cast{gap:4px}
+ :root[data-rpg-discreet="on"] .rpg-cast-member{height:115px;min-width:0;padding:4px;flex:1}
+ :root[data-rpg-discreet="on"] .rpg-cast-member::before{width:44px;height:44px;font-size:23px}
+ :root[data-rpg-discreet="on"] .rpg-cast-member span:last-child{font-size:11px}
+}
