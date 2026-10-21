@@ -52,6 +52,18 @@ test('Psychic Control replays Bill without stealing opponent discard card',()=>{
  const {g,p,f}=fresh({hand:['gym2-121'],rivalDiscard:['base1-91'],deck:Array(7).fill('base1-98')});
  assert.equal(g.trainer59(0,[0]),true);assert.equal(p.hand.length,2);assert.ok(p.discard.includes('gym2-121'));assert.equal(p.discard.filter(id=>id==='base1-91').length,0);assert.equal(f.discard[0],'base1-91');
 });
+test('Psychic Control refuses a pending replay after its source card leaves hand',()=>{
+ const {g,p,f}=fresh({hand:['gym2-121'],rivalDiscard:['base1-91'],deck:Array(7).fill('base1-98')});
+ coinValue=0.01;
+ assert.equal(g.trainer59(0),null);
+ const prompt=vm.runInContext('deckSearchRequest',ctx);
+ assert.ok(prompt);
+ p.discard.push(p.hand.shift());
+ assert.equal(prompt.execute(0),false);
+ assert.equal(g._psychicProxy59??null,null);
+ assert.deepEqual(p.hand,[]);
+ assert.deepEqual(f.discard,['base1-91']);
+});
 test('Psychic Control invalid choices leave hand and discard unchanged',()=>{
  const {g,p,f}=fresh({hand:['gym2-121'],rivalDiscard:['base1-91']});
  assert.equal(g.trainer59(0,[8]),false);assert.equal(p.hand.length,1);assert.equal(f.discard.length,1);
