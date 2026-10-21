@@ -1,10 +1,11 @@
 # NPC battle reaction assets
 
-The RPG duel cut-in system works immediately with the existing eight main character portraits.
+The RPG duel cut-in system supports all 20 installed characters. Attack art is 1280×720 widescreen artwork rather than a conventional portrait crop.
 
 In manifest.json, provide an optional per-character PNG/JPG/WebP asset for any of these keys:
 - default
-- attack
+- attack (widescreen action illustration)
+- match_cutin (alternate in-match artwork for card, Power and evolution callouts)
 - play_card
 - evolve
 - power
@@ -14,7 +15,7 @@ In manifest.json, provide an optional per-character PNG/JPG/WebP asset for any o
 
 For example, under Reina, set attack to /rpg-assets/reactions/reina/attack.webp after committing that file. The fallback order is: the expression image, then the default image, then the existing character portrait, then a decorative art-free silhouette. Only paths under /rpg-assets/ can be loaded.
 
-**Suggested art brief:** portrait orientation, ideally 768x1024 transparent WebP, expressive bust/upper-body, ample head and face crop margin, original Neo Harbor anime fashion, no text in the image. Match each character's established design and personality. Capture performing an attack, presenting a card, evolving a Pokémon, a big win, a bad knockout, a tense exchange. Keep the scenes spoiler-free and SFW.
+**Art guide:** attack art is 1280×720 landscape and shown using a mobile-friendly crop. The optional `match_cutin` may be portrait or square and is contained without cropping. Weakness, status, damage and KO reactions should use expressive portraits (ideally 768×1024) with face margins. Avoid text baked into the illustration. Art must match its character and remain SFW and spoiler-free. Missing files fall back only to images belonging to that same NPC.
 
 The cut-ins are strictly presentation. They never read private hands or modify battle state. Their dialogue comes from public action events and observed Prize changes. By default there are at most six reactions per match, one slot held for a knockout, and a short cooldown between ordinary reactions.
 
