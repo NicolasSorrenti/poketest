@@ -50,14 +50,15 @@
  const rank=ids=>Object.fromEntries([...new Set(ids)].map(id=>[id,ids.filter(x=>x===id).length]));
  const chooseRandom=(list,rng=Math.random)=>list[Math.min(list.length-1,Math.floor(Math.max(0,rng())*list.length))];
  const setForCharacter=id=>{if(!id)return 'base1';if(CHARACTER_SETS[id])return CHARACTER_SETS[id];const sets=Object.keys(SETS);let hash=2166136261;for(const letter of id){hash^=letter.charCodeAt(0);hash=Math.imul(hash,16777619);}return sets[(hash>>>0)%sets.length];};
- function randomPack(set,rng=Math.random){
+ function randomPack(set,rng=Math.random,count=10){
+  if(count!==5&&count!==10)throw Error('Only five- and ten-card packs are supported');
   const info=SETS[set]||SETS.base1,actual=SETS[set]?set:'base1';
   const rare=chooseRandom(Array.from({length:info.rares},(_,i)=>actual+'-'+(i+1)),rng);
   // Energy is guaranteed even when the expansion has no Basic Energy printing.
   const energy=chooseRandom([...ENERGY].filter(id=>id!=='base1-96'),rng);
   const all=Array.from({length:info.size-info.rares},(_,i)=>actual+'-'+(info.rares+i+1)).filter(id=>!ENERGY.has(id));
   const cards=[rare,energy];
-  for(let i=0;i<8;i++)cards.push(chooseRandom(all,rng));
+  for(let i=0;i<count-2;i++)cards.push(chooseRandom(all,rng));
   // Shuffle so the guaranteed cards are not revealed in a fixed position.
   for(let i=cards.length-1;i>0;i--){const j=Math.min(i,Math.floor(Math.max(0,rng())*(i+1)));[cards[i],cards[j]]=[cards[j],cards[i]];}
   return cards;
@@ -75,7 +76,7 @@
    return {...offer,name:info.name,total:info.size,owned:unique,completion:Math.round(100*unique/info.size),unlocked,vouchers,unlockHint:hint};
   });
  }
- function fresh(){return {starter:null,owned:{},deck:[],draft:null,packs:0,rewards:0,lastPack:null,vouchers:{}};}
+ function fresh(){return {starter:null,owned:{},deck:[],draft:null,packs:0,rewards:0,lastPack:null,pendingPacks:[],vouchers:{},weeklyWins:{},weeklyPacks:{},rewardedDuels:{}};}
  function hydrate(state){
   const x=state.deckJourney;if(x===null||x===undefined)return state;
   if(!x||typeof x!=='object'||Array.isArray(x)){state.deckJourney=fresh();return state}
@@ -88,6 +89,17 @@
   if(!Array.isArray(x.draft)||x.draft.length>60||x.draft.some(id=>!allAllowed.has(id)))x.draft=null;
   if(!x.lastPack||!Array.isArray(x.lastPack.cards)||![5,10].includes(x.lastPack.cards.length)||x.lastPack.cards.some(id=>!allAllowed.has(id)))x.lastPack=null;
   else{x.lastPack.source=['win','shop','gift'].includes(x.lastPack.source)?x.lastPack.source:'shop';x.lastPack.opened=x.lastPack.opened===true;}
+  if(!Array.isArray(x.pendingPacks))x.pendingPacks=[];
+  x.pendingPacks=x.pendingPacks.filter(p=>p&&Array.isArray(p.cards)&&[5,10].includes(p.cards.length)&&p.cards.every(id=>allAllowed.has(id))&&['win','shop','gift'].includes(p.source)).slice(0,90);
+  for(const p of x.pendingPacks)p.opened=false;
+  for(const key of ['weeklyWins','weeklyPacks','rewardedDuels'])
+   if(!x[key]||typeof x[key]!=='object'||Array.isArray(x[key]))x[key]={};
+  for(const [key,value] of Object.entries(x.weeklyWins))
+   if(!/^([1-9]|1[0-3]):[a-z0-9_-]{1,70}$/.test(key)||value!==true)delete x.weeklyWins[key];
+  for(const [week,count] of Object.entries(x.weeklyPacks))
+   if(!/^([1-9]|1[0-3])$/.test(week)||!Number.isInteger(count)||count<0||count>2)delete x.weeklyPacks[week];
+  for(const [id,used] of Object.entries(x.rewardedDuels))
+   if(typeof id!=='string'||!id||id.length>150||used!==true)delete x.rewardedDuels[id];
   if(!x.vouchers||typeof x.vouchers!=='object'||Array.isArray(x.vouchers))x.vouchers={};
   for(const [set,n] of Object.entries(x.vouchers))if(!SETS[set]||!Number.isInteger(n)||n<0||n>99)delete x.vouchers[set];
   x.packs=Number.isInteger(x.packs)&&x.packs>=0?x.packs:0;x.rewards=Number.isInteger(x.rewards)&&x.rewards>=0?x.rewards:0;
@@ -95,7 +107,7 @@
  }
  function choose(state,id){if(state.deckJourney?.starter)throw Error('Starter deck already chosen');
   const starter=byId.get(id);if(!starter)throw Error('Choose one of the three starter decks');
-  state.deckJourney={starter:id,owned:rank(starter.cards),deck:[...starter.cards],draft:null,packs:0,rewards:0,lastPack:null,vouchers:{}};state.playerDeck='custom';
+  state.deckJourney={...fresh(),starter:id,owned:rank(starter.cards),deck:[...starter.cards]};state.playerDeck='custom';
   return starter;
  }
  function check(deck,owned){
@@ -141,17 +153,37 @@
   if(!v.valid)throw Error(v.errors.join(' '));x.deck=[...x.draft];x.draft=null;return x.deck;
  }
  function cancel(state){if(state.deckJourney)state.deckJourney.draft=null}
- function grant(x,ids,source,set,giver){
+ function grant(x,ids,source,set,giver,kind=null){
   for(const id of ids)x.owned[id]=(x.owned[id]||0)+1;
-  x.lastPack={cards:[...ids],source,set,giver:giver||null,opened:false};
+  const pack={cards:[...ids],source,set,giver:giver||null,opened:false};
+  if(kind)pack.kind=kind;
+  // Preserve every unviewed reward, even across a reload.
+  if(x.lastPack&&!x.lastPack.opened)x.pendingPacks.push(pack);
+  else x.lastPack=pack;
   return ids;
  }
- function reward(state,win,giver=null,rng=Math.random){
-  const x=state.deckJourney;
+ // Called after authentic duel settlement. Routine wins have a weekly cap;
+ // authored story wins and tournament championships are separate milestones.
+ function reward(state,win,giver=null,rng=Math.random,context={}){
+  const x=state?.deckJourney;
   if(!x?.starter||!win)return null;
-  const set=setForCharacter(giver),ids=randomPack(set,rng);
+  hydrate(state);
+  const day=Number.isInteger(context.day)?context.day:state.day;
+  if(!Number.isInteger(day)||day<1||day>90)return null;
+  const duelId=typeof context.duelId==='string'?context.duelId:null;
+  if(duelId&&x.rewardedDuels[duelId])return null;
+  const week=String(Math.ceil(day/7)),npc=giver||'trainer',key=week+':'+npc;
+  const story=context.story===true,championship=context.championship===true;
+  if(!story&&!championship&&(x.weeklyWins[key]||(x.weeklyPacks[week]||0)>=2))return null;
+  // NPC victory rewards do not bypass expansion unlock progression.
+  const desired=setForCharacter(giver);
+  const set=shopPacks(state).some(p=>p.set===desired&&p.unlocked)?desired:'base1';
+  const ids=randomPack(set,rng,championship?10:5);
+  if(!story&&!championship)x.weeklyPacks[week]=(x.weeklyPacks[week]||0)+1;
+  x.weeklyWins[key]=true;
+  if(duelId)x.rewardedDuels[duelId]=true;
   x.rewards++;
-  return grant(x,ids,'win',set,giver);
+  return grant(x,ids,'win',set,giver,championship?'championship':story?'story':'weekly');
  }
  function buyPack(state,set='base1',rng=Math.random){const x=state?.deckJourney;
   if(!x?.starter)throw Error('Choose your starter before opening packs');
