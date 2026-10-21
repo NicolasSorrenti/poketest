@@ -225,6 +225,7 @@
   showChat();
  }
  function render(){
+  window.CubePoolViewer?.update(state?.cubePool);
   if(!state)return;
   const focused=!!state.finished&&!state.tournament;
   const entering=focused&&!document.body.classList.contains('cube-deck-mode');
