@@ -163,6 +163,17 @@ check('Chaos Gym replay does not erase an identical Trainer already in rival dis
   assert.ok(p.discard.includes('base1-91'));
  }finally{vm.runInContext('coin=__originalCoin',ctx)}
 });
+check('Chaos Gym does not overwrite an existing decision during rival replay',()=>{
+ const {g,f}=fresh();
+ const pending={label:'Previous decision',options:[],execute:()=>false};
+ vm.runInContext('deckSearchRequest=__pendingChaosTest',Object.assign(ctx,{__pendingChaosTest:pending}));
+ const oldHand=f.hand.slice(),oldTurn=g.turn;
+ assert.equal(g._trainer60RivalReplay('base1-91'),false);
+ assert.equal(vm.runInContext('deckSearchRequest',ctx),pending);
+ assert.deepEqual(f.hand,oldHand);
+ assert.equal(g.turn,oldTurn);
+ vm.runInContext('deckSearchRequest=null',ctx);
+});
 check('Chaos Gym refuses unreplayable cards without mutating rival hand',()=>{
  const {g,p,f}=fresh();
  const handBefore=f.hand.slice(),discardBefore=f.discard.slice(),turnBefore=g.turn;
