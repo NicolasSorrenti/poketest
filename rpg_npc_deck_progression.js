@@ -26,6 +26,19 @@ const PROFILES=Object.freeze({
 const DEFAULT=Object.freeze({trainers:['base1-91','base1-88','base1-71','base1-74']});
 const FODDER=Object.freeze(['Potion','Super Potion','Pokédex','Defender','Full Heal','Maintenance','Revive','Pokémon Flute']);
 const tierForDay=day=>Number.isInteger(day)&&day>=61?3:Number.isInteger(day)&&day>=31?2:1;
+// The calendar remains a floor. Optional, completed character chapters can move
+// that character's own deck ahead, not every opponent or the player's deck.
+const completed=(records,id)=>!!records&&typeof records==='object'&&!Array.isArray(records)
+ &&Object.prototype.hasOwnProperty.call(records,id)&&!!records[id];
+function tierForOpponent(state,npc){
+ const day=state?.day,calendar=tierForDay(day);
+ if(typeof npc!=='string'||!/^[a-z][a-z0-9_]*$/.test(npc))return calendar;
+ const chapter=number=>['route','guest','bond'].some(kind=>completed(state?.storyDone,npc+'_'+kind+'_'+number));
+ const rivalry=npc==='reina'&&state?.arcFlags;
+ if(Number.isInteger(day)&&day>=45&&(chapter(3)||(rivalry&&completed(rivalry,'reina_rival_2'))))return 3;
+ if(Number.isInteger(day)&&day>=18&&(chapter(1)||(rivalry&&completed(rivalry,'reina_rival_1'))))return Math.max(calendar,2);
+ return calendar;
+}
 const count=(cards,id)=>cards.filter(c=>c===id).length;
 const isBasicEnergy=card=>card?.supertype==='Energy'&&/^(Fire|Grass|Water|Lightning|Fighting|Psychic) Energy$/.test(card.name||'');
 const cardNameCount=(cards,name,catalog)=>cards.filter(id=>catalog.get(id)?.name===name).length;
@@ -93,4 +106,6 @@ function upgrade({npc,tier,original,catalog}){
  }
  return out;
 }
-module.exports=Object.freeze({PROFILES,tierForDay,upgrade,eligible,count});
+const api=Object.freeze({PROFILES,tierForDay,tierForOpponent,upgrade,eligible,count});
+if(typeof module==='object'&&module.exports)module.exports=api;
+if(typeof window!=='undefined')window.NeoRpgNpcDeckProgression=api;
