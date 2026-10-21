@@ -150,9 +150,28 @@ function baselineUpgrade({npc,tier,original,catalog}){
  }
  return out;
 }
-// Separating the historical pre-calibration upgrade preserves a trustworthy
-// control group for future mirrored CPU-vs-CPU deck tuning experiments.
-function upgrade(args){return baselineUpgrade(args);}
+// Keep original tier recipes as a reproducible control group. The live RPG
+// applies only per-character changes evaluated in mirrored CPU duels.
+const BALANCED_SWAPS=Object.freeze({
+ yuna:[['base1-58','base1-20'],['base1-58','base1-20']],
+ camila:[['base5-25','base5-41'],['base5-25','base5-31'],
+  ['base1-102','base1-99'],['base1-102','base1-99']]
+});
+function applyBalancedSwaps(out,swaps,catalog){
+ for(const [from,to] of swaps){
+  const position=out.indexOf(from),next=catalog.get(to);
+  if(position<0||!next)throw Error('Invalid tuned NPC recipe '+from+' / '+to);
+  if(next.supertype!=='Energy'&&cardNameCount(out,next.name,catalog)>=4)
+   throw Error('Tuned NPC deck exceeds printed copy limit for '+next.name);
+  out[position]=to;
+ }
+ return out;
+}
+function upgrade(args){
+ const out=baselineUpgrade(args);
+ if(args.tier===1||!BALANCED_SWAPS[args.npc])return out;
+ return applyBalancedSwaps(out,BALANCED_SWAPS[args.npc],args.catalog);
+}
 const api=Object.freeze({PROFILES,tierForDay,tierForOpponent,upgrade,baselineUpgrade,eligible,count});
 if(typeof module==='object'&&module.exports)module.exports=api;
 if(typeof window!=='undefined')window.NeoRpgNpcDeckProgression=api;
