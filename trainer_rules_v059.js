@@ -87,6 +87,8 @@ Engine.prototype.trainer59=function(i,provided){
   if(p.bench.length>=5)return false;
   const opts=p.hand.map((id,index)=>({index,id,name:lookup.get(id)?.name||id})).filter(o=>o.index!==i);
   return pick('Choose ANY other hand card to place face down as a Basic Pokémon',opts,j=>{
+   // Revalidate before consuming either card: a pending choice may be stale.
+   if(p.bench.length>=5||!p.hand.includes(c.id)||j===p.hand.indexOf(c.id)||!opts.some(o=>o.index===j&&o.id===p.hand[j]))return false;
    const id=p.hand.splice(j,1)[0],u=unit(id);u.secretPlanFaceDown=true;u.secretPlanOwner=game.turn;u.playedTurn=game.round;
    p.bench.push(u);return commit();
   });
