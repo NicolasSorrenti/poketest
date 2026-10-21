@@ -88,8 +88,8 @@
  }
  function themeUnlocked(state,pack){
   if(pack.day===1)return true;
-  const first=pack.sources.find(set=>set!=='base1');
-  return (Number(state?.day)||0)>=pack.day||!!(first&&shopPacks(state).some(p=>p.set===first&&p.unlocked));
+  const unlocked=new Set(shopPacks(state).filter(p=>p.unlocked).map(p=>p.set));
+  return (Number(state?.day)||0)>=pack.day||pack.sources.some(set=>set!=='base1'&&unlocked.has(set));
  }
  function themedPacks(state){
   const owned=state?.deckJourney?.owned||{};
