@@ -70,11 +70,12 @@ class CubeService{
   return classic.createCube({humanDeck:s.tournament.decks[0],cpuDeck:s.tournament.decks[opponentSeat],
    difficulty:rivalLevel(s.difficulty??3,opponentSeat),personality:rival.personality,name:rival.name});
  }
- start(token,deck,revision,classic){
+ start(token,deck,revision,classic,difficulty){
   const s=this.session(token);
   if(s.revision!==revision)throw Error('Stale draft revision');
   if(!s.draft.done)throw Error('Draft must be completed first');
   if(s.tournament)throw Error('Cube tournament already started');
+  const level=validateDifficulty(difficulty??s.difficulty??3),originalLevel=s.difficulty;
   const v=C.validateBuild(s.draft.picks[0],deck);
   if(!v.valid)throw Error(v.reason);
   const decks=[[...deck],...s.draft.picks.slice(1).map(picks=>buildCpuDeck(picks,{preset:s.draft.preset}))];
@@ -82,9 +83,9 @@ class CubeService{
    activeMatch:'semiHuman',
    matches:{semiHuman:match('semiHuman',[0,1]),semiCpu:match('semiCpu',[2,3]),
     final:match('final',[]),third:match('third',[])}};
-  s.tournament=t;
+  s.tournament=t;s.difficulty=level;
   try{const duel=this.launch(s,classic,1);s.duelToken=duel.token;s.revision++;return {duelToken:duel.token};}
-  catch(e){delete s.tournament;throw e;}
+  catch(e){delete s.tournament;s.difficulty=originalLevel;throw e;}
  }
  resolveCpuFixture(s,id){
   const t=s.tournament,m=t.matches[id];
