@@ -754,7 +754,7 @@ function showStarterChoice(){
    if(controlsLocked())return;
    try{COLLECT.choose(state,starter.id);log('Chose '+starter.name+' as your first deck.');persist();
     if($('starterDialog').open)$('starterDialog').close();
-    say('Narrator','Your '+starter.name+' deck is ready. Visit the card shop for packs, win cards in duels and improve your deck at home.');
+    say('Narrator','Your '+starter.name+' deck is ready. The Lucky Draw has two free welcome mini packs waiting for you—choose from three different types. Later packs unlock as you explore; old ones are still worth opening.');
    }catch(e){$('notice').textContent=e.message;}
   };
   root.append(button);
@@ -781,7 +781,7 @@ function renderCollection(){
  }else picker.options[0].textContent=starter.name+' · Your collection';
  picker.value='custom';picker.disabled=true;
  const total=Object.values(journey.owned).reduce((a,n)=>a+n,0);
- const summary=document.createElement('p');summary.textContent=starter.name+' · 60-card deck · '+total+' owned cards · '+journey.packs+' packs opened';
+ const summary=document.createElement('p');summary.textContent=starter.name+' · 60-card deck · '+total+' owned cards · '+journey.packs+' paid/voucher packs opened'+(journey.welcomePacks?' · '+journey.welcomePacks+' free welcome pick'+(journey.welcomePacks===1?'':'s')+' remaining':'');
  const studio=document.createElement('button');studio.className='studio-open';studio.textContent='✦ Build / edit your deck';studio.disabled=locked;
  studio.onclick=()=>{persist();location.assign('/rpg_deck_studio.html');};
  root.append(summary,studio);
