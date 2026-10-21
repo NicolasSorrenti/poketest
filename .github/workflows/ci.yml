@@ -12,4 +12,13 @@ jobs:
         with:
           node-version: '22'
       - run: node --test tests/rpg_story.test.js tests/rpg_integration.test.js tests/rpg_flow.test.js tests/rpg_save_lock.test.js tests/rpg_art_install.test.js
+      - name: Validate match playmats and RPG dialogue transcript
+        run: |
+          node --check duel_playmats.js
+          node --check classic_live.js
+          node --check rpg.js
+          node --check rpg_match_reactions.js
+          node --check rpg_match_chat.js
+          node tests/duel_playmats.test.js
+          node tests/rpg_match_chat.test.js
       - run: npm test
