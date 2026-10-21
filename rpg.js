@@ -672,7 +672,7 @@ function showPackReveal(){
  const giver=pack.giver&&cast[pack.giver]?pack.giver:null;
  const setName=COLLECT.SETS[pack.set]?.name||'Base Set';
  $('packEyebrow').textContent=isVictory?'✦ DUEL REWARD · YOUR CARDS':'✦ NEO HARBOR · CARD REWARDS';
- $('packTitle').textContent=isVictory?'VICTORY BOOSTER':'NEW BOOSTER';
+ $('packTitle').textContent=isVictory?(pack.kind==='championship'?'CHAMPION BOOSTER':'VICTORY MINI BOOSTER'):'NEW BOOSTER';
  $('packDescription').textContent=setName+' · '+pack.cards.length+' cards. Tap to flip individual cards, or reveal them all.';
  const portrait=$('packGiver');portrait.replaceChildren();
  const request=++packArtSerial; // An earlier booster image must never overwrite this giver.
@@ -726,7 +726,14 @@ function showPackReveal(){
   button.onclick=reveal;cards.push(reveal);target.append(button);
  }
  $('packRevealAll').onclick=()=>{cards.forEach(show=>show(true));window.NeoRpgAudio?.play?.('flip');};
- $('packContinue').onclick=()=>{pack.opened=true;persist();modal.close();finishDuelRewardPresentation();};
+ $('packContinue').onclick=()=>{
+  pack.opened=true;
+  const queued=state.deckJourney?.pendingPacks?.shift()||null;
+  if(queued)state.deckJourney.lastPack=queued;
+  persist();modal.close();
+  if(queued)showPackReveal();
+  else finishDuelRewardPresentation();
+ };
  modal.oncancel=e=>e.preventDefault(); // One handler, even after opening dozens of packs.
  modal.showModal();
  window.NeoRpgAudio?.play?.('booster');
@@ -1012,8 +1019,12 @@ window.addEventListener('message',ev=>{
  if(personalOutcome)log('A special rivalry challenge reached its result.');
  const turningPoint=CONSEQ.record(state,duel,receipt,{cupOutcome,competitiveOutcome});
  if(turningPoint?.highlight)log('A turning point with '+cast[duel.npc].name+'. You can reflect at the Community Center.');
- const awarded=COLLECT.reward(state,receipt.outcome==='Victory',duel.npc);
- if(awarded)log('Won a ten-card booster: '+awarded.map(labelCard).join(', ')+'.');
+ const awarded=COLLECT.reward(state,receipt.outcome==='Victory',duel.npc,Math.random,{
+  day:duel.day,duelId:receipt.duelId,
+  championship:cupOutcome?.state==='champion',
+  story:!!(duel.eventKey||duel.arcEpisode||duel.sideQuestId||duel.bondChallenge)
+ });
+ if(awarded)log('Won a '+awarded.length+'-card '+(awarded.length===10?'championship booster':'mini booster')+': '+awarded.map(labelCard).join(', ')+'.');
  state.lastDuelReceipt=receipt;state.pendingDuel=null;
  sessionStorage.removeItem(BRIDGE.sessionKey(duel.id));
  sessionStorage.removeItem('neoRpgDeck:'+duel.id);
