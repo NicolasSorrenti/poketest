@@ -1,0 +1,118 @@
+/* v0.89 — Physical card alignment, shared by RPG/CPU, Cube and online matches.
+   The actual Pokémon artwork sets the card's physical proportions. Attached
+   Energy and Trainer cards use that same width/aspect ratio, not an independent
+   fixed-height panel that can crop an image. */
+body.duel-active .stage .territory .poke{
+ --attachment-peek:clamp(5px,15%,18px);
+ --tool-peek:var(--attachment-peek);
+ --attachment-overlap:clamp(4px,8%,10px);
+ --tool-overlap:var(--attachment-overlap);
+ padding:0!important;
+ border:0!important;
+ background:transparent!important;
+ box-shadow:none!important;
+ overflow:visible!important;
+}
+body.duel-active .stage .territory .poke .pokemon-face{
+ display:block!important;
+ position:relative!important;
+ z-index:4!important;
+ flex:none!important;
+ width:100%!important;
+ height:auto!important;
+ min-height:0!important;
+ max-height:none!important;
+ aspect-ratio:245/342!important;
+ padding:0!important;
+ margin:0!important;
+ border:0!important;
+ border-radius:5px!important;
+ background:transparent!important;
+ box-shadow:none!important;
+ overflow:hidden!important;
+}
+body.duel-active .stage .territory .poke .pokemon-face>img{
+ display:block!important;
+ position:absolute!important;
+ inset:0!important;
+ width:100%!important;
+ height:100%!important;
+ max-width:none!important;
+ max-height:none!important;
+ padding:0!important;
+ margin:0!important;
+ border:0!important;
+ border-radius:5px!important;
+ object-fit:contain!important;
+ object-position:center!important;
+}
+/* Keep the unavailable-art placeholder inside the same card footprint. */
+body.duel-active .stage .territory .poke .pokemon-face>.empty{
+ position:absolute!important;
+ inset:0!important;
+ width:100%!important;
+ height:100%!important;
+ min-height:0!important;
+}
+/* Both sides of the stack are the same width and aspect ratio as the face.
+   Each attached card moves sideways only; it never becomes an enlarged
+   background image or a separate square behind the Pokémon. */
+body.duel-active .stage .territory .poke .energy-peeks.energy-card-stack,
+body.duel-active .stage .territory .poke .pokemon-tools.tool-card-stack{
+ display:block!important;
+ position:absolute!important;
+ top:0!important;
+ bottom:auto!important;
+ width:100%!important;
+ height:auto!important;
+ min-width:0!important;
+ max-width:none!important;
+ max-height:none!important;
+ aspect-ratio:245/342!important;
+ overflow:visible!important;
+ transform:none!important;
+ pointer-events:none!important;
+}
+body.duel-active .stage .territory .poke .energy-peeks.energy-card-stack{
+ left:calc(-1 * var(--attachment-peek))!important;
+ right:auto!important;
+ z-index:1!important;
+}
+body.duel-active .stage .territory .poke .pokemon-tools.tool-card-stack{
+ right:calc(-1 * var(--tool-peek))!important;
+ left:auto!important;
+ z-index:2!important;
+}
+body.duel-active .stage .territory .poke .energy-card-stack .attached-energy.energy-card-mini,
+body.duel-active .stage .territory .poke .pokemon-tools .pokemon-tool-card{
+ display:block!important;
+ position:absolute!important;
+ top:0!important;
+ bottom:auto!important;
+ width:100%!important;
+ height:100%!important;
+ min-width:0!important;
+ min-height:0!important;
+ max-height:none!important;
+ margin:0!important;
+ padding:0!important;
+ border-radius:5px!important;
+ overflow:hidden!important;
+ transform:none!important;
+}
+body.duel-active .stage .territory .poke .energy-card-stack .energy-card-art,
+body.duel-active .stage .territory .poke .pokemon-tools .tool-card-art{
+ display:block!important;
+ width:100%!important;
+ height:100%!important;
+ max-height:none!important;
+ border:0!important;
+ border-radius:5px!important;
+ object-fit:contain!important;
+ object-position:center!important;
+}
+/* No painted Trainer strip or type-letter frame over actual card artwork. */
+body.duel-active .stage .territory .poke .pokemon-tools .pokemon-tool-card::after,
+body.duel-active .stage .territory .poke .energy-card-stack .attached-energy.energy-card-mini::before{
+ display:none!important;
+}
