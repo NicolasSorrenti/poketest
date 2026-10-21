@@ -137,6 +137,17 @@ function upgrade({npc,tier,original,catalog}){
   for(const id of profile.trainers.slice(2,4))insert(id,'trainer');
  }
  if(npc==='camila')focusCamila(out,tier,catalog);
+ // A pair of Double Colorless Energy remains useful for retreat/neutral
+ // attacks; any additional copies are less useful than the colored Grass/
+ // Water Energy that powers this specific Rocket archetype's attacks.
+ if(profile.trimDoubleColorless&&count(original,'base1-99')>0&&count(original,'base1-102')>0){
+  let extra=Math.max(0,count(out,'base1-96')-2);
+  for(let i=0;i<extra;i++){
+   const at=out.indexOf('base1-96');
+   if(at<0)break;
+   out[at]=i%2===0?'base1-99':'base1-102';
+  }
+ }
  return out;
 }
 const api=Object.freeze({PROFILES,tierForDay,tierForOpponent,upgrade,eligible,count});
