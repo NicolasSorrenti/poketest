@@ -11,8 +11,8 @@ Neo Campus takes inspiration from this structure, not the exact Game Boy cards o
 | Theme | Day | Price | Primary gameplay identity | Expansions which may join the pool when unlocked |
 | --- | ---: | ---: | --- | --- |
 | Colosseum Circuit | 1 | 20 | Cheap reliable Basic attackers | Base, Jungle, Fossil, Base 2, Neo Genesis/Discovery |
-| Evolution Workshop | 1 | 22 | Stage 1/Stage 2 and matching Basics | All 11 printed expansions |
-| Trainer's Toolkit | 1 | 24 | Guaranteed Trainer-heavy support | All 11 printed expansions |
+| Evolution Workshop | 1 | 26 | Stage 1/Stage 2 and matching Basics | All 11 printed expansions |
+| Trainer's Toolkit | 1 | 22 | Guaranteed Trainer-heavy support | All 11 printed expansions |
 | Wild Expedition | 8 | 25 | Jungle/Fossil and related discoveries | Base, Jungle, Fossil, Neo Discovery |
 | Rocket's Shadows | 22 | 30 | Dark evolutions and Rocket support | Team Rocket, Neo Destiny |
 | Gym Champions | 33 | 35 | Leader-specific Pokémon and Gym support | Gym Heroes, Gym Challenge |
@@ -33,6 +33,14 @@ Named days are normal unlocks. Eligible narrative, affection or tournament progr
 - Evolution Workshop selects a Stage 1 and a matching Basic from the same currently accessible printings when possible; its Rare slot may align to that evolutionary line. Trainer's Toolkit features Trainer picks from both Common and Uncommon slots, but never changes the original rarity of the card.
 - Normal NPC mini rewards and story/championship rewards now select a theme suited to the character, falling back to Colosseum Circuit if a later archetype has not unlocked. The **existing 2 ordinary mini packs/week** cap, duplicate receipt guards, and chapter/cup exceptions remain.
 - Existing **source-set vouchers** from relationship milestones, tournaments and old saves remain redeemable in a separate gift section at the shop, producing the original ten-card source-set booster. This honors previously earned rewards rather than replacing their meaning.
+
+## Follow-up balance calibration (Days 15, 30, 45, 60 and 80)
+
+After benchmarking five equal-income purchasing plans with mirrored, equal-skill CPU duels, Evolution Workshop showed a stronger midgame win rate than Trainer's Toolkit. A larger sample of 720 games at Days 45 and 60 confirmed this advantage.
+
+Instead of removing the useful guaranteed compatible Basic + Stage 1 pair, we **increased Evolution Workshop from 22 to 26 credits** and **reduced Trainer's Toolkit from 24 to 22 credits**. Colosseum Circuit stays at 20. All other themed pack prices remain unchanged. The tested price combination moved modeled player win rates at Day 45 from approximately 47% to 41% for Evolution and from 23% to 24% for Toolkit; at Day 60, Evolution moved from 45% to 39% while Toolkit stayed around 33%. This narrows the gap while retaining the identity of each pack, but it does not make all strategies statistically equivalent.
+
+See `docs/RPG_PACK_BALANCE_CHECKPOINTS.md` for assumptions, original results, and the counterfactual comparison.
 
 ## Save and economy migration
 
