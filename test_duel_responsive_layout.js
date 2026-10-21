@@ -6,7 +6,7 @@ const desktop=fs.readFileSync('duel_desktop.css','utf8');
 const mobile=fs.readFileSync('duel_mobile.css','utf8');
 const shared=fs.readFileSync('online_hand_tray.css','utf8');
 const tabletop=fs.readFileSync('duel_nostalgic.css','utf8');
-const reference=fs.readFileSync('duel_reference.css','utf8');
+const reference=fs.readFileSync('duel_match_v085.css','utf8');
 const grass=fs.readFileSync('neo_duel_grass.svg','utf8');
 assert.match(grass,/<svg\b/,'playmat texture must be an SVG asset');
 assert.equal((tabletop.match(/\{/g)||[]).length,(tabletop.match(/\}/g)||[]).length,'tabletop CSS braces are balanced');
@@ -31,8 +31,8 @@ for(const file of ['online.html','classic_live.html']){
  assert.ok(html.indexOf('online_hand_tray.css')<html.indexOf('duel_desktop.css'),file+' responsive overrides must load last');
  assert.match(html,/href="duel_nostalgic\.css"/,file+' must load the tabletop theme');
  assert.ok(html.indexOf('duel_mobile.css')<html.indexOf('duel_nostalgic.css'),file+' tabletop styles must be last in the cascade');
- assert.match(html,/href="duel_reference\.css"/,file+' must load the final reference presentation');
- assert.ok(html.indexOf('duel_nostalgic.css')<html.indexOf('duel_reference.css'),file+' reference presentation must own the final cascade');
+ assert.match(html,/href="duel_match_v085\.css\?v=85"/,file+' must load the cache-busted final match presentation');
+ assert.ok(html.indexOf('duel_nostalgic.css')<html.indexOf('duel_match_v085.css'),file+' final match presentation must own the cascade');
 }
 assert.match(reference,/grid-template-columns:minmax\(0,1fr\) var\(--match-rail\)/,'reference layout keeps the table beside its match rail');
 assert.match(reference,/grid-template-columns:repeat\(5,minmax\(0,1fr\)\)/,'reference Bench exposes five physical positions');

@@ -1,4 +1,5 @@
-/* Final reference-style tabletop layer. Loaded last; presentation only. */
+/* v0.85 final match presentation. This versioned asset is loaded last so a
+   deployed browser cannot reuse the obsolete pre-rebuild tabletop cache. */
 @media (min-width:781px){
  body.duel-active #duel:not(.hidden){
   --match-rail:clamp(292px,27vw,382px);--hand-row:clamp(196px,27dvh,274px);
