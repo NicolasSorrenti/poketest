@@ -465,4 +465,15 @@ check('Charity stale prompt cannot attack after the Active Pokemon changes',()=>
  assert.equal(f.active.damage,0);
  assert.ok(old.attachedTrainers.some(t=>t.id==='gym1-99'));
 });
+check("Sabrina's ESP cannot attach to a target that changed while selection was pending",()=>{
+ const id='gym1-117', {g,p}=fresh({hand:[id],meActive:'gym1-91'});
+ assert.equal(g.trainer58(0),null);
+ const req=vm.runInContext('deckSearchRequest',ctx);
+ assert.ok(req);
+ const target=p.active,originalHand=p.hand.slice();
+ target.id='base1-58'; // no longer a Sabrina Pokémon
+ assert.equal(req.execute(-1),false);
+ assert.deepEqual(p.hand,originalHand);
+ assert.equal(target.attachedTrainers.length,0);
+});
 console.log(`PASS v0.6.0: ${tests} human Trainer timing, choices, and damage outcome scenarios`);
