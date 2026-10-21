@@ -7,7 +7,7 @@ const PROFILES=Object.freeze({
  shiori:{ace:'base1-17',trainers:['base1-88','base1-77','base1-71','base1-74']}, // Beedrill / evolution
  yuna:{ace:'base1-10',trainers:['base1-84','base1-74','base1-71','base1-88']}, // Mewtwo / surprises
  akari:{trainers:['base1-79','base1-71','base1-74','base1-92']}, // disruption
- camila:{ace:'base5-25',supports:['base5-41','base5-31'],trimDoubleColorless:true,minBasicEnergy:14,trainers:['base1-79','base1-71','base1-75','base1-74']}, // Dark Gyarados / Muk / Weezing
+ camila:{ace:'base5-25',trimDoubleColorless:true,minBasicEnergy:14,trainers:['base1-71','base1-88','base1-77','base1-76']}, // Dark Vileplume control / Gyarados
  marina:{ace:'base2-12',trainers:['base1-77','base1-71','base1-88','base1-74']}, // Vaporeon
  kaede:{ace:'base5-31',supports:['base5-41','base5-25'],trimDoubleColorless:true,minBasicEnergy:14,trainers:['base1-79','base1-75','base1-71','base1-74']}, // Dark Weezing / Muk / Gyarados
  jun:{ace:'base3-21',trainers:['base1-71','base1-79','base1-88','base1-74']},
@@ -88,6 +88,26 @@ function cutFor(cards,added,catalog,kind,{trimDoubleColorless=false,minBasicEner
  }
  return picks.find(i=>cards[i]!==added)??-1;
 }
+// Rebuild Camila's later-season Rocket lab into the Dark Vileplume control
+// archetype promised by her character profile. Every exchange is one-for-one;
+// only the campaign NPC copy changes, not the shared lab or any retail deck.
+const CAMILA_FOCUS=Object.freeze({
+ refined:[['base5-70','base5-63'],['base5-70','base5-63'],['base5-70','base5-36'],
+  ['base5-24','base5-36'],['base5-24','base5-30']],
+ expert:[['base5-66','base5-63'],['base5-66','base5-36'],
+  ['base5-51','base5-30'],['base5-51','base5-58']]
+});
+function focusCamila(cards,tier,catalog){
+ const changes=[...CAMILA_FOCUS.refined,...(tier===3?CAMILA_FOCUS.expert:[])];
+ const needed={};
+ for(const [from] of changes)needed[from]=(needed[from]||0)+1;
+ if(!Object.entries(needed).every(([id,n])=>count(cards,id)>=n))return cards;
+ for(const [from,to] of changes){
+  if(!catalog.has(to))throw Error('Missing historical Dark Vileplume recipe card '+to);
+  cards[cards.indexOf(from)]=to;
+ }
+ return cards;
+}
 function upgrade({npc,tier,original,catalog}){
  if(!Array.isArray(original)||original.length!==60)throw Error('NPC progression requires a valid 60-card theme deck');
  if(!Number.isInteger(tier)||tier<1||tier>3)throw Error('Invalid NPC deck tier');
@@ -116,6 +136,7 @@ function upgrade({npc,tier,original,catalog}){
   if(ace)insert(ace,'ace');
   for(const id of profile.trainers.slice(2,4))insert(id,'trainer');
  }
+ if(npc==='camila')focusCamila(out,tier,catalog);
  return out;
 }
 const api=Object.freeze({PROFILES,tierForDay,tierForOpponent,upgrade,eligible,count});
