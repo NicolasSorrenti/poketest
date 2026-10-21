@@ -109,7 +109,7 @@ Engine.prototype.trainer59=function(i,provided){
    // The opponent's discard can change while the choice is pending. Never
    // substitute a different card at the same index or borrow a missing card.
    const id=selectedOption?.id;
-   if(!id||f.discard[j]!==id||!trainer59EligibleReplay(lookup.get(id)))return false;
+   if(!id||f.discard[j]!==id||!trainer59EligibleReplay(lookup.get(id))||!p.hand.includes(c.id)||game.phase!=='game'||game.over)return false;
    const proxyId=`trainer59-proxy-${id}`;
    if(lookup.has(proxyId))return false; // avoid overwriting an active proxy
    lookup.set(proxyId,{...lookup.get(id),id:proxyId});
