@@ -117,7 +117,9 @@ test('character rewards draw five-card packs with guaranteed rare and energy',()
   assert.equal(s.deckJourney.lastPack.set,set);
   assert.equal(s.deckJourney.lastPack.giver,npc);
   assert.ok(ids.some(id=>C.ENERGY.has(id)));
-  assert.ok(ids.some(id=>id.startsWith(set+'-')&&['rare','holo','secret'].includes(C.packRarity(id))));
+  assert.equal(s.deckJourney.lastPack.theme,C.themeForCharacter(s,npc));
+  assert.ok(ids.some(id=>['rare','holo','secret'].includes(C.packRarity(id))));
+  assert.ok(ids.every(id=>C.ENERGY.has(id)||C.themedPacks(s).find(x=>x.id===s.deckJourney.lastPack.theme).sources.includes(id.split('-')[0])));
  }
  const a=C.randomPack('base3',()=>0),b=C.randomPack('base3',()=>0.75);
  assert.notDeepEqual(a,b,'different random outcomes must produce different packs');
@@ -126,7 +128,8 @@ test('new expanded collection cards survive save hydration',()=>{
  const s=setup();C.choose(s,'tidal_circuit');s.day=90;C.reward(s,true,'kaede',()=>0.25);
  const restored=JSON.parse(JSON.stringify(s));C.hydrate(restored);
  assert.deepEqual(restored.deckJourney.lastPack,s.deckJourney.lastPack);
- assert.ok(Object.keys(restored.deckJourney.owned).some(id=>id.startsWith('neo4-')));
+ assert.equal(s.deckJourney.lastPack.theme,'mystery');
+ assert.ok(Object.keys(restored.deckJourney.owned).some(id=>['neo3','neo4','base5'].includes(id.split('-')[0])));
 });
 
 test('expansion shop has ten playable sets with discovery stats and starter availability',()=>{
