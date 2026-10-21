@@ -27,6 +27,13 @@
   if(!previous.name)return false;
   if((next.subtypes||[]).includes('Basic')&&next.supertype==='Pokémon'&&previous.supertype==='Pokémon'&&BABY_EVOLUTIONS[previous.name]?.includes(next.name))return true;
   if(!next.evolvesFrom)return false;
+  // Historical Dark/Light Stage 2 cards commonly have a shortened
+  // 'evolvesFrom' field in the imported catalogue (e.g. Gloom on Dark
+  // Vileplume). Their printed evolution line requires Dark/Light Gloom,
+  // not ordinary Gloom; keep the two evolutionary identities distinct.
+  const themed=/^(Dark |Light )/.exec(next.name||'')?.[1];
+  if(themed&&(next.subtypes||[]).includes('Stage 2')&&!next.evolvesFrom.startsWith(themed))
+   return speciesName(previous.name)===speciesName(themed+next.evolvesFrom);
   const owner=owners.find(prefix=>next.name?.startsWith(prefix));
   if(owner){const wanted=next.evolvesFrom.startsWith(owner)?next.evolvesFrom:owner+next.evolvesFrom;return speciesName(previous.name)===speciesName(wanted);}
   return speciesName(next.evolvesFrom)===speciesName(previous.name)||speciesName(next.evolvesFrom.replace(/^(Dark |Light )/,''))===speciesName(previous.name);
