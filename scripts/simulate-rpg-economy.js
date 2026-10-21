@@ -23,12 +23,15 @@ function simulate(config,seed=1,options={}){
   playerDeck:'blackout',deckJourney:Collection.fresh(),relationships:{},bonds:{},storyDone:{},tournaments:{}
  };
  Collection.choose(s,'ember_garden');
+ // Two free, explicitly chosen mini packs are now part of Day 1 progression.
+ Collection.buyThemedPack(s,'arena',cardRng);s.deckJourney.lastPack.opened=true;
+ Collection.buyThemedPack(s,'evolution',cardRng);s.deckJourney.lastPack.opened=true;
  for(const npc of NPCS){
   s.relationships[npc]={duels:0,trust:0,respect:0,affection:0};
   s.bonds[npc]={duels:0,trust:0,affection:0};
  }
- let wins=0,losses=0,earnings=0,miniPacks=0,shopPacks=0,voucherPacks=0,signatureCards=0;
- const boughtBySet={};
+ let wins=0,losses=0,earnings=0,miniPacks=0,shopPacks=0,voucherPacks=0,signatureCards=0,welcomeMini=2;
+ const boughtByTheme={};
  const chapterDays=Array.from({length:config.chapters},(_,i)=>Math.floor((i+1)*90/(config.chapters+1)));
  for(let day=1;day<=90;day++){
   s.day=day;
@@ -75,19 +78,22 @@ function simulate(config,seed=1,options={}){
     voucherPacks++;
    }
   }
-  // A deliberate upper-bound spender: buys as many of the latest unlocked set as possible.
-  // The model does not assign real duel AI, encounter availability or tournament bonuses.
-  const unlocked=Collection.shopPacks(s).filter(p=>p.unlocked),offer=unlocked[unlocked.length-1];
-  while(offer&&s.credits>=offer.price){
+  // A high-spending illustrative player cycles through affordable thematic packs,
+  // keeping early archetypes relevant rather than blindly buying the newest set.
+  // This still omits real CPU encounters, time spent at shops and tournament payouts.
+  while(true){
+   const offers=Collection.themedPacks(s).filter(p=>p.unlocked&&s.credits>=p.price);
+   if(!offers.length)break;
+   const offer=offers[(day+shopPacks)%offers.length];
    if(s.deckJourney.lastPack)s.deckJourney.lastPack.opened=true;
-   Collection.buyPack(s,offer.set,cardRng);s.deckJourney.lastPack.opened=true;
-   shopPacks++;boughtBySet[offer.set]=(boughtBySet[offer.set]||0)+1;
+   Collection.buyThemedPack(s,offer.id,cardRng);s.deckJourney.lastPack.opened=true;
+   shopPacks++;boughtByTheme[offer.id]=(boughtByTheme[offer.id]||0)+1;
   }
  }
  return {scenario:config.id,seed,wins,losses,earnedCredits:earnings,spentCredits:80+earnings-s.credits,
-  remainingCredits:s.credits,miniPacks,shopPacks,voucherPacks,signatureCards,
+  remainingCredits:s.credits,welcomeMini,miniPacks,shopPacks,voucherPacks,signatureCards,
   totalCardCopies:sum(s.deckJourney.owned),distinctCards:Object.keys(s.deckJourney.owned).length,
-  boughtBySet};
+  boughtByTheme};
 }
 function compare(runs=200){
  if(!Number.isInteger(runs)||runs<1||runs>1000)throw Error('Choose 1..1000 samples');
@@ -106,7 +112,7 @@ function compare(runs=200){
 }
 function report(runs=200){
  if(!Number.isInteger(runs)||runs<1||runs>1000)throw Error('Choose 1..1000 samples');
- const columns=['wins','earnedCredits','spentCredits','miniPacks','shopPacks','voucherPacks','totalCardCopies','distinctCards'];
+ const columns=['wins','earnedCredits','spentCredits','welcomeMini','miniPacks','shopPacks','voucherPacks','totalCardCopies','distinctCards'];
  return SCENARIOS.map(s=>{
   const samples=Array.from({length:runs},(_,i)=>simulate(s,2026+i));
   return {scenario:s.id,description:s.description,runs,
