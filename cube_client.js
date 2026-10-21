@@ -145,6 +145,7 @@
    c.evolvesFrom?'Evolves from '+c.evolvesFrom:'Evolution Pokémon';
  }
  function render(){
+  window.CubePoolViewer?.update(state.cubePool);
   const entering=!!state.done&&!state.started&&!document.body.classList.contains('cube-deck-mode');
   document.body.classList.toggle('cube-deck-mode',!!state.done&&!state.started);
   $('start').textContent='Restart Draft';
