@@ -53,7 +53,7 @@ class CubeService{
     revision:s.revision,round:d.round,pick:d.pick,packs:d.packs,cardsPerPack:d.cardsPerPack,done:d.done,
    pack:C.availableForSeat(d,0).map(id=>this.card(id)),drafted:d.picks[0].map(id=>this.card(id)),
    opponentCounts:d.picks.slice(1).map(a=>a.length),started:!!t,
-    cubePool:d.rounds.flat(2).map(id=>{const c=CATALOG.get(id);return {id,name:c.name,supertype:c.supertype,types:c.types||[]};}),
+    cubePool:d.rounds.flat(2).map(id=>{const c=CATALOG.get(id);return {id,name:c.name,supertype:c.supertype,types:c.types||[],subtypes:c.subtypes||[],evolvesFrom:c.evolvesFrom||null};}),
    tournament:t?{
     rounds:2,activeRound:Math.min(2,t.results.length+1),
     results:t.results.map(r=>({...r})),opponents:RIVALS.map(r=>r.name),
