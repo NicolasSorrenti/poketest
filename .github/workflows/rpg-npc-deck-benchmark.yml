@@ -1,0 +1,34 @@
+name: RPG NPC Deck Balance Benchmark
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/benchmark-rpg-npc-decks.js'
+      - 'tests/rpg_npc_deck_balance.test.js'
+      - 'rpg_npc_deck_progression.js'
+      - '.github/workflows/rpg-npc-deck-benchmark.yml'
+  workflow_dispatch:
+
+jobs:
+  npc-deck-balance:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Validate player growth and NPC deck legality
+        run: node --test tests/rpg_npc_deck_balance.test.js
+      - name: Simulate paired headless Classic duels
+        run: |
+          node scripts/benchmark-rpg-npc-decks.js --npcs reina,hana,camila --starters ember_garden --pairs 1 --max-turns 65 > rpg-npc-deck-benchmark.json
+          node -e 'const x=require("./rpg-npc-deck-benchmark.json"); for(const row of x.totals) console.log(row.stage+": "+row.cpuWins+" NPC wins, "+row.playerWins+" player wins, "+row.draws+" draws/timeouts; NPC decisive win rate "+row.npcWinRateDecisive); console.log("Match errors:",x.errors.length); for(const row of x.cases) console.log(row.stage+" "+row.npc+": NPC "+row.cpuWins+"-"+row.playerWins+" ("+row.drawsOrTimeouts+" draw/timeout), "+row.cpuDeckChanges+" altered NPC slots");'
+      - name: Upload match results and deck diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: rpg-npc-deck-benchmark
+          path: rpg-npc-deck-benchmark.json
+          if-no-files-found: ignore
