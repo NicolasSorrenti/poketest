@@ -31,6 +31,7 @@
  const shared=window.NeoBattleComponents;
  const preview=quick.makePreview($('cardPreview'),id=>card(id));
  const feedback=quick.makeDuelFeedback($('duelFeedback'));
+ const showEnergyLimitToast=quick.makeTransientToast($('energyLimitToast'));
  const combat=presentation.makeBattlePresentation({stage:document.querySelector('.stage'),popup:$('combatFx'),timeline:$('actionTimeline'),getCard:id=>cards.get(id)||{name:String(id)},me:()=>side(),opponentName:()=>current?.players?.[1-side()]?.name||'Opponent'});
  const opponentActivity=quick.makeOpponentActivity({status:$('opponentActivityStatus'),overlay:$('opponentActionFx'),arena:document.querySelector('.stage'),getCard:id=>cards.get(id)||{name:String(id)},suppressCombat:true});
  const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -325,7 +326,7 @@
     energyUsed:!!current.me?.energyUsed,selectedHand,targetMode});
    if(intent.kind==='none')return;
    if(intent.kind==='inspect'){preview.inspect(id);return;}
-   if(intent.kind==='error'){fail(new Error(intent.message));return;}
+   if(intent.kind==='error'){showEnergyLimitToast(intent.message);return;}
    if(intent.kind==='command'){if(intent.type!=='setup_select')preview.hide();send(command(intent.type,intent.payload));return;}
    if(intent.kind==='cancel'){cancelTarget();return;}
    if(intent.kind==='target'){selectedHand=index;preview.hide();setTarget(intent.type,intent.payload,intent.title);return;}
@@ -425,7 +426,6 @@
   }
   $('oppStats').textContent=`Hand ${cpu.handCount} · Deck ${cpu.deckCount} · Discard ${cpu.discard.length}`;
   $('myStats').textContent=`Hand ${you.handCount} · Deck ${you.deckCount} · Discard ${you.discard.length}`;
-  $('energyStatus').textContent=watching()?'Spectating':current.me.energyUsed?'Energy attached this turn':'Energy attachment available';
   $('myDeckCount').querySelector('b').textContent=you.deckCount;$('oppDeckCount').querySelector('b').textContent=cpu.deckCount;
   $('myDiscardBtn').querySelector('b').textContent=you.discard.length;$('oppDiscardBtn').querySelector('b').textContent=cpu.discard.length;
   renderPrizes(you.prizeCount,cpu.prizeCount);renderFaceUpPrizes();renderPrizeFallback();renderPresence();renderCoin(v);renderKnockOut(v);
