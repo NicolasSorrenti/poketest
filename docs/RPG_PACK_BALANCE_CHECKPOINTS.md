@@ -66,6 +66,21 @@ Higher Evolution price reduces the number of strong pairing attempts while prese
 
 Based on this matched experiment, the two candidate prices were adopted. Other offers and weekly reward caps are unchanged. The game still gives two *free* welcome mini packs, so no opening reward is removed.
 
+## Post-change verification (live 26/22 prices)
+
+The full workflow was rerun after committing both new prices. **All stages passed**, including the RPG pack acquisition tests, five-checkpoint matches, extended midgame matches and old-price counterfactual.
+
+| Checkpoint (live prices) | Mixed | Toolkit 22 | Evolution 26 | Arena 20 | Latest |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| Day 45 | 23/70 (33%) | 17/71 (24%) | 29/71 (41%) | 27/69 (39%) | 16/71 (23%) |
+| Day 60 | 21/70 (30%) | 24/72 (33%) | 28/71 (39%) | 23/64 (36%) | 28/72 (39%) |
+
+This is the desirable direction: Evolution Workshop remains competitive without dominating the other main purchasable choices, and even basic Colosseum cards stay relevant. The total win-rate gap between Evolution and Toolkit narrowed. The player deckbuilder's evolution preference and match RNG remain a **model**, not a guarantee that real users will experience those exact rates.
+
+The same workflow reran the **previous prices** as a counterfactual and reproduced 34/72 and 32/71 Evolution wins and 16/71 and 23/70 Toolkit wins for Days 45 and 60, respectively. This is stronger evidence than an unpaired before/after comparison.
+
+[GitHub Actions: passing live-price check, run 39603078769](https://github.com/NicolasSorrenti/poketest/actions/runs/39603078769). The standalone RPG regression suite also passed [run 39602990910](https://github.com/NicolasSorrenti/poketest/actions/runs/39602990910).
+
 ## Repeatable checks
 
 ```sh
