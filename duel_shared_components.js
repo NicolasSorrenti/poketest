@@ -80,10 +80,17 @@
  }
  // Card visuals are shared; ownership, visibility and legal target callbacks
  // stay in the mode-specific controller.
+ function damagePips(unit,card){
+  const hp=Math.max(0,Number(card.hp)||0);
+  if(!hp)return '';
+  const count=Math.ceil(hp/10),filled=Math.min(count,Math.floor(Math.max(0,Number(unit.damage)||0)/10));
+  const pips=Array.from({length:count},(_,i)=>'<span class="damage-pip'+(i<filled?' filled':'')+'" aria-hidden="true"></span>').join('');
+  return '<span class="damage-pips" role="img" aria-label="'+escape((unit.damage||0)+' damage of '+hp+' HP')+'">'+pips+'</span>';
+ }
  function pokemonFace({unit,card,source,energyStack,vitals}){
   const attached=Array.isArray(unit.energies)?unit.energies:[];
   return energyStack({...unit,energies:attached})+
-   '<span class="pokemon-face">'+(source?'<img loading="lazy" alt="" src="'+escape(source)+'">':'<div class="empty">'+escape(card.name)+'</div>')+'</span>'+
+   '<span class="pokemon-card-stage"><span class="pokemon-face">'+(source?'<img loading="lazy" alt="" src="'+escape(source)+'">':'<div class="empty">'+escape(card.name)+'</div>' )+'</span>'+damagePips(unit,card)+'</span>'+
    '<strong>'+escape(card.name)+'</strong>'+vitals(unit,card)+
    '<span class="stats">'+attached.length+' energy attached</span>';
  }
