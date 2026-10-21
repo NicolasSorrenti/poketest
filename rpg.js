@@ -672,7 +672,7 @@ function showPackReveal(){
  const giver=pack.giver&&cast[pack.giver]?pack.giver:null;
  const setName=COLLECT.SETS[pack.set]?.name||'Base Set';
  $('packEyebrow').textContent=isVictory?'✦ DUEL REWARD · YOUR CARDS':'✦ NEO HARBOR · CARD REWARDS';
- $('packTitle').textContent=isVictory?(pack.kind==='championship'?'CHAMPION BOOSTER':'VICTORY MINI BOOSTER'):'NEW BOOSTER';
+ $('packTitle').textContent=isVictory?(pack.cards.length===10?(pack.kind==='championship'?'CHAMPION BOOSTER':'VICTORY BOOSTER'):'VICTORY MINI BOOSTER'):'NEW BOOSTER';
  $('packDescription').textContent=setName+' · '+pack.cards.length+' cards. Tap to flip individual cards, or reveal them all.';
  const portrait=$('packGiver');portrait.replaceChildren();
  const request=++packArtSerial; // An earlier booster image must never overwrite this giver.
