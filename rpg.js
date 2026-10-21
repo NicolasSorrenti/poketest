@@ -1519,6 +1519,7 @@ function renderRpgCast(ids,locked,shown,portraitId){
   if(!button){
    button=document.createElement('button');button.type='button';button.dataset.npc=id;
    button.className='rpg-cast-member is-entering';
+   button.dataset.initials=cast[id].name.split(' ').map(part=>part[0]).join('').slice(0,2).toUpperCase();
    button.append(makeAvatar(id));
    const name=document.createElement('span');name.textContent=cast[id].name.split(' ')[0];button.append(name);
    button.onclick=()=>selectPerson(id);
@@ -1793,7 +1794,7 @@ function render(){
  if(!people.length){const p=document.createElement('p');p.className='empty-note';p.textContent='No regulars here at this time. Try another location or time period.';$('people').append(p);}
  for(const id of people){
   const c=cast[id],b=document.createElement('button');b.className='person'+(state.selected===id?' selected':'');b.disabled=locked;
-  const avatar=document.createElement('span');avatar.className='person-avatar';avatar.append(makeAvatar(id));
+  const avatar=document.createElement('span');avatar.className='person-avatar';avatar.dataset.initials=c.name.split(' ').map(part=>part[0]).join('').slice(0,2).toUpperCase();avatar.append(makeAvatar(id));
   const label=document.createElement('span');label.className='person-info';
   const name=document.createElement('strong');name.textContent=c.name;const sub=document.createElement('small');sub.textContent=c.style;
   const bond=BONDS.progress(state,id,BOND_PLAN),chapter=document.createElement('small');
