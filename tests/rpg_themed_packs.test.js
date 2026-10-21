@@ -61,7 +61,8 @@ test('five new themes unlock by milestone while old themes remain in the shop',(
  s.day=90;
  assert.equal(C.themedPacks(s).every(x=>x.unlocked),true);
  assert.equal(C.themedPacks(s).find(x=>x.id==='arena').price,20);
- assert.equal(C.themedPacks(s).find(x=>x.id==='toolkit').price,24);
+ assert.equal(C.themedPacks(s).find(x=>x.id==='toolkit').price,22);
+ assert.equal(C.themedPacks(s).find(x=>x.id==='evolution').price,26);
 });
 test('no themed booster leaks a printing from an expansion not yet unlocked',()=>{
  const s=campaign('ember_garden');
