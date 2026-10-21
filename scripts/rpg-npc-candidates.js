@@ -9,7 +9,7 @@ const VARIANTS=Object.freeze({
 });
 function candidate({npc,tier,original,catalog,variant='baseline'}){
  if(!VARIANTS[npc]?.includes(variant))throw Error('Unknown candidate '+npc+'/'+variant);
- const base=NPC.upgrade({npc,tier,original,catalog}),cards=[...base];
+ const base=NPC.baselineUpgrade({npc,tier,original,catalog}),cards=[...base];
  if(tier===1||variant==='baseline')return cards;
  function swap(from,to,n=1){
   if(!catalog.has(from)||!catalog.has(to))throw Error('Unknown printed Pokémon card '+from+' / '+to);
