@@ -117,6 +117,9 @@ Engine.prototype.attack=function(i,benchTarget=null,deferTurnEnd=false,searchCho
    options:[...Array.from({length:101},(_,index)=>({index:index*10,name:index?`Reduce damage by up to ${index*10}`:'Do not reduce damage'})),{index:'all',name:'Reduce all damage (any amount)'}],
    execute:value=>{
     if(value!=='all'&&(!Number.isInteger(value)||value<0||value>1000||value%10))return false;
+    // An old prompt must not launch an attack for a different Active Pokémon.
+    if(this.turn!==0||this.me?.active!==attacker||this.phase!=='game'||this.over||
+       !attacker.attachedTrainers?.some(x=>lookup.get(x.id)?.name==='Charity'))return false;
     attacker._trainer60CharitySerial=this.turnSerial;
     attacker._trainer60CharityReduction=value==='all'?Number.POSITIVE_INFINITY:value;
     deckSearchRequest=null;
