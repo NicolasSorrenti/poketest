@@ -69,9 +69,9 @@ test('benchmark validates inputs and preserves independent duel choice paths',()
  assert.throws(()=>candidate({npc:'reina',tier:2,original:src,catalog:CATALOG,variant:'unknown'}),/Unknown candidate/);
 });
 
-test('production Yuna and Camila tunes match measured candidates and retain original baselines',()=>{
+test('production tuned rivals retain baseline parity and correct legal card recipes',()=>{
  const service=new ClassicLocalService();
- const chosen=[['yuna','zap','electabuzz-pair'],['camila','rocket_lab','rocket-hybrid']];
+ const chosen=[['reina','blackout','fair-rival'],['yuna','zap','electabuzz-pair'],['camila','rocket_lab','rocket-hybrid']];
  for(const [npc,theme,variant] of chosen){
   const original=service.decklist(theme);
   const act1=NPC.upgrade({npc,tier:1,original,catalog:CATALOG});
