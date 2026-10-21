@@ -900,10 +900,14 @@ test('RPG collection: a training pack unlocks owned cards and full Deck Studio n
  const original=r.state().deckJourney.deck.join(',');
  const store=r.elements.deckCollection.children.find(x=>x.textContent.includes('Browse booster packs'));
  assert.ok(store,'boosters are purchased in the shop UI, not the collection summary');store.onclick();
- const buy=r.elements.boosterShopGrid.children.flatMap(x=>x.children).find(x=>x.className==='booster-offer-buy'&&!x.disabled&&x.textContent.includes('Buy'));
- assert.ok(buy);buy.onclick();
+ const themes=r.elements.boosterShopGrid.children.slice(0,3).map(x=>x.children[1]?.textContent);
+ assert.deepEqual(themes,['Colosseum Circuit','Evolution Workshop',"Trainer's Toolkit"]);
+ const buy=r.elements.boosterShopGrid.children.flatMap(x=>x.children).find(x=>x.className==='booster-offer-buy'&&!x.disabled&&x.textContent.includes('Choose free'));
+ assert.ok(buy,'two opening mini packs are available without credits');buy.onclick();
  const afterPack=r.state();
- assert.equal(afterPack.credits,60);assert.equal(afterPack.deckJourney.packs,1);
+ assert.equal(afterPack.credits,80);assert.equal(afterPack.deckJourney.packs,0);
+ assert.equal(afterPack.deckJourney.welcomePacks,1);
+ assert.equal(afterPack.deckJourney.lastPack.cards.length,5);
  assert.equal(afterPack.day,5);assert.equal(afterPack.slot,0);
  assert.equal(afterPack.deckJourney.deck.join(','),original);
  const editor=r.elements.deckCollection.children.find(x=>x.className==='studio-open');
