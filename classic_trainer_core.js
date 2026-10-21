@@ -505,10 +505,23 @@ function prompt(g,plan,helpers){
   return single('stage',side,options(vals,'stage'),'Choose evolution stage to remove');
  }
  if(name==='Pokémon Breeder'){
-  if(!chosen(d,'evolution'))return single('evolution',side,hchoices(c=>c.subtypes?.includes('Stage 2')),'Choose Stage 2 Pokémon');
+  const eligibleBasics=evolved=>{
+   // The imported catalogue shortens Dark/Light Stage 1 names in Stage 2
+   // evolvesFrom fields. Require the actual corresponding evolution family.
+   const prefix=/^(Dark |Light )/.exec(evolved.name||'')?.[1];
+   const previous=prefix&&!evolved.evolvesFrom?.startsWith(prefix)?prefix+evolved.evolvesFrom:evolved.evolvesFrom;
+   const firstStages=Array.from(CATALOG.values()).filter(c=>c.name===previous&&c.subtypes?.includes('Stage 1'));
+   return own(u=>isBasicPokemon(get(u.id))&&u.playedTurn<g.round&&firstStages.some(c=>c.evolvesFrom===get(u.id).name));
+  };
+  if(!chosen(d,'evolution')){
+   const playable=hchoices(c=>c.subtypes?.includes('Stage 2')&&eligibleBasics(c).length);
+   if(!playable.length)throw Error('Pokémon Breeder needs a matching Basic Pokémon already in play');
+   return single('evolution',side,playable,'Choose Stage 2 Pokémon');
+  }
   if(!chosen(d,'target')){
-   const evolved=get(p.hand[nums(d,'evolution')[0]]);const stage1=Array.from(CATALOG.values()).filter(c=>c.name===evolved.evolvesFrom&&c.subtypes?.includes('Stage 1'));
-   return single('target',side,own(u=>isBasicPokemon(get(u.id))&&u.playedTurn<g.round&&stage1.some(c=>c.evolvesFrom===get(u.id).name)),'Choose a Basic Pokémon to evolve');
+   const evolved=get(p.hand[nums(d,'evolution')[0]]),targets=eligibleBasics(evolved);
+   if(!targets.length)throw Error('Pokémon Breeder no longer has a compatible Basic Pokémon');
+   return single('target',side,targets,'Choose a Basic Pokémon to evolve');
   }
  }
  if(name==='Challenge!'){
