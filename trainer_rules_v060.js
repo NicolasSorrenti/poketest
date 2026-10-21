@@ -186,6 +186,7 @@ Engine.prototype._trainer60MayRivalReplay=function(card){
 Engine.prototype._trainer60RivalReplay=function(id){
  const oldTurn=this.turn,opponent=this.players[1-oldTurn],lastDeckSearch=deckSearchRequest;
  const originalHandCopies=opponent.hand.filter(cardId=>cardId===id).length;
+ const originalDiscardCopies=opponent.discard.filter(cardId=>cardId===id).length;
  // A rejected delegated Trainer must never leave partial costs or effects.
  // Preserve player object identity because UI and engine callbacks reference it.
  const playerSnapshot=this.players.map(p=>JSON.stringify(p));
@@ -222,7 +223,9 @@ Engine.prototype._trainer60RivalReplay=function(id){
   // Remove only the temporary replay copy; an identical real card may already be in hand.
   const ix=opponent.hand.lastIndexOf(id);
   if(ix>=0&&opponent.hand.filter(cardId=>cardId===id).length>originalHandCopies)opponent.hand.splice(ix,1);
-  if(success){const discard=opponent.discard.lastIndexOf(id);if(discard>=0)opponent.discard.splice(discard,1)}
+  if(success&&opponent.discard.filter(cardId=>cardId===id).length>originalDiscardCopies){
+   const discard=opponent.discard.lastIndexOf(id);if(discard>=0)opponent.discard.splice(discard,1);
+  }
   this.turn=oldTurn;deckSearchRequest=lastDeckSearch;
   if(!success){
    for(let side=0;side<2;side++){const saved=JSON.parse(playerSnapshot[side]);for(const k of Object.keys(this.players[side]))delete this.players[side][k];Object.assign(this.players[side],saved)}
