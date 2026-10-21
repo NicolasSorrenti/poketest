@@ -1,0 +1,11 @@
+'use strict';
+const assert=require('node:assert/strict'),m=require('../duel_playmats.js');
+assert.equal(m.catalog.length,23);
+assert.equal(m.available().length,3);
+assert.deepEqual(m.gifted({playmatGifts:{hana:true},milestoneRewards:{one:{npc:'reina',chapter:1},two:{npc:'jinx',chapter:2}}}),['hana','jinx']);
+const ids=m.available(['hana']).map(x=>x.id);
+assert.ok(ids.includes('npc-hana'));assert.equal(m.choose('npc-reina',ids),'aurora');
+assert.match(m.svg('npc-hana'),/^url\("data:image\/svg\+xml,/);
+const target={dataset:{},style:{setProperty:(k,v)=>{assert.equal(k,'--neo-playmat-image');assert.ok(v.includes('svg'));}}};
+m.apply(target,'npc-hana');assert.equal(target.dataset.playmat,'npc-hana');
+console.log('Playmat catalog and gift migration tests passed');
