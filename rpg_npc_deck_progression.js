@@ -7,9 +7,9 @@ const PROFILES=Object.freeze({
  shiori:{ace:'base1-17',trainers:['base1-88','base1-77','base1-71','base1-74']}, // Beedrill / evolution
  yuna:{ace:'base1-10',trainers:['base1-84','base1-74','base1-71','base1-88']}, // Mewtwo / surprises
  akari:{trainers:['base1-79','base1-71','base1-74','base1-92']}, // disruption
- camila:{ace:'base5-25',trainers:['base1-79','base1-71','base1-75','base1-74']}, // Dark Gyarados
+ camila:{ace:'base5-25',supports:['base5-41','base5-31'],trimDoubleColorless:true,minBasicEnergy:14,trainers:['base1-79','base1-71','base1-75','base1-74']}, // Dark Gyarados / Muk / Weezing
  marina:{ace:'base2-12',trainers:['base1-77','base1-71','base1-88','base1-74']}, // Vaporeon
- kaede:{ace:'base5-31',trainers:['base1-79','base1-75','base1-71','base1-74']}, // Dark Weezing
+ kaede:{ace:'base5-31',supports:['base5-41','base5-25'],trimDoubleColorless:true,minBasicEnergy:14,trainers:['base1-79','base1-75','base1-71','base1-74']}, // Dark Weezing / Muk / Gyarados
  jun:{ace:'base3-21',trainers:['base1-71','base1-79','base1-88','base1-74']},
  teo:{ace:'neo1-7',trainers:['base1-84','base1-88','base1-71','base1-74']},
  iris:{ace:'neo1-8',trainers:['base1-77','base1-71','base1-88','base1-74']},
@@ -60,22 +60,31 @@ function bestAce(cards,catalog,preferred){
  });
  return unique[0]||null;
 }
-function cutFor(cards,added,catalog,kind){
+function cutFor(cards,added,catalog,kind,{trimDoubleColorless=false,minBasicEnergy=12}={}){
  const picks=[];
- // Trainer upgrades replace redundant healing/low-impact support before reducing Energy.
- if(kind==='trainer')for(const name of FODDER){
+ // Replace situational Trainers before lowering the deck's attack-ready Energy.
+ // This also applies to new signature copies, which previously always cut
+ // colored Energy even when the deck still carried several weak Potions.
+ if(kind==='trainer'||kind==='ace')for(const name of FODDER){
   for(let i=0;i<cards.length;i++)if(catalog.get(cards[i])?.name===name)picks.push(i);
+ }
+ // Rocket's main attacks require two or three specifically colored Energy.
+ // Two Double Colorless cards remain available for retreat/Colorless attacks,
+ // but excess copies are a safer cut than Grass/Water in this archetype.
+ if(trimDoubleColorless){
+  const excess=cards.filter(id=>id==='base1-96').length-2;
+  if(excess>0){
+   let addedSpecial=0;
+   for(let i=0;i<cards.length&&addedSpecial<excess;i++)
+    if(cards[i]==='base1-96'){picks.push(i);addedSpecial++;}
+  }
  }
  const energyTotal=cards.filter(id=>isBasicEnergy(catalog.get(id))).length;
  // Retain at least twelve Basic Energy (additional Double Colorless cards are untouched).
- if(energyTotal>12){
+ if(energyTotal>minBasicEnergy){
   const colors=[...new Set(cards.filter(id=>isBasicEnergy(catalog.get(id))))];
   colors.sort((a,b)=>count(cards,b)-count(cards,a)||a.localeCompare(b));
   for(const id of colors)for(let i=0;i<cards.length;i++)if(cards[i]===id)picks.push(i);
- }
- // Rare case: retain the deck's composition but trade a low-impact Trainer for the ace.
- if(kind==='ace')for(const name of FODDER){
-  for(let i=0;i<cards.length;i++)if(catalog.get(cards[i])?.name===name)picks.push(i);
  }
  return picks.find(i=>cards[i]!==added)??-1;
 }
@@ -90,7 +99,7 @@ function upgrade({npc,tier,original,catalog}){
   const card=catalog.get(id);if(!card)return false;
   if(!isBasicEnergy(card)&&cardNameCount(out,card.name,catalog)>=4)return false;
   if(kind==='ace'&&!eligible(id,out,catalog))return false;
-  const i=cutFor(out,id,catalog,kind);
+  const i=cutFor(out,id,catalog,kind,profile);
   if(i<0)return false;
   out[i]=id;return true;
  }
@@ -98,6 +107,9 @@ function upgrade({npc,tier,original,catalog}){
  let ace=bestAce(out,catalog,profile.ace);
  if(ace)insert(ace,'ace');
  for(const id of profile.trainers.slice(0,2))insert(id,'trainer');
+ // Reinforce actual evolution lines rather than only adding powerful Trainers.
+ // Rocket lab's three core lines already contain compatible Basics.
+ for(const id of profile.supports||[])insert(id,'ace');
  if(tier===3){
   // Act III: a second signature copy plus stronger search/disruption.
   ace=bestAce(out,catalog,profile.ace);
