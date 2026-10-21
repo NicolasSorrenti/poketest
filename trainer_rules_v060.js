@@ -10,7 +10,7 @@ Engine.prototype.resolveKO = function(...args) {
     victim.incomingAttack?.turnSerial===this.turnSerial&&!victim._trainer59ExpHandled){
   const energies=victim.energies.map((id,index)=>({id,index})).filter(x=>isBasicEnergyCard(lookup.get(x.id)));
   const receivers=owner.bench.map((u,slot)=>({u,slot})).filter(x=>(x.u.attachedTrainers||[]).some(t=>lookup.get(t.id)?.name==='EXP.ALL'));
-  if(energies.length&&receivers.length&&(energies.length!==1||receivers.length!==1)){
+  if(energies.length&&receivers.length){
    const selections=receivers.flatMap(({u,slot})=>energies.map(({id,index})=>({
     index:slot+':'+index,id,name:`${this.card(u)?.name||'Benched Pokémon'} receives ${lookup.get(id)?.name||'Energy'}`})));
    const options=[{index:'skip',name:'Do not use EXP.ALL'},...selections];
