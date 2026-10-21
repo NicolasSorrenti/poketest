@@ -47,6 +47,7 @@ input,select{background:#0b162e;border:1px solid #5c77a5;border-radius:9px;color
 #buildStatus{font-weight:700;color:#fed988}
 @media(max-width:700px){.columns,.buildgrid{grid-template-columns:1fr}.pack{grid-template-columns:repeat(2,minmax(0,1fr))}}
 .rr-progress{font-weight:800;font-size:20px;margin-bottom:14px;color:#ffd56f}.rr-active{border:1px solid #5b85bd;padding:16px;background:#233a61;border-radius:12px;margin:12px 0}.rr-active strong{display:block;margin-bottom:10px}.rr-active a{display:inline-block;background:#ffd56f;color:#102039;padding:12px 17px;border-radius:9px;font-weight:800;text-decoration:none}.rr-fixtures{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:8px;margin:16px 0}.rr-match{padding:10px;background:#233452;border-radius:9px;border:1px solid #455c82}.rr-match.active{border-color:#ffd56f}.rr-match.complete{border-color:#58cd9b}.rr-match b,.rr-match small{display:block}.rr-match small{color:#b3c8e3;margin-top:4px}.rr-standings{overflow-x:auto}.rr-standings table{width:100%;border-collapse:collapse;min-width:370px}.rr-standings th,.rr-standings td{text-align:left;padding:9px;border-bottom:1px solid #405475}.rr-standings th{color:#b8cdee}.rr-standings tr.me{background:#284875}.rr-active .waiting{color:#c3d5f1}
+.draft-tools{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:10px 0}.draft-tools label{display:flex;align-items:center;gap:7px}.draft-tools select{padding:8px;border-radius:8px;background:#14274b;color:#fff;border:1px solid #8ba7d2}.pick-advice{color:#8dffca;margin:7px 0}.card.suggested{border:2px solid #58dab2}.pick-badge{display:block;background:#86e6b9;color:#17332c;font-weight:800;padding:5px;border-radius:6px;margin:6px 0}.card-kind{display:block;color:#ffe099;font-size:12px}
 </style></head>
 <body>
 <header><div><small>NEO CAMPUS · LIMITED FORMAT</small><h1>Multiplayer Cube Draft</h1></div><nav><a href="/play.html">← Game modes</a></nav></header>
@@ -56,7 +57,8 @@ input,select{background:#0b162e;border:1px solid #5c77a5;border-radius:9px;color
 <h2>Create or join a draft</h2>
 <div class="inputs"><label class="field">Display name<input id="playerName" placeholder="Your nickname" maxlength="28" value="Player"></label>
 <label class="field">Invite code<input id="roomCode" placeholder="ABC234" maxlength="6" autocapitalize="characters"></label>
-<label class="field">Cube format (host only)<select id="cubePreset"><option value="balanced">Classic Balanced</option></select></label></div>
+<label class="field">Cube format (host only)<select id="cubePreset"><option value="balanced">Classic Balanced</option></select></label>
+<label class="field">CPU match difficulty (host only)<select id="cubeCpuDifficulty"><option value="1">1 · Relaxed</option><option value="2">2 · Casual</option><option value="3" selected>3 · Standard</option><option value="4">4 · Expert</option><option value="5">5 · Champion</option></select></label></div>
 <p id="cubePresetInfo" class="muted">Select a Cube format when creating your room. All players draft from the same format.</p>
 <div class="actions"><button id="createRoom" class="primary">Create Cube room</button><button id="joinRoom">Join with code</button></div>
 </section>
@@ -71,6 +73,7 @@ input,select{background:#0b162e;border:1px solid #5c77a5;border-radius:9px;color
 </div>
 <section id="draftArea" class="panel hidden">
 <h2 id="draftHeading">Your pack</h2><p id="draftStatus" aria-live="polite"></p>
+<div class="draft-tools"><label>Sort cards <select id="packSort"><option value="pack">Pack order</option><option value="name">Name A–Z</option><option value="kind">Pokémon first</option></select></label><label><input type="checkbox" id="showPickHelp"> Show draft suggestion</label></div><p id="pickAdvice" class="pick-advice" aria-live="polite"></p>
 <div class="columns"><div id="pack" class="pack"></div><aside><h3>Your drafted cards <span id="pickCount">0</span>/60</h3><p class="muted">Hover or focus a card to inspect it.</p><div id="picks" class="picks"></div></aside></div>
 <div id="cubeHoverPreview" class="cube-hover-preview hidden" aria-hidden="true"></div>
 </section>
