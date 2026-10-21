@@ -4,6 +4,7 @@ const assert=require('node:assert/strict');
 const fs=require('node:fs'),path=require('node:path');
 const Pack=require('../rpg_narrative_pack'),Side=require('../rpg_side_quests'),Story=require('../rpg_story'),Schedules=require('../rpg_schedules'),World=require('../rpg_world'),Arc=require('../rpg_rival_arc'),Tournaments=require('../rpg_tournaments'),Epilogue=require('../rpg_epilogue'),Appointments=require('../rpg_appointments'),Intentions=require('../rpg_intentions'),CG=require('../rpg_cg_gallery'),Planner=require('../rpg_daily_planner'),Social=require('../rpg_social_activities'),Dates=require('../rpg_planned_dates'),Bridge=require('../rpg_duel_bridge'),Pre=require('../rpg_preduel'),Collection=require('../rpg_collection'),Journey=require('../rpg_season_journey'),Situations=require('../rpg_situations'),Dialogue=require('../rpg_dialogue'),BondRewards=require('../rpg_bond_rewards'),Conversations=require('../rpg_conversations'),PartnerDecks=require('../rpg_partner_decks');
 const Mandatory=require('../rpg_mandatory_events'),Season=require('../rpg_season_events'),Registry=require('../rpg_character_packs.generated'),Competitive=require('../rpg_competitive_loop'),Reactivity=require('../rpg_reactivity'),Community=require('../rpg_community'),Consequences=require('../rpg_consequences'),TournamentPresentation=require('../rpg_tournament_presentation');
+const NpcDecks=require('../rpg_npc_deck_progression');
 const js=fs.readFileSync(path.join(__dirname,'..','rpg.js'),'utf8').replace(/\}\)\(\);\s*$/, 'window.__testRpgAction=act;})();');
 const RenderPerf=require('../rpg_render_perf');
 const html=fs.readFileSync(path.join(__dirname,'..','rpg.html'),'utf8');
@@ -75,7 +76,7 @@ function launch(initial,approve=false,mandatory=false){
   createTextNode(text){const node=new FakeNode('#text');node.nodeType=3;node.nodeValue=String(text);node.textContent=String(text);return node;},
   body:new FakeNode('body'),
   addEventListener(name,cb){listeners['document:'+name]=cb;}};
- const win={NeoRpgRenderPerf:RenderPerf,NeoRpgNarrativePack:Pack,NeoRpgSideQuests:Side,NeoHarborStory:Story,NeoRpgSchedules:Schedules,NeoRpgWorld:World,NeoRpgRivalArc:Arc,NeoRpgTournaments:Tournaments,NeoRpgCompetitiveLoop:Competitive,NeoRpgReactivity:Reactivity,NeoRpgCommunity:Community,NeoRpgConsequences:Consequences,NeoRpgTournamentPresentation:TournamentPresentation,NeoRpgEpilogue:Epilogue,NeoRpgAppointments:Appointments,NeoRpgIntentions:Intentions,NeoRpgCGGallery:CG,NeoRpgDailyPlanner:Planner,NeoRpgSocialActivities:Social,NeoRpgPlannedDates:Dates,NeoRpgPreDuel:Pre,NeoRpgCollection:Collection,NeoRpgSeasonJourney:Journey,NeoRpgSituations:Situations,NeoRpgDuelBridge:Bridge,NeoRpgDialogue:Dialogue,NeoRpgBondRewards:BondRewards,NeoRpgConversations:Conversations,NeoRpgPartnerDecks:PartnerDecks,
+ const win={NeoRpgRenderPerf:RenderPerf,NeoRpgNarrativePack:Pack,NeoRpgSideQuests:Side,NeoHarborStory:Story,NeoRpgSchedules:Schedules,NeoRpgWorld:World,NeoRpgRivalArc:Arc,NeoRpgTournaments:Tournaments,NeoRpgCompetitiveLoop:Competitive,NeoRpgReactivity:Reactivity,NeoRpgCommunity:Community,NeoRpgConsequences:Consequences,NeoRpgTournamentPresentation:TournamentPresentation,NeoRpgEpilogue:Epilogue,NeoRpgAppointments:Appointments,NeoRpgIntentions:Intentions,NeoRpgCGGallery:CG,NeoRpgDailyPlanner:Planner,NeoRpgSocialActivities:Social,NeoRpgPlannedDates:Dates,NeoRpgPreDuel:Pre,NeoRpgCollection:Collection,NeoRpgSeasonJourney:Journey,NeoRpgSituations:Situations,NeoRpgDuelBridge:Bridge,NeoRpgDialogue:Dialogue,NeoRpgBondRewards:BondRewards,NeoRpgConversations:Conversations,NeoRpgPartnerDecks:PartnerDecks,NeoRpgNpcDeckProgression:NpcDecks,
   addEventListener(name,cb){listeners[name]=cb;}};
  if(mandatory){win.NeoRpgMandatoryEvents=Mandatory;win.NeoRpgSeasonEvents=Season;win.NeoRpgCharacterPacks=Registry;}
  const local={getItem(k){return saved[k]||null;},setItem(k,v){saved[k]=String(v);}};
@@ -1369,4 +1370,21 @@ test('RPG assigns NPC deck recipes by campaign act and preserves their tier in p
   assert.equal(restored.state().pendingDuel.npcDeckTier,tier,'reload cannot advance an already committed duel');
   assert.equal(restored.state().pendingDuel.opponent,'power_reserve');
  }
+});
+
+test('RPG challenge snapshots NPC story-upgraded tier without changing other characters or pending duels',()=>{
+ const seed={day:20,slot:0,location:'shop',storyDone:{hana_route_1:{day:5,choice:0}},deckJourney:Collection.fresh()};
+ const r=launch(seed);
+ r.elements.starterChoices.children[0].onclick();
+ const hana=r.elements.people.children.find(x=>x.children?.[1]?.children?.[0]?.textContent==='Hana Mizuno');
+ assert.ok(hana,'Hana should still be at the card shop');
+ hana.onclick();finishGreeting(r);
+ r.elements.characterActions.children.find(x=>x.textContent.includes('Duel')).onclick();
+ const pending=r.state().pendingDuel;
+ assert.equal(pending.npcDeckTier,2,'Hana chapter one should upgrade her deck before Day 31');
+ assert.equal(NpcDecks.tierForOpponent(r.state(),'reina'),1,'Hana milestone must not upgrade Reina');
+ assert.match(r.elements.preDuelDeck.textContent,/REFINED DECK/);
+ const saved=JSON.parse(JSON.stringify(r.state()));
+ saved.day=50; // A queued duel retains its original opponent recipe on save/load.
+ assert.equal(saved.pendingDuel.npcDeckTier,2);
 });
