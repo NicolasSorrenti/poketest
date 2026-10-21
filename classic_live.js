@@ -108,6 +108,7 @@
   const partnerCards=rpgMode&&rpgDuelId?sessionStorage.getItem('neoRpgNpcDeck:'+rpgDuelId):null;
   const response=await api('create',{method:'POST',body:JSON.stringify({
    deck:$('deck').value,opponent:$('opponent').value,
+   ...(rpgMode&&rpgDuelId?{npcDeckId:rpgNpc,npcDeckTier:Number(rpgParams.get('npcTier'))||1}:{}),
    ...($('deck').value==='custom'?{customDeck:JSON.parse(rpgMode?sessionStorage.getItem('neoRpgDeck:'+rpgDuelId)||'null':localStorage.getItem('neoCampusCustomGymDeck')||'null')}:{}),
    ...(partnerCards?{customOpponentDeck:JSON.parse(partnerCards)}:{})
   })});
