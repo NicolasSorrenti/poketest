@@ -74,7 +74,7 @@
    const art=typeof url==='string'&&/^https:\/\//.test(url)
     ?`<img class="energy-card-art" src="${html(url)}" alt="" loading="lazy">`
     :`<span class="energy-card-fallback"><span class="energy-symbol">${html(symbol)}</span><span class="energy-label">${html(short)}</span></span>`;
-   return `<span class="attached-energy energy-card-mini energy-type-${type}" title="${html(name)}" data-symbol="${html(symbol)}" style="--energy-position:${i}">${art}</span>`;
+   return `<span class="attached-energy energy-card-mini energy-type-${type}" title="${html(name)}" style="--energy-position:${i}">${art}</span>`;
   }).join('');
   const names=cards.map(c=>String(c.name||'Unknown Energy')).join(', ');
   return `<span class="energy-peeks energy-card-stack" title="${html(names)}" aria-label="${cards.length} attached Energy: ${html(names)}">${minis}${over?`<span class="energy-overflow">+${over}</span>`:''}</span>${toolBadges}`;
