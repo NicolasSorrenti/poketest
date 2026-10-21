@@ -85,3 +85,19 @@ test('production tuned rivals retain baseline parity and correct legal card reci
   }
  }
 });
+
+
+test('campaign benchmark distinguishes calendar tiers from early story advancement',()=>{
+ assert.equal(Trial.tierForBenchmark(45,'reina','calendar'),2);
+ assert.equal(Trial.tierForBenchmark(45,'reina','story'),3);
+ assert.equal(Trial.tierForBenchmark(60,'camila','story'),3);
+ assert.equal(Trial.tierForBenchmark(80,'yuna','calendar'),3);
+ assert.equal(Trial.tierForBenchmark(80,'yuna','story'),3);
+ const modes=Trial.parse(['--npc-tier','story','--player-level','2','--npc-level','3']);
+ assert.equal(modes.npcTier,'story');
+ assert.equal(modes.playerLevel,2);
+ assert.equal(modes.npcLevel,3);
+ assert.throws(()=>Trial.parse(['--npc-tier','unknown']),/Invalid NPC tier mode/);
+ assert.throws(()=>Trial.parse(['--player-level','0']),/Invalid player CPU level/);
+ assert.throws(()=>Trial.parse(['--npc-level','4']),/Invalid NPC CPU level/);
+});
