@@ -89,7 +89,8 @@
  function themeUnlocked(state,pack){
   if(pack.day===1)return true;
   const unlocked=new Set(shopPacks(state).filter(p=>p.unlocked).map(p=>p.set));
-  return (Number(state?.day)||0)>=pack.day||pack.sources.some(set=>set!=='base1'&&unlocked.has(set));
+  const triggerSets=pack.id==='mystery'?['neo3','neo4']:pack.sources.filter(set=>set!=='base1');
+  return (Number(state?.day)||0)>=pack.day||triggerSets.some(set=>unlocked.has(set));
  }
  function themedPacks(state){
   const owned=state?.deckJourney?.owned||{};
