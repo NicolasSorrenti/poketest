@@ -80,7 +80,7 @@
    });
   }
   visualBuilder.update({drafted:state.drafted,energyIds:state.energyIds,deck,
-   locked:mine.deckReady});
+   locked:mine.deckReady,suggestedDeck:state.suggestedDeck});
   const basics=deck.filter(id=>state.drafted.some(c=>c.id===id&&
    (c.subtypes.includes('Basic')||c.subtypes.includes('Baby')))).length;
   const ready=deck.length===40&&basics>0;
