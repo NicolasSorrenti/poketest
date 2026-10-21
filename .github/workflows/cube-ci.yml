@@ -1,0 +1,54 @@
+name: Cube gameplay regression tests
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'cube*.js'
+      - 'cube*.html'
+      - 'cube*.css'
+      - 'test_cube*.js'
+      - 'classic_local_service.js'
+      - 'classic_online_service.js'
+      - 'cpu_policy.js'
+      - 'headless_duel.js'
+      - 'core_rules.js'
+      - 'package.json'
+      - '.github/workflows/cube-ci.yml'
+  pull_request:
+    paths:
+      - 'cube*.js'
+      - 'cube*.html'
+      - 'cube*.css'
+      - 'test_cube*.js'
+      - 'classic_local_service.js'
+      - 'classic_online_service.js'
+      - 'cpu_policy.js'
+      - 'headless_duel.js'
+      - 'core_rules.js'
+      - 'package.json'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  cube-regression:
+    name: Cube solo and multiplayer
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Check Cube JavaScript syntax
+        run: |
+          node --check cube_strategy.js
+          node --check cube_service.js
+          node --check cube_room_service.js
+          node --check cube_client.js
+          node --check cube_room_client.js
+          node --check cube_builder_ui.js
+      - name: Exercise draft, solo duels, multiplayer rooms and tournaments
+        run: npm run test:cube
