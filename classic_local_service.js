@@ -6,7 +6,7 @@ const {createGame,reduce,CATALOG}=require('./headless_duel');
 const {publicView,publicActivity,validateCommand}=require('./duel_protocol');
 const UNDO=require('./duel_undo');
 const {driveBot,configuration}=require('./classic_bot');
-const {profileForNpc}=require('./cpu_profiles');
+const {NPC_PROFILES,profileForNpc}=require('./cpu_profiles');
 const NPC_DECKS=require('./rpg_npc_deck_progression');
 const {list}=require('./authentic_decks');
 const {LAB}=require('./classic_live_decks');
@@ -42,7 +42,12 @@ class ClassicLocalService {
   if(typeof advancedTactics!=='boolean')throw Error('advancedTactics must be a boolean');
   if(!Number.isInteger(npcDeckTier)||npcDeckTier<1||npcDeckTier>3)throw Error('Invalid RPG NPC deck tier');
   if(npcDeckTier>1&&(typeof npcDeckId!=='string'||!/^[a-z][a-z0-9_]*$/.test(npcDeckId)))throw Error('RPG NPC identity required for deck progression');
-  const defaults=npc===undefined?{level:3,personality:'balanced'}:profileForNpc(npc);
+  // RPG duels supply npcDeckId for deck progression, including Act I. Reuse
+  // that identity for the established per-character CPU profile; otherwise
+  // they silently fell back to balanced level 3. Guest characters without an
+  // explicit profile keep the old balanced default.
+  const profileId=npc===undefined&&typeof npcDeckId==='string'&&Object.hasOwn(NPC_PROFILES,npcDeckId)?npcDeckId:npc;
+  const defaults=profileId===undefined?{level:3,personality:'balanced'}:profileForNpc(profileId);
   if(advancedTactics&&(difficulty??defaults.level)<4)throw Error('Advanced tactics require Expert or Champion level');
   const cpuConfig=configuration({level:difficulty??defaults.level,personality:personality??defaults.personality,seed:aiSeed,
    prizeRace:advancedTactics,knockoutTempo:advancedTactics,opponentResponse:advancedTactics});
@@ -71,7 +76,7 @@ class ClassicLocalService {
   const format=[...playerCards,...cpuCards].some(id=>['neo1','neo2','neo3','neo4'].some(set=>id.startsWith(set+'-')))?(expanded?'online-preview':'neo-theme'):expanded?'gym-expanded':RETAIL.meta[deck]?.gym||RETAIL.meta[opponent]?.gym?'gym-theme':[...playerCards,...cpuCards].some(id=>id.startsWith('base4'))?'theme-expanded':'classic';
   let game=createGame({decks:[playerCards,cpuCards],names:['You','Classic CPU'],format,seed:seed??crypto.randomBytes(4).readUInt32BE(0)});
   game=driveBot(game,200,cpuConfig).game;
-  const token=crypto.randomBytes(24).toString('base64url'),session={game,revision:0,updated:this.now(),token,deck,opponent,cpuConfig,npc:npc??null,npcDeckTier:customOpponentDeck?null:npcDeckTier};
+  const token=crypto.randomBytes(24).toString('base64url'),session={game,revision:0,updated:this.now(),token,deck,opponent,cpuConfig,npc:profileId??npcDeckId??null,npcDeckTier:customOpponentDeck?null:npcDeckTier};
   this.sessions.set(token,session);return {token,...this.response(session)};
  }
  createCube({humanDeck,cpuDeck,seed,difficulty=3,personality='balanced',name='Cube CPU'}={}){
