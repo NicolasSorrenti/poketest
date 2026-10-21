@@ -194,7 +194,7 @@
  async function init(){
   token=sessionStorage.getItem('neoCubeDraftToken');
   if(!token)return;
-  try{state=await request('state');render();}
+  try{state=await request('state');$('cpuDifficulty').value=String(state.difficulty??3);render();}
   catch{sessionStorage.removeItem('neoCubeDraftToken');token=null;}
  }
  $('presetSelect').addEventListener('change',showPreset);
