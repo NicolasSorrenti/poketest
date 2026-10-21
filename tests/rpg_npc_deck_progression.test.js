@@ -185,3 +185,26 @@ test('Camila develops the genuine Team Rocket Dark Vileplume chain, not unsuppor
   'normal Gloom cannot illegally substitute for Dark Gloom');
  assert.deepEqual(service.decklist('rocket_lab'),original,'the source lab deck remains untouched');
 });
+
+
+test('RPG duels use the NPC CPU identity automatically, including Act I and story-accelerated tiers',()=>{
+ const {profileForNpc}=require('../cpu_profiles');
+ const live=new ClassicLocalService({maxSessions:40});
+ for(const [npc,opponent] of [['reina','blackout'],['yuna','zap'],['camila','rocket_lab']]){
+  for(const tier of [1,2,3]){
+   const result=live.create({deck:'brushfire',opponent,npcDeckId:npc,npcDeckTier:tier,seed:2500+tier});
+   assert.equal(result.cpu.level,profileForNpc(npc).level,npc+' Act '+tier+' skill');
+   assert.equal(result.cpu.personality,profileForNpc(npc).personality,npc+' Act '+tier+' personality');
+   assert.equal(result.cpu.deckTier,tier);
+  }
+ }
+ const normal=live.create({deck:'brushfire',opponent:'blackout',seed:2540});
+ assert.equal(normal.cpu.level,3,'ordinary single match keeps default difficulty');
+ assert.equal(normal.cpu.personality,'balanced');
+ const guest=live.create({deck:'brushfire',opponent:'blackout',npcDeckId:'guest_unprofiled',npcDeckTier:2,seed:2541});
+ assert.equal(guest.cpu.level,3,'unprofiled guests keep the fallback');
+ assert.equal(guest.cpu.personality,'balanced');
+ const override=live.create({deck:'brushfire',opponent:'blackout',npcDeckId:'reina',npcDeckTier:1,difficulty:1,personality:'setup',seed:2542});
+ assert.equal(override.cpu.level,1,'explicit difficulty still wins');
+ assert.equal(override.cpu.personality,'setup','explicit personality still wins');
+});
