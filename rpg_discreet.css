@@ -17,20 +17,20 @@
 .rpg-discreet-stage__symbol{font:900 clamp(62px,12vw,160px)/1 'Barlow Condensed',sans-serif;opacity:.13;letter-spacing:.05em}
 .rpg-discreet-stage__subtitle{font:800 12px 'Barlow Condensed',sans-serif;letter-spacing:.3em;opacity:.55}
 :root[data-rpg-discreet="on"] #rpgDiscreetToggle{background:#224e60;border-color:#8cbacc;color:#e9f9ff}
-:root[data-rpg-discreet="on"] #portrait,
-:root[data-rpg-discreet="on"] .rpg-cast-member img,
+:root[data-rpg-discreet="on"] #portrait img:not(.rpg-safe-avatar),
+:root[data-rpg-discreet="on"] .rpg-cast-member img:not(.rpg-safe-avatar),
 :root[data-rpg-discreet="on"] .rpg-cast-member .avatar-fallback,
-:root[data-rpg-discreet="on"] .person-avatar img,
+:root[data-rpg-discreet="on"] .person-avatar img:not(.rpg-safe-avatar),
 :root[data-rpg-discreet="on"] .person-avatar .avatar-fallback,
-:root[data-rpg-discreet="on"] .preduel-art img,
-:root[data-rpg-discreet="on"] #packGiver img,
-:root[data-rpg-discreet="on"] #victoryPortrait img,
+:root[data-rpg-discreet="on"] .preduel-art img:not(.rpg-safe-avatar),
+:root[data-rpg-discreet="on"] #packGiver img:not(.rpg-safe-avatar),
+:root[data-rpg-discreet="on"] #victoryPortrait img:not(.rpg-safe-avatar),
 :root[data-rpg-discreet="on"] #victoryPortrait .avatar-fallback,
-:root[data-rpg-discreet="on"] #cgMomentArt img,
-:root[data-rpg-discreet="on"] #galleryGrid .cg-thumb img,
-:root[data-rpg-discreet="on"] #galleryPreview img,
-:root[data-rpg-discreet="on"] .neo-tournament-versus__portrait,
-:root[data-rpg-discreet="on"] .npc-reaction-portrait {display:none!important}
+:root[data-rpg-discreet="on"] #cgMomentArt img:not(.rpg-safe-avatar),
+:root[data-rpg-discreet="on"] #galleryGrid .cg-thumb img:not(.rpg-safe-avatar),
+:root[data-rpg-discreet="on"] #galleryPreview img:not(.rpg-safe-avatar),
+:root[data-rpg-discreet="on"] .neo-tournament-versus__portrait img:not(.rpg-safe-avatar),
+:root[data-rpg-discreet="on"] .npc-reaction-portrait img:not(.rpg-safe-avatar) {display:none!important}
 :root[data-rpg-discreet="on"] .rpg-scene-cast{align-items:center;justify-content:center;gap:clamp(6px,1.5vw,20px)}
 :root[data-rpg-discreet="on"] .rpg-cast-member{
  flex:0 1 170px;min-width:0;max-width:185px;height:clamp(126px,40%,190px);
@@ -81,4 +81,78 @@
  :root[data-rpg-discreet="on"] .rpg-cast-member{height:115px;min-width:0;padding:4px;flex:1}
  :root[data-rpg-discreet="on"] .rpg-cast-member::before{width:44px;height:44px;font-size:23px}
  :root[data-rpg-discreet="on"] .rpg-cast-member span:last-child{font-size:11px}
+}
+
+/* API-rendered illustrated headshots preserve each NPC's identity across expressions. */
+:root[data-rpg-discreet="on"] [data-rpg-safe-id]{position:relative}
+:root[data-rpg-discreet="on"] [data-rpg-safe-id] .rpg-safe-avatar{
+ display:block!important;position:relative;z-index:1;flex:none;
+ object-fit:contain;object-position:center;border-radius:13px;
+ width:100%;height:100%;max-width:100%;max-height:100%;
+ background:#e4edf3;box-shadow:0 8px 25px #0005;
+}
+:root[data-rpg-discreet="on"] [data-rpg-safe-id] .rpg-safe-avatar[hidden]{display:none!important}
+:root[data-rpg-discreet="off"] .rpg-safe-avatar{display:none!important}
+:root[data-rpg-discreet="on"] #portrait:not([hidden]){
+ display:flex;align-items:center;justify-content:center;filter:none;mask-image:none;
+}
+:root[data-rpg-discreet="on"] #portrait[hidden]{display:none!important}
+:root[data-rpg-discreet="on"] #portrait .rpg-safe-avatar{
+ height:min(55vh,350px);width:min(85%,350px);border:5px solid #476a85;
+}
+:root[data-rpg-discreet="on"] .rpg-cast-member::before{display:none}
+:root[data-rpg-discreet="on"] .rpg-cast-member .rpg-safe-avatar{
+ height:min(65%,120px);width:min(80%,120px);border-radius:50%;border:3px solid #7896b3;
+ order:0;
+}
+:root[data-rpg-discreet="on"] .rpg-cast-member span:last-child{order:1}
+:root[data-rpg-discreet="on"] .rpg-cast-member:has(.rpg-safe-avatar:not([hidden])){background:#14283c}
+:root[data-rpg-discreet="on"] .rpg-cast-member:not(:has(.rpg-safe-avatar:not([hidden])))::before{display:grid}
+:root[data-rpg-discreet="on"] .person-avatar{position:relative}
+:root[data-rpg-discreet="on"] .person-avatar .rpg-safe-avatar{
+ position:absolute;inset:0;width:100%;height:100%;border-radius:5px;object-fit:cover
+}
+:root[data-rpg-discreet="on"] .preduel-art::after,
+:root[data-rpg-discreet="on"] #packGiver::after,
+:root[data-rpg-discreet="on"] #victoryPortrait::after,
+:root[data-rpg-discreet="on"] #cgMomentArt::after,
+:root[data-rpg-discreet="on"] #galleryPreview::after,
+:root[data-rpg-discreet="on"] #galleryGrid .cg-thumb::after{display:none}
+:root[data-rpg-discreet="on"] .preduel-art .rpg-safe-avatar{
+ position:relative;height:min(260px,35vh);width:min(260px,55%);
+ margin:12px auto;border:3px solid #6687a0
+}
+:root[data-rpg-discreet="on"] #packGiver .rpg-safe-avatar{
+ width:150px;height:150px;object-fit:contain
+}
+:root[data-rpg-discreet="on"] #victoryPortrait .rpg-safe-avatar{
+ margin:0 auto;width:min(320px,90%);height:100%;object-fit:contain
+}
+:root[data-rpg-discreet="on"] #cgMomentArt .rpg-safe-avatar,
+:root[data-rpg-discreet="on"] #galleryPreview .rpg-safe-avatar{
+ height:min(48vh,310px);width:min(90%,310px);margin:12px auto
+}
+:root[data-rpg-discreet="on"] #galleryGrid .cg-thumb .rpg-safe-avatar{
+ height:100%;width:100%;border-radius:4px
+}
+:root[data-rpg-discreet="on"] .neo-tournament-versus__portrait{
+ display:flex!important;align-items:center;justify-content:center
+}
+:root[data-rpg-discreet="on"] .neo-tournament-versus__portrait .rpg-safe-avatar{
+ height:auto;width:min(100%,220px);aspect-ratio:1/1;object-fit:contain
+}
+:root[data-rpg-discreet="on"] .npc-reaction-card{grid-template-columns:35% minmax(0,1fr)!important}
+:root[data-rpg-discreet="on"] .npc-reaction-portrait{
+ display:flex!important;justify-content:center;align-items:center;padding:8px
+}
+:root[data-rpg-discreet="on"] .npc-reaction-portrait .rpg-safe-avatar{
+ height:100%;width:auto;aspect-ratio:1/1;object-fit:contain;border-radius:50%
+}
+:root[data-rpg-discreet="on"] .npc-reaction-portrait.no-art::after{display:none}
+:root[data-rpg-discreet="on"] [data-rpg-safe-id]:not(:has(.rpg-safe-avatar:not([hidden])))::after{
+ content:attr(data-rpg-safe-initials);color:#9fbad0
+}
+@media(max-width:600px){
+ :root[data-rpg-discreet="on"] .rpg-cast-member .rpg-safe-avatar{height:min(55%,66px);width:min(90%,66px)}
+ :root[data-rpg-discreet="on"] .npc-reaction-card{grid-template-columns:32% minmax(0,1fr)!important}
 }
