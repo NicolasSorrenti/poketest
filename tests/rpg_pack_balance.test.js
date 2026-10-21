@@ -71,3 +71,28 @@ test('CLI validation and inexpensive readiness report expose meaningful cross-pl
  assert.ok(a.aggregate.every(x=>x.day===15&&x.games===0));
  assert.deepEqual(a.errors,[]);
 });
+
+test('hypothetical price trials keep real pack contents and use the same income budget',()=>{
+ const fixed=P.collect('ember_garden',45,'evolution',2026);
+ const pricier=P.collect('ember_garden',45,'evolution',2026,{evolution:26});
+ assert.equal(fixed.budget,pricier.budget);
+ assert.ok(pricier.purchasedPacks<=fixed.purchasedPacks);
+ assert.ok(pricier.spent<=pricier.budget);
+ assert.equal(pricier.remaining,pricier.budget-pricier.spent);
+ const normal=P.collect('tidal_circuit',45,'toolkit',2026);
+ const cheaper=P.collect('tidal_circuit',45,'toolkit',2026,{toolkit:22});
+ assert.equal(normal.budget,cheaper.budget);
+ assert.ok(cheaper.purchasedPacks>=normal.purchasedPacks);
+ assert.equal(Core.validateDeck(pricier.deck,CATALOG).valid,true);
+ assert.equal(Core.validateDeck(cheaper.deck,CATALOG).valid,true);
+ assert.equal(Collection.THEMED_PACKS.find(x=>x.id==='evolution').price,22,'never change actual prices in a trial');
+ assert.equal(Collection.THEMED_PACKS.find(x=>x.id==='toolkit').price,24);
+});
+test('trial pricing arguments are validated and never leak into normal defaults',()=>{
+ const parsed=P.parse(['--prices','evolution=26,toolkit=22','--days','45']);
+ assert.deepEqual(parsed.prices,{evolution:26,toolkit:22});
+ assert.deepEqual(P.parse([]).prices,{});
+ for(const malformed of ['not-a-theme=20','evolution=0','toolkit=10.1','evolution=101']){
+  assert.throws(()=>P.parse(['--prices',malformed]),/Invalid hypothetical pack price/);
+ }
+});
