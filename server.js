@@ -75,7 +75,7 @@ async function cubeAPI(req,res,pathName){
    const body=await parseJSON(req);return sendJSON(res,200,cube.next(token,body.revision,classic));
   }
   if(pathName==='/api/cube/start'&&req.method==='POST'){
-   const body=await parseJSON(req);return sendJSON(res,200,cube.start(token,body.deck,body.revision,classic));
+   const body=await parseJSON(req);return sendJSON(res,200,cube.start(token,body.deck,body.revision,classic,body.difficulty));
   }
   if(pathName==='/api/cube/pick'&&req.method==='POST'){
    const body=await parseJSON(req);return sendJSON(res,200,cube.pick(token,body.id,body.revision));
