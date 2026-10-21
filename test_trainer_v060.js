@@ -174,6 +174,17 @@ check('Chaos Gym does not overwrite an existing decision during rival replay',()
  assert.equal(g.turn,oldTurn);
  vm.runInContext('deckSearchRequest=null',ctx);
 });
+check('Chaos Gym refuses replay after duel ends without modifying rival cards',()=>{
+ const {g,f}=fresh();
+ const beforeHand=f.hand.slice(),beforeDiscard=f.discard.slice();
+ g.over=true;
+ assert.equal(g._trainer60RivalReplay('base1-91'),false);
+ assert.deepEqual(f.hand,beforeHand);
+ assert.deepEqual(f.discard,beforeDiscard);
+ g.over=false;g.phase='setup';
+ assert.equal(g._trainer60RivalReplay('base1-91'),false);
+ assert.deepEqual(f.hand,beforeHand);
+});
 check('Chaos Gym refuses unreplayable cards without mutating rival hand',()=>{
  const {g,p,f}=fresh();
  const handBefore=f.hand.slice(),discardBefore=f.discard.slice(),turnBefore=g.turn;
