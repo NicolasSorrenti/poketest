@@ -111,6 +111,7 @@ test('character sets select random 10-card packs with a guaranteed rare and ener
  const s=setup();C.choose(s,'ember_garden');
  s.day=90;
  for(const [npc,set] of Object.entries(C.CHARACTER_SETS)){
+  if(s.deckJourney.lastPack)s.deckJourney.lastPack.opened=true;
   const ids=C.reward(s,true,npc,Math.random,{story:true});
   assert.equal(ids.length,5);
   assert.equal(s.deckJourney.lastPack.set,set);
