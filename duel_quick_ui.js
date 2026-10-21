@@ -113,6 +113,21 @@
   function unitClass(who,slot){return changes.get(`${who}:${slot}`)||'';}
   return {update,unitClass,reset};
  }
+ // Display a brief, non-blocking warning without changing the match error state.
+ function makeTransientToast(el,duration=2200){
+  let timer=null;
+  return message=>{
+   if(!el)return;
+   if(timer)clearTimeout(timer);
+   el.textContent=String(message);
+   el.classList.add('show');
+   timer=setTimeout(()=>{
+    el.classList.remove('show');
+    el.textContent='';
+    timer=null;
+   },duration);
+  };
+ }
  // Stable names for public, ordered, server-certified actions. These are
  // presentation hints only: no hidden card or decision payloads are exposed.
  const ACTION_LOOK={
@@ -227,6 +242,6 @@
   document.addEventListener('keydown',e=>{if(e.key==='Escape'&&pinned)hide();});
   return {attach,inspect:(id,unit)=>show(id,unit,window.innerWidth/2-145,window.innerHeight/2-180,true),hide};
  }
- root.NeoDuelUI={legalTarget,drawPrizes,makePreview,energyStack,makeDuelFeedback,makeOpponentActivity,actionDescription,newActivitySince,slots};
+ root.NeoDuelUI={legalTarget,drawPrizes,makePreview,energyStack,makeDuelFeedback,makeTransientToast,makeOpponentActivity,actionDescription,newActivitySince,slots};
  if(typeof module!=='undefined'&&module.exports)module.exports=root.NeoDuelUI;
 })(typeof window==='undefined'?globalThis:window);
