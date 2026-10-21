@@ -63,7 +63,7 @@
  async function createOrJoin(isJoin){
   await act(async()=>{
    const name=$('playerName').value.trim()||'Player';
-   const result=await api(isJoin?'join':'create',isJoin?{code:$('roomCode').value.toUpperCase().trim(),name}:{name,preset:$('cubePreset').value});
+   const result=await api(isJoin?'join':'create',isJoin?{code:$('roomCode').value.toUpperCase().trim(),name}:{name,preset:$('cubePreset').value,difficulty:Number($('cubeCpuDifficulty').value)});
    code=result.code;token=result.token;state=result;deck=[];deckInitialized=false;
    store();render();
   });
@@ -92,6 +92,20 @@
   $('roomNext').textContent=state.allDecksReady?
    'All decks are locked. The round-robin tournament is starting…':
    'Your deck is private to your seat. All players must lock their decks before the next stage.';
+ }
+ function arrangedPack(cards){
+  const order=$('packSort').value;
+  if(order==='pack')return cards;
+  return [...cards].sort((a,b)=>order==='name'?
+   a.name.localeCompare(b.name)||a.id.localeCompare(b.id):
+   (a.supertype==='Pokémon'?0:1)-(b.supertype==='Pokémon'?0:1)||
+   a.name.localeCompare(b.name)||a.id.localeCompare(b.id));
+ }
+ function cardKind(c){
+  return c.supertype==='Trainer'?'Trainer':
+   (c.subtypes||[]).includes('Baby')?'Baby Pokémon':
+   (c.subtypes||[]).includes('Basic')?'Basic Pokémon':
+   c.evolvesFrom?'Evolves from '+c.evolvesFrom:'Evolution Pokémon';
  }
  function showCardPreview(card){
   const view=$('cubeHoverPreview');
@@ -251,8 +265,12 @@
     'Choose one card. Hover to preview; your choice locks when everyone picks.';
    $('draftStatus').classList.toggle('pick-waiting',state.waiting);
    $('pickCount').textContent=state.drafted.length;
+   const recommended=state.pack.find(c=>c.id===state.recommendedId);
+   const guide=$('showPickHelp').checked&&recommended;
+   $('pickAdvice').textContent=guide?'Suggested pick: '+recommended.name+
+    ' · Based on your drafted Pokémon, Energy costs and evolution lines.':'';
    $('pack').replaceChildren();
-   for(const card of state.pack){
+   for(const card of arrangedPack(state.pack)){
     const btn=document.createElement('button');btn.className='card';btn.type='button';
     const selected=card.id===state.selectedId;
     btn.classList.toggle('selected',selected);
@@ -261,6 +279,13 @@
     const name=document.createElement('strong');name.textContent=card.name;
     const meta=document.createElement('small');meta.textContent=card.types.join(', ')+' · '+card.supertype;
     btn.append(name,meta);
+    const kind=document.createElement('span');kind.className='card-kind';
+    kind.textContent=cardKind(card);btn.append(kind);
+    if(guide&&card.id===state.recommendedId){
+     btn.classList.add('suggested');
+     const badge=document.createElement('span');badge.className='pick-badge';
+     badge.textContent='Suggested pick';btn.append(badge);
+    }
     makePreviewable(btn,card);
     btn.onclick=async()=>{
      if(busy)return;
@@ -301,6 +326,8 @@
   finally{loading=false;}
  }
  $('cubePreset').addEventListener('change',showPreset);
+ $('packSort').addEventListener('change',()=>{if(state)render();});
+ $('showPickHelp').addEventListener('change',()=>{if(state)render();});
  loadPresets();
  $('createRoom').onclick=()=>createOrJoin(false);
  $('joinRoom').onclick=()=>createOrJoin(true);
