@@ -40,6 +40,11 @@ assert.match(reference,/grid-template-columns:repeat\(2,30px\)!important/,'refer
 assert.match(reference,/@keyframes referenceCardArrive/,'reference presentation animates card arrival');
 assert.match(reference,/\.hand-panel \.hand-fan-card\{[\s\S]*?aspect-ratio:245\/342!important/,'hand cards preserve the physical card ratio');
 assert.match(reference,/\.hand-panel \.hand-fan-card img\{[\s\S]*?object-fit:contain!important/,'hand artwork cannot stretch');
+assert.match(reference,/v0\.82 — reference composition pass/,'the final desktop pass treats the duel as one composed game table');
+assert.match(reference,/width:min\(100%,1450px\);height:calc\(100dvh - 16px\)/,'desktop match shell is centered and height-locked');
+assert.match(reference,/grid-template-columns:minmax\(680px,1040px\) var\(--match-rail\)!important/,'desktop board and utility rail keep deliberate proportions');
+assert.match(reference,/\.hand-panel\{[\s\S]*?background:transparent!important/,'the hand floats below the table instead of looking like a dashboard panel');
+assert.match(reference,/\.hand-fan-card\{[\s\S]*?max-height:135px!important[\s\S]*?aspect-ratio:245\/342!important/,'the floating hand has bounded, physical card proportions');
 for(const [file,css] of [['desktop',desktop],['mobile',mobile]]){
  assert.equal((css.match(/\{/g)||[]).length,(css.match(/\}/g)||[]).length,file+' rules must have balanced braces');
  assert.match(css,/body\.duel-active/,file+' should affect active duels only');

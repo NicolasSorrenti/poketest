@@ -104,3 +104,121 @@
 @keyframes referenceLegalTarget{0%,100%{box-shadow:0 5px 12px #07190da8,0 0 0 2px #63eeb999}50%{box-shadow:0 7px 18px #07190dc7,0 0 0 4px #75ffd0c4}}
 @keyframes referenceTurnPulse{0%,100%{filter:brightness(1);transform:translateX(-50%) scale(1)}50%{filter:brightness(1.12);transform:translateX(-50%) scale(1.025)}}
 @media (prefers-reduced-motion:reduce){body.duel-active .stage .poke,body.duel-active .stage .poke.legal .pokemon-face,body.duel-active .stage .battleline #turnChip{animation:none!important}}
+
+/* v0.82 — reference composition pass.
+   Treat the duel as a game table, not as a dashboard: a fixed-proportion board,
+   a quiet utility rail, and a frameless hand sharing one visual baseline. */
+@media (min-width:781px){
+ body.duel-active{overflow:hidden;background:#181d25!important}
+ body.duel-active .masthead,body.duel-active>footer{display:none!important}
+ body.duel-active main{
+  width:100%;height:100dvh;max-width:none!important;margin:0!important;
+  padding:8px 14px!important;overflow:hidden;background:#181d25!important;
+ }
+ body.duel-active #duel:not(.hidden){
+  --match-rail:clamp(320px,22vw,368px);--hand-row:clamp(142px,18dvh,166px);
+  width:min(100%,1450px);height:calc(100dvh - 16px);margin-inline:auto;
+  display:grid!important;grid-template-columns:minmax(680px,1040px) var(--match-rail)!important;
+  grid-template-rows:34px minmax(0,1fr) var(--hand-row)!important;
+  justify-content:center;column-gap:14px;row-gap:7px;
+ }
+ body.duel-active #duel>.toolbar{
+  grid-column:1/-1;grid-row:1;min-height:34px!important;height:34px;margin:0!important;
+  padding:2px 8px!important;border:0!important;border-bottom:1px solid #3a414b!important;
+  border-radius:0!important;background:transparent!important;box-shadow:none!important;
+ }
+ body.duel-active #duel>.toolbar .turn-summary{font-size:11px!important}
+ body.duel-active #duel>.toolbar .tag,body.duel-active #duel>.toolbar #scoreline{
+  padding:4px 7px!important;background:#222933!important;border-color:#3c4653!important;
+ }
+ body.duel-active #duel>.toolbar #reset{min-height:26px!important;padding:3px 10px!important}
+ body.duel-active #duel>.stage{grid-column:1;grid-row:2;overflow:visible!important;position:relative}
+ body.duel-active .stage>.turn-coach{
+  position:absolute;z-index:80;top:8px;left:50%;transform:translateX(-50%);
+  width:max-content;max-width:58%;min-height:0!important;padding:5px 10px!important;
+  border:1px solid #61716499!important;border-radius:7px!important;
+  background:#202a27e8!important;box-shadow:0 4px 14px #0007!important;
+ }
+ body.duel-active .stage>.turn-coach .coach-message{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+ body.duel-active .stage>.turn-coach .coach-message strong{font-size:9px!important;letter-spacing:.12em}
+ body.duel-active .stage>.turn-coach .coach-message span{font-size:9px!important}
+ body.duel-active .stage>.turn-coach .coach-chips{display:none!important}
+ body.duel-active .stage>.opponent-activity-status{
+  position:absolute;z-index:79;top:8px;left:50%;transform:translateX(-50%);
+  width:max-content;max-width:55%;min-height:26px!important;margin:0!important;
+ }
+ body.duel-active .stage .arena-layout{height:100%!important;flex:1 1 auto!important}
+ body.duel-active .stage .arena-field{grid-template-rows:minmax(0,1fr) 8px minmax(0,1fr)!important;gap:6px!important}
+ body.duel-active .stage .territory{
+  border-width:3px!important;border-color:#46515a!important;border-radius:12px!important;
+  background-color:#477f2e!important;
+  background-image:linear-gradient(90deg,#18351d33,transparent 20%,transparent 80%,#18351d33),radial-gradient(ellipse at 50% 50%,#a7ba681d,transparent 68%),url('neo_duel_grass.svg')!important;
+  background-size:100% 100%,100% 100%,180px 180px!important;
+  box-shadow:inset 0 0 0 1px #9eb56a66,inset 0 0 34px #17341d70,0 4px 14px #0009!important;
+ }
+ body.duel-active .stage .territory .field-row,body.duel-active .stage .territory .field-row.bottom{
+  padding:7px 104px 7px 86px!important;
+ }
+ body.duel-active .stage .territory .zone h3{font-size:8px!important;margin-bottom:3px!important;color:#eef4e0c7!important}
+ body.duel-active .stage .territory .bench-zone .pokemon-strip{
+  width:min(72%,560px)!important;min-height:58px!important;gap:10px!important;
+  padding:4px 6px!important;border-radius:7px!important;
+ }
+ body.duel-active .stage .territory .bench-zone .pokemon-strip>.empty{min-height:55px!important}
+ body.duel-active .stage .territory .active-zone .poke{width:clamp(104px,8vw,128px)!important;--attachment-height:clamp(91px,11.5dvh,125px)!important}
+ body.duel-active .stage .territory .bench-zone .poke{max-width:90px!important;--attachment-height:clamp(48px,6.2dvh,67px)!important}
+ body.duel-active .stage .territory .active-with-attacks{
+  grid-template-columns:minmax(0,1fr) minmax(104px,128px) minmax(0,1fr)!important;gap:12px!important;
+ }
+ body.duel-active .stage .territory .active-with-attacks .inline-attack-panel{
+  width:min(100%,270px)!important;padding:5px 7px!important;opacity:.96;
+ }
+ body.duel-active .stage .territory .active-with-attacks .inline-attack-panel:not(:has(button:not(:disabled))){display:none!important}
+ body.duel-active .stage .territory .active-with-attacks:has(.inline-attack-panel:not(:has(button:not(:disabled))) .active-slot{grid-column:2!important}
+ body.duel-active .stage .trainerlabel{padding:4px 8px 4px 5px!important}
+ body.duel-active .stage .trainerlabel>span{width:28px!important;height:28px!important;flex-basis:28px!important}
+ body.duel-active .stage .pile-tools{left:8px!important}
+ body.duel-active .stage .deck-counter,body.duel-active .stage .pile-button{height:42px!important;min-height:42px!important}
+ body.duel-active .stage .prize-group{right:10px!important;width:82px!important;padding:5px!important;background:transparent!important;border:0!important;box-shadow:none!important}
+ body.duel-active .stage .prize-group:first-child{top:calc(25% - 61px)!important}
+ body.duel-active .stage .prize-group:last-child{bottom:calc(25% - 61px)!important}
+ body.duel-active .stage .prize-group h3{color:#fff!important;text-shadow:0 1px 3px #000!important}
+ body.duel-active .stage .prize-group .prize-count{display:none!important}
+ body.duel-active .stage .prize-group .prize-grid{grid-template-columns:repeat(2,29px)!important;gap:3px!important}
+ body.duel-active .stage .prize-group .prize-back{width:29px!important;height:41px!important;min-height:41px!important}
+ body.duel-active .stage .territory::after{right:112px!important;width:50px!important;height:70px!important}
+ body.duel-active #duel>.below>.main-column>.hand-panel{
+  padding:8px 6px 0!important;border:0!important;border-radius:0!important;
+  background:transparent!important;box-shadow:none!important;overflow:visible!important;
+ }
+ body.duel-active #duel>.below>.main-column>.hand-panel .hand-toggle{
+  inset:0 auto auto 6px!important;height:25px!important;background:#252d37!important;border-color:#4a5665!important;
+ }
+ body.duel-active #duel>.below>.main-column>.hand-panel .hand-fan:not(.hidden){
+  position:absolute!important;inset:31px 0 0!important;height:auto!important;overflow-x:auto!important;overflow-y:visible!important;
+ }
+ body.duel-active #duel>.below>.main-column>.hand-panel .hand-fan-track{
+  justify-content:center!important;align-items:flex-end!important;gap:8px!important;padding:0 12px!important;
+ }
+ body.duel-active #duel>.below>.main-column>.hand-panel .hand-fan-card{
+  height:100%!important;max-height:135px!important;width:auto!important;aspect-ratio:245/342!important;
+  border:1px solid #e1c853!important;border-radius:5px!important;box-shadow:0 4px 10px #000a!important;
+ }
+ body.duel-active #duel>.below>.main-column>.hand-panel .hand-fan-card img{object-fit:contain!important;background:#10151c!important}
+ body.duel-active #duel>.below>.side-column{border:1px solid #3b444f;border-radius:11px;background:#222832!important;padding:0!important}
+ body.duel-active #choiceDock>#decisionBox{border:0!important;border-bottom:1px solid #3b444f!important;border-radius:0!important;background:transparent!important;box-shadow:none!important}
+ body.duel-active #choiceDock>#logDrawer{border:0!important;border-radius:0!important;background:transparent!important;box-shadow:none!important}
+ body.duel-active #duel>.below>.main-column>.turn-actions-panel{
+  border:1px solid #3b444f!important;border-radius:11px!important;background:#222832!important;
+ }
+ body.duel-active #duel>.below .turn-actions-panel .turn-actions{gap:7px!important}
+ body.duel-active #duel>.below .turn-actions-panel .turn-actions button{border-radius:7px!important;font-size:12px!important}
+}
+
+@media (min-width:781px) and (max-height:760px){
+ body.duel-active #duel:not(.hidden){--hand-row:126px;grid-template-rows:32px minmax(0,1fr) var(--hand-row)!important}
+ body.duel-active #duel>.toolbar{height:32px;min-height:32px!important}
+ body.duel-active #duel>.below>.main-column>.hand-panel .hand-fan-card{max-height:104px!important}
+ body.duel-active .stage .territory .active-zone .poke{--attachment-height:74px!important}
+ body.duel-active .stage .territory .bench-zone .poke{--attachment-height:42px!important}
+}
