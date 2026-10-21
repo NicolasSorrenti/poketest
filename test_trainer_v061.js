@@ -69,4 +69,13 @@ t("Brock's Protection reverses an opposing attack shuffling Energy into the deck
  g.trainer61RestoreOpposingEnergy(f,snapshot);
  assert.deepEqual(f.active.energies,['base1-100']);assert.equal(f.deck.includes('base1-100'),false);
 });
+t("Brock's Protection uses attachment state at attack start",()=>{
+ const {g,f}=fresh({foe:'gym1-21',enemyEnergy:['base1-100']});
+ const before=vm.runInContext('trainer61EnergySnapshot(engine,engine.foe)',ctx);
+ f.active.attachedTrainers=[{id:'gym2-101'}];
+ f.discard.push(f.active.energies.pop());
+ g.trainer61RestoreOpposingEnergy(f,before);
+ assert.equal(f.active.energies.length,0);
+ assert.ok(f.discard.includes('base1-100'));
+});
 console.log('PASS v0.6.1: '+tested+' Trainer attack-interaction scenarios');
