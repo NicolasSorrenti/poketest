@@ -107,7 +107,7 @@ test('unopened mini booster persists on reload until player views it',()=>{
  assert.equal(reloaded.deckJourney.lastPack.opened,true);
 });
 
-test('character sets select random 10-card packs with a guaranteed rare and energy',()=>{
+test('character rewards draw five-card packs with guaranteed rare and energy',()=>{
  const s=setup();C.choose(s,'ember_garden');
  s.day=90;
  for(const [npc,set] of Object.entries(C.CHARACTER_SETS)){
