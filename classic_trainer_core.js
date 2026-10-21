@@ -5,6 +5,31 @@
 const {makeDecision}=require('./decision_core');
 const {isBasicPokemon,isEnergy,canEvolve}=require('./core_rules');
 const STATUS=require('./special_conditions_core');
+// Cancellable Trainer interactions must not change any authoritative state or
+// expose hidden cards. Other Trainers opt in only after their flows are audited.
+const CANCELABLE_TRAINERS=new Set([
+ 'Item Finder','Computer Search','Pokémon Trader','Maintenance',
+ 'Energy Retrieval','Super Energy Retrieval','Max Revive','Nightly Garbage Run',
+ 'Potion','Super Potion','Switch','Gust of Wind','Energy Removal',
+ 'Super Energy Removal','Defender','Scoop Up','Devolution Spray',
+ 'Pokémon Breeder','Misty',"Erika's Maids","Misty's Tears",
+ 'Energy Search',"The Boss's Way",'Blaine','Brock',"Brock's Training Method"
+]);
+// Include deck, hands, RNG, statuses, turn and all stateful card effects.
+// Exclude only transient choice and transport/display bookkeeping.
+function cancelFingerprint(g){
+ const {pendingDecision,pendingAction,events,message,matchFeed,feedSeq,nextDecisionId,...state}=g;
+ return JSON.stringify(state);
+}
+function canCancel(g,actor){
+ const pending=g?.pendingAction,plan=pending?.plan;
+ if(g?.phase!=='game'||g.turn!==actor||pending?.kind!=='classic_trainer'||
+    g.pendingDecision?.actor!==actor||!plan||plan.proxy||plan.hiddenShown||
+    !CANCELABLE_TRAINERS.has(get(plan.cardId).name)||typeof plan.cancelBaseline!=='string')return false;
+ // A Chaos Gym coin flip is already resolved before the Trainer begins.
+ if(g.stadium&&get(g.stadium.id).name==='Chaos Gym')return false;
+ return plan.cancelBaseline===cancelFingerprint(g);
+}
 // Chaos Gym cannot pass attached Trainers to the other player (WotC ruling).
 const ATTACH_ONLY=new Set(['PlusPower','Defender','Berry','Counterattack Claws','Charity',"Brock's Protection","Koga's Ninja Trick","Sabrina's ESP",'Mysterious Fossil','Clefairy Doll']);
 const SETS=['base1','base2','base3','base4','base5','gym1','gym2','neo1','neo2','neo3','neo4','basep'];
@@ -27,6 +52,10 @@ function choice(g,plan,key,actor,items,{min=1,max=min,optional=false,label=key}=
  if(!items.length&&min>0)throw Error('No legal choices for '+label);
  g.nextDecisionId++;
  g.pendingDecision=makeDecision({id:`classic-trainer:${g.nextDecisionId}`,actor,kind:key,label,options:items,min,max,optional});
+ // Deck searches and top-deck previews expose private information even
+ // though their eventual card movement might still be transactional.
+ if(items.some(o=>/^(deck|top):/.test(o.id))||key==='arrange'||/^newDex/.test(key))
+  plan.hiddenShown=true;
  g.pendingAction={kind:'classic_trainer',plan:{...plan,await:key}};
 }
 function select(g,plan,key,actor,items,cfg){
@@ -981,7 +1010,7 @@ function commit(g,plan,h){
 const pFor=(g,side)=>g.players[side];
 function start(g,side,handIndex,h){const p=g.players[side],c=get(p.hand[handIndex]);if(c.supertype!=='Trainer')throw Error('Not a Trainer');if(!SUPPORTED.has(c.name))throw Error('Unported Trainer '+c.name);
  if(c.name==='Mail from Bill'&&p.hand.length>=5)throw Error('Mail from Bill requires at most 4 cards in hand (including itself)');
- const plan={side,handIndex,cardId:c.id,data:{}};return prompt(g,plan,h);
+ const plan={side,handIndex,cardId:c.id,data:{},cancelBaseline:cancelFingerprint(g)};return prompt(g,plan,h);
 }
 function startProxy(g,side,cardId,h){
  if(g.players[side].trainerLockedUntil>g.turnSerial)throw Error('Redirected Trainer use blocked this turn');
@@ -1002,4 +1031,4 @@ const SUPPORTED=new Set(['Ecogym','Card-Flip Game','New Pokédex','Energy Amplif
  'Pewter City Gym','Cerulean City Gym','Vermilion City Gym','Celadon City Gym',
  'Fuchsia City Gym','Saffron City Gym','Cinnabar City Gym','Viridian City Gym',
  "Sabrina's Psychic Control",'Berry','Counterattack Claws','Energy Stadium','Chaos Gym',"Lt. Surge's Secret Plan",'Mail from Bill',"Rocket's Hideout",'Heal Powder','Pokémon Breeder Fields']);
-module.exports={SUPPORTED,start,startProxy,answer};
+module.exports={SUPPORTED,start,startProxy,answer,canCancel};
