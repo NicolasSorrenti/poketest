@@ -185,7 +185,7 @@ Engine.prototype._trainer60MayRivalReplay=function(card){
 };
 Engine.prototype._trainer60RivalReplay=function(id){
  // Only recognized, replayable Trainers can enter the temporary rival hand.
- if(!id||!this._trainer60MayRivalReplay(lookup.get(id)||{})||deckSearchRequest)return false;
+ if(this.phase!=='game'||this.over||!id||!this._trainer60MayRivalReplay(lookup.get(id)||{})||deckSearchRequest)return false;
  const oldTurn=this.turn,opponent=this.players[1-oldTurn],lastDeckSearch=deckSearchRequest;
  const originalHandCopies=opponent.hand.filter(cardId=>cardId===id).length;
  const originalDiscardCopies=opponent.discard.filter(cardId=>cardId===id).length;
