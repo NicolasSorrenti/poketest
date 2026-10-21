@@ -125,7 +125,7 @@
   // Only advertise goals that actually have a chance of appearing right now.
   return core.themedPacks(s).map(pack=>({
    ...pack,targets:pack.unlocked?wanted.filter(x=>core.themeContains(s,pack.id,x.id)).length:0,
-   futureTargets:wanted.filter(x=>pack.sources.includes(x.set)).length
+   futureTargets:wanted.filter(x=>pack.futureSources.includes(x.set)).length
   })).sort((a,b)=>b.targets-a.targets||Number(b.unlocked)-Number(a.unlocked)||
    b.futureTargets-a.futureTargets||a.price-b.price);
  }
