@@ -79,7 +79,7 @@ function buildPlayerDeck(starterId,stage,seed=1){
   const name=card.name;
   return deck.filter(x=>CATALOG.get(x)?.name===name).length<4;
  };
- const targets=Object.keys(owned).filter(canAdd).sort((a,b)=>score(b)-score(a)||a.localeCompare(b));
+ const targets=Object.keys(owned).filter(id=>score(id)>=55&&canAdd(id)).sort((a,b)=>score(b)-score(a)||a.localeCompare(b));
  const minEnergy=stage.tier===2?19:17;
  for(const wanted of targets){
   while(canAdd(wanted)){
@@ -88,7 +88,7 @@ function buildPlayerDeck(starterId,stage,seed=1){
     .filter(({card,score:rating})=>card?.supertype==='Trainer'&&rating<score(wanted))
     .sort((a,b)=>a.score-b.score||a.i-b.i)[0];
    const energyIndices=deck.map((id,i)=>({id,i,card:CATALOG.get(id)})).filter(x=>isBasicEnergy(x.card));
-   const energy=energyIndices.length>minEnergy?energyIndices.at(-1):null;
+   const energy=energyIndices.length>minEnergy&&score(wanted)>=70?energyIndices.at(-1):null;
    const drop=discard||energy;
    if(!drop)break;
    deck[drop.i]=wanted;
