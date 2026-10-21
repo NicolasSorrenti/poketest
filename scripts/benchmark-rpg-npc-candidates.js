@@ -92,7 +92,7 @@ function run(options){
     const cards=variants[day+'/'+npc+'/'+variant];
     opts.format=[...player,...cards].some(id=>id.startsWith('neo'))?'online-preview':'gym-expanded';
     const key=day+'/'+npc+'/'+variant;
-    if(!accum.has(key))accum.set(key,{day,npc,variant,games:0,playerWins:0,npcWins:0,draws:0,
+    if(!accum.has(key))accum.set(key,{day,npc,variant,npcDeckTier:tierForBenchmark(day,npc,options.npcTier),npcTierMode:options.npcTier,playerCpuLevel:options.playerLevel,games:0,playerWins:0,npcWins:0,draws:0,
      styles:Object.fromEntries(options.styles.map(x=>[x,{playerWins:0,npcWins:0,draws:0}]))});
     const item=accum.get(key);
     item.npcCpuLevel=cpu.level;item.npcPersonality=cpu.personality;
