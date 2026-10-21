@@ -14,7 +14,7 @@
   root=el('div','ca-panel');root.id='cubeComposition';root.append(el('h3','', 'Cube composition'),el('div','ca-muted','The full generated pool, including duplicate copies.'),el('div','ca-chips'));
   const trigger=document.querySelector('.cube-pool-open');
   if(trigger)trigger.insertAdjacentElement('afterend',root);else document.body.prepend(root);
-  pickPanel=el('div','ca-panel');pickPanel.append(el('h3','','Drafted cards'));
+  pickPanel=el('div','ca-panel');pickPanel.append(el('h3','','Drafted cards'),el('p','ca-muted','Hold a pack card to inspect it without selecting it. On desktop, right-click or press I while focused.'));
   const selector=el('select','ca-control');selector.setAttribute('aria-label','Organize drafted cards');
   for(const [v,t] of [['history','Pick order'],['type','By type'],['stage','By evolution stage'],['family','By evolution family']]){const o=el('option','',t);o.value=v;selector.append(o);}
   selector.addEventListener('change',()=>drawPicks());pickPanel.append(selector,el('div','ca-list'));
