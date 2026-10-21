@@ -1,0 +1,29 @@
+/* Character dialogue lives in the observability rail, not over the battlefield. */
+#chatDuelDock{display:none}
+.rpg-chat-heading{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.rpg-chat-heading h3{margin:0;font-size:13px;letter-spacing:.075em}
+.rpg-chat-heading span{font-size:11px;color:#a8c9d0}
+.rpg-dialogue-messages{display:flex;flex-direction:column;gap:8px;overflow-y:auto;overscroll-behavior:contain;padding:10px;min-height:0}
+.rpg-dialogue-message{flex:none;background:#172f42;border:1px solid #47667c;color:#e9f7ff;border-radius:9px;padding:9px;overflow-wrap:anywhere}
+.rpg-dialogue-message strong{display:block;font-size:12px;color:#90eddf}
+.rpg-dialogue-message small{display:block;font-size:10px;font-weight:800;color:#e0b8ea}
+.rpg-dialogue-message p{margin:5px 0 0;font-size:13px;line-height:1.4;white-space:pre-wrap}
+.rpg-chat-empty{padding:10px;color:#a8bcc9;font-size:12px}
+#rpgChatToggle{display:none}
+@media(min-width:781px){
+ body.rpg-duel.duel-active #chatDuelDock{display:flex!important;flex:1 1 42%!important;min-height:0!important;overflow:hidden}
+ body.rpg-duel.duel-active #chatDuelDock #rpgReactionChat,
+ body.rpg-duel.duel-active #chatDuelDock #rpgReactionChat.hidden{display:flex!important;position:static!important;flex-direction:column!important;flex:1 1 auto!important;min-height:0!important;max-height:none!important;overflow:hidden!important;margin:0!important;padding:0!important;border:0!important;background:transparent!important}
+ body.rpg-duel.duel-active #chatDuelDock .rpg-chat-heading{padding:9px;border-bottom:1px solid #496277}
+ body.rpg-duel.duel-active #chatDuelDock .rpg-dialogue-messages{flex:1 1 auto;max-height:none}
+ body.rpg-duel.duel-active #closeRpgChat{display:none}
+ body.duel-active:not(.rpg-duel) #choiceDock>#logDrawer{flex:1 1 100%!important}
+}
+@media(max-width:780px){
+ body.rpg-duel.duel-active #rpgChatToggle{display:inline-flex}
+ body.rpg-duel.duel-active #chatDuelDock{display:contents}
+ body.rpg-duel.duel-active #rpgReactionChat{display:flex;flex-direction:column;position:fixed;z-index:600;left:8px;right:8px;bottom:12px;max-height:min(60dvh,480px);overflow:hidden;margin:0;padding:0;border:2px solid #54828d;border-radius:12px;background:#14283b;box-shadow:0 10px 34px #000e}
+ body.rpg-duel.duel-active #rpgReactionChat.hidden{display:none!important}
+ body.rpg-duel.duel-active .rpg-chat-heading{padding:10px;border-bottom:1px solid #47657a}
+ body.rpg-duel.duel-active .rpg-dialogue-messages{min-height:90px}
+}

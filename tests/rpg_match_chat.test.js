@@ -1,0 +1,12 @@
+'use strict';
+const assert=require('node:assert/strict'),chat=require('../rpg_match_chat.js');
+const map=new Map(),storage={getItem:k=>map.get(k)||null,setItem:(k,v)=>map.set(k,v),removeItem:k=>map.delete(k)};
+const history=chat.createHistory({storage,key:'one',max:2});
+history.add({npcName:'Reina',title:'Attack',line:'Watch this.'});
+history.add({npcName:'Reina',title:'Hurt',line:'Not bad.'});
+history.add({npcName:'Reina',title:'KO',line:'Well played.'});
+assert.deepEqual(history.entries.map(e=>e.text),['Not bad.','Well played.']);
+assert.equal(chat.createHistory({storage,key:'one'}).entries.length,2);
+assert.equal(chat.createHistory({storage,key:'two'}).entries.length,0);
+history.reset();assert.equal(chat.createHistory({storage,key:'one'}).entries.length,0);
+console.log('RPG match transcript history: OK');
