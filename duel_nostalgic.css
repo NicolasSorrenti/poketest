@@ -295,6 +295,68 @@ body.duel-active .hand-tray-drawer,
 body.duel-active .power-drawer{bottom:calc(clamp(185px,25dvh,255px) + 6px)}
 body.duel-active #decisionBox:not(.hidden){z-index:170;max-height:60dvh;overflow:auto}
 body.duel-active .prize-choice-panel{z-index:190}
+/* Desktop mirrors the reference match cadence: table at left, persistent match
+   information at right, cards below the table and commands below the rail. */
+@media (min-width:781px){
+ body.duel-active #duel:not(.hidden){
+  grid-template-columns:minmax(0,1fr) clamp(292px,27vw,382px);
+  grid-template-rows:auto minmax(0,1fr) clamp(185px,25dvh,255px)!important;
+  column-gap:10px;row-gap:6px;
+ }
+ body.duel-active #duel>.toolbar{grid-column:1 / -1;grid-row:1}
+ body.duel-active #duel>.stage{grid-column:1;grid-row:2;min-height:0}
+ body.duel-active #duel>.below,
+ body.duel-active #duel>.below>.main-column{display:contents}
+ body.duel-active #duel>.below>.main-column>.hand-panel{
+  grid-column:1;grid-row:3;height:100%;min-height:0;
+ }
+ body.duel-active #duel>.below>.side-column{
+  grid-column:2;grid-row:2;display:flex;min-width:0;min-height:0;
+  height:100%;gap:7px;padding:0;overflow:hidden;
+ }
+ body.duel-active #duel>.below>.side-column>#choiceDock{
+  display:flex;flex:1;min-height:0;flex-direction:column;gap:7px;
+ }
+ body.duel-active #choiceDock>#decisionBox{
+  flex:0 0 auto;margin:0;padding:12px;border-color:#3d4857;
+  background:#232a35;border-radius:10px;
+ }
+ body.duel-active #choiceDock>#decisionBox:not(.active) #decisionOptions:empty,
+ body.duel-active #choiceDock>#decisionBox:not(.active) #decisionActions:empty{display:none}
+ body.duel-active #choiceDock>#logDrawer{
+  display:flex!important;flex:1 1 auto;min-height:0;margin:0;padding:0;
+  flex-direction:column;border-color:#3d4857;background:#232a35;
+ }
+ body.duel-active #choiceDock>#logDrawer header{
+  flex:none;padding:10px 12px;border-bottom:1px solid #3d4857;
+ }
+ body.duel-active #choiceDock>#logDrawer .log-scroll{
+  flex:1;min-height:0;max-height:none;overflow:auto;padding:3px 10px 10px;
+ }
+ body.duel-active #choiceDock>#logDrawer #closeLog,
+ body.duel-active .toolbar #logToggle{display:none}
+ body.duel-active #duel>.below>.main-column>.turn-actions-panel{
+  grid-column:2;grid-row:3;width:100%!important;height:100%!important;
+  min-height:0!important;padding:8px!important;background:#232a35;
+ }
+ body.duel-active #duel>.below .turn-actions-panel .turn-actions{
+  display:grid;grid-template-columns:repeat(2,minmax(0,1fr));
+  grid-template-rows:repeat(3,minmax(42px,1fr));gap:7px;
+ }
+ body.duel-active #duel>.below .turn-actions-panel .turn-actions button{
+  width:100%;height:100%;max-width:none;min-height:42px;
+ }
+ body.duel-active #duel>.below .turn-actions-panel #endBtn{grid-column:1 / -1}
+ body.duel-active #duel>.below .turn-actions-panel #concedeBtn{grid-column:1 / -1}
+ body.duel-active #duel>.error:not(.hidden),
+ body.duel-active #duel>.prize-choice-panel:not(.hidden){
+  position:fixed;left:50%;top:54px;transform:translateX(-50%);
+  z-index:210;width:min(680px,calc(100vw - 24px));
+ }
+ body.duel-active #duel>.coin-fx,
+ body.duel-active #duel>.ko-fx,
+ body.duel-active #duel>.duel-feedback{position:fixed}
+}
 @media (max-width:780px){
  body.duel-active main{padding:4px}
  body.duel-active #duel:not(.hidden){

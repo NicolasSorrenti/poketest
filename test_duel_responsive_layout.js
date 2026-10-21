@@ -13,6 +13,11 @@ assert.match(tabletop,/body\.duel-active/,'the visual redesign should only style
 assert.match(tabletop,/grid-template-columns:repeat\(5,minmax\(0,1fr\)\)/,'mobile Bench keeps 5 positions');
 assert.match(tabletop,/\.hand-fan-track\{/,'cards must remain visible in the horizontal hand tray');
 assert.match(tabletop,/\.prize-group\.prize-awaiting/,'interactive Prize selection must remain accessible');
+assert.match(tabletop,/@media \(min-width:781px\)/,'desktop tabletop receives its own match composition');
+assert.match(tabletop,/#duel:not\(\.hidden\)\{[\s\S]*?grid-template-columns:minmax\(0,1fr\) clamp\(292px,27vw,382px\)/,'desktop keeps a persistent right match rail');
+assert.match(tabletop,/#logDrawer\{[\s\S]*?display:flex!important/,'desktop event history remains visible during play');
+assert.match(tabletop,/\.turn-actions-panel\{[\s\S]*?grid-column:2;grid-row:3/,'desktop actions sit below the match rail');
+assert.match(tabletop,/\.hand-panel\{[\s\S]*?grid-column:1;grid-row:3/,'desktop hand remains directly below the battlefield');
 assert.doesNotMatch(tabletop,/\.poke\s*\{[^}]*pointer-events\s*:\s*none/,'playmat must not disable target clicks');
 for(const file of ['online.html','classic_live.html']){
  const html=fs.readFileSync(file,'utf8');
