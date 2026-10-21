@@ -48,3 +48,28 @@ npm run balance:npc-tuning -- --days 45,60,80 --npcs reina,yuna,camila --styles 
 - The more conservative Yuna and Camila recipes have initial matched head-to-head evidence. Reina's fair-rival variant completed its mirrored games, but 24 games per checkpoint are not enough to claim the remaining advantage has been eliminated.
 - Real campaign progress can accelerate a character's tier after story milestones. The benchmark intentionally uses only calendar tiers.
 - No economy settings, booster rates, social rewards, or original attacks/Pokémon Powers change in this milestone.
+
+
+## Follow-up: actual RPG CPU profiles and earlier story upgrades (2026-10-21)
+
+**Important distinction:** The original 24-game cells deliberately use the same level-3 balanced CPU on both sides to isolate deck strength. They are not character-specific difficulty measurements. In the live Classic RPG path, `npcDeckId` was already supplied, but the CPU profile was not selected from it; absent an explicit `npc` field, the local service applied its level-3 balanced fallback. The service now resolves a recognized RPG `npcDeckId` to the existing character CPU profile at **all three acts**, without changing ordinary single matches or unknown guests. Explicit difficulty/personality overrides still take precedence.
+
+| NPC | Live CPU level | CPU personality |
+| --- | --- | --- |
+| Reina | 4 (Expert) | aggressive |
+| Yuna | 2 (Casual) | risk_taking |
+| Camila | 4 (Expert) | tactical |
+
+`benchmark_cpu.js` now accepts independent `--left-personality` and `--right-personality`, retaining its original shared `--personality` default for backward compatibility. The NPC comparison tool now accepts `--npc-profile character` and `--selection production` (only baseline versus the exact production recipe), and supports CPU levels 1–5.
+
+The targeted GitHub Actions workflow includes the **full RPG regression suite** and a new test job that compares **calendar-tier** and **synthetic story-accelerated** tiers using the character profiles above and player decks drawn from simulated themed-pack purchases. Each configured mode/character/day/recipe uses 3 purchasing styles × 2 starters × 4 collection seeds × 3 mirrored pairs × 2 seat orders = **144 games**, plus its paired baseline recipe. Errors or fewer than 100 recorded matches per measured cell fail the job. JSON artifacts include wins, losses, draws, CPU profiles and uncertainty intervals.
+
+The story scenario deliberately marks the NPC's first and third route milestones complete whenever the game allows them, to quantify a **worst-case early deck-upgrade exposure**. It does not claim a real human necessarily completed those chapters. Likewise, modeled +12 daily credits and scheduled wins are acquisition assumptions, not a replay of a human save.
+
+To reproduce the character-profile scenario:
+
+```sh
+node scripts/benchmark-rpg-npc-candidates.js --days 45,60,80 --styles mixed,evolution,toolkit --starters ember_garden,tidal_circuit --npcs reina,yuna,camila --seeds 4 --pairs 3 --npc-profile character --selection production --npc-tier story
+```
+
+**Verification status:** Changes and automated checks have been committed to `main`; do not treat new win rates as measured until the current GitHub Actions runs finish successfully and their artifacts are reviewed. Do not adjust production decks on the older uniform-level results alone.
