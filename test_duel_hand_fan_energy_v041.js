@@ -20,7 +20,7 @@ assert.match(html,/energy-type-rainbow/);
 assert.match(html,/energy-label">FIR/);
 assert.match(html,/energy-label">WAT/);
 assert.match(html,/energy-label">PSY/);
-assert.match(html,/data-symbol="F"/);
+assert.doesNotMatch(html,/data-symbol=/,'Attached card artwork should not have a redundant colored-letter overlay');
 assert.equal((html.match(/class="attached-energy/g)||[]).length,4,'Large attachments must use a bounded fan');
 assert.match(html,/energy-overflow">\+2/);
 assert.match(html,/Unusual &amp; &lt;Special&gt;/,'Tooltip must describe hidden cards safely');
