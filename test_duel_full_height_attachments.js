@@ -12,7 +12,7 @@ assert.match(section,/\.energy-peeks\.energy-card-stack\{[\s\S]*?height:var\(--a
 assert.match(section,/\.pokemon-tools\.tool-card-stack\{[\s\S]*?height:var\(--attachment-height\)/);
 assert.match(section,/left:calc\(var\(--energy-position\) \* -1 \* var\(--attachment-overlap\)\)/);
 assert.match(section,/right:calc\(var\(--tool-position\) \* -1 \* var\(--tool-overlap\)\)/);
-assert.match(section,/\.energy-type-fire\{--attachment-edge:/);
+assert.doesNotMatch(section,/\.attached-energy\.energy-card-mini::before/,'No letter or color overlay should cover attached Energy art');
 assert.match(section,/\.poke \.pokemon-tools \.tool-card-art\{/);
 assert.match(section,/@media\(max-width:780px\)/);
 assert.match(section,/@media\(max-width:435px\)/);
@@ -29,7 +29,7 @@ assert.equal((view.match(/class="attached-energy/g)||[]).length,4);
 assert.equal((view.match(/class="pokemon-tool-card"/g)||[]).length,3);
 assert.match(view,/energy-overflow">\+1/);
 assert.match(view,/tool-overflow" aria-label="1 more attached Trainers">\+1/);
-assert.match(view,/data-symbol="F"/);
+assert.doesNotMatch(view,/data-symbol=/,'No redundant letter overlay on attached card art');
 assert.match(view,/class="tool-card-art"/);
 assert.match(view,/PlusPower, Defender, PlusPower, &lt;script&gt; &amp; Test/);
 assert.doesNotMatch(view,/<script>/);
