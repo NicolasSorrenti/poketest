@@ -76,7 +76,7 @@ test('RPG snapshots a tier at challenge time and forwards it to the existing Cla
  const fs=require('node:fs'),path=require('node:path'),root=path.join(__dirname,'..');
  const rpg=fs.readFileSync(path.join(root,'rpg.js'),'utf8');
  const live=fs.readFileSync(path.join(root,'classic_live.js'),'utf8');
- assert.match(rpg,/npcDeckTier=state\.day<=30\?1:state\.day<=60\?2:3/);
+ assert.match(rpg,/NPC_DECKS\?\.tierForOpponent\?\.\(state,id\)/);
  assert.match(rpg,/competitiveTitle:competition\?\.title\|\|null,npcDeckTier/);
  assert.match(rpg,/npcTier=/);
  assert.match(live,/npcDeckId:rpgNpc,npcDeckTier:/);
@@ -91,4 +91,47 @@ test('RPG opponent progression never alters the authoritative player starting de
  assert.equal(recipe.filter(id=>id==='base1-7').length,3,'Reina gains additional Hitmonchan copies');
  assert.equal(recipe.filter(id=>id==='base1-71').length,1,'Reina gains Computer Search');
  assert.ok(recipe.includes('base1-74'),'Reina gains Item Finder');
+});
+
+test('completed first character chapters can trigger tier two from Day 18 without romance',()=>{
+ const s={day:17,storyDone:{reina_route_1:{day:12,choice:1}}};
+ assert.equal(NPC.tierForOpponent(s,'reina'),1,'day floor prevents an early power spike');
+ s.day=18;assert.equal(NPC.tierForOpponent(s,'reina'),2);
+ assert.equal(NPC.tierForOpponent(s,'hana'),1,'one character cannot improve another opponent');
+ assert.equal(NPC.tierForOpponent({day:19,storyDone:{rina_guest_1:true}},'rina'),2);
+ assert.equal(NPC.tierForOpponent({day:20,storyDone:{sol_bond_1:{day:19}}},'sol'),2);
+ assert.equal(NPC.tierForOpponent({day:21,storyDone:{reina_route_1:false}},'reina'),1);
+});
+test('completed third chapters and Reina rivalry milestones accelerate expert decks from Day 45',()=>{
+ const s={day:44,storyDone:{reina_route_3:{day:43}},arcFlags:{reina_rival_2:{day:43}}};
+ assert.equal(NPC.tierForOpponent(s,'reina'),2,'the Day 45 floor still applies');
+ s.day=45;assert.equal(NPC.tierForOpponent(s,'reina'),3);
+ assert.equal(NPC.tierForOpponent(s,'hana'),2,'only the progressing rival improves');
+ assert.equal(NPC.tierForOpponent({day:45,storyDone:{jinx_route_3:{day:45}}},'jinx'),3);
+ assert.equal(NPC.tierForOpponent({day:49,arcFlags:{reina_rival_1:{day:17}}},'reina'),2);
+ assert.equal(NPC.tierForOpponent({day:49,arcFlags:{reina_rival_2:{day:49}}},'reina'),3);
+ assert.equal(NPC.tierForOpponent({day:20,arcFlags:{reina_rival_1:{day:19}}},'reina'),2);
+});
+test('calendar remains a floor, neutral opponents progress and save reload does not affect selected tier',()=>{
+ const state={day:29,storyDone:{},arcFlags:{}};
+ assert.equal(NPC.tierForOpponent(state,'reina'),1);
+ state.day=31;assert.equal(NPC.tierForOpponent(state,'reina'),2);
+ state.day=61;assert.equal(NPC.tierForOpponent(state,'reina'),3);
+ assert.equal(NPC.tierForOpponent({day:29,storyDone:{jun_guest_1:{day:28}}},'jun'),2);
+ assert.equal(NPC.tierForOpponent({day:55,storyDone:{jun_guest_3:{day:50}}},'jun'),3);
+ assert.equal(NPC.tierForOpponent({day:45,storyDone:{reina_route_3:{day:44}}},'shiori'),2);
+ assert.equal(NPC.tierForOpponent({day:NaN},'reina'),1);
+ assert.equal(NPC.tierForOpponent({day:20,storyDone:{other_route_3:true}},'bad/npc'),1);
+ const before=NPC.tierForOpponent({day:24,storyDone:{hana_route_1:{day:6}}},'hana');
+ const reloaded=JSON.parse(JSON.stringify({day:24,storyDone:{hana_route_1:{day:6}}}));
+ assert.equal(before,2);assert.equal(NPC.tierForOpponent(reloaded,'hana'),before);
+});
+test('NPC progression browser global matches authoritative Node exports',()=>{
+ const fs=require('node:fs'),vm=require('node:vm'),path=require('node:path');
+ const script=fs.readFileSync(path.join(__dirname,'..','rpg_npc_deck_progression.js'),'utf8');
+ const window={};
+ vm.runInNewContext(script,{window});
+ assert.equal(window.NeoRpgNpcDeckProgression.tierForOpponent({day:20,storyDone:{reina_route_1:{day:10}}},'reina'),2);
+ const html=fs.readFileSync(path.join(__dirname,'..','rpg.html'),'utf8');
+ assert.match(html,/<script src="\/rpg_npc_deck_progression\.js"><\/script>/);
 });
