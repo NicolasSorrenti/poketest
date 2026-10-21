@@ -66,7 +66,7 @@
   if(!visualBuilder){
    visualBuilder=window.CubeDeckBuilder.create({
     root:$('soloDeckBuilder'),actionElement:$('soloBuilderAction'),
-    onChange:next=>{deck=next;renderBuilder();}
+    onChange:next=>{deck=next;renderBuilder();window.CubeAnalysis?.update({pool:state.cubePool,drafted:state.drafted,pack:[],deck});}
    });
   }
   visualBuilder.update({drafted:state.drafted,energyIds:state.energyIds,deck,suggestedDeck:state.suggestedDeck});
