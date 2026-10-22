@@ -28,7 +28,8 @@ const cast={
 Object.assign(cast,PACK.cast,SIDE.cast);
 const BOND_PLAN=BONDS.build(STORY.events,cast);
 for(const [id,look] of Object.entries({...PACK.looks,...SIDE.looks}))if(cast[id])cast[id].appearance=look;
-const eventCards=[{day:7,slot:1,place:'arcade',title:'Arcade Friendly Cup',reward:7},{day:14,slot:1,place:'center',title:'Club Exhibition',reward:9},{day:21,slot:2,place:'shop',title:'Card Shop Night',reward:8},{day:30,slot:1,place:'center',title:'Neighborhood Cup',reward:15},{day:42,slot:1,place:'arcade',title:'Open Challenge',reward:10},{day:60,slot:1,place:'center',title:'Regional Qualifier',reward:22},{day:75,slot:2,place:'shop',title:'Final Practice Meet',reward:12},{day:88,slot:1,place:'center',title:'Championship Opening',reward:20},{day:90,slot:1,place:'center',title:'Championship Finale Exhibition',reward:25}];
+const exhibitionOpponents={7:'yuna',14:'reina',21:'hana',30:'reina',42:'kaede',60:'akari',75:'camila',88:'reina',90:'shiori'};
+const eventCards=[{day:7:slot:1,place:'arcade',title:'Arcade Friendly Cup',reward:7},{day:14,slot:1,place:'center',title:'Club Exhibition',reward:9},{day:21,slot:2,place:'shop',title:'Card Shop Night',reward:8},{day:30,slot:1,place:'center',title:'Neighborhood Cup',reward:15},{day:42,slot:1,place:'arcade',title:'Open Challenge',reward:10},{day:60,slot:1,place:'center',title:'Regional Qualifier',reward:22},{day:75,slot:2,place:'shop',title:'Final Practice Meet',reward:12},{day:88,slot:1,place:'center',title:'Championship Opening',reward:20},{day:90,slot:1,place:'center',title:'Championship Finale Exhibition',reward:25}];
 
 
 function eligibleStories(){const nearby=SCHEDULES.peopleAt(state.day,state.slot,state.location,publicAppointments(state.location));return STORY.available(state).filter(e=>!e.evergreen||nearby.includes(e.npc));}
@@ -333,6 +334,9 @@ function availableInvitation(id,people=currentPeople()){
   stories:eligibleStories(),sidequests:SIDE.available(state,people),
   arcs:ARC.available(state,people),situations:SITUATIONS.available(state,people),
   encounters:WORLD.availableEncounters(state,people),
+  cups:TOURNAMENTS.available(state).map(c=>({id:c.id,npc:TOURNAMENTS.status(state,c.id)?.opponent})),
+  competitions:COMPETE.available(state),
+  exhibitions:scheduleEvent()?[{id:String(state.day),npc:exhibitionOpponents[state.day]}]:[],
   canAttend:plan=>DATES.canAttend(state,plan,people,{appointments:APPOINTMENTS,social:SOCIAL,cast})
  });
 }
@@ -528,6 +532,9 @@ function act(action){
   if(id==='arc')return startArc(part);
   if(id==='situation')return beginSituation(part);
   if(id==='encounter')return startEncounter(part);
+  if(id==='cup')return act('cup:'+part);
+  if(id==='competitive')return act('competitive:'+part);
+  if(id==='exhibition')return act('event');
   return;
  }
  if(type==='eventChat'){
@@ -705,7 +712,7 @@ function act(action){
   try{const match=COMPETE.begin(state,id);return startDuel(match.npc,null,null,null,null,false,match);}
   catch(err){return say('Circuit Desk',err.message);}
  }
- if(type==='event'){const e=scheduleEvent();if(!e)return;const opponents={7:'yuna',14:'reina',21:'hana',30:'reina',42:'kaede',60:'akari',75:'camila',88:'reina',90:'shiori'};return startDuel(opponents[e.day]||'reina',e);}
+ if(type==='event'){const e=scheduleEvent();if(!e)return;return startDuel(exhibitionOpponents[e.day]||'reina',e);}
  if(type==='work')return performActivity('shop_shift');
  if(type==='practice')return state.location==='library'?performActivity('library_research'):state.location==='center'?performActivity('center_scrimmage'):performActivity('home_reflect');
  if(type==='rest'){if(state.day>90||!confirmTimeAdvance())return;advance();return say('Narrator','You take a break. Other lives in the town carry on.');}
