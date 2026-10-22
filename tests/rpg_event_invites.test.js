@@ -64,3 +64,15 @@ test('viewing invitations leaves all gameplay progression unchanged',()=>{
  I.dialogue(state,invite);
  assert.equal(JSON.stringify(state),old);
 });
+
+test('an opponent offers only currently available circuit matches, not unstarted events',()=>{
+ const s=base();
+ assert.equal(me(s,'reina',{cups:[{id:'neighborhood',npc:'reina'}]}).kind,'cup');
+ assert.equal(me(s,'reina',{competitions:[{id:'daily-12',npc:'reina'}]}).kind,'competitive');
+ assert.equal(me(s,'reina',{exhibitions:[{id:'12',npc:'reina'}]}).kind,'exhibition');
+ assert.equal(me(s,'hana',{exhibitions:[{id:'12',npc:'reina'}]}),null);
+ const duel=I.dialogue(s,{kind:'cup',id:'neighborhood',npc:'reina'});
+ assert.match(duel.lines[2].text,/deck ready/);
+ assert.equal(duel.choices[0][1],'eventInvite:cup:neighborhood');
+ assert.match(duel.choices[0][0],/play/);
+});
