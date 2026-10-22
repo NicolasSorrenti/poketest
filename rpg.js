@@ -1075,7 +1075,7 @@ function startDuel(id,exhibition=null,arcEpisode=null,tournament=null,sideQuest=
  if(npcEditedCards)sessionStorage.setItem('neoRpgNpcDeck:'+state.pendingDuel.id,JSON.stringify(npcEditedCards));
  persist();render();
  $('duel').hidden=true;$('battle').src='about:blank';
- $('preDuelTutorial').hidden=true;tutorialEvent('duels','preDuelTutorial');
+ $('preDuelTutorial').hidden=true;tutorialEvent(tournament||competition?'tournaments':'duels','preDuelTutorial');
  showPreparedDuel();
 }
 window.addEventListener('message',ev=>{
