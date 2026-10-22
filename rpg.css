@@ -382,3 +382,5 @@
 .gameplay-tutorial p{font-size:12px;line-height:1.6;color:#d5ddea;margin:0}
 .gameplay-tutorial button{justify-self:end;padding:7px 18px;border-color:#e6a4c6;background:#69405d;font:800 12px 'Barlow Condensed',sans-serif}
 @media(max-width:700px){.gameplay-tutorial{right:12px;left:12px;bottom:12px;width:auto;max-height:38dvh;overflow:auto;padding:12px}.gameplay-tutorial strong{font-size:19px}}
+
+.tutorial-inline{background:#23334b;border-left:3px solid #e4a2bd;border-radius:7px;padding:10px 13px;margin:12px 0;color:#f5dce6;font-size:12px;line-height:1.6}
