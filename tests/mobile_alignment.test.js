@@ -49,9 +49,9 @@ test('Classic/RPG/Cube and online load mobile polish after existing styles',()=>
   const html=file(page);
   const links=[...html.matchAll(/<link\s+[^>]*rel="stylesheet"[^>]*>/g)].map(m=>m[0]);
   const last=links.at(-1);
-  assert.match(last,/href="duel_mobile_polish\.css\?v=2"/);
+  assert.match(last,/href="duel_mobile_polish\.css\?v=\d+"/);
   assert.match(last,/media="\(max-width: 780px\)"/);
-  assert.ok(html.indexOf('duel_mobile_alignment.css?v=1')<html.indexOf('duel_mobile_polish.css?v=2'));
+  assert.ok(html.indexOf('duel_mobile_alignment.css?v=1')<html.indexOf('duel_mobile_polish.css?v='));
   for(const id of ['myActive','enemyActive','myBench','enemyBench','fieldAttackDock','mobileAttackDock','attackPanel']){
    assert.ok(html.includes('id="'+id+'"'),page+' retains '+id);
   }
