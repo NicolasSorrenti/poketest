@@ -22,6 +22,11 @@ for(let seed=1;seed<=100;seed++){
   }
   assert.equal(action(game,side,'setup_confirm').ok,true);
  }
+ if(game.mulliganBonus){
+  const beneficiary=game.mulliganBonus.side;
+  assert.equal(action(game,beneficiary,'setup_bonus_draw',{count:game.mulliganBonus.max}).ok,true);
+  assert.equal(action(game,beneficiary,'setup_bonus_done').ok,true);
+ }
  assert.equal(game.phase,'game');
  for(let step=0;step<450&&!game.over;step++){
   if(game.pendingDecision){
