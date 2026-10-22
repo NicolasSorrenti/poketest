@@ -260,6 +260,15 @@ function tutorialEvent(topic,inlineId=null){
   if(box){box.textContent='TIP '+tip.number+'/2 · '+tip.title+' — '+tip.text;box.hidden=false;}
  }else{tutorialQueue.push(tip);displayTutorial();}
 }
+function confirmTimeAdvance(periods=1){
+ const now=(state.day-1)*3+state.slot;
+ const pending=(state.appointments||[]).find(e=>e.status==='booked'&&
+  (e.day-1)*3+e.slot>=now&&(e.day-1)*3+e.slot<now+periods);
+ if(!pending)return true;
+ const when=pending.day===state.day?periods===1?'this period':periods===3?'today':'today':'on Day '+pending.day;
+ return confirm('You agreed to meet '+(cast[pending.npc]?.name||'someone')+' '+when+
+  ' at '+(places[pending.place]?.[0]||pending.place)+'. Advancing time will miss that appointment. Continue?');
+}
 function disableTutorials(disabled){
  TUTORIAL?.setDisabled(state,disabled);
  if(disabled){tutorialQueue.length=0;displayTutorial();}
@@ -575,6 +584,8 @@ function act(action){
  if(type==='socialDo'){
   if(!cast[id]||!currentPeople().includes(id))return;
   try{
+   const available=SOCIAL.options(state,id,currentPeople(),cast).find(x=>x.id===part&&!x.disabledReason);
+   if(available&&!confirmTimeAdvance())return;
    const outcome=SOCIAL.complete(state,id,part,currentPeople(),cast);
    log('Spent time with '+cast[id].name+': '+outcome.title+'.');
    recordIntention('hangout');
@@ -637,7 +648,7 @@ function act(action){
  }
  if(type==='home'){state.location='home';state.selected=null;persist();tutorialEvent('travel');return say('Narrator','Back home. The championship posters on the wall remind you why you came.');}
  if(type==='where'){const c=cast[id],visit=SCHEDULES.nextVisit(id,state.day,state.slot,[]);return say('Narrator',c.name+(visit?' is usually around '+places[visit.place][0]+' on day '+visit.day+', '+periods[visit.slot]+'.':' has no announced public visits in the coming week.'),options(id));}
- if(type==='sleep'){if(state.location!=='home')return;const n=3-state.slot;advance(n,'sleep');return say('Narrator','You wake up to a new day in Neo Harbor.');}
+ if(type==='sleep'){if(state.location!=='home')return;const n=3-state.slot;if(!confirmTimeAdvance(n))return;advance(n,'sleep');return say('Narrator','You wake up to a new day in Neo Harbor.');}
  if(type==='close'||type==='dismissDialogue')return closeSceneDialogue();
  if(type==='duel')return startDuel(id||state.selected,false);
  if(type==='partnerDeck'){
@@ -659,7 +670,7 @@ function act(action){
  if(type==='event'){const e=scheduleEvent();if(!e)return;const opponents={7:'yuna',14:'reina',21:'hana',30:'reina',42:'kaede',60:'akari',75:'camila',88:'reina',90:'shiori'};return startDuel(opponents[e.day]||'reina',e);}
  if(type==='work')return performActivity('shop_shift');
  if(type==='practice')return state.location==='library'?performActivity('library_research'):state.location==='center'?performActivity('center_scrimmage'):performActivity('home_reflect');
- if(type==='rest'){if(state.day>90)return;advance();return say('Narrator','You take a break. Other lives in the town carry on.');}
+ if(type==='rest'){if(state.day>90||!confirmTimeAdvance())return;advance();return say('Narrator','You take a break. Other lives in the town carry on.');}
  if(type==='replay'){
   if(!EPILOGUE.completed(state)||mandatoryClosureDue())return;
   if(confirm('Start New Game+? Your completed season report will be archived. Relationships, standings and credits will reset.')){
@@ -1044,6 +1055,7 @@ function startDuel(id,exhibition=null,arcEpisode=null,tournament=null,sideQuest=
  if(state.deckJourney&&!state.deckJourney.starter){showStarterChoice();return;}
  if(state.deckJourney?.starter&&!COLLECT.check(state.deckJourney.deck,state.deckJourney.owned).valid){$('notice').textContent='Save a valid campaign deck before challenging another trainer.';return;}
  if(state.activeSituation||state.activeStory||state.activeEncounter||(state.activeArc&&state.activeArc.id!==arcEpisode)||(state.activeSideQuest&&state.activeSideQuest.id!==sideQuest?.id)||state.pendingDuel||state.day>90||!cast[id]||(!exhibition&&!tournament&&!competition&&!currentPeople().includes(id)))return;
+ if(!confirmTimeAdvance())return;
  if(competition&&!COMPETE.available(state).some(e=>e.id===competition.id&&e.npc===id))return;
  if(sideQuest&&(!SIDE.canDuel(state,sideQuest.id,currentPeople())||SIDE.byId(sideQuest.id)?.stages[sideQuest.step]?.npc!==id))return;
  if(bondChallenge&&!BONDS.canChallenge(state,id,BOND_PLAN))return;
