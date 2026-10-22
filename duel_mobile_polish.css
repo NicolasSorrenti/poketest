@@ -1,0 +1,261 @@
+/*
+ * Final mobile duel polish. This stylesheet is loaded AFTER every legacy duel
+ * sheet, and applies only on phone-sized viewports. All game rules stay shared.
+ */
+@media (max-width:780px) {
+  /* A playable hand, an attack bar and the five turn actions get dedicated
+     vertical space. The removed Hide Hand button no longer reserves 29px. */
+  body.duel-active #duel:not(.hidden) {
+    grid-template-rows:auto auto minmax(0,1fr) clamp(283px,37dvh,338px)!important;
+  }
+  body.duel-active #duel>.below,
+  body.duel-active #duel>.below>.main-column {
+    min-height:0!important;
+    height:100%!important;
+    max-height:100%!important;
+  }
+  body.duel-active #duel>.below>.main-column {
+    display:flex!important;
+    flex-direction:column!important;
+    gap:5px!important;
+  }
+  body.duel-active #duel>.below>.main-column>.hand-panel {
+    flex:1 1 auto!important;
+    min-height:0!important;
+    height:auto!important;
+    padding:5px!important;
+    overflow:hidden!important;
+  }
+  body.duel-active #duel>.below>.main-column>.hand-panel .hand-fan:not(.hidden) {
+    display:block!important;
+    position:relative!important;
+    inset:auto!important;
+    top:auto!important;
+    left:auto!important;
+    bottom:auto!important;
+    right:auto!important;
+    width:100%!important;
+    height:100%!important;
+    padding:0!important;
+    overflow-x:auto!important;
+    overflow-y:hidden!important;
+  }
+
+  /* Attack buttons have their own compact strip ABOVE regular turn actions.
+     The physical card and five Bench slots are kept centered independently. */
+  body.duel-active .stage .territory .active-with-attacks {
+    display:flex!important;
+    align-items:center!important;
+    justify-content:center!important;
+    width:100%!important;
+    gap:0!important;
+  }
+  body.duel-active .stage .territory .active-with-attacks #myActive {
+    grid-column:auto!important;
+    grid-row:auto!important;
+    flex:0 0 auto!important;
+    width:clamp(82px,25vw,118px)!important;
+    max-width:100%!important;
+    margin:0 auto!important;
+    padding:0!important;
+  }
+  body.duel-active .stage .territory .active-with-attacks #fieldAttackDock {
+    display:none!important;
+  }
+  body.duel-active #duel>.below>.main-column>.turn-actions-panel {
+    display:flex!important;
+    flex-direction:column!important;
+    justify-content:flex-end!important;
+    gap:5px!important;
+    flex:0 0 157px!important;
+    width:100%!important;
+    height:157px!important;
+    min-height:0!important;
+    padding:5px!important;
+    overflow:visible!important;
+  }
+  body.duel-active #duel>.below>.main-column>.turn-actions-panel:not(:has(#mobileAttackDock button.attack-action)) {
+    flex-basis:95px!important;
+    height:95px!important;
+  }
+  body.duel-active #mobileAttackDock {
+    display:block!important;
+    flex:0 0 auto!important;
+    width:100%!important;
+    max-height:65px!important;
+    min-height:0!important;
+    overflow-y:auto!important;
+    border:0!important;
+  }
+  body.duel-active #mobileAttackDock:not(:has(button.attack-action)) {
+    display:none!important;
+  }
+  body.duel-active #mobileAttackDock .inline-attack-panel {
+    display:block!important;
+    width:100%!important;
+    max-width:none!important;
+    margin:0!important;
+    padding:5px 8px!important;
+    border:1px solid #567c64!important;
+    border-radius:9px!important;
+    background:#1b382b!important;
+    box-shadow:none!important;
+  }
+  body.duel-active #mobileAttackDock .inline-attack-panel h4 {
+    margin:0 0 3px!important;
+    font-size:9px!important;
+    letter-spacing:.12em!important;
+  }
+  body.duel-active #mobileAttackDock .inline-attacks {
+    display:grid!important;
+    grid-template-columns:repeat(auto-fit,minmax(105px,1fr))!important;
+    gap:5px!important;
+  }
+  body.duel-active #mobileAttackDock button.attack-action {
+    min-height:34px!important;
+    padding:3px 6px!important;
+    font-size:10px!important;
+    background:#2b6343!important;
+    border:1px solid #659a74!important;
+  }
+  body.duel-active #mobileAttackDock .attack-effect,
+  body.duel-active #mobileAttackDock .attack-warning {
+    display:none!important;
+  }
+  body.duel-active #duel>.below>.main-column>.turn-actions-panel .turn-actions {
+    flex:0 0 84px!important;
+    width:100%!important;
+    height:84px!important;
+    min-height:0!important;
+  }
+
+  /* Remove inherited opaque navy squares behind physical Pokémon cards.
+     Keep targeting feedback (legal/selected) distinct from the card itself. */
+  body.duel-active #duel .stage .territory .poke,
+  body.duel-active #duel .stage .territory .poke .pokemon-face {
+    background:transparent!important;
+    background-image:none!important;
+    border:0!important;
+    box-shadow:none!important;
+  }
+  body.duel-active #duel .stage .territory .poke .pokemon-face>img {
+    background:transparent!important;
+    box-shadow:none!important;
+  }
+  body.duel-active #duel .stage .territory .poke.legal .pokemon-face,
+  body.duel-active #duel .stage .territory .poke.decision-target .pokemon-face {
+    outline:2px solid #78ebbb!important;
+    outline-offset:2px!important;
+    box-shadow:0 0 0 2px #166f5799!important;
+  }
+
+  /* The old six-card Prize stack was never sized for a phone and spilled
+     over both boards. Normal play gets one card + count for each player.
+     Prize choosing and face-up Prize effects retain their full card grid. */
+  body.duel-active #duel .stage .prize-sidebar {
+    position:absolute!important;
+    inset:0!important;
+    z-index:60!important;
+    width:100%!important;
+    height:100%!important;
+    min-width:0!important;
+    padding:0!important;
+    margin:0!important;
+    overflow:visible!important;
+    background:none!important;
+    border:0!important;
+    pointer-events:none!important;
+  }
+  body.duel-active #duel .stage .prize-sidebar .prize-group {
+    position:absolute!important;
+    right:8px!important;
+    left:auto!important;
+    bottom:auto!important;
+    display:grid!important;
+    grid-template-columns:23px minmax(0,1fr)!important;
+    grid-template-rows:auto!important;
+    align-items:center!important;
+    width:77px!important;
+    min-width:0!important;
+    height:43px!important;
+    padding:5px!important;
+    gap:4px!important;
+    border:1px solid #596675!important;
+    border-radius:9px!important;
+    background:#242e39f2!important;
+    box-shadow:0 2px 7px #0006!important;
+    pointer-events:none!important;
+  }
+  body.duel-active #duel .stage .prize-sidebar .prize-group:first-child {
+    top:calc(25% - 22px)!important;
+  }
+  body.duel-active #duel .stage .prize-sidebar .prize-group:last-child {
+    top:calc(75% - 22px)!important;
+  }
+  body.duel-active #duel .stage .prize-sidebar .prize-group h3 {
+    display:none!important;
+  }
+  body.duel-active #duel .stage .prize-sidebar .prize-group .prize-count {
+    grid-column:2!important;
+    grid-row:1!important;
+    display:block!important;
+    margin:0!important;
+    font-size:11px!important;
+    line-height:1.1!important;
+    text-align:center!important;
+    white-space:nowrap!important;
+  }
+  body.duel-active #duel .stage .prize-sidebar .prize-group .prize-grid {
+    grid-column:1!important;
+    grid-row:1!important;
+    display:grid!important;
+    grid-template-columns:23px!important;
+    width:23px!important;
+    height:32px!important;
+    min-height:0!important;
+    max-width:none!important;
+    padding:0!important;
+    gap:0!important;
+  }
+  body.duel-active #duel .stage .prize-sidebar .prize-group .prize-back {
+    display:block!important;
+    width:23px!important;
+    height:32px!important;
+    min-height:0!important;
+    margin:0!important;
+    grid-column:auto!important;
+    grid-row:auto!important;
+    background-size:100% 100%!important;
+  }
+  body.duel-active #duel .stage .prize-sidebar .prize-group:not(.prize-awaiting):not(:has(.prize-face-up)) .prize-back:not(:first-child) {
+    display:none!important;
+  }
+  body.duel-active #duel .stage .prize-sidebar .prize-group.prize-awaiting,
+  body.duel-active #duel .stage .prize-sidebar .prize-group:has(.prize-face-up) {
+    z-index:85!important;
+    display:block!important;
+    width:min(185px,49vw)!important;
+    height:auto!important;
+    padding:7px!important;
+    pointer-events:auto!important;
+  }
+  body.duel-active #duel .stage .prize-sidebar .prize-group.prize-awaiting .prize-grid,
+  body.duel-active #duel .stage .prize-sidebar .prize-group:has(.prize-face-up) .prize-grid {
+    display:grid!important;
+    grid-template-columns:repeat(3,minmax(0,1fr))!important;
+    width:100%!important;
+    height:auto!important;
+    gap:3px!important;
+    margin-top:5px!important;
+  }
+  body.duel-active #duel .stage .prize-sidebar .prize-group.prize-awaiting .prize-back,
+  body.duel-active #duel .stage .prize-sidebar .prize-group:has(.prize-face-up) .prize-back {
+    display:block!important;
+    width:100%!important;
+    height:auto!important;
+    min-height:35px!important;
+  }
+  body.duel-active #duel .stage .prize-sidebar .prize-group.prize-awaiting .prize-select {
+    pointer-events:auto!important;
+  }
+}
