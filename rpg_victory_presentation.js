@@ -65,12 +65,12 @@
     const name=doc.createElement('small');name.textContent=label;
     metric.append(amount,name);stats.append(metric);
    }
-   // Keep the existing NPC avatar only while artwork loads or as the very
-   // last fallback. No other NPC's art may appear during a failed request.
+   // Keep the original portrait throughout the result-screen animation.
+   // Dedicated result CGs are only a fallback when no portrait is supplied.
    const request=++portraitRequest;
    art.replaceChildren();if(avatar)art.append(avatar);
    if(npcId&&typeof window!=='undefined')window.NeoRpgDiscreetAvatars?.set?.(art,npcId,details.kind==='victory'?'happy':'vulnerable',details.opponent);
-   const sources=resultArtSources(npcId);
+   const sources=avatar?[]:resultArtSources(npcId);
    if(sources.length){
     const img=doc.createElement('img');
     img.alt=details.opponent+' after the duel';
