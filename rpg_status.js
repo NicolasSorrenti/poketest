@@ -8,6 +8,8 @@
   const score=value=>Number.isFinite(Number(value))?Math.max(0,Math.floor(Number(value))):0;
   const stats=['affection','trust','respect','attraction'];
   const periods=['Morning','Afternoon','Evening'];
+  const SOCIAL=typeof module==='object'&&module.exports?require('./rpg_social_activities'):
+    (typeof window!=='undefined'?window.NeoRpgSocialActivities:null);
   const labelFor=(affection,trust)=>{
     if(affection>=15&&trust>=10)return 'Deep connection';
     if(affection>=8&&trust>=5)return 'Close bond';
@@ -32,7 +34,8 @@
       people.push({
         id,name:c.name||id,style:c.style||'',...values,duels,
         completed,total:chapters.length,trialWon:!!s.bondTrials?.[id],
-        outcome,partner,connection:labelFor(values.affection,values.trust)
+        outcome,partner,connection:labelFor(values.affection,values.trust),
+        likes:SOCIAL?.learnedLikes(s,id,cast)||[]
       });
     }
     people.sort((a,b)=>Number(b.partner)-Number(a.partner)||
@@ -121,9 +124,17 @@
       notes.append(cell('CHARACTER CHAPTERS',person.completed+' / '+person.total));
       notes.append(cell('PERSONAL CHALLENGE',person.trialWon?'Completed':'Not completed'));
       detail.append(notes);
+      const discovered=el('section','status-discovered-likes');
+      discovered.append(el('strong','status-likes-heading','THINGS THEY SEEM TO ENJOY'));
+      if(person.likes.length){
+        const likes=el('div','status-likes-list');
+        for(const like of person.likes)likes.append(el('span','status-like',like.label));
+        discovered.append(likes);
+      }else discovered.append(el('p','status-likes-unknown','Get to know each other through shared experiences to discover what they enjoy.'));
+      detail.append(discovered);
       if(person.outcome==='romance'||person.outcome==='friendship')
         detail.append(el('p','status-route',person.outcome==='romance'?'♥ Romance route chosen':'✧ Friendship route chosen'));
-      detail.append(el('p','status-disclaimer','Numbers are your real saved relationship stats. Bars visualize the first 20 points, not a maximum. Connection labels are descriptive; story choices and requirements still decide outcomes.'));
+      detail.append(el('p','status-disclaimer','These impressions come from time you have spent together. There is always more to learn about someone.'));
     }
 
     for(const person of data.known){
