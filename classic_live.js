@@ -82,12 +82,44 @@
  let modalDecisionId=null,lastFieldDecisionId=null;
  let token=null,current=null,selectedHand=null,targetMode=null,busy=false,decisionSelection=new Set();
  let playbackEpoch=0;
+ let cloudSyncWarning='';
  let handVisible=true,powersOpen=false,logOpen=false,lastCoinSeq=null,coinQueue=[],coinTimer=null,lastKoMessage="";
  const command=(type,payload={})=>({type,payload});
+ async function rpgAccessToken(){
+  if(!rpgMode)return null;
+  const key='neoRpgCloudSessionV1';
+  let saved;try{saved=JSON.parse(localStorage.getItem(key)||'null');}catch{return null;}
+  if(!saved?.access_token||!saved.refresh_token)return null;
+  if(saved.expires_at>Date.now()+30000)return saved.access_token;
+  // The RPG and its embedded duel use the same origin and login.
+  try{
+   const response=await fetch('/api/rpg-cloud/config',{cache:'no-store'});
+   const config=await response.json();
+   if(!config.enabled)return null;
+   const result=await fetch(config.url+'/auth/v1/token?grant_type=refresh_token',{
+    method:'POST',headers:{'Content-Type':'application/json',apikey:config.key},
+    body:JSON.stringify({refresh_token:saved.refresh_token})
+   });
+   if(!result.ok)return null;
+   const refreshed=await result.json();
+   if(!refreshed?.access_token||!refreshed?.refresh_token)return null;
+   saved={access_token:refreshed.access_token,refresh_token:refreshed.refresh_token,
+    user:refreshed.user,expires_at:Date.now()+Math.max(0,Number(refreshed.expires_in||3600)-60)*1000};
+   localStorage.setItem(key,JSON.stringify(saved));
+   return saved.access_token;
+  }catch{return null;}
+ }
  async function api(path,opts={}){
-  const headers={'Content-Type':'application/json',...(token?{'X-Duel-Token':token}:{})};
+  const accessToken=await rpgAccessToken();
+  const headers={'Content-Type':'application/json',...(token?{'X-Duel-Token':token}:{}),
+    ...(accessToken?{Authorization:'Bearer '+accessToken}:{})};
   const r=await fetch('/api/classic/'+path,{...opts,headers});const body=await r.json();
-  if(!r.ok)throw Error(body.error||'Could not contact Classic engine');return body;
+  if(!r.ok){const error=new Error(body.error||'Could not contact Classic engine');error.status=r.status;throw error;}
+  return body;
+ }
+ function checkCloudCheckpoint(result){
+  cloudSyncWarning=result?.cloudSaved===false?(result.cloudError||'Cloud battle checkpoint was not saved.'):'';
+  if(cloudSyncWarning)fail(new Error(cloudSyncWarning));
  }
  const card=id=>cards.get(id)||{name:String(id),types:[],attacks:[],abilities:[]};
  const fieldDecision=()=>{const d=current?.view?.pendingDecision;if(!d||d.actor!==0)return null;
@@ -141,6 +173,7 @@
    const beforePrizes=current?.view?.players?.map(p=>p.prizeCount);
    preview.hide();selectedHand=null;targetMode=null;decisionSelection.clear();
    if(!await playCpuPlayback(result,epoch))return;
+   checkCloudCheckpoint(result);
    // Let a final knockout reaction appear before returning to the RPG map.
    const prizes=current.view.players;
    const finalKo=rpgMode&&current.view.over&&beforePrizes&&prizes.some((p,i)=>typeof beforePrizes[i]==='number'&&p.prizeCount<beforePrizes[i]);
@@ -152,11 +185,12 @@
   const partnerCards=rpgMode&&rpgDuelId?sessionStorage.getItem('neoRpgNpcDeck:'+rpgDuelId):null;
   const response=await api('create',{method:'POST',body:JSON.stringify({
    deck:$('deck').value,opponent:$('opponent').value,
-   ...(rpgMode&&rpgDuelId?{npcDeckId:rpgNpc,npcDeckTier:Number(rpgParams.get('npcTier'))||1,prizeCount:Number(rpgParams.get('prizes'))===6?6:4}:{}),
+   ...(rpgMode&&rpgDuelId?{rpgDuelId,npcDeckId:rpgNpc,npcDeckTier:Number(rpgParams.get('npcTier'))||1,prizeCount:Number(rpgParams.get('prizes'))===6?6:4}:{}),
    ...($('deck').value==='custom'?{customDeck:JSON.parse(rpgMode?sessionStorage.getItem('neoRpgDeck:'+rpgDuelId)||'null':localStorage.getItem('neoCampusCustomGymDeck')||'null')}:{}),
    ...(partnerCards?{customOpponentDeck:JSON.parse(partnerCards)}:{})
   })});
   feedback.reset();opponentActivity.clear();combat.reset();reactions?.reset();npcChat?.reset();token=response.token;sessionStorage.setItem(rpgKey,token);current=response;
+  checkCloudCheckpoint(response);
   selectedHand=null;targetMode=null;decisionSelection.clear();handVisible=true;powersOpen=false;logOpen=false;lastCoinSeq=null;lastKoMessage="";setHandVisible(true);render();
  }catch(e){$('startupError').textContent=e.message;}finally{busy=false;}}
 
@@ -421,7 +455,18 @@
      $('opponent').value=params.get('opponent')||'brushfire';
    }
    token=sessionStorage.getItem(rpgKey);if(token){try{current=await api('state');}catch{token=null;sessionStorage.removeItem(rpgKey);}}
-   if(rpgMode && !current) await start();
+   if(rpgMode&&!current){
+    // Restore exact duel state after a reload, Render restart or device switch.
+    // A network/auth error must never silently create a different duel.
+    if(await rpgAccessToken()){
+     try{
+      const restored=await api('rpg/resume',{method:'POST',body:JSON.stringify({duelId:rpgDuelId})});
+      token=restored.token;current=restored;sessionStorage.setItem(rpgKey,token);
+      checkCloudCheckpoint(restored);
+     }catch(error){if(error.status!==404)throw error;}
+    }
+    if(!current)await start();
+   }
    notifyRpg();
    render();
   }catch(e){$('startupError').textContent=e.message||String(e);}
