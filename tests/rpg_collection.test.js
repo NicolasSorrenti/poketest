@@ -119,7 +119,8 @@ test('character rewards draw five-card packs with guaranteed rare and energy',()
   assert.ok(ids.some(id=>C.ENERGY.has(id)));
   assert.equal(s.deckJourney.lastPack.theme,C.themeForCharacter(s,npc));
   assert.ok(ids.some(id=>['rare','holo','secret'].includes(C.packRarity(id))));
-  assert.ok(ids.every(id=>C.ENERGY.has(id)||C.themedPacks(s).find(x=>x.id===s.deckJourney.lastPack.theme).sources.includes(id.split('-')[0])));
+  const unlocked=new Set(C.shopPacks(s).filter(p=>p.unlocked).map(p=>p.set));
+  assert.ok(ids.every(id=>C.ENERGY.has(id)||unlocked.has(id.split('-')[0])));
  }
  const a=C.randomPack('base3',()=>0),b=C.randomPack('base3',()=>0.75);
  assert.notDeepEqual(a,b,'different random outcomes must produce different packs');
