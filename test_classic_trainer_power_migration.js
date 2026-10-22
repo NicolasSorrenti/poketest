@@ -49,6 +49,27 @@ check('normal evolution still works while Powers exist',()=>{const g=ready();g.p
 check('Rain Dance attaches additional Water Energy',()=>{const g=ready();g.players[0].active=unit('base1-2');g.players[0].bench=[unit('base1-41')];g.players[0].hand=['base1-102'];
  ok(g,0,'use_power',{slot:-1});answer(g,['hand:0']);answer(g,['slot:0']);assert.deepEqual(g.players[0].bench[0].energies,['base1-102']);assert.equal(g.players[0].energyUsed,false);
 });
+check('Venusaur Energy Trans moves its own Grass Energy and can be repeated',()=>{
+ const g=ready(),p=g.players[0];p.active=unit('base1-15',['base1-99','base1-99','base1-102']);
+ p.bench=[unit('base1-44'),unit('base1-27',['base1-99'])];
+ ok(g,0,'use_power',{slot:-1});
+ assert.ok(g.pendingDecision.options.some(o=>o.id==='slot:-1'),'Venusaur must be a legal Energy donor');
+ answer(g,['slot:-1']);answer(g,['index:0']);
+ assert.ok(g.pendingDecision.options.some(o=>o.id==='slot:0'),'Benched Pokémon must be a legal Energy recipient');
+ assert.ok(!g.pendingDecision.options.some(o=>o.id==='slot:-1'),'Energy cannot move onto its original Pokémon');
+ answer(g,['slot:0']);
+ assert.deepEqual(p.active.energies,['base1-99','base1-102']);
+ assert.deepEqual(p.bench[0].energies,['base1-99']);
+ ok(g,0,'use_power',{slot:-1});answer(g,['slot:1']);answer(g,['index:0']);answer(g,['slot:-1']);
+ assert.deepEqual(p.active.energies,['base1-99','base1-102','base1-99']);
+ assert.deepEqual(p.bench[1].energies,[]);
+ assert.equal(p.energyUsed,false,'Energy Trans must not consume the turn attachment');
+ p.active.status='Paralyzed';bad(g,0,'use_power',{slot:-1},/disabled/);
+});
+check('Venusaur Energy Trans requires a second Pokémon to receive Energy',()=>{
+ const g=ready();g.players[0].active=unit('base1-15',['base1-99']);g.players[0].bench=[];
+ bad(g,0,'use_power',{slot:-1},/requires another Pokémon/);
+});
 check('Snorlax prevents Special Conditions',()=>{const g=ready();g.players[1].active=unit('base2-11');g.players[0].active=unit('base1-44',['base1-99','base1-99','base1-99']);g.players[1].active.status=null;
  // This attack is a normal damage one; make sure the Power does not prevent damage.
  ok(g,0,'attack',{attackIndex:0});assert.ok(g.players[1].active.damage>=0);
