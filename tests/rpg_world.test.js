@@ -115,12 +115,13 @@ test('daily recovery is capped, and duel prep is spent only once for a small non
  W.newDay(s);assert.equal(s.focus,100);
  const victory={outcome:'Victory',credits:15};
  const note=W.afterDuel(s,victory);
- assert.ok(note);assert.equal(victory.trainingBonus,5);
- assert.equal(victory.credits,20);assert.equal(s.credits,85);
+ assert.ok(note);assert.equal(victory.trainingBonus,14);
+ assert.equal(victory.credits,29);assert.equal(s.credits,94);
  assert.equal(s.preparation,1);assert.equal(s.reputation,100);
  assert.equal(s.focus,90);
  const loss={outcome:'Defeat',credits:5};
- W.afterDuel(s,loss);assert.equal(s.preparation,0);assert.equal(s.credits,85);
+ W.afterDuel(s,loss);assert.equal(s.preparation,0);assert.equal(s.credits,102);
+ assert.equal(loss.trainingBonus,8);assert.equal(loss.credits,13);
  const draw={outcome:'Draw',credits:5};
  W.afterDuel(s,draw);assert.equal(s.preparation,0);assert.equal(draw.trainingBonus,0);
 });
