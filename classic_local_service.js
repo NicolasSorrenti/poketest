@@ -35,10 +35,11 @@ class ClassicLocalService {
   this.sessions=new Map();this.now=now;this.ttlMs=ttlMs;this.maxSessions=maxSessions;
  }
  prune(){for(const [token,r] of this.sessions)if(this.now()-r.updated>this.ttlMs)this.sessions.delete(token);}
- create({deck='blackout',opponent='brushfire',customDeck,customOpponentDeck,seed,difficulty,personality,aiSeed=1,npc,npcDeckId,npcDeckTier=1,advancedTactics=false}={}){
+ create({deck='blackout',opponent='brushfire',customDeck,customOpponentDeck,seed,difficulty,personality,aiSeed=1,npc,npcDeckId,npcDeckTier=1,advancedTactics=false,prizeCount}={}){
   this.prune();if(this.sessions.size>=this.maxSessions)throw Error('Too many active duels');
   if(!DECKS[deck]||!DECKS[opponent])throw Error('Unknown Classic deck');
   if(seed!==undefined&&(!Number.isSafeInteger(seed)||seed<0||seed>0xffffffff))throw Error('Invalid seed');
+  if(prizeCount!==undefined&&prizeCount!==4&&prizeCount!==6)throw Error('Prize count must be 4 or 6');
   if(typeof advancedTactics!=='boolean')throw Error('advancedTactics must be a boolean');
   if(!Number.isInteger(npcDeckTier)||npcDeckTier<1||npcDeckTier>3)throw Error('Invalid RPG NPC deck tier');
   if(npcDeckTier>1&&(typeof npcDeckId!=='string'||!/^[a-z][a-z0-9_]*$/.test(npcDeckId)))throw Error('RPG NPC identity required for deck progression');
@@ -74,7 +75,7 @@ class ClassicLocalService {
   }
   const expanded=deck==='custom'||customOpponentDeck!==undefined||EXPANDED[deck]||EXPANDED[opponent]||[...playerCards,...cpuCards].some(id=>id.startsWith('gym')&&!RETAIL.gymIds.includes(id));
   const format=[...playerCards,...cpuCards].some(id=>['neo1','neo2','neo3','neo4'].some(set=>id.startsWith(set+'-')))?(expanded?'online-preview':'neo-theme'):expanded?'gym-expanded':RETAIL.meta[deck]?.gym||RETAIL.meta[opponent]?.gym?'gym-theme':[...playerCards,...cpuCards].some(id=>id.startsWith('base4'))?'theme-expanded':'classic';
-  let game=createGame({decks:[playerCards,cpuCards],names:['You','Classic CPU'],format,seed:seed??crypto.randomBytes(4).readUInt32BE(0)});
+  let game=createGame({decks:[playerCards,cpuCards],names:['You','Classic CPU'],format,...(prizeCount?{prizeCount}:{}),seed:seed??crypto.randomBytes(4).readUInt32BE(0)});
   game=driveBot(game,200,cpuConfig).game;
   const token=crypto.randomBytes(24).toString('base64url'),session={game,revision:0,updated:this.now(),token,deck,opponent,cpuConfig,npc:profileId??npcDeckId??null,npcDeckTier:customOpponentDeck?null:npcDeckTier};
   this.sessions.set(token,session);return {token,...this.response(session)};
