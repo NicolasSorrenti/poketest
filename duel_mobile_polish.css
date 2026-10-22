@@ -416,3 +416,149 @@
     bottom:calc(clamp(206px,33dvh,236px) + 8px)!important;
   }
 }
+
+/* v0.97 — mobile field-first HUD.
+   Reclaim the height taken by redundant coaching/activity banners and
+   full-width Team/CPU bars. Keep the existing deck/discard interactions
+   as compact counters beside each Active Pokémon. Desktop is unchanged. */
+@media (max-width:780px) {
+  /* Those two messages already have equivalents in the log, game field,
+     setup choice bar and decision modal. Neither banner contains controls. */
+  body.duel-active #duel > .stage > #turnCoach,
+  body.duel-active #duel > .stage > #opponentActivityStatus {
+    display:none!important;
+  }
+  body.duel-active #duel > .stage > .arena-layout {
+    flex:1 1 auto!important;
+    height:100%!important;
+    min-height:0!important;
+  }
+  /* Preserve the subtle dividing line, not the large turn badge. */
+  body.duel-active #duel .stage .battleline #turnChip {
+    display:none!important;
+  }
+
+  /* Position small player HUDs inside the playing surface, close to the
+     respective Active. They no longer consume a row in the territory. */
+  body.duel-active #duel .stage .territory > .trainerbar,
+  body.duel-active #duel .stage .territory > .trainerbar.player {
+    position:absolute!important;
+    inset:auto!important;
+    left:clamp(6px,1.8vw,12px)!important;
+    width:clamp(86px,26vw,112px)!important;
+    max-width:29%!important;
+    height:auto!important;
+    min-height:0!important;
+    margin:0!important;
+    padding:0!important;
+    display:flex!important;
+    flex-direction:column!important;
+    justify-content:center!important;
+    align-items:stretch!important;
+    gap:4px!important;
+    border:0!important;
+    background:transparent!important;
+    box-shadow:none!important;
+    z-index:17!important;
+    pointer-events:none!important;
+  }
+  body.duel-active #duel .stage .opponent-territory > .trainerbar {
+    bottom:clamp(7px,1.5dvh,17px)!important;
+  }
+  body.duel-active #duel .stage .player-territory > .trainerbar.player {
+    top:clamp(7px,1.5dvh,17px)!important;
+  }
+  body.duel-active #duel .stage .territory > .trainerbar .trainerlabel,
+  body.duel-active #duel .stage .territory > .trainerbar .pile-tools {
+    position:static!important;
+    inset:auto!important;
+    transform:none!important;
+    box-sizing:border-box!important;
+    width:100%!important;
+    min-width:0!important;
+    max-width:100%!important;
+    margin:0!important;
+    pointer-events:auto!important;
+  }
+  body.duel-active #duel .stage .territory > .trainerbar .trainerlabel {
+    display:flex!important;
+    gap:0!important;
+    padding:4px 6px!important;
+    border:1px solid #72948388!important;
+    border-radius:6px!important;
+    background:#1a2c34d9!important;
+    box-shadow:0 1px 5px #0018!important;
+  }
+  body.duel-active #duel .stage .territory > .trainerbar .trainerlabel > span,
+  body.duel-active #duel .stage .territory > .trainerbar .trainerlabel small {
+    display:none!important;
+  }
+  body.duel-active #duel .stage .territory > .trainerbar .trainerlabel strong {
+    display:block!important;
+    width:100%!important;
+    max-width:100%!important;
+    font-size:10px!important;
+    line-height:1.25!important;
+    text-align:center!important;
+    overflow:hidden!important;
+    text-overflow:ellipsis!important;
+    white-space:nowrap!important;
+  }
+  /* Real discard buttons and counters are still clickable; show the counts
+     directly UNDER the player name without another screen-width bar. */
+  body.duel-active #duel .stage .territory > .trainerbar .pile-tools {
+    display:flex!important;
+    flex-direction:row!important;
+    justify-content:space-between!important;
+    align-items:stretch!important;
+    gap:3px!important;
+    flex-wrap:nowrap!important;
+  }
+  body.duel-active #duel .stage .territory > .trainerbar .deck-counter,
+  body.duel-active #duel .stage .territory > .trainerbar .pile-button {
+    box-sizing:border-box!important;
+    display:inline-flex!important;
+    flex:1 1 0!important;
+    align-items:center!important;
+    justify-content:center!important;
+    width:auto!important;
+    min-width:0!important;
+    height:28px!important;
+    min-height:28px!important;
+    gap:3px!important;
+    padding:2px 3px!important;
+    border:1px solid #72948388!important;
+    border-radius:6px!important;
+    background:#1a2c34df!important;
+    box-shadow:0 1px 5px #0018!important;
+    white-space:nowrap!important;
+    pointer-events:auto!important;
+    font-size:0!important;
+  }
+  body.duel-active #duel .stage .territory > .trainerbar .deck-counter::before {
+    display:block!important;
+    width:12px!important;
+    height:17px!important;
+    flex:0 0 12px!important;
+  }
+  body.duel-active #duel .stage .territory > .trainerbar .pile-button::before {
+    content:"♻"!important;
+    font-size:13px!important;
+    line-height:1!important;
+  }
+  body.duel-active #duel .stage .territory > .trainerbar .deck-counter b,
+  body.duel-active #duel .stage .territory > .trainerbar .pile-button b {
+    font-size:11px!important;
+    font-weight:800!important;
+  }
+}
+@media (max-width:350px) {
+  body.duel-active #duel .stage .territory > .trainerbar,
+  body.duel-active #duel .stage .territory > .trainerbar.player {
+    width:86px!important;
+    left:4px!important;
+  }
+  body.duel-active #duel .stage .territory > .trainerbar .trainerlabel strong {
+    font-size:9px!important;
+  }
+}
