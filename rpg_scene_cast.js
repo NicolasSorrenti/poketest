@@ -9,7 +9,13 @@
  function speakerId(speaker,cast={}){
   if(typeof speaker!=='string')return null;
   const name=speaker.replace(/^✉\s*/,'').replace(/\s*·\s*message\s*$/,'').trim();
-  return Object.keys(cast).find(id=>name===id||name===cast[id]?.name)||null;
+  const ids=Object.keys(cast);
+  const exact=ids.find(id=>name===id||name===cast[id]?.name);
+  if(exact)return exact;
+  // Some authored scenes use first names (e.g. "Reina") as speaker labels.
+  // Only accept an unambiguous match so an unrelated character isn't shown.
+  const short=ids.filter(id=>name===cast[id]?.name?.split(' ')[0]);
+  return short.length===1?short[0]:null;
  }
  function select({cast={},present=[],portraitId=null,shown=null,active=false,script=[],remote=false}={}){
   const lines=Array.isArray(script)&&script.length?script:
