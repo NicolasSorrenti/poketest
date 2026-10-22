@@ -4,11 +4,13 @@ const fs=require('node:fs');
 const path=require('node:path');
 const {ClassicLocalService,deckOptions}=require('./classic_local_service');
 const {ClassicOnlineService}=require('./classic_online_service');
+const {RpgDuelCheckpoint}=require('./rpg_duel_checkpoint');
 const root=__dirname;
 const port=Number(process.env.PORT||8000);
 const types={'.html':'text/html; charset=utf-8','.js':'text/javascript; charset=utf-8','.json':'application/json; charset=utf-8','.css':'text/css; charset=utf-8','.png':'image/png','.jpg':'image/jpeg','.svg':'image/svg+xml','.webp':'image/webp'};
 const classic=new ClassicLocalService();
 const online=new ClassicOnlineService();
+const rpgDuels=new RpgDuelCheckpoint();
 const {CubeService}=require('./cube_service');
 const cube=new CubeService();
 const {CubeRoomService}=require('./cube_room_service');
@@ -28,15 +30,54 @@ async function api(req,res,pathName,url){
   if(pathName==='/api/classic/decks'&&req.method==='GET')return sendJSON(res,200,{decks:deckOptions()});
   if(pathName==='/api/classic/card-pool'&&req.method==='GET')return sendJSON(res,200,{cards:classic.cardPool()});
   if(pathName==='/api/classic/decklist'&&req.method==='GET')return sendJSON(res,200,{cards:classic.decklist(url.searchParams.get('id'))});
-  if(pathName==='/api/classic/create'&&req.method==='POST')return sendJSON(res,200,classic.create(await parseJSON(req)));
+  if(pathName==='/api/classic/create'&&req.method==='POST'){
+   const params=await parseJSON(req);
+   if(!params.rpgDuelId)return sendJSON(res,200,classic.create(params));
+   if(!rpgDuels.validId(params.rpgDuelId))return sendJSON(res,400,{error:'Invalid RPG duel ID'});
+   const identity=req.headers.authorization?await rpgDuels.identify(req.headers.authorization):null;
+   if(identity){
+    const live=[...classic.sessions.values()].find(s=>s.checkpointOwner===identity.userId&&s.checkpointDuelId===params.rpgDuelId);
+    const old=live||await rpgDuels.load(params.rpgDuelId,identity);
+    if(old){classic.sessions.set(old.token,old);return sendJSON(res,200,{token:old.token,...classic.response(old),cloudSaved:true,resumed:true});}
+   }
+   const created=classic.create(params),session=classic.session(created.token);
+   if(identity){
+    session.checkpointOwner=identity.userId;session.checkpointDuelId=params.rpgDuelId;
+    try{await rpgDuels.save(session,identity);created.cloudSaved=true;}
+    catch(error){created.cloudSaved=false;created.cloudError='Cloud checkpoint unavailable. Battle remains active on this server.';}
+   }
+   return sendJSON(res,200,created);
+  }
+  if(pathName==='/api/classic/rpg/resume'&&req.method==='POST'){
+   const params=await parseJSON(req);
+   if(!rpgDuels.validId(params.duelId))return sendJSON(res,400,{error:'Invalid RPG duel ID'});
+   const identity=await rpgDuels.identify(req.headers.authorization);
+   const live=[...classic.sessions.values()].find(s=>s.checkpointOwner===identity.userId&&s.checkpointDuelId===params.duelId);
+   const snapshot=live||await rpgDuels.load(params.duelId,identity);
+   if(!snapshot)return sendJSON(res,404,{error:'No saved RPG duel for this account'});
+   classic.sessions.set(snapshot.token,snapshot);
+   return sendJSON(res,200,{token:snapshot.token,...classic.response(snapshot),cloudSaved:true,resumed:true});
+  }
   const token=req.headers['x-duel-token'];
   if(typeof token!=='string'||!token){sendJSON(res,401,{error:'Missing duel token'});return;}
   if(pathName==='/api/classic/state'&&req.method==='GET')return sendJSON(res,200,classic.state(token));
   if(pathName==='/api/classic/action'&&req.method==='POST'){
-   const body=await parseJSON(req);return sendJSON(res,200,classic.action(token,body.command,body.revision));
+   const session=classic.session(token);
+   const identity=session.checkpointOwner?await rpgDuels.identify(req.headers.authorization):null;
+   if(session.checkpointOwner&&session.checkpointOwner!==identity.userId)throw Error('Unauthorized RPG duel account');
+   const body=await parseJSON(req);
+   const result=classic.action(token,body.command,body.revision);
+   if(identity){
+    try{await rpgDuels.save(session,identity);result.cloudSaved=true;}
+    catch(error){
+     result.cloudSaved=false;
+     result.cloudError=error.code==='40001'?'Battle checkpoint conflict with another device.':'Cloud checkpoint failed. Progress is still active on this server.';
+    }
+   }
+   return sendJSON(res,200,result);
   }
   return sendJSON(res,404,{error:'Unknown Classic API endpoint'});
- }catch(error){const msg=String(error.message||'Unknown error');const status=/Unauthorized|token|session/i.test(msg)?401:/Stale match revision/.test(msg)?409:400;return sendJSON(res,status,{error:msg});}
+ }catch(error){const msg=String(error.message||'Unknown error');const status=/Unauthorized|token|session|Sign in|auth|login/i.test(msg)?401:/Stale match revision|CONFLICT/i.test(msg)?409:400;return sendJSON(res,status,{error:msg});}
 }
 async function onlineAPI(req,res,pathName,url){
  const origin=req.headers.origin;
