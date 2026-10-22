@@ -5,14 +5,15 @@
  function createController(doc,viewport){
   const panel=doc.getElementById('attackPanel');
   const field=doc.getElementById('fieldAttackDock');
+  const mobile=doc.getElementById('mobileAttackDock');
   const rail=doc.getElementById('desktopAttackDock');
-  if(!panel||!field||!rail)return null;
+  if(!panel||!field||!mobile||!rail)return null;
 
-  // Keep the one live attack panel beside the Active Pokémon at every
-  // breakpoint. The old desktop relocation left attacks stranded above the
-  // command buttons on phones using a desktop-width viewport.
+  // One authoritative set of live buttons, moved without duplicating handlers.
+  // Desktop: beside Active. Mobile: its own strip above the turn actions.
   const sync=()=>{
-   if(panel.parentElement!==field)field.append(panel);
+   const destination=viewport.matches?field:mobile;
+   if(panel.parentElement!==destination)destination.append(panel);
    doc.body.classList.remove('attacks-in-rail');
    rail.hidden=true;
   };
