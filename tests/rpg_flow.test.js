@@ -6,7 +6,7 @@ const COMPETE=require('../rpg_competitive_loop'),REACT=require('../rpg_reactivit
 const script=fs.readFileSync('rpg.js','utf8');
 const KEY='neoHarborRpgV1';
 class Element{
- constructor(tag='div'){this.tagName=tag.toUpperCase();this.children=[];this.className='';this.dataset={};this.classList={add(){},remove(){},toggle(){}};this.textContent='';this.hidden=false;this.style={};this.attrs={};this.value='';this.src='';if(this.tagName==='SELECT')this.options=[];}
+ constructor(tag='div'){this.tagName=tag.toUpperCase();this.children=[];this.className='';this.dataset={};this.classList={add(){},remove(){},toggle(){}};this.textContent='';this.hidden=false;this.style={setProperty(name,value){this[name]=String(value);}};this.attrs={};this.value='';this.src='';if(this.tagName==='SELECT')this.options=[];}
  prepend(...nodes){this.children.unshift(...nodes);}
  append(...nodes){this.children.push(...nodes);if(this.options)this.options=this.children;}
  replaceChildren(...nodes){this.children=[...nodes];if(this.options)this.options=this.children;}
@@ -72,7 +72,7 @@ test('NPC route dialogue survives refresh and Space key progresses authored scen
  const advance=()=>app.listeners.keydown({key:' ',target:{tagName:'BODY'},preventDefault(){}});
  for(let step=0;step<20&&app.read().activeStory?.phase==='lines';step++)advance();
  assert.equal(app.read().activeStory.phase,'choice');
- click(app.ids.choices,'Help her finish before opening');
+ click(app.ids.choices,'Help with the tables');
  assert.equal(app.read().activeStory.phase,'response');
  app=boot(store);assert.equal(app.read().activeStory.phase,'response');
  click(app.ids.choices,'Finish scene');
