@@ -18,7 +18,7 @@ for(const set of LEGACY_DECKS){
     if(index>0)assert.notEqual(frame.view.pendingDecision?.actor,1,'Do not announce CPU cards before private target choices resolve');
    }
    if(type==='end_turn'&&!r.view.over){
-    assert.ok(r.cpuPlayback?.length>=1,'CPU turn must expose at least the opening replay frame');
+    assert.ok(r.cpuPlayback?.length>=1,`CPU turn must expose the opening replay frame (deck=${set}, seed=${seed}, revision=${r.revision}, phase=${r.view.phase}, turn=${r.view.turn}, over=${r.view.over}, lastActions=${JSON.stringify(r.lastActions)})`);
     assert.equal(r.cpuPlayback[0].view.turn,1,'Replay starts on the CPU turn');
    }
    return r;};
