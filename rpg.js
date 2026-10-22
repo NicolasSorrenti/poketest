@@ -515,7 +515,7 @@ function act(action){
    'dateActivity:'+id+':'+part+':'+a.id
   ]);
   choices.push(['Choose another day · free','dateInvite:'+id]);
-  return say(cast[id].name,'What should we do at '+places[target.place][0]+'? Costs are paid on arrival.',choices);
+  return say(cast[id].name,'What should we do at '+places[target.place][0]+'?',choices);
  }
  if(type==='dateActivity'){
   if(!cast[id]||!currentPeople().includes(id))return;
