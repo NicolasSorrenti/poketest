@@ -7,6 +7,7 @@ const script=fs.readFileSync('rpg.js','utf8');
 const KEY='neoHarborRpgV1';
 class Element{
  constructor(tag='div'){this.tagName=tag.toUpperCase();this.children=[];this.className='';this.dataset={};this.classList={add(){},remove(){},toggle(){}};this.textContent='';this.hidden=false;this.style={setProperty(name,value){this[name]=String(value);}};this.attrs={};this.value='';this.src='';if(this.tagName==='SELECT')this.options=[];}
+ prepend(...nodes){this.children.unshift(...nodes);}
  append(...nodes){this.children.push(...nodes);if(this.options)this.options=this.children;}
  replaceChildren(...nodes){this.children=[...nodes];if(this.options)this.options=this.children;}
  querySelectorAll(){return [];}
@@ -15,7 +16,7 @@ class Element{
  showModal(){this.open=true;}close(){this.open=false;}
 }
 function boot(saved=new Map(),sessions=new Map()){
- const ids={},listeners={},document={body:new Element('body'),getElementById(id){return ids[id]??(ids[id]=new Element(id==='deckPicker'?'select':id==='battle'?'iframe':'div'));},createElement(tag){return new Element(tag);},addEventListener(type,fn){listeners[type]=fn;}};
+ const ids={},listeners={},document={body:new Element('body'),getElementById(id){return ids[id]??(ids[id]=new Element(id==='deckPicker'?'select':id==='battle'?'iframe':'div'));},createElement(tag){return new Element(tag);},createTextNode(value){return {nodeType:3,textContent:String(value),nodeValue:String(value),children:[]};},createTreeWalker(){return {nextNode(){return false;}};},addEventListener(type,fn){listeners[type]=fn;}};
  ids.battle=new Element('iframe');ids.battle.contentWindow={};
  const window={NeoRpgNarrativePack:PACK,NeoRpgSideQuests:SIDE,NeoHarborStory:STORY,NeoRpgSchedules:SCHEDULES,NeoRpgWorld:WORLD,NeoRpgRivalArc:ARC,NeoRpgTournaments:TOURNAMENTS,NeoRpgCompetitiveLoop:COMPETE,NeoRpgReactivity:REACT,NeoRpgCommunity:COMMUNITY,NeoRpgConsequences:CONSEQ,NeoRpgTournamentPresentation:TOURNAMENT_PRESENTATION,NeoRpgEpilogue:EPILOGUE,NeoRpgAppointments:APPOINTMENTS,NeoRpgIntentions:INTENTIONS,NeoRpgCGGallery:CG,NeoRpgDailyPlanner:PLANNER,NeoRpgSocialActivities:SOCIAL,NeoRpgPlannedDates:DATES,NeoRpgPreDuel:PRE,NeoRpgCollection:COLLECTION,NeoRpgSeasonJourney:JOURNEY,NeoRpgSituations:SITUATIONS,NeoRpgDuelBridge:BRIDGE,NeoRpgDialogue:DIALOGUE,NeoRpgBondRewards:BONDS,NeoRpgPartnerDecks:PARTNER,NeoRpgConversations:VN,
   NeoRpgRenderPerf:{reconcileKeyed(parent,entries,create,refresh){
@@ -26,7 +27,7 @@ function boot(saved=new Map(),sessions=new Map()){
  const sessionStorage={getItem:k=>sessions.get(k)||null,setItem:(k,v)=>sessions.set(k,v),removeItem:k=>sessions.delete(k)};
  const fetch=async()=>({ok:true,json:async()=>({decks:[{id:'blackout',name:'Blackout'},{id:'brushfire',name:'Brushfire'}]})});
  const location={search:'',origin:'http://localhost:8000',reload(){}};
- vm.runInNewContext(script,{window,document,localStorage,sessionStorage,fetch,location,confirm:()=>true,console,URLSearchParams,Image:Element},{filename:'rpg.js'});
+ vm.runInNewContext(script,{window,document,localStorage,sessionStorage,fetch,location,confirm:()=>true,console,URLSearchParams,Image:Element,NodeFilter:{SHOW_TEXT:4}},{filename:'rpg.js'});
  if(fresh)ids.starterChoices.children[0].onclick();
  return {ids,listeners,saved,sessions,location,read:()=>JSON.parse(saved.get(KEY)),send:payload=>listeners.message({origin:location.origin,source:ids.battle.contentWindow,data:payload})};
 }
