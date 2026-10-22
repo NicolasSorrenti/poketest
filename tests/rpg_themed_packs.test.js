@@ -161,3 +161,50 @@ test('Gym Leader evolutions are paired with their actual owned-family Basics, no
  }
  assert.ok(gymPairs>0,'once Gym Heroes unlocks, Evolution Workshop should sometimes have a valid Gym family');
 });
+
+test('all unlocked themed packs yield Basics, evolutions and Trainers throughout the season',()=>{
+ const cards=new Map(Object.keys(C.SETS).flatMap(set=>require('../cards/'+set+'.json')).map(card=>[card.id,card]));
+ const roleCount=(ids,role)=>ids.filter(id=>{
+  const card=cards.get(id);
+  if(!card)return false;
+  if(role==='trainer')return card.supertype==='Trainer';
+  if(card.supertype!=='Pokémon')return false;
+  return role==='basic'?card.subtypes?.includes('Basic'):
+   card.subtypes?.some(stage=>stage==='Stage 1'||stage==='Stage 2');
+ }).length;
+ for(const day of [1,8,22,38,48,68,90]){
+  const s=campaign('tidal_circuit');s.day=day;
+  for(const theme of C.themedPacks(s).filter(offer=>offer.unlocked)){
+   for(const size of [5,10])for(let trial=0;trial<36;trial++){
+    const ids=C.randomThemedPack(s,theme.id,seed(trial*47+day),size);
+    const label=theme.id+' day '+day+' size '+size+' seed '+trial;
+    assert.equal(ids.length,size,label);
+    assert.ok(ids.every(id=>cards.has(id)),label+' unknown printing');
+    assert.ok(roleCount(ids,'basic')>=(size===5?1:2),label+' missing usable Basics');
+    assert.ok(roleCount(ids,'evolution')>=1,label+' missing actual evolution');
+    assert.ok(roleCount(ids,'trainer')>=(size===5?1:2),label+' missing Trainer support');
+    assert.ok(ids.every(id=>C.ENERGY.has(id)||theme.sources.includes(id.split('-')[0])),
+     label+' unlocked set restriction');
+   }
+  }
+ }
+});
+
+test('Evolution Workshop mini boosters still contain real matching Basic and Stage 1 cards',()=>{
+ const {canEvolve}=require('../core_rules');
+ const cards=new Map(Object.keys(C.SETS).flatMap(set=>require('../cards/'+set+'.json')).map(card=>[card.id,card]));
+ for(const day of [1,38,90]){
+  const s=campaign('ember_garden');s.day=day;
+  for(let i=0;i<50;i++){
+   const ids=C.randomThemedPack(s,'evolution',seed(day+i*59),5);
+   const valid=ids.some(id=>{
+    const evolved=cards.get(id);
+    return evolved?.subtypes?.includes('Stage 1')&&ids.some(bid=>{
+     const basic=cards.get(bid);
+     return basic?.subtypes?.includes('Basic')&&canEvolve(evolved,basic);
+    });
+   });
+   assert.equal(valid,true,'no playable Stage 1 + Basic pair at day '+day+' trial '+i);
+  }
+ }
+});
