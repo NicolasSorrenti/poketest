@@ -6,7 +6,7 @@
   try{const saved=JSON.parse(storage?.getItem(key)||'[]');if(Array.isArray(saved))entries=saved.filter(x=>x&&typeof x.text==='string'&&typeof x.name==='string'&&x.text.length<500).slice(-max);}catch{}
   function add(reaction){
    if(typeof reaction?.line!=='string'||!reaction.line.trim())return null;
-   const entry={name:String(reaction.npcName||'Opponent').slice(0,80),text:reaction.line.slice(0,400),title:String(reaction.title||'').slice(0,80),kind:String(reaction.kind||'')};
+   const entry={name:String(reaction.npcName||'Opponent').slice(0,80),text:reaction.line.slice(0,400),title:String(reaction.title||'').slice(0,80),kind:String(reaction.kind||''),imageCandidates:(Array.isArray(reaction.imageCandidates)?reaction.imageCandidates:[]).filter(path=>typeof path==='string'&&/^\/rpg-assets\/[a-z0-9/_-]+\.(?:png|webp|jpe?g)$/i.test(path)).slice(0,30)};
    entries.push(entry);entries=entries.slice(-max);
    try{storage?.setItem(key,JSON.stringify(entries));}catch{}
    return entry;
@@ -23,10 +23,17 @@
    if(!history.entries.length){const empty=doc.createElement('p');empty.className='rpg-chat-empty';empty.textContent='Character dialogue will appear here during battle.';container.append(empty);return;}
    for(const message of history.entries){
     const el=doc.createElement('article');el.className='rpg-dialogue-message';
+    const content=doc.createElement('div');content.className='rpg-dialogue-content';
+    const sources=Array.isArray(message.imageCandidates)?message.imageCandidates:[];
+    if(sources.length){
+     const avatar=doc.createElement('img');avatar.className='rpg-dialogue-avatar';avatar.alt='';avatar.loading='lazy';avatar.decoding='async';
+     let next=0;avatar.onerror=()=>{if(++next<sources.length)avatar.src=sources[next];else avatar.remove();};
+     avatar.src=sources[0];el.append(avatar);
+    }
     const sender=doc.createElement('strong');sender.textContent=message.name;
     const title=doc.createElement('small');title.textContent=message.title;
     const copy=doc.createElement('p');copy.textContent=message.text;
-    el.append(sender,title,copy);container.append(el);
+    content.append(sender,title,copy);el.append(content);container.append(el);
    }
    if(stick)container.scrollTop=container.scrollHeight;
   }
