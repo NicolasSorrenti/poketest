@@ -78,7 +78,8 @@ test('no themed booster leaks a printing from an expansion not yet unlocked',()=
     assert.equal(kinds.filter(x=>['rare','holo','secret'].includes(x)).length,1,offer.id+' rare slot');
     assert.equal(kinds.filter(x=>x==='uncommon').length,n===5?1:3,offer.id+' uncommon slot');
     assert.equal(kinds.filter(x=>x==='common').length,n===5?2:5,offer.id+' common slot');
-    assert.ok(pack.every(id=>C.ENERGY.has(id)||offer.sources.includes(id.split('-')[0])),
+    const unlocked=new Set(C.shopPacks(s).filter(p=>p.unlocked).map(p=>p.set));
+    assert.ok(pack.every(id=>C.ENERGY.has(id)||unlocked.has(id.split('-')[0])),
      offer.id+' contains a locked or irrelevant expansion');
    }
   }
@@ -141,7 +142,7 @@ test('NPC rewards use thematic pools without bypassing the weekly mini cap or gi
  const late=C.reward(s,true,'kaede',()=>.2,{story:true,duelId:'late-kaede'});
  assert.equal(late.length,5);
  assert.equal(s.deckJourney.lastPack.theme,'mystery');
- const allowed=C.themedPacks(s).find(x=>x.id==='mystery').sources;
+ const allowed=C.shopPacks(s).filter(x=>x.unlocked).map(x=>x.set);
  assert.ok(late.every(id=>C.ENERGY.has(id)||allowed.includes(id.split('-')[0])));
 });
 
@@ -183,11 +184,24 @@ test('all unlocked themed packs yield Basics, evolutions and Trainers throughout
     assert.ok(roleCount(ids,'basic')>=(size===5?1:2),label+' missing usable Basics');
     assert.ok(roleCount(ids,'evolution')>=1,label+' missing actual evolution');
     assert.ok(roleCount(ids,'trainer')>=(size===5?1:2),label+' missing Trainer support');
-    assert.ok(ids.every(id=>C.ENERGY.has(id)||theme.sources.includes(id.split('-')[0])),
+    const unlocked=new Set(C.shopPacks(s).filter(x=>x.unlocked).map(x=>x.set));
+    assert.ok(ids.every(id=>C.ENERGY.has(id)||unlocked.has(id.split('-')[0])),
      label+' unlocked set restriction');
    }
   }
  }
+});
+
+test('Rocket and Gym boosters can contain unlocked classic staple Trainers',()=>{
+ const s=campaign('ember_garden');
+ assert.equal(C.themeContains(s,'rocket','base1-88'),false,'Rocket starts locked');
+ s.day=90;
+ for(const theme of ['rocket','gym','johto']){
+  assert.equal(C.themeContains(s,theme,'base1-88'),true,theme+' should share Professor Oak');
+  assert.equal(C.themeContains(s,theme,'base1-94'),true,theme+' should share Potion');
+ }
+ assert.equal(C.themedPacks(s).find(x=>x.id==='rocket').sources.includes('base1'),false,
+  'featured Rocket pool stays distinct from shared support');
 });
 
 test('Evolution Workshop mini boosters still contain real matching Basic and Stage 1 cards',()=>{
