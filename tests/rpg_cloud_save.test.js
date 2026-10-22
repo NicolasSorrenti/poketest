@@ -129,15 +129,26 @@ test('stale revision is rejected when another device saves first',async()=>{
  assert.equal(app.uploads.at(-1).expected_revision,1);
 });
 
-test('never uploads an unfinished duel snapshot',async()=>{
+test('autosaves campaign state even while a duel is pending',async()=>{
  const active=save(10);active.pendingDuel={id:'npc-test-10'};
  const app=setup({localSave:active});
  await app.client.mount(app.adapter);
- assert.equal(app.uploads.length,0);
- active.pendingDuel=null;app.setLocal(active);
- await app.client.syncNow();
  assert.equal(app.uploads.length,1);
- assert.equal(app.getCloud().save_data.pendingDuel,null);
+ assert.equal(app.getCloud().save_data.pendingDuel.id,'npc-test-10');
+ app.setLocal({...active,credits:59});
+ await app.client.syncNow();
+ assert.equal(app.uploads.length,2);
+ assert.equal(app.getCloud().save_data.credits,59);
+ assert.equal(app.getCloud().save_data.pendingDuel.id,'npc-test-10');
+});
+
+test('another device can import an in-progress duel without losing pending state',async()=>{
+ const game=save(15);game.pendingDuel={id:'npc-rena-15-1-0',deckCards:['base1-1']};
+ const app=setup({localSave:save(1),cloudRow:{revision:4,save_data:game},hadLocal:false});
+ await app.client.mount(app.adapter);
+ assert.equal(app.restores.length,1);
+ assert.equal(app.getLocal().pendingDuel.id,game.pendingDuel.id);
+ assert.equal(app.getLocal().pendingDuel.deckCards[0],'base1-1');
 });
 
 test('offline or failed cloud requests never delete the browser save',async()=>{
