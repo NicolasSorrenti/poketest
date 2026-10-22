@@ -365,6 +365,12 @@ function performActivity(id){
  let result;try{result=WORLD.doActivity(state,id,currentPeople());}
  catch(err){$('notice').textContent=err.message;return;}
  const place=state.location;
+ if(result.voucherSet==='latest'){
+  // Award the voucher once, at completion, from sets already unlocked by the campaign.
+  const set=COLLECT.shopPacks(state).filter(offer=>offer.unlocked).at(-1)?.set||'base1';
+  COLLECT.awardVoucher(state,set);
+  result.summary+=' You earned a '+COLLECT.SETS[set].name+' booster voucher to redeem at the card shop.';
+ }
  log('Activity completed at '+places[place][0]+': '+result.summary);recordIntention('activity');
  advance();persist();say('Narrator',result.summary);
 }
@@ -868,6 +874,7 @@ function renderBoosterShop(message=''){
   reason.textContent=!offer.unlocked?offer.unlockHint:
    free?'Welcome choice · five cards · one Rare and one Basic Energy':
    'Ten cards · one Rare and one Basic Energy · original card rarities';
+  if(offer.discount&&offer.unlocked&&!free)reason.textContent='Insight savings: -'+offer.discount+' credits · '+reason.textContent;
   const buy=document.createElement('button');buy.type='button';buy.className='booster-offer-buy';
   const affordable=(state.credits||0)>=offer.price;
   buy.disabled=!offer.unlocked||(!free&&!affordable)||controlsLocked();
@@ -1932,7 +1939,7 @@ function render(){
   $('situationEvents').append(note);
  }
  $('lifeStats').replaceChildren();
- const lifeGauges=[['FOCUS',state.focus,100,'Focus determines which activities you can perform'],['INSIGHT',state.insight,99,'Lessons learned from activities'],['REPUTATION',state.reputation,100,'How familiar the town is with your name'],['DUEL PREP',state.preparation,3,'A modest bonus after your next winning match']];
+ const lifeGauges=[['FOCUS',state.focus,100,'Energy for town activities and outings'],['INSIGHT',state.insight,99,'6 Insight: -3 credits on themed boosters; 15 Insight: -5 credits; 10 unlocks masterclasses'],['REPUTATION',state.reputation,100,'6 Reputation unlocks paid clinics; 15 unlocks weekly sponsored boosters'],['DUEL PREP',state.preparation,3,'Each point awards 14 credits on a win or 8 on a draw/loss after a duel']];
  for(const [label,value,max,title] of lifeGauges){
   const item=document.createElement('div');item.className='life-stat';item.title=title;
   const row=document.createElement('div');row.className='life-stat-label';
@@ -1940,7 +1947,12 @@ function render(){
   const val=document.createElement('span');val.textContent=value+' / '+max;row.append(name,val);
   const track=document.createElement('div');track.className='life-track';
   const fill=document.createElement('div');fill.className='life-fill';fill.style.width=(value/max*100)+'%';track.append(fill);
-  item.append(row,track);$('lifeStats').append(item);
+  item.append(row,track);
+  const perk=label==='INSIGHT'?state.insight>=15?'Themed boosters: -5 credits':state.insight>=6?'Themed boosters: -3 credits':'6 Insight unlocks booster savings':
+   label==='REPUTATION'?state.reputation>=15?'Sponsored vouchers unlocked':state.reputation>=6?'Paid clinics unlocked':'6 Reputation unlocks paid clinics':
+   label==='DUEL PREP'?'Next duel: '+(state.preparation?'+14 win / +8 otherwise':'no bonus queued'):'';
+  if(perk){const tip=document.createElement('small');tip.textContent=perk;item.append(tip);}
+  $('lifeStats').append(item);
  }
  $('townActivities').replaceChildren();
  for(const entry of WORLD.activitiesAt(state)){
@@ -1948,6 +1960,7 @@ function render(){
   const title=document.createElement('strong');title.textContent=entry.title+' · ⏳ 1 period';
   const description=document.createElement('small');
   const gains=Object.entries(entry.change).filter(([,v])=>v>0).map(([key,value])=>'+'+value+' '+key);
+  if(entry.voucherSet==='latest')gains.push('1 unlocked expansion booster voucher');
   description.textContent=(entry.disabledReason?entry.disabledReason+' · ':'')+'Focus cost '+entry.focus+(entry.cost?' · '+entry.cost+' credits':'')+' · '+gains.join(' · ');
   b.append(title,description);b.title=entry.text;b.onclick=()=>act('townActivity:'+entry.id);
   $('townActivities').append(b);
