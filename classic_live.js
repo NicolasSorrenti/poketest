@@ -454,7 +454,7 @@
      $('deck').value=params.get('deck')||'blackout';
      $('opponent').value=params.get('opponent')||'brushfire';
    }
-   token=sessionStorage.getItem(rpgKey);if(token){try{current=await api('state');}catch{token=null;sessionStorage.removeItem(rpgKey);}}
+   token=sessionStorage.getItem(rpgKey);if(token){try{current=await api('state');checkCloudCheckpoint(current);}catch{token=null;sessionStorage.removeItem(rpgKey);}}
    if(rpgMode&&!current){
     // Restore exact duel state after a reload, Render restart or device switch.
     // A network/auth error must never silently create a different duel.
