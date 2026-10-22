@@ -298,7 +298,7 @@
    if(quick.legalTarget(targetMode.type,card(targetMode.payload?.handIndex===undefined?u.id:current.view.players[side()].hand[targetMode.payload.handIndex]),u,card,slot,{round:current.view.round,turnSerial:current.turnSerial})){
     b.classList.add('legal');b.addEventListener('click',()=>send(command(targetMode.type,{...targetMode.payload,slot})));
    }else{b.classList.add('ineligible');b.addEventListener('click',()=>preview.inspect(u.id,u));}
-  }else if(ownerRelative===0&&current.view.phase==='setup'){
+  }else if(ownerRelative===0&&current.view.phase==='setup'&&(!current.setupConfirmed||(current.view.mulliganBonus?.side===side()&&current.view.mulliganBonus.drawn!==null&&slot!==-1))){
    b.title='Return this Pokémon to your hand';b.addEventListener('click',()=>send(command('setup_undo',{slot})));
   }else{b.addEventListener('click',()=>preview.inspect(u.id,u));}
   return b;
@@ -314,7 +314,7 @@
   preview.attach(b,id);
   b.addEventListener('click',()=>{
    const v=current.view;
-   const intent=shared.handIntent({card:c,index,setup,setupConfirmed:!!current.setupConfirmed,
+   const intent=shared.handIntent({card:c,index,setup,setupConfirmed:!!current.setupConfirmed&&!(v.mulliganBonus?.side===side()&&v.mulliganBonus.drawn!==null),
     canAct:!watching()&&v.phase==='game'&&v.turn===side()&&!v.pendingDecision&&!v.over,
     energyUsed:!!current.me?.energyUsed,selectedHand,targetMode});
    if(intent.kind==='none')return;
@@ -399,6 +399,22 @@
   }else if(d){title.textContent='Opponent is choosing';description.textContent='Waiting for the other player to resolve their choice.';}
   else if(v.over){title.textContent='DUEL COMPLETE';description.textContent=watching()?(current.winner===null?'Draw!':`${current.players[current.winner]?.name||'A player'} won.`):current.winner===side()?'You won!':current.winner===1-side()?'Your friend won.':'A draw!';acts.append(btn('Leave finished duel',newDuel,'primary'));}
   else if(watching()){title.textContent='SPECTATING';description.textContent='You can watch the public field and chat. Both players’ hands and face-down Prizes remain private.';}
+  else if(v.phase==='setup'&&v.mulliganBonus){
+   const bonus=v.mulliganBonus;
+   title.textContent='MULLIGAN BONUS';
+   if(bonus.side!==side())description.textContent='Waiting for your opponent to resolve their mulligan bonus.';
+   else if(bonus.drawn===null){
+    description.textContent=`Your opponent took ${bonus.max} more mulligan(s). You may draw up to ${bonus.max} extra card(s).`;
+    const select=document.createElement('select');select.setAttribute('aria-label','Mulligan bonus cards');
+    for(let i=0;i<=bonus.max;i++){const opt=document.createElement('option');opt.value=String(i);opt.textContent=`${i} bonus card${i===1?'':'s'}`;select.append(opt);}
+    select.value=String(bonus.max);
+    acts.append(select,btn('Draw selected cards',()=>send(command('setup_bonus_draw',{count:Number(select.value)})),'primary'));
+    acts.append(btn('Skip bonus draw',()=>send(command('setup_bonus_draw',{count:0}))));
+   }else{
+    description.textContent=`You drew ${bonus.drawn} bonus card(s). Bench any additional Basic Pokémon, then start the duel. Your Active cannot change.`;
+    acts.append(btn('Start duel',()=>send(command('setup_bonus_done')),'primary'));
+   }
+  }
   else if(v.phase==='setup'){
    title.textContent='OPENING SETUP';description.textContent='Select a Basic Pokémon from your opening hand to become Active. You may select up to five more for your Bench, then confirm. Your opponent’s team remains hidden until setup ends.';
    if(current.setupConfirmed){description.textContent='Opening setup confirmed. Waiting for your friend to confirm.';}
