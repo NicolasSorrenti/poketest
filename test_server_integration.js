@@ -34,6 +34,19 @@ server.listen(0,'127.0.0.1', async () => {
    if(filename.endsWith('.json'))assert.ok(Array.isArray(JSON.parse(data)));
    if(filename.endsWith('.js'))assert.match(response.headers.get('content-type'),/javascript/);
   }
+  // A missing allowlist entry causes the Status UI controller to 404.
+  const rpgResponse=await fetch(url+'/rpg.html');
+  assert.equal(rpgResponse.status,200,'RPG page must load');
+  const rpgHtml=await rpgResponse.text();
+  assert.match(rpgHtml,/id="statusBtn"/);
+  assert.match(rpgHtml,/src="\/rpg_status\.js"/);
+  for(const [filename,mime] of [['rpg_status.js',/javascript/],['rpg_status.css',/text\/css/]]){
+   const response=await fetch(url+'/'+filename);
+   assert.equal(response.status,200,filename+' must be served (server public asset allowlist)');
+   assert.match(response.headers.get('content-type')||'',mime);
+   assert.ok((await response.text()).length>150,filename+' must contain the implementation');
+  }
+  assert.equal((await fetch(url+'/test_rpg_status.js')).status,404,'RPG test code must remain private');
   for(const filename of ['cards/does-not-exist.json','not-a-real-file']){
    assert.equal((await fetch(url+'/'+filename)).status,404);
   }
