@@ -208,7 +208,7 @@
 @media(max-width:1050px){.rpg-scene-cast{inset:29% 1% 150px 1%}.rpg-action-dock{max-height:55%}}
 @media(max-width:600px){.rpg-cast-member span:last-child{font-size:12px;padding:4px}.rpg-action-dock{left:8px;right:8px;padding:10px}.rpg-dock-items{grid-template-columns:repeat(2,minmax(0,1fr))}}
 
-/* VN composition: keep the cast in the scene while focusing on the speaker */
+/* VN composition: show only conversation participants and highlight the speaker */
 .rpg-scene-cast.is-conversation .rpg-cast-member{transition:transform .28s ease,filter .28s ease,opacity .28s ease}
 .rpg-scene-cast.is-conversation .rpg-cast-member.is-listening{opacity:.53;filter:brightness(.55) saturate(.72) drop-shadow(0 8px 14px #000c);transform:scale(.91);transform-origin:center bottom}
 .rpg-scene-cast.is-conversation .rpg-cast-member.is-speaking{opacity:1;filter:brightness(1.13) drop-shadow(0 11px 20px #000d);transform:translateY(-14px) scale(1.08);transform-origin:center bottom;z-index:3}
