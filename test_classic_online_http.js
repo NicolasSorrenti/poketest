@@ -63,6 +63,13 @@ const apiBase=async(base,path,{method='GET',token,body,origin}={})=>{
   }
   let host=(await request('state?code='+code,{token:hostToken})).data;
   let guest=(await request('state?code='+code,{token:guestToken})).data;
+  if(host.view.mulliganBonus){
+   const eligible=host.view.mulliganBonus.side,token=eligible===0?hostToken:guestToken;
+   const bonus=await request('action',{method:'POST',token,body:{code,revision:host.revision,command:{type:'setup_bonus_draw',payload:{count:0}}}});
+   assert.equal(bonus.status,200,JSON.stringify(bonus.data));
+   host=(await request('state?code='+code,{token:hostToken})).data;
+   guest=(await request('state?code='+code,{token:guestToken})).data;
+  }
   assert.equal(host.view.phase,'game');assert.equal(guest.view.phase,'game');
   assert.ok(host.view.players[1].active&&guest.view.players[0].active,'Both opening Pokémon are visible after setup');
   assert.equal(guest.view.players[0].hand,undefined);
