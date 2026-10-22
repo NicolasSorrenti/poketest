@@ -635,7 +635,7 @@ function act(action){
   try{APPOINTMENTS.cancel(state,plan.id);persist();return say('Planner','You cancelled the meet-up in advance. No one was kept waiting.');}
   catch(err){$('notice').textContent=err.message;return;}
  }
- if(type==='home'){state.location='home';state.selected=null;persist();return say('Narrator','Back home. The championship posters on the wall remind you why you came.');}
+ if(type==='home'){state.location='home';state.selected=null;persist();tutorialEvent('travel');return say('Narrator','Back home. The championship posters on the wall remind you why you came.');}
  if(type==='where'){const c=cast[id],visit=SCHEDULES.nextVisit(id,state.day,state.slot,[]);return say('Narrator',c.name+(visit?' is usually around '+places[visit.place][0]+' on day '+visit.day+', '+periods[visit.slot]+'.':' has no announced public visits in the coming week.'),options(id));}
  if(type==='sleep'){if(state.location!=='home')return;const n=3-state.slot;advance(n,'sleep');return say('Narrator','You wake up to a new day in Neo Harbor.');}
  if(type==='close'||type==='dismissDialogue')return closeSceneDialogue();
@@ -1186,7 +1186,7 @@ function openPlannerSuggestion(id){
  const pick=PLANNER.recommend(state,plannerDependencies()).find(x=>x.id===id);
  if(!pick||pick.timing!=='now'||!places[pick.place])return;
  if(pick.place!==state.location){
-  state.location=pick.place;state.selected=null;persist();render();
+  state.location=pick.place;state.selected=null;persist();render();tutorialEvent('travel');
  }
  tutorialEvent('planner');
  // Meeting a character is free, so go straight into the conversation.
@@ -1798,7 +1798,7 @@ function render(){
    button.className='place'+(selected?' selected':'');
    button.disabled=locked;
    button.setAttribute('aria-current',selected?'location':'false');
-   button.onclick=()=>{state.location=id;state.selected=null;persist();say('Narrator',detail);};
+   button.onclick=()=>{if(state.location===id)return;state.location=id;state.selected=null;persist();say('Narrator',detail);tutorialEvent('travel');};
    const status=button.querySelector('.place-status');
    const count=state.day<=90?SCHEDULES.peopleAt(state.day,state.slot,id,publicAppointments(id)).length:0;
    const label=selected?'HERE':count?count+' HERE':'›';
@@ -1888,7 +1888,7 @@ function render(){
   const label=document.createElement('strong');label.textContent=cast[id].name;
   const where=document.createElement('small');where.textContent='↗ '+places[place][0];
   button.append(label,where);button.title='Travel for free to '+places[place][0];
-  button.onclick=()=>{if(state.activeStory||state.activeEncounter||state.pendingDuel)return;state.location=place;state.selected=null;persist();say('Narrator','You head to '+places[place][0]+'. '+places[place][1]);};
+  button.onclick=()=>{if(state.activeStory||state.activeEncounter||state.pendingDuel)return;state.location=place;state.selected=null;persist();say('Narrator','You head to '+places[place][0]+'. '+places[place][1]);tutorialEvent('travel');};
   $('townRadar').append(button);
  }
  $('people').replaceChildren();
@@ -2058,6 +2058,8 @@ function render(){
 $('deckStudioBtn').onclick=()=>{if(!controlsLocked()&&state.deckJourney?.starter){persist();location.assign('/rpg_deck_studio.html');}};
 $('statusBtn').onclick=()=>{
  window.NeoRpgStatus.open(state,cast,BOND_PLAN,makeAvatar,disableTutorials);
+ $('statusTutorialHelp').hidden=true;
+ if(!state.gameplayTutorials?.disabled)tutorialEvent('status','statusTutorialHelp');
 };
 $('statusClose').onclick=()=>window.NeoRpgStatus.close();
 $('galleryBtn').onclick=openGallery;
