@@ -11,6 +11,9 @@ const ALPHABET='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
 const makeCode=()=>Array.from(crypto.randomBytes(6),x=>ALPHABET[x%ALPHABET.length]).join('');
 const validCode=code=>typeof code==='string'&&/^[A-Z0-9]{6}$/.test(code.toUpperCase());
 const DISCONNECT_MS=60000;
+const PLAYMAT_COOLDOWN_MS=120000;
+const MAX_PLAYMAT_BYTES=160*1024;
+const PLAYMAT_IDS=new Set(require('./duel_playmats').catalog.map(mat=>mat.id));
 const makeToken=()=>crypto.randomBytes(32).toString('base64url');
 const onlineDeckSource=new ClassicLocalService();
 const standardName=(raw,fallback)=>{
@@ -90,6 +93,7 @@ class ClassicOnlineService {
   return {spectator:side===null,spectatorCount:[...room.spectators.values()].filter(v=>this.now()-v.lastSeen<10000).length,presence:room.players.map(p=>p?{connected:this.now()-p.lastSeen<6000,secondsUntilForfeit:Math.max(0,Math.ceil((DISCONNECT_MS-(this.now()-p.lastSeen))/1000))}:null),code:room.code,revision:room.revision,you:side,joined:!!room.players[1],started:!!g,
    players:room.players.map(p=>p?{name:p.name,deck:p.deck,ready:p.ready}:null),
    chatSeq:room.chatSeq,chatMessages:room.chat.map(m=>({...m})),
+   playmats:(room.playmats||[null,null]).map(m=>m?{id:m.id,version:m.version,cooldownUntil:m.changedAt+PLAYMAT_COOLDOWN_MS}:null),serverNow:this.now(),
    ...(g?{undo:{available:side!==null&&UNDO.available(room.undoHistory||[],g,side),label:side!==null&&UNDO.available(room.undoHistory||[],g,side)?room.undoHistory.at(-1).label:null},view:publicView(g,side),activity:publicActivity(g),feed:[...(g.matchFeed||[]).slice(-90)],turnSerial:g.turnSerial,winner:g.winner,format:g.format,
     me:side===null?{energyUsed:false,retreated:false,stadiumUsed:false}:{energyUsed:!!g.players[side].energyUsed,retreated:!!g.players[side].retreated,stadiumUsed:g.players[side].stadiumUsedTurn===g.turnSerial},
     setupConfirmed:side!==null&&!!g.setupReady[side],
@@ -157,6 +161,44 @@ class ClassicOnlineService {
   const result=reduce(room.game,side,raw);if(!result.ok)throw Error(result.error||'Illegal action');
   UNDO.record(room.undoHistory,room.game,result.game,side,raw);
   room.game=result.game;this.bump(room);return this.response(room,side);
+ }
+ // Presentation state is separate from match revision. Changing a mat must never
+ // cause a stale move/decision or change authoritative Pokémon rules.
+ setPlaymat(code,token,{id,image}={}){
+  const {room,side}=this.session(code,token);
+  if(side===null)throw Error('Spectators cannot change playmats');
+  if(!room.game)throw Error('Start the duel before changing playmats');
+  if(typeof id!=='string'||(!PLAYMAT_IDS.has(id)&&id!=='custom'))throw Error('Invalid playmat');
+  let artwork=null;
+  if(id==='custom'){
+   if(typeof image!=='string'||image.length>230000)throw Error('Custom playmat too large');
+   const match=/^data:image\/(webp|png);base64,([A-Za-z0-9+/]+={0,2})$/.exec(image);
+   if(!match)throw Error('Invalid playmat image format');
+   const bytes=Buffer.from(match[2],'base64');
+   if(!bytes.length||bytes.length>MAX_PLAYMAT_BYTES||bytes.toString('base64')!==match[2])throw Error('Invalid or oversized playmat image');
+   const isWebp=match[1]==='webp'&&bytes.length>16&&bytes.toString('ascii',0,4)==='RIFF'&&bytes.toString('ascii',8,12)==='WEBP';
+   const isPng=match[1]==='png'&&bytes.length>24&&bytes.subarray(0,8).equals(Buffer.from([137,80,78,71,13,10,26,10]))&&
+    bytes.readUInt32BE(16)>0&&bytes.readUInt32BE(20)>0&&bytes.readUInt32BE(16)<=4096&&bytes.readUInt32BE(20)<=4096;
+   if(!isWebp&&!isPng)throw Error('Invalid playmat image data');
+   artwork=image;
+  }else if(image!==undefined&&image!==null)throw Error('Preinstalled mats must not include uploaded images');
+  const time=this.now();
+  const entries=room.playmats||[null,null],previous=entries[side];
+  if(previous&&time-previous.changedAt<PLAYMAT_COOLDOWN_MS){
+   const err=Error('Playmat cooldown: wait '+Math.ceil((PLAYMAT_COOLDOWN_MS-(time-previous.changedAt))/1000)+' seconds');
+   err.cooldownMs=PLAYMAT_COOLDOWN_MS-(time-previous.changedAt);
+   throw err;
+  }
+  room.playmats=entries;
+  entries[side]={id,artwork,version:(previous?.version||0)+1,changedAt:time};
+  room.updated=time;
+  return this.response(room,side);
+ }
+ getPlaymat(code,token,owner){
+  const {room}=this.session(code,token);
+  if(owner!==0&&owner!==1)throw Error('Invalid player side');
+  const entry=room.playmats?.[owner]||null;
+  return {id:entry?.id||null,version:entry?.version||0,image:entry?.id==='custom'?entry.artwork:null};
  }
  chatMessage(code,token,{text}={}){
   const {room,side}=this.session(code,token);
