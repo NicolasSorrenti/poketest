@@ -1284,12 +1284,12 @@ function openPlannerSuggestion(id){
   pick.kind==='activity'?'activities':'stories';
  renderRpgActions(false,{speaker:'Narrator',line:'',choices:[]});
  const section=$(pick.focusId);
- const owner=section?.closest('.side-section');
- const heading=owner?.querySelector('.sidebar-title span')?.textContent||'';
+ const owner=section?.closest?.('.side-section');
+ const heading=owner?.querySelector?.('.sidebar-title span')?.textContent||'';
  rpgActivePanel=Object.entries(rpgPanelGroups).find(([,names])=>names.some(name=>heading.includes(name)))?.[0]||'plans';
  refreshRpgPanels();
  if($('rpgInfoPanel')?.getAttribute('aria-hidden')==='true')window.NeoRpgInterface?.toggle?.('info');
- const buttons=[...(section?.querySelectorAll('button')||[])].filter(x=>!x.disabled);
+ const buttons=[...(section?.querySelectorAll?.('button')||[])].filter(x=>!x.disabled);
  const action=buttons.find(b=>b.dataset?.plannerKey===pick.key)||
   buttons.find(b=>b.textContent?.includes(pick.key)||b.textContent?.includes(pick.title.split(' · ')[0]))||buttons[0];
  (action||section)?.scrollIntoView?.({behavior:'smooth',block:'nearest'});
@@ -1385,8 +1385,8 @@ function populateGalleryCharacters(){
  const select=$('galleryCharacter'),previous=select.value;
  const ids=[...new Set(CG.catalog.map(entry=>entry.character))].filter(id=>!!cast[id]);
  ids.sort((a,b)=>cast[a].name.localeCompare(cast[b].name));
- select.replaceChildren(new Option('All characters',''));
- for(const id of ids)select.add(new Option(cast[id].name,id));
+ const everyone=document.createElement('option');everyone.value='';everyone.textContent='All characters';select.replaceChildren(everyone);
+ for(const id of ids){const option=document.createElement('option');option.value=id;option.textContent=cast[id].name;select.append(option);}
  select.value=ids.includes(previous)?previous:'';
 }
 function renderGallery(){
