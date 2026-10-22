@@ -247,40 +247,42 @@
   showChat();
  }
  function render(){
-  window.CubePoolViewer?.update(state?.cubePool);
   if(!state)return;
-  const focused=!!state.finished&&!state.tournament;
-  const entering=focused&&!document.body.classList.contains('cube-deck-mode');
-  document.body.classList.toggle('cube-deck-mode',focused);
-  $('cubeRoomBuildContext').textContent='Room '+state.code+' · '+
-   (state.seats[state.seat].deckReady?'Deck locked · Waiting for other players':'60 cards drafted · Create your 40-card deck');
-  $('entrance').classList.add('hidden');$('room').classList.remove('hidden');
-  $('roomTitle').textContent='Cube room '+state.code+' · '+(presets.find(p=>p.id===state.preset)?.name||state.preset||'Classic Balanced');
-  const invite=new URL(location.href);invite.pathname='/cube_room.html';invite.search='?room='+encodeURIComponent(code);
-  invite.hash='';$('inviteLink').value=invite.toString();
   const seat=state.seats[state.seat];
-  $('roster').replaceChildren();
-  for(const s of state.seats){
-   const holder=document.createElement('div');holder.className='seat';
-   const name=document.createElement('strong');
-   name.textContent=(s.seat===state.seat?'★ ':'')+s.name+(s.cpu?' · CPU':'');
-   const meta=document.createElement('small');
-   meta.textContent=state.status==='lobby'?(s.ready?'Ready':'Not ready'):
-    state.finished?(s.deckReady?'Deck locked':s.cpu?'CPU seat':'Building deck'):
-    s.pickCount+'/60 cards drafted';
-   holder.append(name,meta);$('roster').append(holder);
+  const phase=state.status==='build'?(seat.deckReady?'wait':'build'):state.status;
+  const focused=phase==='build';
+  document.body.classList.toggle('cube-deck-mode',focused);
+  document.body.dataset.cubePhase=phase;
+  $('entrance').classList.add('hidden');
+  $('room').classList.remove('hidden');
+  $('roomLobbyPanel').classList.toggle('hidden',phase!=='lobby');
+  $('draftArea').classList.toggle('hidden',phase!=='draft');
+  $('deckArea').classList.toggle('hidden',phase!=='build');
+  $('deckWaitingArea').classList.toggle('hidden',phase!=='wait');
+  $('roundRobinArea').classList.toggle('hidden',phase!=='tournament'&&phase!=='complete');
+  window.CubePoolViewer?.update(phase==='draft'||phase==='build'?state.cubePool:null);
+  $('cubeRoomBuildContext').textContent='Room '+state.code+' · 60 cards drafted · Create your 40-card deck';
+  if(phase==='lobby'){
+   $('roomTitle').textContent='Cube room '+state.code+' · '+
+    (presets.find(p=>p.id===state.preset)?.name||state.preset||'Classic Balanced');
+   const invite=new URL(location.href);invite.pathname='/cube_room.html';
+   invite.search='?room='+encodeURIComponent(code);invite.hash='';
+   $('inviteLink').value=invite.toString();
+   $('roster').replaceChildren();
+   for(const s of state.seats){
+    const holder=document.createElement('div');holder.className='seat';
+    const name=document.createElement('strong');name.textContent=(s.seat===state.seat?'★ ':'')+s.name;
+    const meta=document.createElement('small');meta.textContent=s.ready?'Ready':'Not ready';
+    holder.append(name,meta);$('roster').append(holder);
+   }
+   $('lobbyActions').classList.remove('hidden');
+   $('readyRoom').textContent=seat.ready?'Cancel ready':'Ready to draft';
+   $('beginDraft').classList.toggle('hidden',!state.host);
+   $('beginDraft').disabled=state.humanCount<2||state.seats.some(s=>!s.ready);
+   $('roomProgress').textContent=state.humanCount+' human players joined. Host starts after everyone is ready.';
   }
-  $('lobbyActions').classList.toggle('hidden',state.status!=='lobby');
-  $('readyRoom').textContent=seat.ready?'Cancel ready':'Ready to draft';
-  $('beginDraft').classList.toggle('hidden',!state.host);
-  $('beginDraft').disabled=state.humanCount<2||state.seats.some(s=>!s.ready);
-  $('roomProgress').textContent=state.status==='lobby'?
-    state.humanCount+' human players joined. Host starts after everyone is ready.':
-    state.finished?'All 60 picks complete. Build your decks!':
-    'Pack '+(state.round+1)+' of '+state.packs+' · Pick '+(state.pick+1)+' of '+state.cardsPerPack;
-  $('draftArea').classList.toggle('hidden',state.status!=='draft');
-  $('deckArea').classList.toggle('hidden',!state.finished||!!state.tournament);
-  renderTournament();
+  if(phase==='wait')renderWaiting();
+  if(phase==='tournament'||phase==='complete')renderTournament();
   if(state.status==='draft'){
    $('draftHeading').textContent='Your pack · '+state.pack.length+' cards';
    $('draftStatus').textContent=state.waiting?
@@ -330,12 +332,16 @@
     $('picks').append(line);
    });
   }
-  if(state.finished)renderBuild();
-  window.CubeAnalysis?.update({pool:state.cubePool,drafted:state.drafted,pack:state.status==='draft'?arrangedPack(state.pack):[],deck});
-  if(entering){
+  if(phase==='build')renderBuild();
+  window.CubeAnalysis?.update({pool:phase==='draft'||phase==='build'?state.cubePool:null,
+   drafted:state.drafted,pack:phase==='draft'?arrangedPack(state.pack):[],deck});
+  if(phase!==lastPhase){
+   lastPhase=phase;
    window.scrollTo({top:0,behavior:'instant'});
-   const heading=$('deckArea').querySelector('.cb-header h2');
-   if(heading){heading.tabIndex=-1;heading.focus({preventScroll:true});}
+   if(phase==='build'){
+    const heading=$('deckArea').querySelector('.cb-header h2');
+    if(heading){heading.tabIndex=-1;heading.focus({preventScroll:true});}
+   }
   }
  }
  async function refresh(){
