@@ -65,12 +65,10 @@
  justify-content:center;align-items:center;gap:18px}
 .pack-giver-image{width:min(275px,40%);height:180px;flex:none;overflow:hidden;
  background:radial-gradient(ellipse at center,#935578,#211a35 70%);
- border-radius:4px;clip-path:polygon(0 0,93% 0,100% 100%,0 100%);
+ border-radius:4px;
  animation:pack-giver-arrive .32s ease-out both
 }
-.pack-giver-image img.pack-giver-art{object-fit:contain;object-position:bottom center}
-.pack-giver strong{flex:1;max-width:520px;text-align:left;
- font:900 clamp(20px,2.7vw,33px)/1.12 'Barlow Condensed',sans-serif;text-transform:uppercase;letter-spacing:.035em}
+.pack-giver-image img.pack-giver-art{object-fit:cover;object-position:center center}
 .pack-reveal-cards{perspective:900px;margin-top:13px}
 .pack-card{position:relative;min-height:190px;border-radius:6px;
  transform-origin:center bottom;border-color:#bc76ad;background:linear-gradient(145deg,#783866,#22213b);
@@ -101,7 +99,6 @@
  .victory-stats{gap:14px}.victory-metric{min-width:74px}.victory-metric strong{font-size:25px}
  .victory-continue{width:100%;min-height:48px}
  .pack-giver{gap:10px}.pack-giver-image{height:112px;width:35%}
- .pack-giver strong{font-size:18px}
  .pack-card{min-height:155px}
 }
 @media(prefers-reduced-motion:reduce){

@@ -12,6 +12,16 @@ assert.match(boosterRoutine,/rpg-assets\/reactions.*attack\.png/,
 assert.doesNotMatch(boosterRoutine,/vn-expressions\/surpris|portraits\/surpris|events\/surpris/,
  'Generic surprised artwork should no longer replace an absent booster illustration');
 
+// The booster giver image must fill its frame without a redundant caption.
+const rpgMarkup=fs.readFileSync(path.join(__dirname,'rpg.html'),'utf8');
+const rpgStyles=fs.readFileSync(path.join(__dirname,'rpg.css'),'utf8');
+const victoryStyles=fs.readFileSync(path.join(__dirname,'rpg_victory_presentation.css'),'utf8');
+assert.doesNotMatch(rpgMarkup,/id="packGiverName"/);
+assert.doesNotMatch(boosterRoutine,/packGiverName/);
+assert.match(rpgStyles,/\.pack-giver-image img\{[^}]*width:100%;height:100%;[^}]*object-fit:cover/);
+assert.match(victoryStyles,/\.pack-giver-image img\.pack-giver-art\{object-fit:cover;object-position:center center\}/);
+assert.doesNotMatch(victoryStyles,/\.pack-giver-image\{[^}]*clip-path:/,'Artwork frame must remain rectangular');
+
 const receipt={outcome:'Victory',name:'Reina Kurogane',points:8,credits:15,trust:2};
 assert.equal(model(receipt,{hasBooster:true}).title,'VICTORY!');
 assert.equal(model(receipt,{hasBooster:true}).action,'CLAIM BOOSTER →');

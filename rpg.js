@@ -684,7 +684,6 @@ function showPackReveal(){
  if(giver)window.NeoRpgDiscreetAvatars?.set?.(portrait,giver,'happy',cast[giver].name);
  const request=++packArtSerial; // An earlier booster image must never overwrite this giver.
  const fromShop=!isVictory&&!giver&&state.location==='shop';
- const caption=$('packGiverName');caption.textContent=giver?cast[giver].name+' gives you a '+setName+' booster':'The Lucky Draw · '+setName+' booster';
  $('packContinue').textContent=$('boosterShopDialog').open?'Back to booster shop →':'Continue adventure →';
  if(fromShop){
   // Ordinary shop purchases have no named giver. Show the clerk's dedicated CG instead of an empty frame.
