@@ -118,6 +118,12 @@
    previousSeq=lastEventSeq(frame.activity);
    current=frame===result?result:{...result,...frame};
    render();
+   // Keep CPU playback and the victory transition behind image preparation.
+   // Presentation duration begins only after the NPC cut-in is visible.
+   if(rpgMode&&reactions?.active){
+    await reactions.whenShown();
+    if(epoch!==playbackEpoch)return false;
+   }
    if(frame!==result){
     // RPG attacks must hold until the illustrated NPC cut-in has completed.
     // Other modes still receive a readable attack animation, but no NPC art.
