@@ -63,7 +63,7 @@ async function onlineAPI(req,res,pathName,url){
   }
   return sendJSON(res,404,{error:'Unknown Online API endpoint'});
  }catch(error){const msg=String(error.message||'Unknown error');
-  const status=/Unauthorized|token|Spectators cannot/i.test(msg)?403:/Playmat cooldown|Stale match revision/.test(msg)?409:/Room not found|expired/.test(msg)?404:400;
+  const status=/Spectators cannot/i.test(msg)?403:/Unauthorized|token/i.test(msg)?401:/Playmat cooldown|Stale match revision/.test(msg)?409:/Room not found|expired/.test(msg)?404:400;
   return sendJSON(res,status,{error:msg});}
 }
 async function cubeAPI(req,res,pathName){
