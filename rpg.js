@@ -157,7 +157,8 @@ TUTORIAL?.hydrate(state);
 if(!Array.isArray(state.campaignHistory))state.campaignHistory=[];
 if(!Number.isInteger(state.ngPlus)||state.ngPlus<0)state.ngPlus=0;
 if(!places[state.location])state.location='home';
-if(!state.visitedLocations||typeof state.visitedLocations!=='object'||Array.isArray(state.visitedLocations))state.visitedLocations={home:true,[state.location]:true};
+if(!state.visitedLocations||typeof state.visitedLocations!=='object'||Array.isArray(state.visitedLocations))state.visitedLocations={home:true};
+state.visitedLocations[state.location]=true;
 if(!Number.isInteger(state.slot)||state.slot<0||state.slot>2)state.slot=0;
 for(const k of ['results','journal'])if(!Array.isArray(state[k]))state[k]=defaults()[k];
 for(const k of ['flags','bonds','talked','hungOut','eventsDone','storyDone','storyMissed','relationships','routeOutcomes'])if(!state[k]||typeof state[k]!=='object'||Array.isArray(state[k]))state[k]={};
@@ -325,12 +326,12 @@ function closeSceneDialogue(){
  persist();render();
 }
 // Narrate a destination only the first time the player visits it.
-function travelTo(placeId){
+function travelTo(placeId,{intro=true}={}){
  if(!places[placeId]||controlsLocked()||state.location===placeId)return false;
  const firstVisit=!state.visitedLocations[placeId];
  state.visitedLocations[placeId]=true;
  state.location=placeId;state.selected=null;
- if(firstVisit)say('Narrator',places[placeId][1]);
+ if(firstVisit&&intro)say('Narrator',places[placeId][1]);
  else{scene={speaker:'Narrator',line:'',choices:[]};state.scene=scene;persist();render();}
  tutorialEvent('travel');
  return true;
@@ -1236,7 +1237,7 @@ function renderAppointments(locked){
     attend.onclick=()=>act('attend:'+meeting.id);controls.append(attend);
    }else{
     const travel=document.createElement('button');travel.className='meeting-attend';travel.textContent='Go there · free';travel.disabled=locked;travel.onclick=()=>{
-     travelTo(meeting.place);
+     travelTo(meeting.place,{intro:false});
      if(currentPeople().includes(meeting.npc))selectPerson(meeting.npc);};controls.append(travel);
    }
   }else{
@@ -1256,7 +1257,7 @@ function openPlannerSuggestion(id){
  const pick=PLANNER.recommend(state,plannerDependencies()).find(x=>x.id===id);
  if(!pick||pick.timing!=='now'||!places[pick.place])return;
  if(pick.place!==state.location){
-  travelTo(pick.place);
+  travelTo(pick.place,{intro:false});
  }
  tutorialEvent('planner');
  // Free navigation can lead right into a character greeting, but never
@@ -1606,7 +1607,7 @@ function openCalendar(){
     $('calendarDialog').close();
     if(entry.place!==state.location)travelTo(entry.place);
     else if(entry.npc&&currentPeople().includes(entry.npc))selectPerson(entry.npc);
-    else{rpgLocalTab=entry.kind==='Tournament'?'circuit':entry.kind==='Official event'?'activities':'stories';renderRpgActions(false,{speaker:'Narrator',line:'',choices:[]});}
+    else{rpgLocalTab=entry.kind==='Tournament'||entry.kind==='Official event'?'activities':'stories';renderRpgActions(false,{speaker:'Narrator',line:'',choices:[]});}
     if(entry.place===state.location&&entry.npc&&currentPeople().includes(entry.npc))return;
     if(entry.npc&&currentPeople().includes(entry.npc))selectPerson(entry.npc);
    };
