@@ -347,7 +347,7 @@
    ko_scored:['ko_scored','ko-scored','victory'],
    attack:['attack']
   };
-  const reactionPaths=(reactionNames[kind]||[kind]).flatMap(name=>
+  const reactionPaths=(entry && kind!=='attack' ? (reactionNames[kind]||[kind]) : []).flatMap(name=>
    ['png','webp','jpg'].map(ext=>'/rpg-assets/reactions/'+npcId+'/'+name+'.'+ext));
   return [...new Set([...reactionPaths,...(kinds[kind]||[kind]).map(name=>entry?.[name]),
    entry?.default,PORTRAITS[npcId]].filter(valid))];
