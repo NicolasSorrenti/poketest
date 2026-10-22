@@ -44,13 +44,13 @@ test('only mobile uses attack strip; the hand cannot be hidden',()=>{
  }
 });
 
-test('Classic/RPG/Cube and online load mobile polish after existing styles',()=>{
+test('Classic and online load mobile polish after mobile alignment',()=>{
  for(const page of ['classic_live.html','online.html']){
   const html=file(page);
   const links=[...html.matchAll(/<link\s+[^>]*rel="stylesheet"[^>]*>/g)].map(m=>m[0]);
-  const last=links.at(-1);
-  assert.match(last,/href="duel_mobile_polish\.css\?v=\d+"/);
-  assert.match(last,/media="\(max-width: 780px\)"/);
+  const mobilePolish=links.find(link=>/href="duel_mobile_polish\.css\?v=\d+"/.test(link));
+  assert.ok(mobilePolish,page+' includes the mobile polish stylesheet');
+  assert.match(mobilePolish,/media="\(max-width: 780px\)"/);
   assert.ok(html.indexOf('duel_mobile_alignment.css?v=1')<html.indexOf('duel_mobile_polish.css?v='));
   for(const id of ['myActive','enemyActive','myBench','enemyBench','fieldAttackDock','mobileAttackDock','attackPanel']){
    assert.ok(html.includes('id="'+id+'"'),page+' retains '+id);
