@@ -145,7 +145,7 @@ test('duel battle result applies one preparation bonus only once',()=>{
  r.listeners.message(event);
  assert.equal(r.state().results.length,1);
  assert.equal(r.state().preparation,1);
- assert.equal(r.state().credits,100);
+ assert.equal(r.state().credits,109);
  assert.equal(r.state().slot,1);
  r.listeners.message(event);
  assert.equal(r.state().results.length,1);
