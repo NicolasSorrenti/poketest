@@ -1,5 +1,14 @@
 # Neo Harbor RPG / VN — art production status
 
+## 2026-10-22 — recovered booster-reward Batch 03 (conversation ZIP; NOT committed or deployed)
+- A NEW additive conversation ZIP `neo_campus_booster_recovery_batch03_2026-10-22.zip` was assembled from four genuinely independent images created earlier in the current conversation, NOT from cropped concept sheets.
+- It contains exact runtime paths `rpg-assets/characters/{shiori,yuna,akari,marina}/events/booster.webp`, each verified as **768×1024 RGB WebP**, ZIP CRC verified, each SHA-256 recorded in `manifest.batch03.json` inside the archive.
+- This is a **candidate batch awaiting visual comparison with the actual canonical portraits**; the reference image bytes could not be fetched via the text-only repository API, and Shiori's hairstyle should be checked carefully against her canonical bob. All images depict a physical booster offering in an appropriate character-specific public card-play venue.
+- **Do not assume these images are in GitHub.** They are user-downloadable from the conversation; they are not automatically accessible to a scheduled job and have not been committed. The ZIP is intentionally separate from the earlier Batch 02.
+- A paused overnight schedule was re-enabled for **eight hourly checks**, with conditional art creation and explicit no-fabrication rules. Scheduled runs may lack image-generation tools; their progress must be independently verified. Prioritize original portrait identity QA and safe integration of Batch 03 before attempting replacement renders or duplicating those same four images.
+- Next substantive work once the candidate art is reviewed: missing `camila`/`kaede` booster art if actually absent from repository, then missing NPC battle-result illustrations and proper reactions. Always check `main` before producing/overwriting a file.
+
+
 > **Production correction (2026-10-22):** Read `docs/ART_GENERATION_ONE_IMAGE_RULE.md` and use `scripts/rpg-art-prompt.js` to construct one positive prompt for one exact asset. Run `npm run test:art-prompts` before any art generation, then visually reject incorrect layouts. Do not paste the full art handoff or this status document into image-generation tools. If an image fails, inspect and repair the **actual request** rather than blaming a separate repository file.
 Updated: 2026-10-17
 Owner: art and character assets only. Source: `NicolasSorrenti/poketest`.
