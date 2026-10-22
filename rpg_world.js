@@ -281,6 +281,10 @@
     },
     "text": "The reading room is nearly empty. You finish a chapter before noticing how late it's become."
   }
+,
+  {"id":"center_mentor","place":"center","slots":[1,2],"title":"Lead a community training clinic","cost":0,"focus":12,"minReputation":6,"cooldownDays":7,"change":{"credits":28,"reputation":1},"npc":"akari","bond":{"trust":1},"text":"The center pays you to coach its newer duelists. Your growing reputation has brought students to your table."},
+  {"id":"center_sponsor","place":"center","slots":[1,2],"title":"Host a sponsored card showcase","cost":0,"focus":16,"minReputation":15,"requiresStarter":true,"cooldownDays":7,"voucherSet":"latest","change":{"reputation":1},"text":"Your sponsor funds a booster from the newest expansion you have actually unlocked. Claim the voucher at the card shop."},
+  {"id":"library_masterclass","place":"library","slots":[0,1],"title":"Teach a strategic masterclass","cost":0,"focus":12,"minInsight":10,"cooldownDays":7,"change":{"credits":16,"preparation":2},"npc":"akari","bond":{"respect":1},"text":"Your detailed matchup notes impress the regulars. You leave with a teaching fee and ideas for your next match."}
 ];
  function choice(label,reply,delta){return {label,reply,delta};}
  const encounters=[
@@ -1080,6 +1084,11 @@
   if(state.day>90)return 'The circuit season has ended';
   if(entry.place!==state.location||!entry.slots.includes(state.slot))return 'Not here at this time';
   if(state.activityDone[state.day+':'+entry.id])return 'Already completed today';
+  if(entry.minInsight&&(state.insight||0)<entry.minInsight)return 'Requires '+entry.minInsight+' Insight';
+  if(entry.minReputation&&(state.reputation||0)<entry.minReputation)return 'Requires '+entry.minReputation+' Reputation';
+  if(entry.requiresStarter&&!state.deckJourney?.starter)return 'Choose a starter deck first';
+  if(entry.cooldownDays&&Array.from({length:entry.cooldownDays-1},(_,i)=>state.day-i-1)
+   .some(day=>day>0&&state.activityDone[day+':'+entry.id]))return 'Available once every '+entry.cooldownDays+' days';
   if(state.credits<entry.cost)return 'Not enough credits';
   if(state.focus<entry.focus)return 'Not enough focus — rest first';
   return null;
@@ -1094,7 +1103,7 @@
   modify(state,a.change);
   const withNpc=a.npc&&people.includes(a.npc)?a.npc:null;
   if(withNpc)improveBond(state,withNpc,a.bond);
-  return {id:a.id,person:withNpc,summary:a.text,spent:1,reward:a.change};
+  return {id:a.id,person:withNpc,summary:a.text,spent:1,reward:a.change,voucherSet:a.voucherSet||null};
  }
  function availableEncounters(state,people=[]){
   hydrate(state);
@@ -1121,11 +1130,11 @@
   hydrate(state);
   if(!receipt||!['Victory','Defeat','Draw'].includes(receipt.outcome))return null;
   const spentPrep=state.preparation>0?1:0;if(spentPrep)state.preparation--;
-  const earned=receipt.outcome==='Victory'?(spentPrep?5:0):0;
+  const earned=spentPrep?(receipt.outcome==='Victory'?14:8):0;
   const rep=receipt.outcome==='Victory'?2:receipt.outcome==='Draw'?1:0;
   modify(state,{credits:earned,reputation:rep,focus:-10});
   receipt.credits=(receipt.credits||0)+earned;receipt.trainingBonus=earned;
-  return earned?'Your preparation earned 5 extra credits and your reputation grew.':rep?'Your reputation grew after the duel.':'You learned from the duel, even without a victory.';
+  return earned?'Your duel preparation earned '+earned+' bonus credits '+(receipt.outcome==='Victory'?'for the victory.':'even without a victory.'):(rep?'Your reputation grew after the duel.':'You learned from the duel, even without a victory.');
  }
  function validate(){
   const faults=[],seen=new Set();
