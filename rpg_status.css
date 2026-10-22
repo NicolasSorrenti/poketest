@@ -55,3 +55,17 @@
  .status-detail-facts{grid-template-columns:repeat(2,minmax(0,1fr))}
 }
 @media(max-width:390px){.status-characters{grid-template-columns:1fr}.status-meters{grid-template-columns:1fr}}
+
+/* Scrollable toolbars must not justify overflowing items off-screen. Keep Status visible first. */
+.utilitybar .utility-actions{justify-content:flex-start}
+.utilitybar .utility-actions #statusBtn{flex:none;background:#66324f;border-color:#e999b8;color:#fff3f8;font-weight:900;white-space:nowrap}
+.utilitybar .utility-actions #statusBtn:focus-visible{outline:3px solid #fff0af;outline-offset:2px}
+:root[data-rpg-discreet="on"] .status-character-avatar img:not(.rpg-safe-avatar),
+:root[data-rpg-discreet="on"] .status-character-avatar .avatar-fallback{display:none!important}
+:root[data-rpg-discreet="on"] .status-character-avatar .rpg-safe-avatar{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+:root[data-rpg-discreet="on"] .status-character-avatar{position:relative}
+@media(max-width:700px){
+ .utilitybar .utility-actions #statusBtn{position:sticky;left:0;z-index:3;min-height:40px;box-shadow:4px 0 8px #0b1424b5}
+ .rpg-status-dialog{max-height:calc(100dvh - 16px);overscroll-behavior:contain}
+ .status-people,.status-detail{padding:10px}
+}
