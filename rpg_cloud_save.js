@@ -252,5 +252,5 @@
   document.addEventListener('visibilitychange',()=>{if(!document.hidden&&session&&Date.now()-lastCheck>30000)reconcile();});
   await connect();
  }
- root.NeoRpgCloudSave={mount,onLocalSave,syncNow,hash,validSave};
+ root.NeoRpgCloudSave={mount,onLocalSave,syncNow,hash,validSave,signupEndpoint};
 })(typeof window==='undefined'?null:window);
