@@ -2233,6 +2233,13 @@ $('statusBtn').onclick=()=>{
 };
 $('statusClose').onclick=()=>window.NeoRpgStatus.close();
 $('galleryBtn').onclick=openGallery;
+const moreMenu=$('rpgMoreMenu');
+moreMenu?.addEventListener('click',event=>{
+ if(event.target.closest('#galleryBtn,#rpgDiscreetToggle,a[href]'))moreMenu.open=false;
+});
+document.addEventListener('pointerdown',event=>{
+ if(moreMenu?.open&&!moreMenu.contains(event.target))moreMenu.open=false;
+});
 $('galleryClose').onclick=()=>$('galleryDialog').close();
 $('galleryCharacter').onchange=renderGallery;$('galleryCategory').onchange=renderGallery;$('galleryUnseen').onchange=renderGallery;
 $('cgMomentClose').onclick=()=>$('cgMoment').close();
