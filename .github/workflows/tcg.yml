@@ -17,5 +17,7 @@ jobs:
         run: node test_classic_power_batch_20261022.js
       - name: Verify additional Neo Unown and Slowking Powers
         run: node test_classic_power_batch2_20261022.js
+      - name: Verify Gaze and Submerge historical effects
+        run: node test_classic_power_gaze_submerge.js
       - name: Validate all TCG engine and card interactions
         run: npm test
