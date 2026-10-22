@@ -138,7 +138,7 @@ try{
  }
  for(const page of ['classic_live.html','online.html']){
   const html=fs.readFileSync(__dirname+'/'+page,'utf8');
-  assert.ok(html.includes('src="duel_shared_components.js"'),page+' must load shared module');
+  assert.match(html,/src="duel_shared_components\.js(?:\?v=\d+)?"/,page+' must load shared module');
   assert.ok(html.indexOf('duel_shared_components.js')<html.indexOf(page==='online.html'?'online.js':'classic_live.js'),'Common UI must load before client');
  }
  const server=fs.readFileSync(__dirname+'/server.js','utf8');
