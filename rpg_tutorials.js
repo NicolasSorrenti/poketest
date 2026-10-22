@@ -39,6 +39,10 @@
    {title:'Ready to duel',text:'Most regular RPG matches have four Prize cards; important matches may use six. The actual Pokémon TCG rules stay unchanged.'},
    {title:'Practice pays off',text:'Duel Preparation grants a credit bonus after your next match, even if you lose. Visit the Deck Studio between duels to improve your collection deck.'}
   ],
+  tournaments:[
+   {title:'The tournament circuit',text:'Official cups and local challenges have limited schedules. Check the calendar and your deck before starting a round; a match usually uses one period.'},
+   {title:'Play for the long run',text:'Important rounds may use six Prizes, and the other trainers become stronger as the season continues. Tournament results can unlock cards and stories.'}
+  ],
   boosters:[
    {title:'Build your collection',text:'Boosters grant cards you can use in your RPG deck. Themed packs give you different ways to expand it, and earlier packs stay useful.'},
    {title:'Choose packs deliberately',text:'Check each pack’s card pool and cost before buying. Insight can reduce prices, and earned vouchers can be redeemed for expansion packs.'}
