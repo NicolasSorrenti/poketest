@@ -7,9 +7,9 @@
  if(root)root.NeoRpgPlannedDates=api;
 })(typeof window!=='undefined'?window:null,function(){
  const TONES=Object.freeze([
-  Object.freeze({id:'friendship',label:'Spend time as friends',detail:'Build trust without expecting romance.'}),
-  Object.freeze({id:'rivalry',label:'Friendly challenge',detail:'Share a competitive experience and build respect.'}),
-  Object.freeze({id:'romantic',label:'Ask for a date',detail:'A mutual, optional romantic outing; never automatically commits a route.'})
+  Object.freeze({id:'friendship',label:'Spend time as friends',detail:'Enjoy a relaxed outing together.'}),
+  Object.freeze({id:'rivalry',label:'Friendly challenge',detail:'See which of you can come out on top.'}),
+  Object.freeze({id:'romantic',label:'Ask for a date',detail:'Ask whether they would like to spend some time with just you.'})
  ]);
  const byTone=new Map(TONES.map(t=>[t.id,t]));
  const rivalryTags=new Set(['strategy','competitive','playful']);
@@ -22,7 +22,7 @@
    if(!romanticTags.has(activity.tag))return 'Choose a relaxed, creative or playful activity for a date';
    if(s.partner&&s.partner!==npc)return 'You are already committed to someone else';
    const relationship=s.relationships?.[npc]||s.bonds?.[npc]||{};
-   if((relationship.affection||0)<3||(relationship.trust||0)<1)return 'Build affection (3) and trust (1) through meaningful moments before suggesting a date';
+   if((relationship.affection||0)<3||(relationship.trust||0)<1)return 'You do not know each other well enough to ask for a date yet';
   }
   return null;
  }
@@ -102,9 +102,9 @@
    rel.attraction=clamp((rel.attraction||0)+1,999);attraction=1;
   }
   const prefix=e.socialTone==='romantic'?
-   'You both agreed this would be a date. It feels different from an ordinary hangout. ':
-   e.socialTone==='rivalry'?'There is a friendly competitive spark between you. ':
-   'You made time for each other as friends. ';
+   'You catch each other smiling a little longer than usual. ':
+   e.socialTone==='rivalry'?'Neither of you wants to give the other an easy win. ':
+   'The conversation takes a few unexpected turns. ';
   return {entry:e,legacy:false,title:outcome.title,tone:e.socialTone,
    line:prefix+outcome.line,affection:outcome.affection,trust:outcome.trust+trust,
    respect:outcome.respect+respect,attraction,focusCost:outcome.focusCost,creditCost:outcome.creditCost};
