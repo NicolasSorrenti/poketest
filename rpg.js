@@ -179,7 +179,7 @@ for(const id of Object.keys(cast)){const old=state.bonds[id],current=state.relat
 if(typeof state.activeStory==='string')state.activeStory=null;
 STORY.recordExpiry(state);
 if(MANDATORY)MANDATORY.hydrate(state,MANDATORY_EVENTS);
-const persist=()=>localStorage.setItem(KEY,JSON.stringify(state));
+const persist=()=>{localStorage.setItem(KEY,JSON.stringify(state));window.NeoRpgCloudSave?.onLocalSave();};
 const log=t=>{state.journal.unshift(t);state.journal=state.journal.slice(0,25)};
 function recordIntention(kind){const result=INTENTIONS.record(state,kind);if(result)log('Daily priority fulfilled: '+result.title+' ('+result.rewardLabel+').');}
 function recordCG(kind,npc,context=null){const entries=CG.record(state,kind,npc,context);if(entries.length)log(entries.length+' new memory illustration'+(entries.length===1?'':'s')+' unlocked for the CG Gallery.');return entries;}
@@ -2030,7 +2030,7 @@ $('preDuelStart').onclick=launchPreparedDuel;
 $('preDuelSkip').onclick=launchPreparedDuel;
 $('preDuelDialog').addEventListener('cancel',e=>e.preventDefault());
 $('quickNext').onclick=()=>act('rest');$('quickHome').onclick=()=>act('home');$('calendarBtn').onclick=openCalendar;$('calendarClose').onclick=()=>$('calendarDialog').close();$('communityClose').onclick=()=>$('communityDialog').close();
-$('save').onclick=()=>{persist();$('notice').textContent='Campaign saved in this browser.'};
+$('save').onclick=async()=>{persist();const ok=await window.NeoRpgCloudSave?.syncNow();$('notice').textContent=ok?'Campaign saved here and in the cloud.':'Campaign saved in this browser.'};
 $('dismissReceipt').onclick=()=>{state.lastDuelReceipt=null;persist();render();};
 document.addEventListener('keydown',e=>{if($('statusDialog')?.open)return;if((e.key===' '||e.code==='Space')&&!['INPUT','TEXTAREA','SELECT','BUTTON'].includes(e.target?.tagName)){if(scene.dialogue&&scene.index<scene.dialogue.length-1&&!state.mandatoryEventState?.active&&!state.activeStory&&!state.activeArc&&!state.activeSideQuest){e.preventDefault();act('chatNext');}else if(state.mandatoryEventState?.active?.phase==='lines'){e.preventDefault();act('mandatoryNext');}else if(state.activeStory?.phase==='lines'){e.preventDefault();act('storyNext');}else if(state.activeArc?.phase==='lines'){e.preventDefault();act('arcNext');}else if(!$('dialogue').hidden&&!state.activeSituation&&!state.mandatoryEventState?.active&&!state.activeStory&&!state.activeEncounter&&!state.activeArc&&!state.activeSideQuest&&!state.pendingDuel&&!scene.choices?.length){e.preventDefault();closeSceneDialogue();}}});
 async function initDecks(){
@@ -2063,4 +2063,12 @@ persist();render();initDecks();loadCardNames();if(state.deckJourney&&!state.deck
   $('battle').src=duelUrl(state.pendingDuel);
  }
 }
+ window.NeoRpgCloudSave?.mount({
+  getSave:()=>JSON.parse(localStorage.getItem(KEY)||'null'),
+  restoreSave:save=>{localStorage.setItem(KEY,JSON.stringify(save));location.reload();},
+  hadLocalSave:hadCampaignSave,
+  canSwitch:()=>!state.pendingDuel,
+  showButton:true
+ });
+
 })();
