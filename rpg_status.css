@@ -40,6 +40,11 @@
 .status-detail-facts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;margin-top:21px}
 .status-detail-facts .status-overview-stat{padding:9px}
 .status-detail-facts strong{font-size:15px}
+.status-discovered-likes{margin-top:17px;padding:13px 14px;border:1px solid #3b4b60;background:#1b2a40;border-radius:10px}
+.status-likes-heading{display:block;font:800 12px 'Barlow Condensed',sans-serif;letter-spacing:1.1px;color:#f4b7d0;margin-bottom:9px}
+.status-likes-list{display:flex;flex-wrap:wrap;gap:7px}
+.status-like{padding:6px 10px;border:1px solid #845873;background:#3f3048;border-radius:30px;font-size:12px;color:#ffdfeb}
+.status-likes-unknown{margin:0;font-size:12px;color:#b8c4d6;line-height:1.6}
 .status-route{font:800 14px 'Barlow Condensed',sans-serif;color:#ffd0dd;background:#432c47;border:1px solid #795171;border-radius:8px;padding:10px;margin:16px 0 0}
 .status-disclaimer{font-size:11px;color:#9aaac0;line-height:1.6;margin-top:16px}
 @media(max-width:700px){
