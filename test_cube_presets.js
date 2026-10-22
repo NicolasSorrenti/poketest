@@ -8,7 +8,7 @@ const {cpuPick,buildCpuDeck}=require('./cube_strategy');
 const {CubeService}=require('./cube_service');
 const {CubeRoomService}=require('./cube_room_service');
 
-assert.equal(PRESETS.length,6);
+assert.equal(PRESETS.length,14);
 assert.equal(new Set(PRESETS.map(p=>p.id)).size,6);
 assert.equal(getPreset().id,'balanced');
 assert.throws(()=>getPreset('__proto__'),/Unknown Cube preset/);
@@ -23,7 +23,7 @@ for(const preset of PRESETS){
   assert(pool.every(id=>!isEnergy(CATALOG.get(id))),preset.name+' drafted Energy');
   const {mixedPrintingNames}=require('./cube_printings');
   assert.deepEqual(mixedPrintingNames(pool),[],preset.name+' mixed card names from different expansions');
-  if(preset.id==='foundations'){
+  if(preset.id==='foundations'||preset.id==='kanto-growth'||preset.id==='fossil-discovery'){
    assert(pool.every(id=>/^base[123]-/.test(id)),'Kanto Origins contains cards outside Base/Jungle/Fossil');
    for(const set of ['base1','base2','base3'])
     assert(pool.some(id=>id.startsWith(set+'-')),'Missing historical set '+set);
@@ -34,6 +34,16 @@ for(const preset of PRESETS){
   const basics=pokemon.filter(id=>isBasicPokemon(CATALOG.get(id)));
   assert(basics.length>=95,preset.name+' not enough Basic Pokémon');
   const evolved=pokemon.filter(id=>!isBasicPokemon(CATALOG.get(id)));
+  if(preset.evolutionFocus){
+   assert.equal(basics.length,preset.basicCount,preset.name+' Basic quota');
+   assert(evolved.length>=78,preset.name+' Evolution quota');
+   const restrictedBasicNames=/^(Hitmonchan|Electabuzz|Scyther|Magmar|Mewtwo|Lickitung|Chansey|Kangaskhan)$/i;
+   const fastBasics=basics.filter(id=>restrictedBasicNames.test(CATALOG.get(id).name));
+   const counts=new Map();
+   for(const id of fastBasics)counts.set(CATALOG.get(id).name,(counts.get(CATALOG.get(id).name)||0)+1);
+   for(const [name,copies] of counts)assert(copies<=1,preset.name+' too many standalone '+name);
+   for(const id of pool)if(preset.sets)assert(preset.sets.includes(id.split('-')[0]),preset.name+' wrong set: '+id);
+  }
   for(const id of evolved){
    assert(pokemon.some(parent=>canEvolve(CATALOG.get(id),CATALOG.get(parent))),
     preset.name+' orphan evolution: '+id);
@@ -52,7 +62,7 @@ for(const preset of PRESETS.filter(x=>x.id!=='balanced')){
  while(!draft.done){
   for(let seat=0;seat<4;seat++){
    const options=C.availableForSeat(draft,seat);
-   C.draftPick(draft,seat,cpuPick(options,draft.picks[seat]));
+   C.draftPick(draft,seat,cpuPick(options,draft.picks[seat],{preset:preset.id}));
   }
  }
  assert(draft.picks.every(p=>p.length===60));
@@ -82,4 +92,4 @@ const started=rooms.start(host.code,host.token);
 assert.equal(started.preset,'elemental');
 assert.equal(rooms.room(host.code).draft.preset,'elemental');
 assert.throws(()=>rooms.create({name:'Host',preset:'invalid'}),/Unknown Cube preset/);
-console.log('PASS themed cubes: 6 presets, 240-card pools, seeded archetypes, legal CPU builds and multiplayer format locking');
+console.log('PASS themed cubes: 14 presets, 240-card pools, seeded archetypes, legal CPU builds and multiplayer format locking');
