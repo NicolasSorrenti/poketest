@@ -8,11 +8,11 @@ const script=fs.readFileSync(path.join(__dirname,'..','rpg_cloud_save.js'),'utf8
 const clone=x=>JSON.parse(JSON.stringify(x));
 const save=day=>({day,results:[],deckJourney:{starter:'water'},bonds:{},credits:42,pendingDuel:null});
 
-function setup({localSave=save(1),cloudRow=null,hadLocal=true,enabled=true,connected=true}={}){
+function setup({localSave=save(1),cloudRow=null,hadLocal=true,enabled=true,connected=true,authFragment='',existingSession=true}={}){
  let current=clone(localSave),remote=cloudRow?clone(cloudRow):null,network=connected;
- const uploads=[],restores=[],sessions=[],timers=new Map(),cache=new Map();
+ const uploads=[],restores=[],sessions=[],timers=new Map(),cache=new Map(),historyReplacements=[];
  let timerId=0;
- cache.set('neoRpgCloudSessionV1',JSON.stringify({
+ if(existingSession)cache.set('neoRpgCloudSessionV1',JSON.stringify({
   user:{id:'player-one',email:'one@example.com'},
   access_token:'jwt-test',refresh_token:'test-refresh',expires_at:Date.now()+3600*1000
  }));
@@ -26,6 +26,9 @@ function setup({localSave=save(1),cloudRow=null,hadLocal=true,enabled=true,conne
   let data,status=200;
   if(url==='/api/rpg-cloud/config'){
    data={enabled,url:'https://test.supabase.co',key:'sb_publishable_test'};
+  }else if(url.includes('/auth/v1/user')){
+   assert.equal(options.headers.Authorization,'Bearer confirmation-access-token');
+   data={id:'player-one',email:'one@example.com'};
   }else if(url.includes('/rest/v1/rpg_saves?')){
    data=remote?[clone(remote)]:[];
   }else if(url.includes('/rest/v1/rpc/rpg_save_cas')){
@@ -40,10 +43,13 @@ function setup({localSave=save(1),cloudRow=null,hadLocal=true,enabled=true,conne
   }else throw Error('Unexpected API request: '+url);
   return {ok:status===200,status,json:async()=>data};
  }
- const window={addEventListener:(name,fn)=>sessions.push({name,fn})};
+ const window={addEventListener:(name,fn)=>sessions.push({name,fn}),
+  location:{origin:'https://poketest-4y5u.onrender.com',pathname:'/rpg.html',search:'',hash:authFragment},
+  history:{state:null,replaceState:(state,title,url)=>{historyReplacements.push(url);window.location.hash='';}}
+ };
  const document={addEventListener:(name,fn)=>sessions.push({name,fn}),hidden:false};
  vm.runInNewContext(script,{
-  window,document,fetch,localStorage:storage,structuredClone:clone,
+  window,document,fetch,localStorage:storage,structuredClone:clone,URLSearchParams,
   setTimeout:(callback)=>{const id=++timerId;timers.set(id,callback);return id;},
   clearTimeout:id=>timers.delete(id),console
  },{filename:'rpg_cloud_save.js'});
@@ -55,7 +61,7 @@ function setup({localSave=save(1),cloudRow=null,hadLocal=true,enabled=true,conne
   showButton:false
  };
  return {
-  client:window.NeoRpgCloudSave,adapter,uploads,restores,cache,
+  client:window.NeoRpgCloudSave,adapter,uploads,restores,cache,historyReplacements,location:window.location,
   getLocal:()=>clone(current),getCloud:()=>clone(remote),
   setLocal:val=>{current=clone(val)},setCloud:val=>{remote=clone(val)},
   setConnected:value=>{network=value},
@@ -149,4 +155,23 @@ test('rejects invalid cloud saves and retains the local campaign',async()=>{
  await app.client.mount(app.adapter);
  assert.equal(app.restores.length,0);
  assert.equal(app.getLocal().day,11);
+});
+
+test('email confirmation consumes the URL fragment, validates the user and signs in',async()=>{
+ const fragment='#access_token=confirmation-access-token&refresh_token=confirmation-refresh-token&expires_in=3600&token_type=bearer&type=signup';
+ const app=setup({localSave:save(13),existingSession:false,authFragment:fragment});
+ await app.client.mount(app.adapter);
+ assert.equal(app.location.hash,'');
+ assert.deepEqual(app.historyReplacements,['/rpg.html']);
+ const session=JSON.parse(app.cache.get('neoRpgCloudSessionV1'));
+ assert.equal(session.user.id,'player-one');
+ assert.equal(app.getCloud().save_data.day,13);
+});
+
+test('an auth error redirect is stripped from the URL without saving credentials',async()=>{
+ const app=setup({existingSession:false,authFragment:'#error=access_denied&error_description=Expired'});
+ await app.client.mount(app.adapter);
+ assert.equal(app.location.hash,'');
+ assert.deepEqual(app.historyReplacements,['/rpg.html']);
+ assert.equal(app.cache.has('neoRpgCloudSessionV1'),false);
 });
