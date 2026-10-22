@@ -74,3 +74,6 @@
  .rpg-status-dialog{max-height:calc(100dvh - 16px);overscroll-behavior:contain}
  .status-people,.status-detail{padding:10px}
 }
+
+.status-tutorial-option{display:flex;align-items:center;gap:9px;margin:0 0 14px;padding:11px 13px;border:1px solid #3a465d;border-radius:10px;background:#18273b;color:#e9dce4;font-size:12px;cursor:pointer}
+.status-tutorial-option input{width:18px;height:18px;flex:none;accent-color:#d8789f}
