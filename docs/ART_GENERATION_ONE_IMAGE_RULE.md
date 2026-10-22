@@ -19,12 +19,24 @@ node scripts/rpg-art-prompt.js --reward battle-result --character reina
 # Include path, character, and target dimensions for the packager
 node scripts/rpg-art-prompt.js --scene hana_first_meeting --json
 
-# Validate a custom positive prompt from a local text file before use
+# Strict production preflight: validate the EXACT outbound text for the intended ID
+node scripts/rpg-art-prompt.js --scene hana_first_meeting > /tmp/hana-model-prompt.txt
+node scripts/rpg-art-prompt.js --validate /tmp/hana-model-prompt.txt --scene hana_first_meeting
+
+# Exact validation also works with rewards
+node scripts/rpg-art-prompt.js --reward booster --character hana > /tmp/hana-booster-prompt.txt
+node scripts/rpg-art-prompt.js --validate /tmp/hana-booster-prompt.txt --reward booster --character hana
+
+# Generic one-image layout validation is NOT sufficient to prove the story setting
 node scripts/rpg-art-prompt.js --validate /tmp/single-asset-prompt.txt
 
 # Automated tests covering every canonical scene, reward, and rejected layouts
 npm run test:art-prompts
 ~~~
+
+**Strict scene-identity gate:** For one of the 32 canonical CG events, production must use the exact bytes of the script's scene prompt, validated with `--validate FILE --scene SCENE_ID`. The CLI rejects even a single-image alternative if the setting, character, action, or wording changed. The JSON output includes `promptSha256` so the actual submitted prompt can be recorded in the accepted-asset manifest. For rewards, use `--validate FILE --reward TYPE --character ID`. The older unqualified `--validate FILE` only checks layout, and cannot confirm that a bedroom illustration is a card-shop scene.
+
+**Check the real outbound generation request, not just a rehearsal:** record the selected scene ID and exact model-facing prompt (or its SHA-256) at the point of submission. A tool invocation that substitutes a new bedroom/pin-up prompt, omits the scripted location, or rewrites the canonical action **fails preflight** even if it would create a single attractive image. Cancel it and repair the tool-call assembly, not the story data. If the image-generation interface rewrites requests beyond repository control, stop and report that limitation instead of labeling an off-target render as completed art.
 
 **Copy ONLY the script's standard-output prompt into the image-generation request.** Do not supply other scenes, entire art handoffs, reference galleries, character lists, manifests or negative example text. Model image count is **one** per request. The generated result must be a single continuous illustration of the requested moment.
 
