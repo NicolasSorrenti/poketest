@@ -1606,7 +1606,7 @@ function openCalendar(){
     $('calendarDialog').close();
     if(entry.place!==state.location)travelTo(entry.place);
     else if(entry.npc&&currentPeople().includes(entry.npc))selectPerson(entry.npc);
-    else{rpgLocalTab=entry.kind==='Tournament'||entry.kind==='Official event'?'circuit':'stories';renderRpgActions(false,{speaker:'Narrator',line:'',choices:[]});}
+    else{rpgLocalTab=entry.kind==='Tournament'?'circuit':entry.kind==='Official event'?'activities':'stories';renderRpgActions(false,{speaker:'Narrator',line:'',choices:[]});}
     if(entry.place===state.location&&entry.npc&&currentPeople().includes(entry.npc))return;
     if(entry.npc&&currentPeople().includes(entry.npc))selectPerson(entry.npc);
    };
