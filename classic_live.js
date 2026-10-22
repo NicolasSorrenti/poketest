@@ -254,7 +254,7 @@
   if(!showModal)modalDecisionId=null;
   if(!field)lastFieldDecisionId=null;
 
-  el.classList.toggle('hidden',v.phase==='setup'||(!d&&!targetMode&&!v.over&&v.phase==='game'));
+  el.classList.toggle('hidden',!d&&!targetMode&&!v.over&&(v.phase==='game'||v.phase==='setup'));
   opts.textContent='';acts.textContent='';el.classList.remove('active');
   if(targetMode){el.classList.add('active');title.textContent=targetMode.title;
    description.textContent='Click an eligible Pokémon in your Active or Bench area to complete this action.';
