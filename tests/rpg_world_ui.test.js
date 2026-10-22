@@ -540,7 +540,7 @@ test('planner does not offer shortcuts while player is in a committed story scen
  assert.match(r.elements.dailyPlanner.children[0].textContent,/Finish your current scene/);
 });
 
-test('social planner lists three personality-aware choices with cost and favorite hints',()=>{
+test('social planner hides hidden preferences while keeping clear time and resource costs',()=>{
  const r=launch({day:1,slot:0,location:'shop'});
  const hana=r.elements.people.children.find(x=>x.children?.[1]?.children?.[0]?.textContent==='Hana Mizuno');
  assert.ok(hana);hana.onclick();finishGreeting(r);
@@ -548,10 +548,25 @@ test('social planner lists three personality-aware choices with cost and favorit
  const choices=r.elements.choices.children;
  assert.equal(choices.length,4);
  const welcome=choices.find(x=>x.textContent.includes('Welcome a new player'));
- assert.ok(welcome);assert.match(welcome.textContent,/Favorite/);
+ assert.ok(welcome);assert.doesNotMatch(welcome.textContent,/Favorite|Familiar|Something new|New experience/);
  assert.match(welcome.textContent,/8 focus/);
  assert.equal(r.state().slot,0,'reading social options is free');
+ assert.ok(choices.every(x=>!/Favorite|Familiar|Something new|New experience|affection|trust|respect/i.test(x.textContent)),
+  'hidden relationship mechanics should not be advertised on any activity choice');
+ assert.doesNotMatch(r.elements.line.textContent,/Favorite activities|builds respect|deepen our bond/i);
 });
+test('planned outing menu never spoils which options an NPC prefers',()=>{
+ const r=launch({day:1,slot:0,location:'shop'});
+ r.elements.people.children.find(x=>x.children?.[1]?.children?.[0]?.textContent==='Hana Mizuno').onclick();finishGreeting(r);
+ r.act('dateInvite:hana');
+ const slot=r.elements.choices.children.find(x=>x.textContent.includes('choose activity'));
+ assert.ok(slot,'a future date slot should be available');
+ slot.onclick();
+ const labels=r.elements.choices.children.map(c=>c.textContent).join(' | ');
+ assert.match(labels,/Welcome a new player/);
+ assert.doesNotMatch(labels,/Favorite|Familiar|New experience|Something new|affection|trust|respect/);
+});
+
 test('real shared activity consumes one period, saves bond and cannot repeat alongside old hangout',()=>{
  const r=launch({day:1,slot:0,location:'shop'});
  r.elements.people.children.find(x=>x.children?.[1]?.children?.[0]?.textContent==='Hana Mizuno').onclick();finishGreeting(r);
@@ -576,7 +591,7 @@ test('competitive Reina outing increases respect without creating phantom TCG ma
  assert.ok(reina);reina.onclick();finishGreeting(r);
  r.act('socialPlan:reina');
  const preferred=r.elements.choices.children.find(x=>x.textContent.includes('Practice tricky openings'));
- assert.ok(preferred);assert.match(preferred.textContent,/Favorite/);
+ assert.ok(preferred);assert.doesNotMatch(preferred.textContent,/Favorite|Familiar|Something new|New experience/);
  preferred.onclick();
  const s=r.state();
  assert.equal(s.relationships.reina.respect,2);assert.equal(s.socialHistory.reina.lastTag,'strategy');
