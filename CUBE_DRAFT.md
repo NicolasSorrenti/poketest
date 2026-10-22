@@ -58,6 +58,20 @@ The solo selector and multiplayer room host both use exactly the same server-app
 | `neo` | Neo Evolution Lab | 176 | 64 | Neo-biased evolution families and setup play |
 | `rocket` | Rocket's Schemes | 160 | 80 | Dark/Rocket/Gym personalities and disruptive Trainers |
 | `mayhem` | Trainer Mayhem | 128 | 112 | Basic-heavy decks and frequent Trainer plays |
+| `kanto-growth` | Kanto Evolution League · Base/Jungle/Fossil | 176 | 64 | Original three sets, evolution-focused, stronger Stage 2 representation |
+| `jungle-growth` | Jungle Growth · Base/Jungle | 176 | 64 | Stage 1 families and Kanto setup |
+| `fossil-discovery` | Fossil Discoveries · Base/Jungle/Fossil | 174 | 66 | Fossil-era flavor and evolution support |
+| `rocket-uprising` | Rocket Uprising · Base through Rocket | 176 | 64 | Dark Pokémon and regular evolution lines |
+| `gym-academy` | Gym Academy · Kanto + Gym | 176 | 64 | Gym Leader Pokémon and evolved partnerships |
+| `neo-generations` | Neo Generations · Neo 1–4 | 180 | 60 | Neo-only evolutions and Johto families |
+| `stage-one` | Stage One Showdown · All Eras | 176 | 64 | Strong Stage 1 pairs, no Stage 2 cards |
+| `slow-burn` | Slow Burn · All Eras | 180 | 60 | Stage 2-heavy, lower early aggression |
+
+**Evolution-friendly formats** (`kanto-growth`, `jungle-growth`, `fossil-discovery`, `rocket-uprising`, `gym-academy`, `neo-generations`, `stage-one`, `slow-burn`) contain 80–90 Evolution slots rather than 50 in Kanto Origins, prioritize Basics that can evolve, and reserve full Basic→Stage 1→Stage 2 sequences when requested. The generator reserves a Stage 1 and matching Stage 2 for some lines, but those cards remain draftable by different players: taking the complete line is a meaningful choice, not guaranteed per seat. Strong standalone Basics (Hitmonchan, Electabuzz, Scyther, Magmar, Mewtwo, Lickitung, Chansey, Kangaskhan) are capped at **one copy each** in these particular cube pools, while exceptionally fast Trainers (Oak, Bill, Gust of Wind, PlusPower, Energy Removal, Super Energy Removal, Computer Search, Item Finder, Lass, Scoop Up) target **two copies per name**. All other formats, including the original Base/Jungle/Fossil preset, retain their historic behavior.
+
+The CPU draft recommendations and generated CPU decks use the selected cube's evolution focus to choose linked families more often. Card abilities, evolution turn restrictions, Energy attachment, and game rules are unchanged. These are **pool and AI changes**, not unannounced changes to Pokémon card text. A limited set of cards is still sourced from supported historical theme decks; this is not yet a full audit of every card printed in each expansion.
+
+**Balance caveat:** This is a structural intervention, not proof that Evolution decks now win as often as Basic-only decks. The existing audit covers limited heuristic CPU drafts and can adjudicate unfinished matches; compare genuine played games and human drafts before treating any win-rate estimate as reliable.
 
 Every preset draws only from the supported historical theme-deck printings.
 
