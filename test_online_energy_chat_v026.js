@@ -21,6 +21,10 @@ for(const [side,token] of [[0,host.token],[1,guest.token]]){
  call(token,{type:'setup_select',payload:{handIndex:idx}});
  call(token,{type:'setup_confirm',payload:{}});
 }
+if(room.game.mulliganBonus){
+ const side=room.game.mulliganBonus.side;
+ call(side===0?host.token:guest.token,{type:'setup_bonus_draw',payload:{count:0}});
+}
 assert.equal(room.game.phase,'game');
 function energyToHand(side){
  const p=room.game.players[side];
