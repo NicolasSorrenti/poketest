@@ -27,6 +27,35 @@
   {id:'library_archive',place:'library',title:'Explore the old card archives',tag:'collection',tone:'friendship',focus:8,credits:0,detail:'Look through old match records and discover a forgotten card.'}
  ]);
  const ids=new Map(activities.map(x=>[x.id,Object.freeze(x)]));
+ // Private preference categories are discovered through actual time spent together,
+ // never advertised as success chances on the choice buttons.
+ const observedLikes=Object.freeze({
+  strategy:'Trying out deck ideas',community:'Helping other players',
+  creative:'Making things together',competitive:'A good challenge',
+  playful:'Being silly together',quiet:'Quiet time together',
+  adventure:'Exploring new places',collection:'Talking about cards'
+ });
+ // A short scene beat grounds the spoken reaction in what the player actually did.
+ const moments=Object.freeze({
+  shop_deck_lab:'A few shuffled hands later, an impossible opening finally clicks.',
+  shop_welcome:'The new player leaves smiling, already asking when the next match is.',
+  shop_custom:'You turn the finished sleeves in the light, comparing your handiwork.',
+  arcade_highscore:'The machine flashes a new score as the final notes fade.',
+  arcade_coop:'The co-op run falls apart spectacularly, and neither of you can stop laughing.',
+  arcade_music:'The playlist keeps growing as you take turns picking tracks.',
+  park_riverside:'The river passes quietly beside you as the conversation wanders.',
+  park_explore:'You find a tucked-away spot neither of you had noticed before.',
+  park_sketch:'Your sketches look nothing alike, but somehow they belong together.',
+  cafe_trade:'One treasured card leads to another story, and then another.',
+  cafe_break:'The cups grow cold while you lose track of the time.',
+  cafe_games:'Your invented rules become sillier with every round.',
+  center_scrimmage:'One more practice hand turns into an argument about the best play.',
+  center_coach:'The beginner pulls off a clever turn without either of you helping.',
+  center_tactics:'The match notes fill with arrows, corrections, and little discoveries.',
+  library_research:'A strange combo in an old deck list suddenly makes perfect sense.',
+  library_story:'You pass the book back and forth, stopping at favorite passages.',
+  library_archive:'A forgotten card in the archive sparks a surprisingly long conversation.'
+ });
  const defaults=Object.freeze({
   hana:{favorites:['community','creative'],neutral:['quiet','collection'],voice:['Hana beams. "This is the part of the club I love most."','Hana listens closely and shares a funny story.','Hana gives it a genuine try, even if it is not her usual thing.']},
   reina:{favorites:['strategy','competitive'],neutral:['quiet','adventure'],voice:['Reina grins. "Good. Make me work for it."','Reina relaxes enough to speak without challenging you.','Reina raises an eyebrow, then decides to stay anyway.']},
@@ -57,12 +86,24 @@
     delete s.socialHistory[npc];continue;
    }
    h.count=Math.min(270,h.count);
+   if(h.likedTags!==undefined)
+    h.likedTags=Array.isArray(h.likedTags)?[...new Set(h.likedTags.filter(t=>tags.has(t)))].slice(0,8):[];
   }
   return s;
  }
  function affinity(npc,tag,cast={}){
   const p=profile(npc,cast);
   return p.favorites.includes(tag)?'favorite':p.neutral.includes(tag)?'neutral':'unfamiliar';
+ }
+ // Pure projection: can show hints from past saves without changing any saved data.
+ function learnedLikes(s,npc,cast={}){
+  const h=s?.socialHistory?.[npc];
+  if(!h||!Number.isInteger(h.count)||h.count<1)return [];
+  const p=profile(npc,cast),seen=new Set(Array.isArray(h.likedTags)?h.likedTags:[]);
+  // Older saves remember only the last outing. Recognize that one, but don't
+  // invent any other knowledge about the character's preferences.
+  if(p.favorites.includes(h.lastTag))seen.add(h.lastTag);
+  return p.favorites.filter(t=>seen.has(t)).map(tag=>({tag,label:observedLikes[tag]}));
  }
  function options(s,npc,present=[],cast={}){
   if(!s||!Number.isInteger(s.day)||s.day<1||s.day>90||!Number.isInteger(s.slot)||s.slot<0||s.slot>2
@@ -105,10 +146,12 @@
   b.trust=clamp((b.trust||0)+trust,999);
   s.hungOut=s.hungOut||{};
   s.hungOut[s.day+':'+npc]=true;
-  s.socialHistory[npc]={lastDay:s.day,lastTag:a.tag,lastActivity:a.id,count:(previous?.count||0)+1};
+  const likedTags=Array.isArray(previous?.likedTags)?previous.likedTags.filter(t=>tags.has(t)):[];
+  if(rating==='favorite'&&!likedTags.includes(a.tag))likedTags.push(a.tag);
+  s.socialHistory[npc]={lastDay:s.day,lastTag:a.tag,lastActivity:a.id,count:(previous?.count||0)+1,likedTags};
   return {npc,activityId:a.id,title:a.title,affinity:rating,repeated,tag:a.tag,tone:a.tone,
    affection,trust,respect,insight,focusCost:a.focus,creditCost:a.credits,
-   line:profile(npc,cast).voice[rating==='favorite'&&!repeated?0:rating==='unfamiliar'?2:1]};
+   line:moments[a.id]+' '+profile(npc,cast).voice[rating==='favorite'&&!repeated?0:rating==='unfamiliar'?2:1]};
  }
  function validate(){
   const errors=[],seen=new Set();
@@ -123,5 +166,5 @@
   }
   return errors;
  }
- return Object.freeze({activities,defaults,profile,options,complete,hydrate,affinity,validate});
+ return Object.freeze({activities,defaults,profile,options,complete,hydrate,affinity,learnedLikes,validate});
 });
