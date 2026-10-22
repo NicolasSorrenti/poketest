@@ -237,13 +237,15 @@
   el.append(btn('Inspect selected card',()=>preview.inspect(us.hand[idx])));
  }
  function renderDecisions(){const v=current.view,el=$('decisionBox'),title=$('decisionTitle'),description=$('decisionText'),opts=$('decisionOptions'),acts=$('decisionActions');
-  const d=v.pendingDecision,field=fieldDecision(),prizeChoice=!!pendingPrizeChoice(),showModal=!!(d&&d.actor===0&&!field&&!targetMode&&!prizeChoice);
+  const d=v.pendingDecision,field=fieldDecision(),prizeChoice=!!pendingPrizeChoice();
+  const bonusChoice=v.phase==='setup'&&v.mulliganBonus?.side===0&&v.mulliganBonus.drawn===null;
+  const showModal=!!((d&&d.actor===0&&!field&&!targetMode&&!prizeChoice)||bonusChoice);
   const destination=showModal?$('choiceModalContent'):$('choiceDock');
   if(el.parentElement!==destination)destination.append(el);
   $('choiceModal').classList.toggle('hidden',!showModal);
   $('choiceModal').setAttribute('aria-hidden',String(!showModal));
   $('fieldChoiceBar').replaceChildren();$('fieldChoiceBar').classList.add('hidden');
-  if(showModal&&modalDecisionId!==d.id){modalDecisionId=d.id;$('choiceModalContent').focus({preventScroll:true});}
+  if(showModal&&modalDecisionId!==(d?.id||'mulligan-bonus')){modalDecisionId=d?.id||'mulligan-bonus';$('choiceModalContent').focus({preventScroll:true});}
   if(!showModal)modalDecisionId=null;
   if(!field)lastFieldDecisionId=null;
 
