@@ -929,7 +929,7 @@ async function loadCardNames(){
  }catch{}
 }
 
-function duelUrl(duel){const mats=window.NeoDuelPlaymats,gifts=mats?.gifted?.(state)||[],owned=mats?.available?.(gifts).map(m=>m.id)||['aurora'];const chosen=mats?.choose?.(state.playmatSelected,owned)||'aurora';return '/classic_live.html?rpg=1&mat='+encodeURIComponent(chosen)+'&giftMats='+encodeURIComponent(gifts.join(','))+'&duelId='+encodeURIComponent(duel.id)+'&deck='+encodeURIComponent(duel.playerDeck)+'&opponent='+encodeURIComponent(duel.opponent)+'&npc='+encodeURIComponent(duel.npc)+'&npcName='+encodeURIComponent(cast[duel.npc].name)+'&npcTier='+encodeURIComponent(duel.npcDeckTier||1);}
+function duelUrl(duel){const mats=window.NeoDuelPlaymats,gifts=mats?.gifted?.(state)||[],owned=mats?.available?.(gifts).map(m=>m.id)||['aurora'];const chosen=mats?.choose?.(state.playmatSelected,owned)||'aurora';return '/classic_live.html?rpg=1&mat='+encodeURIComponent(chosen)+'&giftMats='+encodeURIComponent(gifts.join(','))+'&duelId='+encodeURIComponent(duel.id)+'&deck='+encodeURIComponent(duel.playerDeck)+'&opponent='+encodeURIComponent(duel.opponent)+'&npc='+encodeURIComponent(duel.npc)+'&npcName='+encodeURIComponent(cast[duel.npc].name)+'&npcTier='+encodeURIComponent(duel.npcDeckTier||1)+'&prizes='+encodeURIComponent(duel.prizeCount===6?6:4);}
 
 function describePreparedDuel(){
  return PRE.describe(state,state.pendingDuel,{cast,places,cg:CG,tournaments:TOURNAMENTS,
@@ -1005,7 +1005,9 @@ function startDuel(id,exhibition=null,arcEpisode=null,tournament=null,sideQuest=
  state.pendingDuel={id:'npc-'+id+'-'+state.day+'-'+state.slot+'-'+state.results.length,npc:id,day:state.day,slot:state.slot,opponent:c.deck,playerDeck:state.deckJourney?.starter?'custom':state.playerDeck,deckCards:state.deckJourney?.starter?[...state.deckJourney.deck]:null,resolved:false,eventKey:exhibition?exhibition.day+':'+exhibition.title:null,eventReward:exhibition?exhibition.reward:0,eventTitle:exhibition?exhibition.title:null,arcEpisode:arcEpisode||null,tournamentId:tournament?.tournamentId||null,tournamentRound:tournament?.tournamentRound??null,tournamentAttempt:tournament?.tournamentAttempt??null,sideQuestId:sideQuest?.id||null,sideQuestStage:sideQuest?.step??null,bondChallenge:!!bondChallenge,customOpponentDeck:npcEditedCards,
   competitiveKind:competition?.kind||null,competitiveId:competition?.id||null,
   competitiveWeek:competition?.week??null,competitiveRound:competition?.round??null,
-  competitiveTitle:competition?.title||null,npcDeckTier};
+  competitiveTitle:competition?.title||null,npcDeckTier,
+  // Routine encounters are shorter; championship finals and story arcs use full matches.
+  prizeCount:(arcEpisode||tournament?.tournamentRound>=2||competition?.round>=2||/final|championship/i.test(competition?.title||''))?6:4};
  if(arcEpisode)state.activeArc=null;
  PRE.stage(state.pendingDuel);
  if(npcEditedCards)sessionStorage.setItem('neoRpgNpcDeck:'+state.pendingDuel.id,JSON.stringify(npcEditedCards));
