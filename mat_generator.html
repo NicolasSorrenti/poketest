@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#101425">
+<title>Playmat Studio | Neo Campus TCG</title>
+<style>
+:root{font-family:Inter,ui-sans-serif,system-ui,Segoe UI,Arial,sans-serif;color:#f5f6fb;background:#0b1020}
+*{box-sizing:border-box}body{margin:0;min-height:100vh;background:radial-gradient(ellipse at 12% 0%,#26385b 0,transparent 47%),radial-gradient(ellipse at 85% 95%,#2e234b 0,transparent 50%),#0b1020}
+a{color:inherit}button,input{font:inherit}button{cursor:pointer}button:disabled{cursor:not-allowed;opacity:.43}
+button:focus-visible,a:focus-visible,input:focus-visible,canvas:focus-visible{outline:2px solid #72e6db;outline-offset:3px}
+main{max-width:1540px;margin:auto;padding:30px clamp(16px,3vw,48px) 60px}
+header{display:flex;justify-content:space-between;align-items:center;gap:24px;margin-bottom:32px;flex-wrap:wrap}
+.crumb{display:inline-flex;align-items:center;gap:9px;text-decoration:none;color:#b4bfd8;font-size:12px;font-weight:750;letter-spacing:.1em}.crumb:hover{color:white}
+nav{display:flex;gap:20px;font-size:13px;font-weight:700;color:#c1c9df;flex-wrap:wrap}nav a{text-decoration:none}nav a:hover{color:#8cfff0}
+.eyebrow{color:#78e7d8;font-weight:850;letter-spacing:.22em;font-size:11px}
+.heading{display:flex;align-items:end;justify-content:space-between;gap:24px;flex-wrap:wrap;margin-bottom:25px}
+h1{font-size:clamp(34px,5vw,61px);line-height:1;letter-spacing:-.05em;margin:10px 0}h1 span{color:#ffcd95}
+.subtitle{color:#a8b4cb;line-height:1.55;margin:0;max-width:700px;font-size:15px}
+.tag{padding:9px 12px;border:1px solid #3b5068;border-radius:50px;font-size:11px;letter-spacing:.13em;color:#7de6d9;font-weight:800}
+.workspace{display:grid;grid-template-columns:minmax(270px,350px) minmax(0,1fr);gap:20px;align-items:start}
+.panel{background:#141c30;border:1px solid #35425d;box-shadow:0 12px 38px #0003;border-radius:20px;overflow:hidden}
+.controls{padding:23px;display:grid;gap:21px}
+.section-heading{display:flex;justify-content:space-between;align-items:center;gap:10px;color:#eff4ff}
+.step{color:#78e6d7;font-size:11px;font-weight:850;letter-spacing:.2em}.section-heading b{font-size:15px}
+.drop{border:1px dashed #657390;border-radius:14px;padding:23px 12px;text-align:center;background:linear-gradient(135deg,#242e4d,#19263b);transition:border-color .15s,background .15s;cursor:pointer}
+.drop.dragging,.drop:hover{border-color:#80ebdf;background:#263e53}.drop-icon{display:grid;place-items:center;margin:0 auto 13px;width:55px;height:55px;border:1px solid #587589;border-radius:17px;background:#2b4356;font-size:25px}
+.drop strong{display:block;font-size:14px}.drop p{font-size:12px;line-height:1.55;color:#a1b4cd;margin:7px auto 15px;max-width:210px}
+.btn{display:inline-flex;justify-content:center;align-items:center;gap:9px;border:1px solid #52647c;background:#202c45;color:#e8f3fa;font-size:13px;font-weight:800;border-radius:10px;padding:11px 14px;min-height:41px;text-decoration:none}
+.btn:hover:not(:disabled){background:#314663;border-color:#9abad0}
+.btn.primary{background:#87eddf;color:#092d32;border-color:#87eddf}.btn.primary:hover:not(:disabled){background:#aefff1}
+.btn.outline{background:transparent}.btn.danger{border-color:#8c5168;color:#ffc4cd}
+.row{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.label{display:block;color:#c9d5e7;font-size:12px;font-weight:800;margin-bottom:10px}.label small{color:#7d93aa;font-weight:500}
+input[type=text]{width:100%;height:44px;border-radius:9px;padding:0 13px;color:#f5f5ff;border:1px solid #586782;background:#0e1729}
+input[type=range]{width:100%;accent-color:#85eee0;cursor:pointer}
+.muted{font-size:12px;color:#9eacc5;line-height:1.55}.mini{font-size:11px;color:#8798b3}
+.hr{height:1px;background:#33425b;margin:0 -23px}
+.slider-head{display:flex;justify-content:space-between;align-items:baseline}.slider-head output{font-size:12px;color:#8beedd;font-weight:850}
+.toggle{display:flex;gap:8px;align-items:center;cursor:pointer;font-size:12px;color:#cad5e8}.toggle input{accent-color:#79e6d4}
+.actions{display:grid;gap:9px}.actions .btn{width:100%}.actions .row{gap:8px}.actions .row>*{flex:1}
+.note{padding:11px 13px;border-radius:9px;background:#101a2d;color:#9cb0c7;font-size:11px;line-height:1.6}
+.status{font-size:12px;color:#b8cbe0;line-height:1.5;min-height:18px;overflow-wrap:anywhere}.status.error{color:#ffb9bb}.status.success{color:#a5f6c8}
+.preview-panel{padding:22px;overflow:hidden}
+.preview-heading{display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:17px}.preview-heading h2{font-size:16px;margin:0}.preview-heading p{color:#8193b2;margin:4px 0 0;font-size:12px}
+.preview-meta{font-size:11px;color:#8de8db;letter-spacing:.09em;font-weight:900}
+.canvas-frame{border:1px solid #58718c;border-radius:12px;overflow:hidden;background:#0c192a;position:relative;touch-action:none;box-shadow:0 12px 24px #0005}
+#matCanvas{display:block;width:100%;height:auto;aspect-ratio:2/1;cursor:grab;touch-action:none}#matCanvas.grabbing{cursor:grabbing}
+.battle-dim{position:absolute;inset:0;pointer-events:none;background:linear-gradient(180deg,#07121b38,#07121b65)}
+.guide-layer{position:absolute;inset:0;pointer-events:none;display:grid;grid-template-columns:39% 61%;gap:0;padding:4.5% 5% 6%}
+.guide-layer[hidden]{display:none}.guide-zone{border:1px dashed #ffffff80;border-radius:8px;background:#09172722;padding:6px;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;gap:5px}
+.guide-zone+.guide-zone{margin-left:4%}.guide-zone small{font-size:clamp(8px,1.2vw,13px);color:#d9eeff;letter-spacing:.15em;font-weight:900;text-shadow:0 2px 5px black}
+.guide-cards{display:flex;justify-content:center;align-items:center;gap:4%;flex:1;width:100%}.card-ghost{width:22%;max-height:90%;aspect-ratio:5/7;border-radius:5px;border:2px solid #ffffffb0;background:linear-gradient(150deg,#f4e4bc88,#536f8a77);box-shadow:0 2px 8px #0006}.guide-zone:first-child .card-ghost{width:39%}
+.preview-footer{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-top:15px;font-size:12px;color:#9faec7;line-height:1.5}
+.tip{margin-top:17px;display:flex;gap:12px;align-items:flex-start;padding:15px;border:1px solid #43506b;background:#1a2540;border-radius:12px;font-size:12px;color:#bac9e0;line-height:1.6}.tip b{display:block;color:#f5f6ff;font-size:13px;margin-bottom:2px}
+.library-panel{margin-top:18px;padding:20px 22px}.library-head{display:flex;align-items:center;justify-content:space-between;gap:12px}.library-head h2{font-size:17px;margin:0}.library-head span{font-size:11px;color:#9baac3}
+.library{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:14px;margin-top:18px}.library-empty{color:#9aaac2;font-size:13px;line-height:1.6;padding:14px 0}
+.mat-card{border:1px solid #45536b;background:#1c2741;border-radius:12px;overflow:hidden}.mat-thumb{width:100%;aspect-ratio:2/1;object-fit:cover;background:#283c52;display:block}.mat-card-body{padding:10px 12px;display:grid;gap:9px}.mat-name{font-size:12px;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mat-card-actions{display:flex;gap:5px}.mat-card-actions button{flex:1;font-size:11px;border:1px solid #52647e;border-radius:7px;background:#263650;color:#c8e7f0;padding:7px 6px}.mat-card-actions button:hover{background:#36506c}
+footer{font-size:11px;color:#7f8fa9;margin-top:28px}
+@media(max-width:900px){.workspace{grid-template-columns:1fr}.controls{grid-template-columns:1fr 1fr;align-items:start}.controls>.hr{display:none}.controls>.step-group{min-width:0}.preview-panel{padding:15px}.guide-layer{padding:3%}.guide-zone small{font-size:9px}}
+@media(max-width:580px){main{padding:18px 12px 35px}.controls{grid-template-columns:1fr}.heading{margin-bottom:19px}.preview-panel{padding:10px}.guide-layer{padding:4%}.guide-zone{padding:3px}.guide-zone small{font-size:7px}.card-ghost{border-width:1px}.preview-meta{display:none}.panel{border-radius:14px}}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important}}
+</style>
+</head>
+<body>
+<main>
+<header><a class="crumb" href="/rpg.html">← NEO HARBOR / RPG</a><nav><a href="/rpg.html">RPG mode ↗</a><a href="/classic_live.html">Classic duel ↗</a></nav></header>
+<div class="heading"><div><span class="eyebrow">NEO CAMPUS · CUSTOMIZATION LAB</span><h1>PLAYMAT <span>STUDIO</span></h1><p class="subtitle">Turn any picture into your personal RPG playmat. Upload, position and crop it against the real 2:1 battlefield, then save it to your collection.</p></div><span class="tag">CUSTOM MAT MAKER / 01</span></div>
+<div class="workspace">
+ <section class="panel controls" aria-label="Playmat editor controls">
+  <div class="step-group"><div class="section-heading"><span><span class="step">01 / </span><b>Choose an image</b></span></div>
+   <div id="dropZone" class="drop" role="button" tabindex="0" aria-label="Choose or drop an image">
+    <span class="drop-icon" aria-hidden="true">▧</span><strong>Drop artwork here</strong><p>PNG, JPG or WebP · Max 20 MB<br>Landscape artwork works best.</p>
+    <button id="chooseBtn" class="btn" type="button">+ Upload image</button>
+   </div><input id="sourceInput" type="file" accept="image/png,image/jpeg,image/webp" hidden>
+  </div>
+  <div class="hr"></div>
+  <div class="step-group"><div class="section-heading"><span><span class="step">02 / </span><b>Adjust the crop</b></span></div>
+   <p class="muted">Drag the artwork to reposition it. Zoom to choose what fits inside the mat.</p>
+   <div class="slider-head"><label class="label" for="zoom">Image zoom</label><output id="zoomOutput" for="zoom">100%</output></div>
+   <input id="zoom" type="range" min="1" max="3" step="0.01" value="1" aria-label="Image zoom" disabled>
+   <div class="row"><button class="btn outline" id="reset" type="button" disabled>↺ Reset framing</button><label class="toggle"><input type="checkbox" id="guides" checked> Show card guides</label></div>
+  </div>
+  <div class="hr"></div>
+  <div class="step-group"><div class="section-heading"><span><span class="step">03 / </span><b>Save your mat</b></span></div>
+   <label class="label" for="matName">Playmat name <small>(shown in your RPG selector)</small></label>
+   <input id="matName" type="text" maxlength="48" value="My Custom Mat" autocomplete="off">
+   <div class="actions"><button class="btn primary" id="finish" type="button" disabled>✦ Finish &amp; use in RPG</button>
+    <div class="row"><button class="btn outline" id="download" type="button" disabled>↓ Export PNG</button><a class="btn outline" href="/rpg.html" id="backToRpg">RPG mode ↗</a></div></div>
+   <div id="status" class="status" role="status" aria-live="polite">Your finished mat stays on this browser and works in your next RPG duel.</div>
+   <div class="note">Private by default: no image is sent to a server. Custom mats are saved in this browser, so use <b>Export PNG</b> to keep a copy or move it to another device.</div>
+  </div>
+ </section>
+ <div>
+  <section class="panel preview-panel" aria-label="Playmat preview">
+   <div class="preview-heading"><div><h2>LIVE BATTLEFIELD PREVIEW</h2><p>Cards and guides are preview-only; they won't be burned into the image.</p></div><span class="preview-meta">1280 × 640 · 2:1</span></div>
+   <div class="canvas-frame" id="canvasShell"><canvas id="matCanvas" width="1280" height="640" tabindex="0" aria-label="Drag or use arrow keys to position the playmat image"></canvas>
+    <div class="battle-dim" aria-hidden="true"></div>
+    <div class="guide-layer" id="guideLayer" aria-hidden="true">
+     <div class="guide-zone"><small>YOUR ACTIVE</small><div class="guide-cards"><div class="card-ghost"></div></div></div>
+     <div class="guide-zone"><small>YOUR BENCH</small><div class="guide-cards"><div class="card-ghost"></div><div class="card-ghost"></div><div class="card-ghost"></div></div></div>
+    </div>
+   </div>
+   <div class="preview-footer"><span id="imageInfo">No artwork chosen · awaiting upload</span><span>Drag to pan · Wheel or slider to zoom · Arrow keys for fine adjustments</span></div>
+   <div class="tip"><span aria-hidden="true">✧</span><div><b>What you see is what you play</b>The artwork fills one player's territory, with the game cards and UI layered on top. Your opponent keeps their own mat.</div></div>
+  </section>
+  <section class="panel library-panel"><div class="library-head"><h2>YOUR SAVED PLAYMATS</h2><span id="libraryCount">0 / 30 slots</span></div><div id="library" class="library"><p class="library-empty">You haven't made a custom mat yet. Your finished designs will appear here.</p></div></section>
+ </div>
+</div>
+<footer>Unofficial fan project · Pokémon belongs to its respective owners · Created artwork is stored only on this device.</footer>
+</main>
+<script src="/duel_playmats.js?v=2"></script><script src="/mat_generator.js?v=1" defer></script>
+</body>
+</html>
