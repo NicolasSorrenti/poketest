@@ -24,6 +24,19 @@ const LAYOUT_TRIGGERS = [
   /\b(?:4\s*[x×]\s*4|2\s*[x×]\s*2|3\s*[x×]\s*3)\b/i,
 ];
 const VALID_REWARDS = new Set(['booster', 'battle-result']);
+// Scene-specific reward settings prevent generic bedroom/pin-up prompts from
+// replacing a recognisable in-game action. Each maps to ONE image only.
+const REWARD_SCENES = Object.freeze({
+  hana: {place:'Behind the wooden checkout counter of the Lucky Draw card shop, warm afternoon light falling across boxed decks and card binders.', gesture:'Hana extends her hand across the shop counter with a single sealed booster pack.'},
+  reina: {place:'At the tournament registration table under dark-red banners, with a quiet card battle arena receding behind her.', gesture:'Reina offers one sealed booster pack with a composed, challenging half-smile.'},
+  shiori: {place:'At a quiet wooden reading table in the campus library, sunlight catching shelves and neatly stacked books.', gesture:'Shiori slides one sealed booster pack across an open notebook toward the viewer.'},
+  yuna: {place:'At a vividly lit neon arcade card counter, cyan and raspberry arcade lights glowing behind her.', gesture:'Yuna holds up one sealed booster pack triumphantly next to her sticker-covered deck box.'},
+  akari: {place:'At a tidy campus strategy-club table, a tablet and color-coded planning notes set beside a deck box.', gesture:'Akari adjusts her square glasses and offers a single sealed booster pack across the table.'},
+  camila: {place:'In a tasteful warm-lit collector lounge with burgundy upholstery and glass card display cabinets.', gesture:'Camila smiles knowingly and extends a single sealed booster pack from her gold-chained card case.'},
+  marina: {place:'At the riverside community-card kiosk, evening reflections gleaming on the harbor beyond.', gesture:'Marina presents one sealed booster pack, her canvas bag resting beside her on the counter.'},
+  kaede: {place:'At the industrial-style underground card-club counter, violet and acid-green neon painting the brickwork.', gesture:'Kaede holds out one sealed booster pack with a playful punk-rock grin and her safety-pin charms visible.'}
+});
+
 const safeId = v => typeof v === 'string' && /^[a-z0-9_]+$/.test(v);
 
 function assertSingleImagePrompt(prompt) {
@@ -83,17 +96,18 @@ function createPrompt({sceneId, reward, characterId}) {
     kind = reward;
     character = characterId;
     target = 'rpg-assets/characters/' + characterId + '/events/' + reward + '.webp';
+    const rewardScene = REWARD_SCENES[characterId];
     if (reward === 'booster') {
-      description = 'After a friendly card duel, the character warmly offers a sealed booster pack toward the viewer as a personal reward.';
-      framing = 'Portrait-oriented medium shot from the player viewpoint, face and reward pack both clearly visible.';
-      expression = 'Bright, personal congratulations with a playful smile.';
+      description = rewardScene.gesture;
+      framing = 'Portrait-format medium shot from the player viewpoint: the face and the single sealed booster pack must be clearly visible together.';
+      expression = 'A personal, playful congratulatory smile following a finished card duel.';
     } else {
-      description = 'The character reacts emotionally to the end of a closely fought card match, with a deck case held at their side.';
-      framing = 'Portrait-oriented medium shot emphasizing a distinct, readable facial expression.';
-      expression = 'Expressive competitive energy with restrained theatrical confidence.';
+      description = 'After a close card match, ' + characterId + ' faces the viewer holding a deck case and reacting to the result.';
+      framing = 'Portrait-format medium shot emphasizing the face, shoulders and deck case.';
+      expression = 'Distinct competitive energy, with a natural post-match reaction.';
     }
-    outfit = 'Their established everyday outfit with signature accessories.';
-    setting = 'The warm interior of the local card club, with softly blurred playing tables and evening light.';
+    outfit = 'The established canonical everyday outfit and signature accessories in the character description.';
+    setting = rewardScene.place;
   }
 
   const canonical = clean(queue.characters[character], 'canonical character identity');
