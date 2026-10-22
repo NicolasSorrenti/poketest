@@ -1,6 +1,6 @@
 # Neo Harbor Portrait Generation Guide
 
-> **MANDATORY ONE-IMAGE GENERATION GATE:** Read [ART_GENERATION_ONE_IMAGE_RULE.md](ART_GENERATION_ONE_IMAGE_RULE.md). **GENERATE ONE (1) IN-GAME CHARACTER PORTRAIT OR ONE (1) EXPRESSION PER IMAGE CALL. NO CONCEPT ART, GRIDS, CHARACTER LINEUPS, MULTI-EXPRESSION SHEETS, COLLAGES, PANEL SPLITS, LABELS OR PROMOTIONAL BOARDS.** A 6-expression request requires 6 independent image calls. Reject sheets rather than cropping them and calling them standalone portraits.
+> **One artwork per generation call:** Follow [ART_GENERATION_ONE_IMAGE_RULE.md](ART_GENERATION_ONE_IMAGE_RULE.md). Describe only the finished portrait or expression being requested, using a short *positive* instruction. For each expression, use a separate model call and run `node scripts/rpg-art-prompt.js --validate <prompt-file>` before submitting the actual prompt. Layout rejection criteria belong to visual QA, not the image-model instruction.
 
 Use this guide to keep all VN portraits visually consistent.
 
