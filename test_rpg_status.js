@@ -50,8 +50,8 @@ test('status entry points and assets are wired into RPG',()=>{
  const js=fs.readFileSync('rpg.js','utf8');
  assert.match(html,/id="statusBtn"/);
  assert.match(html,/id="statusDialog"/);
- assert.match(html,/src="\/rpg_status\.js"/);
- assert.match(html,/href="\/rpg_status\.css"/);
+ assert.match(html,/src="\/rpg_status\.js(?:\?v=\d+)?"/);
+ assert.match(html,/href="\/rpg_status\.css(?:\?v=\d+)?"/);
  assert.match(js,/NeoRpgStatus\.open/);
 });
 
