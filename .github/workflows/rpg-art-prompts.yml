@@ -2,6 +2,7 @@ name: RPG Art Prompt Guard
 on:
   push:
     paths:
+      - '.github/workflows/rpg-art-prompts.yml'
       - 'scripts/rpg-art-prompt.js'
       - 'tests/rpg_art_prompt.test.js'
       - 'docs/cg-art-queue.json'
@@ -9,6 +10,7 @@ on:
       - 'docs/CG_ART_AGENT_HANDOFF.md'
   pull_request:
     paths:
+      - '.github/workflows/rpg-art-prompts.yml'
       - 'scripts/rpg-art-prompt.js'
       - 'tests/rpg_art_prompt.test.js'
       - 'docs/cg-art-queue.json'
