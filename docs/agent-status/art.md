@@ -1,4 +1,6 @@
 # Neo Harbor RPG / VN — art production status
+
+> **Production correction (2026-10-22):** All future image generator calls MUST obey `docs/ART_GENERATION_ONE_IMAGE_RULE.md`: one standalone in-game asset per generated image. Never generate concept boards, character grids, lineups, multi-expression sheets or mixed asset previews; reject any such output. This supersedes any older references to concept-sheet extraction as a preferred production workflow.
 Updated: 2026-10-17
 Owner: art and character assets only. Source: `NicolasSorrenti/poketest`.
 
