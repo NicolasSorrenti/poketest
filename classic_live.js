@@ -160,11 +160,10 @@
  }
  function pumpCoin(){if(coinTimer||!coinQueue.length)return;const f=coinQueue.shift(),el=$('coinFx');el.textContent='🪙 '+String(f.result).toUpperCase();el.classList.remove('hidden','coin-animate');void el.offsetWidth;el.classList.add('coin-animate');coinTimer=setTimeout(()=>{el.classList.add('hidden');coinTimer=null;pumpCoin();},800);}
  function renderCPULog(view){
-  const list=$('actionTimeline');list.replaceChildren();
-  const lines=(view.messages||[]).slice(0,45);
-  if(!lines.length){const empty=document.createElement('li');empty.className='timeline-empty';empty.textContent='Match events will appear here.';list.append(empty);return;}
-  for(const text of lines){const row=document.createElement('li');row.className='timeline-entry rule';const icon=document.createElement('span');icon.className='timeline-icon';icon.textContent=/Coin flip/i.test(text)?'🪙':/Knocked Out|wins!/i.test(text)?'💥':/damage|attack|used /i.test(text)?'⚔':'•';const msg=document.createElement('span');msg.textContent=text;row.append(icon,msg);list.append(row);}
+  window.NeoMatchLog.render({list:$('actionTimeline'),activity:current?.activity,messages:view.messages,
+   getCard:card,opponent:document.getElementById('opponentLabel')?.textContent||'Opponent'});
  }
+
  function renderKnockOut(view){const messages=view.messages||[];const relevant=messages.filter(x=>/Knocked Out|wins by forfeit|wins!/i.test(x));const latest=relevant.at(-1)||'';
   if(!lastKoMessage){lastKoMessage=latest;return;}
   if(latest&&latest!==lastKoMessage){const el=$('koFx');el.textContent='💥 '+latest;el.classList.remove('hidden');clearTimeout(el._dismiss);el._dismiss=setTimeout(()=>el.classList.add('hidden'),2400);lastKoMessage=latest;}
