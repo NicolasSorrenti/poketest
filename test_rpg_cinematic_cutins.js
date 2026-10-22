@@ -77,3 +77,48 @@ assert.equal(timers.size,0);
 make.reset();
 assert.equal(make.count,0);
 console.log('RPG cinematic cut-ins: wide art, match fallback, readable timing, KO priority, queue and NPC safety passed.');
+
+async function verifyDelayedArtwork(){
+ const classes=new Set(['hidden']),children=[],timers=[],calls=[];
+ const el={classList:{add:x=>classes.add(x),remove:x=>classes.delete(x)},
+  replaceChildren(...xs){children.splice(0,children.length,...xs)}};
+ const doc={createElement(tag){return{tagName:tag,children:[],className:'',classList:{add(){}},
+  append(...xs){this.children.push(...xs)},remove(){}}}};
+ const pending=new Map();
+ const attack='/rpg-assets/reactions/reina/attack.png';
+ const fallback='/rpg-assets/characters/reina/cutins/match-cutin.webp';
+ class MockImage{
+  set src(path){
+   const xs=pending.get(path)||[];xs.push(this);pending.set(path,xs);
+   if(path!==attack&&path!==fallback)queueMicrotask(()=>this.onerror?.());
+  }
+ }
+ const experience=makeExperience({element:el,npcId:'reina',npcName:'Reina',random:()=>0,
+  doc,media:{Image:MockImage},onShow:x=>calls.push(x),
+  schedule:(fn,ms)=>{timers.push({fn,ms});return timers.length},cancel:()=>{}});
+ experience.setManifest({characters:{reina:{attack,match_cutin:fallback}}});
+ const view=p=>({phase:'game',players:[
+  {prizeCount:p,active:{id:'a',damage:0},bench:[]},
+  {prizeCount:6,active:{id:'b',damage:0},bench:[]}
+ ]});
+ experience.update({view:view(6),activity:[]});
+ experience.update({view:view(6),activity:[{seq:3,type:'attack',side:1,label:'Tackle'}]});
+ const untilShown=experience.whenShown();
+ assert.equal(classes.has('hidden'),true,'wait while image loads');
+ assert.equal(timers.length,0,'no duration consumed before load');
+ pending.get(attack)[0].onerror();
+ await new Promise(resolve=>setImmediate(resolve));
+ const alternate=pending.get(fallback)?.[0];
+ assert.ok(alternate,'try the fallback before showing');
+ assert.equal(classes.has('hidden'),true,'wait for fallback');
+ alternate.onload();
+ await untilShown;
+ assert.equal(classes.has('hidden'),false);
+ assert.equal(timers[0].ms,2800);
+ assert.equal(children[0].children[0].children[0].src,fallback);
+ assert.equal(calls[0].imageCandidates[0],fallback,'chat avatar starts with working image');
+ experience.reset();
+ assert.equal(classes.has('hidden'),true);
+ console.log('RPG delayed image and fallback loading passed.');
+}
+verifyDelayedArtwork().catch(error=>{console.error(error);process.exitCode=1;});
