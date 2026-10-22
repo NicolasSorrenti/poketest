@@ -76,3 +76,15 @@ test('an opponent offers only currently available circuit matches, not unstarted
  assert.equal(duel.choices[0][1],'eventInvite:cup:neighborhood');
  assert.match(duel.choices[0][0],/play/);
 });
+
+test('a recently missed meeting changes each character’s reunion mood, without giving away mechanics',()=>{
+ const saved=base();saved.relationships.hana={affection:9,trust:8};
+ const normal=I.dialogue(saved,{kind:'appointment',id:'4',npc:'hana',tone:'friendship'});
+ saved.appointments=[{id:2,npc:'hana',day:10,status:'missed'}];
+ const missed=I.dialogue(saved,{kind:'appointment',id:'4',npc:'hana',tone:'friendship'});
+ assert.notEqual(missed.lines[0].text,normal.lines[0].text);
+ assert.match(missed.lines[0].text,/last time/);
+ assert.doesNotMatch(missed.lines[0].text,/trust|affection|\d+ points/i);
+ saved.day=19;
+ assert.equal(I.dialogue(saved,{kind:'appointment',id:'4',npc:'hana'}).lines[0].text,normal.lines[0].text);
+});
