@@ -134,7 +134,9 @@ class ClassicLocalService {
   s.game=game;s.revision++;
   const response=this.response(s);
   // The last snapshot is already the authoritative final response.
-  if(playback.length>1)response.cpuPlayback=playback.slice(0,-1);
+  // Always retain the opening CPU-turn frame. If every internal CPU step was
+  // a private choice, dropping this frame would jump straight to the end state.
+  if(cpuTurn&&playback.length)response.cpuPlayback=playback.length>1?playback.slice(0,-1):playback;
   return response;
  }
  decklist(id){if(!DECKS[id]||id==='custom')throw Error('Unknown theme deck');return EXPANDED[id]?[...EXPANDED[id]]:LAB[id]?[...LAB[id]]:DECKS[id].startsWith('retail:')?RETAIL.list(id):DECKS[id].startsWith('neo:')?NEO.list(id):DECKS[id].startsWith('discovery:')?DISCOVERY.list(id):DECKS[id].startsWith('destiny:')?DESTINY.list(id):list(DECKS[id]);}
