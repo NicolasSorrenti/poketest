@@ -1289,7 +1289,7 @@ function openPlannerSuggestion(id){
  const heading=owner?.querySelector?.('.sidebar-title span')?.textContent||'';
  rpgActivePanel=Object.entries(rpgPanelGroups).find(([,names])=>names.some(name=>heading.includes(name)))?.[0]||'plans';
  refreshRpgPanels();
- if($('rpgInfoPanel')?.getAttribute('aria-hidden')==='true')window.NeoRpgInterface?.toggle?.('info');
+ if($('rpgInfoPanel')?.getAttribute?.('aria-hidden')==='true')window.NeoRpgInterface?.toggle?.('info');
  const buttons=[...(section?.querySelectorAll?.('button')||[])].filter(x=>!x.disabled);
  const action=buttons.find(b=>b.dataset?.plannerKey===pick.key)||
   buttons.find(b=>b.textContent?.includes(pick.key)||b.textContent?.includes(pick.title.split(' · ')[0]))||buttons[0];
