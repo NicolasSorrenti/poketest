@@ -43,10 +43,11 @@ let checks=0;
  assert.equal(rejected.ok,false,'Cannot choose an out-of-range Prize');
  assert.deepEqual(g,prior,'Invalid Prize selection must not change game state');
  choose(g,'prize:2');
- assert.equal(p.prizes[2],beforeDeck.at(-1),'Top deck card replaces the selected Prize');
- assert.equal(p.deck.at(-1),beforePrizes[2],'Selected Prize goes to the top of the deck');
- assert.deepEqual(p.prizes.filter((_,i)=>i!==2),beforePrizes.filter((_,i)=>i!==2));
- assert.equal(p.prizeFaceUp[2],false,'A replacement Prize must not inherit an earlier reveal');
+ const resolved=g.players[0]; // applyCommand atomically replaces game/player objects.
+ assert.equal(resolved.prizes[2],beforeDeck.at(-1),'Top deck card replaces the selected Prize');
+ assert.equal(resolved.deck.at(-1),beforePrizes[2],'Selected Prize goes to the top of the deck');
+ assert.deepEqual(resolved.prizes.filter((_,i)=>i!==2),beforePrizes.filter((_,i)=>i!==2));
+ assert.equal(resolved.prizeFaceUp[2],false,'A replacement Prize must not inherit an earlier reveal');
  assert.ok(!publicView(g,0).players[0].prizes,'Own unrevealed Prize identities stay private');
  assert.equal(applyCommand(g,0,{type:'use_power',payload:{slot:-1}}).ok,false,'Trickery only once per turn');
  checks++;
