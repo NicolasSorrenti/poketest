@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Neo Campus — Play Online</title><link rel="stylesheet" href="classic_live.css"><link rel="stylesheet" href="online_compact.css"><link rel="stylesheet" href="online_hand_tray.css"><link rel="stylesheet" href="duel_desktop.css" media="(min-width: 781px)"><link rel="stylesheet" href="duel_mobile.css" media="(max-width: 780px)"><link rel="stylesheet" href="duel_nostalgic.css"><link rel="stylesheet" href="duel_match_v085.css?v=91"><link rel="stylesheet" href="duel_cards_clean.css?v=90"><link rel="stylesheet" href="duel_observability_rail.css?v=91"><link rel="stylesheet" href="duel_mobile_alignment.css?v=1" media="(max-width: 780px)"><link rel="stylesheet" href="duel_mobile_polish.css?v=3" media="(max-width: 780px)"><link rel="stylesheet" href="online_playmats.css?v=1"></head>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Neo Campus — Play Online</title><link rel="stylesheet" href="classic_live.css"><link rel="stylesheet" href="online_compact.css"><link rel="stylesheet" href="online_hand_tray.css"><link rel="stylesheet" href="duel_desktop.css" media="(min-width: 781px)"><link rel="stylesheet" href="duel_mobile.css" media="(max-width: 780px)"><link rel="stylesheet" href="duel_nostalgic.css"><link rel="stylesheet" href="duel_match_v085.css?v=92"><link rel="stylesheet" href="duel_cards_clean.css?v=90"><link rel="stylesheet" href="duel_observability_rail.css?v=91"><link rel="stylesheet" href="duel_mobile_alignment.css?v=1" media="(max-width: 780px)"><link rel="stylesheet" href="duel_mobile_polish.css?v=3" media="(max-width: 780px)"><link rel="stylesheet" href="online_playmats.css?v=1"></head>
 <body>
 <header class="masthead"><div class="brand"><div class="brand-icon">⚡</div><div><h1>NEO CAMPUS <strong>ONLINE</strong></h1><small>ONLINE FRIEND DUELS · SERVER-VALIDATED RULES</small></div></div><nav><a href="/play.html">← Game modes</a><span class="engine-badge">INVITE CODE</span></nav></header>
 <main>
@@ -34,6 +34,7 @@
     <div class="trainerbar"><div class="trainerlabel"><span>◆</span><div><strong id="opponentLabel">OPPONENT</strong><small id="oppStats"></small></div></div><div class="pile-tools"><span class="deck-counter" id="oppDeckCount" aria-label="Opponent deck count">▣ <b>0</b></span><button id="oppDiscardBtn" type="button" class="pile-button">♻ Discard <b>0</b></button></div></div>
     <div class="field-row"><div class="zone bench-zone"><h3>OPPONENT BENCH</h3><div id="enemyBench" class="pokemon-strip"></div></div>
     <div class="zone active-zone"><h3>OPPONENT ACTIVE</h3><div id="enemyActive" class="pokemon-strip active-slot"></div></div></div>
+    <div id="enemyStadium" class="stadium-slot" hidden aria-label="Opponent Stadium area"></div>
    </section>
    <div class="battleline"><span>VS</span><span id="turnChip">READY</span></div>
    <section class="territory player-territory">
@@ -42,6 +43,7 @@
      <div id="fieldAttackDock" class="field-attack-dock"><div id="attackPanel" class="inline-attack-panel"><h4>ATTACKS</h4><div id="attacks" class="inline-attacks"></div></div></div></div></div>
      <div class="zone bench-zone"><h3>YOUR BENCH</h3><div id="myBench" class="pokemon-strip"></div></div></div>
     <div class="trainerbar player"><div class="trainerlabel"><span>★</span><div><strong id="yourLabel">YOU</strong><small id="myStats"></small></div></div><div class="pile-tools"><span class="deck-counter" id="myDeckCount" aria-label="Your deck count">▣ <b>0</b></span><button id="myDiscardBtn" type="button" class="pile-button">♻ Discard <b>0</b></button></div></div>
+    <div id="myStadium" class="stadium-slot" hidden aria-label="Your Stadium area"></div>
    </section>
   </div>
  </div></div>
@@ -69,6 +71,6 @@
 <div id="choiceModal" class="choice-modal hidden" aria-hidden="true"><div class="choice-dialog" id="choiceModalContent" role="dialog" aria-modal="true" aria-label="Card effect choice" tabindex="-1"></div></div>
 <div id="pileModal" class="pile-modal hidden" role="dialog" aria-modal="true" aria-label="Discard pile"><div class="pile-dialog"><div class="pile-dialog-heading"><h3 id="pileTitle">Discard pile</h3><button id="closePile" type="button">✕ Close</button></div><div id="pileCards" class="pile-cards"></div></div></div><div id="cardPreview" class="card-preview hidden" role="dialog" aria-label="Enlarged card preview"></div>
 <script src="core_rules.js"></script><script src="duel_quick_ui.js"></script><script src="battle_decision_ui.js"></script><script src="duel_experience_ui.js"></script><script src="battle_presentation_ui.js"></script><script src="duel_action_rail.js?v=3"></script>
-<script src="duel_shared_components.js"></script>
+<script src="duel_shared_components.js?v=91"></script>
 <script src="duel_playmats.js?v=2"></script>
-<script src="online.js?v=95" defer></script></body></html>
+<script src="online.js?v=96" defer></script></body></html>
