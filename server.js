@@ -15,8 +15,8 @@ const {CubeRoomService}=require('./cube_room_service');
 const cubeRooms=new CubeRoomService({classic,online});
 const {sendCardImage}=require('./cube_card_images');
 const sendJSON=(res,status,value)=>{res.writeHead(status,{'Content-Type':'application/json; charset=utf-8','Cache-Control':'no-store','X-Content-Type-Options':'nosniff'});res.end(JSON.stringify(value));};
-async function parseJSON(req){return new Promise((resolve,reject)=>{
- let text='';req.on('data',chunk=>{text+=chunk;if(text.length>65536){reject(Error('Request too large'));req.destroy();}});
+async function parseJSON(req,maxBytes=65536){return new Promise((resolve,reject)=>{
+ let text='';req.on('data',chunk=>{text+=chunk;if(text.length>maxBytes){reject(Error('Request too large'));req.destroy();}});
  req.on('end',()=>{try{resolve(text?JSON.parse(text):{});}catch{reject(Error('Malformed JSON'));}});req.on('error',reject);
 });}
 async function api(req,res,pathName,url){
@@ -51,6 +51,11 @@ async function onlineAPI(req,res,pathName,url){
   if(typeof token!=='string'||!token)return sendJSON(res,401,{error:'Missing duel token'});
   if(pathName==='/api/online/state'&&req.method==='GET')return sendJSON(res,200,online.state(url.searchParams.get('code'),token));
   if(pathName==='/api/online/chat'&&req.method==='POST'){const body=await parseJSON(req);return sendJSON(res,200,online.chatMessage(body.code,token,body));}
+  if(pathName==='/api/online/playmat'&&req.method==='GET')return sendJSON(res,200,online.getPlaymat(url.searchParams.get('code'),token,Number(url.searchParams.get('side'))));
+  if(pathName==='/api/online/playmat'&&req.method==='POST'){
+   const body=await parseJSON(req,240000);
+   return sendJSON(res,200,online.setPlaymat(body.code,token,body));
+  }
   if(['/api/online/ready','/api/online/deck','/api/online/name','/api/online/start','/api/online/action','/api/online/leave'].includes(pathName)&&req.method==='POST'){
    const body=await parseJSON(req);
    const result=pathName.endsWith('/ready')?online.ready(body.code,token,body):pathName.endsWith('/deck')?online.changeDeck(body.code,token,body):pathName.endsWith('/name')?online.changeName(body.code,token,body):pathName.endsWith('/start')?online.start(body.code,token,body):pathName.endsWith('/leave')?online.leave(body.code,token,body):online.action(body.code,token,body);
@@ -58,7 +63,7 @@ async function onlineAPI(req,res,pathName,url){
   }
   return sendJSON(res,404,{error:'Unknown Online API endpoint'});
  }catch(error){const msg=String(error.message||'Unknown error');
-  const status=/Unauthorized|token/i.test(msg)?401:/Stale match revision/.test(msg)?409:/Room not found|expired/.test(msg)?404:400;
+  const status=/Unauthorized|token|Spectators cannot/i.test(msg)?403:/Playmat cooldown|Stale match revision/.test(msg)?409:/Room not found|expired/.test(msg)?404:400;
   return sendJSON(res,status,{error:msg});}
 }
 async function cubeAPI(req,res,pathName){
