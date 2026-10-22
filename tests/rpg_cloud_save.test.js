@@ -58,7 +58,8 @@ function setup({localSave=save(1),cloudRow=null,hadLocal=true,enabled=true,conne
   client:window.NeoRpgCloudSave,adapter,uploads,restores,cache,
   getLocal:()=>clone(current),getCloud:()=>clone(remote),
   setLocal:val=>{current=clone(val)},setCloud:val=>{remote=clone(val)},
-  setConnected:value=>{network=value}
+  setConnected:value=>{network=value},
+  online:async()=>{const handler=sessions.find(x=>x.name==='online');assert.ok(handler);await handler.fn();}
  };
 }
 
@@ -99,6 +100,17 @@ test('a first login with two different saves never overwrites either',async()=>{
  assert.equal(app.uploads.length,0);
 });
 
+test('an unchanged device automatically loads the newer cloud save on startup',async()=>{
+ const app=setup({localSave:save(4),cloudRow:{revision:3,save_data:save(14)}});
+ app.cache.set('neoRpgCloudSyncedV1:player-one',JSON.stringify({
+  revision:2,hash:app.client.hash(save(4))
+ }));
+ await app.client.mount(app.adapter);
+ assert.equal(app.restores.length,1);
+ assert.equal(app.getLocal().day,14);
+ assert.equal(app.uploads.length,0);
+});
+
 test('stale revision is rejected when another device saves first',async()=>{
  const app=setup({localSave:save(4)});
  await app.client.mount(app.adapter);
@@ -128,7 +140,7 @@ test('offline or failed cloud requests never delete the browser save',async()=>{
  assert.equal(app.getLocal().day,20);
  assert.equal(app.uploads.length,0);
  app.setConnected(true);
- await app.client.syncNow();
+ await app.online();
  assert.equal(app.getCloud().save_data.day,20);
 });
 
