@@ -44,7 +44,17 @@ async function api(req,res,pathName,url){
    if(identity){
     session.checkpointOwner=identity.userId;session.checkpointDuelId=params.rpgDuelId;
     try{await rpgDuels.save(session,identity);created.cloudSaved=true;}
-    catch(error){created.cloudSaved=false;created.cloudError='Cloud checkpoint unavailable. Battle remains active on this server.';}
+    catch(error){
+     if(error.code==='40001'){
+      const restored=await rpgDuels.load(params.rpgDuelId,identity);
+      if(restored){classic.sessions.delete(created.token);classic.sessions.set(restored.token,restored);
+       return sendJSON(res,200,{token:restored.token,...classic.response(restored),cloudSaved:true,resumed:true});}
+     }
+     created.cloudSaved=false;created.cloudError='Cloud checkpoint unavailable. Battle remains active on this server.';
+    }
+   }else{
+    session.rpgLocalOnly=true;created.cloudSaved=false;
+    created.cloudError='Sign in through the RPG Cloud button for durable battle autosaves. This duel is only on this server.';
    }
    return sendJSON(res,200,created);
   }
@@ -60,7 +70,14 @@ async function api(req,res,pathName,url){
   }
   const token=req.headers['x-duel-token'];
   if(typeof token!=='string'||!token){sendJSON(res,401,{error:'Missing duel token'});return;}
-  if(pathName==='/api/classic/state'&&req.method==='GET')return sendJSON(res,200,classic.state(token));
+  if(pathName==='/api/classic/state'&&req.method==='GET'){
+   const session=classic.session(token),state=classic.response(session);
+   if(session.rpgLocalOnly){
+    state.cloudSaved=false;
+    state.cloudError='This duel is only on the current server. Sign in from the RPG to enable autosaves in future matches.';
+   }else if(session.checkpointOwner){state.cloudSaved=session.checkpointRevision===session.revision;}
+   return sendJSON(res,200,state);
+  }
   if(pathName==='/api/classic/action'&&req.method==='POST'){
    const session=classic.session(token);
    const identity=session.checkpointOwner?await rpgDuels.identify(req.headers.authorization):null;
@@ -73,6 +90,9 @@ async function api(req,res,pathName,url){
      result.cloudSaved=false;
      result.cloudError=error.code==='40001'?'Battle checkpoint conflict with another device.':'Cloud checkpoint failed. Progress is still active on this server.';
     }
+   }else if(session.rpgLocalOnly){
+    result.cloudSaved=false;
+    result.cloudError='Sign in through the RPG Cloud button for durable battle autosaves in future matches.';
    }
    return sendJSON(res,200,result);
   }
