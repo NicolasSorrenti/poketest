@@ -1255,6 +1255,19 @@ function openPlannerSuggestion(id){
   if(meeting&&currentPeople().includes(meeting.npc))return selectPerson(meeting.npc);
  }
  if(pick.kind==='social'&&currentPeople().includes(pick.key))return selectPerson(pick.key);
+ // Story and other personal opportunities are introduced by the character
+ // when they are physically here. A suggestion never auto-plays the event.
+ const actor=pick.kind==='story'?STORY.byId(pick.key)?.npc:
+  pick.kind==='sidequest'?SIDE.available(state,currentPeople()).find(x=>x.quest.id===pick.key)?.stage.npc:
+  pick.kind==='arc'?'reina':
+  pick.kind==='situation'?SITUATIONS.byId(pick.key)?.npc:
+  pick.kind==='encounter'?WORLD.byEncounter(pick.key)?.npc:
+  pick.kind==='tournament'?TOURNAMENTS.status(state,pick.key)?.opponent:null;
+ if(actor&&currentPeople().includes(actor)){
+  const invite=availableInvitation(actor);
+  const kind=pick.kind==='tournament'?'cup':pick.kind;
+  if(invite?.kind===kind&&invite.id===pick.key)return selectPerson(actor);
+ }
  // Never auto-start a duel or a story: highlight the actual action instead.
  rpgLocalTab=pick.kind==='tournament'||pick.kind==='event'?'circuit':
   pick.kind==='activity'?'activities':'stories';
