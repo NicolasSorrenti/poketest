@@ -295,9 +295,12 @@
    $('pickAdvice').textContent=guide?'Suggested pick: '+recommended.name+
     ' · Based on your drafted Pokémon, Energy costs and evolution lines.':'';
    $('pack').replaceChildren();
+   let selectedShown=false;
    for(const card of arrangedPack(state.pack)){
     const btn=document.createElement('button');btn.className='card';btn.type='button';
-    const selected=card.id===state.selectedId;
+    // Copies of one printing share an ID; highlight only one reserved copy.
+    const selected=!selectedShown&&card.id===state.selectedId;
+    if(selected)selectedShown=true;
     btn.classList.toggle('selected',selected);
     btn.setAttribute('aria-pressed',String(selected));
     btn.append(cardArt(card));
