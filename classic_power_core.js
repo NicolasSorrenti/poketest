@@ -10,7 +10,7 @@ const card=id=>{const c=CARDS.get(id);if(!c)throw Error('Unknown Classic card '+
 const own=p=>[p.active,...p.bench].filter(Boolean);
 const pokemon=(p,slot)=>slot===-1?p.active:p.bench[slot];
 const slotList=(p,pred=()=>true)=>[-1,...p.bench.map((_,i)=>i)].flatMap(i=>pokemon(p,i)&&pred(pokemon(p,i),i)?[{id:'slot:'+i,label:(i===-1?'Active ':'Bench ')+(pokemon(p,i).secretPlanFaceDown?'Face-down Pokémon':card(pokemon(p,i).id).name)}]:[]);
-const indices=(arr,pred=()=>true,prefix='index')=>arr.flatMap((id,i)=>pred(card(id),i)?[{id:`${prefix}:${i}`,label:card(id).name}]:[]);
+const indices=(arr,pred=()=>true,prefix='index')=>arr.flatMap((id,i)=>pred(card(id),i)?[{id:`${prefix}:${i}`,label:prefix==='prize'?`Prize ${i+1}`:card(id).name}]:[]);
 const basicEnergy=c=>isEnergy(c)&&/^(Grass|Fire|Water|Lightning|Psychic|Fighting) Energy$/.test(c.name);
 const healthy=u=>u&&u.status!=='Asleep'&&u.status!=='Confused'&&u.status!=='Paralyzed';
 function powerNames(u){return u?.secretPlanFaceDown?[]:(card(u.id).abilities||[]).filter(x=>x.name).map(x=>x.name);}
@@ -22,7 +22,7 @@ function live(g,u,name){
 }
 function has(g,name,noGlobal=false){return g.players.some(p=>own(p).some(u=> powerNames(u).includes(name) && healthy(u) && (noGlobal||live(g,u,name))));}
 function blocked(g,name){if(name==='Toxic Gas')return false;return g.powerBlankUntil>g.turnSerial||has(g,'Toxic Gas',true);}
-function enabled(g,u,name){return Boolean(u&&powerNames(u).includes(name)&&(healthy(u)||['Gaseous Form','Pollen Defense','Restless Sleep','[Normal]','Photosynthesis','Rebellion','Shock Blast'].includes(name))&&!blocked(g,name)&&!(u.powerSuppressedUntil>g.turnSerial));}
+function enabled(g,u,name){return Boolean(u&&powerNames(u).includes(name)&&(healthy(u)||['Gaseous Form','Pollen Defense','Restless Sleep','[Normal]','Photosynthesis','Rebellion','Shock Blast','[Search]','[Tell]','[Laugh]'].includes(name))&&!blocked(g,name)&&!(u.powerSuppressedUntil>g.turnSerial));}
 function protectsStatus(g,u){return enabled(g,u,'Thick Skinned');}
 function powerInPlay(g,name){return g.players.some(p=>own(p).some(u=>enabled(g,u,name)));}
 function choice(g,plan,key,actor,options,{min=1,max=min,optional=false,label=key}={}){
@@ -141,7 +141,10 @@ function powerPlan(g,plan,h){
  if(name==='Heal'&&choose('target',slotList(p,x=>x.damage>=10),'Choose Pokémon to heal'))return;
  if(name==='Evolutionary Light'&&choose('deck',indices(p.deck,c=>c.subtypes?.includes('Stage 1')||c.subtypes?.includes('Stage 2'),'deck'),'Choose an Evolution card'))return;
  if(name==='Matter Exchange'&&choose('hand',indices(p.hand,()=>true,'hand'),'Choose a card to discard'))return;
- if(name==='Trickery'&&choose('prize',indices(p.prizes,()=>true,'prize'),'Choose a Prize to exchange'))return;
+ if(name==='Trickery'){
+  if(!p.prizes.length||!p.deck.length)throw Error('Trickery requires a Prize and a card in the deck');
+  if(choose('prize',indices(p.prizes,()=>true,'prize'),'Choose a face-down Prize position to exchange'))return;
+ }
  if(name==='Shift'){
   const types=[...new Set(g.players.flatMap(player=>own(player).filter(x=>x!==u).flatMap(x=>card(x.id).types||[])))].filter(t=>t!=='Colorless');
   if(choose('type',types.map((t,i)=>({id:`type:${i}`,label:t})),'Choose a Pokémon type'))return;
@@ -156,6 +159,11 @@ function powerPlan(g,plan,h){
  }
  if(name==='Peek'){
   if(choose('peek', [{id:'peek:0',label:'Your top deck card'},{id:'peek:1',label:'Opponent top deck card'},{id:'peek:2',label:'Opponent random hand card'},{id:'peek:3',label:'Your Prize'},{id:'peek:4',label:'Opponent Prize'}],'Choose private information'))return;
+  const mode=selected(plan,'peek')[0];
+  if(mode===3||mode===4){
+   const owner=mode===3?p:f;
+   if(owner.prizes.length&&choose('peekPrize',indices(owner.prizes,()=>true,'prize'),'Choose a face-down Prize position to inspect'))return;
+  }
  }
  if(name==='Summon Minions'){
   const items=indices(p.deck,isBasicPokemon,'deck'),count=Math.min(2,5-p.bench.length,items.length);
@@ -269,11 +277,18 @@ function doPower(g,plan,h){
    p.discard.push(...[removed.id,...removed.under.slice(0,-1),...removed.energies,...removed.attachedTrainers.map(x=>x.id)].filter((_,i)=>!(!removed.under.length&&i===0)));
    if(plan.slot===-1){if(!p.bench.length){g.over=true;g.winner=1-side;}else {g.pendingPromotions=[side];g.promotionAfter='direct';h.finishPromotions(g);}}break;
   }
+  case '[Laugh]':if(h.flip(g)){p.deck=h.shuffle(g,p.deck);f.deck=h.shuffle(g,f.deck);}break;
   case 'Pollen Stench':h.applyCondition(g,h.flip(g)?f.active:p.active,'Confused');break;
   case 'Long Distance Hypnosis':h.applyCondition(g,h.flip(g)?f.active:p.active,'Asleep');break;
   case 'Evolutionary Light':p.hand.push(...take(p.deck,[s('deck')]));p.deck=h.shuffle(g,p.deck);break;
   case 'Matter Exchange':p.discard.push(...take(p.hand,[s('hand')]));h.draw(g,side);break;
-  case 'Trickery':{if(!p.deck.length)break;const idx=s('prize');[p.prizes[idx],p.deck[p.deck.length-1]]=[p.deck[p.deck.length-1],p.prizes[idx]];break;}
+  case 'Trickery':{
+   const idx=s('prize');
+   [p.prizes[idx],p.deck[p.deck.length-1]]=[p.deck[p.deck.length-1],p.prizes[idx]];
+   // The replacement Prize is face down even if the old Prize was revealed.
+   if(p.prizeFaceUp)p.prizeFaceUp[idx]=false;
+   break;
+  }
   case 'Shift':u.shiftType=d.shiftType;break;
   case 'Buzzap':{
    const destination=pokemon(p,s('target'));destination.energies.push(u.id);destination.buzzapTypes ||= {};destination.buzzapTypes[u.id]=d.buzzType;
@@ -283,7 +298,7 @@ function doPower(g,plan,h){
    if(plan.slot===-1){if(!p.bench.length){g.over=true;g.winner=1-side;}else{g.pendingPromotions=[side];g.promotionAfter='direct';h.finishPromotions(g);}}break;
   }
   case 'Peek':{
-   const mode=s('peek');const owner=mode===0||mode===3?p:f;const id=mode<2?owner.deck.at(-1):mode===2?(f.hand.length?f.hand[h.random(g,f.hand.length)]:null):owner.prizes[0];
+   const mode=s('peek');const owner=mode===0||mode===3?p:f;const id=mode<2?owner.deck.at(-1):mode===2?(f.hand.length?f.hand[h.random(g,f.hand.length)]:null):owner.prizes[s('peekPrize')??0];
    (p.privateLog ||= []).push(id?`Peek: ${card(id).name}`:'Peek: no card');break;
   }
   case 'Summon Minions':if(have(plan,'deck')){for(const id of take(p.deck,selected(plan,'deck')))p.bench.push(h.unit(id,g.round));p.deck=h.shuffle(g,p.deck);}break;
@@ -293,8 +308,8 @@ function doPower(g,plan,h){
  }
  h.log(g,`${p.name} activated ${name}.`);
 }
-const ONCE=new Set(['Fragrance Trap','Soak Up','Natural Healing','Playful Punch','Emerge','Gather Fire','Heal','Step In','Curse','Shift','Evolutionary Light','Matter Exchange','Pollen Stench','Long Distance Hypnosis','Trickery','Peek','Revive Fossil','Revive Friends','Fire Recharge','Glaring Gaze','[Search]','[Tell]']);
-const ACTIVATED=new Set(['Shapeshift','Fragrance Trap','Soak Up','Natural Healing','Playful Punch','Emerge','Energy Charge','Rain Dance','Energy Trans','Gather Fire','Energy Burn','Damage Swap','Curse','Strange Behavior','Heal','Step In','Cowardice','Evolutionary Light','Matter Exchange','Pollen Stench','Long Distance Hypnosis','Trickery','Shift','Peek','Buzzap','Revive Fossil','Revive Friends','Downpour','Fire Recharge','Glaring Gaze','[Search]','[Tell]']);
+const ONCE=new Set(['Fragrance Trap','Soak Up','Natural Healing','Playful Punch','Emerge','Gather Fire','Heal','Step In','Curse','Shift','Evolutionary Light','Matter Exchange','Pollen Stench','Long Distance Hypnosis','Trickery','Peek','Revive Fossil','Revive Friends','Fire Recharge','Glaring Gaze','[Search]','[Tell]','[Laugh]']);
+const ACTIVATED=new Set(['Shapeshift','Fragrance Trap','Soak Up','Natural Healing','Playful Punch','Emerge','Energy Charge','Rain Dance','Energy Trans','Gather Fire','Energy Burn','Damage Swap','Curse','Strange Behavior','Heal','Step In','Cowardice','Evolutionary Light','Matter Exchange','Pollen Stench','Long Distance Hypnosis','Trickery','Shift','Peek','Buzzap','Revive Fossil','Revive Friends','Downpour','Fire Recharge','Glaring Gaze','[Search]','[Tell]','[Laugh]']);
 const ONPLAY=new Set(['Call the Boss','Summon Minions','Sneak Attack','Reel In','[Increase]','[Engage]','Tag Team','Berserk','Fire Boost']);
 const PASSIVE=new Set(['Rebirth','Energy Drain','Scram','Shock Blast','Gaseous Form','Healing Fire','Fortitude','Pollen Defense','Restless Sleep','Strange Barrier','Prehistoric Power','Toxic Gas','Hay Fever','Invisible Wall','Kabuto Armor','Transparency','Transform','Thick Skinned','Retreat Aid','Sticky Goo','Clairvoyance','Frenzy','Strikes Back','Sinkhole','Final Beam','Hydroelectric Power','Anger','Frog Song','Spikes','Energy Evolution','[Normal]','Magma Pool','Hot Plate','Psylink','Flee','Bench Guard','Shell Armor','Photosynthesis','Relaxing Scent','Rebellion']);
 const UNSUPPORTED=new Set();
