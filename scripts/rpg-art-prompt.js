@@ -18,8 +18,8 @@ const LAYOUT_TRIGGERS = [
   /\bcollag(?:e|es)\b/i,
   /\b(?:grids?|montages?|mood.?boards?|story.?boards?|contact.sheets?)\b/i,
   /\b(?:concept|character|expression|sprite|reference|style)\s+sheets?\b/i,
-  /\b(?:concept|asset|design|promotional)\s+(?:boards?|galleries|showcases?)\b/i,
-  /\b(?:line.?ups?|multiple.panels?|split.frames?|multi.panels?|tiled|side.by.side)\b/i,
+  /\b(?:concept|asset|design|promotional)\s+(?:boards?|galler(?:y|ies)|showcases?)\b/i,
+  /\b(?:line.?ups?|multiple.panels?|split.frames?|multi.panels?|tiled)\b/i,
   /\b(?:four|eight|sixteen|32)\s+(?:scenes?|characters?|portraits?|images?|variations?|panels?)\b/i,
   /\b(?:4\s*[x×]\s*4|2\s*[x×]\s*2|3\s*[x×]\s*3)\b/i,
 ];
