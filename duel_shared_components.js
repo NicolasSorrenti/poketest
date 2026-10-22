@@ -78,6 +78,31 @@
   if(!bench.length){const el=document.createElement('div');el.className='empty';el.textContent='Empty Bench';root.replaceChildren(el);return;}
   root.replaceChildren(...bench.map((unit,index)=>createPokemon(unit,index)));
  }
+ // Stadiums affect both players, but the physical card sits on its owner's mat.
+ // Preserve unchanged DOM during CPU playback and online polling to avoid flicker.
+ function renderStadium({mine,theirs,stadium,me=0,getCard,picture,onInspect,onHover}){
+  for(const [slot,owner] of [[mine,me],[theirs,1-me]]){
+   const shown=!!(stadium?.id&&stadium.owner===owner);
+   slot.hidden=!shown;
+   slot.classList.toggle('occupied',shown);
+   if(!shown){if(slot.children.length)slot.replaceChildren();slot._stadiumId=null;continue;}
+   if(slot._stadiumId===stadium.id&&slot.children.length)continue;
+   const c=getCard(stadium.id),button=document.createElement('button'),src=picture(stadium.id);
+   button.type='button';button.className='stadium-card';
+   button.title=(c.name||'Stadium')+' — inspect Stadium';
+   button.setAttribute('aria-label',button.title);
+   if(src){
+    const img=document.createElement('img');img.src=src;img.alt='';img.loading='eager';
+    button.append(img);
+   }else{
+    const label=document.createElement('span');label.className='stadium-card-fallback';
+    label.textContent=c.name||'Stadium';button.append(label);
+   }
+   button.addEventListener('click',()=>onInspect(stadium.id));
+   if(onHover)onHover(button,stadium.id);
+   slot.replaceChildren(button);slot._stadiumId=stadium.id;
+  }
+ }
  // Card visuals are shared; ownership, visibility and legal target callbacks
  // stay in the mode-specific controller.
  function damagePips(unit,card){
@@ -154,5 +179,5 @@
   for(const option of prizeOptions(decision))options.append(button('🎴 '+(option.index+1),()=>choose(option.id),'prize-option',busy));
   container.append(title,info,options);
  }
- return {renderHandPeek,renderHandFan,handIntent,handCardFace,renderZone,pokemonFace,renderAttacks,renderFaceUpPrizes,renderPrizeRail,renderPrizeFallback,prizeOptions};
+ return {renderHandPeek,renderHandFan,handIntent,handCardFace,renderZone,renderStadium,pokemonFace,renderAttacks,renderFaceUpPrizes,renderPrizeRail,renderPrizeFallback,prizeOptions};
 });
