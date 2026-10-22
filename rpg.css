@@ -190,7 +190,7 @@
 
 /* RPG scene-first navigation */
 .sidebar{overflow-y:auto;max-height:calc(100vh - 164px)}
-.rpg-panel-tabs{position:sticky;top:-8px;z-index:8;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:5px;padding:12px 0;background:#141b2b}
+.rpg-panel-tabs{position:sticky;top:-8px;z-index:8;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:5px;padding:12px 0;background:#141b2b}
 .rpg-panel-tabs button{padding:10px 3px;font:800 13px 'Barlow Condensed';letter-spacing:.5px;background:#283148}
 .rpg-panel-tabs button.active{background:#a14369;border-color:#f3aac1;color:white}
 .rpg-scene-cast{position:absolute;z-index:2;inset:26% 2% 145px 2%;display:flex;align-items:end;justify-content:space-evenly;gap:2px;pointer-events:none}
@@ -384,3 +384,33 @@
 @media(max-width:700px){.gameplay-tutorial{right:12px;left:12px;bottom:12px;width:auto;max-height:38dvh;overflow:auto;padding:12px}.gameplay-tutorial strong{font-size:19px}}
 
 .tutorial-inline{background:#23334b;border-left:3px solid #e4a2bd;border-radius:7px;padding:10px 13px;margin:12px 0;color:#f5dce6;font-size:12px;line-height:1.6}
+
+/* RPG UX: reserve the main bar for core actions, keep secondary tools accessible. */
+.utility-actions{flex-wrap:wrap;justify-content:flex-end;align-items:center}
+.rpg-more-menu{position:relative;z-index:42;flex:none}
+.rpg-more-menu>summary{list-style:none;cursor:pointer;display:flex;align-items:center;justify-content:center;min-height:40px}
+.rpg-more-menu>summary::-webkit-details-marker{display:none}
+.rpg-more-menu>summary:focus-visible{outline:3px solid #ffbb9e;outline-offset:3px}
+.rpg-more-menu[open]>summary{background:#87436f;border-color:#f3acc5}
+.rpg-more-content{position:absolute;top:calc(100% + 8px);right:0;min-width:230px;
+ max-width:calc(100vw - 20px);display:grid;gap:8px;padding:12px;border:1px solid #b27d9b;
+ border-radius:13px;background:#171c32;box-shadow:0 18px 50px #000d}
+.rpg-more-content>.toolbar-btn{display:block;width:100%;text-decoration:none;text-align:left;white-space:normal}
+.rpg-more-content .rpg-audio-settings{width:100%}
+.rpg-more-content .rpg-audio-settings>summary{justify-content:flex-start;width:100%}
+.rpg-more-content .rpg-audio-settings .rpg-audio-menu{position:static;width:100%;max-width:100%;box-shadow:none;padding:10px;margin-top:6px}
+.rpg-calendar-day{margin:16px 0 8px}
+.rpg-calendar-day h3{font:800 21px 'Barlow Condensed',sans-serif;color:#ffcedd;margin:0 0 8px}
+.rpg-calendar-item{display:grid;gap:6px;padding:12px 14px;margin-bottom:8px;border:1px solid #4c4967;border-radius:10px;background:#20283b}
+.rpg-calendar-type{color:#f3b3c8;font:800 11px 'Barlow Condensed',sans-serif;letter-spacing:1px;text-transform:uppercase}
+.rpg-calendar-item strong{font:800 17px 'Barlow Condensed',sans-serif;color:white}
+.rpg-calendar-item p{margin:0;color:#cbd0e0;font-size:12px;line-height:1.5}
+.rpg-calendar-item button{justify-self:start;padding:9px 13px;background:#7b3f66;border-color:#de97b4}
+#calendarDialog{width:min(700px,95vw);max-width:700px;max-height:87dvh;overflow-y:auto}
+@media(max-width:700px){
+ .utility-actions{grid-template-columns:repeat(3,minmax(0,1fr));align-items:stretch}
+ .rpg-more-menu{min-width:0}
+ .rpg-more-menu>summary{height:100%;font-size:11px;padding:10px 5px}
+ .rpg-more-content{right:0;width:min(270px,calc(100vw - 24px))}
+ .rpg-calendar-item{padding:10px}
+}
