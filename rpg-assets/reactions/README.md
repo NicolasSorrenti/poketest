@@ -1,6 +1,6 @@
 # NPC battle reaction assets
 
-> **MANDATORY SINGLE-IMAGE RULE:** See `docs/ART_GENERATION_ONE_IMAGE_RULE.md`. For each `attack`, `hurt`, `ko_taken`, `battle-result` or `booster` asset, generate **one complete standalone illustration for one NPC and one state**. **NO CONCEPT ART, GRIDS, COLLAGES, MONTAGES, MULTI-POSE OR MULTI-EXPRESSION SHEETS, UI MOCKUPS OR BAKED LABELS.** Reject such outputs before export; never use a cropped panel as if it were a standalone render.
+> **One asset per generation call:** Follow `docs/ART_GENERATION_ONE_IMAGE_RULE.md`. For eight original adult heroines, use `node scripts/rpg-art-prompt.js --reward battle-result --character <id>` or `--reward booster --character <id>` to obtain the exact model-facing request. For other reaction types, validate a concise *positive* custom prompt with `--validate <prompt-file>`. Reject multi-image layouts during visual QA; do not copy this full README into the generator.
 
 The RPG duel cut-in system supports all 20 installed characters. Attack art is 1280×720 widescreen artwork rather than a conventional portrait crop.
 
