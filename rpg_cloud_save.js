@@ -200,26 +200,27 @@
   $('cloudPassword').addEventListener('keydown',ev=>{if(ev.key==='Enter')signIn('signin');});
   renderAccount();
  }
- async function mount(options){
-  if(adapter)return;
-  adapter=options;ui();
+ async function connect(){
   try{
    const response=await fetch('/api/rpg-cloud/config',{cache:'no-store'});
    config=await response.json();
    if(!response.ok||!config.enabled){
-    stateLabel('Cloud saves are not connected yet. Your local save is working.');
-   }else{
-    const cached=JSON.parse(localStorage.getItem(SESSION_KEY)||'null');
-    if(!cached?.refresh_token||!cached?.user?.id){
-     stateLabel('Sign in to sync your RPG progress between devices.');
-    }else{
-     session=cached;meta=readMeta();renderAccount();
-     await refreshIfNeeded();await reconcile({autoLoad:true});
-    }
+    stateLabel('Cloud saves are not connected yet. Your local save is working.');return;
    }
+   const cached=JSON.parse(localStorage.getItem(SESSION_KEY)||'null');
+   if(!cached?.refresh_token||!cached?.user?.id){
+    stateLabel('Sign in to sync your RPG progress between devices.');return;
+   }
+   session=cached;meta=readMeta();renderAccount();
+   await refreshIfNeeded();await reconcile({autoLoad:true});
   }catch(error){stateLabel('Cloud unavailable; browser progress is safe. '+errorText(error));}
-  window.addEventListener('online',()=>{if(session&&!blocked)schedule();});
+ }
+ async function mount(options){
+  if(adapter)return;
+  adapter=options;ui();
+  window.addEventListener('online',()=>{if(!config?.enabled)connect();else if(session&&!blocked)reconcile();});
   document.addEventListener('visibilitychange',()=>{if(!document.hidden&&session&&Date.now()-lastCheck>30000)reconcile();});
+  await connect();
  }
  root.NeoRpgCloudSave={mount,onLocalSave,syncNow,hash,validSave};
 })(typeof window==='undefined'?null:window);
