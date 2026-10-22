@@ -151,12 +151,13 @@
   s.socialHistory[npc]={lastDay:s.day,lastTag:a.tag,lastActivity:a.id,count:(previous?.count||0)+1,likedTags};
   return {npc,activityId:a.id,title:a.title,affinity:rating,repeated,tag:a.tag,tone:a.tone,
    affection,trust,respect,insight,focusCost:a.focus,creditCost:a.credits,
-   line:moments[a.id]+' '+profile(npc,cast).voice[rating==='favorite'&&!repeated?0:rating==='unfamiliar'?2:1]};
+   line:(moments[a.id]||'You share a moment away from the tournament rush.')+' '+profile(npc,cast).voice[rating==='favorite'&&!repeated?0:rating==='unfamiliar'?2:1]};
  }
  function validate(){
   const errors=[],seen=new Set();
   for(const a of activities){
    if(seen.has(a.id))errors.push('Duplicate '+a.id);seen.add(a.id);
+   if(!moments[a.id]||moments[a.id].length<35)errors.push('Missing activity moment '+a.id);
    if(!places.has(a.place)||!tags.has(a.tag)||!['friendship','rivalry'].includes(a.tone)
     ||!Number.isInteger(a.focus)||a.focus<0||!Number.isInteger(a.credits)||a.credits<0||!a.detail)errors.push('Invalid '+a.id);
   }
