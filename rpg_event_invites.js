@@ -25,6 +25,25 @@
   elio:{wait:['Oh! You are here. I was afraid I got the time wrong.','I kept checking the clock. Not because I doubted you! I just really wanted to see you.'],ask:['Hey, can I show you something? I have been working on it.','I wanted your opinion before I try this on my own.'],unexpected:['Uh, this might be a problem. Can you take a look?','I am so relieved you came by. What would you do here?']},
   nereo:{wait:['Right on schedule. Better than the ferry.','I was beginning to think the river had swallowed you. Good to see you.'],ask:['Could use another set of hands. You free?','I have got something to talk through, if you can spare the time.'],unexpected:['Well, that is a new one. Care to help?','You are just in time to see what the harbor has invented today.']}
  });
+ const missedVoice=Object.freeze({
+  hana:'You came. After last time, I was not quite sure. I am happy to see you.',
+  reina:'You are here. Good. I was not planning to wait around twice.',
+  shiori:'I wondered whether our plans would work out this time. Thank you for coming.',
+  yuna:'Hey! You made it this time! I was running out of dramatic backup plans.',
+  akari:'Our last appointment did not happen. I am glad this one appears to be on track.',
+  camila:'Darling, a second chance at punctuality? I approve.',
+  marina:'Oh, you made it. I worried I had misunderstood our plans again.',
+  kaede:'I was not going to save your spot forever. But I am glad you came.',
+  elena:'I appreciate that we can try again after the last scheduling difficulty.',
+  jinx:'Hey, you actually showed! I might forgive the last disappearing act.',
+  luna:'Oh! I am glad you came. I thought you might be busy again.',
+  rina:'You are here! I really did not want to miss our chance twice.',
+  sierra:'Good. I was starting to wonder whether we would ever get this time.',
+  sol:'You made it! I was hoping we would get another chance.',
+  alma:'I kept the table free again. Do not make me charge rent this time.',
+  elio:'Oh, you are here! I was nervous we might miss each other again.',
+  nereo:'Look who beat the ferry to the dock. Better timing than last time.'
+ });
  const fallback={wait:['Glad you could make it. Shall we?','I was hoping we could spend this time together.'],ask:['I was hoping we could talk about something.','There is something I wanted to share with you.'],unexpected:['Something has come up. Do you have a moment?','I am glad you are here. I could use your help.']};
  const score=(s,id,key)=>Math.max(Number(s?.relationships?.[id]?.[key])||0,Number(s?.bonds?.[id]?.[key])||0);
  const close=(s,id)=>s?.partner===id||score(s,id,'affection')>=6||score(s,id,'trust')>=5;
@@ -57,7 +76,10 @@
   const npc=opportunity.npc,style=voice[npc]||fallback,near=close(state,npc),friendly=waiting(state,npc);
   const category=opportunity.kind==='appointment'?'wait':
     opportunity.kind==='situation'||opportunity.kind==='encounter'?'unexpected':'ask';
-  const source=style[category]||fallback[category],intro=source[near||friendly?1:0];
+  const source=style[category]||fallback[category];
+  const missed=(state?.appointments||[]).some(p=>p.npc===npc&&p.status==='missed'&&Number.isInteger(p.day)&&
+   state.day>=p.day&&state.day-p.day<=7);
+  const intro=category==='wait'&&missed?(missedVoice[npc]||source[0]):source[near||friendly?1:0];
   const duel=['cup','competitive','exhibition'].includes(opportunity.kind);
   // A date is an agreed-upon plan, never a surprise romantic escalation.
   const romantic=opportunity.kind==='appointment'&&opportunity.tone==='romantic'&&near;
