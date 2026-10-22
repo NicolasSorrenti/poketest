@@ -71,6 +71,33 @@ try{
  UI.renderZone({root:zone,team:{active:null,bench:[]},active:true,createPokemon:()=>node()});
  assert.equal(zone.children[0].textContent,'Not selected');
  
+ const ownStadium=node(),enemyStadium=node();
+ let inspectedStadium=null,attachedStadiums=0;
+ const renderStadium=(stadium,me=0)=>UI.renderStadium({
+  mine:ownStadium,theirs:enemyStadium,stadium,me,
+  getCard:()=>({name:'Sprout Tower'}),picture:id=>'https://cards.example/'+id+'.png',
+  onInspect:id=>{inspectedStadium=id;},onHover:()=>{attachedStadiums++;}
+ });
+ renderStadium({id:'neo1-105',owner:1});
+ assert.equal(ownStadium.hidden,true,'Own slot stays empty for opposing Stadium');
+ assert.equal(enemyStadium.hidden,false,'Opponent Stadium appears on opponent mat');
+ assert.equal(enemyStadium.children[0].children[0].src,'https://cards.example/neo1-105.png');
+ enemyStadium.children[0].onclick();
+ assert.equal(inspectedStadium,'neo1-105','Stadium card can be inspected');
+ const preserved=enemyStadium.children[0];
+ renderStadium({id:'neo1-105',owner:1});
+ assert.equal(enemyStadium.children[0],preserved,'Unchanged Stadium should not flicker');
+ assert.equal(attachedStadiums,1,'Preview handlers should not stack');
+ renderStadium({id:'neo2-105',owner:0});
+ assert.equal(enemyStadium.hidden,true,'Replaced opposing Stadium disappears');
+ assert.equal(ownStadium.children[0].children[0].src,'https://cards.example/neo2-105.png','Replacement follows its owner');
+ renderStadium(null);
+ assert.equal(ownStadium.children.length,0,'Discarded Stadium clears its slot');
+ assert.equal(ownStadium.hidden,true);
+ renderStadium({id:'neo4-99',owner:1},1);
+ assert.equal(ownStadium.hidden,false,'Online side 1 sees their own Stadium on their half');
+ assert.equal(enemyStadium.hidden,true);
+
  const face=UI.pokemonFace({unit:{energies:['grass'],damage:10},card:{name:'Test <Pokémon>'},source:'x" onerror="alert(1)',energyStack:()=>'<span>Energy</span>',vitals:()=>'<b>HP</b>'});
  assert.match(face,/Energy/);assert.match(face,/HP/);assert.match(face,/1 energy attached/);
  assert.doesNotMatch(face,/<Pokémon>/);assert.doesNotMatch(face,/src="x" onerror=/);
@@ -105,7 +132,7 @@ try{
  const classic=fs.readFileSync(__dirname+'/classic_live.js','utf8');
  const online=fs.readFileSync(__dirname+'/online.js','utf8');
  for(const [mode,client] of [['solo',classic],['multiplayer',online]]){
-  for(const method of ['renderHandPeek','renderHandFan','handIntent','handCardFace','renderZone','pokemonFace','renderAttacks','renderFaceUpPrizes','renderPrizeRail','renderPrizeFallback'])
+  for(const method of ['renderHandPeek','renderHandFan','handIntent','handCardFace','renderZone','renderStadium','pokemonFace','renderAttacks','renderFaceUpPrizes','renderPrizeRail','renderPrizeFallback'])
    assert.ok(client.includes('shared.'+method),mode+' must use common '+method);
   assert.doesNotMatch(client,/b\.innerHTML=quick\.energyStack/,'Pokémon visuals must not diverge');
  }
