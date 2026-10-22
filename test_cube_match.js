@@ -40,6 +40,10 @@ const basic=hand.findIndex(id=>isBasicPokemon(CATALOG.get(id)));
 assert(basic>=0,'40-card player deck has an opening Basic');
 let result=classic.action(launched.duelToken,{type:'setup_select',payload:{handIndex:basic}},duel.revision);
 result=classic.action(launched.duelToken,{type:'setup_confirm',payload:{}},result.revision);
+if(result.view.mulliganBonus){
+ assert.equal(result.view.mulliganBonus.side,0);
+ result=classic.action(launched.duelToken,{type:'setup_bonus_draw',payload:{count:0}},result.revision);
+}
 assert.equal(result.view.phase,'game');
 assert.deepEqual(result.counts,[40,40]);
 assert.equal(result.view.players[0].prizeCount,4);
