@@ -1,0 +1,44 @@
+{
+  "scene": "reina_rain_catch",
+  "checkedAt": "2026-10-22",
+  "target": "rpg-assets/events/cg/season01/reina_rain_catch.webp",
+  "thumbnail": "rpg-assets/events/cg/season01/thumbs/reina_rain_catch.webp",
+  "existingArt": {
+    "existsOnMain": true,
+    "reviewStatus": "different_moment",
+    "existingImageSha256": "32b47cb4c88a1f348b66ad7cc33745d634d25803b5ac138af7d6e06c3869a09d",
+    "documentedMismatch": "Illustration depicts Reina at a sunset overlook, not the scripted rain mishap.",
+    "overwritten": false
+  },
+  "scriptSourceBlobSha": "6037ca622416e6e1dfa00aab0b803a3f7e9f4033",
+  "promptSha256": "07cd716f5bca1dc3d2d6d26935edf3018d62af993b6199b22cdb81431a73283c",
+  "promptValidation": "Matches current createPrompt scene assembly and positive one-image layout gate; outbound exact prompt sent to Figma.",
+  "referencePath": "rpg-assets/reina.png",
+  "referencePixelsChecked": false,
+  "referenceLimitation": "GitHub connector fetch_blob/fetch_file cannot decode binary PNG; no accessible canonical portrait pixel copy for reliable visual identity approval.",
+  "generation": {
+    "attempts": 1,
+    "figmaFileKey": "NPdAvoWAXuXow2dHsdUlkY",
+    "nodeId": "3:2",
+    "model": "gpt-image-2.5-sunburst",
+    "nativeSize": [
+      1536,
+      864
+    ],
+    "accepted": false,
+    "visualQA": "One continuous rain-splash moment at the community center; Reina has black hair with red underlayer, dark jacket, deck case. Rejected: prominently legible Japanese/English signage and text baked into background; original portrait pixel match not verifiable."
+  },
+  "deliverable": {
+    "gameWebpCreated": false,
+    "thumbnailCreated": false,
+    "manifestCreated": false,
+    "zipCreated": false,
+    "committedGameImage": false
+  },
+  "blockers": [
+    "Cannot access canonical Reina portrait pixels through GitHub text-only binary retrieval.",
+    "Figma generation produced text in scene; cannot approve under no-baked-text acceptance rule.",
+    "Figma image URLs/base64 are not directly exportable to the local packaging environment in this run."
+  ],
+  "nextStep": "Do not retry unchanged prompt repeatedly. Provide portrait image bytes as image reference, enforce text-free output through a validated prompt-generator revision, and restore an image export path before another attempt."
+}
