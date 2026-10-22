@@ -29,6 +29,7 @@
     "audit:classic:execute": "node audit_classic_executable.js",
     "test:classic:support": "node test_classic_trainer_matrix.js && node test_classic_power_matrix.js && node test_classic_power_fidelity.js && node test_classic_onplay_powers.js && node test_classic_trainer_power_migration.js && node test_classic_cross_effects.js && node test_classic_reactive_powers.js && node test_classic_trainer_power_duels.js",
     "audit:classic:support": "node audit_classic_support.js",
+    "audit:classic:powers": "node audit_classic_powers.js",
     "test:classic:live": "node test_classic_setup_action_ui.js && node test_classic_live_assets.js && node test_classic_live_attack_preflight.js && node test_classic_live_service.js && node test_classic_live_http.js",
     "test:retail-themes": "node test_retail_theme_decks.js && node test_gym_theme_attacks.js && node test_gym_theme_powers.js && node test_reprint_damage_integrity.js && node test_gym_expanded_pool.js && node test_neo_genesis_decks.js && node test_neo_discovery_decks.js",
     "audit:retail-themes": "node audit_retail_theme_support.js",
