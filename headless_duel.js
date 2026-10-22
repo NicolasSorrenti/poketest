@@ -95,7 +95,12 @@ function extraAttackEnergy(g,unit,attack,type){
 }
 function effectiveCard(g,u){
  if(u?.secretPlanFaceDown)return SECRET_BASIC;
- const printed=card(g,u.id);
+ let printed=card(g,u.id);
+ // Neo Revelation Lanturn becomes Water until turn end while Submerge stays
+ // active. The modified type must be used by combat/attack calculations.
+ if(isClassicRules(g)&&u.submergeUntil>g.turnSerial&&
+    CLASSIC_POWERS.enabled(g,u,'Submerge'))
+  printed={...printed,types:['Water']};
  if(isClassicRules(g)&&u.gymShapeshiftCard){
   const mimicked=card(g,u.gymShapeshiftCard);
   return {...mimicked,id:printed.id,abilities:printed.abilities};
@@ -187,6 +192,7 @@ function applyCondition(g,u,status){
  if(u.neo48PollenShieldUntil>g.turnSerial&&['Asleep','Confused','Paralyzed','Poisoned'].includes(status))return;
  if(isClassicRules(g)&&CLASSIC_POWERS.protectsStatus(g,u))return;
  STATUS.applyCondition(u,status);
+ if(['Asleep','Confused','Paralyzed'].includes(status))delete u.submergeUntil;
  if(u.gymShapeshiftCard&&['Asleep','Confused','Paralyzed'].includes(status)){
   const owner=g.players.find(p=>allPokemon(p).includes(u));if(owner)owner.discard.push(u.gymShapeshiftCard);
   delete u.gymShapeshiftCard;
