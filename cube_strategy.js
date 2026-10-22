@@ -45,7 +45,8 @@ function colorPlan(picks){
  }).sort((a,b)=>b.score-a.score||a.colors.join().localeCompare(b.colors.join()));
  return ranked[0].colors;
 }
-function score(id,picks){
+function score(id,picks,{preset='balanced'}={}){
+ const evolutionFocus=!!require('./cube_presets').getPreset(preset).evolutionFocus;
  const c=card(id);
  if(!c)return -Infinity;
  const name=c.name||'',seen=picks.map(card),basics=seen.filter(isBasicPokemon);
@@ -75,20 +76,28 @@ function score(id,picks){
  if(family)result+=Math.min(6,seen.filter(x=>canEvolve(c,x)).length*2);
  if(copies>=2)result-=copies*3;
  if(progress>=42&&!basic&&!family)result-=8;
+ if(evolutionFocus){
+  // A Basic with no family is less attractive than a complete evolution line.
+  if(basic)result+=seen.some(x=>canEvolve(x,c))?5:-5;
+  else result+=family?13:-5;
+  // The first copy of an evolution is more valuable than a third copy.
+  if(!basic&&family&&copies===0)result+=4;
+ }
  return result;
 }
-function cpuPick(ids,picks){
+function cpuPick(ids,picks,{preset='balanced'}={}){
  if(!Array.isArray(ids)||!ids.length)throw Error('CPU pack is empty');
  // Cache each pack's scores: a room refresh must not re-run strategic planning
  // for the same card dozens of times inside Array.sort's comparator.
  const ranked=new Map();
- for(const id of ids)if(!ranked.has(id))ranked.set(id,score(id,picks));
+ for(const id of ids)if(!ranked.has(id))ranked.set(id,score(id,picks,{preset}));
  return [...ids].sort((a,b)=>ranked.get(b)-ranked.get(a)||a.localeCompare(b))[0];
 }
 function buildCpuDeck(picks,{preset='balanced'}={}){
  const mayhem=preset==='mayhem';
- const basicTarget=mayhem?8:11,minimumBasics=mayhem?7:8;
- const evolutionTarget=mayhem?3:6,trainerTarget=mayhem?16:11;
+ const evolutionFocus=!!require('./cube_presets').getPreset(preset).evolutionFocus;
+ const basicTarget=mayhem?8:evolutionFocus?8:11,minimumBasics=mayhem?7:evolutionFocus?7:8;
+ const evolutionTarget=mayhem?3:evolutionFocus?9:6,trainerTarget=mayhem?16:evolutionFocus?10:11;
  if(!Array.isArray(picks)||!picks.length)throw Error('CPU has no drafted cards');
  const basics=picks.filter(id=>pokemon(id)&&isBasicPokemon(card(id)));
  if(!basics.length)throw Error('CPU drafted no Basic Pokémon');
@@ -127,7 +136,7 @@ function buildCpuDeck(picks,{preset='balanced'}={}){
   }
  }
  const trainers=picks.filter(id=>card(id)?.supertype==='Trainer')
-  .sort((a,b)=>score(b,selected)-score(a,selected)||a.localeCompare(b));
+  .sort((a,b)=>score(b,selected,{preset})-score(a,selected,{preset})||a.localeCompare(b));
  for(const id of trainers){
   if(selected.filter(x=>card(x).supertype==='Trainer').length>=trainerTarget||selected.length>=24)break;
   add(id);
