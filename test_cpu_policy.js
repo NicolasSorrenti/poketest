@@ -337,6 +337,7 @@ const settings={level:3,personality:'balanced',side:1,seed:47};
  let game=createGame({decks:[deck,deck],seed:12093,format:'classic'});
  game=AI.driveSide(game,{side:0,level:5,seed:87}).game;
  game=AI.driveSide(game,{side:1,level:5,seed:91}).game;
+ if(game.mulliganBonus)game=AI.driveSide(game,{side:game.mulliganBonus.side,level:5,seed:91}).game;
  assert.equal(game.phase,'game');
  const settings={side:game.turn,level:5,seed:99,planning:true};
  const first=AI.chooseAction(game,settings);
@@ -711,7 +712,12 @@ for(let seed=1;seed<=4;seed++){
   game=result.game;
   decisions+=result.steps;
  }
- assert.equal(game.phase,'game','Both CPU seats should confirm setup');
+ if(game.mulliganBonus){
+  const side=game.mulliganBonus.side;
+  const result=AI.driveSide(game,{...profiles[side],limit:200});
+  decisions+=result.steps;game=result.game;
+ }
+ assert.equal(game.phase,'game','Both CPU seats should confirm setup and resolve mulligans');
  for(let turn=0;turn<28&&!game.over;turn++){
   const side=game.pendingDecision?game.pendingDecision.actor:game.turn;
   const before=game.events.length;
