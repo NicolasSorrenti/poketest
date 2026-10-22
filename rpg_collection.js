@@ -96,12 +96,11 @@
   const owned=state?.deckJourney?.owned||{};
   return THEMED_PACKS.map(pack=>{
    const sources=availableThemeSets(state,pack),unlocked=themeUnlocked(state,pack);
+   // Every unlocked expansion supplies shared Common/Uncommon support;
+   // rare cards remain tied to the featured theme's own expansion pool.
+   const shared=shopPacks(state).filter(offer=>offer.unlocked).map(offer=>offer.set);
    const possible=new Set(['rare','holo','secret'].flatMap(kind=>selectThemePool(sources,kind,pack.rare))
-    .concat(selectThemePool(sources,'uncommon',pack.uncommon),selectThemePool(sources,'common',pack.common)));
-   // Paid ten-card packs include unrestricted Common/Uncommon slots, even
-   // when the featured slots are guaranteed to match the theme.
-   for(const rarity of ['uncommon','common'])
-    for(const id of selectThemePool(sources,rarity))possible.add(id);
+    .concat(selectThemePool(shared,'uncommon'),selectThemePool(shared,'common')));
    for(const id of [...ENERGY].filter(x=>x!=='base1-96'))possible.add(id);
    const unique=[...possible].filter(id=>(owned[id]||0)>0).length;
    return {...pack,unlocked,sources,futureSources:[...pack.sources],owned:unique,total:possible.size,
@@ -115,16 +114,18 @@
   if(!theme||!themeUnlocked(state,theme))return false;
   if(ENERGY.has(cardId)&&cardId!=='base1-96')return true;
   const sources=availableThemeSets(state,theme),set=cardId?.split('-')[0],rarity=packRarity(cardId);
-  if(!sources.includes(set))return false;
-  // Ten-card packs always have unrestricted Common and Uncommon slots beyond
-  // the featured guaranteed cards. Rare slot uses the exact themed subpool.
+  const unlocked=shopPacks(state).some(offer=>offer.set===set&&offer.unlocked);
+  if(!unlocked)return false;
+  // Non-featured support slots draw from all unlocked expansions, including
+  // classic staple Trainers in otherwise late-season themed boosters.
   if(rarity==='common'||rarity==='uncommon')return true;
+  if(!sources.includes(set))return false;
   return ['rare','holo','secret'].includes(rarity)&&
    selectThemePool(sources,rarity,theme.rare).includes(cardId);
  }
  // Mixed booster design: every pack contains genuine Pokémon and Trainer support.
  // The rare plus two featured slots distinguish ten-card themes (3/10); the
- // remaining slots fill gaps in Basics, Evolutions and Trainers. Mini packs
+ // remaining slots draw shared support from unlocked expansions. Mini packs
  // protect those same roles, when the unlocked rarities can provide them.
  function randomThemedPack(state,themeId,rng=Math.random,count=10){
   if(count!==5&&count!==10)throw Error('Only five- and ten-card packs are supported');
@@ -134,6 +135,7 @@
   if(!offer?.unlocked)throw Error(theme.name+' is not unlocked yet');
   const sets=offer.sources;
   if(!sets.length)throw Error('No unlocked expansions for this booster');
+  const sharedSets=shopPacks(state).filter(offer=>offer.unlocked).map(offer=>offer.set);
   const roll=Math.max(0,Math.min(.999999,rng()));
   const hasSecret=sets.some(set=>PACK_POOLS[set].secret.length>0);
   const rareKind=hasSecret&&roll<.01?'secret':roll<(hasSecret?.26:.25)?'holo':'rare';
@@ -141,17 +143,24 @@
   const pool=(rarity,role=null)=>{
    const key=rarity+':'+(role||'any');
    if(!cached.has(key)){
-    const all=selectThemePool(sets,rarity);
+    const all=selectThemePool(sharedSets,rarity);
     cached.set(key,role?all.filter(id=>cardRole(id,role)):all);
    }
    return cached.get(key);
   };
-  // Missing featured roles fall back to the actual rare pool in the unlocked sets.
   const pick=(rarity,role=null)=>{
    const preferred=role?pool(rarity,role):[];
    return chooseRandom(preferred.length?preferred:pool(rarity),rng);
   };
-  const rare=pick(rareKind,theme.rare);
+  const featuredPool=(rarity,role=null)=>{
+   const all=selectThemePool(sets,rarity);
+   return role?all.filter(id=>cardRole(id,role)):all;
+  };
+  const featuredPick=(rarity,role=null)=>{
+   const preferred=role?featuredPool(rarity,role):[];
+   return chooseRandom(preferred.length?preferred:featuredPool(rarity),rng);
+  };
+  const rare=featuredPick(rareKind,theme.rare);
   const energy=chooseRandom([...ENERGY].filter(id=>id!=='base1-96'),rng);
   const ucCount=count===5?1:3,commonCount=count===5?2:5;
   const target=count===10?{basic:2,evolution:1,trainer:2}:{basic:1,evolution:1,trainer:1};
@@ -193,12 +202,12 @@
   }
   // The Evolution Workshop still guarantees a printable Stage 1 plus Basic;
   // prefer an intermediate Stage 1 for its featured rare when possible.
-  const ucPool=pool('uncommon','evolution'),commonBasics=new Set(pool('common','basic'));
+  const ucPool=featuredPool('uncommon','evolution'),commonBasics=new Set(pool('common','basic'));
   const linked=ucPool.filter(id=>(BOOSTER_PARENTS[id]||[]).some(parent=>commonBasics.has(parent)));
   const parentUncommon=(BOOSTER_PARENTS[rare]||[]).filter(id=>linked.includes(id));
   const firstUncommon=theme.pair&&linked.length?
    chooseRandom(parentUncommon.length?parentUncommon:linked,rng):
-   count===10?pick('uncommon',theme.uncommon):
+   count===10?featuredPick('uncommon',theme.uncommon):
    balancedPick('uncommon',['common','common'],theme.uncommon);
   uncommons.push(firstUncommon);selected.push(firstUncommon);
   // Other packs sometimes supply a usable family pair as a pleasant bonus.
@@ -208,7 +217,7 @@
   if(parent){
    commons.push(parent);selected.push(parent);
   }else if(count===10){
-   const id=pick('common',theme.common);commons.push(id);selected.push(id);
+   const id=featuredPick('common',theme.common);commons.push(id);selected.push(id);
   }
   // Complete the original 1 rare / 3 uncommon / 5 common / 1 Energy
   // (or 1/1/2/1 mini) without disturbing the economy or expansion gates.
