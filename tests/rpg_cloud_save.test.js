@@ -157,6 +157,12 @@ test('rejects invalid cloud saves and retains the local campaign',async()=>{
  assert.equal(app.getLocal().day,11);
 });
 
+test('signup points confirmation emails to the actual game, not localhost',()=>{
+ const app=setup();
+ assert.equal(app.client.signupEndpoint(),
+  '/auth/v1/signup?redirect_to='+encodeURIComponent('https://poketest-4y5u.onrender.com/rpg.html'));
+});
+
 test('email confirmation consumes the URL fragment, validates the user and signs in',async()=>{
  const fragment='#access_token=confirmation-access-token&refresh_token=confirmation-refresh-token&expires_in=3600&token_type=bearer&type=signup';
  const app=setup({localSave:save(13),existingSession:false,authFragment:fragment});
