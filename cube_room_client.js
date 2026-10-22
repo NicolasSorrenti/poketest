@@ -2,7 +2,7 @@
 (()=>{
  const $=id=>document.getElementById(id);
  const TYPES=['Grass','Fire','Water','Lightning','Psychic','Fighting'];
- let code=null,token=null,state=null,busy=false,deck=[],deckInitialized=false,loading=false,presets=[];
+ let code=null,token=null,state=null,busy=false,deck=[],deckInitialized=false,loading=false,presets=[],lastPhase=null;
  const storageKey='neoCampusCubeRoomV1';
  async function loadPresets(){
   try{
@@ -70,7 +70,7 @@
  }
  let visualBuilder=null;
  function renderBuild(){
-  if(!state||!state.finished)return;
+  if(!state||!state.finished||state.tournament||state.seats[state.seat]?.deckReady)return;
   const mine=state.seats[state.seat];
   if(!deckInitialized){deck=[...(state.ownDeck||state.suggestedDeck||[])];deckInitialized=true;}
   if(!visualBuilder){
@@ -151,69 +151,91 @@
    location.assign('/online.html?cubeRoom='+encodeURIComponent(code));
   });
  }
+ function renderWaiting(){
+  const humans=state.seats.filter(s=>!s.cpu),ready=humans.filter(s=>s.deckReady).length;
+  $('deckWaitProgress').textContent=ready+' of '+humans.length+' players have locked their decks';
+  const roster=$('deckReadyRoster');roster.replaceChildren();
+  for(const seat of humans){
+   const row=document.createElement('div');row.className='seat '+(seat.deckReady?'ready':'waiting');
+   const name=document.createElement('strong');name.textContent=(seat.seat===state.seat?'★ ':'')+seat.name;
+   const status=document.createElement('small');status.textContent=seat.deckReady?'✓ Deck locked':'Building deck…';
+   row.append(name,status);roster.append(row);
+  }
+ }
  function renderTournament(){
-  const t=state?.tournament;
-  $('roundRobinArea').classList.toggle('hidden',!t);
-  if(!t)return;
-  $('roomProgress').textContent=t.finished?'All six tournament matches completed.':
-   'Round-robin underway · Games start as soon as opponents are free.';
-  $('rrProgress').textContent=t.finished?'Tournament complete':
+  const t=state?.tournament;if(!t)return;
+  $('rrRoomBadge').textContent='Room '+state.code+' · '+state.seats[state.seat].name;
+  $('rrProgress').textContent=t.finished?'Tournament complete · All '+t.totalMatches+' matches finished':
    t.matchIndex+' of '+t.totalMatches+' matches finished · '+t.activeMatches.length+' live';
   const active=$('rrActive');active.replaceChildren();
+  const myStanding=t.standings.find(row=>row.seat===state.seat);
+  const played=t.matches.filter(m=>m.seats.includes(state.seat)&&m.status==='complete');
   if(t.finished){
-   const row=document.createElement('strong');row.textContent='🏆 '+t.standings[0].name+' wins the Cube!';
-   active.append(row);
-  }else if(t.yourMatch){
    const title=document.createElement('strong');
-   title.textContent='Your match '+t.yourMatch.id+' · '+t.yourMatch.opponent;
+   title.textContent=myStanding?.rank===1?'🏆 You are the Cube Champion!':'🏆 '+t.standings[0].name+' wins the Cube!';
+   const detail=document.createElement('span');detail.className='rr-action-details';
+   detail.textContent='Your final standing: #'+(myStanding?.rank??'—')+' · '+(myStanding?.wins??0)+' wins, '+(myStanding?.losses??0)+' losses';
+   active.append(title,detail);
+  }else if(t.yourMatch){
+   const title=document.createElement('strong');title.textContent='Match '+t.yourMatch.id+' · vs '+t.yourMatch.opponent;
+   const detail=document.createElement('span');detail.className='rr-action-details';
+   detail.textContent=t.yourMatch.kind==='online'?'Your opponent is ready for the next duel.':'Your match against a CPU opponent is ready.';
    const link=document.createElement('a');
-   const sessionName=t.yourMatch.kind==='online'?'neoOnline':'neoClassicLive';
-   link.href=(t.yourMatch.kind==='online'?'/online.html':'/classic_live.html')+
-    '?cubeRoom='+encodeURIComponent(code);
-   link.textContent='Play against '+t.yourMatch.opponent+' →';
+   const isOnline=t.yourMatch.kind==='online';
+   link.href=(isOnline?'/online.html':'/classic_live.html')+'?cubeRoom='+encodeURIComponent(code);
+   link.textContent='Play match →';
    link.addEventListener('click',()=>{
-    if(sessionName==='neoOnline'){
+    if(isOnline){
      sessionStorage.setItem('neoOnlineRoom',t.yourMatch.code);
      sessionStorage.setItem('neoOnlineToken',t.yourMatch.token);
     }else sessionStorage.setItem('neoClassicLiveToken',t.yourMatch.token);
    });
-   active.append(title,link);
+   active.append(title,detail,link);
   }else{
-   const waiting=document.createElement('strong');
-   waiting.textContent=t.activeMatches.length?
-    'Waiting for your next available opponent':'Preparing the next pairings…';
-   active.append(waiting);
+   const waiting=document.createElement('strong');waiting.textContent='Waiting for your next match';
+   const detail=document.createElement('span');detail.className='rr-action-details';
+   detail.textContent=t.activeMatches.length?'Other matches are underway. Watch a live match below while you wait.':
+    'The next pairings will be assigned automatically.';
+   active.append(waiting,detail);
   }
-  const fixtures=$('rrFixtures');fixtures.replaceChildren();
+  const last=played.at(-1);
+  $('rrRecent').textContent=last?'Last result · Match '+last.id+': '+
+   (last.winner===state.seat?'You won!':'You lost to '+state.seats[last.winner].name)+
+   ' · '+played.length+' of 3 matches played':'';
+  for(const id of ['rrLiveFixtures','rrUpcomingFixtures','rrCompletedFixtures'])$(id).replaceChildren();
+  let liveCount=0,upcomingCount=0,completeCount=0;
   for(const match of t.matches){
    const tile=document.createElement('div');
    tile.className='rr-match '+(match.status==='complete'?'complete':match.status==='active'?'active':'');
+   if(match.seats.includes(state.seat))tile.classList.add('mine');
    const title=document.createElement('b');title.textContent='Match '+match.id+': '+match.names.join(' vs ');
    const result=document.createElement('small');
-   result.textContent=match.status==='complete'?
-    'Winner: '+state.seats[match.winner].name+
-     (match.method&&match.method!=='played'?' · '+match.method+' tiebreak':''):
+   result.textContent=match.status==='complete'?'Winner: '+state.seats[match.winner].name+
+    (match.method&&match.method!=='played'?' · '+match.method+' tiebreak':''):
     match.status==='active'?'● Live now':'Upcoming';
    tile.append(title,result);
    if(match.spectatable){
     const watch=document.createElement('button');watch.className='watch-btn';
     watch.type='button';watch.textContent='Watch live match 👁';
-    watch.addEventListener('click',()=>watchMatch(match.id));
-    tile.append(watch);
+    watch.addEventListener('click',()=>watchMatch(match.id));tile.append(watch);
    }
-   fixtures.append(tile);
+   if(match.status==='active'){liveCount++;$('rrLiveFixtures').append(tile);}
+   else if(match.status==='complete'){completeCount++;$('rrCompletedFixtures').append(tile);}
+   else{upcomingCount++;$('rrUpcomingFixtures').append(tile);}
   }
+  $('rrNoLive').classList.toggle('hidden',liveCount!==0);
+  $('rrUpcomingSection').classList.toggle('hidden',upcomingCount===0);
+  $('rrHistorySection').classList.toggle('hidden',completeCount===0);
+  $('rrCompletedCount').textContent=String(completeCount);
   const standings=$('rrStandings');standings.replaceChildren();
-  const table=document.createElement('table');
-  const head=document.createElement('thead'),tr=document.createElement('tr');
+  const table=document.createElement('table'),head=document.createElement('thead'),tr=document.createElement('tr');
   for(const label of ['Rank','Player','Played','W','L','Points']){
    const th=document.createElement('th');th.textContent=label;tr.append(th);
   }
   head.append(tr);table.append(head);
   const body=document.createElement('tbody');
   for(const row of t.standings){
-   const tr=document.createElement('tr');
-   if(row.seat===state.seat)tr.className='me';
+   const tr=document.createElement('tr');if(row.seat===state.seat)tr.className='me';
    for(const value of [row.rank,row.name,row.played,row.wins,row.losses,row.points]){
     const td=document.createElement('td');td.textContent=String(value);tr.append(td);
    }
@@ -225,40 +247,42 @@
   showChat();
  }
  function render(){
-  window.CubePoolViewer?.update(state?.cubePool);
   if(!state)return;
-  const focused=!!state.finished&&!state.tournament;
-  const entering=focused&&!document.body.classList.contains('cube-deck-mode');
-  document.body.classList.toggle('cube-deck-mode',focused);
-  $('cubeRoomBuildContext').textContent='Room '+state.code+' · '+
-   (state.seats[state.seat].deckReady?'Deck locked · Waiting for other players':'60 cards drafted · Create your 40-card deck');
-  $('entrance').classList.add('hidden');$('room').classList.remove('hidden');
-  $('roomTitle').textContent='Cube room '+state.code+' · '+(presets.find(p=>p.id===state.preset)?.name||state.preset||'Classic Balanced');
-  const invite=new URL(location.href);invite.pathname='/cube_room.html';invite.search='?room='+encodeURIComponent(code);
-  invite.hash='';$('inviteLink').value=invite.toString();
   const seat=state.seats[state.seat];
-  $('roster').replaceChildren();
-  for(const s of state.seats){
-   const holder=document.createElement('div');holder.className='seat';
-   const name=document.createElement('strong');
-   name.textContent=(s.seat===state.seat?'★ ':'')+s.name+(s.cpu?' · CPU':'');
-   const meta=document.createElement('small');
-   meta.textContent=state.status==='lobby'?(s.ready?'Ready':'Not ready'):
-    state.finished?(s.deckReady?'Deck locked':s.cpu?'CPU seat':'Building deck'):
-    s.pickCount+'/60 cards drafted';
-   holder.append(name,meta);$('roster').append(holder);
+  const phase=state.status==='build'?(seat.deckReady?'wait':'build'):state.status;
+  const focused=phase==='build';
+  document.body.classList.toggle('cube-deck-mode',focused);
+  document.body.dataset.cubePhase=phase;
+  $('entrance').classList.add('hidden');
+  $('room').classList.remove('hidden');
+  $('roomLobbyPanel').classList.toggle('hidden',phase!=='lobby');
+  $('draftArea').classList.toggle('hidden',phase!=='draft');
+  $('deckArea').classList.toggle('hidden',phase!=='build');
+  $('deckWaitingArea').classList.toggle('hidden',phase!=='wait');
+  $('roundRobinArea').classList.toggle('hidden',phase!=='tournament'&&phase!=='complete');
+  window.CubePoolViewer?.update(phase==='draft'||phase==='build'?state.cubePool:null);
+  $('cubeRoomBuildContext').textContent='Room '+state.code+' · 60 cards drafted · Create your 40-card deck';
+  if(phase==='lobby'){
+   $('roomTitle').textContent='Cube room '+state.code+' · '+
+    (presets.find(p=>p.id===state.preset)?.name||state.preset||'Classic Balanced');
+   const invite=new URL(location.href);invite.pathname='/cube_room.html';
+   invite.search='?room='+encodeURIComponent(code);invite.hash='';
+   $('inviteLink').value=invite.toString();
+   $('roster').replaceChildren();
+   for(const s of state.seats){
+    const holder=document.createElement('div');holder.className='seat';
+    const name=document.createElement('strong');name.textContent=(s.seat===state.seat?'★ ':'')+s.name;
+    const meta=document.createElement('small');meta.textContent=s.ready?'Ready':'Not ready';
+    holder.append(name,meta);$('roster').append(holder);
+   }
+   $('lobbyActions').classList.remove('hidden');
+   $('readyRoom').textContent=seat.ready?'Cancel ready':'Ready to draft';
+   $('beginDraft').classList.toggle('hidden',!state.host);
+   $('beginDraft').disabled=state.humanCount<2||state.seats.some(s=>!s.ready);
+   $('roomProgress').textContent=state.humanCount+' human players joined. Host starts after everyone is ready.';
   }
-  $('lobbyActions').classList.toggle('hidden',state.status!=='lobby');
-  $('readyRoom').textContent=seat.ready?'Cancel ready':'Ready to draft';
-  $('beginDraft').classList.toggle('hidden',!state.host);
-  $('beginDraft').disabled=state.humanCount<2||state.seats.some(s=>!s.ready);
-  $('roomProgress').textContent=state.status==='lobby'?
-    state.humanCount+' human players joined. Host starts after everyone is ready.':
-    state.finished?'All 60 picks complete. Build your decks!':
-    'Pack '+(state.round+1)+' of '+state.packs+' · Pick '+(state.pick+1)+' of '+state.cardsPerPack;
-  $('draftArea').classList.toggle('hidden',state.status!=='draft');
-  $('deckArea').classList.toggle('hidden',!state.finished||!!state.tournament);
-  renderTournament();
+  if(phase==='wait')renderWaiting();
+  if(phase==='tournament'||phase==='complete')renderTournament();
   if(state.status==='draft'){
    $('draftHeading').textContent='Your pack · '+state.pack.length+' cards';
    $('draftStatus').textContent=state.waiting?
@@ -271,9 +295,12 @@
    $('pickAdvice').textContent=guide?'Suggested pick: '+recommended.name+
     ' · Based on your drafted Pokémon, Energy costs and evolution lines.':'';
    $('pack').replaceChildren();
+   let selectedShown=false;
    for(const card of arrangedPack(state.pack)){
     const btn=document.createElement('button');btn.className='card';btn.type='button';
-    const selected=card.id===state.selectedId;
+    // Copies of one printing share an ID; highlight only one reserved copy.
+    const selected=!selectedShown&&card.id===state.selectedId;
+    if(selected)selectedShown=true;
     btn.classList.toggle('selected',selected);
     btn.setAttribute('aria-pressed',String(selected));
     btn.append(cardArt(card));
@@ -308,12 +335,16 @@
     $('picks').append(line);
    });
   }
-  if(state.finished)renderBuild();
-  window.CubeAnalysis?.update({pool:state.cubePool,drafted:state.drafted,pack:state.status==='draft'?arrangedPack(state.pack):[],deck});
-  if(entering){
+  if(phase==='build')renderBuild();
+  window.CubeAnalysis?.update({pool:phase==='draft'||phase==='build'?state.cubePool:null,
+   drafted:state.drafted,pack:phase==='draft'?arrangedPack(state.pack):[],deck});
+  if(phase!==lastPhase){
+   lastPhase=phase;
    window.scrollTo({top:0,behavior:'instant'});
-   const heading=$('deckArea').querySelector('.cb-header h2');
-   if(heading){heading.tabIndex=-1;heading.focus({preventScroll:true});}
+   if(phase==='build'){
+    const heading=$('deckArea').querySelector('.cb-header h2');
+    if(heading){heading.tabIndex=-1;heading.focus({preventScroll:true});}
+   }
   }
  }
  async function refresh(){

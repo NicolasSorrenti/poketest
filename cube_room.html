@@ -48,9 +48,35 @@ input,select{background:#0b162e;border:1px solid #5c77a5;border-radius:9px;color
 @media(max-width:700px){.columns,.buildgrid{grid-template-columns:1fr}.pack{grid-template-columns:repeat(2,minmax(0,1fr))}}
 .rr-progress{font-weight:800;font-size:20px;margin-bottom:14px;color:#ffd56f}.rr-active{border:1px solid #5b85bd;padding:16px;background:#233a61;border-radius:12px;margin:12px 0}.rr-active strong{display:block;margin-bottom:10px}.rr-active a{display:inline-block;background:#ffd56f;color:#102039;padding:12px 17px;border-radius:9px;font-weight:800;text-decoration:none}.rr-fixtures{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:8px;margin:16px 0}.rr-match{padding:10px;background:#233452;border-radius:9px;border:1px solid #455c82}.rr-match.active{border-color:#ffd56f}.rr-match.complete{border-color:#58cd9b}.rr-match b,.rr-match small{display:block}.rr-match small{color:#b3c8e3;margin-top:4px}.rr-standings{overflow-x:auto}.rr-standings table{width:100%;border-collapse:collapse;min-width:370px}.rr-standings th,.rr-standings td{text-align:left;padding:9px;border-bottom:1px solid #405475}.rr-standings th{color:#b8cdee}.rr-standings tr.me{background:#284875}.rr-active .waiting{color:#c3d5f1}
 .draft-tools{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:10px 0}.draft-tools label{display:flex;align-items:center;gap:7px}.draft-tools select{padding:8px;border-radius:8px;background:#14274b;color:#fff;border:1px solid #8ba7d2}.pick-advice{color:#8dffca;margin:7px 0}.card.suggested{border:2px solid #58dab2}.pick-badge{display:block;background:#86e6b9;color:#17332c;font-weight:800;padding:5px;border-radius:6px;margin:6px 0}.card-kind{display:block;color:#ffe099;font-size:12px}
+
+/* Multiplayer Cube: keep the tournament focused on current actions. */
+.rr-eyebrow{font-size:11px;font-weight:850;letter-spacing:.13em;color:#ffdc84;margin-bottom:8px}
+.rr-heading{display:flex;justify-content:space-between;align-items:flex-start;gap:18px;flex-wrap:wrap}
+.rr-heading h2{font-size:clamp(27px,4vw,38px);margin:0 0 8px}
+.rr-heading p{margin:0 0 14px;max-width:650px}
+.rr-room-badge{color:#cbdaf3;background:#233755;border:1px solid #405d8a;border-radius:10px;padding:8px 12px;font-weight:750;white-space:nowrap}
+.rr-dashboard{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(310px,1fr);gap:16px;align-items:start;margin:18px 0 26px}
+.rr-next-panel,.rr-standing-panel{background:#142440;border:1px solid #3a5884;border-radius:14px;padding:17px;min-width:0}
+.rr-next-panel h3,.rr-standing-panel h3{margin:0 0 12px;font-size:18px}
+.rr-next-panel .rr-active{margin:0;background:#213d65}
+.rr-active .rr-action-details{display:block;color:#c8daf3;font-size:13px;margin:7px 0 12px}
+.rr-active a{min-height:45px;display:inline-flex;align-items:center;justify-content:center}
+.rr-recent{margin-top:12px;color:#c8e7d5;font-size:14px}
+.rr-recent:empty{display:none}
+.rr-match-section{margin:18px 0}.rr-match-section h3{margin:0 0 10px}
+.rr-match-section .rr-fixtures{margin:0}
+.rr-history{border:1px solid #405a82;border-radius:12px;padding:12px 15px;margin:18px 0}
+.rr-history summary{cursor:pointer;font-size:16px;font-weight:800}
+.rr-history .rr-fixtures{margin:14px 0 0}
+#deckWaitingArea{max-width:800px;margin:18px auto}
+#deckWaitProgress{margin:18px 0}
+#deckReadyRoster .seat.ready{border:1px solid #3aab87;background:#1c4246}
+#deckReadyRoster .seat.waiting{border:1px solid #62779d}
+#deckReadyRoster .seat small{font-size:13px}
+@media(max-width:820px){.rr-dashboard{grid-template-columns:1fr}.rr-heading{display:block}.rr-room-badge{display:inline-flex;margin:5px 0 12px}.rr-next-panel,.rr-standing-panel{padding:12px}}
 </style></head>
 <body>
-<header><div><small>NEO CAMPUS · LIMITED FORMAT</small><h1>Multiplayer Cube Draft</h1></div><nav><a href="/play.html">← Game modes</a></nav></header>
+<header><div><small>NEO CAMPUS · LIMITED FORMAT</small><h1>Multiplayer Cube</h1></div><nav><a href="/play.html">← Game modes</a></nav></header>
 <p>Invite your friends to draft from the same 240-card cube. Two to four humans can join; empty seats become CPU drafters. Packs and picks stay private.</p>
 <p id="message" role="alert" aria-live="polite"></p>
 <section id="entrance" class="panel">
@@ -63,7 +89,7 @@ input,select{background:#0b162e;border:1px solid #5c77a5;border-radius:9px;color
 <div class="actions"><button id="createRoom" class="primary">Create Cube room</button><button id="joinRoom">Join with code</button></div>
 </section>
 <section id="room" class="hidden">
-<div class="panel">
+<div class="panel" id="roomLobbyPanel">
 <h2 id="roomTitle">Cube room</h2>
 <div class="inputs"><label class="field">Share this invite link<input id="inviteLink" readonly></label>
 <button id="copyInvite">Copy invite link</button></div>
@@ -83,14 +109,38 @@ input,select{background:#0b162e;border:1px solid #5c77a5;border-radius:9px;color
 <div id="roomBuilderAction"><button class="primary" id="lockDeck" type="button">Lock 40-card deck</button></div>
 <p id="buildStatus" aria-live="polite"></p><p id="roomNext" class="muted"></p>
 </section>
+<section id="deckWaitingArea" class="panel hidden" aria-label="Waiting for Cube decks">
+<div class="rr-eyebrow">DECK BUILDING COMPLETE</div>
+<h2>Deck locked. You're ready!</h2>
+<p>Your 40-card deck is saved. The championship begins automatically once the remaining players lock theirs.</p>
+<div class="rr-progress" id="deckWaitProgress" aria-live="polite"></div>
+<div id="deckReadyRoster" class="roster" aria-label="Player deck readiness"></div>
+<p class="muted">You don't need to keep the deck builder open. This page checks for new activity automatically.</p>
+</section>
 <section id="roundRobinArea" class="panel hidden" aria-label="Cube round robin championship">
-<h2>Round-robin Championship</h2>
-<p>Each player faces every opponent once. Two matches can run simultaneously when different players are available. Your drafted deck stays locked.</p>
+<div class="rr-heading">
+<div><div class="rr-eyebrow">MULTIPLAYER CUBE · TOURNAMENT</div>
+<h2>Cube Championship</h2>
+<p>Every seat plays each opponent once. Matches begin automatically when both players are available.</p></div>
+<div id="rrRoomBadge" class="rr-room-badge"></div>
+</div>
 <div class="rr-progress" id="rrProgress" aria-live="polite"></div>
-<div id="rrActive" class="rr-active"></div>
-<div id="rrFixtures" class="rr-fixtures"></div>
+<div class="rr-dashboard">
+<section class="rr-next-panel" aria-label="Your next match">
+<h3>Your next step</h3>
+<div id="rrActive" class="rr-active" aria-live="polite"></div>
+<div id="rrRecent" class="rr-recent" aria-live="polite"></div>
+</section>
+<section class="rr-standing-panel" aria-label="Championship standings">
 <h3>Standings</h3>
 <div id="rrStandings" class="rr-standings"></div>
+</section>
+</div>
+<div id="rrFixtures">
+<section class="rr-match-section" id="rrLiveSection"><h3>Live matches</h3><div id="rrLiveFixtures" class="rr-fixtures"></div><p id="rrNoLive" class="muted hidden">No matches are live right now.</p></section>
+<section class="rr-match-section" id="rrUpcomingSection"><h3>Upcoming matches</h3><div id="rrUpcomingFixtures" class="rr-fixtures"></div></section>
+<details id="rrHistorySection" class="rr-history"><summary>Completed matches (<span id="rrCompletedCount">0</span>)</summary><div id="rrCompletedFixtures" class="rr-fixtures"></div></details>
+</div>
 <p id="rrFooter" class="muted">Results are recorded automatically when each duel ends.</p>
 <section id="cubeChatPanel" class="cube-chat" aria-label="Cube tournament chat">
 <h3>Cube room chat</h3><p class="muted">Chat with your fellow drafters between matches.</p>

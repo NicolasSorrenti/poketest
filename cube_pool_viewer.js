@@ -7,7 +7,7 @@
  const trigger=document.createElement('button');trigger.type='button';trigger.className='cube-pool-open';trigger.textContent='Browse Cube card list';trigger.hidden=true;
  const dialog=document.createElement('dialog');dialog.className='cube-pool-dialog';
  dialog.innerHTML='<div class="cube-pool-body"><div class="cube-pool-header"><h2>Cube card list</h2><button class="cube-pool-close" type="button">Close</button></div><p>Every card in this generated Cube, including duplicates. This does not reveal other players\' picks.</p><div class="cube-pool-tools"><input type="search" placeholder="Search card name…" aria-label="Search Cube cards"><select aria-label="Filter card type"><option value="all">All cards</option><option value="Pokémon">Pokémon</option><option value="Trainer">Trainers</option></select></div><div class="cube-pool-count" aria-live="polite"></div><div class="cube-pool-list"></div></div>';
- const slot=document.getElementById('progress')||document.getElementById('roomProgress')||document.querySelector('header');
+ const slot=document.getElementById('draftStatus')||document.getElementById('progress')||document.getElementById('roomProgress')||document.querySelector('header');
  slot.insertAdjacentElement('afterend',trigger);document.body.append(dialog);
  const search=dialog.querySelector('input'),filter=dialog.querySelector('select'),list=dialog.querySelector('.cube-pool-list'),count=dialog.querySelector('.cube-pool-count');
  let cards=[],fingerprint='';
