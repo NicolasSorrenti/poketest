@@ -214,7 +214,7 @@
   preview.attach(b,id);
   b.addEventListener('click',()=>{
    const v=current.view;
-   const intent=shared.handIntent({card:c,index,setup,setupConfirmed:false,
+   const intent=shared.handIntent({card:c,index,setup,setupConfirmed:!!current.view.mulliganBonus&&current.view.mulliganBonus.drawn===null,
     canAct:v.phase==='game'&&v.turn===0&&!v.pendingDecision&&!v.over,
     energyUsed:!!current.you?.energyUsed,selectedHand,targetMode});
    if(intent.kind==='none')return;
@@ -247,7 +247,7 @@
   if(!showModal)modalDecisionId=null;
   if(!field)lastFieldDecisionId=null;
 
-  el.classList.toggle('hidden',!d&&!targetMode&&!v.over&&(v.phase==='game'||v.phase==='setup'));
+  el.classList.toggle('hidden',!d&&!targetMode&&!v.over&&(v.phase==='game'||v.phase==='setup')&&!v.mulliganBonus);
   opts.textContent='';acts.textContent='';el.classList.remove('active');
   if(targetMode){el.classList.add('active');title.textContent=targetMode.title;
    description.textContent='Click an eligible Pokémon in your Active or Bench area to complete this action.';
@@ -305,6 +305,22 @@
    if(d.cancelable)acts.append(btn('↶ Cancel card (Esc)',()=>send(command('cancel_choice',{decisionId:d.id})),'secondary'));
   }else if(d){title.textContent='CPU is choosing';description.textContent='Waiting for the CPU to resolve its choice.';}
   else if(v.over){title.textContent='DUEL COMPLETE';description.textContent=current.winner===0?'You won!':current.winner===1?'The CPU won.':'A draw!';acts.append(btn(rpgMode?'Returning to Neo Harbor…':'Play another duel',rpgMode?()=>{}:newDuel,'primary',rpgMode));}
+  else if(v.phase==='setup'&&v.mulliganBonus){
+   const bonus=v.mulliganBonus;
+   title.textContent='MULLIGAN BONUS';
+   if(bonus.side!==0){description.textContent='The CPU is resolving its mulligan bonus.';}
+   else if(bonus.drawn===null){
+    description.textContent=`Your opponent took ${bonus.max} more mulligan(s). Choose up to ${bonus.max} bonus cards to draw before the duel begins.`;
+    const select=document.createElement('select');select.setAttribute('aria-label','Mulligan bonus cards');
+    for(let i=0;i<=bonus.max;i++){const opt=document.createElement('option');opt.value=String(i);opt.textContent=`${i} bonus card${i===1?'':'s'}`;select.append(opt);}
+    select.value=String(bonus.max);
+    acts.append(select,btn('Draw selected cards',()=>send(command('setup_bonus_draw',{count:Number(select.value)})),'primary'));
+    acts.append(btn('Skip bonus draw',()=>send(command('setup_bonus_draw',{count:0}))));
+   }else{
+    description.textContent=`You drew ${bonus.drawn} bonus card(s). You may Bench additional Basic Pokémon, then begin the duel. Your Active is locked.`;
+    acts.append(btn('Start duel',()=>send(command('setup_bonus_done')),'primary'));
+   }
+  }
   else if(v.phase==='setup'){
    title.textContent='OPENING SETUP';description.textContent='Select a Basic Pokémon from your opening hand to become Active. You may select up to five more for your Bench, then confirm. Your opponent’s team remains hidden until setup ends.';
    // The setup confirmation action is in the regular turn controls, not a floating decision popup.
@@ -340,9 +356,10 @@
   $('undoBtn').disabled=busy||!current.undo?.available;
   $('undoBtn').title=current.undo?.available?'Undo '+current.undo.label:'Available only before random actions, drawing cards, or turn changes';
   const openingSetup=v.phase==='setup'&&!v.over;
-  $('endBtn').textContent=openingSetup?(you.active?'✓ Confirm setup':'Choose Active first'):'End turn →';
-  $('endBtn').title=openingSetup?'Choose your Active Pokémon, optionally add up to five Benched Pokémon, then confirm to begin.':'End your turn';
-  $('endBtn').disabled=openingSetup?(busy||!you.active||!!v.pendingDecision):actionsDisabled;
+  const bonus=v.mulliganBonus;
+  $('endBtn').textContent=openingSetup?(bonus?(bonus.side===0&&bonus.drawn!==null?'✓ Start duel':'Choose bonus cards'):(you.active?'✓ Confirm setup':'Choose Active first')):'End turn →';
+  $('endBtn').title=openingSetup?(bonus?'Resolve the mulligan bonus, then finish setup.':'Choose your Active Pokémon, optionally add up to five Benched Pokémon, then confirm to begin.'):'End your turn';
+  $('endBtn').disabled=openingSetup?(bonus?(busy||bonus.side!==0||bonus.drawn===null):(busy||!you.active||!!v.pendingDecision)):actionsDisabled;
   $('concedeBtn').disabled=v.over||v.phase!=='game'||!yourTurn;
   $('history').textContent='';(v.messages||[]).forEach(x=>{const li=document.createElement('li');li.textContent=x;$('history').append(li);});
   renderDecisions();combat.update(current);reactions?.update(current);renderCPULog(v);
@@ -393,7 +410,9 @@
  $('endBtn').addEventListener('click',()=>{
   if(!current||busy)return;
   if(current.view.phase==='setup'){
-   if(current.view.players[0]?.active&&!current.view.pendingDecision)send(command('setup_confirm'));
+   const bonus=current.view.mulliganBonus;
+   if(bonus){if(bonus.side===0&&bonus.drawn!==null)send(command('setup_bonus_done'));}
+   else if(current.view.players[0]?.active&&!current.view.pendingDecision)send(command('setup_confirm'));
   }else if(current.view.phase==='game')send(command('end_turn'));
  });
  $('retreatBtn').addEventListener('click',()=>setTarget('retreat',{},'Choose Benched replacement',true));
