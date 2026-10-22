@@ -611,6 +611,7 @@
   renderPrizes(you.prizeCount,cpu.prizeCount);renderFaceUpPrizes();renderPrizeFallback();renderPresence();renderCoin(v);renderKnockOut(v);
   ux.renderGuide($('turnCoach'),{view:v,me:side(),energyUsed:current.me.energyUsed,targetMode,card,setupConfirmed:current.setupConfirmed});
   setZone('enemyActive',cpu,-1);setZone('enemyBench',cpu,0);setZone('myActive',you,-1);setZone('myBench',you,0);
+  shared.renderStadium({mine:$('myStadium'),theirs:$('enemyStadium'),stadium:v.stadium,me:side(),getCard:card,picture,onInspect:id=>preview.inspect(id),onHover:(element,id)=>preview.attach(element,id)});
   renderHandFan(you.hand);$('hand').textContent='';(you.hand||[]).forEach((id,i)=>$('hand').append(handCard(id,i,v.phase==='setup')));
   renderHandActions();$('attacks').textContent='';$('powers').textContent='';
   const attackEnabled=!watching()&&v.phase==='game'&&!v.over&&yourTurn&&!v.pendingDecision;
