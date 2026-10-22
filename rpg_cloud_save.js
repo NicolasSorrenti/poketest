@@ -49,7 +49,7 @@
  async function upload(expected){
   if(inflight){queued=true;return inflight;}
   if(blocked||!session||!eligible()){stateLabel('Saved locally. Cloud sync waits until your duel is complete.');return false;}
-  const snapshot=local(),sentHash=hash(snapshot);
+  const snapshot=structuredClone(local()),sentHash=hash(snapshot);
   inflight=(async()=>{
    try{
     const result=await request('/rest/v1/rpc/rpg_save_cas',{expected_revision:expected,new_save:snapshot},true);
@@ -178,8 +178,8 @@
  }
  function ui(){
   if(!adapter.showButton)return;
-  button=document.createElement('button');button.type='button';button.id='cloudSaveButton';button.className='save-btn cloud-save-button';button.textContent='☁ LOCAL';button.title='Cloud save account';button.onclick=show;
-  const save=document.getElementById('save');if(save)save.insertAdjacentElement('afterend',button);else document.querySelector('header')?.append(button);
+  button=document.createElement('button');button.type='button';button.id='cloudSaveButton';button.className='toolbar-btn cloud-save-button';button.textContent='☁ LOCAL';button.title='Cloud save account';button.onclick=show;
+  const actions=document.querySelector('.utility-actions');if(actions)actions.prepend(button);else document.querySelector('header')?.append(button);
   dialog=document.createElement('dialog');dialog.className='cloud-save-dialog';dialog.id='cloudSaveDialog';
   dialog.innerHTML='<div class="cloud-dialog-head"><h2>☁ Cloud Save</h2><button type="button" id="cloudClose" aria-label="Close">✕</button></div>'+
    '<p id="cloudMessage" role="status" aria-live="polite">Your RPG progress always stays saved in this browser.</p>'+
