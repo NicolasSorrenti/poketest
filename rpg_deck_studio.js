@@ -142,6 +142,14 @@
    if(!state?.deckJourney?.starter)throw Error('Start a campaign and choose your starter deck from Neo Harbor first.');
    if(state.pendingDuel)throw Error('Finish your current duel before editing. Your active duel uses a locked deck snapshot.');
    Core.hydrate(state);Plan.hydrate(state,Core);
+   const lesson=window.NeoRpgTutorials?.record(state,'deck');
+   if(lesson){
+    $('deckTutorialTitle').textContent='GAMEPLAY TIP '+lesson.number+'/2 · '+lesson.title;
+    $('deckTutorialText').textContent=lesson.text;
+    $('deckTutorial').hidden=false;
+    $('deckTutorialDismiss').onclick=()=>{$('deckTutorial').hidden=true;};
+    persist();
+   }
    const libraries=await Promise.all(Object.keys(Core.SETS).map(async set=>{
     const res=await fetch('/cards/'+set+'.json');if(!res.ok)throw Error('Cannot load '+set+' card library.');return res.json();
    }));
