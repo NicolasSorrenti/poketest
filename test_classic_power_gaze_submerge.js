@@ -52,6 +52,19 @@ let cases=0;
  assert.deepEqual(g,before,'Gaze should fail atomically when no opponent Power target exists');
  cases++;
 }
+{
+ // Gaze suppression must also disable global passive Powers such as Muk's
+ // Toxic Gas; merely checking the underlying printed Power is not enough.
+ const g=ready('neo2-40');
+ const muk=unit('base3-13');
+ g.players[1].bench=[muk];
+ assert.equal(P.enabled(g,g.players[0].active,'Gaze'),false,
+   'Active Toxic Gas normally blanks Igglybuff');
+ muk.gazeSuppressedUntil=g.turnSerial+1;
+ assert.equal(P.enabled(g,g.players[0].active,'Gaze'),true,
+   'Suppressed Toxic Gas must no longer blank other Powers');
+ cases++;
+}
 function attackDamage(useSubmerge){
  const g=ready('neo3-32');
  const own=g.players[0],f=g.players[1];
