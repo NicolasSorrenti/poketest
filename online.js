@@ -174,21 +174,14 @@
   $('spectatorCount').textContent=`👁 ${current.spectatorCount||0}`;
   $('spectatorCount').classList.toggle('hidden',watching());
  }
- function setHandVisible(visible){
-  handVisible=!!visible;
-  const fan=$('handFan'),toggle=$('handToggle');
-  // renderHandFan clears its DOM when closed. Rebuild it from the current
-  // private hand before making it visible again (especially on touch screens).
+ function setHandVisible(){
+  // Hand is permanently visible for players; an empty/private hand stays empty.
+  handVisible=true;
+  const fan=$('handFan');
   if(current?.view)renderHandFan(current.view.players[side()]?.hand);
-  else fan.classList.toggle('hidden',true);
-  toggle.setAttribute('aria-expanded',String(handVisible));
-  toggle.setAttribute('aria-label',handVisible?'Hide hand':'Show hand');
-  toggle.setAttribute('aria-pressed',String(!handVisible));
-  $('handVisibilityIcon').textContent=handVisible?'▾':'▴';
-  $('handVisibilityText').textContent=handVisible?'Hide hand':'Show hand';
+  else fan.classList.add('hidden');
  }
  function setPowersOpen(open){powersOpen=!!open;$('powerDrawer').classList.toggle('hidden',!powersOpen);$('powersToggle').setAttribute('aria-expanded',String(powersOpen));}
- function renderHandPeek(ids){shared.renderHandPeek({root:$('handPeek'),ids,picture,hidden:watching()});}
   function renderHandFan(ids){shared.renderHandFan({root:$('handFan'),ids,visible:handVisible,phase:current.view.phase,selectedHand,targetMode,makeCard:handCard,getCard:card,viewportWidth:window.innerWidth});}
   function pendingPrizeChoice(){const d=current?.view?.pendingDecision;return !watching()&&d?.kind==='prize-card'&&d.actor===side()?d:null;}
  function choosePrize(id){const d=pendingPrizeChoice();if(!d||busy||!d.options?.some(o=>o.id===id))return;send(command('choose',{decisionId:d.id,selected:[id]}));}
@@ -431,7 +424,7 @@
   renderPrizes(you.prizeCount,cpu.prizeCount);renderFaceUpPrizes();renderPrizeFallback();renderPresence();renderCoin(v);renderKnockOut(v);
   ux.renderGuide($('turnCoach'),{view:v,me:side(),energyUsed:current.me.energyUsed,targetMode,card,setupConfirmed:current.setupConfirmed});
   setZone('enemyActive',cpu,-1);setZone('enemyBench',cpu,0);setZone('myActive',you,-1);setZone('myBench',you,0);
-  $('handAmount').textContent=`(${you.handCount||0}${watching()?' hidden':''})`;renderHandPeek(you.hand);renderHandFan(you.hand);$('hand').textContent='';(you.hand||[]).forEach((id,i)=>$('hand').append(handCard(id,i,v.phase==='setup')));
+  renderHandFan(you.hand);$('hand').textContent='';(you.hand||[]).forEach((id,i)=>$('hand').append(handCard(id,i,v.phase==='setup')));
   renderHandActions();$('attacks').textContent='';$('powers').textContent='';
   const attackEnabled=!watching()&&v.phase==='game'&&!v.over&&yourTurn&&!v.pendingDecision;
   shared.renderAttacks({root:$('attacks'),unit:you.active,view:v,me:side(),getCard:card,enabled:attackEnabled,button:btn,onAttack:index=>send(command('attack',{attackIndex:index})),attackReason:presentation.attackReason});
@@ -482,8 +475,7 @@
   }catch(e){$('startupError').textContent=e.message||String(e);}
  }
  window.addEventListener('resize',()=>{if(current?.view)renderHandFan(current.view.players[side()]?.hand);});
- $('handToggle').addEventListener('click',()=>setHandVisible(!handVisible));
- $('closeHand').addEventListener('click',()=>setHandVisible(false));
+ $('closeHand').addEventListener('click',()=>$('handTray').classList.add('hidden'));
  $('powersToggle').addEventListener('click',()=>setPowersOpen(!powersOpen));
  $('closePowers').addEventListener('click',()=>setPowersOpen(false));
  $('chatForm').addEventListener('submit',submitChat);
@@ -516,6 +508,6 @@
  $('endBtn').addEventListener('click',()=>send(command('end_turn')));
  $('retreatBtn').addEventListener('click',()=>setTarget('retreat',{},'Choose Benched replacement',true));
  $('concedeBtn').addEventListener('click',()=>{if(confirm('Concede this duel?'))send(command('concede'));});
- document.addEventListener('keydown',e=>{if(e.key==='Escape'){const d=current?.view?.pendingDecision;if(d?.cancelable&&!busy){e.preventDefault();send(command('cancel_choice',{decisionId:d.id}));return;}if(targetMode){e.preventDefault();cancelTarget();}else if(handVisible){setHandVisible(false);}else if(powersOpen){setPowersOpen(false);}}});
+ document.addEventListener('keydown',e=>{if(e.key==='Escape'){const d=current?.view?.pendingDecision;if(d?.cancelable&&!busy){e.preventDefault();send(command('cancel_choice',{decisionId:d.id}));return;}if(targetMode){e.preventDefault();cancelTarget();}else if(powersOpen){setPowersOpen(false);}}});
  init();
 })();
