@@ -39,3 +39,54 @@ If you also want to commit the source references, add `art-production/` separate
 - Some original render scene compositions have shifted costumes/settings slightly; see `art-production/ASSET_INDEX.json` for provenance/status.
 - Expression sheets are not yet auto-separated or integrated into VN face switching.
 - None of the art in this ZIP has been pushed to GitHub by this packaging step.
+
+
+## 2026-10-20 additional completed art
+
+The following assets have been merged into this revised cumulative ZIP:
+- 101 unique expression variants for the 20-character cast, exported as both 512x1024 transparent expression sprites and 280x380 dialogue faces (202 game-ready WebPs). The original 20 five-face sheets are also retained.
+- Five NEW standalone G5 event illustrations (Hana apron, Reina rain, Shiori books, Yuna scattered cards, Kaede tangled bag), exported as 1920x1080 full CGs and 640x360 thumbs; all source PNGs are retained under art-production/original-story-renders/.
+- Eight exploratory inspiration montages are preserved visually as quality-91 WebP rather than bulky PNG to keep this cumulative archive downloadable.
+- The prior five G5 provisional scene compositions are archived under art-production/previous-g5-drafts/ for comparison only and are NOT used for the installable CG paths.
+- For each new event, refer to rpg-assets/events/cg/season01/g5-regenerated-manifest.json.
+- The original eight-heroines Gallery has 32 scenes in total. This pack includes the five new G5 scenes, but not all the other 27 as final installable images. Do not interpret this cumulative archive as the whole final gallery.
+
+Note: artwork was not committed or pushed to the repository by packaging the ZIP.
+
+## 2026-10-20 — 20 new individually illustrated NPC attack close-ups
+
+This updated cumulative bundle now includes the NEW 20 close-up cut-ins. The game-ready
+`rpg-assets/reactions/<character>/attack.png` images **replace** the older portrait-derived
+attack assets. All 20 are 1280x720 transparent RGBA PNG.
+
+The original unscaled high-resolution cut-in PNGs are available in the separate
+`neo_campus_npc_battle_closeups_all_20_2026-10-20.zip` package. The preview and
+per-character SHA256/source-dimensions manifest are included here at
+`rpg-assets/reactions/closeups-art-manifest.json`. The older attack cutin manifest was
+archived under `art-production/archived-manifests/` (its former asset files were
+superseded). The updated `rpg-assets/reactions/manifest.json` uses the close-ups.
+
+**Install only `rpg-assets/` for the game.** `art-production/` holds source artwork,
+reference material, and archived documentation. Non-attack reaction poses are not
+newly illustrated in this update. Nothing was pushed or deployed automatically.
+
+## Packaging note: separate full-resolution battle originals
+
+To keep the cumulative archive reliably downloadable, its 20 newest unscaled battle
+source PNGs are not duplicated here. All **20 game-ready 1280×720 close-up cut-ins**,
+new manifests, preview, and all earlier cumulative artwork ARE included.
+Original generated battle sources are preserved in the separate ZIP:
+`neo_campus_npc_battle_closeups_all_20_2026-10-20.zip`.
+The `closeups-art-manifest.json` sourcePath pointers refer to those separate source
+PNGs; they are not required for the game. No game assets are missing from this archive.
+
+
+## Download-friendly scope of this cumulative pack
+
+All game-ready artwork and original standalone story PNGs are included. Earlier
+unused inspiration montage grids, provisional layout packs, and superseded
+G5 composition drafts are omitted to keep this installable master archive
+within download limits. They remain available in the preceding batch2 ZIP.
+The 20 new unscaled battle source PNGs are likewise in the previously
+delivered NPC battle-closeups original-source ZIP; all 20 new GAME CUTINS
+are included here at their expected paths.

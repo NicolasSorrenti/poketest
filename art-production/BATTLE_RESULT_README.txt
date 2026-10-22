@@ -1,0 +1,1 @@
+Battle-result art expansion. 5 candidate primary result illustrations + 2 alternate concepts. They do not replace attack cut-ins. Review character consistency before treating as final. The alternative Shiori image differs from her approved lavender-haired design.

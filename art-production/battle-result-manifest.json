@@ -1,0 +1,85 @@
+{
+  "type": "Neo Campus TCG battle-result art expansion",
+  "created": "2026-10-21",
+  "status": "review before shipping: scene variants do not automatically indicate canonical approval",
+  "assets": [
+    {
+      "character": "reina",
+      "slug": "reina_post_duel",
+      "original": "art-production/battle-result-originals/reina_post_duel.png",
+      "game_path": "rpg-assets/characters/reina/events/battle-result.webp",
+      "status": "approved candidate",
+      "dimensions": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "character": "elena",
+      "slug": "elena_post_duel",
+      "original": "art-production/battle-result-originals/elena_post_duel.png",
+      "game_path": "rpg-assets/characters/elena/events/battle-result.webp",
+      "status": "approved candidate",
+      "dimensions": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "character": "shiori",
+      "slug": "shiori_post_duel",
+      "original": "art-production/battle-result-originals/shiori_post_duel.png",
+      "game_path": "rpg-assets/characters/shiori/events/battle-result.webp",
+      "status": "approved candidate",
+      "dimensions": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "character": "jinx",
+      "slug": "jinx_post_duel",
+      "original": "art-production/battle-result-originals/jinx_post_duel.png",
+      "game_path": "rpg-assets/characters/jinx/events/battle-result.webp",
+      "status": "approved candidate",
+      "dimensions": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "character": "sol",
+      "slug": "sol_post_duel",
+      "original": "art-production/battle-result-originals/sol_post_duel.png",
+      "game_path": "rpg-assets/characters/sol/events/battle-result.webp",
+      "status": "approved candidate",
+      "dimensions": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "character": "reina",
+      "slug": "reina_result_alt_sunset",
+      "original": "art-production/battle-result-originals/reina_result_alt_sunset.png",
+      "game_path": "art-production/battle-result-alternates/reina_result_alt_sunset.webp",
+      "status": "alternative concept, hair differs from canonical",
+      "dimensions": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "character": "shiori",
+      "slug": "shiori_result_alt_sunset",
+      "original": "art-production/battle-result-originals/shiori_result_alt_sunset.png",
+      "game_path": "art-production/battle-result-alternates/shiori_result_alt_sunset.webp",
+      "status": "alternative concept, hair differs from canonical",
+      "dimensions": [
+        1920,
+        1080
+      ]
+    }
+  ],
+  "integration": "Dedicated result art stored under rpg-assets/characters/{id}/events/battle-result.webp; attack cut-ins unchanged. Alternates stored in art-production/battle-result-alternates/."
+}

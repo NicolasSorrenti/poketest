@@ -1,7 +1,9 @@
 {
-  "pack": "Neo Campus complete regenerated character art",
+  "pack": "Neo Campus all regenerated art with 20 new NPC attack close-ups (game-ready complete)",
   "date": "2026-10-20",
   "scope": "Artwork created/refreshed since portrait regeneration milestone only",
+  "baseArchive": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip",
+  "mergedArchive": "neo_campus_npc_battle_closeups_all_20_2026-10-20.zip",
   "archiveSources": {
     "portraits": "neo_harbor_consistent_portraits_plus_2026-10-19.zip",
     "expressions": "neo_harbor_expression_sheets_2026-10-19.zip",
@@ -9,7 +11,11 @@
     "drafts": "neo_campus_new_heroine_story_cg_batch_2026-10-20.zip",
     "latest_cgs": "neo_campus_story_cgs_jinx_luna_sol_2026-10-20.zip",
     "concepts": "neo_campus_crossover_cg_concepts_2026-10-20.zip",
-    "layouts": "neo_campus_next_story_art_concepts_2026-10-20.zip"
+    "layouts": "neo_campus_next_story_art_concepts_2026-10-20.zip",
+    "expression_exports": "neo_campus_missing_expression_sprites_batch_2026-10-20.zip",
+    "g5_original_cgs": "Standalone scene renders generated 2026-10-20",
+    "g5_previous_drafts": "neo_campus_g5_story_aligned_drafts_2026-10-20.zip",
+    "new_battle_closeups": "neo_campus_npc_battle_closeups_all_20_2026-10-20.zip"
   },
   "sceneUpgrades": {
     "rina/rina_stage_after": {
@@ -39,1055 +45,2165 @@
     "sierra/sierra_deck_talk": {
       "source": "sierra_ofrece_una_carta_al_atardecer.png",
       "status": "Original scene — sunset card game"
+    },
+    "g5/hana_apron_mixup": {
+      "source": "hana_enredada_con_su_delantal_en_la_tienda_tcg.png",
+      "status": "Standalone original matching scripted G5 scene; replaces composite."
+    },
+    "g5/reina_rain_catch": {
+      "source": "reina_bajo_la_lluvia_en_el_puerto.png",
+      "status": "Standalone original matching scripted G5 scene; replaces composite."
+    },
+    "g5/shiori_bookstack_wobble": {
+      "source": "shiori_y_los_libros_dorados.png",
+      "status": "Standalone original matching scripted G5 scene; replaces composite."
+    },
+    "g5/yuna_card_scatter": {
+      "source": "yuna_y_las_cartas_del_nexus_arcade.png",
+      "status": "Standalone original matching scripted G5 scene; replaces composite."
+    },
+    "g5/kaede_jacket_prank": {
+      "source": "kaede_atrapada_entre_cadenas_al_atardecer.png",
+      "status": "Standalone original matching scripted G5 scene; replaces composite."
     }
   },
+  "installedAttackCloseups": [
+    "hana",
+    "reina",
+    "shiori",
+    "yuna",
+    "akari",
+    "camila",
+    "marina",
+    "kaede",
+    "jinx",
+    "luna",
+    "sol",
+    "sierra",
+    "elena",
+    "rina",
+    "alma",
+    "iris",
+    "jun",
+    "nereo",
+    "teo",
+    "elio"
+  ],
   "counts": {
-    "portraits": 21,
-    "expressions": 21,
-    "reactions": 22,
-    "drafts": 7,
-    "original_event_upgrade": 14,
-    "latest_cgs": 9,
     "concepts": 13,
     "layouts": 15,
+    "inspiration-webp": 8,
     "source_cgs": 19,
-    "inspiration": 8,
+    "latest_cgs": 9,
+    "documentation": 4,
+    "portraits": 21,
+    "drafts": 7,
+    "original_event_upgrade": 14,
     "alias": 7,
-    "documentation": 2,
-    "totalBeforeIndex": 158
+    "expressions": 21,
+    "expression-exports": 205,
+    "superseded-g5-drafts": 12,
+    "original-cg-render": 5,
+    "standalone-g5-cg": 5,
+    "standalone-g5-cg-thumbnail": 5,
+    "earlier-art": 4,
+    "new-original-battle-portraits": 0,
+    "battle-metadata": 2,
+    "new-battle-closeups": 20,
+    "archived-metadata": 1,
+    "new-battle-other": 2
   },
+  "fileCountExcludingThisIndex": 347,
   "files": {
-    "rpg-assets/hana.png": {
-      "sha256": "bac1e332a9c435214870ab33fa8ac45b9865494c6226741df275457f92479257",
-      "bytes": 2671534,
-      "group": "portraits",
-      "source": "neo_harbor_consistent_portraits_plus_2026-10-19.zip"
-    },
-    "rpg-assets/reina.png": {
-      "sha256": "a042fde75a277be94dd81764151b9229f38c6335896b81ae732c61871724d1d7",
-      "bytes": 2626467,
-      "group": "portraits",
-      "source": "neo_harbor_consistent_portraits_plus_2026-10-19.zip"
-    },
-    "rpg-assets/shiori.png": {
-      "sha256": "a9b9f1dda665d9067d26c19eb605ffafdc66d3758f5eb5d2885add0766aa4f12",
-      "bytes": 2630682,
-      "group": "portraits",
-      "source": "neo_harbor_consistent_portraits_plus_2026-10-19.zip"
-    },
-    "rpg-assets/yuna.png": {
-      "sha256": "c9481994482454f1e93cf763797f94184fef857b680f75a5d488f747d91a64a5",
-      "bytes": 2850302,
-      "group": "portraits",
-      "source": "neo_harbor_consistent_portraits_plus_2026-10-19.zip"
-    },
-    "rpg-assets/akari.png": {
-      "sha256": "94881aa9e7a5673ea309dd69128fbb740d7716f0201f2893630471438e107d2c",
-      "bytes": 2470873,
-      "group": "portraits",
-      "source": "neo_harbor_consistent_portraits_plus_2026-10-19.zip"
-    },
-    "rpg-assets/camila.png": {
-      "sha256": "047b4a1ad97fe25f75a9ff0457b896d4019570b29490158a06b271aa2b2da5dc",
-      "bytes": 2454934,
-      "group": "portraits",
-      "source": "neo_harbor_consistent_portraits_plus_2026-10-19.zip"
-    },
-    "rpg-assets/marina.png": {
-      "sha256": "68a243e5c6640722628cdefe78a39c4baa5775c592d7cdb9dea7e83bbd45af4c",
-      "bytes": 2695437,
-      "group": "portraits",
-      "source": "neo_harbor_consistent_portraits_plus_2026-10-19.zip"
-    },
-    "rpg-assets/kaede.png": {
-      "sha256": "1a1f8ad11c1daa0af7bf3c560ae3bb6acc5e3790ec97762ca68d8a998b5e3357",
-      "bytes": 2619618,
-      "group": "portraits",
-      "source": "neo_harbor_consistent_portraits_plus_2026-10-19.zip"
-    },
-    "rpg-assets/sol.png": {
-      "sha256": "32b8db5618deae6fb770cd2259d0fae6c71cae9b6445dfb08daa1dc64e499739",
-      "bytes": 2971554,
-      "group": "portraits",
-      "source": "neo_harbor_consistent_portraits_plus_2026-10-19.zip"
-    },
-    "rpg-assets/jinx.png": {
-      "sha256": "d604b4a2de1746746f6e91808da9bf9428455291087fc9b0337fc75b04c24b3e",
-      "bytes": 2228432,
-      "group": "portraits",
-      "source": "neo_harbor_consistent_portraits_plus_2026-10-19.zip"
-    },
-    "rpg-assets/luna.png": {
-      "sha256": "ffd66ab2bc4ea474ab564c6b5fe561d3c78649990f595ff5a5a9735c16cf7058",
-      "bytes": 2755800,
-      "group": "portraits",
-      "source": "neo_harbor_consistent_portraits_plus_2026-10-19.zip"
-    },
-    "rpg-assets/elena.png": {
-      "sha256": "53a1765e0b0223c43b9a10c2d418f886deb0c37af4d367a142e78b480d38dfc2",
-      "bytes": 1594302,
-      "group": "portraits",
-      "source": "neo_harbor_consistent_portraits_plus_2026-10-19.zip"
-    },
-    "rpg-assets/sierra.png": {
-      "sha256": "0d96e6829ec58c001d2b847f94d741150092530397b642ca9ebb6bd85ea2e1fe",
-      "bytes": 2603904,
-      "group": "portraits",
-      "source": "neo_harbor_consistent_portraits_plus_2026-10-19.zip"
-    },
-    "rpg-assets/rina.png": {
-      "sha256": "8d072f4ce7ed13d40f7aa9b863ea5c6fe1fda23357f2a8d911d5a0422d4b18fb",
-      "bytes": 2870081,
-      "group": "portraits",
-      "source": "neo_harbor_consistent_portraits_plus_2026-10-19.zip"
-    },
-    "rpg-assets/jun.png": {
-      "sha256": "93f6d57ebaed5673c71d4d9447e09088d5ab7b0caa766067b8ebc15471a0e9c6",
-      "bytes": 2164359,
-      "group": "portraits",
-      "source": "neo_harbor_consistent_portraits_plus_2026-10-19.zip"
-    },
-    "rpg-assets/teo.png": {
-      "sha256": "5d74543cbc2be1c088651996df8b89fdb6f10cf870cd38150668fb6c55938fe9",
-      "bytes": 2271491,
-      "group": "portraits",
-      "source": "neo_harbor_consistent_portraits_plus_2026-10-19.zip"
-    },
-    "rpg-assets/iris.png": {
-      "sha256": "6a02a16d9c886008766f971754a0b05ec54d8c0de3d6e3c97682dc6389c14ebb",
-      "bytes": 2033312,
-      "group": "portraits",
-      "source": "neo_harbor_consistent_portraits_plus_2026-10-19.zip"
-    },
-    "rpg-assets/elio.png": {
-      "sha256": "2902f1df48ed43dbbaad5b6c24b8a90ae44fe9e22ff841225e39ccdeee8bb348",
-      "bytes": 2184026,
-      "group": "portraits",
-      "source": "neo_harbor_consistent_portraits_plus_2026-10-19.zip"
-    },
-    "rpg-assets/alma.png": {
-      "sha256": "629fcd12c98a71154824bf5dce293440f1ccace1f77645b1d3b58606ea958610",
-      "bytes": 2203850,
-      "group": "portraits",
-      "source": "neo_harbor_consistent_portraits_plus_2026-10-19.zip"
-    },
-    "rpg-assets/nereo.png": {
-      "sha256": "b2a2576a22afd5e98d7947be77974901918cc42d30ea207acf267979d23456ab",
-      "bytes": 2444245,
-      "group": "portraits",
-      "source": "neo_harbor_consistent_portraits_plus_2026-10-19.zip"
-    },
-    "rpg-assets/consistent-portrait-pack-manifest.json": {
-      "sha256": "8bf7b175ad238eb76b80b846a5d435a6b889b82e21526f613ff3b40748d17174",
-      "bytes": 6525,
-      "group": "portraits",
-      "source": "neo_harbor_consistent_portraits_plus_2026-10-19.zip"
-    },
-    "rpg-assets/expression-sheets/hana.png": {
-      "sha256": "449bbf036eafc54cbf94230a6a234f4565c3a04f742d5819d1d6542fb4ada050",
-      "bytes": 3098365,
-      "group": "expressions",
-      "source": "neo_harbor_expression_sheets_2026-10-19.zip"
-    },
-    "rpg-assets/expression-sheets/reina.png": {
-      "sha256": "d8b80f0307a141f81e4e93e6d954ef66d18a1978366659eb8dc2e1ea8957281a",
-      "bytes": 3026311,
-      "group": "expressions",
-      "source": "neo_harbor_expression_sheets_2026-10-19.zip"
-    },
-    "rpg-assets/expression-sheets/shiori.png": {
-      "sha256": "71e61c63dfeb34a7979030ca46b7c955522f9f77dc2e09cc6aaa476e2d932463",
-      "bytes": 2974258,
-      "group": "expressions",
-      "source": "neo_harbor_expression_sheets_2026-10-19.zip"
-    },
-    "rpg-assets/expression-sheets/yuna.png": {
-      "sha256": "1a10cfb8f0da84154f7e7174ba377d6b556fafe36b7968c2048a7939a48896bb",
-      "bytes": 3230787,
-      "group": "expressions",
-      "source": "neo_harbor_expression_sheets_2026-10-19.zip"
-    },
-    "rpg-assets/expression-sheets/akari.png": {
-      "sha256": "b0cf4241f211f9393224bc822c2f4dbbb7c9364afd20555d9c7768a36b218863",
-      "bytes": 2955253,
-      "group": "expressions",
-      "source": "neo_harbor_expression_sheets_2026-10-19.zip"
-    },
-    "rpg-assets/expression-sheets/camila.png": {
-      "sha256": "5f92adb521d7ca8bc888f37e92e1d8038561b7e8e30aa0572c4cadae044e1b70",
-      "bytes": 2828496,
-      "group": "expressions",
-      "source": "neo_harbor_expression_sheets_2026-10-19.zip"
-    },
-    "rpg-assets/expression-sheets/marina.png": {
-      "sha256": "775baa936f597078c5fc1b112ecc134db0129b966a44ce993aba9faa90765c1a",
-      "bytes": 3130762,
-      "group": "expressions",
-      "source": "neo_harbor_expression_sheets_2026-10-19.zip"
-    },
-    "rpg-assets/expression-sheets/kaede.png": {
-      "sha256": "3b0f0270bf493e97dd823f15bfabceca6ccb27d4ff9dbca864dd6187e64f1035",
-      "bytes": 3094281,
-      "group": "expressions",
-      "source": "neo_harbor_expression_sheets_2026-10-19.zip"
-    },
-    "rpg-assets/expression-sheets/sol.png": {
-      "sha256": "999fde6499a05412dbf2dc1f447b34012df1821fd25f6237958d6001570e110f",
-      "bytes": 3486038,
-      "group": "expressions",
-      "source": "neo_harbor_expression_sheets_2026-10-19.zip"
-    },
-    "rpg-assets/expression-sheets/jinx.png": {
-      "sha256": "d043ecb5ddae31516e59a184b4ccb535e93a2662e3d3a655bb38aae67edfeb77",
-      "bytes": 3217765,
-      "group": "expressions",
-      "source": "neo_harbor_expression_sheets_2026-10-19.zip"
-    },
-    "rpg-assets/expression-sheets/luna.png": {
-      "sha256": "ab10ba37c92647e2ee39d667b0e3116051c2e600a359569c88728e88a407b234",
-      "bytes": 3437492,
-      "group": "expressions",
-      "source": "neo_harbor_expression_sheets_2026-10-19.zip"
-    },
-    "rpg-assets/expression-sheets/elena.png": {
-      "sha256": "d64faf9cb27defc0f30fbe000101fcd11b4d7902a71920af028c7f972754f936",
-      "bytes": 2775857,
-      "group": "expressions",
-      "source": "neo_harbor_expression_sheets_2026-10-19.zip"
-    },
-    "rpg-assets/expression-sheets/sierra.png": {
-      "sha256": "0dc1ae4a27a185b0689981eec1793f8f59ae64613b40a33fc0df5359963d12e8",
-      "bytes": 3289101,
-      "group": "expressions",
-      "source": "neo_harbor_expression_sheets_2026-10-19.zip"
-    },
-    "rpg-assets/expression-sheets/rina.png": {
-      "sha256": "3abfe33b498f4ea08180cf860e5c48d98ccda7053d3ee5de4b221a5a8a4e29eb",
-      "bytes": 3319859,
-      "group": "expressions",
-      "source": "neo_harbor_expression_sheets_2026-10-19.zip"
-    },
-    "rpg-assets/expression-sheets/jun.png": {
-      "sha256": "61ef255be712d8244f3b475b0bcffda9175140b49353466272786e2cb479366e",
-      "bytes": 2622013,
-      "group": "expressions",
-      "source": "neo_harbor_expression_sheets_2026-10-19.zip"
-    },
-    "rpg-assets/expression-sheets/teo.png": {
-      "sha256": "3c65e227ab67a8bffa76a0afd7ae5ce597fd8ec64632696fcd419786e0ee1ae3",
-      "bytes": 3024132,
-      "group": "expressions",
-      "source": "neo_harbor_expression_sheets_2026-10-19.zip"
-    },
-    "rpg-assets/expression-sheets/iris.png": {
-      "sha256": "3004abae13cc8588857a2358e313851265fe8a591b004761481e0b871e6cb6fc",
-      "bytes": 3044682,
-      "group": "expressions",
-      "source": "neo_harbor_expression_sheets_2026-10-19.zip"
-    },
-    "rpg-assets/expression-sheets/elio.png": {
-      "sha256": "7fe4efabfbde8b896694284766d873a54d9d36673c43cae083b69c19f2e5067e",
-      "bytes": 2888137,
-      "group": "expressions",
-      "source": "neo_harbor_expression_sheets_2026-10-19.zip"
-    },
-    "rpg-assets/expression-sheets/alma.png": {
-      "sha256": "91377100584281918091a2fc6b3837ead6cde94c6d29a0eb33c04edc126f7ade",
-      "bytes": 2870177,
-      "group": "expressions",
-      "source": "neo_harbor_expression_sheets_2026-10-19.zip"
-    },
-    "rpg-assets/expression-sheets/nereo.png": {
-      "sha256": "c54ffcb86e2103a1656fd38a7af9763e4d9d5d83f2ac7e8f121940664b2ebac6",
-      "bytes": 2814375,
-      "group": "expressions",
-      "source": "neo_harbor_expression_sheets_2026-10-19.zip"
-    },
-    "rpg-assets/expression-sheets/manifest.json": {
-      "sha256": "a0cdf918803983828aae247a3a903a869a939d5ef5dbf3eca529a62e4f3cf8fd",
-      "bytes": 6032,
-      "group": "expressions",
-      "source": "neo_harbor_expression_sheets_2026-10-19.zip"
-    },
-    "rpg-assets/reactions/manifest.json": {
-      "sha256": "1e7a39b164dc26e4cad8cc371b1c08563e1a95be8050bcc9aa313d7a472d744c",
-      "bytes": 2600,
-      "group": "reactions",
-      "source": "neo_campus_all_20_battle_cutins_2026-10-20.zip"
-    },
-    "rpg-assets/reactions/complete-20-attack-cutins-manifest.json": {
-      "sha256": "2ef7ed35c1fc8a5cb04c6e7d355e17a63427ca9d6af2c3ab7f201ff667bdaef2",
-      "bytes": 4327,
-      "group": "reactions",
-      "source": "neo_campus_all_20_battle_cutins_2026-10-20.zip"
-    },
-    "rpg-assets/reactions/akari/attack.png": {
-      "sha256": "9b2f53f928b244bc588b79522c3a5b49904101a6a041c886c85bb87347dbe566",
-      "bytes": 1100717,
-      "group": "reactions",
-      "source": "neo_campus_all_20_battle_cutins_2026-10-20.zip"
-    },
-    "rpg-assets/reactions/alma/attack.png": {
-      "sha256": "2e554ccb0ad6bbff4fa068f0b8ba127b3e452c68d2b6af231d9e2619826c310f",
-      "bytes": 601772,
-      "group": "reactions",
-      "source": "neo_campus_all_20_battle_cutins_2026-10-20.zip"
-    },
-    "rpg-assets/reactions/camila/attack.png": {
-      "sha256": "207c2b20bd1db8cb73299e1b82ed5ac91e15b7df36d31fdcf352819de55668bc",
-      "bytes": 1159508,
-      "group": "reactions",
-      "source": "neo_campus_all_20_battle_cutins_2026-10-20.zip"
-    },
-    "rpg-assets/reactions/elena/attack.png": {
-      "sha256": "fe81fc9f3b87a1f7b850c96e9e480a11ed459136f38ee41f7df6c6514dd90487",
-      "bytes": 436570,
-      "group": "reactions",
-      "source": "neo_campus_all_20_battle_cutins_2026-10-20.zip"
-    },
-    "rpg-assets/reactions/elio/attack.png": {
-      "sha256": "373b87e1813e903d67ba043c1c6947b39cfa4a79c81e7bb5486e9475b2287a78",
-      "bytes": 653442,
-      "group": "reactions",
-      "source": "neo_campus_all_20_battle_cutins_2026-10-20.zip"
-    },
-    "rpg-assets/reactions/hana/attack.png": {
-      "sha256": "97a609bdd6da8a0c450d2ad89cb82b9d8a262721edff15a9813a1b0154113e8b",
-      "bytes": 1207176,
-      "group": "reactions",
-      "source": "neo_campus_all_20_battle_cutins_2026-10-20.zip"
-    },
-    "rpg-assets/reactions/iris/attack.png": {
-      "sha256": "e3c2e9a5be9e843952a36db209ce17312451df95a99b487ed035f00563f21eea",
-      "bytes": 623089,
-      "group": "reactions",
-      "source": "neo_campus_all_20_battle_cutins_2026-10-20.zip"
-    },
-    "rpg-assets/reactions/jinx/attack.png": {
-      "sha256": "a4d4c567d6c4567b6474170d711cbed4c759d6c9f367ab107b7345fe94031628",
-      "bytes": 691004,
-      "group": "reactions",
-      "source": "neo_campus_all_20_battle_cutins_2026-10-20.zip"
-    },
-    "rpg-assets/reactions/jun/attack.png": {
-      "sha256": "38c64e5d9767ce5c6671ad2c393f436a582d7ec866a0e305bc9d893b285b6992",
-      "bytes": 699625,
-      "group": "reactions",
-      "source": "neo_campus_all_20_battle_cutins_2026-10-20.zip"
-    },
-    "rpg-assets/reactions/kaede/attack.png": {
-      "sha256": "899f00e60ac9090c21c3d1c07585c06ec2d9a4773671843b950f9c3597547440",
-      "bytes": 1155929,
-      "group": "reactions",
-      "source": "neo_campus_all_20_battle_cutins_2026-10-20.zip"
-    },
-    "rpg-assets/reactions/luna/attack.png": {
-      "sha256": "a77ddd5f2f3b532ff03adc57735dd282d74d9ca0980b8582f0d3f384d1122b15",
-      "bytes": 799361,
-      "group": "reactions",
-      "source": "neo_campus_all_20_battle_cutins_2026-10-20.zip"
-    },
-    "rpg-assets/reactions/marina/attack.png": {
-      "sha256": "a5a8cc777f0c9adaa6faf6bc1d340ea45c8126315309c2954e75ebbdd6feeba8",
-      "bytes": 1189930,
-      "group": "reactions",
-      "source": "neo_campus_all_20_battle_cutins_2026-10-20.zip"
-    },
-    "rpg-assets/reactions/nereo/attack.png": {
-      "sha256": "be139e86d2e3b68a265f6f94fd4bb3163d236ea6e0a6869f3cb6fac5361692bf",
-      "bytes": 708693,
-      "group": "reactions",
-      "source": "neo_campus_all_20_battle_cutins_2026-10-20.zip"
-    },
-    "rpg-assets/reactions/reina/attack.png": {
-      "sha256": "a5d85ae1e499de6677821a77fceb45ca72746cdc6caa9867c9be41ca5af8cb23",
-      "bytes": 1187416,
-      "group": "reactions",
-      "source": "neo_campus_all_20_battle_cutins_2026-10-20.zip"
-    },
-    "rpg-assets/reactions/rina/attack.png": {
-      "sha256": "2fdc59a29155d94bdd6584e3fbb3660fd6be5b7054fe5e2c606ee5725e9f9ee4",
-      "bytes": 1010967,
-      "group": "reactions",
-      "source": "neo_campus_all_20_battle_cutins_2026-10-20.zip"
-    },
-    "rpg-assets/reactions/shiori/attack.png": {
-      "sha256": "21f79d4de445dd08fda29eeb07e773d420c9bebb2044de6d00ce0adfda5b05a5",
-      "bytes": 1213074,
-      "group": "reactions",
-      "source": "neo_campus_all_20_battle_cutins_2026-10-20.zip"
-    },
-    "rpg-assets/reactions/sierra/attack.png": {
-      "sha256": "46330d35826ac8c63ded25c7c66cdd747e5c6d78ac14ac784b4482352f080e4e",
-      "bytes": 907043,
-      "group": "reactions",
-      "source": "neo_campus_all_20_battle_cutins_2026-10-20.zip"
-    },
-    "rpg-assets/reactions/sol/attack.png": {
-      "sha256": "21121e5800d2b452998b798c76b2ce49620173731ed07a8b6c21d7684ba44111",
-      "bytes": 994006,
-      "group": "reactions",
-      "source": "neo_campus_all_20_battle_cutins_2026-10-20.zip"
-    },
-    "rpg-assets/reactions/teo/attack.png": {
-      "sha256": "5f6f987ee0803122d8a2a03e4f4bc5a3ca6f347cda6d2336fd834de824c03a8d",
-      "bytes": 706800,
-      "group": "reactions",
-      "source": "neo_campus_all_20_battle_cutins_2026-10-20.zip"
-    },
-    "rpg-assets/reactions/yuna/attack.png": {
-      "sha256": "c2a067fd1a5322744df211126ac6f98f0fbb38105c42b1725ac614e2f1ed8474",
-      "bytes": 1324250,
-      "group": "reactions",
-      "source": "neo_campus_all_20_battle_cutins_2026-10-20.zip"
-    },
-    "rpg-assets/characters/elena/elena_after_hours.webp": {
-      "sha256": "2772a8ed957e45cd14747b3912fe703ee6fb68569bdaa1b993e4ba1317261663",
-      "bytes": 255814,
-      "group": "drafts",
-      "source": "neo_campus_new_heroine_story_cg_batch_2026-10-20.zip"
-    },
-    "rpg-assets/characters/elena/elena_unguarded.webp": {
-      "sha256": "0a2052175b5e2699d74dee80b17c9fd43681116531d7a67128ffeea74c840020",
-      "bytes": 434170,
-      "group": "original_event_upgrade",
-      "source": "noche_de_cartas_en_el_rooftop.png",
-      "note": "Adapted original — rooftop lounge rather than cafe"
-    },
-    "rpg-assets/characters/elena/thumbs/elena_after_hours.webp": {
-      "sha256": "1ed80ede3009bcce04fdfe40f1f24f0cb6f2f39441b1a8a890fbd787ec32e08d",
-      "bytes": 51874,
-      "group": "drafts",
-      "source": "neo_campus_new_heroine_story_cg_batch_2026-10-20.zip"
-    },
-    "rpg-assets/characters/elena/thumbs/elena_unguarded.webp": {
-      "sha256": "bf04b3d9713e67a98f8bac75fe986b055eec5c34ce43f779c0a7add87628abed",
-      "bytes": 71678,
-      "group": "original_event_upgrade",
-      "source": "noche_de_cartas_en_el_rooftop.png",
-      "note": "Adapted original — rooftop lounge rather than cafe"
-    },
-    "rpg-assets/characters/jinx/jinx_arcade_challenge.webp": {
-      "sha256": "8c6963c7c88c589eb883a4e6630d8b1ae4d8052f01a80d5b7d1ba44384f82e89",
-      "bytes": 531696,
-      "group": "original_event_upgrade",
-      "source": "duelo_de_cartas_bajo_neón.png",
-      "note": "Original scene — neon arcade card challenge"
-    },
-    "rpg-assets/characters/jinx/jinx_unguarded.webp": {
-      "sha256": "db6ba2e2c9faff81bbaccf06b39c0d1f1ae1a92b21b2b7923c524522b733b76a",
-      "bytes": 429702,
-      "group": "latest_cgs",
-      "source": "neo_campus_story_cgs_jinx_luna_sol_2026-10-20.zip",
-      "note": "Replaces draft"
-    },
-    "rpg-assets/characters/jinx/thumbs/jinx_arcade_challenge.webp": {
-      "sha256": "6e931f47b9f90f7f4be0580a75964f4b143b3f8eb91724e3187bf410ca555060",
-      "bytes": 84686,
-      "group": "original_event_upgrade",
-      "source": "duelo_de_cartas_bajo_neón.png",
-      "note": "Original scene — neon arcade card challenge"
-    },
-    "rpg-assets/characters/jinx/thumbs/jinx_unguarded.webp": {
-      "sha256": "68c4b0d6f907dd5944b0dee5cbcc3c3ab47d8cdfe3b829f5081195ba0e35c5bb",
-      "bytes": 69424,
-      "group": "latest_cgs",
-      "source": "neo_campus_story_cgs_jinx_luna_sol_2026-10-20.zip",
-      "note": "Replaces draft"
-    },
-    "rpg-assets/characters/rina/rina_cards.webp": {
-      "sha256": "2ed51dbc3ed6de8f95afdeb0565892e13cc747b8984690fbab4b7b684e32bcda",
-      "bytes": 598534,
-      "group": "original_event_upgrade",
-      "source": "café_neón_y_álbum_de_estrellas.png",
-      "note": "Original scene — cafe and card binder"
-    },
-    "rpg-assets/characters/rina/rina_stage_after.webp": {
-      "sha256": "6cb120b387968b545c8ddc023655751fc011c095d35dc9be098d1a4ef15bc690",
-      "bytes": 603396,
-      "group": "original_event_upgrade",
-      "source": "ídolo_rosa_bajo_las_luces_del_puerto.png",
-      "note": "Original scene — concert setting and card binder; fit adapted"
-    },
-    "rpg-assets/characters/rina/thumbs/rina_cards.webp": {
-      "sha256": "5df5ea969c3fb0056efafe7f0830d80a8cb9932132136fa59c0fbb4e6f85629b",
-      "bytes": 86926,
-      "group": "original_event_upgrade",
-      "source": "café_neón_y_álbum_de_estrellas.png",
-      "note": "Original scene — cafe and card binder"
-    },
-    "rpg-assets/characters/rina/thumbs/rina_stage_after.webp": {
-      "sha256": "667c744359a05f0ecdb18638b59ba410cfb2ab5fd9ce3bc5de6cf23d48744c17",
-      "bytes": 88496,
-      "group": "original_event_upgrade",
-      "source": "ídolo_rosa_bajo_las_luces_del_puerto.png",
-      "note": "Original scene — concert setting and card binder; fit adapted"
-    },
-    "rpg-assets/characters/sierra/sierra_after_shoot.webp": {
-      "sha256": "bc3ee4d160e7a8f1d39c62e0b3c34bdcaaefa271ee5efebf9368ded1f0bd351a",
-      "bytes": 310484,
-      "group": "drafts",
-      "source": "neo_campus_new_heroine_story_cg_batch_2026-10-20.zip"
-    },
-    "rpg-assets/characters/sierra/sierra_deck_talk.webp": {
-      "sha256": "68c3ff67e3d7a8459d7b8998e362c68fdf44bd1b0efd657847ac89fe8ce48eea",
-      "bytes": 474098,
-      "group": "original_event_upgrade",
-      "source": "sierra_ofrece_una_carta_al_atardecer.png",
-      "note": "Original scene — sunset card game"
-    },
-    "rpg-assets/characters/sierra/thumbs/sierra_after_shoot.webp": {
-      "sha256": "07dd1350eaa1d655f5df3c5f722c2a6c5c00c447844ba1182ea9e2c97e50bf14",
-      "bytes": 50252,
-      "group": "drafts",
-      "source": "neo_campus_new_heroine_story_cg_batch_2026-10-20.zip"
-    },
-    "rpg-assets/characters/sierra/thumbs/sierra_deck_talk.webp": {
-      "sha256": "e2a1d38f8489b0efb7279eb8fff4371a49405907850b7e032b05d5a27210286a",
-      "bytes": 79094,
-      "group": "original_event_upgrade",
-      "source": "sierra_ofrece_una_carta_al_atardecer.png",
-      "note": "Original scene — sunset card game"
-    },
-    "rpg-assets/characters/sol/sol_scavenger_hunt.webp": {
-      "sha256": "13f3d5f8ab81c1b1fe7a856e7bca380495ee5dd94b38648dfc2fd76ba7ea65d8",
-      "bytes": 524910,
-      "group": "latest_cgs",
-      "source": "neo_campus_story_cgs_jinx_luna_sol_2026-10-20.zip",
-      "note": "Replaces draft"
-    },
-    "rpg-assets/characters/sol/sol_unguarded_cafe.webp": {
-      "sha256": "73bc3ad4991f936ae871f39a55ca33c74bba529aa50702f5e978e4a2f234bcfb",
-      "bytes": 366706,
-      "group": "drafts",
-      "source": "neo_campus_new_heroine_story_cg_batch_2026-10-20.zip"
-    },
-    "rpg-assets/characters/sol/thumbs/sol_scavenger_hunt.webp": {
-      "sha256": "6ca507eabe8a8e1be0a825fdb4371d5886efa2bef7c4ea5edada608c1983d8ae",
-      "bytes": 93982,
-      "group": "latest_cgs",
-      "source": "neo_campus_story_cgs_jinx_luna_sol_2026-10-20.zip",
-      "note": "Replaces draft"
-    },
-    "rpg-assets/characters/sol/thumbs/sol_unguarded_cafe.webp": {
-      "sha256": "70706e64d3a0e879bb686c747bb9658d16e755edd20e564cb3593d616cc7d1d0",
-      "bytes": 58402,
-      "group": "drafts",
-      "source": "neo_campus_new_heroine_story_cg_batch_2026-10-20.zip"
-    },
-    "rpg-assets/characters/story-event-cg-draft-manifest.json": {
-      "sha256": "41c65a59ce609fa18a6d9d785020e66926fc769480ce49fff4f10149a4a76418",
-      "bytes": 6597,
-      "group": "drafts",
-      "source": "neo_campus_new_heroine_story_cg_batch_2026-10-20.zip"
-    },
-    "art-production/source-manifests/latest-four-story-events.json": {
-      "sha256": "c42215ee0b773871107b1a4448187586805f65a52d5e4a5cae8176346db4a8bb",
-      "bytes": 2431,
-      "group": "latest_cgs",
-      "source": "neo_campus_story_cgs_jinx_luna_sol_2026-10-20.zip"
-    },
-    "rpg-assets/characters/jinx/jinx_alma_cafe.webp": {
-      "sha256": "7b915db03e0dd88e10d8e9d0dee9b96d4e29aea39236601ece52940bb44be6c0",
-      "bytes": 471930,
-      "group": "latest_cgs",
-      "source": "neo_campus_story_cgs_jinx_luna_sol_2026-10-20.zip",
-      "note": "Replaces draft"
-    },
-    "rpg-assets/characters/jinx/thumbs/jinx_alma_cafe.webp": {
-      "sha256": "e7b47a28bc007f122edc8cc768b98052e1482a649d07973027fa6f2d662bbe23",
-      "bytes": 74478,
-      "group": "latest_cgs",
-      "source": "neo_campus_story_cgs_jinx_luna_sol_2026-10-20.zip",
-      "note": "Replaces draft"
-    },
-    "rpg-assets/characters/luna/luna_stretch.webp": {
-      "sha256": "32acf23d9b2b606716fa4b01dc3a4d1e8267a76ac855b519550c511a49656767",
-      "bytes": 490072,
-      "group": "latest_cgs",
-      "source": "neo_campus_story_cgs_jinx_luna_sol_2026-10-20.zip",
-      "note": "Replaces draft"
-    },
-    "rpg-assets/characters/luna/thumbs/luna_stretch.webp": {
-      "sha256": "defa4ecc8e1e8924067a10628e74de278daaef13ba59e58e63c3bf8ca6f3dd8b",
-      "bytes": 74964,
-      "group": "latest_cgs",
-      "source": "neo_campus_story_cgs_jinx_luna_sol_2026-10-20.zip",
-      "note": "Replaces draft"
-    },
-    "art-production/concept-pack-crossover/rpg-assets/events/cg/concepts/jinx_alma_cafe_concept.webp": {
-      "sha256": "a761714aeebe3ae92f072dbe21faf58ca2cf71819b1b82ed04c5e1892327920b",
-      "bytes": 335998,
-      "group": "concepts",
-      "source": "neo_campus_crossover_cg_concepts_2026-10-20.zip",
-      "note": "Provisional concept; NOT a final story CG"
-    },
-    "art-production/concept-pack-crossover/rpg-assets/events/cg/concepts/thumbs/jinx_alma_cafe_concept.webp": {
-      "sha256": "163c791c2892194cfaa118d10e2398ce38b656e21f2088f41a8411024fa25a52",
-      "bytes": 59288,
-      "group": "concepts",
-      "source": "neo_campus_crossover_cg_concepts_2026-10-20.zip",
-      "note": "Provisional concept; NOT a final story CG"
-    },
-    "art-production/concept-pack-crossover/rpg-assets/events/cg/concepts/jinx_marina_riverside_concept.webp": {
-      "sha256": "c1f450e1af0688b96a866ca7b82e813fe969e0c6130380bb622cd7ad170f523d",
-      "bytes": 410424,
-      "group": "concepts",
-      "source": "neo_campus_crossover_cg_concepts_2026-10-20.zip",
-      "note": "Provisional concept; NOT a final story CG"
-    },
-    "art-production/concept-pack-crossover/rpg-assets/events/cg/concepts/thumbs/jinx_marina_riverside_concept.webp": {
-      "sha256": "3ea61983d4073ba520c510d12964067ccd80372b4ab0fc1aa64f34580733502a",
-      "bytes": 69252,
-      "group": "concepts",
-      "source": "neo_campus_crossover_cg_concepts_2026-10-20.zip",
-      "note": "Provisional concept; NOT a final story CG"
-    },
-    "art-production/concept-pack-crossover/rpg-assets/events/cg/concepts/sol_alma_cafe_concept.webp": {
-      "sha256": "0f004934354f4c500b3c4e11c47f245c1e8d6ae3b70252bce87616492ccf4652",
-      "bytes": 452774,
-      "group": "concepts",
-      "source": "neo_campus_crossover_cg_concepts_2026-10-20.zip",
-      "note": "Provisional concept; NOT a final story CG"
-    },
-    "art-production/concept-pack-crossover/rpg-assets/events/cg/concepts/thumbs/sol_alma_cafe_concept.webp": {
-      "sha256": "a557fa7b82b9fb0826b27acd6ad205655172faef79f51b8ce45c93afb99d2257",
-      "bytes": 73932,
-      "group": "concepts",
-      "source": "neo_campus_crossover_cg_concepts_2026-10-20.zip",
-      "note": "Provisional concept; NOT a final story CG"
-    },
-    "art-production/concept-pack-crossover/rpg-assets/events/cg/concepts/sol_marina_waterfront_concept.webp": {
-      "sha256": "5eb886905e6981f2a23dfaf9f726d3149e2275ec11baa65d66d197fc2ff68075",
-      "bytes": 544880,
-      "group": "concepts",
-      "source": "neo_campus_crossover_cg_concepts_2026-10-20.zip",
-      "note": "Provisional concept; NOT a final story CG"
-    },
-    "art-production/concept-pack-crossover/rpg-assets/events/cg/concepts/thumbs/sol_marina_waterfront_concept.webp": {
-      "sha256": "80a3f4aa3afd77e595a7a4464e5c8502df7416df30ccb10f3e0cd62f3e8c293e",
-      "bytes": 84878,
-      "group": "concepts",
-      "source": "neo_campus_crossover_cg_concepts_2026-10-20.zip",
-      "note": "Provisional concept; NOT a final story CG"
-    },
-    "art-production/concept-pack-crossover/rpg-assets/events/cg/concepts/luna_cafe_evening_concept.webp": {
-      "sha256": "d770b9a21116d560b094dcfd26d2a7c66db1102bf4b10f7292958e1f966bedf5",
-      "bytes": 261524,
-      "group": "concepts",
-      "source": "neo_campus_crossover_cg_concepts_2026-10-20.zip",
-      "note": "Provisional concept; NOT a final story CG"
-    },
-    "art-production/concept-pack-crossover/rpg-assets/events/cg/concepts/thumbs/luna_cafe_evening_concept.webp": {
-      "sha256": "b169441d73f79a94640916aa3d101718931b8d1e8a2700d68c282cd9cbbb357d",
-      "bytes": 46492,
-      "group": "concepts",
-      "source": "neo_campus_crossover_cg_concepts_2026-10-20.zip",
-      "note": "Provisional concept; NOT a final story CG"
-    },
-    "art-production/concept-pack-crossover/README.md": {
-      "sha256": "0ec26e63aa8094c48338fb74794e27f953e194d4ae1629d06c86cdbd4ce91ef7",
-      "bytes": 634,
-      "group": "concepts",
-      "source": "neo_campus_crossover_cg_concepts_2026-10-20.zip",
-      "note": "Provisional concept; NOT a final story CG"
-    },
-    "art-production/concept-pack-crossover/scene-manifest.json": {
-      "sha256": "019d718f9e0e62b296e3cc9ca075af7f3ea5f7e463243539b2cb1895cefc93d6",
-      "bytes": 3162,
-      "group": "concepts",
-      "source": "neo_campus_crossover_cg_concepts_2026-10-20.zip",
-      "note": "Provisional concept; NOT a final story CG"
-    },
-    "art-production/concept-pack-crossover/PREVIEW.jpg": {
-      "sha256": "ddd51de89f5d84b9544db67a5db4c3fb948716d93690df3b8b87730410cf3b68",
-      "bytes": 403511,
-      "group": "concepts",
-      "source": "neo_campus_crossover_cg_concepts_2026-10-20.zip",
-      "note": "Provisional concept; NOT a final story CG"
-    },
-    "art-production/concept-pack-layouts/PREVIEW.jpg": {
-      "sha256": "0ddde200a1685d7f20791cc4029946984e77cc018de513e6c9a74e6b1b62aec6",
-      "bytes": 382053,
-      "group": "layouts",
-      "source": "neo_campus_next_story_art_concepts_2026-10-20.zip",
-      "note": "Provisional concept; NOT a final story CG"
-    },
-    "art-production/concept-pack-layouts/README.md": {
-      "sha256": "cf623fc82277b7f02bcda9c6534fdaed61a2fd432b715f586a94dd67be06993e",
-      "bytes": 685,
-      "group": "layouts",
-      "source": "neo_campus_next_story_art_concepts_2026-10-20.zip",
-      "note": "Provisional concept; NOT a final story CG"
-    },
-    "art-production/concept-pack-layouts/manifest.json": {
-      "sha256": "708ca9ec973cfd04f59ed5363b4ed5adade10fe69bfe6ce329f87e7fe0cceada",
-      "bytes": 6414,
-      "group": "layouts",
-      "source": "neo_campus_next_story_art_concepts_2026-10-20.zip",
-      "note": "Provisional concept; NOT a final story CG"
-    },
-    "art-production/concept-pack-layouts/rpg-assets/characters/elena/concept-cgs/elena_after_work.webp": {
-      "sha256": "d0b8807bf9ba4ee17daa3fcbd618f5fd9783311665f97eb403de6f36d2f6e274",
-      "bytes": 164396,
-      "group": "layouts",
-      "source": "neo_campus_next_story_art_concepts_2026-10-20.zip",
-      "note": "Provisional concept; NOT a final story CG"
-    },
-    "art-production/concept-pack-layouts/rpg-assets/characters/elena/concept-cgs/thumbs/elena_after_work.webp": {
-      "sha256": "bf7a968ce975207197c69f46424e81cd6e62aacfcffccce25444c2f1c87ceb39",
-      "bytes": 26570,
-      "group": "layouts",
-      "source": "neo_campus_next_story_art_concepts_2026-10-20.zip",
-      "note": "Provisional concept; NOT a final story CG"
-    },
-    "art-production/concept-pack-layouts/rpg-assets/characters/jinx/concept-cgs/jinx_alma_cafe.webp": {
-      "sha256": "745cc795c3ea90cb4e9edb07723c2614a67374c6eb0440b2b07462e413eea08a",
-      "bytes": 309442,
-      "group": "layouts",
-      "source": "neo_campus_next_story_art_concepts_2026-10-20.zip",
-      "note": "Provisional concept; NOT a final story CG"
-    },
-    "art-production/concept-pack-layouts/rpg-assets/characters/jinx/concept-cgs/jinx_quiet_park.webp": {
-      "sha256": "4d968813d5bd28c2772502537f3c0fac28834f81b33e74cf2a5d0f01bab16f37",
-      "bytes": 225436,
-      "group": "layouts",
-      "source": "neo_campus_next_story_art_concepts_2026-10-20.zip",
-      "note": "Provisional concept; NOT a final story CG"
-    },
-    "art-production/concept-pack-layouts/rpg-assets/characters/jinx/concept-cgs/thumbs/jinx_alma_cafe.webp": {
-      "sha256": "2bc009ffc8e27e7b1a711f69fe0a5b4f538ab70b88fa86d9122e9fbbd78677a3",
-      "bytes": 42660,
-      "group": "layouts",
-      "source": "neo_campus_next_story_art_concepts_2026-10-20.zip",
-      "note": "Provisional concept; NOT a final story CG"
-    },
-    "art-production/concept-pack-layouts/rpg-assets/characters/jinx/concept-cgs/thumbs/jinx_quiet_park.webp": {
-      "sha256": "b859a437265ef6d582f673c89108c9e9673cf7c350b260ef72fbc400e85d655a",
-      "bytes": 33302,
-      "group": "layouts",
-      "source": "neo_campus_next_story_art_concepts_2026-10-20.zip",
-      "note": "Provisional concept; NOT a final story CG"
-    },
-    "art-production/concept-pack-layouts/rpg-assets/characters/luna/concept-cgs/luna_shelf_mishap.webp": {
-      "sha256": "d159b902ba00450b8692e506afae5b04918b9e2d27f657be6eacbe5786047ee1",
-      "bytes": 311332,
-      "group": "layouts",
-      "source": "neo_campus_next_story_art_concepts_2026-10-20.zip",
-      "note": "Provisional concept; NOT a final story CG"
-    },
-    "art-production/concept-pack-layouts/rpg-assets/characters/luna/concept-cgs/thumbs/luna_shelf_mishap.webp": {
-      "sha256": "0ce11eb6a3b092fb961cd4392190b6d4f787bba28d021ad5418a8c4541e7cc13",
-      "bytes": 46092,
-      "group": "layouts",
-      "source": "neo_campus_next_story_art_concepts_2026-10-20.zip",
-      "note": "Provisional concept; NOT a final story CG"
-    },
-    "art-production/concept-pack-layouts/rpg-assets/characters/sierra/concept-cgs/sierra_shoot_break.webp": {
-      "sha256": "19f8326ebd16a7a1d2960e72f7d18fb17567ee056dfd9840d117f480637a0103",
-      "bytes": 294826,
-      "group": "layouts",
-      "source": "neo_campus_next_story_art_concepts_2026-10-20.zip",
-      "note": "Provisional concept; NOT a final story CG"
-    },
-    "art-production/concept-pack-layouts/rpg-assets/characters/sierra/concept-cgs/thumbs/sierra_shoot_break.webp": {
-      "sha256": "d25030d2b78f910539bca061de368cf4ea1140c76dd84b11d34a949e153153f9",
-      "bytes": 43324,
-      "group": "layouts",
-      "source": "neo_campus_next_story_art_concepts_2026-10-20.zip",
-      "note": "Provisional concept; NOT a final story CG"
-    },
-    "art-production/concept-pack-layouts/rpg-assets/characters/sol/concept-cgs/sol_scavenger_day.webp": {
-      "sha256": "8de541893c2d9a10b8891208b10f9bd7c82587f06ccd2b68231279eb8cb5d802",
-      "bytes": 346242,
-      "group": "layouts",
-      "source": "neo_campus_next_story_art_concepts_2026-10-20.zip",
-      "note": "Provisional concept; NOT a final story CG"
-    },
-    "art-production/concept-pack-layouts/rpg-assets/characters/sol/concept-cgs/thumbs/sol_scavenger_day.webp": {
-      "sha256": "9ef851ec6f36d6fa0b010774e56e13d46a088a037826b24abe8e195cf938e440",
-      "bytes": 50198,
-      "group": "layouts",
-      "source": "neo_campus_next_story_art_concepts_2026-10-20.zip",
-      "note": "Provisional concept; NOT a final story CG"
-    },
-    "art-production/original-story-renders/luna_limpia_un_derrame_bajo_las_estrellas.png": {
-      "sha256": "7e95d14024936113a7c3cbc3fa207b8aa36fcacb17f83f013be4e8a6742e7030",
-      "bytes": 2598167,
+    "art-production/original-story-renders/atardecer_punk_junto_al_río.png": {
+      "sha256": "40b3f6798d237d299caa1d6b2c53670509a242f9545481373eddf5f8f550f665",
+      "bytes": 2318783,
       "group": "source_cgs",
-      "source": "luna_limpia_un_derrame_bajo_las_estrellas.png",
-      "note": "Original render, not automatically installed; see curated game-ready event images"
-    },
-    "art-production/original-story-renders/luna_bajo_la_luna_en_la_terraza.png": {
-      "sha256": "c7006df6e1923a74cb54aa23aee3fb0d7870f455b0ac9c6ca186f3fb21eea2d2",
-      "bytes": 2743508,
-      "group": "source_cgs",
-      "source": "luna_bajo_la_luna_en_la_terraza.png",
-      "note": "Original render, not automatically installed; see curated game-ready event images"
-    },
-    "art-production/original-story-renders/duelo_neón_en_neo_harbor.png": {
-      "sha256": "fdd73e9153c735619531922e1fbb935692b4f045798f2b22d03093e25126f5a1",
-      "bytes": 2657450,
-      "group": "source_cgs",
-      "source": "duelo_neón_en_neo_harbor.png",
-      "note": "Original render, not automatically installed; see curated game-ready event images"
-    },
-    "art-production/original-story-renders/duelo_de_cartas_al_atardecer_costero.png": {
-      "sha256": "fea372ae0e5b3e809af6fe5230dda22290d49861242fa9f581d27a7a6dc5879d",
-      "bytes": 2757172,
-      "group": "source_cgs",
-      "source": "duelo_de_cartas_al_atardecer_costero.png",
-      "note": "Original render, not automatically installed; see curated game-ready event images"
-    },
-    "art-production/original-story-renders/partida_al_atardecer_junto_al_mar.png": {
-      "sha256": "9e588029874a6a516fa4af19ba678fdabb528892264d0b4b22ca7c49c32e7412",
-      "bytes": 2443965,
-      "group": "source_cgs",
-      "source": "partida_al_atardecer_junto_al_mar.png",
-      "note": "Original render, not automatically installed; see curated game-ready event images"
-    },
-    "art-production/original-story-renders/café_lunar_al_anochecer.png": {
-      "sha256": "c934271f4925918aeb25e90b31b2d55a2eb7f349a12627ae3fca1f4371d392be",
-      "bytes": 2653270,
-      "group": "source_cgs",
-      "source": "café_lunar_al_anochecer.png",
-      "note": "Original render, not automatically installed; see curated game-ready event images"
-    },
-    "art-production/original-story-renders/luna_en_el_balcón_bajo_la_luna_llena.png": {
-      "sha256": "d993e606e1276144bae4c4e63bf0877b115d1c63501923ff978bf2e604677864",
-      "bytes": 2786891,
-      "group": "source_cgs",
-      "source": "luna_en_el_balcón_bajo_la_luna_llena.png",
-      "note": "Original render, not automatically installed; see curated game-ready event images"
-    },
-    "art-production/original-story-renders/duelo_de_cartas_bajo_neón.png": {
-      "sha256": "b67b732e9a2e26c1be9cf561296a47a47f2ea6b2b2f8521fc46e8502a846f3f6",
-      "bytes": 2730034,
-      "group": "source_cgs",
-      "source": "duelo_de_cartas_bajo_neón.png",
-      "note": "Original render, not automatically installed; see curated game-ready event images"
-    },
-    "art-production/original-story-renders/duelo_de_cartas_al_atardecer.png": {
-      "sha256": "c2524778a9547dd55415a45436e7a6c468da1e96383c253a5f6f9d100c3af0bd",
-      "bytes": 2854738,
-      "group": "source_cgs",
-      "source": "duelo_de_cartas_al_atardecer.png",
-      "note": "Original render, not automatically installed; see curated game-ready event images"
-    },
-    "art-production/original-story-renders/sol_en_el_café_tropical_al_atardecer.png": {
-      "sha256": "2387a2c09e497a591392da735a12bbc72f03b6ca5c0e4ff7acda8c9234894858",
-      "bytes": 2618620,
-      "group": "source_cgs",
-      "source": "sol_en_el_café_tropical_al_atardecer.png",
-      "note": "Original render, not automatically installed; see curated game-ready event images"
-    },
-    "art-production/original-story-renders/café_neón_y_álbum_de_estrellas.png": {
-      "sha256": "083eb05fa8738b169386ba3f2a10a8ab672df45f2484ff41f655c632bb8d0617",
-      "bytes": 2811762,
-      "group": "source_cgs",
-      "source": "café_neón_y_álbum_de_estrellas.png",
-      "note": "Original render, not automatically installed; see curated game-ready event images"
-    },
-    "art-production/original-story-renders/sierra_ofrece_una_carta_al_atardecer.png": {
-      "sha256": "815f0baf1f1fd7b2fd41e2f1b9aef616d1abd96a96533339662c96219e75c2ce",
-      "bytes": 2531553,
-      "group": "source_cgs",
-      "source": "sierra_ofrece_una_carta_al_atardecer.png",
-      "note": "Original render, not automatically installed; see curated game-ready event images"
-    },
-    "art-production/original-story-renders/noche_de_cartas_en_el_rooftop.png": {
-      "sha256": "cd867d26335218bc8ae1ba2cbc35ab11ed825eef2f604cb6ab0b6311d31cae3a",
-      "bytes": 2460366,
-      "group": "source_cgs",
-      "source": "noche_de_cartas_en_el_rooftop.png",
-      "note": "Original render, not automatically installed; see curated game-ready event images"
-    },
-    "art-production/original-story-renders/duelo_de_cartas_al_atardecer_neon.png": {
-      "sha256": "b193d7ceffde772978ee303dc4d74d97168662afae82ccf5d378f1a1be37f32d",
-      "bytes": 2912064,
-      "group": "source_cgs",
-      "source": "duelo_de_cartas_al_atardecer_neon.png",
-      "note": "Original render, not automatically installed; see curated game-ready event images"
-    },
-    "art-production/original-story-renders/ídolo_rosa_bajo_las_luces_del_puerto.png": {
-      "sha256": "67fb69e8cdd837eeb3c722d8d2a9c9259feb62e3f451405a815fe30788c32f45",
-      "bytes": 2840998,
-      "group": "source_cgs",
-      "source": "ídolo_rosa_bajo_las_luces_del_puerto.png",
-      "note": "Original render, not automatically installed; see curated game-ready event images"
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
     },
     "art-production/original-story-renders/café_al_atardecer_desafío_y_cariño.png": {
       "sha256": "12bdf22828b64f6bf76dc9d626bff057948d784495b3826a7b42cb1bc452927b",
       "bytes": 2420895,
       "group": "source_cgs",
-      "source": "café_al_atardecer_desafío_y_cariño.png",
-      "note": "Original render, not automatically installed; see curated game-ready event images"
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
     },
-    "art-production/original-story-renders/atardecer_punk_junto_al_río.png": {
-      "sha256": "40b3f6798d237d299caa1d6b2c53670509a242f9545481373eddf5f8f550f665",
-      "bytes": 2318783,
+    "art-production/original-story-renders/café_lunar_al_anochecer.png": {
+      "sha256": "c934271f4925918aeb25e90b31b2d55a2eb7f349a12627ae3fca1f4371d392be",
+      "bytes": 2653270,
       "group": "source_cgs",
-      "source": "atardecer_punk_junto_al_río.png",
-      "note": "Original render, not automatically installed; see curated game-ready event images"
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
     },
-    "art-production/original-story-renders/luna_en_la_tienda_de_cartas_mágicas.png": {
-      "sha256": "edbbce63b66583cf1f032d27929443cc3e577e0590f068791f6bbcd99b338a52",
-      "bytes": 2578885,
+    "art-production/original-story-renders/café_neón_y_álbum_de_estrellas.png": {
+      "sha256": "083eb05fa8738b169386ba3f2a10a8ab672df45f2484ff41f655c632bb8d0617",
+      "bytes": 2811762,
       "group": "source_cgs",
-      "source": "luna_en_la_tienda_de_cartas_mágicas.png",
-      "note": "Original render, not automatically installed; see curated game-ready event images"
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "art-production/original-story-renders/duelo_de_cartas_al_atardecer.png": {
+      "sha256": "c2524778a9547dd55415a45436e7a6c468da1e96383c253a5f6f9d100c3af0bd",
+      "bytes": 2854738,
+      "group": "source_cgs",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "art-production/original-story-renders/duelo_de_cartas_al_atardecer_costero.png": {
+      "sha256": "fea372ae0e5b3e809af6fe5230dda22290d49861242fa9f581d27a7a6dc5879d",
+      "bytes": 2757172,
+      "group": "source_cgs",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "art-production/original-story-renders/duelo_de_cartas_al_atardecer_neon.png": {
+      "sha256": "b193d7ceffde772978ee303dc4d74d97168662afae82ccf5d378f1a1be37f32d",
+      "bytes": 2912064,
+      "group": "source_cgs",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "art-production/original-story-renders/duelo_de_cartas_bajo_neón.png": {
+      "sha256": "b67b732e9a2e26c1be9cf561296a47a47f2ea6b2b2f8521fc46e8502a846f3f6",
+      "bytes": 2730034,
+      "group": "source_cgs",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "art-production/original-story-renders/duelo_neón_en_neo_harbor.png": {
+      "sha256": "fdd73e9153c735619531922e1fbb935692b4f045798f2b22d03093e25126f5a1",
+      "bytes": 2657450,
+      "group": "source_cgs",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
     },
     "art-production/original-story-renders/invitación_tropical_junto_al_canal.png": {
       "sha256": "692cef9028e721788528c74226986b35c150388ab8a687d464e22d691c901130",
       "bytes": 2631246,
       "group": "source_cgs",
-      "source": "invitación_tropical_junto_al_canal.png",
-      "note": "Original render, not automatically installed; see curated game-ready event images"
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
     },
-    "art-production/inspiration-montages/a_high_resolution_anime_style_png_collage_composi.png": {
-      "sha256": "a73f519f68279a9df2598c074e487142ccbd084c07812294c62d10cbf4ad6b69",
-      "bytes": 3609716,
-      "group": "inspiration",
-      "source": "a_high_resolution_anime_style_png_collage_composi.png",
-      "note": "Exploratory collage; do not use as individual event CG"
+    "art-production/original-story-renders/luna_bajo_la_luna_en_la_terraza.png": {
+      "sha256": "c7006df6e1923a74cb54aa23aee3fb0d7870f455b0ac9c6ca186f3fb21eea2d2",
+      "bytes": 2743508,
+      "group": "source_cgs",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
     },
-    "art-production/inspiration-montages/a_large_clean_anime_illustration_collage_composi.png": {
-      "sha256": "532111a37e252952acfee2ceb2614b8a678033349e84c606083ce62e44c03b2f",
-      "bytes": 3913341,
-      "group": "inspiration",
-      "source": "a_large_clean_anime_illustration_collage_composi.png",
-      "note": "Exploratory collage; do not use as individual event CG"
+    "art-production/original-story-renders/luna_en_el_balcón_bajo_la_luna_llena.png": {
+      "sha256": "d993e606e1276144bae4c4e63bf0877b115d1c63501923ff978bf2e604677864",
+      "bytes": 2786891,
+      "group": "source_cgs",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
     },
-    "art-production/inspiration-montages/a_high_resolution_anime_style_character_art_collag.png": {
-      "sha256": "b1ea4887945215f73edbfe8c6a4d657de932363097c6cdc9d826ad88c923bd4d",
-      "bytes": 3367008,
-      "group": "inspiration",
-      "source": "a_high_resolution_anime_style_character_art_collag.png",
-      "note": "Exploratory collage; do not use as individual event CG"
+    "art-production/original-story-renders/luna_en_la_tienda_de_cartas_mágicas.png": {
+      "sha256": "edbbce63b66583cf1f032d27929443cc3e577e0590f068791f6bbcd99b338a52",
+      "bytes": 2578885,
+      "group": "source_cgs",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
     },
-    "art-production/inspiration-montages/a_highly_detailed_polished_anime_illustration_col.png": {
-      "sha256": "e85cfc17646f23e6724baee0aef93eb6261516b9788042ce9e22af04c5f64030",
-      "bytes": 3152087,
-      "group": "inspiration",
-      "source": "a_highly_detailed_polished_anime_illustration_col.png",
-      "note": "Exploratory collage; do not use as individual event CG"
+    "art-production/original-story-renders/luna_limpia_un_derrame_bajo_las_estrellas.png": {
+      "sha256": "7e95d14024936113a7c3cbc3fa207b8aa36fcacb17f83f013be4e8a6742e7030",
+      "bytes": 2598167,
+      "group": "source_cgs",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
     },
-    "art-production/inspiration-montages/a_wide_colorful_anime_illustration_collage_arrang.png": {
-      "sha256": "d4636fee847d84018571b6db40bc09efc45c49e3cb9ba1eab4feedad31ec570d",
-      "bytes": 3680376,
-      "group": "inspiration",
-      "source": "a_wide_colorful_anime_illustration_collage_arrang.png",
-      "note": "Exploratory collage; do not use as individual event CG"
+    "art-production/original-story-renders/noche_de_cartas_en_el_rooftop.png": {
+      "sha256": "cd867d26335218bc8ae1ba2cbc35ab11ed825eef2f604cb6ab0b6311d31cae3a",
+      "bytes": 2460366,
+      "group": "source_cgs",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
     },
-    "art-production/inspiration-montages/a_detailed_anime_illustration_collage_storyboard.png": {
-      "sha256": "cf0b9a31c4fc4d90a9d1d744b0342f8ae8ebdaa1d7ef7038b3f844277244be4d",
-      "bytes": 3333743,
-      "group": "inspiration",
-      "source": "a_detailed_anime_illustration_collage_storyboard.png",
-      "note": "Exploratory collage; do not use as individual event CG"
+    "art-production/original-story-renders/partida_al_atardecer_junto_al_mar.png": {
+      "sha256": "9e588029874a6a516fa4af19ba678fdabb528892264d0b4b22ca7c49c32e7412",
+      "bytes": 2443965,
+      "group": "source_cgs",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
     },
-    "art-production/inspiration-montages/a_wide_collage_illustration_sheet_in_anime_style.png": {
-      "sha256": "7a20dc00e7e7f9c45f5da55a5ec2954ba871cf04f64a8a852b5be9fca385c7c7",
-      "bytes": 3343049,
-      "group": "inspiration",
-      "source": "a_wide_collage_illustration_sheet_in_anime_style.png",
-      "note": "Exploratory collage; do not use as individual event CG"
+    "art-production/original-story-renders/sierra_ofrece_una_carta_al_atardecer.png": {
+      "sha256": "815f0baf1f1fd7b2fd41e2f1b9aef616d1abd96a96533339662c96219e75c2ce",
+      "bytes": 2531553,
+      "group": "source_cgs",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
     },
-    "art-production/inspiration-montages/a_large_high_quality_anime_illustration_collage.png": {
-      "sha256": "3fa5b8b26949785c19adddb8dba4d48608ff84ba757ff3c8a1c109389a851806",
-      "bytes": 3286272,
-      "group": "inspiration",
-      "source": "a_large_high_quality_anime_illustration_collage.png",
-      "note": "Exploratory collage; do not use as individual event CG"
+    "art-production/original-story-renders/sol_en_el_café_tropical_al_atardecer.png": {
+      "sha256": "2387a2c09e497a591392da735a12bbc72f03b6ca5c0e4ff7acda8c9234894858",
+      "bytes": 2618620,
+      "group": "source_cgs",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
     },
-    "rpg-assets/characters/jinx/jinx_marina_park.webp": {
-      "sha256": "40f204eca1b2dd24e6bec045a79a988ab48dc03a0b9e9574da21dbb05808cae7",
-      "bytes": 614718,
-      "group": "original_event_upgrade",
-      "source": "duelo_de_cartas_al_atardecer.png",
-      "note": "Adapted original — two-person waterfront card game (not railing)"
+    "art-production/original-story-renders/ídolo_rosa_bajo_las_luces_del_puerto.png": {
+      "sha256": "67fb69e8cdd837eeb3c722d8d2a9c9259feb62e3f451405a815fe30788c32f45",
+      "bytes": 2840998,
+      "group": "source_cgs",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
     },
-    "rpg-assets/characters/jinx/thumbs/jinx_marina_park.webp": {
-      "sha256": "a75cd86ffb910eb3e94ed82bdd6ec3c175b3a76a6e0c0f0ad79970cff8619bd3",
-      "bytes": 91048,
-      "group": "original_event_upgrade",
-      "source": "duelo_de_cartas_al_atardecer.png",
-      "note": "Adapted original — two-person waterfront card game (not railing)"
-    },
-    "rpg-assets/characters/luna/luna_spill.webp": {
-      "sha256": "08c377e2c7eb14ebe5b377e2df49835c2d27dc067956fbc09a54a03e4a1895fd",
-      "bytes": 485752,
-      "group": "original_event_upgrade",
-      "source": "café_lunar_al_anochecer.png",
-      "note": "Original scene — drink spill at cafe"
-    },
-    "rpg-assets/characters/luna/thumbs/luna_spill.webp": {
-      "sha256": "16fe792e341bb9cedaf3aa6c1034939b95c542eed7f69270ba010a0a15406f75",
-      "bytes": 78146,
-      "group": "original_event_upgrade",
-      "source": "café_lunar_al_anochecer.png",
-      "note": "Original scene — drink spill at cafe"
-    },
-    "rpg-assets/characters/jinx/neutral.png": {
-      "sha256": "d604b4a2de1746746f6e91808da9bf9428455291087fc9b0337fc75b04c24b3e",
-      "bytes": 2228432,
-      "group": "alias",
-      "source": "rpg-assets/jinx.png",
-      "note": "Exact copy of refreshed root portrait for the script/manifest path"
-    },
-    "rpg-assets/characters/luna/neutral.png": {
-      "sha256": "ffd66ab2bc4ea474ab564c6b5fe561d3c78649990f595ff5a5a9735c16cf7058",
-      "bytes": 2755800,
-      "group": "alias",
-      "source": "rpg-assets/luna.png",
-      "note": "Exact copy of refreshed root portrait for the script/manifest path"
-    },
-    "rpg-assets/characters/rina/neutral.png": {
-      "sha256": "8d072f4ce7ed13d40f7aa9b863ea5c6fe1fda23357f2a8d911d5a0422d4b18fb",
-      "bytes": 2870081,
-      "group": "alias",
-      "source": "rpg-assets/rina.png",
-      "note": "Exact copy of refreshed root portrait for the script/manifest path"
-    },
-    "rpg-assets/characters/elena/portrait.png": {
-      "sha256": "53a1765e0b0223c43b9a10c2d418f886deb0c37af4d367a142e78b480d38dfc2",
-      "bytes": 1594302,
-      "group": "alias",
-      "source": "rpg-assets/elena.png",
-      "note": "Exact copy of refreshed root portrait for the script/manifest path"
-    },
-    "rpg-assets/characters/sierra/portrait.png": {
-      "sha256": "0d96e6829ec58c001d2b847f94d741150092530397b642ca9ebb6bd85ea2e1fe",
-      "bytes": 2603904,
-      "group": "alias",
-      "source": "rpg-assets/sierra.png",
-      "note": "Exact copy of refreshed root portrait for the script/manifest path"
-    },
-    "rpg-assets/characters/sol/portraits/primary.png": {
-      "sha256": "32b8db5618deae6fb770cd2259d0fae6c71cae9b6445dfb08daa1dc64e499739",
-      "bytes": 2971554,
-      "group": "alias",
-      "source": "rpg-assets/sol.png",
-      "note": "Exact copy of refreshed root portrait for the script/manifest path"
-    },
-    "rpg-assets/characters/reina/portraits/primary.png": {
-      "sha256": "a042fde75a277be94dd81764151b9229f38c6335896b81ae732c61871724d1d7",
-      "bytes": 2626467,
-      "group": "alias",
-      "source": "rpg-assets/reina.png",
-      "note": "Exact copy of refreshed root portrait for the script/manifest path"
-    },
-    "README_START_HERE.md": {
-      "sha256": "fee354637e2686048ed2350532e8dfbdf25e7e34425797e4b05e91c0ef92e4d2",
-      "bytes": 2816,
-      "group": "documentation",
-      "source": "created_in_this_package"
+    "art-production/source-manifests/latest-four-story-events.json": {
+      "sha256": "c42215ee0b773871107b1a4448187586805f65a52d5e4a5cae8176346db4a8bb",
+      "bytes": 2431,
+      "group": "latest_cgs",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
     },
     "docs/PORTRAIT_GENERATION_GUIDE.md": {
       "sha256": "867101d55e5abb2f4b4c010750303660ffcfab16d82b3f7579e9397369f316f7",
       "bytes": 1598,
       "group": "documentation",
-      "source": "prior_guide"
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/akari.png": {
+      "sha256": "94881aa9e7a5673ea309dd69128fbb740d7716f0201f2893630471438e107d2c",
+      "bytes": 2470873,
+      "group": "portraits",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/alma.png": {
+      "sha256": "629fcd12c98a71154824bf5dce293440f1ccace1f77645b1d3b58606ea958610",
+      "bytes": 2203850,
+      "group": "portraits",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/camila.png": {
+      "sha256": "047b4a1ad97fe25f75a9ff0457b896d4019570b29490158a06b271aa2b2da5dc",
+      "bytes": 2454934,
+      "group": "portraits",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/elena/elena_after_hours.webp": {
+      "sha256": "2772a8ed957e45cd14747b3912fe703ee6fb68569bdaa1b993e4ba1317261663",
+      "bytes": 255814,
+      "group": "drafts",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/elena/elena_unguarded.webp": {
+      "sha256": "0a2052175b5e2699d74dee80b17c9fd43681116531d7a67128ffeea74c840020",
+      "bytes": 434170,
+      "group": "original_event_upgrade",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/elena/portrait.png": {
+      "sha256": "53a1765e0b0223c43b9a10c2d418f886deb0c37af4d367a142e78b480d38dfc2",
+      "bytes": 1594302,
+      "group": "alias",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/elena/thumbs/elena_after_hours.webp": {
+      "sha256": "1ed80ede3009bcce04fdfe40f1f24f0cb6f2f39441b1a8a890fbd787ec32e08d",
+      "bytes": 51874,
+      "group": "drafts",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/elena/thumbs/elena_unguarded.webp": {
+      "sha256": "bf04b3d9713e67a98f8bac75fe986b055eec5c34ce43f779c0a7add87628abed",
+      "bytes": 71678,
+      "group": "original_event_upgrade",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/jinx/jinx_alma_cafe.webp": {
+      "sha256": "7b915db03e0dd88e10d8e9d0dee9b96d4e29aea39236601ece52940bb44be6c0",
+      "bytes": 471930,
+      "group": "latest_cgs",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/jinx/jinx_arcade_challenge.webp": {
+      "sha256": "8c6963c7c88c589eb883a4e6630d8b1ae4d8052f01a80d5b7d1ba44384f82e89",
+      "bytes": 531696,
+      "group": "original_event_upgrade",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/jinx/jinx_marina_park.webp": {
+      "sha256": "40f204eca1b2dd24e6bec045a79a988ab48dc03a0b9e9574da21dbb05808cae7",
+      "bytes": 614718,
+      "group": "original_event_upgrade",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/jinx/jinx_unguarded.webp": {
+      "sha256": "db6ba2e2c9faff81bbaccf06b39c0d1f1ae1a92b21b2b7923c524522b733b76a",
+      "bytes": 429702,
+      "group": "latest_cgs",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/jinx/neutral.png": {
+      "sha256": "d604b4a2de1746746f6e91808da9bf9428455291087fc9b0337fc75b04c24b3e",
+      "bytes": 2228432,
+      "group": "alias",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/jinx/thumbs/jinx_alma_cafe.webp": {
+      "sha256": "e7b47a28bc007f122edc8cc768b98052e1482a649d07973027fa6f2d662bbe23",
+      "bytes": 74478,
+      "group": "latest_cgs",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/jinx/thumbs/jinx_arcade_challenge.webp": {
+      "sha256": "6e931f47b9f90f7f4be0580a75964f4b143b3f8eb91724e3187bf410ca555060",
+      "bytes": 84686,
+      "group": "original_event_upgrade",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/jinx/thumbs/jinx_marina_park.webp": {
+      "sha256": "a75cd86ffb910eb3e94ed82bdd6ec3c175b3a76a6e0c0f0ad79970cff8619bd3",
+      "bytes": 91048,
+      "group": "original_event_upgrade",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/jinx/thumbs/jinx_unguarded.webp": {
+      "sha256": "68c4b0d6f907dd5944b0dee5cbcc3c3ab47d8cdfe3b829f5081195ba0e35c5bb",
+      "bytes": 69424,
+      "group": "latest_cgs",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/luna/luna_spill.webp": {
+      "sha256": "08c377e2c7eb14ebe5b377e2df49835c2d27dc067956fbc09a54a03e4a1895fd",
+      "bytes": 485752,
+      "group": "original_event_upgrade",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/luna/luna_stretch.webp": {
+      "sha256": "32acf23d9b2b606716fa4b01dc3a4d1e8267a76ac855b519550c511a49656767",
+      "bytes": 490072,
+      "group": "latest_cgs",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/luna/neutral.png": {
+      "sha256": "ffd66ab2bc4ea474ab564c6b5fe561d3c78649990f595ff5a5a9735c16cf7058",
+      "bytes": 2755800,
+      "group": "alias",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/luna/thumbs/luna_spill.webp": {
+      "sha256": "16fe792e341bb9cedaf3aa6c1034939b95c542eed7f69270ba010a0a15406f75",
+      "bytes": 78146,
+      "group": "original_event_upgrade",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/luna/thumbs/luna_stretch.webp": {
+      "sha256": "defa4ecc8e1e8924067a10628e74de278daaef13ba59e58e63c3bf8ca6f3dd8b",
+      "bytes": 74964,
+      "group": "latest_cgs",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/reina/portraits/primary.png": {
+      "sha256": "a042fde75a277be94dd81764151b9229f38c6335896b81ae732c61871724d1d7",
+      "bytes": 2626467,
+      "group": "alias",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/rina/neutral.png": {
+      "sha256": "8d072f4ce7ed13d40f7aa9b863ea5c6fe1fda23357f2a8d911d5a0422d4b18fb",
+      "bytes": 2870081,
+      "group": "alias",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/rina/rina_cards.webp": {
+      "sha256": "2ed51dbc3ed6de8f95afdeb0565892e13cc747b8984690fbab4b7b684e32bcda",
+      "bytes": 598534,
+      "group": "original_event_upgrade",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/rina/rina_stage_after.webp": {
+      "sha256": "6cb120b387968b545c8ddc023655751fc011c095d35dc9be098d1a4ef15bc690",
+      "bytes": 603396,
+      "group": "original_event_upgrade",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/rina/thumbs/rina_cards.webp": {
+      "sha256": "5df5ea969c3fb0056efafe7f0830d80a8cb9932132136fa59c0fbb4e6f85629b",
+      "bytes": 86926,
+      "group": "original_event_upgrade",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/rina/thumbs/rina_stage_after.webp": {
+      "sha256": "667c744359a05f0ecdb18638b59ba410cfb2ab5fd9ce3bc5de6cf23d48744c17",
+      "bytes": 88496,
+      "group": "original_event_upgrade",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/sierra/portrait.png": {
+      "sha256": "0d96e6829ec58c001d2b847f94d741150092530397b642ca9ebb6bd85ea2e1fe",
+      "bytes": 2603904,
+      "group": "alias",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/sierra/sierra_after_shoot.webp": {
+      "sha256": "bc3ee4d160e7a8f1d39c62e0b3c34bdcaaefa271ee5efebf9368ded1f0bd351a",
+      "bytes": 310484,
+      "group": "drafts",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/sierra/sierra_deck_talk.webp": {
+      "sha256": "68c3ff67e3d7a8459d7b8998e362c68fdf44bd1b0efd657847ac89fe8ce48eea",
+      "bytes": 474098,
+      "group": "original_event_upgrade",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/sierra/thumbs/sierra_after_shoot.webp": {
+      "sha256": "07dd1350eaa1d655f5df3c5f722c2a6c5c00c447844ba1182ea9e2c97e50bf14",
+      "bytes": 50252,
+      "group": "drafts",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/sierra/thumbs/sierra_deck_talk.webp": {
+      "sha256": "e2a1d38f8489b0efb7279eb8fff4371a49405907850b7e032b05d5a27210286a",
+      "bytes": 79094,
+      "group": "original_event_upgrade",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/sol/portraits/primary.png": {
+      "sha256": "32b8db5618deae6fb770cd2259d0fae6c71cae9b6445dfb08daa1dc64e499739",
+      "bytes": 2971554,
+      "group": "alias",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/sol/sol_scavenger_hunt.webp": {
+      "sha256": "13f3d5f8ab81c1b1fe7a856e7bca380495ee5dd94b38648dfc2fd76ba7ea65d8",
+      "bytes": 524910,
+      "group": "latest_cgs",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/sol/sol_unguarded_cafe.webp": {
+      "sha256": "73bc3ad4991f936ae871f39a55ca33c74bba529aa50702f5e978e4a2f234bcfb",
+      "bytes": 366706,
+      "group": "drafts",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/sol/thumbs/sol_scavenger_hunt.webp": {
+      "sha256": "6ca507eabe8a8e1be0a825fdb4371d5886efa2bef7c4ea5edada608c1983d8ae",
+      "bytes": 93982,
+      "group": "latest_cgs",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/sol/thumbs/sol_unguarded_cafe.webp": {
+      "sha256": "70706e64d3a0e879bb686c747bb9658d16e755edd20e564cb3593d616cc7d1d0",
+      "bytes": 58402,
+      "group": "drafts",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/story-event-cg-draft-manifest.json": {
+      "sha256": "41c65a59ce609fa18a6d9d785020e66926fc769480ce49fff4f10149a4a76418",
+      "bytes": 6597,
+      "group": "drafts",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/consistent-portrait-pack-manifest.json": {
+      "sha256": "8bf7b175ad238eb76b80b846a5d435a6b889b82e21526f613ff3b40748d17174",
+      "bytes": 6525,
+      "group": "portraits",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/elena.png": {
+      "sha256": "53a1765e0b0223c43b9a10c2d418f886deb0c37af4d367a142e78b480d38dfc2",
+      "bytes": 1594302,
+      "group": "portraits",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/elio.png": {
+      "sha256": "2902f1df48ed43dbbaad5b6c24b8a90ae44fe9e22ff841225e39ccdeee8bb348",
+      "bytes": 2184026,
+      "group": "portraits",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/expression-sheets/akari.png": {
+      "sha256": "b0cf4241f211f9393224bc822c2f4dbbb7c9364afd20555d9c7768a36b218863",
+      "bytes": 2955253,
+      "group": "expressions",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/expression-sheets/alma.png": {
+      "sha256": "91377100584281918091a2fc6b3837ead6cde94c6d29a0eb33c04edc126f7ade",
+      "bytes": 2870177,
+      "group": "expressions",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/expression-sheets/camila.png": {
+      "sha256": "5f92adb521d7ca8bc888f37e92e1d8038561b7e8e30aa0572c4cadae044e1b70",
+      "bytes": 2828496,
+      "group": "expressions",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/expression-sheets/elena.png": {
+      "sha256": "d64faf9cb27defc0f30fbe000101fcd11b4d7902a71920af028c7f972754f936",
+      "bytes": 2775857,
+      "group": "expressions",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/expression-sheets/elio.png": {
+      "sha256": "7fe4efabfbde8b896694284766d873a54d9d36673c43cae083b69c19f2e5067e",
+      "bytes": 2888137,
+      "group": "expressions",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/expression-sheets/hana.png": {
+      "sha256": "449bbf036eafc54cbf94230a6a234f4565c3a04f742d5819d1d6542fb4ada050",
+      "bytes": 3098365,
+      "group": "expressions",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/expression-sheets/iris.png": {
+      "sha256": "3004abae13cc8588857a2358e313851265fe8a591b004761481e0b871e6cb6fc",
+      "bytes": 3044682,
+      "group": "expressions",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/expression-sheets/jinx.png": {
+      "sha256": "d043ecb5ddae31516e59a184b4ccb535e93a2662e3d3a655bb38aae67edfeb77",
+      "bytes": 3217765,
+      "group": "expressions",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/expression-sheets/jun.png": {
+      "sha256": "61ef255be712d8244f3b475b0bcffda9175140b49353466272786e2cb479366e",
+      "bytes": 2622013,
+      "group": "expressions",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/expression-sheets/kaede.png": {
+      "sha256": "3b0f0270bf493e97dd823f15bfabceca6ccb27d4ff9dbca864dd6187e64f1035",
+      "bytes": 3094281,
+      "group": "expressions",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/expression-sheets/luna.png": {
+      "sha256": "ab10ba37c92647e2ee39d667b0e3116051c2e600a359569c88728e88a407b234",
+      "bytes": 3437492,
+      "group": "expressions",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/expression-sheets/manifest.json": {
+      "sha256": "a0cdf918803983828aae247a3a903a869a939d5ef5dbf3eca529a62e4f3cf8fd",
+      "bytes": 6032,
+      "group": "expressions",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/expression-sheets/marina.png": {
+      "sha256": "775baa936f597078c5fc1b112ecc134db0129b966a44ce993aba9faa90765c1a",
+      "bytes": 3130762,
+      "group": "expressions",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/expression-sheets/nereo.png": {
+      "sha256": "c54ffcb86e2103a1656fd38a7af9763e4d9d5d83f2ac7e8f121940664b2ebac6",
+      "bytes": 2814375,
+      "group": "expressions",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/expression-sheets/reina.png": {
+      "sha256": "d8b80f0307a141f81e4e93e6d954ef66d18a1978366659eb8dc2e1ea8957281a",
+      "bytes": 3026311,
+      "group": "expressions",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/expression-sheets/rina.png": {
+      "sha256": "3abfe33b498f4ea08180cf860e5c48d98ccda7053d3ee5de4b221a5a8a4e29eb",
+      "bytes": 3319859,
+      "group": "expressions",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/expression-sheets/shiori.png": {
+      "sha256": "71e61c63dfeb34a7979030ca46b7c955522f9f77dc2e09cc6aaa476e2d932463",
+      "bytes": 2974258,
+      "group": "expressions",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/expression-sheets/sierra.png": {
+      "sha256": "0dc1ae4a27a185b0689981eec1793f8f59ae64613b40a33fc0df5359963d12e8",
+      "bytes": 3289101,
+      "group": "expressions",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/expression-sheets/sol.png": {
+      "sha256": "999fde6499a05412dbf2dc1f447b34012df1821fd25f6237958d6001570e110f",
+      "bytes": 3486038,
+      "group": "expressions",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/expression-sheets/teo.png": {
+      "sha256": "3c65e227ab67a8bffa76a0afd7ae5ce597fd8ec64632696fcd419786e0ee1ae3",
+      "bytes": 3024132,
+      "group": "expressions",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/expression-sheets/yuna.png": {
+      "sha256": "1a10cfb8f0da84154f7e7174ba377d6b556fafe36b7968c2048a7939a48896bb",
+      "bytes": 3230787,
+      "group": "expressions",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/hana.png": {
+      "sha256": "bac1e332a9c435214870ab33fa8ac45b9865494c6226741df275457f92479257",
+      "bytes": 2671534,
+      "group": "portraits",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/iris.png": {
+      "sha256": "6a02a16d9c886008766f971754a0b05ec54d8c0de3d6e3c97682dc6389c14ebb",
+      "bytes": 2033312,
+      "group": "portraits",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/jinx.png": {
+      "sha256": "d604b4a2de1746746f6e91808da9bf9428455291087fc9b0337fc75b04c24b3e",
+      "bytes": 2228432,
+      "group": "portraits",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/jun.png": {
+      "sha256": "93f6d57ebaed5673c71d4d9447e09088d5ab7b0caa766067b8ebc15471a0e9c6",
+      "bytes": 2164359,
+      "group": "portraits",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/kaede.png": {
+      "sha256": "1a1f8ad11c1daa0af7bf3c560ae3bb6acc5e3790ec97762ca68d8a998b5e3357",
+      "bytes": 2619618,
+      "group": "portraits",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/luna.png": {
+      "sha256": "ffd66ab2bc4ea474ab564c6b5fe561d3c78649990f595ff5a5a9735c16cf7058",
+      "bytes": 2755800,
+      "group": "portraits",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/marina.png": {
+      "sha256": "68a243e5c6640722628cdefe78a39c4baa5775c592d7cdb9dea7e83bbd45af4c",
+      "bytes": 2695437,
+      "group": "portraits",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/nereo.png": {
+      "sha256": "b2a2576a22afd5e98d7947be77974901918cc42d30ea207acf267979d23456ab",
+      "bytes": 2444245,
+      "group": "portraits",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/reina.png": {
+      "sha256": "a042fde75a277be94dd81764151b9229f38c6335896b81ae732c61871724d1d7",
+      "bytes": 2626467,
+      "group": "portraits",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/rina.png": {
+      "sha256": "8d072f4ce7ed13d40f7aa9b863ea5c6fe1fda23357f2a8d911d5a0422d4b18fb",
+      "bytes": 2870081,
+      "group": "portraits",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/shiori.png": {
+      "sha256": "a9b9f1dda665d9067d26c19eb605ffafdc66d3758f5eb5d2885add0766aa4f12",
+      "bytes": 2630682,
+      "group": "portraits",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/sierra.png": {
+      "sha256": "0d96e6829ec58c001d2b847f94d741150092530397b642ca9ebb6bd85ea2e1fe",
+      "bytes": 2603904,
+      "group": "portraits",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/sol.png": {
+      "sha256": "32b8db5618deae6fb770cd2259d0fae6c71cae9b6445dfb08daa1dc64e499739",
+      "bytes": 2971554,
+      "group": "portraits",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/teo.png": {
+      "sha256": "5d74543cbc2be1c088651996df8b89fdb6f10cf870cd38150668fb6c55938fe9",
+      "bytes": 2271491,
+      "group": "portraits",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/yuna.png": {
+      "sha256": "c9481994482454f1e93cf763797f94184fef857b680f75a5d488f747d91a64a5",
+      "bytes": 2850302,
+      "group": "portraits",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "art-production/expression-export/EXPRESSION_PREVIEW.jpg": {
+      "sha256": "ec823a232907b85eaf722d85339c3e5dbf4ccdf1efc0df82a7010d4d9397fb6c",
+      "bytes": 874190,
+      "group": "expression-exports",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "art-production/expression-export/EXPRESSION_EXPORT_MANIFEST.json": {
+      "sha256": "f3804505d0f998093fea7ed81af29ed3a8633626a9d3ace5c63584a1774ab6d3",
+      "bytes": 62287,
+      "group": "expression-exports",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "art-production/expression-export/README.md": {
+      "sha256": "654a69c7d69d94d46a488b956b4089ac65d2a0f14407a514ff3defda4c2b8546",
+      "bytes": 786,
+      "group": "expression-exports",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/akari/expression-faces/concerned.webp": {
+      "sha256": "a5571c4a43e90cd0b8250892e463ab912a84c966c5bc846d4f5e42206b16dcc9",
+      "bytes": 46370,
+      "group": "expression-exports",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/akari/expression-faces/happy.webp": {
+      "sha256": "d599cf8e3765d527e3cfae3d8c34856a96528548a6b7b4ba655c7490f52d7999",
+      "bytes": 46788,
+      "group": "expression-exports",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/akari/expression-faces/neutral.webp": {
+      "sha256": "5d24a87a9f758c950bc7a5d52c60f2dbf3bb7661ba4a14e0cf839aa375c8e90d",
+      "bytes": 44608,
+      "group": "expression-exports",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/akari/expression-faces/soft.webp": {
+      "sha256": "f878c327db57aa7cb674c544f9bc99f1848d6b3372cdf446feed02a27f905a4e",
+      "bytes": 46536,
+      "group": "expression-exports",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/akari/expression-faces/surprised.webp": {
+      "sha256": "8fc82e14766cb54580e4dc59a64aed4f963dae71c8686878f065ab65ca75a025",
+      "bytes": 46130,
+      "group": "expression-exports",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/akari/expression-portraits/concerned.webp": {
+      "sha256": "e0917b70894d5fcefa754ae624a72be0eb577eafc5337e276287bd261b066c3e",
+      "bytes": 118792,
+      "group": "expression-exports",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/akari/expression-portraits/happy.webp": {
+      "sha256": "107b4f21ca287263bf3a23154f694f5d18e8c553a718acee0e68a1821724a4ae",
+      "bytes": 119186,
+      "group": "expression-exports",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/akari/expression-portraits/neutral.webp": {
+      "sha256": "e6c55594f8dc1568db242314bb924c6205e9211430a8e74cd8292423fcc8dd32",
+      "bytes": 114476,
+      "group": "expression-exports",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/akari/expression-portraits/soft.webp": {
+      "sha256": "b4c79636f9dfe32224827d33177c068c5ec1680590ca9d331cd0e24dc9add134",
+      "bytes": 117816,
+      "group": "expression-exports",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/akari/expression-portraits/surprised.webp": {
+      "sha256": "a75635280ee368feaf2d73af238254e19f5fd3854e152c67a85ec6bcef045bc4",
+      "bytes": 119188,
+      "group": "expression-exports",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/alma/expression-faces/concerned.webp": {
+      "sha256": "2874d78ccf42a2c7847d985a8c97900a985b319981c162cacafaec034b9cceda",
+      "bytes": 41598,
+      "group": "expression-exports",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/alma/expression-faces/happy.webp": {
+      "sha256": "0870275e35016188455fb2b6186efa2ab47dda47e4435180f04fcf73ffa61780",
+      "bytes": 41736,
+      "group": "expression-exports",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/alma/expression-faces/neutral.webp": {
+      "sha256": "1c41890953ca663b443f25a569071e0bd2c4dc6730937cce9138ecc7c8e82c7b",
+      "bytes": 41540,
+      "group": "expression-exports",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/alma/expression-faces/soft.webp": {
+      "sha256": "3a10643026a2072a2568b9ebd3a85bedbbca58e7c0dd1c930523e72cc689c281",
+      "bytes": 39196,
+      "group": "expression-exports",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/alma/expression-faces/surprised.webp": {
+      "sha256": "3286c853be01a34efbf8b6a5c231a0049cbf610710f2c037c9afdfcf4801c317",
+      "bytes": 41732,
+      "group": "expression-exports",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/alma/expression-portraits/concerned.webp": {
+      "sha256": "aa7fb0d447f0748b2573b64032dee1f262e6254d7e5acc524d44a3364ed6993c",
+      "bytes": 109054,
+      "group": "expression-exports",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/alma/expression-portraits/happy.webp": {
+      "sha256": "5a9e37abacdbfef2539c130e80c96a26431368a4212468e132528776fadd97f1",
+      "bytes": 107708,
+      "group": "expression-exports",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/alma/expression-portraits/neutral.webp": {
+      "sha256": "de5a2ac50dea5504d711cad12a829063dfc1576a8f26423443c075237576694d",
+      "bytes": 104466,
+      "group": "expression-exports",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/alma/expression-portraits/soft.webp": {
+      "sha256": "4a20e5476d7175c935782ccbde738fe09dea9062ea99c21a896d57ec6de7a14d",
+      "bytes": 105690,
+      "group": "expression-exports",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/alma/expression-portraits/surprised.webp": {
+      "sha256": "65191eb1e79e3e92136943f11596be82f1e57cd5635eaacc7ca9cc3b8264aa3f",
+      "bytes": 107692,
+      "group": "expression-exports",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/camila/expression-faces/concerned.webp": {
+      "sha256": "0c34ad020f5fca31aa19232c86a4ed2fbe55478cf7be196e2c9cbe56c2896b3c",
+      "bytes": 45992,
+      "group": "expression-exports",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/camila/expression-faces/happy.webp": {
+      "sha256": "7b5b340c7210fe85e85859665bf4e10e1b74afc341490819893451d5daff133f",
+      "bytes": 45924,
+      "group": "expression-exports",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/camila/expression-faces/neutral.webp": {
+      "sha256": "3494b1c43ceb29cd458cdee5ea13a11c074480ae3e16093d2cc26927866cf3eb",
+      "bytes": 44024,
+      "group": "expression-exports",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/camila/expression-faces/soft.webp": {
+      "sha256": "61dd7830b6b0415394515286bb3ec61c14b434e16bc420c8d617eb7937d3b793",
+      "bytes": 46114,
+      "group": "expression-exports",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/camila/expression-faces/surprised.webp": {
+      "sha256": "658bd6faec36d6b5fd5f69726b28f1809ad3e551830483c13e63b9084186cd2e",
+      "bytes": 45738,
+      "group": "expression-exports",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/camila/expression-portraits/concerned.webp": {
+      "sha256": "568c31907dac11caaf7fae040ef0f5af54d6fb3f4c39748c8a6152838ead97a5",
+      "bytes": 111958,
+      "group": "expression-exports",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/camila/expression-portraits/happy.webp": {
+      "sha256": "572f193425c99a1c6438c05e545dbb73c03f04757de9f7db81aefcc3b6aacded",
+      "bytes": 112548,
+      "group": "expression-exports",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/camila/expression-portraits/neutral.webp": {
+      "sha256": "12b60167d77319a1728c58260ceb81d7b58372c99146b2d4e3e9929796f704f0",
+      "bytes": 108230,
+      "group": "expression-exports",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/camila/expression-portraits/soft.webp": {
+      "sha256": "f4cb0313c2aa162d1524f3d60bd1337f0ddb631a40a78b88d2943f51d5b54053",
+      "bytes": 113154,
+      "group": "expression-exports",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/camila/expression-portraits/surprised.webp": {
+      "sha256": "595205d3bf21ccf32e8f106b3ab6548adf5c9700c4521313764638dc802d7b47",
+      "bytes": 111496,
+      "group": "expression-exports",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/elena/expression-faces/concerned.webp": {
+      "sha256": "086eadc56fa357fe88c5505b4274146770ff2ad788875d68f71cb1620fdb90c4",
+      "bytes": 43134,
+      "group": "expression-exports",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/elena/expression-faces/happy.webp": {
+      "sha256": "cf3654c8fcc27ddbcf4a378e9e52094230a6f6c7fea0d9166fe6a8e79bc86881",
+      "bytes": 43166,
+      "group": "expression-exports",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/elena/expression-faces/neutral.webp": {
+      "sha256": "5f5607ccf613ddf5c5baa59a61f25ac202f33b99432db5ea889c0fc0c8fb7e40",
+      "bytes": 40680,
+      "group": "expression-exports",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/elena/expression-faces/soft.webp": {
+      "sha256": "0d5be82e97dd8757493e6e5acd9c284a95aed5c3e463a6447161cdc26cd14c17",
+      "bytes": 42006,
+      "group": "expression-exports",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/elena/expression-faces/surprised.webp": {
+      "sha256": "e19f5e034445e6aed55864ed7f3ebe713b1519e14d33d36b165928ff57272038",
+      "bytes": 42738,
+      "group": "expression-exports",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/elena/expression-portraits/concerned.webp": {
+      "sha256": "18b88558d06d09ff89a49193d8c12f2099ffb3db0cd1863717fba3c801f0e97c",
+      "bytes": 106850,
+      "group": "expression-exports",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/elena/expression-portraits/happy.webp": {
+      "sha256": "6751f2bb557b71ce130285206c803555674556659da4c2a991ebafab6222d4d7",
+      "bytes": 108342,
+      "group": "expression-exports",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/elena/expression-portraits/neutral.webp": {
+      "sha256": "2c2e712572a7d478e16f5e5da7585c9be0c34f32f3d30460af4ce10f45abe941",
+      "bytes": 101534,
+      "group": "expression-exports",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/elena/expression-portraits/soft.webp": {
+      "sha256": "771b9d3d2cc3b42228f0a9e9b5af741c48f9e0ba9250243604883f64c7b27fec",
+      "bytes": 103446,
+      "group": "expression-exports",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/elena/expression-portraits/surprised.webp": {
+      "sha256": "fee9cf5af70a1f61090b13b22fc54916753c1b0df2ad80e03f7ec38880d64d29",
+      "bytes": 107736,
+      "group": "expression-exports",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/elio/expression-faces/concerned.webp": {
+      "sha256": "a6cccf7eed85f953305f0084e84a442189b69827bcd401f947bd6f92ab163e21",
+      "bytes": 43150,
+      "group": "expression-exports",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/elio/expression-faces/happy.webp": {
+      "sha256": "5af0f967ecbffd6eb3193e0c3634b69fd9e4ca111f766cb8e50343e397cb2de9",
+      "bytes": 42176,
+      "group": "expression-exports",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/elio/expression-faces/neutral.webp": {
+      "sha256": "3f98abf6fdf622679b2fa2b66a66f16d39e4023612d3e54aea3af7ca0ae79ad3",
+      "bytes": 40798,
+      "group": "expression-exports",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/elio/expression-faces/soft.webp": {
+      "sha256": "39e3c702fd92aced4d8e4ab3be5f07ed9a0fafb8582d4a8b3e5c9f3b0af2609b",
+      "bytes": 43028,
+      "group": "expression-exports",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/elio/expression-faces/surprised.webp": {
+      "sha256": "78b3d55f249b4266986bbc9df86abe67b8d6f07d09e698e8717810e574a789e6",
+      "bytes": 43150,
+      "group": "expression-exports",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/elio/expression-portraits/concerned.webp": {
+      "sha256": "12c295f7df3cc08195981e0c1ab87db2f298dbc2a5467e3746db54cb57ecf12c",
+      "bytes": 110898,
+      "group": "expression-exports",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/elio/expression-portraits/happy.webp": {
+      "sha256": "dc8a0572f2c5211945acd53fc2e285b4db30ddb8d42952a3494750ab54dac1c7",
+      "bytes": 108758,
+      "group": "expression-exports",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/elio/expression-portraits/neutral.webp": {
+      "sha256": "8a5daf92da33490de9eb6b4ed2016f71e8b792ea61f78ed0e05b0875cada7d51",
+      "bytes": 106866,
+      "group": "expression-exports",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/elio/expression-portraits/soft.webp": {
+      "sha256": "6386913c5d3d205f4b5ef30e39525c9439169173c2211c49f8c8dfd4a372f8be",
+      "bytes": 110608,
+      "group": "expression-exports",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/elio/expression-portraits/surprised.webp": {
+      "sha256": "27cc0e71edb9a126b4112fe738428fb7e2d9e4f6168e1362997e6f807738e4af",
+      "bytes": 110976,
+      "group": "expression-exports",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/hana/expression-faces/concerned.webp": {
+      "sha256": "9a3b11e91030839441c99b231556c19eb043992e6007ef6157c4d47ce9249228",
+      "bytes": 51408,
+      "group": "expression-exports",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/hana/expression-faces/happy.webp": {
+      "sha256": "ef5151d6d9a76effb3a6ec5fae0f637146972603af66b38421a9135341778dd5",
+      "bytes": 50768,
+      "group": "expression-exports",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/hana/expression-faces/neutral.webp": {
+      "sha256": "7c3ccc72d675bfce67933149e015b66fe5b8f8ad977f936fa5508147c618d3e2",
+      "bytes": 50274,
+      "group": "expression-exports",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/hana/expression-faces/soft.webp": {
+      "sha256": "a18ca0fcbe100c26348946d027642d7b5d5d876e8da1a6383c34d47a30b8cc9d",
+      "bytes": 51332,
+      "group": "expression-exports",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/hana/expression-faces/surprised.webp": {
+      "sha256": "b37e5c6a3e70aee57c57791ec210be2f360f5d5ca6c0ecac68bbdda39017e097",
+      "bytes": 50708,
+      "group": "expression-exports",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/hana/expression-portraits/concerned.webp": {
+      "sha256": "1c5a974030329043a732f2b7aa023dd90aff766eca0f99478cc27e41fda98719",
+      "bytes": 134708,
+      "group": "expression-exports",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/hana/expression-portraits/happy.webp": {
+      "sha256": "96d11d691a0662a0e515c417e1f0ef8b715f4cfb818ca55bc96735566a3aec31",
+      "bytes": 133674,
+      "group": "expression-exports",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/hana/expression-portraits/neutral.webp": {
+      "sha256": "6d876bf9a6fd74d247015db6b187a8a8692fa3e6342a36769000d0f66ddd5106",
+      "bytes": 129016,
+      "group": "expression-exports",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/hana/expression-portraits/soft.webp": {
+      "sha256": "6dd19adf9c966d62bc3378721d30931099631dcc21c66d05c33553de3f36b526",
+      "bytes": 132684,
+      "group": "expression-exports",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/hana/expression-portraits/surprised.webp": {
+      "sha256": "40b9fcf4612cb1ad1120339d79054ad67de5714245ea7c12b2543993eba06f4e",
+      "bytes": 130248,
+      "group": "expression-exports",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/iris/expression-faces/concerned.webp": {
+      "sha256": "8ac9c1a8ec5a288cc038d10b1f1eef8652850207e030596bc8ce82a00db46415",
+      "bytes": 49502,
+      "group": "expression-exports",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/iris/expression-faces/happy.webp": {
+      "sha256": "371c5c82e80192f4ddf508197ed559f9dc5a875cfa8ff9639f38d0ad289cce71",
+      "bytes": 49124,
+      "group": "expression-exports",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/iris/expression-faces/neutral.webp": {
+      "sha256": "1b579dd1a36d2408d6082b19a5b22290169c76577887f5eb48ca524507b96733",
+      "bytes": 46602,
+      "group": "expression-exports",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/iris/expression-faces/soft.webp": {
+      "sha256": "fe92734d160d798ed866bedbd056bb94b73f4e4f2e3002cdf2074e886ff3381a",
+      "bytes": 50204,
+      "group": "expression-exports",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/iris/expression-faces/surprised.webp": {
+      "sha256": "68b28dd489bdce31c95296dc83b40243f8e0de6ab5a3393661381638cfdd3d09",
+      "bytes": 50146,
+      "group": "expression-exports",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/iris/expression-portraits/concerned.webp": {
+      "sha256": "c68dc6179da351383f7aa491f74559562788e6dbdd4f35603ab0bb5a766eb071",
+      "bytes": 122560,
+      "group": "expression-exports",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/iris/expression-portraits/happy.webp": {
+      "sha256": "96ddcfef13abd022d1db2802731bcc4a3080bff8b74eaf105bcb76f6840d8cc5",
+      "bytes": 122252,
+      "group": "expression-exports",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/iris/expression-portraits/neutral.webp": {
+      "sha256": "291838844a31f88a9b48d607bac0d7c37b60cbc92db2a1085d24bc5c32aeca8e",
+      "bytes": 114662,
+      "group": "expression-exports",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/iris/expression-portraits/soft.webp": {
+      "sha256": "5bed19893e39949ce13d604cd13616ca27a1374293a8e6de681530e6baf87571",
+      "bytes": 124064,
+      "group": "expression-exports",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/iris/expression-portraits/surprised.webp": {
+      "sha256": "faf3f8ce833238ff360850891d22026e60c59a939399d357c327ab0e7c38c708",
+      "bytes": 122140,
+      "group": "expression-exports",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/jinx/expression-faces/annoyed.webp": {
+      "sha256": "ad5f34ce3906dde81901251f330a38d9ec154675b2c1b3bec7fd7c5594692198",
+      "bytes": 47302,
+      "group": "expression-exports",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/jinx/expression-faces/happy.webp": {
+      "sha256": "4859d05b0e9a8ffb42b8ef23a636958671e28874823e5484ae002834e8b47339",
+      "bytes": 48700,
+      "group": "expression-exports",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/jinx/expression-faces/neutral.webp": {
+      "sha256": "fca1f03042c2131f35f1df1023bbdf9b5e684b9f2a337919c0a5e54a090eb488",
+      "bytes": 48510,
+      "group": "expression-exports",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/jinx/expression-faces/playful.webp": {
+      "sha256": "abadadc124380ca25fa822c3777ef5d2f33270f79446b3fd03975d5124a30cd8",
+      "bytes": 46140,
+      "group": "expression-exports",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/jinx/expression-faces/smirk.webp": {
+      "sha256": "567654bae442ff317d9377e2833873341df0f5b113c0dcc2474a3f964c348a3f",
+      "bytes": 50014,
+      "group": "expression-exports",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/jinx/expression-faces/surprised.webp": {
+      "sha256": "919fb4e71e53216108495049461ef7b961c833d53a5e381e91bb6a6bba4007d8",
+      "bytes": 46722,
+      "group": "expression-exports",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/jinx/expression-portraits/annoyed.webp": {
+      "sha256": "d3e7a4549b5d524c62ac08e2e41a2840b6f7c532b5835310813e4d81e7e737a7",
+      "bytes": 108712,
+      "group": "expression-exports",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/jinx/expression-portraits/happy.webp": {
+      "sha256": "81125d4c1c137f92242d054f33e8f77dcef7a0050e7dc367a84ea71b2eaf8341",
+      "bytes": 109244,
+      "group": "expression-exports",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/jinx/expression-portraits/neutral.webp": {
+      "sha256": "e6943da33d3dd8145136bd2d8726f0cc21a62c7c49ba977d4f6f5a68ca35c487",
+      "bytes": 108216,
+      "group": "expression-exports",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/jinx/expression-portraits/playful.webp": {
+      "sha256": "62d347dbfa0a67d46d6ea4d3842dbe4d047232966dec05f20135fcd33b84af5f",
+      "bytes": 108234,
+      "group": "expression-exports",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/jinx/expression-portraits/smirk.webp": {
+      "sha256": "fe8c7a639c1b251bbb498a631317e690525cb03537762d8e28c090baf0a2c8be",
+      "bytes": 111326,
+      "group": "expression-exports",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/jinx/expression-portraits/surprised.webp": {
+      "sha256": "74ee845a34de99bc5a820dceaf0a1d6f6614fe045981c69410876b74e4a80ebb",
+      "bytes": 106160,
+      "group": "expression-exports",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/jun/expression-faces/concerned.webp": {
+      "sha256": "1767fb95040cce160dbc7b077a5e6fd39e9e337a63fa4c6014c58c2d4b5793c4",
+      "bytes": 39488,
+      "group": "expression-exports",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/jun/expression-faces/happy.webp": {
+      "sha256": "66cd4953e1a01ebe5d04d0513b342fd67aa7b7d5210ad6df4bfc71da1d27a408",
+      "bytes": 39492,
+      "group": "expression-exports",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/jun/expression-faces/neutral.webp": {
+      "sha256": "44eb8e0c6f8445143f604f0974be3f09e6a7be2aa43c85d6cc536539970df960",
+      "bytes": 39406,
+      "group": "expression-exports",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/jun/expression-faces/soft.webp": {
+      "sha256": "f54339fa8ef64cd605e8905eb440ad091ebfd792b8e9a7a07462b3eae4e3b7de",
+      "bytes": 39800,
+      "group": "expression-exports",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/jun/expression-faces/surprised.webp": {
+      "sha256": "5842a9ab0db57b13c2a17b8fa20fe442e558a2142528562cb2b53d89eae281aa",
+      "bytes": 41596,
+      "group": "expression-exports",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/jun/expression-portraits/concerned.webp": {
+      "sha256": "b05e9d854e23cd0b82217457791e8016e615ff5d4834c3872efedabe3e153e0a",
+      "bytes": 102252,
+      "group": "expression-exports",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/jun/expression-portraits/happy.webp": {
+      "sha256": "fc5b312c7451cba48c0d0ba789dd17c9766456d0d0e95b69114593c098e4a7a2",
+      "bytes": 101480,
+      "group": "expression-exports",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/jun/expression-portraits/neutral.webp": {
+      "sha256": "f46e912ec4e97a80894f2ad950145522d90ed959cf81a3dc3d750d9aa33c9662",
+      "bytes": 100966,
+      "group": "expression-exports",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/jun/expression-portraits/soft.webp": {
+      "sha256": "6976c13f546411feb13f4cd2d8b768e5bb547b2c157fcc491d58198884ac14f2",
+      "bytes": 102462,
+      "group": "expression-exports",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/jun/expression-portraits/surprised.webp": {
+      "sha256": "4e19aafa60976f11d1e397cff6ced1e87ff15cf5c2ec818e0df92e85cdaec2c0",
+      "bytes": 105498,
+      "group": "expression-exports",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/kaede/expression-faces/concerned.webp": {
+      "sha256": "66c76d89435bc62e804e93409bb50a16b0f1a05bbd4dbf0b26830c496aab2690",
+      "bytes": 50616,
+      "group": "expression-exports",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/kaede/expression-faces/happy.webp": {
+      "sha256": "518adbcbd30a3f60dff34edbdcdfa06732f1be4c10b8774e33b0b2e71ab9b551",
+      "bytes": 50720,
+      "group": "expression-exports",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/kaede/expression-faces/neutral.webp": {
+      "sha256": "f0ec3478bdbef3df18b497f3b1730b6d91ac4b4284321aa954d5568fff36763c",
+      "bytes": 48144,
+      "group": "expression-exports",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/kaede/expression-faces/soft.webp": {
+      "sha256": "d32c33a30166530a95b99c57d4059e9091e9a7876084d6d29e1f38197024d999",
+      "bytes": 49156,
+      "group": "expression-exports",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/kaede/expression-faces/surprised.webp": {
+      "sha256": "bb3a16f78e7523fe2c6d5c2215b7c81d40ddd7dc775ad4221ba553952debc9c3",
+      "bytes": 49960,
+      "group": "expression-exports",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/kaede/expression-portraits/concerned.webp": {
+      "sha256": "a366a1e95e3b9446791e4001a90caa97e181f7244a52019c20792058d7850636",
+      "bytes": 130372,
+      "group": "expression-exports",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/kaede/expression-portraits/happy.webp": {
+      "sha256": "c1f40fac84acdc0a5757f7fd45754f02f29395806854123e741c7f13a6df0d6c",
+      "bytes": 127980,
+      "group": "expression-exports",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/kaede/expression-portraits/neutral.webp": {
+      "sha256": "0c0a074785e9e1ddd0073a0dd10b011fedcf3e00909c07f660618faaa06279e6",
+      "bytes": 122564,
+      "group": "expression-exports",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/kaede/expression-portraits/soft.webp": {
+      "sha256": "2a97066cb77a6a91be734cac161104a4099542f4b32356c45c7ef6efac10018a",
+      "bytes": 124760,
+      "group": "expression-exports",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/kaede/expression-portraits/surprised.webp": {
+      "sha256": "9fa038b3b5a7863d2811081941b2ba53cd5e270433c7b4e42bf26cda8667aee7",
+      "bytes": 127476,
+      "group": "expression-exports",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/luna/expression-faces/concerned.webp": {
+      "sha256": "4fb1bd27e395722d9f0e2c3ff099a2d11e301d5f4854bb739b4d1a3765053258",
+      "bytes": 49846,
+      "group": "expression-exports",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/luna/expression-faces/happy.webp": {
+      "sha256": "3a4eb78c585d31f29513d0607f0b22bab9e843592ba836fadc4ab9d8f1b48797",
+      "bytes": 46772,
+      "group": "expression-exports",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/luna/expression-faces/neutral.webp": {
+      "sha256": "a329d45f9dae00ede302dee7687613222f7da05f1c049d09636ab5025f86fc0b",
+      "bytes": 48410,
+      "group": "expression-exports",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/luna/expression-faces/soft.webp": {
+      "sha256": "c33a86ec3c3d2f1e4e89ddeeffb7608bad954a52f763df5716d37a5f0773f9f7",
+      "bytes": 45702,
+      "group": "expression-exports",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/luna/expression-faces/surprised.webp": {
+      "sha256": "5674ac337890cfdd2faf1865088e7a677254dbcf9f341bf426a2b7a023f759ba",
+      "bytes": 48814,
+      "group": "expression-exports",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/luna/expression-portraits/concerned.webp": {
+      "sha256": "491d03f4d1eab27905fb22a2127baf796495a0502225bbee999bc3a88b8d7107",
+      "bytes": 131532,
+      "group": "expression-exports",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/luna/expression-portraits/happy.webp": {
+      "sha256": "921bc31cb2387be35f7c0ca78d2ab5dafacaa5d3f775d6baefda92736b446b7b",
+      "bytes": 135676,
+      "group": "expression-exports",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/luna/expression-portraits/neutral.webp": {
+      "sha256": "27f12438f54f217e01a805fd877381d7a50bdfe59a00bae89406e9ab73c261ed",
+      "bytes": 127976,
+      "group": "expression-exports",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/luna/expression-portraits/soft.webp": {
+      "sha256": "ec91075a9e62399446f4a8497707cdc23c6f76390d05b993c60728b9d4699229",
+      "bytes": 132070,
+      "group": "expression-exports",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/luna/expression-portraits/surprised.webp": {
+      "sha256": "b15ca21bcc7c9f2fdad29a22bf28bf68905c540fc115dd0d217937ab0f021b92",
+      "bytes": 134912,
+      "group": "expression-exports",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/marina/expression-faces/concerned.webp": {
+      "sha256": "3d794a1e5ce561310a041ef886d44e8ef287247b708aedc318caa9353e2f99ce",
+      "bytes": 51426,
+      "group": "expression-exports",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/marina/expression-faces/happy.webp": {
+      "sha256": "50e5d215dfcfbac079645e1292cb5a7ef2f3bda735ea3d6ecfc40449ee9180f8",
+      "bytes": 50824,
+      "group": "expression-exports",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/marina/expression-faces/neutral.webp": {
+      "sha256": "68619f226d6833171b61312757847a7e9d725db048cbb295137173077f68931a",
+      "bytes": 50720,
+      "group": "expression-exports",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/marina/expression-faces/soft.webp": {
+      "sha256": "9bbd2455922eef8d95ed3fb5d204f92519f0609976267d01a05b62c3df774455",
+      "bytes": 51632,
+      "group": "expression-exports",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/marina/expression-faces/surprised.webp": {
+      "sha256": "90de8e33e965b66f589e7554b2bbc0661254452536a6a210b373626fadcdc897",
+      "bytes": 51130,
+      "group": "expression-exports",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/marina/expression-portraits/concerned.webp": {
+      "sha256": "e399d48ebca385f8c57dfa46ce9b2f9f17d6dd61ac3b3bf7a25a1c62a068e18f",
+      "bytes": 132674,
+      "group": "expression-exports",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/marina/expression-portraits/happy.webp": {
+      "sha256": "44adac2a8558f163a35741f4404413e0c2ba18ae559809d3f29bffcf59908925",
+      "bytes": 134106,
+      "group": "expression-exports",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/marina/expression-portraits/neutral.webp": {
+      "sha256": "a639bb210adab04b4d78fdbe629983d4c9e619d4f88b59976df34f2f184f7f07",
+      "bytes": 133424,
+      "group": "expression-exports",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/marina/expression-portraits/soft.webp": {
+      "sha256": "241d5c9095a4f1812beafdf9d7d0ca50894792c0b74dfa5ee92bfe006e3f390e",
+      "bytes": 133292,
+      "group": "expression-exports",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/marina/expression-portraits/surprised.webp": {
+      "sha256": "dbb9509acaf29ea8f0db0703cd9db0ea3397fa55600a07fcebb57d1a9ec7e568",
+      "bytes": 129536,
+      "group": "expression-exports",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/nereo/expression-faces/concerned.webp": {
+      "sha256": "ec975ffb8cd41a74c488afdfcc27f60d0e9ec5b98557b1c700a9c60818aa19cf",
+      "bytes": 39012,
+      "group": "expression-exports",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/nereo/expression-faces/happy.webp": {
+      "sha256": "bb74226c70515d1b21a899cef2e94103bb10f1a9cdcb83a81942c80c0e888108",
+      "bytes": 40408,
+      "group": "expression-exports",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/nereo/expression-faces/neutral.webp": {
+      "sha256": "58f2ee0c36579300e38ecd07328ffc337afbc9be49f69041b47104f71df15d07",
+      "bytes": 38052,
+      "group": "expression-exports",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/nereo/expression-faces/soft.webp": {
+      "sha256": "e5e9cebd416f3d522f8ecd5b8e89449a818dbe0e46efd76d41f7944cf5b5e9e3",
+      "bytes": 38262,
+      "group": "expression-exports",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/nereo/expression-faces/surprised.webp": {
+      "sha256": "53c2086c98bcc3acc098ea851f8f2358598ebcdb8c40021640cb58b2f7869cc7",
+      "bytes": 40530,
+      "group": "expression-exports",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/nereo/expression-portraits/concerned.webp": {
+      "sha256": "f95ff26fdade2b345724934d25040a7dc094665fd92536950ac4585071c548bd",
+      "bytes": 102352,
+      "group": "expression-exports",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/nereo/expression-portraits/happy.webp": {
+      "sha256": "c67eec999669fd189e4f352f81f07d819e98027237ef16971e7c3dcc90b1ee82",
+      "bytes": 103858,
+      "group": "expression-exports",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/nereo/expression-portraits/neutral.webp": {
+      "sha256": "60924ec7f44b005519b0cfd6f7a1415b884994191aa810868883deb5e5037d60",
+      "bytes": 99364,
+      "group": "expression-exports",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/nereo/expression-portraits/soft.webp": {
+      "sha256": "7f3d5cc03752af5fbd4d7bb15611e2d88ec6f6691f93d76f0dfcdfe201fd1b5a",
+      "bytes": 101266,
+      "group": "expression-exports",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/nereo/expression-portraits/surprised.webp": {
+      "sha256": "4992c1e2d5f221c4b46d58a544a57972abf3d9901a641606828eb5e2910c6c24",
+      "bytes": 105624,
+      "group": "expression-exports",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/reina/expression-faces/concerned.webp": {
+      "sha256": "97ad2e659c22757d3a64a6425c5e86f4e1c388633f53a3530aa385526a708bda",
+      "bytes": 45600,
+      "group": "expression-exports",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/reina/expression-faces/happy.webp": {
+      "sha256": "cd0594bb8d02e12867d2674518f35b80418e26899342cea525bfb126f14182e7",
+      "bytes": 45654,
+      "group": "expression-exports",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/reina/expression-faces/neutral.webp": {
+      "sha256": "0019d21fe1010e943d0fa549a46f4345bca4ba8472047b62f6510a38b1bc2a27",
+      "bytes": 45866,
+      "group": "expression-exports",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/reina/expression-faces/soft.webp": {
+      "sha256": "04145ac2dc801f741e61d9209b994f602d55c86737fde180dcfc629ddcc01c40",
+      "bytes": 46106,
+      "group": "expression-exports",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/reina/expression-faces/surprised.webp": {
+      "sha256": "2195162f45a0a9a35109d5d962a3bcd7c37cee565a3510edfe1561b4540b6ba9",
+      "bytes": 45298,
+      "group": "expression-exports",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/reina/expression-portraits/concerned.webp": {
+      "sha256": "5afb43ae067de7e4a35ed313f8c6900b0a8e1666b3703f9c1d99d7ce1666d483",
+      "bytes": 117026,
+      "group": "expression-exports",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/reina/expression-portraits/happy.webp": {
+      "sha256": "901036397e05b9f14127b0cc7e14dcf2ca9876d51b368e3c54b9f10e089830da",
+      "bytes": 115570,
+      "group": "expression-exports",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/reina/expression-portraits/neutral.webp": {
+      "sha256": "0cd7d6d4f6283fab219a5b9ad91eb134ef14ba0bdaaf4a42a3d356414df5fb24",
+      "bytes": 114108,
+      "group": "expression-exports",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/reina/expression-portraits/soft.webp": {
+      "sha256": "b3e527da2179638a626ece362290ed5e6c7cf5c261cdca132212bf57b54cb92a",
+      "bytes": 115414,
+      "group": "expression-exports",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/reina/expression-portraits/surprised.webp": {
+      "sha256": "3481609df204c54f251f7c84c55a66478a91e95645644918e8f89b63286b5e29",
+      "bytes": 114134,
+      "group": "expression-exports",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/rina/expression-faces/concerned.webp": {
+      "sha256": "26b8eb733067b00cb6bd05a2a8750758b680386a6c9543896bca10325b992302",
+      "bytes": 45702,
+      "group": "expression-exports",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/rina/expression-faces/happy.webp": {
+      "sha256": "fc99d7a75d6642921790d4ebb6d5326ded756097bf03af7d9f533dd3cfc6d4ff",
+      "bytes": 44892,
+      "group": "expression-exports",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/rina/expression-faces/neutral.webp": {
+      "sha256": "9857a923538c3e050f42f56479bb9834b1922d647e06964ae39e819ea4e17ccb",
+      "bytes": 44352,
+      "group": "expression-exports",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/rina/expression-faces/soft.webp": {
+      "sha256": "f19ddc41b7b3ce523ce1923b4c6dfce28ebeb4787ecbf0e304ad5ea0900f1c71",
+      "bytes": 48522,
+      "group": "expression-exports",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/rina/expression-faces/surprised.webp": {
+      "sha256": "ac71584056be7912c7ded799fc35fd535804a73526a136a04c2a860f66b575ad",
+      "bytes": 44916,
+      "group": "expression-exports",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/rina/expression-portraits/concerned.webp": {
+      "sha256": "143116e587f34748009167845202ad8fa230ca46eba9c23dbe46f422fa679c8b",
+      "bytes": 124676,
+      "group": "expression-exports",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/rina/expression-portraits/happy.webp": {
+      "sha256": "458bf14977b6cfdaa232b86dc24f0b2109472b8a8ab284b8d91f796466bf12de",
+      "bytes": 124966,
+      "group": "expression-exports",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/rina/expression-portraits/neutral.webp": {
+      "sha256": "c9e246804132399bb282fee15461c2c489632a1047b71fd7537fc2051ef4f613",
+      "bytes": 120622,
+      "group": "expression-exports",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/rina/expression-portraits/soft.webp": {
+      "sha256": "c46e66c410856a7bdde08e811cba57c189187a6ceb10fe005724f5889250fb4c",
+      "bytes": 131020,
+      "group": "expression-exports",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/rina/expression-portraits/surprised.webp": {
+      "sha256": "f55d99ed3cd7ea4bc8a663f49d15f4da62e3850ff05f806e84455a9fb9446be9",
+      "bytes": 121188,
+      "group": "expression-exports",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/shiori/expression-faces/concerned.webp": {
+      "sha256": "661b7223fa37eb724a9d43aa7a1c582b72deee0b7bfa6a71b0f3ca1227684bf9",
+      "bytes": 46168,
+      "group": "expression-exports",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/shiori/expression-faces/happy.webp": {
+      "sha256": "b159eb2ecf80e61c34cea4c82e8d13054fa0ba3b3976bc6c79eb2596778e1545",
+      "bytes": 47014,
+      "group": "expression-exports",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/shiori/expression-faces/neutral.webp": {
+      "sha256": "e3631194cb2d8125170dfea57afd50a84c42fc01441556b28059061a0804ff67",
+      "bytes": 47564,
+      "group": "expression-exports",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/shiori/expression-faces/soft.webp": {
+      "sha256": "9b4f27835c89a956582a6db37588fa689c0883e40981a810f73723861c98ef29",
+      "bytes": 47180,
+      "group": "expression-exports",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/shiori/expression-faces/surprised.webp": {
+      "sha256": "67160cae978e75be8e1b6770843918200949f59c45d4e15adc3ed716df19f088",
+      "bytes": 46522,
+      "group": "expression-exports",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/shiori/expression-portraits/concerned.webp": {
+      "sha256": "907403d5fd558c8b974dfa63d38dce2209c84e17566a127cb1b17a75b285aa5b",
+      "bytes": 117258,
+      "group": "expression-exports",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/shiori/expression-portraits/happy.webp": {
+      "sha256": "42d27e10782b1d39afbc196b988e2bb0c2ee19da5ce35be8d058056e08eb5821",
+      "bytes": 117106,
+      "group": "expression-exports",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/shiori/expression-portraits/neutral.webp": {
+      "sha256": "498a1dc1a5af658499b5321f7b705c2d297f195a748fbf422718add10b3de887",
+      "bytes": 116312,
+      "group": "expression-exports",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/shiori/expression-portraits/soft.webp": {
+      "sha256": "b815c00ae63b3dfa3f83e066645e05912da25d0dee35efde25e0f361168030fe",
+      "bytes": 120696,
+      "group": "expression-exports",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/shiori/expression-portraits/surprised.webp": {
+      "sha256": "a37adae1fd17bc42d88a2a67ddf3c5b2c012e31487a5ae1f955f75e03bdcd3da",
+      "bytes": 116556,
+      "group": "expression-exports",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/sierra/expression-faces/concerned.webp": {
+      "sha256": "871075eb48744e426e66dde21773739fe160047994456a0a55f173ed439e4adb",
+      "bytes": 48538,
+      "group": "expression-exports",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/sierra/expression-faces/happy.webp": {
+      "sha256": "38831b3ca1059a5467e763a2e5099daeb4af5ffded6b087903c4cea75a3e8175",
+      "bytes": 48422,
+      "group": "expression-exports",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/sierra/expression-faces/neutral.webp": {
+      "sha256": "a10ad2ff396cb95a33aa469086cb146240782a9f63fa990b410936212f440981",
+      "bytes": 47092,
+      "group": "expression-exports",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/sierra/expression-faces/soft.webp": {
+      "sha256": "46484600ec57288069bb93acda6475548e66218e741795965cd39fe566bd217c",
+      "bytes": 47672,
+      "group": "expression-exports",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/sierra/expression-faces/surprised.webp": {
+      "sha256": "46220607bb2a15bedeae8f1e1b37dd7e8d678bb11b6111a3e6e58f7cf44d413e",
+      "bytes": 49046,
+      "group": "expression-exports",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/sierra/expression-portraits/concerned.webp": {
+      "sha256": "407cc801f4c3fa9d9bf41222c96508ce622e004939c9eed35531a3e92e98578c",
+      "bytes": 131208,
+      "group": "expression-exports",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/sierra/expression-portraits/happy.webp": {
+      "sha256": "01b89c5b281c45b31bd17fb60a022cf99f1649459aef43914fd4b1e57f38e007",
+      "bytes": 128236,
+      "group": "expression-exports",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/sierra/expression-portraits/neutral.webp": {
+      "sha256": "5065117c24c03454b6dab97e2ffa44d7ed938b3b1f262c8c38d9bf0d3d578fc9",
+      "bytes": 121208,
+      "group": "expression-exports",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/sierra/expression-portraits/soft.webp": {
+      "sha256": "ea6ada917bb90b4f875242d3f14de339ee32bff0fc0720b94bef1008296b0a3f",
+      "bytes": 125548,
+      "group": "expression-exports",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/sierra/expression-portraits/surprised.webp": {
+      "sha256": "38ff8482577922fe9ab9c0f1b479701eee87e3f38821a1577f769fc3d1be2b99",
+      "bytes": 127344,
+      "group": "expression-exports",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/sol/expression-faces/concerned.webp": {
+      "sha256": "cb9dac11f4c8516e11cf79ca00bf7a03108295f916e777f8d3a486dcf8078f5b",
+      "bytes": 53964,
+      "group": "expression-exports",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/sol/expression-faces/happy.webp": {
+      "sha256": "ecb23cb354d9201e83b6cdf4ef2f47a936850323b22af2bf0dd2e856881a6822",
+      "bytes": 52680,
+      "group": "expression-exports",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/sol/expression-faces/neutral.webp": {
+      "sha256": "cc237ea36d0941af7df4b6e85587b966093fdc8510e761138462a99a865f4993",
+      "bytes": 53120,
+      "group": "expression-exports",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/sol/expression-faces/soft.webp": {
+      "sha256": "fdfecd1377ee25cb7402a6c4d4fb74f4624a47ccfdd4e892f008b5f93ace2984",
+      "bytes": 53772,
+      "group": "expression-exports",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/sol/expression-faces/surprised.webp": {
+      "sha256": "fa8131e40cf0f62b48af7fe53f8d024ae4a73002b9b188e4b5295728b0033681",
+      "bytes": 53964,
+      "group": "expression-exports",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/sol/expression-portraits/concerned.webp": {
+      "sha256": "a26cb0f9ea70a5659c53af84e2ab2e791b89af8b25a65b74b2ff080b63fc9de5",
+      "bytes": 142154,
+      "group": "expression-exports",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/sol/expression-portraits/happy.webp": {
+      "sha256": "2aab6303ce6b868100331473e52040a405cd04c83356985f331aeae1fc333316",
+      "bytes": 143934,
+      "group": "expression-exports",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/sol/expression-portraits/neutral.webp": {
+      "sha256": "cae4c07df7367dc43b9e88ea50257e9b6d72e1250efad96244fd5844fb7c52d5",
+      "bytes": 145318,
+      "group": "expression-exports",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/sol/expression-portraits/soft.webp": {
+      "sha256": "0d17184ad807e53e4159e066d3f2b87401b0bbfc4ef1101ab99833e2057bddc6",
+      "bytes": 144336,
+      "group": "expression-exports",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/sol/expression-portraits/surprised.webp": {
+      "sha256": "b577edbf7a32a6241b8d5822019b3ef8475a6299eb0b1d559a1017888e9e31de",
+      "bytes": 145578,
+      "group": "expression-exports",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/teo/expression-faces/concerned.webp": {
+      "sha256": "6c7ea7f847658821d86472757c6194f4422f0aefdda44a549efc60e51c289a3d",
+      "bytes": 46698,
+      "group": "expression-exports",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/teo/expression-faces/happy.webp": {
+      "sha256": "f6ad19925e76b61b2358244604be6b6a414148c5ac2f50669416af57e0e9f0d3",
+      "bytes": 49246,
+      "group": "expression-exports",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/teo/expression-faces/neutral.webp": {
+      "sha256": "0e9ee057540beceaa555d35100939310a36d3e16e9ef5daa1dbcd9a5b2bf3ec6",
+      "bytes": 47424,
+      "group": "expression-exports",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/teo/expression-faces/soft.webp": {
+      "sha256": "3f43fb5d4285b5052d7c72b09ce8ac204bd0fb7783630869c0b5038860836019",
+      "bytes": 45352,
+      "group": "expression-exports",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/teo/expression-faces/surprised.webp": {
+      "sha256": "a9db871b9608eb65cef903e2a77df1dd35fe0f4bd7d69dacc054536afe3140da",
+      "bytes": 48652,
+      "group": "expression-exports",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/teo/expression-portraits/concerned.webp": {
+      "sha256": "4343c9b0415933e8b816543fd1a02858c400dee38afbc26d84b8f0c0bfec6b4b",
+      "bytes": 121162,
+      "group": "expression-exports",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/teo/expression-portraits/happy.webp": {
+      "sha256": "2228e1505e149bd83b3af1a2aaed0ba5bc86dcf3aa8d9499b8a5cb0e946b9924",
+      "bytes": 128458,
+      "group": "expression-exports",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/teo/expression-portraits/neutral.webp": {
+      "sha256": "6306d2ab42ebfd0ad4cb533f8b5cc86d24abee22304f3d69dc974a555c1a81aa",
+      "bytes": 122412,
+      "group": "expression-exports",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/teo/expression-portraits/soft.webp": {
+      "sha256": "bfd84634e663377a2569564e89978f7bb21acf8d4ea75a3d0891e204c5535516",
+      "bytes": 116974,
+      "group": "expression-exports",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/teo/expression-portraits/surprised.webp": {
+      "sha256": "5561590b7761539078c0319b0bb90388c25f181fdd0a266348f92f9142007187",
+      "bytes": 124420,
+      "group": "expression-exports",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/yuna/expression-faces/concerned.webp": {
+      "sha256": "a8e9653b404e3a3198898cedcc190fde9b901af4534922177ed93ca7f4b14320",
+      "bytes": 56424,
+      "group": "expression-exports",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/yuna/expression-faces/happy.webp": {
+      "sha256": "b20e64f706fa3aa7da4776f9c276ac1e83a4b70d83713756d5553cbfbff01416",
+      "bytes": 57838,
+      "group": "expression-exports",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/yuna/expression-faces/neutral.webp": {
+      "sha256": "1acb9eba4caa119643a7c827f9e77bbc3b17feb0809b439a62f4e65a74ba3ff4",
+      "bytes": 56124,
+      "group": "expression-exports",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/yuna/expression-faces/soft.webp": {
+      "sha256": "e401806dbdd909e532c9d5f5f2847b6b4521215b85f51a9a5c90e264fa80b086",
+      "bytes": 57822,
+      "group": "expression-exports",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/yuna/expression-faces/surprised.webp": {
+      "sha256": "a7a964c6d61a3bf7bbee7660c0a307773d0ab856522ae82c3320e920af2545ab",
+      "bytes": 56640,
+      "group": "expression-exports",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/yuna/expression-portraits/concerned.webp": {
+      "sha256": "39ace7325e9feb7eb0ac9703d7353f7963f5378a68260be2b7d429cff4642fea",
+      "bytes": 142818,
+      "group": "expression-exports",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/yuna/expression-portraits/happy.webp": {
+      "sha256": "187daf8787e85c4b5abfc2ac690563a56f4a2227888f77055a7d01c46dedb6ff",
+      "bytes": 142938,
+      "group": "expression-exports",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/yuna/expression-portraits/neutral.webp": {
+      "sha256": "0fdda4c910aacbd88570a8b5e566a535fc79f3bdc0be053cf942ff9f411c4bfe",
+      "bytes": 136084,
+      "group": "expression-exports",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/yuna/expression-portraits/soft.webp": {
+      "sha256": "06fa6880600652ee49e838f8b28a56bdb9ffa18e6e0375994e18f75a2934e966",
+      "bytes": 144848,
+      "group": "expression-exports",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/characters/yuna/expression-portraits/surprised.webp": {
+      "sha256": "f7541048ae283054480a36ffe14a095ebe7e00c482f6214c4e28782a767d91b6",
+      "bytes": 141838,
+      "group": "expression-exports",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "art-production/original-story-renders/hana_enredada_con_su_delantal_en_la_tienda_tcg.png": {
+      "sha256": "a883d7db1fe09fb06b791fc9f2f0fb1ea8c4f5bc7ce046527a28f07d5659531b",
+      "bytes": 2469946,
+      "group": "original-cg-render",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/events/cg/season01/hana_apron_mixup.webp": {
+      "sha256": "ab6e52b08cb03c7d05a8404f7245c6261be4ae81c682d828ef8cea2dfa809fb3",
+      "bytes": 483630,
+      "group": "standalone-g5-cg",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/events/cg/season01/thumbs/hana_apron_mixup.webp": {
+      "sha256": "616826a308b6a31b9c7f8e0df90d2635e77130bc66ad5d65ec6e20daa1e64436",
+      "bytes": 82746,
+      "group": "standalone-g5-cg-thumbnail",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "art-production/original-story-renders/reina_bajo_la_lluvia_en_el_puerto.png": {
+      "sha256": "aa2739534ac963a6b0d52019f16f9b42de9a0968d19fed8f980bc0fb8e349464",
+      "bytes": 3175286,
+      "group": "original-cg-render",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/events/cg/season01/reina_rain_catch.webp": {
+      "sha256": "3fab969e9d86775335aa5d0fb7747e8e9644ff926645863267d088dd9f8de4f0",
+      "bytes": 755548,
+      "group": "standalone-g5-cg",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/events/cg/season01/thumbs/reina_rain_catch.webp": {
+      "sha256": "7d8fc08059a89a659e09a8e183f2c361dc1c59cd5cb13da48953f7f930f36b2e",
+      "bytes": 107894,
+      "group": "standalone-g5-cg-thumbnail",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "art-production/original-story-renders/shiori_y_los_libros_dorados.png": {
+      "sha256": "93eab1b759b77ef218cee1c11544b8dbac2df6637bac5c70be6b45c35b459e45",
+      "bytes": 2453729,
+      "group": "original-cg-render",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/events/cg/season01/shiori_bookstack_wobble.webp": {
+      "sha256": "cae87f3be0762def79c99b092e2b7b6d2646a24311aab60837405336fef1984b",
+      "bytes": 455562,
+      "group": "standalone-g5-cg",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/events/cg/season01/thumbs/shiori_bookstack_wobble.webp": {
+      "sha256": "8350b6ebef9926f0eff5e7759aaafafebc2009f12cd8fe51a07d06356bf584d2",
+      "bytes": 76904,
+      "group": "standalone-g5-cg-thumbnail",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "art-production/original-story-renders/yuna_y_las_cartas_del_nexus_arcade.png": {
+      "sha256": "367f072edba10eab22aec2883b847443282b109966d0f1f8d00d9bfd881f9d7c",
+      "bytes": 2725302,
+      "group": "original-cg-render",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/events/cg/season01/yuna_card_scatter.webp": {
+      "sha256": "e15143d1a43fe158c37ebf14f04ea5e25f8bc4ba0c805ccd53401d2cb760d726",
+      "bytes": 579838,
+      "group": "standalone-g5-cg",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/events/cg/season01/thumbs/yuna_card_scatter.webp": {
+      "sha256": "2da898a97dd1db11904cc1e420559b46b1e85fb90d8d31bfe607b43b3d04a6e7",
+      "bytes": 98138,
+      "group": "standalone-g5-cg-thumbnail",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "art-production/original-story-renders/kaede_atrapada_entre_cadenas_al_atardecer.png": {
+      "sha256": "3a10f9f9b2b5d5025fd553b4d29d67b90658f48a2bcaacb8d26a35e3cd1290e2",
+      "bytes": 2564709,
+      "group": "original-cg-render",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/events/cg/season01/kaede_jacket_prank.webp": {
+      "sha256": "cc81bc4ca84e6fa18c704f83c55634fe9edb3cd0cc30b6db3f40b3d471345505",
+      "bytes": 507236,
+      "group": "standalone-g5-cg",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/events/cg/season01/thumbs/kaede_jacket_prank.webp": {
+      "sha256": "ad7dca3f178e0e1ed318000126044f0c66dd923376fa760dc65595ccd33c0527",
+      "bytes": 82044,
+      "group": "standalone-g5-cg-thumbnail",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/events/cg/season01/g5-regenerated-manifest.json": {
+      "sha256": "dddd08ccdb04f3d804537b9b43eb90a066324c2c2b27bb43fdd124ba2981a42e",
+      "bytes": 4762,
+      "group": "documentation",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "rpg-assets/reactions/closeups-art-manifest.json": {
+      "sha256": "8261676bb76003b8c9c9c01dc51441b402ddda7d3ebfcdcd499d6b22b425b656",
+      "bytes": 12946,
+      "group": "battle-metadata",
+      "source": "neo_campus_npc_battle_closeups_all_20_2026-10-20.zip"
+    },
+    "rpg-assets/reactions/akari/attack.png": {
+      "sha256": "f2c43182c7c4465f52f6ce7a60c97ca6a34c5890d866f1423f09d59aa8ca72e7",
+      "bytes": 1704185,
+      "group": "new-battle-closeups",
+      "source": "neo_campus_npc_battle_closeups_all_20_2026-10-20.zip"
+    },
+    "rpg-assets/reactions/alma/attack.png": {
+      "sha256": "890bc1b57588c757aa7934417ff896e9b6f76859157260500997c43c7cac0939",
+      "bytes": 1306291,
+      "group": "new-battle-closeups",
+      "source": "neo_campus_npc_battle_closeups_all_20_2026-10-20.zip"
+    },
+    "rpg-assets/reactions/camila/attack.png": {
+      "sha256": "637858596016c4622f8f3e72934e06729648b372efaaff44bb81e2552bc23146",
+      "bytes": 1669099,
+      "group": "new-battle-closeups",
+      "source": "neo_campus_npc_battle_closeups_all_20_2026-10-20.zip"
+    },
+    "rpg-assets/reactions/elena/attack.png": {
+      "sha256": "879ffefdc8530b3812b72b3066ba4c933b0ad152c924b336c992376d69dcae66",
+      "bytes": 996898,
+      "group": "new-battle-closeups",
+      "source": "neo_campus_npc_battle_closeups_all_20_2026-10-20.zip"
+    },
+    "rpg-assets/reactions/elio/attack.png": {
+      "sha256": "86d2f60caa869bb346ecf85001a06666906fa50430857af365bf141e055a08cd",
+      "bytes": 1475123,
+      "group": "new-battle-closeups",
+      "source": "neo_campus_npc_battle_closeups_all_20_2026-10-20.zip"
+    },
+    "rpg-assets/reactions/hana/attack.png": {
+      "sha256": "b76ed8a738760369ec590a8d870223f293ee4f524cb8f74e9540c525e197f8f5",
+      "bytes": 1801950,
+      "group": "new-battle-closeups",
+      "source": "neo_campus_npc_battle_closeups_all_20_2026-10-20.zip"
+    },
+    "rpg-assets/reactions/iris/attack.png": {
+      "sha256": "0a3b8b5c683c35356ae12fcb55ae3eb710359fd7fd28a2432e41e8f6710c57f8",
+      "bytes": 1256706,
+      "group": "new-battle-closeups",
+      "source": "neo_campus_npc_battle_closeups_all_20_2026-10-20.zip"
+    },
+    "rpg-assets/reactions/jinx/attack.png": {
+      "sha256": "ebe454f6fd800eed181bc88a3a51c40f4475f2a0b2ec87f071d683c1c72808af",
+      "bytes": 1758339,
+      "group": "new-battle-closeups",
+      "source": "neo_campus_npc_battle_closeups_all_20_2026-10-20.zip"
+    },
+    "rpg-assets/reactions/jun/attack.png": {
+      "sha256": "c7d0025aea4fbe34f2b7f40d5f9c1ee483d5a7787205375f5c959a4df97db27f",
+      "bytes": 1112692,
+      "group": "new-battle-closeups",
+      "source": "neo_campus_npc_battle_closeups_all_20_2026-10-20.zip"
+    },
+    "rpg-assets/reactions/kaede/attack.png": {
+      "sha256": "31493fc07c2991e5dbacdf4e0865f35336aaad362c81f4cae971a3bbecf6c98d",
+      "bytes": 1747267,
+      "group": "new-battle-closeups",
+      "source": "neo_campus_npc_battle_closeups_all_20_2026-10-20.zip"
+    },
+    "rpg-assets/reactions/luna/attack.png": {
+      "sha256": "72a74c5f922506651903ac425c4a078247462057e5d871bbceb83eddbefa8e35",
+      "bytes": 1837264,
+      "group": "new-battle-closeups",
+      "source": "neo_campus_npc_battle_closeups_all_20_2026-10-20.zip"
+    },
+    "rpg-assets/reactions/marina/attack.png": {
+      "sha256": "48860570967f545c264aa126493c1d1859128fa8ee1aad0ab1300e127a4f83f1",
+      "bytes": 1803219,
+      "group": "new-battle-closeups",
+      "source": "neo_campus_npc_battle_closeups_all_20_2026-10-20.zip"
+    },
+    "rpg-assets/reactions/nereo/attack.png": {
+      "sha256": "35dc37e70bdd2f03dc87c0e113beebf6fa17aba9fb884eb161cdde28808223c6",
+      "bytes": 1315109,
+      "group": "new-battle-closeups",
+      "source": "neo_campus_npc_battle_closeups_all_20_2026-10-20.zip"
+    },
+    "rpg-assets/reactions/reina/attack.png": {
+      "sha256": "607988756ec3bbfd03b8f874a5c0cdff0bd9fb97a384ac23284f2864aa754696",
+      "bytes": 1792713,
+      "group": "new-battle-closeups",
+      "source": "neo_campus_npc_battle_closeups_all_20_2026-10-20.zip"
+    },
+    "rpg-assets/reactions/rina/attack.png": {
+      "sha256": "9c6941a5a7399a0aa0ab94c5864b066a40c6b628048492d1edde4af1e0e335b9",
+      "bytes": 1343027,
+      "group": "new-battle-closeups",
+      "source": "neo_campus_npc_battle_closeups_all_20_2026-10-20.zip"
+    },
+    "rpg-assets/reactions/shiori/attack.png": {
+      "sha256": "95060b64ec02743d095b354f6a5a158ca1c90910910293bf58239c66ae0b4ab4",
+      "bytes": 1847754,
+      "group": "new-battle-closeups",
+      "source": "neo_campus_npc_battle_closeups_all_20_2026-10-20.zip"
+    },
+    "rpg-assets/reactions/sierra/attack.png": {
+      "sha256": "86b96dde587a3e2336c2a10636334e80b6ba7a18a191dd59af5b01566a29fe24",
+      "bytes": 1402752,
+      "group": "new-battle-closeups",
+      "source": "neo_campus_npc_battle_closeups_all_20_2026-10-20.zip"
+    },
+    "rpg-assets/reactions/sol/attack.png": {
+      "sha256": "c37f06db317c6538c400e55f124944d4ffe05041113c9ef188e7f33f4c29dc20",
+      "bytes": 1533359,
+      "group": "new-battle-closeups",
+      "source": "neo_campus_npc_battle_closeups_all_20_2026-10-20.zip"
+    },
+    "rpg-assets/reactions/teo/attack.png": {
+      "sha256": "42fe1d124eeeade1d455ca8bca18eac109fac2854e1a68fe1d8d4f949e0724ea",
+      "bytes": 1357448,
+      "group": "new-battle-closeups",
+      "source": "neo_campus_npc_battle_closeups_all_20_2026-10-20.zip"
+    },
+    "rpg-assets/reactions/yuna/attack.png": {
+      "sha256": "beb7db3fa3fdd7db6a140240f30bc41ab9a426f80208ca573d5f80e4758519a8",
+      "bytes": 1750611,
+      "group": "new-battle-closeups",
+      "source": "neo_campus_npc_battle_closeups_all_20_2026-10-20.zip"
+    },
+    "rpg-assets/reactions/manifest.json": {
+      "sha256": "336f1ab45fabd04356761988dad732b538617c105ecf1942aa3d2debd15b4283",
+      "bytes": 2561,
+      "group": "battle-metadata",
+      "source": "neo_campus_npc_battle_closeups_all_20_2026-10-20.zip"
+    },
+    "art-production/archived-manifests/previous-20-attack-cutins-manifest.json": {
+      "sha256": "2ef7ed35c1fc8a5cb04c6e7d355e17a63427ca9d6af2c3ab7f201ff667bdaef2",
+      "bytes": 4327,
+      "group": "archived-metadata",
+      "source": "neo_campus_ALL_regenerated_art_UPDATED_batch2_2026-10-20.zip"
+    },
+    "art-production/source-battle-closeups/README_INSTALL.md": {
+      "sha256": "903d7d8e1dcbbc75168aba1283d3ec7e5ac22f73377c22487e2eb92ffb98de41",
+      "bytes": 1085,
+      "group": "new-battle-other",
+      "source": "neo_campus_npc_battle_closeups_all_20_2026-10-20.zip"
+    },
+    "art-production/source-battle-closeups/PREVIEW.jpg": {
+      "sha256": "172cc5a4bc2c9b2ceba10a2880b28b1fd552454de66df141e4aee32df6370f0e",
+      "bytes": 488714,
+      "group": "new-battle-other",
+      "source": "neo_campus_npc_battle_closeups_all_20_2026-10-20.zip"
+    },
+    "art-production/changes-npc-closeups.json": {
+      "sha256": "35ecb03e16749f17c4613e1493fab9824b727bdb59bc4103b754e311d2f1d165",
+      "bytes": 1729,
+      "group": "documentation",
+      "source": "cumulative-merge"
+    },
+    "README_START_HERE.md": {
+      "sha256": "24e97e5f456ac828f72cb2ec586b22334fbabad9064b2b823de44920c25a47b9",
+      "bytes": 6314,
+      "group": "documentation"
     }
-  }
+  },
+  "fullResolutionBattleSourceArchive": "neo_campus_npc_battle_closeups_all_20_2026-10-20.zip",
+  "sourceAssetNote": "20 optional original full-resolution battle source PNGs are in separate named ZIP; game-ready PNGs all included.",
+  "excludedNonProductionPrefixes": [
+    "art-production/inspiration-montages/",
+    "art-production/unapproved-montages/",
+    "art-production/concept-pack-crossover/",
+    "art-production/concept-pack-layouts/",
+    "art-production/previous-g5-drafts/"
+  ]
 }
