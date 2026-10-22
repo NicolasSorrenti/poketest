@@ -3,7 +3,7 @@
 const $=id=>document.getElementById(id),KEY='neoHarborRpgV1',STORY=window.NeoHarborStory,SCHEDULES=window.NeoRpgSchedules,WORLD=window.NeoRpgWorld,ARC=window.NeoRpgRivalArc,TOURNAMENTS=window.NeoRpgTournaments,COMPETE=window.NeoRpgCompetitiveLoop,BRIDGE=window.NeoRpgDuelBridge;
 const PACK=window.NeoRpgNarrativePack,SIDE=window.NeoRpgSideQuests,EPILOGUE=window.NeoRpgEpilogue,APPOINTMENTS=window.NeoRpgAppointments,INTENTIONS=window.NeoRpgIntentions,CG=window.NeoRpgCGGallery,PLANNER=window.NeoRpgDailyPlanner,SOCIAL=window.NeoRpgSocialActivities,DATES=window.NeoRpgPlannedDates,PRE=window.NeoRpgPreDuel,SITUATIONS=window.NeoRpgSituations,JOURNEY=window.NeoRpgSeasonJourney,COLLECT=window.NeoRpgCollection,RPGD=window.NeoRpgDialogue,BONDS=window.NeoRpgBondRewards,PARTNER=window.NeoRpgPartnerDecks,VN=window.NeoRpgConversations;
 const TUTORIAL=window.NeoRpgTutorials||null;
-const SCENE_CAST=window.NeoRpgSceneCast,MANDATORY=window.NeoRpgMandatoryEvents||null,REACT=window.NeoRpgReactivity,COMMUNITY=window.NeoRpgCommunity,CONSEQ=window.NeoRpgConsequences,NPC_DECKS=window.NeoRpgNpcDeckProgression;
+const INVITES=window.NeoRpgEventInvites||null,SCENE_CAST=window.NeoRpgSceneCast,MANDATORY=window.NeoRpgMandatoryEvents||null,REACT=window.NeoRpgReactivity,COMMUNITY=window.NeoRpgCommunity,CONSEQ=window.NeoRpgConsequences,NPC_DECKS=window.NeoRpgNpcDeckProgression;
 const MANDATORY_EVENTS=[...(window.NeoRpgSeasonEvents?.events||[]),...(window.NeoRpgCharacterPacks?.mandatoryEvents||[])];
 const periods=['Morning','Afternoon','Evening'];
 const places={
@@ -293,14 +293,14 @@ INTENTIONS.hydrate(state); // Expire yesterday's optional choice before saving t
 for(const plan of missedAppointments)log('You missed your planned meet-up with '+(cast[plan.npc]?.name||'a trainer')+'.');
 queueMandatory();persist();if(!suppressTimeFlash)timeFlash(beforeDay,beforeSlot,transitionSource);}
 function say(speaker,line,choices=[]){scene={speaker,line,choices};state.scene=scene;persist();render();}
-function sayConversation(lines,afterChoices=[],reactionId=null){
+function sayConversation(lines,afterChoices=[],reactionId=null,invitation=null){
  if(!Array.isArray(lines)||!lines.length)return;
  const script=lines.filter(x=>x&&typeof x.text==='string'&&typeof x.speaker==='string');
  if(!script.length)return;
  const first=script[0];
  scene={speaker:first.speaker==='Protagonist'?'You':cast[first.speaker]?.name||first.speaker,
   line:first.text,choices:script.length>1?[['Continue ›','chatNext']]:afterChoices,
-  dialogue:script,index:0,afterChoices,reactionId};
+  dialogue:script,index:0,afterChoices,reactionId,invitation};
  state.scene=scene;persist();render();
 }
 function advanceConversation(){
@@ -326,7 +326,17 @@ function publicAppointments(place){return [...APPOINTMENTS.overrides(state),...S
 function currentPeople(){if(state.day>90)return [];const regular=SCHEDULES.peopleAt(state.day,state.slot,state.location,publicAppointments(state.location));
 for(const e of eligibleStories())if(!regular.includes(e.npc))regular.push(e.npc);
 return regular;}
-function selectPerson(id){
+function availableInvitation(id,people=currentPeople()){
+ if(!INVITES||!cast[id]||!people.includes(id))return null;
+ return INVITES.choose(state,id,{
+  present:people,appointments:APPOINTMENTS.statusAt(state),
+  stories:eligibleStories(),sidequests:SIDE.available(state,people),
+  arcs:ARC.available(state,people),situations:SITUATIONS.available(state,people),
+  encounters:WORLD.availableEncounters(state,people),
+  canAttend:plan=>DATES.canAttend(state,plan,people,{appointments:APPOINTMENTS,social:SOCIAL,cast})
+ });
+}
+function selectPerson(id,{skipInvitation=false}={}){
  if(state.activeSituation||state.activeStory||state.activeSideQuest||state.activeEncounter||state.activeArc||state.pendingDuel||!cast[id]||!currentPeople().includes(id))return;
  const c=cast[id],first=!state['met_'+id]&&!((id==='reina')&&state.metReina);
  const today=state.day+':'+id,fresh=!state.talked[today];
@@ -336,8 +346,14 @@ function selectPerson(id){
  state.selected=id;
  const memories=recordCG('meet',id);
  persist();
- const context=first?null:REACT.reaction(state,id,c,cast,COMMUNITY,CONSEQ);
- sayConversation(context?.lines||VN.dialogue(state,id,c,RPGD,{first}),fresh?VN.choices(state,id):[],context?.id||null);
+ const invite=skipInvitation?null:availableInvitation(id);
+ if(invite){
+  const prompt=INVITES.dialogue(state,invite);
+  sayConversation(prompt.lines,prompt.choices,null,invite);
+ }else{
+  const context=first?null:REACT.reaction(state,id,c,cast,COMMUNITY,CONSEQ);
+  sayConversation(context?.lines||VN.dialogue(state,id,c,RPGD,{first}),fresh?VN.choices(state,id):[],context?.id||null);
+ }
  tutorialEvent('conversation');showCGMoment(memories[0]);
 }
 // Infrequent contextual invitations replace the permanent dialogue command list.
@@ -498,6 +514,26 @@ function act(action){
  const [type,id,part]=action.split(':');
  if(mandatoryAction(type,id))return;
  if(type==='chatNext')return advanceConversation();
+ if(type==='eventInvite'){
+  const invited=scene.invitation;
+  if(!invited||invited.kind!==id||invited.id!==part||!currentPeople().includes(invited.npc))return;
+  const live=availableInvitation(invited.npc);
+  if(!live||live.kind!==id||live.id!==part){
+   return say(cast[invited.npc].name,'Something has changed. We can try another time.');
+  }
+  // The original event handlers still own legality, time, rewards, CGs and saves.
+  if(id==='appointment')return act('attend:'+part);
+  if(id==='story')return startStory(part);
+  if(id==='sidequest')return beginSideQuest(part);
+  if(id==='arc')return startArc(part);
+  if(id==='situation')return beginSituation(part);
+  if(id==='encounter')return startEncounter(part);
+  return;
+ }
+ if(type==='eventChat'){
+  if(scene.invitation?.npc===id&&currentPeople().includes(id))return selectPerson(id,{skipInvitation:true});
+  return;
+ }
  if(type==='situationCancel'){state.activeSituation=null;state.selected=null;return say('Narrator','You decide to leave the moment for another time. No time passes.');}
  if(type==='situationChoice')return chooseSituation(id);
  if(type==='situationFinish')return finishSituation();
@@ -1848,7 +1884,7 @@ function render(){
  $('line').textContent=shown?.line||'The town is waiting.';
  $('dialogue').classList.toggle('is-narration',isNarration);
  $('choices').replaceChildren();
- const responseActions=new Set(['mandatoryChoice','storyChoice','sideChoice','arcChoice','encounterChoice','situationChoice','sideDuel','sidePause','dateBook','dateActivity','dateSlot','book','socialPlan','dateInvite','flirt']);
+ const responseActions=new Set(['mandatoryChoice','storyChoice','sideChoice','arcChoice','encounterChoice','situationChoice','sideDuel','sidePause','dateBook','dateActivity','dateSlot','book','socialPlan','dateInvite','flirt','eventInvite','eventChat']);
  const isPlayerPrompt=!!shown?.choices?.some(([,action])=>responseActions.has(action.split(':')[0]));
  const promptRoot=$('playerChoicePrompt'),promptPanel=$('playerChoicePanel'),choiceList=$('choices');
  const newPlayerPrompt=!!(promptRoot?.hidden&&isPlayerPrompt);
@@ -1918,7 +1954,12 @@ function render(){
   const bond=BONDS.progress(state,id,BOND_PLAN),chapter=document.createElement('small');
   chapter.className='character-chapter-progress';chapter.textContent='♥ Character chapters '+bond.completed+' / '+bond.total+(state.bondTrials?.[id]?' · Personal challenge won':'');
   label.append(name,sub,chapter);
-  if(!locked&&state['met_'+id]&&REACT.reaction(state,id,c,cast,COMMUNITY,CONSEQ)){
+  const invite=!locked?availableInvitation(id,people):null;
+  if(invite){
+   const cue=document.createElement('small');cue.className='character-reaction-hint';
+   cue.textContent=invite.kind==='appointment'?'✦ Waiting for you':'✦ Wants to talk';
+   label.append(cue);
+  }else if(!locked&&state['met_'+id]&&REACT.reaction(state,id,c,cast,COMMUNITY,CONSEQ)){
    const cue=document.createElement('small');cue.className='character-reaction-hint';cue.textContent='✦ Something to say';
    label.append(cue);
   }
