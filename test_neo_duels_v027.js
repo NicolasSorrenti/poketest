@@ -13,6 +13,7 @@ for(let seed=1;seed<=4;seed++)for(let d=0;d<decks.length;d++){
  const legal=(type,payload={})=>{try{step(type,payload);return true;}catch(e){if(/not your turn|Invalid decision|Unknown or expired/.test(e.message))throw e;return false;}};
  const basic=st.view.players[0].hand.findIndex(id=>isBasicPokemon(CATALOG.get(id)));
  assert.ok(basic>=0);step('setup_select',{handIndex:basic});step('setup_confirm');
+ if(st.view.mulliganBonus){assert.equal(st.view.mulliganBonus.side,0);step('setup_bonus_draw',{count:0});}
  for(let iter=0;iter<65&&!st.view.over;iter++){
   if(st.view.pendingDecision){const q=st.view.pendingDecision;assert.equal(q.actor,0);step('choose',{decisionId:q.id,selected:q.options.slice(0,q.min).map(x=>x.id)});choices++;continue;}
   assert.equal(st.view.turn,0);
