@@ -115,3 +115,35 @@ test('outings are disabled beyond day 90 or while another VN scene is active',()
  s.day=5;s.activeStory={id:'test'};
  assert.ok(SOCIAL.options(s,'hana',['hana'],Cast).every(a=>a.disabledReason==='Finish your current scene first'));
 });
+
+test('preferences are private until a shared activity is completed and learned permanently',()=>{
+ const s=state(),first=SOCIAL.learnedLikes(s,'hana',Cast);
+ assert.deepEqual(first,[],'a character profile alone cannot reveal any likes');
+ SOCIAL.complete(s,'hana','shop_welcome',['hana'],Cast);
+ assert.deepEqual(SOCIAL.learnedLikes(s,'hana',Cast),[{tag:'community',label:'Helping other players'}]);
+ assert.deepEqual(s.socialHistory.hana.likedTags,['community']);
+ s.day=6;s.location='cafe';s.slot=1;
+ SOCIAL.complete(s,'hana','cafe_trade',['hana'],Cast);
+ assert.deepEqual(SOCIAL.learnedLikes(s,'hana',Cast),[{tag:'community',label:'Helping other players'}],
+  'neutral activities never expose other hidden favorites');
+ s.day=7;s.location='shop';s.slot=1;
+ SOCIAL.complete(s,'hana','shop_custom',['hana'],Cast);
+ assert.deepEqual(SOCIAL.learnedLikes(s,'hana',Cast).map(x=>x.tag),['community','creative']);
+});
+
+test('legacy saves reveal at most the last actually experienced preference, without edits',()=>{
+ const old=state({socialHistory:{reina:{lastTag:'strategy',lastActivity:'shop_deck_lab',lastDay:4,count:3}}});
+ const before=JSON.stringify(old);
+ assert.deepEqual(SOCIAL.learnedLikes(old,'reina',Cast),[{tag:'strategy',label:'Trying out deck ideas'}]);
+ assert.equal(JSON.stringify(old),before);
+ old.socialHistory.reina.lastTag='community';
+ assert.deepEqual(SOCIAL.learnedLikes(old,'reina',Cast),[]);
+});
+
+test('character reactions describe the shared activity instead of revealing reward math',()=>{
+ const s=state();
+ const outcome=SOCIAL.complete(s,'reina','shop_deck_lab',['reina'],Cast);
+ assert.match(outcome.line,/opening/);
+ assert.match(outcome.line,/Reina/);
+ assert.doesNotMatch(outcome.line,/\+\d+|affection|trust|respect|favorite/i);
+});
