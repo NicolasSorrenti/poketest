@@ -29,7 +29,9 @@ for(const set of LEGACY_DECKS){
   assert.equal(r.revision,0,'Invalid command must not increment revision');
   let first=r.view.players[0].hand.findIndex(id=>isBasicPokemon(CATALOG.get(id)));
   assert.ok(first>=0);run('setup_select',{handIndex:first});
-  run('setup_confirm');assert.equal(r.view.phase,'game');
+  run('setup_confirm');
+  if(r.view.mulliganBonus){assert.equal(r.view.mulliganBonus.side,0);run('setup_bonus_draw',{count:0});}
+  assert.equal(r.view.phase,'game');
   for(let step=0;step<70&&!r.view.over;step++){
    if(r.view.pendingDecision){const d=r.view.pendingDecision;
     assert.equal(d.actor,0,'Bot decisions should auto-resolve');
