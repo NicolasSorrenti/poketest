@@ -24,11 +24,11 @@ test('all ambient encounters and everyday activities have grounded text and corr
  }
  for(const a of W.activities)assert.ok(a.text.length>45,a.id+' needs useful environmental feedback');
 });
-test('14 distinct location activities and 22 validated encounters',()=>{
+test('17 distinct location activities and 22 validated encounters',()=>{
  assert.deepEqual(W.validate(),[]);
- assert.equal(W.activities.length,14);
+ assert.equal(W.activities.length,17);
  assert.equal(W.encounters.length,22);
- assert.equal(new Set(W.activities.map(a=>a.id)).size,14);
+ assert.equal(new Set(W.activities.map(a=>a.id)).size,17);
  assert.equal(new Set(W.encounters.map(e=>e.id)).size,22);
  assert.deepEqual(new Set(W.activities.map(a=>a.place)),new Set(['home','shop','arcade','park','cafe','center','library']));
 });
@@ -170,4 +170,60 @@ test('cup aftermath choices survive JSON reload and do not replay',()=>{
  const restored=W.hydrate(JSON.parse(JSON.stringify(s)));
  assert.ok(restored.encountersDone[e.id]);
  assert.ok(!W.availableEncounters(restored,['akari']).some(x=>x.id===e.id));
+});
+
+test('new career activities require the earned stat and respect a seven-day cooldown',()=>{
+ const s=sample({day:22,slot:1,location:'center',focus:90,reputation:5,insight:0});
+ let mentor=W.activitiesAt(s).find(a=>a.id==='center_mentor');
+ assert.match(mentor.disabledReason,/6 Reputation/);
+ s.reputation=6;
+ mentor=W.activitiesAt(s).find(a=>a.id==='center_mentor');
+ assert.equal(mentor.disabledReason,null);
+ const result=W.doActivity(s,'center_mentor',[]);
+ assert.equal(result.spent,1);
+ assert.equal(s.credits,108);
+ assert.equal(s.reputation,7);
+ assert.throws(()=>W.doActivity(s,'center_mentor'),/Already completed/);
+ s.day=28;
+ assert.match(W.activitiesAt(s).find(a=>a.id==='center_mentor').disabledReason,/once every 7 days/);
+ s.day=29;
+ assert.equal(W.activitiesAt(s).find(a=>a.id==='center_mentor').disabledReason,null);
+});
+
+test('sponsor vouchers require Reputation and a starter and never repeat in the same week',()=>{
+ const s=sample({day:22,slot:1,location:'center',focus:90,reputation:15});
+ assert.match(W.activitiesAt(s).find(a=>a.id==='center_sponsor').disabledReason,/starter/);
+ s.deckJourney={starter:'ember_garden'};
+ const result=W.doActivity(s,'center_sponsor');
+ assert.equal(result.voucherSet,'latest');
+ assert.equal(s.focus,74);
+ assert.equal(s.reputation,16);
+ s.day=28;
+ assert.match(W.activitiesAt(s).find(a=>a.id==='center_sponsor').disabledReason,/once every 7 days/);
+ s.day=29;
+ assert.equal(W.activitiesAt(s).find(a=>a.id==='center_sponsor').disabledReason,null);
+});
+
+test('Insight unlocks a practical masterclass rather than only increasing a counter',()=>{
+ const s=sample({day:30,slot:0,location:'library',focus:85,insight:9});
+ assert.match(W.activitiesAt(s).find(a=>a.id==='library_masterclass').disabledReason,/10 Insight/);
+ s.insight=10;
+ W.doActivity(s,'library_masterclass');
+ assert.equal(s.credits,96);
+ assert.equal(s.preparation,2);
+ assert.equal(s.focus,73);
+});
+
+test('prepared draws and defeats still earn a reward, without changing duel rules',()=>{
+ const s=sample({preparation:2,credits:80,focus:75});
+ const defeat={outcome:'Defeat',credits:5},draw={outcome:'Draw',credits:5};
+ W.afterDuel(s,defeat);
+ assert.equal(defeat.trainingBonus,8);
+ assert.equal(defeat.credits,13);
+ W.afterDuel(s,draw);
+ assert.equal(draw.trainingBonus,8);
+ assert.equal(draw.credits,13);
+ assert.equal(s.preparation,0);
+ assert.equal(s.credits,96);
+ assert.equal(s.focus,55);
 });
