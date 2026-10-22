@@ -6,7 +6,7 @@
   /* A playable hand, an attack bar and the five turn actions get dedicated
      vertical space. The removed Hide Hand button no longer reserves 29px. */
   body.duel-active #duel:not(.hidden) {
-    grid-template-rows:auto auto minmax(0,1fr) clamp(283px,37dvh,338px)!important;
+    grid-template-rows:auto auto minmax(0,1fr) clamp(298px,39dvh,355px)!important;
   }
   body.duel-active #duel>.below,
   body.duel-active #duel>.below>.main-column {
@@ -67,9 +67,9 @@
     flex-direction:column!important;
     justify-content:flex-end!important;
     gap:5px!important;
-    flex:0 0 157px!important;
+    flex:0 0 166px!important;
     width:100%!important;
-    height:157px!important;
+    height:166px!important;
     min-height:0!important;
     padding:5px!important;
     overflow:visible!important;
