@@ -16,9 +16,9 @@ function between(start,end){
 }
 assert.match(html,/id="endBtn" class="primary"/,'setup control uses the permanent, visible action rail');
 assert.match(html,/classic_live\.js\?v=\d+/,'updated UI must not use cached browser JavaScript');
-assert.match(js,/el\.classList\.toggle\('hidden',!d&&!targetMode&&!v\.over&&\(v\.phase==='game'\|\|v\.phase==='setup'\)&&!v\.mulliganBonus\)/,'show bonus decision while still hiding ordinary setup instructions');
+assert.match(js,/el\.classList\.toggle\('hidden',!d&&!targetMode&&!v\.over&&\(v\.phase==='game'\|\|v\.phase==='setup'\)&&!bonusPrompt\)/,'show bonus decision while still hiding ordinary setup instructions');
 assert.doesNotMatch(js,/acts\.append\(btn\('Confirm opening setup'/,'do not leave a second setup button in the popup');
-const visibility=between("  el.classList.toggle('hidden',","  opts.textContent=");
+const visibility=between("  // Once bonus cards have been drawn,","  opts.textContent=");
 function decisionHidden(phase,d=null,mulliganBonus=null){
  let hidden;
  vm.runInNewContext(visibility,{
@@ -30,6 +30,7 @@ function decisionHidden(phase,d=null,mulliganBonus=null){
 assert.equal(decisionHidden('setup'),true,'opening guidance must not become a popup');
 assert.equal(decisionHidden('setup',{id:'mulligan'}),false,'real setup decisions must stay visible');
 assert.equal(decisionHidden('setup',null,{side:0,max:2,drawn:null}),false,'mulligan bonus must be visible during setup');
+assert.equal(decisionHidden('setup',null,{side:0,max:2,drawn:1}),true,'drawn bonuses should leave the field free for Benching');
 assert.equal(decisionHidden('game'),true,'no empty guidance panel during the match');
 
 
