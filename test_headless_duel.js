@@ -34,7 +34,13 @@ let cases=0;
   if(auth===guest){assert.equal(rooms.view(host.code,host.token).view.players[1].active,null);}
   const confirmed=rooms.dispatch(host.code,auth.token,cmd('setup_confirm'),revision);revision=confirmed.revision;
  }
- const joined=rooms.view(host.code,host.token).view;assert.equal(joined.phase,'game');assert.ok(joined.players[0].active&&joined.players[1].active);
+ let joined=rooms.view(host.code,host.token).view;
+ if(joined.mulliganBonus){
+  const eligible=joined.mulliganBonus.side,token=eligible===0?host.token:guest.token;
+  revision=rooms.dispatch(host.code,token,cmd('setup_bonus_draw',{count:0}),revision).revision;
+  joined=rooms.view(host.code,host.token).view;
+ }
+ assert.equal(joined.phase,'game');assert.ok(joined.players[0].active&&joined.players[1].active);
  assert.equal(joined.players[1].hand,undefined);assert.equal(joined.players[1].prizes,undefined);
  assert.throws(()=>rooms.dispatch(host.code,guest.token,cmd('end_turn'),revision),/Not your turn/);
  revision=rooms.dispatch(host.code,host.token,cmd('end_turn'),revision).revision;
@@ -165,10 +171,13 @@ let cases=0;
   change(original,side,'setup_select',{handIndex:index});
   moves.push({side,command:cmd('setup_confirm')});change(original,side,'setup_confirm');
  }
+ if(original.mulliganBonus){const beneficiary=original.mulliganBonus.side;
+  moves.push({side:beneficiary,command:cmd('setup_bonus_draw',{count:0})});
+  change(original,beneficiary,'setup_bonus_draw',{count:0});}
  moves.push({side:0,command:cmd('end_turn')});change(original,0,'end_turn');
  moves.push({side:1,command:cmd('end_turn')});change(original,1,'end_turn');
  assert.deepEqual(replay({decks:[deck,deck],seed},moves),original);
- assert.throws(()=>replay({decks:[deck,deck],seed},[...moves,{side:0,command:cmd('choose',{decisionId:'bogus'})}]),/Replay failed at command 6/);
+ assert.throws(()=>replay({decks:[deck,deck],seed},[...moves,{side:0,command:cmd('choose',{decisionId:'bogus'})}]),new RegExp('Replay failed at command '+moves.length));
  cases++;
 }
 {
