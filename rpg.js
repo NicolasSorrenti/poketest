@@ -2,6 +2,7 @@
 (()=>{
 const $=id=>document.getElementById(id),KEY='neoHarborRpgV1',STORY=window.NeoHarborStory,SCHEDULES=window.NeoRpgSchedules,WORLD=window.NeoRpgWorld,ARC=window.NeoRpgRivalArc,TOURNAMENTS=window.NeoRpgTournaments,COMPETE=window.NeoRpgCompetitiveLoop,BRIDGE=window.NeoRpgDuelBridge;
 const PACK=window.NeoRpgNarrativePack,SIDE=window.NeoRpgSideQuests,EPILOGUE=window.NeoRpgEpilogue,APPOINTMENTS=window.NeoRpgAppointments,INTENTIONS=window.NeoRpgIntentions,CG=window.NeoRpgCGGallery,PLANNER=window.NeoRpgDailyPlanner,SOCIAL=window.NeoRpgSocialActivities,DATES=window.NeoRpgPlannedDates,PRE=window.NeoRpgPreDuel,SITUATIONS=window.NeoRpgSituations,JOURNEY=window.NeoRpgSeasonJourney,COLLECT=window.NeoRpgCollection,RPGD=window.NeoRpgDialogue,BONDS=window.NeoRpgBondRewards,PARTNER=window.NeoRpgPartnerDecks,VN=window.NeoRpgConversations;
+const TUTORIAL=window.NeoRpgTutorials||null;
 const MANDATORY=window.NeoRpgMandatoryEvents||null,REACT=window.NeoRpgReactivity,COMMUNITY=window.NeoRpgCommunity,CONSEQ=window.NeoRpgConsequences,NPC_DECKS=window.NeoRpgNpcDeckProgression;
 const MANDATORY_EVENTS=[...(window.NeoRpgSeasonEvents?.events||[]),...(window.NeoRpgCharacterPacks?.mandatoryEvents||[])];
 const periods=['Morning','Afternoon','Evening'];
@@ -145,12 +146,13 @@ function timeFlash(beforeDay,beforeSlot,source='activity'){
  overlay.addEventListener('animationend',()=>overlay.remove());
 }
 
-function defaults(){return {sideQuests:{},activeSideQuest:null,day:1,slot:0,location:'home',metReina:false,reinaTrust:0,reinaDuels:0,results:[],flags:{intro:false},journal:['The 90-day season begins.'],pendingDuel:null,bonds:{},talked:{},hungOut:{},eventsDone:{},points:0,credits:80,playerDeck:'blackout',selected:null,ended:false,storyDone:{},storyMissed:{},relationships:{},routeOutcomes:{},partner:null,activeStory:null,activeEncounter:null,activeArc:null,arcFlags:{},arcOutcomes:{},activityDone:{},encountersDone:{},focus:75,insight:0,reputation:0,preparation:0,lastDuelReceipt:null,tournaments:{},campaignHistory:[],ngPlus:0,appointments:[],appointmentSeq:0,scene:null,socialHistory:{},situationDone:{},activeSituation:null,deckJourney:null,competitive:null,npcReactivity:null,community:null,consequences:null,mandatoryEventState:null,playmatGifts:{},playmatSelected:'aurora'}}
+function defaults(){return {sideQuests:{},activeSideQuest:null,day:1,slot:0,location:'home',metReina:false,reinaTrust:0,reinaDuels:0,results:[],flags:{intro:false},journal:['The 90-day season begins.'],pendingDuel:null,bonds:{},talked:{},hungOut:{},eventsDone:{},points:0,credits:80,playerDeck:'blackout',selected:null,ended:false,storyDone:{},storyMissed:{},relationships:{},routeOutcomes:{},partner:null,activeStory:null,activeEncounter:null,activeArc:null,arcFlags:{},arcOutcomes:{},activityDone:{},encountersDone:{},focus:75,insight:0,reputation:0,preparation:0,lastDuelReceipt:null,tournaments:{},campaignHistory:[],ngPlus:0,appointments:[],appointmentSeq:0,scene:null,socialHistory:{},situationDone:{},activeSituation:null,deckJourney:null,competitive:null,npcReactivity:null,community:null,consequences:null,mandatoryEventState:null,playmatGifts:{},playmatSelected:'aurora',gameplayTutorials:{disabled:false,seen:{}}}}
 const hadCampaignSave=!!localStorage.getItem(KEY);
 let state;try{state=JSON.parse(localStorage.getItem(KEY))||defaults();if(!Number.isInteger(state.day)||state.day<1||state.day>91)throw Error('Invalid save');}catch{state=defaults()}
 for(const [k,v] of Object.entries(defaults()))if(state[k]===undefined)state[k]=v;
 if(!hadCampaignSave)state.deckJourney=COLLECT.fresh();
 COLLECT.hydrate(state);
+TUTORIAL?.hydrate(state);
 if(!Array.isArray(state.campaignHistory))state.campaignHistory=[];
 if(!Number.isInteger(state.ngPlus)||state.ngPlus<0)state.ngPlus=0;
 if(!places[state.location])state.location='home';
@@ -239,6 +241,30 @@ function mandatoryAction(type,id){
  return true;
 }
 
+const tutorialQueue=[];
+function displayTutorial(){
+ const tip=tutorialQueue[0],card=$('gameplayTutorial');
+ if(!card)return;
+ card.hidden=!tip;
+ if(!tip)return;
+ $('tutorialProgress').textContent='GAMEPLAY TIP · '+tip.number+' OF '+tip.total;
+ $('tutorialTitle').textContent=tip.title;
+ $('tutorialText').textContent=tip.text;
+}
+function tutorialEvent(topic,inlineId=null){
+ const tip=TUTORIAL?.record(state,topic);
+ if(!tip)return;
+ persist();
+ if(inlineId){
+  const box=$(inlineId);
+  if(box){box.textContent='TIP '+tip.number+'/2 · '+tip.title+' — '+tip.text;box.hidden=false;}
+ }else{tutorialQueue.push(tip);displayTutorial();}
+}
+function disableTutorials(disabled){
+ TUTORIAL?.setDisabled(state,disabled);
+ if(disabled){tutorialQueue.length=0;displayTutorial();}
+ persist();
+}
 const atKey=(id)=>state.day+':'+state.slot+':'+id;
 function advance(n=1,transitionSource='activity',suppressTimeFlash=false){const beforeDay=state.day,beforeSlot=state.slot;for(let i=0;i<n;i++){state.slot++;if(state.slot>=3){state.slot=0;state.day++;}}if(state.day>90){state.day=91;state.ended=true;log('The Neo Harbor championship season has ended.');}
 state.selected=null;
@@ -303,7 +329,7 @@ function selectPerson(id){
  persist();
  const context=first?null:REACT.reaction(state,id,c,cast,COMMUNITY,CONSEQ);
  sayConversation(context?.lines||VN.dialogue(state,id,c,RPGD,{first}),fresh?VN.choices(state,id):[],context?.id||null);
- showCGMoment(memories[0]);
+ tutorialEvent('conversation');showCGMoment(memories[0]);
 }
 // Infrequent contextual invitations replace the permanent dialogue command list.
 function options(id){return VN.choices(state,id);}
@@ -327,7 +353,7 @@ function planSharedActivity(id){
  const choices=sharedActivityChoices(id);
  if(!choices.length)return say(cast[id].name,'We could plan something another time.',options(id));
  const hint='I have some time free. What do you feel like doing together?';
- return say(cast[id].name,hint,choices);
+ tutorialEvent('social');return say(cast[id].name,hint,choices);
 }
 function showEncounter(){
  const a=state.activeEncounter,e=a&&WORLD.byEncounter(a.id);
@@ -370,7 +396,7 @@ function performActivity(id){
   result.summary+=' You earned a '+COLLECT.SETS[set].name+' booster voucher to redeem at the card shop.';
  }
  log('Activity completed at '+places[place][0]+': '+result.summary);recordIntention('activity');
- advance();persist();say('Narrator',result.summary);
+ advance();persist();say('Narrator',result.summary);tutorialEvent('activities');
 }
 
 
@@ -503,6 +529,7 @@ function act(action){
  if(type==='dateInvite'){
   if(!cast[id]||!currentPeople().includes(id))return;
   const choices=plannedDateSlots(id);
+  if(choices.length>1)tutorialEvent('appointments');
   return say(cast[id].name,choices.length===1?'I cannot commit to another meeting yet.':'Let us choose a day and plan what to do together.',
     choices.length===1?options(id):choices);
  }
@@ -560,7 +587,7 @@ function act(action){
   }
  }
  if(type==='intention'){
-  try{const goal=INTENTIONS.choose(state,id);log('Today’s priority: '+goal.title+'.');persist();render();}
+  try{const goal=INTENTIONS.choose(state,id);log('Today’s priority: '+goal.title+'.');persist();render();tutorialEvent('priorities');}
   catch(err){$('notice').textContent=err.message;}
   return;
  }
@@ -817,6 +844,7 @@ function renderCollection(){
 function openBoosterShop(){
  if(controlsLocked()||state.day>90||state.location!=='shop'||!state.deckJourney?.starter)return;
  renderBoosterShop();
+ $('boosterTutorial').hidden=true;tutorialEvent('boosters','boosterTutorial');
  if(!$('boosterShopDialog').open)$('boosterShopDialog').showModal();
 }
 function purchaseBoosterPack(packId,useVoucher=false){
@@ -1033,6 +1061,7 @@ function startDuel(id,exhibition=null,arcEpisode=null,tournament=null,sideQuest=
  if(npcEditedCards)sessionStorage.setItem('neoRpgNpcDeck:'+state.pendingDuel.id,JSON.stringify(npcEditedCards));
  persist();render();
  $('duel').hidden=true;$('battle').src='about:blank';
+ $('preDuelTutorial').hidden=true;tutorialEvent('duels','preDuelTutorial');
  showPreparedDuel();
 }
 window.addEventListener('message',ev=>{
@@ -2015,7 +2044,9 @@ function render(){
 }
 
 $('deckStudioBtn').onclick=()=>{if(!controlsLocked()&&state.deckJourney?.starter){persist();location.assign('/rpg_deck_studio.html');}};
-$('statusBtn').onclick=()=>window.NeoRpgStatus.open(state,cast,BOND_PLAN,makeAvatar);
+$('statusBtn').onclick=()=>{
+ window.NeoRpgStatus.open(state,cast,BOND_PLAN,makeAvatar,disableTutorials);
+};
 $('statusClose').onclick=()=>window.NeoRpgStatus.close();
 $('galleryBtn').onclick=openGallery;
 $('galleryClose').onclick=()=>$('galleryDialog').close();
@@ -2027,6 +2058,7 @@ $('preDuelSkip').onclick=launchPreparedDuel;
 $('preDuelDialog').addEventListener('cancel',e=>e.preventDefault());
 $('quickNext').onclick=()=>act('rest');$('quickHome').onclick=()=>act('home');$('calendarBtn').onclick=openCalendar;$('calendarClose').onclick=()=>$('calendarDialog').close();$('communityClose').onclick=()=>$('communityDialog').close();
 $('save').onclick=async()=>{persist();const ok=await window.NeoRpgCloudSave?.syncNow();$('notice').textContent=ok?'Campaign saved here and in the cloud.':'Campaign saved in this browser.'};
+$('tutorialDismiss').onclick=()=>{tutorialQueue.shift();displayTutorial();};
 $('dismissReceipt').onclick=()=>{state.lastDuelReceipt=null;persist();render();};
 document.addEventListener('keydown',e=>{if($('statusDialog')?.open)return;if((e.key===' '||e.code==='Space')&&!['INPUT','TEXTAREA','SELECT','BUTTON'].includes(e.target?.tagName)){if(scene.dialogue&&scene.index<scene.dialogue.length-1&&!state.mandatoryEventState?.active&&!state.activeStory&&!state.activeArc&&!state.activeSideQuest){e.preventDefault();act('chatNext');}else if(state.mandatoryEventState?.active?.phase==='lines'){e.preventDefault();act('mandatoryNext');}else if(state.activeStory?.phase==='lines'){e.preventDefault();act('storyNext');}else if(state.activeArc?.phase==='lines'){e.preventDefault();act('arcNext');}else if(!$('dialogue').hidden&&!state.activeSituation&&!state.mandatoryEventState?.active&&!state.activeStory&&!state.activeEncounter&&!state.activeArc&&!state.activeSideQuest&&!state.pendingDuel&&!scene.choices?.length){e.preventDefault();closeSceneDialogue();}}});
 async function initDecks(){
