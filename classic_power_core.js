@@ -49,7 +49,8 @@ function powerPlan(g,plan,h){
    if(choose('energy',indices(p.hand,c=>c.name==='Water Energy','hand'),'Choose Water Energy from hand'))return;
    if(choose('target',slotList(p,x=>card(x.id).types.includes('Water')),'Choose Water Pokémon to attach Energy'))return;
   }else{
-   if(choose('source',slotList(p,x=>x!==u&&x.energies.some(id=>card(id).name===(name==='Gather Fire'?'Fire Energy':'Grass Energy'))),'Choose source Pokémon'))return;
+   if(name==='Energy Trans'&&own(p).length<2)throw Error('Energy Trans requires another Pokémon in play');
+   if(choose('source',slotList(p,x=>(name==='Energy Trans'||x!==u)&&x.energies.some(id=>card(id).name===(name==='Gather Fire'?'Fire Energy':'Grass Energy'))),'Choose source Pokémon'))return;
    if(choose('energy',indices(pokemonAt('source').energies,c=>c.name===(name==='Gather Fire'?'Fire Energy':'Grass Energy')),'Choose Energy to move'))return;
    if(name==='Energy Trans'&&choose('target',slotList(p,x=>x!==pokemonAt('source')),'Choose receiving Pokémon'))return;
   }
