@@ -123,6 +123,11 @@ function unownNormal(g,side){
  const copies=g.players.flatMap(allPokemon).filter(x=>card(g,x.id).id==='neo2-50');
  return copies.length===1&&allPokemon(g.players[side]).includes(copies[0])&&CLASSIC_POWERS.enabled(g,copies[0],'[Normal]');
 }
+function unownDarkness(g,side){
+ const copies=g.players.flatMap(allPokemon).filter(x=>x.id==='neo2-47');
+ return copies.length===1&&allPokemon(g.players[side]).includes(copies[0])&&
+   CLASSIC_POWERS.enabled(g,copies[0],'Darkness');
+}
 function maxHP(g,u){const base=u.gymGiantGrowth&&u.id==='gym2-10'?80:Number(effectiveCard(g,u).hp)||0;return base+(isClassicRules(g)&&CLASSIC_POWERS.enabled(g,u,'Gaseous Form')?u.energies.filter(id=>card(g,id).name==='Psychic Energy').length*10:0)+(!u.secretPlanFaceDown&&g.stadium&&card(g,g.stadium.id).name==="Rocket's Hideout"&&card(g,u.id).name.startsWith('Dark ')?20:0);}
 function draw(g,side,count=1,required=false){const p=g.players[side];for(let i=0;i<count;i++){if(!p.deck.length){if(required){g.over=true;g.winner=1-side;log(g,`${p.name} cannot draw at the start of turn.`);}return;}p.hand.push(p.deck.pop());}}
 function setupHand(g,p){let retries=0;while(retries++<200){p.deck=shuffle(g,[...p.deck,...p.hand]);p.hand=[];for(let i=0;i<7;i++)p.hand.push(p.deck.pop());if(p.hand.some(id=>isBasicPokemon(card(g,id))))break;}
@@ -1835,6 +1840,7 @@ function resolveAttack(g,side,index,chosenBench,energyPicks,extra={}){
   dmg=Math.max(0,dmg-f.active.reactiveShield.reduce);
  if(shield&&!roll.ignoreDefendingEffects){if(shield.allEffects||shield.preventDamage||shield.threshold!==undefined&&dmg<=shield.threshold||shield.minimumDamage!==undefined&&dmg>=shield.minimumDamage)dmg=0;else if(shield.half)dmg=Math.floor(dmg/20)*10;else dmg=Math.max(0,dmg-(shield.reduce||0));}
  if(dmg>0&&c.types?.includes('Colorless')&&unownNormal(g,1-side))dmg=Math.max(0,dmg-30);
+ if(dmg>0&&c.types?.includes('Darkness')&&unownDarkness(g,1-side))dmg=Math.max(0,dmg-30);
  if(dmg>0&&f.active.screech?.expires>g.turnSerial)dmg+=20;
  if(dmg>0&&p.mistyBoostUntil>g.turnSerial&&c.name.startsWith("Misty's "))dmg+=20;
  if(program.kind==='theme:bonfire'){
@@ -1911,7 +1917,10 @@ function resolveAttack(g,side,index,chosenBench,energyPicks,extra={}){
  if(!shield?.allEffects||roll.ignoreDefendingEffects){if(roll.status)applyCondition(g,f.active,roll.status);if(roll.statuses)for(const status of roll.statuses)applyCondition(g,f.active,status);}
  const benchProtected=owner=>owner.transparentWallsUntil>g.turnSerial||Boolean(owner.themeBenchShield?.expires>g.turnSerial&&owner.active?.id===owner.themeBenchShield.sourceId);
  const hitBench=(owner,target,damage)=>{if(target&&!benchProtected(owner)){
-  const victim=g.players.indexOf(owner),amount=c.types?.includes('Colorless')&&unownNormal(g,victim)?Math.max(0,damage-30):damage;
+  const victim=g.players.indexOf(owner),protectedByUnown=
+  (c.types?.includes('Colorless')&&unownNormal(g,victim))||
+  (c.types?.includes('Darkness')&&unownDarkness(g,victim)),
+  amount=protectedByUnown?Math.max(0,damage-30):damage;
   const reduced=relaxing&&amount>0?Math.ceil(amount/20)*10:amount;
   const defended=isClassicRules(g)&&CLASSIC_POWERS.enabled(g,target,'Shell Armor')?Math.max(0,reduced-10):reduced;
   target.damage+=defended;

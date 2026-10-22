@@ -13,5 +13,7 @@ jobs:
           node-version: '22'
       - name: Verify historical Pokémon Power privacy and rules
         run: node test_classic_power_fidelity.js
+      - name: Verify expanded Neo and promo Pokémon Powers
+        run: node test_classic_power_batch_20261022.js
       - name: Validate all TCG engine and card interactions
         run: npm test
