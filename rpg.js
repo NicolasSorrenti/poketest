@@ -1546,20 +1546,74 @@ function renderBracketProgress(){
  }
 }
 
+// One spoiler-safe timeline for appointments, known stories and official fixtures.
 function openCalendar(){
  const root=$('calendarEntries');root.replaceChildren();
- for(const e of eventCards.filter(e=>e.day>=state.day).slice(0,8)){
-  const p=document.createElement('div');p.className='calendar-entry';
-  p.textContent='DAY '+e.day+' · '+periods[e.slot]+' · '+e.title+' · '+places[e.place][0];root.append(p);
+ const now=APPOINTMENTS.stamp(state.day,state.slot);
+ const rows=[];
+ const add=(entry)=>{if(!places[entry.place])return;rows.push(entry);};
+ for(const plan of APPOINTMENTS.active(state)){
+  if(APPOINTMENTS.stamp(plan.day,plan.slot)<now)continue;
+  const activity=SOCIAL.activities?.find(item=>item.id===plan.activityId);
+  add({day:plan.day,slot:plan.slot,place:plan.place,kind:'Personal plan',
+   title:'Meet '+(cast[plan.npc]?.name||'your friend'),
+   detail:activity?.title||'Agreed meet-up',npc:plan.npc});
+ }
+ for(const e of eventCards){
+  if(APPOINTMENTS.stamp(e.day,e.slot)<now||state.eventsDone?.[e.day+':'+e.title])continue;
+  add({day:e.day,slot:e.slot,place:e.place,kind:'Official event',title:e.title,
+   detail:'Scheduled circuit exhibition'});
  }
  for(const cup of TOURNAMENTS.cups){
   const progress=TOURNAMENTS.status(state,cup.id);
-  const entry=document.createElement('div');entry.className='calendar-entry';
-  const description=progress.state==='champion'?'CHAMPION':progress.state==='eliminated'?'ELIMINATED':progress.state==='expired'||progress.state==='missed'?'REGISTRATION CLOSED':progress.round?'ROUND '+(progress.round+1)+'/3':'REGISTRATION';
-  entry.textContent=cup.title+' · Days '+cup.day+'–'+cup.end+' · '+description;
-  root.append(entry);
+  if(cup.end<state.day||['champion','eliminated','expired','missed'].includes(progress.state))continue;
+  add({day:Math.max(state.day,cup.day),slot:null,place:cup.place,kind:'Tournament',
+   title:cup.title,detail:'Registration: Days '+cup.day+'–'+cup.end+
+    (progress.round?' · Round '+(progress.round+1)+'/3':'')});
  }
- const info=document.createElement('p');info.className='empty-note';info.textContent='Tournament matches use real TCG duels. Wins advance the bracket, defeats eliminate, draws allow a rematch. Other personal encounters remain discoverable.';root.append(info);
+ // Only reveal a story already available to a character the player has met.
+ for(const event of STORY.available(state)){
+  if(!state['met_'+event.npc]&&!(event.npc==='reina'&&state.metReina))continue;
+  if(event.slot!==null&&event.slot!==undefined&&event.slot!==state.slot)continue;
+  if(!places[event.place])continue;
+  const present=SCHEDULES.peopleAt(state.day,state.slot,event.place,publicAppointments(event.place));
+  if(!present.includes(event.npc))continue;
+  add({day:state.day,slot:state.slot,place:event.place,kind:'Personal story',
+   title:'A moment with '+cast[event.npc].name,
+   detail:'A conversation is available now',npc:event.npc});
+ }
+ rows.sort((a,b)=>a.day-b.day||(a.slot??0)-(b.slot??0)||a.kind.localeCompare(b.kind));
+ if(!rows.length){const p=document.createElement('p');p.className='empty-note';p.textContent='No known plans yet. Talk to people around town or check back later.';root.append(p);}
+ let daySection=null,lastDay=null;
+ for(const entry of rows){
+  if(entry.day!==lastDay){
+   lastDay=entry.day;daySection=document.createElement('section');daySection.className='rpg-calendar-day';
+   const heading=document.createElement('h3');heading.textContent='Day '+entry.day+(entry.day===state.day?' · Today':'');
+   daySection.append(heading);root.append(daySection);
+  }
+  const row=document.createElement('article');row.className='rpg-calendar-item';
+  const type=document.createElement('small');type.className='rpg-calendar-type';type.textContent=entry.kind;
+  const title=document.createElement('strong');title.textContent=entry.title;
+  const detail=document.createElement('p');detail.textContent=(entry.slot===null?'Any period':periods[entry.slot])+
+   ' · '+places[entry.place][0]+' · '+entry.detail;
+  row.append(type,title,detail);
+  const current=entry.day===state.day&&(entry.slot===null||entry.slot===state.slot);
+  if(current){
+   const action=document.createElement('button');action.type='button';
+   action.textContent=entry.place===state.location?'View here':'Visit '+places[entry.place][0]+' · free';
+   action.disabled=controlsLocked();
+   action.onclick=()=>{
+    $('calendarDialog').close();
+    if(entry.place!==state.location)travelTo(entry.place);
+    else if(entry.npc&&currentPeople().includes(entry.npc))selectPerson(entry.npc);
+    else{rpgLocalTab=entry.kind==='Tournament'||entry.kind==='Official event'?'circuit':'stories';renderRpgActions(false,{speaker:'Narrator',line:'',choices:[]});}
+    if(entry.place===state.location&&entry.npc&&currentPeople().includes(entry.npc))return;
+    if(entry.npc&&currentPeople().includes(entry.npc))selectPerson(entry.npc);
+   };
+   row.append(action);
+  }
+  daySection.append(row);
+ }
  $('calendarDialog').showModal();
 }
 function makeAvatar(id,size=''){
