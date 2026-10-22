@@ -37,13 +37,34 @@ const have=(plan,key)=>Object.prototype.hasOwnProperty.call(plan.data,key);
 function powerPlan(g,plan,h){
  const side=plan.side,p=g.players[side],f=g.players[1-side],u=pokemon(p,plan.slot),name=plan.name,d=plan.data;
  if(!u||u.id!==plan.unitId)throw Error('Power source no longer present');
- if(plan.source==='activated'&&ONCE.has(name)&&u.powerUsed?.[name]===g.turnSerial)throw Error('Power already used this turn');
+ if(plan.source==='activated'&&ONCE.has(name)&&u.powerUsed?.[name]===g.turnSerial&&
+    !(name==='Special Delivery'&&d.deliveryDrawn))throw Error('Power already used this turn');
  const choose=(key,items,label,opts={})=>{
   if(have(plan,key))return false;
   choice(g,plan,key,side,items,{label,...opts});return true;
  };
  const sourceEnergy=()=>slotList(p,x=>x.energies.some(id=>basicEnergy(card(id))));
  const pokemonAt=(key,who=p)=>pokemon(who,selected(plan,key)[0]);
+ // Letter Powers must have their entire word spelled out on the Bench.
+ const requiredUnown={'[Find]':'FIND','[Help]':'HELP','[Join]':'JOIN'}[name];
+ if(requiredUnown&&!requiredUnown.split('').every(letter=>
+   p.bench.some(x=>card(x.id).name==='Unown ['+letter+']')))
+  throw Error(name+' requires Unown '+requiredUnown.split('').join(', ')+' on the Bench');
+ if(name==='[Find]'&&choose('deck',indices(p.deck,c=>c.supertype==='Trainer','deck'),
+    '[Find]: search your deck for a Trainer card'))return;
+ if(name==='[Join]'&&choose('deck',indices(p.deck,c=>c.supertype==='Pokémon','deck'),
+    '[Join]: search your deck for a Pokémon card'))return;
+ if(name==='Special Delivery'){
+  if(!d.deliveryDrawn){
+   if(!p.deck.length)throw Error('Special Delivery requires a card in the deck');
+   h.draw(g,side);
+   d.deliveryDrawn=true;
+   (u.powerUsed ||= {})[name]=g.turnSerial;
+  }
+  if(choose('hand',indices(p.hand,()=>true,'hand'),
+      'Special Delivery: choose a hand card to put on top of your deck'))return;
+ }
+ if(name==='Solar Power'&&(!p.active||!f.active))throw Error('Solar Power requires both Active Pokémon');
  if(['Rain Dance','Gather Fire','Energy Trans'].includes(name)){
   if(name==='Rain Dance'){
    if(choose('energy',indices(p.hand,c=>c.name==='Water Energy','hand'),'Choose Water Energy from hand'))return;
@@ -182,9 +203,43 @@ function doPower(g,plan,h){
  const s=k=>selected(plan,k)[0];
  const donor=key=>pokemon(p,s(key));
  const once=ONCE.has(name)&&plan.source!=='evolution';
- if(once){if(u.powerUsed?.[name]===g.turnSerial)throw Error('Power already used this turn');(u.powerUsed ||= {})[name]=g.turnSerial;}
+ if(once){
+  if(u.powerUsed?.[name]===g.turnSerial&&!(name==='Special Delivery'&&d.deliveryDrawn))
+   throw Error('Power already used this turn');
+  (u.powerUsed ||= {})[name]=g.turnSerial;
+ }
  switch(name){
-
+  case 'Solar Power':{
+   // Healing the Special Conditions of both Active Pokémon does not heal damage.
+   STATUS.clearConditions(p.active);
+   STATUS.clearConditions(f.active);
+   break;
+  }
+  case 'Observe':{
+   // The five cards must remain in their original order. Only the user sees names.
+   const top=f.deck.slice(-5).reverse().map(id=>card(id).name);
+   (p.privateLog ||= []).push('Observe — top '+top.length+
+     ' opposing deck card(s), next draw first: '+(top.join(', ')||'(none)'));
+   break;
+  }
+  case 'Special Delivery':{
+   p.deck.push(...take(p.hand,[s('hand')]));
+   break;
+  }
+  case '[Find]':case '[Join]':{
+   const picked=take(p.deck,[s('deck')])[0];
+   p.hand.push(picked);
+   p.deck=h.shuffle(g,p.deck);
+   h.log(g,card(u.id).name+' showed '+card(picked).name+' from a deck search.');
+   break;
+  }
+  case '[Help]':{
+   const count=p.hand.length;
+   p.deck=h.shuffle(g,[...p.deck,...p.hand]);
+   p.hand=[];
+   h.draw(g,side,count);
+   break;
+  }
   case 'Berserk':{
    const target=d.coin?f:p;
    for(let i=0;i<5&&target.deck.length;i++)target.discard.push(target.deck.pop());
@@ -308,8 +363,8 @@ function doPower(g,plan,h){
  }
  h.log(g,`${p.name} activated ${name}.`);
 }
-const ONCE=new Set(['Fragrance Trap','Soak Up','Natural Healing','Playful Punch','Emerge','Gather Fire','Heal','Step In','Curse','Shift','Evolutionary Light','Matter Exchange','Pollen Stench','Long Distance Hypnosis','Trickery','Peek','Revive Fossil','Revive Friends','Fire Recharge','Glaring Gaze','[Search]','[Tell]','[Laugh]']);
-const ACTIVATED=new Set(['Shapeshift','Fragrance Trap','Soak Up','Natural Healing','Playful Punch','Emerge','Energy Charge','Rain Dance','Energy Trans','Gather Fire','Energy Burn','Damage Swap','Curse','Strange Behavior','Heal','Step In','Cowardice','Evolutionary Light','Matter Exchange','Pollen Stench','Long Distance Hypnosis','Trickery','Shift','Peek','Buzzap','Revive Fossil','Revive Friends','Downpour','Fire Recharge','Glaring Gaze','[Search]','[Tell]','[Laugh]']);
+const ONCE=new Set(['Fragrance Trap','Soak Up','Natural Healing','Playful Punch','Emerge','Gather Fire','Heal','Step In','Curse','Shift','Evolutionary Light','Matter Exchange','Pollen Stench','Long Distance Hypnosis','Trickery','Peek','Revive Fossil','Revive Friends','Fire Recharge','Glaring Gaze','[Search]','[Tell]','[Laugh]','Solar Power','Observe','Special Delivery','[Find]','[Help]','[Join]']);
+const ACTIVATED=new Set(['Shapeshift','Fragrance Trap','Soak Up','Natural Healing','Playful Punch','Emerge','Energy Charge','Rain Dance','Energy Trans','Gather Fire','Energy Burn','Damage Swap','Curse','Strange Behavior','Heal','Step In','Cowardice','Evolutionary Light','Matter Exchange','Pollen Stench','Long Distance Hypnosis','Trickery','Shift','Peek','Buzzap','Revive Fossil','Revive Friends','Downpour','Fire Recharge','Glaring Gaze','[Search]','[Tell]','[Laugh]','Solar Power','Observe','Special Delivery','[Find]','[Help]','[Join]']);
 const ONPLAY=new Set(['Call the Boss','Summon Minions','Sneak Attack','Reel In','[Increase]','[Engage]','Tag Team','Berserk','Fire Boost']);
 const PASSIVE=new Set(['Rebirth','Energy Drain','Scram','Shock Blast','Gaseous Form','Healing Fire','Fortitude','Pollen Defense','Restless Sleep','Strange Barrier','Prehistoric Power','Toxic Gas','Hay Fever','Invisible Wall','Kabuto Armor','Transparency','Transform','Thick Skinned','Retreat Aid','Sticky Goo','Clairvoyance','Frenzy','Strikes Back','Sinkhole','Final Beam','Hydroelectric Power','Anger','Frog Song','Spikes','Energy Evolution','[Normal]','Magma Pool','Hot Plate','Psylink','Flee','Bench Guard','Shell Armor','Photosynthesis','Relaxing Scent','Rebellion']);
 const UNSUPPORTED=new Set();
