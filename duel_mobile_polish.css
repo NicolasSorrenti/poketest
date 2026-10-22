@@ -259,3 +259,160 @@
     pointer-events:auto!important;
   }
 }
+
+/* v0.96 — Mobile overflow regression.
+   A later reference rule set card width:auto/height:100%, so the hand grew
+   cards to ~150px wide on phones despite 72px rules from older styles.
+   Keep cards physically proportioned and the action rail fully visible.
+   This is exclusively presentation; all duel modes use the same DOM/rules. */
+@media (max-width:780px) {
+  body.duel-active .masthead,
+  body.duel-active > footer {
+    display:none!important;
+  }
+  body.duel-active main {
+    box-sizing:border-box!important;
+    width:100%!important;
+    max-width:none!important;
+    height:100dvh!important;
+    min-height:0!important;
+    padding:4px!important;
+    overflow:hidden!important;
+  }
+  body.duel-active #duel:not(.hidden) {
+    box-sizing:border-box!important;
+    width:100%!important;
+    max-width:100%!important;
+    min-width:0!important;
+    height:calc(100dvh - 8px)!important;
+    min-height:0!important;
+    grid-template-columns:minmax(0,1fr)!important;
+    grid-template-rows:auto auto minmax(0,1fr) clamp(228px,29dvh,272px)!important;
+    gap:4px!important;
+    overflow:hidden!important;
+  }
+  body.duel-active #duel > .stage {
+    min-width:0!important;
+    min-height:0!important;
+    max-height:100%!important;
+    overflow:hidden!important;
+  }
+  body.duel-active #duel > .below,
+  body.duel-active #duel > .below > .main-column {
+    box-sizing:border-box!important;
+    width:100%!important;
+    min-width:0!important;
+    min-height:0!important;
+    height:100%!important;
+    max-height:100%!important;
+  }
+  body.duel-active #duel > .below > .main-column > .hand-panel {
+    box-sizing:border-box!important;
+    flex:1 1 0!important;
+    width:100%!important;
+    min-width:0!important;
+    min-height:0!important;
+    height:auto!important;
+    padding:3px!important;
+    overflow:hidden!important;
+  }
+  body.duel-active #duel > .below > .main-column > .hand-panel .hand-fan:not(.hidden) {
+    display:block!important;
+    position:relative!important;
+    inset:auto!important;
+    width:100%!important;
+    max-width:100%!important;
+    height:100%!important;
+    min-height:0!important;
+    margin:0!important;
+    padding:0!important;
+    overflow-x:auto!important;
+    overflow-y:hidden!important;
+    overscroll-behavior-x:contain;
+    touch-action:pan-x;
+    -webkit-overflow-scrolling:touch;
+  }
+  body.duel-active #duel > .below > .main-column > .hand-panel .hand-fan-track {
+    display:flex!important;
+    flex-flow:row nowrap!important;
+    align-items:center!important;
+    gap:7px!important;
+    width:max-content!important;
+    min-width:100%!important;
+    height:100%!important;
+    min-height:0!important;
+    padding:2px 5px!important;
+  }
+  body.duel-active #duel > .below > .main-column > .hand-panel .hand-fan-card {
+    box-sizing:border-box!important;
+    position:relative!important;
+    inset:auto!important;
+    flex:0 0 clamp(64px,19vw,82px)!important;
+    width:clamp(64px,19vw,82px)!important;
+    min-width:0!important;
+    max-width:82px!important;
+    height:auto!important;
+    min-height:0!important;
+    max-height:calc(100% - 4px)!important;
+    aspect-ratio:245 / 342!important;
+    align-self:center!important;
+    transform:none!important;
+    touch-action:pan-x;
+  }
+  body.duel-active #duel > .below > .main-column > .hand-panel .hand-fan-card img {
+    display:block!important;
+    width:100%!important;
+    height:100%!important;
+    max-height:none!important;
+    object-fit:contain!important;
+  }
+  body.duel-active #duel > .below > .main-column > .turn-actions-panel {
+    box-sizing:border-box!important;
+    flex:0 0 165px!important;
+    height:165px!important;
+    min-height:0!important;
+    max-height:165px!important;
+    width:100%!important;
+    padding:5px!important;
+  }
+  body.duel-active #duel > .below > .main-column > .turn-actions-panel:not(:has(#mobileAttackDock button.attack-action)) {
+    flex:0 0 98px!important;
+    height:98px!important;
+    max-height:98px!important;
+  }
+  body.duel-active #mobileAttackDock {
+    flex:0 1 62px!important;
+    max-height:62px!important;
+  }
+  body.duel-active #duel > .below > .main-column > .turn-actions-panel .turn-actions {
+    display:grid!important;
+    flex:0 0 85px!important;
+    width:100%!important;
+    height:85px!important;
+    min-height:0!important;
+    grid-template-columns:repeat(3,minmax(0,1fr))!important;
+    grid-template-rows:repeat(2,minmax(38px,1fr))!important;
+    gap:4px!important;
+  }
+  body.duel-active #duel > .below > .main-column > .turn-actions-panel .turn-actions button {
+    min-width:0!important;
+    min-height:38px!important;
+    padding:4px!important;
+    white-space:nowrap!important;
+    text-overflow:ellipsis;
+    overflow:hidden;
+  }
+  body.duel-active .hand-tray-drawer,
+  body.duel-active .power-drawer {
+    bottom:calc(clamp(228px,29dvh,272px) + 8px)!important;
+  }
+}
+@media (max-width:780px) and (max-height:700px) {
+  body.duel-active #duel:not(.hidden) {
+    grid-template-rows:auto auto minmax(0,1fr) clamp(206px,33dvh,236px)!important;
+  }
+  body.duel-active .hand-tray-drawer,
+  body.duel-active .power-drawer {
+    bottom:calc(clamp(206px,33dvh,236px) + 8px)!important;
+  }
+}
