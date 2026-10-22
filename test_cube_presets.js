@@ -32,7 +32,7 @@ for(const preset of PRESETS){
   assert.equal(pokemon.length,preset.pokemon,preset.name+' Pokémon quota');
   assert.equal(pool.length-pokemon.length,preset.trainers,preset.name+' Trainer quota');
   const basics=pokemon.filter(id=>isBasicPokemon(CATALOG.get(id)));
-  assert(basics.length>=95,preset.name+' not enough Basic Pokémon');
+  assert(basics.length>=(preset.evolutionFocus?80:95),preset.name+' not enough Basic Pokémon');
   const evolved=pokemon.filter(id=>!isBasicPokemon(CATALOG.get(id)));
   if(preset.evolutionFocus){
    assert.equal(basics.length,preset.basicCount,preset.name+' Basic quota');
