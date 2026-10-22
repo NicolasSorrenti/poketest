@@ -1,0 +1,72 @@
+{
+  "schema": 1,
+  "scene": "reina_center_predue",
+  "checkedAt": "2026-10-22",
+  "target": "rpg-assets/events/cg/season01/reina_center_predue.webp",
+  "thumbnail": "rpg-assets/events/cg/season01/thumbs/reina_center_predue.webp",
+  "status": "rejected_two_candidates_no_asset_replaced",
+  "existingArt": {
+    "existsOnMain": true,
+    "source": "rpg-assets/events/cg/season01/thumbs/reina_center_predue.webp",
+    "review": "major_scene_mismatch",
+    "observed": "Existing image is an outdoor standing Reina portrait with no official duel table or three fanned cards; inconsistent with authored pre-duel moment.",
+    "overwritten": false
+  },
+  "script": {
+    "source": "scripts/rpg-art-prompt.js",
+    "blobSha": "6037ca622416e6e1dfa00aab0b803a3f7e9f4033",
+    "queue": "docs/cg-art-queue.json",
+    "queueBlobSha": "6c885d30d8133b08c5a7ee3645596a2c9ccee9c7",
+    "gallery": "rpg_cg_gallery.js",
+    "prompt": "exact scene prompt generated from the createPrompt assembly for reina_center_predue",
+    "promptSha256": "236fb4d3f70826e011a2a7f6edc3f7d84f15b58a653a7ba559d62d8d4bdd19ad",
+    "promptBytes": 1443
+  },
+  "reference": {
+    "source": "rpg-assets/characters/reina/reference/expression-master.webp",
+    "actualPixelsReviewed": true,
+    "portraitPrimaryBytesRetrieved": false,
+    "visualTraits": "long black hair with red streaks, amber eyes, red leather moto jacket with gold embroidery, black fitted top, red geometric drop earrings; original thumbnail also matches these traits",
+    "caveat": "The exact primary.png binary was unavailable; expression-master.webp contains a 2x3 expression sheet and is used only for QA, not as generated art."
+  },
+  "attempts": [
+    {
+      "node": "4:2",
+      "url": "https://www.figma.com/design/NPdAvoWAXuXow2dHsdUlkY?node-id=4-2",
+      "model": "gpt-image-2.5-sunburst",
+      "nativePixels": [
+        1536,
+        864
+      ],
+      "accepted": false,
+      "visualQA": "The correct three-card duel-table action is visible, hair is black with red underlayer and red jacket rests on chair. Rejected: multiple prominent legible English slogans and tournament signage are baked into the artwork, despite dialogue being rendered separately by the game. Eyes and outfit details do not fully match canonical expression-master."
+    },
+    {
+      "node": "5:2",
+      "url": "https://www.figma.com/design/NPdAvoWAXuXow2dHsdUlkY?node-id=5-2",
+      "model": "gemini-3.1-flash-image",
+      "nativePixels": [
+        1376,
+        768
+      ],
+      "accepted": false,
+      "visualQA": "Duel-table and fanned-card action present. Rejected: explicit lower-third character description and tournament heading baked into image, plus stylized face and hair differ substantially from Reina's existing portrait."
+    }
+  ],
+  "result": {
+    "attemptCount": 2,
+    "accepted": 0,
+    "gameWebpCreated": false,
+    "thumbnailCreated": false,
+    "sha256ManifestCreated": false,
+    "zipCreated": false,
+    "githubBinaryCommit": false,
+    "existingAssetsPreserved": true
+  },
+  "blockers": [
+    "Both exact-prompt model generations included text overlays or prominent text signage; a second retry with the unchanged canonical prompt is not justified.",
+    "Figma generation accepts only text prompt in this connector; the reviewed canonical expression-master pixels could not be supplied as a direct image reference.",
+    "Neither candidate passed visual QA; no valid 1920x1080 WebP/640x360 thumbnail pair can be exported or committed."
+  ],
+  "nextStep": "Improve canonical generator and image-reference handoff with an explicit no-baked-text instruction, then validate its exact new prompt hash before generating another candidate. This specialist does not modify docs or scripts outside its owned image directories."
+}
