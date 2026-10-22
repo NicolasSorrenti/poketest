@@ -21,6 +21,7 @@ for(let seed=0;seed<30;seed++){
   let i=g.players[side].hand.findIndex(id=>isBasicPokemon(CATALOG.get(id)));
   assert.ok(i>=0);assert.ok(doAction(g,side,'setup_select',{handIndex:i}));assert.ok(doAction(g,side,'setup_confirm'));check(g);
  }
+ if(g.mulliganBonus)assert.ok(doAction(g,g.mulliganBonus.side,'setup_bonus_draw',{count:0}));
  let loops=0;
  while(!g.over&&loops++<280){
   if(g.pendingDecision){settle(g);continue;}
