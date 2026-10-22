@@ -135,22 +135,15 @@
   selectedHand=null;targetMode=null;decisionSelection.clear();handVisible=true;powersOpen=false;logOpen=false;lastCoinSeq=null;lastKoMessage="";setHandVisible(true);render();
  }catch(e){$('startupError').textContent=e.message;}finally{busy=false;}}
 
- function setHandVisible(visible){
-  handVisible=!!visible;
-  const fan=$('handFan'),toggle=$('handToggle');
-  // renderHandFan clears its DOM when closed. Rebuild it from the current
-  // private hand before making it visible again (especially on touch screens).
+ function setHandVisible(){
+  // Hand is permanently visible for players; an empty/private hand stays empty.
+  handVisible=true;
+  const fan=$('handFan');
   if(current?.view)renderHandFan(current.view.players[0]?.hand);
-  else fan.classList.toggle('hidden',true);
-  toggle.setAttribute('aria-expanded',String(handVisible));
-  toggle.setAttribute('aria-label',handVisible?'Hide hand':'Show hand');
-  toggle.setAttribute('aria-pressed',String(!handVisible));
-  $('handVisibilityIcon').textContent=handVisible?'▾':'▴';
-  $('handVisibilityText').textContent=handVisible?'Hide hand':'Show hand';
+  else fan.classList.add('hidden');
  }
  function setPowersOpen(open){powersOpen=!!open;$('powerDrawer').classList.toggle('hidden',!powersOpen);$('powersToggle').setAttribute('aria-expanded',String(powersOpen));}
  function setLogOpen(open){logOpen=!!open;$('logDrawer').classList.toggle('hidden',!logOpen);$('logToggle').setAttribute('aria-expanded',String(logOpen));}
- function renderHandPeek(ids){shared.renderHandPeek({root:$('handPeek'),ids,picture,hidden:false});}
   function renderHandFan(ids){shared.renderHandFan({root:$('handFan'),ids,visible:handVisible,phase:current.view.phase,selectedHand,targetMode,makeCard:handCard,getCard:card,viewportWidth:window.innerWidth});}
   function pendingPrizeChoice(){const d=current?.view?.pendingDecision;return d?.kind==='prize-card'&&d.actor===0?d:null;}
  function choosePrize(id){const d=pendingPrizeChoice();if(!d||busy||!d.options?.some(o=>o.id===id))return;send(command('choose',{decisionId:d.id,selected:[id]}));}
@@ -334,7 +327,7 @@
   $('myDiscardBtn').querySelector('b').textContent=you.discard.length;$('oppDiscardBtn').querySelector('b').textContent=cpu.discard.length;
   ux.renderGuide($('turnCoach'),{view:v,me:0,energyUsed:current.you.energyUsed,targetMode,card});
   setZone('enemyActive',cpu,-1);setZone('enemyBench',cpu,0);setZone('myActive',you,-1);setZone('myBench',you,0);
-  $('handAmount').textContent=`(${you.hand.length})`;renderHandPeek(you.hand);renderHandFan(you.hand);$('hand').textContent='';you.hand.forEach((id,i)=>$('hand').append(handCard(id,i,v.phase==='setup')));
+  renderHandFan(you.hand);$('hand').textContent='';you.hand.forEach((id,i)=>$('hand').append(handCard(id,i,v.phase==='setup')));
   renderHandActions();$('attacks').textContent='';$('powers').textContent='';
   const attackEnabled=v.phase==='game'&&!v.over&&yourTurn&&!v.pendingDecision&&!busy;
   shared.renderAttacks({root:$('attacks'),unit:you.active,view:v,me:0,getCard:card,enabled:attackEnabled,button:btn,onAttack:index=>send(command('attack',{attackIndex:index})),attackReason:presentation.attackReason});
@@ -391,7 +384,7 @@
  $('rpgChatToggle').addEventListener('click',()=>toggleNpcChat(!npcChatOpen));$('closeRpgChat').addEventListener('click',()=>toggleNpcChat(false));
  $('newDuel').addEventListener('click',start);$('reset').addEventListener('click',newDuel);
  window.addEventListener('resize',()=>{if(current?.view)renderHandFan(current.view.players[0]?.hand);});
- $('handToggle').addEventListener('click',()=>setHandVisible(!handVisible));$('closeHand').addEventListener('click',()=>setHandVisible(false));
+ $('closeHand').addEventListener('click',()=>$('handTray').classList.add('hidden'));
  $('powersToggle').addEventListener('click',()=>setPowersOpen(!powersOpen));$('closePowers').addEventListener('click',()=>setPowersOpen(false));
  $('logToggle').addEventListener('click',()=>setLogOpen(!logOpen));$('closeLog').addEventListener('click',()=>setLogOpen(false));
  $('myDiscardBtn').addEventListener('click',()=>openDiscard(0));$('oppDiscardBtn').addEventListener('click',()=>openDiscard(1));
@@ -405,6 +398,6 @@
  });
  $('retreatBtn').addEventListener('click',()=>setTarget('retreat',{},'Choose Benched replacement',true));
  $('concedeBtn').addEventListener('click',()=>{if(confirm('Concede this duel?'))send(command('concede'));});
- document.addEventListener('keydown',e=>{if(e.key==='Escape'){const d=current?.view?.pendingDecision;if(d?.cancelable&&!busy){e.preventDefault();send(command('cancel_choice',{decisionId:d.id}));return;}if(targetMode){e.preventDefault();cancelTarget();}else if(handVisible)setHandVisible(false);else if(powersOpen)setPowersOpen(false);else if(logOpen)setLogOpen(false);else $('pileModal').classList.add('hidden');}});
+ document.addEventListener('keydown',e=>{if(e.key==='Escape'){const d=current?.view?.pendingDecision;if(d?.cancelable&&!busy){e.preventDefault();send(command('cancel_choice',{decisionId:d.id}));return;}if(targetMode){e.preventDefault();cancelTarget();}else if(powersOpen)setPowersOpen(false);else if(logOpen)setLogOpen(false);else $('pileModal').classList.add('hidden');}});
  init();
 })();
