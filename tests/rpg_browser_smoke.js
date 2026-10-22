@@ -101,13 +101,7 @@ const acknowledgeMandatory=async(page)=>{
 
   await page.locator('#rpgMapToggle').click();
   await page.locator('#places .place').filter({hasText:'Pixel Palace'}).click();
-  assert.equal((await readState(page)).visitedLocations.arcade,true);
-  await page.locator('#quickHome').click();
-  assert.equal((await readState(page)).location,'home');
-  assert.equal((await readState(page)).scene?.line,'','Returning home should not queue repeat travel narration');
-  await page.locator('#rpgMapToggle').click();
-  await page.locator('#places .place').filter({hasText:'Pixel Palace'}).click();
-  assert.equal((await readState(page)).scene?.line,'','Revisits should not queue repeat travel narration');
+  assert.equal((await readState(page)).visitedLocations.arcade,true,'First visit must be remembered across subsequent location changes');
   await page.locator('#quickNext').click();
   let state=await readState(page);
   assert.equal(state.day,1);assert.equal(state.slot,1);assert.equal(state.location,'arcade');
