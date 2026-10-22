@@ -129,12 +129,16 @@ function setupHand(g,p){let retries=0;while(retries++<200){p.deck=shuffle(g,[...
  if(!p.hand.some(id=>isBasicPokemon(card(g,id))))fail(`${p.name} has no Basic Pokémon`);
  p.mulligans=retries-1;
 }
+function beginDuel(g){
+ g.mulliganBonus=null;
+ g.phase='game';draw(g,0);log(g,'Duel started.');
+}
 function createGame({decks,names=['Player 1','Player 2'],seed=1,format='unrestricted',deckSize=60,prizeCount=6}={}){
  if(!Array.isArray(decks)||decks.length!==2||!decks.every(Array.isArray))fail('Two decks are required');
  if(!Number.isSafeInteger(seed)||seed<0||seed>0xffffffff)fail('Invalid shuffle seed');
  if(!['unrestricted','classic','theme-expanded','gym-theme','gym-expanded','neo-theme','online-preview'].includes(format))fail('Unknown duel format');
  if(!((deckSize===60&&prizeCount===6)||(format==='online-preview'&&deckSize===40&&prizeCount===4)))fail('Unsupported deck and Prize configuration');
- const game={format,deckSize,prizeCount,phase:'setup',turn:0,round:1,turnSerial:0,over:false,winner:null,players:[],setupReady:[false,false],message:[],pendingDecision:null,pendingAction:null,nextDecisionId:0,rngState:seed>>>0,events:[]};
+ const game={format,deckSize,prizeCount,phase:'setup',turn:0,round:1,turnSerial:0,over:false,winner:null,players:[],setupReady:[false,false],mulliganBonus:null,message:[],pendingDecision:null,pendingAction:null,nextDecisionId:0,rngState:seed>>>0,events:[]};
  for(let side=0;side<2;side++){
   const v=deckSize===40?validateDeck(decks[side],CATALOG,{size:40}):format==='classic'?CLASSIC.validateDeck(decks[side],CATALOG):format==='gym-theme'?CLASSIC.validateDeck(decks[side],CATALOG,{gym:true}):format==='gym-expanded'?CLASSIC.validateDeck(decks[side],CATALOG,{gymFull:true}):format==='neo-theme'?CLASSIC.validateDeck(decks[side],CATALOG,{neo:true}):format==='online-preview'?CLASSIC.validateDeck(decks[side],CATALOG,{gymFull:true,neo:true}):format==='theme-expanded'?CLASSIC.validateDeck(decks[side],CATALOG,{reprint:true}):validateDeck(decks[side],CATALOG);if(!v.valid)fail(`Invalid deck ${side}: ${v.errors.join('; ')}`);
   const p={name:String(names[side]||`Player ${side+1}`),deck:[...decks[side]],hand:[],prizes:[],discard:[],active:null,bench:[],energyUsed:false,retreated:false,turnPlays:[],mulligans:0};
@@ -848,6 +852,30 @@ function performAction(g,side,cmd){
  }
  if(type==='choose')fail('No pending decision');
  if(g.phase==='setup'){
+  const bonus=g.mulliganBonus;
+  if(bonus){
+   if(type==='concede'){g.over=true;g.winner=1-side;return;}
+   if(side!==bonus.side)fail('Waiting for the other player to resolve mulligan bonuses');
+   if(type==='setup_bonus_draw'){
+    if(bonus.drawn!==null)fail('Mulligan bonus already selected');
+    if(!Number.isInteger(v.count)||v.count<0||v.count>bonus.max)fail('Invalid mulligan bonus count');
+    bonus.drawn=v.count;draw(g,side,v.count);
+    log(g,`${p.name} chose to draw ${v.count} mulligan bonus card(s).`);
+    if(v.count===0)beginDuel(g);
+    return;
+   }
+   if(bonus.drawn===null)fail('Choose the mulligan bonus draw first');
+   if(type==='setup_select'){
+    const c=handCard(g,p,v.handIndex);if(!isBasicPokemon(c))fail('Only Basic Pokémon can be Benched');
+    if(p.bench.length>=5)fail('Bench full');
+    p.bench.push(unit(p.hand.splice(v.handIndex,1)[0],g.round));
+   }else if(type==='setup_undo'){
+    if(v.slot===-1)fail('Active Pokémon is locked after setup confirmation');
+    const u=safeSlot(p,v.slot);p.bench.splice(v.slot,1);p.hand.push(u.id);
+   }else if(type==='setup_bonus_done')beginDuel(g);
+   else fail('Finish mulligan bonus setup first');
+   return;
+  }
   if(!['setup_select','setup_undo','setup_confirm','concede'].includes(type))fail('Opening setup is not finished');
   if(g.setupReady[side]&&type!=='concede')fail('Setup already confirmed');
   if(type==='setup_select'){
@@ -860,7 +888,15 @@ function performAction(g,side,cmd){
    if(!p.active)fail('Choose an Active Pokémon first');g.setupReady[side]=true;
    if(g.setupReady.every(Boolean)){
     for(const owner of g.players)for(let i=0;i<(g.prizeCount||6);i++)owner.prizes.push(owner.deck.pop());
-    g.phase='game';draw(g,0);log(g,'Duel started.');
+    // Both players' shared mulligans cancel out. Prize cards are reserved
+    // before offering bonus draws, and the Active Pokémon is already locked.
+    const delta=g.players[1].mulligans-g.players[0].mulligans;
+    const beneficiary=delta>0?0:1;
+    const max=Math.min(Math.abs(delta),g.players[beneficiary].deck.length);
+    if(max>0){
+     g.mulliganBonus={side:beneficiary,max,drawn:null};
+     log(g,`${g.players[beneficiary].name} may draw up to ${max} mulligan bonus card(s).`);
+    }else beginDuel(g);
    }
   }else if(type==='concede'){g.over=true;g.winner=1-side;}
   return;
