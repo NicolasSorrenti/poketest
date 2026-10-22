@@ -54,7 +54,7 @@ test('a date requires meaningful prior affection/trust and an explicit accepted 
  const time=A.proposed(s,'hana',Schedules)[0];
  const act=S.activities.find(x=>x.place===time.place&&['quiet','creative','collection','adventure','playful'].includes(x.tag));
  assert.ok(act);
- assert.match(D.choices(s,'hana',time.place,act.id,S,cast).find(x=>x.id==='romantic').disabledReason,/Build affection/);
+ assert.match(D.choices(s,'hana',time.place,act.id,S,cast).find(x=>x.id==='romantic').disabledReason,/do not know each other well enough/);
  assert.throws(()=>D.book(s,{npc:'hana',...time,activityId:act.id,tone:'romantic'},deps),/Build affection/);
  assert.equal(s.appointments.length,0);
 });
