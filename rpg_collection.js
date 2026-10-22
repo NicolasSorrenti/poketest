@@ -92,6 +92,8 @@
   const triggerSets=pack.id==='mystery'?['neo3','neo4']:pack.sources.filter(set=>set!=='base1');
   return (Number(state?.day)||0)>=pack.day||triggerSets.some(set=>unlocked.has(set));
  }
+ // Insight lowers shop prices without bypassing expansion availability or changing card odds.
+ const insightDiscount=state=>(Number(state?.insight)||0)>=15?5:(Number(state?.insight)||0)>=6?3:0;
  function themedPacks(state){
   const owned=state?.deckJourney?.owned||{};
   return THEMED_PACKS.map(pack=>{
@@ -103,7 +105,7 @@
     .concat(selectThemePool(shared,'uncommon'),selectThemePool(shared,'common')));
    for(const id of [...ENERGY].filter(x=>x!=='base1-96'))possible.add(id);
    const unique=[...possible].filter(id=>(owned[id]||0)>0).length;
-   return {...pack,unlocked,sources,futureSources:[...pack.sources],owned:unique,total:possible.size,
+   return {...pack,price:Math.max(1,pack.price-insightDiscount(state)),discount:insightDiscount(state),unlocked,sources,futureSources:[...pack.sources],owned:unique,total:possible.size,
     completion:possible.size?Math.round(100*unique/possible.size):0,
     welcome:STARTER_PACK_IDS.has(pack.id)?Math.max(0,state?.deckJourney?.welcomePacks||0):0,
     unlockHint:pack.day===1?'Available from Day 1':'Usually Day '+pack.day+' · earlier when matching expansion access is earned'};
