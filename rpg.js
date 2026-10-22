@@ -677,7 +677,18 @@ function showPackReveal(){
  const portrait=$('packGiver');portrait.replaceChildren();
  if(giver)window.NeoRpgDiscreetAvatars?.set?.(portrait,giver,'happy',cast[giver].name);
  const request=++packArtSerial; // An earlier booster image must never overwrite this giver.
+ const fromShop=!isVictory&&!giver&&state.location==='shop';
  const caption=$('packGiverName');caption.textContent=giver?cast[giver].name+' gives you a '+setName+' booster':'The Lucky Draw · '+setName+' booster';
+ $('packContinue').textContent=$('boosterShopDialog').open?'Back to booster shop →':'Continue adventure →';
+ if(fromShop){
+  // Ordinary shop purchases have no named giver. Show the clerk's dedicated CG instead of an empty frame.
+  const shopArt=new Image();
+  shopArt.className='pack-giver-art';
+  shopArt.alt='The Lucky Draw shopkeeper handing you a booster pack';
+  shopArt.onerror=()=>{if(request===packArtSerial){portrait.replaceChildren(makeAvatar('hana'));}};
+  shopArt.src='/rpg-assets/shop/shopkeeper-booster.webp';
+  portrait.append(shopArt);
+ }
  if(giver){
   // Show a known portrait immediately while optional artwork loads.
   const showPortrait=()=>{if(request===packArtSerial){portrait.replaceChildren(makeAvatar(giver));window.NeoRpgDiscreetAvatars?.set?.(portrait,giver,'happy',cast[giver].name);}};
@@ -733,7 +744,14 @@ function showPackReveal(){
   if(queued)state.deckJourney.lastPack=queued;
   persist();modal.close();
   if(queued)showPackReveal();
-  else finishDuelRewardPresentation();
+  else{
+   if($('boosterShopDialog').open){
+    const shop=$('boosterShopDialog'),scroll=shop.scrollTop;
+    renderBoosterShop('Booster added to your collection. Pick another or close the shop.');
+    shop.scrollTop=scroll;
+   }
+   finishDuelRewardPresentation();
+  }
  };
  modal.oncancel=e=>e.preventDefault(); // One handler, even after opening dozens of packs.
  modal.showModal();
@@ -809,7 +827,7 @@ function purchaseBoosterPack(packId,useVoucher=false){
   const welcome=opened?.kind==='welcome';
   log('Opened '+name+' booster: '+cards.map(labelCard).join(', ')+'.');
   persist();
-  if($('boosterShopDialog').open)$('boosterShopDialog').close();
+  // Leave the shop open underneath the reveal, so buying another pack needs no re-entry.
   say('Card Shop',(welcome?'Your welcome ':'Your ')+name+' booster is ready! Reveal your cards, then use the Deck Studio to improve your deck.');
   showPackReveal();
  }catch(e){
