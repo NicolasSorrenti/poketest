@@ -13,16 +13,26 @@ const slotList=(p,pred=()=>true)=>[-1,...p.bench.map((_,i)=>i)].flatMap(i=>pokem
 const indices=(arr,pred=()=>true,prefix='index')=>arr.flatMap((id,i)=>pred(card(id),i)?[{id:`${prefix}:${i}`,label:prefix==='prize'?`Prize ${i+1}`:card(id).name}]:[]);
 const basicEnergy=c=>isEnergy(c)&&/^(Grass|Fire|Water|Lightning|Psychic|Fighting) Energy$/.test(c.name);
 const healthy=u=>u&&u.status!=='Asleep'&&u.status!=='Confused'&&u.status!=='Paralyzed';
+// Gaze stops ALL Powers on the chosen opposing Benched Pokémon. Suppression
+// ends when the target leaves the Bench, or at the end of this turn.
+function gazed(g,u){
+ if(!u||!(u.gazeSuppressedUntil>g.turnSerial))return false;
+ const benched=g.players.some(p=>p.bench.includes(u));
+ if(!benched){delete u.gazeSuppressedUntil;return false;}
+ return true;
+}
 function powerNames(u){return u?.secretPlanFaceDown?[]:(card(u.id).abilities||[]).filter(x=>x.name).map(x=>x.name);}
 function live(g,u,name){
- if(!u||!powerNames(u).includes(name)||u.powerSuppressedUntil>g.turnSerial)return false;
+ if(!u||!powerNames(u).includes(name)||(u.powerSuppressedUntil>g.turnSerial||gazed(g,u)))return false;
  if(name!=='Toxic Gas'&&g.powerBlankUntil>g.turnSerial)return false;
  if(name!=='Toxic Gas'&&has(g,'Toxic Gas',true))return false;
  return healthy(u);
 }
-function has(g,name,noGlobal=false){return g.players.some(p=>own(p).some(u=> powerNames(u).includes(name) && healthy(u) && (noGlobal||live(g,u,name))));}
+function has(g,name,noGlobal=false){return g.players.some(p=>own(p).some(u=>
+ powerNames(u).includes(name)&&healthy(u)&&!gazed(g,u)&&
+ !(u.powerSuppressedUntil>g.turnSerial)&&(noGlobal||live(g,u,name))));}
 function blocked(g,name){if(name==='Toxic Gas')return false;return g.powerBlankUntil>g.turnSerial||has(g,'Toxic Gas',true);}
-function enabled(g,u,name){return Boolean(u&&powerNames(u).includes(name)&&(healthy(u)||['Gaseous Form','Pollen Defense','Restless Sleep','[Normal]','Photosynthesis','Rebellion','Shock Blast','[Search]','[Tell]','[Laugh]','Darkness','[Bear]','[Yield]'].includes(name))&&!blocked(g,name)&&!(u.powerSuppressedUntil>g.turnSerial));}
+function enabled(g,u,name){return Boolean(u&&powerNames(u).includes(name)&&(healthy(u)||['Gaseous Form','Pollen Defense','Restless Sleep','[Normal]','Photosynthesis','Rebellion','Shock Blast','[Search]','[Tell]','[Laugh]','Darkness','[Bear]','[Yield]'].includes(name))&&!blocked(g,name)&&!(u.powerSuppressedUntil>g.turnSerial)&&!gazed(g,u));}
 function protectsStatus(g,u){return enabled(g,u,'Thick Skinned');}
 function powerInPlay(g,name){return g.players.some(p=>own(p).some(u=>enabled(g,u,name)));}
 function choice(g,plan,key,actor,options,{min=1,max=min,optional=false,label=key}={}){
@@ -65,6 +75,11 @@ function powerPlan(g,plan,h){
       'Special Delivery: choose a hand card to put on top of your deck'))return;
  }
  if(name==='Solar Power'&&(!p.active||!f.active))throw Error('Solar Power requires both Active Pokémon');
+ if(name==='Gaze'){
+  const choices=f.bench.flatMap((x,i)=>powerNames(x).length?
+    [{id:'bench:'+i,label:card(x.id).name}]:[]);
+  if(choose('gaze',choices,'Gaze: choose opposing Benched Pokémon to disable'))return;
+ }
  if(name==='[Bear]'){
   if(Number(card(u.id).hp)-u.damage<=10)throw Error('[Bear] cannot leave Unown B Knocked Out');
   if(choose('source',slotList(p,x=>x!==u&&card(x.id).name.startsWith('Unown')&&x.damage>=10),
@@ -241,6 +256,16 @@ function doPower(g,plan,h){
   (u.powerUsed ||= {})[name]=g.turnSerial;
  }
  switch(name){
+  case 'Gaze':{
+   const target=f.bench[s('gaze')];
+   if(!target||!powerNames(target).length)throw Error('Invalid Gaze target');
+   target.gazeSuppressedUntil=g.turnSerial+1;
+   break;
+  }
+  case 'Submerge':{
+   u.submergeUntil=g.turnSerial+1;
+   break;
+  }
   case '[Bear]':{
    const donor=pokemon(p,s('source'));
    if(!donor||donor===u||donor.damage<10)throw Error('Invalid [Bear] damage source');
@@ -415,8 +440,8 @@ function doPower(g,plan,h){
  }
  h.log(g,`${p.name} activated ${name}.`);
 }
-const ONCE=new Set(['Fragrance Trap','Soak Up','Natural Healing','Playful Punch','Emerge','Gather Fire','Heal','Step In','Curse','Shift','Evolutionary Light','Matter Exchange','Pollen Stench','Long Distance Hypnosis','Trickery','Peek','Revive Fossil','Revive Friends','Fire Recharge','Glaring Gaze','[Search]','[Tell]','[Laugh]','Solar Power','Observe','Special Delivery','[Find]','[Help]','[Join]','[Bear]','[Yield]','Cunning']);
-const ACTIVATED=new Set(['Shapeshift','Fragrance Trap','Soak Up','Natural Healing','Playful Punch','Emerge','Energy Charge','Rain Dance','Energy Trans','Gather Fire','Energy Burn','Damage Swap','Curse','Strange Behavior','Heal','Step In','Cowardice','Evolutionary Light','Matter Exchange','Pollen Stench','Long Distance Hypnosis','Trickery','Shift','Peek','Buzzap','Revive Fossil','Revive Friends','Downpour','Fire Recharge','Glaring Gaze','[Search]','[Tell]','[Laugh]','Solar Power','Observe','Special Delivery','[Find]','[Help]','[Join]','[Bear]','[Yield]','Cunning']);
+const ONCE=new Set(['Fragrance Trap','Soak Up','Natural Healing','Playful Punch','Emerge','Gather Fire','Heal','Step In','Curse','Shift','Evolutionary Light','Matter Exchange','Pollen Stench','Long Distance Hypnosis','Trickery','Peek','Revive Fossil','Revive Friends','Fire Recharge','Glaring Gaze','[Search]','[Tell]','[Laugh]','Solar Power','Observe','Special Delivery','[Find]','[Help]','[Join]','[Bear]','[Yield]','Cunning','Gaze','Submerge']);
+const ACTIVATED=new Set(['Shapeshift','Fragrance Trap','Soak Up','Natural Healing','Playful Punch','Emerge','Energy Charge','Rain Dance','Energy Trans','Gather Fire','Energy Burn','Damage Swap','Curse','Strange Behavior','Heal','Step In','Cowardice','Evolutionary Light','Matter Exchange','Pollen Stench','Long Distance Hypnosis','Trickery','Shift','Peek','Buzzap','Revive Fossil','Revive Friends','Downpour','Fire Recharge','Glaring Gaze','[Search]','[Tell]','[Laugh]','Solar Power','Observe','Special Delivery','[Find]','[Help]','[Join]','[Bear]','[Yield]','Cunning','Gaze','Submerge']);
 const ONPLAY=new Set(['Call the Boss','Summon Minions','Sneak Attack','Reel In','[Increase]','[Engage]','Tag Team','Berserk','Fire Boost']);
 const PASSIVE=new Set(['Rebirth','Energy Drain','Scram','Shock Blast','Gaseous Form','Healing Fire','Fortitude','Pollen Defense','Restless Sleep','Strange Barrier','Prehistoric Power','Toxic Gas','Hay Fever','Invisible Wall','Kabuto Armor','Transparency','Transform','Thick Skinned','Retreat Aid','Sticky Goo','Clairvoyance','Frenzy','Strikes Back','Sinkhole','Final Beam','Hydroelectric Power','Anger','Frog Song','Spikes','Energy Evolution','[Normal]','Magma Pool','Hot Plate','Psylink','Flee','Bench Guard','Shell Armor','Photosynthesis','Relaxing Scent','Rebellion','Darkness']);
 const UNSUPPORTED=new Set();
