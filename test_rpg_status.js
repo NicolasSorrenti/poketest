@@ -22,6 +22,16 @@ test('status view reads live relationships without changing the save',()=>{
  assert.equal(data.known[0].completed,1);assert.equal(data.known[0].total,2);
  assert.equal(data.known[0].trialWon,true);assert.equal(data.known[0].partner,true);
 });
+test('Status only reveals actually discovered likes and leaves save snapshots unchanged',()=>{
+ const s={day:7,met_hana:true,met_reina:true,relationships:{hana:{affection:3},reina:{affection:3}},
+  socialHistory:{hana:{lastDay:4,lastTag:'community',lastActivity:'shop_welcome',count:1,likedTags:['community']}}};
+ const before=JSON.stringify(s);
+ const data=view.project(s,cast,plan);
+ assert.deepEqual(data.known.find(p=>p.id==='hana').likes,[{tag:'community',label:'Helping other players'}]);
+ assert.deepEqual(data.known.find(p=>p.id==='reina').likes,[]);
+ assert.equal(JSON.stringify(s),before);
+});
+
 test('unmet characters remain hidden, including names and story details',()=>{
  const data=view.project({day:1,slot:0,relationships:{reina:{affection:0}}},cast,plan);
  assert.equal(data.known.length,0);
@@ -84,6 +94,39 @@ test('Status modal renders, switches characters and closes without editing the c
  }finally{
   if(originalDoc===undefined)delete global.document;else global.document=originalDoc;
   if(originalWin===undefined)delete global.window;else global.window=originalWin;
+ }
+});
+
+test('Status renders only discovered activity hints, not unrevealed favorites',()=>{
+ class Node {
+  constructor(tag){this.tag=tag;this.children=[];this.textContent='';this.style={};this.attributes={};this.handlers={};this.open=false;this.classes=new Set();
+   this.classList={contains:key=>this.classes.has(key),toggle:(key,on)=>on?this.classes.add(key):this.classes.delete(key)};
+  }
+  append(...nodes){this.children.push(...nodes);}
+  replaceChildren(...nodes){this.children=[...nodes];}
+  setAttribute(key,value){this.attributes[key]=String(value);}
+  addEventListener(key,fn){this.handlers[key]=fn;}
+  showModal(){this.open=true;}
+  close(){this.open=false;}
+ }
+ const ids=new Map(['statusDialog','statusOverview','statusCharacters','statusDetail','statusCount'].map(id=>[id,new Node(id)]));
+ const origDoc=global.document,origWin=global.window;
+ global.document={getElementById:id=>ids.get(id),createElement:tag=>new Node(tag)};
+ global.window={NeoRpgDiscreetAvatars:{set(){}}};
+ const s={met_hana:true,relationships:{hana:{affection:3}},socialHistory:{hana:{lastDay:3,lastTag:'community',count:1,likedTags:['community']}}};
+ const before=JSON.stringify(s);
+ try{
+  view.open(s,cast,plan,()=>new Node('image'));
+  const screen=ids.get('statusDetail').children;
+  const learned=screen.find(c=>c.className==='status-discovered-likes');
+  assert.ok(learned);
+  const shown=learned.children.find(c=>c.className==='status-likes-list');
+  assert.equal(shown.children.length,1);
+  assert.equal(shown.children[0].textContent,'Helping other players');
+  assert.equal(JSON.stringify(s),before);
+ }finally{
+  if(origDoc===undefined)delete global.document;else global.document=origDoc;
+  if(origWin===undefined)delete global.window;else global.window=origWin;
  }
 });
 
