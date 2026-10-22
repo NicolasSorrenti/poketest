@@ -1989,6 +1989,8 @@ function render(){
 }
 
 $('deckStudioBtn').onclick=()=>{if(!controlsLocked()&&state.deckJourney?.starter){persist();location.assign('/rpg_deck_studio.html');}};
+$('statusBtn').onclick=()=>window.NeoRpgStatus.open(state,cast,BOND_PLAN,makeAvatar);
+$('statusClose').onclick=()=>window.NeoRpgStatus.close();
 $('galleryBtn').onclick=openGallery;
 $('galleryClose').onclick=()=>$('galleryDialog').close();
 $('galleryCharacter').onchange=renderGallery;$('galleryCategory').onchange=renderGallery;$('galleryUnseen').onchange=renderGallery;
