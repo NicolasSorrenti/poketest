@@ -1,5 +1,7 @@
 # Neo Campus — Illustrated Playmat Production & Integration Agent Guide
 
+> **Prompt discipline:** This is a technical reference, not a model prompt. Read [ART_GENERATION_ONE_IMAGE_RULE.md](ART_GENERATION_ONE_IMAGE_RULE.md); write one concise positive prompt for one playmat ID and validate it with `node scripts/rpg-art-prompt.js --validate <prompt-file>`. Do not pass the entire catalog or all NPC descriptions to an image generator. Keep rejected layout concepts in QA criteria only.
+
 **Purpose:** Create actual STATIC image playmats (WebP or PNG) for the Neo Campus TCG match field, while preserving the existing programmatically generated SVG mats as reliable fallback. This is both an ART PRODUCTION brief and an IMPLEMENTATION brief for an autonomous agent.
 
 **Read before work:** `duel_playmats.js`, `duel_playmats.css`, `classic_live.js`, `classic_live.html`, `rpg_bond_rewards.js`, `rpg.js`, `duel_match_v085.css`, `duel_observability_rail.css`, and `server.js`. Also read existing character portraits and expression/cut-in images for the relevant NPC. Work from the actual latest branch, not assumptions about older UI screenshots.
