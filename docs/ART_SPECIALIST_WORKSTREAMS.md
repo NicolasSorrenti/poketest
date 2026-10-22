@@ -48,3 +48,12 @@ Updated 2026-10-22. This is a **production assignment and QA agreement**, not an
 8. **Workstream collision rule:** each illustrator may mutate only its owned asset paths. Shared QA docs/status can be updated only with verified facts. Any asset in a conversation ZIP is pending review until original image pixels are compared to the canonical game art.
 
 These are scheduled specialized task instructions. Scheduling tasks does not constitute launching four separate continuously running generative-model processes, and tool availability during a later run is not guaranteed.
+
+## Mandatory fresh-prompt handshake for every image attempt (including retries)
+
+- Each specialist run must select exactly one canonical asset ID and regenerate its full prompt from the current repository generator immediately before EVERY image-tool invocation. For rewards: `node scripts/rpg-art-prompt.js --reward booster --character <id> --json`. For scenes, use `--scene <id> --json`. Do not reuse conversation memory, previous model output, or a shortened paraphrase.
+- Attach the original character portrait pixels when supported. Check canonical character ID, appearance, wardrobe, setting, action, target path and dimensions before dispatch. Send ONLY the fresh `prompt` field to the image tool, plus actual portrait image pixels if supported. Never pass the full JSON or QA instructions as the model prompt.
+- Validate the exact outbound prompt with the script's selection-specific `--validate` option, and record its SHA-256. If the image tool cannot receive the exact prompt, stop and report a prompt-delivery blocker; do not generate with an empty or substituted prompt.
+- After each rejected image, log the precise visual rejection reason, discard the candidate, RE-RUN the canonical generator and exact validator for the SAME asset ID, then try again with the full freshly retrieved prompt and same identity reference. Do not let a retry inherit partial instructions or quietly change character or destination.
+- Maximum two image attempts per asset per run. If both fail, report the blocker and leave the asset uncommitted. Never accept an image just to meet a quota.
+- These rules apply independently to reward, battle, VN-character and story/environment specialists; they do not authorize changes outside their assigned image folders.
