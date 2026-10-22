@@ -5,6 +5,7 @@ const fs=require('node:fs'),path=require('node:path');
 const Pack=require('../rpg_narrative_pack'),Side=require('../rpg_side_quests'),Story=require('../rpg_story'),Schedules=require('../rpg_schedules'),World=require('../rpg_world'),Arc=require('../rpg_rival_arc'),Tournaments=require('../rpg_tournaments'),Epilogue=require('../rpg_epilogue'),Appointments=require('../rpg_appointments'),Intentions=require('../rpg_intentions'),CG=require('../rpg_cg_gallery'),Planner=require('../rpg_daily_planner'),Social=require('../rpg_social_activities'),Dates=require('../rpg_planned_dates'),Bridge=require('../rpg_duel_bridge'),Pre=require('../rpg_preduel'),Collection=require('../rpg_collection'),Journey=require('../rpg_season_journey'),Situations=require('../rpg_situations'),Dialogue=require('../rpg_dialogue'),BondRewards=require('../rpg_bond_rewards'),Conversations=require('../rpg_conversations'),PartnerDecks=require('../rpg_partner_decks');
 const Mandatory=require('../rpg_mandatory_events'),Season=require('../rpg_season_events'),Registry=require('../rpg_character_packs.generated'),Competitive=require('../rpg_competitive_loop'),Reactivity=require('../rpg_reactivity'),Community=require('../rpg_community'),Consequences=require('../rpg_consequences'),TournamentPresentation=require('../rpg_tournament_presentation');
 const NpcDecks=require('../rpg_npc_deck_progression');
+const Tutorials=require('../rpg_tutorials');
 const js=fs.readFileSync(path.join(__dirname,'..','rpg.js'),'utf8').replace(/\}\)\(\);\s*$/, 'window.__testRpgAction=act;})();');
 const RenderPerf=require('../rpg_render_perf');
 const html=fs.readFileSync(path.join(__dirname,'..','rpg.html'),'utf8');
@@ -76,7 +77,7 @@ function launch(initial,approve=false,mandatory=false){
   createTextNode(text){const node=new FakeNode('#text');node.nodeType=3;node.nodeValue=String(text);node.textContent=String(text);return node;},
   body:new FakeNode('body'),
   addEventListener(name,cb){listeners['document:'+name]=cb;}};
- const win={NeoRpgRenderPerf:RenderPerf,NeoRpgNarrativePack:Pack,NeoRpgSideQuests:Side,NeoHarborStory:Story,NeoRpgSchedules:Schedules,NeoRpgWorld:World,NeoRpgRivalArc:Arc,NeoRpgTournaments:Tournaments,NeoRpgCompetitiveLoop:Competitive,NeoRpgReactivity:Reactivity,NeoRpgCommunity:Community,NeoRpgConsequences:Consequences,NeoRpgTournamentPresentation:TournamentPresentation,NeoRpgEpilogue:Epilogue,NeoRpgAppointments:Appointments,NeoRpgIntentions:Intentions,NeoRpgCGGallery:CG,NeoRpgDailyPlanner:Planner,NeoRpgSocialActivities:Social,NeoRpgPlannedDates:Dates,NeoRpgPreDuel:Pre,NeoRpgCollection:Collection,NeoRpgSeasonJourney:Journey,NeoRpgSituations:Situations,NeoRpgDuelBridge:Bridge,NeoRpgDialogue:Dialogue,NeoRpgBondRewards:BondRewards,NeoRpgConversations:Conversations,NeoRpgPartnerDecks:PartnerDecks,NeoRpgNpcDeckProgression:NpcDecks,
+ const win={NeoRpgRenderPerf:RenderPerf,NeoRpgNarrativePack:Pack,NeoRpgSideQuests:Side,NeoHarborStory:Story,NeoRpgSchedules:Schedules,NeoRpgWorld:World,NeoRpgRivalArc:Arc,NeoRpgTournaments:Tournaments,NeoRpgCompetitiveLoop:Competitive,NeoRpgReactivity:Reactivity,NeoRpgCommunity:Community,NeoRpgConsequences:Consequences,NeoRpgTournamentPresentation:TournamentPresentation,NeoRpgEpilogue:Epilogue,NeoRpgAppointments:Appointments,NeoRpgIntentions:Intentions,NeoRpgCGGallery:CG,NeoRpgDailyPlanner:Planner,NeoRpgSocialActivities:Social,NeoRpgPlannedDates:Dates,NeoRpgPreDuel:Pre,NeoRpgCollection:Collection,NeoRpgSeasonJourney:Journey,NeoRpgSituations:Situations,NeoRpgDuelBridge:Bridge,NeoRpgDialogue:Dialogue,NeoRpgBondRewards:BondRewards,NeoRpgConversations:Conversations,NeoRpgTutorials:Tutorials,NeoRpgPartnerDecks:PartnerDecks,NeoRpgNpcDeckProgression:NpcDecks,
   addEventListener(name,cb){listeners[name]=cb;}};
  if(mandatory){win.NeoRpgMandatoryEvents=Mandatory;win.NeoRpgSeasonEvents=Season;win.NeoRpgCharacterPacks=Registry;}
  const local={getItem(k){return saved[k]||null;},setItem(k,v){saved[k]=String(v);}};
@@ -1439,4 +1440,70 @@ test('RPG challenge snapshots NPC story-upgraded tier without changing other cha
  const saved=JSON.parse(JSON.stringify(r.state()));
  saved.day=50; // A queued duel retains its original opponent recipe on save/load.
  assert.equal(saved.pendingDuel.npcDeckTier,2);
+});
+
+test('tutorials appear for exactly the first two visits per mechanic and survive reloads',()=>{
+ const r=launch({day:1,slot:0,location:'shop'});
+ r.elements.people.children.find(x=>x.children?.[1]?.children?.[0]?.textContent==='Hana Mizuno').onclick();finishGreeting(r);
+ r.act('socialPlan:hana');
+ assert.equal(r.state().gameplayTutorials.seen.social,1);
+ assert.match(r.elements.tutorialTitle.textContent,/Spend time together/);
+ r.elements.tutorialDismiss.onclick();
+ assert.equal(r.elements.gameplayTutorial.hidden,false,'conversation tutorial may still be queued');
+ r.act('socialPlan:hana');
+ assert.equal(r.state().gameplayTutorials.seen.social,2);
+ r.act('socialPlan:hana');
+ assert.equal(r.state().gameplayTutorials.seen.social,2);
+ const reloaded=launch(r.state());
+ assert.equal(reloaded.state().gameplayTutorials.seen.social,2);
+ reloaded.act('socialPlan:hana');
+ assert.equal(reloaded.state().gameplayTutorials.seen.social,2);
+});
+
+test('Status opt-out hides pending tips, persists, and New Game+ resets it',()=>{
+ const r=launch({day:1,slot:0,location:'shop'});
+ r.act('intention:town');
+ assert.equal(r.state().gameplayTutorials.seen.priorities,1);
+ r.elements.statusBtn.onclick();
+ const toggle=r.elements.statusTutorialToggle;
+ assert.equal(toggle.checked,false);
+ toggle.checked=true;toggle.onchange();
+ assert.equal(r.state().gameplayTutorials.disabled,true);
+ assert.equal(r.elements.gameplayTutorial.hidden,true);
+ r.act('intention:town');
+ assert.equal(r.state().gameplayTutorials.seen.priorities,1);
+ const restored=launch(r.state());
+ assert.equal(restored.state().gameplayTutorials.disabled,true);
+ restored.elements.statusBtn.onclick();
+ assert.equal(restored.elements.statusTutorialToggle.checked,true);
+ const newGame=launch({...restored.state(),day:91,ended:true,location:'home'},true);
+ newGame.act('replay');
+ assert.equal(newGame.state().ngPlus,1);
+ assert.equal(newGame.state().gameplayTutorials.disabled,false);
+ assert.deepEqual(newGame.state().gameplayTutorials.seen,{});
+});
+
+test('player can always invite a present character to a shared activity or future outing',()=>{
+ const r=launch({day:1,slot:0,location:'shop'});
+ r.elements.people.children.find(x=>x.children?.[1]?.children?.[0]?.textContent==='Hana Mizuno').onclick();
+ const actions=r.elements.characterActions.children.map(x=>x.textContent);
+ assert.ok(actions.some(x=>x.includes('Spend time')));
+ assert.ok(actions.some(x=>x.includes('Make plans')));
+ const before=r.state();
+ r.elements.characterActions.children.find(x=>x.textContent.includes('Spend time')).onclick();
+ assert.equal(r.state().slot,before.slot,'invitation itself is free');
+ assert.ok(r.elements.choices.children.some(x=>x.textContent.includes('Welcome a new player')));
+});
+
+test('the player must confirm before skipping a known appointment',()=>{
+ const plan={id:1,npc:'hana',day:1,slot:0,place:'shop',status:'booked',bookedDay:1};
+ const initial={day:1,slot:0,location:'home',appointments:[plan],appointmentSeq:1};
+ const decline=launch(initial,false);
+ decline.act('rest');
+ assert.equal(decline.state().slot,0);
+ assert.equal(decline.state().appointments[0].status,'booked');
+ const accept=launch(initial,true);
+ accept.act('rest');
+ assert.equal(accept.state().slot,1);
+ assert.equal(accept.state().appointments[0].status,'missed');
 });
