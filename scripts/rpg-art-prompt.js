@@ -12,6 +12,7 @@
  */
 const fs = require('node:fs');
 const path = require('node:path');
+const crypto = require('node:crypto');
 const queue = require(path.join(__dirname, '..', 'docs', 'cg-art-queue.json'));
 
 const LAYOUT_TRIGGERS = [
@@ -143,8 +144,28 @@ function createPrompt({sceneId, reward, characterId}) {
     referencePath, review,
     width: kind === 'scene' ? 1920 : 768,
     height: kind === 'scene' ? 1080 : 1024,
+    promptSha256: crypto.createHash('sha256').update(prompt).digest('hex'),
     prompt
   };
+}
+
+/**
+ * The generic validator only checks the layout of ONE illustration. For story
+ * and reward production, verify the exact approved prompt too: a perfectly
+ * single-image bedroom illustration is still the wrong scene for a shop event.
+ * This guard is opt-in for custom prompt validation and cannot control an
+ * image tool that independently rewrites its actual model-facing arguments.
+ */
+function assertCanonicalAssetPrompt(prompt, selection) {
+  assertSingleImagePrompt(prompt);
+  const expected = createPrompt(selection);
+  if (prompt.trim() !== expected.prompt) {
+    throw new Error(
+      'Off-story or modified prompt for ' + expected.id +
+      ': use only the exact canonical prompt from --scene or --reward.'
+    );
+  }
+  return true;
 }
 
 function parseArgs(argv) {
@@ -154,7 +175,7 @@ function parseArgs(argv) {
     if (k === '--json') { args.json = true; continue; }
     const key = {'--scene':'sceneId','--reward':'reward','--character':'characterId','--validate':'validate'}[k];
     if (!key || !argv[i + 1] || argv[i + 1].startsWith('--') || args[key]) {
-      throw new Error('Usage: --scene ID OR --reward booster|battle-result --character ID [--json]; or --validate FILE');
+      throw new Error('Usage: --scene ID OR --reward booster|battle-result --character ID [--json]; or --validate FILE [--scene ID | --reward TYPE --character ID]');
     }
     args[key] = argv[++i];
   }
@@ -165,9 +186,14 @@ if (require.main === module) {
   try {
     const args = parseArgs(process.argv.slice(2));
     if (args.validate) {
-      if (args.sceneId || args.reward || args.characterId) throw new Error('Validation accepts a single prompt file only.');
-      assertSingleImagePrompt(fs.readFileSync(args.validate, 'utf8').trim());
-      process.stdout.write('OK: single-asset prompt passed\n');
+      const candidate = fs.readFileSync(args.validate, 'utf8').trim();
+      if (args.sceneId || args.reward || args.characterId) {
+        assertCanonicalAssetPrompt(candidate, args);
+        process.stdout.write('OK: exact canonical asset prompt passed\n');
+      } else {
+        assertSingleImagePrompt(candidate);
+        process.stdout.write('OK: single-asset layout prompt passed (scene identity NOT verified)\n');
+      }
     } else {
       const asset = createPrompt(args);
       process.stdout.write(args.json ? JSON.stringify(asset, null, 2) + '\n' : asset.prompt + '\n');
@@ -178,4 +204,4 @@ if (require.main === module) {
   }
 }
 
-module.exports = {createPrompt, assertSingleImagePrompt, parseArgs};
+module.exports = {createPrompt, assertSingleImagePrompt, assertCanonicalAssetPrompt, parseArgs};
