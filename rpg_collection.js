@@ -122,6 +122,10 @@
   return ['rare','holo','secret'].includes(rarity)&&
    selectThemePool(sources,rarity,theme.rare).includes(cardId);
  }
+ // Mixed booster design: every pack contains genuine Pokémon and Trainer support.
+ // The rare plus two featured slots distinguish ten-card themes (3/10); the
+ // remaining slots fill gaps in Basics, Evolutions and Trainers. Mini packs
+ // protect those same roles, when the unlocked rarities can provide them.
  function randomThemedPack(state,themeId,rng=Math.random,count=10){
   if(count!==5&&count!==10)throw Error('Only five- and ten-card packs are supported');
   const theme=THEMED_BY_ID.get(themeId);
@@ -133,27 +137,91 @@
   const roll=Math.max(0,Math.min(.999999,rng()));
   const hasSecret=sets.some(set=>PACK_POOLS[set].secret.length>0);
   const rareKind=hasSecret&&roll<.01?'secret':roll<(hasSecret?.26:.25)?'holo':'rare';
-  const pick=(kind,role=null)=>chooseRandom(selectThemePool(sets,kind,role),rng);
+  const cached=new Map();
+  const pool=(rarity,role=null)=>{
+   const key=rarity+':'+(role||'any');
+   if(!cached.has(key)){
+    const all=selectThemePool(sets,rarity);
+    cached.set(key,role?all.filter(id=>cardRole(id,role)):all);
+   }
+   return cached.get(key);
+  };
+  // Missing featured roles fall back to the actual rare pool in the unlocked sets.
+  const pick=(rarity,role=null)=>{
+   const preferred=role?pool(rarity,role):[];
+   return chooseRandom(preferred.length?preferred:pool(rarity),rng);
+  };
   const rare=pick(rareKind,theme.rare);
   const energy=chooseRandom([...ENERGY].filter(id=>id!=='base1-96'),rng);
   const ucCount=count===5?1:3,commonCount=count===5?2:5;
-  const uncommons=[],commons=[];
-  for(let i=0;i<ucCount;i++)uncommons.push(pick('uncommon',i===0?theme.uncommon:null));
-  if(theme.pair){
-   // Evolution packs guarantee at least a Stage 1 + matching Basic when a
-   // printable pair is present. A rare Stage 2's Stage 1 is preferred.
-   const ucPool=selectThemePool(sets,'uncommon','evolution');
-   const commonPool=new Set(selectThemePool(sets,'common','basic'));
-   const linked=ucPool.filter(id=>(BOOSTER_PARENTS[id]||[]).some(parent=>commonPool.has(parent)));
-   const parentUncommon=(BOOSTER_PARENTS[rare]||[]).filter(id=>linked.includes(id));
-   const chosen=parentUncommon.length?chooseRandom(parentUncommon,rng):
-    linked.length?chooseRandom(linked,rng):null;
-   if(chosen)uncommons[0]=chosen;
-   const parents=(BOOSTER_PARENTS[uncommons[0]]||[]).filter(id=>commonPool.has(id));
-   if(parents.length)commons.push(chooseRandom(parents,rng));
+  const target=count===10?{basic:2,evolution:1,trainer:2}:{basic:1,evolution:1,trainer:1};
+  const selected=[rare],uncommons=[],commons=[],roles=Object.keys(target);
+  const lacking=role=>Math.max(0,target[role]-selected.filter(id=>cardRole(id,role)).length);
+  // Small matching search: a future card can satisfy only ONE missing role.
+  // Checking roles independently would incorrectly accept an all-Basic mini pack.
+  function balancedPick(rarity,future,preferred=null){
+   const candidates=roles.filter(role=>lacking(role)>0&&pool(rarity,role).length);
+   function feasible(role){
+    const remaining=Object.fromEntries(roles.map(key=>[key,Math.max(0,lacking(key)-Number(key===role))]));
+    function match(at){
+     const need=roles.reduce((sum,key)=>sum+remaining[key],0);
+     if(!need)return true;
+     if(need>future.length-at)return false;
+     if(at===future.length)return false;
+     for(const key of roles)if(remaining[key]&&pool(future[at],key).length){
+      remaining[key]--;
+      if(match(at+1))return true;
+      remaining[key]++;
+     }
+     return match(at+1);
+    }
+    return match(0);
+   }
+   if(preferred&&pool(rarity,preferred).length&&feasible(preferred))
+    return pick(rarity,preferred);
+   const feasibleRoles=candidates.filter(feasible),choices=feasibleRoles.length?feasibleRoles:candidates;
+   if(choices.length){
+    // Take a constrained role before consuming the only rarity that carries it.
+    choices.sort((a,b)=>{
+     const capacity=role=>future.filter(kind=>pool(kind,role).length>0).length;
+     return (capacity(a)-lacking(a))-(capacity(b)-lacking(b))||
+      ['evolution','trainer','basic'].indexOf(a)-['evolution','trainer','basic'].indexOf(b);
+    });
+    return pick(rarity,choices[0]);
+   }
+   return pick(rarity,preferred);
   }
-  for(let i=commons.length;i<commonCount;i++)commons.push(pick('common',
-   theme.guaranteedCommon&&i<theme.guaranteedCommon?theme.common:(i===0?theme.common:null)));
+  // The Evolution Workshop still guarantees a printable Stage 1 plus Basic;
+  // prefer an intermediate Stage 1 for its featured rare when possible.
+  const ucPool=pool('uncommon','evolution'),commonBasics=new Set(pool('common','basic'));
+  const linked=ucPool.filter(id=>(BOOSTER_PARENTS[id]||[]).some(parent=>commonBasics.has(parent)));
+  const parentUncommon=(BOOSTER_PARENTS[rare]||[]).filter(id=>linked.includes(id));
+  const firstUncommon=theme.pair&&linked.length?
+   chooseRandom(parentUncommon.length?parentUncommon:linked,rng):
+   count===10?pick('uncommon',theme.uncommon):
+   balancedPick('uncommon',['common','common'],theme.uncommon);
+  uncommons.push(firstUncommon);selected.push(firstUncommon);
+  // Other packs sometimes supply a usable family pair as a pleasant bonus.
+  const possibleParents=(BOOSTER_PARENTS[firstUncommon]||[]).filter(id=>commonBasics.has(id));
+  const shouldPair=theme.pair||(possibleParents.length>0&&rng()<.35);
+  const parent=shouldPair&&possibleParents.length?chooseRandom(possibleParents,rng):null;
+  if(parent){
+   commons.push(parent);selected.push(parent);
+  }else if(count===10){
+   const id=pick('common',theme.common);commons.push(id);selected.push(id);
+  }
+  // Complete the original 1 rare / 3 uncommon / 5 common / 1 Energy
+  // (or 1/1/2/1 mini) without disturbing the economy or expansion gates.
+  const pending=[];
+  for(let i=uncommons.length;i<ucCount;i++)pending.push('uncommon');
+  for(let i=commons.length;i<commonCount;i++)pending.push('common');
+  for(let i=0;i<pending.length;i++){
+   const rarity=pending[i],future=pending.slice(i+1);
+   const preferred=count===5&&rarity==='common'&&commons.length===0?theme.common:null;
+   const id=balancedPick(rarity,future,preferred);
+   if(rarity==='uncommon')uncommons.push(id);else commons.push(id);
+   selected.push(id);
+  }
   const cards=[rare,energy,...uncommons,...commons];
   for(let i=cards.length-1;i>0;i--){
    const j=Math.min(i,Math.floor(Math.max(0,rng())*(i+1)));
