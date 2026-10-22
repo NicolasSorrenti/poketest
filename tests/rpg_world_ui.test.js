@@ -7,6 +7,7 @@ const Mandatory=require('../rpg_mandatory_events'),Season=require('../rpg_season
 const NpcDecks=require('../rpg_npc_deck_progression');
 const Tutorials=require('../rpg_tutorials');
 const SceneCast=require('../rpg_scene_cast');
+const EventInvites=require('../rpg_event_invites');
 const js=fs.readFileSync(path.join(__dirname,'..','rpg.js'),'utf8').replace(/\}\)\(\);\s*$/, 'window.__testRpgAction=act;})();');
 const RenderPerf=require('../rpg_render_perf');
 const html=fs.readFileSync(path.join(__dirname,'..','rpg.html'),'utf8');
@@ -78,7 +79,7 @@ function launch(initial,approve=false,mandatory=false){
   createTextNode(text){const node=new FakeNode('#text');node.nodeType=3;node.nodeValue=String(text);node.textContent=String(text);return node;},
   body:new FakeNode('body'),
   addEventListener(name,cb){listeners['document:'+name]=cb;}};
- const win={NeoRpgRenderPerf:RenderPerf,NeoRpgNarrativePack:Pack,NeoRpgSideQuests:Side,NeoHarborStory:Story,NeoRpgSchedules:Schedules,NeoRpgWorld:World,NeoRpgRivalArc:Arc,NeoRpgTournaments:Tournaments,NeoRpgCompetitiveLoop:Competitive,NeoRpgReactivity:Reactivity,NeoRpgCommunity:Community,NeoRpgConsequences:Consequences,NeoRpgTournamentPresentation:TournamentPresentation,NeoRpgEpilogue:Epilogue,NeoRpgAppointments:Appointments,NeoRpgIntentions:Intentions,NeoRpgCGGallery:CG,NeoRpgDailyPlanner:Planner,NeoRpgSocialActivities:Social,NeoRpgPlannedDates:Dates,NeoRpgPreDuel:Pre,NeoRpgCollection:Collection,NeoRpgSeasonJourney:Journey,NeoRpgSituations:Situations,NeoRpgDuelBridge:Bridge,NeoRpgDialogue:Dialogue,NeoRpgBondRewards:BondRewards,NeoRpgConversations:Conversations,NeoRpgTutorials:Tutorials,NeoRpgSceneCast:SceneCast,NeoRpgPartnerDecks:PartnerDecks,NeoRpgNpcDeckProgression:NpcDecks,
+ const win={NeoRpgRenderPerf:RenderPerf,NeoRpgNarrativePack:Pack,NeoRpgSideQuests:Side,NeoHarborStory:Story,NeoRpgSchedules:Schedules,NeoRpgWorld:World,NeoRpgRivalArc:Arc,NeoRpgTournaments:Tournaments,NeoRpgCompetitiveLoop:Competitive,NeoRpgReactivity:Reactivity,NeoRpgCommunity:Community,NeoRpgConsequences:Consequences,NeoRpgTournamentPresentation:TournamentPresentation,NeoRpgEpilogue:Epilogue,NeoRpgAppointments:Appointments,NeoRpgIntentions:Intentions,NeoRpgCGGallery:CG,NeoRpgDailyPlanner:Planner,NeoRpgSocialActivities:Social,NeoRpgPlannedDates:Dates,NeoRpgPreDuel:Pre,NeoRpgCollection:Collection,NeoRpgSeasonJourney:Journey,NeoRpgSituations:Situations,NeoRpgDuelBridge:Bridge,NeoRpgDialogue:Dialogue,NeoRpgBondRewards:BondRewards,NeoRpgConversations:Conversations,NeoRpgTutorials:Tutorials,NeoRpgSceneCast:SceneCast,NeoRpgEventInvites:EventInvites,NeoRpgPartnerDecks:PartnerDecks,NeoRpgNpcDeckProgression:NpcDecks,
   addEventListener(name,cb){listeners[name]=cb;}};
  if(mandatory){win.NeoRpgMandatoryEvents=Mandatory;win.NeoRpgSeasonEvents=Season;win.NeoRpgCharacterPacks=Registry;}
  const local={getItem(k){return saved[k]||null;},setItem(k,v){saved[k]=String(v);}};
@@ -1508,4 +1509,60 @@ test('the player must confirm before skipping a known appointment',()=>{
  accept.act('rest');
  assert.equal(accept.state().slot,1);
  assert.equal(accept.state().appointments[0].status,'missed');
+});
+
+test('an NPC greets the player about a booked meeting, without auto-attending or costing time',()=>{
+ const plan={id:8,npc:'hana',day:1,slot:0,place:'shop',status:'booked',bookedDay:1};
+ const r=launch({day:1,slot:0,location:'shop',appointments:[plan],appointmentSeq:8});
+ const button=r.elements.people.children.find(x=>x.children?.[1]?.children?.[0]?.textContent==='Hana Mizuno');
+ assert.ok(button);
+ assert.ok(button.children[1].children.some(x=>x.textContent.includes('Waiting for you')));
+ button.onclick();
+ assert.equal(r.state().scene.invitation.kind,'appointment');
+ assert.equal(r.state().scene.invitation.id,'8');
+ assert.equal(r.state().appointments[0].status,'booked');
+ assert.equal(r.state().slot,0);
+ finishGreeting(r);
+ assert.ok(r.elements.choices.children.some(x=>x.textContent==='I am in.'));
+ const accept=r.elements.choices.children.find(x=>x.textContent==='I am in.');
+ accept.onclick();
+ assert.equal(r.state().appointments[0].status,'attended');
+ assert.equal(r.state().slot,1);
+});
+test('a timely character route invitation lets the player begin the original scripted story',()=>{
+ const r=launch({day:5,slot:0,location:'shop',met_hana:true});
+ const button=r.elements.people.children.find(x=>x.children?.[1]?.children?.[0]?.textContent==='Hana Mizuno');
+ assert.ok(button);
+ button.onclick();
+ assert.equal(r.state().scene.invitation?.kind,'story');
+ assert.equal(r.state().scene.invitation?.id,'hana_route_1');
+ finishGreeting(r);
+ r.elements.choices.children.find(x=>x.textContent==='I am in.').onclick();
+ assert.equal(r.state().activeStory?.id,'hana_route_1');
+ assert.equal(r.state().activeStory?.phase,'lines');
+ assert.equal(r.state().slot,0);
+});
+test('invitation decline and ordinary conversation do not consume time or complete events',()=>{
+ const plan={id:3,npc:'hana',day:1,slot:0,place:'shop',status:'booked',bookedDay:1};
+ const r=launch({day:1,slot:0,location:'shop',appointments:[plan],appointmentSeq:3});
+ const btn=()=>r.elements.people.children.find(x=>x.children?.[1]?.children?.[0]?.textContent==='Hana Mizuno');
+ btn().onclick();finishGreeting(r);
+ r.elements.choices.children.find(x=>x.textContent.includes('just talk')).onclick();
+ assert.equal(r.state().scene.invitation,null);
+ assert.equal(r.state().slot,0);
+ assert.equal(r.state().appointments[0].status,'booked');
+ btn().onclick();finishGreeting(r);
+ r.elements.choices.children.find(x=>x.textContent==='Maybe later.').onclick();
+ assert.equal(r.state().appointments[0].status,'booked');
+ assert.equal(r.state().slot,0);
+});
+test('an event invitation survives reload with the same choices, without inventing an event',()=>{
+ const plan={id:4,npc:'hana',day:1,slot:0,place:'shop',status:'booked',bookedDay:1};
+ const r=launch({day:1,slot:0,location:'shop',appointments:[plan],appointmentSeq:4});
+ r.elements.people.children.find(x=>x.children?.[1]?.children?.[0]?.textContent==='Hana Mizuno').onclick();
+ const reloaded=launch(r.state());
+ assert.equal(reloaded.state().scene.invitation?.id,'4');
+ finishGreeting(reloaded);
+ assert.ok(reloaded.elements.choices.children.some(x=>x.textContent==='I am in.'));
+ assert.equal(reloaded.state().appointments[0].status,'booked');
 });
