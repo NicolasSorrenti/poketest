@@ -7,6 +7,8 @@ on:
       - 'tests/cube_room_browser_smoke.js'
       - 'tests/cube_art_browser_smoke.js'
       - 'tests/cube_deck_builder_browser_smoke.js'
+      - 'tests/cube_round_robin_browser_smoke.js'
+      - 'tests/cube_parallel_browser_smoke.js'
       - '.github/workflows/cube-browser.yml'
   push:
     branches: [main]
@@ -29,6 +31,10 @@ jobs:
         run: node tests/cube_art_browser_smoke.js
       - name: Verify illustrated solo and multiplayer deck building
         run: node tests/cube_deck_builder_browser_smoke.js
+      - name: Verify PvP tournament navigation and automatic return
+        run: node tests/cube_round_robin_browser_smoke.js
+      - name: Verify parallel matches, spectating and tournament progress
+        run: node tests/cube_parallel_browser_smoke.js
       - name: Preserve Cube screenshots
         if: always()
         uses: actions/upload-artifact@v4
@@ -37,5 +43,6 @@ jobs:
           path: |
             artifacts/rpg-browser/cube-room-*.png
             artifacts/rpg-browser/cube-deck-builder-*.png
+            artifacts/rpg-browser/cube-deck-locked-*.png
           if-no-files-found: ignore
           retention-days: 7
