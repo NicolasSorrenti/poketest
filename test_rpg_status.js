@@ -44,3 +44,56 @@ test('status entry points and assets are wired into RPG',()=>{
  assert.match(html,/href="\/rpg_status\.css"/);
  assert.match(js,/NeoRpgStatus\.open/);
 });
+
+
+test('Status modal renders, switches characters and closes without editing the campaign',()=>{
+ class Node{
+  constructor(tag){
+   this.tag=tag;this.children=[];this.textContent='';this.style={};this.attributes={};this.handlers={};this.open=false;
+   this.classes=new Set();
+   this.classList={contains:key=>this.classes.has(key),toggle:(key,on)=>on?this.classes.add(key):this.classes.delete(key)};
+  }
+  append(...nodes){this.children.push(...nodes);}
+  replaceChildren(...nodes){this.children=[...nodes];}
+  setAttribute(key,value){this.attributes[key]=String(value);}
+  addEventListener(key,callback){this.handlers[key]=callback;}
+  showModal(){this.open=true;}
+  close(){this.open=false;}
+ }
+ const ids=new Map(['statusDialog','statusOverview','statusCharacters','statusDetail','statusCount']
+  .map(id=>[id,new Node(id)]));
+ const originalDoc=global.document,originalWin=global.window;
+ global.document={getElementById:id=>ids.get(id),createElement:tag=>new Node(tag)};
+ global.window={NeoRpgDiscreetAvatars:{set(){}}};
+ const save={met_hana:true,met_reina:true,partner:'reina',day:22,slot:1,
+  relationships:{hana:{affection:6,trust:2},reina:{affection:12,trust:9}},results:[{won:true}]};
+ const before=JSON.stringify(save);
+ try{
+  view.open(save,cast,plan,()=>new Node('image'));
+  assert.equal(ids.get('statusDialog').open,true,'click must open the native dialog');
+  assert.equal(ids.get('statusOverview').children.length,8,'season stats should render');
+  const entries=ids.get('statusCharacters').children;
+  assert.equal(entries.length,3,'two met characters plus one hidden-count label');
+  assert.equal(entries[0].children[1].children[0].textContent,'Reina','partner is first');
+  entries[1].handlers.click();
+  assert.equal(ids.get('statusDetail').children[0].children[0].children[1].textContent,'Hana',
+   'selecting another person refreshes relationship details');
+  view.close();
+  assert.equal(ids.get('statusDialog').open,false,'close button must work');
+  assert.equal(JSON.stringify(save),before,'status must not modify saved campaign');
+ }finally{
+  if(originalDoc===undefined)delete global.document;else global.document=originalDoc;
+  if(originalWin===undefined)delete global.window;else global.window=originalWin;
+ }
+});
+
+test('Status is first in the mobile toolbar, and stays discreet-safe',()=>{
+ const html=fs.readFileSync('rpg.html','utf8');
+ const css=fs.readFileSync('rpg_status.css','utf8');
+ const toolbar=html.split('<div class="utility-actions">')[1];
+ assert.match(toolbar,/^\s*<button id="statusBtn"/);
+ assert.match(css,/#statusBtn\{position:sticky/,'Status is reachable when the mobile toolbar scrolls');
+ assert.match(css,/status-character-avatar img:not\(\.rpg-safe-avatar\)/,'original portraits hidden in discreet mode');
+ const server=fs.readFileSync('server.js','utf8');
+ assert.match(server,/'rpg_status\.js'/,'server allowlist must include the browser controller');
+});
