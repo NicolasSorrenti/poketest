@@ -207,4 +207,4 @@ const server=http.createServer((req,res)=>{
  });
 });
 if(require.main===module){const host=process.env.HOST||'0.0.0.0';server.listen(port,host,()=>console.log(`Neo Campus ready: http://localhost:${port}/online.html (host ${host}, invite-code duels)`));}
-module.exports={server,classic,online,cube,cubeRooms};
+module.exports={server,classic,online,cube,cubeRooms,rpgDuels};
