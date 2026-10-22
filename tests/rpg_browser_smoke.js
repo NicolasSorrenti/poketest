@@ -88,9 +88,26 @@ const acknowledgeMandatory=async(page)=>{
   assert.equal(await page.locator('#places .place').count(),7);
   await page.locator('#whereLabel').getByText(/YOU ARE HOME/).waitFor();
   await save(page,'01-home.png');
+  // Secondary tools remain accessible after navigation is simplified.
+  await page.locator('#rpgMoreMenu > summary').click();
+  await page.locator('#galleryBtn').click();
+  const expectedCharacters=await page.evaluate(()=>new Set(window.NeoRpgCGGallery.catalog.map(e=>e.character)).size);
+  assert.equal(await page.locator('#galleryCharacter option').count(),expectedCharacters+1,'Gallery must list every catalog character');
+  await page.locator('#galleryClose').click();
+  assert.equal(await page.locator('#rpgMoreMenu').evaluate(el=>el.open),false,'More closes after selection');
+  await page.locator('#calendarBtn').click();
+  assert.match(await page.locator('#calendarEntries').textContent(),/Day \d+[\s\S]*(Official event|Tournament)/);
+  await page.locator('#calendarClose').click();
 
   await page.locator('#rpgMapToggle').click();
   await page.locator('#places .place').filter({hasText:'Pixel Palace'}).click();
+  assert.equal((await readState(page)).visitedLocations.arcade,true);
+  await page.locator('#quickHome').click();
+  assert.equal((await readState(page)).location,'home');
+  assert.equal(await page.locator('#dialogue').isHidden(),true,'Returning home should not show travel dialogue');
+  await page.locator('#rpgMapToggle').click();
+  await page.locator('#places .place').filter({hasText:'Pixel Palace'}).click();
+  assert.equal(await page.locator('#dialogue').isHidden(),true,'Revisits should not show travel dialogue');
   await page.locator('#quickNext').click();
   let state=await readState(page);
   assert.equal(state.day,1);assert.equal(state.slot,1);assert.equal(state.location,'arcade');
