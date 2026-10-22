@@ -100,7 +100,7 @@
   stateLabel('Save conflict: choose cloud progress or this device.');
  }
  async function offerRemote(){try{const record=await remoteRead();if(record)offer(record);else{blocked=false;meta=null;stateLabel('Cloud save missing; local save is safe.');}}catch(error){stateLabel(errorText(error));}}
- async function reconcile(){
+ async function reconcile({autoLoad=false}={}){
   if(!session||busy)return;
   busy=true;
   try{
@@ -116,6 +116,9 @@
    const cloudHash=hash(remote.save_data);
    if(localHash===cloudHash){
     mark(remote.revision,saved);choice=null;blocked=false;renderAccount();stateLabel('Cloud save up to date.');return;
+   }
+   if(meta?.hash===localHash&&meta?.revision!==remote.revision&&autoLoad){
+    importRemote(remote);return; // No unsynced edits on this device: restore newest progress on launch.
    }
    if(meta?.revision===remote.revision&&meta?.hash===localHash){
     offer(remote);return; // Never silently replace progress while the player is on the page.
@@ -203,11 +206,17 @@
   try{
    const response=await fetch('/api/rpg-cloud/config',{cache:'no-store'});
    config=await response.json();
-   if(!response.ok||!config.enabled){stateLabel('Cloud saves are not connected yet. Your local save is working.');return;}
-   const cached=JSON.parse(localStorage.getItem(SESSION_KEY)||'null');
-   if(!cached?.refresh_token||!cached?.user?.id){stateLabel('Sign in to sync your RPG progress between devices.');return;}
-   session=cached;meta=readMeta();renderAccount();
-   await refreshIfNeeded();await reconcile();
+   if(!response.ok||!config.enabled){
+    stateLabel('Cloud saves are not connected yet. Your local save is working.');
+   }else{
+    const cached=JSON.parse(localStorage.getItem(SESSION_KEY)||'null');
+    if(!cached?.refresh_token||!cached?.user?.id){
+     stateLabel('Sign in to sync your RPG progress between devices.');
+    }else{
+     session=cached;meta=readMeta();renderAccount();
+     await refreshIfNeeded();await reconcile({autoLoad:true});
+    }
+   }
   }catch(error){stateLabel('Cloud unavailable; browser progress is safe. '+errorText(error));}
   window.addEventListener('online',()=>{if(session&&!blocked)schedule();});
   document.addEventListener('visibilitychange',()=>{if(!document.hidden&&session&&Date.now()-lastCheck>30000)reconcile();});
