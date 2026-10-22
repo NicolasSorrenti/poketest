@@ -280,8 +280,7 @@
       "trust": 1
     },
     "text": "The reading room is nearly empty. You finish a chapter before noticing how late it's become."
-  }
-,
+  },
   {"id":"center_mentor","place":"center","slots":[1,2],"title":"Lead a community training clinic","cost":0,"focus":12,"minReputation":6,"cooldownDays":7,"change":{"credits":28,"reputation":1},"npc":"akari","bond":{"trust":1},"text":"The center pays you to coach its newer duelists. Your growing reputation has brought students to your table."},
   {"id":"center_sponsor","place":"center","slots":[1,2],"title":"Host a sponsored card showcase","cost":0,"focus":16,"minReputation":15,"requiresStarter":true,"cooldownDays":7,"voucherSet":"latest","change":{"reputation":1},"text":"Your sponsor funds a booster from the newest expansion you have actually unlocked. Claim the voucher at the card shop."},
   {"id":"library_masterclass","place":"library","slots":[0,1],"title":"Teach a strategic masterclass","cost":0,"focus":12,"minInsight":10,"cooldownDays":7,"change":{"credits":16,"preparation":2},"npc":"akari","bond":{"respect":1},"text":"Your detailed matchup notes impress the regulars. You leave with a teaching fee and ideas for your next match."}
