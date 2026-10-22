@@ -21,7 +21,6 @@
 | Live URL | `/rpg-assets/ui/playmats/<mat-id>.webp` |
 | Visible UI | Art must stay **behind** all Pokémon, their attachments, statuses, attacks, benches, controls and labels |
 | Supported platform | **Desktop first**. Mobile mats are intentionally disabled in current `duel_playmats.css`; do not enable or change mobile layout without separate approval |
-| Safety/content | Adult NPCs, **SFW only**; no nudity, explicit sexualization, gore, hate symbols, or inappropriate text |
 | Naming/branding | No invented branding, fake logos, AI watermarks, signatures, UI elements, or text baked into art |
 | Usage | Cosmetic only. Nothing about playmats changes game rules, legal targets, card visibility, AI, saves, or multiplayer protocol |
 
@@ -106,13 +105,13 @@ Create at 3072×1536 when supported, otherwise render the closest 2:1 resolution
 1. Read the latest actual repository and canonical art references; inspect the CSS territory and existing `duel_playmats.js` catalog. Do not assume every portrait path exists. Choose mat IDs from the list above.
 2. Write a **unique mini-brief** (2–4 sentences) for each mat including its exact character design references, motif, light direction, palette and planned treatment under cards.
 3. Generate ORIGINAL full-bleed 2:1 artwork; generate alternate candidates for designs that are too close to others. For an image service that offers only 16:9, **outpaint or crop carefully to 2:1** rather than stretching.
-4. Inspect every full image for visual defects, character identity, accidental text/watermarks, artifacts, cut limbs/fingers, and adherence to SFW/nonspoiler requirements. Reject and regenerate failures.
+4. Inspect every full image for visual defects, character identity, accidental text/watermarks, artifacts, cut limbs/fingers, and adherence to nonspoiler requirements. Reject and regenerate failures.
 5. Preview THREE views per candidate: whole 2:1 master, center vertical crop representative of 4:1 territory (Y=25–75% of the image), and center vertical crop representative of 5:1 territory (Y=30–70%). Also preview with **card-shaped opaque rectangles** approximately over central active and upper/lower bench areas (these test overlays are NOT part of shipped art). The background must still have a recognizable identity and legible action cards.
 6. Export lossless source master (or native editable source when possible) separately, and make RGB sRGB WebP 2048×1024 at quality 82–88. Optimize toward 200–500 KB without ugly compression; if over ~700 KB, document why.
 7. Save the runtime files as `rpg-assets/ui/playmats/<id>.webp` using **exact IDs**, not names like `hana-final-v3.webp`. Optionally place uncropped masters in a clearly separate art-production folder (not in runtime assets).
 8. Produce an asset manifest or report with **ID, source image/reference path, output path, exact pixels, encoded bytes, SHA-256, motif/palette, review status, and any known issues**. A machine-readable JSON file and a short Markdown report are ideal.
 9. Do not claim images are "in the game" merely because you exported files. Verify the static image integration below and an actual browser match.
-10. Never skip a policy-disallowed image with a blank placeholder; generate a distinct, compliant SFW alternative and document what was substituted.
+10. Never skip a policy-disallowed image with a blank placeholder; generate a distinct, compliant alternative and document what was substituted.
 
 ### Code integration required (current code is SVG-only)
 
