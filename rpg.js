@@ -147,7 +147,7 @@ function timeFlash(beforeDay,beforeSlot,source='activity'){
  overlay.addEventListener('animationend',()=>overlay.remove());
 }
 
-function defaults(){return {sideQuests:{},activeSideQuest:null,day:1,slot:0,location:'home',metReina:false,reinaTrust:0,reinaDuels:0,results:[],flags:{intro:false},journal:['The 90-day season begins.'],pendingDuel:null,bonds:{},talked:{},hungOut:{},eventsDone:{},points:0,credits:80,playerDeck:'blackout',selected:null,ended:false,storyDone:{},storyMissed:{},relationships:{},routeOutcomes:{},partner:null,activeStory:null,activeEncounter:null,activeArc:null,arcFlags:{},arcOutcomes:{},activityDone:{},encountersDone:{},focus:75,insight:0,reputation:0,preparation:0,lastDuelReceipt:null,tournaments:{},campaignHistory:[],ngPlus:0,appointments:[],appointmentSeq:0,scene:null,socialHistory:{},situationDone:{},activeSituation:null,deckJourney:null,competitive:null,npcReactivity:null,community:null,consequences:null,mandatoryEventState:null,playmatGifts:{},playmatSelected:'aurora',gameplayTutorials:{disabled:false,seen:{}}}}
+function defaults(){return {sideQuests:{},activeSideQuest:null,day:1,slot:0,location:'home',visitedLocations:{home:true},metReina:false,reinaTrust:0,reinaDuels:0,results:[],flags:{intro:false},journal:['The 90-day season begins.'],pendingDuel:null,bonds:{},talked:{},hungOut:{},eventsDone:{},points:0,credits:80,playerDeck:'blackout',selected:null,ended:false,storyDone:{},storyMissed:{},relationships:{},routeOutcomes:{},partner:null,activeStory:null,activeEncounter:null,activeArc:null,arcFlags:{},arcOutcomes:{},activityDone:{},encountersDone:{},focus:75,insight:0,reputation:0,preparation:0,lastDuelReceipt:null,tournaments:{},campaignHistory:[],ngPlus:0,appointments:[],appointmentSeq:0,scene:null,socialHistory:{},situationDone:{},activeSituation:null,deckJourney:null,competitive:null,npcReactivity:null,community:null,consequences:null,mandatoryEventState:null,playmatGifts:{},playmatSelected:'aurora',gameplayTutorials:{disabled:false,seen:{}}}}
 const hadCampaignSave=!!localStorage.getItem(KEY);
 let state;try{state=JSON.parse(localStorage.getItem(KEY))||defaults();if(!Number.isInteger(state.day)||state.day<1||state.day>91)throw Error('Invalid save');}catch{state=defaults()}
 for(const [k,v] of Object.entries(defaults()))if(state[k]===undefined)state[k]=v;
@@ -157,6 +157,8 @@ TUTORIAL?.hydrate(state);
 if(!Array.isArray(state.campaignHistory))state.campaignHistory=[];
 if(!Number.isInteger(state.ngPlus)||state.ngPlus<0)state.ngPlus=0;
 if(!places[state.location])state.location='home';
+if(!state.visitedLocations||typeof state.visitedLocations!=='object'||Array.isArray(state.visitedLocations))state.visitedLocations={home:true};
+state.visitedLocations[state.location]=true;
 if(!Number.isInteger(state.slot)||state.slot<0||state.slot>2)state.slot=0;
 for(const k of ['results','journal'])if(!Array.isArray(state[k]))state[k]=defaults()[k];
 for(const k of ['flags','bonds','talked','hungOut','eventsDone','storyDone','storyMissed','relationships','routeOutcomes'])if(!state[k]||typeof state[k]!=='object'||Array.isArray(state[k]))state[k]={};
@@ -322,6 +324,17 @@ function closeSceneDialogue(){
  scene={speaker:'Narrator',line:'',choices:[]};
  state.scene=scene;
  persist();render();
+}
+// Narrate a destination only the first time the player visits it.
+function travelTo(placeId,{intro=true}={}){
+ if(!places[placeId]||controlsLocked()||state.location===placeId)return false;
+ const firstVisit=!state.visitedLocations[placeId];
+ state.visitedLocations[placeId]=true;
+ state.location=placeId;state.selected=null;
+ if(firstVisit&&intro)say('Narrator',places[placeId][1]);
+ else{scene={speaker:'Narrator',line:'',choices:[]};state.scene=scene;persist();render();}
+ tutorialEvent('travel');
+ return true;
 }
 function publicAppointments(place){return [...APPOINTMENTS.overrides(state),...STORY.available(state,place),...SIDE.appointments(state)];}
 function currentPeople(){if(state.day>90)return [];const regular=SCHEDULES.peopleAt(state.day,state.slot,state.location,publicAppointments(state.location));
@@ -690,7 +703,7 @@ function act(action){
   try{APPOINTMENTS.cancel(state,plan.id);persist();return say('Planner','You cancelled the meet-up in advance. No one was kept waiting.');}
   catch(err){$('notice').textContent=err.message;return;}
  }
- if(type==='home'){state.location='home';state.selected=null;persist();tutorialEvent('travel');return say('Narrator','Back home. The championship posters on the wall remind you why you came.');}
+ if(type==='home'){travelTo('home');return;}
  if(type==='where'){const c=cast[id],visit=SCHEDULES.nextVisit(id,state.day,state.slot,[]);return say('Narrator',c.name+(visit?' is usually around '+places[visit.place][0]+' on day '+visit.day+', '+periods[visit.slot]+'.':' has no announced public visits in the coming week.'),options(id));}
  if(type==='sleep'){if(state.location!=='home')return;const n=3-state.slot;if(!confirmTimeAdvance(n))return;advance(n,'sleep');return say('Narrator','You wake up to a new day in Neo Harbor.');}
  if(type==='close'||type==='dismissDialogue')return closeSceneDialogue();
@@ -1224,9 +1237,8 @@ function renderAppointments(locked){
     attend.onclick=()=>act('attend:'+meeting.id);controls.append(attend);
    }else{
     const travel=document.createElement('button');travel.className='meeting-attend';travel.textContent='Go there · free';travel.disabled=locked;travel.onclick=()=>{
-     state.location=meeting.place;state.selected=null;persist();
-     if(currentPeople().includes(meeting.npc))selectPerson(meeting.npc);
-     else say('Narrator','You arrive at '+places[meeting.place][0]+'.');};controls.append(travel);
+     travelTo(meeting.place,{intro:false});
+     if(currentPeople().includes(meeting.npc))selectPerson(meeting.npc);};controls.append(travel);
    }
   }else{
    const cancel=document.createElement('button');cancel.className='meeting-cancel';cancel.textContent='Cancel · free';cancel.disabled=locked;cancel.onclick=()=>act('cancelPlan:'+meeting.id);controls.append(cancel);
@@ -1245,7 +1257,7 @@ function openPlannerSuggestion(id){
  const pick=PLANNER.recommend(state,plannerDependencies()).find(x=>x.id===id);
  if(!pick||pick.timing!=='now'||!places[pick.place])return;
  if(pick.place!==state.location){
-  state.location=pick.place;state.selected=null;persist();render();tutorialEvent('travel');
+  travelTo(pick.place,{intro:false});
  }
  tutorialEvent('planner');
  // Free navigation can lead right into a character greeting, but never
@@ -1273,11 +1285,15 @@ function openPlannerSuggestion(id){
   pick.kind==='activity'?'activities':'stories';
  renderRpgActions(false,{speaker:'Narrator',line:'',choices:[]});
  const section=$(pick.focusId);
- section?.scrollIntoView?.({behavior:'smooth',block:'nearest'});
+ const owner=section?.closest?.('.side-section');
+ const heading=owner?.querySelector?.('.sidebar-title span')?.textContent||'';
+ rpgActivePanel=Object.entries(rpgPanelGroups).find(([,names])=>names.some(name=>heading.includes(name)))?.[0]||'plans';
+ refreshRpgPanels();
  if($('rpgInfoPanel')?.getAttribute?.('aria-hidden')==='true')window.NeoRpgInterface?.toggle?.('info');
- const buttons=[...(section?.querySelectorAll?.('button')||section?.children||[])].filter(x=>x.tagName==='BUTTON'&&!x.disabled);
+ const buttons=[...(section?.querySelectorAll?.('button')||[])].filter(x=>!x.disabled);
  const action=buttons.find(b=>b.dataset?.plannerKey===pick.key)||
   buttons.find(b=>b.textContent?.includes(pick.key)||b.textContent?.includes(pick.title.split(' · ')[0]))||buttons[0];
+ (action||section)?.scrollIntoView?.({behavior:'smooth',block:'nearest'});
  action?.focus?.({preventScroll:true});
  $('notice').textContent='You are in the right place. Pick the highlighted opportunity when you are ready; no time was spent getting here.';
 }
@@ -1366,6 +1382,14 @@ function showGalleryDetail(entry){
  root.append(title,text,image,placeholder);
  window.NeoRpgDiscreetAvatars?.set?.(root,entry.character,'neutral',cast[entry.character]?.name||entry.character);
 }
+function populateGalleryCharacters(){
+ const select=$('galleryCharacter'),previous=select.value;
+ const ids=[...new Set(CG.catalog.map(entry=>entry.character))].filter(id=>!!cast[id]);
+ ids.sort((a,b)=>cast[a].name.localeCompare(cast[b].name));
+ const everyone=document.createElement('option');everyone.value='';everyone.textContent='All characters';select.replaceChildren(everyone);
+ for(const id of ids){const option=document.createElement('option');option.value=id;option.textContent=cast[id].name;select.append(option);}
+ select.value=ids.includes(previous)?previous:'';
+}
 function renderGallery(){
  const root=$('galleryGrid');root.replaceChildren();
  const all=CG.gallery(state,{character:$('galleryCharacter').value,category:$('galleryCategory').value});
@@ -1400,7 +1424,7 @@ function renderGallery(){
  }
 }
 function openGallery(){
- $('galleryPreview').replaceChildren();renderGallery();$('galleryDialog').showModal();
+ $('galleryPreview').replaceChildren();populateGalleryCharacters();renderGallery();$('galleryDialog').showModal();
 }
 
 function openCommunityBoard(){
@@ -1523,20 +1547,74 @@ function renderBracketProgress(){
  }
 }
 
+// One spoiler-safe timeline for appointments, known stories and official fixtures.
 function openCalendar(){
  const root=$('calendarEntries');root.replaceChildren();
- for(const e of eventCards.filter(e=>e.day>=state.day).slice(0,8)){
-  const p=document.createElement('div');p.className='calendar-entry';
-  p.textContent='DAY '+e.day+' · '+periods[e.slot]+' · '+e.title+' · '+places[e.place][0];root.append(p);
+ const now=APPOINTMENTS.stamp(state.day,state.slot);
+ const rows=[];
+ const add=(entry)=>{if(!places[entry.place])return;rows.push(entry);};
+ for(const plan of APPOINTMENTS.active(state)){
+  if(APPOINTMENTS.stamp(plan.day,plan.slot)<now)continue;
+  const activity=SOCIAL.activities?.find(item=>item.id===plan.activityId);
+  add({day:plan.day,slot:plan.slot,place:plan.place,kind:'Personal plan',
+   title:'Meet '+(cast[plan.npc]?.name||'your friend'),
+   detail:activity?.title||'Agreed meet-up',npc:plan.npc});
+ }
+ for(const e of eventCards){
+  if(APPOINTMENTS.stamp(e.day,e.slot)<now||state.eventsDone?.[e.day+':'+e.title])continue;
+  add({day:e.day,slot:e.slot,place:e.place,kind:'Official event',title:e.title,
+   detail:'Scheduled circuit exhibition'});
  }
  for(const cup of TOURNAMENTS.cups){
   const progress=TOURNAMENTS.status(state,cup.id);
-  const entry=document.createElement('div');entry.className='calendar-entry';
-  const description=progress.state==='champion'?'CHAMPION':progress.state==='eliminated'?'ELIMINATED':progress.state==='expired'||progress.state==='missed'?'REGISTRATION CLOSED':progress.round?'ROUND '+(progress.round+1)+'/3':'REGISTRATION';
-  entry.textContent=cup.title+' · Days '+cup.day+'–'+cup.end+' · '+description;
-  root.append(entry);
+  if(cup.end<state.day||['champion','eliminated','expired','missed'].includes(progress.state))continue;
+  add({day:Math.max(state.day,cup.day),slot:null,place:cup.place,kind:'Tournament',
+   title:cup.title,detail:'Registration: Days '+cup.day+'–'+cup.end+
+    (progress.round?' · Round '+(progress.round+1)+'/3':'')});
  }
- const info=document.createElement('p');info.className='empty-note';info.textContent='Tournament matches use real TCG duels. Wins advance the bracket, defeats eliminate, draws allow a rematch. Other personal encounters remain discoverable.';root.append(info);
+ // Only reveal a story already available to a character the player has met.
+ for(const event of STORY.available(state)){
+  if(!state['met_'+event.npc]&&!(event.npc==='reina'&&state.metReina))continue;
+  if(event.slot!==null&&event.slot!==undefined&&event.slot!==state.slot)continue;
+  if(!places[event.place])continue;
+  const present=SCHEDULES.peopleAt(state.day,state.slot,event.place,publicAppointments(event.place));
+  if(!present.includes(event.npc))continue;
+  add({day:state.day,slot:state.slot,place:event.place,kind:'Personal story',
+   title:'A moment with '+cast[event.npc].name,
+   detail:'A conversation is available now',npc:event.npc});
+ }
+ rows.sort((a,b)=>a.day-b.day||(a.slot??0)-(b.slot??0)||a.kind.localeCompare(b.kind));
+ if(!rows.length){const p=document.createElement('p');p.className='empty-note';p.textContent='No known plans yet. Talk to people around town or check back later.';root.append(p);}
+ let daySection=null,lastDay=null;
+ for(const entry of rows){
+  if(entry.day!==lastDay){
+   lastDay=entry.day;daySection=document.createElement('section');daySection.className='rpg-calendar-day';
+   const heading=document.createElement('h3');heading.textContent='Day '+entry.day+(entry.day===state.day?' · Today':'');
+   daySection.append(heading);root.append(daySection);
+  }
+  const row=document.createElement('article');row.className='rpg-calendar-item';
+  const type=document.createElement('small');type.className='rpg-calendar-type';type.textContent=entry.kind;
+  const title=document.createElement('strong');title.textContent=entry.title;
+  const detail=document.createElement('p');detail.textContent=(entry.slot===null?'Any period':periods[entry.slot])+
+   ' · '+places[entry.place][0]+' · '+entry.detail;
+  row.append(type,title,detail);
+  const current=entry.day===state.day&&(entry.slot===null||entry.slot===state.slot);
+  if(current){
+   const action=document.createElement('button');action.type='button';
+   action.textContent=entry.place===state.location?'View here':'Visit '+places[entry.place][0]+' · free';
+   action.disabled=controlsLocked();
+   action.onclick=()=>{
+    $('calendarDialog').close();
+    if(entry.place!==state.location)travelTo(entry.place);
+    else if(entry.npc&&currentPeople().includes(entry.npc))selectPerson(entry.npc);
+    else{rpgLocalTab=entry.kind==='Tournament'||entry.kind==='Official event'?'activities':'stories';renderRpgActions(false,{speaker:'Narrator',line:'',choices:[]});}
+    if(entry.place===state.location&&entry.npc&&currentPeople().includes(entry.npc))return;
+    if(entry.npc&&currentPeople().includes(entry.npc))selectPerson(entry.npc);
+   };
+   row.append(action);
+  }
+  daySection.append(row);
+ }
  $('calendarDialog').showModal();
 }
 function makeAvatar(id,size=''){
@@ -1623,7 +1701,7 @@ function renderSeasonReport(){
 
 // Presentation-only navigation: game state and action handlers remain authoritative.
 const rpgPanelGroups={
- scene:['WHO\'S HERE','YOUR DAY','TOWN LIFE'],
+ scene:['WHO\'S HERE','YOUR DAY','TOWN LIFE','LOCAL CIRCUIT'],
  stories:['STORY OPPORTUNITIES','UNEXPECTED MOMENTS','SIDE QUESTS','LOCAL ENCOUNTERS'],
  plans:['WHAT NEXT?','TODAY\'S PRIORITY','UPCOMING PLANS','AROUND TOWN NOW'],
  progress:['YOUR 90-DAY JOURNEY','TOURNAMENT BRACKETS','YOUR DECK','SEASON JOURNAL']
@@ -1876,7 +1954,7 @@ function render(){
    button.className='place'+(selected?' selected':'');
    button.disabled=locked;
    button.setAttribute('aria-current',selected?'location':'false');
-   button.onclick=()=>{if(state.location===id)return;state.location=id;state.selected=null;persist();say('Narrator',detail);tutorialEvent('travel');};
+   button.onclick=()=>travelTo(id);
    const status=button.querySelector('.place-status');
    const count=state.day<=90?SCHEDULES.peopleAt(state.day,state.slot,id,publicAppointments(id)).length:0;
    const label=selected?'HERE':count?count+' HERE':'›';
@@ -1966,7 +2044,7 @@ function render(){
   const label=document.createElement('strong');label.textContent=cast[id].name;
   const where=document.createElement('small');where.textContent='↗ '+places[place][0];
   button.append(label,where);button.title='Travel for free to '+places[place][0];
-  button.onclick=()=>{if(state.activeStory||state.activeEncounter||state.pendingDuel)return;state.location=place;state.selected=null;persist();say('Narrator','You head to '+places[place][0]+'. '+places[place][1]);tutorialEvent('travel');};
+  button.onclick=()=>travelTo(place);
   $('townRadar').append(button);
  }
  $('people').replaceChildren();
@@ -2156,6 +2234,13 @@ $('statusBtn').onclick=()=>{
 };
 $('statusClose').onclick=()=>window.NeoRpgStatus.close();
 $('galleryBtn').onclick=openGallery;
+const moreMenu=$('rpgMoreMenu');
+moreMenu?.addEventListener('click',event=>{
+ if(event.target.closest('#galleryBtn,#rpgDiscreetToggle,a[href]'))moreMenu.open=false;
+});
+document.addEventListener('pointerdown',event=>{
+ if(moreMenu?.open&&!moreMenu.contains(event.target))moreMenu.open=false;
+});
 $('galleryClose').onclick=()=>$('galleryDialog').close();
 $('galleryCharacter').onchange=renderGallery;$('galleryCategory').onchange=renderGallery;$('galleryUnseen').onchange=renderGallery;
 $('cgMomentClose').onclick=()=>$('cgMoment').close();

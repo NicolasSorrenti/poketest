@@ -48,7 +48,7 @@ const acknowledgeMandatory=async(page)=>{
   assert.equal(await page.locator('#places .place').count(),7);
   assert.equal(await page.locator('#rpgMapPanel .rpg-drawer-close').isVisible(),true);
   await page.locator('#rpgMapPanel .rpg-drawer-close').click();
-  assert.equal(await mapSheet.isVisible(),false);
+  await mapSheet.waitFor({state:'hidden',timeout:5000});
   await page.locator('#rpgInfoToggle').click();
   const infoSheet=page.locator('#rpgInfoPanel');
   await infoSheet.waitFor({state:'visible'});
@@ -63,7 +63,7 @@ const acknowledgeMandatory=async(page)=>{
   await page.locator('#rpgPanelTabs button[data-panel="progress"]').click();
   assert.equal(await page.locator('#journeyProgress').isVisible(),true);
   await page.keyboard.press('Escape');
-  assert.equal(await infoSheet.isVisible(),false);
+  await infoSheet.waitFor({state:'hidden',timeout:5000});
   await page.setViewportSize({width:1400,height:900});
   // This is a dedicated page, not the old two-select card-swap popup.
   await page.locator('#rpgInfoToggle').click();
@@ -88,9 +88,20 @@ const acknowledgeMandatory=async(page)=>{
   assert.equal(await page.locator('#places .place').count(),7);
   await page.locator('#whereLabel').getByText(/YOU ARE HOME/).waitFor();
   await save(page,'01-home.png');
+  // Secondary tools remain accessible after navigation is simplified.
+  await page.locator('#rpgMoreMenu > summary').click();
+  await page.locator('#galleryBtn').click();
+  const expectedCharacters=await page.evaluate(()=>new Set(window.NeoRpgCGGallery.catalog.map(e=>e.character)).size);
+  assert.equal(await page.locator('#galleryCharacter option').count(),expectedCharacters+1,'Gallery must list every catalog character');
+  await page.locator('#galleryClose').click();
+  assert.equal(await page.locator('#rpgMoreMenu').evaluate(el=>el.open),false,'More closes after selection');
+  await page.locator('#calendarBtn').click();
+  assert.match(await page.locator('#calendarEntries').textContent(),/Day \d+[\s\S]*(Official event|Tournament)/);
+  await page.locator('#calendarClose').click();
 
   await page.locator('#rpgMapToggle').click();
   await page.locator('#places .place').filter({hasText:'Pixel Palace'}).click();
+  assert.equal((await readState(page)).visitedLocations.arcade,true,'First visit must be remembered across subsequent location changes');
   await page.locator('#quickNext').click();
   let state=await readState(page);
   assert.equal(state.day,1);assert.equal(state.slot,1);assert.equal(state.location,'arcade');
