@@ -16,7 +16,7 @@ function between(start,end){
 }
 assert.match(html,/id="endBtn" class="primary"/,'setup control uses the permanent, visible action rail');
 assert.match(html,/classic_live\.js\?v=\d+/,'updated UI must not use cached browser JavaScript');
-assert.match(js,/el\\.classList\\.toggle\\('hidden',!d&&!targetMode&&!v\\.over&&\\(v\\.phase==='game'\\|\\|v\\.phase==='setup'\\)\\)/,'hide only opening setup instructions, not actual decisions');
+assert.match(js,/el\.classList\.toggle\('hidden',!d&&!targetMode&&!v\.over&&\(v\.phase==='game'\|\|v\.phase==='setup'\)\)/,'hide only opening setup instructions, not actual decisions');
 assert.doesNotMatch(js,/acts\.append\(btn\('Confirm opening setup'/,'do not leave a second setup button in the popup');
 const visibility=between("  el.classList.toggle('hidden',","  opts.textContent=");
 function decisionHidden(phase,d=null){
