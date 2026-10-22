@@ -10,6 +10,7 @@ class Element{
  prepend(...nodes){this.children.unshift(...nodes);}
  append(...nodes){this.children.push(...nodes);if(this.options)this.options=this.children;}
  replaceChildren(...nodes){this.children=[...nodes];if(this.options)this.options=this.children;}
+ querySelector(selector){if(selector.startsWith('.'))return this.children.find(child=>child.className===selector.slice(1))||null;return null;}
  querySelectorAll(){return [];}
  addEventListener(type,fn){(this.events??={})[type]=fn;}
  setAttribute(k,v){this.attrs[k]=v;}
