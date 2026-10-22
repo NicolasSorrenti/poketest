@@ -405,6 +405,7 @@
   $('myDiscardBtn').querySelector('b').textContent=you.discard.length;$('oppDiscardBtn').querySelector('b').textContent=cpu.discard.length;
   ux.renderGuide($('turnCoach'),{view:v,me:0,energyUsed:current.you.energyUsed,targetMode,card});
   setZone('enemyActive',cpu,-1);setZone('enemyBench',cpu,0);setZone('myActive',you,-1);setZone('myBench',you,0);
+  shared.renderStadium({mine:$('myStadium'),theirs:$('enemyStadium'),stadium:v.stadium,me:0,getCard:card,picture,onInspect:id=>preview.inspect(id),onHover:(element,id)=>preview.attach(element,id)});
   renderHandFan(you.hand);$('hand').textContent='';you.hand.forEach((id,i)=>$('hand').append(handCard(id,i,v.phase==='setup')));
   renderHandActions();$('attacks').textContent='';$('powers').textContent='';
   const attackEnabled=v.phase==='game'&&!v.over&&yourTurn&&!v.pendingDecision&&!busy;
