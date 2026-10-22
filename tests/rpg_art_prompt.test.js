@@ -32,6 +32,27 @@ test('eight original characters can each receive one booster or result prompt', 
   }
 });
 
+test('reward art keeps the character in her assigned game venue with an actual pack', () => {
+  const scenes = {
+    hana: ['Lucky Draw card shop','Hana extends her hand'],
+    reina: ['tournament registration table','Reina offers one sealed booster'],
+    shiori: ['campus library','Shiori slides one sealed booster'],
+    yuna: ['neon arcade card counter','Yuna holds up one sealed booster'],
+    akari: ['campus strategy-club table','Akari adjusts her square glasses'],
+    camila: ['collector lounge','Camila smiles knowingly'],
+    marina: ['riverside community-card kiosk','Marina presents one sealed booster'],
+    kaede: ['underground card-club counter','Kaede holds out one sealed booster'],
+  };
+  for (const [id,[venue,action]] of Object.entries(scenes)) {
+    const {prompt,path} = createPrompt({reward:'booster',characterId:id});
+    assert.ok(prompt.includes(venue), id + ' missing venue');
+    assert.ok(prompt.includes(action), id + ' missing reward action');
+    assert.match(prompt,/the face and the single sealed booster pack must be clearly visible together/);
+    assert.doesNotMatch(prompt,/bedroom|dormitory|lingerie|bunny|pin.up|sunset bedroom/i);
+    assert.equal(path,'rpg-assets/characters/' + id + '/events/booster.webp');
+  }
+});
+
 test('legacy gallery requests and even negative mentions of layouts are rejected', () => {
   const opening='Create one complete, standalone illustration showing a single continuous scene and one focal moment. ';
   for (const bad of [
