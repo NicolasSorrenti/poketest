@@ -147,7 +147,7 @@ function timeFlash(beforeDay,beforeSlot,source='activity'){
  overlay.addEventListener('animationend',()=>overlay.remove());
 }
 
-function defaults(){return {sideQuests:{},activeSideQuest:null,day:1,slot:0,location:'home',metReina:false,reinaTrust:0,reinaDuels:0,results:[],flags:{intro:false},journal:['The 90-day season begins.'],pendingDuel:null,bonds:{},talked:{},hungOut:{},eventsDone:{},points:0,credits:80,playerDeck:'blackout',selected:null,ended:false,storyDone:{},storyMissed:{},relationships:{},routeOutcomes:{},partner:null,activeStory:null,activeEncounter:null,activeArc:null,arcFlags:{},arcOutcomes:{},activityDone:{},encountersDone:{},focus:75,insight:0,reputation:0,preparation:0,lastDuelReceipt:null,tournaments:{},campaignHistory:[],ngPlus:0,appointments:[],appointmentSeq:0,scene:null,socialHistory:{},situationDone:{},activeSituation:null,deckJourney:null,competitive:null,npcReactivity:null,community:null,consequences:null,mandatoryEventState:null,playmatGifts:{},playmatSelected:'aurora',gameplayTutorials:{disabled:false,seen:{}}}}
+function defaults(){return {sideQuests:{},activeSideQuest:null,day:1,slot:0,location:'home',visitedLocations:{home:true},metReina:false,reinaTrust:0,reinaDuels:0,results:[],flags:{intro:false},journal:['The 90-day season begins.'],pendingDuel:null,bonds:{},talked:{},hungOut:{},eventsDone:{},points:0,credits:80,playerDeck:'blackout',selected:null,ended:false,storyDone:{},storyMissed:{},relationships:{},routeOutcomes:{},partner:null,activeStory:null,activeEncounter:null,activeArc:null,arcFlags:{},arcOutcomes:{},activityDone:{},encountersDone:{},focus:75,insight:0,reputation:0,preparation:0,lastDuelReceipt:null,tournaments:{},campaignHistory:[],ngPlus:0,appointments:[],appointmentSeq:0,scene:null,socialHistory:{},situationDone:{},activeSituation:null,deckJourney:null,competitive:null,npcReactivity:null,community:null,consequences:null,mandatoryEventState:null,playmatGifts:{},playmatSelected:'aurora',gameplayTutorials:{disabled:false,seen:{}}}}
 const hadCampaignSave=!!localStorage.getItem(KEY);
 let state;try{state=JSON.parse(localStorage.getItem(KEY))||defaults();if(!Number.isInteger(state.day)||state.day<1||state.day>91)throw Error('Invalid save');}catch{state=defaults()}
 for(const [k,v] of Object.entries(defaults()))if(state[k]===undefined)state[k]=v;
@@ -157,6 +157,7 @@ TUTORIAL?.hydrate(state);
 if(!Array.isArray(state.campaignHistory))state.campaignHistory=[];
 if(!Number.isInteger(state.ngPlus)||state.ngPlus<0)state.ngPlus=0;
 if(!places[state.location])state.location='home';
+if(!state.visitedLocations||typeof state.visitedLocations!=='object'||Array.isArray(state.visitedLocations))state.visitedLocations={home:true,[state.location]:true};
 if(!Number.isInteger(state.slot)||state.slot<0||state.slot>2)state.slot=0;
 for(const k of ['results','journal'])if(!Array.isArray(state[k]))state[k]=defaults()[k];
 for(const k of ['flags','bonds','talked','hungOut','eventsDone','storyDone','storyMissed','relationships','routeOutcomes'])if(!state[k]||typeof state[k]!=='object'||Array.isArray(state[k]))state[k]={};
@@ -322,6 +323,17 @@ function closeSceneDialogue(){
  scene={speaker:'Narrator',line:'',choices:[]};
  state.scene=scene;
  persist();render();
+}
+// Narrate a destination only the first time the player visits it.
+function travelTo(placeId){
+ if(!places[placeId]||controlsLocked()||state.location===placeId)return false;
+ const firstVisit=!state.visitedLocations[placeId];
+ state.visitedLocations[placeId]=true;
+ state.location=placeId;state.selected=null;
+ if(firstVisit)say('Narrator',places[placeId][1]);
+ else{scene={speaker:'Narrator',line:'',choices:[]};state.scene=scene;persist();render();}
+ tutorialEvent('travel');
+ return true;
 }
 function publicAppointments(place){return [...APPOINTMENTS.overrides(state),...STORY.available(state,place),...SIDE.appointments(state)];}
 function currentPeople(){if(state.day>90)return [];const regular=SCHEDULES.peopleAt(state.day,state.slot,state.location,publicAppointments(state.location));
@@ -690,7 +702,7 @@ function act(action){
   try{APPOINTMENTS.cancel(state,plan.id);persist();return say('Planner','You cancelled the meet-up in advance. No one was kept waiting.');}
   catch(err){$('notice').textContent=err.message;return;}
  }
- if(type==='home'){state.location='home';state.selected=null;persist();tutorialEvent('travel');return say('Narrator','Back home. The championship posters on the wall remind you why you came.');}
+ if(type==='home'){travelTo('home');return;}
  if(type==='where'){const c=cast[id],visit=SCHEDULES.nextVisit(id,state.day,state.slot,[]);return say('Narrator',c.name+(visit?' is usually around '+places[visit.place][0]+' on day '+visit.day+', '+periods[visit.slot]+'.':' has no announced public visits in the coming week.'),options(id));}
  if(type==='sleep'){if(state.location!=='home')return;const n=3-state.slot;if(!confirmTimeAdvance(n))return;advance(n,'sleep');return say('Narrator','You wake up to a new day in Neo Harbor.');}
  if(type==='close'||type==='dismissDialogue')return closeSceneDialogue();
@@ -1224,9 +1236,8 @@ function renderAppointments(locked){
     attend.onclick=()=>act('attend:'+meeting.id);controls.append(attend);
    }else{
     const travel=document.createElement('button');travel.className='meeting-attend';travel.textContent='Go there · free';travel.disabled=locked;travel.onclick=()=>{
-     state.location=meeting.place;state.selected=null;persist();
-     if(currentPeople().includes(meeting.npc))selectPerson(meeting.npc);
-     else say('Narrator','You arrive at '+places[meeting.place][0]+'.');};controls.append(travel);
+     travelTo(meeting.place);
+     if(currentPeople().includes(meeting.npc))selectPerson(meeting.npc);};controls.append(travel);
    }
   }else{
    const cancel=document.createElement('button');cancel.className='meeting-cancel';cancel.textContent='Cancel · free';cancel.disabled=locked;cancel.onclick=()=>act('cancelPlan:'+meeting.id);controls.append(cancel);
@@ -1245,7 +1256,7 @@ function openPlannerSuggestion(id){
  const pick=PLANNER.recommend(state,plannerDependencies()).find(x=>x.id===id);
  if(!pick||pick.timing!=='now'||!places[pick.place])return;
  if(pick.place!==state.location){
-  state.location=pick.place;state.selected=null;persist();render();tutorialEvent('travel');
+  travelTo(pick.place);
  }
  tutorialEvent('planner');
  // Free navigation can lead right into a character greeting, but never
@@ -1273,11 +1284,15 @@ function openPlannerSuggestion(id){
   pick.kind==='activity'?'activities':'stories';
  renderRpgActions(false,{speaker:'Narrator',line:'',choices:[]});
  const section=$(pick.focusId);
- section?.scrollIntoView?.({behavior:'smooth',block:'nearest'});
- if($('rpgInfoPanel')?.getAttribute?.('aria-hidden')==='true')window.NeoRpgInterface?.toggle?.('info');
- const buttons=[...(section?.querySelectorAll?.('button')||section?.children||[])].filter(x=>x.tagName==='BUTTON'&&!x.disabled);
+ const owner=section?.closest('.side-section');
+ const heading=owner?.querySelector('.sidebar-title span')?.textContent||'';
+ rpgActivePanel=Object.entries(rpgPanelGroups).find(([,names])=>names.some(name=>heading.includes(name)))?.[0]||'plans';
+ refreshRpgPanels();
+ if($('rpgInfoPanel')?.getAttribute('aria-hidden')==='true')window.NeoRpgInterface?.toggle?.('info');
+ const buttons=[...(section?.querySelectorAll('button')||[])].filter(x=>!x.disabled);
  const action=buttons.find(b=>b.dataset?.plannerKey===pick.key)||
   buttons.find(b=>b.textContent?.includes(pick.key)||b.textContent?.includes(pick.title.split(' · ')[0]))||buttons[0];
+ (action||section)?.scrollIntoView?.({behavior:'smooth',block:'nearest'});
  action?.focus?.({preventScroll:true});
  $('notice').textContent='You are in the right place. Pick the highlighted opportunity when you are ready; no time was spent getting here.';
 }
@@ -1366,6 +1381,14 @@ function showGalleryDetail(entry){
  root.append(title,text,image,placeholder);
  window.NeoRpgDiscreetAvatars?.set?.(root,entry.character,'neutral',cast[entry.character]?.name||entry.character);
 }
+function populateGalleryCharacters(){
+ const select=$('galleryCharacter'),previous=select.value;
+ const ids=[...new Set(CG.catalog.map(entry=>entry.character))].filter(id=>!!cast[id]);
+ ids.sort((a,b)=>cast[a].name.localeCompare(cast[b].name));
+ select.replaceChildren(new Option('All characters',''));
+ for(const id of ids)select.add(new Option(cast[id].name,id));
+ select.value=ids.includes(previous)?previous:'';
+}
 function renderGallery(){
  const root=$('galleryGrid');root.replaceChildren();
  const all=CG.gallery(state,{character:$('galleryCharacter').value,category:$('galleryCategory').value});
@@ -1400,7 +1423,7 @@ function renderGallery(){
  }
 }
 function openGallery(){
- $('galleryPreview').replaceChildren();renderGallery();$('galleryDialog').showModal();
+ $('galleryPreview').replaceChildren();populateGalleryCharacters();renderGallery();$('galleryDialog').showModal();
 }
 
 function openCommunityBoard(){
@@ -1623,7 +1646,7 @@ function renderSeasonReport(){
 
 // Presentation-only navigation: game state and action handlers remain authoritative.
 const rpgPanelGroups={
- scene:['WHO\'S HERE','YOUR DAY','TOWN LIFE'],
+ scene:['WHO\'S HERE','YOUR DAY','TOWN LIFE','LOCAL CIRCUIT'],
  stories:['STORY OPPORTUNITIES','UNEXPECTED MOMENTS','SIDE QUESTS','LOCAL ENCOUNTERS'],
  plans:['WHAT NEXT?','TODAY\'S PRIORITY','UPCOMING PLANS','AROUND TOWN NOW'],
  progress:['YOUR 90-DAY JOURNEY','TOURNAMENT BRACKETS','YOUR DECK','SEASON JOURNAL']
@@ -1876,7 +1899,7 @@ function render(){
    button.className='place'+(selected?' selected':'');
    button.disabled=locked;
    button.setAttribute('aria-current',selected?'location':'false');
-   button.onclick=()=>{if(state.location===id)return;state.location=id;state.selected=null;persist();say('Narrator',detail);tutorialEvent('travel');};
+   button.onclick=()=>travelTo(id);
    const status=button.querySelector('.place-status');
    const count=state.day<=90?SCHEDULES.peopleAt(state.day,state.slot,id,publicAppointments(id)).length:0;
    const label=selected?'HERE':count?count+' HERE':'›';
@@ -1966,7 +1989,7 @@ function render(){
   const label=document.createElement('strong');label.textContent=cast[id].name;
   const where=document.createElement('small');where.textContent='↗ '+places[place][0];
   button.append(label,where);button.title='Travel for free to '+places[place][0];
-  button.onclick=()=>{if(state.activeStory||state.activeEncounter||state.pendingDuel)return;state.location=place;state.selected=null;persist();say('Narrator','You head to '+places[place][0]+'. '+places[place][1]);tutorialEvent('travel');};
+  button.onclick=()=>travelTo(place);
   $('townRadar').append(button);
  }
  $('people').replaceChildren();
