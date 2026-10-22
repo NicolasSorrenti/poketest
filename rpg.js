@@ -1174,7 +1174,7 @@ function renderAppointments(locked){
   const controls=document.createElement('div');controls.className='meeting-actions';
   if(ready){
    if(meeting.place===state.location){
-    const attend=document.createElement('button');attend.className='meeting-attend';
+    const attend=document.createElement('button');attend.className='meeting-attend';attend.dataset.plannerKey=String(meeting.id);
     attend.textContent=meeting.socialTone==='romantic'?'Go on date · ⏳':meeting.activityId?'Enjoy outing · ⏳':'Meet now · ⏳';
     const reason=DATES.canAttend(state,meeting,currentPeople(),{appointments:APPOINTMENTS,social:SOCIAL,cast});
     attend.disabled=locked||!!reason;if(reason)attend.title=reason;
@@ -1211,8 +1211,10 @@ function openPlannerSuggestion(id){
  renderRpgActions(false,{speaker:'Narrator',line:'',choices:[]});
  const section=$(pick.focusId);
  section?.scrollIntoView?.({behavior:'smooth',block:'nearest'});
- const buttons=[...(section?.children||[])].filter(x=>x.tagName==='BUTTON'&&!x.disabled);
- const action=buttons.find(b=>b.textContent?.includes(pick.key)||b.textContent?.includes(pick.title.split(' · ')[0]))||buttons[0];
+ if($('rpgInfoPanel')?.getAttribute?.('aria-hidden')==='true')window.NeoRpgInterface?.toggle?.('info');
+ const buttons=[...(section?.querySelectorAll?.('button')||section?.children||[])].filter(x=>x.tagName==='BUTTON'&&!x.disabled);
+ const action=buttons.find(b=>b.dataset?.plannerKey===pick.key)||
+  buttons.find(b=>b.textContent?.includes(pick.key)||b.textContent?.includes(pick.title.split(' · ')[0]))||buttons[0];
  action?.focus?.({preventScroll:true});
  $('notice').textContent='You are in the right place. Pick the highlighted opportunity when you are ready; no time was spent getting here.';
 }
@@ -1956,7 +1958,7 @@ function render(){
  portraitRoot.hidden=state.location!=='home'&&(people.length>0||!!portraitId);
  $('storyEvents').replaceChildren();const stories=eligibleStories();
  for(const e of stories){
-  const b=document.createElement('button');b.className='event-btn';b.disabled=locked;b.textContent='✦  '+e.title+' · ⏳ 1 period';
+  const b=document.createElement('button');b.className='event-btn';b.disabled=locked;b.dataset.plannerKey=e.id;b.textContent='✦  '+e.title+' · ⏳ 1 period';
   const chapter=BOND_PLAN.byEvent[e.id];
   const small=document.createElement('small');
   small.textContent=cast[e.npc].name+(chapter?' · Bond chapter '+chapter.chapter+' / 4':'')+(e.evergreen?' · available until season end':' · limited-time encounter');
@@ -1964,7 +1966,7 @@ function render(){
  }
  const personalEpisodes=ARC.available(state,currentPeople());
  for(const episode of personalEpisodes){
-  const b=document.createElement('button');b.className='event-btn arc-episode';b.disabled=locked;
+  const b=document.createElement('button');b.className='event-btn arc-episode';b.disabled=locked;b.dataset.plannerKey=episode.id;
   const title=document.createElement('strong');title.textContent='♜  '+episode.title+' · ⏳ 1 period';
   const hint=document.createElement('small');hint.textContent=cast.reina.name+' · an optional rivalry chapter';
   b.append(title,hint);b.onclick=()=>act('arc:'+episode.id);
@@ -1975,7 +1977,7 @@ function render(){
  $('situationEvents').replaceChildren();
  const moments=SITUATIONS.available(state,currentPeople());
  for(const event of moments){
-  const b=document.createElement('button');b.className='event-btn situation-event';
+  const b=document.createElement('button');b.className='event-btn situation-event';b.dataset.plannerKey=event.id;
   b.disabled=locked;
   const label=document.createElement('strong');label.textContent='✧ '+event.title+' · ⏳ 1 period';
   const hint=document.createElement('small');
@@ -2006,7 +2008,7 @@ function render(){
  }
  $('townActivities').replaceChildren();
  for(const entry of WORLD.activitiesAt(state)){
-  const b=document.createElement('button');b.className='town-activity';b.disabled=locked||!!entry.disabledReason;
+  const b=document.createElement('button');b.className='town-activity';b.dataset.plannerKey=entry.id;b.disabled=locked||!!entry.disabledReason;
   const title=document.createElement('strong');title.textContent=entry.title+' · ⏳ 1 period';
   const description=document.createElement('small');
   const gains=Object.entries(entry.change).filter(([,v])=>v>0).map(([key,value])=>'+'+value+' '+key);
@@ -2017,7 +2019,7 @@ function render(){
  }
  $('sideQuestEvents').replaceChildren();
  for(const x of SIDE.available(state,currentPeople())){
-  const b=document.createElement('button');b.className='event-btn';b.disabled=locked;
+  const b=document.createElement('button');b.className='event-btn';b.dataset.plannerKey=x.quest.id;b.disabled=locked;
   const h=document.createElement('strong');h.textContent='◆ '+x.stage.title+' · ⏳ 1 period';
   const hint=document.createElement('small');hint.textContent=cast[x.stage.npc].name+' · '+x.quest.title;
   b.append(h,hint);b.onclick=()=>act('sideQuest:'+x.quest.id);$('sideQuestEvents').append(b);
@@ -2032,7 +2034,7 @@ function render(){
  $('townEncounters').replaceChildren();
  const encounters=WORLD.availableEncounters(state,currentPeople());
  for(const entry of encounters){
-  const b=document.createElement('button');b.className='encounter-btn';b.disabled=locked;
+  const b=document.createElement('button');b.className='encounter-btn';b.dataset.plannerKey=entry.id;b.disabled=locked;
   const title=document.createElement('strong');title.textContent='✧ '+entry.title+' · ⏳ 1 period';
   const hint=document.createElement('small');hint.textContent=(entry.npc?cast[entry.npc].name:'The neighborhood')+' · limited-time opportunity';
   b.append(title,hint);b.onclick=()=>act('encounter:'+entry.id);$('townEncounters').append(b);
