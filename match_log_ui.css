@@ -1,0 +1,12 @@
+/* Full chronological battle history, without increasing the desktop rail width. */
+#actionTimeline .match-log-heading{list-style:none;margin:9px 2px 5px;font-size:10px;font-weight:800;letter-spacing:.08em;color:#c9d7e8;text-transform:uppercase}
+#actionTimeline .match-log-side{border-top:1px solid #394958;padding-top:8px;color:#91a6bd}
+#actionTimeline .match-log-event{display:flex;align-items:flex-start;gap:7px;min-width:0;padding:7px 5px;line-height:1.4;white-space:normal;overflow-wrap:anywhere}
+#actionTimeline .match-log-event.mine{border-left:2px solid #4dbaac}
+#actionTimeline .match-log-event.theirs{border-left:2px solid #df9a68}
+#actionTimeline .match-log-copy{flex:1;min-width:0;font-size:12px}
+#actionTimeline .match-log-seq{flex:none;font-size:10px;opacity:.55}
+#actionTimeline .match-log-details{list-style:none;margin-top:12px}
+#actionTimeline .match-log-details summary{cursor:pointer;padding:8px 4px;font-size:12px;font-weight:700}
+#actionTimeline .match-log-message-list{padding-left:20px;margin:0}
+#actionTimeline .match-log-message-list li{padding:4px 2px;font-size:12px;overflow-wrap:anywhere}
