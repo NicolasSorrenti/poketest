@@ -5,7 +5,7 @@
  const $=id=>document.getElementById(id),KEY='neoHarborRpgV1',
   Core=window.NeoRpgCollection,Builder=window.CubeDeckBuilder,Plan=window.NeoRpgStrategy;
  let state,builder,notice='',catalog=[],allCards=[],index=new Map(),scouts={},requestId=0;
- const persist=()=>localStorage.setItem(KEY,JSON.stringify(state));
+ const persist=()=>{localStorage.setItem(KEY,JSON.stringify(state));window.NeoRpgCloudSave?.onLocalSave();};
  const owned=()=>state.deckJourney.owned,draft=()=>Core.draft(state);
  const dirty=()=>draft().join('|')!==state.deckJourney.deck.join('|');
  const cardName=id=>index.get(id)?.name||id;
@@ -165,6 +165,13 @@
     notice='Changes discarded. Your saved deck is unchanged.';render();
    };
    $('deckStudio').hidden=false;render();
+    window.NeoRpgCloudSave?.mount({
+     getSave:()=>JSON.parse(localStorage.getItem(KEY)||'null'),
+     restoreSave:save=>{localStorage.setItem(KEY,JSON.stringify(save));location.reload();},
+     hadLocalSave:true,
+     canSwitch:()=>!state.pendingDuel,
+     showButton:false
+    });
   }catch(err){showError(err.message);}
  }
  boot();
