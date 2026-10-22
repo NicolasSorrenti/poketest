@@ -71,7 +71,7 @@ test('a mutual planned date grants modest attraction, without setting partner or
  assert.equal(result.tone,'romantic');assert.equal(result.attraction,1);
  assert.equal(s.relationships.hana.attraction,1);
  assert.equal(s.partner,undefined);assert.equal(s.routeOutcomes,undefined);
- assert.match(result.line,/agreed this would be a date/);
+ assert.match(result.line,/smiling a little longer/);
 });
 test('rivalry tone requires playful/tactical venue activity and rewards respect',()=>{
  const s=state();
