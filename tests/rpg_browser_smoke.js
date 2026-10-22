@@ -48,7 +48,7 @@ const acknowledgeMandatory=async(page)=>{
   assert.equal(await page.locator('#places .place').count(),7);
   assert.equal(await page.locator('#rpgMapPanel .rpg-drawer-close').isVisible(),true);
   await page.locator('#rpgMapPanel .rpg-drawer-close').click();
-  assert.equal(await mapSheet.isVisible(),false);
+  await mapSheet.waitFor({state:'hidden',timeout:5000});
   await page.locator('#rpgInfoToggle').click();
   const infoSheet=page.locator('#rpgInfoPanel');
   await infoSheet.waitFor({state:'visible'});
@@ -63,7 +63,7 @@ const acknowledgeMandatory=async(page)=>{
   await page.locator('#rpgPanelTabs button[data-panel="progress"]').click();
   assert.equal(await page.locator('#journeyProgress').isVisible(),true);
   await page.keyboard.press('Escape');
-  assert.equal(await infoSheet.isVisible(),false);
+  await infoSheet.waitFor({state:'hidden',timeout:5000});
   await page.setViewportSize({width:1400,height:900});
   // This is a dedicated page, not the old two-select card-swap popup.
   await page.locator('#rpgInfoToggle').click();
