@@ -1,8 +1,8 @@
 # Neo Harbor — CG Production Handoff (32 event images)
 
-> **MANDATORY ONE-IMAGE GENERATION GATE:** Read [ART_GENERATION_ONE_IMAGE_RULE.md](ART_GENERATION_ONE_IMAGE_RULE.md) before **every** CG generation. **GENERATE EXACTLY ONE (1) STANDALONE IN-GAME ILLUSTRATION OF ONE SCENE. NO CONCEPT ART, GRIDS, COLLAGES, CHARACTER SHEETS, CONTACT SHEETS, STORYBOARDS, PROMOTIONAL PANELS, UI MOCKUPS, TEXT OR LABELS.** Split a batch into separate image calls, one scene ID per call; create the thumbnail later by resizing the accepted full image. Reject any image that breaks this rule instead of cropping a panel out.
+> **PROMPT ENTRY POINT:** Run `node scripts/rpg-art-prompt.js --scene <scene_id>` for ONE asset, then copy ONLY its stdout into the image-generation tool. Do not submit this 32-scene handoff or its descriptions wholesale. See [ART_GENERATION_ONE_IMAGE_RULE.md](ART_GENERATION_ONE_IMAGE_RULE.md) for the separate QA rejection criteria.
 
-**Owner:** illustration / image-creator agent. **Gameplay:** `rpg_cg_gallery.js` owns metadata and triggers. **Characters and story:** parallel narrative agent. **Asset status:** none of these 32 new images are presently committed in this manifest; treat all as requested, not delivered. Older art ZIPs may contain other scenes; check actual image inventory before reuse.
+**Owner:** illustration / image-creator agent. **Gameplay:** `rpg_cg_gallery.js` owns metadata and triggers. **Characters and story:** parallel narrative agent. **Asset status:** All 32 season01 full CG files and 32 thumbnails have been present in main in the documented runtime paths. Some are provisional or have since been regenerated; inspect the current inventory, manifest and actual image contents before replacing anything.
 
 ## Visual bible (mandatory for all 32 images)
 Create polished original **anime visual-novel event illustrations**, stylistically coherent with Neo Harbor’s existing portraits and approved look sheets. All eight heroines are clearly **adult women (19–24)**. SFW romantic-comedy / tasteful anime fan service only. No explicit nudity, upskirt exposure, visible underwear, sexual acts, voyeuristic changing-room views, or implied minors. Situational embarrassment should be caused by humor, clothes/props getting tangled, a gust, or a playful pose rather than nonconsensual exposure.
@@ -30,7 +30,7 @@ Every section below is a complete request. Apply the shared visual bible above, 
 
 **Character:** hana; **Type:** profile; **Gameplay unlock:** meet, any public location, affection ≥ 0, day ≥ 1. **Fan-service intensity:** 0/3.
 
-**IMAGE GENERATION PROMPT:**
+**CREATIVE SCENE BRIEF (reference only; NOT a model-ready prompt):**
 
 Create a cinematic original anime visual-novel CG in Neo Harbor, an adult slice-of-life Pokémon-inspired card-game campus town (do not draw official logos/card art). Depict **Hana Mizuno, 20. Chestnut shoulder-length wavy hair half-up at work. Cream/coral/warm teal wardrobe; soft pastel cardigan, pleated streetwear skirt, enamel pins, and battered card shop lanyard. Enthusiastic, warm, occasionally shy.**
 
@@ -54,7 +54,7 @@ Create a cinematic original anime visual-novel CG in Neo Harbor, an adult slice-
 
 **Character:** hana; **Type:** pre_duel; **Gameplay unlock:** before_duel, shop, affection ≥ 1, day ≥ 1. **Fan-service intensity:** 0/3.
 
-**IMAGE GENERATION PROMPT:**
+**CREATIVE SCENE BRIEF (reference only; NOT a model-ready prompt):**
 
 Create a cinematic original anime visual-novel CG in Neo Harbor, an adult slice-of-life Pokémon-inspired card-game campus town (do not draw official logos/card art). Depict **Hana Mizuno, 20. Chestnut shoulder-length wavy hair half-up at work. Cream/coral/warm teal wardrobe; soft pastel cardigan, pleated streetwear skirt, enamel pins, and battered card shop lanyard. Enthusiastic, warm, occasionally shy.**
 
@@ -78,7 +78,7 @@ Create a cinematic original anime visual-novel CG in Neo Harbor, an adult slice-
 
 **Character:** hana; **Type:** social; **Gameplay unlock:** hangout, park, affection ≥ 3, day ≥ 1. **Fan-service intensity:** 1/3.
 
-**IMAGE GENERATION PROMPT:**
+**CREATIVE SCENE BRIEF (reference only; NOT a model-ready prompt):**
 
 Create a cinematic original anime visual-novel CG in Neo Harbor, an adult slice-of-life Pokémon-inspired card-game campus town (do not draw official logos/card art). Depict **Hana Mizuno, 20. Chestnut shoulder-length wavy hair half-up at work. Cream/coral/warm teal wardrobe; soft pastel cardigan, pleated streetwear skirt, enamel pins, and battered card shop lanyard. Enthusiastic, warm, occasionally shy.**
 
@@ -102,7 +102,7 @@ Create a cinematic original anime visual-novel CG in Neo Harbor, an adult slice-
 
 **Character:** hana; **Type:** special; **Gameplay unlock:** situation-specific event completed, shop, affection ≥ 5, day ≥ 9, period afternoon. **Fan-service intensity:** 2/3.
 
-**IMAGE GENERATION PROMPT:**
+**CREATIVE SCENE BRIEF (reference only; NOT a model-ready prompt):**
 
 Create a cinematic original anime visual-novel CG in Neo Harbor, an adult slice-of-life Pokémon-inspired card-game campus town (do not draw official logos/card art). Depict **Hana Mizuno, 20. Chestnut shoulder-length wavy hair half-up at work. Cream/coral/warm teal wardrobe; soft pastel cardigan, pleated streetwear skirt, enamel pins, and battered card shop lanyard. Enthusiastic, warm, occasionally shy.**
 
@@ -126,7 +126,7 @@ Create a cinematic original anime visual-novel CG in Neo Harbor, an adult slice-
 
 **Character:** reina; **Type:** profile; **Gameplay unlock:** meet, any public location, affection ≥ 0, day ≥ 1. **Fan-service intensity:** 0/3.
 
-**IMAGE GENERATION PROMPT:**
+**CREATIVE SCENE BRIEF (reference only; NOT a model-ready prompt):**
 
 Create a cinematic original anime visual-novel CG in Neo Harbor, an adult slice-of-life Pokémon-inspired card-game campus town (do not draw official logos/card art). Depict **Reina Kurogane, 21. Long ink-black hair with severe side part and red underlayer, subtle silver ear cuff. Black/garnet/silver palette; cropped charcoal motorcycle jacket, fitted jersey, tailored trousers. Intense, fiercely disciplined, guarded smiles.**
 
@@ -150,7 +150,7 @@ Create a cinematic original anime visual-novel CG in Neo Harbor, an adult slice-
 
 **Character:** reina; **Type:** pre_duel; **Gameplay unlock:** before_duel, center, affection ≥ 1, day ≥ 1. **Fan-service intensity:** 0/3.
 
-**IMAGE GENERATION PROMPT:**
+**CREATIVE SCENE BRIEF (reference only; NOT a model-ready prompt):**
 
 Create a cinematic original anime visual-novel CG in Neo Harbor, an adult slice-of-life Pokémon-inspired card-game campus town (do not draw official logos/card art). Depict **Reina Kurogane, 21. Long ink-black hair with severe side part and red underlayer, subtle silver ear cuff. Black/garnet/silver palette; cropped charcoal motorcycle jacket, fitted jersey, tailored trousers. Intense, fiercely disciplined, guarded smiles.**
 
@@ -174,7 +174,7 @@ Create a cinematic original anime visual-novel CG in Neo Harbor, an adult slice-
 
 **Character:** reina; **Type:** social; **Gameplay unlock:** hangout, center, affection ≥ 3, day ≥ 8. **Fan-service intensity:** 1/3.
 
-**IMAGE GENERATION PROMPT:**
+**CREATIVE SCENE BRIEF (reference only; NOT a model-ready prompt):**
 
 Create a cinematic original anime visual-novel CG in Neo Harbor, an adult slice-of-life Pokémon-inspired card-game campus town (do not draw official logos/card art). Depict **Reina Kurogane, 21. Long ink-black hair with severe side part and red underlayer, subtle silver ear cuff. Black/garnet/silver palette; cropped charcoal motorcycle jacket, fitted jersey, tailored trousers. Intense, fiercely disciplined, guarded smiles.**
 
@@ -198,7 +198,7 @@ Create a cinematic original anime visual-novel CG in Neo Harbor, an adult slice-
 
 **Character:** reina; **Type:** special; **Gameplay unlock:** situation-specific event completed, center, affection ≥ 5, day ≥ 21, period evening. **Fan-service intensity:** 2/3.
 
-**IMAGE GENERATION PROMPT:**
+**CREATIVE SCENE BRIEF (reference only; NOT a model-ready prompt):**
 
 Create a cinematic original anime visual-novel CG in Neo Harbor, an adult slice-of-life Pokémon-inspired card-game campus town (do not draw official logos/card art). Depict **Reina Kurogane, 21. Long ink-black hair with severe side part and red underlayer, subtle silver ear cuff. Black/garnet/silver palette; cropped charcoal motorcycle jacket, fitted jersey, tailored trousers. Intense, fiercely disciplined, guarded smiles.**
 
@@ -222,7 +222,7 @@ Create a cinematic original anime visual-novel CG in Neo Harbor, an adult slice-
 
 **Character:** shiori; **Type:** profile; **Gameplay unlock:** meet, any public location, affection ≥ 0, day ≥ 1. **Fan-service intensity:** 0/3.
 
-**IMAGE GENERATION PROMPT:**
+**CREATIVE SCENE BRIEF (reference only; NOT a model-ready prompt):**
 
 Create a cinematic original anime visual-novel CG in Neo Harbor, an adult slice-of-life Pokémon-inspired card-game campus town (do not draw official logos/card art). Depict **Shiori Tsukishima, 23. Straight dark-violet bob tucked behind ear, vintage watch and occasionally thin reading glasses. Slate blue/pearl/muted violet, structured long coat, turtleneck, asymmetric skirt and boots. Gentle composure, witty reserve.**
 
@@ -246,7 +246,7 @@ Create a cinematic original anime visual-novel CG in Neo Harbor, an adult slice-
 
 **Character:** shiori; **Type:** pre_duel; **Gameplay unlock:** before_duel, library, affection ≥ 1, day ≥ 1. **Fan-service intensity:** 0/3.
 
-**IMAGE GENERATION PROMPT:**
+**CREATIVE SCENE BRIEF (reference only; NOT a model-ready prompt):**
 
 Create a cinematic original anime visual-novel CG in Neo Harbor, an adult slice-of-life Pokémon-inspired card-game campus town (do not draw official logos/card art). Depict **Shiori Tsukishima, 23. Straight dark-violet bob tucked behind ear, vintage watch and occasionally thin reading glasses. Slate blue/pearl/muted violet, structured long coat, turtleneck, asymmetric skirt and boots. Gentle composure, witty reserve.**
 
@@ -270,7 +270,7 @@ Create a cinematic original anime visual-novel CG in Neo Harbor, an adult slice-
 
 **Character:** shiori; **Type:** social; **Gameplay unlock:** hangout, cafe, affection ≥ 3, day ≥ 10. **Fan-service intensity:** 1/3.
 
-**IMAGE GENERATION PROMPT:**
+**CREATIVE SCENE BRIEF (reference only; NOT a model-ready prompt):**
 
 Create a cinematic original anime visual-novel CG in Neo Harbor, an adult slice-of-life Pokémon-inspired card-game campus town (do not draw official logos/card art). Depict **Shiori Tsukishima, 23. Straight dark-violet bob tucked behind ear, vintage watch and occasionally thin reading glasses. Slate blue/pearl/muted violet, structured long coat, turtleneck, asymmetric skirt and boots. Gentle composure, witty reserve.**
 
@@ -294,7 +294,7 @@ Create a cinematic original anime visual-novel CG in Neo Harbor, an adult slice-
 
 **Character:** shiori; **Type:** special; **Gameplay unlock:** situation-specific event completed, library, affection ≥ 5, day ≥ 18, period afternoon. **Fan-service intensity:** 2/3.
 
-**IMAGE GENERATION PROMPT:**
+**CREATIVE SCENE BRIEF (reference only; NOT a model-ready prompt):**
 
 Create a cinematic original anime visual-novel CG in Neo Harbor, an adult slice-of-life Pokémon-inspired card-game campus town (do not draw official logos/card art). Depict **Shiori Tsukishima, 23. Straight dark-violet bob tucked behind ear, vintage watch and occasionally thin reading glasses. Slate blue/pearl/muted violet, structured long coat, turtleneck, asymmetric skirt and boots. Gentle composure, witty reserve.**
 
@@ -318,7 +318,7 @@ Create a cinematic original anime visual-novel CG in Neo Harbor, an adult slice-
 
 **Character:** yuna; **Type:** profile; **Gameplay unlock:** meet, any public location, affection ≥ 0, day ≥ 1. **Fan-service intensity:** 0/3.
 
-**IMAGE GENERATION PROMPT:**
+**CREATIVE SCENE BRIEF (reference only; NOT a model-ready prompt):**
 
 Create a cinematic original anime visual-novel CG in Neo Harbor, an adult slice-of-life Pokémon-inspired card-game campus town (do not draw official logos/card art). Depict **Yuna Hoshino, 19. Spiky twin buns with dyed neon tips, electric cyan/raspberry/blue palette, oversized graphic jacket, mismatched patterned tights, sticker-covered deck box and lucky bracelet. Loud theatrical mischief, honest flashes of insecurity.**
 
@@ -342,7 +342,7 @@ Create a cinematic original anime visual-novel CG in Neo Harbor, an adult slice-
 
 **Character:** yuna; **Type:** pre_duel; **Gameplay unlock:** before_duel, arcade, affection ≥ 1, day ≥ 1. **Fan-service intensity:** 0/3.
 
-**IMAGE GENERATION PROMPT:**
+**CREATIVE SCENE BRIEF (reference only; NOT a model-ready prompt):**
 
 Create a cinematic original anime visual-novel CG in Neo Harbor, an adult slice-of-life Pokémon-inspired card-game campus town (do not draw official logos/card art). Depict **Yuna Hoshino, 19. Spiky twin buns with dyed neon tips, electric cyan/raspberry/blue palette, oversized graphic jacket, mismatched patterned tights, sticker-covered deck box and lucky bracelet. Loud theatrical mischief, honest flashes of insecurity.**
 
@@ -366,7 +366,7 @@ Create a cinematic original anime visual-novel CG in Neo Harbor, an adult slice-
 
 **Character:** yuna; **Type:** social; **Gameplay unlock:** hangout, arcade, affection ≥ 3, day ≥ 5. **Fan-service intensity:** 1/3.
 
-**IMAGE GENERATION PROMPT:**
+**CREATIVE SCENE BRIEF (reference only; NOT a model-ready prompt):**
 
 Create a cinematic original anime visual-novel CG in Neo Harbor, an adult slice-of-life Pokémon-inspired card-game campus town (do not draw official logos/card art). Depict **Yuna Hoshino, 19. Spiky twin buns with dyed neon tips, electric cyan/raspberry/blue palette, oversized graphic jacket, mismatched patterned tights, sticker-covered deck box and lucky bracelet. Loud theatrical mischief, honest flashes of insecurity.**
 
@@ -390,7 +390,7 @@ Create a cinematic original anime visual-novel CG in Neo Harbor, an adult slice-
 
 **Character:** yuna; **Type:** special; **Gameplay unlock:** situation-specific event completed, arcade, affection ≥ 5, day ≥ 13, period evening. **Fan-service intensity:** 2/3.
 
-**IMAGE GENERATION PROMPT:**
+**CREATIVE SCENE BRIEF (reference only; NOT a model-ready prompt):**
 
 Create a cinematic original anime visual-novel CG in Neo Harbor, an adult slice-of-life Pokémon-inspired card-game campus town (do not draw official logos/card art). Depict **Yuna Hoshino, 19. Spiky twin buns with dyed neon tips, electric cyan/raspberry/blue palette, oversized graphic jacket, mismatched patterned tights, sticker-covered deck box and lucky bracelet. Loud theatrical mischief, honest flashes of insecurity.**
 
@@ -414,7 +414,7 @@ Create a cinematic original anime visual-novel CG in Neo Harbor, an adult slice-
 
 **Character:** akari; **Type:** profile; **Gameplay unlock:** meet, any public location, affection ≥ 0, day ≥ 1. **Fan-service intensity:** 0/3.
 
-**IMAGE GENERATION PROMPT:**
+**CREATIVE SCENE BRIEF (reference only; NOT a model-ready prompt):**
 
 Create a cinematic original anime visual-novel CG in Neo Harbor, an adult slice-of-life Pokémon-inspired card-game campus town (do not draw official logos/card art). Depict **Akari Fujimoto, 22. Glossy dark hair in high angled ponytail, square glasses, indigo/mint/white palette, angular blazer, graphic mock-neck, cargo skirt, tablet and color-coded notes. Sharp, methodical, surprisingly easily flustered.**
 
@@ -438,7 +438,7 @@ Create a cinematic original anime visual-novel CG in Neo Harbor, an adult slice-
 
 **Character:** akari; **Type:** pre_duel; **Gameplay unlock:** before_duel, library, affection ≥ 1, day ≥ 1. **Fan-service intensity:** 0/3.
 
-**IMAGE GENERATION PROMPT:**
+**CREATIVE SCENE BRIEF (reference only; NOT a model-ready prompt):**
 
 Create a cinematic original anime visual-novel CG in Neo Harbor, an adult slice-of-life Pokémon-inspired card-game campus town (do not draw official logos/card art). Depict **Akari Fujimoto, 22. Glossy dark hair in high angled ponytail, square glasses, indigo/mint/white palette, angular blazer, graphic mock-neck, cargo skirt, tablet and color-coded notes. Sharp, methodical, surprisingly easily flustered.**
 
@@ -462,7 +462,7 @@ Create a cinematic original anime visual-novel CG in Neo Harbor, an adult slice-
 
 **Character:** akari; **Type:** social; **Gameplay unlock:** hangout, center, affection ≥ 3, day ≥ 6. **Fan-service intensity:** 1/3.
 
-**IMAGE GENERATION PROMPT:**
+**CREATIVE SCENE BRIEF (reference only; NOT a model-ready prompt):**
 
 Create a cinematic original anime visual-novel CG in Neo Harbor, an adult slice-of-life Pokémon-inspired card-game campus town (do not draw official logos/card art). Depict **Akari Fujimoto, 22. Glossy dark hair in high angled ponytail, square glasses, indigo/mint/white palette, angular blazer, graphic mock-neck, cargo skirt, tablet and color-coded notes. Sharp, methodical, surprisingly easily flustered.**
 
@@ -486,7 +486,7 @@ Create a cinematic original anime visual-novel CG in Neo Harbor, an adult slice-
 
 **Character:** akari; **Type:** special; **Gameplay unlock:** situation-specific event completed, library, affection ≥ 5, day ≥ 15, period afternoon. **Fan-service intensity:** 2/3.
 
-**IMAGE GENERATION PROMPT:**
+**CREATIVE SCENE BRIEF (reference only; NOT a model-ready prompt):**
 
 Create a cinematic original anime visual-novel CG in Neo Harbor, an adult slice-of-life Pokémon-inspired card-game campus town (do not draw official logos/card art). Depict **Akari Fujimoto, 22. Glossy dark hair in high angled ponytail, square glasses, indigo/mint/white palette, angular blazer, graphic mock-neck, cargo skirt, tablet and color-coded notes. Sharp, methodical, surprisingly easily flustered.**
 
@@ -510,7 +510,7 @@ Create a cinematic original anime visual-novel CG in Neo Harbor, an adult slice-
 
 **Character:** camila; **Type:** profile; **Gameplay unlock:** meet, any public location, affection ≥ 0, day ≥ 1. **Fan-service intensity:** 1/3.
 
-**IMAGE GENERATION PROMPT:**
+**CREATIVE SCENE BRIEF (reference only; NOT a model-ready prompt):**
 
 Create a cinematic original anime visual-novel CG in Neo Harbor, an adult slice-of-life Pokémon-inspired card-game campus town (do not draw official logos/card art). Depict **Camila Vega, 24. Voluminous dark curls swept over one shoulder, burgundy/gold/black palette, long wine-colored coat, fitted vest, tailored trousers, ringed hands and gold card-case chain. Elegant, teasing, privately empathetic.**
 
@@ -534,7 +534,7 @@ Create a cinematic original anime visual-novel CG in Neo Harbor, an adult slice-
 
 **Character:** camila; **Type:** pre_duel; **Gameplay unlock:** before_duel, shop, affection ≥ 1, day ≥ 1. **Fan-service intensity:** 1/3.
 
-**IMAGE GENERATION PROMPT:**
+**CREATIVE SCENE BRIEF (reference only; NOT a model-ready prompt):**
 
 Create a cinematic original anime visual-novel CG in Neo Harbor, an adult slice-of-life Pokémon-inspired card-game campus town (do not draw official logos/card art). Depict **Camila Vega, 24. Voluminous dark curls swept over one shoulder, burgundy/gold/black palette, long wine-colored coat, fitted vest, tailored trousers, ringed hands and gold card-case chain. Elegant, teasing, privately empathetic.**
 
@@ -558,7 +558,7 @@ Create a cinematic original anime visual-novel CG in Neo Harbor, an adult slice-
 
 **Character:** camila; **Type:** social; **Gameplay unlock:** hangout, cafe, affection ≥ 3, day ≥ 7. **Fan-service intensity:** 1/3.
 
-**IMAGE GENERATION PROMPT:**
+**CREATIVE SCENE BRIEF (reference only; NOT a model-ready prompt):**
 
 Create a cinematic original anime visual-novel CG in Neo Harbor, an adult slice-of-life Pokémon-inspired card-game campus town (do not draw official logos/card art). Depict **Camila Vega, 24. Voluminous dark curls swept over one shoulder, burgundy/gold/black palette, long wine-colored coat, fitted vest, tailored trousers, ringed hands and gold card-case chain. Elegant, teasing, privately empathetic.**
 
@@ -582,7 +582,7 @@ Create a cinematic original anime visual-novel CG in Neo Harbor, an adult slice-
 
 **Character:** camila; **Type:** special; **Gameplay unlock:** situation-specific event completed, cafe, affection ≥ 5, day ≥ 14, period afternoon. **Fan-service intensity:** 2/3.
 
-**IMAGE GENERATION PROMPT:**
+**CREATIVE SCENE BRIEF (reference only; NOT a model-ready prompt):**
 
 Create a cinematic original anime visual-novel CG in Neo Harbor, an adult slice-of-life Pokémon-inspired card-game campus town (do not draw official logos/card art). Depict **Camila Vega, 24. Voluminous dark curls swept over one shoulder, burgundy/gold/black palette, long wine-colored coat, fitted vest, tailored trousers, ringed hands and gold card-case chain. Elegant, teasing, privately empathetic.**
 
@@ -606,7 +606,7 @@ Create a cinematic original anime visual-novel CG in Neo Harbor, an adult slice-
 
 **Character:** marina; **Type:** profile; **Gameplay unlock:** meet, any public location, affection ≥ 0, day ≥ 1. **Fan-service intensity:** 0/3.
 
-**IMAGE GENERATION PROMPT:**
+**CREATIVE SCENE BRIEF (reference only; NOT a model-ready prompt):**
 
 Create a cinematic original anime visual-novel CG in Neo Harbor, an adult slice-of-life Pokémon-inspired card-game campus town (do not draw official logos/card art). Depict **Marina Aoki, 21. Soft blue-black side braid and shell-shaped clip, seafoam/navy/sand palette, lightweight linen jacket, navy casualwear, canvas bag. River lover, reflective, gentle and increasingly brave.**
 
@@ -630,7 +630,7 @@ Create a cinematic original anime visual-novel CG in Neo Harbor, an adult slice-
 
 **Character:** marina; **Type:** pre_duel; **Gameplay unlock:** before_duel, park, affection ≥ 1, day ≥ 1. **Fan-service intensity:** 1/3.
 
-**IMAGE GENERATION PROMPT:**
+**CREATIVE SCENE BRIEF (reference only; NOT a model-ready prompt):**
 
 Create a cinematic original anime visual-novel CG in Neo Harbor, an adult slice-of-life Pokémon-inspired card-game campus town (do not draw official logos/card art). Depict **Marina Aoki, 21. Soft blue-black side braid and shell-shaped clip, seafoam/navy/sand palette, lightweight linen jacket, navy casualwear, canvas bag. River lover, reflective, gentle and increasingly brave.**
 
@@ -654,7 +654,7 @@ Create a cinematic original anime visual-novel CG in Neo Harbor, an adult slice-
 
 **Character:** marina; **Type:** social; **Gameplay unlock:** hangout, park, affection ≥ 3, day ≥ 8. **Fan-service intensity:** 1/3.
 
-**IMAGE GENERATION PROMPT:**
+**CREATIVE SCENE BRIEF (reference only; NOT a model-ready prompt):**
 
 Create a cinematic original anime visual-novel CG in Neo Harbor, an adult slice-of-life Pokémon-inspired card-game campus town (do not draw official logos/card art). Depict **Marina Aoki, 21. Soft blue-black side braid and shell-shaped clip, seafoam/navy/sand palette, lightweight linen jacket, navy casualwear, canvas bag. River lover, reflective, gentle and increasingly brave.**
 
@@ -678,7 +678,7 @@ Create a cinematic original anime visual-novel CG in Neo Harbor, an adult slice-
 
 **Character:** marina; **Type:** special; **Gameplay unlock:** situation-specific event completed, park, affection ≥ 5, day ≥ 17, period afternoon. **Fan-service intensity:** 2/3.
 
-**IMAGE GENERATION PROMPT:**
+**CREATIVE SCENE BRIEF (reference only; NOT a model-ready prompt):**
 
 Create a cinematic original anime visual-novel CG in Neo Harbor, an adult slice-of-life Pokémon-inspired card-game campus town (do not draw official logos/card art). Depict **Marina Aoki, 21. Soft blue-black side braid and shell-shaped clip, seafoam/navy/sand palette, lightweight linen jacket, navy casualwear, canvas bag. River lover, reflective, gentle and increasingly brave.**
 
@@ -702,7 +702,7 @@ Create a cinematic original anime visual-novel CG in Neo Harbor, an adult slice-
 
 **Character:** kaede; **Type:** profile; **Gameplay unlock:** meet, any public location, affection ≥ 0, day ≥ 41. **Fan-service intensity:** 0/3.
 
-**IMAGE GENERATION PROMPT:**
+**CREATIVE SCENE BRIEF (reference only; NOT a model-ready prompt):**
 
 Create a cinematic original anime visual-novel CG in Neo Harbor, an adult slice-of-life Pokémon-inspired card-game campus town (do not draw official logos/card art). Depict **Kaede Arashi, 22. Messy silver-gray shag haircut with dark roots, acid green/charcoal/violet palette, cropped leather jacket, asymmetric tee, utility belt, combat boots and safety-pin charms. Punk bravado over cautious warmth.**
 
@@ -726,7 +726,7 @@ Create a cinematic original anime visual-novel CG in Neo Harbor, an adult slice-
 
 **Character:** kaede; **Type:** pre_duel; **Gameplay unlock:** before_duel, arcade, affection ≥ 1, day ≥ 41. **Fan-service intensity:** 1/3.
 
-**IMAGE GENERATION PROMPT:**
+**CREATIVE SCENE BRIEF (reference only; NOT a model-ready prompt):**
 
 Create a cinematic original anime visual-novel CG in Neo Harbor, an adult slice-of-life Pokémon-inspired card-game campus town (do not draw official logos/card art). Depict **Kaede Arashi, 22. Messy silver-gray shag haircut with dark roots, acid green/charcoal/violet palette, cropped leather jacket, asymmetric tee, utility belt, combat boots and safety-pin charms. Punk bravado over cautious warmth.**
 
@@ -750,7 +750,7 @@ Create a cinematic original anime visual-novel CG in Neo Harbor, an adult slice-
 
 **Character:** kaede; **Type:** social; **Gameplay unlock:** hangout, park, affection ≥ 3, day ≥ 43. **Fan-service intensity:** 1/3.
 
-**IMAGE GENERATION PROMPT:**
+**CREATIVE SCENE BRIEF (reference only; NOT a model-ready prompt):**
 
 Create a cinematic original anime visual-novel CG in Neo Harbor, an adult slice-of-life Pokémon-inspired card-game campus town (do not draw official logos/card art). Depict **Kaede Arashi, 22. Messy silver-gray shag haircut with dark roots, acid green/charcoal/violet palette, cropped leather jacket, asymmetric tee, utility belt, combat boots and safety-pin charms. Punk bravado over cautious warmth.**
 
@@ -774,7 +774,7 @@ Create a cinematic original anime visual-novel CG in Neo Harbor, an adult slice-
 
 **Character:** kaede; **Type:** special; **Gameplay unlock:** situation-specific event completed, arcade, affection ≥ 5, day ≥ 49, period evening. **Fan-service intensity:** 2/3.
 
-**IMAGE GENERATION PROMPT:**
+**CREATIVE SCENE BRIEF (reference only; NOT a model-ready prompt):**
 
 Create a cinematic original anime visual-novel CG in Neo Harbor, an adult slice-of-life Pokémon-inspired card-game campus town (do not draw official logos/card art). Depict **Kaede Arashi, 22. Messy silver-gray shag haircut with dark roots, acid green/charcoal/violet palette, cropped leather jacket, asymmetric tee, utility belt, combat boots and safety-pin charms. Punk bravado over cautious warmth.**
 
