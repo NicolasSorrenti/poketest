@@ -222,3 +222,24 @@ test('Evolution Workshop mini boosters still contain real matching Basic and Sta
   }
  }
 });
+
+test('Insight buys a real and visible discount without bypassing expansion gates',()=>{
+ const s={day:1,slot:0,location:'shop',credits:80,insight:0,results:[],deckJourney:C.fresh()};
+ C.choose(s,'ember_garden');
+ s.deckJourney.welcomePacks=0;
+ const offer=()=>C.themedPacks(s).find(p=>p.id==='arena');
+ assert.equal(offer().price,20);
+ assert.equal(offer().discount,0);
+ s.insight=6;
+ assert.equal(offer().price,17);
+ assert.equal(offer().discount,3);
+ assert.equal(C.themedPacks(s).find(p=>p.id==='mystery').unlocked,false);
+ C.buyThemedPack(s,'arena',()=>0.5);
+ assert.equal(s.credits,63,'the same displayed discount must be charged');
+ s.deckJourney.lastPack.opened=true;
+ s.insight=15;
+ assert.equal(offer().price,15);
+ assert.equal(offer().discount,5);
+ C.buyThemedPack(s,'arena',()=>0.5);
+ assert.equal(s.credits,48);
+});
