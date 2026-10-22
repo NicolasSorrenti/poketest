@@ -22,7 +22,7 @@ function live(g,u,name){
 }
 function has(g,name,noGlobal=false){return g.players.some(p=>own(p).some(u=> powerNames(u).includes(name) && healthy(u) && (noGlobal||live(g,u,name))));}
 function blocked(g,name){if(name==='Toxic Gas')return false;return g.powerBlankUntil>g.turnSerial||has(g,'Toxic Gas',true);}
-function enabled(g,u,name){return Boolean(u&&powerNames(u).includes(name)&&(healthy(u)||['Gaseous Form','Pollen Defense','Restless Sleep','[Normal]','Photosynthesis','Rebellion','Shock Blast','[Search]','[Tell]','[Laugh]','Darkness'].includes(name))&&!blocked(g,name)&&!(u.powerSuppressedUntil>g.turnSerial));}
+function enabled(g,u,name){return Boolean(u&&powerNames(u).includes(name)&&(healthy(u)||['Gaseous Form','Pollen Defense','Restless Sleep','[Normal]','Photosynthesis','Rebellion','Shock Blast','[Search]','[Tell]','[Laugh]','Darkness','[Bear]','[Yield]'].includes(name))&&!blocked(g,name)&&!(u.powerSuppressedUntil>g.turnSerial));}
 function protectsStatus(g,u){return enabled(g,u,'Thick Skinned');}
 function powerInPlay(g,name){return g.players.some(p=>own(p).some(u=>enabled(g,u,name)));}
 function choice(g,plan,key,actor,options,{min=1,max=min,optional=false,label=key}={}){
@@ -65,6 +65,38 @@ function powerPlan(g,plan,h){
       'Special Delivery: choose a hand card to put on top of your deck'))return;
  }
  if(name==='Solar Power'&&(!p.active||!f.active))throw Error('Solar Power requires both Active Pokémon');
+ if(name==='[Bear]'){
+  if(Number(card(u.id).hp)-u.damage<=10)throw Error('[Bear] cannot leave Unown B Knocked Out');
+  if(choose('source',slotList(p,x=>x!==u&&card(x.id).name.startsWith('Unown')&&x.damage>=10),
+    '[Bear]: move 1 damage counter from an Unown to Unown B'))return;
+ }
+ if(name==='[Yield]'){
+  if(!have(plan,'coin'))d.coin=h.flip(g);
+  if(d.coin){
+   if(!have(plan,'energy')){
+    const options=indices(p.deck,c=>c.name==='Psychic Energy','deck');
+    if(options.length){if(choose('energy',options,'[Yield]: find Psychic Energy'))return;}
+    else d.energy=[];
+   }
+   if(selected(plan,'energy').length&&choose('target',
+      slotList(p,x=>card(x.id).name.startsWith('Unown')),
+      '[Yield]: attach Psychic Energy to an Unown'))return;
+  }
+ }
+ if(name==='Cunning'){
+  if(!have(plan,'coin'))d.coin=h.flip(g);
+  if(d.coin){
+   if(!d.looked){
+    d.looked=true;
+    (p.privateLog ||= []).push('Cunning: opponent top deck card — '+
+      (f.deck.length?card(f.deck.at(-1)).name:'(deck empty)'));
+   }
+   if(choose('shuffle',[
+      {id:'choice:0',label:'Leave opponent deck in place'},
+      {id:'choice:1',label:'Shuffle opponent deck'}
+    ],'Cunning: do you want to shuffle the opponent deck?'))return;
+  }
+ }
  if(['Rain Dance','Gather Fire','Energy Trans'].includes(name)){
   if(name==='Rain Dance'){
    if(choose('energy',indices(p.hand,c=>c.name==='Water Energy','hand'),'Choose Water Energy from hand'))return;
@@ -209,6 +241,26 @@ function doPower(g,plan,h){
   (u.powerUsed ||= {})[name]=g.turnSerial;
  }
  switch(name){
+  case '[Bear]':{
+   const donor=pokemon(p,s('source'));
+   if(!donor||donor===u||donor.damage<10)throw Error('Invalid [Bear] damage source');
+   donor.damage-=10;u.damage+=10;
+   break;
+  }
+  case '[Yield]':{
+   if(d.coin){
+    if(selected(plan,'energy').length){
+     const id=take(p.deck,[s('energy')])[0];
+     pokemon(p,s('target')).energies.push(id);
+    }
+    p.deck=h.shuffle(g,p.deck);
+   }
+   break;
+  }
+  case 'Cunning':{
+   if(d.coin&&s('shuffle')===1)f.deck=h.shuffle(g,f.deck);
+   break;
+  }
   case 'Solar Power':{
    // Healing the Special Conditions of both Active Pokémon does not heal damage.
    STATUS.clearConditions(p.active);
@@ -363,8 +415,8 @@ function doPower(g,plan,h){
  }
  h.log(g,`${p.name} activated ${name}.`);
 }
-const ONCE=new Set(['Fragrance Trap','Soak Up','Natural Healing','Playful Punch','Emerge','Gather Fire','Heal','Step In','Curse','Shift','Evolutionary Light','Matter Exchange','Pollen Stench','Long Distance Hypnosis','Trickery','Peek','Revive Fossil','Revive Friends','Fire Recharge','Glaring Gaze','[Search]','[Tell]','[Laugh]','Solar Power','Observe','Special Delivery','[Find]','[Help]','[Join]']);
-const ACTIVATED=new Set(['Shapeshift','Fragrance Trap','Soak Up','Natural Healing','Playful Punch','Emerge','Energy Charge','Rain Dance','Energy Trans','Gather Fire','Energy Burn','Damage Swap','Curse','Strange Behavior','Heal','Step In','Cowardice','Evolutionary Light','Matter Exchange','Pollen Stench','Long Distance Hypnosis','Trickery','Shift','Peek','Buzzap','Revive Fossil','Revive Friends','Downpour','Fire Recharge','Glaring Gaze','[Search]','[Tell]','[Laugh]','Solar Power','Observe','Special Delivery','[Find]','[Help]','[Join]']);
+const ONCE=new Set(['Fragrance Trap','Soak Up','Natural Healing','Playful Punch','Emerge','Gather Fire','Heal','Step In','Curse','Shift','Evolutionary Light','Matter Exchange','Pollen Stench','Long Distance Hypnosis','Trickery','Peek','Revive Fossil','Revive Friends','Fire Recharge','Glaring Gaze','[Search]','[Tell]','[Laugh]','Solar Power','Observe','Special Delivery','[Find]','[Help]','[Join]','[Bear]','[Yield]','Cunning']);
+const ACTIVATED=new Set(['Shapeshift','Fragrance Trap','Soak Up','Natural Healing','Playful Punch','Emerge','Energy Charge','Rain Dance','Energy Trans','Gather Fire','Energy Burn','Damage Swap','Curse','Strange Behavior','Heal','Step In','Cowardice','Evolutionary Light','Matter Exchange','Pollen Stench','Long Distance Hypnosis','Trickery','Shift','Peek','Buzzap','Revive Fossil','Revive Friends','Downpour','Fire Recharge','Glaring Gaze','[Search]','[Tell]','[Laugh]','Solar Power','Observe','Special Delivery','[Find]','[Help]','[Join]','[Bear]','[Yield]','Cunning']);
 const ONPLAY=new Set(['Call the Boss','Summon Minions','Sneak Attack','Reel In','[Increase]','[Engage]','Tag Team','Berserk','Fire Boost']);
 const PASSIVE=new Set(['Rebirth','Energy Drain','Scram','Shock Blast','Gaseous Form','Healing Fire','Fortitude','Pollen Defense','Restless Sleep','Strange Barrier','Prehistoric Power','Toxic Gas','Hay Fever','Invisible Wall','Kabuto Armor','Transparency','Transform','Thick Skinned','Retreat Aid','Sticky Goo','Clairvoyance','Frenzy','Strikes Back','Sinkhole','Final Beam','Hydroelectric Power','Anger','Frog Song','Spikes','Energy Evolution','[Normal]','Magma Pool','Hot Plate','Psylink','Flee','Bench Guard','Shell Armor','Photosynthesis','Relaxing Scent','Rebellion','Darkness']);
 const UNSUPPORTED=new Set();
