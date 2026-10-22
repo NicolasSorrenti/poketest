@@ -1,0 +1,27 @@
+name: RPG Art Prompt Guard
+on:
+  push:
+    paths:
+      - 'scripts/rpg-art-prompt.js'
+      - 'tests/rpg_art_prompt.test.js'
+      - 'docs/cg-art-queue.json'
+      - 'docs/ART_GENERATION_ONE_IMAGE_RULE.md'
+      - 'docs/CG_ART_AGENT_HANDOFF.md'
+  pull_request:
+    paths:
+      - 'scripts/rpg-art-prompt.js'
+      - 'tests/rpg_art_prompt.test.js'
+      - 'docs/cg-art-queue.json'
+      - 'docs/ART_GENERATION_ONE_IMAGE_RULE.md'
+      - 'docs/CG_ART_AGENT_HANDOFF.md'
+jobs:
+  assert-single-scene-prompts:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Validate per-scene art prompts
+        run: npm run test:art-prompts
