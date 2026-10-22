@@ -171,13 +171,14 @@ function makePresetPool({preset='balanced',size=240,seed=1}={}){
  }
  // Reserve meaningful complete Stage 2 lines while there is room for both
  // the Stage 1 and Stage 2 cards. This is absent in the old random sampler.
+ const evolutionCap=config.evolutionFocus?5:3;
  const stage2Target=Math.min(config.stage2Target||0,Math.floor((config.pokemon-basicCount)/2));
  let pairedStage2=0;
  while(pairedStage2<stage2Target){
   const chains=[];
-  for(const stage2 of secondStages.filter(id=>count(id)<cardCap(id,3))){
+  for(const stage2 of secondStages.filter(id=>count(id)<cardCap(id,evolutionCap))){
    for(const stage1 of firstStages.filter(id=>canEvolve(card(stage2),card(id))&&
-    count(id)<cardCap(id,3)&&selected.some(root=>canEvolve(card(id),card(root))))){
+    count(id)<cardCap(id,evolutionCap)&&selected.some(root=>canEvolve(card(id),card(root))))){
     chains.push({stage1,stage2});
    }
   }
@@ -194,13 +195,14 @@ function makePresetPool({preset='balanced',size=240,seed=1}={}){
  // predecessor is present. This also builds complete Stage 2 chains.
  const evolvedCount=config.pokemon-basicCount;
  for(let i=reservedEvolved;i<evolvedCount;i++){
-  const possible=evolved.filter(id=>count(id)<cardCap(id,3)&&
+  const possible=evolved.filter(id=>count(id)<cardCap(id,evolutionCap)&&
    (config.stage2Target!==0||!(card(id).subtypes||[]).includes('Stage 2'))&&
    selected.some(parent=>canEvolve(card(id),card(parent))));
   const targetType=preset==='elemental'?TYPES[i%TYPES.length]:null;
   const lane=targetType?possible.filter(id=>typeOf(id)===targetType):[];
   const candidates=lane.length?lane:possible;
   if(!candidates.length){
+   if(config.evolutionFocus)throw Error('Not enough compatible Evolutions for '+preset);
    choose(basics,id=>pokemonWeight(id,preset)*evolutionWeight(id),4);
    continue;
   }
@@ -212,7 +214,7 @@ function makePresetPool({preset='balanced',size=240,seed=1}={}){
     (config.evolutionFocus&&childCount===0?3:1)*
     (config.focusSets?.some(set=>id.startsWith(set+'-'))?2:1)/
     (1+childCount*1.5)/(preset==='elemental'?1+colorCopies/90:1);
-  },3,false);
+  },evolutionCap,false);
  }
  while(selected.length<config.pokemon){
   choose(basics,id=>pokemonWeight(id,preset)*evolutionWeight(id),4);
