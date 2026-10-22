@@ -248,9 +248,9 @@
   if(!['neoCampusCustomPlaymatsV1','neoCampusPlaymat',mats.IMPORT_KEY].includes(event.key))return;
   if(event.key==='neoCampusCustomPlaymatsV1'){refreshMatChoices(matDesired);return;}
   const selected=localStorage.getItem('neoCampusPlaymat');
+  const previous=matDesired;
   refreshMatChoices(selected||matDesired);
-  if(selected&&current?.started&&!watching()&&selected!==matDesired)wantMat(selected);
-  else if(selected&&current?.started&&!watching()&&event.key===mats.IMPORT_KEY)wantMat(selected);
+  if(selected&&current?.started&&!watching()&&(selected!==previous||event.key===mats.IMPORT_KEY))wantMat(selected);
  });
  refreshMatChoices(localStorage.getItem('neoCampusPlaymat')||'aurora');
 
