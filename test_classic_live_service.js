@@ -10,11 +10,12 @@ for(const set of LEGACY_DECKS){
   const service=new ClassicLocalService();
   let r=service.create({deck:set,opponent:LEGACY_DECKS[(seed+1)%LEGACY_DECKS.length],seed:seed*7919});const token=r.token;
   const run=(type,payload={})=>{const next=service.action(token,{type,payload},r.revision);r=next;checks++;assert.deepEqual(r.counts,[60,60],'Card conservation');assert.equal(r.view.players[1].hand,undefined,'CPU hidden hand');assert.equal(r.view.players[1].prizes,undefined,'CPU hidden prizes');
-   for(const frame of r.cpuPlayback||[]){
+   for(const [index,frame] of (r.cpuPlayback||[]).entries()){
     assert.equal(frame.view.players[1].hand,undefined,'Replay must hide CPU hand');
     assert.equal(frame.view.players[1].prizes,undefined,'Replay must hide CPU prizes');
     assert.ok(Array.isArray(frame.activity),'Replay contains only public actions');
     assert.ok(!('game' in frame),'Never expose server game state in replay');
+    if(index>0)assert.notEqual(frame.view.pendingDecision?.actor,1,'Do not announce CPU cards before private target choices resolve');
    }
    if(type==='end_turn'&&!r.view.over){
     assert.ok(r.cpuPlayback?.length>=1,'CPU turn must expose at least the opening replay frame');

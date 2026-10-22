@@ -43,10 +43,10 @@
   return result;
  }
  function makeBattlePresentation({stage,popup,timeline,getCard,opponentName=()=> 'Opponent',me=()=>0}){
-  let lastSeq=null,lastView=null,lastRevision=null,pending=[],timer=null,active=false,animationId=0,lastTimeline='';
+  let lastSeq=null,lastView=null,pending=[],timer=null,active=false,animationId=0,lastTimeline='';
   const reduced=()=>typeof window!=='undefined'&&window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
   function stop(){if(timer)clearTimeout(timer);timer=null;active=false;pending=[];animationId++;popup.textContent='';popup.classList.add('hidden');stage.classList.remove('combat-attack','combat-evolve','combat-me','combat-foe');}
-  function reset(){stop();lastSeq=null;lastView=null;lastRevision=null;lastTimeline='';timeline.textContent='';}
+  function reset(){stop();lastSeq=null;lastView=null;lastTimeline='';timeline.textContent='';}
   function cardNode(relative,slot){const selector=relative==='my'?'my':'enemy',area=slot<0?'Active':'Bench';const parent=document.getElementById(selector+area);return parent?.querySelectorAll('.poke')[slot<0?0:slot]||null;}
   function showHp({relative,slot,delta}){
    const element=cardNode(relative,slot);if(!element)return;
@@ -91,15 +91,16 @@
   function update(data){
    const view=data?.view;if(!view)return;
    const actions=publicActions(data.activity,me(),getCard,opponentName());paintTimeline(actions);
-   const changed=lastView&&lastRevision!==data.revision;
-   const deltas=changed?hpChanges(lastView,view,me()):[];
+   // CPU playback frames share a revision but have different authoritative HP states.
+   // Consecutive identical public views produce no duplicate animation.
+   const deltas=lastView?hpChanges(lastView,view,me()):[];
    const fresh=shared.newActivitySince(data.activity,lastSeq);lastSeq=fresh.seq;
    if(lastView&&fresh.newActions.length){
     pending.push(...fresh.newActions.filter(x=>x.type==='attack'||x.type==='evolve'));
     if(pending.length>12)pending=pending.slice(-12);
    }
    // Always capture previous stable public snapshot. A repeated poll never replays events.
-   lastView=structuredClone(view);lastRevision=data.revision;
+   lastView=structuredClone(view);
    for(const d of deltas)showHp(d);
    pump();
   }

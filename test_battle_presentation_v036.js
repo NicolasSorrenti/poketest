@@ -1,7 +1,7 @@
 'use strict';
 const assert=require('node:assert/strict'),fs=require('node:fs');
 const p=require('./battle_presentation_ui');
-const lookup=id=>({e:{name:'Fire Energy',supertype:'Energy',attacks:[],abilities:[]},se:{name:'Double Colorless Energy',supertype:'Energy',subtypes:['Special']},mon:{name:'Charmander'}}[id]||{});
+const lookup=id=>({e:{name:'Fire Energy',supertype:'Energy',attacks:[],abilities:[]},se:{name:'Double Colorless Energy',supertype:'Energy',subtypes:['Special']},mon:{name:'Charmander'},potion:{name:'Potion'}}[id]||{});
 const players=[{active:{id:'mon',damage:0,energies:[]},bench:[]},{active:{id:'mon',damage:0,energies:[]},bench:[]}];
 const view={phase:'game',turn:0,over:false,players};
 assert.match(p.attackReason({view,me:0,attack:{name:'Ember',cost:['Fire']},unit:players[0].active,getCard:lookup}),/Not enough matching Energy/);
@@ -23,7 +23,8 @@ class FakeElement{
  get offsetWidth(){return 200;}
 }
 const originalDocument=global.document,originalWindow=global.window;
-global.document={createElement:()=>new FakeElement(),getElementById:()=>null};
+const enemyActive=new FakeElement();
+global.document={createElement:()=>new FakeElement(),getElementById:id=>id==='enemyActive'?{querySelectorAll:()=>[enemyActive]}:null};
 global.window={matchMedia:()=>({matches:true})};
 (async()=>{try{
  const stage=new FakeElement(),popup=new FakeElement(),timeline=new FakeElement();
@@ -38,6 +39,15 @@ global.window={matchMedia:()=>({matches:true})};
  assert.match(timeline.textContent,/Opponent used Ember/);
  assert.equal(timeline.children.length,4);
  const first=timeline.children[0];app.update(state(publicFeed,3,20));assert.equal(timeline.children[0],first,'Unchanged polls do not rebuild the feed');
+ // Potion heals during the CPU playback step despite sharing the turn revision.
+ const beforeHealing=enemyActive.children.length;
+ const potionFeed=[...publicFeed,{seq:5,side:1,type:'play_trainer',cardId:'potion'},{seq:6,side:1,type:'choose'}];
+ app.update(state(potionFeed,3,0));
+ assert.match(timeline.textContent,/Opponent played Potion/);
+ assert.equal(enemyActive.children.length,beforeHealing+1,'Healing animation must play with unchanged revision');
+ assert.match(enemyActive.children.at(-1).textContent,/\+20 HP/,'Healing amount matches the snapshot');
+ app.update(state(potionFeed,3,0));
+ assert.equal(enemyActive.children.length,beforeHealing+1,'Repeated snapshots do not replay healing');
  app.reset();assert.equal(timeline.children.length,0);assert.ok(popup.classList.contains('hidden'));
  for(const file of ['classic_live.html','online.html']){
   const html=fs.readFileSync(__dirname+'/'+file,'utf8');for(const id of ['combatFx','actionTimeline'])assert.match(html,new RegExp(`id="${id}"`));

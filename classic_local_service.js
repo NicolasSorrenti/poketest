@@ -121,8 +121,15 @@ class ClassicLocalService {
     stadiumUsed:game.players[0].stadiumUsedTurn===game.turnSerial}
   });
   if(cpuTurn)capture(result.game); // First show the end of the player's action.
+  // Some CPU actions first open a private target choice. Present the card action
+  // only when its choices are resolved and the resulting board state is visible.
+  // A human defender's pending choice is intentionally not hidden.
+  const captureResolvedCpuStep=game=>{
+   if(game.pendingDecision?.actor===1)return;
+   capture(game);
+  };
   // Bot failures must never commit partial human or computer actions.
-  const {game}=driveBot(result.game,200,cpuTurn?{...s.cpuConfig,onStep:capture}:s.cpuConfig);
+  const {game}=driveBot(result.game,200,cpuTurn?{...s.cpuConfig,onStep:captureResolvedCpuStep}:s.cpuConfig);
   UNDO.record(s.undoHistory,s.game,game,0,cmd);
   s.game=game;s.revision++;
   const response=this.response(s);
