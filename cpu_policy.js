@@ -80,7 +80,7 @@ function observation(game,side){
  return {phase:view.phase,turn:view.turn,round:view.round,turnSerial:game.turnSerial,over:view.over,
   self,opponent:view.players[1-side],stadium:view.stadium,
   pendingTrainerTarget:selectedIndex('target'),pendingTrainerSource:selectedIndex('source'),
-  decision:view.pendingDecision,setupReady:!!game.setupReady[side]};
+  decision:view.pendingDecision,setupReady:!!game.setupReady[side],mulliganBonus:view.mulliganBonus};
 }
 const card=id=>CATALOG.get(id);
 const slotUnit=(p,slot)=>slot===-1?p.active:p.bench[slot];
@@ -306,6 +306,15 @@ function candidates(o,cfg,used){
   return options;
  }
  if(o.phase==='setup'){
+  const bonus=o.mulliganBonus;
+  if(bonus){
+   if(bonus.side!==cfg.side)return [];
+   if(bonus.drawn===null)return [command('setup_bonus_draw',{count:bonus.max})];
+   if(p.bench.length<cfg.skill.bench)for(let i=0;i<p.hand.length;i++)
+    if(isBasicPokemon(card(p.hand[i])))options.push(command('setup_select',{handIndex:i}));
+   options.push(command('setup_bonus_done'));
+   return options;
+  }
   if(o.setupReady)return [];
   if(!p.active){for(let i=0;i<p.hand.length;i++)if(isBasicPokemon(card(p.hand[i])))options.push(command('setup_select',{handIndex:i}));}
   else if(p.bench.length<cfg.skill.bench){for(let i=0;i<p.hand.length;i++)if(isBasicPokemon(card(p.hand[i])))options.push(command('setup_select',{handIndex:i}));}
@@ -572,6 +581,8 @@ function energyHorizonBonus(action,o,cfg){
 }
 function score(a,o,cfg,used){
  const p=o.self,q=o.opponent,style=cfg.style,{type,payload:v}=a;
+ if(type==='setup_bonus_draw')return 300;
+ if(type==='setup_bonus_done')return 115+p.bench.length*10;
  if(type==='setup_confirm')return 115+p.bench.length*10;
  if(type==='setup_select'){
   const u={id:p.hand[v.handIndex],energies:[]};
@@ -847,7 +858,7 @@ function driveSide(initial,{side=1,level=3,personality='balanced',seed=1,plannin
   if(beforeTurn!==game.turnSerial){memo.trainers=0;memo.powers=0;memo.powerKeys.clear();memo.stadium=false;}
   if(a.type==='end_turn'&&game.turn===side&&!game.pendingDecision&&!game.over)throw Error('CPU did not advance turn');
  }
- if(steps===limit&&!game.over&&(game.turn===side||game.pendingDecision?.actor===side||game.phase==='setup'&&!game.setupReady[side]))throw Error('CPU step budget exhausted');
+ if(steps===limit&&!game.over&&(game.turn===side||game.pendingDecision?.actor===side||game.phase==='setup'&&(!game.setupReady[side]||game.mulliganBonus?.side===side)))throw Error('CPU step budget exhausted');
  return {game,steps,commands};
 }
 function driveBot(game,limit=200,config={}){return driveSide(game,{...config,side:1,limit});}
