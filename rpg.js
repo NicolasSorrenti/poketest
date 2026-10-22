@@ -3,7 +3,7 @@
 const $=id=>document.getElementById(id),KEY='neoHarborRpgV1',STORY=window.NeoHarborStory,SCHEDULES=window.NeoRpgSchedules,WORLD=window.NeoRpgWorld,ARC=window.NeoRpgRivalArc,TOURNAMENTS=window.NeoRpgTournaments,COMPETE=window.NeoRpgCompetitiveLoop,BRIDGE=window.NeoRpgDuelBridge;
 const PACK=window.NeoRpgNarrativePack,SIDE=window.NeoRpgSideQuests,EPILOGUE=window.NeoRpgEpilogue,APPOINTMENTS=window.NeoRpgAppointments,INTENTIONS=window.NeoRpgIntentions,CG=window.NeoRpgCGGallery,PLANNER=window.NeoRpgDailyPlanner,SOCIAL=window.NeoRpgSocialActivities,DATES=window.NeoRpgPlannedDates,PRE=window.NeoRpgPreDuel,SITUATIONS=window.NeoRpgSituations,JOURNEY=window.NeoRpgSeasonJourney,COLLECT=window.NeoRpgCollection,RPGD=window.NeoRpgDialogue,BONDS=window.NeoRpgBondRewards,PARTNER=window.NeoRpgPartnerDecks,VN=window.NeoRpgConversations;
 const TUTORIAL=window.NeoRpgTutorials||null;
-const MANDATORY=window.NeoRpgMandatoryEvents||null,REACT=window.NeoRpgReactivity,COMMUNITY=window.NeoRpgCommunity,CONSEQ=window.NeoRpgConsequences,NPC_DECKS=window.NeoRpgNpcDeckProgression;
+const SCENE_CAST=window.NeoRpgSceneCast,MANDATORY=window.NeoRpgMandatoryEvents||null,REACT=window.NeoRpgReactivity,COMMUNITY=window.NeoRpgCommunity,CONSEQ=window.NeoRpgConsequences,NPC_DECKS=window.NeoRpgNpcDeckProgression;
 const MANDATORY_EVENTS=[...(window.NeoRpgSeasonEvents?.events||[]),...(window.NeoRpgCharacterPacks?.mandatoryEvents||[])];
 const periods=['Morning','Afternoon','Evening'];
 const places={
@@ -1614,14 +1614,13 @@ function dialogueExpression(line){
  if(/[!]|\b(thanks|great|wonderful|happy|love|fun|glad)\b/.test(s))return 'happy';
  return 'neutral';
 }
-function renderRpgCast(ids,locked,shown,portraitId){
+function renderRpgCast(ids,locked,shown,portraitId,context={}){
  if(typeof document.querySelector!=='function')return;
  const root=$('rpgSceneCast');if(!root)return;
- const speaking=Object.keys(cast).find(id=>shown?.speaker===cast[id].name||shown?.speaker===id);
- // An NPC must not appear to be speaking during the player's or narrator's lines.
- const focused=speaking||null;
- // Keep the actual speaker visible even in crowded locations (six-character cap).
- const participants=[...new Set([focused,...ids,portraitId].filter(id=>!!cast[id]))].slice(0,6);
+ // Only participants in the actual dialogue are onstage. Location attendance
+ // still controls the map, people list and available activities.
+ const composition=SCENE_CAST.select({cast,present:ids,portraitId,shown,...context});
+ const {focused,participants}=composition;
  if(state.location==='home'||!participants.length){root.hidden=true;root.replaceChildren();return;}
  root.hidden=false;
  // Narrator and player lines should not dim every NPC in the location.
@@ -1925,7 +1924,17 @@ function render(){
   }
   b.append(avatar,label);b.onclick=()=>selectPerson(id);$('people').append(b);
  }
- renderRpgCast(people,locked,shown,portraitId);
+ const sceneScript=showingMandatory?.lines||
+  (showingStory?storyDialogueLines(showingStory.id):null)||
+  (showingArc?ARC.linesFor(state,showingArc.id):null)||
+  (sideQuest?SIDE.linesFor(state,state.activeSideQuest.id):null)||[];
+ const remoteScene=!!showingMandatory&&showingMandatory.kind==='bond'&&
+  (showingMandatory.delivery==='remote'||
+   !SCHEDULES.peopleAt(state.day,state.slot,state.location,publicAppointments(state.location)).includes(showingMandatory.characterId));
+ renderRpgCast(people,locked,shown,portraitId,{
+  active:!!(showingMandatory||showingSituation||showingStory||showingEncounter||showingArc||sideQuest),
+  script:sceneScript,remote:remoteScene
+ });
  const characterActions=$('characterActions');
  if(characterActions){
   const selected=state.selected&&people.includes(state.selected)&&!locked?state.selected:null;
