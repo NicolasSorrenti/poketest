@@ -55,6 +55,25 @@ for(const set of LEGACY_DECKS){
   assert.deepEqual(r.counts,[60,60]);
  }
 }
+// RPG's custom 60-card deck must start with four Prizes in routine duels,
+// while special encounters still use six. Validate the actual service path.
+for(const prizeCount of [4,6]){
+ const service=new ClassicLocalService();
+ let r=service.create({
+  deck:'custom',customDeck:require('./authentic_decks').list('base1:Blackout'),
+  opponent:'power_reserve',npcDeckId:'yuna',npcDeckTier:1,seed:7919,prizeCount
+ });
+ const token=r.token;
+ assert.equal(r.view.phase,'setup');
+ const basic=r.view.players[0].hand.findIndex(id=>isBasicPokemon(CATALOG.get(id)));
+ assert.ok(basic>=0,'RPG player has a Basic Pokémon to set up');
+ r=service.action(token,{type:'setup_select',payload:{handIndex:basic}},r.revision);
+ r=service.action(token,{type:'setup_confirm',payload:{}},r.revision);
+ assert.equal(r.view.players[0].prizeCount,prizeCount);
+ assert.equal(r.view.players[1].prizeCount,prizeCount);
+ assert.deepEqual(r.counts,[60,60],'RPG setup conserves both full decks');
+ checks+=2;
+}
 const small=new ClassicLocalService({maxSessions:1});small.create();assert.throws(()=>small.create(),/Too many/);checks++;
 assert.throws(()=>small.state('bogus'),/Unknown or expired/);checks++;
 assert.ok(attacks>30&&choices>5,`Expected game interactions: attacks=${attacks}, choices=${choices}`);

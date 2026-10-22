@@ -105,6 +105,17 @@ function withDifference(decks,winner=0,opts={}){
  assert.equal(countCards(finished.players[1]),60);
 }
 {
+ const g=withDifference([rich,rare],0,{format:'classic',prizeCount:4});
+ setup(g);
+ assert.equal(g.players[0].prizes.length,4,'Short RPG duels reserve four Prizes');
+ assert.equal(g.players[1].prizes.length,4);
+ assert.equal(g.mulliganBonus.side,0,'Four-Prize duels still offer mulligan bonuses');
+ action(g,0,'setup_bonus_draw',{count:0});
+ assert.equal(g.phase,'game');
+ assert.equal(countCards(g.players[0]),60);
+ assert.equal(countCards(g.players[1]),60);
+}
+{
  const deck40=[...Array(4).fill(id.hit),...Array(4).fill(id.rat),
   ...Array(4).fill(id.machop),...Array(4).fill(id.seel),...Array(24).fill(id.fight)];
  const rare40=[id.hit,...Array(39).fill(id.fight)];
