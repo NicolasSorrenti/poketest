@@ -29,7 +29,7 @@
  const score=(s,id,key)=>Math.max(Number(s?.relationships?.[id]?.[key])||0,Number(s?.bonds?.[id]?.[key])||0);
  const close=(s,id)=>s?.partner===id||score(s,id,'affection')>=6||score(s,id,'trust')>=5;
  const waiting=(s,id)=>score(s,id,'affection')>=2||score(s,id,'trust')>=2;
- function choose(s,id,{present=[],appointments=[],stories=[],sidequests=[],arcs=[],situations=[],encounters=[],canAttend=()=>null}={}){
+ function choose(s,id,{present=[],appointments=[],stories=[],sidequests=[],arcs=[],situations=[],encounters=[],competitions=[],cups=[],exhibitions=[],canAttend=()=>null}={}){
   if(!s||s.day>90||!present.includes(id)||s.pendingDuel||s.activeStory||s.activeSideQuest||s.activeArc||s.activeEncounter||s.activeSituation||s.mandatoryEventState?.active)return null;
   // Never promise an activity the player cannot currently perform.
   const plan=appointments.find(p=>p.npc===id&&p.status==='booked'&&p.day===s.day&&p.slot===s.slot&&p.place===s.location&&!canAttend(p));
@@ -40,6 +40,12 @@
   if(side)return {kind:'sidequest',id:side.quest.id,npc:id,urgent:side.stage.end===s.day};
   const arc=arcs.find(e=>e.npc===id||id==='reina');
   if(arc&&id==='reina')return {kind:'arc',id:arc.id,npc:id,urgent:arc.end===s.day};
+  const cup=cups.find(e=>e.npc===id);
+  if(cup)return {kind:'cup',id:cup.id,npc:id};
+  const exhibition=exhibitions.find(e=>e.npc===id);
+  if(exhibition)return {kind:'exhibition',id:String(exhibition.id),npc:id};
+  const competitive=competitions.find(e=>e.npc===id);
+  if(competitive)return {kind:'competitive',id:competitive.id,npc:id};
   const situ=situations.find(e=>e.npc===id);
   if(situ)return {kind:'situation',id:situ.id,npc:id};
   const enc=encounters.find(e=>e.npc===id);
@@ -52,15 +58,17 @@
   const category=opportunity.kind==='appointment'?'wait':
     opportunity.kind==='situation'||opportunity.kind==='encounter'?'unexpected':'ask';
   const source=style[category]||fallback[category],intro=source[near||friendly?1:0];
+  const duel=['cup','competitive','exhibition'].includes(opportunity.kind);
   // A date is an agreed-upon plan, never a surprise romantic escalation.
   const romantic=opportunity.kind==='appointment'&&opportunity.tone==='romantic'&&near;
   const follow=romantic?'I wanted this to feel like our own little corner of the day. Shall we?':
    opportunity.kind==='appointment'?'Shall we do what we planned?':
+   duel?'I have my deck ready. Want to play the match?':
    opportunity.urgent?'I was hoping we could make time for it today. What do you think?':
    opportunity.kind==='situation'||opportunity.kind==='encounter'?'Want to see what we can do?':
    'Would you like to talk about it now?';
   return {lines:[{speaker:npc,text:intro},{speaker:'Protagonist',text:'You had something in mind?'},{speaker:npc,text:follow}],
-   choices:[['I am in.','eventInvite:'+opportunity.kind+':'+opportunity.id],
+   choices:[[duel?'Let’s play.':'I am in.','eventInvite:'+opportunity.kind+':'+opportunity.id],
     ['Can we just talk for a bit?','eventChat:'+npc],
     ['Maybe later.','close']]};
  }
