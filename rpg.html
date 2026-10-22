@@ -15,6 +15,7 @@
 <link rel="stylesheet" href="/rpg_tournament_presentation.css">
 <link rel="stylesheet" href="/rpg_audio.css">
 <link rel="stylesheet" href="/rpg_discreet.css">
+<link rel="stylesheet" href="/rpg_status.css">
 </head>
 <body>
 <div id="app">
@@ -55,6 +56,7 @@
       <button id="rpgDiscreetToggle" class="toolbar-btn" type="button" aria-pressed="false" title="Hide character and event illustrations">◇ DISCREET OFF</button>
       <button id="rpgMapToggle" class="toolbar-btn rpg-nav-toggle" type="button" aria-controls="rpgMapPanel" aria-expanded="false" aria-label="Open town map">☷ MAP</button>
       <button id="rpgInfoToggle" class="toolbar-btn rpg-nav-toggle" type="button" aria-controls="rpgInfoPanel" aria-expanded="false" aria-label="Open story and progress panels">✧ INFO</button>
+      <button id="statusBtn" class="toolbar-btn" type="button" aria-haspopup="dialog" aria-controls="statusDialog">♥ STATUS</button>
       <button id="deckStudioBtn" class="toolbar-btn" type="button">▣ DECK STUDIO</button>
       <a href="/mat_generator.html" target="_blank" rel="noopener" class="toolbar-btn" style="text-decoration:none">▧ PLAYMAT STUDIO</a>
       <button id="galleryBtn" class="toolbar-btn" type="button">▧ CG GALLERY</button>
@@ -194,6 +196,20 @@
 
 <div id="timeFlash" class="time-flash" role="status" aria-live="polite"></div>
 
+<dialog id="statusDialog" class="rpg-status-dialog" aria-label="Player and relationships status">
+  <div class="status-header">
+    <div><small class="status-eyebrow">NEO HARBOR · PLAYER RECORD</small><h2>♥ Your Season Status</h2><p>Progress, personal connections and the people you've met.</p></div>
+    <button id="statusClose" class="status-close" type="button">✕ CLOSE</button>
+  </div>
+  <div id="statusOverview" class="status-overview" aria-label="Player progression"></div>
+  <div class="status-main">
+    <section class="status-people" aria-label="Known characters">
+      <div class="status-section-head"><h3>Connections</h3><small id="statusCount"></small></div>
+      <div id="statusCharacters" class="status-characters"></div>
+    </section>
+    <section id="statusDetail" class="status-detail" aria-live="polite" aria-label="Selected character relationship"></section>
+  </div>
+</dialog>
 <dialog id="calendarDialog" class="modal">
  <div class="modal-heading"><h2>▦ Circuit Calendar</h2><button id="calendarClose" type="button">✕ Close</button></div>
  <p>Known official events. Some personal encounters are discovered by exploring at different times.</p>
@@ -348,6 +364,7 @@
 <script src="/rpg_character_motion.js"></script>
 <script src="/rpg_victory_presentation.js"></script>
 <script src="/rpg_tournament_presentation.js"></script>
+<script src="/rpg_status.js"></script>
 <script src="/rpg.js"></script>
 </body>
 </html>
