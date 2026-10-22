@@ -57,3 +57,10 @@ test('an ordinary travel/narration beat restores the free-roaming cast',()=>{
  assert.deepEqual(scene.participants,present);
  assert.equal(scene.conversation,false);
 });
+
+test('unique first-name speaker labels in authored scripts still receive focus',()=>{
+ const scene=compose({active:true,portraitId:'hana',shown:{speaker:'Reina',line:'Your move.'},
+  script:[['Hana','Hi'],['Reina','Your move.']]});
+ assert.equal(scene.focused,'reina');
+ assert.deepEqual(scene.participants,['hana','reina']);
+});
