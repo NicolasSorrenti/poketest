@@ -119,6 +119,20 @@ async function verifyDelayedArtwork(){
  assert.equal(calls[0].imageCandidates[0],fallback,'chat avatar starts with working image');
  experience.reset();
  assert.equal(classes.has('hidden'),true);
- console.log('RPG delayed image and fallback loading passed.');
+ // A canceled cut-in must stay canceled even if its request completes later.
+ const stale=makeExperience({element:el,npcId:'reina',npcName:'Reina',random:()=>0,
+  doc,media:{Image:MockImage},onShow:x=>calls.push(x),
+  schedule:(fn,ms)=>{timers.push({fn,ms});return timers.length},cancel:()=>{}});
+ stale.setManifest({characters:{reina:{attack,match_cutin:fallback}}});
+ stale.update({view:view(6),activity:[]});
+ stale.update({view:view(6),activity:[{seq:4,type:'attack',side:1,label:'Tackle'}]});
+ const canceled=stale.whenShown(),beforeCancelCount=calls.length;
+ stale.reset();
+ await canceled;
+ pending.get(attack).at(-1).onload();
+ await new Promise(resolve=>setImmediate(resolve));
+ assert.equal(classes.has('hidden'),true,'old image must not revive canceled cut-in');
+ assert.equal(calls.length,beforeCancelCount,'no stale chat entry');
+ console.log('RPG delayed image, fallback loading, and stale cancellation passed.');
 }
 verifyDelayedArtwork().catch(error=>{console.error(error);process.exitCode=1;});
