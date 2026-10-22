@@ -32,6 +32,19 @@ The script takes **one** canonical scene ID, or **one** supported reward type pl
 
 Other art types (expressions, backgrounds, reactions, standing sprites) must likewise be prompted individually. Draft a short, positive one-scene request describing subject, action, outfit, setting, camera, lighting, and desired native dimensions. Validate the actual text using the script's --validate option; include the required phrase "Create one complete, standalone" and describe a "single continuous scene" and "one focal moment". Do not paste the entire source reference document.
 
+## Reliability protocol: canonical visual references and small batches
+
+The four most recent reward candidates (Shiori, Yuna, Akari, Marina) were visibly closer to the requested game settings and character silhouettes than the earlier failures. Preserve the repeatable parts of that approach without claiming that the image-generation model is deterministic:
+
+1. **Reference first:** Invoke `node scripts/rpg-art-prompt.js --reward booster --character <id> --json`. Use its `referencePath` (normally `rpg-assets/<id>.png`) as the approved character reference and check it against the live character portrait. The path is **metadata**, not an automatically attached image: provide the actual pixels as an image reference only if the chosen generation tool supports it. Do not use a different heroine's image as the character identity reference.
+2. **One image request:** Send only the generated `prompt`, along with the actual canonical portrait reference when possible; aim for portrait framing on reward art. It must depict the specified public card-related place and physical reward gesture in one continuous moment. Avoid unrelated private-room staging or spontaneous outfit/identity substitutions.
+3. **Small QA batches:** Create up to **two** images, each in a **separate** image-generation request, then inspect both before beginning the next pair. This is a QA cadence, **not** a request to place two images on one canvas or to run a background agent.
+4. **Identity and action acceptance:** Compare the output with the reference for face shape, hair outline and colors, signature accessories and costume. Check that the booster is visibly handed to the player and the required shop/library/arcade/riverside/club environment appears. A visually attractive image with the wrong identity or no reward is still a failed asset.
+5. **Controlled retry:** Retry by changing one aspect that failed (identity reference, correct place, prop readability or crop) rather than replacing the whole concept. Document the rejection reason, do not relabel an unrelated image under the target NPC, and stop if repeated attempts reproduce unrelated content.
+6. **Deliver, don't just preview:** Convert each accepted result to the target WebP and dimensions, produce SHA-256 and a manifest, and package repo-root-relative paths. The fact an image appeared in the chat does not mean it is checked into GitHub or usable by Render.
+
+The `--json` result includes a separate `review` checklist; **never paste the checklist, reference path, or the entire JSON into the image-generation prompt**. For consistent art, prefer the same *rendering style* as accepted samples; do not use an unrelated character reference as a face reference. Only claim a complete production asset when its actual file path and pixels are verified.
+
 ## Production QA (separate from the model prompt)
 
 Never render the following prohibited layouts for a standalone runtime art slot:
