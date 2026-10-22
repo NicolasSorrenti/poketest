@@ -114,6 +114,7 @@ function createPrompt({sceneId, reward, characterId}) {
   const prompt = [
     'Create one complete, standalone, cinematic anime visual-novel illustration: a single continuous scene capturing one focal moment.',
     'Feature ' + canonical,
+    'Match the supplied original in-game character portrait for the same face, hair silhouette, hair colors, skin tone and signature accessories; change only the pose needed for this event.',
     'Moment: ' + description,
     'Location: ' + setting,
     'Wardrobe: ' + outfit,
@@ -127,8 +128,19 @@ function createPrompt({sceneId, reward, characterId}) {
   if (!target.startsWith('rpg-assets/') || !target.endsWith('.webp') || target.includes('..')) {
     throw new Error('Invalid game asset path');
   }
+  const referencePath = 'rpg-assets/' + character + '.png';
+  const review = [
+    'The output is one standalone complete scene, not a composite layout.',
+    'The face, hair silhouette, colors and signature accessories agree with ' + referencePath + '.',
+    'The image depicts the requested in-game venue and physical action.',
+    kind === 'booster'
+      ? 'Exactly one clearly visible sealed booster pack is presented to the player.'
+      : 'The intended scene/event is immediately recognizable.',
+    'The final image has no interface elements, labels, watermarks or unrelated characters.'
+  ];
   return {
     id, kind, character, path: target,
+    referencePath, review,
     width: kind === 'scene' ? 1920 : 768,
     height: kind === 'scene' ? 1080 : 1024,
     prompt
