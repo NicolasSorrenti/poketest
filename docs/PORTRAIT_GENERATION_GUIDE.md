@@ -1,5 +1,7 @@
 # Neo Harbor Portrait Generation Guide
 
+> **MANDATORY ONE-IMAGE GENERATION GATE:** Read [ART_GENERATION_ONE_IMAGE_RULE.md](ART_GENERATION_ONE_IMAGE_RULE.md). **GENERATE ONE (1) IN-GAME CHARACTER PORTRAIT OR ONE (1) EXPRESSION PER IMAGE CALL. NO CONCEPT ART, GRIDS, CHARACTER LINEUPS, MULTI-EXPRESSION SHEETS, COLLAGES, PANEL SPLITS, LABELS OR PROMOTIONAL BOARDS.** A 6-expression request requires 6 independent image calls. Reject sheets rather than cropping them and calling them standalone portraits.
+
 Use this guide to keep all VN portraits visually consistent.
 
 ## Primary portrait standard
