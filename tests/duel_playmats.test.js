@@ -8,6 +8,9 @@ assert.ok(ids.includes('npc-hana'));assert.equal(m.choose('npc-reina',ids),'auro
 assert.match(m.svg('npc-hana'),/^url\("data:image\/svg\+xml,/);
 const target={dataset:{},style:{setProperty:(k,v)=>{assert.equal(k,'--neo-playmat-image');assert.ok(v.includes('svg'));}}};
 m.apply(target,'npc-hana');assert.equal(target.dataset.playmat,'npc-hana');
+// Static art is preferred when installed; the generated SVG remains the fallback.
+const seen={};const targetWithFallback={dataset:{},style:{setProperty:(k,v)=>seen[k]=v}};
+m.apply(targetWithFallback,'aurora');assert.match(seen['--neo-playmat-image'],/url\("\/rpg-assets\/ui\/playmats\/aurora\.webp"\),url\("data:image\/svg\+xml,/);
 
 // The mobile view should use the regular battlefield background instead of
 // showing a scaled desktop playmat; the desktop playmat remains available.
