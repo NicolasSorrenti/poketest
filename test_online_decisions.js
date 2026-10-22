@@ -14,6 +14,11 @@ for(const [side,token] of [[0,host.token],[1,guest.token]]){
  assert.ok(i>=0);r=svc.action(host.code,token,{revision:r.revision,command:{type:'setup_select',payload:{handIndex:i}}});
  svc.action(host.code,token,{revision:r.revision,command:{type:'setup_confirm'}});
 }
+const bonusState=svc.state(host.code,host.token);
+if(bonusState.view.mulliganBonus){
+ const side=bonusState.view.mulliganBonus.side,token=side===0?host.token:guest.token;
+ svc.action(host.code,token,{revision:bonusState.revision,command:{type:'setup_bonus_draw',payload:{count:0}}});
+}
 const room=svc.rooms.get(host.code),player=room.game.players[0];
 // Inject Challenge! into a prepared fixture, without changing card conservation.
 player.hand[0]='base5-74';
