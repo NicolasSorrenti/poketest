@@ -1,0 +1,19 @@
+{
+  "scene": "hana_first_meeting",
+  "target": "rpg-assets/events/cg/season01/hana_first_meeting.webp",
+  "prompt_sha256": "23cae1af3a42285dc52b3359e8b143d13feb7afedac8727f1e91f9b548610353",
+  "figma_file": "NPdAvoWAXuXow2dHsdUlkY",
+  "attempts": [
+    {
+      "node": "1:2",
+      "accepted": false,
+      "reason": "Baked dialogue and text in lower left."
+    },
+    {
+      "node": "2:2",
+      "accepted": false,
+      "reason": "Baked character label text."
+    }
+  ],
+  "live_art_overwritten": false
+}
