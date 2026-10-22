@@ -1,0 +1,22 @@
+/* RPG cloud save — opt-in account and explicit conflict decisions. */
+.cloud-save-button{white-space:nowrap;border-color:#7398b8;background:#203349;color:#e4f5ff}
+.cloud-save-button:hover:not(:disabled){background:#304d67}
+.cloud-save-dialog{width:min(460px,calc(100vw - 22px));max-height:min(85vh,720px);overflow:auto;background:#141b2e;color:#f6e9ef;border:1px solid #b77393;border-radius:16px;padding:22px;box-shadow:0 24px 75px #000c;font:14px/1.5 'Inter',system-ui,sans-serif}
+.cloud-save-dialog::backdrop{background:#030710d9;backdrop-filter:blur(4px)}
+.cloud-dialog-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:10px}
+.cloud-dialog-head h2{font:800 27px/1.15 'Barlow Condensed',system-ui,sans-serif;margin:0}
+.cloud-dialog-head button{border:0;background:transparent;font-size:18px;min-width:40px}
+.cloud-save-dialog p{line-height:1.55;color:#c6c5db}
+.cloud-save-dialog #cloudMessage{min-height:38px;color:#ffccdc}
+.cloud-save-dialog label{display:block;font-weight:650;color:#eee5ee;margin:12px 0}
+.cloud-save-dialog input{display:block;width:100%;box-sizing:border-box;margin-top:6px;padding:12px;background:#0b1525;color:white;border:1px solid #75748c;border-radius:8px;font:inherit}
+.cloud-save-dialog input:focus-visible{outline:2px solid #ffa1ba;outline-offset:2px}
+.cloud-actions{display:flex;flex-wrap:wrap;gap:9px;margin-top:14px}
+.cloud-actions button{flex:1 1 130px;background:#693653;border:1px solid #bf7497;border-radius:9px;color:white;min-height:43px;font-weight:750}
+.cloud-actions button:hover:not(:disabled){background:#864261}
+#cloudUseCloud{background:#31617b;border-color:#87a9c0}
+#cloudUseLocal{background:#6c3854}
+#cloudChoices{margin-top:18px;border-top:1px solid #535269;padding-top:14px}
+#cloudChoices p{color:#fff0eb}
+.cloud-save-dialog .cloud-small{font-size:11px;color:#9ea9ba;margin:20px 0 0}
+@media(max-width:700px){.utility-actions{grid-template-columns:repeat(4,minmax(0,1fr))}.cloud-save-button{font-size:10px;padding:9px 3px}.cloud-save-dialog{padding:16px}}
