@@ -35,6 +35,12 @@ fs.mkdirSync(artifacts,{recursive:true});
   await host.locator('#beginDraft').click();
   await Promise.all([host.locator('#draftArea:not(.hidden)').waitFor({timeout:25000}),
    guest.locator('#draftArea:not(.hidden)').waitFor({timeout:25000})]);
+  assert.equal(await host.locator('body[data-cube-phase="draft"]').count(),1);
+  assert.equal(await host.locator('#roomLobbyPanel').isVisible(),false,'No lobby clutter during drafting');
+  assert.equal(await host.locator('#deckArea').isVisible(),false);
+  assert.equal(await host.locator('#roundRobinArea').isVisible(),false);
+  assert.equal(await host.locator('.cube-pool-open').isVisible(),true,'Full Cube pool remains accessible while drafting');
+  assert.equal(await host.locator('#cubeComposition').isVisible(),true,'Composition statistics stay available in draft');
   assert.equal(await host.locator('#pack button').count(),15);
   assert.equal(await guest.locator('#pack button').count(),15);
   await host.locator('#pack button').first().hover();
