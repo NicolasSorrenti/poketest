@@ -1186,13 +1186,21 @@ function openPlannerSuggestion(id){
  const pick=PLANNER.recommend(state,plannerDependencies()).find(x=>x.id===id);
  if(!pick||pick.timing!=='now'||!places[pick.place])return;
  if(pick.place!==state.location){
-  state.location=pick.place;state.selected=null;persist();
-  say('Planner','You head to '+places[pick.place][0]+'. '+places[pick.place][1]+' No time has passed.');
- }else{
-  const section=$(pick.focusId);
-  section?.scrollIntoView?.({behavior:'smooth',block:'nearest'});
-  $('notice').textContent='This opportunity is available here. Choose its action below when you are ready.';
+  state.location=pick.place;state.selected=null;persist();render();
  }
+ tutorialEvent('planner');
+ // Meeting a character is free, so go straight into the conversation.
+ if(pick.kind==='social'&&currentPeople().includes(pick.key))return selectPerson(pick.key);
+ // Never auto-start a duel or a story: highlight the actual action instead.
+ rpgLocalTab=pick.kind==='tournament'||pick.kind==='event'?'circuit':
+  pick.kind==='activity'?'activities':'stories';
+ renderRpgActions(false,{speaker:'Narrator',line:'',choices:[]});
+ const section=$(pick.focusId);
+ section?.scrollIntoView?.({behavior:'smooth',block:'nearest'});
+ const buttons=[...(section?.children||[])].filter(x=>x.tagName==='BUTTON'&&!x.disabled);
+ const action=buttons.find(b=>b.textContent?.includes(pick.key)||b.textContent?.includes(pick.title.split(' · ')[0]))||buttons[0];
+ action?.focus?.({preventScroll:true});
+ $('notice').textContent='You are in the right place. Pick the highlighted opportunity when you are ready; no time was spent getting here.';
 }
 function renderPlanner(locked){
  const root=$('dailyPlanner');root.replaceChildren();
@@ -1912,6 +1920,10 @@ function render(){
     ['☏ Talk',()=>selectPerson(selected),'Talk to '+cast[selected].name],
     ['⚔ Duel',()=>startDuel(selected),'Challenge '+cast[selected].name+' to a duel']
    ];
+   if(!state.hungOut?.[state.day+':'+selected]&&SOCIAL.options(state,selected,people,cast).some(a=>!a.disabledReason))
+    buttons.push(['✧ Spend time',()=>planSharedActivity(selected),'Suggest an activity together']);
+   if(APPOINTMENTS.proposed(state,selected,SCHEDULES).length)
+    buttons.push(['◷ Make plans',()=>act('dateInvite:'+selected),'Invite '+display+' to meet on another day']);
    if(state.deckJourney?.starter){
     buttons.push(['⌕ Scout',()=>{
      persist();location.assign('/rpg_deck_studio.html?scout='+encodeURIComponent(selected));
