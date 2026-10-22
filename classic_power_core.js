@@ -28,7 +28,9 @@ function live(g,u,name){
  if(name!=='Toxic Gas'&&has(g,'Toxic Gas',true))return false;
  return healthy(u);
 }
-function has(g,name,noGlobal=false){return g.players.some(p=>own(p).some(u=> powerNames(u).includes(name) && healthy(u) && (noGlobal||live(g,u,name))));}
+function has(g,name,noGlobal=false){return g.players.some(p=>own(p).some(u=>
+ powerNames(u).includes(name)&&healthy(u)&&!gazed(g,u)&&
+ !(u.powerSuppressedUntil>g.turnSerial)&&(noGlobal||live(g,u,name))));}
 function blocked(g,name){if(name==='Toxic Gas')return false;return g.powerBlankUntil>g.turnSerial||has(g,'Toxic Gas',true);}
 function enabled(g,u,name){return Boolean(u&&powerNames(u).includes(name)&&(healthy(u)||['Gaseous Form','Pollen Defense','Restless Sleep','[Normal]','Photosynthesis','Rebellion','Shock Blast','[Search]','[Tell]','[Laugh]','Darkness','[Bear]','[Yield]'].includes(name))&&!blocked(g,name)&&!(u.powerSuppressedUntil>g.turnSerial)&&!gazed(g,u));}
 function protectsStatus(g,u){return enabled(g,u,'Thick Skinned');}
