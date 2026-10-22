@@ -2,6 +2,8 @@
 const test = require('node:test');
 const assert = require('node:assert/strict');
 const queue = require('../docs/cg-art-queue.json');
+const fs = require('node:fs');
+const path = require('node:path');
 const {createPrompt, assertSingleImagePrompt, parseArgs} = require('../scripts/rpg-art-prompt.js');
 
 test('each of the 32 real CGs produces its own isolated positive prompt and path', () => {
@@ -50,6 +52,21 @@ test('reward art keeps the character in her assigned game venue with an actual p
     assert.match(prompt,/the face and the single sealed booster pack must be clearly visible together/);
     assert.doesNotMatch(prompt,/bedroom|dormitory|lingerie|bunny|pin.up|sunset bedroom/i);
     assert.equal(path,'rpg-assets/characters/' + id + '/events/booster.webp');
+  }
+});
+
+test('every canonical character is linked to an existing portrait reference, without injecting a gallery into the request', () => {
+  for (const id of Object.keys(queue.characters)) {
+    for (const type of ['booster', 'battle-result']) {
+      const result = createPrompt({reward:type,characterId:id});
+      assert.equal(result.referencePath, 'rpg-assets/' + id + '.png');
+      assert.ok(fs.existsSync(path.join(__dirname, '..', result.referencePath)), id + ' missing canonical portrait');
+      assert.match(result.prompt, /Match the supplied original in-game character portrait/);
+      assert.match(result.prompt, /same face, hair silhouette, hair colors, skin tone and signature accessories/);
+      assert.equal(result.review.length, 5);
+      assert.doesNotMatch(result.prompt, /collage|grid|sheet|portfolio|storyboard|moodboard|gallery/i);
+      if (type === 'booster') assert.ok(result.review.some(line => line.includes('clearly visible sealed booster')));
+    }
   }
 });
 
