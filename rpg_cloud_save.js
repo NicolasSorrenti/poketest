@@ -218,7 +218,7 @@
  async function mount(options){
   if(adapter)return;
   adapter=options;ui();
-  window.addEventListener('online',()=>{if(!config?.enabled)connect();else if(session&&!blocked)reconcile();});
+  window.addEventListener('online',()=>{if(!config?.enabled)return connect();if(session&&!blocked)return reconcile();});
   document.addEventListener('visibilitychange',()=>{if(!document.hidden&&session&&Date.now()-lastCheck>30000)reconcile();});
   await connect();
  }
