@@ -3,7 +3,6 @@
   "characters": {
     "hana": {
       "default": "/rpg-assets/hana.png",
-<<<<<<< Updated upstream
       "attack": "/rpg-assets/reactions/hana/attack.png",
       "weakness_hit": "/rpg-assets/characters/hana/vn-expressions/surprised.webp",
       "status_hit": "/rpg-assets/characters/hana/vn-expressions/angry.webp",
@@ -92,44 +91,7 @@
     },
     "sol": {
       "default": "/rpg-assets/sol.png",
-      "attack": "/rpg-assets/reactions/sol/attack.png",
-      "weakness_hit": "/rpg-assets/characters/sol/expressions/surprised.png",
-      "status_hit": "/rpg-assets/characters/sol/expressions/worried.png",
-      "big_hit": "/rpg-assets/characters/sol/expressions/worried.png",
-      "hurt": "/rpg-assets/characters/sol/expressions/worried.png",
-      "ko_taken": "/rpg-assets/characters/sol/expressions/worried.png",
-      "ko_scored": "/rpg-assets/characters/sol/expressions/smile.png"
-=======
-      "attack": "/rpg-assets/reactions/hana/attack.png"
-    },
-    "reina": {
-      "default": "/rpg-assets/reina.png",
-      "attack": "/rpg-assets/reactions/reina/attack.png"
-    },
-    "shiori": {
-      "default": "/rpg-assets/shiori.png",
-      "attack": "/rpg-assets/reactions/shiori/attack.png"
-    },
-    "yuna": {
-      "default": "/rpg-assets/yuna.png",
-      "attack": "/rpg-assets/reactions/yuna/attack.png"
-    },
-    "akari": {
-      "default": "/rpg-assets/akari.png",
-      "attack": "/rpg-assets/reactions/akari/attack.png"
-    },
-    "camila": {
-      "default": "/rpg-assets/camila.png",
-      "attack": "/rpg-assets/reactions/camila/attack.png"
-    },
-    "marina": {
-      "default": "/rpg-assets/marina.png",
-      "attack": "/rpg-assets/reactions/marina/attack.png"
-    },
-    "kaede": {
-      "default": "/rpg-assets/kaede.png",
-      "attack": "/rpg-assets/reactions/kaede/attack.png"
->>>>>>> Stashed changes
+      "attack": "/rpg-assets/reactions/sol/attack.png"
     },
     "jinx": {
       "default": "/rpg-assets/jinx.png",
@@ -138,10 +100,6 @@
     "luna": {
       "default": "/rpg-assets/luna.png",
       "attack": "/rpg-assets/reactions/luna/attack.png"
-    },
-    "sol": {
-      "default": "/rpg-assets/sol.png",
-      "attack": "/rpg-assets/reactions/sol/attack.png"
     },
     "sierra": {
       "default": "/rpg-assets/sierra.png",
@@ -155,7 +113,6 @@
       "default": "/rpg-assets/rina.png",
       "attack": "/rpg-assets/reactions/rina/attack.png"
     },
-<<<<<<< Updated upstream
     "jun": {
       "default": "/rpg-assets/jun.png",
       "attack": "/rpg-assets/reactions/jun/attack.png",
@@ -221,31 +178,6 @@
       "ko_taken": "/rpg-assets/characters/nereo/vn-expressions/vulnerable.webp",
       "ko_scored": "/rpg-assets/characters/nereo/vn-expressions/happy.webp",
       "match_cutin": "/rpg-assets/characters/nereo/cutins/match-cutin.webp"
-=======
-    "alma": {
-      "default": "/rpg-assets/alma.png",
-      "attack": "/rpg-assets/reactions/alma/attack.png"
-    },
-    "iris": {
-      "default": "/rpg-assets/iris.png",
-      "attack": "/rpg-assets/reactions/iris/attack.png"
-    },
-    "jun": {
-      "default": "/rpg-assets/jun.png",
-      "attack": "/rpg-assets/reactions/jun/attack.png"
-    },
-    "nereo": {
-      "default": "/rpg-assets/nereo.png",
-      "attack": "/rpg-assets/reactions/nereo/attack.png"
-    },
-    "teo": {
-      "default": "/rpg-assets/teo.png",
-      "attack": "/rpg-assets/reactions/teo/attack.png"
-    },
-    "elio": {
-      "default": "/rpg-assets/elio.png",
-      "attack": "/rpg-assets/reactions/elio/attack.png"
->>>>>>> Stashed changes
     }
   }
 }
