@@ -17,7 +17,9 @@ for(const set of LEGACY_DECKS){
     assert.ok(!('game' in frame),'Never expose server game state in replay');
     if(index>0)assert.notEqual(frame.view.pendingDecision?.actor,1,'Do not announce CPU cards before private target choices resolve');
    }
-   if(type==='end_turn'&&!r.view.over){
+   // End-turn checkup can require a human response (for example a Berry),
+   // before control ever reaches the CPU. Such a response has no CPU replay yet.
+   if(type==='end_turn'&&!r.view.over&&r.view.pendingDecision?.actor!==0){
     assert.ok(r.cpuPlayback?.length>=1,`CPU turn must expose the opening replay frame (deck=${set}, seed=${seed}, revision=${r.revision}, phase=${r.view.phase}, turn=${r.view.turn}, over=${r.view.over}, lastActions=${JSON.stringify(r.lastActions)})`);
     assert.equal(r.cpuPlayback[0].view.turn,1,'Replay starts on the CPU turn');
    }
