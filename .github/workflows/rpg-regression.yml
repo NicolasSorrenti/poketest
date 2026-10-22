@@ -48,7 +48,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - name: Validate RPG story, schedules, world and duel integration
-        run: npm run test:rpg
       - name: Verify cloud save import, conflicts and offline fallback
         run: node --test tests/rpg_cloud_save.test.js
+      - name: Validate RPG story, schedules, world and duel integration
+        run: npm run test:rpg
