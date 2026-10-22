@@ -258,6 +258,22 @@
 .pack-card{min-height:210px}
 @media(max-width:650px){.pack-giver-image{height:125px}.pack-reveal-cards{grid-template-columns:repeat(2,minmax(0,1fr))}.pack-card{min-height:165px}}
 
+/* Shopkeeper CG in the reveal's upper-left; keep text and cards visible on mobile. */
+.pack-reveal-intro{display:grid;grid-template-columns:minmax(0,235px) minmax(0,1fr);align-items:center;gap:24px;margin-bottom:12px}
+.pack-reveal-intro .pack-giver{margin:0;width:100%;min-width:0}
+.pack-reveal-intro .pack-giver-image{width:100%;height:225px}
+.pack-reveal-intro .pack-giver-image img.pack-giver-art{object-position:center center}
+.pack-reveal-intro .pack-reveal-header{justify-content:flex-start;text-align:left;min-width:0}
+@media(max-width:650px){
+ .pack-reveal-intro{grid-template-columns:minmax(0,125px) minmax(0,1fr);gap:12px}
+ .pack-reveal-intro .pack-giver-image{height:130px}
+ .pack-reveal-intro .pack-giver strong{font-size:11px}
+ .pack-reveal-intro .pack-reveal-header h2{font-size:clamp(23px,6vw,32px)}
+ .pack-reveal-intro .pack-reveal-header small{letter-spacing:1px}
+}
+@media(max-width:360px){.pack-reveal-intro{grid-template-columns:minmax(0,100px) minmax(0,1fr)}.pack-reveal-intro .pack-giver-image{height:110px}}
+
+
 
 /* Meaningful dialogue decisions float in the center of the location scene.
    Non-narrative action menus remain inside the bottom dialogue panel. */
