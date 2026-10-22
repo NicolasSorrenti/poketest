@@ -337,13 +337,15 @@
   el.append(btn('Inspect selected card',()=>preview.inspect(us.hand[idx])));
  }
  function renderDecisions(){const v=current.view,el=$('decisionBox'),title=$('decisionTitle'),description=$('decisionText'),opts=$('decisionOptions'),acts=$('decisionActions');
-  const d=v.pendingDecision,field=fieldDecision(),prizeChoice=!!(d&&d.kind==='prize-card'&&d.actor===side()&&!watching()),showModal=!!(d&&d.actor===side()&&!field&&!targetMode&&!prizeChoice&&!watching());
+  const d=v.pendingDecision,field=fieldDecision(),prizeChoice=!!(d&&d.kind==='prize-card'&&d.actor===side()&&!watching());
+  const bonusChoice=v.phase==='setup'&&!watching()&&v.mulliganBonus?.side===side()&&v.mulliganBonus.drawn===null;
+  const showModal=!!((d&&d.actor===side()&&!field&&!targetMode&&!prizeChoice&&!watching())||bonusChoice);
   const destination=showModal?$('choiceModalContent'):$('choiceDock');
   if(el.parentElement!==destination)destination.append(el);
   $('choiceModal').classList.toggle('hidden',!showModal);
   $('choiceModal').setAttribute('aria-hidden',String(!showModal));
   $('fieldChoiceBar').replaceChildren();$('fieldChoiceBar').classList.add('hidden');
-  if(showModal&&modalDecisionId!==d.id){modalDecisionId=d.id;$('choiceModalContent').focus({preventScroll:true});}
+  if(showModal&&modalDecisionId!==(d?.id||'mulligan-bonus')){modalDecisionId=d?.id||'mulligan-bonus';$('choiceModalContent').focus({preventScroll:true});}
   if(!showModal)modalDecisionId=null;
   if(!field)lastFieldDecisionId=null;
 
@@ -452,7 +454,9 @@
   $('retreatBtn').title=actionsDisabled?'Retreat on your turn after resolving any choices.':!you.bench.length?'You need a Benched Pokémon to retreat.':'Choose a Benched Pokémon to replace your Active Pokémon.';
   $('undoBtn').disabled=busy||watching()||!current.undo?.available;
   $('undoBtn').title=current.undo?.available?'Undo '+current.undo.label:'Available only before random actions, drawing cards, or turn changes';
-  $('endBtn').disabled=actionsDisabled;
+  const bonus=v.mulliganBonus,finishBonus=v.phase==='setup'&&!watching()&&bonus?.side===side()&&bonus.drawn!==null;
+  $('endBtn').textContent=finishBonus?'✓ Start duel':'End turn →';
+  $('endBtn').disabled=finishBonus?busy:actionsDisabled;
   $('concedeBtn').disabled=watching()||v.over||v.phase!=='game';
   $('history').textContent='';(v.messages||[]).forEach(x=>{const li=document.createElement('li');li.textContent=x;$('history').append(li);});
   renderDecisions();combat.update(current);renderMatchFeed();
@@ -521,7 +525,12 @@
  $('copyInvite').addEventListener('click',async()=>{try{if(navigator.clipboard){await navigator.clipboard.writeText($('roomLink').value);}else{$('roomLink').select();document.execCommand('copy');}$('copyInvite').textContent='Copied!';}catch{$('roomLink').select();$('copyInvite').textContent='Select and copy link';}});
  $('reset').addEventListener('click',newDuel);
  $('undoBtn').addEventListener('click',()=>send(command('undo')));
- $('endBtn').addEventListener('click',()=>send(command('end_turn')));
+ $('endBtn').addEventListener('click',()=>{
+  const bonus=current?.view?.mulliganBonus;
+  if(current?.view?.phase==='setup'&&bonus?.side===side()&&bonus.drawn!==null)
+   send(command('setup_bonus_done'));
+  else if(current?.view?.phase==='game')send(command('end_turn'));
+ });
  $('retreatBtn').addEventListener('click',()=>setTarget('retreat',{},'Choose Benched replacement',true));
  $('concedeBtn').addEventListener('click',()=>{if(confirm('Concede this duel?'))send(command('concede'));});
  document.addEventListener('keydown',e=>{if(e.key==='Escape'){const d=current?.view?.pendingDecision;if(d?.cancelable&&!busy){e.preventDefault();send(command('cancel_choice',{decisionId:d.id}));return;}if(targetMode){e.preventDefault();cancelTarget();}else if(powersOpen){setPowersOpen(false);}}});
