@@ -332,7 +332,25 @@
    ko_scored:['ko_scored','match_cutin'],
    play_card:['play_card','match_cutin'],evolve:['evolve','match_cutin'],
    power:['power','match_cutin'],attack:['attack','match_cutin']};
-  return [...new Set([...(kinds[kind]||[kind]).map(name=>entry?.[name]),entry?.default,PORTRAITS[npcId]].filter(valid))];
+  // Prefer purpose-built illustrations in the reaction directory over VN
+  // expressions / match portraits. Missing variants fall through via onerror.
+  // Keep the manifest as a fallback for older asset packs.
+  const reactionNames={
+   play_card:['play_card','play-card','card_play','card-play'],
+   evolve:['evolve','evolution'],
+   power:['power','pokemon_power','pokemon-power'],
+   weakness_hit:['weakness_hit','weakness-hit','hurt'],
+   status_hit:['status_hit','status-hit','hurt'],
+   big_hit:['big_hit','big-hit','hurt'],
+   hurt:['hurt','hit'],
+   ko_taken:['ko_taken','ko-taken','hurt'],
+   ko_scored:['ko_scored','ko-scored','victory'],
+   attack:['attack']
+  };
+  const reactionPaths=(reactionNames[kind]||[kind]).flatMap(name=>
+   ['png','webp','jpg'].map(ext=>'/rpg-assets/reactions/'+npcId+'/'+name+'.'+ext));
+  return [...new Set([...reactionPaths,...(kinds[kind]||[kind]).map(name=>entry?.[name]),
+   entry?.default,PORTRAITS[npcId]].filter(valid))];
  }
  function assetFor(manifest,npcId,kind){
   return assetCandidates(manifest,npcId,kind)[0]||null;
