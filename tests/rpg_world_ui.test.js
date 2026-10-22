@@ -1447,9 +1447,10 @@ test('tutorials appear for exactly the first two visits per mechanic and survive
  r.elements.people.children.find(x=>x.children?.[1]?.children?.[0]?.textContent==='Hana Mizuno').onclick();finishGreeting(r);
  r.act('socialPlan:hana');
  assert.equal(r.state().gameplayTutorials.seen.social,1);
- assert.match(r.elements.tutorialTitle.textContent,/Spend time together/);
+ assert.match(r.elements.tutorialTitle.textContent,/Meet the locals/);
  r.elements.tutorialDismiss.onclick();
- assert.equal(r.elements.gameplayTutorial.hidden,false,'conversation tutorial may still be queued');
+ assert.match(r.elements.tutorialTitle.textContent,/Spend time together/);
+ assert.equal(r.elements.gameplayTutorial.hidden,false);
  r.act('socialPlan:hana');
  assert.equal(r.state().gameplayTutorials.seen.social,2);
  r.act('socialPlan:hana');
