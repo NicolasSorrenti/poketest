@@ -25,6 +25,7 @@ for(let seed=1;seed<=60;seed++){
   }
   assert.ok(act(g,side,'setup_confirm').ok);
  }
+ if(g.mulliganBonus)assert.ok(act(g,g.mulliganBonus.side,'setup_bonus_draw',{count:0}).ok);
  for(let step=0;step<700&&!g.over;step++){
   if(g.pendingDecision){const d=g.pendingDecision,decision=act(g,d.actor,'choose',{decisionId:d.id,selected:[d.options[0].id]});assert.ok(decision.ok,`Seed ${seed} failed choice: ${decision.error}`);continue;}
   const side=g.turn;let p=g.players[side];
