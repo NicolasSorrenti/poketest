@@ -21,6 +21,7 @@ for(let seed=1;seed<=60;seed++){
   }
   assert.ok(cmd(g,side,'setup_confirm').ok);
  }
+ if(g.mulliganBonus)assert.ok(cmd(g,g.mulliganBonus.side,'setup_bonus_draw',{count:0}).ok);
  for(let step=0;step<700&&!g.over;step++){
   if(g.pendingDecision){const d=g.pendingDecision,prev=g.turn;
    const out=cmd(g,d.actor,'choose',{decisionId:d.id,selected:[d.options[0].id]});
