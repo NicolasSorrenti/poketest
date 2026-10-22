@@ -916,6 +916,37 @@ test('RPG collection: a training pack unlocks owned cards and full Deck Studio n
  assert.match(r.loc.href,/rpg_deck_studio\.html/);
  assert.equal(r.state().day,5);assert.equal(r.state().slot,0);
 });
+test('booster shop remains open for multiple purchases and shop reveal shows the clerk art',()=>{
+ const r=launch({day:5,slot:0,location:'shop',credits:80,deckJourney:Collection.fresh()});
+ r.elements.starterChoices.children[0].onclick();
+ r.elements.deckCollection.children.find(x=>x.textContent.includes('Browse booster packs')).onclick();
+ assert.equal(r.elements.boosterShopDialog.open,true);
+ const free=()=>r.elements.boosterShopGrid.children.flatMap(x=>x.children).find(x=>x.className==='booster-offer-buy'&&!x.disabled&&x.textContent.includes('Choose free'));
+ assert.ok(free());free().onclick();
+ assert.equal(r.elements.boosterShopDialog.open,true,'underlying shop must stay open during pack reveal');
+ assert.equal(r.elements.packDialog.open,true);
+ assert.equal(r.elements.packGiver.children[0].src,'/rpg-assets/shop/shopkeeper-booster.webp');
+ assert.match(r.elements.packContinue.textContent,/Back to booster shop/);
+ r.elements.packContinue.onclick();
+ assert.equal(r.elements.boosterShopDialog.open,true);
+ assert.equal(r.elements.packDialog.open,false);
+ assert.equal(r.state().deckJourney.welcomePacks,1);
+ assert.ok(free(),'updated offers should allow buying another pack immediately');
+ free().onclick();r.elements.packContinue.onclick();
+ assert.equal(r.state().deckJourney.welcomePacks,0);
+ const paid=()=>r.elements.boosterShopGrid.children.flatMap(x=>x.children).find(x=>x.className==='booster-offer-buy'&&!x.disabled&&x.textContent.includes('Buy'));
+ assert.ok(paid());paid().onclick();
+ assert.equal(r.state().credits,60);
+ assert.equal(r.elements.boosterShopDialog.open,true);
+ r.elements.packContinue.onclick();
+ assert.ok(paid(),'shop offers must refresh after buying');
+ paid().onclick();
+ assert.equal(r.state().credits,40,'repeat purchase charges exactly once');
+ r.elements.packContinue.onclick();
+ assert.equal(r.elements.boosterShopDialog.open,true);
+ r.elements.boosterShopClose.onclick();
+ assert.equal(r.elements.boosterShopDialog.open,false);
+});
 test('RPG collection: pre-duel snapshot locks the actual 60 owned cards until the result',()=>{
  const r=launch({day:5,slot:0,location:'shop',deckJourney:Collection.fresh()});
  r.elements.starterChoices.children[2].onclick();
