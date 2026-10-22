@@ -62,3 +62,9 @@ a{color:inherit;text-decoration:none}
 .strategy-search-results button{margin:0;justify-content:flex-start}
 .strategy-status{min-height:16px;color:#ffcae1;font-size:12px;margin:10px 0 0}
 @media(max-width:850px){.strategy-grid{grid-template-columns:1fr}}
+
+.deck-tutorial{margin:10px 0 18px;padding:13px 16px;border:1px solid #da91b8;border-left:4px solid #ffb9d0;border-radius:11px;background:#20314a;color:#f8e2ec;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.deck-tutorial strong{font-size:15px}
+.deck-tutorial p{flex:1;min-width:220px;margin:0;font-size:12px;line-height:1.6}
+.deck-tutorial button{background:#62405d;border-color:#f0a2c7;color:#fff;padding:8px 17px}
+@media(max-width:700px){.deck-tutorial{display:block}.deck-tutorial p{margin:8px 0}.deck-tutorial button{display:block;margin-left:auto}}
