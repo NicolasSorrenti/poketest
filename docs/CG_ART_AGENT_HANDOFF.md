@@ -1,5 +1,7 @@
 # Neo Harbor — CG Production Handoff (32 event images)
 
+> **MANDATORY ONE-IMAGE GENERATION GATE:** Read [ART_GENERATION_ONE_IMAGE_RULE.md](ART_GENERATION_ONE_IMAGE_RULE.md) before **every** CG generation. **GENERATE EXACTLY ONE (1) STANDALONE IN-GAME ILLUSTRATION OF ONE SCENE. NO CONCEPT ART, GRIDS, COLLAGES, CHARACTER SHEETS, CONTACT SHEETS, STORYBOARDS, PROMOTIONAL PANELS, UI MOCKUPS, TEXT OR LABELS.** Split a batch into separate image calls, one scene ID per call; create the thumbnail later by resizing the accepted full image. Reject any image that breaks this rule instead of cropping a panel out.
+
 **Owner:** illustration / image-creator agent. **Gameplay:** `rpg_cg_gallery.js` owns metadata and triggers. **Characters and story:** parallel narrative agent. **Asset status:** none of these 32 new images are presently committed in this manifest; treat all as requested, not delivered. Older art ZIPs may contain other scenes; check actual image inventory before reuse.
 
 ## Visual bible (mandatory for all 32 images)
