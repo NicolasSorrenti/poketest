@@ -144,6 +144,33 @@
   return upload(meta.revision);
  }
  function onLocalSave(){if(session&&!blocked)schedule();}
+ // Supabase email confirmation returns credentials in the URL fragment.
+ // Remove the fragment immediately so credentials never remain in the address bar.
+ function takeEmailConfirmation(){
+  const fragment=root.location?.hash||'';
+  if(!fragment.startsWith('#'))return null;
+  const params=new URLSearchParams(fragment.slice(1));
+  if(!params.has('access_token')&&!params.has('error'))return null;
+  root.history?.replaceState?.(root.history.state,null,root.location.pathname+root.location.search);
+  if(params.has('error'))throw Error(params.get('error_description')||'Email confirmation was not successful.');
+  const token=params.get('access_token'),refresh=params.get('refresh_token');
+  if(!token||!refresh||params.get('token_type')!=='bearer')throw Error('Email confirmation could not complete. Sign in with your password.');
+  return {access_token:token,refresh_token:refresh,expires_in:Number(params.get('expires_in')||3600)};
+ }
+ async function completeEmailConfirmation(data){
+  const response=await fetch(config.url+'/auth/v1/user',{
+   headers:{apikey:config.key,Authorization:'Bearer '+data.access_token}
+  });
+  const user=await response.json().catch(()=>null);
+  if(!response.ok||!user?.id)throw Error('Email confirmed, but automatic sign-in failed. Sign in using your password.');
+  sessionSave({...data,user});
+  label('Email confirmed. Loading your cloud progress…');
+ }
+ function signupEndpoint(){
+  const origin=root.location?.origin||'';
+  const callback=(origin.startsWith('https://')||origin.startsWith('http://'))?origin+'/rpg.html':null;
+  return '/auth/v1/signup'+(callback?'?redirect_to='+encodeURIComponent(callback):'');
+ }
  async function signIn(mode){
   if(!config?.enabled){stateLabel('Cloud service not configured yet.');return;}
   const email=$('cloudUser').value.trim(),password=$('cloudPassword').value;
@@ -151,7 +178,7 @@
   $('cloudSignIn').disabled=true;$('cloudSignUp').disabled=true;
   try{
    if(mode==='signup'){
-    const signup=await request('/auth/v1/signup',{email,password});
+    const signup=await request(signupEndpoint(),{email,password});
     if(!signup?.access_token){label('Check your email to confirm your account, then sign in.');return;}
     sessionSave(signup);
    }else sessionSave(await request('/auth/v1/token?grant_type=password',{email,password}));
@@ -201,12 +228,15 @@
   renderAccount();
  }
  async function connect(){
+  let confirmed=null;
+  try{confirmed=takeEmailConfirmation();}catch(error){label(errorText(error));}
   try{
    const response=await fetch('/api/rpg-cloud/config',{cache:'no-store'});
    config=await response.json();
    if(!response.ok||!config.enabled){
     stateLabel('Cloud saves are not connected yet. Your local save is working.');return;
    }
+   if(confirmed)await completeEmailConfirmation(confirmed);
    const cached=JSON.parse(localStorage.getItem(SESSION_KEY)||'null');
    if(!cached?.refresh_token||!cached?.user?.id){
     stateLabel('Sign in to sync your RPG progress between devices.');return;
