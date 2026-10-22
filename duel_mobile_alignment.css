@@ -1,0 +1,158 @@
+/*
+ * Mobile battlefield alignment. Loaded last by Classic/RPG/Cube and Online.
+ * Pure presentation: do not modify Pokémon targeting, attack buttons or rules.
+ * Desktop >=781px retains the existing layout and playmat appearance.
+ */
+@media (max-width:780px) {
+  /* Old duel styles disagree on field width and grid placement. Give every
+     zone one full-width, centered grid cell instead of using desktop columns. */
+  body.duel-active .stage .territory .field-row,
+  body.duel-active .stage .territory .field-row.bottom {
+    width:100%!important;
+    max-width:100%!important;
+    min-width:0!important;
+    box-sizing:border-box!important;
+    display:grid!important;
+    grid-template-columns:minmax(0,1fr)!important;
+    justify-items:center!important;
+    padding-left:clamp(8px,2vw,15px)!important;
+    padding-right:clamp(8px,2vw,15px)!important;
+  }
+  body.duel-active .stage .territory .field-row .zone {
+    display:flex!important;
+    flex-direction:column!important;
+    justify-content:center!important;
+    align-items:center!important;
+    justify-self:stretch!important;
+    width:100%!important;
+    min-width:0!important;
+    max-width:100%!important;
+    margin-left:auto!important;
+    margin-right:auto!important;
+  }
+
+  /* Keep the two Active Pokémon on the SAME center line, with the attack dock
+     occupying only the third column on our side. Unlike moving the Active to
+     the left to make room for attacks, this never shifts the Pokémon itself. */
+  body.duel-active .stage .territory .active-zone .pokemon-strip {
+    justify-content:center!important;
+    align-items:center!important;
+    margin-left:auto!important;
+    margin-right:auto!important;
+    min-width:0!important;
+  }
+  body.duel-active .stage .opponent-territory .active-zone .pokemon-strip {
+    display:flex!important;
+    width:100%!important;
+    max-width:100%!important;
+    padding-left:0!important;
+    padding-right:0!important;
+  }
+  body.duel-active .stage .territory .active-with-attacks {
+    display:grid!important;
+    grid-template-columns:minmax(0,1fr) minmax(0,clamp(86px,24vw,116px)) minmax(0,1fr)!important;
+    grid-template-rows:auto!important;
+    align-items:center!important;
+    justify-items:stretch!important;
+    column-gap:clamp(3px,1vw,8px)!important;
+    width:100%!important;
+    max-width:100%!important;
+    min-width:0!important;
+    margin-left:auto!important;
+    margin-right:auto!important;
+    padding:0!important;
+  }
+  body.duel-active .stage .territory .active-with-attacks #myActive {
+    grid-column:2!important;
+    grid-row:1!important;
+    justify-self:center!important;
+    justify-content:center!important;
+    align-items:center!important;
+    width:100%!important;
+    max-width:100%!important;
+    min-width:0!important;
+    margin:0!important;
+    padding:0!important;
+    flex:none!important;
+  }
+  body.duel-active .stage .territory .active-with-attacks #fieldAttackDock {
+    display:block!important;
+    position:static!important;
+    grid-column:3!important;
+    grid-row:1!important;
+    align-self:center!important;
+    justify-self:start!important;
+    transform:none!important;
+    width:100%!important;
+    max-width:145px!important;
+    min-width:0!important;
+    margin:0!important;
+  }
+  body.duel-active .stage .territory .active-with-attacks #fieldAttackDock .inline-attack-panel {
+    width:100%!important;
+    max-width:100%!important;
+    min-width:0!important;
+    padding:4px!important;
+    margin:0!important;
+  }
+  body.duel-active .stage .territory .active-zone .poke {
+    justify-self:center!important;
+    margin-left:auto!important;
+    margin-right:auto!important;
+    max-width:100%!important;
+  }
+
+  /* Five centered, card-sized Bench positions, not a field-wide dark bar.
+     The decorative slots don't block clicks on the real rendered Pokémon. */
+  body.duel-active .stage .territory .bench-zone .pokemon-strip {
+    position:relative!important;
+    isolation:isolate!important;
+    display:grid!important;
+    grid-template-columns:repeat(5,minmax(0,1fr))!important;
+    grid-auto-flow:row!important;
+    align-items:center!important;
+    justify-items:center!important;
+    justify-content:center!important;
+    width:min(100%,335px)!important;
+    max-width:335px!important;
+    min-width:0!important;
+    height:clamp(49px,8dvh,78px)!important;
+    min-height:0!important;
+    margin-left:auto!important;
+    margin-right:auto!important;
+    padding:0!important;
+    gap:3px!important;
+    background:transparent!important;
+    overflow:visible!important;
+  }
+  body.duel-active .stage .territory .bench-zone .pokemon-strip::before {
+    content:"";
+    position:absolute;
+    inset:0;
+    z-index:-1;
+    pointer-events:none;
+    background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 500 120' preserveAspectRatio='none'%3E%3Cg fill='%23122020' fill-opacity='.27' stroke='%237a8396' stroke-opacity='.78' stroke-dasharray='6 5' stroke-width='3'%3E%3Crect x='3' y='3' width='91' height='114' rx='8'/%3E%3Crect x='104' y='3' width='91' height='114' rx='8'/%3E%3Crect x='205' y='3' width='91' height='114' rx='8'/%3E%3Crect x='306' y='3' width='91' height='114' rx='8'/%3E%3Crect x='407' y='3' width='90' height='114' rx='8'/%3E%3C/g%3E%3C/svg%3E") center / 100% 100% no-repeat!important;
+  }
+  body.duel-active .stage .territory .bench-zone .pokemon-strip > .empty {
+    position:absolute!important;
+    inset:0!important;
+    width:100%!important;
+    height:100%!important;
+    min-height:0!important;
+    margin:0!important;
+    padding:0!important;
+    border:0!important;
+    background:transparent!important;
+    color:transparent!important;
+    font-size:0!important;
+  }
+  body.duel-active .stage .territory .bench-zone .pokemon-strip > .poke {
+    position:relative!important;
+    z-index:1!important;
+    justify-self:center!important;
+    width:100%!important;
+    max-width:100%!important;
+    margin-left:auto!important;
+    margin-right:auto!important;
+  }
+}
