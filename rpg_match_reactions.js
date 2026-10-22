@@ -363,62 +363,113 @@
  function makeExperience({element,npcId,npcName,random=Math.random,getCard=()=>null,doc=typeof document==='undefined'?null:document,
   onShow=()=>{},schedule=setTimeout,cancel=clearTimeout,media=typeof window==='undefined'?null:window}={}){
   const director=createDirector({npcId,npcName,random,getCard});
-  let manifest=null,queued=null,active=false,currentPriority=0,timer=null,preloadImages=[];
+  let manifest=null,queued=null,active=false,currentPriority=0,timer=null,generation=0;
+  let pendingShown=null,settleShown=null;
+  const images=new Map();
   const reduced=()=>!!media?.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches;
+  function settle(){if(settleShown){const done=settleShown;settleShown=null;pendingShown=null;done();}}
   function hide(){
+   generation++;
    if(timer!==null)cancel(timer);
    timer=null;active=false;currentPriority=0;
    element?.classList.add('hidden');element?.replaceChildren();
+   settle();
   }
   function reset(){director.reset();queued=null;hide();}
+  function preloadPath(path){
+   if(images.has(path))return images.get(path).promise;
+   const img=new media.Image();
+   img.decoding='async';
+   const promise=new Promise(resolve=>{
+    let finished=false;
+    const timeout=setTimeout(()=>finish(false),5000);
+    function finish(ok){
+     if(finished)return;
+     finished=true;clearTimeout(timeout);img.onload=null;img.onerror=null;resolve(ok);
+    }
+    img.onload=()=>{
+     if(typeof img.decode==='function'){
+      try{Promise.resolve(img.decode()).then(()=>finish(true),()=>finish(false));}
+      catch{finish(true);}
+     }else finish(true);
+    };
+    img.onerror=()=>finish(false);
+    img.src=path;
+   });
+   images.set(path,{img,promise});
+   return promise;
+  }
+  async function readyAsset(candidates){
+   let timeout;
+   const deadline=new Promise(resolve=>{timeout=setTimeout(()=>resolve(null),7500);});
+   const find=(async()=>{
+    for(const path of candidates)if(await preloadPath(path))return path;
+    return null;
+   })();
+   try{return await Promise.race([find,deadline]);}
+   finally{clearTimeout(timeout);}
+  }
   function pump(){
    if(active||!queued||!element||!doc)return;
    const reaction=queued;queued=null;active=true;currentPriority=priorityFor(reaction.kind);
-   const card=doc.createElement('div');
-   const baseClass='npc-reaction-card npc-reaction-'+reaction.kind+(isClutch(reaction.kind)?' is-finisher':'');
-   card.className=baseClass;
-   const portrait=doc.createElement('div');portrait.className='npc-reaction-portrait';
+   const ticket=++generation;
+   pendingShown=new Promise(resolve=>{settleShown=resolve;});
    const candidates=assetCandidates(manifest,npcId,reaction.imageKey);
-   if(candidates.length){
-    const img=doc.createElement('img');img.alt='';
-    let assetIndex=0;
-    const showAsset=()=>{
-     const path=candidates[assetIndex];
+   function show(readyPath){
+    if(ticket!==generation||!active)return;
+    const card=doc.createElement('div');
+    const baseClass='npc-reaction-card npc-reaction-'+reaction.kind+(isClutch(reaction.kind)?' is-finisher':'');
+    card.className=baseClass;
+    const portrait=doc.createElement('div');portrait.className='npc-reaction-portrait';
+    if(readyPath){
+     const img=doc.createElement('img');img.alt='';img.src=readyPath;
      card.className=baseClass+
-      (/^\/rpg-assets\/reactions\/[a-z0-9_-]+\/attack\.(?:png|webp|jpe?g)$/i.test(path)?' has-wide-action-art':'')+
-      (/\/cutins\/match-cutin\.webp$/i.test(path)?' has-match-art':'');
-     img.src=path;
-    };
-    img.onerror=()=>{
-     if(++assetIndex<candidates.length)showAsset();
-     else{img.remove();card.className=baseClass;portrait.classList.add('no-art');}
-    };
-    showAsset();
-    portrait.append(img);
-   }else portrait.classList.add('no-art');
-   media?.NeoRpgDiscreetAvatars?.set?.(portrait,npcId,reaction.imageKey||reaction.kind,reaction.npcName);
-   const copy=doc.createElement('div');copy.className='npc-reaction-copy';
-   const tag=doc.createElement('span');tag.className='npc-reaction-tag';tag.textContent=reaction.subtitle;
-   const name=doc.createElement('strong');name.className='npc-reaction-name';name.textContent=reaction.npcName;
-   const title=doc.createElement('span');title.className='npc-reaction-title';title.textContent=reaction.title;
-   const line=doc.createElement('p');line.textContent='“'+reaction.line+'”';
-   copy.append(tag,name,title,line);card.append(portrait,copy);
-   element.replaceChildren(card);element.classList.remove('hidden');
-   onShow({...reaction,imageCandidates:candidates});
-   media?.NeoRpgAudio?.play?.(isClutch(reaction.kind)?'knockout':'cutin');
-   const showingPriority=currentPriority;
-   timer=schedule(()=>{
-    // Stale completion timers cannot clear a newer cut-in.
-    if(currentPriority!==showingPriority)return;
-    timer=null;hide();pump();
-   },durationFor(reaction.kind,reduced()));
+      (/^\/rpg-assets\/reactions\/[a-z0-9_-]+\/attack\.(?:png|webp|jpe?g)$/i.test(readyPath)?' has-wide-action-art':'')+
+      (/\/cutins\/match-cutin\.webp$/i.test(readyPath)?' has-match-art':'');
+     portrait.append(img);
+    }else if(typeof media?.Image!=='function'&&candidates.length){
+     // Node/test callers without an Image loader retain the older DOM fallback.
+     const img=doc.createElement('img');img.alt='';
+     let index=0;
+     const advance=()=>{
+      const path=candidates[index];
+      card.className=baseClass+
+       (/^\/rpg-assets\/reactions\/[a-z0-9_-]+\/attack\.(?:png|webp|jpe?g)$/i.test(path)?' has-wide-action-art':'')+
+       (/\/cutins\/match-cutin\.webp$/i.test(path)?' has-match-art':'');
+      img.src=path;
+     };
+     img.onerror=()=>{
+      if(++index<candidates.length)advance();
+      else{img.remove();card.className=baseClass;portrait.classList.add('no-art');}
+     };
+     advance();portrait.append(img);
+    }else portrait.classList.add('no-art');
+    media?.NeoRpgDiscreetAvatars?.set?.(portrait,npcId,reaction.imageKey||reaction.kind,reaction.npcName);
+    const copy=doc.createElement('div');copy.className='npc-reaction-copy';
+    const tag=doc.createElement('span');tag.className='npc-reaction-tag';tag.textContent=reaction.subtitle;
+    const name=doc.createElement('strong');name.className='npc-reaction-name';name.textContent=reaction.npcName;
+    const title=doc.createElement('span');title.className='npc-reaction-title';title.textContent=reaction.title;
+    const line=doc.createElement('p');line.textContent='“'+reaction.line+'”';
+    copy.append(tag,name,title,line);card.append(portrait,copy);
+    element.replaceChildren(card);element.classList.remove('hidden');
+    onShow({...reaction,imageCandidates:readyPath?[readyPath,...candidates.filter(p=>p!==readyPath)]:candidates});
+    media?.NeoRpgAudio?.play?.(isClutch(reaction.kind)?'knockout':'cutin');
+    settle();
+    const showingGeneration=generation;
+    timer=schedule(()=>{
+     if(generation!==showingGeneration)return;
+     timer=null;hide();pump();
+    },durationFor(reaction.kind,reduced()));
+   }
+   if(typeof media?.Image==='function'&&candidates.length)
+    readyAsset(candidates).then(show,()=>show(null));
+   else show(null);
   }
   function update(data){
    const reaction=director.update(data);
    if(!reaction)return null;
    const priority=priorityFor(reaction.kind);
    if(active&&priority===3&&priority>currentPriority){
-    // A knockout cuts through an ordinary queued quip.
     queued=null;hide();
    }
    if(!active)queued=reaction;
@@ -428,15 +479,15 @@
   }
   return {update,reset,setManifest:value=>{
     manifest=value;
-    // Preload the RPG character art, including the attack pose, before combat.
-    preloadImages=[];
     if(typeof media?.Image==='function'){
-     for(const path of new Set(['attack','play_card','evolve','power','weakness_hit','status_hit','big_hit','hurt','ko_taken','ko_scored','default']
-      .map(kind=>assetFor(manifest,npcId,kind)).filter(Boolean))){
-      const image=new media.Image();image.src=path;preloadImages.push(image);
+     // Preload actual working images, including fallback variants, not just the
+     // first candidate (often a nonexistent file).
+     for(const kind of ['attack','play_card','evolve','power','weakness_hit','status_hit','big_hit','hurt','ko_taken','ko_scored']){
+      const candidates=assetCandidates(manifest,npcId,kind);
+      if(candidates.length)readyAsset(candidates).catch(()=>{});
      }
     }
-   },get count(){return director.count;},
+   },whenShown:()=>pendingShown||Promise.resolve(),get count(){return director.count;},
    get active(){return active;},get queued(){return queued?.kind||null;}};
  }
  return {createDirector,makeExperience,assetFor,MAX_REACTIONS,priorityFor,durationFor,VOICES};
