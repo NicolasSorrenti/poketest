@@ -69,7 +69,7 @@ function withDifference(decks,winner=0,opts={}){
  action(g,0,'setup_bonus_done');
  assert.equal(g.phase,'game');
  assert.equal(g.mulliganBonus,null);
- assert.equal(g.players[0].hand.length,beforeActive-1+number-1+1,'First player draws at duel start');
+ assert.equal(g.players[0].hand.length,beforeActive-1+number-1+(g.turn===0?1:0),'Only the coin-flip winner draws at duel start');
  assert.equal(countCards(g.players[0]),60);
  assert.equal(countCards(g.players[1]),60);
 }

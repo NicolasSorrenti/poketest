@@ -131,7 +131,15 @@ function setupHand(g,p){let retries=0;while(retries++<200){p.deck=shuffle(g,[...
 }
 function beginDuel(g){
  g.mulliganBonus=null;
- g.phase='game';draw(g,0);log(g,'Duel started.');
+ g.phase='game';
+ // One authoritative, seeded coin flip after BOTH players finish setup.
+ // Heads = seat 0, tails = seat 1; hosting/RPG status gives no advantage.
+ const heads=next(g,2)===1;
+ g.startingPlayer=heads?0:1;
+ g.turn=g.startingPlayer;
+ draw(g,g.turn);
+ log(g,`Opening coin flip: ${heads?'HEADS':'TAILS'} — ${g.players[g.turn].name} goes first.`);
+ log(g,'Duel started.');
 }
 function createGame({decks,names=['Player 1','Player 2'],seed=1,format='unrestricted',deckSize=60,prizeCount=6}={}){
  if(!Array.isArray(decks)||decks.length!==2||!decks.every(Array.isArray))fail('Two decks are required');
@@ -2603,7 +2611,7 @@ function advanceTurn(g){
   for(const t of u.attachedTrainers){if(card(g,t.id).name==='Charity')leaving.hand.push(t.id);else retained.push(t);}
   u.attachedTrainers=retained;
  }
- g.turn=1-g.turn;g.turnSerial++;if(g.turn===0)g.round++;
+ g.turn=1-g.turn;g.turnSerial++;if(g.turn===(g.startingPlayer??0))g.round++;
  for(const owner of g.players)for(const x of allPokemon(owner)){
   const retained=[];for(const t of x.attachedTrainers){if(t.expires!==undefined&&t.expires<=g.turnSerial)owner.discard.push(t.id);else retained.push(t);}x.attachedTrainers=retained;
   if(x.energyBurnUntil<=g.turnSerial)delete x.energyBurnUntil;

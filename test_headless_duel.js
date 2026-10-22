@@ -42,9 +42,12 @@ let cases=0;
  }
  assert.equal(joined.phase,'game');assert.ok(joined.players[0].active&&joined.players[1].active);
  assert.equal(joined.players[1].hand,undefined);assert.equal(joined.players[1].prizes,undefined);
- assert.throws(()=>rooms.dispatch(host.code,guest.token,cmd('end_turn'),revision),/Not your turn/);
- revision=rooms.dispatch(host.code,host.token,cmd('end_turn'),revision).revision;
- assert.equal(rooms.view(host.code,guest.token).view.turn,1);
+ const startingSide=joined.turn;
+ const startingToken=startingSide===0?host.token:guest.token;
+ const waitingToken=startingSide===0?guest.token:host.token;
+ assert.throws(()=>rooms.dispatch(host.code,waitingToken,cmd('end_turn'),revision),/Not your turn/);
+ revision=rooms.dispatch(host.code,startingToken,cmd('end_turn'),revision).revision;
+ assert.equal(rooms.view(host.code,guest.token).view.turn,1-startingSide);
  assert.throws(()=>rooms.dispatch(host.code,guest.token,cmd('end_turn'),revision-1),/Stale/);
  cases++;
 }
