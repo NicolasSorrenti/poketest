@@ -28,17 +28,36 @@
  const opponentName=rpgMode?(rpgParams.get('npcName')||'Opponent'):'Classic CPU';
  const mats=window.NeoDuelPlaymats;
  const gifts=rpgMode?(rpgParams.get('giftMats')||'').split(',').filter(Boolean):Object.keys(mats.themes);
- const matOptions=mats.available(gifts),matIds=matOptions.map(m=>m.id);
- let selectedMat=mats.choose(rpgMode?rpgParams.get('mat'):localStorage.getItem('neoCampusPlaymat'),matIds);
+ let matOptions=[],matIds=[];
+ let selectedMat=rpgMode?rpgParams.get('mat'):localStorage.getItem('neoCampusPlaymat');
  const matSelect=$('playmatSelect');
- for(const mat of matOptions){const option=document.createElement('option');option.value=mat.id;option.textContent=mat.name;matSelect.append(option);}
- matSelect.value=selectedMat;
+ function refreshMatOptions(preferred=selectedMat){
+  matOptions=mats.available(gifts);matIds=matOptions.map(m=>m.id);
+  selectedMat=mats.choose(preferred,matIds);
+  matSelect.replaceChildren();
+  for(const mat of matOptions){const option=document.createElement('option');option.value=mat.id;option.textContent=mat.name;matSelect.append(option);}
+  matSelect.value=selectedMat;
+ }
+ refreshMatOptions();
  function updatePlaymats(){mats.apply(document.querySelector('.player-territory'),selectedMat);mats.apply(document.querySelector('.opponent-territory'),rpgMode&&mats.themes[rpgNpc]?'npc-'+rpgNpc:'heritage');}
+ function persistPlaymatSelection(){
+  localStorage.removeItem(mats.IMPORT_KEY);
+  localStorage.setItem('neoCampusPlaymat',selectedMat);
+  if(rpgMode&&rpgDuelId)window.parent.postMessage({type:'neo-rpg-playmat-selected',duelId:rpgDuelId,playmat:selectedMat},location.origin);
+ }
  matSelect.addEventListener('change',()=>{
   selectedMat=mats.choose(matSelect.value,matIds);
-  if(rpgMode&&rpgDuelId)window.parent.postMessage({type:'neo-rpg-playmat-selected',duelId:rpgDuelId,playmat:selectedMat},location.origin);
-  else localStorage.setItem('neoCampusPlaymat',selectedMat);
+  persistPlaymatSelection();
   updatePlaymats();
+ });
+ // If the Studio is open in another tab, newly finished mats become usable without reloading the duel.
+ window.addEventListener('storage',event=>{
+  if(!['neoCampusCustomPlaymatsV1','neoCampusPlaymat',mats.IMPORT_KEY].includes(event.key))return;
+  const previous=selectedMat;
+  const proposed=event.key==='neoCampusPlaymat'||event.key===mats.IMPORT_KEY?localStorage.getItem('neoCampusPlaymat'):selectedMat;
+  refreshMatOptions(proposed);
+  updatePlaymats();
+  if(selectedMat!==previous&&rpgMode&&rpgDuelId)window.parent.postMessage({type:'neo-rpg-playmat-selected',duelId:rpgDuelId,playmat:selectedMat},location.origin);
  });
  updatePlaymats();
  const cards=new Map();
