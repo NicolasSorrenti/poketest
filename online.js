@@ -86,6 +86,174 @@
   finally{chatBusy=false;}
  }
 
+
+ // Live playmats travel separately from the authoritative card-action revision.
+ // Never embed binary data in room polling: only fetch art when its version changes.
+ const mats=window.NeoDuelPlaymats;
+ const matSelect=$('onlinePlaymatSelect');
+ let matSessionRoom=null,matDesired='aurora',queuedMat=null,matPublishing=false;
+ let matVersions=[null,null],matUrls=[null,null],matClockOffset=0,matNotice='';
+ const matTerritories=()=>[document.querySelector('.player-territory'),document.querySelector('.opponent-territory')];
+ function availableMats(){return mats.available(Object.keys(mats.themes));}
+ function refreshMatChoices(preferred=matDesired){
+  const choices=availableMats();
+  const selected=mats.choose(preferred,choices.map(m=>m.id));
+  matDesired=selected;
+  matSelect.replaceChildren();
+  for(const item of choices){
+   const opt=document.createElement('option');opt.value=item.id;opt.textContent=item.name;matSelect.append(opt);
+  }
+  matSelect.value=selected;
+ }
+ function clearMatImages(){
+  matUrls.forEach(url=>{if(url)URL.revokeObjectURL(url);});
+  matUrls=[null,null];matVersions=[null,null];
+  for(const territory of matTerritories())if(territory){
+   territory.removeAttribute('data-playmat');
+   territory.style.removeProperty('--neo-playmat-image');
+  }
+ }
+ function resetOnlineMats(){
+  clearMatImages();matSessionRoom=null;queuedMat=null;matPublishing=false;matNotice='';
+  $('onlinePlaymatStatus').textContent='';
+ }
+ function secondsRemaining(){
+  if(!current||watching())return 0;
+  const until=current.playmats?.[side()]?.cooldownUntil||0;
+  return Math.max(0,Math.ceil((until-(Date.now()+matClockOffset))/1000));
+ }
+ function showMatStatus(){
+  const el=$('onlinePlaymatStatus');
+  const seconds=secondsRemaining();
+  const time=seconds?Math.floor(seconds/60)+':'+String(seconds%60).padStart(2,'0'):'';
+  el.textContent=matNotice||(queuedMat?(seconds?'Queued · '+time:'Saving mat…'):(seconds?'Change in '+time:'Mat ready'));
+  matSelect.disabled=watching()||matPublishing;
+  $('onlinePlaymatControl').classList.toggle('hidden',watching());
+  $('onlinePlaymatStatus').classList.toggle('hidden',watching());
+ }
+ async function encodeMat(id){
+  const url=await mats.imageUrl(id);
+  if(!url)throw Error('The custom playmat image is missing from this browser.');
+  const image=new Image();
+  await new Promise((resolve,reject)=>{
+   image.onload=resolve;image.onerror=()=>reject(Error('Could not read your saved playmat.'));
+   image.src=url;
+  });
+  const frame=document.createElement('canvas'),ctx=frame.getContext('2d');
+  if(!ctx)throw Error('Image export is unavailable.');
+  const steps=[[1280,640,.67],[1280,640,.4],[960,480,.42],[800,400,.34],[640,320,.3]];
+  for(const [width,height,quality] of steps){
+   frame.width=width;frame.height=height;ctx.drawImage(image,0,0,width,height);
+   const blob=await new Promise((resolve,reject)=>
+    frame.toBlob(result=>result?resolve(result):reject(Error('Could not compress playmat.')),'image/webp',quality));
+   if(!['image/webp','image/png'].includes(blob.type)||blob.size>160*1024)continue;
+   return await new Promise((resolve,reject)=>{
+    const reader=new FileReader();
+    reader.onload=()=>resolve(reader.result);reader.onerror=()=>reject(Error('Could not encode playmat.'));
+    reader.readAsDataURL(blob);
+   });
+  }
+  throw Error('The artwork is too detailed to share (160 KB limit). Try a simpler exported mat.');
+ }
+ function wantMat(id){
+  if(!current?.started||watching())return;
+  const allowed=availableMats().map(item=>item.id);
+  if(!allowed.includes(id))return;
+  matDesired=id;matSelect.value=id;
+  localStorage.setItem('neoCampusPlaymat',id);
+  queuedMat=id;matNotice='';
+  showMatStatus();publishQueuedMat();
+ }
+ async function publishQueuedMat(){
+  if(!queuedMat||!current?.started||watching()||matPublishing||!token||!roomCode)return;
+  if(secondsRemaining()){showMatStatus();return;}
+  const requested=queuedMat,code=roomCode,originalToken=token;
+  matPublishing=true;matNotice='Sending mat…';showMatStatus();
+  try{
+   const custom=mats.custom().some(item=>item.id===requested);
+   const image=custom?await encodeMat(requested):undefined;
+   // The user may leave or change rooms while image encoding is in progress.
+   if(code!==roomCode||originalToken!==token)return;
+   const response=await api('playmat',{method:'POST',body:JSON.stringify({code,id:custom?'custom':requested,...(custom?{image}:{})})});
+   if(code!==roomCode||originalToken!==token)return;
+   current.playmats=response.playmats;current.serverNow=response.serverNow;
+   matClockOffset=response.serverNow-Date.now();
+   if(queuedMat===requested)queuedMat=null;
+   matNotice='';
+   updateDisplayedMats(current);
+  }catch(error){
+   if(code!==roomCode||originalToken!==token)return;
+   if(/cooldown/i.test(error.message)){
+    // A second tab or stale clock may have changed a mat first.
+    try{
+     const fresh=await api('state?code='+encodeURIComponent(roomCode));
+     if(code===roomCode&&originalToken===token){
+      current.playmats=fresh.playmats;matClockOffset=fresh.serverNow-Date.now();updateDisplayedMats(fresh);
+     }
+    }catch{}
+    matNotice='';
+   }else{
+    if(queuedMat===requested)queuedMat=null;
+    matNotice=error.message||'Could not share playmat';
+   }
+  }finally{
+   if(code===roomCode&&originalToken===token){matPublishing=false;showMatStatus();}
+  }
+ }
+ function installMat(sideIndex,descriptor,uri){
+  const territory=matTerritories()[sideIndex===side()?0:1];
+  if(!territory)return;
+  if(descriptor?.id==='custom'){
+   territory.dataset.playmat='custom';
+   territory.style.setProperty('--neo-playmat-image','url("'+uri+'")');
+  }else mats.apply(territory,descriptor?.id||'aurora');
+ }
+ function applyMatVersion(sideIndex,descriptor){
+  const key=descriptor?.version||0;
+  if(matVersions[sideIndex]===key)return;
+  matVersions[sideIndex]=key;
+  const former=matUrls[sideIndex];matUrls[sideIndex]=null;
+  if(former)URL.revokeObjectURL(former);
+  if(descriptor?.id!=='custom'){installMat(sideIndex,descriptor,null);return;}
+  const expectedRoom=roomCode;
+  api('playmat?code='+encodeURIComponent(roomCode)+'&side='+sideIndex).then(result=>{
+   if(expectedRoom!==roomCode||matVersions[sideIndex]!==key||result.version!==key)return;
+   if(typeof result.image!=='string')throw Error('Missing shared mat image');
+   const parsed=/^data:image\/(webp|png);base64,([A-Za-z0-9+/=]+)$/.exec(result.image);
+   if(!parsed)throw Error('Invalid shared mat');
+   const raw=atob(parsed[2]),buffer=new Uint8Array(raw.length);
+   for(let i=0;i<raw.length;i++)buffer[i]=raw.charCodeAt(i);
+   const url=URL.createObjectURL(new Blob([buffer],{type:'image/'+parsed[1]}));
+   if(matVersions[sideIndex]!==key||expectedRoom!==roomCode){URL.revokeObjectURL(url);return;}
+   matUrls[sideIndex]=url;installMat(sideIndex,descriptor,url);
+  }).catch(()=>{
+   if(matVersions[sideIndex]===key){matVersions[sideIndex]=null;installMat(sideIndex,null,null);}
+  });
+ }
+ function updateDisplayedMats(state){
+  if(!state?.started||!roomCode)return;
+  matClockOffset=(state.serverNow||Date.now())-Date.now();
+  if(matSessionRoom!==roomCode){
+   clearMatImages();matSessionRoom=roomCode;
+   refreshMatChoices(localStorage.getItem('neoCampusPlaymat')||'aurora');
+   const own=state.playmats?.[side()];
+   if(!watching()&&!own&&matDesired!=='aurora')queuedMat=matDesired;
+  }
+  for(let i=0;i<2;i++)applyMatVersion(i,state.playmats?.[i]);
+  showMatStatus();
+  if(queuedMat&&!matPublishing)publishQueuedMat();
+ }
+ matSelect.addEventListener('change',()=>wantMat(matSelect.value));
+ window.addEventListener('storage',event=>{
+  if(!['neoCampusCustomPlaymatsV1','neoCampusPlaymat',mats.IMPORT_KEY].includes(event.key))return;
+  if(event.key==='neoCampusCustomPlaymatsV1'){refreshMatChoices(matDesired);return;}
+  const selected=localStorage.getItem('neoCampusPlaymat');
+  const previous=matDesired;
+  refreshMatChoices(selected||matDesired);
+  if(selected&&current?.started&&!watching()&&(selected!==previous||event.key===mats.IMPORT_KEY))wantMat(selected);
+ });
+ refreshMatChoices(localStorage.getItem('neoCampusPlaymat')||'aurora');
+
  async function send(action){if(!current||busy||watching())return;busy=true;clearError();try{
   const post=revision=>api('action',{method:'POST',body:JSON.stringify({code:roomCode,revision,command:action})});
   let result;
@@ -148,7 +316,7 @@
   $('choiceModal').classList.add('hidden');$('choiceModal').setAttribute('aria-hidden','true');
   $('fieldChoiceBar').classList.add('hidden');modalDecisionId=null;lastFieldDecisionId=null;
  }
- function newDuel(){lobbyDeckDraft=null;clearChoiceUi();opponentActivity.clear();combat.reset();chatSeq=-1;$('chatMessages').textContent='';feedback.reset();preview.hide();chatOpen=false;logOpen=false;handVisible=true;powersOpen=false;token=null;roomCode=null;current=null;selectedHand=null;targetMode=null;
+ function newDuel(){resetOnlineMats();lobbyDeckDraft=null;clearChoiceUi();opponentActivity.clear();combat.reset();chatSeq=-1;$('chatMessages').textContent='';feedback.reset();preview.hide();chatOpen=false;logOpen=false;handVisible=true;powersOpen=false;token=null;roomCode=null;current=null;selectedHand=null;targetMode=null;
   sessionStorage.removeItem('neoOnlineToken');sessionStorage.removeItem('neoOnlineRoom');setHandVisible(true);render();}
  async function refresh(){if(!token||!roomCode||busy)return;try{
   const state=await api('state?code='+encodeURIComponent(roomCode));
@@ -157,7 +325,8 @@
   if(!current||state.revision!==current.revision){const previous=current?.view?.pendingDecision?.id;
    preview.hide();current=state; if(previous!==state.view?.pendingDecision?.id)decisionSelection.clear();
    selectedHand=null;targetMode=null;render();}
-  else{current.presence=state.presence;current.spectatorCount=state.spectatorCount;renderPresence();}
+  else{current.presence=state.presence;current.spectatorCount=state.spectatorCount;current.playmats=state.playmats;current.serverNow=state.serverNow;renderPresence();}
+  updateDisplayedMats(state);
  }catch(e){if($('networkStatus'))$('networkStatus').textContent='Disconnected';}
  }
  function toggleDrawer(which,open){
@@ -461,7 +630,7 @@
   $('history').textContent='';(v.messages||[]).forEach(x=>{const li=document.createElement('li');li.textContent=x;$('history').append(li);});
   renderDecisions();combat.update(current);renderMatchFeed();
  }
- function render(){try{performRender();returnToCubeWhenDone();}catch(error){
+ function render(){try{performRender();updateDisplayedMats(current);returnToCubeWhenDone();}catch(error){
   console.error('Neo Campus online UI render failed',error);
   // Preserve the last intact card elements; show a recoverable error rather than going blank.
   fail(new Error('The battlefield could not be redrawn: '+(error.message||String(error))+' — refresh to recover.'));
