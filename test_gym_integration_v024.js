@@ -11,6 +11,7 @@ for(let seed=1;seed<=4;seed++)for(let n=0;n<decks.length;n++){
  const S=new ClassicLocalService();let state=S.create({deck:decks[n],opponent:decks[(n+seed)%decks.length],seed:seed*101+n*409});const token=state.token;
  const action=(type,payload={})=>{state=S.action(token,{type,payload},state.revision);accepted++;assert.deepEqual(state.counts,[60,60],`Card conservation ${decks[n]}`);assert.equal(state.view.players[1].hand,undefined);assert.equal(state.view.players[1].prizes,undefined);};
  const hand=state.view.players[0].hand,ix=hand.findIndex(id=>isBasicPokemon(CATALOG.get(id)));assert.ok(ix>=0);action('setup_select',{handIndex:ix});action('setup_confirm');
+ if(state.view.mulliganBonus){assert.equal(state.view.mulliganBonus.side,0);action('setup_bonus_draw',{count:0});}
  for(let step=0;step<48&&!state.view.over;step++){
   if(state.view.pendingDecision){const d=state.view.pendingDecision;assert.equal(d.actor,0);action('choose',{decisionId:d.id,selected:d.options.slice(0,d.min).map(x=>x.id)});choices++;continue;}
   assert.equal(state.view.turn,0);
