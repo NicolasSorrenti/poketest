@@ -686,7 +686,7 @@ test('G3: unavailable romantic tone is disabled instead of accepting a low-bond 
  r.elements.choices.children.find(x=>x.textContent.includes('Customize deck sleeves')).onclick();
  const option=r.elements.choices.children.find(x=>x.textContent.includes('Ask for a date'));
  assert.ok(option);assert.equal(option.disabled,true);
- assert.match(option.title,/Build affection/);
+ assert.match(option.title,/do not know each other well enough/);
  assert.equal(r.state().appointments.length,0);
 });
 test('G3: insufficient funds disable a booked outing and preserve both save and calendar',()=>{
