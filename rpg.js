@@ -663,8 +663,9 @@ function act(action){
   if(BONDS.canChallenge(state,id,BOND_PLAN))return startDuel(id,null,null,null,null,true);
   $('notice').textContent='Complete two bond chapters first.';return;
  }
- if(type==='cup'){try{const match=TOURNAMENTS.begin(state,id);return startDuel(match.npc,null,null,match);}catch(err){return say('Tournament Desk',err.message);}}
+ if(type==='cup'){if(!confirmTimeAdvance())return;try{const match=TOURNAMENTS.begin(state,id);return startDuel(match.npc,null,null,match);}catch(err){return say('Tournament Desk',err.message);}}
  if(type==='competitive'){
+  if(!confirmTimeAdvance())return;
   try{const match=COMPETE.begin(state,id);return startDuel(match.npc,null,null,null,null,false,match);}
   catch(err){return say('Circuit Desk',err.message);}
  }
@@ -1056,7 +1057,7 @@ function startDuel(id,exhibition=null,arcEpisode=null,tournament=null,sideQuest=
  if(state.deckJourney&&!state.deckJourney.starter){showStarterChoice();return;}
  if(state.deckJourney?.starter&&!COLLECT.check(state.deckJourney.deck,state.deckJourney.owned).valid){$('notice').textContent='Save a valid campaign deck before challenging another trainer.';return;}
  if(state.activeSituation||state.activeStory||state.activeEncounter||(state.activeArc&&state.activeArc.id!==arcEpisode)||(state.activeSideQuest&&state.activeSideQuest.id!==sideQuest?.id)||state.pendingDuel||state.day>90||!cast[id]||(!exhibition&&!tournament&&!competition&&!currentPeople().includes(id)))return;
- if(!confirmTimeAdvance())return;
+ if(!tournament&&!competition&&!confirmTimeAdvance())return;
  if(competition&&!COMPETE.available(state).some(e=>e.id===competition.id&&e.npc===id))return;
  if(sideQuest&&(!SIDE.canDuel(state,sideQuest.id,currentPeople())||SIDE.byId(sideQuest.id)?.stages[sideQuest.step]?.npc!==id))return;
  if(bondChallenge&&!BONDS.canChallenge(state,id,BOND_PLAN))return;
