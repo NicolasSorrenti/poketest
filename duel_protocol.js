@@ -2,7 +2,7 @@
 const {decisionForViewer}=require('./decision_core');
 const CLASSIC_POWERS=require('./classic_power_core');
 // Transport-agnostic definitions: the same command is used for local, CPU, and online play.
-const ACTIONS=Object.freeze(['setup_select','setup_undo','setup_confirm','bench','evolve','attach_energy','play_trainer','use_stadium','attack','retreat','use_power','reveal_secret','choose','cancel_choice','end_turn','concede','undo']);
+const ACTIONS=Object.freeze(['setup_select','setup_undo','setup_confirm','setup_bonus_draw','setup_bonus_done','bench','evolve','attach_energy','play_trainer','use_stadium','attack','retreat','use_power','reveal_secret','choose','cancel_choice','end_turn','concede','undo']);
 const KNOWN=new Set(ACTIONS);
 function validateCommand(input){
  if(!input||typeof input!=='object'||Array.isArray(input))throw Error('Command must be an object');
@@ -60,7 +60,7 @@ function publicView(game,viewer){
    eligible:eligible.has('deck:'+index)
   }));
  }
- return {phase:game.phase,turn:game.turn,round:game.round,over:!!game.over,stadium:game.stadium?{id:game.stadium.id,owner:game.stadium.owner}:null,players:publicPlayers,messages:[...(game.message||[]).slice(0,20)],pendingDecision:projectedDecision,coinFlips:[...(game.coinFlips||[]).slice(-40)]};
+ return {phase:game.phase,turn:game.turn,round:game.round,over:!!game.over,mulligans:game.players.map(p=>p.mulligans||0),mulliganBonus:game.mulliganBonus?{...game.mulliganBonus}:null,stadium:game.stadium?{id:game.stadium.id,owner:game.stadium.owner}:null,players:publicPlayers,messages:[...(game.message||[]).slice(0,20)],pendingDecision:projectedDecision,coinFlips:[...(game.coinFlips||[]).slice(-40)]};
 }
 // Exact ordered public actions, with opaque sequence numbers for polling clients.
 // In particular, never serialize the authoritative event payload: a choice can
