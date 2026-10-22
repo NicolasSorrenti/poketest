@@ -12,7 +12,7 @@
   for(let i=0;i<raw.length;i++){h^=raw.charCodeAt(i);h=Math.imul(h,16777619);}
   return raw.length+':'+(h>>>0).toString(16);
  }
- function eligible(){const s=local();return !!s&&!s.pendingDuel&&adapter?.canSwitch?.()!==false;}
+ function eligible(){return !!local();}
  function fingerprint(){const s=local();return s?hash(s):null;}
  function readMeta(){try{return JSON.parse(localStorage.getItem(META_PREFIX+session.user.id)||'null');}catch{return null;}}
  function mark(revision,snapshot){meta={revision,hash:hash(snapshot)};localStorage.setItem(META_PREFIX+session.user.id,JSON.stringify(meta));}
@@ -48,7 +48,7 @@
  }
  async function upload(expected){
   if(inflight){queued=true;return inflight;}
-  if(blocked||!session||!eligible()){stateLabel('Saved locally. Cloud sync waits until your duel is complete.');return false;}
+  if(blocked||!session||!eligible()){stateLabel('No campaign to sync yet.');return false;}
   const snapshot=structuredClone(local()),sentHash=hash(snapshot);
   inflight=(async()=>{
    try{
@@ -89,8 +89,7 @@
   if(!validSave(record?.save_data))throw Error('The cloud save is invalid; your local save was preserved.');
   if(adapter.canSwitch?.()===false)throw Error('Finish your current duel before switching saves.');
   const downloaded=structuredClone(record.save_data);
-  // A duel's server-memory session cannot be moved to another device.
-  downloaded.pendingDuel=null;
+  // Ongoing battles are restored from their own server-authoritative cloud checkpoints.
   mark(record.revision,downloaded);
   adapter.restoreSave(downloaded);
   close();stateLabel('Cloud progress loaded.');
@@ -108,7 +107,7 @@
    if(!remote){
     blocked=false;choice=null;renderAccount();
     if(eligible())await upload(0);
-    else stateLabel('Cloud connected. Finish your duel to sync.');
+    else stateLabel('Cloud connected. Start a campaign to sync.');
     return;
    }
    if(!validSave(remote.save_data))throw Error('Cloud save failed validation.');
@@ -125,7 +124,7 @@
    }
    if(meta?.revision===remote.revision&&meta?.hash!==localHash){
     blocked=false;choice=null;renderAccount();
-    if(eligible())await upload(remote.revision);else stateLabel('Finish the duel before uploading progress.');
+    if(eligible())await upload(remote.revision);else stateLabel('No campaign to upload.');
     return;
    }
    offer(remote); // First sign-in, another device changed the save, or both edited offline.
@@ -138,7 +137,7 @@
  }
  async function syncNow(){
   if(!config?.enabled||!session||blocked)return false;
-  if(!eligible()){stateLabel('Saved locally; finish the duel before cloud sync.');return false;}
+  if(!eligible()){stateLabel('Saved locally; start a campaign to sync.');return false;}
   if(meta?.hash===fingerprint()){stateLabel('Cloud save up to date.');return true;}
   if(meta?.revision===undefined){await reconcile();return !blocked;}
   return upload(meta.revision);
@@ -201,7 +200,7 @@
   catch(error){label(errorText(error));}
  }
  async function chooseLocal(){
-  if(!choice||!eligible()){label('Finish this duel before choosing this device save.');return;}
+  if(!choice||!eligible()||adapter?.canSwitch?.()===false){label('Finish your current duel before replacing the cloud save.');return;}
   const currentRemote=choice;choice=null;blocked=false;renderAccount();
   const success=await upload(currentRemote.revision);
   if(success){label('This device is now the cloud save.');close();}
@@ -220,7 +219,7 @@
    '<button type="button" id="cloudSync">Sync now</button><button type="button" id="cloudSignOut">Sign out</button></div></div>'+
    '<div id="cloudChoices" hidden><p id="cloudChoiceText"></p><div class="cloud-actions">'+
    '<button type="button" id="cloudUseCloud">Load cloud progress</button><button type="button" id="cloudUseLocal">Use this device</button></div></div>'+
-   '<p class="cloud-small">Unfinished duels and custom uploaded playmat images do not transfer. Local saves are kept as a fallback.</p>';
+   '<p class="cloud-small">Campaign choices and active RPG duels auto-save when signed in. Custom playmat uploads stay on this device.</p>';
   document.body.append(dialog);notice=$('cloudMessage');
   $('cloudClose').onclick=close;$('cloudSignIn').onclick=()=>signIn('signin');$('cloudSignUp').onclick=()=>signIn('signup');
   $('cloudSignOut').onclick=signOut;$('cloudSync').onclick=()=>reconcile();$('cloudUseCloud').onclick=chooseCloud;$('cloudUseLocal').onclick=chooseLocal;
