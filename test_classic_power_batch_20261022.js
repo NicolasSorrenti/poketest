@@ -132,4 +132,17 @@ let assertions=0;
  assert.equal(applyCommand(g,0,{type:'use_power',payload:{slot:0}}).ok,false);
  assertions++;
 }
-console.log('PASS six historical Pokémon Powers:',assertions,'authoritative scenarios');
+{
+ // Unown [D] protects even when Asleep, but is disabled by a second in-play copy.
+ const battle=copies=>{
+  const g=game('neo2-13');
+  g.players[0].active.energies=['base1-99','base1-99'];
+  g.players[1].bench=Array.from({length:copies},()=>unit('neo2-47','Asleep'));
+  run(g,0,'attack',{attackIndex:0});
+  return g.players[1].active.damage;
+ };
+ assert.equal(battle(1),0,'A single Unown D should prevent 20 Darkness attack damage');
+ assert.equal(battle(2),20,'Two Unown D copies disable Darkness prevention');
+ assertions++;
+}
+console.log('PASS seven historical Pokémon Powers:',assertions,'authoritative scenarios');
