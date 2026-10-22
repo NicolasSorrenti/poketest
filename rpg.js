@@ -1217,7 +1217,9 @@ function renderAppointments(locked){
     attend.onclick=()=>act('attend:'+meeting.id);controls.append(attend);
    }else{
     const travel=document.createElement('button');travel.className='meeting-attend';travel.textContent='Go there · free';travel.disabled=locked;travel.onclick=()=>{
-     state.location=meeting.place;state.selected=null;persist();say('Planner','You arrive for your planned meet-up.');};controls.append(travel);
+     state.location=meeting.place;state.selected=null;persist();
+     if(currentPeople().includes(meeting.npc))selectPerson(meeting.npc);
+     else say('Narrator','You arrive at '+places[meeting.place][0]+'.');};controls.append(travel);
    }
   }else{
    const cancel=document.createElement('button');cancel.className='meeting-cancel';cancel.textContent='Cancel · free';cancel.disabled=locked;cancel.onclick=()=>act('cancelPlan:'+meeting.id);controls.append(cancel);
@@ -1239,7 +1241,12 @@ function openPlannerSuggestion(id){
   state.location=pick.place;state.selected=null;persist();render();tutorialEvent('travel');
  }
  tutorialEvent('planner');
- // Meeting a character is free, so go straight into the conversation.
+ // Free navigation can lead right into a character greeting, but never
+ // executes the meeting/event before the player explicitly agrees.
+ if(pick.kind==='appointment'){
+  const meeting=APPOINTMENTS.active(state).find(x=>String(x.id)===pick.key);
+  if(meeting&&currentPeople().includes(meeting.npc))return selectPerson(meeting.npc);
+ }
  if(pick.kind==='social'&&currentPeople().includes(pick.key))return selectPerson(pick.key);
  // Never auto-start a duel or a story: highlight the actual action instead.
  rpgLocalTab=pick.kind==='tournament'||pick.kind==='event'?'circuit':
