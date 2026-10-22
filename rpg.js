@@ -317,8 +317,7 @@ function plannedDateSlots(id){
 function sharedActivityChoices(id){
  const available=SOCIAL.options(state,id,currentPeople(),cast);
  return [...available.map(a=>[
-   a.title+' · '+(a.affinity==='favorite'?'♥ Favorite':a.affinity==='neutral'?'● Familiar':'◇ Something new')
-   +' · ⏳ 1 period · '+a.focus+' focus'+(a.credits?' + '+a.credits+' credits':'')
+   a.title+' · ⏳ 1 period · '+a.focus+' focus'+(a.credits?' + '+a.credits+' credits':'')
    +(a.disabledReason?' · '+a.disabledReason:''),
    'socialDo:'+id+':'+a.id
  ]),['Back to conversation · free','back:'+id]];
@@ -327,8 +326,7 @@ function planSharedActivity(id){
  if(!cast[id]||!currentPeople().includes(id))return;
  const choices=sharedActivityChoices(id);
  if(!choices.length)return say(cast[id].name,'We could plan something another time.',options(id));
- const hint='What shall we do together? Favorite activities deepen our bond; rival-style practice builds respect. '
-  +'Trying something different is worthwhile too, and varying plans keeps them fresh.';
+ const hint='I have some time free. What do you feel like doing together?';
  return say(cast[id].name,hint,choices);
 }
 function showEncounter(){
@@ -513,8 +511,7 @@ function act(action){
   const target=APPOINTMENTS.proposed(state,id,SCHEDULES)[Number(part)];
   if(!target)return say(cast[id].name,'That opening is gone.',plannedDateSlots(id));
   const choices=DATES.options(state,id,target.place,SOCIAL,cast).map(a=>[
-   a.title+' · '+(a.affinity==='favorite'?'♥ Favorite':a.affinity==='neutral'?'● Familiar':'◇ New experience')
-    +' · '+a.focus+' focus'+(a.credits?' + '+a.credits+' credits':'')+' when we meet',
+   a.title+' · '+a.focus+' focus'+(a.credits?' + '+a.credits+' credits':'')+' when we meet',
    'dateActivity:'+id+':'+part+':'+a.id
   ]);
   choices.push(['Choose another day · free','dateInvite:'+id]);
@@ -552,8 +549,7 @@ function act(action){
   if(!cast[id]||!currentPeople().includes(id))return;
   try{
    const outcome=SOCIAL.complete(state,id,part,currentPeople(),cast);
-   log('Shared '+outcome.title.toLowerCase()+' with '+cast[id].name
-     +' · +'+outcome.affection+' affection, +'+outcome.trust+' trust, +'+outcome.respect+' respect.');
+   log('Spent time with '+cast[id].name+': '+outcome.title+'.');
    recordIntention('hangout');
    const memories=recordCG('hangout',id);
    advance();
