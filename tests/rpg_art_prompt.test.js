@@ -4,7 +4,10 @@ const assert = require('node:assert/strict');
 const queue = require('../docs/cg-art-queue.json');
 const fs = require('node:fs');
 const path = require('node:path');
-const {createPrompt, assertSingleImagePrompt, parseArgs} = require('../scripts/rpg-art-prompt.js');
+const crypto = require('node:crypto');
+const os = require('node:os');
+const {execFileSync} = require('node:child_process');
+const {createPrompt, assertSingleImagePrompt, assertCanonicalAssetPrompt, parseArgs} = require('../scripts/rpg-art-prompt.js');
 
 test('each of the 32 real CGs produces its own isolated positive prompt and path', () => {
   assert.equal(queue.scenes.length, 32);
@@ -93,4 +96,57 @@ test('unsupported, combined, invalid and noncanonical requests are rejected', ()
   assert.throws(()=>createPrompt({}), /Choose exactly one/);
   assert.throws(()=>parseArgs(['--scene','hana_first_meeting','--scene','reina_rival_intro']), /Usage/);
   assert.deepEqual(parseArgs(['--scene','hana_first_meeting','--json']),{sceneId:'hana_first_meeting',json:true});
+});
+
+test('canonical scene preflight rejects an unrelated single-image bedroom even when layout rules pass', () => {
+  const event = queue.scenes.find(s => s.id === 'hana_first_meeting');
+  const canonical = createPrompt({sceneId:event.id});
+  const wrong = [
+    'Create one complete, standalone cinematic anime illustration:',
+    'a single continuous scene with one focal moment.',
+    'An adult heroine reclines on a bed in a private dorm bedroom at dusk.'
+  ].join(' ');
+  assert.equal(assertSingleImagePrompt(wrong), true, 'Generic layout check alone cannot detect off-story scenes');
+  assert.throws(
+    () => assertCanonicalAssetPrompt(wrong, {sceneId:event.id}),
+    /Off-story or modified prompt for hana_first_meeting/
+  );
+  assert.equal(assertCanonicalAssetPrompt(canonical.prompt, {sceneId:event.id}), true);
+  assert.equal(canonical.promptSha256, crypto.createHash('sha256').update(canonical.prompt).digest('hex'));
+  assert.match(canonical.prompt, /Lucky Draw counter/);
+  assert.match(canonical.prompt, /sleeved starter card/);
+  assert.doesNotMatch(canonical.prompt, /bedroom|dorm room|reclines? on (?:a|the) bed/i);
+});
+
+test('scene preflight requires an exact event, location, identity and action', () => {
+  const hana = createPrompt({sceneId:'hana_first_meeting'});
+  const reina = createPrompt({sceneId:'reina_rival_intro'});
+  assert.throws(()=>assertCanonicalAssetPrompt(reina.prompt,{sceneId:'hana_first_meeting'}),/Off-story/);
+  assert.throws(()=>assertCanonicalAssetPrompt(
+    hana.prompt.replace('Location: Warm shop lighting;', 'Location: Cozy dorm bedroom;'),
+    {sceneId:'hana_first_meeting'}),/Off-story/);
+  assert.throws(()=>assertCanonicalAssetPrompt(
+    hana.prompt.replace('Hana offers the protagonist a neatly sleeved starter card.', 'Hana reclines on a bed.'),
+    {sceneId:'hana_first_meeting'}),/Off-story/);
+  assert.throws(()=>assertCanonicalAssetPrompt(
+    hana.prompt + ' An unrelated nighttime dorm bedroom scene.',
+    {sceneId:'hana_first_meeting'}),/Off-story/);
+  for(const scene of queue.scenes) {
+    const p = createPrompt({sceneId:scene.id});
+    assertCanonicalAssetPrompt(p.prompt,{sceneId:scene.id});
+  }
+});
+
+test('CLI validates the actual model-facing prompt against the requested scene', () => {
+  const scratch = fs.mkdtempSync(path.join(os.tmpdir(),'rpg-art-preflight-'));
+  const candidate = path.join(scratch,'prompt.txt');
+  const cli = path.join(__dirname,'..','scripts','rpg-art-prompt.js');
+  try {
+    const canonical = createPrompt({sceneId:'hana_first_meeting'});
+    fs.writeFileSync(candidate,canonical.prompt,'utf8');
+    assert.match(execFileSync(process.execPath,[cli,'--validate',candidate,'--scene','hana_first_meeting'],{encoding:'utf8'}),/exact canonical asset prompt passed/);
+    fs.writeFileSync(candidate,canonical.prompt.replace('Lucky Draw counter','dorm bedroom'), 'utf8');
+    assert.throws(()=>execFileSync(process.execPath,[cli,'--validate',candidate,'--scene','hana_first_meeting'],{stdio:'pipe'}),/Command failed/);
+    assert.doesNotThrow(()=>execFileSync(process.execPath,[cli,'--scene','hana_first_meeting'],{stdio:'pipe'}));
+  } finally { fs.rmSync(scratch,{recursive:true,force:true}); }
 });
