@@ -254,7 +254,7 @@
   if(!showModal)modalDecisionId=null;
   if(!field)lastFieldDecisionId=null;
 
-  el.classList.toggle('hidden',!d&&!targetMode&&!v.over&&v.phase==='game');
+  el.classList.toggle('hidden',v.phase==='setup'||(!d&&!targetMode&&!v.over&&v.phase==='game'));
   opts.textContent='';acts.textContent='';el.classList.remove('active');
   if(targetMode){el.classList.add('active');title.textContent=targetMode.title;
    description.textContent='Click an eligible Pokémon in your Active or Bench area to complete this action.';
@@ -314,7 +314,7 @@
   else if(v.over){title.textContent='DUEL COMPLETE';description.textContent=current.winner===0?'You won!':current.winner===1?'The CPU won.':'A draw!';acts.append(btn(rpgMode?'Returning to Neo Harbor…':'Play another duel',rpgMode?()=>{}:newDuel,'primary',rpgMode));}
   else if(v.phase==='setup'){
    title.textContent='OPENING SETUP';description.textContent='Select a Basic Pokémon from your opening hand to become Active. You may select up to five more for your Bench, then confirm. Your opponent’s team remains hidden until setup ends.';
-   acts.append(btn('Confirm opening setup',()=>send(command('setup_confirm')),'primary',!v.players[0].active));
+   // The setup confirmation action is in the regular turn controls, not a floating decision popup.
   }else{title.textContent='YOUR NEXT MOVE';description.textContent='Click a Trainer or Basic Pokémon to play it. Select Energy or Evolution, then click a highlighted Pokémon. Use the attack buttons beside your Active Pokémon.';}
  }
  function render(){returnToCubeWhenDone();const has=Boolean(current);document.body.classList.toggle('duel-active',has);document.body.classList.toggle('cpu-match',has);$('lobby').classList.toggle('hidden',has);$('duel').classList.toggle('hidden',!has);if(!has)return;
@@ -346,7 +346,10 @@
   $('retreatBtn').title=actionsDisabled?'Retreat on your turn after resolving any choices.':!you.bench.length?'You need a Benched Pokémon to retreat.':'Choose a Benched Pokémon to replace your Active Pokémon.';
   $('undoBtn').disabled=busy||!current.undo?.available;
   $('undoBtn').title=current.undo?.available?'Undo '+current.undo.label:'Available only before random actions, drawing cards, or turn changes';
-  $('endBtn').disabled=actionsDisabled;
+  const openingSetup=v.phase==='setup'&&!v.over;
+  $('endBtn').textContent=openingSetup?(you.active?'✓ Confirm setup':'Choose Active first'):'End turn →';
+  $('endBtn').title=openingSetup?'Choose your Active Pokémon, optionally add up to five Benched Pokémon, then confirm to begin.':'End your turn';
+  $('endBtn').disabled=openingSetup?(busy||!you.active||!!v.pendingDecision):actionsDisabled;
   $('concedeBtn').disabled=v.over||v.phase!=='game'||!yourTurn;
   $('history').textContent='';(v.messages||[]).forEach(x=>{const li=document.createElement('li');li.textContent=x;$('history').append(li);});
   renderDecisions();combat.update(current);reactions?.update(current);renderCPULog(v);
@@ -394,7 +397,12 @@
  $('myDiscardBtn').addEventListener('click',()=>openDiscard(0));$('oppDiscardBtn').addEventListener('click',()=>openDiscard(1));
  $('closePile').addEventListener('click',()=>$('pileModal').classList.add('hidden'));$('pileModal').addEventListener('click',e=>{if(e.target===$('pileModal'))$('pileModal').classList.add('hidden');});
  $('undoBtn').addEventListener('click',()=>send(command('undo')));
- $('endBtn').addEventListener('click',()=>send(command('end_turn')));
+ $('endBtn').addEventListener('click',()=>{
+  if(!current||busy)return;
+  if(current.view.phase==='setup'){
+   if(current.view.players[0]?.active&&!current.view.pendingDecision)send(command('setup_confirm'));
+  }else if(current.view.phase==='game')send(command('end_turn'));
+ });
  $('retreatBtn').addEventListener('click',()=>setTarget('retreat',{},'Choose Benched replacement',true));
  $('concedeBtn').addEventListener('click',()=>{if(confirm('Concede this duel?'))send(command('concede'));});
  document.addEventListener('keydown',e=>{if(e.key==='Escape'){const d=current?.view?.pendingDecision;if(d?.cancelable&&!busy){e.preventDefault();send(command('cancel_choice',{decisionId:d.id}));return;}if(targetMode){e.preventDefault();cancelTarget();}else if(handVisible)setHandVisible(false);else if(powersOpen)setPowersOpen(false);else if(logOpen)setLogOpen(false);else $('pileModal').classList.add('hidden');}});
