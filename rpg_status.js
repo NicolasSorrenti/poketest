@@ -80,13 +80,20 @@
     return row;
   }
 
-  function open(state,cast,plan,avatar){
+  function open(state,cast,plan,avatar,onTutorialsChange){
     const dialog=document.getElementById('statusDialog');
     const overview=document.getElementById('statusOverview');
     const characters=document.getElementById('statusCharacters');
     const detail=document.getElementById('statusDetail');
     const count=document.getElementById('statusCount');
     if(!dialog||!overview||!characters||!detail||!count)return;
+    const tutorialToggle=document.getElementById('statusTutorialToggle');
+    if(tutorialToggle){
+      tutorialToggle.checked=state?.gameplayTutorials?.disabled===true;
+      tutorialToggle.onchange=()=>{
+        if(typeof onTutorialsChange==='function')onTutorialsChange(!!tutorialToggle.checked);
+      };
+    }
     const data=project(state,cast,plan);
     overview.replaceChildren(
       cell('SEASON',data.ended?'Complete':'Day '+data.day+' / 90 · '+data.period),
