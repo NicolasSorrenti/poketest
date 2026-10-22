@@ -15,6 +15,7 @@ jobs:
         run: |
           node --check duel_playmats.js
           node --check classic_live.js
+          node --check online.js
           node --check duel_action_rail.js
           node test_duel_action_rail.js
           node --test tests/mobile_alignment.test.js
