@@ -374,3 +374,11 @@
 .dialogue.is-narration{border-left-color:#86a5be;background:linear-gradient(105deg,#141b2bef,#1a2234f0)}
 .dialogue.is-narration .dialogue-title #speaker{color:#b6cfde;font-size:17px;letter-spacing:1.2px;text-transform:uppercase}
 .dialogue.is-narration #line{font-style:italic;color:#e4ebf5;line-height:1.7}
+
+/* A quiet, player-facing hint, never spoken by an NPC or shown as a modal. */
+.gameplay-tutorial{position:fixed;bottom:20px;right:20px;z-index:55;width:min(365px,calc(100vw - 24px));padding:15px 17px;border:1px solid #cf85aa;border-left:4px solid #f3a8c2;border-radius:13px;background:#142239f5;color:#fceaf0;box-shadow:0 14px 36px #050916c9;display:grid;gap:8px}
+.gameplay-tutorial small{color:#f3b6ce;font:800 11px 'Barlow Condensed',sans-serif;letter-spacing:1.1px}
+.gameplay-tutorial strong{font:800 22px 'Barlow Condensed',sans-serif;letter-spacing:.3px}
+.gameplay-tutorial p{font-size:12px;line-height:1.6;color:#d5ddea;margin:0}
+.gameplay-tutorial button{justify-self:end;padding:7px 18px;border-color:#e6a4c6;background:#69405d;font:800 12px 'Barlow Condensed',sans-serif}
+@media(max-width:700px){.gameplay-tutorial{right:12px;left:12px;bottom:12px;width:auto;max-height:38dvh;overflow:auto;padding:12px}.gameplay-tutorial strong{font-size:19px}}
