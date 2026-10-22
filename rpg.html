@@ -42,6 +42,16 @@
     <div class="utility-left"><span class="live-dot"></span><span>NEO HARBOR · TOWN EXPLORATION</span><span class="utility-sep">/</span><span id="notice" aria-live="polite">Travel & talk are free · ⏳ actions advance time</span></div>
     <div class="utility-actions">
       <button id="statusBtn" class="toolbar-btn status-launch" type="button" aria-haspopup="dialog" aria-controls="statusDialog">♥ STATUS</button>
+      <button id="rpgMapToggle" class="toolbar-btn rpg-nav-toggle" type="button" aria-controls="rpgMapPanel" aria-expanded="false" aria-label="Open town map">☷ MAP</button>
+      <button id="rpgInfoToggle" class="toolbar-btn rpg-nav-toggle" type="button" aria-controls="rpgInfoPanel" aria-expanded="false" aria-label="Open story and progress panels">✧ INFO</button>
+      <button id="deckStudioBtn" class="toolbar-btn" type="button">▣ DECK STUDIO</button>
+      <button id="calendarBtn" class="toolbar-btn" type="button">▦ CALENDAR</button>
+      <details class="rpg-more-menu" id="rpgMoreMenu">
+        <summary class="toolbar-btn" aria-label="More RPG tools">⋯ MORE</summary>
+        <div class="rpg-more-content" aria-label="More RPG tools">
+          <button id="galleryBtn" class="toolbar-btn" type="button">▧ CG GALLERY</button>
+          <a href="/mat_generator.html" target="_blank" rel="noopener" class="toolbar-btn">▧ PLAYMAT STUDIO</a>
+          <button id="rpgDiscreetToggle" class="toolbar-btn" type="button" aria-pressed="false" title="Hide character and event illustrations">◇ DISCREET OFF</button>
       <details class="rpg-audio-settings">
         <summary id="rpgSoundLabel" aria-label="Sound settings">♫ SOUND</summary>
         <div class="rpg-audio-menu" aria-label="Audio preferences">
@@ -55,13 +65,8 @@
           <small>Audio starts when you interact. Ambience is optional.</small>
         </div>
       </details>
-      <button id="rpgDiscreetToggle" class="toolbar-btn" type="button" aria-pressed="false" title="Hide character and event illustrations">◇ DISCREET OFF</button>
-      <button id="rpgMapToggle" class="toolbar-btn rpg-nav-toggle" type="button" aria-controls="rpgMapPanel" aria-expanded="false" aria-label="Open town map">☷ MAP</button>
-      <button id="rpgInfoToggle" class="toolbar-btn rpg-nav-toggle" type="button" aria-controls="rpgInfoPanel" aria-expanded="false" aria-label="Open story and progress panels">✧ INFO</button>
-      <button id="deckStudioBtn" class="toolbar-btn" type="button">▣ DECK STUDIO</button>
-      <a href="/mat_generator.html" target="_blank" rel="noopener" class="toolbar-btn" style="text-decoration:none">▧ PLAYMAT STUDIO</a>
-      <button id="galleryBtn" class="toolbar-btn" type="button">▧ CG GALLERY</button>
-      <button id="calendarBtn" class="toolbar-btn" type="button">▦ CALENDAR</button>
+        </div>
+      </details>
       <button id="quickHome" class="toolbar-btn" type="button">⌂ GO HOME</button>
       <button id="quickNext" class="time-advance" type="button">▶ NEXT PERIOD · ⏳</button>
     </div>
@@ -220,8 +225,8 @@
   </div>
 </dialog>
 <dialog id="calendarDialog" class="modal">
- <div class="modal-heading"><h2>▦ Circuit Calendar</h2><button id="calendarClose" type="button">✕ Close</button></div>
- <p>Known official events. Some personal encounters are discovered by exploring at different times.</p>
+ <div class="modal-heading"><h2>▦ Your Calendar</h2><button id="calendarClose" type="button">✕ Close</button></div>
+ <p>Appointments and known events, without revealing undiscovered character stories.</p>
  <div id="calendarEntries"></div>
 </dialog>
 
@@ -241,10 +246,8 @@
  <p class="cg-intro">Discover personal moments by playing the RPG. Illustrations appear only after their art assets are installed.</p>
  <div class="cg-filters">
   <label for="galleryCharacter">Character</label><select id="galleryCharacter">
-   <option value="">All characters</option>
-   <option value="hana">Hana</option><option value="reina">Reina</option><option value="shiori">Shiori</option><option value="yuna">Yuna</option>
-   <option value="akari">Akari</option><option value="camila">Camila</option><option value="marina">Marina</option><option value="kaede">Kaede</option>
-  </select>
+    <option value="">All characters</option>
+   </select>
   <label for="galleryCategory">Moment type</label><select id="galleryCategory">
    <option value="">All types</option>
    <option value="profile">First encounters</option><option value="pre_duel">Pre-duel</option>
