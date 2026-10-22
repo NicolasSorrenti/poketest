@@ -69,7 +69,8 @@ function attackDamage(useSubmerge){
  const g=ready('neo3-32');
  const own=g.players[0],f=g.players[1];
  own.active.energies=Array(3).fill(byName('Lightning Energy'));
- f.active=unit(byName('Charmander'));
+ // Charmeleon survives 60 Water-weakness damage; Charmander would be Knocked Out.
+ f.active=unit(byName('Charmeleon'));
  assert.ok(CATALOG.get(f.active.id).weaknesses.some(w=>w.type==='Water'));
  if(useSubmerge){
   send(g,0,'use_power',{slot:-1});
