@@ -1566,3 +1566,19 @@ test('an event invitation survives reload with the same choices, without inventi
  assert.ok(reloaded.elements.choices.children.some(x=>x.textContent==='I am in.'));
  assert.equal(reloaded.state().appointments[0].status,'booked');
 });
+
+test('the daily guide approaches a present story NPC without triggering or advancing the story',()=>{
+ const r=launch({day:5,slot:0,location:'home',met_hana:true});
+ const card=r.elements.dailyPlanner.children.find(x=>x.children?.[1]?.textContent?.includes('Personal story with Hana'));
+ assert.ok(card,'the guide should surface a current story opportunity');
+ const go=card.children.find(x=>x.className==='planner-action');
+ assert.ok(go);go.onclick();
+ const result=r.state();
+ assert.equal(result.location,'shop');
+ assert.equal(result.day,5);assert.equal(result.slot,0);
+ assert.equal(result.activeStory,null,'no hidden story progression on navigation');
+ assert.equal(result.scene.invitation?.id,'hana_route_1');
+ finishGreeting(r);
+ r.elements.choices.children.find(x=>x.textContent==='I am in.').onclick();
+ assert.equal(r.state().activeStory?.id,'hana_route_1');
+});
