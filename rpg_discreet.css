@@ -1,21 +1,5 @@
-/* Discreet Mode is deliberately visual-only; battle cards and game state are untouched. */
-:root[data-rpg-discreet="on"] #scene{
- background-image:radial-gradient(circle at 62% 36%,#29425a 0%,#131f32 44%,#0a1322 100%)!important;
-}
-:root[data-rpg-discreet="on"] #scene::before{
- content:"";position:absolute;inset:0;z-index:0;pointer-events:none;
- background:linear-gradient(90deg,#ffffff07 1px,transparent 1px),
- linear-gradient(#ffffff07 1px,transparent 1px);
- background-size:42px 42px;mask-image:linear-gradient(transparent,#0007 45%,transparent);
-}
+/* Discreet Mode changes character/event artwork only. Keep the RPG's real location background, scene overlays, and scenery intact. */
 .rpg-discreet-stage{display:none}
-:root[data-rpg-discreet="on"] .rpg-discreet-stage{
- position:absolute;inset:24% 8% 27%;z-index:1;pointer-events:none;
- display:flex;align-items:center;justify-content:center;flex-direction:column;
- gap:8px;text-align:center;color:#b9cadb;
-}
-.rpg-discreet-stage__symbol{font:900 clamp(62px,12vw,160px)/1 'Barlow Condensed',sans-serif;opacity:.13;letter-spacing:.05em}
-.rpg-discreet-stage__subtitle{font:800 12px 'Barlow Condensed',sans-serif;letter-spacing:.3em;opacity:.55}
 :root[data-rpg-discreet="on"] #rpgDiscreetToggle{background:#224e60;border-color:#8cbacc;color:#e9f9ff}
 :root[data-rpg-discreet="on"] #portrait img:not(.rpg-safe-avatar),
 :root[data-rpg-discreet="on"] .rpg-cast-member img:not(.rpg-safe-avatar),
