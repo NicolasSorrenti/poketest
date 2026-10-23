@@ -11,6 +11,9 @@ const NPC_DECKS=require('./rpg_npc_deck_progression');
 const {list}=require('./authentic_decks');
 const {LAB}=require('./classic_live_decks');
 const HAYMAKER=require('./haymaker_decks');
+const HAYMAKER_CARD_IDS=new Set(HAYMAKER.entries.flatMap(e=>HAYMAKER.list(e.id)));
+// Preserve the five original Haymaker presets' Classic format behavior.
+const haymakerNeedsPreview=id=>HAYMAKER.has(id)&&!!HAYMAKER.recipes[id].era;
 const RETAIL=require('./retail_theme_decks');
 const NEO=require('./neo_genesis_decks');
 const DISCOVERY=require('./neo_discovery_decks');
@@ -75,7 +78,7 @@ class ClassicLocalService {
    const legality=validateDeck(cpuCards,CATALOG);
    if(!legality.valid)throw Error('Invalid progressed NPC deck: '+legality.errors[0]);
   }
-  const expanded=deck==='custom'||customOpponentDeck!==undefined||EXPANDED[deck]||EXPANDED[opponent]||[...playerCards,...cpuCards].some(id=>id.startsWith('gym')&&!RETAIL.gymIds.includes(id));
+  const expanded=deck==='custom'||customOpponentDeck!==undefined||haymakerNeedsPreview(deck)||haymakerNeedsPreview(opponent)||EXPANDED[deck]||EXPANDED[opponent]||[...playerCards,...cpuCards].some(id=>id.startsWith('gym')&&!RETAIL.gymIds.includes(id));
   const format=[...playerCards,...cpuCards].some(id=>['neo1','neo2','neo3','neo4'].some(set=>id.startsWith(set+'-')))?(expanded?'online-preview':'neo-theme'):expanded?'gym-expanded':RETAIL.meta[deck]?.gym||RETAIL.meta[opponent]?.gym?'gym-theme':[...playerCards,...cpuCards].some(id=>id.startsWith('base4'))?'theme-expanded':'classic';
   let game=createGame({decks:[playerCards,cpuCards],names:['You','Classic CPU'],format,...(prizeCount?{prizeCount}:{}),seed:seed??crypto.randomBytes(4).readUInt32BE(0)});
   game=driveBot(game,200,cpuConfig).game;
@@ -142,7 +145,7 @@ class ClassicLocalService {
   return response;
  }
  decklist(id){if(!DECKS[id]||id==='custom')throw Error('Unknown theme deck');return HAYMAKER.has(id)?HAYMAKER.list(id):EXPANDED[id]?[...EXPANDED[id]]:LAB[id]?[...LAB[id]]:DECKS[id].startsWith('retail:')?RETAIL.list(id):DECKS[id].startsWith('neo:')?NEO.list(id):DECKS[id].startsWith('discovery:')?DISCOVERY.list(id):DECKS[id].startsWith('destiny:')?DESTINY.list(id):list(DECKS[id]);}
- catalog(){return [...CATALOG.values()].filter(c=>['base1','base2','base3','base4','base5','gym1','gym2'].some(set=>c.id.startsWith(set+'-'))||NEO.neoIds.includes(c.id)||DISCOVERY.neoIds.includes(c.id)||DESTINY.neoIds.includes(c.id)||require('./neo_bonus_pool').ids.includes(c.id)||require('./neo_v040_pool').ids.includes(c.id)||require('./neo_v046_pool').ids.includes(c.id)||require('./neo_v047_pool').ids.includes(c.id)||require('./neo_v048_pool').ids.includes(c.id)||require('./neo_v049_pool').ids.includes(c.id)||require('./neo_v050_pool').ids.includes(c.id)||require('./neo_v051_pool').ids.includes(c.id)||require('./neo_v052_pool').ids.includes(c.id)||require('./neo_v053_pool').ids.includes(c.id)||require('./neo_v054_pool').ids.includes(c.id)||require('./neo_v055_pool').ids.includes(c.id)||require('./neo_v056_pool').ids.includes(c.id)||require('./neo_v061_pool').ids.includes(c.id)||require('./neo_v062_pool').ids.includes(c.id)||require('./neo_v063_pool').ids.includes(c.id)||require('./neo_v064_pool').ids.includes(c.id)||require('./neo_v065_pool').ids.includes(c.id)||require('./neo_v066_pool').ids.includes(c.id)||require('./neo_v084_pool').ids.includes(c.id));}
+ catalog(){return [...CATALOG.values()].filter(c=>['base1','base2','base3','base4','base5','gym1','gym2'].some(set=>c.id.startsWith(set+'-'))||NEO.neoIds.includes(c.id)||DISCOVERY.neoIds.includes(c.id)||DESTINY.neoIds.includes(c.id)||require('./neo_bonus_pool').ids.includes(c.id)||require('./neo_v040_pool').ids.includes(c.id)||require('./neo_v046_pool').ids.includes(c.id)||require('./neo_v047_pool').ids.includes(c.id)||require('./neo_v048_pool').ids.includes(c.id)||require('./neo_v049_pool').ids.includes(c.id)||require('./neo_v050_pool').ids.includes(c.id)||require('./neo_v051_pool').ids.includes(c.id)||require('./neo_v052_pool').ids.includes(c.id)||require('./neo_v053_pool').ids.includes(c.id)||require('./neo_v054_pool').ids.includes(c.id)||require('./neo_v055_pool').ids.includes(c.id)||require('./neo_v056_pool').ids.includes(c.id)||require('./neo_v061_pool').ids.includes(c.id)||require('./neo_v062_pool').ids.includes(c.id)||require('./neo_v063_pool').ids.includes(c.id)||require('./neo_v064_pool').ids.includes(c.id)||require('./neo_v065_pool').ids.includes(c.id)||require('./neo_v066_pool').ids.includes(c.id)||require('./neo_v084_pool').ids.includes(c.id)||HAYMAKER_CARD_IDS.has(c.id));}
  cardPool(){return this.catalog().map(c=>{const attacks=(c.attacks||[]).map(a=>({name:a.name,supported:!!ATTACK.compile(a)}));const powers=(c.abilities||[]).filter(a=>a.name).map(a=>({name:a.name,supported:[...POWERS.ACTIVATED,...POWERS.ONPLAY,...POWERS.PASSIVE].includes(a.name)}));const supported=c.supertype==='Trainer'?TRAINERS.SUPPORTED.has(c.name):attacks.every(a=>a.supported)&&powers.every(a=>a.supported);return {id:c.id,name:c.name,supertype:c.supertype,subtypes:c.subtypes||[],types:c.types||[],hp:c.hp||null,evolvesFrom:c.evolvesFrom||null,attacks,powers,supported,images:c.images||{},set:FORMAT.setOf(c.id)};});}
 }
 const deckOptions=()=>[
