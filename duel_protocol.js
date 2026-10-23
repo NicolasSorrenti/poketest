@@ -20,6 +20,20 @@ function projectPlayer(player,own,hideField=false){
  if(own){base.hand=[...(player.hand||[])];base.prizesCount=(player.prizes||[]).length;}
  return base;
 }
+// Some older effects still send an indexed option without artwork metadata.
+// Resolve only indexes into the choosing player's known card zones, never a
+// catalog search by name: different printings can share the same name.
+function choicePrinting(game,viewer,option,catalog){
+ const match=/^(n|hand|deck|card|discard):(\\d+)$/.exec(option.id);
+ if(!match)return null;
+ const zone={n:'hand',hand:'hand',deck:'deck',card:'deck',discard:'discard'}[match[1]];
+ const id=game.players[viewer]?.[zone]?.[Number(match[2])];
+ const name=catalog.get(id)?.name;
+ const label=String(option.label||'');
+ if(!name||!(label===name||label.startsWith(name+' (')||
+   label.endsWith(': '+name)||label.includes(': '+name+' (')))return null;
+ return id;
+}
 function publicView(game,viewer){
  if(!game||!Array.isArray(game.players)||game.players.length!==2)throw Error('Invalid game');
  if(viewer!==0&&viewer!==1&&viewer!==null)throw Error('Invalid viewer');
@@ -46,13 +60,22 @@ function publicView(game,viewer){
   }
  }
  const projectedDecision=decisionForViewer(game.pendingDecision,viewer);
- if(projectedDecision&&viewer!==null&&projectedDecision.actor===viewer)
+ if(projectedDecision&&viewer!==null&&projectedDecision.actor===viewer){
+  const catalog=require('./headless_duel').CATALOG;
+  for(const option of projectedDecision.options||[]){
+   if(typeof option.cardId==='string'&&catalog.has(option.cardId))continue;
+   // Never substitute a same-named card from a different expansion.
+   delete option.cardId;
+   const id=choicePrinting(game,viewer,option,catalog);
+   if(id)option.cardId=id;
+  }
   projectedDecision.cancelable=require('./classic_trainer_core').canCancel(game,viewer);
+ }
  // Only the acting player may inspect their own complete deck during an
  // authorized deck search. Ineligible entries are display-only, never valid IDs.
  if(projectedDecision&&viewer!==null&&projectedDecision.actor===viewer&&
-    projectedDecision.options?.some(o=>/^deck:\\d+$/.test(o.id))&&
-    /^(find|search|recover|basic|energy)$/i.test(projectedDecision.kind||'')){
+    projectedDecision.options?.some(o=>/^deck:\d+$/.test(o.id))&&
+    /^(find|search|recover|basic|energy|deck-search|card-search)$/i.test(projectedDecision.kind||'')){
   const eligible=new Set(projectedDecision.options.map(o=>o.id));
   const C=require('./headless_duel').CATALOG;
   projectedDecision.displayDeck=game.players[viewer].deck.map((id,index)=>({
