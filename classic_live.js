@@ -344,7 +344,7 @@
     if(item.eligible===false){input.disabled=true;row.classList.add('choice-ineligible');row.title='This card cannot be chosen for this effect';}
     row.classList.add('illustrated-choice');
     // Selection options keep their authoritative IDs; art is presentation only.
-    const candidate=item.cardId?card(item.cardId):[...cards.values()].find(c=>c.name===item.label||item.label?.endsWith(': '+c.name)||item.label?.startsWith(c.name+' ('));
+    const candidate=item.cardId?cards.get(item.cardId):null;
     const src=candidate?.images?.small;
     if(typeof src==='string'&&/^https:\/\//.test(src)){
      const art=document.createElement('img');art.className='choice-card-art';art.src=src;art.alt=candidate.name||'';art.loading='lazy';row.append(art);
