@@ -32,6 +32,9 @@ for(const preset of PRESETS){
   assert.equal(pokemon.length,preset.pokemon,preset.name+' Pokémon quota');
   assert.equal(pool.length-pokemon.length,preset.trainers,preset.name+' Trainer quota');
   const basics=pokemon.filter(id=>isBasicPokemon(CATALOG.get(id)));
+  if(['evolution_kanto','evolution_eras','haymaker_kanto','haymaker_eras'].includes(preset.id))
+   assert.deepEqual(pool,makePresetPool({preset:preset.id,seed:seed+100}),
+    preset.id+' should have a fixed pool independent of pack shuffle seed');
   if(preset.id.startsWith('haymaker_'))
    assert.equal(basics.length,pokemon.length,'Haymaker Cube must contain only Basic Pokémon');
   if(preset.id.startsWith('evolution_'))
