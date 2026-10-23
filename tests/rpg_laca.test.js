@@ -17,10 +17,10 @@ function stateFor(day,slot,location){
   bonds:{laca:{affection:2,trust:5,duels:0}},partner:null,routeOutcomes:{}
  });
 }
-test('Laca is an adult childhood friend and a valid playable Classic opponent',()=>{
+test('Laca is an adult childhood friend available on day one with a valid Classic deck',()=>{
  assert.ok(laca);
  assert.equal(laca.cast.age,20);
- assert.equal(laca.arrivalDay,5);
+ assert.equal(laca.arrivalDay,1);
  assert.equal(laca.cast.deck,'water_blast');
  assert.ok(deckOptions().some(x=>x.id===laca.cast.deck));
  assert.match(laca.cast.intro,/back|rematch|kids/i);
@@ -28,6 +28,19 @@ test('Laca is an adult childhood friend and a valid playable Classic opponent',(
  assert.equal(STORY.events.filter(e=>e.npc==='laca'&&e.id.includes('_cross_')).length,2);
  assert.equal(STORY.validate().length,0);
  assert.equal(SCHEDULES.validate().length,0);
+});
+test('Laca and the first childhood reunion are available on Day 1 at the waterfront',()=>{
+ const e=STORY.byId('laca_route_1');
+ assert.equal(e.start,1);
+ assert.equal(e.place,'park');
+ assert.equal(e.slot,0);
+ assert.equal(SCHEDULES.locationFor('laca',1,0),'park');
+ assert.equal(SCHEDULES.locationFor('laca',1,0),e.place);
+ assert.ok(SCHEDULES.peopleAt(1,0,'park').includes('laca'));
+ const s=stateFor(1,0,'park');
+ assert.equal(s.relationships.laca.trust,5);
+ assert.ok(STORY.available(s).some(scene=>scene.id==='laca_route_1'));
+ assert.equal(CG.byId('laca_route_1').startDay,1);
 });
 test('Laca changes work and off-duty outfits without a character-specific renderer case',()=>{
  const outfits=laca.art.outfits;
