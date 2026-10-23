@@ -124,12 +124,12 @@
      el.replaceChildren();
      const label=document.createElement('span');label.textContent=announcement;el.append(label);
      if(drawn.length&&!knockedOut.length){
-      const cards=document.createElement('span');cards.className='draw-feedback-cards';
+      const cards=document.createElement('span');cards.className='draw-feedback-cards';cards.style.cssText='display:flex;gap:5px;justify-content:center;margin-top:6px';
       for(const id of drawn.slice(0,5)){
        const c=getCard(id)||{},image=c.images?.small;
-       const item=document.createElement('span');item.className='draw-feedback-card';
+       const item=document.createElement('span');item.className='draw-feedback-card';item.style.cssText='display:inline-flex;max-width:76px;align-items:center;justify-content:center;font-size:11px';
        if(typeof image==='string'&&/^https:\/\//.test(image)){
-        const img=document.createElement('img');img.src=image;img.alt=c.name||'Drawn card';item.append(img);
+        const img=document.createElement('img');img.src=image;img.alt=c.name||'Drawn card';img.style.cssText='height:90px;max-width:70px;object-fit:contain;border-radius:5px';item.append(img);
        }else item.textContent=c.name||'Card';
        cards.append(item);
       }
