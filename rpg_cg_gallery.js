@@ -1033,6 +1033,37 @@
   thumb:'/rpg-assets/events/cg/slice-life/thumbs/'+moment.id+'.webp',
   dialogueSafe:'Bottom 20% clear for dialogue UI',sliceId:moment.id
  });
+ // UI-only fallback sequence. Never mistake placeholder artwork for a newly created CG.
+ // Source-of-truth paths here are existing RPG art assets, not generated images.
+ const matchCutins=new Set(['hana','reina','shiori','yuna','akari','camila','marina','kaede','alma','iris']);
+ const alternativeCutins=Object.freeze({
+  jinx:'/rpg-assets/characters/jinx/cutins/battle_smirk.webp',
+  luna:'/rpg-assets/characters/luna/cutins/battle_smile.webp'
+ });
+ const attackFallbacks=new Set(['elena','rina','sierra','sol']);
+ const portraitFallbacks=Object.freeze({
+  elena:'/rpg-assets/characters/elena/expression-portraits/neutral.webp',
+  rina:'/rpg-assets/characters/rina/expression-portraits/neutral.webp',
+  sierra:'/rpg-assets/characters/sierra/expression-portraits/neutral.webp',
+  sol:'/rpg-assets/characters/sol/expression-portraits/neutral.webp',
+  laca:'/rpg-assets/characters/laca/neutral.webp'
+ });
+ function artCandidates(entry,thumbnail=false){
+  // Gallery entries for locked memories have null paths: never load their fallback.
+  if(!entry?.character||!entry.path)return [];
+  const npc=entry.character,items=[],seen=new Set();
+  const add=(path,kind)=>{
+   if(typeof path!=='string'||!path.startsWith('/rpg-assets/')||seen.has(path))return;
+   seen.add(path);items.push({path,kind});
+  };
+  if(thumbnail)add(entry.thumb,'event');
+  add(entry.path,'event'); // A missing thumbnail must not hide an installed full-size CG.
+  if(matchCutins.has(npc))add('/rpg-assets/characters/'+npc+'/cutins/match-cutin.webp','cutin');
+  else add(alternativeCutins[npc],'cutin');
+  if(attackFallbacks.has(npc))add('/rpg-assets/reactions/'+npc+'/attack.png','cutin');
+  add(portraitFallbacks[npc]||'/rpg-assets/characters/'+npc+'/vn-expressions/neutral.webp','portrait');
+  return items;
+ }
  const categories=Object.freeze(['profile','pre_duel','social','special']);
  const map=new Map(catalog.map(x=>[x.id,x]));
  const validTriggers=new Set(['meet','before_duel','hangout','situation','slice','appointment','story_milestone','after_duel']);
@@ -1097,5 +1128,5 @@
   }
   return errors;
  }
- return Object.freeze({catalog,categories,byId:id=>map.get(id)||null,hydrate,record,unlocked,markViewed,gallery,validate});
+ return Object.freeze({catalog,categories,artCandidates,byId:id=>map.get(id)||null,hydrate,record,unlocked,markViewed,gallery,validate});
 });
