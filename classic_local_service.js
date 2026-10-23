@@ -40,13 +40,14 @@ class ClassicLocalService {
   this.sessions=new Map();this.now=now;this.ttlMs=ttlMs;this.maxSessions=maxSessions;
  }
  prune(){for(const [token,r] of this.sessions)if(this.now()-r.updated>this.ttlMs)this.sessions.delete(token);}
- create({deck='blackout',opponent='brushfire',customDeck,customOpponentDeck,seed,difficulty,personality,aiSeed=1,npc,npcDeckId,npcDeckTier=1,advancedTactics=false,prizeCount}={}){
+ create({deck='blackout',opponent='brushfire',customDeck,customOpponentDeck,seed,difficulty,personality,aiSeed=1,npc,npcDeckId,npcDeckTier=1,npcDeckVariant=0,advancedTactics=false,prizeCount}={}){
   this.prune();if(this.sessions.size>=this.maxSessions)throw Error('Too many active duels');
   if(!DECKS[deck]||!DECKS[opponent])throw Error('Unknown Classic deck');
   if(seed!==undefined&&(!Number.isSafeInteger(seed)||seed<0||seed>0xffffffff))throw Error('Invalid seed');
   if(prizeCount!==undefined&&prizeCount!==4&&prizeCount!==6)throw Error('Prize count must be 4 or 6');
   if(typeof advancedTactics!=='boolean')throw Error('advancedTactics must be a boolean');
   if(!Number.isInteger(npcDeckTier)||npcDeckTier<1||npcDeckTier>3)throw Error('Invalid RPG NPC deck tier');
+  if(!Number.isInteger(npcDeckVariant)||npcDeckVariant<0||npcDeckVariant>2)throw Error('Invalid NPC deck variant');
   if(npcDeckTier>1&&(typeof npcDeckId!=='string'||!/^[a-z][a-z0-9_]*$/.test(npcDeckId)))throw Error('RPG NPC identity required for deck progression');
   // RPG duels supply npcDeckId for deck progression, including Act I. Reuse
   // that identity for the established per-character CPU profile; otherwise
@@ -77,6 +78,11 @@ class ClassicLocalService {
    cpuCards=NPC_DECKS.upgrade({npc:npcDeckId,tier:npcDeckTier,original:cpuCards,catalog:CATALOG});
    const legality=validateDeck(cpuCards,CATALOG);
    if(!legality.valid)throw Error('Invalid progressed NPC deck: '+legality.errors[0]);
+  }
+  if(!customOpponentDeck&&typeof npcDeckId==='string'&&npcDeckVariant>0){
+   cpuCards=NPC_DECKS.varyDeck(cpuCards,npcDeckId,npcDeckVariant,CATALOG);
+   const legality=validateDeck(cpuCards,CATALOG);
+   if(!legality.valid)throw Error('Invalid NPC deck variant: '+legality.errors[0]);
   }
   const expanded=deck==='custom'||customOpponentDeck!==undefined||haymakerNeedsPreview(deck)||haymakerNeedsPreview(opponent)||EXPANDED[deck]||EXPANDED[opponent]||[...playerCards,...cpuCards].some(id=>id.startsWith('gym')&&!RETAIL.gymIds.includes(id));
   const format=[...playerCards,...cpuCards].some(id=>['neo1','neo2','neo3','neo4'].some(set=>id.startsWith(set+'-')))?(expanded?'online-preview':'neo-theme'):expanded?'gym-expanded':RETAIL.meta[deck]?.gym||RETAIL.meta[opponent]?.gym?'gym-theme':[...playerCards,...cpuCards].some(id=>id.startsWith('base4'))?'theme-expanded':'classic';
