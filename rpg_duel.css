@@ -50,6 +50,19 @@ body.rpg-duel .npc-reaction:not(.hidden){
 .npc-reaction-card.has-match-art .npc-reaction-portrait img{
  height:100%;width:100%;object-fit:contain;object-position:center bottom;
 }
+/* VN frames may be opaque and portrait-oriented: fill their panel without
+   distortion and keep facial expressions visible at desktop/mobile sizes. */
+.npc-reaction-card.has-vn-expression{grid-template-columns:minmax(0,39%) minmax(0,1fr)}
+.npc-reaction-card.has-vn-expression .npc-reaction-portrait{background:#1a1c31}
+.npc-reaction-card.has-vn-expression .npc-reaction-portrait img:not(.rpg-safe-avatar){
+ width:100%;height:100%;object-fit:cover;object-position:50% 24%;filter:none;
+}
+.npc-reaction-card.has-vn-expression .npc-reaction-portrait::after{
+ content:"";position:absolute;inset:0;pointer-events:none;
+ background:linear-gradient(90deg,transparent 73%,#25213da8 100%);
+}
+:root[data-rpg-discreet="on"] .npc-reaction-card.has-vn-expression .npc-reaction-portrait::after{display:none}
+
 .npc-reaction-portrait.no-art::after{content:'✦';font-size:70px;color:#ffffff8c}
 .npc-reaction-copy{
  display:flex;flex-direction:column;justify-content:center;gap:4px;min-width:0;
@@ -70,6 +83,7 @@ body.rpg-duel .npc-reaction:not(.hidden){
  /* Panoramic attack art should not shrink into a narrow, letterboxed portrait. */
  .npc-reaction-card{height:clamp(160px,29dvh,222px);grid-template-columns:minmax(0,43%) minmax(0,1fr);border-width:3px;transform:skewX(-5deg)}
  .npc-reaction-card.has-wide-action-art{grid-template-columns:minmax(0,50%) minmax(0,1fr)}
+ .npc-reaction-card.has-vn-expression{grid-template-columns:minmax(0,45%) minmax(0,1fr)}
  .npc-reaction-portrait,.npc-reaction-copy{transform:skewX(5deg)}
  .npc-reaction-copy{padding:8px 10px 8px 6px;gap:3px}
  .npc-reaction-tag{font-size:11px;letter-spacing:.05em}
