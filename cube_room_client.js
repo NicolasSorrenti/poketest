@@ -17,11 +17,21 @@
    }
    selector.value=presets.some(p=>p.id===previous)?previous:'balanced';
    showPreset();
+   if(state)showRoomSetBadges();
   }catch{$('cubePresetInfo').textContent='Classic Balanced is available.';}
  }
  function showPreset(){
   const active=presets.find(p=>p.id===$('cubePreset').value);
   if(active)$('cubePresetInfo').textContent=active.description+' · '+active.archetypes.join(' / ');
+  window.CubeSetBadges?.render($('cubePresetSets'),{sets:active?.sets});
+ }
+ function showRoomSetBadges(){
+  const active=presets.find(p=>p.id===state?.preset);
+  const exact=Array.isArray(state?.cubePool);
+  window.CubeSetBadges?.render($('roomPresetSets'),{
+   sets:exact?window.CubeSetBadges.fromPool(state.cubePool):active?.sets,
+   exact
+  });
  }
  const store=()=>sessionStorage.setItem(storageKey,JSON.stringify({code,token}));
  const say=msg=>{$('message').textContent=msg||'';};
@@ -248,6 +258,7 @@
  }
  function render(){
   if(!state)return;
+  showRoomSetBadges();
   const seat=state.seats[state.seat];
   const phase=state.status==='build'?(seat.deckReady?'wait':'build'):state.status;
   const focused=phase==='build';
