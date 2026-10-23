@@ -1,61 +1,12 @@
 {
-  "schemaVersion": 1,
-  "pack": "Neo Campus TCG story CGs — Jinx, Luna and Sol",
-  "created": "2026-10-20",
-  "full": {
-    "width": 1920,
-    "height": 1080,
-    "format": "webp"
-  },
-  "thumb": {
-    "width": 640,
-    "height": 360,
-    "format": "webp"
-  },
-  "scenes": [
-    {
-      "sceneId": "jinx_alma_cross_1",
-      "character": "jinx",
-      "title": "Jinx and Alma — Café Counter",
-      "image": "/rpg-assets/characters/jinx/jinx_alma_cafe.webp",
-      "thumbnail": "/rpg-assets/characters/jinx/thumbs/jinx_alma_cafe.webp",
-      "source": "café_al_atardecer_desafío_y_cariño.png",
-      "description": "Jinx on the café counter while Alma asks her to get down",
-      "status": "original scene illustration",
-      "sha256": "7b915db03e0dd88e10d8e9d0dee9b96d4e29aea39236601ece52940bb44be6c0"
-    },
-    {
-      "sceneId": "jinx_route_3",
-      "character": "jinx",
-      "title": "Jinx — A Quiet Evening",
-      "image": "/rpg-assets/characters/jinx/jinx_unguarded.webp",
-      "thumbnail": "/rpg-assets/characters/jinx/thumbs/jinx_unguarded.webp",
-      "source": "atardecer_punk_junto_al_río.png",
-      "description": "An unusually thoughtful Jinx sits beside the waterfront at sunset",
-      "status": "original scene illustration",
-      "sha256": "db6ba2e2c9faff81bbaccf06b39c0d1f1ae1a92b21b2b7923c524522b733b76a"
-    },
-    {
-      "sceneId": "luna_route_3",
-      "character": "luna",
-      "title": "Luna — The High Shelf",
-      "image": "/rpg-assets/characters/luna/luna_stretch.webp",
-      "thumbnail": "/rpg-assets/characters/luna/thumbs/luna_stretch.webp",
-      "source": "luna_en_la_tienda_de_cartas_mágicas.png",
-      "description": "Luna reaching for the upper shelves in a card shop",
-      "status": "original scene illustration",
-      "sha256": "32acf23d9b2b606716fa4b01dc3a4d1e8267a76ac855b519550c511a49656767"
-    },
-    {
-      "sceneId": "sol_route_1",
-      "character": "sol",
-      "title": "Sol — Waterfront Scavenger Hunt",
-      "image": "/rpg-assets/characters/sol/sol_scavenger_hunt.webp",
-      "thumbnail": "/rpg-assets/characters/sol/thumbs/sol_scavenger_hunt.webp",
-      "source": "invitación_tropical_junto_al_canal.png",
-      "description": "Sol enthusiastically inviting the player along the sunlit waterfront",
-      "status": "original scene illustration",
-      "sha256": "13f3d5f8ab81c1b1fe7a856e7bca380495ee5dd94b38648dfc2fd76ba7ea65d8"
-    }
-  ]
+  "asset": "Camila booster reward",
+  "source_file": "derrota_euf\u00f3rica_en_la_tienda_pok\u00e9mon.png",
+  "game_path": "rpg-assets/characters/camila/events/booster.webp",
+  "format": "WEBP",
+  "dimensions": [
+    768,
+    1024
+  ],
+  "sha256": "371937b384faf72dfc443e49f9b45b1b10e2754e9410152622298bca6e88c4e4",
+  "notes": "Unzip at the repository root so the file lands at the correct game path."
 }
