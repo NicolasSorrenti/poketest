@@ -214,6 +214,22 @@ const server=http.createServer((req,res)=>{
  let url;try{url=new URL(req.url,'http://localhost');}catch{res.writeHead(400).end('Bad request');return;}
  let pathname;try{pathname=decodeURIComponent(url.pathname);}catch{res.writeHead(400).end('Bad request');return;}
  if(pathname.split('/').includes('..')){res.writeHead(403).end('Forbidden');return;}
+ // Account-exclusive character packs: rely on verified Supabase user, not a browser email.
+ if(pathname==='/api/rpg/character-packs'){
+   if(req.method!=='GET')return sendJSON(res,405,{error:'Method not allowed'});
+   const exclusive={barb:new Set(['nicolassorrenti2@gmail.com'])};
+   let verifiedEmail='';
+   if(req.headers.authorization){
+     try{
+       const bearer=rpgDuels.bearer(req.headers.authorization);
+       const user=await rpgDuels.api('/auth/v1/user',bearer);
+       if(user&&typeof user.id==='string'&&user.email_confirmed_at)
+         verifiedEmail=String(user.email||'').trim().toLowerCase();
+     }catch{ /* Authentication failure grants no private content. */ }
+   }
+   const all=require('./rpg_character_packs.generated').packs;
+   return sendJSON(res,200,{packs:all.filter(p=>!exclusive[p.id]||exclusive[p.id].has(verifiedEmail))});
+ }
  if(pathname==='/api/rpg-cloud/config'){
     if(req.method!=='GET')return sendJSON(res,405,{error:'Method not allowed'});
     const rawUrl=process.env.SUPABASE_URL||'';
@@ -240,6 +256,8 @@ const server=http.createServer((req,res)=>{
  if(!(pathname==='/'||/\.(html|js|css|png|jpg|jpeg|svg|webp)$/i.test(pathname)||(/^\/cards\/[a-z0-9_-]+\.json$/i.test(pathname))||pathname==='/rpg-assets/reactions/manifest.json')){res.writeHead(404).end('Not found');return;}
  const publicScripts=new Set(['cube_builder_ui.js','cube_room_client.js','cube_client.js','authentic_decks.js','card_corrections.js','classic_format.js','classic_live.js','core_rules.js','decision_core.js','decision_session.js','duel_quick_ui.js','battle_decision_ui.js','duel_experience_ui.js','battle_presentation_ui.js','duel_shared_components.js','duel_action_rail.js','duel_playmats.js','cube_mat_auth.js','mat_generator.js','match_log_ui.js','rpg_match_chat.js','cube_pool_viewer.js','cube_analysis_ui.js','cube_set_badges.js','rpg_npc_deck_progression.js','rpg_match_reactions.js','rpg_status.js','rpg_discreet.js','rpg_discreet_avatars.js','rpg_cloud_save.js','rpg_deck_studio.js','deck_builder.js','deck_builder_core.js','engine.js','legacy_choice_bridge.js','online.js','target_choice_bridge.js','trainer_rules_v058.js','trainer_rules_v059.js','trainer_rules_v060.js','trainer_rules_v061.js','trainer_rules_v062.js','trainer_rules_v063.js','trainer_rules_v064.js']);
  if(pathname==='/rpg.js'||pathname==='/rpg_narrative_pack.js'||pathname==='/rpg_sol_character.js'||pathname==='/rpg_character_packs.generated.js'||pathname==='/rpg_mandatory_events.js'||pathname==='/rpg_season_events.js'||pathname==='/rpg_side_quests.js'||pathname==='/rpg_bond_chapters.js'||pathname==='/rpg_partner_decks.js'||pathname==='/rpg_partner_deck_studio.js'||pathname==='/rpg_bond_rewards.js'||pathname==='/rpg_conversations.js'||pathname==='/rpg_audio.js'||pathname==='/rpg_render_perf.js'||pathname==='/rpg_legacy_scenes.js'||pathname==='/rpg_story.js'||pathname==='/rpg_schedules.js'||pathname==='/rpg_duel_bridge.js'||pathname==='/rpg_world.js'||pathname==='/rpg_rival_arc.js'||pathname==='/rpg_tournaments.js'||pathname==='/rpg_competitive_loop.js'||pathname==='/rpg_community.js'||pathname==='/rpg_consequences.js'||pathname==='/rpg_strategy.js'||pathname==='/rpg_reactivity.js'||pathname==='/rpg_epilogue.js'||pathname==='/rpg_appointments.js'||pathname==='/rpg_intentions.js'||pathname==='/rpg_cg_gallery.js'||pathname==='/rpg_daily_planner.js'||pathname==='/rpg_social_activities.js'||pathname==='/rpg_planned_dates.js'||pathname==='/rpg_preduel.js'||pathname==='/rpg_situations.js'||pathname==='/rpg_season_journey.js'||pathname==='/rpg_tutorials.js'||pathname==='/rpg_scene_cast.js'||pathname==='/rpg_event_invites.js'||pathname==='/rpg_collection.js'||pathname==='/rpg_dialogue.js'||pathname==='/rpg_time_transitions.js'||pathname==='/rpg_ui_motion.js'||pathname==='/rpg_character_motion.js'||pathname==='/rpg_victory_presentation.js'||pathname==='/rpg_tournament_presentation.js')publicScripts.add(pathname.slice(1));
+ if(pathname==='/rpg_character_packs.generated.js'){res.writeHead(404).end('Not found');return;}
+ if(pathname==='/rpg_character_bootstrap.js')publicScripts.add('rpg_character_bootstrap.js');
  if(pathname.endsWith('.js')&&!publicScripts.has(pathname.slice(1))){res.writeHead(404).end('Not found');return;}
  const target=path.resolve(root,'.'+pathname,pathname.endsWith('/')?'index.html':'');
  if(!target.startsWith(root+path.sep)&&target!==root){res.writeHead(403).end('Forbidden');return;}
