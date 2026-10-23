@@ -1,0 +1,7 @@
+Hana route scene IDs and images:
+hana_route_1 -> hana_too_many_promises.webp
+hana_route_2 -> hana_a_seat_saved.webp
+hana_route_3 -> hana_one_empty_chair.webp
+hana_route_4 -> hana_a_promise_for_tomorrow.webp
+
+Extract at repository root. These are asset files only; story event display requires a code mapping. No repository commit was made.
