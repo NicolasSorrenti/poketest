@@ -64,7 +64,17 @@ const acknowledgeMandatory=async(page)=>{
   assert.equal(await page.locator('#journeyProgress').isVisible(),true);
   await page.keyboard.press('Escape');
   await infoSheet.waitFor({state:'hidden',timeout:5000});
-  await page.setViewportSize({width:1400,height:900});
+  // Mobile: the scrollable toolbar cannot hide the More popup or Discreet switch.
+  await page.locator('#rpgDiscreetToggle').click();
+  assert.equal(await page.locator('html').getAttribute('data-rpg-discreet'),'on');
+  await page.locator('#rpgDiscreetToggle').click();
+  assert.equal(await page.locator('html').getAttribute('data-rpg-discreet'),'off');
+  await page.locator('#rpgMoreMenu > summary').click();
+  assert.equal(await page.locator('.utility-actions').evaluate(el=>getComputedStyle(el).overflowX),'visible');
+  const galleryBounds=await page.locator('#galleryBtn').boundingBox();
+  assert.ok(galleryBounds&&galleryBounds.x>=0&&galleryBounds.x+galleryBounds.width<=361,'More options must fit mobile viewport');
+  await page.locator('#rpgMoreMenu > summary').click();
+    await page.setViewportSize({width:1400,height:900});
   // This is a dedicated page, not the old two-select card-swap popup.
   await page.locator('#rpgInfoToggle').click();
   await page.locator('#rpgPanelTabs button[data-panel="progress"]').click();
@@ -89,12 +99,24 @@ const acknowledgeMandatory=async(page)=>{
   await page.locator('#whereLabel').getByText(/YOU ARE HOME/).waitFor();
   await save(page,'01-home.png');
   // Secondary tools remain accessible after navigation is simplified.
+  // MORE has to escape the horizontally scrollable toolbar at desktop width.
   await page.locator('#rpgMoreMenu > summary').click();
-  await page.locator('#galleryBtn').click();
+  assert.equal(await page.locator('#rpgMoreMenu').evaluate(el=>el.open),true,'More should expand');
+  assert.equal(await page.locator('.utility-actions').evaluate(el=>getComputedStyle(el).overflowX),'visible','More dropdown must not be clipped by toolbar scrolling');
+  const moreGallery=page.locator('#galleryBtn');
+  assert.equal(await moreGallery.isVisible(),true,'Gallery is visible inside More');
+  await moreGallery.click();
   const expectedCharacters=await page.evaluate(()=>new Set(window.NeoRpgCGGallery.catalog.map(e=>e.character)).size);
   assert.equal(await page.locator('#galleryCharacter option').count(),expectedCharacters+1,'Gallery must list every catalog character');
   await page.locator('#galleryClose').click();
   assert.equal(await page.locator('#rpgMoreMenu').evaluate(el=>el.open),false,'More closes after selection');
+  const discreet=page.locator('#rpgDiscreetToggle');
+  assert.equal(await discreet.isVisible(),true,'Discreet toggle must be directly available without opening More');
+  await discreet.click();
+  assert.equal(await page.locator('html').getAttribute('data-rpg-discreet'),'on','Discreet mode can be turned on');
+  await discreet.click();
+  assert.equal(await page.locator('html').getAttribute('data-rpg-discreet'),'off','Discreet mode can be turned back off');
+  assert.equal(await page.evaluate(()=>localStorage.getItem('neoHarborRpgDiscreetV1')),'0','Discreet choice is stored');
   await page.locator('#calendarBtn').click();
   assert.match(await page.locator('#calendarEntries').textContent(),/Day \d+[\s\S]*(Official event|Tournament)/);
   await page.locator('#calendarClose').click();
