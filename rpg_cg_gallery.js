@@ -1021,9 +1021,21 @@
 }
 
 ];
+ // Ambience CGs are separate from scheduled stories and relationship chapters.
+ const SLICE=typeof module==='object'&&module.exports?require('./rpg_slice_of_life'):root?.NeoRpgSliceOfLife;
+ for(const moment of SLICE?.scenes||[])catalog.push({
+  character:moment.npc,id:moment.id,category:'social',trigger:'slice',
+  place:moment.place,minAffection:moment.minAffection,startDay:moment.start,slot:moment.slot,
+  title:moment.title,hint:'Discover this everyday moment at '+moment.place+' while '+moment.npc+' is present.',
+  scene:moment.art.scene,composition:moment.art.composition,outfit:moment.art.outfit,
+  expression:moment.art.expression,environment:moment.art.environment,mood:moment.art.mood,fanservice:0,
+  path:'/rpg-assets/events/cg/slice-life/'+moment.id+'.webp',
+  thumb:'/rpg-assets/events/cg/slice-life/thumbs/'+moment.id+'.webp',
+  dialogueSafe:'Bottom 20% clear for dialogue UI',sliceId:moment.id
+ });
  const categories=Object.freeze(['profile','pre_duel','social','special']);
  const map=new Map(catalog.map(x=>[x.id,x]));
- const validTriggers=new Set(['meet','before_duel','hangout','situation','appointment','story_milestone','after_duel']);
+ const validTriggers=new Set(['meet','before_duel','hangout','situation','slice','appointment','story_milestone','after_duel']);
  function hydrate(state){
   if(!state||typeof state!=='object')throw Error('Invalid campaign state');
   if(!state.cgUnlocked||typeof state.cgUnlocked!=='object'||Array.isArray(state.cgUnlocked))state.cgUnlocked={};
@@ -1057,6 +1069,8 @@
     ||!state.storyDone?.[entry.sceneId]))continue;
    if(trigger==='situation'&&(!context||context.eventId!==entry.situationId
      ||!state.situationDone?.[entry.situationId]))continue;
+   if(trigger==='slice'&&(!context||context.eventId!==entry.sliceId
+     ||!state.sliceOfLifeDone?.[entry.sliceId]))continue;
    state.cgUnlocked[entry.id]={day:state.day,slot:state.slot,trigger};
    unlocked.push(entry);
   }
