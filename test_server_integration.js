@@ -39,13 +39,28 @@ server.listen(0,'127.0.0.1', async () => {
   assert.equal(rpgResponse.status,200,'RPG page must load');
   const rpgHtml=await rpgResponse.text();
   assert.match(rpgHtml,/id="statusBtn"/);
-  assert.match(rpgHtml,/src="\/rpg_status\.js"/);
-  for(const [filename,mime] of [['rpg_status.js',/javascript/],['rpg_status.css',/text\/css/]]){
-   const response=await fetch(url+'/'+filename);
-   assert.equal(response.status,200,filename+' must be served (server public asset allowlist)');
-   assert.match(response.headers.get('content-type')||'',mime);
-   assert.ok((await response.text()).length>150,filename+' must contain the implementation');
+  assert.match(rpgHtml,/src="\/rpg_character_bootstrap\.js"/);
+  const bootstrapResponse=await fetch(url+'/rpg_character_bootstrap.js');
+  assert.equal(bootstrapResponse.status,200,'RPG bootstrap must be served');
+  const bootstrap=await bootstrapResponse.text();
+  // Static source checks cannot spot missing HTTP allowlist entries. Verify
+  // every script requested by the dynamically loaded RPG browser bootstrap.
+  const bootstrapScripts=[...bootstrap.matchAll(/"(\/[^"?]+\.js)(?:\?[^"]*)?"/g)].map(match=>match[1]);
+  assert.ok(bootstrapScripts.length>=30,'RPG browser dependency list must be present');
+  assert.ok(bootstrapScripts.includes('/rpg_slice_of_life.js'),'Daily encounters must load');
+  assert.ok(bootstrapScripts.includes('/rpg.js'),'RPG entrypoint must load');
+  for(const filename of bootstrapScripts){
+   const response=await fetch(url+filename);
+   assert.equal(response.status,200,filename+' must be served (RPG browser bootstrap dependency)');
+   assert.match(response.headers.get('content-type')||'',/javascript/,filename+' must have JS MIME');
+   assert.ok((await response.text()).length>100,filename+' must contain the implementation');
   }
+  const statusCss=await fetch(url+'/rpg_status.css');
+  assert.equal(statusCss.status,200,'RPG status CSS must be served');
+  assert.match(statusCss.headers.get('content-type')||'',/text\/css/);
+  const roster=await fetch(url+'/api/rpg/character-packs');
+  assert.equal(roster.status,200,'RPG character pack bootstrap API must respond');
+  assert.ok(Array.isArray((await roster.json()).packs));
   assert.equal((await fetch(url+'/test_rpg_status.js')).status,404,'RPG test code must remain private');
   for(const filename of ['cards/does-not-exist.json','not-a-real-file']){
    assert.equal((await fetch(url+'/'+filename)).status,404);
