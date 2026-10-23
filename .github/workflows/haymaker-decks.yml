@@ -8,7 +8,7 @@ on:
       - .github/workflows/haymaker-decks.yml
   push:
     branches:
-      - feature/haymaker-basic-decks
+      - feature/haymaker-all-eras
     paths:
       - haymaker_decks.js
       - classic_local_service.js
