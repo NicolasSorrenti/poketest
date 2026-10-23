@@ -2,7 +2,7 @@
 (()=>{
  const $=id=>document.getElementById(id),KEY='neoCampusCustomGymDeck';
  let catalog=[],deck=[],presets=[];const lookup=new Map();
- const names={base1:'Base Set',base2:'Jungle',base3:'Fossil',base4:'Base Set 2',base5:'Team Rocket',gym1:'Gym Heroes',gym2:'Gym Challenge',neo1:'Neo Genesis'};
+ const names={base1:'Base Set',base2:'Jungle',base3:'Fossil',base4:'Base Set 2',base5:'Team Rocket',gym1:'Gym Heroes',gym2:'Gym Challenge',neo1:'Neo Genesis',neo2:'Neo Discovery',neo3:'Neo Revelation',neo4:'Neo Destiny'};
  async function loadJSON(url){const r=await fetch(url);const data=await r.json();if(!r.ok)throw Error(data.error||'Cannot load '+url);return data;}
  const make=(tag,text,cls)=>{const n=document.createElement(tag);if(text!==undefined)n.textContent=text;if(cls)n.className=cls;return n;};
  function apply(id,delta){try{deck=NeoDeckBuilder.change(deck,id,delta,catalog);render();}catch(e){$('validation').textContent=e.message;$('validation').classList.add('error');}}
