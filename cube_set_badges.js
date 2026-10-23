@@ -25,7 +25,7 @@
   const present=new Set(pool.map(card=>String(card?.id||'').split('-')[0]));
   return ORDER.filter(id=>present.has(id));
  }
- function render(target,{sets=[],exact=false}={}){
+ function render(target,{sets=[],exact=false,fixed=false}={}){
   if(!target)return;
   const selected=new Set(Array.isArray(sets)?sets:[]);
   const ids=ORDER.filter(id=>selected.has(id));
@@ -34,7 +34,7 @@
   if(!ids.length)return;
   const title=document.createElement('div');
   title.className='cube-set-caption';
-  title.textContent=exact?'Expansions in this draft':'Expansions available in this Cube';
+  title.textContent=exact?'Expansions in this draft':fixed?'Expansions in this fixed Cube':'Expansions available in this Cube';
   const grid=document.createElement('div');
   grid.className='cube-set-grid';
   grid.setAttribute('role','list');
@@ -53,7 +53,8 @@
   const note=document.createElement('small');
   note.className='cube-set-note';
   note.textContent=exact?
-   'Based on the 240 cards generated for this draft.':
+   'The full 240-card list used for this draft.':
+   fixed?'Fixed 240-card Cube: the card pool stays the same, only the packs are shuffled.':
    'Eligible card printings; the final 240-card selection is randomized.';
   target.append(title,grid,note);
  }
