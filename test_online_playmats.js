@@ -62,7 +62,12 @@ const html=fs.readFileSync(__dirname+'/online.html','utf8');
 const js=fs.readFileSync(__dirname+'/online.js','utf8');
 const server=fs.readFileSync(__dirname+'/server.js','utf8');
 const style=fs.readFileSync(__dirname+'/online_playmats.css','utf8');
+const cubeMatAuth=fs.readFileSync(__dirname+'/cube_mat_auth.js','utf8');
+const classic=fs.readFileSync(__dirname+'/classic_live.js','utf8');
+const classicHtml=fs.readFileSync(__dirname+'/classic_live.html','utf8');
 new vm.Script(js,{filename:'online.js'});
+new vm.Script(cubeMatAuth,{filename:'cube_mat_auth.js'});
+new vm.Script(classic,{filename:'classic_live.js'});
 for(const id of ['onlinePlaymatSelect','onlinePlaymatControl','onlinePlaymatStatus'])
  assert(html.includes('id="'+id+'"'),id+' must appear in the online page');
 assert.match(server,/online\.setPlaymat/);
@@ -74,6 +79,14 @@ assert(server.includes('online.setPlaymat(body.code,token,body,canEdit)'),'Serve
 assert(js.includes('checkCubeMatPermission('),'Cube permission gates UI controls');
 assert(js.includes('cubeMatBearer('),'Authorized Cube owner authenticates changes');
 assert(js.includes('online-mat-studio'),'Studio link must be hidden in non-owner Cube matches');
+assert(server.includes("'/api/cube-room/mat-permission'"),'CPU tournament duel uses a protected owner-permission endpoint');
+assert(classic.includes('checkCubeMatOwner('),'Cube CPU games validate owner permissions');
+assert(classic.includes("matSelect.disabled=locked"),'Cube CPU game playmat picker is disabled for non-owner players');
+assert(classic.includes("duel-playmat-editor"),'Cube CPU game Studio link is hidden for non-owners');
+assert(classicHtml.includes('cube_mat_auth.js'),'CPU battle loads shared account authorization bridge');
+assert(html.includes('cube_mat_auth.js'),'Online battle loads shared account authorization bridge');
+assert(cubeMatAuth.includes("OWNER_EMAIL='nicolassorrenti2@gmail.com'"),'Both duel screens use the requested account');
+assert(cubeMatAuth.includes('grant_type=refresh_token'),'Owner can renew an expired authenticated session');
 assert.match(js,/updateDisplayedMats\(state\)/,'Room polling notices purely visual mat revisions');
 assert.match(js,/window\.addEventListener\('storage'/,'Studio changes propagate to the match');
 assert.match(js,/function encodeMat/,'Client compresses its own image');
