@@ -35,5 +35,5 @@
       ]
     }
   },
-  "notes": "Added based on the Sol character bible referenced in the repository and the generated assets from this conversation."
+  "notes": "Added based on the Sol character bible referenced in the repository and the generated assets from this conversation. Asset paths should be checked against repository inventory before removing duplicates."
 }
