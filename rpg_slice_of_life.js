@@ -1,0 +1,832 @@
+'use strict';
+// Non-story, short ambient encounters. Artwork is independently installed by ID.
+// No time/focus cost, automatic once per scene and at most once per in-game day.
+(function(root,factory){
+ const api=factory();
+ if(typeof module==='object'&&module.exports)module.exports=api;
+ if(root)root.NeoRpgSliceOfLife=api;
+})(typeof window!=='undefined'?window:null,function(){
+ const scenes=[
+  {
+    "id": "hana_the_crooked_display",
+    "npc": "hana",
+    "place": "shop",
+    "slot": 0,
+    "start": 3,
+    "end": 90,
+    "minAffection": 0,
+    "trigger": "entry",
+    "title": "The Crooked Display",
+    "intro": "Hana is standing on tiptoe, trying to straighten a handmade sign above the starter decks.",
+    "line": "It was straight five minutes ago. The shop has a personal grudge against my handwriting.",
+    "close": "You hold the corner while she fixes the tape. She steps down, inspects it, and gives you a grateful little salute.",
+    "art": {
+      "scene": "Hana is standing on tiptoe, trying to straighten a handmade sign above the starter decks. It was straight five minutes ago. The shop has a personal grudge against my handwriting.",
+      "composition": "Single cinematic 16:9 game CG, character prominent, lower fifth clear for dialogue.",
+      "outfit": "Use canonical character bible and a casual outfit suited to the location.",
+      "expression": "Natural, character-specific slice-of-life expression.",
+      "environment": "shop",
+      "mood": "everyday",
+      "fanservice": 0
+    }
+  },
+  {
+    "id": "hana_the_last_cup",
+    "npc": "hana",
+    "place": "cafe",
+    "slot": 2,
+    "start": 24,
+    "end": 90,
+    "minAffection": 2,
+    "trigger": "talk",
+    "title": "The Last Cup",
+    "intro": "Hana has claimed a quiet corner table, her hair bow beside a nearly empty mug.",
+    "line": "I told everyone I was off duty, so naturally somebody asked where we keep the sleeves.",
+    "close": "She offers you the chair across from her. For a few minutes, neither of you has anywhere to be.",
+    "art": {
+      "scene": "Hana has claimed a quiet corner table, her hair bow beside a nearly empty mug. I told everyone I was off duty, so naturally somebody asked where we keep the sleeves.",
+      "composition": "Single cinematic 16:9 game CG, character prominent, lower fifth clear for dialogue.",
+      "outfit": "Use canonical character bible and a casual outfit suited to the location.",
+      "expression": "Natural, character-specific slice-of-life expression.",
+      "environment": "cafe",
+      "mood": "intimate",
+      "fanservice": 0
+    }
+  },
+  {
+    "id": "reina_a_rare_laugh",
+    "npc": "reina",
+    "place": "center",
+    "slot": 1,
+    "start": 5,
+    "end": 90,
+    "minAffection": 0,
+    "trigger": "entry",
+    "title": "A Rare Laugh",
+    "intro": "Reina loses an argument with the practice-room vending machine; two bottles drop instead of one.",
+    "line": "Don't even think about calling that a tactical victory. It was clearly a misplay.",
+    "close": "She gives you the second bottle, and the brief smile she tries to hide is worth more than a rematch.",
+    "art": {
+      "scene": "Reina loses an argument with the practice-room vending machine; two bottles drop instead of one. Don't even think about calling that a tactical victory. It was clearly a misplay.",
+      "composition": "Single cinematic 16:9 game CG, character prominent, lower fifth clear for dialogue.",
+      "outfit": "Use canonical character bible and a casual outfit suited to the location.",
+      "expression": "Natural, character-specific slice-of-life expression.",
+      "environment": "center",
+      "mood": "everyday",
+      "fanservice": 0
+    }
+  },
+  {
+    "id": "reina_the_quiet_table",
+    "npc": "reina",
+    "place": "shop",
+    "slot": 0,
+    "start": 32,
+    "end": 90,
+    "minAffection": 2,
+    "trigger": "talk",
+    "title": "The Quiet Table",
+    "intro": "Reina is at a table with no cards laid out, tracing a circle around a chipped spot in the wood.",
+    "line": "I come here sometimes without a deck. Don't make it into an inspiring speech.",
+    "close": "She admits she likes the shop best before the matches begin, when there is no one left to impress.",
+    "art": {
+      "scene": "Reina is at a table with no cards laid out, tracing a circle around a chipped spot in the wood. I come here sometimes without a deck. Don't make it into an inspiring speech.",
+      "composition": "Single cinematic 16:9 game CG, character prominent, lower fifth clear for dialogue.",
+      "outfit": "Use canonical character bible and a casual outfit suited to the location.",
+      "expression": "Natural, character-specific slice-of-life expression.",
+      "environment": "shop",
+      "mood": "intimate",
+      "fanservice": 0
+    }
+  },
+  {
+    "id": "shiori_the_unreturned_bookmark",
+    "npc": "shiori",
+    "place": "library",
+    "slot": 1,
+    "start": 4,
+    "end": 90,
+    "minAffection": 0,
+    "trigger": "entry",
+    "title": "The Unreturned Bookmark",
+    "intro": "A carefully pressed flower slides from Shiori's borrowed book and lands at your feet.",
+    "line": "That is not a clue to a mystery. It's a bookmark. Although I suppose it does have a story.",
+    "close": "She takes it gently and tells you about the person who gave it to her years ago.",
+    "art": {
+      "scene": "A carefully pressed flower slides from Shiori's borrowed book and lands at your feet. That is not a clue to a mystery. It's a bookmark. Although I suppose it does have a story.",
+      "composition": "Single cinematic 16:9 game CG, character prominent, lower fifth clear for dialogue.",
+      "outfit": "Use canonical character bible and a casual outfit suited to the location.",
+      "expression": "Natural, character-specific slice-of-life expression.",
+      "environment": "library",
+      "mood": "everyday",
+      "fanservice": 0
+    }
+  },
+  {
+    "id": "shiori_an_unfinished_sketch",
+    "npc": "shiori",
+    "place": "cafe",
+    "slot": 0,
+    "start": 27,
+    "end": 90,
+    "minAffection": 2,
+    "trigger": "talk",
+    "title": "An Unfinished Sketch",
+    "intro": "Shiori turns a napkin over before you can see the tiny sketch on its back.",
+    "line": "It's the café window. I was trying to remember how the light falls before it disappears.",
+    "close": "She lets you look after all, then draws an extra chair at the little table in the picture.",
+    "art": {
+      "scene": "Shiori turns a napkin over before you can see the tiny sketch on its back. It's the café window. I was trying to remember how the light falls before it disappears.",
+      "composition": "Single cinematic 16:9 game CG, character prominent, lower fifth clear for dialogue.",
+      "outfit": "Use canonical character bible and a casual outfit suited to the location.",
+      "expression": "Natural, character-specific slice-of-life expression.",
+      "environment": "cafe",
+      "mood": "intimate",
+      "fanservice": 0
+    }
+  },
+  {
+    "id": "yuna_the_prize_counter",
+    "npc": "yuna",
+    "place": "arcade",
+    "slot": 2,
+    "start": 4,
+    "end": 90,
+    "minAffection": 0,
+    "trigger": "entry",
+    "title": "The Prize Counter",
+    "intro": "Yuna is surrounded by tickets from an arcade machine she insists she has beaten fairly.",
+    "line": "If the prize is a rubber duck, it will become my official team mascot. No appeals.",
+    "close": "The duck is smaller than expected. Yuna presents it to you with full tournament ceremony.",
+    "art": {
+      "scene": "Yuna is surrounded by tickets from an arcade machine she insists she has beaten fairly. If the prize is a rubber duck, it will become my official team mascot. No appeals.",
+      "composition": "Single cinematic 16:9 game CG, character prominent, lower fifth clear for dialogue.",
+      "outfit": "Use canonical character bible and a casual outfit suited to the location.",
+      "expression": "Natural, character-specific slice-of-life expression.",
+      "environment": "arcade",
+      "mood": "everyday",
+      "fanservice": 0
+    }
+  },
+  {
+    "id": "yuna_the_sticker_situation",
+    "npc": "yuna",
+    "place": "shop",
+    "slot": 0,
+    "start": 23,
+    "end": 90,
+    "minAffection": 2,
+    "trigger": "talk",
+    "title": "The Sticker Situation",
+    "intro": "Yuna has stuck tiny stars all over her deck box and accidentally decorated her sleeve as well.",
+    "line": "Don't tell anyone I need help. I'm establishing a reputation for artistic genius.",
+    "close": "You peel off the last star together, and she secretly leaves one on your own deck case.",
+    "art": {
+      "scene": "Yuna has stuck tiny stars all over her deck box and accidentally decorated her sleeve as well. Don't tell anyone I need help. I'm establishing a reputation for artistic genius.",
+      "composition": "Single cinematic 16:9 game CG, character prominent, lower fifth clear for dialogue.",
+      "outfit": "Use canonical character bible and a casual outfit suited to the location.",
+      "expression": "Natural, character-specific slice-of-life expression.",
+      "environment": "shop",
+      "mood": "intimate",
+      "fanservice": 0
+    }
+  },
+  {
+    "id": "akari_data_versus_breakfast",
+    "npc": "akari",
+    "place": "library",
+    "slot": 0,
+    "start": 5,
+    "end": 90,
+    "minAffection": 0,
+    "trigger": "entry",
+    "title": "Data Versus Breakfast",
+    "intro": "Akari's neat research table includes three charts, a calculator, and a completely forgotten pastry.",
+    "line": "I scheduled breakfast. I forgot that eating it was a separate step.",
+    "close": "She closes the spreadsheet and asks whether you know anywhere nearby that serves actual food.",
+    "art": {
+      "scene": "Akari's neat research table includes three charts, a calculator, and a completely forgotten pastry. I scheduled breakfast. I forgot that eating it was a separate step.",
+      "composition": "Single cinematic 16:9 game CG, character prominent, lower fifth clear for dialogue.",
+      "outfit": "Use canonical character bible and a casual outfit suited to the location.",
+      "expression": "Natural, character-specific slice-of-life expression.",
+      "environment": "library",
+      "mood": "everyday",
+      "fanservice": 0
+    }
+  },
+  {
+    "id": "akari_the_noncompetitive_experiment",
+    "npc": "akari",
+    "place": "center",
+    "slot": 1,
+    "start": 36,
+    "end": 90,
+    "minAffection": 2,
+    "trigger": "talk",
+    "title": "The Noncompetitive Experiment",
+    "intro": "Akari asks you to help her measure how long it takes people to notice a change in the noticeboard.",
+    "line": "A perfectly harmless study. No prizes, no ranking, and absolutely no sample-size argument.",
+    "close": "When the results prove nothing, she laughs and says she might be learning to appreciate that.",
+    "art": {
+      "scene": "Akari asks you to help her measure how long it takes people to notice a change in the noticeboard. A perfectly harmless study. No prizes, no ranking, and absolutely no sample-size argument.",
+      "composition": "Single cinematic 16:9 game CG, character prominent, lower fifth clear for dialogue.",
+      "outfit": "Use canonical character bible and a casual outfit suited to the location.",
+      "expression": "Natural, character-specific slice-of-life expression.",
+      "environment": "center",
+      "mood": "intimate",
+      "fanservice": 0
+    }
+  },
+  {
+    "id": "camila_a_card_with_a_story",
+    "npc": "camila",
+    "place": "shop",
+    "slot": 1,
+    "start": 5,
+    "end": 90,
+    "minAffection": 0,
+    "trigger": "entry",
+    "title": "A Card With a Story",
+    "intro": "Camila pauses while pricing a battered card, running her thumb over the sleeve's worn edge.",
+    "line": "The market says it's nearly worthless. The owner says it's irreplaceable. The owner wins.",
+    "close": "She sets it back in the binder without a price tag, and trusts you with the story behind it.",
+    "art": {
+      "scene": "Camila pauses while pricing a battered card, running her thumb over the sleeve's worn edge. The market says it's nearly worthless. The owner says it's irreplaceable. The owner wins.",
+      "composition": "Single cinematic 16:9 game CG, character prominent, lower fifth clear for dialogue.",
+      "outfit": "Use canonical character bible and a casual outfit suited to the location.",
+      "expression": "Natural, character-specific slice-of-life expression.",
+      "environment": "shop",
+      "mood": "everyday",
+      "fanservice": 0
+    }
+  },
+  {
+    "id": "camila_the_unsuccessful_bargain",
+    "npc": "camila",
+    "place": "cafe",
+    "slot": 2,
+    "start": 27,
+    "end": 90,
+    "minAffection": 2,
+    "trigger": "talk",
+    "title": "The Unsuccessful Bargain",
+    "intro": "Camila has been negotiating with a café owner over the last slice of cake.",
+    "line": "Apparently charm is not accepted as legal tender after closing time. Tragic.",
+    "close": "She orders two coffees instead, then pushes one toward you as though that was the plan all along.",
+    "art": {
+      "scene": "Camila has been negotiating with a café owner over the last slice of cake. Apparently charm is not accepted as legal tender after closing time. Tragic.",
+      "composition": "Single cinematic 16:9 game CG, character prominent, lower fifth clear for dialogue.",
+      "outfit": "Use canonical character bible and a casual outfit suited to the location.",
+      "expression": "Natural, character-specific slice-of-life expression.",
+      "environment": "cafe",
+      "mood": "intimate",
+      "fanservice": 0
+    }
+  },
+  {
+    "id": "marina_the_ferry_s_wake",
+    "npc": "marina",
+    "place": "park",
+    "slot": 0,
+    "start": 4,
+    "end": 90,
+    "minAffection": 0,
+    "trigger": "entry",
+    "title": "The Ferry's Wake",
+    "intro": "Marina has stopped along the riverside to watch the patterns left behind by a departing ferry.",
+    "line": "Every boat leaves a different wake. That sounds poetic, but mostly I just like watching them.",
+    "close": "You stand beside her until the ripples reach the bank and vanish into the reeds.",
+    "art": {
+      "scene": "Marina has stopped along the riverside to watch the patterns left behind by a departing ferry. Every boat leaves a different wake. That sounds poetic, but mostly I just like watching them.",
+      "composition": "Single cinematic 16:9 game CG, character prominent, lower fifth clear for dialogue.",
+      "outfit": "Use canonical character bible and a casual outfit suited to the location.",
+      "expression": "Natural, character-specific slice-of-life expression.",
+      "environment": "park",
+      "mood": "everyday",
+      "fanservice": 0
+    }
+  },
+  {
+    "id": "marina_the_map_with_no_destination",
+    "npc": "marina",
+    "place": "cafe",
+    "slot": 1,
+    "start": 31,
+    "end": 90,
+    "minAffection": 2,
+    "trigger": "talk",
+    "title": "The Map With No Destination",
+    "intro": "Marina has drawn a little map of the riverside on the back of a receipt.",
+    "line": "There's a bench nobody seems to use. I thought we could walk past it sometime.",
+    "close": "She marks the spot with a blue star and asks you to keep the map until the next sunny day.",
+    "art": {
+      "scene": "Marina has drawn a little map of the riverside on the back of a receipt. There's a bench nobody seems to use. I thought we could walk past it sometime.",
+      "composition": "Single cinematic 16:9 game CG, character prominent, lower fifth clear for dialogue.",
+      "outfit": "Use canonical character bible and a casual outfit suited to the location.",
+      "expression": "Natural, character-specific slice-of-life expression.",
+      "environment": "cafe",
+      "mood": "intimate",
+      "fanservice": 0
+    }
+  },
+  {
+    "id": "kaede_the_sound_check",
+    "npc": "kaede",
+    "place": "arcade",
+    "slot": 1,
+    "start": 42,
+    "end": 90,
+    "minAffection": 0,
+    "trigger": "entry",
+    "title": "The Sound Check",
+    "intro": "Kaede is fixing a loose cable on an arcade cabinet while its music loops the same two notes.",
+    "line": "If this thing plays that chorus one more time, I'm challenging it to a duel.",
+    "close": "The machine finally plays the right melody. Kaede pretends the triumphant grin wasn't hers.",
+    "art": {
+      "scene": "Kaede is fixing a loose cable on an arcade cabinet while its music loops the same two notes. If this thing plays that chorus one more time, I'm challenging it to a duel.",
+      "composition": "Single cinematic 16:9 game CG, character prominent, lower fifth clear for dialogue.",
+      "outfit": "Use canonical character bible and a casual outfit suited to the location.",
+      "expression": "Natural, character-specific slice-of-life expression.",
+      "environment": "arcade",
+      "mood": "everyday",
+      "fanservice": 0
+    }
+  },
+  {
+    "id": "kaede_the_patch_on_her_jacket",
+    "npc": "kaede",
+    "place": "park",
+    "slot": 2,
+    "start": 58,
+    "end": 90,
+    "minAffection": 2,
+    "trigger": "talk",
+    "title": "The Patch on Her Jacket",
+    "intro": "Kaede has taken off her jacket to repair a small torn patch under a park lamp.",
+    "line": "It was a gift from someone who'd hate how sentimental I'm being right now.",
+    "close": "She lets you hold the thread while she finishes, then slips the jacket back on without another joke.",
+    "art": {
+      "scene": "Kaede has taken off her jacket to repair a small torn patch under a park lamp. It was a gift from someone who'd hate how sentimental I'm being right now.",
+      "composition": "Single cinematic 16:9 game CG, character prominent, lower fifth clear for dialogue.",
+      "outfit": "Use canonical character bible and a casual outfit suited to the location.",
+      "expression": "Natural, character-specific slice-of-life expression.",
+      "environment": "park",
+      "mood": "intimate",
+      "fanservice": 0
+    }
+  },
+  {
+    "id": "elena_an_unscheduled_pause",
+    "npc": "elena",
+    "place": "center",
+    "slot": 0,
+    "start": 13,
+    "end": 90,
+    "minAffection": 0,
+    "trigger": "entry",
+    "title": "An Unscheduled Pause",
+    "intro": "Elena's agenda is open on the center table. Between two meetings she has written: ten minutes outside.",
+    "line": "No, I haven't forgotten an appointment. I'm attempting a completely deliberate break.",
+    "close": "She folds the planner shut and spends those ten minutes looking at the sunlight with you.",
+    "art": {
+      "scene": "Elena's agenda is open on the center table. Between two meetings she has written: ten minutes outside. No, I haven't forgotten an appointment. I'm attempting a completely deliberate break.",
+      "composition": "Single cinematic 16:9 game CG, character prominent, lower fifth clear for dialogue.",
+      "outfit": "Use canonical character bible and a casual outfit suited to the location.",
+      "expression": "Natural, character-specific slice-of-life expression.",
+      "environment": "center",
+      "mood": "everyday",
+      "fanservice": 0
+    }
+  },
+  {
+    "id": "elena_the_wrong_order",
+    "npc": "elena",
+    "place": "cafe",
+    "slot": 1,
+    "start": 33,
+    "end": 90,
+    "minAffection": 2,
+    "trigger": "talk",
+    "title": "The Wrong Order",
+    "intro": "Elena studies a cup of tea that the server has mistaken for her usual order.",
+    "line": "I could correct it. But I think I'd rather find out what I have been missing.",
+    "close": "She takes a careful sip, looks almost surprised by her own smile, and orders the same tea again.",
+    "art": {
+      "scene": "Elena studies a cup of tea that the server has mistaken for her usual order. I could correct it. But I think I'd rather find out what I have been missing.",
+      "composition": "Single cinematic 16:9 game CG, character prominent, lower fifth clear for dialogue.",
+      "outfit": "Use canonical character bible and a casual outfit suited to the location.",
+      "expression": "Natural, character-specific slice-of-life expression.",
+      "environment": "cafe",
+      "mood": "intimate",
+      "fanservice": 0
+    }
+  },
+  {
+    "id": "jinx_lost_safety_pin",
+    "npc": "jinx",
+    "place": "arcade",
+    "slot": 1,
+    "start": 15,
+    "end": 90,
+    "minAffection": 0,
+    "trigger": "entry",
+    "title": "Lost Safety Pin",
+    "intro": "Jinx is crouched beside an arcade machine, searching for a silver pin from her favorite jacket.",
+    "line": "Before you ask, yes, I could buy another. That's not the point.",
+    "close": "You spot it by a table leg. She fastens it back on and gives you a rare, unguarded thank-you.",
+    "art": {
+      "scene": "Jinx is crouched beside an arcade machine, searching for a silver pin from her favorite jacket. Before you ask, yes, I could buy another. That's not the point.",
+      "composition": "Single cinematic 16:9 game CG, character prominent, lower fifth clear for dialogue.",
+      "outfit": "Use canonical character bible and a casual outfit suited to the location.",
+      "expression": "Natural, character-specific slice-of-life expression.",
+      "environment": "arcade",
+      "mood": "everyday",
+      "fanservice": 0
+    }
+  },
+  {
+    "id": "jinx_a_shared_playlist",
+    "npc": "jinx",
+    "place": "park",
+    "slot": 1,
+    "start": 39,
+    "end": 90,
+    "minAffection": 2,
+    "trigger": "talk",
+    "title": "A Shared Playlist",
+    "intro": "Jinx has one earbud in and is tapping a combat-boot heel against the riverside railing.",
+    "line": "It's not a love song. It's a really good bass line. There is a difference.",
+    "close": "She offers you the other earbud and waits to see whether you notice the chorus she loves.",
+    "art": {
+      "scene": "Jinx has one earbud in and is tapping a combat-boot heel against the riverside railing. It's not a love song. It's a really good bass line. There is a difference.",
+      "composition": "Single cinematic 16:9 game CG, character prominent, lower fifth clear for dialogue.",
+      "outfit": "Use canonical character bible and a casual outfit suited to the location.",
+      "expression": "Natural, character-specific slice-of-life expression.",
+      "environment": "park",
+      "mood": "intimate",
+      "fanservice": 0
+    }
+  },
+  {
+    "id": "laca_the_familiar_shortcut",
+    "npc": "laca",
+    "place": "park",
+    "slot": 0,
+    "start": 10,
+    "end": 90,
+    "minAffection": 0,
+    "trigger": "entry",
+    "title": "The Familiar Shortcut",
+    "intro": "Laca is trying to remember which path you used to race down when you were kids.",
+    "line": "I swear it used to be shorter. Either that, or we were much better at running.",
+    "close": "She takes the long route anyway, pointing out all the things that have changed since then.",
+    "art": {
+      "scene": "Laca is trying to remember which path you used to race down when you were kids. I swear it used to be shorter. Either that, or we were much better at running.",
+      "composition": "Single cinematic 16:9 game CG, character prominent, lower fifth clear for dialogue.",
+      "outfit": "Use canonical character bible and a casual outfit suited to the location.",
+      "expression": "Natural, character-specific slice-of-life expression.",
+      "environment": "park",
+      "mood": "everyday",
+      "fanservice": 0
+    }
+  },
+  {
+    "id": "laca_the_honest_opinion",
+    "npc": "laca",
+    "place": "cafe",
+    "slot": 2,
+    "start": 51,
+    "end": 90,
+    "minAffection": 2,
+    "trigger": "talk",
+    "title": "The Honest Opinion",
+    "intro": "Laca has brought two jackets to the café and wants a ruling before tomorrow's outing.",
+    "line": "Don't say they both look good. You're my oldest friend; I need an actual answer.",
+    "close": "When you choose one, she smiles at how quickly you remembered the colors she likes.",
+    "art": {
+      "scene": "Laca has brought two jackets to the café and wants a ruling before tomorrow's outing. Don't say they both look good. You're my oldest friend; I need an actual answer.",
+      "composition": "Single cinematic 16:9 game CG, character prominent, lower fifth clear for dialogue.",
+      "outfit": "Use canonical character bible and a casual outfit suited to the location.",
+      "expression": "Natural, character-specific slice-of-life expression.",
+      "environment": "cafe",
+      "mood": "intimate",
+      "fanservice": 0
+    }
+  },
+  {
+    "id": "luna_the_bookmark_avalanche",
+    "npc": "luna",
+    "place": "library",
+    "slot": 0,
+    "start": 17,
+    "end": 90,
+    "minAffection": 0,
+    "trigger": "entry",
+    "title": "The Bookmark Avalanche",
+    "intro": "A handful of bookmarks scatter over the library floor as Luna opens a book upside down.",
+    "line": "I promise I was being organized five seconds ago. Maybe four.",
+    "close": "You help sort them by color; she is delighted to discover that one has a tiny drawing on the back.",
+    "art": {
+      "scene": "A handful of bookmarks scatter over the library floor as Luna opens a book upside down. I promise I was being organized five seconds ago. Maybe four.",
+      "composition": "Single cinematic 16:9 game CG, character prominent, lower fifth clear for dialogue.",
+      "outfit": "Use canonical character bible and a casual outfit suited to the location.",
+      "expression": "Natural, character-specific slice-of-life expression.",
+      "environment": "library",
+      "mood": "everyday",
+      "fanservice": 0
+    }
+  },
+  {
+    "id": "luna_the_courage_to_ask",
+    "npc": "luna",
+    "place": "cafe",
+    "slot": 1,
+    "start": 44,
+    "end": 90,
+    "minAffection": 2,
+    "trigger": "talk",
+    "title": "The Courage to Ask",
+    "intro": "Luna is standing at the counter, rehearsing how to request a different table.",
+    "line": "Would you come with me? I know it's a little thing, but I'd like to ask for myself.",
+    "close": "She gets the quieter seat she wanted and celebrates with the smallest victorious fist pump.",
+    "art": {
+      "scene": "Luna is standing at the counter, rehearsing how to request a different table. Would you come with me? I know it's a little thing, but I'd like to ask for myself.",
+      "composition": "Single cinematic 16:9 game CG, character prominent, lower fifth clear for dialogue.",
+      "outfit": "Use canonical character bible and a casual outfit suited to the location.",
+      "expression": "Natural, character-specific slice-of-life expression.",
+      "environment": "cafe",
+      "mood": "intimate",
+      "fanservice": 0
+    }
+  },
+  {
+    "id": "rina_the_offstage_warm_up",
+    "npc": "rina",
+    "place": "arcade",
+    "slot": 0,
+    "start": 11,
+    "end": 90,
+    "minAffection": 0,
+    "trigger": "entry",
+    "title": "The Offstage Warm-Up",
+    "intro": "Rina is quietly practicing a vocal exercise behind the arcade, hoping the machines will cover the sound.",
+    "line": "I can perform for a crowd. Somehow humming for one person is scarier.",
+    "close": "She finishes the phrase and gives you a shy bow that turns into a laugh.",
+    "art": {
+      "scene": "Rina is quietly practicing a vocal exercise behind the arcade, hoping the machines will cover the sound. I can perform for a crowd. Somehow humming for one person is scarier.",
+      "composition": "Single cinematic 16:9 game CG, character prominent, lower fifth clear for dialogue.",
+      "outfit": "Use canonical character bible and a casual outfit suited to the location.",
+      "expression": "Natural, character-specific slice-of-life expression.",
+      "environment": "arcade",
+      "mood": "everyday",
+      "fanservice": 0
+    }
+  },
+  {
+    "id": "rina_a_song_without_an_audience",
+    "npc": "rina",
+    "place": "park",
+    "slot": 1,
+    "start": 37,
+    "end": 90,
+    "minAffection": 2,
+    "trigger": "talk",
+    "title": "A Song Without an Audience",
+    "intro": "Rina has a notebook open on her knees and keeps crossing out the same lyric.",
+    "line": "It doesn't need to sound like a hit. I want it to sound like something I'd actually say.",
+    "close": "She reads the new line to you without singing it, then keeps it instead of crossing it out.",
+    "art": {
+      "scene": "Rina has a notebook open on her knees and keeps crossing out the same lyric. It doesn't need to sound like a hit. I want it to sound like something I'd actually say.",
+      "composition": "Single cinematic 16:9 game CG, character prominent, lower fifth clear for dialogue.",
+      "outfit": "Use canonical character bible and a casual outfit suited to the location.",
+      "expression": "Natural, character-specific slice-of-life expression.",
+      "environment": "park",
+      "mood": "intimate",
+      "fanservice": 0
+    }
+  },
+  {
+    "id": "sierra_five_minutes_without_cameras",
+    "npc": "sierra",
+    "place": "cafe",
+    "slot": 1,
+    "start": 21,
+    "end": 90,
+    "minAffection": 0,
+    "trigger": "entry",
+    "title": "Five Minutes Without Cameras",
+    "intro": "Sierra has slipped into a quiet café booth still carrying the bag from a photoshoot.",
+    "line": "Please tell me you didn't come to ask for a pose. I have exactly five minutes to be invisible.",
+    "close": "You sit opposite her. She relaxes enough to start telling you about her day on her own terms.",
+    "art": {
+      "scene": "Sierra has slipped into a quiet café booth still carrying the bag from a photoshoot. Please tell me you didn't come to ask for a pose. I have exactly five minutes to be invisible.",
+      "composition": "Single cinematic 16:9 game CG, character prominent, lower fifth clear for dialogue.",
+      "outfit": "Use canonical character bible and a casual outfit suited to the location.",
+      "expression": "Natural, character-specific slice-of-life expression.",
+      "environment": "cafe",
+      "mood": "everyday",
+      "fanservice": 0
+    }
+  },
+  {
+    "id": "sierra_a_photo_for_herself",
+    "npc": "sierra",
+    "place": "park",
+    "slot": 0,
+    "start": 45,
+    "end": 90,
+    "minAffection": 2,
+    "trigger": "talk",
+    "title": "A Photo for Herself",
+    "intro": "Sierra has her phone propped against a tree, trying to photograph the sunlight on the river.",
+    "line": "This one's not for work. Nobody gets to approve it but me.",
+    "close": "She takes the picture, shows it to you with obvious pride, and pockets the phone instead of posting.",
+    "art": {
+      "scene": "Sierra has her phone propped against a tree, trying to photograph the sunlight on the river. This one's not for work. Nobody gets to approve it but me.",
+      "composition": "Single cinematic 16:9 game CG, character prominent, lower fifth clear for dialogue.",
+      "outfit": "Use canonical character bible and a casual outfit suited to the location.",
+      "expression": "Natural, character-specific slice-of-life expression.",
+      "environment": "park",
+      "mood": "intimate",
+      "fanservice": 0
+    }
+  },
+  {
+    "id": "sol_a_very_serious_picnic",
+    "npc": "sol",
+    "place": "park",
+    "slot": 0,
+    "start": 10,
+    "end": 90,
+    "minAffection": 0,
+    "trigger": "entry",
+    "title": "A Very Serious Picnic",
+    "intro": "Sol is arranging three snacks on a bench as though preparing a formal banquet.",
+    "line": "The third one is for whoever admits they forgot breakfast. I have a strong suspect.",
+    "close": "She slides a wrapped pastry toward you, pleased that a simple morning has gone according to plan.",
+    "art": {
+      "scene": "Sol is arranging three snacks on a bench as though preparing a formal banquet. The third one is for whoever admits they forgot breakfast. I have a strong suspect.",
+      "composition": "Single cinematic 16:9 game CG, character prominent, lower fifth clear for dialogue.",
+      "outfit": "Use canonical character bible and a casual outfit suited to the location.",
+      "expression": "Natural, character-specific slice-of-life expression.",
+      "environment": "park",
+      "mood": "everyday",
+      "fanservice": 0
+    }
+  },
+  {
+    "id": "sol_the_dance_machine_challenge",
+    "npc": "sol",
+    "place": "arcade",
+    "slot": 1,
+    "start": 34,
+    "end": 90,
+    "minAffection": 2,
+    "trigger": "talk",
+    "title": "The Dance Machine Challenge",
+    "intro": "Sol has stepped off a rhythm game, laughing too hard to look at the score.",
+    "line": "I was robbed. By my own feet, apparently, but robbed nonetheless.",
+    "close": "She asks you to pick the next song, and promises not to blame you if she loses again.",
+    "art": {
+      "scene": "Sol has stepped off a rhythm game, laughing too hard to look at the score. I was robbed. By my own feet, apparently, but robbed nonetheless.",
+      "composition": "Single cinematic 16:9 game CG, character prominent, lower fifth clear for dialogue.",
+      "outfit": "Use canonical character bible and a casual outfit suited to the location.",
+      "expression": "Natural, character-specific slice-of-life expression.",
+      "environment": "arcade",
+      "mood": "intimate",
+      "fanservice": 0
+    }
+  },
+  {
+    "id": "alma_before_the_caf_opens",
+    "npc": "alma",
+    "place": "cafe",
+    "slot": 0,
+    "start": 5,
+    "end": 90,
+    "minAffection": 0,
+    "trigger": "entry",
+    "title": "Before the Café Opens",
+    "intro": "Alma is wiping down the same clean counter while the first kettle warms.",
+    "line": "It's peaceful before the chairs start arguing with me. Want the first cup?",
+    "close": "She sets out two mugs and enjoys the quiet until the front bell finally rings.",
+    "art": {
+      "scene": "Alma is wiping down the same clean counter while the first kettle warms. It's peaceful before the chairs start arguing with me. Want the first cup?",
+      "composition": "Single cinematic 16:9 game CG, character prominent, lower fifth clear for dialogue.",
+      "outfit": "Use canonical character bible and a casual outfit suited to the location.",
+      "expression": "Natural, character-specific slice-of-life expression.",
+      "environment": "cafe",
+      "mood": "everyday",
+      "fanservice": 0
+    }
+  },
+  {
+    "id": "alma_the_handwritten_menu",
+    "npc": "alma",
+    "place": "cafe",
+    "slot": 1,
+    "start": 29,
+    "end": 90,
+    "minAffection": 2,
+    "trigger": "talk",
+    "title": "The Handwritten Menu",
+    "intro": "Alma is considering a new handwritten menu board, complete with a crooked doodle of a mug.",
+    "line": "The lettering is terrible. The soup is good. I know which one matters.",
+    "close": "She lets you add a tiny flourish in the corner, then declares it part of the café's history.",
+    "art": {
+      "scene": "Alma is considering a new handwritten menu board, complete with a crooked doodle of a mug. The lettering is terrible. The soup is good. I know which one matters.",
+      "composition": "Single cinematic 16:9 game CG, character prominent, lower fifth clear for dialogue.",
+      "outfit": "Use canonical character bible and a casual outfit suited to the location.",
+      "expression": "Natural, character-specific slice-of-life expression.",
+      "environment": "cafe",
+      "mood": "intimate",
+      "fanservice": 0
+    }
+  },
+  {
+    "id": "iris_a_box_of_small_victories",
+    "npc": "iris",
+    "place": "shop",
+    "slot": 1,
+    "start": 13,
+    "end": 90,
+    "minAffection": 0,
+    "trigger": "entry",
+    "title": "A Box of Small Victories",
+    "intro": "Iris carries a stack of shipping boxes into the shop, carefully protecting one dented corner.",
+    "line": "Every package arrived dry. You have no idea how much of a miracle that is.",
+    "close": "You take the lightest box, and she rewards the help with a story about the morning tide.",
+    "art": {
+      "scene": "Iris carries a stack of shipping boxes into the shop, carefully protecting one dented corner. Every package arrived dry. You have no idea how much of a miracle that is.",
+      "composition": "Single cinematic 16:9 game CG, character prominent, lower fifth clear for dialogue.",
+      "outfit": "Use canonical character bible and a casual outfit suited to the location.",
+      "expression": "Natural, character-specific slice-of-life expression.",
+      "environment": "shop",
+      "mood": "everyday",
+      "fanservice": 0
+    }
+  },
+  {
+    "id": "iris_the_tide_chart",
+    "npc": "iris",
+    "place": "park",
+    "slot": 0,
+    "start": 43,
+    "end": 90,
+    "minAffection": 2,
+    "trigger": "talk",
+    "title": "The Tide Chart",
+    "intro": "Iris is comparing today's waterline with a weathered chart pinned inside her notebook.",
+    "line": "I know the tide by sight. But I like being able to prove I'm right.",
+    "close": "She lets you hold the chart against the breeze and points out the patterns you missed.",
+    "art": {
+      "scene": "Iris is comparing today's waterline with a weathered chart pinned inside her notebook. I know the tide by sight. But I like being able to prove I'm right.",
+      "composition": "Single cinematic 16:9 game CG, character prominent, lower fifth clear for dialogue.",
+      "outfit": "Use canonical character bible and a casual outfit suited to the location.",
+      "expression": "Natural, character-specific slice-of-life expression.",
+      "environment": "park",
+      "mood": "intimate",
+      "fanservice": 0
+    }
+  }
+];
+ const index=new Map(scenes.map(e=>[e.id,e]));
+ function hydrate(state){
+  if(!state||typeof state!=='object')throw Error('Invalid slice-of-life save');
+  if(!state.sliceOfLifeDone||typeof state.sliceOfLifeDone!=='object'||Array.isArray(state.sliceOfLifeDone))state.sliceOfLifeDone={};
+  for(const [id,value] of Object.entries(state.sliceOfLifeDone))
+   if(!index.has(id)||!value||!Number.isInteger(value.day)||value.day<1||value.day>90)delete state.sliceOfLifeDone[id];
+  if(!Number.isInteger(state.sliceOfLifeLastDay)||state.sliceOfLifeLastDay<0||state.sliceOfLifeLastDay>90)state.sliceOfLifeLastDay=0;
+  const active=state.activeSliceOfLife;
+  if(active&&(!index.has(active.id)||!Number.isInteger(active.step)||active.step<0||active.step>2))state.activeSliceOfLife=null;
+  return state;
+ }
+ function available(state,people,trigger,npc=null){
+  if(!state||!Array.isArray(people)||state.activeSliceOfLife||state.activeStory||state.activeSideQuest||
+   state.activeArc||state.activeEncounter||state.activeSituation||state.pendingDuel||state.mandatoryEventState?.active||
+   state.day>90||state.sliceOfLifeLastDay===state.day)return [];
+  return scenes.filter(e=>e.trigger===trigger&&(!npc||e.npc===npc)&&state.location===e.place&&state.slot===e.slot&&
+   state.day>=e.start&&state.day<=e.end&&people.includes(e.npc)&&state['met_'+e.npc]&&
+   !state.sliceOfLifeDone?.[e.id]&&(state.relationships?.[e.npc]?.affection||0)>=e.minAffection);
+ }
+ function start(state,people,trigger,npc=null){
+  hydrate(state);const e=available(state,people,trigger,npc)[0];if(!e)return null;
+  state.sliceOfLifeDone[e.id]={day:state.day,slot:state.slot};
+  state.sliceOfLifeLastDay=state.day;
+  state.activeSliceOfLife={id:e.id,step:0};
+  return e;
+ }
+ function next(state){
+  const a=state?.activeSliceOfLife;if(!a||!index.has(a.id))return null;
+  if(a.step===2){state.activeSliceOfLife=null;return {done:true,id:a.id};}
+  a.step++;return {done:false,id:a.id,step:a.step};
+ }
+ function validate(){
+  const errors=[],ids=new Set();for(const e of scenes){
+   if(ids.has(e.id))errors.push('duplicate '+e.id);ids.add(e.id);
+   if(!e.id||!e.npc||!e.place||!['entry','talk'].includes(e.trigger)||e.slot<0||e.slot>2||
+    e.start<1||e.end>90||e.start>e.end||!e.title||!e.intro||!e.line||!e.close)errors.push('invalid '+e.id);
+  }return errors;
+ }
+ return Object.freeze({scenes,byId:id=>index.get(id)||null,hydrate,available,start,next,validate});
+});
