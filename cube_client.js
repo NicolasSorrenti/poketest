@@ -21,6 +21,11 @@
  function showPreset(){
   const p=presets.find(p=>p.id===$('presetSelect').value);
   if(p)$('presetInfo').textContent=p.description+' · '+p.archetypes.join(' / ');
+   const exact=!!(state?.preset===p?.id&&Array.isArray(state?.cubePool));
+   window.CubeSetBadges?.render($('presetSets'),{
+    sets:exact?window.CubeSetBadges.fromPool(state.cubePool):p?.sets,
+    exact
+   });
  }
  function esc(v){return String(v??'').replace(/[&<>"']/g,x=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;','\'':'&#39;'}[x]));}
  function cardArt(card){
@@ -145,6 +150,7 @@
    c.evolvesFrom?'Evolves from '+c.evolvesFrom:'Evolution Pokémon';
  }
  function render(){
+  showPreset();
   window.CubePoolViewer?.update(state.cubePool);
   const entering=!!state.done&&!state.started&&!document.body.classList.contains('cube-deck-mode');
   document.body.classList.toggle('cube-deck-mode',!!state.done&&!state.started);
