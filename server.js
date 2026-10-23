@@ -210,7 +210,7 @@ async function cubeRoomAPI(req,res,pathName){
   return sendJSON(res,/Unauthorized|credentials/i.test(msg)?401:/Stale/i.test(msg)?409:/not found|expired/i.test(msg)?404:400,{error:msg});
  }
 }
-const server=http.createServer((req,res)=>{
+const server=http.createServer(async (req,res)=>{
  let url;try{url=new URL(req.url,'http://localhost');}catch{res.writeHead(400).end('Bad request');return;}
  let pathname;try{pathname=decodeURIComponent(url.pathname);}catch{res.writeHead(400).end('Bad request');return;}
  if(pathname.split('/').includes('..')){res.writeHead(403).end('Forbidden');return;}
