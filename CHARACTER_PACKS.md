@@ -110,3 +110,42 @@ Character authors may add a fifth JSON file, \`mandatory_events.json\`. Omitting
 \`\`\`
 
 The importer supplies \`characterId\` to each event, checks names against existing optional story IDs, validates character and story references and rejects circular \`eventSeen\` dependencies. Only declarative predicates are accepted: \`all\`, \`any\`, \`not\`, \`dayGte\`, \`dayLte\`, \`storyDone\`, \`flag\`, \`relationship\`, \`duelCountGte\`, \`tournamentState\`, \`eventSeen\`. Relationship metrics are \`affection\`, \`trust\`, \`respect\`, and \`attraction\`. A mandatory scene must cost zero time and must not set commitment or relationship rewards. Optional route chapters remain unchanged.
+
+## Outfit variants (optional)
+
+Characters can define **renderable** outfits in `art_manifest.json`. These are independent of the `appearance.outfits` array, which is descriptive text only. Old characters without an art outfit map work unchanged.
+
+Example for Laca (paths are placeholders until the art is created):
+
+```json
+{
+  "schemaVersion": 1,
+  "characterId": "laca",
+  "portrait": "/rpg-assets/characters/laca/neutral.webp",
+  "outfits": {
+    "default": "casual",
+    "variants": {
+      "casual": {
+        "portrait": "/rpg-assets/characters/laca/outfits/casual/neutral.webp",
+        "expressions": { "happy": "/rpg-assets/characters/laca/outfits/casual/happy.webp" }
+      },
+      "lifeguard": {
+        "portrait": "/rpg-assets/characters/laca/outfits/lifeguard/neutral.webp",
+        "expressions": { "happy": "/rpg-assets/characters/laca/outfits/lifeguard/happy.webp" }
+      }
+    },
+    "rules": [
+      { "outfit": "lifeguard", "locations": ["park"], "slots": [0, 1] }
+    ],
+    "sceneOverrides": { "laca_rescue_scene": "lifeguard" }
+  }
+}
+```
+
+**Selection order:** scene-specific override > first matching rule > default outfit. Match by `locations` (existing RPG place IDs), `slots` (morning 0, afternoon 1, evening 2), optional `weekdays` (0–6, counted from campaign Day 1), and/or inclusive `startDay`/`endDay`. Scene overrides apply when that event is actively displayed, not merely scheduled. Rules are evaluated in written order.
+
+Expression images may be specific to each outfit. When artwork is missing, the renderer tries the selected outfit's neutral portrait, the legacy expression, and finally the main canonical portrait; characters without variants keep the old behavior. Discreet Mode continues to use its existing safe character imagery.
+
+For pack assets, place images under `characters/laca/assets/outfits/casual/` and `characters/laca/assets/outfits/lifeguard/`. The builder copies them to `rpg-assets/characters/laca/outfits/`. Do not import a manifest before the referenced files exist.
+
+Run `node test_rpg_outfits.js` and `npm run test:rpg` to check the resolver and RPG integration.
