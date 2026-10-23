@@ -115,7 +115,6 @@
  let modalDecisionId=null,lastFieldDecisionId=null;
  let token=null,current=null,selectedHand=null,targetMode=null,busy=false,decisionSelection=new Set();
  let playbackEpoch=0;
- let cloudSyncWarning='';
  let handVisible=true,powersOpen=false,logOpen=false,lastCoinSeq=null,coinQueue=[],coinTimer=null,lastKoMessage="";
  const command=(type,payload={})=>({type,payload});
  async function rpgAccessToken(){
@@ -151,8 +150,9 @@
   return body;
  }
  function checkCloudCheckpoint(result){
-  cloudSyncWarning=result?.cloudSaved===false?(result.cloudError||'Cloud battle checkpoint was not saved.'):'';
-  if(cloudSyncWarning)fail(new Error(cloudSyncWarning));
+  // Local battles should not display a red error for missing cloud sign-in.
+  // Checkpoint requests and signed-in persistence are unaffected.
+  if(result?.cloudSaved===false&&result.cloudError)console.info('Cloud checkpoint unavailable:',result.cloudError);
  }
  const card=id=>cards.get(id)||{name:String(id),types:[],attacks:[],abilities:[]};
  const fieldDecision=()=>{const d=current?.view?.pendingDecision;if(!d||d.actor!==0)return null;
@@ -443,6 +443,7 @@
   renderHandActions();$('attacks').textContent='';$('powers').textContent='';
   const attackEnabled=v.phase==='game'&&!v.over&&yourTurn&&!v.pendingDecision&&!busy;
   shared.renderAttacks({root:$('attacks'),unit:you.active,view:v,me:0,getCard:card,enabled:attackEnabled,button:btn,onAttack:index=>send(command('attack',{attackIndex:index})),attackReason:presentation.attackReason});
+  $('mobileAttacksToggle').disabled=!you.active||v.over||v.phase!=='game';
   if(v.phase==='game'&&!v.over&&yourTurn&&!v.pendingDecision&&you.active){
    [you.active,...you.bench].forEach((u,i)=>{if(u?.secretPlanFaceDown){$('powers').append(btn(`🎴 Reveal Secret Plan (${i===0?'Active':'Bench '+i})`,()=>send(command('reveal_secret',{slot:i-1}))));return;}const c=card(u.id);(c.abilities||[]).forEach(a=>{if(a.name)$('powers').append(btn(`✦ ${a.name} (${i===0?'Active':'Bench '+i})`,()=>send(command('use_power',{slot:i-1}))));});});
   }
