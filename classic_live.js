@@ -29,8 +29,33 @@
  const mats=window.NeoDuelPlaymats;
  const gifts=rpgMode?(rpgParams.get('giftMats')||'').split(',').filter(Boolean):Object.keys(mats.themes);
  let matOptions=[],matIds=[];
- let selectedMat=rpgMode?rpgParams.get('mat'):localStorage.getItem('neoCampusPlaymat');
+ let cubeMatOwner=!cubeRoomCode;
+ // A multiplayer Cube match against a CPU still belongs to the online
+ // tournament: keep its mat controls locked until server-verified owner login.
+ let selectedMat=cubeRoomCode?'aurora':rpgMode?rpgParams.get('mat'):localStorage.getItem('neoCampusPlaymat');
  const matSelect=$('playmatSelect');
+ function updateCubeMatControls(){
+  const locked=!!cubeRoomCode&&!cubeMatOwner;
+  matSelect.disabled=locked;
+  document.querySelector('.duel-playmat-picker')?.classList.toggle('hidden',locked);
+  document.querySelector('.duel-playmat-editor')?.classList.toggle('hidden',locked);
+ }
+ async function checkCubeMatOwner(){
+  if(!cubeRoomCode||cubeMatOwner)return;
+  try{
+   const credentials=JSON.parse(sessionStorage.getItem('neoCampusCubeRoomV1')||'null');
+   if(credentials?.code!==cubeRoomCode||typeof credentials.token!=='string')return;
+   const bearer=await window.NeoCubeMatAuth?.bearer?.();
+   if(!bearer)return;
+   const response=await fetch('/api/cube-room/mat-permission',{
+    headers:{'X-Cube-Room-Code':cubeRoomCode,'X-Cube-Room-Token':credentials.token,Authorization:bearer}
+   });
+   if(!response.ok||(await response.json()).canEdit!==true)return;
+   cubeMatOwner=true;refreshMatOptions(localStorage.getItem('neoCampusPlaymat')||'aurora');
+   updatePlaymats();updateCubeMatControls();
+  }catch{}
+ }
+ updateCubeMatControls();
  function refreshMatOptions(preferred=selectedMat){
   matOptions=mats.available(gifts);matIds=matOptions.map(m=>m.id);
   selectedMat=mats.choose(preferred,matIds);
@@ -39,19 +64,27 @@
   matSelect.value=selectedMat;
  }
  refreshMatOptions();
+ if(cubeRoomCode)void checkCubeMatOwner();
  function updatePlaymats(){mats.apply(document.querySelector('.player-territory'),selectedMat);mats.apply(document.querySelector('.opponent-territory'),rpgMode&&mats.themes[rpgNpc]?'npc-'+rpgNpc:'heritage');}
  function persistPlaymatSelection(){
+  if(cubeRoomCode&&!cubeMatOwner)return;
   localStorage.removeItem(mats.IMPORT_KEY);
   localStorage.setItem('neoCampusPlaymat',selectedMat);
   if(rpgMode&&rpgDuelId)window.parent.postMessage({type:'neo-rpg-playmat-selected',duelId:rpgDuelId,playmat:selectedMat},location.origin);
  }
  matSelect.addEventListener('change',()=>{
+  if(cubeRoomCode&&!cubeMatOwner)return;
   selectedMat=mats.choose(matSelect.value,matIds);
   persistPlaymatSelection();
   updatePlaymats();
  });
  // If the Studio is open in another tab, newly finished mats become usable without reloading the duel.
  window.addEventListener('storage',event=>{
+  if(cubeRoomCode&&event.key==='neoRpgCloudSessionV1'){
+   cubeMatOwner=false;refreshMatOptions('aurora');updatePlaymats();
+   updateCubeMatControls();void checkCubeMatOwner();return;
+  }
+  if(cubeRoomCode&&!cubeMatOwner)return;
   if(!['neoCampusCustomPlaymatsV1','neoCampusPlaymat',mats.IMPORT_KEY].includes(event.key))return;
   const previous=selectedMat;
   const proposed=event.key==='neoCampusPlaymat'||event.key===mats.IMPORT_KEY?localStorage.getItem('neoCampusPlaymat'):selectedMat;
