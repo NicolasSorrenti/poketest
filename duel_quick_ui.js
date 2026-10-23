@@ -121,9 +121,8 @@
      announcement=(v.messages||[]).find(x=>!older.has(x))||((v.messages||[])[0]||'');
     }
     if(announcement){
-     el.replaceChildren();
-     const label=document.createElement('span');label.textContent=announcement;el.append(label);
-     if(drawn.length&&!knockedOut.length){
+     el.textContent=announcement;
+     if(drawn.length&&!knockedOut.length&&typeof document!=='undefined'){
       const cards=document.createElement('span');cards.className='draw-feedback-cards';cards.style.cssText='display:flex;gap:5px;justify-content:center;margin-top:6px';
       for(const id of drawn.slice(0,5)){
        const c=getCard(id)||{},image=c.images?.small;
