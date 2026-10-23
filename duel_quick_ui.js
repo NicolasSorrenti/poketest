@@ -95,8 +95,26 @@
      else if(after.damage>before.damage)changes.set(key,'card-hit');
      else if((after.energies||[]).length>(before.energies||[]).length)changes.set(key,'card-powered');
     }
+    // Hand changes are private: inspect only the local player's authorized view.
+    // A multiset diff avoids replaying old cards or treating hand reordering as draws.
+    const previousHand=last.view.players?.[me]?.hand||[];
+    const nextHand=v.players?.[me]?.hand||[];
+    const remaining=new Map();
+    for(const id of previousHand)remaining.set(id,(remaining.get(id)||0)+1);
+    const drawn=[];
+    for(const id of nextHand){
+     if(remaining.get(id)>0)remaining.set(id,remaining.get(id)-1);
+     else if(typeof id==='string')drawn.push(id);
+    }
+    const knockedOut=[];
+    for(let who=0;who<2;who++){
+     const before=last.view.players?.[who],after=v.players?.[who];
+     if(before?.active&&!after?.active)knockedOut.push(who===me?'Your Pokémon':'Opponent Pokémon');
+    }
     let announcement='',turn=false;
-    if(v.turn!==last.view.turn){announcement=v.turn===me?'YOUR TURN':'OPPONENT TURN';turn=true;}
+    if(knockedOut.length)announcement=knockedOut.join(' and ')+' Knocked Out!';
+    else if(drawn.length)announcement='You drew '+drawn.length+' card'+(drawn.length===1?'':'s');
+    else if(v.turn!==last.view.turn){announcement=v.turn===me?'YOUR TURN':'OPPONENT TURN';turn=true;}
     else if(v.pendingDecision?.id&&v.pendingDecision.id!==last.view.pendingDecision?.id){announcement=v.pendingDecision.actor===me?'YOUR DECISION':'OPPONENT IS CHOOSING';}
     else{
      const older=new Set(last.view.messages||[]);
