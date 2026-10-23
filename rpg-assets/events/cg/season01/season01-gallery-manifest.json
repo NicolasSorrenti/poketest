@@ -136,13 +136,18 @@
       "category": "story_first_meeting",
       "full": "rpg-assets/events/cg/season01/hana_first_meeting.webp",
       "thumbnail": "rpg-assets/events/cg/season01/thumbs/hana_first_meeting.webp",
-      "reviewStatus": "scene_match",
-      "note": "Standalone new CG reviewed for the canonical Lucky Draw shop welcome: Hana offers the player a sleeved card across the counter. Replaces previous provisional scene.",
+      "reviewStatus": "identity_mismatch",
+      "note": "Needs replacement: visual comparison with installed Hana portrait, avatar and battle-result art shows wrong brown/chestnut hair and a generic softer-rendered look rather than her long pink hair, golden eyes and mint-green floral jacket. Scene action can match, but character identity does not; NOT approved for future art reuse.",
       "sourceImageFilename": "sonrisa_y_cartas_en_la_tienda_de_juegos.png",
       "sourceImageSha256": "958122e7166897e1685af31837be6a7f3a52194bd6afbe210a396d799d16a1d9",
       "sourceSize": [
         1672,
         941
+      ],
+      "visualIdentityReference": [
+        "rpg-assets/characters/hana/portraits/primary.png",
+        "rpg-assets/ui/avatars/hana.webp",
+        "rpg-assets/characters/hana/events/battle-result.webp"
       ]
     },
     "hana_shop_challenge": {
@@ -150,13 +155,18 @@
       "category": "story_preduel",
       "full": "rpg-assets/events/cg/season01/hana_shop_challenge.webp",
       "thumbnail": "rpg-assets/events/cg/season01/thumbs/hana_shop_challenge.webp",
-      "reviewStatus": "scene_match",
-      "note": "Standalone CG depicts Hana seated for a card-shop duel, holding sleeved cards at the table, smiling at the player. Replaces provisional scene artwork.",
+      "reviewStatus": "identity_mismatch",
+      "note": "Needs replacement: visual comparison with installed Hana portrait, avatar and battle-result art shows wrong brown/chestnut hair and a generic softer-rendered look rather than her long pink hair, golden eyes and mint-green floral jacket. Scene action can match, but character identity does not; NOT approved for future art reuse.",
       "sourceImageFilename": "wide_detailed_anime_style_illustration_of_a_cozy.png",
       "sourceImageSha256": "4e58201c56e9a6550b73c7c99c1fe1c1eabdd5601c2963be263bb97c0c9e88cc",
       "sourceSize": [
         1672,
         941
+      ],
+      "visualIdentityReference": [
+        "rpg-assets/characters/hana/portraits/primary.png",
+        "rpg-assets/ui/avatars/hana.webp",
+        "rpg-assets/characters/hana/events/battle-result.webp"
       ]
     },
     "hana_flyer_afternoon": {
