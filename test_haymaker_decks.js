@@ -9,6 +9,21 @@ const ATTACKS=require('./attack_effects_core');
 const POWERS=require('./classic_power_core');
 const TRAINERS=require('./classic_trainer_core');
 const DECK_BUILDER=require('./deck_builder_core');
+// Audit all preset cards before match setup so regressions report every unsupported
+// Pokémon / Trainer in one run, rather than only the first failing deck.
+const unsupported=[];
+for(const entry of HAYMAKER.entries){
+ for(const id of new Set(HAYMAKER.list(entry.id))){
+  const c=CATALOG.get(id);
+  if(!c){unsupported.push(entry.id+': missing '+id);continue;}
+  if(c.supertype==='Pokémon'){
+   for(const a of c.attacks||[])if(!ATTACKS.compile(a))unsupported.push(entry.id+': attack '+id+' '+c.name+' / '+a.name);
+   for(const a of c.abilities||[])if(![POWERS.ACTIVATED,POWERS.PASSIVE,POWERS.ONPLAY].some(pool=>pool.has(a.name)))
+    unsupported.push(entry.id+': power '+id+' '+c.name+' / '+a.name);
+  }else if(c.supertype==='Trainer'&&!TRAINERS.SUPPORTED.has(c.name))unsupported.push(entry.id+': trainer '+id+' '+c.name);
+ }
+}
+assert.equal(unsupported.length,0,'Unsupported Haymaker card effects:\\n'+unsupported.join('\\n'));
 assert.equal(HAYMAKER.entries.length,17);
 assert.equal(new Set(HAYMAKER.entries.map(x=>x.id)).size,HAYMAKER.entries.length);
 assert.equal(HAYMAKER.has('__proto__'),false);
