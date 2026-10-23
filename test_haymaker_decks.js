@@ -64,7 +64,7 @@ for(const [index,preset] of HAYMAKER.entries.entries()){
  assert(energies.length>=17&&energies.length<=21,'Unexpected Energy count');
  // New era lists need genuine playable cards from that era, not a cosmetic name.
  if(!LEGACY_IDS.includes(preset.id)){
-  const expected=preset.id==='haymaker_base2'?'base4':preset.id.startsWith('haymaker_rocket_')?'base5':
+  const expected=preset.id==='haymaker_base2'?'base4':['haymaker_rocket_blitz','haymaker_rocket_venom'].includes(preset.id)?'base5':
    preset.id==='haymaker_gym_heroes'?'gym1':preset.id==='haymaker_gym_challenge'?'gym2':
    preset.id==='haymaker_neo_genesis'?'neo1':preset.id==='haymaker_neo_discovery'?'neo2':
    preset.id==='haymaker_neo_revelation'?'neo3':preset.id==='haymaker_neo_destiny'?'neo4':null;
