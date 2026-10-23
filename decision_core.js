@@ -10,7 +10,7 @@ function makeDecision({id,actor,kind='select',label='',options,min=1,max=1,optio
  const safeOptions=options.map(o=>{
   if(!o||typeof o.id!=='string'||!o.id||seen.has(o.id))throw Error('Invalid or duplicate option id');
   seen.add(o.id);
-  return Object.freeze({id:o.id,label:String(o.label??o.id)});
+  return Object.freeze({id:o.id,label:String(o.label??o.id),...(typeof o.cardId==='string'&&o.cardId?{cardId:o.cardId}:{})});
  });
  return Object.freeze({id,actor,kind,label:String(label),min,max,optional:!!optional,options:Object.freeze(safeOptions)});
 }
