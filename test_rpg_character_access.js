@@ -1,0 +1,11 @@
+'use strict';
+const assert=require('node:assert/strict');
+const {permitted,filterPacks}=require('./rpg_character_access');
+const packs=[{id:'sol'},{id:'barb'},{id:'jinx'}];
+assert.deepEqual(filterPacks(packs,'' ).map(p=>p.id),['sol','jinx']);
+assert.deepEqual(filterPacks(packs,'nicolassorrenti2@gmail.com').map(p=>p.id),['sol','barb','jinx']);
+assert.deepEqual(filterPacks(packs,'  NICOLASSORRENTI2@GMAIL.COM ').map(p=>p.id),['sol','barb','jinx']);
+assert.deepEqual(filterPacks(packs,'different@example.com').map(p=>p.id),['sol','jinx']);
+assert.equal(permitted('barb',null),false);
+assert.equal(permitted('sol',null),true);
+console.log('Exclusive account character filters: OK');
