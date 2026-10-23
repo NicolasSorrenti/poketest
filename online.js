@@ -42,7 +42,7 @@
  const side=()=>current?.you??0;
  const command=(type,payload={})=>({type,payload});
  async function api(path,opts={}){
-  const headers={'Content-Type':'application/json',...(token?{'X-Duel-Token':token}:{})};
+  const headers={'Content-Type':'application/json',...(token?{'X-Duel-Token':token}:{}),...(opts.headers||{})};
   const r=await fetch('/api/online/'+path,{...opts,headers});const body=await r.json();
   if(!r.ok)throw Error(body.error||'Could not contact Classic engine');return body;
  }
@@ -93,6 +93,53 @@
  const matSelect=$('onlinePlaymatSelect');
  let matSessionRoom=null,matDesired='aurora',queuedMat=null,matPublishing=false;
  let matVersions=[null,null],matUrls=[null,null],matClockOffset=0,matNotice='';
+ const CUBE_MAT_OWNER_EMAIL='nicolassorrenti2@gmail.com';
+ const CLOUD_SESSION_KEY='neoRpgCloudSessionV1';
+ let cubeMatPermission=false;
+ const canEditMats=()=>!current?.cube||cubeMatPermission;
+ // The browser-side check only hides controls; the server independently
+ // verifies the logged-in Supabase account on every Cube playmat mutation.
+ async function cubeMatBearer(){
+  let saved;try{saved=JSON.parse(localStorage.getItem(CLOUD_SESSION_KEY)||'null');}catch{return null;}
+  if(!saved?.access_token||!saved?.refresh_token||
+   String(saved.user?.email||'').trim().toLowerCase()!==CUBE_MAT_OWNER_EMAIL)return null;
+  if(Number(saved.expires_at)>Date.now()+30000)return 'Bearer '+saved.access_token;
+  try{
+   const response=await fetch('/api/rpg-cloud/config',{cache:'no-store'});
+   const config=await response.json();
+   if(!response.ok||!config?.enabled)return null;
+   const refreshed=await fetch(config.url+'/auth/v1/token?grant_type=refresh_token',{
+    method:'POST',headers:{apikey:config.key,'Content-Type':'application/json'},
+    body:JSON.stringify({refresh_token:saved.refresh_token})
+   });
+   if(!refreshed.ok)return null;
+   const data=await refreshed.json();
+   if(!data?.access_token||!data?.refresh_token||!data?.user?.id)return null;
+   const next={access_token:data.access_token,refresh_token:data.refresh_token,
+    user:data.user,expires_at:Date.now()+Math.max(0,Number(data.expires_in||3600)-60)*1000};
+   localStorage.setItem(CLOUD_SESSION_KEY,JSON.stringify(next));
+   return 'Bearer '+next.access_token;
+  }catch{return null;}
+ }
+ async function checkCubeMatPermission(){
+  if(!current?.cube||watching()||!roomCode||!token)return;
+  const code=roomCode,seatToken=token;
+  cubeMatPermission=false;showMatStatus();
+  try{
+   const authorization=await cubeMatBearer();
+   if(!authorization)return;
+   const permission=await api('playmat-permission?code='+encodeURIComponent(code),
+    {headers:{Authorization:authorization}});
+   if(code!==roomCode||seatToken!==token||!current?.cube)return;
+   cubeMatPermission=permission.canEdit===true;
+   if(cubeMatPermission&&!current.playmats?.[side()]&&matDesired!=='aurora')queuedMat=matDesired;
+  }catch{}finally{
+   if(code===roomCode&&seatToken===token){
+    showMatStatus();
+    if(queuedMat&&canEditMats())publishQueuedMat();
+   }
+  }
+ }
  const matTerritories=()=>[document.querySelector('.player-territory'),document.querySelector('.opponent-territory')];
  function availableMats(){return mats.available(Object.keys(mats.themes));}
  function refreshMatChoices(preferred=matDesired){
@@ -114,7 +161,7 @@
   }
  }
  function resetOnlineMats(){
-  clearMatImages();matSessionRoom=null;queuedMat=null;matPublishing=false;matNotice='';
+  clearMatImages();matSessionRoom=null;queuedMat=null;matPublishing=false;matNotice='';cubeMatPermission=false;
   $('onlinePlaymatStatus').textContent='';
  }
  function secondsRemaining(){
@@ -127,9 +174,12 @@
   const seconds=secondsRemaining();
   const time=seconds?Math.floor(seconds/60)+':'+String(seconds%60).padStart(2,'0'):'';
   el.textContent=matNotice||(queuedMat?(seconds?'Queued · '+time:'Saving mat…'):(seconds?'Change in '+time:'Mat ready'));
-  matSelect.disabled=watching()||matPublishing;
-  $('onlinePlaymatControl').classList.toggle('hidden',watching());
-  $('onlinePlaymatStatus').classList.toggle('hidden',watching());
+  const locked=watching()||!canEditMats();
+  matSelect.disabled=locked||matPublishing;
+  $('onlinePlaymatControl').classList.toggle('hidden',locked);
+  $('onlinePlaymatStatus').classList.toggle('hidden',locked);
+  document.querySelector('.online-mat-studio')?.classList.toggle('hidden',
+   !!current?.cube&&!canEditMats());
  }
  async function encodeMat(id){
   const url=await mats.imageUrl(id);
@@ -156,7 +206,7 @@
   throw Error('The artwork is too detailed to share (160 KB limit). Try a simpler exported mat.');
  }
  function wantMat(id){
-  if(!current?.started||watching())return;
+  if(!current?.started||watching()||!canEditMats())return;
   const allowed=availableMats().map(item=>item.id);
   if(!allowed.includes(id))return;
   matDesired=id;matSelect.value=id;
@@ -165,16 +215,18 @@
   showMatStatus();publishQueuedMat();
  }
  async function publishQueuedMat(){
-  if(!queuedMat||!current?.started||watching()||matPublishing||!token||!roomCode)return;
+  if(!queuedMat||!current?.started||watching()||!canEditMats()||matPublishing||!token||!roomCode)return;
   if(secondsRemaining()){showMatStatus();return;}
   const requested=queuedMat,code=roomCode,originalToken=token;
   matPublishing=true;matNotice='Sending mat…';showMatStatus();
   try{
+   const authorization=current.cube?await cubeMatBearer():null;
+   if(current.cube&&!authorization)throw Error('Sign in to the owner account through RPG Cloud to change Cube mats.');
    const custom=mats.custom().some(item=>item.id===requested);
    const image=custom?await encodeMat(requested):undefined;
    // The user may leave or change rooms while image encoding is in progress.
    if(code!==roomCode||originalToken!==token)return;
-   const response=await api('playmat',{method:'POST',body:JSON.stringify({code,id:custom?'custom':requested,...(custom?{image}:{})})});
+   const response=await api('playmat',{method:'POST',headers:authorization?{Authorization:authorization}:{},body:JSON.stringify({code,id:custom?'custom':requested,...(custom?{image}:{})})});
    if(code!==roomCode||originalToken!==token)return;
    current.playmats=response.playmats;current.serverNow=response.serverNow;
    matClockOffset=response.serverNow-Date.now();
@@ -234,10 +286,11 @@
   if(!state?.started||!roomCode)return;
   matClockOffset=(state.serverNow||Date.now())-Date.now();
   if(matSessionRoom!==roomCode){
-   clearMatImages();matSessionRoom=roomCode;
+   clearMatImages();matSessionRoom=roomCode;cubeMatPermission=false;
    refreshMatChoices(localStorage.getItem('neoCampusPlaymat')||'aurora');
    const own=state.playmats?.[side()];
-   if(!watching()&&!own&&matDesired!=='aurora')queuedMat=matDesired;
+   if(!state.cube&&!watching()&&!own&&matDesired!=='aurora')queuedMat=matDesired;
+   if(state.cube)void checkCubeMatPermission();
   }
   for(let i=0;i<2;i++)applyMatVersion(i,state.playmats?.[i]);
   showMatStatus();
@@ -245,12 +298,16 @@
  }
  matSelect.addEventListener('change',()=>wantMat(matSelect.value));
  window.addEventListener('storage',event=>{
+  if(event.key===CLOUD_SESSION_KEY){
+   if(current?.cube){cubeMatPermission=false;queuedMat=null;showMatStatus();void checkCubeMatPermission();}
+   return;
+  }
   if(!['neoCampusCustomPlaymatsV1','neoCampusPlaymat',mats.IMPORT_KEY].includes(event.key))return;
   if(event.key==='neoCampusCustomPlaymatsV1'){refreshMatChoices(matDesired);return;}
   const selected=localStorage.getItem('neoCampusPlaymat');
   const previous=matDesired;
   refreshMatChoices(selected||matDesired);
-  if(selected&&current?.started&&!watching()&&(selected!==previous||event.key===mats.IMPORT_KEY))wantMat(selected);
+  if(selected&&current?.started&&!watching()&&canEditMats()&&(selected!==previous||event.key===mats.IMPORT_KEY))wantMat(selected);
  });
  refreshMatChoices(localStorage.getItem('neoCampusPlaymat')||'aurora');
 
