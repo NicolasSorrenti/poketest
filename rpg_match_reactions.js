@@ -26,6 +26,54 @@
   sierra:'/rpg-assets/characters/sierra/portrait.png',
   sol:'/rpg-assets/sol.png'
  });
+ // Established cast has two supported VN-expression folder formats.
+ const VN_MAIN=new Set(['hana','reina','shiori','yuna','akari','camila','marina','kaede']);
+ const VN_GUEST=new Set(['jun','teo','iris','elio','alma','nereo']);
+ const VN_PORTRAITS=new Set(['rina','sol','jinx','luna','elena','sierra']);
+ const EXPRESSIONS={
+  main:{
+   default:['neutral'],attack:['happy','neutral'],play_card:['happy','neutral'],
+   evolve:['happy'],power:['happy','neutral'],hurt:['surprised','angry'],
+   big_hit:['surprised'],weakness_hit:['surprised'],status_hit:['angry','surprised'],
+   ko_taken:['angry','embarrassed'],ko_scored:['happy']
+  },
+  guest:{
+   default:['neutral'],attack:['determined','neutral'],play_card:['happy','neutral'],
+   evolve:['happy'],power:['determined','happy'],hurt:['vulnerable','surprised'],
+   big_hit:['surprised'],weakness_hit:['surprised'],status_hit:['irritated','surprised'],
+   ko_taken:['vulnerable'],ko_scored:['happy']
+  },
+  portrait:{
+   default:['neutral'],attack:['neutral'],play_card:['happy','neutral'],
+   evolve:['happy'],power:['happy','neutral'],hurt:['concerned','surprised'],
+   big_hit:['surprised'],weakness_hit:['surprised'],status_hit:['concerned'],
+   ko_taken:['concerned','soft'],ko_scored:['happy']
+  }
+ };
+ // Vary rivals' battle demeanor while keeping their known sprite filenames.
+ const CHARACTER_EXPRESSIONS={
+  reina:{attack:'angry',play_card:'neutral',power:'angry',ko_taken:'angry'},
+  shiori:{attack:'neutral',power:'neutral',ko_taken:'embarrassed'},
+  yuna:{attack:'happy',ko_taken:'surprised'},
+  akari:{attack:'neutral',power:'neutral'},
+  camila:{attack:'flirty',play_card:'flirty',power:'flirty'},
+  marina:{attack:'neutral',ko_taken:'embarrassed'},
+  kaede:{attack:'angry',power:'angry',ko_taken:'angry'},
+  jinx:{attack:'smirk',play_card:'playful',evolve:'happy',power:'smirk',
+   hurt:'annoyed',status_hit:'annoyed',ko_taken:'annoyed',ko_scored:'smirk'},
+  teo:{attack:'happy'}
+ };
+ function vnCandidates(npcId,kind){
+  const group=VN_MAIN.has(npcId)?'main':VN_GUEST.has(npcId)?'guest':
+   VN_PORTRAITS.has(npcId)?'portrait':null;
+  if(!group)return [];
+  const folder=group==='portrait'?'expression-portraits':'vn-expressions';
+  const names=[CHARACTER_EXPRESSIONS[npcId]?.[kind],
+   ...(EXPRESSIONS[group][kind]||EXPRESSIONS[group].default),
+   'neutral'].filter(Boolean);
+  return [...new Set(names)].map(name=>
+   '/rpg-assets/characters/'+npcId+'/'+folder+'/'+name+'.webp');
+ }
  const LABELS={attack:['ATTACK!','Their Pokémon attacks'],play_card:['NEW PLAY','They put a card into play'],evolve:['EVOLUTION!','A Pokémon evolves'],power:['POKÉMON POWER!','A special effect'],hurt:['HIT!','Their Pokémon takes damage'],big_hit:['BIG HIT!','A powerful blow'],weakness_hit:['IT’S SUPER EFFECTIVE!','Their Pokémon was hit for Weakness'],status_hit:['STATUS TROUBLE!','A Special Condition was inflicted'],ko_taken:['POKÉMON DOWN!','You take a Prize'],ko_scored:['A KNOCKOUT!','They take a Prize']};
  const GENERIC={attack:'Here goes.',play_card:'I can work with this.',evolve:'There we go.',power:'Try this one.',hurt:'Ouch. Good hit.',big_hit:'That hit harder than I expected.',weakness_hit:'I should have seen that matchup coming.',status_hit:'That condition complicates things.',ko_taken:'You got me there.',ko_scored:'That is one down.'};
  const VOICES={
@@ -324,17 +372,14 @@
    path.startsWith('/rpg-assets/characters/'+npcId+'/')||
    path.startsWith('/rpg-assets/reactions/'+npcId+'/'));
   const valid=path=>typeof path==='string'&&/^\/rpg-assets\/[a-z0-9/_-]+\.(?:png|webp|jpe?g)$/i.test(path)&&belongsToNpc(path);
-  // Attack uses widescreen action art. Cards, Powers and evolutions can use
-  // the character's dedicated alternate match cut-in rather than neutral art.
+  // Expression portraits first. Existing match cut-ins remain fallbacks when
+  // a variant is missing, and no art can cross to a different NPC's folder.
   const kinds={weakness_hit:['weakness_hit','hurt','ko_taken'],
    status_hit:['status_hit','hurt'],big_hit:['big_hit','hurt'],
    hurt:['hurt','big_hit'],ko_taken:['ko_taken','hurt'],
    ko_scored:['ko_scored','match_cutin'],
    play_card:['play_card','match_cutin'],evolve:['evolve','match_cutin'],
    power:['power','match_cutin'],attack:['attack','match_cutin']};
-  // Prefer purpose-built illustrations in the reaction directory over VN
-  // expressions / match portraits. Missing variants fall through via onerror.
-  // Keep the manifest as a fallback for older asset packs.
   const reactionNames={
    play_card:['play_card','play-card','card_play','card-play'],
    evolve:['evolve','evolution'],
@@ -347,10 +392,17 @@
    ko_scored:['ko_scored','ko-scored','victory'],
    attack:['attack']
   };
-  const reactionPaths=(entry && kind!=='attack' ? (reactionNames[kind]||[kind]) : []).flatMap(name=>
+  const reactionPaths=(entry&&kind!=='attack'?(reactionNames[kind]||[kind]):[]).flatMap(name=>
    ['png','webp','jpg'].map(ext=>'/rpg-assets/reactions/'+npcId+'/'+name+'.'+ext));
-  return [...new Set([...reactionPaths,...(kinds[kind]||[kind]).map(name=>entry?.[name]),
-   entry?.default,PORTRAITS[npcId]].filter(valid))];
+  return [...new Set([...vnCandidates(npcId,kind),
+   ...(kinds[kind]||[kind]).map(name=>entry?.[name]),
+   ...reactionPaths,entry?.default,PORTRAITS[npcId]].filter(valid))];
+ }
+ // Framing follows the loaded image, even if the first candidate fails.
+ function artClass(path){
+  return (/^\/rpg-assets\/reactions\/[a-z0-9_-]+\/attack\.(?:png|webp|jpe?g)$/i.test(path)?' has-wide-action-art':'')+
+   (/\/cutins\/match-cutin\.webp$/i.test(path)?' has-match-art':'')+
+   (/\/(?:vn-expressions|expression-portraits)\/[a-z_-]+\.webp$/i.test(path)?' has-vn-expression':'');
  }
  function assetFor(manifest,npcId,kind){
   return assetCandidates(manifest,npcId,kind)[0]||null;
@@ -423,9 +475,7 @@
     const portrait=doc.createElement('div');portrait.className='npc-reaction-portrait';
     if(readyPath){
      const img=doc.createElement('img');img.alt='';img.src=readyPath;
-     card.className=baseClass+
-      (/^\/rpg-assets\/reactions\/[a-z0-9_-]+\/attack\.(?:png|webp|jpe?g)$/i.test(readyPath)?' has-wide-action-art':'')+
-      (/\/cutins\/match-cutin\.webp$/i.test(readyPath)?' has-match-art':'');
+     card.className=baseClass+artClass(readyPath);
      portrait.append(img);
     }else if(typeof media?.Image!=='function'&&candidates.length){
      // Node/test callers without an Image loader retain the older DOM fallback.
@@ -433,9 +483,7 @@
      let index=0;
      const advance=()=>{
       const path=candidates[index];
-      card.className=baseClass+
-       (/^\/rpg-assets\/reactions\/[a-z0-9_-]+\/attack\.(?:png|webp|jpe?g)$/i.test(path)?' has-wide-action-art':'')+
-       (/\/cutins\/match-cutin\.webp$/i.test(path)?' has-match-art':'');
+      card.className=baseClass+artClass(path);
       img.src=path;
      };
      img.onerror=()=>{
