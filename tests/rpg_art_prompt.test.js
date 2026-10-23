@@ -150,3 +150,24 @@ test('CLI validates the actual model-facing prompt against the requested scene',
     assert.doesNotThrow(()=>execFileSync(process.execPath,[cli,'--scene','hana_first_meeting'],{stdio:'pipe'}));
   } finally { fs.rmSync(scratch,{recursive:true,force:true}); }
 });
+
+test('Hana scene prompts match installed pink-haired game identity rather than stale concept description', () => {
+  const installed = require('../rpg-assets/manifest.art-expansion.json').characters.hana;
+  const handoff = fs.readFileSync(path.join(__dirname, '..', 'docs/CG_ART_AGENT_HANDOFF.md'),'utf8');
+  const gallerySource = fs.readFileSync(path.join(__dirname, '..', 'rpg_cg_gallery.js'),'utf8');
+  assert.match(installed.visualIdentity, /pink hair/);
+  assert.match(queue.characters.hana, /salmon-pink hair/);
+  assert.match(queue.characters.hana, /amber-golden eyes/);
+  assert.match(queue.characters.hana, /Mint-green and cream floral varsity jacket/);
+  assert.doesNotMatch(queue.characters.hana,/Chestnut shoulder-length|brown hair/i);
+  assert.doesNotMatch(handoff,/Hana Mizuno, 20\. Chestnut shoulder-length/);
+  for (const id of ['hana_first_meeting','hana_shop_challenge','hana_flyer_afternoon','hana_apron_mixup']) {
+    const scene=queue.scenes.find(s=>s.id===id);
+    const p=createPrompt({sceneId:id});
+    assert.match(p.prompt,/salmon-pink hair/);
+    assert.match(p.prompt,/amber-golden eyes/);
+    assert.match(scene.outfit,/mint-green|Mint-green/);
+    assert.ok(handoff.includes(scene.outfit), 'Handoff costume mismatch: '+id);
+    assert.ok(gallerySource.includes(scene.outfit), 'Runtime costume metadata mismatch: '+id);
+  }
+});
