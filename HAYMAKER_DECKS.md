@@ -29,10 +29,10 @@ These **12 additional** decks feature actual Pokémon from the named expansion (
 | \`haymaker_rocket_gym\` | Both Gym sets | Rocket's Hitmonchan, Rocket's Zapdos, Rocket's Snorlax | 15 / 26 / 19 |
 | \`haymaker_neo_genesis\` | Neo Genesis | Magmar, Electabuzz, Miltank, Stantler | 15 / 26 / 19 |
 | \`haymaker_neo_discovery\` | Neo Discovery | Hitmontop, Yanma, Scyther, Larvitar | 15 / 26 / 19 |
-| \`haymaker_neo_revelation\` | Neo Revelation | Entei, Raikou, Stantler, Farfetch'd | 15 / 26 / 19 |
-| \`haymaker_neo_destiny\` | Neo Destiny | Hitmonlee, Heracross, Scyther, Hitmonchan | 15 / 26 / 19 |
+| \`haymaker_neo_revelation\` | Neo Revelation | Slugma, Chinchou, Ho-oh, Farfetch'd | 15 / 26 / 19 |
+| \`haymaker_neo_destiny\` | Neo Destiny | Hitmonlee, Heracross, Scyther, Larvitar | 15 / 26 / 19 |
 | \`haymaker_neo_dark\` | Team Rocket + Neo 1–4 | Sneasel, Houndour, Murkrow, Chansey | 15 / 25 / 20 |
-| \`haymaker_all_eras\` | Base through Neo Destiny | Original and Neo Hitmonchan, Rocket's Zapdos, Neo Electabuzz and Hitmontop | 15 / 26 / 19 |
+| \`haymaker_all_eras\` | Base through Neo Destiny | Original Hitmonchan, Neo Hitmonlee, Rocket's Zapdos, Electabuzz, Hitmontop and Farfetch'd | 15 / 26 / 19 |
 
 The Rocket decks introduce Rocket's Sneak Attack and Nightly Garbage Run. The Neo decks use a small Neo Genesis Trainer suite, including Professor Elm and Focus Band. The Darkness deck intentionally uses four Darkness Energy and four Rainbow Energy, respecting special-Energy copy limits.
 
