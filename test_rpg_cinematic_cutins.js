@@ -7,9 +7,9 @@ assert.equal(durationFor('ko_taken'),2600);
 assert.equal(durationFor('ko_scored',true),2600);
 assert.equal(priorityFor('ko_taken')>priorityFor('attack'),true);
 assert.equal(assetFor({characters:{reina:{attack:'/rpg-assets/characters/hana/portraits/primary.png'}}},'reina','attack'),
- '/rpg-assets/characters/reina/portraits/primary.png','never show the wrong NPC');
+ '/rpg-assets/characters/reina/vn-expressions/angry.webp','never show the wrong NPC');
 assert.equal(assetFor({characters:{reina:{attack:'/rpg-assets/characters/reina/reactions/attack.webp'}}},'reina','attack'),
- '/rpg-assets/characters/reina/reactions/attack.webp');
+ '/rpg-assets/characters/reina/vn-expressions/angry.webp');
 
 const classes=new Set(['hidden']),children=[],timers=new Map();
 let timerId=0;
@@ -49,15 +49,23 @@ assert.equal(first.kind,'attack');
 assert.equal(make.active,true);
 assert.equal(timers.values().next().value.ms,2800,'attack art remains readable');
 assert.equal(children[0].className.includes('npc-reaction-attack'),true);
-assert.match(children[0].className,/has-wide-action-art/,'attack uses wide artwork');
+assert.match(children[0].className,/has-vn-expression/,'RPG uses the character VN frame');
 const battleImage=children[0].children[0].children[0];
-assert.equal(battleImage.src,'/rpg-assets/reactions/reina/attack.png');
+const vn='/rpg-assets/characters/reina/vn-expressions/';
+assert.equal(battleImage.src,vn+'angry.webp','Reina attacks with her aggressive expression');
 battleImage.onerror();
-assert.equal(battleImage.src,'/rpg-assets/characters/reina/cutins/match-cutin.webp','missing attack uses match art');
-assert.match(children[0].className,/has-match-art/,'match art uses its own layout');
+assert.equal(battleImage.src,vn+'happy.webp','Try another installed expression if the first fails');
 battleImage.onerror();
-assert.equal(battleImage.src,'/rpg-assets/characters/reina/portraits/primary.png','missing match art uses the same NPC');
-assert.doesNotMatch(children[0].className,/has-wide-action-art|has-match-art/,'fallback portrait has neutral framing');
+assert.equal(battleImage.src,vn+'neutral.webp','Fall back to the VN neutral expression');
+battleImage.onerror();
+assert.equal(battleImage.src,'/rpg-assets/reactions/reina/attack.png','Original widescreen art remains a fallback');
+assert.match(children[0].className,/has-wide-action-art/);
+battleImage.onerror();
+assert.equal(battleImage.src,'/rpg-assets/characters/reina/cutins/match-cutin.webp');
+assert.match(children[0].className,/has-match-art/);
+battleImage.onerror();
+assert.equal(battleImage.src,'/rpg-assets/characters/reina/portraits/primary.png','Original portrait remains the final fallback');
+assert.doesNotMatch(children[0].className,/has-vn-expression|has-wide-action-art|has-match-art/);
 assert.equal(classes.has('hidden'),false);
 const second=make.update({view:view(),activity:[{seq:6,type:'play_trainer',side:1}]});
 assert.equal(second.kind,'play_card');
@@ -104,6 +112,7 @@ async function verifyDelayedArtwork(){
  experience.update({view:view(6),activity:[]});
  experience.update({view:view(6),activity:[{seq:3,type:'attack',side:1,label:'Tackle'}]});
  const untilShown=experience.whenShown();
+ await new Promise(resolve=>setImmediate(resolve)); // Missing VN variants are rejected before older art.
  assert.equal(classes.has('hidden'),true,'wait while image loads');
  assert.equal(timers.length,0,'no duration consumed before load');
  pending.get(attack)[0].onerror();
