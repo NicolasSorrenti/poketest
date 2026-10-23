@@ -46,6 +46,117 @@
           }
         }
       }
+    },
+    "outfits": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "default",
+        "variants"
+      ],
+      "properties": {
+        "default": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_]{1,39}$"
+        },
+        "variants": {
+          "type": "object",
+          "minProperties": 1,
+          "propertyNames": {
+            "pattern": "^[a-z][a-z0-9_]{1,39}$"
+          },
+          "additionalProperties": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "portrait"
+            ],
+            "properties": {
+              "portrait": {
+                "$ref": "#/$defs/image"
+              },
+              "expressions": {
+                "type": "object",
+                "propertyNames": {
+                  "pattern": "^[a-z][a-z0-9_]{1,39}$"
+                },
+                "additionalProperties": {
+                  "$ref": "#/$defs/image"
+                }
+              }
+            }
+          }
+        },
+        "rules": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "outfit"
+            ],
+            "properties": {
+              "outfit": {
+                "type": "string",
+                "pattern": "^[a-z][a-z0-9_]{1,39}$"
+              },
+              "locations": {
+                "type": "array",
+                "minItems": 1,
+                "items": {
+                  "enum": [
+                    "home",
+                    "shop",
+                    "arcade",
+                    "park",
+                    "cafe",
+                    "center",
+                    "library"
+                  ]
+                }
+              },
+              "slots": {
+                "type": "array",
+                "minItems": 1,
+                "items": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 2
+                }
+              },
+              "weekdays": {
+                "type": "array",
+                "minItems": 1,
+                "items": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 6
+                }
+              },
+              "startDay": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 90
+              },
+              "endDay": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 90
+              }
+            }
+          }
+        },
+        "sceneOverrides": {
+          "type": "object",
+          "propertyNames": {
+            "pattern": "^[a-z][a-z0-9_]{1,39}$"
+          },
+          "additionalProperties": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9_]{1,39}$"
+          }
+        }
+      }
     }
   },
   "$defs": {
