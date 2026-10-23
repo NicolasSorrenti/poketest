@@ -828,7 +828,7 @@ test('G6: journey panel exposes meaningful milestones and opens the real memory 
  open.onclick();
  assert.equal(r.elements.galleryDialog.open,true);
  assert.equal(r.elements.galleryGrid.children.length,CG.catalog.length);
- assert.equal(r.elements.galleryProgress.children.length,12);
+ assert.equal(r.elements.galleryProgress.children.length,CG.categories.length+new Set(CG.catalog.map(e=>e.character)).size);
  assert.match(r.elements.galleryCount.textContent,new RegExp('0/'+CG.catalog.length+' overall'));
 });
 test('G6: gallery shows earned vs viewed correctly and the unseen filter hides locked art',()=>{
