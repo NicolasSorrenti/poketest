@@ -1,0 +1,12 @@
+{
+  "scene_id": "camila_shop_predue",
+  "status": "NOT COMMITTED",
+  "files": {
+    "rpg-assets/events/cg/season01/camila_shop_predue.webp": {
+      "sha256": "174f1370ae125d82b67f2b011bcdffa603948fce91c137242a6a9c9047c8a13b"
+    },
+    "rpg-assets/events/cg/season01/thumbs/camila_shop_predue.webp": {
+      "sha256": "12a63ab2fdcab83e047f833ed6b49d5d0093b4ee4aa6257024f2d0fdee355487"
+    }
+  }
+}
