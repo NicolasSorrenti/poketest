@@ -466,11 +466,11 @@ test('duel intention counts authentic defeat, then resets cleanly the next day',
  assert.equal(r.elements.dailyIntention.children.filter(x=>x.className==='intention-choice').length,3);
 });
 
-test('gallery opens with 32 locked CGs; a real first encounter reveals only its earned profile',()=>{
+test('gallery opens with all planned CGs; a real first encounter reveals only its earned profile',()=>{
  const r=launch({day:5,slot:0,location:'shop'});
  r.elements.galleryBtn.onclick();
  assert.equal(r.elements.galleryDialog.open,true);
- assert.equal(r.elements.galleryGrid.children.length,32);
+ assert.equal(r.elements.galleryGrid.children.length,CG.catalog.length);
  assert.equal(r.elements.galleryGrid.children.filter(x=>!x.disabled).length,0);
  r.elements.galleryClose.onclick();
  const person=r.elements.people.children.find(x=>x.children[1]?.children[0]?.textContent==='Hana Mizuno');
@@ -820,23 +820,23 @@ test('G6: journey panel exposes meaningful milestones and opens the real memory 
  const r=launch({day:46,slot:1,location:'home'});
  assert.ok(r.elements.journeyProgress.children.length>=5);
  const overview=r.elements.journeyProgress.children[0];
- assert.match(overview.textContent,/Season 1.*Day 46 \/ 90.*0\/32 memories/);
+ assert.match(overview.textContent,new RegExp('Season 1.*Day 46 / 90.*0/'+CG.catalog.length+' memories'));
  const progress=r.elements.journeyProgress.children.find(x=>x.className==='journey-track');
  assert.equal(progress.children[0].style.width,'0%');
  const open=r.elements.journeyProgress.children.find(x=>x.className==='journey-gallery');
  assert.ok(open);
  open.onclick();
  assert.equal(r.elements.galleryDialog.open,true);
- assert.equal(r.elements.galleryGrid.children.length,32);
+ assert.equal(r.elements.galleryGrid.children.length,CG.catalog.length);
  assert.equal(r.elements.galleryProgress.children.length,12);
- assert.match(r.elements.galleryCount.textContent,/0\/32 overall/);
+ assert.match(r.elements.galleryCount.textContent,new RegExp('0/'+CG.catalog.length+' overall'));
 });
 test('G6: gallery shows earned vs viewed correctly and the unseen filter hides locked art',()=>{
  const r=launch({day:12,slot:0,location:'home',
   cgUnlocked:{hana_first_meeting:{day:3,slot:0,trigger:'meet'},reina_rival_intro:{day:5,slot:0,trigger:'meet'}},
   cgViewed:{hana_first_meeting:true}});
  r.elements.journeyProgress.children.find(x=>x.className==='journey-gallery').onclick();
- assert.match(r.elements.galleryCount.textContent,/2\/32 overall.*1 earned but not yet viewed/);
+ assert.match(r.elements.galleryCount.textContent,new RegExp('2/'+CG.catalog.length+' overall.*1 earned but not yet viewed'));
  r.elements.galleryUnseen.checked=true;r.elements.galleryUnseen.onchange();
  assert.equal(r.elements.galleryGrid.children.length,1);
  assert.match(r.elements.galleryGrid.children[0].children[2].textContent,/Reina/);
@@ -845,7 +845,7 @@ test('G6: gallery shows earned vs viewed correctly and the unseen filter hides l
  assert.equal(r.state().cgViewed.reina_rival_intro,undefined);
  assert.equal(r.state().cgViewed.hana_first_meeting,true);
  r.elements.galleryUnseen.checked=false;r.elements.galleryUnseen.onchange();
- assert.equal(r.elements.galleryGrid.children.length,32);
+ assert.equal(r.elements.galleryGrid.children.length,CG.catalog.length);
 });
 test('G6: end of season displays accurate social summary and previous-run archive',()=>{
  const r=launch({day:91,ended:true,slot:0,location:'home',
@@ -881,7 +881,7 @@ test('G6: New Game+ archives the run, preserves memories but resets G5 special-e
  assert.match(reloaded.elements.journeyProgress.children[0].textContent,/Season 2/);
  assert.match(reloaded.elements.galleryCount.textContent||'',/^$/);
  reloaded.elements.journeyProgress.children.find(x=>x.className==='journey-gallery').onclick();
- assert.match(reloaded.elements.galleryCount.textContent,/1\/32 overall/);
+ assert.match(reloaded.elements.galleryCount.textContent,new RegExp('1/'+CG.catalog.length+' overall'));
 });
 test('G6: completing a 90-day season by normal period advancement stops at day 91 and offers replay',()=>{
  const r=launch({day:1,slot:0,location:'home'});
