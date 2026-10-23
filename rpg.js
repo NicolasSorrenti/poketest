@@ -202,6 +202,29 @@ function queueMandatory(){
  if(!MANDATORY)return;
  MANDATORY.queue(state,MANDATORY_EVENTS);
 }
+function autoTravelForEvent(place){
+ if(!place||!places[place]||state.location===place)return false;
+ state.visitedLocations=state.visitedLocations||{};
+ state.visitedLocations[place]=true;
+ state.location=place;
+ state.selected=null;
+ return true;
+}
+function arriveForScheduledPlan(){
+ if(state.pendingDuel||state.activeStory||state.activeSituation||state.activeEncounter||state.activeArc||state.activeSideQuest||state.activeAppointment||state.mandatoryEventState?.active)return false;
+ const due=APPOINTMENTS.active(state).find(e=>e.day===state.day&&e.slot===state.slot&&places[e.place]);
+ return due?autoTravelForEvent(due.place):false;
+}
+function mandatoryDestination(event){
+ if(event?.place&&places[event.place])return event.place;
+ if(event?.location&&places[event.location])return event.location;
+ // Character packs can declare a destination; otherwise use the character's current schedule.
+ if(event?.characterId){
+  const scheduled=SCHEDULES.locationFor(event.characterId,state.day,state.slot,APPOINTMENTS.overrides(state));
+  if(places[scheduled])return scheduled;
+ }
+ return null;
+}
 function maybeStartMandatory(){
  if(!MANDATORY)return;
  queueMandatory();
@@ -209,7 +232,8 @@ function maybeStartMandatory(){
  // Existing scripted dialogue, character choices, galleries, duel preparation and starter selection remain authoritative.
  if(state.activeSliceOfLife||scene.line||scene.choices?.length||state.deckJourney&&!state.deckJourney.starter
     ||$('cgMoment')?.open||$('preDuelDialog')?.open||$('galleryDialog')?.open||$('calendarDialog')?.open)return;
- if(MANDATORY.takeNext(state,MANDATORY_EVENTS)){persist();}
+ const started=MANDATORY.takeNext(state,MANDATORY_EVENTS);
+ if(started){autoTravelForEvent(mandatoryDestination(MANDATORY_EVENTS.find(e=>e.id===started.id)));persist();}
 }
 function mandatoryText(value){
  const results=Array.isArray(state.results)?state.results:[],wins=results.filter(x=>x.won===true).length;
@@ -302,7 +326,7 @@ const missedQuests=SIDE.expire(state);if(missedQuests.length)log('A local side-q
 const missedAppointments=APPOINTMENTS.expire(state);
 INTENTIONS.hydrate(state); // Expire yesterday's optional choice before saving the new day.
 for(const plan of missedAppointments)log('You missed your planned meet-up with '+(cast[plan.npc]?.name||'a trainer')+'.');
-queueMandatory();persist();if(!suppressTimeFlash)timeFlash(beforeDay,beforeSlot,transitionSource);}
+queueMandatory();arriveForScheduledPlan();persist();if(!suppressTimeFlash)timeFlash(beforeDay,beforeSlot,transitionSource);}
 function say(speaker,line,choices=[]){scene={speaker,line,choices};state.scene=scene;persist();render();}
 function sayConversation(lines,afterChoices=[],reactionId=null,invitation=null){
  if(!Array.isArray(lines)||!lines.length)return;
