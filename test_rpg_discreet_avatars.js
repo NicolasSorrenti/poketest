@@ -3,56 +3,91 @@ const assert=require('node:assert/strict');
 const fs=require('node:fs');
 const path=require('node:path');
 const vm=require('node:vm');
+
 const source=fs.readFileSync(path.join(__dirname,'rpg_discreet_avatars.js'),'utf8');
 const css=fs.readFileSync(path.join(__dirname,'rpg_discreet.css'),'utf8');
 const rpg=fs.readFileSync(path.join(__dirname,'rpg.js'),'utf8');
 const duel=fs.readFileSync(path.join(__dirname,'rpg_match_reactions.js'),'utf8');
 const html=fs.readFileSync(path.join(__dirname,'rpg.html'),'utf8');
 const live=fs.readFileSync(path.join(__dirname,'classic_live.html'),'utf8');
-const made=[];
-const nodes=[];
-const root={dataset:{rpgDiscreet:'off'}};
-const document={
- documentElement:root,
- createElement(tag){
-  const image={tagName:tag,className:'',dataset:{},hidden:false,src:''};
-  image.classList={contains:cls=>image.className.split(' ').includes(cls)};
-  made.push(image);
-  return image;
- },
- querySelectorAll:()=>nodes
-};
-const win={document};
-vm.runInNewContext(source,{window:win});
-const api=win.NeoRpgDiscreetAvatars;
-assert.ok(api,'The browser exposes a single SFW art API');
-const happy=api.url('reina','happy'),sad=api.url('reina','vulnerable');
-assert.equal(api.url('reina','happy'),happy);
-assert.ok(happy.includes('10.x/lorelei/svg?'));
-assert.ok(happy.includes('mouthVariant=happy08'));
-assert.ok(sad.includes('mouthVariant=sad04'));
-assert.equal(happy.split('&')[0],sad.split('&')[0],'Emotions preserve character seed');
-assert.notEqual(api.url('reina').split('&')[0],api.url('sol').split('&')[0]);
-const box={dataset:{},children:[],append(el){this.children.push(el);}};
-nodes.push(box);
-api.set(box,'reina','neutral','Reina Kurogane');
-assert.equal(made.length,0,'No external avatar request before opt-in');
-root.dataset.rpgDiscreet='on';
-api.refresh();
-assert.equal(box.children.length,1);
-assert.match(box.children[0].src,/neo-harbor-discreet-reina/);
-api.set(box,'reina','happy','Reina Kurogane');
-assert.equal(box.children.length,1,'Rendering reuses the existing img element');
-assert.equal(box.children[0].src,happy);
-box.children[0].onerror();
-assert.equal(box.children[0].hidden,true,'Broken API artwork fails closed');
-assert.match(css,/\.rpg-safe-avatar\[hidden\]/);
-assert.match(css,/\.npc-reaction-portrait img:not\(\.rpg-safe-avatar\)/);
-assert.ok(!css.includes('.pack-card img'),'Pokémon card artwork is not suppressed');
-assert.match(rpg,/NeoRpgDiscreetAvatars\?\.set\?\.\(button,id,expression/);
-assert.match(rpg,/NeoRpgDiscreetAvatars\?\.set\?\.\(avatar,id,'neutral'/);
-assert.match(duel,/NeoRpgDiscreetAvatars\?\.set/);
-assert.match(html,/rpg_discreet_avatars\.js/);
-assert.match(live,/rpg_discreet_avatars\.js/);
-assert.doesNotMatch(source,/\b(?:persist|saveCampaign|localStorage\.setItem|sessionStorage\.setItem)\s*\(/);
-console.log('RPG SFW avatars: stable characters, expressions, opt-in, API fallback and surface wiring passed.');
+
+(async()=>{
+ const made=[],nodes=[],requests=[],draws=[];
+ const root={dataset:{rpgDiscreet:'off'}};
+ const ctx={
+  createLinearGradient(){return {addColorStop(){}};},
+  fillRect(){},
+  drawImage(...args){draws.push(args);}
+ };
+ class SourceImage{
+  set src(src){this._src=src;requests.push(src);this.naturalWidth=256;this.naturalHeight=256;this.onload();}
+  get src(){return this._src;}
+ }
+ const document={
+  documentElement:root,
+  createElement(tag){
+   if(tag==='canvas')return {getContext:()=>ctx,toDataURL:()=> 'data:image/webp;base64,AAAA'};
+   const image={tagName:tag,className:'',dataset:{},hidden:false,src:''};
+   image.classList={contains:cls=>image.className.split(' ').includes(cls)};
+   made.push(image);
+   return image;
+  },
+  querySelectorAll:()=>nodes
+ };
+ const win={document,Image:SourceImage};
+ vm.runInNewContext(source,{window:win,Promise});
+ const api=win.NeoRpgDiscreetAvatars;
+ assert.ok(api,'Browser exports the local anime headshot API');
+ const ids=['akari','alma','camila','elio','hana','iris','jun','kaede',
+  'marina','nereo','reina','shiori','sol','teo','yuna',
+  'jinx','luna','rina','elena','sierra'];
+ for(const id of ids){
+  const localPath=api.url(id);
+  assert.ok(localPath.startsWith('/rpg-assets/'),id+' should only load local art');
+  assert.ok(fs.existsSync(path.join(__dirname,localPath.slice(1))),id+' should have an existing asset');
+  for(const [w,h] of [[256,256],[188,281],[264,380]]){
+   const {sx,sy,size}=api.cropBox(id,w,h);
+   assert.ok(size>0&&sx>=0&&sy>=0&&sx+size<=w+0.01&&sy+size<=h+0.01,id+' crop must stay inside the asset');
+   assert.ok(size<w*0.8,id+' must use a tightly cropped headshot');
+  }
+ }
+ assert.equal(api.url('../bad'),'');
+ assert.equal(api.url('https://example.com'),'');
+ assert.equal(api.url(''),'');
+ assert.equal(api.emotion('weakness-hit'),'weakness_hit');
+ assert.equal(api.initials('Jinx Rivera'),'JR');
+ assert.ok(!source.includes('api.dicebear.com'),'No external cartoon avatar dependency');
+
+ const box={dataset:{},children:[],append(img){this.children.push(img);}};
+ nodes.push(box);
+ api.set(box,'reina','neutral','Reina Kurogane');
+ assert.equal(made.length,0,'No image is loaded while Discreet Mode is disabled');
+ root.dataset.rpgDiscreet='on';
+ api.refresh();
+ await Promise.resolve();
+ await Promise.resolve();
+ assert.equal(box.children.length,1);
+ assert.equal(requests.length,1);
+ assert.equal(requests[0],api.url('reina'));
+ assert.equal(box.children[0].src,'data:image/webp;base64,AAAA');
+ assert.equal(box.children[0].hidden,false);
+ assert.equal(draws.length,1,'One canvas head crop is drawn');
+ assert.ok(draws[0][3]<256,'Canvas must not show the whole source artwork');
+ api.set(box,'reina','happy','Reina Kurogane');
+ assert.equal(box.children.length,1,'Keep the same headshot image between emotions');
+ assert.equal(requests.length,1,'One local image request per character');
+ box.children[0].onerror();
+ assert.equal(box.children[0].hidden,true,'Broken headshot fails closed, never showing full art');
+
+ assert.match(css,/\.rpg-safe-avatar\[hidden\]/);
+ assert.match(css,/\.npc-reaction-portrait img:not\(\.rpg-safe-avatar\)/);
+ assert.ok(!css.includes('data-rpg-discreet="on"] #scene{'),'Location backgrounds are not overridden');
+ assert.ok(!css.includes('.pack-card img'),'Pokémon card art remains visible');
+ assert.match(rpg,/NeoRpgDiscreetAvatars\?\.set\?\.\(button,id,expression/);
+ assert.match(rpg,/NeoRpgDiscreetAvatars\?\.set\?\.\(avatar,id,'neutral'/);
+ assert.match(duel,/NeoRpgDiscreetAvatars\?\.set/);
+ assert.match(html,/rpg_discreet_avatars\.js/);
+ assert.match(live,/rpg_discreet_avatars\.js/);
+ assert.doesNotMatch(source,/\b(?:persist|saveCampaign|localStorage\.setItem|sessionStorage\.setItem)\s*\(/);
+ console.log('RPG Discreet Mode: 20 local portraits, face crops, toggle, fallback and UI wiring passed.');
+})().catch(err=>{console.error(err);process.exitCode=1;});
