@@ -1,0 +1,45 @@
+{
+  "note": "Asset paths only. Story-event integration requires code changes; these images are not automatically displayed.",
+  "scenes": [
+    {
+      "storyId": "reina_another_hour",
+      "title": "Another Hour",
+      "dayRange": [
+        7,
+        19
+      ],
+      "full": "/rpg-assets/events/cg/season01/reina_another_hour.webp",
+      "thumbnail": "/rpg-assets/events/cg/season01/thumbs/reina_another_hour.webp"
+    },
+    {
+      "storyId": "reina_pressure_point",
+      "title": "Pressure Point",
+      "dayRange": [
+        26,
+        41
+      ],
+      "full": "/rpg-assets/events/cg/season01/reina_pressure_point.webp",
+      "thumbnail": "/rpg-assets/events/cg/season01/thumbs/reina_pressure_point.webp"
+    },
+    {
+      "storyId": "reina_side_by_side",
+      "title": "Side by Side",
+      "dayRange": [
+        52,
+        66
+      ],
+      "full": "/rpg-assets/events/cg/season01/reina_side_by_side.webp",
+      "thumbnail": "/rpg-assets/events/cg/season01/thumbs/reina_side_by_side.webp"
+    },
+    {
+      "storyId": "reina_the_match_after",
+      "title": "The Match After",
+      "dayRange": [
+        76,
+        88
+      ],
+      "full": "/rpg-assets/events/cg/season01/reina_the_match_after.webp",
+      "thumbnail": "/rpg-assets/events/cg/season01/thumbs/reina_the_match_after.webp"
+    }
+  ]
+}
