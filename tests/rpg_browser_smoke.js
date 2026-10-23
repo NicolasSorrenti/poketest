@@ -178,8 +178,11 @@ const acknowledgeMandatory=async(page)=>{
   assert.ok(pending?.id,'NPC challenge creates a campaign duel');
   await page.waitForFunction(id=>!!sessionStorage.getItem('neoRpgDuelToken:'+encodeURIComponent(id)),pending.id,{timeout:45000});
   const inner=page.frameLocator('#battle');
-  await inner.locator('#phaseText').waitFor({timeout:45000});
+  // phaseText was removed from the Classic battle UI. Check the actual
+  // authoritative duel surface, not a deleted selector.
+  await inner.locator('#duel').waitFor({state:'visible',timeout:45000});
   assert.equal(await inner.locator('#turnCoach').count(),1);
+  assert.equal(await inner.locator('#startupError').textContent(),'','Battle bootstrap must complete without errors');
   // In a real campaign iframe the opponent's attack art must be visible two
   // seconds after appearing. This visual-only rehearsal does not change rules.
   const attackArt=await inner.locator('.stage').evaluate(async stage=>{
@@ -234,10 +237,9 @@ const acknowledgeMandatory=async(page)=>{
   });
   assert.ok(handGeometry.height>=65&&handGeometry.top>=0&&handGeometry.bottom<handGeometry.viewport-25,
    'CPU/RPG hand card must stay fully visible inside the iframe, not clipped by compact last row');
-  await inner.locator('#handToggle').click();
-  assert.equal(await inner.locator('#handFan').isVisible(),false);
-  await inner.locator('#handToggle').click();
+  // The desktop hand is intentionally always visible: no hide/show toggle.
   assert.equal(await inner.locator('#handFan').isVisible(),true);
+  assert.equal(await inner.locator('#handToggle').count(),0,'Desktop hand toggle must remain removed');
   await save(page,'02-campaign-duel.png');
   // A reload DURING the match must resume the same server-authoritative session.
   const tokenBefore=await page.evaluate(id=>sessionStorage.getItem('neoRpgDuelToken:'+encodeURIComponent(id)),pending.id);
