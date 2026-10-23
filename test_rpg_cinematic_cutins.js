@@ -136,9 +136,12 @@ async function verifyDelayedArtwork(){
  stale.update({view:view(6),activity:[]});
  stale.update({view:view(6),activity:[{seq:4,type:'attack',side:1,label:'Tackle'}]});
  const canceled=stale.whenShown(),beforeCancelCount=calls.length;
+ await new Promise(resolve=>setImmediate(resolve)); // Let VN errors reach the pending attack fallback.
+ const pendingStale=pending.get(attack)?.at(-1);
+ assert.ok(typeof pendingStale?.onload==='function','Stale image request should still be pending');
  stale.reset();
  await canceled;
- pending.get(attack).at(-1).onload();
+ pendingStale.onload?.();
  await new Promise(resolve=>setImmediate(resolve));
  assert.equal(classes.has('hidden'),true,'old image must not revive canceled cut-in');
  assert.equal(calls.length,beforeCancelCount,'no stale chat entry');
