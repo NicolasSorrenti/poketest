@@ -15,6 +15,7 @@ const {CubeService}=require('./cube_service');
 const cube=new CubeService();
 const {CubeRoomService}=require('./cube_room_service');
 const cubeRooms=new CubeRoomService({classic,online});
+const CUBE_PLAYMAT_OWNER_EMAIL='nicolassorrenti2@gmail.com';
 const {sendCardImage}=require('./cube_card_images');
 const sendJSON=(res,status,value)=>{res.writeHead(status,{'Content-Type':'application/json; charset=utf-8','Cache-Control':'no-store','X-Content-Type-Options':'nosniff'});res.end(JSON.stringify(value));};
 async function parseJSON(req,maxBytes=65536){return new Promise((resolve,reject)=>{
@@ -99,6 +100,18 @@ async function api(req,res,pathName,url){
   return sendJSON(res,404,{error:'Unknown Classic API endpoint'});
  }catch(error){const msg=String(error.message||'Unknown error');const status=/Unauthorized|token|session|Sign in|auth|login/i.test(msg)?401:/Stale match revision|CONFLICT/i.test(msg)?409:400;return sendJSON(res,status,{error:msg});}
 }
+// Cube playmat permissions come from Supabase's verified user endpoint,
+// never from room names, user-provided email, or browser-owned seat tokens.
+async function canEditOnlinePlaymat(req,code,token){
+ const {room,side}=online.session(code,token);
+ if(side===null)return false;
+ if(!room.cube)return true;
+ try{
+  const bearer=rpgDuels.bearer(req.headers.authorization);
+  const user=await rpgDuels.api('/auth/v1/user',bearer);
+  return typeof user?.email==='string'&&user.email.trim().toLowerCase()===CUBE_PLAYMAT_OWNER_EMAIL&&!!user.email_confirmed_at;
+ }catch{return false;}
+}
 async function onlineAPI(req,res,pathName,url){
  const origin=req.headers.origin;
  if(origin){let u;try{u=new URL(origin);}catch{sendJSON(res,403,{error:'Invalid origin'});return;}
@@ -112,10 +125,15 @@ async function onlineAPI(req,res,pathName,url){
   if(typeof token!=='string'||!token)return sendJSON(res,401,{error:'Missing duel token'});
   if(pathName==='/api/online/state'&&req.method==='GET')return sendJSON(res,200,online.state(url.searchParams.get('code'),token));
   if(pathName==='/api/online/chat'&&req.method==='POST'){const body=await parseJSON(req);return sendJSON(res,200,online.chatMessage(body.code,token,body));}
+  if(pathName==='/api/online/playmat-permission'&&req.method==='GET'){
+   const canEdit=await canEditOnlinePlaymat(req,url.searchParams.get('code'),token);
+   return sendJSON(res,200,{canEdit});
+  }
   if(pathName==='/api/online/playmat'&&req.method==='GET')return sendJSON(res,200,online.getPlaymat(url.searchParams.get('code'),token,Number(url.searchParams.get('side'))));
   if(pathName==='/api/online/playmat'&&req.method==='POST'){
    const body=await parseJSON(req,240000);
-   return sendJSON(res,200,online.setPlaymat(body.code,token,body));
+   const canEdit=await canEditOnlinePlaymat(req,body.code,token);
+   return sendJSON(res,200,online.setPlaymat(body.code,token,body,canEdit));
   }
   if(['/api/online/ready','/api/online/deck','/api/online/name','/api/online/start','/api/online/action','/api/online/leave'].includes(pathName)&&req.method==='POST'){
    const body=await parseJSON(req);
@@ -124,7 +142,7 @@ async function onlineAPI(req,res,pathName,url){
   }
   return sendJSON(res,404,{error:'Unknown Online API endpoint'});
  }catch(error){const msg=String(error.message||'Unknown error');
-  const status=/Spectators cannot/i.test(msg)?403:/Unauthorized|token/i.test(msg)?401:/Playmat cooldown|Stale match revision/.test(msg)?409:/Room not found|expired/.test(msg)?404:400;
+  const status=/Spectators cannot|Only the account owner/i.test(msg)?403:/Unauthorized|token/i.test(msg)?401:/Playmat cooldown|Stale match revision/.test(msg)?409:/Room not found|expired/.test(msg)?404:400;
   return sendJSON(res,status,{error:msg});}
 }
 async function cubeAPI(req,res,pathName){
