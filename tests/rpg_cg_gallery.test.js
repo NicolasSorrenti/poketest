@@ -5,10 +5,11 @@ const names=['hana','reina','shiori','yuna','akari','camila','marina','kaede'];
 const state=(extra={})=>({day:10,slot:1,location:'shop',
  relationships:Object.fromEntries(names.map(id=>[id,{affection:9,trust:9}])),
  bonds:Object.fromEntries(names.map(id=>[id,{affection:9,trust:9}])),...extra});
-test('the entire planned CG queue has 45 unique, complete brief records',()=>{
- assert.equal(CG.catalog.length,45);assert.deepEqual(CG.validate(),[]);
- assert.equal(new Set(CG.catalog.map(x=>x.id)).size,45);
- for(const id of names)assert.deepEqual(CG.catalog.filter(x=>x.character===id).map(x=>x.category),CG.categories);
+test('the original 45 CGs and 34 standalone slice-of-life briefs coexist without duplicates',()=>{
+ const legacy=CG.catalog.filter(x=>x.trigger!=='slice'),ambient=CG.catalog.filter(x=>x.trigger==='slice');
+ assert.equal(legacy.length,45);assert.equal(ambient.length,34);assert.equal(CG.catalog.length,79);
+ assert.deepEqual(CG.validate(),[]);assert.equal(new Set(CG.catalog.map(x=>x.id)).size,79);
+ for(const id of names)assert.deepEqual(legacy.filter(x=>x.character===id).map(x=>x.category),CG.categories);
 });
 test('first encounters grant only the correct profile and never other characters',()=>{
  const s=state({relationships:{hana:{affection:0}}});
@@ -53,7 +54,7 @@ test('social, special and before-duel moments are not granted by unrelated trigg
 test('locked gallery reveals no titles or image paths and cannot mark views',()=>{
  const s=state({relationships:{hana:{affection:0}}});
  const gallery=CG.gallery(s,{character:'hana'});
- assert.equal(gallery.length,4);
+ assert.equal(gallery.length,6);
  assert.ok(gallery.every(x=>!x.unlocked&&x.title==='???'&&x.path===null&&x.thumb===null));
  assert.equal(CG.markViewed(s,'hana_first_meeting'),false);
  CG.record(s,'meet','hana');
@@ -80,12 +81,12 @@ test('legacy save migration repairs invalid CG metadata and preserves character 
 test('only known unlocked images can be displayed; invalid seasons and negative time reject events',()=>{
  const s=state({day:91});assert.deepEqual(CG.record(s,'meet','hana'),[]);
  s.day=3;s.slot=-1;assert.deepEqual(CG.record(s,'meet','hana'),[]);
- assert.equal(CG.gallery(s).length,45);
+ assert.equal(CG.gallery(s).length,79);
  assert.equal(CG.gallery(s,{category:'special'}).length,16);
 });
 test('the manifest is ready for the art agent with exact uniquely addressed images',()=>{
- const paths=CG.catalog.flatMap(x=>[x.path,x.thumb]);assert.equal(new Set(paths).size,90);
- for(const path of paths)assert.match(path,/^\/rpg-assets\/events\/cg\/season01\/(?:thumbs\/)?[a-z0-9_]+\.webp$/);
+ const paths=CG.catalog.flatMap(x=>[x.path,x.thumb]);assert.equal(new Set(paths).size,158);
+ for(const path of paths)assert.match(path,/^\/rpg-assets\/events\/cg\/(?:season01|slice-life)\/(?:thumbs\/)?[a-z0-9_]+\.webp$/);
 });
 
 test('special CG is exclusive to a verified, completed G5 situation event',()=>{
