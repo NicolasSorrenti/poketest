@@ -63,7 +63,7 @@ assert.equal(displaySignature('shop','Cards'),'shop\u001fCards');
 const game=fs.readFileSync('rpg.js','utf8'),html=fs.readFileSync('rpg.html','utf8');
 assert.match(game,/NeoRpgRenderPerf\.reconcileKeyed\(body,entries/,'dock reconciliation integrated');
 assert.match(game,/NeoRpgRenderPerf\.reconcileKeyed\(\$\('places'\),placeEntries/,'map reconciliation integrated');
-assert.match(game,/if\(portraitRoot\.dataset\.npc!==nextPortrait\)/,'portrait preserves image');
+assert.match(game,/if\(portraitRoot\.dataset\.npc!==nextPortrait\|\|portraitRoot\.dataset\.artSrc!==nextArt\)/,'portrait preserves image until the character or outfit changes');
 assert.match(game,/const selected=button\.dataset\.tab===rpgLocalTab/,'selected tab updates on same button');
 assert.match(html,/src="\/rpg_render_perf\.js"/,'script referenced by RPG');
 assert.equal(html.indexOf('rpg_render_perf.js')<html.indexOf('src="/rpg.js"'),true,'script loaded first');
