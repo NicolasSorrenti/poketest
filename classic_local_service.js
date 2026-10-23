@@ -75,7 +75,7 @@ class ClassicLocalService {
    const legality=validateDeck(cpuCards,CATALOG);
    if(!legality.valid)throw Error('Invalid progressed NPC deck: '+legality.errors[0]);
   }
-  const expanded=deck==='custom'||customOpponentDeck!==undefined||EXPANDED[deck]||EXPANDED[opponent]||[...playerCards,...cpuCards].some(id=>id.startsWith('gym')&&!RETAIL.gymIds.includes(id));
+  const expanded=deck==='custom'||customOpponentDeck!==undefined||HAYMAKER.has(deck)||HAYMAKER.has(opponent)||EXPANDED[deck]||EXPANDED[opponent]||[...playerCards,...cpuCards].some(id=>id.startsWith('gym')&&!RETAIL.gymIds.includes(id));
   const format=[...playerCards,...cpuCards].some(id=>['neo1','neo2','neo3','neo4'].some(set=>id.startsWith(set+'-')))?(expanded?'online-preview':'neo-theme'):expanded?'gym-expanded':RETAIL.meta[deck]?.gym||RETAIL.meta[opponent]?.gym?'gym-theme':[...playerCards,...cpuCards].some(id=>id.startsWith('base4'))?'theme-expanded':'classic';
   let game=createGame({decks:[playerCards,cpuCards],names:['You','Classic CPU'],format,...(prizeCount?{prizeCount}:{}),seed:seed??crypto.randomBytes(4).readUInt32BE(0)});
   game=driveBot(game,200,cpuConfig).game;
