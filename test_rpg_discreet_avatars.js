@@ -57,6 +57,7 @@ const live=fs.readFileSync(path.join(__dirname,'classic_live.html'),'utf8');
  assert.equal(api.emotion('weakness-hit'),'weakness_hit');
  assert.equal(api.initials('Jinx Rivera'),'JR');
  assert.ok(!source.includes('api.dicebear.com'),'No external cartoon avatar dependency');
+ assert.match(source,/characters\/yuna\/discreet\/neutral\.webp/,'Approved art uses its own Discreet Mode path');
 
  const box={dataset:{},children:[],append(img){this.children.push(img);}};
  nodes.push(box);
@@ -79,6 +80,14 @@ const live=fs.readFileSync(path.join(__dirname,'classic_live.html'),'utf8');
  box.children[0].onerror();
  assert.equal(box.children[0].hidden,true,'Broken headshot fails closed, never showing full art');
 
+ const yunaBox={dataset:{},children:[],append(img){this.children.push(img);}};
+ api.set(yunaBox,'yuna','happy','Yuna');
+ await Promise.resolve();
+ await Promise.resolve();
+ assert.equal(yunaBox.dataset.rpgSafeKind,'chibi');
+ assert.equal(yunaBox.children[0].src,'/rpg-assets/characters/yuna/discreet/neutral.webp');
+ assert.equal(draws.length,1,'Chibi must bypass the head-only canvas crop');
+ assert.match(css,/\[data-rpg-safe-kind="chibi"\]/);
  assert.match(css,/\.rpg-safe-avatar\[hidden\]/);
  assert.match(css,/\.npc-reaction-portrait img:not\(\.rpg-safe-avatar\)/);
  assert.ok(!css.includes('data-rpg-discreet="on"] #scene{'),'Location backgrounds are not overridden');

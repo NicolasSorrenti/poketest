@@ -12,6 +12,9 @@
   'nereo','reina','shiori','sol','teo','yuna'
  ]);
  // The remaining main characters have character-specific portrait crops.
+ // Full-body SFW chibis for Discreet Mode. Use existing safe sprite until approved art ships.
+ const CHIBI_FALLBACKS={yuna:'characters/yuna/chibi/front.png'};
+ const CHIBI_APPROVED={yuna:'characters/yuna/discreet/neutral.webp'};
  const OTHER_PORTRAITS={
   jinx:'characters/jinx/neutral.webp',
   luna:'characters/luna/expression-faces/neutral.webp',
@@ -50,6 +53,7 @@
  function url(id){
   const key=validId(id);
   if(!key)return '';
+  if(CHIBI_FALLBACKS[key])return '/rpg-assets/'+CHIBI_FALLBACKS[key];
   if(OTHER_PORTRAITS[key])return '/rpg-assets/'+OTHER_PORTRAITS[key];
   return '/rpg-assets/'+(AVATAR_IDS.has(key)
    ?'ui/avatars/'+key+'.webp'
@@ -71,6 +75,18 @@
  function loadPortrait(id){
   if(cache.has(id))return cache.get(id);
   const src=url(id);
+  if(CHIBI_FALLBACKS[id]){
+   // Full-body artwork is never sent through the headshot crop canvas.
+   const promise=new Promise(resolve=>{
+    if(!win?.Image){resolve(src);return;}
+    const probe=new win.Image();
+    probe.onload=()=>resolve('/rpg-assets/'+CHIBI_APPROVED[id]);
+    probe.onerror=()=>resolve(src); // Existing in-repo chibi remains fully SFW.
+    probe.src='/rpg-assets/'+CHIBI_APPROVED[id];
+   });
+   cache.set(id,promise);
+   return promise;
+  }
   if(!src||!win?.Image||!win?.document?.createElement)return Promise.resolve(null);
   const promise=new Promise(resolve=>{
    const source=new win.Image();
@@ -125,6 +141,7 @@
   if(!node||!validId(id))return;
   node.dataset.rpgSafeId=validId(id);
   node.dataset.rpgSafeEmotion=emotion(mood);
+  node.dataset.rpgSafeKind=CHIBI_FALLBACKS[validId(id)]?'chibi':'headshot';
   node.dataset.rpgSafeInitials=initials(name||id);
   render(node);
  }

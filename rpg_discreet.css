@@ -141,3 +141,8 @@
  :root[data-rpg-discreet="on"] .rpg-cast-member .rpg-safe-avatar{height:min(65%,75px);width:min(90%,75px)}
  :root[data-rpg-discreet="on"] .npc-reaction-card{grid-template-columns:32% minmax(0,1fr)!important}
 }
+
+/* Approved full-body SFW chibis use the complete silhouette, not the headshot crop. */
+:root[data-rpg-discreet="on"] [data-rpg-safe-kind="chibi"] .rpg-safe-avatar{
+ object-fit:contain!important;object-position:center center;background:transparent;
+}
