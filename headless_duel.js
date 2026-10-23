@@ -278,7 +278,7 @@ function planFinalAttack(g,side,attackIndex,program,plan={side,attackIndex,data:
  if(kind==='prophecy'&&!Object.hasOwn(data,'deckOrder')){
   const top=g.players[data.deckOwner].deck.slice(-3).reverse();
   if(!top.length){data.deckOrder=[];return finish();}
-  finalChoice(g,plan,'prophecy-order',side,top.map((id,i)=>({id:`top:${i}`,label:`${card(g,id).name} (${i+1})`})),{min:top.length,max:top.length,label:'Arrange cards from TOP to BOTTOM'});return;
+  finalChoice(g,plan,'prophecy-order',side,top.map((id,i)=>({id:`top:${i}`,label:`${card(g,id).name} (${i+1})`,cardId:id})),{min:top.length,max:top.length,label:'Arrange cards from TOP to BOTTOM'});return;
  }
  if(['copy-attack','amnesia'].includes(kind)&&!Object.hasOwn(data,'copyIndex')){
   // Never offer a copied attack which our reducer cannot actually execute.
@@ -369,7 +369,7 @@ function themeAttackPlan(g,plan){
  };
  const energy=(owner,slot=-1)=>located(owner,slot).energies.map((id,i)=>({id:`energy:${i}`,label:card(g,id).name}));
  const bench=(owner)=>owner.bench.map((x,i)=>({id:`bench:${i}`,label:publicName(g,x)}));
- const top=(ids,pred)=>ids.flatMap((id,i)=>pred(card(g,id))?[{id:`deck:${i}`,label:card(g,id).name}]:[]);
+ const top=(ids,pred)=>ids.flatMap((id,i)=>pred(card(g,id))?[{id:`deck:${i}`,label:card(g,id).name,cardId:id}]:[]);
  const activeOptions=()=>[{id:'slot:-1',label:'Active: '+card(g,f.active.id).name},...f.bench.map((x,i)=>({id:`slot:${i}`,label:'Bench: '+card(g,x.id).name}))];
  // Announce Confusion/Smokescreen checks *before* attack-specific coin flips.
  if(!data.checked){data.checked=true;
@@ -949,7 +949,7 @@ function performAction(g,side,cmd){
    return;
   }
   if(next(g,2)===0){log(g,'Energy Stadium flip was tails.');return;}
-  const choices=p.discard.flatMap((id,i)=>/^(Grass|Fire|Water|Lightning|Psychic|Fighting) Energy$/.test(card(g,id).name)?[{id:`card:${i}`,label:card(g,id).name}]:[]);
+  const choices=p.discard.flatMap((id,i)=>/^(Grass|Fire|Water|Lightning|Psychic|Fighting) Energy$/.test(card(g,id).name)?[{id:`card:${i}`,label:card(g,id).name,cardId:id}]:[]);
   if(!choices.length)return;
   g.nextDecisionId++;
   g.pendingDecision=makeDecision({id:`stadium:${g.nextDecisionId}`,actor:side,kind:'energy-stadium',label:'Energy Stadium: recover a Basic Energy',options:choices,min:0,max:1,optional:true});
@@ -1100,7 +1100,7 @@ function performAction(g,side,cmd){
    const mareepCount=g.players.reduce((n,owner)=>n+allPokemon(owner).filter(v=>!v.secretPlanFaceDown&&card(g,v.id).name==='Mareep').length,0);
    const eligible=p.deck.flatMap((id,i)=>card(g,id).name==='Lightning Energy'?[i]:[]);
    if(eligible.length&&mareepCount){
-    g.nextDecisionId++;g.pendingDecision=makeDecision({id:`neo47Static:${g.nextDecisionId}`,actor:side,kind:'card-search',label:`Static Electricity: attach up to ${mareepCount} Lightning Energy card(s) to the attacker`,options:eligible.map(i=>({id:`card:${i}`,label:`${card(g,p.deck[i]).name} (${i+1})`})),min:0,max:Math.min(mareepCount,eligible.length),optional:true});
+    g.nextDecisionId++;g.pendingDecision=makeDecision({id:`neo47Static:${g.nextDecisionId}`,actor:side,kind:'card-search',label:`Static Electricity: attach up to ${mareepCount} Lightning Energy card(s) to the attacker`,options:eligible.map(i=>({id:`card:${i}`,label:`${card(g,p.deck[i]).name} (${i+1})`,cardId:p.deck[i]})),min:0,max:Math.min(mareepCount,eligible.length),optional:true});
     g.pendingAction={kind:'neo47_attack',stage:'static',side,attackIndex:index};return;
    }
    resolveAttack(g,side,index,undefined,undefined,{neo47Search:[]});return;
@@ -1216,7 +1216,7 @@ function performAction(g,side,cmd){
     return yes?[i]:[];
    });
    if(valid.length){const limit=program.kind==='gym:jellyfish-search'?valid.length:program.kind==='gym:charge-lightning'?program.maxSearch:1;
-    g.nextDecisionId++;g.pendingDecision=makeDecision({id:`gymsearch:${g.nextDecisionId}`,actor:side,kind:'card-search',label:`${a.name}: choose card(s)`,options:valid.map(i=>({id:`card:${i}`,label:card(g,source[i]).name})),min:0,max:Math.min(limit,valid.length),optional:true});g.pendingAction={kind:'attack_gym_search',side,attackIndex:index};return;}
+    g.nextDecisionId++;g.pendingDecision=makeDecision({id:`gymsearch:${g.nextDecisionId}`,actor:side,kind:'card-search',label:`${a.name}: choose card(s)`,options:valid.map(i=>({id:`card:${i}`,label:card(g,source[i]).name,cardId:source[i]})),min:0,max:Math.min(limit,valid.length),optional:true});g.pendingAction={kind:'attack_gym_search',side,attackIndex:index};return;}
   }
   if(a.name==='Floodlight'&&c.id==='neo1-38'&&CLASSIC_POWERS.enabled(g,u,'Hydroelectric Power')&&u.energies.some(id=>card(g,id).name==='Water Energy')){
    g.nextDecisionId++;g.pendingDecision=makeDecision({id:`neoHydro:${g.nextDecisionId}`,actor:side,kind:'power-option',label:'Hydroelectric Power: add 10 damage per unused Water Energy?',options:[{id:'boost:yes',label:'Use Hydroelectric Power'}],min:0,max:1,optional:true});
@@ -1263,7 +1263,7 @@ function performAction(g,side,cmd){
     if(program.kind==='rapid-evolution')return ['Gyarados','Dark Gyarados'].includes(c.name)&&c.supertype==='Pokémon'?[i]:[];
     return isEnergy(c)?[i]:[];
    });
-   if(eligible.length){g.nextDecisionId++;g.pendingDecision=makeDecision({id:`search:${g.nextDecisionId}`,actor:side,kind:'deck-search',label:`${a.name}: choose a card`,options:eligible.map(i=>({id:`card:${i}`,label:card(g,p.deck[i]).name})),min:1,max:1,optional:true});
+   if(eligible.length){g.nextDecisionId++;g.pendingDecision=makeDecision({id:`search:${g.nextDecisionId}`,actor:side,kind:'deck-search',label:`${a.name}: choose a card`,options:eligible.map(i=>({id:`card:${i}`,label:card(g,p.deck[i]).name,cardId:p.deck[i]})),min:1,max:1,optional:true});
     g.pendingAction={kind:program.kind==='rapid-evolution'?'attack_search_evolution':'attack_search_energy',side,attackIndex:index};return;}
   }
   if(program.kind==='fling'&&!f.bench.length)fail('Fling requires opposing Bench');
@@ -1298,7 +1298,7 @@ function performAction(g,side,cmd){
   if(program.kind==='call-family'){
    const choices=familyCandidates(g,side,program.restriction);
    if(choices.length){g.nextDecisionId++;
-    g.pendingDecision=makeDecision({id:`family:${g.nextDecisionId}`,actor:side,kind:'deck-search',label:`${a.name}: choose a Basic Pokémon (or fail to find)`,options:choices.map(o=>({id:`card:${o.index}`,label:o.name})),min:1,max:1,optional:true});
+    g.pendingDecision=makeDecision({id:`family:${g.nextDecisionId}`,actor:side,kind:'deck-search',label:`${a.name}: choose a Basic Pokémon (or fail to find)`,options:choices.map(o=>({id:`card:${o.index}`,label:o.name,cardId:p.deck[o.index]})),min:1,max:1,optional:true});
     g.pendingAction={kind:'attack_family',side,attackIndex:index};return;}
   }
   if(program.kind==='bench-up-to-three'&&f.bench.length>3){g.nextDecisionId++;
