@@ -13,7 +13,7 @@ const moments=()=>SITUATIONS.events.filter(e=>e.npc==='laca');
 function stateFor(day,slot,location){
  return STORY.normalize({
   day,slot,location,focus:70,hungOut:{},situationDone:{},activeSituation:null,
-  storyDone:{},storyMissed:{},storyFlags:{},relationships:{},
+  storyDone:{},storyMissed:{},storyFlags:{},relationships:{laca:{affection:2,trust:5,attraction:0,respect:0,duels:0}},
   bonds:{laca:{affection:2,trust:5,duels:0}},partner:null,routeOutcomes:{}
  });
 }
