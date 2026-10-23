@@ -1444,12 +1444,12 @@ const packs=[
     "cafe"
    ]
   ],
-  "arrivalDay": 5,
+  "arrivalDay": 1,
   "events": [
    {
     "id": "laca_route_1",
     "title": "Just Like Old Times",
-    "start": 5,
+    "start": 1,
     "end": 20,
     "place": "park",
     "slot": 0,
