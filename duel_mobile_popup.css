@@ -194,3 +194,16 @@
     content:none!important;
   }
 }
+
+/* Override older per-button grid placements (some use IDs and !important). */
+@media (max-width:780px) {
+  body.duel-active #duel > .below .turn-actions-panel .turn-actions #mobileAttacksToggle,
+  body.duel-active #duel > .below .turn-actions-panel .turn-actions #powersToggle,
+  body.duel-active #duel > .below .turn-actions-panel .turn-actions #undoBtn,
+  body.duel-active #duel > .below .turn-actions-panel .turn-actions #retreatBtn,
+  body.duel-active #duel > .below .turn-actions-panel .turn-actions #endBtn,
+  body.duel-active #duel > .below .turn-actions-panel .turn-actions #concedeBtn {
+    grid-column:auto!important;
+    grid-row:1!important;
+  }
+}
