@@ -158,6 +158,13 @@ function makePresetPool({preset='balanced',size=240,seed=1}={}){
  }else{
   // All-era Haymaker is a *draftable* multi-era pool, so ensure every era with
   // eligible Basic attackers is represented before filling its archetype lanes.
+  if(preset==='haymaker_kanto'||preset==='evolution_kanto'){
+   // Every fixed Kanto Cube must include all three historical expansions.
+   for(const set of ['base1','base2','base3']){
+    const fromSet=basics.filter(id=>id.startsWith(set+'-'));
+    if(fromSet.length)choose(fromSet,id=>pokemonWeight(id,preset),4);
+   }
+  }
   if(preset==='haymaker_eras'){
    for(const set of CHRONOLOGY){
     const eraBasics=basics.filter(id=>id.startsWith(set+'-'));
