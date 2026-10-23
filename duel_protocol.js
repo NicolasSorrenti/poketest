@@ -24,9 +24,9 @@ function projectPlayer(player,own,hideField=false){
 // Resolve only indexes into the choosing player's known card zones, never a
 // catalog search by name: different printings can share the same name.
 function choicePrinting(game,viewer,option,catalog){
- const match=/^(n|hand|deck|card|discard):(\d+)$/.exec(option.id);
+ const match=/^(n|hand|deck|discard):(\d+)$/.exec(option.id);
  if(!match)return null;
- const zone={n:'hand',hand:'hand',deck:'deck',card:'deck',discard:'discard'}[match[1]];
+ const zone={n:'hand',hand:'hand',deck:'deck',discard:'discard'}[match[1]];
  const id=game.players[viewer]?.[zone]?.[Number(match[2])];
  const name=catalog.get(id)?.name;
  const label=String(option.label||'');
