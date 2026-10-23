@@ -61,6 +61,38 @@ function validate(p,legalDecks=decks()){
  const validImage=(u,label)=>ensure(typeof u==='string'&&artPath.test(u)&&!u.includes('..')&&!u.includes('//'),id+': invalid /rpg-assets/ image '+label);
  validImage(a.portrait,'portrait');
  if(a.expressions!==undefined){ensure(plain(a.expressions),id+': invalid expressions');for(const [k,v] of Object.entries(a.expressions)){ensure(slug.test(k),id+': invalid expression key');validImage(v,k);}}
+ if(a.outfits!==undefined){
+  const o=a.outfits;
+  ensure(plain(o)&&plain(o.variants)&&words(o.default)&&Object.keys(o.variants).length>0,id+': invalid outfits');
+  ensure(Object.keys(o).every(k=>['default','variants','rules','sceneOverrides'].includes(k)),id+': unknown outfit fields');
+  ensure(Object.prototype.hasOwnProperty.call(o.variants,o.default),id+': default outfit not in variants');
+  const hasVariant=k=>slug.test(k)&&Object.prototype.hasOwnProperty.call(o.variants,k);
+  for(const [key,variant] of Object.entries(o.variants)){
+   ensure(hasVariant(key)&&plain(variant)&&Object.keys(variant).every(k=>['portrait','expressions'].includes(k)),id+': invalid outfit '+key);
+   validImage(variant.portrait,key+' portrait');
+   if(variant.expressions!==undefined){
+    ensure(plain(variant.expressions),id+': invalid outfit expressions');
+    for(const [emotion,url] of Object.entries(variant.expressions)){ensure(slug.test(emotion),id+': invalid outfit expression key');validImage(url,key+' '+emotion);}
+   }
+  }
+  if(o.rules!==undefined){
+   ensure(Array.isArray(o.rules),id+': invalid outfit rules');
+   for(const rule of o.rules){
+    ensure(plain(rule)&&hasVariant(rule.outfit),id+': outfit rule refers to unknown variant');
+    ensure(Object.keys(rule).every(k=>['outfit','locations','slots','weekdays','startDay','endDay'].includes(k)),id+': unknown outfit rule field');
+    ensure(['locations','slots','weekdays','startDay','endDay'].some(k=>rule[k]!==undefined),id+': outfit rule missing condition');
+    if(rule.locations!==undefined)ensure(Array.isArray(rule.locations)&&rule.locations.length>0&&rule.locations.every(x=>places.has(x)),id+': invalid outfit rule locations');
+    if(rule.slots!==undefined)ensure(Array.isArray(rule.slots)&&rule.slots.length>0&&rule.slots.every(x=>Number.isInteger(x)&&x>=0&&x<=2),id+': invalid outfit rule slots');
+    if(rule.weekdays!==undefined)ensure(Array.isArray(rule.weekdays)&&rule.weekdays.length>0&&rule.weekdays.every(x=>Number.isInteger(x)&&x>=0&&x<=6),id+': invalid outfit weekdays');
+    if(rule.startDay!==undefined)ensure(Number.isInteger(rule.startDay)&&rule.startDay>=1&&rule.startDay<=90,id+': invalid outfit startDay');
+    if(rule.endDay!==undefined)ensure(Number.isInteger(rule.endDay)&&rule.endDay>=1&&rule.endDay<=90&&rule.endDay>=(rule.startDay||1),id+': invalid outfit endDay');
+   }
+  }
+  if(o.sceneOverrides!==undefined){
+   ensure(plain(o.sceneOverrides),id+': invalid scene outfit overrides');
+   for(const [scene,variant] of Object.entries(o.sceneOverrides))ensure(slug.test(scene)&&hasVariant(variant),id+': invalid outfit scene '+scene);
+  }
+ }
  if(a.eventImages!==undefined){ensure(Array.isArray(a.eventImages),id+': eventImages must be array');for(const img of a.eventImages){ensure(ids.has(img.sceneId)&&words(img.prompt),id+': invalid event image reference/prompt');validImage(img.path,img.sceneId);}}
  return true;
 }
