@@ -6,6 +6,7 @@ const TUTORIAL=window.NeoRpgTutorials||null;
 const INVITES=window.NeoRpgEventInvites||null,SCENE_CAST=window.NeoRpgSceneCast,MANDATORY=window.NeoRpgMandatoryEvents||null,REACT=window.NeoRpgReactivity,COMMUNITY=window.NeoRpgCommunity,CONSEQ=window.NeoRpgConsequences,NPC_DECKS=window.NeoRpgNpcDeckProgression;
 const MANDATORY_EVENTS=[...(window.NeoRpgSeasonEvents?.events||[]),...(window.NeoRpgCharacterPacks?.mandatoryEvents||[])];
 const periods=['Morning','Afternoon','Evening'];
+const OUTFITS=window.NeoRpgOutfits;
 const places={
  home:['Your Apartment','Your base during the championship season.'],
  shop:['The Lucky Draw','Booster packs, friendly duels and the local card scene.'],
@@ -1618,8 +1619,20 @@ function openCalendar(){
  $('calendarDialog').showModal();
 }
 function makeAvatar(id,size=''){
- const img=document.createElement('img');img.src=cast[id].portrait||'/rpg-assets/'+id+'.png';img.alt=cast[id].name;img.loading='lazy';
- img.onerror=()=>{img.style.display='none';const span=document.createElement('span');span.className='avatar-fallback';span.textContent=cast[id].name.split(' ').map(x=>x[0]).join('');img.parentElement.append(span);};
+ const img=document.createElement('img'),paths=portraitPaths(id,'neutral');
+ img.src=paths.find(src=>!failedScenePortraits.has(src))||cast[id].portrait||'/rpg-assets/'+id+'.png';
+ img.alt=cast[id].name;img.loading='lazy';
+ img.onerror=()=>{
+  failedScenePortraits.add(img.getAttribute('src'));
+  const next=paths.find(src=>!failedScenePortraits.has(src));
+  if(next){img.src=next;return;}
+  img.style.display='none';
+  if(!img.parentElement?.querySelector('.avatar-fallback')){
+   const span=document.createElement('span');span.className='avatar-fallback';
+   span.textContent=cast[id].name.split(' ').map(x=>x[0]).join('');
+   img.parentElement?.append(span);
+  }
+ };
  return img;
 }
 
@@ -1734,17 +1747,22 @@ function refreshRpgPanels(){
   const active=button.dataset.panel===rpgActivePanel;button.classList.toggle('active',active);button.setAttribute('aria-pressed',String(active));
  }
 }
-// Guest art includes separately exported expressions; original cast keeps its portrait.
+// Outfit images are optional. All original character art remains a fallback.
 const expressionGuests=new Set(['alma','jun','nereo','teo','elio']);
-// Cache failed optional variants so dialogue does not repeatedly request missing art.
 const failedScenePortraits=new Set();
+let activeOutfitSceneId=null;
 const solExpressions={neutral:'neutral',surprised:'surprised',vulnerable:'worried',irritated:'worried',determined:'neutral',happy:'smile'};
-function scenePortraitSource(id,expression){
+function portraitPaths(id,expression='neutral',sceneId=activeOutfitSceneId){
  const fallback=cast[id].portrait||'/rpg-assets/'+id+'.png';
- let candidate=fallback;
- if(expressionGuests.has(id))candidate='/rpg-assets/characters/'+id+'/vn-expressions/'+expression+'.webp';
- if(id==='sol')candidate='/rpg-assets/characters/sol/expressions/'+(solExpressions[expression]||'neutral')+'.png';
- return failedScenePortraits.has(candidate)?fallback:candidate;
+ let legacy='';
+ if(expressionGuests.has(id))legacy='/rpg-assets/characters/'+id+'/vn-expressions/'+expression+'.webp';
+ if(id==='sol')legacy='/rpg-assets/characters/sol/expressions/'+(solExpressions[expression]||'neutral')+'.png';
+ const art=cast[id].outfitArt||window.NeoRpgCharacterPacks?.byId?.(id)?.art||null;
+ return OUTFITS?.sources?.(art,{location:state.location,slot:state.slot,day:state.day,sceneId},expression,{base:fallback,legacy})||[legacy,fallback].filter(Boolean);
+}
+function scenePortraitSource(id,expression,sceneId=activeOutfitSceneId){
+ const paths=portraitPaths(id,expression,sceneId);
+ return paths.find(src=>!failedScenePortraits.has(src))||paths[paths.length-1]||cast[id].portrait||'/rpg-assets/'+id+'.png';
 }
 function dialogueExpression(line){
  const s=String(line||'').toLowerCase();
@@ -1791,20 +1809,17 @@ function renderRpgCast(ids,locked,shown,portraitId,context={}){
   if(image){
    const expression=active?(window.NeoRpgCharacterMotion?.emotion?.(shown?.expression,dialogueExpression(shown?.line))||dialogueExpression(shown?.line)):'neutral';
    window.NeoRpgDiscreetAvatars?.set?.(button,id,expression,cast[id].name);
-   const path=scenePortraitSource(id,expression);
+   const paths=portraitPaths(id,expression,context.sceneId);
+   const path=scenePortraitSource(id,expression,context.sceneId);
    if(image.getAttribute('src')!==path){
-    const fallback=cast[id].portrait||'/rpg-assets/'+id+'.png';
     image.classList.remove('expression-change');
     image.style.display='';
     image.onerror=()=>{
-     // Ignore asynchronous failures from an older portrait request.
      const failed=image.getAttribute('src');
-     if(failed!==path&&failed!==fallback)return;
-     if(failed===path&&path!==fallback){
-      failedScenePortraits.add(path);
-      image.src=fallback;
-      return;
-     }
+     if(!paths.includes(failed))return;
+     failedScenePortraits.add(failed);
+     const next=paths.find(src=>!failedScenePortraits.has(src));
+     if(next){image.src=next;return;}
      image.style.display='none';
      if(!button.querySelector('.avatar-fallback')){
       const span=document.createElement('span');span.className='avatar-fallback';
@@ -1972,9 +1987,12 @@ function render(){
  const showingArc=state.activeArc?ARC.byId(state.activeArc.id):null;
  const sideQuest=state.activeSideQuest?SIDE.byId(state.activeSideQuest.id):null,sideOwner=sideQuest?.stages[state.sideQuests[state.activeSideQuest?.id]?.step]?.npc;
   const portraitId=mandatoryPortrait||showingSituation?.npc||showingStory?.npc||showingEncounter?.npc||(showingArc?'reina':null)||sideOwner||state.selected,portraitRoot=$('portrait');
+ activeOutfitSceneId=showingMandatory?.id||showingSituation?.id||showingStory?.id||showingEncounter?.id||showingArc?.id||sideQuest?.id||null;
  const nextPortrait=portraitId&&cast[portraitId]?portraitId:'';
- if(portraitRoot.dataset.npc!==nextPortrait){
-  portraitRoot.dataset.npc=nextPortrait;portraitRoot.replaceChildren();
+ const nextArt=nextPortrait?scenePortraitSource(nextPortrait,'neutral'):'';
+ if(portraitRoot.dataset.npc!==nextPortrait||portraitRoot.dataset.artSrc!==nextArt){
+  portraitRoot.dataset.npc=nextPortrait;portraitRoot.dataset.artSrc=nextArt;
+  portraitRoot.replaceChildren();
   if(nextPortrait)portraitRoot.append(makeAvatar(nextPortrait));
   else delete portraitRoot.dataset.rpgSafeId;
  }
@@ -2079,7 +2097,7 @@ function render(){
    !SCHEDULES.peopleAt(state.day,state.slot,state.location,publicAppointments(state.location)).includes(showingMandatory.characterId));
  renderRpgCast(people,locked,shown,portraitId,{
   active:!!(showingMandatory||showingSituation||showingStory||showingEncounter||showingArc||sideQuest),
-  script:sceneScript,remote:remoteScene
+  script:sceneScript,remote:remoteScene,sceneId:activeOutfitSceneId
  });
  const characterActions=$('characterActions');
  if(characterActions){
