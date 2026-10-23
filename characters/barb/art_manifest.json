@@ -1,0 +1,41 @@
+{
+  "schemaVersion": 1,
+  "characterId": "barb",
+  "portrait": "/rpg-assets/characters/barb/portraits/primary.png",
+  "eventImages": [
+    {
+      "sceneId": "barb_route_1",
+      "path": "/rpg-assets/characters/barb/events/barb_display_table.webp",
+      "prompt": "One single fully composed horizontal anime/JRPG event CG, NOT a grid or character sheet, SFW adult woman age 21, height 161 cm, copper red hair, green-hazel eyes, septum, butterfly pendant and left-shoulder rose tattoo, black Y2K punk-cute clothes, proportional compact adult figure with natural fuller bust. At the card shop, Barb proudly arranges pink-star custom deck boxes and playmat swatches on a craft table; warm afternoon sun, full outfit and floral tattoo visible. Keep bottom 20% free for dialogue; 16:9."
+    },
+    {
+      "sceneId": "barb_route_2",
+      "path": "/rpg-assets/characters/barb/events/barb_prototype_arcade.webp",
+      "prompt": "One single fully composed horizontal anime/JRPG event CG, NOT a grid or character sheet, SFW adult woman age 21, height 161 cm, copper red hair, green-hazel eyes, septum, butterfly pendant and left-shoulder rose tattoo, black Y2K punk-cute clothes, proportional compact adult figure with natural fuller bust. Adult Barb in the arcade under colored neon, showing a slightly scuffed handmade deck box to protagonist off camera; no legible branding, expressive and comic. Keep bottom 20% free for dialogue; 16:9."
+    },
+    {
+      "sceneId": "barb_route_3",
+      "path": "/rpg-assets/characters/barb/events/barb_cafe_draft.webp",
+      "prompt": "One single fully composed horizontal anime/JRPG event CG, NOT a grid or character sheet, SFW adult woman age 21, height 161 cm, copper red hair, green-hazel eyes, septum, butterfly pendant and left-shoulder rose tattoo, black Y2K punk-cute clothes, proportional compact adult figure with natural fuller bust. Adult Barb at the café with laptop, two cups and sketchbook, vulnerable thoughtful look before sending an important message; intimate but fully clothed. Keep bottom 20% free for dialogue; 16:9."
+    },
+    {
+      "sceneId": "barb_route_4",
+      "path": "/rpg-assets/characters/barb/events/barb_showcase.webp",
+      "prompt": "Approved artwork: Barb without her cap, seated cross-legged in her creative room, showing her private deck-box design sketchbook, rose-patterned sweater and light shorts, warm pink lighting."
+    },
+    {
+      "sceneId": "barb_route_5",
+      "path": "/rpg-assets/characters/barb/events/barb_riverside.webp",
+      "prompt": "Approved artwork: Barb at sunset on a rooftop overlooking the harbor, wearing an off-shoulder black-and-burgundy outfit, holding the protagonist’s hand and smiling tearfully."
+    }
+  ],
+  "expressions": {
+    "neutral": "/rpg-assets/characters/barb/vn-expressions/neutral.webp",
+    "happy": "/rpg-assets/characters/barb/vn-expressions/happy.webp",
+    "flirty": "/rpg-assets/characters/barb/vn-expressions/flirty.webp",
+    "surprised": "/rpg-assets/characters/barb/vn-expressions/surprised.webp",
+    "angry": "/rpg-assets/characters/barb/vn-expressions/angry.webp",
+    "embarrassed": "/rpg-assets/characters/barb/vn-expressions/embarrassed.webp",
+    "sad": "/rpg-assets/characters/barb/vn-expressions/sad.webp"
+  }
+}

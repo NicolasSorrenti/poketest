@@ -1,0 +1,90 @@
+{
+  "schemaVersion": 1,
+  "id": "barb",
+  "name": "Barb",
+  "age": 21,
+  "role": "romance",
+  "deck": "power_reserve",
+  "style": "Power Reserve · playful Psychic/Lightning resource tempo",
+  "arrivalDay": 6,
+  "dialogue": {
+    "intro": "Oh, that's a nice deck box. Wait—don't move. I need to see how you did the corners. I'm Barb. Sorry, I ask questions before names.",
+    "repeat": "Look who wandered into my creative disaster. Want to talk cards, argue about colors, or help me find the scissors I had ten seconds ago?",
+    "talk": [
+      "I make custom deck boxes and playmat designs. Legal sleeves are somebody else's problem; I just make the things that carry them look cute.",
+      "People see pink hearts on a box and assume the deck inside can't bite. Honestly, I don't mind giving them one free mistake.",
+      "I don't hate popular decks. I hate when people act like copying the list means they've copied the person who built it.",
+      "The butterfly necklace? I found it at a stall. It looked like something with a secret, so I took it home.",
+      "I'm good with a blade and ruler, terrible with a calendar, and absolutely not allowed to carry loose glitter into the card shop again.",
+      "My cap isn't a personality trait. The way I put it back on after a loss might be.",
+      "The worst part of making something for someone is not knowing whether they'll actually use it.",
+      "My glasses are for tiny print. I keep them on because they make me look like I've read the rulebook. Sometimes I even have."
+    ],
+    "flirt": "That sounded suspiciously like flirting. Good thing I already had a comeback ready. ...I did not, actually.",
+    "duelWin": "You got me! Okay, impressive. Don't smile like that—I was saving the compliment for later.",
+    "duelLose": "Cute artwork, mean little deck. That's my brand. Rematch when you've recovered.",
+    "hangouts": [
+      "You help Barb sort scraps of fabric and rejected deck-box panels. She insists the mistakes make the best color combinations.",
+      "At the arcade, Barb keeps score on the back of a receipt and makes an elaborate little trophy for the loser.",
+      "Over café drinks, she sketches a playmat that combines your favorite colors with a tiny joke only the two of you understand.",
+      "You take a quiet waterfront walk while Barb takes photos of shadows and textures for a future design.",
+      "Barb teaches you to assemble a card case, then lets you finish the last fold without fixing it for you."
+    ]
+  },
+  "appearance": {
+    "silhouette": "Clearly adult woman, 21 years old, precisely 161 cm tall. Petite to medium-short with a slightly compact torso and legs (natural proportions, not chibi). Curvy feminine build with defined waist, softly full bust that fits the existing lace-up crop top without exaggeration, rounded hips and sturdy thighs. Poised, playful stance; do not change body proportions between outfits.",
+    "palette": "Copper-red #AE4636 hair, soft rose #D98C81, fair peach skin #F1B69E, warm hazel/green #77734E eyes, black #242024 clothing, dusty mauve #9B7288 accents and vivid punk pink #F367A2 highlights. Silver piercings, occasional gold butterfly pendant.",
+    "hair": "Long, smooth copper-auburn red hair with natural darker roots and soft face-framing bangs, falling well below the bust to waist. Consistent color in shadows; never platinum, purple, magenta or blonde.",
+    "eyes": "Hazel green eyes with a warm brown/gold inner ring, defined dark brows, catlike eyeliner and softly fluttery eyelashes; thin clear oversized round/squoval glasses are an optional accessory.",
+    "details": "Small silver septum horseshoe, multiple tiny ear studs plus silver hoop earrings, floral black-and-gray rose tattoo on her LEFT upper arm/shoulder, butterfly pendant with blue detail. Black leather-look newsboy/baker-boy cap with silver buckle and ring. Optional black bag with chain details.",
+    "expressions": "Default teasing half-smile, bright genuine grin, mischievous tongue-out, mock judgmental eyebrow, flustered eyes looking away, suddenly focused designer stare, relieved quiet smile. Expression changes should be about her face, not changing her features.",
+    "outfits": [
+      "signature: fitted black lace-up crop top, black pleated leather-look mini skirt, one loose black cardigan sleeve, black thigh-high stockings with large bows, silver-buckled chunky ankle boots, leather newsboy cap",
+      "casual: black cardigan over crop top, warm brown-and-pink plaid pleated skirt, knee-high black boots, small crossbody bag, glasses",
+      "workshop: oversized charcoal band-style hoodie, denim shorts, chunky black sneakers, cap pushed backward, hair tied out of the way",
+      "tournament: sleeveless black high-neck top, tailored black cargo trousers, comfortable boots, floral tattoo visible, cap optional",
+      "waterfront: black sleeveless top, fitted shorts, airy overshirt, sneakers; tasteful fully clothed styling"
+    ],
+    "renderNotes": "Neo Harbor anime/JRPG polished adult VN portrait; SFW, contemporary alt/Y2K punk-cute styling. Maintain exact 161 cm proportions (compact torso and relatively short legs, neither dwarfish nor doll-like), moderately fuller bust as approved, original face, copper hair, LEFT shoulder floral tattoo, septum, cap and butterfly pendant. Make full-body art consistent with the close-up; clothing fits naturally. No childlike coding, no text overlay, no concept-sheet grids in finished in-game sprites, no excess limbs or changing tattoo sides."
+  },
+  "schedule": [
+    [
+      "shop",
+      "shop",
+      "cafe"
+    ],
+    [
+      "home",
+      "arcade",
+      "shop"
+    ],
+    [
+      "shop",
+      "center",
+      "cafe"
+    ],
+    [
+      "home",
+      "shop",
+      "arcade"
+    ],
+    [
+      "shop",
+      "center",
+      "park"
+    ],
+    [
+      "arcade",
+      "shop",
+      "cafe"
+    ],
+    [
+      "home",
+      "park",
+      "cafe"
+    ]
+  ],
+  "stories": "stories.json",
+  "artManifest": "art_manifest.json",
+  "bible": "bible.md"
+}

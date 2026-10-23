@@ -1,0 +1,67 @@
+{
+  "schemaVersion": 1,
+  "characterId": "barb",
+  "events": [
+    {
+      "id": "barb_asks_for_help",
+      "title": "A Little Help With the Corners",
+      "kind": "bond",
+      "priority": 60,
+      "earliestDay": 23,
+      "trigger": {
+        "all": [
+          {
+            "storyDone": "barb_route_1"
+          },
+          {
+            "relationship": {
+              "npc": "barb",
+              "metric": "trust",
+              "gte": 2
+            }
+          }
+        ]
+      },
+      "delivery": "remote_or_present",
+      "timeCost": 0,
+      "fallback": "queue",
+      "expiry": "never",
+      "lines": [
+        {
+          "speaker": "barb",
+          "text": "Hey. Do you remember that first display you helped me fix?"
+        },
+        {
+          "speaker": "Protagonist",
+          "text": "The one with the pink paper stars?"
+        },
+        {
+          "speaker": "barb",
+          "text": "That's the one. I saved one star for the next design. Wanted to tell you before I put it somewhere permanent."
+        }
+      ],
+      "choices": [
+        {
+          "label": "That means a lot.",
+          "reply": "It does to me too. Don't go getting dramatic about it.",
+          "flag": "barb_star_thanks",
+          "effects": {
+            "flags": [
+              "barb_star_thanks"
+            ]
+          }
+        },
+        {
+          "label": "Show me when it is ready.",
+          "reply": "Deal. First look is yours—unless I glue my hands to the table again.",
+          "flag": "barb_star_later",
+          "effects": {
+            "flags": [
+              "barb_star_later"
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,28 @@
+{
+  "character": "barb",
+  "approved_cgs": [
+    "barb_route_1",
+    "barb_route_2",
+    "barb_route_3",
+    "barb_route_4",
+    "barb_route_5"
+  ],
+  "approved_expressions": [
+    "neutral",
+    "happy",
+    "flirty",
+    "surprised",
+    "angry",
+    "embarrassed",
+    "sad"
+  ],
+  "chibi": true,
+  "cg5_source": "118000.jpg",
+  "cutin": "review only, background cleanup needed",
+  "story_art_continuity_notes": {
+    "barb_route_4": "Artwork depicts Barb revealing her private sketchbook in her room; story JSON still describes a public showcase. Align narration before deploying.",
+    "barb_route_5": "Artwork depicts romantic rooftop/waterfront sunset confession; story JSON dialogue may require synchronization."
+  },
+  "not_verified": "Game runtime binding / deployment / RPG tests not run",
+  "complete": "Core character artwork & 5 chapter CGs present; not fully integrated in deployed game."
+}
