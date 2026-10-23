@@ -10,10 +10,15 @@
    const data=await response.json();presets=data.presets||[];
    const selector=$('presetSelect'),previous=selector.value;
    selector.replaceChildren();
+   const fixed=document.createElement('optgroup'),classic=document.createElement('optgroup');
+   fixed.label='Fixed 240-card Draft Cubes';
+   classic.label='Other Draft Formats';
    for(const p of presets){
     const option=document.createElement('option');option.value=p.id;option.textContent=p.name;
-    selector.append(option);
+    (p.fixedPool?fixed:classic).append(option);
    }
+   if(fixed.children.length)selector.append(fixed);
+   if(classic.children.length)selector.append(classic);
    selector.value=presets.some(p=>p.id===previous)?previous:'balanced';
    showPreset();
   }catch{$('presetInfo').textContent='Balanced Cube is available.';}
