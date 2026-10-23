@@ -208,3 +208,20 @@ test('RPG duels use the NPC CPU identity automatically, including Act I and stor
  assert.equal(override.cpu.level,1,'explicit difficulty still wins');
  assert.equal(override.cpu.personality,'setup','explicit personality still wins');
 });
+
+test('RPG deck variants are stable, legal and preserve Pokemon/Energy composition',()=>{
+ for(const [npc,theme] of Object.entries(MAIN)){
+  const source=service.decklist(theme);
+  for(const tier of [1,2,3]){
+   const baseline=NPC.upgrade({npc,tier,original:source,catalog:CATALOG});
+   for(const variant of [0,1,2]){
+    const deck=NPC.varyDeck(baseline,npc,variant,CATALOG);
+    assert.equal(deck.length,60);
+    assert.equal(validateDeck(deck,CATALOG).valid,true,npc+' tier '+tier+' variant '+variant);
+    assert.deepEqual(deck.filter(id=>CATALOG.get(id)?.supertype!=='Trainer').sort(),
+     baseline.filter(id=>CATALOG.get(id)?.supertype!=='Trainer').sort());
+   }
+  }
+ }
+ assert.equal(NPC.variantForDuel('npc-reina-1-0-0'),NPC.variantForDuel('npc-reina-1-0-0'));
+});
