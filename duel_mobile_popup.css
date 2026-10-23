@@ -207,3 +207,11 @@
     grid-row:1!important;
   }
 }
+
+/* Only the mobile surface gets a trigger; desktop retains inline attacks. */
+@media (min-width:781px) {
+  body.duel-active #mobileAttacksToggle,
+  body.duel-active #mobileAttackDock {
+    display:none!important;
+  }
+}
