@@ -92,7 +92,8 @@ class ClassicOnlineService {
  response(room,side){const g=room.game;
   return {spectator:side===null,spectatorCount:[...room.spectators.values()].filter(v=>this.now()-v.lastSeen<10000).length,presence:room.players.map(p=>p?{connected:this.now()-p.lastSeen<6000,secondsUntilForfeit:Math.max(0,Math.ceil((DISCONNECT_MS-(this.now()-p.lastSeen))/1000))}:null),code:room.code,revision:room.revision,you:side,joined:!!room.players[1],started:!!g,
    players:room.players.map(p=>p?{name:p.name,deck:p.deck,ready:p.ready}:null),
-   chatSeq:room.chatSeq,chatMessages:room.chat.map(m=>({...m})),
+   cube:!!room.cube,
+   chatSeq:room.chatSeq,chatMessages:room.chat.map(m=>({...m})), 
    playmats:(room.playmats||[null,null]).map(m=>m?{id:m.id,version:m.version,cooldownUntil:m.changedAt+PLAYMAT_COOLDOWN_MS}:null),serverNow:this.now(),
    ...(g?{undo:{available:side!==null&&UNDO.available(room.undoHistory||[],g,side),label:side!==null&&UNDO.available(room.undoHistory||[],g,side)?room.undoHistory.at(-1).label:null},view:publicView(g,side),activity:publicActivity(g),feed:[...(g.matchFeed||[]).slice(-90)],turnSerial:g.turnSerial,winner:g.winner,format:g.format,
     me:side===null?{energyUsed:false,retreated:false,stadiumUsed:false}:{energyUsed:!!g.players[side].energyUsed,retreated:!!g.players[side].retreated,stadiumUsed:g.players[side].stadiumUsedTurn===g.turnSerial},
@@ -164,9 +165,10 @@ class ClassicOnlineService {
  }
  // Presentation state is separate from match revision. Changing a mat must never
  // cause a stale move/decision or change authoritative Pokémon rules.
- setPlaymat(code,token,{id,image}={}){
+ setPlaymat(code,token,{id,image}={},verifiedCubeOwner=false){
   const {room,side}=this.session(code,token);
   if(side===null)throw Error('Spectators cannot change playmats');
+  if(room.cube&&!verifiedCubeOwner)throw Error('Only the account owner can change Cube multiplayer playmats');
   if(!room.game)throw Error('Start the duel before changing playmats');
   if(typeof id!=='string'||(!PLAYMAT_IDS.has(id)&&id!=='custom'))throw Error('Invalid playmat');
   let artwork=null;
