@@ -903,6 +903,122 @@
   "dialogueSafe": "Bottom 20% left clear for dialogue.",
   "situationId": "laca_second_look"
 }
+,
+{
+  "character": "laca",
+  "id": "laca_route_1",
+  "category": "social",
+  "trigger": "story_milestone",
+  "place": "park",
+  "minAffection": 2,
+  "startDay": 5,
+  "slot": 0,
+  "title": "Just Like Old Times",
+  "hint": "Complete Laca's personal story to unlock this memory.",
+  "scene": "Adult lifeguard Laca happily recognizes her returning childhood friend beside the rescue tower.",
+  "composition": "Bright sunlit eye-level reunion scene.",
+  "outfit": "Practical red lifeguard two-piece and whistle",
+  "expression": "Familiar mischievous smile turning genuinely affectionate.",
+  "environment": "Riverside Park",
+  "mood": "friends-to-lovers",
+  "fanservice": 1,
+  "path": "/rpg-assets/events/cg/season01/laca_route_1.webp",
+  "thumb": "/rpg-assets/events/cg/season01/thumbs/laca_route_1.webp",
+  "dialogueSafe": "Leave lower fifth clear for dialogue",
+  "sceneId": "laca_route_1"
+},
+{
+  "character": "laca",
+  "id": "laca_route_2",
+  "category": "social",
+  "trigger": "story_milestone",
+  "place": "shop",
+  "minAffection": 2,
+  "startDay": 21,
+  "slot": 1,
+  "title": "Be Honest, Does This Look Good?",
+  "hint": "Complete Laca's personal story to unlock this memory.",
+  "scene": "Laca confidently shows photos of two outfits to her best friend in the card shop.",
+  "composition": "Friendly fashion-review composition, no changing-room viewpoint.",
+  "outfit": "Black fitted top and light denim",
+  "expression": "Familiar mischievous smile turning genuinely affectionate.",
+  "environment": "The Lucky Draw shop",
+  "mood": "friends-to-lovers",
+  "fanservice": 2,
+  "path": "/rpg-assets/events/cg/season01/laca_route_2.webp",
+  "thumb": "/rpg-assets/events/cg/season01/thumbs/laca_route_2.webp",
+  "dialogueSafe": "Leave lower fifth clear for dialogue",
+  "sceneId": "laca_route_2"
+},
+{
+  "character": "laca",
+  "id": "laca_route_3",
+  "category": "social",
+  "trigger": "story_milestone",
+  "place": "park",
+  "minAffection": 2,
+  "startDay": 39,
+  "slot": 1,
+  "title": "Personal Space? What's That?",
+  "hint": "Complete Laca's personal story to unlock this memory.",
+  "scene": "Laca and her friend sit together laughing over childhood memories after swimming.",
+  "composition": "Warm relaxed towel composition.",
+  "outfit": "Sporty red lifeguard swimsuit",
+  "expression": "Familiar mischievous smile turning genuinely affectionate.",
+  "environment": "Riverside Park",
+  "mood": "friends-to-lovers",
+  "fanservice": 1,
+  "path": "/rpg-assets/events/cg/season01/laca_route_3.webp",
+  "thumb": "/rpg-assets/events/cg/season01/thumbs/laca_route_3.webp",
+  "dialogueSafe": "Leave lower fifth clear for dialogue",
+  "sceneId": "laca_route_3"
+},
+{
+  "character": "laca",
+  "id": "laca_route_4",
+  "category": "social",
+  "trigger": "story_milestone",
+  "place": "cafe",
+  "minAffection": 2,
+  "startDay": 57,
+  "slot": 2,
+  "title": "Since When Is This Weird?",
+  "hint": "Complete Laca's personal story to unlock this memory.",
+  "scene": "Laca admits feeling differently about their friendship during an evening café conversation.",
+  "composition": "Emotional close three-quarter shot with café glow.",
+  "outfit": "Black top and light blue jeans",
+  "expression": "Familiar mischievous smile turning genuinely affectionate.",
+  "environment": "Evening café",
+  "mood": "friends-to-lovers",
+  "fanservice": 1,
+  "path": "/rpg-assets/events/cg/season01/laca_route_4.webp",
+  "thumb": "/rpg-assets/events/cg/season01/thumbs/laca_route_4.webp",
+  "dialogueSafe": "Leave lower fifth clear for dialogue",
+  "sceneId": "laca_route_4"
+},
+{
+  "character": "laca",
+  "id": "laca_route_5",
+  "category": "social",
+  "trigger": "story_milestone",
+  "place": "park",
+  "minAffection": 2,
+  "startDay": 75,
+  "slot": 2,
+  "title": "More Than Best Friends",
+  "hint": "Complete Laca's personal story to unlock this memory.",
+  "scene": "Laca sits with her oldest friend at sunset, hopeful and honest about a possible relationship.",
+  "composition": "Cinematic sunset portrait, safe consensual affectionate framing.",
+  "outfit": "Black top and jeans",
+  "expression": "Familiar mischievous smile turning genuinely affectionate.",
+  "environment": "Riverside Park",
+  "mood": "friends-to-lovers",
+  "fanservice": 1,
+  "path": "/rpg-assets/events/cg/season01/laca_route_5.webp",
+  "thumb": "/rpg-assets/events/cg/season01/thumbs/laca_route_5.webp",
+  "dialogueSafe": "Leave lower fifth clear for dialogue",
+  "sceneId": "laca_route_5"
+}
 
 ];
  const categories=Object.freeze(['profile','pre_duel','social','special']);
@@ -937,6 +1053,8 @@
   const unlocked=[];
   for(const entry of catalog){
    if(state.cgUnlocked[entry.id]||!eligible(state,entry,trigger,npc))continue;
+   if(trigger==='story_milestone'&&entry.sceneId&&(!context||context.eventId!==entry.sceneId
+    ||!state.storyDone?.[entry.sceneId]))continue;
    if(trigger==='situation'&&(!context||context.eventId!==entry.situationId
      ||!state.situationDone?.[entry.situationId]))continue;
    state.cgUnlocked[entry.id]={day:state.day,slot:state.slot,trigger};
