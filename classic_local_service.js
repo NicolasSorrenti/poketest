@@ -10,6 +10,7 @@ const {NPC_PROFILES,profileForNpc}=require('./cpu_profiles');
 const NPC_DECKS=require('./rpg_npc_deck_progression');
 const {list}=require('./authentic_decks');
 const {LAB}=require('./classic_live_decks');
+const HAYMAKER=require('./haymaker_decks');
 const RETAIL=require('./retail_theme_decks');
 const NEO=require('./neo_genesis_decks');
 const DISCOVERY=require('./neo_discovery_decks');
@@ -24,6 +25,7 @@ const DECKS=Object.freeze({
  blackout:'base1:Blackout', brushfire:'base1:Brushfire', overgrowth:'base1:Overgrowth',
  zap:'base1:Zap!', power_reserve:'base2:Power Reserve', water_blast:'base2:Water Blast',
  rocket_lab:'lab:rocket', fossil_lab:'lab:fossil',
+ ...Object.fromEntries(HAYMAKER.entries.map(x=>[x.id,`haymaker:${x.id}`])),
  ...Object.fromEntries(RETAIL.entries.map(x=>[x.id,`retail:${x.id}`])),
  ...Object.fromEntries(NEO.entries.map(x=>[x.id,`neo:${x.id}`])),
  ...Object.fromEntries(DISCOVERY.entries.map(x=>[x.id,`discovery:${x.id}`])),
@@ -55,7 +57,7 @@ class ClassicLocalService {
   if(deck==='custom'&&(!Array.isArray(customDeck)||customDeck.length!==60||!customDeck.every(id=>typeof id==='string'&&id.length<=40)))throw Error('Custom deck must contain exactly 60 card IDs');
   if(deck!=='custom'&&customDeck!==undefined)throw Error('Unexpected custom deck');
   if(opponent==='custom')throw Error('CPU deck must be a preset');
-  const deckCards=id=>id==='custom'?[...customDeck]:EXPANDED[id]?[...EXPANDED[id]]:LAB[id]?[...LAB[id]]:DECKS[id].startsWith('retail:')?RETAIL.list(id):DECKS[id].startsWith('neo:')?NEO.list(id):DECKS[id].startsWith('discovery:')?DISCOVERY.list(id):DECKS[id].startsWith('destiny:')?DESTINY.list(id):list(DECKS[id]);
+  const deckCards=id=>id==='custom'?[...customDeck]:HAYMAKER.has(id)?HAYMAKER.list(id):EXPANDED[id]?[...EXPANDED[id]]:LAB[id]?[...LAB[id]]:DECKS[id].startsWith('retail:')?RETAIL.list(id):DECKS[id].startsWith('neo:')?NEO.list(id):DECKS[id].startsWith('discovery:')?DISCOVERY.list(id):DECKS[id].startsWith('destiny:')?DESTINY.list(id):list(DECKS[id]);
   if(customOpponentDeck!==undefined){
    if(!Array.isArray(customOpponentDeck)||customOpponentDeck.length!==60||
     !customOpponentDeck.every(id=>typeof id==='string'&&/^([a-z0-9]+)-\d+$/.test(id)))
@@ -139,7 +141,7 @@ class ClassicLocalService {
   if(cpuTurn&&playback.length)response.cpuPlayback=playback.length>1?playback.slice(0,-1):playback;
   return response;
  }
- decklist(id){if(!DECKS[id]||id==='custom')throw Error('Unknown theme deck');return EXPANDED[id]?[...EXPANDED[id]]:LAB[id]?[...LAB[id]]:DECKS[id].startsWith('retail:')?RETAIL.list(id):DECKS[id].startsWith('neo:')?NEO.list(id):DECKS[id].startsWith('discovery:')?DISCOVERY.list(id):DECKS[id].startsWith('destiny:')?DESTINY.list(id):list(DECKS[id]);}
+ decklist(id){if(!DECKS[id]||id==='custom')throw Error('Unknown theme deck');return HAYMAKER.has(id)?HAYMAKER.list(id):EXPANDED[id]?[...EXPANDED[id]]:LAB[id]?[...LAB[id]]:DECKS[id].startsWith('retail:')?RETAIL.list(id):DECKS[id].startsWith('neo:')?NEO.list(id):DECKS[id].startsWith('discovery:')?DISCOVERY.list(id):DECKS[id].startsWith('destiny:')?DESTINY.list(id):list(DECKS[id]);}
  catalog(){return [...CATALOG.values()].filter(c=>['base1','base2','base3','base4','base5','gym1','gym2'].some(set=>c.id.startsWith(set+'-'))||NEO.neoIds.includes(c.id)||DISCOVERY.neoIds.includes(c.id)||DESTINY.neoIds.includes(c.id)||require('./neo_bonus_pool').ids.includes(c.id)||require('./neo_v040_pool').ids.includes(c.id)||require('./neo_v046_pool').ids.includes(c.id)||require('./neo_v047_pool').ids.includes(c.id)||require('./neo_v048_pool').ids.includes(c.id)||require('./neo_v049_pool').ids.includes(c.id)||require('./neo_v050_pool').ids.includes(c.id)||require('./neo_v051_pool').ids.includes(c.id)||require('./neo_v052_pool').ids.includes(c.id)||require('./neo_v053_pool').ids.includes(c.id)||require('./neo_v054_pool').ids.includes(c.id)||require('./neo_v055_pool').ids.includes(c.id)||require('./neo_v056_pool').ids.includes(c.id)||require('./neo_v061_pool').ids.includes(c.id)||require('./neo_v062_pool').ids.includes(c.id)||require('./neo_v063_pool').ids.includes(c.id)||require('./neo_v064_pool').ids.includes(c.id)||require('./neo_v065_pool').ids.includes(c.id)||require('./neo_v066_pool').ids.includes(c.id)||require('./neo_v084_pool').ids.includes(c.id));}
  cardPool(){return this.catalog().map(c=>{const attacks=(c.attacks||[]).map(a=>({name:a.name,supported:!!ATTACK.compile(a)}));const powers=(c.abilities||[]).filter(a=>a.name).map(a=>({name:a.name,supported:[...POWERS.ACTIVATED,...POWERS.ONPLAY,...POWERS.PASSIVE].includes(a.name)}));const supported=c.supertype==='Trainer'?TRAINERS.SUPPORTED.has(c.name):attacks.every(a=>a.supported)&&powers.every(a=>a.supported);return {id:c.id,name:c.name,supertype:c.supertype,subtypes:c.subtypes||[],types:c.types||[],hp:c.hp||null,evolvesFrom:c.evolvesFrom||null,attacks,powers,supported,images:c.images||{},set:FORMAT.setOf(c.id)};});}
 }
@@ -151,6 +153,7 @@ const deckOptions=()=>[
  ...NEO.entries,
  ...DISCOVERY.entries,
  ...DESTINY.entries,
+ ...HAYMAKER.entries,
  {id:'rocket_lab',name:'Rocket Lab · custom'},{id:'fossil_lab',name:'Fossil Lab · custom'},
  {id:'gym_new_garden',name:'Gym Discovery · Earth & Garden (new cards)',gym:true,expanded:true},
  {id:'gym_new_voltage',name:'Gym Discovery · Fire & Lightning (new cards)',gym:true,expanded:true},
