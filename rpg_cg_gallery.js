@@ -1022,7 +1022,7 @@
 
 ];
  // Ambience CGs are separate from scheduled stories and relationship chapters.
- const SLICE=typeof module==='object'&&module.exports?require('./rpg_slice_of_life'):root?.NeoRpgSliceOfLife;
+ const SLICE=typeof module==='object'&&module.exports?require('./rpg_slice_of_life'):window.NeoRpgSliceOfLife;
  for(const moment of SLICE?.scenes||[])catalog.push({
   character:moment.npc,id:moment.id,category:'social',trigger:'slice',
   place:moment.place,minAffection:moment.minAffection,startDay:moment.start,slot:moment.slot,
