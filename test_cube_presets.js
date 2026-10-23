@@ -8,7 +8,7 @@ const {cpuPick,buildCpuDeck}=require('./cube_strategy');
 const {CubeService}=require('./cube_service');
 const {CubeRoomService}=require('./cube_room_service');
 
-assert.equal(PRESETS.length,6);
+assert.equal(PRESETS.length,10);
 assert.equal(new Set(PRESETS.map(p=>p.id)).size,6);
 assert.equal(getPreset().id,'balanced');
 assert.throws(()=>getPreset('__proto__'),/Unknown Cube preset/);
@@ -23,7 +23,7 @@ for(const preset of PRESETS){
   assert(pool.every(id=>!isEnergy(CATALOG.get(id))),preset.name+' drafted Energy');
   const {mixedPrintingNames}=require('./cube_printings');
   assert.deepEqual(mixedPrintingNames(pool),[],preset.name+' mixed card names from different expansions');
-  if(preset.id==='foundations'){
+  if(['foundations','evolution_kanto','haymaker_kanto'].includes(preset.id)){
    assert(pool.every(id=>/^base[123]-/.test(id)),'Kanto Origins contains cards outside Base/Jungle/Fossil');
    for(const set of ['base1','base2','base3'])
     assert(pool.some(id=>id.startsWith(set+'-')),'Missing historical set '+set);
@@ -32,6 +32,10 @@ for(const preset of PRESETS){
   assert.equal(pokemon.length,preset.pokemon,preset.name+' Pokémon quota');
   assert.equal(pool.length-pokemon.length,preset.trainers,preset.name+' Trainer quota');
   const basics=pokemon.filter(id=>isBasicPokemon(CATALOG.get(id)));
+  if(preset.id.startsWith('haymaker_'))
+   assert.equal(basics.length,pokemon.length,'Haymaker Cube must contain only Basic Pokémon');
+  if(preset.id.startsWith('evolution_'))
+   assert(pokemon.length-basics.length>=35,'Evolution Cube needs meaningful evolution choices');
   assert(basics.length>=95,preset.name+' not enough Basic Pokémon');
   const evolved=pokemon.filter(id=>!isBasicPokemon(CATALOG.get(id)));
   for(const id of evolved){
@@ -82,4 +86,12 @@ const started=rooms.start(host.code,host.token);
 assert.equal(started.preset,'elemental');
 assert.equal(rooms.room(host.code).draft.preset,'elemental');
 assert.throws(()=>rooms.create({name:'Host',preset:'invalid'}),/Unknown Cube preset/);
-console.log('PASS themed cubes: 6 presets, 240-card pools, seeded archetypes, legal CPU builds and multiplayer format locking');
+// These are real four-player drafts, not the Haymaker 60-card Single Match recipes.
+for(const id of ['haymaker_kanto','haymaker_eras','evolution_kanto','evolution_eras']){
+ const draft=C.makeDraft({seed:123,preset:id});
+ assert.equal(draft.rounds.flat(2).length,240);
+ assert.equal(draft.packs,4);
+ assert.equal(draft.cardsPerPack,15);
+ assert(draft.rounds.flat(2).every(cardId=>!isEnergy(CATALOG.get(cardId))));
+}
+console.log('PASS themed cubes: 10 draft presets, 240-card pools, seeded archetypes, legal CPU builds and multiplayer format locking');
