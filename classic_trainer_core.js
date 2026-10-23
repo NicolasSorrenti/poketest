@@ -44,8 +44,8 @@ const slot=(p,n)=>n===-1?p.active:p.bench[n];
 const n=v=>{if(!Number.isInteger(v))throw Error('Noninteger selection');return v;};
 const chosen=(d,k)=>d[k]!==undefined;
 const nums=(d,k)=>d[k].map(x=>n(Number(x.slice(x.indexOf(':')+1))));
-const options=(entries,prefix='n')=>entries.map(({i,label})=>({id:`${prefix}:${i}`,label}));
-const zone=(ids,pred=()=>true)=>ids.flatMap((id,i)=>pred(get(id),i)?[{i,label:get(id).name}]:[]);
+const options=(entries,prefix='n')=>entries.map(({i,label,cardId})=>({id:`${prefix}:${i}`,label,...(cardId?{cardId}:{})}));
+const zone=(ids,pred=()=>true)=>ids.flatMap((id,i)=>pred(get(id),i)?[{i,label:get(id).name,cardId:id}]:[]);
 const targets=(p,pred=()=>true)=>[-1,...p.bench.map((_,i)=>i)].flatMap(i=>slot(p,i)&&pred(slot(p,i),i)?[{i,label:(i===-1?'Active: ':'Bench: ')+publicName(slot(p,i))}]:[]);
 function held(p,id,index){if(p.hand[index]!==id)throw Error('Trainer in hand changed during selection');}
 function choice(g,plan,key,actor,items,{min=1,max=min,optional=false,label=key}={}){
