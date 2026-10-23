@@ -152,7 +152,7 @@ async function cubeAPI(req,res,pathName){
  if(origin){let u;try{u=new URL(origin);}catch{sendJSON(res,403,{error:'Invalid origin'});return;}
  if(u.host!==req.headers.host||!['http:','https:'].includes(u.protocol)){sendJSON(res,403,{error:'Origin not allowed'});return;}}
  try{
-  if(pathName==='/api/cube/presets'&&req.method==='GET')return sendJSON(res,200,{presets:require('./cube_presets').PRESETS});
+  if(pathName==='/api/cube/presets'&&req.method==='GET')return sendJSON(res,200,{presets:require('./cube_presets').listPresetSummaries()});
   if(pathName==='/api/cube/create'&&req.method==='POST')return sendJSON(res,200,cube.create(await parseJSON(req)));
   const token=req.headers['x-cube-token'];
   if(typeof token!=='string'||!token)return sendJSON(res,401,{error:'Missing cube token'});
