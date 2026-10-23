@@ -28,7 +28,7 @@ const {server}=require('./server');
   const formats=await api('presets');
   assert.equal(formats.status,200);
   assert(formats.body.presets.every(p=>Array.isArray(p.sets)&&p.sets.length>0),'Every Cube should advertise its eligible expansions');
-  assert.deepEqual(formats.body.presets.map(p=>p.id),['balanced','foundations','elemental','neo','rocket','mayhem']);
+  assert.deepEqual(formats.body.presets.map(p=>p.id),['balanced','foundations','elemental','neo','rocket','mayhem','evolution_kanto','evolution_eras','haymaker_kanto','haymaker_eras']);
   assert.equal((await api('state')).status,401);
   const created=await api('create','POST',{seed:475,difficulty:5});
   assert.equal(created.status,200);
