@@ -20,8 +20,8 @@ test('narrated situations have character-spoken responses rather than third-pers
   }
  }
 });
-test('all eight already-planned CGs have unique real-life event definitions',()=>{
- assert.deepEqual(S.validate(),[]);assert.equal(S.events.length,8);
+test('all planned CGs have unique real-life event definitions',()=>{
+ assert.deepEqual(S.validate(),[]);assert.equal(S.events.length,16);
  assert.equal(new Set(S.events.map(x=>x.id)).size,8);
  assert.deepEqual(S.events.map(x=>x.id).sort(),CG.catalog.filter(x=>x.category==='special').map(x=>x.id).sort());
  for(const e of S.events)assert.equal(CG.byId(e.id).trigger,'situation');
