@@ -1,7 +1,7 @@
 'use strict';
 const test=require('node:test'),assert=require('node:assert/strict');
 const S=require('../rpg_situations'),CG=require('../rpg_cg_gallery'),Schedules=require('../rpg_schedules');
-const npcs=['hana','reina','shiori','yuna','akari','camila','marina','kaede'];
+const npcs=['hana','reina','shiori','yuna','akari','camila','marina','kaede','laca'];
 const ready=(e,extra={})=>({day:e.start,slot:e.slot,location:e.place,focus:50,credits:80,
  relationships:Object.fromEntries(npcs.map(n=>[n,{affection:10,trust:4,respect:0}])),
  bonds:Object.fromEntries(npcs.map(n=>[n,{affection:10,trust:4,duels:0}])),
@@ -22,11 +22,11 @@ test('narrated situations have character-spoken responses rather than third-pers
 });
 test('all planned CGs have unique real-life event definitions',()=>{
  assert.deepEqual(S.validate(),[]);assert.equal(S.events.length,16);
- assert.equal(new Set(S.events.map(x=>x.id)).size,8);
+ assert.equal(new Set(S.events.map(x=>x.id)).size,16);
  assert.deepEqual(S.events.map(x=>x.id).sort(),CG.catalog.filter(x=>x.category==='special').map(x=>x.id).sort());
  for(const e of S.events)assert.equal(CG.byId(e.id).trigger,'situation');
 });
-test('all eight situations are discoverable during the 90-day season with the real NPC schedule',()=>{
+test('all sixteen situations are discoverable during the 90-day season with the real NPC schedule',()=>{
  for(const e of S.events){
   const d=firstDay(e);assert.ok(d, e.id+' has no real matching schedule slot');
   const s=ready(e,{day:d});
