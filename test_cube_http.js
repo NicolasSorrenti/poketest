@@ -20,13 +20,14 @@ const {server}=require('./server');
   res=await fetch(base+'/cube_client.js');
   assert.equal(res.status,200);
   assert((await res.text()).includes('/classic_live.html'),'Cube client duel navigation missing');
-  for(const asset of ['/cube_builder_ui.js','/cube_builder.css']){
+  for(const asset of ['/cube_builder_ui.js','/cube_builder.css','/cube_set_badges.js']){
    const resource=await fetch(base+asset);
    assert.equal(resource.status,200,'Visual builder asset missing: '+asset);
   }
   for(const id of ['soloDeckBuilder','soloBuilderAction','cpuDifficulty','matchCpuDifficulty','packSort','showPickHelp'])assert(cubeHtml.includes('id="'+id+'"'));
   const formats=await api('presets');
   assert.equal(formats.status,200);
+  assert(formats.body.presets.every(p=>Array.isArray(p.sets)&&p.sets.length>0),'Every Cube should advertise its eligible expansions');
   assert.deepEqual(formats.body.presets.map(p=>p.id),['balanced','foundations','elemental','neo','rocket','mayhem']);
   assert.equal((await api('state')).status,401);
   const created=await api('create','POST',{seed:475,difficulty:5});
