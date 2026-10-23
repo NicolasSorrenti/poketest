@@ -134,16 +134,16 @@ const MORE_RECIPES=Object.freeze({
  haymaker_neo_revelation:{
   era:'Neo Revelation',
   name:'Haymaker · Legendary Pressure (Fire / Lightning)',
-  description:'Neo Revelation Ho-oh, Chinchou, Stantler and Lugia blend Fire, Lightning and Colorless pressure without unported Legendary Powers.',
-  pokemon:[[4,'neo3-53'],[4,'neo3-42'],[3,'neo3-38'],[2,'neo3-18'],[2,'neo3-43']],
+  description:'Neo Revelation Slugma, Chinchou, Ho-oh and Farfetch’d use early Fire/Lightning attacks and flexible Colorless backup.',
+  pokemon:[[4,'neo3-53'],[4,'neo3-42'],[3,'neo3-18'],[4,'neo3-43']],
   trainers:NEO_TRAINERS,
   energy:[[8,'neo1-107'],[7,'neo1-109'],[4,'base1-96']]
  },
  haymaker_neo_destiny:{
   era:'Neo Destiny',
   name:'Haymaker · Destiny Assault (Fighting / Grass)',
-  description:'Neo Destiny Hitmonlee, Heracross, Scyther and Hitmonchan apply direct Basic pressure.',
-  pokemon:[[4,'neo4-42'],[4,'neo4-55'],[3,'neo4-41'],[2,'neo4-31'],[2,'neo4-69']],
+  description:'Neo Destiny Hitmonlee, Heracross, Scyther and Larvitar apply direct Basic pressure.',
+  pokemon:[[4,'neo4-42'],[4,'neo4-55'],[3,'neo4-41'],[2,'neo4-31'],[2,'neo4-70']],
   trainers:NEO_TRAINERS,
   energy:[[8,'neo1-106'],[7,'neo1-108'],[4,'base1-96']]
  },
@@ -158,8 +158,8 @@ const MORE_RECIPES=Object.freeze({
  haymaker_all_eras:{
   era:'Base → Neo Destiny',
   name:'Haymaker · All-Era All-Stars (Fighting / Lightning)',
-  description:"Classic Hitmonchan, Rocket's Zapdos, Neo Electabuzz and Hitmontop combine the eras.",
-  pokemon:[[2,'base1-7'],[2,'neo4-69'],[4,'gym2-15'],[3,'neo1-33'],[2,'neo2-3'],[2,'neo3-38']],
+  description:"Classic Hitmonchan, Rocket's Zapdos, Neo Hitmonlee, Electabuzz and Hitmontop combine the eras.",
+  pokemon:[[2,'base1-7'],[2,'neo4-42'],[4,'gym2-15'],[3,'neo1-33'],[2,'neo2-3'],[2,'neo3-43']],
   trainers:NEO_TRAINERS,
   energy:[[8,'neo1-106'],[7,'neo1-109'],[4,'base1-96']]
  }
