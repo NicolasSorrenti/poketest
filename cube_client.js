@@ -24,7 +24,7 @@
    const exact=!!(state?.preset===p?.id&&Array.isArray(state?.cubePool));
    window.CubeSetBadges?.render($('presetSets'),{
     sets:exact?window.CubeSetBadges.fromPool(state.cubePool):p?.sets,
-    exact
+    exact,fixed:!!p?.fixedPool
    });
  }
  function esc(v){return String(v??'').replace(/[&<>"']/g,x=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;','\'':'&#39;'}[x]));}
