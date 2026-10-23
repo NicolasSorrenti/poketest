@@ -414,3 +414,19 @@
  .rpg-more-content{right:0;width:min(270px,calc(100vw - 24px))}
  .rpg-calendar-item{padding:10px}
 }
+
+/* Keep the existing horizontal toolbar scrollable when closed, but never clip
+   the absolutely positioned More popup while its native details is open.
+   overflow-x:auto implicitly clips overflow-y too in both Chromium and Firefox. */
+.utilitybar:has(#rpgMoreMenu[open]){position:relative;z-index:110}
+.utilitybar .utility-actions:has(#rpgMoreMenu[open]){
+  overflow:visible;flex-wrap:wrap;
+}
+.utilitybar #rpgMoreMenu[open] .rpg-more-content{z-index:112}
+#rpgDiscreetToggle[aria-pressed="true"]{background:#6a4165;border-color:#ed9fc2;color:#fff}
+#rpgDiscreetToggle{white-space:nowrap;flex:none;min-height:40px}
+@media(max-width:700px){
+  .utilitybar .utility-actions:has(#rpgMoreMenu[open]){justify-content:flex-start}
+  .utilitybar #rpgMoreMenu .rpg-more-content{max-height:calc(100dvh - 155px);overflow-y:auto;overscroll-behavior:contain}
+  #rpgDiscreetToggle{min-width:112px}
+}
