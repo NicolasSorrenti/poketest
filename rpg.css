@@ -108,6 +108,16 @@
 .cg-moment .modal-heading{display:flex;justify-content:space-between;gap:16px;align-items:center}
 .cg-moment-art img{width:100%;max-height:73vh;object-fit:contain;border-radius:10px}
 #cgMomentCaption{padding:7px;color:#ffd3df;font:700 14px 'Barlow Condensed',sans-serif}
+/* Missing CG: a center/upper-torso crop from the character's existing battle cut-in.
+   No derived image file is created, and installing the actual event CG removes this crop. */
+.cg-art-frame.is-fallback{width:100%;aspect-ratio:16/9;max-height:62vh;overflow:hidden;border-radius:10px;background:#121b2f}
+.cg-moment-art .cg-art-frame.is-fallback img,.cg-preview .cg-art-frame.is-fallback img{
+ display:block;width:100%;height:100%;max-height:none;object-fit:cover;object-position:50% 52%;
+ transform:scale(1.38);transform-origin:50% 52%;border-radius:0
+}
+.cg-preview .cg-art-frame.is-fallback{max-height:58vh}
+.cg-thumb img.is-fallback{transform:scale(1.28);object-position:50% 52%}
+
 @media(max-width:600px){.cg-dialog{padding:11px}.cg-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.cg-filters select{min-width:0;flex:1}.cg-tile{min-height:135px;padding:6px}}
 
 /* Context-aware RPG day planner: actionable without skipping time or exposing route spoilers. */
