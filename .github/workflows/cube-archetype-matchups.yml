@@ -1,0 +1,44 @@
+name: Cube Archetype Matchups
+on:
+  push:
+    branches:
+      - feature/evolution-friendly-cube-formats
+    paths:
+      - 'cube_*.js'
+      - 'test_cube_archetype_matchups.js'
+      - '.github/workflows/cube-archetype-matchups.yml'
+  workflow_dispatch:
+    inputs:
+      presets:
+        description: 'Comma-separated Cube preset IDs'
+        type: string
+        default: 'foundations,kanto-growth,jungle-growth,fossil-discovery,rocket-uprising,gym-academy,neo-generations,stage-one,slow-burn'
+      seeds:
+        description: 'Comma-separated reproducible seeds'
+        type: string
+        default: '11,29,47,83,137'
+jobs:
+  archetype-matchups:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    env:
+      MATCHUP_PRESETS: ${{ inputs.presets || 'foundations,kanto-growth,jungle-growth,fossil-discovery,rocket-uprising,gym-academy,neo-generations,stage-one,slow-burn' }}
+      MATCHUP_SEEDS: ${{ inputs.seeds || '11,29,47' }}
+      MATCHUP_SEATS: '2'
+      MATCHUP_TURNS: '60'
+      MATCHUP_LEVEL: '3'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Run genuine Basic-only versus Evolution matches
+        run: node test_cube_archetype_matchups.js
+      - name: Upload raw matchup report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: cube-archetype-matchups
+          path: artifacts/cube-archetype-matchups.json
+          if-no-files-found: warn
+          retention-days: 30
