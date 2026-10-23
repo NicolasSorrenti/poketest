@@ -107,7 +107,7 @@
  const presentation=window.NeoBattlePresentation;
  const shared=window.NeoBattleComponents;
  const preview=quick.makePreview($('cardPreview'),id=>card(id));
- const feedback=quick.makeDuelFeedback($('duelFeedback'));
+ const feedback=quick.makeDuelFeedback($('duelFeedback'),id=>card(id));
  const showEnergyLimitToast=quick.makeTransientToast($('energyLimitToast'));
  const combat=presentation.makeBattlePresentation({stage:document.querySelector('.stage'),popup:$('combatFx'),timeline:$('actionTimeline'),getCard:id=>cards.get(id)||{name:String(id)},me:()=>0,opponentName:()=>opponentName});
  const opponentActivity=quick.makeOpponentActivity({status:$('opponentActivityStatus'),overlay:$('opponentActionFx'),arena:document.querySelector('.stage'),getCard:id=>cards.get(id)||{name:String(id)},suppressCombat:true});
