@@ -651,6 +651,7 @@
   renderHandActions();$('attacks').textContent='';$('powers').textContent='';
   const attackEnabled=!watching()&&v.phase==='game'&&!v.over&&yourTurn&&!v.pendingDecision;
   shared.renderAttacks({root:$('attacks'),unit:you.active,view:v,me:side(),getCard:card,enabled:attackEnabled,button:btn,onAttack:index=>send(command('attack',{attackIndex:index})),attackReason:presentation.attackReason});
+  $('mobileAttacksToggle').disabled=!you.active||v.over||v.phase!=='game';
   if(v.phase==='game'&&!v.over&&yourTurn&&!v.pendingDecision&&you.active){
    [you.active,...you.bench].forEach((u,i)=>{if(u?.secretPlanFaceDown){$('powers').append(btn(`🎴 Reveal Secret Plan (${i===0?'Active':'Bench '+i})`,()=>send(command('reveal_secret',{slot:i-1}))));return;}const c=card(u.id);(c.abilities||[]).forEach(a=>{if(a.name)$('powers').append(btn(`✦ ${a.name} (${i===0?'Active':'Bench '+i})`,()=>send(command('use_power',{slot:i-1}))));});});
   }
