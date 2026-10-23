@@ -159,7 +159,7 @@ const MORE_RECIPES=Object.freeze({
   era:'Base → Neo Destiny',
   name:'Haymaker · All-Era All-Stars (Fighting / Lightning)',
   description:"Classic Hitmonchan, Rocket's Zapdos, Neo Electabuzz and Hitmontop combine the eras.",
-  pokemon:[[4,'base1-7'],[4,'gym2-15'],[3,'neo1-33'],[2,'neo2-3'],[2,'neo3-38']],
+  pokemon:[[2,'base1-7'],[2,'neo4-69'],[4,'gym2-15'],[3,'neo1-33'],[2,'neo2-3'],[2,'neo3-38']],
   trainers:NEO_TRAINERS,
   energy:[[8,'neo1-106'],[7,'neo1-109'],[4,'base1-96']]
  }
