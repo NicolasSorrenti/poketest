@@ -117,7 +117,7 @@ class CubeRoomService{
   const humans=room.seats.map((s,i)=>s.cpu?null:i).filter(x=>x!==null);
   if(humans.every(i=>d.picks[i].length===cursor+1)){
    for(let i=0;i<d.players;i++)if(room.seats[i].cpu){
-    Cube.draftPick(d,i,cpuPick(Cube.availableForSeat(d,i),d.picks[i]));
+    Cube.draftPick(d,i,cpuPick(Cube.availableForSeat(d,i),d.picks[i],{preset:room.preset}));
    }
   }
   return this.view(room,seat);
@@ -209,7 +209,7 @@ class CubeRoomService{
   }
   const offered=waiting?[...d.available[seat],selectedId]:Cube.availableForSeat(d,seat);
   const past=waiting?d.picks[seat].slice(0,-1):d.picks[seat];
-  const recommendedId=!d.done&&offered.length?cpuPick(offered,past):null;
+  const recommendedId=!d.done&&offered.length?cpuPick(offered,past,{preset:room.preset}):null;
   return {...base,round:d.round,pick:d.pick,packs:d.packs,cardsPerPack:d.cardsPerPack,waiting,recommendedId,
     cubePool:d.rounds.flat(2).map(id=>{const c=CATALOG.get(id);return {id,name:c.name,supertype:c.supertype,types:c.types||[],subtypes:c.subtypes||[],evolvesFrom:c.evolvesFrom||null};}),
    // While waiting, return the ORIGINAL pack including this seat's reserved

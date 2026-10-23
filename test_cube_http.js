@@ -27,7 +27,7 @@ const {server}=require('./server');
   for(const id of ['soloDeckBuilder','soloBuilderAction','cpuDifficulty','matchCpuDifficulty','packSort','showPickHelp'])assert(cubeHtml.includes('id="'+id+'"'));
   const formats=await api('presets');
   assert.equal(formats.status,200);
-  assert.deepEqual(formats.body.presets.map(p=>p.id),['balanced','foundations','elemental','neo','rocket','mayhem']);
+  assert.deepEqual(formats.body.presets.map(p=>p.id),require('./cube_presets').PRESETS.map(p=>p.id));
   assert.equal((await api('state')).status,401);
   const created=await api('create','POST',{seed:475,difficulty:5});
   assert.equal(created.status,200);
