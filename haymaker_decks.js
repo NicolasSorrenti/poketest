@@ -134,8 +134,8 @@ const MORE_RECIPES=Object.freeze({
  haymaker_neo_revelation:{
   era:'Neo Revelation',
   name:'Haymaker · Legendary Pressure (Fire / Lightning)',
-  description:'Entei and Raikou bring late-era raw damage alongside Stantler and Farfetch’d tempo.',
-  pokemon:[[4,'neo3-6'],[4,'neo3-13'],[4,'neo3-38'],[3,'neo3-43']],
+  description:'Neo Revelation Ho-oh, Chinchou, Stantler and Lugia blend Fire, Lightning and Colorless pressure without unported Legendary Powers.',
+  pokemon:[[4,'neo3-53'],[4,'neo3-42'],[3,'neo3-38'],[2,'neo3-18'],[2,'neo3-43']],
   trainers:NEO_TRAINERS,
   energy:[[8,'neo1-107'],[7,'neo1-109'],[4,'base1-96']]
  },
