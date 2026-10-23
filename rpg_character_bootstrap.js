@@ -65,7 +65,7 @@
     const cached=JSON.parse(localStorage.getItem('neoRpgCloudSessionV1')||'null');
     let token=cached?.access_token||'';
     // Refresh stale sessions through the same Supabase identity provider as cloud saves.
-    if(cached?.refresh_token && (!token||Number(cached.expires_at)<Date.now())){
+    if(cached?.refresh_token && (!token||!Number.isFinite(Number(cached.expires_at))||Number(cached.expires_at)<=Date.now()+60000)){
       const config=await (await fetch('/api/rpg-cloud/config',{cache:'no-store'})).json();
       if(config.enabled){
         const response=await fetch(config.url+'/auth/v1/token?grant_type=refresh_token',{
