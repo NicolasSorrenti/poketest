@@ -1,0 +1,30 @@
+{
+  "character": "Camila",
+  "note": "Art assets only. Story event wiring is not included.",
+  "scenes": [
+    {
+      "title": "The Unexpected Challenge",
+      "id": "camila_unexpected_challenge",
+      "image": "rpg-assets/events/cg/season01/camila_unexpected_challenge.webp",
+      "thumbnail": "rpg-assets/events/cg/season01/thumbs/camila_unexpected_challenge.webp"
+    },
+    {
+      "title": "Behind the Smile",
+      "id": "camila_behind_the_smile",
+      "image": "rpg-assets/events/cg/season01/camila_behind_the_smile.webp",
+      "thumbnail": "rpg-assets/events/cg/season01/thumbs/camila_behind_the_smile.webp"
+    },
+    {
+      "title": "Closer Than Expected",
+      "id": "camila_closer_than_expected",
+      "image": "rpg-assets/events/cg/season01/camila_closer_than_expected.webp",
+      "thumbnail": "rpg-assets/events/cg/season01/thumbs/camila_closer_than_expected.webp"
+    },
+    {
+      "title": "No More Pretending",
+      "id": "camila_no_more_pretending",
+      "image": "rpg-assets/events/cg/season01/camila_no_more_pretending.webp",
+      "thumbnail": "rpg-assets/events/cg/season01/thumbs/camila_no_more_pretending.webp"
+    }
+  ]
+}
