@@ -14,7 +14,7 @@ Create polished original **anime visual-novel event illustrations**, stylistical
 **Use an established approved character reference first.** If it conflicts with summary below, flag the discrepancy rather than silently changing the character. Keep skin tone and face shape consistent and distinct, even in swimsuits. Marina’s sandy shore is the *existing riverside park/sandbar* — the game does not currently have a separate playable beach location.
 
 ## Canonical cast continuity
-- **hana:** Hana Mizuno, 20. Long voluminous salmon-pink hair styled half-up with a large cream bow and small daisy hair clips; warm amber-golden eyes. Mint-green and cream floral varsity jacket with white sleeves, a lace-trimmed white top, denim shorts, flower accessories and her card-shop lanyard. Bubbly, warmly competitive and expressive; match the established in-game portrait, never substitute brown hair.
+- **hana:** Hana Mizuno, 20. Long voluminous salmon-pink hair styled half-up with a large cream bow and small daisy hair clips; warm amber-golden eyes. Mint-green and cream floral varsity jacket with white sleeves, a lace-trimmed white top, denim shorts, flower accessories and her card-shop lanyard. Bubbly, warmly competitive and expressive, faithfully matching the established in-game character portrait.
 - **reina:** Reina Kurogane, 21. Long ink-black hair with severe side part and red underlayer, subtle silver ear cuff. Black/garnet/silver palette; cropped charcoal motorcycle jacket, fitted jersey, tailored trousers. Intense, fiercely disciplined, guarded smiles.
 - **shiori:** Shiori Tsukishima, 23. Straight dark-violet bob tucked behind ear, vintage watch and occasionally thin reading glasses. Slate blue/pearl/muted violet, structured long coat, turtleneck, asymmetric skirt and boots. Gentle composure, witty reserve.
 - **yuna:** Yuna Hoshino, 19. Spiky twin buns with dyed neon tips, electric cyan/raspberry/blue palette, oversized graphic jacket, mismatched patterned tights, sticker-covered deck box and lucky bracelet. Loud theatrical mischief, honest flashes of insecurity.
@@ -32,7 +32,7 @@ Every section below is a complete request. Apply the shared visual bible above, 
 
 **CREATIVE SCENE BRIEF (reference only; NOT a model-ready prompt):**
 
-Create a cinematic original anime visual-novel CG in Neo Harbor, an adult slice-of-life Pokémon-inspired card-game campus town (do not draw official logos/card art). Depict **Hana Mizuno, 20. Long voluminous salmon-pink hair styled half-up with a large cream bow and small daisy hair clips; warm amber-golden eyes. Mint-green and cream floral varsity jacket with white sleeves, a lace-trimmed white top, denim shorts, flower accessories and her card-shop lanyard. Bubbly, warmly competitive and expressive; match the established in-game portrait, never substitute brown hair.**
+Create a cinematic original anime visual-novel CG in Neo Harbor, an adult slice-of-life Pokémon-inspired card-game campus town (do not draw official logos/card art). Depict **Hana Mizuno, 20. Long voluminous salmon-pink hair styled half-up with a large cream bow and small daisy hair clips; warm amber-golden eyes. Mint-green and cream floral varsity jacket with white sleeves, a lace-trimmed white top, denim shorts, flower accessories and her card-shop lanyard. Bubbly, warmly competitive and expressive, faithfully matching the established in-game character portrait.**
 
 **The moment:** A welcoming moment behind the Lucky Draw counter; Hana offers the protagonist a neatly sleeved starter card.
 
@@ -56,7 +56,7 @@ Create a cinematic original anime visual-novel CG in Neo Harbor, an adult slice-
 
 **CREATIVE SCENE BRIEF (reference only; NOT a model-ready prompt):**
 
-Create a cinematic original anime visual-novel CG in Neo Harbor, an adult slice-of-life Pokémon-inspired card-game campus town (do not draw official logos/card art). Depict **Hana Mizuno, 20. Long voluminous salmon-pink hair styled half-up with a large cream bow and small daisy hair clips; warm amber-golden eyes. Mint-green and cream floral varsity jacket with white sleeves, a lace-trimmed white top, denim shorts, flower accessories and her card-shop lanyard. Bubbly, warmly competitive and expressive; match the established in-game portrait, never substitute brown hair.**
+Create a cinematic original anime visual-novel CG in Neo Harbor, an adult slice-of-life Pokémon-inspired card-game campus town (do not draw official logos/card art). Depict **Hana Mizuno, 20. Long voluminous salmon-pink hair styled half-up with a large cream bow and small daisy hair clips; warm amber-golden eyes. Mint-green and cream floral varsity jacket with white sleeves, a lace-trimmed white top, denim shorts, flower accessories and her card-shop lanyard. Bubbly, warmly competitive and expressive, faithfully matching the established in-game character portrait.**
 
 **The moment:** Hana sits at a trading table, checking the top card of her sleeved deck and looking up, delighted by the challenge.
 
@@ -80,7 +80,7 @@ Create a cinematic original anime visual-novel CG in Neo Harbor, an adult slice-
 
 **CREATIVE SCENE BRIEF (reference only; NOT a model-ready prompt):**
 
-Create a cinematic original anime visual-novel CG in Neo Harbor, an adult slice-of-life Pokémon-inspired card-game campus town (do not draw official logos/card art). Depict **Hana Mizuno, 20. Long voluminous salmon-pink hair styled half-up with a large cream bow and small daisy hair clips; warm amber-golden eyes. Mint-green and cream floral varsity jacket with white sleeves, a lace-trimmed white top, denim shorts, flower accessories and her card-shop lanyard. Bubbly, warmly competitive and expressive; match the established in-game portrait, never substitute brown hair.**
+Create a cinematic original anime visual-novel CG in Neo Harbor, an adult slice-of-life Pokémon-inspired card-game campus town (do not draw official logos/card art). Depict **Hana Mizuno, 20. Long voluminous salmon-pink hair styled half-up with a large cream bow and small daisy hair clips; warm amber-golden eyes. Mint-green and cream floral varsity jacket with white sleeves, a lace-trimmed white top, denim shorts, flower accessories and her card-shop lanyard. Bubbly, warmly competitive and expressive, faithfully matching the established in-game character portrait.**
 
 **The moment:** Hana sits beside the player on a riverside picnic blanket, sorting community-event flyers between laughter.
 
@@ -104,7 +104,7 @@ Create a cinematic original anime visual-novel CG in Neo Harbor, an adult slice-
 
 **CREATIVE SCENE BRIEF (reference only; NOT a model-ready prompt):**
 
-Create a cinematic original anime visual-novel CG in Neo Harbor, an adult slice-of-life Pokémon-inspired card-game campus town (do not draw official logos/card art). Depict **Hana Mizuno, 20. Long voluminous salmon-pink hair styled half-up with a large cream bow and small daisy hair clips; warm amber-golden eyes. Mint-green and cream floral varsity jacket with white sleeves, a lace-trimmed white top, denim shorts, flower accessories and her card-shop lanyard. Bubbly, warmly competitive and expressive; match the established in-game portrait, never substitute brown hair.**
+Create a cinematic original anime visual-novel CG in Neo Harbor, an adult slice-of-life Pokémon-inspired card-game campus town (do not draw official logos/card art). Depict **Hana Mizuno, 20. Long voluminous salmon-pink hair styled half-up with a large cream bow and small daisy hair clips; warm amber-golden eyes. Mint-green and cream floral varsity jacket with white sleeves, a lace-trimmed white top, denim shorts, flower accessories and her card-shop lanyard. Bubbly, warmly competitive and expressive, faithfully matching the established in-game character portrait.**
 
 **The moment:** Trying on a promotional apron over her fully worn outfit, Hana accidentally tangles its long ties with her card case. She catches the player laughing and makes a mock-indignant face.
 
