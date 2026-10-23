@@ -155,10 +155,10 @@
       "category": "story_preduel",
       "full": "rpg-assets/events/cg/season01/hana_shop_challenge.webp",
       "thumbnail": "rpg-assets/events/cg/season01/thumbs/hana_shop_challenge.webp",
-      "reviewStatus": "identity_mismatch",
-      "note": "Needs replacement: visual comparison with installed Hana portrait, avatar and battle-result art shows wrong brown/chestnut hair and a generic softer-rendered look rather than her long pink hair, golden eyes and mint-green floral jacket. Scene action can match, but character identity does not; NOT approved for future art reuse.",
-      "sourceImageFilename": "wide_detailed_anime_style_illustration_of_a_cozy.png",
-      "sourceImageSha256": "4e58201c56e9a6550b73c7c99c1fe1c1eabdd5601c2963be263bb97c0c9e88cc",
+      "reviewStatus": "provisional",
+      "note": "Restored prior pink-haired Hana illustration after visual audit: identity, mint-green floral jacket, golden eyes, bow and sharper anime/JRPG shading match the installed character art. Card-table duel setting is appropriate but the exact scripted card-check gesture still needs a dedicated replacement.",
+      "sourceImageFilename": "desafío_de_cartas_en_la_tienda.png",
+      "sourceImageSha256": "53d95b5a780559cd2cf9fc4ec84193ff19d2105a637629a8d1f155f9c8b527db",
       "sourceSize": [
         1672,
         941
@@ -643,8 +643,8 @@
     },
     {
       "path": "rpg-assets/events/cg/season01/hana_shop_challenge.webp",
-      "sha256": "fd80b87ca4f78d957ce36ff9c2f6979bc7e4497697e37a70698689bce1776531",
-      "bytes": 200986,
+      "sha256": "27ae533a4522bca0f0809b79fd017488dd9a59edf76c8c04fe8fd6bb9ac524e6",
+      "bytes": 454824,
       "width": 1920,
       "height": 1080,
       "format": "WEBP",
@@ -652,8 +652,8 @@
     },
     {
       "path": "rpg-assets/events/cg/season01/thumbs/hana_shop_challenge.webp",
-      "sha256": "af7f80dcddff2ab940069cfb0a29e1f16ced19d6b0f86d1bbcb08ea0766e312a",
-      "bytes": 46366,
+      "sha256": "89d1816af62bd87b7a2fb00deb974e0fd86e6b93a66566e107eb4366f911a275",
+      "bytes": 75244,
       "width": 640,
       "height": 360,
       "format": "WEBP",
