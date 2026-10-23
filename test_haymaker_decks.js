@@ -9,7 +9,7 @@ const ATTACKS=require('./attack_effects_core');
 const POWERS=require('./classic_power_core');
 const TRAINERS=require('./classic_trainer_core');
 assert.equal(HAYMAKER.entries.length,17);
-assert.equal(new Set(HAYMAKER.entries.map(x=>x.id)).size,5);
+assert.equal(new Set(HAYMAKER.entries.map(x=>x.id)).size,HAYMAKER.entries.length);
 assert.equal(HAYMAKER.has('__proto__'),false);
 assert.equal(HAYMAKER.list('nope'),null);
 assert.deepEqual(HAYMAKER.list('haymaker_classic'),HAYMAKER.list('haymaker_classic'));
