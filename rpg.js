@@ -76,10 +76,10 @@ function finishStory(){
  const id=e.npc,bond=state.bonds[id],updated=state.relationships[id];
  for(const metric of ['affection','trust','duels'])bond[metric]=Math.max(bond[metric]||0,updated[metric]||0);
  const chapterReward=BONDS.reward(state,e,BOND_PLAN,COLLECT);
- log('Finished '+e.title+' with '+cast[id].name+'.');recordCG('story_milestone',id);recordIntention('story');
+ log('Finished '+e.title+' with '+cast[id].name+'.');const storyMemories=recordCG('story_milestone',id,{eventId:e.id});recordIntention('story');
  if(chapterReward)log('Bond chapter '+chapterReward.chapter+' reward from '+cast[id].name+': '+chapterReward.label+'.');
  state.activeStory=null;advance();state.selected=id;
- persist();closeSceneDialogue();
+ persist();closeSceneDialogue();showCGMoment(storyMemories[0]);
  if(chapterReward)$('notice').textContent='★ Chapter reward: '+chapterReward.label;
 }
 
@@ -167,6 +167,13 @@ if(!state.pendingDuel?.id||!cast[state.pendingDuel?.npc])state.pendingDuel=null;
 if(state.pendingDuel)PRE.hydrate(state.pendingDuel);
 for(const id of Object.keys(cast)){if(!state.bonds[id])state.bonds[id]={affection:0,trust:0,duels:0};}
 STORY.normalize(state);
+// The player's childhood friend begins with pre-existing trust, never automatic romance.
+if(cast.laca&&!state.flags.lacaChildhoodFriendInitialized){
+ const r=state.relationships.laca,b=state.bonds.laca;
+ r.trust=Math.max(r.trust||0,5);r.affection=Math.max(r.affection||0,2);
+ b.trust=Math.max(b.trust||0,r.trust);b.affection=Math.max(b.affection||0,r.affection);
+ state.flags.lacaChildhoodFriendInitialized=true;
+}
 WORLD.hydrate(state);
 SIDE.hydrate(state);
 SIDE.expire(state);
