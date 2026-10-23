@@ -92,11 +92,13 @@
     console.error('RPG roster load failed',error);
     return;
   }
-  for(const src of scripts){
-    await new Promise((resolve,reject)=>{
-      const script=document.createElement('script');
-      script.src=src;script.onload=resolve;script.onerror=()=>reject(Error('RPG script failed: '+src));
-      document.body.appendChild(script);
-    });
-  }
+  // Browser downloads in parallel, but executes in order because async=false.
+  await Promise.all(scripts.map(src=>new Promise((resolve,reject)=>{
+    const script=document.createElement('script');
+    script.async=false;
+    script.src=src;
+    script.onload=resolve;
+    script.onerror=()=>reject(Error('RPG script failed: '+src));
+    document.body.appendChild(script);
+  })));
 })().catch(error=>console.error('RPG startup failed',error));
