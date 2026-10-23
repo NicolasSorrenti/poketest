@@ -79,7 +79,7 @@
   const names=cards.map(c=>String(c.name||'Unknown Energy')).join(', ');
   return `<span class="energy-peeks energy-card-stack" title="${html(names)}" aria-label="${cards.length} attached Energy: ${html(names)}">${minis}${over?`<span class="energy-overflow">+${over}</span>`:''}</span>${toolBadges}`;
  }
- function makeDuelFeedback(el){
+ function makeDuelFeedback(el,getCard=()=>({})){
   let last=null,removeTimer=null,changes=new Map();
   function reset(){last=null;changes.clear();if(removeTimer)clearTimeout(removeTimer);el.textContent='';el.classList.remove('show','turn-change');}
   function unitOf(view,index,slot){const p=view.players[index];return slot===-1?p?.active:p?.bench?.[slot];}
@@ -109,7 +109,7 @@
     const knockedOut=[];
     for(let who=0;who<2;who++){
      const before=last.view.players?.[who],after=v.players?.[who];
-     if(before?.active&&!after?.active)knockedOut.push(who===me?'Your Pokémon':'Opponent Pokémon');
+     if(before?.active&&!after?.active)knockedOut.push((who===me?'Your ':'Opponent ')+(getCard(before.active.id)?.name||'Pokémon'));
     }
     let announcement='',turn=false;
     if(knockedOut.length)announcement=knockedOut.join(' and ')+' Knocked Out!';
@@ -121,7 +121,21 @@
      announcement=(v.messages||[]).find(x=>!older.has(x))||((v.messages||[])[0]||'');
     }
     if(announcement){
-     el.textContent=announcement;el.classList.remove('show','turn-change');void el.offsetWidth;
+     el.replaceChildren();
+     const label=document.createElement('span');label.textContent=announcement;el.append(label);
+     if(drawn.length&&!knockedOut.length){
+      const cards=document.createElement('span');cards.className='draw-feedback-cards';
+      for(const id of drawn.slice(0,5)){
+       const c=getCard(id)||{},image=c.images?.small;
+       const item=document.createElement('span');item.className='draw-feedback-card';
+       if(typeof image==='string'&&/^https:\/\//.test(image)){
+        const img=document.createElement('img');img.src=image;img.alt=c.name||'Drawn card';item.append(img);
+       }else item.textContent=c.name||'Card';
+       cards.append(item);
+      }
+      el.append(cards);
+     }
+     el.classList.remove('show','turn-change');void el.offsetWidth;
      el.classList.add('show');if(turn)el.classList.add('turn-change');
      if(removeTimer)clearTimeout(removeTimer);removeTimer=setTimeout(()=>el.classList.remove('show','turn-change'),3000);
     }
