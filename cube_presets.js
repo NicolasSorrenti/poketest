@@ -4,7 +4,7 @@
 const {CATALOG}=require('./headless_duel');
 const {isBasicPokemon,canEvolve}=require('./core_rules');
 const {eligibleIds}=require('./cube_draft');
-const {preferredPrintings}=require('./cube_printings');
+const {preferredPrintings,CHRONOLOGY}=require('./cube_printings');
 
 const TYPES=Object.freeze(['Grass','Fire','Water','Lightning','Psychic','Fighting']);
 const PRESETS=Object.freeze([
@@ -161,4 +161,18 @@ function makePresetPool({preset='balanced',size=240,seed=1}={}){
  if(selected.length!==size)throw Error('Cube pool size mismatch');
  return shuffle(selected,random);
 }
-module.exports={PRESETS,getPreset,makePresetPool,typeOf,TYPES};
+// Derive advertised sets from the real supported printing candidates, not from
+// hard-coded expansion claims. Individual generated drafts are still randomized.
+let cachedPresetSummaries=null;
+function listPresetSummaries(){
+ if(cachedPresetSummaries)return cachedPresetSummaries;
+ const supported=eligibleIds();
+ cachedPresetSummaries=Object.freeze(PRESETS.map(p=>{
+  const candidates=preferredPrintings(
+   supported.filter(id=>p.id!=='foundations'||/^base[123]-/.test(id)),{preset:p.id});
+  const available=new Set(candidates.map(id=>id.split('-')[0]));
+  return Object.freeze({...p,sets:Object.freeze(CHRONOLOGY.filter(id=>available.has(id)))});
+ }));
+ return cachedPresetSummaries;
+}
+module.exports={PRESETS,getPreset,listPresetSummaries,makePresetPool,typeOf,TYPES};
