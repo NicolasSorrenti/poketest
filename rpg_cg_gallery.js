@@ -911,7 +911,7 @@
   "trigger": "story_milestone",
   "place": "park",
   "minAffection": 2,
-  "startDay": 5,
+  "startDay": 1,
   "slot": 0,
   "title": "Just Like Old Times",
   "hint": "Complete Laca's personal story to unlock this memory.",
