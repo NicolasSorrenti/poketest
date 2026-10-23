@@ -136,10 +136,10 @@
       "category": "story_first_meeting",
       "full": "rpg-assets/events/cg/season01/hana_first_meeting.webp",
       "thumbnail": "rpg-assets/events/cg/season01/thumbs/hana_first_meeting.webp",
-      "reviewStatus": "provisional",
-      "note": "Generated scene used as Hana first meeting illustration.",
-      "sourceImageFilename": "bienvenida_al_paseo_del_puerto.png",
-      "sourceImageSha256": "f8656032740fb6dcb66dc22092cf17f9877af1062fdeafd6cdd38dfca9dc4aae",
+      "reviewStatus": "scene_match",
+      "note": "Standalone new CG reviewed for the canonical Lucky Draw shop welcome: Hana offers the player a sleeved card across the counter. Replaces previous provisional scene.",
+      "sourceImageFilename": "sonrisa_y_cartas_en_la_tienda_de_juegos.png",
+      "sourceImageSha256": "958122e7166897e1685af31837be6a7f3a52194bd6afbe210a396d799d16a1d9",
       "sourceSize": [
         1672,
         941
