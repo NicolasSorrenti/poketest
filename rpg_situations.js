@@ -254,7 +254,256 @@
         "respect": 1
       }
     ]
-  }
+  },
+{
+  "id": "laca_sunhat_vote",
+  "npc": "laca",
+  "place": "park",
+  "start": 6,
+  "end": 38,
+  "slot": 0,
+  "minAffection": 2,
+  "minTrust": 4,
+  "tag": "childhood_friend",
+  "chance": 80,
+  "focusCost": 6,
+  "title": "The Sunhat Jury",
+  "intro": "A gust tilts Laca's broad sunhat over her eyes during the morning equipment check. She straightens it, catches sight of you, and demands a verdict.",
+  "options": [
+    {
+      "label": "Give an absurdly serious fashion review",
+      "response": "Ten out of ten for dramatic flair? Good. You're officially my hat consultant.",
+      "affection": 2,
+      "trust": 1,
+      "respect": 0
+    },
+    {
+      "label": "Compliment her practical summer style",
+      "response": "That's why I ask you. Practical and cute can coexist, che.",
+      "affection": 1,
+      "trust": 2,
+      "respect": 0
+    }
+  ]
+},
+{
+  "id": "laca_rescue_kit_reach",
+  "npc": "laca",
+  "place": "park",
+  "start": 12,
+  "end": 52,
+  "slot": 0,
+  "minAffection": 2,
+  "minTrust": 4,
+  "tag": "childhood_friend",
+  "chance": 80,
+  "focusCost": 6,
+  "title": "The Bottom Shelf",
+  "intro": "Laca kneels beside the open rescue-equipment cabinet, reaching for the bandage kit under the spare flotation straps. She notices you standing nearby.",
+  "options": [
+    {
+      "label": "Hold the door and pass her the kit",
+      "response": "Finally, a competent assistant! Careful with the straps; that's real rescue equipment.",
+      "affection": 1,
+      "trust": 2,
+      "respect": 0
+    },
+    {
+      "label": "Make a joke about the treasure hunt",
+      "response": "The grand prize is a fully stocked first-aid kit. Honestly better than our lost plastic Squirtle.",
+      "affection": 2,
+      "trust": 1,
+      "respect": 0
+    }
+  ]
+},
+{
+  "id": "laca_swimsuit_verdict",
+  "npc": "laca",
+  "place": "park",
+  "start": 20,
+  "end": 56,
+  "slot": 1,
+  "minAffection": 3,
+  "minTrust": 4,
+  "tag": "childhood_friend",
+  "chance": 80,
+  "focusCost": 6,
+  "title": "The Swimsuit Verdict",
+  "intro": "After her shift, Laca shows you a photo of a new sporty swimsuit and compares it with her work uniform. She wants an honest opinion about both style and comfort.",
+  "options": [
+    {
+      "label": "Discuss the fit and how safe it is for training",
+      "response": "Exactly! A swimsuit that stays put while swimming is worth a hundred compliments.",
+      "affection": 1,
+      "trust": 2,
+      "respect": 0
+    },
+    {
+      "label": "Tell her she's always had good style",
+      "response": "Look at you, actually giving me a real opinion. You're improving.",
+      "affection": 2,
+      "trust": 1,
+      "respect": 0
+    }
+  ]
+},
+{
+  "id": "laca_card_floor",
+  "npc": "laca",
+  "place": "shop",
+  "start": 24,
+  "end": 68,
+  "slot": 1,
+  "minAffection": 3,
+  "minTrust": 4,
+  "tag": "childhood_friend",
+  "chance": 80,
+  "focusCost": 6,
+  "title": "Deck Disaster Recovery",
+  "intro": "A box of old Pokémon cards spills from the shop counter. Laca crouches to gather them and spots a familiar holo from one of your childhood games.",
+  "options": [
+    {
+      "label": "Help sort the cards by set",
+      "response": "You remember the old set symbols! We spent an absurd amount of summer sorting these.",
+      "affection": 1,
+      "trust": 2,
+      "respect": 0
+    },
+    {
+      "label": "Accuse her of taking your lucky card",
+      "response": "Me? Never. Unless that one helps you win, in which case I'm pleading the fifth.",
+      "affection": 2,
+      "trust": 1,
+      "respect": 0
+    }
+  ]
+},
+{
+  "id": "laca_towel_break",
+  "npc": "laca",
+  "place": "park",
+  "start": 37,
+  "end": 74,
+  "slot": 1,
+  "minAffection": 4,
+  "minTrust": 4,
+  "tag": "childhood_friend",
+  "chance": 80,
+  "focusCost": 6,
+  "title": "Five-Minute Break",
+  "intro": "Off duty at last, Laca spreads a towel by the dry side of the waterfront, stretching her shoulders and inviting you to hear the funniest story from her shift.",
+  "options": [
+    {
+      "label": "Sit beside her and listen",
+      "response": "You know my favorite thing? I can tell you about a hard day without pretending it was hilarious.",
+      "affection": 1,
+      "trust": 2,
+      "respect": 0
+    },
+    {
+      "label": "Bring up your worst childhood prank",
+      "response": "The fake sea monster? Oh, I remember. You owe me three apologies and an ice cream.",
+      "affection": 2,
+      "trust": 1,
+      "respect": 0
+    }
+  ]
+},
+{
+  "id": "laca_borrowed_hoodie",
+  "npc": "laca",
+  "place": "cafe",
+  "start": 43,
+  "end": 79,
+  "slot": 2,
+  "minAffection": 4,
+  "minTrust": 4,
+  "tag": "childhood_friend",
+  "chance": 80,
+  "focusCost": 6,
+  "title": "Borrowed for Five Minutes",
+  "intro": "A cool breeze catches Laca on the café terrace. She borrows your jacket and sits beside you, settling in as though that had always been her spot.",
+  "options": [
+    {
+      "label": "Offer the jacket without making a big deal",
+      "response": "Thanks, che. That's why you're still my favorite person to borrow things from.",
+      "affection": 2,
+      "trust": 1,
+      "respect": 0
+    },
+    {
+      "label": "Ask if she'd rather sit closer to the heater",
+      "response": "You're sweet. The warm seat sounds good. Maybe a little closer to you, too.",
+      "affection": 1,
+      "trust": 2,
+      "respect": 0
+    }
+  ]
+},
+{
+  "id": "laca_stretch_challenge",
+  "npc": "laca",
+  "place": "park",
+  "start": 45,
+  "end": 83,
+  "slot": 0,
+  "minAffection": 5,
+  "minTrust": 4,
+  "tag": "childhood_friend",
+  "chance": 80,
+  "focusCost": 6,
+  "title": "The Stretching Contest",
+  "intro": "Laca is doing her routine shoulder warm-up before the morning swim shift. She catches you watching and declares that you're now participating in an invented competition.",
+  "options": [
+    {
+      "label": "Try the warm-up and accept defeat",
+      "response": "Ha! Your posture is tragic. At least your rematch is free.",
+      "affection": 2,
+      "trust": 1,
+      "respect": 0
+    },
+    {
+      "label": "Remind her she's about to go on duty",
+      "response": "Okay! Lifeguard first, professional show-off second. Fair call.",
+      "affection": 1,
+      "trust": 2,
+      "respect": 0
+    }
+  ]
+},
+{
+  "id": "laca_second_look",
+  "npc": "laca",
+  "place": "arcade",
+  "start": 58,
+  "end": 89,
+  "slot": 2,
+  "minAffection": 6,
+  "minTrust": 4,
+  "tag": "childhood_friend",
+  "chance": 80,
+  "focusCost": 6,
+  "title": "The Second Look",
+  "intro": "Laca tries on an oversized varsity jacket over her usual outfit at the arcade, spins around to show you, then realizes your opinion suddenly feels more important than it used to.",
+  "options": [
+    {
+      "label": "Say she's always looked beautiful to you",
+      "response": "You cannot just say that like it's nothing! ...Wow. Apparently you can.",
+      "affection": 2,
+      "trust": 1,
+      "respect": 0
+    },
+    {
+      "label": "Tell her you like seeing her be herself",
+      "response": "That's the best thing you could have said. Come on, play a round before I get sentimental.",
+      "affection": 1,
+      "trust": 2,
+      "respect": 0
+    }
+  ]
+}
+
 ];
  const map=new Map(events.map(x=>[x.id,x]));
  const hash=str=>{let h=2166136261;for(let i=0;i<str.length;i++){h^=str.charCodeAt(i);h=Math.imul(h,16777619);}return h>>>0;};
