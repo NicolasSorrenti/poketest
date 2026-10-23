@@ -1,0 +1,187 @@
+/* v0.98 — one-line mobile actions and an accessible attack selector.
+   Loaded last so legacy two-row/inline-attack overrides cannot reclaim space. */
+@media (max-width:780px) {
+  body.duel-active #duel:not(.hidden) {
+    grid-template-rows:auto auto minmax(0,1fr) clamp(145px,20dvh,178px)!important;
+  }
+  body.duel-active #duel > .below > .main-column {
+    gap:4px!important;
+  }
+  body.duel-active #duel > .below > .main-column > .turn-actions-panel,
+  body.duel-active #duel > .below > .main-column > .turn-actions-panel:not(:has(#mobileAttackDock button.attack-action)) {
+    box-sizing:border-box!important;
+    display:flex!important;
+    justify-content:center!important;
+    align-items:center!important;
+    flex:0 0 51px!important;
+    height:51px!important;
+    min-height:51px!important;
+    max-height:51px!important;
+    padding:4px!important;
+    overflow:visible!important;
+  }
+  body.duel-active #duel > .below > .main-column > .turn-actions-panel .turn-actions {
+    box-sizing:border-box!important;
+    display:grid!important;
+    grid-template-columns:minmax(0,1.05fr) minmax(0,.97fr) minmax(0,.8fr) minmax(0,.9fr) minmax(0,1.28fr) minmax(0,1fr)!important;
+    grid-template-rows:minmax(0,1fr)!important;
+    align-items:stretch!important;
+    flex:1 1 auto!important;
+    width:100%!important;
+    height:43px!important;
+    min-height:43px!important;
+    max-height:43px!important;
+    gap:3px!important;
+  }
+  body.duel-active #duel > .below .turn-actions-panel .turn-actions > button {
+    grid-column:auto!important;
+    grid-row:1!important;
+    display:inline-flex!important;
+    justify-content:center!important;
+    align-items:center!important;
+    min-width:0!important;
+    min-height:40px!important;
+    height:43px!important;
+    padding:4px 2px!important;
+    border-radius:9px!important;
+    font-size:clamp(9px,2.5vw,11px)!important;
+    line-height:1.05!important;
+    font-weight:750!important;
+    white-space:normal!important;
+    overflow:hidden!important;
+    text-overflow:clip!important;
+    text-align:center!important;
+  }
+  body.duel-active #duel > .below .turn-actions-panel .turn-actions #mobileAttacksToggle {
+    background:#265b46!important;
+    border:1px solid #70cba2!important;
+    color:#f1fff7!important;
+  }
+  body.duel-active #duel > .below .turn-actions-panel .turn-actions #endBtn {
+    background:#2fc395!important;
+    border:1px solid #51e2b4!important;
+    color:#083529!important;
+  }
+  body.duel-active #duel > .below .turn-actions-panel .turn-actions #concedeBtn {
+    background:#492d3a!important;
+    border:1px solid #9c6579!important;
+    color:#ffdee3!important;
+  }
+  body.duel-active #duel > .below .turn-actions-panel .turn-actions > button:disabled {
+    opacity:.46!important;
+  }
+  body.duel-active .hand-tray-drawer,
+  body.duel-active .power-drawer {
+    bottom:calc(clamp(145px,20dvh,178px) + 6px)!important;
+  }
+  body.duel-active #mobileAttacksToggle {
+    display:inline-flex!important;
+  }
+  body.duel-active #mobileAttackDock {
+    display:none!important;
+  }
+  body.duel-active.attack-popup-open #mobileAttackDock {
+    box-sizing:border-box!important;
+    position:fixed!important;
+    inset:0!important;
+    display:grid!important;
+    place-items:center!important;
+    z-index:9500!important;
+    width:100%!important;
+    height:100dvh!important;
+    min-height:0!important;
+    max-height:none!important;
+    padding:12px!important;
+    margin:0!important;
+    overflow-y:auto!important;
+    background:rgba(4,12,22,.80)!important;
+    border:0!important;
+    border-radius:0!important;
+    box-shadow:none!important;
+    overscroll-behavior:contain;
+  }
+  body.duel-active #mobileAttackDock .mobile-attack-dialog {
+    box-sizing:border-box;
+    width:min(490px,100%);
+    max-height:calc(100dvh - 32px);
+    padding:14px;
+    overflow-y:auto;
+    border:2px solid #81d9ae;
+    border-radius:16px;
+    background:linear-gradient(155deg,#203b36,#122633);
+    box-shadow:0 20px 65px #000c;
+  }
+  body.duel-active #mobileAttackDock .mobile-attack-heading {
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:8px;
+    margin-bottom:12px;
+    color:#ddfff0;
+    font-size:15px;
+    font-weight:850;
+    letter-spacing:.035em;
+  }
+  body.duel-active #mobileAttackDock #closeAttacks {
+    min-height:38px;
+    padding:6px 12px;
+    border:1px solid #71968b;
+    border-radius:8px;
+    background:#293f43;
+    color:#fff;
+    font-size:13px;
+    cursor:pointer;
+  }
+  body.duel-active #mobileAttackDock #attackPanel {
+    display:block!important;
+    width:100%!important;
+    max-width:none!important;
+    max-height:none!important;
+    padding:0!important;
+    margin:0!important;
+    background:transparent!important;
+    border:0!important;
+    border-radius:0!important;
+    box-shadow:none!important;
+  }
+  body.duel-active #mobileAttackDock #attackPanel h4 {
+    display:none!important;
+  }
+  body.duel-active #mobileAttackDock .inline-attacks {
+    display:grid!important;
+    grid-template-columns:minmax(0,1fr)!important;
+    gap:9px!important;
+  }
+  body.duel-active #mobileAttackDock .attack-action {
+    min-height:65px!important;
+    padding:10px 12px!important;
+    border:1px solid #88c7a2!important;
+    border-radius:11px!important;
+    background:#296247!important;
+    color:#fff!important;
+    font-size:14px!important;
+    text-align:left!important;
+    white-space:normal!important;
+  }
+  body.duel-active #mobileAttackDock .attack-action:disabled {
+    opacity:.52!important;
+  }
+  body.duel-active #mobileAttackDock .attack-effect,
+  body.duel-active #mobileAttackDock .attack-warning {
+    display:block!important;
+    font-size:11px!important;
+    line-height:1.3!important;
+  }
+}
+@media (max-width:360px) {
+  body.duel-active #duel > .below .turn-actions-panel .turn-actions #powersToggle,
+  body.duel-active #duel > .below .turn-actions-panel .turn-actions #undoBtn,
+  body.duel-active #duel > .below .turn-actions-panel .turn-actions #retreatBtn,
+  body.duel-active #duel > .below .turn-actions-panel .turn-actions #concedeBtn {
+    font-size:0!important;
+  }
+  body.duel-active #duel > .below .turn-actions-panel .turn-actions #powersToggle::before {content:"✦";font-size:20px!important}
+  body.duel-active #duel > .below .turn-actions-panel .turn-actions #undoBtn::before {content:"↶";font-size:21px!important}
+  body.duel-active #duel > .below .turn-actions-panel .turn-actions #retreatBtn::before {content:"⇆";font-size:21px!important}
+  body.duel-active #duel > .below .turn-actions-panel .turn-actions #concedeBtn::before {content:"⚑";font-size:19px!important}
+}
