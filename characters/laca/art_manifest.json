@@ -60,27 +60,27 @@
   "eventImages": [
     {
       "sceneId": "laca_route_1",
-      "path": "/rpg-assets/characters/laca/events/laca_route_1.webp",
+      "path": "/rpg-assets/events/cg/season01/laca_route_1.webp",
       "prompt": "Childhood-friend reunion at a supervised waterfront; Laca age 20 on duty, red two-piece lifeguard uniform, whistle and rescue buoy, delighted surprise; anime JRPG VN, safe distance from water, no text."
     },
     {
       "sceneId": "laca_route_2",
-      "path": "/rpg-assets/characters/laca/events/laca_route_2.webp",
+      "path": "/rpg-assets/events/cg/season01/laca_route_2.webp",
       "prompt": "Laca adult 20 presents a new casual outfit and a sporty red training top to her trusted childhood friend, both fully dressed in a public card shop, playful confident pose, anime VN, SFW."
     },
     {
       "sceneId": "laca_route_3",
-      "path": "/rpg-assets/characters/laca/events/laca_route_3.webp",
+      "path": "/rpg-assets/events/cg/season01/laca_route_3.webp",
       "prompt": "Laca adult 20 after lifeguard shift sharing a towel and a laugh with her childhood friend by the safe riverbank, red sporty lifeguard swimsuit with practical coverup available, sunlight, SFW romance comedy."
     },
     {
       "sceneId": "laca_route_4",
-      "path": "/rpg-assets/characters/laca/events/laca_route_4.webp",
+      "path": "/rpg-assets/events/cg/season01/laca_route_4.webp",
       "prompt": "Laca adult 20 at a warm evening cafe, black top and light blue jeans, genuinely surprised by new romantic feelings about an old friend, her long curled eyelashes and warm olive complexion, cinematic anime VN."
     },
     {
       "sceneId": "laca_route_5",
-      "path": "/rpg-assets/characters/laca/events/laca_route_5.webp",
+      "path": "/rpg-assets/events/cg/season01/laca_route_5.webp",
       "prompt": "Laca adult 20 at sunset park with an old childhood friend, black top and jeans, tender comfortable expression, hands close in a genuine confession scene, anime JRPG VN, SFW."
     }
   ]
