@@ -185,3 +185,12 @@
   body.duel-active #duel > .below .turn-actions-panel .turn-actions #retreatBtn::before {content:"⇆";font-size:21px!important}
   body.duel-active #duel > .below .turn-actions-panel .turn-actions #concedeBtn::before {content:"⚑";font-size:19px!important}
 }
+
+/* On regular phones the existing button labels already carry their glyphs.
+   Do not double-prefix Undo or Retreat from older phone styles. */
+@media (min-width:361px) and (max-width:780px) {
+  body.duel-active #duel > .below .turn-actions-panel .turn-actions #undoBtn::before,
+  body.duel-active #duel > .below .turn-actions-panel .turn-actions #retreatBtn::before {
+    content:none!important;
+  }
+}
