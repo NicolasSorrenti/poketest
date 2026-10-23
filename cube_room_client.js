@@ -23,14 +23,14 @@
  function showPreset(){
   const active=presets.find(p=>p.id===$('cubePreset').value);
   if(active)$('cubePresetInfo').textContent=active.description+' · '+active.archetypes.join(' / ');
-  window.CubeSetBadges?.render($('cubePresetSets'),{sets:active?.sets});
+  window.CubeSetBadges?.render($('cubePresetSets'),{sets:active?.sets,fixed:!!active?.fixedPool});
  }
  function showRoomSetBadges(){
   const active=presets.find(p=>p.id===state?.preset);
   const exact=Array.isArray(state?.cubePool);
   window.CubeSetBadges?.render($('roomPresetSets'),{
    sets:exact?window.CubeSetBadges.fromPool(state.cubePool):active?.sets,
-   exact
+   exact,fixed:!!active?.fixedPool
   });
  }
  const store=()=>sessionStorage.setItem(storageKey,JSON.stringify({code,token}));
