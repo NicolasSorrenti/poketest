@@ -17,6 +17,7 @@ const {CubeRoomService}=require('./cube_room_service');
 const cubeRooms=new CubeRoomService({classic,online});
 const CUBE_PLAYMAT_OWNER_EMAIL='nicolassorrenti2@gmail.com';
 const {sendCardImage}=require('./cube_card_images');
+const CharacterAccess=require('./rpg_character_access');
 const sendJSON=(res,status,value)=>{res.writeHead(status,{'Content-Type':'application/json; charset=utf-8','Cache-Control':'no-store','X-Content-Type-Options':'nosniff'});res.end(JSON.stringify(value));};
 async function parseJSON(req,maxBytes=65536){return new Promise((resolve,reject)=>{
  let text='';req.on('data',chunk=>{text+=chunk;if(text.length>maxBytes){reject(Error('Request too large'));req.destroy();}});
@@ -217,7 +218,6 @@ const server=http.createServer(async (req,res)=>{
  // Account-exclusive character packs: rely on verified Supabase user, not a browser email.
  if(pathname==='/api/rpg/character-packs'){
    if(req.method!=='GET')return sendJSON(res,405,{error:'Method not allowed'});
-   const exclusive={barb:new Set(['nicolassorrenti2@gmail.com'])};
    let verifiedEmail='';
    if(req.headers.authorization){
      try{
@@ -228,7 +228,7 @@ const server=http.createServer(async (req,res)=>{
      }catch{ /* Authentication failure grants no private content. */ }
    }
    const all=require('./rpg_character_packs.generated').packs;
-   return sendJSON(res,200,{packs:all.filter(p=>!exclusive[p.id]||exclusive[p.id].has(verifiedEmail))});
+   return sendJSON(res,200,{packs:CharacterAccess.filterPacks(all,verifiedEmail)});
  }
  if(pathname==='/api/rpg-cloud/config'){
     if(req.method!=='GET')return sendJSON(res,405,{error:'Method not allowed'});
