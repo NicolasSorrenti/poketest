@@ -112,11 +112,11 @@
    No derived image file is created, and installing the actual event CG removes this crop. */
 .cg-art-frame.is-fallback{width:100%;aspect-ratio:16/9;max-height:62vh;overflow:hidden;border-radius:10px;background:#121b2f}
 .cg-moment-art .cg-art-frame.is-fallback img,.cg-preview .cg-art-frame.is-fallback img{
- display:block;width:100%;height:100%;max-height:none;object-fit:cover;object-position:50% 52%;
- transform:scale(1.38);transform-origin:50% 52%;border-radius:0
+ display:block;width:100%;height:100%;max-height:none;object-fit:cover;object-position:50% 60%;
+ transform:scale(1.38);transform-origin:50% 60%;border-radius:0
 }
 .cg-preview .cg-art-frame.is-fallback{max-height:58vh}
-.cg-thumb img.is-fallback{transform:scale(1.28);object-position:50% 52%}
+.cg-thumb img.is-fallback{transform:scale(1.28);object-position:50% 60%}
 
 @media(max-width:600px){.cg-dialog{padding:11px}.cg-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.cg-filters select{min-width:0;flex:1}.cg-tile{min-height:135px;padding:6px}}
 
