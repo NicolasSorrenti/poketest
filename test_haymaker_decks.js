@@ -101,6 +101,9 @@ for(const [index,preset] of HAYMAKER.entries.entries()){
  // New decks are fully selectable as both human and CPU opponents.
  const asHuman=local.create({deck:preset.id,opponent:'blackout',seed:1100+index});
  assert.deepEqual(asHuman.counts,[60,60]);
+ assert.equal(asHuman.format,LEGACY_IDS.includes(preset.id)?'classic':
+  list.some(id=>/^neo[1-4]-/.test(id))?'online-preview':'gym-expanded',
+  'Unexpected local match format for '+preset.id);
  const asCpu=local.create({deck:'blackout',opponent:preset.id,seed:2200+index});
  assert.deepEqual(asCpu.counts,[60,60]);
  assert.equal(asHuman.view.players[1].hand,undefined,'CPU hand leaked');
