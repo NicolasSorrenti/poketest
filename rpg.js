@@ -778,6 +778,7 @@ function act(action){
  const c=cast[id],bond=state.bonds[id],key=atKey(id);
  if(type==='talk'){
   state.talked[state.day+':'+id]=true;
+  if(beginSliceOfLife('talk',id))return;
   persist();
   const context=REACT.reaction(state,id,c,cast,COMMUNITY,CONSEQ);
   return sayConversation(context?.lines||VN.dialogue(state,id,c,RPGD),[],context?.id||null);
