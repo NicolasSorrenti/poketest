@@ -1,0 +1,96 @@
+{
+  "schemaVersion": 1,
+  "id": "laca",
+  "name": "Laca",
+  "age": 20,
+  "role": "romance",
+  "deck": "water_blast",
+  "style": "Water Blast · playful Water evolutions and opportunistic tempo",
+  "dialogue": {
+    "intro": "¡No puede ser! Look who finally came back. Come here, idiot. You still owe me a rematch from when we were kids.",
+    "repeat": "There you are! I was starting to think you forgot our extremely important agreement to cause harmless trouble together.",
+    "flirt": "Che, we've known each other forever. If I were flirting, you'd know. ...Okay, yes, I'm flirting.",
+    "duelWin": "Oh, that was actually clever. Don't look so proud; I'm already planning the rematch.",
+    "duelLose": "Ha! Classic Laca victory. You can buy the ice cream. Those are the rules I just invented.",
+    "talk": [
+      "Remember the summer we tried to invent a secret handshake? We got bored halfway through and called it perfect.",
+      "My whistle is for work. My judgmental look? That's free, and you have lifetime access.",
+      "The red swimsuit's basically my uniform. The real challenge is keeping sand out of my deck sleeves.",
+      "If I suddenly stop joking near the water, it's because I'm working. You know the difference.",
+      "I still remember your first Pokémon deck. The strategy was 'hope the opponent feels bad for me.'",
+      "This morning I taught a nervous swimmer how to float. Best part of my shift, no contest.",
+      "You've been away long enough that I'm claiming all future rematches as overdue childhood debts.",
+      "I can stay in the water all day. Put me in a long planning meeting and I last six minutes.",
+      "You know I trust you, right? I wouldn't ask just anyone to tell me when I'm being ridiculous.",
+      "I bought new sunglasses. They're impractical, dramatic, and therefore a sound financial decision.",
+      "A stranger asks if I'm flirting and I say no. You ask and I make you figure it out.",
+      "Don't start with the innocent face. I've known you since you tried to trade a common for my favorite rare."
+    ],
+    "hangouts": [
+      "Laca and you compare snacks on the park bench, arguing over a ranking the two of you invented at age ten.",
+      "After her lifeguard shift, Laca drags you into an entirely unnecessary challenge to build the best deck name.",
+      "Laca shows you two new outfits and insists you give her an opinion more useful than 'they're both fine.'",
+      "You and Laca revisit the arcade cabinet you used to play together, and she immediately accuses it of cheating.",
+      "A calm evening walk turns into a contest to remember the most embarrassing stories from your childhood.",
+      "Laca stretches after swimming and talks through a difficult day at work, glad she doesn't have to act cheerful around you.",
+      "At the café, Laca steals one fry, offers half her dessert in return, and calls it a fair trade.",
+      "You help her sort rescue-kit supplies. Laca turns the inventory into an absurdly serious competition."
+    ]
+  },
+  "appearance": {
+    "silhouette": "Adult Argentine Latina, 20, 167 cm, slim and naturally curvy, athletic enough to work as a lifeguard; realistic modest proportions without exaggeration.",
+    "palette": "Deep dark brown hair, warm olive-tan skin, red rescue swimwear, black casual top, light-blue denim, sunlit gold accents.",
+    "hair": "Very long dark brown to near-black hair, often worn loose off duty and tied back safely while on duty.",
+    "eyes": "Almond-shaped dark brown eyes, strong shaped brows, unusually long curled eyelashes, full natural lips.",
+    "details": "Small hoop earrings, optional whistle and rescue buoy at work, practical sun protection; familiar mischievous smile.",
+    "expressions": "Teasing smirk, genuine laughter, mock-indignant pout, concentration while working, surprised blush when friendship turns romantic, unguarded affectionate smile.",
+    "outfits": [
+      "On-duty: sporty Baywatch-inspired red two-piece lifeguard swimsuit with secure appropriate coverage, whistle and rescue buoy; used most waterfront mornings.",
+      "Off-duty: approved fitted black top with light-wash blue jeans and simple earrings.",
+      "Casual after swimming: sensible beach wrap, towel or light coverup when not on active duty.",
+      "Story-specific outfit variations: SFW casual/swimwear options shown openly to a trusted childhood friend."
+    ],
+    "renderNotes": "Neo Campus anime/JRPG clean cel shading, consistent approved face and lashes across looks, adult and self-assured. On-duty scenes use credible safety equipment and movement. No voyeur camera, accidental exposure, nudity, or uninvited physical contact. Transparent single-character VN portrait. Outfit art variants can be installed later."
+  },
+  "arrivalDay": 5,
+  "schedule": [
+    [
+      "park",
+      "park",
+      "cafe"
+    ],
+    [
+      "park",
+      "shop",
+      "arcade"
+    ],
+    [
+      "park",
+      "park",
+      "cafe"
+    ],
+    [
+      "park",
+      "center",
+      "shop"
+    ],
+    [
+      "park",
+      "park",
+      "arcade"
+    ],
+    [
+      "park",
+      "cafe",
+      "park"
+    ],
+    [
+      "home",
+      "park",
+      "cafe"
+    ]
+  ],
+  "stories": "stories.json",
+  "artManifest": "art_manifest.json",
+  "bible": "bible.md"
+}
