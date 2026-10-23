@@ -23,7 +23,7 @@ jobs:
     timeout-minutes: 25
     env:
       MATCHUP_PRESETS: ${{ inputs.presets || 'foundations,kanto-growth,jungle-growth,fossil-discovery,rocket-uprising,gym-academy,neo-generations,stage-one,slow-burn' }}
-      MATCHUP_SEEDS: ${{ inputs.seeds || '11,29,47' }}
+      MATCHUP_SEEDS: ${{ inputs.seeds || '11,29,47,83,137,191,251,307' }}
       MATCHUP_SEATS: '2'
       MATCHUP_TURNS: '60'
       MATCHUP_LEVEL: '3'
