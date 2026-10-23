@@ -10,7 +10,7 @@ const card=id=>{const c=CARDS.get(id);if(!c)throw Error('Unknown Classic card '+
 const own=p=>[p.active,...p.bench].filter(Boolean);
 const pokemon=(p,slot)=>slot===-1?p.active:p.bench[slot];
 const slotList=(p,pred=()=>true)=>[-1,...p.bench.map((_,i)=>i)].flatMap(i=>pokemon(p,i)&&pred(pokemon(p,i),i)?[{id:'slot:'+i,label:(i===-1?'Active ':'Bench ')+(pokemon(p,i).secretPlanFaceDown?'Face-down Pokémon':card(pokemon(p,i).id).name)}]:[]);
-const indices=(arr,pred=()=>true,prefix='index')=>arr.flatMap((id,i)=>pred(card(id),i)?[{id:`${prefix}:${i}`,label:prefix==='prize'?`Prize ${i+1}`:card(id).name}]:[]);
+const indices=(arr,pred=()=>true,prefix='index')=>arr.flatMap((id,i)=>pred(card(id),i)?[{id:`${prefix}:${i}`,label:prefix==='prize'?`Prize ${i+1}`:card(id).name,cardId:id}]:[]);
 const basicEnergy=c=>isEnergy(c)&&/^(Grass|Fire|Water|Lightning|Psychic|Fighting) Energy$/.test(c.name);
 const healthy=u=>u&&u.status!=='Asleep'&&u.status!=='Confused'&&u.status!=='Paralyzed';
 // Gaze stops ALL Powers on the chosen opposing Benched Pokémon. Suppression
