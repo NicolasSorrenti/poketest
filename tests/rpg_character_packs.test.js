@@ -95,8 +95,11 @@ test('browser and server register the pack bundle before any story module',()=>{
  const server=fs.readFileSync(path.join(__dirname,'..','server.js'),'utf8');
  const narrative=fs.readFileSync(path.join(__dirname,'..','rpg_narrative_pack.js'),'utf8');
  const app=fs.readFileSync(path.join(__dirname,'..','rpg.js'),'utf8');
- assert.ok(html.indexOf('/rpg_character_packs.generated.js')<html.indexOf('/rpg_sol_character.js'));
- assert.ok(html.indexOf('/rpg_sol_character.js')<html.indexOf('/rpg_narrative_pack.js'));
+ const bootstrap=fs.readFileSync(path.join(__dirname,'..','rpg_character_bootstrap.js'),'utf8');
+ assert.match(html,/src="\/rpg_character_bootstrap\.js"/);
+ assert.ok(bootstrap.indexOf('/api/rpg/character-packs')>=0);
+ assert.ok(bootstrap.indexOf('/rpg_sol_character.js')<bootstrap.indexOf('/rpg_narrative_pack.js'));
+ assert.ok(bootstrap.indexOf('window.NeoRpgCharacterPacks=registry')>=0);
  assert.match(server,/pathname==='\/rpg_character_packs\.generated\.js'/);
  assert.match(server,/pathname==='\/rpg_mandatory_events\.js'/);
  assert.match(server,/pathname==='\/rpg_season_events\.js'/);

@@ -718,11 +718,355 @@
   "thumb": "/rpg-assets/events/cg/season01/thumbs/kaede_jacket_prank.webp",
   "dialogueSafe": "Bottom 20% clear for dialogue UI",
   "situationId": "kaede_jacket_prank"
- }
+ },
+{
+  "character": "laca",
+  "id": "laca_sunhat_vote",
+  "category": "special",
+  "trigger": "situation",
+  "place": "park",
+  "minAffection": 2,
+  "startDay": 6,
+  "slot": 0,
+  "title": "The Sunhat Jury",
+  "hint": "Visit Laca at the waterfront at the right moment.",
+  "scene": "Laca in her red lifeguard swimsuit, adjusting an oversized sun hat with a theatrical grin.",
+  "composition": "Normal eye-height three-quarter view focused on her face and hat.",
+  "outfit": "Red practical lifeguard swimsuit",
+  "expression": "Natural bold, mischievous expression among trusted friends; later moments may show sincere warmth.",
+  "environment": "Supervised sunny waterfront",
+  "mood": "lighthearted",
+  "fanservice": 1,
+  "path": "/rpg-assets/events/cg/season01/laca_sunhat_vote.webp",
+  "thumb": "/rpg-assets/events/cg/season01/thumbs/laca_sunhat_vote.webp",
+  "dialogueSafe": "Bottom 20% left clear for dialogue.",
+  "situationId": "laca_sunhat_vote"
+},
+{
+  "character": "laca",
+  "id": "laca_rescue_kit_reach",
+  "category": "special",
+  "trigger": "situation",
+  "place": "park",
+  "minAffection": 2,
+  "startDay": 12,
+  "slot": 0,
+  "title": "The Bottom Shelf",
+  "hint": "Visit Laca at the waterfront at the right moment.",
+  "scene": "Laca kneeling naturally beside a first-aid cabinet in a practical, well-fitting red two-piece lifeguard swimsuit, glancing over with a cheeky smile.",
+  "composition": "Respectful eye-height diagonal shot, competent working posture and expressive face, no voyeur angle.",
+  "outfit": "Red practical lifeguard swimsuit",
+  "expression": "Natural bold, mischievous expression among trusted friends; later moments may show sincere warmth.",
+  "environment": "Supervised sunny waterfront",
+  "mood": "lighthearted",
+  "fanservice": 2,
+  "path": "/rpg-assets/events/cg/season01/laca_rescue_kit_reach.webp",
+  "thumb": "/rpg-assets/events/cg/season01/thumbs/laca_rescue_kit_reach.webp",
+  "dialogueSafe": "Bottom 20% left clear for dialogue.",
+  "situationId": "laca_rescue_kit_reach"
+},
+{
+  "character": "laca",
+  "id": "laca_swimsuit_verdict",
+  "category": "special",
+  "trigger": "situation",
+  "place": "park",
+  "minAffection": 3,
+  "startDay": 20,
+  "slot": 1,
+  "title": "The Swimsuit Verdict",
+  "hint": "Visit Laca at the waterfront at the right moment.",
+  "scene": "Laca in red sporty swimwear, casually showing a phone photo of another swimsuit in a safe public setting.",
+  "composition": "Playful eye-level fashion-pose composition, with supportive coverage and clear face.",
+  "outfit": "Red practical lifeguard swimsuit",
+  "expression": "Natural bold, mischievous expression among trusted friends; later moments may show sincere warmth.",
+  "environment": "Supervised sunny waterfront",
+  "mood": "lighthearted",
+  "fanservice": 2,
+  "path": "/rpg-assets/events/cg/season01/laca_swimsuit_verdict.webp",
+  "thumb": "/rpg-assets/events/cg/season01/thumbs/laca_swimsuit_verdict.webp",
+  "dialogueSafe": "Bottom 20% left clear for dialogue.",
+  "situationId": "laca_swimsuit_verdict"
+},
+{
+  "character": "laca",
+  "id": "laca_card_floor",
+  "category": "special",
+  "trigger": "situation",
+  "place": "shop",
+  "minAffection": 3,
+  "startDay": 24,
+  "slot": 1,
+  "title": "Deck Disaster Recovery",
+  "hint": "Visit Laca at the card shop at the right moment.",
+  "scene": "Laca in her casual black top and light blue jeans crouching to collect cards with a bright friendly smile.",
+  "composition": "Natural eye-level three-quarter shop scene, cards and expressions rather than an intrusive angle.",
+  "outfit": "Black fitted top and light blue jeans",
+  "expression": "Natural bold, mischievous expression among trusted friends; later moments may show sincere warmth.",
+  "environment": "Cozy Pokémon shop",
+  "mood": "lighthearted",
+  "fanservice": 1,
+  "path": "/rpg-assets/events/cg/season01/laca_card_floor.webp",
+  "thumb": "/rpg-assets/events/cg/season01/thumbs/laca_card_floor.webp",
+  "dialogueSafe": "Bottom 20% left clear for dialogue.",
+  "situationId": "laca_card_floor"
+},
+{
+  "character": "laca",
+  "id": "laca_towel_break",
+  "category": "special",
+  "trigger": "situation",
+  "place": "park",
+  "minAffection": 4,
+  "startDay": 37,
+  "slot": 1,
+  "title": "Five-Minute Break",
+  "hint": "Visit Laca at the waterfront at the right moment.",
+  "scene": "Laca in her sporty red lifeguard swimsuit enjoying a seated towel break by the river, pleasantly tired.",
+  "composition": "Natural warm sunlit scene, ordinary sitting posture, appropriate swimwear, friendship first.",
+  "outfit": "Red practical lifeguard swimsuit",
+  "expression": "Natural bold, mischievous expression among trusted friends; later moments may show sincere warmth.",
+  "environment": "Supervised sunny waterfront",
+  "mood": "lighthearted",
+  "fanservice": 1,
+  "path": "/rpg-assets/events/cg/season01/laca_towel_break.webp",
+  "thumb": "/rpg-assets/events/cg/season01/thumbs/laca_towel_break.webp",
+  "dialogueSafe": "Bottom 20% left clear for dialogue.",
+  "situationId": "laca_towel_break"
+},
+{
+  "character": "laca",
+  "id": "laca_borrowed_hoodie",
+  "category": "special",
+  "trigger": "situation",
+  "place": "cafe",
+  "minAffection": 4,
+  "startDay": 43,
+  "slot": 2,
+  "title": "Borrowed for Five Minutes",
+  "hint": "Visit Laca at the café at the right moment.",
+  "scene": "Laca in black top and jeans wearing an oversized borrowed hoodie at an evening café.",
+  "composition": "Comfortable mid-shot, friendly intimacy and natural expression.",
+  "outfit": "Black fitted top and light blue jeans",
+  "expression": "Natural bold, mischievous expression among trusted friends; later moments may show sincere warmth.",
+  "environment": "Warm café terrace",
+  "mood": "lighthearted",
+  "fanservice": 1,
+  "path": "/rpg-assets/events/cg/season01/laca_borrowed_hoodie.webp",
+  "thumb": "/rpg-assets/events/cg/season01/thumbs/laca_borrowed_hoodie.webp",
+  "dialogueSafe": "Bottom 20% left clear for dialogue.",
+  "situationId": "laca_borrowed_hoodie"
+},
+{
+  "character": "laca",
+  "id": "laca_stretch_challenge",
+  "category": "special",
+  "trigger": "situation",
+  "place": "park",
+  "minAffection": 5,
+  "startDay": 45,
+  "slot": 0,
+  "title": "The Stretching Contest",
+  "hint": "Visit Laca at the waterfront at the right moment.",
+  "scene": "Laca doing a natural upright arm-and-shoulder stretch in secure red lifeguard swimwear.",
+  "composition": "Athletic full-body pose, credible warm-up, non-suggestive camera framing.",
+  "outfit": "Red practical lifeguard swimsuit",
+  "expression": "Natural bold, mischievous expression among trusted friends; later moments may show sincere warmth.",
+  "environment": "Supervised sunny waterfront",
+  "mood": "lighthearted",
+  "fanservice": 1,
+  "path": "/rpg-assets/events/cg/season01/laca_stretch_challenge.webp",
+  "thumb": "/rpg-assets/events/cg/season01/thumbs/laca_stretch_challenge.webp",
+  "dialogueSafe": "Bottom 20% left clear for dialogue.",
+  "situationId": "laca_stretch_challenge"
+},
+{
+  "character": "laca",
+  "id": "laca_second_look",
+  "category": "special",
+  "trigger": "situation",
+  "place": "arcade",
+  "minAffection": 6,
+  "startDay": 58,
+  "slot": 2,
+  "title": "The Second Look",
+  "hint": "Visit Laca at the arcade at the right moment.",
+  "scene": "Laca in black top, jeans and a fun oversized jacket, playful smile turning into an unexpected blush.",
+  "composition": "Eye-level arcade outfit reveal, focus on expressive emotional shift.",
+  "outfit": "Black fitted top and light blue jeans",
+  "expression": "Natural bold, mischievous expression among trusted friends; later moments may show sincere warmth.",
+  "environment": "Bright arcade",
+  "mood": "lighthearted",
+  "fanservice": 1,
+  "path": "/rpg-assets/events/cg/season01/laca_second_look.webp",
+  "thumb": "/rpg-assets/events/cg/season01/thumbs/laca_second_look.webp",
+  "dialogueSafe": "Bottom 20% left clear for dialogue.",
+  "situationId": "laca_second_look"
+}
+,
+{
+  "character": "laca",
+  "id": "laca_route_1",
+  "category": "social",
+  "trigger": "story_milestone",
+  "place": "park",
+  "minAffection": 2,
+  "startDay": 1,
+  "slot": 0,
+  "title": "Just Like Old Times",
+  "hint": "Complete Laca's personal story to unlock this memory.",
+  "scene": "Adult lifeguard Laca happily recognizes her returning childhood friend beside the rescue tower.",
+  "composition": "Bright sunlit eye-level reunion scene.",
+  "outfit": "Practical red lifeguard two-piece and whistle",
+  "expression": "Familiar mischievous smile turning genuinely affectionate.",
+  "environment": "Riverside Park",
+  "mood": "friends-to-lovers",
+  "fanservice": 1,
+  "path": "/rpg-assets/events/cg/season01/laca_route_1.webp",
+  "thumb": "/rpg-assets/events/cg/season01/thumbs/laca_route_1.webp",
+  "dialogueSafe": "Leave lower fifth clear for dialogue",
+  "sceneId": "laca_route_1"
+},
+{
+  "character": "laca",
+  "id": "laca_route_2",
+  "category": "social",
+  "trigger": "story_milestone",
+  "place": "shop",
+  "minAffection": 2,
+  "startDay": 21,
+  "slot": 1,
+  "title": "Be Honest, Does This Look Good?",
+  "hint": "Complete Laca's personal story to unlock this memory.",
+  "scene": "Laca confidently shows photos of two outfits to her best friend in the card shop.",
+  "composition": "Friendly fashion-review composition, no changing-room viewpoint.",
+  "outfit": "Black fitted top and light denim",
+  "expression": "Familiar mischievous smile turning genuinely affectionate.",
+  "environment": "The Lucky Draw shop",
+  "mood": "friends-to-lovers",
+  "fanservice": 2,
+  "path": "/rpg-assets/events/cg/season01/laca_route_2.webp",
+  "thumb": "/rpg-assets/events/cg/season01/thumbs/laca_route_2.webp",
+  "dialogueSafe": "Leave lower fifth clear for dialogue",
+  "sceneId": "laca_route_2"
+},
+{
+  "character": "laca",
+  "id": "laca_route_3",
+  "category": "social",
+  "trigger": "story_milestone",
+  "place": "park",
+  "minAffection": 2,
+  "startDay": 39,
+  "slot": 1,
+  "title": "Personal Space? What's That?",
+  "hint": "Complete Laca's personal story to unlock this memory.",
+  "scene": "Laca and her friend sit together laughing over childhood memories after swimming.",
+  "composition": "Warm relaxed towel composition.",
+  "outfit": "Sporty red lifeguard swimsuit",
+  "expression": "Familiar mischievous smile turning genuinely affectionate.",
+  "environment": "Riverside Park",
+  "mood": "friends-to-lovers",
+  "fanservice": 1,
+  "path": "/rpg-assets/events/cg/season01/laca_route_3.webp",
+  "thumb": "/rpg-assets/events/cg/season01/thumbs/laca_route_3.webp",
+  "dialogueSafe": "Leave lower fifth clear for dialogue",
+  "sceneId": "laca_route_3"
+},
+{
+  "character": "laca",
+  "id": "laca_route_4",
+  "category": "social",
+  "trigger": "story_milestone",
+  "place": "cafe",
+  "minAffection": 2,
+  "startDay": 57,
+  "slot": 2,
+  "title": "Since When Is This Weird?",
+  "hint": "Complete Laca's personal story to unlock this memory.",
+  "scene": "Laca admits feeling differently about their friendship during an evening café conversation.",
+  "composition": "Emotional close three-quarter shot with café glow.",
+  "outfit": "Black top and light blue jeans",
+  "expression": "Familiar mischievous smile turning genuinely affectionate.",
+  "environment": "Evening café",
+  "mood": "friends-to-lovers",
+  "fanservice": 1,
+  "path": "/rpg-assets/events/cg/season01/laca_route_4.webp",
+  "thumb": "/rpg-assets/events/cg/season01/thumbs/laca_route_4.webp",
+  "dialogueSafe": "Leave lower fifth clear for dialogue",
+  "sceneId": "laca_route_4"
+},
+{
+  "character": "laca",
+  "id": "laca_route_5",
+  "category": "social",
+  "trigger": "story_milestone",
+  "place": "park",
+  "minAffection": 2,
+  "startDay": 75,
+  "slot": 2,
+  "title": "More Than Best Friends",
+  "hint": "Complete Laca's personal story to unlock this memory.",
+  "scene": "Laca sits with her oldest friend at sunset, hopeful and honest about a possible relationship.",
+  "composition": "Cinematic sunset portrait, safe consensual affectionate framing.",
+  "outfit": "Black top and jeans",
+  "expression": "Familiar mischievous smile turning genuinely affectionate.",
+  "environment": "Riverside Park",
+  "mood": "friends-to-lovers",
+  "fanservice": 1,
+  "path": "/rpg-assets/events/cg/season01/laca_route_5.webp",
+  "thumb": "/rpg-assets/events/cg/season01/thumbs/laca_route_5.webp",
+  "dialogueSafe": "Leave lower fifth clear for dialogue",
+  "sceneId": "laca_route_5"
+}
+
 ];
+ // Ambience CGs are separate from scheduled stories and relationship chapters.
+ const SLICE=typeof module==='object'&&module.exports?require('./rpg_slice_of_life'):window.NeoRpgSliceOfLife;
+ for(const moment of SLICE?.scenes||[])catalog.push({
+  character:moment.npc,id:moment.id,category:'social',trigger:'slice',
+  place:moment.place,minAffection:moment.minAffection,startDay:moment.start,slot:moment.slot,
+  title:moment.title,hint:'Discover this everyday moment at '+moment.place+' while '+moment.npc+' is present.',
+  scene:moment.art.scene,composition:moment.art.composition,outfit:moment.art.outfit,
+  expression:moment.art.expression,environment:moment.art.environment,mood:moment.art.mood,fanservice:0,
+  path:'/rpg-assets/events/cg/slice-life/'+moment.id+'.webp',
+  thumb:'/rpg-assets/events/cg/slice-life/thumbs/'+moment.id+'.webp',
+  dialogueSafe:'Bottom 20% clear for dialogue UI',sliceId:moment.id
+ });
+ // UI-only fallback sequence. Never mistake placeholder artwork for a newly created CG.
+ // Source-of-truth paths here are existing RPG art assets, not generated images.
+ const matchCutins=new Set(['hana','reina','shiori','yuna','akari','camila','marina','kaede','alma','iris']);
+ const alternativeCutins=Object.freeze({
+  jinx:'/rpg-assets/characters/jinx/cutins/battle_smirk.webp',
+  luna:'/rpg-assets/characters/luna/cutins/battle_smile.webp'
+ });
+ const attackFallbacks=new Set(['elena','rina','sierra','sol']);
+ const portraitFallbacks=Object.freeze({
+  elena:'/rpg-assets/characters/elena/expression-portraits/neutral.webp',
+  rina:'/rpg-assets/characters/rina/expression-portraits/neutral.webp',
+  sierra:'/rpg-assets/characters/sierra/expression-portraits/neutral.webp',
+  sol:'/rpg-assets/characters/sol/expression-portraits/neutral.webp',
+  laca:'/rpg-assets/characters/laca/neutral.webp'
+ });
+ function artCandidates(entry,thumbnail=false){
+  // Gallery entries for locked memories have null paths: never load their fallback.
+  if(!entry?.character||!entry.path)return [];
+  const npc=entry.character,items=[],seen=new Set();
+  const add=(path,kind)=>{
+   if(typeof path!=='string'||!path.startsWith('/rpg-assets/')||seen.has(path))return;
+   seen.add(path);items.push({path,kind});
+  };
+  if(thumbnail)add(entry.thumb,'event');
+  add(entry.path,'event'); // A missing thumbnail must not hide an installed full-size CG.
+  if(matchCutins.has(npc))add('/rpg-assets/characters/'+npc+'/cutins/match-cutin.webp','cutin');
+  else add(alternativeCutins[npc],'cutin');
+  if(attackFallbacks.has(npc))add('/rpg-assets/reactions/'+npc+'/attack.png','cutin');
+  add(portraitFallbacks[npc]||'/rpg-assets/characters/'+npc+'/vn-expressions/neutral.webp','portrait');
+  return items;
+ }
  const categories=Object.freeze(['profile','pre_duel','social','special']);
  const map=new Map(catalog.map(x=>[x.id,x]));
- const validTriggers=new Set(['meet','before_duel','hangout','situation','appointment','story_milestone','after_duel']);
+ const validTriggers=new Set(['meet','before_duel','hangout','situation','slice','appointment','story_milestone','after_duel']);
  function hydrate(state){
   if(!state||typeof state!=='object')throw Error('Invalid campaign state');
   if(!state.cgUnlocked||typeof state.cgUnlocked!=='object'||Array.isArray(state.cgUnlocked))state.cgUnlocked={};
@@ -752,8 +1096,12 @@
   const unlocked=[];
   for(const entry of catalog){
    if(state.cgUnlocked[entry.id]||!eligible(state,entry,trigger,npc))continue;
+   if(trigger==='story_milestone'&&entry.sceneId&&(!context||context.eventId!==entry.sceneId
+    ||!state.storyDone?.[entry.sceneId]))continue;
    if(trigger==='situation'&&(!context||context.eventId!==entry.situationId
      ||!state.situationDone?.[entry.situationId]))continue;
+   if(trigger==='slice'&&(!context||context.eventId!==entry.sliceId
+     ||!state.sliceOfLifeDone?.[entry.sliceId]))continue;
    state.cgUnlocked[entry.id]={day:state.day,slot:state.slot,trigger};
    unlocked.push(entry);
   }
@@ -780,5 +1128,5 @@
   }
   return errors;
  }
- return Object.freeze({catalog,categories,byId:id=>map.get(id)||null,hydrate,record,unlocked,markViewed,gallery,validate});
+ return Object.freeze({catalog,categories,artCandidates,byId:id=>map.get(id)||null,hydrate,record,unlocked,markViewed,gallery,validate});
 });

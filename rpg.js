@@ -1,11 +1,12 @@
 'use strict';
 (()=>{
 const $=id=>document.getElementById(id),KEY='neoHarborRpgV1',STORY=window.NeoHarborStory,SCHEDULES=window.NeoRpgSchedules,WORLD=window.NeoRpgWorld,ARC=window.NeoRpgRivalArc,TOURNAMENTS=window.NeoRpgTournaments,COMPETE=window.NeoRpgCompetitiveLoop,BRIDGE=window.NeoRpgDuelBridge;
-const PACK=window.NeoRpgNarrativePack,SIDE=window.NeoRpgSideQuests,EPILOGUE=window.NeoRpgEpilogue,APPOINTMENTS=window.NeoRpgAppointments,INTENTIONS=window.NeoRpgIntentions,CG=window.NeoRpgCGGallery,PLANNER=window.NeoRpgDailyPlanner,SOCIAL=window.NeoRpgSocialActivities,DATES=window.NeoRpgPlannedDates,PRE=window.NeoRpgPreDuel,SITUATIONS=window.NeoRpgSituations,JOURNEY=window.NeoRpgSeasonJourney,COLLECT=window.NeoRpgCollection,RPGD=window.NeoRpgDialogue,BONDS=window.NeoRpgBondRewards,PARTNER=window.NeoRpgPartnerDecks,VN=window.NeoRpgConversations;
+const PACK=window.NeoRpgNarrativePack,SIDE=window.NeoRpgSideQuests,EPILOGUE=window.NeoRpgEpilogue,APPOINTMENTS=window.NeoRpgAppointments,INTENTIONS=window.NeoRpgIntentions,CG=window.NeoRpgCGGallery,PLANNER=window.NeoRpgDailyPlanner,SOCIAL=window.NeoRpgSocialActivities,DATES=window.NeoRpgPlannedDates,PRE=window.NeoRpgPreDuel,SITUATIONS=window.NeoRpgSituations,SLICE=window.NeoRpgSliceOfLife,JOURNEY=window.NeoRpgSeasonJourney,COLLECT=window.NeoRpgCollection,RPGD=window.NeoRpgDialogue,BONDS=window.NeoRpgBondRewards,PARTNER=window.NeoRpgPartnerDecks,VN=window.NeoRpgConversations;
 const TUTORIAL=window.NeoRpgTutorials||null;
 const INVITES=window.NeoRpgEventInvites||null,SCENE_CAST=window.NeoRpgSceneCast,MANDATORY=window.NeoRpgMandatoryEvents||null,REACT=window.NeoRpgReactivity,COMMUNITY=window.NeoRpgCommunity,CONSEQ=window.NeoRpgConsequences,NPC_DECKS=window.NeoRpgNpcDeckProgression;
 const MANDATORY_EVENTS=[...(window.NeoRpgSeasonEvents?.events||[]),...(window.NeoRpgCharacterPacks?.mandatoryEvents||[])];
 const periods=['Morning','Afternoon','Evening'];
+const OUTFITS=window.NeoRpgOutfits;
 const places={
  home:['Your Apartment','Your base during the championship season.'],
  shop:['The Lucky Draw','Booster packs, friendly duels and the local card scene.'],
@@ -75,10 +76,10 @@ function finishStory(){
  const id=e.npc,bond=state.bonds[id],updated=state.relationships[id];
  for(const metric of ['affection','trust','duels'])bond[metric]=Math.max(bond[metric]||0,updated[metric]||0);
  const chapterReward=BONDS.reward(state,e,BOND_PLAN,COLLECT);
- log('Finished '+e.title+' with '+cast[id].name+'.');recordCG('story_milestone',id);recordIntention('story');
+ log('Finished '+e.title+' with '+cast[id].name+'.');const storyMemories=recordCG('story_milestone',id,{eventId:e.id});recordIntention('story');
  if(chapterReward)log('Bond chapter '+chapterReward.chapter+' reward from '+cast[id].name+': '+chapterReward.label+'.');
  state.activeStory=null;advance();state.selected=id;
- persist();closeSceneDialogue();
+ persist();closeSceneDialogue();showCGMoment(storyMemories[0]);
  if(chapterReward)$('notice').textContent='★ Chapter reward: '+chapterReward.label;
 }
 
@@ -147,7 +148,7 @@ function timeFlash(beforeDay,beforeSlot,source='activity'){
  overlay.addEventListener('animationend',()=>overlay.remove());
 }
 
-function defaults(){return {sideQuests:{},activeSideQuest:null,day:1,slot:0,location:'home',visitedLocations:{home:true},metReina:false,reinaTrust:0,reinaDuels:0,results:[],flags:{intro:false},journal:['The 90-day season begins.'],pendingDuel:null,bonds:{},talked:{},hungOut:{},eventsDone:{},points:0,credits:80,playerDeck:'blackout',selected:null,ended:false,storyDone:{},storyMissed:{},relationships:{},routeOutcomes:{},partner:null,activeStory:null,activeEncounter:null,activeArc:null,arcFlags:{},arcOutcomes:{},activityDone:{},encountersDone:{},focus:75,insight:0,reputation:0,preparation:0,lastDuelReceipt:null,tournaments:{},campaignHistory:[],ngPlus:0,appointments:[],appointmentSeq:0,scene:null,socialHistory:{},situationDone:{},activeSituation:null,deckJourney:null,competitive:null,npcReactivity:null,community:null,consequences:null,mandatoryEventState:null,playmatGifts:{},playmatSelected:'aurora',gameplayTutorials:{disabled:false,seen:{}}}}
+function defaults(){return {sideQuests:{},activeSideQuest:null,day:1,slot:0,location:'home',visitedLocations:{home:true},metReina:false,reinaTrust:0,reinaDuels:0,results:[],flags:{intro:false},journal:['The 90-day season begins.'],pendingDuel:null,bonds:{},talked:{},hungOut:{},eventsDone:{},points:0,credits:80,playerDeck:'blackout',selected:null,ended:false,storyDone:{},storyMissed:{},relationships:{},routeOutcomes:{},partner:null,activeStory:null,activeEncounter:null,activeArc:null,arcFlags:{},arcOutcomes:{},activityDone:{},encountersDone:{},focus:75,insight:0,reputation:0,preparation:0,lastDuelReceipt:null,tournaments:{},campaignHistory:[],ngPlus:0,appointments:[],appointmentSeq:0,scene:null,socialHistory:{},situationDone:{},activeSituation:null,sliceOfLifeDone:{},sliceOfLifeLastDay:0,activeSliceOfLife:null,deckJourney:null,competitive:null,npcReactivity:null,community:null,consequences:null,mandatoryEventState:null,playmatGifts:{},playmatSelected:'aurora',gameplayTutorials:{disabled:false,seen:{}}}}
 const hadCampaignSave=!!localStorage.getItem(KEY);
 let state;try{state=JSON.parse(localStorage.getItem(KEY))||defaults();if(!Number.isInteger(state.day)||state.day<1||state.day>91)throw Error('Invalid save');}catch{state=defaults()}
 for(const [k,v] of Object.entries(defaults()))if(state[k]===undefined)state[k]=v;
@@ -166,6 +167,13 @@ if(!state.pendingDuel?.id||!cast[state.pendingDuel?.npc])state.pendingDuel=null;
 if(state.pendingDuel)PRE.hydrate(state.pendingDuel);
 for(const id of Object.keys(cast)){if(!state.bonds[id])state.bonds[id]={affection:0,trust:0,duels:0};}
 STORY.normalize(state);
+// The player's childhood friend begins with pre-existing trust, never automatic romance.
+if(cast.laca&&!state.flags.lacaChildhoodFriendInitialized){
+ const r=state.relationships.laca,b=state.bonds.laca;
+ r.trust=Math.max(r.trust||0,5);r.affection=Math.max(r.affection||0,2);
+ b.trust=Math.max(b.trust||0,r.trust);b.affection=Math.max(b.affection||0,r.affection);
+ state.flags.lacaChildhoodFriendInitialized=true;
+}
 WORLD.hydrate(state);
 SIDE.hydrate(state);
 SIDE.expire(state);
@@ -176,7 +184,7 @@ COMPETE.hydrate(state);
 REACT.hydrate(state);
 COMMUNITY.hydrate(state);
 CONSEQ.hydrate(state);
-APPOINTMENTS.hydrate(state);APPOINTMENTS.expire(state);INTENTIONS.hydrate(state);CG.hydrate(state);SOCIAL.hydrate(state);DATES.hydrate(state,APPOINTMENTS,SOCIAL);SITUATIONS.hydrate(state);
+APPOINTMENTS.hydrate(state);APPOINTMENTS.expire(state);INTENTIONS.hydrate(state);CG.hydrate(state);SOCIAL.hydrate(state);DATES.hydrate(state,APPOINTMENTS,SOCIAL);SITUATIONS.hydrate(state);SLICE?.hydrate(state);
 for(const id of Object.keys(cast)){const old=state.bonds[id],current=state.relationships[id];
  if(!state.flags['newStoryMigrated_'+id]){for(const key of ['affection','trust','duels'])current[key]=Math.max(current[key]||0,old[key]||0);
  state.flags['newStoryMigrated_'+id]=true;}
@@ -199,7 +207,7 @@ function maybeStartMandatory(){
  queueMandatory();
  if(MANDATORY.hydrate(state,MANDATORY_EVENTS).active)return;
  // Existing scripted dialogue, character choices, galleries, duel preparation and starter selection remain authoritative.
- if(scene.line||scene.choices?.length||state.deckJourney&&!state.deckJourney.starter
+ if(state.activeSliceOfLife||scene.line||scene.choices?.length||state.deckJourney&&!state.deckJourney.starter
     ||$('cgMoment')?.open||$('preDuelDialog')?.open||$('galleryDialog')?.open||$('calendarDialog')?.open)return;
  if(MANDATORY.takeNext(state,MANDATORY_EVENTS)){persist();}
 }
@@ -318,7 +326,7 @@ function advanceConversation(){
  state.scene=scene;persist();render();
 }
 function closeSceneDialogue(){
- if(state.activeSituation||state.activeStory||state.activeEncounter||state.activeArc||state.activeSideQuest||state.pendingDuel||state.mandatoryEventState?.active)return;
+ if(state.activeSliceOfLife||state.activeSituation||state.activeStory||state.activeEncounter||state.activeArc||state.activeSideQuest||state.pendingDuel||state.mandatoryEventState?.active)return;
  // Keep the current character selected after casual dialogue so Duel and Deck actions remain accessible.
  if(!state.selected||!cast[state.selected]||!currentPeople().includes(state.selected))state.selected=null;
  scene={speaker:'Narrator',line:'',choices:[]};
@@ -331,6 +339,8 @@ function travelTo(placeId,{intro=true}={}){
  const firstVisit=!state.visitedLocations[placeId];
  state.visitedLocations[placeId]=true;
  state.location=placeId;state.selected=null;
+ // The first visit introduces the place; later visits can contain a small surprise.
+ if(!firstVisit&&placeId!=='home'&&!scheduleEvent()&&!eligibleStories().length&&beginSliceOfLife('entry')){tutorialEvent('travel');return true;}
  if(firstVisit&&intro)say('Narrator',places[placeId][1]);
  else{scene={speaker:'Narrator',line:'',choices:[]};state.scene=scene;persist();render();}
  tutorialEvent('travel');
@@ -354,7 +364,7 @@ function availableInvitation(id,people=currentPeople()){
  });
 }
 function selectPerson(id,{skipInvitation=false}={}){
- if(state.activeSituation||state.activeStory||state.activeSideQuest||state.activeEncounter||state.activeArc||state.pendingDuel||!cast[id]||!currentPeople().includes(id))return;
+ if(state.activeSliceOfLife||state.activeSituation||state.activeStory||state.activeSideQuest||state.activeEncounter||state.activeArc||state.pendingDuel||!cast[id]||!currentPeople().includes(id))return;
  const c=cast[id],first=!state['met_'+id]&&!((id==='reina')&&state.metReina);
  const today=state.day+':'+id,fresh=!state.talked[today];
  state['met_'+id]=true;
@@ -364,6 +374,8 @@ function selectPerson(id,{skipInvitation=false}={}){
  const memories=recordCG('meet',id);
  persist();
  const invite=skipInvitation?null:availableInvitation(id);
+ // Preserve first meetings and important invitations before a casual surprise.
+ if(!first&&!invite&&beginSliceOfLife('talk',id))return;
  if(invite){
   const prompt=INVITES.dialogue(state,invite);
   sayConversation(prompt.lines,prompt.choices,null,invite);
@@ -494,6 +506,29 @@ function finishArc(){
 }
 
 
+
+function renderSliceOfLife(){
+ const active=state.activeSliceOfLife,e=SLICE.byId(active?.id);if(!e)return null;
+ const lines=[{speaker:'Narrator',line:e.intro},{speaker:cast[e.npc]?.name||e.npc,line:e.line},{speaker:'Narrator',line:e.close}];
+ return {...lines[active.step],choices:[['Continue ›','sliceNext']]};
+}
+function beginSliceOfLife(trigger,npc=null){
+ if(!SLICE||state.activeSliceOfLife)return false;
+ const moment=SLICE.start(state,currentPeople(),trigger,npc);
+ if(!moment)return false;
+ state.selected=moment.npc;
+ const memory=recordCG('slice',moment.npc,{eventId:moment.id});
+ persist();render();showCGMoment(memory[0]);
+ return true;
+}
+function nextSliceOfLife(){
+ const result=SLICE.next(state);
+ if(!result)return;
+ if(result.done){log('A small moment with '+(cast[SLICE.byId(result.id)?.npc]?.name||'a friend')+'.');
+  return closeSceneDialogue();}
+ persist();render();
+}
+
 function showSituation(){
  const a=state.activeSituation,e=SITUATIONS.byId(a?.id);
  if(!e)return null;
@@ -530,6 +565,8 @@ function scheduleEvent(){return eventCards.find(e=>e.day===state.day&&e.slot===s
 function act(action){
  const [type,id,part]=action.split(':');
  if(mandatoryAction(type,id))return;
+ // Suppress unrelated actions while a surprise is underway.
+ if(state.activeSliceOfLife){if(type==='sliceNext')return nextSliceOfLife();return;}
  if(type==='chatNext')return advanceConversation();
  if(type==='eventInvite'){
   const invited=scene.invitation;
@@ -741,6 +778,7 @@ function act(action){
  const c=cast[id],bond=state.bonds[id],key=atKey(id);
  if(type==='talk'){
   state.talked[state.day+':'+id]=true;
+  if(beginSliceOfLife('talk',id))return;
   persist();
   const context=REACT.reaction(state,id,c,cast,COMMUNITY,CONSEQ);
   return sayConversation(context?.lines||VN.dialogue(state,id,c,RPGD),[],context?.id||null);
@@ -856,7 +894,7 @@ function showPackReveal(){
 }
 
 const labelCard=id=>cardNames.get(id)||id.replace('base1-','Base #');
-function controlsLocked(){return state.day>90||!!state.mandatoryEventState?.active||!!state.pendingDuel||!!state.activeSituation||!!state.activeStory||!!state.activeSideQuest||!!state.activeArc||!!state.activeEncounter;}
+function controlsLocked(){return state.day>90||!!state.activeSliceOfLife||!!state.mandatoryEventState?.active||!!state.pendingDuel||!!state.activeSituation||!!state.activeStory||!!state.activeSideQuest||!!state.activeArc||!!state.activeEncounter;}
 function showStarterChoice(){
  if(controlsLocked())return;
  const root=$('starterChoices');root.replaceChildren();
@@ -1354,32 +1392,50 @@ function renderDailyIntention(locked){
  root.append(count);
 }
 
+// Reuse existing character artwork until a scene-specific CG is installed.
+function loadCGArt(image,entry,thumbnail,onSuccess,onMissing){
+ const candidates=CG.artCandidates(entry,thumbnail);
+ let index=0;
+ const attempt=()=>{
+  if(index>=candidates.length){image.hidden=true;onMissing?.();return;}
+  const candidate=candidates[index++];
+  image.onload=()=>{image.hidden=false;onSuccess?.(candidate.kind);};
+  image.onerror=attempt;
+  image.src=candidate.path;
+ };
+ attempt();
+}
 function showCGMoment(entry){
  if(!entry||!CG.unlocked(state,entry.id))return;
  const photo=document.createElement('img');
- // An absent art file must never interrupt a duel, hangout, or story beat.
- photo.onload=()=>{
+ photo.alt=entry.title;
+ loadCGArt(photo,entry,false,kind=>{
   if(entry.category==='pre_duel'&&!state.pendingDuel)return;
-  const modal=$('cgMoment'),root=$('cgMomentArt');root.replaceChildren(photo);
+  const modal=$('cgMoment'),root=$('cgMomentArt');
+  const frame=document.createElement('div');
+  frame.className='cg-art-frame'+(kind==='event'?'':' is-fallback');
+  frame.append(photo);root.replaceChildren(frame);
   window.NeoRpgDiscreetAvatars?.set?.(root,entry.character,'surprised',cast[entry.character]?.name||entry.character);
   $('cgMomentTitle').textContent=entry.title;
   $('cgMomentCaption').textContent=cast[entry.character]?.name||entry.character;
   CG.markViewed(state,entry.id);persist();
   if(!modal.open)modal.showModal();
- };
- photo.onerror=()=>{};
- photo.alt=entry.title;photo.src=entry.path;
+ });
 }
 function showGalleryDetail(entry){
  const root=$('galleryPreview');root.replaceChildren();
  const title=document.createElement('h3');title.textContent=entry.title;
  const text=document.createElement('p');text.textContent=(cast[entry.character]?.name||entry.character)+' · '+entry.category.replace('_',' ')+' · '+entry.hint;
- const image=document.createElement('img');image.alt=entry.title;
- const placeholder=document.createElement('p');placeholder.className='cg-pending';placeholder.textContent='Illustration not installed yet — the memory is unlocked, and its image is assigned to the art agent.';
- image.onload=()=>{placeholder.hidden=true;image.hidden=false;CG.markViewed(state,entry.id);persist();renderGallery();};
- image.onerror=()=>{image.hidden=true;placeholder.hidden=false;};
- image.src=entry.path;
- root.append(title,text,image,placeholder);
+ const image=document.createElement('img');image.alt=entry.title;image.hidden=true;
+ const frame=document.createElement('div');frame.className='cg-art-frame';frame.append(image);
+ const placeholder=document.createElement('p');placeholder.className='cg-pending';placeholder.hidden=true;
+ placeholder.textContent='Illustration not installed yet. This memory is unlocked, but no character artwork is currently available.';
+ root.append(title,text,frame,placeholder);
+ loadCGArt(image,entry,false,kind=>{
+  frame.classList.toggle('is-fallback',kind!=='event');
+  placeholder.hidden=true;
+  CG.markViewed(state,entry.id);persist();renderGallery();
+ },()=>{frame.hidden=true;placeholder.hidden=false;});
  window.NeoRpgDiscreetAvatars?.set?.(root,entry.character,'neutral',cast[entry.character]?.name||entry.character);
 }
 function populateGalleryCharacters(){
@@ -1412,8 +1468,8 @@ function renderGallery(){
   const thumb=document.createElement('div');thumb.className='cg-thumb';
   if(entry.unlocked){
    const img=document.createElement('img');img.alt='';
-   img.onerror=()=>{img.hidden=true;};
-   img.src=entry.thumb;thumb.append(img);
+   img.hidden=true;thumb.append(img);
+   loadCGArt(img,entry,true,kind=>{img.classList.toggle('is-fallback',kind!=='event');});
    window.NeoRpgDiscreetAvatars?.set?.(thumb,entry.character,'neutral',cast[entry.character]?.name||entry.character);
   }else{
    const mystery=document.createElement('span');mystery.textContent='?';thumb.append(mystery);
@@ -1618,8 +1674,20 @@ function openCalendar(){
  $('calendarDialog').showModal();
 }
 function makeAvatar(id,size=''){
- const img=document.createElement('img');img.src=cast[id].portrait||'/rpg-assets/'+id+'.png';img.alt=cast[id].name;img.loading='lazy';
- img.onerror=()=>{img.style.display='none';const span=document.createElement('span');span.className='avatar-fallback';span.textContent=cast[id].name.split(' ').map(x=>x[0]).join('');img.parentElement.append(span);};
+ const img=document.createElement('img'),paths=portraitPaths(id,'neutral');
+ img.src=paths.find(src=>!failedScenePortraits.has(src))||cast[id].portrait||'/rpg-assets/'+id+'.png';
+ img.alt=cast[id].name;img.loading='lazy';
+ img.onerror=()=>{
+  failedScenePortraits.add(img.getAttribute('src'));
+  const next=paths.find(src=>!failedScenePortraits.has(src));
+  if(next){img.src=next;return;}
+  img.style.display='none';
+  if(!img.parentElement?.querySelector('.avatar-fallback')){
+   const span=document.createElement('span');span.className='avatar-fallback';
+   span.textContent=cast[id].name.split(' ').map(x=>x[0]).join('');
+   img.parentElement?.append(span);
+  }
+ };
  return img;
 }
 
@@ -1734,17 +1802,22 @@ function refreshRpgPanels(){
   const active=button.dataset.panel===rpgActivePanel;button.classList.toggle('active',active);button.setAttribute('aria-pressed',String(active));
  }
 }
-// Guest art includes separately exported expressions; original cast keeps its portrait.
+// Outfit images are optional. All original character art remains a fallback.
 const expressionGuests=new Set(['alma','jun','nereo','teo','elio']);
-// Cache failed optional variants so dialogue does not repeatedly request missing art.
 const failedScenePortraits=new Set();
+let activeOutfitSceneId=null;
 const solExpressions={neutral:'neutral',surprised:'surprised',vulnerable:'worried',irritated:'worried',determined:'neutral',happy:'smile'};
-function scenePortraitSource(id,expression){
+function portraitPaths(id,expression='neutral',sceneId=activeOutfitSceneId){
  const fallback=cast[id].portrait||'/rpg-assets/'+id+'.png';
- let candidate=fallback;
- if(expressionGuests.has(id))candidate='/rpg-assets/characters/'+id+'/vn-expressions/'+expression+'.webp';
- if(id==='sol')candidate='/rpg-assets/characters/sol/expressions/'+(solExpressions[expression]||'neutral')+'.png';
- return failedScenePortraits.has(candidate)?fallback:candidate;
+ let legacy='';
+ if(expressionGuests.has(id))legacy='/rpg-assets/characters/'+id+'/vn-expressions/'+expression+'.webp';
+ if(id==='sol')legacy='/rpg-assets/characters/sol/expressions/'+(solExpressions[expression]||'neutral')+'.png';
+ const art=cast[id].outfitArt||window.NeoRpgCharacterPacks?.byId?.(id)?.art||null;
+ return OUTFITS?.sources?.(art,{location:state.location,slot:state.slot,day:state.day,sceneId},expression,{base:fallback,legacy})||[legacy,fallback].filter(Boolean);
+}
+function scenePortraitSource(id,expression,sceneId=activeOutfitSceneId){
+ const paths=portraitPaths(id,expression,sceneId);
+ return paths.find(src=>!failedScenePortraits.has(src))||paths[paths.length-1]||cast[id].portrait||'/rpg-assets/'+id+'.png';
 }
 function dialogueExpression(line){
  const s=String(line||'').toLowerCase();
@@ -1791,20 +1864,17 @@ function renderRpgCast(ids,locked,shown,portraitId,context={}){
   if(image){
    const expression=active?(window.NeoRpgCharacterMotion?.emotion?.(shown?.expression,dialogueExpression(shown?.line))||dialogueExpression(shown?.line)):'neutral';
    window.NeoRpgDiscreetAvatars?.set?.(button,id,expression,cast[id].name);
-   const path=scenePortraitSource(id,expression);
+   const paths=portraitPaths(id,expression,context.sceneId);
+   const path=scenePortraitSource(id,expression,context.sceneId);
    if(image.getAttribute('src')!==path){
-    const fallback=cast[id].portrait||'/rpg-assets/'+id+'.png';
     image.classList.remove('expression-change');
     image.style.display='';
     image.onerror=()=>{
-     // Ignore asynchronous failures from an older portrait request.
      const failed=image.getAttribute('src');
-     if(failed!==path&&failed!==fallback)return;
-     if(failed===path&&path!==fallback){
-      failedScenePortraits.add(path);
-      image.src=fallback;
-      return;
-     }
+     if(!paths.includes(failed))return;
+     failedScenePortraits.add(failed);
+     const next=paths.find(src=>!failedScenePortraits.has(src));
+     if(next){image.src=next;return;}
      image.style.display='none';
      if(!button.querySelector('.avatar-fallback')){
       const span=document.createElement('span');span.className='avatar-fallback';
@@ -1918,7 +1988,7 @@ function render(){
  maybeStartMandatory();
  renderJourney();
  renderCollection();
- const ended=state.day>90,locked=!!state.mandatoryEventState?.active||!!state.activeSituation||!!state.activeStory||!!state.activeEncounter||!!state.activeArc||!!state.activeSideQuest||!!state.pendingDuel;
+ const ended=state.day>90,locked=!!state.activeSliceOfLife||!!state.mandatoryEventState?.active||!!state.activeSituation||!!state.activeStory||!!state.activeEncounter||!!state.activeArc||!!state.activeSideQuest||!!state.pendingDuel;
  renderPlanner(locked);
  renderDailyIntention(locked);
  const receipt=state.lastDuelReceipt;
@@ -1967,21 +2037,25 @@ function render(){
  const mandatoryLine=showingMandatory?.lines?.[state.mandatoryEventState.active.index];
  const mandatoryPortrait=mandatoryLine&&cast[mandatoryLine.speaker]?mandatoryLine.speaker:(showingMandatory?.kind==='bond'?showingMandatory.characterId:null);
  const showingSituation=state.activeSituation?SITUATIONS.byId(state.activeSituation.id):null;
+ const showingSlice=state.activeSliceOfLife?SLICE.byId(state.activeSliceOfLife.id):null;
  const showingStory=state.activeStory?STORY.byId(state.activeStory.id):null;
  const showingEncounter=state.activeEncounter?WORLD.byEncounter(state.activeEncounter.id):null;
  const showingArc=state.activeArc?ARC.byId(state.activeArc.id):null;
  const sideQuest=state.activeSideQuest?SIDE.byId(state.activeSideQuest.id):null,sideOwner=sideQuest?.stages[state.sideQuests[state.activeSideQuest?.id]?.step]?.npc;
-  const portraitId=mandatoryPortrait||showingSituation?.npc||showingStory?.npc||showingEncounter?.npc||(showingArc?'reina':null)||sideOwner||state.selected,portraitRoot=$('portrait');
+  const portraitId=mandatoryPortrait||showingSlice?.npc||showingSituation?.npc||showingStory?.npc||showingEncounter?.npc||(showingArc?'reina':null)||sideOwner||state.selected,portraitRoot=$('portrait');
+ activeOutfitSceneId=showingMandatory?.id||showingSlice?.id||showingSituation?.id||showingStory?.id||showingEncounter?.id||showingArc?.id||sideQuest?.id||null;
  const nextPortrait=portraitId&&cast[portraitId]?portraitId:'';
- if(portraitRoot.dataset.npc!==nextPortrait){
-  portraitRoot.dataset.npc=nextPortrait;portraitRoot.replaceChildren();
+ const nextArt=nextPortrait?scenePortraitSource(nextPortrait,'neutral'):'';
+ if(portraitRoot.dataset.npc!==nextPortrait||portraitRoot.dataset.artSrc!==nextArt){
+  portraitRoot.dataset.npc=nextPortrait;portraitRoot.dataset.artSrc=nextArt;
+  portraitRoot.replaceChildren();
   if(nextPortrait)portraitRoot.append(makeAvatar(nextPortrait));
   else delete portraitRoot.dataset.rpgSafeId;
  }
  if(nextPortrait)window.NeoRpgDiscreetAvatars?.set?.(portraitRoot,nextPortrait,'neutral',cast[nextPortrait].name);
  $('homeBanner').hidden=state.location!=='home'||!!portraitId;
  $('homeBanner').textContent='YOUR APARTMENT  ·  DAY '+state.day+'  ·  '+periods[state.slot]+' — Prepare your deck, review your plans or rest.';
- let shown=showingMandatory?renderMandatory():showingSituation?showSituation():showingStory?renderStory():showingEncounter?showEncounter():showingArc?showArc():state.activeSideQuest?showSideQuest():scene;
+ let shown=showingMandatory?renderMandatory():showingSlice?renderSliceOfLife():showingSituation?showSituation():showingStory?renderStory():showingEncounter?showEncounter():showingArc?showArc():state.activeSideQuest?showSideQuest():scene;
  // Narration is visually distinguished by italics, without an unnecessary speaker label.
  const isNarration=shown?.speaker==='Narrator';
  $('speaker').textContent=isNarration?'':(shown?.speaker||'');
@@ -2078,8 +2152,8 @@ function render(){
   (showingMandatory.delivery==='remote'||
    !SCHEDULES.peopleAt(state.day,state.slot,state.location,publicAppointments(state.location)).includes(showingMandatory.characterId));
  renderRpgCast(people,locked,shown,portraitId,{
-  active:!!(showingMandatory||showingSituation||showingStory||showingEncounter||showingArc||sideQuest),
-  script:sceneScript,remote:remoteScene
+  active:!!(showingMandatory||showingSlice||showingSituation||showingStory||showingEncounter||showingArc||sideQuest),
+  script:sceneScript,remote:remoteScene,sceneId:activeOutfitSceneId
  });
  const characterActions=$('characterActions');
  if(characterActions){

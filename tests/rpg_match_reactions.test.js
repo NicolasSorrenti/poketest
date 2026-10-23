@@ -61,21 +61,21 @@ assert.equal(firstAttack.update({view:mkView(),activity:[act(101,1,'attack')]}).
 assert.equal(reactions.durationFor('attack'),2800,'Attack artwork must remain readable');
 assert.equal(reactions.durationFor('attack',true),2800,'Reduced motion must not hide the image early');
 assert.equal(reactions.durationFor('ko_scored'),2600,'Finishing reaction remains visible');
-assert.equal(reactions.assetFor({characters:{reina:{attack:'/rpg-assets/reactions/reina/attack.webp'}}},'reina','attack'),'/rpg-assets/reactions/reina/attack.webp');
-assert.equal(reactions.assetFor({characters:{reina:{attack:'https://host.test/image.png'}}},'reina','attack'),'/rpg-assets/characters/reina/portraits/primary.png','Reject remote art, keep own portrait');
-assert.equal(reactions.assetFor({characters:{reina:{attack:'/rpg-assets/characters/hana/vn-expressions/neutral.webp'}}},'reina','attack'),'/rpg-assets/characters/reina/portraits/primary.png','Never display another NPC from a misassigned art manifest');
-assert.equal(reactions.assetFor({},'jinx','attack'),'/rpg-assets/characters/jinx/neutral.png','Character packs show their own battle portrait');
-assert.equal(reactions.assetFor({},'sierra','attack'),'/rpg-assets/characters/sierra/portrait.png','Use Sierra installed portrait');
-assert.equal(reactions.assetFor({},'rina','attack'),null,'Uninstalled art must not borrow another character portrait');
-assert.equal(reactions.assetFor({},'reina','attack'),'/rpg-assets/characters/reina/portraits/primary.png');
+assert.equal(reactions.assetFor({characters:{reina:{attack:'/rpg-assets/reactions/reina/attack.webp'}}},'reina','attack'),'/rpg-assets/characters/reina/vn-expressions/angry.webp','Reina attacks with her VN expression first');
+assert.equal(reactions.assetFor({characters:{reina:{attack:'https://host.test/image.png'}}},'reina','attack'),'/rpg-assets/characters/reina/vn-expressions/angry.webp','Reject remote art, use own expression');
+assert.equal(reactions.assetFor({characters:{reina:{attack:'/rpg-assets/characters/hana/vn-expressions/neutral.webp'}}},'reina','attack'),'/rpg-assets/characters/reina/vn-expressions/angry.webp','Never display another NPC from a misassigned art manifest');
+assert.equal(reactions.assetFor({},'jinx','attack'),'/rpg-assets/characters/jinx/expression-portraits/smirk.webp','Jinx uses her own expressive art');
+assert.equal(reactions.assetFor({},'sierra','attack'),'/rpg-assets/characters/sierra/expression-portraits/neutral.webp','Use Sierra VN expression');
+assert.equal(reactions.assetFor({},'rina','attack'),'/rpg-assets/characters/rina/expression-portraits/neutral.webp','Use Rina installed expression portraits');
+assert.equal(reactions.assetFor({},'reina','attack'),'/rpg-assets/characters/reina/vn-expressions/angry.webp');
 const installedManifest=JSON.parse(fs.readFileSync(path.join(__dirname,'../rpg-assets/reactions/manifest.json'),'utf8'));
 assert.equal(Object.keys(installedManifest.characters).length,20,'NPC artwork manifest must load for the whole cast');
-assert.equal(reactions.assetFor(installedManifest,'reina','default'),'/rpg-assets/characters/reina/portraits/primary.png','Reina uses her own approved portrait');
-assert.equal(reactions.assetFor(installedManifest,'rina','default'),'/rpg-assets/rina.png','Rina uses the installed manifest artwork');
-assert.equal(reactions.assetFor(installedManifest,'reina','attack'),'/rpg-assets/reactions/reina/attack.png','Attack uses dedicated widescreen art');
-assert.equal(reactions.assetFor(installedManifest,'reina','power'),'/rpg-assets/characters/reina/cutins/match-cutin.webp','Powers use installed battle cut-ins');
-assert.equal(reactions.assetFor(installedManifest,'reina','evolve'),'/rpg-assets/characters/reina/cutins/match-cutin.webp','Evolution uses installed battle art');
-assert.equal(reactions.assetFor(installedManifest,'jinx','power'),'/rpg-assets/characters/jinx/neutral.png','Missing match cut-in falls back to the correct portrait');
+assert.equal(reactions.assetFor(installedManifest,'reina','default'),'/rpg-assets/characters/reina/vn-expressions/neutral.webp','Reina uses her VN neutral portrait');
+assert.equal(reactions.assetFor(installedManifest,'rina','default'),'/rpg-assets/characters/rina/expression-portraits/neutral.webp','Rina uses her VN portrait');
+assert.equal(reactions.assetFor(installedManifest,'reina','attack'),'/rpg-assets/characters/reina/vn-expressions/angry.webp','Attack uses VN expression before widescreen art');
+assert.equal(reactions.assetFor(installedManifest,'reina','power'),'/rpg-assets/characters/reina/vn-expressions/angry.webp','Powers use a character-specific expression');
+assert.equal(reactions.assetFor(installedManifest,'reina','evolve'),'/rpg-assets/characters/reina/vn-expressions/happy.webp','Evolution uses a happy expression');
+assert.equal(reactions.assetFor(installedManifest,'jinx','power'),'/rpg-assets/characters/jinx/expression-portraits/smirk.webp','Jinx uses her playful battle expression');
 assert.ok(fs.readFileSync(path.join(__dirname,'../rpg_duel.css'),'utf8').includes('has-wide-action-art'),'Widescreen styles must exist');
 
 
@@ -146,8 +146,21 @@ assert.match(reactions.assetFor(contextualManifest,'reina','weakness_hit'),/rein
 assert.match(reactions.assetFor(contextualManifest,'reina','status_hit'),/reina\/vn-expressions\/angry\.webp$/,
  'Reina reacts to Special Conditions with an appropriate expression');
 assert.equal(reactions.assetFor({characters:{reina:{weakness_hit:'/rpg-assets/characters/hana/expressions/neutral.png',hurt:'/rpg-assets/characters/reina/expressions/flustered.png'}}},'reina','weakness_hit'),
- '/rpg-assets/characters/reina/expressions/flustered.png','Invalid cross-NPC expression falls back to own hurt art');
+ '/rpg-assets/characters/reina/vn-expressions/surprised.webp','Invalid cross-NPC art cannot override her VN expression');
 
+// The VN/portrait sources selected for the entire cast must be installed.
+const reactionKinds=['default','attack','play_card','evolve','power','hurt','big_hit','weakness_hit','status_hit','ko_taken','ko_scored'];
+for(const id of castIds){
+ for(const kind of reactionKinds){
+  const chosen=reactions.assetFor(installedManifest,id,kind);
+  assert.ok(chosen.startsWith('/rpg-assets/characters/'+id+'/'),id+' '+kind+' must use their own VN art');
+  assert.ok(fs.existsSync(path.join(__dirname,'..',chosen.slice(1))),id+' '+kind+': selected VN expression is missing');
+ }
+}
+assert.match(reactions.assetFor(installedManifest,'camila','power'),/camila\/vn-expressions\/flirty\.webp$/);
+assert.match(reactions.assetFor(installedManifest,'jun','attack'),/jun\/vn-expressions\/determined\.webp$/);
+assert.match(reactions.assetFor(installedManifest,'rina','hurt'),/rina\/expression-portraits\/concerned\.webp$/);
+assert.match(reactions.assetFor(installedManifest,'jinx','ko_scored'),/jinx\/expression-portraits\/smirk\.webp$/);
 assert.equal(reactions.assetFor({},'unknown_npc','attack'),null,'Unknown NPC gets silhouette');
 const js=fs.readFileSync(path.join(__dirname,'../classic_live.js'),'utf8');
 const html=fs.readFileSync(path.join(__dirname,'../classic_live.html'),'utf8');
@@ -156,7 +169,7 @@ assert.match(html,/id="npcReaction"/);
 assert.doesNotMatch(html,/id="rpgOpponentPortrait"/,'Permanent rival portrait mount removed');
 assert.doesNotMatch(js,/showRpgOpponent\(/,'No permanent portrait rendering');
 assert.match(js,/getCard:id=>cards\.get\(id\)\|\|null/,'NPC reactions inspect public card types');
-assert.match(html,/src="rpg_match_reactions.js"/);
+assert.match(html,/src="rpg_match_reactions.js(?:\?v=[^"]+)?"/);
 assert.match(js,/rpgMode&&rpgNpc/,'Non-RPG CPU duel does not show NPC reactions');
 assert.match(js,/reactions\?\.update\(current\)/,'Reactions observe battle updates');
 assert.match(js,/setTimeout\(notifyRpg,3000\)/,'Final knockout waits for the complete NPC image');

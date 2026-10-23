@@ -6,7 +6,7 @@
   hana:'base2-16',reina:'base3-7',shiori:'neo2-1',yuna:'base2-1',
   akari:'neo1-14',camila:'base5-13',marina:'base1-2',kaede:'base5-5',
   jun:'base3-1',teo:'base2-44',iris:'neo1-2',jinx:'base1-14',
-  luna:'base3-10',sol:'base1-36',elena:'base2-16',rina:'base1-15',sierra:'base5-13',elio:'base3-9',alma:'base2-11',nereo:'base3-42'
+  luna:'base3-10',sol:'base1-36',elena:'base2-16',rina:'base1-15',sierra:'base5-13',elio:'base3-9',alma:'base2-11',nereo:'base3-42',laca:'base1-2'
  });
  const TRIALS=Object.freeze({
   hana:'Teamwork Exhibition',reina:'No-Excuses Rematch',shiori:'Endgame Study',
@@ -14,7 +14,7 @@
   marina:'Patience Trial',kaede:'Disruption Trial',jun:'Fair-Play Clinic',
   teo:'Live Broadcast Duel',iris:'Courier Challenge',jinx:'Lightning Sprint',
   luna:'Tidal Balance',sol:'Hot-and-Cold Match',elena:'Calculated Reserve',rina:'Overgrowth Challenge',sierra:'The Disruption Test',elio:'The Brave First Game',
-  alma:'Quiet-Table Duel',nereo:'Against the Current'
+  alma:'Quiet-Table Duel',nereo:'Against the Current',laca:'Old Friends, New Tricks'
  });
  const KEY=/_(?:route|guest|bond)_\d+$/;
  function build(events,cast){

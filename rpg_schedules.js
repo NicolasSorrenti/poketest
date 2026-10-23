@@ -14,9 +14,14 @@
  Object.assign(templates,PACK.schedules);
  const SIDE=typeof module==='object'&&module.exports?require('./rpg_side_quests'):window.NeoRpgSideQuests;
  Object.assign(templates,SIDE.schedules);
+ // The server provides only the character packs this account may access.
+ // In Node, use the generated roster for deterministic offline tests.
+ const CHARS=typeof module==='object'&&module.exports?require('./rpg_character_packs.generated'):window.NeoRpgCharacterPacks;
+ Object.assign(templates,CHARS?.schedules||{});
  const start={hana:1,reina:1,shiori:1,yuna:1,akari:1,camila:1,marina:1,kaede:41};
  Object.assign(start,PACK.arrivals);
  Object.assign(start,SIDE.arrivals);
+ Object.assign(start,CHARS?.arrivals||{});
  const publicPlaces=['shop','arcade','park','cafe','center','library'];
  function locationFor(npc,day,slot,events=[]){
   if(!templates[npc]||!Number.isInteger(day)||day<1||day>90||!Number.isInteger(slot)||slot<0||slot>2||day<start[npc])return null;

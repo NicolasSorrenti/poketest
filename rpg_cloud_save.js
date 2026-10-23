@@ -20,11 +20,15 @@
  function stateLabel(message){label(message);if(button)button.textContent=session?'☁ CLOUD':'☁ LOCAL';}
  function errorText(error){return error?.message||'Cloud saves are unavailable. Your browser save is safe.';}
  function sessionSave(data){
+  const previousUserId=session?.user?.id||'';
   session=data?{access_token:data.access_token,refresh_token:data.refresh_token,user:data.user,expires_at:Date.now()+Math.max(0,Number(data.expires_in||3600)-60)*1000}:null;
   if(session)localStorage.setItem(SESSION_KEY,JSON.stringify(session));else localStorage.removeItem(SESSION_KEY);
   meta=session?readMeta():null;
   if(button)button.textContent=session?'☁ CLOUD':'☁ LOCAL';
   renderAccount();
+  // The roster is loaded once at startup. Switching accounts must fetch it again.
+  if(previousUserId!==(session?.user?.id||'')&&root.NeoRpgExclusiveRosterLoaded)
+    root.location.reload();
  }
  async function request(endpoint,body,authenticated=false,method='POST'){
   if(authenticated)await refreshIfNeeded();

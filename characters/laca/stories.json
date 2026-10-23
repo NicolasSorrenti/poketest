@@ -1,0 +1,673 @@
+{
+  "schemaVersion": 1,
+  "characterId": "laca",
+  "events": [
+    {
+      "id": "laca_route_1",
+      "title": "Just Like Old Times",
+      "start": 1,
+      "end": 20,
+      "place": "park",
+      "slot": 0,
+      "minBond": 0,
+      "prerequisite": null,
+      "participants": [],
+      "npc": "laca",
+      "chapter": 1,
+      "lines": [
+        {
+          "speaker": "laca",
+          "text": "No way. NO WAY. You're really here? Che, come here, idiot!"
+        },
+        {
+          "speaker": "Protagonist",
+          "text": "Laca? Is that you?"
+        },
+        {
+          "speaker": "laca",
+          "text": "Who else would yell at you from a lifeguard tower? Don't step past the marked area. My shift's still on."
+        },
+        {
+          "speaker": "Protagonist",
+          "text": "You sound exactly the same."
+        },
+        {
+          "speaker": "laca",
+          "text": "And you still make that face when you're caught doing something stupid. I missed that face."
+        },
+        {
+          "speaker": "laca",
+          "text": "Remember racing to the buoy when we were kids? You challenged me every summer."
+        },
+        {
+          "speaker": "Protagonist",
+          "text": "You never let me forget that I lost."
+        },
+        {
+          "speaker": "laca",
+          "text": "The scoreboard is permanent. Wait by the safe side of the rail for five minutes; I have to finish checking the rescue kit."
+        },
+        {
+          "speaker": "Protagonist",
+          "text": "You're actually serious about this job."
+        },
+        {
+          "speaker": "laca",
+          "text": "Someone has to be. Outside my shift? I reserve the right to be a disaster."
+        },
+        {
+          "speaker": "laca",
+          "text": "Okay. Now we can celebrate the grand return of my favorite troublemaker. Ice cream or an overdue card game?"
+        }
+      ],
+      "choices": [
+        {
+          "label": "Say you've missed her too",
+          "reply": "Good. Because I have approximately a hundred stories to tell you and no intention of being normal about it.",
+          "kind": "support",
+          "flag": "laca_reunion_warm",
+          "delta": {
+            "affection": 2,
+            "trust": 1,
+            "respect": 0,
+            "attraction": 0
+          }
+        },
+        {
+          "label": "Challenge her to the childhood rematch",
+          "reply": "A rematch? You came home and immediately chose violence. I'm so proud.",
+          "kind": "honest",
+          "flag": "laca_reunion_rival",
+          "delta": {
+            "affection": 1,
+            "trust": 2,
+            "respect": 1,
+            "attraction": 0
+          }
+        },
+        {
+          "label": "Tell her she's somehow gotten even cuter",
+          "reply": "Starting early, are we? That was smooth. Still doesn't erase your terrible swim record.",
+          "kind": "flirt",
+          "flag": "laca_reunion_flirt",
+          "delta": {
+            "affection": 2,
+            "trust": 1,
+            "respect": 0,
+            "attraction": 2
+          }
+        }
+      ]
+    },
+    {
+      "id": "laca_route_2",
+      "title": "Be Honest, Does This Look Good?",
+      "start": 21,
+      "end": 38,
+      "place": "shop",
+      "slot": 1,
+      "minBond": 2,
+      "prerequisite": "laca_route_1",
+      "participants": [],
+      "npc": "laca",
+      "chapter": 2,
+      "lines": [
+        {
+          "speaker": "laca",
+          "text": "Perfect timing. I need someone who's known me long enough to tell me the truth."
+        },
+        {
+          "speaker": "Protagonist",
+          "text": "That sounds suspiciously like a trap."
+        },
+        {
+          "speaker": "laca",
+          "text": "I bought a new red training top and a casual outfit for after work. The shop owner said they'd both look good. That's not a real opinion."
+        },
+        {
+          "speaker": "laca",
+          "text": "I'm not changing in here, obviously. I have photos from the try-on and the outfit on under my open jacket. Here, look."
+        },
+        {
+          "speaker": "Protagonist",
+          "text": "You always ask me these questions."
+        },
+        {
+          "speaker": "laca",
+          "text": "Because you won't pretend something looks great if it doesn't. You're the one who told me that ridiculous hat made me look like a mushroom."
+        },
+        {
+          "speaker": "Protagonist",
+          "text": "It did make you look like a mushroom."
+        },
+        {
+          "speaker": "laca",
+          "text": "Exactly! An honest friend. So which works better for a sunny day, and don't you dare say 'both'?"
+        },
+        {
+          "speaker": "Protagonist",
+          "text": "You do realize you could just pick the one you like."
+        },
+        {
+          "speaker": "laca",
+          "text": "I can. I like having you involved. Besides, I enjoy making you work for your childhood-friend privileges."
+        },
+        {
+          "speaker": "laca",
+          "text": "One more thing: if the top slips during training, it stays out of the water. Looking good isn't worth unsafe equipment."
+        }
+      ],
+      "choices": [
+        {
+          "label": "Give her thoughtful, practical feedback",
+          "reply": "That's actually helpful! See? Years of friendship, finally paying dividends.",
+          "kind": "support",
+          "flag": "laca_outfit_practical",
+          "delta": {
+            "affection": 2,
+            "trust": 1,
+            "respect": 0,
+            "attraction": 0
+          }
+        },
+        {
+          "label": "Say she should choose what feels right",
+          "reply": "Okay, fair. I liked this one first anyway. But I still wanted to hear your opinion.",
+          "kind": "honest",
+          "flag": "laca_outfit_choice",
+          "delta": {
+            "affection": 1,
+            "trust": 2,
+            "respect": 1,
+            "attraction": 0
+          }
+        },
+        {
+          "label": "Admit she looks especially good today",
+          "reply": "Oh? Look at you, finally giving a real answer. I'm keeping that compliment.",
+          "kind": "flirt",
+          "flag": "laca_outfit_flirt",
+          "delta": {
+            "affection": 2,
+            "trust": 1,
+            "respect": 0,
+            "attraction": 2
+          }
+        }
+      ],
+      "openingByFlag": {
+        "laca_reunion_warm": "I saved your seat at the shop like old times. I also need an opinion about something I bought.",
+        "laca_reunion_rival": "Before our rematch, I need your famously terrible judgment about two outfits.",
+        "laca_reunion_flirt": "Since you suddenly have so many opinions about how cute I am, you can help judge a new outfit."
+      }
+    },
+    {
+      "id": "laca_route_3",
+      "title": "Personal Space? What's That?",
+      "start": 39,
+      "end": 56,
+      "place": "park",
+      "slot": 1,
+      "minBond": 3,
+      "prerequisite": "laca_route_2",
+      "participants": [],
+      "npc": "laca",
+      "chapter": 3,
+      "lines": [
+        {
+          "speaker": "laca",
+          "text": "Shift's over! Don't move. You're about to become an unwilling participant in the Annual Summer Games."
+        },
+        {
+          "speaker": "Protagonist",
+          "text": "Annual? We've never done this before."
+        },
+        {
+          "speaker": "laca",
+          "text": "That is what makes the inaugural edition so historically important."
+        },
+        {
+          "speaker": "laca",
+          "text": "First challenge: who can skip a stone farther? Second: who remembers more of our childhood nonsense?"
+        },
+        {
+          "speaker": "Protagonist",
+          "text": "You have a towel, two drinks and absolutely no stones."
+        },
+        {
+          "speaker": "laca",
+          "text": "Details. Sit down, I'll share the towel. We used to take over entire picnic blankets with our card collections."
+        },
+        {
+          "speaker": "Protagonist",
+          "text": "You're leaning on me."
+        },
+        {
+          "speaker": "laca",
+          "text": "And? We've fallen asleep on smaller couches. Tell me about that terrible deck you built on the train."
+        },
+        {
+          "speaker": "Protagonist",
+          "text": "You really don't think anything of sitting this close?"
+        },
+        {
+          "speaker": "laca",
+          "text": "You're you. It's easy. ...Wait, why does it sound different when you say it like that?"
+        },
+        {
+          "speaker": "laca",
+          "text": "Never mind. Tell me your deck list before I invent a competition you can't win."
+        }
+      ],
+      "choices": [
+        {
+          "label": "Enjoy the familiar closeness and tell the old story",
+          "reply": "That's the one! You remember everything. Even the parts that make me look ridiculous.",
+          "kind": "support",
+          "flag": "laca_closeness_easy",
+          "delta": {
+            "affection": 2,
+            "trust": 1,
+            "respect": 0,
+            "attraction": 0
+          }
+        },
+        {
+          "label": "Ask whether she's comfortable, just to be sure",
+          "reply": "Of course I am. But I like that you asked. You're still my favorite safe person.",
+          "kind": "honest",
+          "flag": "laca_closeness_check",
+          "delta": {
+            "affection": 1,
+            "trust": 2,
+            "respect": 1,
+            "attraction": 0
+          }
+        },
+        {
+          "label": "Tease her about getting flustered",
+          "reply": "Me? Flustered? Please. You're imagining things. ...Stop smiling like that.",
+          "kind": "flirt",
+          "flag": "laca_closeness_fluster",
+          "delta": {
+            "affection": 2,
+            "trust": 1,
+            "respect": 0,
+            "attraction": 2
+          }
+        }
+      ],
+      "openingByFlag": {
+        "laca_outfit_practical": "The new top survived an entire training session, thanks to your expert fashion-and-safety review. Now sit down.",
+        "laca_outfit_choice": "I picked the outfit that felt right, like you said. Today I'm picking you as my opponent in a ridiculous contest.",
+        "laca_outfit_flirt": "You were pretty generous with your compliments last time. Let's see if you can stay composed after a whole afternoon with me."
+      }
+    },
+    {
+      "id": "laca_route_4",
+      "title": "Since When Is This Weird?",
+      "start": 57,
+      "end": 74,
+      "place": "cafe",
+      "slot": 2,
+      "minBond": 4,
+      "prerequisite": "laca_route_3",
+      "participants": [],
+      "npc": "laca",
+      "chapter": 4,
+      "lines": [
+        {
+          "speaker": "laca",
+          "text": "Hey. Sit. I saved the seat by the window. And your favorite snack, because apparently I remember everything."
+        },
+        {
+          "speaker": "Protagonist",
+          "text": "You sound suspiciously serious."
+        },
+        {
+          "speaker": "laca",
+          "text": "I had an idea for a joke. Then I thought about telling it to you, and somehow I got nervous. Ridiculous, right?"
+        },
+        {
+          "speaker": "Protagonist",
+          "text": "Since when do you get nervous around me?"
+        },
+        {
+          "speaker": "laca",
+          "text": "That's the question! You're still the person who once cried because we lost a plastic Squirtle."
+        },
+        {
+          "speaker": "Protagonist",
+          "text": "It was a very good Squirtle."
+        },
+        {
+          "speaker": "laca",
+          "text": "It was. But lately when you compliment me, I actually think about it afterward."
+        },
+        {
+          "speaker": "laca",
+          "text": "And when I finish my shift, I find myself checking whether you're around. Not because we made plans. Just because."
+        },
+        {
+          "speaker": "Protagonist",
+          "text": "We don't have to make anything weird."
+        },
+        {
+          "speaker": "laca",
+          "text": "I know. That's the best thing about us. We can talk like normal people, even when I desperately want to hide behind another bad joke."
+        },
+        {
+          "speaker": "laca",
+          "text": "So I'm going to try something wild: saying I care about you without pretending it's a punch line."
+        }
+      ],
+      "choices": [
+        {
+          "label": "Tell her how much your friendship means",
+          "reply": "Good. Whatever happens, we don't lose that. It's the one thing I never want to gamble with.",
+          "kind": "support",
+          "flag": "laca_honest_friend",
+          "delta": {
+            "affection": 2,
+            "trust": 1,
+            "respect": 0,
+            "attraction": 0
+          }
+        },
+        {
+          "label": "Give her room to work out what she feels",
+          "reply": "Thanks. I don't need an answer tonight. Just... stay for dessert?",
+          "kind": "honest",
+          "flag": "laca_honest_space",
+          "delta": {
+            "affection": 1,
+            "trust": 2,
+            "respect": 1,
+            "attraction": 0
+          }
+        },
+        {
+          "label": "Admit your feelings have started changing too",
+          "reply": "Oh. Oh, wow. I'm going to need a minute before I remember how to be smug.",
+          "kind": "flirt",
+          "flag": "laca_honest_mutual",
+          "delta": {
+            "affection": 2,
+            "trust": 1,
+            "respect": 0,
+            "attraction": 2
+          }
+        }
+      ],
+      "openingByFlag": {
+        "laca_closeness_easy": "Remember our ridiculous Summer Games? I've been thinking about how easy it felt to be together.",
+        "laca_closeness_check": "You asked whether I was comfortable the other day. I keep thinking about why I liked that so much.",
+        "laca_closeness_fluster": "I'm still blaming you for making me blush at the waterfront. Anyway, there's something I want to say."
+      }
+    },
+    {
+      "id": "laca_route_5",
+      "title": "More Than Best Friends",
+      "start": 75,
+      "end": 89,
+      "place": "park",
+      "slot": 2,
+      "minBond": 5,
+      "prerequisite": "laca_route_4",
+      "participants": [],
+      "npc": "laca",
+      "chapter": 5,
+      "lines": [
+        {
+          "speaker": "laca",
+          "text": "I brought two drinks and the last of those awful candies we used to love. The sunset is free."
+        },
+        {
+          "speaker": "Protagonist",
+          "text": "This looks familiar."
+        },
+        {
+          "speaker": "laca",
+          "text": "Same spot we used to watch the boats after swimming. Only now we can actually stay until dark."
+        },
+        {
+          "speaker": "Protagonist",
+          "text": "You went to a lot of trouble."
+        },
+        {
+          "speaker": "laca",
+          "text": "Nah. I wanted to. Also, I remembered your favorite drink, so I expect some admiration."
+        },
+        {
+          "speaker": "laca",
+          "text": "You know what was nice about having you back? I didn't have to explain myself. Not even the strange parts."
+        },
+        {
+          "speaker": "Protagonist",
+          "text": "You've always been my best friend."
+        },
+        {
+          "speaker": "laca",
+          "text": "And you mine. That's not changing. I needed to say that first."
+        },
+        {
+          "speaker": "laca",
+          "text": "I've been trying to figure out whether these feelings are just me getting nostalgic. They're not."
+        },
+        {
+          "speaker": "laca",
+          "text": "I'm still the girl who'll challenge you to a stupid rematch tomorrow. But I'd really like to know if we can be something more."
+        },
+        {
+          "speaker": "Protagonist",
+          "text": "Then let's be honest with each other."
+        },
+        {
+          "speaker": "laca",
+          "text": "Okay. No bets this time. Tell me what you want."
+        }
+      ],
+      "choices": [
+        {
+          "label": "Ask Laca to be your girlfriend",
+          "reply": "Yes. Absolutely yes. And for the record, I'm still going to steal your fries. Girlfriend privileges.",
+          "kind": "commit",
+          "flag": "romance",
+          "delta": {
+            "affection": 3,
+            "trust": 2,
+            "respect": 0,
+            "attraction": 3
+          }
+        },
+        {
+          "label": "Choose to stay her closest friend",
+          "reply": "Then that's us. Best friends, still unstoppable. Thanks for being honest with me.",
+          "kind": "friend",
+          "flag": "friendship",
+          "delta": {
+            "affection": 2,
+            "trust": 2,
+            "respect": 1,
+            "attraction": 0
+          }
+        },
+        {
+          "label": "Say you cherish her but aren't ready for romance",
+          "reply": "I can respect that. You don't owe me a love story, che. We've still got tomorrow.",
+          "kind": "honest",
+          "flag": "laca_ending_open",
+          "delta": {
+            "affection": 1,
+            "trust": 2,
+            "respect": 1,
+            "attraction": 0
+          }
+        }
+      ],
+      "openingByFlag": {
+        "laca_honest_friend": "You told me our friendship matters. I brought you back to the place where it really started.",
+        "laca_honest_space": "I took the time you gave me. Turns out I know exactly what I want to ask you.",
+        "laca_honest_mutual": "You said your feelings were changing too. I've been thinking about that all week. Come sit by me."
+      }
+    },
+    {
+      "id": "laca_marina_cross_1",
+      "title": "Two Ways to Read the Current",
+      "start": 32,
+      "end": 50,
+      "place": "park",
+      "slot": 1,
+      "minBond": 1,
+      "prerequisite": "laca_route_1",
+      "participants": [
+        "marina"
+      ],
+      "npc": "laca",
+      "chapter": 2,
+      "lines": [
+        {
+          "speaker": "marina",
+          "text": "The river looks calm from here. The current closer to the channel is stronger."
+        },
+        {
+          "speaker": "laca",
+          "text": "Marina's trying to convince me I should say 'please' more often instead of 'back behind the markers.'"
+        },
+        {
+          "speaker": "Protagonist",
+          "text": "Can both of you be right?"
+        },
+        {
+          "speaker": "marina",
+          "text": "It's her job to keep people safe. It's also helpful to make nervous swimmers feel welcome."
+        },
+        {
+          "speaker": "laca",
+          "text": "Okay, excellent point. But if someone ignores my whistle twice, I'm allowed a serious face."
+        },
+        {
+          "speaker": "Protagonist",
+          "text": "I've seen the serious face. It's terrifying."
+        },
+        {
+          "speaker": "laca",
+          "text": "You knew me before I was tall enough to carry a rescue buoy. You don't get to pretend you're scared."
+        },
+        {
+          "speaker": "marina",
+          "text": "You two sound very comfortable together."
+        },
+        {
+          "speaker": "laca",
+          "text": "We've got a whole childhood of blackmail material. Want to hear about the plastic Squirtle?"
+        }
+      ],
+      "choices": [
+        {
+          "label": "Help them write a friendly safety reminder",
+          "reply": "Not bad! Clear, kind, and only slightly less threatening than my original version.",
+          "kind": "support",
+          "flag": "laca_marina_team",
+          "delta": {
+            "affection": 2,
+            "trust": 1,
+            "respect": 0,
+            "attraction": 0
+          }
+        },
+        {
+          "label": "Let Marina tell the Squirtle story",
+          "reply": "Traitor! Okay, it was a tiny tragedy. I admit it. Don't tell everyone.",
+          "kind": "honest",
+          "flag": "laca_marina_squirtle",
+          "delta": {
+            "affection": 1,
+            "trust": 2,
+            "respect": 1,
+            "attraction": 0
+          }
+        }
+      ]
+    },
+    {
+      "id": "laca_sol_cross_1",
+      "title": "Fun Stops at the Safety Line",
+      "start": 53,
+      "end": 72,
+      "place": "park",
+      "slot": 1,
+      "minBond": 1,
+      "prerequisite": "laca_route_2",
+      "participants": [
+        "sol"
+      ],
+      "npc": "laca",
+      "chapter": 2,
+      "lines": [
+        {
+          "speaker": "sol",
+          "text": "What if we ran a mini beach-themed card tournament near the waterfront? Costumes encouraged!"
+        },
+        {
+          "speaker": "laca",
+          "text": "Near the waterfront, sure. Inside the supervised swim zone during duty hours? Absolutely not."
+        },
+        {
+          "speaker": "Protagonist",
+          "text": "I feel like we've had this conversation before."
+        },
+        {
+          "speaker": "sol",
+          "text": "I was going to ask for rescue buoys as decorations."
+        },
+        {
+          "speaker": "laca",
+          "text": "The real rescue buoys stay where people can reach them. I'll help you make fake props after my shift."
+        },
+        {
+          "speaker": "sol",
+          "text": "Fair! Safety crew first, cute cardboard Psyduck second."
+        },
+        {
+          "speaker": "Protagonist",
+          "text": "You two work surprisingly well together."
+        },
+        {
+          "speaker": "laca",
+          "text": "Obviously. One of us has ideas. The other has slightly fewer liability waivers."
+        },
+        {
+          "speaker": "sol",
+          "text": "Hey! I'll make the invitations. You keep everyone from swimming with their decks."
+        }
+      ],
+      "choices": [
+        {
+          "label": "Offer to make props with both of them",
+          "reply": "Look at us: responsible adults making ridiculous cardboard buoys. I love it.",
+          "kind": "support",
+          "flag": "laca_sol_props",
+          "delta": {
+            "affection": 2,
+            "trust": 1,
+            "respect": 0,
+            "attraction": 0
+          }
+        },
+        {
+          "label": "Back Laca's safety boundaries",
+          "reply": "Thank you. I can joke all day, but my equipment isn't a decoration.",
+          "kind": "honest",
+          "flag": "laca_sol_safety",
+          "delta": {
+            "affection": 1,
+            "trust": 2,
+            "respect": 1,
+            "attraction": 0
+          }
+        }
+      ]
+    }
+  ]
+}
