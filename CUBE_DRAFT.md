@@ -81,7 +81,7 @@ A generated Cube selects **one expansion per named card** for the entire pool, w
 
 Every preset draws only from the supported historical theme-deck printings. Evolutions are admitted only when a compatible predecessor is somewhere in the final cube, and CPU decks must still obey 40-card construction rules. Drafting the whole evolution family is not automatic; it requires actual picks. Mono-type support is intentional in Elemental Rivals; specialized text-effect weighting nudges each type toward its archetype but does not create new custom Pokémon rules. All presets support reproducible seeds for testing.
 
-For verification, run `node test_cube_presets.js` or `npm run test:cube`. Competitive win-rate tuning across large numbers of matchups remains to be done.
+For verification, run `node test_cube_presets.js` or `npm run test:cube`. A first controlled Basic-only versus Evolution CPU matchup audit has now completed: **280 actual finishes, 2 incompletes** across nine Cube formats with eight draft seeds. See [CUBE_ARCHETYPE_BALANCE_REPORT.md](CUBE_ARCHETYPE_BALANCE_REPORT.md) for per-format win rates, Evolution-play rates, interpretation limits and the reproducible workflow. Independent archetype-specific drafting and human playtest win rates remain to be measured.
 
 ## Multiplayer round-robin (2–4 humans, CPU fills to four)
 - Everyone completes their 60 picks, builds a legal 40-card deck and locks it.
