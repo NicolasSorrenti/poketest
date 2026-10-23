@@ -22,6 +22,7 @@
  "/rpg_epilogue.js",
  "/rpg_appointments.js",
  "/rpg_intentions.js",
+ "/rpg_slice_of_life.js",
  "/rpg_cg_gallery.js",
  "/rpg_daily_planner.js",
  "/rpg_social_activities.js",
