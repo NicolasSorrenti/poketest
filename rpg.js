@@ -1392,32 +1392,50 @@ function renderDailyIntention(locked){
  root.append(count);
 }
 
+// Reuse existing character artwork until a scene-specific CG is installed.
+function loadCGArt(image,entry,thumbnail,onSuccess,onMissing){
+ const candidates=CG.artCandidates(entry,thumbnail);
+ let index=0;
+ const attempt=()=>{
+  if(index>=candidates.length){image.hidden=true;onMissing?.();return;}
+  const candidate=candidates[index++];
+  image.onload=()=>{image.hidden=false;onSuccess?.(candidate.kind);};
+  image.onerror=attempt;
+  image.src=candidate.path;
+ };
+ attempt();
+}
 function showCGMoment(entry){
  if(!entry||!CG.unlocked(state,entry.id))return;
  const photo=document.createElement('img');
- // An absent art file must never interrupt a duel, hangout, or story beat.
- photo.onload=()=>{
+ photo.alt=entry.title;
+ loadCGArt(photo,entry,false,kind=>{
   if(entry.category==='pre_duel'&&!state.pendingDuel)return;
-  const modal=$('cgMoment'),root=$('cgMomentArt');root.replaceChildren(photo);
+  const modal=$('cgMoment'),root=$('cgMomentArt');
+  const frame=document.createElement('div');
+  frame.className='cg-art-frame'+(kind==='event'?'':' is-fallback');
+  frame.append(photo);root.replaceChildren(frame);
   window.NeoRpgDiscreetAvatars?.set?.(root,entry.character,'surprised',cast[entry.character]?.name||entry.character);
   $('cgMomentTitle').textContent=entry.title;
   $('cgMomentCaption').textContent=cast[entry.character]?.name||entry.character;
   CG.markViewed(state,entry.id);persist();
   if(!modal.open)modal.showModal();
- };
- photo.onerror=()=>{};
- photo.alt=entry.title;photo.src=entry.path;
+ });
 }
 function showGalleryDetail(entry){
  const root=$('galleryPreview');root.replaceChildren();
  const title=document.createElement('h3');title.textContent=entry.title;
  const text=document.createElement('p');text.textContent=(cast[entry.character]?.name||entry.character)+' · '+entry.category.replace('_',' ')+' · '+entry.hint;
- const image=document.createElement('img');image.alt=entry.title;
- const placeholder=document.createElement('p');placeholder.className='cg-pending';placeholder.textContent='Illustration not installed yet — the memory is unlocked, and its image is assigned to the art agent.';
- image.onload=()=>{placeholder.hidden=true;image.hidden=false;CG.markViewed(state,entry.id);persist();renderGallery();};
- image.onerror=()=>{image.hidden=true;placeholder.hidden=false;};
- image.src=entry.path;
- root.append(title,text,image,placeholder);
+ const image=document.createElement('img');image.alt=entry.title;image.hidden=true;
+ const frame=document.createElement('div');frame.className='cg-art-frame';frame.append(image);
+ const placeholder=document.createElement('p');placeholder.className='cg-pending';placeholder.hidden=true;
+ placeholder.textContent='Illustration not installed yet. This memory is unlocked, but no character artwork is currently available.';
+ root.append(title,text,frame,placeholder);
+ loadCGArt(image,entry,false,kind=>{
+  frame.classList.toggle('is-fallback',kind!=='event');
+  placeholder.hidden=true;
+  CG.markViewed(state,entry.id);persist();renderGallery();
+ },()=>{frame.hidden=true;placeholder.hidden=false;});
  window.NeoRpgDiscreetAvatars?.set?.(root,entry.character,'neutral',cast[entry.character]?.name||entry.character);
 }
 function populateGalleryCharacters(){
@@ -1450,8 +1468,8 @@ function renderGallery(){
   const thumb=document.createElement('div');thumb.className='cg-thumb';
   if(entry.unlocked){
    const img=document.createElement('img');img.alt='';
-   img.onerror=()=>{img.hidden=true;};
-   img.src=entry.thumb;thumb.append(img);
+   img.hidden=true;thumb.append(img);
+   loadCGArt(img,entry,true,kind=>{img.classList.toggle('is-fallback',kind!=='event');});
    window.NeoRpgDiscreetAvatars?.set?.(thumb,entry.character,'neutral',cast[entry.character]?.name||entry.character);
   }else{
    const mystery=document.createElement('span');mystery.textContent='?';thumb.append(mystery);
