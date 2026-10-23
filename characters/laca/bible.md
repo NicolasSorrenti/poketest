@@ -29,7 +29,8 @@ The existing `park` is the supervised waterfront—**do not invent a new `beach`
 Uses the **existing** `water_blast` deck so gameplay works now, not a fictional deck ID. She likes Water Pokémon, surprise plays, and silly wagers. Respect existing engine legality and the NPC difficulty/progression system; a custom creative Water toolbox list would be a separate balance task.
 
 ## Story roadmap — five optional sequential episodes
-1. **Just Like Old Times** (Days 5–20, park, morning): an affectionate reunion; her lifeguard professionalism amid teasing; the player chooses warmth, a rematch, or playful flirting. Childhood familiarity is already established.
+Laca is available at the Riverside Park waterfront from **Day 1, morning**. The first chapter can be triggered immediately upon visiting her; later chapters keep their existing dates.
+1. **Just Like Old Times** (Days 1–20, park, morning): an affectionate reunion; her lifeguard professionalism amid teasing; the player chooses warmth, a rematch, or playful flirting. Childhood familiarity is already established.
 2. **Be Honest, Does This Look Good?** (Days 21–38, shop, afternoon): she shows pictures of outfits after a public fitting and asks a trusted friend's real opinion. The fun is her confidence and the protagonist's growing self-awareness, not secret voyeurism.
 3. **Personal Space? What's That?** (Days 39–56, park, afternoon): they reenact silly childhood contests, share a towel and a comfortable closeness that suddenly feels different. Laca stays bold even when the mood shifts.
 4. **Since When Is This Weird?** (Days 57–74, café, evening): Laca names her feelings without hiding behind jokes. Player responses can center on friendship, space, or mutual attraction.
