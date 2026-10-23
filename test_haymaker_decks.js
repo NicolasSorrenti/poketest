@@ -8,6 +8,7 @@ const {ClassicOnlineService}=require('./classic_online_service');
 const ATTACKS=require('./attack_effects_core');
 const POWERS=require('./classic_power_core');
 const TRAINERS=require('./classic_trainer_core');
+const DECK_BUILDER=require('./deck_builder_core');
 assert.equal(HAYMAKER.entries.length,17);
 assert.equal(new Set(HAYMAKER.entries.map(x=>x.id)).size,HAYMAKER.entries.length);
 assert.equal(HAYMAKER.has('__proto__'),false);
@@ -28,6 +29,8 @@ for(const [id,pokemon] of Object.entries(originalPrintings))for(const printing o
  assert(HAYMAKER.list(id).includes(printing),'Original Haymaker printing missing: '+id+' '+printing);
 const local=new ClassicLocalService({maxSessions:55});
 const online=new ClassicOnlineService({maxRooms:55});
+const builderCatalog=local.cardPool();
+const builderIds=new Set(builderCatalog.map(c=>c.id));
 let checked=0;
 for(const [index,preset] of HAYMAKER.entries.entries()){
  const list=HAYMAKER.list(preset.id);
@@ -35,6 +38,9 @@ for(const [index,preset] of HAYMAKER.entries.entries()){
  assert.equal(DECKS[preset.id],'haymaker:'+preset.id);
  assert(deckOptions().some(x=>x.id===preset.id&&x.haymaker),'Deck selector missing '+preset.id);
  assert.deepEqual(local.decklist(preset.id),list,'Published deck list differs');
+ for(const id of list)assert(builderIds.has(id),'Haymaker card unavailable to deck builder: '+id+' in '+preset.id);
+ const builderValidation=DECK_BUILDER.verify(list,builderCatalog);
+ assert(builderValidation.valid,'Haymaker starter cannot load in deck builder: '+preset.id+' '+builderValidation.errors?.join(', '));
  const valid=validateDeck(list,CATALOG);
  assert(valid.valid,preset.id+' deck illegal: '+valid.errors?.join(', '));
  const byName=new Map(),pokemon=[],trainers=[],energies=[];
@@ -96,4 +102,4 @@ for(const [index,preset] of HAYMAKER.entries.entries()){
  assert.equal(online.state(host.code,guest.token).view.players[0].hand,undefined);
  checked++;
 }
-console.log('PASS Haymaker: '+checked+' Basic-only decks from Base through Neo Destiny; original five retained, supported effects, 60-card legality, solo and online match setup');
+console.log('PASS Haymaker: '+checked+' Basic-only decks from Base through Neo Destiny; original five retained, supported effects, 60-card legality, deck builder and solo / online match setup');
