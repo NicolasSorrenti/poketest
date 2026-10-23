@@ -3,14 +3,14 @@ const assert=require('node:assert/strict');
 const fs=require('node:fs');
 const {CHRONOLOGY,preferredPrintings}=require('./cube_printings');
 const {eligibleIds}=require('./cube_draft');
-const {PRESETS,listPresetSummaries,candidateIds}=require('./cube_presets');
+const {PRESETS,listPresetSummaries,candidateIds,makePresetPool}=require('./cube_presets');
 const formats=listPresetSummaries();
 assert.equal(formats.length,PRESETS.length);
 assert.deepEqual(formats.map(p=>p.id),PRESETS.map(p=>p.id));
 const all=eligibleIds();
 for(const p of formats){
  assert(p.sets.length>0,p.id+' must display at least one expansion');
- const eligible=candidateIds(p.id);
+ const eligible=p.fixedPool?makePresetPool({preset:p.id,seed:11}):candidateIds(p.id);
  const expected=CHRONOLOGY.filter(set=>eligible.some(id=>id.startsWith(set+'-')));
  assert.deepEqual(p.sets,expected,p.id+' badges must match the real card candidates');
 }
