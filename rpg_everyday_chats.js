@@ -330,14 +330,16 @@
    "No! They gave me a ribbon for enthusiasm. I'm putting it on my deck box."
   ],
   [
-   "I bought a tiny plastic dinosaur from a machine.",
-   "What's its name?",
-   "Possibly Lizard. That's also what the label says."
+   "This little dinosaur came out of a vending machine.",
+   "Cute! What's its name?",
+   "According to the packaging? Lizard. Very bold marketing choice."
   ],
   [
-   "I tried learning a magic trick online.",
-   "Show me.",
-   "Pick a number. Wait, no—I've accidentally learned a sandwich recipe."
+   "I wanted to learn a magic trick.",
+   "What happened?",
+   "I clicked the wrong video and learned how to make a sandwich instead.",
+   "So, no magic?",
+   "Not unless you count how fast I ate the sandwich."
   ],
   [
    "There was a little frog on the sidewalk.",
@@ -345,23 +347,25 @@
    "Escorted it to the grass like a very important guest."
   ],
   [
-   "Look at this photograph. Tell me what you see.",
-   "A duck in a shopping cart?",
-   "Yes! Everyone else keeps saying it's a loaf of bread.",
-   "Why was it in the cart?",
-   "That is the mystery of the century."
+   "Look at this picture and tell me what you see.",
+   "A duck?",
+   "THANK YOU. Teo says it's a loaf of bread.",
+   "Are you sure?",
+   "There's a beak! I'm sending him your expert testimony."
   ],
   [
-   "I thought my apartment was haunted.",
-   "What happened?",
-   "A mysterious tapping sound every night.",
-   "Was it a ghost?",
-   "A spoon rolling inside the washing machine. Less exciting, more expensive."
+   "I thought my apartment was haunted last night.",
+   "What made you think that?",
+   "Clanking noises from the laundry room. I went to investigate.",
+   "And?",
+   "A spoon had gotten into the washer. Ghost defeated."
   ],
   [
-   "I signed up for a beginner dance class.",
-   "How did it go?",
-   "I learned the ending before the beginning. Nobody was ready for my entrance."
+   "I joined a dance class yesterday.",
+   "Did it go well?",
+   "I learned the last step first and nearly crashed into the instructor.",
+   "Did they throw you out?",
+   "Nope. She laughed and showed me where to stand. I'm going back."
   ],
   [
    "I found a four-leaf clover yesterday.",
@@ -402,9 +406,11 @@
    "There was a whole room of mechanical birds. I stayed until closing."
   ],
   [
-   "I tried helping a friend move house.",
+   "I helped a friend move yesterday.",
    "Were you useful?",
-   "I labeled every box. Unfortunately, they were all labeled 'treasure.'"
+   "I labeled every box for them.",
+   "Nice.",
+   "Except I wrote 'important stuff' on half of them. They made me relabel everything."
   ],
   [
    "A girl at the bus stop told me she was nervous about her first day at a new school.",
@@ -429,18 +435,18 @@
   ],
   [
    "I tried folding a paper crane.",
-   "Can I see?",
-   "It's somewhere between a crane and an optimistic napkin."
+   "How'd that turn out?",
+   "It looks like a napkin trying very hard to become a bird."
   ],
   [
-   "I took the wrong bus on purpose yesterday.",
-   "Why?",
-   "To see where it ended. It ended near incredible cinnamon rolls."
+   "I got on a bus without checking where it went.",
+   "You? Not planning ahead?",
+   "That was the point. I wound up at a bakery with incredible cinnamon rolls."
   ],
   [
-   "A child asked me to name a cloud.",
+   "A child asked me what to name a cloud.",
    "What did you choose?",
-   "Barbara. The child insisted it was clearly a Kevin."
+   "Barbara. The child corrected me. Apparently it's a Kevin."
   ],
   [
    "This is going to sound strange. I like washing dishes.",
@@ -457,14 +463,14 @@
    "I would love to be making it up. Try one."
   ],
   [
-   "A sparrow built a nest outside my window.",
-   "Do you watch it?",
-   "Every morning. The parents have a very demanding schedule."
+   "A sparrow's nesting outside my window.",
+   "Does that distract you?",
+   "Quite the opposite. The parents keep a stricter schedule than I do."
   ],
   [
-   "I watched a documentary about restoring old violins.",
-   "Do you play?",
-   "Not at all. I just liked hearing them find their voices again."
+   "I watched a violin-restoration documentary last night.",
+   "Do you even play violin?",
+   "Not a note. I just liked seeing something broken sound beautiful again."
   ],
   [
    "I may have overestimated my skill with children's chemistry kits.",
@@ -488,9 +494,9 @@
    "Both. It turned out surprisingly well."
   ],
   [
-   "I tried an art class with no instructions.",
-   "How did that feel?",
-   "Uncomfortable for about ten minutes. Then I started painting a giraffe."
+   "I took a painting class with no instructions.",
+   "That must have driven you crazy.",
+   "For the first ten minutes. Then I painted a giraffe. It was a wonderful giraffe."
   ],
   [
    "A neighbor invited me over to meet her new puppy.",
@@ -526,19 +532,23 @@
    "Fantastic. Looking respectable is terribly overrated."
   ],
   [
-   "I tried a new board game with friends.",
+   "I played a new board game with friends.",
    "Did you win?",
-   "No. I accidentally became mayor and spent the treasury on fountains."
+   "No, I was elected mayor and bankrupted the town buying fountains.",
+   "Why fountains?",
+   "They looked charming on the board. It was a terrible administration."
   ],
   [
-   "My pen exploded halfway through a birthday card.",
-   "Did you get a new card?",
-   "I finished with 'have a dramatic birthday' and drew fireworks."
+   "I ruined a birthday card with a leaky pen.",
+   "Did you start over?",
+   "No. I turned the ink blot into a firework and wrote 'Have a dramatic birthday.'"
   ],
   [
-   "I bought a chipped cup with a smug goose painted on it.",
+   "I found a chipped mug with a very smug goose on it.",
+   "You bought it?",
+   "At a discount. Naturally.",
    "Does the goose have a name?",
-   "Sir Honkington. He looks down on all my other mugs."
+   "Sir Honkington. He looks down on all the expensive cups."
   ],
   [
    "I'm on my way to return a borrowed casserole dish.",
@@ -555,9 +565,11 @@
    "Nobody. I felt like I'd been trusted with a secret."
   ],
   [
-   "I tried an escape room.",
-   "Did you get out?",
-   "Only because someone accidentally leaned on the right wall."
+   "We tried an escape room for my friend's birthday.",
+   "Did you solve it?",
+   "Barely. Somebody leaned on a wall that turned out to be a door.",
+   "Sounds lucky.",
+   "Extremely. We're pretending it was strategy."
   ],
   [
    "My grandmother used to make orange peel candy.",
@@ -572,16 +584,18 @@
    "No. She's been practicing losing for forty years. The woman is a professional."
   ],
   [
-   "I visited a tiny town with a clock that chimes the wrong hour.",
-   "Does nobody fix it?",
-   "They like it that way. The baker says it makes every afternoon unpredictable."
+   "The clock tower in the town I visited rings an hour late.",
+   "Is it broken?",
+   "The baker says nobody wants to fix it.",
+   "That's strange.",
+   "Maybe. But everyone still knows what time it is."
   ],
   [
-   "I lost an earring in the lining of my coat.",
-   "Did you find it?",
-   "Three days later. Along with a receipt and a mint.",
-   "A treasure hunt.",
-   "My coat apparently leads a separate life."
+   "I finally found my missing earring.",
+   "Where was it?",
+   "Caught in my coat's lining. I also found three receipts and a mint.",
+   "What a haul.",
+   "The mint expired last year. The earring is fine."
   ],
   [
    "I went to the theater with no idea what the play was about.",
