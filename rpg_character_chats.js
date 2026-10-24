@@ -335,6 +335,336 @@
    "Why?",
    "Because people deserve to hear their names."
   ]
+ ],
+ "elio": [
+  [
+   "I finally asked someone not to touch my deck without permission.",
+   "How'd they take it?",
+   "They apologized. I almost apologized back.",
+   "You were right to speak up.",
+   "I'm practicing believing that."
+  ],
+  [
+   "The others say I play too cautiously.",
+   "What do you think?",
+   "Sometimes they're right. But when I take a chance, I want it to be my choice.",
+   "So what's next?",
+   "One brave move per match. I wrote it on a sticky note."
+  ],
+  [
+   "Someone invited me to teach a new player.",
+   "You said yes?",
+   "I told them everything I wished I'd known.",
+   "Were they overwhelmed?",
+   "A little. Then they beat me. Maybe I taught too well."
+  ],
+  [
+   "I changed the name on my old deck box.",
+   "Was that hard?",
+   "It had my cousin's name on it for years.",
+   "How does the new name feel?",
+   "Like something I've finally earned."
+  ]
+ ],
+ "alma": [
+  [
+   "The café is full of people arguing about who won.",
+   "Does that bother you?",
+   "No. I wish someone remembered who cleaned up.",
+   "You could tell them.",
+   "I do, with a mop in plain view by the door."
+  ],
+  [
+   "A customer apologized for coming in without buying anything.",
+   "What did you say?",
+   "That sitting quietly is allowed here.",
+   "Even if they only order water?",
+   "Even then. Hospitality doesn't have a minimum purchase."
+  ],
+  [
+   "Some days I feel like the town's listener, not a café owner.",
+   "That sounds tiring.",
+   "It can be. But today someone asked about my day first.",
+   "And?",
+   "It became a very good day."
+  ],
+  [
+   "Everyone loves the crooked table by the window.",
+   "Why not repair it?",
+   "The light is good there, and nobody rushes.",
+   "But the table wobbles.",
+   "Then I'll fix the leg, not the feeling."
+  ]
+ ],
+ "nereo": [
+  [
+   "The ferry was delayed and everybody wanted an answer.",
+   "Did you have one?",
+   "A timetable and a shrug. The river won.",
+   "Were people upset?",
+   "Yes. So I found the older passengers a place to sit."
+  ],
+  [
+   "Marina says I pretend to be grumpier than I am.",
+   "Is she right?",
+   "Ask the dock cats. They know I'm a pushover.",
+   "You feed them?",
+   "Don't spread rumors. They know where I keep biscuits."
+  ],
+  [
+   "Someone asked why I keep repairing that old railing.",
+   "Why not replace it?",
+   "It's sturdy, familiar, and marked by every flood.",
+   "Sentimental?",
+   "I said sturdy. Don't make this sentimental."
+  ],
+  [
+   "A kid watched me fix a ferry sign yesterday.",
+   "Did they ask questions?",
+   "Twenty. Then they held my tools.",
+   "Did you mind?",
+   "Best apprentice I've had all month."
+  ]
+ ],
+ "elena": [
+  [
+   "I made room for an evening with no appointments.",
+   "Sounds relaxing.",
+   "I spent the first hour wondering what I'd forgotten.",
+   "And then?",
+   "Watched a terrible comedy and laughed louder than expected."
+  ],
+  [
+   "A junior colleague admitted she'd made a mistake.",
+   "How did you respond?",
+   "I thanked her for telling me before it grew.",
+   "Were you always so understanding?",
+   "No. Someone once showed me that kindness. I remember it."
+  ],
+  [
+   "I once thought a perfect plan meant no surprises.",
+   "What changed?",
+   "Some of my favorite memories weren't planned.",
+   "Any examples?",
+   "A rainy walk. A missed train. This conversation."
+  ],
+  [
+   "I keep buying gifts and waiting for the right moment.",
+   "Why wait?",
+   "I don't know. Yesterday I gave my friend a silly keychain.",
+   "Did she like it?",
+   "She loved it. Apparently today was the right moment."
+  ]
+ ],
+ "jinx": [
+  [
+   "Somebody called me fearless after a match.",
+   "Are you?",
+   "Not remotely. I hate letting fear have the last word.",
+   "What scares you?",
+   "Being wrong in front of someone I care about."
+  ],
+  [
+   "I repaired a stranger's torn backpack.",
+   "You carry sewing supplies?",
+   "A needle and black thread. Learned the hard way.",
+   "Did they thank you?",
+   "They looked shocked. Apparently I don't look like a repair person."
+  ],
+  [
+   "I want people to remember more than the loud things I say.",
+   "Like what?",
+   "That I showed up. I listened. I meant it.",
+   "I think they do.",
+   "Maybe. Thanks for not making that a joke."
+  ],
+  [
+   "I found an old sketch I made before coming here.",
+   "What was it?",
+   "A city full of neon signs and impossible rooftops.",
+   "Did you find that place?",
+   "Not exactly. Found some people worth staying for."
+  ]
+ ],
+ "luna": [
+  [
+   "Someone offered to carry everything for me again.",
+   "Was that a problem?",
+   "They meant well, but I hadn't asked.",
+   "Did you tell them?",
+   "Yes. I could handle the little box, but wanted help with the big one."
+  ],
+  [
+   "I finally won a difficult rhythm-game level.",
+   "Did you tell anyone?",
+   "No. Sometimes I like having something that's just mine.",
+   "But you're telling me.",
+   "I know. I think that means something."
+  ],
+  [
+   "When I make a mistake, I apologize before anyone notices.",
+   "Can you stop?",
+   "Today I dropped a sleeve and said 'oops' instead.",
+   "Progress!",
+   "Please don't make a ceremony of it. I might drop another."
+  ],
+  [
+   "I want to try something that scares me a little.",
+   "Like a tournament?",
+   "Maybe. Or ordering food without rehearsing first.",
+   "Want company?",
+   "Yes, but don't order for me. I want to do it."
+  ]
+ ],
+ "rina": [
+  [
+   "Sometimes people recognize my face but not my name.",
+   "Does that upset you?",
+   "Only when they decide who I am before I speak.",
+   "What would you tell them?",
+   "I sing badly while cooking and take card games seriously."
+  ],
+  [
+   "I caught myself practicing a smile in the mirror.",
+   "For a performance?",
+   "No. For meeting someone I wanted to see.",
+   "Did you really need practice?",
+   "No. That's what made me laugh."
+  ],
+  [
+   "A fan asked which card matters most to me.",
+   "The rarest?",
+   "The bent card I traded for as a child.",
+   "Did you explain?",
+   "Yes. We talked about the people who taught us."
+  ],
+  [
+   "I finally have one free evening.",
+   "Any plans?",
+   "I wanted to do absolutely nothing, then felt guilty.",
+   "You don't need an excuse to rest.",
+   "I'm trying to believe that."
+  ]
+ ],
+ "sierra": [
+  [
+   "Someone called my last win effortless.",
+   "Isn't that a compliment?",
+   "Maybe. It ignores years of quiet practice.",
+   "Would you explain?",
+   "Not to them. But I wanted you to know."
+  ],
+  [
+   "I'm learning to turn down jobs that take every weekend.",
+   "Isn't that hard?",
+   "Yes. Everyone calls them opportunities.",
+   "And what do you call them?",
+   "Sometimes a missed birthday or a day I wanted to keep."
+  ],
+  [
+   "A girl told me she started playing after seeing my match.",
+   "How did that feel?",
+   "More important than any photo this year.",
+   "Did you give her advice?",
+   "I asked about her favorite card. She talked for twenty minutes."
+  ],
+  [
+   "I used to photograph every good moment.",
+   "And now?",
+   "Sometimes I leave my camera in my bag.",
+   "Does that feel strange?",
+   "A little. But I remember the laughter better."
+  ]
+ ],
+ "sol": [
+  [
+   "I invited three people to an outing and two said no.",
+   "Were you disappointed?",
+   "For a moment. Then I realized one person still wanted to go.",
+   "Adventure for two, then.",
+   "Exactly. Smaller doesn't mean worse."
+  ],
+  [
+   "Jun says I make everything an event.",
+   "Does he have a point?",
+   "I declared tea an official sunset ceremony.",
+   "Did he join?",
+   "He even stayed until his cup was empty."
+  ],
+  [
+   "Sometimes I talk so much because I don't know if people want me around.",
+   "You could ask.",
+   "I know. But asking is scarier than a bad joke.",
+   "I want you here.",
+   "Oh. That's unfairly effective."
+  ],
+  [
+   "I went on a walk without taking three detours.",
+   "How was it?",
+   "One beautiful cloud and home on time.",
+   "Are you proud?",
+   "Very. Next time I get exactly one detour."
+  ]
+ ],
+ "laca": [
+  [
+   "Remember when every little race became a championship?",
+   "You kept changing the rules.",
+   "Because you kept winning!",
+   "You admit it now?",
+   "Only because I can finally laugh. Rematch someday?"
+  ],
+  [
+   "I thought seeing you again might be awkward.",
+   "Was it?",
+   "For ten seconds. Then you made your old face.",
+   "Which face?",
+   "That one. When you're pretending not to laugh."
+  ],
+  [
+   "People think I'm never afraid of the water.",
+   "And you're not?",
+   "Of course I am. You learn to respect it and trust yourself.",
+   "Does that apply elsewhere?",
+   "Maybe. Especially with people."
+  ],
+  [
+   "I almost told you an embarrassing childhood memory.",
+   "Why didn't you?",
+   "I wasn't sure you remembered it the same way.",
+   "Try me.",
+   "Our blanket fort collapsing and us calling it a secret tunnel."
+  ]
+ ],
+ "barb": [
+  [
+   "Somebody asked if I'd ever dress more conventionally.",
+   "What did you say?",
+   "That I might, if I feel like it.",
+   "Were they offended?",
+   "Maybe. My clothes are conversations I get to start."
+  ],
+  [
+   "I made a jacket that looked great on the mannequin.",
+   "And on you?",
+   "It didn't feel like me.",
+   "Did you alter it?",
+   "Moved a seam and added a tiny detail inside. Now I love it."
+  ],
+  [
+   "Sometimes I sketch an outfit when words fail me.",
+   "Does it help?",
+   "Anger becomes sharp lines; joy becomes movement.",
+   "And today?",
+   "Something soft with a bold surprise. Interpret that as you like."
+  ],
+  [
+   "A friend told me she wished she had my confidence.",
+   "What did you say?",
+   "That I get scared too.",
+   "Did it help?",
+   "She showed me an outfit she was afraid to wear. We went out together."
+  ]
  ]
 };
  function hash(value){let h=2166136261;for(const ch of String(value))h=Math.imul(h^ch.charCodeAt(0),16777619)>>>0;return h;}
