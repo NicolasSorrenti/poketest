@@ -1034,16 +1034,17 @@
  function select(state,npc){
   const rows=topics[npc];if(!rows?.length)return null;
   const day=Number(state?.day)||1,slot=Number(state?.slot)||0;
-  // Seven advances to a different topic every day, cycling all four.
-  const index=(day*7+slot*3+hash(npc))%rows.length;
+  // A small week offset prevents the 1-in-4 classic chat days from
+  // permanently hiding the same topics as this bank grows.
+  const index=(day*7+Math.floor(day/4)+slot*3+hash(npc))%rows.length;
   return rows[index].map((text,i)=>({speaker:i%2?'Protagonist':npc,text}));
  }
  function validate(){
   const issues=[];
   for(const [npc,rows] of Object.entries(topics)){
-   if(rows.length<4)issues.push(npc+': too few scenes');
+   if(rows.length<8)issues.push(npc+': too few scenes');
    if(new Set(rows.map(r=>r[0])).size!==rows.length)issues.push(npc+': duplicate opener');
-   if(rows.some(r=>r.length!==3||r.some(s=>typeof s!=='string'||!s.trim())))issues.push(npc+': malformed dialogue');
+   if(rows.some(r=>![3,5].includes(r.length)||r.some(s=>typeof s!=='string'||!s.trim())))issues.push(npc+': malformed dialogue');
   }
   return issues;
  }
