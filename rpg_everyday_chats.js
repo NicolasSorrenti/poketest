@@ -309,10 +309,10 @@
   ],
   [
    "I went back to thank the person who fixed my bike.",
-   "You didn't have to do that.",
-   "I know. But they noticed the brakes were worn and fixed those too.",
-   "What did they say?",
-   "They looked embarrassed. I recognize that expression."
+   "Did they remember you?",
+   "They did. They'd fixed the brakes too, without charging me.",
+   "That was kind of them.",
+   "They looked embarrassed when I said it. I recognize that expression."
   ]
  ],
  "shiori": [
@@ -2014,7 +2014,7 @@
    "I made a paper star and put it above my desk.",
    "Why a star?",
    "I wanted something small to look at during long afternoons.",
-   "Does looking at the stars make the day nicer?",
+   "So you're making a whole constellation?",
    "I made three more. It's becoming a little sky."
   ],
   [
