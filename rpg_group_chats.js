@@ -2236,9 +2236,10 @@
   // Rare enough not to displace the independent everyday/social routines.
   if((day+slot+hash(npc))%3!==0)return null;
   const g=pool[hash(npc+':'+day+':'+slot)%pool.length];
-  // A three-day stride avoids aliasing with weekly schedules and group gating;
-  // it keeps every variant reachable even with account-exclusive NPCs present.
-  const variant=(Math.floor(day/3)+slot+hash(g.pair.join(':')))%g.scenes.length;
+  // Deliberately decouple authored-scene rotation from the weekly routine
+  // and the occasional group Talk gate. Covers every variant even when a
+  // different account's character roster reshuffles location attendance.
+  const variant=(Math.floor(day/11)+slot*2+hash(g.pair.join(':')))%g.scenes.length;
   return g.scenes[variant].map(([speaker,text])=>({speaker,text}));
  }
  function validate(){
