@@ -27,6 +27,30 @@
    "There's an unclaimed umbrella by the door.",
    "Maybe somebody forgot it.",
    "Or it belongs to the building now. I don't know umbrella law."
+  ],
+  [
+   "You have a button stuck to your sleeve.",
+   "Oh! It belongs to a coat I was repairing.",
+   "Did you finish the coat?",
+   "No, but I made a tiny button collection. Repairs keep becoming crafts.",
+   "I think that's how hobbies begin."
+  ],
+  [
+   "Is that a sketchbook?",
+   "Yes. I draw people I see on the bus, but only their shoes.",
+   "That page has a lot of boots.",
+   "Winter is going to be my masterpiece.",
+   "I'm looking forward to the summer sandals edition."
+  ],
+  [
+   "I tried learning the harmonica.",
+   "How far did you get?",
+   "Three notes. The neighbor's dog can already sing along."
+  ],
+  [
+   "I got invited to a costume party and misunderstood the theme.",
+   "What did you wear?",
+   "Everyone came as movie stars. I came dressed as the night sky."
   ]
  ],
  "reina": [
@@ -49,6 +73,30 @@
    "I cried watching a movie about people fixing an old bicycle.",
    "Was it sad?",
    "It wasn't supposed to be. That's the embarrassing part."
+  ],
+  [
+   "Don't laugh, but I signed up for a pottery class.",
+   "That sounds fun.",
+   "My cup has one handle shaped like an ear. I'm strangely proud of it.",
+   "Does it hold tea?",
+   "Mostly. I'm choosing to focus on the artistic achievement."
+  ],
+  [
+   "I'm hiding from someone in a yellow raincoat.",
+   "Why?",
+   "I told an elderly neighbor I'd help choose curtains. She has brought twelve samples.",
+   "Could be worse.",
+   "She likes all of them. I am completely out of opinions."
+  ],
+  [
+   "There's a song I only listen to when it rains.",
+   "What kind of song?",
+   "Old-fashioned, with a piano. It makes walking home feel like a movie."
+  ],
+  [
+   "I went to the aquarium alone last weekend.",
+   "Which tank was your favorite?",
+   "The jellyfish. Everyone was quiet in there."
   ]
  ],
  "shiori": [
@@ -71,6 +119,30 @@
    "I tried drawing the view from my window.",
    "How did it go?",
    "My trees appear to have elbows. Nature is very forgiving."
+  ],
+  [
+   "There's an old man near my building who feeds a crow every morning.",
+   "Does the crow recognize him?",
+   "I think so. Yesterday it brought him a blue bottle cap.",
+   "Like a thank-you gift?",
+   "Perhaps. I hope the crow has a whole collection."
+  ],
+  [
+   "Have you ever listened to a whole album without doing anything else?",
+   "Not in a while.",
+   "I did last night. I forgot what a luxury that can be.",
+   "Was it a good album?",
+   "I think so. I was smiling when it ended."
+  ],
+  [
+   "I bought a secondhand telescope.",
+   "Have you found any planets?",
+   "Mostly chimneys. I live in a very educational neighborhood."
+  ],
+  [
+   "I tried baking a cake for a friend's birthday.",
+   "How did it go?",
+   "The icing spelled 'Hapy Brithday.' We kept it that way."
   ]
  ],
  "yuna": [
@@ -93,6 +165,30 @@
    "There was a little frog on the sidewalk.",
    "What did you do?",
    "Escorted it to the grass like a very important guest."
+  ],
+  [
+   "Look at this photograph. Tell me what you see.",
+   "A duck in a shopping cart?",
+   "Yes! Everyone else keeps saying it's a loaf of bread.",
+   "Why was it in the cart?",
+   "That is the mystery of the century."
+  ],
+  [
+   "I thought my apartment was haunted.",
+   "What happened?",
+   "A mysterious tapping sound every night.",
+   "Was it a ghost?",
+   "A spoon rolling inside the washing machine. Less exciting, more expensive."
+  ],
+  [
+   "I signed up for a beginner dance class.",
+   "How did it go?",
+   "I learned the ending before the beginning. Nobody was ready for my entrance."
+  ],
+  [
+   "I found a four-leaf clover yesterday.",
+   "Are you saving it?",
+   "I gave it to a kid who looked like she really needed some luck."
   ]
  ],
  "akari": [
@@ -115,6 +211,30 @@
    "A child asked me to name a cloud.",
    "What did you choose?",
    "Barbara. The child insisted it was clearly a Kevin."
+  ],
+  [
+   "This is going to sound strange. I like washing dishes.",
+   "Because it's productive?",
+   "No. Because I can listen to music and think about absolutely nothing.",
+   "That is surprising.",
+   "It's restful. Please don't turn it into a theory."
+  ],
+  [
+   "I bought mystery-flavor candies.",
+   "Did you like them?",
+   "One tasted like lemon. One tasted like the idea of a cupboard.",
+   "You're making that up.",
+   "I would love to be making it up. Try one."
+  ],
+  [
+   "A sparrow built a nest outside my window.",
+   "Do you watch it?",
+   "Every morning. The parents have a very demanding schedule."
+  ],
+  [
+   "I watched a documentary about restoring old violins.",
+   "Do you play?",
+   "Not at all. I just liked hearing them find their voices again."
   ]
  ],
  "camila": [
@@ -137,6 +257,30 @@
    "I bought a chipped cup with a smug goose painted on it.",
    "Does the goose have a name?",
    "Sir Honkington. He looks down on all my other mugs."
+  ],
+  [
+   "I'm on my way to return a borrowed casserole dish.",
+   "Empty?",
+   "Of course not. It's filled with cookies.",
+   "That seems generous.",
+   "The original casserole was terrible. This is my diplomatic apology."
+  ],
+  [
+   "There was a woman playing violin in the courtyard.",
+   "Did you stop to listen?",
+   "Yes. She missed one note and made the funniest face at herself.",
+   "Did anyone else notice?",
+   "Nobody. I felt like I'd been trusted with a secret."
+  ],
+  [
+   "I tried an escape room.",
+   "Did you get out?",
+   "Only because someone accidentally leaned on the right wall."
+  ],
+  [
+   "My grandmother used to make orange peel candy.",
+   "Do you know how?",
+   "I found the recipe and tried it. The whole apartment smelled like childhood."
   ]
  ],
  "marina": [
@@ -159,6 +303,30 @@
    "I found a snow globe with a beach inside.",
    "Snow on palm trees?",
    "Exactly. I bought it because it made no sense."
+  ],
+  [
+   "I have a confession: I don't know how to whistle.",
+   "Not even a little?",
+   "I can make the wind sound, but not a note.",
+   "Want me to teach you?",
+   "Yes, somewhere nobody can hear my first attempt."
+  ],
+  [
+   "My neighbor started learning the trumpet.",
+   "Is he any good?",
+   "He's improved from 'frightened elephant' to 'optimistic elephant.'",
+   "You sound fond of him.",
+   "He practices every day. I admire that."
+  ],
+  [
+   "I found a broken garden gnome by the bins.",
+   "What was wrong with it?",
+   "One ear was missing. I repaired it with modeling clay."
+  ],
+  [
+   "I spent an afternoon remembering a childhood lullaby.",
+   "Did you remember it?",
+   "Only the last line. My mother sang the rest when I called."
   ]
  ],
  "kaede": [
@@ -181,6 +349,30 @@
    "A cat fell asleep on my jacket at the park.",
    "So you waited?",
    "An hour. Then another cat arrived and I surrendered the jacket."
+  ],
+  [
+   "I went to a miniature railway museum.",
+   "That sounds unexpectedly wholesome.",
+   "The tiny stations had tiny benches. I couldn't leave.",
+   "Did you buy a souvenir?",
+   "A tiny bench. Obviously."
+  ],
+  [
+   "Have you ever ruined a surprise party by arriving early?",
+   "You did that?",
+   "I came to decorate. The guest of honor was already there.",
+   "What happened?",
+   "We pretended it was an elaborate ordinary Tuesday."
+  ],
+  [
+   "The woman downstairs keeps giving me homemade jam.",
+   "Do you know her?",
+   "Barely. I leave her empty jars and drawings in return."
+  ],
+  [
+   "I found an old photo of myself with a terrible haircut.",
+   "Was it that bad?",
+   "A triangle. My head was a triangle."
   ]
  ],
  "elio": [
@@ -423,6 +615,30 @@
    "I found an old postcard with no address on it.",
    "What did it say?",
    "Just 'Wish you were here.' I hope somebody eventually was."
+  ],
+  [
+   "I volunteered to judge a neighborhood pie contest.",
+   "Why did they ask you?",
+   "Apparently I look like someone who knows when a crust is done.",
+   "Do you?",
+   "Not remotely. I ate four slices and declared a tie."
+  ],
+  [
+   "I got lost in a botanical garden.",
+   "Isn't there a map?",
+   "There was. I was looking at flowers and forgot to read it.",
+   "Did you mind?",
+   "Not even slightly. I found the rose garden by accident."
+  ],
+  [
+   "A friend left a rubber duck on my desk.",
+   "Did you keep it?",
+   "It has a tiny detective hat. Of course I kept it."
+  ],
+  [
+   "My mother sent me a recipe with no measurements.",
+   "Did you make it?",
+   "I tried. She said I'd know when it was enough. I didn't."
   ]
  ],
  "teo": [
@@ -445,6 +661,30 @@
    "I tried drawing my own portrait.",
    "Was it recognizable?",
    "People guessed three different cousins. I don't have cousins."
+  ],
+  [
+   "My neighbor thinks I have a pet parrot.",
+   "Do you?",
+   "No. I practice funny voices while cooking.",
+   "What does your neighbor think it says?",
+   "Mostly 'where is the salt?' I should explain someday."
+  ],
+  [
+   "I went to an amateur poetry night.",
+   "Did you read something?",
+   "A poem about the loneliness of the last slice of pizza.",
+   "How was it received?",
+   "Someone cried laughing. I'm counting that as success."
+  ],
+  [
+   "I've started taking photos of funny-shaped clouds.",
+   "Any favorites?",
+   "One looked exactly like a giant shoe. Very fashionable."
+  ],
+  [
+   "I helped my uncle move a sofa.",
+   "Did it fit through the door?",
+   "After carrying it up four flights, we learned it didn't."
   ]
  ],
  "iris": [
@@ -467,6 +707,30 @@
    "There's a small dog who waits at the same corner every day.",
    "Do you know its name?",
    "Not yet. I call it Captain. It looks like it has a schedule."
+  ],
+  [
+   "I promised to water a friend's flowers.",
+   "How many?",
+   "She said 'a few.' There are thirty-seven.",
+   "Will you manage?",
+   "They have names now. I can't let them down."
+  ],
+  [
+   "I tried keeping a diary for a month.",
+   "Did you stick with it?",
+   "Mostly. Several entries say 'ate noodles, felt peaceful.'",
+   "Seems like a good month.",
+   "It was. That's what surprised me."
+  ],
+  [
+   "A stranger gave me a paper crane at the bus stop.",
+   "Why?",
+   "The bus was late, so she taught everyone in the queue to fold one."
+  ],
+  [
+   "I found a photo booth that still prints old-fashioned strips.",
+   "Did you use it?",
+   "Yes. Every photo shows me laughing at the previous one."
   ]
  ],
  "barb": [
