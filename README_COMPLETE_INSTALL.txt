@@ -1,0 +1,1 @@
+Extract at the root of poketest. Runtime files are under rpg-assets/. Source/reference artwork is under laca-source-art/. The event manifest is in characters/laca/art_manifest.json in the repository. Some art needs visual review, and optional scenes require registration. No source code modifications are included.
