@@ -42,9 +42,9 @@ test('event attendance is an exception to normal crowd limits and does not move 
 });
 test('balanced schedules are deterministic, respect arrivals, and retain public visits',()=>{
  for(const id of Object.keys(S.start)){
-  assert.equal(S.locationFor(id,Math.max(1,S.start[id]-1),0),S.start[id]===1?S.locationFor(id,1,0):null);
   const first=S.start[id];
+  if(first>1)assert.equal(S.locationFor(id,first-1,0),null);
   assert.deepEqual(S.itinerary(id,first),S.itinerary(id,first));
-  assert.ok(S.nextVisit(id,Math.min(89,first),0)||first===90,id+' has no future visit');
+  assert.ok(S.nextVisit(id,first,0)||first===90,id+' has no future visit');
  }
 });
