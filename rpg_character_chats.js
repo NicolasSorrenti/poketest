@@ -671,7 +671,9 @@
  function select(state,npc){
   const rows=scenes[npc];if(!rows?.length)return null;
   const day=Number(state?.day)||1,slot=Number(state?.slot)||0;
-  const i=(day+Math.floor(day/4)+slot*5+hash(npc))%rows.length;
+  // The /5 offset is intentionally independent of both the 1-in-4
+  // everyday gate and the /4 character-chat gate: all four scenes surface.
+  const i=(day+Math.floor(day/5)+slot*5+hash(npc))%rows.length;
   return rows[i].map((text,i)=>({speaker:i%2?'Protagonist':npc,text}));
  }
  function shouldUse(state,npc){
