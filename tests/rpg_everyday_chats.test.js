@@ -7,17 +7,17 @@ const VOICED=require('../rpg_character_chats');
 const roster=['hana','reina','shiori','yuna','akari','camila','marina','kaede',
  'jun','teo','iris','elio','alma','nereo','elena','jinx','luna','rina','sierra','sol','laca','barb'];
 const actor={intro:'Nice to meet you.',repeat:'Hello again.',talk:['A card topic.','A tournament topic.']};
-test('every known character has sixteen independent, well-formed everyday conversations',()=>{
+test('every known character has nineteen independent, well-formed everyday conversations',()=>{
  assert.deepEqual(Object.keys(chats.topics).sort(),[...roster].sort());
  assert.deepEqual(chats.validate(),[]);
  for(const id of roster){
-  assert.equal(chats.topics[id].length,16,id);
+  assert.equal(chats.topics[id].length,19,id);
   const openings=chats.topics[id].map(lines=>lines[0]);
-  assert.equal(new Set(openings).size,16,id+' repeats itself');
+  assert.equal(new Set(openings).size,19,id+' repeats itself');
   assert.ok(chats.topics[id].every(lines=>[3,5].includes(lines.length)));
  }
 });
-test('dialogue remains stable on reload and cycles through all 16 casual topics',()=>{
+test('dialogue remains stable on reload and cycles through all 19 casual topics',()=>{
  for(const id of roster){
   const seen=new Set(),spoken=new Set(),s={day:1,slot:1,relationships:{},talked:{}};
   const before=JSON.stringify(s);
@@ -37,8 +37,8 @@ test('dialogue remains stable on reload and cycles through all 16 casual topics'
     spoken.add(lines[0].text);
    }
   }
-  assert.equal(seen.size,16,id+' does not rotate through every topic');
-  assert.equal(spoken.size,16,id+' normal Talk never displays some topics');
+  assert.equal(seen.size,19,id+' does not rotate through every topic');
+  assert.equal(spoken.size,19,id+' normal Talk never displays some topics');
   assert.equal(JSON.stringify(s),before,id+' casual chat changed save state');
  }
 });
