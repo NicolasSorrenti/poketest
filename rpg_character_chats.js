@@ -29,11 +29,11 @@
    "A little. I still remember every one of their names."
   ],
   [
-   "I want to run a tournament for people who've never won.",
-   "What would you call it?",
-   "Anything other than 'the losers' cup.'",
-   "First Steps?",
-   "That's perfect. Now I want you on the poster committee."
+   "Someone pitched a tournament for players who've never won one.",
+   "Are you considering it?",
+   "Yes, but I don't want anybody to feel like they're being put in a special beginners' corner.",
+   "What if they got to choose the name?",
+   "That's better. If Yuna suggests 'Epic Loser Cup,' you're helping me veto it."
   ]
  ],
  "reina": [
@@ -60,10 +60,10 @@
   ],
   [
    "Someone told me to smile more after a match.",
+   "Really? While you were packing your cards?",
+   "Yes. As if I was supposed to entertain him too.",
    "What did you say?",
-   "That I was smiling internally at my last play.",
-   "Did they believe you?",
-   "Doesn't matter. I didn't owe them a performance."
+   "Nothing. I gave him my best tournament stare. Very effective."
   ]
  ],
  "shiori": [
@@ -89,11 +89,11 @@
    "I'd ask what changed their minds. That's the interesting part."
   ],
   [
-   "I nearly skipped an evening event to finish a book.",
-   "What made you go?",
-   "I promised someone I'd be there.",
-   "Worth it?",
-   "Yes. The book waited. The conversation wouldn't have."
+   "I almost missed the evening event because of a book.",
+   "Must have been a good chapter.",
+   "An excellent one. I had to stop just before the reveal.",
+   "Was it worth putting down?",
+   "Someone saved me a seat. We ended up talking the whole evening. Yes, I think it was."
   ]
  ],
  "yuna": [
@@ -105,11 +105,11 @@
    "It wins sometimes, which is making the problem much worse."
   ],
   [
-   "I joke first so nobody gets the chance to laugh at me.",
-   "I suspected that.",
-   "Oh. Was I that obvious?",
-   "Not always.",
-   "Good. Sometimes I'm just genuinely hilarious."
+   "Can I tell you something deeply unfair?",
+   "Go ahead.",
+   "When I make a stupid joke on purpose, everybody laughs. When I trip by accident, everybody also laughs.",
+   "That's not exactly unfair.",
+   "You're supposed to be on my side! Fine. It was a spectacular fall."
   ],
   [
    "Reina challenged me to play without dramatic commentary.",
@@ -128,11 +128,11 @@
  ],
  "akari": [
   [
-   "I reviewed our first match in my notes.",
-   "Any interesting numbers?",
-   "Several. Then I found a page that just says 'that was fun.'",
-   "Is that yours?",
-   "Apparently. It may be the most useful note I made."
+   "I found a strange note in my old match records.",
+   "Strange for you?",
+   "An entire page of calculations, followed by three words: 'That was fun.'",
+   "Did you write that?",
+   "I must have. I think I'd forgotten to record the most important part."
   ],
   [
    "I predicted three outcomes and a fourth occurred.",
@@ -158,11 +158,11 @@
  ],
  "camila": [
   [
-   "Someone offered me a valuable card for almost nothing.",
-   "Did you accept?",
-   "I explained the price and let them decide again.",
-   "That wasn't profitable.",
-   "They came back to me afterward. Trust is a long game."
+   "A kid offered me a card worth far more than the price he named.",
+   "Did you tell him?",
+   "I did. He thought I was trying to talk him out of selling it.",
+   "And was he?",
+   "No. He wanted it for his brother. So we looked for a cheaper copy together."
   ],
   [
    "People think I never give anything away.",
@@ -188,11 +188,11 @@
  ],
  "marina": [
   [
-   "People assume every free hour I have belongs to the river.",
-   "Doesn't it?",
-   "Some days I want a loud café with no view of the water.",
-   "That surprises me.",
-   "Good. I'm a person, not a postcard."
+   "Do you know anywhere with loud music and absolutely no view of the river?",
+   "You? Trying to avoid the water?",
+   "Just for one afternoon. I've been watching the tide since sunrise.",
+   "There's a café near the arcade.",
+   "Perfect. If anyone asks me about the weather, I'm pretending not to hear."
   ],
   [
    "I stayed with a beginner until they signed up for a tournament.",
@@ -218,11 +218,11 @@
  ],
  "kaede": [
   [
-   "People keep asking why I arrived so late in the season.",
-   "What do you say?",
-   "That I took a wrong turn and found interesting people.",
-   "Is that true?",
-   "More true than any dramatic explanation."
+   "Three people have asked why I came to town.",
+   "Have you told them?",
+   "I said I got on a train. Apparently that wasn't enough of a backstory.",
+   "Was there more to it?",
+   "Sure. I was hungry when I got off, so I found a noodle shop. Want the sequel?"
   ],
   [
    "I hate being called mysterious.",
@@ -255,11 +255,11 @@
    "For five minutes. Then they came back anyway."
   ],
   [
-   "A teen corrected a mistake I made while judging.",
-   "How did you react?",
-   "I corrected the call and thanked her.",
-   "She must have been nervous.",
-   "She might be an excellent judge someday. We need people like that."
+   "A young player caught a ruling I'd gotten wrong at a local event.",
+   "That sounds awkward.",
+   "It was, for about five seconds. Then I corrected it.",
+   "Did you thank her?",
+   "Of course. I hope she considers judging someday. We could use another pair of sharp eyes."
   ],
   [
    "Sometimes I wonder whether anyone talks to me without a rules question.",
@@ -285,11 +285,11 @@
    "A cleaner applauded with her mop. My finest review."
   ],
   [
-   "The best part of yesterday's final wasn't on camera.",
-   "What happened?",
-   "A player helped their opponent pick up a spilled deck.",
-   "Did you mention it?",
-   "Of course. That was the real highlight."
+   "I remember a final where the best moment happened after the match.",
+   "A huge upset?",
+   "No. Someone dropped their deck, and their opponent crouched down to help pick it up.",
+   "Did you mention it on air?",
+   "Of course. It was the only replay worth giving a second look."
   ],
   [
    "I worry that people remember my voice, not what I say.",
@@ -329,11 +329,11 @@
    "It was a good reminder the world doesn't rest on my shoulders."
   ],
   [
-   "Someone thanked me for an event I didn't run alone.",
+   "A visitor thanked me for an event that took twelve people to set up.",
    "Did you tell them?",
-   "I named everyone who carried a chair or made a sign.",
-   "Why?",
-   "Because people deserve to hear their names."
+   "I started listing everyone's names. They looked a little surprised.",
+   "Maybe they just meant it was nice.",
+   "I know. Next time I'll just say thanks, then make sure the team hears it too."
   ]
  ],
  "elio": [
@@ -359,11 +359,11 @@
    "A little. Then they beat me. Maybe I taught too well."
   ],
   [
-   "I changed the name on my old deck box.",
-   "Was that hard?",
-   "It had my cousin's name on it for years.",
-   "How does the new name feel?",
-   "Like something I've finally earned."
+   "I took my cousin's name off my deck box today.",
+   "Why was it there?",
+   "It used to be hers. She gave it to me when I was learning.",
+   "Does it feel different now?",
+   "A little. I called her to tell her. She said I should have done it ages ago."
   ]
  ],
  "alma": [
@@ -382,11 +382,11 @@
    "Even then. Hospitality doesn't have a minimum purchase."
   ],
   [
-   "Some days I feel like the town's listener, not a café owner.",
-   "That sounds tiring.",
-   "It can be. But today someone asked about my day first.",
-   "And?",
-   "It became a very good day."
+   "Do you have time for a cup of tea?",
+   "You're asking me that in my own café?",
+   "Yes, but I mean sitting down. Not making it for somebody.",
+   "That does sound nice.",
+   "Good. You pour yours, I'll pour mine. My feet are declaring a strike."
   ],
   [
    "Everyone loves the crooked table by the window.",
@@ -412,11 +412,11 @@
    "Don't spread rumors. They know where I keep biscuits."
   ],
   [
-   "Someone asked why I keep repairing that old railing.",
-   "Why not replace it?",
-   "It's sturdy, familiar, and marked by every flood.",
-   "Sentimental?",
-   "I said sturdy. Don't make this sentimental."
+   "The council wants to replace the old railing at the dock.",
+   "Isn't it falling apart?",
+   "Not yet. It needs two bolts and somebody with patience.",
+   "So why keep it?",
+   "That rail has survived more storms than I have. Give it one more season."
   ],
   [
    "A kid watched me fix a ferry sign yesterday.",
@@ -442,11 +442,11 @@
    "No. Someone once showed me that kindness. I remember it."
   ],
   [
-   "I once thought a perfect plan meant no surprises.",
-   "What changed?",
-   "Some of my favorite memories weren't planned.",
-   "Any examples?",
-   "A rainy walk. A missed train. This conversation."
+   "My train was delayed yesterday. I had an entire evening planned.",
+   "That sounds frustrating.",
+   "At first. Then I found a quiet bookshop by the station.",
+   "Did you make it home late?",
+   "Very. And I'm not going to pretend I disliked the detour."
   ],
   [
    "I keep buying gifts and waiting for the right moment.",
@@ -472,11 +472,11 @@
    "They looked shocked. Apparently I don't look like a repair person."
   ],
   [
-   "I want people to remember more than the loud things I say.",
-   "Like what?",
-   "That I showed up. I listened. I meant it.",
-   "I think they do.",
-   "Maybe. Thanks for not making that a joke."
+   "A kid thanked me today for staying after their first match.",
+   "That seems nice.",
+   "Yeah. I thought they'd remember the joke I made about their deck.",
+   "What did they remember?",
+   "That I sat down and played another game. Kinda made my day."
   ],
   [
    "I found an old sketch I made before coming here.",
@@ -495,11 +495,11 @@
    "Yes. I could handle the little box, but wanted help with the big one."
   ],
   [
-   "I finally won a difficult rhythm-game level.",
-   "Did you tell anyone?",
-   "No. Sometimes I like having something that's just mine.",
-   "But you're telling me.",
-   "I know. I think that means something."
+   "I finally cleared the rhythm-game song that kept beating me.",
+   "That's great. Did you tell anyone?",
+   "Not yet. I wanted to enjoy it on my own first.",
+   "So why tell me now?",
+   "I don't know. You asked how my day was going, and that was the best part."
   ],
   [
    "When I make a mistake, I apologize before anyone notices.",
@@ -525,11 +525,11 @@
    "I sing badly while cooking and take card games seriously."
   ],
   [
-   "I caught myself practicing a smile in the mirror.",
-   "For a performance?",
-   "No. For meeting someone I wanted to see.",
-   "Did you really need practice?",
-   "No. That's what made me laugh."
+   "I caught myself practicing a smile in the mirror again.",
+   "For the stage?",
+   "No, for a coffee with somebody I hadn't seen in ages.",
+   "Did you end up doing the rehearsed smile?",
+   "No! I knocked over the sugar and laughed instead. Much easier."
   ],
   [
    "A fan asked which card matters most to me.",
@@ -548,11 +548,11 @@
  ],
  "sierra": [
   [
-   "Someone called my last win effortless.",
-   "Isn't that a compliment?",
-   "Maybe. It ignores years of quiet practice.",
-   "Would you explain?",
-   "Not to them. But I wanted you to know."
+   "Someone told me my last match looked easy.",
+   "Was that good to hear?",
+   "Sort of. I spent the week before it getting the opening wrong.",
+   "You could tell them.",
+   "I think I just needed to tell somebody. Thanks for listening."
   ],
   [
    "I'm learning to turn down jobs that take every weekend.",
@@ -592,11 +592,11 @@
    "He even stayed until his cup was empty."
   ],
   [
-   "Sometimes I talk so much because I don't know if people want me around.",
-   "You could ask.",
-   "I know. But asking is scarier than a bad joke.",
-   "I want you here.",
-   "Oh. That's unfairly effective."
+   "I planned three activities for today. Again.",
+   "Do you need to do all three?",
+   "Probably not. I just hate the awkward moment when the conversation runs out.",
+   "Maybe it wouldn't be awkward.",
+   "You're suggesting we just sit and talk? Bold. I might actually try that."
   ],
   [
    "I went on a walk without taking three detours.",
@@ -615,11 +615,11 @@
    "Only because I can finally laugh. Rematch someday?"
   ],
   [
-   "I thought seeing you again might be awkward.",
-   "Was it?",
-   "For ten seconds. Then you made your old face.",
-   "Which face?",
-   "That one. When you're pretending not to laugh."
+   "I had a whole speech ready for when you came back.",
+   "Seriously?",
+   "Yeah. Very casual, very cool, definitely no awkward pauses.",
+   "What happened to it?",
+   "You walked in and I forgot half the words. Then we started arguing like old times."
   ],
   [
    "People think I'm never afraid of the water.",
@@ -652,11 +652,11 @@
    "Moved a seam and added a tiny detail inside. Now I love it."
   ],
   [
-   "Sometimes I sketch an outfit when words fail me.",
-   "Does it help?",
-   "Anger becomes sharp lines; joy becomes movement.",
-   "And today?",
-   "Something soft with a bold surprise. Interpret that as you like."
+   "I've been drawing the same jacket all afternoon.",
+   "What's wrong with it?",
+   "Nothing. I just can't decide whether it should be fierce or cozy.",
+   "Why not both?",
+   "That's the problem. You make it sound easy, and now I want to try it."
   ],
   [
    "A friend told me she wished she had my confidence.",
