@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#101725">
+<title>Card Library · Neo Harbor</title>
+<link rel="stylesheet" href="/rpg_card_library.css?v=1">
+</head>
+<body>
+<header class="library-header">
+ <div class="header-inner">
+  <a class="back-link" id="libraryBack" href="/rpg.html">← Back to Neo Harbor</a>
+  <div class="identity"><span class="star">✦</span><div><small>NEO HARBOR · COLLECTOR'S ARCHIVE</small><h1>CARD LIBRARY</h1></div></div>
+  <a class="studio-link" href="/rpg_deck_studio.html">▣ Deck Studio</a>
+ </div>
+</header>
+<main>
+ <section class="intro">
+  <span class="eyebrow">FIND YOUR NEXT CARD</span>
+  <h2>Find the card. Find the pack.</h2>
+  <p>Search every printing from Base Set through Neo Destiny. See which expansion boosters and themed packs can contain it, whether those packs are available in your current campaign, and how many copies you already own.</p>
+  <p class="disclaimer">Pack listings show possible drops, not guaranteed pulls. Themed booster pools expand when new sets unlock. Reprints are listed separately because their artwork, rarity and pack sources can differ.</p>
+ </section>
+ <section class="tools" aria-label="Filter the card library">
+  <label class="search-field">Search card name or ID<input id="librarySearch" type="search" placeholder="e.g. Charizard, Dark Muk, base1-4" autocomplete="off" autofocus></label>
+  <label>Expansion<select id="librarySet"><option value="">All expansions</option></select></label>
+  <label>Pack source<select id="libraryPack"><option value="">Any booster</option></select></label>
+  <label>Rarity<select id="libraryRarity"><option value="">All rarities</option><option value="holo">Holo Rare</option><option value="rare">Rare</option><option value="secret">Secret / Shining</option><option value="uncommon">Uncommon</option><option value="common">Common</option><option value="energy">Basic Energy</option></select></label>
+  <label>Collection<select id="libraryOwned"><option value="">All cards</option><option value="missing">Missing</option><option value="owned">Owned</option></select></label>
+  <label>Availability<select id="libraryAvailable"><option value="">Available and future</option><option value="now">In available packs</option><option value="later">Future packs only</option></select></label>
+ </section>
+ <div class="results-header"><p id="libraryCount" role="status" aria-live="polite">Loading cards…</p><span id="libraryProgress"></span></div>
+ <div id="libraryError" class="error" hidden role="alert"></div>
+ <div id="libraryResults" class="card-grid" aria-label="Card printings and booster sources"></div>
+ <button id="libraryMore" type="button" hidden>Show more cards ↓</button>
+</main>
+<script src="/rpg_collection.js"></script>
+<script src="/rpg_pack_index.js"></script>
+<script src="/rpg_card_library.js" defer></script>
+</body>
+</html>

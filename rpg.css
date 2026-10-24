@@ -440,3 +440,6 @@
   .utilitybar #rpgMoreMenu .rpg-more-content{max-height:calc(100dvh - 155px);overflow-y:auto;overscroll-behavior:contain}
   #rpgDiscreetToggle{min-width:112px}
 }
+
+/* RPG pack encyclopedia access inside the shop. */
+.booster-library-link{display:inline-flex;align-items:center;max-width:100%;padding:11px 13px;margin:2px 0 13px;border-radius:8px;background:#453050;border:1px solid #d29dbc;color:#ffe0ef;font-size:13px;font-weight:800;text-decoration:none;line-height:1.35}.booster-library-link:hover,.booster-library-link:focus-visible{background:#653d62;outline-offset:3px}
