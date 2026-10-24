@@ -225,11 +225,11 @@
    "Sure. I was hungry when I got off, so I found a noodle shop. Want the sequel?"
   ],
   [
-   "I hate being called mysterious.",
-   "Really?",
-   "Sometimes I'm late because I stopped for noodles.",
-   "And today?",
-   "Exactly. Mystery solved."
+   "I don't like it when people call me mysterious.",
+   "Why not?",
+   "They think I'm keeping some enormous secret.",
+   "Aren't you?",
+   "Today? No. I lost my bus ticket and walked here. That's the whole mystery."
   ],
   [
    "I've gotten used to stopping by the arcade.",
@@ -629,11 +629,11 @@
    "Sometimes. That's why I check everything before anyone goes in."
   ],
   [
-   "I almost told you an embarrassing childhood memory.",
-   "Why didn't you?",
-   "I wasn't sure you remembered it the same way.",
-   "Try me.",
-   "Our blanket fort collapsing and us calling it a secret tunnel."
+   "Remember the time we tried to sell lemonade outside the school?",
+   "We didn't sell much.",
+   "We drank half of it ourselves, then argued over who owed the money.",
+   "Did we ever make a profit?",
+   "Not a cent. But I still think our sign was excellent."
   ]
  ],
  "barb": [
