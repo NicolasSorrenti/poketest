@@ -405,7 +405,7 @@ function selectPerson(id,{skipInvitation=false}={}){
   sayConversation(prompt.lines,prompt.choices,null,invite);
  }else{
   const context=first?null:REACT.reaction(state,id,c,cast,COMMUNITY,CONSEQ);
-  sayConversation(context?.lines||VN.dialogue(state,id,c,RPGD,{first}),fresh?VN.choices(state,id):[],context?.id||null);
+  sayConversation(context?.lines||VN.dialogue(state,id,c,RPGD,{first,present:currentPeople()}),fresh?VN.choices(state,id):[],context?.id||null);
  }
  tutorialEvent('conversation');showCGMoment(memories[0]);
 }
@@ -805,7 +805,7 @@ function act(action){
   if(beginSliceOfLife('talk',id))return;
   persist();
   const context=REACT.reaction(state,id,c,cast,COMMUNITY,CONSEQ);
-  return sayConversation(context?.lines||VN.dialogue(state,id,c,RPGD),[],context?.id||null);
+  return sayConversation(context?.lines||VN.dialogue(state,id,c,RPGD,{present:currentPeople()}),[],context?.id||null);
  }
  if(type==='flirt'){
   state.talked['flirt:'+key]=true;

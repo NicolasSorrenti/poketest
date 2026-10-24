@@ -65,3 +65,21 @@ test('unknown characters cannot accidentally receive another character’s dialo
  assert.deepEqual(Dialogue.greetingLines('unknown','Hello'),[{speaker:'unknown',text:'Hello'}]);
  assert.deepEqual(Dialogue.flirtLines('unknown','No thanks'),[{speaker:'unknown',text:'No thanks'}]);
 });
+
+test('Laca and Barb receive contextual authored conversations, not the generic Talk filler',()=>{
+ const chars={laca:require('../characters/laca/character.json').dialogue,
+  barb:require('../characters/barb/character.json').dialogue};
+ for(const [id,character] of Object.entries(chars)){
+  const greeting=Dialogue.greetingLines(id,character.intro);
+  assert.deepEqual(greeting.map(x=>x.speaker),[id,'Protagonist',id],id);
+  assert.ok(!greeting.some(x=>/hoping to meet people around town/.test(x.text)),id);
+  assert.equal(Dialogue.flirtLines(id,character.flirt).length,4,id);
+  for(const [index,opening] of character.talk.entries()){
+   const lines=Dialogue.talkLines(id,index,opening);
+   assert.deepEqual(lines.map(x=>x.speaker),[id,'Protagonist',id,'Protagonist',id],id+':'+index);
+   assert.equal(lines[0].text,opening,id+':'+index);
+   assert.ok(lines.every(x=>x.text.trim()));
+   assert.ok(!lines.some(x=>/And how are things going otherwise\?/.test(x.text)));
+  }
+ }
+});

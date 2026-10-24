@@ -9,6 +9,131 @@
  // Each daily topic starts with the NPC's existing line. These four lines
  // turn that line into a conversation rather than a one-line stat interaction.
  const talk={
+  // Personal character packs receive the same real conversations as the base cast.
+  laca:[
+ [
+  "You never told me what the last step was.",
+  "Because you never showed up for rehearsal. We made it up on the spot.",
+  "So that's why it ended with us falling over?",
+  "Exactly. Beautiful choreography. No notes."
+ ],
+ [
+  "I remember that look. You're about to say something.",
+  "I'm about to ask if you're still this easy to tease.",
+  "Only when you want something from me?",
+  "Nah. It's free for you. Old-friend privilege."
+ ],
+ [
+  "Sand in sleeves sounds miserable.",
+  "It gets into everything. Even the bag I keep away from the pool.",
+  "Want help sorting them?",
+  "Only if you promise not to ask why one of them has a tiny shell inside."
+ ],
+ [
+  "I know. You get quiet when someone's in trouble.",
+  "Yeah. Jokes can wait; keeping people safe can't.",
+  "Does the change surprise the kids?",
+  "Sometimes. Then they see I'm serious and listen. That's what matters."
+ ],
+ [
+  "That is not how I remember my first deck.",
+  "You literally kept a card because the picture was cute.",
+  "You were the one who taught me to play it.",
+  "True. And you still owe me for the terrible advice I gave."
+ ],
+ [
+  "That must have felt good.",
+  "It did. She was scared to let go of the edge.",
+  "What finally helped?",
+  "I showed her she could stand up whenever she wanted. She worked out the rest herself."
+ ],
+ [
+  "I thought we settled that debt when we were twelve.",
+  "You thought wrong. I have a very sophisticated accounting system.",
+  "Does it include interest?",
+  "Only ice cream. Two scoops per year, I think."
+ ],
+ [
+  "I'd have guessed you enjoy organizing things.",
+  "Only if the things are people at a swimming lesson.",
+  "So not a two-hour planning meeting?",
+  "Please. Put me back in the pool before I start counting ceiling tiles."
+ ],
+ [
+  "If I'm being ridiculous, you'll hear it.",
+  "Good. Because I need someone who won't just agree with me.",
+  "Even when we're arguing?",
+  "Especially then. We can be mad and still split fries afterward."
+ ],
+ [
+  "Are those the sunglasses you nearly lost in the water?",
+  "Different pair. These ones are even less practical.",
+  "How are you planning to keep them?",
+  "By not wearing them at work. Look, I can learn."
+ ],
+ [
+  "You're making me guess on purpose.",
+  "Obviously. It's a longstanding tradition.",
+  "Does the tradition come with clues?",
+  "Maybe. Start by asking me to get a snack after my shift."
+ ],
+ [
+  "I wasn't trying to cheat with that trade.",
+  "You said my rare looked lonely in its binder.",
+  "That almost worked.",
+  "It would've worked if you hadn't offered me the same common twice."
+ ]
+],
+  barb:[
+ [
+  "What makes a deck box feel like yours?",
+  "A little detail that says somebody made a choice, not just followed a pattern.",
+  "So the corners matter as much as the colors?",
+  "Sometimes more. Bad corners ruin a beautiful box."
+ ],
+ [
+  "So the hearts are a warning label?",
+  "Not deliberately. But I do enjoy watching people underestimate the deck.",
+  "Do you design for a particular strategy?",
+  "For the person carrying it. The nasty surprises are their department."
+ ],
+ [
+  "Copying the list doesn't teach you why it works.",
+  "Exactly. I want people to know what they'd change when things go wrong.",
+  "Do you change other people's designs, too?",
+  "Only when they ask. And I try not to move the parts they love."
+ ],
+ [
+  "Did it look like it had a story?",
+  "The seller said it belonged to someone who traveled a lot.",
+  "And that's why you kept it?",
+  "Partly. The clasp was broken. I wanted to make it wearable again."
+ ],
+ [
+  "How did the glitter ban happen?",
+  "One little jar tipped over during a workshop.",
+  "How much glitter are we talking about?",
+  "Enough that Hana found some under the counter three weeks later."
+ ],
+ [
+  "You always put the cap back on after losing?",
+  "Yes. My personal way of saying 'fine, I need five minutes.'",
+  "Does it help?",
+  "A little. It's better than saying something I'll regret."
+ ],
+ [
+  "What if they love it but don't use it?",
+  "That's possible. I know not everything needs to be practical.",
+  "But you'd still ask?",
+  "Gently. Sometimes I just want to know what happened to something I made."
+ ],
+ [
+  "Have the glasses actually saved a misread?",
+  "More than once. Tiny rule text and bad lighting are a terrible combination.",
+  "Are you showing off?",
+  "Only a little. I did read the rulebook before the glasses arrived."
+ ]
+],
   // Character-pack conversations: each follow-up responds to that character's
   // actual topic instead of falling back to a generic question and random next line.
   jinx:[
@@ -476,6 +601,8 @@
   if(!Object.prototype.hasOwnProperty.call(talk,id))talk[id]=beats;
  }
  const flirt={
+  laca:["Is the ice-cream debt still payable in actual dates?","I'd like to spend time with you even if I don't owe you anything.","Che. That's a better answer than I expected."],
+  barb:["What if I said I came to see you, not the new designs?","Would you believe me if I meant it?","Maybe. Sit down and let me see how long you can keep that up."],
   hana:["I was hoping I'd run into you today.","Should I give you a warning next time?","No. Just give me a moment to stop blushing."],
   reina:["You know, you look good when you're determined.","Only when you keep listening.","Then you'd better give me something worth listening to."],
   shiori:["I was hoping you'd save a quiet moment for me.","Then I'll be direct again: I like being here with you.","...You may stay as long as you like."],
@@ -551,6 +678,8 @@
  Object.assign(flirt,extraFlirt);
  // Introduction and repeat greetings also let the protagonist answer naturally.
  const greetings={
+  laca:["You really remember that old rematch?","Of course. I've only been keeping the rematch score for years."],
+  barb:["Nice to meet you. I made that deck box myself.","You did? Okay, we're definitely talking about how you finished those corners."],
   "hana": [
     "You always make the shop feel welcoming.",
     "I try. It's easier when familiar faces actually stop to talk."
