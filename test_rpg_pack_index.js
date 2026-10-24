@@ -22,3 +22,17 @@ const item=early.record({id:'base1-4',name:'Charizard'});
 assert.equal(item.owned,1);
 assert.equal(item.rarity,'holo');
 console.log('RPG pack index: card printing, rarity, real unlocks, shared energy and future pack sources OK');
+
+
+// Cached lookup must agree with the live booster eligibility rules on representative printings.
+for(const day of [1,40,90]){
+ const state={...day1,day};
+ const lookup=Index.create(Core,state);
+ for(const cardId of ['base1-4','base1-46','base1-96','base1-98','base2-1','base3-46','base5-1','gym2-127','neo1-50','neo2-75','neo3-65','neo4-106']){
+  for(const theme of Core.THEMED_PACKS){
+   const actual=lookup.sourcesFor(cardId).some(p=>p.id==='theme:'+theme.id&&p.available);
+   assert.equal(actual,Core.themeContains(state,theme.id,cardId),day+' '+theme.id+' '+cardId+' eligibility mismatch');
+  }
+ }
+}
+console.log('Cached themed booster sources match gameplay eligibility.');

@@ -13,12 +13,26 @@
   const offers=core.shopPacks(progress);
   const themes=core.themedPacks(progress);
   const offerBySet=new Map(offers.map(offer=>[offer.set,offer]));
-  const themeById=new Map(themes.map(theme=>[theme.id,theme]));
-  const energyIds=new Set([...core.ENERGY].filter(id=>id!=='base1-96'));
-  const descriptors=[
-   ...core.SHOP_OFFERS.map(offer=>({id:'set:'+offer.set,name:core.SETS[offer.set].name+' Booster',kind:'set',set:offer.set})),
-   ...core.THEMED_PACKS.map(theme=>({id:'theme:'+theme.id,name:theme.name,kind:'theme',theme:theme.id}))
-  ];
+  const futureThemes=core.themedPacks(future);
+  const themePools=new Map();
+  function possible(offer,unlockedSets){
+   const ids=new Set();
+   if(!offer?.unlocked)return ids;
+   for(const set of unlockedSets)
+    for(const rarity of ['common','uncommon'])for(const id of core.PACK_POOLS[set]?.[rarity]||[])ids.add(id);
+   for(const rarity of ['rare','holo','secret'])
+    for(const id of core.selectThemePool(offer.sources,rarity,offer.rare))ids.add(id);
+   for(const id of energyIds)ids.add(id);
+   return ids;
+  }
+  const availableSets=offers.filter(offer=>offer.unlocked).map(offer=>offer.set);
+  const futureSets=core.shopPacks(future).filter(offer=>offer.unlocked).map(offer=>offer.set);
+  for(const theme of core.THEMED_PACKS){
+   themePools.set(theme.id,{
+    current:possible(themes.find(p=>p.id===theme.id),availableSets),
+    future:possible(futureThemes.find(p=>p.id===theme.id),futureSets)
+   });
+  }
   function sourcesFor(id){
    if(typeof id!=='string'||!core.canOwn(id))return [];
    const split=id.lastIndexOf('-'),set=id.slice(0,split),rarity=core.packRarity(id),energy=energyIds.has(id);
@@ -28,8 +42,8 @@
      const possible=energy||entry.set===set&&!!core.PACK_POOLS[set]?.[rarity]?.includes(id);
      if(possible)sources.push({...entry,available:!!offerBySet.get(entry.set)?.unlocked});
     }else{
-     const available=core.themeContains(progress,entry.theme,id);
-     const futurePossible=available||core.themeContains(future,entry.theme,id);
+     const pools=themePools.get(entry.theme),available=pools.current.has(id);
+     const futurePossible=available||pools.future.has(id);
      if(futurePossible)sources.push({...entry,available});
     }
    }
