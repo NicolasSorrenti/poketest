@@ -1407,11 +1407,11 @@
    "No. I like knowing there's a breeze."
   ],
   [
-   "My aunt asked me to help with dinner again.",
-   "More dumplings?",
-   "So many. I lost count after the first tray.",
-   "Were they good?",
-   "The whole family ate them before I could sit down. I think that means yes."
+   "My aunt taught me how to grow herbs on a windowsill.",
+   "Is that hard?",
+   "Not really, but I keep watering the wrong pot.",
+   "Which one?",
+   "The empty one. I'm going to label them this afternoon."
   ],
   [
    "There was a free piano outside the community center.",
