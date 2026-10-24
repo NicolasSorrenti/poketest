@@ -144,6 +144,20 @@
    "That's the thing. Apparently it doesn't have to be a special day.",
    "Are you keeping some for yourself?",
    "I put a slice aside before anyone noticed. I've learned at least one thing from Camila."
+  ],
+  [
+   "I left the lights on in the shop after closing.",
+   "Were you working late?",
+   "No, I stayed to finish a book. I just forgot what time it was.",
+   "And nobody interrupted you?",
+   "Not even once. I think that's why I lost track."
+  ],
+  [
+   "One of the beginners made little name cards for the tournament tables.",
+   "That's thoughtful.",
+   "She said she wanted everyone to feel like they belonged there.",
+   "Are you keeping them?",
+   "Of course. Even the one where she spelled my name wrong."
   ]
  ],
  "reina": [
@@ -285,6 +299,20 @@
    "My sister made it when we were kids, for a game I barely remember.",
    "Why keep it?",
    "She was so proud of me. I'd rather have that on my shelf than another medal."
+  ],
+  [
+   "I tried teaching my sister the game I play here.",
+   "How did she do?",
+   "She ignored my entire strategy lesson and won with her favorite Pokémon.",
+   "Did you ask for a rematch?",
+   "Immediately. She made me wash the dishes first."
+  ],
+  [
+   "I went back to thank the person who fixed my bike.",
+   "You didn't have to do that.",
+   "I know. But they noticed the brakes were worn and fixed those too.",
+   "What did they say?",
+   "They looked embarrassed. I recognize that expression."
   ]
  ],
  "shiori": [
@@ -424,6 +452,20 @@
    "'Remember to go home sometimes.'",
    "Who wrote it?",
    "The librarian, to herself. I think we should both take it seriously."
+  ],
+  [
+   "There's a bookmark on the café counter that nobody has claimed.",
+   "What's on it?",
+   "A handwritten list of books. I've read three of them.",
+   "Are they any good?",
+   "Very. I hope the person who lost it comes back. I'd like to thank them."
+  ],
+  [
+   "I read a short story aloud to my niece.",
+   "Did she like it?",
+   "She kept interrupting to ask what every character was thinking.",
+   "Sounds like a good reader.",
+   "She's already better at asking questions than I was at her age."
   ]
  ],
  "yuna": [
@@ -563,6 +605,20 @@
    "I brought silly stickers and a terrible movie.",
    "Did the movie cheer them up?",
    "Not right away. We just sat there a bit. That was probably what they needed."
+  ],
+  [
+   "I tried doing something nice without telling everyone afterward.",
+   "You told me, though.",
+   "I know! It was going so well until you asked what I'd done today.",
+   "Should I pretend I didn't hear?",
+   "No. It's kind of nice telling someone who won't make a big deal of it."
+  ],
+  [
+   "There's a new button on the arcade machine and I'm afraid to press it.",
+   "Since when does that stop you?",
+   "Since the last one erased my high score.",
+   "Want me to test it first?",
+   "That would be heroic. Also irresponsible. Let's ask the owner."
   ]
  ],
  "akari": [
@@ -696,6 +752,20 @@
    "I almost said that. Then I realized it's eating together afterward.",
    "Did you tell them?",
    "Yes. They looked more surprised than you do."
+  ],
+  [
+   "My prediction about the tournament turnout was wrong.",
+   "By much?",
+   "Twenty people. I forgot to account for the school holidays.",
+   "Did it ruin your plans?",
+   "No. We found more chairs. That's a nicer surprise than getting the estimate right."
+  ],
+  [
+   "I tried to keep my phone in my bag all afternoon.",
+   "Did you manage?",
+   "Until I needed to look up the name of a tree.",
+   "What tree?",
+   "I still don't know. Maybe I can ask someone who lives near it."
   ]
  ],
  "camila": [
@@ -837,6 +907,20 @@
    "Of course. Politely, before you make that face.",
    "How did the café handle the mistake?",
    "They apologized, refunded me, and offered a pastry. I left a bigger tip than usual."
+  ],
+  [
+   "I refused a trade that would have made me a good profit.",
+   "Was something wrong with the card?",
+   "No. The owner looked miserable about parting with it.",
+   "Did you tell them to keep it?",
+   "I told them the offer would be there tomorrow if they still wanted it."
+  ],
+  [
+   "I finally let someone else set the price for once.",
+   "And you agreed to it?",
+   "I tried very hard not to negotiate.",
+   "What were you buying?",
+   "A small painting from a student. It was worth every credit."
   ]
  ],
  "marina": [
@@ -972,6 +1056,20 @@
    "Yesterday, the view. Today, the shade.",
    "You're not going to choose?",
    "Maybe I can move two steps to the left and have both. Amazing what a little compromise does."
+  ],
+  [
+   "I took the long route home so I could avoid the construction site.",
+   "Was it noisy?",
+   "Very. I ended up passing a little garden I hadn't seen before.",
+   "Are you going back?",
+   "Probably. There's a bench that looks perfect for lunch."
+  ],
+  [
+   "A family asked me to take a picture of them by the water.",
+   "Was everyone in the frame?",
+   "Almost. Their dog kept walking toward me.",
+   "Did you get a good one?",
+   "Eventually. The dog is blurry, but they're all laughing."
   ]
  ],
  "kaede": [
@@ -1109,6 +1207,20 @@
    "The woman at the stall remembered my name on the second visit.",
    "And the third?",
    "She asked whether I wanted extra chili. I said yes. I'm apparently a regular now."
+  ],
+  [
+   "I helped someone find their way back to the station.",
+   "You know the town that well now?",
+   "Better than I expected. I even knew where to buy a ticket.",
+   "That sounds like progress.",
+   "Don't make it a ceremony. I still get lost near the market."
+  ],
+  [
+   "I found a place that does late-night noodles without music.",
+   "Sounds quiet.",
+   "It is. The owner doesn't ask where you're going next.",
+   "Is that why you like it?",
+   "Partly. The noodles are good, too. Don't tell Yuna or it'll stop being quiet."
   ]
  ],
  "elio": [
@@ -1244,6 +1356,20 @@
    "Apparently quite. Every corner of the box has a different shape now.",
    "Does it look bad?",
    "A little. But my cousin will know I did it myself."
+  ],
+  [
+   "I offered to help at a beginner table without being asked.",
+   "Were you nervous?",
+   "Of course. Then I spent ten minutes helping someone count Energy cards.",
+   "Did you enjoy it?",
+   "Yeah. It's nice being the person who knows an answer sometimes."
+  ],
+  [
+   "I found an old card sleeve with my cousin's handwriting on it.",
+   "What did it say?",
+   "'Don't forget to have fun.' She used to write that on everything.",
+   "Are you keeping it?",
+   "I put it back in my deck box. Some reminders are worth carrying."
   ]
  ],
  "alma": [
@@ -1377,6 +1503,20 @@
    "Probably. But I miss having dinner with my sister.",
    "Are you going to do it?",
    "Yes. I'll put up a sign with enough notice. Maybe they'll forgive me."
+  ],
+  [
+   "A customer asked whether they could leave a book here for somebody else.",
+   "Like a free shelf?",
+   "Exactly. We already have a little corner for it.",
+   "Did you say yes?",
+   "I did. By lunch, there were four books and somebody had left a thank-you note."
+  ],
+  [
+   "I let a regular make their own tea while I was busy.",
+   "Was it difficult to watch?",
+   "They used the wrong cup and almost too much water.",
+   "Did you intervene?",
+   "Only when they asked. It was perfectly good tea."
   ]
  ],
  "nereo": [
@@ -1510,6 +1650,20 @@
    "Until it went through the wash.",
    "Can you read anything?",
    "Just 'lamp' and something that might say 'sandwich.' I hope it was important."
+  ],
+  [
+   "I found a loose board by the old steps.",
+   "Did you fix it?",
+   "I put a warning sign up, then went to fetch my tools.",
+   "Was anyone using the path?",
+   "Marina made sure people went around. We had it safe before lunch."
+  ],
+  [
+   "A kid asked me to explain why boats have ropes.",
+   "That could take all afternoon.",
+   "I gave him the short answer. He came back with a drawing of a boat tied to the moon.",
+   "What did you think?",
+   "Best boat I've seen in years. I kept the drawing."
   ]
  ],
  "elena": [
@@ -1651,6 +1805,20 @@
    "It belonged to my father. He gave it to me before my first interview.",
    "Does it still work?",
    "Beautifully. The ink is ordinary, but I like how it feels in my hand."
+  ],
+  [
+   "Someone invited me to lunch without naming a restaurant.",
+   "Did that make you nervous?",
+   "A little. Then I remembered I could simply ask where we were going.",
+   "And did you like the place?",
+   "Very. I even ordered something I hadn't planned on trying."
+  ],
+  [
+   "I forgot my notes before a meeting.",
+   "Did it cause trouble?",
+   "No. I knew the details better than I thought.",
+   "Was that reassuring?",
+   "More than I expected. I still checked the numbers afterward."
   ]
  ],
  "jinx": [
@@ -1790,6 +1958,20 @@
    "Yeah. I drew six versions and hated all of them.",
    "What did they think?",
    "They picked the one I almost threw away. I guess that's why you show your work."
+  ],
+  [
+   "I went to apologize to the owner of the arcade.",
+   "What happened?",
+   "I was loud during somebody else's tournament match.",
+   "How did they take it?",
+   "He thanked me and said I could help announce next time. I think I got promoted somehow."
+  ],
+  [
+   "I got a message from someone who'd borrowed my sketchbook.",
+   "Were they returning it?",
+   "Yeah. They said it had made them want to start drawing again.",
+   "That's a good thing to hear.",
+   "It is. Now I want to send them a fresh notebook."
   ]
  ],
  "luna": [
@@ -1929,6 +2111,20 @@
    "At first. Then I noticed one of my friends looking sad and gave her a handful.",
    "Did she like them?",
    "She put one in her phone case. I saw it later and couldn't stop smiling."
+  ],
+  [
+   "I got to the game night and there was only one seat left.",
+   "Did you take it?",
+   "I nearly went home. Then someone smiled and moved their bag.",
+   "Did you stay?",
+   "The whole evening. I even suggested the second game."
+  ],
+  [
+   "I brought extra sleeves to the beginner table.",
+   "For anyone who needed them?",
+   "Yes. I didn't want to make a big announcement.",
+   "Did someone use them?",
+   "A girl whose deck was falling apart. She thanked me on her way out."
   ]
  ],
  "rina": [
@@ -2068,6 +2264,20 @@
    "All the time. My hands get cold before I go on.",
    "Did that surprise her?",
    "She looked relieved. I wish somebody had told me that when I was younger."
+  ],
+  [
+   "I spent the afternoon with people who didn't ask for a photo.",
+   "That must've been nice.",
+   "It was. We played cards and argued about sandwiches.",
+   "Who won the sandwich argument?",
+   "Nobody. We ordered three different kinds and shared them."
+  ],
+  [
+   "I was supposed to rehearse a song but kept thinking about a card combo.",
+   "Did you get distracted?",
+   "I wrote the combo on the back of my lyric sheet.",
+   "Did your band notice?",
+   "My drummer found it and asked if it was a new verse."
   ]
  ],
  "sierra": [
@@ -2207,6 +2417,20 @@
    "Very. I kept reaching for the bag that wasn't there.",
    "Did you miss any pictures?",
    "Probably. But I didn't miss the conversation."
+  ],
+  [
+   "I canceled a small job because I promised a friend I'd be there.",
+   "Were they upset?",
+   "The client? No. They found someone else.",
+   "And your friend?",
+   "She was pleased. We spent the afternoon doing nothing important."
+  ],
+  [
+   "I showed a photo to someone and they noticed something I hadn't.",
+   "What did they see?",
+   "A little bird perched on the railing behind the subject.",
+   "Did you keep the picture?",
+   "It's my new favorite. Sometimes other people see the best part."
   ]
  ],
  "sol": [
@@ -2346,6 +2570,20 @@
    "Enough that the wind made them look like a flock of panicked birds.",
    "Did you put them away?",
    "Most of them. We kept two and ate under a very dramatic sky."
+  ],
+  [
+   "I was planning an afternoon and realized nobody had asked me to.",
+   "So you left it alone?",
+   "For an entire ten minutes. Then I asked what everyone actually wanted.",
+   "And?",
+   "They wanted to sit in the park and eat. I can work with that."
+  ],
+  [
+   "I tried organizing a game where everyone gets a turn to make the rules.",
+   "How chaotic was it?",
+   "Very. One person banned running, another banned standing still.",
+   "How did it end?",
+   "We sat down and made up a new game. Much better."
   ]
  ],
  "laca": [
@@ -2487,6 +2725,20 @@
    "Of course. Even people who love the water need breaks.",
    "Did they believe you?",
    "Not until I sat down and ate my sandwich. Apparently that was proof."
+  ],
+  [
+   "I nearly forgot my lunch after the swimming shift.",
+   "You never forget food.",
+   "I know. There was a kid having a rough morning and I stayed to help.",
+   "Did you eat eventually?",
+   "Yeah. My coworker saved it for me. Even warmed it up."
+  ],
+  [
+   "Che, remember the old shortcut behind the school?",
+   "The one with the broken gate?",
+   "It's been repaired, and now there's a little garden there.",
+   "Did you go in?",
+   "Just for a minute. I wanted to see whether the big tree was still there."
   ]
  ],
  "jun": [
@@ -2620,6 +2872,20 @@
    "I went to the park and watched people play a game I didn't know.",
    "Did you learn the rules?",
    "Not even once. It was strangely relaxing."
+  ],
+  [
+   "Someone asked me for a ruling outside a match.",
+   "About a card?",
+   "About whether two friends were cheating at a board game.",
+   "Did you get involved?",
+   "I said friendship disputes were above my pay grade. Then I read the rules anyway."
+  ],
+  [
+   "I sat next to a kid drawing their own Pokémon cards.",
+   "Were the cards playable?",
+   "Absolutely not. Every attack said 'win immediately.'",
+   "Did you tell them?",
+   "I asked which one was their favorite. They said the one with the biggest hat."
   ]
  ],
  "teo": [
@@ -2749,6 +3015,20 @@
    "A little unnatural at first.",
    "Then?",
    "I learned more about my neighbor in an hour than I had in three years. Turns out I should do that more."
+  ],
+  [
+   "I walked past an outdoor rehearsal and didn't say a word.",
+   "I find that hard to believe.",
+   "The conductor was showing a young player how to start a piece.",
+   "Why didn't you interrupt?",
+   "It seemed like a moment worth leaving alone. I can learn restraint."
+  ],
+  [
+   "Someone handed me a microphone that wasn't switched on.",
+   "Did you notice?",
+   "Not until halfway through my introduction.",
+   "Did the audience hear anything?",
+   "Everyone in the front row did. The others had a peaceful morning."
   ]
  ],
  "iris": [
@@ -2880,6 +3160,20 @@
    "Every time. Last week she drew me a tiny truck.",
    "Tell me you saved her drawing.",
    "It's taped inside my clipboard. Teo hasn't found it yet, thankfully."
+  ],
+  [
+   "I stopped by the market without a shopping list.",
+   "That sounds brave for you.",
+   "I bought fresh bread and forgot the detergent.",
+   "Worth it?",
+   "The bread was excellent. I'll wash clothes tomorrow."
+  ],
+  [
+   "The new volunteers keep asking where everything belongs.",
+   "Didn't you label the shelves?",
+   "I did. The problem is that I used abbreviations only I understand.",
+   "Are you fixing them?",
+   "Yes. Someone asked what 'EMG RIB' meant. Emergency ribbon, obviously."
   ]
  ],
  "barb": [
@@ -3023,6 +3317,20 @@
    "She said it felt like something she'd actually wear, not a costume.",
    "That's good, right?",
    "The best compliment. I want people to feel like themselves in my clothes."
+  ],
+  [
+   "I'm trying to make a design that doesn't feel like my usual work.",
+   "What's different about it?",
+   "Almost no color. Just shapes and texture.",
+   "Does it still feel like you?",
+   "More than I expected. I think I've been hiding behind the bright stuff a little."
+  ],
+  [
+   "Someone came back to show me the case I made them months ago.",
+   "Was it holding up?",
+   "A little worn at the corners. They'd been carrying it everywhere.",
+   "Were you happy about that?",
+   "Very. I'd rather see it used than kept perfectly clean."
   ]
  ]
 };
