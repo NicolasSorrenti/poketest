@@ -1,5 +1,5 @@
 'use strict';
-// Optional multi-character Talk. Both NPCs must be present AND already met.
+// Optional multi-character Talk. Every participating NPC must be present AND met.
 // The existing multi-speaker renderer displays every participant; no rewards/flags.
 (function(root,factory){
  const api=factory();
