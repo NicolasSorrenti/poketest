@@ -3347,7 +3347,7 @@
   const rows=topics[npc];if(!rows?.length)return null;
   const day=Number(state?.day)||1,slot=Number(state?.slot)||0;
   // A small week offset prevents the 1-in-4 classic chat days from
-  // permanently hiding some of the 21 topics in the 90-day season.
+  // permanently hiding some of the 23 topics in the 90-day season.
   const index=(day*7+Math.floor(day/4)+slot*3+hash(npc))%rows.length;
   return rows[index].map((text,i)=>({speaker:i%2?'Protagonist':npc,text}));
  }
