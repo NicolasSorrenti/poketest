@@ -15,18 +15,18 @@
    "I almost told my entire embarrassing first-tournament story. The bell saved them."
   ],
   [
-   "I had to turn down someone's request today.",
-   "And what happened?",
-   "They said 'no problem' and asked somebody else.",
-   "You look relieved.",
-   "I think I'm allowed to have limits. I just needed to hear it aloud."
+   "The sign-up sheet's full, and I promised to help three people at once.",
+   "You're only one person.",
+   "That's what I keep forgetting. I told one of them I couldn't make it today.",
+   "How did they take it?",
+   "They said it was fine. Imagine that. Nothing caught fire."
   ],
   [
-   "I found the poster for the shop's first ever event.",
-   "How many people came?",
-   "Six. We sat elbow-to-elbow around one table.",
-   "Do you miss it?",
-   "A little. I still remember every one of their names."
+   "I found the very first shop tournament poster.",
+   "Does it look different?",
+   "It's handwritten. We didn't even have a proper printer.",
+   "How many players showed up?",
+   "Six. All of them stayed to help stack chairs afterward."
   ],
   [
    "Someone pitched a tournament for players who've never won one.",
@@ -38,11 +38,11 @@
  ],
  "reina": [
   [
-   "A newcomer was afraid to ask me for deck advice.",
-   "So did you help?",
-   "I told her exactly what was wrong, then showed her a fix.",
-   "Did she come back?",
-   "Today. With a stronger deck and no fear of me. A dangerous development."
+   "A rookie asked me to look at her deck list.",
+   "You said yes?",
+   "She expected me to make fun of it. I asked why she liked those cards.",
+   "And what happened?",
+   "We changed a few Trainers. She says she'll challenge me next week."
   ],
   [
    "My sister used to let me win board games.",
@@ -52,11 +52,11 @@
    "No. Now I let her choose the game, and we play properly."
   ],
   [
-   "Yuna convinced me to try a silly arcade co-op game.",
-   "Did you win?",
-   "We lost in two minutes because nobody read the instructions.",
-   "You sound happy.",
-   "It was fun. Don't tell her or she'll arrange another one."
+   "Yuna dragged me into some co-op arcade game.",
+   "How was it?",
+   "A complete disaster. She pressed every button except the one we needed.",
+   "Did you have fun?",
+   "Obviously not. ...Fine. Yes. Don't tell her."
   ],
   [
    "Someone told me to smile more after a match.",
@@ -68,11 +68,11 @@
  ],
  "shiori": [
   [
-   "A friend asked for advice and I gave her five solutions.",
-   "Did she want them?",
-   "No. She wanted someone to listen.",
-   "What did you do?",
-   "Took her to tea and kept quiet. Surprisingly difficult, surprisingly helpful."
+   "I think I upset my friend yesterday.",
+   "What happened?",
+   "She told me about a bad day, and I spent twenty minutes suggesting solutions.",
+   "Did she want advice?",
+   "No. She wanted tea and someone to listen. I'll do better next time."
   ],
   [
    "Someone said I never get excited about anything.",
@@ -82,11 +82,11 @@
    "Loud enough for the librarian to turn around. A scandal."
   ],
   [
-   "I love reading arguments in the margins of old books.",
-   "About the stories?",
-   "Often. People disagree with strangers separated by decades.",
-   "Would you respond?",
-   "I'd ask what changed their minds. That's the interesting part."
+   "Someone has been writing tiny arguments in the margins of that old book.",
+   "Arguments with the author?",
+   "Sometimes with an earlier reader. See the different handwriting?",
+   "That's kind of funny.",
+   "It is. I'd love to know whether either of them ever changed their mind."
   ],
   [
    "I almost missed the evening event because of a book.",
@@ -98,11 +98,11 @@
  ],
  "yuna": [
   [
-   "My new deck has the worst possible name.",
-   "Try me.",
-   "Electric Marshmallow Disaster.",
-   "That's incredible.",
-   "It wins sometimes, which is making the problem much worse."
+   "I named my new deck Electric Marshmallow Disaster.",
+   "That's a lot to put on a deck box.",
+   "I know! I wrote it in tiny letters and added a lightning bolt.",
+   "Is the deck any good?",
+   "It won twice, so now I can't change the name. That's the rule I made up."
   ],
   [
    "Can I tell you something deeply unfair?",
@@ -119,11 +119,11 @@
    "At a volume legally classified as weather."
   ],
   [
-   "I keep a sticker from every tournament.",
-   "Even the ones you lose?",
-   "Especially those. They make the best stories.",
-   "That's thoughtful.",
-   "I'm a complicated woman. Mostly loud, but complicated."
+   "Look at all these stickers on my binder.",
+   "They're from tournaments?",
+   "Every one. Even the ones where I got knocked out early.",
+   "Why keep those?",
+   "Because there was always something fun. And because this one has a tiny frog on it."
   ]
  ],
  "akari": [
@@ -135,18 +135,18 @@
    "I must have. I think I'd forgotten to record the most important part."
   ],
   [
-   "I predicted three outcomes and a fourth occurred.",
-   "Does it bother you?",
-   "Only until I remember surprises are how we improve a theory.",
-   "So you liked it?",
-   "Curiosity and happiness look very similar on me."
+   "I got completely surprised in a match yesterday.",
+   "You sound pleased.",
+   "Once I stopped being annoyed, I was. I hadn't even considered that line.",
+   "Are you changing your notes?",
+   "I've already filled two pages. I'm trying to keep it to two."
   ],
   [
-   "I tried explaining a messy deck without using numbers.",
-   "What did you say?",
-   "It's a crowded bus and none of the passengers know their stop.",
+   "I tried describing a deck without numbers.",
+   "How?",
+   "I said it was like a bus with fifteen passengers and no driver.",
    "Did that help?",
-   "They changed six cards. Metaphors are frighteningly effective."
+   "They laughed, then took out three unnecessary cards. I might use that explanation again."
   ],
   [
    "Reina says I should trust my instinct more.",
@@ -165,18 +165,18 @@
    "I found him another buyer who'd pay fairly. He came back later to show me the present."
   ],
   [
-   "People think I never give anything away.",
-   "Do you?",
-   "I offer unsolicited opinions for free every day.",
-   "Anything kinder?",
-   "Sometimes I slip a spare sleeve into a child's first deck. Keep that quiet."
+   "I gave a child a packet of spare sleeves yesterday.",
+   "How kind of you.",
+   "They'd brought a deck held together with a rubber band. I had extras.",
+   "Did you charge them?",
+   "Please. They can pay me back by beating someone at the tournament."
   ],
   [
-   "I missed an auction by refusing to bid one extra credit.",
-   "Regrets?",
-   "For three days. Then I found the same thing in a dusty shop.",
-   "And?",
-   "I laughed until the owner asked if I was all right."
+   "I walked away from an auction over one extra credit.",
+   "That sounds frustrating.",
+   "It was. I spent three days thinking about it.",
+   "You found another?",
+   "Better. A shop owner had one with a little story behind it. Same price."
   ],
   [
    "Alma says I negotiate even when talking to friends.",
@@ -195,11 +195,11 @@
    "Perfect. If anyone asks me about the weather, I'm pretending not to hear."
   ],
   [
-   "I stayed with a beginner until they signed up for a tournament.",
-   "Did you give advice?",
-   "Not really. I just stayed beside them.",
-   "That was enough?",
-   "They said it was. Sometimes company is enough."
+   "A first-time competitor stood outside the center for ten minutes.",
+   "Did you speak to them?",
+   "Not much. I stood nearby while they worked up the nerve to go in.",
+   "Did they enter?",
+   "They did. I hope somebody does that for me when I need it."
   ],
   [
    "I once missed a ferry because the sunset was beautiful.",
@@ -209,11 +209,11 @@
    "Waited for the next one. It was a better crossing."
   ],
   [
-   "Sometimes I say that water keeps moving when plans fail.",
-   "That's poetic.",
-   "It sounds better than admitting I'm improvising.",
-   "Does it scare you?",
-   "Less than it used to. Especially with good company."
+   "The ferry schedule changed without warning today.",
+   "That must've thrown things off.",
+   "It did. I spent the first few minutes complaining to Nereo.",
+   "Did it help?",
+   "No. Then we found a workable route. He's good at that when I let him."
   ]
  ],
  "kaede": [
@@ -232,27 +232,27 @@
    "Exactly. Mystery solved."
   ],
   [
-   "I used to leave whenever a town got familiar.",
-   "What about now?",
-   "I know which bench stays warm at sunset.",
-   "Is that a problem?",
-   "I'm still deciding. I haven't bought a return ticket."
+   "I've gotten used to stopping by the arcade.",
+   "You sound surprised by that.",
+   "I used to move on before anybody learned my name.",
+   "And now?",
+   "The snack vendor keeps my favorite drink behind the counter. Complicated, isn't it?"
   ],
   [
-   "I said something sharp to Elio yesterday.",
-   "Did you apologize?",
-   "Yes. He thanked me and offered a cookie.",
-   "That sounds nice.",
-   "It was much worse than an argument. I felt terrible."
+   "I said something stupid to Elio the other day.",
+   "Was it mean?",
+   "A little. He deserved an apology, so I gave him one.",
+   "How'd that go?",
+   "He offered me a cookie. Somehow that was harder to deal with than him being angry."
   ]
  ],
  "jun": [
   [
-   "A player asked for a ruling without reading the card.",
-   "And you answered?",
-   "The first judge lives in the bottom half of the card.",
-   "Did it help?",
-   "For five minutes. Then they came back anyway."
+   "I got asked to settle a dispute over a card nobody had read.",
+   "What did you do?",
+   "Handed the card back and pointed at the text.",
+   "Did they read it?",
+   "Eventually. Then they wanted to argue about the comma. I earned my pay today."
   ],
   [
    "A young player caught a ruling I'd gotten wrong at a local event.",
@@ -269,20 +269,20 @@
    "Excellent. I might actually enjoy this."
   ],
   [
-   "Sol confiscated my clipboard so I'd take a break.",
-   "Did you?",
-   "She handed me ice cream. I asked for a receipt.",
-   "Seriously?",
-   "Out of habit. She'll never let me forget."
+   "Sol stole my clipboard yesterday.",
+   "Why?",
+   "She decided I needed an ice-cream break.",
+   "Did she win?",
+   "I'm ashamed to say she did. The ice cream was excellent."
   ]
  ],
  "teo": [
   [
-   "I gave a perfect tournament introduction to an empty room.",
-   "How?",
-   "The microphone was on, but the audience was outside.",
-   "Nobody heard it?",
-   "A cleaner applauded with her mop. My finest review."
+   "Yesterday I made my best tournament introduction yet.",
+   "How'd the crowd take it?",
+   "That's the thing. They were still waiting outside.",
+   "Nobody heard you?",
+   "The cleaner did. She applauded with a mop. I'm putting that on my résumé."
   ],
   [
    "I remember a final where the best moment happened after the match.",
@@ -292,11 +292,11 @@
    "Of course. It was the only replay worth giving a second look."
   ],
   [
-   "I worry that people remember my voice, not what I say.",
-   "Does that happen?",
-   "Sometimes someone remembers a joke but forgets my name.",
-   "Does it bother you?",
-   "A little. I'm trying to make the words matter."
+   "A kid recognized my voice at the market.",
+   "That sounds exciting.",
+   "He kept imitating my worst catchphrase.",
+   "You could change it.",
+   "I might have to. He's much better at it than I am."
   ],
   [
    "Yuna says I can make a sandwich sound like a championship.",
@@ -308,11 +308,11 @@
  ],
  "iris": [
   [
-   "People see the tournament supplies arrive, not the inventory list.",
-   "Want more credit?",
-   "I mostly want people to stop using my clipboard as a coaster.",
-   "Who did it?",
-   "Teo. Again. Please tell him he owes me a new one."
+   "Somebody used my inventory list as a coaster again.",
+   "Let me guess. Teo?",
+   "He says the ring adds character to the paper.",
+   "What did you say?",
+   "That he'd be responsible for counting chairs next week. He stopped smiling."
   ],
   [
    "A volunteer asked why I care how chairs are stacked.",
@@ -322,11 +322,11 @@
    "They stayed to help. That answered everything."
   ],
   [
-   "I was late once and the entire opening schedule went sideways.",
-   "Did it ruin the event?",
-   "No. Everyone improvised and it went fine.",
-   "You sound relieved.",
-   "It was a good reminder the world doesn't rest on my shoulders."
+   "One morning I was late and the opening almost went wrong.",
+   "What happened?",
+   "The volunteers worked it out without me.",
+   "Must have been a relief.",
+   "It was. I still thanked every one of them. I'm trying not to worry about everything."
   ],
   [
    "A visitor thanked me for an event that took twelve people to set up.",
