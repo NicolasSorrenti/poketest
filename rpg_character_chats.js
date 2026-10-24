@@ -345,18 +345,18 @@
    "I'm practicing believing that."
   ],
   [
-   "The others say I play too cautiously.",
-   "What do you think?",
-   "Sometimes they're right. But when I take a chance, I want it to be my choice.",
-   "So what's next?",
-   "One brave move per match. I wrote it on a sticky note."
+   "I nearly took a big risk in yesterday's match.",
+   "Nearly?",
+   "I waited one turn too long and lost the chance.",
+   "Will you try next time?",
+   "I think so. Not every risky play is a bad one."
   ],
   [
-   "Someone invited me to teach a new player.",
-   "You said yes?",
-   "I told them everything I wished I'd known.",
-   "Were they overwhelmed?",
-   "A little. Then they beat me. Maybe I taught too well."
+   "I helped someone test their starter deck.",
+   "How did that go?",
+   "They beat me. Twice.",
+   "You don't look upset.",
+   "They understood every card by the end. That's pretty nice to see."
   ],
   [
    "I took my cousin's name off my deck box today.",
@@ -368,18 +368,18 @@
  ],
  "alma": [
   [
-   "The café is full of people arguing about who won.",
-   "Does that bother you?",
-   "No. I wish someone remembered who cleaned up.",
-   "You could tell them.",
-   "I do, with a mop in plain view by the door."
+   "The tournament's over and everyone's heading home.",
+   "Busy night?",
+   "Very. I'm glad they had fun. I wish more of them remembered their cups.",
+   "Need a hand?",
+   "That would be lovely. The tray's by the window."
   ],
   [
-   "A customer apologized for coming in without buying anything.",
-   "What did you say?",
-   "That sitting quietly is allowed here.",
-   "Even if they only order water?",
-   "Even then. Hospitality doesn't have a minimum purchase."
+   "A young player came in just to sit by the window.",
+   "Didn't they order anything?",
+   "Water, eventually. They looked like they'd had a rough day.",
+   "Did you ask what happened?",
+   "No. I left them alone until they wanted to talk."
   ],
   [
    "I was about to make myself some tea, then remembered I haven't sat down all day.",
@@ -398,11 +398,11 @@
  ],
  "nereo": [
   [
-   "The ferry was delayed and everybody wanted an answer.",
-   "Did you have one?",
-   "A timetable and a shrug. The river won.",
-   "Were people upset?",
-   "Yes. So I found the older passengers a place to sit."
+   "People keep asking me when the next ferry leaves.",
+   "Isn't it on the schedule?",
+   "It was, until the wind picked up.",
+   "So what do you tell them?",
+   "That I'm waiting to hear from the captain. Better an honest answer than a wrong one."
   ],
   [
    "Marina says I pretend to be grumpier than I am.",
@@ -419,27 +419,27 @@
    "That rail has survived more storms than I have. Give it one more season."
   ],
   [
-   "A kid watched me fix a ferry sign yesterday.",
-   "Did they ask questions?",
-   "Twenty. Then they held my tools.",
-   "Did you mind?",
-   "Best apprentice I've had all month."
+   "A boy helped me change a sign at the dock.",
+   "Did you let him use the tools?",
+   "Held the spare bolts while I worked.",
+   "Was he bored?",
+   "He asked questions the whole time. I hope he comes back."
   ]
  ],
  "elena": [
   [
-   "I made room for an evening with no appointments.",
-   "Sounds relaxing.",
-   "I spent the first hour wondering what I'd forgotten.",
-   "And then?",
-   "Watched a terrible comedy and laughed louder than expected."
+   "I've actually kept my evening free.",
+   "Are you planning something?",
+   "That's the unusual part. No.",
+   "So what will you do?",
+   "I've got a comedy queued up and a bowl of popcorn. Please don't ask for the itinerary."
   ],
   [
-   "A junior colleague admitted she'd made a mistake.",
-   "How did you respond?",
-   "I thanked her for telling me before it grew.",
-   "Were you always so understanding?",
-   "No. Someone once showed me that kindness. I remember it."
+   "One of our new colleagues told me about an error she'd made.",
+   "How did she take it?",
+   "She expected a lecture. I asked her to walk me through what happened.",
+   "And?",
+   "We fixed it together. I wish someone had done that for me early on."
   ],
   [
    "My train was delayed yesterday. I had an entire evening planned.",
@@ -458,11 +458,11 @@
  ],
  "jinx": [
   [
-   "Somebody called me fearless after a match.",
-   "Are you?",
-   "Not remotely. I hate letting fear have the last word.",
-   "What scares you?",
-   "Being wrong in front of someone I care about."
+   "A spectator called me fearless yesterday.",
+   "They've clearly never seen you before a close match.",
+   "Exactly. My hands were shaking the whole time.",
+   "But you played anyway.",
+   "Yeah. Don't confuse loud with fearless. I'm working on both."
   ],
   [
    "I repaired a stranger's torn backpack.",
@@ -479,20 +479,20 @@
    "That I sat down and played another game. Kinda made my day."
   ],
   [
-   "I found an old sketch I made before coming here.",
-   "What was it?",
-   "A city full of neon signs and impossible rooftops.",
-   "Did you find that place?",
-   "Not exactly. Found some people worth staying for."
+   "I dug out an old sketchbook last night.",
+   "Anything good?",
+   "A drawing of a city with rooftop walkways and ridiculous neon signs.",
+   "Did you ever go there?",
+   "Not that exact place. But I did end up somewhere I like. That's close enough."
   ]
  ],
  "luna": [
   [
-   "Someone offered to carry everything for me again.",
-   "Was that a problem?",
-   "They meant well, but I hadn't asked.",
-   "Did you tell them?",
-   "Yes. I could handle the little box, but wanted help with the big one."
+   "Somebody grabbed the box I was carrying without asking.",
+   "Trying to help?",
+   "Probably. I still wish they'd asked.",
+   "Did you say so?",
+   "Yeah. Then we carried the big boxes together. Much easier."
   ],
   [
    "I finally cleared the rhythm-game song that kept beating me.",
@@ -509,20 +509,20 @@
    "Please don't make a ceremony of it. I might drop another."
   ],
   [
-   "I want to try something that scares me a little.",
-   "Like a tournament?",
-   "Maybe. Or ordering food without rehearsing first.",
-   "Want company?",
-   "Yes, but don't order for me. I want to do it."
+   "I'm thinking of signing up for something that makes me nervous.",
+   "A tournament?",
+   "Maybe. Or just ordering at that busy café by myself.",
+   "Want me to come?",
+   "Sure. But let me order. That's the part I want to try."
   ]
  ],
  "rina": [
   [
-   "Sometimes people recognize my face but not my name.",
-   "Does that upset you?",
-   "Only when they decide who I am before I speak.",
-   "What would you tell them?",
-   "I sing badly while cooking and take card games seriously."
+   "A fan called me 'the girl from the posters' this morning.",
+   "That must happen a lot.",
+   "It does. She was nice, but I wished she'd asked my name.",
+   "Did you talk?",
+   "A little. She turned out to collect Grass cards, too. That was fun."
   ],
   [
    "I caught myself practicing a smile in the mirror again.",
@@ -539,11 +539,11 @@
    "Yes. We talked about the people who taught us."
   ],
   [
-   "I finally have one free evening.",
-   "Any plans?",
-   "I wanted to do absolutely nothing, then felt guilty.",
-   "You don't need an excuse to rest.",
-   "I'm trying to believe that."
+   "For once, my evening is completely free.",
+   "That sounds good.",
+   "It does, until I feel guilty for not doing something productive.",
+   "What would you actually like?",
+   "A blanket, a movie, and nobody calling to ask where I am."
   ]
  ],
  "sierra": [
@@ -555,18 +555,18 @@
    "I think I just needed to tell somebody. Thanks for listening."
   ],
   [
-   "I'm learning to turn down jobs that take every weekend.",
-   "Isn't that hard?",
-   "Yes. Everyone calls them opportunities.",
-   "And what do you call them?",
-   "Sometimes a missed birthday or a day I wanted to keep."
+   "I've started turning down some weekend bookings.",
+   "Was that difficult?",
+   "I hated telling my manager, but I kept missing time with friends.",
+   "How did she take it?",
+   "Better than I expected. I think I should have said something earlier."
   ],
   [
-   "A girl told me she started playing after seeing my match.",
-   "How did that feel?",
-   "More important than any photo this year.",
-   "Did you give her advice?",
-   "I asked about her favorite card. She talked for twenty minutes."
+   "A teenager stopped me after my match.",
+   "For an autograph?",
+   "No. She told me she'd started playing after watching one of my games.",
+   "What did you say?",
+   "I asked to see her deck. She talked so fast I could barely keep up."
   ],
   [
    "I used to photograph every good moment.",
@@ -578,18 +578,18 @@
  ],
  "sol": [
   [
-   "I invited three people to an outing and two said no.",
-   "Were you disappointed?",
-   "For a moment. Then I realized one person still wanted to go.",
-   "Adventure for two, then.",
-   "Exactly. Smaller doesn't mean worse."
+   "I invited a whole group on a trip and only one person said yes.",
+   "Are you still going?",
+   "Of course! We can stop at every snack stand without a vote.",
+   "Sounds like a good day.",
+   "It might be better than my original plan. Don't tell the others."
   ],
   [
-   "Jun says I make everything an event.",
-   "Does he have a point?",
-   "I declared tea an official sunset ceremony.",
-   "Did he join?",
-   "He even stayed until his cup was empty."
+   "Jun says I make every afternoon a festival.",
+   "Is he wrong?",
+   "I made an official sunset tea ceremony yesterday.",
+   "Did he attend?",
+   "Yes. He complained about the title, then stayed for two cups."
   ],
   [
    "I planned three activities for today. Again.",
@@ -608,11 +608,11 @@
  ],
  "laca": [
   [
-   "Remember when every little race became a championship?",
-   "You kept changing the rules.",
-   "Because you kept winning!",
-   "You admit it now?",
-   "Only because I can finally laugh. Rematch someday?"
+   "Remember that race we held by the old school?",
+   "You moved the finish line halfway through.",
+   "Because you were winning!",
+   "You were never going to admit that.",
+   "I'm admitting it now. Doesn't mean I won't do it again."
   ],
   [
    "I had a whole speech ready for when you came back.",
@@ -622,11 +622,11 @@
    "You walked in and I forgot half the words. Then we started arguing like old times."
   ],
   [
-   "People think I'm never afraid of the water.",
-   "And you're not?",
-   "Of course I am. You learn to respect it and trust yourself.",
-   "Does that apply elsewhere?",
-   "Maybe. Especially with people."
+   "A kid asked me if the water ever scares me.",
+   "What did you tell him?",
+   "That being careful isn't the same as being frightened.",
+   "And are you ever scared?",
+   "Sometimes. That's why I check everything before anyone goes in."
   ],
   [
    "I almost told you an embarrassing childhood memory.",
@@ -638,11 +638,11 @@
  ],
  "barb": [
   [
-   "Somebody asked if I'd ever dress more conventionally.",
+   "Someone asked why I don't wear something more normal.",
    "What did you say?",
-   "That I might, if I feel like it.",
-   "Were they offended?",
-   "Maybe. My clothes are conversations I get to start."
+   "I asked what normal was supposed to look like.",
+   "Did they have an answer?",
+   "Not really. I think the outfit was doing its job."
   ],
   [
    "I made a jacket that looked great on the mannequin.",
@@ -659,11 +659,11 @@
    "That's the problem. You make it sound easy, and now I want to try it."
   ],
   [
-   "A friend told me she wished she had my confidence.",
-   "What did you say?",
-   "That I get scared too.",
-   "Did it help?",
-   "She showed me an outfit she was afraid to wear. We went out together."
+   "My friend finally wore the outfit she'd been nervous about.",
+   "How did it go?",
+   "We went out for coffee, and she kept tugging at the sleeves.",
+   "Did she relax?",
+   "By the end she was showing it off. I was very proud of her."
   ]
  ]
 };
