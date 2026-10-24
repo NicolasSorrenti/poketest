@@ -177,7 +177,7 @@
   ],
   [
    "I was late yesterday because of a dog.",
-   "How does a dog make Reina late?",
+   "How did a dog manage that?",
    "A stranger asked me to hold the leash. The dog sat on my feet and fell asleep.",
    "And you waited?",
    "Twenty minutes. He looked comfortable. What was I supposed to do?"
@@ -241,7 +241,7 @@
    "My sister asked me to help decorate her birthday cake.",
    "What did you put on it?",
    "Little pink flowers. She said I had a steady hand.",
-   "Did she like the drawings?",
+   "Did you enjoy decorating it?",
    "I liked being useful for something completely silly."
   ],
   [
@@ -778,7 +778,7 @@
   ],
   [
    "I played a new board game with friends.",
-   "How did your term as mayor end?",
+   "Did you at least win the game?",
    "No, I was elected mayor and bankrupted the town buying fountains.",
    "Why fountains?",
    "They looked charming on the board. It was a terrible administration."
@@ -1110,7 +1110,7 @@
    "I arrived early to help set up a surprise party.",
    "And the surprise?",
    "The guest of honor was already there.",
-   "How did you keep the party a surprise?",
+   "Did you have to cancel the party?",
    "We decorated anyway and pretended Tuesday was a special holiday."
   ],
   [
@@ -1262,7 +1262,7 @@
   ],
   [
    "I tried a trivia quiz about ocean animals.",
-   "Were you the team octopus expert?",
+   "Did your team take first place?",
    "No, but I knew every octopus question.",
    "That's something.",
    "My team says I'm in charge of octopuses from now on."
@@ -1290,7 +1290,7 @@
    "I ordered a drink I couldn't pronounce.",
    "What did you get?",
    "Something pink with mint leaves.",
-   "Was it a happy accident?",
+   "Did you end up liking the drink?",
    "A lot. I'm ordering by accident more often."
   ],
   [
@@ -1392,7 +1392,7 @@
   ],
   [
    "I went to my nephew's school play.",
-   "Did your nephew enjoy his big night?",
+   "Did anything memorable happen on stage?",
    "The cardboard dragon's head fell off. They kept singing like nothing had happened.",
    "Sounds memorable.",
    "Best performance I've seen in years."
@@ -1406,8 +1406,8 @@
   ],
   [
    "A regular left a handwritten poem for the cleaning staff.",
-   "Did the cleaning staff appreciate the poem?",
-   "Terrible rhyme, lovely gesture. We put it on the wall.",
+   "What did the staff think of it?",
+   "They laughed at the terrible rhyme and put it on the wall.",
    "Do people read it?",
    "Every day. Someone even added a tiny illustration."
   ],
@@ -2794,7 +2794,7 @@
   ],
   [
    "I went to my neighbor's puppet show.",
-   "Did the puppet keep performing?",
+   "Anything memorable happen?",
    "One puppet lost an arm in the middle of the performance.",
    "Oh no.",
    "The puppeteer called it a shocking twist and carried on. I respect that level of composure."
@@ -2985,7 +2985,7 @@
    "I thought I'd lost my voice before yesterday's event.",
    "How did you save your voice?",
    "I spoke quietly all morning to save it.",
-   "Was your voice ready for the event?",
+   "Did keeping quiet help?",
    "A lot. Iris says it was the nicest morning she's had in months."
   ],
   [
@@ -3249,13 +3249,13 @@
    "I tried painting a chair instead of replacing it.",
    "What color?",
    "Deep blue. I accidentally painted one leg gold.",
-   "Did you leave the gold leg?",
+   "Are you going to repaint the leg?",
    "No. It looks like the chair has a secret."
   ],
   [
    "A friend asked me to teach her a simple stitch.",
-   "Were you able to teach her?",
-   "We spent the afternoon talking more than sewing.",
+   "Did she manage to learn the stitch?",
+   "We spent most of the afternoon talking, but she got the hang of it.",
    "What did she make?",
    "One tiny crooked flower on her sleeve. She wore it home."
   ],
@@ -3268,8 +3268,8 @@
   ],
   [
    "A stranger complimented a scarf I'd made.",
-   "Did she ask where you got it?",
-   "That it was handmade. She asked me to show her how."
+   "Did you tell her it was handmade?",
+   "I did. She even asked if I could show her how."
   ],
   [
    "I went to an outdoor concert and danced by myself.",
