@@ -130,6 +130,20 @@
    "A kid asked if they could use them for a practice deck.",
    "Did they take the whole box?",
    "Half of it. And now our beginner table looks like a rainbow. Honestly, I like it."
+  ],
+  [
+   "I need an opinion on these two posters.",
+   "The colorful one or the simple one?",
+   "Exactly. The colorful one is mine; the simple one is from a new volunteer.",
+   "Which do they prefer?",
+   "The simple one. I think I'll hang both and let them choose the next event's design."
+  ],
+  [
+   "Someone brought a little cake to thank the shop staff.",
+   "What's the occasion?",
+   "That's the thing. Apparently it doesn't have to be a special day.",
+   "Are you keeping some for yourself?",
+   "I put a slice aside before anyone noticed. I've learned at least one thing from Camila."
   ]
  ],
  "reina": [
@@ -257,6 +271,20 @@
    "'Dough or Die.'",
    "Are the pastries good?",
    "Very. That's what makes it so irritating."
+  ],
+  [
+   "I lost a match yesterday and didn't immediately rewrite my deck.",
+   "That sounds unusual for you.",
+   "I went home, made dinner, and watched a movie first.",
+   "Did it help?",
+   "Yes. I spotted the mistake this morning without being angry at myself."
+  ],
+  [
+   "See this crooked little trophy?",
+   "It looks homemade.",
+   "My sister made it when we were kids, for a game I barely remember.",
+   "Why keep it?",
+   "She was so proud of me. I'd rather have that on my shelf than another medal."
   ]
  ],
  "shiori": [
@@ -382,6 +410,20 @@
    "Partly. The windows fog up, and nobody complains if you sit with a book for a while.",
    "Alma doesn't mind?",
    "She brings me tea before I even ask."
+  ],
+  [
+   "Can you help me decide whether to return this book?",
+   "You didn't enjoy it?",
+   "I loved the first half. The ending annoyed me.",
+   "So why keep it?",
+   "I want to read it again to find out whether I'm being unfair. That is a terrible reason to miss the return date."
+  ],
+  [
+   "There's a little note taped inside the library clock.",
+   "What does it say?",
+   "'Remember to go home sometimes.'",
+   "Who wrote it?",
+   "The librarian, to herself. I think we should both take it seriously."
   ]
  ],
  "yuna": [
@@ -507,6 +549,20 @@
    "Myself. I challenged the traffic lights.",
    "Did you win?",
    "No. But I stopped at a really good bakery, so the judges are reviewing the result."
+  ],
+  [
+   "I practiced being quiet for an entire hour.",
+   "You? On purpose?",
+   "Yes. I wanted to see if I could focus without filling every silence.",
+   "How'd it go?",
+   "Pretty well. Then I saw a dog wearing boots and had to tell someone. Look at this photo!"
+  ],
+  [
+   "I was supposed to cheer up my friend yesterday.",
+   "Did you manage?",
+   "I brought silly stickers and a terrible movie.",
+   "Did it work?",
+   "Not right away. We just sat there a bit. That was probably what they needed."
   ]
  ],
  "akari": [
@@ -626,6 +682,20 @@
    "Not quite. This one has things like 'why do some songs feel like old places?'",
    "Any answers?",
    "None yet. I'm enjoying not having them."
+  ],
+  [
+   "I keep finding a little drawing in the margins of my deck notes.",
+   "You drew it?",
+   "A tiny umbrella. It appears whenever a match started badly.",
+   "What does it mean?",
+   "I don't remember. But it makes me laugh now, so I'm keeping it."
+  ],
+  [
+   "Somebody asked me what my favorite part of tournaments is.",
+   "Let me guess: collecting data.",
+   "I almost said that. Then I realized it's eating together afterward.",
+   "Did you tell them?",
+   "Yes. They looked more surprised than you do."
   ]
  ],
  "camila": [
@@ -753,6 +823,20 @@
    "I'd stop correcting her receipts if she'd stop calling me a workaholic.",
    "Did either of you agree?",
    "No. We shared the cake and went back to arguing. Best deal I've made all week."
+  ],
+  [
+   "I found a card with a little note on the back.",
+   "Does that hurt its value?",
+   "Financially, yes. But it says 'good luck, kiddo' in somebody's handwriting.",
+   "Are you selling it?",
+   "I haven't decided. I want to ask whether the seller knows who wrote it first."
+  ],
+  [
+   "I bought two coffees and got charged for three.",
+   "Did you complain?",
+   "Of course. Politely, before you make that face.",
+   "What happened?",
+   "They apologized, refunded me, and offered a pastry. I left a bigger tip than usual."
   ]
  ],
  "marina": [
@@ -874,6 +958,20 @@
    "No, a café with someone practicing the piano badly.",
    "That sounds difficult to sit through.",
    "A little. But by the end they finally got the melody right. Everybody clapped."
+  ],
+  [
+   "The river's higher than it was yesterday.",
+   "Is that a problem?",
+   "No. It just means the little path by the reeds is flooded.",
+   "Will you take another route?",
+   "Yes. Nereo showed me one years ago. I should probably thank him for remembering."
+  ],
+  [
+   "I found a bench with a perfect view and terrible shade.",
+   "Which matters more?",
+   "Yesterday, the view. Today, the shade.",
+   "You're not going to choose?",
+   "Maybe I can move two steps to the left and have both. Amazing what a little compromise does."
   ]
  ],
  "kaede": [
@@ -997,6 +1095,20 @@
    "And a little drawing of a train in the corner.",
    "You know what it means?",
    "Yeah. That's enough. Some people don't need to write much."
+  ],
+  [
+   "Someone asked whether I'd stay in town after the season.",
+   "Did you answer?",
+   "I said I'd see how things go. That sounds evasive, doesn't it?",
+   "A little.",
+   "I'm not trying to be mysterious. I just don't want to promise an answer before I know it."
+  ],
+  [
+   "I ordered the same lunch three times this week.",
+   "Found a favorite?",
+   "The woman at the stall remembered my name on the second visit.",
+   "And the third?",
+   "She asked whether I wanted extra chili. I said yes. I'm apparently a regular now."
   ]
  ],
  "elio": [
@@ -2354,6 +2466,20 @@
    "No. I was mentally calculating when it would end.",
    "Did you stop?",
    "Yes. I took my watch off. The movie was much better after that."
+  ],
+  [
+   "Two beginners were arguing about a rule before their first turn.",
+   "Did you help?",
+   "I asked them to read the card aloud together.",
+   "Did that settle it?",
+   "Almost. One of them spotted the answer and apologized. The other offered a rematch after dinner."
+  ],
+  [
+   "I put the clipboard down early yesterday.",
+   "That sounds suspicious.",
+   "I went to the park and watched people play a game I didn't know.",
+   "Did you learn the rules?",
+   "Not even once. It was strangely relaxing."
   ]
  ],
  "teo": [
@@ -2469,6 +2595,20 @@
    "One question, then I let them leave.",
    "That doesn't sound like you.",
    "It should. Nobody owes me a speech after a rough match."
+  ],
+  [
+   "A kid asked me to say something in my announcer voice.",
+   "What did you announce?",
+   "That his mum had found his lost scarf.",
+   "Was she amused?",
+   "She laughed. The kid looked like he'd won a championship. Best call of the day."
+  ],
+  [
+   "I spent a whole evening listening to somebody else tell stories.",
+   "How did that feel?",
+   "A little unnatural at first.",
+   "Then?",
+   "I learned more about my neighbor in an hour than I had in three years. Turns out I should do that more."
   ]
  ],
  "iris": [
@@ -2586,6 +2726,20 @@
    "He said it was a 'ceremonial upgrade.'",
    "Did you forgive him?",
    "Only after he promised to stop using it as a coaster."
+  ],
+  [
+   "I made myself a checklist with only three things on it.",
+   "That's unlike you.",
+   "The old one had nineteen. I wanted to finish a day without carrying unfinished work home.",
+   "Did you manage?",
+   "Two and a half. I'm counting the half as progress."
+  ],
+  [
+   "There's a child who waves at every delivery van.",
+   "Does she wave at yours?",
+   "Every time. Last week she drew me a tiny truck.",
+   "Did you keep it?",
+   "It's taped inside my clipboard. Teo hasn't found it yet, thankfully."
   ]
  ],
  "barb": [
