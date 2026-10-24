@@ -57,3 +57,16 @@ test('first meetings and existing characteristic dialogue remain accessible',()=
  assert.equal(chats.select({day:5,slot:0},'unknown'),null);
  assert.equal(chats.shouldUse({day:5,slot:0},'unknown'),false);
 });
+
+test('protagonist replies respond to a topic without repeating stock questions across the cast',()=>{
+ const replies=new Map();
+ for(const [npc,rows] of Object.entries(chats.topics)){
+  for(const [i,lines] of rows.entries())for(let j=1;j<lines.length;j+=2){
+   const reply=lines[j].toLowerCase().trim();
+   assert.ok(!/and how are things going otherwise\?/.test(reply),npc+':'+i);
+   replies.set(reply,(replies.get(reply)||0)+1);
+  }
+ }
+ const repeated=[...replies.entries()].filter(([reply,count])=>count>2);
+ assert.deepEqual(repeated,[],'stock protagonist prompts should not dominate everyday Talk');
+});
