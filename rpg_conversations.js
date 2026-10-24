@@ -6,6 +6,7 @@
  if(typeof module==='object'&&module.exports)module.exports=api;
  if(root)root.NeoRpgConversations=api;
 })(typeof window!=='undefined'?window:null,function(){
+ const EVERYDAY=typeof module==='object'&&module.exports?require('./rpg_everyday_chats'):window.NeoRpgEverydayChats;
  function hash(text){
   let n=2166136261;
   for(const ch of String(text)){n=Math.imul(n^ch.charCodeAt(0),16777619)>>>0;}
@@ -22,6 +23,12 @@
    return [{speaker:npc,text:character.intro||lines[0]},
     {speaker:'Protagonist',text:'Thanks. I was hoping to meet people around town.'},
     {speaker:npc,text:lines[topic(state,npc,lines.length)]}];
+  }
+  // Most days can be about something other than cards or defining traits.
+  // First meetings, reactive scenes and story events retain their own dialogue.
+  if(EVERYDAY?.shouldUse(state,npc)){
+   const casual=EVERYDAY.select(state,npc);
+   if(casual?.length)return casual;
   }
   const index=topic(state,npc,lines.length);
   const authored=dialogueModule?.talkLines?.(npc,index,lines[index]);
