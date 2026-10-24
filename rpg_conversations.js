@@ -7,6 +7,7 @@
  if(root)root.NeoRpgConversations=api;
 })(typeof window!=='undefined'?window:null,function(){
  const EVERYDAY=typeof module==='object'&&module.exports?require('./rpg_everyday_chats'):window.NeoRpgEverydayChats;
+ const CHARACTER=typeof module==='object'&&module.exports?require('./rpg_character_chats'):window.NeoRpgCharacterChats;
  function hash(text){
   let n=2166136261;
   for(const ch of String(text)){n=Math.imul(n^ch.charCodeAt(0),16777619)>>>0;}
@@ -29,6 +30,12 @@
   if(EVERYDAY?.shouldUse(state,npc)){
    const casual=EVERYDAY.select(state,npc);
    if(casual?.length)return casual;
+  }
+  // On the other days, mix new, voice-specific banter with established topics.
+  // Keep first meetings and higher-priority event/reactivity dialogue untouched.
+  if(CHARACTER?.shouldUse(state,npc)){
+   const voiced=CHARACTER.select(state,npc);
+   if(voiced?.length)return voiced;
   }
   const index=topic(state,npc,lines.length);
   const authored=dialogueModule?.talkLines?.(npc,index,lines[index]);
