@@ -807,11 +807,11 @@
    "For the whole song. It was nice not having to hurry."
   ],
   [
-   "My new shoes have stopped squeaking.",
-   "Are you happy about that?",
-   "Actually, I miss the noise. It was like having an entrance theme.",
-   "Could you make one yourself?",
-   "Maybe. I'll need something heroic but not too loud."
+   "You wouldn't believe what I found at the back of my cupboard.",
+   "Something useful?",
+   "A box of postcards I bought years ago and never sent.",
+   "Are you going to mail them?",
+   "I think so. One even has a stamp. Past me was halfway there."
   ],
   [
    "I went to a beginner cooking class.",
@@ -1615,11 +1615,11 @@
    "Beautiful. I'm glad I got soaked."
   ],
   [
-   "I finally learned the ending of that ridiculous handshake.",
-   "Show me.",
-   "Two claps, a spin, and then a bow like performers.",
-   "That actually works.",
-   "I know! Try not to look so surprised."
+   "My neighbor taught me a handshake with two claps and a spin.",
+   "Isn't that a bit much for a handshake?",
+   "Absolutely. We had to rehearse it three times.",
+   "Did you get it right?",
+   "Not once. I'm still committed to teaching it to everyone I meet."
   ],
   [
    "I want a day with no plans and no clock.",
