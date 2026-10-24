@@ -49,7 +49,7 @@ test('group Talk never invents absent or unintroduced conversation partners',()=
  assert.equal(GROUP.select(metState(),GROUP.groups[0].pair[0],[]),null);
 });
 
-test('both variants in every group can occur at real co-locations during the 90-day season',()=>{
+test('all five variants in every group can occur at real co-locations during the 90-day season',()=>{
  for(const g of GROUP.groups){
   const seen=new Set();
   for(let day=1;day<=90;day++)for(let slot=0;slot<3;slot++){
