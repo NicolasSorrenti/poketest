@@ -762,7 +762,7 @@
   ],
   [
    "I tried to keep my phone in my bag all afternoon.",
-   "Did you manage?",
+   "Did your phone stay in the bag?",
    "Until I needed to look up the name of a tree.",
    "What tree?",
    "I still don't know. Maybe I can ask someone who lives near it."
@@ -1361,12 +1361,12 @@
    "I offered to help at a beginner table without being asked.",
    "Were you nervous?",
    "Of course. Then I spent ten minutes helping someone count Energy cards.",
-   "Did you enjoy it?",
+   "Did helping feel different from before?",
    "Yeah. It's nice being the person who knows an answer sometimes."
   ],
   [
    "I found an old card sleeve with my cousin's handwriting on it.",
-   "What did it say?",
+   "Did she write something encouraging?",
    "'Don't forget to have fun.' She used to write that on everything.",
    "Are you keeping it?",
    "I put it back in my deck box. Some reminders are worth carrying."
@@ -1456,7 +1456,7 @@
   ],
   [
    "I finally visited the little museum down the road.",
-   "Worth it?",
+   "Any reason you'd go back?",
    "There's a whole room of antique toys. I nearly forgot to leave before closing."
   ],
   [
@@ -1480,7 +1480,7 @@
    "A teenager asked whether they could study at the big table.",
    "Was it busy?",
    "Not then. They spread notes everywhere and ordered one tea.",
-   "Did you mind?",
+   "Were they getting in your way?",
    "Not at all. I brought a second pot when their friends arrived."
   ],
   [
@@ -1529,7 +1529,7 @@
   ],
   [
    "I kept getting a crossword clue wrong last night.",
-   "Which one?",
+   "What was the clue?",
    "It meant 'regret.' I kept writing 'banana.' I really should've eaten before starting."
   ],
   [
@@ -1641,7 +1641,7 @@
    "Someone painted the old dock bench bright blue.",
    "Without asking?",
    "They asked. I said any color was fine, so long as they sanded it first.",
-   "Do you like it?",
+   "How do you feel about the blue?",
    "It's a little brighter than I expected. But the kids have stopped calling it 'the sad bench.'"
   ],
   [
@@ -1782,7 +1782,7 @@
    "I attended a concert without looking at my watch.",
    "Was that difficult?",
    "At first. Then I realized nobody in the room was waiting for me to finish anything.",
-   "Did you enjoy it?",
+   "Would you want to go again?",
    "Very much. I bought tickets for another one."
   ],
   [
@@ -1850,7 +1850,7 @@
   ],
   [
    "Someone left a tiny toy astronaut on a park bench.",
-   "Did you take it?",
+   "Did you bring the astronaut home?",
    "No. I sat it upright like it was waiting for a bus.",
    "You should've taken a photo.",
    "I did. It looks more patient than most people."
@@ -1914,7 +1914,7 @@
   ],
   [
    "Somebody put a handwritten sign on the broken bench by the park.",
-   "What did it say?",
+   "Was there a warning on the sign?",
    "'Bench is resting. Please give it some space.'",
    "Did they fix it?",
    "Not yet. But people stopped trying to sit on it, so I guess it worked."
@@ -2047,7 +2047,7 @@
    "My aunt taught me how to grow herbs on a windowsill.",
    "Is that hard?",
    "Not really, but I keep watering the wrong pot.",
-   "Which one?",
+   "Which pot keeps getting extra water?",
    "The empty one. I'm going to label them this afternoon."
   ],
   [
@@ -2114,7 +2114,7 @@
   ],
   [
    "I got to the game night and there was only one seat left.",
-   "Did you take it?",
+   "Did you manage to sit down with them?",
    "I nearly went home. Then someone smiled and moved their bag.",
    "Did you stay?",
    "The whole evening. I even suggested the second game."
@@ -2158,7 +2158,7 @@
   ],
   [
    "I spent yesterday helping a friend paint their kitchen.",
-   "What color?",
+   "What shade did you settle on?",
    "We agreed on yellow. Somehow it turned out orange.",
    "Did they mind?",
    "They love it. They're calling it 'sunset surprise.'"
@@ -2177,7 +2177,7 @@
   ],
   [
    "I tried making candles this weekend.",
-   "Any success?",
+   "Did the candles hold their shape?",
    "The first one leaned to one side, but it smells amazing.",
    "Are you keeping it?",
    "Of course. I made it myself."
@@ -2200,7 +2200,7 @@
    "A friend showed me a shortcut through a garden.",
    "Was it faster?",
    "Not at all. We stopped to watch butterflies.",
-   "Worth it?",
+   "Was the longer walk worthwhile?",
    "Completely. I take the longer route now."
   ],
   [
@@ -2354,7 +2354,7 @@
   ],
   [
    "I helped a neighbor paint a bedroom.",
-   "What color?",
+   "Which shade did they choose?",
    "Green. A very brave green.",
    "Did they like it?",
    "We opened the windows and danced while it dried."
@@ -2370,7 +2370,7 @@
    "I sat for a portrait on the street.",
    "How did it turn out?",
    "The artist got my nose right, but gave me a hairstyle I've never had.",
-   "Did you mind?",
+   "Did the unfamiliar hairstyle bother you?",
    "No. I'm tempted to try it."
   ],
   [
@@ -2406,7 +2406,7 @@
   ],
   [
    "I found an old photo where nobody is looking at the camera.",
-   "Do you like it?",
+   "Is it one of your favorites?",
    "I think it's my favorite from that day.",
    "What makes that photo special?",
    "Everyone's laughing at something I can't remember. It looks exactly how being there felt."
@@ -2671,7 +2671,7 @@
   ],
   [
    "I tried painting a little clay bowl.",
-   "Any success?",
+   "Did you get a decent bowl out of it?",
    "Paint on everything but the bowl. Then I started over."
   ],
   [
@@ -2806,7 +2806,7 @@
   ],
   [
    "A friend convinced me to take an introductory salsa class.",
-   "How did you do?",
+   "Were you able to follow the steps?",
    "I counted the steps beautifully and still ended up facing the wrong wall."
   ],
   [
@@ -2818,7 +2818,7 @@
   ],
   [
    "There was a toy car under the bus seat.",
-   "Did you take it?",
+   "Did you hand the toy car in?",
    "Gave it to the driver. He said a child had been looking for it all morning.",
    "Good timing.",
    "For a change, yes."
@@ -2963,7 +2963,7 @@
   ],
   [
    "I got invited to host a neighborhood pet parade.",
-   "How did you do?",
+   "What was your big announcement?",
    "I announced every dog as if it were royalty. One cat walked off the stage."
   ],
   [
@@ -3151,7 +3151,7 @@
    "I made myself a checklist with only three things on it.",
    "That's unlike you.",
    "The old one had nineteen. I wanted to finish a day without carrying unfinished work home.",
-   "Did you manage?",
+   "Did you finish the little list?",
    "Two and a half. I'm counting the half as progress."
   ],
   [
@@ -3165,7 +3165,7 @@
    "I stopped by the market without a shopping list.",
    "That sounds brave for you.",
    "I bought fresh bread and forgot the detergent.",
-   "Worth it?",
+   "Was the bread worth forgetting the detergent?",
    "The bread was excellent. I'll wash clothes tomorrow."
   ],
   [
