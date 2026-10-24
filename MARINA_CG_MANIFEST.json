@@ -1,0 +1,30 @@
+{
+  "character": "marina",
+  "status": "approved art assets only; story integration not yet wired",
+  "events": [
+    {
+      "event": "Waterline",
+      "slug": "marina_waterline",
+      "image": "rpg-assets/events/cg/season01/marina_waterline.webp",
+      "thumbnail": "rpg-assets/events/cg/season01/thumbs/marina_waterline.webp"
+    },
+    {
+      "event": "The Application",
+      "slug": "marina_the_application",
+      "image": "rpg-assets/events/cg/season01/marina_the_application.webp",
+      "thumbnail": "rpg-assets/events/cg/season01/thumbs/marina_the_application.webp"
+    },
+    {
+      "event": "A Step Forward",
+      "slug": "marina_a_step_forward",
+      "image": "rpg-assets/events/cg/season01/marina_a_step_forward.webp",
+      "thumbnail": "rpg-assets/events/cg/season01/thumbs/marina_a_step_forward.webp"
+    },
+    {
+      "event": "After the Tide",
+      "slug": "marina_after_the_tide",
+      "image": "rpg-assets/events/cg/season01/marina_after_the_tide.webp",
+      "thumbnail": "rpg-assets/events/cg/season01/thumbs/marina_after_the_tide.webp"
+    }
+  ]
+}

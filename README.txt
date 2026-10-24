@@ -1,7 +1,1 @@
-Neo Campus game-ready asset package
-
-Steps:
-1. Unzip this file at the ROOT of the poketest repository.
-2. It will place the artwork at:
-   rpg-assets/characters/camila/events/booster.webp
-3. Commit and push the new file.
+Marina story CG art pack. Extract into repository root. Includes four 1920x1080 WebP CGs and four 640x360 WebP thumbnails. Story event references must still be added in code; no GitHub commit was made.

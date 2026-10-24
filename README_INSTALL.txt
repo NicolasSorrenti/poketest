@@ -1,0 +1,1 @@
+Extract this ZIP at the ROOT of the poketest repository, preserving directories. This adds assets only. You must register new image paths with story events/gallery logic before they display automatically. Do not assume all story scenes are already visually approved or wired.

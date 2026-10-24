@@ -1,0 +1,65 @@
+{
+  "note": "Asset pack only; story-event triggers and gallery registrations must be wired in code. Existing character packs are included without changing their original manifests. Some CGs are concept art pending visual approval.",
+  "existing_packs": [
+    "hana_story_cgs_all_four.zip",
+    "reina_story_cgs_all_four.zip",
+    "camila_story_cgs_all_four.zip",
+    "marina_story_cgs_all_four.zip"
+  ],
+  "new_images": [
+    {
+      "id": "kaede_tomorrow_maybe",
+      "source": "a_detailed_high_quality_anime_illustration_in_a_m.png",
+      "image": "/rpg-assets/events/cg/season01/kaede_tomorrow_maybe.webp",
+      "thumb": "/rpg-assets/events/cg/season01/thumbs/kaede_tomorrow_maybe.webp"
+    },
+    {
+      "id": "akari_an_unplanned_afternoon",
+      "source": "a_warm_detailed_anime_style_illustration_of_a_coz.png",
+      "image": "/rpg-assets/events/cg/season01/akari_an_unplanned_afternoon.webp",
+      "thumb": "/rpg-assets/events/cg/season01/thumbs/akari_an_unplanned_afternoon.webp"
+    },
+    {
+      "id": "akari_no_more_predictions",
+      "source": "a_detailed_cinematic_anime_style_illustration_of.png",
+      "image": "/rpg-assets/events/cg/season01/akari_no_more_predictions.webp",
+      "thumb": "/rpg-assets/events/cg/season01/thumbs/akari_no_more_predictions.webp"
+    },
+    {
+      "id": "shiori_a_recorded_match",
+      "source": "a_cozy_cinematic_anime_style_illustration_in_a_wa.png",
+      "image": "/rpg-assets/events/cg/season01/shiori_a_recorded_match.webp",
+      "thumb": "/rpg-assets/events/cg/season01/thumbs/shiori_a_recorded_match.webp"
+    },
+    {
+      "id": "shiori_an_open_door",
+      "source": "a_cozy_intimate_anime_style_scene_in_warm_cinem.png",
+      "image": "/rpg-assets/events/cg/season01/shiori_an_open_door.webp",
+      "thumb": "/rpg-assets/events/cg/season01/thumbs/shiori_an_open_door.webp"
+    },
+    {
+      "id": "shiori_beyond_the_score",
+      "source": "a_cozy_cinematic_anime_style_illustration_of_an.png",
+      "image": "/rpg-assets/events/cg/season01/shiori_beyond_the_score.webp",
+      "thumb": "/rpg-assets/events/cg/season01/thumbs/shiori_beyond_the_score.webp"
+    },
+    {
+      "id": "yuna_behind_the_joke",
+      "source": "a_detailed_vibrant_anime_style_scene_in_an_arcade.png",
+      "image": "/rpg-assets/events/cg/season01/yuna_behind_the_joke.webp",
+      "thumb": "/rpg-assets/events/cg/season01/thumbs/yuna_behind_the_joke.webp"
+    },
+    {
+      "id": "yuna_a_real_shot",
+      "source": "a_dynamic_anime_style_high_detail_scene_in_a_bri.png",
+      "image": "/rpg-assets/events/cg/season01/yuna_a_real_shot.webp",
+      "thumb": "/rpg-assets/events/cg/season01/thumbs/yuna_a_real_shot.webp"
+    },
+    {
+      "id": "yuna_after_the_encore",
+      "source": "a_detailed_cinematic_anime_style_illustration_a.png",
+      "image": "/rpg-assets/events/cg/season01/yuna_after_the_encore.webp",
+      "thumb": "/rpg-assets/events/cg/season01/thumbs/yuna_after_the_encore.webp"
+    }
+  ]
+}
