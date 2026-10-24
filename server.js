@@ -11,6 +11,36 @@ const types={'.html':'text/html; charset=utf-8','.js':'text/javascript; charset=
 const classic=new ClassicLocalService();
 const online=new ClassicOnlineService();
 const rpgDuels=new RpgDuelCheckpoint();
+// A duel has one cloud writer. Keep the newest immutable state while a write is
+// in flight; neither Supabase latency nor failures should delay player actions.
+const checkpointQueues=new WeakMap();
+function queueDuelCheckpoint(session,identity){
+ let queue=checkpointQueues.get(session);
+ if(!queue){queue={running:false,pending:null};checkpointQueues.set(session,queue);}
+ queue.pending={snapshot:structuredClone(rpgDuels.snapshot(session)),identity};
+ if(queue.running)return;
+ queue.running=true;
+ void (async()=>{
+  try{
+   while(queue.pending){
+    const item=queue.pending;queue.pending=null;
+    // The CAS expectation comes from the last acknowledged write, not the
+    // revision of the game state captured for this particular command.
+    const savedSession={...session,...item.snapshot,
+     checkpointRevision:session.checkpointRevision};
+    try{
+     await rpgDuels.save(savedSession,item.identity);
+     session.checkpointRevision=savedSession.checkpointRevision;
+    }catch(error){
+     console.warn('RPG duel background checkpoint failed:',error.message);
+     // On conflict, do not overwrite another device's checkpoint.
+     // A later action may retry, but gameplay remains responsive.
+    }
+   }
+  }finally{queue.running=false;}
+ })();
+}
+
 const {CubeService}=require('./cube_service');
 const cube=new CubeService();
 const {CubeRoomService}=require('./cube_room_service');
@@ -87,11 +117,9 @@ async function api(req,res,pathName,url){
    const body=await parseJSON(req);
    const result=classic.action(token,body.command,body.revision);
    if(identity){
-    try{await rpgDuels.save(session,identity);result.cloudSaved=true;}
-    catch(error){
-     result.cloudSaved=false;
-     result.cloudError=error.code==='40001'?'Battle checkpoint conflict with another device.':'Cloud checkpoint failed. Progress is still active on this server.';
-    }
+    queueDuelCheckpoint(session,identity);
+    // Accepted by the local authoritative engine, but not yet durable in cloud.
+    result.cloudSaved=false;
    }else if(session.rpgLocalOnly){
     result.cloudSaved=false;
     result.cloudError='Sign in through the RPG Cloud button for durable battle autosaves in future matches.';
