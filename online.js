@@ -3,6 +3,22 @@
 // Every button sends a typed command to the same server-side Classic reducer.
 (()=>{
  const $=id=>document.getElementById(id);
+ function settleBoot(error){
+  const loading=$('duelLoading');
+  if(error){
+   $('duelLoadingTitle').textContent='Unable to open the duel';
+   $('duelLoadingText').textContent=error.message||String(error);
+   $('duelLoadingSpinner').hidden=true;
+   $('duelLoadingRetry').hidden=false;
+   $('duelLoadingBack').hidden=false;
+   $('duelLoadingBack').href=cubeRoomCode?'/cube_room.html?room='+encodeURIComponent(cubeRoomCode):'/play.html';
+   return;
+  }
+  loading.hidden=true;
+  document.body.classList.remove('duel-booting');
+ }
+ $('duelLoadingRetry').addEventListener('click',()=>location.reload());
+
  const cubeRoomCode=new URLSearchParams(location.search).get('cubeRoom');
  let cubeReturnTimer=null;
  function returnToCubeWhenDone(){
@@ -697,8 +713,9 @@
    token=sessionStorage.getItem('neoOnlineToken');roomCode=sessionStorage.getItem('neoOnlineRoom');
    if(token&&roomCode){try{current=await api('state?code='+encodeURIComponent(roomCode));}
     catch{token=null;roomCode=null;sessionStorage.removeItem('neoOnlineToken');sessionStorage.removeItem('neoOnlineRoom');}}
-   render();setInterval(refresh,1200);
-  }catch(e){$('startupError').textContent=e.message||String(e);}
+   if(cubeRoomCode&&!current)throw Error('This Cube room match is no longer available. Return to the tournament.');
+   render();settleBoot();setInterval(refresh,1200);
+  }catch(e){$('startupError').textContent=e.message||String(e);settleBoot(e);}
  }
  window.addEventListener('resize',()=>{if(current?.view)renderHandFan(current.view.players[side()]?.hand);});
  $('closeHand').addEventListener('click',()=>$('handTray').classList.add('hidden'));
