@@ -15,7 +15,7 @@ function metState(day=1,slot=0,location='shop'){
 
 test('authored multi-speaker conversations are complete and use actual cast IDs',()=>{
  assert.equal(GROUP.groups.length,14);
- assert.equal(GROUP.groups.reduce((n,g)=>n+g.scenes.length,0),28);
+ assert.equal(GROUP.groups.reduce((n,g)=>n+g.scenes.length,0),56);
  assert.deepEqual(GROUP.validate(),[]);
  const keys=new Set();
  for(const g of GROUP.groups){
@@ -69,7 +69,7 @@ test('both variants in every group can occur at real co-locations during the 90-
    }
    assert.equal(JSON.stringify(state),snapshot,'group selection mutates saves');
   }
-  assert.deepEqual([...seen].sort(),[0,1],g.pair.join('+')+' never displays a variant');
+  assert.deepEqual([...seen].sort(),[0,1,2,3],g.pair.join('+')+' never displays a variant');
  }
 });
 
@@ -88,7 +88,7 @@ test('first meetings win; otherwise Talk can select group conversation and fall 
  const normal=VN.dialogue(state,npc,actor,null);
  assert.ok(normal.length>=3);
  assert.ok(normal.some(line=>line.speaker==='Protagonist'));
- assert.ok(everyday.topics[npc].length===19);
+ assert.ok(everyday.topics[npc].length===21);
 });
 
 test('browser loads group content before Talk; runtime passes real attendance to both entry points',()=>{
