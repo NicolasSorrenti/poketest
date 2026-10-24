@@ -13,6 +13,11 @@
   const offers=core.shopPacks(progress);
   const themes=core.themedPacks(progress);
   const offerBySet=new Map(offers.map(offer=>[offer.set,offer]));
+  const energyIds=new Set([...core.ENERGY].filter(id=>id!=='base1-96'));
+  const descriptors=[
+   ...core.SHOP_OFFERS.map(offer=>({id:'set:'+offer.set,name:core.SETS[offer.set].name+' Booster',kind:'set',set:offer.set})),
+   ...core.THEMED_PACKS.map(theme=>({id:'theme:'+theme.id,name:theme.name,kind:'theme',theme:theme.id}))
+  ];
   const futureThemes=core.themedPacks(future);
   const themePools=new Map();
   function possible(offer,unlockedSets){
