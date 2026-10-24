@@ -158,11 +158,11 @@
  ],
  "camila": [
   [
-   "A kid offered me a card worth far more than the price he named.",
+   "A kid tried selling me a rare card for a fraction of its value.",
    "Did you tell him?",
-   "I did. He thought I was trying to talk him out of selling it.",
-   "And was he?",
-   "No. He wanted it for his brother. So we looked for a cheaper copy together."
+   "Of course. Turns out he was saving for his brother's birthday.",
+   "So what happened?",
+   "I found him another buyer who'd pay fairly. He came back later to show me the present."
   ],
   [
    "People think I never give anything away.",
@@ -382,11 +382,11 @@
    "Even then. Hospitality doesn't have a minimum purchase."
   ],
   [
-   "Do you have time for a cup of tea?",
-   "You're asking me that in my own café?",
-   "Yes, but I mean sitting down. Not making it for somebody.",
-   "That does sound nice.",
-   "Good. You pour yours, I'll pour mine. My feet are declaring a strike."
+   "I was about to make myself some tea, then remembered I haven't sat down all day.",
+   "Want some company?",
+   "Are you offering to sit through the slowest cup of tea in town?",
+   "Sounds perfect.",
+   "Good. Just let me put this tray down before I change my mind."
   ],
   [
    "Everyone loves the crooked table by the window.",
