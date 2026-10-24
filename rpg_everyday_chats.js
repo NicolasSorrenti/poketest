@@ -840,19 +840,19 @@
    "I did. Now only the left shoe squeaks. I think it's trying to communicate."
   ],
   [
-   "I lost my shopping list.",
-   "Did you remember what you needed?",
-   "I bought soap and a pear. Pretty sure I went out for batteries."
+   "I think I've forgotten why I went shopping.",
+   "What did you bring home?",
+   "Soap and a pear. I found the list later; it only said 'batteries.'"
   ],
   [
-   "I baked cookies for the first time.",
-   "Can I try one?",
-   "Sure, but soften it in tea first. I value your teeth."
+   "I tried baking cookies. Want one?",
+   "Sure. Why are you holding it with both hands?",
+   "They're a little hard. You'll need a drink to go with it."
   ],
   [
-   "I heard a street musician playing a song I knew.",
+   "A street musician was playing a song my family used to sing.",
    "Did you stop?",
-   "For the whole song. It was nice not having to hurry."
+   "Yeah. I missed my bus, but I remembered the whole chorus."
   ],
   [
    "You wouldn't believe what I found at the back of my cupboard.",
@@ -862,16 +862,18 @@
    "I think so. One even has a stamp. Past me was halfway there."
   ],
   [
-   "I went to a beginner cooking class.",
-   "What did you make?",
-   "A beautiful omelet that stuck to the pan.",
-   "At least you learned something.",
-   "That a spatula can have personal enemies."
+   "I took a beginner cooking class.",
+   "What did you learn?",
+   "That my omelet can look beautiful right until I try to flip it.",
+   "Did you get to eat it?",
+   "Eventually. We called it scrambled eggs."
   ],
   [
-   "I tried a trivia quiz about sea creatures.",
-   "How did you do?",
-   "I knew every octopus question. It may be my calling."
+   "I tried a trivia quiz about ocean animals.",
+   "Did you win?",
+   "No, but I knew every octopus question.",
+   "That's something.",
+   "My team says I'm in charge of octopuses from now on."
   ],
   [
    "My neighbor gave me an old lamp.",
@@ -917,9 +919,11 @@
    "Old songs from family parties. We remembered every chorus."
   ],
   [
-   "I'm teaching myself to juggle three oranges.",
-   "How many can you catch?",
-   "One reliably. Two if I stop trying to look cool."
+   "I'm trying to learn to juggle.",
+   "How's it going?",
+   "I can keep two oranges in the air for about a second.",
+   "What about the third?",
+   "It sits on the table and judges me."
   ],
   [
    "I painted a little wooden birdhouse.",
@@ -936,19 +940,21 @@
    "Yes. Now she wants to bring me another one. I may never sleep again."
   ],
   [
-   "I went to a pottery class once.",
-   "What did you make?",
-   "A very questionable bowl. It's excellent at holding keys."
+   "A friend talked me into a pottery class.",
+   "Did you make anything?",
+   "A bowl that won't stand straight. It's perfect for holding my keys."
   ],
   [
-   "A dog visits my building every morning.",
-   "Does it have a name?",
-   "I call it Chairman. It only acknowledges me when I have a biscuit."
+   "That dog is back at my front door.",
+   "Does it have an owner?",
+   "Oh, yes. It lives two buildings over. I call it Chairman because it only visits when there are biscuits."
   ],
   [
-   "I saw a children's play with a cardboard dragon.",
-   "Was it good?",
-   "Its head fell off and the actors kept going. Best show all year."
+   "I went to my nephew's school play.",
+   "How was it?",
+   "The cardboard dragon's head fell off. They kept singing like nothing had happened.",
+   "Sounds memorable.",
+   "Best performance I've seen in years."
   ],
   [
    "I've been taking a drawing class after hours.",
@@ -965,9 +971,9 @@
    "Every day. Someone even added a tiny illustration."
   ],
   [
-   "I tried roller skating again after twenty years.",
-   "Did it come back to you?",
-   "My knees remembered something my feet had forgotten."
+   "I went roller skating for the first time in ages.",
+   "Did you remember how?",
+   "My knees did. My feet had apparently resigned."
   ],
   [
    "My friend sent me a photo of a very old tree.",
@@ -982,11 +988,11 @@
    "It did. Mostly how much we laughed at the rain."
   ],
   [
-   "There was a handwritten thank-you note slipped under my door.",
-   "For what?",
-   "Apparently I helped someone on a very bad day.",
-   "Do you remember?",
-   "Not really. That's what makes it so lovely."
+   "Someone left a thank-you note under my door.",
+   "Who from?",
+   "They didn't sign it. It says I helped them on a bad day.",
+   "Do you remember doing that?",
+   "Not exactly. I'll have to keep treating people well and hope that covers it."
   ],
   [
    "An old school friend called out of nowhere.",
@@ -1008,9 +1014,9 @@
    "Some. The instructor says enthusiasm counts for the rest."
   ],
   [
-   "I finally visited a museum I've lived near for years.",
-   "Any surprises?",
-   "A room full of antique toys. I spent most of my time there."
+   "I finally visited the little museum down the road.",
+   "Worth it?",
+   "There's a whole room of antique toys. I nearly forgot to leave before closing."
   ],
   [
    "I baked a chocolate cake for no special occasion.",
@@ -1032,19 +1038,19 @@
    "I did yesterday. It turned right back. We understand each other."
   ],
   [
-   "I wrote 'banana' on a crossword clue meaning 'regret.'",
-   "Why banana?",
-   "I'd skipped lunch. Apparently every answer was banana."
+   "I kept getting a crossword clue wrong last night.",
+   "Which one?",
+   "It meant 'regret.' I kept writing 'banana.' I really should've eaten before starting."
   ],
   [
-   "A kid put a smiling-star sticker on my toolbox.",
-   "Did you keep it?",
-   "Of course. Repairs feel less miserable with a celebrity present."
+   "Some kid put a smiling star sticker on my toolbox.",
+   "Did you take it off?",
+   "Why would I? It's the only employee around here that looks cheerful."
   ],
   [
-   "I found an old cassette tape that still plays.",
-   "What's on it?",
-   "An hour of someone identifying bird songs. I listened to all of it."
+   "I found a cassette of somebody identifying birdsongs.",
+   "Sounds fascinating.",
+   "Don't mock it. I listened all the way through and learned three birds."
   ],
   [
    "I bought an old record player at a yard sale.",
@@ -1061,14 +1067,14 @@
    "Three. She says I can practice with her next weekend."
   ],
   [
-   "I tried making homemade lemonade.",
-   "Was it good?",
-   "It was good until I added salt instead of sugar."
+   "I made lemonade yesterday.",
+   "Is that why you're drinking water?",
+   "I mistook the salt jar for the sugar jar. The lemonade was a learning experience."
   ],
   [
-   "There's a squirrel outside my window every morning.",
-   "Does it visit you?",
-   "It has a favorite branch. I feel rude if I don't say hello."
+   "There's a squirrel who visits my window every morning.",
+   "Do you feed it?",
+   "No. It has a favorite branch. I just make sure to say good morning."
   ],
   [
    "You ever go fishing and hope nothing bites?",
@@ -1099,9 +1105,11 @@
    "It belonged to her father. I'm glad I fixed it."
   ],
   [
-   "I tried to cook rice without a timer.",
-   "How did it go?",
-   "Crunchy on top, mysterious on the bottom. Never again."
+   "Tried cooking rice without the timer.",
+   "How was it?",
+   "Crunchy on top, burnt underneath. I called Marina and got laughed at.",
+   "Did she help?",
+   "She told me to soak the pot. Sensible woman."
   ],
   [
    "There's a stray dog that watches the morning ferry.",
@@ -1128,19 +1136,23 @@
    "I do. It holds exactly the right amount of tea. Please keep that to yourself."
   ],
   [
-   "A sudden shower caught me without an umbrella.",
-   "What did you do?",
-   "Ran through a puddle in very expensive shoes. Do not tell anyone."
+   "My shoes have survived a remarkable indignity.",
+   "Should I ask?",
+   "I had to run through a puddle in the rain.",
+   "Are they ruined?",
+   "No. I am simply embarrassed that I spent so much time avoiding puddles in the first place."
   ],
   [
-   "A friend persuaded me to sing karaoke.",
-   "How was it?",
-   "Dreadful. Everyone was kind enough that I've agreed to go again."
+   "A friend convinced me to try karaoke.",
+   "I didn't know you sang.",
+   "Neither did I. It was dreadful, but everyone was nice about it. I've agreed to go again."
   ],
   [
-   "My fridge magnet is a dancing carrot saying 'rooting for you.'",
-   "Is that really yours?",
-   "Yes. Please allow me one dreadful pun in private."
+   "Please ignore the refrigerator magnet.",
+   "The dancing carrot?",
+   "Yes. It says 'rooting for you.'",
+   "Did you buy it?",
+   "My friend gave it to me. It's awful. I love it."
   ],
   [
    "I found an old tin of watercolor paints.",
@@ -1164,9 +1176,11 @@
    "I know. I've been looking forward to telling someone all week."
   ],
   [
-   "I tried making soup without a recipe.",
-   "How did it go?",
-   "Quite well. The second bowl was better because I stopped worrying."
+   "I made soup without a recipe for once.",
+   "How was it?",
+   "Edible. Then I added more salt, and it was actually good.",
+   "Sounds simple.",
+   "That's what surprised me. I didn't need a plan."
   ],
   [
    "My friend insisted on taking me to an outdoor film screening.",
@@ -1197,9 +1211,11 @@
    "A ridiculous romance novel. I bought the sequel."
   ],
   [
-   "Someone in the elevator was carrying six balloons.",
-   "A party?",
-   "His grandmother's ninety-first birthday. I wished him luck."
+   "I held the elevator for a man with six balloons.",
+   "For a party?",
+   "His grandmother's ninety-first birthday. He was worried about finding the address.",
+   "Did he make it?",
+   "I pointed him toward the correct street. I hope she liked the balloons."
   ],
   [
    "A child at the museum explained dinosaurs to me.",
@@ -1207,9 +1223,9 @@
    "Three new fossil facts and one fact about his dog."
   ],
   [
-   "I made a playlist called 'walking nowhere.'",
-   "And the destination?",
-   "That's the point. There isn't one."
+   "I made a playlist with no purpose whatsoever.",
+   "What's it called?",
+   "Walking Nowhere. I put it on when I leave the office without a destination."
   ],
   [
    "I bought flowers for myself yesterday.",
