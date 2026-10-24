@@ -31,7 +31,7 @@
  function stage(next){
   const counts=Core.rank(next),inventory=owned();
   const illegal=next.length>60||Object.entries(counts).some(([id,n])=>
-   !(inventory[id]>0)||n>inventory[id]||(!Core.ENERGY.has(id)&&n>4));
+   !(inventory[id]>0)||n>inventory[id]||(!Core.isBasicEnergyId(id)&&next.filter(x=>Core.cardName(x)===Core.cardName(id)).length>4));
   if(illegal){notice='That edit exceeds your owned cards or campaign copy limits.';render();return;}
   state.deckJourney.draft=[...next];notice='';persist();status();renderStrategy();
  }
@@ -161,7 +161,7 @@
    builder=Builder.create({root:$('rpgDeckBuilder'),actionElement:$('rpgBuilderActions'),onChange:stage,
     config:{targetSize:60,eyebrow:'NEO HARBOR · YOUR COLLECTION',heading:'Build your 60-card deck',
      description:'Build with the cards you own. Save your changes to use them in the next duel.',
-     collectionLabel:'owned cards',nameLimit:false,unlimitedIds:[...Core.ENERGY],
+     collectionLabel:'owned cards',nameLimit:true,unlimitedIds:allCards.filter(c=>Core.isBasicEnergyId(c.id)).map(c=>c.id),
      validate:next=>Core.check(next,owned())}});
    $('strategySearch').oninput=renderSearch;
    $('saveDeck').onclick=()=>{
