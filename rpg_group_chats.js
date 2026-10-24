@@ -968,6 +968,66 @@
      "alma",
      "At least you'll help carry them."
     ]
+   ],
+   [
+    [
+     "sol",
+     "I brought an extra chair for the reading corner."
+    ],
+    [
+     "alma",
+     "And I brought cushions. We don't need to make a festival out of it."
+    ],
+    [
+     "Protagonist",
+     "Is that even possible with Sol involved?"
+    ],
+    [
+     "sol",
+     "Yes! A very quiet festival."
+    ],
+    [
+     "alma",
+     "You're calling it that already."
+    ],
+    [
+     "Protagonist",
+     "I could help arrange the books."
+    ],
+    [
+     "alma",
+     "Please. And if she brings bunting, hide it."
+    ]
+   ],
+   [
+    [
+     "alma",
+     "Sol has been telling me to leave the café for an evening."
+    ],
+    [
+     "sol",
+     "Just one evening! The shop won't fall down."
+    ],
+    [
+     "Protagonist",
+     "What would you do?"
+    ],
+    [
+     "alma",
+     "Visit my sister, probably. We haven't had dinner together in ages."
+    ],
+    [
+     "sol",
+     "See? That's a better plan than mine."
+    ],
+    [
+     "Protagonist",
+     "What was your plan?"
+    ],
+    [
+     "sol",
+     "Lantern parade. But dinner with her sister wins."
+    ]
    ]
   ]
  },
@@ -1035,6 +1095,66 @@
     [
      "luna",
      "I like it anyway."
+    ]
+   ],
+   [
+    [
+     "jinx",
+     "I tried teaching Luna how to draw graffiti-style letters."
+    ],
+    [
+     "luna",
+     "She made it look easy."
+    ],
+    [
+     "Protagonist",
+     "Can I see what you made?"
+    ],
+    [
+     "luna",
+     "It's a little uneven."
+    ],
+    [
+     "jinx",
+     "It's good! You gave the letters little stars."
+    ],
+    [
+     "Protagonist",
+     "That makes it yours."
+    ],
+    [
+     "luna",
+     "I might try it again, actually."
+    ]
+   ],
+   [
+    [
+     "luna",
+     "Jinx stayed while I practiced a song yesterday."
+    ],
+    [
+     "jinx",
+     "It sounded fine after the first run."
+    ],
+    [
+     "Protagonist",
+     "Why were you still there?"
+    ],
+    [
+     "jinx",
+     "Someone had to turn the pages."
+    ],
+    [
+     "luna",
+     "She also remembered where I kept getting lost."
+    ],
+    [
+     "Protagonist",
+     "That's pretty good support."
+    ],
+    [
+     "jinx",
+     "Don't make it weird. She's teaching me the chorus later."
     ]
    ]
   ]
@@ -1104,6 +1224,66 @@
      "rina",
      "You made their commute better."
     ]
+   ],
+   [
+    [
+     "sierra",
+     "The photographer wanted us both looking at the camera."
+    ],
+    [
+     "rina",
+     "But Sierra kept laughing at the wind blowing my hair everywhere."
+    ],
+    [
+     "Protagonist",
+     "Did you get a usable picture?"
+    ],
+    [
+     "sierra",
+     "Several. The candid one is my favorite."
+    ],
+    [
+     "rina",
+     "Mine too. We look like actual friends."
+    ],
+    [
+     "Protagonist",
+     "You are actual friends."
+    ],
+    [
+     "rina",
+     "Exactly. That's why I like it."
+    ]
+   ],
+   [
+    [
+     "rina",
+     "Sierra helped me pick a small gift for my crew."
+    ],
+    [
+     "sierra",
+     "She wanted to buy everyone the same thing."
+    ],
+    [
+     "Protagonist",
+     "What did you choose?"
+    ],
+    [
+     "rina",
+     "Little notebooks, all different colors."
+    ],
+    [
+     "sierra",
+     "And she wrote a note inside each."
+    ],
+    [
+     "Protagonist",
+     "That's a lot of work."
+    ],
+    [
+     "rina",
+     "They do a lot for me. It didn't feel like work."
+    ]
    ]
   ]
  },
@@ -1172,6 +1352,66 @@
      "shiori",
      "I won't tell a soul."
     ]
+   ],
+   [
+    [
+     "shiori",
+     "Elena just finished the mystery novel I lent her."
+    ],
+    [
+     "elena",
+     "I was wrong about the culprit."
+    ],
+    [
+     "Protagonist",
+     "Did that annoy you?"
+    ],
+    [
+     "elena",
+     "For perhaps five minutes."
+    ],
+    [
+     "shiori",
+     "Then she sent me three theories about the ending."
+    ],
+    [
+     "Protagonist",
+     "And now you're discussing it?"
+    ],
+    [
+     "elena",
+     "Yes. She has been intolerably gracious about being right."
+    ]
+   ],
+   [
+    [
+     "elena",
+     "I asked Shiori for a book that had nothing to do with work."
+    ],
+    [
+     "shiori",
+     "I gave her a travel diary."
+    ],
+    [
+     "Protagonist",
+     "Any good?"
+    ],
+    [
+     "elena",
+     "It made me want to visit places without an agenda."
+    ],
+    [
+     "shiori",
+     "I told her the train station is a start."
+    ],
+    [
+     "Protagonist",
+     "An actual day trip?"
+    ],
+    [
+     "elena",
+     "Perhaps. If nobody calls it a personal-development exercise."
+    ]
    ]
   ]
  },
@@ -1239,6 +1479,66 @@
     [
      "yuna",
      "At a substantial emotional loss."
+    ]
+   ],
+   [
+    [
+     "kaede",
+     "Yuna says I have to pick a song for the arcade playlist."
+    ],
+    [
+     "yuna",
+     "Every regular gets one pick."
+    ],
+    [
+     "Protagonist",
+     "What did you choose?"
+    ],
+    [
+     "kaede",
+     "A quiet instrumental. I thought it would be funny."
+    ],
+    [
+     "yuna",
+     "And it is! Everyone got weirdly focused."
+    ],
+    [
+     "Protagonist",
+     "Maybe you found the secret to high scores."
+    ],
+    [
+     "kaede",
+     "Don't tell the manager. They'll start charging for silence."
+    ]
+   ],
+   [
+    [
+     "yuna",
+     "I'm teaching Kaede my special victory dance."
+    ],
+    [
+     "kaede",
+     "I learned it by watching you lose twice."
+    ],
+    [
+     "Protagonist",
+     "That still counts as practice."
+    ],
+    [
+     "yuna",
+     "Thank you! Finally, someone understands art."
+    ],
+    [
+     "kaede",
+     "The last step is tripping over your own foot."
+    ],
+    [
+     "Protagonist",
+     "Is that intentional?"
+    ],
+    [
+     "yuna",
+     "It's an advanced technique."
     ]
    ]
   ]
@@ -1309,6 +1609,66 @@
      "hana",
      "I'll find you both a table."
     ]
+   ],
+   [
+    [
+     "elio",
+     "The beginner shelf needs more commons."
+    ],
+    [
+     "camila",
+     "I've got a box of extras nobody is buying."
+    ],
+    [
+     "hana",
+     "Don't make him negotiate over it."
+    ],
+    [
+     "Protagonist",
+     "Could you donate a few?"
+    ],
+    [
+     "camila",
+     "A few? I brought the whole box."
+    ],
+    [
+     "elio",
+     "Then we can actually finish the practice decks."
+    ],
+    [
+     "hana",
+     "This is why I like having you both around."
+    ]
+   ],
+   [
+    [
+     "hana",
+     "We need a name for the practice-deck lending program."
+    ],
+    [
+     "elio",
+     "What about 'Borrow a Deck'?"
+    ],
+    [
+     "camila",
+     "Accurate, but hardly memorable."
+    ],
+    [
+     "Protagonist",
+     "Maybe the sign can explain it instead of being clever."
+    ],
+    [
+     "hana",
+     "That's exactly what I wanted."
+    ],
+    [
+     "camila",
+     "Fine. But I'm designing the sign."
+    ],
+    [
+     "elio",
+     "I'll check the spelling."
+    ]
    ]
   ]
  },
@@ -1378,6 +1738,66 @@
      "yuna",
      "I can try. No promises."
     ]
+   ],
+   [
+    [
+     "teo",
+     "Today's arcade challenge has a new rule."
+    ],
+    [
+     "kaede",
+     "Nobody told me there was a challenge."
+    ],
+    [
+     "yuna",
+     "That's part of the challenge."
+    ],
+    [
+     "Protagonist",
+     "What actually are the rules?"
+    ],
+    [
+     "teo",
+     "Highest score after three games."
+    ],
+    [
+     "kaede",
+     "That's surprisingly normal."
+    ],
+    [
+     "yuna",
+     "Wait until you see the trophy."
+    ]
+   ],
+   [
+    [
+     "yuna",
+     "Teo made a sound effect every time Kaede scored."
+    ],
+    [
+     "teo",
+     "A supportive sound effect."
+    ],
+    [
+     "kaede",
+     "It sounded like a broken kettle."
+    ],
+    [
+     "Protagonist",
+     "Did it help?"
+    ],
+    [
+     "yuna",
+     "Kaede beat the high score anyway."
+    ],
+    [
+     "kaede",
+     "Mostly because I was trying to finish before he made another noise."
+    ],
+    [
+     "teo",
+     "Motivation comes in many forms."
+    ]
    ]
   ]
  }
@@ -1405,7 +1825,7 @@
    const key=[...g.pair].sort().join(':');
    if(g.pair.length<2||g.pair.length>3||new Set(g.pair).size!==g.pair.length||unique.has(key))faults.push('bad group '+key);
    unique.add(key);
-   if(g.scenes.length!==2)faults.push('missing variants '+key);
+   if(g.scenes.length!==4)faults.push('missing variants '+key);
    for(const scene of g.scenes){
     const speakers=new Set(scene.map(row=>row[0]));
     if(scene.length!==7||!g.pair.every(id=>speakers.has(id))||!speakers.has('Protagonist')||
