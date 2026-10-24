@@ -202,6 +202,29 @@ function queueMandatory(){
  if(!MANDATORY)return;
  MANDATORY.queue(state,MANDATORY_EVENTS);
 }
+function autoTravelForEvent(place){
+ if(!place||!places[place]||state.location===place)return false;
+ state.visitedLocations=state.visitedLocations||{};
+ state.visitedLocations[place]=true;
+ state.location=place;
+ state.selected=null;
+ return true;
+}
+function arriveForScheduledPlan(){
+ if(state.pendingDuel||state.activeStory||state.activeSituation||state.activeEncounter||state.activeArc||state.activeSideQuest||state.activeAppointment||state.mandatoryEventState?.active)return false;
+ const due=APPOINTMENTS.active(state).find(e=>e.day===state.day&&e.slot===state.slot&&places[e.place]);
+ return due?autoTravelForEvent(due.place):false;
+}
+function mandatoryDestination(event){
+ if(event?.place&&places[event.place])return event.place;
+ if(event?.location&&places[event.location])return event.location;
+ // Character packs can declare a destination; otherwise use the character's current schedule.
+ if(event?.characterId){
+  const scheduled=SCHEDULES.locationFor(event.characterId,state.day,state.slot,APPOINTMENTS.overrides(state));
+  if(places[scheduled])return scheduled;
+ }
+ return null;
+}
 function maybeStartMandatory(){
  if(!MANDATORY)return;
  queueMandatory();
@@ -209,7 +232,8 @@ function maybeStartMandatory(){
  // Existing scripted dialogue, character choices, galleries, duel preparation and starter selection remain authoritative.
  if(state.activeSliceOfLife||scene.line||scene.choices?.length||state.deckJourney&&!state.deckJourney.starter
     ||$('cgMoment')?.open||$('preDuelDialog')?.open||$('galleryDialog')?.open||$('calendarDialog')?.open)return;
- if(MANDATORY.takeNext(state,MANDATORY_EVENTS)){persist();}
+ const started=MANDATORY.takeNext(state,MANDATORY_EVENTS);
+ if(started){autoTravelForEvent(mandatoryDestination(MANDATORY_EVENTS.find(e=>e.id===started.id)));persist();}
 }
 function mandatoryText(value){
  const results=Array.isArray(state.results)?state.results:[],wins=results.filter(x=>x.won===true).length;
@@ -302,7 +326,7 @@ const missedQuests=SIDE.expire(state);if(missedQuests.length)log('A local side-q
 const missedAppointments=APPOINTMENTS.expire(state);
 INTENTIONS.hydrate(state); // Expire yesterday's optional choice before saving the new day.
 for(const plan of missedAppointments)log('You missed your planned meet-up with '+(cast[plan.npc]?.name||'a trainer')+'.');
-queueMandatory();persist();if(!suppressTimeFlash)timeFlash(beforeDay,beforeSlot,transitionSource);}
+queueMandatory();arriveForScheduledPlan();persist();if(!suppressTimeFlash)timeFlash(beforeDay,beforeSlot,transitionSource);}
 function say(speaker,line,choices=[]){scene={speaker,line,choices};state.scene=scene;persist();render();}
 function sayConversation(lines,afterChoices=[],reactionId=null,invitation=null){
  if(!Array.isArray(lines)||!lines.length)return;
@@ -381,7 +405,7 @@ function selectPerson(id,{skipInvitation=false}={}){
   sayConversation(prompt.lines,prompt.choices,null,invite);
  }else{
   const context=first?null:REACT.reaction(state,id,c,cast,COMMUNITY,CONSEQ);
-  sayConversation(context?.lines||VN.dialogue(state,id,c,RPGD,{first}),fresh?VN.choices(state,id):[],context?.id||null);
+  sayConversation(context?.lines||VN.dialogue(state,id,c,RPGD,{first,present:currentPeople()}),fresh?VN.choices(state,id):[],context?.id||null);
  }
  tutorialEvent('conversation');showCGMoment(memories[0]);
 }
@@ -781,7 +805,7 @@ function act(action){
   if(beginSliceOfLife('talk',id))return;
   persist();
   const context=REACT.reaction(state,id,c,cast,COMMUNITY,CONSEQ);
-  return sayConversation(context?.lines||VN.dialogue(state,id,c,RPGD),[],context?.id||null);
+  return sayConversation(context?.lines||VN.dialogue(state,id,c,RPGD,{present:currentPeople()}),[],context?.id||null);
  }
  if(type==='flirt'){
   state.talked['flirt:'+key]=true;
@@ -1084,7 +1108,7 @@ async function loadCardNames(){
  }catch{}
 }
 
-function duelUrl(duel){const mats=window.NeoDuelPlaymats,gifts=mats?.gifted?.(state)||[],owned=mats?.available?.(gifts).map(m=>m.id)||['aurora'];const imported=localStorage.getItem(mats?.IMPORT_KEY||'neoCampusPlaymatImportSelection');const chosen=mats?.choose?.(imported&&owned.includes(imported)?imported:state.playmatSelected,owned)||'aurora';if(imported){localStorage.removeItem(mats.IMPORT_KEY);if(owned.includes(imported)){state.playmatSelected=chosen;persist();}}return '/classic_live.html?rpg=1&mat='+encodeURIComponent(chosen)+'&giftMats='+encodeURIComponent(gifts.join(','))+'&duelId='+encodeURIComponent(duel.id)+'&deck='+encodeURIComponent(duel.playerDeck)+'&opponent='+encodeURIComponent(duel.opponent)+'&npc='+encodeURIComponent(duel.npc)+'&npcName='+encodeURIComponent(cast[duel.npc].name)+'&npcTier='+encodeURIComponent(duel.npcDeckTier||1)+'&prizes='+encodeURIComponent(duel.prizeCount===6?6:4);}
+function duelUrl(duel){const mats=window.NeoDuelPlaymats,gifts=mats?.gifted?.(state)||[],owned=mats?.available?.(gifts).map(m=>m.id)||['aurora'];const imported=localStorage.getItem(mats?.IMPORT_KEY||'neoCampusPlaymatImportSelection');const chosen=mats?.choose?.(imported&&owned.includes(imported)?imported:state.playmatSelected,owned)||'aurora';if(imported){localStorage.removeItem(mats.IMPORT_KEY);if(owned.includes(imported)){state.playmatSelected=chosen;persist();}}return '/classic_live.html?rpg=1&mat='+encodeURIComponent(chosen)+'&giftMats='+encodeURIComponent(gifts.join(','))+'&duelId='+encodeURIComponent(duel.id)+'&deck='+encodeURIComponent(duel.playerDeck)+'&opponent='+encodeURIComponent(duel.opponent)+'&npc='+encodeURIComponent(duel.npc)+'&npcName='+encodeURIComponent(cast[duel.npc].name)+'&npcTier='+encodeURIComponent(duel.npcDeckTier||1)+'&npcVariant='+encodeURIComponent(duel.npcDeckVariant||0)+'&prizes='+encodeURIComponent(duel.prizeCount===6?6:4);}
 
 function describePreparedDuel(){
  return PRE.describe(state,state.pendingDuel,{cast,places,cg:CG,tournaments:TOURNAMENTS,
@@ -1157,8 +1181,9 @@ function startDuel(id,exhibition=null,arcEpisode=null,tournament=null,sideQuest=
  if(bondChallenge&&!BONDS.canChallenge(state,id,BOND_PLAN))return;
  if(arcEpisode&&(!state.activeArc||state.activeArc.phase!=='choice'||!ARC.available(state,currentPeople()).some(e=>e.id===arcEpisode)))return;
  const c=cast[id],npcEditedCards=PARTNER.snapshot(state,id,c.deck);
+ const npcDeckVariant=NPC_DECKS?.variantForDuel?.('npc-'+id+'-'+state.day+'-'+state.slot+'-'+state.results.length)??0;
  const npcDeckTier=NPC_DECKS?.tierForOpponent?.(state,id)??(state.day<=30?1:state.day<=60?2:3);
- state.pendingDuel={id:'npc-'+id+'-'+state.day+'-'+state.slot+'-'+state.results.length+'-'+Math.random().toString(36).slice(2,10),npc:id,day:state.day,slot:state.slot,opponent:c.deck,playerDeck:state.deckJourney?.starter?'custom':state.playerDeck,deckCards:state.deckJourney?.starter?[...state.deckJourney.deck]:null,resolved:false,eventKey:exhibition?exhibition.day+':'+exhibition.title:null,eventReward:exhibition?exhibition.reward:0,eventTitle:exhibition?exhibition.title:null,arcEpisode:arcEpisode||null,tournamentId:tournament?.tournamentId||null,tournamentRound:tournament?.tournamentRound??null,tournamentAttempt:tournament?.tournamentAttempt??null,sideQuestId:sideQuest?.id||null,sideQuestStage:sideQuest?.step??null,bondChallenge:!!bondChallenge,customOpponentDeck:npcEditedCards,
+ state.pendingDuel={id:'npc-'+id+'-'+state.day+'-'+state.slot+'-'+state.results.length+'-'+Math.random().toString(36).slice(2,10),npc:id,day:state.day,slot:state.slot,npcDeckVariant,opponent:c.deck,playerDeck:state.deckJourney?.starter?'custom':state.playerDeck,deckCards:state.deckJourney?.starter?[...state.deckJourney.deck]:null,resolved:false,eventKey:exhibition?exhibition.day+':'+exhibition.title:null,eventReward:exhibition?exhibition.reward:0,eventTitle:exhibition?exhibition.title:null,arcEpisode:arcEpisode||null,tournamentId:tournament?.tournamentId||null,tournamentRound:tournament?.tournamentRound??null,tournamentAttempt:tournament?.tournamentAttempt??null,sideQuestId:sideQuest?.id||null,sideQuestStage:sideQuest?.step??null,bondChallenge:!!bondChallenge,customOpponentDeck:npcEditedCards,
   competitiveKind:competition?.kind||null,competitiveId:competition?.id||null,
   competitiveWeek:competition?.week??null,competitiveRound:competition?.round??null,
   competitiveTitle:competition?.title||null,npcDeckTier,

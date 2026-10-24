@@ -51,7 +51,7 @@
   return Array.isArray(rows)?rows[0]||null:null;
  }
  async function upload(expected){
-  if(inflight){queued=true;return inflight;}
+  if(inflight){queued=true;return false;}
   if(blocked||!session||!eligible()){stateLabel('No campaign to sync yet.');return false;}
   const snapshot=structuredClone(local()),sentHash=hash(snapshot);
   inflight=(async()=>{
@@ -137,10 +137,14 @@
  }
  function schedule(){
   if(timer)clearTimeout(timer);
-  timer=setTimeout(()=>{timer=null;syncNow();},1400);
+  // Debounce bursts of game actions; never make gameplay await the network.
+  timer=setTimeout(()=>{timer=null;void syncNow();},250);
  }
  async function syncNow(){
   if(!config?.enabled||!session||blocked)return false;
+  // A single writer owns the CAS revision. Coalesce all intervening actions
+  // into the newest snapshot after that request completes.
+  if(inflight){queued=true;return false;}
   if(!eligible()){stateLabel('Saved locally; start a campaign to sync.');return false;}
   if(meta?.hash===fingerprint()){stateLabel('Cloud save up to date.');return true;}
   if(meta?.revision===undefined){await reconcile();return !blocked;}

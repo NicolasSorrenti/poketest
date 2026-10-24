@@ -107,7 +107,7 @@
  const presentation=window.NeoBattlePresentation;
  const shared=window.NeoBattleComponents;
  const preview=quick.makePreview($('cardPreview'),id=>card(id));
- const feedback=quick.makeDuelFeedback($('duelFeedback'));
+ const feedback=quick.makeDuelFeedback($('duelFeedback'),id=>card(id));
  const showEnergyLimitToast=quick.makeTransientToast($('energyLimitToast'));
  const combat=presentation.makeBattlePresentation({stage:document.querySelector('.stage'),popup:$('combatFx'),timeline:$('actionTimeline'),getCard:id=>cards.get(id)||{name:String(id)},me:()=>0,opponentName:()=>opponentName});
  const opponentActivity=quick.makeOpponentActivity({status:$('opponentActivityStatus'),overlay:$('opponentActionFx'),arena:document.querySelector('.stage'),getCard:id=>cards.get(id)||{name:String(id)},suppressCombat:true});
@@ -218,7 +218,7 @@
   const partnerCards=rpgMode&&rpgDuelId?sessionStorage.getItem('neoRpgNpcDeck:'+rpgDuelId):null;
   const response=await api('create',{method:'POST',body:JSON.stringify({
    deck:$('deck').value,opponent:$('opponent').value,
-   ...(rpgMode&&rpgDuelId?{rpgDuelId,npcDeckId:rpgNpc,npcDeckTier:Number(rpgParams.get('npcTier'))||1,prizeCount:Number(rpgParams.get('prizes'))===6?6:4}:{}),
+   ...(rpgMode&&rpgDuelId?{rpgDuelId,npcDeckId:rpgNpc,npcDeckTier:Number(rpgParams.get('npcTier'))||1,npcDeckVariant:Number(rpgParams.get('npcVariant'))||0,prizeCount:Number(rpgParams.get('prizes'))===6?6:4}:{}),
    ...($('deck').value==='custom'?{customDeck:JSON.parse(rpgMode?sessionStorage.getItem('neoRpgDeck:'+rpgDuelId)||'null':localStorage.getItem('neoCampusCustomGymDeck')||'null')}:{}),
    ...(partnerCards?{customOpponentDeck:JSON.parse(partnerCards)}:{})
   })});

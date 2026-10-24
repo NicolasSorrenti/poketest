@@ -3,6 +3,8 @@
 (()=>{
  const TYPES=['Grass','Fire','Water','Lightning','Psychic','Fighting'];
  const GROUPS=['Pokémon','Trainer','Energy'];
+ const dexNumber=c=>{const raw=c.nationalPokedexNumbers?.[0]??c.nationalPokedexNumber??c.pokedexNumber??c.dexNumber;const n=Number(raw);return Number.isInteger(n)&&n>0?n:Number.MAX_SAFE_INTEGER;};
+ const dexSort=(a,b)=>dexNumber(a)-dexNumber(b)||a.name.localeCompare(b.name)||a.id.localeCompare(b.id);
  const ICON={'Pokémon':'◉',Trainer:'▤',Energy:'⚡'};
  const LABEL={'Pokémon':'Pokémon',Trainer:'Trainers',Energy:'Basic Energy'};
  const node=(tag,cls,text)=>{
@@ -34,7 +36,7 @@
    '<div class="cb-progress"><strong id="cbTotal">0 / 40 cards</strong><div class="cb-track"><div id="cbFill"></div></div><small id="cbValidation" aria-live="polite"></small></div></div>',
    '<div class="cb-workspace"><section class="cb-library"><div class="cb-toolbar"><div id="cbTabs" class="cb-tabs"></div>',
    '<div class="cb-search"><input id="cbSearch" type="search" aria-label="Search drafted cards" placeholder="Search cards">',
-   '<select id="cbSort" aria-label="Sort cards"><option value="name">Name A–Z</option><option value="count">Most drafted</option><option value="type">Type</option></select></div></div>',
+   '<select id="cbSort" aria-label="Sort cards"><option value="dex">Pokédex number</option><option value="name">Name A–Z</option><option value="count">Most drafted</option><option value="type">Type</option></select></div></div>',
    '<div id="cbPool"></div></section><aside class="cb-preview"><div class="cb-caption">CARD PREVIEW</div><div id="cbPreview"></div></aside>',
    '<aside class="cb-selected"><div class="cb-selected-title"><h3>Selected deck</h3><div class="cb-selected-actions"><button id="cbRestore" type="button" hidden>Restore suggestion</button><button id="cbClear" type="button">Clear deck</button></div></div>',
    '<div class="cb-summary"><strong id="cbDeckTotal">0 / 40 cards</strong><div id="cbBreakdown"></div></div>',
@@ -47,7 +49,7 @@
   if(config.collectionLabel)$('cbSearch').placeholder='Search '+config.collectionLabel;
   if(config.canClear===false)$('cbClear').hidden=true;
   if(actionElement)$('cbActionSlot').append(actionElement);
-  let filter='all',query='',sort='name',selectedId=null,deck=[],locked=false,cards=[],limits=new Map(),index=new Map(),suggestedDeck=null;
+  let filter='all',query='',sort='dex',selectedId=null,deck=[],locked=false,cards=[],limits=new Map(),index=new Map(),suggestedDeck=null;
   const amount=id=>deck.filter(x=>x===id).length;
   const basic=id=>{const c=index.get(id);return c?.supertype==='Pokémon'&&(c.subtypes||[]).some(x=>x==='Basic'||x==='Baby');};
   const group=c=>GROUPS.includes(c?.supertype)?c.supertype:'Trainer';
@@ -116,6 +118,8 @@
    for(const kind of GROUPS){
     if(filter!=='all'&&filter!==kind)continue;
     let available=cards.filter(c=>group(c)===kind&&c.name.toLowerCase().includes(query.toLowerCase()));
+    if(sort==='dex'&&kind==='Pokémon')available.sort(dexSort);
+    if(sort==='dex'&&kind!=='Pokémon')available.sort((a,b)=>a.name.localeCompare(b.name)||a.id.localeCompare(b.id));
     if(sort==='name')available.sort((a,b)=>a.name.localeCompare(b.name)||a.id.localeCompare(b.id));
     if(sort==='count')available.sort((a,b)=>limits.get(b.id)-limits.get(a.id)||a.name.localeCompare(b.name));
     if(sort==='type')available.sort((a,b)=>(a.types?.[0]||'').localeCompare(b.types?.[0]||'')||a.name.localeCompare(b.name));
@@ -159,7 +163,7 @@
     const section=node('section','cb-deck-group');
     const title=node('h4','',ICON[kind]+' '+LABEL[kind]+' ');
     title.append(node('span','cb-pill',total));section.append(title);
-    for(const c of items.sort((a,b)=>a.name.localeCompare(b.name))){
+    for(const c of items.sort(kind==='Pokémon'?dexSort:(a,b)=>a.name.localeCompare(b.name))){
      const row=node('div','cb-deck-row');
      const preview=node('button','cb-row-card');preview.type='button';preview.title='Preview '+c.name;
      preview.append(cardArt(c,'cb-tiny'),node('span','',c.name));

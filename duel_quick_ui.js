@@ -79,7 +79,7 @@
   const names=cards.map(c=>String(c.name||'Unknown Energy')).join(', ');
   return `<span class="energy-peeks energy-card-stack" title="${html(names)}" aria-label="${cards.length} attached Energy: ${html(names)}">${minis}${over?`<span class="energy-overflow">+${over}</span>`:''}</span>${toolBadges}`;
  }
- function makeDuelFeedback(el){
+ function makeDuelFeedback(el,getCard=()=>({})){
   let last=null,removeTimer=null,changes=new Map();
   function reset(){last=null;changes.clear();if(removeTimer)clearTimeout(removeTimer);el.textContent='';el.classList.remove('show','turn-change');}
   function unitOf(view,index,slot){const p=view.players[index];return slot===-1?p?.active:p?.bench?.[slot];}
@@ -95,15 +95,46 @@
      else if(after.damage>before.damage)changes.set(key,'card-hit');
      else if((after.energies||[]).length>(before.energies||[]).length)changes.set(key,'card-powered');
     }
+    // Hand changes are private: inspect only the local player's authorized view.
+    // A multiset diff avoids replaying old cards or treating hand reordering as draws.
+    const previousHand=last.view.players?.[me]?.hand||[];
+    const nextHand=v.players?.[me]?.hand||[];
+    const remaining=new Map();
+    for(const id of previousHand)remaining.set(id,(remaining.get(id)||0)+1);
+    const drawn=[];
+    for(const id of nextHand){
+     if(remaining.get(id)>0)remaining.set(id,remaining.get(id)-1);
+     else if(typeof id==='string')drawn.push(id);
+    }
+    const knockedOut=[];
+    for(let who=0;who<2;who++){
+     const before=last.view.players?.[who],after=v.players?.[who];
+     if(before?.active&&!after?.active)knockedOut.push((who===me?'Your ':'Opponent ')+(getCard(before.active.id)?.name||'Pokémon'));
+    }
     let announcement='',turn=false;
-    if(v.turn!==last.view.turn){announcement=v.turn===me?'YOUR TURN':'OPPONENT TURN';turn=true;}
+    if(knockedOut.length)announcement=knockedOut.join(' and ')+' Knocked Out!';
+    else if(drawn.length)announcement='You drew '+drawn.length+' card'+(drawn.length===1?'':'s');
+    else if(v.turn!==last.view.turn){announcement=v.turn===me?'YOUR TURN':'OPPONENT TURN';turn=true;}
     else if(v.pendingDecision?.id&&v.pendingDecision.id!==last.view.pendingDecision?.id){announcement=v.pendingDecision.actor===me?'YOUR DECISION':'OPPONENT IS CHOOSING';}
     else{
      const older=new Set(last.view.messages||[]);
      announcement=(v.messages||[]).find(x=>!older.has(x))||((v.messages||[])[0]||'');
     }
     if(announcement){
-     el.textContent=announcement;el.classList.remove('show','turn-change');void el.offsetWidth;
+     el.textContent=announcement;
+     if(drawn.length&&!knockedOut.length&&typeof document!=='undefined'){
+      const cards=document.createElement('span');cards.className='draw-feedback-cards';cards.style.cssText='display:flex;gap:5px;justify-content:center;margin-top:6px';
+      for(const id of drawn.slice(0,5)){
+       const c=getCard(id)||{},image=c.images?.small;
+       const item=document.createElement('span');item.className='draw-feedback-card';item.style.cssText='display:inline-flex;max-width:76px;align-items:center;justify-content:center;font-size:11px';
+       if(typeof image==='string'&&/^https:\/\//.test(image)){
+        const img=document.createElement('img');img.src=image;img.alt=c.name||'Drawn card';img.style.cssText='height:90px;max-width:70px;object-fit:contain;border-radius:5px';item.append(img);
+       }else item.textContent=c.name||'Card';
+       cards.append(item);
+      }
+      el.append(cards);
+     }
+     el.classList.remove('show','turn-change');void el.offsetWidth;
      el.classList.add('show');if(turn)el.classList.add('turn-change');
      if(removeTimer)clearTimeout(removeTimer);removeTimer=setTimeout(()=>el.classList.remove('show','turn-change'),3000);
     }

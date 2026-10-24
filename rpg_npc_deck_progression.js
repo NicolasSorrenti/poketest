@@ -169,11 +169,30 @@ function applyBalancedSwaps(out,swaps,catalog){
  }
  return out;
 }
+function variantForDuel(id){
+ let h=2166136261;for(const ch of String(id||''))h=Math.imul(h^ch.charCodeAt(0),16777619)>>>0;
+ return h%3;
+}
+function varyDeck(cards,npc,variant,catalog){
+ if(!Number.isInteger(variant)||variant<0||variant>2)throw Error('Invalid NPC deck variant');
+ const out=[...cards];if(!variant)return out;
+ const profile=PROFILES[npc]||DEFAULT;
+ const candidates=variant===1?[...profile.trainers].reverse():[...profile.trainers];
+ const extras=variant===1?['base1-91','base1-88','base1-74']:['base1-77','base1-79','base1-71'];
+ let changes=0;
+ for(let i=0;i<out.length&&changes<(variant===1?4:6);i++){
+  const current=catalog.get(out[i]);
+  if(current?.supertype!=='Trainer'||!FODDER.includes(current.name))continue;
+  const replacement=[...candidates,...extras].find(id=>id!==out[i]&&catalog.get(id)?.supertype==='Trainer'&&cardNameCount(out,catalog.get(id).name,catalog)<4);
+  if(replacement){out[i]=replacement;changes++;}
+ }
+ return out;
+}
 function upgrade(args){
  const out=baselineUpgrade(args);
  if(args.tier===1||!BALANCED_SWAPS[args.npc])return out;
  return applyBalancedSwaps(out,BALANCED_SWAPS[args.npc],args.catalog);
 }
-const api=Object.freeze({PROFILES,tierForDay,tierForOpponent,upgrade,baselineUpgrade,eligible,count});
+const api=Object.freeze({PROFILES,tierForDay,tierForOpponent,variantForDuel,varyDeck,upgrade,baselineUpgrade,eligible,count});
 if(typeof module==='object'&&module.exports)module.exports=api;
 if(typeof window!=='undefined')window.NeoRpgNpcDeckProgression=api;
