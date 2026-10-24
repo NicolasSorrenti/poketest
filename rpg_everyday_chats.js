@@ -1242,19 +1242,23 @@
    "I made a revolutionary new species. Don't judge it."
   ],
   [
-   "I bought flower seeds but forgot what kind.",
-   "What's the plan?",
-   "Plant them. Wait. Pretend the surprise was intentional."
+   "I bought a packet of flower seeds and lost the label.",
+   "So what are you planting?",
+   "That's the fun part. Could be flowers, could be something weird.",
+   "You have no idea?",
+   "Nope. I gave the pot a name anyway: Classified."
   ],
   [
-   "I made a playlist for a very quiet afternoon.",
-   "What's on it?",
-   "Piano, soft rain, and nothing anyone can shout over."
+   "I made a playlist for a quiet afternoon.",
+   "You? Quiet?",
+   "Shocking, I know. Mostly piano and songs without anyone shouting.",
+   "Any good?",
+   "Actually, yeah. I might make a second one for you."
   ],
   [
-   "My phone keeps changing 'okay' to 'okra.'",
-   "Why not fix it?",
-   "I've committed to the vegetable. My friends are concerned."
+   "My phone keeps turning 'okay' into 'okra.'",
+   "Haven't you fixed it?",
+   "I'm too deep into the bit now. Teo keeps asking for vegetable updates."
   ],
   [
    "Someone left a tiny toy astronaut on a park bench.",
@@ -1264,16 +1268,18 @@
    "I did. It looks more patient than most people."
   ],
   [
-   "I spent all night watching videos about deep-sea creatures.",
-   "Why deep-sea creatures?",
-   "I clicked one video and fell down the strangest rabbit hole.",
-   "Any favorites?",
-   "The dumbo octopus. It looks like it's constantly apologizing."
+   "Did you know there's an octopus that looks like it has ears?",
+   "No. How do you know?",
+   "I got stuck watching deep-sea videos last night.",
+   "Did you sleep at all?",
+   "Eventually. After the octopus. I have priorities."
   ],
   [
    "I tried baking cinnamon rolls.",
-   "Did it work?",
-   "They turned into one enormous cinnamon continent."
+   "How'd they turn out?",
+   "They merged into one gigantic roll.",
+   "Are you eating it?",
+   "Absolutely. It still tastes good. Just bring a knife."
   ],
   [
    "I found a little music box in a thrift shop.",
@@ -1319,9 +1325,11 @@
    "The first loaf was a brick. The third had an actual crust."
   ],
   [
-   "Someone put a sign on a broken park bench.",
+   "Somebody put a handwritten sign on the broken bench by the park.",
    "What did it say?",
-   "'Resting bench, please give it space.' I laughed."
+   "'Bench is resting. Please give it some space.'",
+   "Did they fix it?",
+   "Not yet. But people stopped trying to sit on it, so I guess it worked."
   ],
   [
    "I took my headphones off on the bus today.",
@@ -1338,19 +1346,25 @@
    "Yes. I ate the ugly ones first so nobody else had to."
   ],
   [
-   "The library gave away old magazines.",
-   "Find anything interesting?",
-   "An issue on tiny houses. Some have staircases in cupboards."
+   "Look at this magazine the library was giving away.",
+   "Tiny houses?",
+   "Yes. Some of them have staircases built right into cupboards.",
+   "Could you live in one?",
+   "Maybe for a weekend. I'd miss having room for all my books."
   ],
   [
-   "I beat a rhythm game on the hardest setting.",
+   "I finally beat that rhythm-game level everyone struggles with.",
    "Seriously?",
-   "Three times. I just like the music, so I don't mention it much."
+   "On the hardest setting. I practiced the same section for ages.",
+   "Were you excited?",
+   "Yes, but my hands were shaking. I had to sit down afterward."
   ],
   [
-   "I tried a new hot sauce yesterday.",
-   "Too spicy?",
-   "Not at all. I bought another bottle. You look surprised."
+   "I tried the hot sauce from that little shop.",
+   "Too hot?",
+   "Not at all. I went back and bought another bottle.",
+   "You're full of surprises.",
+   "Only some of them are edible."
   ],
   [
    "I went to an outdoor movie screening by myself.",
@@ -1367,14 +1381,16 @@
    "I made three more. It's becoming a little sky."
   ],
   [
-   "I tried singing while cooking yesterday.",
-   "Any good?",
-   "The food? Yes. The singing? My neighbor hasn't complained yet."
+   "I sang while making dinner yesterday.",
+   "How'd that go?",
+   "Dinner was good. The singing might owe my neighbor an apology."
   ],
   [
-   "A stray cat followed me home in the rain.",
-   "Did you keep it?",
-   "It belonged to the family upstairs. We had a very polite reunion."
+   "A cat followed me home while it was raining.",
+   "Did you take it in?",
+   "I checked its collar. It belonged to the family upstairs, so I walked it home.",
+   "Did it seem pleased?",
+   "It went straight to its food bowl. I think so."
   ],
   [
    "I joined a beginner photography walk.",
@@ -1405,9 +1421,9 @@
    "No. We never introduced ourselves. It was nice anyway."
   ],
   [
-   "I tried a poetry reading for the first time.",
+   "I went to a poetry reading.",
    "Did you read anything?",
-   "I listened. One poem about missing a bus made me cry."
+   "No, I listened. Somebody wrote about missing the last bus and I cried a little."
   ],
   [
    "I started writing letters instead of messages to a friend.",
@@ -1434,19 +1450,25 @@
    "Unfortunately. She says they don't match anything, which is kind of their charm."
   ],
   [
-   "I went to the market for one apple.",
-   "Did you get it?",
-   "No. Three peaches and an antique spoon. I forgot the apple."
+   "I went to the market for a single apple.",
+   "And?",
+   "Came home with peaches and an old spoon. No apple.",
+   "How did that happen?",
+   "The spoon looked like something from my grandmother's kitchen. I got distracted."
   ],
   [
-   "I made pasta sauce with a blender.",
-   "How was it?",
-   "Good! The ceiling got to taste it, too."
+   "I learned an important cooking lesson yesterday.",
+   "Which one?",
+   "Don't leave the lid off the blender when making sauce.",
+   "How bad was it?",
+   "I found tomato on the ceiling. I'm still apologizing to it."
   ],
   [
-   "I found a note in my coat that says 'remember the nice thing.'",
-   "Did you remember?",
-   "No. Now I have to find a new nice thing worthy of the note."
+   "I found a note in my coat pocket from last week.",
+   "What did it say?",
+   "'Remember the nice thing.' No other details.",
+   "Do you remember?",
+   "No. So I'm writing a new nice thing next to it."
   ],
   [
    "I spent yesterday helping a friend paint their kitchen.",
@@ -1463,14 +1485,16 @@
    "A little. It makes me want to hum the ending myself."
   ],
   [
-   "Someone taught me how to carve an apple into a little swan.",
-   "Can you do it?",
-   "Mine looks like a duck who has seen things."
+   "Someone showed me how to carve an apple into a swan.",
+   "Did it work?",
+   "Not exactly. Mine looks like a very tired duck."
   ],
   [
-   "I tried making handmade candles.",
-   "How did it go?",
-   "The first one leaned sideways. It still smells wonderful."
+   "I tried making candles this weekend.",
+   "Any success?",
+   "The first one leaned to one side, but it smells amazing.",
+   "Are you keeping it?",
+   "Of course. I made it myself."
   ],
   [
    "I found a video from my first roller-skating lesson.",
@@ -1501,9 +1525,9 @@
    "She waved until the train pulled away."
   ],
   [
-   "I repaired an old pair of jeans.",
-   "What went wrong?",
-   "Nothing! I stitched a tiny blue star over the tear."
+   "I patched my old jeans with a little blue star.",
+   "You did that yourself?",
+   "Yeah! The first stitch was a disaster, but the last few were pretty good."
   ],
   [
    "I keep ticket stubs from ordinary days.",
@@ -1530,19 +1554,23 @@
    "Very. The last piece had been under the couch the whole time."
   ],
   [
-   "I photographed a boring sidewalk.",
-   "Why?",
-   "A bicycle's shadow looked exactly like a giraffe."
+   "I stopped to photograph a shadow on the pavement.",
+   "A shadow?",
+   "A bicycle made a shape that looked exactly like a giraffe.",
+   "Did anyone notice you?",
+   "One passerby. They looked at the shadow, too, and laughed."
   ],
   [
-   "I invented a dinner recipe by accident.",
-   "Any good?",
-   "Spicy orange rice. Better if you leave out the orange juice."
+   "I tried improvising dinner.",
+   "How did it go?",
+   "Spicy rice with orange juice. The rice was good; the juice was a mistake.",
+   "What'll you do next time?",
+   "Start with water. Very innovative."
   ],
   [
-   "Someone gave me a cactus.",
+   "A friend gave me a cactus.",
    "Does it have a name?",
-   "Professor Prickles. He silently judges my windowsill."
+   "Professor Prickles. It sits on my windowsill, judging every photo I take."
   ],
   [
    "I went on a guided tour of an old lighthouse.",
@@ -1564,9 +1592,9 @@
    "Sat on the grass. The dog was a better guest than I was."
   ],
   [
-   "I tried growing strawberries on my balcony.",
-   "Any fruit yet?",
-   "One. I'm considering making it a little crown."
+   "I have exactly one strawberry on my balcony.",
+   "One?",
+   "The other flowers didn't turn into fruit. I'm trying not to fuss over this one."
   ],
   [
    "I ducked into the science museum to get out of the rain.",
@@ -1597,14 +1625,18 @@
    "We opened the windows and danced while it dried."
   ],
   [
-   "I made a terrible sketch of my own hand.",
-   "Can I see?",
-   "It has six fingers. Don't ask."
+   "I tried sketching my hand instead of photographing it.",
+   "Any good?",
+   "Six fingers. Somehow I gave myself six fingers.",
+   "Keeping it?",
+   "Definitely. It makes me laugh."
   ],
   [
-   "There was a portrait artist on the sidewalk.",
-   "Did you sit for one?",
-   "Yes. He got my nose right and invented a new hairstyle."
+   "I sat for a portrait on the street.",
+   "How did it turn out?",
+   "The artist got my nose right, but gave me a hairstyle I've never had.",
+   "Did you mind?",
+   "No. I'm tempted to try it."
   ],
   [
    "A teenager asked me to sign a scrap of paper.",
