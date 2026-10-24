@@ -18,12 +18,15 @@ test('different printings of Charmander share a four-card limit',()=>{
  assert.equal(result.valid,false);
  assert.match(result.errors.join(' '),/Four-copy limit exceeded for Charmander/);
 });
-test('exactly four across sets is allowed and basic energy is unlimited',()=>{
- const deck=[...base];let changed=0;
- for(let i=0;i<deck.length&&changed<4;i++)if(deck[i]==='base1-98'){deck[i]=changed<2?'base1-46':'base4-69';changed++;}
- const inventory={...owned,'base1-46':20,'base4-69':20};
- // Starter includes three Charmander already, so this produces seven and must fail.
- assert.equal(Core.check(deck,inventory).valid,false);
+test('four mixed printings are legal, a fifth is rejected',()=>{
+ const deck=[...base];
+ // The starter contains three Base Set Charmander. Swap one non-Charmander
+ // for a Base Set 2 printing to reach four identical printed names.
+ const slot=deck.indexOf('base1-98');assert.ok(slot>=0);deck[slot]='base4-69';
+ const inventory={...owned,'base4-69':5};
+ assert.equal(Core.check(deck,inventory).valid,true);
+ const fifth=[...deck];fifth[fifth.indexOf('base1-99')]='base4-69';
+ assert.match(Core.check(fifth,inventory).errors.join(' '),/Four-copy limit exceeded for Charmander/);
 });
 test('Miracle Energy is capped at one printing',()=>{
  assert.equal(Core.cardName('base4-69'),'Charmander');
