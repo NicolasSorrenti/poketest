@@ -16,19 +16,19 @@
    "Absolutely not. The basilisk has earned its name."
   ],
   [
-   "Someone put a terrible joke in the suggestion box.",
-   "Did you laugh?",
-   "For five minutes. I'm annoyed at how funny bad jokes are."
+   "Someone put a joke in the suggestion box.",
+   "A complaint?",
+   "Worse. 'Why did the card cross the table? To get to the other side deck.' I laughed. I'm ashamed."
   ],
   [
-   "My pancakes looked like maps of countries that don't exist.",
-   "Did they taste okay?",
-   "Fantastic. Breakfast was a journey of discovery."
+   "Have you ever managed to make a round pancake?",
+   "Usually. Why?",
+   "Mine turned into something shaped like a country on a map. I ate the border first."
   ],
   [
-   "There's an unclaimed umbrella by the door.",
-   "Maybe somebody forgot it.",
-   "Or it belongs to the building now. I don't know umbrella law."
+   "Whose umbrella is this?",
+   "It's been here for days.",
+   "I've put a note on it, but nobody's claimed it. At this point I'm considering giving it a staff badge."
   ],
   [
    "You have a button stuck to your sleeve.",
@@ -45,14 +45,18 @@
    "I'm looking forward to the summer sandals edition."
   ],
   [
-   "I tried learning the harmonica.",
-   "How far did you get?",
-   "Three notes. The neighbor's dog can already sing along."
+   "I tried learning the harmonica this weekend.",
+   "Let me guess: noisy?",
+   "Three notes. Then the neighbor's dog started howling along.",
+   "Did you stop?",
+   "Eventually. The dog had better rhythm, and I needed to concede."
   ],
   [
-   "I got invited to a costume party and misunderstood the theme.",
-   "What did you wear?",
-   "Everyone came as movie stars. I came dressed as the night sky."
+   "I've got a costume-party problem.",
+   "Don't tell me you forgot the costume.",
+   "I dressed as the night sky. Everyone else came as movie stars.",
+   "That's still a costume.",
+   "Thank you! That's exactly what I told them."
   ],
   [
    "Do you know somewhere I can get a quiet breakfast?",
@@ -74,9 +78,11 @@
    "I once moved a beetle off a windowsill. Apparently that was my qualification."
   ],
   [
-   "There was a thunderstorm last night, so I built a blanket nest on my couch.",
-   "All by yourself?",
-   "With three pillows and a very judgmental stuffed bear. Five stars. Highly recommend."
+   "The thunderstorm kept me inside all evening.",
+   "Did you get bored?",
+   "Not at all. Blanket on the couch, an old movie, and a teddy bear I've had since school.",
+   "Sounds pretty good.",
+   "It was. I think I needed the quiet."
   ],
   [
    "I found a letter I'd written to my future self at thirteen.",
@@ -114,19 +120,23 @@
    "I blinked first. Don't tell anyone."
   ],
   [
-   "I bought socks with little smiling strawberries.",
-   "That's unexpected.",
-   "The strawberries looked happy. What's your problem?"
+   "Are those strawberry socks?",
+   "Yes. You can stop looking.",
+   "I didn't say anything.",
+   "You were going to.",
+   "They're comfortable and I like them. End of discussion."
   ],
   [
-   "A stranger asked me to hold their dog for a moment.",
-   "And?",
-   "The dog fell asleep on my lap. I stayed for twenty minutes."
+   "I was late yesterday because of a dog.",
+   "What happened?",
+   "A stranger asked me to hold the leash. The dog sat on my feet and fell asleep.",
+   "And you waited?",
+   "Twenty minutes. He looked comfortable. What was I supposed to do?"
   ],
   [
-   "I cried watching a movie about people fixing an old bicycle.",
-   "Was it sad?",
-   "It wasn't supposed to be. That's the embarrassing part."
+   "That bicycle-repair movie made me cry.",
+   "Why? Was it sad?",
+   "No. The old man finally got his friend's bike running. Don't make it a thing."
   ],
   [
    "Don't laugh, but I signed up for a pottery class.",
@@ -148,9 +158,9 @@
    "Old-fashioned, with a piano. It makes walking home feel like a movie."
   ],
   [
-   "I went to the aquarium alone last weekend.",
-   "Which tank was your favorite?",
-   "The jellyfish. Everyone was quiet in there."
+   "I went to the aquarium by myself.",
+   "Which part did you like?",
+   "The jellyfish exhibit. Nobody talked in there, not even me."
   ],
   [
    "My grandmother made me help fold dumplings yesterday.",
@@ -172,9 +182,11 @@
    "It ignores me unless I sit on the curb. Then it climbs onto my shoe."
   ],
   [
-   "I tried ice skating last winter.",
-   "Were you good?",
-   "I spent the first ten minutes holding the wall. Don't imagine anything heroic."
+   "I tried skating once.",
+   "Did you fall?",
+   "Not once, technically. I never let go of the railing.",
+   "That's cheating.",
+   "That's risk management."
   ],
   [
    "My sister asked me to help decorate her birthday cake.",
@@ -184,9 +196,11 @@
    "I liked being useful for something completely silly."
   ],
   [
-   "I borrowed a mystery novel and guessed the ending wrong.",
-   "Did you finish it?",
-   "In one night. Then I reread the first chapter to see what I'd missed."
+   "I stayed up until two finishing a detective novel.",
+   "Did you guess the culprit?",
+   "Wrong person. Completely wrong.",
+   "You sound annoyed.",
+   "I reread chapter one to see what I'd missed. The clue was right there."
   ],
   [
    "Someone gave me a daisy while I was waiting in line.",
@@ -212,19 +226,23 @@
    "Certainly not. I want to see whether the soup is any good."
   ],
   [
-   "There's a cat outside that looks exactly like the librarian.",
-   "Did you tell her?",
-   "Absolutely not. I value my borrowing privileges."
+   "Do you see the cat sitting by the library doors?",
+   "The gray one?",
+   "It looks exactly like the librarian when she's annoyed.",
+   "Have you told her?",
+   "Certainly not. I would like to keep my library card."
   ],
   [
-   "I found an old picnic photograph in a secondhand novel.",
-   "Do you know the people?",
-   "No. But they looked so happy that I kept the photograph safe."
+   "A photograph fell out of the book I bought yesterday.",
+   "Of whom?",
+   "A family on a picnic. I don't know them, but they looked so pleased to be together.",
+   "What will you do with it?",
+   "Leave it in the book. Perhaps someone else will find it one day."
   ],
   [
-   "I tried drawing the view from my window.",
-   "How did it go?",
-   "My trees appear to have elbows. Nature is very forgiving."
+   "I tried sketching the view from my window.",
+   "Can I see?",
+   "Only if you don't mind trees that seem to have elbows."
   ],
   [
    "There's an old man near my building who feeds a crow every morning.",
@@ -242,13 +260,13 @@
   ],
   [
    "I bought a secondhand telescope.",
-   "Have you found any planets?",
-   "Mostly chimneys. I live in a very educational neighborhood."
+   "What can you see?",
+   "Mostly rooftops so far. I'm waiting for a clear night before attempting anything ambitious."
   ],
   [
-   "I tried baking a cake for a friend's birthday.",
-   "How did it go?",
-   "The icing spelled 'Hapy Brithday.' We kept it that way."
+   "I tried decorating a birthday cake myself.",
+   "How did it turn out?",
+   "It said 'Hapy Brithday.' My friend insisted the spelling was its best feature."
   ],
   [
    "There is a courtyard near the library that's full of paper lanterns.",
@@ -270,9 +288,11 @@
    "All the way to the river. I decided the ending deserved a view."
   ],
   [
-   "I found a chess piece on the pavement.",
-   "Which piece?",
-   "A knight. I've placed it beside my kettle for company."
+   "I found a lonely chess knight on the pavement.",
+   "Did you hand it in?",
+   "I asked around. Nobody knew where it came from.",
+   "So you kept it?",
+   "For now. It sits beside my kettle, looking surprisingly distinguished."
   ],
   [
    "I helped a child choose a book at the library.",
