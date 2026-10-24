@@ -7,6 +7,7 @@
  "/rpg_narrative_pack.js",
  "/rpg_side_quests.js",
  "/rpg_bond_chapters.js",
+ "/rpg_everyday_chats.js",
  "/rpg_conversations.js",
  "/rpg_legacy_scenes.js",
  "/rpg_story.js",
