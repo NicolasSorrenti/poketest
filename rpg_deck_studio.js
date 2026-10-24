@@ -31,7 +31,7 @@
  function stage(next){
   const counts=Core.rank(next),inventory=owned();
   const illegal=next.length>60||Object.entries(counts).some(([id,n])=>
-   !(inventory[id]>0)||n>inventory[id]||(!Core.ENERGY.has(id)&&n>4));
+   !(inventory[id]>0)||n>inventory[id]||(!Core.isBasicEnergyId(id)&&next.filter(x=>Core.cardName(x)===Core.cardName(id)).length>4));
   if(illegal){notice='That edit exceeds your owned cards or campaign copy limits.';render();return;}
   state.deckJourney.draft=[...next];notice='';persist();status();renderStrategy();
  }
