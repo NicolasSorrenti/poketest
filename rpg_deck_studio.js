@@ -161,7 +161,7 @@
    builder=Builder.create({root:$('rpgDeckBuilder'),actionElement:$('rpgBuilderActions'),onChange:stage,
     config:{targetSize:60,eyebrow:'NEO HARBOR · YOUR COLLECTION',heading:'Build your 60-card deck',
      description:'Build with the cards you own. Save your changes to use them in the next duel.',
-     collectionLabel:'owned cards',nameLimit:true,unlimitedIds:[...Core.ENERGY],
+     collectionLabel:'owned cards',nameLimit:true,unlimitedIds:allCards.filter(c=>Core.isBasicEnergyId(c.id)).map(c=>c.id),
      validate:next=>Core.check(next,owned())}});
    $('strategySearch').oninput=renderSearch;
    $('saveDeck').onclick=()=>{
