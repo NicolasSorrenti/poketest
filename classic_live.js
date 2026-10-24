@@ -3,6 +3,22 @@
 // Every button sends a typed command to the same server-side Classic reducer.
 (()=>{
  const $=id=>document.getElementById(id);
+ function settleBoot(error){
+  const loading=$('duelLoading');
+  if(error){
+   $('duelLoadingTitle').textContent='Unable to open the duel';
+   $('duelLoadingText').textContent=error.message||String(error);
+   $('duelLoadingSpinner').hidden=true;
+   $('duelLoadingRetry').hidden=false;
+   $('duelLoadingBack').hidden=false;
+   $('duelLoadingBack').href=rpgMode?'/rpg.html':cubeRoomCode?'/cube_room.html?room='+encodeURIComponent(cubeRoomCode):'/play.html';
+   return;
+  }
+  loading.hidden=true;
+  document.body.classList.remove('duel-booting');
+ }
+ $('duelLoadingRetry').addEventListener('click',()=>location.reload());
+
  const cubeRoomCode=new URLSearchParams(location.search).get('cubeRoom');
  let cubeReturnTimer=null;
  function returnToCubeWhenDone(){
@@ -225,7 +241,7 @@
   feedback.reset();opponentActivity.clear();combat.reset();reactions?.reset();npcChat?.reset();token=response.token;sessionStorage.setItem(rpgKey,token);current=response;
   checkCloudCheckpoint(response);
   selectedHand=null;targetMode=null;decisionSelection.clear();handVisible=true;powersOpen=false;logOpen=false;lastCoinSeq=null;lastKoMessage="";setHandVisible(true);render();
- }catch(e){$('startupError').textContent=e.message;}finally{busy=false;}}
+ }catch(e){$('startupError').textContent=e.message;return false;}finally{busy=false;}return true;}
 
  function setHandVisible(){
   // Hand is permanently visible for players; an empty/private hand stays empty.
@@ -500,11 +516,13 @@
       checkCloudCheckpoint(restored);
      }catch(error){if(error.status!==404)throw error;}
     }
-    if(!current)await start();
+    if(!current&&!await start())throw Error($('startupError').textContent||'The duel could not start.');
    }
+   if(cubeRoomCode&&!current)throw Error('This Cube match has expired. Return to the tournament to reopen it.');
    notifyRpg();
    render();
-  }catch(e){$('startupError').textContent=e.message||String(e);}
+   settleBoot();
+  }catch(e){$('startupError').textContent=e.message||String(e);settleBoot(e);}
  }
  $('rpgChatToggle').addEventListener('click',()=>toggleNpcChat(!npcChatOpen));$('closeRpgChat').addEventListener('click',()=>toggleNpcChat(false));
  $('newDuel').addEventListener('click',start);$('reset').addEventListener('click',newDuel);
