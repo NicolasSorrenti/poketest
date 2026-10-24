@@ -9,9 +9,11 @@
  const topics={
  "hana": [
   [
-   "I accidentally labeled my basil plant 'basilisk.'",
-   "Did you fix the label?",
-   "No. I'm waiting to see whether it breathes fire."
+   "Look, I finally grew something that isn't dead.",
+   "Is that basil?",
+   "Supposed to be. I labeled it 'basilisk' and didn't notice for a week.",
+   "Are you changing it?",
+   "Absolutely not. The basilisk has earned its name."
   ],
   [
    "Someone put a terrible joke in the suggestion box.",
@@ -53,11 +55,11 @@
    "Everyone came as movie stars. I came dressed as the night sky."
   ],
   [
-   "I took a day off and spent it looking for a place to eat breakfast.",
-   "Did you find one?",
-   "Eventually. A tiny bakery with one table and a radio playing old songs.",
-   "Sounds worth the trip.",
-   "It was. I stayed long enough to watch the whole street wake up."
+   "Do you know somewhere I can get a quiet breakfast?",
+   "Is the café too busy?",
+   "I love Alma's place, but sometimes I want to be a customer nobody knows.",
+   "Did you find somewhere?",
+   "A bakery with one little table. I spent an hour watching the street wake up."
   ],
   [
    "Alma gave me a recipe for vegetable soup.",
@@ -105,9 +107,11 @@
  ],
  "reina": [
   [
-   "A pigeon stared at me through my window this morning.",
-   "What did you do?",
-   "Stared back. I lost when it blinked first and flew off."
+   "There's a pigeon outside my window that seems to have a problem with me.",
+   "A pigeon?",
+   "It stared me down while I ate breakfast.",
+   "Who won?",
+   "I blinked first. Don't tell anyone."
   ],
   [
    "I bought socks with little smiling strawberries.",
@@ -149,11 +153,11 @@
    "The jellyfish. Everyone was quiet in there."
   ],
   [
-   "I promised my grandmother I'd learn one of her recipes.",
-   "What did she teach you?",
-   "How to make dumplings. Mine looked like exhausted little pillows.",
-   "Did she approve?",
-   "She ate six and asked when I was coming back. That's an approval."
+   "My grandmother made me help fold dumplings yesterday.",
+   "How'd that go?",
+   "She made perfect little crescents. Mine looked like crumpled envelopes.",
+   "Did she complain?",
+   "She ate six of mine and asked when I'd come back. I think I passed."
   ],
   [
    "I went to an open-air concert without checking who was playing.",
@@ -201,9 +205,11 @@
  ],
  "shiori": [
   [
-   "I bought a cookbook because I liked its cover.",
-   "Have you cooked anything?",
-   "Not yet. Every recipe is written as a riddle."
+   "Can I ask you something? Does this look like a cookbook to you?",
+   "It has soup on the cover.",
+   "Exactly. Yet the recipes read like riddles. I think I've bought a literary experiment.",
+   "Are you returning it?",
+   "Certainly not. I want to see whether the soup is any good."
   ],
   [
    "There's a cat outside that looks exactly like the librarian.",
@@ -245,11 +251,11 @@
    "The icing spelled 'Hapy Brithday.' We kept it that way."
   ],
   [
-   "I took a different route home and discovered a courtyard full of lanterns.",
-   "Were they for a festival?",
-   "No. Someone said the residents simply liked how they looked at night.",
-   "That's a good enough reason.",
-   "Exactly. Not everything needs an occasion."
+   "There is a courtyard near the library that's full of paper lanterns.",
+   "Is there a festival?",
+   "No. I asked. The residents simply like seeing them lit at night.",
+   "I like that.",
+   "So do I. I went back the next evening, just to look."
   ],
   [
    "My neighbor taught me how to make paper flowers.",
@@ -297,9 +303,11 @@
  ],
  "yuna": [
   [
-   "I entered a pancake-flipping contest.",
-   "How'd it go?",
-   "Mine landed on the judge's hat. I got a ribbon for ambition."
+   "Promise you won't laugh at this picture.",
+   "Why is there a pancake on that man's hat?",
+   "He was judging the flipping contest. Mine took an ambitious route.",
+   "Did you get disqualified?",
+   "No! They gave me a ribbon for enthusiasm. I'm putting it on my deck box."
   ],
   [
    "I bought a tiny plastic dinosaur from a machine.",
@@ -341,11 +349,11 @@
    "I gave it to a kid who looked like she really needed some luck."
   ],
   [
-   "I accidentally joined a neighborhood cleanup.",
-   "How do you accidentally do that?",
-   "I thought people were lining up for free ice cream.",
-   "Did you stay?",
-   "Of course. We cleaned the park and they gave us ice cream afterward."
+   "Want to hear how I earned free ice cream?",
+   "I'm almost afraid to ask.",
+   "I followed a crowd, thinking it was a dessert line. Turns out it was a park cleanup.",
+   "You helped?",
+   "For two hours! Then they handed out ice cream. Best wrong turn ever."
   ],
   [
    "I have discovered I am excellent at parallel parking a shopping cart.",
@@ -393,9 +401,11 @@
  ],
  "akari": [
   [
-   "My radio only picks up one station.",
-   "Are you returning it?",
-   "No. The jazz is excellent. I've become attached to the trumpet solo."
+   "This old radio only gets one station.",
+   "That sounds inconvenient.",
+   "It plays jazz almost constantly. I've started leaving it alone.",
+   "No attempt to repair it?",
+   "I know. It's an unusual experiment in accepting things as they are."
   ],
   [
    "I tried folding a paper crane.",
@@ -437,11 +447,11 @@
    "Not at all. I just liked hearing them find their voices again."
   ],
   [
-   "I spent an afternoon trying to grow crystals from a kit.",
-   "Did it work?",
-   "Technically. I made a tiny blue lump.",
-   "Did you keep it?",
-   "It's on my desk. It's a very determined blue lump."
+   "I may have overestimated my skill with children's chemistry kits.",
+   "What happened?",
+   "The box promised a sparkling crystal. I have produced a blue lump.",
+   "Maybe it needs time?",
+   "Possibly. I've named it Control Group One."
   ],
   [
    "A busker was playing violin outside the station.",
@@ -489,9 +499,11 @@
  ],
  "camila": [
   [
-   "The grocer sold me a bag of terribly ugly pears.",
-   "Were they any good?",
-   "Delicious. I owe those pears an apology."
+   "The market vendor tried to apologize for these pears.",
+   "They do look a little strange.",
+   "Exactly why I bought them. Nobody wanted them, so he gave me a good price.",
+   "And the taste?",
+   "Fantastic. Looking respectable is terribly overrated."
   ],
   [
    "I tried a new board game with friends.",
@@ -533,11 +545,11 @@
    "I found the recipe and tried it. The whole apartment smelled like childhood."
   ],
   [
-   "My aunt taught me a card game with absolutely ridiculous rules.",
-   "How ridiculous?",
-   "The winner has to do the dishes.",
-   "So you lost on purpose?",
-   "I tried. My aunt has been perfecting her losing strategy for forty years."
+   "My aunt has a card game where the winner does the dishes.",
+   "That seems backwards.",
+   "Exactly. I spent the evening trying to lose gracefully.",
+   "Did it work?",
+   "No. She's been practicing losing for forty years. The woman is a professional."
   ],
   [
    "I visited a tiny town with a clock that chimes the wrong hour.",
@@ -585,9 +597,11 @@
  ],
  "marina": [
   [
-   "I painted a bowl of oranges yesterday.",
-   "How did it turn out?",
-   "Like a gathering of worried little suns."
+   "I tried painting a still life last night.",
+   "Really? Can I see?",
+   "Please don't laugh. The oranges look like tiny suns.",
+   "I like it.",
+   "Thanks. I wanted to make something that had nothing to do with the river."
   ],
   [
    "Somebody swapped grocery bags with me by accident.",
@@ -629,11 +643,11 @@
    "Only the last line. My mother sang the rest when I called."
   ],
   [
-   "I spent a rainy afternoon in a greenhouse.",
-   "What was it like?",
-   "Warm, quiet, and full of plants taller than me.",
-   "Did you buy anything?",
-   "A tiny fern. It's doing better than my cooking."
+   "The rain sent me into the greenhouse by the old market.",
+   "Was it worth getting soaked?",
+   "Absolutely. Warm air, huge ferns, and nobody in a rush.",
+   "Did you buy a plant?",
+   "One tiny fern. So far it's doing better than my cooking."
   ],
   [
    "Nereo taught me a trick for repairing a squeaky gate.",
@@ -677,9 +691,11 @@
  ],
  "kaede": [
   [
-   "I bought a keychain shaped like a sad potato.",
-   "Why a sad potato?",
-   "The happy potato cost more. This one needed a home."
+   "Is this potato supposed to look disappointed?",
+   "It does seem disappointed.",
+   "Good. That's exactly why I bought it.",
+   "What's its name?",
+   "Management. Now Management can judge my life choices."
   ],
   [
    "I accidentally sent someone to a bakery while giving directions.",
@@ -721,11 +737,11 @@
    "A triangle. My head was a triangle."
   ],
   [
-   "I accidentally went to a knitting club.",
-   "How do you accidentally join one?",
-   "I followed a sign for free tea.",
+   "I now know how to knit.",
+   "That seems unexpected.",
+   "I followed a sign offering free tea and ended up in a knitting circle.",
    "Did you stay?",
-   "Yes. I made a scarf long enough for half the table."
+   "Made half a scarf. Apparently I have a talent for accidentally joining things."
   ],
   [
    "I bought a notebook and started writing down places I liked.",
@@ -1711,9 +1727,11 @@
  ],
  "jun": [
   [
-   "I tried fixing a squeaky door hinge this morning.",
-   "Did it work?",
-   "The door is silent. The chair started squeaking. I think noise is following me."
+   "That door hinge has been bothering me for three days.",
+   "You could ignore it.",
+   "And let it win? Absolutely not.",
+   "Did you fix it?",
+   "Mostly. Now the door is silent, but I have oil on my tournament notes."
   ],
   [
    "A child asked me which ice cream flavor was best.",
@@ -1755,11 +1773,11 @@
    "I tried. She said I'd know when it was enough. I didn't."
   ],
   [
-   "I watched an amateur puppet show yesterday.",
-   "Why?",
-   "My neighbor built the puppets. One of them lost an arm halfway through.",
-   "What happened?",
-   "The puppet declared it an exciting plot twist. Magnificent recovery."
+   "I went to my neighbor's puppet show.",
+   "How was it?",
+   "One puppet lost an arm in the middle of the performance.",
+   "Oh no.",
+   "The puppeteer called it a shocking twist and carried on. I respect that level of composure."
   ],
   [
    "I've started going for walks without my watch.",
@@ -1801,9 +1819,11 @@
  ],
  "teo": [
   [
-   "I ordered an enormous sandwich by mistake.",
-   "How enormous?",
-   "It came on a tray normally used for birthday cakes."
+   "I think the café has mistaken me for a small family.",
+   "What did you order?",
+   "A sandwich. It arrived with its own horizon.",
+   "Could you finish it?",
+   "I gave it a heroic introduction. Then I asked Alma for a box."
   ],
   [
    "My neighbor keeps singing the same line of a song.",
@@ -1845,11 +1865,11 @@
    "After carrying it up four flights, we learned it didn't."
   ],
   [
-   "I went to a silent meditation class.",
-   "How was that for you?",
-   "I lasted seven minutes before my stomach made a noise like a trumpet.",
+   "I tried a meditation class. Complete silence, forty minutes.",
+   "Did you make it?",
+   "Seven minutes. My stomach made a noise like a trumpet.",
    "Did anyone laugh?",
-   "Nobody. That somehow made it worse."
+   "Nobody! I've never wanted an audience more in my life."
   ],
   [
    "I took a train to the end of the line on my day off.",
@@ -1893,9 +1913,11 @@
  ],
  "iris": [
   [
-   "I found a very tiny knitted hat in the street.",
-   "For a doll?",
-   "I hope so. I'd hate to meet the person who lost it."
+   "Someone dropped a hat the size of a plum.",
+   "Are you sure it's a hat?",
+   "It has a tiny pom-pom. I'm going with hat.",
+   "What will you do with it?",
+   "Put it in lost and found. Imagine explaining that inventory entry."
   ],
   [
    "I entered a bread-baking competition by accident.",
@@ -1937,9 +1959,11 @@
    "Yes. Every photo shows me laughing at the previous one."
   ],
   [
-   "I visited an outdoor sculpture park on my day off.",
-   "Did you like it?",
-   "There was a metal bird taller than a house. I sat under it for an hour."
+   "I finally took a day off and went to the sculpture park.",
+   "Anything good there?",
+   "A metal bird taller than a house. I sat under it for an hour.",
+   "No errands afterward?",
+   "Not one. Please don't sound so amazed."
   ],
   [
    "My aunt sent me a package with homemade jam.",
