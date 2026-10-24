@@ -48,7 +48,7 @@
    "I tried learning the harmonica this weekend.",
    "Let me guess: noisy?",
    "Three notes. Then the neighbor's dog started howling along.",
-   "Did you stop?",
+   "Did you and the dog finish the duet?",
    "Eventually. The dog had better rhythm, and I needed to concede."
   ],
   [
@@ -93,7 +93,7 @@
   ],
   [
    "I tried ordering lunch in a language I'm learning.",
-   "How did it go?",
+   "Please tell me you at least got lunch.",
    "I asked for a spoon instead of a sandwich. The waiter was very kind."
   ],
   [
@@ -163,7 +163,7 @@
   ],
   [
    "I was late yesterday because of a dog.",
-   "What happened?",
+   "How does a dog make Reina late?",
    "A stranger asked me to hold the leash. The dog sat on my feet and fell asleep.",
    "And you waited?",
    "Twenty minutes. He looked comfortable. What was I supposed to do?"
@@ -182,7 +182,7 @@
   ],
   [
    "I'm hiding from someone in a yellow raincoat.",
-   "Why?",
+   "Who are you trying to avoid?",
    "I told an elderly neighbor I'd help choose curtains. She has brought twelve samples.",
    "Could be worse.",
    "She likes all of them. I am completely out of opinions."
@@ -227,7 +227,7 @@
    "My sister asked me to help decorate her birthday cake.",
    "What did you put on it?",
    "Little pink flowers. She said I had a steady hand.",
-   "And?",
+   "Did she like the drawings?",
    "I liked being useful for something completely silly."
   ],
   [
@@ -241,7 +241,7 @@
    "Someone gave me a daisy while I was waiting in line.",
    "Who?",
    "A toddler who was handing them out to everyone.",
-   "Did you keep it?",
+   "Is the little flower still with you?",
    "Pressed it inside a book. I don't know why you're smiling."
   ],
   [
@@ -253,7 +253,7 @@
   ],
   [
    "Yuna thinks I need a victory pose.",
-   "What did you tell her?",
+   "What's your opinion of victory poses?",
    "That winning the match is the victory pose.",
    "Did she listen?",
    "She demonstrated four poses anyway. I admit one was pretty good."
@@ -276,7 +276,7 @@
    "I lost a match yesterday and didn't immediately rewrite my deck.",
    "That sounds unusual for you.",
    "I went home, made dinner, and watched a movie first.",
-   "Did it help?",
+   "Was it easier to review the match afterward?",
    "Yes. I spotted the mistake this morning without being angry at myself."
   ],
   [
@@ -385,7 +385,7 @@
   ],
   [
    "I tried watching a silent film last weekend.",
-   "Did you like it?",
+   "Was there a scene worth remembering?",
    "I laughed so hard at one scene that I had to rewind.",
    "Even without dialogue?",
    "Especially without it. The actor's eyebrows did all the talking."
@@ -394,7 +394,7 @@
    "Someone returned a library book with a pressed flower inside.",
    "Do you know whose it was?",
    "No. I left it between the pages.",
-   "Why?",
+   "Why leave it tucked in the book?",
    "It seemed rude to separate the flower from the story it had been keeping company."
   ],
   [
@@ -441,14 +441,14 @@
   ],
   [
    "I wanted to learn a magic trick.",
-   "What happened?",
+   "How did you end up with a sandwich?",
    "I clicked the wrong video and learned how to make a sandwich instead.",
    "So, no magic?",
    "Not unless you count how fast I ate the sandwich."
   ],
   [
    "There was a little frog on the sidewalk.",
-   "What did you do?",
+   "Did you get the frog off the pavement?",
    "Escorted it to the grass like a very important guest."
   ],
   [
@@ -462,7 +462,7 @@
    "I thought my apartment was haunted last night.",
    "What made you think that?",
    "Clanking noises from the laundry room. I went to investigate.",
-   "And?",
+   "What was making all that noise?",
    "A spoon had gotten into the washer. Ghost defeated."
   ],
   [
@@ -507,7 +507,7 @@
   ],
   [
    "I went to a museum and expected to be bored.",
-   "And?",
+   "Anything worth staying for?",
    "There was a whole room of mechanical birds. I stayed until closing."
   ],
   [
@@ -519,7 +519,7 @@
   ],
   [
    "A girl at the bus stop told me she was nervous about her first day at a new school.",
-   "What did you tell her?",
+   "How did you try to make her feel welcome?",
    "That being new means nobody knows your bad jokes yet.",
    "Did she laugh?",
    "A little. Then she told me one. It was awful. I loved it."
@@ -547,7 +547,7 @@
    "I tried turning an ordinary walk into a race.",
    "With who?",
    "Myself. I challenged the traffic lights.",
-   "Did you win?",
+   "Did the traffic lights let you finish?",
    "No. But I stopped at a really good bakery, so the judges are reviewing the result."
   ],
   [
@@ -561,7 +561,7 @@
    "I was supposed to cheer up my friend yesterday.",
    "Did you manage?",
    "I brought silly stickers and a terrible movie.",
-   "Did it work?",
+   "Did the movie cheer them up?",
    "Not right away. We just sat there a bit. That was probably what they needed."
   ]
  ],
@@ -614,14 +614,14 @@
   ],
   [
    "I may have overestimated my skill with children's chemistry kits.",
-   "What happened?",
+   "I'm guessing the crystals disagreed with you?",
    "The box promised a sparkling crystal. I have produced a blue lump.",
    "Maybe it needs time?",
    "Possibly. I've named it Control Group One."
   ],
   [
    "A busker was playing violin outside the station.",
-   "Did you stop?",
+   "Did you stay for the music?",
    "I had somewhere to be. I stopped anyway.",
    "Regrets?",
    "None. I missed the early bus, not the important thing."
@@ -640,7 +640,7 @@
   ],
   [
    "A neighbor invited me over to meet her new puppy.",
-   "And?",
+   "Did you get to meet the puppy?",
    "It fell asleep on my lap. I forgot about the book I brought.",
    "Sounds like a good afternoon.",
    "It was. I think I needed an afternoon that wasn't useful."
@@ -671,7 +671,7 @@
   ],
   [
    "A child asked why the moon follows the bus.",
-   "What did you say?",
+   "How did you explain that to a child?",
    "I started explaining distance and perspective.",
    "Did they understand?",
    "Probably not. They asked if it gets lonely. I liked that question better."
@@ -708,7 +708,7 @@
   ],
   [
    "I played a new board game with friends.",
-   "Did you win?",
+   "How did your term as mayor end?",
    "No, I was elected mayor and bankrupted the town buying fountains.",
    "Why fountains?",
    "They looked charming on the board. It was a terrible administration."
@@ -755,7 +755,7 @@
    "My aunt has a card game where the winner does the dishes.",
    "That seems backwards.",
    "Exactly. I spent the evening trying to lose gracefully.",
-   "Did it work?",
+   "Did you manage to lose?",
    "No. She's been practicing losing for forty years. The woman is a professional."
   ],
   [
@@ -774,14 +774,14 @@
   ],
   [
    "I went to the theater with no idea what the play was about.",
-   "Was it good?",
+   "Was it the kind of show you enjoy?",
    "Funny and sad and completely impossible to explain.",
    "Do you recommend it?",
    "Absolutely. I'd take you, and still refuse to explain it."
   ],
   [
    "A little kid tried selling me a leaf at the park.",
-   "Did you buy it?",
+   "Did the kid convince you to take the leaf?",
    "For one compliment. She said I had very shiny shoes.",
    "Fair price?",
    "A bargain. The leaf is on my fridge."
@@ -798,7 +798,7 @@
   ],
   [
    "I tried to teach my niece a magic trick.",
-   "Did it work?",
+   "Was your niece fooled?",
    "She spotted the secret instantly, then promised not to tell anyone.",
    "Can you trust her?",
    "Only if I pay her in chocolate."
@@ -835,7 +835,7 @@
    "I bought two coffees and got charged for three.",
    "Did you complain?",
    "Of course. Politely, before you make that face.",
-   "What happened?",
+   "How did the café handle the mistake?",
    "They apologized, refunded me, and offered a pastry. I left a bigger tip than usual."
   ]
  ],
@@ -899,7 +899,7 @@
   ],
   [
    "Nereo taught me a trick for repairing a squeaky gate.",
-   "Did it work?",
+   "Is the gate quiet now?",
    "Yes. Now I miss the noise a little. It used to greet me every morning."
   ],
   [
@@ -918,7 +918,7 @@
   ],
   [
    "I tried going a whole Sunday without making plans.",
-   "How did it go?",
+   "Did you manage to stay unplanned?",
    "I had tea, read two chapters, and watched clouds.",
    "Did you get bored?",
    "Yes, for a moment. Then it felt lovely."
@@ -1012,7 +1012,7 @@
    "I arrived early to help set up a surprise party.",
    "And the surprise?",
    "The guest of honor was already there.",
-   "What did you do?",
+   "How did you keep the party a surprise?",
    "We decorated anyway and pretended Tuesday was a special holiday."
   ],
   [
@@ -1041,7 +1041,7 @@
   ],
   [
    "Someone on the train asked me to help with her baby.",
-   "Did you?",
+   "Did you find a way to help without taking over?",
    "I took her shopping bags while she adjusted the stroller.",
    "Much safer?",
    "For both of us. Babies look extremely easy to drop."
@@ -1060,7 +1060,7 @@
   ],
   [
    "I tried to repair an old music player.",
-   "Did you fix it?",
+   "Does the music player run now?",
    "It plays tapes again, but only if I tap the side twice.",
    "A personality quirk.",
    "That's what I'm calling it."
@@ -1072,7 +1072,7 @@
   ],
   [
    "I keep a little stone from a beach in my coat pocket.",
-   "Why?",
+   "Does it remind you of somewhere?",
    "I picked it up on a good day. It's silly, but I like remembering it."
   ],
   [
@@ -1131,7 +1131,7 @@
   ],
   [
    "A street musician was playing a song my family used to sing.",
-   "Did you stop?",
+   "Did you listen for a while?",
    "Yeah. I missed my bus, but I remembered the whole chorus."
   ],
   [
@@ -1150,14 +1150,14 @@
   ],
   [
    "I tried a trivia quiz about ocean animals.",
-   "Did you win?",
+   "Were you the team octopus expert?",
    "No, but I knew every octopus question.",
    "That's something.",
    "My team says I'm in charge of octopuses from now on."
   ],
   [
    "My neighbor gave me an old lamp.",
-   "Does it work?",
+   "Does the lamp still light up?",
    "Yes, but the shade has little stars punched in it. My ceiling looks magical."
   ],
   [
@@ -1178,7 +1178,7 @@
    "I ordered a drink I couldn't pronounce.",
    "What did you get?",
    "Something pink with mint leaves.",
-   "Did you like it?",
+   "Was it a happy accident?",
    "A lot. I'm ordering by accident more often."
   ],
   [
@@ -1214,7 +1214,7 @@
    "I helped an older man carry a television up the stairs.",
    "That sounds heavy.",
    "It was. He insisted on telling me its entire history between floors.",
-   "Did it work?",
+   "Did you get the television upstairs safely?",
    "Yes. It's older than I am and has a much better story."
   ],
   [
@@ -1228,14 +1228,14 @@
    "I spent an afternoon teaching my cousin a card game.",
    "Was she good at it?",
    "Too good. She figured out the best move while I was explaining the rules.",
-   "Did you win?",
+   "Did your cousin let you win even once?",
    "Not once. She says I can keep practicing."
   ],
   [
    "I almost didn't enter the practice match yesterday.",
    "What changed your mind?",
    "The person at the other table looked just as nervous as I felt.",
-   "How did it go?",
+   "Did playing against someone equally nervous help?",
    "We both made mistakes. Then we laughed and played another game."
   ],
   [
@@ -1266,7 +1266,7 @@
   ],
   [
    "I went to my nephew's school play.",
-   "How was it?",
+   "Did your nephew enjoy his big night?",
    "The cardboard dragon's head fell off. They kept singing like nothing had happened.",
    "Sounds memorable.",
    "Best performance I've seen in years."
@@ -1280,7 +1280,7 @@
   ],
   [
    "A regular left a handwritten poem for the cleaning staff.",
-   "Was it good?",
+   "Did the cleaning staff appreciate the poem?",
    "Terrible rhyme, lovely gesture. We put it on the wall.",
    "Do people read it?",
    "Every day. Someone even added a tiny illustration."
@@ -1340,7 +1340,7 @@
   ],
   [
    "My nephew asked if adults ever get scared.",
-   "What did you say?",
+   "How did you answer him?",
    "Of course. We just get better at choosing who to tell."
   ],
   [
@@ -1361,14 +1361,14 @@
    "I found a recipe in my mother's handwriting.",
    "Are you going to make it?",
    "I already tried. She never wrote down how much cinnamon to use.",
-   "Was it good?",
+   "How close did you get to your mother's recipe?",
    "Close enough to make me call her. That's the important part."
   ],
   [
    "Somebody left a chessboard on the café shelf.",
    "Does anyone play?",
    "A few regulars started yesterday. They only got halfway through a game.",
-   "What happened?",
+   "Did they leave the game unfinished?",
    "They went home and left the pieces exactly where they were. I put a little note saying 'to be continued.'"
   ],
   [
@@ -1404,7 +1404,7 @@
   ],
   [
    "I bought an old record player at a yard sale.",
-   "Does it work?",
+   "Does it actually play music?",
    "Only one speaker, but the music sounds like it's coming from another decade.",
    "What records do you have?",
    "Two jazz albums and a mystery record labeled 'Dad's favorite.'"
@@ -1444,19 +1444,19 @@
    "A woman at the market taught me to pick ripe peaches.",
    "What's the trick?",
    "Smell them. I'd been buying fruit like a confused mechanic.",
-   "Did it work?",
+   "And how was your first proper peach?",
    "Best peach of my life. Don't make that dramatic."
   ],
   [
    "I repaired an old lamp for a neighbor.",
    "Was she happy?",
    "She turned it on and started crying.",
-   "Why?",
+   "Did the radio mean something to her?",
    "It belonged to her father. I'm glad I fixed it."
   ],
   [
    "Tried cooking rice without the timer.",
-   "How was it?",
+   "Did the rice survive?",
    "Crunchy on top, burnt underneath. I called Marina and got laughed at.",
    "Did she help?",
    "She told me to soak the pot. Sensible woman."
@@ -1480,7 +1480,7 @@
    "The dock's noticeboard keeps losing its pins.",
    "Is the wind taking them?",
    "That, or someone is collecting them. I tied the notices with string.",
-   "Did it work?",
+   "Are the notices staying up?",
    "So far. Looks ugly, stays up. My kind of repair."
   ],
   [
@@ -1492,7 +1492,7 @@
   ],
   [
    "A kid asked why the ferry has a name.",
-   "What did you say?",
+   "I bet you had an answer ready.",
    "Because you take better care of something once it feels familiar.",
    "Did they like that answer?",
    "They wanted to rename it 'Captain Sandwich.' Can't say I hate it."
@@ -1536,7 +1536,7 @@
    "Please ignore the refrigerator magnet.",
    "The dancing carrot?",
    "Yes. It says 'rooting for you.'",
-   "Did you buy it?",
+   "Is that the magnet you bought yourself?",
    "My friend gave it to me. It's awful. I love it."
   ],
   [
@@ -1562,7 +1562,7 @@
   ],
   [
    "I made soup without a recipe for once.",
-   "How was it?",
+   "Did the soup taste any better than it looked?",
    "Edible. Then I added more salt, and it was actually good.",
    "Sounds simple.",
    "That's what surprised me. I didn't need a plan."
@@ -1583,7 +1583,7 @@
   ],
   [
    "I asked a neighbor to teach me how to sew.",
-   "How did it go?",
+   "Did you manage a decent stitch?",
    "I made a handkerchief with a crooked border.",
    "Will you make another?",
    "Absolutely. I rather enjoyed making something imperfect."
@@ -1729,7 +1729,7 @@
   ],
   [
    "I borrowed an album from a friend I'd lost touch with.",
-   "How was it?",
+   "Did the album live up to the memory?",
    "Great. More importantly, it gave us a reason to talk.",
    "Are you seeing them?",
    "We might get lunch. Feels good, actually."
@@ -1753,7 +1753,7 @@
   ],
   [
    "I took my headphones off on the bus today.",
-   "Why?",
+   "What made you do that?",
    "I wanted to hear the city for once. It sounded pretty good."
   ],
   [
@@ -1767,7 +1767,7 @@
    "I found a cardboard box big enough to build a little spaceship.",
    "For what?",
    "My neighbor's kid wanted to make something for a school play.",
-   "Did it work?",
+   "Did the little spaceship survive its launch?",
    "Yeah. We used bottle caps for buttons. It looked ridiculous. Perfect."
   ],
   [
@@ -1832,7 +1832,7 @@
    "I made a paper star and put it above my desk.",
    "Why a star?",
    "I wanted something small to look at during long afternoons.",
-   "Did it help?",
+   "Does looking at the stars make the day nicer?",
    "I made three more. It's becoming a little sky."
   ],
   [
@@ -1856,7 +1856,7 @@
   ],
   [
    "I rescued a broken wind chime from a market stall.",
-   "Did you fix it?",
+   "Does the wind chime sound right again?",
    "Yes. It makes a soft sound when the window opens.",
    "Doesn't it keep you awake?",
    "No. I like knowing there's a breeze."
@@ -1906,7 +1906,7 @@
    "I signed up for a workshop without asking anyone to come with me.",
    "Were you nervous?",
    "Terribly. Then someone asked to share my table.",
-   "And?",
+   "Were they easy to talk to?",
    "We talked the whole afternoon. I think I'll go again."
   ],
   [
@@ -1941,7 +1941,7 @@
   ],
   [
    "I went to the market for a single apple.",
-   "And?",
+   "So where was the apple?",
    "Came home with peaches and an old spoon. No apple.",
    "How did that happen?",
    "The spoon looked like something from my grandmother's kitchen. I got distracted."
@@ -1976,7 +1976,7 @@
   ],
   [
    "Someone showed me how to carve an apple into a swan.",
-   "Did it work?",
+   "Does it actually look like a swan?",
    "Not exactly. Mine looks like a very tired duck."
   ],
   [
@@ -1997,7 +1997,7 @@
    "I went looking for a raincoat and fell in love with the wrong one.",
    "Why was it wrong?",
    "Bright yellow, oversized, covered in tiny frogs.",
-   "Did you buy it?",
+   "Please tell me that outfit came home with you.",
    "Yes. I look forward to rainy days now."
   ],
   [
@@ -2052,7 +2052,7 @@
    "I found a card sleeve with a drawing tucked inside.",
    "What was the drawing?",
    "A tiny Grass Pokémon with a bow. A fan gave it to me years ago.",
-   "Did you keep it?",
+   "Do you still have that sleeve?",
    "Of course. I put it where I'll see it before every rehearsal."
   ],
   [
@@ -2064,7 +2064,7 @@
   ],
   [
    "A younger fan asked whether I ever have stage fright.",
-   "What did you say?",
+   "Did you tell her you get nervous too?",
    "All the time. My hands get cold before I go on.",
    "Did that surprise her?",
    "She looked relieved. I wish somebody had told me that when I was younger."
@@ -2087,7 +2087,7 @@
   ],
   [
    "I tried improvising dinner.",
-   "How did it go?",
+   "Was dinner edible?",
    "Spicy rice with orange juice. The rice was good; the juice was a mistake.",
    "What'll you do next time?",
    "Start with water. Very innovative."
@@ -2113,7 +2113,7 @@
   ],
   [
    "A small dog stole my seat at a picnic.",
-   "What did you do?",
+   "Did the dog at least let you sit nearby?",
    "Sat on the grass. The dog was a better guest than I was."
   ],
   [
@@ -2165,17 +2165,17 @@
   ],
   [
    "A teenager asked me to sign a scrap of paper.",
-   "Did you?",
+   "Did you sign it for her?",
    "Yes, then we talked about her favorite music instead."
   ],
   [
    "I lost track of time watching fish in a pond.",
-   "Why?",
+   "Didn't you have someplace to be?",
    "They were there, and for once I didn't need to be elsewhere."
   ],
   [
    "A magazine asked what I do to relax.",
-   "What did you say?",
+   "What did you admit in the end?",
    "The usual polished answer. Then I admitted I like sitting by the window with noodles.",
    "Did they print that part?",
    "Yes. A reader wrote to say she does the same thing."
@@ -2184,12 +2184,12 @@
    "I helped a younger model prepare for her first shoot.",
    "Was she nervous?",
    "Very. She kept asking if she looked all right.",
-   "What did you tell her?",
+   "How did you help her settle down?",
    "That we could fix the lighting. She didn't need to fix herself."
   ],
   [
    "I missed a chance to take the perfect picture.",
-   "What happened?",
+   "What kept you from taking it?",
    "I was laughing with friends and forgot the camera.",
    "Do you regret it?",
    "Not really. I remember the evening perfectly."
@@ -2198,7 +2198,7 @@
    "I found an old photo where nobody is looking at the camera.",
    "Do you like it?",
    "I think it's my favorite from that day.",
-   "Why?",
+   "What makes that photo special?",
    "Everyone's laughing at something I can't remember. It looks exactly how being there felt."
   ],
   [
@@ -2219,7 +2219,7 @@
   ],
   [
    "I saw a scarf covered in tiny ducks wearing hats.",
-   "Did you buy it?",
+   "Are the ducks coming home with you?",
    "Naturally. It's going to be the centerpiece of my next outfit.",
    "What's the outfit?",
    "Don't know yet. The ducks get creative control."
@@ -2273,7 +2273,7 @@
    "I got caught in the rain and hid inside a record shop.",
    "Did you buy anything?",
    "A record with an orange sunset on the cover.",
-   "Was it good?",
+   "Was the record worth the soaking?",
    "Beautiful. I'm glad I got soaked."
   ],
   [
@@ -2450,7 +2450,7 @@
   ],
   [
    "Someone wrote 'you'll be okay' outside a shop.",
-   "Did it help?",
+   "Did seeing those words make a difference?",
    "A little. I didn't know I needed to read it today."
   ],
   [
@@ -2462,7 +2462,7 @@
   ],
   [
    "A kid at work asked me why I wear a whistle.",
-   "What did you say?",
+   "How did you explain the whistle?",
    "So everyone can hear me when it matters.",
    "Did they get it?",
    "They asked to try it. I told them maybe after the swimming lesson."
@@ -2483,7 +2483,7 @@
   ],
   [
    "A kid at my swimming shift asked if I ever get tired.",
-   "What did you say?",
+   "How did you answer that?",
    "Of course. Even people who love the water need breaks.",
    "Did they believe you?",
    "Not until I sat down and ate my sandwich. Apparently that was proof."
@@ -2494,12 +2494,12 @@
    "That door hinge has been bothering me for three days.",
    "You could ignore it.",
    "And let it win? Absolutely not.",
-   "Did you fix it?",
+   "Is the hinge quiet now?",
    "Mostly. Now the door is silent, but I have oil on my tournament notes."
   ],
   [
    "A kid asked me which ice cream flavor was best.",
-   "What did you say?",
+   "Which flavor did you recommend?",
    "Pistachio. She looked at me like I'd just assigned her homework."
   ],
   [
@@ -2542,7 +2542,7 @@
   ],
   [
    "I went to my neighbor's puppet show.",
-   "How was it?",
+   "Did the puppet keep performing?",
    "One puppet lost an arm in the middle of the performance.",
    "Oh no.",
    "The puppeteer called it a shocking twist and carried on. I respect that level of composure."
@@ -2559,9 +2559,9 @@
   ],
   [
    "I borrowed a mystery novel from Alma.",
-   "Was it good?",
+   "Did the ending surprise you?",
    "She warned me the ending was strange. It was stranger than she promised.",
-   "Did you like it?",
+   "Did she pick a good book for you?",
    "Very much. She knows me alarmingly well."
   ],
   [
@@ -2604,7 +2604,7 @@
    "I caught myself looking at the clock during a movie.",
    "Were you bored?",
    "No. I was mentally calculating when it would end.",
-   "Did you stop?",
+   "Were you able to enjoy the film afterward?",
    "Yes. I took my watch off. The movie was much better after that."
   ],
   [
@@ -2637,12 +2637,12 @@
   ],
   [
    "I bought a rocket-shaped alarm clock.",
-   "Does it work?",
+   "Does it wake you on time?",
    "Too well. Every morning feels like a launch countdown."
   ],
   [
    "I drew a self-portrait yesterday.",
-   "How did it go?",
+   "Please tell me somebody recognized you.",
    "Three people asked which cousin it was. I don't even have cousins."
   ],
   [
@@ -2678,7 +2678,7 @@
   ],
   [
    "I took a train to the end of the line on my day off.",
-   "Why?",
+   "What were you hoping to find?",
    "I wanted to see the town there.",
    "Was it exciting?",
    "Not really. But there was a bakery that made perfect apple pie."
@@ -2717,14 +2717,14 @@
   ],
   [
    "I thought I'd lost my voice before yesterday's event.",
-   "What happened?",
+   "How did you save your voice?",
    "I spoke quietly all morning to save it.",
-   "Did it help?",
+   "Was your voice ready for the event?",
    "A lot. Iris says it was the nicest morning she's had in months."
   ],
   [
    "My brother asked me to announce his cooking.",
-   "Did you?",
+   "You actually did the commentary?",
    "Of course. He was making toast.",
    "How dramatic can toast be?",
    "You'd be surprised. There was a tense moment when the butter wouldn't spread."
@@ -2768,7 +2768,7 @@
   ],
   [
    "I've been practicing a coin trick.",
-   "Does it work?",
+   "Have you pulled off the trick yet?",
    "The coin disappears, but I spend ten minutes finding it afterward."
   ],
   [
@@ -2792,7 +2792,7 @@
   ],
   [
    "A stranger gave me a paper crane at the bus stop.",
-   "Why?",
+   "Where did the crane come from?",
    "The bus was late, so she taught everyone in the queue to fold one."
   ],
   [
@@ -2878,7 +2878,7 @@
    "There's a child who waves at every delivery van.",
    "Does she wave at yours?",
    "Every time. Last week she drew me a tiny truck.",
-   "Did you keep it?",
+   "Tell me you saved her drawing.",
    "It's taped inside my clipboard. Teo hasn't found it yet, thankfully."
   ]
  ],
@@ -2915,7 +2915,7 @@
    "I went to an outdoor flea market looking for a lamp.",
    "Did you find one?",
    "No. I found a music box shaped like a house.",
-   "Does it work?",
+   "Does the music box still play?",
    "Yes. It plays a waltz so softly you have to lean close."
   ],
   [
@@ -2955,12 +2955,12 @@
    "I tried painting a chair instead of replacing it.",
    "What color?",
    "Deep blue. I accidentally painted one leg gold.",
-   "Did you fix it?",
+   "Did you leave the gold leg?",
    "No. It looks like the chair has a secret."
   ],
   [
    "A friend asked me to teach her a simple stitch.",
-   "Did you?",
+   "Were you able to teach her?",
    "We spent the afternoon talking more than sewing.",
    "What did she make?",
    "One tiny crooked flower on her sleeve. She wore it home."
@@ -2974,7 +2974,7 @@
   ],
   [
    "A stranger complimented a scarf I'd made.",
-   "What did you say?",
+   "Did she ask where you got it?",
    "That it was handmade. She asked me to show her how."
   ],
   [
