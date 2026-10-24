@@ -65,3 +65,18 @@ test('romance readiness respects completed story chapters, exclusivity, and olde
  assert.equal(VN.commitmentReady(s,'reina'),true);
  s.partner='hana';assert.equal(VN.commitmentReady(s,'reina'),false);
 });
+
+test('unrecognized NPC Talk never stitches an unrelated opening after a repetitive protagonist filler',()=>{
+ const actor={intro:'I just moved here.',talk:['I lost the map to the station.','I am saving up for a new bike.']};
+ const previous=new Set();
+ for(let day=1;day<=28;day++){
+  const state={day,slot:1};
+  const lines=VN.dialogue(state,'visiting-trainer',actor,null);
+  assert.deepEqual(lines.map(x=>x.speaker),['visiting-trainer','Protagonist','visiting-trainer']);
+  assert.equal(lines[0].text,actor.talk[VN.topic(state,'visiting-trainer',2)]);
+  assert.notEqual(lines[2].text,actor.talk[(VN.topic(state,'visiting-trainer',2)+1)%2]);
+  assert.ok(!lines.some(x=>/And how are things going otherwise\?/.test(x.text)));
+  previous.add(lines[1].text);
+ }
+ assert.ok(previous.size>=3,'fallback protagonist should vary instead of repeating a stock line');
+});
