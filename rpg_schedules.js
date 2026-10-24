@@ -23,17 +23,89 @@
  Object.assign(start,SIDE.arrivals);
  Object.assign(start,CHARS?.arrivals||{});
  const publicPlaces=['shop','arcade','park','cafe','center','library'];
- function locationFor(npc,day,slot,events=[]){
-  if(!templates[npc]||!Number.isInteger(day)||day<1||day>90||!Number.isInteger(slot)||slot<0||slot>2||day<start[npc])return null;
-  const override=events.find(e=>(e.npc===npc||e.participants?.includes(npc))&&e.start<=day&&e.end>=day&&e.slot===slot);
-  if(override)return override.place;
+ const NORMAL_PLACE_LIMIT=4;
+ // A little flexibility in the timetable, without moving people's workplace
+ // shifts or making every NPC converge on the same park at once.
+ const workplace={hana:'shop',camila:'shop',elio:'shop',iris:'shop',alma:'cafe',
+  jun:'center',teo:'arcade',yuna:'arcade',kaede:'arcade',akari:'library',
+  shiori:'library',marina:'park',nereo:'park'};
+ const wander={shop:'cafe',cafe:'park',park:'shop',arcade:'shop',
+  center:'park',library:'cafe',home:'park'};
+ const hash=s=>{let n=2166136261;for(const c of String(s))n=Math.imul(n^c.charCodeAt(0),16777619)>>>0;return n;};
+ function baseLocation(npc,day,slot){
   const week=Math.floor((day-1)/7),weekday=(day-1)%7;
   let place=templates[npc][weekday][slot];
-  // Every fourth week, NPCs change their routine on one afternoon; deterministic after reload.
-  if(week%4===3&&slot===1&&weekday===3)place={shop:'cafe',cafe:'park',park:'shop',arcade:'shop',center:'park',library:'cafe',home:'park'}[place]||place;
+  // Stagger the fourth-week routine change so it doesn't move the entire
+  // town toward the park in the very same afternoon.
+  if(week%4===3&&slot===1&&weekday===3&&hash(npc)%3===0)place=wander[place]||place;
   return place;
  }
- function peopleAt(day,slot,place,events=[]){if(!publicPlaces.includes(place))return [];return Object.keys(templates).filter(id=>locationFor(id,day,slot,events)===place);}
+ function validTime(day,slot){return Number.isInteger(day)&&day>=1&&day<=90&&Number.isInteger(slot)&&slot>=0&&slot<=2;}
+ function placements(day,slot,events=[]){
+  if(!validTime(day,slot))return {};
+  const ids=Object.keys(templates).filter(id=>day>=start[id]);
+  const result={},pinned=new Set(),counts=Object.fromEntries(publicPlaces.map(p=>[p,0]));
+  const overrides=Array.isArray(events)?events:[];
+  for(const id of ids){
+   const event=overrides.find(e=>(e.npc===id||e.participants?.includes(id))&&
+    e.start<=day&&e.end>=day&&e.slot===slot&&typeof e.place==='string');
+   if(event){result[id]=event.place;pinned.add(id);}
+   else result[id]=baseLocation(id,day,slot);
+   if(publicPlaces.includes(result[id]))counts[result[id]]++;
+  }
+  // Preserve every story/appointment attendee. If an event legitimately
+  // brings more than four people together, allow that crowd to remain.
+  const capacity=p=>Math.max(NORMAL_PLACE_LIMIT,ids.filter(id=>pinned.has(id)&&result[id]===p).length);
+  function preference(id,place){
+   const week=templates[id];
+   let score=0;
+   for(const row of week)for(let s=0;s<3;s++)
+    if(row[s]===place)score+=s===slot?8:2;
+   if(workplace[id]===place)score+=18;
+   return score;
+  }
+  // Move only overflow, preferring characters whose regular routine offers
+  // a credible alternative. Stable hash breaks ties; no rerolls on reload.
+  for(let turns=0;turns<ids.length*publicPlaces.length;turns++){
+   const crowded=publicPlaces.filter(p=>counts[p]>capacity(p))
+    .sort((a,b)=>(counts[b]-capacity(b))-(counts[a]-capacity(a))||a.localeCompare(b));
+   if(!crowded.length)break;
+   const source=crowded[0];
+   const destinations=publicPlaces.filter(p=>p!==source&&counts[p]<capacity(p));
+   if(!destinations.length)break;
+   const movers=ids.filter(id=>result[id]===source&&!pinned.has(id))
+    .sort((a,b)=>{
+     const stickA=preference(a,source),stickB=preference(b,source);
+     return stickA-stickB||(hash(a+':'+day+':'+slot)-hash(b+':'+day+':'+slot));
+    });
+   if(!movers.length)break;
+   const mover=movers[0];
+   destinations.sort((a,b)=>{
+    const scoreA=preference(mover,a)-counts[a]*8;
+    const scoreB=preference(mover,b)-counts[b]*8;
+    return scoreB-scoreA||(hash(mover+':'+day+':'+slot+':'+a)-hash(mover+':'+day+':'+slot+':'+b));
+   });
+   const dest=destinations[0];
+   result[mover]=dest;counts[source]--;counts[dest]++;
+  }
+  return result;
+ }
+ const normalCache=new Map();
+ function dailyLocations(day,slot,events=[]){
+  if(Array.isArray(events)&&events.length)return placements(day,slot,events);
+  const key=day+':'+slot;
+  if(!normalCache.has(key))normalCache.set(key,placements(day,slot));
+  return normalCache.get(key);
+ }
+ function locationFor(npc,day,slot,events=[]){
+  if(!templates[npc]||!validTime(day,slot)||day<start[npc])return null;
+  return dailyLocations(day,slot,events)[npc]||null;
+ }
+ function peopleAt(day,slot,place,events=[]){
+  if(!publicPlaces.includes(place))return [];
+  const places=dailyLocations(day,slot,events);
+  return Object.keys(templates).filter(id=>places[id]===place);
+ }
  function itinerary(npc,day,events=[]){return [0,1,2].map(slot=>locationFor(npc,day,slot,events));}
  function nextVisit(npc,day,slot,events=[],horizon=7){
   for(let offset=1;offset<=horizon*3;offset++){const n=(day-1)*3+slot+offset,d=Math.floor(n/3)+1,s=n%3;if(d>90)break;const place=locationFor(npc,d,s,events);if(place&&place!=='home')return {day:d,slot:s,place};}
@@ -44,5 +116,5 @@
   for(const [id,week] of Object.entries(templates)){if(week.length!==7)issues.push(id+' missing weekdays');for(const row of week)if(row.length!==3||row.some(p=>p!=='home'&&!publicPlaces.includes(p)))issues.push(id+' bad location');}
   return issues;
  }
- return Object.freeze({locationFor,peopleAt,itinerary,nextVisit,validate,publicPlaces,start});
+ return Object.freeze({locationFor,peopleAt,itinerary,nextVisit,validate,publicPlaces,start,NORMAL_PLACE_LIMIT});
 });
