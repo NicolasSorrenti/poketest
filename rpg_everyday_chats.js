@@ -3354,7 +3354,7 @@
  function validate(){
   const issues=[];
   for(const [npc,rows] of Object.entries(topics)){
-   if(rows.length<21)issues.push(npc+': too few scenes');
+   if(rows.length<23)issues.push(npc+': too few scenes');
    if(new Set(rows.map(r=>r[0])).size!==rows.length)issues.push(npc+': duplicate opener');
    if(rows.some(r=>![3,5].includes(r.length)||r.some(s=>typeof s!=='string'||!s.trim())))issues.push(npc+': malformed dialogue');
   }
