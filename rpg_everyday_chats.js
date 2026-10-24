@@ -811,6 +811,54 @@
    "My neighbor gave me an old lamp.",
    "Does it work?",
    "Yes, but the shade has little stars punched in it. My ceiling looks magical."
+  ],
+  [
+   "A neighbor asked me to water her balcony garden.",
+   "Did you manage?",
+   "Mostly. Her tomato plants are enormous.",
+   "You sound proud.",
+   "I am. She gave me two tomatoes as a thank-you. I took photos."
+  ],
+  [
+   "I found my grandfather's old radio in a closet.",
+   "Does it still work?",
+   "Only when the antenna points toward the ceiling.",
+   "And what do you hear?",
+   "A station playing songs he used to hum. I sat there for a while."
+  ],
+  [
+   "I ordered a drink I couldn't pronounce.",
+   "What did you get?",
+   "Something pink with mint leaves.",
+   "Did you like it?",
+   "A lot. I'm ordering by accident more often."
+  ],
+  [
+   "An elderly woman asked me to take her picture beside a mural.",
+   "Did it turn out well?",
+   "She said I made her look like a movie star.",
+   "Maybe you did.",
+   "I think the mural helped. She promised to send it to her sister."
+  ],
+  [
+   "I joined a walk through a historical neighborhood.",
+   "Learn anything?",
+   "The oldest building used to be a bakery. I liked that part."
+  ],
+  [
+   "I spent an evening listening to records with my cousin.",
+   "What did you play?",
+   "Old songs from family parties. We remembered every chorus."
+  ],
+  [
+   "I'm teaching myself to juggle three oranges.",
+   "How many can you catch?",
+   "One reliably. Two if I stop trying to look cool."
+  ],
+  [
+   "I painted a little wooden birdhouse.",
+   "Do birds use it?",
+   "Not yet. A spider has moved in. Someone likes my house."
   ]
  ],
  "alma": [
@@ -857,6 +905,54 @@
    "My friend sent me a photo of a very old tree.",
    "What's special about it?",
    "We used to hide notes there when we were children. It is still standing."
+  ],
+  [
+   "I found the scarf I thought I'd lost years ago.",
+   "Where was it?",
+   "At the bottom of a suitcase, wrapped around a postcard.",
+   "From somewhere special?",
+   "A trip with old friends. I wore it all afternoon."
+  ],
+  [
+   "There was a handwritten thank-you note slipped under my door.",
+   "For what?",
+   "Apparently I helped someone on a very bad day.",
+   "Do you remember?",
+   "Not really. That's what makes it so lovely."
+  ],
+  [
+   "An old school friend called out of nowhere.",
+   "How long had it been?",
+   "Almost a decade. We spoke for two hours.",
+   "Was it awkward?",
+   "Only for the first minute. Then we were teenagers again."
+  ],
+  [
+   "I watched the sunrise from the roof this morning.",
+   "Couldn't sleep?",
+   "No, I woke early and decided the sky deserved an audience.",
+   "Was it beautiful?",
+   "Very. And nobody asked me for a receipt."
+  ],
+  [
+   "I joined a group learning traditional dances.",
+   "Do you know the steps?",
+   "Some. The instructor says enthusiasm counts for the rest."
+  ],
+  [
+   "I finally visited a museum I've lived near for years.",
+   "Any surprises?",
+   "A room full of antique toys. I spent most of my time there."
+  ],
+  [
+   "I baked a chocolate cake for no special occasion.",
+   "Why not wait for a celebration?",
+   "I think Tuesday deserves cake every now and then."
+  ],
+  [
+   "My nephew asked if adults ever get scared.",
+   "What did you say?",
+   "Of course. We just get better at choosing who to tell."
   ]
  ],
  "nereo": [
@@ -903,6 +999,54 @@
    "There's a squirrel outside my window every morning.",
    "Does it visit you?",
    "It has a favorite branch. I feel rude if I don't say hello."
+  ],
+  [
+   "I went fishing with an old friend and caught absolutely nothing.",
+   "Bad day?",
+   "Best one I've had in weeks. We talked until sunset.",
+   "About what?",
+   "Everything and nothing. That's why I went."
+  ],
+  [
+   "I found a postcard I'd never mailed.",
+   "Where was it supposed to go?",
+   "To my brother, years ago. It says 'wish you were here.'",
+   "Are you sending it?",
+   "I think I'll hand it to him myself and see if he laughs."
+  ],
+  [
+   "A woman at the market taught me to pick ripe peaches.",
+   "What's the trick?",
+   "Smell them. I'd been buying fruit like a confused mechanic.",
+   "Did it work?",
+   "Best peach of my life. Don't make that dramatic."
+  ],
+  [
+   "I repaired an old lamp for a neighbor.",
+   "Was she happy?",
+   "She turned it on and started crying.",
+   "Why?",
+   "It belonged to her father. I'm glad I fixed it."
+  ],
+  [
+   "I tried to cook rice without a timer.",
+   "How did it go?",
+   "Crunchy on top, mysterious on the bottom. Never again."
+  ],
+  [
+   "There's a stray dog that watches the morning ferry.",
+   "Does it get on?",
+   "No. It sees everyone off, then goes back to its bench."
+  ],
+  [
+   "My niece made me a friendship bracelet.",
+   "Are you wearing it?",
+   "Under my sleeve. It's brighter than everything else I own."
+  ],
+  [
+   "I found a place that sells homemade ice pops.",
+   "Favorite flavor?",
+   "Lemon. They're too sour. I buy one every week."
   ]
  ],
  "elena": [
@@ -951,6 +1095,54 @@
    "I tried making soup without a recipe.",
    "How did it go?",
    "Quite well. The second bowl was better because I stopped worrying."
+  ],
+  [
+   "A friend took me to an outdoor film screening.",
+   "Did you enjoy it?",
+   "I brought a blanket; she brought popcorn. Neither checked the weather.",
+   "What happened?",
+   "Rain during the final scene. We stayed through the credits."
+  ],
+  [
+   "I found a photograph of myself at eight years old.",
+   "What were you doing?",
+   "Building a sandcastle in an enormous sunhat.",
+   "You sound fond of it.",
+   "I remember being furious when the tide came in. I still remember the castle."
+  ],
+  [
+   "I asked a neighbor to teach me how to sew.",
+   "How did it go?",
+   "I made a handkerchief with a crooked border.",
+   "Will you make another?",
+   "Absolutely. I rather enjoyed making something imperfect."
+  ],
+  [
+   "I spent Sunday reading in a public garden.",
+   "Without a schedule?",
+   "Not a single appointment.",
+   "What did you read?",
+   "A ridiculous romance novel. I bought the sequel."
+  ],
+  [
+   "Someone in the elevator was carrying six balloons.",
+   "A party?",
+   "His grandmother's ninety-first birthday. I wished him luck."
+  ],
+  [
+   "A child at the museum explained dinosaurs to me.",
+   "Was he knowledgeable?",
+   "Three new fossil facts and one fact about his dog."
+  ],
+  [
+   "I made a playlist called 'walking nowhere.'",
+   "And the destination?",
+   "That's the point. There isn't one."
+  ],
+  [
+   "I bought flowers for myself yesterday.",
+   "For a special reason?",
+   "I liked their color. I've decided that's reason enough."
   ]
  ],
  "jinx": [
@@ -997,6 +1189,54 @@
    "I found a little music box in a thrift shop.",
    "What does it play?",
    "A song I used to hear as a kid. I didn't realize I remembered it."
+  ],
+  [
+   "I went to a tiny neighborhood cinema last night.",
+   "Anything good?",
+   "An old comedy where everything goes wrong at dinner.",
+   "Did you laugh?",
+   "So hard I spilled my popcorn. Great night."
+  ],
+  [
+   "I helped a neighbor carry a cabinet upstairs.",
+   "Did it fit?",
+   "Not until we removed the legs.",
+   "Was that your idea?",
+   "No. I suggested removing the stairs. They chose the sensible option."
+  ],
+  [
+   "A kid asked me to draw on their sidewalk chalk mural.",
+   "What did you draw?",
+   "A spaceship. They added an alien with twelve legs.",
+   "Better than yours?",
+   "Way better. I asked for an autograph."
+  ],
+  [
+   "I borrowed an album from a friend I'd lost touch with.",
+   "How was it?",
+   "Great. More importantly, it gave us a reason to talk.",
+   "Are you seeing them?",
+   "We might get lunch. Feels good, actually."
+  ],
+  [
+   "I adopted a tiny succulent.",
+   "What's its name?",
+   "Satellite. It listens for signals from my windowsill."
+  ],
+  [
+   "I tried baking bread.",
+   "Any luck?",
+   "The first loaf was a brick. The third had an actual crust."
+  ],
+  [
+   "Someone put a sign on a broken park bench.",
+   "What did it say?",
+   "'Resting bench, please give it space.' I laughed."
+  ],
+  [
+   "I took my headphones off on the bus today.",
+   "Why?",
+   "I wanted to hear the city for once. It sounded pretty good."
   ]
  ],
  "luna": [
@@ -1043,6 +1283,54 @@
    "A stray cat followed me home in the rain.",
    "Did you keep it?",
    "It belonged to the family upstairs. We had a very polite reunion."
+  ],
+  [
+   "I joined a beginner photography walk.",
+   "Did you take good pictures?",
+   "One lovely bicycle with flowers in its basket.",
+   "And the others?",
+   "Mostly my thumb. I'm learning to notice it."
+  ],
+  [
+   "I rescued a broken wind chime from a market stall.",
+   "Did you fix it?",
+   "Yes. It makes a soft sound when the window opens.",
+   "Doesn't it keep you awake?",
+   "No. I like knowing there's a breeze."
+  ],
+  [
+   "My aunt asked me to help make dumplings for dinner.",
+   "How many?",
+   "Nearly a hundred. I lost count after the first tray.",
+   "Were they good?",
+   "They disappeared before I sat down. That's a compliment."
+  ],
+  [
+   "There was a free piano outside the community center.",
+   "Did you play?",
+   "A little. A stranger came over and joined in.",
+   "Did you know them?",
+   "No. We never introduced ourselves. It was nice anyway."
+  ],
+  [
+   "I tried a poetry reading for the first time.",
+   "Did you read anything?",
+   "I listened. One poem about missing a bus made me cry."
+  ],
+  [
+   "I started writing letters instead of messages to a friend.",
+   "Isn't that slow?",
+   "Yes. Maybe that's why we're telling each other more."
+  ],
+  [
+   "A baker made little rolls shaped like hedgehogs.",
+   "Did you buy one?",
+   "Two. I had to admire them before eating them."
+  ],
+  [
+   "I spent an afternoon on a puzzle with my cousin.",
+   "Did you finish?",
+   "No, but we invented stories about everyone in the picture."
   ]
  ],
  "rina": [
@@ -1089,6 +1377,54 @@
    "I tried making handmade candles.",
    "How did it go?",
    "The first one leaned sideways. It still smells wonderful."
+  ],
+  [
+   "I found an old video of myself learning to roller skate.",
+   "Can I see it?",
+   "Only if you promise not to laugh.",
+   "I can't promise that.",
+   "Fair. I spend half the video clinging to a tree."
+  ],
+  [
+   "I went looking for a raincoat and fell in love with the wrong one.",
+   "Why was it wrong?",
+   "Bright yellow, oversized, covered in tiny frogs.",
+   "Did you buy it?",
+   "Yes. I look forward to rainy days now."
+  ],
+  [
+   "A friend showed me a shortcut through a garden.",
+   "Was it faster?",
+   "Not at all. We stopped to watch butterflies.",
+   "Worth it?",
+   "Completely. I take the longer route now."
+  ],
+  [
+   "I helped a girl find her missing glove on the train.",
+   "Did you find it?",
+   "Inside her hat. We both looked relieved.",
+   "That sounds sweet.",
+   "She waved until the train pulled away."
+  ],
+  [
+   "I repaired an old pair of jeans.",
+   "What went wrong?",
+   "Nothing! I stitched a tiny blue star over the tear."
+  ],
+  [
+   "I keep ticket stubs from ordinary days.",
+   "Not concerts?",
+   "No. Bus rides to see friends. Little days count too."
+  ],
+  [
+   "I saw a street performer teaching strangers to dance.",
+   "Did you join?",
+   "For one song. Forgot the steps and kept moving."
+  ],
+  [
+   "My neighbor asked me to watch her parrot.",
+   "Did it talk?",
+   "It said 'good morning' at midnight and laughed at me."
   ]
  ],
  "sierra": [
@@ -1135,6 +1471,54 @@
    "I tried growing strawberries on my balcony.",
    "Any fruit yet?",
    "One. I'm considering making it a little crown."
+  ],
+  [
+   "I went into a science museum to escape the rain.",
+   "Anything interesting?",
+   "A room where you could make giant soap bubbles.",
+   "Did you try?",
+   "Three times. The last bubble was taller than me."
+  ],
+  [
+   "A friend invited me to her family dinner.",
+   "Did you know anyone else?",
+   "No. By dessert, her grandmother had taught me recipes and a card trick.",
+   "Did you fit in?",
+   "They invited me back. I think so."
+  ],
+  [
+   "I've been rereading a book I loved as a teenager.",
+   "Still good?",
+   "Better in some places, worse in others.",
+   "Disappointing?",
+   "Not really. I like noticing how I've changed."
+  ],
+  [
+   "I helped a neighbor paint a bedroom.",
+   "What color?",
+   "Green. A very brave green.",
+   "Did they like it?",
+   "We opened the windows and danced while it dried."
+  ],
+  [
+   "I made a terrible sketch of my own hand.",
+   "Can I see?",
+   "It has six fingers. Don't ask."
+  ],
+  [
+   "There was a portrait artist on the sidewalk.",
+   "Did you sit for one?",
+   "Yes. He got my nose right and invented a new hairstyle."
+  ],
+  [
+   "A teenager asked me to sign a scrap of paper.",
+   "Did you?",
+   "Yes, then we talked about her favorite music instead."
+  ],
+  [
+   "I lost track of time watching fish in a pond.",
+   "Why?",
+   "They were there, and for once I didn't need to be elsewhere."
   ]
  ],
  "sol": [
@@ -1181,6 +1565,54 @@
    "I tried making a little herb garden.",
    "Any luck?",
    "The mint has taken over. It's not a garden, it's a mint kingdom."
+  ],
+  [
+   "I volunteered at a neighborhood garden.",
+   "Are you a gardener now?",
+   "I mostly carried soil and met a woman named Pilar.",
+   "Did she teach you anything?",
+   "She told stories while I planted carrots. I owe her one now."
+  ],
+  [
+   "I got caught in the rain and hid inside a record shop.",
+   "Did you buy anything?",
+   "A record with an orange sunset on the cover.",
+   "Was it good?",
+   "Beautiful. I'm glad I got soaked."
+  ],
+  [
+   "I finally learned the ending of that ridiculous handshake.",
+   "Show me.",
+   "Two claps, a spin, and then a bow like performers.",
+   "That actually works.",
+   "I know! Try not to look so surprised."
+  ],
+  [
+   "I want a day with no plans and no clock.",
+   "Would you enjoy that?",
+   "I think so. Or maybe I'm terrible at relaxing.",
+   "We could find out.",
+   "Perfect. There's only one way to know."
+  ],
+  [
+   "Someone left a drawing on a park bench.",
+   "Of what?",
+   "A smiling whale in a crown. I left it for the next person."
+  ],
+  [
+   "I tried making soap at a workshop.",
+   "Was it difficult?",
+   "Mine looks like a potato. A very fragrant potato."
+  ],
+  [
+   "I watched a puppet show with a friend's little sister.",
+   "Did she like it?",
+   "She shouted advice at every puppet. They ignored her."
+  ],
+  [
+   "I found a tiny book of poems at a stall.",
+   "Any good ones?",
+   "One about missing a train made me miss mine."
   ]
  ],
  "laca": [
@@ -1227,6 +1659,54 @@
    "I bought a lemon tart from a bakery I've never visited.",
    "Was it good?",
    "So good I walked back to learn the baker's name."
+  ],
+  [
+   "I passed the place where I used to take swimming lessons.",
+   "Does it look the same?",
+   "The gate is smaller, and the tree is enormous.",
+   "Funny how things change.",
+   "I stood there remembering those afternoons."
+  ],
+  [
+   "I found a childhood list of things I wanted to do.",
+   "Anything surprising?",
+   "Whistle, ride a horse, eat a whole watermelon.",
+   "Have you?",
+   "Two and a half. The watermelon defeated me."
+  ],
+  [
+   "Do you remember that awful song we used to make up on walks?",
+   "Only the chorus.",
+   "That's all I remember too. Maybe the verses never existed.",
+   "We could write new ones.",
+   "Only if they're just as awful."
+  ],
+  [
+   "A child had drawn a map of town.",
+   "Was it accurate?",
+   "Not remotely. All the important places were snack shops.",
+   "Sounds like a good map.",
+   "Honestly, it was better than the real one."
+  ],
+  [
+   "I tried painting a little clay bowl.",
+   "Any success?",
+   "Paint on everything but the bowl. Then I started over."
+  ],
+  [
+   "A kitten fell asleep beside me on a bench.",
+   "Did it belong to anyone?",
+   "A woman came looking for it. It has a home and a loud purr."
+  ],
+  [
+   "I went to a fair with my cousin.",
+   "Best part?",
+   "We painted little wooden boats shaped like strawberries."
+  ],
+  [
+   "Someone wrote 'you'll be okay' outside a shop.",
+   "Did it help?",
+   "A little. I didn't know I needed to read it today."
   ]
  ],
  "jun": [
@@ -1545,6 +2025,54 @@
    "I tried teaching myself a new dance step.",
    "How's it going?",
    "I can do the first half. The second half currently involves falling on a pillow."
+  ],
+  [
+   "I saw a dress in a window that reminded me of my mother.",
+   "Did you go inside?",
+   "No. I stood remembering how she danced in something similar.",
+   "Good memories?",
+   "Very. I called her afterward, just because."
+  ],
+  [
+   "I bought a fern from a woman at the market.",
+   "Where did you put it?",
+   "Beside the window, as she suggested.",
+   "Does it suit the room?",
+   "The room feels more lived-in already."
+  ],
+  [
+   "I tried painting a chair instead of replacing it.",
+   "What color?",
+   "Deep blue. I accidentally painted one leg gold.",
+   "Did you fix it?",
+   "No. It looks like the chair has a secret."
+  ],
+  [
+   "A friend asked me to teach her a simple stitch.",
+   "Did you?",
+   "We spent the afternoon talking more than sewing.",
+   "What did she make?",
+   "One tiny crooked flower on her sleeve. She wore it home."
+  ],
+  [
+   "I found a café with mismatched chairs.",
+   "Do you like it?",
+   "Every chair feels like it has a history. I chose green."
+  ],
+  [
+   "A stranger complimented a scarf I'd made.",
+   "What did you say?",
+   "That it was handmade. She asked me to show her how."
+  ],
+  [
+   "I went to an outdoor concert and danced by myself.",
+   "Was it awkward?",
+   "For one song. Then someone else started dancing too."
+  ],
+  [
+   "I kept fabric from a childhood costume.",
+   "Why keep it?",
+   "It was the first thing I wore just because I loved it."
   ]
  ]
 };
