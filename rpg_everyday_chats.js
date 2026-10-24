@@ -785,9 +785,11 @@
  ],
  "elio": [
   [
-   "My new shoes squeak with every step.",
-   "Is that annoying?",
-   "Actually, it's the most confident entrance I've ever made."
+   "Can you hear that?",
+   "Your shoes?",
+   "Every step sounds like a tiny rubber duck.",
+   "Have you tried fixing them?",
+   "I did. Now only the left shoe squeaks. I think it's trying to communicate."
   ],
   [
    "I lost my shopping list.",
@@ -829,11 +831,11 @@
    "Yes, but the shade has little stars punched in it. My ceiling looks magical."
   ],
   [
-   "A neighbor asked me to water her balcony garden.",
-   "Did you manage?",
-   "Mostly. Her tomato plants are enormous.",
-   "You sound proud.",
-   "I am. She gave me two tomatoes as a thank-you. I took photos."
+   "Mrs. Duarte left me in charge of her tomatoes.",
+   "Are they surviving?",
+   "I took pictures every morning, just in case.",
+   "And how are they doing?",
+   "Better than my houseplants. She gave me two tomatoes as a thank-you."
   ],
   [
    "I found my grandfather's old radio in a closet.",
@@ -879,9 +881,11 @@
  ],
  "alma": [
   [
-   "My neighbor lent me a book and said I wouldn't like it.",
-   "Did you?",
-   "Stayed up half the night reading it. Don't tell my neighbor yet."
+   "My neighbor handed me a novel and said it wasn't my kind of book.",
+   "Did you read it anyway?",
+   "Finished it in two nights. The ending made me cry.",
+   "Did you tell her?",
+   "Yes. Now she wants to bring me another one. I may never sleep again."
   ],
   [
    "I went to a pottery class once.",
@@ -923,11 +927,11 @@
    "We used to hide notes there when we were children. It is still standing."
   ],
   [
-   "I found the scarf I thought I'd lost years ago.",
-   "Where was it?",
-   "At the bottom of a suitcase, wrapped around a postcard.",
-   "From somewhere special?",
-   "A trip with old friends. I wore it all afternoon."
+   "You won't believe what was hiding at the bottom of my suitcase.",
+   "A fortune?",
+   "My old yellow scarf. It was wrapped around a postcard from a trip with friends.",
+   "That must have brought something back.",
+   "It did. Mostly how much we laughed at the rain."
   ],
   [
    "There was a handwritten thank-you note slipped under my door.",
@@ -973,9 +977,11 @@
  ],
  "nereo": [
   [
-   "My houseplant is growing sideways.",
-   "Toward the window?",
-   "Toward a picture of a sandwich. I think it's hungry."
+   "Come here. Tell me what this plant is doing.",
+   "Leaning toward the window?",
+   "It has all the sunlight it could ask for. It's just being contrary.",
+   "You could turn the pot.",
+   "I did yesterday. It turned right back. We understand each other."
   ],
   [
    "I wrote 'banana' on a crossword clue meaning 'regret.'",
@@ -1017,11 +1023,11 @@
    "It has a favorite branch. I feel rude if I don't say hello."
   ],
   [
-   "I went fishing with an old friend and caught absolutely nothing.",
-   "Bad day?",
-   "Best one I've had in weeks. We talked until sunset.",
-   "About what?",
-   "Everything and nothing. That's why I went."
+   "You ever go fishing and hope nothing bites?",
+   "Not usually.",
+   "That's what happened yesterday. We just talked until sunset.",
+   "Did you mind going home empty-handed?",
+   "We weren't there for the fish. Don't tell him I said that."
   ],
   [
    "I found a postcard I'd never mailed.",
@@ -1067,9 +1073,11 @@
  ],
  "elena": [
   [
-   "I bought a mushroom-shaped mug.",
-   "Really?",
-   "It's ridiculous. I love it. It does not leave my apartment."
+   "Please don't say anything about the mug.",
+   "The one shaped like a mushroom?",
+   "Yes. It was an entirely unnecessary purchase.",
+   "It looks like you love it.",
+   "I do. It holds exactly the right amount of tea. Please keep that to yourself."
   ],
   [
    "A sudden shower caught me without an umbrella.",
@@ -1113,11 +1121,11 @@
    "Quite well. The second bowl was better because I stopped worrying."
   ],
   [
-   "A friend took me to an outdoor film screening.",
-   "Did you enjoy it?",
-   "I brought a blanket; she brought popcorn. Neither checked the weather.",
-   "What happened?",
-   "Rain during the final scene. We stayed through the credits."
+   "My friend insisted on taking me to an outdoor film screening.",
+   "That sounds pleasant.",
+   "It was, until it started raining during the final scene.",
+   "Did you leave?",
+   "We stayed. We were already wet, and neither of us wanted to miss the ending."
   ],
   [
    "I found a photograph of myself at eight years old.",
@@ -1163,9 +1171,11 @@
  ],
  "jinx": [
   [
-   "I've spent twenty minutes trying to fold a paper frog.",
-   "Does it jump?",
-   "It falls over with remarkable dignity. Want to try?"
+   "Give me one reason this paper frog won't jump.",
+   "You've folded one leg inside out.",
+   "It's supposed to have two legs?",
+   "You made a frog with one leg?",
+   "I made a revolutionary new species. Don't judge it."
   ],
   [
    "I bought flower seeds but forgot what kind.",
@@ -1207,11 +1217,11 @@
    "A song I used to hear as a kid. I didn't realize I remembered it."
   ],
   [
-   "I went to a tiny neighborhood cinema last night.",
-   "Anything good?",
-   "An old comedy where everything goes wrong at dinner.",
-   "Did you laugh?",
-   "So hard I spilled my popcorn. Great night."
+   "There was an old comedy playing at the little cinema.",
+   "Did you go?",
+   "Yeah. I laughed so hard I dropped my popcorn.",
+   "Worth it?",
+   "Totally. I went back for more and the guy at the counter said he'd heard me laughing from outside."
   ],
   [
    "I helped a neighbor carry a cabinet upstairs.",
@@ -1257,9 +1267,11 @@
  ],
  "luna": [
   [
-   "I learned to make dumplings this week.",
-   "Any success?",
-   "They came out beautifully. I saved two in case you passed by."
+   "I brought something. Here.",
+   "Dumplings? They look great.",
+   "Thank you. I learned to fold them this week, but I wasn't sure they'd hold together.",
+   "Have you tried one?",
+   "Yes. I ate the ugly ones first so nobody else had to."
   ],
   [
    "The library gave away old magazines.",
@@ -1315,11 +1327,11 @@
    "No. I like knowing there's a breeze."
   ],
   [
-   "My aunt asked me to help make dumplings for dinner.",
-   "How many?",
-   "Nearly a hundred. I lost count after the first tray.",
+   "My aunt asked me to help with dinner again.",
+   "More dumplings?",
+   "So many. I lost count after the first tray.",
    "Were they good?",
-   "They disappeared before I sat down. That's a compliment."
+   "The whole family ate them before I could sit down. I think that means yes."
   ],
   [
    "There was a free piano outside the community center.",
@@ -1351,9 +1363,11 @@
  ],
  "rina": [
   [
-   "I bought socks covered in little bananas.",
-   "Why bananas?",
-   "They looked cheerful, and I firmly support cheerful socks."
+   "These are my lucky rehearsal socks now.",
+   "Bananas? Seriously?",
+   "I know. I tried to buy plain ones, but these made me laugh.",
+   "Does your manager know?",
+   "Unfortunately. She says they don't match anything, which is kind of their charm."
   ],
   [
    "I went to the market for one apple.",
@@ -1395,11 +1409,11 @@
    "The first one leaned sideways. It still smells wonderful."
   ],
   [
-   "I found an old video of myself learning to roller skate.",
-   "Can I see it?",
-   "Only if you promise not to laugh.",
-   "I can't promise that.",
-   "Fair. I spend half the video clinging to a tree."
+   "I found a video from my first roller-skating lesson.",
+   "Was it embarrassing?",
+   "I spent most of it gripping a tree.",
+   "Will you show me?",
+   "Maybe. If you promise not to turn it into a reaction clip."
   ],
   [
    "I went looking for a raincoat and fell in love with the wrong one.",
@@ -1445,9 +1459,11 @@
  ],
  "sierra": [
   [
-   "I completed a thousand-piece puzzle yesterday.",
-   "Every piece?",
-   "The last one was in my sleeve. I framed the puzzle as evidence."
+   "I've done something I haven't managed in months.",
+   "Taken a day off?",
+   "That too. I finished a thousand-piece puzzle without checking work messages.",
+   "Was it satisfying?",
+   "Very. The last piece had been under the couch the whole time."
   ],
   [
    "I photographed a boring sidewalk.",
@@ -1489,11 +1505,11 @@
    "One. I'm considering making it a little crown."
   ],
   [
-   "I went into a science museum to escape the rain.",
-   "Anything interesting?",
-   "A room where you could make giant soap bubbles.",
-   "Did you try?",
-   "Three times. The last bubble was taller than me."
+   "I ducked into the science museum to get out of the rain.",
+   "Any good exhibits?",
+   "An entire room devoted to giant soap bubbles.",
+   "Did you try it?",
+   "Of course. I was the only adult waiting in line without a child."
   ],
   [
    "A friend invited me to her family dinner.",
@@ -1539,9 +1555,11 @@
  ],
  "sol": [
   [
-   "I made a paper kite and launched it yesterday.",
-   "Did it fly?",
-   "For four glorious seconds. Now the bush has a collection."
+   "Do you know how to rescue a kite from a tree?",
+   "I take it yours got stuck.",
+   "Within six seconds. That's a personal record.",
+   "Did you get it down?",
+   "A kid helped me with a very long stick. I let her name the kite afterward."
   ],
   [
    "I found a scarf embroidered with ducks wearing hats.",
@@ -1583,11 +1601,11 @@
    "The mint has taken over. It's not a garden, it's a mint kingdom."
   ],
   [
-   "I volunteered at a neighborhood garden.",
-   "Are you a gardener now?",
-   "I mostly carried soil and met a woman named Pilar.",
-   "Did she teach you anything?",
-   "She told stories while I planted carrots. I owe her one now."
+   "I promised Pilar I'd help with her carrots again.",
+   "Pilar?",
+   "We met at the community garden. She tells the best stories while I carry soil.",
+   "Do you help her much?",
+   "Some. Mostly she keeps catching me listening instead of planting."
   ],
   [
    "I got caught in the rain and hid inside a record shop.",
@@ -1633,9 +1651,11 @@
  ],
  "laca": [
   [
-   "There's a bakery making pastries shaped like moons.",
-   "Have you tried them?",
-   "Bought two. One disappeared on the walk here. Delicious mystery."
+   "Che, take a look at these.",
+   "Tiny moons?",
+   "The bakery near my shift started selling them. I bought one for you.",
+   "What's the occasion?",
+   "No occasion. You owe me one if they're good, though."
   ],
   [
    "I found a bookmark with a fox drawn on it.",
@@ -1677,11 +1697,11 @@
    "So good I walked back to learn the baker's name."
   ],
   [
-   "I passed the place where I used to take swimming lessons.",
-   "Does it look the same?",
-   "The gate is smaller, and the tree is enormous.",
-   "Funny how things change.",
-   "I stood there remembering those afternoons."
+   "I walked past the old swimming pool yesterday.",
+   "The one we used to go by?",
+   "Yeah. I remembered the gate being enormous.",
+   "What changed?",
+   "Mostly us, I think. The tree outside really has grown, though."
   ],
   [
    "I found a childhood list of things I wanted to do.",
@@ -2007,9 +2027,11 @@
  ],
  "barb": [
   [
-   "I found a ceramic frog at a street market.",
-   "Did you buy it?",
-   "Yes. It looks deeply unimpressed with my life choices."
+   "Tell me whether this belongs on my desk.",
+   "A ceramic frog in a bow tie?",
+   "Exactly. It's ugly in a very committed way.",
+   "Are you buying it?",
+   "Already did. I just wanted a second opinion before naming him."
   ],
   [
    "I went to buy bread and came home with three lemons.",
@@ -2051,11 +2073,11 @@
    "I can do the first half. The second half currently involves falling on a pillow."
   ],
   [
-   "I saw a dress in a window that reminded me of my mother.",
-   "Did you go inside?",
-   "No. I stood remembering how she danced in something similar.",
-   "Good memories?",
-   "Very. I called her afterward, just because."
+   "That dress in the window stopped me in my tracks.",
+   "Is it your style?",
+   "Not quite. My mother wore something like it when she danced.",
+   "Did you tell her?",
+   "I called her on the way home. She laughed and started singing the old song."
   ],
   [
    "I bought a fern from a woman at the market.",
