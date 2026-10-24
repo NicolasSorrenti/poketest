@@ -6,34 +6,38 @@ const DIALOGUE=require('../rpg_dialogue');
 const roster=['hana','reina','shiori','yuna','akari','camila','marina','kaede',
  'jun','teo','iris','elio','alma','nereo','elena','jinx','luna','rina','sierra','sol','laca','barb'];
 const actor={intro:'Nice to meet you.',repeat:'Hello again.',talk:['A card topic.','A tournament topic.']};
-test('every known character has four independent, well-formed everyday conversations',()=>{
+test('every known character has eight independent, well-formed everyday conversations',()=>{
  assert.deepEqual(Object.keys(chats.topics).sort(),[...roster].sort());
  assert.deepEqual(chats.validate(),[]);
  for(const id of roster){
-  assert.equal(chats.topics[id].length,4,id);
+  assert.equal(chats.topics[id].length,8,id);
   const openings=chats.topics[id].map(lines=>lines[0]);
-  assert.equal(new Set(openings).size,4,id+' repeats itself');
-  assert.ok(chats.topics[id].every(lines=>lines.length===3));
+  assert.equal(new Set(openings).size,8,id+' repeats itself');
+  assert.ok(chats.topics[id].every(lines=>[3,5].includes(lines.length)));
  }
 });
 test('dialogue remains stable on reload and cycles through all casual topics',()=>{
  for(const id of roster){
-  const seen=new Set(),s={day:1,slot:1,relationships:{},talked:{}};
+  const seen=new Set(),spoken=new Set(),s={day:1,slot:1,relationships:{},talked:{}};
   const before=JSON.stringify(s);
   const same=chats.select(s,id);
   assert.deepEqual(chats.select({...s},id),same,id);
   for(let day=1;day<=90;day++){
    const state={...s,day};
    const lines=chats.select(state,id);
-   assert.deepEqual(lines.map(x=>x.speaker),[id,'Protagonist',id]);
+   assert.deepEqual(lines.map(x=>x.speaker),Array.from({length:lines.length},(_,i)=>i%2?'Protagonist':id));
    assert.ok(lines.every(x=>x.text.trim()));
    seen.add(lines[0].text);
    const out=VN.dialogue(state,id,actor,DIALOGUE);
    assert.ok(out.length>=3,id);
    assert.ok(out.some(x=>x.speaker==='Protagonist'));
-   if(chats.shouldUse(state,id))assert.deepEqual(out,lines,'casual scene should appear on most days');
+   if(chats.shouldUse(state,id)){
+    assert.deepEqual(out,lines,'casual scene should appear on most days');
+    spoken.add(lines[0].text);
+   }
   }
-  assert.equal(seen.size,4,id+' does not rotate through every topic');
+  assert.equal(seen.size,8,id+' does not rotate through every topic');
+  assert.equal(spoken.size,8,id+' normal Talk never displays some topics');
   assert.equal(JSON.stringify(s),before,id+' casual chat changed save state');
  }
 });
