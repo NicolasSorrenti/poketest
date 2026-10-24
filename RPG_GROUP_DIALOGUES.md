@@ -32,6 +32,7 @@ Group scripts do not award anything or change time, save data, relationship stat
 
 ## Verification
 - 90-day × 3-period simulation: **no ordinary public location exceeded four present NPCs**. The former template produced at least one group of five or more during 217 of 270 periods and peaked at 15.
+- Repeated the occupancy and dialogue-rotation simulations with the **server-filtered, account-exclusive Barb pack** added to the normal 21-character generated roster: 22 characters, the same four-person public cap, and all 56 multi-character variants reachable. Group rotation uses a three-day stride to avoid synchronized schedules hiding individual scenes.
 - Group-conversation reachability: **all four variants of all 14 groups remain playable**, with exact NPC presence and introductions enforced.
 - All 21 everyday topics and four voice-specific topics remain valid for every NPC; the actual 90-day casual rotation exposes all 21 new everyday topics.
 - Added scheduling regression tests for the four-person limit, stable lookups, arrivals, deterministic visits, six-person event overrides and compatibility with event locations.
