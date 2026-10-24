@@ -638,19 +638,23 @@
    "Thanks. I wanted to make something that had nothing to do with the river."
   ],
   [
-   "Somebody swapped grocery bags with me by accident.",
-   "What did you get?",
-   "Four limes, birthday balloons, and a candle. I needed bread."
+   "I got home from shopping and opened a bag full of party supplies.",
+   "Had you bought party supplies?",
+   "No. Someone had my bread; I had their balloons.",
+   "Did you get it back?",
+   "Yes. We met outside the market. She gave me a balloon for the trouble."
   ],
   [
-   "I rode a bicycle with one of those tiny bells.",
+   "I borrowed a bicycle with a tiny brass bell.",
    "Did you ring it?",
-   "Accidentally, at every corner. One man waved like we were friends."
+   "By accident, at every corner. A man waved like we knew each other."
   ],
   [
-   "I found a snow globe with a beach inside.",
-   "Snow on palm trees?",
-   "Exactly. I bought it because it made no sense."
+   "I found the strangest souvenir.",
+   "What is it?",
+   "A snow globe with a tropical beach inside. The palm trees have snow on them.",
+   "Why did you buy it?",
+   "Look at it. How could I not?"
   ],
   [
    "I have a confession: I don't know how to whistle.",
@@ -667,14 +671,14 @@
    "He practices every day. I admire that."
   ],
   [
-   "I found a broken garden gnome by the bins.",
-   "What was wrong with it?",
-   "One ear was missing. I repaired it with modeling clay."
+   "There's a garden gnome in my yard with a missing ear.",
+   "Did you buy it like that?",
+   "Found it beside the bins and patched it with clay. Looks happier now."
   ],
   [
-   "I spent an afternoon remembering a childhood lullaby.",
-   "Did you remember it?",
-   "Only the last line. My mother sang the rest when I called."
+   "A lullaby from when I was little got stuck in my head.",
+   "Did you remember the words?",
+   "Only the ending. I called Mum and she sang me the whole thing."
   ],
   [
    "The rain sent me into the greenhouse by the old market.",
@@ -696,9 +700,11 @@
    "Because she was always happy when she tried."
   ],
   [
-   "Someone asked me to photograph their dog by the river.",
-   "Did it pose?",
-   "It sat perfectly still until I raised the camera. Then it sneezed."
+   "A stranger asked me to photograph their dog.",
+   "Was it cooperative?",
+   "Perfectly, until I lifted the camera. Then it sneezed.",
+   "Did you get the shot?",
+   "A blur and a very surprised expression. They loved it."
   ],
   [
    "I tried going a whole Sunday without making plans.",
@@ -732,19 +738,23 @@
    "Management. Now Management can judge my life choices."
   ],
   [
-   "I accidentally sent someone to a bakery while giving directions.",
-   "Were they angry?",
-   "They came back with bread and thanked me. I'm an accidental tour guide."
+   "I gave someone directions and sent them to the wrong street.",
+   "Were they upset?",
+   "They came back with fresh bread. Apparently I'd sent them to a bakery.",
+   "Did you apologize?",
+   "Yes. Then I asked whether the bread was any good."
   ],
   [
-   "I once cut my own hair.",
-   "How bad was it?",
-   "The hairdresser asked if I'd been in a wind tunnel."
+   "I cut my own hair once.",
+   "Did that work?",
+   "The hairdresser asked whether I'd fought a ceiling fan. I paid her to fix it."
   ],
   [
    "A cat fell asleep on my jacket at the park.",
    "So you waited?",
-   "An hour. Then another cat arrived and I surrendered the jacket."
+   "Forty minutes. Then another cat tried to climb in.",
+   "Did you get your jacket back?",
+   "Eventually. I considered charging rent."
   ],
   [
    "I went to a miniature railway museum.",
@@ -754,11 +764,11 @@
    "A tiny bench. Obviously."
   ],
   [
-   "Have you ever ruined a surprise party by arriving early?",
-   "You did that?",
-   "I came to decorate. The guest of honor was already there.",
-   "What happened?",
-   "We pretended it was an elaborate ordinary Tuesday."
+   "I arrived early to help set up a surprise party.",
+   "And the surprise?",
+   "The guest of honor was already there.",
+   "What did you do?",
+   "We decorated anyway and pretended Tuesday was a special holiday."
   ],
   [
    "The woman downstairs keeps giving me homemade jam.",
@@ -778,14 +788,18 @@
    "Made half a scarf. Apparently I have a talent for accidentally joining things."
   ],
   [
-   "I bought a notebook and started writing down places I liked.",
-   "Travel plans?",
-   "No. Tiny places. A bench with shade, a quiet stairwell, a shop with friendly lights."
+   "I've been writing down places I want to return to.",
+   "Big trips?",
+   "Not really. A bench with shade. A tiny noodle shop. A street where the lamps are always on.",
+   "That's quite a list.",
+   "Not everything worth visiting is far away."
   ],
   [
-   "A woman on the train asked whether I could hold her baby for a second.",
-   "Could you?",
-   "No, I held her groceries instead. I was terrified of dropping either."
+   "Someone on the train asked me to help with her baby.",
+   "Did you?",
+   "I took her shopping bags while she adjusted the stroller.",
+   "Much safer?",
+   "For both of us. Babies look extremely easy to drop."
   ],
   [
    "I learned how to make fried rice from a neighbor.",
@@ -1788,19 +1802,21 @@
    "Mostly. Now the door is silent, but I have oil on my tournament notes."
   ],
   [
-   "A child asked me which ice cream flavor was best.",
-   "What did you recommend?",
-   "Pistachio. She looked at me like I had recommended a tax return."
+   "A kid asked me which ice cream flavor was best.",
+   "What did you say?",
+   "Pistachio. She looked at me like I'd just assigned her homework."
   ],
   [
-   "I bought a houseplant and named it Tuesday.",
+   "I bought a plant and named it Tuesday.",
    "Why Tuesday?",
-   "Because it arrived on Friday. I wanted it to have a little mystery."
+   "It arrived on Friday. I thought it deserved some mystery."
   ],
   [
-   "I found an old postcard with no address on it.",
+   "I found a postcard at the bottom of an old drawer.",
    "What did it say?",
-   "Just 'Wish you were here.' I hope somebody eventually was."
+   "Just 'Wish you were here.' No address.",
+   "That's a little sad.",
+   "Maybe. I hope somebody made it there eventually."
   ],
   [
    "I volunteered to judge a neighborhood pie contest.",
@@ -1817,14 +1833,16 @@
    "Not even slightly. I found the rose garden by accident."
   ],
   [
-   "A friend left a rubber duck on my desk.",
-   "Did you keep it?",
-   "It has a tiny detective hat. Of course I kept it."
+   "There's a rubber duck on my desk.",
+   "From who?",
+   "A colleague. It has a detective hat. I have decided to keep it."
   ],
   [
    "My mother sent me a recipe with no measurements.",
-   "Did you make it?",
-   "I tried. She said I'd know when it was enough. I didn't."
+   "Did you ask her for them?",
+   "She said I'd know when it looked right.",
+   "And did you?",
+   "Not remotely. She laughed and sent me a picture."
   ],
   [
    "I went to my neighbor's puppet show.",
@@ -1851,9 +1869,11 @@
    "Very much. She knows me alarmingly well."
   ],
   [
-   "I found a little toy car under the seat of my bus.",
-   "What did you do?",
-   "Gave it to the driver. He said someone had been asking for it all morning."
+   "There was a toy car under the bus seat.",
+   "Did you take it?",
+   "Gave it to the driver. He said a child had been looking for it all morning.",
+   "Good timing.",
+   "For a change, yes."
   ],
   [
    "My niece painted me a portrait.",
@@ -1880,19 +1900,19 @@
    "I gave it a heroic introduction. Then I asked Alma for a box."
   ],
   [
-   "My neighbor keeps singing the same line of a song.",
-   "Do you know the rest?",
-   "I do now. I learned it just to end the cliffhanger."
+   "The person upstairs keeps singing the same line of a song.",
+   "How long has that been happening?",
+   "Four days. I learned the rest just to resolve the cliffhanger."
   ],
   [
-   "I bought a little alarm clock shaped like a rocket.",
+   "I bought a rocket-shaped alarm clock.",
    "Does it work?",
-   "It launches me out of bed, usually in a state of panic."
+   "Too well. Every morning feels like a launch countdown."
   ],
   [
-   "I tried drawing my own portrait.",
-   "Was it recognizable?",
-   "People guessed three different cousins. I don't have cousins."
+   "I drew a self-portrait yesterday.",
+   "How did it go?",
+   "Three people asked which cousin it was. I don't even have cousins."
   ],
   [
    "My neighbor thinks I have a pet parrot.",
@@ -1902,16 +1922,16 @@
    "Mostly 'where is the salt?' I should explain someday."
   ],
   [
-   "I went to an amateur poetry night.",
-   "Did you read something?",
-   "A poem about the loneliness of the last slice of pizza.",
-   "How was it received?",
-   "Someone cried laughing. I'm counting that as success."
+   "I read a poem at an open-mic night.",
+   "About what?",
+   "The loneliness of the last slice of pizza.",
+   "How did the room react?",
+   "One person laughed so hard they had to sit down. I'll call it a standing ovation."
   ],
   [
-   "I've started taking photos of funny-shaped clouds.",
-   "Any favorites?",
-   "One looked exactly like a giant shoe. Very fashionable."
+   "I've started photographing clouds.",
+   "Anything interesting?",
+   "Yesterday one looked like a shoe. I've never seen such a fashionable sky."
   ],
   [
    "I helped my uncle move a sofa.",
@@ -1933,9 +1953,9 @@
    "Not really. But there was a bakery that made perfect apple pie."
   ],
   [
-   "My younger brother asked me to teach him a tongue twister.",
-   "Did he learn it?",
-   "In two minutes. I still can't say it without laughing."
+   "I tried teaching my little brother a tongue twister.",
+   "Did he get it?",
+   "On the first try. I still get stuck halfway. It's humiliating."
   ],
   [
    "I found a box of cassette tapes labeled by weather.",
@@ -1974,19 +1994,21 @@
    "Put it in lost and found. Imagine explaining that inventory entry."
   ],
   [
-   "I entered a bread-baking competition by accident.",
-   "How do you enter by accident?",
-   "I signed the wrong sheet. Finished third with store-bought rolls."
+   "I signed up for what I thought was a baking workshop.",
+   "What was it actually?",
+   "A community bake-off. I made the world's quickest banana loaf.",
+   "How did you do?",
+   "Third place. Out of four. Still got a recipe out of it."
   ],
   [
-   "I tried to teach myself a card trick.",
-   "Any luck?",
-   "I can make one coin disappear. It turned up inside a shoe."
+   "I've been practicing a coin trick.",
+   "Does it work?",
+   "The coin disappears, but I spend ten minutes finding it afterward."
   ],
   [
-   "There's a small dog who waits at the same corner every day.",
-   "Do you know its name?",
-   "Not yet. I call it Captain. It looks like it has a schedule."
+   "That dog on the corner is there every morning.",
+   "Does it have an owner?",
+   "Yes. Its owner opens the bakery. I call the dog Captain; it looks like it's supervising."
   ],
   [
    "I promised to water a friend's flowers.",
@@ -2008,9 +2030,9 @@
    "The bus was late, so she taught everyone in the queue to fold one."
   ],
   [
-   "I found a photo booth that still prints old-fashioned strips.",
-   "Did you use it?",
-   "Yes. Every photo shows me laughing at the previous one."
+   "Look at these photos.",
+   "You went to a booth?",
+   "The one near the station. I started laughing during the first picture and couldn't stop."
   ],
   [
    "I finally took a day off and went to the sculpture park.",
@@ -2032,14 +2054,14 @@
    "She did, then decorated the patch with little embroidered stars."
   ],
   [
-   "There was a tiny street library beside the station.",
-   "Did you take a book?",
-   "Yes, and left two behind. One had a note saying it made someone laugh."
+   "I found a little take-a-book shelf near the station.",
+   "Did you take one?",
+   "Yes. Left two books in return. One had a note inside recommending chapter four."
   ],
   [
-   "I went out for a walk and got caught in a parade.",
-   "What kind of parade?",
-   "I still don't know. There were drums and a person dressed as a giant peach."
+   "I went for a walk and stumbled onto a parade.",
+   "What was it celebrating?",
+   "I still don't know. There were drums and somebody in a giant peach costume."
   ],
   [
    "Someone handed me a cup of hot chocolate when it started raining.",
