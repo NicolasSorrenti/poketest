@@ -48,7 +48,7 @@ test('first meetings and existing characteristic dialogue remain accessible',()=
   const first=VN.dialogue(s,id,actor,DIALOGUE,{first:true});
   assert.equal(first[0].text,actor.intro,id+' must retain the first meeting');
   assert.ok(first.some(x=>x.speaker===id));
-  const oldDay=Array.from({length:8},(_,i)=>({...s,day:i+1}))
+  const oldDay=Array.from({length:90},(_,i)=>({...s,day:i+1}))
    .find(state=>!chats.shouldUse(state,id)&&!VOICED.shouldUse(state,id));
   assert.ok(oldDay,id+' must still have classic dialogue days');
   const legacy=VN.dialogue(oldDay,id,actor,DIALOGUE);
