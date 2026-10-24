@@ -8,6 +8,7 @@
 })(typeof window!=='undefined'?window:null,function(){
  const EVERYDAY=typeof module==='object'&&module.exports?require('./rpg_everyday_chats'):window.NeoRpgEverydayChats;
  const CHARACTER=typeof module==='object'&&module.exports?require('./rpg_character_chats'):window.NeoRpgCharacterChats;
+ const GROUP=typeof module==='object'&&module.exports?require('./rpg_group_chats'):window.NeoRpgGroupChats;
  function hash(text){
   let n=2166136261;
   for(const ch of String(text)){n=Math.imul(n^ch.charCodeAt(0),16777619)>>>0;}
@@ -16,7 +17,7 @@
  function topic(state,npc,length){
   return length>0?hash(npc+':'+state.day+':'+state.slot)%length:0;
  }
- function dialogue(state,npc,character,dialogueModule,{first=false}={}){
+ function dialogue(state,npc,character,dialogueModule,{first=false,present=[]}={}){
   const lines=Array.isArray(character?.talk)&&character.talk.length?character.talk:[character?.repeat||character?.intro||'Good to see you.'];
   if(first){
    const greeting=dialogueModule?.greetingLines?.(npc,character.intro||lines[0]);
@@ -25,6 +26,11 @@
     {speaker:'Protagonist',text:'Thanks. I was hoping to meet people around town.'},
     {speaker:npc,text:lines[topic(state,npc,lines.length)]}];
   }
+  // Only already-met NPCs physically attending the same location can join Talk.
+  // Important invitations, story events and reactive scenes are checked before
+  // this pure casual selector by the runtime, so none of them is displaced.
+  const group=GROUP?.select(state,npc,present);
+  if(group?.length)return group;
   // Most days can be about something other than cards or defining traits.
   // First meetings, reactive scenes and story events retain their own dialogue.
   if(EVERYDAY?.shouldUse(state,npc)){
