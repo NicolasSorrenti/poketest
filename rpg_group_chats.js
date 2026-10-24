@@ -132,6 +132,36 @@
      "camila",
      "I know a good investment when I see one."
     ]
+   ],
+   [
+    [
+     "hana",
+     "Somebody suggested a trade night where nobody mentions card prices."
+    ],
+    [
+     "camila",
+     "And I said I'd help run it."
+    ],
+    [
+     "Protagonist",
+     "You? Really?"
+    ],
+    [
+     "camila",
+     "People still need to know whether a trade is fair."
+    ],
+    [
+     "hana",
+     "She's bringing a price guide but keeping it behind the counter."
+    ],
+    [
+     "Protagonist",
+     "Sounds like a compromise."
+    ],
+    [
+     "camila",
+     "Don't tell anyone. They'll expect more of them."
+    ]
    ]
   ]
  },
@@ -259,6 +289,36 @@
     [
      "reina",
      "I should have stayed home."
+    ]
+   ],
+   [
+    [
+     "yuna",
+     "Reina sat through my entire terrible magic show."
+    ],
+    [
+     "reina",
+     "There were three tricks. You dropped the cards during two."
+    ],
+    [
+     "Protagonist",
+     "What was the third trick?"
+    ],
+    [
+     "yuna",
+     "I made a coin disappear!"
+    ],
+    [
+     "reina",
+     "It rolled under a chair."
+    ],
+    [
+     "Protagonist",
+     "Did you ever get it back?"
+    ],
+    [
+     "yuna",
+     "Yes. With Reina's help. She's my assistant now."
     ]
    ]
   ]
@@ -388,6 +448,36 @@
      "akari",
      "The book. I'd rather know how it ends."
     ]
+   ],
+   [
+    [
+     "shiori",
+     "I found Akari asleep over a library book."
+    ],
+    [
+     "akari",
+     "I was resting my eyes. Briefly."
+    ],
+    [
+     "Protagonist",
+     "How briefly?"
+    ],
+    [
+     "shiori",
+     "Long enough for me to finish two chapters."
+    ],
+    [
+     "akari",
+     "You could have woken me."
+    ],
+    [
+     "Protagonist",
+     "Would you have gone home?"
+    ],
+    [
+     "akari",
+     "...Probably not. Thank you for letting me sleep."
+    ]
    ]
   ]
  },
@@ -515,6 +605,36 @@
     [
      "nereo",
      "...Fine. Write down the address."
+    ]
+   ],
+   [
+    [
+     "marina",
+     "We found a little bird's nest near the dock steps."
+    ],
+    [
+     "nereo",
+     "Right where people leave their bags."
+    ],
+    [
+     "Protagonist",
+     "Is it safe there?"
+    ],
+    [
+     "marina",
+     "We've put a rope around that corner for now."
+    ],
+    [
+     "nereo",
+     "A proper sign goes up tomorrow."
+    ],
+    [
+     "Protagonist",
+     "Did the birds seem bothered?"
+    ],
+    [
+     "marina",
+     "Not at all. They're much less worried than we are."
     ]
    ]
   ]
@@ -644,6 +764,36 @@
      "teo",
      "Fine. But I'm bringing my best introduction."
     ]
+   ],
+   [
+    [
+     "teo",
+     "Jun has decided I need to learn the difference between commentary and interruption."
+    ],
+    [
+     "jun",
+     "You announced a ruling while I was explaining it."
+    ],
+    [
+     "Protagonist",
+     "Did you disagree with the ruling?"
+    ],
+    [
+     "teo",
+     "No. I was being supportive."
+    ],
+    [
+     "jun",
+     "He introduced it as 'the most dramatic comma in tournament history.'"
+    ],
+    [
+     "Protagonist",
+     "That is quite a comma."
+    ],
+    [
+     "jun",
+     "Please don't encourage him."
+    ]
    ]
   ]
  },
@@ -771,6 +921,36 @@
     [
      "hana",
      "Don't tell her. She'll label me next."
+    ]
+   ],
+   [
+    [
+     "iris",
+     "The volunteers made a system for returning borrowed cards."
+    ],
+    [
+     "hana",
+     "Color-coded tags and everything."
+    ],
+    [
+     "Protagonist",
+     "Does it help?"
+    ],
+    [
+     "iris",
+     "A lot. Except nobody agreed which color meant 'returned.'"
+    ],
+    [
+     "hana",
+     "We were arguing about blue versus green."
+    ],
+    [
+     "Protagonist",
+     "Could you write the words on the tags?"
+    ],
+    [
+     "iris",
+     "...You have just saved us an hour."
     ]
    ]
   ]
@@ -900,6 +1080,36 @@
      "hana",
      "That's exactly what I told him."
     ]
+   ],
+   [
+    [
+     "elio",
+     "I had a question about setting up a practice match."
+    ],
+    [
+     "hana",
+     "And you answered it before I could."
+    ],
+    [
+     "Protagonist",
+     "What was the question?"
+    ],
+    [
+     "elio",
+     "Whether a beginner can ask to read the opponent's card."
+    ],
+    [
+     "hana",
+     "I was about to tell them yes."
+    ],
+    [
+     "Protagonist",
+     "That must've felt good."
+    ],
+    [
+     "elio",
+     "It did. I was that beginner not so long ago."
+    ]
    ]
   ]
  },
@@ -1027,6 +1237,36 @@
     [
      "sol",
      "Lantern parade. But dinner with her sister wins."
+    ]
+   ],
+   [
+    [
+     "sol",
+     "Alma's letting me plan one little activity for the café."
+    ],
+    [
+     "alma",
+     "One. Little. Activity."
+    ],
+    [
+     "Protagonist",
+     "What are you thinking?"
+    ],
+    [
+     "sol",
+     "A table where people teach each other a card game."
+    ],
+    [
+     "alma",
+     "No microphones, no stage, and nothing glued to the furniture."
+    ],
+    [
+     "Protagonist",
+     "Those seem like fair conditions."
+    ],
+    [
+     "sol",
+     "Fine. I'll leave my glitter at home."
     ]
    ]
   ]
@@ -1156,6 +1396,36 @@
      "jinx",
      "Don't make it weird. She's teaching me the chorus later."
     ]
+   ],
+   [
+    [
+     "luna",
+     "Jinx found the last missing piece of my puzzle."
+    ],
+    [
+     "jinx",
+     "It was under the arcade bench."
+    ],
+    [
+     "Protagonist",
+     "How did a puzzle piece get there?"
+    ],
+    [
+     "luna",
+     "I brought some pieces to show her the pattern."
+    ],
+    [
+     "jinx",
+     "Then I knocked the little bag off the table. My fault."
+    ],
+    [
+     "Protagonist",
+     "Did you finish the puzzle?"
+    ],
+    [
+     "luna",
+     "Yes. We saved the last piece for when she visited."
+    ]
    ]
   ]
  },
@@ -1283,6 +1553,36 @@
     [
      "rina",
      "They do a lot for me. It didn't feel like work."
+    ]
+   ],
+   [
+    [
+     "sierra",
+     "Rina caught me watching an old concert recording."
+    ],
+    [
+     "rina",
+     "And immediately started pointing out everything the cameras missed."
+    ],
+    [
+     "Protagonist",
+     "Like what?"
+    ],
+    [
+     "rina",
+     "The drummer making faces and the stage crew dancing backstage."
+    ],
+    [
+     "sierra",
+     "Those were the best parts."
+    ],
+    [
+     "Protagonist",
+     "Did you keep watching?"
+    ],
+    [
+     "rina",
+     "Twice. We made popcorn for the second round."
     ]
    ]
   ]
@@ -1412,6 +1712,36 @@
      "elena",
      "Perhaps. If nobody calls it a personal-development exercise."
     ]
+   ],
+   [
+    [
+     "elena",
+     "Shiori has suggested keeping a journal of pleasant surprises."
+    ],
+    [
+     "shiori",
+     "Only because you keep calling them scheduling disruptions."
+    ],
+    [
+     "Protagonist",
+     "Have you written anything yet?"
+    ],
+    [
+     "elena",
+     "Three things. One was a surprisingly good cup of coffee."
+    ],
+    [
+     "shiori",
+     "And what was the second?"
+    ],
+    [
+     "Protagonist",
+     "You don't have to tell us."
+    ],
+    [
+     "elena",
+     "Thank you. I'd like to keep one surprise to myself."
+    ]
    ]
   ]
  },
@@ -1539,6 +1869,36 @@
     [
      "yuna",
      "It's an advanced technique."
+    ]
+   ],
+   [
+    [
+     "yuna",
+     "Kaede finally tried my favorite racing game."
+    ],
+    [
+     "kaede",
+     "It's better than I expected."
+    ],
+    [
+     "Protagonist",
+     "Did you beat her high score?"
+    ],
+    [
+     "kaede",
+     "No. I crashed into the first wall."
+    ],
+    [
+     "yuna",
+     "Then she calmly worked out every shortcut."
+    ],
+    [
+     "Protagonist",
+     "Sounds familiar."
+    ],
+    [
+     "kaede",
+     "I'm not done with that machine yet."
     ]
    ]
   ]
@@ -1669,6 +2029,36 @@
      "elio",
      "I'll check the spelling."
     ]
+   ],
+   [
+    [
+     "hana",
+     "Elio wants to organize a beginner card-swap afternoon."
+    ],
+    [
+     "elio",
+     "I thought it might help people finish their decks."
+    ],
+    [
+     "camila",
+     "I have one condition: somebody explains card values before the swaps."
+    ],
+    [
+     "Protagonist",
+     "So nobody feels taken advantage of?"
+    ],
+    [
+     "camila",
+     "Exactly. You can be generous without being careless."
+    ],
+    [
+     "elio",
+     "I'll make a simple guide if you help me."
+    ],
+    [
+     "hana",
+     "And I'll bring snacks. We might actually pull this off."
+    ]
    ]
   ]
  },
@@ -1798,6 +2188,36 @@
      "teo",
      "Motivation comes in many forms."
     ]
+   ],
+   [
+    [
+     "teo",
+     "I need a volunteer to introduce the next arcade match."
+    ],
+    [
+     "yuna",
+     "I volunteer Kaede!"
+    ],
+    [
+     "kaede",
+     "I didn't agree to anything."
+    ],
+    [
+     "Protagonist",
+     "You could just say the players' names."
+    ],
+    [
+     "kaede",
+     "I can manage that."
+    ],
+    [
+     "teo",
+     "A concise, confident introduction. I approve."
+    ],
+    [
+     "yuna",
+     "Boooo! At least add dramatic music."
+    ]
    ]
   ]
  }
@@ -1827,7 +2247,7 @@
    const key=[...g.pair].sort().join(':');
    if(g.pair.length<2||g.pair.length>3||new Set(g.pair).size!==g.pair.length||unique.has(key))faults.push('bad group '+key);
    unique.add(key);
-   if(g.scenes.length!==4)faults.push('missing variants '+key);
+   if(g.scenes.length!==5)faults.push('missing variants '+key);
    for(const scene of g.scenes){
     const speakers=new Set(scene.map(row=>row[0]));
     if(scene.length!==7||!g.pair.every(id=>speakers.has(id))||!speakers.has('Protagonist')||
