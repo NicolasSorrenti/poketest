@@ -17,6 +17,7 @@
  // The server provides only the character packs this account may access.
  // In Node, use the generated roster for deterministic offline tests.
  const CHARS=typeof module==='object'&&module.exports?require('./rpg_character_packs.generated'):window.NeoRpgCharacterPacks;
+ const GROUP=typeof module==='object'&&module.exports?require('./rpg_group_chats'):window.NeoRpgGroupChats;
  Object.assign(templates,CHARS?.schedules||{});
  const start={hana:1,reina:1,shiori:1,yuna:1,akari:1,camila:1,marina:1,kaede:41};
  Object.assign(start,PACK.arrivals);
@@ -75,7 +76,7 @@
    if(!destinations.length)break;
    const movers=ids.filter(id=>result[id]===source&&!pinned.has(id))
     .sort((a,b)=>{
-     const stickA=preference(a,source),stickB=preference(b,source);
+     const stickA=preference(a,source)+bondStability(a,source,result),stickB=preference(b,source)+bondStability(b,source,result);
      return stickA-stickB||(hash(a+':'+day+':'+slot)-hash(b+':'+day+':'+slot));
     });
    if(!movers.length)break;
@@ -89,6 +90,12 @@
    result[mover]=dest;counts[source]--;counts[dest]++;
   }
   return result;
+ }
+ // Preserve opportunities for naturally overlapping friends to speak together.
+ // It is a soft preference: attendance still respects the four-person cap.
+ const friendLinks=GROUP?.groups?.filter(g=>g.pair?.length===2).map(g=>g.pair)||[];
+ function bondStability(id,place,locations){
+  return friendLinks.reduce((sum,pair)=>sum+(pair.includes(id)&&pair.some(other=>other!==id&&locations[other]===place)?25:0),0);
  }
  const normalCache=new Map();
  function dailyLocations(day,slot,events=[]){
