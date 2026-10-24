@@ -2348,7 +2348,7 @@ $('preDuelStart').onclick=launchPreparedDuel;
 $('preDuelSkip').onclick=launchPreparedDuel;
 $('preDuelDialog').addEventListener('cancel',e=>e.preventDefault());
 $('quickNext').onclick=()=>act('rest');$('quickHome').onclick=()=>act('home');$('calendarBtn').onclick=openCalendar;$('calendarClose').onclick=()=>$('calendarDialog').close();$('communityClose').onclick=()=>$('communityDialog').close();
-$('save').onclick=async()=>{persist();const ok=await window.NeoRpgCloudSave?.syncNow();$('notice').textContent=ok?'Campaign saved here and in the cloud.':'Campaign saved in this browser.'};
+$('save').onclick=async()=>{persist();const cloud=window.NeoRpgCloudSave?.isSignedIn?.();const ok=await window.NeoRpgCloudSave?.syncNow();$('notice').textContent=cloud?(ok?'Cloud campaign synced.':'Cloud sync pending. Progress is cached on this device until it reconnects.'):'Campaign saved in this browser.';};
 $('tutorialDismiss').onclick=()=>{tutorialQueue.shift();displayTutorial();};
 $('dismissReceipt').onclick=()=>{state.lastDuelReceipt=null;persist();render();};
 document.addEventListener('keydown',e=>{if($('statusDialog')?.open)return;if((e.key===' '||e.code==='Space')&&!['INPUT','TEXTAREA','SELECT','BUTTON'].includes(e.target?.tagName)){if(scene.dialogue&&scene.index<scene.dialogue.length-1&&!state.mandatoryEventState?.active&&!state.activeStory&&!state.activeArc&&!state.activeSideQuest){e.preventDefault();act('chatNext');}else if(state.mandatoryEventState?.active?.phase==='lines'){e.preventDefault();act('mandatoryNext');}else if(state.activeStory?.phase==='lines'){e.preventDefault();act('storyNext');}else if(state.activeArc?.phase==='lines'){e.preventDefault();act('arcNext');}else if(!$('dialogue').hidden&&!state.activeSituation&&!state.mandatoryEventState?.active&&!state.activeStory&&!state.activeEncounter&&!state.activeArc&&!state.activeSideQuest&&!state.pendingDuel&&!scene.choices?.length){e.preventDefault();closeSceneDialogue();}}});
@@ -2386,7 +2386,6 @@ persist();render();initDecks();loadCardNames();if(state.deckJourney&&!state.deck
   getSave:()=>JSON.parse(localStorage.getItem(KEY)||'null'),
   restoreSave:save=>{localStorage.setItem(KEY,JSON.stringify(save));location.reload();},
   hadLocalSave:hadCampaignSave,
-  canSwitch:()=>!state.pendingDuel,
   showButton:true
  });
 

@@ -98,11 +98,12 @@ test('first use on a new device imports the cloud state and does not upload defa
  assert.equal(app.uploads.length,0);
 });
 
-test('a first login with two different saves never overwrites either',async()=>{
+test('a first login automatically loads existing cloud progress',async()=>{
  const app=setup({localSave:save(9),cloudRow:{revision:2,save_data:save(14)}});
  await app.client.mount(app.adapter);
- assert.equal(app.getLocal().day,9);
+ assert.equal(app.getLocal().day,14);
  assert.equal(app.getCloud().save_data.day,14);
+ assert.equal(app.restores.length,1);
  assert.equal(app.uploads.length,0);
 });
 
@@ -117,7 +118,7 @@ test('an unchanged device automatically loads the newer cloud save on startup',a
  assert.equal(app.uploads.length,0);
 });
 
-test('stale revision is rejected when another device saves first',async()=>{
+test('cloud wins automatically when another device advanced the revision',async()=>{
  const app=setup({localSave:save(4)});
  await app.client.mount(app.adapter);
  app.setCloud({revision:2,save_data:save(17)});
@@ -125,7 +126,8 @@ test('stale revision is rejected when another device saves first',async()=>{
  const synced=await app.client.syncNow();
  assert.equal(synced,false);
  assert.equal(app.getCloud().save_data.day,17);
- assert.equal(app.getLocal().day,5);
+ assert.equal(app.getLocal().day,17);
+ assert.equal(app.restores.length,1);
  assert.equal(app.uploads.at(-1).expected_revision,1);
 });
 
@@ -191,4 +193,23 @@ test('an auth error redirect is stripped from the URL without saving credentials
  assert.equal(app.location.hash,'');
  assert.deepEqual(app.historyReplacements,['/rpg.html']);
  assert.equal(app.cache.has('neoRpgCloudSessionV1'),false);
+});
+
+test('unsynced local actions upload when cloud revision is unchanged',async()=>{
+ const app=setup({localSave:save(3),cloudRow:{revision:4,save_data:save(3)}});
+ app.cache.set('neoRpgCloudSyncedV1:player-one',JSON.stringify({revision:4,hash:app.client.hash(save(3))}));
+ app.setLocal(save(5));
+ await app.client.mount(app.adapter);
+ assert.equal(app.getCloud().save_data.day,5);
+ assert.equal(app.restores.length,0);
+ assert.equal(app.uploads[0].expected_revision,4);
+});
+
+test('cloud progress replaces an in-progress local duel',async()=>{
+ const local=save(8);local.pendingDuel={id:'local-battle'};
+ const cloud=save(12);cloud.pendingDuel={id:'cloud-battle'};
+ const app=setup({localSave:local,cloudRow:{revision:3,save_data:cloud}});
+ await app.client.mount(app.adapter);
+ assert.equal(app.getLocal().pendingDuel.id,'cloud-battle');
+ assert.equal(app.uploads.length,0);
 });

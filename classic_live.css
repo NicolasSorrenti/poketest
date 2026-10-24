@@ -334,3 +334,17 @@ body.duel-active .stage .territory .bench-zone .poke .damage-pip{width:6px;heigh
 .card-preview .preview-life-track{height:10px;border-radius:8px;background:#553533;overflow:hidden}
 .card-preview .preview-life-track>span{display:block;height:100%;border-radius:inherit;background:linear-gradient(90deg,#6dde92,#bbdf6c)}
 .card-preview .preview-energy{display:flex;flex-direction:column;gap:3px}
+
+/* Full-screen startup stage shared by CPU, RPG, Cube and online match entry. */
+.duel-loading[hidden],.duel-loading-actions [hidden]{display:none!important}
+.duel-loading{position:fixed;inset:0;z-index:12000;display:grid;place-items:center;padding:22px;background:radial-gradient(circle at 50% 30%,#183c58 0%,#101e30 45%,#080f1b 100%);color:#eaf6fc;text-align:center;overflow:auto}
+.duel-loading-card{max-width:480px;width:100%;padding:30px 24px}
+.duel-loading-mark{width:68px;height:68px;margin:0 auto 17px;display:grid;place-items:center;border-radius:19px;border:1px solid #548baa;background:#123c55;font-size:36px;box-shadow:0 0 40px #2c8da633}
+.duel-loading-kicker{font-size:11px;font-weight:850;letter-spacing:.22em;color:#71e4db}
+.duel-loading h1{font-size:clamp(24px,5vw,36px);margin:11px 0 23px;letter-spacing:-.03em}
+.duel-loading p:not(.duel-loading-kicker){font-size:14px;line-height:1.5;color:#b4cddd}
+.duel-loading-spinner{width:40px;height:40px;margin:0 auto 22px;border:3px solid #345671;border-top-color:#68ebdd;border-radius:50%;animation:duel-boot-spin .85s linear infinite}
+.duel-loading-actions{display:flex;justify-content:center;align-items:center;gap:16px;flex-wrap:wrap;margin-top:24px}
+.duel-loading-actions button{background:#1b7974;border-color:#60cfc0}
+@keyframes duel-boot-spin{to{transform:rotate(360deg)}}
+@media(prefers-reduced-motion:reduce){.duel-loading-spinner{animation:none;border-top-color:#68ebdd}}
