@@ -402,6 +402,94 @@
    "Did you photograph it?",
    "Yes. I like keeping little things before the rain takes them."
   ]
+ ],
+ "jun": [
+  [
+   "I tried fixing a squeaky door hinge this morning.",
+   "Did it work?",
+   "The door is silent. The chair started squeaking. I think noise is following me."
+  ],
+  [
+   "A child asked me which ice cream flavor was best.",
+   "What did you recommend?",
+   "Pistachio. She looked at me like I had recommended a tax return."
+  ],
+  [
+   "I bought a houseplant and named it Tuesday.",
+   "Why Tuesday?",
+   "Because it arrived on Friday. I wanted it to have a little mystery."
+  ],
+  [
+   "I found an old postcard with no address on it.",
+   "What did it say?",
+   "Just 'Wish you were here.' I hope somebody eventually was."
+  ]
+ ],
+ "teo": [
+  [
+   "I ordered an enormous sandwich by mistake.",
+   "How enormous?",
+   "It came on a tray normally used for birthday cakes."
+  ],
+  [
+   "My neighbor keeps singing the same line of a song.",
+   "Do you know the rest?",
+   "I do now. I learned it just to end the cliffhanger."
+  ],
+  [
+   "I bought a little alarm clock shaped like a rocket.",
+   "Does it work?",
+   "It launches me out of bed, usually in a state of panic."
+  ],
+  [
+   "I tried drawing my own portrait.",
+   "Was it recognizable?",
+   "People guessed three different cousins. I don't have cousins."
+  ]
+ ],
+ "iris": [
+  [
+   "I found a very tiny knitted hat in the street.",
+   "For a doll?",
+   "I hope so. I'd hate to meet the person who lost it."
+  ],
+  [
+   "I entered a bread-baking competition by accident.",
+   "How do you enter by accident?",
+   "I signed the wrong sheet. Finished third with store-bought rolls."
+  ],
+  [
+   "I tried to teach myself a card trick.",
+   "Any luck?",
+   "I can make one coin disappear. It turned up inside a shoe."
+  ],
+  [
+   "There's a small dog who waits at the same corner every day.",
+   "Do you know its name?",
+   "Not yet. I call it Captain. It looks like it has a schedule."
+  ]
+ ],
+ "barb": [
+  [
+   "I found a ceramic frog at a street market.",
+   "Did you buy it?",
+   "Yes. It looks deeply unimpressed with my life choices."
+  ],
+  [
+   "I went to buy bread and came home with three lemons.",
+   "No bread?",
+   "No bread. But I have big plans for lemonade."
+  ],
+  [
+   "A stranger complimented my handwriting.",
+   "Is it especially neat?",
+   "Absolutely not. I think they mistook it for a secret code."
+  ],
+  [
+   "I spent last night trying to solve a crossword.",
+   "Did you finish it?",
+   "Almost. One clue was 'four-letter word for calm.' I wrote 'nap.'"
+  ]
  ]
 };
  function hash(value){
