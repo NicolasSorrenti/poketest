@@ -1658,14 +1658,18 @@
    "A kid helped me with a very long stick. I let her name the kite afterward."
   ],
   [
-   "I found a scarf embroidered with ducks wearing hats.",
-   "You bought it?",
-   "Obviously. Every outfit deserves more ducks."
+   "I saw a scarf covered in tiny ducks wearing hats.",
+   "Did you buy it?",
+   "Naturally. It's going to be the centerpiece of my next outfit.",
+   "What's the outfit?",
+   "Don't know yet. The ducks get creative control."
   ],
   [
-   "I followed a recipe for a fancy dessert.",
-   "How was it?",
-   "I invented dessert soup. A brave, terrible new genre."
+   "The fancy dessert I made turned into a bowl of soup.",
+   "Was that in the recipe?",
+   "No. I think I added too much milk.",
+   "How did it taste?",
+   "Actually okay. I'm calling it dessert soup and moving on."
   ],
   [
    "Someone taught me a handshake and I forgot the ending.",
@@ -1673,11 +1677,11 @@
    "Two claps, a spin, and complete social panic. Help me invent an ending."
   ],
   [
-   "I volunteered to help decorate a friend's birthday cake.",
-   "What was the theme?",
-   "Underwater adventure. I made a jellyfish with too many tentacles.",
-   "How many?",
-   "We stopped counting. It was an octopus by the end."
+   "I helped decorate a cake with an underwater theme.",
+   "What did you make?",
+   "A blue jellyfish. Except I kept adding legs.",
+   "Isn't that an octopus?",
+   "It was by the time I finished. My friend loved it anyway."
   ],
   [
    "I went to a planetarium for the first time.",
@@ -1692,9 +1696,11 @@
    "Of course. The knots are impossible to undo anyway."
   ],
   [
-   "I tried making a little herb garden.",
-   "Any luck?",
-   "The mint has taken over. It's not a garden, it's a mint kingdom."
+   "My herb garden has been taken over.",
+   "By insects?",
+   "Worse. Mint. It grew into every pot.",
+   "What will you do?",
+   "Make tea for the entire neighborhood, apparently."
   ],
   [
    "I promised Pilar I'd help with her carrots again.",
@@ -1711,11 +1717,11 @@
    "Beautiful. I'm glad I got soaked."
   ],
   [
-   "My neighbor taught me a handshake with two claps and a spin.",
-   "Isn't that a bit much for a handshake?",
-   "Absolutely. We had to rehearse it three times.",
-   "Did you get it right?",
-   "Not once. I'm still committed to teaching it to everyone I meet."
+   "I've decided I need a better way to greet people.",
+   "What's wrong with hello?",
+   "It's fine, but a high five with a spin is more memorable.",
+   "Isn't that a little much?",
+   "Probably. That's why I'll practice before trying it on Jun."
   ],
   [
    "I want a day with no plans and no clock.",
@@ -1735,9 +1741,11 @@
    "Mine looks like a potato. A very fragrant potato."
   ],
   [
-   "I watched a puppet show with a friend's little sister.",
-   "Did she like it?",
-   "She shouted advice at every puppet. They ignored her."
+   "I went to a puppet show with my friend's little sister.",
+   "Did she enjoy it?",
+   "She kept shouting warnings to the puppets.",
+   "Did they listen?",
+   "Not once. She's planning to write the puppeteers a stern letter."
   ],
   [
    "I found a tiny book of poems at a stall.",
@@ -1754,19 +1762,23 @@
    "No occasion. You owe me one if they're good, though."
   ],
   [
-   "I found a bookmark with a fox drawn on it.",
-   "Where?",
-   "Inside a secondhand book. Now I like the book even more."
+   "I bought a used book and found something between the pages.",
+   "Money?",
+   "Better. A bookmark with a little fox drawn on it.",
+   "Better than money?",
+   "Okay, maybe not better. But it made me smile."
   ],
   [
-   "A paper airplane landed beside me earlier.",
-   "What did you do?",
-   "Folded it a little better and sent it back into the world."
+   "A paper airplane landed next to me on the bench.",
+   "Where did it come from?",
+   "No idea. I fixed a crooked fold and sent it off again.",
+   "Did it fly?",
+   "Much better than the first time. I hope whoever threw it saw."
   ],
   [
-   "Someone drew a smiling sun in chalk on the sidewalk.",
-   "Did you photograph it?",
-   "Yes. I like keeping little things before the rain takes them."
+   "There was a chalk sun on the pavement outside the bakery.",
+   "You took a picture?",
+   "Yeah. I like those little things people leave behind for no reason."
   ],
   [
    "I saw a tiny green lizard warming itself on a wall.",
@@ -1783,14 +1795,18 @@
    "No. But I remember laughing so hard I couldn't hold the blanket."
   ],
   [
-   "I tried making little embroidered patches.",
-   "Any success?",
-   "My first flower looks more like a fried egg."
+   "I tried making embroidered patches.",
+   "How'd the first one turn out?",
+   "It's meant to be a flower. Looks more like a fried egg.",
+   "Will you redo it?",
+   "Nah, I like this one. It's got personality."
   ],
   [
-   "I bought a lemon tart from a bakery I've never visited.",
-   "Was it good?",
-   "So good I walked back to learn the baker's name."
+   "Che, you have to try the lemon tart from the new bakery.",
+   "That good?",
+   "I went back just to ask the baker what was in it.",
+   "Did she tell you?",
+   "No. She gave me a smile and said 'more lemons than you'd think.'"
   ],
   [
    "I walked past the old swimming pool yesterday.",
@@ -1831,9 +1847,11 @@
    "A woman came looking for it. It has a home and a loud purr."
   ],
   [
-   "I went to a fair with my cousin.",
-   "Best part?",
-   "We painted little wooden boats shaped like strawberries."
+   "My cousin talked me into painting a tiny wooden boat.",
+   "How did yours turn out?",
+   "Bright red with white dots. It looks like a strawberry.",
+   "Does it float?",
+   "Don't know yet. Maybe I'll test it after work."
   ],
   [
    "Someone wrote 'you'll be okay' outside a shop.",
@@ -2138,19 +2156,25 @@
    "Already did. I just wanted a second opinion before naming him."
   ],
   [
-   "I went to buy bread and came home with three lemons.",
-   "No bread?",
-   "No bread. But I have big plans for lemonade."
+   "I came home with three lemons instead of bread.",
+   "How does that happen?",
+   "The market had this beautiful pile of bright yellow fruit, and I got distracted.",
+   "What about dinner?",
+   "Toast is canceled. We're making lemonade."
   ],
   [
-   "A stranger complimented my handwriting.",
-   "Is it especially neat?",
-   "Absolutely not. I think they mistook it for a secret code."
+   "Someone told me my handwriting was beautiful.",
+   "Isn't that good?",
+   "Except it's completely unreadable. I think they assumed it was calligraphy.",
+   "Did you correct them?",
+   "I said thank you and tried not to laugh."
   ],
   [
-   "I spent last night trying to solve a crossword.",
+   "I started a crossword last night and fell asleep on it.",
+   "Any damage?",
+   "I woke up with a pen mark on my cheek.",
    "Did you finish it?",
-   "Almost. One clue was 'four-letter word for calm.' I wrote 'nap.'"
+   "No, but I worked out the last clue at breakfast."
   ],
   [
    "I went to an outdoor flea market looking for a lamp.",
@@ -2172,9 +2196,11 @@
    "No. I liked the thought of someone leaving color behind."
   ],
   [
-   "I tried teaching myself a new dance step.",
+   "I tried learning a new dance step.",
    "How's it going?",
-   "I can do the first half. The second half currently involves falling on a pillow."
+   "First half is fine. Second half keeps sending me into the sofa.",
+   "Do you need help?",
+   "Only if you're prepared to catch me."
   ],
   [
    "That dress in the window stopped me in my tracks.",
@@ -2205,9 +2231,11 @@
    "One tiny crooked flower on her sleeve. She wore it home."
   ],
   [
-   "I found a café with mismatched chairs.",
-   "Do you like it?",
-   "Every chair feels like it has a history. I chose green."
+   "There's a café around the corner with chairs that don't match.",
+   "And you love it?",
+   "Of course. Every chair looks like it has a different story.",
+   "Which one did you choose?",
+   "Green velvet, beside the window. Great light for sketching."
   ],
   [
    "A stranger complimented a scarf I'd made.",
@@ -2220,9 +2248,11 @@
    "For one song. Then someone else started dancing too."
   ],
   [
-   "I kept fabric from a childhood costume.",
+   "I found a bit of fabric from a costume I wore as a kid.",
    "Why keep it?",
-   "It was the first thing I wore just because I loved it."
+   "I picked that color myself, even when everyone wanted me in pink.",
+   "Still like the color?",
+   "Absolutely. Maybe I'll use it as the lining of a new jacket."
   ]
  ]
 };
