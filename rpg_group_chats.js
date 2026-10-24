@@ -822,6 +822,144 @@
     ]
    ]
   ]
+ },
+ {
+  "pair": [
+   "hana",
+   "camila",
+   "elio"
+  ],
+  "scenes": [
+   [
+    [
+     "hana",
+     "I want the beginner table to have a small trading corner."
+    ],
+    [
+     "camila",
+     "With a price guide. Nobody should feel pressured."
+    ],
+    [
+     "elio",
+     "Could we have a box for cards people just want to swap?"
+    ],
+    [
+     "Protagonist",
+     "Maybe two boxes: trades and donations."
+    ],
+    [
+     "camila",
+     "Good. Then nobody mistakes a gift for a deal."
+    ],
+    [
+     "hana",
+     "Elio, would you help label them?"
+    ],
+    [
+     "elio",
+     "Sure. I'm better at labels than I am at bargaining."
+    ]
+   ],
+   [
+    [
+     "elio",
+     "I found cards that could finish my practice deck."
+    ],
+    [
+     "camila",
+     "And all three are in the free exchange box."
+    ],
+    [
+     "hana",
+     "Told you the box was worth keeping."
+    ],
+    [
+     "Protagonist",
+     "So what's missing now?"
+    ],
+    [
+     "elio",
+     "Someone to test it against."
+    ],
+    [
+     "camila",
+     "I'll play. No discounts on the match, though."
+    ],
+    [
+     "hana",
+     "I'll find you both a table."
+    ]
+   ]
+  ]
+ },
+ {
+  "pair": [
+   "yuna",
+   "kaede",
+   "teo"
+  ],
+  "scenes": [
+   [
+    [
+     "teo",
+     "Welcome to the most unofficial arcade championship in town!"
+    ],
+    [
+     "kaede",
+     "There's one machine and no bracket."
+    ],
+    [
+     "yuna",
+     "That's what makes it exclusive."
+    ],
+    [
+     "Protagonist",
+     "What's the prize?"
+    ],
+    [
+     "teo",
+     "I was thinking an elaborate trophy."
+    ],
+    [
+     "kaede",
+     "You have an empty snack cup."
+    ],
+    [
+     "yuna",
+     "Perfect. I'll take it when I win."
+    ]
+   ],
+   [
+    [
+     "kaede",
+     "Teo keeps announcing my score while I play."
+    ],
+    [
+     "teo",
+     "The audience deserves to know history is happening."
+    ],
+    [
+     "yuna",
+     "It's just us three. Four, counting the new arrival."
+    ],
+    [
+     "Protagonist",
+     "Do I need a ticket?"
+    ],
+    [
+     "teo",
+     "No, but I appreciate your professionalism."
+    ],
+    [
+     "kaede",
+     "Can you ask them both to be quiet for one round?"
+    ],
+    [
+     "yuna",
+     "I can try. No promises."
+    ]
+   ]
+  ]
  }
 ];
  const hash=s=>{let h=2166136261;for(const c of String(s))h=Math.imul(h^c.charCodeAt(0),16777619)>>>0;return h;};
@@ -845,7 +983,7 @@
   const faults=[],unique=new Set();
   for(const g of groups){
    const key=[...g.pair].sort().join(':');
-   if(g.pair.length!==2||g.pair[0]===g.pair[1]||unique.has(key))faults.push('bad pair '+key);
+   if(g.pair.length<2||g.pair.length>3||new Set(g.pair).size!==g.pair.length||unique.has(key))faults.push('bad group '+key);
    unique.add(key);
    if(g.scenes.length!==2)faults.push('missing variants '+key);
    for(const scene of g.scenes){
