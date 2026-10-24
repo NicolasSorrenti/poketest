@@ -72,6 +72,66 @@
      "hana",
      "You're impossible. Thank you."
     ]
+   ],
+   [
+    [
+     "camila",
+     "Someone wants to buy the old display cabinet."
+    ],
+    [
+     "hana",
+     "I told them it wasn't for sale."
+    ],
+    [
+     "Protagonist",
+     "Is it valuable?"
+    ],
+    [
+     "camila",
+     "Not especially. That's what made the offer interesting."
+    ],
+    [
+     "hana",
+     "It's where we keep the first-tournament photos."
+    ],
+    [
+     "Protagonist",
+     "Then you'd lose more than a cabinet."
+    ],
+    [
+     "camila",
+     "Fine. I'll find them another one. I'm not heartless."
+    ]
+   ],
+   [
+    [
+     "hana",
+     "I need to choose prizes for the beginners' event."
+    ],
+    [
+     "camila",
+     "Practical prizes. Sleeves, a few cards, something they'll use."
+    ],
+    [
+     "Protagonist",
+     "What was your idea, Hana?"
+    ],
+    [
+     "hana",
+     "A little handmade badge for everyone who finishes."
+    ],
+    [
+     "camila",
+     "That's actually not bad."
+    ],
+    [
+     "Protagonist",
+     "You sound surprised."
+    ],
+    [
+     "camila",
+     "I know a good investment when I see one."
+    ]
    ]
   ]
  },
@@ -139,6 +199,66 @@
     [
      "reina",
      "I didn't. I wanted to see what you'd do."
+    ]
+   ],
+   [
+    [
+     "yuna",
+     "Reina said something nice about my deck."
+    ],
+    [
+     "reina",
+     "I said your opening hand was consistent."
+    ],
+    [
+     "Protagonist",
+     "That's practically a compliment."
+    ],
+    [
+     "yuna",
+     "I'm framing it."
+    ],
+    [
+     "reina",
+     "Don't you dare."
+    ],
+    [
+     "Protagonist",
+     "Maybe just write it on the deck box."
+    ],
+    [
+     "yuna",
+     "Too late. I've already told three people."
+    ]
+   ],
+   [
+    [
+     "reina",
+     "Why is there a rubber duck next to your damage counters?"
+    ],
+    [
+     "yuna",
+     "It's my tactical adviser."
+    ],
+    [
+     "Protagonist",
+     "Does it give good advice?"
+    ],
+    [
+     "yuna",
+     "It reminds me not to take every turn so seriously."
+    ],
+    [
+     "reina",
+     "That's... not entirely terrible."
+    ],
+    [
+     "Protagonist",
+     "There it is. Another compliment."
+    ],
+    [
+     "reina",
+     "I should have stayed home."
     ]
    ]
   ]
@@ -208,6 +328,66 @@
      "shiori",
      "We both needed tea afterward, but yes."
     ]
+   ],
+   [
+    [
+     "akari",
+     "I found a mistake in my own probability chart."
+    ],
+    [
+     "shiori",
+     "You seem oddly relieved."
+    ],
+    [
+     "Protagonist",
+     "Why relieved?"
+    ],
+    [
+     "akari",
+     "I've been staring at it for days. At least now I know what felt wrong."
+    ],
+    [
+     "shiori",
+     "There's something satisfying about finding the right question."
+    ],
+    [
+     "Protagonist",
+     "Even if you don't have the answer?"
+    ],
+    [
+     "akari",
+     "Especially then."
+    ]
+   ],
+   [
+    [
+     "shiori",
+     "Akari asked me to lend her a novel with an unreliable narrator."
+    ],
+    [
+     "akari",
+     "I thought it would be an interesting exercise."
+    ],
+    [
+     "Protagonist",
+     "Did you work out who was lying?"
+    ],
+    [
+     "akari",
+     "I took notes for forty pages."
+    ],
+    [
+     "shiori",
+     "Then she stopped taking notes and just read."
+    ],
+    [
+     "Protagonist",
+     "Who convinced you?"
+    ],
+    [
+     "akari",
+     "The book. I'd rather know how it ends."
+    ]
    ]
   ]
  },
@@ -275,6 +455,66 @@
     [
      "nereo",
      "Practical forecasts. That's my specialty."
+    ]
+   ],
+   [
+    [
+     "marina",
+     "Nereo, the little ferry waiting area needs more chairs."
+    ],
+    [
+     "nereo",
+     "I know. I already borrowed two from the office."
+    ],
+    [
+     "Protagonist",
+     "Is the ferry delayed?"
+    ],
+    [
+     "marina",
+     "Only a little, but an older couple have been standing."
+    ],
+    [
+     "nereo",
+     "They'll have seats in a minute."
+    ],
+    [
+     "Protagonist",
+     "Want help carrying them?"
+    ],
+    [
+     "nereo",
+     "Grab that end. And watch the loose step."
+    ]
+   ],
+   [
+    [
+     "nereo",
+     "Marina thinks I should replace my old coat."
+    ],
+    [
+     "marina",
+     "The sleeve's held together with tape."
+    ],
+    [
+     "Protagonist",
+     "That does seem like a sign."
+    ],
+    [
+     "nereo",
+     "It's good tape."
+    ],
+    [
+     "marina",
+     "I found a repair shop that can do the seam properly."
+    ],
+    [
+     "Protagonist",
+     "You'd still get to keep the coat."
+    ],
+    [
+     "nereo",
+     "...Fine. Write down the address."
     ]
    ]
   ]
@@ -344,6 +584,66 @@
      "teo",
      "A moment of silence for the fallen biscuit."
     ]
+   ],
+   [
+    [
+     "teo",
+     "I promised Jun I'd keep my commentary down today."
+    ],
+    [
+     "jun",
+     "For the beginner matches. They were trying to concentrate."
+    ],
+    [
+     "Protagonist",
+     "How quiet did you manage?"
+    ],
+    [
+     "teo",
+     "I whispered the entire final turn."
+    ],
+    [
+     "jun",
+     "He was still louder than the players."
+    ],
+    [
+     "Protagonist",
+     "But quieter than usual?"
+    ],
+    [
+     "jun",
+     "Significantly. I bought him a drink afterward."
+    ]
+   ],
+   [
+    [
+     "jun",
+     "Teo wants a microphone at the next rules workshop."
+    ],
+    [
+     "teo",
+     "People need to hear the important details."
+    ],
+    [
+     "Protagonist",
+     "Is there going to be a big crowd?"
+    ],
+    [
+     "jun",
+     "Eight people, if everyone turns up."
+    ],
+    [
+     "teo",
+     "An intimate and exclusive audience."
+    ],
+    [
+     "Protagonist",
+     "Could you just sit at the table?"
+    ],
+    [
+     "teo",
+     "Fine. But I'm bringing my best introduction."
+    ]
    ]
   ]
  },
@@ -412,6 +712,66 @@
      "iris",
      "I have it in writing."
     ]
+   ],
+   [
+    [
+     "iris",
+     "Hana, I put labels on every storage box."
+    ],
+    [
+     "hana",
+     "I saw! It's wonderful."
+    ],
+    [
+     "Protagonist",
+     "Did it take long?"
+    ],
+    [
+     "iris",
+     "Longer than it should have. One box was entirely old event ribbons."
+    ],
+    [
+     "hana",
+     "We should keep those."
+    ],
+    [
+     "Protagonist",
+     "Maybe make a little memory board?"
+    ],
+    [
+     "iris",
+     "As long as somebody else hangs it. I've got deliveries."
+    ]
+   ],
+   [
+    [
+     "hana",
+     "We actually finished setting up early today."
+    ],
+    [
+     "iris",
+     "Nobody moved the tables after I measured the space."
+    ],
+    [
+     "Protagonist",
+     "A peaceful morning, then?"
+    ],
+    [
+     "hana",
+     "Until I noticed we were missing the sign-up pens."
+    ],
+    [
+     "iris",
+     "They're in the drawer, labeled 'pens.'"
+    ],
+    [
+     "Protagonist",
+     "Sometimes the simplest system wins."
+    ],
+    [
+     "hana",
+     "Don't tell her. She'll label me next."
+    ]
    ]
   ]
  },
@@ -479,6 +839,66 @@
     [
      "hana",
      "That counts as a win."
+    ]
+   ],
+   [
+    [
+     "elio",
+     "Hana asked me to greet new players at the door."
+    ],
+    [
+     "hana",
+     "Only if he wanted to."
+    ],
+    [
+     "Protagonist",
+     "How did it go?"
+    ],
+    [
+     "elio",
+     "I was nervous. Then someone asked where to get a beginner deck."
+    ],
+    [
+     "hana",
+     "And he showed them our whole starter table."
+    ],
+    [
+     "Protagonist",
+     "Sounds like you handled it."
+    ],
+    [
+     "elio",
+     "It felt easier once there was something useful to do."
+    ]
+   ],
+   [
+    [
+     "hana",
+     "Elio's been helping tidy the practice decks."
+    ],
+    [
+     "elio",
+     "There's a card in one of them with a little smiley face on the sleeve."
+    ],
+    [
+     "Protagonist",
+     "Whose is it?"
+    ],
+    [
+     "hana",
+     "Probably a child's. I haven't seen them in weeks."
+    ],
+    [
+     "elio",
+     "I left the sleeve there in case they come back."
+    ],
+    [
+     "Protagonist",
+     "Good call."
+    ],
+    [
+     "hana",
+     "That's exactly what I told him."
     ]
    ]
   ]
