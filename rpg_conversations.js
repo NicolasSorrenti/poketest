@@ -22,9 +22,11 @@
   if(first){
    const greeting=dialogueModule?.greetingLines?.(npc,character.intro||lines[0]);
    if(Array.isArray(greeting)&&greeting.length>=3)return greeting;
-   return [{speaker:npc,text:character.intro||lines[0]},
-    {speaker:'Protagonist',text:'Thanks. I was hoping to meet people around town.'},
-    {speaker:npc,text:lines[topic(state,npc,lines.length)]}];
+   // Unknown/new packs still get a coherent first meeting, not an unrelated
+   // randomly selected daily topic after the introduction.
+   return [{speaker:npc,text:character?.intro||lines[0]},
+    {speaker:'Protagonist',text:'Nice to meet you. Mind if we talk for a moment?'},
+    {speaker:npc,text:'Of course. Good to meet you too.'}];
   }
   // Only already-met NPCs physically attending the same location can join Talk.
   // Important invitations, story events and reactive scenes are checked before
@@ -46,10 +48,20 @@
   const index=topic(state,npc,lines.length);
   const authored=dialogueModule?.talkLines?.(npc,index,lines[index]);
   if(Array.isArray(authored)&&authored.length>=3)return authored;
-  const follow=lines[(index+1)%lines.length];
+  // Last-resort conversation for an NPC with no authored `talkLines`.
+  // NEVER attach another random, unrelated topic to the NPC's opening.
+  // Varied but connected listening responses avoid the previous repetitive
+  // "And how are things going otherwise?" that players kept hearing.
+  const fallbacks=[
+   ['Was that on your mind today?','A little, yeah. I wanted to say it out loud.'],
+   ['I hadn\'t thought about it that way.','Neither had I, until recently.'],
+   ['Sounds like you\'ve been thinking about that.','I have. I\'m glad you stopped to listen.'],
+   ['And what do you make of it now?','I\'m still working that out, to be fair.']
+  ];
+  const exchange=fallbacks[hash(npc+':fallback:'+state.day+':'+state.slot)%fallbacks.length];
   return [{speaker:npc,text:lines[index]},
-   {speaker:'Protagonist',text:lines.length>1?'And how are things going otherwise?':'How is your day going?'},
-   {speaker:npc,text:follow===lines[index]?(character.repeat||'I am glad we could talk for a moment.'):follow}];
+   {speaker:'Protagonist',text:exchange[0]},
+   {speaker:npc,text:exchange[1]}];
  }
  function choices(state,npc){
   if(!state||typeof npc!=='string'||state.day>90)return [];
