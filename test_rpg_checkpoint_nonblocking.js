@@ -1,0 +1,11 @@
+'use strict';
+const assert=require('node:assert/strict');
+const fs=require('node:fs');
+const server=fs.readFileSync(require.resolve('./server'),'utf8');
+assert.match(server,/function queueDuelCheckpoint\(session,identity\)/);
+assert.match(server,/queue\.pending=\{snapshot:structuredClone\(rpgDuels\.snapshot\(session\)\),identity\}/);
+assert.match(server,/await rpgDuels\.save\(savedSession,item\.identity\)/);
+const action=server.slice(server.indexOf("if(pathName==='/api/classic/action'"),server.indexOf("return sendJSON(res,200,result);",server.indexOf("if(pathName==='/api/classic/action'")));
+assert.match(action,/queueDuelCheckpoint\(session,identity\)/);
+assert.doesNotMatch(action,/await rpgDuels\.save\(/);
+console.log('PASS RPG action responses do not await cloud checkpoint writes');
