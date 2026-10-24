@@ -678,7 +678,7 @@
  Object.assign(flirt,extraFlirt);
  // Introduction and repeat greetings also let the protagonist answer naturally.
  const greetings={
-  laca:["You remember I just got back, right?","Of course. I've only been keeping the rematch score for years."],
+  laca:["You really remember that old rematch?","Of course. I've only been keeping the rematch score for years."],
   barb:["Nice to meet you. I made that deck box myself.","You did? Okay, we're definitely talking about how you finished those corners."],
   "hana": [
     "You always make the shop feel welcoming.",
