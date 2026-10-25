@@ -147,3 +147,29 @@ test('cross-character callbacks can accompany unrelated Talk only after hearing 
  }
  assert.equal(reachable,22);
 });
+
+test('third-wave callbacks link to actual older dialogue selected during the 90-day campaign',()=>{
+ const MEMORY=require('../rpg_dialogue_memory');
+ const actor={intro:'Hello.',talk:['Another topic.','Some other news.']};
+ let grounded=0;
+ for(const [npc,rows] of Object.entries(MEMORY.asides)){
+  for(let index=6;index<=8;index++){
+   const row=rows[index],[kind,number]=row.requires.split(':'),from=row.from||npc;
+   const expected=MEMORY.casualId(kind,from,Number(number));
+   assert.ok(expected,'source must belong to an authored bank');
+   const previous=Array.from({length:85},(_,i)=>i+1).flatMap(day=>
+    [0,1,2].map(slot=>({day,slot}))).find(state=>
+      VN.dialogueEntry(state,from,cast[from]||actor,null,{present:[]}).id===expected);
+   assert.ok(previous,npc+' callback '+index+' references a source that can be shown before day 86');
+   const s={...previous,dialogueMemory:{entries:{},casualSeen:{},asidesSeen:{}}};
+   const dialogue=VN.dialogueEntry(s,from,cast[from]||actor,null,{present:[]});
+   assert.equal(dialogue.id,expected);
+   assert.equal(JSON.stringify(s.dialogueMemory),JSON.stringify({entries:{},casualSeen:{},asidesSeen:{}}),
+    'choosing a source does not record it until its final line');
+   assert.equal(MEMORY.markCasual(s,dialogue.id),true);
+   assert.equal(s.dialogueMemory.casualSeen[expected].day,previous.day);
+   grounded++;
+  }
+ }
+ assert.equal(grounded,66,'two direct followups and one second cross-reference per NPC');
+});

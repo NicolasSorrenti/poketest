@@ -75,7 +75,7 @@ test('all existing and expanded incidental references have valid authored prereq
  assert.deepEqual(Object.keys(Memory.asides).sort(),Object.keys(Everyday.topics).sort());
  assert.deepEqual(Memory.validate(),[]);
  for(const [npc,rows] of Object.entries(Memory.asides)){
-  assert.equal(rows.length,6,npc+' must have six distinct references');
+  assert.equal(rows.length,10,npc+' must have ten distinct references');
   for(const row of rows.slice(0,2)){
    const [source,indexText]=row.requires.split(':'),index=Number(indexText);
    const bank=source==='everyday'?Everyday.topics[npc]:Character.scenes[npc];
@@ -153,9 +153,9 @@ test('remembered topic identities survive reordering or inserting other authored
 test('new asides include two additional personal topics, a grounded cross-character reference and a sequel',()=>{
  const CHARACTER=require('../rpg_character_chats');
  const extraCount=Object.values(Memory.asides).reduce((n,rows)=>n+rows.length-2,0);
- assert.equal(extraCount,88,'22 characters get four more callbacks each');
+ assert.equal(extraCount,176,'22 characters have eight linked callbacks beyond the original pair');
  for(const [npc,rows] of Object.entries(Memory.asides)){
-  assert.equal(rows.length,6,npc+' has two original and four new callbacks');
+  assert.equal(rows.length,10,npc+' has ten linked callbacks');
   for(const [i,row] of rows.entries()){
    assert.equal(row.lines.length,3,npc+':'+i);
    assert.ok(row.lines.every(line=>typeof line==='string'&&line.trim()),npc+' has complete lines');
@@ -172,7 +172,7 @@ test('new asides include two additional personal topics, a grounded cross-charac
  assert.deepEqual(Memory.validate(),[]);
 });
 
-test('all 88 new callbacks require a prior completed scene and can play without changing resources',()=>{
+test('all 176 expanded callbacks require a prior completed scene and can play without changing resources',()=>{
  for(const [npc,rows] of Object.entries(Memory.asides)){
   for(let index=2;index<rows.length;index++){
    const item=rows[index],state={day:12,slot:1,credits:80,points:0,
@@ -188,7 +188,7 @@ test('all 88 new callbacks require a prior completed scene and can play without 
     // The first, existing aside needs its own prerequisite dialogue first.
     const original=rows[Number(idxText)];
     const [kind,topic]=original.requires.split(':');
-    const initial=Memory.casualId(kind,npc,Number(topic));
+    const initial=Memory.casualId(kind,original.from||npc,Number(topic));
     assert.ok(initial,npc+' chain prerequisite exists');
     assert.equal(Memory.markCasual(state,initial),true);
     state.day=13;
@@ -236,5 +236,54 @@ test('cross-character callbacks do not invent another NPC\'s prior dialogue',()=
   assert.equal(Memory.markAside(s,'aside:'+npc+':4'),false);
   assert.equal(Memory.markCasual(s,id),true);
   assert.equal(Memory.markAside(s,'aside:'+npc+':4'),false,'same-day reference is still forbidden');
+ }
+});
+
+test('wave-three conversations are grounded in existing topics and retain old saved IDs',()=>{
+ const Character=require('../rpg_character_chats');
+ let newEntries=0;
+ for(const [npc,rows] of Object.entries(Memory.asides)){
+  assert.equal(rows.length,10,npc+' must have 10 authored callbacks');
+  assert.equal(rows[6].requires,'everyday:2',npc+' should follow an existing everyday anecdote');
+  assert.equal(rows[7].requires,'character:3',npc+' should revisit a non-random character chat');
+  assert.equal(rows[9].requires,'aside:4',npc+' should follow a heard cross-character callback');
+  assert.ok(rows[8].from&&rows[8].from!==npc,npc+' needs an actual second character');
+  for(let i=6;i<=9;i++){
+   const row=rows[i],source=row.from||npc,[kind,indexText]=row.requires.split(':');
+   assert.equal(row.lines.length,3,npc+' dialogue has three beats');
+   assert.ok(row.lines.every(x=>typeof x==='string'&&x.trim()),npc+' contains no blank dialogue');
+   if(kind==='everyday')assert.ok(Everyday.topics[source][Number(indexText)],npc+' source everyday scene exists');
+   if(kind==='character')assert.ok(Character.scenes[source][Number(indexText)],npc+' source character scene exists');
+   if(kind==='aside')assert.ok(Number(indexText)<i&&rows[Number(indexText)],npc+' sequel cannot reference itself');
+   newEntries++;
+  }
+ }
+ assert.equal(newEntries,88);
+ assert.deepEqual(Memory.validate(),[]);
+});
+
+test('wave-three cross-character memories cannot trigger just from familiarity, the calendar, or another NPC',()=>{
+ for(const [npc,rows] of Object.entries(Memory.asides)){
+  const row=rows[8],source=row.from,[kind,indexText]=row.requires.split(':');
+  const prerequisite=Memory.casualId(kind,source,Number(indexText));
+  assert.ok(prerequisite,npc+' source dialogue exists');
+  const unrelated=Memory.casualId(kind,npc,Number(indexText));
+  const s={day:22,slot:1,relationships:{[npc]:{affection:30},[source]:{affection:30}},
+   dialogueMemory:{entries:{},casualSeen:{},asidesSeen:{}}};
+  if(unrelated)assert.equal(Memory.markCasual(s,unrelated),true);
+  assert.equal(Memory.markAside(s,'aside:'+npc+':8'),false,'hearing an identically numbered own topic is not sufficient');
+  for(let day=23;day<=30;day++)for(let slot=0;slot<3;slot++){
+   assert.notEqual(Memory.aside({...s,day,slot},npc,'casual:classic:'+npc+':0')?.id,'aside:'+npc+':8');
+  }
+  assert.equal(Memory.markCasual(s,prerequisite),true);
+  assert.equal(Memory.markAside(s,'aside:'+npc+':8'),false,'same day is too early');
+  const callback=Array.from({length:68},(_,i)=>i+23).flatMap(day=>
+   [0,1,2].map(slot=>({day,slot}))).find(t=>
+    Memory.aside({...s,...t},npc,'casual:classic:'+npc+':0')?.id==='aside:'+npc+':8');
+  assert.ok(callback,npc+' cross-character anecdote can occur later in the campaign');
+  const seenState={...s,...callback};
+  assert.equal(Memory.markAside(seenState,'aside:'+npc+':8'),true);
+  assert.equal(Memory.markAside(seenState,'aside:'+npc+':8'),false);
+  assert.equal(seenState.relationships[npc].affection,30,'no relationship change');
  }
 });
