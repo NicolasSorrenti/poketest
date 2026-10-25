@@ -124,7 +124,7 @@ test('optional references never appear before the referenced dialogue is complet
 test('malformed memory IDs and older saves cannot invent casual history or callbacks',()=>{
  const state={day:12,dialogueMemory:{entries:{}}};
  assert.equal(Memory.aside(state,'hana','casual:character:hana:1'),null);
- assert.equal(Memory.markCasual(state,'casual:everyday:hana:0'),true);
+ assert.equal(Memory.markCasual(state,Memory.casualId('everyday','hana',0)),true);
  assert.equal(Memory.markCasual(state,'react:duel:hana:old'),false);
  assert.equal(Memory.markCasual(state,'casual:other:hana:0'),false);
  assert.equal(Memory.markCasual(state,'casual:everyday:hana:0:injected'),false);
