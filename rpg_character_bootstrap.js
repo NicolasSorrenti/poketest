@@ -12,6 +12,7 @@
  "/rpg_group_chats.js",
  "/rpg_conversations.js",
  "/rpg_legacy_scenes.js",
+ "/rpg_relationships.js",
  "/rpg_story.js",
  "/rpg_schedules.js",
  "/rpg_world.js",
