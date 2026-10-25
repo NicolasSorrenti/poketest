@@ -60,4 +60,15 @@ for(const seed of [1,17,475]){
   assert(energy.size<=2,'Two-color CPU support cannot require three-color Energy');
  }
 }
+const uniqueFocus=new Set(focused.map(id=>CATALOG.get(id).name));
+const pairs={};
+for(const id of focused){
+ const key=attackColors(CATALOG.get(id)).slice().sort().join('/')||'power-synergy';
+ pairs[key]=(pairs[key]||0)+1;
+}
+console.log('Dual Energy audit:',JSON.stringify({
+ supportedPokemonPrintings:candidates.length,uniqueFocusNames:uniqueFocus.size,
+ focusedSlots:focused.length,supportSlots:pokemon.length-focused.length,
+ trainers:pool.length-pokemon.length,types:pairs
+}));
 console.log('PASS Dual Energy: 240-card supported fixed pool, evolution lines, 12 valid CPU drafts');
