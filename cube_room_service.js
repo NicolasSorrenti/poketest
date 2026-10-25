@@ -8,11 +8,13 @@ const {cpuPick,buildCpuDeck,ENERGY_IDS}=require('./cube_strategy');
 const {CATALOG}=require('./headless_duel');
 const {makeSchedule,standings}=require('./cube_round_robin');
 const {simulateCpuMatch}=require('./cube_bracket');
+const {SKILLS}=require('./cpu_policy');
+const MAX_CPU_LEVEL=Math.max(...Object.keys(SKILLS).map(Number));
 const LETTERS='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
 const randomCode=()=>Array.from(crypto.randomBytes(6),x=>LETTERS[x%LETTERS.length]).join('');
 const makeToken=()=>crypto.randomBytes(32).toString('base64url');
 const validateDifficulty=value=>{
- if(!Number.isInteger(value)||value<1||value>5)throw Error('CPU difficulty must be 1–5');
+ if(!Number.isInteger(value)||value<1||value>MAX_CPU_LEVEL)throw Error('CPU difficulty must be 1–'+MAX_CPU_LEVEL);
  return value;
 };
 const normalizeCode=value=>{
