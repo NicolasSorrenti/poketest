@@ -32,10 +32,21 @@ function queueDuelCheckpoint(session,identity){
     try{
      await rpgDuels.save(savedSession,item.identity);
      session.checkpointRevision=savedSession.checkpointRevision;
+     session.checkpointError=null;
     }catch(error){
      console.warn('RPG duel background checkpoint failed:',error.message);
-     // On conflict, do not overwrite another device's checkpoint.
-     // A later action may retry, but gameplay remains responsive.
+     session.checkpointError='Cloud checkpoint pending: '+error.message;
+     if(error.code==='40001'||error.status===409){
+      session.checkpointError='Another device has newer battle progress. Resume that cloud duel.';
+      queue.pending=null;
+      break;
+     }
+     const attempts=item.attempt||0;
+     if(attempts<6){
+      await new Promise(resolve=>setTimeout(resolve,Math.min(5000,250*2**attempts)));
+      if(queue.pending)queue.pending.attempt=Math.max(queue.pending.attempt||0,attempts+1);
+      else queue.pending={...item,attempt:attempts+1};
+     }
     }
    }
   }finally{queue.running=false;}
@@ -71,7 +82,7 @@ async function api(req,res,pathName,url){
    if(identity){
     const live=[...classic.sessions.values()].find(s=>s.checkpointOwner===identity.userId&&s.checkpointDuelId===params.rpgDuelId);
     const old=live||await rpgDuels.load(params.rpgDuelId,identity);
-    if(old){upgradeRpgSession(old);classic.sessions.set(old.token,old);return sendJSON(res,200,{token:old.token,...classic.response(old),cloudSaved:true,resumed:true});}
+    if(old){upgradeRpgSession(old);classic.sessions.set(old.token,old);return sendJSON(res,200,{token:old.token,...classic.response(old),cloudSaved:old.checkpointRevision===old.revision,cloudError:old.checkpointError||undefined,resumed:true});}
    }
    const created=classic.create(forRpgDuel(params)),session=classic.session(created.token);
    if(identity){
@@ -100,7 +111,7 @@ async function api(req,res,pathName,url){
    if(!snapshot)return sendJSON(res,404,{error:'No saved RPG duel for this account'});
    upgradeRpgSession(snapshot);
    classic.sessions.set(snapshot.token,snapshot);
-   return sendJSON(res,200,{token:snapshot.token,...classic.response(snapshot),cloudSaved:true,resumed:true});
+   return sendJSON(res,200,{token:snapshot.token,...classic.response(snapshot),cloudSaved:snapshot.checkpointRevision===snapshot.revision,cloudError:snapshot.checkpointError||undefined,resumed:true});
   }
   const token=req.headers['x-duel-token'];
   if(typeof token!=='string'||!token){sendJSON(res,401,{error:'Missing duel token'});return;}
@@ -111,7 +122,7 @@ async function api(req,res,pathName,url){
    if(session.rpgLocalOnly){
     state.cloudSaved=false;
     state.cloudError='This duel is only on the current server. Sign in from the RPG to enable autosaves in future matches.';
-   }else if(session.checkpointOwner){state.cloudSaved=session.checkpointRevision===session.revision;}
+   }else if(session.checkpointOwner){state.cloudSaved=session.checkpointRevision===session.revision;if(session.checkpointError)state.cloudError=session.checkpointError;}
    return sendJSON(res,200,state);
   }
   if(pathName==='/api/classic/action'&&req.method==='POST'){
@@ -125,6 +136,7 @@ async function api(req,res,pathName,url){
     queueDuelCheckpoint(session,identity);
     // Accepted by the local authoritative engine, but not yet durable in cloud.
     result.cloudSaved=false;
+    if(session.checkpointError)result.cloudError=session.checkpointError;
    }else if(session.rpgLocalOnly){
     result.cloudSaved=false;
     result.cloudError='Sign in through the RPG Cloud button for durable battle autosaves in future matches.';
