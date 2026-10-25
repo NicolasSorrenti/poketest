@@ -50,7 +50,8 @@ function duel(opts,number,swap,decks){
  const logs=[],stats={actions:0,attacks:0,attachments:0,evolutions:0,trainers:0,choices:0,decisionsMs:0,illegalActions:0,rejectedProposals:0,probedCandidates:0,byRole:[{},{}],openingBenchByRole:[0,0],decisionPerActionMsByRole:[[],[]]};
  const start=performance.now();
  for(let side=0;side<2;side++){
-  const r=driveSide(game,{...profile[roleForSide[side]],side,limit:200});
+  const r=driveSide(game,{...profile[roleForSide[side]],side,limit:200,
+   onDecision:ms=>stats.decisionPerActionMsByRole[roleForSide[side]].push(ms)});
   if(!r.steps)throw Error('CPU could not set up');
   game=r.game;logs.push(...r.commands);stats.actions+=r.steps;
  }
@@ -58,11 +59,11 @@ function duel(opts,number,swap,decks){
  for(let step=0;step<opts.maxTurns&&!game.over;step++){
   const side=game.pendingDecision?game.pendingDecision.actor:game.turn;
   const startDecision=performance.now();
-  const r=driveSide(game,{...profile[roleForSide[side]],side,limit:200});
+  const r=driveSide(game,{...profile[roleForSide[side]],side,limit:200,
+   onDecision:ms=>stats.decisionPerActionMsByRole[roleForSide[side]].push(ms)});
   const elapsedDecision=performance.now()-startDecision;
   stats.decisionsMs+=elapsedDecision;
   if(!r.steps){stats.stalled=true;break;}
-  stats.decisionPerActionMsByRole[roleForSide[side]].push(elapsedDecision/r.steps);
   game=r.game;stats.actions+=r.steps;logs.push(...r.commands);
   stats.rejectedProposals+=r.commands.reduce((n,a)=>n+(a.rejectedCandidates||0),0);
   stats.probedCandidates+=r.commands.reduce((n,a)=>n+(a.probedCandidates||0),0);
