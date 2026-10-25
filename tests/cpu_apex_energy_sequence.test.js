@@ -29,3 +29,28 @@ test('other CPU levels retain their existing attack ordering',()=>{
  const o=board();
  assert.deepEqual(AI.energyPreparationActions(o,AI.configuration({side:1,level:7}),[attack,attach]),[attack,attach]);
 });
+
+test('Apex does not sacrifice its attack for illegal Miracle Energy targets',()=>{
+ const o=board();
+ Object.assign(o,{phase:'game',turn:1,round:5,turnSerial:11,over:false,decision:null});
+ o.self.hand=['neo4-16']; // Miracle Energy: only Light or Shining Pokémon
+ o.self.bench=[];
+ o.self.retreated=false;
+ const actions=AI.candidates(o,cfg,{trainers:0,powers:0,powerKeys:new Set(),stadium:false});
+ assert.equal(actions.some(a=>a.type==='attach_energy'),false);
+ assert.equal(actions.some(a=>a.type==='attack'),true);
+ assert.equal(AI.energyPreparationActions(o,cfg,actions).some(a=>a.type==='attack'),true);
+});
+test('Miracle Energy remains a candidate for a legal Light Pokémon',()=>{
+ const o=board();
+ Object.assign(o,{phase:'game',turn:1,round:5,turnSerial:11,over:false,decision:null});
+ o.self.hand=['neo4-16'];
+ o.self.bench=[{id:'neo4-13',energies:[],damage:0,playedTurn:2}]; // Light Azumarill
+ o.self.retreated=false;
+ const used={trainers:0,powers:0,powerKeys:new Set(),stadium:false};
+ const actions=AI.candidates(o,cfg,used);
+ assert.equal(actions.some(a=>a.type==='attach_energy'&&a.payload.slot===-1),false);
+ assert.equal(actions.some(a=>a.type==='attach_energy'&&a.payload.slot===0),true);
+ o.self.bench[0].energyAttachBlockSerial=12;
+ assert.equal(AI.candidates(o,cfg,used).some(a=>a.type==='attach_energy'),false);
+});
