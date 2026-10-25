@@ -14,6 +14,7 @@
  // The remaining main characters have character-specific portrait crops.
  // Full-body SFW chibis for Discreet Mode. Use existing safe sprite until approved art ships.
  const CHIBI_FALLBACKS={yuna:'characters/yuna/chibi/front.png'};
+ const CHIBI_IDS=new Set(['akari','alma','barb','camila','elio','elena','hana','iris','jinx','jun','kaede','laca','luna','marina','nereo','reina','rina','shiori','sierra','sol','teo','yuna']);
  const CHIBI_APPROVED={yuna:'characters/yuna/discreet/neutral.webp'};
  const OTHER_PORTRAITS={
   jinx:'characters/jinx/neutral.webp',
@@ -36,6 +37,15 @@
   hana:['#624151','#f6a5bc'],kaede:['#35354d','#b9a6e6'],marina:['#28465a','#90cfde']
  };
  const cache=new Map();
+ const chibiCandidates=id=>['/rpg-assets/characters/'+id+'/discreet/neutral.webp','/rpg-assets/characters/'+id+'/discreet/neutral.png','/rpg-assets/characters/'+id+'/chibi/front.png'];
+ function probeChibi(id){
+  if(!CHIBI_IDS.has(id)||!win?.Image)return Promise.resolve(null);
+  const paths=chibiCandidates(id);
+  return new Promise(resolve=>{
+   const next=i=>{if(i>=paths.length){resolve(null);return;}
+    const img=new win.Image();img.onload=()=>resolve(paths[i]);img.onerror=()=>next(i+1);img.src=paths[i];};next(0);
+  });
+ }
  const EMOTIONS=new Set([
   'neutral','happy','surprised','vulnerable','sad','irritated','angry',
   'determined','confident','nervous','worried','smile','attack','hurt',
@@ -75,18 +85,14 @@
  function loadPortrait(id){
   if(cache.has(id))return cache.get(id);
   const src=url(id);
-  if(CHIBI_FALLBACKS[id]){
-   // Full-body artwork is never sent through the headshot crop canvas.
-   const promise=new Promise(resolve=>{
-    if(!win?.Image){resolve(src);return;}
-    const probe=new win.Image();
-    probe.onload=()=>resolve('/rpg-assets/'+CHIBI_APPROVED[id]);
-    probe.onerror=()=>resolve(src); // Existing in-repo chibi remains fully SFW.
-    probe.src='/rpg-assets/'+CHIBI_APPROVED[id];
-   });
-   cache.set(id,promise);
-   return promise;
+  if(CHIBI_IDS.has(id)){
+   const promise=probeChibi(id).then(found=>found||loadHeadshot(id));
+   cache.set(id,promise);return promise;
   }
+  return loadHeadshot(id);
+ }
+ function loadHeadshot(id){
+  const src=url(id);
   if(!src||!win?.Image||!win?.document?.createElement)return Promise.resolve(null);
   const promise=new Promise(resolve=>{
    const source=new win.Image();
@@ -133,7 +139,7 @@
   img.hidden=true;
   loadPortrait(id).then(data=>{
    if(img.dataset.safeSrc!==id||node.dataset?.rpgSafeId!==id)return;
-   if(data){img.src=data;img.hidden=false;}
+   if(data){img.src=data;img.hidden=false;node.dataset.rpgSafeKind=data.startsWith('/rpg-assets/characters/')&&(/\/discreet\/|\/chibi\//).test(data)?'chibi':'headshot';}
    else img.hidden=true; // Monogram fallback; never leak the original full art.
   });
  }
@@ -141,7 +147,7 @@
   if(!node||!validId(id))return;
   node.dataset.rpgSafeId=validId(id);
   node.dataset.rpgSafeEmotion=emotion(mood);
-  node.dataset.rpgSafeKind=CHIBI_FALLBACKS[validId(id)]?'chibi':'headshot';
+  node.dataset.rpgSafeKind=CHIBI_IDS.has(validId(id))?'chibi':'headshot';
   node.dataset.rpgSafeInitials=initials(name||id);
   render(node);
  }
