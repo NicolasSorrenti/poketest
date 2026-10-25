@@ -13,7 +13,10 @@ const SKILLS=Object.freeze({
   2:Object.freeze({name:'Casual',temperature:18,attention:9,sampleWindow:9,trainers:2,bench:3}),
   3:Object.freeze({name:'Experienced',temperature:8,attention:16,sampleWindow:6,trainers:3,bench:3}),
   4:Object.freeze({name:'Expert',temperature:2,attention:30,sampleWindow:3,trainers:4,bench:4}),
-  5:Object.freeze({name:'Champion',temperature:0,attention:100,sampleWindow:1,trainers:6,bench:4})
+  5:Object.freeze({name:'Champion',temperature:0,attention:100,sampleWindow:1,trainers:6,bench:4}),
+  6:Object.freeze({name:'Grandmaster',temperature:0,attention:140,sampleWindow:1,trainers:8,bench:4,searchDepth:2,searchWidth:3,searchRoots:4,searchNodes:24}),
+  7:Object.freeze({name:'Mastermind',temperature:0,attention:200,sampleWindow:1,trainers:9,bench:4,searchDepth:3,searchWidth:4,searchRoots:5,searchNodes:48}),
+  8:Object.freeze({name:'Apex',temperature:0,attention:300,sampleWindow:1,trainers:10,bench:4,searchDepth:4,searchWidth:4,searchRoots:6,searchNodes:80})
 });
 // An independently testable difficulty calibration: mistakes result from a
 // broader, noisier choice among *legal* actions, never extra cards, forced
@@ -23,7 +26,7 @@ const CALIBRATED_SKILLS=Object.freeze({
  2:Object.freeze({...SKILLS[2],temperature:240,sampleWindow:24}),
  3:Object.freeze({...SKILLS[3],temperature:85,sampleWindow:13}),
  4:Object.freeze({...SKILLS[4],temperature:35,sampleWindow:7}),
- 5:SKILLS[5]
+ 5:SKILLS[5],6:SKILLS[6],7:SKILLS[7],8:SKILLS[8]
 });
 const PERSONALITIES=Object.freeze({
  balanced:Object.freeze({damage:1,survival:1,setup:1,control:1,risk:0}),
@@ -35,24 +38,24 @@ const PERSONALITIES=Object.freeze({
 });
 function configuration(raw={}){
  const level=raw.level??3,personality=raw.personality??'balanced';
- if(!Number.isInteger(level)||!SKILLS[level])throw Error('CPU level must be 1–5');
+ if(!Number.isInteger(level)||!SKILLS[level])throw Error('CPU level must be 1–8');
  if(!Object.hasOwn(PERSONALITIES,personality))throw Error('Unknown CPU personality');
  if(!Number.isSafeInteger(raw.seed??1))throw Error('Invalid CPU policy seed');
  const side=raw.side??1;if(side!==0&&side!==1)throw Error('Invalid CPU side');
  // Opt-in until blinded paired tournaments demonstrate a strength gain.
  const planning=raw.planning??false;
  if(typeof planning!=='boolean')throw Error('Invalid CPU planning setting');
- const evolutionTempo=raw.evolutionTempo??false;
+ const evolutionTempo=raw.evolutionTempo??(level>=6);
  if(typeof evolutionTempo!=='boolean')throw Error('Invalid CPU evolution-tempo setting');
- const prizeRace=raw.prizeRace??false;
+ const prizeRace=raw.prizeRace??(level>=6);
  if(typeof prizeRace!=='boolean')throw Error('Invalid CPU Prize-race setting');
- const knockoutTempo=raw.knockoutTempo??false;
+ const knockoutTempo=raw.knockoutTempo??(level>=6);
  if(typeof knockoutTempo!=='boolean')throw Error('Invalid CPU knockout-tempo setting');
- const opponentResponse=raw.opponentResponse??false;
+ const opponentResponse=raw.opponentResponse??(level>=6);
  if(typeof opponentResponse!=='boolean')throw Error('Invalid CPU opponent-response setting');
  const graduatedNoise=raw.graduatedNoise??false;
  if(typeof graduatedNoise!=='boolean')throw Error('Invalid graduated-noise setting');
- const energyHorizon=raw.energyHorizon??false;
+ const energyHorizon=raw.energyHorizon??(level>=7);
  if(typeof energyHorizon!=='boolean')throw Error('Invalid energy-horizon setting');
  return {level,personality,seed:raw.seed??1,side,planning,evolutionTempo,prizeRace,knockoutTempo,opponentResponse,
   graduatedNoise,energyHorizon,skill:(graduatedNoise?CALIBRATED_SKILLS:SKILLS)[level],style:PERSONALITIES[personality]};
@@ -823,17 +826,23 @@ function chooseAction(game,raw={},memo={}){
  // *evaluation budget* should NOT widen the random window: doing so previously
  // made mid-level players less competent than beginners. Beginner is allowed
  // to overlook the best move; Champion deterministically chooses its best.
- const shortlist=ranked.slice(0,cfg.skill.sampleWindow);
+ const deep=cfg.level>=6?require('./cpu_lookahead').rankWithLookahead(game,cfg,used,ranked,{
+  observation,candidates,score,projectedAttackValue,hpRemaining,
+  attackBonus:(action,board,config)=>planningBonus(action,board,config)+prizeRaceBonus(action,board,config)+
+   knockoutTempoBonus(action,board,config)+opponentResponseBonus(action,board,config)+energyHorizonBonus(action,board,config)
+ }):{ranked,nodes:0};
+ const strategic=deep.ranked;
+ const shortlist=strategic.slice(0,cfg.skill.sampleWindow);
  const temp=cfg.skill.temperature,ordered=temp===0?shortlist:[...shortlist].map(x=>({...x,priority:x.score+Math.log(-Math.log(Math.max(1e-12,random())))*-temp}))
   .sort((a,b)=>b.priority-a.priority||a.tie-b.tie);
  // The result of each probe is intentionally opaque to the scorer. In
  // particular a previewed random coin result is never used to rank actions.
  let probedCandidates=0,rejectedCandidates=0;
- for(const item of [...ordered,...ranked.slice(cfg.skill.sampleWindow)]){
+ for(const item of [...ordered,...strategic.slice(cfg.skill.sampleWindow)]){
   probedCandidates++;
   const result=reduce(game,cfg.side,item.action);
   if(result.ok)return {command:item.action,game:result.game,score:item.score,alternatives:ranked.length,
-   probedCandidates,rejectedCandidates};
+   probedCandidates,rejectedCandidates,searchNodes:deep.nodes};
   rejectedCandidates++;
  }
  return null;
@@ -852,7 +861,7 @@ function driveSide(initial,{side=1,level=3,personality='balanced',seed=1,plannin
   if(a.type==='use_power'){memo.powers++;memo.powerKeys.add(a.payload.slot+':'+a.payload.powerIndex);}
   if(a.type==='use_stadium')memo.stadium=true;
   commands.push({side,command:a,score:next.score,alternatives:next.alternatives,
-   probedCandidates:next.probedCandidates,rejectedCandidates:next.rejectedCandidates});
+   probedCandidates:next.probedCandidates,rejectedCandidates:next.rejectedCandidates,searchNodes:next.searchNodes||0});
   game=next.game;steps++;
   if(onStep)onStep(game,a,steps);
   if(beforeTurn!==game.turnSerial){memo.trainers=0;memo.powers=0;memo.powerKeys.clear();memo.stadium=false;}
