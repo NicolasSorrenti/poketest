@@ -1799,6 +1799,780 @@
 };
  // Preserve the indices and save IDs of the original 44 asides.
  for(const [npc,rows] of Object.entries(expandedAsides))asides[npc].push(...rows);
+ const wave3Asides={
+ "hana": [
+  {
+   "requires": "everyday:2",
+   "lines": [
+    "I tried making pancakes again. Got one shaped like a boot.",
+    "Are you collecting geographical accidents?",
+    "Apparently. I'm calling this one the Peninsula of Breakfast."
+   ]
+  },
+  {
+   "requires": "character:3",
+   "lines": [
+    "We held a vote on the beginner tournament's name.",
+    "Did Yuna suggest something outrageous?",
+    "Three things. We chose 'First Steps Cup.' She says it needs more lightning bolts."
+   ]
+  },
+  {
+   "requires": "everyday:1",
+   "from": "yuna",
+   "lines": [
+    "Yuna told me about the magic trick that became a sandwich lesson.",
+    "A very Yuna sort of detour.",
+    "She offered to teach me the trick. I asked for the sandwich recipe instead."
+   ]
+  },
+  {
+   "requires": "aside:4",
+   "lines": [
+    "Camila left another bundle of spare sleeves by the register.",
+    "Did she try to call it an investment?",
+    "She wrote 'no comment' on the envelope. That counts as progress."
+   ]
+  }
+ ],
+ "reina": [
+  {
+   "requires": "everyday:2",
+   "lines": [
+    "I saw that dog again—the one that fell asleep on my feet.",
+    "Did he recognize you?",
+    "He walked over and sat down. My reputation is apparently set."
+   ]
+  },
+  {
+   "requires": "character:3",
+   "lines": [
+    "Someone asked me to smile after the match again.",
+    "Did you give him the stare?",
+    "I said I'd smile if he helped pack the tables. He went surprisingly quiet."
+   ]
+  },
+  {
+   "requires": "character:0",
+   "from": "hana",
+   "lines": [
+    "Hana told me she has a tournament poster drawn by hand.",
+    "From the shop's very first event?",
+    "Yes. It has six signatures at the bottom. She's trying to find space to frame it."
+   ]
+  },
+  {
+   "requires": "aside:4",
+   "lines": [
+    "Yuna wants me to judge a pancake-flipping rematch.",
+    "Against the ribbon champion herself?",
+    "I agreed on one condition: I get to eat the evidence."
+   ]
+  }
+ ],
+ "shiori": [
+  {
+   "requires": "everyday:2",
+   "lines": [
+    "Another old photograph fell out of a secondhand book.",
+    "Another stranger's family picnic?",
+    "A school play this time. I tucked it back beside the page it had kept company."
+   ]
+  },
+  {
+   "requires": "character:3",
+   "lines": [
+    "I finished the chapter I left unread for that evening event.",
+    "Was the reveal worth waiting for?",
+    "Yes. Though now I remember the people who saved me a seat more clearly than the ending."
+   ]
+  },
+  {
+   "requires": "everyday:0",
+   "from": "elena",
+   "lines": [
+    "Elena's mushroom-shaped mug has become something of a legend.",
+    "Have you seen it?",
+    "I have. It looks like something from a children's story. I nearly asked where she bought it."
+   ]
+  },
+  {
+   "requires": "aside:4",
+   "lines": [
+    "Akari's jazz station played a song I recognized.",
+    "From where?",
+    "My father used to play it on Sundays. I didn't expect an ordinary radio recommendation to do that."
+   ]
+  }
+ ],
+ "yuna": [
+  {
+   "requires": "everyday:2",
+   "lines": [
+    "I finally learned an actual magic trick.",
+    "No sandwich this time?",
+    "Only a card disappearing into my sleeve. Unfortunately I forgot which sleeve."
+   ]
+  },
+  {
+   "requires": "character:3",
+   "lines": [
+    "I ran out of space for stickers on my binder.",
+    "Are you starting a second binder?",
+    "No way. I'm using the inside cover. More memories per square centimeter."
+   ]
+  },
+  {
+   "requires": "everyday:0",
+   "from": "luna",
+   "lines": [
+    "Luna was showing me the dumplings she made.",
+    "Did you eat any?",
+    "One. I tried to make the same shape with paper. The paper version was worse."
+   ]
+  },
+  {
+   "requires": "aside:4",
+   "lines": [
+    "I found the pigeon Reina told you about.",
+    "Did you get that champion's autograph?",
+    "No, but it stole a crumb from my breakfast. I'm counting that as a signed contract."
+   ]
+  }
+ ],
+ "akari": [
+  {
+   "requires": "everyday:2",
+   "lines": [
+    "I visited the bakery from my unplanned bus trip again.",
+    "You knew where you were going this time?",
+    "Yes. Oddly, the cinnamon rolls tasted just as good without the element of surprise."
+   ]
+  },
+  {
+   "requires": "character:3",
+   "lines": [
+    "I tried trusting my instinct during a practice hand.",
+    "Without writing down the probability first?",
+    "For one decision. I checked the numbers afterward. The instinct was right, but I enjoyed proving it."
+   ]
+  },
+  {
+   "requires": "character:2",
+   "from": "yuna",
+   "lines": [
+    "Yuna once told me Reina made her play without commentary.",
+    "Did it work?",
+    "Briefly. I suggested they time the silence. Reina refused to make it a competitive category."
+   ]
+  },
+  {
+   "requires": "aside:4",
+   "lines": [
+    "Shiori gave me a recipe from that strange cookbook.",
+    "Are you going to test it?",
+    "With measurements this time. The book says 'a generous whisper of salt,' which is not a unit."
+   ]
+  }
+ ],
+ "camila": [
+  {
+   "requires": "everyday:2",
+   "lines": [
+    "I ran into the person who got that disastrous birthday card.",
+    "Did they mind the ink-blot firework?",
+    "They framed it. I may stop buying expensive cards entirely."
+   ]
+  },
+  {
+   "requires": "character:3",
+   "lines": [
+    "Alma offered me cake without making a deal of it.",
+    "Did you try to negotiate?",
+    "I actually said thank you. She looked suspicious."
+   ]
+  },
+  {
+   "requires": "everyday:0",
+   "from": "reina",
+   "lines": [
+    "Reina has an ongoing dispute with a pigeon.",
+    "Who's winning?",
+    "I haven't seen a contract, so I refuse to recognize the bird's claim."
+   ]
+  },
+  {
+   "requires": "aside:4",
+   "lines": [
+    "Hana found another joke in the suggestion box.",
+    "Are you charging that pun fee now?",
+    "No. I've started a collection. A terrible pun is apparently a useful promotional resource."
+   ]
+  }
+ ],
+ "marina": [
+  {
+   "requires": "everyday:2",
+   "lines": [
+    "I passed that brass-bell bicycle again.",
+    "Did you ring the bell?",
+    "The owner did. I still looked around for someone waving at me."
+   ]
+  },
+  {
+   "requires": "character:3",
+   "lines": [
+    "The ferry schedule shifted again this morning.",
+    "Did you complain to Nereo first?",
+    "No. I checked the routes with him. We found a better connection before either of us got annoyed."
+   ]
+  },
+  {
+   "requires": "everyday:1",
+   "from": "alma",
+   "lines": [
+    "Alma told me about a pottery bowl that wobbles.",
+    "Did she fix it?",
+    "She put teaspoons in it. I think that's a much better use than trying to make it perfect."
+   ]
+  },
+  {
+   "requires": "aside:4",
+   "lines": [
+    "Nereo's smiling toolbox sticker now has a neighbor.",
+    "Another sticker?",
+    "A tiny painted sun. He claims he didn't notice. It's right beside the handle."
+   ]
+  }
+ ],
+ "kaede": [
+  {
+   "requires": "everyday:2",
+   "lines": [
+    "I have a new hairdresser now.",
+    "Anyone who won't ask about ceiling fans?",
+    "Exactly. She only asked whether I'd used scissors intended for paper. I declined to answer."
+   ]
+  },
+  {
+   "requires": "character:3",
+   "lines": [
+    "Elio brought more cookies to the arcade.",
+    "The ones he gave you after your apology?",
+    "These ones you can actually bite. He looked very pleased with himself."
+   ]
+  },
+  {
+   "requires": "everyday:2",
+   "from": "sol",
+   "lines": [
+    "Sol told me about her attempt to invent dessert soup.",
+    "Did you taste it?",
+    "No, but she offered me the recipe. I said I'd rather keep the surprise."
+   ]
+  },
+  {
+   "requires": "aside:4",
+   "lines": [
+    "Sol actually put a tie on Management.",
+    "The judgmental potato?",
+    "Yes. The carrot has a smaller one. Apparently my vegetables have office politics now."
+   ]
+  }
+ ],
+ "elio": [
+  {
+   "requires": "everyday:2",
+   "lines": [
+    "I tried baking cookies again.",
+    "Still need both hands to hold one?",
+    "No. The first batch was edible. I gave the recipe to Kaede, who promised not to mock me."
+   ]
+  },
+  {
+   "requires": "character:3",
+   "lines": [
+    "I found the old name sticker from my deck box.",
+    "The one your cousin gave you?",
+    "Yes. I kept it inside the box. I don't need to erase where it came from to make it mine."
+   ]
+  },
+  {
+   "requires": "everyday:1",
+   "from": "teo",
+   "lines": [
+    "Teo told me about his upstairs neighbor singing one line on repeat.",
+    "That sounds exhausting.",
+    "He learned the full song so he could sing the ending through the ceiling. I'm not sure that helped."
+   ]
+  },
+  {
+   "requires": "aside:4",
+   "lines": [
+    "Jun says Tuesday needs more sunlight.",
+    "The plant, not the weekday?",
+    "The plant. I didn't think I'd ever need to specify that, but here we are."
+   ]
+  }
+ ],
+ "alma": [
+  {
+   "requires": "everyday:2",
+   "lines": [
+    "Chairman came by again.",
+    "The biscuit-loving dog?",
+    "This time I didn't have any biscuits. He still stayed until I scratched behind his ears."
+   ]
+  },
+  {
+   "requires": "character:3",
+   "lines": [
+    "I finally fixed the crooked table's leg.",
+    "Did anyone lose their favorite spot?",
+    "No. They stayed just as long. I think the light was doing most of the work."
+   ]
+  },
+  {
+   "requires": "everyday:0",
+   "from": "iris",
+   "lines": [
+    "Iris says someone lost a hat no bigger than a plum.",
+    "Did she figure out whose it was?",
+    "She did. I asked whether the toy wanted a cup of tea while it waited."
+   ]
+  },
+  {
+   "requires": "aside:4",
+   "lines": [
+    "Teo ordered lunch without describing it as a tournament.",
+    "Was something wrong?",
+    "Not at all. He looked at me, paused, and said 'just a sandwich.' I thanked him for his restraint."
+   ]
+  }
+ ],
+ "nereo": [
+  {
+   "requires": "everyday:2",
+   "lines": [
+    "The boy who put that smiling star on my toolbox stopped by.",
+    "Did he check that it was still there?",
+    "First thing he did. I pretended not to notice how pleased he looked."
+   ]
+  },
+  {
+   "requires": "character:3",
+   "lines": [
+    "That boy came back to help with the dock sign.",
+    "More spare bolts?",
+    "This time he wanted to measure everything. I might have found myself an apprentice."
+   ]
+  },
+  {
+   "requires": "everyday:1",
+   "from": "jun",
+   "lines": [
+    "Jun recommended pistachio ice cream to a kid.",
+    "Did she take his advice?",
+    "Apparently not. Smart kid. Don't tell him I said that."
+   ]
+  },
+  {
+   "requires": "aside:4",
+   "lines": [
+    "Marina hung her orange painting near the ferry office.",
+    "The tiny suns?",
+    "That's the one. The room needed some color. I told her not to make a fuss about my saying so."
+   ]
+  }
+ ],
+ "elena": [
+  {
+   "requires": "everyday:2",
+   "lines": [
+    "I went back to karaoke with my friend.",
+    "Any better at singing now?",
+    "No. But I finally stopped apologizing between verses."
+   ]
+  },
+  {
+   "requires": "character:3",
+   "lines": [
+    "I gave someone a gift without waiting for a perfect occasion.",
+    "Another keychain?",
+    "A small notebook. She opened it immediately and started drawing. That was enough of an occasion."
+   ]
+  },
+  {
+   "requires": "character:0",
+   "from": "sierra",
+   "lines": [
+    "Sierra mentioned how much practice went into a match that looked easy.",
+    "It wasn't effortless after all?",
+    "Apparently not. I wish people saw the preparation rather than only the finished result."
+   ]
+  },
+  {
+   "requires": "aside:4",
+   "lines": [
+    "Iris has added a new line to the lost-and-found inventory.",
+    "Another tiny accessory?",
+    "A miniature umbrella. I'm beginning to believe her theory about a very small visitor."
+   ]
+  }
+ ],
+ "jinx": [
+  {
+   "requires": "everyday:2",
+   "lines": [
+    "I made that second quiet playlist I threatened to make.",
+    "Is it actually quiet?",
+    "Mostly. There are two loud songs in the middle. I couldn't help myself."
+   ]
+  },
+  {
+   "requires": "character:3",
+   "lines": [
+    "I found another page from that old neon-city sketchbook.",
+    "Another rooftop walkway?",
+    "A ridiculous vending machine this time. I think past me was hungry when she drew it."
+   ]
+  },
+  {
+   "requires": "character:1",
+   "from": "luna",
+   "lines": [
+    "Luna told me she finally cleared that brutal rhythm-game song.",
+    "Did you ask for a demonstration?",
+    "Of course. She beat it again while I was still fumbling with the settings."
+   ]
+  },
+  {
+   "requires": "aside:4",
+   "lines": [
+    "I sewed a tiny pair of boots for Barb's frog.",
+    "Combat boots?",
+    "Black ones. She says I owe Sir Puddleton a whole outfit now."
+   ]
+  }
+ ],
+ "luna": [
+  {
+   "requires": "everyday:2",
+   "lines": [
+    "I tried that rhythm-game song on a different controller.",
+    "Still able to beat it?",
+    "Not yet. But I'm enjoying learning the timing again, which surprised me."
+   ]
+  },
+  {
+   "requires": "character:3",
+   "lines": [
+    "I ordered at the busy café without anyone speaking for me.",
+    "How was it?",
+    "The cashier just asked which size I wanted. All my rehearsed answers were unnecessary."
+   ]
+  },
+  {
+   "requires": "everyday:1",
+   "from": "shiori",
+   "lines": [
+    "Shiori told me about a gray cat that waits outside the library.",
+    "Did you see it?",
+    "Yes. It watched me return a book as if it were checking the due date."
+   ]
+  },
+  {
+   "requires": "aside:4",
+   "lines": [
+    "Jinx taught me to fold the paper frog.",
+    "Did yours jump any better?",
+    "A little. She declared me head of quality control. I'm still not sure how to take that."
+   ]
+  }
+ ],
+ "rina": [
+  {
+   "requires": "everyday:2",
+   "lines": [
+    "I got all the tomato stains off the kitchen ceiling.",
+    "After the blender incident?",
+    "Almost all. I left one tiny spot as a warning to future me."
+   ]
+  },
+  {
+   "requires": "character:3",
+   "lines": [
+    "I actually took that evening off.",
+    "A blanket and a movie?",
+    "Exactly. I kept reaching for my phone, but eventually I forgot what time it was."
+   ]
+  },
+  {
+   "requires": "character:3",
+   "from": "luna",
+   "lines": [
+    "Luna said she was nervous about ordering at a busy café.",
+    "Did she go?",
+    "I don't know yet. I told her the menu doesn't bite, then worried that wasn't very helpful."
+   ]
+  },
+  {
+   "requires": "aside:4",
+   "lines": [
+    "Sierra has started another puzzle.",
+    "Any missing pieces this time?",
+    "Not that I know of. I offered to help, but apparently she's enjoying doing it alone."
+   ]
+  }
+ ],
+ "sierra": [
+  {
+   "requires": "everyday:2",
+   "lines": [
+    "I tried cooking that rice dish again.",
+    "With orange juice?",
+    "Water this time. It was much less exciting and substantially better."
+   ]
+  },
+  {
+   "requires": "character:3",
+   "lines": [
+    "I left my camera at home for a walk.",
+    "Did you miss taking photographs?",
+    "Once or twice. Then I noticed I could remember the whole conversation without checking a screen."
+   ]
+  },
+  {
+   "requires": "everyday:2",
+   "from": "rina",
+   "lines": [
+    "Rina told me about her blender disaster.",
+    "Did she really get sauce on the ceiling?",
+    "She showed me a photo. I offered to help clean, but she said the danger had passed."
+   ]
+  },
+  {
+   "requires": "aside:4",
+   "lines": [
+    "Rina says she's buying another pair of funny socks.",
+    "More bananas?",
+    "I hope not. She asked me to help choose between two very different kinds of fruit."
+   ]
+  }
+ ],
+ "sol": [
+  {
+   "requires": "everyday:2",
+   "lines": [
+    "I tried making dessert again.",
+    "Another bowl of soup?",
+    "No! It actually set this time. I'm keeping the original recipe under 'emergency beverages.'"
+   ]
+  },
+  {
+   "requires": "character:3",
+   "lines": [
+    "I took another walk with no unnecessary detours.",
+    "Did you stick to one cloud and home on time?",
+    "Almost. I stopped to pet a dog. I think that should count as a necessary detour."
+   ]
+  },
+  {
+   "requires": "character:3",
+   "from": "jun",
+   "lines": [
+    "Jun said I stole his clipboard to make him take a break.",
+    "Did he ever get it back?",
+    "After the ice cream. I don't keep trophies from my rescue missions."
+   ]
+  },
+  {
+   "requires": "aside:4",
+   "lines": [
+    "Management is demanding annual leave.",
+    "The potato?",
+    "Kaede says the little tie keeps falling off. I told her every executive needs a vacation."
+   ]
+  }
+ ],
+ "laca": [
+  {
+   "requires": "everyday:2",
+   "lines": [
+    "I found another paper airplane near the same bench.",
+    "Did you fix it again?",
+    "No, this one flew perfectly. I left it on the railing in case the mystery pilot came back."
+   ]
+  },
+  {
+   "requires": "character:3",
+   "lines": [
+    "I walked past our old lemonade stand corner.",
+    "Still think the sign was excellent?",
+    "Absolutely. We should have sold the sign instead of the lemonade."
+   ]
+  },
+  {
+   "requires": "everyday:1",
+   "from": "barb",
+   "lines": [
+    "Barb told me how she came home with lemons instead of bread.",
+    "That sounds like a fun mistake.",
+    "She made lemonade. I said we should enter the failed shopping trip into a competition."
+   ]
+  },
+  {
+   "requires": "aside:4",
+   "lines": [
+    "Hana let me draw a dragon on Basilisk's pot.",
+    "Is the basil officially a dragon now?",
+    "According to the label, yes. She says the plant looks more confident already."
+   ]
+  }
+ ],
+ "jun": [
+  {
+   "requires": "everyday:2",
+   "lines": [
+    "Tuesday has acquired a second leaf.",
+    "Your mysterious Friday plant?",
+    "The very one. I considered calling the new leaf Wednesday, but decided against it."
+   ]
+  },
+  {
+   "requires": "character:3",
+   "lines": [
+    "Sol tried to schedule another ice-cream break for me.",
+    "Did she steal your clipboard again?",
+    "No. I put the break on the schedule myself. She looked almost disappointed."
+   ]
+  },
+  {
+   "requires": "everyday:2",
+   "from": "elio",
+   "lines": [
+    "Elio offered me one of his homemade cookies.",
+    "Were they good?",
+    "They were hard enough to count as building material. He's already promised to try again."
+   ]
+  },
+  {
+   "requires": "aside:4",
+   "lines": [
+    "Elio's shoes stopped squeaking in the hall.",
+    "Missing your built-in arrival alarm?",
+    "A little. I've been checking the door more often than I'd like to admit."
+   ]
+  }
+ ],
+ "teo": [
+  {
+   "requires": "everyday:2",
+   "lines": [
+    "The rocket alarm clock nearly launched me out of bed.",
+    "Still waking you on time?",
+    "Yes. Now I keep it at the far end of the room so I have to walk to the launch pad."
+   ]
+  },
+  {
+   "requires": "character:3",
+   "lines": [
+    "I tried giving the sandwich another sports commentary.",
+    "Did the cheese make a comeback?",
+    "Down to the final bite! A last-second upset! Iris told me to eat before the bread got cold."
+   ]
+  },
+  {
+   "requires": "everyday:2",
+   "from": "iris",
+   "lines": [
+    "Iris is practicing a coin trick.",
+    "Has she made it disappear yet?",
+    "She has. The problem is finding it. I've offered to narrate the search."
+   ]
+  },
+  {
+   "requires": "aside:4",
+   "lines": [
+    "Iris has me stacking chairs before I can rehearse now.",
+    "Still sore about being corrected?",
+    "Not at all. I can carry more chairs than I could last week. It's unexpectedly satisfying."
+   ]
+  }
+ ],
+ "iris": [
+  {
+   "requires": "everyday:2",
+   "lines": [
+    "My missing coin turned up.",
+    "The one from your trick?",
+    "Yes. In the pocket I thought I'd checked five times. The trick works better when I can find the prop."
+   ]
+  },
+  {
+   "requires": "character:3",
+   "lines": [
+    "A visitor thanked me for last night's event.",
+    "Did you list the entire staff again?",
+    "No. I said thanks, then sent the team a message afterward. Much better."
+   ]
+  },
+  {
+   "requires": "everyday:2",
+   "from": "teo",
+   "lines": [
+    "Teo has an alarm clock shaped like a rocket.",
+    "You can probably hear it across the hall.",
+    "I've threatened to bill him for unsolicited launch announcements. He says it's part of the atmosphere."
+   ]
+  },
+  {
+   "requires": "aside:4",
+   "lines": [
+    "Teo has actually been rehearsing in a proper room.",
+    "No more mop applause?",
+    "Not yet. The cleaner asked if she could still come to the performances."
+   ]
+  }
+ ],
+ "barb": [
+  {
+   "requires": "everyday:2",
+   "lines": [
+    "Someone asked me to letter a sign after seeing my handwriting.",
+    "The beautiful but unreadable script?",
+    "Exactly. I said yes, then wrote everything in block capitals so customers could actually read it."
+   ]
+  },
+  {
+   "requires": "character:3",
+   "lines": [
+    "My friend wore that outfit to another café.",
+    "Still tugging at the sleeves?",
+    "Not once. She ordered first and took the best seat. I couldn't stop smiling."
+   ]
+  },
+  {
+   "requires": "everyday:1",
+   "from": "jinx",
+   "lines": [
+    "Jinx has a flowerpot called Classified.",
+    "Does she know what's growing in it?",
+    "Not yet. I offered to make it a proper label, but she says that defeats the purpose."
+   ]
+  },
+  {
+   "requires": "aside:4",
+   "lines": [
+    "The patch kit for Jinx is ready.",
+    "Did you get her approval?",
+    "She picked the thread color in five seconds, then spent half an hour choosing a name for the case."
+   ]
+  }
+ ]
+};
+ // Append-only ordering: existing aside IDs 0–5 remain save compatible.
+ for(const [npc,rows] of Object.entries(wave3Asides))asides[npc].push(...rows);
  const plain=x=>!!x&&typeof x==='object'&&!Array.isArray(x);
  const hash=value=>{let h=2166136261;for(const c of String(value))h=Math.imul(h^c.charCodeAt(0),16777619)>>>0;return h;};
  const key=(npc,topic)=>npc+':'+topic;
@@ -1930,7 +2704,7 @@
    }
   }
   for(const [npc,rows] of Object.entries(asides)){
-   if(!threads[npc]||rows.length!==6)errors.push(npc+': asides');
+   if(!threads[npc]||rows.length!==10)errors.push(npc+': asides');
    for(const [i,row] of rows.entries()){
     if(!asideRequirement(npc,row,i))errors.push(npc+': invalid prerequisite '+i);
     if(row.lines.length!==3||row.lines.some(x=>typeof x!=='string'||!x.trim()))errors.push(npc+': aside format '+i);
