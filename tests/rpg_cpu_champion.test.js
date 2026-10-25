@@ -6,8 +6,8 @@ const {NPC_PROFILES}=require('../cpu_profiles');
 const {configuration,SKILLS}=require('../cpu_policy');
 const {RPG_CPU_LEVEL,forRpgDuel,upgradeRpgSession}=require('../rpg_cpu_config');
 
-test('RPG Mastermind is the strongest benchmarked RPG tier, including guest NPCs',()=>{
- assert.equal(RPG_CPU_LEVEL,7,'campaign AI uses the benchmarked Mastermind policy');
+test('RPG uses the highest supported CPU tier for named and guest opponents',()=>{
+ assert.equal(RPG_CPU_LEVEL,Math.max(...Object.keys(SKILLS).map(Number)),'campaign AI uses the strongest configured skill');
  const service=new ClassicLocalService();
  for(const [npc,profile] of Object.entries(NPC_PROFILES)){
   const params=forRpgDuel({deck:'brushfire',opponent:'blackout',npcDeckId:npc,seed:110,
@@ -53,12 +53,19 @@ test('Older local and cloud checkpoints are promoted without changing duel state
   evolutionTempo:false,energyHorizon:false});
  const oldSession={cpuConfig:oldChampion,revision:3,game};
  upgradeRpgSession(oldSession);
- assert.equal(oldSession.cpuConfig.level,7,'cloud save from Champion is promoted');
+ assert.equal(oldSession.cpuConfig.level,RPG_CPU_LEVEL,'cloud save from Champion is promoted');
  assert.equal(oldSession.cpuConfig.evolutionTempo,true,'old explicit false must not disable new RPG tactics');
  assert.equal(oldSession.cpuConfig.energyHorizon,true,'old explicit false must not disable new RPG tactics');
  assert.equal(oldSession.cpuConfig.personality,'tactical');
  assert.equal(oldSession.cpuConfig.seed,431);
  assert.equal(oldSession.game,game);
+ const savedNpc={npc:'reina',cpuConfig:configuration({level:5,personality:'balanced',seed:91}),game,revision:2};
+ upgradeRpgSession(savedNpc);
+ assert.equal(savedNpc.cpuConfig.level,RPG_CPU_LEVEL);
+ assert.equal(savedNpc.cpuConfig.personality,NPC_PROFILES.reina.personality,
+  'a restored named character retains the canonical personality from the current roster');
+ assert.equal(savedNpc.game,game);
+ assert.equal(savedNpc.revision,2);
  const updated=session.cpuConfig;
  upgradeRpgSession(session);
  assert.equal(session.cpuConfig,updated,'already upgraded checkpoints are left intact');
