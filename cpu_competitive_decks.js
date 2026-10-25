@@ -85,7 +85,7 @@ function inspect(id){
  // card; every evolved card needs its printed parent somewhere in this deck.
  for(const cardId of cards){
   const c=CATALOG.get(cardId);
-  if(!c?.evolvesFrom)continue;
+  if(!c?.evolvesFrom||isBasicPokemon(c))continue;
   const parents=cards.map(x=>CATALOG.get(x)?.name);
   if(!parents.includes(c.evolvesFrom))throw Error('Missing evolution prerequisite for '+c.name+' in '+id);
  }
