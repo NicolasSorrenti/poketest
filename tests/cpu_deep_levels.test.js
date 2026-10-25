@@ -56,3 +56,57 @@ test('single matches accept opt-in advanced levels while preserving default Leve
   assert.equal(duel.cpu.level,level);
  }
 });
+
+
+test('turn planner reserves valuable cards instead of assigning all hand cards equal cost',()=>{
+ const P=require('../cpu_lookahead');
+ const catalog=id=>({
+  oak:{supertype:'Trainer',name:'Professor Oak'},
+  search:{supertype:'Trainer',name:'Computer Search'},
+  potion:{supertype:'Trainer',name:'Potion'},
+  energy:{supertype:'Energy',name:'Fighting Energy'},
+  special:{supertype:'Energy',name:'Double Colorless Energy'},
+  basic:{supertype:'Pokémon',name:'Machop'}
+ })[id];
+ assert.ok(P.reserveValue('search',catalog)>P.reserveValue('potion',catalog));
+ assert.ok(P.reserveValue('oak',catalog)>P.reserveValue('basic',catalog));
+ assert.ok(P.reserveValue('special',catalog)>P.reserveValue('energy',catalog));
+});
+test('opponent response uses visible attacks, discounts bench switching, and respects disabling status',()=>{
+ const P=require('../cpu_lookahead');
+ const our={hp:90,damage:20};
+ const o={turnSerial:3,self:{active:our},opponent:{
+  active:{hp:60,damage:0,dmg:80,status:null},bench:[{dmg:70,hp:90,damage:0}]}};
+ const helpers={hpRemaining:u=>u.hp-u.damage,projectedAttackValue:u=>u.dmg||0,
+  strongestAffordableAttack:u=>u.dmg||0};
+ const threat=P.publicCounterplay(o,helpers);
+ assert.equal(threat.koChance,1);
+ assert.ok(threat.expected>=80);
+ o.opponent.active.status='Asleep';
+ const blocked=P.publicCounterplay(o,helpers);
+ assert.equal(blocked.koChance,0);
+ assert.ok(blocked.expected<25,'visible ready Bench is only a possible switch, not an assumed free swap');
+});
+test('end-of-turn evaluation rewards preserving a backup against an affordable counter-KO',()=>{
+ const P=require('../cpu_lookahead');
+ const o={phase:'game',turnSerial:9,self:{
+  active:{id:'hit',hp:70,damage:20,energies:[]},
+  hand:[],bench:[],prizeCount:2,deckCount:22
+ },opponent:{active:{id:'opp',hp:100,damage:0,dmg:90},bench:[],prizeCount:2}};
+ const helper={
+  card:()=>({supertype:'Pokémon',hp:70,attacks:[]}),
+  hpRemaining:u=>u.hp-u.damage,
+  projectedAttackValue:u=>u.dmg||0,
+  strongestAffordableAttack:u=>u.dmg||0,
+  candidates:()=>[],
+  score:()=>0,
+  attackBonus:()=>0,
+  knockoutChance:()=>0
+ };
+ const cfg={side:1,level:8,style:{survival:1}};
+ const alone=P.evaluateTurn(o,cfg,helper);
+ const backup=structuredClone(o);
+ backup.self.bench=[{id:'rat',hp:50,damage:0,dmg:30}];
+ assert.ok(P.evaluateTurn(backup,cfg,helper)>alone,
+  'the AI should not leave itself exposed to losing its final Pokémon');
+});
