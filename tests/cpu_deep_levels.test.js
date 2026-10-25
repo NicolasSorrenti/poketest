@@ -29,7 +29,7 @@ test('three advanced levels configure increasing bounded search, without changin
   assert.equal(c.skill,AI.SKILLS[i]);
  }
  assert.throws(()=>AI.configuration({level:9}),/1–8/);
- assert.equal(RPG_CPU_LEVEL,5,'experimental levels must be opt-in until measured');
+ assert.equal(RPG_CPU_LEVEL,7,'Level 7 was promoted after mirrored and held-out RPG trials');
 });
 test('Level 6–8 decisions are legal, deterministic and independent of hidden enemy cards and future RNG',()=>{
  const g=midgame();
