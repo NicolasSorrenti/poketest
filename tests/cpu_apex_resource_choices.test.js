@@ -14,10 +14,10 @@ test('Apex strongly rejects PlusPower with no affordable attack',()=>{
 });
 test('Computer Search prioritizes Energy unlocking an attack over Onix',()=>{
  const x=o();x.self.active=unit('base1-2',['base1-102','base1-102']);
- const d={kind:'single',label:'Search your deck for any card'};
+ const d={id:'search-choice',kind:'single',label:'Search your deck for any card'};
  const energy={id:'deck:12',label:'Water Energy'};
  const onix={id:'deck:13',label:'Onix'};
  const e=AI.candidates({...x,decision:{...d,actor:1,options:[energy,onix],min:1,max:1}},cfg,{trainers:0,powers:0,powerKeys:new Set(),stadium:false});
  assert.ok(e.length>0);
- assert.equal(e[0].payload?.ids?.[0]||e[0].payload?.choice||e[0].payload?.id||'',energy.id);
+ assert.equal(e[0].payload.selected[0],energy.id);
 });
