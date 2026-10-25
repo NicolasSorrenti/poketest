@@ -218,7 +218,7 @@ test('Apex counterplay prefers a guaranteed winning KO to leaving a ready reply'
   'securing the final Prize removes a hypothetical following counterattack');
 });
 test('Apex returned game remains valid across varied legal matches',()=>{
- const {countCards}=require('../headless_duel');
+ const {countCards}=require('../core_rules');
  for(const seed of [2301,2302,2303,2304,2305,2306]){
   const g=createGame({decks:[deck,deck],seed,format:'classic'});
   const started=AI.driveSide(g,{side:0,level:5,seed:seed+1}).game;
