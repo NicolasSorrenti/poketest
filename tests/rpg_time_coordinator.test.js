@@ -28,3 +28,11 @@ test('coordinator rejects invalid clocks before writing',()=>{
  for(const amount of [0,-1,1.5,271])assert.throws(()=>TIME.advanceClock(s,amount),/Invalid/);
  assert.equal(JSON.stringify(s),before);
 });
+
+test('meeting conflict order follows slot chronology rather than booking ID',()=>{
+ const state={day:5,slot:0,appointments:[
+  booked(1,5,2),booked(9,5,0),booked(4,5,1),booked(3,6,0)
+ ]};
+ assert.deepEqual(TIME.conflicts(state,3).map(x=>x.id),[9,4,1]);
+ assert.deepEqual(TIME.conflicts(state,4).map(x=>x.id),[9,4,1,3]);
+});
