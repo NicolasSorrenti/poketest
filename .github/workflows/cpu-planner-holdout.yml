@@ -8,6 +8,8 @@ on:
       - 'scripts/benchmark-cpu-advanced.js'
       - 'scripts/benchmark-cpu-rpg-advanced.js'
       - 'tests/cpu_deep_levels.test.js'
+      - 'tests/rpg_cpu_champion.test.js'
+      - 'rpg_cpu_config.js'
       - '.github/workflows/cpu-planner-holdout.yml'
 jobs:
   level7-holdout:
@@ -18,8 +20,8 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - name: Full-turn CPU planner regressions
-        run: node --test tests/cpu_deep_levels.test.js
+      - name: Full-turn CPU planner and RPG promotion regressions
+        run: node --test tests/cpu_deep_levels.test.js tests/rpg_cpu_champion.test.js
       - name: Independent 400-match general seed sample
         run: node scripts/benchmark-cpu-advanced.js --level 7 --pairs 25 --max-turns 120 --fixtures 8 --seed 94723
       - name: Independent 144-match RPG deck seed sample
