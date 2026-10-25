@@ -169,6 +169,23 @@ const acknowledgeMandatory=async(page)=>{
   await page.locator('#preDuelNext').click();
   assert.equal((await readState(page)).pendingDuel.preview.index,1);
   assert.equal(await page.locator('#preDuelStart').isVisible(),true);
+  // Back works after a reload and after advancing the dialogue.
+  const beforeCancel=await readState(page);
+  await page.locator('#preDuelBack').click();
+  await page.locator('#preDuelDialog').waitFor({state:'hidden'});
+  const cancelled=await readState(page);
+  assert.equal(cancelled.pendingDuel,null,'Back cancels the staged duel');
+  assert.equal(cancelled.day,beforeCancel.day,'Cancel must not advance the day');
+  assert.equal(cancelled.slot,beforeCancel.slot,'Cancel must not spend a period');
+  assert.equal(cancelled.results.length,beforeCancel.results.length,'Cancel must not record a match result');
+  assert.equal(cancelled.credits,beforeCancel.credits,'Cancel must not change rewards');
+  assert.equal(await page.locator('#battle').getAttribute('src'),'about:blank');
+  assert.equal(await page.evaluate(id=>sessionStorage.getItem('neoRpgNpcDeck:'+id),stagedId),null);
+  assert.equal(await page.evaluate(id=>sessionStorage.getItem('neoRpgDeck:'+id),stagedId),null);
+  await page.locator('#characterActions button').filter({hasText:'Duel'}).click();
+  await page.locator('#preDuelDialog').waitFor({state:'visible'});
+  assert.notEqual((await readState(page)).pendingDuel.id,stagedId,'Reentry stages a fresh identity');
+  await page.locator('#preDuelNext').click();
   await page.locator('#preDuelStart').click();
   const pending=(await readState(page)).pendingDuel;
   assert.equal(pending.preview.phase,'launched');
