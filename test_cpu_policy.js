@@ -9,7 +9,7 @@ const deck=[...Array(4).fill(IDS.hit),...Array(4).fill(IDS.rat),...Array(4).fill
  ...Array(4).fill(IDS.bill),...Array(4).fill(IDS.potion),...Array(4).fill(IDS.gust),
  ...Array(4).fill(IDS.switch),...Array(32).fill(IDS.fight)];
 assert.equal(deck.length,60);
-assert.equal(Object.keys(AI.SKILLS).length,5);
+assert.equal(Object.keys(AI.SKILLS).length,8);
 assert.equal(Object.keys(AI.PERSONALITIES).length,6);
 assert.throws(()=>AI.configuration({level:0}),/1/);
 assert.throws(()=>AI.configuration({personality:'cheater'}),/personality/);
