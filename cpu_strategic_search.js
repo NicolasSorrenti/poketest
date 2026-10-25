@@ -42,44 +42,50 @@ function oneEnergyThreat(attacker,target,helpers,turnSerial=0){
 // Adversarial but limited: distinguish "attack didn't KO" from "their bench
 // is promoted after a KO". The ready opponent chooses its strongest visible
 // reply. Hidden Energy and a future Gust are *not* guaranteed.
+// The shared end-of-turn evaluator already penalizes the opponent's AVAILABLE
+// attacks (including post-KO Bench replies). Apex should not count that risk
+// twice: this *additional* premium covers only an uncertain extra Energy
+// attachment on the opponent's future turn. Hidden cards remain unknown.
 function counterplayExposure(o,helpers){
  const own=o.self,enemy=o.opponent;
  if(!own?.active||!enemy?.active)return 0;
  const {projectedAttackValue,hpRemaining,knockoutChance,card,candidates}=helpers;
  const hp=hpRemaining(own.active),endGameRisk=enemy.prizeCount===1||own.bench.length===0;
+ if(hp<=0)return 0;
  const riskMultiplier=endGameRisk?155:92;
  const ready=attacker=>attacker&&!['Asleep','Paralyzed'].includes(attacker.status)?
   projectedAttackValue(attacker,own.active,o.turnSerial):0;
- const uncertain=attacker=>oneEnergyThreat(attacker,own.active,helpers,o.turnSerial);
- const activeResponse=ready(enemy.active)+MAX_REPLY_WEIGHT*uncertain(enemy.active);
- const benchResponse=enemy.bench.reduce((v,u)=>
-  Math.max(v,ready(u)+MAX_REPLY_WEIGHT*uncertain(u)),0);
- const switchedResponse=Math.max(activeResponse,activeResponse*.82+benchResponse*.18);
- const afterKnockout=benchResponse; // Opponent chooses a replacement to become Active.
+ const uncertain=attacker=>MAX_REPLY_WEIGHT*oneEnergyThreat(
+  attacker,own.active,helpers,o.turnSerial);
+ const activeReady=ready(enemy.active),activeExtra=uncertain(enemy.active);
+ const benchReady=enemy.bench.reduce((v,u)=>Math.max(v,ready(u)),0);
+ const benchFuture=enemy.bench.reduce((v,u)=>Math.max(v,ready(u)+uncertain(u)),0);
  const attacks=candidates(o,{side:o.turn,level:8,skill:{trainers:10,bench:4}},{
   trainers:0,powers:0,powerKeys:new Set(),stadium:false
  }).filter(a=>a.type==='attack');
- // Evaluate the attack we could actually perform after preparation.
- // End turn without an attack is possible but not ideal.
- let minExposure=switchedResponse;
- if(attacks.length){
-  minExposure=Infinity;
+ function exposure(futureEnergy){
+  const active=activeReady+(futureEnergy?activeExtra:0);
+  const bench=futureEnergy?benchFuture:benchReady;
+  const switched=Math.max(active,active*.82+bench*.18);
+  if(!attacks.length)return switched;
+  let lowest=switched;
   for(const a of attacks){
-   const atk=(own.active.effectiveAttacks||card(own.active.id)?.attacks||[])[a.payload.attackIndex];
+   const atk=(own.active.effectiveAttacks||card(own.active.id)?.attacks||[])
+    [a.payload.attackIndex];
    if(!atk)continue;
    const ko=knockoutChance(atk,own.active,enemy.active);
-   const attackWins=(own.prizeCount===1||!enemy.bench.length);
-   // A winning KO prevents counterplay; even a certain non-winning KO
-   // exposes us only to their visible promoted bench.
-   const incoming=attackWins?switchedResponse*(1-ko):
-    switchedResponse*(1-ko)+afterKnockout*ko;
-   minExposure=Math.min(minExposure,incoming);
+   const winOnKO=own.prizeCount===1||!enemy.bench.length;
+   const incoming=(1-ko)*switched+
+    (winOnKO?0:ko*bench);
+   lowest=Math.min(lowest,incoming);
   }
-  if(!Number.isFinite(minExposure))minExposure=switchedResponse;
+  return lowest;
  }
- const nearKO=clamp(minExposure/Math.max(10,hp),0,1.5);
- const danger=nearKO>=1?riskMultiplier:riskMultiplier*.36*nearKO;
- return danger;
+ const penalty=value=>{
+  const fraction=clamp(value/Math.max(10,hp),0,1.5);
+  return fraction>=1?riskMultiplier:riskMultiplier*.36*fraction;
+ };
+ return clamp(penalty(exposure(true))-penalty(exposure(false)),0,riskMultiplier);
 }
 
 // Same ordered list of root candidates, with deterministic coverage for
