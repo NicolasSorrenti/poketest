@@ -470,7 +470,7 @@ function choiceValue(option,decision,o,cfg){
   }
   return own?setupValue(target):110-hpRemaining(target);
  }
- if(/^deck:/.test(id)&&cfg?.level>=8&&/Computer Search/i.test(ctx)){
+ if(/^deck:/.test(id)&&cfg?.level>=8&&/^Search your deck for any card$/i.test(ctx)){
   // Prefer an Energy that makes the Active attack *this turn* over an
   // attractive but tactically irrelevant Basic Pokémon.
   // Deck option IDs are indices, not card IDs. Resolve by the public
