@@ -470,6 +470,18 @@ function choiceValue(option,decision,o,cfg){
   }
   return own?setupValue(target):110-hpRemaining(target);
  }
+ if(/^deck:/.test(id)&&cfg?.level>=8&&/Computer Search/i.test(ctx)){
+  // Prefer an Energy that makes the Active attack *this turn* over an
+  // attractive but tactically irrelevant Basic Pokémon.
+  const candidateId=id.slice(5);
+  const candidate=card(candidateId);
+  if(candidate&&isEnergy(candidate)&&!o.self.energyUsed&&o.self.active&&o.opponent.active){
+   const before=strongestAffordableAttack(o.self.active,o.opponent.active);
+   const after=damageAfterAttachment(o.self.active,candidateId,o.opponent.active);
+   if(before===0&&after>0)return 1000+after;
+   if(after>before)return 450+after;
+  }
+ }
  if(/^hand:|^deck:/.test(id))return /Energy/i.test(label)?20:40;
  if(/draw|recover|search|attach|heal/i.test(ctx))return 15;
  return 0;
@@ -763,7 +775,10 @@ function score(a,o,cfg,used){
   if(/Search|Computer|Ball|Trader|Elm/i.test(name))return 130*style.setup;
   if(name==='PlusPower'){
    const damage=strongestAffordableAttack(p.active,q.active),needed=hpRemaining(q.active)-damage;
-   return (damage>0&&needed>0&&needed<=10?300:cfg.level>=3?45:118)*style.damage;
+   // PlusPower only boosts an attack that can actually be paid for.
+   // Preserve the card when the Active cannot attack this turn.
+   return (damage>0&&needed>0&&needed<=10?300:
+    cfg.level>=8&&damage<=0?-500:cfg.level>=3?45:118)*style.damage;
   }
   if(/Defender|Berry|Focus Band/i.test(name))return 115*style.survival;
   return 75;
