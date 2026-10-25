@@ -153,3 +153,8 @@
 :root[data-rpg-discreet="on"] .radar-person-avatar .rpg-safe-avatar{display:block;width:100%;height:100%;object-fit:contain;background:transparent}
 :root[data-rpg-discreet="on"] .radar-person:has(.radar-person-avatar){grid-template-columns:54px minmax(0,1fr);column-gap:10px;align-items:center}
 :root[data-rpg-discreet="on"] .radar-person .radar-person-avatar~strong,:root[data-rpg-discreet="on"] .radar-person .radar-person-avatar~small{grid-column:2}
+
+/* RPG battles expose the same Discreet Mode preference as the overworld. */
+.duel-utility-toolbar #rpgDiscreetToggle[hidden]{display:none!important}
+.duel-utility-toolbar #rpgDiscreetToggle{white-space:nowrap;min-width:max-content}
+:root[data-rpg-discreet="on"] .duel-utility-toolbar #rpgDiscreetToggle{background:#224e60;border-color:#8cbacc;color:#e9f9ff}
