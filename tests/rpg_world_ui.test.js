@@ -8,7 +8,7 @@ const NpcDecks=require('../rpg_npc_deck_progression');
 const Tutorials=require('../rpg_tutorials');
 const SceneCast=require('../rpg_scene_cast');
 const EventInvites=require('../rpg_event_invites');
-const js=fs.readFileSync(path.join(__dirname,'..','rpg.js'),'utf8').replace(/\}\)\(\);\s*$/, 'window.__testRpgAction=act;})();');
+const js=fs.readFileSync(path.join(__dirname,'..','rpg.js'),'utf8').replace(/\}\)\(\);\s*$/, 'window.__testRpgAction=act;window.__testRpgSelect=selectPerson;})();');
 const RenderPerf=require('../rpg_render_perf');
 const html=fs.readFileSync(path.join(__dirname,'..','rpg.html'),'utf8');
 const ids=[...html.matchAll(/id="([^"]+)"/g)].map(x=>x[1]);
