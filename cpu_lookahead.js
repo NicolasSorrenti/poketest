@@ -71,6 +71,15 @@ function evaluateTurn(o,cfg,helpers){
  // The entire hand is visible to its owner. Preserve search cards/secondary
  // evolution pieces and special Energy when attack gains do not justify costs.
  const handReserve=(own.hand||[]).reduce((n,id)=>n+reserveValue(id,card),0);
+ // Attached Energy is still an invested resource. A retreat or Trainer that
+ // discards it must have a tactical payoff, while a useful attachment should
+ // not be treated as if an Energy card simply disappeared from the hand.
+ const committed=(own.active.energies||[]).reduce((n,id)=>n+reserveValue(id,card),0)+
+  own.bench.reduce((n,u)=>n+(u.energies||[]).reduce((v,id)=>v+reserveValue(id,card),0),0);
+ const maxPrintedCost=Math.max(0,...(card(own.active.id)?.attacks||[])
+  .map(a=>(a.cost||[]).length));
+ const excess=Math.max(0,(own.active.energies||[]).length-maxPrintedCost);
+ const overcommitPenalty=excess*12;
  const backups=benchCount===0?-80:benchCount===1?20:benchCount===2?28:32;
  const readyBench=own.bench.reduce((best,u)=>
   Math.max(best,strongestAffordableAttack(u,enemy.active)),0);
@@ -78,7 +87,7 @@ function evaluateTurn(o,cfg,helpers){
  // A failed search still has a meaningful value: passing safely with a backup.
  const risk=counter.koChance*(enemyPrizes===1?155:95)*(benchCount?0.55:1);
  const scarceDeck=own.deckCount<=2?-90:own.deckCount<=5?-25:0;
- return Math.max(attacks,70)+position+handReserve*0.32-risk+scarceDeck;
+ return Math.max(attacks,70)+position+handReserve*0.32+committed*0.30-overcommitPenalty-risk+scarceDeck;
 }
 function rankWithLookahead(game,cfg,used,ranked,helpers){
  const budget=cfg.skill.searchNodes||0,depth=cfg.skill.searchDepth||0;
