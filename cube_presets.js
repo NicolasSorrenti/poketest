@@ -19,6 +19,7 @@ const PRESETS=Object.freeze([
  {id:'evolution_eras',name:'Evolution Masters · Base to Neo Destiny',description:'All-era draft emphasizing evolution chains, rather than rewarding only standalone Basic Pokémon.',archetypes:['Stage 1 lines','Stage 2 payoffs','Cross-era support','Setup'],pokemon:178,trainers:62},
  {id:'haymaker_kanto',name:'Kanto Haymaker Cube · Base / Jungle / Fossil',description:'Draft your own fast Basic-only 40-card deck from 240 Pokémon and Trainer cards. Not a preset Haymaker deck.',archetypes:['Fast Basics','Color pressure','Status','Draw and disruption'],pokemon:140,trainers:100},
  {id:'haymaker_eras',name:'All-Era Haymaker Cube · Base to Neo Destiny',description:'Draft 240 curated Basic Pokémon and Trainers across supported eras; assemble your own Haymaker deck after picking.',archetypes:['Fast Basics','Neo and Gym threats','Status','Trainer tempo'],pokemon:140,trainers:100}
+ ,{id:'dual_energy',name:'Dual Energy Lab · Base to Neo Destiny',description:'A fixed 240-card multicolor draft built around Pokémon whose attacks or verified Powers reward different basic Energy types. Supporting Basics keep evolution lines playable.',archetypes:['Water / Psychic','Lightning / Water','Grass / Psychic','Fighting splashes','Energy decisions'],pokemon:156,trainers:84}
 ].map(p=>Object.freeze({...p,archetypes:Object.freeze(p.archetypes)})));
 // These four formats are curated, fixed 240-card Cubes. The draft seed only
 // shuffles the packs; it must never silently change which cards the Cube owns.
@@ -26,7 +27,8 @@ const FIXED_CUBE_SEEDS=Object.freeze({
  evolution_kanto:0x4b414e54,
  evolution_eras:0x45564f4c,
  haymaker_kanto:0x484b414e,
- haymaker_eras:0x48414c4c
+ haymaker_eras:0x48414c4c,
+ dual_energy:0x4455414c
 });
 const BY_ID=Object.freeze(Object.fromEntries(PRESETS.map(p=>[p.id,p])));
 function getPreset(id='balanced'){
@@ -52,6 +54,7 @@ function rocket(c,id){
 function isHaymakerCube(preset){return preset==='haymaker_kanto'||preset==='haymaker_eras';}
 function isKantoCube(preset){return ['foundations','evolution_kanto','haymaker_kanto'].includes(preset);}
 function candidateIds(preset){
+ if(preset==='dual_energy')return [...new Set(require('./cube_dual_energy').makeDualEnergyPool())];
  const fromThemes=eligibleIds();
  const haymakerIds=isHaymakerCube(preset)?
   HAYMAKER.entries.flatMap(entry=>HAYMAKER.list(entry.id)).filter(supported):[];
@@ -126,6 +129,7 @@ function makePresetPool({preset='balanced',size=240,seed=1}={}){
  if(config.id==='balanced')return require('./cube_draft').makePool({size,seed});
  if(!Number.isInteger(size)||size!==240)throw Error('Themed Cube presets require 240 cards');
  if(!Number.isSafeInteger(seed)||seed<0||seed>0xffffffff)throw Error('Invalid Cube seed');
+ if(preset==='dual_energy')return require('./cube_dual_energy').makeDualEnergyPool();
  const random=rng(FIXED_CUBE_SEEDS[preset]??seed);
  const all=candidateIds(preset);
  const pokemon=all.filter(id=>card(id).supertype==='Pokémon');
