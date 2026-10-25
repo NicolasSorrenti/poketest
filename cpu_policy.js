@@ -626,6 +626,17 @@ function energyHorizonBonus(action,o,cfg){
  const surplus=direct===0&&changed-before<=1?-35:0;
  return Math.max(-85,Math.min(160,expected+activeBias+weakDefense+surplus))*cfg.style.setup;
 }
+// Pokémon Center heals the whole team but discards Energy from each healed
+// Pokémon. Preserve attachments until after the heal, including Energy in
+// hand that would otherwise be thrown away in the same turn.
+function pokemonCenterPending(o){
+ return (o.self.hand||[]).some(id=>card(id)?.name==='Pokémon Center')&&
+  [o.self.active,...o.self.bench].some(u=>u&&u.damage>=10);
+}
+function pokemonCenterEnergyWaste(o,slot){
+ const u=slotUnit(o.self,slot);
+ return !!(u&&u.damage>=10&&pokemonCenterPending(o));
+}
 function score(a,o,cfg,used){
  const p=o.self,q=o.opponent,style=cfg.style,{type,payload:v}=a;
  if(type==='setup_bonus_draw')return 300;
@@ -677,6 +688,10 @@ function score(a,o,cfg,used){
  }
  if(type==='attach_energy'){
   const unit=slotUnit(p,v.slot),value=energyValue(unit,p.hand[v.handIndex]);
+  // This attachment will be discarded if Center heals its target later.
+  // Penalize it enough to force the zero-cost heal first; a follow-up
+  // attachment is then evaluated normally against the healed board.
+  if(cfg.level>=8&&pokemonCenterEnergyWaste(o,v.slot))return -1000;
   if(cfg.level===1)return 110+value*style.setup+(v.slot===-1?20:0);
   // One-step public-state projection: evaluate the attacks unlocked by the
   // Energy without calling reduce() to peek at future flips or hidden cards.
@@ -736,6 +751,13 @@ function score(a,o,cfg,used){
   }
   if(name==='Energy Removal')return (q.active?.energies?.length?200:140)*style.control;
   if(/Lass|Rocket|Scoop/i.test(name))return (q.active?.energies?.length?160:75)*style.control;
+  if(name==='Pokémon Center'){
+   const damaged=[p.active,...p.bench].filter(u=>u&&u.damage>=10);
+   const healed=damaged.reduce((n,u)=>n+u.damage,0);
+   const lost=damaged.reduce((n,u)=>n+(u.energies?.length||0),0);
+   return cfg.level>=8?(healed*1.5-lost*65+110)*style.survival:
+    (p.active?.damage||0)>=20?168*style.survival:40;
+  }
   if(/Potion|Center|Heal/i.test(name))return (p.active?.damage||0)>=20?168*style.survival:40;
   if(name==='Switch')return p.active?.status?210*style.survival:55;
   if(/Search|Computer|Ball|Trader|Elm/i.test(name))return 130*style.setup;
@@ -872,8 +894,16 @@ function chooseAction(game,raw={},memo={}){
  const cfg=configuration(raw),o=observation(game,cfg.side);
  const used={trainers:memo.trainers||0,powers:memo.powers||0,powerKeys:memo.powerKeys||new Set(),stadium:!!memo.stadium};
  const actions=candidates(o,cfg,used);if(!actions.length)return null;
+ // A strategic beam may award a long-term bonus to an Energy attachment
+ // despite its immediate -1000 penalty. This is a strict sequencing guard,
+ // not merely a heuristic: never spend the turn's attachment on a damaged
+ // Pokémon while an unplayed Center is available to discard that Energy.
+ const safeActions=cfg.level===8&&pokemonCenterPending(o)?
+  actions.filter(a=>a.type!=='attach_energy'||!pokemonCenterEnergyWaste(o,a.payload.slot)):
+  actions;
+ if(!safeActions.length)return null;
  const random=rng(cfg.seed+game.turnSerial*7919+(game.events?.length||0)*17011+cfg.side*31);
- const ranked=actions.map((action,i)=>({action,
+ const ranked=safeActions.map((action,i)=>({action,
   score:score(action,o,cfg,used)+planningBonus(action,o,cfg)+prizeRaceBonus(action,o,cfg)+knockoutTempoBonus(action,o,cfg)+opponentResponseBonus(action,o,cfg)+energyHorizonBonus(action,o,cfg),tie:i}))
   .sort((a,b)=>b.score-a.score||a.tie-b.tie);
  // Rank all visible options before competence-sensitive choice noise. A larger

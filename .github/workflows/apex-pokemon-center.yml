@@ -1,0 +1,16 @@
+name: Apex Pokemon Center Regression
+on:
+  pull_request:
+    paths:
+      - 'cpu_policy.js'
+      - 'tests/cpu_pokemon_center_order.test.js'
+      - '.github/workflows/apex-pokemon-center.yml'
+jobs:
+  targeted:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: node --test tests/cpu_pokemon_center_order.test.js tests/cpu_deep_levels.test.js tests/cpu_apex_rain_dance.test.js
