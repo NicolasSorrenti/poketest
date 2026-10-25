@@ -30,10 +30,12 @@
 });
  // Keep the pre-duel fallback identical to the character art used by booster rewards.
  // The caller checks which files actually exist and keeps the portrait if none load.
- function boosterArtCandidates(npc){
+ function boosterArtCandidates(npc, outfit){
   if(typeof npc!=='string'||!/^[a-z0-9_-]+$/.test(npc))return [];
   const base='/rpg-assets/characters/'+npc+'/';
-  return [base+'events/booster.webp',base+'events/booster.png',
+  const outfitArt=outfit==='lifeguard'?base+'events/laca_booster_lifeguard_square_1024.png':
+   outfit==='casual'?base+'events/laca_booster_casual_square_1024.png':null;
+  return [outfitArt,base+'events/booster.webp',base+'events/booster.png',
    '/rpg-assets/reactions/'+npc+'/attack.png'];
  }
  const isReady=d=>!!d&&d.preview?.phase==='ready';

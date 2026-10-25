@@ -927,7 +927,12 @@ function showPackReveal(){
   // Show a known portrait immediately while optional artwork loads.
   const showPortrait=()=>{if(request===packArtSerial){portrait.replaceChildren(makeAvatar(giver));window.NeoRpgDiscreetAvatars?.set?.(portrait,giver,'happy',cast[giver].name);}};
   showPortrait();
+  const outfit=OUTFITS?.select?.(cast[giver]?.art?.outfits,{location:state.location,slot:state.slot,day:state.day})?.key;
   const candidates=PRE.boosterArtCandidates(giver);
+  if(outfit){
+   const outfitArt=PRE.boosterArtCandidates(giver,outfit)[0];
+   if(outfitArt)candidates.unshift(outfitArt);
+  }
   const art=new Image();
   art.alt=cast[giver].name+' presenting a booster';
   art.className='pack-giver-art';
