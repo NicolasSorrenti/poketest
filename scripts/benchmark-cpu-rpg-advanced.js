@@ -1,6 +1,6 @@
 'use strict';
-// Late-campaign RPG NPC deck evaluation for experimental CPU skill tiers.
-// Tests identical *tier-3* character recipes on both sides, so deck power
+// RPG NPC deck evaluation for experimental CPU skill tiers.
+// Tests identical character recipes at the chosen campaign tier, so deck power
 // differences do not manufacture a CPU skill gain. Mirrored seeds vary seats.
 const {performance}=require('node:perf_hooks');
 const {argumentsOf,duel,wilson}=require('../benchmark_cpu');
@@ -18,14 +18,15 @@ const ARCHETYPES=Object.freeze([
  {npc:'akari',deck:'gym_new_voltage'}
 ]);
 function parse(argv){
- const o={level:6,baselineLevel:5,pairs:15,maxTurns:120,seed:67411};
+ const o={level:6,baselineLevel:5,tier:3,pairs:15,maxTurns:120,seed:67411};
  for(let i=0;i<argv.length;i++){
-  const k=argv[i],v=argv[++i],key={'--level':'level','--baseline-level':'baselineLevel','--pairs':'pairs','--max-turns':'maxTurns','--seed':'seed'}[k];
+  const k=argv[i],v=argv[++i],key={'--level':'level','--baseline-level':'baselineLevel','--tier':'tier','--pairs':'pairs','--max-turns':'maxTurns','--seed':'seed'}[k];
   if(!key||v===undefined)throw Error('Unknown/incomplete argument: '+k);
   o[key]=Number(v);
  }
  if(!Number.isInteger(o.baselineLevel)||o.baselineLevel<1||o.baselineLevel>8)throw Error('Invalid baseline level');
  if(!Number.isInteger(o.level)||o.level<6||o.level>8)throw Error('Level must be 6–8');
+ if(!Number.isInteger(o.tier)||o.tier<1||o.tier>3)throw Error('Tier must be 1–3');
  if(!Number.isInteger(o.pairs)||o.pairs<1||o.pairs>150)throw Error('Invalid pairs');
  if(!Number.isInteger(o.maxTurns)||o.maxTurns<5||o.maxTurns>250)throw Error('Invalid maxTurns');
  if(!Number.isSafeInteger(o.seed)||o.seed<0)throw Error('Invalid seed');
@@ -37,9 +38,9 @@ function evaluate(o){
  const decisionSamplesByRole=[[],[]];
  for(let i=0;i<ARCHETYPES.length;i++){
   const f=ARCHETYPES[i],original=service.decklist(f.deck);
-  const cards=NPC.upgrade({npc:f.npc,tier:3,original,catalog:CATALOG});
+  const cards=NPC.upgrade({npc:f.npc,tier:o.tier,original,catalog:CATALOG});
   const valid=validateDeck(cards,CATALOG);
-  if(!valid.valid)throw Error(f.npc+' tier-3 deck invalid: '+valid.errors.join('; '));
+  if(!valid.valid)throw Error(f.npc+' tier-'+o.tier+' deck invalid: '+valid.errors.join('; '));
   const args=['--pairs',String(o.pairs),'--max-turns',String(o.maxTurns),
    '--seed',String(o.seed+i*7193),'--left-level',String(o.baselineLevel),'--right-level',String(o.level),
    '--left-prize-race','true','--left-knockout-tempo','true','--left-opponent-response','true',
@@ -63,7 +64,7 @@ function evaluate(o){
  }
  const decisive=champ+challenger;
  return {level:o.level,against:'RPG CPU Level '+o.baselineLevel+' with advanced tactics',
-  day:'late campaign, tier 3 NPC decks',games:decisive+unfinished,
+  day:['early campaign','mid campaign','late campaign'][o.tier-1],deckTier:o.tier, games:decisive+unfinished,
   championWins:champ,challengerWins:challenger,unfinished,decisive,
   challengerWinRateDecisive:decisive?challenger/decisive:null,
   challengerWinRate95:decisive?wilson(challenger,decisive):null,
