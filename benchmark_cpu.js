@@ -64,7 +64,15 @@ function duel(opts,number,swap,decks){
   const elapsedDecision=performance.now()-startDecision;
   stats.decisionsMs+=elapsedDecision;
   if(!r.steps){stats.stalled=true;break;}
-  game=r.game;stats.actions+=r.steps;logs.push(...r.commands);
+  // Enrich the audit trace from the pre-action public match feed. The
+  // acting player's own hand is visible to them; no opponent hidden zones.
+  const fresh=r.commands.map((entry,index)=>({
+   ...entry,
+   turnSerial:entry.turnSerial,
+   cardId:entry.cardId,
+   targetDamageBefore:entry.targetDamageBefore
+  }));
+  game=r.game;stats.actions+=r.steps;logs.push(...fresh);
   stats.rejectedProposals+=r.commands.reduce((n,a)=>n+(a.rejectedCandidates||0),0);
   stats.probedCandidates+=r.commands.reduce((n,a)=>n+(a.probedCandidates||0),0);
   for(const {command} of r.commands){
