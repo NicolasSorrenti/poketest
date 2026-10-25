@@ -15,6 +15,7 @@ async function waitUntil(predicate,timeoutMs=1500){
 
 function fakeSupabase(){
  const rows=new Map();
+ let failOnce=false;
  const owner=token=>token==='test-owner-access'?player:token==='test-other-access'?other:null;
  const fake=async (url,init={})=>{
   const auth=String(init.headers?.Authorization||'').replace(/^Bearer /,'');
@@ -27,6 +28,7 @@ function fakeSupabase(){
    const row=rows.get(user+':'+duelId);
    data=row?[{duel_id:duelId,revision:row.revision,snapshot:deep(row.snapshot)}]:[];
   }else if(route==='/rest/v1/rpc/rpg_duel_checkpoint_cas'){
+   if(failOnce){failOnce=false;return {ok:false,status:503,json:async()=>({message:'Temporary checkpoint outage'})};}
    const body=JSON.parse(init.body),key=user+':'+body.p_duel_id,old=rows.get(key);
    if((!old&&body.p_expected_revision===-1)||old?.revision===body.p_expected_revision){
     rows.set(key,{revision:body.p_revision,snapshot:deep(body.p_snapshot)});
@@ -35,7 +37,7 @@ function fakeSupabase(){
   }else throw Error('Unexpected fake Supabase path '+route);
   return {ok:status===200,status,json:async()=>data};
  };
- return {fake,rows};
+ return {fake,rows,failNextSave:()=>{failOnce=true;}};
 }
 async function api(path,{auth='test-owner-access',duelToken,body,method='POST'}={}){
  const response=await fetch(base()+'/api/classic/'+path,{
@@ -65,6 +67,7 @@ test('RPG checkpoint stores every accepted move, restores after server restart a
    return card?.supertype==='Pokémon'&&(card?.subtypes||[]).includes('Basic');
   });
   assert.ok(basicIndex>=0,'starting hand has Basic Pokémon');
+  fake.failNextSave(); // First asynchronous write fails; retry must still persist the final state.
   const move=await api('action',{duelToken:token,body:{
    revision:0,command:{type:'setup_select',payload:{handIndex:basicIndex}}
   }});
