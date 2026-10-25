@@ -594,8 +594,17 @@ function beginSliceOfLife(trigger,npc=null){
  return true;
 }
 function nextSliceOfLife(){
+ const before=state.activeSliceOfLife;
  const result=SLICE.next(state);
  if(!result)return;
+ if(!result.done&&before&&result.step===4){
+  const moment=SLICE.byId(result.id),second=moment?.cgSequence?.[1]&&CG.byId(moment.cgSequence[1]);
+  if(second){
+   state.sliceOfLifeCgShown=state.sliceOfLifeCgShown||{};
+   const shown=state.sliceOfLifeCgShown[result.id]||[];
+   if(!shown.includes(4)){shown.push(4);state.sliceOfLifeCgShown[result.id]=shown;persist();render();showCGMoment(second,true);}
+  }
+ }
  if(result.done){const moment=SLICE.byId(result.id);
   if(moment.choices)recordCG('slice',moment.npc,{eventId:moment.id});
   log('A small moment with '+(cast[moment?.npc]?.name||'a friend')+'.');
