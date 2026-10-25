@@ -232,7 +232,7 @@
   }catch(e){if(epoch===playbackEpoch)fail(e);}
   finally{if(epoch===playbackEpoch){busy=false;render();}}
  }
- async function start(){if(busy)return;busy=true;$('startupError').textContent='';try{
+ async function start(){if(cubeRoomCode||cubeSoloMode)return false;if(busy)return;busy=true;$('startupError').textContent='';try{
   const partnerCards=rpgMode&&rpgDuelId?sessionStorage.getItem('neoRpgNpcDeck:'+rpgDuelId):null;
   const response=await api('create',{method:'POST',body:JSON.stringify({
    deck:$('deck').value,opponent:$('opponent').value,
@@ -284,7 +284,11 @@
   $('choiceModal').classList.add('hidden');$('choiceModal').setAttribute('aria-hidden','true');
   $('fieldChoiceBar').classList.add('hidden');modalDecisionId=null;lastFieldDecisionId=null;
  }
- function newDuel(){npcChat?.reset();toggleNpcChat(false);playbackEpoch++;busy=false;clearChoiceUi();opponentActivity.clear();combat.reset();reactions?.reset();feedback.reset();preview.hide();token=null;current=null;selectedHand=null;targetMode=null;handVisible=true;powersOpen=false;logOpen=false;setLogOpen(false);document.body.classList.remove('duel-active','cpu-match');sessionStorage.removeItem(rpgKey);setHandVisible(true);render();}
+ function newDuel(){
+  // Cube sessions belong to an authoritative tournament. Never open the
+  // Single Match deck lobby or create a new untracked duel from here.
+  if(cubeRoomCode||cubeSoloMode){location.assign(cubeRoomCode?'/cube_room.html?room='+encodeURIComponent(cubeRoomCode):'/cube.html');return;}
+  npcChat?.reset();toggleNpcChat(false);playbackEpoch++;busy=false;clearChoiceUi();opponentActivity.clear();combat.reset();reactions?.reset();feedback.reset();preview.hide();token=null;current=null;selectedHand=null;targetMode=null;handVisible=true;powersOpen=false;logOpen=false;setLogOpen(false);document.body.classList.remove('duel-active','cpu-match');sessionStorage.removeItem(rpgKey);setHandVisible(true);render();}
  function setTarget(type,payload,title,benchOnly=false){preview.hide();targetMode={type,payload,title,benchOnly};render();}
  function cancelTarget(){targetMode=null;selectedHand=null;preview.hide();render();}
  function pokemonNode(u,side,slot){
@@ -417,7 +421,7 @@
    if(d.optional)acts.append(btn('Decline',()=>send(command('choose',{decisionId:d.id,decline:true}))));
    if(d.cancelable)acts.append(btn('↶ Cancel card (Esc)',()=>send(command('cancel_choice',{decisionId:d.id})),'secondary'));
   }else if(d){title.textContent='CPU is choosing';description.textContent='Waiting for the CPU to resolve its choice.';}
-  else if(v.over){title.textContent='DUEL COMPLETE';description.textContent=current.winner===0?'You won!':current.winner===1?'The CPU won.':'A draw!';acts.append(btn(rpgMode?'Returning to Neo Harbor…':'Play another duel',rpgMode?()=>{}:newDuel,'primary',rpgMode));}
+  else if(v.over){title.textContent='DUEL COMPLETE';description.textContent=current.winner===0?'You won!':current.winner===1?'The CPU won.':'A draw!';acts.append(btn(rpgMode?'Returning to Neo Harbor…':(cubeRoomCode||cubeSoloMode)?'Return to Cube tournament':'Play another duel',rpgMode?()=>{}:newDuel,'primary',rpgMode));}
   else if(v.phase==='setup'&&v.mulliganBonus){
    const bonus=v.mulliganBonus;
    title.textContent='MULLIGAN BONUS';
