@@ -25,11 +25,15 @@ function oneEnergyThreat(attacker,target,helpers,turnSerial=0){
  const attacks=attacker.effectiveAttacks||card(attacker.id)?.attacks||[];
  const owned=energyPool(attacker),hp=hpRemaining(target);
  let current=0,next=0;
- for(const atk of attacks){
+ for(let i=0;i<attacks.length;i++){
+  const atk=attacks[i];
   if(!atk||!Array.isArray(atk.cost))continue;
   const cost=atk.cost;
   if(!atk.name&&!(atk.damage||atk.text))continue;
-  if(attacker.amnesia?.index===attacks.indexOf(atk)&&attacker.amnesia.expires>turnSerial)continue;
+  if(attacker.amnesia?.index===i&&attacker.amnesia.expires>turnSerial)continue;
+  if(attacker.gymAttackCooldown?.expires>turnSerial&&
+    (attacker.gymAttackCooldown.index===null||attacker.gymAttackCooldown.index===i))continue;
+  if(attacker.gymAttackOnce?.includes(i))continue;
   const raw=estimatedDamage(atk,attacker,target);
   const value=Math.min(Math.max(raw,0),hp)*1.05+(raw>=hp?110:0);
   if(canPayEnergy(cost,owned)){current=Math.max(current,value);continue;}
