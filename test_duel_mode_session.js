@@ -14,4 +14,7 @@ assert.match(client,/location\.assign\('\/classic_live\.html\?cubeSolo=1'\)/);
 assert.match(cube,/id="resumeMatch"[^>]*href="\/classic_live\.html\?cubeSolo=1"/,'Resume link should keep mode marker');
 assert.match(room,/sessionStorage\.setItem\('neoCubeRoomLiveToken:'\+code,t\.yourMatch\.token\)/,'Room CPU matches have room-scoped sessions');
 assert.equal(room.includes("sessionStorage.setItem('neoClassicLiveToken'"),false,'Cube room CPU must not overwrite Single Match');
+assert.ok(live.includes("async function start(){if(cubeRoomCode||cubeSoloMode)return false;"),'Cube battle page cannot start a standalone Single Match');
+assert.ok(live.includes("if(cubeRoomCode||cubeSoloMode){location.assign(cubeRoomCode?'/cube_room.html?room='+encodeURIComponent(cubeRoomCode):'/cube.html');return;}"),'Cube reset leads to the right tournament');
+assert.ok(live.includes("'Return to Cube tournament':'Play another duel'"),'Cube victory must not offer another Single Match');
 console.log('PASS Cube and Single Match use separate tokens and mode-aware navigation');
