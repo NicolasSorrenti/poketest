@@ -1019,7 +1019,51 @@
   "dialogueSafe": "Leave lower fifth clear for dialogue",
   "sceneId": "laca_route_5"
 }
-
+,
+{
+  "character": "akari",
+  "id": "akari_route_1",
+  "category": "social",
+  "trigger": "story_milestone",
+  "place": "library",
+  "minAffection": 0,
+  "startDay": 13,
+  "slot": 0,
+  "title": "A Statistical Anomaly",
+  "path": "/rpg-assets/events/cg/season01/akari_route_1.webp",
+  "thumb": "/rpg-assets/events/cg/season01/thumbs/akari_route_1.webp",
+  "sceneId": "akari_route_1",
+  "hint": "Complete Akari's personal story to unlock this memory.",
+  "scene": "Akari at library table with cards and statistics; overhead angle",
+  "composition": "Overhead view of the library table.",
+  "outfit": "Approved Akari story outfit",
+  "expression": "Analytical curiosity",
+  "environment": "Library",
+  "fanservice": 0,
+  "dialogueSafe": "Approved story illustration displayed after dialogue."
+},
+{
+  "character": "akari",
+  "id": "akari_route_3",
+  "category": "social",
+  "trigger": "story_milestone",
+  "place": "center",
+  "minAffection": 0,
+  "startDay": 54,
+  "slot": 1,
+  "title": "The Broken Prediction",
+  "path": "/rpg-assets/events/cg/season01/akari_route_3.webp",
+  "thumb": "/rpg-assets/events/cg/season01/thumbs/akari_route_3.webp",
+  "sceneId": "akari_route_3",
+  "hint": "Complete Akari's personal story to unlock this memory.",
+  "scene": "Akari at Pokemon Center with notebook during vulnerable conversation",
+  "composition": "Intimate conversation at the Pokemon Center.",
+  "outfit": "Approved Akari story outfit",
+  "expression": "Vulnerable and thoughtful",
+  "environment": "Pokemon Center",
+  "fanservice": 0,
+  "dialogueSafe": "Approved story illustration displayed after dialogue."
+}
 ];
  // Ambience CGs are separate from scheduled stories and relationship chapters.
  const SLICE=typeof module==='object'&&module.exports?require('./rpg_slice_of_life'):window.NeoRpgSliceOfLife;

@@ -6,9 +6,9 @@ const state=(extra={})=>({day:10,slot:1,location:'shop',
  relationships:Object.fromEntries(names.map(id=>[id,{affection:9,trust:9}])),
  bonds:Object.fromEntries(names.map(id=>[id,{affection:9,trust:9}])),...extra});
 test('the original 45 CGs and 34 standalone slice-of-life briefs coexist without duplicates',()=>{
- const legacy=CG.catalog.filter(x=>x.trigger!=='slice'),ambient=CG.catalog.filter(x=>x.trigger==='slice');
- assert.equal(legacy.length,45);assert.equal(ambient.length,34);assert.equal(CG.catalog.length,79);
- assert.deepEqual(CG.validate(),[]);assert.equal(new Set(CG.catalog.map(x=>x.id)).size,79);
+ const legacy=CG.catalog.filter(x=>x.trigger!=='slice'&&!['akari_route_1','akari_route_3'].includes(x.id)),ambient=CG.catalog.filter(x=>x.trigger==='slice');
+ assert.equal(legacy.length,45);assert.equal(ambient.length,34);assert.equal(CG.catalog.length,81);
+ assert.deepEqual(CG.validate(),[]);assert.equal(new Set(CG.catalog.map(x=>x.id)).size,81);
  for(const id of names)assert.deepEqual(legacy.filter(x=>x.character===id).map(x=>x.category),CG.categories);
 });
 test('first encounters grant only the correct profile and never other characters',()=>{
@@ -81,11 +81,11 @@ test('legacy save migration repairs invalid CG metadata and preserves character 
 test('only known unlocked images can be displayed; invalid seasons and negative time reject events',()=>{
  const s=state({day:91});assert.deepEqual(CG.record(s,'meet','hana'),[]);
  s.day=3;s.slot=-1;assert.deepEqual(CG.record(s,'meet','hana'),[]);
- assert.equal(CG.gallery(s).length,79);
+ assert.equal(CG.gallery(s).length,81);
  assert.equal(CG.gallery(s,{category:'special'}).length,16);
 });
 test('the manifest is ready for the art agent with exact uniquely addressed images',()=>{
- const paths=CG.catalog.flatMap(x=>[x.path,x.thumb]);assert.equal(new Set(paths).size,158);
+ const paths=CG.catalog.flatMap(x=>[x.path,x.thumb]);assert.equal(new Set(paths).size,162);
  for(const path of paths)assert.match(path,/^\/rpg-assets\/events\/cg\/(?:season01|slice-life)\/(?:thumbs\/)?[a-z0-9_]+\.webp$/);
 });
 
