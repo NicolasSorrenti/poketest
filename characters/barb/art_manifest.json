@@ -82,6 +82,16 @@
       "sceneId": "barb_bonus_sketch",
       "path": "/rpg-assets/characters/barb/events/barb_bonus_sketch.webp",
       "prompt": "Approved CG for Barb optional everyday encounter: The Pink Marker Test. Keep the existing artwork unchanged; adult 21-year-old Barb with copper-red hair and alt punk aesthetic."
+    },
+    {
+      "sceneId": "barb_room_after_hours",
+      "path": "/rpg-assets/characters/barb/events/barb_room_after_hours.webp",
+      "prompt": "Approved Neo Campus Barb CG: back-view in her punk workshop bedroom, preparing to take a proper day off. Keep original CG unchanged."
+    },
+    {
+      "sceneId": "barb_pool_day_off",
+      "path": "/rpg-assets/characters/barb/events/barb_pool_day_off.webp",
+      "prompt": "Approved Neo Campus Barb CG: by the pool, stretching in her punk-inspired swimwear on a sunny afternoon. Keep original CG unchanged."
     }
   ],
   "expressions": {

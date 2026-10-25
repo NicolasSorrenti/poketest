@@ -1073,8 +1073,8 @@
   title:moment.title,hint:'Discover this everyday moment at '+moment.place+' while '+moment.npc+' is present.',
   scene:moment.art.scene,composition:moment.art.composition,outfit:moment.art.outfit,
   expression:moment.art.expression,environment:moment.art.environment,mood:moment.art.mood,fanservice:0,
-  path:moment.image||'/rpg-assets/events/cg/slice-life/'+moment.id+'.webp',
-  thumb:moment.image||'/rpg-assets/events/cg/slice-life/thumbs/'+moment.id+'.webp',
+  path:moment.npc==='barb'?'/rpg-assets/events/cg/season01/'+moment.id+'.webp':(moment.image||'/rpg-assets/events/cg/slice-life/'+moment.id+'.webp'),
+  thumb:moment.npc==='barb'?'/rpg-assets/events/cg/season01/thumbs/'+moment.id+'.webp':(moment.image||'/rpg-assets/events/cg/slice-life/thumbs/'+moment.id+'.webp'),
   dialogueSafe:'Bottom 20% clear for dialogue UI',sliceId:moment.id
  });
  // UI-only fallback sequence. Never mistake placeholder artwork for a newly created CG.
