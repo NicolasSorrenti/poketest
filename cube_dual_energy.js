@@ -65,8 +65,10 @@ function makeDualEnergyPool(){
  const basics=pokemon.filter(id=>isBasicPokemon(CATALOG.get(id)));
  const evolutions=pokemon.filter(id=>!isBasicPokemon(CATALOG.get(id)));
  const focused=pokemon.filter(id=>isFocus(CATALOG.get(id)));
- const root=id=>evolutions.some(e=>isFocus(CATALOG.get(e))&&
-  canEvolve(CATALOG.get(e),CATALOG.get(id)));
+ const focusedEvolutions=evolutions.filter(e=>isFocus(CATALOG.get(e)));
+ const evolutionRoots=new Set(basics.filter(id=>focusedEvolutions.some(e=>
+  canEvolve(CATALOG.get(e),CATALOG.get(id)))));
+ const root=id=>evolutionRoots.has(id);
  if(focused.length<4||basics.length<26||trainers.length<15)
   throw Error('Insufficient engine-supported cards for Dual Energy Cube');
  const selected=[],copies=new Map(),cap=4;
@@ -83,13 +85,16 @@ function makeDualEnergyPool(){
   (CATALOG.get(id).types||[]).find(t=>COLORS.has(t))||'Colorless';
  const basicColorCount=color=>selected.filter(id=>isBasicPokemon(CATALOG.get(id))&&typeOf(id)===color).length;
  function pick(items,weight){
-  const choices=items.filter(id=>count(id)<cap);
-  if(!choices.length)return null;
-  choices.sort((a,b)=>{
-   const diff=weight(b)-weight(a);
-   return diff||a.localeCompare(b);
-  });
-  add(choices[0]);return choices[0];
+  let best=null,bestWeight=-Infinity;
+  for(const id of items){
+   if(count(id)>=cap)continue;
+   const w=weight(id);
+   if(w>bestWeight||(w===bestWeight&&(best===null||id.localeCompare(best)<0))){
+    best=id;bestWeight=w;
+   }
+  }
+  if(best===null)return null;
+  add(best);return best;
  }
  // Guarantee each of the six primary colors has a playable starting Basic.
  for(const color of TYPES){
