@@ -60,3 +60,16 @@ test('Apex does not attempt Rain Dance through blocking special conditions',()=>
  o.self.active.status=null;
  assert.ok(options(o,8).some(rain));
 });
+
+test('Rain Dance preserves Water Energy when no attack or future cost improves',()=>{
+ const o=board(),cfg=AI.configuration({level:8,side:1,personality:'setup'});
+ o.self.active.energies=[W,W,W];
+ o.self.bench=[];
+ o.self.hand=[W];
+ const power={type:'use_power',payload:{slot:-1,powerIndex:0}};
+ assert.equal(AI.score(power,o,cfg,{}),0,
+  'avoid overcommitting the final Water when Hydro Pump is already affordable');
+ o.self.active.energies=[W,W];
+ assert.ok(AI.score(power,o,cfg,{})>170,
+  'the same Energy is valuable when it unlocks the third Water requirement');
+});
