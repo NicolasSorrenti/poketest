@@ -146,3 +146,10 @@
 :root[data-rpg-discreet="on"] [data-rpg-safe-kind="chibi"] .rpg-safe-avatar{
  object-fit:contain!important;object-position:center center;background:transparent;
 }
+
+/* Town map radar: show character chibis when Discreet Mode is enabled. */
+.radar-person-avatar{display:none}
+:root[data-rpg-discreet="on"] .radar-person-avatar{display:flex;align-items:center;justify-content:center;width:54px;height:54px;flex:none;grid-row:span 2}
+:root[data-rpg-discreet="on"] .radar-person-avatar .rpg-safe-avatar{display:block;width:100%;height:100%;object-fit:contain;background:transparent}
+:root[data-rpg-discreet="on"] .radar-person:has(.radar-person-avatar){grid-template-columns:54px minmax(0,1fr);column-gap:10px;align-items:center}
+:root[data-rpg-discreet="on"] .radar-person .radar-person-avatar~strong,:root[data-rpg-discreet="on"] .radar-person .radar-person-avatar~small{grid-column:2}
