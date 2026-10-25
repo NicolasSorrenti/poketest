@@ -75,7 +75,7 @@ test('all existing and expanded incidental references have valid authored prereq
  assert.deepEqual(Object.keys(Memory.asides).sort(),Object.keys(Everyday.topics).sort());
  assert.deepEqual(Memory.validate(),[]);
  for(const [npc,rows] of Object.entries(Memory.asides)){
-  assert.equal(rows.length,6,npc+' must have six distinct references');
+  assert.equal(rows.length,10,npc+' must have ten distinct references');
   for(const row of rows.slice(0,2)){
    const [source,indexText]=row.requires.split(':'),index=Number(indexText);
    const bank=source==='everyday'?Everyday.topics[npc]:Character.scenes[npc];
@@ -172,7 +172,7 @@ test('new asides include two additional personal topics, a grounded cross-charac
  assert.deepEqual(Memory.validate(),[]);
 });
 
-test('all 88 new callbacks require a prior completed scene and can play without changing resources',()=>{
+test('all 176 expanded callbacks require a prior completed scene and can play without changing resources',()=>{
  for(const [npc,rows] of Object.entries(Memory.asides)){
   for(let index=2;index<rows.length;index++){
    const item=rows[index],state={day:12,slot:1,credits:80,points:0,
