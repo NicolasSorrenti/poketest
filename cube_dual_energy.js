@@ -58,7 +58,9 @@ function sourcePool(){
  const trainers=choosePrinting([...known].filter(id=>CATALOG.get(id)?.supertype==='Trainer'),known);
  return {pokemon,trainers};
 }
+let cachedDualPool=null;
 function makeDualEnergyPool(){
+ if(cachedDualPool)return [...cachedDualPool];
  const {pokemon,trainers}=sourcePool();
  const basics=pokemon.filter(id=>isBasicPokemon(CATALOG.get(id)));
  const evolutions=pokemon.filter(id=>!isBasicPokemon(CATALOG.get(id)));
@@ -137,6 +139,7 @@ function makeDualEnergyPool(){
  }
  if(selected.length!==SIZE)throw Error('Dual Energy cube size mismatch');
  // Fixed order; the normal draft shuffler randomizes packs from this set.
- return selected;
+ cachedDualPool=Object.freeze([...selected]);
+ return [...cachedDualPool];
 }
 module.exports={makeDualEnergyPool,isDualAttacker,isEnergySynergy,isFocus,attackColors,sourcePool};
