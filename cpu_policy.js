@@ -473,8 +473,10 @@ function choiceValue(option,decision,o,cfg){
  if(/^deck:/.test(id)&&cfg?.level>=8&&/Computer Search/i.test(ctx)){
   // Prefer an Energy that makes the Active attack *this turn* over an
   // attractive but tactically irrelevant Basic Pokémon.
-  const candidateId=id.slice(5);
-  const candidate=card(candidateId);
+  // Deck option IDs are indices, not card IDs. Resolve by the public
+  // option label; never inspect unrevealed deck order.
+  const candidateId=[...CATALOG.values()].find(c=>c.name===label)?.id;
+  const candidate=candidateId?card(candidateId):null;
   if(candidate&&isEnergy(candidate)&&!o.self.energyUsed&&o.self.active&&o.opponent.active){
    const before=strongestAffordableAttack(o.self.active,o.opponent.active);
    const after=damageAfterAttachment(o.self.active,candidateId,o.opponent.active);
