@@ -90,6 +90,7 @@ function duel(opts,number,swap,decks){
   winner!==null&&game.players[game.winner].prizes.length===0?'prizes':
   winner!==null&&!game.players[1-game.winner].active&&
     !game.players[1-game.winner].bench.length?'no-pokemon':'other';
+ stats.decisionQuality=require('./cpu_decision_audit').summarize(logs);
  return {seed:opts.seed+number*11+101,swap,winner,finished:game.over,
   endReason,stats,logs};
 }
