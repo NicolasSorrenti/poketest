@@ -7,6 +7,11 @@ const player='10000000-0000-4000-8000-000000000001';
 const other='20000000-0000-4000-8000-000000000002';
 const base=()=> 'http://127.0.0.1:'+server.address().port;
 const deep=x=>JSON.parse(JSON.stringify(x));
+async function waitUntil(predicate,timeoutMs=1500){
+ const deadline=Date.now()+timeoutMs;
+ while(!predicate()&&Date.now()<deadline)await new Promise(resolve=>setTimeout(resolve,10));
+ assert.ok(predicate(),'Cloud checkpoint should eventually persist the accepted action');
+}
 
 function fakeSupabase(){
  const rows=new Map();
@@ -65,8 +70,8 @@ test('RPG checkpoint stores every accepted move, restores after server restart a
   }});
   assert.equal(move.status,200,JSON.stringify(move.body).slice(0,400));
   assert.equal(move.body.revision,1);
-  assert.equal(move.body.cloudSaved,true);
-  assert.equal(fake.rows.get(prefix).revision,1);
+  assert.equal(move.body.cloudSaved,false,'Actions should respond before the asynchronous write completes');
+  await waitUntil(()=>fake.rows.get(prefix)?.revision===1);
   assert.ok(fake.rows.get(prefix).snapshot.game.players[0].active);
   // Simulate a Render restart: RAM is gone, database still has the whole match.
   classic.sessions.clear();
