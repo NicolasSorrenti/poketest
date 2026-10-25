@@ -149,8 +149,38 @@
               "type": "string",
               "minLength": 1
             }
+          },
+          "encounterType": {
+            "const": "slice",
+            "description": "Optional ambient encounter; excluded from main route chapters."
+          },
+          "trigger": {
+            "enum": [
+              "entry",
+              "talk"
+            ],
+            "description": "Entry encounters may also be discovered through Talk."
           }
-        }
+        },
+        "allOf": [
+          {
+            "if": {
+              "required": [
+                "encounterType"
+              ]
+            },
+            "then": {
+              "required": [
+                "trigger"
+              ],
+              "properties": {
+                "prerequisite": {
+                  "type": "null"
+                }
+              }
+            }
+          }
+        ]
       }
     }
   }

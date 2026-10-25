@@ -1,0 +1,34 @@
+name: Barb optional CG integration
+on:
+  pull_request:
+    paths:
+      - 'characters/barb/**'
+      - 'rpg-assets/characters/barb/events/**'
+      - 'rpg_character_packs.generated.js'
+      - 'rpg_narrative_pack.js'
+      - 'rpg_slice_of_life.js'
+      - 'rpg_cg_gallery.js'
+      - 'rpg.js'
+      - 'tests/rpg_barb*'
+      - '.github/workflows/barb-cg.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'characters/barb/**'
+      - 'rpg_slice_of_life.js'
+      - 'tests/rpg_barb*'
+jobs:
+  integration:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Pack, story, eligibility, callbacks, gallery and asset regressions
+        run: node --test tests/rpg_barb_optional_cgs.test.js tests/rpg_cg_gallery.test.js tests/rpg_character_packs.test.js tests/rpg_story.test.js tests/rpg_encounter_director.test.js tests/rpg_akari_cgs.test.js tests/rpg_flow.test.js tests/rpg_integration.test.js tests/rpg_art_install.test.js
+      - run: npm install --no-save --ignore-scripts playwright
+      - run: npx playwright install --with-deps chromium
+      - name: Real desktop and mobile encounters, image loading and gallery reloads
+        run: node tests/rpg_barb_browser_smoke.js

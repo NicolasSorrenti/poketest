@@ -13,11 +13,11 @@ const save=(moment,day=dayAt(moment))=>({
  bonds:{[moment.npc]:{affection:8,trust:5}},sliceOfLifeDone:{},sliceOfLifeLastDay:0,activeSliceOfLife:null,
  ['met_'+moment.npc]:true
 });
-test('two non-story encounters per female character with no duplicate IDs',()=>{
+test('original pairs and eleven optional Barb encounters have no duplicate IDs',()=>{
  assert.deepEqual(SLICE.validate(),[]);
- assert.equal(SLICE.scenes.length,34);
+ assert.equal(SLICE.scenes.length,45);
  for(const npc of characters)assert.equal(SLICE.scenes.filter(e=>e.npc===npc).length,2,npc);
- assert.equal(new Set(SLICE.scenes.map(e=>e.id)).size,34);
+ assert.equal(new Set(SLICE.scenes.map(e=>e.id)).size,45);
  assert.deepEqual(CG.validate(),[]);
  for(const e of SLICE.scenes){
   const cg=CG.byId(e.id);assert.ok(cg,'missing CG brief '+e.id);
@@ -36,7 +36,7 @@ test('every moment has a real authorized character-pack or base schedule opportu
  }
 });
 test('a location or conversation scene triggers once, without consuming time or focus',()=>{
- for(const e of SLICE.scenes){
+ for(const e of SLICE.scenes.filter(e=>!e.choices)){
   const s=save(e),before={day:s.day,slot:s.slot,focus:s.focus};
   const started=SLICE.start(s,[e.npc],e.trigger,e.npc);
   assert.equal(started?.id,e.id);
