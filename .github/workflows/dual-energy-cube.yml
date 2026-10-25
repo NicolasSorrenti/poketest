@@ -1,0 +1,27 @@
+name: Dual Energy Cube
+on:
+  pull_request:
+    paths:
+      - 'cube_dual_energy.js'
+      - 'cube_presets.js'
+      - 'cube_draft.js'
+      - 'cube_strategy.js'
+      - 'cube_service.js'
+      - 'cube_room_service.js'
+      - 'test_cube_dual_energy.js'
+      - '.github/workflows/dual-energy-cube.yml'
+  push:
+    branches: [feature/dual-energy-cube]
+jobs:
+  dual-energy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Audit draft eligibility, decks and evolution chains
+        run: node test_cube_dual_energy.js
+      - name: Check existing cube formats
+        run: node test_cube_presets.js
