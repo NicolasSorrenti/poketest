@@ -22,6 +22,15 @@ jobs:
         run: node --test tests/cpu_deep_levels.test.js tests/rpg_cpu_champion.test.js
       - name: Compare policy decisions on identical late-campaign NPC positions
         run: node scripts/diagnose-cpu-decisions.js --scenario rpg --seed 753871 --turns 12 --samples 35
+      - name: Compare policy decisions across distinct RPG personalities
+        run: |
+          node scripts/diagnose-cpu-decisions.js --scenario rpg --npc yuna --tier 3 --seed 527281 --turns 10 --samples 30
+          node scripts/diagnose-cpu-decisions.js --scenario rpg --npc camila --tier 3 --seed 628207 --turns 10 --samples 30
+          node scripts/diagnose-cpu-decisions.js --scenario rpg --npc kaede --tier 3 --seed 729217 --turns 10 --samples 30
+          node scripts/diagnose-cpu-decisions.js --scenario rpg --npc shiori --tier 3 --seed 830273 --turns 10 --samples 30
+          node scripts/diagnose-cpu-decisions.js --scenario rpg --npc akari --tier 3 --seed 931279 --turns 10 --samples 30
+          node scripts/diagnose-cpu-decisions.js --scenario rpg --npc reina --tier 1 --seed 163309 --turns 10 --samples 30
+          node scripts/diagnose-cpu-decisions.js --scenario rpg --npc reina --tier 2 --seed 264371 --turns 10 --samples 30
       - name: Compare policy decisions on independent theme-deck positions
         run: node scripts/diagnose-cpu-decisions.js --scenario theme --seed 863923 --turns 12 --samples 35
       - name: Replay losing Apex duels and locate first-turn policy disagreements
