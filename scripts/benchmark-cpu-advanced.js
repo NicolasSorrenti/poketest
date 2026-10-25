@@ -8,7 +8,11 @@ const FIXTURES=Object.freeze([
  {name:'blackout mirror',left:'blackout',right:'blackout'},
  {name:'brushfire mirror',left:'brushfire',right:'brushfire'},
  {name:'blackout vs brushfire',left:'blackout',right:'brushfire'},
- {name:'brushfire vs blackout',left:'brushfire',right:'blackout'}
+ {name:'brushfire vs blackout',left:'brushfire',right:'blackout'},
+ {name:'overgrowth mirror',left:'overgrowth',right:'overgrowth'},
+ {name:'zap mirror',left:'zap',right:'zap'},
+ {name:'overgrowth vs zap',left:'overgrowth',right:'zap'},
+ {name:'zap vs overgrowth',left:'zap',right:'overgrowth'}
 ]);
 function parse(args){
  const options={level:6,pairs:2,maxTurns:40,seed:28671,fixtures:FIXTURES.length};
