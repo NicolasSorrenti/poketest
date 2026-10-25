@@ -91,6 +91,12 @@ function parse(argv){
  return args;
 }
 if(require.main===module)try{
- console.log('CPU_APEX_LOSS_REPLAY '+JSON.stringify(diagnose(parse(process.argv.slice(2)))));
+ const result=diagnose(parse(process.argv.slice(2)));
+ console.log('CPU_APEX_LOSS_REPLAY '+JSON.stringify(result));
+ if(result.replaysVerified!==result.apexLosses||result.candidateMismatch)
+  throw Error('Replay or Apex decision mismatch: '+JSON.stringify({
+   replayed:result.replaysVerified,losses:result.apexLosses,
+   candidateMismatch:result.candidateMismatch
+  }));
 }catch(e){console.error(e.stack||e);process.exitCode=1;}
 module.exports={parse,diagnose};
