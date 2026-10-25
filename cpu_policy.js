@@ -894,8 +894,16 @@ function chooseAction(game,raw={},memo={}){
  const cfg=configuration(raw),o=observation(game,cfg.side);
  const used={trainers:memo.trainers||0,powers:memo.powers||0,powerKeys:memo.powerKeys||new Set(),stadium:!!memo.stadium};
  const actions=candidates(o,cfg,used);if(!actions.length)return null;
+ // A strategic beam may award a long-term bonus to an Energy attachment
+ // despite its immediate -1000 penalty. This is a strict sequencing guard,
+ // not merely a heuristic: never spend the turn's attachment on a damaged
+ // Pokémon while an unplayed Center is available to discard that Energy.
+ const safeActions=cfg.level===8&&pokemonCenterPending(o)?
+  actions.filter(a=>a.type!=='attach_energy'||!pokemonCenterEnergyWaste(o,a.payload.slot)):
+  actions;
+ if(!safeActions.length)return null;
  const random=rng(cfg.seed+game.turnSerial*7919+(game.events?.length||0)*17011+cfg.side*31);
- const ranked=actions.map((action,i)=>({action,
+ const ranked=safeActions.map((action,i)=>({action,
   score:score(action,o,cfg,used)+planningBonus(action,o,cfg)+prizeRaceBonus(action,o,cfg)+knockoutTempoBonus(action,o,cfg)+opponentResponseBonus(action,o,cfg)+energyHorizonBonus(action,o,cfg),tie:i}))
   .sort((a,b)=>b.score-a.score||a.tie-b.tie);
  // Rank all visible options before competence-sensitive choice noise. A larger
