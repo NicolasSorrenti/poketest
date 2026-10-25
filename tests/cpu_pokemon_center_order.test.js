@@ -11,12 +11,25 @@ function obs(){
   opponent:{active:unit(HITMONCHAN,0,[W]),bench:[],prizeCount:3,discard:[],deckCount:20},decision:null};
 }
 const cfg=AI.configuration({side:1,level:8,personality:'balanced'});
-test('Apex will not attach Energy to a damaged Pokémon before playing Center',()=>{
+test('Apex reserves an attachment for a valuable, playable Center',()=>{
  const o=obs();
+ o.self.active.damage=70;
+ o.self.bench[0].damage=40;
  const attach=AI.score({type:'attach_energy',payload:{handIndex:0,slot:-1}},o,cfg,{});
  const heal=AI.score({type:'play_trainer',payload:{handIndex:1}},o,cfg,{});
  assert.equal(attach,-1000);
  assert.ok(heal>attach);
+});
+test('Apex does not block Energy for an uneconomical Center',()=>{
+ const o=obs();
+ assert.notEqual(AI.score({type:'attach_energy',payload:{handIndex:0,slot:-1}},o,cfg,{}),-1000);
+});
+test('Apex does not block Energy when Trainer action budget is exhausted',()=>{
+ const o=obs();
+ o.self.active.damage=70;
+ o.self.bench[0].damage=40;
+ assert.notEqual(AI.score({type:'attach_energy',payload:{handIndex:0,slot:-1}},
+  o,cfg,{trainers:cfg.skill.trainers}),-1000);
 });
 test('Energy remains attachable after Center or on an undamaged teammate',()=>{
  const o=obs();
