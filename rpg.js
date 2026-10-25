@@ -2410,6 +2410,7 @@ persist();render();initDecks();loadCardNames();if(state.deckJourney&&!state.deck
  window.NeoRpgCloudSave?.mount({
   getSave:()=>JSON.parse(localStorage.getItem(KEY)||'null'),
   restoreSave:save=>{localStorage.setItem(KEY,JSON.stringify(save));location.reload();},
+  resetSave:()=>{localStorage.removeItem(KEY);location.reload();},
   hadLocalSave:hadCampaignSave,
   showButton:true
  });
