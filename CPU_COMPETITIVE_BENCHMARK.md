@@ -2,9 +2,9 @@
 
 ## Purpose
 
-The previous CPU benchmark mostly used printed theme decks, Haymaker-style basics, and RPG character-deck mirrors. Those are insufficient proxies for competitive historical Pokémon TCG tactics. This suite exercises *archetype-specific* Energy acceleration, evolutions/Pokémon Powers, special Energy, disruption, and stall alongside the older tests.
+The previous CPU benchmark mostly used printed theme decks, Haymaker-style basics, and RPG character-deck mirrors. Those are insufficient proxies for competitive historical Pokémon TCG tactics. This suite exercises *archetype-specific* Energy acceleration, evolutions/implemented Pokémon Powers, special Energy, disruption, and stall alongside the older tests.
 
-**Important:** These are curated, legal 60-card *benchmark builds*, NOT exact documented tournament-winning lists. They intentionally include engines and trainer staples from Base Set through Neo Destiny. Passing tests cannot establish tournament-level play or that every historical mechanic is implemented.
+**Important:** These are curated, legal 60-card *benchmark builds*, NOT exact documented tournament-winning lists. They intentionally include engines and trainer staples from Base Set through Neo Destiny. Passing tests cannot establish tournament-level play or that every historical mechanic is implemented. We replaced Meganium Wild Growth with Venusaur Energy Trans because the former's Power was not found in the active battle-engine handlers; a nonfunctional engine must not falsely claim to benchmark that strategy.
 
 ## Deck library
 
@@ -14,7 +14,7 @@ The previous CPU benchmark mostly used printed theme decks, Haymaker-style basic
 |---|---|
 | Haymaker aggression | Basic attacker tempo, Prize race, trainers and switching |
 | Blastoise Rain Dance | Stage-2 setup, Water Energy acceleration, Pokémon Power |
-| Meganium Wild Growth | Stage-2 evolution and Energy-type modification |
+| Venusaur Energy Trans | Stage-2 evolution and movable Grass Energy |
 | Typhlosion Fire Recharge | Evolution sequencing, discard recovery and Energy economy |
 | Feraligatr Downpour / Riptide | Evolution sequencing, discard-based damage and recursion |
 | Energy Removal attrition | Denial strategy, constrained Energy and replacement timing |
