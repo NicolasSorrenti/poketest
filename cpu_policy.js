@@ -354,7 +354,12 @@ function candidates(o,cfg,used){
   for(let powerIndex=0;powerIndex<powerNames.length;powerIndex++){
    if(!POWERS.ACTIVATED.has(powerNames[powerIndex])||!powerOpportunity(o,slot,powerNames[powerIndex]))continue;
    const id=slot+':'+powerIndex;
-   if(!used.powerKeys.has(id))options.push(command('use_power',{slot,powerIndex}));
+   // Rain Dance may be used repeatedly while Water Energy remains in hand.
+   // Keep its reuse confined to Level 8; the global 8-Power/turn budget and
+   // decreasing hand Energy prevent cycling indefinitely.
+   const repeatable=cfg.level===8&&powerNames[powerIndex]==='Rain Dance';
+   if(repeatable||!used.powerKeys.has(id))
+    options.push(command('use_power',{slot,powerIndex}));
   }
  }
  if(o.stadium&&!used.stadium)options.push(command('use_stadium'));
@@ -388,8 +393,41 @@ function energyRemovalChoiceValue(unit,defender,energyIndex,enemy){
  const control=denied*2+(preventedKO?130:0)+removed*7;
  return enemy?control:-control;
 }
+// Apex: Rain Dance is a free, repeatable Water Energy attachment, not a
+// generic 85-point Power. The target valuation uses only our visible hand,
+// public cards, and presently affordable attacks; it never samples deck draws.
+function rainDanceTargetValue(unit,waterId,enemy){
+ if(!unit||!enemy||!waterId)return -100;
+ const before=strongestAffordableAttack(unit,enemy);
+ const after=damageAfterAttachment(unit,waterId,enemy);
+ const increase=Math.max(0,after-before);
+ const ko=before<hpRemaining(enemy)&&after>=hpRemaining(enemy)&&after>0;
+ const prep=Math.max(0,energyValue(unit,waterId));
+ // Prefer an immediate attack unlock, then productive future development.
+ // A fully powered attacker still benefits a little from spare Energy.
+ return 30+Math.min(125,prep)*.65+increase*1.7+(ko?135:0)-
+  (before>0&&increase===0?25:0);
+}
+function rainDanceOpportunity(o){
+ const waterId=o.self.hand.find(id=>card(id)?.name==='Water Energy');
+ if(!waterId||!o.opponent.active)return -100;
+ return Math.max(-100,...slots(o.self).map(slot=>{
+  const unit=slotUnit(o.self,slot);
+  return card(unit?.id)?.types?.includes('Water')?
+   rainDanceTargetValue(unit,waterId,o.opponent.active):-100;
+ }));
+}
 function choiceValue(option,decision,o,cfg){
  const id=option.id,label=option.label||'',kind=decision.kind||'',ctx=decision.label||'';
+ // Power target prompts are own-team choices, even when their printed
+ // label says "Water Pokémon" rather than "your Pokémon". The generic
+ // slot scorer otherwise accidentally looks up the opponent's Bench.
+ if(cfg?.level===8&&/^slot:-?\d+$/.test(id)&&
+   /^Choose Water Pokémon to attach Energy$/i.test(ctx)){
+  const unit=slotUnit(o.self,Number(id.slice(5)));
+  const energy=o.self.hand.find(cardId=>card(cardId)?.name==='Water Energy');
+  return rainDanceTargetValue(unit,energy,o.opponent.active);
+ }
  if(/^prize:/.test(id))return 1;
  if(/^n:\d+$/.test(id)&&cfg?.level>=3){
   const index=Number(id.slice(2));
@@ -730,7 +768,17 @@ function score(a,o,cfg,used){
    ((hpRemaining(before)<30)&&alternativeSurvives?23:0)*style.survival-
    (before.energies?.length||0)*18+foresight;
  }
- if(type==='use_power')return 85*style.setup;
+ if(type==='use_power'){
+  if(cfg.level===8){
+   const unit=slotUnit(p,v.slot);
+   const names=(card(unit?.id)?.abilities||[]).filter(a=>a.name).map(a=>a.name);
+   if(names[v.powerIndex]==='Rain Dance'){
+    const benefit=rainDanceOpportunity(o);
+    return benefit>0?(150+benefit)*style.setup:0;
+   }
+  }
+  return 85*style.setup;
+ }
  if(type==='use_stadium')return 85;
  return 0;
 }
