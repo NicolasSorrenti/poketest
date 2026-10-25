@@ -85,3 +85,15 @@ The dialogue-memory layer now provides **132 optional three-beat asides across 2
 - If a prerequisite never happens, its callback stays invisible and ordinary Talk remains available. New Game+ still starts with empty dialogue history, with no assumed prior encounters.
 - Dialogue references have been editorially designed to avoid asserting untracked match results, undocumented relationships, player actions, or choices from a different scene.
 - The selection remains deterministic, save-safe, occasional, and read-only; completed asides have no rewards, affection, calendar cost or competitive side effects. Regression coverage includes authored source validity, cross-character gating, multi-step chains, legacy IDs, absent-history fallbacks, save/load and once-only completion.
+
+## More ambient continuity — third wave (October 2026)
+
+The optional dialogue library now includes **220 incidentally linked scenes across 22 NPCs**: 44 original, 88 from the second wave, and 88 from this wave.
+
+- Wave 3 gives every NPC an additional callback anchored to a *different existing everyday anecdote* (topic 2) and another anchored to a *different established character scene* (topic 3).
+- A new cross-character callback for every NPC references a real, previously completed Talk with another named character. It remains ineligible without the actual dialogue history and does not assume acquaintance alone is enough.
+- Each NPC also gains a continuation to their prior cross-character callback (aside 4), allowing the player to hear a subject arise again only after it actually came up once.
+- All previous IDs (aside 0–5) retain their meaning. New callbacks append at IDs 6–9, so loading old saves never retroactively invents dialogue or rewrites past choices.
+- These are *optional asides* appended to otherwise unrelated casual conversations, not forced narrative events. They remain rare, repeat-free, read-only during selection, and carry no game-time, affection, credits or reward effects.
+- Source discussions may happen off the beaten path during the 90-day campaign. If any prerequisite is skipped, no callback is inserted. Save/reload of interrupted dialogues still acknowledges scenes only once their last line is shown.
+- Editorial goals: character-specific humor and everyday texture, no unexplained tournament outcomes, and callbacks that make sense independently of romantic commitment or unrelated story branches.
