@@ -412,8 +412,9 @@ function selectPerson(id,{skipInvitation=false}={}){
   sayConversation(prompt.lines,prompt.choices,null,invite);
  }else{
   const context=first?null:REACT.reaction(state,id,c,cast,COMMUNITY,CONSEQ);
-  const memory=!first&&!context?MEM?.offer(state,id):null;
-  sayConversation(context?.lines||memory?.lines||VN.dialogue(state,id,c,RPGD,{first,present:currentPeople()}),memory?.choices||(fresh?VN.choices(state,id):[]),context?.id||null,null,memory);
+  const invitations=fresh?VN.choices(state,id):[];
+  const memory=!first&&!context&&!invitations.length?MEM?.offer(state,id):null;
+  sayConversation(context?.lines||memory?.lines||VN.dialogue(state,id,c,RPGD,{first,present:currentPeople()}),memory?.choices||invitations,context?.id||null,null,memory);
  }
  tutorialEvent('conversation');showCGMoment(memories[0]);
 }
