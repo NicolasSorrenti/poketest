@@ -643,13 +643,21 @@ function energyHorizonBonus(action,o,cfg){
 // Pokémon Center heals the whole team but discards Energy from each healed
 // Pokémon. Preserve attachments until after the heal, including Energy in
 // hand that would otherwise be thrown away in the same turn.
-function pokemonCenterPending(o){
- return (o.self.hand||[]).some(id=>card(id)?.name==='Pokémon Center')&&
-  [o.self.active,...o.self.bench].some(u=>u&&u.damage>=10);
+function pokemonCenterPending(o,cfg,used){
+ // Do not block the turn's Energy attachment for a Center that cannot be
+ // played: Apex has a finite Trainer-action budget per turn.
+ if((used?.trainers||0)>=cfg.skill.trainers||
+    !(o.self.hand||[]).some(id=>card(id)?.name==='Pokémon Center'))return false;
+ const damaged=[o.self.active,...o.self.bench].filter(u=>u&&u.damage>=10);
+ const healed=damaged.reduce((n,u)=>n+u.damage,0);
+ const lost=damaged.reduce((n,u)=>n+(u.energies?.length||0),0);
+ // Match Center's existing resource-aware score; a small heal that discards
+ // valuable Energy is not worth holding back our only attachment for.
+ return damaged.length>0&&(healed*1.5-lost*65+110)*cfg.style.survival>175;
 }
-function pokemonCenterEnergyWaste(o,slot){
+function pokemonCenterEnergyWaste(o,slot,cfg,used){
  const u=slotUnit(o.self,slot);
- return !!(u&&u.damage>=10&&pokemonCenterPending(o));
+ return !!(u&&u.damage>=10&&pokemonCenterPending(o,cfg,used));
 }
 // Evaluate a possible replacement against the opponent's *revealed* Active.
 // An unequipped Basic is not a ready attacker, and its weakness/HP matters.
@@ -724,7 +732,7 @@ function score(a,o,cfg,used){
   // This attachment will be discarded if Center heals its target later.
   // Penalize it enough to force the zero-cost heal first; a follow-up
   // attachment is then evaluated normally against the healed board.
-  if(cfg.level>=8&&pokemonCenterEnergyWaste(o,v.slot))return -1000;
+  if(cfg.level>=8&&pokemonCenterEnergyWaste(o,v.slot,cfg,used))return -1000;
   if(cfg.level===1)return 110+value*style.setup+(v.slot===-1?20:0);
   // One-step public-state projection: evaluate the attacks unlocked by the
   // Energy without calling reduce() to peek at future flips or hidden cards.
@@ -926,6 +934,21 @@ function planningBonus(action,o,cfg){
  return Math.max(-45,Math.min(135,immediate+synergy))*cfg.style.damage;
 }
 
+function energyPreparationActions(o,cfg,actions){
+ // Attacking ends the turn. Use a legal, productive Energy attachment first,
+ // unless an already-affordable attack guarantees the final knockout.
+ if(cfg.level!==8||o.self.energyUsed)return actions;
+ const useful=actions.some(a=>a.type==='attach_energy'&&
+  energyValue(slotUnit(o.self,a.payload.slot),o.self.hand[a.payload.handIndex])>12);
+ if(!useful)return actions;
+ const gameWinningKo=(o.self.prizeCount<=1||o.opponent.bench.length===0)&&
+  actions.some(a=>{
+   if(a.type!=='attack')return false;
+   const attacks=o.self.active?.effectiveAttacks||card(o.self.active?.id)?.attacks||[];
+   return knockoutChance(attacks[a.payload.attackIndex],o.self.active,o.opponent.active)>=.999;
+  });
+ return gameWinningKo?actions:actions.filter(a=>a.type!=='attack');
+}
 function chooseAction(game,raw={},memo={}){
  const cfg=configuration(raw),o=observation(game,cfg.side);
  const used={trainers:memo.trainers||0,powers:memo.powers||0,powerKeys:memo.powerKeys||new Set(),stadium:!!memo.stadium};
@@ -934,12 +957,13 @@ function chooseAction(game,raw={},memo={}){
  // despite its immediate -1000 penalty. This is a strict sequencing guard,
  // not merely a heuristic: never spend the turn's attachment on a damaged
  // Pokémon while an unplayed Center is available to discard that Energy.
- const safeActions=cfg.level===8&&pokemonCenterPending(o)?
-  actions.filter(a=>a.type!=='attach_energy'||!pokemonCenterEnergyWaste(o,a.payload.slot)):
+ const safeActions=cfg.level===8&&pokemonCenterPending(o,cfg,used)?
+  actions.filter(a=>a.type!=='attach_energy'||!pokemonCenterEnergyWaste(o,a.payload.slot,cfg,used)):
   actions;
  if(!safeActions.length)return null;
  const random=rng(cfg.seed+game.turnSerial*7919+(game.events?.length||0)*17011+cfg.side*31);
- const ranked=safeActions.map((action,i)=>({action,
+ const preparedActions=energyPreparationActions(o,cfg,safeActions);
+ const ranked=preparedActions.map((action,i)=>({action,
   score:score(action,o,cfg,used)+planningBonus(action,o,cfg)+prizeRaceBonus(action,o,cfg)+knockoutTempoBonus(action,o,cfg)+opponentResponseBonus(action,o,cfg)+energyHorizonBonus(action,o,cfg),tie:i}))
   .sort((a,b)=>b.score-a.score||a.tie-b.tie);
  // Rank all visible options before competence-sensitive choice noise. A larger
@@ -1018,4 +1042,4 @@ function driveSide(initial,{side=1,level=3,personality='balanced',seed=1,plannin
 }
 function driveBot(game,limit=200,config={}){return driveSide(game,{...config,side:1,limit});}
 function propose(game,config={}){return chooseAction(game,{...config,side:1});}
-module.exports={SKILLS,CALIBRATED_SKILLS,PERSONALITIES,configuration,observation,trainerOpportunity,candidates,score,knockoutChance,planningBonus,evolutionTempoPenalty,prizeRaceBonus,knockoutTempoBonus,opponentResponseBonus,energyHorizonBonus,chooseAction,driveSide,driveBot,propose};
+module.exports={SKILLS,CALIBRATED_SKILLS,PERSONALITIES,configuration,observation,trainerOpportunity,candidates,score,knockoutChance,planningBonus,evolutionTempoPenalty,prizeRaceBonus,knockoutTempoBonus,opponentResponseBonus,energyHorizonBonus,energyPreparationActions,chooseAction,driveSide,driveBot,propose};
