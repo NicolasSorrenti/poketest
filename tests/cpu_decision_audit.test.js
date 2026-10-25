@@ -17,3 +17,22 @@ test('does not classify unfinished turns or opponents as missed',()=>{
   row(3,'end_turn',false,0)]);
  assert.equal(result.missedUsefulAttachments,0);
 });
+
+
+test('winning attack is a justified skip rather than a missed attachment',()=>{
+ const result=summarize([{...row(7,'attack',true),wonGame:true}]);
+ assert.equal(result.opportunities,1);
+ assert.equal(result.missedUsefulAttachments,0);
+ assert.equal(result.justifiedWinningSkips,1);
+ assert.deepEqual(result.missedTurns,[]);
+});
+test('winning after attack resolution choices still excuses the attachment',()=>{
+ const result=summarize([row(8,'attack',true),{...row(8,'choose'),wonGame:true}]);
+ assert.equal(result.missedUsefulAttachments,0);
+ assert.equal(result.justifiedWinningSkips,1);
+});
+test('losing terminal attack still counts as a missed attachment',()=>{
+ const result=summarize([{...row(9,'attack',true),wonGame:false}]);
+ assert.equal(result.missedUsefulAttachments,1);
+ assert.equal(result.justifiedWinningSkips,0);
+});

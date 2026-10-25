@@ -5,7 +5,7 @@
 const {performance}=require('node:perf_hooks');
 const {reduce,CATALOG}=require('./headless_duel');
 const {publicView}=require('./duel_protocol');
-const {isBasicPokemon,isEnergy,canEvolve,canPayEnergy}=require('./core_rules');
+const {isBasicPokemon,isEnergy,canEvolve,canPayEnergy,legalAttachment}=require('./core_rules');
 const ATTACK=require('./attack_effects_core');
 const POWERS=require('./classic_power_core');
 
@@ -337,7 +337,16 @@ function candidates(o,cfg,used){
     if(target&&canEvolve(c,card(target.id))&&target.playedTurn<o.round)
      options.push(command('evolve',{handIndex:i,slot}));
    }
-  if(!p.energyUsed&&isEnergy(c))for(const slot of slots(p))options.push(command('attach_energy',{handIndex:i,slot}));
+  if(!p.energyUsed&&isEnergy(c))for(const slot of slots(p)){
+   const target=slotUnit(p,slot);
+   // Exclude Energy placements that the authoritative reducer rejects.
+   // Otherwise the Apex attack-ordering guard may suppress a legal attack
+   // in favor of a completely impossible attachment.
+   if(target&&!(target.energyAttachBlockSerial>o.turnSerial)&&
+      legalAttachment({card:c,unit:target,round:o.round,energyUsed:p.energyUsed,
+       cardName:card(target.id)?.name||''}))
+    options.push(command('attach_energy',{handIndex:i,slot}));
+  }
   if(c?.supertype==='Trainer'&&used.trainers<cfg.skill.trainers&&trainerOpportunity(o,c.name,cfg))options.push(command('play_trainer',{handIndex:i}));
  }
  if(p.active){
@@ -1028,6 +1037,8 @@ function driveSide(initial,{side=1,level=3,personality='balanced',seed=1,plannin
    energyValue(slotUnit(auditObs.self,candidate.payload.slot),
     auditObs.self.hand[candidate.payload.handIndex])>12);
   commands.push({side,turnSerial:beforeTurn,
+   // Resolved outcome, never a hypothetical result of a simulated attack.
+   wonGame:!!next.game.over&&next.game.winner===side,
    attachmentOpportunity,energyUsedBefore:auditObs.self.energyUsed,
    energyInHand:auditObs.self.hand.some(id=>isEnergy(card(id))),
    command:a,score:next.score,alternatives:next.alternatives,
