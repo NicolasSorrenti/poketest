@@ -133,3 +133,19 @@ test('malformed memory IDs and older saves cannot invent casual history or callb
  assert.deepEqual(restart.dialogueMemory.casualSeen,{});
  assert.deepEqual(restart.dialogueMemory.asidesSeen,{});
 });
+
+test('remembered topic identities survive reordering or inserting other authored chats',()=>{
+ const Character=require('../rpg_character_chats');
+ for(const [kind,bank] of [['everyday',Everyday.topics],['character',Character.scenes]]){
+  const rows=bank.hana,first=rows[0],second=rows[1];
+  const savedId=Memory.casualId(kind,'hana',0);
+  try{
+   rows[0]=second;rows[1]=first;
+   assert.equal(Memory.casualId(kind,'hana',1),savedId,'same original topic must retain its ID after reordering');
+  }finally{rows[0]=first;rows[1]=second;}
+  assert.equal(Memory.casualId(kind,'hana',0),savedId);
+ }
+ const s={day:9};
+ assert.equal(Memory.markCasual(s,'casual:everyday:hana:0'),false,
+  'old position-shaped IDs must never masquerade as a completed authored conversation');
+});
