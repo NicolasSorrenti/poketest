@@ -96,7 +96,7 @@ function launch(initial,approve=false,mandatory=false){
  const loc={origin:'http://localhost',href:'http://localhost/rpg.html',reload(){},assign(href){this.href=new URL(href,this.origin).href;}};
  new Function('window','document','localStorage','sessionStorage','location','fetch','confirm','Image',js)(
   win,doc,local,session,loc,async()=>({ok:true,json:async()=>({decks:[{id:'blackout',name:'Blackout'}]})}),()=>approve,function MockImage(){return new FakeNode('img');});
- return {elements,listeners,loc,act:win.__testRpgAction,state:()=>JSON.parse(saved.neoHarborRpgV1)};
+ return {elements,listeners,loc,act:win.__testRpgAction,select:(id,options)=>win.__testRpgSelect(id,options),state:()=>JSON.parse(saved.neoHarborRpgV1)};
 }
 function finishGreeting(app){
  let steps=0;
@@ -1099,7 +1099,7 @@ test('a first meeting plays its greeting scene before actions and survives reloa
 test('casual character click starts a free VN exchange with a compact external action bar',()=>{
  const r=launch({day:5,slot:0,location:'shop'});
  const hana=r.elements.people.children.find(x=>x.children?.[1]?.children?.[0]?.textContent==='Hana Mizuno');
- assert.ok(hana);hana.onclick();
+ assert.ok(hana);r.select('hana',{skipInvitation:true});
  const current=r.state();
  assert.ok(current.scene.dialogue?.length>=3,'character and player exchange more than one line');
  assert.ok(current.scene.dialogue.some(x=>x.speaker==='Protagonist'));
@@ -1152,7 +1152,7 @@ test('occasional natural dialogue invitation opens the existing social system wi
    Conversations.choices({day,slot,hungOut:{},appointments:[]},'hana').some(([,action])=>action==='socialPlan:hana'));
  assert.ok(match,'Hana offers an optional invitation somewhere in the opening weeks');
  const r=launch({...match,location:match.place}),hana=r.elements.people.children.find(x=>x.children?.[1]?.children?.[0]?.textContent==='Hana Mizuno');
- assert.ok(hana);hana.onclick();finishGreeting(r);
+ assert.ok(hana);r.select('hana',{skipInvitation:true});finishGreeting(r);
  const before=r.state();
  assert.equal(before.relationships.hana.affection,0);
  const invite=r.elements.choices.children.find(x=>x.textContent.includes('something together'));
