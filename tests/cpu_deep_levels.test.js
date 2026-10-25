@@ -130,3 +130,27 @@ test('full-turn planner explores a legal evolve + Energy sequence without resolv
  assert.deepEqual(second?.command,first.command,
   'planning must not consult concealed opposing cards or next coin flip');
 });
+
+
+test('planner penalizes overcommitting attached Energy beyond useful printed attack costs',()=>{
+ const P=require('../cpu_lookahead');
+ const base={phase:'game',turnSerial:5,self:{
+  active:{id:'fighter',hp:80,damage:0,energies:['fight']},
+  bench:[{id:'backup',hp:60,damage:0,energies:[]}],
+  hand:[],deckCount:25,prizeCount:3
+ },opponent:{active:{id:'enemy',hp:70,damage:0,energies:[],status:null},bench:[],prizeCount:3}};
+ const helpers={
+  card:id=>id==='fight'?{name:'Fighting Energy',supertype:'Energy'}:
+   {name:id,supertype:'Pokémon',attacks:[{cost:['Fighting'],damage:'10'}]},
+  hpRemaining:u=>u.hp-u.damage,
+  strongestAffordableAttack:()=>0,
+  projectedAttackValue:()=>0,candidates:()=>[],score:()=>0,
+  attackBonus:()=>0,knockoutChance:()=>0
+ };
+ const level8={side:1,level:8,style:{survival:1}};
+ const economical=P.evaluateTurn(base,level8,helpers);
+ const excess=structuredClone(base);
+ excess.self.active.energies.push('fight','fight','fight');
+ assert.ok(P.evaluateTurn(excess,level8,helpers)<economical,
+  'do not overvalue wasted energy commitments that enable no extra attack');
+});
