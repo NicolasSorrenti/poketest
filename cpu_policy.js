@@ -644,8 +644,13 @@ function energyHorizonBonus(action,o,cfg){
 // Pokémon. Preserve attachments until after the heal, including Energy in
 // hand that would otherwise be thrown away in the same turn.
 function pokemonCenterPending(o){
- return (o.self.hand||[]).some(id=>card(id)?.name==='Pokémon Center')&&
-  [o.self.active,...o.self.bench].some(u=>u&&u.damage>=10);
+ if(!(o.self.hand||[]).some(id=>card(id)?.name==='Pokémon Center'))return false;
+ const damaged=[o.self.active,...o.self.bench].filter(u=>u&&u.damage>=10);
+ const healed=damaged.reduce((n,u)=>n+u.damage,0);
+ const lost=damaged.reduce((n,u)=>n+(u.energies?.length||0),0);
+ // Merely holding Center is not a reason to skip an Energy attachment.
+ // Healing must be sufficiently valuable to justify discarding resources.
+ return damaged.length>0&&healed*1.5-lost*65+110>155;
 }
 function pokemonCenterEnergyWaste(o,slot){
  const u=slotUnit(o.self,slot);
@@ -939,7 +944,17 @@ function chooseAction(game,raw={},memo={}){
   actions;
  if(!safeActions.length)return null;
  const random=rng(cfg.seed+game.turnSerial*7919+(game.events?.length||0)*17011+cfg.side*31);
- const ranked=safeActions.map((action,i)=>({action,
+ // Attacks end the turn. If an affordable legal attachment would improve
+ // our board, perform that preparation first unless the attack wins outright.
+ // This is evaluated from the acting player's own hand and public board.
+ const usefulAttachment=cfg.level===8&&!o.self.energyUsed&&
+  safeActions.some(a=>a.type==='attach_energy'&&
+   energyValue(slotUnit(o.self,a.payload.slot),o.self.hand[a.payload.handIndex])>12);
+ const urgentWin=o.opponent.active&&
+  (o.self.prizeCount===1||o.opponent.bench.length===0);
+ const preparedActions=usefulAttachment&&!urgentWin?
+  safeActions.filter(a=>a.type!=='attack'):safeActions;
+ const ranked=preparedActions.map((action,i)=>({action,
   score:score(action,o,cfg,used)+planningBonus(action,o,cfg)+prizeRaceBonus(action,o,cfg)+knockoutTempoBonus(action,o,cfg)+opponentResponseBonus(action,o,cfg)+energyHorizonBonus(action,o,cfg),tie:i}))
   .sort((a,b)=>b.score-a.score||a.tie-b.tie);
  // Rank all visible options before competence-sensitive choice noise. A larger
