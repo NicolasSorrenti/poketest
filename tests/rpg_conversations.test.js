@@ -107,3 +107,43 @@ test('existing casual chats expose stable memory IDs without changing a single a
  const first=VN.dialogueEntry({day:1,slot:0},'hana',cast.hana,null,{first:true});
  assert.equal(first.id,null,'introductions are not retroactively counted as casual conversations');
 });
+
+test('cross-character callbacks can accompany unrelated Talk only after hearing the other NPC',()=>{
+ const MEMORY=require('../rpg_dialogue_memory');
+ const generic={intro:'Hello!',talk:['A regular chat.','A different day.']};
+ let reachable=0;
+ for(const [npc,rows] of Object.entries(MEMORY.asides)){
+  const reference=rows[4],from=reference.from,[bank,index]=reference.requires.split(':');
+  const originalId=MEMORY.casualId(bank,from,Number(index));
+  assert.ok(originalId,npc+' must have a real source conversation');
+  const unseen={day:25,slot:1,dialogueMemory:{entries:{},casualSeen:{},asidesSeen:{}}};
+  const earlier=JSON.stringify(unseen),base=VN.dialogueEntry(unseen,npc,cast[npc]||generic,null,{present:[]});
+  assert.equal(MEMORY.aside(unseen,npc,base.id),null,'missing cross-character history may not trigger a callback');
+  assert.equal(JSON.stringify(unseen),earlier,'unseen selection cannot create evidence');
+  // Actually select the originating source topic in the 90-day timeline, not
+  // just fabricate knowledge of an arbitrary nonexistent dialogue.
+  const witnessed=Array.from({length:69},(_,i)=>i+1).flatMap(day=>
+   [0,1,2].map(slot=>({day,slot}))).find(t=>
+    VN.dialogueEntry(t,from,cast[from]||generic,null,{present:[]}).id===originalId);
+  assert.ok(witnessed,from+' original dialogue can actually be shown');
+  const save={day:witnessed.day,slot:witnessed.slot,
+   dialogueMemory:{entries:{},casualSeen:{},asidesSeen:{}}};
+  assert.equal(MEMORY.markCasual(save,originalId),true);
+  const encountered=Array.from({length:90-witnessed.day},(_,i)=>witnessed.day+i+1).flatMap(day=>
+   [0,1,2].map(slot=>({day,slot}))).find(t=>{
+    const present={...save,...t},talk=VN.dialogueEntry(present,npc,cast[npc]||generic,null,{present:[]});
+    return talk.id&&MEMORY.aside(present,npc,talk.id)?.id==='aside:'+npc+':4';
+   });
+  assert.ok(encountered,npc+' must be able to recall '+from+' in unrelated Talk');
+  const later={...save,...encountered};
+  const unrelated=VN.dialogueEntry(later,npc,cast[npc]||generic,null,{present:[]});
+  const aside=MEMORY.aside(later,npc,unrelated.id);
+  assert.ok(aside&&aside.requires===originalId);
+  assert.notEqual(unrelated.id,originalId,'callback runs in a separate, unrelated conversation');
+  assert.equal(aside.lines.length,3);
+  assert.equal(MEMORY.markAside(later,aside.id),true);
+  assert.equal(MEMORY.markAside(later,aside.id),false);
+  reachable++;
+ }
+ assert.equal(reachable,22);
+});
