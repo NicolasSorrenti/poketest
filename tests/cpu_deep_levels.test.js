@@ -276,3 +276,26 @@ test('CPU benchmark instrumentation measures real individual decisions',()=>{
  assert.equal(times.length,played.steps,
   'timing observes each actual chosen command, not one batch divided by step count');
 });
+
+test('Apex hypothetical counterattack never uses disabled attack slots',()=>{
+ const S=require('../cpu_strategic_search');
+ const attack={name:'Big Future Hit',cost:['Fighting','Colorless'],damage:'70'};
+ const attacker={id:'enemy',status:null,energies:['fight']};
+ const defender={id:'player',damage:0,hp:80};
+ const h={
+  card:id=>({attacks:[attack]}),
+  energyPool:unit=>(unit.energies||[]).map(()=> 'Fighting'),
+  canPayEnergy:(cost,pool)=>pool.length>=cost.length,
+  estimatedDamage:()=>70,
+  hpRemaining:unit=>unit.hp-unit.damage
+ };
+ assert.ok(S.oneEnergyThreat(attacker,defender,h,10)>0);
+ attacker.gymAttackCooldown={index:0,expires:11};
+ assert.equal(S.oneEnergyThreat(attacker,defender,h,10),0);
+ delete attacker.gymAttackCooldown;
+ attacker.gymAttackOnce=[0];
+ assert.equal(S.oneEnergyThreat(attacker,defender,h,10),0);
+ delete attacker.gymAttackOnce;
+ attacker.amnesia={index:0,expires:11};
+ assert.equal(S.oneEnergyThreat(attacker,defender,h,10),0);
+});
