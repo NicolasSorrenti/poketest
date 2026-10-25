@@ -208,4 +208,17 @@ assert.equal(planTravel({from:'',to:'Pixel Palace'}),null);
  assert.equal(mandatory.takeNext(interrupted,events).id,'chapter_two');
 }
 
+{
+ // Being busy must not permanently lose a mandatory beat with a dayLte trigger.
+ const event={id:'fleeting_visit',kind:'bond',characterId:'hana',earliestDay:2,priority:10,
+  delivery:'remote',timeCost:0,trigger:{all:[{dayGte:2},{dayLte:2}]},
+  lines:[{speaker:'hana',text:'We should talk.'}],choices:[{label:'Okay',reply:'Thank you.'}]};
+ const events=[event],state={day:2,slot:0,activeStory:{id:'previous_scene'},mandatoryEventState:null};
+ mandatory.queue(state,events);
+ assert.equal(state.mandatoryEventState.pending[0].eligibleDay,2);
+ state.day=4;state.slot=1;
+ assert.equal(mandatory.takeNext(state,events),null);
+ state.activeStory=null;
+ assert.equal(mandatory.takeNext(state,events).id,event.id,'queued window must remain deliverable');
+}
 console.log('RPG time and travel transitions: planning, DOM lifecycle, priority, skip and reduced-motion checks passed.');
