@@ -41,7 +41,7 @@
  const rpgParams=new URLSearchParams(location.search),rpgMode=rpgParams.get('rpg')==='1',rpgDuelId=rpgParams.get('duelId');
  const cubeSoloMode=rpgParams.get('cubeSolo')==='1';
  // Distinct browser sessions stop Cube duels leaking into Single Match.
- const rpgKey=rpgMode&&rpgDuelId?window.NeoRpgDuelBridge.sessionKey(rpgDuelId):cubeSoloMode?'neoCubeLiveToken':'neoClassicLiveToken';
+ const rpgKey=rpgMode&&rpgDuelId?window.NeoRpgDuelBridge.sessionKey(rpgDuelId):cubeRoomCode?'neoCubeRoomLiveToken:'+cubeRoomCode:cubeSoloMode?'neoCubeLiveToken':'neoClassicLiveToken';
  const rpgNpc=rpgMode?rpgParams.get('npc'):null;
  const opponentName=rpgMode?(rpgParams.get('npcName')||'Opponent'):'Classic CPU';
  const mats=window.NeoDuelPlaymats;
