@@ -7,6 +7,8 @@
  if(typeof module==='object'&&module.exports)module.exports=api;
  if(root)root.NeoRpgDialogueMemory=api;
 })(typeof window!=='undefined'?window:null,function(){
+ const EVERYDAY=typeof module==='object'&&module.exports?require('./rpg_everyday_chats'):window.NeoRpgEverydayChats;
+ const CHARACTER=typeof module==='object'&&module.exports?require('./rpg_character_chats'):window.NeoRpgCharacterChats;
  const threads={
  "hana": {
   "topic": "basilisk",
@@ -1073,7 +1075,15 @@
   if(!['everyday','character','classic','group'].includes(source)||
      typeof npc!=='string'||!/^[a-z0-9_-]{1,60}$/.test(npc)||
      (!Number.isInteger(index)&&typeof index!=='string'))return null;
-  const suffix=String(index);
+  let suffix=String(index);
+  if(source==='everyday'||source==='character'){
+   // Derive from the authored opener rather than array position. Adding or
+   // rearranging other dialogue topics must not rewrite players' memories.
+   const bank=source==='everyday'?EVERYDAY?.topics:CHARACTER?.scenes;
+   const opener=bank?.[npc]?.[index]?.[0];
+   if(typeof opener!=='string'||!opener.trim())return null;
+   suffix='t'+hash(opener).toString(36);
+  }
   if(!/^[a-z0-9_-]{1,32}$/.test(suffix))return null;
   return 'casual:'+source+':'+npc+':'+suffix;
  }
