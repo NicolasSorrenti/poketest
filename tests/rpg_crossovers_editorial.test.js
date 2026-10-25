@@ -18,11 +18,13 @@ const expectedCrossFlags={
  jinx_marina_cross_1:['jinx_marina_safety','jinx_marina_tease','jinx_marina_help'],
  jinx_alma_cross_1:['jinx_alma_defend','jinx_alma_pick','jinx_alma_bribe'],
  sol_alma_cross_1:['sol_practical','sol_respect'],
- sol_marina_cross_1:['sol_safe_game','sol_marina_trust']
+ sol_marina_cross_1:['sol_safe_game','sol_marina_trust'],
+ laca_marina_cross_1:['laca_marina_team','laca_marina_squirtle'],
+ laca_sol_cross_1:['laca_sol_props','laca_sol_safety']
 };
 const originals=new Set(['hana','reina','shiori','yuna','akari','camila','marina','kaede']);
 const cast=new Set([...originals,...Object.keys(NARRATIVE.cast),...Object.keys(REGISTRY.cast),'elio','alma','nereo']);
-test('twelve playable crossovers keep their dialogue speakers, flags, and scene choices intact',()=>{
+test('fourteen playable crossovers keep their dialogue speakers, flags, and scene choices intact',()=>{
  assert.deepEqual(STORY.validate(),[]);
  const crossovers=STORY.events.filter(e=>e.id.includes('_cross_'));
  assert.deepEqual(crossovers.map(e=>e.id).sort(),Object.keys(expectedCrossFlags).sort());
@@ -30,7 +32,8 @@ test('twelve playable crossovers keep their dialogue speakers, flags, and scene 
   const flags=expectedCrossFlags[e.id];
   assert.deepEqual(e.choices.map(c=>c.flag),flags,'historic branching metadata changed for '+e.id);
   assert.ok(e.lines.length>=6,'crossover lacks back-and-forth '+e.id);
-  assert.ok(e.lines.some(x=>x.speaker==='Narrator'),'missing physical context '+e.id);
+  if(!e.id.startsWith('laca_'))assert.ok(e.lines.some(x=>x.speaker==='Narrator'),'missing physical context '+e.id);
+  else assert.ok(e.participants?.length,'new crossover needs the other scene character '+e.id);
   assert.ok(e.lines.some(x=>x.speaker==='Protagonist'),'player never speaks '+e.id);
   assert.ok(e.lines.some(x=>x.speaker===e.npc),'main NPC never speaks '+e.id);
   assert.ok(e.lines.every(x=>x.text&&x.text.trim().length>0),'empty dialogue '+e.id);
