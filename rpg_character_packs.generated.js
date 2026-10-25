@@ -487,6 +487,1020 @@ const packs=[
      "barb_showcase_practice": "The rehearsal worked. Turns out I can introduce my own work without swallowing my words.",
      "barb_showcase_artist": "You made me grin through my whole showcase. That is an official complaint."
     }
+   },
+   {
+    "id": "barb_random_cg_01",
+    "npc": "barb",
+    "title": "The Zipper Incident",
+    "start": 6,
+    "end": 90,
+    "place": "shop",
+    "slot": 1,
+    "minBond": 0,
+    "prerequisite": null,
+    "participants": [],
+    "lines": [
+     {
+      "speaker": "barb",
+      "text": "Okay. Before you say anything: this zipper and I are having a private disagreement."
+     },
+     {
+      "speaker": "Protagonist",
+      "text": "Your jacket won?"
+     },
+     {
+      "speaker": "barb",
+      "text": "It won the first round. I was testing a new fastening system, and apparently I tested it on myself."
+     },
+     {
+      "speaker": "Protagonist",
+      "text": "Is that why you are standing perfectly still?"
+     },
+     {
+      "speaker": "barb",
+      "text": "I am standing *strategically*. If I move, the little metal pull disappears into the lining."
+     },
+     {
+      "speaker": "Protagonist",
+      "text": "Want me to take a look?"
+     },
+     {
+      "speaker": "barb",
+      "text": "At the zipper. Eyes on the zipper, troublemaker. And if you laugh, I am adding a surcharge."
+     },
+     {
+      "speaker": "Protagonist",
+      "text": "You charge your rescuers?"
+     },
+     {
+      "speaker": "barb",
+      "text": "Only the cute ones. Now hold the fabric steady while I work the pull free."
+     }
+    ],
+    "choices": [
+     {
+      "label": "Hold the jacket steady and follow her instructions",
+      "reply": "See? A steady hand, no panic, and my dignity is only slightly damaged. You are hired.",
+      "kind": "support",
+      "flag": "barb_zipper_help",
+      "delta": {
+       "affection": 2,
+       "trust": 2,
+       "respect": 0,
+       "attraction": 0
+      }
+     },
+     {
+      "label": "Ask her to show you what went wrong",
+      "reply": "The teeth are fine; I sewed the lining too close. That is actually useful feedback.",
+      "kind": "honest",
+      "flag": "barb_zipper_measure",
+      "delta": {
+       "affection": 1,
+       "trust": 1,
+       "respect": 2,
+       "attraction": 0
+      }
+     },
+     {
+      "label": "Tell her the design looks great, even unfinished",
+      "reply": "Oh, do not distract the designer while she is trapped in her own masterpiece. ...Thank you.",
+      "kind": "flirt",
+      "flag": "barb_zipper_compliment",
+      "delta": {
+       "affection": 2,
+       "trust": 0,
+       "respect": 0,
+       "attraction": 2
+      }
+     }
+    ],
+    "encounterType": "slice",
+    "trigger": "entry"
+   },
+   {
+    "id": "barb_random_cg_02",
+    "npc": "barb",
+    "title": "The Wind Has Opinions",
+    "start": 6,
+    "end": 90,
+    "place": "park",
+    "slot": 1,
+    "minBond": 0,
+    "prerequisite": null,
+    "participants": [],
+    "lines": [
+     {
+      "speaker": "barb",
+      "text": "HEY! Give that back, you extremely rude weather!"
+     },
+     {
+      "speaker": "Protagonist",
+      "text": "Your hat?"
+     },
+     {
+      "speaker": "barb",
+      "text": "Hat, hair, skirt, personal dignity. The wind is collecting the entire set."
+     },
+     {
+      "speaker": "Protagonist",
+      "text": "I think you caught most of it."
+     },
+     {
+      "speaker": "barb",
+      "text": "If you saw me wrestle the atmosphere, no you did not."
+     },
+     {
+      "speaker": "Protagonist",
+      "text": "There is a bench out of the wind behind us."
+     },
+     {
+      "speaker": "barb",
+      "text": "Oh, now it stops? The second I am ready to fight a cloud?"
+     },
+     {
+      "speaker": "Protagonist",
+      "text": "You were going to fight a cloud?"
+     },
+     {
+      "speaker": "barb",
+      "text": "And I would have won. I have excellent accessories and terrible judgment."
+     }
+    ],
+    "choices": [
+     {
+      "label": "Offer to carry her bag while she fixes her hat",
+      "reply": "Thanks. You are officially on wind-defense duty. The pay is terrible, but the company is good.",
+      "kind": "support",
+      "flag": "barb_wind_hat",
+      "delta": {
+       "affection": 2,
+       "trust": 1,
+       "respect": 0,
+       "attraction": 0
+      }
+     },
+     {
+      "label": "Suggest taking the sheltered route",
+      "reply": "A practical idea. Annoying how attractive competence can be.",
+      "kind": "honest",
+      "flag": "barb_wind_route",
+      "delta": {
+       "affection": 1,
+       "trust": 1,
+       "respect": 2,
+       "attraction": 0
+      }
+     },
+     {
+      "label": "Say the wind could not ruin her look",
+      "reply": "That line was shameless. ...Do you have another one?",
+      "kind": "flirt",
+      "flag": "barb_wind_flirt",
+      "delta": {
+       "affection": 2,
+       "trust": 0,
+       "respect": 0,
+       "attraction": 2
+      }
+     }
+    ],
+    "openingByFlag": {
+     "barb_zipper_help": "You already helped me defeat a zipper. Think you can take on the weather too?"
+    },
+    "encounterType": "slice",
+    "trigger": "entry"
+   },
+   {
+    "id": "barb_random_cg_03",
+    "npc": "barb",
+    "title": "One Size Too Small",
+    "start": 6,
+    "end": 90,
+    "place": "shop",
+    "slot": 0,
+    "minBond": 0,
+    "prerequisite": null,
+    "participants": [],
+    "lines": [
+     {
+      "speaker": "barb",
+      "text": "Do not call for help. I am not stuck."
+     },
+     {
+      "speaker": "Protagonist",
+      "text": "You have been trying to remove that sleeve for a minute."
+     },
+     {
+      "speaker": "barb",
+      "text": "That is called a fitting test. The result is that my elbows have been canceled."
+     },
+     {
+      "speaker": "Protagonist",
+      "text": "Did you make the jacket?"
+     },
+     {
+      "speaker": "barb",
+      "text": "Customized it. Took the seams in a little. Okay, a lot. It looked perfect on the mannequin."
+     },
+     {
+      "speaker": "Protagonist",
+      "text": "Mannequins are not known for moving."
+     },
+     {
+      "speaker": "barb",
+      "text": "Neither am I, apparently. Can you unzip the cuff while I stop pretending this was deliberate?"
+     },
+     {
+      "speaker": "Protagonist",
+      "text": "Only if you admit I was right."
+     },
+     {
+      "speaker": "barb",
+      "text": "I will admit the mannequin was suspiciously unhelpful. Final offer."
+     }
+    ],
+    "choices": [
+     {
+      "label": "Carefully release the cuff seam",
+      "reply": "Freedom! I have never appreciated elbows this much. Thank you for not yanking the fabric.",
+      "kind": "support",
+      "flag": "barb_jacket_rescue",
+      "delta": {
+       "affection": 2,
+       "trust": 2,
+       "respect": 0,
+       "attraction": 0
+      }
+     },
+     {
+      "label": "Help her measure a better fit",
+      "reply": "Good. Real measurements, real movement. I might even learn from this.",
+      "kind": "honest",
+      "flag": "barb_jacket_fit",
+      "delta": {
+       "affection": 1,
+       "trust": 1,
+       "respect": 2,
+       "attraction": 0
+      }
+     },
+     {
+      "label": "Call it an unforgettable runway pose",
+      "reply": "If you take a photo I will haunt your wardrobe. ...But you may compliment the jacket.",
+      "kind": "flirt",
+      "flag": "barb_jacket_flirt",
+      "delta": {
+       "affection": 2,
+       "trust": 0,
+       "respect": 0,
+       "attraction": 2
+      }
+     }
+    ],
+    "openingByFlag": {
+     "barb_zipper_help": "Do you have a talent for finding me at precisely the wrong moment with precisely the right tools?"
+    },
+    "encounterType": "slice",
+    "trigger": "entry"
+   },
+   {
+    "id": "barb_random_cg_04",
+    "npc": "barb",
+    "title": "The Accidental Model",
+    "start": 6,
+    "end": 90,
+    "place": "center",
+    "slot": 1,
+    "minBond": 0,
+    "prerequisite": null,
+    "participants": [],
+    "lines": [
+     {
+      "speaker": "barb",
+      "text": "Do NOT delete that photo."
+     },
+     {
+      "speaker": "Protagonist",
+      "text": "The one where you tripped over the camera cable?"
+     },
+     {
+      "speaker": "barb",
+      "text": "Especially that one. My carefully rehearsed poses were terrible, and my emergency landing looked editorial."
+     },
+     {
+      "speaker": "Protagonist",
+      "text": "Are you hurt?"
+     },
+     {
+      "speaker": "barb",
+      "text": "Only my pride. And that was already on clearance."
+     },
+     {
+      "speaker": "Protagonist",
+      "text": "The lighting did catch your outfit perfectly."
+     },
+     {
+      "speaker": "barb",
+      "text": "Right? The skirt moved, the hair moved, and somehow the camera understood my entire design philosophy."
+     },
+     {
+      "speaker": "Protagonist",
+      "text": "Controlled chaos?"
+     },
+     {
+      "speaker": "barb",
+      "text": "Exactly. Except with very little control. Could you help me check the other shots before I make it worse?"
+     }
+    ],
+    "choices": [
+     {
+      "label": "Check that she is okay, then review the pictures",
+      "reply": "Thanks for asking first. I am fine—and this one is actually going on my portfolio.",
+      "kind": "support",
+      "flag": "barb_camera_cable",
+      "delta": {
+       "affection": 2,
+       "trust": 2,
+       "respect": 0,
+       "attraction": 0
+      }
+     },
+     {
+      "label": "Offer to move the cable and reset the shoot",
+      "reply": "Excellent. Safety first, accidental genius second. A responsible production at last.",
+      "kind": "honest",
+      "flag": "barb_camera_reset",
+      "delta": {
+       "affection": 1,
+       "trust": 1,
+       "respect": 2,
+       "attraction": 0
+      }
+     },
+     {
+      "label": "Tell her even her mistakes look like magazine covers",
+      "reply": "You know, I would accuse you of flirting if that were not a genuinely great caption.",
+      "kind": "flirt",
+      "flag": "barb_camera_flirt",
+      "delta": {
+       "affection": 2,
+       "trust": 0,
+       "respect": 0,
+       "attraction": 2
+      }
+     }
+    ],
+    "openingByFlag": {
+     "barb_jacket_rescue": "You saw the jacket disaster. Apparently my wardrobe has decided to become an extreme sport."
+    },
+    "encounterType": "slice",
+    "trigger": "entry"
+   },
+   {
+    "id": "barb_random_cg_05",
+    "npc": "barb",
+    "title": "The Sunscreen Negotiation",
+    "start": 6,
+    "end": 90,
+    "place": "park",
+    "slot": 1,
+    "minBond": 0,
+    "prerequisite": null,
+    "participants": [],
+    "lines": [
+     {
+      "speaker": "barb",
+      "text": "I need to negotiate a tiny favor."
+     },
+     {
+      "speaker": "Protagonist",
+      "text": "That sounds suspiciously formal for the pool."
+     },
+     {
+      "speaker": "barb",
+      "text": "I am completely capable of sunscreen. Except for the bit between my shoulders, because apparently I was not built with detachable arms."
+     },
+     {
+      "speaker": "Protagonist",
+      "text": "You could ask nicely."
+     },
+     {
+      "speaker": "barb",
+      "text": "I *am* asking nicely. This is my professional nice voice."
+     },
+     {
+      "speaker": "Protagonist",
+      "text": "What is in it for me?"
+     },
+     {
+      "speaker": "barb",
+      "text": "One debt repaid, plus a very prestigious title: Official Defender Against Sunburn."
+     },
+     {
+      "speaker": "Protagonist",
+      "text": "Only if you promise to stop trying to skip sunscreen."
+     },
+     {
+      "speaker": "barb",
+      "text": "Deal. You have my solemn word, delivered from this extremely comfortable lounge chair."
+     }
+    ],
+    "choices": [
+     {
+      "label": "Help with the sunscreen on her shoulders",
+      "reply": "Thank you. That is one fewer weirdly shaped sunburn for the scrapbook.",
+      "kind": "support",
+      "flag": "barb_sun_help",
+      "delta": {
+       "affection": 2,
+       "trust": 2,
+       "respect": 0,
+       "attraction": 0
+      }
+     },
+     {
+      "label": "Hand her a long-handled applicator instead",
+      "reply": "Of course you brought an actual solution. Fine, that is impressively clever.",
+      "kind": "honest",
+      "flag": "barb_sun_applicator",
+      "delta": {
+       "affection": 1,
+       "trust": 1,
+       "respect": 2,
+       "attraction": 0
+      }
+     },
+     {
+      "label": "Accept the title with an exaggerated bow",
+      "reply": "Your service has been noted, brave knight of SPF fifty. Try not to look so pleased.",
+      "kind": "flirt",
+      "flag": "barb_sun_title",
+      "delta": {
+       "affection": 2,
+       "trust": 0,
+       "respect": 0,
+       "attraction": 2
+      }
+     }
+    ],
+    "openingByFlag": {
+     "barb_wind_hat": "At least there is no wind to steal my hat today. I learned to keep the emergency hair tie nearby."
+    },
+    "encounterType": "slice",
+    "trigger": "entry"
+   },
+   {
+    "id": "barb_random_cg_06",
+    "npc": "barb",
+    "title": "Fashion Emergency",
+    "start": 6,
+    "end": 90,
+    "place": "shop",
+    "slot": 2,
+    "minBond": 0,
+    "prerequisite": null,
+    "participants": [],
+    "lines": [
+     {
+      "speaker": "barb",
+      "text": "I have invented a new type of outfit."
+     },
+     {
+      "speaker": "Protagonist",
+      "text": "Should I be worried?"
+     },
+     {
+      "speaker": "barb",
+      "text": "It comes with a built-in desk. I accidentally stitched my skirt to a strip of fabric still attached to the sewing machine."
+     },
+     {
+      "speaker": "Protagonist",
+      "text": "That explains why you are sitting so carefully."
+     },
+     {
+      "speaker": "barb",
+      "text": "This is a dignified design consultation. Ignore the loose thread connecting me to my own furniture."
+     },
+     {
+      "speaker": "Protagonist",
+      "text": "Did you try cutting it?"
+     },
+     {
+      "speaker": "barb",
+      "text": "Yes, then remembered the thread is holding a finished hem. I need a third hand and a second brain."
+     },
+     {
+      "speaker": "Protagonist",
+      "text": "I can supply one of those."
+     },
+     {
+      "speaker": "barb",
+      "text": "Great. You be the brain. I will continue providing highly entertaining commentary."
+     }
+    ],
+    "choices": [
+     {
+      "label": "Hold the fabric while she unpicks the seam",
+      "reply": "Perfect. Nobody gets stabbed by a seam ripper and the hem survives. A rare double victory.",
+      "kind": "support",
+      "flag": "barb_sewing_rescue",
+      "delta": {
+       "affection": 2,
+       "trust": 2,
+       "respect": 0,
+       "attraction": 0
+      }
+     },
+     {
+      "label": "Suggest tracing the stray stitch before pulling",
+      "reply": "You spotted the problem faster than I did. Okay, we save the good stitches and sacrifice the rest.",
+      "kind": "honest",
+      "flag": "barb_sewing_trace",
+      "delta": {
+       "affection": 1,
+       "trust": 1,
+       "respect": 2,
+       "attraction": 0
+      }
+     },
+     {
+      "label": "Declare it the first wearable sewing machine",
+      "reply": "I hate that I laughed. Do not put that in the product catalog. Actually—write it down.",
+      "kind": "flirt",
+      "flag": "barb_sewing_joke",
+      "delta": {
+       "affection": 2,
+       "trust": 0,
+       "respect": 0,
+       "attraction": 2
+      }
+     }
+    ],
+    "openingByFlag": {
+     "barb_jacket_rescue": "Remember the jacket that nearly ate my elbows? My sewing machine has clearly taken its side."
+    },
+    "encounterType": "slice",
+    "trigger": "entry"
+   },
+   {
+    "id": "barb_bonus_closeup",
+    "npc": "barb",
+    "title": "The Missing Clasp",
+    "start": 6,
+    "end": 90,
+    "place": "cafe",
+    "slot": 2,
+    "minBond": 0,
+    "prerequisite": null,
+    "participants": [],
+    "lines": [
+     {
+      "speaker": "barb",
+      "text": "Do not move. I need to look right there."
+     },
+     {
+      "speaker": "Protagonist",
+      "text": "At me?"
+     },
+     {
+      "speaker": "barb",
+      "text": "At the tiny clasp stuck to your hoodie. It is from the charm I was making."
+     },
+     {
+      "speaker": "Protagonist",
+      "text": "You are very close."
+     },
+     {
+      "speaker": "barb",
+      "text": "I have noticed. My glasses are on the other side of the room, and my pride refused to walk back for them."
+     },
+     {
+      "speaker": "Protagonist",
+      "text": "Did you find it?"
+     },
+     {
+      "speaker": "barb",
+      "text": "Yes. It is smaller than a rice grain and more committed to mischief than I am."
+     },
+     {
+      "speaker": "Protagonist",
+      "text": "That is a high bar."
+     },
+     {
+      "speaker": "barb",
+      "text": "Hush. I am concentrating. ...There. Rescue complete. Why are *you* blushing?"
+     }
+    ],
+    "choices": [
+     {
+      "label": "Hold still so she can retrieve it",
+      "reply": "Thank you. You have the patience of a saint and the hoodie of a hardware store.",
+      "kind": "support",
+      "flag": "barb_bonus_closeup_support",
+      "delta": {
+       "affection": 2,
+       "trust": 1,
+       "respect": 0,
+       "attraction": 0
+      }
+     },
+     {
+      "label": "Offer to get her glasses next time",
+      "reply": "Fair. My stubbornness is not an accessibility strategy. Point taken.",
+      "kind": "honest",
+      "flag": "barb_bonus_closeup_honest",
+      "delta": {
+       "affection": 1,
+       "trust": 2,
+       "respect": 1,
+       "attraction": 0
+      }
+     },
+     {
+      "label": "Say you did not mind the close inspection",
+      "reply": "Careful, I might start charging for personal attention.",
+      "kind": "flirt",
+      "flag": "barb_bonus_closeup_flirt",
+      "delta": {
+       "affection": 2,
+       "trust": 0,
+       "respect": 0,
+       "attraction": 2
+      }
+     }
+    ],
+    "encounterType": "slice",
+    "trigger": "entry"
+   },
+   {
+    "id": "barb_bonus_strawberry",
+    "npc": "barb",
+    "title": "The Last Bite Treaty",
+    "start": 6,
+    "end": 90,
+    "place": "cafe",
+    "slot": 2,
+    "minBond": 0,
+    "prerequisite": null,
+    "participants": [],
+    "lines": [
+     {
+      "speaker": "barb",
+      "text": "I have a very serious diplomatic proposal."
+     },
+     {
+      "speaker": "Protagonist",
+      "text": "Does it involve that cake?"
+     },
+     {
+      "speaker": "barb",
+      "text": "One forkful. Strawberry, chocolate, and a legally binding agreement that you tell me whether it is actually good."
+     },
+     {
+      "speaker": "Protagonist",
+      "text": "Why do you need a second opinion?"
+     },
+     {
+      "speaker": "barb",
+      "text": "Because I spent ten minutes photographing it instead of eating it, which means I may have lost objectivity."
+     },
+     {
+      "speaker": "Protagonist",
+      "text": "You really are a designer even at dessert."
+     },
+     {
+      "speaker": "barb",
+      "text": "Every dessert deserves a mood board. Now open up before I eat the evidence."
+     },
+     {
+      "speaker": "Protagonist",
+      "text": "And if I love it?"
+     },
+     {
+      "speaker": "barb",
+      "text": "Then we split the last bite. That is how peace treaties work."
+     }
+    ],
+    "choices": [
+     {
+      "label": "Take the offered bite and share your verdict",
+      "reply": "Yes! Excellent. I chose well, and now you are officially my cake consultant.",
+      "kind": "support",
+      "flag": "barb_bonus_strawberry_support",
+      "delta": {
+       "affection": 2,
+       "trust": 1,
+       "respect": 0,
+       "attraction": 0
+      }
+     },
+     {
+      "label": "Ask if she took a picture of the slice first",
+      "reply": "Obviously. And the composition is better than my last portfolio shoot. Do not tell anyone.",
+      "kind": "honest",
+      "flag": "barb_bonus_strawberry_honest",
+      "delta": {
+       "affection": 1,
+       "trust": 1,
+       "respect": 2,
+       "attraction": 0
+      }
+     },
+     {
+      "label": "Say sharing makes it taste better",
+      "reply": "Ugh, that was terribly sweet. Unfortunately it was also correct.",
+      "kind": "flirt",
+      "flag": "barb_bonus_strawberry_flirt",
+      "delta": {
+       "affection": 2,
+       "trust": 0,
+       "respect": 0,
+       "attraction": 2
+      }
+     }
+    ],
+    "openingByFlag": {
+     "barb_camera_cable": "After my accidental runway moment, I have been studying the camera angle on everything—including pastries."
+    },
+    "encounterType": "slice",
+    "trigger": "entry"
+   },
+   {
+    "id": "barb_bonus_bedroom",
+    "npc": "barb",
+    "title": "A Quiet Five Minutes",
+    "start": 6,
+    "end": 90,
+    "place": "shop",
+    "slot": 2,
+    "minBond": 0,
+    "prerequisite": null,
+    "participants": [],
+    "lines": [
+     {
+      "speaker": "barb",
+      "text": "I am doing absolutely nothing for five minutes. It is a bold experiment."
+     },
+     {
+      "speaker": "Protagonist",
+      "text": "You are lying on a pile of half-finished projects."
+     },
+     {
+      "speaker": "barb",
+      "text": "Exactly. If I sit at the desk, I will start fixing them. Down here I can pretend my deadlines do not exist."
+     },
+     {
+      "speaker": "Protagonist",
+      "text": "You look like you want to say something."
+     },
+     {
+      "speaker": "barb",
+      "text": "Only that I am glad you came by. The workshop is less noisy when I do not have to explain every unfinished thing."
+     },
+     {
+      "speaker": "Protagonist",
+      "text": "Want some company?"
+     },
+     {
+      "speaker": "barb",
+      "text": "Yes. But do not be useful. Being useful will ruin the experiment."
+     },
+     {
+      "speaker": "Protagonist",
+      "text": "I can manage that."
+     },
+     {
+      "speaker": "barb",
+      "text": "Perfect. Five minutes. Then we can argue about whether the pink stitching is too much."
+     }
+    ],
+    "choices": [
+     {
+      "label": "Sit beside her without trying to fix anything",
+      "reply": "Thank you. I do not always need a solution. Sometimes I just need a person.",
+      "kind": "support",
+      "flag": "barb_bonus_bedroom_support",
+      "delta": {
+       "affection": 2,
+       "trust": 2,
+       "respect": 0,
+       "attraction": 0
+      }
+     },
+     {
+      "label": "Tell her breaks count as work too",
+      "reply": "You sound suspiciously sensible. I should embroider that on a pillow.",
+      "kind": "honest",
+      "flag": "barb_bonus_bedroom_honest",
+      "delta": {
+       "affection": 1,
+       "trust": 1,
+       "respect": 2,
+       "attraction": 0
+      }
+     },
+     {
+      "label": "Say five minutes with her sounds like a good deal",
+      "reply": "Do not make me smile during my extremely serious rest period.",
+      "kind": "flirt",
+      "flag": "barb_bonus_bedroom_flirt",
+      "delta": {
+       "affection": 2,
+       "trust": 0,
+       "respect": 0,
+       "attraction": 2
+      }
+     }
+    ],
+    "openingByFlag": {
+     "barb_sewing_rescue": "After our sewing-table incident, I am trying a radical new idea: leaving the fabric alone for a while."
+    },
+    "encounterType": "slice",
+    "trigger": "entry"
+   },
+   {
+    "id": "barb_bonus_guitar",
+    "npc": "barb",
+    "title": "Three Chords and a Dare",
+    "start": 6,
+    "end": 90,
+    "place": "arcade",
+    "slot": 2,
+    "minBond": 0,
+    "prerequisite": null,
+    "participants": [],
+    "lines": [
+     {
+      "speaker": "barb",
+      "text": "Okay. First rule: nobody is allowed to laugh if I miss the chord."
+     },
+     {
+      "speaker": "Protagonist",
+      "text": "I thought you were teaching me."
+     },
+     {
+      "speaker": "barb",
+      "text": "I am. Which is why I need you to maintain a respectful silence about my dramatic failures."
+     },
+     {
+      "speaker": "Protagonist",
+      "text": "That is not how lessons usually work."
+     },
+     {
+      "speaker": "barb",
+      "text": "I designed a deck box from a napkin sketch. I never claimed to be a qualified music teacher."
+     },
+     {
+      "speaker": "Protagonist",
+      "text": "Where does my finger go?"
+     },
+     {
+      "speaker": "barb",
+      "text": "Here. No, the other fret. You have excellent instincts and absolutely no hand coordination."
+     },
+     {
+      "speaker": "Protagonist",
+      "text": "Harsh."
+     },
+     {
+      "speaker": "barb",
+      "text": "Accurate. One more try, and then I will show you the song I keep pretending I wrote."
+     }
+    ],
+    "choices": [
+     {
+      "label": "Practice slowly until the chord sounds right",
+      "reply": "There! You did it. I am ridiculously proud of both of us.",
+      "kind": "support",
+      "flag": "barb_bonus_guitar_support",
+      "delta": {
+       "affection": 2,
+       "trust": 1,
+       "respect": 0,
+       "attraction": 0
+      }
+     },
+     {
+      "label": "Ask why she picked up guitar in the first place",
+      "reply": "My cousin left one at home and I liked the noise. Turns out liking something is enough reason to begin.",
+      "kind": "honest",
+      "flag": "barb_bonus_guitar_honest",
+      "delta": {
+       "affection": 1,
+       "trust": 2,
+       "respect": 2,
+       "attraction": 0
+      }
+     },
+     {
+      "label": "Say you will only practice if she stays close",
+      "reply": "Flattery will not improve your timing. ...It may improve mine, though.",
+      "kind": "flirt",
+      "flag": "barb_bonus_guitar_flirt",
+      "delta": {
+       "affection": 2,
+       "trust": 0,
+       "respect": 0,
+       "attraction": 2
+      }
+     }
+    ],
+    "encounterType": "slice",
+    "trigger": "entry"
+   },
+   {
+    "id": "barb_bonus_sketch",
+    "npc": "barb",
+    "title": "The Pink Marker Test",
+    "start": 6,
+    "end": 90,
+    "place": "shop",
+    "slot": 1,
+    "minBond": 0,
+    "prerequisite": null,
+    "participants": [],
+    "lines": [
+     {
+      "speaker": "barb",
+      "text": "Hold this pose. Two seconds."
+     },
+     {
+      "speaker": "Protagonist",
+      "text": "Are you drawing me?"
+     },
+     {
+      "speaker": "barb",
+      "text": "Your jacket cuff. The fold is doing this perfect diagonal thing, and if you move I will lose it."
+     },
+     {
+      "speaker": "Protagonist",
+      "text": "I did not know sleeves could be inspiring."
+     },
+     {
+      "speaker": "barb",
+      "text": "Everything is inspiring if you stare at it long enough. Even that tragic mug you keep bringing around."
+     },
+     {
+      "speaker": "Protagonist",
+      "text": "What is the pink marker for?"
+     },
+     {
+      "speaker": "barb",
+      "text": "A little accent line. It makes the design feel less serious. A reminder that I do not have to impress everyone."
+     },
+     {
+      "speaker": "Protagonist",
+      "text": "Looks like it worked."
+     },
+     {
+      "speaker": "barb",
+      "text": "Maybe. Or maybe I just like having somebody around who actually notices the details."
+     }
+    ],
+    "choices": [
+     {
+      "label": "Hold the pose until she finishes",
+      "reply": "Perfect. Thank you. I have a whole page of ideas now, all because you stood still.",
+      "kind": "support",
+      "flag": "barb_bonus_sketch_support",
+      "delta": {
+       "affection": 2,
+       "trust": 1,
+       "respect": 0,
+       "attraction": 0
+      }
+     },
+     {
+      "label": "Ask how the accent color changes the design",
+      "reply": "See? The pink breaks up the black without making it softer. You get it.",
+      "kind": "honest",
+      "flag": "barb_bonus_sketch_honest",
+      "delta": {
+       "affection": 1,
+       "trust": 1,
+       "respect": 2,
+       "attraction": 0
+      }
+     },
+     {
+      "label": "Ask if she is drawing your jacket or finding excuses to stare",
+      "reply": "It can be two things. Do not look so pleased with yourself.",
+      "kind": "flirt",
+      "flag": "barb_bonus_sketch_flirt",
+      "delta": {
+       "affection": 2,
+       "trust": 0,
+       "respect": 0,
+       "attraction": 2
+      }
+     }
+    ],
+    "openingByFlag": {
+     "barb_display_help": "Remember arranging the display together? This is the color combination I could not quite settle on."
+    },
+    "encounterType": "slice",
+    "trigger": "entry"
    }
   ],
   "mandatoryEvents": [
@@ -582,6 +1596,61 @@ const packs=[
      "sceneId": "barb_route_5",
      "path": "/rpg-assets/characters/barb/events/barb_riverside.webp",
      "prompt": "Approved artwork: Barb at sunset on a rooftop overlooking the harbor, wearing an off-shoulder black-and-burgundy outfit, holding the protagonist’s hand and smiling tearfully."
+    },
+    {
+     "sceneId": "barb_random_cg_01",
+     "path": "/rpg-assets/characters/barb/events/barb_random_cg_01.webp",
+     "prompt": "Approved CG for Barb optional everyday encounter: The Zipper Incident. Keep the existing artwork unchanged; adult 21-year-old Barb with copper-red hair and alt punk aesthetic."
+    },
+    {
+     "sceneId": "barb_random_cg_02",
+     "path": "/rpg-assets/characters/barb/events/barb_random_cg_02.webp",
+     "prompt": "Approved CG for Barb optional everyday encounter: The Wind Has Opinions. Keep the existing artwork unchanged; adult 21-year-old Barb with copper-red hair and alt punk aesthetic."
+    },
+    {
+     "sceneId": "barb_random_cg_03",
+     "path": "/rpg-assets/characters/barb/events/barb_random_cg_03.webp",
+     "prompt": "Approved CG for Barb optional everyday encounter: One Size Too Small. Keep the existing artwork unchanged; adult 21-year-old Barb with copper-red hair and alt punk aesthetic."
+    },
+    {
+     "sceneId": "barb_random_cg_04",
+     "path": "/rpg-assets/characters/barb/events/barb_random_cg_04.webp",
+     "prompt": "Approved CG for Barb optional everyday encounter: The Accidental Model. Keep the existing artwork unchanged; adult 21-year-old Barb with copper-red hair and alt punk aesthetic."
+    },
+    {
+     "sceneId": "barb_random_cg_05",
+     "path": "/rpg-assets/characters/barb/events/barb_random_cg_05.webp",
+     "prompt": "Approved CG for Barb optional everyday encounter: The Sunscreen Negotiation. Keep the existing artwork unchanged; adult 21-year-old Barb with copper-red hair and alt punk aesthetic."
+    },
+    {
+     "sceneId": "barb_random_cg_06",
+     "path": "/rpg-assets/characters/barb/events/barb_random_cg_06.webp",
+     "prompt": "Approved CG for Barb optional everyday encounter: Fashion Emergency. Keep the existing artwork unchanged; adult 21-year-old Barb with copper-red hair and alt punk aesthetic."
+    },
+    {
+     "sceneId": "barb_bonus_closeup",
+     "path": "/rpg-assets/characters/barb/events/barb_bonus_closeup.webp",
+     "prompt": "Approved CG for Barb optional everyday encounter: The Missing Contact Lens. Keep the existing artwork unchanged; adult 21-year-old Barb with copper-red hair and alt punk aesthetic."
+    },
+    {
+     "sceneId": "barb_bonus_strawberry",
+     "path": "/rpg-assets/characters/barb/events/barb_bonus_strawberry.webp",
+     "prompt": "Approved CG for Barb optional everyday encounter: The Last Bite Treaty. Keep the existing artwork unchanged; adult 21-year-old Barb with copper-red hair and alt punk aesthetic."
+    },
+    {
+     "sceneId": "barb_bonus_bedroom",
+     "path": "/rpg-assets/characters/barb/events/barb_bonus_bedroom.webp",
+     "prompt": "Approved CG for Barb optional everyday encounter: A Quiet Five Minutes. Keep the existing artwork unchanged; adult 21-year-old Barb with copper-red hair and alt punk aesthetic."
+    },
+    {
+     "sceneId": "barb_bonus_guitar",
+     "path": "/rpg-assets/characters/barb/events/barb_bonus_guitar.webp",
+     "prompt": "Approved CG for Barb optional everyday encounter: Three Chords and a Dare. Keep the existing artwork unchanged; adult 21-year-old Barb with copper-red hair and alt punk aesthetic."
+    },
+    {
+     "sceneId": "barb_bonus_sketch",
+     "path": "/rpg-assets/characters/barb/events/barb_bonus_sketch.webp",
+     "prompt": "Approved CG for Barb optional everyday encounter: The Pink Marker Test. Keep the existing artwork unchanged; adult 21-year-old Barb with copper-red hair and alt punk aesthetic."
     }
    ],
    "expressions": {

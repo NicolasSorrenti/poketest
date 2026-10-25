@@ -140,7 +140,9 @@
   if(entry.id==='sol')continue;
   if(cast[entry.id])throw Error('Character pack conflicts with existing NPC: '+entry.id);
   cast[entry.id]=entry.cast;looks[entry.id]=entry.looks;schedules[entry.id]=entry.schedule;
-  arrivals[entry.id]=entry.arrivalDay;events.push(...entry.events);
+  arrivals[entry.id]=entry.arrivalDay;
+  // Optional pack encounters belong to the ambient director, never the route calendar.
+  events.push(...entry.events.filter(e=>e.encounterType!=='slice'));
  }
  function validate(){
   const errors=[],ids=new Set(events.map(e=>e.id)),known=new Set([...Object.keys(cast),...Object.keys(looks)]);

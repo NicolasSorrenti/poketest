@@ -7,6 +7,8 @@
  if(root)root.NeoRpgSliceOfLife=api;
 })(typeof window!=='undefined'?window:null,function(){
  const DIRECTOR=typeof module==='object'&&module.exports?require('./rpg_encounter_director'):window.NeoRpgEncounterDirector;
+ const REL=typeof module==='object'&&module.exports?require('./rpg_relationships'):window.NeoRpgRelationships;
+ const PACKS=typeof module==='object'&&module.exports?require('./rpg_character_packs.generated'):window.NeoRpgCharacterPacks;
  const scenes=[
   {
     "id": "hana_the_crooked_display",
@@ -791,7 +793,39 @@
     }
   }
 ];
+ // The browser registry contains only packs authorized by the server for this account.
+ for(const pack of PACKS?.packs||[])for(const e of pack.events.filter(e=>e.encounterType==='slice')){
+  const image=pack.art.eventImages.find(a=>a.sceneId===e.id);
+  scenes.push({...e,minAffection:e.minBond,image:image?.path,
+   intro:e.lines[0].text,line:e.lines[1].text,close:e.lines[e.lines.length-1].text,
+   art:{scene:e.title,composition:'Approved single horizontal story CG',outfit:'Approved character outfit',
+    expression:'Authored everyday expression',environment:e.place,mood:'everyday',fanservice:0}});
+ }
  const index=new Map(scenes.map(e=>[e.id,e]));
+ const authored=(PACKS?.packs||[]).flatMap(p=>p.events);
+ function scheduleOverrides(state){
+  if(!state||state.day<1||state.day>90||state.sliceOfLifeLastDay===state.day||
+   state.activeSliceOfLife||state.pendingDuel||state.mandatoryEventState?.active)return [];
+  // Protect an existing routine stop from crowd balancing while an unseen encounter is possible.
+  // This never moves a character away from their authored weekly schedule; route/meeting overrides win.
+  return (PACKS?.packs||[]).flatMap(pack=>{
+   const place=pack.schedule[(state.day-1)%7]?.[state.slot];
+   if(state.day<pack.arrivalDay||!state['met_'+pack.id])return [];
+   const possible=scenes.some(e=>e.encounterType==='slice'&&e.npc===pack.id&&e.place===place&&e.slot===state.slot&&
+    state.day>=e.start&&state.day<=e.end&&!state.sliceOfLifeDone?.[e.id]&&
+    (state.relationships?.[e.npc]?.affection||0)>=e.minAffection);
+   return possible?[{npc:pack.id,place,slot:state.slot,start:state.day,end:state.day}]:[];
+  });
+ }
+ function linesFor(state,id){
+  const e=index.get(id);if(!e?.lines)return [];
+  // A matching flag alone is not history: require its source scene to be completed.
+  const callback=Object.entries(e.openingByFlag||{}).find(([flag])=>authored.some(source=>{
+   const done=source.encounterType==='slice'?state.sliceOfLifeDone?.[source.id]:state.storyDone?.[source.id];
+   return done&&source.choices?.[done.choice]?.flag===flag;
+  }));
+  return e.lines.map((line,i)=>({...line,text:i===0&&callback?callback[1]+' '+line.text:line.text}));
+ }
  function hydrate(state){
   if(!state||typeof state!=='object')throw Error('Invalid slice-of-life save');
   if(!state.sliceOfLifeDone||typeof state.sliceOfLifeDone!=='object'||Array.isArray(state.sliceOfLifeDone))state.sliceOfLifeDone={};
@@ -799,29 +833,51 @@
    if(!index.has(id)||!value||!Number.isInteger(value.day)||value.day<1||value.day>90)delete state.sliceOfLifeDone[id];
   if(!Number.isInteger(state.sliceOfLifeLastDay)||state.sliceOfLifeLastDay<0||state.sliceOfLifeLastDay>90)state.sliceOfLifeLastDay=0;
   const active=state.activeSliceOfLife;
-  if(active&&(!index.has(active.id)||!Number.isInteger(active.step)||active.step<0||active.step>2))state.activeSliceOfLife=null;
+  if(active){
+   const e=index.get(active.id),last=e?.lines?.length??2;
+   if(!e||!Number.isInteger(active.step)||active.step<0||active.step>last||
+    (e.choices&&active.step===last&&!e.choices[active.choice])||
+    (e.choices&&state.sliceOfLifeDone[e.id]))state.activeSliceOfLife=null;
+  }
   return state;
  }
  function available(state,people,trigger,npc=null){
   if(!state||!Array.isArray(people)||state.activeSliceOfLife||state.activeStory||state.activeSideQuest||
    state.activeArc||state.activeEncounter||state.activeSituation||state.pendingDuel||state.mandatoryEventState?.active||
    state.day>90||state.sliceOfLifeLastDay===state.day)return [];
-  return scenes.filter(e=>e.trigger===trigger&&(!npc||e.npc===npc)&&state.location===e.place&&state.slot===e.slot&&
+  return scenes.filter(e=>(e.trigger===trigger||(e.encounterType==='slice'&&trigger==='talk'))&&(!npc||e.npc===npc)&&state.location===e.place&&state.slot===e.slot&&
    state.day>=e.start&&state.day<=e.end&&people.includes(e.npc)&&state['met_'+e.npc]&&
    !state.sliceOfLifeDone?.[e.id]&&(state.relationships?.[e.npc]?.affection||0)>=e.minAffection);
  }
  function start(state,people,trigger,npc=null){
   hydrate(state);const e=DIRECTOR.select(state,available(state,people,trigger,npc));if(!e)return null;
   DIRECTOR.remember(state,e);
-  state.sliceOfLifeDone[e.id]={day:state.day,slot:state.slot};
+  // Legacy three-beat moments unlock on discovery; authored choices commit on completion.
+  if(!e.choices)state.sliceOfLifeDone[e.id]={day:state.day,slot:state.slot};
   state.sliceOfLifeLastDay=state.day;
   state.activeSliceOfLife={id:e.id,step:0};
   return e;
  }
  function next(state){
   const a=state?.activeSliceOfLife;if(!a||!index.has(a.id))return null;
+  const e=index.get(a.id);
+  if(e.choices){
+   if(a.step===e.lines.length){
+    const choice=e.choices[a.choice];if(!choice||state.sliceOfLifeDone?.[e.id])return null;
+    REL.apply(state,e.npc,choice.delta);
+    state.sliceOfLifeDone[e.id]={day:state.day,slot:state.slot,choice:a.choice,flag:choice.flag};
+    state.activeSliceOfLife=null;return {done:true,id:a.id};
+   }
+   if(a.step===e.lines.length-1)return null; // The final line requires an explicit choice.
+   a.step++;return {done:false,id:a.id,step:a.step};
+  }
   if(a.step===2){state.activeSliceOfLife=null;return {done:true,id:a.id};}
   a.step++;return {done:false,id:a.id,step:a.step};
+ }
+ function choose(state,choiceIndex){
+  const a=state?.activeSliceOfLife,e=index.get(a?.id);
+  if(!e?.choices||a.step!==e.lines.length-1||!Number.isInteger(choiceIndex)||!e.choices[choiceIndex])return false;
+  a.choice=choiceIndex;a.step=e.lines.length;return true;
  }
  function validate(){
   const errors=[],ids=new Set();for(const e of scenes){
@@ -830,5 +886,5 @@
     e.start<1||e.end>90||e.start>e.end||!e.title||!e.intro||!e.line||!e.close)errors.push('invalid '+e.id);
   }return errors;
  }
- return Object.freeze({scenes,byId:id=>index.get(id)||null,hydrate,available,start,next,validate});
+ return Object.freeze({scenes,byId:id=>index.get(id)||null,hydrate,available,start,next,choose,linesFor,scheduleOverrides,validate});
 });

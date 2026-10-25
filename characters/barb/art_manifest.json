@@ -27,6 +27,61 @@
       "sceneId": "barb_route_5",
       "path": "/rpg-assets/characters/barb/events/barb_riverside.webp",
       "prompt": "Approved artwork: Barb at sunset on a rooftop overlooking the harbor, wearing an off-shoulder black-and-burgundy outfit, holding the protagonist’s hand and smiling tearfully."
+    },
+    {
+      "sceneId": "barb_random_cg_01",
+      "path": "/rpg-assets/characters/barb/events/barb_random_cg_01.webp",
+      "prompt": "Approved CG for Barb optional everyday encounter: The Zipper Incident. Keep the existing artwork unchanged; adult 21-year-old Barb with copper-red hair and alt punk aesthetic."
+    },
+    {
+      "sceneId": "barb_random_cg_02",
+      "path": "/rpg-assets/characters/barb/events/barb_random_cg_02.webp",
+      "prompt": "Approved CG for Barb optional everyday encounter: The Wind Has Opinions. Keep the existing artwork unchanged; adult 21-year-old Barb with copper-red hair and alt punk aesthetic."
+    },
+    {
+      "sceneId": "barb_random_cg_03",
+      "path": "/rpg-assets/characters/barb/events/barb_random_cg_03.webp",
+      "prompt": "Approved CG for Barb optional everyday encounter: One Size Too Small. Keep the existing artwork unchanged; adult 21-year-old Barb with copper-red hair and alt punk aesthetic."
+    },
+    {
+      "sceneId": "barb_random_cg_04",
+      "path": "/rpg-assets/characters/barb/events/barb_random_cg_04.webp",
+      "prompt": "Approved CG for Barb optional everyday encounter: The Accidental Model. Keep the existing artwork unchanged; adult 21-year-old Barb with copper-red hair and alt punk aesthetic."
+    },
+    {
+      "sceneId": "barb_random_cg_05",
+      "path": "/rpg-assets/characters/barb/events/barb_random_cg_05.webp",
+      "prompt": "Approved CG for Barb optional everyday encounter: The Sunscreen Negotiation. Keep the existing artwork unchanged; adult 21-year-old Barb with copper-red hair and alt punk aesthetic."
+    },
+    {
+      "sceneId": "barb_random_cg_06",
+      "path": "/rpg-assets/characters/barb/events/barb_random_cg_06.webp",
+      "prompt": "Approved CG for Barb optional everyday encounter: Fashion Emergency. Keep the existing artwork unchanged; adult 21-year-old Barb with copper-red hair and alt punk aesthetic."
+    },
+    {
+      "sceneId": "barb_bonus_closeup",
+      "path": "/rpg-assets/characters/barb/events/barb_bonus_closeup.webp",
+      "prompt": "Approved CG for Barb optional everyday encounter: The Missing Contact Lens. Keep the existing artwork unchanged; adult 21-year-old Barb with copper-red hair and alt punk aesthetic."
+    },
+    {
+      "sceneId": "barb_bonus_strawberry",
+      "path": "/rpg-assets/characters/barb/events/barb_bonus_strawberry.webp",
+      "prompt": "Approved CG for Barb optional everyday encounter: The Last Bite Treaty. Keep the existing artwork unchanged; adult 21-year-old Barb with copper-red hair and alt punk aesthetic."
+    },
+    {
+      "sceneId": "barb_bonus_bedroom",
+      "path": "/rpg-assets/characters/barb/events/barb_bonus_bedroom.webp",
+      "prompt": "Approved CG for Barb optional everyday encounter: A Quiet Five Minutes. Keep the existing artwork unchanged; adult 21-year-old Barb with copper-red hair and alt punk aesthetic."
+    },
+    {
+      "sceneId": "barb_bonus_guitar",
+      "path": "/rpg-assets/characters/barb/events/barb_bonus_guitar.webp",
+      "prompt": "Approved CG for Barb optional everyday encounter: Three Chords and a Dare. Keep the existing artwork unchanged; adult 21-year-old Barb with copper-red hair and alt punk aesthetic."
+    },
+    {
+      "sceneId": "barb_bonus_sketch",
+      "path": "/rpg-assets/characters/barb/events/barb_bonus_sketch.webp",
+      "prompt": "Approved CG for Barb optional everyday encounter: The Pink Marker Test. Keep the existing artwork unchanged; adult 21-year-old Barb with copper-red hair and alt punk aesthetic."
     }
   ],
   "expressions": {

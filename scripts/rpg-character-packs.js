@@ -47,6 +47,10 @@ function validate(p,legalDecks=decks()){
   }
   if(e.participants!==undefined)ensure(Array.isArray(e.participants)&&e.participants.every(x=>slug.test(x)),e.id+': invalid participants');
   if(e.openingByFlag!==undefined)ensure(plain(e.openingByFlag)&&Object.values(e.openingByFlag).every(words),e.id+': invalid dialogue callbacks');
+  if(e.encounterType!==undefined){
+   ensure(e.encounterType==='slice'&&['entry','talk'].includes(e.trigger),e.id+': invalid optional encounter type/trigger');
+   ensure(!e.prerequisite,e.id+': optional encounters cannot require another encounter');
+  }
  }
  if(p.mandatory!==null&&p.mandatory!==undefined){
   ensure(plain(p.mandatory)&&p.mandatory.schemaVersion===1&&p.mandatory.characterId===id&&Array.isArray(p.mandatory.events),id+': invalid mandatory_events.json');

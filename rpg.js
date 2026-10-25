@@ -380,7 +380,7 @@ function travelTo(placeId,{intro=true}={}){
  tutorialEvent('travel');
  return true;
 }
-function publicAppointments(place){return [...APPOINTMENTS.overrides(state),...STORY.available(state,place),...SIDE.appointments(state)];}
+function publicAppointments(place){return [...APPOINTMENTS.overrides(state),...STORY.available(state,place),...SIDE.appointments(state),...(SLICE?.scheduleOverrides?.(state)||[])];}
 function currentPeople(){if(state.day>90)return [];const regular=SCHEDULES.peopleAt(state.day,state.slot,state.location,publicAppointments(state.location));
 for(const e of eligibleStories())if(!regular.includes(e.npc))regular.push(e.npc);
 return regular;}
@@ -557,6 +557,12 @@ function finishArc(){
 
 function renderSliceOfLife(){
  const active=state.activeSliceOfLife,e=SLICE.byId(active?.id);if(!e)return null;
+ if(e.choices){
+  const lines=SLICE.linesFor(state,e.id),reply=active.step===lines.length;
+  const current=reply?{speaker:e.npc,text:e.choices[active.choice].reply}:lines[active.step];
+  const choices=!reply&&active.step===lines.length-1?e.choices.map((c,i)=>[c.label,'sliceChoice:'+i]):[['Continue ›','sliceNext']];
+  return {speaker:cast[current.speaker]?.name||current.speaker,line:current.text,choices};
+ }
  const lines=[{speaker:'Narrator',line:e.intro},{speaker:cast[e.npc]?.name||e.npc,line:e.line},{speaker:'Narrator',line:e.close}];
  return {...lines[active.step],choices:[['Continue ›','sliceNext']]};
 }
@@ -565,14 +571,17 @@ function beginSliceOfLife(trigger,npc=null){
  const moment=SLICE.start(state,currentPeople(),trigger,npc);
  if(!moment)return false;
  state.selected=moment.npc;
- const memory=recordCG('slice',moment.npc,{eventId:moment.id});
- persist();render();showCGMoment(memory[0]);
+ const memory=moment.choices?CG.byId(moment.id):recordCG('slice',moment.npc,{eventId:moment.id})[0];
+ persist();render();showCGMoment(memory,!!moment.choices);
  return true;
 }
 function nextSliceOfLife(){
  const result=SLICE.next(state);
  if(!result)return;
- if(result.done){log('A small moment with '+(cast[SLICE.byId(result.id)?.npc]?.name||'a friend')+'.');
+ if(result.done){const moment=SLICE.byId(result.id);
+  if(moment.choices)recordCG('slice',moment.npc,{eventId:moment.id});
+  log('A small moment with '+(cast[moment?.npc]?.name||'a friend')+'.');
+  persist();
   return closeSceneDialogue();}
  persist();render();
 }
@@ -615,7 +624,10 @@ function act(action){
  const [type,id,part]=action.split(':');
  if(mandatoryAction(type,id))return;
  // Suppress unrelated actions while a surprise is underway.
- if(state.activeSliceOfLife){if(type==='sliceNext')return nextSliceOfLife();return;}
+ if(state.activeSliceOfLife){
+  if(type==='sliceChoice'&&SLICE.choose(state,Number(id))){persist();render();return;}
+  if(type==='sliceNext')return nextSliceOfLife();return;
+ }
  if(type==='chatNext')return advanceConversation();
   if(type==='memoryChoice'){
    const topic=MEM?.threads[id]?.topic;
@@ -1489,11 +1501,13 @@ function loadCGArt(image,entry,thumbnail,onSuccess,onMissing){
  };
  attempt();
 }
-function showCGMoment(entry){
- if(!entry||!CG.unlocked(state,entry.id))return;
+function showCGMoment(entry,encounterPreview=false){
+ const preview=encounterPreview&&state.activeSliceOfLife?.id===entry?.id&&SLICE.byId(entry?.id)?.choices;
+ if(!entry||(!CG.unlocked(state,entry.id)&&!preview))return;
  const photo=document.createElement('img');
  photo.alt=entry.title;
  loadCGArt(photo,entry,false,kind=>{
+  if(preview&&state.activeSliceOfLife?.id!==entry.id)return;
   if(entry.category==='pre_duel'&&!state.pendingDuel)return;
   const modal=$('cgMoment'),root=$('cgMomentArt');
   const frame=document.createElement('div');
@@ -1502,7 +1516,7 @@ function showCGMoment(entry){
   window.NeoRpgDiscreetAvatars?.set?.(root,entry.character,'surprised',cast[entry.character]?.name||entry.character);
   $('cgMomentTitle').textContent=entry.title;
   $('cgMomentCaption').textContent=cast[entry.character]?.name||entry.character;
-  CG.markViewed(state,entry.id);persist();
+  if(CG.unlocked(state,entry.id))CG.markViewed(state,entry.id);persist();
   if(!modal.open)modal.showModal();
  });
 }
@@ -2147,7 +2161,7 @@ function render(){
  $('line').textContent=shown?.line||'The town is waiting.';
  $('dialogue').classList.toggle('is-narration',isNarration);
  $('choices').replaceChildren();
- const responseActions=new Set(['mandatoryChoice','storyChoice','sideChoice','arcChoice','encounterChoice','situationChoice','sideDuel','sidePause','dateBook','dateActivity','dateSlot','book','socialPlan','dateInvite','flirt','eventInvite','eventChat']);
+ const responseActions=new Set(['mandatoryChoice','storyChoice','sliceChoice','sideChoice','arcChoice','encounterChoice','situationChoice','sideDuel','sidePause','dateBook','dateActivity','dateSlot','book','socialPlan','dateInvite','flirt','eventInvite','eventChat']);
  const isPlayerPrompt=!!shown?.choices?.some(([,action])=>responseActions.has(action.split(':')[0]));
  const promptRoot=$('playerChoicePrompt'),promptPanel=$('playerChoicePanel'),choiceList=$('choices');
  const newPlayerPrompt=!!(promptRoot?.hidden&&isPlayerPrompt);

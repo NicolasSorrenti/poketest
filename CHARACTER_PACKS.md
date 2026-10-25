@@ -149,3 +149,13 @@ Expression images may be specific to each outfit. When artwork is missing, the r
 For pack assets, place images under `characters/laca/assets/outfits/casual/` and `characters/laca/assets/outfits/lifeguard/`. The builder copies them to `rpg-assets/characters/laca/outfits/`. Do not import a manifest before the referenced files exist.
 
 Run `node test_rpg_outfits.js` and `npm run test:rpg` to check the resolver and RPG integration.
+
+## Optional illustrated encounters
+
+An event in `stories.json` can declare `"encounterType": "slice"` and `"trigger": "entry"` (or `"talk"`). Keep its `prerequisite` null, and map its ID to an approved asset in `art_manifest.json` as usual. The pack builder preserves this data, but the narrative pack excludes it from the main story calendar and bond chapter rewards.
+
+The ambient director selects these encounters only after the character has been introduced and is present at the event's location and period. They share the existing once-per-day limit, cost no time or focus, and cannot interrupt an active event. Unseen pack encounters protect matching stops in the character's authored weekly routine from crowd balancing; appointments and main stories take precedence. Entry encounters also support discovery through Talk.
+
+Full `lines`, player choices, replies and relationship deltas are supported. The CG is previewed when the encounter starts; finishing the chosen reply commits the relationship change and unlocks the gallery memory once. Saves preserve the current line/choice and completed unlocks. `openingByFlag` adds a callback only when the matching answer's source encounter or main story was completed; it creates no prerequisite and the base conversation always remains available.
+
+Run `node --test tests/rpg_barb_optional_cgs.test.js` for campaign, callback, asset and persistence coverage. With Playwright and Chromium installed, run `node tests/rpg_barb_browser_smoke.js` for all eleven encounters at desktop and mobile sizes. Set `RPG_BROWSER_EXECUTABLE` only when using an existing Chromium executable.
