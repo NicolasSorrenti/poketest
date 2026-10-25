@@ -8,7 +8,7 @@ const {cpuPick,buildCpuDeck}=require('./cube_strategy');
 const {CubeService}=require('./cube_service');
 const {CubeRoomService}=require('./cube_room_service');
 
-assert.equal(PRESETS.length,10);
+assert.equal(PRESETS.length,11);
 assert.equal(new Set(PRESETS.map(p=>p.id)).size,PRESETS.length);
 assert.equal(getPreset().id,'balanced');
 assert.throws(()=>getPreset('__proto__'),/Unknown Cube preset/);
