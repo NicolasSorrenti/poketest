@@ -29,7 +29,7 @@ test('three advanced levels configure increasing bounded search, without changin
   assert.equal(c.skill,AI.SKILLS[i]);
  }
  assert.throws(()=>AI.configuration({level:9}),/1–8/);
- assert.equal(RPG_CPU_LEVEL,7,'Level 7 was promoted after mirrored and held-out RPG trials');
+ assert.equal(RPG_CPU_LEVEL,Math.max(...Object.keys(AI.SKILLS).map(Number)),'RPG uses the highest available CPU level');
 });
 test('Level 6–8 decisions are legal, deterministic and independent of hidden enemy cards and future RNG',()=>{
  const g=midgame();
@@ -161,7 +161,7 @@ test('Apex can think longer without slowing lower CPU tiers or RPG Mastermind',(
  assert.equal(AI.configuration({level:8}).skill.searchNodes,400);
  assert.equal(AI.configuration({level:8}).skill.searchDepth,5);
  assert.ok(S.TIME_BUDGET_MS>=1000&&S.TIME_BUDGET_MS<=1500);
- assert.equal(RPG_CPU_LEVEL,7);
+ assert.equal(RPG_CPU_LEVEL,8);
 });
 test('hypothetical next-turn Energy reply is based only on visible printed costs',()=>{
  const S=require('../cpu_strategic_search');
