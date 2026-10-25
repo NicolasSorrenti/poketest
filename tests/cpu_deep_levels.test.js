@@ -198,24 +198,29 @@ test('Apex search preserves hidden-zone invariance and a strict node budget',()=
 test('Apex counterplay prefers a guaranteed winning KO to leaving a ready reply',()=>{
  const S=require('../cpu_strategic_search');
  const attack={name:'Finishing Blow',damage:'80',cost:['Fighting']};
+ const opponentAttack={name:'Powered Reply',damage:'80',cost:['Fighting','Colorless']};
  const self={active:{id:'our',hp:70,damage:20,energies:['fight']},bench:[],prizeCount:1};
  const opponent={active:{id:'enemy',hp:60,damage:0,energies:['fight'],status:null},bench:[],prizeCount:2};
  const o={phase:'game',turn:1,turnSerial:16,self,opponent};
  const h={
-  card:id=>({attacks:[attack],hp:id==='enemy'?60:70}),
+  card:id=>({attacks:[id==='enemy'?opponentAttack:attack],hp:id==='enemy'?60:70}),
   candidates:()=>[{type:'attack',payload:{attackIndex:0}}],
   hpRemaining:u=>u.hp-u.damage,
-  projectedAttackValue:()=>65,
+  projectedAttackValue:()=>0,
   energyPool:u=>(u.energies||[]).map(()=> 'Fighting'),
   canPayEnergy:(cost,pool)=>pool.length>=cost.length,
   estimatedDamage:()=>80,
   knockoutChance:()=>0
  };
  const unprotected=S.counterplayExposure(o,h);
+ assert.ok(unprotected>0,'a plausible future Energy attachment adds uncertainty');
  h.knockoutChance=()=>1;
  const finishing=S.counterplayExposure(o,h);
- assert.ok(finishing<unprotected,
-  'securing the final Prize removes a hypothetical following counterattack');
+ assert.equal(finishing,0,'winning this turn eliminates uncertain future replies');
+ opponent.active.energies.push('fight');
+ h.knockoutChance=()=>0;
+ assert.equal(S.counterplayExposure(o,h),0,
+  'already affordable counterattacks belong to the end-of-turn evaluator, not an extra penalty');
 });
 test('Apex returned game remains valid across varied legal matches',()=>{
  const {countCards}=require('../core_rules');
