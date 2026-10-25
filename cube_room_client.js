@@ -203,7 +203,7 @@
     if(isOnline){
      sessionStorage.setItem('neoOnlineRoom',t.yourMatch.code);
      sessionStorage.setItem('neoOnlineToken',t.yourMatch.token);
-    }else sessionStorage.setItem('neoClassicLiveToken',t.yourMatch.token);
+    }else sessionStorage.setItem('neoCubeRoomLiveToken:'+code,t.yourMatch.token);
    });
    active.append(title,detail,link);
   }else{
