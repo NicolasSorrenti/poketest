@@ -1,6 +1,7 @@
 'use strict';
 // UI integration only. The authoritative Classic engine owns every card rule.
 (function(root,factory){const api=factory();if(typeof module==='object'&&module.exports)module.exports=api;if(root)root.NeoRpgDuelBridge=api;})(typeof window==='undefined'?null:window,function(){
+ const REL=typeof module==='object'&&module.exports?require('./rpg_relationships'):window.NeoRpgRelationships;
  function sessionKey(id){if(typeof id!=='string'||!id.trim())throw Error('Missing duel ID');return 'neoRpgDuelToken:'+encodeURIComponent(id);}
  function message(id,winner){sessionKey(id);if(winner!==null&&winner!==0&&winner!==1)throw Error('Invalid winner');return {type:'neo-rpg-duel-finished',duelId:id,winner};}
  function accepts(ev,origin,frame,pending){const x=ev?.data;return !!pending&&!pending.resolved&&!!frame&&ev.origin===origin&&ev.source===frame&&x?.type==='neo-rpg-duel-finished'&&x.duelId===pending.id&&(x.winner===null||x.winner===0||x.winner===1);}
@@ -18,7 +19,7 @@
   const credits=won?(ordinaryWin&&earlier>=2?8:15):5;
   // Persist weekly history on accepted receipts; old saves remain valid as-is.
   s.results.push({id:d.id,npc:d.npc,won,draw,day,winner,...(ordinaryWin?{ordinaryCreditWin:true}:{})});
-  b.duels++;b.trust+=trust;r.duels++;r.trust+=trust;r.respect+=trust;s.points+=points;s.credits+=credits;
+  REL.apply(s,d.npc,{duels:1,trust,respect:trust});s.points+=points;s.credits+=credits;
   let bonus=0;const notes=[];
   if(d.eventKey&&!s.eventsDone[d.eventKey]){s.eventsDone[d.eventKey]={won,draw,day:d.day};if(won){bonus=d.eventReward||0;s.points+=bonus;}notes.push('Played '+d.eventTitle+' — '+(won?'victory':draw?'draw':'defeat')+'.');}
   if(d.npc==='reina'){s.reinaDuels=b.duels;s.reinaTrust=b.trust;}
