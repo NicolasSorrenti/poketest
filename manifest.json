@@ -1,12 +1,50 @@
-{
-  "asset": "Camila booster reward",
-  "source_file": "derrota_euf\u00f3rica_en_la_tienda_pok\u00e9mon.png",
-  "game_path": "rpg-assets/characters/camila/events/booster.webp",
-  "format": "WEBP",
-  "dimensions": [
-    768,
-    1024
-  ],
-  "sha256": "371937b384faf72dfc443e49f9b45b1b10e2754e9410152622298bca6e88c4e4",
-  "notes": "Unzip at the repository root so the file lands at the correct game path."
-}
+[
+  {
+    "path": "rpg-assets/characters/yuna/discreet/neutral.webp",
+    "source": "previous approved batch"
+  },
+  {
+    "path": "rpg-assets/characters/camila/discreet/neutral.webp",
+    "source": "previous approved batch"
+  },
+  {
+    "path": "rpg-assets/characters/rina/discreet/neutral.webp",
+    "source": "previous approved batch"
+  },
+  {
+    "path": "rpg-assets/characters/sol/discreet/neutral.webp",
+    "source": "previous approved batch"
+  },
+  {
+    "path": "rpg-assets/characters/elena/discreet/neutral.webp",
+    "source": "previous approved batch"
+  },
+  {
+    "path": "rpg-assets/characters/jinx/discreet/neutral.webp",
+    "source": "previous approved batch"
+  },
+  {
+    "path": "rpg-assets/characters/luna/discreet/neutral.webp",
+    "source": "previous approved batch"
+  },
+  {
+    "path": "rpg-assets/characters/akari/discreet/neutral.webp",
+    "source": "akari_chibi.png"
+  },
+  {
+    "path": "rpg-assets/characters/iris/discreet/neutral.webp",
+    "source": "iris_chibi.png"
+  },
+  {
+    "path": "rpg-assets/characters/marina/discreet/neutral.webp",
+    "source": "marina_chibi.png"
+  },
+  {
+    "path": "rpg-assets/characters/barb/discreet/neutral.webp",
+    "source": "a_single_chibi_anime_style_illustration_on_a_trans.png"
+  },
+  {
+    "path": "rpg-assets/characters/laca/discreet/neutral.webp",
+    "source": "a_high_quality_anime_chibi_style_illustration_of_a.png"
+  }
+]

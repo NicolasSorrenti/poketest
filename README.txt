@@ -1,1 +1,1 @@
-Marina story CG art pack. Extract into repository root. Includes four 1920x1080 WebP CGs and four 640x360 WebP thumbnails. Story event references must still be added in code; no GitHub commit was made.
+Neo Campus Discreet Mode asset paths. Extract at repository ROOT (not inside rpg-assets). 12 named characters. Other generated candidates require identity approval before assigning. PR #109 must be merged separately.
