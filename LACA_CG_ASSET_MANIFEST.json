@@ -1,0 +1,112 @@
+{
+  "character": "laca",
+  "repo": "NicolasSorrenti/poketest",
+  "gallery_path_root": "/rpg-assets/events/cg/season01/",
+  "note": "Four entries use TEMPORARY STAND-INS and require purpose-made CGs. Existing art is not a guarantee of narrative visual match.",
+  "entries": [
+    {
+      "id": "laca_route_1",
+      "status": "approved_existing",
+      "source": "rpg-assets/events/cg/season01/laca_route_1.webp",
+      "full": "rpg-assets/events/cg/season01/laca_route_1.webp",
+      "thumbnail": "rpg-assets/events/cg/season01/thumbs/laca_route_1.webp",
+      "sha256": "65842bdf52a0e01460fc67fa4eb5ed7fab6f3f83de0caeb4b045bd7a75bba439"
+    },
+    {
+      "id": "laca_route_2",
+      "status": "approved_existing",
+      "source": "rpg-assets/events/cg/season01/laca_route_2.webp",
+      "full": "rpg-assets/events/cg/season01/laca_route_2.webp",
+      "thumbnail": "rpg-assets/events/cg/season01/thumbs/laca_route_2.webp",
+      "sha256": "b31c5e2907fa453c8ea9aaca9b43deceeb994fadb8934b3dc834376bd4528338"
+    },
+    {
+      "id": "laca_route_3",
+      "status": "approved_existing",
+      "source": "rpg-assets/events/cg/season01/laca_route_3.webp",
+      "full": "rpg-assets/events/cg/season01/laca_route_3.webp",
+      "thumbnail": "rpg-assets/events/cg/season01/thumbs/laca_route_3.webp",
+      "sha256": "e5d8113f5235c7d9f8e061d11a33dfb5d74065f1374fd7cf82db3bd52b9d47a8"
+    },
+    {
+      "id": "laca_route_4",
+      "status": "approved_existing",
+      "source": "rpg-assets/events/cg/season01/laca_route_4.webp",
+      "full": "rpg-assets/events/cg/season01/laca_route_4.webp",
+      "thumbnail": "rpg-assets/events/cg/season01/thumbs/laca_route_4.webp",
+      "sha256": "a313c7e2a82a208bc9816da6cf3ec2cfa7d7d26170b0d5e7e5def3cfd4008725"
+    },
+    {
+      "id": "laca_sunhat_vote",
+      "status": "approved_existing",
+      "source": "rpg-assets/events/cg/slice-life/laca_the_sunhat_jury.webp",
+      "full": "rpg-assets/events/cg/season01/laca_sunhat_vote.webp",
+      "thumbnail": "rpg-assets/events/cg/season01/thumbs/laca_sunhat_vote.webp",
+      "sha256": "ada45ee34aaf016c6d14ea5e4496ded3d5e768d950471d263c5c3e1430e2b1cf"
+    },
+    {
+      "id": "laca_rescue_kit_reach",
+      "status": "approved_existing",
+      "source": "rpg-assets/events/cg/slice-life/laca_the_bottom_shelf.webp",
+      "full": "rpg-assets/events/cg/season01/laca_rescue_kit_reach.webp",
+      "thumbnail": "rpg-assets/events/cg/season01/thumbs/laca_rescue_kit_reach.webp",
+      "sha256": "d4bf0f40f3bf23b249b8900733b5fd0b6467ac99d9c1069312732075f3e7fda1"
+    },
+    {
+      "id": "laca_borrowed_hoodie",
+      "status": "existing_art_scene_variation",
+      "source": "rpg-assets/events/cg/slice-life/laca_borrowed_for_five_minutes.webp",
+      "full": "rpg-assets/events/cg/season01/laca_borrowed_hoodie.webp",
+      "thumbnail": "rpg-assets/events/cg/season01/thumbs/laca_borrowed_hoodie.webp",
+      "sha256": "a11d7d154b9c74a7d56b722039e7f6836995bf2ea3efa73001092809d5b9ad1e"
+    },
+    {
+      "id": "laca_stretch_challenge",
+      "status": "existing_art_scene_variation",
+      "source": "rpg-assets/events/cg/slice-life/laca_the_stretching_contest.webp",
+      "full": "rpg-assets/events/cg/season01/laca_stretch_challenge.webp",
+      "thumbnail": "rpg-assets/events/cg/season01/thumbs/laca_stretch_challenge.webp",
+      "sha256": "7daa928ab05e5b830730981cd4cd6e40668675659311c78f609ac230350b2738"
+    },
+    {
+      "id": "laca_second_look",
+      "status": "existing_art_scene_variation",
+      "source": "laca_the_second_look.png",
+      "full": "rpg-assets/events/cg/season01/laca_second_look.webp",
+      "thumbnail": "rpg-assets/events/cg/season01/thumbs/laca_second_look.webp",
+      "sha256": "6becaf8e2c742ffee4e0c71e2d80a7333433644a0e4b96f2e920b99b2784bf5a"
+    },
+    {
+      "id": "laca_route_5",
+      "status": "temporary_standin",
+      "source": "laca-source-art/all-generated/a_detailed_anime_style_illustration_cg_scene_a_su.png",
+      "full": "rpg-assets/events/cg/season01/laca_route_5.webp",
+      "thumbnail": "rpg-assets/events/cg/season01/thumbs/laca_route_5.webp",
+      "sha256": "cade6ca349e7b08f7e79eeb630a0605052ff2bc3cf4592790e22f8b97a753bcf"
+    },
+    {
+      "id": "laca_swimsuit_verdict",
+      "status": "temporary_standin",
+      "source": "laca-source-art/all-generated/wide_detailed_anime_style_illustration_scene_a_c.png",
+      "full": "rpg-assets/events/cg/season01/laca_swimsuit_verdict.webp",
+      "thumbnail": "rpg-assets/events/cg/season01/thumbs/laca_swimsuit_verdict.webp",
+      "sha256": "ce608240f12c1ac8d729ccfe4425523680b57bb7dcca485b53f6b9e16dd4387c"
+    },
+    {
+      "id": "laca_card_floor",
+      "status": "temporary_standin",
+      "source": "laca-source-art/all-generated/wide_detailed_anime_style_illustration_in_a_cloth.png",
+      "full": "rpg-assets/events/cg/season01/laca_card_floor.webp",
+      "thumbnail": "rpg-assets/events/cg/season01/thumbs/laca_card_floor.webp",
+      "sha256": "6becaf8e2c742ffee4e0c71e2d80a7333433644a0e4b96f2e920b99b2784bf5a"
+    },
+    {
+      "id": "laca_towel_break",
+      "status": "temporary_standin",
+      "source": "laca-source-art/all-generated/wide_warm_detailed_anime_style_illustration_a_l.png",
+      "full": "rpg-assets/events/cg/season01/laca_towel_break.webp",
+      "thumbnail": "rpg-assets/events/cg/season01/thumbs/laca_towel_break.webp",
+      "sha256": "ec7a89dde4eb6ef387403cf850dbf2fa93030fe432b38b38c523ab8f43c8c46b"
+    }
+  ]
+}

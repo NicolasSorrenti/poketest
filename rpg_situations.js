@@ -417,7 +417,7 @@
   "place": "cafe",
   "start": 43,
   "end": 79,
-  "slot": 2,
+  "slot": 1,
   "minAffection": 4,
   "minTrust": 4,
   "tag": "childhood_friend",
