@@ -64,7 +64,11 @@ test('RPG checkpoint stores every accepted move, restores after server restart a
   }});
   assert.equal(move.status,200,JSON.stringify(move.body).slice(0,400));
   assert.equal(move.body.revision,1);
-  assert.equal(move.body.cloudSaved,true);
+  assert.equal(move.body.cloudSaved,false,'moves return immediately; cloud checkpoint is asynchronous');
+  // A later acknowledgement guarantees that the newest revision is actually
+  // durable before we simulate a server restart.
+  for(let i=0;i<100&&fake.rows.get(prefix)?.revision!==1;i++)
+   await new Promise(resolve=>setTimeout(resolve,5));
   assert.equal(fake.rows.get(prefix).revision,1);
   assert.ok(fake.rows.get(prefix).snapshot.game.players[0].active);
   // Simulate a Render restart: RAM is gone, database still has the whole match.
