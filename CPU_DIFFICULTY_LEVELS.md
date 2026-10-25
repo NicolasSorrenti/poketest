@@ -32,6 +32,31 @@ RPG-deck p95 simulated per-action decision-processing time for Level 7 was ~21 m
 
 **Implementation:** `rpg_cpu_config.js` sets `RPG_CPU_LEVEL=7` and promotes older cloud/local CPU sessions without mutating game or profile state. Actual deployment awaits merge and CI review.
 
+## Next strategic challenger: Apex 8 (not yet promoted)
+
+Apex now uses a **bounded beam search**, with up to 400 deterministic preparation
+transitions and a **1.3-second wall-clock planning limit per CPU action**.
+It evaluates full preparation sequences, hand and Energy opportunity cost,
+plausible (not guaranteed) next-turn Energy attachments, and the visible
+opponent Active/Bench responses after a knockout. It never uses the opponent's
+private hand or deck as an oracle, never simulates unknown coin flips, and
+still applies only engine-validated legal moves.
+
+This is a computational allowance, **not an artificial delay**. The chosen
+action may be immediate when the position is simple. A hard node and time
+budget keeps pathological positions bounded. The budget is below the user's
+acceptable 1–2 second think interval to leave headroom for other processing.
+
+**RPG continues to use benchmarked Level 7 Mastermind** until held-out paired
+general and late-game NPC matches actually demonstrate a meaningful advantage
+from Apex. Benchmark it directly with:
+```sh
+node --test tests/cpu_deep_levels.test.js tests/rpg_cpu_champion.test.js
+node scripts/benchmark-cpu-advanced.js --baseline-level 7 --level 8 --pairs 6 --max-turns 120 --fixtures 8 --seed 291451
+node scripts/benchmark-cpu-rpg-advanced.js --baseline-level 7 --level 8 --pairs 5 --max-turns 110 --seed 491721
+```
+The GitHub Actions workflow `cpu-strategic-challenger.yml` runs these checks.
+
 ## Proving that a new level is better
 
 Run paired and mirrored games, varying deck, seed and seat, then compare both win rates and CPU action latency. Examples:
