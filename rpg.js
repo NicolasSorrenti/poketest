@@ -1159,6 +1159,25 @@ function advancePreparedDuel(){
  if(!PRE.advance(state.pendingDuel))return;
  persist();showPreparedDuel();
 }
+function cancelPreparedDuel(){
+ const pending=state.pendingDuel;
+ // Never close a launched Classic duel through a preview-only cancellation.
+ if(!PRE.isReady(pending))return;
+ ++preDuelArtSerial; // Ignore artwork loads from the withdrawn preview.
+ if(pending.tournamentId)TOURNAMENTS.cancel(state,pending);
+ if(pending.arcEpisode){
+  // Reopen the choice that offered this match, even after a save/reload.
+  state.activeArc={id:pending.arcEpisode,phase:'choice',index:ARC.linesFor(state,pending.arcEpisode).length,choice:null};
+ }
+ state.pendingDuel=null;
+ sessionStorage.removeItem(BRIDGE.sessionKey(pending.id));
+ sessionStorage.removeItem('neoRpgDeck:'+pending.id);
+ sessionStorage.removeItem('neoRpgNpcDeck:'+pending.id);
+ if($('preDuelDialog').open)$('preDuelDialog').close();
+ $('duel').hidden=true;
+ $('battle').src='about:blank';
+ persist();render();
+}
 function launchPreparedDuel(){
  const pending=state.pendingDuel;
  if(!PRE.launch(pending))return;
@@ -2348,10 +2367,11 @@ document.addEventListener('pointerdown',event=>{
 $('galleryClose').onclick=()=>$('galleryDialog').close();
 $('galleryCharacter').onchange=renderGallery;$('galleryCategory').onchange=renderGallery;$('galleryUnseen').onchange=renderGallery;
 $('cgMomentClose').onclick=()=>$('cgMoment').close();
+$('preDuelBack').onclick=cancelPreparedDuel;
 $('preDuelNext').onclick=advancePreparedDuel;
 $('preDuelStart').onclick=launchPreparedDuel;
 $('preDuelSkip').onclick=launchPreparedDuel;
-$('preDuelDialog').addEventListener('cancel',e=>e.preventDefault());
+$('preDuelDialog').addEventListener('cancel',e=>{e.preventDefault();cancelPreparedDuel();});
 $('quickNext').onclick=()=>act('rest');$('quickHome').onclick=()=>act('home');$('calendarBtn').onclick=openCalendar;$('calendarClose').onclick=()=>$('calendarDialog').close();$('communityClose').onclick=()=>$('communityDialog').close();
 $('save').onclick=async()=>{persist();const cloud=window.NeoRpgCloudSave?.isSignedIn?.();const ok=await window.NeoRpgCloudSave?.syncNow();$('notice').textContent=cloud?(ok?'Cloud campaign synced.':'Cloud sync pending. Progress is cached on this device until it reconnects.'):'Campaign saved in this browser.';};
 $('tutorialDismiss').onclick=()=>{tutorialQueue.shift();displayTutorial();};
