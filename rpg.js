@@ -79,7 +79,7 @@ function finishStory(){
  log('Finished '+e.title+' with '+cast[id].name+'.');const storyMemories=recordCG('story_milestone',id,{eventId:e.id});recordIntention('story');
  if(chapterReward)log('Bond chapter '+chapterReward.chapter+' reward from '+cast[id].name+': '+chapterReward.label+'.');
  state.activeStory=null;advance();state.selected=id;
- persist();closeSceneDialogue();showCGMoment(storyMemories[0]);
+ persist();showCGMoment(storyMemories[0]);closeSceneDialogue();
  if(chapterReward)$('notice').textContent='★ Chapter reward: '+chapterReward.label;
 }
 
@@ -139,16 +139,19 @@ function audioForTime(change){
  const kind=window.NeoRpgTimeTransitions?.plan?.(change)?.kind;
  if(kind)window.NeoRpgAudio?.play?.(kind==='season'?'finale':kind==='day'?'day':kind==='sleep'?'sleep':'period');
 }
-function timeFlash(beforeDay,beforeSlot,source='activity'){
- const change={beforeDay,beforeSlot,afterDay:state.day,afterSlot:state.slot,source};
+function timeFlash(change,onDone=()=>{}){
  audioForTime(change);
  // Presentation follows the already-committed RPG time state; it never owns state changes.
- if(window.NeoRpgTimeTransitions?.present){window.NeoRpgTimeTransitions.present(change);return;}
+ if(window.NeoRpgTimeTransitions?.present)return !!window.NeoRpgTimeTransitions.present(change,{onDismiss:onDone});
  const overlay=document.createElement('div');overlay.className='notice-pop';
- const heading=document.createElement('b');heading.textContent=state.day>90?'Season complete':state.day!==beforeDay?'A NEW DAY BEGINS':'TIME PASSES';
- const body=document.createElement('span');body.textContent=state.day>90?'Day 90 has ended.':'Day '+state.day+' · '+periods[state.slot];
+ const heading=document.createElement('b');heading.textContent=change.afterDay>90?'Season complete':change.afterDay!==change.beforeDay?'A NEW DAY BEGINS':'TIME PASSES';
+ const body=document.createElement('span');body.textContent=change.afterDay>90?'Day 90 has ended.':'Day '+change.afterDay+' · '+periods[change.afterSlot];
  overlay.append(heading,body);document.body.append(overlay);
- overlay.addEventListener('animationend',()=>overlay.remove());
+ let finished=false;
+ const done=()=>{if(finished)return;finished=true;clearTimeout(timer);overlay.remove();onDone();};
+ overlay.addEventListener('animationend',done);
+ const timer=setTimeout(done,1400);
+ return true;
 }
 
 function defaults(){return {sideQuests:{},activeSideQuest:null,day:1,slot:0,location:'home',visitedLocations:{home:true},metReina:false,reinaTrust:0,reinaDuels:0,results:[],flags:{intro:false},journal:['The 90-day season begins.'],pendingDuel:null,bonds:{},talked:{},hungOut:{},eventsDone:{},points:0,credits:80,playerDeck:'blackout',selected:null,ended:false,storyDone:{},storyMissed:{},relationships:{},routeOutcomes:{},partner:null,activeStory:null,activeEncounter:null,activeArc:null,arcFlags:{},arcOutcomes:{},activityDone:{},encountersDone:{},focus:75,insight:0,reputation:0,preparation:0,lastDuelReceipt:null,tournaments:{},campaignHistory:[],ngPlus:0,appointments:[],appointmentSeq:0,scene:null,socialHistory:{},situationDone:{},activeSituation:null,sliceOfLifeDone:{},sliceOfLifeLastDay:0,activeSliceOfLife:null,deckJourney:null,competitive:null,npcReactivity:null,community:null,consequences:null,mandatoryEventState:null,playmatGifts:{},playmatSelected:'aurora',gameplayTutorials:{disabled:false,seen:{}}}}
@@ -202,6 +205,14 @@ const log=t=>{state.journal.unshift(t);state.journal=state.journal.slice(0,25)};
 function recordIntention(kind){const result=INTENTIONS.record(state,kind);if(result)log('Daily priority fulfilled: '+result.title+' ('+result.rewardLabel+').');}
 function recordCG(kind,npc,context=null){const entries=CG.record(state,kind,npc,context);if(entries.length)log(entries.length+' new memory illustration'+(entries.length===1?'':'s')+' unlocked for the CG Gallery.');return entries;}
 let scene=state.scene&&typeof state.scene.speaker==='string'&&typeof state.scene.line==='string'&&Array.isArray(state.scene.choices)?state.scene:{speaker:'Narrator',line:'Ninety days. One championship. You came to Neo Harbor to win. Everyone else has their own plans.',choices:[]};
+// A single handoff owns calendar wipes, image loading and forced-story eligibility.
+// The state is saved at clock advancement; only presentation waits for acknowledgement.
+const timeSequence=window.NeoRpgTimeTransitions.createSequence({
+ canPresent:()=>!scene.line&&!scene.choices?.length&&!$('cgMoment')?.open,
+ present:timeFlash,
+ onSettled:()=>render()
+});
+let cgMomentRelease=null;
 
 function queueMandatory(){
  if(!MANDATORY)return;
@@ -234,6 +245,7 @@ function maybeStartMandatory(){
  if(!MANDATORY)return;
  queueMandatory();
  if(MANDATORY.hydrate(state,MANDATORY_EVENTS).active)return;
+ if(timeSequence.blocked||window.NeoRpgTimeTransitions?.active)return;
  // Existing scripted dialogue, character choices, galleries, duel preparation and starter selection remain authoritative.
  if(state.activeSliceOfLife||scene.line||scene.choices?.length||state.deckJourney&&!state.deckJourney.starter
     ||$('cgMoment')?.open||$('preDuelDialog')?.open||$('galleryDialog')?.open||$('calendarDialog')?.open)return;
@@ -331,7 +343,8 @@ const missedQuests=SIDE.expire(state);if(missedQuests.length)log('A local side-q
 const missedAppointments=APPOINTMENTS.expire(state);
 INTENTIONS.hydrate(state); // Expire yesterday's optional choice before saving the new day.
 for(const plan of missedAppointments)log('You missed your planned meet-up with '+(cast[plan.npc]?.name||'a trainer')+'.');
-queueMandatory();arriveForScheduledPlan();persist();if(!suppressTimeFlash)timeFlash(beforeDay,beforeSlot,transitionSource);}
+queueMandatory();arriveForScheduledPlan();persist();
+if(!suppressTimeFlash)timeSequence.queue({beforeDay,beforeSlot,afterDay:state.day,afterSlot:state.slot,source:transitionSource});}
 function say(speaker,line,choices=[]){scene={speaker,line,choices};state.scene=scene;persist();render();}
 function sayConversation(lines,afterChoices=[],reactionId=null,invitation=null,memory=null,casual=null){
  if(!Array.isArray(lines)||!lines.length)return;
@@ -366,6 +379,7 @@ function closeSceneDialogue(){
  scene={speaker:'Narrator',line:'',choices:[]};
  state.scene=scene;
  persist();render();
+ timeSequence.flush();
 }
 // Narrate a destination only the first time the player visits it.
 function travelTo(placeId,{intro=true}={}){
@@ -614,8 +628,8 @@ function finishSituation(){
   recordIntention('hangout');
   const memories=recordCG('situation',event.npc,{eventId:event.id});
   advance();
-  closeSceneDialogue();
   showCGMoment(memories[0]);
+  closeSceneDialogue();
  }catch(err){$('notice').textContent=err.message;}
 }
 
@@ -870,7 +884,7 @@ let pendingDuelTimeShift=null;
 function finishDuelRewardPresentation(){
  const transition=pendingDuelTimeShift;pendingDuelTimeShift=null;
  // The world clock and all rewards were already persisted before results appeared.
- if(transition){audioForTime(transition);window.NeoRpgTimeTransitions?.present?.(transition);}
+ if(transition){timeSequence.queue(transition);timeSequence.flush();}
 }
 
 function showPackReveal(){
@@ -961,7 +975,7 @@ function showPackReveal(){
 }
 
 const labelCard=id=>cardNames.get(id)||id.replace('base1-','Base #');
-function controlsLocked(){return state.day>90||!!state.activeSliceOfLife||!!state.mandatoryEventState?.active||!!state.pendingDuel||!!state.activeSituation||!!state.activeStory||!!state.activeSideQuest||!!state.activeArc||!!state.activeEncounter;}
+function controlsLocked(){return timeSequence.running||state.day>90||!!state.activeSliceOfLife||!!state.mandatoryEventState?.active||!!state.pendingDuel||!!state.activeSituation||!!state.activeStory||!!state.activeSideQuest||!!state.activeArc||!!state.activeEncounter;}
 function showStarterChoice(){
  if(controlsLocked())return;
  const root=$('starterChoices');root.replaceChildren();
@@ -1503,12 +1517,26 @@ function loadCGArt(image,entry,thumbnail,onSuccess,onMissing){
 }
 function showCGMoment(entry,encounterPreview=false){
  const preview=encounterPreview&&state.activeSliceOfLife?.id===entry?.id&&SLICE.byId(entry?.id)?.choices;
- if(!entry||(!CG.unlocked(state,entry.id)&&!preview))return;
+ if(!entry||(!CG.unlocked(state,entry.id)&&!preview))return false;
+ // Hold the next calendar wipe and any due mandatory event while artwork loads
+ // and until its modal is closed. Missing images must release this hold too.
+ const releaseHold=timeSequence.hold();
+ const previousRelease=cgMomentRelease;
+ let released=false;
+ const release=()=>{
+  if(released)return;
+  released=true;
+  if(cgMomentRelease===release)cgMomentRelease=null;
+  releaseHold();
+ };
+ cgMomentRelease=release;
+ previousRelease?.();
  const photo=document.createElement('img');
  photo.alt=entry.title;
  loadCGArt(photo,entry,false,kind=>{
-  if(preview&&state.activeSliceOfLife?.id!==entry.id)return;
-  if(entry.category==='pre_duel'&&!state.pendingDuel)return;
+  if(cgMomentRelease!==release)return;
+  if(preview&&state.activeSliceOfLife?.id!==entry.id){release();return;}
+  if(entry.category==='pre_duel'&&!state.pendingDuel){release();return;}
   const modal=$('cgMoment'),root=$('cgMomentArt');
   const frame=document.createElement('div');
   frame.className='cg-art-frame'+(kind==='event'?'':' is-fallback');
@@ -1518,7 +1546,8 @@ function showCGMoment(entry,encounterPreview=false){
   $('cgMomentCaption').textContent=cast[entry.character]?.name||entry.character;
   if(CG.unlocked(state,entry.id))CG.markViewed(state,entry.id);persist();
   if(!modal.open)modal.showModal();
- });
+ },release);
+ return true;
 }
 function showGalleryDetail(entry){
  const root=$('galleryPreview');root.replaceChildren();
@@ -2075,10 +2104,13 @@ function render(){
  if(previousLocation&&previousLocation!==state.location){
   window.NeoRpgAudio?.play?.('travel');
   window.NeoRpgInterface?.onLocationChange?.();
-  window.NeoRpgTimeTransitions?.presentTravel?.({
-   from:places[previousLocation]?.[0]||previousLocation,
-   to:places[state.location]?.[0]||state.location
-  });
+  // A CG, calendar wipe or mandatory scene must never be covered by travel.
+  if(!timeSequence.blocked&&!state.mandatoryEventState?.active){
+   window.NeoRpgTimeTransitions?.presentTravel?.({
+    from:places[previousLocation]?.[0]||previousLocation,
+    to:places[state.location]?.[0]||state.location
+   });
+  }
  }
  window.NeoRpgAudio?.setScene?.(state.location,state.slot);
  ensureRpgLayout();
@@ -2086,7 +2118,7 @@ function render(){
  maybeStartMandatory();
  renderJourney();
  renderCollection();
- const ended=state.day>90,locked=!!state.activeSliceOfLife||!!state.mandatoryEventState?.active||!!state.activeSituation||!!state.activeStory||!!state.activeEncounter||!!state.activeArc||!!state.activeSideQuest||!!state.pendingDuel;
+ const ended=state.day>90,locked=timeSequence.running||!!state.activeSliceOfLife||!!state.mandatoryEventState?.active||!!state.activeSituation||!!state.activeStory||!!state.activeEncounter||!!state.activeArc||!!state.activeSideQuest||!!state.pendingDuel;
  renderPlanner(locked);
  renderDailyIntention(locked);
  const receipt=state.lastDuelReceipt;
@@ -2418,6 +2450,7 @@ document.addEventListener('pointerdown',event=>{
 $('galleryClose').onclick=()=>$('galleryDialog').close();
 $('galleryCharacter').onchange=renderGallery;$('galleryCategory').onchange=renderGallery;$('galleryUnseen').onchange=renderGallery;
 $('cgMomentClose').onclick=()=>$('cgMoment').close();
+$('cgMoment').addEventListener('close',()=>cgMomentRelease?.());
 $('preDuelBack').onclick=cancelPreparedDuel;
 $('preDuelNext').onclick=advancePreparedDuel;
 $('preDuelStart').onclick=launchPreparedDuel;
