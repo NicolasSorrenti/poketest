@@ -128,7 +128,14 @@ const settings={level:3,personality:'balanced',side:1,seed:47};
 {
  const {NPC_PROFILES,profileForNpc}=require('./cpu_profiles');
  const {ClassicLocalService}=require('./classic_local_service');
- assert.equal(Object.keys(NPC_PROFILES).length,8);
+ // The original eight RPG opponents remain supported as the roster expands.
+ const originalNpcIds=['hana','reina','shiori','yuna','akari','camila','marina','kaede'];
+ for(const id of originalNpcIds)assert.ok(Object.hasOwn(NPC_PROFILES,id),
+  'Missing original RPG CPU personality: '+id);
+ for(const [id,profile] of Object.entries(NPC_PROFILES)){
+  assert.doesNotThrow(()=>AI.configuration({...profile,side:1}),
+   'Invalid CPU profile for '+id);
+ }
  assert.deepEqual(profileForNpc('reina'),{level:4,personality:'aggressive'});
  assert.deepEqual(profileForNpc('akari'),{level:5,personality:'tactical'});
  assert.throws(()=>profileForNpc('unknown'),/Unknown CPU NPC/);
