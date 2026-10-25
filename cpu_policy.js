@@ -2,6 +2,7 @@
 // CPU policy reads only the same projected information that a player may see.
 // The authoritative reducer is used for legality and execution, never as a
 // future-outcome oracle (in particular it cannot peek at upcoming coin flips).
+const {performance}=require('node:perf_hooks');
 const {reduce,CATALOG}=require('./headless_duel');
 const {publicView}=require('./duel_protocol');
 const {isBasicPokemon,isEnergy,canEvolve,canPayEnergy}=require('./core_rules');
@@ -858,15 +859,17 @@ function chooseAction(game,raw={},memo={}){
  }
  return null;
 }
-function driveSide(initial,{side=1,level=3,personality='balanced',seed=1,planning,evolutionTempo,prizeRace,knockoutTempo,opponentResponse,graduatedNoise,energyHorizon,limit=200,onStep=null}={}){
+function driveSide(initial,{side=1,level=3,personality='balanced',seed=1,planning,evolutionTempo,prizeRace,knockoutTempo,opponentResponse,graduatedNoise,energyHorizon,limit=200,onStep=null,onDecision=null}={}){
  let game=initial,steps=0;const commands=[],memo={trainers:0,powers:0,powerKeys:new Set(),stadium:false};
  while(!game.over&&steps<limit){
   const beforeTurn=game.turnSerial;
+  const started=onDecision?performance.now():0;
   const next=chooseAction(game,{side,level,personality,seed,planning,evolutionTempo,prizeRace,knockoutTempo,opponentResponse,graduatedNoise,energyHorizon},memo);
   if(!next){
    if(game.pendingDecision?.actor===side)throw Error('CPU unresolved choice: '+JSON.stringify({decision:game.pendingDecision,pendingAction:game.pendingAction}));
    break;
   }
+  if(onDecision)onDecision(performance.now()-started,next.command);
   const a=next.command,signature=a.type+':'+JSON.stringify(a.payload);
   if(a.type==='play_trainer')memo.trainers++;
   if(a.type==='use_power'){memo.powers++;memo.powerKeys.add(a.payload.slot+':'+a.payload.powerIndex);}
