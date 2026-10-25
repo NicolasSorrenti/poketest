@@ -4,6 +4,7 @@ const fs=require('node:fs');
 const path=require('node:path');
 const {ClassicLocalService,deckOptions}=require('./classic_local_service');
 const {ClassicOnlineService}=require('./classic_online_service');
+const {forRpgDuel,upgradeRpgSession}=require('./rpg_cpu_config');
 const {RpgDuelCheckpoint}=require('./rpg_duel_checkpoint');
 const root=__dirname;
 const port=Number(process.env.PORT||8000);
@@ -70,16 +71,16 @@ async function api(req,res,pathName,url){
    if(identity){
     const live=[...classic.sessions.values()].find(s=>s.checkpointOwner===identity.userId&&s.checkpointDuelId===params.rpgDuelId);
     const old=live||await rpgDuels.load(params.rpgDuelId,identity);
-    if(old){classic.sessions.set(old.token,old);return sendJSON(res,200,{token:old.token,...classic.response(old),cloudSaved:true,resumed:true});}
+    if(old){upgradeRpgSession(old);classic.sessions.set(old.token,old);return sendJSON(res,200,{token:old.token,...classic.response(old),cloudSaved:true,resumed:true});}
    }
-   const created=classic.create(params),session=classic.session(created.token);
+   const created=classic.create(forRpgDuel(params)),session=classic.session(created.token);
    if(identity){
     session.checkpointOwner=identity.userId;session.checkpointDuelId=params.rpgDuelId;
     try{await rpgDuels.save(session,identity);created.cloudSaved=true;}
     catch(error){
      if(error.code==='40001'){
       const restored=await rpgDuels.load(params.rpgDuelId,identity);
-      if(restored){classic.sessions.delete(created.token);classic.sessions.set(restored.token,restored);
+      if(restored){upgradeRpgSession(restored);classic.sessions.delete(created.token);classic.sessions.set(restored.token,restored);
        return sendJSON(res,200,{token:restored.token,...classic.response(restored),cloudSaved:true,resumed:true});}
      }
      created.cloudSaved=false;created.cloudError='Cloud checkpoint unavailable. Battle remains active on this server.';
@@ -97,13 +98,16 @@ async function api(req,res,pathName,url){
    const live=[...classic.sessions.values()].find(s=>s.checkpointOwner===identity.userId&&s.checkpointDuelId===params.duelId);
    const snapshot=live||await rpgDuels.load(params.duelId,identity);
    if(!snapshot)return sendJSON(res,404,{error:'No saved RPG duel for this account'});
+   upgradeRpgSession(snapshot);
    classic.sessions.set(snapshot.token,snapshot);
    return sendJSON(res,200,{token:snapshot.token,...classic.response(snapshot),cloudSaved:true,resumed:true});
   }
   const token=req.headers['x-duel-token'];
   if(typeof token!=='string'||!token){sendJSON(res,401,{error:'Missing duel token'});return;}
   if(pathName==='/api/classic/state'&&req.method==='GET'){
-   const session=classic.session(token),state=classic.response(session);
+   const session=classic.session(token);
+   if(session.rpgLocalOnly||session.checkpointDuelId)upgradeRpgSession(session);
+   const state=classic.response(session);
    if(session.rpgLocalOnly){
     state.cloudSaved=false;
     state.cloudError='This duel is only on the current server. Sign in from the RPG to enable autosaves in future matches.';
@@ -112,6 +116,7 @@ async function api(req,res,pathName,url){
   }
   if(pathName==='/api/classic/action'&&req.method==='POST'){
    const session=classic.session(token);
+   if(session.rpgLocalOnly||session.checkpointDuelId)upgradeRpgSession(session);
    const identity=session.checkpointOwner?await rpgDuels.identify(req.headers.authorization):null;
    if(session.checkpointOwner&&session.checkpointOwner!==identity.userId)throw Error('Unauthorized RPG duel account');
    const body=await parseJSON(req);
