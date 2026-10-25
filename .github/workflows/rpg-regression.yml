@@ -52,6 +52,10 @@ jobs:
           node-version: '22'
       - name: Verify cloud save import, conflicts and offline fallback
         run: node --test tests/rpg_cloud_save.test.js tests/rpg_cloud_config.test.js tests/rpg_duel_checkpoint.test.js
+      - name: Verify Barb battle reactions and serve her art
+        run: |
+          node --test tests/rpg_match_reactions.test.js
+          node --test tests/rpg_match_reactions_http.test.js
       - name: Validate RPG story, schedules, world and duel integration
         run: |
           node --test test_rpg_status.js

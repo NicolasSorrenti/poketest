@@ -45,3 +45,9 @@ and it also falls back to the attack cut-in. It no longer uses the generic
 Keep the result illustration portrait-oriented with the face clearly legible
 when cropped into the right side of the results splash. No text baked into the
 image, since the game overlays the result and earned rewards.
+
+## Barb match art
+
+Barb's approved character art lives under `characters/barb/assets/` and is mirrored exactly at `rpg-assets/characters/barb/` through the character-pack build. Her battle reactions are registered in `manifest.json` and `rpg_match_reactions.js`, which uses the existing VN expressions for card play, Power, evolution, damage, Weakness and KOs, and her already-installed `/rpg-assets/reactions/barb/attack.png` for attacks.
+
+A dedicated `match-cutin.webp`, victory/result CG or booster CG can be created later, but no placeholder or another NPC's artwork should substitute for her approved identity.

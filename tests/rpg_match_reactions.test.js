@@ -3,7 +3,7 @@ const assert=require('node:assert/strict');
 const fs=require('node:fs');
 const path=require('node:path');
 const reactions=require('../rpg_match_reactions');
-const castIds=['hana','reina','shiori','yuna','akari','camila','marina','kaede','jinx','luna','sol','rina','elena','sierra','jun','teo','iris','elio','alma','nereo'];
+const castIds=['hana','reina','shiori','yuna','akari','camila','marina','kaede','jinx','luna','sol','rina','elena','sierra','jun','teo','iris','elio','alma','nereo','barb'];
 const expectedKinds=['attack','play_card','evolve','power','hurt','ko_taken','ko_scored'];
 assert.deepEqual(Object.keys(reactions.VOICES).sort(),castIds.sort(),'every existing RPG opponent must have authored cut-ins');
 for(const [id,voice] of Object.entries(reactions.VOICES)){
@@ -12,7 +12,7 @@ for(const [id,voice] of Object.entries(reactions.VOICES)){
 }
 for(const kind of expectedKinds){
  const utterances=Object.values(reactions.VOICES).map(voice=>voice[kind]);
- assert.equal(new Set(utterances).size,20,'duplicated generic '+kind+' line between distinct NPCs');
+ assert.equal(new Set(utterances).size,21,'duplicated generic '+kind+' line between distinct NPCs');
 }
 const mkView=(human=6,cpu=6,cpuDamage=0,phase='game')=>({phase,over:phase==='done',players:[{prizeCount:human},{prizeCount:cpu,active:{id:'char',damage:cpuDamage},bench:[]}]});
 const act=(seq,side,type,label)=>({seq,side,type,label});
@@ -69,7 +69,7 @@ assert.equal(reactions.assetFor({},'sierra','attack'),'/rpg-assets/characters/si
 assert.equal(reactions.assetFor({},'rina','attack'),'/rpg-assets/characters/rina/expression-portraits/neutral.webp','Use Rina installed expression portraits');
 assert.equal(reactions.assetFor({},'reina','attack'),'/rpg-assets/characters/reina/vn-expressions/angry.webp');
 const installedManifest=JSON.parse(fs.readFileSync(path.join(__dirname,'../rpg-assets/reactions/manifest.json'),'utf8'));
-assert.equal(Object.keys(installedManifest.characters).length,20,'NPC artwork manifest must load for the whole cast');
+assert.equal(Object.keys(installedManifest.characters).length,21,'NPC artwork manifest must load for the whole cast');
 assert.equal(reactions.assetFor(installedManifest,'reina','default'),'/rpg-assets/characters/reina/vn-expressions/neutral.webp','Reina uses her VN neutral portrait');
 assert.equal(reactions.assetFor(installedManifest,'rina','default'),'/rpg-assets/characters/rina/expression-portraits/neutral.webp','Rina uses her VN portrait');
 assert.equal(reactions.assetFor(installedManifest,'reina','attack'),'/rpg-assets/reactions/reina/attack.png','Attack uses the widescreen manifest art first');
@@ -157,12 +157,12 @@ const reactionKinds=['default','attack','play_card','evolve','power','hurt','big
 for(const id of castIds){
  for(const kind of reactionKinds){
   const chosen=reactions.assetFor(installedManifest,id,kind);
-  assert.ok(chosen.startsWith('/rpg-assets/characters/'+id+'/'),id+' '+kind+' must use their own VN art');
+  assert.ok(chosen.startsWith('/rpg-assets/characters/'+id+'/')||chosen.startsWith('/rpg-assets/reactions/'+id+'/'),id+' '+kind+' must use that NPC\'s own artwork');
   assert.ok(fs.existsSync(path.join(__dirname,'..',chosen.slice(1))),id+' '+kind+': selected VN expression is missing');
  }
 }
 assert.match(reactions.assetFor(installedManifest,'camila','power'),/camila\/vn-expressions\/flirty\.webp$/);
-assert.match(reactions.assetFor(installedManifest,'jun','attack'),/jun\/vn-expressions\/determined\.webp$/);
+assert.equal(reactions.assetFor(installedManifest,'jun','attack'),'/rpg-assets/reactions/jun/attack.png','Jun uses his dedicated attack illustration before VN expressions');
 assert.match(reactions.assetFor(installedManifest,'rina','hurt'),/rina\/expression-portraits\/concerned\.webp$/);
 assert.match(reactions.assetFor(installedManifest,'jinx','ko_scored'),/jinx\/expression-portraits\/smirk\.webp$/);
 assert.equal(reactions.assetFor({},'unknown_npc','attack'),null,'Unknown NPC gets silhouette');
@@ -183,3 +183,24 @@ assert.match(css,/z-index:680/,'NPC artwork overlays the generic attack banner')
 assert.match(css,/\.npc-reaction-card\.npc-reaction-attack\{animation-duration:2\.8s\}/,
  'NPC attack animation must match its 2.8-second lifetime');
 console.log('PASS RPG NPC cut-ins: action feed, damage, KO, final KO, cooldown, cap, art, integration');
+
+const barb='/rpg-assets/characters/barb/vn-expressions/';
+const barbPaths={
+ default:'neutral',play_card:'happy',evolve:'happy',power:'flirty',
+ hurt:'surprised',big_hit:'surprised',weakness_hit:'surprised',
+ status_hit:'angry',ko_taken:'sad',ko_scored:'happy'
+};
+for(const [kind,expression] of Object.entries(barbPaths)){
+ assert.equal(reactions.assetFor(installedManifest,'barb',kind),barb+expression+'.webp',
+  'Barb '+kind+' uses her original installed expression');
+}
+assert.equal(reactions.assetFor(installedManifest,'barb','attack'),
+ '/rpg-assets/reactions/barb/attack.png','Barb keeps her original attack CG');
+assert.match(reactions.VOICES.barb.attack,/reserve/,'Barb has authored match voice');
+for(const [kind,expression] of Object.entries(barbPaths)){
+ const live=path.join(__dirname,'..',(barb+expression+'.webp').slice(1));
+ const source=path.join(__dirname,'../characters/barb/assets/vn-expressions',expression+'.webp');
+ assert.ok(fs.existsSync(live),kind+' published for Barb');
+ assert.deepEqual(fs.readFileSync(live),fs.readFileSync(source),
+  'Published '+kind+' image is exactly the approved source art');
+}

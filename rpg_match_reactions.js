@@ -24,10 +24,11 @@
   jinx:'/rpg-assets/characters/jinx/neutral.png',
   luna:'/rpg-assets/characters/luna/neutral.png',
   sierra:'/rpg-assets/characters/sierra/portrait.png',
-  sol:'/rpg-assets/sol.png'
+  sol:'/rpg-assets/sol.png',
+  barb:'/rpg-assets/characters/barb/portraits/primary.png'
  });
  // Established cast has two supported VN-expression folder formats.
- const VN_MAIN=new Set(['hana','reina','shiori','yuna','akari','camila','marina','kaede']);
+ const VN_MAIN=new Set(['hana','reina','shiori','yuna','akari','camila','marina','kaede','barb']);
  const VN_GUEST=new Set(['jun','teo','iris','elio','alma','nereo']);
  const VN_PORTRAITS=new Set(['rina','sol','jinx','luna','elena','sierra']);
  const EXPRESSIONS={
@@ -61,7 +62,10 @@
   kaede:{attack:'angry',power:'angry',ko_taken:'angry'},
   jinx:{attack:'smirk',play_card:'playful',evolve:'happy',power:'smirk',
    hurt:'annoyed',status_hit:'annoyed',ko_taken:'annoyed',ko_scored:'smirk'},
-  teo:{attack:'happy'}
+  teo:{attack:'happy'},
+  barb:{attack:'flirty',play_card:'happy',evolve:'happy',power:'flirty',
+   hurt:'surprised',big_hit:'surprised',weakness_hit:'surprised',
+   status_hit:'angry',ko_taken:'sad',ko_scored:'happy'}
  };
  function vnCandidates(npcId,kind){
   const group=VN_MAIN.has(npcId)?'main':VN_GUEST.has(npcId)?'guest':
@@ -194,6 +198,15 @@
     "ko_taken": "Mm. I was too slow.",
     "ko_scored": "Good. Tea's on me after this."
   },
+  "barb": {
+    "attack": "Let's see if you noticed what I kept in reserve.",
+    "play_card": "I was hoping to draw that. Perfect timing.",
+    "evolve": "There we go. The whole plan fits together now.",
+    "power": "One small adjustment changes everything.",
+    "hurt": "Ouch. I definitely left that open.",
+    "ko_taken": "I should've protected that one. Nice play.",
+    "ko_scored": "There we go! That setup actually paid off."
+  },
   "nereo": {
     "attack": "Let's see if it holds.",
     "play_card": "There's the spare part.",
@@ -278,6 +291,9 @@
   iris:{weakness_hit:"I should have predicted that advantage.",status_hit:"This is a frustrating complication.",big_hit:"That was a clean, brutal hit."},
   elio:{weakness_hit:"I read that matchup badly.",status_hit:"Great. Another thing to recover from.",big_hit:"You nearly had me there."},
   alma:{weakness_hit:"Ah. You found the opening.",status_hit:"That condition makes this delicate.",big_hit:"Okay. I need a different approach."},
+  barb:{weakness_hit:"I should've seen that matchup coming. I won't miss it twice.",
+   status_hit:"That condition ruins my timing. New plan.",
+   big_hit:"Okay, that's more damage than I budgeted for."},
   nereo:{weakness_hit:"A type advantage. Clever choice.",status_hit:"I will need to play around that.",big_hit:"A substantial hit. Understood."}
  };
  const CHANCES={attack:.82,play_card:.52,evolve:.85,power:.65,hurt:.7,big_hit:1,weakness_hit:1,status_hit:1,ko_taken:1,ko_scored:.95};
