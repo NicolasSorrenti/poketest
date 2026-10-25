@@ -651,6 +651,24 @@ function pokemonCenterEnergyWaste(o,slot){
  const u=slotUnit(o.self,slot);
  return !!(u&&u.damage>=10&&pokemonCenterPending(o));
 }
+// Evaluate a possible replacement against the opponent's *revealed* Active.
+// An unequipped Basic is not a ready attacker, and its weakness/HP matters.
+function benchMatchupValue(pokemonId,o){
+ const candidate={id:pokemonId,energies:[],damage:0,status:null};
+ const enemy=o.opponent.active;
+ if(!enemy)return 0;
+ const incoming=strongestAffordableAttack(enemy,candidate);
+ const hp=hpRemaining(candidate);
+ const canBeKnockedOut=incoming>0&&incoming>=hp;
+ const handEnergies=o.self.hand.filter(id=>isEnergy(card(id)));
+ const immediate=handEnergies.reduce((best,id)=>
+  Math.max(best,damageAfterAttachment(candidate,id,enemy)),0);
+ const ownCard=card(pokemonId);
+ const weakType=(ownCard?.weaknesses||[]).some(w=>
+  (card(enemy.id)?.types||[]).includes(w.type));
+ return (canBeKnockedOut?-175:0)+(weakType?-45:0)+
+  Math.min(80,immediate*.6)+(handEnergies.length===0?-20:0);
+}
 function score(a,o,cfg,used){
  const p=o.self,q=o.opponent,style=cfg.style,{type,payload:v}=a;
  if(type==='setup_bonus_draw')return 300;
@@ -693,7 +711,8 @@ function score(a,o,cfg,used){
   // a cheap attacker already online; the duel can end when Bench is empty.
   const backup=p.bench.length===0?cfg.level>=3?125:45:p.bench.length===1?cfg.level>=3?70:20:0;
   return (p.bench.length?43:100)+backup*style.setup+
-   setupValue({id:p.hand[v.handIndex]})*.32*style.setup;
+   setupValue({id:p.hand[v.handIndex]})*.32*style.setup+
+   (cfg.level>=8?benchMatchupValue(p.hand[v.handIndex],o):0);
  }
  if(type==='evolve'){
   const target=slotUnit(p,v.slot),after=card(p.hand[v.handIndex]);
