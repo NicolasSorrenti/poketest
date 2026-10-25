@@ -48,6 +48,9 @@ server.listen(0,'127.0.0.1', async () => {
   const bootstrapScripts=[...bootstrap.matchAll(/"(\/[^"?]+\.js)(?:\?[^"]*)?"/g)].map(match=>match[1]);
   assert.ok(bootstrapScripts.length>=30,'RPG browser dependency list must be present');
   assert.ok(bootstrapScripts.includes('/rpg_slice_of_life.js'),'Daily encounters must load');
+  for(const dependency of ['/rpg_relationships.js','/rpg_time_coordinator.js','/rpg_encounter_director.js']){
+   assert.ok(bootstrapScripts.includes(dependency),dependency+' must remain in the RPG bootstrap');
+  }
   assert.ok(bootstrapScripts.includes('/rpg.js'),'RPG entrypoint must load');
   for(const filename of bootstrapScripts){
    const response=await fetch(url+filename);
