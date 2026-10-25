@@ -47,3 +47,11 @@ Existing CI tests were updated to use the correct bootstrap asset URLs, a unique
 ## Further work
 
 The current patch migrates the relationship compatibility views, but does not alter authored relationship thresholds or romance-route design. End-to-end browser/cloud replay tests and fully simulated Classic duels remain separate follow-up tasks.
+
+## Competitive circuit regression coverage (after roster expansion)
+
+The full 90-day headless simulation now verifies that every recurring competition it plays actually settles into the RPG standings. A rejected receipt fails the simulation instead of silently counting as a successful duel. The same receipt is replayed deliberately to ensure it cannot award points or credits a second time.
+
+The simulation also checks that the canonical `relationships` view stays synchronized with older `bonds` saves after every time period. Story rewards no longer have a separate maximum-based copy that could disguise a mismatch.
+
+The report adds `competitiveSettled`, `competitiveMatches`, and `matchmakingVersion`; it continues to label **all simulated duels as synthetic**. Tests exercise the complete 90-day expanded roster, every Saturday's three distinct challengers, and version-1 legacy-save settlement. This is a progression regression harness, **not a validation of Classic battle tactics or actual CPU difficulty**.
