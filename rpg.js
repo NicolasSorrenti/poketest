@@ -333,7 +333,7 @@ INTENTIONS.hydrate(state); // Expire yesterday's optional choice before saving t
 for(const plan of missedAppointments)log('You missed your planned meet-up with '+(cast[plan.npc]?.name||'a trainer')+'.');
 queueMandatory();arriveForScheduledPlan();persist();if(!suppressTimeFlash)timeFlash(beforeDay,beforeSlot,transitionSource);}
 function say(speaker,line,choices=[]){scene={speaker,line,choices};state.scene=scene;persist();render();}
-function sayConversation(lines,afterChoices=[],reactionId=null,invitation=null,memory=null){
+function sayConversation(lines,afterChoices=[],reactionId=null,invitation=null,memory=null,casual=null){
  if(!Array.isArray(lines)||!lines.length)return;
  const script=lines.filter(x=>x&&typeof x.text==='string'&&typeof x.speaker==='string');
  if(!script.length)return;
@@ -341,7 +341,8 @@ function sayConversation(lines,afterChoices=[],reactionId=null,invitation=null,m
  scene={speaker:first.speaker==='Protagonist'?'You':cast[first.speaker]?.name||first.speaker,
   line:first.text,choices:script.length>1?[['Continue ›','chatNext']]:afterChoices,
   dialogue:script,index:0,afterChoices,reactionId,invitation,
-   memoryId:memory?.kind==='followup'?memory.id:null,memoryOfferId:memory?.kind==='intro'?memory.id:null};
+   memoryId:memory?.kind==='followup'?memory.id:null,memoryOfferId:memory?.kind==='intro'?memory.id:null,
+   casualId:casual?.id||null,asideId:casual?.asideId||null};
  state.scene=scene;persist();render();
 }
 function advanceConversation(){
@@ -353,7 +354,9 @@ function advanceConversation(){
  scene.choices=scene.index===scene.dialogue.length-1?scene.afterChoices:[['Continue ›','chatNext']];
  // Do not consume an acknowledgement until the player actually reads its final line.
  if(scene.index===scene.dialogue.length-1&&scene.reactionId)REACT.mark(state,scene.reactionId);
-  if(scene.index===scene.dialogue.length-1&&scene.memoryId)MEM?.mark(state,scene.memoryId);
+ if(scene.index===scene.dialogue.length-1&&scene.memoryId)MEM?.mark(state,scene.memoryId);
+ if(scene.index===scene.dialogue.length-1&&scene.casualId)MEM?.markCasual(state,scene.casualId);
+ if(scene.index===scene.dialogue.length-1&&scene.asideId)MEM?.markAside(state,scene.asideId);
  state.scene=scene;persist();render();
 }
 function closeSceneDialogue(){
@@ -394,6 +397,15 @@ function availableInvitation(id,people=currentPeople()){
   canAttend:plan=>DATES.canAttend(state,plan,people,{appointments:APPOINTMENTS,social:SOCIAL,cast})
  });
 }
+// Ordinary Talk remembers its own source topic. A callback can add a three-beat
+// aside ONLY after the original topic was actually read on a prior day.
+function ordinaryTalk(id,character,{first=false,present=[]}={}){
+ const base=VN.dialogueEntry(state,id,character,RPGD,{first,present});
+ const aside=!first&&['everyday','character','classic'].includes(base.source)&&base.id
+   ?MEM?.aside(state,id,base.id):null;
+ return {lines:aside?[...base.lines,...aside.lines]:base.lines,
+  record:{id:base.id,asideId:aside?.id||null}};
+}
 function selectPerson(id,{skipInvitation=false}={}){
  if(state.activeSliceOfLife||state.activeSituation||state.activeStory||state.activeSideQuest||state.activeEncounter||state.activeArc||state.pendingDuel||!cast[id]||!currentPeople().includes(id))return;
  const c=cast[id],first=!state['met_'+id]&&!((id==='reina')&&state.metReina);
@@ -414,7 +426,8 @@ function selectPerson(id,{skipInvitation=false}={}){
   const context=first?null:REACT.reaction(state,id,c,cast,COMMUNITY,CONSEQ);
   const invitations=fresh?VN.choices(state,id):[];
   const memory=!first&&!context&&!invitations.length?MEM?.offer(state,id):null;
-  sayConversation(context?.lines||memory?.lines||VN.dialogue(state,id,c,RPGD,{first,present:currentPeople()}),memory?.choices||invitations,context?.id||null,null,memory);
+  const casual=!context&&!memory?ordinaryTalk(id,c,{first,present:currentPeople()}):null;
+  sayConversation(context?.lines||memory?.lines||casual?.lines,memory?.choices||invitations,context?.id||null,null,memory,casual?.record);
  }
  tutorialEvent('conversation');showCGMoment(memories[0]);
 }
@@ -826,7 +839,8 @@ function act(action){
   persist();
   const context=REACT.reaction(state,id,c,cast,COMMUNITY,CONSEQ);
   const memory=!context?MEM?.offer(state,id):null;
-  return sayConversation(context?.lines||memory?.lines||VN.dialogue(state,id,c,RPGD,{present:currentPeople()}),memory?.choices||[],context?.id||null,null,memory);
+  const casual=!context&&!memory?ordinaryTalk(id,c,{present:currentPeople()}):null;
+  return sayConversation(context?.lines||memory?.lines||casual?.lines,memory?.choices||[],context?.id||null,null,memory,casual?.record);
  }
  if(type==='flirt'){
   state.talked['flirt:'+key]=true;
