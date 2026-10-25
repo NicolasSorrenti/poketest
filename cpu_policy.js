@@ -982,6 +982,13 @@ function driveSide(initial,{side=1,level=3,personality='balanced',seed=1,plannin
  let game=initial,steps=0;const commands=[],memo={trainers:0,powers:0,powerKeys:new Set(),stadium:false};
  while(!game.over&&steps<limit){
   const beforeTurn=game.turnSerial;
+  // Capture actionable missed attachments before the move, without reading
+  // either player's unrevealed deck or the opponent's hand.
+  const auditObs=observation(game,side);
+  const auditCfg=configuration({side,level,personality,seed,planning,evolutionTempo,prizeRace,
+   knockoutTempo,opponentResponse,graduatedNoise,energyHorizon});
+  const auditOptions=auditObs.phase==='game'&&auditObs.turn===side&&!auditObs.decision?
+   candidates(auditObs,auditCfg,memo).filter(a=>a.type==='attach_energy'):[];
   const started=onDecision?performance.now():0;
   const next=chooseAction(game,{side,level,personality,seed,planning,evolutionTempo,prizeRace,knockoutTempo,opponentResponse,graduatedNoise,energyHorizon},memo);
   if(!next){
@@ -993,7 +1000,13 @@ function driveSide(initial,{side=1,level=3,personality='balanced',seed=1,plannin
   if(a.type==='play_trainer')memo.trainers++;
   if(a.type==='use_power'){memo.powers++;memo.powerKeys.add(a.payload.slot+':'+a.payload.powerIndex);}
   if(a.type==='use_stadium')memo.stadium=true;
-  commands.push({side,command:a,score:next.score,alternatives:next.alternatives,
+  const attachmentOpportunity=auditOptions.some(candidate=>
+   energyValue(slotUnit(auditObs.self,candidate.payload.slot),
+    auditObs.self.hand[candidate.payload.handIndex])>12);
+  commands.push({side,turnSerial:beforeTurn,
+   attachmentOpportunity,energyUsedBefore:auditObs.self.energyUsed,
+   energyInHand:auditObs.self.hand.some(id=>isEnergy(card(id))),
+   command:a,score:next.score,alternatives:next.alternatives,
    probedCandidates:next.probedCandidates,rejectedCandidates:next.rejectedCandidates,searchNodes:next.searchNodes||0});
   game=next.game;steps++;
   if(onStep)onStep(game,a,steps);
