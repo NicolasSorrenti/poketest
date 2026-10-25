@@ -1067,7 +1067,7 @@
    "lines": [
     "I wore the strawberry socks again.",
     "Still hoping nobody notices?",
-    "I stopped caring. They're warm, and they haven't lost a single match. That's enough evidence for me."
+    "I stopped caring. They're warm, and nobody else gets a vote on them. That's enough evidence for me."
    ]
   },
   {
