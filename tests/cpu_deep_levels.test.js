@@ -110,3 +110,23 @@ test('end-of-turn evaluation rewards preserving a backup against an affordable c
  assert.ok(P.evaluateTurn(backup,cfg,helper)>alone,
   'the AI should not leave itself exposed to losing its final Pokémon');
 });
+
+
+test('full-turn planner explores a legal evolve + Energy sequence without resolving imaginary attacks',()=>{
+ const g=midgame(),side=g.turn;
+ g.round=5;g.turnSerial=8;g.players[side].energyUsed=false;
+ const active=g.players[side].active;
+ Object.assign(active,{id:C.machop,damage:0,playedTurn:2,
+  energies:[C.fight,C.fight],status:null});
+ g.players[side].hand=['base1-34',C.fight]; // Machoke and a Fighting Energy
+ const first=AI.chooseAction(g,{side,level:8,seed:174});
+ assert.ok(first&&first.game,'must still produce a legal action through the authoritative reducer');
+ assert.ok(first.searchNodes>0,'actual deterministic evolution / attachment options should be searched');
+ assert.ok(first.searchNodes<=AI.SKILLS[8].searchNodes);
+ const hidden=structuredClone(g),other=hidden.players[1-side];
+ if(other.deck.length&&other.hand.length)[other.hand[0],other.deck[0]]=[other.deck[0],other.hand[0]];
+ hidden.rngState=(hidden.rngState^0x9e3779b9)>>>0;
+ const second=AI.chooseAction(hidden,{side,level:8,seed:174});
+ assert.deepEqual(second?.command,first.command,
+  'planning must not consult concealed opposing cards or next coin flip');
+});
