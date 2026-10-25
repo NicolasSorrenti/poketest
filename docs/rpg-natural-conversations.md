@@ -73,3 +73,15 @@ The original eight characters' revised source is `rpg_legacy_scenes.js` (32 scen
 - The incidental aside itself is acknowledged only when its last line is displayed (`state.dialogueMemory.asidesSeen`) and does not repeat after reload. The current topic is also remembered when the whole conversation finishes.
 - Selection is pure/deterministic and intentionally occasional. Normal story and reactivity priority is unchanged. No game time, relationship points, rewards, mandatory flags, credits, or duel rules are changed. New Game+ resets the new memories with the rest of the new season.
 - Regression coverage: `tests/rpg_conversations.test.js`, `tests/rpg_dialogue_memory.test.js`, and the save/reload end-to-end cases in `tests/rpg_world_ui.test.js`.
+
+## Expanded dialogue continuity: casual callbacks and cross-character references
+
+The dialogue-memory layer now provides **132 optional three-beat asides across 22 characters** (the existing 44 plus 88 newly authored callbacks).
+
+- Each character gains two callbacks to older unrelated everyday or character conversations, one callback referencing an earlier conversation with **another** NPC, and a second-stage callback unlocked only after the character's previous aside was fully heard.
+- Cross-character references require a verified, previously displayed dialogue with the **source** NPC. Meeting both characters, advancing the campaign calendar, or simply unlocking an earlier topic does not invent the missing memory.
+- Every dependency is checked against the saved day: a callback cannot happen on the same day as the conversation it references, cannot mark itself complete in advance, and won't take over first meetings, invitations or important story chapters.
+- The original callback identifiers remain unchanged for previously saved games. Chained callbacks have new IDs following the original entries; older saves naturally become eligible where the earlier prerequisite is already recorded.
+- If a prerequisite never happens, its callback stays invisible and ordinary Talk remains available. New Game+ still starts with empty dialogue history, with no assumed prior encounters.
+- Dialogue references have been editorially designed to avoid asserting untracked match results, undocumented relationships, player actions, or choices from a different scene.
+- The selection remains deterministic, save-safe, occasional, and read-only; completed asides have no rewards, affection, calendar cost or competitive side effects. Regression coverage includes authored source validity, cross-character gating, multi-step chains, legacy IDs, absent-history fallbacks, save/load and once-only completion.
