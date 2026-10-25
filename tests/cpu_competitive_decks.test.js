@@ -27,7 +27,7 @@ test('benchmarks include real acceleration, evolution, control and attrition car
  const byName=id=>DECKS.list(id).map(x=>CATALOG.get(x)?.name);
  for(const [id,names] of [
   ['rain_dance',['Blastoise','Wartortle','Squirtle','Pokémon Breeder']],
-  ['meganium',['Meganium','Bayleef','Chikorita']],
+  ['venusaur',['Venusaur','Ivysaur','Bulbasaur']],
   ['feraligatr',['Feraligatr','Croconaw','Totodile']],
   ['typhlosion',['Typhlosion','Quilava','Cyndaquil']],
   ['energy_denial',['Energy Removal','Super Energy Removal']],
@@ -41,11 +41,11 @@ test('benchmark fixture groups include mirrors and both directions of key asymme
  assert.equal(fixtures.length,24);
  const key=f=>f.left+' / '+f.right;
  const keys=new Set(fixtures.map(key));
- for(const a of ['haymaker','rain_dance','meganium','typhlosion',
+ for(const a of ['haymaker','rain_dance','venusaur','typhlosion',
   'feraligatr','energy_denial','stall','neo_dark'])
   assert.ok(keys.has(a+' / '+a),a+' mirror missing');
  for(const [a,b] of [['haymaker','rain_dance'],['rain_dance','energy_denial'],
-  ['meganium','typhlosion'],['stall','typhlosion'],['neo_dark','feraligatr']]){
+  ['venusaur','typhlosion'],['stall','typhlosion'],['neo_dark','feraligatr']]){
   assert.ok(keys.has(a+' / '+b),a+' vs '+b);
   assert.ok(keys.has(b+' / '+a),b+' vs '+a);
  }
