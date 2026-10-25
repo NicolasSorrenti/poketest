@@ -28,9 +28,9 @@ const archetypes=Object.freeze({
    [2,'base1-77'],[2,'base1-74'],[2,'base1-93'],[2,'base1-81'],[2,'base1-95'],
    [19,'base1-102']
   ]},
- meganium:{label:'Meganium evolution and Wild Growth',family:'evolution-power',era:'Neo Genesis',
+ venusaur:{label:'Venusaur evolution and Energy Trans',family:'evolution-power',era:'Base–Neo',
   rows:[
-   [4,'neo1-53'],[3,'neo1-28'],[3,'neo1-11'],
+   [4,'base1-44'],[3,'base1-30'],[3,'base1-15'],
    [3,'neo1-20'],[2,'base2-26'],[2,'base2-38'],
    ...staple,[19,'base1-99']
   ]},
