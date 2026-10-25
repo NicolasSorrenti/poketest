@@ -1090,6 +1090,11 @@
  function markCasual(state,id){
   if(!plain(state)||!Number.isInteger(state.day)||state.day<1||state.day>90||
      typeof id!=='string'||!/^casual:(everyday|character|classic|group):[a-z0-9_-]{1,60}:[a-z0-9_-]{1,32}$/.test(id))return false;
+  const [,source,npc]=id.split(':');
+  if(source==='everyday'||source==='character'){
+   const rows=(source==='everyday'?EVERYDAY?.topics:CHARACTER?.scenes)?.[npc];
+   if(!Array.isArray(rows)||!rows.some((row,i)=>casualId(source,npc,i)===id))return false;
+  }
   const seen=hydrate(state).casualSeen;
   if(plain(seen[id]))return false;
   seen[id]={day:state.day,slot:Number.isInteger(state.slot)?state.slot:0};
