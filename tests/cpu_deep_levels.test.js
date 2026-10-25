@@ -24,8 +24,8 @@ test('three advanced levels configure increasing bounded search, without changin
   const c=AI.configuration({level:i});
   assert.equal(c.skill.name,names[i-6]);
   assert.equal(c.skill.temperature,0);
-  assert.equal(c.skill.searchDepth,i-4);
-  assert.ok(c.skill.searchNodes>0&&c.skill.searchNodes<=96);
+  assert.equal(c.skill.searchDepth,i===8?5:i-4);
+  assert.ok(c.skill.searchNodes>0&&c.skill.searchNodes<=(i===8?400:96));
   assert.equal(c.skill,AI.SKILLS[i]);
  }
  assert.throws(()=>AI.configuration({level:9}),/1–8/);
@@ -153,4 +153,44 @@ test('planner penalizes overcommitting attached Energy beyond useful printed att
  excess.self.active.energies.push('fight','fight','fight');
  assert.ok(P.evaluateTurn(excess,level8,helpers)<economical,
   'do not overvalue wasted energy commitments that enable no extra attack');
+});
+
+test('Apex can think longer without slowing lower CPU tiers or RPG Mastermind',()=>{
+ const S=require('../cpu_strategic_search');
+ assert.equal(AI.configuration({level:7}).skill.searchNodes,48);
+ assert.equal(AI.configuration({level:8}).skill.searchNodes,400);
+ assert.equal(AI.configuration({level:8}).skill.searchDepth,5);
+ assert.ok(S.TIME_BUDGET_MS>=1000&&S.TIME_BUDGET_MS<=1500);
+ assert.equal(RPG_CPU_LEVEL,7);
+});
+test('hypothetical next-turn Energy reply is based only on visible printed costs',()=>{
+ const S=require('../cpu_strategic_search');
+ const attacker={id:'fighting',status:null,energies:['fighting_energy']};
+ const target={id:'target',damage:0,hp:80};
+ const attack={name:'Heavy Hit',cost:['Fighting','Colorless'],damage:'40'};
+ const helpers={
+  card:id=>id==='fighting'?{attacks:[attack]}:{},
+  energyPool:u=>u.energies.map(()=> 'Fighting'),
+  canPayEnergy:(cost,pool)=>cost.length<=pool.length&&cost.every((t,i)=>t==='Colorless'||pool[i]===t),
+  estimatedDamage:()=>40,hpRemaining:u=>u.hp-u.damage
+ };
+ const extra=S.oneEnergyThreat(attacker,target,helpers,0);
+ assert.ok(extra>0,'one hypothetical Energy can unlock a printed attack');
+ attacker.status='Paralyzed';
+ assert.equal(S.oneEnergyThreat(attacker,target,helpers,0),0,
+  'disabled opponent is not expected to attack without an actual cure');
+});
+test('Apex search preserves hidden-zone invariance and a strict node budget',()=>{
+ const g=midgame(),side=g.turn,raw={side,level:8,seed:183,personality:'tactical'};
+ const a=AI.chooseAction(g,raw);
+ assert.ok(a?.game);
+ assert.ok(a.searchNodes<=400);
+ const invisible=structuredClone(g);
+ if(invisible.players[1-side].deck.length&&invisible.players[1-side].hand.length){
+  const p=invisible.players[1-side];
+  [p.deck[0],p.hand[0]]=[p.hand[0],p.deck[0]];
+ }
+ invisible.rngState=(invisible.rngState^0x4e5a1337)>>>0;
+ assert.deepEqual(AI.chooseAction(invisible,raw)?.command,a.command,
+  'the deep planner must not act on private card identities or future flips');
 });
