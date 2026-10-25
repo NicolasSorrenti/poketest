@@ -112,3 +112,51 @@ test('difficulty roster progresses between the three acts without requiring new 
  assert.ok(C.ROSTERS[1].includes(C.opponent(42,'daily')));
  assert.ok(C.ROSTERS[2].includes(C.opponent(82,'daily')));
 });
+
+test('expanded matchmaking rotates through six or more opponents per campaign act',()=>{
+ const early=new Set(),middle=new Set(),late=new Set();
+ for(let day=2;day<=90;day++){
+  const s=state(day);
+  const x=C.available(s)[0];
+  assert.equal(s.competitive.matchmakingVersion,2);
+  assert.ok(x,'daily challenge is available');
+  (day<=30?early:day<=60?middle:late).add(x.npc);
+  if(day>2&&day!==31&&day!==61)
+   assert.notEqual(x.npc,C.opponent(day-1,'daily'), 'avoid repeated consecutive opponents on day '+day);
+ }
+ assert.ok(early.size>=6,'first act needs six distinct opponents');
+ assert.ok(middle.size>=7,'second act needs seven distinct opponents');
+ assert.ok(late.size>=7,'third act needs seven distinct opponents');
+});
+test('daily challenger and both Saturday opponents are distinct in new campaigns',()=>{
+ const s=state(6,0,'center');
+ const daily=C.available(s)[0].npc;
+ s.location='shop';const local=C.begin(s,'local-1-0');
+ assert.notEqual(local.npc,daily);
+ finish(s,local);s.slot=1;
+ const final=C.begin(s,'local-1-1');
+ assert.notEqual(final.npc,local.npc);
+ assert.notEqual(final.npc,daily);
+});
+test('old campaigns and in-progress duels retain the original matchmaking contract',()=>{
+ const s=state(9);
+ s.competitive={daily:{},locals:{},processed:{}};
+ const e=C.available(s)[0];
+ assert.equal(s.competitive.matchmakingVersion,1);
+ assert.equal(e.npc,C.opponent(9,'daily',0,1));
+ assert.ok(C.LEGACY_ROSTERS[C.tier(9)].includes(e.npc));
+ const d=match(s,e);
+ const restored=JSON.parse(JSON.stringify(s));
+ assert.equal(C.available(restored)[0].npc,e.npc);
+ assert.equal(C.settle(restored,d,{duelId:d.id,outcome:'Victory'}).won,true);
+ assert.equal(restored.points,4);
+ assert.equal(C.settle(restored,d,{duelId:d.id,outcome:'Victory'}),null);
+});
+test('new matchmaking version survives a saved-and-reloaded season',()=>{
+ const s=state(48);
+ const before=C.begin(s,'daily-48');
+ const saved=JSON.parse(JSON.stringify(s));
+ assert.equal(saved.competitive.matchmakingVersion,2);
+ assert.equal(C.begin(saved,'daily-48').npc,before.npc);
+ assert.equal(finish(saved,before).won,true);
+});

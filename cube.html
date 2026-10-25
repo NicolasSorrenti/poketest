@@ -11,8 +11,8 @@
 <select id="presetSelect" aria-describedby="presetInfo"><option value="balanced">Classic Balanced</option></select>
 <p id="presetInfo" class="muted">Flexible all-era decks and a balanced mix of Pokémon types.</p><div id="presetSets" class="cube-set-overview" aria-live="polite" hidden></div>
 <label for="cpuDifficulty"><strong>CPU difficulty for matches</strong></label>
-<select id="cpuDifficulty"><option value="1">1 · Relaxed</option><option value="2">2 · Casual</option><option value="3" selected>3 · Standard</option><option value="4">4 · Expert</option><option value="5">5 · Champion</option></select>
-<p class="muted">Rookie rival plays one level below, Cube Champion one above (within levels 1–5). Your choice stays fixed for this tournament.</p></div>
+<select id="cpuDifficulty"><option value="1">1 · Relaxed</option><option value="2">2 · Casual</option><option value="3" selected>3 · Standard</option><option value="4">4 · Expert</option><option value="5">5 · Champion</option><option value="6">6 · Grandmaster (experimental)</option><option value="7">7 · Mastermind (experimental)</option><option value="8">8 · Apex (experimental)</option></select>
+<p class="muted">Rookie rival plays one level below, Cube Champion one above (within levels 1–8). Tiers 6–8 are experimental and may take longer to think. Your choice stays fixed for this tournament.</p></div>
 <button id="start" class="primary">Start New Draft</button><p id="progress" aria-live="polite"></p><p id="error" class="error" role="alert"></p>
 <div class="layout"><section><h2 id="packTitle">Your pack</h2>
 <div class="draft-tools"><label>Sort cards <select id="packSort"><option value="pack">Pack order</option><option value="name">Name A–Z</option><option value="kind">Pokémon first</option></select></label><label><input id="showPickHelp" type="checkbox"> Show draft suggestion</label></div>
@@ -21,7 +21,7 @@
 <section id="builder" class="hidden" aria-label="Cube deck builder">
 <div class="cube-build-context" aria-label="Cube stage"><strong>NEO CAMPUS TCG</strong><span>SOLO CUBE · DECK BUILDING</span><span>60 cards drafted · Create your 40-card deck</span><button id="restartBuilder" class="cube-build-reset" type="button">New draft ↻</button></div>
 <div id="soloDeckBuilder"></div>
-<div id="soloBuilderAction"><label class="match-difficulty" for="matchCpuDifficulty">CPU difficulty <select id="matchCpuDifficulty"><option value="1">1 · Relaxed</option><option value="2">2 · Casual</option><option value="3" selected>3 · Standard</option><option value="4">4 · Expert</option><option value="5">5 · Champion</option></select></label><button class="primary" id="playCube" type="button">Start 4-Prize CPU Duel →</button></div>
+<div id="soloBuilderAction"><label class="match-difficulty" for="matchCpuDifficulty">CPU difficulty <select id="matchCpuDifficulty"><option value="1">1 · Relaxed</option><option value="2">2 · Casual</option><option value="3" selected>3 · Standard</option><option value="4">4 · Expert</option><option value="5">5 · Champion</option><option value="6">6 · Grandmaster (experimental)</option><option value="7">7 · Mastermind (experimental)</option><option value="8">8 · Apex (experimental)</option></select></label><button class="primary" id="playCube" type="button">Start 4-Prize CPU Duel →</button></div>
 <p id="deckStatus" class="muted" aria-live="polite"></p>
 </section>
 <section id="tournament" class="panel hidden" aria-label="Cube Championship">
@@ -29,7 +29,7 @@
 <p class="muted">Play your semifinal and a final or third-place match. The other semifinal and placement match are played by the CPUs using the real duel engine.</p>
 <div id="roundList" class="rounds"></div>
 <p id="tournamentStatus" aria-live="polite"></p><div id="standings"></div>
-<div class="tourney-actions"><button id="nextMatch" class="primary hidden" type="button">Challenge next opponent →</button><a id="resumeMatch" class="hidden" href="/classic_live.html">Return to current duel →</a></div>
+<div class="tourney-actions"><button id="nextMatch" class="primary hidden" type="button">Challenge next opponent →</button><a id="resumeMatch" class="hidden" href="/classic_live.html?cubeSolo=1">Return to current duel →</a></div>
 </section>
 <link rel="stylesheet" href="/cube_builder.css">
 <script src="/cube_builder_ui.js"></script>

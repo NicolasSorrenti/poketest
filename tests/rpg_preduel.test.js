@@ -79,3 +79,13 @@ test('unrecognized duel identities have no valid scene',()=>{
  assert.equal(PRE.describe(fresh(),duel({npc:'nobody'}),{cast,places}),null);
  assert.throws(()=>PRE.stage({npc:'hana'}),/Missing duel identity/);
 });
+
+test('pre-duel fallback uses exactly the character artwork candidates shown in booster rewards',()=>{
+ assert.deepEqual(PRE.boosterArtCandidates('hana'),[
+  '/rpg-assets/characters/hana/events/booster.webp',
+  '/rpg-assets/characters/hana/events/booster.png',
+  '/rpg-assets/reactions/hana/attack.png'
+ ]);
+ assert.deepEqual(PRE.boosterArtCandidates('sol')[2],'/rpg-assets/reactions/sol/attack.png');
+ for(const id of ['', '../reina', 'hana/other', null])assert.deepEqual(PRE.boosterArtCandidates(id),[]);
+});

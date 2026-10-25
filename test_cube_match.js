@@ -29,8 +29,8 @@ const captured=[];
 for(const seat of [1,2,3]){
  cubes.launch(cubes.session(token),{createCube:args=>{captured.push(args);return {token:'mock'};}},seat);
 }
-assert.deepEqual(captured.map(x=>x.difficulty),[4,5,5],
- 'Solo tournament difficulty should scale by rival tier and clamp to 1–5');
+assert.deepEqual(captured.map(x=>x.difficulty),[4,5,6],
+ 'Solo tournament difficulty should scale by rival tier and clamp to 1–8');
 assert.equal(duel.format,'online-preview');
 assert.deepEqual(duel.counts,[40,40]);
 assert.equal(classic.session(launched.duelToken).game.deckSize,40);

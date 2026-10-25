@@ -1,0 +1,31 @@
+name: Experimental CPU Tier Benchmarks
+on:
+  pull_request:
+    paths:
+      - 'cpu_policy.js'
+      - 'cpu_lookahead.js'
+      - 'rpg_cpu_config.js'
+      - 'benchmark_cpu.js'
+      - 'scripts/benchmark-cpu-advanced.js'
+      - 'scripts/benchmark-cpu-rpg-advanced.js'
+      - '.github/workflows/cpu-tier-benchmarks.yml'
+  workflow_dispatch:
+jobs:
+  compare:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        level: [6, 7, 8]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Validate policy and experimental levels
+        run: node --test tests/cpu_deep_levels.test.js
+      - name: Paired and mirrored matches against RPG Champion
+        run: node scripts/benchmark-cpu-advanced.js --level ${{ matrix.level }} --pairs 25 --max-turns 120 --fixtures 8
+      - name: Late-campaign tier 3 NPC deck mirrors
+        run: node scripts/benchmark-cpu-rpg-advanced.js --level ${{ matrix.level }} --pairs 12 --max-turns 110

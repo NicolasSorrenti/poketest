@@ -132,8 +132,8 @@
   busy=true;$('error').textContent='';
   try{
    const result=await request('next',{method:'POST',body:JSON.stringify({revision:state.revision})});
-   sessionStorage.setItem('neoClassicLiveToken',result.duelToken);
-   location.assign('/classic_live.html');
+   sessionStorage.setItem('neoCubeLiveToken',result.duelToken);
+   location.assign('/classic_live.html?cubeSolo=1');
   }catch(e){
    $('error').textContent=e.message;
    try{state=await request('state');$('cpuDifficulty').value=String(state.difficulty??3);render();}catch{}
@@ -200,8 +200,8 @@
   busy=true;$('error').textContent='';
   try{
    const result=await request('start',{method:'POST',body:JSON.stringify({revision:state.revision,deck,difficulty:Number($('matchCpuDifficulty').value)})});
-   sessionStorage.setItem('neoClassicLiveToken',result.duelToken);
-   location.assign('/classic_live.html');
+   sessionStorage.setItem('neoCubeLiveToken',result.duelToken);
+   location.assign('/classic_live.html?cubeSolo=1');
   }catch(e){$('error').textContent=e.message;busy=false;renderBuilder();}
  }
  async function init(){
@@ -221,7 +221,7 @@
  $('playCube').addEventListener('click',play);
  $('nextMatch').addEventListener('click',nextMatch);
  $('resumeMatch').addEventListener('click',()=>{
-  if(state?.tournament?.activeDuelToken)sessionStorage.setItem('neoClassicLiveToken',state.tournament.activeDuelToken);
+  if(state?.tournament?.activeDuelToken)sessionStorage.setItem('neoCubeLiveToken',state.tournament.activeDuelToken);
  });
  init();
 })();

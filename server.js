@@ -4,6 +4,7 @@ const fs=require('node:fs');
 const path=require('node:path');
 const {ClassicLocalService,deckOptions}=require('./classic_local_service');
 const {ClassicOnlineService}=require('./classic_online_service');
+const {forRpgDuel,upgradeRpgSession}=require('./rpg_cpu_config');
 const {RpgDuelCheckpoint}=require('./rpg_duel_checkpoint');
 const root=__dirname;
 const port=Number(process.env.PORT||8000);
@@ -31,10 +32,21 @@ function queueDuelCheckpoint(session,identity){
     try{
      await rpgDuels.save(savedSession,item.identity);
      session.checkpointRevision=savedSession.checkpointRevision;
+     session.checkpointError=null;
     }catch(error){
      console.warn('RPG duel background checkpoint failed:',error.message);
-     // On conflict, do not overwrite another device's checkpoint.
-     // A later action may retry, but gameplay remains responsive.
+     session.checkpointError='Cloud checkpoint pending: '+error.message;
+     if(error.code==='40001'||error.status===409){
+      session.checkpointError='Another device has newer battle progress. Resume that cloud duel.';
+      queue.pending=null;
+      break;
+     }
+     const attempts=item.attempt||0;
+     if(attempts<6){
+      await new Promise(resolve=>setTimeout(resolve,Math.min(5000,250*2**attempts)));
+      if(queue.pending)queue.pending.attempt=Math.max(queue.pending.attempt||0,attempts+1);
+      else queue.pending={...item,attempt:attempts+1};
+     }
     }
    }
   }finally{queue.running=false;}
@@ -70,16 +82,16 @@ async function api(req,res,pathName,url){
    if(identity){
     const live=[...classic.sessions.values()].find(s=>s.checkpointOwner===identity.userId&&s.checkpointDuelId===params.rpgDuelId);
     const old=live||await rpgDuels.load(params.rpgDuelId,identity);
-    if(old){classic.sessions.set(old.token,old);return sendJSON(res,200,{token:old.token,...classic.response(old),cloudSaved:true,resumed:true});}
+    if(old){upgradeRpgSession(old);classic.sessions.set(old.token,old);return sendJSON(res,200,{token:old.token,...classic.response(old),cloudSaved:old.checkpointRevision===old.revision,cloudError:old.checkpointError||undefined,resumed:true});}
    }
-   const created=classic.create(params),session=classic.session(created.token);
+   const created=classic.create(forRpgDuel(params)),session=classic.session(created.token);
    if(identity){
     session.checkpointOwner=identity.userId;session.checkpointDuelId=params.rpgDuelId;
     try{await rpgDuels.save(session,identity);created.cloudSaved=true;}
     catch(error){
      if(error.code==='40001'){
       const restored=await rpgDuels.load(params.rpgDuelId,identity);
-      if(restored){classic.sessions.delete(created.token);classic.sessions.set(restored.token,restored);
+      if(restored){upgradeRpgSession(restored);classic.sessions.delete(created.token);classic.sessions.set(restored.token,restored);
        return sendJSON(res,200,{token:restored.token,...classic.response(restored),cloudSaved:true,resumed:true});}
      }
      created.cloudSaved=false;created.cloudError='Cloud checkpoint unavailable. Battle remains active on this server.';
@@ -97,21 +109,25 @@ async function api(req,res,pathName,url){
    const live=[...classic.sessions.values()].find(s=>s.checkpointOwner===identity.userId&&s.checkpointDuelId===params.duelId);
    const snapshot=live||await rpgDuels.load(params.duelId,identity);
    if(!snapshot)return sendJSON(res,404,{error:'No saved RPG duel for this account'});
+   upgradeRpgSession(snapshot);
    classic.sessions.set(snapshot.token,snapshot);
-   return sendJSON(res,200,{token:snapshot.token,...classic.response(snapshot),cloudSaved:true,resumed:true});
+   return sendJSON(res,200,{token:snapshot.token,...classic.response(snapshot),cloudSaved:snapshot.checkpointRevision===snapshot.revision,cloudError:snapshot.checkpointError||undefined,resumed:true});
   }
   const token=req.headers['x-duel-token'];
   if(typeof token!=='string'||!token){sendJSON(res,401,{error:'Missing duel token'});return;}
   if(pathName==='/api/classic/state'&&req.method==='GET'){
-   const session=classic.session(token),state=classic.response(session);
+   const session=classic.session(token);
+   if(session.rpgLocalOnly||session.checkpointDuelId)upgradeRpgSession(session);
+   const state=classic.response(session);
    if(session.rpgLocalOnly){
     state.cloudSaved=false;
     state.cloudError='This duel is only on the current server. Sign in from the RPG to enable autosaves in future matches.';
-   }else if(session.checkpointOwner){state.cloudSaved=session.checkpointRevision===session.revision;}
+   }else if(session.checkpointOwner){state.cloudSaved=session.checkpointRevision===session.revision;if(session.checkpointError)state.cloudError=session.checkpointError;}
    return sendJSON(res,200,state);
   }
   if(pathName==='/api/classic/action'&&req.method==='POST'){
    const session=classic.session(token);
+   if(session.rpgLocalOnly||session.checkpointDuelId)upgradeRpgSession(session);
    const identity=session.checkpointOwner?await rpgDuels.identify(req.headers.authorization):null;
    if(session.checkpointOwner&&session.checkpointOwner!==identity.userId)throw Error('Unauthorized RPG duel account');
    const body=await parseJSON(req);
@@ -120,6 +136,7 @@ async function api(req,res,pathName,url){
     queueDuelCheckpoint(session,identity);
     // Accepted by the local authoritative engine, but not yet durable in cloud.
     result.cloudSaved=false;
+    if(session.checkpointError)result.cloudError=session.checkpointError;
    }else if(session.rpgLocalOnly){
     result.cloudSaved=false;
     result.cloudError='Sign in through the RPG Cloud button for durable battle autosaves in future matches.';
@@ -282,7 +299,7 @@ const server=http.createServer(async (req,res)=>{
  if(req.method!=='GET'&&req.method!=='HEAD'){res.writeHead(405).end('Method not allowed');return;}
  // Public hosting: never expose source maps, logs, archives, env files or server code over static HTTP.
  if(!(pathname==='/'||/\.(html|js|css|png|jpg|jpeg|svg|webp)$/i.test(pathname)||(/^\/cards\/[a-z0-9_-]+\.json$/i.test(pathname))||pathname==='/rpg-assets/reactions/manifest.json')){res.writeHead(404).end('Not found');return;}
- const publicScripts=new Set(['cube_builder_ui.js','cube_room_client.js','cube_client.js','authentic_decks.js','card_corrections.js','classic_format.js','classic_live.js','core_rules.js','decision_core.js','decision_session.js','duel_quick_ui.js','battle_decision_ui.js','duel_experience_ui.js','battle_presentation_ui.js','duel_shared_components.js','duel_action_rail.js','duel_playmats.js','cube_mat_auth.js','mat_generator.js','match_log_ui.js','rpg_match_chat.js','cube_pool_viewer.js','cube_analysis_ui.js','cube_set_badges.js','rpg_npc_deck_progression.js','rpg_match_reactions.js','rpg_status.js','rpg_discreet.js','rpg_discreet_avatars.js','rpg_cloud_save.js','rpg_outfits.js','rpg_deck_studio.js','deck_builder.js','deck_builder_core.js','engine.js','legacy_choice_bridge.js','online.js','target_choice_bridge.js','trainer_rules_v058.js','trainer_rules_v059.js','trainer_rules_v060.js','trainer_rules_v061.js','trainer_rules_v062.js','trainer_rules_v063.js','trainer_rules_v064.js']);
+ const publicScripts=new Set(['rpg_pack_index.js','rpg_card_library.js','cube_builder_ui.js','cube_room_client.js','cube_client.js','authentic_decks.js','card_corrections.js','classic_format.js','classic_live.js','core_rules.js','decision_core.js','decision_session.js','duel_quick_ui.js','battle_decision_ui.js','duel_experience_ui.js','battle_presentation_ui.js','duel_shared_components.js','duel_action_rail.js','duel_playmats.js','cube_mat_auth.js','mat_generator.js','match_log_ui.js','rpg_match_chat.js','cube_pool_viewer.js','cube_analysis_ui.js','cube_set_badges.js','rpg_npc_deck_progression.js','rpg_relationships.js','rpg_time_coordinator.js','rpg_encounter_director.js','rpg_match_reactions.js','rpg_status.js','rpg_discreet.js','rpg_discreet_avatars.js','rpg_cloud_save.js','rpg_outfits.js','rpg_deck_studio.js','deck_builder.js','deck_builder_core.js','engine.js','legacy_choice_bridge.js','online.js','target_choice_bridge.js','trainer_rules_v058.js','trainer_rules_v059.js','trainer_rules_v060.js','trainer_rules_v061.js','trainer_rules_v062.js','trainer_rules_v063.js','trainer_rules_v064.js']);
  if(pathname==='/rpg.js'||pathname==='/rpg_narrative_pack.js'||pathname==='/rpg_sol_character.js'||pathname==='/rpg_character_packs.generated.js'||pathname==='/rpg_mandatory_events.js'||pathname==='/rpg_season_events.js'||pathname==='/rpg_side_quests.js'||pathname==='/rpg_bond_chapters.js'||pathname==='/rpg_partner_decks.js'||pathname==='/rpg_partner_deck_studio.js'||pathname==='/rpg_bond_rewards.js'||pathname==='/rpg_everyday_chats.js'||pathname==='/rpg_character_chats.js'||pathname==='/rpg_group_chats.js'||pathname==='/rpg_conversations.js'||pathname==='/rpg_audio.js'||pathname==='/rpg_render_perf.js'||pathname==='/rpg_legacy_scenes.js'||pathname==='/rpg_story.js'||pathname==='/rpg_schedules.js'||pathname==='/rpg_duel_bridge.js'||pathname==='/rpg_world.js'||pathname==='/rpg_rival_arc.js'||pathname==='/rpg_tournaments.js'||pathname==='/rpg_competitive_loop.js'||pathname==='/rpg_community.js'||pathname==='/rpg_consequences.js'||pathname==='/rpg_strategy.js'||pathname==='/rpg_reactivity.js'||pathname==='/rpg_epilogue.js'||pathname==='/rpg_appointments.js'||pathname==='/rpg_intentions.js'||pathname==='/rpg_slice_of_life.js'||pathname==='/rpg_cg_gallery.js'||pathname==='/rpg_cg_viewer.js'||pathname==='/rpg_daily_planner.js'||pathname==='/rpg_social_activities.js'||pathname==='/rpg_planned_dates.js'||pathname==='/rpg_preduel.js'||pathname==='/rpg_situations.js'||pathname==='/rpg_season_journey.js'||pathname==='/rpg_tutorials.js'||pathname==='/rpg_scene_cast.js'||pathname==='/rpg_event_invites.js'||pathname==='/rpg_collection.js'||pathname==='/rpg_dialogue.js'||pathname==='/rpg_time_transitions.js'||pathname==='/rpg_ui_motion.js'||pathname==='/rpg_character_motion.js'||pathname==='/rpg_victory_presentation.js'||pathname==='/rpg_tournament_presentation.js')publicScripts.add(pathname.slice(1));
  if(pathname==='/rpg_character_packs.generated.js'){res.writeHead(404).end('Not found');return;}
  if(pathname==='/rpg_character_bootstrap.js')publicScripts.add('rpg_character_bootstrap.js');

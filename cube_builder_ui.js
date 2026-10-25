@@ -55,7 +55,7 @@
   const group=c=>GROUPS.includes(c?.supertype)?c.supertype:'Trainer';
   const sameName=name=>deck.filter(id=>index.get(id)?.name===name).length;
   const canAdd=c=>!locked&&deck.length<targetSize&&amount(c.id)<(limits.get(c.id)||0)&&
-   (unlimitedIds.has(c.id)||(!nameLimit?amount(c.id)<4:group(c)==='Energy'||sameName(c.name)<4));
+   (unlimitedIds.has(c.id)||(!nameLimit?amount(c.id)<4:sameName(c.name)<4));
   const canRemove=c=>!locked&&amount(c.id)>0;
   function change(c,by){
    if((by>0&&!canAdd(c))||(by<0&&!canRemove(c)))return;

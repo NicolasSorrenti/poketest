@@ -9,9 +9,9 @@ const Story=require('../rpg_story');
 const regular=['hana','reina','shiori','yuna','akari','camila','marina','kaede'];
 const cast={...Object.fromEntries(regular.map(id=>[id,{name:id,intro:'Hello from '+id,flirt:'Hello',talk:['First daily topic','Second daily topic','Third daily topic']}])) ,...Pack.cast,...Side.cast};
 const newRoutes=['jinx','luna','sol','rina','elena','sierra'];
-const expected=[...regular,'jun','teo','iris','elio','alma','nereo',...newRoutes];
+const expected=[...regular,'jun','teo','iris','elio','alma','nereo',...newRoutes,'laca','barb'];
 
-test('all 20 registered characters speak in multi-line greetings, Talk and flirt exchanges',()=>{
+test('all 22 registered characters speak in multi-line greetings, Talk and flirt exchanges',()=>{
  assert.deepEqual(Object.keys(cast).sort(),expected.sort());
  for(const id of expected){
   const actor=cast[id];

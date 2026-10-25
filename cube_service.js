@@ -5,6 +5,8 @@ const C=require('./cube_draft');
 const {getPreset}=require('./cube_presets');
 const {cpuPick,score,buildCpuDeck,ENERGY_IDS}=require('./cube_strategy');
 const {simulateCpuMatch}=require('./cube_bracket');
+const {SKILLS}=require('./cpu_policy');
+const MAX_CPU_LEVEL=Math.max(...Object.keys(SKILLS).map(Number));
 const RIVALS=Object.freeze([
  {name:'Rookie Rival',level:2,personality:'balanced'},
  {name:'Campus Challenger',level:3,personality:'balanced'},
@@ -12,10 +14,10 @@ const RIVALS=Object.freeze([
 ]);
 const NAMES=['You',...RIVALS.map(x=>x.name)];
 const validateDifficulty=value=>{
- if(!Number.isInteger(value)||value<1||value>5)throw Error('CPU difficulty must be 1–5');
+ if(!Number.isInteger(value)||value<1||value>MAX_CPU_LEVEL)throw Error('CPU difficulty must be 1–'+MAX_CPU_LEVEL);
  return value;
 };
-const rivalLevel=(difficulty,seat)=>Math.min(5,Math.max(1,difficulty+RIVALS[seat-1].level-3));
+const rivalLevel=(difficulty,seat)=>Math.min(MAX_CPU_LEVEL,Math.max(1,difficulty+RIVALS[seat-1].level-3));
 const other=(seats,winner)=>seats.find(x=>x!==winner);
 const match=(id,seats)=>({id,seats:[...seats],winner:null,method:null,status:seats.length?'waiting':'pending'});
 

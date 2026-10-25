@@ -1,0 +1,45 @@
+name: Competitive Archetype CPU Benchmark
+on:
+  pull_request:
+    paths:
+      - 'cpu_competitive_decks.js'
+      - 'scripts/benchmark-cpu-competitive.js'
+      - 'tests/cpu_competitive_decks.test.js'
+      - 'cpu_policy.js'
+      - 'cpu_lookahead.js'
+      - 'cpu_strategic_search.js'
+      - 'benchmark_cpu.js'
+      - '.github/workflows/cpu-competitive-archetypes.yml'
+jobs:
+  deck-validity:
+    name: Legal competitive archetype decks
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Validate archetype deck construction and historical game setup
+        run: node --test tests/cpu_competitive_decks.test.js
+      - name: Check strategic planner and RPG difficulty remain correct
+        run: node --test tests/cpu_deep_levels.test.js tests/rpg_cpu_champion.test.js
+  matchup-tournament:
+    name: ${{ matrix.group }} competitive matchups
+    runs-on: ubuntu-latest
+    timeout-minutes: 55
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - {group: aggression, seed: 720913}
+          - {group: evolution, seed: 830929}
+          - {group: control, seed: 940943}
+          - {group: neo, seed: 1050961}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Mirror levels 7 and 8 across asymmetric competitive archetypes
+        run: node scripts/benchmark-cpu-competitive.js --group ${{ matrix.group }} --pairs 3 --max-turns 100 --seed ${{ matrix.seed }}

@@ -45,7 +45,7 @@ const {server}=require('./server');
   assert.equal(state.done,true);
   assert.equal(state.suggestedDeck.length,40);
   assert.equal((await api('start','POST',{revision:state.revision,deck:['bad']})).status,400);
-  assert.equal((await api('start','POST',{revision:state.revision,deck:state.suggestedDeck,difficulty:6})).status,400);
+  assert.equal((await api('start','POST',{revision:state.revision,deck:state.suggestedDeck,difficulty:9})).status,400);
   const started=await api('start','POST',{revision:state.revision,deck:state.suggestedDeck,difficulty:2});
   assert.equal(started.status,200,'Could not launch Cube: '+started.body.error);
   const duel=await api('state','GET',undefined,started.body.duelToken,'classic');

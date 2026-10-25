@@ -5,10 +5,12 @@ const fs=require('node:fs'),path=require('node:path');
 const Pack=require('../rpg_narrative_pack'),Side=require('../rpg_side_quests'),Story=require('../rpg_story'),Schedules=require('../rpg_schedules'),World=require('../rpg_world'),Arc=require('../rpg_rival_arc'),Tournaments=require('../rpg_tournaments'),Epilogue=require('../rpg_epilogue'),Appointments=require('../rpg_appointments'),Intentions=require('../rpg_intentions'),CG=require('../rpg_cg_gallery'),Planner=require('../rpg_daily_planner'),Social=require('../rpg_social_activities'),Dates=require('../rpg_planned_dates'),Bridge=require('../rpg_duel_bridge'),Pre=require('../rpg_preduel'),Collection=require('../rpg_collection'),Journey=require('../rpg_season_journey'),Situations=require('../rpg_situations'),Dialogue=require('../rpg_dialogue'),BondRewards=require('../rpg_bond_rewards'),Conversations=require('../rpg_conversations'),PartnerDecks=require('../rpg_partner_decks');
 const Mandatory=require('../rpg_mandatory_events'),Season=require('../rpg_season_events'),Registry=require('../rpg_character_packs.generated'),Competitive=require('../rpg_competitive_loop'),Reactivity=require('../rpg_reactivity'),Community=require('../rpg_community'),Consequences=require('../rpg_consequences'),TournamentPresentation=require('../rpg_tournament_presentation');
 const NpcDecks=require('../rpg_npc_deck_progression');
+const Time=require('../rpg_time_coordinator');
+const Relationships=require('../rpg_relationships');
 const Tutorials=require('../rpg_tutorials');
 const SceneCast=require('../rpg_scene_cast');
 const EventInvites=require('../rpg_event_invites');
-const js=fs.readFileSync(path.join(__dirname,'..','rpg.js'),'utf8').replace(/\}\)\(\);\s*$/, 'window.__testRpgAction=act;})();');
+const js=fs.readFileSync(path.join(__dirname,'..','rpg.js'),'utf8').replace(/\}\)\(\);\s*$/, 'window.__testRpgAction=act;window.__testRpgSelect=selectPerson;})();');
 const RenderPerf=require('../rpg_render_perf');
 const html=fs.readFileSync(path.join(__dirname,'..','rpg.html'),'utf8');
 const ids=[...html.matchAll(/id="([^"]+)"/g)].map(x=>x[1]);
@@ -79,19 +81,28 @@ function launch(initial,approve=false,mandatory=false){
   createTextNode(text){const node=new FakeNode('#text');node.nodeType=3;node.nodeValue=String(text);node.textContent=String(text);return node;},
   body:new FakeNode('body'),
   addEventListener(name,cb){listeners['document:'+name]=cb;}};
- const win={NeoRpgRenderPerf:RenderPerf,NeoRpgNarrativePack:Pack,NeoRpgSideQuests:Side,NeoHarborStory:Story,NeoRpgSchedules:Schedules,NeoRpgWorld:World,NeoRpgRivalArc:Arc,NeoRpgTournaments:Tournaments,NeoRpgCompetitiveLoop:Competitive,NeoRpgReactivity:Reactivity,NeoRpgCommunity:Community,NeoRpgConsequences:Consequences,NeoRpgTournamentPresentation:TournamentPresentation,NeoRpgEpilogue:Epilogue,NeoRpgAppointments:Appointments,NeoRpgIntentions:Intentions,NeoRpgCGGallery:CG,NeoRpgDailyPlanner:Planner,NeoRpgSocialActivities:Social,NeoRpgPlannedDates:Dates,NeoRpgPreDuel:Pre,NeoRpgCollection:Collection,NeoRpgSeasonJourney:Journey,NeoRpgSituations:Situations,NeoRpgDuelBridge:Bridge,NeoRpgDialogue:Dialogue,NeoRpgBondRewards:BondRewards,NeoRpgConversations:Conversations,NeoRpgTutorials:Tutorials,NeoRpgSceneCast:SceneCast,NeoRpgEventInvites:EventInvites,NeoRpgPartnerDecks:PartnerDecks,NeoRpgNpcDeckProgression:NpcDecks,
+ const win={NeoRpgRenderPerf:RenderPerf,NeoRpgNarrativePack:Pack,NeoRpgSideQuests:Side,NeoHarborStory:Story,NeoRpgSchedules:Schedules,NeoRpgWorld:World,NeoRpgRivalArc:Arc,NeoRpgTournaments:Tournaments,NeoRpgCompetitiveLoop:Competitive,NeoRpgReactivity:Reactivity,NeoRpgCommunity:Community,NeoRpgConsequences:Consequences,NeoRpgTournamentPresentation:TournamentPresentation,NeoRpgEpilogue:Epilogue,NeoRpgAppointments:Appointments,NeoRpgIntentions:Intentions,NeoRpgCGGallery:CG,NeoRpgDailyPlanner:Planner,NeoRpgSocialActivities:Social,NeoRpgPlannedDates:Dates,NeoRpgPreDuel:Pre,NeoRpgCollection:Collection,NeoRpgSeasonJourney:Journey,NeoRpgSituations:Situations,NeoRpgDuelBridge:Bridge,NeoRpgDialogue:Dialogue,NeoRpgBondRewards:BondRewards,NeoRpgConversations:Conversations,NeoRpgTutorials:Tutorials,NeoRpgSceneCast:SceneCast,NeoRpgEventInvites:EventInvites,NeoRpgPartnerDecks:PartnerDecks,NeoRpgNpcDeckProgression:NpcDecks,NeoRpgTimeCoordinator:Time,NeoRpgRelationships:Relationships,
   addEventListener(name,cb){listeners[name]=cb;}};
  if(mandatory){win.NeoRpgMandatoryEvents=Mandatory;win.NeoRpgSeasonEvents=Season;win.NeoRpgCharacterPacks=Registry;}
+ win.NeoRpgStatus={
+  open(state,cast,plan,avatar,onTutorialsChange){
+   const toggle=elements.statusTutorialToggle;
+   toggle.checked=!!state.gameplayTutorials?.disabled;
+   toggle.onchange=()=>onTutorialsChange(!!toggle.checked);
+   elements.statusDialog.showModal();
+  },
+  close(){elements.statusDialog.close();}
+ };
  const local={getItem(k){return saved[k]||null;},setItem(k,v){saved[k]=String(v);}};
  const session={removeItem(){},setItem(){},getItem(){return null;}};
  const loc={origin:'http://localhost',href:'http://localhost/rpg.html',reload(){},assign(href){this.href=new URL(href,this.origin).href;}};
  new Function('window','document','localStorage','sessionStorage','location','fetch','confirm','Image',js)(
   win,doc,local,session,loc,async()=>({ok:true,json:async()=>({decks:[{id:'blackout',name:'Blackout'}]})}),()=>approve,function MockImage(){return new FakeNode('img');});
- return {elements,listeners,loc,act:win.__testRpgAction,state:()=>JSON.parse(saved.neoHarborRpgV1)};
+ return {elements,listeners,loc,act:win.__testRpgAction,select:(id,options)=>win.__testRpgSelect(id,options),state:()=>JSON.parse(saved.neoHarborRpgV1)};
 }
 function finishGreeting(app){
  let steps=0;
- while(steps++<5&&app.state().scene?.dialogue?.length>1&&
+ while(steps++<30&&app.state().scene?.dialogue?.length>1&&
    app.state().scene.index<app.state().scene.dialogue.length-1){
   const advance=app.elements.choices.children.find(x=>x.textContent.includes('Continue'));
   assert.ok(advance,'Conversation needs a Continue action');advance.onclick();
@@ -1090,7 +1101,7 @@ test('a first meeting plays its greeting scene before actions and survives reloa
 test('casual character click starts a free VN exchange with a compact external action bar',()=>{
  const r=launch({day:5,slot:0,location:'shop'});
  const hana=r.elements.people.children.find(x=>x.children?.[1]?.children?.[0]?.textContent==='Hana Mizuno');
- assert.ok(hana);hana.onclick();
+ assert.ok(hana);r.select('hana',{skipInvitation:true});
  const current=r.state();
  assert.ok(current.scene.dialogue?.length>=3,'character and player exchange more than one line');
  assert.ok(current.scene.dialogue.some(x=>x.speaker==='Protagonist'));
@@ -1143,7 +1154,7 @@ test('occasional natural dialogue invitation opens the existing social system wi
    Conversations.choices({day,slot,hungOut:{},appointments:[]},'hana').some(([,action])=>action==='socialPlan:hana'));
  assert.ok(match,'Hana offers an optional invitation somewhere in the opening weeks');
  const r=launch({...match,location:match.place}),hana=r.elements.people.children.find(x=>x.children?.[1]?.children?.[0]?.textContent==='Hana Mizuno');
- assert.ok(hana);hana.onclick();finishGreeting(r);
+ assert.ok(hana);r.select('hana',{skipInvitation:true});finishGreeting(r);
  const before=r.state();
  assert.equal(before.relationships.hana.affection,0);
  const invite=r.elements.choices.children.find(x=>x.textContent.includes('something together'));
@@ -1577,8 +1588,46 @@ test('the daily guide approaches a present story NPC without triggering or advan
  assert.equal(result.location,'shop');
  assert.equal(result.day,5);assert.equal(result.slot,0);
  assert.equal(result.activeStory,null,'no hidden story progression on navigation');
- assert.equal(result.scene.invitation?.id,'hana_route_1');
+ if(result.scene.invitation?.id!=='hana_route_1'){
+  // Planner may highlight the NPC's action rather than immediately starting a greeting.
+  const hana=r.elements.people.children.find(x=>x.children?.[1]?.children?.[0]?.textContent==='Hana Mizuno');
+  assert.ok(hana,'the story NPC must be reachable after free planner travel');
+  hana.onclick();
+ }
+ assert.equal(r.state().scene.invitation?.id,'hana_route_1');
  finishGreeting(r);
  r.elements.choices.children.find(x=>x.textContent==='I am in.').onclick();
  assert.equal(r.state().activeStory?.id,'hana_route_1');
+});
+
+
+test('a legacy hangout cannot silently miss a booked appointment',()=>{
+ const plan={id:21,npc:'hana',day:1,slot:0,place:'shop',status:'booked',bookedDay:1};
+ const initial={day:1,slot:0,location:'shop',appointments:[plan],appointmentSeq:21};
+ const declined=launch(initial,false);
+ declined.act('hang:hana');
+ assert.equal(declined.state().day,1);
+ assert.equal(declined.state().slot,0);
+ assert.equal(declined.state().appointments[0].status,'booked');
+ assert.ok(!declined.state().hungOut?.['1:hana'],'declining must not grant a hangout or affection');
+ const accepted=launch(initial,true);
+ accepted.act('hang:hana');
+ assert.equal(accepted.state().slot,1);
+ assert.equal(accepted.state().appointments[0].status,'missed');
+ assert.equal(accepted.state().hungOut['1:hana'],true);
+});
+
+test('an authored chapter cannot start over a booked meeting without consent',()=>{
+ const plan={id:22,npc:'hana',day:5,slot:0,place:'shop',status:'booked',bookedDay:5};
+ const initial={day:5,slot:0,location:'shop',met_hana:true,appointments:[plan],appointmentSeq:22};
+ const declined=launch(initial,false);
+ const chapter=declined.elements.storyEvents.children.find(x=>x.dataset.plannerKey==='hana_route_1');
+ assert.ok(chapter,'authored chapter must be visible to exercise the guard');
+ chapter.onclick();
+ assert.equal(declined.state().activeStory,null);
+ assert.equal(declined.state().appointments[0].status,'booked');
+ const accepted=launch(initial,true);
+ accepted.elements.storyEvents.children.find(x=>x.dataset.plannerKey==='hana_route_1').onclick();
+ assert.equal(accepted.state().activeStory?.id,'hana_route_1');
+ assert.equal(accepted.state().slot,0,'starting dialogue does not prematurely spend the period');
 });

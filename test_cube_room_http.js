@@ -32,7 +32,7 @@ const {server}=require('./server');
   const host=h.body,room=h.body.code;
   assert.equal(host.preset,'rocket');
   assert.equal(host.difficulty,4);
-  assert.equal((await req('create',{name:'Nope',difficulty:7})).status,400);
+  assert.equal((await req('create',{name:'Nope',difficulty:9})).status,400);
   const b=await req('join',{code:room,name:'Player B'});
   assert.equal(b.status,200);
   const guest=b.body;

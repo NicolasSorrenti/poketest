@@ -8,9 +8,12 @@ const script=fs.readFileSync(path.join(__dirname,'..','rpg_cloud_save.js'),'utf8
 const clone=x=>JSON.parse(JSON.stringify(x));
 const save=day=>({day,results:[],deckJourney:{starter:'water'},bonds:{},credits:42,pendingDuel:null});
 
-function setup({localSave=save(1),cloudRow=null,hadLocal=true,enabled=true,connected=true,authFragment='',existingSession=true}={}){
+function setup({localSave=save(1),cloudRow=null,hadLocal=true,enabled=true,connected=true,authFragment='',existingSession=true,ownerId=null,ownCache=null}={}){
  let current=clone(localSave),remote=cloudRow?clone(cloudRow):null,network=connected;
  const uploads=[],restores=[],sessions=[],timers=new Map(),cache=new Map(),historyReplacements=[];
+ let resets=0;
+ if(ownerId)cache.set('neoRpgLocalOwnerV1',ownerId);
+ if(ownCache)cache.set('neoRpgAccountCacheV1:player-one',JSON.stringify(ownCache));
  let timerId=0;
  if(existingSession)cache.set('neoRpgCloudSessionV1',JSON.stringify({
   user:{id:'player-one',email:'one@example.com'},
@@ -56,12 +59,14 @@ function setup({localSave=save(1),cloudRow=null,hadLocal=true,enabled=true,conne
  const adapter={
   getSave:()=>current,
   restoreSave:download=>{restores.push(clone(download));current=clone(download);},
+  resetSave:()=>{resets++;current=save(1);},
   canSwitch:()=>!current.pendingDuel,
   hadLocalSave:hadLocal,
   showButton:false
  };
  return {
   client:window.NeoRpgCloudSave,adapter,uploads,restores,cache,historyReplacements,location:window.location,
+  getResets:()=>resets,
   getLocal:()=>clone(current),getCloud:()=>clone(remote),
   setLocal:val=>{current=clone(val)},setCloud:val=>{remote=clone(val)},
   setConnected:value=>{network=value},
@@ -98,11 +103,12 @@ test('first use on a new device imports the cloud state and does not upload defa
  assert.equal(app.uploads.length,0);
 });
 
-test('a first login with two different saves never overwrites either',async()=>{
+test('a first login automatically loads existing cloud progress',async()=>{
  const app=setup({localSave:save(9),cloudRow:{revision:2,save_data:save(14)}});
  await app.client.mount(app.adapter);
- assert.equal(app.getLocal().day,9);
+ assert.equal(app.getLocal().day,14);
  assert.equal(app.getCloud().save_data.day,14);
+ assert.equal(app.restores.length,1);
  assert.equal(app.uploads.length,0);
 });
 
@@ -117,7 +123,7 @@ test('an unchanged device automatically loads the newer cloud save on startup',a
  assert.equal(app.uploads.length,0);
 });
 
-test('stale revision is rejected when another device saves first',async()=>{
+test('cloud wins automatically when another device advanced the revision',async()=>{
  const app=setup({localSave:save(4)});
  await app.client.mount(app.adapter);
  app.setCloud({revision:2,save_data:save(17)});
@@ -125,7 +131,8 @@ test('stale revision is rejected when another device saves first',async()=>{
  const synced=await app.client.syncNow();
  assert.equal(synced,false);
  assert.equal(app.getCloud().save_data.day,17);
- assert.equal(app.getLocal().day,5);
+ assert.equal(app.getLocal().day,17);
+ assert.equal(app.restores.length,1);
  assert.equal(app.uploads.at(-1).expected_revision,1);
 });
 
@@ -191,4 +198,45 @@ test('an auth error redirect is stripped from the URL without saving credentials
  assert.equal(app.location.hash,'');
  assert.deepEqual(app.historyReplacements,['/rpg.html']);
  assert.equal(app.cache.has('neoRpgCloudSessionV1'),false);
+});
+
+test('unsynced local actions upload when cloud revision is unchanged',async()=>{
+ const app=setup({localSave:save(3),cloudRow:{revision:4,save_data:save(3)}});
+ app.cache.set('neoRpgCloudSyncedV1:player-one',JSON.stringify({revision:4,hash:app.client.hash(save(3))}));
+ app.setLocal(save(5));
+ await app.client.mount(app.adapter);
+ assert.equal(app.getCloud().save_data.day,5);
+ assert.equal(app.restores.length,0);
+ assert.equal(app.uploads[0].expected_revision,4);
+});
+
+test('cloud progress replaces an in-progress local duel',async()=>{
+ const local=save(8);local.pendingDuel={id:'local-battle'};
+ const cloud=save(12);cloud.pendingDuel={id:'cloud-battle'};
+ const app=setup({localSave:local,cloudRow:{revision:3,save_data:cloud}});
+ await app.client.mount(app.adapter);
+ assert.equal(app.getLocal().pendingDuel.id,'cloud-battle');
+ assert.equal(app.uploads.length,0);
+});
+
+
+test('switching to a different cloud account never uploads the previous account campaign',async()=>{
+ const app=setup({localSave:save(25),ownerId:'previous-account'});
+ await app.client.mount(app.adapter);
+ assert.equal(app.uploads.length,0,'do not leak previous-account progress to a new cloud account');
+ assert.equal(app.getResets(),1,'new account gets an independent fresh campaign');
+ assert.equal(app.getLocal().day,1);
+ assert.equal(app.cache.get('neoRpgLocalOwnerV1'),'player-one');
+ assert.equal(JSON.parse(app.cache.get('neoRpgAccountCacheV1:previous-account')).day,25);
+});
+
+test('switching back restores only the account-owned local cache',async()=>{
+ const app=setup({localSave:save(30),ownerId:'other-account',ownCache:save(8)});
+ await app.client.mount(app.adapter);
+ assert.equal(app.getResets(),0);
+ assert.equal(app.restores.length,1);
+ assert.equal(app.getLocal().day,8);
+ assert.equal(app.uploads.length,0,'reconciliation continues after reload, not with a foreign campaign');
+ assert.equal(app.cache.get('neoRpgLocalOwnerV1'),'player-one');
+ assert.equal(JSON.parse(app.cache.get('neoRpgAccountCacheV1:other-account')).day,30);
 });

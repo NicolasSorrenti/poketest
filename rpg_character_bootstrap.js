@@ -12,6 +12,7 @@
  "/rpg_group_chats.js",
  "/rpg_conversations.js",
  "/rpg_legacy_scenes.js",
+ "/rpg_relationships.js",
  "/rpg_story.js",
  "/rpg_schedules.js",
  "/rpg_world.js",
@@ -24,13 +25,15 @@
  "/rpg_duel_bridge.js",
  "/rpg_epilogue.js",
  "/rpg_appointments.js",
+ "/rpg_time_coordinator.js",
  "/rpg_intentions.js",
+ "/rpg_encounter_director.js",
  "/rpg_slice_of_life.js",
  "/rpg_cg_gallery.js",
  "/rpg_daily_planner.js",
  "/rpg_social_activities.js",
  "/rpg_planned_dates.js",
- "/rpg_preduel.js",
+ "/rpg_preduel.js?v=20261024-preduel-art",
  "/rpg_situations.js",
  "/rpg_season_journey.js",
  "/rpg_collection.js",
@@ -54,7 +57,7 @@
  "/rpg_status.js?v=4",
  "/rpg_cloud_save.js?v=2",
  "/rpg_outfits.js?v=1",
- "/rpg.js"
+ "/rpg.js?v=20261024-preduel-back"
 ];
   function registry(packs){
     const cast={},looks={},schedules={},arrivals={},events=[],mandatoryEvents=[];

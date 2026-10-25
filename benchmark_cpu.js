@@ -47,10 +47,11 @@ function duel(opts,number,swap,decks){
  const roleForSide=swap?[1,0]:[0,1];
  const source=swap?[decks[1],decks[0]]:decks;
  let game=createGame({decks:source,format:opts.format||'classic',seed:opts.seed+number*11+101});
- const logs=[],stats={actions:0,attacks:0,attachments:0,evolutions:0,trainers:0,choices:0,decisionsMs:0,illegalActions:0,rejectedProposals:0,probedCandidates:0,byRole:[{},{}],openingBenchByRole:[0,0]};
+ const logs=[],stats={actions:0,attacks:0,attachments:0,evolutions:0,trainers:0,choices:0,decisionsMs:0,illegalActions:0,rejectedProposals:0,probedCandidates:0,byRole:[{},{}],openingBenchByRole:[0,0],decisionPerActionMsByRole:[[],[]]};
  const start=performance.now();
  for(let side=0;side<2;side++){
-  const r=driveSide(game,{...profile[roleForSide[side]],side,limit:200});
+  const r=driveSide(game,{...profile[roleForSide[side]],side,limit:200,
+   onDecision:ms=>stats.decisionPerActionMsByRole[roleForSide[side]].push(ms)});
   if(!r.steps)throw Error('CPU could not set up');
   game=r.game;logs.push(...r.commands);stats.actions+=r.steps;
  }
@@ -58,8 +59,10 @@ function duel(opts,number,swap,decks){
  for(let step=0;step<opts.maxTurns&&!game.over;step++){
   const side=game.pendingDecision?game.pendingDecision.actor:game.turn;
   const startDecision=performance.now();
-  const r=driveSide(game,{...profile[roleForSide[side]],side,limit:200});
-  stats.decisionsMs+=performance.now()-startDecision;
+  const r=driveSide(game,{...profile[roleForSide[side]],side,limit:200,
+   onDecision:ms=>stats.decisionPerActionMsByRole[roleForSide[side]].push(ms)});
+  const elapsedDecision=performance.now()-startDecision;
+  stats.decisionsMs+=elapsedDecision;
   if(!r.steps){stats.stalled=true;break;}
   game=r.game;stats.actions+=r.steps;logs.push(...r.commands);
   stats.rejectedProposals+=r.commands.reduce((n,a)=>n+(a.rejectedCandidates||0),0);
@@ -90,6 +93,11 @@ function duel(opts,number,swap,decks){
  return {seed:opts.seed+number*11+101,swap,winner,finished:game.over,
   endReason,stats,logs};
 }
+function percentile(values,part){
+ if(!values.length)return null;
+ const sorted=[...values].sort((a,b)=>a-b);
+ return sorted[Math.max(0,Math.ceil(part*sorted.length)-1)];
+}
 function arena(opts){
  const service=new ClassicLocalService(),decks=[service.decklist(opts.leftDeck),service.decklist(opts.rightDeck)];
  const matches=[];
@@ -97,6 +105,7 @@ function arena(opts){
  const conclusive=matches.filter(x=>x.winner!==null);
  const wins=conclusive.filter(x=>x.winner===0).length,losses=conclusive.length-wins;
  const totals=matches.reduce((s,x)=>{for(const [k,v] of Object.entries(x.stats))if(typeof v==='number')s[k]=(s[k]||0)+v;return s;},{});
+ const decisionSamplesByRole=[0,1].map(role=>matches.flatMap(m=>m.stats.decisionPerActionMsByRole[role]));
  const report={baseline:{level:opts.leftLevel,deck:opts.leftDeck,
     planning:configuration({level:opts.leftLevel,planning:opts.leftPlanning??undefined}).planning,
     evolutionTempo:configuration({level:opts.leftLevel,evolutionTempo:opts.leftEvolutionTempo??undefined}).evolutionTempo,
@@ -135,6 +144,9 @@ function arena(opts){
    statisticallyVerified:opts.leftLevel>opts.rightLevel&&conclusive.length>0&&wilson(losses,conclusive.length).upper<=opts.targetUpsetRate,
    note:'Zero lower-level wins does not establish a five-percent ceiling without enough matches; draws are separate.'},
   meanDecisionMs:totals.actions?totals.decisionsMs/totals.actions:null,
+  decisionLatencyByRole:decisionSamplesByRole.map(samples=>({count:samples.length,
+   medianMs:percentile(samples,.5),p95Ms:percentile(samples,.95),p99Ms:percentile(samples,.99),
+   maxMs:samples.length?Math.max(...samples):null})),
   averageTurns:totals.turnSerial/matches.length,totalActions:totals.actions,
   illegalActions:totals.illegalActions,rejectedProposals:totals.rejectedProposals,probedCandidates:totals.probedCandidates,
   attacks:totals.attacks,attachments:totals.attachments,

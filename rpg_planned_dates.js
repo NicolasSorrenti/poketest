@@ -6,6 +6,7 @@
  if(typeof module==='object'&&module.exports)module.exports=api;
  if(root)root.NeoRpgPlannedDates=api;
 })(typeof window!=='undefined'?window:null,function(){
+ const REL=typeof module==='object'&&module.exports?require('./rpg_relationships'):window.NeoRpgRelationships;
  const TONES=Object.freeze([
   Object.freeze({id:'friendship',label:'Spend time as friends',detail:'Enjoy a relaxed outing together.'}),
   Object.freeze({id:'rivalry',label:'Friendly challenge',detail:'See which of you can come out on top.'}),
@@ -93,13 +94,13 @@
   const rel=s.relationships[e.npc],bond=s.bonds[e.npc];
   let trust=0,respect=0,attraction=0;
   if(e.socialTone==='friendship'&&outcome.affinity!=='unfamiliar'){
-   rel.trust=clamp((rel.trust||0)+1,999);bond.trust=clamp((bond.trust||0)+1,999);trust=1;
+   REL.apply(s,e.npc,{trust:1});trust=1;
   }
   if(e.socialTone==='rivalry'){
-   rel.respect=clamp((rel.respect||0)+1,999);respect=1;
+   REL.apply(s,e.npc,{respect:1});respect=1;
   }
   if(e.socialTone==='romantic'){
-   rel.attraction=clamp((rel.attraction||0)+1,999);attraction=1;
+   REL.apply(s,e.npc,{attraction:1});attraction=1;
   }
   const prefix=e.socialTone==='romantic'?
    'You catch each other smiling a little longer than usual. ':

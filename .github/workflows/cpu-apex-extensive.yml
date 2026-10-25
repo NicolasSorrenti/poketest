@@ -1,0 +1,53 @@
+name: Apex Extensive Validation
+on:
+  pull_request:
+    paths:
+      - 'cpu_strategic_search.js'
+      - 'cpu_lookahead.js'
+      - 'cpu_policy.js'
+      - 'benchmark_cpu.js'
+      - 'scripts/benchmark-cpu-rpg-advanced.js'
+      - 'scripts/benchmark-cpu-advanced.js'
+      - 'tests/cpu_deep_levels.test.js'
+      - '.github/workflows/cpu-apex-extensive.yml'
+jobs:
+  cpu-invariants:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Focused CPU, campaign and hidden-information tests
+        run: node --test tests/cpu_deep_levels.test.js tests/rpg_cpu_champion.test.js
+  rpg-tiers:
+    name: RPG tier ${{ matrix.tier }}, seed ${{ matrix.seed }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 55
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - {tier: 1, seed: 317951}
+          - {tier: 2, seed: 843713}
+          - {tier: 3, seed: 931723}
+          - {tier: 3, seed: 173993}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Real-engine mirrored NPC matches against Mastermind
+        run: node scripts/benchmark-cpu-rpg-advanced.js --baseline-level 7 --level 8 --tier ${{ matrix.tier }} --pairs 12 --max-turns 110 --seed ${{ matrix.seed }}
+  general:
+    name: Eight distinct general fixtures, held-out seed
+    runs-on: ubuntu-latest
+    timeout-minutes: 55
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Real-engine general TCG mirrored matchups
+        run: node scripts/benchmark-cpu-advanced.js --baseline-level 7 --level 8 --pairs 12 --max-turns 120 --fixtures 8 --seed 659021

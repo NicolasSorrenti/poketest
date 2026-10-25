@@ -20,3 +20,12 @@
 #cloudChoices p{color:#fff0eb}
 .cloud-save-dialog .cloud-small{font-size:11px;color:#9ea9ba;margin:20px 0 0}
 @media(max-width:700px){.utility-actions{grid-template-columns:repeat(4,minmax(0,1fr))}.cloud-save-button{font-size:10px;padding:9px 3px}.cloud-save-dialog{padding:16px}}
+
+/* Hide cached campaign until account cloud save has been checked. */
+#rpgCloudBoot{display:none}
+.rpg-cloud-loading #rpgCloudBoot{position:fixed;inset:0;z-index:15000;background:radial-gradient(circle at top,#28354c,#0c1220 72%);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;text-align:center;padding:24px;color:#f3e7f2}
+#rpgCloudBoot strong{font-size:clamp(19px,4vw,28px)}
+#rpgCloudBoot span:last-child{font-size:13px;color:#b4bacc}
+.rpg-cloud-boot-spinner{width:36px;height:36px;border:3px solid #5b6379;border-top-color:#f5a1c0;border-radius:50%;animation:duel-cloud-spin .8s linear infinite}
+@keyframes duel-cloud-spin{to{transform:rotate(360deg)}}
+@media(prefers-reduced-motion:reduce){.rpg-cloud-boot-spinner{animation:none}}

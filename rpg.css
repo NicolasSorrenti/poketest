@@ -143,6 +143,8 @@
 .preduel-context{font:600 11px/1.45 'Barlow Condensed',sans-serif;color:#ded1e5;text-align:right}
 .preduel-art{position:relative;min-height:220px;aspect-ratio:16/7;overflow:hidden;background:radial-gradient(ellipse at 55% 20%,#453450,#1b2440 60%,#111724)}
 .preduel-art img.preduel-cg{width:100%;height:100%;object-fit:cover;display:block;position:absolute;inset:0}
+/* Booster / battle reaction images are portraits, so preserve the complete artwork in the wide intro. */
+.preduel-art img.preduel-booster-art{object-fit:contain;object-position:center 45%;filter:drop-shadow(0 9px 23px #0009)}
 .preduel-art .preduel-portrait{max-height:95%;height:100%;width:auto;max-width:75%;object-fit:contain;position:absolute;bottom:0;right:3%}
 .preduel-art .preduel-placeholder{display:grid;place-items:center;position:absolute;inset:0;padding:18px;color:#d7c1cf;text-align:center;font:700 17px 'Barlow Condensed',sans-serif}
 .preduel-body{display:grid;gap:13px;padding:15px 20px 20px}
@@ -153,7 +155,8 @@
 .preduel-dialogue p{font-size:15px;line-height:1.55;margin:6px 0 0;color:#f1eaf2}
 .preduel-actions{display:flex;flex-wrap:wrap;gap:9px;justify-content:flex-end}
 .preduel-actions button{min-height:44px;padding:11px 15px;font:800 14px 'Barlow Condensed',sans-serif}
-#preDuelSkip{margin-right:auto;background:#262840;border:1px solid #665a73}
+#preDuelBack{margin-right:auto;background:#272b3e;border:1px solid #8796aa;color:#f6eef3}
+#preDuelSkip{background:#262840;border:1px solid #665a73}
 #preDuelStart,#preDuelNext{background:#984d78;color:#fff;border-color:#d68baa}
 @media(max-width:600px){.preduel-dialog{max-height:93vh;width:97vw}.preduel-top{display:block;padding:10px 12px}.preduel-context{display:block;text-align:left;margin-top:5px}.preduel-art{aspect-ratio:4/3;min-height:210px}.preduel-body{padding:10px;gap:9px}.preduel-actions button{flex:1 1 160px}.preduel-dialogue{min-height:90px}}
 
@@ -440,3 +443,6 @@
   .utilitybar #rpgMoreMenu .rpg-more-content{max-height:calc(100dvh - 155px);overflow-y:auto;overscroll-behavior:contain}
   #rpgDiscreetToggle{min-width:112px}
 }
+
+/* RPG pack encyclopedia access inside the shop. */
+.booster-library-link{display:inline-flex;align-items:center;max-width:100%;padding:11px 13px;margin:2px 0 13px;border-radius:8px;background:#453050;border:1px solid #d29dbc;color:#ffe0ef;font-size:13px;font-weight:800;text-decoration:none;line-height:1.35}.booster-library-link:hover,.booster-library-link:focus-visible{background:#653d62;outline-offset:3px}
