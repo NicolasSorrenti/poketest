@@ -207,11 +207,15 @@ function recordCG(kind,npc,context=null){const entries=CG.record(state,kind,npc,
 let scene=state.scene&&typeof state.scene.speaker==='string'&&typeof state.scene.line==='string'&&Array.isArray(state.scene.choices)?state.scene:{speaker:'Narrator',line:'Ninety days. One championship. You came to Neo Harbor to win. Everyone else has their own plans.',choices:[]};
 // A single handoff owns calendar wipes, image loading and forced-story eligibility.
 // The state is saved at clock advancement; only presentation waits for acknowledgement.
-const timeSequence=window.NeoRpgTimeTransitions.createSequence({
+const timeSequence=window.NeoRpgTimeTransitions?.createSequence?.({
  canPresent:()=>!scene.line&&!scene.choices?.length&&!$('cgMoment')?.open,
  present:timeFlash,
  onSettled:()=>render()
-});
+})||{
+ // Headless RPG harnesses load the game without its presentation-only module.
+ // Core narrative progression remains available without visual transitions.
+ queue:()=>false,hold:()=>()=>{},flush:()=>false,blocked:false,running:false
+};
 let cgMomentRelease=null;
 
 function queueMandatory(){
