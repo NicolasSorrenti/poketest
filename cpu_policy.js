@@ -407,10 +407,11 @@ function rainDanceTargetValue(unit,waterId,enemy){
  const increase=Math.max(0,after-before);
  const ko=before<hpRemaining(enemy)&&after>=hpRemaining(enemy)&&after>0;
  const prep=Math.max(0,energyValue(unit,waterId));
- // Prefer an immediate attack unlock, then productive future development.
- // A fully powered attacker still benefits a little from spare Energy.
- return 30+Math.min(125,prep)*.65+increase*1.7+(ko?135:0)-
-  (before>0&&increase===0?25:0);
+ // Free attachment is not actually free in strategy: spending a Water card
+ // now can strand a future evolver. Do not overfill an already ready attacker
+ // when an extra Energy would unlock neither damage nor a future cost.
+ if(increase===0&&prep===0)return -50;
+ return 30+Math.min(125,prep)*.65+increase*1.7+(ko?135:0);
 }
 function rainDanceOpportunity(o){
  const waterId=o.self.hand.find(id=>card(id)?.name==='Water Energy');
