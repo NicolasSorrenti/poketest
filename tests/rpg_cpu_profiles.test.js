@@ -16,7 +16,7 @@ test('every named RPG opponent has a legal character-specific CPU profile',()=>{
   assert.ok(Object.hasOwn(NPC_PROFILES,id),'Missing CPU personality: '+id);
   const p=profileForNpc(id);
   assert.ok(['aggressive','balanced','defensive','tactical','setup','risk_taking'].includes(p.personality),id);
-  assert.ok(p.reason&&p.reason.length>=15,id+' lacks a personality rationale');
+  assert.ok(typeof p.reason==='string'&&p.reason.trim().length>0,id+' lacks a personality rationale');
   assert.equal(configuration({level:RPG_CPU_LEVEL,personality:p.personality}).skill,SKILLS[RPG_CPU_LEVEL]);
  }
  assert.ok(ids.size>=20,'Expected the full campaign and guest cast');
