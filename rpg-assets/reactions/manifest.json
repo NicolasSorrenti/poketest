@@ -178,6 +178,20 @@
       "ko_taken": "/rpg-assets/characters/nereo/vn-expressions/vulnerable.webp",
       "ko_scored": "/rpg-assets/characters/nereo/vn-expressions/happy.webp",
       "match_cutin": "/rpg-assets/characters/nereo/cutins/match-cutin.webp"
+    },
+    "barb": {
+      "default": "/rpg-assets/characters/barb/vn-expressions/neutral.webp",
+      "attack": "/rpg-assets/reactions/barb/attack.png",
+      "match_cutin": "/rpg-assets/characters/barb/vn-expressions/flirty.webp",
+      "play_card": "/rpg-assets/characters/barb/vn-expressions/happy.webp",
+      "evolve": "/rpg-assets/characters/barb/vn-expressions/happy.webp",
+      "power": "/rpg-assets/characters/barb/vn-expressions/flirty.webp",
+      "hurt": "/rpg-assets/characters/barb/vn-expressions/surprised.webp",
+      "big_hit": "/rpg-assets/characters/barb/vn-expressions/surprised.webp",
+      "weakness_hit": "/rpg-assets/characters/barb/vn-expressions/surprised.webp",
+      "status_hit": "/rpg-assets/characters/barb/vn-expressions/angry.webp",
+      "ko_taken": "/rpg-assets/characters/barb/vn-expressions/sad.webp",
+      "ko_scored": "/rpg-assets/characters/barb/vn-expressions/happy.webp"
     }
   }
 }

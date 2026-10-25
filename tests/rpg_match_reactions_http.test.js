@@ -23,6 +23,15 @@ const {server}=require('../server');
    const body=await response.text();
    assert.ok(body.length>100,path+' must have nonempty content');
   }
+  // Barb's new match-reaction sources must be served, not just listed in JSON.
+  const reactionManifestResponse=await fetch(origin+'/rpg-assets/reactions/manifest.json');
+  const reactionsJSON=await reactionManifestResponse.json();
+  assert.ok(reactionsJSON.characters.barb,'Barb must be registered for RPG reactions');
+  for(const url of Object.values(reactionsJSON.characters.barb)){
+   const response=await fetch(origin+url,{method:'HEAD'});
+   assert.equal(response.status,200,'Barb match artwork missing: '+url);
+   assert.match(response.headers.get('content-type')||'',/image\\//,'Barb reaction must be an image');
+  }
   // Prevent a UI with visible navigation buttons but missing JS click handlers.
   // Every RPG <script> must actually resolve on the same hosted server used by Render.
   const htmlResponse=await fetch(origin+'/rpg.html');
