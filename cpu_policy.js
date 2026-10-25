@@ -1028,6 +1028,9 @@ function driveSide(initial,{side=1,level=3,personality='balanced',seed=1,plannin
    energyValue(slotUnit(auditObs.self,candidate.payload.slot),
     auditObs.self.hand[candidate.payload.handIndex])>12);
   commands.push({side,turnSerial:beforeTurn,
+   // A terminal win makes an unused attachment strategically irrelevant.
+   // Record this after the authoritative reducer resolves the action.
+   wonGame:!!next.game.over&&next.game.winner===side,
    attachmentOpportunity,energyUsedBefore:auditObs.self.energyUsed,
    energyInHand:auditObs.self.hand.some(id=>isEnergy(card(id))),
    command:a,score:next.score,alternatives:next.alternatives,
