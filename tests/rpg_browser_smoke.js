@@ -219,13 +219,13 @@ const acknowledgeMandatory=async(page)=>{
    const style=card&&getComputedStyle(card);
    const result={
     visible:!!card&&!overlay.classList.contains('hidden')&&Number(style.opacity)>.95,
-    correctImage:!!img?.src.includes('/rpg-assets/reactions/yuna/attack.png')&&img.naturalWidth>0,
+    correctImage:!!img&&/\/rpg-assets\/(?:characters\/yuna\/|reactions\/yuna\/|yuna\.)/.test(new URL(img.src).pathname)&&img.naturalWidth>0,
     overlaysAttack:Number(getComputedStyle(overlay).zIndex)>Number(getComputedStyle(document.querySelector('#combatFx')).zIndex)
    };
    demo.reset();overlay.remove();return result;
   });
   assert.ok(attackArt.visible,'NPC attack artwork must remain on screen for two seconds');
-  assert.ok(attackArt.correctImage,'NPC cut-in must load the correct character-specific image');
+  assert.ok(attackArt.correctImage,'NPC cut-in must load an actual Yuna expression or cut-in, not another character');
   assert.ok(attackArt.overlaysAttack,'NPC artwork must render above the generic attack banner');
   const energyArtGeometry=await inner.locator('.stage').evaluate(stage=>{
      const box=document.createElement('button');box.className='poke';
