@@ -353,6 +353,10 @@ function candidates(o,cfg,used){
   const powerNames=(card(u.id)?.abilities||[]).filter(x=>x.name).map(x=>x.name);
   for(let powerIndex=0;powerIndex<powerNames.length;powerIndex++){
    if(!POWERS.ACTIVATED.has(powerNames[powerIndex])||!powerOpportunity(o,slot,powerNames[powerIndex]))continue;
+   // Rain Dance is inactive while its source is Asleep, Confused or
+   // Paralyzed; don't spend the search budget probing an illegal use.
+   if(cfg.level===8&&powerNames[powerIndex]==='Rain Dance'&&
+     ['Asleep','Confused','Paralyzed'].includes(u.status))continue;
    const id=slot+':'+powerIndex;
    // Rain Dance may be used repeatedly while Water Energy remains in hand.
    // Keep its reuse confined to Level 8; the global 8-Power/turn budget and
