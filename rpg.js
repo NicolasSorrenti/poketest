@@ -3,7 +3,7 @@
 const $=id=>document.getElementById(id),KEY='neoHarborRpgV1',STORY=window.NeoHarborStory,SCHEDULES=window.NeoRpgSchedules,WORLD=window.NeoRpgWorld,ARC=window.NeoRpgRivalArc,TOURNAMENTS=window.NeoRpgTournaments,COMPETE=window.NeoRpgCompetitiveLoop,BRIDGE=window.NeoRpgDuelBridge;
 const PACK=window.NeoRpgNarrativePack,SIDE=window.NeoRpgSideQuests,EPILOGUE=window.NeoRpgEpilogue,APPOINTMENTS=window.NeoRpgAppointments,INTENTIONS=window.NeoRpgIntentions,CG=window.NeoRpgCGGallery,PLANNER=window.NeoRpgDailyPlanner,SOCIAL=window.NeoRpgSocialActivities,DATES=window.NeoRpgPlannedDates,PRE=window.NeoRpgPreDuel,SITUATIONS=window.NeoRpgSituations,SLICE=window.NeoRpgSliceOfLife,JOURNEY=window.NeoRpgSeasonJourney,COLLECT=window.NeoRpgCollection,RPGD=window.NeoRpgDialogue,BONDS=window.NeoRpgBondRewards,PARTNER=window.NeoRpgPartnerDecks,VN=window.NeoRpgConversations;
 const TUTORIAL=window.NeoRpgTutorials||null;
-const INVITES=window.NeoRpgEventInvites||null,SCENE_CAST=window.NeoRpgSceneCast,MANDATORY=window.NeoRpgMandatoryEvents||null,REACT=window.NeoRpgReactivity,COMMUNITY=window.NeoRpgCommunity,CONSEQ=window.NeoRpgConsequences,NPC_DECKS=window.NeoRpgNpcDeckProgression,TIME=window.NeoRpgTimeCoordinator,REL=window.NeoRpgRelationships;
+const INVITES=window.NeoRpgEventInvites||null,SCENE_CAST=window.NeoRpgSceneCast,MANDATORY=window.NeoRpgMandatoryEvents||null,REACT=window.NeoRpgReactivity,COMMUNITY=window.NeoRpgCommunity,CONSEQ=window.NeoRpgConsequences,NPC_DECKS=window.NeoRpgNpcDeckProgression,TIME=window.NeoRpgTimeCoordinator,REL=window.NeoRpgRelationships,MEM=window.NeoRpgDialogueMemory||null;
 const MANDATORY_EVENTS=[...(window.NeoRpgSeasonEvents?.events||[]),...(window.NeoRpgCharacterPacks?.mandatoryEvents||[])];
 const periods=['Morning','Afternoon','Evening'];
 const OUTFITS=window.NeoRpgOutfits;
@@ -170,6 +170,7 @@ if(!state.pendingDuel?.id||!cast[state.pendingDuel?.npc])state.pendingDuel=null;
 if(state.pendingDuel)PRE.hydrate(state.pendingDuel);
 for(const id of Object.keys(cast)){if(!state.bonds[id])state.bonds[id]={affection:0,trust:0,duels:0};}
 STORY.normalize(state);
+ MEM?.hydrate(state);
 // The player's childhood friend begins with pre-existing trust, never automatic romance.
 if(cast.laca&&!state.flags.lacaChildhoodFriendInitialized){
  const r=state.relationships.laca,b=state.bonds.laca;
@@ -332,14 +333,15 @@ INTENTIONS.hydrate(state); // Expire yesterday's optional choice before saving t
 for(const plan of missedAppointments)log('You missed your planned meet-up with '+(cast[plan.npc]?.name||'a trainer')+'.');
 queueMandatory();arriveForScheduledPlan();persist();if(!suppressTimeFlash)timeFlash(beforeDay,beforeSlot,transitionSource);}
 function say(speaker,line,choices=[]){scene={speaker,line,choices};state.scene=scene;persist();render();}
-function sayConversation(lines,afterChoices=[],reactionId=null,invitation=null){
+function sayConversation(lines,afterChoices=[],reactionId=null,invitation=null,memory=null){
  if(!Array.isArray(lines)||!lines.length)return;
  const script=lines.filter(x=>x&&typeof x.text==='string'&&typeof x.speaker==='string');
  if(!script.length)return;
  const first=script[0];
  scene={speaker:first.speaker==='Protagonist'?'You':cast[first.speaker]?.name||first.speaker,
   line:first.text,choices:script.length>1?[['Continue ›','chatNext']]:afterChoices,
-  dialogue:script,index:0,afterChoices,reactionId,invitation};
+  dialogue:script,index:0,afterChoices,reactionId,invitation,
+   memoryId:memory?.kind==='followup'?memory.id:null,memoryOfferId:memory?.kind==='intro'?memory.id:null};
  state.scene=scene;persist();render();
 }
 function advanceConversation(){
@@ -351,6 +353,7 @@ function advanceConversation(){
  scene.choices=scene.index===scene.dialogue.length-1?scene.afterChoices:[['Continue ›','chatNext']];
  // Do not consume an acknowledgement until the player actually reads its final line.
  if(scene.index===scene.dialogue.length-1&&scene.reactionId)REACT.mark(state,scene.reactionId);
+  if(scene.index===scene.dialogue.length-1&&scene.memoryId)MEM?.mark(state,scene.memoryId);
  state.scene=scene;persist();render();
 }
 function closeSceneDialogue(){
@@ -409,7 +412,9 @@ function selectPerson(id,{skipInvitation=false}={}){
   sayConversation(prompt.lines,prompt.choices,null,invite);
  }else{
   const context=first?null:REACT.reaction(state,id,c,cast,COMMUNITY,CONSEQ);
-  sayConversation(context?.lines||VN.dialogue(state,id,c,RPGD,{first,present:currentPeople()}),fresh?VN.choices(state,id):[],context?.id||null);
+  const invitations=fresh?VN.choices(state,id):[];
+  const memory=!first&&!context&&!invitations.length?MEM?.offer(state,id):null;
+  sayConversation(context?.lines||memory?.lines||VN.dialogue(state,id,c,RPGD,{first,present:currentPeople()}),memory?.choices||invitations,context?.id||null,null,memory);
  }
  tutorialEvent('conversation');showCGMoment(memories[0]);
 }
@@ -599,6 +604,14 @@ function act(action){
  // Suppress unrelated actions while a surprise is underway.
  if(state.activeSliceOfLife){if(type==='sliceNext')return nextSliceOfLife();return;}
  if(type==='chatNext')return advanceConversation();
+  if(type==='memoryChoice'){
+   const topic=MEM?.threads[id]?.topic;
+   if(!topic||id!==state.selected||scene.memoryOfferId!=='memory:'+id+':'+topic+':intro'||
+      !Array.isArray(scene.dialogue)||scene.index!==scene.dialogue.length-1||!currentPeople().includes(id))return;
+   const reply=MEM.choose(state,id,part);
+   if(reply)return sayConversation(reply);
+   return;
+  }
  if(type==='eventInvite'){
   const invited=scene.invitation;
   if(!invited||invited.kind!==id||invited.id!==part||!currentPeople().includes(invited.npc))return;
@@ -812,7 +825,8 @@ function act(action){
   if(beginSliceOfLife('talk',id))return;
   persist();
   const context=REACT.reaction(state,id,c,cast,COMMUNITY,CONSEQ);
-  return sayConversation(context?.lines||VN.dialogue(state,id,c,RPGD,{present:currentPeople()}),[],context?.id||null);
+  const memory=!context?MEM?.offer(state,id):null;
+  return sayConversation(context?.lines||memory?.lines||VN.dialogue(state,id,c,RPGD,{present:currentPeople()}),memory?.choices||[],context?.id||null,null,memory);
  }
  if(type==='flirt'){
   state.talked['flirt:'+key]=true;

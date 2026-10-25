@@ -10,6 +10,7 @@
  "/rpg_everyday_chats.js",
  "/rpg_character_chats.js",
  "/rpg_group_chats.js",
+ "/rpg_dialogue_memory.js",
  "/rpg_conversations.js",
  "/rpg_legacy_scenes.js",
  "/rpg_relationships.js",

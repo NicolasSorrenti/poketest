@@ -7,6 +7,7 @@ const Mandatory=require('../rpg_mandatory_events'),Season=require('../rpg_season
 const NpcDecks=require('../rpg_npc_deck_progression');
 const Time=require('../rpg_time_coordinator');
 const Relationships=require('../rpg_relationships');
+const DialogueMemory=require('../rpg_dialogue_memory');
 const Tutorials=require('../rpg_tutorials');
 const SceneCast=require('../rpg_scene_cast');
 const EventInvites=require('../rpg_event_invites');
@@ -81,7 +82,7 @@ function launch(initial,approve=false,mandatory=false){
   createTextNode(text){const node=new FakeNode('#text');node.nodeType=3;node.nodeValue=String(text);node.textContent=String(text);return node;},
   body:new FakeNode('body'),
   addEventListener(name,cb){listeners['document:'+name]=cb;}};
- const win={NeoRpgRenderPerf:RenderPerf,NeoRpgNarrativePack:Pack,NeoRpgSideQuests:Side,NeoHarborStory:Story,NeoRpgSchedules:Schedules,NeoRpgWorld:World,NeoRpgRivalArc:Arc,NeoRpgTournaments:Tournaments,NeoRpgCompetitiveLoop:Competitive,NeoRpgReactivity:Reactivity,NeoRpgCommunity:Community,NeoRpgConsequences:Consequences,NeoRpgTournamentPresentation:TournamentPresentation,NeoRpgEpilogue:Epilogue,NeoRpgAppointments:Appointments,NeoRpgIntentions:Intentions,NeoRpgCGGallery:CG,NeoRpgDailyPlanner:Planner,NeoRpgSocialActivities:Social,NeoRpgPlannedDates:Dates,NeoRpgPreDuel:Pre,NeoRpgCollection:Collection,NeoRpgSeasonJourney:Journey,NeoRpgSituations:Situations,NeoRpgDuelBridge:Bridge,NeoRpgDialogue:Dialogue,NeoRpgBondRewards:BondRewards,NeoRpgConversations:Conversations,NeoRpgTutorials:Tutorials,NeoRpgSceneCast:SceneCast,NeoRpgEventInvites:EventInvites,NeoRpgPartnerDecks:PartnerDecks,NeoRpgNpcDeckProgression:NpcDecks,NeoRpgTimeCoordinator:Time,NeoRpgRelationships:Relationships,
+ const win={NeoRpgRenderPerf:RenderPerf,NeoRpgNarrativePack:Pack,NeoRpgSideQuests:Side,NeoHarborStory:Story,NeoRpgSchedules:Schedules,NeoRpgWorld:World,NeoRpgRivalArc:Arc,NeoRpgTournaments:Tournaments,NeoRpgCompetitiveLoop:Competitive,NeoRpgReactivity:Reactivity,NeoRpgCommunity:Community,NeoRpgConsequences:Consequences,NeoRpgTournamentPresentation:TournamentPresentation,NeoRpgEpilogue:Epilogue,NeoRpgAppointments:Appointments,NeoRpgIntentions:Intentions,NeoRpgCGGallery:CG,NeoRpgDailyPlanner:Planner,NeoRpgSocialActivities:Social,NeoRpgPlannedDates:Dates,NeoRpgPreDuel:Pre,NeoRpgCollection:Collection,NeoRpgSeasonJourney:Journey,NeoRpgSituations:Situations,NeoRpgDuelBridge:Bridge,NeoRpgDialogue:Dialogue,NeoRpgBondRewards:BondRewards,NeoRpgConversations:Conversations,NeoRpgDialogueMemory:DialogueMemory,NeoRpgTutorials:Tutorials,NeoRpgSceneCast:SceneCast,NeoRpgEventInvites:EventInvites,NeoRpgPartnerDecks:PartnerDecks,NeoRpgNpcDeckProgression:NpcDecks,NeoRpgTimeCoordinator:Time,NeoRpgRelationships:Relationships,
   addEventListener(name,cb){listeners[name]=cb;}};
  if(mandatory){win.NeoRpgMandatoryEvents=Mandatory;win.NeoRpgSeasonEvents=Season;win.NeoRpgCharacterPacks=Registry;}
  win.NeoRpgStatus={
@@ -1630,4 +1631,45 @@ test('an authored chapter cannot start over a booked meeting without consent',()
  accepted.elements.storyEvents.children.find(x=>x.dataset.plannerKey==='hana_route_1').onclick();
  assert.equal(accepted.state().activeStory?.id,'hana_route_1');
  assert.equal(accepted.state().slot,0,'starting dialogue does not prematurely spend the period');
+});
+
+test('casual Talk records a chosen memory, survives interruption, and acknowledges its later callback once',()=>{
+ const opportunity=Array.from({length:83},(_,i)=>i+4).flatMap(day=>
+  [0,1,2].map(slot=>({day,slot,place:Schedules.locationFor('hana',day,slot)})))
+  .find(x=>x.place&&x.place!=='home'&&DialogueMemory.offer({day:x.day},'hana')?.kind==='intro'&&
+   Conversations.choices({day:x.day,slot:x.slot,hungOut:{},appointments:[]},'hana').length===0);
+ assert.ok(opportunity,'a continuity invitation should be reachable during ordinary play');
+ const r=launch({...opportunity,location:opportunity.place,met_hana:true},false);
+ r.select('hana',{skipInvitation:true});
+ const intro=r.state().scene;
+ assert.equal(intro.memoryOfferId,'memory:hana:basilisk:intro');
+ const before={day:r.state().day,slot:r.state().slot,credits:r.state().credits,
+  affection:r.state().relationships.hana.affection};
+ r.act('memoryChoice:hana:a'); // clicking before hearing the prompt must not save a reply
+ assert.equal(r.state().dialogueMemory.entries['hana:basilisk'],undefined);
+ finishGreeting(r);
+ assert.equal(r.state().scene.afterChoices.length,2);
+ r.act('memoryChoice:hana:a');
+ assert.equal(r.state().dialogueMemory.entries['hana:basilisk'].choice,'a');
+ assert.equal(r.state().dialogueMemory.entries['hana:basilisk'].day,opportunity.day);
+ assert.equal(r.state().credits,before.credits);
+ assert.equal(r.state().relationships.hana.affection,before.affection);
+ assert.equal(r.state().day,before.day);assert.equal(r.state().slot,before.slot);
+ const next=Array.from({length:Math.max(0,90-before.day-1)},(_,i)=>i+before.day+2).flatMap(day=>
+  [0,1,2].map(slot=>({day,slot,place:Schedules.locationFor('hana',day,slot)})))
+  .find(x=>x.place&&x.place!=='home'&&Conversations.choices({day:x.day,slot:x.slot,hungOut:{},appointments:[]},'hana').length===0);
+ assert.ok(next,'an in-season return visit must exist');
+ const resumed=launch({...r.state(),...next,location:next.place,scene:{speaker:'Narrator',line:'',choices:[]}},false);
+ resumed.select('hana',{skipInvitation:true});
+ const callback=resumed.state().scene;
+ assert.equal(callback.memoryId,'memory:hana:basilisk:followup');
+ assert.match(callback.line,/Basilisk/i);
+ assert.equal(resumed.state().dialogueMemory.entries['hana:basilisk'].seen,false);
+ const interrupted=launch(resumed.state(),false);
+ assert.equal(interrupted.state().scene.memoryId,callback.memoryId,'mid-dialogue save resumes the callback');
+ assert.equal(interrupted.state().dialogueMemory.entries['hana:basilisk'].seen,false);
+ finishGreeting(interrupted);
+ assert.equal(interrupted.state().dialogueMemory.entries['hana:basilisk'].seen,true);
+ const loaded=launch(interrupted.state(),false);
+ assert.equal(DialogueMemory.offer(loaded.state(),'hana'),null,'a heard callback is not repeated');
 });
