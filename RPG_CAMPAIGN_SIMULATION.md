@@ -30,6 +30,20 @@ An action that consumes a period must ask before it can miss a known booking. St
 
 Mandatory scenes remain in their queue when an appointment is due now, rather than auto-traveling the player away from the reserved venue. They may play after the appointment or once its slot has passed.
 
+## Relationship state consistency
+
+`rpg_relationships.js` now owns stat changes for story choices, social activities, appointments, planned dates, encounters, situations, side quests and duel receipts. `relationships` is canonical; the existing `bonds` view remains mirrored for older UI and saves. On first load, legacy progress is reconciled once, **before missed appointments expire**; subsequent reloads do not use a maximum merge that could undo a negative trust consequence.
+
+Tests cover migration, applying awards, surviving JSON reloads, missed appointment penalties, and settling a duel only once.
+
+## Optional encounter fairness
+
+`rpg_encounter_director.js` selects among otherwise-valid slice-of-life opportunities without changing story, schedule, or CG prerequisites. It remembers a small recent history to reduce repeated selection of the same NPC, prioritizes close-to-expiry moments, and uses stable deterministic ties. Selection itself remains read-only until an encounter actually starts. Important mandatory scenes, booked meetings, and invitations still have their existing priority.
+
+## Related regression maintenance
+
+Existing CI tests were updated to use the correct bootstrap asset URLs, a unique Deck Studio back-navigation selector, the new browser test dependencies, and the asynchronous cloud checkpoint protocol. The generated account-scoped character roster was also rebuilt from the current character pack definitions rather than editing generated character data by hand.
+
 ## Further work
 
-The current patch deliberately avoids migrating historical saves or rewriting the existing `bonds` and `relationships` models. A future data-model pass can make relationship updates transactional and canonical, with explicit migrations and separate regression tests.
+The current patch migrates the relationship compatibility views, but does not alter authored relationship thresholds or romance-route design. End-to-end browser/cloud replay tests and fully simulated Classic duels remain separate follow-up tasks.
