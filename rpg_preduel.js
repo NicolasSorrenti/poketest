@@ -28,6 +28,14 @@
   "elena": "I've cleared the afternoon. Shall we begin?",
   "sierra": "The shoot ended early. I brought a deck, not a camera."
 });
+ // Keep the pre-duel fallback identical to the character art used by booster rewards.
+ // The caller checks which files actually exist and keeps the portrait if none load.
+ function boosterArtCandidates(npc){
+  if(typeof npc!=='string'||!/^[a-z0-9_-]+$/.test(npc))return [];
+  const base='/rpg-assets/characters/'+npc+'/';
+  return [base+'events/booster.webp',base+'events/booster.png',
+   '/rpg-assets/reactions/'+npc+'/attack.png'];
+ }
  const isReady=d=>!!d&&d.preview?.phase==='ready';
  const isLaunched=d=>!!d&&(!d.preview||d.preview.phase==='launched');
  function hydrate(d){
@@ -87,5 +95,5 @@
    lines:[{speaker:'Narrator',text:intro},{speaker:character.name,text:response}],
    deckLabel:character.style||'A personal deck',day:d.day,slot:d.slot};
  }
- return Object.freeze({isReady,isLaunched,hydrate,stage,advance,launch,describe,compatibleCG});
+ return Object.freeze({isReady,isLaunched,hydrate,stage,advance,launch,describe,compatibleCG,boosterArtCandidates});
 });
