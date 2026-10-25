@@ -232,3 +232,28 @@ test('Apex returned game remains valid across varied legal matches',()=>{
    'engine cards are conserved at seed '+seed);
  }
 });
+
+test('Apex distributes the search budget across root alternatives',()=>{
+ const g=midgame(),side=g.turn;
+ g.round=5;g.turnSerial=8;g.players[side].energyUsed=false;
+ Object.assign(g.players[side].active,{id:C.machop,damage:0,
+  playedTurn:2,energies:[C.fight,C.fight],status:null});
+ g.players[side].hand=['base1-34',C.fight,C.rat]; // Evolve, Energy, Bench
+ const first=AI.chooseAction(g,{side,level:8,seed:813,diagnostics:true});
+ assert.ok(first?.game);
+ const d=first.searchDiagnostics;
+ assert.ok(d?.rootsAvailable>=3,'multiple distinct preparations should be available');
+ assert.equal(d.rootsVisited,d.rootDiagnostics.length);
+ assert.equal(d.rootsVisited,d.rootsAvailable,
+  'all prospective roots receive a budget instead of only the highest ranked');
+ assert.ok(d.rootDiagnostics.every(x=>x.nodes<=(AI.SKILLS[8].searchNodes/2)),
+  'no single root monopolizes the 400-node search budget');
+ assert.ok(first.searchNodes<=400);
+ assert.ok(d.rootDiagnostics.some(x=>x.type==='attach_energy'));
+ assert.ok(d.rootDiagnostics.some(x=>x.type==='bench'));
+ const without=AI.chooseAction(g,{side,level:8,seed:813});
+ assert.equal(without.searchDiagnostics,undefined,
+  'diagnostics are opt-in and not sent with normal decisions');
+ assert.deepEqual(without.command,first.command,
+  'enabling explanation must not change the move');
+});
