@@ -811,8 +811,9 @@
   return (PACKS?.packs||[]).flatMap(pack=>{
    const place=pack.schedule[(state.day-1)%7]?.[state.slot];
    if(state.day<pack.arrivalDay||!state['met_'+pack.id])return [];
-   const possible=scenes.some(e=>e.encounterType==='slice'&&e.npc===pack.id&&e.place===place&&e.slot===state.slot&&
+    const possible=scenes.some(e=>e.encounterType==='slice'&&e.npc===pack.id&&e.place===place&&e.slot===state.slot&&
     state.day>=e.start&&state.day<=e.end&&!state.sliceOfLifeDone?.[e.id]&&
+    (!e.prerequisite||state.sliceOfLifeDone?.[e.prerequisite]||state.storyDone?.[e.prerequisite])&&
     (state.relationships?.[e.npc]?.affection||0)>=e.minAffection);
    return possible?[{npc:pack.id,place,slot:state.slot,start:state.day,end:state.day}]:[];
   });
@@ -847,6 +848,7 @@
    state.day>90||state.sliceOfLifeLastDay===state.day)return [];
   return scenes.filter(e=>(e.trigger===trigger||(e.encounterType==='slice'&&trigger==='talk'))&&(!npc||e.npc===npc)&&state.location===e.place&&state.slot===e.slot&&
    state.day>=e.start&&state.day<=e.end&&people.includes(e.npc)&&state['met_'+e.npc]&&
+   (!e.prerequisite||state.sliceOfLifeDone?.[e.prerequisite]||state.storyDone?.[e.prerequisite])&&
    !state.sliceOfLifeDone?.[e.id]&&(state.relationships?.[e.npc]?.affection||0)>=e.minAffection);
  }
  function start(state,people,trigger,npc=null){
