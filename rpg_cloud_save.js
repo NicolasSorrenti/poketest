@@ -3,6 +3,7 @@
 // Supabase publishable keys are public; row-level security protects each user's records.
 (function(root){
  const SESSION_KEY='neoRpgCloudSessionV1', META_PREFIX='neoRpgCloudSyncedV1:';
+ const OWNER_KEY='neoRpgLocalOwnerV1', ACCOUNT_CACHE_PREFIX='neoRpgAccountCacheV1:';
  let config=null,session=null,adapter=null,button=null,dialog=null,notice=null;
  let meta=null,blocked=false,busy=false,inflight=null,queued=false,timer=null,lastCheck=0;
  const $=id=>dialog?.querySelector('#'+id);
@@ -15,12 +16,38 @@
  function eligible(){return !!local();}
  function fingerprint(){const s=local();return s?hash(s):null;}
  function readMeta(){try{return JSON.parse(localStorage.getItem(META_PREFIX+session.user.id)||'null');}catch{return null;}}
- function mark(revision,snapshot){meta={revision,hash:hash(snapshot)};localStorage.setItem(META_PREFIX+session.user.id,JSON.stringify(meta));}
+ function mark(revision,snapshot){
+  meta={revision,hash:hash(snapshot)};
+  localStorage.setItem(META_PREFIX+session.user.id,JSON.stringify(meta));
+  localStorage.setItem(OWNER_KEY,session.user.id);
+  localStorage.setItem(ACCOUNT_CACHE_PREFIX+session.user.id,JSON.stringify(snapshot));
+ }
+ function stashLocal(userId){
+  if(!userId||localStorage.getItem(OWNER_KEY)!==userId)return;
+  const snapshot=local();
+  if(snapshot&&validSave(snapshot))localStorage.setItem(ACCOUNT_CACHE_PREFIX+userId,JSON.stringify(snapshot));
+ }
+ function restoreAccountLocal(){
+  const userId=session?.user?.id,owner=localStorage.getItem(OWNER_KEY);
+  if(!userId||!owner||owner===userId)return false;
+  // Never upload another account's local campaign, even if this account has no cloud row.
+  const raw=localStorage.getItem(ACCOUNT_CACHE_PREFIX+userId);
+  let ownSave=null;
+  try{ownSave=raw?JSON.parse(raw):null;}catch{}
+  stashLocal(owner);
+  localStorage.setItem(OWNER_KEY,userId);
+  meta=readMeta();
+  if(validSave(ownSave))adapter.restoreSave(ownSave);
+  else adapter.resetSave?.();
+  stateLabel('Switching to this account\'s own campaign…');
+  return true;
+ }
  function label(message){if(notice)notice.textContent=message;if(button)button.title=message;}
  function stateLabel(message){label(message);if(button)button.textContent=session?'☁ CLOUD':'☁ SIGN IN';const saveButton=document.getElementById?.('save');if(saveButton){saveButton.textContent=session?'☁ SYNC':'▣ SAVE';saveButton.title=session?'Sync campaign to the cloud':'Save your campaign';}}
  function errorText(error){return error?.message||'Cloud saves are unavailable. Your browser save is safe.';}
  function sessionSave(data){
   const previousUserId=session?.user?.id||'';
+  stashLocal(previousUserId);
   session=data?{access_token:data.access_token,refresh_token:data.refresh_token,user:data.user,expires_at:Date.now()+Math.max(0,Number(data.expires_in||3600)-60)*1000}:null;
   if(session)localStorage.setItem(SESSION_KEY,JSON.stringify(session));else localStorage.removeItem(SESSION_KEY);
   meta=session?readMeta():null;
@@ -104,6 +131,7 @@
   if(!session||busy)return;
   busy=true;
   try{
+   if(restoreAccountLocal())return;
    const remote=await remoteRead(),saved=local(),localHash=saved?hash(saved):null;
    if(!remote){
     blocked=false;renderAccount();
@@ -141,7 +169,10 @@
   if(meta?.revision===undefined){await reconcile();return !blocked&&meta?.hash===fingerprint();}
   return upload(meta.revision);
  }
- function onLocalSave(){if(session&&!blocked)schedule();}
+ function onLocalSave(){
+  if(session&&localStorage.getItem(OWNER_KEY)===session.user.id)stashLocal(session.user.id);
+  if(session&&!blocked)schedule();
+ }
  // Supabase email confirmation returns credentials in the URL fragment.
  // Remove the fragment immediately so credentials never remain in the address bar.
  function takeEmailConfirmation(){
