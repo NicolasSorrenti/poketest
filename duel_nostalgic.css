@@ -495,7 +495,7 @@ body.duel-active .prize-choice-panel{z-index:190}
   display:block!important;position:relative!important;
   width:100%!important;height:100%!important;
   min-width:0!important;min-height:0!important;max-width:none!important;
-  padding:34px 8px 7px!important;overflow:hidden!important;
+  padding:34px 8px 32px!important;overflow:hidden!important;
   pointer-events:auto!important;isolation:isolate;
   border:1px solid #3f4b59!important;border-radius:11px!important;
   background:#222a35!important;box-shadow:inset 0 1px #ffffff0b!important;

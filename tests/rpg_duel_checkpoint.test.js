@@ -9,9 +9,15 @@ const player='10000000-0000-4000-8000-000000000001';
 const other='20000000-0000-4000-8000-000000000002';
 const base=()=> 'http://127.0.0.1:'+server.address().port;
 const deep=x=>JSON.parse(JSON.stringify(x));
+async function waitUntil(predicate,timeoutMs=1500){
+ const deadline=Date.now()+timeoutMs;
+ while(!predicate()&&Date.now()<deadline)await new Promise(resolve=>setTimeout(resolve,10));
+ assert.ok(predicate(),'Cloud checkpoint should eventually persist the accepted action');
+}
 
 function fakeSupabase(){
  const rows=new Map();
+ let failOnce=false;
  const owner=token=>token==='test-owner-access'?player:token==='test-other-access'?other:null;
  const fake=async (url,init={})=>{
   const auth=String(init.headers?.Authorization||'').replace(/^Bearer /,'');
@@ -24,6 +30,7 @@ function fakeSupabase(){
    const row=rows.get(user+':'+duelId);
    data=row?[{duel_id:duelId,revision:row.revision,snapshot:deep(row.snapshot)}]:[];
   }else if(route==='/rest/v1/rpc/rpg_duel_checkpoint_cas'){
+   if(failOnce){failOnce=false;return {ok:false,status:503,json:async()=>({message:'Temporary checkpoint outage'})};}
    const body=JSON.parse(init.body),key=user+':'+body.p_duel_id,old=rows.get(key);
    if((!old&&body.p_expected_revision===-1)||old?.revision===body.p_expected_revision){
     rows.set(key,{revision:body.p_revision,snapshot:deep(body.p_snapshot)});
@@ -32,7 +39,7 @@ function fakeSupabase(){
   }else throw Error('Unexpected fake Supabase path '+route);
   return {ok:status===200,status,json:async()=>data};
  };
- return {fake,rows};
+ return {fake,rows,failNextSave:()=>{failOnce=true;}};
 }
 async function api(path,{auth='test-owner-access',duelToken,body,method='POST'}={}){
  const response=await fetch(base()+'/api/classic/'+path,{
@@ -59,6 +66,7 @@ test('RPG checkpoint stores every accepted move, restores after server restart a
   const state=classic.session(token);
   const basicIndex=state.game.players[0].hand.findIndex(cardId=>isBasicPokemon(CATALOG.get(cardId)));
   assert.ok(basicIndex>=0,'starting hand has Basic Pokémon');
+  fake.failNextSave(); // Recover from a transient cloud write failure without blocking gameplay.
   const move=await api('action',{duelToken:token,body:{
    revision:0,command:{type:'setup_select',payload:{handIndex:basicIndex}}
   }});
