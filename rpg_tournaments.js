@@ -15,6 +15,18 @@
   if(p.round>=x.cup.rounds.length)throw Error('Tournament completed');
   return {tournamentId:id,tournamentRound:p.round,tournamentAttempt:p.attempts,npc:x.cup.rounds[p.round],title:x.cup.title+' · Round '+(p.round+1)};
  }
+ // Withdrawing from a staged preview must not spend a tournament attempt.
+ // A real/launched battle is never refundable by this path.
+ function cancel(s,duel){
+  if(!duel||duel.preview?.phase!=='ready'||!duel.tournamentId)return false;
+  const p=s.tournaments?.[duel.tournamentId];
+  if(!p||p.state!=='open'||p.round!==duel.tournamentRound||
+    p.attempts!==duel.tournamentAttempt||!Array.isArray(p.results)||
+    p.results.some(result=>result.attempt===duel.tournamentAttempt))return false;
+  p.attempts--;
+  if(p.attempts===0&&p.round===0&&!p.results.length)delete s.tournaments[duel.tournamentId];
+  return true;
+ }
  function settle(s,duel,receipt){
   if(!duel.tournamentId)return null;
   const x=status(s,duel.tournamentId);if(!x||x.state!=='open'||x.round!==duel.tournamentRound||x.opponent!==duel.npc)return null;
@@ -33,5 +45,5 @@
  }
  function expire(s){hydrate(s);const missed=[];for(const c of cups){if(s.day>c.end){const p=s.tournaments[c.id];if(!p){s.tournaments[c.id]={round:0,results:[],state:'missed'};missed.push(c.id);}else if(p.state==='open'){p.state='expired';missed.push(c.id);}}}return missed;}
  function validate(){const errors=[];for(const c of cups){if(c.rounds.length!==3||c.points.length!==3||c.credits.length!==3||c.day>c.end)errors.push(c.id);}return errors;}
- return Object.freeze({cups,status,available,begin,settle,expire,hydrate,validate});
+ return Object.freeze({cups,status,available,begin,cancel,settle,expire,hydrate,validate});
 });
