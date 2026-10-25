@@ -8,6 +8,7 @@
  if(typeof module==='object'&&module.exports)module.exports=api;
  if(root)root.NeoRpgSideQuests=api;
 })(typeof window!=='undefined'?window:null,function(){
+ const REL=typeof module==='object'&&module.exports?require('./rpg_relationships'):window.NeoRpgRelationships;
  const cast={
   elio:{name:'Elio Soto',age:19,deck:'bodyguard',style:'Fossil Bodyguard · Careful basics',
    intro:'Sorry. I was sorting my cards by the tiny numbers at the bottom. Is that weird?',
@@ -209,10 +210,8 @@
    ||s.activeSideQuest.choice!==index)throw Error('Side quest choice is no longer available');
   const choice=x.stage.choices[index];if(!choice||!Number.isInteger(index))throw Error('Invalid side quest decision');
   applyDelta(s,choice.delta);
-  const rel=s.relationships?.[x.stage.npc],bond=s.bonds?.[x.stage.npc];
-  for(const key of ['trust','affection','respect']){
-   if(Number.isFinite(choice.delta[key])){if(rel)rel[key]=(rel[key]||0)+choice.delta[key];if(bond&&(key==='trust'||key==='affection'))bond[key]=(bond[key]||0)+choice.delta[key];}
-  }
+  const change={};for(const key of ['trust','affection','respect'])if(Number.isFinite(choice.delta[key]))change[key]=choice.delta[key];
+  REL.apply(s,x.stage.npc,change);
   const status=advance(s,x,{choice:index,flag:choice.flag});
   return {title:x.quest.title,reply:choice.reply,...status};
  }
