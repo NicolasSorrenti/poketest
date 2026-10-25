@@ -108,7 +108,7 @@ function rankWithStrategicSearch(game,cfg,used,ranked,helpers){
  if(!roots.length)return {ranked,nodes:0,elapsedMs:performance.now()-start};
  const originalUtility=evaluateTurn(origin,cfg,helpers)-counterplayExposure(origin,helpers);
  let nodes=0;
- const boosts=new Map();
+ const boosts=new Map(),rootDiagnostics=[];
  const remaining=()=>nodes<budget&&performance.now()<deadline;
  function apply(parent,action){
   if(!remaining())return null;
@@ -134,16 +134,28 @@ function rankWithStrategicSearch(game,cfg,used,ranked,helpers){
   return (strategic-originalUtility)/(1+.14*Math.max(0,steps-1))-
    Math.max(0,steps-1)*3;
  }
- for(const root of roots){
+ // Do not let the highest heuristic root monopolize the node budget.
+ // Share the remaining capacity across still-unvisited root candidates; any
+ // unused nodes from cheap roots roll forward to later roots.
+ for(let rootIndex=0;rootIndex<roots.length;rootIndex++){
+  const root=roots[rootIndex];
   if(!remaining())break;
-  const first=apply(game,root.action);if(!first)continue;
+  const rootStart=nodes;
+  const rootAllowance=Math.max(1,Math.floor((budget-nodes)/(roots.length-rootIndex)));
+  const rootRemaining=()=>remaining()&&nodes-rootStart<rootAllowance;
+  const first=apply(game,root.action);
+  if(!first){
+   rootDiagnostics.push({type:root.action.type,nodes:nodes-rootStart,
+    gain:null,viable:false});
+   continue;
+  }
   let best=value(first,1),beam=[{state:first,steps:1,
    trainers:Number(root.action.type==='play_trainer'),value:best}];
   const seen=new Set();
-  for(let layer=1;layer<depth&&remaining()&&beam.length;layer++){
+  for(let layer=1;layer<depth&&rootRemaining()&&beam.length;layer++){
    const nextBeam=[];
    for(const item of beam){
-    if(!remaining())break;
+    if(!rootRemaining())break;
     const o=observation(item.state,cfg.side);
     const opts=candidates(o,cfg,{...used,trainers:used.trainers+item.trainers})
      .filter(a=>PREP.has(a.type)&&
@@ -151,7 +163,7 @@ function rankWithStrategicSearch(game,cfg,used,ranked,helpers){
      .map((a,i)=>({a,i,rank:score(a,o,cfg,used)}))
      .sort((a,b)=>b.rank-a.rank||a.i-b.i);
     for(const {a} of opts.slice(0,cfg.skill.searchWidth||5)){
-     if(!remaining())break;
+     if(!rootRemaining())break;
      const next=apply(item.state,a);if(!next)continue;
      // Deduplicate identical *observable* boards. The search never keys
      // against opponent hand contents or hidden deck ordering.
@@ -171,10 +183,15 @@ function rankWithStrategicSearch(game,cfg,used,ranked,helpers){
    nextBeam.sort((a,b)=>b.value-a.value);
    beam=nextBeam.slice(0,cfg.skill.searchWidth||5);
   }
+  rootDiagnostics.push({type:root.action.type,nodes:nodes-rootStart,
+   gain:Number(best.toFixed(2)),viable:true});
   if(best>0)boosts.set(root.tie,clamp(best,0,250));
  }
- if(!boosts.size)return {ranked,nodes,elapsedMs:performance.now()-start};
+ const metrics={nodes,rootsAvailable:roots.length,
+  rootsVisited:rootDiagnostics.length,rootDiagnostics,
+  elapsedMs:performance.now()-start};
+ if(!boosts.size)return {ranked,...metrics};
  return {ranked:ranked.map(item=>({...item,score:item.score+(boosts.get(item.tie)||0)}))
-  .sort((a,b)=>b.score-a.score||a.tie-b.tie),nodes,elapsedMs:performance.now()-start};
+  .sort((a,b)=>b.score-a.score||a.tie-b.tie),...metrics};
 }
 module.exports={oneEnergyThreat,counterplayExposure,rootsFor,rankWithStrategicSearch,TIME_BUDGET_MS};
