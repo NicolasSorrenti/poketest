@@ -17,7 +17,7 @@ function attackColors(c){
  return [...new Set((c.attacks||[]).filter(isPayable)
   .flatMap(a=>(a.cost||[]).filter(t=>COLORS.has(t))))];
 }
-function isDualAttacker(c){return attackColors(c).length>=2;}
+function isDualAttacker(c){return attackColors(c).length===2;}
 function isEnergySynergy(c){
  // Neo Genesis Lanturn's Water bonus comes from its Power; its printed
  // attack only requires Lightning. Do not infer other Powers from keywords.
