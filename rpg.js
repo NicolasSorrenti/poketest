@@ -2173,7 +2173,9 @@ function render(){
   const button=document.createElement('button');button.className='radar-person';button.disabled=locked;
   const label=document.createElement('strong');label.textContent=cast[id].name;
   const where=document.createElement('small');where.textContent='↗ '+places[place][0];
-  button.append(label,where);button.title='Travel for free to '+places[place][0];
+  const avatar=document.createElement('span');avatar.className='radar-person-avatar';
+  window.NeoRpgDiscreetAvatars?.set?.(avatar,id,'neutral',cast[id].name);
+  button.append(avatar,label,where);button.title='Travel for free to '+places[place][0];
   button.onclick=()=>travelTo(place);
   $('townRadar').append(button);
  }
