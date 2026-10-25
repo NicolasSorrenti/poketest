@@ -30,7 +30,7 @@ const {server}=require('../server');
   for(const url of Object.values(reactionsJSON.characters.barb)){
    const response=await fetch(origin+url,{method:'HEAD'});
    assert.equal(response.status,200,'Barb match artwork missing: '+url);
-   assert.match(response.headers.get('content-type')||'',/image\\//,'Barb reaction must be an image');
+   assert.match(response.headers.get('content-type')||'',/image\//,'Barb reaction must be an image');
   }
   // Prevent a UI with visible navigation buttons but missing JS click handlers.
   // Every RPG <script> must actually resolve on the same hosted server used by Render.

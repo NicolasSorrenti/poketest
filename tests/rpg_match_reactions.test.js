@@ -198,7 +198,7 @@ assert.equal(reactions.assetFor(installedManifest,'barb','attack'),
  '/rpg-assets/reactions/barb/attack.png','Barb keeps her original attack CG');
 assert.match(reactions.VOICES.barb.attack,/reserve/,'Barb has authored match voice');
 for(const [kind,expression] of Object.entries(barbPaths)){
- const live=path.join(__dirname,'..',barbPaths[kind].slice(1));
+ const live=path.join(__dirname,'..',(barb+expression+'.webp').slice(1));
  const source=path.join(__dirname,'../characters/barb/assets/vn-expressions',expression+'.webp');
  assert.ok(fs.existsSync(live),kind+' published for Barb');
  assert.deepEqual(fs.readFileSync(live),fs.readFileSync(source),
