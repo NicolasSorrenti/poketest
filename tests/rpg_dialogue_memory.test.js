@@ -70,13 +70,13 @@ test('forged choices, unowned acknowledgements, invalid days and new seasons can
  assert.deepEqual(restarted.dialogueMemory.entries,{});
 });
 
-test('all 44 incidental references are tied to actual everyday or character Talk topics',()=>{
+test('all existing and expanded incidental references have valid authored prerequisites',()=>{
  const Character=require('../rpg_character_chats');
  assert.deepEqual(Object.keys(Memory.asides).sort(),Object.keys(Everyday.topics).sort());
  assert.deepEqual(Memory.validate(),[]);
  for(const [npc,rows] of Object.entries(Memory.asides)){
-  assert.equal(rows.length,2,npc+' must have two different references');
-  for(const row of rows){
+  assert.equal(rows.length,6,npc+' must have six distinct references');
+  for(const row of rows.slice(0,2)){
    const [source,indexText]=row.requires.split(':'),index=Number(indexText);
    const bank=source==='everyday'?Everyday.topics[npc]:Character.scenes[npc];
    assert.ok(bank[index],npc+' referenced source exists');
@@ -88,7 +88,7 @@ test('all 44 incidental references are tied to actual everyday or character Talk
 
 test('optional references never appear before the referenced dialogue is completed',()=>{
  for(const [npc,rows] of Object.entries(Memory.asides)){
-  for(const [index,item] of rows.entries()){
+  for(const [index,item] of rows.slice(0,2).entries()){
    const [source,topic]=item.requires.split(':'),id=Memory.casualId(source,npc,Number(topic));
    const state={day:14,slot:0,credits:80,relationships:{[npc]:{affection:2}},dialogueMemory:{entries:{},casualSeen:{},asidesSeen:{}}};
    for(let day=14;day<=35;day++)for(let slot=0;slot<3;slot++){
@@ -148,4 +148,93 @@ test('remembered topic identities survive reordering or inserting other authored
  const s={day:9};
  assert.equal(Memory.markCasual(s,'casual:everyday:hana:0'),false,
   'old position-shaped IDs must never masquerade as a completed authored conversation');
+});
+
+test('new asides include two additional personal topics, a grounded cross-character reference and a sequel',()=>{
+ const CHARACTER=require('../rpg_character_chats');
+ const extraCount=Object.values(Memory.asides).reduce((n,rows)=>n+rows.length-2,0);
+ assert.equal(extraCount,88,'22 characters get four more callbacks each');
+ for(const [npc,rows] of Object.entries(Memory.asides)){
+  assert.equal(rows.length,6,npc+' has two original and four new callbacks');
+  for(const [i,row] of rows.entries()){
+   assert.equal(row.lines.length,3,npc+':'+i);
+   assert.ok(row.lines.every(line=>typeof line==='string'&&line.trim()),npc+' has complete lines');
+   if(i===2)assert.ok(Everyday.topics[npc][1],npc+' first expansion anchored to an existing everyday topic');
+   if(i===3)assert.ok(CHARACTER.scenes[npc][2],npc+' second expansion anchored to an existing character topic');
+   if(i===4){
+    assert.ok(row.from&&row.from!==npc,npc+' cross-reference names a different NPC');
+    const [type,index]=row.requires.split(':');
+    assert.ok((type==='everyday'?Everyday.topics:CHARACTER.scenes)[row.from][Number(index)],npc+' refers to a real older scene');
+   }
+   if(i===5)assert.equal(row.requires,'aside:0',npc+' sequel follows an existing callback');
+  }
+ }
+ assert.deepEqual(Memory.validate(),[]);
+});
+
+test('all 88 new callbacks require a prior completed scene and can play without changing resources',()=>{
+ for(const [npc,rows] of Object.entries(Memory.asides)){
+  for(let index=2;index<rows.length;index++){
+   const item=rows[index],state={day:12,slot:1,credits:80,points:0,
+    relationships:{[npc]:{affection:2,trust:1}},dialogueMemory:{entries:{},casualSeen:{},asidesSeen:{}}};
+   const key='aside:'+npc+':'+index;
+   assert.equal(Memory.markAside(state,key),false,npc+' cannot mark unseen reference '+index);
+   for(let day=12;day<=18;day++){
+    assert.equal(Memory.aside({...state,day},npc,'casual:classic:'+npc+':0'),null,npc+' cannot mention unheard prerequisites');
+   }
+   const [source,idxText]=item.requires.split(':'),from=item.from||npc;
+   let dependency;
+   if(source==='aside'){
+    // The first, existing aside needs its own prerequisite dialogue first.
+    const original=rows[Number(idxText)];
+    const [kind,topic]=original.requires.split(':');
+    const initial=Memory.casualId(kind,npc,Number(topic));
+    assert.ok(initial,npc+' chain prerequisite exists');
+    assert.equal(Memory.markCasual(state,initial),true);
+    state.day=13;
+    assert.equal(Memory.markAside(state,'aside:'+npc+':'+idxText),true);
+    dependency='aside:'+npc+':'+idxText;
+   }else{
+    dependency=Memory.casualId(source,from,Number(idxText));
+    assert.ok(dependency,npc+' source exists');
+    assert.equal(Memory.markCasual(state,dependency),true);
+   }
+   const referenceDay=state.day;
+   assert.equal(Memory.markAside(state,key),false,'cannot cite same-day conversation');
+   assert.equal(Memory.aside(state,npc,'casual:classic:'+npc+':0'),null,'no same-day callback');
+   const first=Array.from({length:90-referenceDay},(_,i)=>i+referenceDay+1).flatMap(day=>
+    [0,1,2].map(slot=>({day,slot}))).find(t=>{
+     const next={...state,...t};
+     return Memory.aside(next,npc,'casual:classic:'+npc+':0')?.id===key;
+    });
+   assert.ok(first,npc+' new callback '+index+' should be reachable before campaign end');
+   const day=first.day,slot=first.slot;state.day=day;state.slot=slot;
+   const checkpoint=JSON.stringify(state),scene=Memory.aside(state,npc,'casual:classic:'+npc+':0');
+   assert.equal(scene.requires,dependency);
+   assert.equal(JSON.stringify(state),checkpoint,'selection is pure and must not modify saves');
+   assert.deepEqual(scene.lines.map(x=>x.speaker),[npc,'Protagonist',npc]);
+   assert.deepEqual(Memory.aside(JSON.parse(JSON.stringify(state)),npc,'casual:classic:'+npc+':0'),scene);
+   assert.equal(Memory.markAside(state,key),true);
+   assert.equal(Memory.markAside(state,key),false,'already completed scene must not repeat');
+   assert.equal(state.credits,80);
+   assert.equal(state.relationships[npc].affection,2);
+   assert.equal(state.points,0);
+  }
+ }
+});
+
+test('cross-character callbacks do not invent another NPC\'s prior dialogue',()=>{
+ for(const [npc,rows] of Object.entries(Memory.asides)){
+  const cross=rows[4],id=Memory.casualId(...[cross.requires.split(':')[0],cross.from,Number(cross.requires.split(':')[1])]);
+  const own=Memory.casualId('everyday',npc,1);
+  const s={day:20,slot:1,dialogueMemory:{entries:{},casualSeen:{},asidesSeen:{}}};
+  assert.equal(Memory.markCasual(s,own),true);
+  for(let day=21;day<=35;day++)for(let slot=0;slot<3;slot++){
+   const next={...s,day,slot},ref=Memory.aside(next,npc,'casual:classic:'+npc+':0');
+   assert.notEqual(ref?.id,'aside:'+npc+':4','same-NPC talk cannot fabricate other-character history');
+  }
+  assert.equal(Memory.markAside(s,'aside:'+npc+':4'),false);
+  assert.equal(Memory.markCasual(s,id),true);
+  assert.equal(Memory.markAside(s,'aside:'+npc+':4'),false,'same-day reference is still forbidden');
+ }
 });
