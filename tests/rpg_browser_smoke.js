@@ -92,7 +92,7 @@ const acknowledgeMandatory=async(page)=>{
   await page.locator('#saveDeck').click();
   assert.equal((await readState(page)).deckJourney.deck.length,60);
   await save(page,'01-deck-studio.png');
-  await page.locator('.back').click();
+  await page.locator('a.back[href="/rpg.html"]').click();
   await page.waitForURL(/rpg\.html/);
   await page.locator('#places .place').first().waitFor({state:'attached'});
   assert.equal(await page.locator('#places .place').count(),7);
