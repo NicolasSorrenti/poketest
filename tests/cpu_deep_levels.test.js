@@ -194,3 +194,41 @@ test('Apex search preserves hidden-zone invariance and a strict node budget',()=
  assert.deepEqual(AI.chooseAction(invisible,raw)?.command,a.command,
   'the deep planner must not act on private card identities or future flips');
 });
+
+test('Apex counterplay prefers a guaranteed winning KO to leaving a ready reply',()=>{
+ const S=require('../cpu_strategic_search');
+ const attack={name:'Finishing Blow',damage:'80',cost:['Fighting']};
+ const self={active:{id:'our',hp:70,damage:20,energies:['fight']},bench:[],prizeCount:1};
+ const opponent={active:{id:'enemy',hp:60,damage:0,energies:['fight'],status:null},bench:[],prizeCount:2};
+ const o={phase:'game',turn:1,turnSerial:16,self,opponent};
+ const h={
+  card:id=>({attacks:[attack],hp:id==='enemy'?60:70}),
+  candidates:()=>[{type:'attack',payload:{attackIndex:0}}],
+  hpRemaining:u=>u.hp-u.damage,
+  projectedAttackValue:()=>65,
+  energyPool:u=>(u.energies||[]).map(()=> 'Fighting'),
+  canPayEnergy:(cost,pool)=>pool.length>=cost.length,
+  estimatedDamage:()=>80,
+  knockoutChance:()=>0
+ };
+ const unprotected=S.counterplayExposure(o,h);
+ h.knockoutChance=()=>1;
+ const finishing=S.counterplayExposure(o,h);
+ assert.ok(finishing<unprotected,
+  'securing the final Prize removes a hypothetical following counterattack');
+});
+test('Apex returned game remains valid across varied legal matches',()=>{
+ const {countCards}=require('../headless_duel');
+ for(const seed of [2301,2302,2303,2304,2305,2306]){
+  const g=createGame({decks:[deck,deck],seed,format:'classic'});
+  const started=AI.driveSide(g,{side:0,level:5,seed:seed+1}).game;
+  const setup=AI.driveSide(started,{side:1,level:5,seed:seed+2}).game;
+  const settled=setup.mulliganBonus?
+   AI.driveSide(setup,{side:setup.mulliganBonus.side,level:5,seed:seed+3}).game:setup;
+  const turn=settled.turn,move=AI.chooseAction(settled,{side:turn,level:8,seed:seed+4});
+  assert.ok(move?.game,'decision must be legal at seed '+seed);
+  assert.ok(move.searchNodes<=400,'search must obey node cap');
+  for(const side of [0,1])assert.equal(countCards(move.game.players[side]),60,
+   'engine cards are conserved at seed '+seed);
+ }
+});
