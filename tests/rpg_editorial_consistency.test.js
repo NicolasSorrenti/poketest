@@ -13,7 +13,7 @@ const Dialogue=require('../rpg_dialogue');
 
 const original=['hana','reina','shiori','yuna','akari','camila','marina','kaede'];
 const supporting=['elio','alma','nereo','jun','teo','iris'];
-const guests=['jinx','luna','sol','rina','elena','sierra'];
+const guests=['jinx','luna','sol','rina','elena','sierra','laca','barb'];
 
 test('all nine side-quest stages express movement through narration, with no mechanical changes',()=>{
  assert.deepEqual(Side.validate(),[]);

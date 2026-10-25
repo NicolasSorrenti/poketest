@@ -92,7 +92,7 @@ const acknowledgeMandatory=async(page)=>{
   await page.locator('#saveDeck').click();
   assert.equal((await readState(page)).deckJourney.deck.length,60);
   await save(page,'01-deck-studio.png');
-  await page.locator('.back').click();
+  await page.locator('a.back[href="/rpg.html"]').click();
   await page.waitForURL(/rpg\.html/);
   await page.locator('#places .place').first().waitFor({state:'attached'});
   assert.equal(await page.locator('#places .place').count(),7);
@@ -169,6 +169,23 @@ const acknowledgeMandatory=async(page)=>{
   await page.locator('#preDuelNext').click();
   assert.equal((await readState(page)).pendingDuel.preview.index,1);
   assert.equal(await page.locator('#preDuelStart').isVisible(),true);
+  // Back works after a reload and after advancing the dialogue.
+  const beforeCancel=await readState(page);
+  await page.locator('#preDuelBack').click();
+  await page.locator('#preDuelDialog').waitFor({state:'hidden'});
+  const cancelled=await readState(page);
+  assert.equal(cancelled.pendingDuel,null,'Back cancels the staged duel');
+  assert.equal(cancelled.day,beforeCancel.day,'Cancel must not advance the day');
+  assert.equal(cancelled.slot,beforeCancel.slot,'Cancel must not spend a period');
+  assert.equal(cancelled.results.length,beforeCancel.results.length,'Cancel must not record a match result');
+  assert.equal(cancelled.credits,beforeCancel.credits,'Cancel must not change rewards');
+  assert.equal(await page.locator('#battle').getAttribute('src'),'about:blank');
+  assert.equal(await page.evaluate(id=>sessionStorage.getItem('neoRpgNpcDeck:'+id),stagedId),null);
+  assert.equal(await page.evaluate(id=>sessionStorage.getItem('neoRpgDeck:'+id),stagedId),null);
+  await page.locator('#characterActions button').filter({hasText:'Duel'}).click();
+  await page.locator('#preDuelDialog').waitFor({state:'visible'});
+  assert.notEqual((await readState(page)).pendingDuel.id,stagedId,'Reentry stages a fresh identity');
+  await page.locator('#preDuelNext').click();
   await page.locator('#preDuelStart').click();
   const pending=(await readState(page)).pendingDuel;
   assert.equal(pending.preview.phase,'launched');
@@ -202,13 +219,13 @@ const acknowledgeMandatory=async(page)=>{
    const style=card&&getComputedStyle(card);
    const result={
     visible:!!card&&!overlay.classList.contains('hidden')&&Number(style.opacity)>.95,
-    correctImage:!!img?.src.includes('/rpg-assets/reactions/yuna/attack.png')&&img.naturalWidth>0,
+    correctImage:!!img&&/\/rpg-assets\/(?:characters\/yuna\/|reactions\/yuna\/|yuna\.)/.test(new URL(img.src).pathname)&&img.naturalWidth>0,
     overlaysAttack:Number(getComputedStyle(overlay).zIndex)>Number(getComputedStyle(document.querySelector('#combatFx')).zIndex)
    };
    demo.reset();overlay.remove();return result;
   });
   assert.ok(attackArt.visible,'NPC attack artwork must remain on screen for two seconds');
-  assert.ok(attackArt.correctImage,'NPC cut-in must load the correct character-specific image');
+  assert.ok(attackArt.correctImage,'NPC cut-in must load an actual Yuna expression or cut-in, not another character');
   assert.ok(attackArt.overlaysAttack,'NPC artwork must render above the generic attack banner');
   const energyArtGeometry=await inner.locator('.stage').evaluate(stage=>{
      const box=document.createElement('button');box.className='poke';

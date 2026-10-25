@@ -1,0 +1,20 @@
+'use strict';
+// Browser navigation regression: a Cube duel must not be treated as Single Match.
+const assert=require('node:assert/strict');
+const fs=require('node:fs');
+const read=path=>fs.readFileSync(__dirname+'/'+path,'utf8');
+const client=read('cube_client.js'),room=read('cube_room_client.js'),live=read('classic_live.js'),cube=read('cube.html');
+assert.match(live,/rpgParams\.get\('cubeSolo'\)==='1'/,'Mode should be explicit');
+assert.ok(live.includes("cubeRoomCode?'neoCubeRoomLiveToken:'+cubeRoomCode:cubeSoloMode?'neoCubeLiveToken':'neoClassicLiveToken'"),'Use separate per-mode keys');
+assert.match(live,/if\(cubeSoloMode&&!current\)throw Error\(/,'Do not silently create a Single Match when Cube expires');
+assert.match(client,/sessionStorage\.setItem\('neoCubeLiveToken',result\.duelToken\)/);
+assert.match(client,/sessionStorage\.setItem\('neoCubeLiveToken',state\.tournament\.activeDuelToken\)/);
+assert.equal(client.includes("sessionStorage.setItem('neoClassicLiveToken'"),false,'Cube must never overwrite Single Match key');
+assert.match(client,/location\.assign\('\/classic_live\.html\?cubeSolo=1'\)/);
+assert.match(cube,/id="resumeMatch"[^>]*href="\/classic_live\.html\?cubeSolo=1"/,'Resume link should keep mode marker');
+assert.match(room,/sessionStorage\.setItem\('neoCubeRoomLiveToken:'\+code,t\.yourMatch\.token\)/,'Room CPU matches have room-scoped sessions');
+assert.equal(room.includes("sessionStorage.setItem('neoClassicLiveToken'"),false,'Cube room CPU must not overwrite Single Match');
+assert.ok(live.includes("async function start(){if(cubeRoomCode||cubeSoloMode)return false;"),'Cube battle page cannot start a standalone Single Match');
+assert.ok(live.includes("if(cubeRoomCode||cubeSoloMode){location.assign(cubeRoomCode?'/cube_room.html?room='+encodeURIComponent(cubeRoomCode):'/cube.html');return;}"),'Cube reset leads to the right tournament');
+assert.ok(live.includes("'Return to Cube tournament':'Play another duel'"),'Cube victory must not offer another Single Match');
+console.log('PASS Cube and Single Match use separate tokens and mode-aware navigation');

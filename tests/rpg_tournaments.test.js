@@ -24,3 +24,32 @@ test('malformed receipt cannot mutate bracket progression',()=>{
  assert.throws(()=>T.settle(s,d,{outcome:'Unknown'}),/Invalid/);
  assert.equal(JSON.stringify(s),before);
 });
+
+test('backing out of an unlaunched tournament preview refunds the reserved attempt',()=>{
+ const s=state(),first=T.begin(s,'neighborhood');
+ const duel={...first,preview:{phase:'ready',index:1}};
+ assert.equal(s.tournaments.neighborhood.attempts,1);
+ assert.equal(T.cancel(s,duel),true);
+ assert.equal(s.tournaments.neighborhood,undefined,'first aborted preview leaves no registration');
+ assert.equal(T.cancel(s,duel),false,'cancellation is idempotent');
+ assert.equal(T.begin(s,'neighborhood').tournamentAttempt,1);
+});
+test('cancellation never refunds a launched or already settled tournament attempt',()=>{
+ const s=state(),d=T.begin(s,'neighborhood');
+ const preview={...d,preview:{phase:'ready',index:0}};
+ assert.equal(T.cancel(s,{...preview,preview:{phase:'launched',index:1}}),false);
+ assert.equal(s.tournaments.neighborhood.attempts,1);
+ assert.equal(T.settle(s,{...d,id:'match-1'},{outcome:'Draw'}).draw,true);
+ assert.equal(T.cancel(s,preview),false,'a recorded match is not a cancelable preview');
+ assert.equal(T.begin(s,'neighborhood').tournamentAttempt,2);
+ assert.equal(T.cancel(s,{...preview,tournamentAttempt:1}),false,'old identities cannot cancel newer attempts');
+});
+test('canceling a preview after a drawn round preserves recorded results',()=>{
+ const s=state(),first=T.begin(s,'neighborhood');
+ T.settle(s,{...first,id:'drawn'},{outcome:'Draw'});
+ const second=T.begin(s,'neighborhood');
+ assert.equal(T.cancel(s,{...second,preview:{phase:'ready',index:0}}),true);
+ assert.equal(s.tournaments.neighborhood.attempts,1);
+ assert.equal(s.tournaments.neighborhood.results.length,1);
+ assert.equal(T.begin(s,'neighborhood').tournamentAttempt,2);
+});
