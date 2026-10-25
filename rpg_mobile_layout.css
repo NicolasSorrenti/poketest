@@ -1,0 +1,35 @@
+/* Mobile RPG: artwork and dialogue have separate layout space. */
+@media (max-width:700px) {
+  .stage-panel { min-width:0; }
+  .stage-panel .scene {
+    display:flex; flex-direction:column; height:auto; min-height:0;
+    max-height:none; overflow:visible; background-position:center top;
+  }
+  .stage-panel .scene::after { bottom:auto; height:390px; }
+  .stage-panel .scene-head { position:relative; inset:auto; padding:16px 14px 0; min-height:112px; }
+  .stage-panel .portrait {
+    position:relative; inset:auto; width:100%; height:clamp(260px,88vw,430px);
+    flex:none; margin-top:0; mask-image:none; overflow:hidden;
+  }
+  .stage-panel .portrait img { max-height:100%; object-position:center bottom; }
+  .stage-panel .dialogue {
+    position:relative; inset:auto; max-height:none; min-height:0; overflow:visible;
+    margin:0 9px 10px; padding:13px; flex:none;
+  }
+  .stage-panel .player-choice-prompt:not([hidden]) { position:relative; inset:auto; margin:8px; }
+  .stage-panel .character-actions:not([hidden]) {
+    position:sticky; bottom:env(safe-area-inset-bottom,0px); z-index:30;
+    display:grid; grid-template-columns:repeat(4,minmax(0,1fr));
+    gap:5px; padding:8px 6px calc(8px + env(safe-area-inset-bottom,0px));
+    box-shadow:0 -8px 22px #080c1b99;
+  }
+  .stage-panel .character-action-btn { width:100%; min-width:0; padding:10px 3px; font-size:12px; }
+  #rpgInfoPanel { max-height:calc(100dvh - 32px); overscroll-behavior:contain; }
+  #rpgInfoPanel .rpg-drawer-header { position:sticky; top:0; z-index:5; background:#1b2036; }
+  .mobile-current-events { padding:12px; margin:10px 0; border:1px solid #82617f;
+    border-radius:13px; background:#192238; }
+  .mobile-current-events > h2 { margin:0 0 10px; color:#f4afc8;
+    font:800 22px 'Barlow Condensed',sans-serif; }
+  .mobile-current-events .side-section { padding:8px 0; }
+}
+@media (min-width:701px) { .mobile-current-events { display:none; } }
