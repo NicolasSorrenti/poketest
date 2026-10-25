@@ -33,6 +33,7 @@ function parse(argv){
 function evaluate(o){
  const service=new ClassicLocalService(),rows=[],errors=[];
  let champ=0,challenger=0,unfinished=0,elapsed=0,totalActions=0,totalActionMs=0;
+ const decisionSamplesByRole=[[],[]];
  for(let i=0;i<ARCHETYPES.length;i++){
   const f=ARCHETYPES[i],original=service.decklist(f.deck);
   const cards=NPC.upgrade({npc:f.npc,tier:3,original,catalog:CATALOG});
@@ -50,6 +51,7 @@ function evaluate(o){
     const result=duel(options,pair,swap,[cards,cards]);
     if(result.winner===0)cw++;else if(result.winner===1)nw++;else inc++;
     totalActions+=result.stats.actions;totalActionMs+=result.stats.decisionsMs;
+    for(let role=0;role<2;role++)decisionSamplesByRole[role].push(...result.stats.decisionPerActionMsByRole[role]);
    }catch(err){errors.push({npc:f.npc,pair,swap,error:String(err).slice(0,240)});}
   }
   const ms=performance.now()-started;
@@ -64,7 +66,13 @@ function evaluate(o){
   championWins:champ,challengerWins:challenger,unfinished,decisive,
   challengerWinRateDecisive:decisive?challenger/decisive:null,
   challengerWinRate95:decisive?wilson(challenger,decisive):null,
-  meanActionMs:totalActions?totalActionMs/totalActions:null,elapsedMs:Math.round(elapsed),rows,errors,
+  meanActionMs:totalActions?totalActionMs/totalActions:null,
+  perRoleLatencyMs:decisionSamplesByRole.map(values=>{
+   if(!values.length)return {samples:0,p95:null,p99:null,max:null};
+   values.sort((a,b)=>a-b);
+   return {samples:values.length,p95:values[Math.ceil(values.length*.95)-1],
+    p99:values[Math.ceil(values.length*.99)-1],max:values[values.length-1]};
+  }),elapsedMs:Math.round(elapsed),rows,errors,
   caveat:'Mirrored NPC deck self-play; not a human win-rate prediction. Unported card effects must be reported explicitly.'};
 }
 if(require.main===module){
