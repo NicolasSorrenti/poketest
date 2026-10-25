@@ -59,14 +59,15 @@
     };
     function dismiss(){
       if(!current)return;
-      const {element,timer,onKey,finishAnimation}=current;
+      const {element,timer,onKey,finishAnimation,onDismiss}=current;
       current=null;
       clearTimer(timer);
       if(doc.removeEventListener)doc.removeEventListener('keydown',onKey,true);
       element.removeEventListener('animationend',finishAnimation);
       element.remove();
+      onDismiss?.();
     }
-    function present(change){
+    function present(change,options={}){
       const result=change?.kind==='travel'?planTravel(change):plan(change);
       if(!result)return null;
       // An ordinary location reveal cannot replace a day/period transition.
@@ -108,11 +109,49 @@
       doc.addEventListener?.('keydown',onKey,true);
       doc.body.append(element);
       const timer=setTimer(dismiss,(reduced?140:result.durationMs)+100);
-      current={element,timer,onKey,finishAnimation,plan:result};
+      current={element,timer,onKey,finishAnimation,plan:result,onDismiss:options.onDismiss};
       return result;
     }
     return {present,presentTravel:detail=>present({...detail,kind:'travel'}),dismiss,get active(){return !!current;}};
   }
+  // The clock commits immediately, but the visual wipe must wait for the final
+  // dialogue/CG to be acknowledged. A queue also keeps mandatory events behind
+  // the wipe, instead of allowing a newly eligible scene to appear underneath it.
+  function createSequence({canPresent=()=>true,present=()=>false,onSettled=()=>{}}={}){
+    let queued=null,holds=0,running=false;
+    function flush(){
+      if(!queued||holds||running||!canPresent())return false;
+      const change=queued;queued=null;running=true;
+      let finished=false;
+      const settle=()=>{
+        if(finished)return;
+        finished=true;running=false;
+        if(!flush())onSettled();
+      };
+      try{if(!present(change,settle))settle();}
+      catch(error){settle();throw error;}
+      return true;
+    }
+    function queue(change){
+      if(!plan(change))return false;
+      // Several clock changes before presentation become one continuous wipe.
+      queued=queued?{...queued,afterDay:change.afterDay,afterSlot:change.afterSlot}:change;
+      return true;
+    }
+    function hold(){
+      holds++;
+      let released=false;
+      return ()=>{
+        if(released)return;
+        released=true;holds--;
+        if(!flush()&&!running&&!queued)onSettled();
+      };
+    }
+    return {queue,hold,flush,get blocked(){return !!queued||holds>0||running;},get running(){return running;}};
+  }
   const defaultPresenter=createPresenter();
-  return {plan,planTravel,createPresenter,present:detail=>defaultPresenter.present(detail),presentTravel:detail=>defaultPresenter.presentTravel(detail),dismiss:()=>defaultPresenter.dismiss()};
+  return {plan,planTravel,createPresenter,createSequence,
+    present:(detail,options)=>defaultPresenter.present(detail,options),
+    presentTravel:detail=>defaultPresenter.presentTravel(detail),
+    dismiss:()=>defaultPresenter.dismiss(),get active(){return defaultPresenter.active;}};
 });
