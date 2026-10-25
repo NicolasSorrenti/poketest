@@ -2,6 +2,8 @@
 const test=require('node:test');
 const assert=require('node:assert/strict');
 const {server,classic,rpgDuels}=require('../server');
+const {isBasicPokemon}=require('../core_rules');
+const {CATALOG}=require('../headless_duel');
 
 const player='10000000-0000-4000-8000-000000000001';
 const other='20000000-0000-4000-8000-000000000002';
@@ -62,20 +64,23 @@ test('RPG checkpoint stores every accepted move, restores after server restart a
   const token=created.body.token;
   assert.equal(fake.rows.get(prefix).revision,0,'first checkpoint before the player can act');
   const state=classic.session(token);
-  const basicIndex=state.game.players[0].hand.findIndex(cardId=>{
-   const card=require('../headless_duel').CATALOG.get(cardId);
-   return card?.supertype==='Pokémon'&&(card?.subtypes||[]).includes('Basic');
-  });
+  const basicIndex=state.game.players[0].hand.findIndex(cardId=>isBasicPokemon(CATALOG.get(cardId)));
   assert.ok(basicIndex>=0,'starting hand has Basic Pokémon');
-  fake.failNextSave(); // First asynchronous write fails; retry must still persist the final state.
+  fake.failNextSave(); // Recover from a transient cloud write failure without blocking gameplay.
   const move=await api('action',{duelToken:token,body:{
    revision:0,command:{type:'setup_select',payload:{handIndex:basicIndex}}
   }});
   assert.equal(move.status,200,JSON.stringify(move.body).slice(0,400));
   assert.equal(move.body.revision,1);
-  assert.equal(move.body.cloudSaved,false,'Actions should respond before the asynchronous write completes');
-  await waitUntil(()=>fake.rows.get(prefix)?.revision===1);
+  assert.equal(move.body.cloudSaved,false,'moves return immediately; cloud checkpoint is asynchronous');
+  // A later acknowledgement guarantees that the newest revision is actually
+  // durable before we simulate a server restart.
+  for(let i=0;i<100&&fake.rows.get(prefix)?.revision!==1;i++)
+   await new Promise(resolve=>setTimeout(resolve,5));
+  assert.equal(fake.rows.get(prefix).revision,1);
   assert.ok(fake.rows.get(prefix).snapshot.game.players[0].active);
+  const settled=await api('state',{duelToken:token,method:'GET'});
+  assert.equal(settled.body.cloudSaved,true,'Acknowledged checkpoint is reported as durable');
   // Simulate a Render restart: RAM is gone, database still has the whole match.
   classic.sessions.clear();
   const restored=await api('rpg/resume',{body:{duelId:id}});

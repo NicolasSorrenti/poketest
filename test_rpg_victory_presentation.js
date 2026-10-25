@@ -7,8 +7,11 @@ const rpgSource=fs.readFileSync(path.join(__dirname,'rpg.js'),'utf8');
 assert.match(rpgSource,/avatar:makeAvatar\(duel\.npc\),npcId:duel\.npc/,
  'Battle results must pass NPC identity to the dedicated artwork resolver');
 const boosterRoutine=rpgSource.slice(rpgSource.indexOf('function showPackReveal()'),rpgSource.indexOf("const target=$('packCards')"));
-assert.match(boosterRoutine,/rpg-assets\/reactions.*attack\.png/,
- 'Booster reveal must fall back to NPC attack cut-in');
+assert.match(boosterRoutine,/PRE\.boosterArtCandidates\(giver\)/,
+ 'Booster reveal must consult the shared character art fallback');
+const artHelper=fs.readFileSync(path.join(__dirname,'rpg_preduel.js'),'utf8');
+assert.match(artHelper,/rpg-assets\/reactions/,'Shared artwork fallback must include the NPC reaction image');
+assert.match(artHelper,/attack\.png/,'Shared artwork fallback must include the NPC attack cut-in');
 assert.doesNotMatch(boosterRoutine,/vn-expressions\/surpris|portraits\/surpris|events\/surpris/,
  'Generic surprised artwork should no longer replace an absent booster illustration');
 

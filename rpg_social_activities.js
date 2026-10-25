@@ -6,6 +6,7 @@
  if(typeof module==='object'&&module.exports)module.exports=api;
  if(root)root.NeoRpgSocialActivities=api;
 })(typeof window!=='undefined'?window:null,function(){
+ const REL=typeof module==='object'&&module.exports?require('./rpg_relationships'):window.NeoRpgRelationships;
  const activities=Object.freeze([
   {id:'shop_deck_lab',place:'shop',title:'Build a deck together',tag:'strategy',tone:'rivalry',focus:12,credits:0,detail:'Compare opening hands and make each other rethink a risky play.'},
   {id:'shop_welcome',place:'shop',title:'Welcome a new player',tag:'community',tone:'friendship',focus:8,credits:0,detail:'Show a newcomer how to play without making them feel judged.'},
@@ -139,11 +140,7 @@
   s.focus=clamp((s.focus||0)-a.focus,100);
   s.credits=clamp((s.credits||0)-a.credits,999999);
   s.insight=clamp((s.insight||0)+insight,99);
-  r.affection=clamp((r.affection||0)+affection,999);
-  r.trust=clamp((r.trust||0)+trust,999);
-  r.respect=clamp((r.respect||0)+respect,999);
-  b.affection=clamp((b.affection||0)+affection,999);
-  b.trust=clamp((b.trust||0)+trust,999);
+  REL.apply(s,npc,{affection,trust,respect});
   s.hungOut=s.hungOut||{};
   s.hungOut[s.day+':'+npc]=true;
   const likedTags=Array.isArray(previous?.likedTags)?previous.likedTags.filter(t=>tags.has(t)):[];
