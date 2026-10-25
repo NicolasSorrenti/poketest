@@ -1,0 +1,26 @@
+name: Apex Strategic CPU Challenge
+on:
+  pull_request:
+    paths:
+      - 'cpu_strategic_search.js'
+      - 'cpu_lookahead.js'
+      - 'cpu_policy.js'
+      - 'tests/cpu_deep_levels.test.js'
+      - 'scripts/benchmark-cpu-advanced.js'
+      - 'scripts/benchmark-cpu-rpg-advanced.js'
+      - '.github/workflows/cpu-strategic-challenger.yml'
+jobs:
+  challenge-mastermind:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Rules, hidden information, bounded CPU planning, RPG regression
+        run: node --test tests/cpu_deep_levels.test.js tests/rpg_cpu_champion.test.js
+      - name: Apex vs Mastermind - mirrored general decks
+        run: node scripts/benchmark-cpu-advanced.js --level 8 --baseline-level 7 --pairs 6 --max-turns 120 --fixtures 8 --seed 291451
+      - name: Apex vs Mastermind - tier 3 NPC deck mirrors
+        run: node scripts/benchmark-cpu-rpg-advanced.js --level 8 --baseline-level 7 --pairs 5 --max-turns 110 --seed 491721
