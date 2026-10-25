@@ -65,9 +65,14 @@ test('RPG checkpoint stores every accepted move, restores after server restart a
   }});
   assert.equal(move.status,200,JSON.stringify(move.body).slice(0,400));
   assert.equal(move.body.revision,1);
-  assert.equal(move.body.cloudSaved,true);
-  assert.equal(fake.rows.get(prefix).revision,1);
+  assert.equal(move.body.cloudSaved,false,'Accepted action does not wait for cloud');
+  // Autosaving is intentionally nonblocking, so verify eventual durability.
+  for(let attempt=0;attempt<100&&fake.rows.get(prefix)?.revision!==1;attempt++)
+   await new Promise(resolve=>setTimeout(resolve,10));
+  assert.equal(fake.rows.get(prefix).revision,1,'Queued checkpoint persisted accepted action');
   assert.ok(fake.rows.get(prefix).snapshot.game.players[0].active);
+  const settled=await api('state',{duelToken:token,method:'GET'});
+  assert.equal(settled.body.cloudSaved,true,'Acknowledged checkpoint is reported as durable');
   // Simulate a Render restart: RAM is gone, database still has the whole match.
   classic.sessions.clear();
   const restored=await api('rpg/resume',{body:{duelId:id}});
