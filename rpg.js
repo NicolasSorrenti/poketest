@@ -86,7 +86,9 @@ function finishStory(){
 
 function beginSideQuest(id){
  if(state.activeSituation||state.activeSideQuest||state.activeStory||state.activeEncounter||state.activeArc||state.pendingDuel||state.day>90)return;
- if(!SIDE.available(state,currentPeople()).some(x=>x.quest.id===id)||!confirmTimeAdvance())return;
+ const chapter=SIDE.available(state,currentPeople()).find(x=>x.quest.id===id);
+ // Duel stages do not spend time until the actual match is launched.
+ if(!chapter||(chapter.stage.kind!=='duel'&&!confirmTimeAdvance()))return;
  try{const x=SIDE.begin(state,id,currentPeople());state.selected=x.stage.npc;persist();render();}
  catch(err){$('notice').textContent=err.message;}
 }
@@ -482,7 +484,9 @@ function performActivity(id){
 
 function startArc(id){
  if(state.activeStory||state.activeEncounter||state.activeArc||state.pendingDuel||state.day>90)return;
- const e=ARC.available(state,currentPeople()).find(x=>x.id===id);if(!e||!confirmTimeAdvance())return;
+ const e=ARC.available(state,currentPeople()).find(x=>x.id===id);
+ // Rival duel preparation is free; startDuel owns its eventual time warning.
+ if(!e||(e.id!=='reina_rival_trial'&&!confirmTimeAdvance()))return;
  state.activeArc={id,phase:'lines',index:0,choice:null};state.selected='reina';persist();render();
 }
 function showArc(){
