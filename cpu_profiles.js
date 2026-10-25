@@ -24,7 +24,8 @@ const NPC_PROFILES=Object.freeze({
  luna:Object.freeze({level:3,personality:'defensive',reason:'gentle Water tempo and protecting her team'}),
  rina:Object.freeze({level:4,personality:'setup',reason:'developed Grass evolution lines into a strong attack'}),
  sierra:Object.freeze({level:4,personality:'tactical',reason:'calculated Blackout disruption and resource denial'}),
- sol:Object.freeze({level:3,personality:'risk_taking',reason:'unpredictable Fire and Water tempo plays'})
+ sol:Object.freeze({level:3,personality:'risk_taking',reason:'unpredictable Fire and Water tempo plays'}),
+ barb:Object.freeze({level:4,personality:'tactical',reason:'playful Psychic and Lightning resource tempo'})
 });
 function profileForNpc(npc){
  if(typeof npc!=='string'||!Object.hasOwn(NPC_PROFILES,npc))throw Error('Unknown CPU NPC profile');
