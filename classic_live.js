@@ -11,7 +11,7 @@
    $('duelLoadingSpinner').hidden=true;
    $('duelLoadingRetry').hidden=false;
    $('duelLoadingBack').hidden=false;
-   $('duelLoadingBack').href=rpgMode?'/rpg.html':cubeRoomCode?'/cube_room.html?room='+encodeURIComponent(cubeRoomCode):'/play.html';
+   $('duelLoadingBack').href=rpgMode?'/rpg.html':cubeRoomCode?'/cube_room.html?room='+encodeURIComponent(cubeRoomCode):cubeSoloMode?'/cube.html':'/play.html';
    return;
   }
   loading.hidden=true;
@@ -39,7 +39,9 @@
  }
 
  const rpgParams=new URLSearchParams(location.search),rpgMode=rpgParams.get('rpg')==='1',rpgDuelId=rpgParams.get('duelId');
- const rpgKey=rpgMode&&rpgDuelId?window.NeoRpgDuelBridge.sessionKey(rpgDuelId):'neoClassicLiveToken';
+ const cubeSoloMode=rpgParams.get('cubeSolo')==='1';
+ // Distinct browser sessions stop Cube duels leaking into Single Match.
+ const rpgKey=rpgMode&&rpgDuelId?window.NeoRpgDuelBridge.sessionKey(rpgDuelId):cubeSoloMode?'neoCubeLiveToken':'neoClassicLiveToken';
  const rpgNpc=rpgMode?rpgParams.get('npc'):null;
  const opponentName=rpgMode?(rpgParams.get('npcName')||'Opponent'):'Classic CPU';
  const mats=window.NeoDuelPlaymats;
@@ -518,7 +520,8 @@
     }
     if(!current&&!await start())throw Error($('startupError').textContent||'The duel could not start.');
    }
-   if(cubeRoomCode&&!current)throw Error('This Cube match has expired. Return to the tournament to reopen it.');
+   if(cubeSoloMode&&!current)throw Error('This Cube match has expired. Return to the Cube tournament to reopen it.');
+    if(cubeRoomCode&&!current)throw Error('This Cube match has expired. Return to the tournament to reopen it.');
    notifyRpg();
    render();
    settleBoot();
