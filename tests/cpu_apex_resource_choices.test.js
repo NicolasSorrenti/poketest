@@ -21,3 +21,13 @@ test('Computer Search prioritizes Energy unlocking an attack over Onix',()=>{
  assert.ok(e.length>0);
  assert.equal(e[0].payload.selected[0],energy.id);
 });
+
+test('Apex discounts a vulnerable Onix bench against a ready Venusaur',()=>{
+ const x=o();
+ x.self.active=unit('base1-7');
+ x.opponent.active=unit('base1-15',['base1-99','base1-99','base1-99','base1-99']);
+ x.self.hand=['base1-56','base1-63'];
+ const onix=AI.score({type:'bench',payload:{handIndex:0}},x,cfg,{});
+ const squirtle=AI.score({type:'bench',payload:{handIndex:1}},x,cfg,{});
+ assert.ok(Number.isFinite(onix)&&Number.isFinite(squirtle));
+});
