@@ -1,6 +1,6 @@
 'use strict';
 // Post-mortem: replay authoritative duel command transcripts from Apex losses
-// and compare each first Apex turn choice with Mastermind on THE SAME state.
+// and compare every Apex decision with Mastermind on THE SAME state.
 // The test never accesses the opposing private hand, deck, or Prizes for
 // scoring; the engine's full transcript is used only to replay legal history.
 const {createGame,reduce,CATALOG}=require('../headless_duel');
@@ -14,7 +14,7 @@ function diagnose({pairs=4,seed=641209,maxTurns=85,deck='blackout',maxExamples=1
   '--left-deck',deck,'--right-deck',deck]);
  const service=new ClassicLocalService(),cards=service.decklist(deck);
  const out={pairs,seed,deck,duels:0,apexLosses:0,replaysVerified:0,
-  firstTurnComparisons:0,disagreements:0,
+  decisionComparisons:0,disagreements:0,
   candidateMismatch:0,differentByType:{},examples:[]};
  const name=id=>CATALOG.get(id)?.name||id;
  for(let number=0;number<pairs;number++)for(const swap of [false,true]){
@@ -22,17 +22,18 @@ function diagnose({pairs=4,seed=641209,maxTurns=85,deck='blackout',maxExamples=1
   if(match.winner!==0)continue;out.apexLosses++;
   const roleForSide=swap?[1,0]:[0,1];
   let game=createGame({decks:[cards,cards],format:'classic',seed:seed+number*11+101});
-  const observedTurns=new Set();
+  const freshMemo=()=>({trainers:0,powers:0,powerKeys:new Set(),stadium:false});
+  const memoBySide=[freshMemo(),freshMemo()];
   for(const record of match.logs){
-   const side=record.side,action=record.command;
-   if(game.phase==='game'&&!game.pendingDecision&&game.turn===side&&
-     roleForSide[side]===1&&!observedTurns.has(game.turnSerial)){
-    observedTurns.add(game.turnSerial);
+   const side=record.side,action=record.command,beforeTurn=game.turnSerial;
+   const memo=memoBySide[side];
+   if(game.phase==='game'&&roleForSide[side]===1&&
+     (game.turn===side||game.pendingDecision?.actor===side)){
     const p={side,personality:options.personality,seed:seed+number*4001+31};
-    const master=AI.chooseAction(game,{...p,level:7});
-    const apex=AI.chooseAction(game,{...p,level:8,diagnostics:true});
+    const master=AI.chooseAction(game,{...p,level:7},memo);
+    const apex=AI.chooseAction(game,{...p,level:8,diagnostics:true},memo);
     if(master?.command&&apex?.command){
-     out.firstTurnComparisons++;
+     out.decisionComparisons++;
      const id=x=>x.type+':'+JSON.stringify(x.payload||{});
      if(id(apex.command)!==id(action))out.candidateMismatch++;
      if(id(master.command)!==id(apex.command)){
@@ -47,7 +48,9 @@ function diagnose({pairs=4,seed=641209,maxTurns=85,deck='blackout',maxExamples=1
         ownEnergies:o.self.active?.energies?.length||0,
         opponentEnergies:o.opponent.active?.energies?.length||0,
         ownPrizes:o.self.prizeCount,opponentPrizes:o.opponent.prizeCount,
-        ownBench:o.self.bench.length,opponentBench:o.opponent.bench.length,
+        ownBench:o.self.bench.map((u,i)=>({slot:i,name:name(u.id),
+          energy:(u.energies||[]).map(name),damage:u.damage||0})),
+        opponentBench:o.opponent.bench.map(u=>name(u.id)),
         hand:o.self.hand.map(name),mastermind:master.command,apex:apex.command,
         actuallyPlayed:action,rootCoverage:[d.rootsVisited,d.rootsAvailable],
         roots:d.rootDiagnostics
@@ -59,6 +62,15 @@ function diagnose({pairs=4,seed=641209,maxTurns=85,deck='blackout',maxExamples=1
    const r=reduce(game,side,action);
    if(!r.ok)throw Error('Transcript replay illegal at duel '+number+' '+JSON.stringify(action)+': '+r.error);
    game=r.game;
+   // Replicate driveSide's per-turn Trainer, power and Stadium use tracking,
+   // including pending-choice chains, so later move comparisons stay valid.
+   if(action.type==='play_trainer')memo.trainers++;
+   if(action.type==='use_power'){
+    memo.powers++;
+    memo.powerKeys.add(action.payload.slot+':'+action.payload.powerIndex);
+   }
+   if(action.type==='use_stadium')memo.stadium=true;
+   if(beforeTurn!==game.turnSerial)memoBySide[side]=freshMemo();
   }
   const finalWinner=game.over&&game.winner!==null?roleForSide[game.winner]:null;
   if(finalWinner!==match.winner||game.over!==match.finished)
