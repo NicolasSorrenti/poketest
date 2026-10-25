@@ -30,7 +30,7 @@
  "/rpg_daily_planner.js",
  "/rpg_social_activities.js",
  "/rpg_planned_dates.js",
- "/rpg_preduel.js",
+ "/rpg_preduel.js?v=20261024-preduel-art",
  "/rpg_situations.js",
  "/rpg_season_journey.js",
  "/rpg_collection.js",
@@ -54,7 +54,7 @@
  "/rpg_status.js?v=4",
  "/rpg_cloud_save.js?v=2",
  "/rpg_outfits.js?v=1",
- "/rpg.js"
+ "/rpg.js?v=20261024-preduel-art"
 ];
   function registry(packs){
     const cast={},looks={},schedules={},arrivals={},events=[],mandatoryEvents=[];
