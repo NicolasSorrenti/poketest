@@ -5,7 +5,7 @@
 const {performance}=require('node:perf_hooks');
 const {reduce,CATALOG}=require('./headless_duel');
 const {publicView}=require('./duel_protocol');
-const {isBasicPokemon,isEnergy,canEvolve,canPayEnergy}=require('./core_rules');
+const {isBasicPokemon,isEnergy,canEvolve,canPayEnergy,legalAttachment}=require('./core_rules');
 const ATTACK=require('./attack_effects_core');
 const POWERS=require('./classic_power_core');
 
@@ -337,7 +337,15 @@ function candidates(o,cfg,used){
     if(target&&canEvolve(c,card(target.id))&&target.playedTurn<o.round)
      options.push(command('evolve',{handIndex:i,slot}));
    }
-  if(!p.energyUsed&&isEnergy(c))for(const slot of slots(p))options.push(command('attach_energy',{handIndex:i,slot}));
+  if(!p.energyUsed&&isEnergy(c))for(const slot of slots(p)){
+   const target=slotUnit(p,slot);
+   // Do not treat a merely proposed attachment as useful if the reducer
+   // will reject it (e.g. Miracle Energy on a non-Light/Shining Pokémon).
+   if(target&&!(target.energyAttachBlockSerial>o.turnSerial)&&
+      legalAttachment({card:c,unit:target,round:o.round,energyUsed:p.energyUsed,
+       cardName:card(target.id)?.name||''}))
+    options.push(command('attach_energy',{handIndex:i,slot}));
+  }
   if(c?.supertype==='Trainer'&&used.trainers<cfg.skill.trainers&&trainerOpportunity(o,c.name,cfg))options.push(command('play_trainer',{handIndex:i}));
  }
  if(p.active){
