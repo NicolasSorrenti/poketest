@@ -54,7 +54,7 @@
  "/rpg_status.js?v=4",
  "/rpg_cloud_save.js?v=2",
  "/rpg_outfits.js?v=1",
- "/rpg.js?v=20261024-preduel-art"
+ "/rpg.js?v=20261024-preduel-back"
 ];
   function registry(packs){
     const cast={},looks={},schedules={},arrivals={},events=[],mandatoryEvents=[];
