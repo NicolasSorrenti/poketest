@@ -177,6 +177,11 @@ if(cast.laca&&!state.flags.lacaChildhoodFriendInitialized){
  b.trust=Math.max(b.trust||0,r.trust);b.affection=Math.max(b.affection||0,r.affection);
  state.flags.lacaChildhoodFriendInitialized=true;
 }
+for(const id of Object.keys(cast)){const old=state.bonds[id],current=state.relationships[id];
+ if(!state.flags['newStoryMigrated_'+id]){for(const key of ['affection','trust','duels'])current[key]=Math.max(current[key]||0,old[key]||0);
+ state.flags['newStoryMigrated_'+id]=true;}
+}
+REL.hydrate(state,Object.keys(cast));
 WORLD.hydrate(state);
 SIDE.hydrate(state);
 SIDE.expire(state);
@@ -188,11 +193,6 @@ REACT.hydrate(state);
 COMMUNITY.hydrate(state);
 CONSEQ.hydrate(state);
 APPOINTMENTS.hydrate(state);APPOINTMENTS.expire(state);INTENTIONS.hydrate(state);CG.hydrate(state);SOCIAL.hydrate(state);DATES.hydrate(state,APPOINTMENTS,SOCIAL);SITUATIONS.hydrate(state);SLICE?.hydrate(state);
-for(const id of Object.keys(cast)){const old=state.bonds[id],current=state.relationships[id];
- if(!state.flags['newStoryMigrated_'+id]){for(const key of ['affection','trust','duels'])current[key]=Math.max(current[key]||0,old[key]||0);
- state.flags['newStoryMigrated_'+id]=true;}
-}
-REL.hydrate(state,Object.keys(cast));
 if(typeof state.activeStory==='string')state.activeStory=null;
 STORY.recordExpiry(state);
 if(MANDATORY)MANDATORY.hydrate(state,MANDATORY_EVENTS);
