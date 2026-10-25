@@ -1162,7 +1162,7 @@
    "lines": [
     "My pancake ribbon is now an official trophy.",
     "Official according to whom?",
-    "Me. It sits next to Captain Lizard and watches over my deck boxes."
+    "Me. It sits over my deck boxes and watches over the whole operation."
    ]
   }
  ],
