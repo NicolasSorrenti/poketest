@@ -9,27 +9,34 @@ const {NPC_PROFILES}=require('../cpu_profiles');
 const progression=require('../rpg_npc_deck_progression');
 const AI=require('../cpu_policy');
 
-const ARGUMENTS=new Set(['--seed','--turns','--samples','--scenario']);
+const RPG_DECKS=Object.freeze({
+ reina:'blackout',yuna:'zap',camila:'rocket_lab',
+ kaede:'rocket_lab',shiori:'overgrowth',akari:'gym_new_voltage'
+});
+const ARGUMENTS=new Set(['--seed','--turns','--samples','--scenario','--npc','--tier']);
 function parse(argv){
- const out={seed:753871,turns:12,samples:35,scenario:'rpg'};
+ const out={seed:753871,turns:12,samples:35,scenario:'rpg',npc:'reina',tier:3};
  for(let i=0;i<argv.length;i++){
   const key=argv[i],value=argv[++i];
   if(!ARGUMENTS.has(key)||value===undefined)throw Error('Unknown option '+key);
-  out[key.slice(2)]=key==='--scenario'?value:Number(value);
+  out[key.slice(2)]=['--scenario','--npc'].includes(key)?value:Number(value);
  }
  if(!Number.isSafeInteger(out.seed)||out.seed<0||
    !Number.isInteger(out.turns)||out.turns<1||out.turns>80||
    !Number.isInteger(out.samples)||out.samples<1||out.samples>250||
-   !['rpg','theme'].includes(out.scenario))throw Error('Invalid diagnosis parameters');
+   !['rpg','theme'].includes(out.scenario)||
+   !Object.hasOwn(RPG_DECKS,out.npc)||
+   !Number.isInteger(out.tier)||out.tier<1||out.tier>3)
+   throw Error('Invalid diagnosis parameters');
  return out;
 }
 function setup(o){
  const service=new ClassicLocalService();
  let cards,personality='balanced',format='classic';
  if(o.scenario==='rpg'){
-  const npc='reina';
-  const original=service.decklist('blackout');
-  cards=progression.upgrade({npc,tier:3,original,catalog:CATALOG});
+  const npc=o.npc;
+  const original=service.decklist(RPG_DECKS[npc]);
+  cards=progression.upgrade({npc,tier:o.tier,original,catalog:CATALOG});
   personality=NPC_PROFILES[npc]?.personality||'balanced';
   format=cards.some(id=>/^neo[1-4]-/.test(id))?'online-preview':'gym-expanded';
  }else cards=service.decklist('brushfire');
@@ -41,7 +48,7 @@ function setup(o){
 }
 function audit(options){
  let {game,personality}=setup(options);
- const summary={scenario:options.scenario,seed:options.seed,positions:0,
+ const summary={scenario:options.scenario,npc:options.npc,tier:options.tier,seed:options.seed,positions:0,
   disagreements:0,apexWinsNow:0,mastermindWinsNow:0,
   rootSamples:0,allRootsVisited:0,chosenTypes:{},disagreementsByType:{},examples:[]};
  function sample(g){
