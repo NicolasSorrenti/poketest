@@ -75,6 +75,13 @@ function audit(options){
     activeEnergy:view.self.active?.energies?.length||0,
     enemyActiveEnergy:view.opponent.active?.energies?.length||0,
     selfBench:view.self.bench.length,enemyBench:view.opponent.bench.length,
+    benchChoices:view.self.bench.map((u,i)=>({
+     slot:i,name:name(u.id),hp:CATALOG.get(u.id)?.hp,
+     damage:u.damage||0,energy:(u.energies||[]).map(name),
+     attackNames:(u.effectiveAttacks||CATALOG.get(u.id)?.attacks||[]).map(a=>a.name)
+    })),
+    ownActiveDamage:view.self.active?.damage||0,
+    opposingDamage:view.opponent.active?.damage||0,
     selfPrizes:view.self.prizeCount,enemyPrizes:view.opponent.prizeCount,
     availableHand:view.self.hand.map(name),
     mastermind:m,apex:a,mastermindScore:master.score,apexScore:apex.score,
