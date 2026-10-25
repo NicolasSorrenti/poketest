@@ -8,18 +8,25 @@ function audit(commands){
  const violations=[];
  const byTurn=new Map();
  for(const entry of commands){
-  const c=entry.command||entry;
-  const turn=entry.turnSerial??entry.turn??null;
-  if(turn===null)continue;
-  if(!byTurn.has(turn))byTurn.set(turn,[]);
-  byTurn.get(turn).push(c);
+  const turn=entry.turnSerial;
+  if(!Number.isInteger(turn))continue;
+  const key=entry.side+':'+turn;
+  if(!byTurn.has(key))byTurn.set(key,[]);
+  byTurn.get(key).push(entry);
  }
- for(const [turn,actions] of byTurn){
-  let energyAttachments=0;
-  for(const [i,a] of actions.entries()){
-   if(a.type==='attach_energy')energyAttachments++;
-   if(a.type==='play_trainer'&&CATALOG.get(a.cardId)?.name==='Pokémon Center'&&energyAttachments)
-    violations.push({turn,index:i,type:'energy-before-pokemon-center'});
+ for(const [key,actions] of byTurn){
+  const attachments=[];
+  for(const [i,entry] of actions.entries()){
+   if(entry.command.type==='attach_energy')attachments.push({index:i,entry});
+   if(entry.command.type==='play_trainer'&&CATALOG.get(entry.cardId)?.name==='Pokémon Center'){
+    for(const attached of attachments){
+     // Only attachments to Pokémon actually healed by Center are wasted.
+     // The action trace records target damage before the attachment.
+     if(attached.entry.targetDamageBefore>0)
+      violations.push({turn:key,index:i,type:'energy-before-pokemon-center',
+       attachmentIndex:attached.index,cardId:attached.entry.cardId});
+    }
+   }
   }
  }
  return violations;
@@ -47,21 +54,19 @@ function run(p){
  for(let pair=0;pair<p.pairs;pair++)for(const swap of [false,true]){
   try{
    const game=duel(opts,pair,swap,decks);
-   // A result records actual action types and sequencing, but not every
-   // Trainer card identity. Report aggregate turn statistics until the
-   // richer action trace is available; never claim zero blunders from
-   // incomplete instrumentation.
+   const violations=audit(game.logs);
    rows.push({pair,swap,winner:game.winner,endReason:game.endReason,
     actions:game.stats.actions,attachments:game.stats.attachments,
-    trainers:game.stats.trainers,traceCoverage:'action-types-only'});
+    trainers:game.stats.trainers,violations});
   }catch(e){errors.push({pair,swap,error:String(e.stack||e).slice(0,500)});}
  }
  return {deck:p.deck,games:rows.length,rows,errors,
-  auditComplete:false,note:'Trace coverage incomplete: card-specific sequencing needs enriched action logging.'};
+  violations:rows.flatMap(r=>r.violations),
+  auditComplete:true,note:'Audits observed Pokémon Center sequencing only; does not prove optimal CPU play.'};
 }
 if(require.main===module)try{
  const r=run(parse(process.argv.slice(2)));
  console.log('APEX_TURN_AUDIT '+JSON.stringify(r));
- if(r.errors.length)process.exitCode=1;
+ if(r.errors.length||r.violations.length)process.exitCode=1;
 }catch(e){console.error(e.stack||e);process.exitCode=1;}
 module.exports={audit,parse,run};
