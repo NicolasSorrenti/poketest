@@ -1673,3 +1673,53 @@ test('casual Talk records a chosen memory, survives interruption, and acknowledg
  const loaded=launch(interrupted.state(),false);
  assert.equal(DialogueMemory.offer(loaded.state(),'hana'),null,'a heard callback is not repeated');
 });
+
+test('an incidental callback is appended only when its unrelated source Talk was actually heard',()=>{
+ const npc='hana',anchor=DialogueMemory.casualId('everyday','hana',0);
+ const actor={intro:'Hello!',talk:['A card topic.','A quiet day.']};
+ const moments=Array.from({length:75},(_,i)=>i+1).flatMap(day=>
+  [0,1,2].map(slot=>({day,slot,place:Schedules.locationFor(npc,day,slot)})));
+ const start=moments.find(m=>m.day>=2&&m.place&&m.place!=='home'&&
+  Conversations.dialogueEntry({day:m.day,slot:m.slot},npc,actor,null,{present:[]}).id===anchor&&
+  !DialogueMemory.offer({day:m.day},npc)&&
+  Conversations.choices({day:m.day,slot:m.slot,hungOut:{},appointments:[]},npc).length===0);
+ assert.ok(start,'original basil conversation should be reachable without competing scenes');
+ const first=launch({...start,location:start.place,met_hana:true,sliceOfLifeLastDay:start.day},false);
+ first.select(npc,{skipInvitation:true});
+ assert.equal(first.state().scene.casualId,anchor,'original scene identity should be captured');
+ assert.equal(first.state().scene.asideId,null,'no callback before any casual chat was heard');
+ assert.equal(first.state().dialogueMemory.casualSeen[anchor],undefined);
+ finishGreeting(first);
+ assert.equal(first.state().dialogueMemory.casualSeen[anchor].day,start.day);
+ const saved=first.state();
+ const next=moments.filter(m=>m.day>=start.day+1).find(m=>{
+  if(!m.place||m.place==='home'||DialogueMemory.offer({...saved,day:m.day},npc))return false;
+  if(Conversations.choices({day:m.day,slot:m.slot,hungOut:{},appointments:[]},npc).length)return false;
+  const entry=Conversations.dialogueEntry({...saved,day:m.day,slot:m.slot},npc,actor,null,{present:[]});
+  if(!entry.id||entry.id===anchor||entry.source==='group')return false;
+  return DialogueMemory.aside({...saved,day:m.day,slot:m.slot},npc,entry.id)?.id==='aside:hana:0';
+ });
+ assert.ok(next,'previously heard basil conversation can be mentioned casually on another day');
+ const base={...saved,...next,location:next.place,sliceOfLifeLastDay:next.day,
+  scene:{speaker:'Narrator',line:'',choices:[]}};
+ const unseen=launch({...base,dialogueMemory:{entries:{},casualSeen:{},asidesSeen:{}}},false);
+ unseen.select(npc,{skipInvitation:true});
+ assert.equal(unseen.state().scene.asideId,null,'skipped prerequisite must not create a callback');
+ const player=launch(base,false);
+ player.select(npc,{skipInvitation:true});
+ const pending=player.state().scene;
+ assert.equal(pending.asideId,'aside:hana:0');
+ assert.ok(pending.dialogue.length>Conversations.dialogue({...base,day:next.day,slot:next.slot},npc,actor,Dialogue,{present:[]}).length);
+ assert.equal(player.state().dialogueMemory.asidesSeen?.['aside:hana:0'],undefined);
+ let turns=0;
+ while(player.state().scene.index<player.state().scene.dialogue.length-2&&turns++<30)player.act('chatNext');
+ assert.equal(player.state().dialogueMemory.asidesSeen?.['aside:hana:0'],undefined,'stopping before final line preserves the callback');
+ const restored=launch(player.state(),false);
+ assert.equal(restored.state().scene.asideId,'aside:hana:0','an interrupted aside resumes after loading');
+ finishGreeting(restored);
+ assert.equal(restored.state().dialogueMemory.asidesSeen['aside:hana:0'].day,next.day);
+ assert.equal(restored.state().credits,saved.credits);
+ assert.equal(restored.state().relationships.hana.affection,saved.relationships.hana.affection);
+ assert.equal(restored.state().day,next.day);
+ assert.equal(restored.state().slot,next.slot);
+});

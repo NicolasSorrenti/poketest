@@ -64,3 +64,12 @@ The original eight characters' revised source is `rpg_legacy_scenes.js` (32 scen
 - **Branch openings must keep their owner.** The `openingByFlag` text replaces a scene's first line. If that line is conditional NPC dialogue, the first speaker must remain that NPC, not be silently changed to `Narrator`.
 - **Choices should finish the conversation.** Retain the last authored character line while showing response options. Don't insert a generic `How will you answer?` / `What would you suggest?` bubble that interrupts the scene.
 - **Descriptions and responses differ.** Opening scene and activity result text belongs to `Narrator`; actual character replies belong to the character. Avoid printing focus gains, affection numbers or one-period labels inside centered VN decision options.
+
+## Incidental callbacks from previously heard Talk (October 2026)
+
+- Existing **Everyday**, **Character**, **Group**, and **Classic** casual Talk now receive stable `casual:<source>:<npc>:<topic>` memory identifiers. First meetings, reactive result conversations, mandatory scenes, and invitations are not treated as casual history.
+- Only actually displaying the final line records a topic in `state.dialogueMemory.casualSeen`. Incomplete and unseen scenes never become prerequisites, and older save files start with no invented casual history.
+- Each of the 22 everyday Talk characters has two independently written incidental asides (44 total) tied to specific prior topics. Once that prior Talk has been completed **on an earlier day**, an occasional unrelated Talk can include a natural three-line aside. If the prerequisite never happened, no new dialogue appears; the existing Talk is preserved verbatim.
+- The incidental aside itself is acknowledged only when its last line is displayed (`state.dialogueMemory.asidesSeen`) and does not repeat after reload. The current topic is also remembered when the whole conversation finishes.
+- Selection is pure/deterministic and intentionally occasional. Normal story and reactivity priority is unchanged. No game time, relationship points, rewards, mandatory flags, credits, or duel rules are changed. New Game+ resets the new memories with the rest of the new season.
+- Regression coverage: `tests/rpg_conversations.test.js`, `tests/rpg_dialogue_memory.test.js`, and the save/reload end-to-end cases in `tests/rpg_world_ui.test.js`.

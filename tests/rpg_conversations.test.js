@@ -80,3 +80,30 @@ test('unrecognized NPC Talk never stitches an unrelated opening after a repetiti
  }
  assert.ok(previous.size>=3,'fallback protagonist should vary instead of repeating a stock line');
 });
+
+test('existing casual chats expose stable memory IDs without changing a single authored line',()=>{
+ const MEMORY=require('../rpg_dialogue_memory');
+ const EVERYDAY=require('../rpg_everyday_chats');
+ const CHARACTER=require('../rpg_character_chats');
+ for(const npc of Object.keys(EVERYDAY.topics)){
+  const actor=cast[npc]||{intro:'Hi',talk:['How is your day?','The weather is nice.']};
+  const seen=new Set();
+  for(let day=1;day<=90;day++)for(let slot=0;slot<3;slot++){
+   const state={day,slot};
+   const saved=JSON.stringify(state);
+   const entry=VN.dialogueEntry(state,npc,actor,null,{present:[]});
+   assert.deepEqual(entry.lines,VN.dialogue(state,npc,actor,null,{present:[]}));
+   assert.equal(JSON.stringify(state),saved,'selection cannot write a fake memory');
+   assert.ok(entry.id?.startsWith('casual:')&&entry.id.includes(':'+npc+':'));
+   seen.add(entry.id);
+   if(entry.source==='everyday')
+    assert.ok(EVERYDAY.topics[npc].some((topic,i)=>topic[0]===entry.lines[0].text&&entry.id===MEMORY.casualId('everyday',npc,i)));
+   if(entry.source==='character')
+    assert.ok(CHARACTER.scenes[npc].some((topic,i)=>topic[0]===entry.lines[0].text&&entry.id===MEMORY.casualId('character',npc,i)));
+  }
+  assert.ok(seen.has(MEMORY.casualId('everyday',npc,0)),npc+' ordinary topic must be reachable');
+  assert.ok(seen.has(MEMORY.casualId('character',npc,1)),npc+' character-specific topic must be reachable');
+ }
+ const first=VN.dialogueEntry({day:1,slot:0},'hana',cast.hana,null,{first:true});
+ assert.equal(first.id,null,'introductions are not retroactively counted as casual conversations');
+});
