@@ -6,6 +6,7 @@
  if(typeof module==='object'&&module.exports)module.exports=api;
  if(root)root.NeoRpgSliceOfLife=api;
 })(typeof window!=='undefined'?window:null,function(){
+ const DIRECTOR=typeof module==='object'&&module.exports?require('./rpg_encounter_director'):window.NeoRpgEncounterDirector;
  const scenes=[
   {
     "id": "hana_the_crooked_display",
@@ -810,7 +811,8 @@
    !state.sliceOfLifeDone?.[e.id]&&(state.relationships?.[e.npc]?.affection||0)>=e.minAffection);
  }
  function start(state,people,trigger,npc=null){
-  hydrate(state);const e=available(state,people,trigger,npc)[0];if(!e)return null;
+  hydrate(state);const e=DIRECTOR.select(state,available(state,people,trigger,npc));if(!e)return null;
+  DIRECTOR.remember(state,e);
   state.sliceOfLifeDone[e.id]={day:state.day,slot:state.slot};
   state.sliceOfLifeLastDay=state.day;
   state.activeSliceOfLife={id:e.id,step:0};

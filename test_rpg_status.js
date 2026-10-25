@@ -52,7 +52,7 @@ test('status entry points and assets are wired into RPG',()=>{
  assert.match(html,/id="statusDialog"/);
  // The RPG bootstraps its account-scoped roster before loading dependent scripts.
  const bootstrap=fs.readFileSync('rpg_character_bootstrap.js','utf8');
- assert.match(html,/src="\/rpg_character_bootstrap\.js"/);
+ assert.match(html,/src="\/rpg_character_bootstrap\.js(?:\?v=[^"]+)?"/);
  assert.match(bootstrap,/"\/rpg_status\.js(?:\?v=\d+)?"/);
  assert.match(html,/href="\/rpg_status\.css(?:\?v=\d+)?"/);
  assert.match(js,/NeoRpgStatus\.open/);

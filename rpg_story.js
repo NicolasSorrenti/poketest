@@ -6,6 +6,7 @@
  if(typeof module==='object'&&module.exports)module.exports=api;
  if(root)root.NeoHarborStory=api;
 })(typeof window!=='undefined'?window:null,function(){
+ const REL=typeof module==='object'&&module.exports?require('./rpg_relationships'):window.NeoRpgRelationships;
  const kinds={
   support:{affection:2,trust:2,respect:0,attraction:0},
   honest:{affection:1,trust:1,respect:2,attraction:0},
@@ -268,7 +269,7 @@
   const choice=e.choices[choiceIndex];if(!choice)throw Error('Invalid story choice');
   if(choice.kind==='commit'&&state.partner&&state.partner!==e.npc)throw Error('Already committed to another relationship');
   if(choice.kind==='commit'&&!VN.commitmentReady(state,e.npc))throw Error('A deeper bond is required');
-  const b=state.relationships[e.npc];for(const [k,v] of Object.entries(choice.delta))b[k]=(b[k]||0)+v;
+  REL.apply(state,e.npc,choice.delta);
   if(choice.kind==='commit'){if(VN.commitmentReady(state,e.npc)){state.partner=e.npc;state.routeOutcomes=state.routeOutcomes||{};state.routeOutcomes[e.npc]='romance';}else{state.routeOutcomes=state.routeOutcomes||{};state.routeOutcomes[e.npc]='friendship';}}
   if(choice.kind==='friend'||choice.flag==='friendship'){state.routeOutcomes=state.routeOutcomes||{};state.routeOutcomes[e.npc]='friendship';}
   if(choice.flag&&choice.flag!=='romance'&&choice.flag!=='friendship')state.storyFlags[e.id]=choice.flag;

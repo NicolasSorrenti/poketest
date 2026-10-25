@@ -96,7 +96,7 @@ test('browser and server register the pack bundle before any story module',()=>{
  const narrative=fs.readFileSync(path.join(__dirname,'..','rpg_narrative_pack.js'),'utf8');
  const app=fs.readFileSync(path.join(__dirname,'..','rpg.js'),'utf8');
  const bootstrap=fs.readFileSync(path.join(__dirname,'..','rpg_character_bootstrap.js'),'utf8');
- assert.match(html,/src="\/rpg_character_bootstrap\.js"/);
+ assert.match(html,/src="\/rpg_character_bootstrap\.js(?:\?v=[^"]+)?"/);
  assert.ok(bootstrap.indexOf('/api/rpg/character-packs')>=0);
  assert.ok(bootstrap.indexOf('/rpg_sol_character.js')<bootstrap.indexOf('/rpg_narrative_pack.js'));
  assert.ok(bootstrap.indexOf('window.NeoRpgCharacterPacks=registry')>=0);

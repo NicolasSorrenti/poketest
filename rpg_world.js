@@ -6,6 +6,7 @@
  if(typeof module==='object'&&module.exports)module.exports=api;
  if(root)root.NeoRpgWorld=api;
 })(typeof window!=='undefined'?window:null,function(){
+ const REL=typeof module==='object'&&module.exports?require('./rpg_relationships'):window.NeoRpgRelationships;
  const activities=[
   {
     "id": "home_reflect",
@@ -1070,14 +1071,9 @@
  }
  function improveBond(state,id,delta){
   if(!id||!delta)return;
-  state.relationships=state.relationships||{};
-  if(!state.relationships[id])state.relationships[id]={affection:0,trust:0,respect:0,attraction:0,duels:0};
-  const target=state.relationships[id];
-  state.bonds=state.bonds||{};if(!state.bonds[id])state.bonds[id]={affection:0,trust:0,duels:0};
-  for(const stat of ['affection','trust','respect','attraction'])if(Number.isFinite(delta[stat])){
-   target[stat]=Math.max(0,(target[stat]||0)+delta[stat]);
-   if(stat==='affection'||stat==='trust')state.bonds[id][stat]=target[stat];
-  }
+  const changes={};
+  for(const stat of ['affection','trust','respect','attraction'])if(Number.isFinite(delta[stat]))changes[stat]=delta[stat];
+  REL.apply(state,id,changes);
  }
  function activityReason(state,entry){
   if(state.day>90)return 'The circuit season has ended';
