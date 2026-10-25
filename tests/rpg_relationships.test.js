@@ -37,3 +37,33 @@ test('reject invalid changes before writing and clamp negative trust',()=>{
  REL.apply(s,'hana',{trust:-99});
  assert.equal(s.relationships.hana.trust,0);
 });
+
+test('missed appointment penalty survives a JSON save and reload',()=>{
+ const APPOINTMENTS=require('../rpg_appointments');
+ const s={day:6,slot:0,relationships:{hana:{trust:5,affection:2}},
+  bonds:{hana:{trust:5,affection:2}},appointments:[
+   {id:1,npc:'hana',day:5,slot:2,place:'shop',status:'booked'}
+  ]};
+ REL.hydrate(s,['hana']);
+ assert.equal(APPOINTMENTS.expire(s).length,1);
+ assert.equal(s.relationships.hana.trust,4);
+ const restored=JSON.parse(JSON.stringify(s));
+ REL.hydrate(restored,['hana']);
+ assert.equal(restored.relationships.hana.trust,4);
+ assert.equal(restored.bonds.hana.trust,4);
+ assert.equal(APPOINTMENTS.expire(restored).length,0,'no double penalty');
+});
+test('duel receipt grants one mirrored trust change and resists duplicate settlement',()=>{
+ const BRIDGE=require('../rpg_duel_bridge');
+ const s={relationships:{reina:{trust:1,respect:0,duels:0}},
+  bonds:{reina:{trust:1,duels:0}},pendingDuel:{id:'test-duel'},
+  results:[],eventsDone:{},points:0,credits:0,day:5};
+ REL.hydrate(s,['reina']);
+ const d={id:'test-duel',npc:'reina',day:5};
+ assert.ok(BRIDGE.settle(s,d,0,'Reina'));
+ assert.equal(s.relationships.reina.trust,3);
+ assert.equal(s.bonds.reina.trust,3);
+ assert.equal(s.relationships.reina.duels,1);
+ assert.equal(BRIDGE.settle(s,d,0,'Reina'),null);
+ assert.equal(s.bonds.reina.trust,3);
+});
