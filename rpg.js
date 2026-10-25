@@ -606,7 +606,7 @@ function nextSliceOfLife(){
   }
  }
  if(result.done){const moment=SLICE.byId(result.id);
-  if(moment.choices)recordCG('slice',moment.npc,{eventId:moment.id});
+  if(moment.choices){const owners=[moment.npc,...(moment.participants||[])];for(const owner of new Set(owners))recordCG('slice',owner,{eventId:moment.id});}
   log('A small moment with '+(cast[moment?.npc]?.name||'a friend')+'.');
   persist();
   return closeSceneDialogue();}
