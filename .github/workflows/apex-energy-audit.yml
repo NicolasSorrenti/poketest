@@ -1,0 +1,20 @@
+name: Apex Energy Decision Audit
+on:
+  pull_request:
+    paths:
+      - 'cpu_policy.js'
+      - 'cpu_decision_audit.js'
+      - 'benchmark_cpu.js'
+      - 'tests/cpu_decision_audit.test.js'
+      - '.github/workflows/apex-energy-audit.yml'
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: node --test tests/cpu_decision_audit.test.js
+      - run: node benchmark_cpu.js --pairs 1 --max-turns 35 --left-level 8 --right-level 8
