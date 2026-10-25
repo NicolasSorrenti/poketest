@@ -589,7 +589,7 @@ function beginSliceOfLife(trigger,npc=null){
  const moment=SLICE.start(state,currentPeople(),trigger,npc);
  if(!moment)return false;
  state.selected=moment.npc;
- const memory=moment.choices?CG.byId(moment.id):recordCG('slice',moment.npc,{eventId:moment.id})[0];
+ const memory=moment.choices?CG.byId(moment.cgSequence?.[0]||moment.id):recordCG('slice',moment.npc,{eventId:moment.id})[0];
  persist();render();showCGMoment(memory,!!moment.choices);
  return true;
 }
@@ -1520,7 +1520,7 @@ function loadCGArt(image,entry,thumbnail,onSuccess,onMissing){
  attempt();
 }
 function showCGMoment(entry,encounterPreview=false){
- const preview=encounterPreview&&state.activeSliceOfLife?.id===entry?.id&&SLICE.byId(entry?.id)?.choices;
+ const activeMoment=SLICE.byId(state.activeSliceOfLife?.id);const preview=encounterPreview&&activeMoment?.choices&&((activeMoment.cgSequence||[activeMoment.id]).includes(entry?.id));
  if(!entry||(!CG.unlocked(state,entry.id)&&!preview))return false;
  // Hold the next calendar wipe and any due mandatory event while artwork loads
  // and until its modal is closed. Missing images must release this hold too.
