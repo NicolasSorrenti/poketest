@@ -1583,3 +1583,35 @@ test('the daily guide approaches a present story NPC without triggering or advan
  r.elements.choices.children.find(x=>x.textContent==='I am in.').onclick();
  assert.equal(r.state().activeStory?.id,'hana_route_1');
 });
+
+
+test('a legacy hangout cannot silently miss a booked appointment',()=>{
+ const plan={id:21,npc:'hana',day:1,slot:0,place:'shop',status:'booked',bookedDay:1};
+ const initial={day:1,slot:0,location:'shop',appointments:[plan],appointmentSeq:21};
+ const declined=launch(initial,false);
+ declined.act('hang:hana');
+ assert.equal(declined.state().day,1);
+ assert.equal(declined.state().slot,0);
+ assert.equal(declined.state().appointments[0].status,'booked');
+ assert.ok(!declined.state().hungOut?.['1:hana'],'declining must not grant a hangout or affection');
+ const accepted=launch(initial,true);
+ accepted.act('hang:hana');
+ assert.equal(accepted.state().slot,1);
+ assert.equal(accepted.state().appointments[0].status,'missed');
+ assert.equal(accepted.state().hungOut['1:hana'],true);
+});
+
+test('an authored chapter cannot start over a booked meeting without consent',()=>{
+ const plan={id:22,npc:'hana',day:5,slot:0,place:'shop',status:'booked',bookedDay:5};
+ const initial={day:5,slot:0,location:'shop',met_hana:true,appointments:[plan],appointmentSeq:22};
+ const declined=launch(initial,false);
+ const chapter=declined.elements.storyEvents.children.find(x=>x.dataset.plannerKey==='hana_route_1');
+ assert.ok(chapter,'authored chapter must be visible to exercise the guard');
+ chapter.onclick();
+ assert.equal(declined.state().activeStory,null);
+ assert.equal(declined.state().appointments[0].status,'booked');
+ const accepted=launch(initial,true);
+ accepted.elements.storyEvents.children.find(x=>x.dataset.plannerKey==='hana_route_1').onclick();
+ assert.equal(accepted.state().activeStory?.id,'hana_route_1');
+ assert.equal(accepted.state().slot,0,'starting dialogue does not prematurely spend the period');
+});
