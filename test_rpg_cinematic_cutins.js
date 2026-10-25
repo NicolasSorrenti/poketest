@@ -9,7 +9,7 @@ assert.equal(priorityFor('ko_taken')>priorityFor('attack'),true);
 assert.equal(assetFor({characters:{reina:{attack:'/rpg-assets/characters/hana/portraits/primary.png'}}},'reina','attack'),
  '/rpg-assets/characters/reina/vn-expressions/angry.webp','never show the wrong NPC');
 assert.equal(assetFor({characters:{reina:{attack:'/rpg-assets/characters/reina/reactions/attack.webp'}}},'reina','attack'),
- '/rpg-assets/characters/reina/vn-expressions/angry.webp');
+ '/rpg-assets/characters/reina/reactions/attack.webp');
 
 const classes=new Set(['hidden']),children=[],timers=new Map();
 let timerId=0;
@@ -49,17 +49,17 @@ assert.equal(first.kind,'attack');
 assert.equal(make.active,true);
 assert.equal(timers.values().next().value.ms,2800,'attack art remains readable');
 assert.equal(children[0].className.includes('npc-reaction-attack'),true);
-assert.match(children[0].className,/has-vn-expression/,'RPG uses the character VN frame');
+assert.match(children[0].className,/has-wide-action-art/,'Dedicated attack illustration appears first');
 const battleImage=children[0].children[0].children[0];
 const vn='/rpg-assets/characters/reina/vn-expressions/';
-assert.equal(battleImage.src,vn+'angry.webp','Reina attacks with her aggressive expression');
+assert.equal(battleImage.src,'/rpg-assets/reactions/reina/attack.png','Reina uses her dedicated attack illustration');
+battleImage.onerror();
+assert.equal(battleImage.src,vn+'angry.webp','The aggressive VN expression is the first fallback');
+assert.match(children[0].className,/has-vn-expression/);
 battleImage.onerror();
 assert.equal(battleImage.src,vn+'happy.webp','Try another installed expression if the first fails');
 battleImage.onerror();
 assert.equal(battleImage.src,vn+'neutral.webp','Fall back to the VN neutral expression');
-battleImage.onerror();
-assert.equal(battleImage.src,'/rpg-assets/reactions/reina/attack.png','Original widescreen art remains a fallback');
-assert.match(children[0].className,/has-wide-action-art/);
 battleImage.onerror();
 assert.equal(battleImage.src,'/rpg-assets/characters/reina/cutins/match-cutin.webp');
 assert.match(children[0].className,/has-match-art/);
