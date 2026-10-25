@@ -1675,7 +1675,7 @@ test('casual Talk records a chosen memory, survives interruption, and acknowledg
 });
 
 test('an incidental callback is appended only when its unrelated source Talk was actually heard',()=>{
- const npc='hana',anchor='casual:everyday:hana:0';
+ const npc='hana',anchor=DialogueMemory.casualId('everyday','hana',0);
  const actor={intro:'Hello!',talk:['A card topic.','A quiet day.']};
  const moments=Array.from({length:75},(_,i)=>i+1).flatMap(day=>
   [0,1,2].map(slot=>({day,slot,place:Schedules.locationFor(npc,day,slot)})));
