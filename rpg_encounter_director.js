@@ -21,7 +21,7 @@
   const count=prev.filter(x=>x.npc===event.npc).length;
   // Protect imminent limited-time moments before favoring unseen characters.
   const remaining=Number.isInteger(event.end)?event.end-day:999;
-  const expiring=remaining<=1?30:remaining<=3?16:remaining<=7?8:0;
+  const expiring=remaining<=1?60:remaining<=3?30:remaining<=7?10:0;
   const fresh=count===0?14:0;
   const rotation=last<=1?-22:last<=3?-12:last<=7?-5:5;
   const ties=hash(event.id+':'+day+':'+state.slot)%7;
