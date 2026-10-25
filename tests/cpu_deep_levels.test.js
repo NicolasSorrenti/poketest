@@ -257,3 +257,17 @@ test('Apex distributes the search budget across root alternatives',()=>{
  assert.deepEqual(without.command,first.command,
   'enabling explanation must not change the move');
 });
+
+test('CPU benchmark instrumentation measures real individual decisions',()=>{
+ const g=midgame(),times=[];
+ const side=g.turn;
+ const played=AI.driveSide(g,{side,level:7,seed:511,limit:200,
+  onDecision:(elapsed,command)=>{
+   assert.ok(Number.isFinite(elapsed)&&elapsed>=0);
+   assert.ok(command?.type);
+   times.push(elapsed);
+  }});
+ assert.ok(played.steps>0);
+ assert.equal(times.length,played.steps,
+  'timing observes each actual chosen command, not one batch divided by step count');
+});
