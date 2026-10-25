@@ -3,6 +3,599 @@
 (function(root,factory){const api=factory();if(typeof module==='object'&&module.exports)module.exports=api;if(root)root.NeoRpgCharacterPacks=api;})(typeof window!=='undefined'?window:null,function(){
 const packs=[
  {
+  "id": "barb",
+  "cast": {
+   "name": "Barb",
+   "age": 21,
+   "deck": "power_reserve",
+   "style": "Power Reserve · playful Psychic/Lightning resource tempo",
+   "intro": "Oh, that's a nice deck box. Wait—don't move. I need to see how you did the corners. I'm Barb. Sorry, I ask questions before names.",
+   "repeat": "Look who wandered into my creative disaster. Want to talk cards, argue about colors, or help me find the scissors I had ten seconds ago?",
+   "talk": [
+    "I make custom deck boxes and playmat designs. Legal sleeves are somebody else's problem; I just make the things that carry them look cute.",
+    "People see pink hearts on a box and assume the deck inside can't bite. Honestly, I don't mind giving them one free mistake.",
+    "I don't hate popular decks. I hate when people act like copying the list means they've copied the person who built it.",
+    "The butterfly necklace? I found it at a stall. It looked like something with a secret, so I took it home.",
+    "I'm good with a blade and ruler, terrible with a calendar, and absolutely not allowed to carry loose glitter into the card shop again.",
+    "My cap isn't a personality trait. The way I put it back on after a loss might be.",
+    "The worst part of making something for someone is not knowing whether they'll actually use it.",
+    "My glasses are for tiny print. I keep them on because they make me look like I've read the rulebook. Sometimes I even have."
+   ],
+   "flirt": "That sounded suspiciously like flirting. Good thing I already had a comeback ready. ...I did not, actually.",
+   "duelWin": "You got me! Okay, impressive. Don't smile like that—I was saving the compliment for later.",
+   "duelLose": "Cute artwork, mean little deck. That's my brand. Rematch when you've recovered.",
+   "hangouts": [
+    "You help Barb sort scraps of fabric and rejected deck-box panels. She insists the mistakes make the best color combinations.",
+    "At the arcade, Barb keeps score on the back of a receipt and makes an elaborate little trophy for the loser.",
+    "Over café drinks, she sketches a playmat that combines your favorite colors with a tiny joke only the two of you understand.",
+    "You take a quiet waterfront walk while Barb takes photos of shadows and textures for a future design.",
+    "Barb teaches you to assemble a card case, then lets you finish the last fold without fixing it for you."
+   ],
+   "portrait": "/rpg-assets/characters/barb/portraits/primary.png"
+  },
+  "looks": {
+   "silhouette": "Clearly adult woman, 21 years old, precisely 161 cm tall. Petite to medium-short with a slightly compact torso and legs (natural proportions, not chibi). Curvy feminine build with defined waist, softly full bust that fits the existing lace-up crop top without exaggeration, rounded hips and sturdy thighs. Poised, playful stance; do not change body proportions between outfits.",
+   "palette": "Copper-red #AE4636 hair, soft rose #D98C81, fair peach skin #F1B69E, warm hazel/green #77734E eyes, black #242024 clothing, dusty mauve #9B7288 accents and vivid punk pink #F367A2 highlights. Silver piercings, occasional gold butterfly pendant.",
+   "hair": "Long, smooth copper-auburn red hair with natural darker roots and soft face-framing bangs, falling well below the bust to waist. Consistent color in shadows; never platinum, purple, magenta or blonde.",
+   "eyes": "Hazel green eyes with a warm brown/gold inner ring, defined dark brows, catlike eyeliner and softly fluttery eyelashes; thin clear oversized round/squoval glasses are an optional accessory.",
+   "details": "Small silver septum horseshoe, multiple tiny ear studs plus silver hoop earrings, floral black-and-gray rose tattoo on her LEFT upper arm/shoulder, butterfly pendant with blue detail. Black leather-look newsboy/baker-boy cap with silver buckle and ring. Optional black bag with chain details.",
+   "expressions": "Default teasing half-smile, bright genuine grin, mischievous tongue-out, mock judgmental eyebrow, flustered eyes looking away, suddenly focused designer stare, relieved quiet smile. Expression changes should be about her face, not changing her features.",
+   "outfits": [
+    "signature: fitted black lace-up crop top, black pleated leather-look mini skirt, one loose black cardigan sleeve, black thigh-high stockings with large bows, silver-buckled chunky ankle boots, leather newsboy cap",
+    "casual: black cardigan over crop top, warm brown-and-pink plaid pleated skirt, knee-high black boots, small crossbody bag, glasses",
+    "workshop: oversized charcoal band-style hoodie, denim shorts, chunky black sneakers, cap pushed backward, hair tied out of the way",
+    "tournament: sleeveless black high-neck top, tailored black cargo trousers, comfortable boots, floral tattoo visible, cap optional",
+    "waterfront: black sleeveless top, fitted shorts, airy overshirt, sneakers; tasteful fully clothed styling"
+   ],
+   "renderNotes": "Neo Harbor anime/JRPG polished adult VN portrait; SFW, contemporary alt/Y2K punk-cute styling. Maintain exact 161 cm proportions (compact torso and relatively short legs, neither dwarfish nor doll-like), moderately fuller bust as approved, original face, copper hair, LEFT shoulder floral tattoo, septum, cap and butterfly pendant. Make full-body art consistent with the close-up; clothing fits naturally. No childlike coding, no text overlay, no concept-sheet grids in finished in-game sprites, no excess limbs or changing tattoo sides."
+  },
+  "schedule": [
+   [
+    "shop",
+    "shop",
+    "cafe"
+   ],
+   [
+    "home",
+    "arcade",
+    "shop"
+   ],
+   [
+    "shop",
+    "center",
+    "cafe"
+   ],
+   [
+    "home",
+    "shop",
+    "arcade"
+   ],
+   [
+    "shop",
+    "center",
+    "park"
+   ],
+   [
+    "arcade",
+    "shop",
+    "cafe"
+   ],
+   [
+    "home",
+    "park",
+    "cafe"
+   ]
+  ],
+  "arrivalDay": 6,
+  "events": [
+   {
+    "id": "barb_route_1",
+    "npc": "barb",
+    "title": "The Wrong Side of the Label",
+    "start": 6,
+    "end": 20,
+    "place": "shop",
+    "slot": 1,
+    "minBond": 0,
+    "prerequisite": null,
+    "participants": [],
+    "lines": [
+     {
+      "speaker": "barb",
+      "text": "Please tell me you haven't stepped on the little pink paper star. That's the only one I got the cut right on."
+     },
+     {
+      "speaker": "Protagonist",
+      "text": "Is this for a tournament?"
+     },
+     {
+      "speaker": "barb",
+      "text": "A showcase. Deck boxes, playmats, stuff you can actually touch. The shop said I can borrow one table if nothing smells like paint."
+     },
+     {
+      "speaker": "Protagonist",
+      "text": "Your designs look good."
+     },
+     {
+      "speaker": "barb",
+      "text": "They're mine, which isn't quite the same. People keep asking whether someone else drew them."
+     },
+     {
+      "speaker": "barb",
+      "text": "Sorry. That got serious. Want to help me make the display not look like a yard sale?"
+     }
+    ],
+    "choices": [
+     {
+      "label": "Help arrange the display by color",
+      "reply": "You have excellent taste. Don't let that go to your head; I need you to hold this corner.",
+      "kind": "support",
+      "flag": "barb_display_help",
+      "delta": {
+       "affection": 2,
+       "trust": 2,
+       "respect": 0,
+       "attraction": 0
+      }
+     },
+     {
+      "label": "Ask why she has to prove the designs are hers",
+      "reply": "Because 'cute' gets called a hobby and 'serious' gets called a business. I want them to be both.",
+      "kind": "honest",
+      "flag": "barb_display_why",
+      "delta": {
+       "affection": 1,
+       "trust": 2,
+       "respect": 2,
+       "attraction": 0
+      }
+     },
+     {
+      "label": "Tell her her work is hard to ignore",
+      "reply": "Careful. My ego barely fits under this cap already. ...Thanks, though.",
+      "kind": "flirt",
+      "flag": "barb_display_flirt",
+      "delta": {
+       "affection": 2,
+       "trust": 0,
+       "respect": 1,
+       "attraction": 2
+      }
+     }
+    ]
+   },
+   {
+    "id": "barb_route_2",
+    "npc": "barb",
+    "title": "The Prototype That Won",
+    "start": 23,
+    "end": 38,
+    "place": "arcade",
+    "slot": 2,
+    "minBond": 2,
+    "prerequisite": "barb_route_1",
+    "participants": [],
+    "lines": [
+     {
+      "speaker": "barb",
+      "text": "Don't look at the score machine. I just won a game with a deck box that's held together by tape."
+     },
+     {
+      "speaker": "Protagonist",
+      "text": "Are you testing it in the arcade?"
+     },
+     {
+      "speaker": "barb",
+      "text": "Field test. Official scientific term for dropping things on purpose."
+     },
+     {
+      "speaker": "Protagonist",
+      "text": "And the problem?"
+     },
+     {
+      "speaker": "barb",
+      "text": "A store wants fifty units with their logo covering mine. Fifty is a lot. My name disappearing is also a lot."
+     },
+     {
+      "speaker": "barb",
+      "text": "I could use someone to argue with me instead of saying whatever sounds nice."
+     }
+    ],
+    "choices": [
+     {
+      "label": "Suggest negotiating a small co-branded run",
+      "reply": "Okay. So it's not no, it's a different yes. I can work with that.",
+      "kind": "support",
+      "flag": "barb_prototype_negotiate",
+      "delta": {
+       "affection": 1,
+       "trust": 2,
+       "respect": 2,
+       "attraction": 0
+      }
+     },
+     {
+      "label": "Ask what matters more: cash or the signature",
+      "reply": "Both. That's the annoying part. I can want rent money and still want to be proud of the work.",
+      "kind": "honest",
+      "flag": "barb_prototype_values",
+      "delta": {
+       "affection": 1,
+       "trust": 2,
+       "respect": 2,
+       "attraction": 0
+      }
+     },
+     {
+      "label": "Say her signature belongs where people can see it",
+      "reply": "Well, now I really have to design a signature worth staring at, don't I?",
+      "kind": "flirt",
+      "flag": "barb_prototype_signature",
+      "delta": {
+       "affection": 2,
+       "trust": 0,
+       "respect": 0,
+       "attraction": 2
+      }
+     }
+    ],
+    "openingByFlag": {
+     "barb_display_help": "You helped me make the display. Guess who noticed the arrangement? The buyer with the giant logo.",
+     "barb_display_why": "You asked why I care about authorship. A buyer just made that question complicated.",
+     "barb_display_flirt": "You said my work was hard to ignore. A shop noticed it and is now trying to cover my name."
+    }
+   },
+   {
+    "id": "barb_route_3",
+    "npc": "barb",
+    "title": "Two Cups, One Honest Answer",
+    "start": 41,
+    "end": 56,
+    "place": "cafe",
+    "slot": 2,
+    "minBond": 3,
+    "prerequisite": "barb_route_2",
+    "participants": [],
+    "lines": [
+     {
+      "speaker": "barb",
+      "text": "I made a mockup. Then another. Then twelve more. None of them felt like me."
+     },
+     {
+      "speaker": "Protagonist",
+      "text": "You sound tired."
+     },
+     {
+      "speaker": "barb",
+      "text": "I can stay up all night fixing a seam. Turns out you can't seam-rip a decision."
+     },
+     {
+      "speaker": "Protagonist",
+      "text": "Have you told the buyer you're uncomfortable?"
+     },
+     {
+      "speaker": "barb",
+      "text": "I wrote the message three times. Saved the draft. Deleted the draft. Classic me."
+     },
+     {
+      "speaker": "barb",
+      "text": "I'm not asking you to solve this. Just don't pretend it isn't scary."
+     }
+    ],
+    "choices": [
+     {
+      "label": "Sit with her while she writes the message",
+      "reply": "You didn't touch the keyboard. You just stayed. I think that's why I could hit send.",
+      "kind": "support",
+      "flag": "barb_cafe_stay",
+      "delta": {
+       "affection": 2,
+       "trust": 2,
+       "respect": 0,
+       "attraction": 0
+      }
+     },
+     {
+      "label": "Admit you would be afraid to send it too",
+      "reply": "Good. I thought everyone else had some secret bravery manual.",
+      "kind": "honest",
+      "flag": "barb_cafe_honest",
+      "delta": {
+       "affection": 1,
+       "trust": 2,
+       "respect": 2,
+       "attraction": 0
+      }
+     },
+     {
+      "label": "Tell her being nervous makes her courage matter more",
+      "reply": "That was unfairly sweet. I was prepared for sarcasm. Give me a second.",
+      "kind": "flirt",
+      "flag": "barb_cafe_courage",
+      "delta": {
+       "affection": 2,
+       "trust": 1,
+       "respect": 0,
+       "attraction": 2
+      }
+     }
+    ],
+    "openingByFlag": {
+     "barb_prototype_negotiate": "I tried writing the co-branding proposal you suggested. It's sitting in my drafts.",
+     "barb_prototype_values": "Remember when I said I wanted both? I think I have to say it out loud to the buyer.",
+     "barb_prototype_signature": "My signature is still on the mockup. I just need to convince myself I can ask for it."
+    }
+   },
+   {
+    "id": "barb_route_4",
+    "npc": "barb",
+    "title": "The Table With Her Name On It",
+    "start": 59,
+    "end": 73,
+    "place": "center",
+    "slot": 1,
+    "minBond": 4,
+    "prerequisite": "barb_route_3",
+    "participants": [],
+    "lines": [
+     {
+      "speaker": "barb",
+      "text": "I have exactly three minutes before the showcase opens, and the table banner is upside down."
+     },
+     {
+      "speaker": "Protagonist",
+      "text": "Want a hand?"
+     },
+     {
+      "speaker": "barb",
+      "text": "Yes—please don't laugh. They said yes to the smaller run with both logos."
+     },
+     {
+      "speaker": "Protagonist",
+      "text": "You did it."
+     },
+     {
+      "speaker": "barb",
+      "text": "We did the argument part. I had to do the sending part. My hands shook like I was flipping for turn one."
+     },
+     {
+      "speaker": "barb",
+      "text": "What if everyone likes the work, then asks somebody taller and louder who made it?"
+     }
+    ],
+    "choices": [
+     {
+      "label": "Stand beside her but let her introduce the work",
+      "reply": "I kept expecting you to step in. You didn't. That felt like you believed I could do it.",
+      "kind": "support",
+      "flag": "barb_showcase_space",
+      "delta": {
+       "affection": 2,
+       "trust": 2,
+       "respect": 1,
+       "attraction": 0
+      }
+     },
+     {
+      "label": "Help turn the banner right-side up and rehearse",
+      "reply": "A thirty-second rehearsal. A huge difference. You're welcome at my table any time.",
+      "kind": "honest",
+      "flag": "barb_showcase_practice",
+      "delta": {
+       "affection": 1,
+       "trust": 2,
+       "respect": 2,
+       "attraction": 0
+      }
+     },
+     {
+      "label": "Say you came to cheer for the artist, not the display",
+      "reply": "Stop. I'm going to smile at the wrong time and embarrass myself in front of customers.",
+      "kind": "flirt",
+      "flag": "barb_showcase_artist",
+      "delta": {
+       "affection": 2,
+       "trust": 1,
+       "respect": 0,
+       "attraction": 2
+      }
+     }
+    ],
+    "openingByFlag": {
+     "barb_cafe_stay": "You sat with me while I sent the message. They answered. Here we are.",
+     "barb_cafe_honest": "You said you would be scared too. I sent it scared. Turns out that counts.",
+     "barb_cafe_courage": "I kept what you said in my head when I finally hit send. Don't get smug about it."
+    }
+   },
+   {
+    "id": "barb_route_5",
+    "npc": "barb",
+    "title": "A Design With Space Left Open",
+    "start": 76,
+    "end": 90,
+    "place": "park",
+    "slot": 1,
+    "minBond": 5,
+    "prerequisite": "barb_route_4",
+    "participants": [],
+    "lines": [
+     {
+      "speaker": "barb",
+      "text": "I brought my sketchbook, but I haven't drawn a single line. I'm trying a new thing called 'having a day off.'"
+     },
+     {
+      "speaker": "Protagonist",
+      "text": "How's it going?"
+     },
+     {
+      "speaker": "barb",
+      "text": "Terribly. I keep measuring clouds for card sleeves."
+     },
+     {
+      "speaker": "Protagonist",
+      "text": "At least things are moving with your designs."
+     },
+     {
+      "speaker": "barb",
+      "text": "They are. And I realized I don't want every choice made for me, even the nice ones."
+     },
+     {
+      "speaker": "barb",
+      "text": "I can keep making room for my work. I think I might want to make room for someone, too. No pressure for either of us."
+     }
+    ],
+    "choices": [
+     {
+      "label": "Tell her you value the quiet days too",
+      "reply": "Then we can leave the next page blank for a while. I think I'd like that.",
+      "kind": "support",
+      "flag": "barb_final_quiet",
+      "delta": {
+       "affection": 2,
+       "trust": 2,
+       "respect": 1,
+       "attraction": 0
+      }
+     },
+     {
+      "label": "Say you will respect the time she needs",
+      "reply": "Good. I like someone who knows an invitation isn't an obligation.",
+      "kind": "honest",
+      "flag": "barb_final_respect",
+      "delta": {
+       "affection": 1,
+       "trust": 2,
+       "respect": 2,
+       "attraction": 0
+      }
+     },
+     {
+      "label": "Ask if she wants to explore something more together",
+      "reply": "I do. Slowly, on purpose, with actual communication. This is extremely off-brand for me.",
+      "kind": "commit",
+      "flag": "barb_final_romance",
+      "delta": {
+       "affection": 2,
+       "trust": 1,
+       "respect": 0,
+       "attraction": 3
+      }
+     }
+    ],
+    "openingByFlag": {
+     "barb_showcase_space": "Thanks for letting me speak for myself at the showcase. I'm still thinking about that.",
+     "barb_showcase_practice": "The rehearsal worked. Turns out I can introduce my own work without swallowing my words.",
+     "barb_showcase_artist": "You made me grin through my whole showcase. That is an official complaint."
+    }
+   }
+  ],
+  "mandatoryEvents": [
+   {
+    "id": "barb_asks_for_help",
+    "title": "A Little Help With the Corners",
+    "kind": "bond",
+    "priority": 60,
+    "earliestDay": 23,
+    "trigger": {
+     "all": [
+      {
+       "storyDone": "barb_route_1"
+      },
+      {
+       "relationship": {
+        "npc": "barb",
+        "metric": "trust",
+        "gte": 2
+       }
+      }
+     ]
+    },
+    "delivery": "remote_or_present",
+    "timeCost": 0,
+    "fallback": "queue",
+    "expiry": "never",
+    "lines": [
+     {
+      "speaker": "barb",
+      "text": "Hey. Do you remember that first display you helped me fix?"
+     },
+     {
+      "speaker": "Protagonist",
+      "text": "The one with the pink paper stars?"
+     },
+     {
+      "speaker": "barb",
+      "text": "That's the one. I saved one star for the next design. Wanted to tell you before I put it somewhere permanent."
+     }
+    ],
+    "choices": [
+     {
+      "label": "That means a lot.",
+      "reply": "It does to me too. Don't go getting dramatic about it.",
+      "flag": "barb_star_thanks",
+      "effects": {
+       "flags": [
+        "barb_star_thanks"
+       ]
+      }
+     },
+     {
+      "label": "Show me when it is ready.",
+      "reply": "Deal. First look is yours—unless I glue my hands to the table again.",
+      "flag": "barb_star_later",
+      "effects": {
+       "flags": [
+        "barb_star_later"
+       ]
+      }
+     }
+    ],
+    "characterId": "barb"
+   }
+  ],
+  "art": {
+   "schemaVersion": 1,
+   "characterId": "barb",
+   "portrait": "/rpg-assets/characters/barb/portraits/primary.png",
+   "eventImages": [
+    {
+     "sceneId": "barb_route_1",
+     "path": "/rpg-assets/characters/barb/events/barb_display_table.webp",
+     "prompt": "One single fully composed horizontal anime/JRPG event CG, NOT a grid or character sheet, SFW adult woman age 21, height 161 cm, copper red hair, green-hazel eyes, septum, butterfly pendant and left-shoulder rose tattoo, black Y2K punk-cute clothes, proportional compact adult figure with natural fuller bust. At the card shop, Barb proudly arranges pink-star custom deck boxes and playmat swatches on a craft table; warm afternoon sun, full outfit and floral tattoo visible. Keep bottom 20% free for dialogue; 16:9."
+    },
+    {
+     "sceneId": "barb_route_2",
+     "path": "/rpg-assets/characters/barb/events/barb_prototype_arcade.webp",
+     "prompt": "One single fully composed horizontal anime/JRPG event CG, NOT a grid or character sheet, SFW adult woman age 21, height 161 cm, copper red hair, green-hazel eyes, septum, butterfly pendant and left-shoulder rose tattoo, black Y2K punk-cute clothes, proportional compact adult figure with natural fuller bust. Adult Barb in the arcade under colored neon, showing a slightly scuffed handmade deck box to protagonist off camera; no legible branding, expressive and comic. Keep bottom 20% free for dialogue; 16:9."
+    },
+    {
+     "sceneId": "barb_route_3",
+     "path": "/rpg-assets/characters/barb/events/barb_cafe_draft.webp",
+     "prompt": "One single fully composed horizontal anime/JRPG event CG, NOT a grid or character sheet, SFW adult woman age 21, height 161 cm, copper red hair, green-hazel eyes, septum, butterfly pendant and left-shoulder rose tattoo, black Y2K punk-cute clothes, proportional compact adult figure with natural fuller bust. Adult Barb at the café with laptop, two cups and sketchbook, vulnerable thoughtful look before sending an important message; intimate but fully clothed. Keep bottom 20% free for dialogue; 16:9."
+    },
+    {
+     "sceneId": "barb_route_4",
+     "path": "/rpg-assets/characters/barb/events/barb_showcase.webp",
+     "prompt": "Approved artwork: Barb without her cap, seated cross-legged in her creative room, showing her private deck-box design sketchbook, rose-patterned sweater and light shorts, warm pink lighting."
+    },
+    {
+     "sceneId": "barb_route_5",
+     "path": "/rpg-assets/characters/barb/events/barb_riverside.webp",
+     "prompt": "Approved artwork: Barb at sunset on a rooftop overlooking the harbor, wearing an off-shoulder black-and-burgundy outfit, holding the protagonist’s hand and smiling tearfully."
+    }
+   ],
+   "expressions": {
+    "neutral": "/rpg-assets/characters/barb/vn-expressions/neutral.webp",
+    "happy": "/rpg-assets/characters/barb/vn-expressions/happy.webp",
+    "flirty": "/rpg-assets/characters/barb/vn-expressions/flirty.webp",
+    "surprised": "/rpg-assets/characters/barb/vn-expressions/surprised.webp",
+    "angry": "/rpg-assets/characters/barb/vn-expressions/angry.webp",
+    "embarrassed": "/rpg-assets/characters/barb/vn-expressions/embarrassed.webp",
+    "sad": "/rpg-assets/characters/barb/vn-expressions/sad.webp"
+   }
+  }
+ },
+ {
   "id": "elena",
   "cast": {
    "name": "Elena Crowe",
