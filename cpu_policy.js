@@ -827,7 +827,7 @@ function chooseAction(game,raw={},memo={}){
  // made mid-level players less competent than beginners. Beginner is allowed
  // to overlook the best move; Champion deterministically chooses its best.
  const deep=cfg.level>=6?require('./cpu_lookahead').rankWithLookahead(game,cfg,used,ranked,{
-  observation,candidates,score,projectedAttackValue,hpRemaining,
+  observation,candidates,score,projectedAttackValue,hpRemaining,card,strongestAffordableAttack,knockoutChance,
   attackBonus:(action,board,config)=>planningBonus(action,board,config)+prizeRaceBonus(action,board,config)+
    knockoutTempoBonus(action,board,config)+opponentResponseBonus(action,board,config)+energyHorizonBonus(action,board,config)
  }):{ranked,nodes:0};
