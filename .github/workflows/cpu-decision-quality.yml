@@ -1,0 +1,38 @@
+name: CPU Decision Quality Investigation
+on:
+  pull_request:
+    paths:
+      - 'cpu_strategic_search.js'
+      - 'cpu_policy.js'
+      - 'cpu_lookahead.js'
+      - 'scripts/diagnose-cpu-decisions.js'
+      - 'tests/cpu_deep_levels.test.js'
+      - '.github/workflows/cpu-decision-quality.yml'
+jobs:
+  diagnoses:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: CPU invariants and root-diversity tests
+        run: node --test tests/cpu_deep_levels.test.js tests/rpg_cpu_champion.test.js
+      - name: Compare policy decisions on identical late-campaign NPC positions
+        run: node scripts/diagnose-cpu-decisions.js --scenario rpg --seed 753871 --turns 12 --samples 35
+      - name: Compare policy decisions on independent theme-deck positions
+        run: node scripts/diagnose-cpu-decisions.js --scenario theme --seed 863923 --turns 12 --samples 35
+  strength:
+    name: Root-balanced Apex against Mastermind
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Distinct general-deck seed set
+        run: node scripts/benchmark-cpu-advanced.js --baseline-level 7 --level 8 --pairs 6 --max-turns 120 --fixtures 8 --seed 495139
+      - name: Independent RPG tier 3 seed set
+        run: node scripts/benchmark-cpu-rpg-advanced.js --baseline-level 7 --level 8 --tier 3 --pairs 5 --max-turns 110 --seed 595153
