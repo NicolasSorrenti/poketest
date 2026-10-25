@@ -56,8 +56,9 @@ class ClassicLocalService {
   const profileId=npc===undefined&&typeof npcDeckId==='string'&&Object.hasOwn(NPC_PROFILES,npcDeckId)?npcDeckId:npc;
   const defaults=profileId===undefined?{level:3,personality:'balanced'}:profileForNpc(profileId);
   if(advancedTactics&&(difficulty??defaults.level)<4)throw Error('Advanced tactics require Expert or Champion level');
-  const cpuConfig=configuration({level:difficulty??defaults.level,personality:personality??defaults.personality,seed:aiSeed,
-   prizeRace:advancedTactics,knockoutTempo:advancedTactics,opponentResponse:advancedTactics});
+  const level=difficulty??defaults.level;
+  const cpuConfig=configuration({level,personality:personality??defaults.personality,seed:aiSeed,
+   prizeRace:advancedTactics||level>=6,knockoutTempo:advancedTactics||level>=6,opponentResponse:advancedTactics||level>=6});
   if(deck==='custom'&&(!Array.isArray(customDeck)||customDeck.length!==60||!customDeck.every(id=>typeof id==='string'&&id.length<=40)))throw Error('Custom deck must contain exactly 60 card IDs');
   if(deck!=='custom'&&customDeck!==undefined)throw Error('Unexpected custom deck');
   if(opponent==='custom')throw Error('CPU deck must be a preset');
