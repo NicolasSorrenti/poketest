@@ -4,6 +4,7 @@
 const TIME=require('./rpg_time_coordinator');
 const APPOINTMENTS=require('./rpg_appointments');
 const STORY=require('./rpg_story');
+const REL=require('./rpg_relationships');
 const WORLD=require('./rpg_world');
 const SCHEDULES=require('./rpg_schedules');
 const TOURNAMENTS=require('./rpg_tournaments');
@@ -30,8 +31,8 @@ function fresh(){
   routeOutcomes:{},partner:null,relationships:{},bonds:{},
   activityDone:{},encountersDone:{},hungOut:{},sideQuests:{},
   appointments:[],appointmentSeq:0,tournaments:{},mandatoryEventState:null,
-  competitive:null,community:null,deckJourney:null};
- STORY.normalize(s);WORLD.hydrate(s);SIDE.hydrate(s);APPOINTMENTS.hydrate(s);
+  competitive:null,community:null,deckJourney:null,simulatedCompetitiveMatches:[]};
+ STORY.normalize(s);REL.hydrate(s,Object.keys(CAST));WORLD.hydrate(s);SIDE.hydrate(s);APPOINTMENTS.hydrate(s);
  TOURNAMENTS.hydrate(s);COMPETE.hydrate(s);COMMUNITY.hydrate(s);
  MANDATORY.hydrate(s,EVENTS);
  return s;
@@ -74,11 +75,9 @@ function tryStory(s){
   if(!people(s).includes(e.npc))continue;
   const choice=e.choices.findIndex(c=>c.kind!=='commit');
   if(choice<0)continue;
+  // The same canonical relationship function runs in the browser and here.
+  // No second max-merge may hide diverging effects or restore lost trust.
   STORY.resolve(s,e.id,choice);
-  // Mirror the browser's legacy bond synchronization, but no card rewards.
-  const b=s.bonds[e.npc]||(s.bonds[e.npc]={affection:0,trust:0,duels:0});
-  for(const metric of ['affection','trust','duels'])
-   b[metric]=Math.max(b[metric]||0,s.relationships[e.npc]?.[metric]||0);
   return true;
  }
  return false;
@@ -114,7 +113,16 @@ function syntheticDuel(s,npc,details={},outcome='Victory'){
  s.results.push({id,npc,day:s.day,won:outcome==='Victory',draw:outcome==='Draw'});
  WORLD.afterDuel(s,receipt);
  if(duel.tournamentId)TOURNAMENTS.settle(s,duel,receipt);
- if(duel.competitiveKind)COMPETE.settle(s,duel,receipt);
+ if(duel.competitiveKind){
+  const awarded=COMPETE.settle(s,duel,receipt);
+  if(!awarded)throw Error('Competitive receipt was rejected: '+id+' on day '+s.day);
+  // Replaying a settled receipt must be rejected without changing standings.
+  const before=JSON.stringify(s.competitive);
+  if(COMPETE.settle(s,duel,receipt)!==null||JSON.stringify(s.competitive)!==before)
+   throw Error('Competitive receipt was settled twice: '+id);
+  s.simulatedCompetitiveMatches.push({id,day:s.day,npc,kind:duel.competitiveKind,
+   version:s.competitive.matchmakingVersion,outcome,points:awarded.points,credits:awarded.credits});
+ }
  return true;
 }
 function tryCompetition(s,mode){
@@ -149,6 +157,14 @@ function assertInvariants(s,seen,issues){
  if(new Set(m.pending.map(e=>e.id)).size!==m.pending.length)issues.push('Duplicate mandatory queue on day '+s.day);
  if(s.day>91||s.slot<0||s.slot>2)issues.push('Invalid day/slot');
  if(s.results.some((r,i)=>s.results.findIndex(x=>x.id===r.id)!==i))issues.push('Duplicate synthetic receipt');
+ for(const [id,rel] of Object.entries(s.relationships||{}))
+  for(const metric of ['affection','trust','duels'])
+   if((rel[metric]||0)!==(s.bonds?.[id]?.[metric]||0))
+    issues.push('Relationship mismatch: '+id+' '+metric+' on day '+s.day);
+ const matches=s.simulatedCompetitiveMatches||[];
+ if(new Set(matches.map(x=>x.id)).size!==matches.length)issues.push('Duplicate competitive settlement');
+ if(matches.some(x=>!s.competitive?.processed?.[x.id]))
+  issues.push('Competitive settlement not persisted');
 }
 function simulate(mode='balanced'){
  if(!MODES.includes(mode))throw Error('Unknown campaign strategy '+mode);
@@ -200,6 +216,9 @@ function simulate(mode='balanced'){
   clubs:s.community.events.length,points:s.points,credits:s.credits,
   championships:report.champions,
   reportTitle:report.title,
+  competitiveMatches:s.simulatedCompetitiveMatches,
+  competitiveSettled:s.simulatedCompetitiveMatches.length,
+  matchmakingVersion:s.competitive.matchmakingVersion,
   syntheticDuels:true};
 }
 if(require.main===module){
