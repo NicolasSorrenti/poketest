@@ -6,6 +6,7 @@ const Pack=require('../rpg_narrative_pack'),Side=require('../rpg_side_quests'),S
 const Mandatory=require('../rpg_mandatory_events'),Season=require('../rpg_season_events'),Registry=require('../rpg_character_packs.generated'),Competitive=require('../rpg_competitive_loop'),Reactivity=require('../rpg_reactivity'),Community=require('../rpg_community'),Consequences=require('../rpg_consequences'),TournamentPresentation=require('../rpg_tournament_presentation');
 const NpcDecks=require('../rpg_npc_deck_progression');
 const Time=require('../rpg_time_coordinator');
+const Relationships=require('../rpg_relationships');
 const Tutorials=require('../rpg_tutorials');
 const SceneCast=require('../rpg_scene_cast');
 const EventInvites=require('../rpg_event_invites');
@@ -80,7 +81,7 @@ function launch(initial,approve=false,mandatory=false){
   createTextNode(text){const node=new FakeNode('#text');node.nodeType=3;node.nodeValue=String(text);node.textContent=String(text);return node;},
   body:new FakeNode('body'),
   addEventListener(name,cb){listeners['document:'+name]=cb;}};
- const win={NeoRpgRenderPerf:RenderPerf,NeoRpgNarrativePack:Pack,NeoRpgSideQuests:Side,NeoHarborStory:Story,NeoRpgSchedules:Schedules,NeoRpgWorld:World,NeoRpgRivalArc:Arc,NeoRpgTournaments:Tournaments,NeoRpgCompetitiveLoop:Competitive,NeoRpgReactivity:Reactivity,NeoRpgCommunity:Community,NeoRpgConsequences:Consequences,NeoRpgTournamentPresentation:TournamentPresentation,NeoRpgEpilogue:Epilogue,NeoRpgAppointments:Appointments,NeoRpgIntentions:Intentions,NeoRpgCGGallery:CG,NeoRpgDailyPlanner:Planner,NeoRpgSocialActivities:Social,NeoRpgPlannedDates:Dates,NeoRpgPreDuel:Pre,NeoRpgCollection:Collection,NeoRpgSeasonJourney:Journey,NeoRpgSituations:Situations,NeoRpgDuelBridge:Bridge,NeoRpgDialogue:Dialogue,NeoRpgBondRewards:BondRewards,NeoRpgConversations:Conversations,NeoRpgTutorials:Tutorials,NeoRpgSceneCast:SceneCast,NeoRpgEventInvites:EventInvites,NeoRpgPartnerDecks:PartnerDecks,NeoRpgNpcDeckProgression:NpcDecks,NeoRpgTimeCoordinator:Time,
+ const win={NeoRpgRenderPerf:RenderPerf,NeoRpgNarrativePack:Pack,NeoRpgSideQuests:Side,NeoHarborStory:Story,NeoRpgSchedules:Schedules,NeoRpgWorld:World,NeoRpgRivalArc:Arc,NeoRpgTournaments:Tournaments,NeoRpgCompetitiveLoop:Competitive,NeoRpgReactivity:Reactivity,NeoRpgCommunity:Community,NeoRpgConsequences:Consequences,NeoRpgTournamentPresentation:TournamentPresentation,NeoRpgEpilogue:Epilogue,NeoRpgAppointments:Appointments,NeoRpgIntentions:Intentions,NeoRpgCGGallery:CG,NeoRpgDailyPlanner:Planner,NeoRpgSocialActivities:Social,NeoRpgPlannedDates:Dates,NeoRpgPreDuel:Pre,NeoRpgCollection:Collection,NeoRpgSeasonJourney:Journey,NeoRpgSituations:Situations,NeoRpgDuelBridge:Bridge,NeoRpgDialogue:Dialogue,NeoRpgBondRewards:BondRewards,NeoRpgConversations:Conversations,NeoRpgTutorials:Tutorials,NeoRpgSceneCast:SceneCast,NeoRpgEventInvites:EventInvites,NeoRpgPartnerDecks:PartnerDecks,NeoRpgNpcDeckProgression:NpcDecks,NeoRpgTimeCoordinator:Time,NeoRpgRelationships:Relationships,
   addEventListener(name,cb){listeners[name]=cb;}};
  if(mandatory){win.NeoRpgMandatoryEvents=Mandatory;win.NeoRpgSeasonEvents=Season;win.NeoRpgCharacterPacks=Registry;}
  const local={getItem(k){return saved[k]||null;},setItem(k,v){saved[k]=String(v);}};
