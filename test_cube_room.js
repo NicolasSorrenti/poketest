@@ -94,7 +94,7 @@ function fourHuman(){
 function mixed(){
  const srv=new CubeRoomService();
  assert.throws(()=>srv.create({name:'Invalid',difficulty:0}),/difficulty/);
- assert.throws(()=>srv.create({name:'Invalid',difficulty:6}),/difficulty/);
+ assert.throws(()=>srv.create({name:'Invalid',difficulty:9}),/difficulty/);
  const host=srv.create({name:'Host',seed:475,difficulty:4});
  assert.equal(host.difficulty,4);
  const guest=srv.join({code:host.code,name:'Friend'});
