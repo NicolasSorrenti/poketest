@@ -9,6 +9,7 @@
  const EVERYDAY=typeof module==='object'&&module.exports?require('./rpg_everyday_chats'):window.NeoRpgEverydayChats;
  const CHARACTER=typeof module==='object'&&module.exports?require('./rpg_character_chats'):window.NeoRpgCharacterChats;
  const GROUP=typeof module==='object'&&module.exports?require('./rpg_group_chats'):window.NeoRpgGroupChats;
+ const MEMORY=typeof module==='object'&&module.exports?require('./rpg_dialogue_memory'):window.NeoRpgDialogueMemory;
  function hash(text){
   let n=2166136261;
   for(const ch of String(text)){n=Math.imul(n^ch.charCodeAt(0),16777619)>>>0;}
@@ -17,37 +18,43 @@
  function topic(state,npc,length){
   return length>0?hash(npc+':'+state.day+':'+state.slot)%length:0;
  }
- function dialogue(state,npc,character,dialogueModule,{first=false,present=[]}={}){
+ function dialogueEntry(state,npc,character,dialogueModule,{first=false,present=[]}={}){
   const lines=Array.isArray(character?.talk)&&character.talk.length?character.talk:[character?.repeat||character?.intro||'Good to see you.'];
   if(first){
    const greeting=dialogueModule?.greetingLines?.(npc,character.intro||lines[0]);
-   if(Array.isArray(greeting)&&greeting.length>=3)return greeting;
+   if(Array.isArray(greeting)&&greeting.length>=3)return {lines:greeting,id:null,source:'intro'};
    // Unknown/new packs still get a coherent first meeting, not an unrelated
    // randomly selected daily topic after the introduction.
-   return [{speaker:npc,text:character?.intro||lines[0]},
+   return {lines:[{speaker:npc,text:character?.intro||lines[0]},
     {speaker:'Protagonist',text:'Nice to meet you. Mind if we talk for a moment?'},
-    {speaker:npc,text:'Of course. Good to meet you too.'}];
+    {speaker:npc,text:'Of course. Good to meet you too.'}],id:null,source:'intro'};
   }
   // Only already-met NPCs physically attending the same location can join Talk.
   // Important invitations, story events and reactive scenes are checked before
   // this pure casual selector by the runtime, so none of them is displaced.
   const group=GROUP?.select(state,npc,present);
-  if(group?.length)return group;
+  if(group?.length)return {lines:group,id:MEMORY?.casualId('group',npc,hash(group.map(x=>x.speaker+':'+x.text).join('|')))||null,source:'group'};
   // Most days can be about something other than cards or defining traits.
   // First meetings, reactive scenes and story events retain their own dialogue.
   if(EVERYDAY?.shouldUse(state,npc)){
    const casual=EVERYDAY.select(state,npc);
-   if(casual?.length)return casual;
+   if(casual?.length){
+    const i=EVERYDAY.topics[npc]?.findIndex(row=>row[0]===casual[0]?.text)??-1;
+    return {lines:casual,id:i>=0?MEMORY?.casualId('everyday',npc,i)||null:null,source:'everyday'};
+   }
   }
   // On the other days, mix new, voice-specific banter with established topics.
   // Keep first meetings and higher-priority event/reactivity dialogue untouched.
   if(CHARACTER?.shouldUse(state,npc)){
    const voiced=CHARACTER.select(state,npc);
-   if(voiced?.length)return voiced;
+   if(voiced?.length){
+    const i=CHARACTER.scenes[npc]?.findIndex(row=>row[0]===voiced[0]?.text)??-1;
+    return {lines:voiced,id:i>=0?MEMORY?.casualId('character',npc,i)||null:null,source:'character'};
+   }
   }
   const index=topic(state,npc,lines.length);
   const authored=dialogueModule?.talkLines?.(npc,index,lines[index]);
-  if(Array.isArray(authored)&&authored.length>=3)return authored;
+  if(Array.isArray(authored)&&authored.length>=3)return {lines:authored,id:MEMORY?.casualId('classic',npc,index)||null,source:'classic'};
   // Last-resort conversation for an NPC with no authored `talkLines`.
   // NEVER attach another random, unrelated topic to the NPC's opening.
   // Varied but connected listening responses avoid the previous repetitive
@@ -59,9 +66,12 @@
    ['And what do you make of it now?','I\'m still working that out, to be fair.']
   ];
   const exchange=fallbacks[hash(npc+':fallback:'+state.day+':'+state.slot)%fallbacks.length];
-  return [{speaker:npc,text:lines[index]},
+  return {lines:[{speaker:npc,text:lines[index]},
    {speaker:'Protagonist',text:exchange[0]},
-   {speaker:npc,text:exchange[1]}];
+   {speaker:npc,text:exchange[1]}],id:MEMORY?.casualId('classic',npc,index)||null,source:'classic'};
+ }
+ function dialogue(state,npc,character,dialogueModule,options){
+  return dialogueEntry(state,npc,character,dialogueModule,options).lines;
  }
  function choices(state,npc){
   if(!state||typeof npc!=='string'||state.day>90)return [];
@@ -96,5 +106,5 @@
    id.startsWith(npc+'_')&&/_(route|guest|bond)_\d+$/.test(id)&&state.storyDone[id]).length;
   return relationship.trust>=1||completed>=3;
  }
- return Object.freeze({topic,dialogue,choices,bondNeeded,commitmentReady});
+ return Object.freeze({topic,dialogue,dialogueEntry,choices,bondNeeded,commitmentReady});
 });
