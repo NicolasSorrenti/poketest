@@ -6,6 +6,7 @@ on:
       - 'cpu_policy.js'
       - 'cpu_lookahead.js'
       - 'scripts/diagnose-cpu-decisions.js'
+      - 'scripts/diagnose-cpu-losses.js'
       - 'tests/cpu_deep_levels.test.js'
       - '.github/workflows/cpu-decision-quality.yml'
 jobs:
@@ -23,6 +24,8 @@ jobs:
         run: node scripts/diagnose-cpu-decisions.js --scenario rpg --seed 753871 --turns 12 --samples 35
       - name: Compare policy decisions on independent theme-deck positions
         run: node scripts/diagnose-cpu-decisions.js --scenario theme --seed 863923 --turns 12 --samples 35
+      - name: Replay losing Apex duels and locate first-turn policy disagreements
+        run: node scripts/diagnose-cpu-losses.js --pairs 2 --max-turns 70 --seed 743171
   strength:
     name: Root-balanced Apex against Mastermind
     runs-on: ubuntu-latest
