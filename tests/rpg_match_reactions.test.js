@@ -162,7 +162,7 @@ for(const id of castIds){
  }
 }
 assert.match(reactions.assetFor(installedManifest,'camila','power'),/camila\/vn-expressions\/flirty\.webp$/);
-assert.match(reactions.assetFor(installedManifest,'jun','attack'),/jun\/vn-expressions\/determined\.webp$/);
+assert.equal(reactions.assetFor(installedManifest,'jun','attack'),'/rpg-assets/reactions/jun/attack.png','Jun uses his dedicated attack illustration before VN expressions');
 assert.match(reactions.assetFor(installedManifest,'rina','hurt'),/rina\/expression-portraits\/concerned\.webp$/);
 assert.match(reactions.assetFor(installedManifest,'jinx','ko_scored'),/jinx\/expression-portraits\/smirk\.webp$/);
 assert.equal(reactions.assetFor({},'unknown_npc','attack'),null,'Unknown NPC gets silhouette');
