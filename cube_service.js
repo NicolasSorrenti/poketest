@@ -51,7 +51,7 @@ class CubeService{
     return id==='final'?[m.winner,other(m.seats,m.winner)]:[m.winner,other(m.seats,m.winner)];
    }).map((seat,i)=>({place:i+1,name:NAMES[seat]})):null;
   return {preset:d.preset||'balanced',difficulty:s.difficulty??3,
-    recommendedId:d.done?null:cpuPick(C.availableForSeat(d,0),d.picks[0]),
+    recommendedId:d.done?null:cpuPick(C.availableForSeat(d,0),d.picks[0],{preset:d.preset}),
     revision:s.revision,round:d.round,pick:d.pick,packs:d.packs,cardsPerPack:d.cardsPerPack,done:d.done,
    pack:C.availableForSeat(d,0).map(id=>this.card(id)),drafted:d.picks[0].map(id=>this.card(id)),
    opponentCounts:d.picks.slice(1).map(a=>a.length),started:!!t,
@@ -159,7 +159,7 @@ class CubeService{
   C.draftPick(d,0,id);
   for(let seat=1;seat<d.players;seat++){
    const pack=C.availableForSeat(d,seat);
-   C.draftPick(d,seat,cpuPick(pack,d.picks[seat]));
+   C.draftPick(d,seat,cpuPick(pack,d.picks[seat],{preset:d.preset}));
   }
   s.revision++;return this.view(token);
  }
