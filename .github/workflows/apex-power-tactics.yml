@@ -1,0 +1,29 @@
+name: Apex Power Tactics Validation
+on:
+  pull_request:
+    paths:
+      - 'cpu_policy.js'
+      - 'tests/cpu_apex_rain_dance.test.js'
+      - '.github/workflows/apex-power-tactics.yml'
+jobs:
+  targeted:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Power activation / legal choice / hidden-information regressions
+        run: node --test tests/cpu_apex_rain_dance.test.js tests/cpu_deep_levels.test.js tests/rpg_cpu_champion.test.js
+  benchmark:
+    name: Rain Dance cross-archetype matchup
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Mirrored cross-archetype holdout seeds
+        run: node scripts/benchmark-cpu-competitive.js --group aggression --baseline-level 7 --challenger-level 8 --pairs 4 --max-turns 110 --seed 20261537
