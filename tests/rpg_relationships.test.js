@@ -1,0 +1,39 @@
+'use strict';
+const test=require('node:test'),assert=require('node:assert/strict');
+const REL=require('../rpg_relationships');
+test('migrates historical bond and relationship saves only once',()=>{
+ const s={relationships:{hana:{affection:2,trust:8,respect:3}},bonds:{hana:{affection:5,trust:4,duels:3}}};
+ REL.hydrate(s,['hana']);
+ assert.deepEqual([s.relationships.hana.affection,s.relationships.hana.trust,s.relationships.hana.duels],[5,8,3]);
+ assert.deepEqual([s.bonds.hana.affection,s.bonds.hana.trust,s.bonds.hana.duels],[5,8,3]);
+ REL.apply(s,'hana',{trust:-2});
+ const roundtrip=JSON.parse(JSON.stringify(s));
+ REL.hydrate(roundtrip,['hana']);
+ assert.equal(roundtrip.relationships.hana.trust,6);
+ assert.equal(roundtrip.bonds.hana.trust,6,'old trust cannot resurrect after penalty');
+});
+test('reward and penalties update both compatibility views exactly once',()=>{
+ const s={relationships:{},bonds:{}};REL.hydrate(s,['reina']);
+ REL.apply(s,'reina',{trust:2,affection:3,respect:2,duels:1});
+ REL.apply(s,'reina',{trust:-1});
+ assert.equal(s.relationships.reina.trust,1);
+ assert.equal(s.bonds.reina.trust,1);
+ assert.equal(s.relationships.reina.respect,2);
+ assert.equal(s.bonds.reina.duels,1);
+});
+test('legacy bond-only characters and late-added character packs hydrate safely',()=>{
+ const s={relationshipModelVersion:1,relationships:{},bonds:{laca:{trust:5}}};
+ REL.hydrate(s,['laca','barb']);
+ assert.equal(s.relationships.laca.trust,5);
+ assert.equal(s.bonds.barb.trust,0);
+ REL.apply(s,'barb',{affection:1});
+ assert.equal(s.bonds.barb.affection,1);
+});
+test('reject invalid changes before writing and clamp negative trust',()=>{
+ const s={relationships:{hana:{trust:1}},bonds:{}};
+ const before=JSON.stringify(s);
+ assert.throws(()=>REL.apply(s,'hana',{trust:NaN}),/Invalid/);
+ assert.equal(JSON.stringify(s),before);
+ REL.apply(s,'hana',{trust:-99});
+ assert.equal(s.relationships.hana.trust,0);
+});
