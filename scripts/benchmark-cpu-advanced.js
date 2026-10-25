@@ -15,13 +15,14 @@ const FIXTURES=Object.freeze([
  {name:'zap vs overgrowth',left:'zap',right:'overgrowth'}
 ]);
 function parse(args){
- const options={level:6,pairs:2,maxTurns:40,seed:28671,fixtures:FIXTURES.length};
+ const options={level:6,baselineLevel:5,pairs:2,maxTurns:40,seed:28671,fixtures:FIXTURES.length};
  for(let i=0;i<args.length;i++){
   const key=args[i],value=args[++i];
-  if(!Object.hasOwn({'--level':1,'--pairs':1,'--max-turns':1,'--seed':1,'--fixtures':1},key))
+  if(!Object.hasOwn({'--level':1,'--baseline-level':1,'--pairs':1,'--max-turns':1,'--seed':1,'--fixtures':1},key))
    throw Error('Unknown benchmark argument '+key);
-  options[{'--level':'level','--pairs':'pairs','--max-turns':'maxTurns','--seed':'seed','--fixtures':'fixtures'}[key]]=Number(value);
+  options[{'--level':'level','--baseline-level':'baselineLevel','--pairs':'pairs','--max-turns':'maxTurns','--seed':'seed','--fixtures':'fixtures'}[key]]=Number(value);
  }
+ if(!Number.isInteger(options.baselineLevel)||options.baselineLevel<1||options.baselineLevel>8)throw Error('Baseline must be 1–8');
  if(!Number.isInteger(options.level)||options.level<6||options.level>8)throw Error('Level must be 6–8');
  if(!Number.isInteger(options.pairs)||options.pairs<1||options.pairs>100)throw Error('Pairs must be 1–100');
  if(!Number.isInteger(options.maxTurns)||options.maxTurns<5||options.maxTurns>250)throw Error('Turns must be 5–250');
@@ -36,7 +37,7 @@ function evaluate(opts){
  for(let i=0;i<opts.fixtures;i++){
   const f=FIXTURES[i],seed=opts.seed+i*7919;
   const args=['--pairs',String(opts.pairs),'--max-turns',String(opts.maxTurns),
-   '--seed',String(seed),'--left-level','5','--right-level',String(opts.level),
+   '--seed',String(seed),'--left-level',String(opts.baselineLevel),'--right-level',String(opts.level),
    '--left-deck',f.left,'--right-deck',f.right,
    // Match production RPG Champion settings; the challenger uses its own
    // level's default tactical settings and bounded preparation lookahead.
@@ -57,7 +58,7 @@ function evaluate(opts){
    rejectedLegalityProbes:report.rejectedProposals});
  }
  const decisive=championWins+challengerWins;
- const result={level:opts.level,against:'RPG Champion 5, advanced tactics on',pairsPerFixture:opts.pairs,
+ const result={level:opts.level,against:'CPU Level '+opts.baselineLevel+' with advanced tactics on',pairsPerFixture:opts.pairs,
   maxTurns:opts.maxTurns,seed:opts.seed,games:decisive+unfinished,
   decisive,championWins,challengerWins,unfinished,
   challengerWinRateDecisive:decisive?challengerWins/decisive:null,
