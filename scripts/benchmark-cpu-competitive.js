@@ -67,7 +67,8 @@ function percentile(data,p){
 }
 function evaluate(params){
  const fixtures=FIXTURES[params.group],errors=[],rows=[];
- const sampleTimes=[[],[]],actionsByRole=[0,0];
+ const sampleTimes=[[],[]],actionsByRole=[0,0],actionTypesByRole=[{},{}];
+ const endings={prizes:0,'no-pokemon':0,deckout:0,timeout:0,other:0};
  let wins=0,losses=0,unfinished=0;
  for(let i=0;i<fixtures.length;i++){
   const f=fixtures[i],left=D.list(f.left),right=D.list(f.right);
@@ -83,13 +84,19 @@ function evaluate(params){
   ]);
   options.format='online-preview';
   let w=0,l=0,u=0,started=performance.now();
+  const fixtureActionTypes=[{},{}];
   for(let pair=0;pair<params.pairs;pair++)for(const swap of [false,true]){
    try{
     const result=duel(options,pair,swap,[left,right]);
     if(result.winner===1)w++;
     else if(result.winner===0)l++;
     else u++;
+    endings[result.endReason]=(endings[result.endReason]||0)+1;
     for(let role=0;role<2;role++){
+     for(const [action,count] of Object.entries(result.stats.byRole[role])){
+      fixtureActionTypes[role][action]=(fixtureActionTypes[role][action]||0)+count;
+      actionTypesByRole[role][action]=(actionTypesByRole[role][action]||0)+count;
+     }
      const timings=result.stats.decisionPerActionMsByRole[role];
      actionsByRole[role]+=timings.length;
      sampleTimes[role].push(...timings);
@@ -102,7 +109,8 @@ function evaluate(params){
   wins+=w;losses+=l;unfinished+=u;
   rows.push({name:f.left+' vs '+f.right,personality:f.persona,
    games:w+l+u,challengerWins:w,baselineWins:l,unfinished:u,
-   decisiveRate:w+l?w/(w+l):null,elapsedMs:Math.round(performance.now()-started)});
+   decisiveRate:w+l?w/(w+l):null,actionTypesByRole:fixtureActionTypes,
+   elapsedMs:Math.round(performance.now()-started)});
  }
  const n=wins+losses;
  const perRoleLatencyMs=sampleTimes.map((a,i)=>({samples:actionsByRole[i],
@@ -113,7 +121,7 @@ function evaluate(params){
   baselineLevel:params.baselineLevel,challengerLevel:params.challengerLevel,
   games:wins+losses+unfinished,challengerWins:wins,baselineWins:losses,
   unfinished,decisive:n,challengerDecisiveWinRate:n?wins/n:null,
-  wilson95:n?wilson(wins,n):null,perRoleLatencyMs,rows,errors,
+  wilson95:n?wilson(wins,n):null,perRoleLatencyMs,actionTypesByRole,endings,rows,errors,
   note:'Decks are legal curated archetype test builds, not historical tournament records. Games are paired by seat; deck roles reverse in explicitly mirrored fixtures. Timeout is not a win.'};
 }
 if(require.main===module)try{
