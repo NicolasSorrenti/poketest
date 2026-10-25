@@ -51,13 +51,14 @@
     const setTimer=options.setTimeout||setTimeout;
     const clearTimer=options.clearTimeout||clearTimeout;
     let current=null;
+    const idleCallbacks=new Set();
     const node=(tag,className,text)=>{
       const item=doc.createElement(tag);
       if(className)item.className=className;
       if(text!==undefined)item.textContent=text;
       return item;
     };
-    function dismiss(){
+    function dismiss(notify=true){
       if(!current)return;
       const {element,timer,onKey,finishAnimation,onDismiss}=current;
       current=null;
@@ -65,14 +66,25 @@
       if(doc.removeEventListener)doc.removeEventListener('keydown',onKey,true);
       element.removeEventListener('animationend',finishAnimation);
       element.remove();
-      onDismiss?.();
+      if(notify){
+        onDismiss?.();
+        if(!current)for(const callback of [...idleCallbacks]){
+          idleCallbacks.delete(callback);callback();
+          if(current)break;
+        }
+      }
+    }
+    function whenIdle(callback){
+      if(!current){callback();return ()=>{};}
+      idleCallbacks.add(callback);
+      return ()=>idleCallbacks.delete(callback);
     }
     function present(change,options={}){
       const result=change?.kind==='travel'?planTravel(change):plan(change);
       if(!result)return null;
       // An ordinary location reveal cannot replace a day/period transition.
       if(result.kind==='travel'&&current&&current.plan?.kind!=='travel')return null;
-      dismiss(); // New transitions supersede old ones; no stale overlay or timer.
+      dismiss(false); // Replacement cannot run old idle callbacks in front of the next wipe.
       if(!doc?.body||typeof doc.createElement!=='function')return result;
       const reduced=!!win?.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches;
       const element=node('div','neo-timefx neo-timefx--'+result.kind+' neo-timefx--'+result.period+(reduced?' neo-timefx--reduced':''));
@@ -112,7 +124,7 @@
       current={element,timer,onKey,finishAnimation,plan:result,onDismiss:options.onDismiss};
       return result;
     }
-    return {present,presentTravel:detail=>present({...detail,kind:'travel'}),dismiss,get active(){return !!current;}};
+    return {present,presentTravel:(detail,options)=>present({...detail,kind:'travel'},options),dismiss,whenIdle,get active(){return !!current;}};
   }
   // The clock commits immediately, but the visual wipe must wait for the final
   // dialogue/CG to be acknowledged. A queue also keeps mandatory events behind
@@ -152,6 +164,7 @@
   const defaultPresenter=createPresenter();
   return {plan,planTravel,createPresenter,createSequence,
     present:(detail,options)=>defaultPresenter.present(detail,options),
-    presentTravel:detail=>defaultPresenter.presentTravel(detail),
-    dismiss:()=>defaultPresenter.dismiss(),get active(){return defaultPresenter.active;}};
+    presentTravel:(detail,options)=>defaultPresenter.presentTravel(detail,options),
+    dismiss:()=>defaultPresenter.dismiss(),whenIdle:callback=>defaultPresenter.whenIdle(callback),
+    get active(){return defaultPresenter.active;}};
 });
