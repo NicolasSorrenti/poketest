@@ -133,6 +133,7 @@ const acknowledgeMandatory=async(page)=>{
    if(await dismiss.isVisible())await dismiss.click();
    // Complete the calendar wipe before inspecting/acknowledging the queued story.
    await page.waitForFunction(()=>!document.querySelector('.neo-timefx'),null,{timeout:8000});
+   await page.waitForFunction(()=>!document.querySelector('.neo-timefx'),null,{timeout:8000});
    await acknowledgeMandatory(page);
    await page.locator('#rpgSceneCast .rpg-cast-member[data-npc="yuna"]').click();
 
