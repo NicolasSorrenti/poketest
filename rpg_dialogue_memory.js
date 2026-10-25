@@ -1874,35 +1874,47 @@
   seen[id]={day:state.day,slot:Number.isInteger(state.slot)?state.slot:0};
   return true;
  }
+ // Resolve dependencies without assuming conversations happened. An aside can
+ // refer to another character's Talk or to an earlier *completed* aside.
+ function asideRequirement(npc,item,index=null){
+  if(!plain(item)||typeof item.requires!=='string')return null;
+  const [kind,positionText]=item.requires.split(':'),position=Number(positionText);
+  const from=item.from||npc;
+  if(!Number.isSafeInteger(position)||position<0||!asides[from])return null;
+  if(kind==='aside'){
+   if(from!==npc||index===null||position>=index||!asides[from][position])return null;
+   return {id:'aside:'+from+':'+position,seenIn:'asidesSeen'};
+  }
+  if(!['everyday','character'].includes(kind))return null;
+  const id=casualId(kind,from,position);
+  return id?{id,seenIn:'casualSeen'}:null;
+ }
+ function prerequisite(state,npc,item,index,currentId=null){
+  const required=asideRequirement(npc,item,index);
+  if(!required||required.id===currentId)return null;
+  const record=state?.dialogueMemory?.[required.seenIn]?.[required.id];
+  if(!plain(record)||!Number.isInteger(record.day)||record.day<1||record.day>=state.day)return null;
+  return required;
+ }
  function aside(state,npc,currentId=null){
   if(!plain(state)||!asides[npc]||!Number.isInteger(state.day)||
      state.day<2||state.day>90)return null;
-  const seen=state.dialogueMemory?.casualSeen;
-  if(!plain(seen))return null;
-  const done=state.dialogueMemory?.asidesSeen;
-  // A brief aside should appear occasionally during otherwise unrelated chats,
-  // rather than taking over important authored events or every Talk.
+  if(!plain(state.dialogueMemory?.casualSeen)||!plain(state.dialogueMemory?.asidesSeen))return null;
+  // Most casual conversations remain independent. This is a read-only selector.
   if(hash('casual-aside:'+npc+':'+state.day+':'+state.slot)%3!==0)return null;
-  const options=asides[npc].map((item,i)=>{
-   const [source,index]=item.requires.split(':');
-   return {item,i,priorId:casualId(source,npc,Number(index))};
-  })
-   .filter(({item,i,priorId})=>priorId!==currentId&&plain(seen[priorId])&&
-      Number.isInteger(seen[priorId].day)&&seen[priorId].day>=1&&seen[priorId].day<state.day&&
-      !done?.['aside:'+npc+':'+i]);
+  const done=state.dialogueMemory.asidesSeen;
+  const options=asides[npc].map((item,i)=>({item,i,required:prerequisite(state,npc,item,i,currentId)}))
+   .filter(({i,required})=>required&&!done['aside:'+npc+':'+i]);
   if(!options.length)return null;
   const chosen=options[hash('casual-aside-pick:'+npc+':'+state.day+':'+state.slot)%options.length];
-  return {id:'aside:'+npc+':'+chosen.i,requires:chosen.priorId,
+  return {id:'aside:'+npc+':'+chosen.i,requires:chosen.required.id,
    lines:chosen.item.lines.map((text,i)=>({speaker:i%2?'Protagonist':npc,text}))};
  }
  function markAside(state,id){
   const match=typeof id==='string'&&/^aside:([a-z0-9_-]+):([0-9]+)$/.exec(id);
   if(!plain(state)||!match||!Number.isInteger(state.day)||state.day<1||state.day>90)return false;
   const [,npc,ordinal]=match,entry=asides[npc]?.[Number(ordinal)];
-  if(!entry)return false;
-  const [source,idx]=entry.requires.split(':'),original=casualId(source,npc,Number(idx));
-  const seen=state.dialogueMemory?.casualSeen?.[original];
-  if(!plain(seen)||!Number.isInteger(seen.day)||seen.day>=state.day)return false;
+  if(!entry||!prerequisite(state,npc,entry,Number(ordinal)))return false;
   const memory=hydrate(state);
   if(memory.asidesSeen[id])return false;
   memory.asidesSeen[id]={day:state.day};
@@ -1918,9 +1930,11 @@
    }
   }
   for(const [npc,rows] of Object.entries(asides)){
-   if(!threads[npc]||rows.length!==2)errors.push(npc+': asides');
-   for(const row of rows)if(!/^(everyday|character):[0-9]+$/.test(row.requires)||
-    row.lines.length!==3||row.lines.some(x=>typeof x!=='string'||!x.trim()))errors.push(npc+': aside format');
+   if(!threads[npc]||rows.length!==6)errors.push(npc+': asides');
+   for(const [i,row] of rows.entries()){
+    if(!asideRequirement(npc,row,i))errors.push(npc+': invalid prerequisite '+i);
+    if(row.lines.length!==3||row.lines.some(x=>typeof x!=='string'||!x.trim()))errors.push(npc+': aside format '+i);
+   }
   }
   return errors;
  }
