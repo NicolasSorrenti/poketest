@@ -101,8 +101,8 @@ test('existing casual chats expose stable memory IDs without changing a single a
    if(entry.source==='character')
     assert.ok(CHARACTER.scenes[npc].some((topic,i)=>topic[0]===entry.lines[0].text&&entry.id===MEMORY.casualId('character',npc,i)));
   }
-  assert.ok(seen.has('casual:everyday:'+npc+':0'),npc+' ordinary topic must be reachable');
-  assert.ok(seen.has('casual:character:'+npc+':1'),npc+' character-specific topic must be reachable');
+  assert.ok(seen.has(MEMORY.casualId('everyday',npc,0)),npc+' ordinary topic must be reachable');
+  assert.ok(seen.has(MEMORY.casualId('character',npc,1)),npc+' character-specific topic must be reachable');
  }
  const first=VN.dialogueEntry({day:1,slot:0},'hana',cast.hana,null,{first:true});
  assert.equal(first.id,null,'introductions are not retroactively counted as casual conversations');
