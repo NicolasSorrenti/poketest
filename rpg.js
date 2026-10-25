@@ -3,7 +3,7 @@
 const $=id=>document.getElementById(id),KEY='neoHarborRpgV1',STORY=window.NeoHarborStory,SCHEDULES=window.NeoRpgSchedules,WORLD=window.NeoRpgWorld,ARC=window.NeoRpgRivalArc,TOURNAMENTS=window.NeoRpgTournaments,COMPETE=window.NeoRpgCompetitiveLoop,BRIDGE=window.NeoRpgDuelBridge;
 const PACK=window.NeoRpgNarrativePack,SIDE=window.NeoRpgSideQuests,EPILOGUE=window.NeoRpgEpilogue,APPOINTMENTS=window.NeoRpgAppointments,INTENTIONS=window.NeoRpgIntentions,CG=window.NeoRpgCGGallery,PLANNER=window.NeoRpgDailyPlanner,SOCIAL=window.NeoRpgSocialActivities,DATES=window.NeoRpgPlannedDates,PRE=window.NeoRpgPreDuel,SITUATIONS=window.NeoRpgSituations,SLICE=window.NeoRpgSliceOfLife,JOURNEY=window.NeoRpgSeasonJourney,COLLECT=window.NeoRpgCollection,RPGD=window.NeoRpgDialogue,BONDS=window.NeoRpgBondRewards,PARTNER=window.NeoRpgPartnerDecks,VN=window.NeoRpgConversations;
 const TUTORIAL=window.NeoRpgTutorials||null;
-const INVITES=window.NeoRpgEventInvites||null,SCENE_CAST=window.NeoRpgSceneCast,MANDATORY=window.NeoRpgMandatoryEvents||null,REACT=window.NeoRpgReactivity,COMMUNITY=window.NeoRpgCommunity,CONSEQ=window.NeoRpgConsequences,NPC_DECKS=window.NeoRpgNpcDeckProgression;
+const INVITES=window.NeoRpgEventInvites||null,SCENE_CAST=window.NeoRpgSceneCast,MANDATORY=window.NeoRpgMandatoryEvents||null,REACT=window.NeoRpgReactivity,COMMUNITY=window.NeoRpgCommunity,CONSEQ=window.NeoRpgConsequences,NPC_DECKS=window.NeoRpgNpcDeckProgression,TIME=window.NeoRpgTimeCoordinator,REL=window.NeoRpgRelationships;
 const MANDATORY_EVENTS=[...(window.NeoRpgSeasonEvents?.events||[]),...(window.NeoRpgCharacterPacks?.mandatoryEvents||[])];
 const periods=['Morning','Afternoon','Evening'];
 const OUTFITS=window.NeoRpgOutfits;
@@ -37,7 +37,7 @@ function eligibleStories(){const nearby=SCHEDULES.peopleAt(state.day,state.slot,
 function storyDialogueLines(id){const lines=STORY.linesFor(state,id);return RPGD?.storyLines(id,lines)||lines;}
 function startStory(id){
  if(state.activeSituation||state.activeSideQuest||state.activeStory||state.activeEncounter||state.activeArc||state.pendingDuel)return;
- const e=eligibleStories().find(e=>e.id===id);if(!e)return;
+ const e=eligibleStories().find(e=>e.id===id);if(!e||!confirmTimeAdvance())return;
  state.selected=e.npc;state.activeStory={id:e.id,phase:'lines',index:0,choice:null};persist();render();
 }
 function renderStory(){
@@ -73,8 +73,8 @@ function finishStory(){
  const a=state.activeStory;if(!a||a.phase!=='response')return;
  const e=STORY.byId(a.id);
  let result;try{result=STORY.resolve(state,a.id,a.choice)}catch(err){$('notice').textContent=err.message;return;}
- const id=e.npc,bond=state.bonds[id],updated=state.relationships[id];
- for(const metric of ['affection','trust','duels'])bond[metric]=Math.max(bond[metric]||0,updated[metric]||0);
+ const id=e.npc;
+ // STORY.resolve has already committed and mirrored the selected relationship effects.
  const chapterReward=BONDS.reward(state,e,BOND_PLAN,COLLECT);
  log('Finished '+e.title+' with '+cast[id].name+'.');const storyMemories=recordCG('story_milestone',id,{eventId:e.id});recordIntention('story');
  if(chapterReward)log('Bond chapter '+chapterReward.chapter+' reward from '+cast[id].name+': '+chapterReward.label+'.');
@@ -86,6 +86,9 @@ function finishStory(){
 
 function beginSideQuest(id){
  if(state.activeSituation||state.activeSideQuest||state.activeStory||state.activeEncounter||state.activeArc||state.pendingDuel||state.day>90)return;
+ const chapter=SIDE.available(state,currentPeople()).find(x=>x.quest.id===id);
+ // Duel stages do not spend time until the actual match is launched.
+ if(!chapter||(chapter.stage.kind!=='duel'&&!confirmTimeAdvance()))return;
  try{const x=SIDE.begin(state,id,currentPeople());state.selected=x.stage.npc;persist();render();}
  catch(err){$('notice').textContent=err.message;}
 }
@@ -174,6 +177,11 @@ if(cast.laca&&!state.flags.lacaChildhoodFriendInitialized){
  b.trust=Math.max(b.trust||0,r.trust);b.affection=Math.max(b.affection||0,r.affection);
  state.flags.lacaChildhoodFriendInitialized=true;
 }
+for(const id of Object.keys(cast)){const old=state.bonds[id],current=state.relationships[id];
+ if(!state.flags['newStoryMigrated_'+id]){for(const key of ['affection','trust','duels'])current[key]=Math.max(current[key]||0,old[key]||0);
+ state.flags['newStoryMigrated_'+id]=true;}
+}
+REL.hydrate(state,Object.keys(cast));
 WORLD.hydrate(state);
 SIDE.hydrate(state);
 SIDE.expire(state);
@@ -185,10 +193,6 @@ REACT.hydrate(state);
 COMMUNITY.hydrate(state);
 CONSEQ.hydrate(state);
 APPOINTMENTS.hydrate(state);APPOINTMENTS.expire(state);INTENTIONS.hydrate(state);CG.hydrate(state);SOCIAL.hydrate(state);DATES.hydrate(state,APPOINTMENTS,SOCIAL);SITUATIONS.hydrate(state);SLICE?.hydrate(state);
-for(const id of Object.keys(cast)){const old=state.bonds[id],current=state.relationships[id];
- if(!state.flags['newStoryMigrated_'+id]){for(const key of ['affection','trust','duels'])current[key]=Math.max(current[key]||0,old[key]||0);
- state.flags['newStoryMigrated_'+id]=true;}
-}
 if(typeof state.activeStory==='string')state.activeStory=null;
 STORY.recordExpiry(state);
 if(MANDATORY)MANDATORY.hydrate(state,MANDATORY_EVENTS);
@@ -232,6 +236,8 @@ function maybeStartMandatory(){
  // Existing scripted dialogue, character choices, galleries, duel preparation and starter selection remain authoritative.
  if(state.activeSliceOfLife||scene.line||scene.choices?.length||state.deckJourney&&!state.deckJourney.starter
     ||$('cgMoment')?.open||$('preDuelDialog')?.open||$('galleryDialog')?.open||$('calendarDialog')?.open)return;
+ // A due meeting takes precedence over an automatic story that would relocate the player.
+ if(TIME.dueNow(state).length)return;
  const started=MANDATORY.takeNext(state,MANDATORY_EVENTS);
  if(started){autoTravelForEvent(mandatoryDestination(MANDATORY_EVENTS.find(e=>e.id===started.id)));persist();}
 }
@@ -296,11 +302,9 @@ function tutorialEvent(topic,inlineId=null){
  }else{tutorialQueue.push(tip);displayTutorial();}
 }
 function confirmTimeAdvance(periods=1){
- const now=(state.day-1)*3+state.slot;
- const pending=(state.appointments||[]).find(e=>e.status==='booked'&&
-  (e.day-1)*3+e.slot>=now&&(e.day-1)*3+e.slot<now+periods);
+ const pending=TIME.conflicts(state,periods)[0];
  if(!pending)return true;
- const when=pending.day===state.day?periods===1?'this period':periods===3?'today':'today':'on Day '+pending.day;
+ const when=pending.day===state.day?periods===1?'this period':'today':'on Day '+pending.day;
  return confirm('You agreed to meet '+(cast[pending.npc]?.name||'someone')+' '+when+
   ' at '+(places[pending.place]?.[0]||pending.place)+'. Advancing time will miss that appointment. Continue?');
 }
@@ -310,7 +314,7 @@ function disableTutorials(disabled){
  persist();
 }
 const atKey=(id)=>state.day+':'+state.slot+':'+id;
-function advance(n=1,transitionSource='activity',suppressTimeFlash=false){const beforeDay=state.day,beforeSlot=state.slot;for(let i=0;i<n;i++){state.slot++;if(state.slot>=3){state.slot=0;state.day++;}}if(state.day>90){state.day=91;state.ended=true;log('The Neo Harbor championship season has ended.');}
+function advance(n=1,transitionSource='activity',suppressTimeFlash=false){const beforeDay=state.day,beforeSlot=state.slot;TIME.advanceClock(state,n);if(state.day>90)log('The Neo Harbor championship season has ended.');
 state.selected=null;
 if(state.day>beforeDay){
  WORLD.newDay(state,state.day-beforeDay);
@@ -443,7 +447,7 @@ function showEncounter(){
 }
 function startEncounter(id){
  if(state.activeStory||state.activeEncounter||state.activeArc||state.pendingDuel||state.day>90)return;
- const e=WORLD.availableEncounters(state,currentPeople()).find(x=>x.id===id);if(!e)return;
+ const e=WORLD.availableEncounters(state,currentPeople()).find(x=>x.id===id);if(!e||!confirmTimeAdvance())return;
  state.activeEncounter={id,phase:'choice',choice:null};state.selected=e.npc||null;persist();render();
 }
 function chooseEncounter(value){
@@ -481,7 +485,9 @@ function performActivity(id){
 
 function startArc(id){
  if(state.activeStory||state.activeEncounter||state.activeArc||state.pendingDuel||state.day>90)return;
- const e=ARC.available(state,currentPeople()).find(x=>x.id===id);if(!e)return;
+ const e=ARC.available(state,currentPeople()).find(x=>x.id===id);
+ // Rival duel preparation is free; startDuel owns its eventual time warning.
+ if(!e||(e.id!=='reina_rival_trial'&&!confirmTimeAdvance()))return;
  state.activeArc={id,phase:'lines',index:0,choice:null};state.selected='reina';persist();render();
 }
 function showArc(){
@@ -563,6 +569,7 @@ function showSituation(){
 }
 function beginSituation(id){
  if(state.activeSituation||state.activeStory||state.activeSideQuest||state.activeArc||state.activeEncounter||state.pendingDuel)return;
+ if(!SITUATIONS.available(state,currentPeople()).some(e=>e.id===id)||!confirmTimeAdvance())return;
  try{const e=SITUATIONS.start(state,id,currentPeople());state.selected=e.npc;persist();render();}
  catch(err){$('notice').textContent=err.message;}
 }
@@ -813,7 +820,7 @@ function act(action){
   persist();
   return sayConversation(lines,[]);
  }
- if(type==='hang'){if(state.hungOut[state.day+':'+id])return say(c.name,'I enjoyed our time today. Let us make plans another day.',options(id));state.hungOut[state.day+':'+id]=true;bond.affection+=2;bond.trust++;state.relationships[id].affection+=2;state.relationships[id].trust++;log('Spent time with '+c.name+'.');recordIntention('hangout');const memories=recordCG('hangout',id);advance();state.selected=null;say(c.name,Array.isArray(c.hangouts)&&c.hangouts.length?c.hangouts[(state.day+bond.duels)%c.hangouts.length]:'That was a lovely way to spend part of the day. See you around.');showCGMoment(memories[0]);return;}
+ if(type==='hang'){if(state.hungOut[state.day+':'+id])return say(c.name,'I enjoyed our time today. Let us make plans another day.',options(id));if(!confirmTimeAdvance())return;state.hungOut[state.day+':'+id]=true;REL.apply(state,id,{affection:2,trust:1});log('Spent time with '+c.name+'.');recordIntention('hangout');const memories=recordCG('hangout',id);advance();state.selected=null;say(c.name,Array.isArray(c.hangouts)&&c.hangouts.length?c.hangouts[(state.day+bond.duels)%c.hangouts.length]:'That was a lovely way to spend part of the day. See you around.');showCGMoment(memories[0]);return;}
 }
 
 const cardNames=new Map(),cardImages=new Map();

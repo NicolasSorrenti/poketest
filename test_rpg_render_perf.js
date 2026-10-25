@@ -65,7 +65,7 @@ assert.match(game,/NeoRpgRenderPerf\.reconcileKeyed\(body,entries/,'dock reconci
 assert.match(game,/NeoRpgRenderPerf\.reconcileKeyed\(\$\('places'\),placeEntries/,'map reconciliation integrated');
 assert.match(game,/if\(portraitRoot\.dataset\.npc!==nextPortrait\|\|portraitRoot\.dataset\.artSrc!==nextArt\)/,'portrait preserves image until the character or outfit changes');
 assert.match(game,/const selected=button\.dataset\.tab===rpgLocalTab/,'selected tab updates on same button');
-assert.match(html,/src="\/rpg_character_bootstrap\.js"/,'RPG loads scripts through the authorized bootstrap');
+assert.match(html,/src="\/rpg_character_bootstrap\.js(?:\?v=[^"]+)?"/,'RPG loads scripts through the authorized bootstrap');
 const bootstrap=fs.readFileSync('rpg_character_bootstrap.js','utf8');
 assert.ok(bootstrap.includes('"/rpg_render_perf.js"'),'render performance helper is in the bootstrap dependency list');
 assert.ok(bootstrap.indexOf('"/rpg_render_perf.js"')<bootstrap.indexOf('"/rpg.js"'),'render helper is loaded before RPG entrypoint');
