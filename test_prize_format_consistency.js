@@ -40,4 +40,50 @@ for(const format of historical){
   assert.equal(game.pendingDecision.actor,1);
  }
 }
-console.log('PASS all six historical formats prompt for a chosen Prize with 4 or 6 cards');
+// A single attack can Knock Out an Active and an already-damaged Benched Pokémon.
+// Both earned Prizes must be chosen before the defender's forced promotion.
+{
+ const g=createGame({decks:[deck,deck],format:'classic',prizeCount:4,seed:418});
+ g.phase='game';g.setupReady=[true,true];g.turn=0;g.turnSerial=4;g.round=4;
+ g.players[0].active=U('base1-7',['base1-97']);
+ g.players[1].active=U('base1-61',[],15);
+ g.players[1].bench=[U('base1-35',[],30),U('base1-52')];
+ g.players[0].prizes=['base1-91','base1-94','base1-95','base1-93'];
+ g.players[0].prizeFaceUp=[false,true,false,false];
+ let r=applyCommand(g,0,{type:'attack',payload:{attackIndex:0}});
+ assert.equal(r.ok,true,r.error);
+ assert.equal(g.pendingDecision?.kind,'prize-card');
+ assert.equal(g.players[0].prizes.length,4,'Multiple Knock Outs do not auto-claim Prizes');
+ r=applyCommand(g,0,{type:'choose',payload:{decisionId:g.pendingDecision.id,selected:['prize:2']}});
+ assert.equal(r.ok,true,r.error);
+ assert.equal(g.pendingDecision?.kind,'prize-card','Second Knock Out queues second Prize choice');
+ r=applyCommand(g,0,{type:'choose',payload:{decisionId:g.pendingDecision.id,selected:['prize:0']}});
+ assert.equal(r.ok,true,r.error);
+ assert.deepEqual(g.players[0].prizes,['base1-94','base1-93']);
+ assert.deepEqual(g.players[0].prizeFaceUp,[true,false]);
+ assert.equal(g.players[1].active?.id,'base1-52','Only surviving Benched Pokémon auto-promotes');
+ assert.equal(g.turn,1,'Turn advances only after all Prize claims and promotions');
+}
+// A Prize-race victory must be awarded after the final selection, even when
+// the defender still has a Benched Pokémon. Champion CPU must resolve its own
+// Prize decision without seeing card identities.
+{
+ const g=createGame({decks:[deck,deck],format:'classic',prizeCount:4,seed:418});
+ g.phase='game';g.setupReady=[true,true];g.turn=1;g.turnSerial=4;g.round=4;
+ g.players[1].active=U('base1-7',['base1-97']);
+ g.players[0].active=U('base1-61',[],15);
+ g.players[0].bench=[U('base1-52')];
+ g.players[1].prizes=['base1-91'];
+ g.players[1].prizeFaceUp=[false];
+ let result=applyCommand(g,1,{type:'attack',payload:{attackIndex:0}});
+ assert.equal(result.ok,true,result.error);
+ assert.equal(g.over,false,'Winning Knock Out waits for Prize selection');
+ assert.equal(g.pendingDecision?.actor,1,'CPU is the Prize actor');
+ const {driveSide}=require('./cpu_policy');
+ const resolved=driveSide(g,{side:1,level:5,personality:'tactical',limit:12});
+ assert.equal(resolved.game.over,true);
+ assert.equal(resolved.game.winner,1,'Taking the final Prize awards the win');
+ assert.ok(resolved.commands.some(entry=>entry.command.type==='choose'),'Champion resolves Prize prompt');
+ assert.equal(resolved.game.players[1].prizes.length,0);
+}
+console.log('PASS manual Prize choices: all six historical formats, simultaneous KOs, final Prize, Champion CPU');
