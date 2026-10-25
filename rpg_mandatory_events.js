@@ -121,7 +121,11 @@
   const stamp=state.day+':'+state.slot;
   const index=m.pending.findIndex(p=>{
    const e=events.find(x=>x.id===p.id);
-   return e&&(m.lastPlayedStamp!==stamp||e.closure===true||state.day>90)&&testPredicate(e.trigger,state);
+   // Once queued, a dayLte window must not expire while another scene or duel
+   // blocks delivery. Recheck every other prerequisite against current state.
+   const eligibleNow=testPredicate(e?.trigger,state);
+   const eligibleWhenQueued=e&&testPredicate(e.trigger,{...state,day:p.eligibleDay});
+   return e&&(m.lastPlayedStamp!==stamp||e.closure===true||state.day>90)&&(eligibleNow||eligibleWhenQueued);
   });
   if(index<0)return null;
   const item=m.pending.splice(index,1)[0];
