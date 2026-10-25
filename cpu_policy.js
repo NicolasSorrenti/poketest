@@ -847,7 +847,13 @@ function chooseAction(game,raw={},memo={}){
   probedCandidates++;
   const result=reduce(game,cfg.side,item.action);
   if(result.ok)return {command:item.action,game:result.game,score:item.score,alternatives:ranked.length,
-   probedCandidates,rejectedCandidates,searchNodes:deep.nodes};
+   probedCandidates,rejectedCandidates,searchNodes:deep.nodes,
+   ...(raw.diagnostics===true?{searchDiagnostics:{
+    rootsAvailable:deep.rootsAvailable||0,
+    rootsVisited:deep.rootsVisited||0,
+    rootDiagnostics:deep.rootDiagnostics||[],
+    elapsedMs:deep.elapsedMs||0
+   }}:{})};
   rejectedCandidates++;
  }
  return null;
