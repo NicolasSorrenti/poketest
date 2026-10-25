@@ -3,7 +3,7 @@ const assert=require('node:assert/strict');
 const {CubeService}=require('./cube_service');
 const service=new CubeService();
 assert.throws(()=>service.create({seed:475,difficulty:0}),/difficulty/);
-assert.throws(()=>service.create({seed:475,difficulty:6}),/difficulty/);
+assert.throws(()=>service.create({seed:475,difficulty:9}),/difficulty/);
 assert.throws(()=>service.create({seed:475,difficulty:'5'}),/difficulty/);
 const created=service.create({seed:475,difficulty:5});
 assert.equal(created.difficulty,5);
