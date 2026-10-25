@@ -934,6 +934,21 @@ function planningBonus(action,o,cfg){
  return Math.max(-45,Math.min(135,immediate+synergy))*cfg.style.damage;
 }
 
+function energyPreparationActions(o,cfg,actions){
+ // Attacking ends the turn. Use a legal, productive Energy attachment first,
+ // unless an already-affordable attack guarantees the final knockout.
+ if(cfg.level!==8||o.self.energyUsed)return actions;
+ const useful=actions.some(a=>a.type==='attach_energy'&&
+  energyValue(slotUnit(o.self,a.payload.slot),o.self.hand[a.payload.handIndex])>12);
+ if(!useful)return actions;
+ const gameWinningKo=(o.self.prizeCount<=1||o.opponent.bench.length===0)&&
+  actions.some(a=>{
+   if(a.type!=='attack')return false;
+   const attacks=o.self.active?.effectiveAttacks||card(o.self.active?.id)?.attacks||[];
+   return knockoutChance(attacks[a.payload.attackIndex],o.self.active,o.opponent.active)>=.999;
+  });
+ return gameWinningKo?actions:actions.filter(a=>a.type!=='attack');
+}
 function chooseAction(game,raw={},memo={}){
  const cfg=configuration(raw),o=observation(game,cfg.side);
  const used={trainers:memo.trainers||0,powers:memo.powers||0,powerKeys:memo.powerKeys||new Set(),stadium:!!memo.stadium};
@@ -947,20 +962,7 @@ function chooseAction(game,raw={},memo={}){
   actions;
  if(!safeActions.length)return null;
  const random=rng(cfg.seed+game.turnSerial*7919+(game.events?.length||0)*17011+cfg.side*31);
- // A normal attack ends the turn. Preserve a legal, productive attachment
- // first when it develops an attack, unless an existing attack is guaranteed
- // to take the last Prize or eliminate the opponent's last Pokémon.
- const usefulAttachment=cfg.level===8&&!o.self.energyUsed&&
-  safeActions.some(a=>a.type==='attach_energy'&&
-   energyValue(slotUnit(o.self,a.payload.slot),o.self.hand[a.payload.handIndex])>12);
- const winningAttack=(o.self.prizeCount<=1||o.opponent.bench.length===0)&&
-  safeActions.some(a=>{
-   if(a.type!=='attack')return false;
-   const attacks=o.self.active?.effectiveAttacks||card(o.self.active?.id)?.attacks||[];
-   return knockoutChance(attacks[a.payload.attackIndex],o.self.active,o.opponent.active)>=.999;
-  });
- const preparedActions=usefulAttachment&&!winningAttack?
-  safeActions.filter(a=>a.type!=='attack'):safeActions;
+ const preparedActions=energyPreparationActions(o,cfg,safeActions);
  const ranked=preparedActions.map((action,i)=>({action,
   score:score(action,o,cfg,used)+planningBonus(action,o,cfg)+prizeRaceBonus(action,o,cfg)+knockoutTempoBonus(action,o,cfg)+opponentResponseBonus(action,o,cfg)+energyHorizonBonus(action,o,cfg),tie:i}))
   .sort((a,b)=>b.score-a.score||a.tie-b.tie);
@@ -1040,4 +1042,4 @@ function driveSide(initial,{side=1,level=3,personality='balanced',seed=1,plannin
 }
 function driveBot(game,limit=200,config={}){return driveSide(game,{...config,side:1,limit});}
 function propose(game,config={}){return chooseAction(game,{...config,side:1});}
-module.exports={SKILLS,CALIBRATED_SKILLS,PERSONALITIES,configuration,observation,trainerOpportunity,candidates,score,knockoutChance,planningBonus,evolutionTempoPenalty,prizeRaceBonus,knockoutTempoBonus,opponentResponseBonus,energyHorizonBonus,chooseAction,driveSide,driveBot,propose};
+module.exports={SKILLS,CALIBRATED_SKILLS,PERSONALITIES,configuration,observation,trainerOpportunity,candidates,score,knockoutChance,planningBonus,evolutionTempoPenalty,prizeRaceBonus,knockoutTempoBonus,opponentResponseBonus,energyHorizonBonus,energyPreparationActions,chooseAction,driveSide,driveBot,propose};
