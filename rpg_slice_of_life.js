@@ -9,6 +9,7 @@
  const DIRECTOR=typeof module==='object'&&module.exports?require('./rpg_encounter_director'):window.NeoRpgEncounterDirector;
  const REL=typeof module==='object'&&module.exports?require('./rpg_relationships'):window.NeoRpgRelationships;
  const PACKS=typeof module==='object'&&module.exports?require('./rpg_character_packs.generated'):window.NeoRpgCharacterPacks;
+ const FIT=typeof module==='object'&&module.exports?require('./rpg_akari_barb_event'):window.NeoRpgAkariBarbFitting;
  const scenes=[
   {
     "id": "hana_the_crooked_display",
@@ -801,6 +802,7 @@
    art:{scene:e.title,composition:'Approved single horizontal story CG',outfit:'Approved character outfit',
     expression:'Authored everyday expression',environment:e.place,mood:'everyday',fanservice:0}});
  }
+ scenes.push({...FIT.event, minAffection:0, image:FIT.cgs[0].path, cgSequence:FIT.cgs.map(x=>x.id), art:{scene:'Akari and Barb fitting a swimsuit at Barb\'s workshop.',composition:'Approved cinematic 16:9 story CG with lower fifth clear for dialogue.',outfit:'Approved swimsuit-fitting scene outfits',expression:'Natural flustered and professional expressions',environment:'Barb\'s workshop',mood:'lighthearted',fanservice:1}});
  const index=new Map(scenes.map(e=>[e.id,e]));
  const authored=(PACKS?.packs||[]).flatMap(p=>p.events);
  function scheduleOverrides(state){
@@ -847,7 +849,7 @@
    state.activeArc||state.activeEncounter||state.activeSituation||state.pendingDuel||state.mandatoryEventState?.active||
    state.day>90||state.sliceOfLifeLastDay===state.day)return [];
   return scenes.filter(e=>(e.trigger===trigger||(e.encounterType==='slice'&&trigger==='talk'))&&(!npc||e.npc===npc)&&state.location===e.place&&state.slot===e.slot&&
-   state.day>=e.start&&state.day<=e.end&&people.includes(e.npc)&&state['met_'+e.npc]&&
+   state.day>=e.start&&state.day<=e.end&&(e.participants||[e.npc]).every(id=>people.includes(id)&&state['met_'+id])&&
    (!e.prerequisite||state.sliceOfLifeDone?.[e.prerequisite]||state.storyDone?.[e.prerequisite])&&
    !state.sliceOfLifeDone?.[e.id]&&(state.relationships?.[e.npc]?.affection||0)>=e.minAffection);
  }

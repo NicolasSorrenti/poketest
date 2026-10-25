@@ -589,15 +589,24 @@ function beginSliceOfLife(trigger,npc=null){
  const moment=SLICE.start(state,currentPeople(),trigger,npc);
  if(!moment)return false;
  state.selected=moment.npc;
- const memory=moment.choices?CG.byId(moment.id):recordCG('slice',moment.npc,{eventId:moment.id})[0];
+ const memory=moment.choices?CG.byId(moment.cgSequence?.[0]||moment.id):recordCG('slice',moment.npc,{eventId:moment.id})[0];
  persist();render();showCGMoment(memory,!!moment.choices);
  return true;
 }
 function nextSliceOfLife(){
+ const before=state.activeSliceOfLife;
  const result=SLICE.next(state);
  if(!result)return;
+ if(!result.done&&before&&result.step===4){
+  const moment=SLICE.byId(result.id),second=moment?.cgSequence?.[1]&&CG.byId(moment.cgSequence[1]);
+  if(second){
+   state.sliceOfLifeCgShown=state.sliceOfLifeCgShown||{};
+   const shown=state.sliceOfLifeCgShown[result.id]||[];
+   if(!shown.includes(4)){shown.push(4);state.sliceOfLifeCgShown[result.id]=shown;persist();render();showCGMoment(second,true);}
+  }
+ }
  if(result.done){const moment=SLICE.byId(result.id);
-  if(moment.choices)recordCG('slice',moment.npc,{eventId:moment.id});
+  if(moment.choices){const owners=[moment.npc,...(moment.participants||[])];for(const owner of new Set(owners))recordCG('slice',owner,{eventId:moment.id});}
   log('A small moment with '+(cast[moment?.npc]?.name||'a friend')+'.');
   persist();
   return closeSceneDialogue();}
@@ -1520,7 +1529,7 @@ function loadCGArt(image,entry,thumbnail,onSuccess,onMissing){
  attempt();
 }
 function showCGMoment(entry,encounterPreview=false){
- const preview=encounterPreview&&state.activeSliceOfLife?.id===entry?.id&&SLICE.byId(entry?.id)?.choices;
+ const activeMoment=SLICE.byId(state.activeSliceOfLife?.id);const preview=encounterPreview&&activeMoment?.choices&&((activeMoment.cgSequence||[activeMoment.id]).includes(entry?.id));
  if(!entry||(!CG.unlocked(state,entry.id)&&!preview))return false;
  // Hold the next calendar wipe and any due mandatory event while artwork loads
  // and until its modal is closed. Missing images must release this hold too.
