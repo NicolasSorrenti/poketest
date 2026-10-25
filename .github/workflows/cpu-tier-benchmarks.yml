@@ -25,4 +25,4 @@ jobs:
       - name: Validate policy and experimental levels
         run: node --test tests/cpu_deep_levels.test.js
       - name: Paired and mirrored matches against RPG Champion
-        run: node scripts/benchmark-cpu-advanced.js --level ${{ matrix.level }} --pairs 3 --max-turns 45 --fixtures 4
+        run: node scripts/benchmark-cpu-advanced.js --level ${{ matrix.level }} --pairs 25 --max-turns 120 --fixtures 8
