@@ -470,6 +470,20 @@ function choiceValue(option,decision,o,cfg){
   }
   return own?setupValue(target):110-hpRemaining(target);
  }
+ if(/^deck:/.test(id)&&cfg?.level>=8&&/^Search your deck for any card$/i.test(ctx)){
+  // Prefer an Energy that makes the Active attack *this turn* over an
+  // attractive but tactically irrelevant Basic Pokémon.
+  // Deck option IDs are indices, not card IDs. Resolve by the public
+  // option label; never inspect unrevealed deck order.
+  const candidateId=[...CATALOG.values()].find(c=>c.name===label)?.id;
+  const candidate=candidateId?card(candidateId):null;
+  if(candidate&&isEnergy(candidate)&&!o.self.energyUsed&&o.self.active&&o.opponent.active){
+   const before=strongestAffordableAttack(o.self.active,o.opponent.active);
+   const after=damageAfterAttachment(o.self.active,candidateId,o.opponent.active);
+   if(before===0&&after>0)return 1000+after;
+   if(after>before)return 450+after;
+  }
+ }
  if(/^hand:|^deck:/.test(id))return /Energy/i.test(label)?20:40;
  if(/draw|recover|search|attach|heal/i.test(ctx))return 15;
  return 0;
@@ -637,6 +651,24 @@ function pokemonCenterEnergyWaste(o,slot){
  const u=slotUnit(o.self,slot);
  return !!(u&&u.damage>=10&&pokemonCenterPending(o));
 }
+// Evaluate a possible replacement against the opponent's *revealed* Active.
+// An unequipped Basic is not a ready attacker, and its weakness/HP matters.
+function benchMatchupValue(pokemonId,o){
+ const candidate={id:pokemonId,energies:[],damage:0,status:null};
+ const enemy=o.opponent.active;
+ if(!enemy)return 0;
+ const incoming=strongestAffordableAttack(enemy,candidate);
+ const hp=hpRemaining(candidate);
+ const canBeKnockedOut=incoming>0&&incoming>=hp;
+ const handEnergies=o.self.hand.filter(id=>isEnergy(card(id)));
+ const immediate=handEnergies.reduce((best,id)=>
+  Math.max(best,damageAfterAttachment(candidate,id,enemy)),0);
+ const ownCard=card(pokemonId);
+ const weakType=(ownCard?.weaknesses||[]).some(w=>
+  (card(enemy.id)?.types||[]).includes(w.type));
+ return (canBeKnockedOut?-175:0)+(weakType?-45:0)+
+  Math.min(80,immediate*.6)+(handEnergies.length===0?-20:0);
+}
 function score(a,o,cfg,used){
  const p=o.self,q=o.opponent,style=cfg.style,{type,payload:v}=a;
  if(type==='setup_bonus_draw')return 300;
@@ -679,7 +711,8 @@ function score(a,o,cfg,used){
   // a cheap attacker already online; the duel can end when Bench is empty.
   const backup=p.bench.length===0?cfg.level>=3?125:45:p.bench.length===1?cfg.level>=3?70:20:0;
   return (p.bench.length?43:100)+backup*style.setup+
-   setupValue({id:p.hand[v.handIndex]})*.32*style.setup;
+   setupValue({id:p.hand[v.handIndex]})*.32*style.setup+
+   (cfg.level>=8?benchMatchupValue(p.hand[v.handIndex],o):0);
  }
  if(type==='evolve'){
   const target=slotUnit(p,v.slot),after=card(p.hand[v.handIndex]);
@@ -763,7 +796,10 @@ function score(a,o,cfg,used){
   if(/Search|Computer|Ball|Trader|Elm/i.test(name))return 130*style.setup;
   if(name==='PlusPower'){
    const damage=strongestAffordableAttack(p.active,q.active),needed=hpRemaining(q.active)-damage;
-   return (damage>0&&needed>0&&needed<=10?300:cfg.level>=3?45:118)*style.damage;
+   // PlusPower only boosts an attack that can actually be paid for.
+   // Preserve the card when the Active cannot attack this turn.
+   return (damage>0&&needed>0&&needed<=10?300:
+    cfg.level>=8&&damage<=0?-500:cfg.level>=3?45:118)*style.damage;
   }
   if(/Defender|Berry|Focus Band/i.test(name))return 115*style.survival;
   return 75;
