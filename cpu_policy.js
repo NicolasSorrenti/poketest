@@ -957,7 +957,12 @@ function driveSide(initial,{side=1,level=3,personality='balanced',seed=1,plannin
   if(a.type==='play_trainer')memo.trainers++;
   if(a.type==='use_power'){memo.powers++;memo.powerKeys.add(a.payload.slot+':'+a.payload.powerIndex);}
   if(a.type==='use_stadium')memo.stadium=true;
-  commands.push({side,command:a,score:next.score,alternatives:next.alternatives,
+  const handCardId=['play_trainer','attach_energy','bench','evolve'].includes(a.type)?
+   game.players[side]?.hand?.[a.payload?.handIndex]:null;
+  const target=a.type==='attach_energy'?
+   (a.payload.slot===-1?game.players[side]?.active:game.players[side]?.bench?.[a.payload.slot]):null;
+  commands.push({side,turnSerial:beforeTurn,cardId:handCardId||null,
+   targetDamageBefore:target?.damage??null,command:a,score:next.score,alternatives:next.alternatives,
    probedCandidates:next.probedCandidates,rejectedCandidates:next.rejectedCandidates,searchNodes:next.searchNodes||0});
   game=next.game;steps++;
   if(onStep)onStep(game,a,steps);
