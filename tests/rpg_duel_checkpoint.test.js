@@ -71,6 +71,8 @@ test('RPG checkpoint stores every accepted move, restores after server restart a
    await new Promise(resolve=>setTimeout(resolve,5));
   assert.equal(fake.rows.get(prefix).revision,1);
   assert.ok(fake.rows.get(prefix).snapshot.game.players[0].active);
+  const settled=await api('state',{duelToken:token,method:'GET'});
+  assert.equal(settled.body.cloudSaved,true,'Acknowledged checkpoint is reported as durable');
   // Simulate a Render restart: RAM is gone, database still has the whole match.
   classic.sessions.clear();
   const restored=await api('rpg/resume',{body:{duelId:id}});
