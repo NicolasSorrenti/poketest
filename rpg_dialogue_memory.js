@@ -1094,7 +1094,10 @@
   // A brief aside should appear occasionally during otherwise unrelated chats,
   // rather than taking over important authored events or every Talk.
   if(hash('casual-aside:'+npc+':'+state.day+':'+state.slot)%3!==0)return null;
-  const options=asides[npc].map((item,i)=>({item,i,priorId:casualId(...[...item.requires.split(':' ).slice(0,1),npc,Number(item.requires.split(':')[1])])}))
+  const options=asides[npc].map((item,i)=>{
+   const [source,index]=item.requires.split(':');
+   return {item,i,priorId:casualId(source,npc,Number(index))};
+  })
    .filter(({item,i,priorId})=>priorId!==currentId&&plain(seen[priorId])&&
       Number.isInteger(seen[priorId].day)&&seen[priorId].day>=1&&seen[priorId].day<state.day&&
       !done?.['aside:'+npc+':'+i]);
