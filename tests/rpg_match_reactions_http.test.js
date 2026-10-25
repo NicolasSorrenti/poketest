@@ -16,7 +16,7 @@ const {server}=require('../server');
    assert.equal(response.status,200,script+' referenced by RPG must be served');
    assert.match(response.headers.get('content-type')||'',/text\/javascript/,script+' must have JS content type');
   }
-  for(const path of ['/rpg_match_reactions.js','/rpg_competitive_loop.js','/rpg_reactivity.js','/rpg_community.js','/rpg_consequences.js','/rpg_strategy.js','/rpg-assets/reactions/manifest.json']){
+  for(const path of ['/rpg_match_reactions.js','/rpg_competitive_loop.js','/rpg_reactivity.js','/rpg_dialogue_memory.js','/rpg_community.js','/rpg_consequences.js','/rpg_strategy.js','/rpg-assets/reactions/manifest.json']){
    const response=await fetch(origin+path);
    assert.equal(response.status,200,path+' must be served to the RPG duel iframe');
    assert.match(response.headers.get('content-type'),path.endsWith('.json')?/application\/json/:/text\/javascript/);
