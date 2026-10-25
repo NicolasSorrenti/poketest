@@ -1534,6 +1534,7 @@ function showCGMoment(entry,encounterPreview=false){
  const photo=document.createElement('img');
  photo.alt=entry.title;
  loadCGArt(photo,entry,false,kind=>{
+  const reveal=()=>{
   if(cgMomentRelease!==release)return;
   if(preview&&state.activeSliceOfLife?.id!==entry.id){release();return;}
   if(entry.category==='pre_duel'&&!state.pendingDuel){release();return;}
@@ -1546,6 +1547,11 @@ function showCGMoment(entry,encounterPreview=false){
   $('cgMomentCaption').textContent=cast[entry.character]?.name||entry.character;
   if(CG.unlocked(state,entry.id))CG.markViewed(state,entry.id);persist();
   if(!modal.open)modal.showModal();
+  };
+  // Entering a new area can start a travel wipe and a slice-of-life CG
+  // in the same render. Reveal the CG only after the arrival animation.
+  if(window.NeoRpgTimeTransitions?.active)window.NeoRpgTimeTransitions.whenIdle(reveal);
+  else reveal();
  },release);
  return true;
 }
@@ -2109,7 +2115,7 @@ function render(){
    window.NeoRpgTimeTransitions?.presentTravel?.({
     from:places[previousLocation]?.[0]||previousLocation,
     to:places[state.location]?.[0]||state.location
-   });
+   },{onDismiss:()=>render()});
   }
  }
  window.NeoRpgAudio?.setScene?.(state.location,state.slot);
