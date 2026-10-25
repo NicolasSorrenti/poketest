@@ -1,8 +1,9 @@
 'use strict';
-// RPG opponents always use the strongest available CPU skill from the first day.
+// RPG opponents always use the strongest validated CPU skill from the first day.
 // Campaign progression still changes their cards, not their decision-making effort.
 const {SKILLS,configuration}=require('./cpu_policy');
-const RPG_CPU_LEVEL=Math.max(...Object.keys(SKILLS).map(Number));
+// Experimental levels are opt-in until real matches demonstrate strength and latency.
+const RPG_CPU_LEVEL=5;
 const TACTICS=Object.freeze({prizeRace:true,knockoutTempo:true,opponentResponse:true});
 
 // The server owns this decision: an RPG launch cannot downgrade its opponent.
