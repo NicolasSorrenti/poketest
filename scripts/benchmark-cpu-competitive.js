@@ -16,12 +16,12 @@ const FIXTURES=Object.freeze({
   {left:'energy_denial',right:'haymaker',persona:'tactical'}
  ],
  evolution:[
-  {left:'meganium',right:'meganium',persona:'setup'},
+  {left:'venusaur',right:'venusaur',persona:'setup'},
   {left:'typhlosion',right:'typhlosion',persona:'setup'},
   {left:'feraligatr',right:'feraligatr',persona:'setup'},
-  {left:'meganium',right:'typhlosion',persona:'balanced'},
-  {left:'typhlosion',right:'meganium',persona:'balanced'},
-  {left:'feraligatr',right:'meganium',persona:'tactical'}
+  {left:'venusaur',right:'typhlosion',persona:'balanced'},
+  {left:'typhlosion',right:'venusaur',persona:'balanced'},
+  {left:'feraligatr',right:'venusaur',persona:'tactical'}
  ],
  control:[
   {left:'energy_denial',right:'energy_denial',persona:'tactical'},
@@ -35,8 +35,8 @@ const FIXTURES=Object.freeze({
   {left:'neo_dark',right:'neo_dark',persona:'aggressive'},
   {left:'neo_dark',right:'feraligatr',persona:'tactical'},
   {left:'feraligatr',right:'neo_dark',persona:'tactical'},
-  {left:'neo_dark',right:'meganium',persona:'balanced'},
-  {left:'meganium',right:'neo_dark',persona:'balanced'},
+  {left:'neo_dark',right:'venusaur',persona:'balanced'},
+  {left:'venusaur',right:'neo_dark',persona:'balanced'},
   {left:'feraligatr',right:'typhlosion',persona:'setup'}
  ]
 });
