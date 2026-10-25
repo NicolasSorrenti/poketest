@@ -27,6 +27,35 @@ The updated Apex `counterplayExposure` now computes **only the marginal addition
 
 This code change happened **after** run 40152500262 and must **not** be credited for that result. Updated CI tests, expanded personality diagnostics and new matches were queued at documentation time. Keep Level 7 until fresh held-out trials establish improvement.
 
+## Latest decision-replay findings
+
+The first completed loss-replay investigation in GitHub run
+[40152653221](https://github.com/NicolasSorrenti/poketest/actions/runs/40152653221)
+verified the authoritative transcript of one Apex loss among four seeded games.
+In that loss, **the first move of each of 24 Apex turns matched Mastermind**.
+This was a diagnostic limitation, not evidence that the whole policies agree:
+the original tool compared only turn-opening choices and missed later actions
+after Energy attachments, evolving, Trainer and Power usage.
+
+`scripts/diagnose-cpu-losses.js` now compares **every** Apex action on the
+replayed position, reconstructs the same per-turn Trainer, Power and Stadium
+use counters that `driveSide` passes to `chooseAction`, and records exact
+public Bench/hand context for disagreements. It fails CI if replayed games
+diverge or the allegedly executed Apex action cannot be reproduced by its
+own policy. Results from this expanded replay are still pending at the time
+of writing.
+
+## Further evaluator calibration (pending validation)
+
+Apex's post-turn forecast was found to impose two overlapping penalties for
+opponent attacks already affordable from publicly visible Energy. The shared
+`evaluateTurn` scorer already prices those immediate threats; Apex's revised
+`counterplayExposure` now adds only the **marginal uncertain threat** from a
+possible future Energy attachment. A blocked attack (Amnesia, attack-specific
+cooldown, or once-per-game use) no longer contributes to hypothetical replies.
+This is a targeted hypothesis, not yet proof of stronger play. Follow-up
+regressions and paired tournaments must validate it.
+
 ## Diagnostics and instrumentation
 
 - `scripts/diagnose-cpu-decisions.js`: both policies act hypothetically on exactly the same real-engine position. Logs own hand, public board and legal candidate disagreement; never uses opposing private hand/deck/prize IDs as input to ranking.
