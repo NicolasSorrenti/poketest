@@ -6,6 +6,7 @@
  if(typeof module==='object'&&module.exports)module.exports=api;
  if(root)root.NeoRpgSituations=api;
 })(typeof window!=='undefined'?window:null,function(){
+ const REL=typeof module==='object'&&module.exports?require('./rpg_relationships'):window.NeoRpgRelationships;
  const events=[
   {
     "id": "hana_apron_mixup",
@@ -556,11 +557,7 @@
   if(!r||!b)throw Error('Relationship data is unavailable');
   // All validation above happens before the first campaign write.
   s.focus=Math.max(0,s.focus-e.focusCost);
-  for(const key of ['affection','trust','respect']){
-   const n=option[key]||0;
-   r[key]=Math.min(999,(r[key]||0)+n);
-   if(key!=='respect')b[key]=Math.min(999,(b[key]||0)+n);
-  }
+  REL.apply(s,e.npc,{affection:option.affection||0,trust:option.trust||0,respect:option.respect||0});
   s.hungOut=s.hungOut||{};s.hungOut[s.day+':'+e.npc]=true;
   s.situationDone[e.id]={day:s.day,slot:s.slot,choice:a.choice};
   s.activeSituation=null;
