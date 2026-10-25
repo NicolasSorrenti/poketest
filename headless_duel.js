@@ -2407,6 +2407,19 @@ function calculateDamage(attacker,target,base,defendingUnit=null,{ignoreWeakness
  if(!ignoreResistance&&(defendingUnit?.resistanceOverride===type||(!defendingUnit?.resistanceOverride&&(target.resistances||[]).some(r=>r.type===type))))amount=Math.max(0,amount-resistancePenalty);
  return amount;
 }
+// Each Knock Out earns a selectable Prize in historical formats, regardless
+// of which format-specific card rules are active. Queue one claim per Knock Out.
+function awardKnockoutPrize(g,side){
+ const winner=g.players[side];
+ if(!winner.prizes.length)return;
+ if(isClassicRules(g)){
+  (g.pendingPrizeClaims ||= []).push(side);
+ }else{
+  // Retain old behavior for the unrestricted internal fixture format.
+  winner.hand.push(winner.prizes.pop());
+  winner.prizeFaceUp?.pop();
+ }
+}
 // Resolve both sides simultaneously before requiring promotions; needed for
 // Poison and recoil KOs. Pending decisions belong to the defending owner.
 function knockOuts(g,after){
@@ -2522,9 +2535,7 @@ function knockOuts(g,after){
   for(let i=p.bench.length-1;i>=0;i--){
    const u=p.bench[i];if(u.damage<maxHP(g,u))continue;
    p.bench.splice(i,1);p.discard.push(u.id,...u.under,...u.energies,...u.attachedTrainers.map(x=>x.id),...(u.gymShapeshiftCard?[u.gymShapeshiftCard]:[]));if(u.gymRebirthReturn){const ix=p.discard.lastIndexOf(u.id);if(ix>=0)p.hand.push(p.discard.splice(ix,1)[0]);}
-   const enemy=g.players[1-side];if(enemy.prizes.length){// All historical formats use the same player-chosen Prize resolution.
-    // Preserve legacy unrestricted behavior for old headless fixtures.
-    if(isClassicRules(g))(g.pendingPrizeClaims ||= []).push(1-side);else {enemy.hand.push(enemy.prizes.pop());enemy.prizeFaceUp?.pop();}}
+   awardKnockoutPrize(g,1-side);
    eliminated.push(side);log(g,`${p.name}'s Benched ${card(g,u.id).name} was Knocked Out.`);
   }
  }
@@ -2532,9 +2543,7 @@ function knockOuts(g,after){
   const p=g.players[side],u=p.active;
   if(!u||u.damage<maxHP(g,u))continue;
   p.discard.push(u.id,...u.under,...u.energies,...u.attachedTrainers.map(x=>x.id),...(u.gymShapeshiftCard?[u.gymShapeshiftCard]:[]));if(u.gymRebirthReturn){const ix=p.discard.lastIndexOf(u.id);if(ix>=0)p.hand.push(p.discard.splice(ix,1)[0]);}p.active=null;
-  const enemy=g.players[1-side];if(enemy.prizes.length){// All historical formats use the same player-chosen Prize resolution.
-    // Preserve legacy unrestricted behavior for old headless fixtures.
-    if(isClassicRules(g))(g.pendingPrizeClaims ||= []).push(1-side);else {enemy.hand.push(enemy.prizes.pop());enemy.prizeFaceUp?.pop();}}
+  awardKnockoutPrize(g,1-side);
   eliminated.push(side);log(g,`${p.name}'s Active ${card(g,u.id).name} was Knocked Out.`);
  }
  if(!eliminated.length){const needs=[0,1].filter(side=>!g.players[side].active);if(needs.length){for(const side of needs)if(!g.players[side].bench.length){g.over=true;g.winner=1-side;return true;}g.pendingPromotions=needs;g.promotionAfter=after;finishPromotions(g);return true;}return false;}
