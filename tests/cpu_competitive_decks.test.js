@@ -67,3 +67,19 @@ test('all archetypes enter a game with conserved cards and legal setup moves',()
   assert.equal(countCards(game.players[1]),60,entry.id);
  }
 });
+
+test('benchmark centerpiece Pokémon Powers and attack effects have engine handlers',()=>{
+ const POWERS=require('../classic_power_core');
+ const ATTACK=require('../attack_effects_core');
+ for(const power of ['Rain Dance','Energy Trans','Fire Recharge','Downpour'])
+  assert.ok(POWERS.ACTIVATED.has(power),
+   'benchmark must not silently rely on unsupported Power '+power);
+ for(const [id,move] of [['neo1-5','Riptide'],['base1-2','Hydro Pump'],
+  ['base1-15','Solarbeam']]){
+  const attack=CATALOG.get(id)?.attacks?.find(a=>a.name===move);
+  assert.ok(attack,'missing centerpiece attack '+id+' '+move);
+  assert.ok(ATTACK.compile(attack),'no engine support for '+id+' '+move);
+ }
+ assert.ok(!DECKS.archetypes.meganium,
+  'Meganium Wild Growth is not a tested Power until implemented');
+});
