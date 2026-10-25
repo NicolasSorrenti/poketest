@@ -24,6 +24,7 @@
  "/rpg_duel_bridge.js",
  "/rpg_epilogue.js",
  "/rpg_appointments.js",
+ "/rpg_time_coordinator.js",
  "/rpg_intentions.js",
  "/rpg_slice_of_life.js",
  "/rpg_cg_gallery.js",
