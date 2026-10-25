@@ -25,7 +25,7 @@ function coverageScore(c,colors){
  const viable=usableAttacks(c,colors);
  return viable.length?6+Math.max(0,4-Math.min(...viable.map(a=>(a.cost||[]).length))):c?.abilities?.length?1:-7;
 }
-function colorPlan(picks){
+function colorPlan(picks,{preferDual=false}={}){
  const basics=picks.filter(id=>pokemon(id)&&isBasicPokemon(card(id)));
  if(!basics.length)return ['Fighting'];
  const plans=TYPES.flatMap((a,i)=>[ [a],...TYPES.slice(i+1).map(b=>[a,b]) ]);
@@ -40,12 +40,12 @@ function colorPlan(picks){
    if(basics.some(x=>canEvolve(c,card(x)))&&requiredTypes(c).every(t=>colors.includes(t)))score+=2;
   }
   // Avoid splashing into a second color unless it unlocks several useful cards.
-  if(colors.length===2)score-=5;
+  if(colors.length===2)score+=preferDual?5:-5;
   return {colors,score};
  }).sort((a,b)=>b.score-a.score||a.colors.join().localeCompare(b.colors.join()));
  return ranked[0].colors;
 }
-function score(id,picks){
+function score(id,picks,{preset='balanced'}={}){
  const c=card(id);
  if(!c)return -Infinity;
  const name=c.name||'',seen=picks.map(card),basics=seen.filter(isBasicPokemon);
@@ -60,7 +60,7 @@ function score(id,picks){
  }
  const basic=isBasicPokemon(c),family=seen.some(x=>canEvolve(c,x));
  // Before selecting a Basic, don't force every possible pick to Fighting.
- const colors=basics.length?colorPlan(picks):
+ const colors=basics.length?colorPlan(picks,{preferDual:preset==='dual_energy'}):
   [...new Set(requiredTypes(c))].filter(t=>TYPES.includes(t));
  const related=seen.filter(x=>x.types?.some(t=>c.types?.includes(t))).length;
  const progress=picks.length;
@@ -77,12 +77,12 @@ function score(id,picks){
  if(progress>=42&&!basic&&!family)result-=8;
  return result;
 }
-function cpuPick(ids,picks){
+function cpuPick(ids,picks,{preset='balanced'}={}){
  if(!Array.isArray(ids)||!ids.length)throw Error('CPU pack is empty');
  // Cache each pack's scores: a room refresh must not re-run strategic planning
  // for the same card dozens of times inside Array.sort's comparator.
  const ranked=new Map();
- for(const id of ids)if(!ranked.has(id))ranked.set(id,score(id,picks));
+ for(const id of ids)if(!ranked.has(id))ranked.set(id,score(id,picks,{preset}));
  return [...ids].sort((a,b)=>ranked.get(b)-ranked.get(a)||a.localeCompare(b))[0];
 }
 function buildCpuDeck(picks,{preset='balanced'}={}){
@@ -92,7 +92,7 @@ function buildCpuDeck(picks,{preset='balanced'}={}){
  if(!Array.isArray(picks)||!picks.length)throw Error('CPU has no drafted cards');
  const basics=picks.filter(id=>pokemon(id)&&isBasicPokemon(card(id)));
  if(!basics.length)throw Error('CPU drafted no Basic Pokémon');
- const colors=colorPlan(picks),selected=[],used=new Map(),names=new Map();
+ const colors=colorPlan(picks,{preferDual:preset==='dual_energy'}),selected=[],used=new Map(),names=new Map();
  const owned=new Map();
  for(const id of picks)owned.set(id,(owned.get(id)||0)+1);
  function add(id){
@@ -127,7 +127,7 @@ function buildCpuDeck(picks,{preset='balanced'}={}){
   }
  }
  const trainers=picks.filter(id=>card(id)?.supertype==='Trainer')
-  .sort((a,b)=>score(b,selected)-score(a,selected)||a.localeCompare(b));
+  .sort((a,b)=>score(b,selected,{preset})-score(a,selected,{preset})||a.localeCompare(b));
  for(const id of trainers){
   if(selected.filter(x=>card(x).supertype==='Trainer').length>=trainerTarget||selected.length>=24)break;
   add(id);
