@@ -32,6 +32,7 @@ function parse(args){
 function evaluate(opts){
  const rows=[];let championWins=0,challengerWins=0,unfinished=0;
  let decisions=0,decisionMs=0,overallMs=0,rejected=0;
+ const p95ByRole=[[],[]];
  for(let i=0;i<opts.fixtures;i++){
   const f=FIXTURES[i],seed=opts.seed+i*7919;
   const args=['--pairs',String(opts.pairs),'--max-turns',String(opts.maxTurns),
@@ -43,6 +44,7 @@ function evaluate(opts){
    '--left-opponent-response','true'];
   const start=performance.now(),report=arena(argumentsOf(args));
   const ms=performance.now()-start;
+  for(let role=0;role<2;role++)p95ByRole[role].push(report.decisionLatencyByRole[role].p95Ms);
   const actualActions=report.totalActions;
   decisions+=actualActions;decisionMs+=report.meanDecisionMs*actualActions;
   overallMs+=ms;championWins+=report.wins;challengerWins+=report.losses;
@@ -50,7 +52,8 @@ function evaluate(opts){
   rows.push({fixture:f.name,games:report.totalMatches,decisive:report.conclusiveMatches,
    championWins:report.wins,challengerWins:report.losses,unfinished:report.drawsOrTimeouts,
    challengerWinRateDecisive:report.conclusiveMatches?report.losses/report.conclusiveMatches:null,
-   meanActionMs:report.meanDecisionMs,matchElapsedMs:Math.round(ms),
+   meanActionMs:report.meanDecisionMs,championP95Ms:report.decisionLatencyByRole[0].p95Ms,
+   challengerP95Ms:report.decisionLatencyByRole[1].p95Ms,matchElapsedMs:Math.round(ms),
    rejectedLegalityProbes:report.rejectedProposals});
  }
  const decisive=championWins+challengerWins;
@@ -60,6 +63,7 @@ function evaluate(opts){
   challengerWinRateDecisive:decisive?challengerWins/decisive:null,
   challengerWinRate95:decisive?wilson(challengerWins,decisive):{lower:0,upper:1},
   meanDecisionMs:decisions?decisionMs/decisions:null,overallElapsedMs:Math.round(overallMs),
+  worstFixtureP95MsByRole:p95ByRole.map(values=>Math.max(...values.filter(Number.isFinite))),
   rejectedLegalityProbes:rejected,fixtures:rows,
   recommendation:'Do not automatically promote: require statistically persuasive multi-archetype wins AND acceptable p95 latency before choosing a campaign default.',
   caveat:'Small mirrored runs are smoke-level comparisons; seed/matchup sensitivity, timeouts and policy asymmetries matter.'};
