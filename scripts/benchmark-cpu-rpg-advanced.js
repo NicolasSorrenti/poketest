@@ -18,12 +18,13 @@ const ARCHETYPES=Object.freeze([
  {npc:'akari',deck:'gym_new_voltage'}
 ]);
 function parse(argv){
- const o={level:6,pairs:15,maxTurns:120,seed:67411};
+ const o={level:6,baselineLevel:5,pairs:15,maxTurns:120,seed:67411};
  for(let i=0;i<argv.length;i++){
-  const k=argv[i],v=argv[++i],key={'--level':'level','--pairs':'pairs','--max-turns':'maxTurns','--seed':'seed'}[k];
+  const k=argv[i],v=argv[++i],key={'--level':'level','--baseline-level':'baselineLevel','--pairs':'pairs','--max-turns':'maxTurns','--seed':'seed'}[k];
   if(!key||v===undefined)throw Error('Unknown/incomplete argument: '+k);
   o[key]=Number(v);
  }
+ if(!Number.isInteger(o.baselineLevel)||o.baselineLevel<1||o.baselineLevel>8)throw Error('Invalid baseline level');
  if(!Number.isInteger(o.level)||o.level<6||o.level>8)throw Error('Level must be 6–8');
  if(!Number.isInteger(o.pairs)||o.pairs<1||o.pairs>150)throw Error('Invalid pairs');
  if(!Number.isInteger(o.maxTurns)||o.maxTurns<5||o.maxTurns>250)throw Error('Invalid maxTurns');
@@ -40,7 +41,7 @@ function evaluate(o){
   const valid=validateDeck(cards,CATALOG);
   if(!valid.valid)throw Error(f.npc+' tier-3 deck invalid: '+valid.errors.join('; '));
   const args=['--pairs',String(o.pairs),'--max-turns',String(o.maxTurns),
-   '--seed',String(o.seed+i*7193),'--left-level','5','--right-level',String(o.level),
+   '--seed',String(o.seed+i*7193),'--left-level',String(o.baselineLevel),'--right-level',String(o.level),
    '--left-prize-race','true','--left-knockout-tempo','true','--left-opponent-response','true',
    '--personality',NPC_PROFILES[f.npc]?.personality||'balanced'];
   const options=argumentsOf(args);
@@ -61,7 +62,7 @@ function evaluate(o){
    challengerWinRateDecisive:cw+nw?nw/(cw+nw):null,elapsedMs:Math.round(ms)});
  }
  const decisive=champ+challenger;
- return {level:o.level,against:'RPG Champion (level 5 + advanced tactics)',
+ return {level:o.level,against:'RPG CPU Level '+o.baselineLevel+' with advanced tactics',
   day:'late campaign, tier 3 NPC decks',games:decisive+unfinished,
   championWins:champ,challengerWins:challenger,unfinished,decisive,
   challengerWinRateDecisive:decisive?challenger/decisive:null,
