@@ -36,7 +36,7 @@ test('exhibition results award correct points, credits and bonds exactly once',(
 });
 test('RPG and Classic clients use the adapter and parse without syntax errors',()=>{
  for(const file of ['rpg.js','classic_live.js','rpg_duel_bridge.js'])new vm.Script(read(file),{filename:file});
- assert.match(read('rpg.html'),/src="\/rpg_character_bootstrap\.js"/);
+ assert.match(read('rpg.html'),/src="\/rpg_character_bootstrap\.js(?:\?[^"]*)?"/);
  assert.match(read('rpg_character_bootstrap.js'),/\/rpg_duel_bridge\.js/);
  assert.match(read('classic_live.html'),/src="rpg_duel_bridge\.js"/);
  assert.match(read('rpg.js'),/BRIDGE\.accepts/);
