@@ -3415,7 +3415,7 @@ const packs=[
     "start": 57,
     "end": 74,
     "place": "cafe",
-    "slot": 2,
+    "slot": 1,
     "minBond": 4,
     "prerequisite": "laca_route_3",
     "participants": [],
