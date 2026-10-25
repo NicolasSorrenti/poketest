@@ -372,8 +372,8 @@
    path.startsWith('/rpg-assets/characters/'+npcId+'/')||
    path.startsWith('/rpg-assets/reactions/'+npcId+'/'));
   const valid=path=>typeof path==='string'&&/^\/rpg-assets\/[a-z0-9/_-]+\.(?:png|webp|jpe?g)$/i.test(path)&&belongsToNpc(path);
-  // Expression portraits first. Existing match cut-ins remain fallbacks when
-  // a variant is missing, and no art can cross to a different NPC's folder.
+  // Dedicated attack art leads its cinematic when declared in the manifest.
+  // Other reactions still prefer expressions; all art must belong to this NPC.
   const kinds={weakness_hit:['weakness_hit','hurt','ko_taken'],
    status_hit:['status_hit','hurt'],big_hit:['big_hit','hurt'],
    hurt:['hurt','big_hit'],ko_taken:['ko_taken','hurt'],
@@ -394,7 +394,8 @@
   };
   const reactionPaths=(entry&&kind!=='attack'?(reactionNames[kind]||[kind]):[]).flatMap(name=>
    ['png','webp','jpg'].map(ext=>'/rpg-assets/reactions/'+npcId+'/'+name+'.'+ext));
-  return [...new Set([...vnCandidates(npcId,kind),
+  const primaryAttackArt=kind==='attack'?[entry?.attack]:[];
+  return [...new Set([...primaryAttackArt,...vnCandidates(npcId,kind),
    ...(kinds[kind]||[kind]).map(name=>entry?.[name]),
    ...reactionPaths,entry?.default,PORTRAITS[npcId]].filter(valid))];
  }
