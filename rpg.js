@@ -818,6 +818,7 @@ function act(action){
 
 const cardNames=new Map(),cardImages=new Map();
 let packArtSerial=0;
+let preDuelArtSerial=0;
 let pendingDuelTimeShift=null;
 function finishDuelRewardPresentation(){
  const transition=pendingDuelTimeShift;pendingDuelTimeShift=null;
@@ -852,12 +853,7 @@ function showPackReveal(){
   // Show a known portrait immediately while optional artwork loads.
   const showPortrait=()=>{if(request===packArtSerial){portrait.replaceChildren(makeAvatar(giver));window.NeoRpgDiscreetAvatars?.set?.(portrait,giver,'happy',cast[giver].name);}};
   showPortrait();
-  const base='/rpg-assets/characters/'+encodeURIComponent(giver)+'/';
-  const candidates=[
-   base+'events/booster.webp',
-   base+'events/booster.png',
-   '/rpg-assets/reactions/'+encodeURIComponent(giver)+'/attack.png'
-  ];
+  const candidates=PRE.boosterArtCandidates(giver);
   const art=new Image();
   art.alt=cast[giver].name+' presenting a booster';
   art.className='pack-giver-art';
@@ -1120,6 +1116,7 @@ function showPreparedDuel(){
  const preview=describePreparedDuel();
  if(!preview)return;
  const modal=$('preDuelDialog'),art=$('preDuelArt');art.replaceChildren();
+ const artRequest=++preDuelArtSerial;
  const matchStyle=window.NeoRpgTournamentPresentation?.matchModel?.(pending,{cast,cups:TOURNAMENTS.cups});
  modal.dataset.circuit=matchStyle?.kind||'friendly';
  $('preDuelContext').textContent=preview.stake;
@@ -1134,20 +1131,28 @@ function showPreparedDuel(){
  const placeholder=document.createElement('span');placeholder.className='preduel-placeholder';
  placeholder.textContent='✦ '+preview.name+' · '+preview.place;
  art.append(placeholder);
- // Existing canonical portrait always serves as the artwork fallback.
+ // Show the portrait immediately, then prefer the eligible story CG.
+ // If it is missing (or none is eligible), reuse the booster / battle chime-in art.
  const face=makeAvatar(preview.npc);face.className+=' preduel-portrait';art.append(face);
  window.NeoRpgDiscreetAvatars?.set?.(art,preview.npc,'determined',preview.name);
- if(preview.artwork?.path){
-  const photo=document.createElement('img');
-  photo.className='preduel-cg';photo.alt=preview.artwork.title;
+ const artworkCandidates=[
+  ...(preview.artwork?.path?[{path:preview.artwork.path,kind:'event',alt:preview.artwork.title}]:[]),
+  ...PRE.boosterArtCandidates(preview.npc).map(path=>({path,kind:'booster',alt:preview.name+' before the duel'}))
+ ];
+ const tryArtwork=index=>{
+  if(index>=artworkCandidates.length||artRequest!==preDuelArtSerial)return;
+  const choice=artworkCandidates[index],photo=new Image();
+  photo.className='preduel-cg'+(choice.kind==='booster'?' preduel-booster-art':'');
+  photo.alt=choice.alt;
   photo.onload=()=>{
-   if(!PRE.isReady(state.pendingDuel)||state.pendingDuel.id!==preview.id)return;
+   if(artRequest!==preDuelArtSerial||!PRE.isReady(state.pendingDuel)||state.pendingDuel.id!==preview.id)return;
    art.replaceChildren(photo);
    window.NeoRpgDiscreetAvatars?.set?.(art,preview.npc,'determined',preview.name);
   };
-  photo.onerror=()=>{}; // Keep the portrait and scene dialogue if art is absent.
-  photo.src=preview.artwork.path;
- }
+  photo.onerror=()=>{if(artRequest===preDuelArtSerial)tryArtwork(index+1);};
+  photo.src=choice.path;
+ };
+ tryArtwork(0);
  if(!modal.open)modal.showModal();
 }
 function advancePreparedDuel(){
