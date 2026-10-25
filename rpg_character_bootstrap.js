@@ -27,6 +27,7 @@
  "/rpg_appointments.js",
  "/rpg_time_coordinator.js",
  "/rpg_intentions.js",
+ "/rpg_encounter_director.js",
  "/rpg_slice_of_life.js",
  "/rpg_cg_gallery.js",
  "/rpg_daily_planner.js",
