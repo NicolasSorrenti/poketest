@@ -9,6 +9,7 @@
  if(typeof module==='object'&&module.exports)module.exports=api;
  if(root)root.NeoRpgAppointments=api;
 })(typeof window!=='undefined'?window:null,function(){
+ const REL=typeof module==='object'&&module.exports?require('./rpg_relationships'):window.NeoRpgRelationships;
  const MAX_PENDING=3,MAX_HISTORY=45,MAX_AHEAD_DAYS=6;
  const validStates=new Set(['booked','attended','missed','cancelled']);
  const stamp=(day,slot)=>(day-1)*3+slot;
@@ -73,12 +74,7 @@
   const e=state.appointments.find(x=>x.id===id&&x.status==='booked');
   if(!e||e.day!==state.day||e.slot!==state.slot||e.place!==state.location)throw Error('Meet-up is not available here and now');
   if(!availablePeople.includes(e.npc))throw Error('Your guest is not here');
-  const rel=state.relationships[e.npc]||(state.relationships[e.npc]={affection:0,trust:0,respect:0,attraction:0,duels:0});
-  const bond=state.bonds[e.npc]||(state.bonds[e.npc]={affection:0,trust:0,duels:0});
-  if(options.grantRewards!==false){
-   rel.affection=Math.max(0,(rel.affection||0)+2);rel.trust=Math.max(0,(rel.trust||0)+1);
-   bond.affection=Math.max(0,(bond.affection||0)+2);bond.trust=Math.max(0,(bond.trust||0)+1);
-  }
+  if(options.grantRewards!==false)REL.apply(state,e.npc,{affection:2,trust:1});
   e.status='attended';e.completedDay=state.day;
   return {entry:e,affection:options.grantRewards===false?0:2,trust:options.grantRewards===false?0:1};
  }
@@ -96,9 +92,7 @@
   for(const e of state.appointments){
    if(e.status!=='booked'||stamp(e.day,e.slot)>=stamp(state.day,state.slot))continue;
    e.status='missed';e.completedDay=state.day;
-   const rel=state.relationships[e.npc],bond=state.bonds[e.npc];
-   if(rel)rel.trust=Math.max(0,(rel.trust||0)-1);
-   if(bond)bond.trust=Math.max(0,(bond.trust||0)-1);
+   REL.apply(state,e.npc,{trust:-1});
    missed.push(e);
   }
   return missed;
