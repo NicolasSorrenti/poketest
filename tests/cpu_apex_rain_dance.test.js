@@ -49,3 +49,14 @@ test('Apex respects eight-Power per-turn budget as a loop guard',()=>{
  const o=board(),memo={trainers:0,powers:8,powerKeys:new Set(),stadium:false};
  assert.ok(!options(o,8,memo).some(a=>a.type==='use_power'));
 });
+
+test('Apex does not attempt Rain Dance through blocking special conditions',()=>{
+ const o=board(),rain=a=>a.type==='use_power'&&a.payload.slot===-1;
+ for(const status of ['Asleep','Confused','Paralyzed']){
+  o.self.active.status=status;
+  assert.ok(!options(o,8).some(rain),
+   'cannot activate Rain Dance while '+status);
+ }
+ o.self.active.status=null;
+ assert.ok(options(o,8).some(rain));
+});
