@@ -975,7 +975,7 @@ function showPackReveal(){
 }
 
 const labelCard=id=>cardNames.get(id)||id.replace('base1-','Base #');
-function controlsLocked(){return timeSequence.running||state.day>90||!!state.activeSliceOfLife||!!state.mandatoryEventState?.active||!!state.pendingDuel||!!state.activeSituation||!!state.activeStory||!!state.activeSideQuest||!!state.activeArc||!!state.activeEncounter;}
+function controlsLocked(){return timeSequence.blocked||state.day>90||!!state.activeSliceOfLife||!!state.mandatoryEventState?.active||!!state.pendingDuel||!!state.activeSituation||!!state.activeStory||!!state.activeSideQuest||!!state.activeArc||!!state.activeEncounter;}
 function showStarterChoice(){
  if(controlsLocked())return;
  const root=$('starterChoices');root.replaceChildren();
@@ -2118,7 +2118,7 @@ function render(){
  maybeStartMandatory();
  renderJourney();
  renderCollection();
- const ended=state.day>90,locked=timeSequence.running||!!state.activeSliceOfLife||!!state.mandatoryEventState?.active||!!state.activeSituation||!!state.activeStory||!!state.activeEncounter||!!state.activeArc||!!state.activeSideQuest||!!state.pendingDuel;
+ const ended=state.day>90,locked=timeSequence.blocked||!!state.activeSliceOfLife||!!state.mandatoryEventState?.active||!!state.activeSituation||!!state.activeStory||!!state.activeEncounter||!!state.activeArc||!!state.activeSideQuest||!!state.pendingDuel;
  renderPlanner(locked);
  renderDailyIntention(locked);
  const receipt=state.lastDuelReceipt;
@@ -2229,7 +2229,8 @@ function render(){
   const first=[...choiceList.children].find(b=>!b.disabled);
   if(typeof first?.focus==='function')first.focus({preventScroll:true});
  }
- if(!locked&&shown?.line&&!shown?.choices?.length){
+ // The final line remains dismissible even though the calendar wipe locks travel.
+ if((!locked||timeSequence.blocked&&!timeSequence.running)&&shown?.line&&!shown?.choices?.length){
   const b=document.createElement('button');b.className='choice finish';b.textContent='Continue ›';
   b.onclick=()=>closeSceneDialogue();$('choices').append(b);
  }
