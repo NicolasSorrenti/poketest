@@ -10,6 +10,10 @@ These tiers are **not** perfect play, exhaustive game-tree search, trained agent
 
 To avoid a gameplay performance regression, the RPG campaign remains pinned to the **highest validated** CPU level (Champion, 5). Levels 6–8 can be tried explicitly in Single Match and Cube.
 
+## Measured results (October 2026)
+
+[See the full validation report](CPU_DIFFICULTY_BENCHMARK_RESULTS.md). Across 400 general matches plus 144 late-campaign RPG mirrors per challenger, **none of Levels 6–8 showed a statistically convincing gain over Level 5**. They remain opt-in experiments; the RPG still uses Champion. The report includes win/loss counts, Wilson intervals, timings, and reproduction commands.
+
 ## Proving that a new level is better
 
 Run paired and mirrored games, varying deck, seed and seat, then compare both win rates and CPU action latency. Examples:
