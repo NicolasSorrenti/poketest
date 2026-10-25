@@ -16,7 +16,7 @@ const SKILLS=Object.freeze({
   5:Object.freeze({name:'Champion',temperature:0,attention:100,sampleWindow:1,trainers:6,bench:4}),
   6:Object.freeze({name:'Grandmaster',temperature:0,attention:140,sampleWindow:1,trainers:8,bench:4,searchDepth:2,searchWidth:3,searchRoots:4,searchNodes:24}),
   7:Object.freeze({name:'Mastermind',temperature:0,attention:200,sampleWindow:1,trainers:9,bench:4,searchDepth:3,searchWidth:4,searchRoots:5,searchNodes:48}),
-  8:Object.freeze({name:'Apex',temperature:0,attention:300,sampleWindow:1,trainers:10,bench:4,searchDepth:4,searchWidth:4,searchRoots:6,searchNodes:80})
+  8:Object.freeze({name:'Apex',temperature:0,attention:300,sampleWindow:1,trainers:10,bench:4,searchDepth:5,searchWidth:6,searchRoots:8,searchNodes:400})
 });
 // An independently testable difficulty calibration: mistakes result from a
 // broader, noisier choice among *legal* actions, never extra cards, forced
@@ -826,11 +826,16 @@ function chooseAction(game,raw={},memo={}){
  // *evaluation budget* should NOT widen the random window: doing so previously
  // made mid-level players less competent than beginners. Beginner is allowed
  // to overlook the best move; Champion deterministically chooses its best.
- const deep=cfg.level>=6?require('./cpu_lookahead').rankWithLookahead(game,cfg,used,ranked,{
+ const helpers={
   observation,candidates,score,projectedAttackValue,hpRemaining,card,strongestAffordableAttack,knockoutChance,
+  energyPool,canPayEnergy,estimatedDamage,
   attackBonus:(action,board,config)=>planningBonus(action,board,config)+prizeRaceBonus(action,board,config)+
    knockoutTempoBonus(action,board,config)+opponentResponseBonus(action,board,config)+energyHorizonBonus(action,board,config)
- }):{ranked,nodes:0};
+ };
+ // The longer adversarial beam search is experimental at Level 8 only.
+ // RPG Mastermind (Level 7) retains its calibrated decision path.
+ const deep=cfg.level===8?require('./cpu_strategic_search').rankWithStrategicSearch(game,cfg,used,ranked,helpers):
+  cfg.level>=6?require('./cpu_lookahead').rankWithLookahead(game,cfg,used,ranked,helpers):{ranked,nodes:0};
  const strategic=deep.ranked;
  const shortlist=strategic.slice(0,cfg.skill.sampleWindow);
  const temp=cfg.skill.temperature,ordered=temp===0?shortlist:[...shortlist].map(x=>({...x,priority:x.score+Math.log(-Math.log(Math.max(1e-12,random())))*-temp}))
