@@ -305,13 +305,12 @@ test('Lower CPU levels retain their existing Active Energy scoring',()=>{
 
 function horizonThreatBoard(){
  const o=threatenedActiveEnergyBoard();
- // Hitmonchan's Jab is disabled by Sleep. A Fighting now and visible DCE
- // next turn would otherwise appear to prepare its stronger Special Punch.
- o.self.active={id:HITMONCHAN,energies:[FIGHT,FIGHT],damage:60,status:'Asleep'};
+ // Machoke needs three Energy for Karate Chop; the visible DCE next
+ // turn would complete that line after attaching Fighting now.
+ // The first Fighting attachment does not fund a retreat or attack.
+ o.self.active={id:'base1-34',energies:[],damage:70,status:null};
  o.self.bench=[{id:HITMONCHAN,energies:[FIGHT],damage:0,status:null}];
- // DCE unlocks the Active's stronger attack, but Sleep prevents using it.
- // On Bench it prepares a legal Fighting follow-up next turn.
- o.self.hand=['base1-96',FIGHT];
+ o.self.hand=[FIGHT,'base1-96'];
  return o;
 }
 test('Apex does not forecast next-turn Active damage after a certain knockout',()=>{
@@ -329,4 +328,35 @@ test('Apex does not suppress Active horizon planning without a ready enemy knock
  safe.opponent.active.energies=[];
  assert.ok(AI.energyHorizonBonus(attachActive,safe,cfg)>0,
   'safe Active may plan visible next-turn Double Colorless attack');
+});
+
+test('Apex avoids doomed Active setup across defensive personality styles',()=>{
+ const threatened=threatenedActiveEnergyBoard();
+ for(const personality of ['balanced','defensive','tactical','setup']){
+  const policy=AI.configuration({side:1,level:8,personality});
+  assert.ok(AI.score(attach,threatened,policy,{})>
+   AI.score(attachActive,threatened,policy,{}),personality);
+ }
+});
+test('Apex still develops Active when its opponent is Asleep and cannot attack',()=>{
+ const threatened=threatenedActiveEnergyBoard();
+ const asleep=structuredClone(threatened);
+ asleep.opponent.active.status='Asleep';
+ assert.equal(AI.score(attachActive,asleep,cfg,{})-
+  AI.score(attachActive,threatened,cfg,{}),140);
+});
+test('Apex does not overreact to an opponent missing its attack Energy',()=>{
+ const threatened=threatenedActiveEnergyBoard();
+ const empty=structuredClone(threatened);
+ empty.opponent.active.energies=[];
+ assert.equal(AI.score(attachActive,empty,cfg,{})-
+  AI.score(attachActive,threatened,cfg,{}),140);
+});
+test('Apex does not punish Active investment if every Bench slot is blocked',()=>{
+ const threatened=threatenedActiveEnergyBoard();
+ threatened.self.bench[0].energyAttachBlockSerial=threatened.turnSerial+1;
+ const safe=structuredClone(threatened);
+ safe.opponent.active.energies=[];
+ assert.equal(AI.score(attachActive,threatened,cfg,{}),
+  AI.score(attachActive,safe,cfg,{}));
 });
