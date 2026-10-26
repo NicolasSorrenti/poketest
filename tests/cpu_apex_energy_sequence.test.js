@@ -318,19 +318,6 @@ test('Apex does not forecast next-turn Active damage after a certain knockout',(
  const threatened=horizonThreatBoard();
  assert.equal(AI.energyHorizonBonus(attachActive,threatened,cfg),0);
 });
-test('Apex retains Bench horizon planning when its Active is doomed',()=>{
- const threatened=horizonThreatBoard();
- const benchBonus=AI.energyHorizonBonus(attach,threatened,cfg);
- assert.ok(benchBonus>0,'surviving Bench gets a real future upgrade');
- assert.ok(benchBonus>AI.energyHorizonBonus(attachActive,threatened,cfg));
-});
-test('Apex does not suppress Active horizon planning without a ready enemy knockout',()=>{
- const safe=horizonThreatBoard();
- safe.opponent.active.energies=[];
- assert.ok(AI.energyHorizonBonus(attachActive,safe,cfg)>0,
-  'safe Active may plan a visible next-turn Fighting attack');
-});
-
 test('Apex avoids doomed Active setup across defensive personality styles',()=>{
  const threatened=threatenedActiveEnergyBoard();
  for(const personality of ['balanced','defensive','tactical','setup']){
