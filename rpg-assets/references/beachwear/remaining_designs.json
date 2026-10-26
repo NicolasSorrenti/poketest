@@ -1,0 +1,61 @@
+{
+  "reference": "/rpg-assets/references/beachwear/remaining_designs.png",
+  "usage": "Outfit styling only. Character appearances must follow approved in-game visual bibles. The four male character consultations cover coordinated beachwear and/or assistance designing collection bikinis.",
+  "characters": {
+    "shiori": {
+      "palette": "sage green, ivory and soft gold",
+      "cut": "elegant wrap-style bikini with botanical embroidery, tassel ties, high-waist bottoms and a light floral overshirt",
+      "detail": "Pressed-flower detailing, gold accents and a calm vintage resort silhouette"
+    },
+    "yuna": {
+      "palette": "royal blue, bright orange and gold",
+      "cut": "bold sporty bikini with a ring-linked halter top, contrast piping, athletic side straps and coordinated fitted swim bottoms",
+      "detail": "Bright geometric paneling, gold ring details and beach-game tournament energy"
+    },
+    "camila": {
+      "palette": "wine red, burgundy and antique gold",
+      "cut": "luxurious draped bikini with asymmetrical shoulder styling, gold jewelry-like connectors and ornate high-waist bottoms",
+      "detail": "Burgundy fabric drapes, gilded buckles and collector-edition resort glamour"
+    },
+    "marina": {
+      "palette": "marine blue, white and silver",
+      "cut": "nautical halter bikini with anchor-inspired metal fittings, secured cross-back straps, structured bottoms and an optional UV swim cover",
+      "detail": "Functional seaside styling, blue-white contrast, practical closures and dockside accessories"
+    },
+    "kaede": {
+      "palette": "black, charcoal and silver",
+      "cut": "sleek asymmetrical black bikini with geometric strap layering, ring-and-buckle hardware and a detachable translucent-looking but fully lined cover layer",
+      "detail": "Monochrome high-fashion details, discreet metallic fasteners and a composed silhouette"
+    },
+    "iris": {
+      "palette": "mint, lavender and pearl",
+      "cut": "pastel shell-inspired bikini with gathered fabric, pearl-like beaded accents and a lightweight pastel overshirt",
+      "detail": "Tidepool palette, iridescent accents, floral hair accessories and gentle draped layers"
+    },
+    "elena": {
+      "palette": "dusty pink, mauve and midnight navy",
+      "cut": "comfortable navy-and-rose wrap bikini with a supportive bow-front top, adjustable straps and a matching draped light cover-up",
+      "detail": "Soft rose ribbons, elegant fabric layers and an easy-to-adjust fit chosen by Elena herself"
+    },
+    "jun": {
+      "palette": "navy, white and sand",
+      "cut": "coordinated resort beachwear with blue patterned boardshorts, rope-tie waistband and an open lightweight white-and-blue shirt",
+      "detail": "Clean nautical prints, simple anchor-themed accessories and comfortable practical styling"
+    },
+    "teo": {
+      "palette": "sunset coral, hot pink, bright violet and black",
+      "cut": "bright floral boardshorts with an open matching tropical print shirt and sporty beach accessories",
+      "detail": "High-energy sunset gradients, bold hibiscus motifs and confident summer commentary style"
+    },
+    "elio": {
+      "palette": "sage green, blush coral and cream",
+      "cut": "relaxed botanical-print boardshorts with an open short-sleeved floral resort shirt",
+      "detail": "Understated leaf designs, dusty coral flower accents and gentle vacation styling"
+    },
+    "nereo": {
+      "palette": "deep ocean blue, ivory and sea-glass silver",
+      "cut": "wave-patterned blue swim shorts with an open nautical shirt and subtle compass-themed accessories",
+      "detail": "Shoreline contour lines, curling wave motifs and a cool coastal palette"
+    }
+  }
+}

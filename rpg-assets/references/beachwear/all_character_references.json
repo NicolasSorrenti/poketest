@@ -1,0 +1,137 @@
+{
+  "usage": "Outfit style ONLY; canonical character appearance must come from approved visual bibles. CGs for existing design-table scenes depict swimsuit on sketches, not worn.",
+  "characters": {
+    "laca": {
+      "image": "/rpg-assets/references/beachwear/original_collection_bold.png",
+      "design": "Use the existing bold design details already approved and recorded in rpg_cross_character_events.js"
+    },
+    "rina": {
+      "image": "/rpg-assets/references/beachwear/original_collection_bold.png",
+      "design": "Use the existing bold design details already approved and recorded in rpg_cross_character_events.js"
+    },
+    "luna": {
+      "image": "/rpg-assets/references/beachwear/original_collection_bold.png",
+      "design": "Use the existing bold design details already approved and recorded in rpg_cross_character_events.js"
+    },
+    "akari": {
+      "image": "/rpg-assets/references/beachwear/original_collection_bold.png",
+      "design": "Use the existing bold design details already approved and recorded in rpg_cross_character_events.js"
+    },
+    "sierra": {
+      "image": "/rpg-assets/references/beachwear/original_collection_bold.png",
+      "design": "Use the existing bold design details already approved and recorded in rpg_cross_character_events.js"
+    },
+    "alma": {
+      "image": "/rpg-assets/references/beachwear/original_collection_bold.png",
+      "design": "Use the existing bold design details already approved and recorded in rpg_cross_character_events.js"
+    },
+    "sol": {
+      "image": "/rpg-assets/references/beachwear/original_collection_bold.png",
+      "design": "Use the existing bold design details already approved and recorded in rpg_cross_character_events.js"
+    },
+    "hana": {
+      "image": "/rpg-assets/references/beachwear/original_collection_bold.png",
+      "design": "Use the existing bold design details already approved and recorded in rpg_cross_character_events.js"
+    },
+    "jinx": {
+      "image": "/rpg-assets/references/beachwear/original_collection_bold.png",
+      "design": "Use the existing bold design details already approved and recorded in rpg_cross_character_events.js"
+    },
+    "reina": {
+      "image": "/rpg-assets/references/beachwear/original_collection_bold.png",
+      "design": "Use the existing bold design details already approved and recorded in rpg_cross_character_events.js"
+    },
+    "shiori": {
+      "image": "/rpg-assets/references/beachwear/remaining_designs.png",
+      "design": {
+        "palette": "sage green, ivory and soft gold",
+        "cut": "elegant wrap-style bikini with botanical embroidery, tassel ties, high-waist bottoms and a light floral overshirt",
+        "detail": "Pressed-flower detailing, gold accents and a calm vintage resort silhouette"
+      }
+    },
+    "yuna": {
+      "image": "/rpg-assets/references/beachwear/remaining_designs.png",
+      "design": {
+        "palette": "royal blue, bright orange and gold",
+        "cut": "bold sporty bikini with a ring-linked halter top, contrast piping, athletic side straps and coordinated fitted swim bottoms",
+        "detail": "Bright geometric paneling, gold ring details and beach-game tournament energy"
+      }
+    },
+    "camila": {
+      "image": "/rpg-assets/references/beachwear/remaining_designs.png",
+      "design": {
+        "palette": "wine red, burgundy and antique gold",
+        "cut": "luxurious draped bikini with asymmetrical shoulder styling, gold jewelry-like connectors and ornate high-waist bottoms",
+        "detail": "Burgundy fabric drapes, gilded buckles and collector-edition resort glamour"
+      }
+    },
+    "marina": {
+      "image": "/rpg-assets/references/beachwear/remaining_designs.png",
+      "design": {
+        "palette": "marine blue, white and silver",
+        "cut": "nautical halter bikini with anchor-inspired metal fittings, secured cross-back straps, structured bottoms and an optional UV swim cover",
+        "detail": "Functional seaside styling, blue-white contrast, practical closures and dockside accessories"
+      }
+    },
+    "kaede": {
+      "image": "/rpg-assets/references/beachwear/remaining_designs.png",
+      "design": {
+        "palette": "black, charcoal and silver",
+        "cut": "sleek asymmetrical black bikini with geometric strap layering, ring-and-buckle hardware and a detachable translucent-looking but fully lined cover layer",
+        "detail": "Monochrome high-fashion details, discreet metallic fasteners and a composed silhouette"
+      }
+    },
+    "iris": {
+      "image": "/rpg-assets/references/beachwear/remaining_designs.png",
+      "design": {
+        "palette": "mint, lavender and pearl",
+        "cut": "pastel shell-inspired bikini with gathered fabric, pearl-like beaded accents and a lightweight pastel overshirt",
+        "detail": "Tidepool palette, iridescent accents, floral hair accessories and gentle draped layers"
+      }
+    },
+    "elena": {
+      "image": "/rpg-assets/references/beachwear/remaining_designs.png",
+      "design": {
+        "palette": "dusty pink, mauve and midnight navy",
+        "cut": "comfortable navy-and-rose wrap bikini with a supportive bow-front top, adjustable straps and a matching draped light cover-up",
+        "detail": "Soft rose ribbons, elegant fabric layers and an easy-to-adjust fit chosen by Elena herself"
+      }
+    },
+    "jun": {
+      "image": "/rpg-assets/references/beachwear/remaining_designs.png",
+      "design": {
+        "palette": "navy, white and sand",
+        "cut": "coordinated resort beachwear with blue patterned boardshorts, rope-tie waistband and an open lightweight white-and-blue shirt",
+        "detail": "Clean nautical prints, simple anchor-themed accessories and comfortable practical styling"
+      }
+    },
+    "teo": {
+      "image": "/rpg-assets/references/beachwear/remaining_designs.png",
+      "design": {
+        "palette": "sunset coral, hot pink, bright violet and black",
+        "cut": "bright floral boardshorts with an open matching tropical print shirt and sporty beach accessories",
+        "detail": "High-energy sunset gradients, bold hibiscus motifs and confident summer commentary style"
+      }
+    },
+    "elio": {
+      "image": "/rpg-assets/references/beachwear/remaining_designs.png",
+      "design": {
+        "palette": "sage green, blush coral and cream",
+        "cut": "relaxed botanical-print boardshorts with an open short-sleeved floral resort shirt",
+        "detail": "Understated leaf designs, dusty coral flower accents and gentle vacation styling"
+      }
+    },
+    "nereo": {
+      "image": "/rpg-assets/references/beachwear/remaining_designs.png",
+      "design": {
+        "palette": "deep ocean blue, ivory and sea-glass silver",
+        "cut": "wave-patterned blue swim shorts with an open nautical shirt and subtle compass-themed accessories",
+        "detail": "Shoreline contour lines, curling wave motifs and a cool coastal palette"
+      }
+    },
+    "barb": {
+      "image": "/rpg-assets/references/beachwear/original_collection_bold.png",
+      "design": "Black and hot pink, asymmetric pink-on-black graphics, ring connectors, layered hip straps, statement belt."
+    }
+  }
+}
