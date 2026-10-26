@@ -1070,7 +1070,7 @@
  for(const moment of SLICE?.scenes||[])catalog.push({
   character:moment.npc,id:moment.id,category:'social',trigger:'slice',
   place:moment.place,minAffection:moment.minAffection,startDay:moment.start,slot:moment.slot,
-  title:moment.title,hint:'Discover this everyday moment at '+moment.place+' while '+moment.npc+' is present.',
+  title:moment.title,hint:moment.artPending?'CG TO CREATE · '+moment.participants.join(' + ')+' · Discover this shared moment at '+moment.place+'.':'Discover this everyday moment at '+moment.place+' while '+moment.npc+' is present.',artPending:!!moment.artPending,
   scene:moment.art.scene,composition:moment.art.composition,outfit:moment.art.outfit,
   expression:moment.art.expression,environment:moment.art.environment,mood:moment.art.mood,fanservice:0,
   path:moment.image||(moment.npc==='barb'?'/rpg-assets/events/cg/season01/'+moment.id+'.webp':'/rpg-assets/events/cg/slice-life/'+moment.id+'.webp'),
@@ -1104,7 +1104,9 @@
    seen.add(path);items.push({path,kind});
   };
   if(thumbnail)add(entry.thumb,'event');
-  add(entry.path,'event'); // A missing thumbnail must not hide an installed full-size CG.
+  add(entry.path,'event');
+  // The actual CG always wins; a neutral labeled placeholder displays only while it is missing.
+  if(entry.artPending)add('/rpg-assets/events/cg/crossover_pending.svg','event'); // A missing thumbnail must not hide an installed full-size CG.
   if(matchCutins.has(npc))add('/rpg-assets/characters/'+npc+'/cutins/match-cutin.webp','cutin');
   else add(alternativeCutins[npc],'cutin');
   if(attackFallbacks.has(npc))add('/rpg-assets/reactions/'+npc+'/attack.png','cutin');
