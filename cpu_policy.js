@@ -845,7 +845,11 @@ function score(a,o,cfg,used){
   }
   if(name==='Super Energy Removal'){
    const enemy=Math.max(q.active?.energies?.length||0,...q.bench.map(x=>x.energies?.length||0));
-   const ownCost=Math.min(p.active?.energies?.length||0,...p.bench.map(x=>x.energies?.length||0));
+   // An empty Bench slot cannot pay Super Energy Removal's discard cost.
+   // Compare only Pokémon with attached Energy; otherwise adding an
+   // unequipped Bench Pokémon falsely makes this Trainer look cheaper.
+   const ownCost=Math.min(Infinity,...[p.active,...p.bench]
+    .filter(Boolean).map(x=>x.energies?.length||0).filter(n=>n>0));
    return enemy>=2&&ownCost<=1?210*style.control:cfg.level>=3?48:140;
   }
   if(name==='Energy Removal')return (q.active?.energies?.length?200:140)*style.control;

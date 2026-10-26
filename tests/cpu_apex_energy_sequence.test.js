@@ -201,3 +201,28 @@ test('Apex two-step planner does not reuse an already-spent attachment',()=>{
  assert.equal(AI.planningBonus(evolveActive,spent,planningCfg),
   AI.planningBonus(evolveActive,noEnergy,planningCfg));
 });
+
+function superEnergyRemovalBoard(benchEnergies=null){
+ const o=board();
+ o.self.active.energies=[FIGHT,FIGHT];
+ o.self.bench=benchEnergies===null?[]:[{id:MACHOP,energies:benchEnergies,damage:0}];
+ o.self.hand=['base1-79']; // Super Energy Removal
+ o.opponent.active.energies=[FIGHT,FIGHT];
+ return o;
+}
+const playSuperEnergyRemoval={type:'play_trainer',payload:{handIndex:0}};
+test('Super Energy Removal fixture uses the real Base Set Trainer',()=>{
+ assert.equal(require('../headless_duel').CATALOG.get('base1-79')?.name,'Super Energy Removal');
+});
+test('Apex does not mistake an Energy-free Bench for cheap Super Energy Removal payment',()=>{
+ const noBench=superEnergyRemovalBoard();
+ const emptyBench=superEnergyRemovalBoard([]);
+ assert.equal(AI.score(playSuperEnergyRemoval,emptyBench,cfg,{}),
+  AI.score(playSuperEnergyRemoval,noBench,cfg,{}));
+});
+test('Apex still values Super Energy Removal when a one-Energy donor exists',()=>{
+ const expensive=superEnergyRemovalBoard();
+ const cheap=superEnergyRemovalBoard([FIGHT]);
+ assert.ok(AI.score(playSuperEnergyRemoval,cheap,cfg,{})>
+  AI.score(playSuperEnergyRemoval,expensive,cfg,{}));
+});
