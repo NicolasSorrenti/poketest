@@ -572,7 +572,7 @@ function prematureEvolutionPenalty(o,slot,evolutionId,cfg){
  const incomingBefore=strongestAffordableAttack(enemy,before);
  const incomingAfter=strongestAffordableAttack(enemy,after);
  if(incomingBefore>=hpRemaining(before)&&incomingAfter<hpRemaining(after))return 0;
- if(hpRemaining(after)>hpRemaining(before)+20)return 0;
+ if(hpRemaining(after)>hpRemaining(before)+35)return 0;
  return 190;
 }
 function prizeRaceBonus(action,o,cfg){
