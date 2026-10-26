@@ -302,3 +302,42 @@ test('Lower CPU levels retain their existing Active Energy scoring',()=>{
  assert.equal(AI.score(attachActive,threatened,lower,{}),
   AI.score(attachActive,safe,lower,{}));
 });
+
+function blockedRetreatEnergyBoard({status=null,retreated=false}={}){
+ const o=board();
+ Object.assign(o,{phase:'game',round:5,turnSerial:11});
+ const machop=require('../headless_duel').CATALOG.get(MACHOP);
+ assert.equal(machop.retreatCost.length,1,'fixture requires a one-Energy retreat');
+ // DCE pays Machop's retreat but cannot fund its Fighting attacks.
+ // The same DCE develops Benched Hitmonchan's Special Punch.
+ o.self.active={id:MACHOP,energies:[],damage:Number(machop.hp)-10,status};
+ o.self.bench=[{id:HITMONCHAN,energies:[FIGHT],damage:0,status:null}];
+ o.self.hand=['base1-96'];
+ o.self.retreated=retreated;
+ o.opponent.active={id:HITMONCHAN,energies:[FIGHT],damage:0,status:null};
+ return o;
+}
+test('Apex does not excuse a doomed Active attachment for an Asleep retreat',()=>{
+ const threatened=blockedRetreatEnergyBoard({status:'Asleep'});
+ const safe=structuredClone(threatened);
+ safe.opponent.active.energies=[];
+ assert.ok(AI.score(attachActive,safe,cfg,{})>
+  AI.score(attachActive,threatened,cfg,{}),
+  'an Asleep Active cannot retreat even after DCE pays the cost');
+});
+test('Apex does not excuse a doomed Active attachment after retreat was used',()=>{
+ const threatened=blockedRetreatEnergyBoard({retreated:true});
+ const safe=structuredClone(threatened);
+ safe.opponent.active.energies=[];
+ assert.ok(AI.score(attachActive,safe,cfg,{})>
+  AI.score(attachActive,threatened,cfg,{}),
+  'the once-per-turn retreat limit still applies');
+});
+test('Apex preserves the escape exception for a legal Energy-funded retreat',()=>{
+ const threatened=blockedRetreatEnergyBoard();
+ const safe=structuredClone(threatened);
+ safe.opponent.active.energies=[];
+ assert.equal(AI.score(attachActive,threatened,cfg,{}),
+  AI.score(attachActive,safe,cfg,{}),
+  'DCE that enables a legal retreat should not be treated as stranded');
+});
