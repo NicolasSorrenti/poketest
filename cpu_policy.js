@@ -486,11 +486,31 @@ function choiceValue(option,decision,o,cfg){
   // option label; never inspect unrevealed deck order.
   const candidateId=[...CATALOG.values()].find(c=>c.name===label)?.id;
   const candidate=candidateId?card(candidateId):null;
-  if(candidate&&isEnergy(candidate)&&!o.self.energyUsed&&o.self.active&&o.opponent.active){
-   const before=strongestAffordableAttack(o.self.active,o.opponent.active);
-   const after=damageAfterAttachment(o.self.active,candidateId,o.opponent.active);
-   if(before===0&&after>0)return 1000+after;
-   if(after>before)return 450+after;
+  if(candidate&&isEnergy(candidate)&&o.self.active){
+   const active=o.self.active;
+   // Search results must be attachable to the intended attacker. In
+   // particular, Miracle Energy cannot power an ordinary Pokémon.
+   const attachable=legalAttachment({card:candidate,unit:active,round:o.round,
+    cardName:card(active.id)?.name||''});
+   if(attachable){
+    if(!o.self.energyUsed&&o.opponent.active){
+     const before=strongestAffordableAttack(active,o.opponent.active);
+     const after=damageAfterAttachment(active,candidateId,o.opponent.active);
+     if(before===0&&after>0)return 1000+after;
+     if(after>before)return 450+after;
+    }
+    // A two- or three-attachment attacker still needs its first Energy.
+    // Previously these searches scored just 20, below an unrelated Basic
+    // Pokémon (40), even with no Energy in hand and no affordable attack.
+    const progress=energyValue(active,candidateId);
+    if(progress>12){
+     const hasEnergyInHand=(o.self.hand||[]).some(handId=>
+      isEnergy(card(handId))&&legalAttachment({card:card(handId),unit:active,
+       round:o.round,cardName:card(active.id)?.name||''})&&
+      energyValue(active,handId)>12);
+     return 55+Math.min(110,progress*1.5)+(hasEnergyInHand?0:55);
+    }
+   }
   }
  }
  if(/^hand:|^deck:/.test(id))return /Energy/i.test(label)?20:40;
