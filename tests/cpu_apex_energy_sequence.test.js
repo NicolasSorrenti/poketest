@@ -302,3 +302,35 @@ test('Lower CPU levels retain their existing Active Energy scoring',()=>{
  assert.equal(AI.score(attachActive,threatened,lower,{}),
   AI.score(attachActive,safe,lower,{}));
 });
+
+test('Apex penalizes doomed Active Energy when an existing Jab was already affordable',()=>{
+ const threatened=threatenedActiveEnergyBoard();
+ // Jab already works with one Fighting; adding another cannot improve it or
+ // unlock Special Punch, and the opponent can knock out this Active next turn.
+ threatened.self.active={id:HITMONCHAN,energies:[FIGHT],damage:60,status:null};
+ const safe=structuredClone(threatened);
+ safe.opponent.active.energies=[];
+ assert.equal(AI.score(attachActive,safe,cfg,{})-
+  AI.score(attachActive,threatened,cfg,{}),140);
+ assert.ok(AI.score(attach,threatened,cfg,{})>
+  AI.score(attachActive,threatened,cfg,{}),
+  'invest in the surviving Bench instead of an unnecessary second Active Energy');
+});
+test('Apex keeps the immediate attack-upgrade exception for Special Punch',()=>{
+ const threatened=threatenedActiveEnergyBoard();
+ // The third Fighting Energy unlocks Hitmonchan's stronger Special Punch.
+ threatened.self.active={id:HITMONCHAN,energies:[FIGHT,FIGHT],damage:60,status:null};
+ const safe=structuredClone(threatened);
+ safe.opponent.active.energies=[];
+ assert.equal(AI.score(attachActive,safe,cfg,{}),
+  AI.score(attachActive,threatened,cfg,{}));
+});
+test('Level 6 does not inherit the new already-ready attack penalty',()=>{
+ const threatened=threatenedActiveEnergyBoard();
+ threatened.self.active={id:HITMONCHAN,energies:[FIGHT],damage:60,status:null};
+ const safe=structuredClone(threatened);
+ safe.opponent.active.energies=[];
+ const lower=AI.configuration({side:1,level:6});
+ assert.equal(AI.score(attachActive,safe,lower,{}),
+  AI.score(attachActive,threatened,lower,{}));
+});
