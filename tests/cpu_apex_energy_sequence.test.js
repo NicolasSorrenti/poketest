@@ -302,3 +302,42 @@ test('Lower CPU levels retain their existing Active Energy scoring',()=>{
  assert.equal(AI.score(attachActive,threatened,lower,{}),
   AI.score(attachActive,safe,lower,{}));
 });
+
+function matchWinningEvolutionBoard(){
+ const o=evolutionRefuelBoard('base1-96');
+ // Rattata's Bite KOs damaged Machop but not evolved Machoke.
+ // Machop's affordable Low Kick guarantees the final Prize right now.
+ o.self.active.damage=40;
+ o.self.prizeCount=1;
+ o.opponent.active={id:RATTATA,energies:[FIGHT],damage:10,status:null};
+ o.opponent.bench=[{id:RATTATA,energies:[],damage:0,status:null}];
+ return o;
+}
+test('Apex preserves a certain final-Prize attack instead of evolving to safety',()=>{
+ const o=matchWinningEvolutionBoard();
+ const evolve={type:'evolve',payload:{handIndex:0,slot:-1}};
+ assert.equal(AI.evolutionTempoPenalty(o,-1,'base1-34',cfg),550);
+ assert.ok(AI.score(attack,o,cfg,{})>AI.score(evolve,o,cfg,{}));
+});
+test('Apex preserves an all-Pokémon knockout even when Prizes remain',()=>{
+ const o=matchWinningEvolutionBoard();
+ o.self.prizeCount=3;
+ o.opponent.bench=[];
+ assert.equal(AI.evolutionTempoPenalty(o,-1,'base1-34',cfg),550);
+});
+test('Apex may evolve for survival when no immediate win exists',()=>{
+ const o=matchWinningEvolutionBoard();
+ o.self.prizeCount=3;
+ assert.equal(AI.evolutionTempoPenalty(o,-1,'base1-34',cfg),0);
+});
+test('Apex does not penalize evolution when evolved attack also guarantees victory',()=>{
+ const o=matchWinningEvolutionBoard();
+ o.self.active.damage=0;
+ o.self.active.energies=[FIGHT,FIGHT,'base1-96'];
+ assert.equal(AI.evolutionTempoPenalty(o,-1,'base1-34',cfg),0);
+});
+test('Level 7 evolution policy is unchanged by the Apex winning-attack guard',()=>{
+ const o=matchWinningEvolutionBoard();
+ assert.equal(AI.evolutionTempoPenalty(o,-1,'base1-34',
+  AI.configuration({side:1,level:7})),0);
+});
