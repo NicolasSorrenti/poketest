@@ -684,6 +684,34 @@ function energyHorizonBonus(action,o,cfg){
  const surplus=direct===0&&changed-before<=1?-35:0;
  return Math.max(-85,Math.min(160,expected+activeBias+weakDefense+surplus))*cfg.style.setup;
 }
+// Avoid investing the only turn attachment in an Active that is publicly
+// facing a likely knockout before its next attack. A useful Bench investment
+// preserves tempo, but never override an attack unlocked now or an attachment
+// that enables retreat. No opponent hand or future draw is inspected.
+function doomedActiveAttachmentPenalty(o,energyId,cfg){
+ if(cfg.level<7||o.phase!=='game'||!o.self.active||!o.opponent.active||
+    o.self.energyUsed||!o.self.bench?.length)return 0;
+ const active=o.self.active,enemy=o.opponent.active,energy=card(energyId);
+ if(!isEnergy(energy)||['Asleep','Paralyzed'].includes(enemy.status))return 0;
+ const incoming=(enemy.effectiveAttacks||card(enemy.id)?.attacks||[]);
+ const threatened=incoming.some(a=>canPayEnergy(a.cost||[],energyPool(enemy))&&
+  knockoutChance(a,enemy,active)>=.75);
+ if(!threatened)return 0;
+ const after={...active,energies:[...(active.energies||[]),energyId]};
+ // If this attachment enables an attack now, it may earn a Prize or trade
+ // damage before the opponent's next turn: do not classify it as wasted.
+ const attacks=active.effectiveAttacks||card(active.id)?.attacks||[];
+ if(!['Asleep','Paralyzed'].includes(active.status)&&
+    attacks.some(a=>canPayEnergy(a.cost||[],energyPool(after))))return 0;
+ const retreat=card(active.id)?.retreatCost||[];
+ if(retreat.length&&!canPayEnergy(retreat,energyPool(active))&&
+    canPayEnergy(retreat,energyPool(after)))return 0;
+ const usefulBench=o.self.bench.some(unit=>
+  !(unit.energyAttachBlockSerial>o.turnSerial)&&
+  legalAttachment({card:energy,unit,round:o.round,cardName:card(unit.id)?.name||''})&&
+  energyValue(unit,energyId)>0);
+ return usefulBench?140*cfg.style.survival:0;
+}
 // Pokémon Center heals the whole team but discards Energy from each healed
 // Pokémon. Preserve attachments until after the heal, including Energy in
 // hand that would otherwise be thrown away in the same turn.
@@ -800,7 +828,8 @@ function score(a,o,cfg,used){
   const ko=after>=hpRemaining(q.active)&&before<hpRemaining(q.active);
   const future=(improvement*(cfg.level===2?.50:.85)+(ko?(cfg.level===2?30:65):0))*style.damage;
   const saturation=before>0&&improvement===0?(cfg.level===2?14:35):0;
-  return 110+value*style.setup+(v.slot===-1?18:0)+future-saturation;
+  return 110+value*style.setup+(v.slot===-1?18:0)+future-saturation-
+   (v.slot===-1?doomedActiveAttachmentPenalty(o,p.hand[v.handIndex],cfg):0);
  }
  if(type==='attack'){
   const attack=(p.active.effectiveAttacks||card(p.active.id)?.attacks||[])[v.attackIndex];
