@@ -25,12 +25,13 @@
   luna:'/rpg-assets/characters/luna/neutral.png',
   sierra:'/rpg-assets/characters/sierra/portrait.png',
   sol:'/rpg-assets/sol.png',
-  barb:'/rpg-assets/characters/barb/portraits/primary.png'
+  barb:'/rpg-assets/characters/barb/portraits/primary.png',
+  laca:'/rpg-assets/characters/laca/expression-portraits/neutral.webp'
  });
  // Established cast has two supported VN-expression folder formats.
  const VN_MAIN=new Set(['hana','reina','shiori','yuna','akari','camila','marina','kaede','barb']);
  const VN_GUEST=new Set(['jun','teo','iris','elio','alma','nereo']);
- const VN_PORTRAITS=new Set(['rina','sol','jinx','luna','elena','sierra']);
+ const VN_PORTRAITS=new Set(['rina','sol','jinx','luna','elena','sierra','laca']);
  const EXPRESSIONS={
   main:{
    default:['neutral'],attack:['happy','neutral'],play_card:['happy','neutral'],
