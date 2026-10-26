@@ -1180,7 +1180,9 @@
    state.day>=e.start&&state.day<=e.end&&e.slot===state.slot&&!state.sliceOfLifeDone?.[e.id]&&
    (!e.prerequisite||state.sliceOfLifeDone?.[e.prerequisite]||state.storyDone?.[e.prerequisite])&&
    (state.relationships?.[e.npc]?.affection||0)>=e.minAffection&&
-   e.participants.every(id=>state['met_'+id]&&SCHEDULES.naturalLocationFor(id,state.day,state.slot)===e.place)
+   e.participants.every(id=>state['met_'+id]&&(SCHEDULES.naturalLocationFor(id,state.day,state.slot)===e.place||
+    // Elena explicitly books a fitting consultation at Barb's regular café stop.
+    (e.plannedMeetup&&id!=='barb'&&SCHEDULES.naturalLocationFor('barb',state.day,state.slot)===e.place)))
   );
   const selected=DIRECTOR.select(state,crossoverCandidates);
   const pinned=selected?selected.participants.map(npc=>({npc,place:selected.place,slot:state.slot,start:state.day,end:state.day})):[];
