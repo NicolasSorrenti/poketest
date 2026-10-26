@@ -938,7 +938,7 @@ function prepBoard(o){
   bench:o.self.bench.map(x=>({...x})),hand:[...(o.self.hand||[])],
   energyUsed:!!o.self.energyUsed};
 }
-function projectedPrep(board,action,round){
+function projectedPrep(board,action,round,turnSerial){
  const {type,payload}=action;
  if(!['attach_energy','evolve','bench'].includes(type))return null;
  const next={...board,active:board.active?{...board.active}:null,
@@ -947,7 +947,12 @@ function projectedPrep(board,action,round){
  if(!c)return null;
  const u=payload.slot===-1?next.active:next.bench[payload.slot];
  if(type==='attach_energy'){
-  if(next.energyUsed||!u||!isEnergy(c))return null;
+  // Tactical forecasts must use the same attachment legality as candidates().
+  // Otherwise a two-card line can reward Miracle Energy on an ordinary Basic
+  // or an attachment prohibited for this turn.
+  if(next.energyUsed||!u||!isEnergy(c)||u.energyAttachBlockSerial>turnSerial||
+    !legalAttachment({card:c,unit:u,round,energyUsed:next.energyUsed,
+     cardName:card(u.id)?.name||''}))return null;
   u.energies=[...(u.energies||[]),id];
   next.energyUsed=true;
  }else if(type==='evolve'){
@@ -966,12 +971,12 @@ function bestOnePrep(board,o){
  for(let i=0;i<board.hand.length;i++){
   const c=card(board.hand[i]);if(!c)continue;
   if(isEnergy(c)&&!board.energyUsed&&board.active){
-   const next=projectedPrep(board,command('attach_energy',{handIndex:i,slot:-1}),o.round);
+   const next=projectedPrep(board,command('attach_energy',{handIndex:i,slot:-1}),o.round,o.turnSerial);
    if(next)best=Math.max(best,projectedAttackValue(next.active,o.opponent.active,o.turnSerial));
   }
   if(c.evolvesFrom&&board.active&&canEvolve(c,card(board.active.id))&&
    board.active.playedTurn<o.round){
-   const next=projectedPrep(board,command('evolve',{handIndex:i,slot:-1}),o.round);
+   const next=projectedPrep(board,command('evolve',{handIndex:i,slot:-1}),o.round,o.turnSerial);
    if(next)best=Math.max(best,projectedAttackValue(next.active,o.opponent.active,o.turnSerial));
   }
  }
@@ -979,7 +984,7 @@ function bestOnePrep(board,o){
 }
 function planningBonus(action,o,cfg){
  if(!cfg.planning||o.phase!=='game'||!o.self.active)return 0;
- const before=prepBoard(o),after=projectedPrep(before,action,o.round);
+ const before=prepBoard(o),after=projectedPrep(before,action,o.round,o.turnSerial);
  if(!after)return 0;
  const now=projectedAttackValue(before.active,o.opponent.active,o.turnSerial);
  const next=projectedAttackValue(after.active,o.opponent.active,o.turnSerial);

@@ -169,3 +169,35 @@ test('Apex evolution tempo cannot refuel after the turn attachment was used',()=
  assert.equal(AI.evolutionTempoPenalty(dce,-1,'base1-34',cfg),
   AI.evolutionTempoPenalty(noEnergy,-1,'base1-34',cfg));
 });
+
+const planningCfg=AI.configuration({side:1,level:8,planning:true});
+const evolveActive={type:'evolve',payload:{handIndex:0,slot:-1}};
+function planningEvolutionBoard(energyId,{blocked=false,used=false}={}){
+ const o=evolutionRefuelBoard(energyId,used);
+ if(blocked)o.self.active.energyAttachBlockSerial=o.turnSerial+1;
+ return o;
+}
+test('Apex two-step planner does not invent Miracle Energy refuel after evolution',()=>{
+ const miracle=planningEvolutionBoard('neo4-16');
+ const noEnergy=planningEvolutionBoard('base1-91'); // Bill
+ assert.equal(AI.planningBonus(evolveActive,miracle,planningCfg),
+  AI.planningBonus(evolveActive,noEnergy,planningCfg));
+});
+test('Apex two-step planner still values a legal DCE follow-up after evolution',()=>{
+ const dce=planningEvolutionBoard('base1-96');
+ const noEnergy=planningEvolutionBoard('base1-91');
+ assert.ok(AI.planningBonus(evolveActive,dce,planningCfg)>
+  AI.planningBonus(evolveActive,noEnergy,planningCfg));
+});
+test('Apex two-step planner ignores attachment-blocked Energy',()=>{
+ const blocked=planningEvolutionBoard('base1-96',{blocked:true});
+ const noEnergy=planningEvolutionBoard('base1-91',{blocked:true});
+ assert.equal(AI.planningBonus(evolveActive,blocked,planningCfg),
+  AI.planningBonus(evolveActive,noEnergy,planningCfg));
+});
+test('Apex two-step planner does not reuse an already-spent attachment',()=>{
+ const spent=planningEvolutionBoard('base1-96',{used:true});
+ const noEnergy=planningEvolutionBoard('base1-91',{used:true});
+ assert.equal(AI.planningBonus(evolveActive,spent,planningCfg),
+  AI.planningBonus(evolveActive,noEnergy,planningCfg));
+});
