@@ -4601,6 +4601,7 @@
  },
  {
   "id": "crossover_barb_elena_beachwear_design",
+  "plannedMeetup": true,
   "npc": "barb",
   "participants": [
    "barb",
