@@ -704,7 +704,10 @@ function doomedActiveAttachmentPenalty(o,energyId,cfg){
  if(!['Asleep','Paralyzed'].includes(active.status)&&
     attacks.some(a=>canPayEnergy(a.cost||[],energyPool(after))))return 0;
  const retreat=card(active.id)?.retreatCost||[];
- if(retreat.length&&!canPayEnergy(retreat,energyPool(active))&&
+ // An Energy that covers retreat cost is not an escape route when the
+ // Pokémon cannot retreat this turn (status or already-retreated limit).
+ if(!o.self.retreated&&!['Asleep','Paralyzed'].includes(active.status)&&
+    retreat.length&&!canPayEnergy(retreat,energyPool(active))&&
     canPayEnergy(retreat,energyPool(after)))return 0;
  const usefulBench=o.self.bench.some(unit=>
   !(unit.energyAttachBlockSerial>o.turnSerial)&&
