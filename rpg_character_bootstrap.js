@@ -29,6 +29,7 @@
  "/rpg_time_coordinator.js",
  "/rpg_intentions.js",
  "/rpg_encounter_director.js",
+ "/rpg_akari_barb_event.js?v=20261026",
  "/rpg_slice_of_life.js",
  "/rpg_cg_gallery.js",
  "/rpg_daily_planner.js",
@@ -58,7 +59,7 @@
  "/rpg_status.js?v=4",
  "/rpg_cloud_save.js?v=2",
  "/rpg_outfits.js?v=1",
- "/rpg.js?v=20261026-diagnostics-1"
+ "/rpg.js?v=20261026-slice-dependencies"
 ];
   function registry(packs){
     const cast={},looks={},schedules={},arrivals={},events=[],mandatoryEvents=[];
@@ -101,13 +102,29 @@
     console.error('RPG roster load failed',error);
     return;
   }
-  // Browser downloads in parallel, but executes in order because async=false.
-  await Promise.all(scripts.map(src=>new Promise((resolve,reject)=>{
+  // Browser downloads in parallel but run in insertion order (async=false).
+  // Validate dependencies BEFORE launching rpg.js: a module can throw while
+  // evaluating, yet its script still fires onload, leaving its global undefined.
+  const loadScript=src=>new Promise((resolve,reject)=>{
     const script=document.createElement('script');
     script.async=false;
     script.src=src;
     script.onload=resolve;
     script.onerror=()=>reject(Error('RPG script failed: '+src));
     document.body.appendChild(script);
-  })));
+  });
+  await Promise.all(scripts.slice(0,-1).map(loadScript));
+  const dependencies={
+    NeoRpgRelationships:'apply',NeoRpgEncounterDirector:'select',
+    NeoRpgAkariBarbFitting:'event',NeoRpgSliceOfLife:'byId',
+    NeoHarborStory:'resolve',NeoRpgEventInvites:'dialogue',
+    NeoRpgCGGallery:'record',NeoRpgTimeCoordinator:'conflicts'
+  };
+  for(const [globalName,method] of Object.entries(dependencies)){
+    const module=window[globalName];
+    if(!module||!(method in module)){
+      throw Error('Missing RPG dependency '+globalName+'.'+method+' before RPG startup');
+    }
+  }
+  await loadScript(scripts.at(-1));
 })().catch(error=>{window.NeoRpgErrorReport?.capture(error,{source:'startup',action:'load RPG scripts'});console.error('RPG startup failed',error);});
