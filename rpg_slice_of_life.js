@@ -8,6 +8,7 @@
 })(typeof window!=='undefined'?window:null,function(){
  const DIRECTOR=typeof module==='object'&&module.exports?require('./rpg_encounter_director'):window.NeoRpgEncounterDirector;
  const REL=typeof module==='object'&&module.exports?require('./rpg_relationships'):window.NeoRpgRelationships;
+ const SCHEDULES=typeof module==='object'&&module.exports?require('./rpg_schedules'):window.NeoRpgSchedules;
  const PACKS=typeof module==='object'&&module.exports?require('./rpg_character_packs.generated'):window.NeoRpgCharacterPacks;
  const FIT=typeof module==='object'&&module.exports?require('./rpg_akari_barb_event'):window.NeoRpgAkariBarbFitting;
  const CROSS=typeof module==='object'&&module.exports?require('./rpg_cross_character_events'):window.NeoRpgCrossCharacterEvents;
@@ -1171,7 +1172,18 @@
     (state.relationships?.[e.npc]?.affection||0)>=e.minAffection);
    return possible?[{npc:pack.id,place,slot:state.slot,start:state.day,end:state.day}]:[];
   });
-  return [...originalOverrides,...guestOverrides];
+  // Keep one plausible crossover pair together where they were BOTH naturally scheduled.
+  // This protects their meeting from the four-person crowd cap without teleporting
+  // anyone away from their authored routine or preempting active story/appointments.
+  const crossoverCandidates=(CROSS?.events||[]).filter(e=>
+   state.day>=e.start&&state.day<=e.end&&e.slot===state.slot&&!state.sliceOfLifeDone?.[e.id]&&
+   (!e.prerequisite||state.sliceOfLifeDone?.[e.prerequisite]||state.storyDone?.[e.prerequisite])&&
+   (state.relationships?.[e.npc]?.affection||0)>=e.minAffection&&
+   e.participants.every(id=>state['met_'+id]&&SCHEDULES.naturalLocationFor(id,state.day,state.slot)===e.place)
+  );
+  const selected=DIRECTOR.select(state,crossoverCandidates);
+  const pinned=selected?selected.participants.map(npc=>({npc,place:selected.place,slot:state.slot,start:state.day,end:state.day})):[];
+  return [...originalOverrides,...guestOverrides,...pinned];
  }
  function linesFor(state,id){
   const e=index.get(id);if(!e?.lines)return [];
