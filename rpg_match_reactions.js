@@ -70,7 +70,9 @@
  function vnCandidates(npcId,kind){
   // Keep Alma in canonical cafe workwear; legacy guest art and suit candidates conflict.
   if(npcId==='alma'){
-   const name=['attack','play_card','evolve','power','ko_scored'].includes(kind)?'happy':'neutral';
+   const name=['attack','play_card','evolve','power','ko_scored'].includes(kind)?'happy':
+    ['hurt','big_hit','weakness_hit'].includes(kind)?'surprised':
+    ['status_hit','ko_taken'].includes(kind)?'concerned':'neutral';
    return [...new Set([name,'neutral'])].map(expression=>
     '/rpg-assets/characters/alma/expression-portraits/'+expression+'.webp');
   }

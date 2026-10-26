@@ -1,0 +1,12 @@
+{
+  "reference": "/workspace/scratch/dc054acd6888/poketest/rpg-assets/alma.png",
+  "reference_sha256": "629fcd12c98a71154824bf5dce293440f1ccace1f77645b1d3b58606ea958610",
+  "report": "/workspace/scratch/dc054acd6888/poketest/rpg-assets/rejected-artwork/pr140-next-batch/ALMA_RUNTIME_INTEGRATION.md",
+  "report_sha256": "3867efb7be57c64611c9d0e568a1cf2cab10499e48a404a4de397ddd24f3101f",
+  "branch": "art/overworld-character-refresh",
+  "tool": "built-in imagegen",
+  "transparent_background": true,
+  "generated_source": "/workspace/scratch/dc054acd6888/generated_images/exec-96275a37-10b0-4f6c-8872-f0b4fa0cf15f.png",
+  "attempt": 1,
+  "validation": "Canonical female cafe owner outfit, pose and framing visually retained; surprised expression; RGBA with alpha-zero background pixels; hidden RGB retained."
+}

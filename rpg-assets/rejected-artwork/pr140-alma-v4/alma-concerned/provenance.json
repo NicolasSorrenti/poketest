@@ -1,0 +1,18 @@
+{
+  "reference": "/workspace/scratch/dc054acd6888/poketest/rpg-assets/alma.png",
+  "reference_sha256": "629fcd12c98a71154824bf5dce293440f1ccace1f77645b1d3b58606ea958610",
+  "repository": "NicolasSorrenti/poketest",
+  "branch": "art/overworld-character-refresh",
+  "generator": "built-in imagegen",
+  "transparent_background": true,
+  "attempts": 1,
+  "output_size": [
+    1024,
+    1536
+  ],
+  "alpha_range": [
+    0,
+    254
+  ],
+  "review": "Concerned brows and mouth; canonical hair, pose, brown apron, rust cardigan, cream blouse and framing retained. No runtime integration or commits."
+}
