@@ -1,0 +1,64 @@
+{
+  "status": "candidate_not_activated_pending_user_review",
+  "tool": "built-in imagegen",
+  "attempt_count": 1,
+  "rejected_attempts": [],
+  "lost_attempts": "Prior pruned f7a5e09 / happy59966 / 1ad78 not recovered; no match among 23 available neighboring workspace generated files. No invented source bytes or full hashes.",
+  "validated_main": "43162affb6ecd1bb900cd4aea7f6ac80d2b77150",
+  "reference_repo_path": "rpg-assets/characters/laca/outfits/casual/neutral.webp",
+  "reference_git_blob": "d77b5dd5e758cb7e34733bc5dd94594ebcf6111c",
+  "visual_review": "Matches viewed adult identity, black top, jeans, dark brown hair, smile and open-palm gesture. Retains reference tight framing and edge fringe; not approved for activation.",
+  "files": [
+    {
+      "path": "attempt-001-original.png",
+      "bytes": 1311391,
+      "sha256": "a5e73a9fa2de7a7ff184d0061b225022846ed1bdebf6d834b4dd7e416f45818e",
+      "git_blob": "970fc60db35d58fcaadbf8ac781df6d6256932ca",
+      "dimensions": [
+        941,
+        1672
+      ],
+      "mode": "RGBA",
+      "alpha_extrema": [
+        0,
+        255
+      ]
+    },
+    {
+      "path": "attempt-001-thumbnail.png",
+      "bytes": 144921,
+      "sha256": "73568b858d84b90a6c561370143eec98ec21089ec3d0b7d1fa83305b71bc1758",
+      "git_blob": "1fb20ceafd47606ac855320fe43e899ad713d696",
+      "dimensions": [
+        300,
+        533
+      ],
+      "mode": "RGBA",
+      "alpha_extrema": [
+        0,
+        255
+      ]
+    },
+    {
+      "path": "prompt.txt",
+      "bytes": 1037,
+      "sha256": "e1e711e326b9b609841a522d2c3a96fe0901b6c4a23ad8fc337d58c4dbfc10fe",
+      "git_blob": "7b4c57824f6d40150d5ab0216c0be709b8563545"
+    },
+    {
+      "path": "reference-neutral.webp",
+      "bytes": 255536,
+      "sha256": "76841a9c5eb144ff55b132e5b8b4e0e078b7c0ad4c7154bfd68659df085510a7",
+      "git_blob": "d77b5dd5e758cb7e34733bc5dd94594ebcf6111c",
+      "dimensions": [
+        941,
+        1672
+      ],
+      "mode": "RGBA",
+      "alpha_extrema": [
+        0,
+        255
+      ]
+    }
+  ]
+}
