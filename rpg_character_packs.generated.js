@@ -3993,14 +3993,14 @@ const packs=[
    "characterId": "laca",
    "portrait": "/rpg-assets/characters/laca/neutral.webp",
    "expressions": {
-    "neutral": "/rpg-assets/characters/laca/neutral.webp",
-    "happy": "/rpg-assets/characters/laca/outfits/casual/happy.png",
-    "surprised": "/rpg-assets/characters/laca/outfits/casual/surprised.png",
-    "vulnerable": "/rpg-assets/characters/laca/outfits/casual/sad.png",
+    "neutral": "/rpg-assets/characters/laca/outfits/casual/neutral.webp",
+    "happy": "/rpg-assets/characters/laca/expression-portraits/happy.webp",
+    "surprised": "/rpg-assets/characters/laca/expression-portraits/surprised.webp",
+    "vulnerable": "/rpg-assets/characters/laca/expression-portraits/concerned.webp",
     "flirty": "/rpg-assets/characters/laca/outfits/casual/flirty.png",
     "embarrassed": "/rpg-assets/characters/laca/outfits/casual/embarrassed.png",
     "angry": "/rpg-assets/characters/laca/outfits/casual/angry.png",
-    "sad": "/rpg-assets/characters/laca/outfits/casual/sad.png",
+    "sad": "/rpg-assets/characters/laca/expression-portraits/concerned.webp",
     "inviting": "/rpg-assets/characters/laca/outfits/casual/inviting.png"
    },
    "outfits": {
@@ -4009,21 +4009,21 @@ const packs=[
      "casual": {
       "portrait": "/rpg-assets/characters/laca/outfits/casual/neutral.webp",
       "expressions": {
-       "neutral": "/rpg-assets/characters/laca/outfits/casual/neutral.png",
-       "happy": "/rpg-assets/characters/laca/outfits/casual/happy.png",
-       "surprised": "/rpg-assets/characters/laca/outfits/casual/surprised.png",
-       "vulnerable": "/rpg-assets/characters/laca/outfits/casual/sad.png",
+       "neutral": "/rpg-assets/characters/laca/outfits/casual/neutral.webp",
+       "happy": "/rpg-assets/characters/laca/expression-portraits/happy.webp",
+       "surprised": "/rpg-assets/characters/laca/expression-portraits/surprised.webp",
+       "vulnerable": "/rpg-assets/characters/laca/expression-portraits/concerned.webp",
        "flirty": "/rpg-assets/characters/laca/outfits/casual/flirty.png",
        "embarrassed": "/rpg-assets/characters/laca/outfits/casual/embarrassed.png",
        "angry": "/rpg-assets/characters/laca/outfits/casual/angry.png",
-       "sad": "/rpg-assets/characters/laca/outfits/casual/sad.png",
+       "sad": "/rpg-assets/characters/laca/expression-portraits/concerned.webp",
        "inviting": "/rpg-assets/characters/laca/outfits/casual/inviting.png"
       }
      },
      "lifeguard": {
       "portrait": "/rpg-assets/characters/laca/outfits/lifeguard/neutral.webp",
       "expressions": {
-       "neutral": "/rpg-assets/characters/laca/outfits/lifeguard/neutral.png",
+       "neutral": "/rpg-assets/characters/laca/outfits/lifeguard/neutral.webp",
        "happy": "/rpg-assets/characters/laca/outfits/lifeguard/happy.png",
        "surprised": "/rpg-assets/characters/laca/outfits/lifeguard/surprised.png",
        "vulnerable": "/rpg-assets/characters/laca/outfits/lifeguard/sad.png",
