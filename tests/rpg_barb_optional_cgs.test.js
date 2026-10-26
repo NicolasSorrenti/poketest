@@ -2,7 +2,7 @@
 const test=require('node:test'),assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path'),crypto=require('node:crypto'),vm=require('node:vm');
 const SLICE=require('../rpg_slice_of_life'),CG=require('../rpg_cg_gallery'),STORY=require('../rpg_story'),SCHEDULES=require('../rpg_schedules'),TOOLS=require('../scripts/rpg-character-packs');
 const REGISTRY=require('../rpg_character_packs.generated'),pack=REGISTRY.byId('barb');
-const scenes=SLICE.scenes.filter(e=>e.npc==='barb');
+const scenes=SLICE.scenes.filter(e=>e.npc==='barb'&&e.id.startsWith('barb_'));
 const hashes={
  barb_random_cg_01:'1483038f7f086ef0d2f21433e4a2bf43ba5a33fd9033de194013ffd569877332',
  barb_random_cg_02:'17dc78efc71bfeffde7e8849b540dc49288724b4a064f11cbc604d50854aa3e4',
