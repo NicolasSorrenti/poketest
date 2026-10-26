@@ -1,0 +1,240 @@
+{
+  "main_inspected": "43162affb6ecd1bb900cd4aea7f6ac80d2b77150",
+  "review_branch": "art/overworld-character-refresh",
+  "review_parent_observed": "45c8513269d0a84566da8b2424d40b9e17bd353b",
+  "scope": "output/archive only; no runtime, activation or main writes",
+  "decision": "reuse existing identity-matching male historical happy unchanged",
+  "canonical_path": "rpg-assets/elio.png",
+  "canonical_git_blob": "78fc95deead861b3ce91a20c1ed50313d5be411e",
+  "selected_historical_commit": "ed3195e122450397ae4446aefead7e0e1a519bd7",
+  "selected_historical_path": "rpg-assets/characters/elio/expression-portraits/happy.webp",
+  "selected_git_blob": "e4ab597633a3220d47f0cfd87cbeda8a23d957a7",
+  "remote_source_blob_verified": true,
+  "qa": {
+    "decode": "pass",
+    "identity": "pass: male brown tousled hair, earrings, navy/white star jacket, star pendant, bag strap and constellation notebook match root reference",
+    "white_composite": "pass: no opaque rectangular backdrop",
+    "dark_composite": "pass: no opaque rectangular backdrop",
+    "limitations": [
+      "Tight historical portrait crop",
+      "Small isolated hair fragment near left boundary; retained unchanged for review"
+    ],
+    "approval": "review candidate only"
+  },
+  "rejected": {
+    "originals/vn-happy.webp": "identity mismatch: female character; beige baked backdrop",
+    "originals/vn-neutral.webp": "identity mismatch: female character; inspected for comparison",
+    "originals/portrait-happy.webp": "identity mismatch: female character"
+  },
+  "generation": {
+    "invoked": false,
+    "attempts_this_run": 0,
+    "prior_lost_attempts": "unavailable; not recovered; cannot archive absent bytes"
+  },
+  "files": [
+    {
+      "path": "happy.webp",
+      "sha256": "dc8a0572f2c5211945acd53fc2e285b4db30ddb8d42952a3494750ab54dac1c7",
+      "git_blob": "e4ab597633a3220d47f0cfd87cbeda8a23d957a7",
+      "bytes": 108758,
+      "dimensions": [
+        512,
+        1024
+      ],
+      "decode": "pass",
+      "mode": "RGBA",
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "transparent_pixels": 248283,
+      "partial_alpha_pixels": 275922
+    },
+    {
+      "path": "originals/canonical-elio.png",
+      "sha256": "2902f1df48ed43dbbaad5b6c24b8a90ae44fe9e22ff841225e39ccdeee8bb348",
+      "git_blob": "78fc95deead861b3ce91a20c1ed50313d5be411e",
+      "bytes": 2184026,
+      "dimensions": [
+        1024,
+        1536
+      ],
+      "decode": "pass",
+      "mode": "RGBA",
+      "alpha_extrema": [
+        0,
+        254
+      ],
+      "transparent_pixels": 612022,
+      "partial_alpha_pixels": 960842
+    },
+    {
+      "path": "originals/historical-happy.webp",
+      "sha256": "dc8a0572f2c5211945acd53fc2e285b4db30ddb8d42952a3494750ab54dac1c7",
+      "git_blob": "e4ab597633a3220d47f0cfd87cbeda8a23d957a7",
+      "bytes": 108758,
+      "dimensions": [
+        512,
+        1024
+      ],
+      "decode": "pass",
+      "mode": "RGBA",
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "transparent_pixels": 248283,
+      "partial_alpha_pixels": 275922
+    },
+    {
+      "path": "originals/portrait-happy.webp",
+      "sha256": "08ccf49d96b9a3a54e44b002f9f3887a694adb7c84275d6765b5725a68c17caa",
+      "git_blob": "9193ae820d6f782e50040539967658ed2ea1a7c1",
+      "bytes": 670156,
+      "dimensions": [
+        887,
+        1774
+      ],
+      "decode": "pass",
+      "mode": "RGBA",
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "transparent_pixels": 1015410,
+      "partial_alpha_pixels": 557517
+    },
+    {
+      "path": "originals/vn-happy.webp",
+      "sha256": "f4727e3fcca4eda4da972763c014fed5d2c54572f59f0db92850edda4eaf58e4",
+      "git_blob": "281537a1737316ccae344dab5c71865eebf73a0d",
+      "bytes": 84918,
+      "dimensions": [
+        474,
+        535
+      ],
+      "decode": "pass",
+      "mode": "RGB",
+      "alpha_extrema": [
+        255,
+        255
+      ],
+      "transparent_pixels": 0,
+      "partial_alpha_pixels": 0
+    },
+    {
+      "path": "originals/vn-neutral.webp",
+      "sha256": "cf5f626d0847aeb7fb15172a06a27b3aa3e4693c341e4440d36ec8c95a37d73f",
+      "git_blob": "6b9daef407c1d13520eca8615277ff1555d1887f",
+      "bytes": 85930,
+      "dimensions": [
+        475,
+        535
+      ],
+      "decode": "pass",
+      "mode": "RGB",
+      "alpha_extrema": [
+        255,
+        255
+      ],
+      "transparent_pixels": 0,
+      "partial_alpha_pixels": 0
+    },
+    {
+      "path": "prompt.txt",
+      "sha256": "49ed405cd1c911f717bc39a2611952c75820df27276cd717d3fe16c05e916d97",
+      "git_blob": "dd2550c7cac32b0caac1e52df4b807a82448547f",
+      "bytes": 348
+    },
+    {
+      "path": "qa/happy-dark.png",
+      "sha256": "802db706aa20ef9615027bc61b7c8c86041bc698c51769563af67f5c18e94b6a",
+      "git_blob": "250351a13336eb49be2112c5f5be938331748d3f",
+      "bytes": 429345,
+      "dimensions": [
+        512,
+        1024
+      ],
+      "decode": "pass",
+      "mode": "RGB",
+      "alpha_extrema": [
+        255,
+        255
+      ],
+      "transparent_pixels": 0,
+      "partial_alpha_pixels": 0
+    },
+    {
+      "path": "qa/happy-white.png",
+      "sha256": "7f5da3884e8e64c482c1570a61cdf061b2777e954f40e25602f672405949c7bf",
+      "git_blob": "96beecde68bb16f8687ca8fd46701176142cb263",
+      "bytes": 433406,
+      "dimensions": [
+        512,
+        1024
+      ],
+      "decode": "pass",
+      "mode": "RGB",
+      "alpha_extrema": [
+        255,
+        255
+      ],
+      "transparent_pixels": 0,
+      "partial_alpha_pixels": 0
+    },
+    {
+      "path": "qa/historical-happy.png",
+      "sha256": "cdaf1ee5b5102df2af45670c2e136dbbcb484b0e3072f544c9c04d00e1c3d05f",
+      "git_blob": "f1e1700b466a2931813877b75c4a840ac90fecbb",
+      "bytes": 266562,
+      "dimensions": [
+        350,
+        700
+      ],
+      "decode": "pass",
+      "mode": "RGBA",
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "transparent_pixels": 115764,
+      "partial_alpha_pixels": 128168
+    },
+    {
+      "path": "qa/identity-review.jpg",
+      "sha256": "85b0eba3c914bbb776cb3d13826510da4d61f5c341201ec705f799e63df5c9a4",
+      "git_blob": "14919796062078b82530066fb251d8e957ac25a9",
+      "bytes": 89542,
+      "dimensions": [
+        1200,
+        700
+      ],
+      "decode": "pass",
+      "mode": "RGB",
+      "alpha_extrema": [
+        255,
+        255
+      ],
+      "transparent_pixels": 0,
+      "partial_alpha_pixels": 0
+    },
+    {
+      "path": "thumbnail.png",
+      "sha256": "e3c565fb76752a99d180368596fe67f8813106ecc07068bea501fd357ef26dc9",
+      "git_blob": "1d5deb56e22b72614fc2fb4a100e4bfcdcaf6b3c",
+      "bytes": 153971,
+      "dimensions": [
+        256,
+        512
+      ],
+      "decode": "pass",
+      "mode": "RGBA",
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "transparent_pixels": 61785,
+      "partial_alpha_pixels": 68506
+    }
+  ]
+}
