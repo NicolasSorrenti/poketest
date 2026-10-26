@@ -635,14 +635,18 @@ function knockoutTempoBonus(a,o,cfg){
 // Estimate what additional cards ALREADY in the player's own hand could unlock
 // after the current Energy attachment. No future draw is assumed, no opponent
 // hidden cards are accessed, and no engine reducer/coin oracle is consulted.
-function horizonAttackValue(unit,defender,hand,remaining=1){
+function horizonAttackValue(unit,defender,hand,remaining=1,futureRound=0){
  if(!unit||!defender)return 0;
  const immediate=projectedAttackValue(unit,defender);
  if(remaining===0)return immediate;
  const seen=new Set();
  let best=immediate;
  for(const id of hand){
-  if(seen.has(id)||!isEnergy(card(id)))continue;
+  const energy=card(id);
+  // Forecast only Energy the attacker can legally receive next turn.
+  // Miracle Energy must not create imaginary two-turn attack lines.
+  if(seen.has(id)||!isEnergy(energy)||!legalAttachment({card:energy,unit,
+   round:futureRound,cardName:card(unit.id)?.name||''}))continue;
   seen.add(id);
   const after={...unit,energies:[...(unit.energies||[]),id]};
   // A card requires another turn's Energy attachment. Discount those future
@@ -661,8 +665,9 @@ function energyHorizonBonus(action,o,cfg){
  if(!isEnergy(card(attachedId)))return 0;
  const after={...u,energies:[...(u.energies||[]),attachedId]};
  const futureHand=p.hand.filter((_,i)=>i!==v.handIndex);
- const before=horizonAttackValue(u,q.active,futureHand);
- const changed=horizonAttackValue(after,q.active,futureHand);
+ const futureRound=(Number(o.round)||0)+1;
+ const before=horizonAttackValue(u,q.active,futureHand,1,futureRound);
+ const changed=horizonAttackValue(after,q.active,futureHand,1,futureRound);
  const direct=projectedAttackValue(after,q.active)-projectedAttackValue(u,q.active);
  // Reward immediate Energy unlocks, but value two-card lines only insofar as
  // they are possible with cards that are ALREADY visible in our own hand.

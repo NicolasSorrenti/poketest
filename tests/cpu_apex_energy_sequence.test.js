@@ -107,3 +107,32 @@ test('opening Active readiness still rewards legal matching Fighting Energy',()=
  assert.ok(AI.score(selectHitmonchan,fighting,cfg,{})>
   AI.score(selectHitmonchan,noEnergy,cfg,{}));
 });
+
+function futureEnergyBoard(currentEnergy,futureEnergy,activeEnergies=[]){
+ const o=board();
+ o.phase='game';
+ o.round=5;
+ o.self.active.energies=activeEnergies;
+ o.self.bench=[];
+ // Avoid a Rattata weakness KO: Jab and Special Punch would otherwise
+ // both score as lethal, masking the forecast's difference.
+ o.opponent.active={id:MACHOP,energies:[],damage:0,status:null};
+ o.self.hand=[currentEnergy,futureEnergy];
+ return o;
+}
+const attachActive={type:'attach_energy',payload:{handIndex:0,slot:-1}};
+test('Apex future Energy horizon ignores illegal Miracle Energy on ordinary Basics',()=>{
+ // DCE + Miracle appears to unlock Hitmonchan's Special Punch, but Miracle
+ // cannot legally be attached to Hitmonchan on the following turn.
+ const miracle=futureEnergyBoard('base1-96','neo4-16');
+ const noEnergy=futureEnergyBoard('base1-96','base1-91'); // Bill
+ assert.equal(AI.energyHorizonBonus(attachActive,miracle,cfg),
+  AI.energyHorizonBonus(attachActive,noEnergy,cfg));
+});
+test('Apex future Energy horizon still rewards legal multi-turn setup',()=>{
+ // Two Fighting Energy followed by a legal DCE unlock Special Punch.
+ const dce=futureEnergyBoard(FIGHT,'base1-96',[FIGHT]);
+ const noEnergy=futureEnergyBoard(FIGHT,'base1-91',[FIGHT]);
+ assert.ok(AI.energyHorizonBonus(attachActive,dce,cfg)>
+  AI.energyHorizonBonus(attachActive,noEnergy,cfg));
+});
