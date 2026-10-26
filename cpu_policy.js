@@ -556,6 +556,25 @@ function evolutionTempoPenalty(o,slot,evolutionId,cfg){
 }
 // Conservative one-ply opponent response and visible Prize-race incentives.
 // No reducer rollouts, opponent concealed hand, unknown future Energy or RNG.
+// Apex may hold an evolution when it gains no immediate combat or survival
+// benefit. Preserve future evolution options instead of promoting by default.
+function prematureEvolutionPenalty(o,slot,evolutionId,cfg){
+ if(cfg.level!==8||o.phase!=='game'||slot!==-1||!o.opponent.active)return 0;
+ const before=o.self.active,next=card(evolutionId);
+ if(!before||!next)return 0;
+ const after={...before,id:evolutionId};
+ const oldDamage=strongestAffordableAttack(before,o.opponent.active);
+ const newDamage=strongestAffordableAttack(after,o.opponent.active);
+ if(oldDamage<=0||newDamage>oldDamage)return 0;
+ if(['Asleep','Paralyzed','Confused'].includes(before.status))return 0;
+ if((next.abilities||[]).length)return 0;
+ const enemy=o.opponent.active;
+ const incomingBefore=strongestAffordableAttack(enemy,before);
+ const incomingAfter=strongestAffordableAttack(enemy,after);
+ if(incomingBefore>=hpRemaining(before)&&incomingAfter<hpRemaining(after))return 0;
+ if(hpRemaining(after)>hpRemaining(before)+20)return 0;
+ return 190;
+}
 function prizeRaceBonus(action,o,cfg){
  if(!cfg.prizeRace||cfg.level<4||o.phase!=='game'||!o.self.active||!o.opponent.active)return 0;
  const own=o.self,enemy=o.opponent;
@@ -815,7 +834,8 @@ function score(a,o,cfg,used){
  if(type==='evolve'){
   const target=slotUnit(p,v.slot),after=card(p.hand[v.handIndex]);
   return 165*style.setup+(Number(after?.hp)||0)*.35+((v.slot===-1)?15:0)-
-   (target?.damage||0)*.1-evolutionTempoPenalty(o,v.slot,p.hand[v.handIndex],cfg);
+   (target?.damage||0)*.1-evolutionTempoPenalty(o,v.slot,p.hand[v.handIndex],cfg)-
+   prematureEvolutionPenalty(o,v.slot,p.hand[v.handIndex],cfg);
  }
  if(type==='attach_energy'){
   const unit=slotUnit(p,v.slot),value=energyValue(unit,p.hand[v.handIndex]);
