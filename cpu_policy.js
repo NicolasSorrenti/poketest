@@ -675,6 +675,10 @@ function energyHorizonBonus(action,o,cfg){
  // Reward immediate Energy unlocks, but value two-card lines only insofar as
  // they are possible with cards that are ALREADY visible in our own hand.
  const expected=Math.max(0,changed-before)*1.15+Math.max(0,direct)*.35;
+ // Do not reward a next-turn attack from an Active that is expected to be
+ // knocked out before it can use the newly attached Energy. Keep the
+ // immediate-attack and retreat exceptions in the shared risk assessment.
+ if(v.slot===-1&&doomedActiveAttachmentPenalty(o,attachedId,cfg)>0)return 0;
  const enemyReady=!['Asleep','Paralyzed'].includes(q.active.status)&&
   strongestAffordableAttack(q.active,u)>=hpRemaining(u);
  // A Bench attacker is useful as a replacement when the Active is visibly
