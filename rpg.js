@@ -2006,52 +2006,61 @@ function portraitPaths(id,expression='neutral',sceneId=activeOutfitSceneId){
  if(['rina','sierra','sol','jinx','luna'].includes(id)&&!Object.prototype.hasOwnProperty.call(art?.expressions||{},expression))expression='neutral';
  return OUTFITS?.sources?.(art,{location:state.location,slot:state.slot,day:state.day,sceneId},expression,{base:fallback,legacy})||[legacy,fallback].filter(Boolean);
 }
-// Curated VN stage sources: approved full-figure artwork, never face crops.
-// Only the stage uses these choices; dialogue avatars, boosters, and CGs retain
-// their own artwork paths. Original image files remain untouched.
-// Curated stage portraits use artist-approved full-figure assets from the existing
-// repository. Mixed-framing expression groups use a stable neutral stage sprite,
-// not a new crop or an automatically guessed zoom.
-const STABLE_STAGE_GROUPS=new Set(['akari','camila','hana','kaede','marina','reina','shiori','teo','yuna']);
-const MANUAL_STAGE_PORTRAITS={
- barb:{base:'/rpg-assets/characters/barb/vn-expressions/neutral.webp',
-  expressions:{happy:'happy',surprised:'surprised',irritated:'angry',vulnerable:'sad',determined:'neutral'},
-  directory:'/rpg-assets/characters/barb/vn-expressions/',scale:1,offsetX:0,offsetY:0},
- laca:{base:'/rpg-assets/characters/laca/outfits/casual/neutral.webp',scale:1,offsetX:0,offsetY:0},
- rina:{base:'/rpg-assets/characters/rina/neutral.png',scale:1,offsetX:0,offsetY:0},
- sol:{base:'/rpg-assets/characters/sol/portraits/primary.png',
-  directory:'/rpg-assets/characters/sol/expressions/',
-  expressions:{neutral:'neutral',happy:'smile',surprised:'surprised',vulnerable:'worried',irritated:'worried',determined:'neutral'},
-  extension:'.png',scale:1,offsetX:0,offsetY:0},
- sierra:{base:'/rpg-assets/characters/sierra/portrait.png',scale:1,offsetX:0,offsetY:0}
+// Persona C bust framing approved by the player. Only the RPG stage uses it.
+// Original art, event CGs and booster portraits remain untouched.
+const PERSONA_C_CROPS={
+ akari:[.028,0,.943,.597],alma:[.075,0,.868,.55],barb:[.296,0,.429,.363],
+ camila:[.072,0,.894,.566],elena:[.225,0,.56,.355],elio:[.177,0,.673,.426],
+ hana:[.054,0,.892,.565],iris:[.243,0,.52,.439],jinx:[.236,0,.508,.429],
+ jun:[.165,0,.672,.567],kaede:[.053,0,.894,.566],laca:[.225,0,.505,.36],
+ luna:[.276,0,.448,.378],marina:[.05,0,.9,.57],nereo:[.197,0,.616,.52],
+ reina:[.053,0,.894,.566],rina:[.19,0,.627,.53],shiori:[.052,0,.896,.568],
+ sierra:[.189,0,.626,.529],sol:[.18,0,.639,.54],teo:[.09,0,.819,.519],
+ yuna:[.029,0,.943,.597]
 };
-for(const id of ['akari','alma','camila','elena','elio','hana','iris','jinx','jun','kaede','luna','marina','nereo','reina','shiori','teo','yuna']){
- const directory='/rpg-assets/characters/'+id+'/expression-portraits/';
- const stable=STABLE_STAGE_GROUPS.has(id);
- MANUAL_STAGE_PORTRAITS[id]={
-  base:directory+'neutral.webp',directory,extension:'.webp',
-  // Emotion variants are only promoted into the stage when the original set
-  // has a consistent canvas/composition. Other expressions remain available
-  // to the smaller avatar UI through the original resolver.
-  expressions:stable?{neutral:'neutral',happy:'happy',surprised:'surprised',vulnerable:'soft',irritated:'concerned',determined:'neutral'}:{neutral:'neutral'},
-  scale:1,offsetX:0,offsetY:0
- };
+const PERSONA_C_EXPR={
+ happy:['happy','smile','playful'],surprised:['surprised'],
+ vulnerable:['soft','vulnerable','sad','worried','concerned','embarrassed'],
+ irritated:['angry','annoyed','concerned','worried'],
+ determined:['smirk','neutral'],neutral:['neutral']
+};
+function personaCStageCandidates(id,emotion,normal){
+ const dir='/rpg-assets/characters/'+id+'/';
+ const names=PERSONA_C_EXPR[emotion]||PERSONA_C_EXPR.neutral;
+ const picks=[];
+ if(id==='barb')for(const n of names)picks.push(dir+'vn-expressions/'+n+'.webp');
+ else if(id==='laca'){
+  // Outfit selection remains authoritative: do not turn lifeguard Laca casual.
+  const life=normal.some(p=>p.includes('/lifeguard/'));
+  const outfit=life?'lifeguard':'casual';
+  for(const n of names){picks.push(dir+'outfits/'+outfit+'/'+n+'.webp');picks.push(dir+'outfits/'+outfit+'/'+n+'.png');}
+  picks.push(dir+'outfits/'+outfit+'/neutral.webp');
+ }else if(id==='sol'){
+  for(const n of names)picks.push(dir+'expressions/'+(n==='happy'?'smile':n==='vulnerable'?'worried':n)+'.png');
+  picks.push(dir+'portraits/primary.png');
+ }else{
+  for(const n of names)picks.push(dir+'expression-portraits/'+n+'.webp');
+  if(id==='rina')picks.push(dir+'neutral.png');
+  if(id==='sierra')picks.push(dir+'portrait.png');
+ }
+ return [...new Set([...picks,...normal])];
 }
 function stagePortraitPaths(id,expression,sceneId){
- const normal=portraitPaths(id,expression,sceneId);
- const manual=MANUAL_STAGE_PORTRAITS[id];
- if(!manual)return normal;
- // Laca may switch into lifeguard clothes. Don't override that choice with
- // a casual sprite; otherwise outfit selection silently breaks.
- if(id==='laca'&&normal.some(p=>p.includes('/outfits/lifeguard/')))
-  return ['/rpg-assets/characters/laca/outfits/lifeguard/neutral.webp',...normal];
- const name=manual.expressions?.[expression];
- const expressionPath=name&&manual.directory?manual.directory+name+(manual.extension||'.webp'):null;
- return [...new Set([expressionPath,manual.base,...normal].filter(Boolean))];
+ return personaCStageCandidates(id,expression,portraitPaths(id,expression,sceneId));
 }
 function scenePortraitSource(id,expression,sceneId=activeOutfitSceneId){
  const paths=stagePortraitPaths(id,expression,sceneId);
  return paths.find(src=>!failedScenePortraits.has(src))||paths[paths.length-1]||cast[id].portrait||'/rpg-assets/'+id+'.png';
+}
+function applyPersonaCStageCrop(img,id){
+ const crop=PERSONA_C_CROPS[id];
+ if(!crop)return;
+ const [x,y,w,h]=crop;
+ // The stage frame clips the original image; no binary assets are altered.
+ img.style.width=(100/w)+'%';
+ img.style.height=(100/h)+'%';
+ img.style.left=(-100*x/w)+'%';
+ img.style.top=(-100*y/h)+'%';
 }
 function dialogueExpression(line){
  const s=String(line||'').toLowerCase();
@@ -2082,7 +2091,8 @@ function renderRpgCast(ids,locked,shown,portraitId,context={}){
    button=document.createElement('button');button.type='button';button.dataset.npc=id;
    button.className='rpg-cast-member is-entering';
    button.dataset.initials=cast[id].name.split(' ').map(part=>part[0]).join('').slice(0,2).toUpperCase();
-   button.append(makeAvatar(id));
+   const stageFrame=document.createElement('div');stageFrame.className='rpg-stage-persona-frame';
+   stageFrame.append(makeAvatar(id));button.append(stageFrame);
    const name=document.createElement('span');name.textContent=cast[id].name.split(' ')[0];button.append(name);
    button.onclick=()=>selectPerson(id);
    button.addEventListener('animationend',event=>{if(event.target===button)button.classList.remove('is-entering');});
@@ -2096,6 +2106,7 @@ function renderRpgCast(ids,locked,shown,portraitId,context={}){
   button.setAttribute('aria-label','Talk to '+cast[id].name);
   const image=button.querySelector('img');
   if(image){
+   applyPersonaCStageCrop(image,id);
    // Explicit reviewed sources, rather than transparent-margin heuristics.
    const expression=active?(window.NeoRpgCharacterMotion?.emotion?.(shown?.expression,dialogueExpression(shown?.line))||dialogueExpression(shown?.line)):'neutral';
    window.NeoRpgDiscreetAvatars?.set?.(button,id,expression,cast[id].name);
