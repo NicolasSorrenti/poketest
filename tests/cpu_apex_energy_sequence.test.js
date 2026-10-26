@@ -305,12 +305,13 @@ test('Lower CPU levels retain their existing Active Energy scoring',()=>{
 
 function horizonThreatBoard(){
  const o=threatenedActiveEnergyBoard();
- // Machoke needs three Energy for Karate Chop; the visible DCE next
- // turn would complete that line after attaching Fighting now.
+ // Machoke needs three Fighting Energy for Karate Chop. A second
+ // visible Fighting next turn would complete the line after today's one.
  // The first Fighting attachment does not fund a retreat or attack.
  o.self.active={id:'base1-34',energies:[],damage:70,status:null};
  o.self.bench=[{id:HITMONCHAN,energies:[FIGHT],damage:0,status:null}];
- o.self.hand=[FIGHT,'base1-96'];
+ // Machoke's Karate Chop costs three Fighting, not Fighting + two Colorless.
+ o.self.hand=[FIGHT,FIGHT];
  return o;
 }
 test('Apex does not forecast next-turn Active damage after a certain knockout',()=>{
@@ -327,7 +328,7 @@ test('Apex does not suppress Active horizon planning without a ready enemy knock
  const safe=horizonThreatBoard();
  safe.opponent.active.energies=[];
  assert.ok(AI.energyHorizonBonus(attachActive,safe,cfg)>0,
-  'safe Active may plan visible next-turn Double Colorless attack');
+  'safe Active may plan a visible next-turn Fighting attack');
 });
 
 test('Apex avoids doomed Active setup across defensive personality styles',()=>{
