@@ -72,17 +72,23 @@ function chooseStory(raw){
 function finishStory(){
  const a=state.activeStory;if(!a||a.phase!=='response')return;
  const e=STORY.byId(a.id);
- let result;try{result=STORY.resolve(state,a.id,a.choice)}catch(err){$('notice').textContent=err.message;return;}
- const id=e.npc;
- // STORY.resolve has already committed and mirrored the selected relationship effects.
- const chapterReward=BONDS.reward(state,e,BOND_PLAN,COLLECT);
- log('Finished '+e.title+' with '+cast[id].name+'.');const storyMemories=recordCG('story_milestone',id,{eventId:e.id});recordIntention('story');
- if(chapterReward)log('Bond chapter '+chapterReward.chapter+' reward from '+cast[id].name+': '+chapterReward.label+'.');
- state.activeStory=null;advance();state.selected=id;
- persist();showCGMoment(storyMemories[0]);closeSceneDialogue();
+ try{STORY.resolve(state,a.id,a.choice);}
+ catch(err){console.error('RPG story completion failed',err);$('notice').textContent='Could not finish scene: '+err.message;return;}
+ // Commit the resolved scene before any nonessential rewards or artwork.
+ state.activeStory=null;persist();
+ const id=e.npc;let chapterReward=null,storyMemories=[];
+ try{chapterReward=BONDS.reward(state,e,BOND_PLAN,COLLECT);}
+ catch(err){console.error('RPG chapter reward failed',err);}
+ try{
+  log('Finished '+e.title+' with '+cast[id].name+'.');
+  storyMemories=recordCG('story_milestone',id,{eventId:e.id});
+  recordIntention('story');
+  if(chapterReward)log('Bond chapter '+chapterReward.chapter+' reward from '+cast[id].name+': '+chapterReward.label+'.');
+ }catch(err){console.error('RPG optional story effects failed',err);}
+ advance();state.selected=id;persist();closeSceneDialogue();
+ try{showCGMoment(storyMemories[0]);}catch(err){console.error('RPG scene artwork failed',err);}
  if(chapterReward)$('notice').textContent='★ Chapter reward: '+chapterReward.label;
 }
-
 
 function beginSideQuest(id){
  if(state.activeSituation||state.activeSideQuest||state.activeStory||state.activeEncounter||state.activeArc||state.pendingDuel||state.day>90)return;
@@ -124,10 +130,12 @@ function chooseSideQuest(raw){
 }
 function finishSideQuest(){
  const a=state.activeSideQuest;if(!a||a.phase!=='response')return;
- const x=SIDE.byId(a.id),i=a.choice,owner=x.stages[state.sideQuests[a.id].step].npc;
- let result;try{result=SIDE.finishChoice(state,a.id,i,currentPeople());}
- catch(err){$('notice').textContent=err.message;return;}
- log((result.done?'Completed':'Progressed')+' side quest: '+result.title+'.');recordIntention('sideQuest');
+ let result;
+ try{result=SIDE.finishChoice(state,a.id,a.choice,currentPeople());}
+ catch(err){console.error('RPG side quest completion failed',err);$('notice').textContent='Could not finish chapter: '+err.message;return;}
+ persist(); // The quest is complete even if an optional follow-up effect fails.
+ try{log((result.done?'Completed':'Progressed')+' side quest: '+result.title+'.');recordIntention('sideQuest');}
+ catch(err){console.error('RPG optional side quest effects failed',err);}
  advance();persist();closeSceneDialogue();
 }
 function pauseSideQuest(){
@@ -647,6 +655,13 @@ function finishSituation(){
 }
 
 function scheduleEvent(){return eventCards.find(e=>e.day===state.day&&e.slot===state.slot&&e.place===state.location&&!state.eventsDone[e.day+':'+e.title]);}
+function safeAct(action){
+ try{return act(action);}
+ catch(err){
+  console.error('RPG action failed',action,err);
+  $('notice').textContent='Action failed: '+(err?.message||'Unknown error')+'. Your save is intact.';
+ }
+}
 function act(action){
  const [type,id,part]=action.split(':');
  if(mandatoryAction(type,id))return;
@@ -666,11 +681,26 @@ function act(action){
   }
  if(type==='eventInvite'){
   const invited=scene.invitation;
-  if(!invited||invited.kind!==id||invited.id!==part||!currentPeople().includes(invited.npc))return;
-  const live=availableInvitation(invited.npc);
-  if(!live||live.kind!==id||live.id!==part){
-   return say(cast[invited.npc].name,'Something has changed. We can try another time.');
-  }
+  if(!invited||invited.kind!==id||invited.id!==part)
+   return say('Narrator','This invitation has changed. Talk to the character again to refresh it.');
+  if(!currentPeople().includes(invited.npc))
+   return say('Narrator','They have moved on. You can try again later.');
+  // Recheck the invited event itself, not whether it is still the top-ranked
+  // invitation. Rankings can change after a saved scene is restored.
+  const people=currentPeople();
+  const available=
+   id==='story'?eligibleStories().some(e=>e.id===part&&e.npc===invited.npc):
+   id==='sidequest'?SIDE.available(state,people).some(e=>e.quest.id===part&&e.stage.npc===invited.npc):
+   id==='arc'?ARC.available(state,people).some(e=>e.id===part&&invited.npc==='reina'):
+   id==='situation'?SITUATIONS.available(state,people).some(e=>e.id===part&&e.npc===invited.npc):
+   id==='encounter'?WORLD.availableEncounters(state,people).some(e=>e.id===part&&e.npc===invited.npc):
+   id==='appointment'?APPOINTMENTS.active(state).some(e=>String(e.id)===part&&e.npc===invited.npc):
+   id==='cup'?TOURNAMENTS.available(state).some(e=>e.id===part):
+   id==='competitive'?COMPETE.available(state).some(e=>e.id===part):
+   id==='exhibition'?!!scheduleEvent()&&String(scheduleEvent().day)===part:false;
+  if(!available)return say(cast[invited.npc]?.name||'Narrator',
+    'That event is not available right now. We can still talk.',
+    [['Talk','eventChat:'+invited.npc],['Close','close']]);
   // The original event handlers still own legality, time, rewards, CGs and saves.
   if(id==='appointment')return act('attend:'+part);
   if(id==='story')return startStory(part);
@@ -684,8 +714,8 @@ function act(action){
   return;
  }
  if(type==='eventChat'){
-  if(scene.invitation?.npc===id&&currentPeople().includes(id))return selectPerson(id,{skipInvitation:true});
-  return;
+  if(cast[id]&&currentPeople().includes(id))return selectPerson(id,{skipInvitation:true});
+   return say('Narrator','They have moved on. You can try again later.');
  }
  if(type==='situationCancel'){state.activeSituation=null;state.selected=null;return say('Narrator','You decide to leave the moment for another time. No time passes.');}
  if(type==='situationChoice')return chooseSituation(id);
@@ -2247,7 +2277,7 @@ function render(){
    b.disabled=!option||!!option.disabledReason;
    if(b.disabled)b.title=option?.disabledReason||'That meeting time is no longer available.';
   }
-  b.onclick=()=>act(action);$('choices').append(b);
+  b.onclick=()=>safeAct(action);$('choices').append(b);
  }
  if(newPlayerPrompt){
   const first=[...choiceList.children].find(b=>!b.disabled);
@@ -2436,7 +2466,7 @@ function render(){
  ...(state.location==='home'?[['Sleep until morning · ⏳ '+(3-state.slot)+' period(s)','sleep']]:[]),
  ['Calendar · free','calendar'],['New campaign','new']];
  for(const [label,action] of items){
-  const b=document.createElement('button');b.className='activity';b.textContent=label;b.disabled=(ended&&action!=='new'&&action!=='calendar')||(locked&&action!=='calendar');b.onclick=()=>act(action);$('activities').append(b);
+  const b=document.createElement('button');b.className='activity';b.textContent=label;b.disabled=(ended&&action!=='new'&&action!=='calendar')||(locked&&action!=='calendar');b.onclick=()=>safeAct(action);$('activities').append(b);
  }
  renderBracketProgress();
  renderCompetitiveCircuit(locked);
