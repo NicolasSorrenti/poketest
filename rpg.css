@@ -480,9 +480,3 @@
 #scene.has-story-cg .dialogue{z-index:4}
 #scene.has-story-cg .player-choice-prompt{z-index:6}
 
-/* Reversible portrait framing based on the first transparent sprite per character.
-   No source artwork is cropped or resized on disk. */
-.rpg-scene-cast .rpg-cast-member img[data-portrait-framing="normalized"]{
- transform:translateY(var(--rpg-portrait-art-lift,0%)) scale(var(--rpg-portrait-art-scale,1));
- transform-origin:center bottom;
-}
