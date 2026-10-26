@@ -46,20 +46,20 @@ for(const spec of specs){
   const restored=JSON.parse(JSON.stringify(s));assert.equal(CG.unlocked(restored,spec.id),true);
   assert.deepEqual(CG.record(restored,'story_milestone','akari',{eventId:spec.id}),[]);
  });
- test(spec.id+' finishStory displays and saves the CG before time advancement can affect eligibility',()=>{
+ test(spec.id+' finishStory records and saves the CG before time advancement can affect eligibility',()=>{
   const source=fs.readFileSync(path.join(__dirname,'../rpg.js'),'utf8');
   const start=source.indexOf('function finishStory(){'),end=source.indexOf('\nfunction beginSideQuest(',start);
   assert.ok(start>=0&&end>start,'finishStory function boundary must be present');
   const finish=source.slice(start,end);
   for(const day of [spec.start,spec.end])for(const choice of [0,1,2]){
    const s=state(spec,day);s.activeStory={id:spec.id,phase:'response',choice};
-   let shown=null,saved=false,closed=false;
+   let recorded=null,saved=false,closed=false;
    const ctx={state:s,STORY,cast:{akari:{name:'Akari'}},BONDS:{reward:()=>null},BOND_PLAN:{},COLLECT:{},
-    log:()=>{},recordIntention:()=>{},recordCG:(...args)=>CG.record(s,...args),
+    log:()=>{},recordIntention:()=>{},recordCG:(...args)=>{const entries=CG.record(s,...args);recorded=entries[0]||null;return entries;},
     advance:()=>{s.slot=(s.slot+1)%3;s.location='home';},persist:()=>{saved=true;},
-    closeSceneDialogue:()=>{closed=true;},showCGMoment:entry=>{shown=entry;},$:()=>({})};
+    closeSceneDialogue:()=>{closed=true;},$:()=>({})};
    vm.runInNewContext(finish+'\nfinishStory();',ctx);
-   assert.equal(shown?.id,spec.id);assert.ok(saved&&closed);assert.equal(s.activeStory,null);
+   assert.equal(recorded?.id,spec.id);assert.ok(saved&&closed);assert.equal(s.activeStory,null);
    assert.equal(CG.gallery(s).find(x=>x.id===spec.id).unlocked,true);
   }
  });
