@@ -28,6 +28,16 @@ on:
       - '.github/workflows/rpg-regression.yml'
 
 jobs:
+  cg-scene:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: In-scene CG background and sequencing regression
+        run: node --test tests/rpg_cg_scene.test.js
   mandatory-system:
     runs-on: ubuntu-latest
     timeout-minutes: 10
