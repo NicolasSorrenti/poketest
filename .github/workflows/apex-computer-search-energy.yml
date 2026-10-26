@@ -1,0 +1,17 @@
+name: Apex Computer Search Energy Regression
+on:
+  pull_request:
+    paths:
+      - 'cpu_policy.js'
+      - 'tests/cpu_apex_computer_search_energy.test.js'
+      - '.github/workflows/apex-computer-search-energy.yml'
+jobs:
+  computer-search-energy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: node --test tests/cpu_apex_computer_search_energy.test.js
