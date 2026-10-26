@@ -688,6 +688,13 @@ function pokemonCenterEnergyWaste(o,slot,cfg,used){
  const u=slotUnit(o.self,slot);
  return !!(u&&u.damage>=10&&pokemonCenterPending(o,cfg,used));
 }
+function centerSafeActions(o,cfg,used,actions){
+ // Keep the decision-quality audit aligned with the exact sequencing
+ // constraint applied to Apex's real action planner.
+ if(cfg.level!==8||!pokemonCenterPending(o,cfg,used))return actions;
+ return actions.filter(a=>a.type!=='attach_energy'||
+  !pokemonCenterEnergyWaste(o,a.payload.slot,cfg,used));
+}
 // Evaluate a possible replacement against the opponent's *revealed* Active.
 // An unequipped Basic is not a ready attacker, and its weakness/HP matters.
 function benchMatchupValue(pokemonId,o){
@@ -986,9 +993,7 @@ function chooseAction(game,raw={},memo={}){
  // despite its immediate -1000 penalty. This is a strict sequencing guard,
  // not merely a heuristic: never spend the turn's attachment on a damaged
  // Pokémon while an unplayed Center is available to discard that Energy.
- const safeActions=cfg.level===8&&pokemonCenterPending(o,cfg,used)?
-  actions.filter(a=>a.type!=='attach_energy'||!pokemonCenterEnergyWaste(o,a.payload.slot,cfg,used)):
-  actions;
+ const safeActions=centerSafeActions(o,cfg,used,actions);
  if(!safeActions.length)return null;
  const random=rng(cfg.seed+game.turnSerial*7919+(game.events?.length||0)*17011+cfg.side*31);
  const preparedActions=energyPreparationActions(o,cfg,safeActions);
@@ -1041,7 +1046,8 @@ function driveSide(initial,{side=1,level=3,personality='balanced',seed=1,plannin
   const auditCfg=configuration({side,level,personality,seed,planning,evolutionTempo,prizeRace,
    knockoutTempo,opponentResponse,graduatedNoise,energyHorizon});
   const auditOptions=auditObs.phase==='game'&&auditObs.turn===side&&!auditObs.decision?
-   candidates(auditObs,auditCfg,memo).filter(a=>a.type==='attach_energy'):[];
+   centerSafeActions(auditObs,auditCfg,memo,
+    candidates(auditObs,auditCfg,memo)).filter(a=>a.type==='attach_energy'):[];
   const started=onDecision?performance.now():0;
   const next=chooseAction(game,{side,level,personality,seed,planning,evolutionTempo,prizeRace,knockoutTempo,opponentResponse,graduatedNoise,energyHorizon},memo);
   if(!next){
@@ -1073,4 +1079,4 @@ function driveSide(initial,{side=1,level=3,personality='balanced',seed=1,plannin
 }
 function driveBot(game,limit=200,config={}){return driveSide(game,{...config,side:1,limit});}
 function propose(game,config={}){return chooseAction(game,{...config,side:1});}
-module.exports={SKILLS,CALIBRATED_SKILLS,PERSONALITIES,configuration,observation,trainerOpportunity,candidates,score,knockoutChance,planningBonus,evolutionTempoPenalty,prizeRaceBonus,knockoutTempoBonus,opponentResponseBonus,energyHorizonBonus,energyPreparationActions,chooseAction,driveSide,driveBot,propose};
+module.exports={SKILLS,CALIBRATED_SKILLS,PERSONALITIES,configuration,observation,trainerOpportunity,candidates,score,knockoutChance,planningBonus,evolutionTempoPenalty,prizeRaceBonus,knockoutTempoBonus,opponentResponseBonus,energyHorizonBonus,energyPreparationActions,centerSafeActions,chooseAction,driveSide,driveBot,propose};
