@@ -67,9 +67,11 @@ function benchEnergyBoard(energyId,energyUsed=false){
 const benchHitmonchan={type:'bench',payload:{handIndex:0}};
 test('Apex does not treat illegal Miracle Energy as Bench attack readiness',()=>{
  const miracle=benchEnergyBoard('neo4-16');
- const offType=benchEnergyBoard('base1-98'); // Fire cannot pay Hitmonchan's Fighting attack
+ // An illegal Miracle Energy offers no attachment option, unlike a
+ // legal off-type Energy which could still be attached for future turns.
+ const noEnergy=benchEnergyBoard('base1-91'); // Bill, not an Energy card
  assert.equal(AI.score(benchHitmonchan,miracle,cfg,{}),
-  AI.score(benchHitmonchan,offType,cfg,{}));
+  AI.score(benchHitmonchan,noEnergy,cfg,{}));
 });
 test('Apex does not assume a second Energy attachment when already used',()=>{
  const spentFighting=benchEnergyBoard(FIGHT,true);
