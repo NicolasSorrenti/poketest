@@ -303,25 +303,28 @@ test('Lower CPU levels retain their existing Active Energy scoring',()=>{
   AI.score(attachActive,safe,lower,{}));
 });
 
+function horizonThreatBoard(){
+ const o=threatenedActiveEnergyBoard();
+ // Hitmonchan's Jab is disabled by Sleep. A Fighting now and visible DCE
+ // next turn would otherwise appear to prepare its stronger Special Punch.
+ o.self.active={id:HITMONCHAN,energies:[FIGHT],damage:60,status:'Asleep'};
+ o.self.bench=[{id:HITMONCHAN,energies:[FIGHT],damage:0,status:null}];
+ o.self.hand=[FIGHT,'base1-96']; // Future Double Colorless Energy
+ return o;
+}
 test('Apex does not forecast next-turn Active damage after a certain knockout',()=>{
- const threatened=threatenedActiveEnergyBoard();
- // A second Energy in hand makes the hypothetical next-turn attack tempting.
- threatened.self.hand=[FIGHT,FIGHT];
- threatened.self.active.energies=[FIGHT];
+ const threatened=horizonThreatBoard();
  assert.equal(AI.energyHorizonBonus(attachActive,threatened,cfg),0);
 });
 test('Apex retains Bench horizon planning when its Active is doomed',()=>{
- const threatened=threatenedActiveEnergyBoard();
- threatened.self.hand=[FIGHT,FIGHT];
- threatened.self.active.energies=[FIGHT];
+ const threatened=horizonThreatBoard();
  const benchBonus=AI.energyHorizonBonus(attach,threatened,cfg);
- assert.ok(Number.isFinite(benchBonus));
+ assert.ok(benchBonus>0,'surviving Bench gets a real future upgrade');
  assert.ok(benchBonus>AI.energyHorizonBonus(attachActive,threatened,cfg));
 });
 test('Apex does not suppress Active horizon planning without a ready enemy knockout',()=>{
- const safe=threatenedActiveEnergyBoard();
+ const safe=horizonThreatBoard();
  safe.opponent.active.energies=[];
- safe.self.hand=[FIGHT,FIGHT];
- safe.self.active.energies=[FIGHT];
- assert.notEqual(AI.energyHorizonBonus(attachActive,safe,cfg),0);
+ assert.ok(AI.energyHorizonBonus(attachActive,safe,cfg)>0,
+  'safe Active may plan visible next-turn Double Colorless attack');
 });
