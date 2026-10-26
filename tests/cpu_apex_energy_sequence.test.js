@@ -307,9 +307,11 @@ function horizonThreatBoard(){
  const o=threatenedActiveEnergyBoard();
  // Hitmonchan's Jab is disabled by Sleep. A Fighting now and visible DCE
  // next turn would otherwise appear to prepare its stronger Special Punch.
- o.self.active={id:HITMONCHAN,energies:[FIGHT],damage:60,status:'Asleep'};
+ o.self.active={id:HITMONCHAN,energies:[FIGHT,FIGHT],damage:60,status:'Asleep'};
  o.self.bench=[{id:HITMONCHAN,energies:[FIGHT],damage:0,status:null}];
- o.self.hand=[FIGHT,'base1-96']; // Future Double Colorless Energy
+ // DCE unlocks the Active's stronger attack, but Sleep prevents using it.
+ // On Bench it prepares a legal Fighting follow-up next turn.
+ o.self.hand=['base1-96',FIGHT];
  return o;
 }
 test('Apex does not forecast next-turn Active damage after a certain knockout',()=>{
