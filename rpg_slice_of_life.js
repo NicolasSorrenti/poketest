@@ -1225,7 +1225,7 @@
    state.activeArc||state.activeEncounter||state.activeSituation||state.pendingDuel||state.mandatoryEventState?.active||
    state.day>90||state.sliceOfLifeLastDay===state.day)return [];
   return scenes.filter(e=>(e.trigger===trigger||(e.encounterType==='slice'&&trigger==='talk'))&&(!options.onlyRandomForced||e.randomForced)&&randomEligible(state,e)&&(!npc||e.npc===npc)&&state.location===e.place&&state.slot===e.slot&&
-   state.day>=e.start&&state.day<=e.end&&(e.participants||[e.npc]).every(id=>people.includes(id)&&state['met_'+id])&&
+   state.day>=e.start&&state.day<=e.end&&[e.npc,...(e.participants||[])].every(id=>people.includes(id)&&state['met_'+id])&&
    (!e.prerequisite||state.sliceOfLifeDone?.[e.prerequisite]||state.storyDone?.[e.prerequisite])&&
    !state.sliceOfLifeDone?.[e.id]&&(state.relationships?.[e.npc]?.affection||0)>=e.minAffection);
  }
