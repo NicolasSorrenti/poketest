@@ -311,7 +311,7 @@ function blockedRetreatEnergyBoard({status=null,retreated=false}={}){
  // DCE pays Machop's retreat but cannot fund its Fighting attacks.
  // The same DCE develops Benched Hitmonchan's Special Punch.
  o.self.active={id:MACHOP,energies:[],damage:Number(machop.hp)-10,status};
- o.self.bench=[{id:HITMONCHAN,energies:[FIGHT],damage:0,status:null}];
+ o.self.bench=[{id:HITMONCHAN,energies:[FIGHT,FIGHT],damage:0,status:null}];
  o.self.hand=['base1-96'];
  o.self.retreated=retreated;
  o.opponent.active={id:HITMONCHAN,energies:[FIGHT],damage:0,status:null};
