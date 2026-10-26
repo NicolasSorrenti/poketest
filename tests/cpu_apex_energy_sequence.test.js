@@ -307,11 +307,13 @@ test('Apex does not forecast next-turn Active damage after a certain knockout',(
  const threatened=threatenedActiveEnergyBoard();
  // A second Energy in hand makes the hypothetical next-turn attack tempting.
  threatened.self.hand=[FIGHT,FIGHT];
+ threatened.self.active.energies=[FIGHT];
  assert.equal(AI.energyHorizonBonus(attachActive,threatened,cfg),0);
 });
 test('Apex retains Bench horizon planning when its Active is doomed',()=>{
  const threatened=threatenedActiveEnergyBoard();
  threatened.self.hand=[FIGHT,FIGHT];
+ threatened.self.active.energies=[FIGHT];
  const benchBonus=AI.energyHorizonBonus(attach,threatened,cfg);
  assert.ok(Number.isFinite(benchBonus));
  assert.ok(benchBonus>AI.energyHorizonBonus(attachActive,threatened,cfg));
@@ -320,5 +322,6 @@ test('Apex does not suppress Active horizon planning without a ready enemy knock
  const safe=threatenedActiveEnergyBoard();
  safe.opponent.active.energies=[];
  safe.self.hand=[FIGHT,FIGHT];
+ safe.self.active.energies=[FIGHT];
  assert.notEqual(AI.energyHorizonBonus(attachActive,safe,cfg),0);
 });
