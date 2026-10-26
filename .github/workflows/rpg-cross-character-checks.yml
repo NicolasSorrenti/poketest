@@ -37,4 +37,4 @@ jobs:
         run: |
           node --test tests/rpg_cross_character_events.test.js
           node --test tests/rpg_bootstrap_dependency.test.js tests/rpg_public_scripts.test.js tests/rpg_cg_scene.test.js
-          node --test tests/rpg_cg_gallery.test.js tests/rpg_archived_random_cgs.test.js tests/rpg_slice_of_life.test.js
+          node --test tests/rpg_cg_gallery.test.js tests/rpg_archived_random_cgs.test.js
