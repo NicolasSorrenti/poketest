@@ -114,6 +114,9 @@ function futureEnergyBoard(currentEnergy,futureEnergy,activeEnergies=[]){
  o.round=5;
  o.self.active.energies=activeEnergies;
  o.self.bench=[];
+ // Avoid a Rattata weakness KO: Jab and Special Punch would otherwise
+ // both score as lethal, masking the forecast's difference.
+ o.opponent.active={id:MACHOP,energies:[],damage:0,status:null};
  o.self.hand=[currentEnergy,futureEnergy];
  return o;
 }
