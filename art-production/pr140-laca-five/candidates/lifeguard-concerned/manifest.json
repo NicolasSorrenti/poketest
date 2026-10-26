@@ -1,0 +1,87 @@
+{
+  "repository": "NicolasSorrenti/poketest",
+  "branch": "art/overworld-character-refresh",
+  "source_commit": "e002154ee027fafec1bbc906c1d388434cf9ef06",
+  "scope": "Laca lifeguard concerned ONLY",
+  "status": "generated_candidate",
+  "reuse_decision": "No valid approved full-body matching concerned expression. Manifest sad.png fails full decode. vulnerable.webp is 384x447 crop with different pose/framing. Casual concerned excluded for wrong outfit.",
+  "attempts": [
+    {
+      "number": 1,
+      "original": "attempt-01-original.png",
+      "thumbnail": "attempt-01-thumbnail.png",
+      "prompt": "prompt.txt",
+      "transparent_background": true
+    }
+  ],
+  "files": {
+    "prompt.txt": {
+      "sha256": "d077b6277cfa070edc956bdfb3d9128f670a16ddbdd317ed19d96a0bf1e3c729"
+    },
+    "references/characters__laca__bible.md": {
+      "sha256": "86aedd44295dfa9b408388c519e526cecd32830936a659193abb414740464f4e"
+    },
+    "references/rpg-assets__characters__laca__outfits__lifeguard__vulnerable.webp": {
+      "sha256": "afc71041dd8f50a344de91d4ed326df9e06e4cde90f4a6a03e646ed56ce65216",
+      "dimensions": [
+        384,
+        447
+      ],
+      "mode": "RGBA",
+      "alpha_extrema": [
+        0,
+        254
+      ]
+    },
+    "references/characters__laca__art_manifest.json": {
+      "sha256": "770ea63ef32a870710e3d02802c3824abdab430c48767e54cb73900ff442a54a"
+    },
+    "references/rpg-assets__characters__laca__outfits__lifeguard__neutral.webp": {
+      "sha256": "035e43536e36ca0ecea28c8ea20aa4191a41330cd0b95cfb8662a31d5f59d500",
+      "dimensions": [
+        941,
+        1672
+      ],
+      "mode": "RGBA",
+      "alpha_extrema": [
+        0,
+        255
+      ]
+    },
+    "references/docs__PR140_BARB_LACA_HANA_AUDIT.md": {
+      "sha256": "b9138e02e21f19372bb3f15d7340147f18bc42981dd068542cc2b674044542c5"
+    },
+    "references/rpg-assets__characters__laca__outfits__lifeguard__sad.png": {
+      "sha256": "e8c11351dd174e2689f323f42a11934c5f7010bd387c136a79707e0340f84668",
+      "decode_error": "broken PNG file (chunk b'\\xe3*\\xf4\\xa3')"
+    },
+    "attempt-01-original.png": {
+      "sha256": "66cb242994b0b73eca88be44c052d1a4346804d64a5bd0261d0a0e5023158b3d",
+      "dimensions": [
+        941,
+        1672
+      ],
+      "mode": "RGBA",
+      "alpha_extrema": [
+        0,
+        255
+      ]
+    },
+    "attempt-01-thumbnail.png": {
+      "sha256": "3a73ce618c96841370611b987873fc765a1774c509edbcff9437a5715c88088a",
+      "dimensions": [
+        256,
+        455
+      ],
+      "mode": "RGBA",
+      "alpha_extrema": [
+        0,
+        255
+      ]
+    }
+  },
+  "method": "built-in imagegen; transparent_background=true",
+  "reused": false,
+  "selected": "attempt-01-original.png",
+  "visual_review": "Concerned raised inner brows and downturned closed mouth. Matching identity, long hair, red uniform, whistle, float, pose and full-body framing retained. Candidate awaits user approval; no integration performed."
+}

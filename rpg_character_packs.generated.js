@@ -4012,7 +4012,8 @@ const packs=[
     "embarrassed": "/rpg-assets/characters/laca/outfits/casual/embarrassed.png",
     "angry": "/rpg-assets/characters/laca/outfits/casual/angry.png",
     "sad": "/rpg-assets/characters/laca/expression-portraits/concerned.webp",
-    "inviting": "/rpg-assets/characters/laca/outfits/casual/inviting.png"
+    "inviting": "/rpg-assets/characters/laca/outfits/casual/inviting.png",
+    "concerned": "/rpg-assets/characters/laca/expression-portraits/concerned.webp"
    },
    "outfits": {
     "default": "casual",
@@ -4028,7 +4029,8 @@ const packs=[
        "embarrassed": "/rpg-assets/characters/laca/outfits/casual/embarrassed.png",
        "angry": "/rpg-assets/characters/laca/outfits/casual/angry.png",
        "sad": "/rpg-assets/characters/laca/expression-portraits/concerned.webp",
-       "inviting": "/rpg-assets/characters/laca/outfits/casual/inviting.png"
+       "inviting": "/rpg-assets/characters/laca/outfits/casual/inviting.png",
+       "concerned": "/rpg-assets/characters/laca/expression-portraits/concerned.webp"
       }
      },
      "lifeguard": {
@@ -4037,12 +4039,13 @@ const packs=[
        "neutral": "/rpg-assets/characters/laca/outfits/lifeguard/neutral.webp",
        "happy": "/rpg-assets/characters/laca/outfits/lifeguard/happy.png",
        "surprised": "/rpg-assets/characters/laca/outfits/lifeguard/surprised.png",
-       "vulnerable": "/rpg-assets/characters/laca/outfits/lifeguard/sad.png",
+       "vulnerable": "/rpg-assets/characters/laca/outfits/lifeguard/concerned.png",
        "flirty": "/rpg-assets/characters/laca/outfits/lifeguard/flirty.png",
        "embarrassed": "/rpg-assets/characters/laca/outfits/lifeguard/embarrassed.png",
        "angry": "/rpg-assets/characters/laca/outfits/lifeguard/angry.png",
-       "sad": "/rpg-assets/characters/laca/outfits/lifeguard/sad.png",
-       "inviting": "/rpg-assets/characters/laca/outfits/lifeguard/inviting.png"
+       "sad": "/rpg-assets/characters/laca/outfits/lifeguard/concerned.png",
+       "inviting": "/rpg-assets/characters/laca/outfits/lifeguard/inviting.png",
+       "concerned": "/rpg-assets/characters/laca/outfits/lifeguard/concerned.png"
       }
      }
     },

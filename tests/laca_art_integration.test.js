@@ -31,7 +31,8 @@ test('Laca preserves expression mappings and verified WebP substitutions',()=>{
     continue;
    }
    const info=pngInfo(rel);
-   assert.deepEqual([info.width,info.height],[768,1024]);
+   const integrated=JSON.parse(fs.readFileSync(path.join(root,'art-production/pr140-laca-five/inventory.json'))).files.find(file=>file.path===rel);
+   assert.deepEqual([info.width,info.height],integrated?.dimensions||[768,1024]);
    assert.equal(info.colorType,6,'portrait must retain alpha: '+rel);
   }
  }

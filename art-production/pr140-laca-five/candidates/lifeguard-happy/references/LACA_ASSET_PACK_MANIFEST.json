@@ -1,0 +1,50 @@
+{
+  "assets": [
+    {
+      "title": "Just Like Old Times",
+      "path": "rpg-assets/events/cg/season01/laca_route_1.webp",
+      "thumbnail": "rpg-assets/events/cg/season01/thumbs/laca_route_1.webp",
+      "source": "a_highly_detailed_warm_anime_style_illustration.png",
+      "registered_in_existing_laca_art_manifest": true
+    },
+    {
+      "title": "Be Honest, Does This Look Good?",
+      "path": "rpg-assets/events/cg/season01/laca_route_2.webp",
+      "thumbnail": "rpg-assets/events/cg/season01/thumbs/laca_route_2.webp",
+      "source": "a_detailed_polished_anime_style_illustration_of_a.png",
+      "registered_in_existing_laca_art_manifest": true
+    },
+    {
+      "title": "Personal Space? What's That? (sunset waterfront alternative)",
+      "path": "rpg-assets/events/cg/season01/laca_route_3.webp",
+      "thumbnail": "rpg-assets/events/cg/season01/thumbs/laca_route_3.webp",
+      "source": "a_detailed_anime_style_illustration_cg_scene_a_su.png",
+      "registered_in_existing_laca_art_manifest": true
+    },
+    {
+      "title": "Since When Is This Weird?",
+      "path": "rpg-assets/events/cg/season01/laca_route_4.webp",
+      "thumbnail": "rpg-assets/events/cg/season01/thumbs/laca_route_4.webp",
+      "source": "a_cozy_romantic_detailed_anime_style_illustratio.png",
+      "registered_in_existing_laca_art_manifest": true
+    },
+    {
+      "title": "The Sunhat Jury (requires game event registration)",
+      "path": "rpg-assets/events/cg/slice-life/laca_the_sunhat_jury.webp",
+      "thumbnail": "rpg-assets/events/cg/slice-life/thumbs/laca_the_sunhat_jury.webp",
+      "source": "a_vibrant_detailed_anime_style_illustration_of_a.png",
+      "registered_in_existing_laca_art_manifest": false
+    },
+    {
+      "title": "The Bottom Shelf (lifeguard station alternative; requires registration)",
+      "path": "rpg-assets/events/cg/slice-life/laca_the_bottom_shelf.webp",
+      "thumbnail": "rpg-assets/events/cg/slice-life/thumbs/laca_the_bottom_shelf.webp",
+      "source": "a_detailed_high_quality_anime_style_illustration.png",
+      "registered_in_existing_laca_art_manifest": false
+    }
+  ],
+  "target": "1920x1080",
+  "method": "letterbox via blurred background; no image content cropped",
+  "missing": "laca_route_5: no verified matching sunset confession CG",
+  "notes": "Slice-life images are packaged at proposed paths, but game trigger/event registration is not included."
+}

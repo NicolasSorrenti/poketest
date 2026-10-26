@@ -1,0 +1,35 @@
+{
+  "character": "laca",
+  "install": "Extract at repository root",
+  "gamePortraits": [
+    "rpg-assets/characters/laca/happy.webp",
+    "rpg-assets/characters/laca/neutral.webp",
+    "rpg-assets/characters/laca/outfits/casual/happy.webp",
+    "rpg-assets/characters/laca/outfits/casual/neutral.webp",
+    "rpg-assets/characters/laca/outfits/casual/surprised.webp",
+    "rpg-assets/characters/laca/outfits/casual/teasing.webp",
+    "rpg-assets/characters/laca/outfits/casual/vulnerable.webp",
+    "rpg-assets/characters/laca/outfits/lifeguard/happy.webp",
+    "rpg-assets/characters/laca/outfits/lifeguard/neutral.webp",
+    "rpg-assets/characters/laca/outfits/lifeguard/surprised.webp",
+    "rpg-assets/characters/laca/outfits/lifeguard/teasing.webp",
+    "rpg-assets/characters/laca/outfits/lifeguard/vulnerable.webp",
+    "rpg-assets/characters/laca/surprised.webp",
+    "rpg-assets/characters/laca/vulnerable.webp"
+  ],
+  "gameCGs": [
+    "rpg-assets/events/cg/season01/laca_route_1.webp",
+    "rpg-assets/events/cg/season01/laca_route_2.webp",
+    "rpg-assets/events/cg/season01/laca_route_3.webp",
+    "rpg-assets/events/cg/season01/laca_route_4.webp",
+    "rpg-assets/events/cg/slice-life/laca_the_bottom_shelf.webp",
+    "rpg-assets/events/cg/slice-life/laca_the_sunhat_jury.webp"
+  ],
+  "notes": [
+    "Portraits converted from available generated PNGs; some expressions are close-up crops rather than full-body portraits.",
+    "Source art and visual bible are included under laca-source-art/ for review, not game runtime.",
+    "The slice-of-life images require code/event registration; installing image files alone does not create triggers.",
+    "Main route scene 5 is not included.",
+    "No repository code was changed."
+  ]
+}

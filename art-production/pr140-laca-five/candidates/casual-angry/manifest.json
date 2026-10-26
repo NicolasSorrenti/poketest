@@ -1,0 +1,74 @@
+{
+  "character": "laca",
+  "outfit": "casual",
+  "expression": "angry",
+  "status": "generated_candidate",
+  "reused": false,
+  "attempt_count": 1,
+  "generator": "built-in image_gen",
+  "transparent_background": true,
+  "repository": "NicolasSorrenti/poketest",
+  "branch": "art/overworld-character-refresh",
+  "source_reference": "rpg-assets/characters/laca/outfits/casual/neutral.webp",
+  "reuse_decision": "Current manifest angry.png fails full Pillow decode; no valid matching installed casual angry asset.",
+  "visual_review": "Generated output viewed: angry brows and frown; canonical face, hair, black top, light jeans, sneakers, pose and full-body framing retained. Minor generative texture differences; candidate requires integration approval.",
+  "repository_modified": false,
+  "files": [
+    {
+      "path": "/workspace/scratch/4a8bc1383fdd/next-laca/casual-angry/attempt-01-original.png",
+      "sha256": "c8cbbb03ab7fbf828784de891a1633e4234493e8bb616459bd30cea74a24aad8",
+      "dimensions": [
+        941,
+        1672
+      ],
+      "mode": "RGBA",
+      "alpha_extrema": [
+        0,
+        255
+      ]
+    },
+    {
+      "path": "/workspace/scratch/4a8bc1383fdd/next-laca/casual-angry/attempt-01-prompt.txt",
+      "sha256": "172651efa864c27496569d27160015e16ded35a35c3e0bf72d7877e62a863b0a"
+    },
+    {
+      "path": "/workspace/scratch/4a8bc1383fdd/next-laca/casual-angry/attempt-01-thumbnail.png",
+      "sha256": "c7c75abf89ef73c622b0948fea143b5526b6c21c70da2d7432313f9732a7b5f9",
+      "dimensions": [
+        256,
+        455
+      ],
+      "mode": "RGBA",
+      "alpha_extrema": [
+        0,
+        255
+      ]
+    },
+    {
+      "path": "/workspace/scratch/4a8bc1383fdd/next-laca/casual-angry/references/PR140_BARB_LACA_HANA_AUDIT.md",
+      "sha256": "b9138e02e21f19372bb3f15d7340147f18bc42981dd068542cc2b674044542c5"
+    },
+    {
+      "path": "/workspace/scratch/4a8bc1383fdd/next-laca/casual-angry/references/approved-casual-neutral.webp",
+      "sha256": "76841a9c5eb144ff55b132e5b8b4e0e078b7c0ad4c7154bfd68659df085510a7",
+      "dimensions": [
+        941,
+        1672
+      ],
+      "mode": "RGBA",
+      "alpha_extrema": [
+        0,
+        255
+      ]
+    },
+    {
+      "path": "/workspace/scratch/4a8bc1383fdd/next-laca/casual-angry/references/current-outfit-manifest.json",
+      "sha256": "770ea63ef32a870710e3d02802c3824abdab430c48767e54cb73900ff442a54a"
+    },
+    {
+      "path": "/workspace/scratch/4a8bc1383fdd/next-laca/casual-angry/references/existing-angry-corrupt.png",
+      "sha256": "9286c05f0470c3c863a5bcbeb8a4be73bda803b5951e1e181c0bd5c03f4e6d8e",
+      "decode_error": "broken PNG file (chunk b'\\x03H\\xe2\\xf5')"
+    }
+  ]
+}

@@ -1,0 +1,732 @@
+{
+  "base_commit": "e002154ee027fafec1bbc906c1d388434cf9ef06",
+  "branch": "art/overworld-character-refresh",
+  "files": [
+    {
+      "path": "art-production/pr140-laca-five/candidates/casual-flirty/casual-flirty-original.png",
+      "bytes": 1278076,
+      "sha256": "e33fb4edfee1e591a88b27d540889a7bbea7bdc20043c9262f977408cda4e01d",
+      "git_blob_sha": "e1d3bd29aa898ce0fa0ee29c4abfb88e677fa311",
+      "dimensions": [
+        941,
+        1671
+      ],
+      "mode": "RGBA",
+      "decode": true,
+      "alpha_extrema": [
+        0,
+        255
+      ]
+    },
+    {
+      "path": "art-production/pr140-laca-five/candidates/casual-flirty/manifest.json",
+      "bytes": 4184,
+      "sha256": "267a9685243d854dc31b4be575c49f21edeba49f3ce61e7a232c3d74d44d6c52",
+      "git_blob_sha": "2c76d76f146ab98a59a97da0ab6c3abe90dd0b10"
+    },
+    {
+      "path": "art-production/pr140-laca-five/candidates/casual-flirty/prompt.txt",
+      "bytes": 923,
+      "sha256": "3bb5dd5034f5b8d298952cc643637eafb2f97065f4bd34efec9b2782aa673829",
+      "git_blob_sha": "df58f57d7a8b7fb041d5e6a3e69583f133febf97"
+    },
+    {
+      "path": "art-production/pr140-laca-five/candidates/casual-flirty/reference-neutral.webp",
+      "bytes": 255536,
+      "sha256": "76841a9c5eb144ff55b132e5b8b4e0e078b7c0ad4c7154bfd68659df085510a7",
+      "git_blob_sha": "d77b5dd5e758cb7e34733bc5dd94594ebcf6111c",
+      "dimensions": [
+        941,
+        1672
+      ],
+      "mode": "RGBA",
+      "decode": true,
+      "alpha_extrema": [
+        0,
+        255
+      ]
+    },
+    {
+      "path": "art-production/pr140-laca-five/candidates/casual-flirty/thumbnail.png",
+      "bytes": 106486,
+      "sha256": "2f7de75c6edccf99bc7a971e722c08c891f660affd5754cc665710f35abf40ed",
+      "git_blob_sha": "9f14d7ea9f08600bd2a0aae455fae3fea9b018ff",
+      "dimensions": [
+        256,
+        455
+      ],
+      "mode": "RGBA",
+      "decode": true,
+      "alpha_extrema": [
+        0,
+        255
+      ]
+    },
+    {
+      "path": "art-production/pr140-laca-five/candidates/casual-flirty/existing-flirty-original.png",
+      "bytes": 786444,
+      "sha256": "7d765aacea9d4f10f9da87708ccb8555e0cb6fe015c7bd926cf45fc88d95d80a",
+      "git_blob_sha": "34cad9f54e7550f64860a68ecbe9bb5c72a7e457",
+      "decode": false,
+      "decode_error": "broken PNG file (chunk b',\\xf9\\xe1Q')"
+    },
+    {
+      "path": "art-production/pr140-laca-five/candidates/casual-flirty/PR140_BARB_LACA_HANA_AUDIT.md",
+      "bytes": 13899,
+      "sha256": "b9138e02e21f19372bb3f15d7340147f18bc42981dd068542cc2b674044542c5",
+      "git_blob_sha": "72008437225bfac15ca2b9a8629f8ff725917d4b"
+    },
+    {
+      "path": "art-production/pr140-laca-five/candidates/lifeguard-concerned/manifest.json",
+      "bytes": 2957,
+      "sha256": "7314cf5ce94e67df6f0f3f7f9f2ee49275e7a205fdd2fc2907db5049c70764a0",
+      "git_blob_sha": "2aefec1586418c86ec17c621dbfc20722500bb25"
+    },
+    {
+      "path": "art-production/pr140-laca-five/candidates/lifeguard-concerned/prompt.txt",
+      "bytes": 1177,
+      "sha256": "d077b6277cfa070edc956bdfb3d9128f670a16ddbdd317ed19d96a0bf1e3c729",
+      "git_blob_sha": "12671ab912c8f62f8d414cad41b9c8656a3cf907"
+    },
+    {
+      "path": "art-production/pr140-laca-five/candidates/lifeguard-concerned/attempt-01-original.png",
+      "bytes": 1318488,
+      "sha256": "66cb242994b0b73eca88be44c052d1a4346804d64a5bd0261d0a0e5023158b3d",
+      "git_blob_sha": "5cb42aaf470ad153ddb83be44af90d1076cc8bae",
+      "dimensions": [
+        941,
+        1672
+      ],
+      "mode": "RGBA",
+      "decode": true,
+      "alpha_extrema": [
+        0,
+        255
+      ]
+    },
+    {
+      "path": "art-production/pr140-laca-five/candidates/lifeguard-concerned/attempt-01-thumbnail.png",
+      "bytes": 116987,
+      "sha256": "3a73ce618c96841370611b987873fc765a1774c509edbcff9437a5715c88088a",
+      "git_blob_sha": "2d0b5d460c989345ed095a0609fb0d285fabdfdd",
+      "dimensions": [
+        256,
+        455
+      ],
+      "mode": "RGBA",
+      "decode": true,
+      "alpha_extrema": [
+        0,
+        255
+      ]
+    },
+    {
+      "path": "art-production/pr140-laca-five/candidates/lifeguard-happy/manifest.json",
+      "bytes": 6822,
+      "sha256": "604ac82046282afbedad568077ff047361f61cbf7669639cfaea708d11cbb07a",
+      "git_blob_sha": "2921ebf36c8dab083df7e280f4257148c9f85447"
+    },
+    {
+      "path": "art-production/pr140-laca-five/candidates/lifeguard-happy/SHA256SUMS",
+      "bytes": 2000,
+      "sha256": "aa904a69de533e9483ca50e065de723213aa94d8db3f223f7a7eb5b84fc0241f",
+      "git_blob_sha": "e68dd1973df9d2309ab7db9a9d93aae24159858f"
+    },
+    {
+      "path": "art-production/pr140-laca-five/candidates/lifeguard-happy/prompt.txt",
+      "bytes": 1022,
+      "sha256": "98ea3af548736c28e0500b8b7428f2d7dbeb9d7c2420c0918bf0e16395a10640",
+      "git_blob_sha": "7657eb326a787072de18623f09f3251baf2efe2b"
+    },
+    {
+      "path": "art-production/pr140-laca-five/candidates/lifeguard-happy/review-white.jpg",
+      "bytes": 33404,
+      "sha256": "2080f856185fbb5b9d924b2d8d9d361ce038819d43f4f2be8df27678d82efdca",
+      "git_blob_sha": "8eef23c99b5a9e01227f3ac3fa8dc29613a2d971",
+      "dimensions": [
+        281,
+        500
+      ],
+      "mode": "RGB",
+      "decode": true
+    },
+    {
+      "path": "art-production/pr140-laca-five/candidates/lifeguard-happy/review-dark.jpg",
+      "bytes": 31344,
+      "sha256": "e0d44734b8390a202d4f5ec43aa2cd5b253ccb55274ee5c66e9aa0312165c0d9",
+      "git_blob_sha": "2ee5647619a70328f401310f1779d9402714d252",
+      "dimensions": [
+        281,
+        500
+      ],
+      "mode": "RGB",
+      "decode": true
+    },
+    {
+      "path": "art-production/pr140-laca-five/candidates/lifeguard-happy/original.png",
+      "bytes": 1292388,
+      "sha256": "ef399486c5587882718b07899de28455a5be7147d2dae6eec4597a53ae3e15d3",
+      "git_blob_sha": "03ba4659a49845e9a58907db5afde6f3c2df3650",
+      "dimensions": [
+        941,
+        1672
+      ],
+      "mode": "RGBA",
+      "decode": true,
+      "alpha_extrema": [
+        0,
+        255
+      ]
+    },
+    {
+      "path": "art-production/pr140-laca-five/candidates/lifeguard-happy/thumbnail.png",
+      "bytes": 136930,
+      "sha256": "e40ec3015002cd5d3a71cb2cc83464ea448ef47027acd809f93bc73e8439f01e",
+      "git_blob_sha": "63ca2a4adad4e8c828a78fe2160921f9dac98a0f",
+      "dimensions": [
+        281,
+        500
+      ],
+      "mode": "RGBA",
+      "decode": true,
+      "alpha_extrema": [
+        0,
+        255
+      ]
+    },
+    {
+      "path": "art-production/pr140-laca-five/candidates/casual-angry/manifest.json",
+      "bytes": 2688,
+      "sha256": "b862206c0d1b82c9fcd6b8e12e7c4982117e40518a7b4dcd46ec1c2fcae5b665",
+      "git_blob_sha": "67bc39986c6ec34a64609266cef2d2c156728e83"
+    },
+    {
+      "path": "art-production/pr140-laca-five/candidates/casual-angry/SHA256SUMS",
+      "bytes": 772,
+      "sha256": "1d7a7503a89c38f28371ac0399e40480aad0b0ea20ad5084b1d223b519562f85",
+      "git_blob_sha": "0782a69914c4bde4242d273fbfd033fa92a44973"
+    },
+    {
+      "path": "art-production/pr140-laca-five/candidates/casual-angry/attempt-01-original.png",
+      "bytes": 1256574,
+      "sha256": "c8cbbb03ab7fbf828784de891a1633e4234493e8bb616459bd30cea74a24aad8",
+      "git_blob_sha": "a06cc00aced66f03ea71a0686e79ef320a9fd2ad",
+      "dimensions": [
+        941,
+        1672
+      ],
+      "mode": "RGBA",
+      "decode": true,
+      "alpha_extrema": [
+        0,
+        255
+      ]
+    },
+    {
+      "path": "art-production/pr140-laca-five/candidates/casual-angry/attempt-01-thumbnail.png",
+      "bytes": 106149,
+      "sha256": "c7c75abf89ef73c622b0948fea143b5526b6c21c70da2d7432313f9732a7b5f9",
+      "git_blob_sha": "d3691a7e02603fdaf74e76bd53cec7a00af1e96b",
+      "dimensions": [
+        256,
+        455
+      ],
+      "mode": "RGBA",
+      "decode": true,
+      "alpha_extrema": [
+        0,
+        255
+      ]
+    },
+    {
+      "path": "art-production/pr140-laca-five/candidates/casual-angry/attempt-01-prompt.txt",
+      "bytes": 892,
+      "sha256": "172651efa864c27496569d27160015e16ded35a35c3e0bf72d7877e62a863b0a",
+      "git_blob_sha": "95b079c929787773fab3ba9c21bf57e19116afc9"
+    },
+    {
+      "path": "art-production/pr140-laca-five/candidates/casual-embarrassed/manifest.json",
+      "bytes": 1719,
+      "sha256": "acef34b9ac441cb16f89e1ff66ace7165aa501c5bdce590375e4dc09a3ce8813",
+      "git_blob_sha": "39e5aad4edc9990075573078b7322415b5f065b7"
+    },
+    {
+      "path": "art-production/pr140-laca-five/candidates/casual-embarrassed/SHA256SUMS",
+      "bytes": 733,
+      "sha256": "12241af39fded8e4e00c68aa489e7405f63a79859e456d33b42fed7f5a8a2833",
+      "git_blob_sha": "3acddbb6f46d12cc0a59d8421c780cd81cf51738"
+    },
+    {
+      "path": "art-production/pr140-laca-five/candidates/casual-embarrassed/prompt.txt",
+      "bytes": 902,
+      "sha256": "31d3ad4621d0bca61994b8bd833747ea030a9078afb83f447d3965d6c92c0e8f",
+      "git_blob_sha": "fe775b422754ad54f106271cdaf14e12fa8f5d8c"
+    },
+    {
+      "path": "art-production/pr140-laca-five/candidates/casual-embarrassed/outfit-mappings.json",
+      "bytes": 4997,
+      "sha256": "770ea63ef32a870710e3d02802c3824abdab430c48767e54cb73900ff442a54a",
+      "git_blob_sha": "3ed97987a2226e1c602885e22eb96c2d1e376273"
+    },
+    {
+      "path": "art-production/pr140-laca-five/candidates/casual-embarrassed/bible.md",
+      "bytes": 8561,
+      "sha256": "86aedd44295dfa9b408388c519e526cecd32830936a659193abb414740464f4e",
+      "git_blob_sha": "065a31b816dc753d198f7f140f340a0936caa5d3"
+    },
+    {
+      "path": "art-production/pr140-laca-five/candidates/casual-embarrassed/reference-neutral.webp",
+      "bytes": 255536,
+      "sha256": "76841a9c5eb144ff55b132e5b8b4e0e078b7c0ad4c7154bfd68659df085510a7",
+      "git_blob_sha": "d77b5dd5e758cb7e34733bc5dd94594ebcf6111c",
+      "dimensions": [
+        941,
+        1672
+      ],
+      "mode": "RGBA",
+      "decode": true,
+      "alpha_extrema": [
+        0,
+        255
+      ]
+    },
+    {
+      "path": "art-production/pr140-laca-five/candidates/casual-embarrassed/original.png",
+      "bytes": 1261113,
+      "sha256": "5c9bac87bf923a9b299874abe45da1537e5d41f61901d4b8ad98ba356f47dc6d",
+      "git_blob_sha": "fb9236c9bdcbd93b46705d3e780ba2b37ab052c8",
+      "dimensions": [
+        941,
+        1672
+      ],
+      "mode": "RGBA",
+      "decode": true,
+      "alpha_extrema": [
+        0,
+        255
+      ]
+    },
+    {
+      "path": "art-production/pr140-laca-five/candidates/casual-embarrassed/existing-embarrassed.png",
+      "bytes": 786444,
+      "sha256": "50474c8545a8b39a77dcc2968b9d162fd2e8de1c73cb4e4a84e2931c17618a65",
+      "git_blob_sha": "766fc22add1f9dc2df2c5e1f65598627eb084fff",
+      "decode": false,
+      "decode_error": "broken PNG file (chunk b'\\xe7\\xdeu\\xbc')"
+    },
+    {
+      "path": "art-production/pr140-laca-five/candidates/casual-embarrassed/thumbnail.png",
+      "bytes": 94546,
+      "sha256": "180de9026c09866541599082152a077016333ec835c3bd9ff993f95df810bf23",
+      "git_blob_sha": "8d966b88eaaae1ad4ad4b68e947d03516ddc8e17",
+      "dimensions": [
+        240,
+        426
+      ],
+      "mode": "RGBA",
+      "decode": true,
+      "alpha_extrema": [
+        0,
+        255
+      ]
+    },
+    {
+      "path": "art-production/pr140-laca-five/candidates/casual-embarrassed/audit.md",
+      "bytes": 13899,
+      "sha256": "b9138e02e21f19372bb3f15d7340147f18bc42981dd068542cc2b674044542c5",
+      "git_blob_sha": "72008437225bfac15ca2b9a8629f8ff725917d4b"
+    },
+    {
+      "path": "art-production/pr140-laca-five/candidates/casual-flirty/attempts/attempt-01-original.png",
+      "bytes": 1278076,
+      "sha256": "e33fb4edfee1e591a88b27d540889a7bbea7bdc20043c9262f977408cda4e01d",
+      "git_blob_sha": "e1d3bd29aa898ce0fa0ee29c4abfb88e677fa311",
+      "dimensions": [
+        941,
+        1671
+      ],
+      "mode": "RGBA",
+      "decode": true,
+      "alpha_extrema": [
+        0,
+        255
+      ]
+    },
+    {
+      "path": "art-production/pr140-laca-five/candidates/lifeguard-concerned/references/characters__laca__bible.md",
+      "bytes": 8561,
+      "sha256": "86aedd44295dfa9b408388c519e526cecd32830936a659193abb414740464f4e",
+      "git_blob_sha": "065a31b816dc753d198f7f140f340a0936caa5d3"
+    },
+    {
+      "path": "art-production/pr140-laca-five/candidates/lifeguard-concerned/references/rpg-assets__characters__laca__outfits__lifeguard__vulnerable.webp",
+      "bytes": 56058,
+      "sha256": "afc71041dd8f50a344de91d4ed326df9e06e4cde90f4a6a03e646ed56ce65216",
+      "git_blob_sha": "334c8d0b2aa1f08852f991696b7418776fd23950",
+      "dimensions": [
+        384,
+        447
+      ],
+      "mode": "RGBA",
+      "decode": true,
+      "alpha_extrema": [
+        0,
+        254
+      ]
+    },
+    {
+      "path": "art-production/pr140-laca-five/candidates/lifeguard-concerned/references/characters__laca__art_manifest.json",
+      "bytes": 4997,
+      "sha256": "770ea63ef32a870710e3d02802c3824abdab430c48767e54cb73900ff442a54a",
+      "git_blob_sha": "3ed97987a2226e1c602885e22eb96c2d1e376273"
+    },
+    {
+      "path": "art-production/pr140-laca-five/candidates/lifeguard-concerned/references/rpg-assets__characters__laca__outfits__lifeguard__neutral.webp",
+      "bytes": 280300,
+      "sha256": "035e43536e36ca0ecea28c8ea20aa4191a41330cd0b95cfb8662a31d5f59d500",
+      "git_blob_sha": "8576adbecc6597714841d93017185b771d6b3c04",
+      "dimensions": [
+        941,
+        1672
+      ],
+      "mode": "RGBA",
+      "decode": true,
+      "alpha_extrema": [
+        0,
+        255
+      ]
+    },
+    {
+      "path": "art-production/pr140-laca-five/candidates/lifeguard-concerned/references/docs__PR140_BARB_LACA_HANA_AUDIT.md",
+      "bytes": 13899,
+      "sha256": "b9138e02e21f19372bb3f15d7340147f18bc42981dd068542cc2b674044542c5",
+      "git_blob_sha": "72008437225bfac15ca2b9a8629f8ff725917d4b"
+    },
+    {
+      "path": "art-production/pr140-laca-five/candidates/lifeguard-concerned/references/rpg-assets__characters__laca__outfits__lifeguard__sad.png",
+      "bytes": 786444,
+      "sha256": "e8c11351dd174e2689f323f42a11934c5f7010bd387c136a79707e0340f84668",
+      "git_blob_sha": "2555c2319e0b91ebb41f666051e6e954279e5344",
+      "decode": false,
+      "decode_error": "broken PNG file (chunk b'\\xe3*\\xf4\\xa3')"
+    },
+    {
+      "path": "art-production/pr140-laca-five/candidates/lifeguard-happy/attempts/attempt-01.png",
+      "bytes": 1292388,
+      "sha256": "ef399486c5587882718b07899de28455a5be7147d2dae6eec4597a53ae3e15d3",
+      "git_blob_sha": "03ba4659a49845e9a58907db5afde6f3c2df3650",
+      "dimensions": [
+        941,
+        1672
+      ],
+      "mode": "RGBA",
+      "decode": true,
+      "alpha_extrema": [
+        0,
+        255
+      ]
+    },
+    {
+      "path": "art-production/pr140-laca-five/candidates/lifeguard-happy/references/LACA_ASSET_PACK_MANIFEST.json",
+      "bytes": 2415,
+      "sha256": "60af787c7b877c35dace77f4f8eb2862e2cd016b0a777f1e737c981090a614d3",
+      "git_blob_sha": "e2cba5458be91c82d1afb4c26d9f405b6f015dd8"
+    },
+    {
+      "path": "art-production/pr140-laca-five/candidates/lifeguard-happy/references/rpg-assets__characters__laca__outfits__lifeguard__happy.png",
+      "bytes": 786445,
+      "sha256": "361f40af36b45e6fe5a98e029cf269eb3f7a51656aa6af29b3682e1068069d62",
+      "git_blob_sha": "9b0ef6bf4c098e514140e85c57ac84642ba87a73",
+      "decode": false,
+      "decode_error": "broken PNG file (chunk b'\\xf5\\xb0\\x84Z')"
+    },
+    {
+      "path": "art-production/pr140-laca-five/candidates/lifeguard-happy/references/characters__laca__bible.md",
+      "bytes": 8561,
+      "sha256": "86aedd44295dfa9b408388c519e526cecd32830936a659193abb414740464f4e",
+      "git_blob_sha": "065a31b816dc753d198f7f140f340a0936caa5d3"
+    },
+    {
+      "path": "art-production/pr140-laca-five/candidates/lifeguard-happy/references/rpg-assets__characters__laca__outfits__lifeguard__happy.webp",
+      "bytes": 56672,
+      "sha256": "2a35991b01c562fba5b4f1393540a8ead1cd375428b82c7fc6361763f2ccfbab",
+      "git_blob_sha": "cf79973afc14ef73e8a45c97c3e58238ddf9696e",
+      "dimensions": [
+        384,
+        447
+      ],
+      "mode": "RGBA",
+      "decode": true,
+      "alpha_extrema": [
+        1,
+        254
+      ]
+    },
+    {
+      "path": "art-production/pr140-laca-five/candidates/lifeguard-happy/references/characters__laca__art_manifest.json",
+      "bytes": 4997,
+      "sha256": "770ea63ef32a870710e3d02802c3824abdab430c48767e54cb73900ff442a54a",
+      "git_blob_sha": "3ed97987a2226e1c602885e22eb96c2d1e376273"
+    },
+    {
+      "path": "art-production/pr140-laca-five/candidates/lifeguard-happy/references/LACA_COMPLETE_PACK_MANIFEST.json",
+      "bytes": 1742,
+      "sha256": "18b0aa7a853dbc3187bd20043b5caeb2f0e08fc1dfc4a2ac34084fa35346039b",
+      "git_blob_sha": "fb531f5d131199e5cab7b86659944b0ab0cfa884"
+    },
+    {
+      "path": "art-production/pr140-laca-five/candidates/lifeguard-happy/references/rpg-assets__characters__laca__outfits__lifeguard__neutral.webp",
+      "bytes": 280300,
+      "sha256": "035e43536e36ca0ecea28c8ea20aa4191a41330cd0b95cfb8662a31d5f59d500",
+      "git_blob_sha": "8576adbecc6597714841d93017185b771d6b3c04",
+      "dimensions": [
+        941,
+        1672
+      ],
+      "mode": "RGBA",
+      "decode": true,
+      "alpha_extrema": [
+        0,
+        255
+      ]
+    },
+    {
+      "path": "art-production/pr140-laca-five/candidates/lifeguard-happy/references/rpg_character_packs.generated.js",
+      "bytes": 223471,
+      "sha256": "f69c88f3b29eb65dd73c65986cc7225f046ca631b0053f2c4008da1c5206908c",
+      "git_blob_sha": "4cda521e233fffb055fa50f9e3be6d9b2c6f5d08"
+    },
+    {
+      "path": "art-production/pr140-laca-five/candidates/lifeguard-happy/references/rpg_outfits.js",
+      "bytes": 1826,
+      "sha256": "fe61a01ae089d0f0a31d608d12084b91139611556bb8efb3ccc0c2d5d3b8adc9",
+      "git_blob_sha": "fc5296a4d9d88bc6c559cc6581ba1e089266f317"
+    },
+    {
+      "path": "art-production/pr140-laca-five/candidates/lifeguard-happy/references/laca-source-art__lifeguarda_anime_con_flotador_rojo.png",
+      "bytes": 1355134,
+      "sha256": "1d8cc5216ee024bf38ec82f9d5e97937bf5b0d4748d817a97d3d80f5097bb720",
+      "git_blob_sha": "7f3ec4628cb5322c6e4960ca61b59ed1e5927e47",
+      "dimensions": [
+        941,
+        1672
+      ],
+      "mode": "RGBA",
+      "decode": true,
+      "alpha_extrema": [
+        0,
+        255
+      ]
+    },
+    {
+      "path": "art-production/pr140-laca-five/candidates/lifeguard-happy/references/laca-source-art__expressions__laca_lifeguard_happy.png",
+      "bytes": 295298,
+      "sha256": "c7cd3f5a4ba2c13c0d11883a7a6804f17f991d97557e9c4e3b88e5de0ffc9d6e",
+      "git_blob_sha": "27023e52be16d007033e3bdaf7392202cecb2b4d",
+      "dimensions": [
+        384,
+        447
+      ],
+      "mode": "RGBA",
+      "decode": true,
+      "alpha_extrema": [
+        1,
+        254
+      ]
+    },
+    {
+      "path": "art-production/pr140-laca-five/candidates/lifeguard-happy/references/docs__PR140_BARB_LACA_HANA_AUDIT.md",
+      "bytes": 13899,
+      "sha256": "b9138e02e21f19372bb3f15d7340147f18bc42981dd068542cc2b674044542c5",
+      "git_blob_sha": "72008437225bfac15ca2b9a8629f8ff725917d4b"
+    },
+    {
+      "path": "art-production/pr140-laca-five/candidates/casual-angry/references/existing-angry-corrupt.png",
+      "bytes": 786444,
+      "sha256": "9286c05f0470c3c863a5bcbeb8a4be73bda803b5951e1e181c0bd5c03f4e6d8e",
+      "git_blob_sha": "28bdb4a1d7e450f1bb6ad83d7e1024bef6cdc291",
+      "decode": false,
+      "decode_error": "broken PNG file (chunk b'\\x03H\\xe2\\xf5')"
+    },
+    {
+      "path": "art-production/pr140-laca-five/candidates/casual-angry/references/approved-casual-neutral.webp",
+      "bytes": 255536,
+      "sha256": "76841a9c5eb144ff55b132e5b8b4e0e078b7c0ad4c7154bfd68659df085510a7",
+      "git_blob_sha": "d77b5dd5e758cb7e34733bc5dd94594ebcf6111c",
+      "dimensions": [
+        941,
+        1672
+      ],
+      "mode": "RGBA",
+      "decode": true,
+      "alpha_extrema": [
+        0,
+        255
+      ]
+    },
+    {
+      "path": "art-production/pr140-laca-five/candidates/casual-angry/references/PR140_BARB_LACA_HANA_AUDIT.md",
+      "bytes": 13899,
+      "sha256": "b9138e02e21f19372bb3f15d7340147f18bc42981dd068542cc2b674044542c5",
+      "git_blob_sha": "72008437225bfac15ca2b9a8629f8ff725917d4b"
+    },
+    {
+      "path": "art-production/pr140-laca-five/candidates/casual-angry/references/current-outfit-manifest.json",
+      "bytes": 4997,
+      "sha256": "770ea63ef32a870710e3d02802c3824abdab430c48767e54cb73900ff442a54a",
+      "git_blob_sha": "3ed97987a2226e1c602885e22eb96c2d1e376273"
+    },
+    {
+      "path": "rpg-assets/rejected-artwork/pr140-laca-five/replaced/rpg-assets/characters/laca/outfits/lifeguard/happy.png",
+      "bytes": 786445,
+      "sha256": "361f40af36b45e6fe5a98e029cf269eb3f7a51656aa6af29b3682e1068069d62",
+      "git_blob_sha": "9b0ef6bf4c098e514140e85c57ac84642ba87a73",
+      "decode": false,
+      "decode_error": "broken PNG file (chunk b'\\xf5\\xb0\\x84Z')"
+    },
+    {
+      "path": "rpg-assets/rejected-artwork/pr140-laca-five/replaced/rpg-assets/characters/laca/outfits/lifeguard/sad.png",
+      "bytes": 786444,
+      "sha256": "e8c11351dd174e2689f323f42a11934c5f7010bd387c136a79707e0340f84668",
+      "git_blob_sha": "2555c2319e0b91ebb41f666051e6e954279e5344",
+      "decode": false,
+      "decode_error": "broken PNG file (chunk b'\\xe3*\\xf4\\xa3')"
+    },
+    {
+      "path": "rpg-assets/rejected-artwork/pr140-laca-five/replaced/rpg-assets/characters/laca/outfits/casual/flirty.png",
+      "bytes": 786444,
+      "sha256": "7d765aacea9d4f10f9da87708ccb8555e0cb6fe015c7bd926cf45fc88d95d80a",
+      "git_blob_sha": "34cad9f54e7550f64860a68ecbe9bb5c72a7e457",
+      "decode": false,
+      "decode_error": "broken PNG file (chunk b',\\xf9\\xe1Q')"
+    },
+    {
+      "path": "rpg-assets/rejected-artwork/pr140-laca-five/replaced/rpg-assets/characters/laca/outfits/casual/embarrassed.png",
+      "bytes": 786444,
+      "sha256": "50474c8545a8b39a77dcc2968b9d162fd2e8de1c73cb4e4a84e2931c17618a65",
+      "git_blob_sha": "766fc22add1f9dc2df2c5e1f65598627eb084fff",
+      "decode": false,
+      "decode_error": "broken PNG file (chunk b'\\xe7\\xdeu\\xbc')"
+    },
+    {
+      "path": "rpg-assets/rejected-artwork/pr140-laca-five/replaced/rpg-assets/characters/laca/outfits/casual/angry.png",
+      "bytes": 786444,
+      "sha256": "9286c05f0470c3c863a5bcbeb8a4be73bda803b5951e1e181c0bd5c03f4e6d8e",
+      "git_blob_sha": "28bdb4a1d7e450f1bb6ad83d7e1024bef6cdc291",
+      "decode": false,
+      "decode_error": "broken PNG file (chunk b'\\x03H\\xe2\\xf5')"
+    },
+    {
+      "path": "rpg-assets/characters/laca/outfits/casual/embarrassed.png",
+      "bytes": 1261113,
+      "sha256": "5c9bac87bf923a9b299874abe45da1537e5d41f61901d4b8ad98ba356f47dc6d",
+      "git_blob_sha": "fb9236c9bdcbd93b46705d3e780ba2b37ab052c8",
+      "dimensions": [
+        941,
+        1672
+      ],
+      "mode": "RGBA",
+      "decode": true,
+      "alpha_extrema": [
+        0,
+        255
+      ]
+    },
+    {
+      "path": "rpg-assets/characters/laca/outfits/casual/angry.png",
+      "bytes": 1256574,
+      "sha256": "c8cbbb03ab7fbf828784de891a1633e4234493e8bb616459bd30cea74a24aad8",
+      "git_blob_sha": "a06cc00aced66f03ea71a0686e79ef320a9fd2ad",
+      "dimensions": [
+        941,
+        1672
+      ],
+      "mode": "RGBA",
+      "decode": true,
+      "alpha_extrema": [
+        0,
+        255
+      ]
+    },
+    {
+      "path": "rpg-assets/characters/laca/outfits/casual/flirty.png",
+      "bytes": 1278076,
+      "sha256": "e33fb4edfee1e591a88b27d540889a7bbea7bdc20043c9262f977408cda4e01d",
+      "git_blob_sha": "e1d3bd29aa898ce0fa0ee29c4abfb88e677fa311",
+      "dimensions": [
+        941,
+        1671
+      ],
+      "mode": "RGBA",
+      "decode": true,
+      "alpha_extrema": [
+        0,
+        255
+      ]
+    },
+    {
+      "path": "rpg-assets/characters/laca/outfits/lifeguard/happy.png",
+      "bytes": 1292388,
+      "sha256": "ef399486c5587882718b07899de28455a5be7147d2dae6eec4597a53ae3e15d3",
+      "git_blob_sha": "03ba4659a49845e9a58907db5afde6f3c2df3650",
+      "dimensions": [
+        941,
+        1672
+      ],
+      "mode": "RGBA",
+      "decode": true,
+      "alpha_extrema": [
+        0,
+        255
+      ]
+    },
+    {
+      "path": "rpg-assets/characters/laca/outfits/lifeguard/concerned.png",
+      "bytes": 1318488,
+      "sha256": "66cb242994b0b73eca88be44c052d1a4346804d64a5bd0261d0a0e5023158b3d",
+      "git_blob_sha": "5cb42aaf470ad153ddb83be44af90d1076cc8bae",
+      "dimensions": [
+        941,
+        1672
+      ],
+      "mode": "RGBA",
+      "decode": true,
+      "alpha_extrema": [
+        0,
+        255
+      ]
+    },
+    {
+      "path": "rpg-assets/characters/laca/outfits/casual/neutral.webp",
+      "bytes": 255536,
+      "sha256": "76841a9c5eb144ff55b132e5b8b4e0e078b7c0ad4c7154bfd68659df085510a7",
+      "git_blob_sha": "d77b5dd5e758cb7e34733bc5dd94594ebcf6111c",
+      "dimensions": [
+        941,
+        1672
+      ],
+      "mode": "RGBA",
+      "decode": true,
+      "alpha_extrema": [
+        0,
+        255
+      ]
+    },
+    {
+      "path": "rpg-assets/characters/laca/outfits/lifeguard/neutral.webp",
+      "bytes": 280300,
+      "sha256": "035e43536e36ca0ecea28c8ea20aa4191a41330cd0b95cfb8662a31d5f59d500",
+      "git_blob_sha": "8576adbecc6597714841d93017185b771d6b3c04",
+      "dimensions": [
+        941,
+        1672
+      ],
+      "mode": "RGBA",
+      "decode": true,
+      "alpha_extrema": [
+        0,
+        255
+      ]
+    }
+  ]
+}

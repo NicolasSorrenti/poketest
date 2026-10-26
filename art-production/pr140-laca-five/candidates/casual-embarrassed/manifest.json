@@ -1,0 +1,39 @@
+{
+  "repository": "NicolasSorrenti/poketest",
+  "branch": "art/overworld-character-refresh",
+  "audited_head": "e002154ee027fafec1bbc906c1d388434cf9ef06",
+  "decision": "generate: mapped existing casual embarrassed PNG fails full decode; no alternate embarrassed/blush/shy asset in current tree",
+  "reference": "rpg-assets/characters/laca/outfits/casual/neutral.webp",
+  "reference_viewed_before_generation": true,
+  "tool": "built-in image_gen",
+  "transparent_background": true,
+  "attempts": [
+    {
+      "attempt": 1,
+      "original": "original.png",
+      "thumbnail": "thumbnail.png",
+      "dimensions": [
+        941,
+        1672
+      ],
+      "mode": "RGBA",
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "review": "Embarrassed blush visible; adult identity, outfit, pose and full-body framing visually consistent with reference. Generated edit is not pixel-identical outside face.",
+      "selected": true
+    }
+  ],
+  "github_writes": false,
+  "sha256": {
+    "audit.md": "b9138e02e21f19372bb3f15d7340147f18bc42981dd068542cc2b674044542c5",
+    "bible.md": "86aedd44295dfa9b408388c519e526cecd32830936a659193abb414740464f4e",
+    "existing-embarrassed.png": "50474c8545a8b39a77dcc2968b9d162fd2e8de1c73cb4e4a84e2931c17618a65",
+    "original.png": "5c9bac87bf923a9b299874abe45da1537e5d41f61901d4b8ad98ba356f47dc6d",
+    "outfit-mappings.json": "770ea63ef32a870710e3d02802c3824abdab430c48767e54cb73900ff442a54a",
+    "prompt.txt": "31d3ad4621d0bca61994b8bd833747ea030a9078afb83f447d3965d6c92c0e8f",
+    "reference-neutral.webp": "76841a9c5eb144ff55b132e5b8b4e0e078b7c0ad4c7154bfd68659df085510a7",
+    "thumbnail.png": "180de9026c09866541599082152a077016333ec835c3bd9ff993f95df810bf23"
+  }
+}
