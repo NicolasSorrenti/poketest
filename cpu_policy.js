@@ -539,7 +539,10 @@ function evolutionTempoPenalty(o,slot,evolutionId,cfg){
  // If one legal Energy attachment can restore a useful attack this turn,
  // evolution is not necessarily a tempo sacrifice.
  const canRefuel=!o.self.energyUsed&&o.self.hand.some(id=>
-  isEnergy(card(id))&&damageAfterAttachment(after,id,o.opponent.active)>=current);
+  isEnergy(card(id))&&legalAttachment({card:card(id),unit:after,
+   round:o.round,cardName:nextCard.name||''})&&
+  !(after.energyAttachBlockSerial>o.turnSerial)&&
+  damageAfterAttachment(after,id,o.opponent.active)>=current);
  if(canRefuel)return 0;
  const currentKO=current>=hpRemaining(o.opponent.active)&&hpRemaining(o.opponent.active)>0;
  const counterBefore=strongestAffordableAttack(o.opponent.active,before);
