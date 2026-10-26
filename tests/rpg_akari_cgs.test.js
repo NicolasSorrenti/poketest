@@ -48,7 +48,9 @@ for(const spec of specs){
  });
  test(spec.id+' finishStory displays and saves the CG before time advancement can affect eligibility',()=>{
   const source=fs.readFileSync(path.join(__dirname,'../rpg.js'),'utf8');
-  const finish=source.slice(source.indexOf('function finishStory(){'),source.indexOf('\n\n\n',source.indexOf('function finishStory(){')));
+  const start=source.indexOf('function finishStory(){'),end=source.indexOf('\nfunction beginSideQuest(',start);
+  assert.ok(start>=0&&end>start,'finishStory function boundary must be present');
+  const finish=source.slice(start,end);
   for(const day of [spec.start,spec.end])for(const choice of [0,1,2]){
    const s=state(spec,day);s.activeStory={id:spec.id,phase:'response',choice};
    let shown=null,saved=false,closed=false;
