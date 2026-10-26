@@ -1146,7 +1146,8 @@
     expression:'Authored everyday expression',environment:e.place,mood:'everyday',fanservice:0}});
  }
  scenes.push({...FIT.event, minAffection:0, image:FIT.cgs[0].path, cgSequence:FIT.cgs.map(x=>x.id), art:{scene:'Akari and Barb fitting a swimsuit at Barb\'s workshop.',composition:'Approved cinematic 16:9 story CG with lower fifth clear for dialogue.',outfit:'Approved swimsuit-fitting scene outfits',expression:'Natural flustered and professional expressions',environment:'Barb\'s workshop',mood:'lighthearted',fanservice:1}});
- scenes.push(...(CROSS?.events||[]));
+ // Exclusive character packs must remain server-authorized: no absent guest, no leaked CG.
+ scenes.push(...(CROSS?.events||[]).filter(e=>e.participants.every(id=>Object.prototype.hasOwnProperty.call(SCHEDULES.start,id))));
  const index=new Map(scenes.map(e=>[e.id,e]));
  const authored=(PACKS?.packs||[]).flatMap(p=>p.events);
  function scheduleOverrides(state){
