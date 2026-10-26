@@ -844,7 +844,11 @@ function score(a,o,cfg,used){
    return (vulnerable&&!opponentAlreadyLethal?cfg.level>=3?275:205:40)*style.control;
   }
   if(name==='Super Energy Removal'){
-   const enemy=Math.max(q.active?.energies?.length||0,...q.bench.map(x=>x.energies?.length||0));
+   // Brock's Protection prevents removal from its Pokémon. Count only
+   // targetable Energy when deciding whether the opponent loses two cards.
+   const enemy=Math.max(0,...[q.active,...q.bench].filter(u=>u&&
+    !u.attachedTrainers?.some(t=>card(t.id)?.name==="Brock's Protection"))
+    .map(u=>u.energies?.length||0));
    // An empty Bench slot cannot pay Super Energy Removal's discard cost.
    // Compare only Pokémon with attached Energy; otherwise adding an
    // unequipped Bench Pokémon falsely makes this Trainer look cheaper.
