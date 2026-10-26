@@ -73,23 +73,59 @@
  function dialogue(state,npc,character,dialogueModule,options){
   return dialogueEntry(state,npc,character,dialogueModule,options).lines;
  }
+ // Varied wording, stable action ids and unchanged eligibility.
+ const invitationLines=Object.freeze({
+ "social": [
+  "Want to spend a little time together?",
+  "Got a moment to hang out?",
+  "Fancy doing something after this?",
+  "We should do something together sometime.",
+  "How about we take a break together?",
+  "Would you be up for hanging out?"
+ ],
+ "date": [
+  "Would you like to make plans for another day?",
+  "Is there a day we could meet up?",
+  "Want to find some time for just us?",
+  "Maybe we could plan something for later?",
+  "Could we catch up another day?",
+  "How about we arrange something soon?"
+ ],
+ "flirt": [
+  "You know, I could tease you about that.",
+  "Careful, you are making this too easy.",
+  "Am I allowed to make a joke about that?",
+  "I have a comeback, but you might regret hearing it.",
+  "That deserves a little teasing, don't you think?",
+  "Are you sure you want to give me that opening?"
+ ],
+ "later": [
+  "Maybe another time.",
+  "I should get going.",
+  "Let's pick this up later.",
+  "I'll catch you later."
+ ]
+});
+ function invitationLabel(kind,npc,day){
+  const variants=invitationLines[kind];
+  return variants[hash(npc+':'+kind+':'+day)%variants.length];
+ }
  function choices(state,npc){
   if(!state||typeof npc!=='string'||state.day>90)return [];
   const n=hash(npc+':'+state.day);
   const spent=!!state.hungOut?.[state.day+':'+npc];
   const planned=Array.isArray(state.appointments)&&state.appointments.some(a=>a.npc===npc&&a.status==='booked');
-  // These are infrequent story-like prompts, not a permanent action menu.
   if(!spent&&n%4===0)return [
-   ['Would you like to do something together?', 'socialPlan:'+npc],
-   ['Maybe another time.', 'close']
+   [invitationLabel('social',npc,state.day), 'socialPlan:'+npc],
+   [invitationLabel('later',npc,state.day), 'close']
   ];
   if(!planned&&n%6===1)return [
-   ['Would you like to meet up another day?', 'dateInvite:'+npc],
-   ['I should get going.', 'close']
+   [invitationLabel('date',npc,state.day), 'dateInvite:'+npc],
+   [invitationLabel('later',npc,state.day), 'close']
   ];
   if(n%9===2)return [
-   ['I could tease you about that.', 'flirt:'+npc],
-   ['Leave it there.', 'close']
+   [invitationLabel('flirt',npc,state.day), 'flirt:'+npc],
+   [invitationLabel('later',npc,state.day), 'close']
   ];
   return [];
  }
