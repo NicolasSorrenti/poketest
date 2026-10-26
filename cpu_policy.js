@@ -675,12 +675,15 @@ function energyHorizonBonus(action,o,cfg){
  // Reward immediate Energy unlocks, but value two-card lines only insofar as
  // they are possible with cards that are ALREADY visible in our own hand.
  const expected=Math.max(0,changed-before)*1.15+Math.max(0,direct)*.35;
- const enemyReady=!['Asleep','Paralyzed'].includes(q.active.status)&&
-  strongestAffordableAttack(q.active,u)>=hpRemaining(u);
+ // Bench replacement urgency depends on the exposed Active, not the Bench
+ // target of this attachment. Comparing against u made a fragile Bench look
+ // urgent while ignoring an Active that was about to be knocked out.
+ const activeExposed=!!p.active&&!['Asleep','Paralyzed'].includes(q.active.status)&&
+  strongestAffordableAttack(q.active,p.active)>=hpRemaining(p.active);
  // A Bench attacker is useful as a replacement when the Active is visibly
  // exposed. Otherwise minimize speculative Energy sunk on remote Bench.
- const activeBias=v.slot===-1?35:enemyReady?22:-34;
- const weakDefense=enemyReady&&v.slot===-1&&p.bench.length>0?-30:0;
+ const activeBias=v.slot===-1?35:activeExposed?22:-34;
+ const weakDefense=activeExposed&&v.slot===-1&&p.bench.length>0?-30:0;
  const surplus=direct===0&&changed-before<=1?-35:0;
  return Math.max(-85,Math.min(160,expected+activeBias+weakDefense+surplus))*cfg.style.setup;
 }
