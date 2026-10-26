@@ -704,10 +704,17 @@ function benchMatchupValue(pokemonId,o){
  const incoming=strongestAffordableAttack(enemy,candidate);
  const hp=hpRemaining(candidate);
  const canBeKnockedOut=incoming>0&&incoming>=hp;
- const handEnergies=o.self.hand.filter(id=>isEnergy(card(id)));
+ // A newly benched Pokémon can use only an Energy attachment that is
+ // still available this turn and legal for that specific Pokémon.
+ // Miracle Energy on a non-Light Pokémon must not inflate Bench readiness.
+ const ownCard=card(pokemonId);
+ const handEnergies=o.self.hand.filter(id=>{
+  const energy=card(id);
+  return isEnergy(energy)&&legalAttachment({card:energy,unit:candidate,
+   energyUsed:o.self.energyUsed,round:o.round,cardName:ownCard?.name||''});
+ });
  const immediate=handEnergies.reduce((best,id)=>
   Math.max(best,damageAfterAttachment(candidate,id,enemy)),0);
- const ownCard=card(pokemonId);
  const weakType=(ownCard?.weaknesses||[]).some(w=>
   (card(enemy.id)?.types||[]).includes(w.type));
  return (canBeKnockedOut?-175:0)+(weakType?-45:0)+
