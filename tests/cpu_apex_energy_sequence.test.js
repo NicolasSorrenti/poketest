@@ -55,3 +55,31 @@ test('Miracle Energy can target Light Pokémon unless attachment-blocked',()=>{
  o.self.bench[0].energyAttachBlockSerial=12;
  assert.equal(AI.candidates(o,cfg,used).some(a=>a.type==='attach_energy'),false);
 });
+
+function benchEnergyBoard(energyId,energyUsed=false){
+ const o=board();
+ Object.assign(o,{phase:'game',turn:1,round:5,turnSerial:11,over:false,decision:null});
+ o.self.hand=[HITMONCHAN,energyId];
+ o.self.bench=[];
+ o.self.energyUsed=energyUsed;
+ return o;
+}
+const benchHitmonchan={type:'bench',payload:{handIndex:0}};
+test('Apex does not treat illegal Miracle Energy as Bench attack readiness',()=>{
+ const miracle=benchEnergyBoard('neo4-16');
+ const offType=benchEnergyBoard('base1-98'); // Fire cannot pay Hitmonchan's Fighting attack
+ assert.equal(AI.score(benchHitmonchan,miracle,cfg,{}),
+  AI.score(benchHitmonchan,offType,cfg,{}));
+});
+test('Apex does not assume a second Energy attachment when already used',()=>{
+ const spentFighting=benchEnergyBoard(FIGHT,true);
+ const spentFire=benchEnergyBoard('base1-98',true);
+ assert.equal(AI.score(benchHitmonchan,spentFighting,cfg,{}),
+  AI.score(benchHitmonchan,spentFire,cfg,{}));
+});
+test('Apex still rewards a legal, available Energy for a newly benched attacker',()=>{
+ const fighting=benchEnergyBoard(FIGHT);
+ const fire=benchEnergyBoard('base1-98');
+ assert.ok(AI.score(benchHitmonchan,fighting,cfg,{})>
+  AI.score(benchHitmonchan,fire,cfg,{}));
+});
