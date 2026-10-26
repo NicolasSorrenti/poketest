@@ -465,3 +465,20 @@
  .mobile-events h2{font:800 22px 'Barlow Condensed';color:#f8bad0;margin:0 0 8px}
 }
 @media(min-width:701px){.mobile-events{display:none}}
+
+/* Mobile RPG: compact utility navigation; keep scene and daily guide visible. */
+@media(max-width:700px){
+ .utilitybar{display:block;padding:7px 10px}
+ .utility-left{display:none}
+ .utilitybar .utility-actions{display:flex;flex-wrap:nowrap;overflow-x:auto;overscroll-behavior-x:contain;gap:6px;width:100%;scrollbar-width:thin;justify-content:flex-start;align-items:center}
+ .utilitybar .utility-actions>.toolbar-btn,
+ .utilitybar .utility-actions>.time-advance,
+ .utilitybar .utility-actions>.rpg-more-menu{flex:0 0 auto;white-space:nowrap}
+ .utilitybar .utility-actions .toolbar-btn,.utilitybar .utility-actions .time-advance{min-height:40px;padding:9px 11px}
+ .utilitybar:has(#rpgMoreMenu[open]) .utility-actions{overflow:visible;flex-wrap:wrap}
+ .stage-panel .mobile-events:not([hidden]){display:block;clear:both;position:relative;z-index:1;margin:12px 0;padding:12px;border:1px solid #765873;border-radius:12px;background:#182238}
+ .mobile-events .planner-section{border:0;padding:0}
+ .mobile-events .sidebar-title{display:none}
+ .mobile-events .daily-planner{min-width:0}
+ .mobile-events h2{font:800 23px 'Barlow Condensed',sans-serif;color:#ffb6ce;margin:0 0 10px}
+}
