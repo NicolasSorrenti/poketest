@@ -88,11 +88,11 @@ test('routine protection respects account roster, meetings, daily caps and compl
  const done=Object.fromEntries(SLICE.scenes.filter(e=>e.npc==='barb').map(e=>[e.id,{day:6,slot:e.slot,choice:0}]));
  assert.deepEqual(SLICE.scheduleOverrides({...s,sliceOfLifeDone:done}),[]);
  // The same browser modules with the server-filtered roster cannot register Barb or her gallery entries.
- const context={window:{NeoRpgCharacterPacks:{packs:[]},NeoRpgEncounterDirector:require('../rpg_encounter_director'),NeoRpgRelationships:require('../rpg_relationships')}};
+ const context={window:{NeoRpgCharacterPacks:{packs:[]},NeoRpgEncounterDirector:require('../rpg_encounter_director'),NeoRpgRelationships:require('../rpg_relationships'),NeoRpgSchedules:require('../rpg_schedules'),NeoRpgAkariBarbFitting:require('../rpg_akari_barb_event'),NeoRpgCrossCharacterEvents:{events:[]}}};
  vm.runInNewContext(fs.readFileSync(path.join(__dirname,'../rpg_slice_of_life.js'),'utf8'),context);
  vm.runInNewContext(fs.readFileSync(path.join(__dirname,'../rpg_cg_gallery.js'),'utf8'),context);
- assert.equal(context.window.NeoRpgSliceOfLife.scenes.some(e=>e.npc==='barb'),false);
- assert.equal(context.window.NeoRpgCGGallery.catalog.some(e=>e.character==='barb'),false);
+ assert.equal(context.window.NeoRpgSliceOfLife.scenes.some(e=>e.id.startsWith('barb_')),false);
+ assert.equal(context.window.NeoRpgCGGallery.catalog.some(e=>e.id.startsWith('barb_')),false);
 });
 for(const e of scenes)test(e.id+' preserves choices, interruption, exact deltas and gallery unlocks',()=>{
  for(let choice=0;choice<3;choice++){
