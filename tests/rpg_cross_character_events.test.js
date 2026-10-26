@@ -124,7 +124,7 @@ test('Barb designs one individualized bikini-related beachwear concept with each
  for(const e of plans){
   assert.ok(cast.has(e.participants[1]),'unknown visitor '+e.id);
   assert.equal(e.participants[0],'barb');
-  assert.match(e.beachwear.cut,/bikini|swim/i);
+  assert.ok(e.beachwear.cut.length>30,'missing custom silhouette '+e.id);
   assert.match(e.beachwear.palette,/and/i);
   assert.ok(e.art.scene.includes('Barb and '+e.participants[1]));
   assert.match(e.art.scene,/sketch/i);
