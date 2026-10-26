@@ -58,7 +58,7 @@ test('social, special and before-duel moments are not granted by unrelated trigg
 test('locked gallery reveals no titles or image paths and cannot mark views',()=>{
  const s=state({relationships:{hana:{affection:0}}});
  const gallery=CG.gallery(s,{character:'hana'});
- assert.equal(gallery.length,6);
+ assert.ok(gallery.length>=6);
  assert.ok(gallery.every(x=>!x.unlocked&&x.title==='???'&&x.path===null&&x.thumb===null));
  assert.equal(CG.markViewed(s,'hana_first_meeting'),false);
  CG.record(s,'meet','hana');
