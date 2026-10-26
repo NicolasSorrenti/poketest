@@ -58,7 +58,7 @@
  "/rpg_status.js?v=4",
  "/rpg_cloud_save.js?v=2",
  "/rpg_outfits.js?v=1",
- "/rpg.js?v=20261026-scene-recovery"
+ "/rpg.js?v=20261026-diagnostics-1"
 ];
   function registry(packs){
     const cast={},looks={},schedules={},arrivals={},events=[],mandatoryEvents=[];
@@ -97,6 +97,7 @@
   } catch(error) {
     // Fail closed: never load an unfiltered registry as a fallback.
     document.body.insertAdjacentHTML('beforeend','<p role="alert">Unable to load the RPG character roster. Reload to try again.</p>');
+    window.NeoRpgErrorReport?.capture(error,{source:'startup',action:'load character roster'});
     console.error('RPG roster load failed',error);
     return;
   }
@@ -109,4 +110,4 @@
     script.onerror=()=>reject(Error('RPG script failed: '+src));
     document.body.appendChild(script);
   })));
-})().catch(error=>console.error('RPG startup failed',error));
+})().catch(error=>{window.NeoRpgErrorReport?.capture(error,{source:'startup',action:'load RPG scripts'});console.error('RPG startup failed',error);});
