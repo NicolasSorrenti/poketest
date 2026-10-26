@@ -531,7 +531,10 @@ function evolutionTempoPenalty(o,slot,evolutionId,cfg){
  if(!cfg.evolutionTempo||cfg.level<3||slot!==-1)return 0;
  const before=o.self.active,nextCard=card(evolutionId);
  if(!before||!nextCard)return 0;
- const after={...before,id:evolutionId,effectiveAttacks:undefined};
+ const after={...before,id:evolutionId};
+ // Evolution replaces copied Active attacks; retain legacy behavior for
+ // lower levels while correcting Apex's hypothetical promoted form.
+ if(cfg.level===8)delete after.effectiveAttacks;
  const current=strongestAffordableAttack(before,o.opponent.active);
  if(current<=0)return 0;
  // An evolution must not trade away a certain match-winning attack, even
