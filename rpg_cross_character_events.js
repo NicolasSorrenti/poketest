@@ -3337,6 +3337,1899 @@
   }
  }
 ];
+ // Barb beachwear collection: each attendee gets a unique concept-fitting conversation.
+ events.push(...[
+ {
+  "id": "crossover_barb_hana_beachwear_design",
+  "npc": "barb",
+  "participants": [
+   "barb",
+   "hana"
+  ],
+  "encounterType": "slice",
+  "trigger": "talk",
+  "place": "shop",
+  "slot": 0,
+  "start": 19,
+  "end": 90,
+  "minAffection": 0,
+  "title": "Shop Window Sunshine",
+  "lines": [
+   {
+    "speaker": "Narrator",
+    "text": "Her shop apron always slips from one shoulder"
+   },
+   {
+    "speaker": "hana",
+    "text": "I want to feel sunny, but I still need to carry stock and bend over the counter."
+   },
+   {
+    "speaker": "barb",
+    "text": "Then we're building comfort first. Yellow panels, mint piping, and adjustable straps that stay put."
+   },
+   {
+    "speaker": "Protagonist",
+    "text": "So the buttercup yellow and mint palette will become a soft square-neck top with wide adjustable straps; high-waisted shorts-style bottoms?"
+   },
+   {
+    "speaker": "barb",
+    "text": "That's our starting point. We'll adjust the fit and finish together. A tiny embroidered Poké Ball hidden at the hem."
+   },
+   {
+    "speaker": "hana",
+    "text": "I want the finished outfit to feel like me, not just look good on paper."
+   },
+   {
+    "speaker": "Narrator",
+    "text": "Barb lays out fabric swatches and draws the first complete design, ready for the wearer's approval."
+   }
+  ],
+  "choices": [
+   {
+    "label": "Help test the straps while sorting display boxes",
+    "reply": "Hana lifts a stack of empty deck boxes and laughs: nothing budges.",
+    "kind": "creative",
+    "delta": {
+     "affection": 1,
+     "trust": 1,
+     "respect": 1,
+     "attraction": 0
+    },
+    "flag": "crossover_barb_hana_beachwear_design_collaboration"
+   },
+   {
+    "label": "Ask Barb to explain the pattern construction",
+    "reply": "Barb traces every seam and adjustment while hana listens closely. The sketch is labelled and safely packed away for the next fitting.",
+    "kind": "support",
+    "delta": {
+     "affection": 1,
+     "trust": 1,
+     "respect": 0,
+     "attraction": 0
+    },
+    "flag": "crossover_barb_hana_beachwear_design_process"
+   }
+  ],
+  "image": "/rpg-assets/events/cg/season01/crossover_barb_hana_beachwear_design.webp",
+  "artPending": true,
+  "beachwear": {
+   "palette": "buttercup yellow and mint",
+   "cut": "soft square-neck top with wide adjustable straps; high-waisted shorts-style bottoms",
+   "detail": "A tiny embroidered Poké Ball hidden at the hem.",
+   "wearer": "hana",
+   "stage": "concept"
+  },
+  "art": {
+   "scene": "Barb and hana at a public beachwear design consultation, discussing fabric swatches and a fashion illustration on the table. Her shop apron always slips from one shoulder Both characters fully clothed; bikini is shown as fashion sketches and fabric samples only. The proposed design: buttercup yellow and mint, soft square-neck top with wide adjustable straps; high-waisted shorts-style bottoms.",
+   "composition": "Single 16:9 cinematic workshop consultation, Barb and hana both clearly recognizable, design sketch foreground, bottom 20% clear for dialogue; no split panels or actual swimsuit changing.",
+   "outfit": "Canonical approved everyday outfits for both characters; beachwear exists only as sketch and swatch in this initial event.",
+   "expression": "Characterful collaborative design discussion",
+   "environment": "shop",
+   "mood": "friendly professional and lighthearted",
+   "fanservice": 0
+  }
+ },
+ {
+  "id": "crossover_barb_reina_beachwear_design",
+  "npc": "barb",
+  "participants": [
+   "barb",
+   "reina"
+  ],
+  "encounterType": "slice",
+  "trigger": "talk",
+  "place": "shop",
+  "slot": 0,
+  "start": 19,
+  "end": 90,
+  "minAffection": 0,
+  "title": "A Champion Off Duty",
+  "lines": [
+   {
+    "speaker": "Narrator",
+    "text": "Reina refuses anything that feels like a costume"
+   },
+   {
+    "speaker": "reina",
+    "text": "If this is for a day off, it has to stop looking like I'm about to compete."
+   },
+   {
+    "speaker": "barb",
+    "text": "Clean lines. No ribbons that demand attention. I'll make the structure feel effortless."
+   },
+   {
+    "speaker": "Protagonist",
+    "text": "So the deep navy with a restrained crimson seam palette will become a athletic halter bikini with secure racerback fastening and structured swim shorts?"
+   },
+   {
+    "speaker": "barb",
+    "text": "That's our starting point. We'll adjust the fit and finish together. A narrow red accent only visible when she turns."
+   },
+   {
+    "speaker": "reina",
+    "text": "I want the finished outfit to feel like me, not just look good on paper."
+   },
+   {
+    "speaker": "Narrator",
+    "text": "Barb lays out fabric swatches and draws the first complete design, ready for the wearer's approval."
+   }
+  ],
+  "choices": [
+   {
+    "label": "Help check the fit with a confident practice stance",
+    "reply": "Reina tries a few stretches, then admits she actually likes the design.",
+    "kind": "creative",
+    "delta": {
+     "affection": 1,
+     "trust": 1,
+     "respect": 1,
+     "attraction": 0
+    },
+    "flag": "crossover_barb_reina_beachwear_design_collaboration"
+   },
+   {
+    "label": "Ask Barb to explain the pattern construction",
+    "reply": "Barb traces every seam and adjustment while reina listens closely. The sketch is labelled and safely packed away for the next fitting.",
+    "kind": "support",
+    "delta": {
+     "affection": 1,
+     "trust": 1,
+     "respect": 0,
+     "attraction": 0
+    },
+    "flag": "crossover_barb_reina_beachwear_design_process"
+   }
+  ],
+  "image": "/rpg-assets/events/cg/season01/crossover_barb_reina_beachwear_design.webp",
+  "artPending": true,
+  "beachwear": {
+   "palette": "deep navy with a restrained crimson seam",
+   "cut": "athletic halter bikini with secure racerback fastening and structured swim shorts",
+   "detail": "A narrow red accent only visible when she turns.",
+   "wearer": "reina",
+   "stage": "concept"
+  },
+  "art": {
+   "scene": "Barb and reina at a public beachwear design consultation, discussing fabric swatches and a fashion illustration on the table. Reina refuses anything that feels like a costume Both characters fully clothed; bikini is shown as fashion sketches and fabric samples only. The proposed design: deep navy with a restrained crimson seam, athletic halter bikini with secure racerback fastening and structured swim shorts.",
+   "composition": "Single 16:9 cinematic workshop consultation, Barb and reina both clearly recognizable, design sketch foreground, bottom 20% clear for dialogue; no split panels or actual swimsuit changing.",
+   "outfit": "Canonical approved everyday outfits for both characters; beachwear exists only as sketch and swatch in this initial event.",
+   "expression": "Characterful collaborative design discussion",
+   "environment": "shop",
+   "mood": "friendly professional and lighthearted",
+   "fanservice": 0
+  }
+ },
+ {
+  "id": "crossover_barb_shiori_beachwear_design",
+  "npc": "barb",
+  "participants": [
+   "barb",
+   "shiori"
+  ],
+  "encounterType": "slice",
+  "trigger": "talk",
+  "place": "park",
+  "slot": 2,
+  "start": 19,
+  "end": 90,
+  "minAffection": 0,
+  "title": "The Bookmark Pattern",
+  "lines": [
+   {
+    "speaker": "Narrator",
+    "text": "Shiori brings a pressed seaside flower as her only reference"
+   },
+   {
+    "speaker": "shiori",
+    "text": "I don't want to look as if I wandered out of a photograph of someone else."
+   },
+   {
+    "speaker": "barb",
+    "text": "Then we borrow the feeling, not the era. Sea-glass shades and a cut you can move in."
+   },
+   {
+    "speaker": "Protagonist",
+    "text": "So the sea-glass green and ivory palette will become a vintage-inspired high-waist bikini and softly wrapped top with removable light cover-up?"
+   },
+   {
+    "speaker": "barb",
+    "text": "That's our starting point. We'll adjust the fit and finish together. A subtle pressed-flower motif on the wrap."
+   },
+   {
+    "speaker": "shiori",
+    "text": "I want the finished outfit to feel like me, not just look good on paper."
+   },
+   {
+    "speaker": "Narrator",
+    "text": "Barb lays out fabric swatches and draws the first complete design, ready for the wearer's approval."
+   }
+  ],
+  "choices": [
+   {
+    "label": "Help help compare fabric textures in the afternoon light",
+    "reply": "Shiori holds the sample toward the river and smiles at its understated pattern.",
+    "kind": "creative",
+    "delta": {
+     "affection": 1,
+     "trust": 1,
+     "respect": 1,
+     "attraction": 0
+    },
+    "flag": "crossover_barb_shiori_beachwear_design_collaboration"
+   },
+   {
+    "label": "Ask Barb to explain the pattern construction",
+    "reply": "Barb traces every seam and adjustment while shiori listens closely. The sketch is labelled and safely packed away for the next fitting.",
+    "kind": "support",
+    "delta": {
+     "affection": 1,
+     "trust": 1,
+     "respect": 0,
+     "attraction": 0
+    },
+    "flag": "crossover_barb_shiori_beachwear_design_process"
+   }
+  ],
+  "image": "/rpg-assets/events/cg/season01/crossover_barb_shiori_beachwear_design.webp",
+  "artPending": true,
+  "beachwear": {
+   "palette": "sea-glass green and ivory",
+   "cut": "vintage-inspired high-waist bikini and softly wrapped top with removable light cover-up",
+   "detail": "A subtle pressed-flower motif on the wrap.",
+   "wearer": "shiori",
+   "stage": "concept"
+  },
+  "art": {
+   "scene": "Barb and shiori at a public beachwear design consultation, discussing fabric swatches and a fashion illustration on the table. Shiori brings a pressed seaside flower as her only reference Both characters fully clothed; bikini is shown as fashion sketches and fabric samples only. The proposed design: sea-glass green and ivory, vintage-inspired high-waist bikini and softly wrapped top with removable light cover-up.",
+   "composition": "Single 16:9 cinematic workshop consultation, Barb and shiori both clearly recognizable, design sketch foreground, bottom 20% clear for dialogue; no split panels or actual swimsuit changing.",
+   "outfit": "Canonical approved everyday outfits for both characters; beachwear exists only as sketch and swatch in this initial event.",
+   "expression": "Characterful collaborative design discussion",
+   "environment": "park",
+   "mood": "friendly professional and lighthearted",
+   "fanservice": 0
+  }
+ },
+ {
+  "id": "crossover_barb_yuna_beachwear_design",
+  "npc": "barb",
+  "participants": [
+   "barb",
+   "yuna"
+  ],
+  "encounterType": "slice",
+  "trigger": "talk",
+  "place": "park",
+  "slot": 1,
+  "start": 21,
+  "end": 90,
+  "minAffection": 0,
+  "title": "Final Boss Summer",
+  "lines": [
+   {
+    "speaker": "Narrator",
+    "text": "Yuna wants a design loud enough for the beach-games tournament"
+   },
+   {
+    "speaker": "yuna",
+    "text": "It has to look like I've already won the beach games."
+   },
+   {
+    "speaker": "barb",
+    "text": "Then it also has to stay on while you actually play them."
+   },
+   {
+    "speaker": "Protagonist",
+    "text": "So the electric cobalt and citrus orange palette will become a sporty zip-front bikini top and flexible swim shorts with geometric contrasting panels?"
+   },
+   {
+    "speaker": "barb",
+    "text": "That's our starting point. We'll adjust the fit and finish together. A tiny lightning emblem on one side."
+   },
+   {
+    "speaker": "yuna",
+    "text": "I want the finished outfit to feel like me, not just look good on paper."
+   },
+   {
+    "speaker": "Narrator",
+    "text": "Barb lays out fabric swatches and draws the first complete design, ready for the wearer's approval."
+   }
+  ],
+  "choices": [
+   {
+    "label": "Help challenge Yuna to a dry-land volleyball move test",
+    "reply": "Yuna jumps for an imaginary spike and declares the design tournament-ready.",
+    "kind": "creative",
+    "delta": {
+     "affection": 1,
+     "trust": 1,
+     "respect": 1,
+     "attraction": 0
+    },
+    "flag": "crossover_barb_yuna_beachwear_design_collaboration"
+   },
+   {
+    "label": "Ask Barb to explain the pattern construction",
+    "reply": "Barb traces every seam and adjustment while yuna listens closely. The sketch is labelled and safely packed away for the next fitting.",
+    "kind": "support",
+    "delta": {
+     "affection": 1,
+     "trust": 1,
+     "respect": 0,
+     "attraction": 0
+    },
+    "flag": "crossover_barb_yuna_beachwear_design_process"
+   }
+  ],
+  "image": "/rpg-assets/events/cg/season01/crossover_barb_yuna_beachwear_design.webp",
+  "artPending": true,
+  "beachwear": {
+   "palette": "electric cobalt and citrus orange",
+   "cut": "sporty zip-front bikini top and flexible swim shorts with geometric contrasting panels",
+   "detail": "A tiny lightning emblem on one side.",
+   "wearer": "yuna",
+   "stage": "concept"
+  },
+  "art": {
+   "scene": "Barb and yuna at a public beachwear design consultation, discussing fabric swatches and a fashion illustration on the table. Yuna wants a design loud enough for the beach-games tournament Both characters fully clothed; bikini is shown as fashion sketches and fabric samples only. The proposed design: electric cobalt and citrus orange, sporty zip-front bikini top and flexible swim shorts with geometric contrasting panels.",
+   "composition": "Single 16:9 cinematic workshop consultation, Barb and yuna both clearly recognizable, design sketch foreground, bottom 20% clear for dialogue; no split panels or actual swimsuit changing.",
+   "outfit": "Canonical approved everyday outfits for both characters; beachwear exists only as sketch and swatch in this initial event.",
+   "expression": "Characterful collaborative design discussion",
+   "environment": "park",
+   "mood": "friendly professional and lighthearted",
+   "fanservice": 0
+  }
+ },
+ {
+  "id": "crossover_barb_akari_beachwear_design",
+  "npc": "barb",
+  "participants": [
+   "barb",
+   "akari"
+  ],
+  "encounterType": "slice",
+  "trigger": "talk",
+  "place": "cafe",
+  "slot": 2,
+  "start": 20,
+  "end": 90,
+  "minAffection": 0,
+  "title": "Variables in the Sun",
+  "lines": [
+   {
+    "speaker": "Narrator",
+    "text": "Akari arrives with a spreadsheet of sun coverage, fit, and drying times"
+   },
+   {
+    "speaker": "akari",
+    "text": "I have ranked thirty-seven designs by their measurable performance."
+   },
+   {
+    "speaker": "barb",
+    "text": "Did you rank whether you'd enjoy wearing one?"
+   },
+   {
+    "speaker": "Protagonist",
+    "text": "So the teal and charcoal with fine copper linework palette will become a minimalist supportive swim top with adjustable back and high-waist bottoms?"
+   },
+   {
+    "speaker": "barb",
+    "text": "That's our starting point. We'll adjust the fit and finish together. A copper grid pattern that becomes visible in sunlight."
+   },
+   {
+    "speaker": "akari",
+    "text": "I want the finished outfit to feel like me, not just look good on paper."
+   },
+   {
+    "speaker": "Narrator",
+    "text": "Barb lays out fabric swatches and draws the first complete design, ready for the wearer's approval."
+   }
+  ],
+  "choices": [
+   {
+    "label": "Help help Akari add comfort to her scoring rubric",
+    "reply": "Akari crosses out a column and writes 'makes me happy' instead.",
+    "kind": "creative",
+    "delta": {
+     "affection": 1,
+     "trust": 1,
+     "respect": 1,
+     "attraction": 0
+    },
+    "flag": "crossover_barb_akari_beachwear_design_collaboration"
+   },
+   {
+    "label": "Ask Barb to explain the pattern construction",
+    "reply": "Barb traces every seam and adjustment while akari listens closely. The sketch is labelled and safely packed away for the next fitting.",
+    "kind": "support",
+    "delta": {
+     "affection": 1,
+     "trust": 1,
+     "respect": 0,
+     "attraction": 0
+    },
+    "flag": "crossover_barb_akari_beachwear_design_process"
+   }
+  ],
+  "image": "/rpg-assets/events/cg/season01/crossover_barb_akari_beachwear_design.webp",
+  "artPending": true,
+  "beachwear": {
+   "palette": "teal and charcoal with fine copper linework",
+   "cut": "minimalist supportive swim top with adjustable back and high-waist bottoms",
+   "detail": "A copper grid pattern that becomes visible in sunlight.",
+   "wearer": "akari",
+   "stage": "concept"
+  },
+  "art": {
+   "scene": "Barb and akari at a public beachwear design consultation, discussing fabric swatches and a fashion illustration on the table. Akari arrives with a spreadsheet of sun coverage, fit, and drying times Both characters fully clothed; bikini is shown as fashion sketches and fabric samples only. The proposed design: teal and charcoal with fine copper linework, minimalist supportive swim top with adjustable back and high-waist bottoms.",
+   "composition": "Single 16:9 cinematic workshop consultation, Barb and akari both clearly recognizable, design sketch foreground, bottom 20% clear for dialogue; no split panels or actual swimsuit changing.",
+   "outfit": "Canonical approved everyday outfits for both characters; beachwear exists only as sketch and swatch in this initial event.",
+   "expression": "Characterful collaborative design discussion",
+   "environment": "cafe",
+   "mood": "friendly professional and lighthearted",
+   "fanservice": 0
+  }
+ },
+ {
+  "id": "crossover_barb_camila_beachwear_design",
+  "npc": "barb",
+  "participants": [
+   "barb",
+   "camila"
+  ],
+  "encounterType": "slice",
+  "trigger": "talk",
+  "place": "shop",
+  "slot": 1,
+  "start": 18,
+  "end": 90,
+  "minAffection": 0,
+  "title": "The Collector's Edition",
+  "lines": [
+   {
+    "speaker": "Narrator",
+    "text": "Camila treats her fashion consultation like a rare-card negotiation"
+   },
+   {
+    "speaker": "camila",
+    "text": "What makes this one-of-a-kind?"
+   },
+   {
+    "speaker": "barb",
+    "text": "The fit is yours, the color is yours, and no one has to know the exact pattern."
+   },
+   {
+    "speaker": "Protagonist",
+    "text": "So the wine red and antique gold palette will become a sleek one-shoulder bikini top paired with high-waist bottoms, minimal metallic detailing?"
+   },
+   {
+    "speaker": "barb",
+    "text": "That's our starting point. We'll adjust the fit and finish together. A tiny removable gold clasp with a card-suit motif."
+   },
+   {
+    "speaker": "camila",
+    "text": "I want the finished outfit to feel like me, not just look good on paper."
+   },
+   {
+    "speaker": "Narrator",
+    "text": "Barb lays out fabric swatches and draws the first complete design, ready for the wearer's approval."
+   }
+  ],
+  "choices": [
+   {
+    "label": "Help ask Camila what she actually wants instead of its resale value",
+    "reply": "Camila quietly admits she wants something beautiful purely for herself.",
+    "kind": "creative",
+    "delta": {
+     "affection": 1,
+     "trust": 1,
+     "respect": 1,
+     "attraction": 0
+    },
+    "flag": "crossover_barb_camila_beachwear_design_collaboration"
+   },
+   {
+    "label": "Ask Barb to explain the pattern construction",
+    "reply": "Barb traces every seam and adjustment while camila listens closely. The sketch is labelled and safely packed away for the next fitting.",
+    "kind": "support",
+    "delta": {
+     "affection": 1,
+     "trust": 1,
+     "respect": 0,
+     "attraction": 0
+    },
+    "flag": "crossover_barb_camila_beachwear_design_process"
+   }
+  ],
+  "image": "/rpg-assets/events/cg/season01/crossover_barb_camila_beachwear_design.webp",
+  "artPending": true,
+  "beachwear": {
+   "palette": "wine red and antique gold",
+   "cut": "sleek one-shoulder bikini top paired with high-waist bottoms, minimal metallic detailing",
+   "detail": "A tiny removable gold clasp with a card-suit motif.",
+   "wearer": "camila",
+   "stage": "concept"
+  },
+  "art": {
+   "scene": "Barb and camila at a public beachwear design consultation, discussing fabric swatches and a fashion illustration on the table. Camila treats her fashion consultation like a rare-card negotiation Both characters fully clothed; bikini is shown as fashion sketches and fabric samples only. The proposed design: wine red and antique gold, sleek one-shoulder bikini top paired with high-waist bottoms, minimal metallic detailing.",
+   "composition": "Single 16:9 cinematic workshop consultation, Barb and camila both clearly recognizable, design sketch foreground, bottom 20% clear for dialogue; no split panels or actual swimsuit changing.",
+   "outfit": "Canonical approved everyday outfits for both characters; beachwear exists only as sketch and swatch in this initial event.",
+   "expression": "Characterful collaborative design discussion",
+   "environment": "shop",
+   "mood": "friendly professional and lighthearted",
+   "fanservice": 0
+  }
+ },
+ {
+  "id": "crossover_barb_marina_beachwear_design",
+  "npc": "barb",
+  "participants": [
+   "barb",
+   "marina"
+  ],
+  "encounterType": "slice",
+  "trigger": "talk",
+  "place": "park",
+  "slot": 2,
+  "start": 19,
+  "end": 90,
+  "minAffection": 0,
+  "title": "Safe Harbor",
+  "lines": [
+   {
+    "speaker": "Narrator",
+    "text": "Marina insists on practicality for a long day by the water"
+   },
+   {
+    "speaker": "marina",
+    "text": "I can't be adjusting straps when someone's asking for help."
+   },
+   {
+    "speaker": "barb",
+    "text": "Then this is active swimwear, not something that only works for a photo."
+   },
+   {
+    "speaker": "Protagonist",
+    "text": "So the lagoon blue and pearl white palette will become a secure cross-back bikini with moderate coverage, UV swim shirt and dry-bag pocket?"
+   },
+   {
+    "speaker": "barb",
+    "text": "That's our starting point. We'll adjust the fit and finish together. A wave motif stitched into the hem."
+   },
+   {
+    "speaker": "marina",
+    "text": "I want the finished outfit to feel like me, not just look good on paper."
+   },
+   {
+    "speaker": "Narrator",
+    "text": "Barb lays out fabric swatches and draws the first complete design, ready for the wearer's approval."
+   }
+  ],
+  "choices": [
+   {
+    "label": "Help test the design against Marina's movement checklist",
+    "reply": "Marina signs off when every practical concern has a clear answer.",
+    "kind": "creative",
+    "delta": {
+     "affection": 1,
+     "trust": 1,
+     "respect": 1,
+     "attraction": 0
+    },
+    "flag": "crossover_barb_marina_beachwear_design_collaboration"
+   },
+   {
+    "label": "Ask Barb to explain the pattern construction",
+    "reply": "Barb traces every seam and adjustment while marina listens closely. The sketch is labelled and safely packed away for the next fitting.",
+    "kind": "support",
+    "delta": {
+     "affection": 1,
+     "trust": 1,
+     "respect": 0,
+     "attraction": 0
+    },
+    "flag": "crossover_barb_marina_beachwear_design_process"
+   }
+  ],
+  "image": "/rpg-assets/events/cg/season01/crossover_barb_marina_beachwear_design.webp",
+  "artPending": true,
+  "beachwear": {
+   "palette": "lagoon blue and pearl white",
+   "cut": "secure cross-back bikini with moderate coverage, UV swim shirt and dry-bag pocket",
+   "detail": "A wave motif stitched into the hem.",
+   "wearer": "marina",
+   "stage": "concept"
+  },
+  "art": {
+   "scene": "Barb and marina at a public beachwear design consultation, discussing fabric swatches and a fashion illustration on the table. Marina insists on practicality for a long day by the water Both characters fully clothed; bikini is shown as fashion sketches and fabric samples only. The proposed design: lagoon blue and pearl white, secure cross-back bikini with moderate coverage, UV swim shirt and dry-bag pocket.",
+   "composition": "Single 16:9 cinematic workshop consultation, Barb and marina both clearly recognizable, design sketch foreground, bottom 20% clear for dialogue; no split panels or actual swimsuit changing.",
+   "outfit": "Canonical approved everyday outfits for both characters; beachwear exists only as sketch and swatch in this initial event.",
+   "expression": "Characterful collaborative design discussion",
+   "environment": "park",
+   "mood": "friendly professional and lighthearted",
+   "fanservice": 0
+  }
+ },
+ {
+  "id": "crossover_barb_kaede_beachwear_design",
+  "npc": "barb",
+  "participants": [
+   "barb",
+   "kaede"
+  ],
+  "encounterType": "slice",
+  "trigger": "talk",
+  "place": "park",
+  "slot": 1,
+  "start": 42,
+  "end": 90,
+  "minAffection": 0,
+  "title": "The Quiet Ace",
+  "lines": [
+   {
+    "speaker": "Narrator",
+    "text": "Kaede is hesitant to try anything that could draw a crowd"
+   },
+   {
+    "speaker": "kaede",
+    "text": "I'm not looking for a dramatic reveal."
+   },
+   {
+    "speaker": "barb",
+    "text": "Good. We're making something you'd choose for yourself, not your audience."
+   },
+   {
+    "speaker": "Protagonist",
+    "text": "So the black, slate and a narrow silver edge palette will become a precise asymmetrical swim top with fitted high-rise bottoms and detachable wrap skirt?"
+   },
+   {
+    "speaker": "barb",
+    "text": "That's our starting point. We'll adjust the fit and finish together. A subtle silver seam that echoes her favorite deck box."
+   },
+   {
+    "speaker": "kaede",
+    "text": "I want the finished outfit to feel like me, not just look good on paper."
+   },
+   {
+    "speaker": "Narrator",
+    "text": "Barb lays out fabric swatches and draws the first complete design, ready for the wearer's approval."
+   }
+  ],
+  "choices": [
+   {
+    "label": "Help let Kaede choose the final amount of contrast",
+    "reply": "She picks the faintest silver trim and seems relieved Barb listens.",
+    "kind": "creative",
+    "delta": {
+     "affection": 1,
+     "trust": 1,
+     "respect": 1,
+     "attraction": 0
+    },
+    "flag": "crossover_barb_kaede_beachwear_design_collaboration"
+   },
+   {
+    "label": "Ask Barb to explain the pattern construction",
+    "reply": "Barb traces every seam and adjustment while kaede listens closely. The sketch is labelled and safely packed away for the next fitting.",
+    "kind": "support",
+    "delta": {
+     "affection": 1,
+     "trust": 1,
+     "respect": 0,
+     "attraction": 0
+    },
+    "flag": "crossover_barb_kaede_beachwear_design_process"
+   }
+  ],
+  "image": "/rpg-assets/events/cg/season01/crossover_barb_kaede_beachwear_design.webp",
+  "artPending": true,
+  "beachwear": {
+   "palette": "black, slate and a narrow silver edge",
+   "cut": "precise asymmetrical swim top with fitted high-rise bottoms and detachable wrap skirt",
+   "detail": "A subtle silver seam that echoes her favorite deck box.",
+   "wearer": "kaede",
+   "stage": "concept"
+  },
+  "art": {
+   "scene": "Barb and kaede at a public beachwear design consultation, discussing fabric swatches and a fashion illustration on the table. Kaede is hesitant to try anything that could draw a crowd Both characters fully clothed; bikini is shown as fashion sketches and fabric samples only. The proposed design: black, slate and a narrow silver edge, precise asymmetrical swim top with fitted high-rise bottoms and detachable wrap skirt.",
+   "composition": "Single 16:9 cinematic workshop consultation, Barb and kaede both clearly recognizable, design sketch foreground, bottom 20% clear for dialogue; no split panels or actual swimsuit changing.",
+   "outfit": "Canonical approved everyday outfits for both characters; beachwear exists only as sketch and swatch in this initial event.",
+   "expression": "Characterful collaborative design discussion",
+   "environment": "park",
+   "mood": "friendly professional and lighthearted",
+   "fanservice": 0
+  }
+ },
+ {
+  "id": "crossover_barb_jun_beachwear_design",
+  "npc": "barb",
+  "participants": [
+   "barb",
+   "jun"
+  ],
+  "encounterType": "slice",
+  "trigger": "talk",
+  "place": "cafe",
+  "slot": 2,
+  "start": 20,
+  "end": 90,
+  "minAffection": 0,
+  "title": "A Design That Follows the Rules",
+  "lines": [
+   {
+    "speaker": "Narrator",
+    "text": "Jun volunteers to check the beachwear show's accessibility and dress code"
+   },
+   {
+    "speaker": "jun",
+    "text": "I can review the safety plan, but I know absolutely nothing about swimwear styling."
+   },
+   {
+    "speaker": "barb",
+    "text": "Good. I need someone who'll tell me whether every guest can actually use the changing rooms."
+   },
+   {
+    "speaker": "Protagonist",
+    "text": "So the marine blue and warm sand palette will become a coordinated bikini concept with a simple secure top and matching boardshorts for a group showcase?"
+   },
+   {
+    "speaker": "barb",
+    "text": "That's our starting point. We'll adjust the fit and finish together. Clear fit labels and inclusive size options."
+   },
+   {
+    "speaker": "jun",
+    "text": "I like helping create the collection without deciding who has to wear the bikini."
+   },
+   {
+    "speaker": "Narrator",
+    "text": "Barb lays out fabric swatches and draws the first complete design, ready for the wearer's approval."
+   }
+  ],
+  "choices": [
+   {
+    "label": "Help help Jun check the collection's fit and accessibility notes",
+    "reply": "Jun marks the collection approved after Barb updates the practical instructions.",
+    "kind": "creative",
+    "delta": {
+     "affection": 1,
+     "trust": 1,
+     "respect": 1,
+     "attraction": 0
+    },
+    "flag": "crossover_barb_jun_beachwear_design_collaboration"
+   },
+   {
+    "label": "Ask Barb to explain the pattern construction",
+    "reply": "Barb traces every seam and adjustment while jun listens closely. The sketch is labelled and safely packed away for the next fitting.",
+    "kind": "support",
+    "delta": {
+     "affection": 1,
+     "trust": 1,
+     "respect": 0,
+     "attraction": 0
+    },
+    "flag": "crossover_barb_jun_beachwear_design_process"
+   }
+  ],
+  "image": "/rpg-assets/events/cg/season01/crossover_barb_jun_beachwear_design.webp",
+  "artPending": true,
+  "beachwear": {
+   "palette": "marine blue and warm sand",
+   "cut": "coordinated bikini concept with a simple secure top and matching boardshorts for a group showcase",
+   "detail": "Clear fit labels and inclusive size options.",
+   "wearer": "showcase design; wearer to be selected with consent",
+   "stage": "concept"
+  },
+  "art": {
+   "scene": "Barb and jun at a public beachwear design consultation, discussing fabric swatches and a fashion illustration on the table. Jun volunteers to check the beachwear show's accessibility and dress code A bikini is shown ONLY as a garment sketch on paper; jun is dressed in their usual clothing. The proposed design: marine blue and warm sand, coordinated bikini concept with a simple secure top and matching boardshorts for a group showcase.",
+   "composition": "Single 16:9 cinematic workshop consultation, Barb and jun both clearly recognizable, design sketch foreground, bottom 20% clear for dialogue; no split panels or actual swimsuit changing.",
+   "outfit": "Canonical approved everyday outfits for both characters; beachwear exists only as sketch and swatch in this initial event.",
+   "expression": "Characterful collaborative design discussion",
+   "environment": "cafe",
+   "mood": "friendly professional and lighthearted",
+   "fanservice": 0
+  }
+ },
+ {
+  "id": "crossover_barb_teo_beachwear_design",
+  "npc": "barb",
+  "participants": [
+   "barb",
+   "teo"
+  ],
+  "encounterType": "slice",
+  "trigger": "talk",
+  "place": "shop",
+  "slot": 1,
+  "start": 18,
+  "end": 90,
+  "minAffection": 0,
+  "title": "The Color Commentary",
+  "lines": [
+   {
+    "speaker": "Narrator",
+    "text": "Teo proposes a coordinated team palette and tries to narrate the entire fitting"
+   },
+   {
+    "speaker": "teo",
+    "text": "The crowd goes wild as Barb unveils the summer collection!"
+   },
+   {
+    "speaker": "barb",
+    "text": "The crowd can go wild after you help me pick a color that doesn't clash with the signs."
+   },
+   {
+    "speaker": "Protagonist",
+    "text": "So the sunset coral and bright violet palette will become a bikini color concept paired with geometric-pattern boardshorts for a beach-games team?"
+   },
+   {
+    "speaker": "barb",
+    "text": "That's our starting point. We'll adjust the fit and finish together. A bold but readable team crest."
+   },
+   {
+    "speaker": "teo",
+    "text": "I like helping create the collection without deciding who has to wear the bikini."
+   },
+   {
+    "speaker": "Narrator",
+    "text": "Barb lays out fabric swatches and draws the first complete design, ready for the wearer's approval."
+   }
+  ],
+  "choices": [
+   {
+    "label": "Help ask Teo to test the palette against the event banners",
+    "reply": "Teo finally chooses a palette that looks good without overpowering the whole scene.",
+    "kind": "creative",
+    "delta": {
+     "affection": 1,
+     "trust": 1,
+     "respect": 1,
+     "attraction": 0
+    },
+    "flag": "crossover_barb_teo_beachwear_design_collaboration"
+   },
+   {
+    "label": "Ask Barb to explain the pattern construction",
+    "reply": "Barb traces every seam and adjustment while teo listens closely. The sketch is labelled and safely packed away for the next fitting.",
+    "kind": "support",
+    "delta": {
+     "affection": 1,
+     "trust": 1,
+     "respect": 0,
+     "attraction": 0
+    },
+    "flag": "crossover_barb_teo_beachwear_design_process"
+   }
+  ],
+  "image": "/rpg-assets/events/cg/season01/crossover_barb_teo_beachwear_design.webp",
+  "artPending": true,
+  "beachwear": {
+   "palette": "sunset coral and bright violet",
+   "cut": "bikini color concept paired with geometric-pattern boardshorts for a beach-games team",
+   "detail": "A bold but readable team crest.",
+   "wearer": "showcase design; wearer to be selected with consent",
+   "stage": "concept"
+  },
+  "art": {
+   "scene": "Barb and teo at a public beachwear design consultation, discussing fabric swatches and a fashion illustration on the table. Teo proposes a coordinated team palette and tries to narrate the entire fitting A bikini is shown ONLY as a garment sketch on paper; teo is dressed in their usual clothing. The proposed design: sunset coral and bright violet, bikini color concept paired with geometric-pattern boardshorts for a beach-games team.",
+   "composition": "Single 16:9 cinematic workshop consultation, Barb and teo both clearly recognizable, design sketch foreground, bottom 20% clear for dialogue; no split panels or actual swimsuit changing.",
+   "outfit": "Canonical approved everyday outfits for both characters; beachwear exists only as sketch and swatch in this initial event.",
+   "expression": "Characterful collaborative design discussion",
+   "environment": "shop",
+   "mood": "friendly professional and lighthearted",
+   "fanservice": 0
+  }
+ },
+ {
+  "id": "crossover_barb_iris_beachwear_design",
+  "npc": "barb",
+  "participants": [
+   "barb",
+   "iris"
+  ],
+  "encounterType": "slice",
+  "trigger": "talk",
+  "place": "park",
+  "slot": 2,
+  "start": 19,
+  "end": 90,
+  "minAffection": 0,
+  "title": "The Tidepool Print",
+  "lines": [
+   {
+    "speaker": "Narrator",
+    "text": "Iris has collected shell colors but doesn't know how to turn them into clothing"
+   },
+   {
+    "speaker": "iris",
+    "text": "I like these colors because they look different depending on the water."
+   },
+   {
+    "speaker": "barb",
+    "text": "Then let's make them reversible, so you can choose the mood that day."
+   },
+   {
+    "speaker": "Protagonist",
+    "text": "So the seafoam and lavender palette will become a softly gathered bikini with reversible high-waist bottoms and a sheer-free lightweight cover-up?"
+   },
+   {
+    "speaker": "barb",
+    "text": "That's our starting point. We'll adjust the fit and finish together. A tiny embroidered seashell inside the reversible seam."
+   },
+   {
+    "speaker": "iris",
+    "text": "I want the finished outfit to feel like me, not just look good on paper."
+   },
+   {
+    "speaker": "Narrator",
+    "text": "Barb lays out fabric swatches and draws the first complete design, ready for the wearer's approval."
+   }
+  ],
+  "choices": [
+   {
+    "label": "Help help arrange Iris's shell-inspired color samples",
+    "reply": "Iris turns the mock-up inside out twice and says she likes both versions.",
+    "kind": "creative",
+    "delta": {
+     "affection": 1,
+     "trust": 1,
+     "respect": 1,
+     "attraction": 0
+    },
+    "flag": "crossover_barb_iris_beachwear_design_collaboration"
+   },
+   {
+    "label": "Ask Barb to explain the pattern construction",
+    "reply": "Barb traces every seam and adjustment while iris listens closely. The sketch is labelled and safely packed away for the next fitting.",
+    "kind": "support",
+    "delta": {
+     "affection": 1,
+     "trust": 1,
+     "respect": 0,
+     "attraction": 0
+    },
+    "flag": "crossover_barb_iris_beachwear_design_process"
+   }
+  ],
+  "image": "/rpg-assets/events/cg/season01/crossover_barb_iris_beachwear_design.webp",
+  "artPending": true,
+  "beachwear": {
+   "palette": "seafoam and lavender",
+   "cut": "softly gathered bikini with reversible high-waist bottoms and a sheer-free lightweight cover-up",
+   "detail": "A tiny embroidered seashell inside the reversible seam.",
+   "wearer": "iris",
+   "stage": "concept"
+  },
+  "art": {
+   "scene": "Barb and iris at a public beachwear design consultation, discussing fabric swatches and a fashion illustration on the table. Iris has collected shell colors but doesn't know how to turn them into clothing Both characters fully clothed; bikini is shown as fashion sketches and fabric samples only. The proposed design: seafoam and lavender, softly gathered bikini with reversible high-waist bottoms and a sheer-free lightweight cover-up.",
+   "composition": "Single 16:9 cinematic workshop consultation, Barb and iris both clearly recognizable, design sketch foreground, bottom 20% clear for dialogue; no split panels or actual swimsuit changing.",
+   "outfit": "Canonical approved everyday outfits for both characters; beachwear exists only as sketch and swatch in this initial event.",
+   "expression": "Characterful collaborative design discussion",
+   "environment": "park",
+   "mood": "friendly professional and lighthearted",
+   "fanservice": 0
+  }
+ },
+ {
+  "id": "crossover_barb_elio_beachwear_design",
+  "npc": "barb",
+  "participants": [
+   "barb",
+   "elio"
+  ],
+  "encounterType": "slice",
+  "trigger": "talk",
+  "place": "shop",
+  "slot": 1,
+  "start": 22,
+  "end": 90,
+  "minAffection": 0,
+  "title": "The Gift Sketch",
+  "lines": [
+   {
+    "speaker": "Narrator",
+    "text": "Elio wants to contribute a meaningful design without guessing someone else's measurements"
+   },
+   {
+    "speaker": "elio",
+    "text": "Would it be weird to bring a bikini design to the showcase if I'm not wearing it?"
+   },
+   {
+    "speaker": "barb",
+    "text": "Not if you design it as a concept and let whoever wears it choose the fit."
+   },
+   {
+    "speaker": "Protagonist",
+    "text": "So the sage green and muted coral palette will become a bikini prototype displayed alongside coordinated relaxed swim trunks for the community show?"
+   },
+   {
+    "speaker": "barb",
+    "text": "That's our starting point. We'll adjust the fit and finish together. A hand-drawn leaf pattern that can be adapted for any size."
+   },
+   {
+    "speaker": "elio",
+    "text": "I like helping create the collection without deciding who has to wear the bikini."
+   },
+   {
+    "speaker": "Narrator",
+    "text": "Barb lays out fabric swatches and draws the first complete design, ready for the wearer's approval."
+   }
+  ],
+  "choices": [
+   {
+    "label": "Help encourage Elio to present the concept without choosing a model",
+    "reply": "He pins the color study beside his own swim-trunk sketch with a proud grin.",
+    "kind": "creative",
+    "delta": {
+     "affection": 1,
+     "trust": 1,
+     "respect": 1,
+     "attraction": 0
+    },
+    "flag": "crossover_barb_elio_beachwear_design_collaboration"
+   },
+   {
+    "label": "Ask Barb to explain the pattern construction",
+    "reply": "Barb traces every seam and adjustment while elio listens closely. The sketch is labelled and safely packed away for the next fitting.",
+    "kind": "support",
+    "delta": {
+     "affection": 1,
+     "trust": 1,
+     "respect": 0,
+     "attraction": 0
+    },
+    "flag": "crossover_barb_elio_beachwear_design_process"
+   }
+  ],
+  "image": "/rpg-assets/events/cg/season01/crossover_barb_elio_beachwear_design.webp",
+  "artPending": true,
+  "beachwear": {
+   "palette": "sage green and muted coral",
+   "cut": "bikini prototype displayed alongside coordinated relaxed swim trunks for the community show",
+   "detail": "A hand-drawn leaf pattern that can be adapted for any size.",
+   "wearer": "showcase design; wearer to be selected with consent",
+   "stage": "concept"
+  },
+  "art": {
+   "scene": "Barb and elio at a public beachwear design consultation, discussing fabric swatches and a fashion illustration on the table. Elio wants to contribute a meaningful design without guessing someone else's measurements A bikini is shown ONLY as a garment sketch on paper; elio is dressed in their usual clothing. The proposed design: sage green and muted coral, bikini prototype displayed alongside coordinated relaxed swim trunks for the community show.",
+   "composition": "Single 16:9 cinematic workshop consultation, Barb and elio both clearly recognizable, design sketch foreground, bottom 20% clear for dialogue; no split panels or actual swimsuit changing.",
+   "outfit": "Canonical approved everyday outfits for both characters; beachwear exists only as sketch and swatch in this initial event.",
+   "expression": "Characterful collaborative design discussion",
+   "environment": "shop",
+   "mood": "friendly professional and lighthearted",
+   "fanservice": 0
+  }
+ },
+ {
+  "id": "crossover_barb_alma_beachwear_design",
+  "npc": "barb",
+  "participants": [
+   "barb",
+   "alma"
+  ],
+  "encounterType": "slice",
+  "trigger": "talk",
+  "place": "cafe",
+  "slot": 2,
+  "start": 20,
+  "end": 90,
+  "minAffection": 0,
+  "title": "The Café After Closing",
+  "lines": [
+   {
+    "speaker": "Narrator",
+    "text": "Alma wants something elegant that can survive a whole afternoon with friends"
+   },
+   {
+    "speaker": "alma",
+    "text": "I like looking put together. I also like sitting down without rearranging myself."
+   },
+   {
+    "speaker": "barb",
+    "text": "I promise both are possible. We'll build the twist into the fabric, not the fit."
+   },
+   {
+    "speaker": "Protagonist",
+    "text": "So the espresso brown and cream palette will become a elegant twist-front bikini and wrap skirt with practical pockets for beach essentials?"
+   },
+   {
+    "speaker": "barb",
+    "text": "That's our starting point. We'll adjust the fit and finish together. A café-bean inspired textured border."
+   },
+   {
+    "speaker": "alma",
+    "text": "I want the finished outfit to feel like me, not just look good on paper."
+   },
+   {
+    "speaker": "Narrator",
+    "text": "Barb lays out fabric swatches and draws the first complete design, ready for the wearer's approval."
+   }
+  ],
+  "choices": [
+   {
+    "label": "Help test how the wrap falls while Alma takes a seat",
+    "reply": "Alma approves the comfortable drape and insists on treating Barb to dessert.",
+    "kind": "creative",
+    "delta": {
+     "affection": 1,
+     "trust": 1,
+     "respect": 1,
+     "attraction": 0
+    },
+    "flag": "crossover_barb_alma_beachwear_design_collaboration"
+   },
+   {
+    "label": "Ask Barb to explain the pattern construction",
+    "reply": "Barb traces every seam and adjustment while alma listens closely. The sketch is labelled and safely packed away for the next fitting.",
+    "kind": "support",
+    "delta": {
+     "affection": 1,
+     "trust": 1,
+     "respect": 0,
+     "attraction": 0
+    },
+    "flag": "crossover_barb_alma_beachwear_design_process"
+   }
+  ],
+  "image": "/rpg-assets/events/cg/season01/crossover_barb_alma_beachwear_design.webp",
+  "artPending": true,
+  "beachwear": {
+   "palette": "espresso brown and cream",
+   "cut": "elegant twist-front bikini and wrap skirt with practical pockets for beach essentials",
+   "detail": "A café-bean inspired textured border.",
+   "wearer": "alma",
+   "stage": "concept"
+  },
+  "art": {
+   "scene": "Barb and alma at a public beachwear design consultation, discussing fabric swatches and a fashion illustration on the table. Alma wants something elegant that can survive a whole afternoon with friends Both characters fully clothed; bikini is shown as fashion sketches and fabric samples only. The proposed design: espresso brown and cream, elegant twist-front bikini and wrap skirt with practical pockets for beach essentials.",
+   "composition": "Single 16:9 cinematic workshop consultation, Barb and alma both clearly recognizable, design sketch foreground, bottom 20% clear for dialogue; no split panels or actual swimsuit changing.",
+   "outfit": "Canonical approved everyday outfits for both characters; beachwear exists only as sketch and swatch in this initial event.",
+   "expression": "Characterful collaborative design discussion",
+   "environment": "cafe",
+   "mood": "friendly professional and lighthearted",
+   "fanservice": 0
+  }
+ },
+ {
+  "id": "crossover_barb_nereo_beachwear_design",
+  "npc": "barb",
+  "participants": [
+   "barb",
+   "nereo"
+  ],
+  "encounterType": "slice",
+  "trigger": "talk",
+  "place": "park",
+  "slot": 1,
+  "start": 21,
+  "end": 90,
+  "minAffection": 0,
+  "title": "A Map of Color",
+  "lines": [
+   {
+    "speaker": "Narrator",
+    "text": "Nereo brings contour maps instead of clothing references"
+   },
+   {
+    "speaker": "nereo",
+    "text": "The curves on this map are actually beautiful."
+   },
+   {
+    "speaker": "barb",
+    "text": "They are. But we're not putting a dangerous hiking route on someone's outfit."
+   },
+   {
+    "speaker": "Protagonist",
+    "text": "So the deep ocean blue and dune beige palette will become a bikini print concept with shoreline contour lines and matching swim shorts for the seaside crew?"
+   },
+   {
+    "speaker": "barb",
+    "text": "That's our starting point. We'll adjust the fit and finish together. A tiny compass point that doubles as the collection emblem."
+   },
+   {
+    "speaker": "nereo",
+    "text": "I like helping create the collection without deciding who has to wear the bikini."
+   },
+   {
+    "speaker": "Narrator",
+    "text": "Barb lays out fabric swatches and draws the first complete design, ready for the wearer's approval."
+   }
+  ],
+  "choices": [
+   {
+    "label": "Help help refine the contour print so it reads as waves",
+    "reply": "Nereo realizes the shoreline lines make a surprisingly elegant textile.",
+    "kind": "creative",
+    "delta": {
+     "affection": 1,
+     "trust": 1,
+     "respect": 1,
+     "attraction": 0
+    },
+    "flag": "crossover_barb_nereo_beachwear_design_collaboration"
+   },
+   {
+    "label": "Ask Barb to explain the pattern construction",
+    "reply": "Barb traces every seam and adjustment while nereo listens closely. The sketch is labelled and safely packed away for the next fitting.",
+    "kind": "support",
+    "delta": {
+     "affection": 1,
+     "trust": 1,
+     "respect": 0,
+     "attraction": 0
+    },
+    "flag": "crossover_barb_nereo_beachwear_design_process"
+   }
+  ],
+  "image": "/rpg-assets/events/cg/season01/crossover_barb_nereo_beachwear_design.webp",
+  "artPending": true,
+  "beachwear": {
+   "palette": "deep ocean blue and dune beige",
+   "cut": "bikini print concept with shoreline contour lines and matching swim shorts for the seaside crew",
+   "detail": "A tiny compass point that doubles as the collection emblem.",
+   "wearer": "showcase design; wearer to be selected with consent",
+   "stage": "concept"
+  },
+  "art": {
+   "scene": "Barb and nereo at a public beachwear design consultation, discussing fabric swatches and a fashion illustration on the table. Nereo brings contour maps instead of clothing references A bikini is shown ONLY as a garment sketch on paper; nereo is dressed in their usual clothing. The proposed design: deep ocean blue and dune beige, bikini print concept with shoreline contour lines and matching swim shorts for the seaside crew.",
+   "composition": "Single 16:9 cinematic workshop consultation, Barb and nereo both clearly recognizable, design sketch foreground, bottom 20% clear for dialogue; no split panels or actual swimsuit changing.",
+   "outfit": "Canonical approved everyday outfits for both characters; beachwear exists only as sketch and swatch in this initial event.",
+   "expression": "Characterful collaborative design discussion",
+   "environment": "park",
+   "mood": "friendly professional and lighthearted",
+   "fanservice": 0
+  }
+ },
+ {
+  "id": "crossover_barb_elena_beachwear_design",
+  "npc": "barb",
+  "participants": [
+   "barb",
+   "elena"
+  ],
+  "encounterType": "slice",
+  "trigger": "talk",
+  "place": "cafe",
+  "slot": 2,
+  "start": 30,
+  "end": 90,
+  "minAffection": 0,
+  "title": "An Appointment for Elena",
+  "lines": [
+   {
+    "speaker": "Narrator",
+    "text": "Elena books a calm, private design consultation rather than joining a crowded fitting"
+   },
+   {
+    "speaker": "elena",
+    "text": "I don't want to be the center of attention. I just want to enjoy a day outside."
+   },
+   {
+    "speaker": "barb",
+    "text": "Then we'll design something comfortable, with a cover-up you can put on whenever you like."
+   },
+   {
+    "speaker": "Protagonist",
+    "text": "So the soft rose and deep indigo palette will become a comfortable wrap-style bikini top with wide straps and high-waist bottoms plus a light overshirt?"
+   },
+   {
+    "speaker": "barb",
+    "text": "That's our starting point. We'll adjust the fit and finish together. A tiny stitched rose detail near the hem."
+   },
+   {
+    "speaker": "elena",
+    "text": "I want the finished outfit to feel like me, not just look good on paper."
+   },
+   {
+    "speaker": "Narrator",
+    "text": "Barb lays out fabric swatches and draws the first complete design, ready for the wearer's approval."
+   }
+  ],
+  "choices": [
+   {
+    "label": "Help let Elena choose the coverage and overshirt length",
+    "reply": "Elena relaxes as the sketch changes to reflect exactly what she asked for.",
+    "kind": "creative",
+    "delta": {
+     "affection": 1,
+     "trust": 1,
+     "respect": 1,
+     "attraction": 0
+    },
+    "flag": "crossover_barb_elena_beachwear_design_collaboration"
+   },
+   {
+    "label": "Ask Barb to explain the pattern construction",
+    "reply": "Barb traces every seam and adjustment while elena listens closely. The sketch is labelled and safely packed away for the next fitting.",
+    "kind": "support",
+    "delta": {
+     "affection": 1,
+     "trust": 1,
+     "respect": 0,
+     "attraction": 0
+    },
+    "flag": "crossover_barb_elena_beachwear_design_process"
+   }
+  ],
+  "image": "/rpg-assets/events/cg/season01/crossover_barb_elena_beachwear_design.webp",
+  "artPending": true,
+  "beachwear": {
+   "palette": "soft rose and deep indigo",
+   "cut": "comfortable wrap-style bikini top with wide straps and high-waist bottoms plus a light overshirt",
+   "detail": "A tiny stitched rose detail near the hem.",
+   "wearer": "elena",
+   "stage": "concept"
+  },
+  "art": {
+   "scene": "Barb and elena at a public beachwear design consultation, discussing fabric swatches and a fashion illustration on the table. Elena books a calm, private design consultation rather than joining a crowded fitting Both characters fully clothed; bikini is shown as fashion sketches and fabric samples only. The proposed design: soft rose and deep indigo, comfortable wrap-style bikini top with wide straps and high-waist bottoms plus a light overshirt.",
+   "composition": "Single 16:9 cinematic workshop consultation, Barb and elena both clearly recognizable, design sketch foreground, bottom 20% clear for dialogue; no split panels or actual swimsuit changing.",
+   "outfit": "Canonical approved everyday outfits for both characters; beachwear exists only as sketch and swatch in this initial event.",
+   "expression": "Characterful collaborative design discussion",
+   "environment": "cafe",
+   "mood": "friendly professional and lighthearted",
+   "fanservice": 0
+  }
+ },
+ {
+  "id": "crossover_barb_jinx_beachwear_design",
+  "npc": "barb",
+  "participants": [
+   "barb",
+   "jinx"
+  ],
+  "encounterType": "slice",
+  "trigger": "talk",
+  "place": "park",
+  "slot": 2,
+  "start": 19,
+  "end": 90,
+  "minAffection": 0,
+  "title": "Graffiti Meets Sea Spray",
+  "lines": [
+   {
+    "speaker": "Narrator",
+    "text": "Jinx presents Barb with a page of paint splashes that would overwhelm any swimsuit"
+   },
+   {
+    "speaker": "jinx",
+    "text": "I want it to look like the ocean joined my crew."
+   },
+   {
+    "speaker": "barb",
+    "text": "Then give the colors room to breathe. Even rebellion needs negative space."
+   },
+   {
+    "speaker": "Protagonist",
+    "text": "So the ultraviolet, black and electric cyan palette will become a sporty bikini with graffiti-inspired colorblocking and secure straps?"
+   },
+   {
+    "speaker": "barb",
+    "text": "That's our starting point. We'll adjust the fit and finish together. A discreet graffiti tag worked into the hem instead of a giant logo."
+   },
+   {
+    "speaker": "jinx",
+    "text": "I want the finished outfit to feel like me, not just look good on paper."
+   },
+   {
+    "speaker": "Narrator",
+    "text": "Barb lays out fabric swatches and draws the first complete design, ready for the wearer's approval."
+   }
+  ],
+  "choices": [
+   {
+    "label": "Help help Jinx simplify the shapes without losing the attitude",
+    "reply": "Jinx calls the final color study 'chaos with a plan' and signs it.",
+    "kind": "creative",
+    "delta": {
+     "affection": 1,
+     "trust": 1,
+     "respect": 1,
+     "attraction": 0
+    },
+    "flag": "crossover_barb_jinx_beachwear_design_collaboration"
+   },
+   {
+    "label": "Ask Barb to explain the pattern construction",
+    "reply": "Barb traces every seam and adjustment while jinx listens closely. The sketch is labelled and safely packed away for the next fitting.",
+    "kind": "support",
+    "delta": {
+     "affection": 1,
+     "trust": 1,
+     "respect": 0,
+     "attraction": 0
+    },
+    "flag": "crossover_barb_jinx_beachwear_design_process"
+   }
+  ],
+  "image": "/rpg-assets/events/cg/season01/crossover_barb_jinx_beachwear_design.webp",
+  "artPending": true,
+  "beachwear": {
+   "palette": "ultraviolet, black and electric cyan",
+   "cut": "sporty bikini with graffiti-inspired colorblocking and secure straps",
+   "detail": "A discreet graffiti tag worked into the hem instead of a giant logo.",
+   "wearer": "jinx",
+   "stage": "concept"
+  },
+  "art": {
+   "scene": "Barb and jinx at a public beachwear design consultation, discussing fabric swatches and a fashion illustration on the table. Jinx presents Barb with a page of paint splashes that would overwhelm any swimsuit Both characters fully clothed; bikini is shown as fashion sketches and fabric samples only. The proposed design: ultraviolet, black and electric cyan, sporty bikini with graffiti-inspired colorblocking and secure straps.",
+   "composition": "Single 16:9 cinematic workshop consultation, Barb and jinx both clearly recognizable, design sketch foreground, bottom 20% clear for dialogue; no split panels or actual swimsuit changing.",
+   "outfit": "Canonical approved everyday outfits for both characters; beachwear exists only as sketch and swatch in this initial event.",
+   "expression": "Characterful collaborative design discussion",
+   "environment": "park",
+   "mood": "friendly professional and lighthearted",
+   "fanservice": 0
+  }
+ },
+ {
+  "id": "crossover_barb_laca_beachwear_design",
+  "npc": "barb",
+  "participants": [
+   "barb",
+   "laca"
+  ],
+  "encounterType": "slice",
+  "trigger": "talk",
+  "place": "park",
+  "slot": 1,
+  "start": 21,
+  "end": 90,
+  "minAffection": 0,
+  "title": "The Lifeguard's Day Off",
+  "lines": [
+   {
+    "speaker": "Narrator",
+    "text": "Laca wants an off-duty look distinct from her functional red lifeguard uniform"
+   },
+   {
+    "speaker": "laca",
+    "text": "I spend all day looking like I'm on shift. I want people to know I'm relaxing."
+   },
+   {
+    "speaker": "barb",
+    "text": "Then we keep your sporty style and change the color story just enough."
+   },
+   {
+    "speaker": "Protagonist",
+    "text": "So the red, cream and dusky turquoise palette will become a secure sporty bikini, modest coverage and adjustable straps with a matching light cover-up?"
+   },
+   {
+    "speaker": "barb",
+    "text": "That's our starting point. We'll adjust the fit and finish together. A tiny wave emblem instead of any rescue-service insignia."
+   },
+   {
+    "speaker": "laca",
+    "text": "I want the finished outfit to feel like me, not just look good on paper."
+   },
+   {
+    "speaker": "Narrator",
+    "text": "Barb lays out fabric swatches and draws the first complete design, ready for the wearer's approval."
+   }
+  ],
+  "choices": [
+   {
+    "label": "Help test the outfit's secure movement without treating it as work gear",
+    "reply": "Laca laughs when Barb tells her she is officially allowed to sit still.",
+    "kind": "creative",
+    "delta": {
+     "affection": 1,
+     "trust": 1,
+     "respect": 1,
+     "attraction": 0
+    },
+    "flag": "crossover_barb_laca_beachwear_design_collaboration"
+   },
+   {
+    "label": "Ask Barb to explain the pattern construction",
+    "reply": "Barb traces every seam and adjustment while laca listens closely. The sketch is labelled and safely packed away for the next fitting.",
+    "kind": "support",
+    "delta": {
+     "affection": 1,
+     "trust": 1,
+     "respect": 0,
+     "attraction": 0
+    },
+    "flag": "crossover_barb_laca_beachwear_design_process"
+   }
+  ],
+  "image": "/rpg-assets/events/cg/season01/crossover_barb_laca_beachwear_design.webp",
+  "artPending": true,
+  "beachwear": {
+   "palette": "red, cream and dusky turquoise",
+   "cut": "secure sporty bikini, modest coverage and adjustable straps with a matching light cover-up",
+   "detail": "A tiny wave emblem instead of any rescue-service insignia.",
+   "wearer": "laca",
+   "stage": "concept"
+  },
+  "art": {
+   "scene": "Barb and laca at a public beachwear design consultation, discussing fabric swatches and a fashion illustration on the table. Laca wants an off-duty look distinct from her functional red lifeguard uniform Both characters fully clothed; bikini is shown as fashion sketches and fabric samples only. The proposed design: red, cream and dusky turquoise, secure sporty bikini, modest coverage and adjustable straps with a matching light cover-up.",
+   "composition": "Single 16:9 cinematic workshop consultation, Barb and laca both clearly recognizable, design sketch foreground, bottom 20% clear for dialogue; no split panels or actual swimsuit changing.",
+   "outfit": "Canonical approved everyday outfits for both characters; beachwear exists only as sketch and swatch in this initial event.",
+   "expression": "Characterful collaborative design discussion",
+   "environment": "park",
+   "mood": "friendly professional and lighthearted",
+   "fanservice": 0
+  }
+ },
+ {
+  "id": "crossover_barb_luna_beachwear_design",
+  "npc": "barb",
+  "participants": [
+   "barb",
+   "luna"
+  ],
+  "encounterType": "slice",
+  "trigger": "talk",
+  "place": "shop",
+  "slot": 1,
+  "start": 18,
+  "end": 90,
+  "minAffection": 0,
+  "title": "A Little Moonlight",
+  "lines": [
+   {
+    "speaker": "Narrator",
+    "text": "Luna is afraid her tastes will seem too quiet compared with everyone else's"
+   },
+   {
+    "speaker": "luna",
+    "text": "Mine is going to look boring next to Jinx's."
+   },
+   {
+    "speaker": "barb",
+    "text": "Yours should feel like you. A calm palette can be the most memorable thing in the room."
+   },
+   {
+    "speaker": "Protagonist",
+    "text": "So the midnight blue and pale lilac palette will become a soft square-neck bikini with a gently draped high-rise bottom and optional beach cardigan?"
+   },
+   {
+    "speaker": "barb",
+    "text": "That's our starting point. We'll adjust the fit and finish together. Subtle crescent stitching hidden in the cardigan cuff."
+   },
+   {
+    "speaker": "luna",
+    "text": "I want the finished outfit to feel like me, not just look good on paper."
+   },
+   {
+    "speaker": "Narrator",
+    "text": "Barb lays out fabric swatches and draws the first complete design, ready for the wearer's approval."
+   }
+  ],
+  "choices": [
+   {
+    "label": "Help help Luna choose the softer of two fabrics",
+    "reply": "Luna brushes the lilac fabric between her fingers and makes the choice herself.",
+    "kind": "creative",
+    "delta": {
+     "affection": 1,
+     "trust": 1,
+     "respect": 1,
+     "attraction": 0
+    },
+    "flag": "crossover_barb_luna_beachwear_design_collaboration"
+   },
+   {
+    "label": "Ask Barb to explain the pattern construction",
+    "reply": "Barb traces every seam and adjustment while luna listens closely. The sketch is labelled and safely packed away for the next fitting.",
+    "kind": "support",
+    "delta": {
+     "affection": 1,
+     "trust": 1,
+     "respect": 0,
+     "attraction": 0
+    },
+    "flag": "crossover_barb_luna_beachwear_design_process"
+   }
+  ],
+  "image": "/rpg-assets/events/cg/season01/crossover_barb_luna_beachwear_design.webp",
+  "artPending": true,
+  "beachwear": {
+   "palette": "midnight blue and pale lilac",
+   "cut": "soft square-neck bikini with a gently draped high-rise bottom and optional beach cardigan",
+   "detail": "Subtle crescent stitching hidden in the cardigan cuff.",
+   "wearer": "luna",
+   "stage": "concept"
+  },
+  "art": {
+   "scene": "Barb and luna at a public beachwear design consultation, discussing fabric swatches and a fashion illustration on the table. Luna is afraid her tastes will seem too quiet compared with everyone else's Both characters fully clothed; bikini is shown as fashion sketches and fabric samples only. The proposed design: midnight blue and pale lilac, soft square-neck bikini with a gently draped high-rise bottom and optional beach cardigan.",
+   "composition": "Single 16:9 cinematic workshop consultation, Barb and luna both clearly recognizable, design sketch foreground, bottom 20% clear for dialogue; no split panels or actual swimsuit changing.",
+   "outfit": "Canonical approved everyday outfits for both characters; beachwear exists only as sketch and swatch in this initial event.",
+   "expression": "Characterful collaborative design discussion",
+   "environment": "shop",
+   "mood": "friendly professional and lighthearted",
+   "fanservice": 0
+  }
+ },
+ {
+  "id": "crossover_barb_rina_beachwear_design",
+  "npc": "barb",
+  "participants": [
+   "barb",
+   "rina"
+  ],
+  "encounterType": "slice",
+  "trigger": "talk",
+  "place": "cafe",
+  "slot": 2,
+  "start": 21,
+  "end": 90,
+  "minAffection": 0,
+  "title": "A Star Without a Stage",
+  "lines": [
+   {
+    "speaker": "Narrator",
+    "text": "Rina asks for something pretty that doesn't feel like a stage costume"
+   },
+   {
+    "speaker": "rina",
+    "text": "Everyone picks glitter when I say I'm a performer."
+   },
+   {
+    "speaker": "barb",
+    "text": "Do you want glitter?"
+   },
+   {
+    "speaker": "Protagonist",
+    "text": "So the rose pink and sea-green palette will become a playful retro bikini top with supportive broad straps and high-rise bottoms plus a coordinating tied cover-up?"
+   },
+   {
+    "speaker": "barb",
+    "text": "That's our starting point. We'll adjust the fit and finish together. A single small star sewn at the waist instead of sequins."
+   },
+   {
+    "speaker": "rina",
+    "text": "I want the finished outfit to feel like me, not just look good on paper."
+   },
+   {
+    "speaker": "Narrator",
+    "text": "Barb lays out fabric swatches and draws the first complete design, ready for the wearer's approval."
+   }
+  ],
+  "choices": [
+   {
+    "label": "Help ask Rina to describe the beach day she actually imagines",
+    "reply": "Rina sketches friends and food instead of spotlights and picks the softer palette.",
+    "kind": "creative",
+    "delta": {
+     "affection": 1,
+     "trust": 1,
+     "respect": 1,
+     "attraction": 0
+    },
+    "flag": "crossover_barb_rina_beachwear_design_collaboration"
+   },
+   {
+    "label": "Ask Barb to explain the pattern construction",
+    "reply": "Barb traces every seam and adjustment while rina listens closely. The sketch is labelled and safely packed away for the next fitting.",
+    "kind": "support",
+    "delta": {
+     "affection": 1,
+     "trust": 1,
+     "respect": 0,
+     "attraction": 0
+    },
+    "flag": "crossover_barb_rina_beachwear_design_process"
+   }
+  ],
+  "image": "/rpg-assets/events/cg/season01/crossover_barb_rina_beachwear_design.webp",
+  "artPending": true,
+  "beachwear": {
+   "palette": "rose pink and sea-green",
+   "cut": "playful retro bikini top with supportive broad straps and high-rise bottoms plus a coordinating tied cover-up",
+   "detail": "A single small star sewn at the waist instead of sequins.",
+   "wearer": "rina",
+   "stage": "concept"
+  },
+  "art": {
+   "scene": "Barb and rina at a public beachwear design consultation, discussing fabric swatches and a fashion illustration on the table. Rina asks for something pretty that doesn't feel like a stage costume Both characters fully clothed; bikini is shown as fashion sketches and fabric samples only. The proposed design: rose pink and sea-green, playful retro bikini top with supportive broad straps and high-rise bottoms plus a coordinating tied cover-up.",
+   "composition": "Single 16:9 cinematic workshop consultation, Barb and rina both clearly recognizable, design sketch foreground, bottom 20% clear for dialogue; no split panels or actual swimsuit changing.",
+   "outfit": "Canonical approved everyday outfits for both characters; beachwear exists only as sketch and swatch in this initial event.",
+   "expression": "Characterful collaborative design discussion",
+   "environment": "cafe",
+   "mood": "friendly professional and lighthearted",
+   "fanservice": 0
+  }
+ },
+ {
+  "id": "crossover_barb_sierra_beachwear_design",
+  "npc": "barb",
+  "participants": [
+   "barb",
+   "sierra"
+  ],
+  "encounterType": "slice",
+  "trigger": "talk",
+  "place": "park",
+  "slot": 2,
+  "start": 19,
+  "end": 90,
+  "minAffection": 0,
+  "title": "The Trail to the Tide",
+  "lines": [
+   {
+    "speaker": "Narrator",
+    "text": "Sierra expects to be exploring as much as swimming"
+   },
+   {
+    "speaker": "sierra",
+    "text": "I need something that survives a walk, a swim, and sitting on a rock to watch the waves."
+   },
+   {
+    "speaker": "barb",
+    "text": "That sounds like three outfit tests. Great. I love a challenge."
+   },
+   {
+    "speaker": "Protagonist",
+    "text": "So the terracotta and ocean teal palette will become a outdoorsy cross-back bikini top, flexible swim shorts and a sun-protective overshirt?"
+   },
+   {
+    "speaker": "barb",
+    "text": "That's our starting point. We'll adjust the fit and finish together. A stitched tiny trail-marker symbol on the overshirt."
+   },
+   {
+    "speaker": "sierra",
+    "text": "I want the finished outfit to feel like me, not just look good on paper."
+   },
+   {
+    "speaker": "Narrator",
+    "text": "Barb lays out fabric swatches and draws the first complete design, ready for the wearer's approval."
+   }
+  ],
+  "choices": [
+   {
+    "label": "Help help Sierra test the range of motion in the prototype",
+    "reply": "Sierra gives the practical version the highest possible praise: she'd pack it.",
+    "kind": "creative",
+    "delta": {
+     "affection": 1,
+     "trust": 1,
+     "respect": 1,
+     "attraction": 0
+    },
+    "flag": "crossover_barb_sierra_beachwear_design_collaboration"
+   },
+   {
+    "label": "Ask Barb to explain the pattern construction",
+    "reply": "Barb traces every seam and adjustment while sierra listens closely. The sketch is labelled and safely packed away for the next fitting.",
+    "kind": "support",
+    "delta": {
+     "affection": 1,
+     "trust": 1,
+     "respect": 0,
+     "attraction": 0
+    },
+    "flag": "crossover_barb_sierra_beachwear_design_process"
+   }
+  ],
+  "image": "/rpg-assets/events/cg/season01/crossover_barb_sierra_beachwear_design.webp",
+  "artPending": true,
+  "beachwear": {
+   "palette": "terracotta and ocean teal",
+   "cut": "outdoorsy cross-back bikini top, flexible swim shorts and a sun-protective overshirt",
+   "detail": "A stitched tiny trail-marker symbol on the overshirt.",
+   "wearer": "sierra",
+   "stage": "concept"
+  },
+  "art": {
+   "scene": "Barb and sierra at a public beachwear design consultation, discussing fabric swatches and a fashion illustration on the table. Sierra expects to be exploring as much as swimming Both characters fully clothed; bikini is shown as fashion sketches and fabric samples only. The proposed design: terracotta and ocean teal, outdoorsy cross-back bikini top, flexible swim shorts and a sun-protective overshirt.",
+   "composition": "Single 16:9 cinematic workshop consultation, Barb and sierra both clearly recognizable, design sketch foreground, bottom 20% clear for dialogue; no split panels or actual swimsuit changing.",
+   "outfit": "Canonical approved everyday outfits for both characters; beachwear exists only as sketch and swatch in this initial event.",
+   "expression": "Characterful collaborative design discussion",
+   "environment": "park",
+   "mood": "friendly professional and lighthearted",
+   "fanservice": 0
+  }
+ },
+ {
+  "id": "crossover_barb_sol_beachwear_design",
+  "npc": "barb",
+  "participants": [
+   "barb",
+   "sol"
+  ],
+  "encounterType": "slice",
+  "trigger": "talk",
+  "place": "park",
+  "slot": 1,
+  "start": 21,
+  "end": 90,
+  "minAffection": 0,
+  "title": "Golden-Hour Colors",
+  "lines": [
+   {
+    "speaker": "Narrator",
+    "text": "Sol wants the colors of her favorite riverside sunset without sacrificing comfort"
+   },
+   {
+    "speaker": "sol",
+    "text": "I love this photograph. Can you turn the feeling into fabric?"
+   },
+   {
+    "speaker": "barb",
+    "text": "The warmth, yes. The sunset's actual temperature, no."
+   },
+   {
+    "speaker": "Protagonist",
+    "text": "So the golden amber and sky blue palette will become a balanced halter bikini with supportive neck-free conversion straps and a light sarong?"
+   },
+   {
+    "speaker": "barb",
+    "text": "That's our starting point. We'll adjust the fit and finish together. A gradient stripe along the sarong edge."
+   },
+   {
+    "speaker": "sol",
+    "text": "I want the finished outfit to feel like me, not just look good on paper."
+   },
+   {
+    "speaker": "Narrator",
+    "text": "Barb lays out fabric swatches and draws the first complete design, ready for the wearer's approval."
+   }
+  ],
+  "choices": [
+   {
+    "label": "Help hold the fabric samples up in evening light",
+    "reply": "Sol decides the real fabric looks even lovelier than the photograph.",
+    "kind": "creative",
+    "delta": {
+     "affection": 1,
+     "trust": 1,
+     "respect": 1,
+     "attraction": 0
+    },
+    "flag": "crossover_barb_sol_beachwear_design_collaboration"
+   },
+   {
+    "label": "Ask Barb to explain the pattern construction",
+    "reply": "Barb traces every seam and adjustment while sol listens closely. The sketch is labelled and safely packed away for the next fitting.",
+    "kind": "support",
+    "delta": {
+     "affection": 1,
+     "trust": 1,
+     "respect": 0,
+     "attraction": 0
+    },
+    "flag": "crossover_barb_sol_beachwear_design_process"
+   }
+  ],
+  "image": "/rpg-assets/events/cg/season01/crossover_barb_sol_beachwear_design.webp",
+  "artPending": true,
+  "beachwear": {
+   "palette": "golden amber and sky blue",
+   "cut": "balanced halter bikini with supportive neck-free conversion straps and a light sarong",
+   "detail": "A gradient stripe along the sarong edge.",
+   "wearer": "sol",
+   "stage": "concept"
+  },
+  "art": {
+   "scene": "Barb and sol at a public beachwear design consultation, discussing fabric swatches and a fashion illustration on the table. Sol wants the colors of her favorite riverside sunset without sacrificing comfort Both characters fully clothed; bikini is shown as fashion sketches and fabric samples only. The proposed design: golden amber and sky blue, balanced halter bikini with supportive neck-free conversion straps and a light sarong.",
+   "composition": "Single 16:9 cinematic workshop consultation, Barb and sol both clearly recognizable, design sketch foreground, bottom 20% clear for dialogue; no split panels or actual swimsuit changing.",
+   "outfit": "Canonical approved everyday outfits for both characters; beachwear exists only as sketch and swatch in this initial event.",
+   "expression": "Characterful collaborative design discussion",
+   "environment": "park",
+   "mood": "friendly professional and lighthearted",
+   "fanservice": 0
+  }
+ }
+]);
  const pendingArt=events.map(e=>({id:e.id,path:e.image,participants:e.participants,title:e.title,brief:e.art.scene,composition:e.art.composition,status:'PENDING_CG'}));
  function validate(){const issues=[],ids=new Set();for(const e of events){if(ids.has(e.id))issues.push('Duplicate '+e.id);ids.add(e.id);if(e.participants.length<2||e.participants[0]!==e.npc||e.lines.length<5||!e.choices?.length||!e.image.endsWith(e.id+'.webp'))issues.push('Invalid '+e.id);if(e.prerequisite&&!ids.has(e.prerequisite)&&!events.some(x=>x.id===e.prerequisite))issues.push('Unknown prerequisite '+e.id);}return issues;}
  return Object.freeze({events,pendingArt,validate});
