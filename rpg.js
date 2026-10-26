@@ -219,7 +219,7 @@ function recordIntention(kind){const result=INTENTIONS.record(state,kind);if(res
 function recordCG(kind,npc,context=null){
  const entries=CG.record(state,kind,npc,context);
  for(const entry of entries)if(!entry.artPending&&cgScenePresenter?.hasShown(entry.id))CG.markViewed(state,entry.id);
- if(entries.length)log(entries.length+' new memory illustration'+(entries.length===1?'':'s')+' unlocked for the CG Gallery.');
+ if(entries.length)log(entries.length+' new CG Gallery memor'+(entries.length===1?'y':'ies')+' unlocked.');
  return entries;
 }
 let scene=state.scene&&typeof state.scene.speaker==='string'&&typeof state.scene.line==='string'&&Array.isArray(state.scene.choices)?state.scene:{speaker:'Narrator',line:'Ninety days. One championship. You came to Neo Harbor to win. Everyone else has their own plans.',choices:[]};
@@ -600,7 +600,7 @@ function renderSliceOfLife(){
   const lines=SLICE.linesFor(state,e.id),reply=active.step===lines.length;
   const current=reply?{speaker:e.npc,text:e.choices[active.choice].reply}:lines[active.step];
   const choices=!reply&&active.step===lines.length-1?e.choices.map((c,i)=>[c.label,'sliceChoice:'+i]):[['Continue ›','sliceNext']];
-  return {speaker:cast[current.speaker]?.name||current.speaker,line:current.text,choices};
+  return {speaker:current.speaker==='Protagonist'?'You':(cast[current.speaker]?.name||current.speaker),line:current.text,choices};
  }
  const lines=e.lines?.length?e.lines.map(part=>({speaker:cast[part.speaker]?.name||(part.speaker==='Protagonist'?'You':part.speaker),line:part.text})):
   [{speaker:'Narrator',line:e.intro},{speaker:cast[e.npc]?.name||e.npc,line:e.line},{speaker:'Narrator',line:e.close}];
