@@ -303,11 +303,11 @@ test('Lower CPU levels retain their existing Active Energy scoring',()=>{
   AI.score(attachActive,safe,lower,{}));
 });
 
-test('Apex penalizes doomed Active Energy when an existing Jab was already affordable',()=>{
+test('Apex penalizes doomed Active Energy when Low Kick was already affordable',()=>{
  const threatened=threatenedActiveEnergyBoard();
- // Jab already works with one Fighting; adding another cannot improve it or
- // unlock Special Punch, and the opponent can knock out this Active next turn.
- threatened.self.active={id:HITMONCHAN,energies:[FIGHT],damage:60,status:null};
+ // Machop's Low Kick is already affordable. Its one-Energy retreat cost is
+ // also already paid, so the second attachment adds no new escape or attack.
+ threatened.self.active={id:MACHOP,energies:[FIGHT],damage:40,status:null};
  const safe=structuredClone(threatened);
  safe.opponent.active.energies=[];
  assert.equal(AI.score(attachActive,safe,cfg,{})-
@@ -327,7 +327,7 @@ test('Apex keeps the immediate attack-upgrade exception for Special Punch',()=>{
 });
 test('Level 6 does not inherit the new already-ready attack penalty',()=>{
  const threatened=threatenedActiveEnergyBoard();
- threatened.self.active={id:HITMONCHAN,energies:[FIGHT],damage:60,status:null};
+ threatened.self.active={id:MACHOP,energies:[FIGHT],damage:40,status:null};
  const safe=structuredClone(threatened);
  safe.opponent.active.energies=[];
  const lower=AI.configuration({side:1,level:6});
