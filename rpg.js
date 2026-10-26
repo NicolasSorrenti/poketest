@@ -2009,9 +2009,13 @@ function portraitPaths(id,expression='neutral',sceneId=activeOutfitSceneId){
 // Curated VN stage sources: approved full-figure artwork, never face crops.
 // Only the stage uses these choices; dialogue avatars, boosters, and CGs retain
 // their own artwork paths. Original image files remain untouched.
+// Curated stage portraits use artist-approved full-figure assets from the existing
+// repository. Mixed-framing expression groups use a stable neutral stage sprite,
+// not a new crop or an automatically guessed zoom.
+const STABLE_STAGE_GROUPS=new Set(['akari','camila','hana','kaede','marina','reina','shiori','teo','yuna']);
 const MANUAL_STAGE_PORTRAITS={
  barb:{base:'/rpg-assets/characters/barb/vn-expressions/neutral.webp',
-  expressions:{happy:'happy',surprised:'surprised',irritated:'angry',vulnerable:'sad',determined:'neutral'} ,
+  expressions:{happy:'happy',surprised:'surprised',irritated:'angry',vulnerable:'sad',determined:'neutral'},
   directory:'/rpg-assets/characters/barb/vn-expressions/',scale:1,offsetX:0,offsetY:0},
  laca:{base:'/rpg-assets/characters/laca/outfits/casual/neutral.webp',scale:1,offsetX:0,offsetY:0},
  rina:{base:'/rpg-assets/characters/rina/neutral.png',scale:1,offsetX:0,offsetY:0},
@@ -2021,6 +2025,18 @@ const MANUAL_STAGE_PORTRAITS={
   extension:'.png',scale:1,offsetX:0,offsetY:0},
  sierra:{base:'/rpg-assets/characters/sierra/portrait.png',scale:1,offsetX:0,offsetY:0}
 };
+for(const id of ['akari','alma','camila','elena','elio','hana','iris','jinx','jun','kaede','luna','marina','nereo','reina','shiori','teo','yuna']){
+ const directory='/rpg-assets/characters/'+id+'/expression-portraits/';
+ const stable=STABLE_STAGE_GROUPS.has(id);
+ MANUAL_STAGE_PORTRAITS[id]={
+  base:directory+'neutral.webp',directory,extension:'.webp',
+  // Emotion variants are only promoted into the stage when the original set
+  // has a consistent canvas/composition. Other expressions remain available
+  // to the smaller avatar UI through the original resolver.
+  expressions:stable?{neutral:'neutral',happy:'happy',surprised:'surprised',vulnerable:'soft',irritated:'concerned',determined:'neutral'}:{neutral:'neutral'},
+  scale:1,offsetX:0,offsetY:0
+ };
+}
 function stagePortraitPaths(id,expression,sceneId){
  const normal=portraitPaths(id,expression,sceneId);
  const manual=MANUAL_STAGE_PORTRAITS[id];
