@@ -9,7 +9,7 @@
 <script src="/rpg_error_diagnostics.js?v=20261026-diagnostics-1"></script>
 <script src="/rpg_discreet.js"></script>
 <script src="/rpg_discreet_avatars.js?v=2"></script>
-<link rel="stylesheet" href="/rpg.css?v=20261024-preduel-back">
+<link rel="stylesheet" href="/rpg.css?v=20261026-in-scene-cg">
 <link rel="stylesheet" href="/rpg_cloud_save.css?v=2">
 <link rel="stylesheet" href="/rpg_time_transitions.css">
 <link rel="stylesheet" href="/rpg_ui_motion.css">
@@ -109,6 +109,7 @@
         </div>
         <div class="home-banner" id="homeBanner">YOUR APARTMENT — Prepare, plan or rest.</div>
         <div class="rpg-discreet-stage" aria-hidden="true"><span class="rpg-discreet-stage__symbol">N/H</span><span class="rpg-discreet-stage__subtitle">STORY · TACTICS · CONNECTIONS</span></div>
+        <img id="rpgSceneCG" class="rpg-scene-cg" alt="" aria-label="Scene illustration" hidden>
         <div id="portrait" class="portrait" aria-label="Character illustration"></div>
         <div id="dialogue" class="dialogue" aria-live="polite">
           <div class="dialogue-title"><span id="speaker">Narrator</span><span class="vn-label">NEO HARBOR / STORY</span></div>
@@ -268,12 +269,6 @@
  <div id="galleryPreview" class="cg-preview" aria-live="polite"></div>
 </dialog>
 
-<dialog id="cgMoment" class="modal cg-moment" aria-label="New character event illustration">
- <div class="modal-heading"><h2 id="cgMomentTitle">New memory</h2><button id="cgMomentClose" type="button">Continue →</button></div>
- <div id="cgMomentArt" class="cg-moment-art"></div>
- <p id="cgMomentCaption"></p>
-</dialog>
-
 <dialog id="preDuelDialog" class="modal preduel-dialog" aria-label="Before the duel" aria-modal="true">
  <div class="preduel-top">
   <span class="preduel-eyebrow">✧ NEO HARBOR · BEFORE THE DUEL</span>
@@ -349,6 +344,6 @@
 </div>
 
 <script src="/rpg_cg_viewer.js?v=1" defer></script>
-<script src="/rpg_character_bootstrap.js?v=20261026-slice-dependencies"></script>
+<script src="/rpg_character_bootstrap.js?v=20261026-in-scene-cg"></script>
 </body>
 </html>

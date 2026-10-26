@@ -465,3 +465,17 @@
  .mobile-events h2{font:800 22px 'Barlow Condensed';color:#f8bad0;margin:0 0 8px}
 }
 @media(min-width:701px){.mobile-events{display:none}}
+
+/* Event CGs use the stage itself, never a blocking popup. The full approved
+   composition remains visible, with normal dialogue and response UI above it. */
+#scene.has-story-cg{background-color:#090e1c}
+#scene .rpg-scene-cg{position:absolute;inset:0;z-index:1;width:100%;height:100%;object-fit:contain;object-position:center;background:#090e1c;pointer-events:none}
+#scene.has-story-cg::after{display:none}
+#scene.has-story-cg .scene-head,
+#scene.has-story-cg .home-banner,
+#scene.has-story-cg .portrait,
+#scene.has-story-cg .rpg-scene-cast,
+#scene.has-story-cg .rpg-discreet-stage,
+#scene.has-story-cg .rpg-action-dock{display:none!important}
+#scene.has-story-cg .dialogue{z-index:4}
+#scene.has-story-cg .player-choice-prompt{z-index:6}
