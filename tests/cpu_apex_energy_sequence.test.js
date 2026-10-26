@@ -206,11 +206,14 @@ function superEnergyRemovalBoard(benchEnergies=null){
  const o=board();
  o.self.active.energies=[FIGHT,FIGHT];
  o.self.bench=benchEnergies===null?[]:[{id:MACHOP,energies:benchEnergies,damage:0}];
- o.self.hand=['base1-108']; // Super Energy Removal
+ o.self.hand=['base1-79']; // Super Energy Removal
  o.opponent.active.energies=[FIGHT,FIGHT];
  return o;
 }
 const playSuperEnergyRemoval={type:'play_trainer',payload:{handIndex:0}};
+test('Super Energy Removal fixture uses the real Base Set Trainer',()=>{
+ assert.equal(require('../headless_duel').CATALOG.get('base1-79')?.name,'Super Energy Removal');
+});
 test('Apex does not mistake an Energy-free Bench for cheap Super Energy Removal payment',()=>{
  const noBench=superEnergyRemovalBoard();
  const emptyBench=superEnergyRemovalBoard([]);
