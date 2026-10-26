@@ -5,7 +5,7 @@ on:
       - 'rpg_slice_of_life.js'
       - 'rpg_cg_gallery.js'
       - 'rpg.js'
-      - 'tests/rpg_slice_of_life.test.js'
+      - 'tests/rpg_archived_random_cgs.test.js'
       - 'tests/rpg_cg_gallery.test.js'
       - 'rpg-assets/events/cg/slice-life/*.png'
       - '.github/workflows/original-cg-events.yml'
@@ -22,4 +22,4 @@ jobs:
           node --check rpg.js
           node --check rpg_cg_gallery.js
           node --check rpg_slice_of_life.js
-          node --test tests/rpg_slice_of_life.test.js tests/rpg_cg_gallery.test.js
+          node --test tests/rpg_archived_random_cgs.test.js tests/rpg_cg_gallery.test.js

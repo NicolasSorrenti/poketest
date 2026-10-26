@@ -1151,7 +1151,16 @@
    state.activeSliceOfLife||state.pendingDuel||state.mandatoryEventState?.active)return [];
   // Protect an existing routine stop from crowd balancing while an unseen encounter is possible.
   // This never moves a character away from their authored weekly schedule; route/meeting overrides win.
-  return (PACKS?.packs||[]).flatMap(pack=>{
+  // Pin only an eligible character's existing weekly stop while the random CG
+  // is available. This prevents crowd balancing from making the event impossible.
+  hydrate(state);
+  const originalOverrides=originalRandomCGs.filter(e=>{
+   const pack=(PACKS?.packs||[]).find(p=>p.id===e.npc);
+   return pack&&pack.schedule[(state.day-1)%7]?.[state.slot]===e.place&&
+    state.day>=e.start&&state.day<=e.end&&!state.sliceOfLifeDone?.[e.id]&&
+    state['met_'+e.npc]&&(state.relationships?.[e.npc]?.affection||0)>=e.minAffection&&randomEligible(state,e);
+  }).map(e=>({npc:e.npc,place:e.place,slot:e.slot,start:state.day,end:state.day}));
+  const guestOverrides=(PACKS?.packs||[]).flatMap(pack=>{
    const place=pack.schedule[(state.day-1)%7]?.[state.slot];
    if(state.day<pack.arrivalDay||!state['met_'+pack.id])return [];
     const possible=scenes.some(e=>e.encounterType==='slice'&&e.npc===pack.id&&e.place===place&&e.slot===state.slot&&
@@ -1160,6 +1169,7 @@
     (state.relationships?.[e.npc]?.affection||0)>=e.minAffection);
    return possible?[{npc:pack.id,place,slot:state.slot,start:state.day,end:state.day}]:[];
   });
+  return [...originalOverrides,...guestOverrides];
  }
  function linesFor(state,id){
   const e=index.get(id);if(!e?.lines)return [];
@@ -1237,7 +1247,7 @@
   const errors=[],ids=new Set();for(const e of scenes){
    if(ids.has(e.id))errors.push('duplicate '+e.id);ids.add(e.id);
    if(!e.id||!e.npc||!e.place||!['entry','talk'].includes(e.trigger)||e.slot<0||e.slot>2||
-    e.start<1||e.end>90||e.start>e.end||!e.title||!e.intro||!e.line||!e.close||
+    e.start<1||e.end>90||e.start>e.end||!e.title||(!e.lines?.length&&(!e.intro||!e.line||!e.close))||
     (e.randomForced&&(!Number.isInteger(e.chancePercent)||e.chancePercent<1||e.chancePercent>100||!e.image||!e.lines?.length)))errors.push('invalid '+e.id);
   }return errors;
  }

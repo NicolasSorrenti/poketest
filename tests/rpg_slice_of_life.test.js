@@ -15,11 +15,9 @@ const save=(moment,day=dayAt(moment))=>({
 });
 test('original pairs and eleven optional Barb encounters have no duplicate IDs',()=>{
  assert.deepEqual(SLICE.validate(),[]);
- const original=SLICE.scenes.filter(e=>!e.randomForced);
- assert.equal(original.length,45);
- assert.equal(SLICE.scenes.filter(e=>e.randomForced).length,7);
- for(const npc of characters)assert.equal(original.filter(e=>e.npc===npc).length,2,npc);
- assert.equal(new Set(SLICE.scenes.map(e=>e.id)).size,SLICE.scenes.length);
+ assert.equal(SLICE.scenes.length,45);
+ for(const npc of characters)assert.equal(SLICE.scenes.filter(e=>e.npc===npc).length,2,npc);
+ assert.equal(new Set(SLICE.scenes.map(e=>e.id)).size,45);
  assert.deepEqual(CG.validate(),[]);
  for(const e of SLICE.scenes){
   const cg=CG.byId(e.id);assert.ok(cg,'missing CG brief '+e.id);
@@ -28,7 +26,7 @@ test('original pairs and eleven optional Barb encounters have no duplicate IDs',
  }
 });
 test('every moment has a real authorized character-pack or base schedule opportunity',()=>{
- for(const e of SLICE.scenes.filter(e=>!e.randomForced)){
+ for(const e of SLICE.scenes){
   assert.ok(dayAt(e)!==null,e.id+' is impossible to encounter');
   const s=save(e);
   assert.ok(SLICE.available(s,[e.npc],e.trigger,e.npc).some(x=>x.id===e.id),e.id);
@@ -38,7 +36,7 @@ test('every moment has a real authorized character-pack or base schedule opportu
  }
 });
 test('a location or conversation scene triggers once, without consuming time or focus',()=>{
- for(const e of SLICE.scenes.filter(e=>!e.choices&&!e.randomForced)){
+ for(const e of SLICE.scenes.filter(e=>!e.choices)){
   const s=save(e),before={day:s.day,slot:s.slot,focus:s.focus};
   const started=SLICE.start(s,[e.npc],e.trigger,e.npc);
   assert.equal(started?.id,e.id);
@@ -63,35 +61,4 @@ test('active RPG content, unintroduced NPCs, and same-day repeats block surprise
  assert.equal(SLICE.available({...s,mandatoryEventState:{active:{id:'scene'}}},[e.npc],e.trigger,e.npc).length,0);
  assert.equal(SLICE.available({...s,sliceOfLifeLastDay:s.day},[e.npc],e.trigger,e.npc).length,0);
  assert.equal(CG.record(s,'slice',e.npc,{eventId:e.id}).length,0,'no CG before a scene begins');
-});
-
-test('seven non-Jinx original CGs play once on persistent random entry rolls',()=>{
- const events=SLICE.scenes.filter(e=>e.randomForced);
- assert.equal(events.length,7);
- for(const e of events){
-  assert.notEqual(e.npc,'jinx');
-  assert.ok(dayAt(e)!==null,e.id+' has an attainable scheduled slot');
-  assert.ok(require('node:fs').existsSync(require('node:path').join(__dirname,'..',e.image.slice(1))));
-  assert.equal(CG.byId(e.id)?.path,e.image);
-  assert.equal(CG.byId(e.id)?.thumb,e.image);
-  let s;
-  for(let seed=0;seed<1000;seed++){
-   const attempt={...save(e),randomForcedCGSeed:seed};
-   if(SLICE.available(attempt,[e.npc],'entry',e.npc,{onlyRandomForced:true}).some(x=>x.id===e.id)){s=attempt;break;}
-  }
-  assert.ok(s,e.id+' cannot be rolled');
-  assert.deepEqual(SLICE.available({...s,activeStory:{id:'other'}},[e.npc],'entry',e.npc,{onlyRandomForced:true}),[]);
-  assert.deepEqual(SLICE.available(s,[e.npc],'talk',e.npc,{onlyRandomForced:true}),[]);
-  for(const other of events)if(other.id!==e.id)s.sliceOfLifeDone[other.id]={day:1,slot:0};
-  const selected=SLICE.start(s,[e.npc],'entry',e.npc,{onlyRandomForced:true});
-  assert.equal(selected?.id,e.id);
-  assert.equal(s.sliceOfLifeDone[e.id].day,s.day);
-  assert.deepEqual(CG.record(s,'slice',e.npc,{eventId:e.id}).map(x=>x.id),[e.id]);
-  const loaded=JSON.parse(JSON.stringify(s));SLICE.hydrate(loaded);
-  assert.equal(loaded.randomForcedCGSeed,s.randomForcedCGSeed);
-  for(let i=1;i<e.lines.length;i++)assert.equal(SLICE.next(loaded).step,i);
-  assert.equal(SLICE.next(loaded).done,true);
-  assert.equal(loaded.activeSliceOfLife,null);
-  assert.equal(SLICE.start(loaded,[e.npc],'entry',e.npc,{onlyRandomForced:true}),null);
- }
 });
