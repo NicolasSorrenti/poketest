@@ -1114,6 +1114,13 @@
   return items;
  }
  const categories=Object.freeze(['profile','pre_duel','social','special']);
+ // In the browser, the schedule registry reflects the server-authorized character packs.
+ // Never publish private/excluded character memories in the player's album.
+ const SCHEDULES=typeof module==='object'&&module.exports?require('./rpg_schedules'):window.NeoRpgSchedules;
+ if(SCHEDULES?.start){
+  const authorized=new Set(Object.keys(SCHEDULES.start));
+  for(let i=catalog.length-1;i>=0;i--)if(!authorized.has(catalog[i].character))catalog.splice(i,1);
+ }
  const map=new Map(catalog.map(x=>[x.id,x]));
  const validTriggers=new Set(['meet','before_duel','hangout','situation','slice','appointment','story_milestone','after_duel']);
  function hydrate(state){
