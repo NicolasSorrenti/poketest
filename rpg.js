@@ -218,7 +218,7 @@ window.NeoRpgErrorReport?.setContextProvider(()=>{
 function recordIntention(kind){const result=INTENTIONS.record(state,kind);if(result)log('Daily priority fulfilled: '+result.title+' ('+result.rewardLabel+').');}
 function recordCG(kind,npc,context=null){
  const entries=CG.record(state,kind,npc,context);
- for(const entry of entries)if(cgScenePresenter?.hasShown(entry.id))CG.markViewed(state,entry.id);
+ for(const entry of entries)if(!entry.artPending&&cgScenePresenter?.hasShown(entry.id))CG.markViewed(state,entry.id);
  if(entries.length)log(entries.length+' new memory illustration'+(entries.length===1?'':'s')+' unlocked for the CG Gallery.');
  return entries;
 }
@@ -2325,6 +2325,7 @@ function render(){
  const sceneScript=showingMandatory?.lines||
   (showingStory?storyDialogueLines(showingStory.id):null)||
   (showingArc?ARC.linesFor(state,showingArc.id):null)||
+  (showingSlice?.lines?.length?SLICE.linesFor(state,showingSlice.id):null)||
   (sideQuest?SIDE.linesFor(state,state.activeSideQuest.id):null)||[];
  const remoteScene=!!showingMandatory&&showingMandatory.kind==='bond'&&
   (showingMandatory.delivery==='remote'||
