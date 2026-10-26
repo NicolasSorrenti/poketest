@@ -1,0 +1,164 @@
+{
+  "repository": "NicolasSorrenti/poketest",
+  "branch": "art/overworld-character-refresh",
+  "head": "8902bb3ed26c8f3f2c8646a1a26c14b2522b8e49",
+  "generated_count": 0,
+  "reviewed_expressions_per_character": [
+    "happy",
+    "soft"
+  ],
+  "files": [
+    {
+      "character": "akari",
+      "expression": "happy",
+      "status": "reuse_existing_reviewed",
+      "runtime_target": "/rpg-assets/characters/akari/expression-portraits/happy.webp",
+      "ready_file": "/workspace/scratch/4a8bc1383fdd/parallel-next/akari/ready/akari/happy.webp",
+      "thumbnail": "/workspace/scratch/4a8bc1383fdd/parallel-next/akari/thumbnails/akari/happy.png",
+      "sha256": "107b4f21ca287263bf3a23154f694f5d18e8c553a718acee0e68a1821724a4ae",
+      "dimensions": [
+        512,
+        1024
+      ],
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "source_ref": "8902bb3ed26c8f3f2c8646a1a26c14b2522b8e49",
+      "source_path": "rpg-assets/characters/akari/expression-portraits/happy.webp"
+    },
+    {
+      "character": "akari",
+      "expression": "soft",
+      "status": "reuse_existing_reviewed",
+      "runtime_target": "/rpg-assets/characters/akari/expression-portraits/soft.webp",
+      "ready_file": "/workspace/scratch/4a8bc1383fdd/parallel-next/akari/ready/akari/soft.webp",
+      "thumbnail": "/workspace/scratch/4a8bc1383fdd/parallel-next/akari/thumbnails/akari/soft.png",
+      "sha256": "b4c79636f9dfe32224827d33177c068c5ec1680590ca9d331cd0e24dc9add134",
+      "dimensions": [
+        512,
+        1024
+      ],
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "source_ref": "8902bb3ed26c8f3f2c8646a1a26c14b2522b8e49",
+      "source_path": "rpg-assets/characters/akari/expression-portraits/soft.webp"
+    },
+    {
+      "character": "camila",
+      "expression": "happy",
+      "status": "reuse_existing_reviewed",
+      "runtime_target": "/rpg-assets/characters/camila/expression-portraits/happy.webp",
+      "ready_file": "/workspace/scratch/4a8bc1383fdd/parallel-next/akari/ready/camila/happy.webp",
+      "thumbnail": "/workspace/scratch/4a8bc1383fdd/parallel-next/akari/thumbnails/camila/happy.png",
+      "sha256": "572f193425c99a1c6438c05e545dbb73c03f04757de9f7db81aefcc3b6aacded",
+      "dimensions": [
+        512,
+        1024
+      ],
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "source_ref": "8902bb3ed26c8f3f2c8646a1a26c14b2522b8e49",
+      "source_path": "rpg-assets/characters/camila/expression-portraits/happy.webp"
+    },
+    {
+      "character": "camila",
+      "expression": "soft",
+      "status": "reuse_existing_reviewed",
+      "runtime_target": "/rpg-assets/characters/camila/expression-portraits/soft.webp",
+      "ready_file": "/workspace/scratch/4a8bc1383fdd/parallel-next/akari/ready/camila/soft.webp",
+      "thumbnail": "/workspace/scratch/4a8bc1383fdd/parallel-next/akari/thumbnails/camila/soft.png",
+      "sha256": "f4cb0313c2aa162d1524f3d60bd1337f0ddb631a40a78b88d2943f51d5b54053",
+      "dimensions": [
+        512,
+        1024
+      ],
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "source_ref": "8902bb3ed26c8f3f2c8646a1a26c14b2522b8e49",
+      "source_path": "rpg-assets/characters/camila/expression-portraits/soft.webp"
+    },
+    {
+      "character": "kaede",
+      "expression": "happy",
+      "status": "reuse_existing_reviewed",
+      "runtime_target": "/rpg-assets/characters/kaede/expression-portraits/happy.webp",
+      "ready_file": "/workspace/scratch/4a8bc1383fdd/parallel-next/akari/ready/kaede/happy.webp",
+      "thumbnail": "/workspace/scratch/4a8bc1383fdd/parallel-next/akari/thumbnails/kaede/happy.png",
+      "sha256": "c1f40fac84acdc0a5757f7fd45754f02f29395806854123e741c7f13a6df0d6c",
+      "dimensions": [
+        512,
+        1024
+      ],
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "source_ref": "8902bb3ed26c8f3f2c8646a1a26c14b2522b8e49",
+      "source_path": "rpg-assets/characters/kaede/expression-portraits/happy.webp"
+    },
+    {
+      "character": "kaede",
+      "expression": "soft",
+      "status": "reuse_existing_reviewed",
+      "runtime_target": "/rpg-assets/characters/kaede/expression-portraits/soft.webp",
+      "ready_file": "/workspace/scratch/4a8bc1383fdd/parallel-next/akari/ready/kaede/soft.webp",
+      "thumbnail": "/workspace/scratch/4a8bc1383fdd/parallel-next/akari/thumbnails/kaede/soft.png",
+      "sha256": "2a97066cb77a6a91be734cac161104a4099542f4b32356c45c7ef6efac10018a",
+      "dimensions": [
+        512,
+        1024
+      ],
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "source_ref": "8902bb3ed26c8f3f2c8646a1a26c14b2522b8e49",
+      "source_path": "rpg-assets/characters/kaede/expression-portraits/soft.webp"
+    },
+    {
+      "character": "marina",
+      "expression": "happy",
+      "status": "reuse_existing_reviewed",
+      "runtime_target": "/rpg-assets/characters/marina/expression-portraits/happy.webp",
+      "ready_file": "/workspace/scratch/4a8bc1383fdd/parallel-next/akari/ready/marina/happy.webp",
+      "thumbnail": "/workspace/scratch/4a8bc1383fdd/parallel-next/akari/thumbnails/marina/happy.png",
+      "sha256": "44adac2a8558f163a35741f4404413e0c2ba18ae559809d3f29bffcf59908925",
+      "dimensions": [
+        512,
+        1024
+      ],
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "source_ref": "8902bb3ed26c8f3f2c8646a1a26c14b2522b8e49",
+      "source_path": "rpg-assets/characters/marina/expression-portraits/happy.webp"
+    },
+    {
+      "character": "marina",
+      "expression": "soft",
+      "status": "reuse_existing_reviewed",
+      "runtime_target": "/rpg-assets/characters/marina/expression-portraits/soft.webp",
+      "ready_file": "/workspace/scratch/4a8bc1383fdd/parallel-next/akari/ready/marina/soft.webp",
+      "thumbnail": "/workspace/scratch/4a8bc1383fdd/parallel-next/akari/thumbnails/marina/soft.png",
+      "sha256": "241d5c9095a4f1812beafdf9d7d0ca50894792c0b74dfa5ee92bfe006e3f390e",
+      "dimensions": [
+        512,
+        1024
+      ],
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "source_ref": "8902bb3ed26c8f3f2c8646a1a26c14b2522b8e49",
+      "source_path": "rpg-assets/characters/marina/expression-portraits/soft.webp"
+    }
+  ]
+}

@@ -1,0 +1,528 @@
+{
+  "repository": "NicolasSorrenti/poketest",
+  "branch": "art/overworld-character-refresh",
+  "commit": "8902bb3ed26c8f3f2c8646a1a26c14b2522b8e49",
+  "reviewed_non_neutral": [
+    "happy",
+    "surprised"
+  ],
+  "files": [
+    {
+      "file": "ready/rpg-assets/characters/iris/expression-portraits/neutral.webp",
+      "runtime_target": "/rpg-assets/characters/iris/expression-portraits/neutral.webp",
+      "source": "rpg-assets/iris.png",
+      "reason": "Reuse viewed canonical portrait; no identity redesign",
+      "width": 1024,
+      "height": 1536,
+      "alpha_extrema": [
+        0,
+        254
+      ],
+      "sha256": "20c1204f82f0223a22b071d302e6abca6d9d06b5ddc5d79a3fd5b3df4a2ffc83",
+      "source_sha256": "6a02a16d9c886008766f971754a0b05ec54d8c0de3d6e3c97682dc6389c14ebb",
+      "thumbnail": "thumbnails/rpg-assets/characters/iris/expression-portraits/neutral.png"
+    },
+    {
+      "file": "ready/rpg-assets/characters/iris/vn-expressions/neutral.webp",
+      "runtime_target": "/rpg-assets/characters/iris/vn-expressions/neutral.webp",
+      "source": "rpg-assets/iris.png",
+      "reason": "Canonical replacement of mismatching legacy battle/scene art",
+      "width": 1024,
+      "height": 1536,
+      "alpha_extrema": [
+        0,
+        254
+      ],
+      "sha256": "20c1204f82f0223a22b071d302e6abca6d9d06b5ddc5d79a3fd5b3df4a2ffc83",
+      "source_sha256": "6a02a16d9c886008766f971754a0b05ec54d8c0de3d6e3c97682dc6389c14ebb",
+      "thumbnail": "thumbnails/rpg-assets/characters/iris/vn-expressions/neutral.png"
+    },
+    {
+      "file": "ready/rpg-assets/characters/iris/expression-portraits/happy.webp",
+      "runtime_target": "/rpg-assets/characters/iris/expression-portraits/happy.webp",
+      "source": "rpg-assets/characters/iris/expression-portraits/happy.webp",
+      "reason": "Reuse viewed canonical portrait; no identity redesign",
+      "width": 512,
+      "height": 1024,
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "sha256": "96ddcfef13abd022d1db2802731bcc4a3080bff8b74eaf105bcb76f6840d8cc5",
+      "source_sha256": "96ddcfef13abd022d1db2802731bcc4a3080bff8b74eaf105bcb76f6840d8cc5",
+      "thumbnail": "thumbnails/rpg-assets/characters/iris/expression-portraits/happy.png"
+    },
+    {
+      "file": "ready/rpg-assets/characters/iris/vn-expressions/happy.webp",
+      "runtime_target": "/rpg-assets/characters/iris/vn-expressions/happy.webp",
+      "source": "rpg-assets/characters/iris/expression-portraits/happy.webp",
+      "reason": "Canonical replacement of mismatching legacy battle/scene art",
+      "width": 512,
+      "height": 1024,
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "sha256": "96ddcfef13abd022d1db2802731bcc4a3080bff8b74eaf105bcb76f6840d8cc5",
+      "source_sha256": "96ddcfef13abd022d1db2802731bcc4a3080bff8b74eaf105bcb76f6840d8cc5",
+      "thumbnail": "thumbnails/rpg-assets/characters/iris/vn-expressions/happy.png"
+    },
+    {
+      "file": "ready/rpg-assets/characters/iris/expression-portraits/surprised.webp",
+      "runtime_target": "/rpg-assets/characters/iris/expression-portraits/surprised.webp",
+      "source": "rpg-assets/characters/iris/expression-portraits/surprised.webp",
+      "reason": "Reuse viewed canonical portrait; no identity redesign",
+      "width": 512,
+      "height": 1024,
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "sha256": "faf3f8ce833238ff360850891d22026e60c59a939399d357c327ab0e7c38c708",
+      "source_sha256": "faf3f8ce833238ff360850891d22026e60c59a939399d357c327ab0e7c38c708",
+      "thumbnail": "thumbnails/rpg-assets/characters/iris/expression-portraits/surprised.png"
+    },
+    {
+      "file": "ready/rpg-assets/characters/iris/vn-expressions/surprised.webp",
+      "runtime_target": "/rpg-assets/characters/iris/vn-expressions/surprised.webp",
+      "source": "rpg-assets/characters/iris/expression-portraits/surprised.webp",
+      "reason": "Canonical replacement of mismatching legacy battle/scene art",
+      "width": 512,
+      "height": 1024,
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "sha256": "faf3f8ce833238ff360850891d22026e60c59a939399d357c327ab0e7c38c708",
+      "source_sha256": "faf3f8ce833238ff360850891d22026e60c59a939399d357c327ab0e7c38c708",
+      "thumbnail": "thumbnails/rpg-assets/characters/iris/vn-expressions/surprised.png"
+    },
+    {
+      "file": "ready/rpg-assets/characters/jinx/expression-portraits/neutral.webp",
+      "runtime_target": "/rpg-assets/characters/jinx/expression-portraits/neutral.webp",
+      "source": "rpg-assets/characters/jinx/neutral.png",
+      "reason": "Reuse viewed canonical portrait; no identity redesign",
+      "width": 1024,
+      "height": 1536,
+      "alpha_extrema": [
+        0,
+        254
+      ],
+      "sha256": "12c3e5511ce54c9745a19fe3a7cc3c60c4a2fc76ad746ffe81d4abb4ea016624",
+      "source_sha256": "d604b4a2de1746746f6e91808da9bf9428455291087fc9b0337fc75b04c24b3e",
+      "thumbnail": "thumbnails/rpg-assets/characters/jinx/expression-portraits/neutral.png"
+    },
+    {
+      "file": "ready/rpg-assets/characters/jinx/expression-portraits/happy.webp",
+      "runtime_target": "/rpg-assets/characters/jinx/expression-portraits/happy.webp",
+      "source": "rpg-assets/characters/jinx/expression-portraits/happy.webp",
+      "reason": "Reuse viewed canonical portrait; no identity redesign",
+      "width": 512,
+      "height": 1024,
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "sha256": "81125d4c1c137f92242d054f33e8f77dcef7a0050e7dc367a84ea71b2eaf8341",
+      "source_sha256": "81125d4c1c137f92242d054f33e8f77dcef7a0050e7dc367a84ea71b2eaf8341",
+      "thumbnail": "thumbnails/rpg-assets/characters/jinx/expression-portraits/happy.png"
+    },
+    {
+      "file": "ready/rpg-assets/characters/jinx/expression-portraits/surprised.webp",
+      "runtime_target": "/rpg-assets/characters/jinx/expression-portraits/surprised.webp",
+      "source": "rpg-assets/characters/jinx/expression-portraits/surprised.webp",
+      "reason": "Reuse viewed canonical portrait; no identity redesign",
+      "width": 512,
+      "height": 1024,
+      "alpha_extrema": [
+        0,
+        254
+      ],
+      "sha256": "74ee845a34de99bc5a820dceaf0a1d6f6614fe045981c69410876b74e4a80ebb",
+      "source_sha256": "74ee845a34de99bc5a820dceaf0a1d6f6614fe045981c69410876b74e4a80ebb",
+      "thumbnail": "thumbnails/rpg-assets/characters/jinx/expression-portraits/surprised.png"
+    },
+    {
+      "file": "ready/rpg-assets/characters/jinx/neutral.webp",
+      "runtime_target": "/rpg-assets/characters/jinx/neutral.webp",
+      "source": "rpg-assets/characters/jinx/neutral.png",
+      "reason": "Canonical neutral for current overworld art.expressions.neutral",
+      "width": 1024,
+      "height": 1536,
+      "alpha_extrema": [
+        0,
+        254
+      ],
+      "sha256": "12c3e5511ce54c9745a19fe3a7cc3c60c4a2fc76ad746ffe81d4abb4ea016624",
+      "source_sha256": "d604b4a2de1746746f6e91808da9bf9428455291087fc9b0337fc75b04c24b3e",
+      "thumbnail": "thumbnails/rpg-assets/characters/jinx/neutral.png"
+    },
+    {
+      "file": "ready/rpg-assets/characters/jun/expression-portraits/neutral.webp",
+      "runtime_target": "/rpg-assets/characters/jun/expression-portraits/neutral.webp",
+      "source": "rpg-assets/jun.png",
+      "reason": "Reuse viewed canonical portrait; no identity redesign",
+      "width": 1024,
+      "height": 1536,
+      "alpha_extrema": [
+        0,
+        254
+      ],
+      "sha256": "8edfd7384f1339f33e37f65aefcf06ec2707ea3b35ead5c1ac3cfcc403fab0b4",
+      "source_sha256": "93f6d57ebaed5673c71d4d9447e09088d5ab7b0caa766067b8ebc15471a0e9c6",
+      "thumbnail": "thumbnails/rpg-assets/characters/jun/expression-portraits/neutral.png"
+    },
+    {
+      "file": "ready/rpg-assets/characters/jun/vn-expressions/neutral.webp",
+      "runtime_target": "/rpg-assets/characters/jun/vn-expressions/neutral.webp",
+      "source": "rpg-assets/jun.png",
+      "reason": "Canonical replacement of mismatching legacy battle/scene art",
+      "width": 1024,
+      "height": 1536,
+      "alpha_extrema": [
+        0,
+        254
+      ],
+      "sha256": "8edfd7384f1339f33e37f65aefcf06ec2707ea3b35ead5c1ac3cfcc403fab0b4",
+      "source_sha256": "93f6d57ebaed5673c71d4d9447e09088d5ab7b0caa766067b8ebc15471a0e9c6",
+      "thumbnail": "thumbnails/rpg-assets/characters/jun/vn-expressions/neutral.png"
+    },
+    {
+      "file": "ready/rpg-assets/characters/jun/expression-portraits/happy.webp",
+      "runtime_target": "/rpg-assets/characters/jun/expression-portraits/happy.webp",
+      "source": "rpg-assets/characters/jun/expression-portraits/happy.webp",
+      "reason": "Reuse viewed canonical portrait; no identity redesign",
+      "width": 512,
+      "height": 1024,
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "sha256": "fc5b312c7451cba48c0d0ba789dd17c9766456d0d0e95b69114593c098e4a7a2",
+      "source_sha256": "fc5b312c7451cba48c0d0ba789dd17c9766456d0d0e95b69114593c098e4a7a2",
+      "thumbnail": "thumbnails/rpg-assets/characters/jun/expression-portraits/happy.png"
+    },
+    {
+      "file": "ready/rpg-assets/characters/jun/vn-expressions/happy.webp",
+      "runtime_target": "/rpg-assets/characters/jun/vn-expressions/happy.webp",
+      "source": "rpg-assets/characters/jun/expression-portraits/happy.webp",
+      "reason": "Canonical replacement of mismatching legacy battle/scene art",
+      "width": 512,
+      "height": 1024,
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "sha256": "fc5b312c7451cba48c0d0ba789dd17c9766456d0d0e95b69114593c098e4a7a2",
+      "source_sha256": "fc5b312c7451cba48c0d0ba789dd17c9766456d0d0e95b69114593c098e4a7a2",
+      "thumbnail": "thumbnails/rpg-assets/characters/jun/vn-expressions/happy.png"
+    },
+    {
+      "file": "ready/rpg-assets/characters/jun/expression-portraits/surprised.webp",
+      "runtime_target": "/rpg-assets/characters/jun/expression-portraits/surprised.webp",
+      "source": "rpg-assets/characters/jun/expression-portraits/surprised.webp",
+      "reason": "Reuse viewed canonical portrait; no identity redesign",
+      "width": 512,
+      "height": 1024,
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "sha256": "4e19aafa60976f11d1e397cff6ced1e87ff15cf5c2ec818e0df92e85cdaec2c0",
+      "source_sha256": "4e19aafa60976f11d1e397cff6ced1e87ff15cf5c2ec818e0df92e85cdaec2c0",
+      "thumbnail": "thumbnails/rpg-assets/characters/jun/expression-portraits/surprised.png"
+    },
+    {
+      "file": "ready/rpg-assets/characters/jun/vn-expressions/surprised.webp",
+      "runtime_target": "/rpg-assets/characters/jun/vn-expressions/surprised.webp",
+      "source": "rpg-assets/characters/jun/expression-portraits/surprised.webp",
+      "reason": "Canonical replacement of mismatching legacy battle/scene art",
+      "width": 512,
+      "height": 1024,
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "sha256": "4e19aafa60976f11d1e397cff6ced1e87ff15cf5c2ec818e0df92e85cdaec2c0",
+      "source_sha256": "4e19aafa60976f11d1e397cff6ced1e87ff15cf5c2ec818e0df92e85cdaec2c0",
+      "thumbnail": "thumbnails/rpg-assets/characters/jun/vn-expressions/surprised.png"
+    },
+    {
+      "file": "ready/rpg-assets/characters/luna/expression-portraits/neutral.webp",
+      "runtime_target": "/rpg-assets/characters/luna/expression-portraits/neutral.webp",
+      "source": "rpg-assets/characters/luna/neutral.png",
+      "reason": "Reuse viewed canonical portrait; no identity redesign",
+      "width": 1024,
+      "height": 1536,
+      "alpha_extrema": [
+        0,
+        254
+      ],
+      "sha256": "da4ebf4cbfd131cd1d88a40b286bc96b7bdcad1cd324210d9c155abc3139e956",
+      "source_sha256": "ffd66ab2bc4ea474ab564c6b5fe561d3c78649990f595ff5a5a9735c16cf7058",
+      "thumbnail": "thumbnails/rpg-assets/characters/luna/expression-portraits/neutral.png"
+    },
+    {
+      "file": "ready/rpg-assets/characters/luna/expression-portraits/happy.webp",
+      "runtime_target": "/rpg-assets/characters/luna/expression-portraits/happy.webp",
+      "source": "rpg-assets/characters/luna/expression-portraits/happy.webp",
+      "reason": "Reuse viewed canonical portrait; no identity redesign",
+      "width": 512,
+      "height": 1024,
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "sha256": "921bc31cb2387be35f7c0ca78d2ab5dafacaa5d3f775d6baefda92736b446b7b",
+      "source_sha256": "921bc31cb2387be35f7c0ca78d2ab5dafacaa5d3f775d6baefda92736b446b7b",
+      "thumbnail": "thumbnails/rpg-assets/characters/luna/expression-portraits/happy.png"
+    },
+    {
+      "file": "ready/rpg-assets/characters/luna/expression-portraits/surprised.webp",
+      "runtime_target": "/rpg-assets/characters/luna/expression-portraits/surprised.webp",
+      "source": "rpg-assets/characters/luna/expression-portraits/surprised.webp",
+      "reason": "Reuse viewed canonical portrait; no identity redesign",
+      "width": 512,
+      "height": 1024,
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "sha256": "b15ca21bcc7c9f2fdad29a22bf28bf68905c540fc115dd0d217937ab0f021b92",
+      "source_sha256": "b15ca21bcc7c9f2fdad29a22bf28bf68905c540fc115dd0d217937ab0f021b92",
+      "thumbnail": "thumbnails/rpg-assets/characters/luna/expression-portraits/surprised.png"
+    },
+    {
+      "file": "ready/rpg-assets/characters/luna/neutral.webp",
+      "runtime_target": "/rpg-assets/characters/luna/neutral.webp",
+      "source": "rpg-assets/characters/luna/neutral.png",
+      "reason": "Canonical neutral for current overworld art.expressions.neutral",
+      "width": 1024,
+      "height": 1536,
+      "alpha_extrema": [
+        0,
+        254
+      ],
+      "sha256": "da4ebf4cbfd131cd1d88a40b286bc96b7bdcad1cd324210d9c155abc3139e956",
+      "source_sha256": "ffd66ab2bc4ea474ab564c6b5fe561d3c78649990f595ff5a5a9735c16cf7058",
+      "thumbnail": "thumbnails/rpg-assets/characters/luna/neutral.png"
+    },
+    {
+      "file": "ready/rpg-assets/characters/nereo/expression-portraits/neutral.webp",
+      "runtime_target": "/rpg-assets/characters/nereo/expression-portraits/neutral.webp",
+      "source": "rpg-assets/nereo.png",
+      "reason": "Reuse viewed canonical portrait; no identity redesign",
+      "width": 1024,
+      "height": 1536,
+      "alpha_extrema": [
+        0,
+        254
+      ],
+      "sha256": "5e139827b4f6dda21cee5bbfbed1a7c9edb03c1c48565271ea2a7afc21fdb3dc",
+      "source_sha256": "b2a2576a22afd5e98d7947be77974901918cc42d30ea207acf267979d23456ab",
+      "thumbnail": "thumbnails/rpg-assets/characters/nereo/expression-portraits/neutral.png"
+    },
+    {
+      "file": "ready/rpg-assets/characters/nereo/vn-expressions/neutral.webp",
+      "runtime_target": "/rpg-assets/characters/nereo/vn-expressions/neutral.webp",
+      "source": "rpg-assets/nereo.png",
+      "reason": "Canonical replacement of mismatching legacy battle/scene art",
+      "width": 1024,
+      "height": 1536,
+      "alpha_extrema": [
+        0,
+        254
+      ],
+      "sha256": "5e139827b4f6dda21cee5bbfbed1a7c9edb03c1c48565271ea2a7afc21fdb3dc",
+      "source_sha256": "b2a2576a22afd5e98d7947be77974901918cc42d30ea207acf267979d23456ab",
+      "thumbnail": "thumbnails/rpg-assets/characters/nereo/vn-expressions/neutral.png"
+    },
+    {
+      "file": "ready/rpg-assets/characters/nereo/expression-portraits/happy.webp",
+      "runtime_target": "/rpg-assets/characters/nereo/expression-portraits/happy.webp",
+      "source": "rpg-assets/characters/nereo/expression-portraits/happy.webp",
+      "reason": "Reuse viewed canonical portrait; no identity redesign",
+      "width": 512,
+      "height": 1024,
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "sha256": "c67eec999669fd189e4f352f81f07d819e98027237ef16971e7c3dcc90b1ee82",
+      "source_sha256": "c67eec999669fd189e4f352f81f07d819e98027237ef16971e7c3dcc90b1ee82",
+      "thumbnail": "thumbnails/rpg-assets/characters/nereo/expression-portraits/happy.png"
+    },
+    {
+      "file": "ready/rpg-assets/characters/nereo/vn-expressions/happy.webp",
+      "runtime_target": "/rpg-assets/characters/nereo/vn-expressions/happy.webp",
+      "source": "rpg-assets/characters/nereo/expression-portraits/happy.webp",
+      "reason": "Canonical replacement of mismatching legacy battle/scene art",
+      "width": 512,
+      "height": 1024,
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "sha256": "c67eec999669fd189e4f352f81f07d819e98027237ef16971e7c3dcc90b1ee82",
+      "source_sha256": "c67eec999669fd189e4f352f81f07d819e98027237ef16971e7c3dcc90b1ee82",
+      "thumbnail": "thumbnails/rpg-assets/characters/nereo/vn-expressions/happy.png"
+    },
+    {
+      "file": "ready/rpg-assets/characters/nereo/expression-portraits/surprised.webp",
+      "runtime_target": "/rpg-assets/characters/nereo/expression-portraits/surprised.webp",
+      "source": "rpg-assets/characters/nereo/expression-portraits/surprised.webp",
+      "reason": "Reuse viewed canonical portrait; no identity redesign",
+      "width": 512,
+      "height": 1024,
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "sha256": "4992c1e2d5f221c4b46d58a544a57972abf3d9901a641606828eb5e2910c6c24",
+      "source_sha256": "4992c1e2d5f221c4b46d58a544a57972abf3d9901a641606828eb5e2910c6c24",
+      "thumbnail": "thumbnails/rpg-assets/characters/nereo/expression-portraits/surprised.png"
+    },
+    {
+      "file": "ready/rpg-assets/characters/nereo/vn-expressions/surprised.webp",
+      "runtime_target": "/rpg-assets/characters/nereo/vn-expressions/surprised.webp",
+      "source": "rpg-assets/characters/nereo/expression-portraits/surprised.webp",
+      "reason": "Canonical replacement of mismatching legacy battle/scene art",
+      "width": 512,
+      "height": 1024,
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "sha256": "4992c1e2d5f221c4b46d58a544a57972abf3d9901a641606828eb5e2910c6c24",
+      "source_sha256": "4992c1e2d5f221c4b46d58a544a57972abf3d9901a641606828eb5e2910c6c24",
+      "thumbnail": "thumbnails/rpg-assets/characters/nereo/vn-expressions/surprised.png"
+    },
+    {
+      "file": "ready/rpg-assets/characters/teo/expression-portraits/neutral.webp",
+      "runtime_target": "/rpg-assets/characters/teo/expression-portraits/neutral.webp",
+      "source": "rpg-assets/characters/teo/expression-portraits/neutral.webp",
+      "reason": "Reuse viewed canonical portrait; no identity redesign",
+      "width": 512,
+      "height": 1024,
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "sha256": "6306d2ab42ebfd0ad4cb533f8b5cc86d24abee22304f3d69dc974a555c1a81aa",
+      "source_sha256": "6306d2ab42ebfd0ad4cb533f8b5cc86d24abee22304f3d69dc974a555c1a81aa",
+      "thumbnail": "thumbnails/rpg-assets/characters/teo/expression-portraits/neutral.png"
+    },
+    {
+      "file": "ready/rpg-assets/characters/teo/vn-expressions/neutral.webp",
+      "runtime_target": "/rpg-assets/characters/teo/vn-expressions/neutral.webp",
+      "source": "rpg-assets/characters/teo/expression-portraits/neutral.webp",
+      "reason": "Canonical replacement of mismatching legacy battle/scene art",
+      "width": 512,
+      "height": 1024,
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "sha256": "6306d2ab42ebfd0ad4cb533f8b5cc86d24abee22304f3d69dc974a555c1a81aa",
+      "source_sha256": "6306d2ab42ebfd0ad4cb533f8b5cc86d24abee22304f3d69dc974a555c1a81aa",
+      "thumbnail": "thumbnails/rpg-assets/characters/teo/vn-expressions/neutral.png"
+    },
+    {
+      "file": "ready/rpg-assets/characters/teo/expression-portraits/happy.webp",
+      "runtime_target": "/rpg-assets/characters/teo/expression-portraits/happy.webp",
+      "source": "rpg-assets/characters/teo/expression-portraits/happy.webp",
+      "reason": "Reuse viewed canonical portrait; no identity redesign",
+      "width": 512,
+      "height": 1024,
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "sha256": "2228e1505e149bd83b3af1a2aaed0ba5bc86dcf3aa8d9499b8a5cb0e946b9924",
+      "source_sha256": "2228e1505e149bd83b3af1a2aaed0ba5bc86dcf3aa8d9499b8a5cb0e946b9924",
+      "thumbnail": "thumbnails/rpg-assets/characters/teo/expression-portraits/happy.png"
+    },
+    {
+      "file": "ready/rpg-assets/characters/teo/vn-expressions/happy.webp",
+      "runtime_target": "/rpg-assets/characters/teo/vn-expressions/happy.webp",
+      "source": "rpg-assets/characters/teo/expression-portraits/happy.webp",
+      "reason": "Canonical replacement of mismatching legacy battle/scene art",
+      "width": 512,
+      "height": 1024,
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "sha256": "2228e1505e149bd83b3af1a2aaed0ba5bc86dcf3aa8d9499b8a5cb0e946b9924",
+      "source_sha256": "2228e1505e149bd83b3af1a2aaed0ba5bc86dcf3aa8d9499b8a5cb0e946b9924",
+      "thumbnail": "thumbnails/rpg-assets/characters/teo/vn-expressions/happy.png"
+    },
+    {
+      "file": "ready/rpg-assets/characters/teo/expression-portraits/surprised.webp",
+      "runtime_target": "/rpg-assets/characters/teo/expression-portraits/surprised.webp",
+      "source": "rpg-assets/characters/teo/expression-portraits/surprised.webp",
+      "reason": "Reuse viewed canonical portrait; no identity redesign",
+      "width": 512,
+      "height": 1024,
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "sha256": "5561590b7761539078c0319b0bb90388c25f181fdd0a266348f92f9142007187",
+      "source_sha256": "5561590b7761539078c0319b0bb90388c25f181fdd0a266348f92f9142007187",
+      "thumbnail": "thumbnails/rpg-assets/characters/teo/expression-portraits/surprised.png"
+    },
+    {
+      "file": "ready/rpg-assets/characters/teo/vn-expressions/surprised.webp",
+      "runtime_target": "/rpg-assets/characters/teo/vn-expressions/surprised.webp",
+      "source": "rpg-assets/characters/teo/expression-portraits/surprised.webp",
+      "reason": "Canonical replacement of mismatching legacy battle/scene art",
+      "width": 512,
+      "height": 1024,
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "sha256": "5561590b7761539078c0319b0bb90388c25f181fdd0a266348f92f9142007187",
+      "source_sha256": "5561590b7761539078c0319b0bb90388c25f181fdd0a266348f92f9142007187",
+      "thumbnail": "thumbnails/rpg-assets/characters/teo/vn-expressions/surprised.png"
+    },
+    {
+      "file": "ready/rpg-assets/characters/jinx/expression-portraits/concerned.webp",
+      "runtime_target": "/rpg-assets/characters/jinx/expression-portraits/concerned.webp",
+      "source": "rpg-assets/characters/jinx/expression-portraits/annoyed.webp",
+      "reason": "Reuse existing serious/frowning face for missing concerned fallback; semantic alias, no new generation",
+      "width": 512,
+      "height": 1024,
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "sha256": "d3e7a4549b5d524c62ac08e2e41a2840b6f7c532b5835310813e4d81e7e737a7",
+      "source_sha256": "d3e7a4549b5d524c62ac08e2e41a2840b6f7c532b5835310813e4d81e7e737a7",
+      "thumbnail": "thumbnails/rpg-assets/characters/jinx/expression-portraits/concerned.png"
+    },
+    {
+      "file": "ready/rpg-assets/characters/jinx/expression-portraits/soft.webp",
+      "runtime_target": "/rpg-assets/characters/jinx/expression-portraits/soft.webp",
+      "source": "attempts/jinx-soft-01.png",
+      "reason": "Genuinely missing compatible soft expression",
+      "width": 1024,
+      "height": 1536,
+      "alpha_extrema": [
+        0,
+        254
+      ],
+      "sha256": "a3b341b6202db7b3b4b0ffce29c9415741ffe480a612c3b9cc86d83d17c47c1b",
+      "thumbnail": "thumbnails/rpg-assets/characters/jinx/expression-portraits/soft.png"
+    }
+  ],
+  "generation": {
+    "tool": "built-in image_gen",
+    "transparent_background": true,
+    "attempts": 1,
+    "reference": "rpg-assets/characters/jinx/neutral.png",
+    "prompt": "attempts/jinx-soft-01-prompt.txt",
+    "review": "Accepted after viewing white and dark alpha composites; identity, hair, eyes and outfit retained. Original attempt preserved."
+  }
+}

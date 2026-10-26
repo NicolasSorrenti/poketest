@@ -1,0 +1,137 @@
+{
+  "repository": "NicolasSorrenti/poketest",
+  "branch": "art/overworld-character-refresh",
+  "pr": 140,
+  "head": "8902bb3ed26c8f3f2c8646a1a26c14b2522b8e49",
+  "github_tree_verified": true,
+  "tree_truncated": false,
+  "generated_attempts": 0,
+  "files": [
+    {
+      "character": "rina",
+      "expression_key": "neutral",
+      "source": "rpg-assets/characters/rina/expression-portraits/neutral.webp",
+      "ready_file": "/workspace/scratch/4a8bc1383fdd/parallel-next/rina/ready/rina/neutral.webp",
+      "missing_manifest_target": "/rpg-assets/characters/rina/neutral.webp",
+      "preferred_mapping_target": "/rpg-assets/characters/rina/expression-portraits/neutral.webp",
+      "sha256": "c9e246804132399bb282fee15461c2c489632a1047b71fd7537fc2051ef4f613",
+      "dimensions": [
+        512,
+        1024
+      ],
+      "mode": "RGBA",
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "thumbnail": "/workspace/scratch/4a8bc1383fdd/parallel-next/rina/thumbs/rina/neutral.png",
+      "decision": "reuse existing; remap manifest to existing path preferred",
+      "semantic_note": ""
+    },
+    {
+      "character": "rina",
+      "expression_key": "sparkle",
+      "source": "rpg-assets/characters/rina/expression-portraits/happy.webp",
+      "ready_file": "/workspace/scratch/4a8bc1383fdd/parallel-next/rina/ready/rina/sparkle.webp",
+      "missing_manifest_target": "/rpg-assets/characters/rina/sparkle.webp",
+      "preferred_mapping_target": "/rpg-assets/characters/rina/expression-portraits/happy.webp",
+      "sha256": "458bf14977b6cfdaa232b86dc24f0b2109472b8a8ab284b8d91f796466bf12de",
+      "dimensions": [
+        512,
+        1024
+      ],
+      "mode": "RGBA",
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "thumbnail": "/workspace/scratch/4a8bc1383fdd/parallel-next/rina/thumbs/rina/sparkle.png",
+      "decision": "reuse existing; remap manifest to existing path preferred",
+      "semantic_note": "sparkle can reuse cheerful happy; no distinct sparkle artwork verified"
+    },
+    {
+      "character": "sierra",
+      "expression_key": "neutral",
+      "source": "rpg-assets/characters/sierra/expression-portraits/neutral.webp",
+      "ready_file": "/workspace/scratch/4a8bc1383fdd/parallel-next/rina/ready/sierra/neutral.webp",
+      "missing_manifest_target": "/rpg-assets/characters/sierra/neutral.webp",
+      "preferred_mapping_target": "/rpg-assets/characters/sierra/expression-portraits/neutral.webp",
+      "sha256": "5065117c24c03454b6dab97e2ffa44d7ed938b3b1f262c8c38d9bf0d3d578fc9",
+      "dimensions": [
+        512,
+        1024
+      ],
+      "mode": "RGBA",
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "thumbnail": "/workspace/scratch/4a8bc1383fdd/parallel-next/rina/thumbs/sierra/neutral.png",
+      "decision": "reuse existing; remap manifest to existing path preferred",
+      "semantic_note": ""
+    },
+    {
+      "character": "sierra",
+      "expression_key": "soft",
+      "source": "rpg-assets/characters/sierra/expression-portraits/soft.webp",
+      "ready_file": "/workspace/scratch/4a8bc1383fdd/parallel-next/rina/ready/sierra/soft.webp",
+      "missing_manifest_target": "/rpg-assets/characters/sierra/soft.webp",
+      "preferred_mapping_target": "/rpg-assets/characters/sierra/expression-portraits/soft.webp",
+      "sha256": "ea6ada917bb90b4f875242d3f14de339ee32bff0fc0720b94bef1008296b0a3f",
+      "dimensions": [
+        512,
+        1024
+      ],
+      "mode": "RGBA",
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "thumbnail": "/workspace/scratch/4a8bc1383fdd/parallel-next/rina/thumbs/sierra/soft.png",
+      "decision": "reuse existing; remap manifest to existing path preferred",
+      "semantic_note": ""
+    },
+    {
+      "character": "sol",
+      "expression_key": "smile",
+      "source": "rpg-assets/characters/sol/expression-portraits/happy.webp",
+      "ready_file": "/workspace/scratch/4a8bc1383fdd/parallel-next/rina/ready/sol/smile.webp",
+      "missing_manifest_target": "/rpg-assets/characters/sol/smile.webp",
+      "preferred_mapping_target": "/rpg-assets/characters/sol/expression-portraits/happy.webp",
+      "sha256": "2aab6303ce6b868100331473e52040a405cd04c83356985f331aeae1fc333316",
+      "dimensions": [
+        512,
+        1024
+      ],
+      "mode": "RGBA",
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "thumbnail": "/workspace/scratch/4a8bc1383fdd/parallel-next/rina/thumbs/sol/smile.png",
+      "decision": "reuse existing; remap manifest to existing path preferred",
+      "semantic_note": ""
+    },
+    {
+      "character": "sol",
+      "expression_key": "surprised",
+      "source": "rpg-assets/characters/sol/expression-portraits/surprised.webp",
+      "ready_file": "/workspace/scratch/4a8bc1383fdd/parallel-next/rina/ready/sol/surprised.webp",
+      "missing_manifest_target": "/rpg-assets/characters/sol/surprised.webp",
+      "preferred_mapping_target": "/rpg-assets/characters/sol/expression-portraits/surprised.webp",
+      "sha256": "b577edbf7a32a6241b8d5822019b3ef8475a6299eb0b1d559a1017888e9e31de",
+      "dimensions": [
+        512,
+        1024
+      ],
+      "mode": "RGBA",
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "thumbnail": "/workspace/scratch/4a8bc1383fdd/parallel-next/rina/thumbs/sol/surprised.png",
+      "decision": "reuse existing; remap manifest to existing path preferred",
+      "semantic_note": ""
+    }
+  ]
+}

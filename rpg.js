@@ -1965,11 +1965,24 @@ function portraitPaths(id,expression='neutral',sceneId=activeOutfitSceneId){
   const name=['neutral','happy','soft','concerned','surprised'].includes(expression)?expression:'neutral';
   return ['/rpg-assets/characters/alma/expression-portraits/'+name+'.webp','/rpg-assets/alma.png'];
  }
+ // Explicit reviewed scene slots. Unknown emotions stay with canonical neutral/original.
+ const reviewedPairs={akari:['happy','soft'],camila:['happy','soft'],kaede:['happy','soft'],marina:['happy','soft'],
+  reina:['neutral','happy','surprised'],shiori:['neutral','happy','surprised'],yuna:['neutral','happy','surprised'],
+  iris:['neutral','happy','surprised'],jun:['neutral','happy','surprised'],nereo:['neutral','happy','surprised'],teo:['neutral','happy','surprised'],
+  hana:['neutral','happy','surprised','concerned','soft']};
+ const approved=reviewedPairs[id];
+ if(approved){
+  const fallback=cast[id].portrait||'/rpg-assets/'+id+'.png';
+  const alias=id==='hana'?({vulnerable:'soft',irritated:'concerned',determined:'neutral'}[expression]||expression):expression;
+  const name=approved.includes(alias)?alias:approved.includes('neutral')?'neutral':null;
+  return name?['/rpg-assets/characters/'+id+'/expression-portraits/'+name+'.webp',fallback]:[fallback];
+ }
  const fallback=cast[id].portrait||'/rpg-assets/'+id+'.png';
  let legacy='';
  if(expressionGuests.has(id))legacy='/rpg-assets/characters/'+id+'/vn-expressions/'+expression+'.webp';
  if(id==='sol')legacy='/rpg-assets/characters/sol/expressions/'+(solExpressions[expression]||'neutral')+'.png';
  const art=cast[id].outfitArt||window.NeoRpgCharacterPacks?.byId?.(id)?.art||null;
+ if(['rina','sierra','sol','jinx','luna'].includes(id)&&!Object.prototype.hasOwnProperty.call(art?.expressions||{},expression))expression='neutral';
  return OUTFITS?.sources?.(art,{location:state.location,slot:state.slot,day:state.day,sceneId},expression,{base:fallback,legacy})||[legacy,fallback].filter(Boolean);
 }
 function scenePortraitSource(id,expression,sceneId=activeOutfitSceneId){

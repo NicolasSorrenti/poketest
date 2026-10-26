@@ -3,17 +3,23 @@
   "characterId": "luna",
   "portrait": "/rpg-assets/characters/luna/neutral.png",
   "expressions": {
-    "neutral": "/rpg-assets/characters/luna/neutral.webp",
-    "shy": "/rpg-assets/characters/luna/shy.webp",
-    "panic": "/rpg-assets/characters/luna/panic.webp",
-    "blush": "/rpg-assets/characters/luna/blush.webp",
-    "happy": "/rpg-assets/characters/luna/happy.webp"
+    "neutral": "/rpg-assets/characters/luna/expression-portraits/neutral.webp",
+    "happy": "/rpg-assets/characters/luna/expression-portraits/happy.webp",
+    "surprised": "/rpg-assets/characters/luna/expression-portraits/surprised.webp",
+    "soft": "/rpg-assets/characters/luna/expression-portraits/soft.webp",
+    "concerned": "/rpg-assets/characters/luna/expression-portraits/concerned.webp",
+    "vulnerable": "/rpg-assets/characters/luna/expression-portraits/neutral.webp",
+    "irritated": "/rpg-assets/characters/luna/expression-portraits/neutral.webp",
+    "determined": "/rpg-assets/characters/luna/expression-portraits/neutral.webp",
+    "shy": "/rpg-assets/characters/luna/expression-portraits/neutral.webp",
+    "panic": "/rpg-assets/characters/luna/expression-portraits/surprised.webp",
+    "blush": "/rpg-assets/characters/luna/expression-portraits/neutral.webp"
   },
   "eventImages": [
     {
       "sceneId": "luna_route_1",
       "path": "/rpg-assets/characters/luna/luna_spill.webp",
-      "prompt": "Adult 18 year old Luna Quinn, soft anime visual novel style, extremely large breasts straining a too-small cream crop sweater, long pastel-lavender hair, violet eyes looking apologetic, she has just spilled a drink down her front, cardigan slipping off one shoulder, heavy unintentional fanservice, fully clothed SFW, café interior, Neo Harbor aesthetic, bottom 20 percent clear for text"
+      "prompt": "Adult 18 year old Luna Quinn, soft anime visual novel style, extremely large breasts straining a too-small cream crop sweater, long pastel-lavender hair, violet eyes looking apologetic, she has just spilled a drink down her front, cardigan slipping off one shoulder, heavy unintentional fanservice, fully clothed SFW, caf\u00e9 interior, Neo Harbor aesthetic, bottom 20 percent clear for text"
     },
     {
       "sceneId": "luna_route_3",

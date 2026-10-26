@@ -76,6 +76,19 @@
    return [...new Set([name,'neutral'])].map(expression=>
     '/rpg-assets/characters/alma/expression-portraits/'+expression+'.webp');
   }
+  if(npcId==='barb'&&['hurt','big_hit','weakness_hit','status_hit','ko_taken'].includes(kind)){
+   const name=kind==='ko_taken'?'soft':'concerned';
+   return ['/rpg-assets/characters/barb/expression-portraits/'+name+'.png',
+    '/rpg-assets/characters/barb/expression-portraits/neutral.webp'];
+  }
+  // These guest legacy sheets contain other identities; only the reviewed pair is active.
+  if(['iris','jun','nereo','teo','reina','shiori','yuna','hana'].includes(npcId)){
+   const happy=['attack','play_card','evolve','power','ko_scored'].includes(kind);
+   const hurt=['hurt','big_hit','weakness_hit','status_hit'].includes(kind);
+   const name=happy?'happy':hurt?'surprised':'neutral';
+   return [...new Set([name,'neutral'])].map(expression=>
+    '/rpg-assets/characters/'+npcId+'/expression-portraits/'+expression+'.webp');
+  }
   const group=VN_MAIN.has(npcId)?'main':VN_GUEST.has(npcId)?'guest':
    VN_PORTRAITS.has(npcId)?'portrait':null;
   if(!group)return [];

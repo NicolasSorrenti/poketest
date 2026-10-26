@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "characterId": "rina",
+  "portrait": "/rpg-assets/characters/rina/neutral.png",
+  "expressions": {
+    "neutral": "/rpg-assets/characters/rina/neutral.webp",
+    "sparkle": "/rpg-assets/characters/rina/sparkle.webp",
+    "determined": "/rpg-assets/characters/rina/determined.webp",
+    "shy": "/rpg-assets/characters/rina/shy.webp",
+    "stage": "/rpg-assets/characters/rina/stage.webp"
+  },
+  "eventImages": [
+    {
+      "sceneId": "rina_route_1",
+      "path": "/rpg-assets/characters/rina/rina_stage_after.webp",
+      "prompt": "Adult 18 year old Rina Hoshino, anime visual novel idol style, long pastel-pink hair in twin tails with ribbons, large aqua-blue eyes sparkling, wearing a short frilly stage skirt and cropped star-motif top with open sparkly jacket, bright cheerful smile, colorful and energetic, fully clothed SFW, Neo Harbor aesthetic, bottom 20 percent clear for text"
+    },
+    {
+      "sceneId": "rina_route_3",
+      "path": "/rpg-assets/characters/rina/rina_cards.webp",
+      "prompt": "Adult 18 year old Rina Hoshino sitting at a café table showing her card binder, long pastel-pink hair, genuine excited expression, still wearing parts of her idol outfit under a soft cardigan, large aqua eyes sparkling, anime visual novel CG, warm lighting, fully clothed SFW, Neo Harbor style, bottom 20 percent clear for dialogue"
+    }
+  ]
+}

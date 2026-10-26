@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "characterId": "sierra",
+  "portrait": "/rpg-assets/characters/sierra/portrait.png",
+  "expressions": {
+    "neutral": "/rpg-assets/characters/sierra/neutral.webp",
+    "cool": "/rpg-assets/characters/sierra/cool.webp",
+    "focused": "/rpg-assets/characters/sierra/focused.webp",
+    "soft": "/rpg-assets/characters/sierra/soft.webp",
+    "tired": "/rpg-assets/characters/sierra/tired.webp"
+  },
+  "eventImages": [
+    {
+      "sceneId": "sierra_route_1",
+      "path": "/rpg-assets/characters/sierra/sierra_after_shoot.webp",
+      "prompt": "Adult 18 year old Sierra Holt, anime visual novel style, extremely slim with tiny breasts and large round heavy ass, long dark brunette hair, hazel-green eyes, wearing a coral string bikini with an open sheer cover-up, standing near a park bench looking slightly tired but guarded, heavy lower-body fanservice, fully clothed SFW, Neo Harbor aesthetic, bottom 20 percent clear for text"
+    },
+    {
+      "sceneId": "sierra_route_3",
+      "path": "/rpg-assets/characters/sierra/sierra_deck_talk.webp",
+      "prompt": "Adult 18 year old Sierra Holt sitting at a café table, long dark brunette hair, soft genuine expression while talking about cards, extremely slim upper body with tiny chest and large round ass visible even seated, casual crop top and tiny shorts, anime visual novel CG, warm lighting, fully clothed SFW, Neo Harbor style, bottom 20 percent clear for dialogue"
+    }
+  ]
+}

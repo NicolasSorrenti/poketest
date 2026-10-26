@@ -3,11 +3,18 @@
   "characterId": "jinx",
   "portrait": "/rpg-assets/characters/jinx/neutral.png",
   "expressions": {
-    "neutral": "/rpg-assets/characters/jinx/neutral.webp",
-    "smirk": "/rpg-assets/characters/jinx/smirk.webp",
-    "judgy": "/rpg-assets/characters/jinx/judgy.webp",
-    "fire": "/rpg-assets/characters/jinx/fire.webp",
-    "soft": "/rpg-assets/characters/jinx/soft.webp"
+    "neutral": "/rpg-assets/characters/jinx/expression-portraits/neutral.webp",
+    "happy": "/rpg-assets/characters/jinx/expression-portraits/happy.webp",
+    "surprised": "/rpg-assets/characters/jinx/expression-portraits/surprised.webp",
+    "soft": "/rpg-assets/characters/jinx/expression-portraits/soft.webp",
+    "concerned": "/rpg-assets/characters/jinx/expression-portraits/concerned.webp",
+    "vulnerable": "/rpg-assets/characters/jinx/expression-portraits/neutral.webp",
+    "irritated": "/rpg-assets/characters/jinx/expression-portraits/annoyed.webp",
+    "determined": "/rpg-assets/characters/jinx/expression-portraits/neutral.webp",
+    "smirk": "/rpg-assets/characters/jinx/expression-portraits/smirk.webp",
+    "judgy": "/rpg-assets/characters/jinx/expression-portraits/annoyed.webp",
+    "fire": "/rpg-assets/characters/jinx/expression-portraits/neutral.webp",
+    "playful": "/rpg-assets/characters/jinx/expression-portraits/playful.webp"
   },
   "eventImages": [
     {
@@ -32,4 +39,3 @@
     }
   ]
 }
-

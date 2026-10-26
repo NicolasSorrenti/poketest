@@ -1871,7 +1871,11 @@ const packs=[
     "surprised": "/rpg-assets/characters/barb/vn-expressions/surprised.webp",
     "angry": "/rpg-assets/characters/barb/vn-expressions/angry.webp",
     "embarrassed": "/rpg-assets/characters/barb/vn-expressions/embarrassed.webp",
-    "sad": "/rpg-assets/characters/barb/vn-expressions/sad.webp"
+    "sad": "/rpg-assets/characters/barb/vn-expressions/sad.webp",
+    "concerned": "/rpg-assets/characters/barb/expression-portraits/concerned.png",
+    "soft": "/rpg-assets/characters/barb/expression-portraits/soft.png",
+    "vulnerable": "/rpg-assets/characters/barb/expression-portraits/soft.png",
+    "irritated": "/rpg-assets/characters/barb/expression-portraits/concerned.png"
    }
   }
  },
@@ -3197,11 +3201,18 @@ const packs=[
    "characterId": "jinx",
    "portrait": "/rpg-assets/characters/jinx/neutral.png",
    "expressions": {
-    "neutral": "/rpg-assets/characters/jinx/neutral.webp",
-    "smirk": "/rpg-assets/characters/jinx/smirk.webp",
-    "judgy": "/rpg-assets/characters/jinx/judgy.webp",
-    "fire": "/rpg-assets/characters/jinx/fire.webp",
-    "soft": "/rpg-assets/characters/jinx/soft.webp"
+    "neutral": "/rpg-assets/characters/jinx/expression-portraits/neutral.webp",
+    "happy": "/rpg-assets/characters/jinx/expression-portraits/happy.webp",
+    "surprised": "/rpg-assets/characters/jinx/expression-portraits/surprised.webp",
+    "soft": "/rpg-assets/characters/jinx/expression-portraits/soft.webp",
+    "concerned": "/rpg-assets/characters/jinx/expression-portraits/concerned.webp",
+    "vulnerable": "/rpg-assets/characters/jinx/expression-portraits/neutral.webp",
+    "irritated": "/rpg-assets/characters/jinx/expression-portraits/annoyed.webp",
+    "determined": "/rpg-assets/characters/jinx/expression-portraits/neutral.webp",
+    "smirk": "/rpg-assets/characters/jinx/expression-portraits/smirk.webp",
+    "judgy": "/rpg-assets/characters/jinx/expression-portraits/annoyed.webp",
+    "fire": "/rpg-assets/characters/jinx/expression-portraits/neutral.webp",
+    "playful": "/rpg-assets/characters/jinx/expression-portraits/playful.webp"
    },
    "eventImages": [
     {
@@ -4658,11 +4669,17 @@ const packs=[
    "characterId": "luna",
    "portrait": "/rpg-assets/characters/luna/neutral.png",
    "expressions": {
-    "neutral": "/rpg-assets/characters/luna/neutral.webp",
-    "shy": "/rpg-assets/characters/luna/shy.webp",
-    "panic": "/rpg-assets/characters/luna/panic.webp",
-    "blush": "/rpg-assets/characters/luna/blush.webp",
-    "happy": "/rpg-assets/characters/luna/happy.webp"
+    "neutral": "/rpg-assets/characters/luna/expression-portraits/neutral.webp",
+    "happy": "/rpg-assets/characters/luna/expression-portraits/happy.webp",
+    "surprised": "/rpg-assets/characters/luna/expression-portraits/surprised.webp",
+    "soft": "/rpg-assets/characters/luna/expression-portraits/soft.webp",
+    "concerned": "/rpg-assets/characters/luna/expression-portraits/concerned.webp",
+    "vulnerable": "/rpg-assets/characters/luna/expression-portraits/neutral.webp",
+    "irritated": "/rpg-assets/characters/luna/expression-portraits/neutral.webp",
+    "determined": "/rpg-assets/characters/luna/expression-portraits/neutral.webp",
+    "shy": "/rpg-assets/characters/luna/expression-portraits/neutral.webp",
+    "panic": "/rpg-assets/characters/luna/expression-portraits/surprised.webp",
+    "blush": "/rpg-assets/characters/luna/expression-portraits/neutral.webp"
    },
    "eventImages": [
     {
@@ -5241,11 +5258,17 @@ const packs=[
    "characterId": "rina",
    "portrait": "/rpg-assets/characters/rina/neutral.png",
    "expressions": {
-    "neutral": "/rpg-assets/characters/rina/neutral.webp",
-    "sparkle": "/rpg-assets/characters/rina/sparkle.webp",
-    "determined": "/rpg-assets/characters/rina/determined.webp",
-    "shy": "/rpg-assets/characters/rina/shy.webp",
-    "stage": "/rpg-assets/characters/rina/stage.webp"
+    "neutral": "/rpg-assets/characters/rina/expression-portraits/neutral.webp",
+    "happy": "/rpg-assets/characters/rina/expression-portraits/happy.webp",
+    "surprised": "/rpg-assets/characters/rina/expression-portraits/surprised.webp",
+    "soft": "/rpg-assets/characters/rina/expression-portraits/soft.webp",
+    "concerned": "/rpg-assets/characters/rina/expression-portraits/concerned.webp",
+    "vulnerable": "/rpg-assets/characters/rina/expression-portraits/neutral.webp",
+    "irritated": "/rpg-assets/characters/rina/expression-portraits/neutral.webp",
+    "determined": "/rpg-assets/characters/rina/expression-portraits/neutral.webp",
+    "sparkle": "/rpg-assets/characters/rina/expression-portraits/happy.webp",
+    "shy": "/rpg-assets/characters/rina/expression-portraits/neutral.webp",
+    "stage": "/rpg-assets/characters/rina/expression-portraits/neutral.webp"
    },
    "eventImages": [
     {
@@ -5824,11 +5847,17 @@ const packs=[
    "characterId": "sierra",
    "portrait": "/rpg-assets/characters/sierra/portrait.png",
    "expressions": {
-    "neutral": "/rpg-assets/characters/sierra/neutral.webp",
-    "cool": "/rpg-assets/characters/sierra/cool.webp",
-    "focused": "/rpg-assets/characters/sierra/focused.webp",
-    "soft": "/rpg-assets/characters/sierra/soft.webp",
-    "tired": "/rpg-assets/characters/sierra/tired.webp"
+    "neutral": "/rpg-assets/characters/sierra/expression-portraits/neutral.webp",
+    "happy": "/rpg-assets/characters/sierra/expression-portraits/happy.webp",
+    "surprised": "/rpg-assets/characters/sierra/expression-portraits/surprised.webp",
+    "soft": "/rpg-assets/characters/sierra/expression-portraits/soft.webp",
+    "concerned": "/rpg-assets/characters/sierra/expression-portraits/concerned.webp",
+    "vulnerable": "/rpg-assets/characters/sierra/expression-portraits/neutral.webp",
+    "irritated": "/rpg-assets/characters/sierra/expression-portraits/neutral.webp",
+    "determined": "/rpg-assets/characters/sierra/expression-portraits/neutral.webp",
+    "cool": "/rpg-assets/characters/sierra/expression-portraits/neutral.webp",
+    "focused": "/rpg-assets/characters/sierra/expression-portraits/neutral.webp",
+    "tired": "/rpg-assets/characters/sierra/expression-portraits/neutral.webp"
    },
    "eventImages": [
     {
@@ -6651,11 +6680,16 @@ const packs=[
    "characterId": "sol",
    "portrait": "/rpg-assets/sol.png",
    "expressions": {
-    "neutral": "/rpg-assets/characters/sol/neutral.webp",
-    "smile": "/rpg-assets/characters/sol/smile.webp",
-    "surprised": "/rpg-assets/characters/sol/surprised.webp",
-    "worried": "/rpg-assets/characters/sol/worried.webp",
-    "soft": "/rpg-assets/characters/sol/soft.webp"
+    "neutral": "/rpg-assets/characters/sol/expression-portraits/neutral.webp",
+    "happy": "/rpg-assets/characters/sol/expression-portraits/happy.webp",
+    "surprised": "/rpg-assets/characters/sol/expression-portraits/surprised.webp",
+    "soft": "/rpg-assets/characters/sol/expression-portraits/soft.webp",
+    "concerned": "/rpg-assets/characters/sol/expression-portraits/concerned.webp",
+    "vulnerable": "/rpg-assets/characters/sol/expression-portraits/neutral.webp",
+    "irritated": "/rpg-assets/characters/sol/expression-portraits/neutral.webp",
+    "determined": "/rpg-assets/characters/sol/expression-portraits/neutral.webp",
+    "smile": "/rpg-assets/characters/sol/expression-portraits/happy.webp",
+    "worried": "/rpg-assets/characters/sol/expression-portraits/concerned.webp"
    },
    "eventImages": [
     {

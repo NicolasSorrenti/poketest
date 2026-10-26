@@ -1,0 +1,69 @@
+{
+  "repository": "NicolasSorrenti/poketest",
+  "pull_request": 140,
+  "branch": "art/overworld-character-refresh",
+  "audited_commit": "8902bb3ed26c8f3f2c8646a1a26c14b2522b8e49",
+  "reference": {
+    "repo_path": "rpg-assets/characters/barb/expression-portraits/neutral.webp",
+    "saved": "references/canonical-neutral.webp",
+    "sha256": "b44cedeafb0a77fe5d1812e314e034497b8ca462e5b5695f683f410c600d465f",
+    "dimensions": [
+      512,
+      1024
+    ],
+    "viewed_before_generation": true
+  },
+  "method": "built-in image_gen; one edit per expression using actual canonical neutral as the only generation reference",
+  "prompts": "prompts.json",
+  "attempts_preserved": true,
+  "github_writes": false,
+  "integration_performed": false,
+  "assets": [
+    {
+      "expression": "concerned",
+      "file": "concerned.png",
+      "attempt": "attempts/concerned-attempt-01.png",
+      "dimensions": [
+        887,
+        1774
+      ],
+      "mode": "RGBA",
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "alpha_bbox": [
+        25,
+        11,
+        831,
+        1758
+      ],
+      "sha256": "f16cbd4ca57c89feceeda51b31d4a67290232f0222290088e4a09e18839abab1",
+      "decode": "pass",
+      "visual_review": "Full body including cap and both boot soles; canonical copper hair, cap, tattoo, outfit, accessories and peace-sign/hand-on-hip pose retained. Concerned brows/closed lips or soft smile as requested. Generative edit is not pixel-identical outside face."
+    },
+    {
+      "expression": "soft",
+      "file": "soft.png",
+      "attempt": "attempts/soft-attempt-01.png",
+      "dimensions": [
+        887,
+        1774
+      ],
+      "mode": "RGBA",
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "alpha_bbox": [
+        17,
+        11,
+        806,
+        1758
+      ],
+      "sha256": "6496c46bf3720087f4e945c77ed50adfedf30ae372dfd5a902db0c2705325268",
+      "decode": "pass",
+      "visual_review": "Full body including cap and both boot soles; canonical copper hair, cap, tattoo, outfit, accessories and peace-sign/hand-on-hip pose retained. Concerned brows/closed lips or soft smile as requested. Generative edit is not pixel-identical outside face."
+    }
+  ]
+}

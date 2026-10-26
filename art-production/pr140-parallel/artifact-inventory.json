@@ -1,0 +1,1859 @@
+[
+  {
+    "path": "art-production/pr140-parallel/INTEGRATION.md",
+    "bytes": 3768,
+    "sha256": "883dc229dd0afb3110878b81c159b9ed9027b3396b8095194305facc742fa0ac",
+    "git_blob_sha": "dc895cbc65a7bc0ea4a193212db97410eea4c937"
+  },
+  {
+    "path": "art-production/pr140-parallel/akari/AUDIT.md",
+    "bytes": 3402,
+    "sha256": "25d1f76fe5a17aa6f620fa734bc92cd326086641d9fb7cd1b6bebc04e31040cb",
+    "git_blob_sha": "525dba99c62445848a5665682a624b2cf110a0ca"
+  },
+  {
+    "path": "art-production/pr140-parallel/akari/akari-audit.jpg",
+    "bytes": 125040,
+    "sha256": "2a44ca7e512e5277d863e56149b29855a1ae31e7fcf49c7ec62d73c802817fd2",
+    "git_blob_sha": "bb0df53e58dcb52de57f1b3e801b5dc12082345f",
+    "dimensions": [
+      1500,
+      460
+    ],
+    "decode": "pass",
+    "alpha_extrema": [
+      255,
+      255
+    ]
+  },
+  {
+    "path": "art-production/pr140-parallel/akari/camila-audit.jpg",
+    "bytes": 127309,
+    "sha256": "8d5b333888fbee354b0fae853413ad7f100be8668c5ce3cf2dd710629b0b1a49",
+    "git_blob_sha": "90a2e6883467e4bbc6539e06b6da90ef15291821",
+    "dimensions": [
+      1500,
+      460
+    ],
+    "decode": "pass",
+    "alpha_extrema": [
+      255,
+      255
+    ]
+  },
+  {
+    "path": "art-production/pr140-parallel/akari/kaede-audit.jpg",
+    "bytes": 132958,
+    "sha256": "57c2dc75d7f2a5a36f9b2b7d2ea1ab09366c994a5e8295627b90e98c3e4f8b07",
+    "git_blob_sha": "71e6a9ece35cf248cb596cbe9bc856ec4b029163",
+    "dimensions": [
+      1500,
+      460
+    ],
+    "decode": "pass",
+    "alpha_extrema": [
+      255,
+      255
+    ]
+  },
+  {
+    "path": "art-production/pr140-parallel/akari/manifest.json",
+    "bytes": 6219,
+    "sha256": "f4bca2c346bd81a3d32abde4a54f2677c28886b8d470c8c9083d44db90590b63",
+    "git_blob_sha": "a2a572ab0022de2677403671eb0f6eb4ba7b1adf"
+  },
+  {
+    "path": "art-production/pr140-parallel/akari/marina-audit.jpg",
+    "bytes": 138120,
+    "sha256": "b5171daf3ac5fce9c4f576a80d79117e9fbee46cdeab6ddcd4910ce38bf2ac0b",
+    "git_blob_sha": "f5a9a671a44d20ae4161f7a9bcb34a8f3e554720",
+    "dimensions": [
+      1500,
+      460
+    ],
+    "decode": "pass",
+    "alpha_extrema": [
+      255,
+      255
+    ]
+  },
+  {
+    "path": "art-production/pr140-parallel/akari/thumbnails/characters/akari/expression-portraits/happy.png",
+    "bytes": 92197,
+    "sha256": "730feb29baf82f40542221ca9d92ac5129b3ca2adcc3d038d034492fe67d345c",
+    "git_blob_sha": "77ea8dd435094dfe85d80a7946c3a9198ef2bfae",
+    "dimensions": [
+      192,
+      384
+    ],
+    "decode": "pass",
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  {
+    "path": "art-production/pr140-parallel/akari/thumbnails/characters/akari/expression-portraits/soft.png",
+    "bytes": 90592,
+    "sha256": "e08c642595377f6b9eaae34027f2b464b80f74a792e23cf8a19e510a25052cf6",
+    "git_blob_sha": "24428ce5fd9b1cf4708f12f7dc155e1c296f6ad4",
+    "dimensions": [
+      192,
+      384
+    ],
+    "decode": "pass",
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  {
+    "path": "art-production/pr140-parallel/akari/thumbnails/characters/camila/expression-portraits/happy.png",
+    "bytes": 89928,
+    "sha256": "fe90829899c82b171173a7495c2b8a34e81af98f139f27e4a3a50a23aa996376",
+    "git_blob_sha": "c8404854c38120305a24aada211b35d7570c6dcf",
+    "dimensions": [
+      192,
+      384
+    ],
+    "decode": "pass",
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  {
+    "path": "art-production/pr140-parallel/akari/thumbnails/characters/camila/expression-portraits/soft.png",
+    "bytes": 88692,
+    "sha256": "6af88538fcbf187bdf456d0cd753d9bb5bcc8e85bea66bda2160d4d950cb8c03",
+    "git_blob_sha": "8635d3b3ded62bce128e69ea1de8ae5cbb587db2",
+    "dimensions": [
+      192,
+      384
+    ],
+    "decode": "pass",
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  {
+    "path": "art-production/pr140-parallel/akari/thumbnails/characters/kaede/expression-portraits/happy.png",
+    "bytes": 96129,
+    "sha256": "af19be6118d54ffc992dc311e8927a669e63471751994d5d4af411b1bd0fa441",
+    "git_blob_sha": "de8bbe98c75a86ede52d3c20920dae2eab49b20c",
+    "dimensions": [
+      192,
+      384
+    ],
+    "decode": "pass",
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  {
+    "path": "art-production/pr140-parallel/akari/thumbnails/characters/kaede/expression-portraits/soft.png",
+    "bytes": 94864,
+    "sha256": "827293b287f8d32241722f47bed303cac0eb367183bbfa33ddfc2bdec1073120",
+    "git_blob_sha": "8640f09b8a0cbe38707a46589c1fd38ab903ab07",
+    "dimensions": [
+      192,
+      384
+    ],
+    "decode": "pass",
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  {
+    "path": "art-production/pr140-parallel/akari/thumbnails/characters/marina/expression-portraits/happy.png",
+    "bytes": 97819,
+    "sha256": "ad54d5e855a6c650510a0379bd340243adadd5a78145bc1a5d97cfcf91090d2f",
+    "git_blob_sha": "e421d896465c335e6f82a4718819334d63cb9aae",
+    "dimensions": [
+      192,
+      384
+    ],
+    "decode": "pass",
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  {
+    "path": "art-production/pr140-parallel/akari/thumbnails/characters/marina/expression-portraits/soft.png",
+    "bytes": 98059,
+    "sha256": "6cfb090f85bc8d899f3c3bd52ff4e8630436742e767e5c2a422a210d8fdfaf83",
+    "git_blob_sha": "6cb8a4007b462a53ebbfc71b5eb319655fe4f860",
+    "dimensions": [
+      192,
+      384
+    ],
+    "decode": "pass",
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  {
+    "path": "art-production/pr140-parallel/barb-repair/SHA256SUMS",
+    "bytes": 1269,
+    "sha256": "a671c6cd503e9a2d48be3d6627d619904c572746ca699267d998acb479dac79b",
+    "git_blob_sha": "697c24d9c4b596ce99413c737ae73e2dd4a636c9"
+  },
+  {
+    "path": "art-production/pr140-parallel/barb-repair/attempts/concerned-attempt-01.png",
+    "bytes": 1415614,
+    "sha256": "f16cbd4ca57c89feceeda51b31d4a67290232f0222290088e4a09e18839abab1",
+    "git_blob_sha": "2ea6fc7a2e9886856f8fb33cae772901328f466a",
+    "dimensions": [
+      887,
+      1774
+    ],
+    "decode": "pass",
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  {
+    "path": "art-production/pr140-parallel/barb-repair/attempts/soft-attempt-01.png",
+    "bytes": 1392226,
+    "sha256": "6496c46bf3720087f4e945c77ed50adfedf30ae372dfd5a902db0c2705325268",
+    "git_blob_sha": "580820ad78126d5e460210fe74e243215bc58e88",
+    "dimensions": [
+      887,
+      1774
+    ],
+    "decode": "pass",
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  {
+    "path": "art-production/pr140-parallel/barb-repair/concerned.png",
+    "bytes": 1415614,
+    "sha256": "f16cbd4ca57c89feceeda51b31d4a67290232f0222290088e4a09e18839abab1",
+    "git_blob_sha": "2ea6fc7a2e9886856f8fb33cae772901328f466a",
+    "dimensions": [
+      887,
+      1774
+    ],
+    "decode": "pass",
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  {
+    "path": "art-production/pr140-parallel/barb-repair/manifest.json",
+    "bytes": 2213,
+    "sha256": "e060c6fa0872d3253eb9c30013557ee3ba1c2b21e5115cc04a93f74138a2fc5f",
+    "git_blob_sha": "20806bf5c500ca78f11863beea47b46257a47b8d"
+  },
+  {
+    "path": "art-production/pr140-parallel/barb-repair/prompts.json",
+    "bytes": 1985,
+    "sha256": "70d8defe2598f57710dad48359ddd8a1920bdd0dad441edcc9e4b5246991b426",
+    "git_blob_sha": "786a33e184c2f941a92f19840002d690a43a28a9"
+  },
+  {
+    "path": "art-production/pr140-parallel/barb-repair/references/PR140_BARB_LACA_HANA_AUDIT.md",
+    "bytes": 13899,
+    "sha256": "b9138e02e21f19372bb3f15d7340147f18bc42981dd068542cc2b674044542c5",
+    "git_blob_sha": "72008437225bfac15ca2b9a8629f8ff725917d4b"
+  },
+  {
+    "path": "art-production/pr140-parallel/barb-repair/references/canonical-neutral.webp",
+    "bytes": 349972,
+    "sha256": "b44cedeafb0a77fe5d1812e314e034497b8ca462e5b5695f683f410c600d465f",
+    "git_blob_sha": "5f7ff3ee278fdbf78b298d97d760ff9d40933118",
+    "dimensions": [
+      512,
+      1024
+    ],
+    "decode": "pass",
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  {
+    "path": "art-production/pr140-parallel/barb-repair/review.jpg",
+    "bytes": 77221,
+    "sha256": "df6630cc2e2fe4cb203d09b2a67d2ecbd04903e1401f87fb6bbfcb29442feb59",
+    "git_blob_sha": "e27ee5cc6dc899c84ca93e453c89cd1aa505b798",
+    "dimensions": [
+      900,
+      920
+    ],
+    "decode": "pass",
+    "alpha_extrema": [
+      255,
+      255
+    ]
+  },
+  {
+    "path": "art-production/pr140-parallel/barb-repair/soft.png",
+    "bytes": 1392226,
+    "sha256": "6496c46bf3720087f4e945c77ed50adfedf30ae372dfd5a902db0c2705325268",
+    "git_blob_sha": "580820ad78126d5e460210fe74e243215bc58e88",
+    "dimensions": [
+      887,
+      1774
+    ],
+    "decode": "pass",
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  {
+    "path": "art-production/pr140-parallel/barb-repair/thumbnails/concerned-dark.png",
+    "bytes": 114571,
+    "sha256": "208272bbdacf8db4bc590296e0cf75042fe9b5f464d6e5a19822d2a9e269b221",
+    "git_blob_sha": "0458ddcee103b2f321ac91c7bc6251b4bce8009b",
+    "dimensions": [
+      256,
+      512
+    ],
+    "decode": "pass",
+    "alpha_extrema": [
+      255,
+      255
+    ]
+  },
+  {
+    "path": "art-production/pr140-parallel/barb-repair/thumbnails/concerned-white.png",
+    "bytes": 119706,
+    "sha256": "c67589923b9a7f935b5a298447bf3f177f8de36ad9e5da34df997dfb8a3fb625",
+    "git_blob_sha": "fe1da1e9eccb86cde05ca372fa96aefa053f97c0",
+    "dimensions": [
+      256,
+      512
+    ],
+    "decode": "pass",
+    "alpha_extrema": [
+      255,
+      255
+    ]
+  },
+  {
+    "path": "art-production/pr140-parallel/barb-repair/thumbnails/concerned.png",
+    "bytes": 137225,
+    "sha256": "e2542d92fec7372fab869ac28bbe5feda798f50e7e1c2d05f72164f3f8f5bd9d",
+    "git_blob_sha": "a69db547e340b0870c8804c0c9daec134f66ac6c",
+    "dimensions": [
+      256,
+      512
+    ],
+    "decode": "pass",
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  {
+    "path": "art-production/pr140-parallel/barb-repair/thumbnails/soft-dark.png",
+    "bytes": 113756,
+    "sha256": "52fe2c4d6169fb1590ed82f517e8b40f0e8d5d9cc4c5dab99107b990b62cc8e0",
+    "git_blob_sha": "f6391f794e78cb8b5870327b7554d6179cae615a",
+    "dimensions": [
+      256,
+      512
+    ],
+    "decode": "pass",
+    "alpha_extrema": [
+      255,
+      255
+    ]
+  },
+  {
+    "path": "art-production/pr140-parallel/barb-repair/thumbnails/soft-white.png",
+    "bytes": 119061,
+    "sha256": "dadbdc97b8bffe5ffaab1d14262834001453ef73c84e606f080fcf481b309352",
+    "git_blob_sha": "b7affb11a21464829d4899cf2215afdebd713045",
+    "dimensions": [
+      256,
+      512
+    ],
+    "decode": "pass",
+    "alpha_extrema": [
+      255,
+      255
+    ]
+  },
+  {
+    "path": "art-production/pr140-parallel/barb-repair/thumbnails/soft.png",
+    "bytes": 136758,
+    "sha256": "11e705e4be33e8c236eb000ac0b3c09e8a3601ea8670adce585085404fe353e3",
+    "git_blob_sha": "d5c375f704c3ffed145121fcf50cc6af9b1e1c6a",
+    "dimensions": [
+      256,
+      512
+    ],
+    "decode": "pass",
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  {
+    "path": "art-production/pr140-parallel/iris/HANDOFF.md",
+    "bytes": 7631,
+    "sha256": "ea288cd5e638ac3e45987c8c64764596c8254a0d501988e020ce5b37698d22cc",
+    "git_blob_sha": "cfccaa08eade7a9b9a5e8039b42d2f5af0aa11d2"
+  },
+  {
+    "path": "art-production/pr140-parallel/iris/iris-review.jpg",
+    "bytes": 128363,
+    "sha256": "5a3fbe4f4421ecd6a05dce62a32c2150ef8a7d8d3f4ed903280c2e580ff52336",
+    "git_blob_sha": "302b6d81957de50e585f9945482bceedf4c37600",
+    "dimensions": [
+      1820,
+      600
+    ],
+    "decode": "pass",
+    "alpha_extrema": [
+      255,
+      255
+    ]
+  },
+  {
+    "path": "art-production/pr140-parallel/iris/iris-runtime.jpg",
+    "bytes": 113687,
+    "sha256": "93d48d9e46d53f83ecade6a4360067477056493e7ee4254de6064b3ba8680608",
+    "git_blob_sha": "f5f54d9d0ba67ddbc70f0bf3a189972fc051f716",
+    "dimensions": [
+      780,
+      600
+    ],
+    "decode": "pass",
+    "alpha_extrema": [
+      255,
+      255
+    ]
+  },
+  {
+    "path": "art-production/pr140-parallel/iris/jinx-review.jpg",
+    "bytes": 135670,
+    "sha256": "aa81ce9e0b431b3a7e10a277b8bd862fbe20c3b12dccf4f62b1af1130de28b2c",
+    "git_blob_sha": "294920d2c42075b96b28fd4c7c992a0065c49011",
+    "dimensions": [
+      2080,
+      600
+    ],
+    "decode": "pass",
+    "alpha_extrema": [
+      255,
+      255
+    ]
+  },
+  {
+    "path": "art-production/pr140-parallel/iris/jinx-runtime.jpg",
+    "bytes": 51999,
+    "sha256": "3a33feeb44c701606335d2e8572d3fc605d43f2d5f456fd5206acfce96e46e48",
+    "git_blob_sha": "6bd08fe1d007f23e8a9a43b55d065f018f55eb81",
+    "dimensions": [
+      520,
+      600
+    ],
+    "decode": "pass",
+    "alpha_extrema": [
+      255,
+      255
+    ]
+  },
+  {
+    "path": "art-production/pr140-parallel/iris/jinx-soft-01-composites.jpg",
+    "bytes": 166650,
+    "sha256": "8b48fd75e0ce1bbad8b51e1f6e5f67be49f1f225bf478c499cd94491e32dc013",
+    "git_blob_sha": "91899c368de79cb269001c1e1be5afdf2bdb92e9",
+    "dimensions": [
+      1024,
+      800
+    ],
+    "decode": "pass",
+    "alpha_extrema": [
+      255,
+      255
+    ]
+  },
+  {
+    "path": "art-production/pr140-parallel/iris/jun-review.jpg",
+    "bytes": 120221,
+    "sha256": "1ff749e5c3cf5887482f8c70bd0fb9f14e0ed9b39736c1124b5a4fd552e31f72",
+    "git_blob_sha": "be761bade3d49a873a536208c34c211327ba2b9d",
+    "dimensions": [
+      1820,
+      600
+    ],
+    "decode": "pass",
+    "alpha_extrema": [
+      255,
+      255
+    ]
+  },
+  {
+    "path": "art-production/pr140-parallel/iris/jun-runtime.jpg",
+    "bytes": 118040,
+    "sha256": "93252dfba6b62b4a93c7bb98e8f6ca4d056872a310092ada71754e5ae446d35f",
+    "git_blob_sha": "584e2f6b3c6b9d10dd4887979068e6ae3d814659",
+    "dimensions": [
+      780,
+      600
+    ],
+    "decode": "pass",
+    "alpha_extrema": [
+      255,
+      255
+    ]
+  },
+  {
+    "path": "art-production/pr140-parallel/iris/luna-review.jpg",
+    "bytes": 124608,
+    "sha256": "06baa26c0d39aa24c4965078b7b6b32d5b8b9db629a1eb4280de013cb13dd446",
+    "git_blob_sha": "6dbbd14eb7b3b8283df0f0953f7dd0930244d3ac",
+    "dimensions": [
+      1820,
+      600
+    ],
+    "decode": "pass",
+    "alpha_extrema": [
+      255,
+      255
+    ]
+  },
+  {
+    "path": "art-production/pr140-parallel/iris/luna-runtime.jpg",
+    "bytes": 69830,
+    "sha256": "1fe7173d4dd819d8aa126c5743f9e083813667e84385f4bf3fe93826be2c726b",
+    "git_blob_sha": "3f1d6ac7df08718e1b5be4e81a1a5b19387fb43c",
+    "dimensions": [
+      520,
+      600
+    ],
+    "decode": "pass",
+    "alpha_extrema": [
+      255,
+      255
+    ]
+  },
+  {
+    "path": "art-production/pr140-parallel/iris/manifest.json",
+    "bytes": 23887,
+    "sha256": "edb6cb6c1fb622e5cdb3292b2a639932c2ea2b14e6f56438c013e236c3de658a",
+    "git_blob_sha": "871257b7f5f4e517ca00cb2e128f543e95e17bb9"
+  },
+  {
+    "path": "art-production/pr140-parallel/iris/nereo-review.jpg",
+    "bytes": 114663,
+    "sha256": "9e9f372131fb003f44f7f52b776b747c035babf45705bc67c9b1c5f6632a2f77",
+    "git_blob_sha": "aa3fea0273354e89ddfd36d440884720aa332e5f",
+    "dimensions": [
+      1820,
+      600
+    ],
+    "decode": "pass",
+    "alpha_extrema": [
+      255,
+      255
+    ]
+  },
+  {
+    "path": "art-production/pr140-parallel/iris/nereo-runtime.jpg",
+    "bytes": 111785,
+    "sha256": "a26c24c06c6404e4f649d45d8e0636b4bb54a80cac42ac2b9dcf752f997be9e0",
+    "git_blob_sha": "59eeda404ca02136f1335410caf955c2d74d3167",
+    "dimensions": [
+      780,
+      600
+    ],
+    "decode": "pass",
+    "alpha_extrema": [
+      255,
+      255
+    ]
+  },
+  {
+    "path": "art-production/pr140-parallel/iris/teo-review.jpg",
+    "bytes": 114313,
+    "sha256": "5aecf7947efdddb8d348736574e2e3f5b2d746f9cae977aad650350a0b983fa5",
+    "git_blob_sha": "fae656ebc3d2ff9f696055a75536e34eb4b84720",
+    "dimensions": [
+      1560,
+      600
+    ],
+    "decode": "pass",
+    "alpha_extrema": [
+      255,
+      255
+    ]
+  },
+  {
+    "path": "art-production/pr140-parallel/iris/teo-runtime.jpg",
+    "bytes": 113270,
+    "sha256": "c8bb889b9c8a4b0cd898b9af79bc056f1a236c6c72ec54f1233063a9fc8929c4",
+    "git_blob_sha": "db04ba2fddc169085f02a430aa00568ccfe13bec",
+    "dimensions": [
+      780,
+      600
+    ],
+    "decode": "pass",
+    "alpha_extrema": [
+      255,
+      255
+    ]
+  },
+  {
+    "path": "art-production/pr140-parallel/iris/thumbnails/characters/iris/expression-portraits/happy.png",
+    "bytes": 100430,
+    "sha256": "6a194754d9f1793ae9c545283755295092bb7627fcd8cd7464567fa4906c68b5",
+    "git_blob_sha": "e971908e2fd36fac64565c991520f34fea139344",
+    "dimensions": [
+      192,
+      384
+    ],
+    "decode": "pass",
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  {
+    "path": "art-production/pr140-parallel/iris/thumbnails/characters/iris/expression-portraits/neutral.png",
+    "bytes": 109289,
+    "sha256": "42714c0e3d4948f61f9d87acad7b4d59913ff095782e914dc2f08f52eac3055f",
+    "git_blob_sha": "5c5dca4f1141f3aed57ad9cf456b02b7a8e687cc",
+    "dimensions": [
+      256,
+      384
+    ],
+    "decode": "pass",
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  {
+    "path": "art-production/pr140-parallel/iris/thumbnails/characters/iris/expression-portraits/surprised.png",
+    "bytes": 99141,
+    "sha256": "fe0fb5e2532ce0a9677d8f84b676b71ec1e3d20704e462b01569c1f8d7d71a9f",
+    "git_blob_sha": "7b3eb1f14b05c0b211625bbd1ffb716ad88f6259",
+    "dimensions": [
+      192,
+      384
+    ],
+    "decode": "pass",
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  {
+    "path": "art-production/pr140-parallel/iris/thumbnails/characters/iris/vn-expressions/happy.png",
+    "bytes": 100430,
+    "sha256": "6a194754d9f1793ae9c545283755295092bb7627fcd8cd7464567fa4906c68b5",
+    "git_blob_sha": "e971908e2fd36fac64565c991520f34fea139344",
+    "dimensions": [
+      192,
+      384
+    ],
+    "decode": "pass",
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  {
+    "path": "art-production/pr140-parallel/iris/thumbnails/characters/iris/vn-expressions/neutral.png",
+    "bytes": 109289,
+    "sha256": "42714c0e3d4948f61f9d87acad7b4d59913ff095782e914dc2f08f52eac3055f",
+    "git_blob_sha": "5c5dca4f1141f3aed57ad9cf456b02b7a8e687cc",
+    "dimensions": [
+      256,
+      384
+    ],
+    "decode": "pass",
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  {
+    "path": "art-production/pr140-parallel/iris/thumbnails/characters/iris/vn-expressions/surprised.png",
+    "bytes": 99141,
+    "sha256": "fe0fb5e2532ce0a9677d8f84b676b71ec1e3d20704e462b01569c1f8d7d71a9f",
+    "git_blob_sha": "7b3eb1f14b05c0b211625bbd1ffb716ad88f6259",
+    "dimensions": [
+      192,
+      384
+    ],
+    "decode": "pass",
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  {
+    "path": "art-production/pr140-parallel/iris/thumbnails/characters/jinx/expression-portraits/concerned.png",
+    "bytes": 86581,
+    "sha256": "a56c0f3d97984cb523234acbe678f8394b857bf84b835a416bcef7ab549a45fb",
+    "git_blob_sha": "f8ec5eeaf0a8381488fde290679caffe1070a0b3",
+    "dimensions": [
+      192,
+      384
+    ],
+    "decode": "pass",
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  {
+    "path": "art-production/pr140-parallel/iris/thumbnails/characters/jinx/expression-portraits/happy.png",
+    "bytes": 88769,
+    "sha256": "a2b8e0aba4f9cb3d542344bddce354aeef9beade78532fa250be9fb91d2ec11e",
+    "git_blob_sha": "9e509e0a628022f825eb818cdbef89bcf0645ecd",
+    "dimensions": [
+      192,
+      384
+    ],
+    "decode": "pass",
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  {
+    "path": "art-production/pr140-parallel/iris/thumbnails/characters/jinx/expression-portraits/neutral.png",
+    "bytes": 123586,
+    "sha256": "47a57ad43b1b28229f045e3fe577839810d650da23e670ed3e447126d88153c3",
+    "git_blob_sha": "2c6448076c30e9513f52c0d6e46990b69d95c18c",
+    "dimensions": [
+      256,
+      384
+    ],
+    "decode": "pass",
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  {
+    "path": "art-production/pr140-parallel/iris/thumbnails/characters/jinx/expression-portraits/soft.png",
+    "bytes": 202866,
+    "sha256": "33221c0a93e8b2c6a78cdebb67eaae6375127bb1da754dc5975fd47ddf68b959",
+    "git_blob_sha": "e63bbb15783439bf19604c6b8209a43bba56e8fc",
+    "dimensions": [
+      256,
+      384
+    ],
+    "decode": "pass",
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  {
+    "path": "art-production/pr140-parallel/iris/thumbnails/characters/jinx/expression-portraits/surprised.png",
+    "bytes": 85597,
+    "sha256": "4f431d727770f7b932dbb77b842bb7de7c6acf87b5fec68b6e316865e3880de0",
+    "git_blob_sha": "ab0f157b5cb12f9ea14ea8f18d235600df609c9c",
+    "dimensions": [
+      192,
+      384
+    ],
+    "decode": "pass",
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  {
+    "path": "art-production/pr140-parallel/iris/thumbnails/characters/jinx/neutral.png",
+    "bytes": 123586,
+    "sha256": "47a57ad43b1b28229f045e3fe577839810d650da23e670ed3e447126d88153c3",
+    "git_blob_sha": "2c6448076c30e9513f52c0d6e46990b69d95c18c",
+    "dimensions": [
+      256,
+      384
+    ],
+    "decode": "pass",
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  {
+    "path": "art-production/pr140-parallel/iris/thumbnails/characters/jun/expression-portraits/happy.png",
+    "bytes": 84967,
+    "sha256": "82a49101bb337f9f702bbb71fc4a497bba878ec022379c3fccce6920d39968d2",
+    "git_blob_sha": "364f6e953e8d1d8ccd80e27dba90d8b10dd00f9d",
+    "dimensions": [
+      192,
+      384
+    ],
+    "decode": "pass",
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  {
+    "path": "art-production/pr140-parallel/iris/thumbnails/characters/jun/expression-portraits/neutral.png",
+    "bytes": 141717,
+    "sha256": "ea886991dd98227c74197f2c1712cb6d441b654f478bc2862746873c2c5c3179",
+    "git_blob_sha": "5f1dbb1306c81940bb4dc8fc5a63f68536f1006d",
+    "dimensions": [
+      256,
+      384
+    ],
+    "decode": "pass",
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  {
+    "path": "art-production/pr140-parallel/iris/thumbnails/characters/jun/expression-portraits/surprised.png",
+    "bytes": 84400,
+    "sha256": "772d97760e9f3417f4338010df89835ee61aaef5329dda98b278b8c40f89f2f1",
+    "git_blob_sha": "bc76d7865d6fe7bbfd12329077d726afafd285cb",
+    "dimensions": [
+      192,
+      384
+    ],
+    "decode": "pass",
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  {
+    "path": "art-production/pr140-parallel/iris/thumbnails/characters/jun/vn-expressions/happy.png",
+    "bytes": 84967,
+    "sha256": "82a49101bb337f9f702bbb71fc4a497bba878ec022379c3fccce6920d39968d2",
+    "git_blob_sha": "364f6e953e8d1d8ccd80e27dba90d8b10dd00f9d",
+    "dimensions": [
+      192,
+      384
+    ],
+    "decode": "pass",
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  {
+    "path": "art-production/pr140-parallel/iris/thumbnails/characters/jun/vn-expressions/neutral.png",
+    "bytes": 141717,
+    "sha256": "ea886991dd98227c74197f2c1712cb6d441b654f478bc2862746873c2c5c3179",
+    "git_blob_sha": "5f1dbb1306c81940bb4dc8fc5a63f68536f1006d",
+    "dimensions": [
+      256,
+      384
+    ],
+    "decode": "pass",
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  {
+    "path": "art-production/pr140-parallel/iris/thumbnails/characters/jun/vn-expressions/surprised.png",
+    "bytes": 84400,
+    "sha256": "772d97760e9f3417f4338010df89835ee61aaef5329dda98b278b8c40f89f2f1",
+    "git_blob_sha": "bc76d7865d6fe7bbfd12329077d726afafd285cb",
+    "dimensions": [
+      192,
+      384
+    ],
+    "decode": "pass",
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  {
+    "path": "art-production/pr140-parallel/iris/thumbnails/characters/luna/expression-portraits/happy.png",
+    "bytes": 108240,
+    "sha256": "6a160a69b0513910f355c793a17a9077bbb5f0d84b9536a061227ede6e76efab",
+    "git_blob_sha": "66d6c5ba3b0b00514ff0b469ef9790b7d40f736e",
+    "dimensions": [
+      192,
+      384
+    ],
+    "decode": "pass",
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  {
+    "path": "art-production/pr140-parallel/iris/thumbnails/characters/luna/expression-portraits/neutral.png",
+    "bytes": 181406,
+    "sha256": "bf9c4a5fd4f1e9ade132f0245e5d33edcaf4436257b1a6530d2c6bb32cd82983",
+    "git_blob_sha": "dad89b329b7c16310f27010a2d358ac51dd852a9",
+    "dimensions": [
+      256,
+      384
+    ],
+    "decode": "pass",
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  {
+    "path": "art-production/pr140-parallel/iris/thumbnails/characters/luna/expression-portraits/surprised.png",
+    "bytes": 107671,
+    "sha256": "aacf8ad659b27fe6c371d229367de5ae8f7d4be9974886b0baaf41a1abebec70",
+    "git_blob_sha": "78d165b3ef8546701ab6e1fa6b73d9ad8d87ef8a",
+    "dimensions": [
+      192,
+      384
+    ],
+    "decode": "pass",
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  {
+    "path": "art-production/pr140-parallel/iris/thumbnails/characters/luna/neutral.png",
+    "bytes": 181406,
+    "sha256": "bf9c4a5fd4f1e9ade132f0245e5d33edcaf4436257b1a6530d2c6bb32cd82983",
+    "git_blob_sha": "dad89b329b7c16310f27010a2d358ac51dd852a9",
+    "dimensions": [
+      256,
+      384
+    ],
+    "decode": "pass",
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  {
+    "path": "art-production/pr140-parallel/iris/thumbnails/characters/nereo/expression-portraits/happy.png",
+    "bytes": 88730,
+    "sha256": "26485d41746c145be3557210d237fccea52f593d544dc95bc373d3e9b84ffcf2",
+    "git_blob_sha": "d9654465e922feb2f359cd891de3b3996b3ce206",
+    "dimensions": [
+      192,
+      384
+    ],
+    "decode": "pass",
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  {
+    "path": "art-production/pr140-parallel/iris/thumbnails/characters/nereo/expression-portraits/neutral.png",
+    "bytes": 151773,
+    "sha256": "45de58ad1df164bd53a59f5074fe5b7781a840db9f27cf8f5320f8b4bf84e30e",
+    "git_blob_sha": "1ad2ba7678e8ee2c83b1962a944f4ca685217d0b",
+    "dimensions": [
+      256,
+      384
+    ],
+    "decode": "pass",
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  {
+    "path": "art-production/pr140-parallel/iris/thumbnails/characters/nereo/expression-portraits/surprised.png",
+    "bytes": 88976,
+    "sha256": "ed67a2ae9222bbca6de19c51e7716dd019d8ec925ae9cacc0a532f83365e985c",
+    "git_blob_sha": "6f2d3205ea1044301194d12b190a4d6625b02396",
+    "dimensions": [
+      192,
+      384
+    ],
+    "decode": "pass",
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  {
+    "path": "art-production/pr140-parallel/iris/thumbnails/characters/nereo/vn-expressions/happy.png",
+    "bytes": 88730,
+    "sha256": "26485d41746c145be3557210d237fccea52f593d544dc95bc373d3e9b84ffcf2",
+    "git_blob_sha": "d9654465e922feb2f359cd891de3b3996b3ce206",
+    "dimensions": [
+      192,
+      384
+    ],
+    "decode": "pass",
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  {
+    "path": "art-production/pr140-parallel/iris/thumbnails/characters/nereo/vn-expressions/neutral.png",
+    "bytes": 151773,
+    "sha256": "45de58ad1df164bd53a59f5074fe5b7781a840db9f27cf8f5320f8b4bf84e30e",
+    "git_blob_sha": "1ad2ba7678e8ee2c83b1962a944f4ca685217d0b",
+    "dimensions": [
+      256,
+      384
+    ],
+    "decode": "pass",
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  {
+    "path": "art-production/pr140-parallel/iris/thumbnails/characters/nereo/vn-expressions/surprised.png",
+    "bytes": 88976,
+    "sha256": "ed67a2ae9222bbca6de19c51e7716dd019d8ec925ae9cacc0a532f83365e985c",
+    "git_blob_sha": "6f2d3205ea1044301194d12b190a4d6625b02396",
+    "dimensions": [
+      192,
+      384
+    ],
+    "decode": "pass",
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  {
+    "path": "art-production/pr140-parallel/iris/thumbnails/characters/teo/expression-portraits/happy.png",
+    "bytes": 99539,
+    "sha256": "05f1aa76fdedfd868b2b9089f77b4b1728619d77054822196297419002e9f208",
+    "git_blob_sha": "c0d03f68c88f0f069dd70e6bcb9306c84466fae3",
+    "dimensions": [
+      192,
+      384
+    ],
+    "decode": "pass",
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  {
+    "path": "art-production/pr140-parallel/iris/thumbnails/characters/teo/expression-portraits/neutral.png",
+    "bytes": 96680,
+    "sha256": "2e2946e4a8e5e4bfd65134a27b0cd1f6d9d97b771585c8028c8e94485dabc6ce",
+    "git_blob_sha": "283f2af23ae449e81fc065d3ac315b2af6960cad",
+    "dimensions": [
+      192,
+      384
+    ],
+    "decode": "pass",
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  {
+    "path": "art-production/pr140-parallel/iris/thumbnails/characters/teo/expression-portraits/surprised.png",
+    "bytes": 97943,
+    "sha256": "be4d7b84116189dbdcbe6814a89b7e723ce3d68cbf619cbb05ad89d177d27d5c",
+    "git_blob_sha": "c83bb4a0af6bfe7aba4460dd40bb65038fc8a220",
+    "dimensions": [
+      192,
+      384
+    ],
+    "decode": "pass",
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  {
+    "path": "art-production/pr140-parallel/iris/thumbnails/characters/teo/vn-expressions/happy.png",
+    "bytes": 99539,
+    "sha256": "05f1aa76fdedfd868b2b9089f77b4b1728619d77054822196297419002e9f208",
+    "git_blob_sha": "c0d03f68c88f0f069dd70e6bcb9306c84466fae3",
+    "dimensions": [
+      192,
+      384
+    ],
+    "decode": "pass",
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  {
+    "path": "art-production/pr140-parallel/iris/thumbnails/characters/teo/vn-expressions/neutral.png",
+    "bytes": 96680,
+    "sha256": "2e2946e4a8e5e4bfd65134a27b0cd1f6d9d97b771585c8028c8e94485dabc6ce",
+    "git_blob_sha": "283f2af23ae449e81fc065d3ac315b2af6960cad",
+    "dimensions": [
+      192,
+      384
+    ],
+    "decode": "pass",
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  {
+    "path": "art-production/pr140-parallel/iris/thumbnails/characters/teo/vn-expressions/surprised.png",
+    "bytes": 97943,
+    "sha256": "be4d7b84116189dbdcbe6814a89b7e723ce3d68cbf619cbb05ad89d177d27d5c",
+    "git_blob_sha": "c83bb4a0af6bfe7aba4460dd40bb65038fc8a220",
+    "dimensions": [
+      192,
+      384
+    ],
+    "decode": "pass",
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  {
+    "path": "art-production/pr140-parallel/manifest.json",
+    "bytes": 36436,
+    "sha256": "0829cb51e3154fd33844eb39c60d1c0d3d0d35a094f26c70e594002b98007057",
+    "git_blob_sha": "5d4cc150c6bde559ea40758016e8ffa377724aaa"
+  },
+  {
+    "path": "art-production/pr140-parallel/prior-manifests/barb/art_manifest.json",
+    "bytes": 7376,
+    "sha256": "c79613cf3e97600d1ace2e20f8d53abf39c3eb0f268b1bf35cbf2f4951dc44d2",
+    "git_blob_sha": "ff127e3c2f592e5d908917bc344babf7c4b4b6ad"
+  },
+  {
+    "path": "art-production/pr140-parallel/prior-manifests/jinx/art_manifest.json",
+    "bytes": 2269,
+    "sha256": "76a60c17f8f6768b593dfe8593dbfd4457d643e8c2d866174da2e508b1814085",
+    "git_blob_sha": "8e2c7d7123c5cf7fffe12a6ae883fe8e8cc08e24"
+  },
+  {
+    "path": "art-production/pr140-parallel/prior-manifests/luna/art_manifest.json",
+    "bytes": 1399,
+    "sha256": "937f2296633ef753cc73144358f7aba2424a0332d825c6022fcd5819af71c6b9",
+    "git_blob_sha": "1ec0bce2aa34b4d2b067585413a073c6a5c841fd"
+  },
+  {
+    "path": "art-production/pr140-parallel/prior-manifests/rina/art_manifest.json",
+    "bytes": 1385,
+    "sha256": "f1888a418115c474e17c83762604168c8f1a892369471a7a8437ce0683887111",
+    "git_blob_sha": "adcb93e151d52166739262a584b2782ea8414d12"
+  },
+  {
+    "path": "art-production/pr140-parallel/prior-manifests/sierra/art_manifest.json",
+    "bytes": 1464,
+    "sha256": "27b3c7bfc8781ba3c8d743a51e4bb5c379688ce2ecb61d6a7944d8ec0f0b6708",
+    "git_blob_sha": "ed4e4ab856adc025a4a1ac9c68e97578cdba23a8"
+  },
+  {
+    "path": "art-production/pr140-parallel/prior-manifests/sol/art_manifest.json",
+    "bytes": 1231,
+    "sha256": "e351a956d5e4cf3c2f9b86de6cd1e7e58bd33a877dd3f7f430cc389e1a8d705a",
+    "git_blob_sha": "20aa6a554f64f7542fe2cc1bb802ab8b44733b7c"
+  },
+  {
+    "path": "art-production/pr140-parallel/reina/REPORT.md",
+    "bytes": 4177,
+    "sha256": "831eee79858a7d34a452781349d340f013277db7508bd34727214c90367aa7f3",
+    "git_blob_sha": "32bbf90815b2ccb0a2ba1be325825863b6cb2665"
+  },
+  {
+    "path": "art-production/pr140-parallel/reina/manifest.json",
+    "bytes": 7465,
+    "sha256": "64188c194d1beb757de072e04702c0abdd767f3bb0007f9d0ee6154c7378e004",
+    "git_blob_sha": "7dc95c2b1c0b6700ccce65b2acc6f603c094e9bc"
+  },
+  {
+    "path": "art-production/pr140-parallel/reina/reina-review.jpg",
+    "bytes": 147882,
+    "sha256": "049c298e0af96e8d10a7ddd497ea466e277d471113802180895a81c4fd07c7a0",
+    "git_blob_sha": "d196da72105dbf0499e8c1071d3b4c86e162d66c",
+    "dimensions": [
+      1470,
+      620
+    ],
+    "decode": "pass",
+    "alpha_extrema": [
+      255,
+      255
+    ]
+  },
+  {
+    "path": "art-production/pr140-parallel/reina/runtime-vn-review.jpg",
+    "bytes": 178964,
+    "sha256": "b2087b30ec82baadfe3e2a8c8c8949197b54f9b5386fddde68a386aa92d44008",
+    "git_blob_sha": "bfbe9b05711f496d5f2ddde7fb315081b48430f6",
+    "dimensions": [
+      1260,
+      610
+    ],
+    "decode": "pass",
+    "alpha_extrema": [
+      255,
+      255
+    ]
+  },
+  {
+    "path": "art-production/pr140-parallel/reina/shiori-review.jpg",
+    "bytes": 151085,
+    "sha256": "c544e9fbb9ee937c2d041e7c4996f5a5e4193d494127bfa3babaf8556bee5a63",
+    "git_blob_sha": "99ca91b26890057f120360c96227e81a857d6345",
+    "dimensions": [
+      1470,
+      620
+    ],
+    "decode": "pass",
+    "alpha_extrema": [
+      255,
+      255
+    ]
+  },
+  {
+    "path": "art-production/pr140-parallel/reina/thumbnails/characters/reina/expression-portraits/happy.png",
+    "bytes": 93798,
+    "sha256": "6fbf313f709e7101f2f09ac8dc2e97d642cb9b4f9d3794de9367f1287109c5bd",
+    "git_blob_sha": "16790615bb94596b00294f08569e0943d89cddc0",
+    "dimensions": [
+      192,
+      384
+    ],
+    "decode": "pass",
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  {
+    "path": "art-production/pr140-parallel/reina/thumbnails/characters/reina/expression-portraits/neutral.png",
+    "bytes": 124323,
+    "sha256": "387d165c3518144a7890c0dc18f7d652436e429499037b49a561fa961ec4bf6f",
+    "git_blob_sha": "c664375407919639be7c8e606d04752b3e843f4e",
+    "dimensions": [
+      192,
+      384
+    ],
+    "decode": "pass",
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  {
+    "path": "art-production/pr140-parallel/reina/thumbnails/characters/reina/expression-portraits/surprised.png",
+    "bytes": 93673,
+    "sha256": "6860cb9b0e6cdc005766f2322f9a4bbc5d37a62f178ddbf3afb1f38097050a35",
+    "git_blob_sha": "4edce2f68f841bfb773c2e263aa08dc559bf6d1f",
+    "dimensions": [
+      192,
+      384
+    ],
+    "decode": "pass",
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  {
+    "path": "art-production/pr140-parallel/reina/thumbnails/characters/shiori/expression-portraits/happy.png",
+    "bytes": 95101,
+    "sha256": "b256890c3205cdf67fe5c47630650884282c293778e9478bfd323d200ad7cf8a",
+    "git_blob_sha": "1c4c77ef1ac0d8dc3d6b7938537fa456d2a411e3",
+    "dimensions": [
+      192,
+      384
+    ],
+    "decode": "pass",
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  {
+    "path": "art-production/pr140-parallel/reina/thumbnails/characters/shiori/expression-portraits/neutral.png",
+    "bytes": 149870,
+    "sha256": "65c866407539afbc109d027abdf255a17d388b17c51515e5ea1f9da8460653fd",
+    "git_blob_sha": "86de4ecac0efaad5542476a6a4291afe855bf6ca",
+    "dimensions": [
+      192,
+      384
+    ],
+    "decode": "pass",
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  {
+    "path": "art-production/pr140-parallel/reina/thumbnails/characters/shiori/expression-portraits/surprised.png",
+    "bytes": 94541,
+    "sha256": "c24fe3f1ec64ee2ed7f02e2fb3e3dc051728a55bec9051950838c731f3b94b86",
+    "git_blob_sha": "fcc1df0e71d72e06addba56c29dcfee33cafc367",
+    "dimensions": [
+      192,
+      384
+    ],
+    "decode": "pass",
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  {
+    "path": "art-production/pr140-parallel/reina/thumbnails/characters/yuna/expression-portraits/happy.png",
+    "bytes": 104178,
+    "sha256": "a55e72813154cca6603618164abd931dd9f22ed85068a9bc18c99a8bfbe074e6",
+    "git_blob_sha": "54670858103411c890d1306c4195315fcf0b8909",
+    "dimensions": [
+      192,
+      384
+    ],
+    "decode": "pass",
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  {
+    "path": "art-production/pr140-parallel/reina/thumbnails/characters/yuna/expression-portraits/neutral.png",
+    "bytes": 153169,
+    "sha256": "e58527c23dce3f5eaa7940aaae31365df6a8bb382527f9b92cea7509bdf2388d",
+    "git_blob_sha": "5fc73439f141efd79e907cd6cdd45e0e9c1a932e",
+    "dimensions": [
+      192,
+      384
+    ],
+    "decode": "pass",
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  {
+    "path": "art-production/pr140-parallel/reina/thumbnails/characters/yuna/expression-portraits/surprised.png",
+    "bytes": 103798,
+    "sha256": "aed1ba55740f993e759e0648fb2a76ccb2e7462a545937da73c7e2342e2b0f2c",
+    "git_blob_sha": "ebc0ae762549fe82417efaadb41fb6efa4a802c7",
+    "dimensions": [
+      192,
+      384
+    ],
+    "decode": "pass",
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  {
+    "path": "art-production/pr140-parallel/reina/yuna-review.jpg",
+    "bytes": 180586,
+    "sha256": "ab40bcab0a6713f6c45fa9638a4a58dd2dbbf93625e1fee17e89c3d263f4e0d5",
+    "git_blob_sha": "d3f59fa305962242e126c791ed35ab8d4d2c4819",
+    "dimensions": [
+      1470,
+      620
+    ],
+    "decode": "pass",
+    "alpha_extrema": [
+      255,
+      255
+    ]
+  },
+  {
+    "path": "art-production/pr140-parallel/rina/REPORT.md",
+    "bytes": 4323,
+    "sha256": "42cb0bc6b21ce78e8fb0503798b4b7df3b2fd32482cb7c58335c850caa1bb3d5",
+    "git_blob_sha": "5dc79cb4702918b66de7ca27ab42ad557dab4623"
+  },
+  {
+    "path": "art-production/pr140-parallel/rina/audit-1.jpg",
+    "bytes": 174778,
+    "sha256": "997d69983c46bb8e6416c63cc39a11655e29236b660eb4cc4e1d5fe0e2737b04",
+    "git_blob_sha": "416f5f4c4974c096bbb84037f43ff99bd50d4fda",
+    "dimensions": [
+      1200,
+      930
+    ],
+    "decode": "pass",
+    "alpha_extrema": [
+      255,
+      255
+    ]
+  },
+  {
+    "path": "art-production/pr140-parallel/rina/audit-2.jpg",
+    "bytes": 178438,
+    "sha256": "0a5f5fb05556c79aacfa5091706763845be5a08507ff455faaf3e5cbf170b234",
+    "git_blob_sha": "66a61c954bde0acbc9a1cd145b64e1d943634cfe",
+    "dimensions": [
+      1200,
+      930
+    ],
+    "decode": "pass",
+    "alpha_extrema": [
+      255,
+      255
+    ]
+  },
+  {
+    "path": "art-production/pr140-parallel/rina/audit-3.jpg",
+    "bytes": 186069,
+    "sha256": "55f416663ccb6533a3739918ebc0fed3ddc5810bd4364d1ed6ae15ecf268517d",
+    "git_blob_sha": "fa92937be0c9247bf431331ed4b5443a19b8ffe8",
+    "dimensions": [
+      1200,
+      930
+    ],
+    "decode": "pass",
+    "alpha_extrema": [
+      255,
+      255
+    ]
+  },
+  {
+    "path": "art-production/pr140-parallel/rina/audit-4.jpg",
+    "bytes": 51279,
+    "sha256": "68979d75abe4ee8a1ea7f9068e268826eee7b07855b03c1555720139e680a566",
+    "git_blob_sha": "6076927f991c430337b47bbe6460ad94a6ae5d16",
+    "dimensions": [
+      1200,
+      310
+    ],
+    "decode": "pass",
+    "alpha_extrema": [
+      255,
+      255
+    ]
+  },
+  {
+    "path": "art-production/pr140-parallel/rina/manifest.json",
+    "bytes": 5429,
+    "sha256": "6913c064b937c2a58d233fd5a30f3532e2e8eb3c3eca4ca8808a57d3c1f7570a",
+    "git_blob_sha": "20bca1bd2f634f1bcfc058dc99af53591ee874e0"
+  },
+  {
+    "path": "art-production/pr140-parallel/rina/thumbnails/characters/rina/expression-portraits/happy.png",
+    "bytes": 106687,
+    "sha256": "de2f50b5a1cb44703e7ad745a908ba71cfab309320ed43369d7e28d124317b19",
+    "git_blob_sha": "38c230b795d3fe6fa077a11ed025c58a43840df3",
+    "dimensions": [
+      192,
+      384
+    ],
+    "decode": "pass",
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  {
+    "path": "art-production/pr140-parallel/rina/thumbnails/characters/rina/expression-portraits/neutral.png",
+    "bytes": 105272,
+    "sha256": "aacbb33cde93c6d8aa7c24836d1caf98b2961e6b60a7226d904b15d3ca78d16f",
+    "git_blob_sha": "c2cba32590e18d3776edccb69b30332ceb01730f",
+    "dimensions": [
+      192,
+      384
+    ],
+    "decode": "pass",
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  {
+    "path": "art-production/pr140-parallel/rina/thumbnails/characters/sierra/expression-portraits/neutral.png",
+    "bytes": 104918,
+    "sha256": "d6651357b20258444b1bbec2b55aff93cf9a43a7f1596d21720b7a63897c8ac5",
+    "git_blob_sha": "21ed18db5b737a87ecad542d061d5a4a1dfabd65",
+    "dimensions": [
+      192,
+      384
+    ],
+    "decode": "pass",
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  {
+    "path": "art-production/pr140-parallel/rina/thumbnails/characters/sierra/expression-portraits/soft.png",
+    "bytes": 105583,
+    "sha256": "bfdbad134939955756d832a382781be4b69db2f82ac68cdfad401cc486009d40",
+    "git_blob_sha": "9cdc4c2899c55008471a18014a052d09c5f97a9e",
+    "dimensions": [
+      192,
+      384
+    ],
+    "decode": "pass",
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  {
+    "path": "art-production/pr140-parallel/rina/thumbnails/characters/sol/expression-portraits/happy.png",
+    "bytes": 112717,
+    "sha256": "57d69b7ccaedfb50640813b9c77482f68d75e9597a2f37a84165368b10b800f4",
+    "git_blob_sha": "c23c3f665db5bec141dd2f507667070f3698f085",
+    "dimensions": [
+      192,
+      384
+    ],
+    "decode": "pass",
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  {
+    "path": "art-production/pr140-parallel/rina/thumbnails/characters/sol/expression-portraits/surprised.png",
+    "bytes": 113203,
+    "sha256": "31a19432c26c46c39574905166a138633f4f02eb32cea04e77358dcef004098d",
+    "git_blob_sha": "7a956b0ea5b94850494fa114ce163fcf856a62b4",
+    "dimensions": [
+      192,
+      384
+    ],
+    "decode": "pass",
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  {
+    "path": "rpg-assets/rejected-artwork/pr140-parallel/attempts/jinx-soft-01-prompt.txt",
+    "bytes": 1108,
+    "sha256": "35f66b40dc80ebf65ba1e0897bc7547b26eb4bf758df27387cf35e544a25d5c8",
+    "git_blob_sha": "95b0b01fd14309c11f5b49b310903483592f2b42"
+  },
+  {
+    "path": "rpg-assets/rejected-artwork/pr140-parallel/attempts/jinx-soft-01.png",
+    "bytes": 2807378,
+    "sha256": "afb9354fabc293f705ea710d07d8b0265b6babf615acfd9dc5939f10816db657",
+    "git_blob_sha": "4af2ec56dcb685b14096e3f8d9f9ebd40c12aaf2",
+    "dimensions": [
+      1024,
+      1536
+    ],
+    "decode": "pass",
+    "alpha_extrema": [
+      0,
+      254
+    ]
+  },
+  {
+    "path": "rpg-assets/rejected-artwork/pr140-parallel/attempts/jun-neutral-damaged-staging-copy.webp",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "git_blob_sha": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+    "decode": "preserved failure: cannot identify image file 'rpg-assets/rejected-artwork/pr140-parallel/attempts/jun-neutral-damaged-staging-copy.webp'"
+  },
+  {
+    "path": "rpg-assets/rejected-artwork/pr140-parallel/replaced/rpg-assets/characters/barb/expression-portraits/concerned.webp",
+    "bytes": 786444,
+    "sha256": "052e4415355e609d3f96470bd02b720b693b54381a649b2ba54270f1b9fd0831",
+    "git_blob_sha": "6f45ee2d9c8d4a3c950429cfdf2a16f8e3d26d8a",
+    "decode": "preserved failure: could not create decoder object"
+  },
+  {
+    "path": "rpg-assets/rejected-artwork/pr140-parallel/replaced/rpg-assets/characters/barb/expression-portraits/soft.webp",
+    "bytes": 786446,
+    "sha256": "eac73ac9edc9f48988db99b6a2d2528a9fdb164cdbfeb330974dea194c7191d9",
+    "git_blob_sha": "08e209e82273df0a9c9f4f02cce369cf64a491ae",
+    "decode": "preserved failure: could not create decoder object"
+  },
+  {
+    "path": "rpg-assets/rejected-artwork/pr140-parallel/replaced/rpg-assets/characters/iris/expression-portraits/neutral.webp",
+    "bytes": 396472,
+    "sha256": "5bb054a9fd26715df0fa453f6872e33c99e4c8fd212a2d9d8722ad74287006ee",
+    "git_blob_sha": "a0141a89b609ceb7c925ba72a6021605d17dadf8",
+    "dimensions": [
+      512,
+      1024
+    ],
+    "decode": "pass",
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  {
+    "path": "rpg-assets/rejected-artwork/pr140-parallel/replaced/rpg-assets/characters/iris/vn-expressions/happy.webp",
+    "bytes": 91208,
+    "sha256": "c7e7783a6a2e77ca5b2c597442baa08d418f9111d6cf3413440c71d1755334c4",
+    "git_blob_sha": "9d915fe66eb534057f7dc7d91cae30fcbd5b4aea",
+    "dimensions": [
+      474,
+      535
+    ],
+    "decode": "pass",
+    "alpha_extrema": [
+      255,
+      255
+    ]
+  },
+  {
+    "path": "rpg-assets/rejected-artwork/pr140-parallel/replaced/rpg-assets/characters/iris/vn-expressions/neutral.webp",
+    "bytes": 91078,
+    "sha256": "c8502ad972212ccd973a92cae3d85f76740d2b83fe70fe2c7be00f955575f16e",
+    "git_blob_sha": "e7d5aa58016ba43951d15037b31fb5217783bba6",
+    "dimensions": [
+      475,
+      535
+    ],
+    "decode": "pass",
+    "alpha_extrema": [
+      255,
+      255
+    ]
+  },
+  {
+    "path": "rpg-assets/rejected-artwork/pr140-parallel/replaced/rpg-assets/characters/iris/vn-expressions/surprised.webp",
+    "bytes": 91134,
+    "sha256": "5b1789d372f690728e502ca9224131b59cea5dcc06ba57ee7361b730745120df",
+    "git_blob_sha": "19edd28ec54c03d24b0ccaf852d861ba131c5c3c",
+    "dimensions": [
+      475,
+      535
+    ],
+    "decode": "pass",
+    "alpha_extrema": [
+      255,
+      255
+    ]
+  },
+  {
+    "path": "rpg-assets/rejected-artwork/pr140-parallel/replaced/rpg-assets/characters/jinx/expression-portraits/neutral.webp",
+    "bytes": 424806,
+    "sha256": "5021f399df6033e269fce2de653fbb507ab23015838a4a266dcd0b50a8acfa5f",
+    "git_blob_sha": "e267169e1eae8131591710b69382e90434ce0fcf",
+    "dimensions": [
+      512,
+      1024
+    ],
+    "decode": "pass",
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  {
+    "path": "rpg-assets/rejected-artwork/pr140-parallel/replaced/rpg-assets/characters/jinx/neutral.webp",
+    "bytes": 19214,
+    "sha256": "a5611f430585224239f17c23ceea5c365a26cb11a3267715884ddf0219d92abd",
+    "git_blob_sha": "c0db985edb19c859c7c40a3e7d4c233961240db9",
+    "dimensions": [
+      189,
+      303
+    ],
+    "decode": "pass",
+    "alpha_extrema": [
+      255,
+      255
+    ]
+  },
+  {
+    "path": "rpg-assets/rejected-artwork/pr140-parallel/replaced/rpg-assets/characters/jun/expression-portraits/neutral.webp",
+    "bytes": 465500,
+    "sha256": "1d661d5c2a4c718815b406a6e6463ff7db1c61e92ccbe07528e1649c12ecc7ee",
+    "git_blob_sha": "db6f9f0ad27673f656d1bef18be8573592fab8a6",
+    "dimensions": [
+      512,
+      1024
+    ],
+    "decode": "pass",
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  {
+    "path": "rpg-assets/rejected-artwork/pr140-parallel/replaced/rpg-assets/characters/jun/vn-expressions/happy.webp",
+    "bytes": 94892,
+    "sha256": "47bb1fa2ff3668a0e800d3684d326c533b84d71b0d42ce9e390bfc739aeb0411",
+    "git_blob_sha": "2d4df67437c11d6276c3b54961c5f321b11a1233",
+    "dimensions": [
+      474,
+      535
+    ],
+    "decode": "pass",
+    "alpha_extrema": [
+      255,
+      255
+    ]
+  },
+  {
+    "path": "rpg-assets/rejected-artwork/pr140-parallel/replaced/rpg-assets/characters/jun/vn-expressions/neutral.webp",
+    "bytes": 91498,
+    "sha256": "7260bac10193614371815643d0492c6ec922d9991e1262349e87dd69e7dc8732",
+    "git_blob_sha": "3205ea784c5dde5c1b1140844f95ff4d8dc27177",
+    "dimensions": [
+      475,
+      535
+    ],
+    "decode": "pass",
+    "alpha_extrema": [
+      255,
+      255
+    ]
+  },
+  {
+    "path": "rpg-assets/rejected-artwork/pr140-parallel/replaced/rpg-assets/characters/jun/vn-expressions/surprised.webp",
+    "bytes": 91744,
+    "sha256": "221a1a8bbff5ffc8506a979d54b85b26254f514a187db6b66e768d31a61b2112",
+    "git_blob_sha": "686ba30ca3f52732e5a026d291df9c9902a3021f",
+    "dimensions": [
+      475,
+      535
+    ],
+    "decode": "pass",
+    "alpha_extrema": [
+      255,
+      255
+    ]
+  },
+  {
+    "path": "rpg-assets/rejected-artwork/pr140-parallel/replaced/rpg-assets/characters/luna/expression-portraits/neutral.webp",
+    "bytes": 617666,
+    "sha256": "c1f942f031e1f14cc418702e226223db956055a2f37d64f369c711390e87a560",
+    "git_blob_sha": "3f70e2e53b37303f4862851d097cfbf58729d7dc",
+    "dimensions": [
+      512,
+      1024
+    ],
+    "decode": "pass",
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  {
+    "path": "rpg-assets/rejected-artwork/pr140-parallel/replaced/rpg-assets/characters/luna/neutral.webp",
+    "bytes": 32236,
+    "sha256": "7c608dcbaabeeee010dfd4f2407346188d9de3bbc4ee8cbb86b89d1f61cb383e",
+    "git_blob_sha": "025ec261a9f3714bccca8f56ab553fa8a6655468",
+    "dimensions": [
+      220,
+      320
+    ],
+    "decode": "pass",
+    "alpha_extrema": [
+      255,
+      255
+    ]
+  },
+  {
+    "path": "rpg-assets/rejected-artwork/pr140-parallel/replaced/rpg-assets/characters/nereo/expression-portraits/neutral.webp",
+    "bytes": 384782,
+    "sha256": "5675ff4e0723bbf2c1dc03d797cb9bff95fe475f509fed08295ccb00ce60afa7",
+    "git_blob_sha": "d651bee9bd4464653c2cabad14c72ae1edfdb675",
+    "dimensions": [
+      512,
+      1024
+    ],
+    "decode": "pass",
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  {
+    "path": "rpg-assets/rejected-artwork/pr140-parallel/replaced/rpg-assets/characters/nereo/vn-expressions/happy.webp",
+    "bytes": 95790,
+    "sha256": "f2c67e73846b83fb5617b84449d5d39a1aca8a7f73b89b425c9f7946b7e1a4c8",
+    "git_blob_sha": "18d5da1b96a160a32f175cfd24ceb031155505ee",
+    "dimensions": [
+      474,
+      535
+    ],
+    "decode": "pass",
+    "alpha_extrema": [
+      255,
+      255
+    ]
+  },
+  {
+    "path": "rpg-assets/rejected-artwork/pr140-parallel/replaced/rpg-assets/characters/nereo/vn-expressions/neutral.webp",
+    "bytes": 94702,
+    "sha256": "a0cfc05b460aee387797118a96f922721aef9fa070b57a6d17eb3a3991f62482",
+    "git_blob_sha": "ff2595dff51a722596f1b6cce60011c9ab96b28c",
+    "dimensions": [
+      475,
+      535
+    ],
+    "decode": "pass",
+    "alpha_extrema": [
+      255,
+      255
+    ]
+  },
+  {
+    "path": "rpg-assets/rejected-artwork/pr140-parallel/replaced/rpg-assets/characters/nereo/vn-expressions/surprised.webp",
+    "bytes": 95734,
+    "sha256": "555328f1e72b896c8c9c334bf7645a185702043919b5f7a8631b687fa2e1a450",
+    "git_blob_sha": "e5224c6013aecf8dc418d7bdf3cb6af0c0928dd4",
+    "dimensions": [
+      475,
+      535
+    ],
+    "decode": "pass",
+    "alpha_extrema": [
+      255,
+      255
+    ]
+  },
+  {
+    "path": "rpg-assets/rejected-artwork/pr140-parallel/replaced/rpg-assets/characters/teo/vn-expressions/happy.webp",
+    "bytes": 90658,
+    "sha256": "4551202f3cd9089e07a66ba6733619320c248d41118cdb825d9d0f8379fbafbf",
+    "git_blob_sha": "f17e8fd7a1878dce6b28e1865d60db8dca9165d7",
+    "dimensions": [
+      474,
+      535
+    ],
+    "decode": "pass",
+    "alpha_extrema": [
+      255,
+      255
+    ]
+  },
+  {
+    "path": "rpg-assets/rejected-artwork/pr140-parallel/replaced/rpg-assets/characters/teo/vn-expressions/neutral.webp",
+    "bytes": 90240,
+    "sha256": "e3b1e6c5e5fd4340092ef60bbc47118afd90800b42a495c396cd2b7a09314359",
+    "git_blob_sha": "fc4b6f76bdce406ba8e04550d8b910737b3d57f8",
+    "dimensions": [
+      475,
+      535
+    ],
+    "decode": "pass",
+    "alpha_extrema": [
+      255,
+      255
+    ]
+  },
+  {
+    "path": "rpg-assets/rejected-artwork/pr140-parallel/replaced/rpg-assets/characters/teo/vn-expressions/surprised.webp",
+    "bytes": 90320,
+    "sha256": "c6d1c931bc59ad174f170582fa6119682fd4f10da7f2c8309fd6378b8a1d9db0",
+    "git_blob_sha": "904103f153c68fa8f6d197e1490c934ab286277d",
+    "dimensions": [
+      475,
+      535
+    ],
+    "decode": "pass",
+    "alpha_extrema": [
+      255,
+      255
+    ]
+  }
+]

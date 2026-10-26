@@ -16,7 +16,7 @@
     {
       "sceneId": "barb_route_3",
       "path": "/rpg-assets/characters/barb/events/barb_cafe_draft.webp",
-      "prompt": "One single fully composed horizontal anime/JRPG event CG, NOT a grid or character sheet, SFW adult woman age 21, height 161 cm, copper red hair, green-hazel eyes, septum, butterfly pendant and left-shoulder rose tattoo, black Y2K punk-cute clothes, proportional compact adult figure with natural fuller bust. Adult Barb at the café with laptop, two cups and sketchbook, vulnerable thoughtful look before sending an important message; intimate but fully clothed. Keep bottom 20% free for dialogue; 16:9."
+      "prompt": "One single fully composed horizontal anime/JRPG event CG, NOT a grid or character sheet, SFW adult woman age 21, height 161 cm, copper red hair, green-hazel eyes, septum, butterfly pendant and left-shoulder rose tattoo, black Y2K punk-cute clothes, proportional compact adult figure with natural fuller bust. Adult Barb at the caf\u00e9 with laptop, two cups and sketchbook, vulnerable thoughtful look before sending an important message; intimate but fully clothed. Keep bottom 20% free for dialogue; 16:9."
     },
     {
       "sceneId": "barb_route_4",
@@ -26,7 +26,7 @@
     {
       "sceneId": "barb_route_5",
       "path": "/rpg-assets/characters/barb/events/barb_riverside.webp",
-      "prompt": "Approved artwork: Barb at sunset on a rooftop overlooking the harbor, wearing an off-shoulder black-and-burgundy outfit, holding the protagonist’s hand and smiling tearfully."
+      "prompt": "Approved artwork: Barb at sunset on a rooftop overlooking the harbor, wearing an off-shoulder black-and-burgundy outfit, holding the protagonist\u2019s hand and smiling tearfully."
     },
     {
       "sceneId": "barb_random_cg_01",
@@ -101,6 +101,10 @@
     "surprised": "/rpg-assets/characters/barb/vn-expressions/surprised.webp",
     "angry": "/rpg-assets/characters/barb/vn-expressions/angry.webp",
     "embarrassed": "/rpg-assets/characters/barb/vn-expressions/embarrassed.webp",
-    "sad": "/rpg-assets/characters/barb/vn-expressions/sad.webp"
+    "sad": "/rpg-assets/characters/barb/vn-expressions/sad.webp",
+    "concerned": "/rpg-assets/characters/barb/expression-portraits/concerned.png",
+    "soft": "/rpg-assets/characters/barb/expression-portraits/soft.png",
+    "vulnerable": "/rpg-assets/characters/barb/expression-portraits/soft.png",
+    "irritated": "/rpg-assets/characters/barb/expression-portraits/concerned.png"
   }
 }
