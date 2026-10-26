@@ -136,3 +136,36 @@ test('Apex future Energy horizon still rewards legal multi-turn setup',()=>{
  assert.ok(AI.energyHorizonBonus(attachActive,dce,cfg)>
   AI.energyHorizonBonus(attachActive,noEnergy,cfg));
 });
+
+function evolutionRefuelBoard(energyId,energyUsed=false){
+ const o=board();
+ o.phase='game';
+ o.round=5;
+ o.turnSerial=11;
+ // Machop can Low Kick with these Fighting Energy, but Machoke needs
+ // a third Energy for Karate Chop after evolving.
+ o.self.active={id:MACHOP,energies:[FIGHT,FIGHT],damage:0,status:null,playedTurn:2};
+ o.self.hand=['base1-34',energyId];
+ o.self.energyUsed=energyUsed;
+ o.opponent.active={id:MACHOP,energies:[],damage:0,status:null};
+ return o;
+}
+test('Apex evolution tempo does not assume illegal Miracle Energy can refuel Machoke',()=>{
+ const miracle=evolutionRefuelBoard('neo4-16');
+ const noEnergy=evolutionRefuelBoard('base1-91'); // Bill
+ const penalty=AI.evolutionTempoPenalty(miracle,-1,'base1-34',cfg);
+ assert.ok(penalty>0,'evolving strands the currently attacking Machop');
+ assert.equal(penalty,AI.evolutionTempoPenalty(noEnergy,-1,'base1-34',cfg));
+});
+test('Apex evolution tempo still recognizes legal Double Colorless refuel',()=>{
+ const dce=evolutionRefuelBoard('base1-96');
+ const noEnergy=evolutionRefuelBoard('base1-91');
+ assert.equal(AI.evolutionTempoPenalty(dce,-1,'base1-34',cfg),0);
+ assert.ok(AI.evolutionTempoPenalty(noEnergy,-1,'base1-34',cfg)>0);
+});
+test('Apex evolution tempo cannot refuel after the turn attachment was used',()=>{
+ const dce=evolutionRefuelBoard('base1-96',true);
+ const noEnergy=evolutionRefuelBoard('base1-91',true);
+ assert.equal(AI.evolutionTempoPenalty(dce,-1,'base1-34',cfg),
+  AI.evolutionTempoPenalty(noEnergy,-1,'base1-34',cfg));
+});
