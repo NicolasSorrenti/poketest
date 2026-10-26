@@ -2006,8 +2006,35 @@ function portraitPaths(id,expression='neutral',sceneId=activeOutfitSceneId){
  if(['rina','sierra','sol','jinx','luna'].includes(id)&&!Object.prototype.hasOwnProperty.call(art?.expressions||{},expression))expression='neutral';
  return OUTFITS?.sources?.(art,{location:state.location,slot:state.slot,day:state.day,sceneId},expression,{base:fallback,legacy})||[legacy,fallback].filter(Boolean);
 }
+// Curated VN stage sources: approved full-figure artwork, never face crops.
+// Only the stage uses these choices; dialogue avatars, boosters, and CGs retain
+// their own artwork paths. Original image files remain untouched.
+const MANUAL_STAGE_PORTRAITS={
+ barb:{base:'/rpg-assets/characters/barb/vn-expressions/neutral.webp',
+  expressions:{happy:'happy',surprised:'surprised',irritated:'angry',vulnerable:'sad',determined:'neutral'} ,
+  directory:'/rpg-assets/characters/barb/vn-expressions/',scale:1,offsetX:0,offsetY:0},
+ laca:{base:'/rpg-assets/characters/laca/outfits/casual/neutral.webp',scale:1,offsetX:0,offsetY:0},
+ rina:{base:'/rpg-assets/characters/rina/neutral.png',scale:1,offsetX:0,offsetY:0},
+ sol:{base:'/rpg-assets/characters/sol/portraits/primary.png',
+  directory:'/rpg-assets/characters/sol/expressions/',
+  expressions:{neutral:'neutral',happy:'smile',surprised:'surprised',vulnerable:'worried',irritated:'worried',determined:'neutral'},
+  extension:'.png',scale:1,offsetX:0,offsetY:0},
+ sierra:{base:'/rpg-assets/characters/sierra/portrait.png',scale:1,offsetX:0,offsetY:0}
+};
+function stagePortraitPaths(id,expression,sceneId){
+ const normal=portraitPaths(id,expression,sceneId);
+ const manual=MANUAL_STAGE_PORTRAITS[id];
+ if(!manual)return normal;
+ // Laca may switch into lifeguard clothes. Don't override that choice with
+ // a casual sprite; otherwise outfit selection silently breaks.
+ if(id==='laca'&&normal.some(p=>p.includes('/outfits/lifeguard/')))
+  return ['/rpg-assets/characters/laca/outfits/lifeguard/neutral.webp',...normal];
+ const name=manual.expressions?.[expression];
+ const expressionPath=name&&manual.directory?manual.directory+name+(manual.extension||'.webp'):null;
+ return [...new Set([expressionPath,manual.base,...normal].filter(Boolean))];
+}
 function scenePortraitSource(id,expression,sceneId=activeOutfitSceneId){
- const paths=portraitPaths(id,expression,sceneId);
+ const paths=stagePortraitPaths(id,expression,sceneId);
  return paths.find(src=>!failedScenePortraits.has(src))||paths[paths.length-1]||cast[id].portrait||'/rpg-assets/'+id+'.png';
 }
 function dialogueExpression(line){
@@ -2053,10 +2080,10 @@ function renderRpgCast(ids,locked,shown,portraitId,context={}){
   button.setAttribute('aria-label','Talk to '+cast[id].name);
   const image=button.querySelector('img');
   if(image){
-   window.NeoRpgPortraitFraming?.attach?.(image,id);
+   // Explicit reviewed sources, rather than transparent-margin heuristics.
    const expression=active?(window.NeoRpgCharacterMotion?.emotion?.(shown?.expression,dialogueExpression(shown?.line))||dialogueExpression(shown?.line)):'neutral';
    window.NeoRpgDiscreetAvatars?.set?.(button,id,expression,cast[id].name);
-   const paths=portraitPaths(id,expression,context.sceneId);
+   const paths=stagePortraitPaths(id,expression,context.sceneId);
    const path=scenePortraitSource(id,expression,context.sceneId);
    if(image.getAttribute('src')!==path){
     image.classList.remove('expression-change');
