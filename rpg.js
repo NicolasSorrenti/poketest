@@ -73,18 +73,18 @@ function finishStory(){
  const a=state.activeStory;if(!a||a.phase!=='response')return;
  const e=STORY.byId(a.id);
  try{STORY.resolve(state,a.id,a.choice);}
- catch(err){console.error('RPG story completion failed',err);$('notice').textContent='Could not finish scene: '+err.message;return;}
+ catch(err){window.NeoRpgErrorReport?.capture(err,{source:'story-completion',action:'storyFinish'});console.error('RPG story completion failed',err);$('notice').textContent='Could not finish scene: '+err.message;return;}
  // Commit the resolved scene before any nonessential rewards or artwork.
  state.activeStory=null;persist();
  const id=e.npc;let chapterReward=null,storyMemories=[];
  try{chapterReward=BONDS.reward(state,e,BOND_PLAN,COLLECT);}
- catch(err){console.error('RPG chapter reward failed',err);}
+ catch(err){window.NeoRpgErrorReport?.capture(err,{source:'optional-reward',action:'storyReward'});console.error('RPG chapter reward failed',err);}
  try{
   log('Finished '+e.title+' with '+cast[id].name+'.');
   storyMemories=recordCG('story_milestone',id,{eventId:e.id});
   recordIntention('story');
   if(chapterReward)log('Bond chapter '+chapterReward.chapter+' reward from '+cast[id].name+': '+chapterReward.label+'.');
- }catch(err){console.error('RPG optional story effects failed',err);}
+ }catch(err){window.NeoRpgErrorReport?.capture(err,{source:'optional-story-effects',action:'storyFinish'});console.error('RPG optional story effects failed',err);}
  advance();state.selected=id;persist();closeSceneDialogue();
  try{showCGMoment(storyMemories[0]);}catch(err){console.error('RPG scene artwork failed',err);}
  if(chapterReward)$('notice').textContent='★ Chapter reward: '+chapterReward.label;
@@ -132,10 +132,10 @@ function finishSideQuest(){
  const a=state.activeSideQuest;if(!a||a.phase!=='response')return;
  let result;
  try{result=SIDE.finishChoice(state,a.id,a.choice,currentPeople());}
- catch(err){console.error('RPG side quest completion failed',err);$('notice').textContent='Could not finish chapter: '+err.message;return;}
+ catch(err){window.NeoRpgErrorReport?.capture(err,{source:'side-quest-completion',action:'sideFinish'});console.error('RPG side quest completion failed',err);$('notice').textContent='Could not finish chapter: '+err.message;return;}
  persist(); // The quest is complete even if an optional follow-up effect fails.
  try{log((result.done?'Completed':'Progressed')+' side quest: '+result.title+'.');recordIntention('sideQuest');}
- catch(err){console.error('RPG optional side quest effects failed',err);}
+ catch(err){window.NeoRpgErrorReport?.capture(err,{source:'optional-side-effects',action:'sideFinish'});console.error('RPG optional side quest effects failed',err);}
  advance();persist();closeSceneDialogue();
 }
 function pauseSideQuest(){
@@ -210,6 +210,12 @@ STORY.recordExpiry(state);
 if(MANDATORY)MANDATORY.hydrate(state,MANDATORY_EVENTS);
 const persist=()=>{localStorage.setItem(KEY,JSON.stringify(state));window.NeoRpgCloudSave?.onLocalSave();};
 const log=t=>{state.journal.unshift(t);state.journal=state.journal.slice(0,25)};
+window.NeoRpgErrorReport?.setContextProvider(()=>{
+ const active=[['mandatory',state.mandatoryEventState?.active],['slice',state.activeSliceOfLife],['situation',state.activeSituation],['story',state.activeStory],['encounter',state.activeEncounter],['arc',state.activeArc],['sideQuest',state.activeSideQuest]].find(([,value])=>!!value);
+ return {day:state.day,period:['Morning','Afternoon','Evening'][state.slot]||null,
+  location:state.location,selectedCharacter:state.selected,activeType:active?.[0]||null,
+  eventId:active?.[1]?.id||null,phase:active?.[1]?.phase||null};
+});
 function recordIntention(kind){const result=INTENTIONS.record(state,kind);if(result)log('Daily priority fulfilled: '+result.title+' ('+result.rewardLabel+').');}
 function recordCG(kind,npc,context=null){const entries=CG.record(state,kind,npc,context);if(entries.length)log(entries.length+' new memory illustration'+(entries.length===1?'':'s')+' unlocked for the CG Gallery.');return entries;}
 let scene=state.scene&&typeof state.scene.speaker==='string'&&typeof state.scene.line==='string'&&Array.isArray(state.scene.choices)?state.scene:{speaker:'Narrator',line:'Ninety days. One championship. You came to Neo Harbor to win. Everyone else has their own plans.',choices:[]};
@@ -658,6 +664,7 @@ function scheduleEvent(){return eventCards.find(e=>e.day===state.day&&e.slot===s
 function safeAct(action){
  try{return act(action);}
  catch(err){
+  window.NeoRpgErrorReport?.capture(err,{source:'handled-action',action});
   console.error('RPG action failed',action,err);
   $('notice').textContent='Action failed: '+(err?.message||'Unknown error')+'. Your save is intact.';
  }
