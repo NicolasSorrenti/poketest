@@ -698,11 +698,11 @@ function doomedActiveAttachmentPenalty(o,energyId,cfg){
   knockoutChance(a,enemy,active)>=.75);
  if(!threatened)return 0;
  const after={...active,energies:[...(active.energies||[]),energyId]};
- // If this attachment enables an attack now, it may earn a Prize or trade
- // damage before the opponent's next turn: do not classify it as wasted.
- const attacks=active.effectiveAttacks||card(active.id)?.attacks||[];
- if(!['Asleep','Paralyzed'].includes(active.status)&&
-    attacks.some(a=>canPayEnergy(a.cost||[],energyPool(after))))return 0;
+ // Exempt Energy only when it improves an attack available THIS turn.
+ // A previously affordable Jab does not justify attaching to a doomed Active
+ // when that attachment unlocks nothing and a Bench attacker can use it.
+ if(projectedAttackValue(after,enemy,o.turnSerial)>
+    projectedAttackValue(active,enemy,o.turnSerial))return 0;
  const retreat=card(active.id)?.retreatCost||[];
  if(retreat.length&&!canPayEnergy(retreat,energyPool(active))&&
     canPayEnergy(retreat,energyPool(after)))return 0;
