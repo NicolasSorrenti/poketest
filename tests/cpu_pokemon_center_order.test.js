@@ -50,7 +50,8 @@ test('Center evaluation accounts for discarded Energy on every healed Pokémon',
 
 test('Apex Center guard excludes intentionally forbidden attachments from audit candidates',()=>{
  const o=obs();
- o.self.active.damage=70;
+ // 90 damage makes Center worthwhile even with the Bench undamaged.
+ o.self.active.damage=90;
  o.self.bench[0].damage=0;
  const active={type:'attach_energy',payload:{handIndex:0,slot:-1}};
  const bench={type:'attach_energy',payload:{handIndex:0,slot:0}};
