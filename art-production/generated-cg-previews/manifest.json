@@ -1,0 +1,159 @@
+{
+  "schemaVersion": 1,
+  "created": "2026-10-26",
+  "purpose": "Generated event CG previews installed for review. These are not approved artwork.",
+  "approvalStatus": "pending_human_review",
+  "policy": "Do not set event artPending to false until a human approves the image and the CG is confirmed to match the event and visual canon.",
+  "items": [
+    {
+      "eventId": "crossover_barb_camila_trade_coat",
+      "title": "A Jacket for a Bargain",
+      "target": "/rpg-assets/events/cg/season01/crossover_barb_camila_trade_coat.webp",
+      "generatedSource": "/workspace/scratch/874e5fdad4e1/generated_images/exec-cb714583-bf8e-4247-af43-8c749b70405f.png",
+      "dimensions": "1672x941",
+      "format": "WebP",
+      "artPending": true,
+      "approved": false
+    },
+    {
+      "eventId": "crossover_laca_marina_beginner_lesson",
+      "title": "The Deep End Is Optional",
+      "target": "/rpg-assets/events/cg/season01/crossover_laca_marina_beginner_lesson.webp",
+      "generatedSource": "/workspace/scratch/874e5fdad4e1/generated_images/exec-1b514af8-5811-4697-8e21-7ab6338fa51e.png",
+      "dimensions": "1672x941",
+      "format": "WebP",
+      "artPending": true,
+      "approved": false
+    },
+    {
+      "eventId": "crossover_rina_jinx_neon_rehearsal",
+      "title": "Neon Rehearsal",
+      "target": "/rpg-assets/events/cg/season01/crossover_rina_jinx_neon_rehearsal.webp",
+      "generatedSource": "/workspace/scratch/874e5fdad4e1/generated_images/exec-ac4f4313-ab8b-49b2-bc52-eb0ec84e27b6.png",
+      "dimensions": "1672x941",
+      "format": "WebP",
+      "artPending": true,
+      "approved": false
+    },
+    {
+      "eventId": "crossover_barb_hana_ribbon_return",
+      "title": "The Window Strikes Back",
+      "target": "/rpg-assets/events/cg/season01/crossover_barb_hana_ribbon_return.webp",
+      "generatedSource": "imagegen preview by cg_batch_c",
+      "dimensions": "1672x941",
+      "format": "WebP",
+      "artPending": true,
+      "approved": false
+    },
+    {
+      "eventId": "crossover_barb_sierra_measurement_mixup",
+      "title": "The Wrong Measurements",
+      "target": "/rpg-assets/events/cg/season01/crossover_barb_sierra_measurement_mixup.webp",
+      "generatedSource": "imagegen preview by cg_batch_c",
+      "dimensions": "1672x941",
+      "format": "WebP",
+      "artPending": true,
+      "approved": false
+    },
+    {
+      "eventId": "crossover_laca_marina_second_lesson",
+      "title": "Beyond the Kickboard",
+      "target": "/rpg-assets/events/cg/season01/crossover_laca_marina_second_lesson.webp",
+      "generatedSource": "imagegen preview by cg_batch_c",
+      "dimensions": "1672x941",
+      "format": "WebP",
+      "artPending": true,
+      "approved": false
+    },
+    {
+      "eventId": "crossover_barb_hana_beachwear_design",
+      "title": "Shop Window Sunshine",
+      "target": "/rpg-assets/events/cg/season01/crossover_barb_hana_beachwear_design.webp",
+      "generatedSource": "imagegen preview by cg_batch_e",
+      "dimensions": "1672x941",
+      "format": "WebP",
+      "artPending": true,
+      "approved": false
+    },
+    {
+      "eventId": "crossover_barb_reina_beachwear_design",
+      "title": "A Champion Off Duty",
+      "target": "/rpg-assets/events/cg/season01/crossover_barb_reina_beachwear_design.webp",
+      "generatedSource": "imagegen preview by cg_batch_e",
+      "dimensions": "1672x941",
+      "format": "WebP",
+      "artPending": true,
+      "approved": false
+    },
+    {
+      "eventId": "crossover_barb_luna_beachwear_design",
+      "title": "A Little Moonlight",
+      "target": "/rpg-assets/events/cg/season01/crossover_barb_luna_beachwear_design.webp",
+      "generatedSource": "imagegen preview by cg_batch_f",
+      "dimensions": "1672x941",
+      "format": "WebP",
+      "artPending": true,
+      "approved": false
+    },
+    {
+      "eventId": "crossover_barb_rina_beachwear_design",
+      "title": "A Star Without a Stage",
+      "target": "/rpg-assets/events/cg/season01/crossover_barb_rina_beachwear_design.webp",
+      "generatedSource": "imagegen preview by cg_batch_f",
+      "dimensions": "1672x941",
+      "format": "WebP",
+      "artPending": true,
+      "approved": false
+    },
+    {
+      "eventId": "crossover_barb_sol_beachwear_design",
+      "title": "Golden-Hour Colors",
+      "target": "/rpg-assets/events/cg/season01/crossover_barb_sol_beachwear_design.webp",
+      "generatedSource": "imagegen preview by cg_batch_f",
+      "dimensions": "1672x941",
+      "format": "WebP",
+      "artPending": true,
+      "approved": false
+    },
+    {
+      "eventId": "crossover_hana_camila_new_player_return",
+      "title": "A New Player Returns",
+      "target": "/rpg-assets/events/cg/season01/crossover_hana_camila_new_player_return.webp",
+      "generatedSource": "imagegen preview by cg_batch_e",
+      "dimensions": "1672x941",
+      "format": "WebP",
+      "artPending": true,
+      "approved": false
+    },
+    {
+      "eventId": "crossover_laca_jinx_final_vest",
+      "title": "Safety in Full Color",
+      "target": "/rpg-assets/events/cg/season01/crossover_laca_jinx_final_vest.webp",
+      "generatedSource": "imagegen preview by cg_batch_e",
+      "dimensions": "1672x941",
+      "format": "WebP",
+      "artPending": true,
+      "approved": false
+    },
+    {
+      "eventId": "crossover_laca_luna_calm_water",
+      "title": "Counting Ripples",
+      "target": "/rpg-assets/events/cg/season01/crossover_laca_luna_calm_water.webp",
+      "generatedSource": "imagegen preview by cg_batch_b",
+      "dimensions": "1672x941",
+      "format": "WebP",
+      "artPending": true,
+      "approved": false
+    },
+    {
+      "eventId": "crossover_reina_camila_trade_strategy",
+      "title": "A Fair Price for Victory",
+      "target": "/rpg-assets/events/cg/season01/crossover_reina_camila_trade_strategy.webp",
+      "generatedSource": "imagegen preview by cg_batch_b",
+      "dimensions": "1672x941",
+      "format": "WebP",
+      "artPending": true,
+      "approved": false
+    }
+  ]
+}
