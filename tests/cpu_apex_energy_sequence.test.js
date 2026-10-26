@@ -302,3 +302,55 @@ test('Lower CPU levels retain their existing Active Energy scoring',()=>{
  assert.equal(AI.score(attachActive,threatened,lower,{}),
   AI.score(attachActive,safe,lower,{}));
 });
+
+
+function retreatLockBoard(){
+ const o=board();
+ Object.assign(o,{phase:'game',turn:1,round:5,turnSerial:11,over:false,decision:null});
+ o.self.active={id:HITMONCHAN,energies:[FIGHT],damage:50,status:null};
+ o.self.bench=[{id:MACHOP,energies:[],damage:0,status:null}];
+ o.opponent.active={id:HITMONCHAN,energies:[FIGHT],damage:0,status:null};
+ return o;
+}
+const retreatToBench={type:'retreat',payload:{slot:0}};
+test('Apex values escaping a genuinely ready public knockout',()=>{
+ const ready=retreatLockBoard(),unarmed=structuredClone(ready);
+ unarmed.opponent.active.energies=[];
+ assert.ok(AI.score(retreatToBench,ready,cfg,{})>
+  AI.score(retreatToBench,unarmed,cfg,{}));
+});
+test('Apex does not panic retreat against a sleeping or paralyzed attacker',()=>{
+ const ready=retreatLockBoard(),unarmed=structuredClone(ready);
+ unarmed.opponent.active.energies=[];
+ for(const status of ['Asleep','Paralyzed']){
+  const blocked=structuredClone(ready);
+  blocked.opponent.active.status=status;
+  assert.equal(AI.score(retreatToBench,blocked,cfg,{}),
+   AI.score(retreatToBench,unarmed,cfg,{}),status);
+ }
+});
+test('Apex does not panic retreat from an Amnesia-locked opponent attack',()=>{
+ const ready=retreatLockBoard(),unarmed=structuredClone(ready);
+ unarmed.opponent.active.energies=[];
+ ready.opponent.active.amnesia={index:0,expires:12};
+ assert.equal(AI.score(retreatToBench,ready,cfg,{}),
+  AI.score(retreatToBench,unarmed,cfg,{}));
+});
+test('Apex respects visible Gym attack cooldown and once-per-turn attack locks',()=>{
+ const ready=retreatLockBoard(),unarmed=structuredClone(ready);
+ unarmed.opponent.active.energies=[];
+ for(const lock of [{gymAttackCooldown:{index:0,expires:12}},
+   {gymAttackOnce:[0]}]){
+  const blocked=structuredClone(ready);
+  Object.assign(blocked.opponent.active,lock);
+  assert.equal(AI.score(retreatToBench,blocked,cfg,{}),
+   AI.score(retreatToBench,unarmed,cfg,{}));
+ }
+});
+test('Level 7 retreat heuristic remains unchanged',()=>{
+ const ready=retreatLockBoard(),blocked=structuredClone(ready);
+ blocked.opponent.active.amnesia={index:0,expires:12};
+ const lower=AI.configuration({side:1,level:7});
+ assert.equal(AI.score(retreatToBench,ready,lower,{}),
+  AI.score(retreatToBench,blocked,lower,{}));
+});
