@@ -446,3 +446,22 @@
 
 /* RPG pack encyclopedia access inside the shop. */
 .booster-library-link{display:inline-flex;align-items:center;max-width:100%;padding:11px 13px;margin:2px 0 13px;border-radius:8px;background:#453050;border:1px solid #d29dbc;color:#ffe0ef;font-size:13px;font-weight:800;text-decoration:none;line-height:1.35}.booster-library-link:hover,.booster-library-link:focus-visible{background:#653d62;outline-offset:3px}
+
+/* Mobile v2: reserve artwork space without altering the scene's absolute children. */
+@media(max-width:700px){
+ .stage-panel .scene{height:clamp(440px,115vw,580px);min-height:440px;max-height:none;overflow:hidden}
+ .stage-panel .rpg-scene-cast{inset:24% 1% 12px 1%}
+ .stage-panel .portrait{bottom:12px}
+ .stage-panel .rpg-action-dock{position:relative;inset:auto;max-height:none;margin:0 8px 10px;overflow:visible}
+ .stage-panel .scene:has(.rpg-action-dock:not([hidden])){height:auto;min-height:0;overflow:visible;padding-bottom:10px}
+ .stage-panel .scene:has(.rpg-action-dock:not([hidden])) .rpg-scene-cast{position:relative;inset:auto;height:clamp(270px,76vw,390px);margin-top:100px}
+ .stage-panel .scene:has(.rpg-action-dock:not([hidden])) .portrait{position:relative;inset:auto;height:clamp(270px,76vw,390px)}
+ .stage-panel .scene:has(.rpg-action-dock:not([hidden])) .dialogue{position:relative;inset:auto;margin:8px;max-height:none}
+ .stage-panel .character-actions:not([hidden]){display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:5px}
+ .stage-panel .character-action-btn{min-width:0;width:100%;padding:10px 2px;font-size:12px}
+ #rpgInfoPanel{max-height:calc(100dvh - 28px);overscroll-behavior:contain}
+ #rpgInfoPanel .rpg-drawer-header{position:sticky;top:0;z-index:10;background:#1c2034}
+ .mobile-events{margin:12px 0;padding:12px;border:1px solid #6b5876;border-radius:12px;background:#192238}
+ .mobile-events h2{font:800 22px 'Barlow Condensed';color:#f8bad0;margin:0 0 8px}
+}
+@media(min-width:701px){.mobile-events{display:none}}
