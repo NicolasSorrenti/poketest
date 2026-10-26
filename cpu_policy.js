@@ -193,7 +193,14 @@ function setupValue(unit){
 }
 function openingReadiness(cardId,hand){
  const pokemon=card(cardId),moves=pokemon?.attacks||[];
- const energies=hand.filter(id=>isEnergy(card(id)));
+ // An opening Energy must be attachable to the selected Active. Miracle
+ // Energy cannot power an ordinary Basic even if its symbols match a cost.
+ const unit={id:cardId,energies:[]};
+ const energies=hand.filter(id=>{
+  const energy=card(id);
+  return isEnergy(energy)&&legalAttachment({card:energy,unit,
+   cardName:pokemon?.name||''});
+ });
  if(!moves.length||!energies.length)return 0;
  let readiness=0;
  for(const e of energies){
