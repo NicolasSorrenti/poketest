@@ -123,5 +123,7 @@
   for(const [id,week] of Object.entries(templates)){if(week.length!==7)issues.push(id+' missing weekdays');for(const row of week)if(row.length!==3||row.some(p=>p!=='home'&&!publicPlaces.includes(p)))issues.push(id+' bad location');}
   return issues;
  }
- return Object.freeze({locationFor,peopleAt,itinerary,nextVisit,validate,publicPlaces,start,NORMAL_PLACE_LIMIT});
+ // Natural timetable before crowd balancing, exposed only for plausible optional crossover scheduling.
+ function naturalLocationFor(npc,day,slot){return templates[npc]&&validTime(day,slot)&&day>=start[npc]?baseLocation(npc,day,slot):null;}
+ return Object.freeze({locationFor,naturalLocationFor,peopleAt,itinerary,nextVisit,validate,publicPlaces,start,NORMAL_PLACE_LIMIT});
 });
