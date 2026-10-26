@@ -531,9 +531,23 @@ function evolutionTempoPenalty(o,slot,evolutionId,cfg){
  if(!cfg.evolutionTempo||cfg.level<3||slot!==-1)return 0;
  const before=o.self.active,nextCard=card(evolutionId);
  if(!before||!nextCard)return 0;
- const after={...before,id:evolutionId};
+ const after={...before,id:evolutionId,effectiveAttacks:undefined};
  const current=strongestAffordableAttack(before,o.opponent.active);
  if(current<=0)return 0;
+ // An evolution must not trade away a certain match-winning attack, even
+ // when its extra HP would otherwise make the Active safer. The normal
+ // refuel exception below is not worth spending Energy before a free win.
+ // Evaluate only revealed attacks and attached Energy; never future draws.
+ if(cfg.level===8&&(o.self.prizeCount===1||o.opponent.bench.length===0)&&
+    !['Asleep','Paralyzed','Confused'].includes(before.status)){
+  const certainKO=u=>(u.effectiveAttacks||card(u.id)?.attacks||[]).some((a,i)=>
+   canPayEnergy(a.cost||[],energyPool(u))&&
+   !(u.amnesia?.index===i&&u.amnesia.expires>o.turnSerial)&&
+   !(u.gymAttackCooldown?.expires>o.turnSerial&&
+    (u.gymAttackCooldown.index===null||u.gymAttackCooldown.index===i))&&
+   knockoutChance(a,u,o.opponent.active)>=.999);
+  if(certainKO(before)&&!certainKO(after))return 550;
+ }
  const promoted=strongestAffordableAttack(after,o.opponent.active);
  if(promoted>=current)return 0;
  // If one legal Energy attachment can restore a useful attack this turn,
