@@ -69,7 +69,9 @@ assert.equal(reactions.assetFor({},'sierra','attack'),'/rpg-assets/characters/si
 assert.equal(reactions.assetFor({},'rina','attack'),'/rpg-assets/characters/rina/expression-portraits/neutral.webp','Use Rina installed expression portraits');
 assert.equal(reactions.assetFor({},'reina','attack'),'/rpg-assets/characters/reina/expression-portraits/happy.webp');
 const installedManifest=JSON.parse(fs.readFileSync(path.join(__dirname,'../rpg-assets/reactions/manifest.json'),'utf8'));
-assert.equal(Object.keys(installedManifest.characters).length,21,'NPC artwork manifest must load for the whole cast');
+assert.equal(Object.keys(installedManifest.characters).length,castIds.length+1,'NPC artwork manifest includes the authored cast and Laca');
+assert.ok(castIds.every(id=>installedManifest.characters[id]),'Every voiced NPC has artwork');
+assert.ok(installedManifest.characters.laca,'Laca has her own artwork manifest entry');
 assert.equal(reactions.assetFor(installedManifest,'reina','default'),'/rpg-assets/characters/reina/expression-portraits/neutral.webp','Reina uses her VN neutral portrait');
 assert.equal(reactions.assetFor(installedManifest,'rina','default'),'/rpg-assets/characters/rina/expression-portraits/neutral.webp','Rina uses her VN portrait');
 assert.equal(reactions.assetFor(installedManifest,'reina','attack'),'/rpg-assets/reactions/reina/attack.png','Attack uses the widescreen manifest art first');
