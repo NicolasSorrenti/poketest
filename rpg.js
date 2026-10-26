@@ -1959,6 +1959,12 @@ const failedScenePortraits=new Set();
 let activeOutfitSceneId=null;
 const solExpressions={neutral:'neutral',surprised:'surprised',vulnerable:'worried',irritated:'worried',determined:'neutral',happy:'smile'};
 function portraitPaths(id,expression='neutral',sceneId=activeOutfitSceneId){
+ // Alma's legacy guest sheet depicts another character. Only the cafe set is compatible.
+ // Concerned/surprised candidates remain preserved pending a matching canonical outfit.
+ if(id==='alma'){
+  const name=['neutral','happy','soft'].includes(expression)?expression:'neutral';
+  return ['/rpg-assets/characters/alma/expression-portraits/'+name+'.webp','/rpg-assets/alma.png'];
+ }
  const fallback=cast[id].portrait||'/rpg-assets/'+id+'.png';
  let legacy='';
  if(expressionGuests.has(id))legacy='/rpg-assets/characters/'+id+'/vn-expressions/'+expression+'.webp';

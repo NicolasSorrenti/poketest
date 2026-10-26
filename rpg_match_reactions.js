@@ -68,6 +68,12 @@
    status_hit:'angry',ko_taken:'sad',ko_scored:'happy'}
  };
  function vnCandidates(npcId,kind){
+  // Keep Alma in canonical cafe workwear; legacy guest art and suit candidates conflict.
+  if(npcId==='alma'){
+   const name=['attack','play_card','evolve','power','ko_scored'].includes(kind)?'happy':'neutral';
+   return [...new Set([name,'neutral'])].map(expression=>
+    '/rpg-assets/characters/alma/expression-portraits/'+expression+'.webp');
+  }
   const group=VN_MAIN.has(npcId)?'main':VN_GUEST.has(npcId)?'guest':
    VN_PORTRAITS.has(npcId)?'portrait':null;
   if(!group)return [];
