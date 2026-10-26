@@ -1173,7 +1173,11 @@
    if(e.category==='special'&&e.situationId!==e.id)errors.push('Invalid situation CG '+e.id);
    if(!/^[a-z_0-9]+$/.test(e.id)||!e.scene||!e.composition||!e.outfit||!e.expression||!e.environment||!e.dialogueSafe)errors.push('Incomplete CG brief '+e.id);
    if(e.startDay<1||e.startDay>90||e.minAffection<0||e.fanservice<0||e.fanservice>3)errors.push('Invalid gate '+e.id);
-   if(!e.path.endsWith(e.id+'.webp')&&!(e.randomForced&&e.path.endsWith(e.id+'.png')))errors.push('Invalid asset path '+e.id);
+   // Approved legacy art can intentionally use an exact versioned filename or an
+   // opening CG from a multi-image story. Do not falsely reject those assets.
+   const approvedAlias=(e.id==='barb_random_cg_04'&&e.path==='/rpg-assets/characters/barb/events/barb_random_cg_04_accidental_model_v2.webp')||
+    (e.id==='akari_barb_swimsuit_fitting'&&e.path===FIT.cgs[0].path);
+   if(!e.path.endsWith(e.id+'.webp')&&!(e.randomForced&&e.path.endsWith(e.id+'.png'))&&!approvedAlias)errors.push('Invalid asset path '+e.id);
   }
   return errors;
  }
