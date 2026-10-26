@@ -302,3 +302,23 @@ test('Lower CPU levels retain their existing Active Energy scoring',()=>{
  assert.equal(AI.score(attachActive,threatened,lower,{}),
   AI.score(attachActive,safe,lower,{}));
 });
+
+test('Apex does not forecast next-turn Active damage after a certain knockout',()=>{
+ const threatened=threatenedActiveEnergyBoard();
+ // A second Energy in hand makes the hypothetical next-turn attack tempting.
+ threatened.self.hand=[FIGHT,FIGHT];
+ assert.equal(AI.energyHorizonBonus(attachActive,threatened,cfg),0);
+});
+test('Apex retains Bench horizon planning when its Active is doomed',()=>{
+ const threatened=threatenedActiveEnergyBoard();
+ threatened.self.hand=[FIGHT,FIGHT];
+ const benchBonus=AI.energyHorizonBonus(attach,threatened,cfg);
+ assert.ok(Number.isFinite(benchBonus));
+ assert.ok(benchBonus>AI.energyHorizonBonus(attachActive,threatened,cfg));
+});
+test('Apex does not suppress Active horizon planning without a ready enemy knockout',()=>{
+ const safe=threatenedActiveEnergyBoard();
+ safe.opponent.active.energies=[];
+ safe.self.hand=[FIGHT,FIGHT];
+ assert.notEqual(AI.energyHorizonBonus(attachActive,safe,cfg),0);
+});
