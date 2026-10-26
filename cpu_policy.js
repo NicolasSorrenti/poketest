@@ -185,6 +185,19 @@ function damageAfterAttachment(unit,energyId,defender){
  return attacks.reduce((best,a)=>canPayEnergy(a.cost||[],pool)?
   Math.max(best,estimatedDamage(a,unit,defender)):best,0);
 }
+// A public opponent attack can be paid for but temporarily unusable (Sleep,
+// Paralysis, Amnesia or a Gym attack cooldown). Do not flee from an attack
+// that cannot be declared on the visible board. This is not a future oracle.
+function strongestUsableOpponentAttack(o,defender){
+ const enemy=o.opponent.active;
+ if(!enemy||!defender)return 0;
+ const fromEnemy={...o,self:o.opponent,opponent:o.self};
+ const moves=enemy.effectiveAttacks||card(enemy.id)?.attacks||[];
+ return moves.reduce((best,attack,index)=>
+  eligibleAttack(fromEnemy,enemy,attack,index)&&
+  canPayEnergy(attack.cost||[],energyPool(enemy))?
+   Math.max(best,estimatedDamage(attack,enemy,defender)):best,0);
+}
 function hpRemaining(u){return Math.max(0,(Number(card(u?.id)?.hp)||60)-(u?.damage||0));}
 function setupValue(unit){
  const c=card(unit?.id);
@@ -915,8 +928,10 @@ function score(a,o,cfg,used){
   const oldDamage=strongestAffordableAttack(before,q.active);
   const newDamage=strongestAffordableAttack(to,q.active);
   const lethalOwn=oldDamage>=hpRemaining(q.active)&&hpRemaining(q.active)>0;
-  const counter=strongestAffordableAttack(q.active,before);
-  const counterTo=strongestAffordableAttack(q.active,to);
+  const counter=cfg.level===8?strongestUsableOpponentAttack(o,before):
+   strongestAffordableAttack(q.active,before);
+  const counterTo=cfg.level===8?strongestUsableOpponentAttack(o,to):
+   strongestAffordableAttack(q.active,to);
   const threatened=counter>=hpRemaining(before)&&counter>0;
   const alternativeSurvives=counterTo<hpRemaining(to);
   // A defensive swap is useful only when it *actually* shelters the Active
