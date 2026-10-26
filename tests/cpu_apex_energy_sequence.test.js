@@ -302,3 +302,38 @@ test('Lower CPU levels retain their existing Active Energy scoring',()=>{
  assert.equal(AI.score(attachActive,threatened,lower,{}),
   AI.score(attachActive,safe,lower,{}));
 });
+
+function exposedActiveHorizonBoard(){
+ const o=board();
+ Object.assign(o,{phase:'game',round:5,turnSerial:11});
+ o.self.active={id:HITMONCHAN,energies:[FIGHT],damage:60,status:null};
+ o.self.bench=[{id:MACHOP,energies:[],damage:0,status:null}];
+ o.self.hand=[FIGHT];
+ o.opponent.active={id:HITMONCHAN,energies:[FIGHT],damage:0,status:null};
+ return o;
+}
+test('Apex Bench horizon rewards a replacement when the Active faces a ready knockout',()=>{
+ const threatened=exposedActiveHorizonBoard();
+ const safe=structuredClone(threatened);
+ safe.self.active.damage=0;
+ assert.ok(AI.energyHorizonBonus(attach,threatened,cfg)>
+  AI.energyHorizonBonus(attach,safe,cfg),
+  'the exposed Active, not the Energy recipient, determines replacement urgency');
+});
+test('Apex Bench horizon does not mistake a fragile Bench for a threatened Active',()=>{
+ const safe=exposedActiveHorizonBoard();
+ safe.self.active.damage=0;
+ const fragile=structuredClone(safe);
+ fragile.self.bench[0].damage=40;
+ assert.equal(AI.energyHorizonBonus(attach,fragile,cfg),
+  AI.energyHorizonBonus(attach,safe,cfg),
+  'damage on a Bench target must not trigger Active replacement urgency');
+});
+test('Apex Bench horizon ignores knockouts from a sleeping opponent',()=>{
+ const threatened=exposedActiveHorizonBoard();
+ threatened.opponent.active.status='Asleep';
+ const safe=structuredClone(threatened);
+ safe.self.active.damage=0;
+ assert.equal(AI.energyHorizonBonus(attach,threatened,cfg),
+  AI.energyHorizonBonus(attach,safe,cfg));
+});
