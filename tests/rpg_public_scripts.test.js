@@ -17,7 +17,7 @@ test('every client RPG JS dependency exists and is permitted by static server ro
  for(const file of new Set(scriptFiles)){
   assert.ok(fs.existsSync(path.join(root,file)),file+' missing on disk');
   // Server allowlist is an initial set plus explicit pathname comparisons.
-  assert.ok(publicRoute.includes("'"+file+"'"),file+' missing from HTTP static allowlist');
+  assert.ok(publicRoute.includes("'"+file+"'")||publicRoute.includes("'/"+file+"'"),file+' missing from HTTP static allowlist');
  }
 });
 test('new RPG dependencies have explicit static routes',()=>{
