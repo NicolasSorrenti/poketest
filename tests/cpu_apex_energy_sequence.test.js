@@ -85,3 +85,25 @@ test('Apex still rewards a legal, available Energy for a newly benched attacker'
  assert.ok(AI.score(benchHitmonchan,fighting,cfg,{})>
   AI.score(benchHitmonchan,fire,cfg,{}));
 });
+
+function openingChoiceBoard(energyId){
+ const o=board();
+ o.phase='setup';
+ o.self.active=null;
+ o.self.bench=[];
+ o.self.hand=[HITMONCHAN,energyId];
+ return o;
+}
+const selectHitmonchan={type:'setup_select',payload:{handIndex:0}};
+test('opening Active readiness ignores illegal Miracle Energy',()=>{
+ const miracle=openingChoiceBoard('neo4-16');
+ const noEnergy=openingChoiceBoard('base1-91'); // Bill, not an Energy
+ assert.equal(AI.score(selectHitmonchan,miracle,cfg,{}),
+  AI.score(selectHitmonchan,noEnergy,cfg,{}));
+});
+test('opening Active readiness still rewards legal matching Fighting Energy',()=>{
+ const fighting=openingChoiceBoard(FIGHT);
+ const noEnergy=openingChoiceBoard('base1-91');
+ assert.ok(AI.score(selectHitmonchan,fighting,cfg,{})>
+  AI.score(selectHitmonchan,noEnergy,cfg,{}));
+});
