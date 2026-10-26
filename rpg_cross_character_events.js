@@ -3369,11 +3369,11 @@
    },
    {
     "speaker": "Protagonist",
-    "text": "So the buttercup yellow and mint palette will become a soft square-neck top with wide adjustable straps; high-waisted shorts-style bottoms?"
+    "text": "So the rose pink, white and cherry blossom palette will become a floral pink bikini with elaborate scalloped ruffles, rose bows, crossing decorative ribbons and frilled hip overlay?"
    },
    {
     "speaker": "barb",
-    "text": "That's our starting point. We'll adjust the fit and finish together. A tiny embroidered Poké Ball hidden at the hem."
+    "text": "That's our starting point. We'll adjust the fit and finish together. Handmade flower appliques, bow fasteners and playful pink patterns"
    },
    {
     "speaker": "hana",
@@ -3413,16 +3413,17 @@
   "image": "/rpg-assets/events/cg/season01/crossover_barb_hana_beachwear_design.webp",
   "artPending": true,
   "beachwear": {
-   "palette": "buttercup yellow and mint",
-   "cut": "soft square-neck top with wide adjustable straps; high-waisted shorts-style bottoms",
-   "detail": "A tiny embroidered Poké Ball hidden at the hem.",
+   "palette": "rose pink, white and cherry blossom",
+   "cut": "floral pink bikini with elaborate scalloped ruffles, rose bows, crossing decorative ribbons and frilled hip overlay",
+   "detail": "Handmade flower appliques, bow fasteners and playful pink patterns",
    "wearer": "hana",
-   "stage": "concept"
+   "stage": "concept",
+   "visualReference": "Second Neo Campus Beachwear Collection lineup poster; swimsuit styling only, not a canonical face/body reference."
   },
   "art": {
-   "scene": "Barb and hana at a public beachwear design consultation, discussing fabric swatches and a fashion illustration on the table. Her shop apron always slips from one shoulder Both characters fully clothed; bikini is shown as fashion sketches and fabric samples only. The proposed design: buttercup yellow and mint, soft square-neck top with wide adjustable straps; high-waisted shorts-style bottoms.",
+   "scene": "Barb and hana at a public beachwear design consultation, discussing fabric swatches and a fashion illustration on the table. Her shop apron always slips from one shoulder Both characters fully clothed; bikini is shown as fashion sketches and fabric samples only. The proposed design: rose pink, white and cherry blossom, floral pink bikini with elaborate scalloped ruffles, rose bows, crossing decorative ribbons and frilled hip overlay. Incorporate the refined decorative specifics: Handmade flower appliques, bow fasteners and playful pink patterns. The illustration shows this garment as Barb's sketch, not worn.",
    "composition": "Single 16:9 cinematic workshop consultation, Barb and hana both clearly recognizable, design sketch foreground, bottom 20% clear for dialogue; no split panels or actual swimsuit changing.",
-   "outfit": "Canonical approved everyday outfits for both characters; beachwear exists only as sketch and swatch in this initial event.",
+   "outfit": "Canonical approved everyday outfits for both characters; beachwear exists only as sketch and swatch in this initial event. Bold concept detailing must match beachwear metadata; retain approved facial and body canon.",
    "expression": "Characterful collaborative design discussion",
    "environment": "shop",
    "mood": "friendly professional and lighthearted",
@@ -3459,11 +3460,11 @@
    },
    {
     "speaker": "Protagonist",
-    "text": "So the deep navy with a restrained crimson seam palette will become a athletic halter bikini with secure racerback fastening and structured swim shorts?"
+    "text": "So the black, crimson and antique gold palette will become a dramatic black-and-crimson floral bikini with structured neckline, gold rings, diagonal layering and asymmetric hip details?"
    },
    {
     "speaker": "barb",
-    "text": "That's our starting point. We'll adjust the fit and finish together. A narrow red accent only visible when she turns."
+    "text": "That's our starting point. We'll adjust the fit and finish together. Red floral graphics and intricate gold-tone buckles"
    },
    {
     "speaker": "reina",
@@ -3503,16 +3504,17 @@
   "image": "/rpg-assets/events/cg/season01/crossover_barb_reina_beachwear_design.webp",
   "artPending": true,
   "beachwear": {
-   "palette": "deep navy with a restrained crimson seam",
-   "cut": "athletic halter bikini with secure racerback fastening and structured swim shorts",
-   "detail": "A narrow red accent only visible when she turns.",
+   "palette": "black, crimson and antique gold",
+   "cut": "dramatic black-and-crimson floral bikini with structured neckline, gold rings, diagonal layering and asymmetric hip details",
+   "detail": "Red floral graphics and intricate gold-tone buckles",
    "wearer": "reina",
-   "stage": "concept"
+   "stage": "concept",
+   "visualReference": "Second Neo Campus Beachwear Collection lineup poster; swimsuit styling only, not a canonical face/body reference."
   },
   "art": {
-   "scene": "Barb and reina at a public beachwear design consultation, discussing fabric swatches and a fashion illustration on the table. Reina refuses anything that feels like a costume Both characters fully clothed; bikini is shown as fashion sketches and fabric samples only. The proposed design: deep navy with a restrained crimson seam, athletic halter bikini with secure racerback fastening and structured swim shorts.",
+   "scene": "Barb and reina at a public beachwear design consultation, discussing fabric swatches and a fashion illustration on the table. Reina refuses anything that feels like a costume Both characters fully clothed; bikini is shown as fashion sketches and fabric samples only. The proposed design: black, crimson and antique gold, dramatic black-and-crimson floral bikini with structured neckline, gold rings, diagonal layering and asymmetric hip details. Incorporate the refined decorative specifics: Red floral graphics and intricate gold-tone buckles. The illustration shows this garment as Barb's sketch, not worn.",
    "composition": "Single 16:9 cinematic workshop consultation, Barb and reina both clearly recognizable, design sketch foreground, bottom 20% clear for dialogue; no split panels or actual swimsuit changing.",
-   "outfit": "Canonical approved everyday outfits for both characters; beachwear exists only as sketch and swatch in this initial event.",
+   "outfit": "Canonical approved everyday outfits for both characters; beachwear exists only as sketch and swatch in this initial event. Bold concept detailing must match beachwear metadata; retain approved facial and body canon.",
    "expression": "Characterful collaborative design discussion",
    "environment": "shop",
    "mood": "friendly professional and lighthearted",
@@ -3729,11 +3731,11 @@
    },
    {
     "speaker": "Protagonist",
-    "text": "So the teal and charcoal with fine copper linework palette will become a minimalist supportive swim top with adjustable back and high-waist bottoms?"
+    "text": "So the deep teal, black and silver palette will become a structured teal-and-black halter bikini with angular crossing upper straps, metal connectors and precision-cut contrast panels?"
    },
    {
     "speaker": "barb",
-    "text": "That's our starting point. We'll adjust the fit and finish together. A copper grid pattern that becomes visible in sunlight."
+    "text": "That's our starting point. We'll adjust the fit and finish together. Streamlined metallic fittings and an asymmetric hip belt"
    },
    {
     "speaker": "akari",
@@ -3773,16 +3775,17 @@
   "image": "/rpg-assets/events/cg/season01/crossover_barb_akari_beachwear_design.webp",
   "artPending": true,
   "beachwear": {
-   "palette": "teal and charcoal with fine copper linework",
-   "cut": "minimalist supportive swim top with adjustable back and high-waist bottoms",
-   "detail": "A copper grid pattern that becomes visible in sunlight.",
+   "palette": "deep teal, black and silver",
+   "cut": "structured teal-and-black halter bikini with angular crossing upper straps, metal connectors and precision-cut contrast panels",
+   "detail": "Streamlined metallic fittings and an asymmetric hip belt",
    "wearer": "akari",
-   "stage": "concept"
+   "stage": "concept",
+   "visualReference": "Second Neo Campus Beachwear Collection lineup poster; swimsuit styling only, not a canonical face/body reference."
   },
   "art": {
-   "scene": "Barb and akari at a public beachwear design consultation, discussing fabric swatches and a fashion illustration on the table. Akari arrives with a spreadsheet of sun coverage, fit, and drying times Both characters fully clothed; bikini is shown as fashion sketches and fabric samples only. The proposed design: teal and charcoal with fine copper linework, minimalist supportive swim top with adjustable back and high-waist bottoms.",
+   "scene": "Barb and akari at a public beachwear design consultation, discussing fabric swatches and a fashion illustration on the table. Akari arrives with a spreadsheet of sun coverage, fit, and drying times Both characters fully clothed; bikini is shown as fashion sketches and fabric samples only. The proposed design: deep teal, black and silver, structured teal-and-black halter bikini with angular crossing upper straps, metal connectors and precision-cut contrast panels. Incorporate the refined decorative specifics: Streamlined metallic fittings and an asymmetric hip belt. The illustration shows this garment as Barb's sketch, not worn.",
    "composition": "Single 16:9 cinematic workshop consultation, Barb and akari both clearly recognizable, design sketch foreground, bottom 20% clear for dialogue; no split panels or actual swimsuit changing.",
-   "outfit": "Canonical approved everyday outfits for both characters; beachwear exists only as sketch and swatch in this initial event.",
+   "outfit": "Canonical approved everyday outfits for both characters; beachwear exists only as sketch and swatch in this initial event. Bold concept detailing must match beachwear metadata; retain approved facial and body canon.",
    "expression": "Characterful collaborative design discussion",
    "environment": "cafe",
    "mood": "friendly professional and lighthearted",
@@ -4449,11 +4452,11 @@
    },
    {
     "speaker": "Protagonist",
-    "text": "So the espresso brown and cream palette will become a elegant twist-front bikini and wrap skirt with practical pockets for beach essentials?"
+    "text": "So the pale lavender, cream and soft gold palette will become a lavender floral bikini with delicate layered ruffles, lace-inspired edging, subtle gold fasteners and an elegant matching wrap?"
    },
    {
     "speaker": "barb",
-    "text": "That's our starting point. We'll adjust the fit and finish together. A café-bean inspired textured border."
+    "text": "That's our starting point. We'll adjust the fit and finish together. Soft flower details, flutter fabric and pearl-like accents"
    },
    {
     "speaker": "alma",
@@ -4493,16 +4496,17 @@
   "image": "/rpg-assets/events/cg/season01/crossover_barb_alma_beachwear_design.webp",
   "artPending": true,
   "beachwear": {
-   "palette": "espresso brown and cream",
-   "cut": "elegant twist-front bikini and wrap skirt with practical pockets for beach essentials",
-   "detail": "A café-bean inspired textured border.",
+   "palette": "pale lavender, cream and soft gold",
+   "cut": "lavender floral bikini with delicate layered ruffles, lace-inspired edging, subtle gold fasteners and an elegant matching wrap",
+   "detail": "Soft flower details, flutter fabric and pearl-like accents",
    "wearer": "alma",
-   "stage": "concept"
+   "stage": "concept",
+   "visualReference": "Second Neo Campus Beachwear Collection lineup poster; swimsuit styling only, not a canonical face/body reference."
   },
   "art": {
-   "scene": "Barb and alma at a public beachwear design consultation, discussing fabric swatches and a fashion illustration on the table. Alma wants something elegant that can survive a whole afternoon with friends Both characters fully clothed; bikini is shown as fashion sketches and fabric samples only. The proposed design: espresso brown and cream, elegant twist-front bikini and wrap skirt with practical pockets for beach essentials.",
+   "scene": "Barb and alma at a public beachwear design consultation, discussing fabric swatches and a fashion illustration on the table. Alma wants something elegant that can survive a whole afternoon with friends Both characters fully clothed; bikini is shown as fashion sketches and fabric samples only. The proposed design: pale lavender, cream and soft gold, lavender floral bikini with delicate layered ruffles, lace-inspired edging, subtle gold fasteners and an elegant matching wrap. Incorporate the refined decorative specifics: Soft flower details, flutter fabric and pearl-like accents. The illustration shows this garment as Barb's sketch, not worn.",
    "composition": "Single 16:9 cinematic workshop consultation, Barb and alma both clearly recognizable, design sketch foreground, bottom 20% clear for dialogue; no split panels or actual swimsuit changing.",
-   "outfit": "Canonical approved everyday outfits for both characters; beachwear exists only as sketch and swatch in this initial event.",
+   "outfit": "Canonical approved everyday outfits for both characters; beachwear exists only as sketch and swatch in this initial event. Bold concept detailing must match beachwear metadata; retain approved facial and body canon.",
    "expression": "Characterful collaborative design discussion",
    "environment": "cafe",
    "mood": "friendly professional and lighthearted",
@@ -4720,11 +4724,11 @@
    },
    {
     "speaker": "Protagonist",
-    "text": "So the ultraviolet, black and electric cyan palette will become a sporty bikini with graffiti-inspired colorblocking and secure straps?"
+    "text": "So the black, violet, hot pink and electric cyan palette will become a punk graffiti bikini with asymmetric graphic panels, crisscross straps, buckled hip bands and paint-splash prints?"
    },
    {
     "speaker": "barb",
-    "text": "That's our starting point. We'll adjust the fit and finish together. A discreet graffiti tag worked into the hem instead of a giant logo."
+    "text": "That's our starting point. We'll adjust the fit and finish together. Neon trim, graffiti motifs and bold layered straps"
    },
    {
     "speaker": "jinx",
@@ -4764,16 +4768,17 @@
   "image": "/rpg-assets/events/cg/season01/crossover_barb_jinx_beachwear_design.webp",
   "artPending": true,
   "beachwear": {
-   "palette": "ultraviolet, black and electric cyan",
-   "cut": "sporty bikini with graffiti-inspired colorblocking and secure straps",
-   "detail": "A discreet graffiti tag worked into the hem instead of a giant logo.",
+   "palette": "black, violet, hot pink and electric cyan",
+   "cut": "punk graffiti bikini with asymmetric graphic panels, crisscross straps, buckled hip bands and paint-splash prints",
+   "detail": "Neon trim, graffiti motifs and bold layered straps",
    "wearer": "jinx",
-   "stage": "concept"
+   "stage": "concept",
+   "visualReference": "Second Neo Campus Beachwear Collection lineup poster; swimsuit styling only, not a canonical face/body reference."
   },
   "art": {
-   "scene": "Barb and jinx at a public beachwear design consultation, discussing fabric swatches and a fashion illustration on the table. Jinx presents Barb with a page of paint splashes that would overwhelm any swimsuit Both characters fully clothed; bikini is shown as fashion sketches and fabric samples only. The proposed design: ultraviolet, black and electric cyan, sporty bikini with graffiti-inspired colorblocking and secure straps.",
+   "scene": "Barb and jinx at a public beachwear design consultation, discussing fabric swatches and a fashion illustration on the table. Jinx presents Barb with a page of paint splashes that would overwhelm any swimsuit Both characters fully clothed; bikini is shown as fashion sketches and fabric samples only. The proposed design: black, violet, hot pink and electric cyan, punk graffiti bikini with asymmetric graphic panels, crisscross straps, buckled hip bands and paint-splash prints. Incorporate the refined decorative specifics: Neon trim, graffiti motifs and bold layered straps. The illustration shows this garment as Barb's sketch, not worn.",
    "composition": "Single 16:9 cinematic workshop consultation, Barb and jinx both clearly recognizable, design sketch foreground, bottom 20% clear for dialogue; no split panels or actual swimsuit changing.",
-   "outfit": "Canonical approved everyday outfits for both characters; beachwear exists only as sketch and swatch in this initial event.",
+   "outfit": "Canonical approved everyday outfits for both characters; beachwear exists only as sketch and swatch in this initial event. Bold concept detailing must match beachwear metadata; retain approved facial and body canon.",
    "expression": "Characterful collaborative design discussion",
    "environment": "park",
    "mood": "friendly professional and lighthearted",
@@ -4810,11 +4815,11 @@
    },
    {
     "speaker": "Protagonist",
-    "text": "So the red, cream and dusky turquoise palette will become a secure sporty bikini, modest coverage and adjustable straps with a matching light cover-up?"
+    "text": "So the coral red, teal and cream palette will become a sporty color-block bikini with cross-over halter neckline, diagonal teal straps, asymmetric hip band and metallic ring fasteners?"
    },
    {
     "speaker": "barb",
-    "text": "That's our starting point. We'll adjust the fit and finish together. A tiny wave emblem instead of any rescue-service insignia."
+    "text": "That's our starting point. We'll adjust the fit and finish together. Teal piping, glossy ring connectors and layered athletic strapwork"
    },
    {
     "speaker": "laca",
@@ -4854,16 +4859,17 @@
   "image": "/rpg-assets/events/cg/season01/crossover_barb_laca_beachwear_design.webp",
   "artPending": true,
   "beachwear": {
-   "palette": "red, cream and dusky turquoise",
-   "cut": "secure sporty bikini, modest coverage and adjustable straps with a matching light cover-up",
-   "detail": "A tiny wave emblem instead of any rescue-service insignia.",
+   "palette": "coral red, teal and cream",
+   "cut": "sporty color-block bikini with cross-over halter neckline, diagonal teal straps, asymmetric hip band and metallic ring fasteners",
+   "detail": "Teal piping, glossy ring connectors and layered athletic strapwork",
    "wearer": "laca",
-   "stage": "concept"
+   "stage": "concept",
+   "visualReference": "Second Neo Campus Beachwear Collection lineup poster; swimsuit styling only, not a canonical face/body reference."
   },
   "art": {
-   "scene": "Barb and laca at a public beachwear design consultation, discussing fabric swatches and a fashion illustration on the table. Laca wants an off-duty look distinct from her functional red lifeguard uniform Both characters fully clothed; bikini is shown as fashion sketches and fabric samples only. The proposed design: red, cream and dusky turquoise, secure sporty bikini, modest coverage and adjustable straps with a matching light cover-up.",
+   "scene": "Barb and laca at a public beachwear design consultation, discussing fabric swatches and a fashion illustration on the table. Laca wants an off-duty look distinct from her functional red lifeguard uniform Both characters fully clothed; bikini is shown as fashion sketches and fabric samples only. The proposed design: coral red, teal and cream, sporty color-block bikini with cross-over halter neckline, diagonal teal straps, asymmetric hip band and metallic ring fasteners. Incorporate the refined decorative specifics: Teal piping, glossy ring connectors and layered athletic strapwork. The illustration shows this garment as Barb's sketch, not worn.",
    "composition": "Single 16:9 cinematic workshop consultation, Barb and laca both clearly recognizable, design sketch foreground, bottom 20% clear for dialogue; no split panels or actual swimsuit changing.",
-   "outfit": "Canonical approved everyday outfits for both characters; beachwear exists only as sketch and swatch in this initial event.",
+   "outfit": "Canonical approved everyday outfits for both characters; beachwear exists only as sketch and swatch in this initial event. Bold concept detailing must match beachwear metadata; retain approved facial and body canon.",
    "expression": "Characterful collaborative design discussion",
    "environment": "park",
    "mood": "friendly professional and lighthearted",
@@ -4900,11 +4906,11 @@
    },
    {
     "speaker": "Protagonist",
-    "text": "So the midnight blue and pale lilac palette will become a soft square-neck bikini with a gently draped high-rise bottom and optional beach cardigan?"
+    "text": "So the midnight violet, indigo and gold palette will become a elegant violet bikini with crossing neckline straps, gold connectors, layered hip straps and gothic filigree panels?"
    },
    {
     "speaker": "barb",
-    "text": "That's our starting point. We'll adjust the fit and finish together. Subtle crescent stitching hidden in the cardigan cuff."
+    "text": "That's our starting point. We'll adjust the fit and finish together. Small gold constellation motifs and jewel-like fittings"
    },
    {
     "speaker": "luna",
@@ -4944,16 +4950,17 @@
   "image": "/rpg-assets/events/cg/season01/crossover_barb_luna_beachwear_design.webp",
   "artPending": true,
   "beachwear": {
-   "palette": "midnight blue and pale lilac",
-   "cut": "soft square-neck bikini with a gently draped high-rise bottom and optional beach cardigan",
-   "detail": "Subtle crescent stitching hidden in the cardigan cuff.",
+   "palette": "midnight violet, indigo and gold",
+   "cut": "elegant violet bikini with crossing neckline straps, gold connectors, layered hip straps and gothic filigree panels",
+   "detail": "Small gold constellation motifs and jewel-like fittings",
    "wearer": "luna",
-   "stage": "concept"
+   "stage": "concept",
+   "visualReference": "Second Neo Campus Beachwear Collection lineup poster; swimsuit styling only, not a canonical face/body reference."
   },
   "art": {
-   "scene": "Barb and luna at a public beachwear design consultation, discussing fabric swatches and a fashion illustration on the table. Luna is afraid her tastes will seem too quiet compared with everyone else's Both characters fully clothed; bikini is shown as fashion sketches and fabric samples only. The proposed design: midnight blue and pale lilac, soft square-neck bikini with a gently draped high-rise bottom and optional beach cardigan.",
+   "scene": "Barb and luna at a public beachwear design consultation, discussing fabric swatches and a fashion illustration on the table. Luna is afraid her tastes will seem too quiet compared with everyone else's Both characters fully clothed; bikini is shown as fashion sketches and fabric samples only. The proposed design: midnight violet, indigo and gold, elegant violet bikini with crossing neckline straps, gold connectors, layered hip straps and gothic filigree panels. Incorporate the refined decorative specifics: Small gold constellation motifs and jewel-like fittings. The illustration shows this garment as Barb's sketch, not worn.",
    "composition": "Single 16:9 cinematic workshop consultation, Barb and luna both clearly recognizable, design sketch foreground, bottom 20% clear for dialogue; no split panels or actual swimsuit changing.",
-   "outfit": "Canonical approved everyday outfits for both characters; beachwear exists only as sketch and swatch in this initial event.",
+   "outfit": "Canonical approved everyday outfits for both characters; beachwear exists only as sketch and swatch in this initial event. Bold concept detailing must match beachwear metadata; retain approved facial and body canon.",
    "expression": "Characterful collaborative design discussion",
    "environment": "shop",
    "mood": "friendly professional and lighthearted",
@@ -4990,11 +4997,11 @@
    },
    {
     "speaker": "Protagonist",
-    "text": "So the rose pink and sea-green palette will become a playful retro bikini top with supportive broad straps and high-rise bottoms plus a coordinating tied cover-up?"
+    "text": "So the bubblegum pink, fuchsia and rose palette will become a ornate ruffled pink bikini with layered bow-front top, scalloped trim and doubled side-tie ribbons?"
    },
    {
     "speaker": "barb",
-    "text": "That's our starting point. We'll adjust the fit and finish together. A single small star sewn at the waist instead of sequins."
+    "text": "That's our starting point. We'll adjust the fit and finish together. Flower-like ruffles, oversized satin bows and a tiny star charm"
    },
    {
     "speaker": "rina",
@@ -5034,16 +5041,17 @@
   "image": "/rpg-assets/events/cg/season01/crossover_barb_rina_beachwear_design.webp",
   "artPending": true,
   "beachwear": {
-   "palette": "rose pink and sea-green",
-   "cut": "playful retro bikini top with supportive broad straps and high-rise bottoms plus a coordinating tied cover-up",
-   "detail": "A single small star sewn at the waist instead of sequins.",
+   "palette": "bubblegum pink, fuchsia and rose",
+   "cut": "ornate ruffled pink bikini with layered bow-front top, scalloped trim and doubled side-tie ribbons",
+   "detail": "Flower-like ruffles, oversized satin bows and a tiny star charm",
    "wearer": "rina",
-   "stage": "concept"
+   "stage": "concept",
+   "visualReference": "Second Neo Campus Beachwear Collection lineup poster; swimsuit styling only, not a canonical face/body reference."
   },
   "art": {
-   "scene": "Barb and rina at a public beachwear design consultation, discussing fabric swatches and a fashion illustration on the table. Rina asks for something pretty that doesn't feel like a stage costume Both characters fully clothed; bikini is shown as fashion sketches and fabric samples only. The proposed design: rose pink and sea-green, playful retro bikini top with supportive broad straps and high-rise bottoms plus a coordinating tied cover-up.",
+   "scene": "Barb and rina at a public beachwear design consultation, discussing fabric swatches and a fashion illustration on the table. Rina asks for something pretty that doesn't feel like a stage costume Both characters fully clothed; bikini is shown as fashion sketches and fabric samples only. The proposed design: bubblegum pink, fuchsia and rose, ornate ruffled pink bikini with layered bow-front top, scalloped trim and doubled side-tie ribbons. Incorporate the refined decorative specifics: Flower-like ruffles, oversized satin bows and a tiny star charm. The illustration shows this garment as Barb's sketch, not worn.",
    "composition": "Single 16:9 cinematic workshop consultation, Barb and rina both clearly recognizable, design sketch foreground, bottom 20% clear for dialogue; no split panels or actual swimsuit changing.",
-   "outfit": "Canonical approved everyday outfits for both characters; beachwear exists only as sketch and swatch in this initial event.",
+   "outfit": "Canonical approved everyday outfits for both characters; beachwear exists only as sketch and swatch in this initial event. Bold concept detailing must match beachwear metadata; retain approved facial and body canon.",
    "expression": "Characterful collaborative design discussion",
    "environment": "cafe",
    "mood": "friendly professional and lighthearted",
@@ -5080,11 +5088,11 @@
    },
    {
     "speaker": "Protagonist",
-    "text": "So the terracotta and ocean teal palette will become a outdoorsy cross-back bikini top, flexible swim shorts and a sun-protective overshirt?"
+    "text": "So the burnt orange, turquoise and charcoal palette will become a adventurous burnt-orange and teal bikini with secure asymmetric strapping, buckle details and a utility-inspired hip belt?"
    },
    {
     "speaker": "barb",
-    "text": "That's our starting point. We'll adjust the fit and finish together. A stitched tiny trail-marker symbol on the overshirt."
+    "text": "That's our starting point. We'll adjust the fit and finish together. Geometric panels, sporty contrast piping and an optional overshirt"
    },
    {
     "speaker": "sierra",
@@ -5124,16 +5132,17 @@
   "image": "/rpg-assets/events/cg/season01/crossover_barb_sierra_beachwear_design.webp",
   "artPending": true,
   "beachwear": {
-   "palette": "terracotta and ocean teal",
-   "cut": "outdoorsy cross-back bikini top, flexible swim shorts and a sun-protective overshirt",
-   "detail": "A stitched tiny trail-marker symbol on the overshirt.",
+   "palette": "burnt orange, turquoise and charcoal",
+   "cut": "adventurous burnt-orange and teal bikini with secure asymmetric strapping, buckle details and a utility-inspired hip belt",
+   "detail": "Geometric panels, sporty contrast piping and an optional overshirt",
    "wearer": "sierra",
-   "stage": "concept"
+   "stage": "concept",
+   "visualReference": "Second Neo Campus Beachwear Collection lineup poster; swimsuit styling only, not a canonical face/body reference."
   },
   "art": {
-   "scene": "Barb and sierra at a public beachwear design consultation, discussing fabric swatches and a fashion illustration on the table. Sierra expects to be exploring as much as swimming Both characters fully clothed; bikini is shown as fashion sketches and fabric samples only. The proposed design: terracotta and ocean teal, outdoorsy cross-back bikini top, flexible swim shorts and a sun-protective overshirt.",
+   "scene": "Barb and sierra at a public beachwear design consultation, discussing fabric swatches and a fashion illustration on the table. Sierra expects to be exploring as much as swimming Both characters fully clothed; bikini is shown as fashion sketches and fabric samples only. The proposed design: burnt orange, turquoise and charcoal, adventurous burnt-orange and teal bikini with secure asymmetric strapping, buckle details and a utility-inspired hip belt. Incorporate the refined decorative specifics: Geometric panels, sporty contrast piping and an optional overshirt. The illustration shows this garment as Barb's sketch, not worn.",
    "composition": "Single 16:9 cinematic workshop consultation, Barb and sierra both clearly recognizable, design sketch foreground, bottom 20% clear for dialogue; no split panels or actual swimsuit changing.",
-   "outfit": "Canonical approved everyday outfits for both characters; beachwear exists only as sketch and swatch in this initial event.",
+   "outfit": "Canonical approved everyday outfits for both characters; beachwear exists only as sketch and swatch in this initial event. Bold concept detailing must match beachwear metadata; retain approved facial and body canon.",
    "expression": "Characterful collaborative design discussion",
    "environment": "park",
    "mood": "friendly professional and lighthearted",
@@ -5170,11 +5179,11 @@
    },
    {
     "speaker": "Protagonist",
-    "text": "So the golden amber and sky blue palette will become a balanced halter bikini with supportive neck-free conversion straps and a light sarong?"
+    "text": "So the warm amber, white and sunset gold palette will become a sunburst-pattern bikini with layered crossing neckline, ornate gold ring hardware, asymmetric draping and high-hip chain-inspired trim?"
    },
    {
     "speaker": "barb",
-    "text": "That's our starting point. We'll adjust the fit and finish together. A gradient stripe along the sarong edge."
+    "text": "That's our starting point. We'll adjust the fit and finish together. Radiant amber-to-gold details and jewelry-inspired accents"
    },
    {
     "speaker": "sol",
@@ -5214,16 +5223,17 @@
   "image": "/rpg-assets/events/cg/season01/crossover_barb_sol_beachwear_design.webp",
   "artPending": true,
   "beachwear": {
-   "palette": "golden amber and sky blue",
-   "cut": "balanced halter bikini with supportive neck-free conversion straps and a light sarong",
-   "detail": "A gradient stripe along the sarong edge.",
+   "palette": "warm amber, white and sunset gold",
+   "cut": "sunburst-pattern bikini with layered crossing neckline, ornate gold ring hardware, asymmetric draping and high-hip chain-inspired trim",
+   "detail": "Radiant amber-to-gold details and jewelry-inspired accents",
    "wearer": "sol",
-   "stage": "concept"
+   "stage": "concept",
+   "visualReference": "Second Neo Campus Beachwear Collection lineup poster; swimsuit styling only, not a canonical face/body reference."
   },
   "art": {
-   "scene": "Barb and sol at a public beachwear design consultation, discussing fabric swatches and a fashion illustration on the table. Sol wants the colors of her favorite riverside sunset without sacrificing comfort Both characters fully clothed; bikini is shown as fashion sketches and fabric samples only. The proposed design: golden amber and sky blue, balanced halter bikini with supportive neck-free conversion straps and a light sarong.",
+   "scene": "Barb and sol at a public beachwear design consultation, discussing fabric swatches and a fashion illustration on the table. Sol wants the colors of her favorite riverside sunset without sacrificing comfort Both characters fully clothed; bikini is shown as fashion sketches and fabric samples only. The proposed design: warm amber, white and sunset gold, sunburst-pattern bikini with layered crossing neckline, ornate gold ring hardware, asymmetric draping and high-hip chain-inspired trim. Incorporate the refined decorative specifics: Radiant amber-to-gold details and jewelry-inspired accents. The illustration shows this garment as Barb's sketch, not worn.",
    "composition": "Single 16:9 cinematic workshop consultation, Barb and sol both clearly recognizable, design sketch foreground, bottom 20% clear for dialogue; no split panels or actual swimsuit changing.",
-   "outfit": "Canonical approved everyday outfits for both characters; beachwear exists only as sketch and swatch in this initial event.",
+   "outfit": "Canonical approved everyday outfits for both characters; beachwear exists only as sketch and swatch in this initial event. Bold concept detailing must match beachwear metadata; retain approved facial and body canon.",
    "expression": "Characterful collaborative design discussion",
    "environment": "park",
    "mood": "friendly professional and lighthearted",
