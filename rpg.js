@@ -76,12 +76,12 @@ function finishStory(){
  catch(err){window.NeoRpgErrorReport?.capture(err,{source:'story-completion',action:'storyFinish'});console.error('RPG story completion failed',err);$('notice').textContent='Could not finish scene: '+err.message;return;}
  // Commit the resolved scene before any nonessential rewards or artwork.
  state.activeStory=null;persist();
- const id=e.npc;let chapterReward=null,storyMemories=[];
+ const id=e.npc;let chapterReward=null;
  try{chapterReward=BONDS.reward(state,e,BOND_PLAN,COLLECT);}
  catch(err){window.NeoRpgErrorReport?.capture(err,{source:'optional-reward',action:'storyReward'});console.error('RPG chapter reward failed',err);}
  try{
   log('Finished '+e.title+' with '+cast[id].name+'.');
-  storyMemories=recordCG('story_milestone',id,{eventId:e.id});
+  recordCG('story_milestone',id,{eventId:e.id});
   recordIntention('story');
   if(chapterReward)log('Bond chapter '+chapterReward.chapter+' reward from '+cast[id].name+': '+chapterReward.label+'.');
  }catch(err){window.NeoRpgErrorReport?.capture(err,{source:'optional-story-effects',action:'storyFinish'});console.error('RPG optional story effects failed',err);}
@@ -226,7 +226,7 @@ let scene=state.scene&&typeof state.scene.speaker==='string'&&typeof state.scene
 // A single handoff owns calendar wipes, image loading and forced-story eligibility.
 // The state is saved at clock advancement; only presentation waits for acknowledgement.
 const timeSequence=window.NeoRpgTimeTransitions?.createSequence?.({
- canPresent:()=>!scene.line&&!scene.choices?.length&&!$('cgMoment')?.open,
+ canPresent:()=>!scene.line&&!scene.choices?.length,
  present:timeFlash,
  onSettled:()=>render()
 })||{
@@ -271,7 +271,7 @@ function maybeStartMandatory(){
  if(timeSequence.blocked||window.NeoRpgTimeTransitions?.active)return;
  // Existing scripted dialogue, character choices, galleries, duel preparation and starter selection remain authoritative.
  if(state.activeSliceOfLife||scene.line||scene.choices?.length||state.deckJourney&&!state.deckJourney.starter
-    ||$('cgMoment')?.open||$('preDuelDialog')?.open||$('galleryDialog')?.open||$('calendarDialog')?.open)return;
+    ||$('preDuelDialog')?.open||$('galleryDialog')?.open||$('calendarDialog')?.open)return;
  // A due meeting takes precedence over an automatic story that would relocate the player.
  if(TIME.dueNow(state).length)return;
  const started=MANDATORY.takeNext(state,MANDATORY_EVENTS);
@@ -611,12 +611,11 @@ function beginSliceOfLife(trigger,npc=null,onlyRandomForced=false){
  const moment=SLICE.start(state,currentPeople(),trigger,npc,{onlyRandomForced});
  if(!moment)return false;
  state.selected=moment.npc;
- const memory=moment.choices?CG.byId(moment.cgSequence?.[0]||moment.id):recordCG('slice',moment.npc,{eventId:moment.id})[0];
+ if(!moment.choices)recordCG('slice',moment.npc,{eventId:moment.id});
  persist();render();
  return true;
 }
 function nextSliceOfLife(){
- const before=state.activeSliceOfLife;
  const result=SLICE.next(state);
  if(!result)return;
  // The CG selector uses the current step, switching the fitting artwork at step 4.
@@ -654,7 +653,7 @@ function finishSituation(){
   const outcome=SITUATIONS.finish(state,currentPeople());
   log('An unexpected moment with '+cast[event.npc].name+': '+event.title+'.');
   recordIntention('hangout');
-  const memories=recordCG('situation',event.npc,{eventId:event.id});
+  recordCG('situation',event.npc,{eventId:event.id});
   advance();
   closeSceneDialogue();
  }catch(err){$('notice').textContent=err.message;}
