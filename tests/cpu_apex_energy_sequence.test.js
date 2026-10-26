@@ -226,3 +226,30 @@ test('Apex still values Super Energy Removal when a one-Energy donor exists',()=
  assert.ok(AI.score(playSuperEnergyRemoval,cheap,cfg,{})>
   AI.score(playSuperEnergyRemoval,expensive,cfg,{}));
 });
+
+function protectedRemovalBoard(protectActive,benchEnergyCount=1){
+ const o=superEnergyRemovalBoard();
+ o.self.active.energies=[FIGHT];
+ o.opponent.active.attachedTrainers=protectActive?[{id:'gym2-101'}]:[];
+ o.opponent.bench=[{id:MACHOP,energies:Array(benchEnergyCount).fill(FIGHT),damage:0}];
+ return o;
+}
+test('Super Energy Removal protection fixture uses the real Gym Trainer',()=>{
+ assert.equal(require('../headless_duel').CATALOG.get('gym2-101')?.name,"Brock's Protection");
+});
+test('Apex ignores protected two-Energy Active when valuing Super Energy Removal',()=>{
+ const protectedBoard=protectedRemovalBoard(true);
+ const oneEnergyActive=protectedRemovalBoard(false);
+ oneEnergyActive.opponent.active.energies=[FIGHT];
+ const unprotectedTwoEnergy=protectedRemovalBoard(false);
+ assert.equal(AI.score(playSuperEnergyRemoval,protectedBoard,cfg,{}),
+  AI.score(playSuperEnergyRemoval,oneEnergyActive,cfg,{}));
+ assert.ok(AI.score(playSuperEnergyRemoval,unprotectedTwoEnergy,cfg,{})>
+  AI.score(playSuperEnergyRemoval,protectedBoard,cfg,{}));
+});
+test('Apex still recognizes a removable two-Energy Bench behind protected Active',()=>{
+ const removableTwo=protectedRemovalBoard(true,2);
+ const removableOne=protectedRemovalBoard(true,1);
+ assert.ok(AI.score(playSuperEnergyRemoval,removableTwo,cfg,{})>
+  AI.score(playSuperEnergyRemoval,removableOne,cfg,{}));
+});
