@@ -544,10 +544,7 @@ function evolutionTempoPenalty(o,slot,evolutionId,cfg){
  if(cfg.level===8&&(o.self.prizeCount===1||o.opponent.bench.length===0)&&
     !['Asleep','Paralyzed','Confused'].includes(before.status)){
   const certainKO=u=>(u.effectiveAttacks||card(u.id)?.attacks||[]).some((a,i)=>
-   canPayEnergy(a.cost||[],energyPool(u))&&
-   !(u.amnesia?.index===i&&u.amnesia.expires>o.turnSerial)&&
-   !(u.gymAttackCooldown?.expires>o.turnSerial&&
-    (u.gymAttackCooldown.index===null||u.gymAttackCooldown.index===i))&&
+   eligibleAttack(o,u,a,i)&&canPayEnergy(a.cost||[],energyPool(u))&&
    knockoutChance(a,u,o.opponent.active)>=.999);
   if(certainKO(before)&&!certainKO(after))return 550;
  }
