@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "characterId": "sol",
+  "portrait": "/rpg-assets/sol.png",
+  "expressions": {
+    "neutral": "/rpg-assets/characters/sol/neutral.webp",
+    "smile": "/rpg-assets/characters/sol/smile.webp",
+    "surprised": "/rpg-assets/characters/sol/surprised.webp",
+    "worried": "/rpg-assets/characters/sol/worried.webp",
+    "soft": "/rpg-assets/characters/sol/soft.webp"
+  },
+  "eventImages": [
+    {
+      "sceneId": "sol_route_1",
+      "path": "/rpg-assets/characters/sol/sol_scavenger_hunt.webp",
+      "prompt": "Adult 26 year old Sol Varela, anime visual novel JRPG, playful outdoor waterfront scavenger hunt, her turquoise/coral resort bikini under an open bright tropical shirt, sparkling joyful expression, entirely SFW, wide environmental CG; bottom 20 percent kept clear for text"
+    },
+    {
+      "sceneId": "sol_route_3",
+      "path": "/rpg-assets/characters/sol/sol_unguarded_cafe.webp",
+      "prompt": "Adult 26 year old Sol Varela in a relaxed cardigan over colorful resort wear, sitting quietly in cafe when festival plans go wrong; genuine vulnerable expression, cinematic anime VN composition, warm sunset atmosphere, SFW and character-led; bottom 20 percent clear for dialogue."
+    }
+  ]
+}

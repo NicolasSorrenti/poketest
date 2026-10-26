@@ -1,0 +1,1155 @@
+{
+  "base_head": "4cf9765467176dfc1479eaee0044a25b5b6612eb",
+  "files": [
+    {
+      "path": "rpg-assets/characters/akari/expression-portraits/happy.webp",
+      "dimensions": [
+        512,
+        1024
+      ],
+      "sha256": "107b4f21ca287263bf3a23154f694f5d18e8c553a718acee0e68a1821724a4ae",
+      "git_blob_sha": "068a076ac918580472103c0432dc05c522bf8891",
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "batch": "akari",
+      "thumbnail": "art-production/pr140-parallel/akari/thumbnails/characters/akari/expression-portraits/happy.png"
+    },
+    {
+      "path": "rpg-assets/characters/akari/expression-portraits/soft.webp",
+      "dimensions": [
+        512,
+        1024
+      ],
+      "sha256": "b4c79636f9dfe32224827d33177c068c5ec1680590ca9d331cd0e24dc9add134",
+      "git_blob_sha": "21c6165ac0fdd2c566a7e92ba9f94221f8a44211",
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "batch": "akari",
+      "thumbnail": "art-production/pr140-parallel/akari/thumbnails/characters/akari/expression-portraits/soft.png"
+    },
+    {
+      "path": "rpg-assets/characters/camila/expression-portraits/happy.webp",
+      "dimensions": [
+        512,
+        1024
+      ],
+      "sha256": "572f193425c99a1c6438c05e545dbb73c03f04757de9f7db81aefcc3b6aacded",
+      "git_blob_sha": "8493e935d6d8843b24980c02d4b9e37b5ab90aab",
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "batch": "akari",
+      "thumbnail": "art-production/pr140-parallel/akari/thumbnails/characters/camila/expression-portraits/happy.png"
+    },
+    {
+      "path": "rpg-assets/characters/camila/expression-portraits/soft.webp",
+      "dimensions": [
+        512,
+        1024
+      ],
+      "sha256": "f4cb0313c2aa162d1524f3d60bd1337f0ddb631a40a78b88d2943f51d5b54053",
+      "git_blob_sha": "9837974465eeeca9780af452bac1a45f959ce843",
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "batch": "akari",
+      "thumbnail": "art-production/pr140-parallel/akari/thumbnails/characters/camila/expression-portraits/soft.png"
+    },
+    {
+      "path": "rpg-assets/characters/kaede/expression-portraits/happy.webp",
+      "dimensions": [
+        512,
+        1024
+      ],
+      "sha256": "c1f40fac84acdc0a5757f7fd45754f02f29395806854123e741c7f13a6df0d6c",
+      "git_blob_sha": "e378e0264725d1a2e73244adc56154515587791b",
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "batch": "akari",
+      "thumbnail": "art-production/pr140-parallel/akari/thumbnails/characters/kaede/expression-portraits/happy.png"
+    },
+    {
+      "path": "rpg-assets/characters/kaede/expression-portraits/soft.webp",
+      "dimensions": [
+        512,
+        1024
+      ],
+      "sha256": "2a97066cb77a6a91be734cac161104a4099542f4b32356c45c7ef6efac10018a",
+      "git_blob_sha": "9b4ace2396e0a2610e2e0ca885b06d586cb4ab23",
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "batch": "akari",
+      "thumbnail": "art-production/pr140-parallel/akari/thumbnails/characters/kaede/expression-portraits/soft.png"
+    },
+    {
+      "path": "rpg-assets/characters/marina/expression-portraits/happy.webp",
+      "dimensions": [
+        512,
+        1024
+      ],
+      "sha256": "44adac2a8558f163a35741f4404413e0c2ba18ae559809d3f29bffcf59908925",
+      "git_blob_sha": "a2f08231929d29cfebfc723f19fefb7afb73e820",
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "batch": "akari",
+      "thumbnail": "art-production/pr140-parallel/akari/thumbnails/characters/marina/expression-portraits/happy.png"
+    },
+    {
+      "path": "rpg-assets/characters/marina/expression-portraits/soft.webp",
+      "dimensions": [
+        512,
+        1024
+      ],
+      "sha256": "241d5c9095a4f1812beafdf9d7d0ca50894792c0b74dfa5ee92bfe006e3f390e",
+      "git_blob_sha": "56bdfb875f8531d273735ea5ea892dd90340b1a6",
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "batch": "akari",
+      "thumbnail": "art-production/pr140-parallel/akari/thumbnails/characters/marina/expression-portraits/soft.png"
+    },
+    {
+      "path": "rpg-assets/characters/rina/expression-portraits/neutral.webp",
+      "dimensions": [
+        512,
+        1024
+      ],
+      "sha256": "c9e246804132399bb282fee15461c2c489632a1047b71fd7537fc2051ef4f613",
+      "git_blob_sha": "ca3aa751028ce2530f058e2cf6aeb5321e38f26b",
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "batch": "rina",
+      "thumbnail": "art-production/pr140-parallel/rina/thumbnails/characters/rina/expression-portraits/neutral.png"
+    },
+    {
+      "path": "rpg-assets/characters/rina/expression-portraits/happy.webp",
+      "dimensions": [
+        512,
+        1024
+      ],
+      "sha256": "458bf14977b6cfdaa232b86dc24f0b2109472b8a8ab284b8d91f796466bf12de",
+      "git_blob_sha": "fcb1547743a900ea8484b5e9a1ee7ea3f8e7b13e",
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "batch": "rina",
+      "thumbnail": "art-production/pr140-parallel/rina/thumbnails/characters/rina/expression-portraits/happy.png"
+    },
+    {
+      "path": "rpg-assets/characters/sierra/expression-portraits/neutral.webp",
+      "dimensions": [
+        512,
+        1024
+      ],
+      "sha256": "5065117c24c03454b6dab97e2ffa44d7ed938b3b1f262c8c38d9bf0d3d578fc9",
+      "git_blob_sha": "8e55d7267a8a11c2f0c01b93fe96a4d22475b21a",
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "batch": "rina",
+      "thumbnail": "art-production/pr140-parallel/rina/thumbnails/characters/sierra/expression-portraits/neutral.png"
+    },
+    {
+      "path": "rpg-assets/characters/sierra/expression-portraits/soft.webp",
+      "dimensions": [
+        512,
+        1024
+      ],
+      "sha256": "ea6ada917bb90b4f875242d3f14de339ee32bff0fc0720b94bef1008296b0a3f",
+      "git_blob_sha": "443df4004ed43496650760cbec10f58c62386351",
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "batch": "rina",
+      "thumbnail": "art-production/pr140-parallel/rina/thumbnails/characters/sierra/expression-portraits/soft.png"
+    },
+    {
+      "path": "rpg-assets/characters/sol/expression-portraits/happy.webp",
+      "dimensions": [
+        512,
+        1024
+      ],
+      "sha256": "2aab6303ce6b868100331473e52040a405cd04c83356985f331aeae1fc333316",
+      "git_blob_sha": "f7fbe0798b95ead3c1c0df07c7f0126570f2e3f1",
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "batch": "rina",
+      "thumbnail": "art-production/pr140-parallel/rina/thumbnails/characters/sol/expression-portraits/happy.png"
+    },
+    {
+      "path": "rpg-assets/characters/sol/expression-portraits/surprised.webp",
+      "dimensions": [
+        512,
+        1024
+      ],
+      "sha256": "b577edbf7a32a6241b8d5822019b3ef8475a6299eb0b1d559a1017888e9e31de",
+      "git_blob_sha": "b7be466fcb482996fcc4cbd34940bb6c856d41f7",
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "batch": "rina",
+      "thumbnail": "art-production/pr140-parallel/rina/thumbnails/characters/sol/expression-portraits/surprised.png"
+    },
+    {
+      "path": "rpg-assets/characters/reina/expression-portraits/neutral.webp",
+      "dimensions": [
+        512,
+        1024
+      ],
+      "sha256": "324fe2ff42cdbab8d3690f2d6517738af3b9eb5a665fd19761e92e141bbf6b40",
+      "git_blob_sha": "6eaa2892adb01995d87eb09e61056538754b1887",
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "batch": "reina",
+      "thumbnail": "art-production/pr140-parallel/reina/thumbnails/characters/reina/expression-portraits/neutral.png"
+    },
+    {
+      "path": "rpg-assets/characters/reina/expression-portraits/happy.webp",
+      "dimensions": [
+        512,
+        1024
+      ],
+      "sha256": "901036397e05b9f14127b0cc7e14dcf2ca9876d51b368e3c54b9f10e089830da",
+      "git_blob_sha": "62314931f09dbcb54ad3f12898e0376d779a6b26",
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "batch": "reina",
+      "thumbnail": "art-production/pr140-parallel/reina/thumbnails/characters/reina/expression-portraits/happy.png"
+    },
+    {
+      "path": "rpg-assets/characters/reina/expression-portraits/surprised.webp",
+      "dimensions": [
+        512,
+        1024
+      ],
+      "sha256": "3481609df204c54f251f7c84c55a66478a91e95645644918e8f89b63286b5e29",
+      "git_blob_sha": "608bfe440b89f96688521059c76583017c1b4090",
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "batch": "reina",
+      "thumbnail": "art-production/pr140-parallel/reina/thumbnails/characters/reina/expression-portraits/surprised.png"
+    },
+    {
+      "path": "rpg-assets/characters/shiori/expression-portraits/neutral.webp",
+      "dimensions": [
+        512,
+        1024
+      ],
+      "sha256": "27a8c4ff058e3d21104728b23cb02476502d05b721331e5f7587aa64dfbc0b9e",
+      "git_blob_sha": "34e2fc5b2a500a333bda76a70d3e7b77864c036c",
+      "alpha_extrema": [
+        0,
+        254
+      ],
+      "batch": "reina",
+      "thumbnail": "art-production/pr140-parallel/reina/thumbnails/characters/shiori/expression-portraits/neutral.png"
+    },
+    {
+      "path": "rpg-assets/characters/shiori/expression-portraits/happy.webp",
+      "dimensions": [
+        512,
+        1024
+      ],
+      "sha256": "42d27e10782b1d39afbc196b988e2bb0c2ee19da5ce35be8d058056e08eb5821",
+      "git_blob_sha": "b946a75439abe55ad1171f7215485f38dc3f5a27",
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "batch": "reina",
+      "thumbnail": "art-production/pr140-parallel/reina/thumbnails/characters/shiori/expression-portraits/happy.png"
+    },
+    {
+      "path": "rpg-assets/characters/shiori/expression-portraits/surprised.webp",
+      "dimensions": [
+        512,
+        1024
+      ],
+      "sha256": "a37adae1fd17bc42d88a2a67ddf3c5b2c012e31487a5ae1f955f75e03bdcd3da",
+      "git_blob_sha": "7939275698d3f05dcf83365f365f18eaf32cbe5a",
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "batch": "reina",
+      "thumbnail": "art-production/pr140-parallel/reina/thumbnails/characters/shiori/expression-portraits/surprised.png"
+    },
+    {
+      "path": "rpg-assets/characters/yuna/expression-portraits/neutral.webp",
+      "dimensions": [
+        512,
+        1024
+      ],
+      "sha256": "256f4287a9135627aa191a6e5b47dbaeecdc6fd59b9b6177f1181d7674b21345",
+      "git_blob_sha": "297df133ab5d0a2a2d41b95609a88cf3e3def030",
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "batch": "reina",
+      "thumbnail": "art-production/pr140-parallel/reina/thumbnails/characters/yuna/expression-portraits/neutral.png"
+    },
+    {
+      "path": "rpg-assets/characters/yuna/expression-portraits/happy.webp",
+      "dimensions": [
+        512,
+        1024
+      ],
+      "sha256": "187daf8787e85c4b5abfc2ac690563a56f4a2227888f77055a7d01c46dedb6ff",
+      "git_blob_sha": "0dcef1a0d0a8a9ad66744edaaff093e46b596e31",
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "batch": "reina",
+      "thumbnail": "art-production/pr140-parallel/reina/thumbnails/characters/yuna/expression-portraits/happy.png"
+    },
+    {
+      "path": "rpg-assets/characters/yuna/expression-portraits/surprised.webp",
+      "dimensions": [
+        512,
+        1024
+      ],
+      "sha256": "f7541048ae283054480a36ffe14a095ebe7e00c482f6214c4e28782a767d91b6",
+      "git_blob_sha": "0117c569d8bb57234bc647bf5b627a181a6e5712",
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "batch": "reina",
+      "thumbnail": "art-production/pr140-parallel/reina/thumbnails/characters/yuna/expression-portraits/surprised.png"
+    },
+    {
+      "path": "rpg-assets/characters/iris/expression-portraits/neutral.webp",
+      "dimensions": [
+        1024,
+        1536
+      ],
+      "sha256": "20c1204f82f0223a22b071d302e6abca6d9d06b5ddc5d79a3fd5b3df4a2ffc83",
+      "git_blob_sha": "ae2a82c761c2d32569705489b439c676963b3cf7",
+      "alpha_extrema": [
+        0,
+        254
+      ],
+      "batch": "iris",
+      "thumbnail": "art-production/pr140-parallel/iris/thumbnails/characters/iris/expression-portraits/neutral.png"
+    },
+    {
+      "path": "rpg-assets/characters/iris/vn-expressions/neutral.webp",
+      "dimensions": [
+        1024,
+        1536
+      ],
+      "sha256": "20c1204f82f0223a22b071d302e6abca6d9d06b5ddc5d79a3fd5b3df4a2ffc83",
+      "git_blob_sha": "ae2a82c761c2d32569705489b439c676963b3cf7",
+      "alpha_extrema": [
+        0,
+        254
+      ],
+      "batch": "iris",
+      "thumbnail": "art-production/pr140-parallel/iris/thumbnails/characters/iris/vn-expressions/neutral.png"
+    },
+    {
+      "path": "rpg-assets/characters/iris/expression-portraits/happy.webp",
+      "dimensions": [
+        512,
+        1024
+      ],
+      "sha256": "96ddcfef13abd022d1db2802731bcc4a3080bff8b74eaf105bcb76f6840d8cc5",
+      "git_blob_sha": "95005ec397c83a3ee306d52a62e48325860e5e10",
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "batch": "iris",
+      "thumbnail": "art-production/pr140-parallel/iris/thumbnails/characters/iris/expression-portraits/happy.png"
+    },
+    {
+      "path": "rpg-assets/characters/iris/vn-expressions/happy.webp",
+      "dimensions": [
+        512,
+        1024
+      ],
+      "sha256": "96ddcfef13abd022d1db2802731bcc4a3080bff8b74eaf105bcb76f6840d8cc5",
+      "git_blob_sha": "95005ec397c83a3ee306d52a62e48325860e5e10",
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "batch": "iris",
+      "thumbnail": "art-production/pr140-parallel/iris/thumbnails/characters/iris/vn-expressions/happy.png"
+    },
+    {
+      "path": "rpg-assets/characters/iris/expression-portraits/surprised.webp",
+      "dimensions": [
+        512,
+        1024
+      ],
+      "sha256": "faf3f8ce833238ff360850891d22026e60c59a939399d357c327ab0e7c38c708",
+      "git_blob_sha": "0dd845acacab5a4282c760f3a5215dfc61a48a79",
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "batch": "iris",
+      "thumbnail": "art-production/pr140-parallel/iris/thumbnails/characters/iris/expression-portraits/surprised.png"
+    },
+    {
+      "path": "rpg-assets/characters/iris/vn-expressions/surprised.webp",
+      "dimensions": [
+        512,
+        1024
+      ],
+      "sha256": "faf3f8ce833238ff360850891d22026e60c59a939399d357c327ab0e7c38c708",
+      "git_blob_sha": "0dd845acacab5a4282c760f3a5215dfc61a48a79",
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "batch": "iris",
+      "thumbnail": "art-production/pr140-parallel/iris/thumbnails/characters/iris/vn-expressions/surprised.png"
+    },
+    {
+      "path": "rpg-assets/characters/jinx/expression-portraits/neutral.webp",
+      "dimensions": [
+        1024,
+        1536
+      ],
+      "sha256": "12c3e5511ce54c9745a19fe3a7cc3c60c4a2fc76ad746ffe81d4abb4ea016624",
+      "git_blob_sha": "2273e5293a70b4ed73cccf53093ba6c7d485b293",
+      "alpha_extrema": [
+        0,
+        254
+      ],
+      "batch": "iris",
+      "thumbnail": "art-production/pr140-parallel/iris/thumbnails/characters/jinx/expression-portraits/neutral.png"
+    },
+    {
+      "path": "rpg-assets/characters/jinx/expression-portraits/happy.webp",
+      "dimensions": [
+        512,
+        1024
+      ],
+      "sha256": "81125d4c1c137f92242d054f33e8f77dcef7a0050e7dc367a84ea71b2eaf8341",
+      "git_blob_sha": "6986a3acce0bbb71536056f0a7f681798ea6c209",
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "batch": "iris",
+      "thumbnail": "art-production/pr140-parallel/iris/thumbnails/characters/jinx/expression-portraits/happy.png"
+    },
+    {
+      "path": "rpg-assets/characters/jinx/expression-portraits/surprised.webp",
+      "dimensions": [
+        512,
+        1024
+      ],
+      "sha256": "74ee845a34de99bc5a820dceaf0a1d6f6614fe045981c69410876b74e4a80ebb",
+      "git_blob_sha": "88f9a4f830374a70f2c272634105e1c6c386a219",
+      "alpha_extrema": [
+        0,
+        254
+      ],
+      "batch": "iris",
+      "thumbnail": "art-production/pr140-parallel/iris/thumbnails/characters/jinx/expression-portraits/surprised.png"
+    },
+    {
+      "path": "rpg-assets/characters/jinx/neutral.webp",
+      "dimensions": [
+        1024,
+        1536
+      ],
+      "sha256": "12c3e5511ce54c9745a19fe3a7cc3c60c4a2fc76ad746ffe81d4abb4ea016624",
+      "git_blob_sha": "2273e5293a70b4ed73cccf53093ba6c7d485b293",
+      "alpha_extrema": [
+        0,
+        254
+      ],
+      "batch": "iris",
+      "thumbnail": "art-production/pr140-parallel/iris/thumbnails/characters/jinx/neutral.png"
+    },
+    {
+      "path": "rpg-assets/characters/jun/expression-portraits/neutral.webp",
+      "dimensions": [
+        1024,
+        1536
+      ],
+      "sha256": "8edfd7384f1339f33e37f65aefcf06ec2707ea3b35ead5c1ac3cfcc403fab0b4",
+      "git_blob_sha": "645be0b420f069643a1d84e4a1da0ac2fffcc5d2",
+      "alpha_extrema": [
+        0,
+        254
+      ],
+      "batch": "iris",
+      "thumbnail": "art-production/pr140-parallel/iris/thumbnails/characters/jun/expression-portraits/neutral.png"
+    },
+    {
+      "path": "rpg-assets/characters/jun/vn-expressions/neutral.webp",
+      "dimensions": [
+        1024,
+        1536
+      ],
+      "sha256": "8edfd7384f1339f33e37f65aefcf06ec2707ea3b35ead5c1ac3cfcc403fab0b4",
+      "git_blob_sha": "645be0b420f069643a1d84e4a1da0ac2fffcc5d2",
+      "alpha_extrema": [
+        0,
+        254
+      ],
+      "batch": "iris",
+      "thumbnail": "art-production/pr140-parallel/iris/thumbnails/characters/jun/vn-expressions/neutral.png"
+    },
+    {
+      "path": "rpg-assets/characters/jun/expression-portraits/happy.webp",
+      "dimensions": [
+        512,
+        1024
+      ],
+      "sha256": "fc5b312c7451cba48c0d0ba789dd17c9766456d0d0e95b69114593c098e4a7a2",
+      "git_blob_sha": "f6f11a5eb6dd62d021bc4a035773fa09cb22a06d",
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "batch": "iris",
+      "thumbnail": "art-production/pr140-parallel/iris/thumbnails/characters/jun/expression-portraits/happy.png"
+    },
+    {
+      "path": "rpg-assets/characters/jun/vn-expressions/happy.webp",
+      "dimensions": [
+        512,
+        1024
+      ],
+      "sha256": "fc5b312c7451cba48c0d0ba789dd17c9766456d0d0e95b69114593c098e4a7a2",
+      "git_blob_sha": "f6f11a5eb6dd62d021bc4a035773fa09cb22a06d",
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "batch": "iris",
+      "thumbnail": "art-production/pr140-parallel/iris/thumbnails/characters/jun/vn-expressions/happy.png"
+    },
+    {
+      "path": "rpg-assets/characters/jun/expression-portraits/surprised.webp",
+      "dimensions": [
+        512,
+        1024
+      ],
+      "sha256": "4e19aafa60976f11d1e397cff6ced1e87ff15cf5c2ec818e0df92e85cdaec2c0",
+      "git_blob_sha": "6e017c6a4265046ff9b0db3698f4de64a4ae51f5",
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "batch": "iris",
+      "thumbnail": "art-production/pr140-parallel/iris/thumbnails/characters/jun/expression-portraits/surprised.png"
+    },
+    {
+      "path": "rpg-assets/characters/jun/vn-expressions/surprised.webp",
+      "dimensions": [
+        512,
+        1024
+      ],
+      "sha256": "4e19aafa60976f11d1e397cff6ced1e87ff15cf5c2ec818e0df92e85cdaec2c0",
+      "git_blob_sha": "6e017c6a4265046ff9b0db3698f4de64a4ae51f5",
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "batch": "iris",
+      "thumbnail": "art-production/pr140-parallel/iris/thumbnails/characters/jun/vn-expressions/surprised.png"
+    },
+    {
+      "path": "rpg-assets/characters/luna/expression-portraits/neutral.webp",
+      "dimensions": [
+        1024,
+        1536
+      ],
+      "sha256": "da4ebf4cbfd131cd1d88a40b286bc96b7bdcad1cd324210d9c155abc3139e956",
+      "git_blob_sha": "428066ebaac050341894ccc66b31ec7a57acf91f",
+      "alpha_extrema": [
+        0,
+        254
+      ],
+      "batch": "iris",
+      "thumbnail": "art-production/pr140-parallel/iris/thumbnails/characters/luna/expression-portraits/neutral.png"
+    },
+    {
+      "path": "rpg-assets/characters/luna/expression-portraits/happy.webp",
+      "dimensions": [
+        512,
+        1024
+      ],
+      "sha256": "921bc31cb2387be35f7c0ca78d2ab5dafacaa5d3f775d6baefda92736b446b7b",
+      "git_blob_sha": "e95aed01c59126daf8bfae120290ba50f0bc4f3b",
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "batch": "iris",
+      "thumbnail": "art-production/pr140-parallel/iris/thumbnails/characters/luna/expression-portraits/happy.png"
+    },
+    {
+      "path": "rpg-assets/characters/luna/expression-portraits/surprised.webp",
+      "dimensions": [
+        512,
+        1024
+      ],
+      "sha256": "b15ca21bcc7c9f2fdad29a22bf28bf68905c540fc115dd0d217937ab0f021b92",
+      "git_blob_sha": "bc79c323cac65918c9ebf000e1ca483ad552f6e5",
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "batch": "iris",
+      "thumbnail": "art-production/pr140-parallel/iris/thumbnails/characters/luna/expression-portraits/surprised.png"
+    },
+    {
+      "path": "rpg-assets/characters/luna/neutral.webp",
+      "dimensions": [
+        1024,
+        1536
+      ],
+      "sha256": "da4ebf4cbfd131cd1d88a40b286bc96b7bdcad1cd324210d9c155abc3139e956",
+      "git_blob_sha": "428066ebaac050341894ccc66b31ec7a57acf91f",
+      "alpha_extrema": [
+        0,
+        254
+      ],
+      "batch": "iris",
+      "thumbnail": "art-production/pr140-parallel/iris/thumbnails/characters/luna/neutral.png"
+    },
+    {
+      "path": "rpg-assets/characters/nereo/expression-portraits/neutral.webp",
+      "dimensions": [
+        1024,
+        1536
+      ],
+      "sha256": "5e139827b4f6dda21cee5bbfbed1a7c9edb03c1c48565271ea2a7afc21fdb3dc",
+      "git_blob_sha": "eeeb6a85cc742c985583d823e6abec2470dff9ab",
+      "alpha_extrema": [
+        0,
+        254
+      ],
+      "batch": "iris",
+      "thumbnail": "art-production/pr140-parallel/iris/thumbnails/characters/nereo/expression-portraits/neutral.png"
+    },
+    {
+      "path": "rpg-assets/characters/nereo/vn-expressions/neutral.webp",
+      "dimensions": [
+        1024,
+        1536
+      ],
+      "sha256": "5e139827b4f6dda21cee5bbfbed1a7c9edb03c1c48565271ea2a7afc21fdb3dc",
+      "git_blob_sha": "eeeb6a85cc742c985583d823e6abec2470dff9ab",
+      "alpha_extrema": [
+        0,
+        254
+      ],
+      "batch": "iris",
+      "thumbnail": "art-production/pr140-parallel/iris/thumbnails/characters/nereo/vn-expressions/neutral.png"
+    },
+    {
+      "path": "rpg-assets/characters/nereo/expression-portraits/happy.webp",
+      "dimensions": [
+        512,
+        1024
+      ],
+      "sha256": "c67eec999669fd189e4f352f81f07d819e98027237ef16971e7c3dcc90b1ee82",
+      "git_blob_sha": "d9a5d9d6dc3c36144722fa17a64e8c72f092a449",
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "batch": "iris",
+      "thumbnail": "art-production/pr140-parallel/iris/thumbnails/characters/nereo/expression-portraits/happy.png"
+    },
+    {
+      "path": "rpg-assets/characters/nereo/vn-expressions/happy.webp",
+      "dimensions": [
+        512,
+        1024
+      ],
+      "sha256": "c67eec999669fd189e4f352f81f07d819e98027237ef16971e7c3dcc90b1ee82",
+      "git_blob_sha": "d9a5d9d6dc3c36144722fa17a64e8c72f092a449",
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "batch": "iris",
+      "thumbnail": "art-production/pr140-parallel/iris/thumbnails/characters/nereo/vn-expressions/happy.png"
+    },
+    {
+      "path": "rpg-assets/characters/nereo/expression-portraits/surprised.webp",
+      "dimensions": [
+        512,
+        1024
+      ],
+      "sha256": "4992c1e2d5f221c4b46d58a544a57972abf3d9901a641606828eb5e2910c6c24",
+      "git_blob_sha": "552ad24bdd3dd91631edce39647b1cb94675aa4c",
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "batch": "iris",
+      "thumbnail": "art-production/pr140-parallel/iris/thumbnails/characters/nereo/expression-portraits/surprised.png"
+    },
+    {
+      "path": "rpg-assets/characters/nereo/vn-expressions/surprised.webp",
+      "dimensions": [
+        512,
+        1024
+      ],
+      "sha256": "4992c1e2d5f221c4b46d58a544a57972abf3d9901a641606828eb5e2910c6c24",
+      "git_blob_sha": "552ad24bdd3dd91631edce39647b1cb94675aa4c",
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "batch": "iris",
+      "thumbnail": "art-production/pr140-parallel/iris/thumbnails/characters/nereo/vn-expressions/surprised.png"
+    },
+    {
+      "path": "rpg-assets/characters/teo/expression-portraits/neutral.webp",
+      "dimensions": [
+        512,
+        1024
+      ],
+      "sha256": "6306d2ab42ebfd0ad4cb533f8b5cc86d24abee22304f3d69dc974a555c1a81aa",
+      "git_blob_sha": "8ececfd15d11049bc37862e8180939cdff288ba9",
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "batch": "iris",
+      "thumbnail": "art-production/pr140-parallel/iris/thumbnails/characters/teo/expression-portraits/neutral.png"
+    },
+    {
+      "path": "rpg-assets/characters/teo/vn-expressions/neutral.webp",
+      "dimensions": [
+        512,
+        1024
+      ],
+      "sha256": "6306d2ab42ebfd0ad4cb533f8b5cc86d24abee22304f3d69dc974a555c1a81aa",
+      "git_blob_sha": "8ececfd15d11049bc37862e8180939cdff288ba9",
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "batch": "iris",
+      "thumbnail": "art-production/pr140-parallel/iris/thumbnails/characters/teo/vn-expressions/neutral.png"
+    },
+    {
+      "path": "rpg-assets/characters/teo/expression-portraits/happy.webp",
+      "dimensions": [
+        512,
+        1024
+      ],
+      "sha256": "2228e1505e149bd83b3af1a2aaed0ba5bc86dcf3aa8d9499b8a5cb0e946b9924",
+      "git_blob_sha": "0205063801dc69027c06bcae5949562be4eb869b",
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "batch": "iris",
+      "thumbnail": "art-production/pr140-parallel/iris/thumbnails/characters/teo/expression-portraits/happy.png"
+    },
+    {
+      "path": "rpg-assets/characters/teo/vn-expressions/happy.webp",
+      "dimensions": [
+        512,
+        1024
+      ],
+      "sha256": "2228e1505e149bd83b3af1a2aaed0ba5bc86dcf3aa8d9499b8a5cb0e946b9924",
+      "git_blob_sha": "0205063801dc69027c06bcae5949562be4eb869b",
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "batch": "iris",
+      "thumbnail": "art-production/pr140-parallel/iris/thumbnails/characters/teo/vn-expressions/happy.png"
+    },
+    {
+      "path": "rpg-assets/characters/teo/expression-portraits/surprised.webp",
+      "dimensions": [
+        512,
+        1024
+      ],
+      "sha256": "5561590b7761539078c0319b0bb90388c25f181fdd0a266348f92f9142007187",
+      "git_blob_sha": "c7747da2661265f08e592eed513b3ca9940961fd",
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "batch": "iris",
+      "thumbnail": "art-production/pr140-parallel/iris/thumbnails/characters/teo/expression-portraits/surprised.png"
+    },
+    {
+      "path": "rpg-assets/characters/teo/vn-expressions/surprised.webp",
+      "dimensions": [
+        512,
+        1024
+      ],
+      "sha256": "5561590b7761539078c0319b0bb90388c25f181fdd0a266348f92f9142007187",
+      "git_blob_sha": "c7747da2661265f08e592eed513b3ca9940961fd",
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "batch": "iris",
+      "thumbnail": "art-production/pr140-parallel/iris/thumbnails/characters/teo/vn-expressions/surprised.png"
+    },
+    {
+      "path": "rpg-assets/characters/jinx/expression-portraits/concerned.webp",
+      "dimensions": [
+        512,
+        1024
+      ],
+      "sha256": "d3e7a4549b5d524c62ac08e2e41a2840b6f7c532b5835310813e4d81e7e737a7",
+      "git_blob_sha": "4be591bdd36c98dfaced53b53fbc7a6f9d4c4a64",
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "batch": "iris",
+      "thumbnail": "art-production/pr140-parallel/iris/thumbnails/characters/jinx/expression-portraits/concerned.png"
+    },
+    {
+      "path": "rpg-assets/characters/jinx/expression-portraits/soft.webp",
+      "dimensions": [
+        1024,
+        1536
+      ],
+      "sha256": "a3b341b6202db7b3b4b0ffce29c9415741ffe480a612c3b9cc86d83d17c47c1b",
+      "git_blob_sha": "dcf7a3e6485427c1aa9b8cc1618520d8bc7814ce",
+      "alpha_extrema": [
+        0,
+        254
+      ],
+      "batch": "iris",
+      "thumbnail": "art-production/pr140-parallel/iris/thumbnails/characters/jinx/expression-portraits/soft.png"
+    },
+    {
+      "path": "rpg-assets/characters/rina/expression-portraits/concerned.webp",
+      "dimensions": [
+        512,
+        1024
+      ],
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "sha256": "143116e587f34748009167845202ad8fa230ca46eba9c23dbe46f422fa679c8b",
+      "git_blob_sha": "366752677c0bc08a76d764abbbb7b8da9b1f27bd",
+      "batch": "additional-reviewed"
+    },
+    {
+      "path": "rpg-assets/characters/rina/expression-portraits/surprised.webp",
+      "dimensions": [
+        512,
+        1024
+      ],
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "sha256": "f55d99ed3cd7ea4bc8a663f49d15f4da62e3850ff05f806e84455a9fb9446be9",
+      "git_blob_sha": "0016763859e37b8ab72ff184065bfc2c02a7d229",
+      "batch": "additional-reviewed"
+    },
+    {
+      "path": "rpg-assets/characters/rina/expression-portraits/soft.webp",
+      "dimensions": [
+        512,
+        1024
+      ],
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "sha256": "c46e66c410856a7bdde08e811cba57c189187a6ceb10fe005724f5889250fb4c",
+      "git_blob_sha": "c77869c33f330dbba7b164a834efdcc0cd5af4a4",
+      "batch": "additional-reviewed"
+    },
+    {
+      "path": "rpg-assets/characters/sierra/expression-portraits/concerned.webp",
+      "dimensions": [
+        512,
+        1024
+      ],
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "sha256": "407cc801f4c3fa9d9bf41222c96508ce622e004939c9eed35531a3e92e98578c",
+      "git_blob_sha": "c5776c6580dc02472ee17a4179be392e5f0e2ba5",
+      "batch": "additional-reviewed"
+    },
+    {
+      "path": "rpg-assets/characters/sierra/expression-portraits/surprised.webp",
+      "dimensions": [
+        512,
+        1024
+      ],
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "sha256": "38ff8482577922fe9ab9c0f1b479701eee87e3f38821a1577f769fc3d1be2b99",
+      "git_blob_sha": "36a8aa4f698e409c6b8bddc6425f1098f32175b7",
+      "batch": "additional-reviewed"
+    },
+    {
+      "path": "rpg-assets/characters/sierra/expression-portraits/happy.webp",
+      "dimensions": [
+        512,
+        1024
+      ],
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "sha256": "01b89c5b281c45b31bd17fb60a022cf99f1649459aef43914fd4b1e57f38e007",
+      "git_blob_sha": "644af2e0390cf3b0c87e65e5fb72c83f19dc1fbf",
+      "batch": "additional-reviewed"
+    },
+    {
+      "path": "rpg-assets/characters/sol/expression-portraits/concerned.webp",
+      "dimensions": [
+        512,
+        1024
+      ],
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "sha256": "a26cb0f9ea70a5659c53af84e2ab2e791b89af8b25a65b74b2ff080b63fc9de5",
+      "git_blob_sha": "91dc1ee08ccbfabe695d36aa07d1f90d36ed6ab9",
+      "batch": "additional-reviewed"
+    },
+    {
+      "path": "rpg-assets/characters/sol/expression-portraits/neutral.webp",
+      "dimensions": [
+        512,
+        1024
+      ],
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "sha256": "cae4c07df7367dc43b9e88ea50257e9b6d72e1250efad96244fd5844fb7c52d5",
+      "git_blob_sha": "f7b57e0da8771c37bc203c24cbb6e32f2666dd5a",
+      "batch": "additional-reviewed"
+    },
+    {
+      "path": "rpg-assets/characters/sol/expression-portraits/soft.webp",
+      "dimensions": [
+        512,
+        1024
+      ],
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "sha256": "0d17184ad807e53e4159e066d3f2b87401b0bbfc4ef1101ab99833e2057bddc6",
+      "git_blob_sha": "fcd74c41017f2812d0ade238c6be1878bc697dd0",
+      "batch": "additional-reviewed"
+    },
+    {
+      "path": "rpg-assets/characters/jinx/expression-portraits/smirk.webp",
+      "dimensions": [
+        512,
+        1024
+      ],
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "sha256": "fe8c7a639c1b251bbb498a631317e690525cb03537762d8e28c090baf0a2c8be",
+      "git_blob_sha": "79c7c93aca2b2a2133f89b4beb1e696acbbb307b",
+      "batch": "additional-reviewed"
+    },
+    {
+      "path": "rpg-assets/characters/jinx/expression-portraits/annoyed.webp",
+      "dimensions": [
+        512,
+        1024
+      ],
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "sha256": "d3e7a4549b5d524c62ac08e2e41a2840b6f7c532b5835310813e4d81e7e737a7",
+      "git_blob_sha": "4be591bdd36c98dfaced53b53fbc7a6f9d4c4a64",
+      "batch": "additional-reviewed"
+    },
+    {
+      "path": "rpg-assets/characters/jinx/expression-portraits/playful.webp",
+      "dimensions": [
+        512,
+        1024
+      ],
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "sha256": "62d347dbfa0a67d46d6ea4d3842dbe4d047232966dec05f20135fcd33b84af5f",
+      "git_blob_sha": "87d1e09cb091ff9de38a22d2826f8cd0e49ceb0d",
+      "batch": "additional-reviewed"
+    },
+    {
+      "path": "rpg-assets/characters/luna/expression-portraits/concerned.webp",
+      "dimensions": [
+        512,
+        1024
+      ],
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "sha256": "491d03f4d1eab27905fb22a2127baf796495a0502225bbee999bc3a88b8d7107",
+      "git_blob_sha": "45bce51cd4dca8829a371a9ed1c2837d8f2fceae",
+      "batch": "additional-reviewed"
+    },
+    {
+      "path": "rpg-assets/characters/luna/expression-portraits/soft.webp",
+      "dimensions": [
+        512,
+        1024
+      ],
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "sha256": "ec91075a9e62399446f4a8497707cdc23c6f76390d05b993c60728b9d4699229",
+      "git_blob_sha": "121229f5b40553c24b31269eb3d62017a42fd010",
+      "batch": "additional-reviewed"
+    },
+    {
+      "path": "rpg-assets/characters/hana/expression-portraits/concerned.webp",
+      "dimensions": [
+        512,
+        1024
+      ],
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "sha256": "1c5a974030329043a732f2b7aa023dd90aff766eca0f99478cc27e41fda98719",
+      "git_blob_sha": "28c0764f6f35fad148eeec9451e7f5ac1d79ef8a",
+      "batch": "additional-reviewed"
+    },
+    {
+      "path": "rpg-assets/characters/hana/expression-portraits/surprised.webp",
+      "dimensions": [
+        512,
+        1024
+      ],
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "sha256": "40b9fcf4612cb1ad1120339d79054ad67de5714245ea7c12b2543993eba06f4e",
+      "git_blob_sha": "e47610499d60c88f60b60113ee6fd78d5e749b00",
+      "batch": "additional-reviewed"
+    },
+    {
+      "path": "rpg-assets/characters/hana/expression-portraits/neutral.webp",
+      "dimensions": [
+        512,
+        1024
+      ],
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "sha256": "cc3c7c654ba33edcc4199997da691253a1063ebcbda303492b567e06dad50412",
+      "git_blob_sha": "7a8152834c41f145ea5ea78304420bfcb17be228",
+      "batch": "additional-reviewed"
+    },
+    {
+      "path": "rpg-assets/characters/hana/expression-portraits/happy.webp",
+      "dimensions": [
+        512,
+        1024
+      ],
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "sha256": "96d11d691a0662a0e515c417e1f0ef8b715f4cfb818ca55bc96735566a3aec31",
+      "git_blob_sha": "b7bf94aedd4e3cd590710f7cd90bfcb6e0833833",
+      "batch": "additional-reviewed"
+    },
+    {
+      "path": "rpg-assets/characters/hana/expression-portraits/soft.webp",
+      "dimensions": [
+        512,
+        1024
+      ],
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "sha256": "6dd19adf9c966d62bc3378721d30931099631dcc21c66d05c33553de3f36b526",
+      "git_blob_sha": "1ff96775ed2f7c39088f3d37c86ac4ac26319db9",
+      "batch": "additional-reviewed"
+    },
+    {
+      "path": "rpg-assets/characters/barb/expression-portraits/concerned.png",
+      "sha256": "f16cbd4ca57c89feceeda51b31d4a67290232f0222290088e4a09e18839abab1",
+      "dimensions": [
+        887,
+        1774
+      ],
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "batch": "barb-repair",
+      "git_blob_sha": "2ea6fc7a2e9886856f8fb33cae772901328f466a"
+    },
+    {
+      "path": "rpg-assets/characters/barb/expression-portraits/soft.png",
+      "sha256": "6496c46bf3720087f4e945c77ed50adfedf30ae372dfd5a902db0c2705325268",
+      "dimensions": [
+        887,
+        1774
+      ],
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "batch": "barb-repair",
+      "git_blob_sha": "580820ad78126d5e460210fe74e243215bc58e88"
+    }
+  ],
+  "policy": "Canonical identities reviewed on white/dark composites; hidden RGB under alpha zero is preserved. Unknown dialogue states fall back to neutral; no blind identity aliases."
+}

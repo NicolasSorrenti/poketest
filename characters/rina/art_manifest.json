@@ -3,11 +3,17 @@
   "characterId": "rina",
   "portrait": "/rpg-assets/characters/rina/neutral.png",
   "expressions": {
-    "neutral": "/rpg-assets/characters/rina/neutral.webp",
-    "sparkle": "/rpg-assets/characters/rina/sparkle.webp",
-    "determined": "/rpg-assets/characters/rina/determined.webp",
-    "shy": "/rpg-assets/characters/rina/shy.webp",
-    "stage": "/rpg-assets/characters/rina/stage.webp"
+    "neutral": "/rpg-assets/characters/rina/expression-portraits/neutral.webp",
+    "happy": "/rpg-assets/characters/rina/expression-portraits/happy.webp",
+    "surprised": "/rpg-assets/characters/rina/expression-portraits/surprised.webp",
+    "soft": "/rpg-assets/characters/rina/expression-portraits/soft.webp",
+    "concerned": "/rpg-assets/characters/rina/expression-portraits/concerned.webp",
+    "vulnerable": "/rpg-assets/characters/rina/expression-portraits/neutral.webp",
+    "irritated": "/rpg-assets/characters/rina/expression-portraits/neutral.webp",
+    "determined": "/rpg-assets/characters/rina/expression-portraits/neutral.webp",
+    "sparkle": "/rpg-assets/characters/rina/expression-portraits/happy.webp",
+    "shy": "/rpg-assets/characters/rina/expression-portraits/neutral.webp",
+    "stage": "/rpg-assets/characters/rina/expression-portraits/neutral.webp"
   },
   "eventImages": [
     {
@@ -18,7 +24,7 @@
     {
       "sceneId": "rina_route_3",
       "path": "/rpg-assets/characters/rina/rina_cards.webp",
-      "prompt": "Adult 18 year old Rina Hoshino sitting at a café table showing her card binder, long pastel-pink hair, genuine excited expression, still wearing parts of her idol outfit under a soft cardigan, large aqua eyes sparkling, anime visual novel CG, warm lighting, fully clothed SFW, Neo Harbor style, bottom 20 percent clear for dialogue"
+      "prompt": "Adult 18 year old Rina Hoshino sitting at a caf\u00e9 table showing her card binder, long pastel-pink hair, genuine excited expression, still wearing parts of her idol outfit under a soft cardigan, large aqua eyes sparkling, anime visual novel CG, warm lighting, fully clothed SFW, Neo Harbor style, bottom 20 percent clear for dialogue"
     }
   ]
 }

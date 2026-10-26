@@ -1,0 +1,94 @@
+{
+  "status": "generated_candidate",
+  "reused": false,
+  "scope": "Laca casual flirty ONLY",
+  "tool": "built-in imagegen",
+  "transparent_background": true,
+  "repository": "NicolasSorrenti/poketest",
+  "branch": "art/overworld-character-refresh",
+  "reviewed_head": "e002154ee027fafec1bbc906c1d388434cf9ef06",
+  "current_manifest_blob_sha": "3ed97987a2226e1c602885e22eb96c2d1e376273",
+  "reference_source": "rpg-assets/characters/laca/outfits/casual/neutral.webp",
+  "reuse_decision": "Existing mapped casual/flirty.png fails full Pillow decode; teasing WebP is a face crop per audit, not matching full-body framing.",
+  "prompt": "Use case: identity-preserve. Edit the attached approved neutral reference into Neo Campus Laca casual FLIRTY expression ONLY. Laca is an adult 20-year-old Argentine woman, long dark-brown hair, brown eyes, canonical face. Change only her facial expression to a clearly playful affectionate flirty look: subtle confident asymmetric smile, gently raised eyebrow, warm teasing eye contact; eyes remain brown and open. Preserve her exact facial identity, hair shape and strands, olive skin, hoop earrings, fitted black top, light-wash jeans, white sneakers, anatomy, hands, pocket placement, pose, full-body framing, composition and anime illustration style from the reference. Do not redesign, change clothes, change pose or crop. Fully clothed SFW, playful non-voyeuristic. One character only, no text, no props. Genuine transparent background with clean alpha. Match reference portrait aspect ratio and head-to-toe framing.",
+  "attempts": [
+    "attempts/attempt-01-original.png"
+  ],
+  "selected": "casual-flirty-original.png",
+  "visual_review": "Viewed actual approved neutral reference and generated image. Canonical face, long dark-brown hair, black top, jeans, white shoes, pocket-hand pose and head-to-toe framing retained visually; subtle asymmetric smile and teasing gaze. Generated pixels outside face are not byte-identical. Candidate not integrated or newly user-approved.",
+  "files": [
+    {
+      "path": "/workspace/scratch/4a8bc1383fdd/next-laca/casual-flirty/PR140_BARB_LACA_HANA_AUDIT.md",
+      "sha256": "b9138e02e21f19372bb3f15d7340147f18bc42981dd068542cc2b674044542c5",
+      "bytes": 13899
+    },
+    {
+      "path": "/workspace/scratch/4a8bc1383fdd/next-laca/casual-flirty/attempts/attempt-01-original.png",
+      "sha256": "e33fb4edfee1e591a88b27d540889a7bbea7bdc20043c9262f977408cda4e01d",
+      "bytes": 1278076,
+      "dimensions": [
+        941,
+        1671
+      ],
+      "mode": "RGBA",
+      "alpha_extrema": [
+        0,
+        255
+      ]
+    },
+    {
+      "path": "/workspace/scratch/4a8bc1383fdd/next-laca/casual-flirty/casual-flirty-original.png",
+      "sha256": "e33fb4edfee1e591a88b27d540889a7bbea7bdc20043c9262f977408cda4e01d",
+      "bytes": 1278076,
+      "dimensions": [
+        941,
+        1671
+      ],
+      "mode": "RGBA",
+      "alpha_extrema": [
+        0,
+        255
+      ]
+    },
+    {
+      "path": "/workspace/scratch/4a8bc1383fdd/next-laca/casual-flirty/existing-flirty-original.png",
+      "sha256": "7d765aacea9d4f10f9da87708ccb8555e0cb6fe015c7bd926cf45fc88d95d80a",
+      "bytes": 786444,
+      "decode_error": "broken PNG file (chunk b',\\xf9\\xe1Q')"
+    },
+    {
+      "path": "/workspace/scratch/4a8bc1383fdd/next-laca/casual-flirty/prompt.txt",
+      "sha256": "3bb5dd5034f5b8d298952cc643637eafb2f97065f4bd34efec9b2782aa673829",
+      "bytes": 923
+    },
+    {
+      "path": "/workspace/scratch/4a8bc1383fdd/next-laca/casual-flirty/reference-neutral.webp",
+      "sha256": "76841a9c5eb144ff55b132e5b8b4e0e078b7c0ad4c7154bfd68659df085510a7",
+      "bytes": 255536,
+      "dimensions": [
+        941,
+        1672
+      ],
+      "mode": "RGBA",
+      "alpha_extrema": [
+        0,
+        255
+      ]
+    },
+    {
+      "path": "/workspace/scratch/4a8bc1383fdd/next-laca/casual-flirty/thumbnail.png",
+      "sha256": "2f7de75c6edccf99bc7a971e722c08c891f660affd5754cc665710f35abf40ed",
+      "bytes": 106486,
+      "dimensions": [
+        256,
+        455
+      ],
+      "mode": "RGBA",
+      "alpha_extrema": [
+        0,
+        255
+      ]
+    }
+  ],
+  "repo_mutations": false
+}

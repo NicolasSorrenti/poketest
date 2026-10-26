@@ -1,0 +1,196 @@
+{
+  "repository": "NicolasSorrenti/poketest",
+  "branch": "art/overworld-character-refresh",
+  "pr": 140,
+  "head": "e002154ee027fafec1bbc906c1d388434cf9ef06",
+  "scope": "Laca lifeguard happy only",
+  "method": "built-in image_gen reference edit",
+  "transparent_background": true,
+  "github_writes": false,
+  "generation_attempt_count": 1,
+  "selected_attempt": "attempts/attempt-01.png",
+  "original": "original.png",
+  "thumbnail": "thumbnail.png",
+  "decision": "Generate: mapped happy.png fails full PNG decode; existing happy.webp and source happy PNG are 384x447 face/torso crops with different pose and background, incompatible with approved 941x1672 full-body neutral.",
+  "reference_viewed_before_generation": true,
+  "reference": "references/rpg-assets__characters__laca__outfits__lifeguard__neutral.webp",
+  "mapping_verified": [
+    "characters/laca/art_manifest.json",
+    "rpg_character_packs.generated.js",
+    "rpg_outfits.js"
+  ],
+  "visual_review": {
+    "status": "compatible candidate; not user-approved",
+    "findings": "Happy smile; adult dark-haired identity, outfit, whistle, rescue float, hand-on-hip/crossed-leg pose and full-body framing visually retained. Real alpha verified. Generative edit is not pixel-identical outside the face; minor rendering differences remain.",
+    "checks": [
+      "full PNG decode",
+      "RGBA transparency",
+      "white and dark composites",
+      "full body including feet and float"
+    ]
+  },
+  "files": [
+    {
+      "path": "attempts/attempt-01.png",
+      "sha256": "ef399486c5587882718b07899de28455a5be7147d2dae6eec4597a53ae3e15d3",
+      "bytes": 1292388,
+      "size": [
+        941,
+        1672
+      ],
+      "mode": "RGBA",
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "decode": "pass"
+    },
+    {
+      "path": "original.png",
+      "sha256": "ef399486c5587882718b07899de28455a5be7147d2dae6eec4597a53ae3e15d3",
+      "bytes": 1292388,
+      "size": [
+        941,
+        1672
+      ],
+      "mode": "RGBA",
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "decode": "pass"
+    },
+    {
+      "path": "references/LACA_ASSET_PACK_MANIFEST.json",
+      "sha256": "60af787c7b877c35dace77f4f8eb2862e2cd016b0a777f1e737c981090a614d3",
+      "bytes": 2415
+    },
+    {
+      "path": "references/LACA_COMPLETE_PACK_MANIFEST.json",
+      "sha256": "18b0aa7a853dbc3187bd20043b5caeb2f0e08fc1dfc4a2ac34084fa35346039b",
+      "bytes": 1742
+    },
+    {
+      "path": "references/characters__laca__art_manifest.json",
+      "sha256": "770ea63ef32a870710e3d02802c3824abdab430c48767e54cb73900ff442a54a",
+      "bytes": 4997
+    },
+    {
+      "path": "references/characters__laca__bible.md",
+      "sha256": "86aedd44295dfa9b408388c519e526cecd32830936a659193abb414740464f4e",
+      "bytes": 8561
+    },
+    {
+      "path": "references/docs__PR140_BARB_LACA_HANA_AUDIT.md",
+      "sha256": "b9138e02e21f19372bb3f15d7340147f18bc42981dd068542cc2b674044542c5",
+      "bytes": 13899
+    },
+    {
+      "path": "references/laca-source-art__expressions__laca_lifeguard_happy.png",
+      "sha256": "c7cd3f5a4ba2c13c0d11883a7a6804f17f991d97557e9c4e3b88e5de0ffc9d6e",
+      "bytes": 295298,
+      "size": [
+        384,
+        447
+      ],
+      "mode": "RGBA",
+      "alpha_extrema": [
+        1,
+        254
+      ],
+      "decode": "pass"
+    },
+    {
+      "path": "references/laca-source-art__lifeguarda_anime_con_flotador_rojo.png",
+      "sha256": "1d8cc5216ee024bf38ec82f9d5e97937bf5b0d4748d817a97d3d80f5097bb720",
+      "bytes": 1355134,
+      "size": [
+        941,
+        1672
+      ],
+      "mode": "RGBA",
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "decode": "pass"
+    },
+    {
+      "path": "references/rpg-assets__characters__laca__outfits__lifeguard__happy.png",
+      "sha256": "361f40af36b45e6fe5a98e029cf269eb3f7a51656aa6af29b3682e1068069d62",
+      "bytes": 786445,
+      "decode": "fail",
+      "error": "broken PNG file (chunk b'\\xf5\\xb0\\x84Z')"
+    },
+    {
+      "path": "references/rpg-assets__characters__laca__outfits__lifeguard__happy.webp",
+      "sha256": "2a35991b01c562fba5b4f1393540a8ead1cd375428b82c7fc6361763f2ccfbab",
+      "bytes": 56672,
+      "size": [
+        384,
+        447
+      ],
+      "mode": "RGBA",
+      "alpha_extrema": [
+        1,
+        254
+      ],
+      "decode": "pass"
+    },
+    {
+      "path": "references/rpg-assets__characters__laca__outfits__lifeguard__neutral.webp",
+      "sha256": "035e43536e36ca0ecea28c8ea20aa4191a41330cd0b95cfb8662a31d5f59d500",
+      "bytes": 280300,
+      "size": [
+        941,
+        1672
+      ],
+      "mode": "RGBA",
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "decode": "pass"
+    },
+    {
+      "path": "references/rpg_character_packs.generated.js",
+      "sha256": "f69c88f3b29eb65dd73c65986cc7225f046ca631b0053f2c4008da1c5206908c",
+      "bytes": 223471
+    },
+    {
+      "path": "references/rpg_outfits.js",
+      "sha256": "fe61a01ae089d0f0a31d608d12084b91139611556bb8efb3ccc0c2d5d3b8adc9",
+      "bytes": 1826
+    },
+    {
+      "path": "review-dark.jpg",
+      "sha256": "e0d44734b8390a202d4f5ec43aa2cd5b253ccb55274ee5c66e9aa0312165c0d9",
+      "bytes": 31344
+    },
+    {
+      "path": "review-white.jpg",
+      "sha256": "2080f856185fbb5b9d924b2d8d9d361ce038819d43f4f2be8df27678d82efdca",
+      "bytes": 33404
+    },
+    {
+      "path": "thumbnail.png",
+      "sha256": "e40ec3015002cd5d3a71cb2cc83464ea448ef47027acd809f93bc73e8439f01e",
+      "bytes": 136930,
+      "size": [
+        281,
+        500
+      ],
+      "mode": "RGBA",
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "decode": "pass"
+    },
+    {
+      "path": "prompt.txt",
+      "sha256": "98ea3af548736c28e0500b8b7428f2d7dbeb9d7c2420c0918bf0e16395a10640"
+    }
+  ],
+  "prompt": "Use case: identity-preserve. Edit target: attached approved Laca lifeguard neutral artwork. Create one transparent full-body game character PNG. Change ONLY her facial expression to a warm clearly happy cheerful smile, softly lifted cheeks and happy eyes. Preserve the exact same adult 20-year-old dark-haired woman, facial identity and facial proportions, olive-tan skin, very long wavy dark brown hair, small hoop earrings, red white-trimmed two-piece lifeguard uniform with white cross, black whistle and lanyard, red rescue float with white rope and black strap, hand on hip, other hand holding float, crossed-leg standing pose, entire body including feet, exact camera angle, portrait framing, subject scale, lighting, shading, and illustration style of the reference. No redesign, no additional elements, no background, no text additions. SFW, practical swimwear coverage, neutral nonvoyeuristic full-body game artwork framing. Genuinely transparent background. Preserve all non-face content as closely as possible."
+}

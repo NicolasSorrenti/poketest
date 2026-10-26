@@ -1,0 +1,94 @@
+{
+  "alma": {
+    "overworldCandidates": [
+      {
+        "path": "/rpg-assets/characters/alma/vn-expressions/neutral.webp",
+        "exists": true
+      },
+      {
+        "path": "/rpg-assets/alma.png",
+        "exists": true
+      }
+    ],
+    "overworldResolved": "/rpg-assets/characters/alma/vn-expressions/neutral.webp",
+    "battleNeutral": [
+      "/rpg-assets/characters/alma/vn-expressions/neutral.webp"
+    ],
+    "galleryFallback": [
+      {
+        "path": "/rpg-assets/characters/alma/vn-expressions/neutral.webp",
+        "kind": "portrait"
+      }
+    ]
+  },
+  "rina": {
+    "overworldCandidates": [
+      {
+        "path": "/rpg-assets/characters/rina/neutral.webp",
+        "exists": false
+      },
+      {
+        "path": "/rpg-assets/characters/rina/neutral.png",
+        "exists": true
+      }
+    ],
+    "overworldResolved": "/rpg-assets/characters/rina/neutral.png",
+    "battleNeutral": [
+      "/rpg-assets/characters/rina/expression-portraits/neutral.webp"
+    ],
+    "galleryFallback": [
+      {
+        "path": "/rpg-assets/characters/rina/expression-portraits/neutral.webp",
+        "kind": "portrait"
+      }
+    ]
+  },
+  "sierra": {
+    "overworldCandidates": [
+      {
+        "path": "/rpg-assets/characters/sierra/neutral.webp",
+        "exists": false
+      },
+      {
+        "path": "/rpg-assets/characters/sierra/portrait.png",
+        "exists": true
+      }
+    ],
+    "overworldResolved": "/rpg-assets/characters/sierra/portrait.png",
+    "battleNeutral": [
+      "/rpg-assets/characters/sierra/expression-portraits/neutral.webp"
+    ],
+    "galleryFallback": [
+      {
+        "path": "/rpg-assets/characters/sierra/expression-portraits/neutral.webp",
+        "kind": "portrait"
+      }
+    ]
+  },
+  "sol": {
+    "overworldCandidates": [
+      {
+        "path": "/rpg-assets/characters/sol/neutral.webp",
+        "exists": false
+      },
+      {
+        "path": "/rpg-assets/characters/sol/expressions/neutral.png",
+        "exists": true
+      },
+      {
+        "path": "/rpg-assets/sol.png",
+        "exists": true
+      }
+    ],
+    "overworldResolved": "/rpg-assets/characters/sol/expressions/neutral.png",
+    "battleNeutral": [
+      "/rpg-assets/characters/sol/expression-portraits/neutral.webp"
+    ],
+    "galleryFallback": [
+      {
+        "path": "/rpg-assets/characters/sol/expression-portraits/neutral.webp",
+        "kind": "portrait"
+      }
+    ]
+  }
+}

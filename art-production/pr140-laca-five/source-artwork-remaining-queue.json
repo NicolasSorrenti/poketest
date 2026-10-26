@@ -1,0 +1,1885 @@
+{
+  "schema_version": 1,
+  "repository": "NicolasSorrenti/poketest",
+  "pr": 140,
+  "branch": "art/overworld-character-refresh",
+  "verified_remote_head": "e002154ee027fafec1bbc906c1d388434cf9ef06",
+  "audited_commit": "e002154ee027fafec1bbc906c1d388434cf9ef06",
+  "audit_scope": "Current remote Git source, actual selector behavior, tracked assets and integration manifests. Not a deployed-site/browser gameplay audit.",
+  "prohibitions": [
+    "Do not use or update main",
+    "No generation performed",
+    "No commit or push",
+    "Preserve existing originals and rejected attempts",
+    "Do not regenerate fulfilled slots"
+  ],
+  "neutral_overworld_refresh": {
+    "complete": false,
+    "canonical_originals_available": true,
+    "blocker": "Elio scene neutral resolves to legacy vn-expressions/neutral.webp depicting a woman; installed expression-portraits/neutral.webp also depicts a woman. Reuse rpg-assets/elio.png and repair scene/battle routes. No neutral generation needed.",
+    "distinction": "Neutral artwork availability is complete; canonical neutral runtime coverage across the entire cast is not."
+  },
+  "sources": [
+    "art-production/pr140-parallel/INTEGRATION.md",
+    "art-production/pr140-parallel/manifest.json",
+    "art-production/pr140-parallel/artifact-inventory.json",
+    "art-production/pr140-parallel/akari/AUDIT.md",
+    "art-production/pr140-parallel/reina/REPORT.md",
+    "art-production/pr140-parallel/rina/REPORT.md",
+    "art-production/pr140-parallel/iris/HANDOFF.md",
+    "docs/PR140_BARB_LACA_HANA_AUDIT.md",
+    "characters/laca/art_manifest.json",
+    "rpg.js",
+    "rpg_outfits.js",
+    "rpg_match_reactions.js",
+    "rpg_character_packs.generated.js"
+  ],
+  "verification": {
+    "remote": "git ls-remote origin refs/heads/art/overworld-character-refresh",
+    "integrated_manifest_images_hashed_and_fully_decoded": 78,
+    "hash_or_decode_failures": 0,
+    "focused_node_tests_passed": 10,
+    "generated_character_pack_check": "passed",
+    "full_suite_run": false,
+    "visual_review": "Originals and five expression portraits across all 22 cast members; additional Elio live VN set. Alpha-hidden RGB ignored."
+  },
+  "artwork_queue": [
+    {
+      "id": "laca-casual-flirty",
+      "character": "laca",
+      "outfit": "casual",
+      "expression": "flirty",
+      "runtime_keys": [
+        "flirty"
+      ],
+      "action": "produce_missing_full_body_expression_after_reuse_check",
+      "canonical_reference_paths": [
+        "rpg-assets/characters/laca/outfits/casual/neutral.webp",
+        "characters/laca/bible.md"
+      ],
+      "target_path": "rpg-assets/characters/laca/outfits/casual/flirty.png",
+      "current_target": {
+        "path": "rpg-assets/characters/laca/outfits/casual/flirty.png",
+        "decodes": false,
+        "error": "broken PNG file (chunk b',\\xf9\\xe1Q')"
+      },
+      "identity_outfit_constraints": "Adult Laca, 20; very long near-black/dark-brown hair, olive-tan skin, dark brown almond eyes, thick brows, curled eyelashes, full lips, small hoops. Full-body framing matching outfit neutral. Fitted black top and light blue jeans. Preserve canonical identity, age, skin tone, facial features, hair, outfit and accessories; transparent single-character anime/JRPG cutout. Change expression/pose only. Keep native original outputs; archive replacements. Review visible pixels on white and dark backgrounds.",
+      "reason": "Declared active outfit expression PNG is corrupt. Existing small outfit WebPs are facial crops, not exact full-body replacements.",
+      "integration": "Keep exact declared PNG path unless a later explicit manifest/generated-pack update chooses another format. Repair outfit variant and root aliases together; do not create a separate vulnerable image for sad."
+    },
+    {
+      "id": "laca-casual-embarrassed",
+      "character": "laca",
+      "outfit": "casual",
+      "expression": "embarrassed",
+      "runtime_keys": [
+        "embarrassed"
+      ],
+      "action": "produce_missing_full_body_expression_after_reuse_check",
+      "canonical_reference_paths": [
+        "rpg-assets/characters/laca/outfits/casual/neutral.webp",
+        "characters/laca/bible.md"
+      ],
+      "target_path": "rpg-assets/characters/laca/outfits/casual/embarrassed.png",
+      "current_target": {
+        "path": "rpg-assets/characters/laca/outfits/casual/embarrassed.png",
+        "decodes": false,
+        "error": "broken PNG file (chunk b'\\xe7\\xdeu\\xbc')"
+      },
+      "identity_outfit_constraints": "Adult Laca, 20; very long near-black/dark-brown hair, olive-tan skin, dark brown almond eyes, thick brows, curled eyelashes, full lips, small hoops. Full-body framing matching outfit neutral. Fitted black top and light blue jeans. Preserve canonical identity, age, skin tone, facial features, hair, outfit and accessories; transparent single-character anime/JRPG cutout. Change expression/pose only. Keep native original outputs; archive replacements. Review visible pixels on white and dark backgrounds.",
+      "reason": "Declared active outfit expression PNG is corrupt. Existing small outfit WebPs are facial crops, not exact full-body replacements.",
+      "integration": "Keep exact declared PNG path unless a later explicit manifest/generated-pack update chooses another format. Repair outfit variant and root aliases together; do not create a separate vulnerable image for sad."
+    },
+    {
+      "id": "laca-casual-angry",
+      "character": "laca",
+      "outfit": "casual",
+      "expression": "angry",
+      "runtime_keys": [
+        "angry"
+      ],
+      "action": "produce_missing_full_body_expression_after_reuse_check",
+      "canonical_reference_paths": [
+        "rpg-assets/characters/laca/outfits/casual/neutral.webp",
+        "characters/laca/bible.md"
+      ],
+      "target_path": "rpg-assets/characters/laca/outfits/casual/angry.png",
+      "current_target": {
+        "path": "rpg-assets/characters/laca/outfits/casual/angry.png",
+        "decodes": false,
+        "error": "broken PNG file (chunk b'\\x03H\\xe2\\xf5')"
+      },
+      "identity_outfit_constraints": "Adult Laca, 20; very long near-black/dark-brown hair, olive-tan skin, dark brown almond eyes, thick brows, curled eyelashes, full lips, small hoops. Full-body framing matching outfit neutral. Fitted black top and light blue jeans. Preserve canonical identity, age, skin tone, facial features, hair, outfit and accessories; transparent single-character anime/JRPG cutout. Change expression/pose only. Keep native original outputs; archive replacements. Review visible pixels on white and dark backgrounds.",
+      "reason": "Declared active outfit expression PNG is corrupt. Existing small outfit WebPs are facial crops, not exact full-body replacements.",
+      "integration": "Keep exact declared PNG path unless a later explicit manifest/generated-pack update chooses another format. Repair outfit variant and root aliases together; do not create a separate vulnerable image for sad."
+    },
+    {
+      "id": "laca-casual-inviting",
+      "character": "laca",
+      "outfit": "casual",
+      "expression": "inviting",
+      "runtime_keys": [
+        "inviting"
+      ],
+      "action": "produce_missing_full_body_expression_after_reuse_check",
+      "canonical_reference_paths": [
+        "rpg-assets/characters/laca/outfits/casual/neutral.webp",
+        "characters/laca/bible.md"
+      ],
+      "target_path": "rpg-assets/characters/laca/outfits/casual/inviting.png",
+      "current_target": {
+        "path": "rpg-assets/characters/laca/outfits/casual/inviting.png",
+        "decodes": false,
+        "error": "broken PNG file (chunk b'\\xf1\\x88\\xc8y')"
+      },
+      "identity_outfit_constraints": "Adult Laca, 20; very long near-black/dark-brown hair, olive-tan skin, dark brown almond eyes, thick brows, curled eyelashes, full lips, small hoops. Full-body framing matching outfit neutral. Fitted black top and light blue jeans. Preserve canonical identity, age, skin tone, facial features, hair, outfit and accessories; transparent single-character anime/JRPG cutout. Change expression/pose only. Keep native original outputs; archive replacements. Review visible pixels on white and dark backgrounds.",
+      "reason": "Declared active outfit expression PNG is corrupt. Existing small outfit WebPs are facial crops, not exact full-body replacements.",
+      "integration": "Keep exact declared PNG path unless a later explicit manifest/generated-pack update chooses another format. Repair outfit variant and root aliases together; do not create a separate vulnerable image for sad."
+    },
+    {
+      "id": "laca-lifeguard-happy",
+      "character": "laca",
+      "outfit": "lifeguard",
+      "expression": "happy",
+      "runtime_keys": [
+        "happy"
+      ],
+      "action": "produce_missing_full_body_expression_after_reuse_check",
+      "canonical_reference_paths": [
+        "rpg-assets/characters/laca/outfits/lifeguard/neutral.webp",
+        "characters/laca/bible.md"
+      ],
+      "target_path": "rpg-assets/characters/laca/outfits/lifeguard/happy.png",
+      "current_target": {
+        "path": "rpg-assets/characters/laca/outfits/lifeguard/happy.png",
+        "decodes": false,
+        "error": "broken PNG file (chunk b'\\xf5\\xb0\\x84Z')"
+      },
+      "identity_outfit_constraints": "Adult Laca, 20; very long near-black/dark-brown hair, olive-tan skin, dark brown almond eyes, thick brows, curled eyelashes, full lips, small hoops. Full-body framing matching outfit neutral. Practical red two-piece lifeguard swimsuit, whistle and red rescue float; no casual outfit substitution. Preserve canonical identity, age, skin tone, facial features, hair, outfit and accessories; transparent single-character anime/JRPG cutout. Change expression/pose only. Keep native original outputs; archive replacements. Review visible pixels on white and dark backgrounds.",
+      "reason": "Declared active outfit expression PNG is corrupt. Existing small outfit WebPs are facial crops, not exact full-body replacements.",
+      "integration": "Keep exact declared PNG path unless a later explicit manifest/generated-pack update chooses another format. Repair outfit variant and root aliases together; do not create a separate vulnerable image for sad."
+    },
+    {
+      "id": "laca-lifeguard-surprised",
+      "character": "laca",
+      "outfit": "lifeguard",
+      "expression": "surprised",
+      "runtime_keys": [
+        "surprised"
+      ],
+      "action": "produce_missing_full_body_expression_after_reuse_check",
+      "canonical_reference_paths": [
+        "rpg-assets/characters/laca/outfits/lifeguard/neutral.webp",
+        "characters/laca/bible.md"
+      ],
+      "target_path": "rpg-assets/characters/laca/outfits/lifeguard/surprised.png",
+      "current_target": {
+        "path": "rpg-assets/characters/laca/outfits/lifeguard/surprised.png",
+        "decodes": false,
+        "error": "broken PNG file (chunk b'\\x9b7\\x84\\xad')"
+      },
+      "identity_outfit_constraints": "Adult Laca, 20; very long near-black/dark-brown hair, olive-tan skin, dark brown almond eyes, thick brows, curled eyelashes, full lips, small hoops. Full-body framing matching outfit neutral. Practical red two-piece lifeguard swimsuit, whistle and red rescue float; no casual outfit substitution. Preserve canonical identity, age, skin tone, facial features, hair, outfit and accessories; transparent single-character anime/JRPG cutout. Change expression/pose only. Keep native original outputs; archive replacements. Review visible pixels on white and dark backgrounds.",
+      "reason": "Declared active outfit expression PNG is corrupt. Existing small outfit WebPs are facial crops, not exact full-body replacements.",
+      "integration": "Keep exact declared PNG path unless a later explicit manifest/generated-pack update chooses another format. Repair outfit variant and root aliases together; do not create a separate vulnerable image for sad."
+    },
+    {
+      "id": "laca-lifeguard-sad",
+      "character": "laca",
+      "outfit": "lifeguard",
+      "expression": "sad",
+      "runtime_keys": [
+        "vulnerable",
+        "sad"
+      ],
+      "action": "produce_missing_full_body_expression_after_reuse_check",
+      "canonical_reference_paths": [
+        "rpg-assets/characters/laca/outfits/lifeguard/neutral.webp",
+        "characters/laca/bible.md"
+      ],
+      "target_path": "rpg-assets/characters/laca/outfits/lifeguard/sad.png",
+      "current_target": {
+        "path": "rpg-assets/characters/laca/outfits/lifeguard/sad.png",
+        "decodes": false,
+        "error": "broken PNG file (chunk b'\\xe3*\\xf4\\xa3')"
+      },
+      "identity_outfit_constraints": "Adult Laca, 20; very long near-black/dark-brown hair, olive-tan skin, dark brown almond eyes, thick brows, curled eyelashes, full lips, small hoops. Full-body framing matching outfit neutral. Practical red two-piece lifeguard swimsuit, whistle and red rescue float; no casual outfit substitution. Preserve canonical identity, age, skin tone, facial features, hair, outfit and accessories; transparent single-character anime/JRPG cutout. Change expression/pose only. Keep native original outputs; archive replacements. Review visible pixels on white and dark backgrounds.",
+      "reason": "Declared active outfit expression PNG is corrupt. Existing small outfit WebPs are facial crops, not exact full-body replacements.",
+      "integration": "Keep exact declared PNG path unless a later explicit manifest/generated-pack update chooses another format. Repair outfit variant and root aliases together; do not create a separate vulnerable image for sad."
+    },
+    {
+      "id": "laca-lifeguard-flirty",
+      "character": "laca",
+      "outfit": "lifeguard",
+      "expression": "flirty",
+      "runtime_keys": [
+        "flirty"
+      ],
+      "action": "produce_missing_full_body_expression_after_reuse_check",
+      "canonical_reference_paths": [
+        "rpg-assets/characters/laca/outfits/lifeguard/neutral.webp",
+        "characters/laca/bible.md"
+      ],
+      "target_path": "rpg-assets/characters/laca/outfits/lifeguard/flirty.png",
+      "current_target": {
+        "path": "rpg-assets/characters/laca/outfits/lifeguard/flirty.png",
+        "decodes": false,
+        "error": "broken PNG file (chunk b'z\\xc5r\\xdb')"
+      },
+      "identity_outfit_constraints": "Adult Laca, 20; very long near-black/dark-brown hair, olive-tan skin, dark brown almond eyes, thick brows, curled eyelashes, full lips, small hoops. Full-body framing matching outfit neutral. Practical red two-piece lifeguard swimsuit, whistle and red rescue float; no casual outfit substitution. Preserve canonical identity, age, skin tone, facial features, hair, outfit and accessories; transparent single-character anime/JRPG cutout. Change expression/pose only. Keep native original outputs; archive replacements. Review visible pixels on white and dark backgrounds.",
+      "reason": "Declared active outfit expression PNG is corrupt. Existing small outfit WebPs are facial crops, not exact full-body replacements.",
+      "integration": "Keep exact declared PNG path unless a later explicit manifest/generated-pack update chooses another format. Repair outfit variant and root aliases together; do not create a separate vulnerable image for sad."
+    },
+    {
+      "id": "laca-lifeguard-embarrassed",
+      "character": "laca",
+      "outfit": "lifeguard",
+      "expression": "embarrassed",
+      "runtime_keys": [
+        "embarrassed"
+      ],
+      "action": "produce_missing_full_body_expression_after_reuse_check",
+      "canonical_reference_paths": [
+        "rpg-assets/characters/laca/outfits/lifeguard/neutral.webp",
+        "characters/laca/bible.md"
+      ],
+      "target_path": "rpg-assets/characters/laca/outfits/lifeguard/embarrassed.png",
+      "current_target": {
+        "path": "rpg-assets/characters/laca/outfits/lifeguard/embarrassed.png",
+        "decodes": false,
+        "error": "broken PNG file (chunk b'\\xccQ9\\xe5')"
+      },
+      "identity_outfit_constraints": "Adult Laca, 20; very long near-black/dark-brown hair, olive-tan skin, dark brown almond eyes, thick brows, curled eyelashes, full lips, small hoops. Full-body framing matching outfit neutral. Practical red two-piece lifeguard swimsuit, whistle and red rescue float; no casual outfit substitution. Preserve canonical identity, age, skin tone, facial features, hair, outfit and accessories; transparent single-character anime/JRPG cutout. Change expression/pose only. Keep native original outputs; archive replacements. Review visible pixels on white and dark backgrounds.",
+      "reason": "Declared active outfit expression PNG is corrupt. Existing small outfit WebPs are facial crops, not exact full-body replacements.",
+      "integration": "Keep exact declared PNG path unless a later explicit manifest/generated-pack update chooses another format. Repair outfit variant and root aliases together; do not create a separate vulnerable image for sad."
+    },
+    {
+      "id": "laca-lifeguard-angry",
+      "character": "laca",
+      "outfit": "lifeguard",
+      "expression": "angry",
+      "runtime_keys": [
+        "angry"
+      ],
+      "action": "produce_missing_full_body_expression_after_reuse_check",
+      "canonical_reference_paths": [
+        "rpg-assets/characters/laca/outfits/lifeguard/neutral.webp",
+        "characters/laca/bible.md"
+      ],
+      "target_path": "rpg-assets/characters/laca/outfits/lifeguard/angry.png",
+      "current_target": {
+        "path": "rpg-assets/characters/laca/outfits/lifeguard/angry.png",
+        "decodes": false,
+        "error": "broken PNG file (chunk b'\\x96\\xc4\\xa5\\x19')"
+      },
+      "identity_outfit_constraints": "Adult Laca, 20; very long near-black/dark-brown hair, olive-tan skin, dark brown almond eyes, thick brows, curled eyelashes, full lips, small hoops. Full-body framing matching outfit neutral. Practical red two-piece lifeguard swimsuit, whistle and red rescue float; no casual outfit substitution. Preserve canonical identity, age, skin tone, facial features, hair, outfit and accessories; transparent single-character anime/JRPG cutout. Change expression/pose only. Keep native original outputs; archive replacements. Review visible pixels on white and dark backgrounds.",
+      "reason": "Declared active outfit expression PNG is corrupt. Existing small outfit WebPs are facial crops, not exact full-body replacements.",
+      "integration": "Keep exact declared PNG path unless a later explicit manifest/generated-pack update chooses another format. Repair outfit variant and root aliases together; do not create a separate vulnerable image for sad."
+    },
+    {
+      "id": "laca-lifeguard-inviting",
+      "character": "laca",
+      "outfit": "lifeguard",
+      "expression": "inviting",
+      "runtime_keys": [
+        "inviting"
+      ],
+      "action": "produce_missing_full_body_expression_after_reuse_check",
+      "canonical_reference_paths": [
+        "rpg-assets/characters/laca/outfits/lifeguard/neutral.webp",
+        "characters/laca/bible.md"
+      ],
+      "target_path": "rpg-assets/characters/laca/outfits/lifeguard/inviting.png",
+      "current_target": {
+        "path": "rpg-assets/characters/laca/outfits/lifeguard/inviting.png",
+        "decodes": false,
+        "error": "broken PNG file (chunk b'\\xcf\\tp\\xfd')"
+      },
+      "identity_outfit_constraints": "Adult Laca, 20; very long near-black/dark-brown hair, olive-tan skin, dark brown almond eyes, thick brows, curled eyelashes, full lips, small hoops. Full-body framing matching outfit neutral. Practical red two-piece lifeguard swimsuit, whistle and red rescue float; no casual outfit substitution. Preserve canonical identity, age, skin tone, facial features, hair, outfit and accessories; transparent single-character anime/JRPG cutout. Change expression/pose only. Keep native original outputs; archive replacements. Review visible pixels on white and dark backgrounds.",
+      "reason": "Declared active outfit expression PNG is corrupt. Existing small outfit WebPs are facial crops, not exact full-body replacements.",
+      "integration": "Keep exact declared PNG path unless a later explicit manifest/generated-pack update chooses another format. Repair outfit variant and root aliases together; do not create a separate vulnerable image for sad."
+    },
+    {
+      "id": "elio-happy",
+      "character": "elio",
+      "expression": "happy",
+      "runtime_keys": [
+        "happy"
+      ],
+      "action": "replace_wrong_identity_expression_after_reuse_check",
+      "canonical_reference_paths": [
+        "rpg-assets/elio.png"
+      ],
+      "target_path": "rpg-assets/characters/elio/expression-portraits/happy.webp",
+      "current_target": {
+        "path": "rpg-assets/characters/elio/expression-portraits/happy.webp",
+        "sha256": "08ccf49d96b9a3a54e44b002f9f3887a694adb7c84275d6765b5725a68c17caa",
+        "dimensions": [
+          887,
+          1774
+        ],
+        "decodes": true
+      },
+      "identity_outfit_constraints": "Adult male Elio, 19; match rpg-assets/elio.png exactly: short tousled chestnut/brown hair, dark star-motif shirt, oversized navy-and-cream varsity hoodie/jacket, dark trousers and shoulder bag. Do not use any existing Elio expression-portrait or VN image as an identity reference: they depict a woman. Preserve canonical identity, age, skin tone, facial features, hair, outfit and accessories; transparent single-character anime/JRPG cutout. Change expression/pose only. Keep native original outputs; archive replacements. Review visible pixels on white and dark backgrounds.",
+      "reason": "Both installed portrait expressions and live VN sheet depict a different female character. These four slots complete the established neutral/happy/surprised/concerned/soft set.",
+      "integration": "Explicitly route scenes and battle to reviewed expression portraits; proposed irritated->concerned, vulnerable->soft; determined->canonical neutral until a distinct determined slot is approved. No need to duplicate images in VN folder."
+    },
+    {
+      "id": "elio-surprised",
+      "character": "elio",
+      "expression": "surprised",
+      "runtime_keys": [
+        "surprised"
+      ],
+      "action": "replace_wrong_identity_expression_after_reuse_check",
+      "canonical_reference_paths": [
+        "rpg-assets/elio.png"
+      ],
+      "target_path": "rpg-assets/characters/elio/expression-portraits/surprised.webp",
+      "current_target": {
+        "path": "rpg-assets/characters/elio/expression-portraits/surprised.webp",
+        "sha256": "57779ddb801c003cf277d55b0254b15ebeae22e35f633ff0b477f7a756beb9e0",
+        "dimensions": [
+          887,
+          1774
+        ],
+        "decodes": true
+      },
+      "identity_outfit_constraints": "Adult male Elio, 19; match rpg-assets/elio.png exactly: short tousled chestnut/brown hair, dark star-motif shirt, oversized navy-and-cream varsity hoodie/jacket, dark trousers and shoulder bag. Do not use any existing Elio expression-portrait or VN image as an identity reference: they depict a woman. Preserve canonical identity, age, skin tone, facial features, hair, outfit and accessories; transparent single-character anime/JRPG cutout. Change expression/pose only. Keep native original outputs; archive replacements. Review visible pixels on white and dark backgrounds.",
+      "reason": "Both installed portrait expressions and live VN sheet depict a different female character. These four slots complete the established neutral/happy/surprised/concerned/soft set.",
+      "integration": "Explicitly route scenes and battle to reviewed expression portraits; proposed irritated->concerned, vulnerable->soft; determined->canonical neutral until a distinct determined slot is approved. No need to duplicate images in VN folder."
+    },
+    {
+      "id": "elio-concerned",
+      "character": "elio",
+      "expression": "concerned",
+      "runtime_keys": [
+        "irritated"
+      ],
+      "action": "replace_wrong_identity_expression_after_reuse_check",
+      "canonical_reference_paths": [
+        "rpg-assets/elio.png"
+      ],
+      "target_path": "rpg-assets/characters/elio/expression-portraits/concerned.webp",
+      "current_target": {
+        "path": "rpg-assets/characters/elio/expression-portraits/concerned.webp",
+        "sha256": "381ce95b712b11909a275283ae7ee46e5015040da1d0a7c7908ee76cf4a9c7a0",
+        "dimensions": [
+          887,
+          1774
+        ],
+        "decodes": true
+      },
+      "identity_outfit_constraints": "Adult male Elio, 19; match rpg-assets/elio.png exactly: short tousled chestnut/brown hair, dark star-motif shirt, oversized navy-and-cream varsity hoodie/jacket, dark trousers and shoulder bag. Do not use any existing Elio expression-portrait or VN image as an identity reference: they depict a woman. Preserve canonical identity, age, skin tone, facial features, hair, outfit and accessories; transparent single-character anime/JRPG cutout. Change expression/pose only. Keep native original outputs; archive replacements. Review visible pixels on white and dark backgrounds.",
+      "reason": "Both installed portrait expressions and live VN sheet depict a different female character. These four slots complete the established neutral/happy/surprised/concerned/soft set.",
+      "integration": "Explicitly route scenes and battle to reviewed expression portraits; proposed irritated->concerned, vulnerable->soft; determined->canonical neutral until a distinct determined slot is approved. No need to duplicate images in VN folder."
+    },
+    {
+      "id": "elio-soft",
+      "character": "elio",
+      "expression": "soft",
+      "runtime_keys": [
+        "vulnerable"
+      ],
+      "action": "replace_wrong_identity_expression_after_reuse_check",
+      "canonical_reference_paths": [
+        "rpg-assets/elio.png"
+      ],
+      "target_path": "rpg-assets/characters/elio/expression-portraits/soft.webp",
+      "current_target": {
+        "path": "rpg-assets/characters/elio/expression-portraits/soft.webp",
+        "sha256": "ef4f3613c2525565f6db66e45b9d5d38d5cd8c5cefa27e5df7104b32c70e5729",
+        "dimensions": [
+          887,
+          1774
+        ],
+        "decodes": true
+      },
+      "identity_outfit_constraints": "Adult male Elio, 19; match rpg-assets/elio.png exactly: short tousled chestnut/brown hair, dark star-motif shirt, oversized navy-and-cream varsity hoodie/jacket, dark trousers and shoulder bag. Do not use any existing Elio expression-portrait or VN image as an identity reference: they depict a woman. Preserve canonical identity, age, skin tone, facial features, hair, outfit and accessories; transparent single-character anime/JRPG cutout. Change expression/pose only. Keep native original outputs; archive replacements. Review visible pixels on white and dark backgrounds.",
+      "reason": "Both installed portrait expressions and live VN sheet depict a different female character. These four slots complete the established neutral/happy/surprised/concerned/soft set.",
+      "integration": "Explicitly route scenes and battle to reviewed expression portraits; proposed irritated->concerned, vulnerable->soft; determined->canonical neutral until a distinct determined slot is approved. No need to duplicate images in VN folder."
+    }
+  ],
+  "reuse_and_routing_queue": [
+    {
+      "id": "elio-neutral",
+      "character": "elio",
+      "action": "reuse_canonical_neutral_and_remove_wrong_identity_routes",
+      "canonical_reference_paths": [
+        "rpg-assets/elio.png"
+      ],
+      "target_paths": [
+        "rpg-assets/characters/elio/expression-portraits/neutral.webp"
+      ],
+      "runtime_files": [
+        "rpg.js",
+        "rpg_match_reactions.js"
+      ],
+      "constraints": "Adult male Elio, 19; match rpg-assets/elio.png exactly: short tousled chestnut/brown hair, dark star-motif shirt, oversized navy-and-cream varsity hoodie/jacket, dark trousers and shoulder bag. Do not use any existing Elio expression-portrait or VN image as an identity reference: they depict a woman. Preserve canonical identity, age, skin tone, facial features, hair, outfit and accessories; transparent single-character anime/JRPG cutout. Change expression/pose only. Keep native original outputs; archive replacements. Review visible pixels on white and dark backgrounds.",
+      "reason": "Neutral is reusable, not missing artwork. Also guard determined/irritated/vulnerable while replacements await approval."
+    },
+    {
+      "id": "akari-remaining-existing-expressions",
+      "character": "akari",
+      "action": "reuse_existing_compatible_images_after_final_slot_review",
+      "canonical_reference_paths": [
+        "rpg-assets/akari.png"
+      ],
+      "existing_target_paths": [
+        "rpg-assets/characters/akari/expression-portraits/surprised.webp",
+        "rpg-assets/characters/akari/expression-portraits/concerned.webp"
+      ],
+      "expressions": [
+        "surprised",
+        "concerned"
+      ],
+      "reason": "Installed compatible artwork exists. Current reviewedPairs scene allowlist omits these states; no generation justified.",
+      "identity_outfit_constraints": "Match the listed canonical original and existing approved happy pair; preserve its exact hair, clothing, accessories and framing. Do not use historical wrong-identity rejected filenames.",
+      "runtime_files": [
+        "rpg.js",
+        "rpg_match_reactions.js"
+      ],
+      "integration": "Add only reviewed slots to allowlist. Any vulnerable/irritated alias requires explicit mapping; determined can retain neutral. Preserve dedicated attack precedence and existing valid battle routes."
+    },
+    {
+      "id": "camila-remaining-existing-expressions",
+      "character": "camila",
+      "action": "reuse_existing_compatible_images_after_final_slot_review",
+      "canonical_reference_paths": [
+        "rpg-assets/camila.png"
+      ],
+      "existing_target_paths": [
+        "rpg-assets/characters/camila/expression-portraits/surprised.webp",
+        "rpg-assets/characters/camila/expression-portraits/concerned.webp"
+      ],
+      "expressions": [
+        "surprised",
+        "concerned"
+      ],
+      "reason": "Installed compatible artwork exists. Current reviewedPairs scene allowlist omits these states; no generation justified.",
+      "identity_outfit_constraints": "Match the listed canonical original and existing approved happy pair; preserve its exact hair, clothing, accessories and framing. Do not use historical wrong-identity rejected filenames.",
+      "runtime_files": [
+        "rpg.js",
+        "rpg_match_reactions.js"
+      ],
+      "integration": "Add only reviewed slots to allowlist. Any vulnerable/irritated alias requires explicit mapping; determined can retain neutral. Preserve dedicated attack precedence and existing valid battle routes."
+    },
+    {
+      "id": "kaede-remaining-existing-expressions",
+      "character": "kaede",
+      "action": "reuse_existing_compatible_images_after_final_slot_review",
+      "canonical_reference_paths": [
+        "rpg-assets/kaede.png"
+      ],
+      "existing_target_paths": [
+        "rpg-assets/characters/kaede/expression-portraits/surprised.webp",
+        "rpg-assets/characters/kaede/expression-portraits/concerned.webp"
+      ],
+      "expressions": [
+        "surprised",
+        "concerned"
+      ],
+      "reason": "Installed compatible artwork exists. Current reviewedPairs scene allowlist omits these states; no generation justified.",
+      "identity_outfit_constraints": "Match the listed canonical original and existing approved happy pair; preserve its exact hair, clothing, accessories and framing. Do not use historical wrong-identity rejected filenames.",
+      "runtime_files": [
+        "rpg.js",
+        "rpg_match_reactions.js"
+      ],
+      "integration": "Add only reviewed slots to allowlist. Any vulnerable/irritated alias requires explicit mapping; determined can retain neutral. Preserve dedicated attack precedence and existing valid battle routes."
+    },
+    {
+      "id": "marina-remaining-existing-expressions",
+      "character": "marina",
+      "action": "reuse_existing_compatible_images_after_final_slot_review",
+      "canonical_reference_paths": [
+        "rpg-assets/marina.png"
+      ],
+      "existing_target_paths": [
+        "rpg-assets/characters/marina/expression-portraits/surprised.webp",
+        "rpg-assets/characters/marina/expression-portraits/concerned.webp"
+      ],
+      "expressions": [
+        "surprised",
+        "concerned"
+      ],
+      "reason": "Installed compatible artwork exists. Current reviewedPairs scene allowlist omits these states; no generation justified.",
+      "identity_outfit_constraints": "Match the listed canonical original and existing approved happy pair; preserve its exact hair, clothing, accessories and framing. Do not use historical wrong-identity rejected filenames.",
+      "runtime_files": [
+        "rpg.js",
+        "rpg_match_reactions.js"
+      ],
+      "integration": "Add only reviewed slots to allowlist. Any vulnerable/irritated alias requires explicit mapping; determined can retain neutral. Preserve dedicated attack precedence and existing valid battle routes."
+    },
+    {
+      "id": "reina-remaining-existing-expressions",
+      "character": "reina",
+      "action": "reuse_existing_compatible_images_after_final_slot_review",
+      "canonical_reference_paths": [
+        "rpg-assets/reina.png"
+      ],
+      "existing_target_paths": [
+        "rpg-assets/characters/reina/expression-portraits/concerned.webp",
+        "rpg-assets/characters/reina/expression-portraits/soft.webp"
+      ],
+      "expressions": [
+        "concerned",
+        "soft"
+      ],
+      "reason": "Installed compatible artwork exists. Current reviewedPairs scene allowlist omits these states; no generation justified.",
+      "identity_outfit_constraints": "Match the listed canonical original and existing approved happy pair; preserve its exact hair, clothing, accessories and framing. Do not use historical wrong-identity rejected filenames.",
+      "runtime_files": [
+        "rpg.js",
+        "rpg_match_reactions.js"
+      ],
+      "integration": "Add only reviewed slots to allowlist. Any vulnerable/irritated alias requires explicit mapping; determined can retain neutral. Preserve dedicated attack precedence and existing valid battle routes."
+    },
+    {
+      "id": "shiori-remaining-existing-expressions",
+      "character": "shiori",
+      "action": "reuse_existing_compatible_images_after_final_slot_review",
+      "canonical_reference_paths": [
+        "rpg-assets/shiori.png"
+      ],
+      "existing_target_paths": [
+        "rpg-assets/characters/shiori/expression-portraits/concerned.webp",
+        "rpg-assets/characters/shiori/expression-portraits/soft.webp"
+      ],
+      "expressions": [
+        "concerned",
+        "soft"
+      ],
+      "reason": "Installed compatible artwork exists. Current reviewedPairs scene allowlist omits these states; no generation justified.",
+      "identity_outfit_constraints": "Match the listed canonical original and existing approved happy pair; preserve its exact hair, clothing, accessories and framing. Do not use historical wrong-identity rejected filenames.",
+      "runtime_files": [
+        "rpg.js",
+        "rpg_match_reactions.js"
+      ],
+      "integration": "Add only reviewed slots to allowlist. Any vulnerable/irritated alias requires explicit mapping; determined can retain neutral. Preserve dedicated attack precedence and existing valid battle routes."
+    },
+    {
+      "id": "yuna-remaining-existing-expressions",
+      "character": "yuna",
+      "action": "reuse_existing_compatible_images_after_final_slot_review",
+      "canonical_reference_paths": [
+        "rpg-assets/yuna.png"
+      ],
+      "existing_target_paths": [
+        "rpg-assets/characters/yuna/expression-portraits/concerned.webp",
+        "rpg-assets/characters/yuna/expression-portraits/soft.webp"
+      ],
+      "expressions": [
+        "concerned",
+        "soft"
+      ],
+      "reason": "Installed compatible artwork exists. Current reviewedPairs scene allowlist omits these states; no generation justified.",
+      "identity_outfit_constraints": "Match the listed canonical original and existing approved happy pair; preserve its exact hair, clothing, accessories and framing. Do not use historical wrong-identity rejected filenames.",
+      "runtime_files": [
+        "rpg.js",
+        "rpg_match_reactions.js"
+      ],
+      "integration": "Add only reviewed slots to allowlist. Any vulnerable/irritated alias requires explicit mapping; determined can retain neutral. Preserve dedicated attack precedence and existing valid battle routes."
+    },
+    {
+      "id": "iris-remaining-existing-expressions",
+      "character": "iris",
+      "action": "reuse_existing_compatible_images_after_final_slot_review",
+      "canonical_reference_paths": [
+        "rpg-assets/iris.png"
+      ],
+      "existing_target_paths": [
+        "rpg-assets/characters/iris/expression-portraits/concerned.webp",
+        "rpg-assets/characters/iris/expression-portraits/soft.webp"
+      ],
+      "expressions": [
+        "concerned",
+        "soft"
+      ],
+      "reason": "Installed compatible artwork exists. Current reviewedPairs scene allowlist omits these states; no generation justified.",
+      "identity_outfit_constraints": "Match the listed canonical original and existing approved happy pair; preserve its exact hair, clothing, accessories and framing. Do not use historical wrong-identity rejected filenames.",
+      "runtime_files": [
+        "rpg.js",
+        "rpg_match_reactions.js"
+      ],
+      "integration": "Add only reviewed slots to allowlist. Any vulnerable/irritated alias requires explicit mapping; determined can retain neutral. Preserve dedicated attack precedence and existing valid battle routes."
+    },
+    {
+      "id": "jun-remaining-existing-expressions",
+      "character": "jun",
+      "action": "reuse_existing_compatible_images_after_final_slot_review",
+      "canonical_reference_paths": [
+        "rpg-assets/jun.png"
+      ],
+      "existing_target_paths": [
+        "rpg-assets/characters/jun/expression-portraits/concerned.webp",
+        "rpg-assets/characters/jun/expression-portraits/soft.webp"
+      ],
+      "expressions": [
+        "concerned",
+        "soft"
+      ],
+      "reason": "Installed compatible artwork exists. Current reviewedPairs scene allowlist omits these states; no generation justified.",
+      "identity_outfit_constraints": "Match the listed canonical original and existing approved happy pair; preserve its exact hair, clothing, accessories and framing. Do not use historical wrong-identity rejected filenames.",
+      "runtime_files": [
+        "rpg.js",
+        "rpg_match_reactions.js"
+      ],
+      "integration": "Add only reviewed slots to allowlist. Any vulnerable/irritated alias requires explicit mapping; determined can retain neutral. Preserve dedicated attack precedence and existing valid battle routes."
+    },
+    {
+      "id": "nereo-remaining-existing-expressions",
+      "character": "nereo",
+      "action": "reuse_existing_compatible_images_after_final_slot_review",
+      "canonical_reference_paths": [
+        "rpg-assets/nereo.png"
+      ],
+      "existing_target_paths": [
+        "rpg-assets/characters/nereo/expression-portraits/concerned.webp",
+        "rpg-assets/characters/nereo/expression-portraits/soft.webp"
+      ],
+      "expressions": [
+        "concerned",
+        "soft"
+      ],
+      "reason": "Installed compatible artwork exists. Current reviewedPairs scene allowlist omits these states; no generation justified.",
+      "identity_outfit_constraints": "Match the listed canonical original and existing approved happy pair; preserve its exact hair, clothing, accessories and framing. Do not use historical wrong-identity rejected filenames.",
+      "runtime_files": [
+        "rpg.js",
+        "rpg_match_reactions.js"
+      ],
+      "integration": "Add only reviewed slots to allowlist. Any vulnerable/irritated alias requires explicit mapping; determined can retain neutral. Preserve dedicated attack precedence and existing valid battle routes."
+    },
+    {
+      "id": "teo-remaining-existing-expressions",
+      "character": "teo",
+      "action": "reuse_existing_compatible_images_after_final_slot_review",
+      "canonical_reference_paths": [
+        "rpg-assets/teo.png"
+      ],
+      "existing_target_paths": [
+        "rpg-assets/characters/teo/expression-portraits/concerned.webp",
+        "rpg-assets/characters/teo/expression-portraits/soft.webp"
+      ],
+      "expressions": [
+        "concerned",
+        "soft"
+      ],
+      "reason": "Installed compatible artwork exists. Current reviewedPairs scene allowlist omits these states; no generation justified.",
+      "identity_outfit_constraints": "Match the listed canonical original and existing approved happy pair; preserve its exact hair, clothing, accessories and framing. Do not use historical wrong-identity rejected filenames.",
+      "runtime_files": [
+        "rpg.js",
+        "rpg_match_reactions.js"
+      ],
+      "integration": "Add only reviewed slots to allowlist. Any vulnerable/irritated alias requires explicit mapping; determined can retain neutral. Preserve dedicated attack precedence and existing valid battle routes."
+    },
+    {
+      "id": "elena-existing-portrait-set",
+      "character": "elena",
+      "action": "review_and_route_existing_compatible_portrait_set",
+      "canonical_reference_paths": [
+        "rpg-assets/characters/elena/portrait.png",
+        "characters/elena/bible.md"
+      ],
+      "existing_target_paths": [
+        "rpg-assets/characters/elena/expression-portraits/neutral.webp",
+        "rpg-assets/characters/elena/expression-portraits/happy.webp",
+        "rpg-assets/characters/elena/expression-portraits/surprised.webp",
+        "rpg-assets/characters/elena/expression-portraits/concerned.webp",
+        "rpg-assets/characters/elena/expression-portraits/soft.webp"
+      ],
+      "identity_outfit_constraints": "Adult Elena 26, long dark brown hair, hazel-green eyes, tailored charcoal/black blazer and cream/white blouse; preserve canonical office outfit.",
+      "reason": "Scene still selects older expressions/*.webp, while compatible transparent portraits exist and battle already uses them. No missing five-set raster established.",
+      "runtime_files": [
+        "characters/elena/art_manifest.json",
+        "rpg_character_packs.generated.js",
+        "rpg.js"
+      ]
+    }
+  ],
+  "cast_coverage": [
+    {
+      "character": "akari",
+      "five_set_assets": {
+        "neutral": {
+          "path": "rpg-assets/characters/akari/expression-portraits/neutral.webp",
+          "sha256": "c7ed38a97dc063673b95bf70560c2df3858e83cf9c626ab3eefca8b54d0e004a",
+          "dimensions": [
+            512,
+            1024
+          ],
+          "decodes": true
+        },
+        "happy": {
+          "path": "rpg-assets/characters/akari/expression-portraits/happy.webp",
+          "sha256": "107b4f21ca287263bf3a23154f694f5d18e8c553a718acee0e68a1821724a4ae",
+          "dimensions": [
+            512,
+            1024
+          ],
+          "decodes": true
+        },
+        "surprised": {
+          "path": "rpg-assets/characters/akari/expression-portraits/surprised.webp",
+          "sha256": "a75635280ee368feaf2d73af238254e19f5fd3854e152c67a85ec6bcef045bc4",
+          "dimensions": [
+            512,
+            1024
+          ],
+          "decodes": true
+        },
+        "concerned": {
+          "path": "rpg-assets/characters/akari/expression-portraits/concerned.webp",
+          "sha256": "e0917b70894d5fcefa754ae624a72be0eb577eafc5337e276287bd261b066c3e",
+          "dimensions": [
+            512,
+            1024
+          ],
+          "decodes": true
+        },
+        "soft": {
+          "path": "rpg-assets/characters/akari/expression-portraits/soft.webp",
+          "sha256": "b4c79636f9dfe32224827d33177c068c5ec1680590ca9d331cd0e24dc9add134",
+          "dimensions": [
+            512,
+            1024
+          ],
+          "decodes": true
+        }
+      },
+      "status": "five_set_art_exists_do_not_regenerate",
+      "note": "Compatible crops are accepted for existing fulfilled slots; Laca full-body outfit deliverables are separately declared. Asset presence alone does not mean a scene key reaches it."
+    },
+    {
+      "character": "alma",
+      "five_set_assets": {
+        "neutral": {
+          "path": "rpg-assets/characters/alma/expression-portraits/neutral.webp",
+          "sha256": "6244f4d6852750ba8f02f340ede611d81ed9323121af6b2dc42a8197b9a71142",
+          "dimensions": [
+            512,
+            1024
+          ],
+          "decodes": true
+        },
+        "happy": {
+          "path": "rpg-assets/characters/alma/expression-portraits/happy.webp",
+          "sha256": "37d22a41b11b68c764c2bd8990ee8a63568ccfb29920c3b3ab2b804b6c6b4067",
+          "dimensions": [
+            887,
+            1774
+          ],
+          "decodes": true
+        },
+        "surprised": {
+          "path": "rpg-assets/characters/alma/expression-portraits/surprised.webp",
+          "sha256": "d8f349ac9db37e208654249c9900a591a07c65e662d532dc3fdee4fa4b13a912",
+          "dimensions": [
+            1024,
+            1536
+          ],
+          "decodes": true
+        },
+        "concerned": {
+          "path": "rpg-assets/characters/alma/expression-portraits/concerned.webp",
+          "sha256": "657d5cf852516ad42a689ad5a95f6aa83b340893c23186252805d6ee6c5bf676",
+          "dimensions": [
+            1024,
+            1536
+          ],
+          "decodes": true
+        },
+        "soft": {
+          "path": "rpg-assets/characters/alma/expression-portraits/soft.webp",
+          "sha256": "63ca18069e111b1deb094ff7167b8575b3e0e9b31b46f54003c3f3fa054534fe",
+          "dimensions": [
+            887,
+            1774
+          ],
+          "decodes": true
+        }
+      },
+      "status": "five_set_art_exists_do_not_regenerate",
+      "note": "Compatible crops are accepted for existing fulfilled slots; Laca full-body outfit deliverables are separately declared. Asset presence alone does not mean a scene key reaches it."
+    },
+    {
+      "character": "barb",
+      "five_set_assets": {
+        "neutral": {
+          "path": "rpg-assets/characters/barb/expression-portraits/neutral.webp",
+          "sha256": "b44cedeafb0a77fe5d1812e314e034497b8ca462e5b5695f683f410c600d465f",
+          "dimensions": [
+            512,
+            1024
+          ],
+          "decodes": true
+        },
+        "happy": {
+          "path": "rpg-assets/characters/barb/expression-portraits/happy.webp",
+          "sha256": "8493bc79706fa4f3c880454a9b16acf4c4b76f65cc39805a8797fa965bd239cd",
+          "dimensions": [
+            280,
+            380
+          ],
+          "decodes": true
+        },
+        "surprised": {
+          "path": "rpg-assets/characters/barb/expression-portraits/surprised.webp",
+          "sha256": "977ab615d625aee4fcc65fed539ffd44faa25bfe5bf37a6ddb17f17096f37a4b",
+          "dimensions": [
+            280,
+            380
+          ],
+          "decodes": true
+        },
+        "concerned": {
+          "path": "rpg-assets/characters/barb/expression-portraits/concerned.png",
+          "sha256": "f16cbd4ca57c89feceeda51b31d4a67290232f0222290088e4a09e18839abab1",
+          "dimensions": [
+            887,
+            1774
+          ],
+          "decodes": true
+        },
+        "soft": {
+          "path": "rpg-assets/characters/barb/expression-portraits/soft.png",
+          "sha256": "6496c46bf3720087f4e945c77ed50adfedf30ae372dfd5a902db0c2705325268",
+          "dimensions": [
+            887,
+            1774
+          ],
+          "decodes": true
+        }
+      },
+      "status": "five_set_art_exists_do_not_regenerate",
+      "note": "Compatible crops are accepted for existing fulfilled slots; Laca full-body outfit deliverables are separately declared. Asset presence alone does not mean a scene key reaches it."
+    },
+    {
+      "character": "camila",
+      "five_set_assets": {
+        "neutral": {
+          "path": "rpg-assets/characters/camila/expression-portraits/neutral.webp",
+          "sha256": "80faa1b0a6fcc004c67875b820f4bbbbc178b5ff628826131f313c5c32f561d2",
+          "dimensions": [
+            512,
+            1024
+          ],
+          "decodes": true
+        },
+        "happy": {
+          "path": "rpg-assets/characters/camila/expression-portraits/happy.webp",
+          "sha256": "572f193425c99a1c6438c05e545dbb73c03f04757de9f7db81aefcc3b6aacded",
+          "dimensions": [
+            512,
+            1024
+          ],
+          "decodes": true
+        },
+        "surprised": {
+          "path": "rpg-assets/characters/camila/expression-portraits/surprised.webp",
+          "sha256": "595205d3bf21ccf32e8f106b3ab6548adf5c9700c4521313764638dc802d7b47",
+          "dimensions": [
+            512,
+            1024
+          ],
+          "decodes": true
+        },
+        "concerned": {
+          "path": "rpg-assets/characters/camila/expression-portraits/concerned.webp",
+          "sha256": "568c31907dac11caaf7fae040ef0f5af54d6fb3f4c39748c8a6152838ead97a5",
+          "dimensions": [
+            512,
+            1024
+          ],
+          "decodes": true
+        },
+        "soft": {
+          "path": "rpg-assets/characters/camila/expression-portraits/soft.webp",
+          "sha256": "f4cb0313c2aa162d1524f3d60bd1337f0ddb631a40a78b88d2943f51d5b54053",
+          "dimensions": [
+            512,
+            1024
+          ],
+          "decodes": true
+        }
+      },
+      "status": "five_set_art_exists_do_not_regenerate",
+      "note": "Compatible crops are accepted for existing fulfilled slots; Laca full-body outfit deliverables are separately declared. Asset presence alone does not mean a scene key reaches it."
+    },
+    {
+      "character": "elena",
+      "five_set_assets": {
+        "neutral": {
+          "path": "rpg-assets/characters/elena/expression-portraits/neutral.webp",
+          "sha256": "a23c3b9eb3d5b65ec631a67afc710fe3f53ea988b33bffec3e1f47da76c51c46",
+          "dimensions": [
+            512,
+            1024
+          ],
+          "decodes": true
+        },
+        "happy": {
+          "path": "rpg-assets/characters/elena/expression-portraits/happy.webp",
+          "sha256": "300df8549398202cedec6f76c460cabca812068e3350f5b8252c1d802f36b379",
+          "dimensions": [
+            1199,
+            1312
+          ],
+          "decodes": true
+        },
+        "surprised": {
+          "path": "rpg-assets/characters/elena/expression-portraits/surprised.webp",
+          "sha256": "ea80a5bdee72cf91dfa8c1aacd00a40e4954e35867365ff6289f22d57a05f6e3",
+          "dimensions": [
+            1199,
+            1312
+          ],
+          "decodes": true
+        },
+        "concerned": {
+          "path": "rpg-assets/characters/elena/expression-portraits/concerned.webp",
+          "sha256": "d798bb10bf8b26811c743f8d0153c5a9522eacb72533c55ee23b372d2d57348f",
+          "dimensions": [
+            1145,
+            1374
+          ],
+          "decodes": true
+        },
+        "soft": {
+          "path": "rpg-assets/characters/elena/expression-portraits/soft.webp",
+          "sha256": "c9324163817922308f74fca5f30d8cee1093cdce81ea8415ba98aaa88309e053",
+          "dimensions": [
+            1145,
+            1374
+          ],
+          "decodes": true
+        }
+      },
+      "status": "five_set_art_exists_do_not_regenerate",
+      "note": "Compatible crops are accepted for existing fulfilled slots; Laca full-body outfit deliverables are separately declared. Asset presence alone does not mean a scene key reaches it."
+    },
+    {
+      "character": "elio",
+      "five_set_assets": {
+        "neutral": {
+          "path": "rpg-assets/characters/elio/expression-portraits/neutral.webp",
+          "sha256": "6671e81e4ed8aa48cb4660efdb2fa944eb8cefaad6bf93379fccfdd91fd231bd",
+          "dimensions": [
+            512,
+            1024
+          ],
+          "decodes": true
+        },
+        "happy": {
+          "path": "rpg-assets/characters/elio/expression-portraits/happy.webp",
+          "sha256": "08ccf49d96b9a3a54e44b002f9f3887a694adb7c84275d6765b5725a68c17caa",
+          "dimensions": [
+            887,
+            1774
+          ],
+          "decodes": true
+        },
+        "surprised": {
+          "path": "rpg-assets/characters/elio/expression-portraits/surprised.webp",
+          "sha256": "57779ddb801c003cf277d55b0254b15ebeae22e35f633ff0b477f7a756beb9e0",
+          "dimensions": [
+            887,
+            1774
+          ],
+          "decodes": true
+        },
+        "concerned": {
+          "path": "rpg-assets/characters/elio/expression-portraits/concerned.webp",
+          "sha256": "381ce95b712b11909a275283ae7ee46e5015040da1d0a7c7908ee76cf4a9c7a0",
+          "dimensions": [
+            887,
+            1774
+          ],
+          "decodes": true
+        },
+        "soft": {
+          "path": "rpg-assets/characters/elio/expression-portraits/soft.webp",
+          "sha256": "ef4f3613c2525565f6db66e45b9d5d38d5cd8c5cefa27e5df7104b32c70e5729",
+          "dimensions": [
+            887,
+            1774
+          ],
+          "decodes": true
+        }
+      },
+      "status": "wrong_identity_replacement_required",
+      "note": "Compatible crops are accepted for existing fulfilled slots; Laca full-body outfit deliverables are separately declared. Asset presence alone does not mean a scene key reaches it."
+    },
+    {
+      "character": "hana",
+      "five_set_assets": {
+        "neutral": {
+          "path": "rpg-assets/characters/hana/expression-portraits/neutral.webp",
+          "sha256": "cc3c7c654ba33edcc4199997da691253a1063ebcbda303492b567e06dad50412",
+          "dimensions": [
+            512,
+            1024
+          ],
+          "decodes": true
+        },
+        "happy": {
+          "path": "rpg-assets/characters/hana/expression-portraits/happy.webp",
+          "sha256": "96d11d691a0662a0e515c417e1f0ef8b715f4cfb818ca55bc96735566a3aec31",
+          "dimensions": [
+            512,
+            1024
+          ],
+          "decodes": true
+        },
+        "surprised": {
+          "path": "rpg-assets/characters/hana/expression-portraits/surprised.webp",
+          "sha256": "40b9fcf4612cb1ad1120339d79054ad67de5714245ea7c12b2543993eba06f4e",
+          "dimensions": [
+            512,
+            1024
+          ],
+          "decodes": true
+        },
+        "concerned": {
+          "path": "rpg-assets/characters/hana/expression-portraits/concerned.webp",
+          "sha256": "1c5a974030329043a732f2b7aa023dd90aff766eca0f99478cc27e41fda98719",
+          "dimensions": [
+            512,
+            1024
+          ],
+          "decodes": true
+        },
+        "soft": {
+          "path": "rpg-assets/characters/hana/expression-portraits/soft.webp",
+          "sha256": "6dd19adf9c966d62bc3378721d30931099631dcc21c66d05c33553de3f36b526",
+          "dimensions": [
+            512,
+            1024
+          ],
+          "decodes": true
+        }
+      },
+      "status": "five_set_art_exists_do_not_regenerate",
+      "note": "Compatible crops are accepted for existing fulfilled slots; Laca full-body outfit deliverables are separately declared. Asset presence alone does not mean a scene key reaches it."
+    },
+    {
+      "character": "iris",
+      "five_set_assets": {
+        "neutral": {
+          "path": "rpg-assets/characters/iris/expression-portraits/neutral.webp",
+          "sha256": "20c1204f82f0223a22b071d302e6abca6d9d06b5ddc5d79a3fd5b3df4a2ffc83",
+          "dimensions": [
+            1024,
+            1536
+          ],
+          "decodes": true
+        },
+        "happy": {
+          "path": "rpg-assets/characters/iris/expression-portraits/happy.webp",
+          "sha256": "96ddcfef13abd022d1db2802731bcc4a3080bff8b74eaf105bcb76f6840d8cc5",
+          "dimensions": [
+            512,
+            1024
+          ],
+          "decodes": true
+        },
+        "surprised": {
+          "path": "rpg-assets/characters/iris/expression-portraits/surprised.webp",
+          "sha256": "faf3f8ce833238ff360850891d22026e60c59a939399d357c327ab0e7c38c708",
+          "dimensions": [
+            512,
+            1024
+          ],
+          "decodes": true
+        },
+        "concerned": {
+          "path": "rpg-assets/characters/iris/expression-portraits/concerned.webp",
+          "sha256": "c68dc6179da351383f7aa491f74559562788e6dbdd4f35603ab0bb5a766eb071",
+          "dimensions": [
+            512,
+            1024
+          ],
+          "decodes": true
+        },
+        "soft": {
+          "path": "rpg-assets/characters/iris/expression-portraits/soft.webp",
+          "sha256": "5bed19893e39949ce13d604cd13616ca27a1374293a8e6de681530e6baf87571",
+          "dimensions": [
+            512,
+            1024
+          ],
+          "decodes": true
+        }
+      },
+      "status": "five_set_art_exists_do_not_regenerate",
+      "note": "Compatible crops are accepted for existing fulfilled slots; Laca full-body outfit deliverables are separately declared. Asset presence alone does not mean a scene key reaches it."
+    },
+    {
+      "character": "jinx",
+      "five_set_assets": {
+        "neutral": {
+          "path": "rpg-assets/characters/jinx/expression-portraits/neutral.webp",
+          "sha256": "12c3e5511ce54c9745a19fe3a7cc3c60c4a2fc76ad746ffe81d4abb4ea016624",
+          "dimensions": [
+            1024,
+            1536
+          ],
+          "decodes": true
+        },
+        "happy": {
+          "path": "rpg-assets/characters/jinx/expression-portraits/happy.webp",
+          "sha256": "81125d4c1c137f92242d054f33e8f77dcef7a0050e7dc367a84ea71b2eaf8341",
+          "dimensions": [
+            512,
+            1024
+          ],
+          "decodes": true
+        },
+        "surprised": {
+          "path": "rpg-assets/characters/jinx/expression-portraits/surprised.webp",
+          "sha256": "74ee845a34de99bc5a820dceaf0a1d6f6614fe045981c69410876b74e4a80ebb",
+          "dimensions": [
+            512,
+            1024
+          ],
+          "decodes": true
+        },
+        "concerned": {
+          "path": "rpg-assets/characters/jinx/expression-portraits/concerned.webp",
+          "sha256": "d3e7a4549b5d524c62ac08e2e41a2840b6f7c532b5835310813e4d81e7e737a7",
+          "dimensions": [
+            512,
+            1024
+          ],
+          "decodes": true
+        },
+        "soft": {
+          "path": "rpg-assets/characters/jinx/expression-portraits/soft.webp",
+          "sha256": "a3b341b6202db7b3b4b0ffce29c9415741ffe480a612c3b9cc86d83d17c47c1b",
+          "dimensions": [
+            1024,
+            1536
+          ],
+          "decodes": true
+        }
+      },
+      "status": "five_set_art_exists_do_not_regenerate",
+      "note": "Compatible crops are accepted for existing fulfilled slots; Laca full-body outfit deliverables are separately declared. Asset presence alone does not mean a scene key reaches it."
+    },
+    {
+      "character": "jun",
+      "five_set_assets": {
+        "neutral": {
+          "path": "rpg-assets/characters/jun/expression-portraits/neutral.webp",
+          "sha256": "8edfd7384f1339f33e37f65aefcf06ec2707ea3b35ead5c1ac3cfcc403fab0b4",
+          "dimensions": [
+            1024,
+            1536
+          ],
+          "decodes": true
+        },
+        "happy": {
+          "path": "rpg-assets/characters/jun/expression-portraits/happy.webp",
+          "sha256": "fc5b312c7451cba48c0d0ba789dd17c9766456d0d0e95b69114593c098e4a7a2",
+          "dimensions": [
+            512,
+            1024
+          ],
+          "decodes": true
+        },
+        "surprised": {
+          "path": "rpg-assets/characters/jun/expression-portraits/surprised.webp",
+          "sha256": "4e19aafa60976f11d1e397cff6ced1e87ff15cf5c2ec818e0df92e85cdaec2c0",
+          "dimensions": [
+            512,
+            1024
+          ],
+          "decodes": true
+        },
+        "concerned": {
+          "path": "rpg-assets/characters/jun/expression-portraits/concerned.webp",
+          "sha256": "b05e9d854e23cd0b82217457791e8016e615ff5d4834c3872efedabe3e153e0a",
+          "dimensions": [
+            512,
+            1024
+          ],
+          "decodes": true
+        },
+        "soft": {
+          "path": "rpg-assets/characters/jun/expression-portraits/soft.webp",
+          "sha256": "6976c13f546411feb13f4cd2d8b768e5bb547b2c157fcc491d58198884ac14f2",
+          "dimensions": [
+            512,
+            1024
+          ],
+          "decodes": true
+        }
+      },
+      "status": "five_set_art_exists_do_not_regenerate",
+      "note": "Compatible crops are accepted for existing fulfilled slots; Laca full-body outfit deliverables are separately declared. Asset presence alone does not mean a scene key reaches it."
+    },
+    {
+      "character": "kaede",
+      "five_set_assets": {
+        "neutral": {
+          "path": "rpg-assets/characters/kaede/expression-portraits/neutral.webp",
+          "sha256": "1c771a347bcfdd9560a94a11e06f141e7125169723032ab2570d3a7e285bf35f",
+          "dimensions": [
+            512,
+            1024
+          ],
+          "decodes": true
+        },
+        "happy": {
+          "path": "rpg-assets/characters/kaede/expression-portraits/happy.webp",
+          "sha256": "c1f40fac84acdc0a5757f7fd45754f02f29395806854123e741c7f13a6df0d6c",
+          "dimensions": [
+            512,
+            1024
+          ],
+          "decodes": true
+        },
+        "surprised": {
+          "path": "rpg-assets/characters/kaede/expression-portraits/surprised.webp",
+          "sha256": "9fa038b3b5a7863d2811081941b2ba53cd5e270433c7b4e42bf26cda8667aee7",
+          "dimensions": [
+            512,
+            1024
+          ],
+          "decodes": true
+        },
+        "concerned": {
+          "path": "rpg-assets/characters/kaede/expression-portraits/concerned.webp",
+          "sha256": "a366a1e95e3b9446791e4001a90caa97e181f7244a52019c20792058d7850636",
+          "dimensions": [
+            512,
+            1024
+          ],
+          "decodes": true
+        },
+        "soft": {
+          "path": "rpg-assets/characters/kaede/expression-portraits/soft.webp",
+          "sha256": "2a97066cb77a6a91be734cac161104a4099542f4b32356c45c7ef6efac10018a",
+          "dimensions": [
+            512,
+            1024
+          ],
+          "decodes": true
+        }
+      },
+      "status": "five_set_art_exists_do_not_regenerate",
+      "note": "Compatible crops are accepted for existing fulfilled slots; Laca full-body outfit deliverables are separately declared. Asset presence alone does not mean a scene key reaches it."
+    },
+    {
+      "character": "laca",
+      "five_set_assets": {
+        "neutral": {
+          "path": "rpg-assets/characters/laca/expression-portraits/neutral.webp",
+          "sha256": "cb33e9af3be2f368baad9b02e7490769e90c1a06d14b86de6899cc126f833006",
+          "dimensions": [
+            512,
+            1024
+          ],
+          "decodes": true
+        },
+        "happy": {
+          "path": "rpg-assets/characters/laca/expression-portraits/happy.webp",
+          "sha256": "15d62a1aeddbe2da30bd4a939cd5768f7f531edefae593379fb6a32f9a1975ed",
+          "dimensions": [
+            941,
+            1672
+          ],
+          "decodes": true
+        },
+        "surprised": {
+          "path": "rpg-assets/characters/laca/expression-portraits/surprised.webp",
+          "sha256": "e876d6d8621727d76330470e4d6c60f35388f797e4dfec718d1f7df0f13bc91c",
+          "dimensions": [
+            941,
+            1672
+          ],
+          "decodes": true
+        },
+        "concerned": {
+          "path": "rpg-assets/characters/laca/expression-portraits/concerned.webp",
+          "sha256": "4c22bfa97e9d97d60db25bc4cdec7eb4071c5e2c16b988c358a427371f7cca74",
+          "dimensions": [
+            941,
+            1672
+          ],
+          "decodes": true
+        },
+        "soft": {
+          "path": "rpg-assets/characters/laca/expression-portraits/soft.webp",
+          "sha256": "5570b61544c8e3909aa2fe4b0b42941f8c8365baf17e097464e8a8367de4a9d2",
+          "dimensions": [
+            941,
+            1672
+          ],
+          "decodes": true
+        }
+      },
+      "status": "outfit_expressions_incomplete",
+      "note": "Compatible crops are accepted for existing fulfilled slots; Laca full-body outfit deliverables are separately declared. Asset presence alone does not mean a scene key reaches it."
+    },
+    {
+      "character": "luna",
+      "five_set_assets": {
+        "neutral": {
+          "path": "rpg-assets/characters/luna/expression-portraits/neutral.webp",
+          "sha256": "da4ebf4cbfd131cd1d88a40b286bc96b7bdcad1cd324210d9c155abc3139e956",
+          "dimensions": [
+            1024,
+            1536
+          ],
+          "decodes": true
+        },
+        "happy": {
+          "path": "rpg-assets/characters/luna/expression-portraits/happy.webp",
+          "sha256": "921bc31cb2387be35f7c0ca78d2ab5dafacaa5d3f775d6baefda92736b446b7b",
+          "dimensions": [
+            512,
+            1024
+          ],
+          "decodes": true
+        },
+        "surprised": {
+          "path": "rpg-assets/characters/luna/expression-portraits/surprised.webp",
+          "sha256": "b15ca21bcc7c9f2fdad29a22bf28bf68905c540fc115dd0d217937ab0f021b92",
+          "dimensions": [
+            512,
+            1024
+          ],
+          "decodes": true
+        },
+        "concerned": {
+          "path": "rpg-assets/characters/luna/expression-portraits/concerned.webp",
+          "sha256": "491d03f4d1eab27905fb22a2127baf796495a0502225bbee999bc3a88b8d7107",
+          "dimensions": [
+            512,
+            1024
+          ],
+          "decodes": true
+        },
+        "soft": {
+          "path": "rpg-assets/characters/luna/expression-portraits/soft.webp",
+          "sha256": "ec91075a9e62399446f4a8497707cdc23c6f76390d05b993c60728b9d4699229",
+          "dimensions": [
+            512,
+            1024
+          ],
+          "decodes": true
+        }
+      },
+      "status": "five_set_art_exists_do_not_regenerate",
+      "note": "Compatible crops are accepted for existing fulfilled slots; Laca full-body outfit deliverables are separately declared. Asset presence alone does not mean a scene key reaches it."
+    },
+    {
+      "character": "marina",
+      "five_set_assets": {
+        "neutral": {
+          "path": "rpg-assets/characters/marina/expression-portraits/neutral.webp",
+          "sha256": "89c0bbd5d781d81df795aba263121a394ceff996a0bbf49b1ea5b54282a92a1e",
+          "dimensions": [
+            512,
+            1024
+          ],
+          "decodes": true
+        },
+        "happy": {
+          "path": "rpg-assets/characters/marina/expression-portraits/happy.webp",
+          "sha256": "44adac2a8558f163a35741f4404413e0c2ba18ae559809d3f29bffcf59908925",
+          "dimensions": [
+            512,
+            1024
+          ],
+          "decodes": true
+        },
+        "surprised": {
+          "path": "rpg-assets/characters/marina/expression-portraits/surprised.webp",
+          "sha256": "dbb9509acaf29ea8f0db0703cd9db0ea3397fa55600a07fcebb57d1a9ec7e568",
+          "dimensions": [
+            512,
+            1024
+          ],
+          "decodes": true
+        },
+        "concerned": {
+          "path": "rpg-assets/characters/marina/expression-portraits/concerned.webp",
+          "sha256": "e399d48ebca385f8c57dfa46ce9b2f9f17d6dd61ac3b3bf7a25a1c62a068e18f",
+          "dimensions": [
+            512,
+            1024
+          ],
+          "decodes": true
+        },
+        "soft": {
+          "path": "rpg-assets/characters/marina/expression-portraits/soft.webp",
+          "sha256": "241d5c9095a4f1812beafdf9d7d0ca50894792c0b74dfa5ee92bfe006e3f390e",
+          "dimensions": [
+            512,
+            1024
+          ],
+          "decodes": true
+        }
+      },
+      "status": "five_set_art_exists_do_not_regenerate",
+      "note": "Compatible crops are accepted for existing fulfilled slots; Laca full-body outfit deliverables are separately declared. Asset presence alone does not mean a scene key reaches it."
+    },
+    {
+      "character": "nereo",
+      "five_set_assets": {
+        "neutral": {
+          "path": "rpg-assets/characters/nereo/expression-portraits/neutral.webp",
+          "sha256": "5e139827b4f6dda21cee5bbfbed1a7c9edb03c1c48565271ea2a7afc21fdb3dc",
+          "dimensions": [
+            1024,
+            1536
+          ],
+          "decodes": true
+        },
+        "happy": {
+          "path": "rpg-assets/characters/nereo/expression-portraits/happy.webp",
+          "sha256": "c67eec999669fd189e4f352f81f07d819e98027237ef16971e7c3dcc90b1ee82",
+          "dimensions": [
+            512,
+            1024
+          ],
+          "decodes": true
+        },
+        "surprised": {
+          "path": "rpg-assets/characters/nereo/expression-portraits/surprised.webp",
+          "sha256": "4992c1e2d5f221c4b46d58a544a57972abf3d9901a641606828eb5e2910c6c24",
+          "dimensions": [
+            512,
+            1024
+          ],
+          "decodes": true
+        },
+        "concerned": {
+          "path": "rpg-assets/characters/nereo/expression-portraits/concerned.webp",
+          "sha256": "f95ff26fdade2b345724934d25040a7dc094665fd92536950ac4585071c548bd",
+          "dimensions": [
+            512,
+            1024
+          ],
+          "decodes": true
+        },
+        "soft": {
+          "path": "rpg-assets/characters/nereo/expression-portraits/soft.webp",
+          "sha256": "7f3d5cc03752af5fbd4d7bb15611e2d88ec6f6691f93d76f0dfcdfe201fd1b5a",
+          "dimensions": [
+            512,
+            1024
+          ],
+          "decodes": true
+        }
+      },
+      "status": "five_set_art_exists_do_not_regenerate",
+      "note": "Compatible crops are accepted for existing fulfilled slots; Laca full-body outfit deliverables are separately declared. Asset presence alone does not mean a scene key reaches it."
+    },
+    {
+      "character": "reina",
+      "five_set_assets": {
+        "neutral": {
+          "path": "rpg-assets/characters/reina/expression-portraits/neutral.webp",
+          "sha256": "324fe2ff42cdbab8d3690f2d6517738af3b9eb5a665fd19761e92e141bbf6b40",
+          "dimensions": [
+            512,
+            1024
+          ],
+          "decodes": true
+        },
+        "happy": {
+          "path": "rpg-assets/characters/reina/expression-portraits/happy.webp",
+          "sha256": "901036397e05b9f14127b0cc7e14dcf2ca9876d51b368e3c54b9f10e089830da",
+          "dimensions": [
+            512,
+            1024
+          ],
+          "decodes": true
+        },
+        "surprised": {
+          "path": "rpg-assets/characters/reina/expression-portraits/surprised.webp",
+          "sha256": "3481609df204c54f251f7c84c55a66478a91e95645644918e8f89b63286b5e29",
+          "dimensions": [
+            512,
+            1024
+          ],
+          "decodes": true
+        },
+        "concerned": {
+          "path": "rpg-assets/characters/reina/expression-portraits/concerned.webp",
+          "sha256": "5afb43ae067de7e4a35ed313f8c6900b0a8e1666b3703f9c1d99d7ce1666d483",
+          "dimensions": [
+            512,
+            1024
+          ],
+          "decodes": true
+        },
+        "soft": {
+          "path": "rpg-assets/characters/reina/expression-portraits/soft.webp",
+          "sha256": "b3e527da2179638a626ece362290ed5e6c7cf5c261cdca132212bf57b54cb92a",
+          "dimensions": [
+            512,
+            1024
+          ],
+          "decodes": true
+        }
+      },
+      "status": "five_set_art_exists_do_not_regenerate",
+      "note": "Compatible crops are accepted for existing fulfilled slots; Laca full-body outfit deliverables are separately declared. Asset presence alone does not mean a scene key reaches it."
+    },
+    {
+      "character": "rina",
+      "five_set_assets": {
+        "neutral": {
+          "path": "rpg-assets/characters/rina/expression-portraits/neutral.webp",
+          "sha256": "c9e246804132399bb282fee15461c2c489632a1047b71fd7537fc2051ef4f613",
+          "dimensions": [
+            512,
+            1024
+          ],
+          "decodes": true
+        },
+        "happy": {
+          "path": "rpg-assets/characters/rina/expression-portraits/happy.webp",
+          "sha256": "458bf14977b6cfdaa232b86dc24f0b2109472b8a8ab284b8d91f796466bf12de",
+          "dimensions": [
+            512,
+            1024
+          ],
+          "decodes": true
+        },
+        "surprised": {
+          "path": "rpg-assets/characters/rina/expression-portraits/surprised.webp",
+          "sha256": "f55d99ed3cd7ea4bc8a663f49d15f4da62e3850ff05f806e84455a9fb9446be9",
+          "dimensions": [
+            512,
+            1024
+          ],
+          "decodes": true
+        },
+        "concerned": {
+          "path": "rpg-assets/characters/rina/expression-portraits/concerned.webp",
+          "sha256": "143116e587f34748009167845202ad8fa230ca46eba9c23dbe46f422fa679c8b",
+          "dimensions": [
+            512,
+            1024
+          ],
+          "decodes": true
+        },
+        "soft": {
+          "path": "rpg-assets/characters/rina/expression-portraits/soft.webp",
+          "sha256": "c46e66c410856a7bdde08e811cba57c189187a6ceb10fe005724f5889250fb4c",
+          "dimensions": [
+            512,
+            1024
+          ],
+          "decodes": true
+        }
+      },
+      "status": "five_set_art_exists_do_not_regenerate",
+      "note": "Compatible crops are accepted for existing fulfilled slots; Laca full-body outfit deliverables are separately declared. Asset presence alone does not mean a scene key reaches it."
+    },
+    {
+      "character": "shiori",
+      "five_set_assets": {
+        "neutral": {
+          "path": "rpg-assets/characters/shiori/expression-portraits/neutral.webp",
+          "sha256": "27a8c4ff058e3d21104728b23cb02476502d05b721331e5f7587aa64dfbc0b9e",
+          "dimensions": [
+            512,
+            1024
+          ],
+          "decodes": true
+        },
+        "happy": {
+          "path": "rpg-assets/characters/shiori/expression-portraits/happy.webp",
+          "sha256": "42d27e10782b1d39afbc196b988e2bb0c2ee19da5ce35be8d058056e08eb5821",
+          "dimensions": [
+            512,
+            1024
+          ],
+          "decodes": true
+        },
+        "surprised": {
+          "path": "rpg-assets/characters/shiori/expression-portraits/surprised.webp",
+          "sha256": "a37adae1fd17bc42d88a2a67ddf3c5b2c012e31487a5ae1f955f75e03bdcd3da",
+          "dimensions": [
+            512,
+            1024
+          ],
+          "decodes": true
+        },
+        "concerned": {
+          "path": "rpg-assets/characters/shiori/expression-portraits/concerned.webp",
+          "sha256": "907403d5fd558c8b974dfa63d38dce2209c84e17566a127cb1b17a75b285aa5b",
+          "dimensions": [
+            512,
+            1024
+          ],
+          "decodes": true
+        },
+        "soft": {
+          "path": "rpg-assets/characters/shiori/expression-portraits/soft.webp",
+          "sha256": "b815c00ae63b3dfa3f83e066645e05912da25d0dee35efde25e0f361168030fe",
+          "dimensions": [
+            512,
+            1024
+          ],
+          "decodes": true
+        }
+      },
+      "status": "five_set_art_exists_do_not_regenerate",
+      "note": "Compatible crops are accepted for existing fulfilled slots; Laca full-body outfit deliverables are separately declared. Asset presence alone does not mean a scene key reaches it."
+    },
+    {
+      "character": "sierra",
+      "five_set_assets": {
+        "neutral": {
+          "path": "rpg-assets/characters/sierra/expression-portraits/neutral.webp",
+          "sha256": "5065117c24c03454b6dab97e2ffa44d7ed938b3b1f262c8c38d9bf0d3d578fc9",
+          "dimensions": [
+            512,
+            1024
+          ],
+          "decodes": true
+        },
+        "happy": {
+          "path": "rpg-assets/characters/sierra/expression-portraits/happy.webp",
+          "sha256": "01b89c5b281c45b31bd17fb60a022cf99f1649459aef43914fd4b1e57f38e007",
+          "dimensions": [
+            512,
+            1024
+          ],
+          "decodes": true
+        },
+        "surprised": {
+          "path": "rpg-assets/characters/sierra/expression-portraits/surprised.webp",
+          "sha256": "38ff8482577922fe9ab9c0f1b479701eee87e3f38821a1577f769fc3d1be2b99",
+          "dimensions": [
+            512,
+            1024
+          ],
+          "decodes": true
+        },
+        "concerned": {
+          "path": "rpg-assets/characters/sierra/expression-portraits/concerned.webp",
+          "sha256": "407cc801f4c3fa9d9bf41222c96508ce622e004939c9eed35531a3e92e98578c",
+          "dimensions": [
+            512,
+            1024
+          ],
+          "decodes": true
+        },
+        "soft": {
+          "path": "rpg-assets/characters/sierra/expression-portraits/soft.webp",
+          "sha256": "ea6ada917bb90b4f875242d3f14de339ee32bff0fc0720b94bef1008296b0a3f",
+          "dimensions": [
+            512,
+            1024
+          ],
+          "decodes": true
+        }
+      },
+      "status": "five_set_art_exists_do_not_regenerate",
+      "note": "Compatible crops are accepted for existing fulfilled slots; Laca full-body outfit deliverables are separately declared. Asset presence alone does not mean a scene key reaches it."
+    },
+    {
+      "character": "sol",
+      "five_set_assets": {
+        "neutral": {
+          "path": "rpg-assets/characters/sol/expression-portraits/neutral.webp",
+          "sha256": "cae4c07df7367dc43b9e88ea50257e9b6d72e1250efad96244fd5844fb7c52d5",
+          "dimensions": [
+            512,
+            1024
+          ],
+          "decodes": true
+        },
+        "happy": {
+          "path": "rpg-assets/characters/sol/expression-portraits/happy.webp",
+          "sha256": "2aab6303ce6b868100331473e52040a405cd04c83356985f331aeae1fc333316",
+          "dimensions": [
+            512,
+            1024
+          ],
+          "decodes": true
+        },
+        "surprised": {
+          "path": "rpg-assets/characters/sol/expression-portraits/surprised.webp",
+          "sha256": "b577edbf7a32a6241b8d5822019b3ef8475a6299eb0b1d559a1017888e9e31de",
+          "dimensions": [
+            512,
+            1024
+          ],
+          "decodes": true
+        },
+        "concerned": {
+          "path": "rpg-assets/characters/sol/expression-portraits/concerned.webp",
+          "sha256": "a26cb0f9ea70a5659c53af84e2ab2e791b89af8b25a65b74b2ff080b63fc9de5",
+          "dimensions": [
+            512,
+            1024
+          ],
+          "decodes": true
+        },
+        "soft": {
+          "path": "rpg-assets/characters/sol/expression-portraits/soft.webp",
+          "sha256": "0d17184ad807e53e4159e066d3f2b87401b0bbfc4ef1101ab99833e2057bddc6",
+          "dimensions": [
+            512,
+            1024
+          ],
+          "decodes": true
+        }
+      },
+      "status": "five_set_art_exists_do_not_regenerate",
+      "note": "Compatible crops are accepted for existing fulfilled slots; Laca full-body outfit deliverables are separately declared. Asset presence alone does not mean a scene key reaches it."
+    },
+    {
+      "character": "teo",
+      "five_set_assets": {
+        "neutral": {
+          "path": "rpg-assets/characters/teo/expression-portraits/neutral.webp",
+          "sha256": "6306d2ab42ebfd0ad4cb533f8b5cc86d24abee22304f3d69dc974a555c1a81aa",
+          "dimensions": [
+            512,
+            1024
+          ],
+          "decodes": true
+        },
+        "happy": {
+          "path": "rpg-assets/characters/teo/expression-portraits/happy.webp",
+          "sha256": "2228e1505e149bd83b3af1a2aaed0ba5bc86dcf3aa8d9499b8a5cb0e946b9924",
+          "dimensions": [
+            512,
+            1024
+          ],
+          "decodes": true
+        },
+        "surprised": {
+          "path": "rpg-assets/characters/teo/expression-portraits/surprised.webp",
+          "sha256": "5561590b7761539078c0319b0bb90388c25f181fdd0a266348f92f9142007187",
+          "dimensions": [
+            512,
+            1024
+          ],
+          "decodes": true
+        },
+        "concerned": {
+          "path": "rpg-assets/characters/teo/expression-portraits/concerned.webp",
+          "sha256": "4343c9b0415933e8b816543fd1a02858c400dee38afbc26d84b8f0c0bfec6b4b",
+          "dimensions": [
+            512,
+            1024
+          ],
+          "decodes": true
+        },
+        "soft": {
+          "path": "rpg-assets/characters/teo/expression-portraits/soft.webp",
+          "sha256": "bfd84634e663377a2569564e89978f7bb21acf8d4ea75a3d0891e204c5535516",
+          "dimensions": [
+            512,
+            1024
+          ],
+          "decodes": true
+        }
+      },
+      "status": "five_set_art_exists_do_not_regenerate",
+      "note": "Compatible crops are accepted for existing fulfilled slots; Laca full-body outfit deliverables are separately declared. Asset presence alone does not mean a scene key reaches it."
+    },
+    {
+      "character": "yuna",
+      "five_set_assets": {
+        "neutral": {
+          "path": "rpg-assets/characters/yuna/expression-portraits/neutral.webp",
+          "sha256": "256f4287a9135627aa191a6e5b47dbaeecdc6fd59b9b6177f1181d7674b21345",
+          "dimensions": [
+            512,
+            1024
+          ],
+          "decodes": true
+        },
+        "happy": {
+          "path": "rpg-assets/characters/yuna/expression-portraits/happy.webp",
+          "sha256": "187daf8787e85c4b5abfc2ac690563a56f4a2227888f77055a7d01c46dedb6ff",
+          "dimensions": [
+            512,
+            1024
+          ],
+          "decodes": true
+        },
+        "surprised": {
+          "path": "rpg-assets/characters/yuna/expression-portraits/surprised.webp",
+          "sha256": "f7541048ae283054480a36ffe14a095ebe7e00c482f6214c4e28782a767d91b6",
+          "dimensions": [
+            512,
+            1024
+          ],
+          "decodes": true
+        },
+        "concerned": {
+          "path": "rpg-assets/characters/yuna/expression-portraits/concerned.webp",
+          "sha256": "39ace7325e9feb7eb0ac9703d7353f7963f5378a68260be2b7d429cff4642fea",
+          "dimensions": [
+            512,
+            1024
+          ],
+          "decodes": true
+        },
+        "soft": {
+          "path": "rpg-assets/characters/yuna/expression-portraits/soft.webp",
+          "sha256": "06fa6880600652ee49e838f8b28a56bdb9ffa18e6e0375994e18f75a2934e966",
+          "dimensions": [
+            512,
+            1024
+          ],
+          "decodes": true
+        }
+      },
+      "status": "five_set_art_exists_do_not_regenerate",
+      "note": "Compatible crops are accepted for existing fulfilled slots; Laca full-body outfit deliverables are separately declared. Asset presence alone does not mean a scene key reaches it."
+    }
+  ],
+  "excluded_fulfilled_slots": [
+    "All 78 integrated manifest images, including Barb concerned.png/soft.png and Jinx generated soft/concerned alias",
+    "Alma neutral/happy/surprised/concerned/soft; v4 replacements already installed",
+    "Hana neutral/happy/surprised/concerned/soft and integrated scene routing",
+    "Rina/Sierra/Sol five-set portraits and repaired source/generated maps",
+    "Jinx/Luna neutral/happy/surprised/concerned/soft and repaired maps",
+    "Akari/Camila/Kaede/Marina happy/soft",
+    "Reina/Shiori/Yuna/Iris/Jun/Nereo/Teo neutral/happy/surprised",
+    "Laca casual neutral/happy/surprised/vulnerable/sad; lifeguard neutral; casual soft/concerned portrait artwork exists"
+  ],
+  "aliases_not_new_generation_orders": {
+    "rina": [
+      "sparkle -> happy",
+      "shy/stage/determined -> neutral"
+    ],
+    "sierra": [
+      "cool/focused/tired/determined -> neutral"
+    ],
+    "sol": [
+      "smile -> happy",
+      "worried -> concerned",
+      "determined -> neutral"
+    ],
+    "jinx": [
+      "judgy/irritated -> annoyed",
+      "concerned -> annoyed reuse",
+      "fire/determined -> neutral"
+    ],
+    "luna": [
+      "panic -> surprised",
+      "shy/blush/determined -> neutral"
+    ],
+    "general": "Neutral fallback is not a distinct expression, but does not by itself authorize generation of every bespoke key. Existing concerned/soft can cover explicit dialogue aliases after review. Do not manufacture a universal determined slot."
+  },
+  "counts": {
+    "missing_expression_artwork_slots": 15,
+    "laca_casual": 4,
+    "laca_lifeguard": 7,
+    "elio_wrong_identity_non_neutral": 4,
+    "neutral_generation_slots": 0,
+    "reuse_or_routing_work_items": 13
+  }
+}

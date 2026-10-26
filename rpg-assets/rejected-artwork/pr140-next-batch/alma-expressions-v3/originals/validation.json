@@ -1,0 +1,98 @@
+[
+  {
+    "path": "/workspace/scratch/4a8bc1383fdd/expressions-v3/alma/attempts/concerned-attempt-01.png",
+    "dimensions": [
+      1024,
+      1536
+    ],
+    "mode": "RGBA",
+    "alpha_extrema": [
+      0,
+      254
+    ],
+    "fully_transparent_pixels": 1211505,
+    "nonopaque_pixels": 1572864,
+    "bytes": 1280209,
+    "sha256": "73ad36b82a0c1377daacabb74238babd9894fb1654c2f6c0fba5e88a5b6f3fe9"
+  },
+  {
+    "path": "/workspace/scratch/4a8bc1383fdd/expressions-v3/alma/attempts/surprised-attempt-01.png",
+    "dimensions": [
+      1024,
+      1536
+    ],
+    "mode": "RGBA",
+    "alpha_extrema": [
+      0,
+      254
+    ],
+    "fully_transparent_pixels": 1208148,
+    "nonopaque_pixels": 1572864,
+    "bytes": 1307820,
+    "sha256": "73f130e72428e56e973e2d334f5ad3405f04ad433ecea5dc558b02d65d38b38c"
+  },
+  {
+    "path": "/workspace/scratch/4a8bc1383fdd/expressions-v3/alma/concerned-thumb.png",
+    "dimensions": [
+      256,
+      384
+    ],
+    "mode": "RGBA",
+    "alpha_extrema": [
+      0,
+      255
+    ],
+    "fully_transparent_pixels": 74720,
+    "nonopaque_pixels": 97490,
+    "bytes": 57854,
+    "sha256": "633f652007838dc0d138e0301f91a58eec3404f78803e6cc72a323979cd9b4ee"
+  },
+  {
+    "path": "/workspace/scratch/4a8bc1383fdd/expressions-v3/alma/concerned.png",
+    "dimensions": [
+      1024,
+      1536
+    ],
+    "mode": "RGBA",
+    "alpha_extrema": [
+      0,
+      254
+    ],
+    "fully_transparent_pixels": 1211505,
+    "nonopaque_pixels": 1572864,
+    "bytes": 1280209,
+    "sha256": "73ad36b82a0c1377daacabb74238babd9894fb1654c2f6c0fba5e88a5b6f3fe9"
+  },
+  {
+    "path": "/workspace/scratch/4a8bc1383fdd/expressions-v3/alma/surprised-thumb.png",
+    "dimensions": [
+      256,
+      384
+    ],
+    "mode": "RGBA",
+    "alpha_extrema": [
+      0,
+      255
+    ],
+    "fully_transparent_pixels": 74655,
+    "nonopaque_pixels": 97521,
+    "bytes": 57973,
+    "sha256": "ba1f0d11e333b873f3e896c16be501f8cf83d1421186583e3d94a35b84419eeb"
+  },
+  {
+    "path": "/workspace/scratch/4a8bc1383fdd/expressions-v3/alma/surprised.png",
+    "dimensions": [
+      1024,
+      1536
+    ],
+    "mode": "RGBA",
+    "alpha_extrema": [
+      0,
+      254
+    ],
+    "fully_transparent_pixels": 1208148,
+    "nonopaque_pixels": 1572864,
+    "bytes": 1307820,
+    "sha256": "73f130e72428e56e973e2d334f5ad3405f04ad433ecea5dc558b02d65d38b38c"
+  }
+]

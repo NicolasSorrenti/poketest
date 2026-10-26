@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "characterId": "jinx",
+  "portrait": "/rpg-assets/characters/jinx/neutral.png",
+  "expressions": {
+    "neutral": "/rpg-assets/characters/jinx/neutral.webp",
+    "smirk": "/rpg-assets/characters/jinx/smirk.webp",
+    "judgy": "/rpg-assets/characters/jinx/judgy.webp",
+    "fire": "/rpg-assets/characters/jinx/fire.webp",
+    "soft": "/rpg-assets/characters/jinx/soft.webp"
+  },
+  "eventImages": [
+    {
+      "sceneId": "jinx_route_1",
+      "path": "/rpg-assets/characters/jinx/jinx_arcade_challenge.webp",
+      "prompt": "Adult 18 year old Jinx Rivera, anime visual novel JRPG style, leaning against an arcade machine in black micro-shorts and cropped magenta tank, long silver-white hair with pink underlights, sharp amber eyes and signature smirk, heavy fanservice silhouette but fully clothed and SFW, neon arcade lighting, confident posture, bottom 20 percent clear for text"
+    },
+    {
+      "sceneId": "jinx_route_3",
+      "path": "/rpg-assets/characters/jinx/jinx_unguarded.webp",
+      "prompt": "Adult 18 year old Jinx Rivera sitting on a park bench at dusk, oversized open hoodie over her usual short outfit, long silver-pink hair down, rare unguarded soft expression instead of the usual smirk, cinematic anime VN composition, warm evening light, entirely SFW, bottom 20 percent clear for dialogue"
+    },
+    {
+      "sceneId": "jinx_marina_cross_1",
+      "path": "/rpg-assets/characters/jinx/jinx_marina_park.webp",
+      "prompt": "Adult 18 year old Jinx Rivera and Marina at a waterfront park railing, Jinx in micro-shorts + cropped top looking slightly annoyed but listening, long silver-pink hair, sharp amber eyes, heavy fanservice silhouette still fully clothed and SFW, Marina in practical clothes, daylight anime visual novel style, bottom 20 percent clear for text"
+    },
+    {
+      "sceneId": "jinx_alma_cross_1",
+      "path": "/rpg-assets/characters/jinx/jinx_alma_cafe.webp",
+      "prompt": "Adult 18 year old Jinx Rivera perched on a cafe counter being told to get down by Alma, Jinx in short skirt and cropped top with signature smirk, long silver-white hair with pink underlights, fanservicey but fully clothed SFW anime JRPG style, warm cafe interior, bottom 20 percent clear for dialogue"
+    }
+  ]
+}
+

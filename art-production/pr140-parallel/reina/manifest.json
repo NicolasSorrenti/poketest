@@ -1,0 +1,183 @@
+{
+  "review_head": "8902bb3ed26c8f3f2c8646a1a26c14b2522b8e49",
+  "branch": "art/overworld-character-refresh",
+  "PR": 140,
+  "checked_expressions_per_character": [
+    "happy",
+    "surprised"
+  ],
+  "neutral_included_as_fallback": true,
+  "files": [
+    {
+      "character": "reina",
+      "expression": "neutral",
+      "runtime_target": "/rpg-assets/characters/reina/expression-portraits/neutral.webp",
+      "ready_file": "/workspace/scratch/4a8bc1383fdd/parallel-next/reina/ready/reina/neutral.webp",
+      "thumbnail": "/workspace/scratch/4a8bc1383fdd/parallel-next/reina/thumbnails/reina/neutral.png",
+      "sha256": "324fe2ff42cdbab8d3690f2d6517738af3b9eb5a665fd19761e92e141bbf6b40",
+      "dimensions": [
+        512,
+        1024
+      ],
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "git_blob_sha": "6eaa2892adb01995d87eb09e61056538754b1887",
+      "source": "/workspace/scratch/dc054acd6888/poketest/rpg-assets/characters/reina/expression-portraits/neutral.webp",
+      "decision": "reuse existing; no generation"
+    },
+    {
+      "character": "reina",
+      "expression": "happy",
+      "runtime_target": "/rpg-assets/characters/reina/expression-portraits/happy.webp",
+      "ready_file": "/workspace/scratch/4a8bc1383fdd/parallel-next/reina/ready/reina/happy.webp",
+      "thumbnail": "/workspace/scratch/4a8bc1383fdd/parallel-next/reina/thumbnails/reina/happy.png",
+      "sha256": "901036397e05b9f14127b0cc7e14dcf2ca9876d51b368e3c54b9f10e089830da",
+      "dimensions": [
+        512,
+        1024
+      ],
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "git_blob_sha": "62314931f09dbcb54ad3f12898e0376d779a6b26",
+      "source": "/workspace/scratch/dc054acd6888/poketest/rpg-assets/characters/reina/expression-portraits/happy.webp",
+      "decision": "reuse existing; no generation"
+    },
+    {
+      "character": "reina",
+      "expression": "surprised",
+      "runtime_target": "/rpg-assets/characters/reina/expression-portraits/surprised.webp",
+      "ready_file": "/workspace/scratch/4a8bc1383fdd/parallel-next/reina/ready/reina/surprised.webp",
+      "thumbnail": "/workspace/scratch/4a8bc1383fdd/parallel-next/reina/thumbnails/reina/surprised.png",
+      "sha256": "3481609df204c54f251f7c84c55a66478a91e95645644918e8f89b63286b5e29",
+      "dimensions": [
+        512,
+        1024
+      ],
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "git_blob_sha": "608bfe440b89f96688521059c76583017c1b4090",
+      "source": "/workspace/scratch/dc054acd6888/poketest/rpg-assets/characters/reina/expression-portraits/surprised.webp",
+      "decision": "reuse existing; no generation"
+    },
+    {
+      "character": "shiori",
+      "expression": "neutral",
+      "runtime_target": "/rpg-assets/characters/shiori/expression-portraits/neutral.webp",
+      "ready_file": "/workspace/scratch/4a8bc1383fdd/parallel-next/reina/ready/shiori/neutral.webp",
+      "thumbnail": "/workspace/scratch/4a8bc1383fdd/parallel-next/reina/thumbnails/shiori/neutral.png",
+      "sha256": "27a8c4ff058e3d21104728b23cb02476502d05b721331e5f7587aa64dfbc0b9e",
+      "dimensions": [
+        512,
+        1024
+      ],
+      "alpha_extrema": [
+        0,
+        254
+      ],
+      "git_blob_sha": "34e2fc5b2a500a333bda76a70d3e7b77864c036c",
+      "source": "/workspace/scratch/dc054acd6888/poketest/rpg-assets/characters/shiori/expression-portraits/neutral.webp",
+      "decision": "reuse existing; no generation"
+    },
+    {
+      "character": "shiori",
+      "expression": "happy",
+      "runtime_target": "/rpg-assets/characters/shiori/expression-portraits/happy.webp",
+      "ready_file": "/workspace/scratch/4a8bc1383fdd/parallel-next/reina/ready/shiori/happy.webp",
+      "thumbnail": "/workspace/scratch/4a8bc1383fdd/parallel-next/reina/thumbnails/shiori/happy.png",
+      "sha256": "42d27e10782b1d39afbc196b988e2bb0c2ee19da5ce35be8d058056e08eb5821",
+      "dimensions": [
+        512,
+        1024
+      ],
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "git_blob_sha": "b946a75439abe55ad1171f7215485f38dc3f5a27",
+      "source": "/workspace/scratch/dc054acd6888/poketest/rpg-assets/characters/shiori/expression-portraits/happy.webp",
+      "decision": "reuse existing; no generation"
+    },
+    {
+      "character": "shiori",
+      "expression": "surprised",
+      "runtime_target": "/rpg-assets/characters/shiori/expression-portraits/surprised.webp",
+      "ready_file": "/workspace/scratch/4a8bc1383fdd/parallel-next/reina/ready/shiori/surprised.webp",
+      "thumbnail": "/workspace/scratch/4a8bc1383fdd/parallel-next/reina/thumbnails/shiori/surprised.png",
+      "sha256": "a37adae1fd17bc42d88a2a67ddf3c5b2c012e31487a5ae1f955f75e03bdcd3da",
+      "dimensions": [
+        512,
+        1024
+      ],
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "git_blob_sha": "7939275698d3f05dcf83365f365f18eaf32cbe5a",
+      "source": "/workspace/scratch/dc054acd6888/poketest/rpg-assets/characters/shiori/expression-portraits/surprised.webp",
+      "decision": "reuse existing; no generation"
+    },
+    {
+      "character": "yuna",
+      "expression": "neutral",
+      "runtime_target": "/rpg-assets/characters/yuna/expression-portraits/neutral.webp",
+      "ready_file": "/workspace/scratch/4a8bc1383fdd/parallel-next/reina/ready/yuna/neutral.webp",
+      "thumbnail": "/workspace/scratch/4a8bc1383fdd/parallel-next/reina/thumbnails/yuna/neutral.png",
+      "sha256": "256f4287a9135627aa191a6e5b47dbaeecdc6fd59b9b6177f1181d7674b21345",
+      "dimensions": [
+        512,
+        1024
+      ],
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "git_blob_sha": "297df133ab5d0a2a2d41b95609a88cf3e3def030",
+      "source": "/workspace/scratch/dc054acd6888/poketest/rpg-assets/characters/yuna/expression-portraits/neutral.webp",
+      "decision": "reuse existing; no generation"
+    },
+    {
+      "character": "yuna",
+      "expression": "happy",
+      "runtime_target": "/rpg-assets/characters/yuna/expression-portraits/happy.webp",
+      "ready_file": "/workspace/scratch/4a8bc1383fdd/parallel-next/reina/ready/yuna/happy.webp",
+      "thumbnail": "/workspace/scratch/4a8bc1383fdd/parallel-next/reina/thumbnails/yuna/happy.png",
+      "sha256": "187daf8787e85c4b5abfc2ac690563a56f4a2227888f77055a7d01c46dedb6ff",
+      "dimensions": [
+        512,
+        1024
+      ],
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "git_blob_sha": "0dcef1a0d0a8a9ad66744edaaff093e46b596e31",
+      "source": "/workspace/scratch/dc054acd6888/poketest/rpg-assets/characters/yuna/expression-portraits/happy.webp",
+      "decision": "reuse existing; no generation"
+    },
+    {
+      "character": "yuna",
+      "expression": "surprised",
+      "runtime_target": "/rpg-assets/characters/yuna/expression-portraits/surprised.webp",
+      "ready_file": "/workspace/scratch/4a8bc1383fdd/parallel-next/reina/ready/yuna/surprised.webp",
+      "thumbnail": "/workspace/scratch/4a8bc1383fdd/parallel-next/reina/thumbnails/yuna/surprised.png",
+      "sha256": "f7541048ae283054480a36ffe14a095ebe7e00c482f6214c4e28782a767d91b6",
+      "dimensions": [
+        512,
+        1024
+      ],
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "git_blob_sha": "0117c569d8bb57234bc647bf5b627a181a6e5712",
+      "source": "/workspace/scratch/dc054acd6888/poketest/rpg-assets/characters/yuna/expression-portraits/surprised.webp",
+      "decision": "reuse existing; no generation"
+    }
+  ]
+}

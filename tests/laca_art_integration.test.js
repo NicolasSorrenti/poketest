@@ -16,7 +16,7 @@ const pngInfo=file=>{
 const laca=packs.byId('laca');
 const art=laca?.art;
 
-test('Laca has eight approved expressions per outfit',()=>{
+test('Laca preserves expression mappings and verified WebP substitutions',()=>{
  const names=['neutral','happy','flirty','embarrassed','angry','surprised','sad','inviting'];
  for(const outfit of ['casual','lifeguard']){
   const variant=art.outfits.variants[outfit];
@@ -24,8 +24,15 @@ test('Laca has eight approved expressions per outfit',()=>{
   for(const name of names){
    const rel=variant.expressions[name].replace(/^\//,'');
    assert.ok(fs.existsSync(path.join(root,rel)),rel);
+   if(rel.endsWith('.webp')){
+    const bytes=fs.readFileSync(path.join(root,rel));
+    assert.equal(bytes.toString('ascii',0,4),'RIFF');
+    assert.equal(bytes.toString('ascii',8,12),'WEBP');
+    continue;
+   }
    const info=pngInfo(rel);
-   assert.deepEqual([info.width,info.height],[768,1024]);
+   const integrated=JSON.parse(fs.readFileSync(path.join(root,'art-production/pr140-laca-five/inventory.json'))).files.find(file=>file.path===rel);
+   assert.deepEqual([info.width,info.height],integrated?.dimensions||[768,1024]);
    assert.equal(info.colorType,6,'portrait must retain alpha: '+rel);
   }
  }

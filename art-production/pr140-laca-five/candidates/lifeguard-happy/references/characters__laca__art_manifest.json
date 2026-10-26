@@ -1,0 +1,106 @@
+{
+  "schemaVersion": 1,
+  "characterId": "laca",
+  "portrait": "/rpg-assets/characters/laca/neutral.webp",
+  "expressions": {
+    "neutral": "/rpg-assets/characters/laca/outfits/casual/neutral.webp",
+    "happy": "/rpg-assets/characters/laca/expression-portraits/happy.webp",
+    "surprised": "/rpg-assets/characters/laca/expression-portraits/surprised.webp",
+    "vulnerable": "/rpg-assets/characters/laca/expression-portraits/concerned.webp",
+    "flirty": "/rpg-assets/characters/laca/outfits/casual/flirty.png",
+    "embarrassed": "/rpg-assets/characters/laca/outfits/casual/embarrassed.png",
+    "angry": "/rpg-assets/characters/laca/outfits/casual/angry.png",
+    "sad": "/rpg-assets/characters/laca/expression-portraits/concerned.webp",
+    "inviting": "/rpg-assets/characters/laca/outfits/casual/inviting.png"
+  },
+  "outfits": {
+    "default": "casual",
+    "variants": {
+      "casual": {
+        "portrait": "/rpg-assets/characters/laca/outfits/casual/neutral.webp",
+        "expressions": {
+          "neutral": "/rpg-assets/characters/laca/outfits/casual/neutral.webp",
+          "happy": "/rpg-assets/characters/laca/expression-portraits/happy.webp",
+          "surprised": "/rpg-assets/characters/laca/expression-portraits/surprised.webp",
+          "vulnerable": "/rpg-assets/characters/laca/expression-portraits/concerned.webp",
+          "flirty": "/rpg-assets/characters/laca/outfits/casual/flirty.png",
+          "embarrassed": "/rpg-assets/characters/laca/outfits/casual/embarrassed.png",
+          "angry": "/rpg-assets/characters/laca/outfits/casual/angry.png",
+          "sad": "/rpg-assets/characters/laca/expression-portraits/concerned.webp",
+          "inviting": "/rpg-assets/characters/laca/outfits/casual/inviting.png"
+        }
+      },
+      "lifeguard": {
+        "portrait": "/rpg-assets/characters/laca/outfits/lifeguard/neutral.webp",
+        "expressions": {
+          "neutral": "/rpg-assets/characters/laca/outfits/lifeguard/neutral.webp",
+          "happy": "/rpg-assets/characters/laca/outfits/lifeguard/happy.png",
+          "surprised": "/rpg-assets/characters/laca/outfits/lifeguard/surprised.png",
+          "vulnerable": "/rpg-assets/characters/laca/outfits/lifeguard/sad.png",
+          "flirty": "/rpg-assets/characters/laca/outfits/lifeguard/flirty.png",
+          "embarrassed": "/rpg-assets/characters/laca/outfits/lifeguard/embarrassed.png",
+          "angry": "/rpg-assets/characters/laca/outfits/lifeguard/angry.png",
+          "sad": "/rpg-assets/characters/laca/outfits/lifeguard/sad.png",
+          "inviting": "/rpg-assets/characters/laca/outfits/lifeguard/inviting.png"
+        }
+      }
+    },
+    "rules": [
+      {
+        "outfit": "lifeguard",
+        "locations": [
+          "park"
+        ],
+        "slots": [
+          0
+        ]
+      },
+      {
+        "outfit": "lifeguard",
+        "locations": [
+          "park"
+        ],
+        "slots": [
+          1
+        ]
+      }
+    ],
+    "sceneOverrides": {
+      "laca_route_1": "lifeguard",
+      "laca_route_3": "lifeguard",
+      "laca_marina_cross_1": "lifeguard",
+      "laca_sol_cross_1": "lifeguard"
+    }
+  },
+  "boosterArt": {
+    "casual": "/rpg-assets/characters/laca/events/laca_booster_casual_square_1024.png",
+    "lifeguard": "/rpg-assets/characters/laca/events/laca_booster_lifeguard_square_1024.png"
+  },
+  "eventImages": [
+    {
+      "sceneId": "laca_route_1",
+      "path": "/rpg-assets/events/cg/season01/laca_route_1.webp",
+      "prompt": "Childhood-friend reunion at a supervised waterfront; Laca age 20 on duty, red two-piece lifeguard uniform, whistle and rescue buoy, delighted surprise; anime JRPG VN, safe distance from water, no text."
+    },
+    {
+      "sceneId": "laca_route_2",
+      "path": "/rpg-assets/events/cg/season01/laca_route_2.webp",
+      "prompt": "Laca adult 20 presents a new casual outfit and a sporty red training top to her trusted childhood friend, both fully dressed in a public card shop, playful confident pose, anime VN, SFW."
+    },
+    {
+      "sceneId": "laca_route_3",
+      "path": "/rpg-assets/events/cg/season01/laca_route_3.webp",
+      "prompt": "Laca adult 20 after lifeguard shift sharing a towel and a laugh with her childhood friend by the safe riverbank, red sporty lifeguard swimsuit with practical coverup available, sunlight, SFW romance comedy."
+    },
+    {
+      "sceneId": "laca_route_4",
+      "path": "/rpg-assets/events/cg/season01/laca_route_4.webp",
+      "prompt": "Laca adult 20 at a warm evening cafe, black top and light blue jeans, genuinely surprised by new romantic feelings about an old friend, her long curled eyelashes and warm olive complexion, cinematic anime VN."
+    },
+    {
+      "sceneId": "laca_route_5",
+      "path": "/rpg-assets/events/cg/season01/laca_route_5.webp",
+      "prompt": "Laca adult 20 at sunset park with an old childhood friend, black top and jeans, tender comfortable expression, hands close in a genuine confession scene, anime JRPG VN, SFW."
+    }
+  ]
+}

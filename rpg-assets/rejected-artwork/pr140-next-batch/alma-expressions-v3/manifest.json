@@ -1,0 +1,123 @@
+{
+  "authorization": "User explicitly requested these two expressions after coordinator visual approval against next-batch Alma neutral. This is separate from canonical-neutral approval.",
+  "runtime_note": "Alma overworld/battle/gallery use vn-expressions paths; expression-portraits are not wired as Alma runtime candidates. No unrequested runtime routing or neutral promotion.",
+  "files": [
+    {
+      "path": "rpg-assets/rejected-artwork/pr140-next-batch/alma-expressions-v3/previous-expression-portraits/concerned.webp",
+      "bytes": 109054,
+      "sha256": "aa7fb0d447f0748b2573b64032dee1f262e6254d7e5acc524d44a3364ed6993c",
+      "git_blob_sha": "7052347e77026f731a2bfc98bfb6d50aaf79e40e",
+      "status": "preserved previous expression",
+      "dimensions": [
+        512,
+        1024
+      ]
+    },
+    {
+      "path": "rpg-assets/characters/alma/expression-portraits/concerned.webp",
+      "bytes": 779960,
+      "sha256": "1f88386b166845e37975a86f559cdd96886b0439dfad859974cc98243dca7a3c",
+      "git_blob_sha": "c2d41d58522d298d338999cd0a5e74bf6823b878",
+      "status": "user-directed integration; coordinator verified against next-batch Alma neutral; full-resolution lossless conversion",
+      "dimensions": [
+        1024,
+        1536
+      ]
+    },
+    {
+      "path": "rpg-assets/rejected-artwork/pr140-next-batch/alma-expressions-v3/previous-expression-portraits/surprised.webp",
+      "bytes": 107692,
+      "sha256": "65191eb1e79e3e92136943f11596be82f1e57cd5635eaacc7ca9cc3b8264aa3f",
+      "git_blob_sha": "f32cfb396f74ff663b09f302f498d410f7b889cc",
+      "status": "preserved previous expression",
+      "dimensions": [
+        512,
+        1024
+      ]
+    },
+    {
+      "path": "rpg-assets/characters/alma/expression-portraits/surprised.webp",
+      "bytes": 800302,
+      "sha256": "ab18002870c8f5074663a4beb4f7127f07aa7d63342a21b7e0fdba925cf9c1ed",
+      "git_blob_sha": "440eae190ae195febf932bf19a30e3e56cb43643",
+      "status": "user-directed integration; coordinator verified against next-batch Alma neutral; full-resolution lossless conversion",
+      "dimensions": [
+        1024,
+        1536
+      ]
+    },
+    {
+      "path": "rpg-assets/rejected-artwork/pr140-next-batch/alma-expressions-v3/originals/attempts/concerned-attempt-01.png",
+      "bytes": 1280209,
+      "sha256": "73ad36b82a0c1377daacabb74238babd9894fb1654c2f6c0fba5e88a5b6f3fe9",
+      "git_blob_sha": "79182f8117b58735f7b3ee87b8a7d437f6038838",
+      "status": "preserved source byte-for-byte",
+      "dimensions": [
+        1024,
+        1536
+      ]
+    },
+    {
+      "path": "rpg-assets/rejected-artwork/pr140-next-batch/alma-expressions-v3/originals/attempts/surprised-attempt-01.png",
+      "bytes": 1307820,
+      "sha256": "73f130e72428e56e973e2d334f5ad3405f04ad433ecea5dc558b02d65d38b38c",
+      "git_blob_sha": "5d715565c61e1715fc4ff05e3af6f1cce02f487d",
+      "status": "preserved source byte-for-byte",
+      "dimensions": [
+        1024,
+        1536
+      ]
+    },
+    {
+      "path": "rpg-assets/rejected-artwork/pr140-next-batch/alma-expressions-v3/originals/concerned-thumb.png",
+      "bytes": 57854,
+      "sha256": "633f652007838dc0d138e0301f91a58eec3404f78803e6cc72a323979cd9b4ee",
+      "git_blob_sha": "c6ef4330745739f75c656d98bc268029b4b4ac07",
+      "status": "preserved source byte-for-byte",
+      "dimensions": [
+        256,
+        384
+      ]
+    },
+    {
+      "path": "rpg-assets/rejected-artwork/pr140-next-batch/alma-expressions-v3/originals/concerned.png",
+      "bytes": 1280209,
+      "sha256": "73ad36b82a0c1377daacabb74238babd9894fb1654c2f6c0fba5e88a5b6f3fe9",
+      "git_blob_sha": "79182f8117b58735f7b3ee87b8a7d437f6038838",
+      "status": "preserved source byte-for-byte",
+      "dimensions": [
+        1024,
+        1536
+      ]
+    },
+    {
+      "path": "rpg-assets/rejected-artwork/pr140-next-batch/alma-expressions-v3/originals/surprised-thumb.png",
+      "bytes": 57973,
+      "sha256": "ba1f0d11e333b873f3e896c16be501f8cf83d1421186583e3d94a35b84419eeb",
+      "git_blob_sha": "8706f93907f75d25ea21e6a4dfc477c4fbf5b0d1",
+      "status": "preserved source byte-for-byte",
+      "dimensions": [
+        256,
+        384
+      ]
+    },
+    {
+      "path": "rpg-assets/rejected-artwork/pr140-next-batch/alma-expressions-v3/originals/surprised.png",
+      "bytes": 1307820,
+      "sha256": "73f130e72428e56e973e2d334f5ad3405f04ad433ecea5dc558b02d65d38b38c",
+      "git_blob_sha": "5d715565c61e1715fc4ff05e3af6f1cce02f487d",
+      "status": "preserved source byte-for-byte",
+      "dimensions": [
+        1024,
+        1536
+      ]
+    },
+    {
+      "path": "rpg-assets/rejected-artwork/pr140-next-batch/alma-expressions-v3/originals/validation.json",
+      "bytes": 2355,
+      "sha256": "174e88c6f00d4703ced6d9b2a60df166fbcd7e1cb59d1eabe0469772b3cf3281",
+      "git_blob_sha": "a99c2c10e6db7056c16127daaa08f64ae97cbc5b",
+      "status": "preserved source byte-for-byte"
+    }
+  ]
+}

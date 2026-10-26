@@ -1089,6 +1089,7 @@
  });
  const attackFallbacks=new Set(['elena','rina','sierra','sol']);
  const portraitFallbacks=Object.freeze({
+  alma:'/rpg-assets/characters/alma/expression-portraits/neutral.webp',
   elena:'/rpg-assets/characters/elena/expression-portraits/neutral.webp',
   rina:'/rpg-assets/characters/rina/expression-portraits/neutral.webp',
   sierra:'/rpg-assets/characters/sierra/expression-portraits/neutral.webp',

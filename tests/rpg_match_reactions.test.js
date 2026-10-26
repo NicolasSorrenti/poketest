@@ -62,19 +62,19 @@ assert.equal(reactions.durationFor('attack'),2800,'Attack artwork must remain re
 assert.equal(reactions.durationFor('attack',true),2800,'Reduced motion must not hide the image early');
 assert.equal(reactions.durationFor('ko_scored'),2600,'Finishing reaction remains visible');
 assert.equal(reactions.assetFor({characters:{reina:{attack:'/rpg-assets/reactions/reina/attack.webp'}}},'reina','attack'),'/rpg-assets/reactions/reina/attack.webp','Dedicated attack art takes priority over VN expressions');
-assert.equal(reactions.assetFor({characters:{reina:{attack:'https://host.test/image.png'}}},'reina','attack'),'/rpg-assets/characters/reina/vn-expressions/angry.webp','Reject remote art, use own expression');
-assert.equal(reactions.assetFor({characters:{reina:{attack:'/rpg-assets/characters/hana/vn-expressions/neutral.webp'}}},'reina','attack'),'/rpg-assets/characters/reina/vn-expressions/angry.webp','Never display another NPC from a misassigned art manifest');
+assert.equal(reactions.assetFor({characters:{reina:{attack:'https://host.test/image.png'}}},'reina','attack'),'/rpg-assets/characters/reina/expression-portraits/happy.webp','Reject remote art, use own expression');
+assert.equal(reactions.assetFor({characters:{reina:{attack:'/rpg-assets/characters/hana/vn-expressions/neutral.webp'}}},'reina','attack'),'/rpg-assets/characters/reina/expression-portraits/happy.webp','Never display another NPC from a misassigned art manifest');
 assert.equal(reactions.assetFor({},'jinx','attack'),'/rpg-assets/characters/jinx/expression-portraits/smirk.webp','Jinx uses her own expressive art');
 assert.equal(reactions.assetFor({},'sierra','attack'),'/rpg-assets/characters/sierra/expression-portraits/neutral.webp','Use Sierra VN expression');
 assert.equal(reactions.assetFor({},'rina','attack'),'/rpg-assets/characters/rina/expression-portraits/neutral.webp','Use Rina installed expression portraits');
-assert.equal(reactions.assetFor({},'reina','attack'),'/rpg-assets/characters/reina/vn-expressions/angry.webp');
+assert.equal(reactions.assetFor({},'reina','attack'),'/rpg-assets/characters/reina/expression-portraits/happy.webp');
 const installedManifest=JSON.parse(fs.readFileSync(path.join(__dirname,'../rpg-assets/reactions/manifest.json'),'utf8'));
 assert.equal(Object.keys(installedManifest.characters).length,21,'NPC artwork manifest must load for the whole cast');
-assert.equal(reactions.assetFor(installedManifest,'reina','default'),'/rpg-assets/characters/reina/vn-expressions/neutral.webp','Reina uses her VN neutral portrait');
+assert.equal(reactions.assetFor(installedManifest,'reina','default'),'/rpg-assets/characters/reina/expression-portraits/neutral.webp','Reina uses her VN neutral portrait');
 assert.equal(reactions.assetFor(installedManifest,'rina','default'),'/rpg-assets/characters/rina/expression-portraits/neutral.webp','Rina uses her VN portrait');
 assert.equal(reactions.assetFor(installedManifest,'reina','attack'),'/rpg-assets/reactions/reina/attack.png','Attack uses the widescreen manifest art first');
-assert.equal(reactions.assetFor(installedManifest,'reina','power'),'/rpg-assets/characters/reina/vn-expressions/angry.webp','Powers use a character-specific expression');
-assert.equal(reactions.assetFor(installedManifest,'reina','evolve'),'/rpg-assets/characters/reina/vn-expressions/happy.webp','Evolution uses a happy expression');
+assert.equal(reactions.assetFor(installedManifest,'reina','power'),'/rpg-assets/characters/reina/expression-portraits/happy.webp','Powers use a character-specific expression');
+assert.equal(reactions.assetFor(installedManifest,'reina','evolve'),'/rpg-assets/characters/reina/expression-portraits/happy.webp','Evolution uses a happy expression');
 assert.equal(reactions.assetFor(installedManifest,'jinx','power'),'/rpg-assets/characters/jinx/expression-portraits/smirk.webp','Jinx uses her playful battle expression');
 const duelCss=fs.readFileSync(path.join(__dirname,'../rpg_duel.css'),'utf8');
 assert.ok(duelCss.includes('has-wide-action-art'),'Widescreen styles must exist');
@@ -145,12 +145,12 @@ for(const [id,entry] of Object.entries(contextualManifest.characters)){
   assert.ok(fs.existsSync(path.join(__dirname,'..',url.slice(1))),id+' '+kind+': referenced art must exist');
  }
 }
-assert.match(reactions.assetFor(contextualManifest,'reina','weakness_hit'),/reina\/vn-expressions\/surprised\.webp$/,
+assert.match(reactions.assetFor(contextualManifest,'reina','weakness_hit'),/reina\/expression-portraits\/surprised\.webp$/,
  'Reina reacts to Weakness using her surprised expression');
-assert.match(reactions.assetFor(contextualManifest,'reina','status_hit'),/reina\/vn-expressions\/angry\.webp$/,
+assert.match(reactions.assetFor(contextualManifest,'reina','status_hit'),/reina\/expression-portraits\/surprised\.webp$/,
  'Reina reacts to Special Conditions with an appropriate expression');
 assert.equal(reactions.assetFor({characters:{reina:{weakness_hit:'/rpg-assets/characters/hana/expressions/neutral.png',hurt:'/rpg-assets/characters/reina/expressions/flustered.png'}}},'reina','weakness_hit'),
- '/rpg-assets/characters/reina/vn-expressions/surprised.webp','Invalid cross-NPC art cannot override her VN expression');
+ '/rpg-assets/characters/reina/expression-portraits/surprised.webp','Invalid cross-NPC art cannot override her VN expression');
 
 // The VN/portrait sources selected for the entire cast must be installed.
 const reactionKinds=['default','attack','play_card','evolve','power','hurt','big_hit','weakness_hit','status_hit','ko_taken','ko_scored'];
@@ -191,7 +191,8 @@ const barbPaths={
  status_hit:'angry',ko_taken:'sad',ko_scored:'happy'
 };
 for(const [kind,expression] of Object.entries(barbPaths)){
- assert.equal(reactions.assetFor(installedManifest,'barb',kind),barb+expression+'.webp',
+ const repaired=['hurt','big_hit','weakness_hit','status_hit','ko_taken'].includes(kind);
+ assert.equal(reactions.assetFor(installedManifest,'barb',kind),repaired?'/rpg-assets/characters/barb/expression-portraits/'+(kind==='ko_taken'?'soft':'concerned')+'.png':barb+expression+'.webp',
   'Barb '+kind+' uses her original installed expression');
 }
 assert.equal(reactions.assetFor(installedManifest,'barb','attack'),

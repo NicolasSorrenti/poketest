@@ -1,0 +1,224 @@
+{
+  "review_branch": "art/overworld-character-refresh",
+  "pr": 140,
+  "audited_head": "4af42041ca3c3e334153b6857cfadea1c7a27668",
+  "decision": "No next-batch portrait promoted: none passed identity verification against established portraits and character bibles.",
+  "files": [
+    {
+      "path": "rpg-assets/rejected-artwork/pr140-next-batch/originals/alma/neutral-thumb.png",
+      "source": "/workspace/scratch/4a8bc1383fdd/next-batch/alma/neutral-thumb.png",
+      "status": "rejected identity; preserved byte-for-byte",
+      "dimensions": [
+        171,
+        256
+      ],
+      "bytes": 28636,
+      "git_blob_sha": "d8c073d5819cfcd6110e952045e3559da3cce0e9",
+      "sha256": "7380c01feb4032041ee3637d4dd6bce60a1dc06e9e0b0183224915f5c7700ff1"
+    },
+    {
+      "path": "rpg-assets/rejected-artwork/pr140-next-batch/originals/alma/neutral.png",
+      "source": "/workspace/scratch/4a8bc1383fdd/next-batch/alma/neutral.png",
+      "status": "rejected identity; preserved byte-for-byte",
+      "dimensions": [
+        1024,
+        1536
+      ],
+      "bytes": 1326114,
+      "git_blob_sha": "596fffba784599a8fe5f98167f1534dd83dc94c7",
+      "sha256": "0d43a7e2b5e156527a35126ab83598156d6389fe04bba19e0fc850ab8444df2a"
+    },
+    {
+      "path": "rpg-assets/rejected-artwork/pr140-next-batch/originals/alma/neutral.webp",
+      "source": "/workspace/scratch/4a8bc1383fdd/next-batch/alma/neutral.webp",
+      "status": "rejected identity; preserved byte-for-byte",
+      "dimensions": [
+        1024,
+        1536
+      ],
+      "bytes": 409892,
+      "git_blob_sha": "198df7db0c1041625594bebd91a9eec690bbbd06",
+      "sha256": "2002c71321c2eb80c0d42b1b01f6949db00a2d7ed71d089f225ec73ed0baaa6d"
+    },
+    {
+      "path": "rpg-assets/rejected-artwork/pr140-next-batch/originals/rina/neutral.png",
+      "source": "/workspace/scratch/4a8bc1383fdd/next-batch/rina/neutral.png",
+      "status": "rejected identity; preserved byte-for-byte",
+      "dimensions": [
+        512,
+        1024
+      ],
+      "bytes": 586212,
+      "git_blob_sha": "1c7c3deefb1f3ecefc8b36b62710fccbd75b31b7",
+      "sha256": "4843b0092ffc57511ce413251cbbad9240b8c58131b12d74ea9b5bdc04da35b9"
+    },
+    {
+      "path": "rpg-assets/rejected-artwork/pr140-next-batch/originals/rina/neutral_thumb.webp",
+      "source": "/workspace/scratch/4a8bc1383fdd/next-batch/rina/neutral_thumb.webp",
+      "status": "rejected identity; preserved byte-for-byte",
+      "dimensions": [
+        128,
+        256
+      ],
+      "bytes": 12616,
+      "git_blob_sha": "6502c166154c01f5da06359bb065eb8a1eb9afc9",
+      "sha256": "9a0a59879966b953b3ee0710fd0322b5795d3183ad61532d92cce9f4b1bcc085"
+    },
+    {
+      "path": "rpg-assets/rejected-artwork/pr140-next-batch/originals/sierra/_check.jpg",
+      "source": "/workspace/scratch/4a8bc1383fdd/next-batch/sierra/_check.jpg",
+      "status": "rejected identity; preserved byte-for-byte",
+      "dimensions": [
+        1024,
+        1536
+      ],
+      "bytes": 354509,
+      "git_blob_sha": "72015720fe4cd3e929eaf83f3f01b411fe815865",
+      "sha256": "283a673526b80a3484fb5ec024a422a180c3e7700010e6348643567c472003a3"
+    },
+    {
+      "path": "rpg-assets/rejected-artwork/pr140-next-batch/originals/sierra/sierra_neutral.png",
+      "source": "/workspace/scratch/4a8bc1383fdd/next-batch/sierra/sierra_neutral.png",
+      "status": "rejected identity; preserved byte-for-byte",
+      "dimensions": [
+        1024,
+        1536
+      ],
+      "bytes": 2093191,
+      "git_blob_sha": "7552acb5ac441ab93fbbdc9d2ea020d61aab7028",
+      "sha256": "a6ad7988db30b49fc1c363dabcd2745e1defc32bc9a079f09aff1facca8c3f89"
+    },
+    {
+      "path": "rpg-assets/rejected-artwork/pr140-next-batch/originals/sierra/sierra_neutral_thumb.webp",
+      "source": "/workspace/scratch/4a8bc1383fdd/next-batch/sierra/sierra_neutral_thumb.webp",
+      "status": "rejected identity; preserved byte-for-byte",
+      "dimensions": [
+        171,
+        256
+      ],
+      "bytes": 10962,
+      "git_blob_sha": "9563fee11cd47d53a2dc2fd1e78d313b3e602b98",
+      "sha256": "ae6e9818d71edb613ec1b97cb9ca8a4645335df1bce5758dadad39ca5e9a6e5f"
+    },
+    {
+      "path": "rpg-assets/rejected-artwork/pr140-next-batch/originals/sol/sol_neutral.png",
+      "source": "/workspace/scratch/4a8bc1383fdd/next-batch/sol/sol_neutral.png",
+      "status": "rejected identity; preserved byte-for-byte",
+      "dimensions": [
+        891,
+        1765
+      ],
+      "bytes": 1900195,
+      "git_blob_sha": "2cbad768e1000f3edacce33cea0f9d1c26c50953",
+      "sha256": "73410366b94dfd4e776457d4a99ba7c0e1e75a8b8d2461d6d4bd7e86cb8e12a7"
+    },
+    {
+      "path": "rpg-assets/rejected-artwork/pr140-next-batch/originals/sol/sol_neutral_thumb.png",
+      "source": "/workspace/scratch/4a8bc1383fdd/next-batch/sol/sol_neutral_thumb.png",
+      "status": "rejected identity; preserved byte-for-byte",
+      "dimensions": [
+        129,
+        256
+      ],
+      "bytes": 69797,
+      "git_blob_sha": "8e870b784e9f1514e07f82ce3574cde02a3254d0",
+      "sha256": "11539e7e29586dce3186e0b2b318a820e63e0da4312b2cd84579afd184564aaf"
+    },
+    {
+      "path": "rpg-assets/rejected-artwork/pr140-next-batch/runtime-4af4204/rpg-assets/characters/alma/portraits/primary.webp",
+      "source": "4af42041ca3c3e334153b6857cfadea1c7a27668:rpg-assets/characters/alma/portraits/primary.webp",
+      "status": "rejected identity; preserved byte-for-byte",
+      "dimensions": [
+        1024,
+        1536
+      ],
+      "bytes": 409892,
+      "git_blob_sha": "198df7db0c1041625594bebd91a9eec690bbbd06",
+      "sha256": "2002c71321c2eb80c0d42b1b01f6949db00a2d7ed71d089f225ec73ed0baaa6d"
+    },
+    {
+      "path": "rpg-assets/characters/alma/portraits/primary.webp",
+      "source": "ee67d3b:rpg-assets/characters/alma/portraits/primary.webp",
+      "status": "restored established identity",
+      "dimensions": [
+        1086,
+        1448
+      ],
+      "bytes": 312012,
+      "git_blob_sha": "485ebb602066e6c8099bd24f1496a9ac54ddf829",
+      "sha256": "0a063ebf0b950bc88d45dbbf268f859dc6e55672814bf7f6f7824437b1f77a07"
+    },
+    {
+      "path": "rpg-assets/rejected-artwork/pr140-next-batch/runtime-4af4204/rpg-assets/characters/rina/neutral.png",
+      "source": "4af42041ca3c3e334153b6857cfadea1c7a27668:rpg-assets/characters/rina/neutral.png",
+      "status": "rejected identity; preserved byte-for-byte",
+      "dimensions": [
+        512,
+        1024
+      ],
+      "bytes": 586212,
+      "git_blob_sha": "1c7c3deefb1f3ecefc8b36b62710fccbd75b31b7",
+      "sha256": "4843b0092ffc57511ce413251cbbad9240b8c58131b12d74ea9b5bdc04da35b9"
+    },
+    {
+      "path": "rpg-assets/characters/rina/neutral.png",
+      "source": "ee67d3b:rpg-assets/characters/rina/neutral.png",
+      "status": "restored established identity",
+      "dimensions": [
+        1024,
+        1536
+      ],
+      "bytes": 2870081,
+      "git_blob_sha": "4e6019445833b1a1fc2157591690fb21dd22a1ba",
+      "sha256": "8d072f4ce7ed13d40f7aa9b863ea5c6fe1fda23357f2a8d911d5a0422d4b18fb"
+    },
+    {
+      "path": "rpg-assets/rejected-artwork/pr140-next-batch/runtime-4af4204/rpg-assets/characters/sierra/portrait.png",
+      "source": "4af42041ca3c3e334153b6857cfadea1c7a27668:rpg-assets/characters/sierra/portrait.png",
+      "status": "rejected identity; preserved byte-for-byte",
+      "dimensions": [
+        512,
+        768
+      ],
+      "bytes": 405591,
+      "git_blob_sha": "b548b5690ecc5c5217d8fc51fae1d7ab0c6f3829",
+      "sha256": "ffb96a22ca736df23c3c44e190bf615e763dde26db5fd08c17a4c2a8622d0a27"
+    },
+    {
+      "path": "rpg-assets/characters/sierra/portrait.png",
+      "source": "ee67d3b:rpg-assets/characters/sierra/portrait.png",
+      "status": "restored established identity",
+      "dimensions": [
+        1024,
+        1536
+      ],
+      "bytes": 2603904,
+      "git_blob_sha": "8efd7e988539ff93ee50d6f5a0c7a772482b4473",
+      "sha256": "0d96e6829ec58c001d2b847f94d741150092530397b642ca9ebb6bd85ea2e1fe"
+    },
+    {
+      "path": "rpg-assets/rejected-artwork/pr140-next-batch/runtime-4af4204/rpg-assets/characters/sol/portraits/primary.png",
+      "source": "4af42041ca3c3e334153b6857cfadea1c7a27668:rpg-assets/characters/sol/portraits/primary.png",
+      "status": "rejected identity; preserved byte-for-byte",
+      "dimensions": [
+        512,
+        1014
+      ],
+      "bytes": 659047,
+      "git_blob_sha": "c0b6d552a025a43703433d4cc3b44ab38ce10d8b",
+      "sha256": "0b3e3a27ca825fddf61c46d134279ea92ed736b7ee26289d45101873b175ae6c"
+    },
+    {
+      "path": "rpg-assets/characters/sol/portraits/primary.png",
+      "source": "ee67d3b:rpg-assets/characters/sol/portraits/primary.png",
+      "status": "restored established identity",
+      "dimensions": [
+        1024,
+        1536
+      ],
+      "bytes": 2971554,
+      "git_blob_sha": "f28a51e9acd016729f4de1b800fedb5e8f748da4",
+      "sha256": "32b8db5618deae6fb770cd2259d0fae6c71cae9b6445dfb08daa1dc64e499739"
+    }
+  ]
+}

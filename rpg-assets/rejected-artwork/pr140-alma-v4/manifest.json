@@ -1,0 +1,185 @@
+{
+  "base_commit": "4cc94bd650d79ed1091796919c0efb2be10a1499",
+  "review": "Visible composites match canonical female cafe identity: brown apron, rust cardigan, cream blouse. Happy and soft compatible and unchanged. Full-resolution WebP RGBA pixels equal PNG source including alpha-zero RGB. All supplied v4 files and replaced v3 WebPs preserved.",
+  "files": [
+    {
+      "path": "rpg-assets/characters/alma/expression-portraits/concerned.webp",
+      "bytes": 1316686,
+      "sha256": "657d5cf852516ad42a689ad5a95f6aa83b340893c23186252805d6ee6c5bf676",
+      "git_blob_sha": "4e64e3bfda79324cd30f99987d63666a5f6094a8",
+      "width": 1024,
+      "height": 1536,
+      "mode": "RGBA",
+      "alpha_extrema": [
+        0,
+        254
+      ]
+    },
+    {
+      "path": "rpg-assets/characters/alma/expression-portraits/surprised.webp",
+      "bytes": 1354522,
+      "sha256": "d8f349ac9db37e208654249c9900a591a07c65e662d532dc3fdee4fa4b13a912",
+      "git_blob_sha": "b32f96083a6668819d382ffc7aa8ccda45cb4bb3",
+      "width": 1024,
+      "height": 1536,
+      "mode": "RGBA",
+      "alpha_extrema": [
+        0,
+        254
+      ]
+    },
+    {
+      "path": "rpg-assets/rejected-artwork/pr140-alma-v4/alma-concerned/SHA256SUMS.txt",
+      "bytes": 361,
+      "sha256": "05eabea0011280603d61b312f8cf0253ec5ba0fddcfcf813e3680f1d06fb0ba0",
+      "git_blob_sha": "85ce4773f818c2160210300d2382b6eefdc4fec8"
+    },
+    {
+      "path": "rpg-assets/rejected-artwork/pr140-alma-v4/alma-concerned/alma-concerned-attempt-01-thumbnail.png",
+      "bytes": 127415,
+      "sha256": "4811dfb4272bdead3e10e110c1e7ecade44f4faaa12d22686ab79b3f9128c81d",
+      "git_blob_sha": "01ed4881a9dca68bf0142ea1fca399f9c3b8c8c5",
+      "width": 256,
+      "height": 384,
+      "mode": "RGBA",
+      "alpha_extrema": [
+        0,
+        255
+      ]
+    },
+    {
+      "path": "rpg-assets/rejected-artwork/pr140-alma-v4/alma-concerned/alma-concerned-attempt-01.png",
+      "bytes": 2163588,
+      "sha256": "21ed7c40e7743e8597354fa785208913d454afbdd521159d1b1a2987c7be03be",
+      "git_blob_sha": "48ef7f7ac2b092a5e7e07aba6beabc25f72b0cef",
+      "width": 1024,
+      "height": 1536,
+      "mode": "RGBA",
+      "alpha_extrema": [
+        0,
+        254
+      ]
+    },
+    {
+      "path": "rpg-assets/rejected-artwork/pr140-alma-v4/alma-concerned/prompt.txt",
+      "bytes": 10,
+      "sha256": "770c2d18aa4ec3159f46da461ef452972949942ff4f6a9771044485faa146398",
+      "git_blob_sha": "417b7b5370df81a7316ee9f983437444afdae432"
+    },
+    {
+      "path": "rpg-assets/rejected-artwork/pr140-alma-v4/alma-concerned/provenance.json",
+      "bytes": 594,
+      "sha256": "8733d1a640e3c465cb5b48d27eb153c6080095dada24075e083ae6861441d5fa",
+      "git_blob_sha": "df802d1aaead8b79d0738c2888d3da995603b776"
+    },
+    {
+      "path": "rpg-assets/rejected-artwork/pr140-alma-v4/alma-surprised/SHA256SUMS",
+      "bytes": 413,
+      "sha256": "7c86df16808bda774393486efe8c6dc11f46f5d1f6dca175c2689ec94c17fdab",
+      "git_blob_sha": "8517b88344115b2de64ef26d240fe48521ca09c3"
+    },
+    {
+      "path": "rpg-assets/rejected-artwork/pr140-alma-v4/alma-surprised/alma-surprised-attempt-01-prompt.txt",
+      "bytes": 1022,
+      "sha256": "538a832ecb252b1613a39e4a56308d572244ffac03d83aed570b8a3e60ac51ff",
+      "git_blob_sha": "5ffabb81e56d62fb8875506ca2181a16a0e00c0e"
+    },
+    {
+      "path": "rpg-assets/rejected-artwork/pr140-alma-v4/alma-surprised/alma-surprised-attempt-01-provenance.json",
+      "bytes": 810,
+      "sha256": "acc4b8c4b6390e302e9dc0deb6f859470046a752148b27601f0a3dd77227aed4",
+      "git_blob_sha": "32ced0ed3306746e6239cb43ca10acecb500f1aa"
+    },
+    {
+      "path": "rpg-assets/rejected-artwork/pr140-alma-v4/alma-surprised/alma-surprised-attempt-01-thumbnail.png",
+      "bytes": 137921,
+      "sha256": "a8292e305806870c2c6dde13bb7d28adc851abaef65f93313cbce5e47c233743",
+      "git_blob_sha": "92478bbbc931ddec07fc8030e410980aef58f4a9",
+      "width": 256,
+      "height": 384,
+      "mode": "RGBA",
+      "alpha_extrema": [
+        0,
+        255
+      ]
+    },
+    {
+      "path": "rpg-assets/rejected-artwork/pr140-alma-v4/alma-surprised/alma-surprised-attempt-01.png",
+      "bytes": 2195026,
+      "sha256": "0de779cf633b61cd2e3e0affac601f6a10ef0e1b7fe283435f3ad7c599a11399",
+      "git_blob_sha": "8bec92ba91f2102dfd2e84f137d5c4d82fb98d61",
+      "width": 1024,
+      "height": 1536,
+      "mode": "RGBA",
+      "alpha_extrema": [
+        0,
+        254
+      ]
+    },
+    {
+      "path": "rpg-assets/rejected-artwork/pr140-alma-v4/superseded-v3/concerned.webp",
+      "bytes": 779960,
+      "sha256": "1f88386b166845e37975a86f559cdd96886b0439dfad859974cc98243dca7a3c",
+      "git_blob_sha": "c2d41d58522d298d338999cd0a5e74bf6823b878",
+      "width": 1024,
+      "height": 1536,
+      "mode": "RGBA",
+      "alpha_extrema": [
+        0,
+        254
+      ]
+    },
+    {
+      "path": "rpg-assets/rejected-artwork/pr140-alma-v4/superseded-v3/surprised.webp",
+      "bytes": 800302,
+      "sha256": "ab18002870c8f5074663a4beb4f7127f07aa7d63342a21b7e0fdba925cf9c1ed",
+      "git_blob_sha": "440eae190ae195febf932bf19a30e3e56cb43643",
+      "width": 1024,
+      "height": 1536,
+      "mode": "RGBA",
+      "alpha_extrema": [
+        0,
+        254
+      ]
+    },
+    {
+      "path": "rpg-assets/alma.png",
+      "bytes": 2203850,
+      "sha256": "629fcd12c98a71154824bf5dce293440f1ccace1f77645b1d3b58606ea958610",
+      "git_blob_sha": "afa9b565639414ddfbc8bd90d5f9b8e95ffa97b2",
+      "width": 1024,
+      "height": 1536,
+      "mode": "RGBA",
+      "alpha_extrema": [
+        0,
+        254
+      ]
+    },
+    {
+      "path": "rpg-assets/characters/alma/expression-portraits/happy.webp",
+      "bytes": 244174,
+      "sha256": "37d22a41b11b68c764c2bd8990ee8a63568ccfb29920c3b3ab2b804b6c6b4067",
+      "git_blob_sha": "e15e20db966e6518e1bae6eb94ec70af20b593dc",
+      "width": 887,
+      "height": 1774,
+      "mode": "RGBA",
+      "alpha_extrema": [
+        0,
+        255
+      ]
+    },
+    {
+      "path": "rpg-assets/characters/alma/expression-portraits/soft.webp",
+      "bytes": 239764,
+      "sha256": "63ca18069e111b1deb094ff7167b8575b3e0e9b31b46f54003c3f3fa054534fe",
+      "git_blob_sha": "c788d5365ea7d32a77644c6bf250ad3d6bca5b86",
+      "width": 887,
+      "height": 1774,
+      "mode": "RGBA",
+      "alpha_extrema": [
+        0,
+        255
+      ]
+    }
+  ]
+}

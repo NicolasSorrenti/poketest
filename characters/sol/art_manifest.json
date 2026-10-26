@@ -3,11 +3,16 @@
   "characterId": "sol",
   "portrait": "/rpg-assets/sol.png",
   "expressions": {
-    "neutral": "/rpg-assets/characters/sol/neutral.webp",
-    "smile": "/rpg-assets/characters/sol/smile.webp",
-    "surprised": "/rpg-assets/characters/sol/surprised.webp",
-    "worried": "/rpg-assets/characters/sol/worried.webp",
-    "soft": "/rpg-assets/characters/sol/soft.webp"
+    "neutral": "/rpg-assets/characters/sol/expression-portraits/neutral.webp",
+    "happy": "/rpg-assets/characters/sol/expression-portraits/happy.webp",
+    "surprised": "/rpg-assets/characters/sol/expression-portraits/surprised.webp",
+    "soft": "/rpg-assets/characters/sol/expression-portraits/soft.webp",
+    "concerned": "/rpg-assets/characters/sol/expression-portraits/concerned.webp",
+    "vulnerable": "/rpg-assets/characters/sol/expression-portraits/neutral.webp",
+    "irritated": "/rpg-assets/characters/sol/expression-portraits/neutral.webp",
+    "determined": "/rpg-assets/characters/sol/expression-portraits/neutral.webp",
+    "smile": "/rpg-assets/characters/sol/expression-portraits/happy.webp",
+    "worried": "/rpg-assets/characters/sol/expression-portraits/concerned.webp"
   },
   "eventImages": [
     {
