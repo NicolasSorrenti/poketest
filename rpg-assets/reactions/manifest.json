@@ -192,6 +192,10 @@
       "status_hit": "/rpg-assets/characters/barb/vn-expressions/angry.webp",
       "ko_taken": "/rpg-assets/characters/barb/vn-expressions/sad.webp",
       "ko_scored": "/rpg-assets/characters/barb/vn-expressions/happy.webp"
+    },
+    "laca": {
+      "default": "/rpg-assets/characters/laca/expression-portraits/neutral.webp",
+      "attack": "/rpg-assets/characters/laca/expression-portraits/neutral.webp"
     }
   }
 }
