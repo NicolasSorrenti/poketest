@@ -7,8 +7,12 @@ const state=(extra={})=>({day:10,slot:1,location:'shop',
  bonds:Object.fromEntries(names.map(id=>[id,{affection:9,trust:9}])),...extra});
 test('the original CGs plus Akari, Barb and standalone slice-of-life briefs coexist without duplicates',()=>{
  const legacy=CG.catalog.filter(x=>x.trigger!=='slice'&&!['akari_route_1','akari_route_3'].includes(x.id)),ambient=CG.catalog.filter(x=>x.trigger==='slice');
-assert.equal(legacy.length,45);assert.equal(ambient.length,47);assert.equal(CG.catalog.length,94);
- assert.deepEqual(CG.validate(),[]);assert.equal(new Set(CG.catalog.map(x=>x.id)).size,94);
+assert.equal(legacy.length,45);
+ const archive=ambient.filter(x=>x.randomForced);
+ assert.equal(archive.length,7,'seven archived original CGs should be new slice memories');
+ assert.ok(ambient.length>=archive.length);
+ assert.equal(CG.catalog.length,legacy.length+ambient.length+2);
+ assert.deepEqual(CG.validate(),[]);assert.equal(new Set(CG.catalog.map(x=>x.id)).size,CG.catalog.length);
  for(const id of names)assert.deepEqual(legacy.filter(x=>x.character===id).map(x=>x.category),CG.categories);
 });
 test('first encounters grant only the correct profile and never other characters',()=>{
@@ -81,12 +85,21 @@ test('legacy save migration repairs invalid CG metadata and preserves character 
 test('only known unlocked images can be displayed; invalid seasons and negative time reject events',()=>{
  const s=state({day:91});assert.deepEqual(CG.record(s,'meet','hana'),[]);
  s.day=3;s.slot=-1;assert.deepEqual(CG.record(s,'meet','hana'),[]);
- assert.equal(CG.gallery(s).length,94);
+ assert.equal(CG.gallery(s).length,CG.catalog.length);
  assert.equal(CG.gallery(s,{category:'special'}).length,16);
 });
 test('the manifest is ready for the art agent with exact uniquely addressed images',()=>{
- const paths=CG.catalog.flatMap(x=>[x.path,x.thumb]);assert.equal(new Set(paths).size,188);
- for(const path of paths)assert.match(path,/^\/rpg-assets\/(?:events\/cg\/(?:season01|slice-life)\/(?:thumbs\/)?|characters\/barb\/events\/)[a-z0-9_]+\.webp$/);
+ const paths=CG.catalog.flatMap(x=>[x.path,x.thumb]);
+ assert.equal(paths.length,CG.catalog.length*2);
+ for(const cg of CG.catalog){
+  if(cg.randomForced){
+   assert.equal(cg.path,cg.thumb,'original PNG is deliberately reused for its thumbnail');
+   assert.match(cg.path,/^\/rpg-assets\/events\/cg\/slice-life\/[a-z0-9_]+\.png$/);
+  }else{
+   for(const path of [cg.path,cg.thumb])assert.match(path,/^\/rpg-assets\/(?:events\/cg\/(?:season01|slice-life)\/(?:thumbs\/)?|characters\/barb\/events\/)[a-z0-9_]+\.webp$/);
+  }
+ }
+ assert.ok(new Set(paths).size>CG.catalog.length,'each scene should have its own addressable artwork');
 });
 
 test('special CG is exclusive to a verified, completed G5 situation event',()=>{
