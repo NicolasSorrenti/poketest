@@ -2053,6 +2053,7 @@ function renderRpgCast(ids,locked,shown,portraitId,context={}){
   button.setAttribute('aria-label','Talk to '+cast[id].name);
   const image=button.querySelector('img');
   if(image){
+   window.NeoRpgPortraitFraming?.attach?.(image,id);
    const expression=active?(window.NeoRpgCharacterMotion?.emotion?.(shown?.expression,dialogueExpression(shown?.line))||dialogueExpression(shown?.line)):'neutral';
    window.NeoRpgDiscreetAvatars?.set?.(button,id,expression,cast[id].name);
    const paths=portraitPaths(id,expression,context.sceneId);
