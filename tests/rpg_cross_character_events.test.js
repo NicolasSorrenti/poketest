@@ -91,3 +91,25 @@ test('choices resolve once, create saves, and unlock the intended CG memory with
   assert.ok(!SLICE.available(restored,e.participants,e.trigger,e.npc).some(x=>x.id===e.id),e.id);
  }
 });
+
+test('server-filtered guest roster cannot leak exclusive character crossover dialogue or gallery art',()=>{
+ const fs=require('node:fs'),vm=require('node:vm'),path=require('node:path');
+ const allowed=['hana','reina','shiori','yuna','akari','camila','marina','kaede'];
+ const context=vm.createContext({window:{
+  NeoRpgSchedules:{start:Object.fromEntries(allowed.map(id=>[id,1]))},
+  NeoRpgCrossCharacterEvents:CROSS,
+  NeoRpgCharacterPacks:{packs:[]},
+  NeoRpgEncounterDirector:require('../rpg_encounter_director'),
+  NeoRpgRelationships:require('../rpg_relationships'),
+  NeoRpgAkariBarbFitting:require('../rpg_akari_barb_event')
+ }});
+ for(const name of ['rpg_slice_of_life.js','rpg_cg_gallery.js'])
+  vm.runInContext(fs.readFileSync(path.join(__dirname,'..',name),'utf8'),context,{filename:name});
+ const scenes=Array.from(context.window.NeoRpgSliceOfLife.scenes).filter(e=>e.id.startsWith('crossover_'));
+ assert.ok(scenes.length>0,'public pair scenes should remain available');
+ assert.ok(scenes.every(e=>Array.from(e.participants).every(id=>allowed.includes(id))));
+ const cgs=Array.from(context.window.NeoRpgCGGallery.catalog).filter(e=>e.id.startsWith('crossover_'));
+ assert.equal(cgs.length,scenes.length);
+ assert.ok(cgs.every(e=>allowed.includes(e.character)));
+ assert.ok(!cgs.some(e=>e.id.includes('barb')||e.id.includes('laca')||e.id.includes('jinx')));
+});
