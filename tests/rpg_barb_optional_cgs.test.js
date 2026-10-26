@@ -7,7 +7,7 @@ const hashes={
  barb_random_cg_01:'1483038f7f086ef0d2f21433e4a2bf43ba5a33fd9033de194013ffd569877332',
  barb_random_cg_02:'17dc78efc71bfeffde7e8849b540dc49288724b4a064f11cbc604d50854aa3e4',
  barb_random_cg_03:'b99d1f4b3640dd256df6629f279b8caa95aeedec96f9e5704e1725253f3ff2bf',
- barb_random_cg_04:'58dae08b79caf09d2474569dd5572f4893b97ea0da686e0738d2ac1f6de7c554',
+ barb_random_cg_04:'327a3487ed5bbff6a6a76b54997f59a3ec36bd5bb142037439ac75144178dd10',
  barb_random_cg_05:'d0f94b8c4b6060b1036f8706eef63382deb3604db5320b7a83fc8716a5350cd3',
  barb_random_cg_06:'a7b4f33b41284c3470a79e4f1f5985e6979889725c1c88c4c6941b78aed38aed',
  barb_bonus_closeup:'eb2e0b7ce90cc4b3d1f7330d8422e6e2ece4cf2dc80cd620d68d7cb6f0d25257',
@@ -35,7 +35,8 @@ test('all eleven optional pack scenes retain distinct approved assets and stay o
   assert.equal(STORY.byId(e.id),undefined);
   const art=pack.art.eventImages.find(x=>x.sceneId===e.id),cg=CG.byId(e.id);
   assert.equal(cg.trigger,'slice');assert.equal(cg.sliceId,e.id);assert.equal(cg.path,art.path);assert.equal(cg.thumb,art.path);
-  assert.equal(art.path,'/rpg-assets/characters/barb/events/'+e.id+'.webp');
+  const expectedPath=e.id==='barb_random_cg_04'?'/rpg-assets/characters/barb/events/barb_random_cg_04_accidental_model_v2.webp':'/rpg-assets/characters/barb/events/'+e.id+'.webp';
+  assert.equal(art.path,expectedPath);
   const bytes=fs.readFileSync(path.join(__dirname,'..',art.path));
   assert.equal(crypto.createHash('sha256').update(bytes).digest('hex'),hashes[e.id]);
   assert.equal(CG.artCandidates(cg)[0].path,art.path);

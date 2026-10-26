@@ -1815,7 +1815,7 @@ const packs=[
     },
     {
      "sceneId": "barb_random_cg_04",
-     "path": "/rpg-assets/characters/barb/events/barb_random_cg_04.webp",
+     "path": "/rpg-assets/characters/barb/events/barb_random_cg_04_accidental_model_v2.webp",
      "prompt": "Approved CG for Barb optional everyday encounter: The Accidental Model. Keep the existing artwork unchanged; adult 21-year-old Barb with copper-red hair and alt punk aesthetic."
     },
     {

@@ -45,8 +45,8 @@
     },
     {
       "sceneId": "barb_random_cg_04",
-      "path": "/rpg-assets/characters/barb/events/barb_random_cg_04.webp",
-      "prompt": "Approved CG for Barb optional everyday encounter: The Accidental Model. Keep the existing artwork unchanged; adult 21-year-old Barb with copper-red hair and alt punk aesthetic."
+      "path": "/rpg-assets/characters/barb/events/barb_random_cg_04_accidental_model_v2.webp",
+      "prompt": "New generated CG for Barb’s optional event “The Accidental Model”: adult 21-year-old Barb with copper-red hair, hazel-green eyes, septum ring, butterfly pendant and left-shoulder rose tattoo, in a fully clothed punk-cute outfit. A playful accidental fashion photo after she safely trips on a camera cable in a studio; bashful surprise, warm editorial lighting, wide 16:9, dialogue space at bottom. Preserve the prior approved CG as a separate asset."
     },
     {
       "sceneId": "barb_random_cg_05",
