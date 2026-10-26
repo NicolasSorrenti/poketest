@@ -1588,7 +1588,7 @@ function syncSceneCG(){
  cgScenePresenter.show(entry,CG.artCandidates(entry,false),loaded=>{
   // Calendar/mandatory transitions must wait until the event dialogue concludes.
   if(!cgSceneRelease)cgSceneRelease=timeSequence.hold();
-  if(CG.unlocked(state,loaded.id)){CG.markViewed(state,loaded.id);persist();}
+  if(!loaded.artPending&&CG.unlocked(state,loaded.id)){CG.markViewed(state,loaded.id);persist();}
  },()=>{
   // Missing art must not stall the campaign or hide normal portraits.
   if(cgSceneRelease){const release=cgSceneRelease;cgSceneRelease=null;release();}
