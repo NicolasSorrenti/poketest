@@ -17,7 +17,7 @@ test('original pairs and eleven optional Barb encounters have no duplicate IDs',
  assert.deepEqual(SLICE.validate(),[]);
  assert.ok(SLICE.scenes.length>=45);
  for(const npc of characters)assert.ok(SLICE.scenes.filter(e=>e.npc===npc).length>=2,npc);
- assert.equal(new Set(SLICE.scenes.map(e=>e.id)).size,45);
+ assert.equal(new Set(SLICE.scenes.map(e=>e.id)).size,SLICE.scenes.length);
  assert.deepEqual(CG.validate(),[]);
  for(const e of SLICE.scenes){
   const cg=CG.byId(e.id);assert.ok(cg,'missing CG brief '+e.id);
