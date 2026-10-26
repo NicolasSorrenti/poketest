@@ -33,5 +33,5 @@ test('slice module initializes in browser mode with the real optional fitting mo
 test('RPG HTML loads diagnostics before the bootstrap with new cache version',()=>{
  const html=fs.readFileSync(path.join(root,'rpg.html'),'utf8');
  assert.ok(html.indexOf('rpg_error_diagnostics.js')<html.indexOf('rpg_character_bootstrap.js'));
- assert.match(html,/rpg_character_bootstrap\\.js\\?v=20261026-in-scene-cg/);
+ assert.match(html,/rpg_character_bootstrap\.js\?v=20261026-in-scene-cg/);
 });
