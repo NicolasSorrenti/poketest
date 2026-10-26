@@ -253,3 +253,52 @@ test('Apex still recognizes a removable two-Energy Bench behind protected Active
  assert.ok(AI.score(playSuperEnergyRemoval,removableTwo,cfg,{})>
   AI.score(playSuperEnergyRemoval,removableOne,cfg,{}));
 });
+
+function threatenedActiveEnergyBoard(){
+ const o=board();
+ Object.assign(o,{phase:'game',round:5,turnSerial:11});
+ // Machoke cannot attack after a single Fighting attachment, and the
+ // opposing Hitmonchan has an affordable, certain Jab knockout.
+ const machoke=require('../headless_duel').CATALOG.get('base1-34');
+ o.self.active={id:'base1-34',energies:[],damage:Number(machoke.hp)-10,status:null};
+ o.self.bench=[{id:HITMONCHAN,energies:[FIGHT],damage:0,status:null}];
+ o.self.hand=[FIGHT];
+ o.opponent.active={id:HITMONCHAN,energies:[FIGHT],damage:0,status:null};
+ return o;
+}
+test('Apex invests on Bench instead of an Active doomed before its next attack',()=>{
+ const o=threatenedActiveEnergyBoard();
+ assert.ok(AI.score(attach,o,cfg,{})>AI.score(attachActive,o,cfg,{}),
+  'a useful Bench attachment must beat Energy stranded on the doomed Active');
+});
+test('Apex only penalizes the Active investment when opponent has a ready knockout',()=>{
+ const threatened=threatenedActiveEnergyBoard();
+ const safe=structuredClone(threatened);
+ safe.opponent.active.energies=[];
+ assert.equal(AI.score(attachActive,safe,cfg,{})-
+  AI.score(attachActive,threatened,cfg,{}),140);
+});
+test('Apex does not penalize an Active attachment that enables an attack now',()=>{
+ const threatened=threatenedActiveEnergyBoard();
+ threatened.self.active={id:HITMONCHAN,energies:[],damage:60,status:null};
+ const safe=structuredClone(threatened);
+ safe.opponent.active.energies=[];
+ assert.equal(AI.score(attachActive,threatened,cfg,{}),
+  AI.score(attachActive,safe,cfg,{}));
+});
+test('Apex does not apply doomed-Active penalty without a Bench investment',()=>{
+ const threatened=threatenedActiveEnergyBoard();
+ threatened.self.bench=[];
+ const safe=structuredClone(threatened);
+ safe.opponent.active.energies=[];
+ assert.equal(AI.score(attachActive,threatened,cfg,{}),
+  AI.score(attachActive,safe,cfg,{}));
+});
+test('Lower CPU levels retain their existing Active Energy scoring',()=>{
+ const threatened=threatenedActiveEnergyBoard();
+ const safe=structuredClone(threatened);
+ safe.opponent.active.energies=[];
+ const lower=AI.configuration({side:1,level:6});
+ assert.equal(AI.score(attachActive,threatened,lower,{}),
+  AI.score(attachActive,safe,lower,{}));
+});
