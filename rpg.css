@@ -479,3 +479,20 @@
 #scene.has-story-cg .rpg-action-dock{display:none!important}
 #scene.has-story-cg .dialogue{z-index:4}
 #scene.has-story-cg .player-choice-prompt{z-index:6}
+
+
+/* Approved Persona C bust crop. Cropping occurs exclusively inside each
+   stage member, preserving original high-resolution portrait files. */
+.rpg-cast-member .rpg-stage-persona-frame{
+ position:relative;display:block;flex:none;overflow:hidden;
+ height:calc(100% - 27px);width:auto;max-width:100%;
+ aspect-ratio:320 / 405;
+}
+.rpg-cast-member .rpg-stage-persona-frame img{
+ position:absolute;display:block;max-width:none;max-height:none;
+ object-fit:fill;transform:none;object-position:initial;
+}
+/* Small-screen stage slots remain centered and don't push the nameplates away. */
+@media(max-width:600px){
+ .rpg-cast-member .rpg-stage-persona-frame{height:calc(100% - 23px)}
+}
