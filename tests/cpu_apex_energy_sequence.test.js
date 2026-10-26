@@ -325,6 +325,14 @@ test('Apex does not excuse a doomed Active attachment for an Asleep retreat',()=
   AI.score(attachActive,threatened,cfg,{}),
   'an Asleep Active cannot retreat even after DCE pays the cost');
 });
+test('Apex does not excuse a doomed Active attachment for a Paralyzed retreat',()=>{
+ const threatened=blockedRetreatEnergyBoard({status:'Paralyzed'});
+ const safe=structuredClone(threatened);
+ safe.opponent.active.energies=[];
+ assert.ok(AI.score(attachActive,safe,cfg,{})>
+  AI.score(attachActive,threatened,cfg,{}),
+  'a Paralyzed Active cannot retreat even with enough Energy');
+});
 test('Apex does not excuse a doomed Active attachment after retreat was used',()=>{
  const threatened=blockedRetreatEnergyBoard({retreated:true});
  const safe=structuredClone(threatened);
