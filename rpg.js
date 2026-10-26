@@ -6,7 +6,7 @@ const TUTORIAL=window.NeoRpgTutorials||null;
 const INVITES=window.NeoRpgEventInvites||null,SCENE_CAST=window.NeoRpgSceneCast,MANDATORY=window.NeoRpgMandatoryEvents||null,REACT=window.NeoRpgReactivity,COMMUNITY=window.NeoRpgCommunity,CONSEQ=window.NeoRpgConsequences,NPC_DECKS=window.NeoRpgNpcDeckProgression,TIME=window.NeoRpgTimeCoordinator,REL=window.NeoRpgRelationships,MEM=window.NeoRpgDialogueMemory||null;
 const MANDATORY_EVENTS=[...(window.NeoRpgSeasonEvents?.events||[]),...(window.NeoRpgCharacterPacks?.mandatoryEvents||[])];
 const periods=['Morning','Afternoon','Evening'];
-const OUTFITS=window.NeoRpgOutfits;
+const OUTFITS=window.NeoRpgOutfits,CG_SCENE=window.NeoRpgCGScene;
 const places={
  home:['Your Apartment','Your base during the championship season.'],
  shop:['The Lucky Draw','Booster packs, friendly duels and the local card scene.'],
@@ -86,7 +86,6 @@ function finishStory(){
   if(chapterReward)log('Bond chapter '+chapterReward.chapter+' reward from '+cast[id].name+': '+chapterReward.label+'.');
  }catch(err){window.NeoRpgErrorReport?.capture(err,{source:'optional-story-effects',action:'storyFinish'});console.error('RPG optional story effects failed',err);}
  advance();state.selected=id;persist();closeSceneDialogue();
- try{showCGMoment(storyMemories[0]);}catch(err){console.error('RPG scene artwork failed',err);}
  if(chapterReward)$('notice').textContent='★ Chapter reward: '+chapterReward.label;
 }
 
@@ -217,7 +216,12 @@ window.NeoRpgErrorReport?.setContextProvider(()=>{
   eventId:active?.[1]?.id||null,phase:active?.[1]?.phase||null};
 });
 function recordIntention(kind){const result=INTENTIONS.record(state,kind);if(result)log('Daily priority fulfilled: '+result.title+' ('+result.rewardLabel+').');}
-function recordCG(kind,npc,context=null){const entries=CG.record(state,kind,npc,context);if(entries.length)log(entries.length+' new memory illustration'+(entries.length===1?'':'s')+' unlocked for the CG Gallery.');return entries;}
+function recordCG(kind,npc,context=null){
+ const entries=CG.record(state,kind,npc,context);
+ for(const entry of entries)if(cgScenePresenter?.hasShown(entry.id))CG.markViewed(state,entry.id);
+ if(entries.length)log(entries.length+' new memory illustration'+(entries.length===1?'':'s')+' unlocked for the CG Gallery.');
+ return entries;
+}
 let scene=state.scene&&typeof state.scene.speaker==='string'&&typeof state.scene.line==='string'&&Array.isArray(state.scene.choices)?state.scene:{speaker:'Narrator',line:'Ninety days. One championship. You came to Neo Harbor to win. Everyone else has their own plans.',choices:[]};
 // A single handoff owns calendar wipes, image loading and forced-story eligibility.
 // The state is saved at clock advancement; only presentation waits for acknowledgement.
@@ -230,7 +234,8 @@ const timeSequence=window.NeoRpgTimeTransitions?.createSequence?.({
  // Core narrative progression remains available without visual transitions.
  queue:()=>false,hold:()=>()=>{},flush:()=>false,blocked:false,running:false
 };
-let cgMomentRelease=null;
+let cgSceneRelease=null;
+const cgScenePresenter=CG_SCENE?.create($('scene'),$('rpgSceneCG'),document)||null;
 
 function queueMandatory(){
  if(!MANDATORY)return;
@@ -394,6 +399,7 @@ function closeSceneDialogue(){
  if(state.activeSliceOfLife||state.activeSituation||state.activeStory||state.activeEncounter||state.activeArc||state.activeSideQuest||state.pendingDuel||state.mandatoryEventState?.active)return;
  // Keep the current character selected after casual dialogue so Duel and Deck actions remain accessible.
  if(!state.selected||!cast[state.selected]||!currentPeople().includes(state.selected))state.selected=null;
+ state.sceneCgId=null;
  scene={speaker:'Narrator',line:'',choices:[]};
  state.scene=scene;
  persist();render();
@@ -606,21 +612,14 @@ function beginSliceOfLife(trigger,npc=null,onlyRandomForced=false){
  if(!moment)return false;
  state.selected=moment.npc;
  const memory=moment.choices?CG.byId(moment.cgSequence?.[0]||moment.id):recordCG('slice',moment.npc,{eventId:moment.id})[0];
- persist();render();showCGMoment(memory,!!moment.choices);
+ persist();render();
  return true;
 }
 function nextSliceOfLife(){
  const before=state.activeSliceOfLife;
  const result=SLICE.next(state);
  if(!result)return;
- if(!result.done&&before&&result.step===4){
-  const moment=SLICE.byId(result.id),second=moment?.cgSequence?.[1]&&CG.byId(moment.cgSequence[1]);
-  if(second){
-   state.sliceOfLifeCgShown=state.sliceOfLifeCgShown||{};
-   const shown=state.sliceOfLifeCgShown[result.id]||[];
-   if(!shown.includes(4)){shown.push(4);state.sliceOfLifeCgShown[result.id]=shown;persist();render();showCGMoment(second,true);}
-  }
- }
+ // The CG selector uses the current step, switching the fitting artwork at step 4.
  if(result.done){const moment=SLICE.byId(result.id);
   if(moment.choices){const owners=[moment.npc,...(moment.participants||[])];for(const owner of new Set(owners))recordCG('slice',owner,{eventId:moment.id});}
   log('A small moment with '+(cast[moment?.npc]?.name||'a friend')+'.');
@@ -657,7 +656,6 @@ function finishSituation(){
   recordIntention('hangout');
   const memories=recordCG('situation',event.npc,{eventId:event.id});
   advance();
-  showCGMoment(memories[0]);
   closeSceneDialogue();
  }catch(err){$('notice').textContent=err.message;}
 }
@@ -1572,45 +1570,30 @@ function loadCGArt(image,entry,thumbnail,onSuccess,onMissing){
  };
  attempt();
 }
-function showCGMoment(entry,encounterPreview=false){
- const activeMoment=SLICE.byId(state.activeSliceOfLife?.id);const preview=encounterPreview&&activeMoment?.choices&&((activeMoment.cgSequence||[activeMoment.id]).includes(entry?.id));
- if(!entry||(!CG.unlocked(state,entry.id)&&!preview))return false;
- // Hold the next calendar wipe and any due mandatory event while artwork loads
- // and until its modal is closed. Missing images must release this hold too.
- const releaseHold=timeSequence.hold();
- const previousRelease=cgMomentRelease;
- let released=false;
- const release=()=>{
-  if(released)return;
-  released=true;
-  if(cgMomentRelease===release)cgMomentRelease=null;
-  releaseHold();
- };
- cgMomentRelease=release;
- previousRelease?.();
- const photo=document.createElement('img');
- photo.alt=entry.title;
- loadCGArt(photo,entry,false,kind=>{
-  const reveal=()=>{
-  if(cgMomentRelease!==release)return;
-  if(preview&&state.activeSliceOfLife?.id!==entry.id){release();return;}
-  if(entry.category==='pre_duel'&&!state.pendingDuel){release();return;}
-  const modal=$('cgMoment'),root=$('cgMomentArt');
-  const frame=document.createElement('div');
-  frame.className='cg-art-frame'+(kind==='event'?'':' is-fallback');
-  frame.append(photo);root.replaceChildren(frame);
-  window.NeoRpgDiscreetAvatars?.set?.(root,entry.character,'surprised',cast[entry.character]?.name||entry.character);
-  $('cgMomentTitle').textContent=entry.title;
-  $('cgMomentCaption').textContent=cast[entry.character]?.name||entry.character;
-  if(CG.unlocked(state,entry.id))CG.markViewed(state,entry.id);persist();
-  if(!modal.open)modal.showModal();
-  };
-  // Entering a new area can start a travel wipe and a slice-of-life CG
-  // in the same render. Reveal the CG only after the arrival animation.
-  if(window.NeoRpgTimeTransitions?.active)window.NeoRpgTimeTransitions.whenIdle(reveal);
-  else reveal();
- },release);
+function showCGMoment(entry){
+ if(!entry||!CG.unlocked(state,entry.id))return false;
+ // Short conversations and rewards use the same presenter through their last line.
+ state.sceneCgId=entry.id;
+ persist();syncSceneCG();
  return true;
+}
+function syncSceneCG(){
+ if(!cgScenePresenter)return;
+ const selected=CG_SCENE.select(state,CG.catalog,SLICE,scene);
+ const entry=selected?.entry;
+ if(!entry||(!selected.preview&&!CG.unlocked(state,entry.id))){
+  cgScenePresenter.clear();
+  if(cgSceneRelease){const release=cgSceneRelease;cgSceneRelease=null;release();}
+  return;
+ }
+ cgScenePresenter.show(entry,CG.artCandidates(entry,false),loaded=>{
+  // Calendar/mandatory transitions must wait until the event dialogue concludes.
+  if(!cgSceneRelease)cgSceneRelease=timeSequence.hold();
+  if(CG.unlocked(state,loaded.id)){CG.markViewed(state,loaded.id);persist();}
+ },()=>{
+  // Missing art must not stall the campaign or hide normal portraits.
+  if(cgSceneRelease){const release=cgSceneRelease;cgSceneRelease=null;release();}
+ });
 }
 function showGalleryDetail(entry){
  const root=$('galleryPreview');root.replaceChildren();
@@ -2492,6 +2475,7 @@ function render(){
   location:state.location,speaker:shown?.speaker||'',line:shown?.line||'',
   dialogue:$('dialogue'),speakerElement:$('speaker'),lineElement:$('line')
  });
+ syncSceneCG();
  $('deckPicker').disabled=locked||ended||!!state.deckJourney;
  if($('deckPicker')?.options.length)$('deckPicker').value=state.playerDeck;
 }
@@ -2513,8 +2497,6 @@ document.addEventListener('pointerdown',event=>{
 });
 $('galleryClose').onclick=()=>$('galleryDialog').close();
 $('galleryCharacter').onchange=renderGallery;$('galleryCategory').onchange=renderGallery;$('galleryUnseen').onchange=renderGallery;
-$('cgMomentClose').onclick=()=>$('cgMoment').close();
-$('cgMoment').addEventListener('close',()=>cgMomentRelease?.());
 $('preDuelBack').onclick=cancelPreparedDuel;
 $('preDuelNext').onclick=advancePreparedDuel;
 $('preDuelStart').onclick=launchPreparedDuel;
