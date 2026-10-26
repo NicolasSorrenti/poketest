@@ -47,3 +47,35 @@ test('Center evaluation accounts for discarded Energy on every healed Pokémon',
  const after=AI.score(a,o,cfg,{});
  assert.ok(before>after+150,'avoid throwing away three additional Energy cards');
 });
+
+test('Apex Center guard excludes intentionally forbidden attachments from audit candidates',()=>{
+ const o=obs();
+ o.self.active.damage=70;
+ o.self.bench[0].damage=0;
+ const active={type:'attach_energy',payload:{handIndex:0,slot:-1}};
+ const bench={type:'attach_energy',payload:{handIndex:0,slot:0}};
+ const center={type:'play_trainer',payload:{handIndex:1}};
+ const actions=[active,bench,center];
+ const allowed=AI.centerSafeActions(o,cfg,{},actions);
+ assert.deepEqual(allowed,[bench,center]);
+ // Audit uses this same filtered set, so skipping the doomed attachment
+ // does not inflate missed-useful-Energy metrics.
+ assert.equal(allowed.some(a=>a.type==='attach_energy'&&a.payload.slot===-1),false);
+});
+test('Center guard does not hide attachment opportunities when Center is unplayable',()=>{
+ const o=obs();
+ o.self.active.damage=70;
+ o.self.bench[0].damage=40;
+ const active={type:'attach_energy',payload:{handIndex:0,slot:-1}};
+ const actions=[active];
+ assert.deepEqual(AI.centerSafeActions(o,cfg,{trainers:cfg.skill.trainers},actions),actions);
+ o.self.hand=[W];
+ assert.deepEqual(AI.centerSafeActions(o,cfg,{},actions),actions);
+});
+test('Center guard is Apex-only and leaves Level 7 audit opportunities unchanged',()=>{
+ const o=obs();
+ o.self.active.damage=70;
+ o.self.bench[0].damage=40;
+ const actions=[{type:'attach_energy',payload:{handIndex:0,slot:-1}}];
+ assert.deepEqual(AI.centerSafeActions(o,AI.configuration({side:1,level:7}),{},actions),actions);
+});
