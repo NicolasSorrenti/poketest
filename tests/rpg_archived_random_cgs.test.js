@@ -18,9 +18,14 @@ test('all seven archived events preserve exact PNGs, omit Jinx, and validate',()
 test('forced CG slots are reachable, random rolls persist, and scenes finish once',()=>{
  for(const e of events){
   const pack=PACKS.packs.find(p=>p.id===e.npc);
-  assert.ok(pack,'unknown NPC '+e.npc);
+  // Guest packs use their authored weekly schedule; original main-cast NPCs
+  // (such as Marina) use the existing town schedule instead.
   let day=null;
-  for(let d=e.start;d<=e.end;d++)if(pack.schedule[(d-1)%7]?.[e.slot]===e.place){day=d;break;}
+  for(let d=e.start;d<=e.end;d++){
+   const atPlace=pack?pack.schedule[(d-1)%7]?.[e.slot]===e.place:
+    SCHEDULES.locationFor(e.npc,d,e.slot)===e.place;
+   if(atPlace){day=d;break;}
+  }
   assert.ok(day,'unreachable authored slot '+e.id);
   let s=null;
   for(let seed=0;seed<1000;seed++){
@@ -30,7 +35,7 @@ test('forced CG slots are reachable, random rolls persist, and scenes finish onc
    if(SLICE.available(proposed,[e.npc],'entry',e.npc,{onlyRandomForced:true}).some(m=>m.id===e.id)){s=proposed;break;}
   }
   assert.ok(s,'roll unavailable '+e.id);
-  assert.ok(SLICE.scheduleOverrides(s).some(o=>o.npc===e.npc&&o.place===e.place),'missing schedule pin '+e.id);
+  if(pack)assert.ok(SLICE.scheduleOverrides(s).some(o=>o.npc===e.npc&&o.place===e.place),'missing schedule pin '+e.id);
   assert.equal(SCHEDULES.locationFor(e.npc,day,e.slot,SLICE.scheduleOverrides(s)),e.place);
   assert.deepEqual(SLICE.available({...s,activeStory:{id:'route'}},[e.npc],'entry',e.npc,{onlyRandomForced:true}),[]);
   assert.deepEqual(SLICE.available(s,[e.npc],'talk',e.npc,{onlyRandomForced:true}),[]);
