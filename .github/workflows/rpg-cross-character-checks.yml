@@ -1,0 +1,40 @@
+name: RPG Cross-character Event Checks
+on:
+  pull_request:
+    paths:
+      - 'rpg_cross_character_events.js'
+      - 'rpg_slice_of_life.js'
+      - 'rpg_cg_gallery.js'
+      - 'rpg_schedules.js'
+      - 'rpg_character_bootstrap.js'
+      - 'server.js'
+      - 'tests/rpg_cross_character_events.test.js'
+      - '.github/workflows/rpg-cross-character-checks.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'rpg_cross_character_events.js'
+      - 'rpg_slice_of_life.js'
+      - 'rpg_cg_gallery.js'
+      - 'tests/rpg_cross_character_events.test.js'
+jobs:
+  crossovers:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Check JavaScript syntax and crossover integration
+        run: |
+          node --check rpg_cross_character_events.js
+          node --check rpg_schedules.js
+          node --check rpg_slice_of_life.js
+          node --check rpg_cg_gallery.js
+          node --check rpg.js
+      - name: Run crossover gameplay, catalog and schedule regressions
+        run: |
+          node --test tests/rpg_cross_character_events.test.js
+          node --test tests/rpg_bootstrap_dependency.test.js tests/rpg_public_scripts.test.js tests/rpg_cg_scene.test.js
+          node --test tests/rpg_cg_gallery.test.js tests/rpg_archived_random_cgs.test.js

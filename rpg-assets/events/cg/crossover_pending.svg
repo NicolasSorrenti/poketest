@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" role="img" aria-labelledby="title description">
+<title id="title">Cross-character event CG — artwork pending</title>
+<desc id="description">Non-final visual placeholder until the character scene illustration is commissioned and approved.</desc>
+<defs>
+<linearGradient id="night" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#151930"/><stop offset="0.55" stop-color="#293054"/><stop offset="1" stop-color="#101322"/></linearGradient>
+<pattern id="grid" width="64" height="64" patternUnits="userSpaceOnUse"><path d="M64 0H0V64" fill="none" stroke="#ffffff" stroke-opacity=".055"/></pattern>
+</defs>
+<rect width="1600" height="900" fill="url(#night)"/><rect width="1600" height="900" fill="url(#grid)"/>
+<rect x="64" y="60" width="1472" height="780" rx="30" fill="none" stroke="#a7b2ec" stroke-width="3" stroke-dasharray="18 16" opacity=".7"/>
+<circle cx="620" cy="362" r="105" fill="#7c88c7" opacity=".45"/><path d="M412 580c0-128 83-188 208-188s208 60 208 188v26H412z" fill="#7c88c7" opacity=".45"/>
+<circle cx="984" cy="362" r="105" fill="#d48eae" opacity=".42"/><path d="M776 580c0-128 83-188 208-188s208 60 208 188v26H776z" fill="#d48eae" opacity=".42"/>
+<text x="800" y="165" font-size="34" font-family="Arial,sans-serif" text-anchor="middle" letter-spacing="12" fill="#bbc6fd">NEO CAMPUS • CROSSOVER EVENT</text>
+<rect x="480" y="630" width="640" height="104" rx="20" fill="#151827" stroke="#efc884" stroke-width="4"/>
+<text x="800" y="696" text-anchor="middle" font-family="Arial,sans-serif" font-size="48" font-weight="bold" letter-spacing="10" fill="#ffe2a8">CG PENDING</text>
+<text x="800" y="782" text-anchor="middle" font-family="Arial,sans-serif" font-size="24" fill="#c6cced">FINAL ARTWORK HAS NOT BEEN CREATED</text>
+</svg>

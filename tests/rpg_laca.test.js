@@ -87,7 +87,7 @@ test('eight optional friendship situations have reachable schedule slots and one
  assert.equal(moments().length,8);
  // The pack contributes 13 entries; two authored slice-of-life entries are
  // already part of the broader catalog and remain intentionally separate.
- assert.equal(CG.catalog.filter(x=>x.character==='laca').length,15);
+ assert.equal(CG.catalog.filter(x=>x.character==='laca'&&!x.id.startsWith('crossover_')).length,15);
  for(const e of moments()){
   const d=Array.from({length:e.end-e.start+1},(_,j)=>e.start+j)
     .find(day=>SCHEDULES.locationFor('laca',day,e.slot)===e.place&&SITUATIONS.chance(e,day,e.slot));

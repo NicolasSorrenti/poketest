@@ -1070,7 +1070,7 @@
  for(const moment of SLICE?.scenes||[])catalog.push({
   character:moment.npc,id:moment.id,category:'social',trigger:'slice',
   place:moment.place,minAffection:moment.minAffection,startDay:moment.start,slot:moment.slot,
-  title:moment.title,hint:'Discover this everyday moment at '+moment.place+' while '+moment.npc+' is present.',
+  title:moment.title,hint:moment.artPending?'CG TO CREATE · '+moment.participants.join(' + ')+' · Discover this shared moment at '+moment.place+'.':'Discover this everyday moment at '+moment.place+' while '+moment.npc+' is present.',artPending:!!moment.artPending,
   scene:moment.art.scene,composition:moment.art.composition,outfit:moment.art.outfit,
   expression:moment.art.expression,environment:moment.art.environment,mood:moment.art.mood,fanservice:0,
   path:moment.image||(moment.npc==='barb'?'/rpg-assets/events/cg/season01/'+moment.id+'.webp':'/rpg-assets/events/cg/slice-life/'+moment.id+'.webp'),
@@ -1104,7 +1104,9 @@
    seen.add(path);items.push({path,kind});
   };
   if(thumbnail)add(entry.thumb,'event');
-  add(entry.path,'event'); // A missing thumbnail must not hide an installed full-size CG.
+  add(entry.path,'event');
+  // The actual CG always wins; a neutral labeled placeholder displays only while it is missing.
+  if(entry.artPending)add('/rpg-assets/events/cg/crossover_pending.svg','event'); // A missing thumbnail must not hide an installed full-size CG.
   if(matchCutins.has(npc))add('/rpg-assets/characters/'+npc+'/cutins/match-cutin.webp','cutin');
   else add(alternativeCutins[npc],'cutin');
   if(attackFallbacks.has(npc))add('/rpg-assets/reactions/'+npc+'/attack.png','cutin');
@@ -1112,6 +1114,13 @@
   return items;
  }
  const categories=Object.freeze(['profile','pre_duel','social','special']);
+ // In the browser, the schedule registry reflects the server-authorized character packs.
+ // Never publish private/excluded character memories in the player's album.
+ const SCHEDULES=typeof module==='object'&&module.exports?require('./rpg_schedules'):window.NeoRpgSchedules;
+ if(SCHEDULES?.start){
+  const authorized=new Set(Object.keys(SCHEDULES.start));
+  for(let i=catalog.length-1;i>=0;i--)if(!authorized.has(catalog[i].character))catalog.splice(i,1);
+ }
  const map=new Map(catalog.map(x=>[x.id,x]));
  const validTriggers=new Set(['meet','before_duel','hangout','situation','slice','appointment','story_milestone','after_duel']);
  function hydrate(state){
@@ -1171,7 +1180,11 @@
    if(e.category==='special'&&e.situationId!==e.id)errors.push('Invalid situation CG '+e.id);
    if(!/^[a-z_0-9]+$/.test(e.id)||!e.scene||!e.composition||!e.outfit||!e.expression||!e.environment||!e.dialogueSafe)errors.push('Incomplete CG brief '+e.id);
    if(e.startDay<1||e.startDay>90||e.minAffection<0||e.fanservice<0||e.fanservice>3)errors.push('Invalid gate '+e.id);
-   if(!e.path.endsWith(e.id+'.webp')&&!(e.randomForced&&e.path.endsWith(e.id+'.png')))errors.push('Invalid asset path '+e.id);
+   // Approved legacy art can intentionally use an exact versioned filename or an
+   // opening CG from a multi-image story. Do not falsely reject those assets.
+   const approvedAlias=(e.id==='barb_random_cg_04'&&e.path==='/rpg-assets/characters/barb/events/barb_random_cg_04_accidental_model_v2.webp')||
+    (e.id==='akari_barb_swimsuit_fitting'&&e.path===FIT.cgs[0].path);
+   if(!e.path.endsWith(e.id+'.webp')&&!(e.randomForced&&e.path.endsWith(e.id+'.png'))&&!approvedAlias)errors.push('Invalid asset path '+e.id);
   }
   return errors;
  }

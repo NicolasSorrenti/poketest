@@ -30,6 +30,7 @@
  "/rpg_intentions.js",
  "/rpg_encounter_director.js",
  "/rpg_akari_barb_event.js?v=20261026",
+ "/rpg_cross_character_events.js?v=20261026-crossovers",
  "/rpg_slice_of_life.js",
  "/rpg_cg_gallery.js",
  "/rpg_cg_scene.js?v=20261026-in-scene",
@@ -117,7 +118,7 @@
   await Promise.all(scripts.slice(0,-1).map(loadScript));
   const dependencies={
     NeoRpgRelationships:'apply',NeoRpgEncounterDirector:'select',
-    NeoRpgAkariBarbFitting:'event',NeoRpgSliceOfLife:'byId',
+    NeoRpgAkariBarbFitting:'event',NeoRpgCrossCharacterEvents:'events',NeoRpgSliceOfLife:'byId',
     NeoHarborStory:'resolve',NeoRpgEventInvites:'dialogue',
     NeoRpgCGGallery:'record',NeoRpgTimeCoordinator:'conflicts'
   };
