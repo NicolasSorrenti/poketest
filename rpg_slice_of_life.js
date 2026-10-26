@@ -794,6 +794,347 @@
     }
   }
 ];
+ // One-time automatic discoveries using source PNGs already in the repository.
+ // A saved campaign seed determines which eligible visits reveal these CGs.
+ const originalRandomCGs=[
+  {
+    "id": "luna_moonlit_terrace",
+    "npc": "luna",
+    "place": "cafe",
+    "slot": 2,
+    "start": 25,
+    "end": 90,
+    "minAffection": 0,
+    "trigger": "entry",
+    "title": "The Moonlit Terrace",
+    "intro": "Beyond the café doors, the moonlight catches the terrace. Luna sits there with her deck box beside her.",
+    "line": "I came here to practice an opening hand, but I think I needed a moment where nobody was watching.",
+    "close": "You stay until the lights dim, talking about everything except the next match.",
+    "lines": [
+      {
+        "speaker": "Narrator",
+        "text": "Beyond the café doors, the moonlight catches the terrace. Luna sits there with her deck box beside her."
+      },
+      {
+        "speaker": "luna",
+        "text": "I came here to practice an opening hand, but I think I needed a moment where nobody was watching."
+      },
+      {
+        "speaker": "Protagonist",
+        "text": "You don't need to turn every quiet minute into practice."
+      },
+      {
+        "speaker": "luna",
+        "text": "I know. It's just nice to hear someone say it."
+      },
+      {
+        "speaker": "Narrator",
+        "text": "You stay until the lights dim, talking about everything except the next match."
+      }
+    ],
+    "image": "/rpg-assets/events/cg/slice-life/luna_moonlit_terrace.png",
+    "randomForced": true,
+    "chancePercent": 52,
+    "art": {
+      "scene": "Beyond the café doors, the moonlight catches the terrace. Luna sits there with her deck box beside her.",
+      "composition": "Approved original cinematic CG, displayed before dialogue.",
+      "outfit": "Use archived original art without regeneration.",
+      "expression": "Character-specific story expression.",
+      "environment": "cafe",
+      "mood": "everyday",
+      "fanservice": 0
+    }
+  },
+  {
+    "id": "luna_balcony_moon",
+    "npc": "luna",
+    "place": "cafe",
+    "slot": 2,
+    "start": 44,
+    "end": 90,
+    "minAffection": 1,
+    "trigger": "entry",
+    "title": "A Balcony and a Promise",
+    "intro": "A soft breeze draws you to the café balcony. Luna is watching moonlight ripple on the water.",
+    "line": "I used to avoid places this high. I thought I'd trip in front of everybody.",
+    "close": "She laughs and stays beside you until the last ferry light slips past.",
+    "lines": [
+      {
+        "speaker": "Narrator",
+        "text": "A soft breeze draws you to the café balcony. Luna is watching moonlight ripple on the water."
+      },
+      {
+        "speaker": "luna",
+        "text": "I used to avoid places this high. I thought I'd trip in front of everybody."
+      },
+      {
+        "speaker": "Protagonist",
+        "text": "But you came up here anyway."
+      },
+      {
+        "speaker": "luna",
+        "text": "And I remembered my deck. That's two small victories."
+      },
+      {
+        "speaker": "Narrator",
+        "text": "She laughs and stays beside you until the last ferry light slips past."
+      }
+    ],
+    "image": "/rpg-assets/events/cg/slice-life/luna_balcony_moon.png",
+    "randomForced": true,
+    "chancePercent": 44,
+    "art": {
+      "scene": "A soft breeze draws you to the café balcony. Luna is watching moonlight ripple on the water.",
+      "composition": "Approved original cinematic CG, displayed before dialogue.",
+      "outfit": "Use archived original art without regeneration.",
+      "expression": "Character-specific story expression.",
+      "environment": "cafe",
+      "mood": "everyday",
+      "fanservice": 0
+    }
+  },
+  {
+    "id": "luna_starlit_cleanup",
+    "npc": "luna",
+    "place": "cafe",
+    "slot": 2,
+    "start": 29,
+    "end": 90,
+    "minAffection": 0,
+    "trigger": "entry",
+    "title": "One Last Spill",
+    "intro": "The café is closing when a drink slips across the counter. Luna grabs a cloth immediately.",
+    "line": "No, this one's mine to fix. Could you save those card sleeves from the puddle?",
+    "close": "You finish wiping down the counter beneath the lights. Luna smiles at the dry cards.",
+    "lines": [
+      {
+        "speaker": "Narrator",
+        "text": "The café is closing when a drink slips across the counter. Luna grabs a cloth immediately."
+      },
+      {
+        "speaker": "luna",
+        "text": "No, this one's mine to fix. Could you save those card sleeves from the puddle?"
+      },
+      {
+        "speaker": "Protagonist",
+        "text": "They're safe. You've got the rest."
+      },
+      {
+        "speaker": "luna",
+        "text": "Look at that. I handled it without panicking."
+      },
+      {
+        "speaker": "Narrator",
+        "text": "You finish wiping down the counter beneath the lights. Luna smiles at the dry cards."
+      }
+    ],
+    "image": "/rpg-assets/events/cg/slice-life/luna_starlit_cleanup.png",
+    "randomForced": true,
+    "chancePercent": 48,
+    "art": {
+      "scene": "The café is closing when a drink slips across the counter. Luna grabs a cloth immediately.",
+      "composition": "Approved original cinematic CG, displayed before dialogue.",
+      "outfit": "Use archived original art without regeneration.",
+      "expression": "Character-specific story expression.",
+      "environment": "cafe",
+      "mood": "everyday",
+      "fanservice": 0
+    }
+  },
+  {
+    "id": "sol_sunset_cafe",
+    "npc": "sol",
+    "place": "cafe",
+    "slot": 2,
+    "start": 32,
+    "end": 90,
+    "minAffection": 1,
+    "trigger": "entry",
+    "title": "A Table for No Occasion",
+    "intro": "Sol has turned a corner café table into a tiny tropical celebration with no guest list or schedule.",
+    "line": "Nothing is being launched. I just thought the sunset deserved a good seat.",
+    "close": "She pulls out a spare chair and lets the evening unfold without an agenda.",
+    "lines": [
+      {
+        "speaker": "Narrator",
+        "text": "Sol has turned a corner café table into a tiny tropical celebration with no guest list or schedule."
+      },
+      {
+        "speaker": "sol",
+        "text": "Nothing is being launched. I just thought the sunset deserved a good seat."
+      },
+      {
+        "speaker": "Protagonist",
+        "text": "So what are we celebrating?"
+      },
+      {
+        "speaker": "sol",
+        "text": "Not needing a reason. It's new for me."
+      },
+      {
+        "speaker": "Narrator",
+        "text": "She pulls out a spare chair and lets the evening unfold without an agenda."
+      }
+    ],
+    "image": "/rpg-assets/events/cg/slice-life/sol_sunset_cafe.png",
+    "randomForced": true,
+    "chancePercent": 52,
+    "art": {
+      "scene": "Sol has turned a corner café table into a tiny tropical celebration with no guest list or schedule.",
+      "composition": "Approved original cinematic CG, displayed before dialogue.",
+      "outfit": "Use archived original art without regeneration.",
+      "expression": "Character-specific story expression.",
+      "environment": "cafe",
+      "mood": "everyday",
+      "fanservice": 0
+    }
+  },
+  {
+    "id": "marina_coastal_duel",
+    "npc": "marina",
+    "place": "park",
+    "slot": 2,
+    "start": 27,
+    "end": 90,
+    "minAffection": 0,
+    "trigger": "entry",
+    "title": "A Match at the Waterline",
+    "intro": "Two playmats lie by the waterfront in the last sunlight. Marina steadies their corners against the breeze.",
+    "line": "No tournament points tonight. I want to see what my deck does when nobody keeps score.",
+    "close": "You play a few friendly turns before packing up as the lamps come on.",
+    "lines": [
+      {
+        "speaker": "Narrator",
+        "text": "Two playmats lie by the waterfront in the last sunlight. Marina steadies their corners against the breeze."
+      },
+      {
+        "speaker": "marina",
+        "text": "No tournament points tonight. I want to see what my deck does when nobody keeps score."
+      },
+      {
+        "speaker": "Protagonist",
+        "text": "You still brought your lucky sleeves."
+      },
+      {
+        "speaker": "marina",
+        "text": "There's relaxed, and then there's reckless."
+      },
+      {
+        "speaker": "Narrator",
+        "text": "You play a few friendly turns before packing up as the lamps come on."
+      }
+    ],
+    "image": "/rpg-assets/events/cg/slice-life/marina_coastal_duel.png",
+    "randomForced": true,
+    "chancePercent": 47,
+    "art": {
+      "scene": "Two playmats lie by the waterfront in the last sunlight. Marina steadies their corners against the breeze.",
+      "composition": "Approved original cinematic CG, displayed before dialogue.",
+      "outfit": "Use archived original art without regeneration.",
+      "expression": "Character-specific story expression.",
+      "environment": "park",
+      "mood": "everyday",
+      "fanservice": 0
+    }
+  },
+  {
+    "id": "marina_seaside_cards",
+    "npc": "marina",
+    "place": "park",
+    "slot": 2,
+    "start": 55,
+    "end": 90,
+    "minAffection": 2,
+    "trigger": "entry",
+    "title": "The Last Hand Before Dark",
+    "intro": "Near the far end of the promenade, Marina has found a quiet spot for a card game by the open water.",
+    "line": "I used to think every match needed a winner. Sometimes it's enough to remember why we play.",
+    "close": "The last cards land as the sunset fades. Neither of you hurries to count the score.",
+    "lines": [
+      {
+        "speaker": "Narrator",
+        "text": "Near the far end of the promenade, Marina has found a quiet spot for a card game by the open water."
+      },
+      {
+        "speaker": "marina",
+        "text": "I used to think every match needed a winner. Sometimes it's enough to remember why we play."
+      },
+      {
+        "speaker": "Protagonist",
+        "text": "Are you offering me a draw?"
+      },
+      {
+        "speaker": "marina",
+        "text": "I'm offering you one last hand before we head home."
+      },
+      {
+        "speaker": "Narrator",
+        "text": "The last cards land as the sunset fades. Neither of you hurries to count the score."
+      }
+    ],
+    "image": "/rpg-assets/events/cg/slice-life/marina_seaside_cards.png",
+    "randomForced": true,
+    "chancePercent": 46,
+    "art": {
+      "scene": "Near the far end of the promenade, Marina has found a quiet spot for a card game by the open water.",
+      "composition": "Approved original cinematic CG, displayed before dialogue.",
+      "outfit": "Use archived original art without regeneration.",
+      "expression": "Character-specific story expression.",
+      "environment": "park",
+      "mood": "everyday",
+      "fanservice": 0
+    }
+  },
+  {
+    "id": "yuna_neon_harbor_match",
+    "npc": "yuna",
+    "place": "arcade",
+    "slot": 2,
+    "start": 35,
+    "end": 90,
+    "minAffection": 1,
+    "trigger": "entry",
+    "title": "The Neon Challenge",
+    "intro": "Under Neo Harbor's neon lights, Yuna has claimed a table and stacked her deck into a tall tower.",
+    "line": "Special rules: no prizes, no audience, and no pretending you didn't see that terrible opening hand.",
+    "close": "You settle in for a friendly practice game while the arcade hums around you.",
+    "lines": [
+      {
+        "speaker": "Narrator",
+        "text": "Under Neo Harbor's neon lights, Yuna has claimed a table and stacked her deck into a tall tower."
+      },
+      {
+        "speaker": "yuna",
+        "text": "Special rules: no prizes, no audience, and no pretending you didn't see that terrible opening hand."
+      },
+      {
+        "speaker": "Protagonist",
+        "text": "Those sound like rules you'll break yourself."
+      },
+      {
+        "speaker": "yuna",
+        "text": "Only if it makes a better story."
+      },
+      {
+        "speaker": "Narrator",
+        "text": "You settle in for a friendly practice game while the arcade hums around you."
+      }
+    ],
+    "image": "/rpg-assets/events/cg/slice-life/yuna_neon_harbor_match.png",
+    "randomForced": true,
+    "chancePercent": 49,
+    "art": {
+      "scene": "Under Neo Harbor's neon lights, Yuna has claimed a table and stacked her deck into a tall tower.",
+      "composition": "Approved original cinematic CG, displayed before dialogue.",
+      "outfit": "Use archived original art without regeneration.",
+      "expression": "Character-specific story expression.",
+      "environment": "arcade",
+      "mood": "everyday",
+      "fanservice": 0
+    }
+  }
+];
+ scenes.push(...originalRandomCGs);
  // The browser registry contains only packs authorized by the server for this account.
  for(const pack of PACKS?.packs||[])for(const e of pack.events.filter(e=>e.encounterType==='slice')){
   const image=pack.art.eventImages.find(a=>a.sceneId===e.id);
@@ -835,26 +1176,34 @@
   for(const [id,value] of Object.entries(state.sliceOfLifeDone))
    if(!index.has(id)||!value||!Number.isInteger(value.day)||value.day<1||value.day>90)delete state.sliceOfLifeDone[id];
   if(!Number.isInteger(state.sliceOfLifeLastDay)||state.sliceOfLifeLastDay<0||state.sliceOfLifeLastDay>90)state.sliceOfLifeLastDay=0;
+  if(!Number.isInteger(state.randomForcedCGSeed)||state.randomForcedCGSeed<0)state.randomForcedCGSeed=Math.floor(Math.random()*0x7fffffff);
   const active=state.activeSliceOfLife;
   if(active){
-   const e=index.get(active.id),last=e?.lines?.length??2;
+   const e=index.get(active.id),last=e?.choices?(e.lines?.length??0):(e?.lines?.length?e.lines.length-1:2);
    if(!e||!Number.isInteger(active.step)||active.step<0||active.step>last||
     (e.choices&&active.step===last&&!e.choices[active.choice])||
     (e.choices&&state.sliceOfLifeDone[e.id]))state.activeSliceOfLife=null;
   }
   return state;
  }
- function available(state,people,trigger,npc=null){
+ function randomEligible(state,e){
+  if(!e.randomForced)return true;
+  const seed=Number.isInteger(state.randomForcedCGSeed)?state.randomForcedCGSeed:0;
+  let hash=2166136261;
+  for(const char of e.id+':'+seed+':'+state.day+':'+state.slot)hash=Math.imul(hash^char.charCodeAt(0),16777619)>>>0;
+  return hash%100<e.chancePercent;
+ }
+ function available(state,people,trigger,npc=null,options={}){
   if(!state||!Array.isArray(people)||state.activeSliceOfLife||state.activeStory||state.activeSideQuest||
    state.activeArc||state.activeEncounter||state.activeSituation||state.pendingDuel||state.mandatoryEventState?.active||
    state.day>90||state.sliceOfLifeLastDay===state.day)return [];
-  return scenes.filter(e=>(e.trigger===trigger||(e.encounterType==='slice'&&trigger==='talk'))&&(!npc||e.npc===npc)&&state.location===e.place&&state.slot===e.slot&&
+  return scenes.filter(e=>(e.trigger===trigger||(e.encounterType==='slice'&&trigger==='talk'))&&(!options.onlyRandomForced||e.randomForced)&&randomEligible(state,e)&&(!npc||e.npc===npc)&&state.location===e.place&&state.slot===e.slot&&
    state.day>=e.start&&state.day<=e.end&&(e.participants||[e.npc]).every(id=>people.includes(id)&&state['met_'+id])&&
    (!e.prerequisite||state.sliceOfLifeDone?.[e.prerequisite]||state.storyDone?.[e.prerequisite])&&
    !state.sliceOfLifeDone?.[e.id]&&(state.relationships?.[e.npc]?.affection||0)>=e.minAffection);
  }
- function start(state,people,trigger,npc=null){
-  hydrate(state);const e=DIRECTOR.select(state,available(state,people,trigger,npc));if(!e)return null;
+ function start(state,people,trigger,npc=null,options={}){
+  hydrate(state);const e=DIRECTOR.select(state,available(state,people,trigger,npc,options));if(!e)return null;
   DIRECTOR.remember(state,e);
   // Legacy three-beat moments unlock on discovery; authored choices commit on completion.
   if(!e.choices)state.sliceOfLifeDone[e.id]={day:state.day,slot:state.slot};
@@ -875,7 +1224,8 @@
    if(a.step===e.lines.length-1)return null; // The final line requires an explicit choice.
    a.step++;return {done:false,id:a.id,step:a.step};
   }
-  if(a.step===2){state.activeSliceOfLife=null;return {done:true,id:a.id};}
+  const last=e.lines?.length?e.lines.length-1:2;
+  if(a.step===last){state.activeSliceOfLife=null;return {done:true,id:a.id};}
   a.step++;return {done:false,id:a.id,step:a.step};
  }
  function choose(state,choiceIndex){
@@ -887,7 +1237,8 @@
   const errors=[],ids=new Set();for(const e of scenes){
    if(ids.has(e.id))errors.push('duplicate '+e.id);ids.add(e.id);
    if(!e.id||!e.npc||!e.place||!['entry','talk'].includes(e.trigger)||e.slot<0||e.slot>2||
-    e.start<1||e.end>90||e.start>e.end||!e.title||!e.intro||!e.line||!e.close)errors.push('invalid '+e.id);
+    e.start<1||e.end>90||e.start>e.end||!e.title||!e.intro||!e.line||!e.close||
+    (e.randomForced&&(!Number.isInteger(e.chancePercent)||e.chancePercent<1||e.chancePercent>100||!e.image||!e.lines?.length)))errors.push('invalid '+e.id);
   }return errors;
  }
  return Object.freeze({scenes,byId:id=>index.get(id)||null,hydrate,available,start,next,choose,linesFor,scheduleOverrides,validate});
