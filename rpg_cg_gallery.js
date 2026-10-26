@@ -1075,7 +1075,7 @@
   expression:moment.art.expression,environment:moment.art.environment,mood:moment.art.mood,fanservice:0,
   path:moment.npc==='barb'?'/rpg-assets/events/cg/season01/'+moment.id+'.webp':(moment.image||'/rpg-assets/events/cg/slice-life/'+moment.id+'.webp'),
   thumb:moment.npc==='barb'?'/rpg-assets/events/cg/season01/thumbs/'+moment.id+'.webp':(moment.image||'/rpg-assets/events/cg/slice-life/thumbs/'+moment.id+'.webp'),
-  dialogueSafe:'Bottom 20% clear for dialogue UI',sliceId:moment.id
+  dialogueSafe:'Bottom 20% clear for dialogue UI',sliceId:moment.id,randomForced:!!moment.randomForced
  });
  // Joint optional scenes can contribute multiple collectible memories while remaining one encounter.
  const FIT=typeof module==='object'&&module.exports?require('./rpg_akari_barb_event'):window.NeoRpgAkariBarbFitting;
@@ -1171,7 +1171,7 @@
    if(e.category==='special'&&e.situationId!==e.id)errors.push('Invalid situation CG '+e.id);
    if(!/^[a-z_0-9]+$/.test(e.id)||!e.scene||!e.composition||!e.outfit||!e.expression||!e.environment||!e.dialogueSafe)errors.push('Incomplete CG brief '+e.id);
    if(e.startDay<1||e.startDay>90||e.minAffection<0||e.fanservice<0||e.fanservice>3)errors.push('Invalid gate '+e.id);
-   if(e.path.endsWith('.png')||!e.path.endsWith(e.id+'.webp'))errors.push('Invalid asset path '+e.id);
+   if(!e.path.endsWith(e.id+'.webp')&&!(e.randomForced&&e.path.endsWith(e.id+'.png')))errors.push('Invalid asset path '+e.id);
   }
   return errors;
  }

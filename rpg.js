@@ -406,7 +406,8 @@ function travelTo(placeId,{intro=true}={}){
  state.visitedLocations[placeId]=true;
  state.location=placeId;state.selected=null;
  // The first visit introduces the place; later visits can contain a small surprise.
- if(!firstVisit&&placeId!=='home'&&!scheduleEvent()&&!eligibleStories().length&&beginSliceOfLife('entry')){tutorialEvent('travel');return true;}
+ if(!firstVisit&&placeId!=='home'&&!scheduleEvent()&&
+    (beginSliceOfLife('entry',null,true)||(!eligibleStories().length&&beginSliceOfLife('entry')))){tutorialEvent('travel');return true;}
  if(firstVisit&&intro)say('Narrator',places[placeId][1]);
  else{scene={speaker:'Narrator',line:'',choices:[]};state.scene=scene;persist();render();}
  tutorialEvent('travel');
@@ -595,12 +596,13 @@ function renderSliceOfLife(){
   const choices=!reply&&active.step===lines.length-1?e.choices.map((c,i)=>[c.label,'sliceChoice:'+i]):[['Continue ›','sliceNext']];
   return {speaker:cast[current.speaker]?.name||current.speaker,line:current.text,choices};
  }
- const lines=[{speaker:'Narrator',line:e.intro},{speaker:cast[e.npc]?.name||e.npc,line:e.line},{speaker:'Narrator',line:e.close}];
+ const lines=e.lines?.length?e.lines.map(part=>({speaker:cast[part.speaker]?.name||(part.speaker==='Protagonist'?'You':part.speaker),line:part.text})):
+  [{speaker:'Narrator',line:e.intro},{speaker:cast[e.npc]?.name||e.npc,line:e.line},{speaker:'Narrator',line:e.close}];
  return {...lines[active.step],choices:[['Continue ›','sliceNext']]};
 }
-function beginSliceOfLife(trigger,npc=null){
+function beginSliceOfLife(trigger,npc=null,onlyRandomForced=false){
  if(!SLICE||state.activeSliceOfLife)return false;
- const moment=SLICE.start(state,currentPeople(),trigger,npc);
+ const moment=SLICE.start(state,currentPeople(),trigger,npc,{onlyRandomForced});
  if(!moment)return false;
  state.selected=moment.npc;
  const memory=moment.choices?CG.byId(moment.cgSequence?.[0]||moment.id):recordCG('slice',moment.npc,{eventId:moment.id})[0];
