@@ -7,7 +7,8 @@ const CG=require('../rpg_cg_gallery');
 const ids=new Set(CROSS.events.map(e=>e.id));
 const naturalDay=e=>{
  for(let day=e.start;day<=e.end;day++)
-  if(e.participants.every(id=>SCHEDULES.naturalLocationFor(id,day,e.slot)===e.place))return day;
+  if(e.participants.every(id=>SCHEDULES.naturalLocationFor(id,day,e.slot)===e.place||
+   (e.plannedMeetup&&id!=='barb'&&SCHEDULES.naturalLocationFor('barb',day,e.slot)===e.place)))return day;
  return null;
 };
 const stateFor=e=>{
@@ -21,7 +22,7 @@ const stateFor=e=>{
  };
 };
 test('cross-character catalog has original two-person scenes, meaningful choices, and a planned CG path for each',()=>{
- assert.equal(CROSS.events.length,42);
+ assert.equal(CROSS.events.length,63);
  assert.deepEqual(CROSS.validate(),[]);
  assert.deepEqual(SLICE.validate(),[]);
  assert.deepEqual(CG.validate(),[]);
@@ -112,4 +113,25 @@ test('server-filtered guest roster cannot leak exclusive character crossover dia
  assert.equal(cgs.length,scenes.length);
  assert.ok(cgs.every(e=>allowed.includes(e.character)));
  assert.ok(!cgs.some(e=>e.id.includes('barb')||e.id.includes('laca')||e.id.includes('jinx')));
+});
+
+test('Barb designs one individualized bikini-related beachwear concept with each other authorized character',()=>{
+ const PACK=require('../rpg_character_packs.generated'),NARRATIVE=require('../rpg_narrative_pack'),SIDE=require('../rpg_side_quests');
+ const cast=new Set(Object.keys(SCHEDULES.start));cast.delete('barb');
+ const plans=CROSS.events.filter(e=>e.beachwear?.stage==='concept');
+ assert.equal(plans.length,cast.size);
+ assert.equal(new Set(plans.map(e=>e.participants[1])).size,cast.size);
+ for(const e of plans){
+  assert.ok(cast.has(e.participants[1]),'unknown visitor '+e.id);
+  assert.equal(e.participants[0],'barb');
+  assert.match(e.beachwear.cut,/bikini|swim/i);
+  assert.match(e.beachwear.palette,/and/i);
+  assert.ok(e.art.scene.includes('Barb and '+e.participants[1]));
+  assert.match(e.art.scene,/sketch/i);
+  assert.equal(e.artPending,true);
+  assert.ok(naturalDay(e)!==null,'meeting impossible '+e.id);
+ }
+ assert.ok(plans.find(e=>e.participants[1]==='elena')?.plannedMeetup);
+ const identityIds=[...Object.keys(NARRATIVE.schedules),...Object.keys(SIDE.schedules),...PACK.packs.map(p=>p.id)];
+ assert.ok(identityIds.every(id=>id==='barb'||plans.some(e=>e.participants[1]===id)));
 });
