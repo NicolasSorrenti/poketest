@@ -361,3 +361,24 @@ test('Apex does not punish Active investment if every Bench slot is blocked',()=
  assert.equal(AI.score(attachActive,threatened,cfg,{}),
   AI.score(attachActive,safe,cfg,{}));
 });
+
+test('Apex delays a low-value evolution when Machop can already attack',()=>{
+ const o=evolutionRefuelBoard('base1-91');
+ o.self.active={id:MACHOP,energies:[FIGHT,FIGHT],damage:0,status:null,playedTurn:2};
+ o.self.hand=['base1-34','base1-91'];
+ const evolution={type:'evolve',payload:{handIndex:0,slot:-1}};
+ const baseline=AI.configuration({side:1,level:8});
+ const nonGame=structuredClone(o);nonGame.phase='setup';
+ assert.ok(AI.score(evolution,o,baseline,{})<
+  AI.score(evolution,nonGame,baseline,{}),
+  'a live game should discount a premature Active promotion');
+});
+test('Apex does not delay evolution merely to keep a Paralyzed attacker',()=>{
+ const o=evolutionRefuelBoard('base1-91');
+ o.self.active={id:MACHOP,energies:[FIGHT,FIGHT],damage:0,status:'Paralyzed',playedTurn:2};
+ o.self.hand=['base1-34','base1-91'];
+ const evolution={type:'evolve',payload:{handIndex:0,slot:-1}};
+ const nonGame=structuredClone(o);nonGame.phase='setup';
+ assert.equal(AI.score(evolution,o,cfg,{}),
+  AI.score(evolution,nonGame,cfg,{}));
+});
