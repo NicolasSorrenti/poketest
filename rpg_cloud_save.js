@@ -142,7 +142,7 @@
    else{meta=null;stateLabel('Cloud save not found. Reconnecting…');}
   }catch(error){stateLabel('Cloud sync unavailable: '+errorText(error));}
  }
- async function reconcile(){
+ async function reconcile(background=false){
   if(!session||busy)return;
   const ownerId=session.user.id;
   busy=true;
@@ -167,6 +167,17 @@
     blocked=false;renderAccount();
     if(eligible())await upload(remote.revision);
     return;
+   }
+   if(background){
+    // A focus check never interrupts normal play unless another device has
+    // advanced the cloud revision. Do not replace unsynced local progress with
+    // an identical or older revision.
+    if(meta&&remote.revision<=meta.revision){
+     stateLabel('Cloud save checked. Local progress kept.');return;
+    }
+    // The player sees the notification before the active campaign changes.
+    root.alert?.('A newer cloud save was found. It will now be loaded.');
+    if(session?.user?.id!==ownerId)return;
    }
    importRemote(remote);
   }catch(error){stateLabel('Cloud progress could not be loaded: '+errorText(error));}
@@ -286,7 +297,12 @@
   if(adapter)return;
   adapter=options;ui();
   window.addEventListener('online',()=>{if(!config?.enabled)return connect();if(session&&!blocked)return reconcile();});
-  document.addEventListener('visibilitychange',()=>{if(!document.hidden&&session&&Date.now()-lastCheck>30000)reconcile();});
+  document.addEventListener('visibilitychange',()=>{
+   if(document.hidden)return;
+   // The foreground game remains visible during a routine cloud check.
+   document.documentElement?.classList.remove('rpg-cloud-loading');
+   if(session&&Date.now()-lastCheck>30000)void reconcile(true);
+  });
   try{await connect();}finally{document.documentElement?.classList.remove('rpg-cloud-loading');}
  }
  root.NeoRpgCloudSave={mount,onLocalSave,syncNow,hash,validSave,signupEndpoint,isSignedIn:()=>!!session};

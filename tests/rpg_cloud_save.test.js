@@ -10,7 +10,8 @@ const save=day=>({day,results:[],deckJourney:{starter:'water'},bonds:{},credits:
 
 function setup({localSave=save(1),cloudRow=null,hadLocal=true,enabled=true,connected=true,authFragment='',existingSession=true,ownerId=null,ownCache=null}={}){
  let current=clone(localSave),remote=cloudRow?clone(cloudRow):null,network=connected;
- const uploads=[],restores=[],sessions=[],timers=new Map(),cache=new Map(),historyReplacements=[];
+ const uploads=[],restores=[],sessions=[],timers=new Map(),cache=new Map(),historyReplacements=[],alerts=[];
+ let clock=Date.now();
  let resets=0;
  if(ownerId)cache.set('neoRpgLocalOwnerV1',ownerId);
  if(ownCache)cache.set('neoRpgAccountCacheV1:player-one',JSON.stringify(ownCache));
@@ -46,13 +47,14 @@ function setup({localSave=save(1),cloudRow=null,hadLocal=true,enabled=true,conne
   }else throw Error('Unexpected API request: '+url);
   return {ok:status===200,status,json:async()=>data};
  }
- const window={addEventListener:(name,fn)=>sessions.push({name,fn}),
+ const window={alert:message=>alerts.push(message),addEventListener:(name,fn)=>sessions.push({name,fn}),
   location:{origin:'https://poketest-4y5u.onrender.com',pathname:'/rpg.html',search:'',hash:authFragment},
   history:{state:null,replaceState:(state,title,url)=>{historyReplacements.push(url);window.location.hash='';}}
  };
- const document={addEventListener:(name,fn)=>sessions.push({name,fn}),hidden:false};
+ const document={addEventListener:(name,fn)=>sessions.push({name,fn}),hidden:false,documentElement:{classList:{remove:()=>{}}}};
  vm.runInNewContext(script,{
   window,document,fetch,localStorage:storage,structuredClone:clone,URLSearchParams,
+  Date:class extends Date{static now(){return clock;}},
   setTimeout:(callback)=>{const id=++timerId;timers.set(id,callback);return id;},
   clearTimeout:id=>timers.delete(id),console
  },{filename:'rpg_cloud_save.js'});
@@ -65,7 +67,9 @@ function setup({localSave=save(1),cloudRow=null,hadLocal=true,enabled=true,conne
   showButton:false
  };
  return {
-  client:window.NeoRpgCloudSave,adapter,uploads,restores,cache,historyReplacements,location:window.location,
+  client:window.NeoRpgCloudSave,adapter,uploads,restores,cache,alerts,historyReplacements,location:window.location,
+  advance:ms=>{clock+=ms;},
+  focus:async()=>{const handler=sessions.find(x=>x.name==='visibilitychange');assert.ok(handler);handler.fn();await new Promise(resolve=>setImmediate(resolve));},
   getResets:()=>resets,
   getLocal:()=>clone(current),getCloud:()=>clone(remote),
   setLocal:val=>{current=clone(val)},setCloud:val=>{remote=clone(val)},
@@ -239,4 +243,39 @@ test('switching back restores only the account-owned local cache',async()=>{
  assert.equal(app.uploads.length,0,'reconciliation continues after reload, not with a foreign campaign');
  assert.equal(app.cache.get('neoRpgLocalOwnerV1'),'player-one');
  assert.equal(JSON.parse(app.cache.get('neoRpgAccountCacheV1:other-account')).day,30);
+});
+
+
+test('returning to tab with unchanged cloud save does not interrupt the player',async()=>{
+ const app=setup({localSave:save(12),cloudRow:{revision:5,save_data:save(12)}});
+ await app.client.mount(app.adapter);
+ app.advance(31000);
+ await app.focus();
+ assert.equal(app.restores.length,0);
+ assert.equal(app.alerts.length,0);
+ assert.equal(app.getLocal().day,12);
+});
+
+test('returning to tab announces newer cloud progress before restoring it',async()=>{
+ const app=setup({localSave:save(12),cloudRow:{revision:5,save_data:save(12)}});
+ await app.client.mount(app.adapter);
+ app.setCloud({revision:6,save_data:save(16)});
+ app.advance(31000);
+ await app.focus();
+ assert.equal(app.alerts.length,1);
+ assert.match(app.alerts[0],/newer cloud save/i);
+ assert.equal(app.restores.length,1);
+ assert.equal(app.getLocal().day,16);
+});
+
+test('returning to tab never replaces unsynced local progress with same cloud revision',async()=>{
+ const app=setup({localSave:save(12),cloudRow:{revision:5,save_data:save(12)}});
+ await app.client.mount(app.adapter);
+ app.setLocal(save(13));
+ app.advance(31000);
+ await app.focus();
+ assert.equal(app.restores.length,0);
+ assert.equal(app.alerts.length,0);
+ assert.equal(app.getLocal().day,13);
+ assert.equal(app.getCloud().save_data.day,13);
 });
