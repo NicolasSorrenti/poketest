@@ -32,6 +32,7 @@
  "/rpg_akari_barb_event.js?v=20261026",
  "/rpg_slice_of_life.js",
  "/rpg_cg_gallery.js",
+ "/rpg_cg_scene.js?v=20261026-in-scene",
  "/rpg_daily_planner.js",
  "/rpg_social_activities.js",
  "/rpg_planned_dates.js",
@@ -59,7 +60,7 @@
  "/rpg_status.js?v=4",
  "/rpg_cloud_save.js?v=2",
  "/rpg_outfits.js?v=1",
- "/rpg.js?v=20261026-slice-dependencies"
+ "/rpg.js?v=20261026-in-scene-cg"
 ];
   function registry(packs){
     const cast={},looks={},schedules={},arrivals={},events=[],mandatoryEvents=[];
