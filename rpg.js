@@ -2012,6 +2012,13 @@ function hanaOverworldPortrait(sceneId=activeOutfitSceneId){
 }
 const solExpressions={neutral:'neutral',surprised:'surprised',vulnerable:'worried',irritated:'worried',determined:'neutral',happy:'smile'};
 function portraitPaths(id,expression='neutral',sceneId=activeOutfitSceneId){
+ // Reuse the day-locked special outfit in ordinary, dialogue and duel avatars.
+ // Battle-exclusive cut-ins and reaction images remain on their own asset routes.
+ if(SPECIAL_LOOKS[id]){
+  const special=dailyStagePortrait(id,state.day);
+  if(special)return [special,cast[id]?.portrait||'/rpg-assets/'+id+'.png'];
+ }
+
  if(id==='hana'){
   const fallback=cast.hana.portrait||'/rpg-assets/hana.png';
   return [fallback];
