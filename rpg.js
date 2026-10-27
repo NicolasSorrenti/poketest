@@ -1975,7 +1975,8 @@ function refreshRpgPanels(){
  }
 }
 // Outfit images are optional. All original character art remains a fallback.
-// Older guest assets are optional fallbacks; never assume every character has vn-expressions.\nconst expressionGuests=new Set(['alma','jun','nereo','teo','elio']);
+// Older guest assets are optional fallbacks; never assume every character has vn-expressions.
+const expressionGuests=new Set(['alma','jun','nereo','teo','elio']);
 const failedScenePortraits=new Set();
 let activeOutfitSceneId=null;
 const solExpressions={neutral:'neutral',surprised:'surprised',vulnerable:'worried',irritated:'worried',determined:'neutral',happy:'smile'};
