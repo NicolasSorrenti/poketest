@@ -6,7 +6,8 @@ const focus=JSON.parse(fs.readFileSync('rpg-assets/characters/hana/overworld-var
 const variants=JSON.parse(fs.readFileSync('rpg-assets/characters/hana/overworld-variants/variants.json','utf8'));
 const html=fs.readFileSync('rpg.html','utf8');
 const runtime=fs.readFileSync('rpg.js','utf8');
-const overlay=fs.readFileSync('rpg_hana_outfit_chime.js','utf8');
+const overlay=fs.readFileSync('rpg_outfit_chime.js','utf8');
+const shared=JSON.parse(fs.readFileSync('rpg-assets/outfit-chime-focus.json','utf8'));
 test('every Hana variant has an outfit focus window within image bounds',()=>{
  assert.equal(focus.durationMs,3000);
  for(const item of variants.variants){
@@ -16,15 +17,27 @@ test('every Hana variant has an outfit focus window within image bounds',()=>{
  }
 });
 test('overlay loads before RPG bootstrap and contains no caption',()=>{
- assert.ok(html.indexOf('/rpg_hana_outfit_chime.js')<html.indexOf('/rpg_character_bootstrap.js'));
+ assert.ok(html.indexOf('/rpg_outfit_chime.js')<html.indexOf('/rpg_character_bootstrap.js'));
  assert.match(overlay,/aria-hidden/);
  assert.match(overlay,/setTimeout/);
- assert.doesNotMatch(overlay,/cover\.textContent\s*=/);
+ assert.doesNotMatch(overlay,/overlay\.textContent\s*=/);
 });
 test('location entry reuses existing Hana portrait and skips events',()=>{
- assert.match(runtime,/HanaOutfitChime\.onEntry/);
- assert.match(runtime,/const portrait=hanaOverworldPortrait\(null\)/);
- assert.match(runtime,/currentPeople\(\)\.includes\('hana'\)/);
+ assert.match(runtime,/NeoOutfitChime\.onEntry/);
+ assert.match(runtime,/id==='hana'\?hanaOverworldPortrait\(null\)/);
+ assert.match(runtime,/currentPeople\(\)\.filter/);
  assert.match(runtime,/!!state\.mandatoryEventState\?\.active/);
  assert.match(runtime,/hanaEncounterKey='entry:'/);
+});
+
+test('Akari and Barb portrait variants have focus coordinates',()=>{
+ for(const [id,n] of [['akari',5],['barb',10]]){
+  for(let i=1;i<=n;i++){
+   const filename='special-day-'+i+'.png';
+   assert.ok(fs.existsSync('rpg-assets/characters/'+id+'/portraits/'+filename));
+   const focus=shared.characters[id].variants[filename];
+   assert.ok(focus&&focus.top>=0&&focus.bottom<=1&&focus.bottom>focus.top);
+  }
+ }
+ assert.match(runtime,/id==='akari'\|\|id==='barb'/);
 });
