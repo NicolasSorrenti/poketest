@@ -411,9 +411,8 @@ function travelTo(placeId,{intro=true}={}){
  const firstVisit=!state.visitedLocations[placeId];
  state.visitedLocations[placeId]=true;
  state.location=placeId;state.selected=null;
- // The first visit introduces the place; later visits can contain a small surprise.
- if(!firstVisit&&placeId!=='home'&&!scheduleEvent()&&
-    (beginSliceOfLife('entry',null,true)||(!eligibleStories().length&&beginSliceOfLife('entry')))){tutorialEvent('travel');return true;}
+ // Entry surprises must wait until travel and any outfit/introduction chime finish.
+ pendingEntrySurprise=!firstVisit&&placeId!=='home';
  if(firstVisit&&intro)say('Narrator',places[placeId][1]);
  else{scene={speaker:'Narrator',line:'',choices:[]};state.scene=scene;persist();render();}
  tutorialEvent('travel');
@@ -2380,6 +2379,31 @@ function maybeShowYearEndFallReel(){
  controls.append(prev,label,next,close);panel.append(title,img,controls);document.body.append(panel);
  document.addEventListener('keydown',onKey,true);show();close.focus();
 }
+let pendingEntrySurprise=false;
+let arrivalGate=false;
+async function finishOverworldArrival(destination){
+ if(state.location!==destination)return;
+ arrivalGate=true;
+ try{
+  hanaEncounterKey='entry:'+ ++hanaEncounterSerial;
+  const present=currentPeople();
+  const characters=present.filter(id=>Object.hasOwn(SPECIAL_LOOKS,id))
+   .map(id=>({id,portrait:scenePortraitSource(id,'neutral',null)}));
+  const firstMeetings=present.filter(id=>!state['met_'+id]&&!(id==='reina'&&state.metReina))
+   .map(id=>({id,portrait:scenePortraitSource(id,'neutral',null)}));
+  if(typeof NeoOutfitChime!=='undefined'){
+   await NeoOutfitChime.onEntry({characters,firstMeetings});
+  }
+  if(state.location!==destination)return;
+  for(const {id} of characters)markSpecialLookSeen(id);
+  if(pendingEntrySurprise){
+   pendingEntrySurprise=false;
+   if(!scheduleEvent()&&(beginSliceOfLife('entry',null,true)||(!eligibleStories().length&&beginSliceOfLife('entry'))))return;
+  }
+ }catch(error){console.warn('Overworld arrival chime skipped:',error);}
+ finally{arrivalGate=false;}
+ if(state.location===destination)render();
+}
 function render(){
  // Detect actual location changes after the first render; navigation remains free.
  const previousLocation=lastRenderedLocation;
@@ -2387,34 +2411,20 @@ function render(){
  if(previousLocation&&previousLocation!==state.location){
   window.NeoRpgAudio?.play?.('travel');
   window.NeoRpgInterface?.onLocationChange?.();
-  // A CG, calendar wipe or mandatory scene must never be covered by travel.
+  // Stop the RPG render/event pipeline until the travel wipe and chimes finish.
   if(!timeSequence.blocked&&!state.mandatoryEventState?.active){
-   window.NeoRpgTimeTransitions?.presentTravel?.({
+   const destination=state.location;
+   const transition=window.NeoRpgTimeTransitions?.presentTravel?.({
     from:places[previousLocation]?.[0]||previousLocation,
-    to:places[state.location]?.[0]||state.location
-   },{onDismiss:()=>render()});
+    to:places[destination]?.[0]||destination
+   },{onDismiss:()=>{void finishOverworldArrival(destination);}});
+   if(transition)return;
   }
  }
  window.NeoRpgAudio?.setScene?.(state.location,state.slot);
  ensureRpgLayout();
  window.NeoRpgInterface?.init?.();
- maybeStartMandatory();
- // Trigger outfit changes on location entry using the actual stage portrait resolver.
- if(previousLocation&&previousLocation!==state.location){
-  hanaEncounterKey='entry:'+ ++hanaEncounterSerial;
-  const destination=state.location;
-  const arriving=currentPeople().filter(id=>Object.hasOwn(SPECIAL_LOOKS,id));
-  const snapshots=arriving.map(id=>({id,portrait:scenePortraitSource(id,'neutral',null)}));
-  for(const id of arriving)markSpecialLookSeen(id);
-  setTimeout(()=>{
-   if(state.location!==destination)return;
-   const blocked=timeSequence.blocked||!!state.mandatoryEventState?.active||
-    !!state.activeSliceOfLife||!!state.activeSituation||!!state.activeStory||
-    !!state.activeEncounter||!!state.activeArc||!!state.activeSideQuest||
-    !!state.pendingDuel;
-   if(typeof NeoOutfitChime!=='undefined')NeoOutfitChime.onEntry({characters:snapshots,blocked,sceneId:activeOutfitSceneId});
-  },900);
- }
+ if(!arrivalGate)maybeStartMandatory();
  renderJourney();
  renderCollection();
  const ended=state.day>90,locked=timeSequence.blocked||!!state.activeSliceOfLife||!!state.mandatoryEventState?.active||!!state.activeSituation||!!state.activeStory||!!state.activeEncounter||!!state.activeArc||!!state.activeSideQuest||!!state.pendingDuel;
