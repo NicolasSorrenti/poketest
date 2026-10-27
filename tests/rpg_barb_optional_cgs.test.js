@@ -2,7 +2,7 @@
 const test=require('node:test'),assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path'),crypto=require('node:crypto'),vm=require('node:vm');
 const SLICE=require('../rpg_slice_of_life'),CG=require('../rpg_cg_gallery'),STORY=require('../rpg_story'),SCHEDULES=require('../rpg_schedules'),TOOLS=require('../scripts/rpg-character-packs');
 const REGISTRY=require('../rpg_character_packs.generated'),pack=REGISTRY.byId('barb');
-const scenes=SLICE.scenes.filter(e=>e.npc==='barb'&&e.id.startsWith('barb_'));
+const allBarbSlices=SLICE.scenes.filter(e=>e.npc==='barb'&&e.id.startsWith('barb_'));
 const hashes={
  barb_random_cg_01:'1483038f7f086ef0d2f21433e4a2bf43ba5a33fd9033de194013ffd569877332',
  barb_random_cg_02:'17dc78efc71bfeffde7e8849b540dc49288724b4a064f11cbc604d50854aa3e4',
@@ -16,6 +16,9 @@ const hashes={
  barb_bonus_guitar:'31c601d26021e31f10d669f5a384de52063be18dcf8f2f01b8df289bd0ca7d41',
  barb_bonus_sketch:'0c98d8ff58b0382171812fe20dc072c311506e2adc94b8eb5a35858fd3619803'
 };
+// Keep the original approved-CG regression scoped to its eleven frozen assets.
+// New Barb events have their own coverage rather than invalidating old hashes.
+const scenes=allBarbSlices.filter(e=>Object.hasOwn(hashes,e.id));
 const fresh=(e,extra={})=>({day:28,slot:e.slot,location:e.place,focus:75,credits:80,met_barb:true,
  relationships:{barb:{affection:5,trust:5,respect:2,attraction:2,duels:0}},bonds:{barb:{affection:5,trust:5,duels:0}},...extra});
 function finish(s,e,choice=0){
@@ -28,7 +31,7 @@ function finish(s,e,choice=0){
 }
 test('all eleven optional pack scenes retain distinct approved assets and stay outside the main story',()=>{
  assert.equal(scenes.length,11);assert.deepEqual(scenes.map(e=>e.id).sort(),Object.keys(hashes).sort());
- assert.equal(pack.events.length,16);assert.equal(STORY.events.filter(e=>e.npc==='barb').length,5);
+ assert.equal(pack.events.length,18);assert.equal(STORY.events.filter(e=>e.npc==='barb').length,5);
  assert.equal(TOOLS.check().length,REGISTRY.packs.length);
  for(const e of scenes){
   assert.equal(e.encounterType,'slice');assert.equal(e.prerequisite,null);assert.equal(e.lines.length,9);assert.equal(e.choices.length,3);
@@ -42,6 +45,21 @@ test('all eleven optional pack scenes retain distinct approved assets and stay o
   assert.equal(CG.artCandidates(cg)[0].path,art.path);
  }
  assert.deepEqual(CG.validate(),[]);assert.deepEqual(SLICE.validate(),[]);
+});
+test('new Barb room and pool events coexist with the eleven original approved CGs',()=>{
+ const additional=allBarbSlices.filter(e=>!Object.hasOwn(hashes,e.id));
+ assert.deepEqual(additional.map(e=>e.id).sort(),['barb_pool_day_off','barb_room_after_hours']);
+ assert.equal(pack.events.length,STORY.events.filter(e=>e.npc==='barb').length+allBarbSlices.length);
+ for(const e of additional){
+  assert.equal(e.encounterType,'slice');
+  const art=pack.art.eventImages.find(x=>x.sceneId===e.id),cg=CG.byId(e.id);
+  assert.ok(art,e.id+' artwork registration');
+  assert.ok(cg,e.id+' CG registration');
+  assert.equal(cg.path,art.path);
+  assert.equal(cg.sliceId,e.id);
+  assert.ok(fs.existsSync(path.join(__dirname,'..',art.path)),e.id+' CG file');
+ }
+ assert.equal(additional.find(e=>e.id==='barb_pool_day_off').prerequisite,'barb_room_after_hours');
 });
 test('all eleven can occur in one 90-day campaign on real protected routine stops',()=>{
  let s=fresh(scenes[0],{day:6,relationships:{barb:{affection:0}},bonds:{barb:{affection:0}}});
@@ -67,14 +85,14 @@ test('routine protection respects account roster, meetings, daily caps and compl
  const pin=SLICE.scheduleOverrides(s).find(x=>x.npc==='barb');assert.equal(pin?.place,'park');
  assert.equal(SCHEDULES.locationFor('barb',28,1,[{npc:'barb',place:'center',slot:1,start:28,end:28},pin]),'center');
  for(const extra of [{met_barb:false},{sliceOfLifeLastDay:28},{day:91},{pendingDuel:{id:'duel'}}])assert.deepEqual(SLICE.scheduleOverrides({...s,...extra}),[]);
- const done=Object.fromEntries(scenes.map(e=>[e.id,{day:6,slot:e.slot,choice:0}]));
+ const done=Object.fromEntries(SLICE.scenes.filter(e=>e.npc==='barb').map(e=>[e.id,{day:6,slot:e.slot,choice:0}]));
  assert.deepEqual(SLICE.scheduleOverrides({...s,sliceOfLifeDone:done}),[]);
  // The same browser modules with the server-filtered roster cannot register Barb or her gallery entries.
- const context={window:{NeoRpgCharacterPacks:{packs:[]},NeoRpgEncounterDirector:require('../rpg_encounter_director'),NeoRpgRelationships:require('../rpg_relationships')}};
+ const context={window:{NeoRpgCharacterPacks:{packs:[]},NeoRpgEncounterDirector:require('../rpg_encounter_director'),NeoRpgRelationships:require('../rpg_relationships'),NeoRpgSchedules:require('../rpg_schedules'),NeoRpgAkariBarbFitting:require('../rpg_akari_barb_event'),NeoRpgCrossCharacterEvents:{events:[]}}};
  vm.runInNewContext(fs.readFileSync(path.join(__dirname,'../rpg_slice_of_life.js'),'utf8'),context);
  vm.runInNewContext(fs.readFileSync(path.join(__dirname,'../rpg_cg_gallery.js'),'utf8'),context);
- assert.equal(context.window.NeoRpgSliceOfLife.scenes.some(e=>e.npc==='barb'),false);
- assert.equal(context.window.NeoRpgCGGallery.catalog.some(e=>e.character==='barb'),false);
+ assert.equal(context.window.NeoRpgSliceOfLife.scenes.some(e=>e.id.startsWith('barb_')),false);
+ assert.equal(context.window.NeoRpgCGGallery.catalog.some(e=>e.id.startsWith('barb_')),false);
 });
 for(const e of scenes)test(e.id+' preserves choices, interruption, exact deltas and gallery unlocks',()=>{
  for(let choice=0;choice<3;choice++){
@@ -86,7 +104,7 @@ for(const e of scenes)test(e.id+' preserves choices, interruption, exact deltas 
   }
   assert.deepEqual(SLICE.available(s,[],'entry'),[]);
   // Isolate this candidate so fairness among the eleven scenes doesn't dictate which we test.
-  s.sliceOfLifeDone=Object.fromEntries(scenes.filter(x=>x.id!==e.id).map(x=>[x.id,{day:6,slot:x.slot,choice:0}]));
+  s.sliceOfLifeDone=Object.fromEntries(SLICE.scenes.filter(x=>x.npc==='barb'&&x.id!==e.id).map(x=>[x.id,{day:6,slot:x.slot,choice:0}]));
   assert.equal(SLICE.start(s,['barb'],'entry')?.id,e.id);
   assert.equal(CG.gallery(s).find(x=>x.id===e.id).path,null);
   assert.deepEqual(CG.record(s,'slice','barb',{eventId:e.id}),[]);
@@ -122,6 +140,6 @@ test('callbacks require their completed source choice; out-of-order encounters r
 test('pack validation rejects accidental chapter prerequisites and unknown optional triggers',()=>{
  const p=TOOLS.discover().find(p=>p.def.id==='barb');
  const malformed=structuredClone(p),e=malformed.stories.events.find(e=>e.encounterType==='slice');
- e.prerequisite='barb_route_1';assert.throws(()=>TOOLS.validate(malformed),/optional encounters/);
+ e.prerequisite='barb_nonexistent_route';assert.throws(()=>TOOLS.validate(malformed),/prerequisite must be earlier scene/);
  e.prerequisite=null;e.trigger='mandatory';assert.throws(()=>TOOLS.validate(malformed),/optional encounter type/);
 });
