@@ -726,8 +726,14 @@ function energyHorizonBonus(action,o,cfg){
  // Bench replacement urgency depends on the exposed Active, not the Bench
  // target of this attachment. Comparing against u made a fragile Bench look
  // urgent while ignoring an Active that was about to be knocked out.
- const activeExposed=!!p.active&&!['Asleep','Paralyzed'].includes(q.active.status)&&
-  strongestAffordableAttack(q.active,p.active)>=hpRemaining(p.active);
+ // For Apex, only a currently legal public attack makes our Active exposed.
+ // Amnesia and Gym locks must not cause speculative Bench Energy urgency.
+ // Keep the previous affordable-attack estimate for lower difficulty tiers.
+ const activeThreat=cfg.level===8?
+  strongestUsableOpponentAttack(o,p.active):
+  (!['Asleep','Paralyzed'].includes(q.active.status)?
+   strongestAffordableAttack(q.active,p.active):0);
+ const activeExposed=!!p.active&&activeThreat>=hpRemaining(p.active);
  // A Bench attacker is useful as a replacement when the Active is visibly
  // exposed. Otherwise minimize speculative Energy sunk on remote Bench.
  const activeBias=v.slot===-1?35:activeExposed?22:-34;
