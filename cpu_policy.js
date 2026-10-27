@@ -745,7 +745,12 @@ function doomedActiveAttachmentPenalty(o,energyId,cfg){
  const active=o.self.active,enemy=o.opponent.active,energy=card(energyId);
  if(!isEnergy(energy)||['Asleep','Paralyzed'].includes(enemy.status))return 0;
  const incoming=(enemy.effectiveAttacks||card(enemy.id)?.attacks||[]);
- const threatened=incoming.some(a=>canPayEnergy(a.cost||[],energyPool(enemy))&&
+ // A printed knockout is not a threat when its attack is publicly locked
+ // (Amnesia, Gym cooldown or once-per-turn restriction). Apply the same
+ // visible attack-legality check used by opponent-response planning.
+ const fromEnemy={...o,self:o.opponent,opponent:o.self};
+ const threatened=incoming.some((a,i)=>
+  eligibleAttack(fromEnemy,enemy,a,i)&&
   knockoutChance(a,enemy,active)>=.75);
  if(!threatened)return 0;
  const after={...active,energies:[...(active.energies||[]),energyId]};
