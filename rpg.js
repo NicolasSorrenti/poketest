@@ -1501,8 +1501,14 @@ function openPlannerSuggestion(id){
  const buttons=[...(section?.querySelectorAll?.('button')||[])].filter(x=>!x.disabled);
  const action=buttons.find(b=>b.dataset?.plannerKey===pick.key)||
   buttons.find(b=>b.textContent?.includes(pick.key)||b.textContent?.includes(pick.title.split(' · ')[0]))||buttons[0];
- (action||section)?.scrollIntoView?.({behavior:'smooth',block:'nearest'});
- action?.focus?.({preventScroll:true});
+ // Info is intentionally closed for What's Next shortcuts. Avoid scrolling
+ // or focusing controls inside its hidden drawer after travelling.
+ const info=$('rpgInfoPanel');
+ const actionHiddenInInfo=!!(info&&action&&info.contains(action)&&info.getAttribute('aria-hidden')==='true');
+ if(!actionHiddenInInfo){
+  (action||section)?.scrollIntoView?.({behavior:'smooth',block:'nearest'});
+  action?.focus?.({preventScroll:true});
+ }
  $('notice').textContent='You are in the right place. Pick the highlighted opportunity when you are ready; no time was spent getting here.';
 }
 function renderPlanner(locked){
