@@ -155,6 +155,36 @@ test('Apex Energy horizon restores attacks after Amnesia and Gym cooldown expire
  }
 });
 
+test('Apex forecasts temporary attack locks at the next own turn, not forever',()=>{
+ // Hitmonchan already has one Fighting Energy. Attaching another Fighting
+ // now plus a DCE next turn enables Special Punch, but only after the lock
+ // expires. turnSerial advances twice before our next opportunity to attack.
+ for(const lock of [
+  {amnesia:{index:1,expires:13}},
+  {gymAttackCooldown:{index:1,expires:13}},
+  {gymAttackCooldown:{index:null,expires:13}}
+ ]){
+  const withDce=futureEnergyBoard(FIGHT,'base1-96',[FIGHT]);
+  const withoutDce=futureEnergyBoard(FIGHT,'base1-91',[FIGHT]);
+  for(const o of [withDce,withoutDce]){
+   o.turnSerial=11;
+   Object.assign(o.self.active,structuredClone(lock));
+  }
+  assert.ok(AI.energyHorizonBonus(attachActive,withDce,cfg)>
+   AI.energyHorizonBonus(attachActive,withoutDce,cfg),
+   'an attack unlocked by our next turn should reward legal two-turn setup');
+  // If the same lock remains active on our next turn, DCE cannot unlock
+  // the blocked attack, so its forecast must match a non-Energy card.
+  for(const o of [withDce,withoutDce]){
+   if(o.self.active.amnesia)o.self.active.amnesia.expires=14;
+   if(o.self.active.gymAttackCooldown)o.self.active.gymAttackCooldown.expires=14;
+  }
+  assert.equal(AI.energyHorizonBonus(attachActive,withDce,cfg),
+   AI.energyHorizonBonus(attachActive,withoutDce,cfg),
+   'a still-active next-turn attack lock must not create phantom value');
+ }
+});
+
 function evolutionRefuelBoard(energyId,energyUsed=false){
  const o=board();
  o.phase='game';
