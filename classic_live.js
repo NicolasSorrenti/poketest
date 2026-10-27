@@ -43,6 +43,7 @@
  // Distinct browser sessions stop Cube duels leaking into Single Match.
  const rpgKey=rpgMode&&rpgDuelId?window.NeoRpgDuelBridge.sessionKey(rpgDuelId):cubeRoomCode?'neoCubeRoomLiveToken:'+cubeRoomCode:cubeSoloMode?'neoCubeLiveToken':'neoClassicLiveToken';
  const rpgNpc=rpgMode?rpgParams.get('npc'):null;
+ const rpgNpcOutfit=rpgMode?rpgParams.get('npcOutfit'):null;
  const opponentName=rpgMode?(rpgParams.get('npcName')||'Opponent'):'Classic CPU';
  const mats=window.NeoDuelPlaymats;
  const gifts=rpgMode?(rpgParams.get('giftMats')||'').split(',').filter(Boolean):Object.keys(mats.themes);
@@ -116,7 +117,7 @@
  let npcChatOpen=false;
  function toggleNpcChat(open){npcChatOpen=!!open;$('rpgReactionChat').classList.toggle('hidden',!npcChatOpen);$('rpgChatToggle').setAttribute('aria-expanded',String(npcChatOpen));}
  const reactions=rpgMode&&rpgNpc?window.NeoRpgMatchReactions.makeExperience({
-  element:$('npcReaction'),npcId:rpgNpc,npcName:opponentName,onShow:reaction=>npcChat?.push(reaction),
+  element:$('npcReaction'),npcId:rpgNpc,npcName:opponentName,outfit:rpgNpcOutfit,onShow:reaction=>npcChat?.push(reaction),
   getCard:id=>cards.get(id)||null
  }):null;
  function notifyRpg(){if(rpgMode&&rpgDuelId&&current?.view?.over&&(current.winner===null||current.winner===0||current.winner===1))window.parent.postMessage(window.NeoRpgDuelBridge.message(rpgDuelId,current.winner),location.origin);}
