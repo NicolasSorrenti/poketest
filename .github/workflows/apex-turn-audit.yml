@@ -1,0 +1,20 @@
+name: Apex Turn Sequence Audit
+on:
+  pull_request:
+    paths:
+      - 'cpu_policy.js'
+      - 'benchmark_cpu.js'
+      - 'scripts/apex-turn-audit.js'
+      - 'tests/apex_turn_audit.test.js'
+      - '.github/workflows/apex-turn-audit.yml'
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: node --test tests/apex_turn_audit.test.js tests/cpu_pokemon_center_order.test.js
+      - run: node scripts/apex-turn-audit.js --deck rain_dance --pairs 1 --max-turns 70
