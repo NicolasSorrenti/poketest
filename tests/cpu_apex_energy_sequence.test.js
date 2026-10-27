@@ -137,6 +137,24 @@ test('Apex future Energy horizon still rewards legal multi-turn setup',()=>{
   AI.energyHorizonBonus(attachActive,noEnergy,cfg));
 });
 
+test('Apex Energy horizon restores attacks after Amnesia and Gym cooldown expire',()=>{
+ // An expired public lock must not be treated as permanent just because
+ // the Energy horizon helper previously evaluated attacks at turnSerial=0.
+ const baseline=futureEnergyBoard(FIGHT,'base1-96',[FIGHT]);
+ baseline.turnSerial=11;
+ const expected=AI.energyHorizonBonus(attachActive,baseline,cfg);
+ for(const lock of [
+  {amnesia:{index:0,expires:10}},
+  {gymAttackCooldown:{index:0,expires:10}},
+  {gymAttackCooldown:{index:null,expires:10}}
+ ]){
+  const expired=structuredClone(baseline);
+  Object.assign(expired.self.active,lock);
+  assert.equal(AI.energyHorizonBonus(attachActive,expired,cfg),expected,
+   'an expired attack restriction must not change Energy attachment value');
+ }
+});
+
 function evolutionRefuelBoard(energyId,energyUsed=false){
  const o=board();
  o.phase='game';
