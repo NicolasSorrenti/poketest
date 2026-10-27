@@ -1,0 +1,7 @@
+Use case: identity-preserve
+Asset type: ONE Neo Campus visual-novel character portrait, happy expression.
+Input image 1 is the exact canonical edit target: adult MALE Elio. Edit this image, do not redesign or substitute the character.
+Primary request: Change ONLY Elio's facial expression to clearly happy: a warm natural cheerful smile, slightly raised cheeks and warmly smiling eyes, retaining his recognizable masculine adult face, same facial structure, brown eye color, gaze and head angle.
+Keep unchanged: tousled brown hair silhouette and strands, earrings, adult male identity, body proportions, head placement, pose, hands and fingers, navy-and-white star jacket and hood, navy shirt, star pendant necklace, notebooks, bag strap, backpack and charms, pants, every accessory, palette, lighting on the character, detailed anime illustration style and linework. Preserve the canonical full framing exactly from hair top to the same upper-leg crop, with all visible accessories; same portrait aspect ratio and subject scale. Do not zoom, crop, re-pose or add objects.
+Background: remove the shaded backdrop and glow entirely, leaving genuine transparent alpha around the character, clean natural edges, no checkerboard baked into pixels, no shadow plate.
+Constraints: SFW, fully clothed, neutral non-voyeuristic presentation. Exactly one character and one image. No female identity, no feminization, no text or watermark. Limit character edits to the facial expression.

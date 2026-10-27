@@ -1,0 +1,125 @@
+{
+  "repository": "NicolasSorrenti/poketest",
+  "commit": "cdc7b3a7e474f37113b0c9c7081fd3b1d6a059dc",
+  "canonical_repository_path": "rpg-assets/elio.png",
+  "verified_git_blob_sha1": "78fc95deead861b3ce91a20c1ed50313d5be411e",
+  "verified_reference_sha256": "2902f1df48ed43dbbaad5b6c24b8a90ae44fe9e22ff841225e39ccdeee8bb348",
+  "reference_inspected_before_generation": true,
+  "generator": "built-in image_gen",
+  "attempts": [
+    {
+      "number": 1,
+      "original": "attempt-01-original.png",
+      "status": "selected with disclosed minor redraw limitation",
+      "prompt": "prompt.txt",
+      "thumbnail": "attempt-01-original-thumbnail.png"
+    }
+  ],
+  "rejected_attempts": [],
+  "selected_output": "attempt-01-original.png",
+  "thumbnail_maximum": [
+    256,
+    512
+  ],
+  "review": "One built-in image_gen edit attempt; selected attempt-01-original.png. Exact reference recovered by commit-pinned raw GitHub download after connector base64 returned empty content and blob routes failed to decode binary. Reference SHA256 and Git blob SHA1 both verified before view_image inspection and generation. Visual review: canonical adult male identity, tousled brown hair, earrings, navy-white star jacket, pendant, notebook, bag strap, pose, and full canonical hair-to-thigh framing retained. Surprised expression reads through raised brows, wider eyes and parted mouth. SFW, fully clothed. Genuine alpha confirmed with transparent outer pixels; thumbnail also inspected. Limitations: generative editing causes small linework/shading/detail changes beyond the face; pixel-identical preservation is not claimed. Alpha ranges 0\u2013254 rather than 0\u2013255, including mostly 253\u2013254 character interior inherited from source-like output. No Git mutations; installed expression portraits were not used. No rejected generation attempts.",
+  "files": [
+    {
+      "path": "/workspace/scratch/dc054acd6888/elio-refresh/surprised/attempt-01-original-thumbnail.png",
+      "bytes": 141828,
+      "sha256": "7bffc168e7807efe372337cddb0bfee75b077557a1bfa9b9e93dffb77ac4cfab",
+      "width": 256,
+      "height": 384,
+      "mode": "RGBA",
+      "alpha": {
+        "present": true,
+        "min": 0,
+        "max": 255,
+        "transparent_pixels": 38278,
+        "partially_transparent_pixels": 59219,
+        "opaque_pixels": 807,
+        "bounding_box": [
+          8,
+          3,
+          245,
+          384
+        ]
+      }
+    },
+    {
+      "path": "/workspace/scratch/dc054acd6888/elio-refresh/surprised/attempt-01-original.png",
+      "bytes": 2089759,
+      "sha256": "e516852131b883597d6c9f5a89b84413847590a2dd662381eb11c28292207ba6",
+      "width": 1024,
+      "height": 1536,
+      "mode": "RGBA",
+      "alpha": {
+        "present": true,
+        "min": 0,
+        "max": 254,
+        "transparent_pixels": 611408,
+        "partially_transparent_pixels": 961456,
+        "opaque_pixels": 0,
+        "bounding_box": [
+          9,
+          10,
+          982,
+          1536
+        ]
+      }
+    },
+    {
+      "path": "/workspace/scratch/dc054acd6888/elio-refresh/surprised/prompt.txt",
+      "bytes": 1382,
+      "sha256": "a088fab9d0178e38c02e99e1a9e21dab81c7da90ba3e6e3998a73bc57133fb45"
+    },
+    {
+      "path": "/workspace/scratch/dc054acd6888/elio-refresh/surprised/reference-thumbnail.png",
+      "bytes": 140857,
+      "sha256": "5c4b8bfc8cb68cdf7e07f805076e5a39714167691f90e8cdf4660428d032ceb5",
+      "width": 256,
+      "height": 384,
+      "mode": "RGBA",
+      "alpha": {
+        "present": true,
+        "min": 0,
+        "max": 255,
+        "transparent_pixels": 38470,
+        "partially_transparent_pixels": 59207,
+        "opaque_pixels": 627,
+        "bounding_box": [
+          8,
+          0,
+          244,
+          384
+        ]
+      }
+    },
+    {
+      "path": "/workspace/scratch/dc054acd6888/elio-refresh/surprised/reference.png",
+      "bytes": 2184026,
+      "sha256": "2902f1df48ed43dbbaad5b6c24b8a90ae44fe9e22ff841225e39ccdeee8bb348",
+      "width": 1024,
+      "height": 1536,
+      "mode": "RGBA",
+      "alpha": {
+        "present": true,
+        "min": 0,
+        "max": 254,
+        "transparent_pixels": 612022,
+        "partially_transparent_pixels": 960842,
+        "opaque_pixels": 0,
+        "bounding_box": [
+          0,
+          0,
+          982,
+          1536
+        ]
+      }
+    },
+    {
+      "path": "/workspace/scratch/dc054acd6888/elio-refresh/surprised/review.txt",
+      "bytes": 1040,
+      "sha256": "4d386d0879205f4f97a34dbe816f034af0c9fe20ea296e4f32f7bea66ae59282"
+    }
+  ]
+}

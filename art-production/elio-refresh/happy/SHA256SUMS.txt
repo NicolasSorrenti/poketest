@@ -1,0 +1,14 @@
+8109f3d3af829fdaac6a9219390d7b9babf330d042317fa2d5722744b84183bb  /workspace/scratch/dc054acd6888/elio-refresh/happy/attempt-01-alpha-review.jpg
+0884936e6ca82faf6423d1c5742a06fc16cfc37faaefbd8e5433a38e5520c052  /workspace/scratch/dc054acd6888/elio-refresh/happy/attempt-01-original.png
+0b240d6f3f37ec853504738abfa12c20246db02135d5af7d52b0b56cd5188ce8  /workspace/scratch/dc054acd6888/elio-refresh/happy/attempt-01-prompt.txt
+d9c3588fae46e1202026642fe1ae4ee4d28e815773f271d550b4883d1db53a3c  /workspace/scratch/dc054acd6888/elio-refresh/happy/attempt-01-thumbnail.png
+cf2a8b24cf8733ed9b44b1b1e58cc5512c9db509d7e7260ca7b696e8b2ecd82a  /workspace/scratch/dc054acd6888/elio-refresh/happy/attempt-02-alpha-review.jpg
+8ae45ba2de9f5fe9eb76a886fcedc188f782dc66614ccd647c4247c0b9e4d6d6  /workspace/scratch/dc054acd6888/elio-refresh/happy/attempt-02-original.png
+cd8076371a66d5a1f78f54e8d089e93b7cc855b95eacff5a8b115d2d1598f66a  /workspace/scratch/dc054acd6888/elio-refresh/happy/attempt-02-prompt.txt
+40335895ffb8de5c9d255ec63d6eb4e200f227ba96371196123dd7df045faf1c  /workspace/scratch/dc054acd6888/elio-refresh/happy/attempt-02-thumbnail.png
+d9c3588fae46e1202026642fe1ae4ee4d28e815773f271d550b4883d1db53a3c  /workspace/scratch/dc054acd6888/elio-refresh/happy/happy-thumbnail.png
+0884936e6ca82faf6423d1c5742a06fc16cfc37faaefbd8e5433a38e5520c052  /workspace/scratch/dc054acd6888/elio-refresh/happy/happy.png
+b7d1a35c0521f76a065542a37da47558d73b1ce74fb1028daf3be4d5322c2f65  /workspace/scratch/dc054acd6888/elio-refresh/happy/manifest.json
+5c4b8bfc8cb68cdf7e07f805076e5a39714167691f90e8cdf4660428d032ceb5  /workspace/scratch/dc054acd6888/elio-refresh/happy/reference-thumbnail.png
+2902f1df48ed43dbbaad5b6c24b8a90ae44fe9e22ff841225e39ccdeee8bb348  /workspace/scratch/dc054acd6888/elio-refresh/happy/reference.png
+319774b09e6b5b4efb423cffad1f4ad6efddc1f141c5beec4e2e9dee0c4d0ee9  /workspace/scratch/dc054acd6888/elio-refresh/happy/review.txt
