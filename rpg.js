@@ -2249,6 +2249,53 @@ function renderRpgActions(locked,shown){
   body.append(p);
  }
 }
+// Day 91 year-end blooper reel; state lives in the campaign save for local/cloud persistence.
+function maybeShowYearEndFallReel(){
+ if(state.day!==91||state.yearEndFallReelCompleted||state.yearEndFallReelActive||
+    state.pendingDuel||state.activeStory||state.mandatoryEventState?.active||
+    state.activeSliceOfLife||state.activeSituation||state.activeEncounter||
+    state.activeArc||state.activeSideQuest||scene.line||scene.choices?.length||
+    timeSequence.blocked||window.NeoRpgTimeTransitions?.active||document.getElementById('neoYearEndFalls'))return;
+ state.yearEndFallReelActive=true;
+ state.yearEndFallReelCompleted=true;
+ persist();
+ const entries=[['Barb','barb'],['Hana','hana'],['Laca','laca'],['Marina','marina']];
+ let index=0;
+ const panel=document.createElement('div');
+ panel.id='neoYearEndFalls';panel.setAttribute('role','dialog');panel.setAttribute('aria-modal','true');
+ panel.setAttribute('aria-label','Year-end workshop bloopers');
+ panel.style.cssText='position:fixed;inset:0;z-index:2147480000;background:rgba(12,9,25,.96);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:16px;color:white;box-sizing:border-box';
+ const title=document.createElement('h2');title.textContent='Year-End Bloopers · Barb’s Workshop';
+ title.style.cssText='margin:0;font:600 clamp(18px,3vw,26px) sans-serif;text-align:center';
+ const img=document.createElement('img');img.style.cssText='width:min(100%,1100px);height:min(72vh,760px);max-height:72dvh;object-fit:contain;border-radius:12px';
+ const controls=document.createElement('div');controls.style.cssText='display:flex;gap:10px;align-items:center;justify-content:center;flex-wrap:wrap;font:16px sans-serif';
+ const label=document.createElement('span');label.style.cssText='min-width:110px;text-align:center';
+ const prev=document.createElement('button');prev.type='button';prev.textContent='← Previous';
+ const next=document.createElement('button');next.type='button';next.textContent='Next →';
+ const close=document.createElement('button');close.type='button';close.textContent='Close';
+ let dismissed=false;
+ function show(){
+  const [name,key]=entries[index];
+  label.textContent=name+' · '+(index+1)+' / '+entries.length;
+  img.alt=name+' slipping in the workshop year-end blooper reel';
+  img.src='/rpg-assets/events/cg/season01/year_end_fall_'+key+'.webp';
+  prev.disabled=index===0;next.textContent=index===entries.length-1?'Finish':'Next →';
+ }
+ function dismiss(){
+  if(dismissed)return;dismissed=true;
+  document.removeEventListener('keydown',onKey,true);
+  panel.remove();state.yearEndFallReelActive=false;persist();
+ }
+ function advance(){if(index===entries.length-1)dismiss();else{index++;show();}}
+ function onKey(e){
+  if(e.key==='Escape'){e.preventDefault();e.stopImmediatePropagation();dismiss();}
+  else if(e.key==='ArrowRight'){e.preventDefault();advance();}
+  else if(e.key==='ArrowLeft'&&index>0){e.preventDefault();index--;show();}
+ }
+ prev.onclick=()=>{if(index>0){index--;show();}};next.onclick=advance;close.onclick=dismiss;
+ controls.append(prev,label,next,close);panel.append(title,img,controls);document.body.append(panel);
+ document.addEventListener('keydown',onKey,true);show();close.focus();
+}
 function render(){
  // Detect actual location changes after the first render; navigation remains free.
  const previousLocation=lastRenderedLocation;
@@ -2583,6 +2630,7 @@ function render(){
   dialogue:$('dialogue'),speakerElement:$('speaker'),lineElement:$('line')
  });
  syncSceneCG();
+ queueMicrotask(maybeShowYearEndFallReel);
  $('deckPicker').disabled=locked||ended||!!state.deckJourney;
  if($('deckPicker')?.options.length)$('deckPicker').value=state.playerDeck;
 }
