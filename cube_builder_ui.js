@@ -28,6 +28,7 @@
  function create({root,actionElement,onChange,config={}}){
   const targetSize=Number.isInteger(config.targetSize)&&config.targetSize>0?config.targetSize:40;
   const unlimitedIds=new Set(config.unlimitedIds||[]);
+  const suppliedEnergyIds=new Set();
   const nameLimit=config.nameLimit!==false;
   if(!root||typeof onChange!=='function')throw Error('Missing Cube builder root/callback');
   root.classList.add('cube-builder-ui');
@@ -55,7 +56,7 @@
   const group=c=>GROUPS.includes(c?.supertype)?c.supertype:'Trainer';
   const sameName=name=>deck.filter(id=>index.get(id)?.name===name).length;
   const canAdd=c=>!locked&&deck.length<targetSize&&amount(c.id)<(limits.get(c.id)||0)&&
-   (unlimitedIds.has(c.id)||(!nameLimit?amount(c.id)<4:sameName(c.name)<4));
+   (suppliedEnergyIds.has(c.id)||unlimitedIds.has(c.id)||(!nameLimit?amount(c.id)<4:sameName(c.name)<4));
   const canRemove=c=>!locked&&amount(c.id)>0;
   function change(c,by){
    if((by>0&&!canAdd(c))||(by<0&&!canRemove(c)))return;
@@ -192,12 +193,13 @@
   };
   return {update({drafted=[],energyIds={},deck:nextDeck=[],locked:isLocked=false,ownedCounts=null,suggestedDeck:recommendation=null}={}){
    suggestedDeck=Array.isArray(recommendation)?[...recommendation]:null;
-   deck=[...nextDeck];locked=isLocked;limits=new Map();index=new Map();
+   deck=[...nextDeck];locked=isLocked;limits=new Map();index=new Map();suppliedEnergyIds.clear();
    for(const c of drafted){
     limits.set(c.id,ownedCounts?Math.max(0,ownedCounts[c.id]||0):(limits.get(c.id)||0)+1);index.set(c.id,c);
    }
    for(const type of TYPES){
     const id=energyIds[type];if(typeof id!=='string')continue;
+    suppliedEnergyIds.add(id);
     index.set(id,{id,name:type+' Energy',supertype:'Energy',subtypes:[],types:[type],images:{}});
     limits.set(id,targetSize);
    }
