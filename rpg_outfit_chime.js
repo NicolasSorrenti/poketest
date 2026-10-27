@@ -1,73 +1,65 @@
-// Reuse the current portrait; outfits only, no dialogue text or extra artwork.
+// Blocking, data-driven overworld close-ups. Never creates replacement artwork.
 const NeoOutfitChime=(()=>{
  const focusUrl='/rpg-assets/outfit-chime-focus.json';
- let focusPromise=null,sequence=0,visible=null,timeout=null;
+ let focusPromise=null,visible=null,timer=null;
  const lastSeen=new Map();
- const load=()=>focusPromise||(focusPromise=fetch(focusUrl).then(r=>{if(!r.ok)throw Error('outfit focus unavailable');return r.json()}).catch(()=>null));
- function cancel(){++sequence;if(timeout)clearTimeout(timeout);if(visible)visible.remove();visible=null;}
- async function onEntry({characters=[],blocked=false,sceneId=null}={}){
-  cancel();if(blocked||sceneId||!characters.length)return;
-  const changes=[];
+ const load=()=>focusPromise||(focusPromise=fetch(focusUrl).then(r=>r.ok?r.json():null).catch(()=>null));
+ function cancel(){if(timer)clearTimeout(timer);timer=null;visible?.remove();visible=null;}
+ async function display(portrait,focus,duration=3000){
+  if(!portrait||typeof document==='undefined')return;
+  cancel();
+  const top=Math.max(0,Math.min(.8,Number(focus?.top??.06)));
+  const bottom=Math.max(top+.12,Math.min(1,Number(focus?.bottom??.51)));
+  const img=new Image();
+  img.alt='';img.decoding='async';img.draggable=false;
+  // Load before displaying; failures must not strand the game.
+  const loaded=await new Promise(resolve=>{
+   const watchdog=setTimeout(()=>resolve(false),2500);
+   img.onload=()=>{clearTimeout(watchdog);resolve(true);};
+   img.onerror=()=>{clearTimeout(watchdog);resolve(false);};
+   img.src=portrait;
+  });
+  if(!loaded)return;
+  const ratio=img.naturalWidth/(img.naturalHeight*(bottom-top));
+  const screen=document.createElement('div');
+  screen.className='neo-outfit-chime';
+  screen.setAttribute('aria-hidden','true');
+  screen.style.cssText='position:fixed;inset:0;z-index:10050;display:grid;place-items:center;background:#060a1bd9;pointer-events:auto;';
+  const panel=document.createElement('div');
+  panel.style.cssText='position:relative;overflow:hidden;border:2px solid #fad59dd9;border-radius:16px;background:#111;box-shadow:0 14px 55px #000c;';
+  panel.style.width='min(90vw,560px,'+(58*ratio)+'vh)';
+  panel.style.aspectRatio=String(ratio);
+  img.style.cssText='position:absolute;max-width:none;left:0;width:100%;height:auto;top:'+(-top/(bottom-top)*100)+'%;';
+  panel.append(img);screen.append(panel);document.body.append(screen);visible=screen;
+  await new Promise(resolve=>{
+   let done=false;
+   const finish=()=>{if(done)return;done=true;clearTimeout(timer);timer=null;screen.remove();if(visible===screen)visible=null;resolve();};
+   timer=setTimeout(finish,duration);
+   // Chime blocks game input, but is not a trap if someone explicitly taps to skip.
+   screen.addEventListener('click',finish,{once:true});
+  });
+ }
+ async function onEntry({characters=[],firstMeetings=[],blocked=false,sceneId=null}={}){
+  if(blocked||sceneId)return;
+  const data=await load();
+  // Preserve baseline for only actually encountered characters.
+  const outfit=[];
   for(const {id,portrait} of characters){
    if(!id||!portrait)continue;
    const previous=lastSeen.get(id);
    lastSeen.set(id,portrait);
-   // Initial encounter is not a change; no chime for unchanged portrait.
-   if(previous&&previous!==portrait)changes.push({id,portrait});
+   const name=portrait.split('/').pop();
+   const focus=data?.characters?.[id]?.variants?.[name];
+   if(focus&&portrait.includes('/'+id+'/')&&previous!==portrait)outfit.push({id,portrait,focus});
   }
-  if(!changes.length)return;
-  const ticket=sequence,data=await load();
-  if(!data||ticket!==sequence||document.hidden)return;
-  // Only explicitly approved outfit variants should chime, not facial expressions.
-  const matching=changes.find(({id,portrait})=>data.characters?.[id]?.variants?.[portrait.split('/').pop()]&&portrait.includes('/'+id+'/'));
-  if(!matching)return;
-  const {id,portrait}=matching,focus=data.characters[id].variants[portrait.split('/').pop()];
-  const top=Math.max(0,Math.min(.85,Number(focus.top)||.3));
-  const bottom=Math.max(top+.1,Math.min(1,Number(focus.bottom)||.7));
-  const overlay=document.createElement('div');
-  overlay.className='neo-outfit-chime';
-  overlay.setAttribute('aria-hidden','true');
-  overlay.style.cssText='position:fixed;inset:0;z-index:10050;pointer-events:none;display:grid;place-items:center;background:rgba(5,9,24,.35)';
-  const frame=document.createElement('div');
-  frame.style.cssText='position:relative;overflow:hidden;border:2px solid rgba(250,213,157,.85);border-radius:15px;background:#141724;box-shadow:0 8px 55px #000a;';
-  const img=new Image();img.alt='';img.draggable=false;
-  img.style.cssText='position:absolute;max-width:none;width:100%;height:auto;left:0;top:'+(-100*top/(bottom-top))+'%;';
-  img.onload=()=>{
-   if(visible!==overlay)return;
-   const aspect=img.naturalWidth/(img.naturalHeight*(bottom-top));
-   frame.style.width='min(88vw,550px,'+(54*aspect)+'vh)';
-   frame.style.aspectRatio=String(aspect);
-  };
-  img.onerror=()=>{if(visible===overlay)cancel();};
-  img.src=portrait;frame.append(img);overlay.append(frame);
-  document.body.append(overlay);visible=overlay;
-  timeout=setTimeout(()=>{if(visible===overlay)cancel();},Math.max(500,Number(data.durationMs)||3000));
+  const newIds=new Set(firstMeetings.map(x=>x.id));
+  for(const item of firstMeetings){
+   if(item?.portrait)await display(item.portrait,{top:.06,bottom:.53},3000);
+  }
+  for(const item of outfit){
+   // An introduction and outfit reveal must not both play for one NPC on arrival.
+   if(!newIds.has(item.id))await display(item.portrait,item.focus,3000);
+  }
  }
- async function firstMeeting({id,portrait}={}){
-  if(!id||!portrait)return;
-  // A character's introduction is tied to the game's existing met flag;
-  // this renderer never edits save data or changes the source portrait.
-  cancel();
-  const ticket=sequence;
-  const overlay=document.createElement('div');
-  overlay.className='neo-first-meeting-chime';
-  overlay.setAttribute('aria-hidden','true');
-  overlay.style.cssText='position:fixed;inset:0;z-index:10050;pointer-events:none;display:grid;place-items:center;background:rgba(5,9,24,.38)';
-  const frame=document.createElement('div');
-  frame.style.cssText='position:relative;width:min(88vw,520px);max-height:60vh;overflow:hidden;border:2px solid rgba(250,213,157,.85);border-radius:15px;background:#141724;box-shadow:0 8px 55px #000a;';
-  const img=new Image();
-  img.alt='';img.draggable=false;
-  img.style.cssText='display:block;width:100%;height:100%;object-fit:cover;object-position:center 14%;';
-  img.onload=()=>{
-   if(ticket!==sequence)return;
-   const ratio=img.naturalWidth/img.naturalHeight;
-   frame.style.aspectRatio=String(Math.max(.75,Math.min(1.25,ratio/.52)));
-  };
-  img.onerror=()=>{if(visible===overlay)cancel();};
-  img.src=portrait;
-  frame.append(img);overlay.append(frame);
-  document.body.append(overlay);visible=overlay;
-  timeout=setTimeout(()=>{if(visible===overlay)cancel();},3000);
- }
- return {onEntry,firstMeeting,cancel};
+ return {onEntry,cancel,firstMeeting:({portrait})=>display(portrait,{top:.06,bottom:.53},3000)};
 })();
