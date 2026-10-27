@@ -710,3 +710,15 @@ test('Level 7 retains existing Bench evolution scoring',()=>{
  const lower=AI.configuration({side:1,level:7});
  assert.equal(AI.score(evolve,o,lower,{}),AI.score(evolve,structuredClone(o),lower,{}));
 });
+
+test('Apex saves a playable evolution before a small-hand Professor Oak reset',()=>{
+ const o=board();
+ Object.assign(o,{phase:'game',round:5,turnSerial:11});
+ o.self.bench=[{id:MACHOP,energies:[],damage:0,status:null,playedTurn:2}];
+ o.self.hand=['base1-34','base1-88'];
+ o.self.deckCount=20;
+ const evo={type:'evolve',payload:{handIndex:0,slot:0}};
+ const withoutOak=structuredClone(o);
+ withoutOak.self.hand=['base1-34','base1-91'];
+ assert.ok(AI.score(evo,o,cfg,{})>AI.score(evo,withoutOak,cfg,{})+200);
+});
