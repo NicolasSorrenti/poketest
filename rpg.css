@@ -496,3 +496,17 @@
 @media(max-width:600px){
  .rpg-cast-member .rpg-stage-persona-frame{height:calc(100% - 23px)}
 }
+
+/* Info drawer: title and tabs remain visible in document order without overlap. */
+#rpgInfoPanel .rpg-drawer-header{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:52px}
+#rpgInfoPanel .rpg-panel-tabs{position:relative;top:auto;z-index:1;min-width:0;padding:10px 0;grid-template-columns:repeat(4,minmax(0,1fr))}
+#rpgInfoPanel .rpg-panel-tabs button{min-width:0;min-height:40px;white-space:normal;overflow-wrap:anywhere}
+.stage-planner{margin:12px 0 0;padding:14px;min-width:0;border:1px solid #55516c;border-radius:12px;background:linear-gradient(150deg,#1c263b,#151c2e)}
+.stage-planner .daily-planner{grid-template-columns:repeat(auto-fit,minmax(min(100%,230px),1fr))}
+@media(max-width:700px){
+ #rpgInfoPanel .rpg-drawer-header{position:relative;top:auto;z-index:2}
+ #rpgInfoPanel .rpg-panel-tabs{position:relative;top:auto}
+ .stage-panel .character-actions:not([hidden]){position:relative;bottom:auto;z-index:auto}
+ .stage-planner{margin:9px 0 12px;padding:11px}
+ .stage-planner .daily-planner{grid-template-columns:minmax(0,1fr)}
+}
