@@ -559,6 +559,41 @@ test('Apex Bench horizon ignores knockouts from a sleeping opponent',()=>{
   AI.energyHorizonBonus(attach,safe,cfg));
 });
 
+test('Apex Bench horizon ignores Amnesia-locked knockout threats',()=>{
+ const ready=exposedActiveHorizonBoard();
+ const blocked=structuredClone(ready);
+ blocked.opponent.active.amnesia={index:0,expires:blocked.turnSerial+1};
+ const safe=structuredClone(blocked);
+ safe.self.active.damage=0;
+ assert.equal(AI.energyHorizonBonus(attach,blocked,cfg),
+  AI.energyHorizonBonus(attach,safe,cfg),
+  'an Amnesia-disabled attack must not create Bench replacement urgency');
+ blocked.opponent.active.amnesia.expires=blocked.turnSerial;
+ assert.equal(AI.energyHorizonBonus(attach,blocked,cfg),
+  AI.energyHorizonBonus(attach,ready,cfg),
+  'the threat returns after Amnesia expires');
+});
+test('Apex Bench horizon respects Gym cooldown and once-used attacks',()=>{
+ const ready=exposedActiveHorizonBoard();
+ for(const lock of [{gymAttackCooldown:{index:0,expires:ready.turnSerial+1}},
+   {gymAttackOnce:[0]}]){
+  const blocked=structuredClone(ready);
+  Object.assign(blocked.opponent.active,lock);
+  const safe=structuredClone(blocked);
+  safe.self.active.damage=0;
+  assert.equal(AI.energyHorizonBonus(attach,blocked,cfg),
+   AI.energyHorizonBonus(attach,safe,cfg));
+ }
+});
+test('Level 7 Bench horizon retains the existing affordable-attack estimate',()=>{
+ const ready=exposedActiveHorizonBoard();
+ const blocked=structuredClone(ready);
+ blocked.opponent.active.amnesia={index:0,expires:ready.turnSerial+1};
+ const lower=AI.configuration({side:1,level:7});
+ assert.equal(AI.energyHorizonBonus(attach,blocked,lower),
+  AI.energyHorizonBonus(attach,ready,lower));
+});
+
 function matchWinningEvolutionBoard(){
  const o=evolutionRefuelBoard('base1-96');
  // Rattata's Bite KOs damaged Machop but not evolved Machoke.
