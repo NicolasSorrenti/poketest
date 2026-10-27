@@ -1,0 +1,52 @@
+{
+  "status": "generated",
+  "tool": "built-in image_gen",
+  "attempts": 1,
+  "reference": "/workspace/scratch/dc054acd6888/retry-batch/laca-lifeguard-surprised/attempt-001/reference.webp",
+  "source": "/workspace/scratch/dc054acd6888/generated_images/exec-bb7fe94e-7515-42ee-a12e-2daea3b9f0d2.png",
+  "original_bytes_preserved": true,
+  "review": "Surprised expression present; original pose, outfit coverage, accessories and framing visually retained. Exact pixel invariance outside facial region is not guaranteed.",
+  "files": [
+    {
+      "path": "/workspace/scratch/dc054acd6888/reset-batch/laca-lifeguard-surprised/original.png",
+      "bytes": 1292612,
+      "sha256": "4c67f7facb3d5ffcb3bcfbfad5ef71b1096297ac5da57d22648657f364b57d3b",
+      "dimensions": [
+        941,
+        1672
+      ],
+      "mode": "RGBA",
+      "alpha": {
+        "present": true,
+        "extrema": [
+          0,
+          255
+        ],
+        "transparent_pixels": 903885
+      }
+    },
+    {
+      "path": "/workspace/scratch/dc054acd6888/reset-batch/laca-lifeguard-surprised/thumbnail.png",
+      "bytes": 123474,
+      "sha256": "e33ef5ea965dd1a7abba37f91175afa01587ea71d2c28b1ac8bf344fdb30cb8c",
+      "dimensions": [
+        256,
+        455
+      ],
+      "mode": "RGBA",
+      "alpha": {
+        "present": true,
+        "extrema": [
+          0,
+          255
+        ],
+        "transparent_pixels": 66099
+      }
+    },
+    {
+      "path": "/workspace/scratch/dc054acd6888/reset-batch/laca-lifeguard-surprised/prompt.txt",
+      "bytes": 840,
+      "sha256": "2eceb9d9d4f92540b3bd7ec6a41620f6c354dedfae692a2c5f72fea0d30c92eb"
+    }
+  ]
+}

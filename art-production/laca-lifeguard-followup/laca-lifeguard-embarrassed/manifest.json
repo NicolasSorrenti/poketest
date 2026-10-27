@@ -1,0 +1,70 @@
+{
+  "tool": "built-in image_gen",
+  "attempt_count": 1,
+  "reject_count": 0,
+  "reference": {
+    "path": "/workspace/scratch/dc054acd6888/retry-batch/laca-lifeguard-angry/reference.webp",
+    "sha256": "035e43536e36ca0ecea28c8ea20aa4191a41330cd0b95cfb8662a31d5f59d500",
+    "bytes": 280300,
+    "width": 941,
+    "height": 1672,
+    "mode": "RGBA",
+    "alpha": {
+      "extrema": [
+        0,
+        255
+      ],
+      "fully_transparent_pixels": 897651,
+      "partially_transparent_pixels": 674994,
+      "opaque_pixels": 707
+    }
+  },
+  "artifacts": [
+    {
+      "path": "/workspace/scratch/dc054acd6888/followup-batch/laca-lifeguard-embarrassed/attempt-001-original.png",
+      "sha256": "76f5915509dac301e6f4f0a54f87bc2f6aa636471b873c35e7af343fa8a3382f",
+      "bytes": 1300198,
+      "width": 941,
+      "height": 1672,
+      "mode": "RGBA",
+      "alpha": {
+        "extrema": [
+          0,
+          255
+        ],
+        "fully_transparent_pixels": 888768,
+        "partially_transparent_pixels": 683995,
+        "opaque_pixels": 589
+      }
+    },
+    {
+      "path": "/workspace/scratch/dc054acd6888/followup-batch/laca-lifeguard-embarrassed/attempt-001-thumbnail.png",
+      "sha256": "aeef8446481205cf158531c1ec3399464ae885f39ae0539d565630b828569d13",
+      "bytes": 124320,
+      "width": 256,
+      "height": 455,
+      "mode": "RGBA",
+      "alpha": {
+        "extrema": [
+          0,
+          255
+        ],
+        "fully_transparent_pixels": 65685,
+        "partially_transparent_pixels": 49630,
+        "opaque_pixels": 1165
+      }
+    },
+    {
+      "path": "/workspace/scratch/dc054acd6888/followup-batch/laca-lifeguard-embarrassed/prompt.txt",
+      "sha256": "5b2a6396549ba1c61584793b8dbc66acb5f50d3974b758d870bc59e1d498c621",
+      "bytes": 924
+    }
+  ],
+  "assessment": {
+    "expression": "Visible blush, sideways gaze, raised inner brows and sheepish smile read as embarrassed.",
+    "identity_and_invariants": "Adult identity, brown hair and eyes, outfit coverage, pose, framing and illustration style appear closely preserved. Generative redraw introduces subtle differences outside the face; exact pixel-identical face-only preservation is not achieved.",
+    "transparency": "Actual alpha verified numerically.",
+    "sfw": "SFW character asset; neutral full-body framing.",
+    "status": "Delivered with outside-face preservation caveat; no additional attempts."
+  }
+}

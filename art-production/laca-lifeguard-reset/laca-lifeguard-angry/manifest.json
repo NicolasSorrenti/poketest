@@ -1,0 +1,57 @@
+{
+  "status": "generated",
+  "tool": "built-in image_gen",
+  "calls": 1,
+  "source": "/workspace/scratch/dc054acd6888/generated_images/exec-f7f54fc9-ad2c-4121-a873-0c1d1af30923.png",
+  "reference": "/workspace/scratch/dc054acd6888/retry-batch/laca-lifeguard-angry/reference.webp",
+  "original_bytes_preserved": true,
+  "attempts": [
+    {
+      "attempt": 1,
+      "path": "/workspace/scratch/dc054acd6888/reset-batch/laca-lifeguard-angry/original.png",
+      "status": "retained",
+      "review": "Angry expression present; identity, swimwear coverage, pose and framing visually consistent. Generative edit is not guaranteed pixel-identical outside the face."
+    }
+  ],
+  "files": [
+    {
+      "path": "/workspace/scratch/dc054acd6888/reset-batch/laca-lifeguard-angry/original.png",
+      "bytes": 1292631,
+      "sha256": "4ab5549dfaf33d047e3a79edc5f724c3663f20f98be73781a9ff09bebe304729",
+      "width": 941,
+      "height": 1672,
+      "mode": "RGBA",
+      "alpha": {
+        "present": true,
+        "extrema": [
+          0,
+          255
+        ],
+        "fully_transparent_pixels": 908423,
+        "partially_transparent_pixels": 663765
+      }
+    },
+    {
+      "path": "/workspace/scratch/dc054acd6888/reset-batch/laca-lifeguard-angry/thumbnail.png",
+      "bytes": 123302,
+      "sha256": "23b54791b972d8d0065901a1f43fa4c1efb68b658393b7c8c6e7202f9fe16536",
+      "width": 256,
+      "height": 455,
+      "mode": "RGBA",
+      "alpha": {
+        "present": true,
+        "extrema": [
+          0,
+          255
+        ],
+        "fully_transparent_pixels": 66345,
+        "partially_transparent_pixels": 48816
+      }
+    },
+    {
+      "path": "/workspace/scratch/dc054acd6888/reset-batch/laca-lifeguard-angry/prompt.txt",
+      "bytes": 993,
+      "sha256": "81699f43dba648c910385438c32ef622abdf865737ba702826416dda2cee9b4c"
+    }
+  ]
+}
