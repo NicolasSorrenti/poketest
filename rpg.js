@@ -448,7 +448,7 @@ function ordinaryTalk(id,character,{first=false,present=[]}={}){
 function selectPerson(id,{skipInvitation=false}={}){
  if(state.activeSliceOfLife||state.activeSituation||state.activeStory||state.activeSideQuest||state.activeEncounter||state.activeArc||state.pendingDuel||!cast[id]||!currentPeople().includes(id))return;
  const c=cast[id],first=!state['met_'+id]&&!((id==='reina')&&state.metReina);
- if(id==='hana')hanaEncounterKey='talk:'+ ++hanaEncounterSerial;
+ if(id==='hana'&&!(hanaEncounterKey||'').startsWith('entry:'))hanaEncounterKey='talk:'+ ++hanaEncounterSerial;
  const today=state.day+':'+id,fresh=!state.talked[today];
  state['met_'+id]=true;
  if(id==='reina')state.metReina=true;
@@ -2353,6 +2353,24 @@ function render(){
  ensureRpgLayout();
  window.NeoRpgInterface?.init?.();
  maybeStartMandatory();
+ // Outfit-chime: reuse Hana's selected overworld PNG and crop per focus manifest.
+ // Only evaluate on entering a different location; don't cover scripted events.
+ if(previousLocation&&previousLocation!==state.location){
+  hanaEncounterKey='entry:'+ ++hanaEncounterSerial;
+  const entrant=currentPeople().includes('hana');
+  if(entrant){
+   const portrait=hanaOverworldPortrait(null);
+   const destination=state.location;
+   setTimeout(()=>{
+    if(state.location!==destination)return;
+    const blocked=timeSequence.blocked||!!state.mandatoryEventState?.active||
+     !!state.activeSliceOfLife||!!state.activeSituation||!!state.activeStory||
+     !!state.activeEncounter||!!state.activeArc||!!state.activeSideQuest||
+     !!state.pendingDuel;
+    HanaOutfitChime.onEntry({location:destination,portrait,present:currentPeople().includes('hana'),blocked,sceneId:activeOutfitSceneId});
+   },900);
+  }else HanaOutfitChime.cancel();
+ }
  renderJourney();
  renderCollection();
  const ended=state.day>90,locked=timeSequence.blocked||!!state.activeSliceOfLife||!!state.mandatoryEventState?.active||!!state.activeSituation||!!state.activeStory||!!state.activeEncounter||!!state.activeArc||!!state.activeSideQuest||!!state.pendingDuel;
