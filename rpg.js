@@ -2054,13 +2054,31 @@ function scenePortraitSource(id,expression,sceneId=activeOutfitSceneId){
 }
 function applyPersonaCStageCrop(img,id){
  const crop=PERSONA_C_CROPS[id];
- if(!crop)return;
- const [x,y,w,h]=crop;
- // The stage frame clips the original image; no binary assets are altered.
- img.style.width=(100/w)+'%';
- img.style.height=(100/h)+'%';
- img.style.left=(-100*x/w)+'%';
- img.style.top=(-100*y/h)+'%';
+ const frame=img.closest('.rpg-stage-persona-frame');
+ if(!crop||!frame)return;
+ const layout=()=>{
+  if(!img.naturalWidth||!img.naturalHeight)return;
+  const fw=frame.clientWidth,fh=frame.clientHeight;
+  if(!fw||!fh)return;
+  const [x,y,w,h]=crop;
+  // Single uniform scale preserves source artwork proportions. Cover the
+  // selected source rectangle and clip excess within the Persona bust frame.
+  const scale=Math.max(fw/(w*img.naturalWidth),fh/(h*img.naturalHeight));
+  const displayW=img.naturalWidth*scale,displayH=img.naturalHeight*scale;
+  img.style.width=displayW+'px';
+  img.style.height=displayH+'px';
+  img.style.left=(fw/2-(x+w/2)*displayW)+'px';
+  img.style.top=(fh/2-(y+h/2)*displayH)+'px';
+ };
+ if(!frame._personaCropObserver&&typeof ResizeObserver!=='undefined'){
+  frame._personaCropObserver=new ResizeObserver(()=>layout());
+  frame._personaCropObserver.observe(frame);
+ }
+ if(!img._personaCropListener){
+  img._personaCropListener=true;
+  img.addEventListener('load',layout);
+ }
+ layout();
 }
 function dialogueExpression(line){
  const s=String(line||'').toLowerCase();
