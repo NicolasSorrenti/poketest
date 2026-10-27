@@ -72,6 +72,13 @@ function observation(game,side){
  // visible to the acting player and never reveal the opponent's private cards.
  const self={...view.players[side],energyUsed:!!game.players[side].energyUsed,
   retreated:!!game.players[side].retreated};
+ // Both Trainer locks and an enabled Hay Fever are visible game effects.
+ // Check the actual Power state (including status/suppression), never a
+ // printed ability alone. Only the acting player's lock flag is read.
+ const classicFormat=['classic','theme-expanded','gym-theme','gym-expanded',
+  'neo-theme','online-preview'].includes(game.format);
+ const trainerBlocked=!!(game.players[side].trainerLockedUntil>game.turnSerial||
+  classicFormat&&POWERS.powerInPlay(game,'Hay Fever'));
  // Only expose decisions previously made BY this CPU in its own Trainer flow.
  // The full pending action can include hidden draws and must never be projected.
  const ownedPlan=game.pendingAction?.kind==='classic_trainer'&&
@@ -82,7 +89,7 @@ function observation(game,side){
   return Number(x.slice(5));
  };
  return {phase:view.phase,turn:view.turn,round:view.round,turnSerial:game.turnSerial,over:view.over,
-  self,opponent:view.players[1-side],stadium:view.stadium,
+  self,opponent:view.players[1-side],stadium:view.stadium,trainerBlocked,
   pendingTrainerTarget:selectedIndex('target'),pendingTrainerSource:selectedIndex('source'),
   decision:view.pendingDecision,setupReady:!!game.setupReady[side],mulliganBonus:view.mulliganBonus};
 }
@@ -354,7 +361,9 @@ function candidates(o,cfg,used){
        cardName:card(target.id)?.name||''}))
     options.push(command('attach_energy',{handIndex:i,slot}));
   }
-  if(c?.supertype==='Trainer'&&used.trainers<cfg.skill.trainers&&trainerOpportunity(o,c.name,cfg))options.push(command('play_trainer',{handIndex:i}));
+  if(c?.supertype==='Trainer'&&used.trainers<cfg.skill.trainers&&
+     !(cfg.level===8&&o.trainerBlocked)&&trainerOpportunity(o,c.name,cfg))
+   options.push(command('play_trainer',{handIndex:i}));
  }
  if(p.active){
   const effective=p.active.effectiveAttacks||card(p.active.id)?.attacks||[];
@@ -718,7 +727,7 @@ function doomedActiveAttachmentPenalty(o,energyId,cfg){
 function pokemonCenterPending(o,cfg,used){
  // Do not block the turn's Energy attachment for a Center that cannot be
  // played: Apex has a finite Trainer-action budget per turn.
- if((used?.trainers||0)>=cfg.skill.trainers||
+ if(o.trainerBlocked||(used?.trainers||0)>=cfg.skill.trainers||
     !(o.self.hand||[]).some(id=>card(id)?.name==='Pokémon Center'))return false;
  const damaged=[o.self.active,...o.self.bench].filter(u=>u&&u.damage>=10);
  const healed=damaged.reduce((n,u)=>n+u.damage,0);
