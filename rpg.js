@@ -1975,7 +1975,7 @@ function refreshRpgPanels(){
  }
 }
 // Outfit images are optional. All original character art remains a fallback.
-const expressionGuests=new Set(['alma','jun','nereo','teo','elio']);
+// Older guest assets are optional fallbacks; never assume every character has vn-expressions.\nconst expressionGuests=new Set(['alma','jun','nereo','teo','elio']);
 const failedScenePortraits=new Set();
 let activeOutfitSceneId=null;
 const solExpressions={neutral:'neutral',surprised:'surprised',vulnerable:'worried',irritated:'worried',determined:'neutral',happy:'smile'};
@@ -2031,27 +2031,35 @@ const PERSONA_C_EXPR={
  irritated:['angry','annoyed','concerned','worried'],
  determined:['smirk','neutral'],neutral:['neutral']
 };
+// Central portrait source registry. Existing asset locations are retained; no migrations.
+// Outfit-driven characters still use OUTFITS.sources() for their canonical outfits.
+const RPG_STAGE_PORTRAIT_LAYOUTS=Object.freeze({
+ barb:{folder:'vn-expressions',extension:'webp'},
+ laca:{folder:'outfits',extension:'webp'},
+ sol:{folder:'expressions',extension:'png'},
+ elio:{folder:null},
+ rina:{folder:'expression-portraits',extension:'webp',extra:'neutral.png'},
+ sierra:{folder:'expression-portraits',extension:'webp',extra:'portrait.png'}
+});
 function personaCStageCandidates(id,emotion,normal){
- if(id==='elio')return normal;
+ if(id==='elio')return normal; // Elio uses only reviewed sources.
  const dir='/rpg-assets/characters/'+id+'/';
  const names=PERSONA_C_EXPR[emotion]||PERSONA_C_EXPR.neutral;
- const picks=[];
- if(id==='barb')for(const n of names)picks.push(dir+'vn-expressions/'+n+'.webp');
- else if(id==='laca'){
-  // Outfit selection remains authoritative: do not turn lifeguard Laca casual.
-  const life=normal.some(p=>p.includes('/lifeguard/'));
-  const outfit=life?'lifeguard':'casual';
-  for(const n of names){picks.push(dir+'outfits/'+outfit+'/'+n+'.webp');picks.push(dir+'outfits/'+outfit+'/'+n+'.png');}
+ const picks=[],layout=RPG_STAGE_PORTRAIT_LAYOUTS[id]||{folder:'expression-portraits',extension:'webp'};
+ if(id==='laca'){
+  // Do not override the canonical lifeguard/casual outfit selected upstream.
+  const outfit=normal.some(p=>p.includes('/lifeguard/'))?'lifeguard':'casual';
+  for(const n of names){picks.push(dir+'outfits/'+outfit+'/'+n+'.webp',dir+'outfits/'+outfit+'/'+n+'.png');}
   picks.push(dir+'outfits/'+outfit+'/neutral.webp');
- }else if(id==='sol'){
-  for(const n of names)picks.push(dir+'expressions/'+(n==='happy'?'smile':n==='vulnerable'?'worried':n)+'.png');
-  picks.push(dir+'portraits/primary.png');
  }else{
-  for(const n of names)picks.push(dir+'expression-portraits/'+n+'.webp');
-  if(id==='rina')picks.push(dir+'neutral.png');
-  if(id==='sierra')picks.push(dir+'portrait.png');
+  for(const n of names){
+   const resolved=id==='sol'?({happy:'smile',vulnerable:'worried'}[n]||n):n;
+   picks.push(dir+layout.folder+'/'+resolved+'.'+layout.extension);
+  }
+  if(id==='sol')picks.push(dir+'portraits/primary.png');
+  if(layout.extra)picks.push(dir+layout.extra);
  }
- return [...new Set([...picks,...normal])];
+ return [...new Set([...picks,...normal].filter(Boolean))];
 }
 // Daily overworld-only alternate portraits. Stable for the entire in-game day.
 const DAILY_STAGE_ALTERNATES={
