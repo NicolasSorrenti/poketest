@@ -333,6 +333,16 @@ test('Apex still develops Active when its opponent is Asleep and cannot attack',
  assert.equal(AI.score(attachActive,asleep,cfg,{})-
   AI.score(attachActive,threatened,cfg,{}),140);
 });
+test('Apex discounts a Confused opponent KO before penalizing Active Energy',()=>{
+ const threatened=threatenedActiveEnergyBoard();
+ const confused=structuredClone(threatened);
+ confused.opponent.active.status='Confused';
+ // The reducer makes a Confused attacker pass a 50% coin flip before the
+ // printed attack resolves. A certain Jab KO is therefore not a >=75% KO.
+ assert.ok(AI.score(attachActive,confused,cfg,{})>
+  AI.score(attachActive,threatened,cfg,{})+80,
+  'Confusion must not trigger the same doomed-Active Energy penalty as a guaranteed KO');
+});
 test('Apex does not treat an Amnesia-disabled knockout as a doomed-Active threat',()=>{
  const threatened=threatenedActiveEnergyBoard();
  const locked=structuredClone(threatened);
@@ -545,6 +555,18 @@ test('Apex does not force a doomed Active attachment before a ready attack',()=>
  assert.deepEqual(AI.energyPreparationActions(o,cfg,[attack,activeEnergy]),
   [attack,activeEnergy],
   'preserve the legal attack instead of forcing a stranded attachment');
+});
+test('Apex keeps productive Energy preparation against a Confused attacker',()=>{
+ const threatened=exposedActiveHorizonBoard();
+ threatened.self.bench[0].energyAttachBlockSerial=threatened.turnSerial+1;
+ threatened.self.retreated=true;
+ const activeEnergy={type:'attach_energy',payload:{handIndex:0,slot:-1}};
+ const confused=structuredClone(threatened);
+ confused.opponent.active.status='Confused';
+ assert.deepEqual(AI.energyPreparationActions(threatened,cfg,[attack,activeEnergy]),
+  [attack,activeEnergy],'a guaranteed KO makes the extra Active Energy expendable');
+ assert.deepEqual(AI.energyPreparationActions(confused,cfg,[attack,activeEnergy]),
+  [activeEnergy],'a 50% Confusion KO must not suppress otherwise useful Energy preparation');
 });
 test('Apex preserves Energy preparation when it enables a legal retreat',()=>{
  const o=exposedActiveHorizonBoard();
