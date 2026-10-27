@@ -654,7 +654,9 @@ function horizonAttackValue(unit,defender,hand,remaining=1,futureRound=0,turnSer
   const after={...unit,energies:[...(unit.energies||[]),id]};
   // A card requires another turn's Energy attachment. Discount those future
   // outcomes to avoid preferring a speculative combination to today's KO.
-  const next=projectedAttackValue(after,defender,turnSerial);
+  // The next hand attachment is made on our next turn (after the opponent's
+  // turn). Temporary attack locks may expire before that future attack.
+  const next=projectedAttackValue(after,defender,turnSerial+2);
   best=Math.max(best,immediate+(next-immediate)*.48);
  }
  return best;
