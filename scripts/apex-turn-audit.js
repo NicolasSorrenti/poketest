@@ -28,9 +28,9 @@ function audit(commands){
    // Preserve a valid attachment trace until a genuinely board-changing
    // action or Pokémon Center consumes it.
    const drawsCards=['Bill','Professor Oak',"Blaine's Last Resort",
-    'Mail from Bill','Erika'].includes(trainerName);
+    'Mail from Bill','Erika',"Misty's Wrath"].includes(trainerName);
    const preservesBoard=['Bill','Professor Oak',"Blaine's Last Resort",
-    'Mail from Bill','Erika','Energy Search','Pokémon Trader',
+    'Mail from Bill','Erika',"Misty's Wrath",'Energy Search','Pokémon Trader',
     'Nightly Garbage Run','Pokédex'].includes(trainerName);
    // Erika draws for both players, but never changes Pokémon or Energy.
    // Keep the evidence through her (and other neutral Trainers') prompts.
