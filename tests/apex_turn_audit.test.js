@@ -40,6 +40,17 @@ test('discards stale evidence after a trainer or board-position action',()=>{
  assert.deepEqual(audit([attach(1,8,40),trainer,center(1,8)]),[]);
  assert.deepEqual(audit([attach(1,8,40),retreat,center(1,8)]),[]);
 });
+test('preserves wasted-Energy evidence through draw-only Trainers',()=>{
+ for(const cardId of ['base1-91','base1-88']){
+  const draw={side:1,turnSerial:8,cardId,
+   command:{type:'play_trainer',payload:{handIndex:0}}};
+  const result=audit([attach(1,8,40),draw,center(1,8)]);
+  assert.equal(result.length,1,cardId+' cannot heal or reposition the attachment target');
+  assert.equal(result[0].attachmentIndex,0);
+  assert.deepEqual(audit([attach(1,8,40),draw,center(1,8,[])]),[],
+   'a healed target must not produce a false positive');
+ }
+});
 test('retains a valid attachment through a harmless bench placement',()=>{
  const bench={side:1,turnSerial:8,command:{type:'bench',payload:{handIndex:0}}};
  assert.equal(audit([attach(1,8,40),bench,center(1,8)]).length,1);
