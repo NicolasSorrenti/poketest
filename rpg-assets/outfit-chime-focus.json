@@ -1,0 +1,127 @@
+{
+  "version": 1,
+  "durationMs": 3000,
+  "characters": {
+    "akari": {
+      "portraitPattern": "/rpg-assets/characters/akari/portraits/special-day-{n}.png",
+      "variants": {
+        "special-day-1.png": {
+          "top": 0.29,
+          "bottom": 0.67,
+          "notes": "Upper outfit and waist; review for precise garment framing"
+        },
+        "special-day-2.png": {
+          "top": 0.29,
+          "bottom": 0.67,
+          "notes": "Upper outfit and waist; review for precise garment framing"
+        },
+        "special-day-3.png": {
+          "top": 0.29,
+          "bottom": 0.67,
+          "notes": "Upper outfit and waist; review for precise garment framing"
+        },
+        "special-day-4.png": {
+          "top": 0.29,
+          "bottom": 0.67,
+          "notes": "Upper outfit and waist; review for precise garment framing"
+        },
+        "special-day-5.png": {
+          "top": 0.29,
+          "bottom": 0.67,
+          "notes": "Upper outfit and waist; review for precise garment framing"
+        }
+      }
+    },
+    "barb": {
+      "portraitPattern": "/rpg-assets/characters/barb/portraits/special-day-{n}.png",
+      "variants": {
+        "special-day-1.png": {
+          "top": 0.26,
+          "bottom": 0.7,
+          "notes": "Upper outfit and waist; review for precise garment framing"
+        },
+        "special-day-2.png": {
+          "top": 0.26,
+          "bottom": 0.7,
+          "notes": "Upper outfit and waist; review for precise garment framing"
+        },
+        "special-day-3.png": {
+          "top": 0.26,
+          "bottom": 0.7,
+          "notes": "Upper outfit and waist; review for precise garment framing"
+        },
+        "special-day-4.png": {
+          "top": 0.26,
+          "bottom": 0.7,
+          "notes": "Upper outfit and waist; review for precise garment framing"
+        },
+        "special-day-5.png": {
+          "top": 0.26,
+          "bottom": 0.7,
+          "notes": "Upper outfit and waist; review for precise garment framing"
+        },
+        "special-day-6.png": {
+          "top": 0.26,
+          "bottom": 0.7,
+          "notes": "Upper outfit and waist; review for precise garment framing"
+        },
+        "special-day-7.png": {
+          "top": 0.26,
+          "bottom": 0.7,
+          "notes": "Upper outfit and waist; review for precise garment framing"
+        },
+        "special-day-8.png": {
+          "top": 0.26,
+          "bottom": 0.7,
+          "notes": "Upper outfit and waist; review for precise garment framing"
+        },
+        "special-day-9.png": {
+          "top": 0.26,
+          "bottom": 0.7,
+          "notes": "Upper outfit and waist; review for precise garment framing"
+        },
+        "special-day-10.png": {
+          "top": 0.26,
+          "bottom": 0.7,
+          "notes": "Upper outfit and waist; review for precise garment framing"
+        }
+      }
+    },
+    "hana": {
+      "variants": {
+        "01_original_white_lace_denim.png": {
+          "top": 0.31,
+          "bottom": 0.65
+        },
+        "02_gray_blouse_denim.png": {
+          "top": 0.31,
+          "bottom": 0.65
+        },
+        "03_gray_ruched_top_denim.png": {
+          "top": 0.31,
+          "bottom": 0.65
+        },
+        "04_white_top_mini_skirt.png": {
+          "top": 0.34,
+          "bottom": 0.8
+        },
+        "05_white_top_pleated_skirt.png": {
+          "top": 0.34,
+          "bottom": 0.8
+        },
+        "06_pink_lace_white_top_denim.png": {
+          "top": 0.31,
+          "bottom": 0.65
+        },
+        "07_gray_lace_white_top_denim.png": {
+          "top": 0.31,
+          "bottom": 0.65
+        },
+        "08_ribbon_top_denim.png": {
+          "top": 0.31,
+          "bottom": 0.65
+        }
+      }
+    }
+  }
+}
