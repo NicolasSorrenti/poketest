@@ -1,0 +1,70 @@
+{
+  "character": "hana",
+  "purpose": "overworld_random_variants",
+  "variants": [
+    {
+      "id": "01_original_white_lace_denim",
+      "path": "/rpg-assets/characters/hana/overworld-variants/01_original_white_lace_denim.png",
+      "width": 512,
+      "height": 1024,
+      "mode": "RGBA",
+      "sha256": "a893729947be20a73e97fe0eca88827b8b206c95466772de72bd3958e41abbf8"
+    },
+    {
+      "id": "02_gray_blouse_denim",
+      "path": "/rpg-assets/characters/hana/overworld-variants/02_gray_blouse_denim.png",
+      "width": 512,
+      "height": 1024,
+      "mode": "RGBA",
+      "sha256": "68e68b76981839d81c2a7b55263448c4dbc17a5845d7e098f4ea6565d14e1f6f"
+    },
+    {
+      "id": "03_gray_ruched_top_denim",
+      "path": "/rpg-assets/characters/hana/overworld-variants/03_gray_ruched_top_denim.png",
+      "width": 512,
+      "height": 1024,
+      "mode": "RGBA",
+      "sha256": "c4d0a77d0c7a05d104c9ae9708838cfa79c2af2f6b4fcaab2e571cd67c244d02"
+    },
+    {
+      "id": "04_white_top_mini_skirt",
+      "path": "/rpg-assets/characters/hana/overworld-variants/04_white_top_mini_skirt.png",
+      "width": 512,
+      "height": 1024,
+      "mode": "RGBA",
+      "sha256": "e360bd63de5dc9b6e1d954d38bf6d4d8636898d64eb6e5775029c1b463bd0357"
+    },
+    {
+      "id": "05_white_top_pleated_skirt",
+      "path": "/rpg-assets/characters/hana/overworld-variants/05_white_top_pleated_skirt.png",
+      "width": 512,
+      "height": 1024,
+      "mode": "RGBA",
+      "sha256": "9693b139ef9e057109f6ac225a909e878a74894439fbf7f215f7cc087ccf977d"
+    },
+    {
+      "id": "06_pink_lace_white_top_denim",
+      "path": "/rpg-assets/characters/hana/overworld-variants/06_pink_lace_white_top_denim.png",
+      "width": 512,
+      "height": 1024,
+      "mode": "RGBA",
+      "sha256": "a172e92cb5b2eada7348451bbb1029fd28c13e22c6ce5fc3cb419c480befeb50"
+    },
+    {
+      "id": "07_gray_lace_white_top_denim",
+      "path": "/rpg-assets/characters/hana/overworld-variants/07_gray_lace_white_top_denim.png",
+      "width": 512,
+      "height": 1024,
+      "mode": "RGBA",
+      "sha256": "3afa25c35c469ea25011fd8711e4287a48a787abd9291d73508c5425c027a178"
+    },
+    {
+      "id": "08_ribbon_top_denim",
+      "path": "/rpg-assets/characters/hana/overworld-variants/08_ribbon_top_denim.png",
+      "width": 512,
+      "height": 1024,
+      "mode": "RGBA",
+      "sha256": "367396792f4f17a610401ffaea5a65853dd730e9d013885034e0cee71c75c334"
+    }
+  ]
+}

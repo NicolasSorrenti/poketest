@@ -448,6 +448,7 @@ function ordinaryTalk(id,character,{first=false,present=[]}={}){
 function selectPerson(id,{skipInvitation=false}={}){
  if(state.activeSliceOfLife||state.activeSituation||state.activeStory||state.activeSideQuest||state.activeEncounter||state.activeArc||state.pendingDuel||!cast[id]||!currentPeople().includes(id))return;
  const c=cast[id],first=!state['met_'+id]&&!((id==='reina')&&state.metReina);
+ if(id==='hana')hanaEncounterKey='talk:'+ ++hanaEncounterSerial;
  const today=state.day+':'+id,fresh=!state.talked[today];
  state['met_'+id]=true;
  if(id==='reina')state.metReina=true;
@@ -1982,8 +1983,37 @@ function refreshRpgPanels(){
 // Older guest assets are optional fallbacks; never assume every character has vn-expressions.\nconst expressionGuests=new Set(['alma','jun','nereo','teo','elio']);
 const failedScenePortraits=new Set();
 let activeOutfitSceneId=null;
+// Hana's casual overworld looks are selected once per encounter and reused
+// through its dialogue. Authored scenes retain their existing costume routing.
+let hanaEncounterSerial=0,hanaEncounterKey=null,hanaLastVariant=null;
+const hanaEncounterVariants=new Map();
+const HANA_OVERWORLD_VARIANTS=[
+ '/rpg-assets/characters/hana/overworld-variants/01_original_white_lace_denim.png',
+ '/rpg-assets/characters/hana/overworld-variants/02_gray_blouse_denim.png',
+ '/rpg-assets/characters/hana/overworld-variants/03_gray_ruched_top_denim.png',
+ '/rpg-assets/characters/hana/overworld-variants/04_white_top_mini_skirt.png',
+ '/rpg-assets/characters/hana/overworld-variants/05_white_top_pleated_skirt.png',
+ '/rpg-assets/characters/hana/overworld-variants/06_pink_lace_white_top_denim.png',
+ '/rpg-assets/characters/hana/overworld-variants/07_gray_lace_white_top_denim.png',
+ '/rpg-assets/characters/hana/overworld-variants/08_ribbon_top_denim.png'
+];
+function hanaOverworldPortrait(sceneId=activeOutfitSceneId){
+ if(sceneId)return null;
+ const key=hanaEncounterKey||['ordinary',state.day,state.slot,state.location,'hana'].join(':');
+ if(hanaEncounterVariants.has(key))return hanaEncounterVariants.get(key);
+ const choices=[cast.hana.portrait,...HANA_OVERWORLD_VARIANTS].filter(Boolean);
+ const available=choices.filter(path=>path!==hanaLastVariant);
+ const selected=(available.length?available:choices)[Math.floor(Math.random()*(available.length||choices.length))];
+ hanaEncounterVariants.set(key,selected);hanaLastVariant=selected;
+ if(hanaEncounterVariants.size>64)hanaEncounterVariants.delete(hanaEncounterVariants.keys().next().value);
+ return selected;
+}
 const solExpressions={neutral:'neutral',surprised:'surprised',vulnerable:'worried',irritated:'worried',determined:'neutral',happy:'smile'};
 function portraitPaths(id,expression='neutral',sceneId=activeOutfitSceneId){
+ if(id==='hana'&&!sceneId){
+  const fallback=cast.hana.portrait||'/rpg-assets/hana.png';
+  return [...new Set([hanaOverworldPortrait(sceneId),fallback].filter(Boolean))];
+ }
  // Only the reviewed Elio expressions may precede his canonical neutral portrait.
  if(id==='elio'){
   const name=({smile:'happy',vulnerable:'soft',worried:'concerned',irritated:'concerned'}[expression]||expression);
@@ -2047,6 +2077,7 @@ const RPG_STAGE_PORTRAIT_LAYOUTS=Object.freeze({
 });
 function personaCStageCandidates(id,emotion,normal){
  if(id==='elio')return normal; // Elio uses only reviewed sources.
+ if(id==='hana'&&normal.some(path=>path.includes('/overworld-variants/')))return normal;
  const dir='/rpg-assets/characters/'+id+'/';
  const names=PERSONA_C_EXPR[emotion]||PERSONA_C_EXPR.neutral;
  const picks=[],layout=RPG_STAGE_PORTRAIT_LAYOUTS[id]||{folder:'expression-portraits',extension:'webp'};
@@ -2089,8 +2120,10 @@ function scenePortraitSource(id,expression,sceneId=activeOutfitSceneId){
 }
 function applyPersonaCStageCrop(img,id){
  // Alternate source images use their own framing; canonical crops are too tight.
- const alternate=/\/portraits\/special-day-\d+\.png(?:\?|$)/.test(img.getAttribute('src')||'');
- const crop=alternate?(id==='barb'?[.10,0,.80,.60]:[.07,0,.86,.62]):PERSONA_C_CROPS[id];
+ const src=img.getAttribute('src')||'';
+ const alternate=/\/portraits\/special-day-\d+\.png(?:\?|$)/.test(src);
+ const hanaVariant=id==='hana'&&src.includes('/overworld-variants/');
+ const crop=alternate?(id==='barb'?[.10,0,.80,.60]:[.07,0,.86,.62]):hanaVariant?[.07,0,.86,.62]:PERSONA_C_CROPS[id];
  if(!crop)return;
  const [x,y,w,h]=crop;
  // The stage frame clips the original image; no binary assets are altered.
