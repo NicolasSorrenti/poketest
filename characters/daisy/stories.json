@@ -1,0 +1,326 @@
+{
+  "schemaVersion": 1,
+  "characterId": "daisy",
+  "events": [
+    {
+      "id": "daisy_route_1",
+      "npc": "daisy",
+      "title": "The Trouble With First Impressions",
+      "start": 9,
+      "end": 25,
+      "place": "shop",
+      "slot": 1,
+      "minBond": 0,
+      "prerequisite": null,
+      "participants": [],
+      "lines": [
+        {
+          "speaker": "daisy",
+          "text": "That's my table. You're welcome to share it, unless you're going to shuffle like a lawn mower."
+        },
+        {
+          "speaker": "Protagonist",
+          "text": "I was about to say the same about your deck sleeves."
+        },
+        {
+          "speaker": "daisy",
+          "text": "Oh, so you do have a personality. Good. I was worried I'd have to supply both sides of the conversation."
+        },
+        {
+          "speaker": "Protagonist",
+          "text": "You always test new people like this?"
+        },
+        {
+          "speaker": "daisy",
+          "text": "Only the ones who look like they might actually surprise me. One game. No spectators. Deal?"
+        },
+        {
+          "speaker": "Protagonist",
+          "text": "And if I win?"
+        },
+        {
+          "speaker": "daisy",
+          "text": "Then you get to choose our rematch location. If I win, you stop pretending you're not curious."
+        }
+      ],
+      "choices": [
+        {
+          "label": "Accept the match without bargaining",
+          "reply": "No hesitation. I like that. Now don't complain when I make you work for it.",
+          "kind": "honest",
+          "flag": "daisy_first_match",
+          "delta": {
+            "affection": 1,
+            "respect": 2,
+            "trust": 1
+          }
+        },
+        {
+          "label": "Ask what she gets out of testing strangers",
+          "reply": "Someone who can lose gracefully and win without being cruel. Your answer just earned you a point.",
+          "kind": "support",
+          "flag": "daisy_first_truth",
+          "delta": {
+            "trust": 2,
+            "respect": 2
+          }
+        },
+        {
+          "label": "Say you'd have come over even without the challenge",
+          "reply": "Bold answer. I was hoping you'd say it, but don't let that distract you from your opening hand.",
+          "kind": "flirt",
+          "flag": "daisy_first_flirt",
+          "delta": {
+            "affection": 2,
+            "attraction": 2
+          }
+        }
+      ]
+    },
+    {
+      "id": "daisy_route_2",
+      "npc": "daisy",
+      "title": "Layers",
+      "start": 28,
+      "end": 43,
+      "place": "cafe",
+      "slot": 2,
+      "minBond": 2,
+      "prerequisite": "daisy_route_1",
+      "participants": [],
+      "lines": [
+        {
+          "speaker": "daisy",
+          "text": "I brought two sketches, and before you ask, they aren't new deck boxes."
+        },
+        {
+          "speaker": "Protagonist",
+          "text": "You asked me here to judge outfits?"
+        },
+        {
+          "speaker": "daisy",
+          "text": "I asked you here because you'll tell me if something doesn't work. Most people just say 'pretty' and stop looking."
+        },
+        {
+          "speaker": "Protagonist",
+          "text": "The burgundy fabric is almost transparent."
+        },
+        {
+          "speaker": "daisy",
+          "text": "That's why it has a lining. There's a difference between showing your style and leaving everything to chance."
+        },
+        {
+          "speaker": "daisy",
+          "text": "Here—hold this edge up to the window. See how the color changes?"
+        },
+        {
+          "speaker": "Protagonist",
+          "text": "I see why you wanted a second pair of eyes."
+        },
+        {
+          "speaker": "daisy",
+          "text": "And maybe I wanted an excuse to see you without a card table between us. Don't get a big head."
+        }
+      ],
+      "choices": [
+        {
+          "label": "Point out the way the lining makes the color warmer",
+          "reply": "You actually looked. That's worth more than a hundred automatic compliments.",
+          "kind": "support",
+          "flag": "daisy_layers_detail",
+          "delta": {
+            "trust": 2,
+            "respect": 2
+          }
+        },
+        {
+          "label": "Admit you're not an expert but offer to help test the fabric",
+          "reply": "Perfect. Honest and useful. A dangerous combination.",
+          "kind": "honest",
+          "flag": "daisy_layers_help",
+          "delta": {
+            "affection": 2,
+            "trust": 2
+          }
+        },
+        {
+          "label": "Tell her the clothes are great, but she steals the scene",
+          "reply": "Careful. Keep saying things like that and I'll start thinking you mean them.",
+          "kind": "flirt",
+          "flag": "daisy_layers_spark",
+          "delta": {
+            "affection": 2,
+            "attraction": 2
+          }
+        }
+      ]
+    },
+    {
+      "id": "daisy_route_3",
+      "npc": "daisy",
+      "title": "The Girl Behind the Glasses",
+      "start": 46,
+      "end": 62,
+      "place": "arcade",
+      "slot": 2,
+      "minBond": 3,
+      "prerequisite": "daisy_route_2",
+      "participants": [],
+      "lines": [
+        {
+          "speaker": "daisy",
+          "text": "Don't laugh. This hoodie could fit two of me. That's the point."
+        },
+        {
+          "speaker": "Protagonist",
+          "text": "I almost didn't recognize you."
+        },
+        {
+          "speaker": "daisy",
+          "text": "Exactly. Sometimes I like being a person nobody notices."
+        },
+        {
+          "speaker": "Protagonist",
+          "text": "Something happened?"
+        },
+        {
+          "speaker": "daisy",
+          "text": "A stranger photographed me without asking and posted it around town. Everyone had a theory about who I was. Nobody thought to ask."
+        },
+        {
+          "speaker": "Protagonist",
+          "text": "That sounds exhausting."
+        },
+        {
+          "speaker": "daisy",
+          "text": "I can dress boldly and still want boundaries. Both can be true."
+        },
+        {
+          "speaker": "Protagonist",
+          "text": "Do you want me to do something?"
+        },
+        {
+          "speaker": "daisy",
+          "text": "Just stay here a minute. And maybe beat me at this game so I can complain about something normal."
+        }
+      ],
+      "choices": [
+        {
+          "label": "Let her decide whether to report the photo",
+          "reply": "Thank you. I needed a choice that was mine for a change.",
+          "kind": "support",
+          "flag": "daisy_hoodie_control",
+          "delta": {
+            "trust": 3,
+            "affection": 1
+          }
+        },
+        {
+          "label": "Ask what would make her feel comfortable tonight",
+          "reply": "This. Not having to perform. Maybe one more round.",
+          "kind": "honest",
+          "flag": "daisy_hoodie_listen",
+          "delta": {
+            "trust": 2,
+            "respect": 2
+          }
+        },
+        {
+          "label": "Challenge her to the arcade machine, no questions asked",
+          "reply": "There you are. My favorite kind of distraction: one that actually understands the assignment.",
+          "kind": "flirt",
+          "flag": "daisy_hoodie_game",
+          "delta": {
+            "affection": 2,
+            "attraction": 1,
+            "trust": 1
+          }
+        }
+      ]
+    },
+    {
+      "id": "daisy_route_4",
+      "npc": "daisy",
+      "title": "A Flower That Kept Growing",
+      "start": 65,
+      "end": 82,
+      "place": "park",
+      "slot": 2,
+      "minBond": 4,
+      "prerequisite": "daisy_route_3",
+      "participants": [],
+      "lines": [
+        {
+          "speaker": "daisy",
+          "text": "Do you remember asking me about the flower tattoo?"
+        },
+        {
+          "speaker": "Protagonist",
+          "text": "The one in the middle of your chest?"
+        },
+        {
+          "speaker": "daisy",
+          "text": "Yeah. I got it after a year when I thought nothing would feel steady again. It's a lotus—messy roots, beautiful bloom. Very dramatic. Very me."
+        },
+        {
+          "speaker": "Protagonist",
+          "text": "And the stars?"
+        },
+        {
+          "speaker": "daisy",
+          "text": "People who stayed when I was hard to be around. I don't give everyone that story."
+        },
+        {
+          "speaker": "Protagonist",
+          "text": "Why tell me now?"
+        },
+        {
+          "speaker": "daisy",
+          "text": "Because you stopped trying to guess who I am from what I wear. You kept showing up for the actual person."
+        },
+        {
+          "speaker": "Protagonist",
+          "text": "I'm glad you told me."
+        },
+        {
+          "speaker": "daisy",
+          "text": "So am I. I was going to make a joke to escape the moment. I think I'll stay in it a little longer."
+        }
+      ],
+      "choices": [
+        {
+          "label": "Tell her she never owes you an explanation",
+          "reply": "Good. Then I can tell you things because I want to, not because I have to.",
+          "kind": "support",
+          "flag": "daisy_lotus_trust",
+          "delta": {
+            "trust": 3,
+            "affection": 1
+          }
+        },
+        {
+          "label": "Share a time you had to start over too",
+          "reply": "That sounded difficult to say. Thank you for trusting me with it.",
+          "kind": "honest",
+          "flag": "daisy_lotus_mutual",
+          "delta": {
+            "trust": 2,
+            "respect": 1,
+            "affection": 2
+          }
+        },
+        {
+          "label": "Ask whether you can hold her hand",
+          "reply": "Yes. Just... don't turn it into a victory pose, okay?",
+          "kind": "flirt",
+          "flag": "daisy_lotus_hand",
+          "delta": {
+            "affection": 2,
+            "trust": 1,
+            "attraction": 2
+          }
+        }
+      ]
+    }
+  ]
+}
