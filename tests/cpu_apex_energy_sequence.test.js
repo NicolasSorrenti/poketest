@@ -688,3 +688,25 @@ test('Apex still rewards a real retreat when opponent has a ready knockout',()=>
  unsafe.self.bench[0].damage=90;
  assert.ok(AI.score(retreat,o,cfg,{})>AI.score(retreat,unsafe,cfg,{}));
 });
+
+test('Apex delays uncharged Bench evolution until an attack is one attachment away',()=>{
+ const o=board();
+ Object.assign(o,{phase:'game',round:5,turnSerial:11});
+ o.self.bench=[{id:MACHOP,energies:[],damage:0,status:null,playedTurn:2}];
+ o.self.hand=['base1-34'];
+ const evolve={type:'evolve',payload:{handIndex:0,slot:0}};
+ const unready=AI.score(evolve,o,cfg,{});
+ const charged=structuredClone(o);
+ charged.self.bench[0].energies=[FIGHT,FIGHT];
+ charged.self.hand=[ 'base1-34',FIGHT ];
+ assert.ok(AI.score(evolve,charged,cfg,{})>unready+200);
+});
+test('Level 7 retains existing Bench evolution scoring',()=>{
+ const o=board();
+ Object.assign(o,{phase:'game',round:5,turnSerial:11});
+ o.self.bench=[{id:MACHOP,energies:[],damage:0,status:null,playedTurn:2}];
+ o.self.hand=['base1-34'];
+ const evolve={type:'evolve',payload:{handIndex:0,slot:0}};
+ const lower=AI.configuration({side:1,level:7});
+ assert.equal(AI.score(evolve,o,lower,{}),AI.score(evolve,structuredClone(o),lower,{}));
+});
