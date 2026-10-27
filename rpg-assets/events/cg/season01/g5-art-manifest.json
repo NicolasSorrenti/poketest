@@ -1,0 +1,270 @@
+{
+  "schemaVersion": 1,
+  "pack": "Neo Campus TCG — G5 Unexpected Moments provisional event CGs",
+  "gameVersion": "G5",
+  "generatedFrom": "Eight already-generated scene illustrations from this conversation; no duplicate image generation",
+  "paths": "rpg-assets/events/cg/season01/<id>.webp and thumbs/<id>.webp",
+  "fullSize": [
+    1920,
+    1080
+  ],
+  "thumbSize": [
+    640,
+    360
+  ],
+  "qualityWarning": "Five images depict a different moment than the scripted G5 scene. Supplied as provisional display art until corresponding scene-accurate illustrations exist.",
+  "canonicalCharacterConflict": "Earlier visual pack uses colors and hairstyles that differ from the newer CG_ART_AGENT_HANDOFF.md bible; these images preserve established artwork rather than silently changing the designs.",
+  "scenes": {
+    "hana_apron_mixup": {
+      "character": "hana",
+      "full": "rpg-assets/events/cg/season01/hana_apron_mixup.webp",
+      "thumbnail": "rpg-assets/events/cg/season01/thumbs/hana_apron_mixup.webp",
+      "reviewStatus": "different_moment",
+      "deviationFromScript": "Illustration depicts Hana catching falling books in a library, not the specified card-shop apron mix-up.",
+      "sourceImageFilename": "accidente_entre_libros_en_la_biblioteca.png",
+      "sourceImageSha256": "74f31fb2b63c2819b1c223f282240ede9e9275dbdee80ee38faff7bee3e9bc89",
+      "sourceSize": [
+        1672,
+        941
+      ]
+    },
+    "reina_rain_catch": {
+      "character": "reina",
+      "full": "rpg-assets/events/cg/season01/reina_rain_catch.webp",
+      "thumbnail": "rpg-assets/events/cg/season01/thumbs/reina_rain_catch.webp",
+      "reviewStatus": "different_moment",
+      "deviationFromScript": "Illustration depicts Reina at a sunset overlook, not the community-center gutter/rain mishap.",
+      "sourceImageFilename": "reina_kurogane_al_atardecer_urbano.png",
+      "sourceImageSha256": "32b47cb4c88a1f348b66ad7cc33745d634d25803b5ac138af7d6e06c3869a09d",
+      "sourceSize": [
+        1672,
+        941
+      ]
+    },
+    "shiori_bookstack_wobble": {
+      "character": "shiori",
+      "full": "rpg-assets/events/cg/season01/shiori_bookstack_wobble.webp",
+      "thumbnail": "rpg-assets/events/cg/season01/thumbs/shiori_bookstack_wobble.webp",
+      "reviewStatus": "different_moment",
+      "deviationFromScript": "Illustration depicts Shiori at a waterside tea table at night, not the library book-stack incident.",
+      "sourceImageFilename": "shiori_junto_al_puerto_lunar.png",
+      "sourceImageSha256": "871ae330fad93aa3ef8fca81487502cea315d66af1d02f6710c6fe30e4d3b87b",
+      "sourceSize": [
+        1672,
+        941
+      ]
+    },
+    "yuna_card_scatter": {
+      "character": "yuna",
+      "full": "rpg-assets/events/cg/season01/yuna_card_scatter.webp",
+      "thumbnail": "rpg-assets/events/cg/season01/thumbs/yuna_card_scatter.webp",
+      "reviewStatus": "different_moment",
+      "deviationFromScript": "Illustration depicts Yuna at an arcade claw machine, not her scattered card sleeves.",
+      "sourceImageFilename": "yuna_brilla_en_el_arcade_neón.png",
+      "sourceImageSha256": "2956b6106a8b15204ea4c93ba673643d05f2785d9cadebdd508cb8c0ab07c1fd",
+      "sourceSize": [
+        1672,
+        941
+      ]
+    },
+    "akari_notes_whirl": {
+      "character": "akari",
+      "full": "rpg-assets/events/cg/season01/akari_notes_whirl.webp",
+      "thumbnail": "rpg-assets/events/cg/season01/thumbs/akari_notes_whirl.webp",
+      "reviewStatus": "approximate_match",
+      "deviationFromScript": "Flying library notes, startled expression, glasses, and research material match most of the requested scene.",
+      "sourceImageFilename": "akari_y_sus_apuntes_al_viento.png",
+      "sourceImageSha256": "264121e89b6d24df2edecae5e095dec51494842f27fb35acc79dad011ecba15d",
+      "sourceSize": [
+        1672,
+        941
+      ]
+    },
+    "camila_windy_receipts": {
+      "character": "camila",
+      "full": "rpg-assets/events/cg/season01/camila_windy_receipts.webp",
+      "thumbnail": "rpg-assets/events/cg/season01/thumbs/camila_windy_receipts.webp",
+      "reviewStatus": "approximate_match",
+      "deviationFromScript": "Windblown paperwork at riverside cafe and dramatic coat closely match the requested event.",
+      "sourceImageFilename": "café_junto_al_puerto_al_viento.png",
+      "sourceImageSha256": "fecde9c9d0844c2995f8aeb89870019f0b44982179ca26759885f8e6fd3f9276",
+      "sourceSize": [
+        1672,
+        941
+      ]
+    },
+    "marina_beach_towel": {
+      "character": "marina",
+      "full": "rpg-assets/events/cg/season01/marina_beach_towel.webp",
+      "thumbnail": "rpg-assets/events/cg/season01/thumbs/marina_beach_towel.webp",
+      "reviewStatus": "approximate_match",
+      "deviationFromScript": "Riverside shore, towel and summer setting match; artwork is composed more like a relaxed portrait than the comedic mishap.",
+      "sourceImageFilename": "marina_en_la_orilla_bajo_el_sol_estival.png",
+      "sourceImageSha256": "42c3764149d47352ad5b16c571464d451b73e755b8c919c90f040e8ab9ce9121",
+      "sourceSize": [
+        1672,
+        941
+      ]
+    },
+    "kaede_jacket_prank": {
+      "character": "kaede",
+      "full": "rpg-assets/events/cg/season01/kaede_jacket_prank.webp",
+      "thumbnail": "rpg-assets/events/cg/season01/thumbs/kaede_jacket_prank.webp",
+      "reviewStatus": "different_moment",
+      "deviationFromScript": "Illustration depicts Kaede beside neon vending machines in rain, not the tangled jacket/bag at the arcade.",
+      "sourceImageFilename": "kaede_bajo_la_lluvia_de_neón.png",
+      "sourceImageSha256": "cc2fa344e6cfa37329ed3260284a47de104dc7fbbe6170674031005b8be9b2ae",
+      "sourceSize": [
+        1672,
+        941
+      ]
+    }
+  },
+  "files": [
+    {
+      "path": "rpg-assets/events/cg/season01/hana_apron_mixup.webp",
+      "sha256": "a53770a832e610dbf99a20b9e4cb912b939c105cf176bf01e2c42515d92a3427",
+      "bytes": 324720,
+      "width": 1920,
+      "height": 1080,
+      "format": "WEBP",
+      "colorspace": "sRGB"
+    },
+    {
+      "path": "rpg-assets/events/cg/season01/thumbs/hana_apron_mixup.webp",
+      "sha256": "a0e12d769a0a079585bbe2e9a067246b3aef0c04d5bf578bfd33a4ce805420b1",
+      "bytes": 78252,
+      "width": 640,
+      "height": 360,
+      "format": "WEBP",
+      "colorspace": "sRGB"
+    },
+    {
+      "path": "rpg-assets/events/cg/season01/reina_rain_catch.webp",
+      "sha256": "9c0db5226ad7eaaf0efd13dcf28b380325ba206cbef378ccf1457e91ce54ce99",
+      "bytes": 337782,
+      "width": 1920,
+      "height": 1080,
+      "format": "WEBP",
+      "colorspace": "sRGB"
+    },
+    {
+      "path": "rpg-assets/events/cg/season01/thumbs/reina_rain_catch.webp",
+      "sha256": "6ae07c795caaf8cc667a193fc1a54d28d1ef08d4a712169beda9b99815d56208",
+      "bytes": 80368,
+      "width": 640,
+      "height": 360,
+      "format": "WEBP",
+      "colorspace": "sRGB"
+    },
+    {
+      "path": "rpg-assets/events/cg/season01/shiori_bookstack_wobble.webp",
+      "sha256": "cd9787dca33ab113ddf8011a244a93fc5b70c089ce3d9606907c419d6419ddce",
+      "bytes": 333372,
+      "width": 1920,
+      "height": 1080,
+      "format": "WEBP",
+      "colorspace": "sRGB"
+    },
+    {
+      "path": "rpg-assets/events/cg/season01/thumbs/shiori_bookstack_wobble.webp",
+      "sha256": "f95b0d67506835a2360a1c52754a49bdb1323d771b48e0d36ec0a44bc8aa10a7",
+      "bytes": 81064,
+      "width": 640,
+      "height": 360,
+      "format": "WEBP",
+      "colorspace": "sRGB"
+    },
+    {
+      "path": "rpg-assets/events/cg/season01/yuna_card_scatter.webp",
+      "sha256": "65bad7b359d79a5bb0e410bcf8f90a59ec7c4d03643137b2baed3b7e1857289a",
+      "bytes": 415446,
+      "width": 1920,
+      "height": 1080,
+      "format": "WEBP",
+      "colorspace": "sRGB"
+    },
+    {
+      "path": "rpg-assets/events/cg/season01/thumbs/yuna_card_scatter.webp",
+      "sha256": "94d1f96cbed053eb497e8f734375c0b838e1c9a6ae2279686671ddace89f01e1",
+      "bytes": 91912,
+      "width": 640,
+      "height": 360,
+      "format": "WEBP",
+      "colorspace": "sRGB"
+    },
+    {
+      "path": "rpg-assets/events/cg/season01/akari_notes_whirl.webp",
+      "sha256": "e52df2abf17246ea1e8ced3d82c9692f841f040f551d5b5b347d747506f00716",
+      "bytes": 311176,
+      "width": 1920,
+      "height": 1080,
+      "format": "WEBP",
+      "colorspace": "sRGB"
+    },
+    {
+      "path": "rpg-assets/events/cg/season01/thumbs/akari_notes_whirl.webp",
+      "sha256": "6737a0efa68be012cbf702b69a3c06521370cd30af5754d838bc16dc45a187b3",
+      "bytes": 72862,
+      "width": 640,
+      "height": 360,
+      "format": "WEBP",
+      "colorspace": "sRGB"
+    },
+    {
+      "path": "rpg-assets/events/cg/season01/camila_windy_receipts.webp",
+      "sha256": "bfcdb2343297b536efbd4694557e72075f6b0a11665a531dcee384a45aad64f7",
+      "bytes": 355308,
+      "width": 1920,
+      "height": 1080,
+      "format": "WEBP",
+      "colorspace": "sRGB"
+    },
+    {
+      "path": "rpg-assets/events/cg/season01/thumbs/camila_windy_receipts.webp",
+      "sha256": "b3966f4cafb8b37fb44fa479caff75d14c657647a660d46036693c10f5171cff",
+      "bytes": 83852,
+      "width": 640,
+      "height": 360,
+      "format": "WEBP",
+      "colorspace": "sRGB"
+    },
+    {
+      "path": "rpg-assets/events/cg/season01/marina_beach_towel.webp",
+      "sha256": "65b623033f018e741008361e7cbcd0d5b3b1e6fe94f7378e1a4f67df0f75f551",
+      "bytes": 429464,
+      "width": 1920,
+      "height": 1080,
+      "format": "WEBP",
+      "colorspace": "sRGB"
+    },
+    {
+      "path": "rpg-assets/events/cg/season01/thumbs/marina_beach_towel.webp",
+      "sha256": "2396b618d6989aa23b837b64d474e919f11a3716899ed1ac259bc443d3be8166",
+      "bytes": 95972,
+      "width": 640,
+      "height": 360,
+      "format": "WEBP",
+      "colorspace": "sRGB"
+    },
+    {
+      "path": "rpg-assets/events/cg/season01/kaede_jacket_prank.webp",
+      "sha256": "eb785b67e1c7db79eb63cf8312cd1e544673e710f0d55eb442fa912702e57a96",
+      "bytes": 410206,
+      "width": 1920,
+      "height": 1080,
+      "format": "WEBP",
+      "colorspace": "sRGB"
+    },
+    {
+      "path": "rpg-assets/events/cg/season01/thumbs/kaede_jacket_prank.webp",
+      "sha256": "319baccbfaf1f1fd3db804f1e37aadf8d9028a8f429b9b983f8a8ed261d15e1f",
+      "bytes": 92674,
+      "width": 640,
+      "height": 360,
+      "format": "WEBP",
+      "colorspace": "sRGB"
+    }
+  ],
+  "imageCount": 16
+}
