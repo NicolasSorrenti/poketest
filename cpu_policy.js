@@ -776,8 +776,12 @@ function strandedActiveEnergy(o,energyId){
  const incoming=enemy.effectiveAttacks||card(enemy.id)?.attacks||[];
  // Only publicly usable opposing attacks count (Amnesia, cooldown, once-use).
  const fromEnemy={...o,self:o.opponent,opponent:o.self};
+ // A Confused attacker must win its mandatory coin flip before any attack
+ // resolves. Even a printed certain KO is only a 50% threat, below this
+ // conservative 75% doomed-Active threshold (no future RNG is inspected).
+ const confusionChance=enemy.status==='Confused'?.5:1;
  if(!incoming.some((a,i)=>eligibleAttack(fromEnemy,enemy,a,i)&&
-    knockoutChance(a,enemy,active)>=.75))return false;
+    knockoutChance(a,enemy,active)*confusionChance>=.75))return false;
  const after={...active,energies:[...(active.energies||[]),energyId]};
  if(projectedAttackValue(after,enemy,o.turnSerial)>
     projectedAttackValue(active,enemy,o.turnSerial))return false;
