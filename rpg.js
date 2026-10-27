@@ -450,7 +450,15 @@ function selectPerson(id,{skipInvitation=false}={}){
  // The very first personal introduction gets a portrait close-up once.
  if(first&&!state.overworldIntroductions?.[id]&&typeof NeoOutfitChime!=='undefined'){
   const introductionPortrait=scenePortraitSource(id,'neutral',null);
-  NeoOutfitChime.firstMeeting?.({id,portrait:introductionPortrait});
+  // Hold dialogue, CG and event processing until the introduction is dismissed.
+  void Promise.resolve(NeoOutfitChime.firstMeeting({id,portrait:introductionPortrait}))
+   .catch(error=>console.warn('Introduction chime skipped:',error))
+   .then(()=>{
+    state.overworldIntroductions=state.overworldIntroductions||{};
+    state.overworldIntroductions[id]=true;persist();
+    if(currentPeople().includes(id))selectPerson(id,{skipInvitation});
+   });
+  return;
  }
  markSpecialLookSeen(id);
  if(id==='hana'&&!(hanaEncounterKey||'').startsWith('entry:'))hanaEncounterKey='talk:'+ ++hanaEncounterSerial;
