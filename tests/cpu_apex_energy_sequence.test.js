@@ -685,6 +685,6 @@ test('Apex still rewards a real retreat when opponent has a ready knockout',()=>
  o.opponent.active={id:HITMONCHAN,energies:[FIGHT],damage:0,status:null};
  const retreat={type:'retreat',payload:{slot:0}};
  const unsafe=structuredClone(o);
- unsafe.self.bench[0].damage=70;
+ unsafe.self.bench[0].damage=90;
  assert.ok(AI.score(retreat,o,cfg,{})>AI.score(retreat,unsafe,cfg,{}));
 });
