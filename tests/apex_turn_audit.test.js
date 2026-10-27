@@ -51,6 +51,24 @@ test('preserves wasted-Energy evidence through draw-only Trainers',()=>{
    'a healed target must not produce a false positive');
  }
 });
+test('preserves attachment evidence through additional draw-only Trainers',()=>{
+ // Verified against classic_trainer_core: Blaine's Last Resort draws five;
+ // Mail from Bill draws up to four in hand. Neither changes Pokémon state.
+ for(const cardId of ['gym1-105','neo4-105']){
+  const draw={side:1,turnSerial:8,cardId,
+   command:{type:'play_trainer',payload:{handIndex:0}}};
+  assert.equal(audit([attach(1,8,40),draw,center(1,8)]).length,1,
+   cardId+' must not erase a valid Center sequencing warning');
+  assert.deepEqual(audit([attach(1,8,40),draw,center(1,8,[])]),[],
+   'pre-Center damage evidence is still required');
+ }
+});
+test('healing Trainers still invalidate stale attachment evidence',()=>{
+ const heal={side:1,turnSerial:8,cardId:'gym2-103',
+  command:{type:'play_trainer',payload:{handIndex:0}}};
+ assert.deepEqual(audit([attach(1,8,40),heal,center(1,8)]),[],
+  "Erika's Kindness can heal the target before Center");
+});
 test('retains a valid attachment through a harmless bench placement',()=>{
  const bench={side:1,turnSerial:8,command:{type:'bench',payload:{handIndex:0}}};
  assert.equal(audit([attach(1,8,40),bench,center(1,8)]).length,1);
