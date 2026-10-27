@@ -43,5 +43,31 @@ const NeoOutfitChime=(()=>{
   document.body.append(overlay);visible=overlay;
   timeout=setTimeout(()=>{if(visible===overlay)cancel();},Math.max(500,Number(data.durationMs)||3000));
  }
- return {onEntry,cancel};
+ async function firstMeeting({id,portrait}={}){
+  if(!id||!portrait)return;
+  // A character's introduction is tied to the game's existing met flag;
+  // this renderer never edits save data or changes the source portrait.
+  cancel();
+  const ticket=sequence;
+  const overlay=document.createElement('div');
+  overlay.className='neo-first-meeting-chime';
+  overlay.setAttribute('aria-hidden','true');
+  overlay.style.cssText='position:fixed;inset:0;z-index:10050;pointer-events:none;display:grid;place-items:center;background:rgba(5,9,24,.38)';
+  const frame=document.createElement('div');
+  frame.style.cssText='position:relative;width:min(88vw,520px);max-height:60vh;overflow:hidden;border:2px solid rgba(250,213,157,.85);border-radius:15px;background:#141724;box-shadow:0 8px 55px #000a;';
+  const img=new Image();
+  img.alt='';img.draggable=false;
+  img.style.cssText='display:block;width:100%;height:100%;object-fit:cover;object-position:center 14%;';
+  img.onload=()=>{
+   if(ticket!==sequence)return;
+   const ratio=img.naturalWidth/img.naturalHeight;
+   frame.style.aspectRatio=String(Math.max(.75,Math.min(1.25,ratio/.52)));
+  };
+  img.onerror=()=>{if(visible===overlay)cancel();};
+  img.src=portrait;
+  frame.append(img);overlay.append(frame);
+  document.body.append(overlay);visible=overlay;
+  timeout=setTimeout(()=>{if(visible===overlay)cancel();},3000);
+ }
+ return {onEntry,firstMeeting,cancel};
 })();
