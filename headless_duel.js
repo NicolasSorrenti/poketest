@@ -605,6 +605,22 @@ function performAction(g,side,cmd){
    if(!knockOuts(g,'checkup'))finishTurn(g);
    return;
   }
+  if(pending.kind==='saffron_city_gym'){
+   const owner=g.players[pending.side],selected=answer.selected[0];
+   if(!answer.decline&&selected){
+    const match=/^slot:(-?\\d+):energy:(\\d+)$/.exec(selected);
+    if(!match)fail('Invalid Saffron City Gym selection');
+    const slot=Number(match[1]),index=Number(match[2]);
+    const pokemon=slot===-1?owner.active:owner.bench[slot];
+    if(!pokemon||!card(g,pokemon.id).name.startsWith("Sabrina's "))fail('Saffron City Gym requires a Sabrina Pokémon');
+    const energy=pokemon.energies[index];
+    if(!energy||!/^(Grass|Fire|Water|Lightning|Psychic|Fighting) Energy$/.test(card(g,energy).name))fail('Saffron City Gym requires basic Energy');
+    if(!g.stadium||card(g,g.stadium.id).name!=='Saffron City Gym')fail('Saffron City Gym is no longer in play');
+    owner.hand.push(pokemon.energies.splice(index,1)[0]);
+    log(g,'Saffron City Gym returned a basic Energy to hand.');
+   }
+   g.pendingDecision=null;g.pendingAction=null;return;
+  }
   if(pending.kind==='energy_stadium'){
    g.pendingDecision=null;g.pendingAction=null;
    if(!answer.decline&&answer.selected.length){const i=Number(answer.selected[0].slice(5));const x=g.players[pending.side];
@@ -927,7 +943,18 @@ function performAction(g,side,cmd){
  if(type==='concede'){g.over=true;g.winner=1-side;log(g,`${p.name} conceded.`);return;}
  if(type==='use_stadium'){
   const name=g.stadium?card(g,g.stadium.id).name:null;
-  if(!['Energy Stadium','Healing Field','Radio Tower','Lucky Stadium'].includes(name))fail('No usable Stadium action in play');
+  if(!['Energy Stadium','Healing Field','Radio Tower','Lucky Stadium','Saffron City Gym'].includes(name))fail('No usable Stadium action in play');
+  if(name==='Saffron City Gym'){
+   const choices=[...(p.active?[{pokemon:p.active,slot:-1}]:[]),...p.bench.map((pokemon,slot)=>({pokemon,slot}))]
+    .filter(({pokemon})=>card(g,pokemon.id).name.startsWith("Sabrina's "))
+    .flatMap(({pokemon,slot})=>pokemon.energies.flatMap((id,index)=>
+     /^(Grass|Fire|Water|Lightning|Psychic|Fighting) Energy$/.test(card(g,id).name)
+      ?[{id:`slot:${slot}:energy:${index}`,label:`${card(g,pokemon.id).name}: ${card(g,id).name}`,cardId:id}]:[]));
+   if(!choices.length)fail('No basic Energy attached to your Sabrina Pokémon');
+   g.nextDecisionId++;
+   g.pendingDecision=makeDecision({id:`stadium:${g.nextDecisionId}`,actor:side,kind:'saffron-city-gym',label:'Saffron City Gym: return a basic Energy to your hand',options:choices,min:1,max:1});
+   g.pendingAction={kind:'saffron_city_gym',side};return;
+  }
   if(p.stadiumUsedTurn===g.turnSerial)fail('Stadium action already used this turn');
   p.stadiumUsedTurn=g.turnSerial;
   if(name==='Healing Field'){
