@@ -26,6 +26,9 @@ function audit(commands){
       violations.push({turn:key,index:i,type:'energy-before-pokemon-center',
        attachmentIndex:attached.index,cardId:attached.entry.cardId});
     }
+    // Center discards the Energy it affects. A later Center in this turn
+    // cannot discard that same attachment a second time.
+    attachments.length=0;
    }
   }
  }
