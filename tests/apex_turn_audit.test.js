@@ -115,6 +115,26 @@ test('Erika draw choices preserve only genuine pre-Center Energy mistakes',()=>{
  // An unrelated choice is not assumed to be board-neutral.
  assert.deepEqual(audit([attach(1,8,40,-1,true),choose,center(1,8)]),[]);
 });
+test("Misty's Wrath keeps only genuine pre-Center attachment warnings",()=>{
+ // The reducer keeps two of the top seven deck cards and discards the rest.
+ // Its follow-up choice changes hand/deck/discard, never the Pokémon board.
+ const wrath={side:1,turnSerial:8,cardId:'gym1-114',
+  command:{type:'play_trainer',payload:{handIndex:0}}};
+ assert.equal(CATALOG.get(wrath.cardId)?.name,"Misty's Wrath");
+ const choose={side:1,turnSerial:8,
+  command:{type:'choose',payload:{decisionId:'misty-keep',selected:['deck:1','deck:2']}}};
+ const steps=[wrath,choose];
+ assert.equal(audit([attach(1,8,40,-1,true),...steps,center(1,8)]).length,1,
+  'Misty\'s Wrath must not hide a wasted attachment when Center was already held');
+ assert.deepEqual(audit([attach(1,8,40,-1,false),...steps,center(1,8)]),[],
+  'a Center first found in the top seven was not playable before attachment');
+ assert.deepEqual(audit([attach(1,8,40),...steps,center(1,8)]),[],
+  'missing hand snapshots must remain conservative');
+ assert.equal(audit([...steps,attach(1,8,40,-1,true),center(1,8)]).length,1,
+  'Center found before attachment is a genuine sequencing opportunity');
+ assert.deepEqual(audit([attach(1,8,40,-1,true),...steps,center(1,8,[])]),[],
+  'Center must actually heal the attached Pokémon');
+});
 test('board-changing Trainer choices still clear stale attachment evidence',()=>{
  const sabrinaId=[...CATALOG].find(([,c])=>c.name==='Sabrina'&&c.supertype==='Trainer')?.[0];
  assert.ok(sabrinaId,'Sabrina must resolve to a real Trainer card');
