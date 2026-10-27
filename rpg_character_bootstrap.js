@@ -31,6 +31,7 @@
  "/rpg_encounter_director.js",
  "/rpg_akari_barb_event.js?v=20261026",
  "/rpg_cross_character_events.js?v=20261026-crossovers",
+ "/rpg_daisy_event_additions.js?v=1",
  "/rpg_slice_of_life.js",
  "/rpg_cg_gallery.js",
  "/rpg_cg_scene.js?v=20261026-in-scene",
