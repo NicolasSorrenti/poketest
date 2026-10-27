@@ -20,9 +20,11 @@ function audit(commands){
    const type=entry.command.type;
    const trainerName=type==='play_trainer'?CATALOG.get(entry.cardId)?.name:null;
    const isCenter=trainerName==='Pokémon Center';
-   // Bill and Professor Oak change only the hand, not Pokémon positions,
-   // damage, or attached Energy. Keep reliable evidence through those draws.
-   const preservesBoard=trainerName==='Bill'||trainerName==='Professor Oak';
+   // These draw-only Trainers do not heal, move, or alter attached Energy.
+   // Keep reliable attachment evidence across them; a generic Trainer
+   // invalidation would miss a subsequent wasteful Pokémon Center play.
+   const preservesBoard=['Bill','Professor Oak',"Blaine's Last Resort",
+    'Mail from Bill'].includes(trainerName);
    if(type==='attach_energy')attachments.push({index:i,entry});
    if(isCenter){
     // Damage at attachment time alone does not prove Center discarded it:
