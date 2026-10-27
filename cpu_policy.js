@@ -638,9 +638,9 @@ function knockoutTempoBonus(a,o,cfg){
 // Estimate what additional cards ALREADY in the player's own hand could unlock
 // after the current Energy attachment. No future draw is assumed, no opponent
 // hidden cards are accessed, and no engine reducer/coin oracle is consulted.
-function horizonAttackValue(unit,defender,hand,remaining=1,futureRound=0){
+function horizonAttackValue(unit,defender,hand,remaining=1,futureRound=0,turnSerial=0){
  if(!unit||!defender)return 0;
- const immediate=projectedAttackValue(unit,defender);
+ const immediate=projectedAttackValue(unit,defender,turnSerial);
  if(remaining===0)return immediate;
  const seen=new Set();
  let best=immediate;
@@ -654,7 +654,7 @@ function horizonAttackValue(unit,defender,hand,remaining=1,futureRound=0){
   const after={...unit,energies:[...(unit.energies||[]),id]};
   // A card requires another turn's Energy attachment. Discount those future
   // outcomes to avoid preferring a speculative combination to today's KO.
-  const next=projectedAttackValue(after,defender);
+  const next=projectedAttackValue(after,defender,turnSerial);
   best=Math.max(best,immediate+(next-immediate)*.48);
  }
  return best;
@@ -669,9 +669,12 @@ function energyHorizonBonus(action,o,cfg){
  const after={...u,energies:[...(u.energies||[]),attachedId]};
  const futureHand=p.hand.filter((_,i)=>i!==v.handIndex);
  const futureRound=(Number(o.round)||0)+1;
- const before=horizonAttackValue(u,q.active,futureHand,1,futureRound);
- const changed=horizonAttackValue(after,q.active,futureHand,1,futureRound);
- const direct=projectedAttackValue(after,q.active)-projectedAttackValue(u,q.active);
+ // The live turn serial is required to expire Amnesia and Gym cooldowns;
+ // projectedAttackValue's default zero would treat old locks as permanent.
+ const before=horizonAttackValue(u,q.active,futureHand,1,futureRound,o.turnSerial);
+ const changed=horizonAttackValue(after,q.active,futureHand,1,futureRound,o.turnSerial);
+ const direct=projectedAttackValue(after,q.active,o.turnSerial)-
+  projectedAttackValue(u,q.active,o.turnSerial);
  // Reward immediate Energy unlocks, but value two-card lines only insofar as
  // they are possible with cards that are ALREADY visible in our own hand.
  const expected=Math.max(0,changed-before)*1.15+Math.max(0,direct)*.35;
