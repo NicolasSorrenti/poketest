@@ -20,11 +20,13 @@ function audit(commands){
    const type=entry.command.type;
    const trainerName=type==='play_trainer'?CATALOG.get(entry.cardId)?.name:null;
    const isCenter=trainerName==='Pokémon Center';
-   // These draw-only Trainers do not heal, move, or alter attached Energy.
-   // Keep reliable attachment evidence across them; a generic Trainer
-   // invalidation would miss a subsequent wasteful Pokémon Center play.
+   // These Trainers only change hand, deck, or discard zones; none
+   // heals, switches, evolves, or removes attached Energy from the board.
+   // Preserve a valid attachment trace until a genuinely board-changing
+   // action or Pokémon Center consumes it.
    const preservesBoard=['Bill','Professor Oak',"Blaine's Last Resort",
-    'Mail from Bill'].includes(trainerName);
+    'Mail from Bill','Energy Search','Pokémon Trader',
+    'Nightly Garbage Run','Pokédex'].includes(trainerName);
    if(type==='attach_energy')attachments.push({index:i,entry});
    if(isCenter){
     // Damage at attachment time alone does not prove Center discarded it:
