@@ -1185,8 +1185,14 @@ function driveSide(initial,{side=1,level=3,personality='balanced',seed=1,plannin
    game.players[side]?.hand?.[a.payload?.handIndex]:null;
   const target=a.type==='attach_energy'?
    (a.payload.slot===-1?game.players[side]?.active:game.players[side]?.bench?.[a.payload.slot]):null;
+  // Center only discards Energy from Pokémon still damaged when it resolves.
+  // Record the public pre-action slots rather than assuming earlier damage persists.
+  const centerDamagedSlotsBefore=a.type==='play_trainer'&&
+   CATALOG.get(handCardId)?.name==='Pokémon Center'?
+   [-1,...game.players[side].bench.map((_,index)=>index)].filter(slot=>
+    (slot===-1?game.players[side].active:game.players[side].bench[slot])?.damage>0):null;
   commands.push({side,turnSerial:beforeTurn,cardId:handCardId||null,
-   targetDamageBefore:target?.damage??null,
+   targetDamageBefore:target?.damage??null,centerDamagedSlotsBefore,
    // Resolved outcome, never a hypothetical result of a simulated attack.
    wonGame:!!next.game.over&&next.game.winner===side,
    attachmentOpportunity,energyUsedBefore:auditObs.self.energyUsed,
