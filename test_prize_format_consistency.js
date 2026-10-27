@@ -50,6 +50,10 @@ for(const format of historical){
  g.players[1].bench=[U('base1-35',[],30),U('base1-52')];
  g.players[0].prizes=['base1-91','base1-94','base1-95','base1-93'];
  g.players[0].prizeFaceUp=[false,true,false,false];
+ // createGame starts in setup with no dealt Prizes. Both players need a
+ // realistic Prize reserve before the knockout checkpoint can declare a winner.
+ g.players[1].prizes=['base1-91','base1-94','base1-95','base1-93'];
+ g.players[1].prizeFaceUp=[false,false,false,false];
  let r=applyCommand(g,0,{type:'attack',payload:{attackIndex:0}});
  assert.equal(r.ok,true,r.error);
  assert.equal(g.pendingDecision?.kind,'prize-card');
@@ -61,13 +65,7 @@ for(const format of historical){
  assert.equal(r.ok,true,r.error);
  assert.deepEqual(g.players[0].prizes,['base1-94','base1-93']);
  assert.deepEqual(g.players[0].prizeFaceUp,[true,false]);
- assert.equal(g.players[1].active?.id,'base1-52','Only surviving Benched Pokémon auto-promotes: '+JSON.stringify({
-  pendingDecision:g.pendingDecision?.kind,
-  pendingAction:g.pendingAction?.kind,
-  pendingPrizeClaims:g.pendingPrizeClaims,
-  bench:g.players[1].bench.map(u=>({id:u.id,damage:u.damage})),
-  over:g.over,winner:g.winner,turn:g.turn,attackerActive:g.players[0].active?.id,attackerPrizes:g.players[0].prizes.length,defenderPrizes:g.players[1].prizes.length,attackerDeck:g.players[0].deck.length,defenderDeck:g.players[1].deck.length,message:g.message.slice(0,4)
- }));
+ assert.equal(g.players[1].active?.id,'base1-52','Only surviving Benched Pokémon auto-promotes');
  assert.equal(g.turn,1,'Turn advances only after all Prize claims and promotions');
 }
 // A Prize-race victory must be awarded after the final selection, even when
@@ -81,6 +79,8 @@ for(const format of historical){
  g.players[0].bench=[U('base1-52')];
  g.players[1].prizes=['base1-91'];
  g.players[1].prizeFaceUp=[false];
+ g.players[0].prizes=['base1-91','base1-94','base1-95','base1-93'];
+ g.players[0].prizeFaceUp=[false,false,false,false];
  let result=applyCommand(g,1,{type:'attack',payload:{attackIndex:0}});
  assert.equal(result.ok,true,result.error);
  assert.equal(g.over,false,'Winning Knock Out waits for Prize selection');
