@@ -608,7 +608,7 @@ function performAction(g,side,cmd){
   if(pending.kind==='saffron_city_gym'){
    const owner=g.players[pending.side],selected=answer.selected[0];
    if(!answer.decline&&selected){
-    const match=/^slot:(-?\\d+):energy:(\\d+)$/.exec(selected);
+    const match=/^slot:(-?\d+):energy:(\d+)$/.exec(selected);
     if(!match)fail('Invalid Saffron City Gym selection');
     const slot=Number(match[1]),index=Number(match[2]);
     const pokemon=slot===-1?owner.active:owner.bench[slot];
