@@ -21,7 +21,7 @@ test('every client RPG JS dependency exists and is permitted by static server ro
  }
 });
 test('new RPG dependencies have explicit static routes',()=>{
- for(const file of ['rpg_error_diagnostics.js','rpg_mobile_events_v2.js','rpg_akari_barb_event.js']){
+ for(const file of ['rpg_error_diagnostics.js','rpg_mobile_events_v2.js','rpg_akari_barb_event.js','rpg_daisy_event_additions.js']){
   assert.ok(server.includes("'"+file+"'"),file+' must be publicly served');
  }
  assert.ok(!server.includes("publicScripts.add('rpg_character_packs.generated.js')"));
