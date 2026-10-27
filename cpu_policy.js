@@ -1181,7 +1181,12 @@ function driveSide(initial,{side=1,level=3,personality='balanced',seed=1,plannin
   const attachmentOpportunity=auditOptions.some(candidate=>
    energyValue(slotUnit(auditObs.self,candidate.payload.slot),
     auditObs.self.hand[candidate.payload.handIndex])>12);
-  commands.push({side,turnSerial:beforeTurn,
+  const handCardId=['play_trainer','attach_energy','bench','evolve'].includes(a.type)?
+   game.players[side]?.hand?.[a.payload?.handIndex]:null;
+  const target=a.type==='attach_energy'?
+   (a.payload.slot===-1?game.players[side]?.active:game.players[side]?.bench?.[a.payload.slot]):null;
+  commands.push({side,turnSerial:beforeTurn,cardId:handCardId||null,
+   targetDamageBefore:target?.damage??null,
    // Resolved outcome, never a hypothetical result of a simulated attack.
    wonGame:!!next.game.over&&next.game.winner===side,
    attachmentOpportunity,energyUsedBefore:auditObs.self.energyUsed,
