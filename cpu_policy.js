@@ -1002,12 +1002,24 @@ function score(a,o,cfg,used){
   // Avoid perpetual KO-avoidance: fleeing costs Energy and concedes tempo.
   // A slightly threatened attacker should still trade damage if it can score
   // Prizes. Champion values the *quality* of a safe replacement over panic.
+  // A switch to an attacker without a usable attack is typically a tempo
+  // loss, not a rescue. Keep a sacrificial Active in place when it buys time
+  // to charge a better Bench Pokémon; do not repeatedly promote an unready
+  // replacement merely to preserve the Active's remaining HP.
+  const apexUnready=cfg.level===8&&replacementPressure===0;
+  const usableActive=cfg.level===8&&currentPressure>0;
+  const noMeaningfulRescue=cfg.level===8&&(!threatened||!alternativeSurvives);
+  const sacrificeTempo=apexUnready&&noMeaningfulRescue?220:
+   apexUnready&&usableActive?175:0;
+  const attackTempo=cfg.level===8&&usableActive&&replacementPressure<=currentPressure?
+   120:0;
   const rescue=threatened&&alternativeSurvives?(cfg.level>=4?65:100)*style.survival:
    threatened&&!alternativeSurvives?-45:0;
   const foresight=cfg.level>=3?rescue-
    (lethalOwn?300:0)+(newDamage-oldDamage)*1.05-
    (newDamage===0&&oldDamage>0?70:0)-(oldDamage>0?oldDamage*.25:0):0;
-  return (safeMatchupLoss?-320:0)+(unreadySwap?-190:0)+
+  return -sacrificeTempo-attackTempo+
+   (safeMatchupLoss?-320:0)+(unreadySwap?-190:0)+
    (before.status?180:45)+(gain>0?Math.min(30,gain):0)+
    ((hpRemaining(before)<30)&&alternativeSurvives?23:0)*style.survival-
    (before.energies?.length||0)*18+foresight;
