@@ -24,10 +24,18 @@ function audit(commands){
    // heals, switches, evolves, or removes attached Energy from the board.
    // Preserve a valid attachment trace until a genuinely board-changing
    // action or Pokémon Center consumes it.
+   const drawsCards=['Bill','Professor Oak',"Blaine's Last Resort",
+    'Mail from Bill'].includes(trainerName);
    const preservesBoard=['Bill','Professor Oak',"Blaine's Last Resort",
     'Mail from Bill','Energy Search','Pokémon Trader',
     'Nightly Garbage Run','Pokédex'].includes(trainerName);
    if(type==='attach_energy')attachments.push({index:i,entry});
+   if(drawsCards){
+    // A newly drawn Center could not have been played before the earlier
+    // attachment. Keep only evidence where Center was already in hand.
+    for(let n=attachments.length-1;n>=0;n--)
+     if(attachments[n].entry.centerInHandBefore!==true)attachments.splice(n,1);
+   }
    if(isCenter){
     // Damage at attachment time alone does not prove Center discarded it:
     // the Pokémon may have been healed before Center was played.
