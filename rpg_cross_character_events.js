@@ -5239,7 +5239,98 @@
    "mood": "friendly professional and lighthearted",
    "fanservice": 0
   }
+ },
+ {
+ "id": "crossover_barb_daisy_beachwear_design",
+ "npc": "barb",
+ "participants": [
+  "barb",
+  "daisy"
+ ],
+ "encounterType": "slice",
+ "trigger": "talk",
+ "place": "shop",
+ "slot": 1,
+ "start": 19,
+ "end": 90,
+ "minAffection": 0,
+ "title": "Burgundy Afterglow",
+ "lines": [
+  {
+   "speaker": "Narrator",
+   "text": "At Barb's workshop, Daisy spreads burgundy and charcoal fabric swatches across the cutting table, keeping a tiny lotus sketch under one finger."
+  },
+  {
+   "speaker": "daisy",
+   "text": "I want something that feels like me, not a costume. Confident, a little dramatic, but comfortable enough to move."
+  },
+  {
+   "speaker": "barb",
+   "text": "Then we start with a secure lined two-piece: burgundy panels, a soft black wrap detail and silver rings that won't catch when you walk."
+  },
+  {
+   "speaker": "Protagonist",
+   "text": "Could the lotus motif echo Daisy's tattoos without copying them literally?"
+  },
+  {
+   "speaker": "daisy",
+   "text": "Exactly. A subtle flower on the sketch, and maybe three tiny stars. I'd rather the details tell a story than shout."
+  },
+  {
+   "speaker": "barb",
+   "text": "I'll draw two strap options and a removable sheer overskirt. You can decide what feels right when we test the fit."
+  },
+  {
+   "speaker": "Narrator",
+   "text": "Barb labels the fashion sketch with Daisy's notes and folds the samples away for their next design session."
+  }
+ ],
+ "choices": [
+  {
+   "label": "Help compare the practical strap layouts",
+   "reply": "Daisy chooses the secure version and Barb marks the adjustment points on the pattern.",
+   "kind": "creative",
+   "delta": {
+    "affection": 1,
+    "trust": 1,
+    "respect": 1,
+    "attraction": 0
+   },
+   "flag": "crossover_barb_daisy_beachwear_design_collaboration"
+  },
+  {
+   "label": "Ask Daisy which detail matters most to her",
+   "reply": "She taps the little lotus drawing, then smiles when Barb adds it to the final sketch.",
+   "kind": "support",
+   "delta": {
+    "affection": 1,
+    "trust": 1,
+    "respect": 0,
+    "attraction": 0
+   },
+   "flag": "crossover_barb_daisy_beachwear_design_process"
+  }
+ ],
+ "image": "/rpg-assets/events/cg/season01/crossover_barb_daisy_beachwear_design.webp",
+ "artPending": true,
+ "beachwear": {
+  "palette": "deep burgundy, charcoal black and muted silver",
+  "cut": "secure burgundy two-piece with adjustable crossing straps, removable sheer wrap skirt and delicate silver ring accents",
+  "detail": "Subtle lotus embroidery and three tiny stars inspired by Daisy's personal style",
+  "wearer": "daisy",
+  "stage": "concept",
+  "visualReference": "Daisy's approved Neo Campus visual bible; fashion design only, no swimsuit worn in this scene."
+ },
+ "art": {
+  "scene": "Barb and daisy at the shop worktable designing a practical burgundy beachwear set; the sketch shows adjustable straps, a removable wrap skirt, delicate lotus embroidery and three tiny stars. Both adult women wear their approved everyday outfits. Fabric swatches and a detailed fashion sketch are on the table; the proposed beachwear is not worn.",
+  "composition": "Single cinematic 16:9 JRPG workshop illustration, Barb and Daisy clearly identifiable, fashion sketch foreground, bottom fifth clear for dialogue.",
+  "outfit": "Approved everyday character designs: Barb's copper-red hair and punk-cute styling; Daisy's dark hair with bangs, burgundy layered outfit and floral tattoos. No changing clothes.",
+  "expression": "Daisy's playful confidence softens into thoughtful attention; Barb is focused and enthusiastic.",
+  "environment": "shop",
+  "mood": "warm, creative and gently teasing",
+  "fanservice": 0
  }
+}
 ]);
  const pendingArt=events.map(e=>({id:e.id,path:e.image,participants:e.participants,title:e.title,brief:e.art.scene,composition:e.art.composition,status:'PENDING_CG'}));
  function validate(){const issues=[],ids=new Set();for(const e of events){if(ids.has(e.id))issues.push('Duplicate '+e.id);ids.add(e.id);if(e.participants.length<2||e.participants[0]!==e.npc||e.lines.length<5||!e.choices?.length||!e.image.endsWith(e.id+'.webp'))issues.push('Invalid '+e.id);if(e.prerequisite&&!ids.has(e.prerequisite)&&!events.some(x=>x.id===e.prerequisite))issues.push('Unknown prerequisite '+e.id);}return issues;}
