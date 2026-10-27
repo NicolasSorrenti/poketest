@@ -606,6 +606,13 @@ function prematureEvolutionPenalty(o,slot,evolutionId,cfg){
  // turns too early. Evolve once the new attacker can attack now or needs only
  // the next Energy attachment already visible in our own hand.
  if(ready||nextTurnReady)return 0;
+ // Preserve a playable evolution before an imminent Professor Oak hand reset,
+ // but never give up a currently stronger Active attack merely to save a card.
+ const oakPending=(o.self.hand||[]).some(id=>card(id)?.name==='Professor Oak')&&
+  o.self.hand.length<=4&&(o.self.deckCount??0)>2;
+ if(oakPending&&(slot!==-1||
+   projectedAttackValue(after,enemy,o.turnSerial)>=
+   projectedAttackValue(before,enemy,o.turnSerial)))return 0;
  // Important survival and tactical exceptions outweigh waiting.
  if(slot===-1){
   const incoming=strongestUsableOpponentAttack(o,before);
