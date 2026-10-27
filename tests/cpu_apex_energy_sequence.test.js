@@ -302,3 +302,275 @@ test('Lower CPU levels retain their existing Active Energy scoring',()=>{
  assert.equal(AI.score(attachActive,threatened,lower,{}),
   AI.score(attachActive,safe,lower,{}));
 });
+
+function horizonThreatBoard(){
+ const o=threatenedActiveEnergyBoard();
+ // Machoke needs three Fighting Energy for Karate Chop. A second
+ // visible Fighting next turn would complete the line after today's one.
+ // The first Fighting attachment does not fund a retreat or attack.
+ o.self.active={id:'base1-34',energies:[],damage:70,status:null};
+ o.self.bench=[{id:HITMONCHAN,energies:[FIGHT],damage:0,status:null}];
+ // Machoke's Karate Chop costs three Fighting, not Fighting + two Colorless.
+ o.self.hand=[FIGHT,FIGHT];
+ return o;
+}
+test('Apex does not forecast next-turn Active damage after a certain knockout',()=>{
+ const threatened=horizonThreatBoard();
+ assert.equal(AI.energyHorizonBonus(attachActive,threatened,cfg),0);
+});
+test('Apex avoids doomed Active setup across defensive personality styles',()=>{
+ const threatened=threatenedActiveEnergyBoard();
+ for(const personality of ['balanced','defensive','tactical','setup']){
+  const policy=AI.configuration({side:1,level:8,personality});
+  assert.ok(AI.score(attach,threatened,policy,{})>
+   AI.score(attachActive,threatened,policy,{}),personality);
+ }
+});
+test('Apex still develops Active when its opponent is Asleep and cannot attack',()=>{
+ const threatened=threatenedActiveEnergyBoard();
+ const asleep=structuredClone(threatened);
+ asleep.opponent.active.status='Asleep';
+ assert.equal(AI.score(attachActive,asleep,cfg,{})-
+  AI.score(attachActive,threatened,cfg,{}),140);
+});
+test('Apex does not overreact to an opponent missing its attack Energy',()=>{
+ const threatened=threatenedActiveEnergyBoard();
+ const empty=structuredClone(threatened);
+ empty.opponent.active.energies=[];
+ assert.equal(AI.score(attachActive,empty,cfg,{})-
+  AI.score(attachActive,threatened,cfg,{}),140);
+});
+test('Apex does not punish Active investment if every Bench slot is blocked',()=>{
+ const threatened=threatenedActiveEnergyBoard();
+ threatened.self.bench[0].energyAttachBlockSerial=threatened.turnSerial+1;
+ const safe=structuredClone(threatened);
+ safe.opponent.active.energies=[];
+ assert.equal(AI.score(attachActive,threatened,cfg,{}),
+  AI.score(attachActive,safe,cfg,{}));
+});
+
+test('Apex delays a low-value evolution when Machop can already attack',()=>{
+ const o=evolutionRefuelBoard('base1-91');
+ o.self.active={id:MACHOP,energies:[FIGHT,FIGHT],damage:0,status:null,playedTurn:2};
+ o.self.hand=['base1-34','base1-91'];
+ const evolution={type:'evolve',payload:{handIndex:0,slot:-1}};
+ const baseline=AI.configuration({side:1,level:8});
+ const nonGame=structuredClone(o);nonGame.phase='setup';
+ assert.ok(AI.score(evolution,o,baseline,{})<
+  AI.score(evolution,nonGame,baseline,{}),
+  'a live game should discount a premature Active promotion');
+});
+test('Apex does not delay evolution merely to keep a Paralyzed attacker',()=>{
+ const o=evolutionRefuelBoard('base1-91');
+ o.self.active={id:MACHOP,energies:[FIGHT,FIGHT],damage:0,status:'Paralyzed',playedTurn:2};
+ o.self.hand=['base1-34','base1-91'];
+ const evolution={type:'evolve',payload:{handIndex:0,slot:-1}};
+ const nonGame=structuredClone(o);nonGame.phase='setup';
+ assert.equal(AI.score(evolution,o,cfg,{}),
+  AI.score(evolution,nonGame,cfg,{}));
+});
+
+
+function retreatLockBoard(){
+ const o=board();
+ Object.assign(o,{phase:'game',turn:1,round:5,turnSerial:11,over:false,decision:null});
+ o.self.active={id:HITMONCHAN,energies:[FIGHT],damage:50,status:null};
+ o.self.bench=[{id:MACHOP,energies:[],damage:0,status:null}];
+ o.opponent.active={id:HITMONCHAN,energies:[FIGHT],damage:0,status:null};
+ return o;
+}
+const retreatToBench={type:'retreat',payload:{slot:0}};
+test('Apex values escaping a genuinely ready public knockout',()=>{
+ const ready=retreatLockBoard(),unarmed=structuredClone(ready);
+ unarmed.opponent.active.energies=[];
+ assert.ok(AI.score(retreatToBench,ready,cfg,{})>
+  AI.score(retreatToBench,unarmed,cfg,{}));
+});
+test('Apex does not panic retreat against a sleeping or paralyzed attacker',()=>{
+ const ready=retreatLockBoard(),unarmed=structuredClone(ready);
+ unarmed.opponent.active.energies=[];
+ for(const status of ['Asleep','Paralyzed']){
+  const blocked=structuredClone(ready);
+  blocked.opponent.active.status=status;
+  assert.equal(AI.score(retreatToBench,blocked,cfg,{}),
+   AI.score(retreatToBench,unarmed,cfg,{}),status);
+ }
+});
+test('Apex does not panic retreat from an Amnesia-locked opponent attack',()=>{
+ const ready=retreatLockBoard(),unarmed=structuredClone(ready);
+ unarmed.opponent.active.energies=[];
+ ready.opponent.active.amnesia={index:0,expires:12};
+ assert.equal(AI.score(retreatToBench,ready,cfg,{}),
+  AI.score(retreatToBench,unarmed,cfg,{}));
+});
+test('Apex respects visible Gym attack cooldown and once-per-turn attack locks',()=>{
+ const ready=retreatLockBoard(),unarmed=structuredClone(ready);
+ unarmed.opponent.active.energies=[];
+ for(const lock of [{gymAttackCooldown:{index:0,expires:12}},
+   {gymAttackOnce:[0]}]){
+  const blocked=structuredClone(ready);
+  Object.assign(blocked.opponent.active,lock);
+  assert.equal(AI.score(retreatToBench,blocked,cfg,{}),
+   AI.score(retreatToBench,unarmed,cfg,{}));
+ }
+});
+test('Level 7 retreat heuristic remains unchanged',()=>{
+ const ready=retreatLockBoard(),blocked=structuredClone(ready);
+ blocked.opponent.active.amnesia={index:0,expires:12};
+ const lower=AI.configuration({side:1,level:7});
+ assert.equal(AI.score(retreatToBench,ready,lower,{}),
+  AI.score(retreatToBench,blocked,lower,{}));
+});
+
+test('Apex penalizes doomed Active Energy when Low Kick was already affordable',()=>{
+ const threatened=threatenedActiveEnergyBoard();
+ // Machop's Low Kick is already affordable. Its one-Energy retreat cost is
+ // also already paid, so the second attachment adds no new escape or attack.
+ threatened.self.active={id:MACHOP,energies:[FIGHT],damage:40,status:null};
+ const safe=structuredClone(threatened);
+ safe.opponent.active.energies=[];
+ assert.equal(AI.score(attachActive,safe,cfg,{})-
+  AI.score(attachActive,threatened,cfg,{}),140);
+ assert.ok(AI.score(attach,threatened,cfg,{})>
+  AI.score(attachActive,threatened,cfg,{}),
+  'invest in the surviving Bench instead of an unnecessary second Active Energy');
+});
+test('Apex keeps the immediate attack-upgrade exception for Special Punch',()=>{
+ const threatened=threatenedActiveEnergyBoard();
+ // The third Fighting Energy unlocks Hitmonchan's stronger Special Punch.
+ threatened.self.active={id:HITMONCHAN,energies:[FIGHT,FIGHT],damage:60,status:null};
+ const safe=structuredClone(threatened);
+ safe.opponent.active.energies=[];
+ assert.equal(AI.score(attachActive,safe,cfg,{}),
+  AI.score(attachActive,threatened,cfg,{}));
+});
+test('Level 6 does not inherit the new already-ready attack penalty',()=>{
+ const threatened=threatenedActiveEnergyBoard();
+ threatened.self.active={id:MACHOP,energies:[FIGHT],damage:40,status:null};
+ const safe=structuredClone(threatened);
+ safe.opponent.active.energies=[];
+ const lower=AI.configuration({side:1,level:6});
+ assert.equal(AI.score(attachActive,safe,lower,{}),
+  AI.score(attachActive,threatened,lower,{}));
+});
+
+function blockedRetreatEnergyBoard({status=null,retreated=false}={}){
+ const o=board();
+ Object.assign(o,{phase:'game',round:5,turnSerial:11});
+ const machop=require('../headless_duel').CATALOG.get(MACHOP);
+ assert.equal(machop.retreatCost.length,1,'fixture requires a one-Energy retreat');
+ // DCE pays Machop's retreat but cannot fund its Fighting attacks.
+ // The same DCE develops Benched Hitmonchan's Special Punch.
+ o.self.active={id:MACHOP,energies:[],damage:Number(machop.hp)-10,status};
+ o.self.bench=[{id:HITMONCHAN,energies:[FIGHT,FIGHT],damage:0,status:null}];
+ o.self.hand=['base1-96'];
+ o.self.retreated=retreated;
+ o.opponent.active={id:HITMONCHAN,energies:[FIGHT],damage:0,status:null};
+ return o;
+}
+test('Apex does not excuse a doomed Active attachment for an Asleep retreat',()=>{
+ const threatened=blockedRetreatEnergyBoard({status:'Asleep'});
+ const safe=structuredClone(threatened);
+ safe.opponent.active.energies=[];
+ assert.ok(AI.score(attachActive,safe,cfg,{})>
+  AI.score(attachActive,threatened,cfg,{}),
+  'an Asleep Active cannot retreat even after DCE pays the cost');
+});
+test('Apex does not excuse a doomed Active attachment for a Paralyzed retreat',()=>{
+ const threatened=blockedRetreatEnergyBoard({status:'Paralyzed'});
+ const safe=structuredClone(threatened);
+ safe.opponent.active.energies=[];
+ assert.ok(AI.score(attachActive,safe,cfg,{})>
+  AI.score(attachActive,threatened,cfg,{}),
+  'a Paralyzed Active cannot retreat even with enough Energy');
+});
+test('Apex does not excuse a doomed Active attachment after retreat was used',()=>{
+ const threatened=blockedRetreatEnergyBoard({retreated:true});
+ const safe=structuredClone(threatened);
+ safe.opponent.active.energies=[];
+ assert.ok(AI.score(attachActive,safe,cfg,{})>
+  AI.score(attachActive,threatened,cfg,{}),
+  'the once-per-turn retreat limit still applies');
+});
+test('Apex preserves the escape exception for a legal Energy-funded retreat',()=>{
+ const threatened=blockedRetreatEnergyBoard();
+ const safe=structuredClone(threatened);
+ safe.opponent.active.energies=[];
+ assert.equal(AI.score(attachActive,threatened,cfg,{}),
+  AI.score(attachActive,safe,cfg,{}),
+  'DCE that enables a legal retreat should not be treated as stranded');
+});
+
+function exposedActiveHorizonBoard(){
+ const o=board();
+ Object.assign(o,{phase:'game',round:5,turnSerial:11});
+ o.self.active={id:HITMONCHAN,energies:[FIGHT],damage:60,status:null};
+ o.self.bench=[{id:MACHOP,energies:[],damage:0,status:null}];
+ o.self.hand=[FIGHT];
+ o.opponent.active={id:HITMONCHAN,energies:[FIGHT],damage:0,status:null};
+ return o;
+}
+test('Apex Bench horizon rewards a replacement when the Active faces a ready knockout',()=>{
+ const threatened=exposedActiveHorizonBoard();
+ const safe=structuredClone(threatened);
+ safe.self.active.damage=0;
+ assert.ok(AI.energyHorizonBonus(attach,threatened,cfg)>
+  AI.energyHorizonBonus(attach,safe,cfg),
+  'the exposed Active, not the Energy recipient, determines replacement urgency');
+});
+test('Apex Bench horizon does not mistake a fragile Bench for a threatened Active',()=>{
+ const safe=exposedActiveHorizonBoard();
+ safe.self.active.damage=0;
+ const fragile=structuredClone(safe);
+ fragile.self.bench[0].damage=40;
+ assert.equal(AI.energyHorizonBonus(attach,fragile,cfg),
+  AI.energyHorizonBonus(attach,safe,cfg),
+  'damage on a Bench target must not trigger Active replacement urgency');
+});
+test('Apex Bench horizon ignores knockouts from a sleeping opponent',()=>{
+ const threatened=exposedActiveHorizonBoard();
+ threatened.opponent.active.status='Asleep';
+ const safe=structuredClone(threatened);
+ safe.self.active.damage=0;
+ assert.equal(AI.energyHorizonBonus(attach,threatened,cfg),
+  AI.energyHorizonBonus(attach,safe,cfg));
+});
+
+function matchWinningEvolutionBoard(){
+ const o=evolutionRefuelBoard('base1-96');
+ // Rattata's Bite KOs damaged Machop but not evolved Machoke.
+ // Machop's affordable Low Kick guarantees the final Prize right now.
+ o.self.active.damage=40;
+ o.self.prizeCount=1;
+ o.opponent.active={id:RATTATA,energies:[FIGHT],damage:10,status:null};
+ o.opponent.bench=[{id:RATTATA,energies:[],damage:0,status:null}];
+ return o;
+}
+test('Apex preserves a certain final-Prize attack instead of evolving to safety',()=>{
+ const o=matchWinningEvolutionBoard();
+ const evolve={type:'evolve',payload:{handIndex:0,slot:-1}};
+ assert.equal(AI.evolutionTempoPenalty(o,-1,'base1-34',cfg),550);
+ assert.ok(AI.score(attack,o,cfg,{})>AI.score(evolve,o,cfg,{}));
+});
+test('Apex preserves an all-Pokémon knockout even when Prizes remain',()=>{
+ const o=matchWinningEvolutionBoard();
+ o.self.prizeCount=3;
+ o.opponent.bench=[];
+ assert.equal(AI.evolutionTempoPenalty(o,-1,'base1-34',cfg),550);
+});
+test('Apex may evolve for survival when no immediate win exists',()=>{
+ const o=matchWinningEvolutionBoard();
+ o.self.prizeCount=3;
+ assert.equal(AI.evolutionTempoPenalty(o,-1,'base1-34',cfg),0);
+});
+test('Apex does not penalize evolution when evolved attack also guarantees victory',()=>{
+ const o=matchWinningEvolutionBoard();
+ o.self.active.damage=0;
+ o.self.active.energies=[FIGHT,FIGHT,'base1-96'];
+ assert.equal(AI.evolutionTempoPenalty(o,-1,'base1-34',cfg),0);
+});
+test('Level 7 evolution policy is unchanged by the Apex winning-attack guard',()=>{
+ const o=matchWinningEvolutionBoard();
+ assert.equal(AI.evolutionTempoPenalty(o,-1,'base1-34',
+  AI.configuration({side:1,level:7})),0);
+});
