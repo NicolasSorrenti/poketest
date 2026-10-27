@@ -403,7 +403,7 @@
   }
   return {update,reset,get count(){return count;}};
  }
- function assetCandidates(manifest,npcId,kind){
+ function assetCandidates(manifest,npcId,kind,outfit=null){
   const entry=manifest?.characters?.[npcId];
   const belongsToNpc=path=>typeof path==='string'&&(
    path.startsWith('/rpg-assets/'+npcId+'.')||
@@ -432,8 +432,12 @@
   };
   const reactionPaths=(entry&&kind!=='attack'?(reactionNames[kind]||[kind]):[]).flatMap(name=>
    ['png','webp','jpg'].map(ext=>'/rpg-assets/reactions/'+npcId+'/'+name+'.'+ext));
+  // Laca's current RPG outfit takes priority over legacy generic cut-ins.
+  // The images are optional: missing PNGs fall back to the existing art.
+  const outfitAttack=kind==='attack'&&npcId==='laca'&&['casual','lifeguard'].includes(outfit)?
+   ['/rpg-assets/reactions/laca/'+outfit+'/attack.png']:[];
   const primaryAttackArt=kind==='attack'?[entry?.attack]:[];
-  return [...new Set([...primaryAttackArt,...vnCandidates(npcId,kind),
+  return [...new Set([...outfitAttack,...primaryAttackArt,...vnCandidates(npcId,kind),
    ...(kinds[kind]||[kind]).map(name=>entry?.[name]),
    ...reactionPaths,entry?.default,PORTRAITS[npcId]].filter(valid))];
  }
@@ -441,6 +445,7 @@
  function artClass(path){
   return (/^\/rpg-assets\/reactions\/[a-z0-9_-]+\/attack\.(?:png|webp|jpe?g)$/i.test(path)?' has-wide-action-art':'')+
    (/\/cutins\/match-cutin\.webp$/i.test(path)?' has-match-art':'')+
+   (/^\/rpg-assets\/reactions\/laca\/(?:casual|lifeguard)\/attack\.png$/i.test(path)?' has-wide-action-art':'')+
    (/\/(?:vn-expressions|expression-portraits)\/[a-z_-]+\.webp$/i.test(path)?' has-vn-expression':'');
  }
  function assetFor(manifest,npcId,kind){
@@ -451,7 +456,7 @@
  const isClutch=kind=>kind==='ko_taken'||kind==='ko_scored';
  const priorityFor=kind=>isClutch(kind)?3:['weakness_hit','status_hit','big_hit','evolve','power'].includes(kind)?2:1;
  const durationFor=(kind,reduced=false)=>kind==='attack'?2800:isClutch(kind)?2600:['weakness_hit','status_hit','big_hit'].includes(kind)?2300:1650;
- function makeExperience({element,npcId,npcName,random=Math.random,getCard=()=>null,doc=typeof document==='undefined'?null:document,
+ function makeExperience({element,npcId,npcName,outfit=null,random=Math.random,getCard=()=>null,doc=typeof document==='undefined'?null:document,
   onShow=()=>{},schedule=setTimeout,cancel=clearTimeout,media=typeof window==='undefined'?null:window}={}){
   const director=createDirector({npcId,npcName,random,getCard});
   let manifest=null,queued=null,active=false,currentPriority=0,timer=null,generation=0;
@@ -505,7 +510,7 @@
    const reaction=queued;queued=null;active=true;currentPriority=priorityFor(reaction.kind);
    const ticket=++generation;
    pendingShown=new Promise(resolve=>{settleShown=resolve;});
-   const candidates=assetCandidates(manifest,npcId,reaction.imageKey);
+   const candidates=assetCandidates(manifest,npcId,reaction.imageKey,outfit);
    function show(readyPath){
     if(ticket!==generation||!active)return;
     const card=doc.createElement('div');
@@ -570,7 +575,7 @@
      // Preload actual working images, including fallback variants, not just the
      // first candidate (often a nonexistent file).
      for(const kind of ['attack','play_card','evolve','power','weakness_hit','status_hit','big_hit','hurt','ko_taken','ko_scored']){
-      const candidates=assetCandidates(manifest,npcId,kind);
+      const candidates=assetCandidates(manifest,npcId,kind,outfit);
       if(candidates.length)readyAsset(candidates).catch(()=>{});
      }
     }
