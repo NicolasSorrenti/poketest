@@ -1,0 +1,72 @@
+{
+  "tool": "built-in image_gen",
+  "attempt_count": 1,
+  "reject_count": 1,
+  "reference": {
+    "path": "/workspace/scratch/dc054acd6888/retry-batch/laca-lifeguard-angry/reference.webp",
+    "sha256": "035e43536e36ca0ecea28c8ea20aa4191a41330cd0b95cfb8662a31d5f59d500",
+    "bytes": 280300,
+    "width": 941,
+    "height": 1672,
+    "mode": "RGBA",
+    "alpha": {
+      "extrema": [
+        0,
+        255
+      ],
+      "transparent_pixels": 897651,
+      "partial_pixels": 674994,
+      "opaque_pixels": 707,
+      "actual_transparency": true
+    }
+  },
+  "attempts": [
+    {
+      "status": "rejected_for_strict_face_only_requirement; retained_as_visual_candidate",
+      "assessment": "Warm welcoming smile achieved. Adult identity, brown hair/eyes, outfit coverage, pose, framing and illustration style visually consistent. Non-face details show small rendering changes; exact face-only invariance is not met. Colored edge fringe visible, also present in reference. SFW, non-voyeuristic. Original output preserved without postprocessing.",
+      "original": {
+        "path": "/workspace/scratch/dc054acd6888/followup-batch/laca-lifeguard-inviting/attempt-001-original.png",
+        "sha256": "dca0ae513e02ff3146df88a0405a7e1d41de9b98f849653269c9f86f8701fe97",
+        "bytes": 1293700,
+        "width": 941,
+        "height": 1672,
+        "mode": "RGBA",
+        "alpha": {
+          "extrema": [
+            0,
+            255
+          ],
+          "transparent_pixels": 900132,
+          "partial_pixels": 672536,
+          "opaque_pixels": 684,
+          "actual_transparency": true
+        }
+      },
+      "thumbnail": {
+        "path": "/workspace/scratch/dc054acd6888/followup-batch/laca-lifeguard-inviting/attempt-001-thumbnail.png",
+        "sha256": "1e6e8154b5cf51d97e8cfe63bf29cd397240d7ebde7ee17fedc754b67fe00726",
+        "bytes": 123184,
+        "width": 256,
+        "height": 455,
+        "mode": "RGBA",
+        "alpha": {
+          "extrema": [
+            0,
+            255
+          ],
+          "transparent_pixels": 66198,
+          "partial_pixels": 49088,
+          "opaque_pixels": 1194,
+          "actual_transparency": true
+        }
+      }
+    }
+  ],
+  "prompt": {
+    "path": "/workspace/scratch/dc054acd6888/followup-batch/laca-lifeguard-inviting/prompt.txt",
+    "sha256": "e66e917fecdaae510360b8d8760127f37201b7bef2d92cd1fa22d33088fe70f5",
+    "bytes": 888
+  },
+  "git_mutations": false,
+  "runtime_activation": false
+}

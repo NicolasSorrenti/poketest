@@ -1,0 +1,5 @@
+Use case: identity-preserve
+Edit target: the supplied canonical Laca lifeguard illustration.
+Primary request: Change ONLY her facial expression to a playful, confident, flirty smile: a subtle asymmetric smile, gently amused eyes and a softly lifted brow, SFW and friendly. Preserve her adult identity, brown eyes, facial structure and brown hair.
+Invariants: Preserve the exact full-body pose, head angle, framing, proportions, painterly anime illustration style, lighting, approved red lifeguard bikini and its exact coverage/white trim/cross, jewelry, whistle, rescue float and hand placement. No outfit or body changes. Minor rendering differences are acceptable if visually consistent. No added objects or text. SFW, non-voyeuristic presentation.
+Background: actual transparent alpha, clean cutout, no solid background and no checkerboard painted into the image.

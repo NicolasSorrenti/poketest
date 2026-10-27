@@ -1,0 +1,4 @@
+Use case: identity-preserve
+Input image: edit target, canonical adult Laca lifeguard.
+Primary request: Change ONLY her facial expression to a warm, friendly, welcoming and inviting smile, with relaxed brows and kind brown eyes. Inviting means approachable and reassuring, not seductive.
+Constraints: Preserve the exact adult identity and facial structure, brown hair and brown eye color, hairstyle, head angle, exact full-body pose, hands, body proportions, outfit and its existing coverage, red swimsuit and white cross, whistle, earrings, rescue float, framing, composition, illustration rendering style, colors, lighting and all non-face details. No changes outside the face. SFW, non-voyeuristic lifeguard character art. Keep the full figure and rescue float in the same framing. Actual transparent alpha background, not black, white or checkerboard pixels. Produce one edited image.
