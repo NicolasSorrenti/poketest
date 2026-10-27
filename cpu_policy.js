@@ -1256,8 +1256,12 @@ function driveSide(initial,{side=1,level=3,personality='balanced',seed=1,plannin
    CATALOG.get(handCardId)?.name==='Pokémon Center'?
    [-1,...game.players[side].bench.map((_,index)=>index)].filter(slot=>
     (slot===-1?game.players[side].active:game.players[side].bench[slot])?.damage>0):null;
+  // A draw Trainer may introduce Center after the attachment. Record whether
+  // the acting player could have played Center before spending that Energy.
+  const centerInHandBefore=a.type==='attach_energy'?
+   game.players[side]?.hand?.some(id=>CATALOG.get(id)?.name==='Pokémon Center')===true:null;
   commands.push({side,turnSerial:beforeTurn,cardId:handCardId||null,
-   targetDamageBefore:target?.damage??null,centerDamagedSlotsBefore,
+   targetDamageBefore:target?.damage??null,centerDamagedSlotsBefore,centerInHandBefore,
    // Resolved outcome, never a hypothetical result of a simulated attack.
    wonGame:!!next.game.over&&next.game.winner===side,
    attachmentOpportunity,energyUsedBefore:auditObs.self.energyUsed,
