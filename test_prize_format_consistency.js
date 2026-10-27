@@ -66,7 +66,7 @@ for(const format of historical){
   pendingAction:g.pendingAction?.kind,
   pendingPrizeClaims:g.pendingPrizeClaims,
   bench:g.players[1].bench.map(u=>({id:u.id,damage:u.damage})),
-  over:g.over,winner:g.winner,turn:g.turn
+  over:g.over,winner:g.winner,turn:g.turn,attackerActive:g.players[0].active?.id,attackerPrizes:g.players[0].prizes.length,defenderPrizes:g.players[1].prizes.length,attackerDeck:g.players[0].deck.length,defenderDeck:g.players[1].deck.length,message:g.message.slice(0,4)
  }));
  assert.equal(g.turn,1,'Turn advances only after all Prize claims and promotions');
 }
