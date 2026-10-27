@@ -452,8 +452,11 @@
   quick.drawPrizes($('prizeRail'),you.prizeCount,cpu.prizeCount,'CPU');renderPrizes();renderFaceUpPrizes();renderPrizeFallback();renderCoin(v);renderKnockOut(v);
   $('turnChip').textContent='TURN '+(current.turnSerial+1);
   $('stadiumText').textContent=v.stadium?`Stadium: ${card(v.stadium.id).name}`:'';
-  if(['neo4-99','neo3-61','neo4-95','neo4-100'].includes(v.stadium?.id)&&v.phase==='game'&&yourTurn&&!v.pendingDecision){
-   $('stadiumText').append(btn(current.you.stadiumUsed?' • Used this turn':' ↻ Use Stadium',()=>send(command('use_stadium')),'subtle',!!current.you.stadiumUsed));
+  if(['neo4-99','neo3-61','neo4-95','neo4-100','gym2-122'].includes(v.stadium?.id)&&v.phase==='game'&&yourTurn&&!v.pendingDecision){
+   const saffron=v.stadium.id==='gym2-122';
+   const eligible=saffron&&[you.active,...you.bench].some(p=>p&&card(p.id).name.startsWith("Sabrina's ")&&p.energies.some(id=>/^(Grass|Fire|Water|Lightning|Psychic|Fighting) Energy$/.test(card(id).name)));
+   const disabled=saffron?!eligible:!!current.you.stadiumUsed;
+   $('stadiumText').append(btn(disabled?' • '+(saffron?'No eligible Energy':'Used this turn'):' ↻ Use Stadium',()=>send(command('use_stadium')),'subtle',disabled));
   }
   $('oppStats').textContent=`Hand ${cpu.handCount} · Deck ${cpu.deckCount} · Discard ${cpu.discard.length}`;
   $('myStats').textContent=`Hand ${you.handCount} · Deck ${you.deckCount} · Discard ${you.discard.length}`;
