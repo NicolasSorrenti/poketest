@@ -68,6 +68,11 @@
    status_hit:'angry',ko_taken:'sad',ko_scored:'happy'}
  };
  function vnCandidates(npcId,kind){
+  if(npcId==='elio'){
+   const name=['play_card','evolve','power','ko_scored'].includes(kind)?'happy':
+    ['hurt','big_hit','weakness_hit','status_hit'].includes(kind)?'surprised':null;
+   return name?['/rpg-assets/characters/elio/expression-portraits/'+name+'.png',PORTRAITS.elio]:[PORTRAITS.elio];
+  }
   // Keep Alma in canonical cafe workwear; legacy guest art and suit candidates conflict.
   if(npcId==='alma'){
    const name=['attack','play_card','evolve','power','ko_scored'].includes(kind)?'happy':
@@ -409,6 +414,10 @@
    path.startsWith('/rpg-assets/characters/'+npcId+'/')||
    path.startsWith('/rpg-assets/reactions/'+npcId+'/'));
   const valid=path=>typeof path==='string'&&/^\/rpg-assets\/[a-z0-9/_-]+\.(?:png|webp|jpe?g)$/i.test(path)&&belongsToNpc(path);
+  // Never retry Elio's unreviewed legacy expressions, including manifest fallbacks.
+  if(npcId==='elio')return [...new Set([
+   ...(kind==='attack'?[entry?.attack]:[]),...vnCandidates(npcId,kind)
+  ].filter(valid))];
   // Dedicated attack art leads its cinematic when declared in the manifest.
   // Other reactions still prefer expressions; all art must belong to this NPC.
   const kinds={weakness_hit:['weakness_hit','hurt','ko_taken'],
@@ -440,7 +449,7 @@
  function artClass(path){
   return (/^\/rpg-assets\/reactions\/[a-z0-9_-]+\/attack\.(?:png|webp|jpe?g)$/i.test(path)?' has-wide-action-art':'')+
    (/\/cutins\/match-cutin\.webp$/i.test(path)?' has-match-art':'')+
-   (/\/(?:vn-expressions|expression-portraits)\/[a-z_-]+\.webp$/i.test(path)?' has-vn-expression':'');
+   (/\/(?:vn-expressions|expression-portraits)\/[a-z_-]+\.(?:png|webp)$/i.test(path)?' has-vn-expression':'');
  }
  function assetFor(manifest,npcId,kind){
   return assetCandidates(manifest,npcId,kind)[0]||null;

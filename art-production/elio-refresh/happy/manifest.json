@@ -1,0 +1,196 @@
+{
+  "canonical": {
+    "repository": "NicolasSorrenti/poketest",
+    "commit": "cdc7b3a7e474f37113b0c9c7081fd3b1d6a059dc",
+    "path": "rpg-assets/elio.png",
+    "git_blob": "78fc95deead861b3ce91a20c1ed50313d5be411e",
+    "sha256": "2902f1df48ed43dbbaad5b6c24b8a90ae44fe9e22ff841225e39ccdeee8bb348",
+    "hashes_verified": true,
+    "inspected_before_generation": true,
+    "recovery": "GitHub connector verified commit path/blob; exact bytes downloaded from raw.githubusercontent.com commit-pinned URL. Connector base64 response was empty and fetch_blob failed UTF-8 decoding."
+  },
+  "tool": "built-in image_gen edit",
+  "attempts": [
+    {
+      "id": 1,
+      "input": "reference.png",
+      "original": "attempt-01-original.png",
+      "prompt": "attempt-01-prompt.txt",
+      "thumbnail": "attempt-01-thumbnail.png",
+      "status": "selected",
+      "reason": "Happy expression with canonical male identity and genuine transparent alpha; verified on white composite."
+    },
+    {
+      "id": 2,
+      "input": "attempt-01-original.png",
+      "original": "attempt-02-original.png",
+      "prompt": "attempt-02-prompt.txt",
+      "thumbnail": "attempt-02-thumbnail.png",
+      "status": "rejected",
+      "reason": "Additional redraw drift; first attempt already has genuine alpha."
+    }
+  ],
+  "approved_final": "happy.png",
+  "review": "Selected attempt 01 as happy.png. Exact canonical source was hash-verified and inspected before generation. Adult male Elio identity, hair, earrings, jacket, pendant, notebooks, bag strap, full framing and pose are closely preserved; happy smile is clear. SFW fully clothed. This is a generative edit, not a pixel-identical expression-only patch: some linework, shading and fine details differ outside the face. Alpha is genuine: 611868 zero-alpha pixels (38.90%), corners zero, range 0..254. A white composite confirms the shaded RGB backdrop is hidden by alpha. Initial rejection based on the image viewer was incorrect because it displayed hidden RGB data; that assessment is superseded. Attempt 02 is archived/rejected in favor of attempt 01 because it adds redraw drift with no needed improvement. No Git mutations; no wrong-character assets used. Built-in image_gen edit only. Original generated files retained untouched; thumbnails are proportional 256x384. Alpha-review JPEGs are white composites for QA only, not deliverables replacing the transparent PNG.",
+  "files": [
+    {
+      "path": "/workspace/scratch/dc054acd6888/elio-refresh/happy/attempt-01-alpha-review.jpg",
+      "sha256": "8109f3d3af829fdaac6a9219390d7b9babf330d042317fa2d5722744b84183bb",
+      "bytes": 19907,
+      "width": 256,
+      "height": 384,
+      "mode": "RGB"
+    },
+    {
+      "path": "/workspace/scratch/dc054acd6888/elio-refresh/happy/attempt-01-original.png",
+      "sha256": "0884936e6ca82faf6423d1c5742a06fc16cfc37faaefbd8e5433a38e5520c052",
+      "bytes": 2080256,
+      "width": 1024,
+      "height": 1536,
+      "mode": "RGBA",
+      "alpha": {
+        "min": 0,
+        "max": 254,
+        "zero_pixels": 611868,
+        "opaque_pixels": 0,
+        "partial_pixels": 960996,
+        "zero_fraction": 0.38901519775390625
+      }
+    },
+    {
+      "path": "/workspace/scratch/dc054acd6888/elio-refresh/happy/attempt-01-prompt.txt",
+      "sha256": "0b240d6f3f37ec853504738abfa12c20246db02135d5af7d52b0b56cd5188ce8",
+      "bytes": 1475
+    },
+    {
+      "path": "/workspace/scratch/dc054acd6888/elio-refresh/happy/attempt-01-thumbnail.png",
+      "sha256": "d9c3588fae46e1202026642fe1ae4ee4d28e815773f271d550b4883d1db53a3c",
+      "bytes": 142049,
+      "width": 256,
+      "height": 384,
+      "mode": "RGBA",
+      "alpha": {
+        "min": 0,
+        "max": 255,
+        "zero_pixels": 38307,
+        "opaque_pixels": 804,
+        "partial_pixels": 59193,
+        "zero_fraction": 0.389678955078125
+      }
+    },
+    {
+      "path": "/workspace/scratch/dc054acd6888/elio-refresh/happy/attempt-02-alpha-review.jpg",
+      "sha256": "cf2a8b24cf8733ed9b44b1b1e58cc5512c9db509d7e7260ca7b696e8b2ecd82a",
+      "bytes": 20381,
+      "width": 256,
+      "height": 384,
+      "mode": "RGB"
+    },
+    {
+      "path": "/workspace/scratch/dc054acd6888/elio-refresh/happy/attempt-02-original.png",
+      "sha256": "8ae45ba2de9f5fe9eb76a886fcedc188f782dc66614ccd647c4247c0b9e4d6d6",
+      "bytes": 2063935,
+      "width": 1024,
+      "height": 1536,
+      "mode": "RGBA",
+      "alpha": {
+        "min": 0,
+        "max": 254,
+        "zero_pixels": 610020,
+        "opaque_pixels": 0,
+        "partial_pixels": 962844,
+        "zero_fraction": 0.38784027099609375
+      }
+    },
+    {
+      "path": "/workspace/scratch/dc054acd6888/elio-refresh/happy/attempt-02-prompt.txt",
+      "sha256": "cd8076371a66d5a1f78f54e8d089e93b7cc855b95eacff5a8b115d2d1598f66a",
+      "bytes": 873
+    },
+    {
+      "path": "/workspace/scratch/dc054acd6888/elio-refresh/happy/attempt-02-thumbnail.png",
+      "sha256": "40335895ffb8de5c9d255ec63d6eb4e200f227ba96371196123dd7df045faf1c",
+      "bytes": 142725,
+      "width": 256,
+      "height": 384,
+      "mode": "RGBA",
+      "alpha": {
+        "min": 0,
+        "max": 255,
+        "zero_pixels": 38144,
+        "opaque_pixels": 820,
+        "partial_pixels": 59340,
+        "zero_fraction": 0.3880208333333333
+      }
+    },
+    {
+      "path": "/workspace/scratch/dc054acd6888/elio-refresh/happy/happy-thumbnail.png",
+      "sha256": "d9c3588fae46e1202026642fe1ae4ee4d28e815773f271d550b4883d1db53a3c",
+      "bytes": 142049,
+      "width": 256,
+      "height": 384,
+      "mode": "RGBA",
+      "alpha": {
+        "min": 0,
+        "max": 255,
+        "zero_pixels": 38307,
+        "opaque_pixels": 804,
+        "partial_pixels": 59193,
+        "zero_fraction": 0.389678955078125
+      }
+    },
+    {
+      "path": "/workspace/scratch/dc054acd6888/elio-refresh/happy/happy.png",
+      "sha256": "0884936e6ca82faf6423d1c5742a06fc16cfc37faaefbd8e5433a38e5520c052",
+      "bytes": 2080256,
+      "width": 1024,
+      "height": 1536,
+      "mode": "RGBA",
+      "alpha": {
+        "min": 0,
+        "max": 254,
+        "zero_pixels": 611868,
+        "opaque_pixels": 0,
+        "partial_pixels": 960996,
+        "zero_fraction": 0.38901519775390625
+      }
+    },
+    {
+      "path": "/workspace/scratch/dc054acd6888/elio-refresh/happy/reference-thumbnail.png",
+      "sha256": "5c4b8bfc8cb68cdf7e07f805076e5a39714167691f90e8cdf4660428d032ceb5",
+      "bytes": 140857,
+      "width": 256,
+      "height": 384,
+      "mode": "RGBA",
+      "alpha": {
+        "min": 0,
+        "max": 255,
+        "zero_pixels": 38470,
+        "opaque_pixels": 627,
+        "partial_pixels": 59207,
+        "zero_fraction": 0.3913370768229167
+      }
+    },
+    {
+      "path": "/workspace/scratch/dc054acd6888/elio-refresh/happy/reference.png",
+      "sha256": "2902f1df48ed43dbbaad5b6c24b8a90ae44fe9e22ff841225e39ccdeee8bb348",
+      "bytes": 2184026,
+      "width": 1024,
+      "height": 1536,
+      "mode": "RGBA",
+      "alpha": {
+        "min": 0,
+        "max": 254,
+        "zero_pixels": 612022,
+        "opaque_pixels": 0,
+        "partial_pixels": 960842,
+        "zero_fraction": 0.3891131083170573
+      }
+    },
+    {
+      "path": "/workspace/scratch/dc054acd6888/elio-refresh/happy/review.txt",
+      "sha256": "319774b09e6b5b4efb423cffad1f4ad6efddc1f141c5beec4e2e9dee0c4d0ee9",
+      "bytes": 1066
+    }
+  ]
+}

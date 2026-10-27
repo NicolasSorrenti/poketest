@@ -1959,6 +1959,13 @@ const failedScenePortraits=new Set();
 let activeOutfitSceneId=null;
 const solExpressions={neutral:'neutral',surprised:'surprised',vulnerable:'worried',irritated:'worried',determined:'neutral',happy:'smile'};
 function portraitPaths(id,expression='neutral',sceneId=activeOutfitSceneId){
+ // Only the reviewed Elio expressions may precede his canonical neutral portrait.
+ if(id==='elio'){
+  const name=expression==='smile'?'happy':expression;
+  const neutral='/rpg-assets/elio.png';
+  return ['happy','surprised'].includes(name)?
+   ['/rpg-assets/characters/elio/expression-portraits/'+name+'.png',neutral]:[neutral];
+ }
  // Alma's legacy guest sheet depicts another character. Only the cafe set is compatible.
  // The v4 concerned/surprised pair matches the canonical cafe outfit.
  if(id==='alma'){

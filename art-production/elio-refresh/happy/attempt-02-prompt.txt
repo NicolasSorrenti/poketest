@@ -1,0 +1,4 @@
+Use case: background-extraction
+Edit target: image 1, the happy adult MALE Elio portrait just produced from the verified canonical reference.
+Remove ALL of the background surrounding the character. The black/brown/gray gradient and glow are unwanted BACKGROUND and must be completely erased to zero-alpha transparent pixels, including the space around the hair, shoulders, bag and legs. Produce a genuine transparent PNG cutout, not a dark backdrop, not a checkerboard image. Keep natural antialiased edges.
+Preserve the character exactly as in image 1, including his happy smile, masculine adult face, tousled brown hair, earrings, navy-white star jacket, pendant, notebooks, bag strap, bag and charms, hands, pants, full original 1024x1536 framing and pose. Do not redraw or redesign. Do not crop, zoom or change scale. SFW fully clothed non-voyeuristic. One image only.
