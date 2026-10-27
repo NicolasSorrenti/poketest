@@ -43,16 +43,16 @@ const read=page=>page.evaluate(()=>JSON.parse(localStorage.getItem('neoHarborRpg
    await page.setViewportSize(viewport);
    for(const e of scenes){
     assert.equal(await page.evaluate(id=>window.__barbTest.seed(id),e.id),true,e.id+' can begin');
-    await page.locator('#cgMoment').waitFor({state:'visible'});
-    const img=page.locator('#cgMomentArt img');
+    const img=page.locator('#rpgSceneCG');
+    await img.waitFor({state:'visible'});
+    assert.equal(await page.locator('#scene').evaluate(el=>el.classList.contains('has-story-cg')),true,'Event CG is the scene background');
     await img.evaluate(el=>el.decode());
     assert.equal(await img.getAttribute('src'),'/rpg-assets/characters/barb/events/'+e.id+'.webp');
     const dimensions=await img.evaluate(el=>({w:el.naturalWidth,h:el.naturalHeight,fit:getComputedStyle(el).objectFit}));
     assert.deepEqual(dimensions,{w:1672,h:941,fit:'contain'});
-    const box=await page.locator('#cgMoment').boundingBox();
-    assert.ok(box.x>=-1&&box.y>=-1&&box.x+box.width<=viewport.width+1&&box.y+box.height<=viewport.height+1,'CG modal fits '+JSON.stringify(viewport));
+    const box=await img.boundingBox();
+    assert.ok(box.x>=-1&&box.y>=-1&&box.x+box.width<=viewport.width+1&&box.y+box.height<=viewport.height+1,'In-scene CG fits '+JSON.stringify(viewport));
     assert.equal((await read(page)).cgUnlocked[e.id],undefined,'preview must not unlock unfinished dialogue');
-    await page.locator('#cgMomentClose').click();
     for(let i=0;i<8;i++)await page.locator('#choices button').first().click();
     assert.equal(await page.locator('#choices button').count(),3);
     // Reload at the choice prompt, then commit an actual on-screen choice.
@@ -78,7 +78,7 @@ const read=page=>page.evaluate(()=>JSON.parse(localStorage.getItem('neoHarborRpg
     await page.locator('#galleryClose').click();
     console.log('PASS: '+e.id+' at '+viewport.width+'px');
    }
-   console.log('PASS: all 11 Barb CGs, actual choice controls, mid-dialogue reloads and saved gallery at '+viewport.width+'×'+viewport.height);
+   console.log('PASS: all '+scenes.length+' Barb CGs as scene backgrounds, actual choice controls, mid-dialogue reloads and saved gallery at '+viewport.width+'×'+viewport.height);
   }
   assert.deepEqual(errors,[]);
  }finally{await browser?.close();await new Promise(resolve=>server.close(resolve));}
