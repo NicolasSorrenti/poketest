@@ -632,3 +632,29 @@ test('Level 7 evolution policy is unchanged by the Apex winning-attack guard',()
  assert.equal(AI.evolutionTempoPenalty(o,-1,'base1-34',
   AI.configuration({side:1,level:7})),0);
 });
+
+test('Apex holds Psychic-resistant Eevee rather than retreating into uncharged Rhydon',()=>{
+ const o=board();
+ Object.assign(o,{phase:'game',turn:1,round:5,turnSerial:11,over:false,decision:null});
+ // Base Set 2 Eevee resists Psychic -30, while Rhydon does not.
+ // Psychic Abra can use Psyshock for 10; Eevee takes zero.
+ o.self.active={id:'base2-51',energies:[FIGHT,FIGHT],damage:0,status:null};
+ o.self.bench=[{id:'base2-45',energies:[FIGHT],damage:0,status:null}];
+ o.opponent.active={id:'base1-43',energies:[FIGHT],damage:0,status:null};
+ o.opponent.bench=[];
+ const retreat={type:'retreat',payload:{slot:0}};
+ const hold=AI.score(retreat,o,cfg,{});
+ const lower=AI.score(retreat,o,AI.configuration({side:1,level:7}),{});
+ assert.ok(hold<lower-250,'Apex recognizes the lost Psychic resistance and inactive Rhydon');
+ assert.ok(hold<0,'retreat should not be favored in a protected matchup');
+});
+test('Apex retains level 7 retreat scoring on the Eevee/Rhydon matchup',()=>{
+ const o=board();
+ Object.assign(o,{phase:'game',turn:1,round:5,turnSerial:11,over:false,decision:null});
+ o.self.active={id:'base2-51',energies:[FIGHT,FIGHT],damage:0,status:null};
+ o.self.bench=[{id:'base2-45',energies:[FIGHT],damage:0,status:null}];
+ o.opponent.active={id:'base1-43',energies:[FIGHT],damage:0,status:null};
+ const lower=AI.configuration({side:1,level:7});
+ assert.equal(AI.score({type:'retreat',payload:{slot:0}},o,lower,{}),
+  AI.score({type:'retreat',payload:{slot:0}},structuredClone(o),lower,{}));
+});
