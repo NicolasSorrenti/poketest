@@ -1,0 +1,186 @@
+{
+  "scope": "Elio soft only; review archive; no activation or main writes",
+  "canonical_path": "rpg-assets/elio.png",
+  "canonical_blob": "78fc95deead861b3ce91a20c1ed50313d5be411e",
+  "historical_commit": "ed3195e122450397ae4446aefead7e0e1a519bd7",
+  "historical_soft_blob": "9e60ed458aad4cf1ad56b207b6d525ad1c1622ab",
+  "historical_audit": "Male neutral/happy/concerned/surprised match identity; male soft rejected: energetic open mouth and changed hand pose. Female installed portrait/VN excluded.",
+  "generation": {
+    "tool": "built-in imagegen",
+    "transparent_background": true,
+    "attempts": 2
+  },
+  "rejects": {
+    "historical-soft.webp": "wrong expression and pose for soft",
+    "attempt-001-original.png": "superseded candidate; initial glow concern disproven by alpha composite"
+  },
+  "status": "second attempt selected as review candidate; no activation",
+  "files": [
+    {
+      "path": "elio-soft.png",
+      "sha256": "c3251f06f84f4c9a68e3921708ced701f729b298409eb0ce505e9946dae0e70a",
+      "git_blob": "328120d7bca6e6a1605761291a3e02bec3d29e55",
+      "bytes": 2029688,
+      "dimensions": [
+        1024,
+        1536
+      ],
+      "mode": "RGBA",
+      "alpha_extrema": [
+        0,
+        254
+      ],
+      "transparent_pixels": 607333,
+      "partial_alpha_pixels": 965531
+    },
+    {
+      "path": "originals/canonical-elio.png",
+      "sha256": "2902f1df48ed43dbbaad5b6c24b8a90ae44fe9e22ff841225e39ccdeee8bb348",
+      "git_blob": "78fc95deead861b3ce91a20c1ed50313d5be411e",
+      "bytes": 2184026,
+      "dimensions": [
+        1024,
+        1536
+      ],
+      "mode": "RGBA",
+      "alpha_extrema": [
+        0,
+        254
+      ],
+      "transparent_pixels": 612022,
+      "partial_alpha_pixels": 960842
+    },
+    {
+      "path": "prompt-002.txt",
+      "sha256": "951a73908d537bad76e55e246c8cfd7b2bdc7b8912e9123dea7d7053750eb377",
+      "git_blob": "53ebcf0ed8828cb8a0e428bac053e4bd055b1fc7",
+      "bytes": 461
+    },
+    {
+      "path": "prompt.txt",
+      "sha256": "57fbdb43f49cbb95885fec6e8b436fd706cdca2a1b0b8b1aa5e9ce5115304d35",
+      "git_blob": "4b310271ce44cd77a2b85fb2fa0b1e5ff38e4f44",
+      "bytes": 654
+    },
+    {
+      "path": "qa-001-white.jpg",
+      "sha256": "4015529ec8817f093f7991e7ee67f024d313696dde023e893c43c60589a1f115",
+      "git_blob": "77d3b665ad282eece8ed32eabb52a705513d90fd",
+      "bytes": 58163,
+      "dimensions": [
+        512,
+        768
+      ],
+      "mode": "RGB",
+      "alpha_extrema": [
+        255,
+        255
+      ],
+      "transparent_pixels": 0,
+      "partial_alpha_pixels": 0
+    },
+    {
+      "path": "qa-002-dark.jpg",
+      "sha256": "7502a4fe6f7e91f34b53fb6a3c9fbd8602cd8b79ad662e1bf848b46546e7ae05",
+      "git_blob": "84a073da85791b7c97580b1e7d4e857d40edf4bb",
+      "bytes": 57942,
+      "dimensions": [
+        512,
+        768
+      ],
+      "mode": "RGB",
+      "alpha_extrema": [
+        255,
+        255
+      ],
+      "transparent_pixels": 0,
+      "partial_alpha_pixels": 0
+    },
+    {
+      "path": "qa-002-white.jpg",
+      "sha256": "6c6e0f4dbe47698aec9f2ed112f1868bab8142d7b097f62163070ebc92951989",
+      "git_blob": "3a5c8614dff4547e6d27521091db8140a8c641a6",
+      "bytes": 60620,
+      "dimensions": [
+        512,
+        768
+      ],
+      "mode": "RGB",
+      "alpha_extrema": [
+        255,
+        255
+      ],
+      "transparent_pixels": 0,
+      "partial_alpha_pixels": 0
+    },
+    {
+      "path": "rejects/attempt-001-original.png",
+      "sha256": "c4b138cc1b8eb924e19fd4f2913381ade8bee2326a5aa0b93cf328bcc86a0c71",
+      "git_blob": "6e4af58aa3d1a3ed1a05f68cd9d8f1fc67c7c32e",
+      "bytes": 2078610,
+      "dimensions": [
+        1024,
+        1536
+      ],
+      "mode": "RGBA",
+      "alpha_extrema": [
+        0,
+        254
+      ],
+      "transparent_pixels": 610815,
+      "partial_alpha_pixels": 962049
+    },
+    {
+      "path": "rejects/attempt-002-original.png",
+      "sha256": "c3251f06f84f4c9a68e3921708ced701f729b298409eb0ce505e9946dae0e70a",
+      "git_blob": "328120d7bca6e6a1605761291a3e02bec3d29e55",
+      "bytes": 2029688,
+      "dimensions": [
+        1024,
+        1536
+      ],
+      "mode": "RGBA",
+      "alpha_extrema": [
+        0,
+        254
+      ],
+      "transparent_pixels": 607333,
+      "partial_alpha_pixels": 965531
+    },
+    {
+      "path": "rejects/historical-soft.webp",
+      "sha256": "6386913c5d3d205f4b5ef30e39525c9439169173c2211c49f8c8dfd4a372f8be",
+      "git_blob": "9e60ed458aad4cf1ad56b207b6d525ad1c1622ab",
+      "bytes": 110608,
+      "dimensions": [
+        512,
+        1024
+      ],
+      "mode": "RGBA",
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "transparent_pixels": 249593,
+      "partial_alpha_pixels": 274590
+    },
+    {
+      "path": "thumbnail.png",
+      "sha256": "d90755afb75ce2dc794745ec43cc32ae388eac31328ca776dbe211c81d4bbf9e",
+      "git_blob": "e2cea30f2e8c5f09f3047c61e5bb1e5ffb7df79f",
+      "bytes": 141400,
+      "dimensions": [
+        256,
+        384
+      ],
+      "mode": "RGBA",
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "transparent_pixels": 38025,
+      "partial_alpha_pixels": 59468
+    }
+  ],
+  "qa": "White composite passes: no backdrop or glow. Exact identity/outfit/pose and framing visually match canonical; subtle closed-mouth soft smile. Alpha max 254 retained unchanged."
+}

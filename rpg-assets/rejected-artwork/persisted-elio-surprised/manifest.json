@@ -1,0 +1,162 @@
+{
+  "scope": "Elio surprised only; review archive; no activation or main writes",
+  "decision": "reuse historical male surprised unchanged; user/coordinator review required",
+  "canonical_path": "rpg-assets/elio.png",
+  "canonical_remote_verified_blob": "78fc95deead861b3ce91a20c1ed50313d5be411e",
+  "historical_commit": "ed3195e122450397ae4446aefead7e0e1a519bd7",
+  "historical_path": "rpg-assets/characters/elio/expression-portraits/surprised.webp",
+  "historical_remote_verified_blob": "8c6d0f72be46d6bbbb823b4525866f83978d55e8",
+  "rejected": {
+    "originals/rejected-installed-female-surprised.webp": "wrong female identity; never used as generation reference"
+  },
+  "generation": {
+    "invoked": false,
+    "attempts": 0
+  },
+  "qa": {
+    "identity": "male hair, face, earrings, star jacket, pendant, notebook and bag strap match canonical",
+    "expression": "wide eyes, raised brows, open mouth",
+    "limitations": [
+      "Historical 512x1024 bust crop differs from canonical 1024x1536 framing",
+      "Not proven to be lost pending approved generated artwork; reuse candidate only",
+      "Small isolated fragment at left edge and two drawn surprise marks retained unchanged"
+    ],
+    "approval": "not newly approved"
+  },
+  "files": [
+    {
+      "path": "originals/canonical-elio.png",
+      "sha256": "2902f1df48ed43dbbaad5b6c24b8a90ae44fe9e22ff841225e39ccdeee8bb348",
+      "git_blob": "78fc95deead861b3ce91a20c1ed50313d5be411e",
+      "bytes": 2184026,
+      "dimensions": [
+        1024,
+        1536
+      ],
+      "mode": "RGBA",
+      "alpha_extrema": [
+        0,
+        254
+      ],
+      "transparent_pixels": 612022,
+      "partial_alpha_pixels": 960842,
+      "opaque_pixels": 0
+    },
+    {
+      "path": "originals/historical-neutral.webp",
+      "sha256": "8a5daf92da33490de9eb6b4ed2016f71e8b792ea61f78ed0e05b0875cada7d51",
+      "git_blob": "3bd391a0d348f1c38acdf20bcda9c6cbcf6ca40c",
+      "bytes": 106866,
+      "dimensions": [
+        512,
+        1024
+      ],
+      "mode": "RGBA",
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "transparent_pixels": 248809,
+      "partial_alpha_pixels": 275386,
+      "opaque_pixels": 93
+    },
+    {
+      "path": "originals/historical-surprised.webp",
+      "sha256": "27cc0e71edb9a126b4112fe738428fb7e2d9e4f6168e1362997e6f807738e4af",
+      "git_blob": "8c6d0f72be46d6bbbb823b4525866f83978d55e8",
+      "bytes": 110976,
+      "dimensions": [
+        512,
+        1024
+      ],
+      "mode": "RGBA",
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "transparent_pixels": 246395,
+      "partial_alpha_pixels": 277774,
+      "opaque_pixels": 119
+    },
+    {
+      "path": "originals/rejected-installed-female-surprised.webp",
+      "sha256": "57779ddb801c003cf277d55b0254b15ebeae22e35f633ff0b477f7a756beb9e0",
+      "git_blob": "a33bd319035ceb6c390a46ea545fcfa1f306e452",
+      "bytes": 655254,
+      "dimensions": [
+        887,
+        1774
+      ],
+      "mode": "RGBA",
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "transparent_pixels": 1030286,
+      "partial_alpha_pixels": 542535,
+      "opaque_pixels": 717
+    },
+    {
+      "path": "prompt.txt",
+      "sha256": "7c2ce09bf5165cf28d449cf7624c55a0c695461ae545846b008b648c887e9c4f",
+      "git_blob": "61f0f151f6e3b7c6b577b8aa2b59c6a4b52bf6e6",
+      "bytes": 272
+    },
+    {
+      "path": "surprised.webp",
+      "sha256": "27cc0e71edb9a126b4112fe738428fb7e2d9e4f6168e1362997e6f807738e4af",
+      "git_blob": "8c6d0f72be46d6bbbb823b4525866f83978d55e8",
+      "bytes": 110976,
+      "dimensions": [
+        512,
+        1024
+      ],
+      "mode": "RGBA",
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "transparent_pixels": 246395,
+      "partial_alpha_pixels": 277774,
+      "opaque_pixels": 119
+    },
+    {
+      "path": "thumbnail.png",
+      "sha256": "5eee93a16a82bc6cf01074f7b6ec39d4ebd281c61b0b9d22b1bbfdce5432c85b",
+      "git_blob": "208a062c2ee7d12d23dc3e616080c20b6787e10c",
+      "bytes": 155455,
+      "dimensions": [
+        256,
+        512
+      ],
+      "mode": "RGBA",
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "transparent_pixels": 61481,
+      "partial_alpha_pixels": 68797,
+      "opaque_pixels": 794
+    },
+    {
+      "path": "qa/surprised-white.jpg",
+      "sha256": "6e6ccf012aefc8134b1e18187bb5598be8518daefbf212e8b4704e5fa34877e0",
+      "git_blob": "3b2d88776354f7f9f37f25d7caf5c52eac325fdd",
+      "dimensions": [
+        512,
+        1024
+      ],
+      "alpha": "opaque review composite only"
+    },
+    {
+      "path": "qa/surprised-dark.jpg",
+      "sha256": "9fefd79dd17f4d3c7dd37e218a18052af22f39cc5c5b84f69c11a27c9f4bb9ce",
+      "git_blob": "807e6d16f98edd4c1c6e265e36c53a7e4b5b5eef",
+      "dimensions": [
+        512,
+        1024
+      ],
+      "alpha": "opaque review composite only"
+    }
+  ]
+}
