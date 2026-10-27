@@ -136,4 +136,16 @@ test('Apex observation recognizes Trainer lock expiry and enabled Hay Fever',()=
  game.players[0].bench[0].powerSuppressedUntil=game.turnSerial;
  assert.equal(AI.observation(game,1).trainerBlocked,true,
   'Hay Fever resumes after individual suppression expires');
+ // Trainer locks belong to the affected player, unlike the global Hay Fever.
+ game.players[0].bench=[];
+ game.players[0].trainerLockedUntil=game.turnSerial+1;
+ assert.equal(AI.observation(game,1).trainerBlocked,false,
+  'an opponent-only Trainer lock must not block Apex');
+ game.players[0].trainerLockedUntil=game.turnSerial;
+ game.players[1].bench.push(unit(vileplume.id,0));
+ assert.equal(AI.observation(game,1).trainerBlocked,true,
+  'Apex own Dark Vileplume must also block Trainers for both players');
+ game.players[1].bench[1].status='Paralyzed';
+ assert.equal(AI.observation(game,1).trainerBlocked,false,
+  'Paralysis disables Apex own Hay Fever, permitting Trainers');
 });
