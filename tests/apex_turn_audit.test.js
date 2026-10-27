@@ -15,6 +15,16 @@ test('does not flag Energy after Center or on an undamaged Pokémon',()=>{
  assert.deepEqual(audit([center(1,8),attach(1,8,40)]),[]);
  assert.deepEqual(audit([attach(1,8,0),center(1,8)]),[]);
 });
+test('counts a discarded attachment only once across repeated Centers',()=>{
+ const result=audit([attach(1,8,40),center(1,8),center(1,8)]);
+ assert.equal(result.length,1,'the first Center already discarded this Energy');
+ assert.equal(result[0].index,1);
+});
+test('still detects a new attachment between two Centers',()=>{
+ const result=audit([attach(1,8,40),center(1,8),attach(1,8,20),center(1,8)]);
+ assert.equal(result.length,2);
+ assert.deepEqual(result.map(v=>v.index),[1,3]);
+});
 test('keeps both players and different turns separate',()=>{
  assert.deepEqual(audit([attach(0,8,40),center(1,8),center(0,9)]),[]);
 });
