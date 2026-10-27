@@ -2115,7 +2115,7 @@ function specialLookRecord(id,day=state.day){
  const root=state.specialLookDays||(state.specialLookDays={});
  const saved=root[id];
  if(saved&&saved.day===day)return saved;
- const missed=Math.max(0,Number(saved?.missed)||0);
+ const missed=Math.max(0,(saved?Number(saved.missed)||0:Math.max(0,day-1))+Math.max(0,day-(saved?.day||day)-1));
  const chance=Math.min(1,.10+.05*missed);
  const active=Math.random()<chance;
  const portrait=active?files[Math.floor(Math.random()*files.length)]:null;
@@ -2453,6 +2453,11 @@ function render(){
  const sideQuest=state.activeSideQuest?SIDE.byId(state.activeSideQuest.id):null,sideOwner=sideQuest?.stages[state.sideQuests[state.activeSideQuest?.id]?.step]?.npc;
   const portraitId=mandatoryPortrait||showingSlice?.npc||showingSituation?.npc||showingStory?.npc||showingEncounter?.npc||(showingArc?'reina':null)||sideOwner||state.selected,portraitRoot=$('portrait');
  activeOutfitSceneId=showingMandatory?.id||showingSlice?.id||showingSituation?.id||showingStory?.id||showingEncounter?.id||showingArc?.id||sideQuest?.id||null;
+ // Being present in a rendered ordinary location counts as having been seen.
+ // Do not count hidden/blocked cinematic or combat appearances.
+ if(!activeOutfitSceneId&&!timeSequence.blocked&&!state.pendingDuel){
+  for(const id of currentPeople())if(Object.hasOwn(SPECIAL_LOOKS,id))markSpecialLookSeen(id);
+ }
  const nextPortrait=portraitId&&cast[portraitId]?portraitId:'';
  const nextArt=nextPortrait?scenePortraitSource(nextPortrait,'neutral'):'';
  if(portraitRoot.dataset.npc!==nextPortrait||portraitRoot.dataset.artSrc!==nextArt){
