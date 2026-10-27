@@ -1,0 +1,51 @@
+{
+  "schemaVersion": 1,
+  "characterId": "daisy",
+  "events": [
+    {
+      "id": "daisy_slice_coffee_spill",
+      "title": "The Almost-Spilled Coffee",
+      "npc": "daisy",
+      "place": "cafe",
+      "slot": 2,
+      "start": 12,
+      "end": 90,
+      "minAffection": 0,
+      "trigger": "entry",
+      "randomForced": true,
+      "chancePercent": 35,
+      "image": "/rpg-assets/events/cg/slice-life/daisy_slice_coffee_spill.png",
+      "lines": [
+        {
+          "speaker": "Narrator",
+          "text": "Daisy saves a wobbling coffee tray."
+        },
+        {
+          "speaker": "daisy",
+          "text": "I absolutely had that under control."
+        },
+        {
+          "speaker": "Protagonist",
+          "text": "You were holding it upside down."
+        },
+        {
+          "speaker": "daisy",
+          "text": "Details. Are you going to help me or laugh?"
+        },
+        {
+          "speaker": "Protagonist",
+          "text": "I can do both."
+        }
+      ],
+      "art": {
+        "scene": "Daisy and protagonist catching a coffee tray in a warm evening café.",
+        "composition": "16:9 cinematic CG, dialogue-safe lower fifth.",
+        "outfit": "Burgundy blouse and black lined skirt.",
+        "expression": "Surprised laughter",
+        "environment": "cafe",
+        "mood": "comic",
+        "fanservice": 0
+      }
+    }
+  ]
+}
