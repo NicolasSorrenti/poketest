@@ -1,0 +1,76 @@
+{
+  "schemaVersion": 1,
+  "characterId": "daisy",
+  "portrait": "/rpg-assets/characters/daisy/portraits/primary.png",
+  "expressions": {
+    "neutral": "/rpg-assets/characters/daisy/expression-portraits/neutral.png",
+    "happy": "/rpg-assets/characters/daisy/expression-portraits/happy.png",
+    "flirty": "/rpg-assets/characters/daisy/expression-portraits/flirty.png",
+    "surprised": "/rpg-assets/characters/daisy/expression-portraits/surprised.png",
+    "concerned": "/rpg-assets/characters/daisy/expression-portraits/concerned.png",
+    "angry": "/rpg-assets/characters/daisy/expression-portraits/angry.png",
+    "embarrassed": "/rpg-assets/characters/daisy/expression-portraits/embarrassed.png",
+    "determined": "/rpg-assets/characters/daisy/expression-portraits/determined.png"
+  },
+  "outfits": {
+    "default": "signature",
+    "variants": {
+      "signature": {
+        "portrait": "/rpg-assets/characters/daisy/portraits/primary.png"
+      },
+      "evening": {
+        "portrait": "/rpg-assets/characters/daisy/outfits/evening/neutral.png"
+      },
+      "sporty": {
+        "portrait": "/rpg-assets/characters/daisy/outfits/sporty/neutral.png"
+      }
+    },
+    "rules": [
+      {
+        "outfit": "evening",
+        "locations": [
+          "cafe"
+        ],
+        "slots": [
+          2
+        ]
+      },
+      {
+        "outfit": "sporty",
+        "locations": [
+          "arcade"
+        ],
+        "slots": [
+          2
+        ],
+        "startDay": 46,
+        "endDay": 62
+      }
+    ],
+    "sceneOverrides": {
+      "daisy_route_3": "sporty"
+    }
+  },
+  "eventImages": [
+    {
+      "sceneId": "daisy_route_1",
+      "path": "/rpg-assets/events/cg/season01/daisy_route_1.png",
+      "prompt": "Daisy at a card shop table with the newcomer, burgundy mesh top with opaque underlayer and lined sheer black skirt, nose hoop, accurate sleeve tattoos and center lotus sternum tattoo; playful over-the-shoulder close-up across scattered cards, energetic cinematic anime 16:9, bottom dialogue-safe composition."
+    },
+    {
+      "sceneId": "daisy_route_2",
+      "path": "/rpg-assets/events/cg/season01/daisy_route_2.png",
+      "prompt": "Daisy at a sunset café window comparing sheer burgundy and black skirt fabrics with the protagonist; warm backlit translucent fabrics over opaque linings, concentrated eyes and near-touching hands, elegant intimate close-up and full-scene version, tattoo accuracy, SFW JRPG CG 16:9."
+    },
+    {
+      "sceneId": "daisy_route_3",
+      "path": "/rpg-assets/events/cg/season01/daisy_route_3.png",
+      "prompt": "Daisy in a giant oversized charcoal hoodie and extremely loose trousers at a neon arcade, glasses slightly lowered, candid expression between bravado and relief as protagonist sits beside her; intimate waist-up cut-in within landscape CG, no posing for camera, 16:9."
+    },
+    {
+      "sceneId": "daisy_route_4",
+      "path": "/rpg-assets/events/cg/season01/daisy_route_4.png",
+      "prompt": "Night park scene. Daisy wearing burgundy sheer long-sleeved top and lined black translucent skirt, hair gently moving, softly lit chest lotus/flower tattoo and three little stars visible; quiet vulnerable near-handholding moment with protagonist, cinematic close-up, 16:9 anime VN."
+    }
+  ]
+}
