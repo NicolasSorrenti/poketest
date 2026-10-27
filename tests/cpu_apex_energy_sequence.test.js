@@ -333,6 +333,29 @@ test('Apex still develops Active when its opponent is Asleep and cannot attack',
  assert.equal(AI.score(attachActive,asleep,cfg,{})-
   AI.score(attachActive,threatened,cfg,{}),140);
 });
+test('Apex does not treat an Amnesia-disabled knockout as a doomed-Active threat',()=>{
+ const threatened=threatenedActiveEnergyBoard();
+ const locked=structuredClone(threatened);
+ locked.opponent.active.amnesia={index:0,expires:locked.turnSerial+1};
+ assert.equal(AI.score(attachActive,locked,cfg,{})-
+  AI.score(attachActive,threatened,cfg,{}),140);
+ // Expired Amnesia must restore the actual threat.
+ locked.opponent.active.amnesia.expires=locked.turnSerial;
+ assert.equal(AI.score(attachActive,locked,cfg,{}),
+  AI.score(attachActive,threatened,cfg,{}));
+});
+test('Apex ignores Gym cooldown and once-used attacks when investing Energy',()=>{
+ const threatened=threatenedActiveEnergyBoard();
+ for(const lock of [
+  {gymAttackCooldown:{index:0,expires:threatened.turnSerial+1}},
+  {gymAttackOnce:[0]}
+ ]){
+  const locked=structuredClone(threatened);
+  Object.assign(locked.opponent.active,lock);
+  assert.equal(AI.score(attachActive,locked,cfg,{})-
+   AI.score(attachActive,threatened,cfg,{}),140);
+ }
+});
 test('Apex does not overreact to an opponent missing its attack Energy',()=>{
  const threatened=threatenedActiveEnergyBoard();
  const empty=structuredClone(threatened);
