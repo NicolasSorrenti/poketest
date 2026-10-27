@@ -20,7 +20,7 @@ const live=fs.readFileSync(path.join(__dirname,'classic_live.html'),'utf8');
   drawImage(...args){draws.push(args);}
  };
  class SourceImage{
-  set src(src){this._src=src;requests.push(src);this.naturalWidth=256;this.naturalHeight=256;this.onload();}
+  set src(src){this._src=src;requests.push(src);if(src.startsWith('/rpg-assets/characters/akari/')&&/\/(?:discreet|chibi)\//.test(src)){this.onerror();return;}this.naturalWidth=256;this.naturalHeight=256;this.onload();}
   get src(){return this._src;}
  }
  const document={
@@ -69,11 +69,11 @@ const live=fs.readFileSync(path.join(__dirname,'classic_live.html'),'utf8');
  await Promise.resolve();
  assert.equal(box.children.length,1);
  assert.equal(requests.length,1);
- assert.equal(requests[0],api.url('reina'));
- assert.equal(box.children[0].src,'data:image/webp;base64,AAAA');
+ assert.equal(requests[0],'/rpg-assets/characters/reina/discreet/neutral.webp');
+ assert.equal(box.children[0].src,requests[0]);
  assert.equal(box.children[0].hidden,false);
- assert.equal(draws.length,1,'One canvas head crop is drawn');
- assert.ok(draws[0][3]<256,'Canvas must not show the whole source artwork');
+ assert.equal(box.dataset.rpgSafeKind,'chibi','Available local discreet art takes priority over legacy avatar crops');
+ assert.equal(draws.length,0,'Approved discreet art must not be canvas-cropped');
  api.set(box,'reina','happy','Reina Kurogane');
  assert.equal(box.children.length,1,'Keep the same headshot image between emotions');
  assert.equal(requests.length,1,'One local image request per character');
@@ -86,7 +86,18 @@ const live=fs.readFileSync(path.join(__dirname,'classic_live.html'),'utf8');
  await Promise.resolve();
  assert.equal(yunaBox.dataset.rpgSafeKind,'chibi');
  assert.equal(yunaBox.children[0].src,'/rpg-assets/characters/yuna/discreet/neutral.webp');
- assert.equal(draws.length,1,'Chibi must bypass the head-only canvas crop');
+ assert.equal(draws.length,0,'Chibi must bypass the head-only canvas crop');
+
+ // If a character has no usable discreet/chibi image, fall back to the local head crop.
+ // Simulate failed chibi probes for Akari while allowing the legacy avatar to load.
+ const akariBox={dataset:{},children:[],append(img){this.children.push(img);}};
+ api.set(akariBox,'akari','neutral','Akari');
+ await new Promise(resolve=>setImmediate(resolve));
+ assert.ok(requests.includes(api.url('akari')),'Fallback must request Akari\'s existing local avatar');
+ assert.equal(akariBox.children[0].src,'data:image/webp;base64,AAAA');
+ assert.equal(akariBox.dataset.rpgSafeKind,'headshot');
+ assert.equal(draws.length,1,'Fallback renders one face-only canvas crop');
+ assert.ok(draws[0][3]<256,'Fallback crop must exclude full-body artwork');
  assert.match(css,/\[data-rpg-safe-kind="chibi"\]/);
  assert.match(css,/\.rpg-safe-avatar\[hidden\]/);
  assert.match(css,/\.npc-reaction-portrait img:not\(\.rpg-safe-avatar\)/);
