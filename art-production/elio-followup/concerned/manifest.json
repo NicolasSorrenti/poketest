@@ -1,0 +1,94 @@
+{
+  "tool": "built-in image_gen.imagegen",
+  "source_path": "/workspace/scratch/dc054acd6888/elio-refresh/happy/reference.png",
+  "source_sha256": "2902f1df48ed43dbbaad5b6c24b8a90ae44fe9e22ff841225e39ccdeee8bb348",
+  "raw_generated_path": "/workspace/scratch/dc054acd6888/generated_images/exec-69f80b03-4f3e-4c6b-bdb7-75bd46cc3b70.png",
+  "attempts": 1,
+  "selected": "attempt-01-concerned.png",
+  "rejects": [],
+  "assessment": "Accepted: gently knit worried brows and mild downturned closed mouth, no shock. Canonical adult identity, brown hair, earrings, pendant, star jacket, notebooks, strap, pose and framing visually consistent; minor linework and shading redraws. Genuine transparent background verified by alpha and zero-alpha border samples. Subject alpha peaks at 254 rather than 255; preserve tool output unchanged.",
+  "prompt": "Use case: identity-preserve\nEdit target: the exact canonical Elio reference image supplied. Create ONE concerned-expression variant of this same adult male character. Change the face expression to worried, gently knit brows with slightly raised inner brows, and a mild concerned closed mouth with subtle downturn. Natural restrained concern, not shock; no wide eyes, open mouth, tears or exaggerated distress.\nPreserve canonical identity, brown tousled hair, amber-brown eyes, facial structure, earrings, star pendant, navy and cream star jacket, layered shirt, notebook and smaller book, backpack strap and bag charms. Keep the exact same pose, hand positions, proportions, portrait framing and outfit, fully clothed SFW. Preserve the illustration style, palette and shading. Minor non-face redraws allowed only if visually consistent. Remove the entire dark gradient background and deliver genuine transparent alpha around the character, with clean detailed hair and clothing edges. No backdrop, glow, text, watermark or extra elements. Retain 2:3 portrait composition.\n",
+  "files": [
+    {
+      "path": "/workspace/scratch/dc054acd6888/elio-next/concerned/attempt-01-concerned-thumb256x384.png",
+      "sha256": "07273ffafcfa165c54d597035ccc3e1e7a66d2276776c6819a47322251a079d8",
+      "bytes": 152043,
+      "dimensions": [
+        256,
+        384
+      ],
+      "mode": "RGBA",
+      "alpha": {
+        "range": [
+          0,
+          255
+        ],
+        "fully_transparent_pixels": 37260,
+        "fully_opaque_pixels": 778,
+        "partial_alpha_pixels": 60266
+      }
+    },
+    {
+      "path": "/workspace/scratch/dc054acd6888/elio-next/concerned/attempt-01-concerned.png",
+      "sha256": "c496f984ef6ff4233c573f90eb7fc36b79f1a9e7178068aad779ca0432a87791",
+      "bytes": 2178625,
+      "dimensions": [
+        1024,
+        1536
+      ],
+      "mode": "RGBA",
+      "alpha": {
+        "range": [
+          0,
+          254
+        ],
+        "fully_transparent_pixels": 609122,
+        "fully_opaque_pixels": 0,
+        "partial_alpha_pixels": 963742
+      }
+    },
+    {
+      "path": "/workspace/scratch/dc054acd6888/elio-next/concerned/prompt.txt",
+      "sha256": "43121dd6a104823d486d238048b46e961cfef7da8dae4b4d4da59b0a328a8afc",
+      "bytes": 1072
+    },
+    {
+      "path": "/workspace/scratch/dc054acd6888/elio-next/concerned/reference-original-thumb256x384.png",
+      "sha256": "215d5b94825928064d2b60f6a039c8c225976c108b09ea25c1f14412d5cfd295",
+      "bytes": 147923,
+      "dimensions": [
+        256,
+        384
+      ],
+      "mode": "RGBA",
+      "alpha": {
+        "range": [
+          0,
+          255
+        ],
+        "fully_transparent_pixels": 37492,
+        "fully_opaque_pixels": 729,
+        "partial_alpha_pixels": 60083
+      }
+    },
+    {
+      "path": "/workspace/scratch/dc054acd6888/elio-next/concerned/reference-original.png",
+      "sha256": "2902f1df48ed43dbbaad5b6c24b8a90ae44fe9e22ff841225e39ccdeee8bb348",
+      "bytes": 2184026,
+      "dimensions": [
+        1024,
+        1536
+      ],
+      "mode": "RGBA",
+      "alpha": {
+        "range": [
+          0,
+          254
+        ],
+        "fully_transparent_pixels": 612022,
+        "fully_opaque_pixels": 0,
+        "partial_alpha_pixels": 960842
+      }
+    }
+  ]
+}

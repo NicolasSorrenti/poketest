@@ -1961,9 +1961,9 @@ const solExpressions={neutral:'neutral',surprised:'surprised',vulnerable:'worrie
 function portraitPaths(id,expression='neutral',sceneId=activeOutfitSceneId){
  // Only the reviewed Elio expressions may precede his canonical neutral portrait.
  if(id==='elio'){
-  const name=expression==='smile'?'happy':expression;
+  const name=({smile:'happy',vulnerable:'soft',worried:'concerned',irritated:'concerned'}[expression]||expression);
   const neutral='/rpg-assets/elio.png';
-  return ['happy','surprised'].includes(name)?
+  return ['happy','surprised','soft','concerned'].includes(name)?
    ['/rpg-assets/characters/elio/expression-portraits/'+name+'.png',neutral]:[neutral];
  }
  // Alma's legacy guest sheet depicts another character. Only the cafe set is compatible.
