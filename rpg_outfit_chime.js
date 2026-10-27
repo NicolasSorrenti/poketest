@@ -29,9 +29,15 @@ const NeoOutfitChime=(()=>{
   overlay.setAttribute('aria-hidden','true');
   overlay.style.cssText='position:fixed;inset:0;z-index:10050;pointer-events:none;display:grid;place-items:center;background:rgba(5,9,24,.35)';
   const frame=document.createElement('div');
-  frame.style.cssText='position:relative;width:min(88vw,550px);height:min(54vh,460px);overflow:hidden;border:2px solid rgba(250,213,157,.85);border-radius:15px;background:#141724;box-shadow:0 8px 55px #000a;';
+  frame.style.cssText='position:relative;overflow:hidden;border:2px solid rgba(250,213,157,.85);border-radius:15px;background:#141724;box-shadow:0 8px 55px #000a;';
   const img=new Image();img.alt='';img.draggable=false;
-  img.style.cssText='position:absolute;max-width:none;width:100%;height:'+(100/(bottom-top))+'%;object-fit:fill;left:0;top:'+(-100*top/(bottom-top))+'%;';
+  img.style.cssText='position:absolute;max-width:none;width:100%;height:auto;left:0;top:'+(-100*top/(bottom-top))+'%;';
+  img.onload=()=>{
+   if(visible!==overlay)return;
+   const aspect=img.naturalWidth/(img.naturalHeight*(bottom-top));
+   frame.style.width='min(88vw,550px,'+(54*aspect)+'vh)';
+   frame.style.aspectRatio=String(aspect);
+  };
   img.onerror=()=>{if(visible===overlay)cancel();};
   img.src=portrait;frame.append(img);overlay.append(frame);
   document.body.append(overlay);visible=overlay;
