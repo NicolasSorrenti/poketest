@@ -448,6 +448,11 @@ function ordinaryTalk(id,character,{first=false,present=[]}={}){
 function selectPerson(id,{skipInvitation=false}={}){
  if(state.activeSliceOfLife||state.activeSituation||state.activeStory||state.activeSideQuest||state.activeEncounter||state.activeArc||state.pendingDuel||!cast[id]||!currentPeople().includes(id))return;
  const c=cast[id],first=!state['met_'+id]&&!((id==='reina')&&state.metReina);
+ // The very first personal introduction gets a portrait close-up once.
+ if(first&&typeof NeoOutfitChime!=='undefined'){
+  const introductionPortrait=scenePortraitSource(id,'neutral',null);
+  NeoOutfitChime.firstMeeting?.({id,portrait:introductionPortrait});
+ }
  markSpecialLookSeen(id);
  if(id==='hana'&&!(hanaEncounterKey||'').startsWith('entry:'))hanaEncounterKey='talk:'+ ++hanaEncounterSerial;
  const today=state.day+':'+id,fresh=!state.talked[today];
@@ -2216,12 +2221,13 @@ function renderRpgCast(ids,locked,shown,portraitId,context={}){
   button.setAttribute('aria-label','Talk to '+cast[id].name);
   const image=button.querySelector('img');
   if(image){
-   applyPersonaCStageCrop(image,id);
+   // Crop after selecting the current source to avoid stale portrait framing.
    // Explicit reviewed sources, rather than transparent-margin heuristics.
    const expression=active?(window.NeoRpgCharacterMotion?.emotion?.(shown?.expression,dialogueExpression(shown?.line))||dialogueExpression(shown?.line)):'neutral';
    window.NeoRpgDiscreetAvatars?.set?.(button,id,expression,cast[id].name);
    const paths=stagePortraitPaths(id,expression,context.sceneId);
    const path=scenePortraitSource(id,expression,context.sceneId);
+   if(image.getAttribute('src')===path)applyPersonaCStageCrop(image,id);
    if(image.getAttribute('src')!==path){
     image.classList.remove('expression-change');
     image.style.display='';
@@ -2238,6 +2244,7 @@ function renderRpgCast(ids,locked,shown,portraitId,context={}){
      }
     };
     image.onload=()=>{
+     applyPersonaCStageCrop(image,id);
      image.style.display='';
      button.querySelector('.avatar-fallback')?.remove();
     };
