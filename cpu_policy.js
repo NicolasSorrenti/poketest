@@ -586,21 +586,36 @@ function evolutionTempoPenalty(o,slot,evolutionId,cfg){
 // Apex may hold an evolution when it gains no immediate combat or survival
 // benefit. Preserve future evolution options instead of promoting by default.
 function prematureEvolutionPenalty(o,slot,evolutionId,cfg){
- if(cfg.level!==8||o.phase!=='game'||slot!==-1||!o.opponent.active)return 0;
- const before=o.self.active,next=card(evolutionId);
+ if(cfg.level!==8||o.phase!=='game'||!o.opponent.active)return 0;
+ const before=slotUnit(o.self,slot),next=card(evolutionId);
  if(!before||!next)return 0;
+ // Evolution replaces the previous attack list; never project inherited moves.
  const after={...before,id:evolutionId};
- const oldDamage=strongestAffordableAttack(before,o.opponent.active);
- const newDamage=strongestAffordableAttack(after,o.opponent.active);
- if(oldDamage<=0||newDamage>oldDamage)return 0;
- if(['Asleep','Paralyzed','Confused'].includes(before.status))return 0;
- if((next.abilities||[]).length)return 0;
+ delete after.effectiveAttacks;
+ const moves=next.attacks||[];
+ const pool=energyPool(after);
  const enemy=o.opponent.active;
- const incomingBefore=strongestAffordableAttack(enemy,before);
- const incomingAfter=strongestAffordableAttack(enemy,after);
- if(incomingBefore>=hpRemaining(before)&&incomingAfter<hpRemaining(after))return 0;
- if(hpRemaining(after)>hpRemaining(before)+35)return 0;
- return 190;
+ const ready=moves.some((a,i)=>canPayEnergy(a.cost||[],pool)&&
+  (slot!==-1||eligibleAttack(o,after,a,i)));
+ const relevantEnergy=(o.self.hand||[]).filter(id=>isEnergy(card(id))&&
+  legalAttachment({card:card(id),unit:after,round:o.round+1,
+   cardName:next.name||''}));
+ const nextTurnReady=moves.some(a=>relevantEnergy.some(id=>
+  canPayEnergy(a.cost||[],[...pool,...energyPool({energies:[id]})])));
+ // Waiting is generally better than evolving an uncharged Pokémon several
+ // turns too early. Evolve once the new attacker can attack now or needs only
+ // the next Energy attachment already visible in our own hand.
+ if(ready||nextTurnReady)return 0;
+ // Important survival and tactical exceptions outweigh waiting.
+ if(slot===-1){
+  const incoming=strongestUsableOpponentAttack(o,before);
+  const safer=strongestUsableOpponentAttack(o,after);
+  if(incoming>=hpRemaining(before)&&safer<hpRemaining(after))return 0;
+  if(['Asleep','Paralyzed'].includes(before.status))return 0;
+ }
+ // Do not pretend to know a future forced discard or opponent's hand.
+ // Trainer-driven hand disposal is evaluated separately when actually usable.
+ return 255;
 }
 function prizeRaceBonus(action,o,cfg){
  if(!cfg.prizeRace||cfg.level<4||o.phase!=='game'||!o.self.active||!o.opponent.active)return 0;
