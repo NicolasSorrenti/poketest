@@ -123,4 +123,17 @@ test('Apex observation recognizes Trainer lock expiry and enabled Hay Fever',()=
  game.players[0].bench[0].status='Asleep';
  assert.equal(AI.observation(game,1).trainerBlocked,false,
   'a disabled Hay Fever must not suppress a playable Center');
+ game.players[0].bench[0].status=null;
+ game.powerBlankUntil=game.turnSerial+1;
+ assert.equal(AI.observation(game,1).trainerBlocked,false,
+  'global Power suppression must permit Trainers even with Dark Vileplume in play');
+ game.powerBlankUntil=game.turnSerial;
+ assert.equal(AI.observation(game,1).trainerBlocked,true,
+  'Hay Fever resumes when global Power suppression expires');
+ game.players[0].bench[0].powerSuppressedUntil=game.turnSerial+1;
+ assert.equal(AI.observation(game,1).trainerBlocked,false,
+  'individual Power suppression must also permit Trainers');
+ game.players[0].bench[0].powerSuppressedUntil=game.turnSerial;
+ assert.equal(AI.observation(game,1).trainerBlocked,true,
+  'Hay Fever resumes after individual suppression expires');
 });
