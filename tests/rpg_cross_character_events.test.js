@@ -22,7 +22,7 @@ const stateFor=e=>{
  };
 };
 test('cross-character catalog has original two-person scenes, meaningful choices, and a planned CG path for each',()=>{
- assert.equal(CROSS.events.length,63);
+ assert.equal(CROSS.events.length,64);
  assert.deepEqual(CROSS.validate(),[]);
  assert.deepEqual(SLICE.validate(),[]);
  assert.deepEqual(CG.validate(),[]);
@@ -132,6 +132,7 @@ test('Barb designs one individualized bikini-related beachwear concept with each
   assert.ok(naturalDay(e)!==null,'meeting impossible '+e.id);
  }
  assert.ok(plans.find(e=>e.participants[1]==='elena')?.plannedMeetup);
+ assert.ok(plans.some(e=>e.participants[1]==='daisy'), 'Daisy needs a dedicated Barb beachwear concept');
  const identityIds=[...Object.keys(NARRATIVE.schedules),...Object.keys(SIDE.schedules),...PACK.packs.map(p=>p.id)];
  assert.ok(identityIds.every(id=>id==='barb'||plans.some(e=>e.participants[1]===id)));
 });
