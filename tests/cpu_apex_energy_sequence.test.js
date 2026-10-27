@@ -533,6 +533,45 @@ function exposedActiveHorizonBoard(){
  o.opponent.active={id:HITMONCHAN,energies:[FIGHT],damage:0,status:null};
  return o;
 }
+test('Apex does not force a doomed Active attachment before a ready attack',()=>{
+ const o=exposedActiveHorizonBoard();
+ // The Bench is temporarily attachment-blocked. The Active can use Jab now,
+ // but another Fighting Energy cannot unlock Special Punch before the KO.
+ o.self.bench[0].energyAttachBlockSerial=o.turnSerial+1;
+ const activeEnergy={type:'attach_energy',payload:{handIndex:0,slot:-1}};
+ assert.deepEqual(AI.energyPreparationActions(o,cfg,[attack,activeEnergy]),
+  [attack,activeEnergy],
+  'preserve the legal attack instead of forcing a stranded attachment');
+});
+test('Apex still prepares an Active Energy when the opposing KO is unavailable',()=>{
+ const o=exposedActiveHorizonBoard();
+ o.self.bench[0].energyAttachBlockSerial=o.turnSerial+1;
+ const activeEnergy={type:'attach_energy',payload:{handIndex:0,slot:-1}};
+ const safe=structuredClone(o);
+ safe.opponent.active.energies=[];
+ assert.deepEqual(AI.energyPreparationActions(safe,cfg,[attack,activeEnergy]),
+  [activeEnergy],'Energy preparation remains useful against an uncharged foe');
+ const disabled=structuredClone(o);
+ disabled.opponent.active.amnesia={index:0,expires:disabled.turnSerial+1};
+ assert.deepEqual(AI.energyPreparationActions(disabled,cfg,[attack,activeEnergy]),
+  [activeEnergy],'a disabled opponent attack cannot force the Active to be treated as doomed');
+});
+test('Apex still prepares useful Bench Energy when its Active is doomed',()=>{
+ const o=exposedActiveHorizonBoard();
+ const activeEnergy={type:'attach_energy',payload:{handIndex:0,slot:-1}};
+ const benchEnergy={type:'attach_energy',payload:{handIndex:0,slot:0}};
+ assert.deepEqual(AI.energyPreparationActions(o,cfg,[attack,activeEnergy,benchEnergy]),
+  [activeEnergy,benchEnergy],
+  'Bench preparation remains available before the Active attacks');
+});
+test('Apex keeps the immediate Special Punch upgrade before attacking',()=>{
+ const o=exposedActiveHorizonBoard();
+ o.self.active.energies=[FIGHT,FIGHT];
+ o.self.bench[0].energyAttachBlockSerial=o.turnSerial+1;
+ const activeEnergy={type:'attach_energy',payload:{handIndex:0,slot:-1}};
+ assert.deepEqual(AI.energyPreparationActions(o,cfg,[attack,activeEnergy]),
+  [activeEnergy],'the third Fighting Energy immediately unlocks Special Punch');
+});
 test('Apex Bench horizon rewards a replacement when the Active faces a ready knockout',()=>{
  const threatened=exposedActiveHorizonBoard();
  const safe=structuredClone(threatened);
