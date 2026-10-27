@@ -24,7 +24,7 @@ test('overlay loads before RPG bootstrap and contains no caption',()=>{
 });
 test('location entry reuses existing Hana portrait and skips events',()=>{
  assert.match(runtime,/NeoOutfitChime\.onEntry/);
- assert.match(runtime,/id==='hana'\?hanaOverworldPortrait\(null\)/);
+ assert.match(runtime,/scenePortraitSource\(id,'neutral',null\)/);
  assert.match(runtime,/currentPeople\(\)\.filter/);
  assert.match(runtime,/!!state\.mandatoryEventState\?\.active/);
  assert.match(runtime,/hanaEncounterKey='entry:'/);
@@ -39,5 +39,5 @@ test('Akari and Barb portrait variants have focus coordinates',()=>{
    assert.ok(focus&&focus.top>=0&&focus.bottom<=1&&focus.bottom>focus.top);
   }
  }
- assert.match(runtime,/id==='akari'\|\|id==='barb'/);
+ assert.match(runtime,/Object\.hasOwn\(SPECIAL_LOOKS,id\)/);
 });
