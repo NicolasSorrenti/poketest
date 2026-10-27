@@ -658,3 +658,33 @@ test('Apex retains level 7 retreat scoring on the Eevee/Rhydon matchup',()=>{
  assert.equal(AI.score({type:'retreat',payload:{slot:0}},o,lower,{}),
   AI.score({type:'retreat',payload:{slot:0}},structuredClone(o),lower,{}));
 });
+
+function apexRetreatTempoBoard(){
+ const o=board();
+ Object.assign(o,{phase:'game',turn:1,round:5,turnSerial:11,over:false,decision:null});
+ o.self.active={id:HITMONCHAN,energies:[FIGHT],damage:50,status:null};
+ o.self.bench=[{id:'base2-45',energies:[FIGHT],damage:0,status:null}];
+ o.opponent.active={id:RATTATA,energies:[],damage:0,status:null};
+ return o;
+}
+test('Apex attacks with a ready Active rather than rotate into uncharged Rhydon',()=>{
+ const o=apexRetreatTempoBoard();
+ const retreat={type:'retreat',payload:{slot:0}};
+ assert.ok(AI.score(attack,o,cfg,{})>AI.score(retreat,o,cfg,{}));
+});
+test('Apex tolerates a damaged Active while preparing an uncharged Bench',()=>{
+ const o=apexRetreatTempoBoard();
+ o.self.active.energies=[];
+ const retreat={type:'retreat',payload:{slot:0}};
+ const lower=AI.configuration({side:1,level:7});
+ assert.ok(AI.score(retreat,o,cfg,{})<AI.score(retreat,o,lower,{}));
+});
+test('Apex still rewards a real retreat when opponent has a ready knockout',()=>{
+ const o=apexRetreatTempoBoard();
+ o.self.active.damage=60;
+ o.opponent.active={id:HITMONCHAN,energies:[FIGHT],damage:0,status:null};
+ const retreat={type:'retreat',payload:{slot:0}};
+ const unsafe=structuredClone(o);
+ unsafe.self.bench[0].damage=70;
+ assert.ok(AI.score(retreat,o,cfg,{})>AI.score(retreat,unsafe,cfg,{}));
+});
