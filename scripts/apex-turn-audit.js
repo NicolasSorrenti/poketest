@@ -18,7 +18,11 @@ function audit(commands){
   const attachments=[];
   for(const [i,entry] of actions.entries()){
    const type=entry.command.type;
-   const isCenter=type==='play_trainer'&&CATALOG.get(entry.cardId)?.name==='Pokémon Center';
+   const trainerName=type==='play_trainer'?CATALOG.get(entry.cardId)?.name:null;
+   const isCenter=trainerName==='Pokémon Center';
+   // Bill and Professor Oak change only the hand, not Pokémon positions,
+   // damage, or attached Energy. Keep reliable evidence through those draws.
+   const preservesBoard=trainerName==='Bill'||trainerName==='Professor Oak';
    if(type==='attach_energy')attachments.push({index:i,entry});
    if(isCenter){
     // Damage at attachment time alone does not prove Center discarded it:
@@ -32,7 +36,7 @@ function audit(commands){
     }
     // Center consumes eligible attachments; never count them twice.
     attachments.length=0;
-   }else if(!['attach_energy','bench'].includes(type)){
+   }else if(!['attach_energy','bench'].includes(type)&&!preservesBoard){
     // Trainer effects, powers and position changes may heal or move a
     // Pokémon. Without a stable unit identity, do not accuse the CPU
     // based on a stale slot/damage snapshot.
