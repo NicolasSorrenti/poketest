@@ -448,6 +448,7 @@ function ordinaryTalk(id,character,{first=false,present=[]}={}){
 function selectPerson(id,{skipInvitation=false}={}){
  if(state.activeSliceOfLife||state.activeSituation||state.activeStory||state.activeSideQuest||state.activeEncounter||state.activeArc||state.pendingDuel||!cast[id]||!currentPeople().includes(id))return;
  const c=cast[id],first=!state['met_'+id]&&!((id==='reina')&&state.metReina);
+ markSpecialLookSeen(id);
  if(id==='hana'&&!(hanaEncounterKey||'').startsWith('entry:'))hanaEncounterKey='talk:'+ ++hanaEncounterSerial;
  const today=state.day+':'+id,fresh=!state.talked[today];
  state['met_'+id]=true;
@@ -2011,9 +2012,9 @@ function hanaOverworldPortrait(sceneId=activeOutfitSceneId){
 }
 const solExpressions={neutral:'neutral',surprised:'surprised',vulnerable:'worried',irritated:'worried',determined:'neutral',happy:'smile'};
 function portraitPaths(id,expression='neutral',sceneId=activeOutfitSceneId){
- if(id==='hana'&&!sceneId){
+ if(id==='hana'){
   const fallback=cast.hana.portrait||'/rpg-assets/hana.png';
-  return [...new Set([hanaOverworldPortrait(sceneId),fallback].filter(Boolean))];
+  return [fallback];
  }
  // Only the reviewed Elio expressions may precede his canonical neutral portrait.
  if(id==='elio'){
@@ -2102,17 +2103,42 @@ const DAILY_STAGE_ALTERNATES={
  akari:Array.from({length:5},(_,i)=>'/rpg-assets/characters/akari/portraits/special-day-'+(i+1)+'.png'),
  barb:Array.from({length:10},(_,i)=>'/rpg-assets/characters/barb/portraits/special-day-'+(i+1)+'.png')
 };
+// Special looks roll once per character per day. The pity counter advances only
+// for days on which the player did not SEE the special outfit, even if it was rolled.
+const SPECIAL_LOOKS={
+ ...DAILY_STAGE_ALTERNATES,
+ hana:HANA_OVERWORLD_VARIANTS
+};
+function specialLookRecord(id,day=state.day){
+ const files=SPECIAL_LOOKS[id];
+ if(!files?.length)return null;
+ const root=state.specialLookDays||(state.specialLookDays={});
+ const saved=root[id];
+ if(saved&&saved.day===day)return saved;
+ const missed=Math.max(0,Number(saved?.missed)||0);
+ const chance=Math.min(1,.10+.05*missed);
+ const active=Math.random()<chance;
+ const portrait=active?files[Math.floor(Math.random()*files.length)]:null;
+ const record={day,portrait,active,seen:false,missed:missed+1,chance};
+ root[id]=record;
+ persist();
+ return record;
+}
 function dailyStagePortrait(id,day){
- const files=DAILY_STAGE_ALTERNATES[id],d=Number(day);
- if(!files||!Number.isInteger(d)||d<1)return null;
- const salt=id==='akari'?0x51a3:0x9b27;
- let h=(Math.imul(d^salt,2246822519)^0x85ebca6b)>>>0;
- h^=h>>>16;h=Math.imul(h,3266489917)>>>0;h^=h>>>13;
- return h%10<3?files[Math.floor(h/10)%files.length]:null;
+ return specialLookRecord(id,day)?.portrait||null;
+}
+function markSpecialLookSeen(id){
+ const record=specialLookRecord(id);
+ if(!record?.active||record.seen)return;
+ record.seen=true;
+ record.missed=0;
+ persist();
 }
 function stagePortraitPaths(id,expression,sceneId){
- const normal=personaCStageCandidates(id,expression,portraitPaths(id,expression,sceneId));
  const alternate=dailyStagePortrait(id,state.day);
+ // An active special look remains the character's normal portrait all day,
+ // regardless of expression. Dedicated CG/cut-in/battle graphics use other paths.
+ const normal=personaCStageCandidates(id,expression,portraitPaths(id,expression,sceneId));
  return alternate?[alternate,...normal.filter(path=>path!==alternate)]:normal;
 }
 function scenePortraitSource(id,expression,sceneId=activeOutfitSceneId){
@@ -2357,8 +2383,9 @@ function render(){
  if(previousLocation&&previousLocation!==state.location){
   hanaEncounterKey='entry:'+ ++hanaEncounterSerial;
   const destination=state.location;
-  const arriving=currentPeople().filter(id=>id==='hana'||id==='akari'||id==='barb');
-  const snapshots=arriving.map(id=>({id,portrait:id==='hana'?hanaOverworldPortrait(null):scenePortraitSource(id,'neutral',null)}));
+  const arriving=currentPeople().filter(id=>Object.hasOwn(SPECIAL_LOOKS,id));
+  const snapshots=arriving.map(id=>({id,portrait:scenePortraitSource(id,'neutral',null)}));
+  for(const id of arriving)markSpecialLookSeen(id);
   setTimeout(()=>{
    if(state.location!==destination)return;
    const blocked=timeSequence.blocked||!!state.mandatoryEventState?.active||
