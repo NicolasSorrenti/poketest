@@ -63,6 +63,24 @@ test('preserves attachment evidence through additional draw-only Trainers',()=>{
    'pre-Center damage evidence is still required');
  }
 });
+test('board-neutral search and deck Trainers preserve pre-Center Energy evidence',()=>{
+ // Each effect below only moves cards among hand, deck and discard; none
+ // changes the attachment target, damage or attached Energy on the board.
+ // IDs are actual supported Base/Fossil/Rocket Trainer cards.
+ for(const [cardId,name] of [
+  ['base3-59','Energy Search'],
+  ['base1-77','Pokémon Trader'],
+  ['base5-77','Nightly Garbage Run'],
+  ['base1-87','Pokédex']
+ ]){
+  const trainer={side:1,turnSerial:8,cardId,
+   command:{type:'play_trainer',payload:{handIndex:0}}};
+  assert.equal(audit([attach(1,8,40),trainer,center(1,8)]).length,1,
+   name+' must not conceal an Energy-before-Center sequencing error');
+  assert.deepEqual(audit([attach(1,8,40),trainer,center(1,8,[])]),[],
+   name+' must not cause a warning when Center heals no attachment target');
+ }
+});
 test('healing Trainers still invalidate stale attachment evidence',()=>{
  const heal={side:1,turnSerial:8,cardId:'gym2-103',
   command:{type:'play_trainer',payload:{handIndex:0}}};
