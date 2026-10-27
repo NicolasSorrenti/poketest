@@ -1956,7 +1956,7 @@ function ensureRpgLayout(){
   const b=document.createElement('button');b.type='button';b.dataset.panel=id;b.textContent=label;
   b.onclick=()=>{rpgActivePanel=id;refreshRpgPanels();};nav.append(b);
  }
- sidebar.prepend(nav);
+ const drawerHeader=sidebar.querySelector(':scope > .rpg-drawer-header'); if(drawerHeader)drawerHeader.after(nav);else sidebar.prepend(nav);
  const castRoot=document.createElement('div');castRoot.id='rpgSceneCast';castRoot.className='rpg-scene-cast';castRoot.setAttribute('aria-label','Characters at this location');
  sceneRoot.append(castRoot);
  const dock=document.createElement('section');dock.id='rpgActionDock';dock.className='rpg-action-dock';
