@@ -1,0 +1,49 @@
+{
+  "version": 1,
+  "character": "hana",
+  "coordinateSystem": "normalized-image",
+  "durationMs": 3000,
+  "description": "Crop rectangle in source image coordinates (0..1); top/bottom include modest padding around the changed garment. Original portrait intentionally excluded.",
+  "variants": {
+    "01_original_white_lace_denim.png": {
+      "top": 0.305,
+      "bottom": 0.635,
+      "notes": "White bodice and lace front, with upper denim waistband"
+    },
+    "02_gray_blouse_denim.png": {
+      "top": 0.3,
+      "bottom": 0.63,
+      "notes": "Gray draped blouse and waistband"
+    },
+    "03_gray_ruched_top_denim.png": {
+      "top": 0.305,
+      "bottom": 0.625,
+      "notes": "Gray ruched blouse and upper shorts"
+    },
+    "04_white_top_mini_skirt.png": {
+      "top": 0.34,
+      "bottom": 0.79,
+      "notes": "White camisole and mini skirt"
+    },
+    "05_white_top_pleated_skirt.png": {
+      "top": 0.34,
+      "bottom": 0.8,
+      "notes": "White camisole and pleated skirt"
+    },
+    "06_pink_lace_white_top_denim.png": {
+      "top": 0.315,
+      "bottom": 0.635,
+      "notes": "Pink lace detail, white top and denim waist"
+    },
+    "07_gray_lace_white_top_denim.png": {
+      "top": 0.32,
+      "bottom": 0.64,
+      "notes": "Gray lace neckline, white top and shorts waistband"
+    },
+    "08_ribbon_top_denim.png": {
+      "top": 0.31,
+      "bottom": 0.65,
+      "notes": "Ribbon and printed bodice, upper denim shorts"
+    }
+  }
+}
