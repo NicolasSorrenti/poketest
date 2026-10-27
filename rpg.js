@@ -448,7 +448,7 @@ function selectPerson(id,{skipInvitation=false}={}){
  if(state.activeSliceOfLife||state.activeSituation||state.activeStory||state.activeSideQuest||state.activeEncounter||state.activeArc||state.pendingDuel||!cast[id]||!currentPeople().includes(id))return;
  const c=cast[id],first=!state['met_'+id]&&!((id==='reina')&&state.metReina);
  // The very first personal introduction gets a portrait close-up once.
- if(first&&typeof NeoOutfitChime!=='undefined'){
+ if(first&&!state.overworldIntroductions?.[id]&&typeof NeoOutfitChime!=='undefined'){
   const introductionPortrait=scenePortraitSource(id,'neutral',null);
   NeoOutfitChime.firstMeeting?.({id,portrait:introductionPortrait});
  }
@@ -2389,13 +2389,18 @@ async function finishOverworldArrival(destination){
   const present=currentPeople();
   const characters=present.filter(id=>Object.hasOwn(SPECIAL_LOOKS,id))
    .map(id=>({id,portrait:scenePortraitSource(id,'neutral',null)}));
-  const firstMeetings=present.filter(id=>!state['met_'+id]&&!(id==='reina'&&state.metReina))
+  const firstMeetings=present.filter(id=>!state['met_'+id]&&!state.overworldIntroductions?.[id]&&!(id==='reina'&&state.metReina))
    .map(id=>({id,portrait:scenePortraitSource(id,'neutral',null)}));
   if(typeof NeoOutfitChime!=='undefined'){
    await NeoOutfitChime.onEntry({characters,firstMeetings});
   }
   if(state.location!==destination)return;
   for(const {id} of characters)markSpecialLookSeen(id);
+  if(firstMeetings.length){
+   state.overworldIntroductions=state.overworldIntroductions||{};
+   for(const {id} of firstMeetings)state.overworldIntroductions[id]=true;
+   persist();
+  }
   if(pendingEntrySurprise){
    pendingEntrySurprise=false;
    if(!scheduleEvent()&&(beginSliceOfLife('entry',null,true)||(!eligibleStories().length&&beginSliceOfLife('entry'))))return;
