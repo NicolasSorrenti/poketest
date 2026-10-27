@@ -16,6 +16,9 @@ function audit(commands){
  }
  for(const [key,actions] of byTurn){
   const attachments=[];
+  // A board-neutral Trainer may require follow-up choice commands. Those
+  // choices complete its hand/deck effect, not a new board-changing action.
+  let neutralTrainerChoices=false;
   for(const [i,entry] of actions.entries()){
    const type=entry.command.type;
    const trainerName=type==='play_trainer'?CATALOG.get(entry.cardId)?.name:null;
@@ -25,10 +28,14 @@ function audit(commands){
    // Preserve a valid attachment trace until a genuinely board-changing
    // action or Pokémon Center consumes it.
    const drawsCards=['Bill','Professor Oak',"Blaine's Last Resort",
-    'Mail from Bill'].includes(trainerName);
+    'Mail from Bill','Erika'].includes(trainerName);
    const preservesBoard=['Bill','Professor Oak',"Blaine's Last Resort",
-    'Mail from Bill','Energy Search','Pokémon Trader',
+    'Mail from Bill','Erika','Energy Search','Pokémon Trader',
     'Nightly Garbage Run','Pokédex'].includes(trainerName);
+   // Erika draws for both players, but never changes Pokémon or Energy.
+   // Keep the evidence through her (and other neutral Trainers') prompts.
+   if(type==='play_trainer')neutralTrainerChoices=preservesBoard;
+   else if(type!=='choose')neutralTrainerChoices=false;
    if(type==='attach_energy')attachments.push({index:i,entry});
    if(drawsCards){
     // A newly drawn Center could not have been played before the earlier
@@ -48,7 +55,8 @@ function audit(commands){
     }
     // Center consumes eligible attachments; never count them twice.
     attachments.length=0;
-   }else if(!['attach_energy','bench'].includes(type)&&!preservesBoard){
+   }else if(!['attach_energy','bench'].includes(type)&&!preservesBoard&&
+    !(type==='choose'&&neutralTrainerChoices)){
     // Trainer effects, powers and position changes may heal or move a
     // Pokémon. Without a stable unit identity, do not accuse the CPU
     // based on a stale slot/damage snapshot.
