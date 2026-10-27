@@ -7,7 +7,7 @@ const state=(extra={})=>({day:10,slot:1,location:'shop',
  bonds:Object.fromEntries(names.map(id=>[id,{affection:9,trust:9}])),...extra});
 test('the original CGs plus Akari, Barb and standalone slice-of-life briefs coexist without duplicates',()=>{
  const legacy=CG.catalog.filter(x=>x.trigger!=='slice'&&!['akari_route_1','akari_route_3'].includes(x.id)),ambient=CG.catalog.filter(x=>x.trigger==='slice');
-assert.equal(legacy.length,45);
+assert.equal(legacy.length,49,'four Daisy route memories are registered');
  const archive=ambient.filter(x=>x.randomForced);
  assert.equal(archive.length,7,'seven archived original CGs should be new slice memories');
  assert.ok(ambient.length>=archive.length);
@@ -96,7 +96,7 @@ test('the manifest is ready for the art agent with exact uniquely addressed imag
    assert.equal(cg.path,cg.thumb,'original PNG is deliberately reused for its thumbnail');
    assert.match(cg.path,/^\/rpg-assets\/events\/cg\/slice-life\/[a-z0-9_]+\.png$/);
   }else{
-   for(const path of [cg.path,cg.thumb])assert.match(path,/^\/rpg-assets\/(?:events\/cg\/(?:season01|slice-life)\/(?:thumbs\/)?|characters\/barb\/events\/)[a-z0-9_]+\.webp$/);
+   for(const path of [cg.path,cg.thumb])assert.match(path,/^\/rpg-assets\/(?:events\/cg\/(?:season01|slice-life)\/(?:thumbs\/)?|characters\/barb\/events\/)[a-z0-9_]+\.(?:webp|png)$/);
   }
  }
  assert.ok(new Set(paths).size>CG.catalog.length,'each scene should have its own addressable artwork');

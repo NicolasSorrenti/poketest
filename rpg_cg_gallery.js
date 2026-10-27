@@ -1065,6 +1065,14 @@
   "dialogueSafe": "Approved story illustration displayed after dialogue."
 }
 ];
+
+ // Approved Daisy route CGs are attached to the authored relationship events.
+ const DAISY_ROUTES=[['daisy_route_1','The Trouble With First Impressions','Complete Daisy’s first card-shop event.'],['daisy_route_2','Layers','Complete Daisy’s fabric-sketch café event.'],['daisy_route_3','The Girl Behind the Glasses','Complete Daisy’s arcade event.'],['daisy_route_4','A Flower That Kept Growing','Complete Daisy’s park conversation.']];
+ for(const [id,title,hint] of DAISY_ROUTES){const path='/rpg-assets/events/cg/season01/'+id+'.png';catalog.push({character:'daisy',id,category:'social',trigger:'story_milestone',sceneId:id,place:null,minAffection:0,startDay:1,slot:null,title,hint,scene:'Approved Daisy route illustration for '+title+'.',composition:'Approved landscape CG with dialogue-safe lower fifth.',outfit:'Use Daisy’s approved outfit from this scene.',expression:'Authored route expression.',environment:'Neo Harbor',mood:'story',fanservice:0,path,thumb:path,dialogueSafe:'Lower fifth clear for dialogue UI'});}
+
+ // Daisy's authored random events have their own JSON source.
+ const DAISY_EVENTS=typeof module==='object'&&module.exports?require('./characters/daisy/extra_events.json'):window.NeoRpgCharacterPacks?.byId?.('daisy')?.events||[];
+ for(const event of (Array.isArray(DAISY_EVENTS)?DAISY_EVENTS:DAISY_EVENTS.events||[]).filter(e=>e.id.startsWith('daisy_random_')&&e.image))catalog.push({character:'daisy',id:event.id,category:'social',trigger:'slice',place:event.place,minAffection:event.minAffection||0,startDay:event.start,slot:event.slot,title:event.title,hint:'Encounter this approved Daisy slice-of-life event.',scene:event.art.scene,composition:event.art.composition,outfit:event.art.outfit,expression:event.art.expression,environment:event.art.environment,mood:event.art.mood,fanservice:0,path:event.image,thumb:event.image,dialogueSafe:'Lower fifth clear for dialogue UI',sliceId:event.id,randomForced:true});
  // Ambience CGs are separate from scheduled stories and relationship chapters.
  const SLICE=typeof module==='object'&&module.exports?require('./rpg_slice_of_life'):window.NeoRpgSliceOfLife;
  for(const moment of SLICE?.scenes||[])catalog.push({
@@ -1077,8 +1085,15 @@
   thumb:moment.image||(moment.npc==='barb'?'/rpg-assets/events/cg/season01/thumbs/'+moment.id+'.webp':'/rpg-assets/events/cg/slice-life/thumbs/'+moment.id+'.webp'),
   dialogueSafe:'Bottom 20% clear for dialogue UI',sliceId:moment.id,randomForced:!!moment.randomForced
  });
+
+
+ // Crossover gallery entries are generated from the authorized crossover registry below.
  // Joint optional scenes can contribute multiple collectible memories while remaining one encounter.
  const FIT=typeof module==='object'&&module.exports?require('./rpg_akari_barb_event'):window.NeoRpgAkariBarbFitting;
+
+ const CROSS=typeof module==='object'&&module.exports?require('./rpg_cross_character_events'):window.NeoRpgCrossCharacterEvents;
+ for(const event of CROSS?.events||[])if(event.id.startsWith('daisy_')&&!event.artPending){const details={character:'daisy',category:'social',trigger:'slice',place:null,minAffection:0,startDay:1,slot:null,title:event.title,hint:'Complete '+event.title+' to unlock this approved scene.',scene:event.art.scene,composition:event.art.composition,outfit:event.art.outfit,expression:event.art.expression,environment:event.art.environment,mood:event.art.mood,fanservice:event.art.fanservice||0,path:event.image,thumb:event.image,dialogueSafe:'Lower fifth clear for dialogue UI',sliceId:event.id};const prior=catalog.find(entry=>entry.id===event.id);if(prior)Object.assign(prior,details);else catalog.push({id:event.id,...details});if(event.cgSequence?.length>1){const id=event.cgSequence[1],path='/rpg-assets/events/cg/season01/'+id+'.webp';catalog.push({character:'daisy',id,category:'social',trigger:'slice',place:null,minAffection:0,startDay:1,slot:null,title:event.title+' — Follow-up',hint:'Complete '+event.title+' to unlock the second illustration.',scene:event.art.scene,composition:event.art.composition,outfit:event.art.outfit,expression:event.art.expression,environment:event.art.environment,mood:event.art.mood,fanservice:event.art.fanservice||0,path,thumb:path,dialogueSafe:'Lower fifth clear for dialogue UI',sliceId:event.id});}}
+
  for(const cg of FIT?.cgs||[])catalog.push({character:'akari',id:cg.id,category:'social',trigger:'slice',place:'shop',minAffection:0,startDay:18,slot:1,title:cg.id.endsWith('_01')?'The Perfect Fit — Measuring Up':'The Perfect Fit — One More Adjustment',hint:'Complete The Perfect Fit at Barb\'s workshop.',scene:'Akari and Barb share a swimsuit fitting at the workshop.',composition:'Approved cinematic story CG with lower fifth clear for dialogue.',outfit:'Approved swimsuit-fitting scene outfits',expression:'Natural flustered and professional expressions',environment:'Barb\'s workshop',mood:'lighthearted',fanservice:1,path:cg.path,thumb:cg.thumb,dialogueSafe:'Bottom 20% clear for dialogue UI',sliceId:FIT.event.id});
  // UI-only fallback sequence. Never mistake placeholder artwork for a newly created CG.
  // Source-of-truth paths here are existing RPG art assets, not generated images.
@@ -1183,7 +1198,7 @@
    if(e.startDay<1||e.startDay>90||e.minAffection<0||e.fanservice<0||e.fanservice>3)errors.push('Invalid gate '+e.id);
    // Approved legacy art can intentionally use an exact versioned filename or an
    // opening CG from a multi-image story. Do not falsely reject those assets.
-   const approvedAlias=(e.id==='barb_random_cg_04'&&e.path==='/rpg-assets/characters/barb/events/barb_random_cg_04_accidental_model_v2.webp')||
+   const approvedAlias=(e.character==='daisy'&&/^\/rpg-assets\/events\/cg\/(?:season01|slice-life)\/daisy_[a-z0-9_]+\.(?:png|webp)$/.test(e.path))||(e.id==='barb_random_cg_04'&&e.path==='/rpg-assets/characters/barb/events/barb_random_cg_04_accidental_model_v2.webp')||
     (e.id==='akari_barb_swimsuit_fitting'&&e.path===FIT.cgs[0].path);
    if(!e.path.endsWith(e.id+'.webp')&&!(e.randomForced&&e.path.endsWith(e.id+'.png'))&&!approvedAlias)errors.push('Invalid asset path '+e.id);
   }

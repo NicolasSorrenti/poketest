@@ -1,0 +1,132 @@
+{
+  "repository": "NicolasSorrenti/poketest",
+  "base_branch": "main",
+  "assets": [
+    {
+      "asset": "rpg-assets/events/cg/season01/daisy_route_1.png",
+      "source": "a_high_quality_anime_illustration_style_realisti.png",
+      "label": "route_1_card_shop",
+      "dimensions": [
+        1536,
+        1024
+      ],
+      "sha256": "bfae947a60c746086af34f5b3de06cb345e421c4899cb5942561facd264c9e57",
+      "note": "approved scene approximation; verify narrative fit"
+    },
+    {
+      "asset": "rpg-assets/events/cg/season01/daisy_route_2.png",
+      "source": "a_highly_detailed_polished_anime_cg_style_illustr.png",
+      "label": "route_2_cafe",
+      "dimensions": [
+        1536,
+        1024
+      ],
+      "sha256": "5d06968c844c886f782a9c683356f03aee67aa79cec56c9a56705c383cd0b1e4",
+      "note": ""
+    },
+    {
+      "asset": "rpg-assets/events/cg/season01/daisy_route_3.png",
+      "source": "a_highly_detailed_colorful_anime_illustration_st.png",
+      "label": "route_3_arcade",
+      "dimensions": [
+        1672,
+        941
+      ],
+      "sha256": "a5e92fa21c6a53b4bfdf73310dde49fac8370fbe88196eba3c830f67af991290",
+      "note": ""
+    },
+    {
+      "asset": "rpg-assets/events/cg/season01/daisy_route_4.png",
+      "source": "a_highly_detailed_anime_realistic_anime_illustrat.png",
+      "label": "route_4_park",
+      "dimensions": [
+        1672,
+        941
+      ],
+      "sha256": "c173cc168357189a3d39c7dceec5723b907c62c25e610dbf7eb4fc0474551479",
+      "note": ""
+    },
+    {
+      "asset": "rpg-assets/events/cg/slice-life/daisy_random_window_reflection.png",
+      "source": "a_highly_detailed_realistic_anime_style_illustrat.png",
+      "label": "window_reflection",
+      "dimensions": [
+        1672,
+        941
+      ],
+      "sha256": "9b4318abe3125c95882ad775ecb4d24be2fd5eb9fc8fa0cabcc98044918935af",
+      "note": ""
+    },
+    {
+      "asset": "rpg-assets/events/cg/slice-life/daisy_random_rain_shelter.png",
+      "source": "a_highly_detailed_cinematic_anime_realistic_illu.png",
+      "label": "borrowed_umbrella",
+      "dimensions": [
+        1672,
+        941
+      ],
+      "sha256": "4a81c108951142655b25ef0c15a22d1241dada3e90fc2f2f65b348e486d9d3d1",
+      "note": ""
+    },
+    {
+      "asset": "rpg-assets/events/cg/slice-life/daisy_random_deck_luck.png",
+      "source": "a_high_quality_anime_realistic_anime_styled_illus.png",
+      "label": "unlucky_shuffle",
+      "dimensions": [
+        1672,
+        941
+      ],
+      "sha256": "9e2e2da1291a6b347f9e0701fe8039516eeb5bee639160a7943d7e113a4ae1f5",
+      "note": ""
+    },
+    {
+      "asset": "rpg-assets/events/cg/season01/daisy_barb_swimsuit_sketch.webp",
+      "source": "wide_detailed_anime_style_illustration_cgi_scene.png",
+      "label": "barb_swimsuit",
+      "dimensions": [
+        1672,
+        941
+      ],
+      "sha256": "99f423f3e73bfb54d8ba47f7441f8f3340ea8d0265970007aff71a62314e28e8",
+      "note": ""
+    },
+    {
+      "asset": "rpg-assets/events/cg/season01/daisy_barb_fitting_followup.webp",
+      "source": "wide_warm_detailed_anime_style_illustration_of_a.png",
+      "label": "barb_fitting_stage1",
+      "dimensions": [
+        1672,
+        941
+      ],
+      "sha256": "6fd27ec74ade9e3fb4889d0b855ca958f4bbc01b87b6e61e26e73616ae5fbe2c",
+      "note": ""
+    },
+    {
+      "asset": "rpg-assets/events/cg/season01/daisy_barb_fitting_followup_stage2.webp",
+      "source": "wide_warmly_lit_detailed_anime_style_illustratio.png",
+      "label": "barb_fitting_stage2",
+      "dimensions": [
+        1672,
+        941
+      ],
+      "sha256": "2978bbd4f6b72dbbe10ddf7de729d2bd3e9f682005a00cb109e01f6cad8bc23c",
+      "note": "additional scene image; must be explicitly triggered"
+    },
+    {
+      "asset": "rpg-assets/events/cg/season01/daisy_laca_boardwalk.webp",
+      "source": "a_detailed_realistic_high_quality_anime_cgi_sty.png",
+      "label": "laca_boardwalk",
+      "dimensions": [
+        1672,
+        941
+      ],
+      "sha256": "cb7fb386a8faebeddf25afae4589ecfbde7429a8ccc17765ea7f4ec11bad7bc0",
+      "note": ""
+    }
+  ],
+  "not_included": [
+    "daisy_random_arcade_disguise.png",
+    "daisy_rina_cafe.webp"
+  ],
+  "two_step_event": "daisy_barb_fitting_followup"
+}

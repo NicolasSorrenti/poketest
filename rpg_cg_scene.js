@@ -40,12 +40,13 @@
 
  function create(stage,image,doc){
   let requestedId=null,visibleId=null,serial=0;
+  if(image?.style)image.style.transition='opacity 220ms ease';
   const seen=new Set();
   function clear(){
    if(requestedId===null&&!visibleId)return;
    ++serial;requestedId=null;visibleId=null;
    stage.classList.remove('has-story-cg');
-   image.hidden=true;
+   image.hidden=true;if(image?.style)image.style.opacity='1';
    image.removeAttribute?.('src');
   }
   function show(entry,candidates,onShown,onMissing){
@@ -61,10 +62,10 @@
     const loader=doc.createElement('img');
     loader.onload=()=>{
      if(token!==serial)return;
-     image.src=paths[index].path;
-     image.alt=entry.title||'Story illustration';
+     const changing=!!visibleId;
+     if(changing){if(image?.style)image.style.opacity='0';image.src=paths[index].path;image.alt=entry.title||'Story illustration';image.hidden=false;stage.classList.add('has-story-cg');setTimeout(()=>{if(token===serial&&image?.style)image.style.opacity='1';},0);}else{image.src=paths[index].path;image.alt=entry.title||'Story illustration';
      image.hidden=false;
-     stage.classList.add('has-story-cg');
+     stage.classList.add('has-story-cg');if(image?.style)image.style.opacity='1';}
      visibleId=entry.id;
      seen.add(entry.id);
      onShown?.(entry);

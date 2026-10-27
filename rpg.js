@@ -616,14 +616,18 @@ function beginSliceOfLife(trigger,npc=null,onlyRandomForced=false){
  return true;
 }
 function nextSliceOfLife(){
+ const before=state.activeSliceOfLife&&SLICE.byId(state.activeSliceOfLife.id);
+ const priorCG=before?.cgSequence?.length&&before.cgSwitchSteps?.findIndex((step,index)=>index>0&&state.activeSliceOfLife.step<step&&state.activeSliceOfLife.step+1>=step);
  const result=SLICE.next(state);
  if(!result)return;
  // The CG selector uses the current step, switching the fitting artwork at step 4.
  if(result.done){const moment=SLICE.byId(result.id);
   if(moment.choices){const owners=[moment.npc,...(moment.participants||[])];for(const owner of new Set(owners))recordCG('slice',owner,{eventId:moment.id});}
+  for(const entry of CG.catalog.filter(x=>x.sliceId===moment.id&&x.id!==moment.cgSequence?.[0])){const unlocked=CG.record(state,'slice',entry.character,{eventId:moment.id});if(unlocked.some(x=>x.id===entry.id))log('New CG memory unlocked: '+entry.title+'.');}
   log('A small moment with '+(cast[moment?.npc]?.name||'a friend')+'.');
   persist();
   return closeSceneDialogue();}
+ if(priorCG!==false&&priorCG!==undefined){const nextCG=before.cgSequence[priorCG];if(nextCG)CG.markViewed(state,nextCG);}
  persist();render();
 }
 

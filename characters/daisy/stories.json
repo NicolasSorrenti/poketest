@@ -15,6 +15,10 @@
       "participants": [],
       "lines": [
         {
+          "speaker": "Narrator",
+          "text": "At the card shop table, Daisy has already laid out a deck and is waiting for you to take the seat across from her."
+        },
+        {
           "speaker": "daisy",
           "text": "That's my table. You're welcome to share it, unless you're going to shuffle like a lawn mower."
         },
@@ -75,7 +79,8 @@
             "attraction": 2
           }
         }
-      ]
+      ],
+      "image": "/rpg-assets/events/cg/season01/daisy_route_1.png"
     },
     {
       "id": "daisy_route_2",
@@ -89,6 +94,10 @@
       "prerequisite": "daisy_route_1",
       "participants": [],
       "lines": [
+        {
+          "speaker": "Narrator",
+          "text": "At the caf\u00e9 window, Daisy holds two fabric sketches up to the daylight so you can compare their layers and color."
+        },
         {
           "speaker": "daisy",
           "text": "I brought two sketches, and before you ask, they aren't new deck boxes."
@@ -111,7 +120,7 @@
         },
         {
           "speaker": "daisy",
-          "text": "Here—hold this edge up to the window. See how the color changes?"
+          "text": "Here\u2014hold this edge up to the window. See how the color changes?"
         },
         {
           "speaker": "Protagonist",
@@ -153,7 +162,8 @@
             "attraction": 2
           }
         }
-      ]
+      ],
+      "image": "/rpg-assets/events/cg/season01/daisy_route_2.png"
     },
     {
       "id": "daisy_route_3",
@@ -236,7 +246,8 @@
             "trust": 1
           }
         }
-      ]
+      ],
+      "image": "/rpg-assets/events/cg/season01/daisy_route_3.png"
     },
     {
       "id": "daisy_route_4",
@@ -251,6 +262,10 @@
       "participants": [],
       "lines": [
         {
+          "speaker": "Narrator",
+          "text": "In the quiet park at dusk, Daisy sits beside you and turns the conversation toward the lotus tattoo she chose for herself."
+        },
+        {
           "speaker": "daisy",
           "text": "Do you remember asking me about the flower tattoo?"
         },
@@ -260,7 +275,7 @@
         },
         {
           "speaker": "daisy",
-          "text": "Yeah. I got it after a year when I thought nothing would feel steady again. It's a lotus—messy roots, beautiful bloom. Very dramatic. Very me."
+          "text": "Yeah. I got it after a year when I thought nothing would feel steady again. It's a lotus\u2014messy roots, beautiful bloom. Very dramatic. Very me."
         },
         {
           "speaker": "Protagonist",
@@ -320,7 +335,8 @@
             "attraction": 2
           }
         }
-      ]
+      ],
+      "image": "/rpg-assets/events/cg/season01/daisy_route_4.png"
     }
   ]
 }
