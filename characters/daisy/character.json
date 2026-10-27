@@ -1,0 +1,92 @@
+{
+  "schemaVersion": 1,
+  "id": "daisy",
+  "name": "Daisy",
+  "age": 20,
+  "role": "romance",
+  "deck": "water_blast",
+  "style": "Water tempo · patient setup and daring reversals",
+  "dialogue": {
+    "intro": "Oh, you're the new challenger? You were staring at the wrong side of the card, cariño. The interesting part is what I do next. I'm Daisy.",
+    "repeat": "There you are. Are we playing cards, trading rumors, or pretending we didn't plan to run into each other?",
+    "flirt": "If that's your opening move, I'm curious what you've been saving for the late game.",
+    "duelWin": "Okay, that was good. I was trying not to look impressed. Clearly failed.",
+    "duelLose": "That grin? Keep it. I earned this one.",
+    "talk": [
+      "A sheer skirt and a secret strategy have something in common: everyone thinks they've seen the whole thing.",
+      "I like the café after sunset. The windows make everyone look like the main character in a music video.",
+      "No, I don't dress for duels. I dress for myself. Winning just matches the outfit.",
+      "My tattoos? The lotus is about growing through things. The three stars are for people who saw me before I knew how.",
+      "People hear a joke and think you aren't serious. Let them. Then show them the score.",
+      "When I want to disappear, it's oversized hoodie, baggy trousers and headphones. Total incognito mode.",
+      "There's this half-second before someone draws the last Prize where I can hear the whole room go quiet.",
+      "I can admit I was wrong. I just prefer to do it with a dramatic entrance.",
+      "If I look confident, it means I decided not to wait for permission.",
+      "My glasses aren't a disguise. They just make it easier to stare at a tiny card and pretend I'm studying."
+    ],
+    "hangouts": [
+      "Daisy holds two translucent skirt layers against the window and asks which moves better when she walks.",
+      "You browse the arcade together. Daisy critiques the neon lighting with alarming precision.",
+      "At the café, Daisy draws a flower on your napkin and explains why she likes things that grow crooked.",
+      "You test a new deck at the card shop while Daisy makes outrageous predictions and keeps an honest score.",
+      "The two of you walk through the park after a summer rain; Daisy trades jokes for a rare quiet moment.",
+      "Daisy tries on an enormous hoodie for a low-key day and laughs when you almost don't recognize her."
+    ]
+  },
+  "appearance": {
+    "silhouette": "Adult Argentine woman, 20 years old, 167 cm, feminine and curvy with natural proportions, defined waist and soft hips. Long dark hair with straight bangs and half-up ponytail.",
+    "palette": "Near-black hair, warm olive skin, deep brown eyes, vivid raspberry lipstick, black lace, burgundy translucent mesh, pink highlights and silver jewelry.",
+    "hair": "Long glossy near-black hair, neat full fringe, usually half-up ponytail, loose lengths reaching waist.",
+    "eyes": "Large expressive almond-shaped warm dark-brown eyes, crisp cat-eye black liner, dark upper lashes, delicate lower lashes and softly arched brows.",
+    "details": "Small nostril hoop, silver ear hoops; detailed floral and cartoon cat tattoos along arms and shoulders, three small stars near upper chest, crucial central lotus/flower tattoo between breasts with delicate stem continuing down the sternum, additional ornamental under-bust tattoo.",
+    "expressions": "Teasing half-lidded look, knowing smirk, open genuine smile, playful wink, sudden wide-eyed surprise, flustered sidelong glance, focused competitive stare and guarded tenderness.",
+    "outfits": [
+      "Signature: burgundy sheer long-sleeved top over opaque bralette, layered black translucent mini skirt over secure shorts/lining, black boots.",
+      "Evening: black lace transparent long-sleeved top over opaque black underlayer with matching lined sheer skirt and ankle boots.",
+      "Summer: thin translucent blouse with opaque underpinning, light flowing sheer skirt over visible lining, optional sunglasses.",
+      "Only when sporty or hiding: dramatically oversized baggy hoodie and very loose trousers; never fitted sporty/cargo pants in routine outfits."
+    ],
+    "renderNotes": "Approved Neo Campus polished modern anime/JRPG cel shading, mature adult face consistent with image references. Daisy always uses sheer/translucent tops with opaque underlayers and usually lined translucent skirts; sporty exception is deliberately huge baggy clothes. Preserve brown eye shape, straight bangs, central flower sternum tattoo, three stars, arm sleeves, piercings. Transparent portrait and cut-in PNG with no background; event CGs landscape scene background. No wardrobe cargo pants."
+  },
+  "arrivalDay": 9,
+  "schedule": [
+    [
+      "cafe",
+      "shop",
+      "arcade"
+    ],
+    [
+      "home",
+      "shop",
+      "cafe"
+    ],
+    [
+      "cafe",
+      "center",
+      "arcade"
+    ],
+    [
+      "home",
+      "shop",
+      "park"
+    ],
+    [
+      "cafe",
+      "shop",
+      "cafe"
+    ],
+    [
+      "shop",
+      "center",
+      "arcade"
+    ],
+    [
+      "home",
+      "park",
+      "cafe"
+    ]
+  ],
+  "stories": "stories.json",
+  "artManifest": "art_manifest.json",
+  "bible": "bible.md"
+}
