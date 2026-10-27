@@ -2353,23 +2353,20 @@ function render(){
  ensureRpgLayout();
  window.NeoRpgInterface?.init?.();
  maybeStartMandatory();
- // Outfit-chime: reuse Hana's selected overworld PNG and crop per focus manifest.
- // Only evaluate on entering a different location; don't cover scripted events.
+ // Trigger outfit changes on location entry using the actual stage portrait resolver.
  if(previousLocation&&previousLocation!==state.location){
   hanaEncounterKey='entry:'+ ++hanaEncounterSerial;
-  const entrant=currentPeople().includes('hana');
-  if(entrant){
-   const portrait=hanaOverworldPortrait(null);
-   const destination=state.location;
-   setTimeout(()=>{
-    if(state.location!==destination)return;
-    const blocked=timeSequence.blocked||!!state.mandatoryEventState?.active||
-     !!state.activeSliceOfLife||!!state.activeSituation||!!state.activeStory||
-     !!state.activeEncounter||!!state.activeArc||!!state.activeSideQuest||
-     !!state.pendingDuel;
-    HanaOutfitChime.onEntry({location:destination,portrait,present:currentPeople().includes('hana'),blocked,sceneId:activeOutfitSceneId});
-   },900);
-  }else HanaOutfitChime.cancel();
+  const destination=state.location;
+  const arriving=currentPeople().filter(id=>id==='hana'||id==='akari'||id==='barb');
+  const snapshots=arriving.map(id=>({id,portrait:id==='hana'?hanaOverworldPortrait(null):scenePortraitSource(id,'neutral',null)}));
+  setTimeout(()=>{
+   if(state.location!==destination)return;
+   const blocked=timeSequence.blocked||!!state.mandatoryEventState?.active||
+    !!state.activeSliceOfLife||!!state.activeSituation||!!state.activeStory||
+    !!state.activeEncounter||!!state.activeArc||!!state.activeSideQuest||
+    !!state.pendingDuel;
+   window.NeoOutfitChime?.onEntry({characters:snapshots,blocked,sceneId:activeOutfitSceneId});
+  },900);
  }
  renderJourney();
  renderCollection();
