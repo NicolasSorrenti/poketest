@@ -50,6 +50,10 @@ for(const format of historical){
  g.players[1].bench=[U('base1-35',[],30),U('base1-52')];
  g.players[0].prizes=['base1-91','base1-94','base1-95','base1-93'];
  g.players[0].prizeFaceUp=[false,true,false,false];
+ // createGame starts in setup with no dealt Prizes. Both players need a
+ // realistic Prize reserve before the knockout checkpoint can declare a winner.
+ g.players[1].prizes=['base1-91','base1-94','base1-95','base1-93'];
+ g.players[1].prizeFaceUp=[false,false,false,false];
  let r=applyCommand(g,0,{type:'attack',payload:{attackIndex:0}});
  assert.equal(r.ok,true,r.error);
  assert.equal(g.pendingDecision?.kind,'prize-card');
@@ -75,6 +79,8 @@ for(const format of historical){
  g.players[0].bench=[U('base1-52')];
  g.players[1].prizes=['base1-91'];
  g.players[1].prizeFaceUp=[false];
+ g.players[0].prizes=['base1-91','base1-94','base1-95','base1-93'];
+ g.players[0].prizeFaceUp=[false,false,false,false];
  let result=applyCommand(g,1,{type:'attack',payload:{attackIndex:0}});
  assert.equal(result.ok,true,result.error);
  assert.equal(g.over,false,'Winning Knock Out waits for Prize selection');
