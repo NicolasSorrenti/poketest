@@ -80,3 +80,47 @@ test('Center guard is Apex-only and leaves Level 7 audit opportunities unchanged
  const actions=[{type:'attach_energy',payload:{handIndex:0,slot:-1}}];
  assert.deepEqual(AI.centerSafeActions(o,AI.configuration({side:1,level:7}),{},actions),actions);
 });
+
+test('Apex can attach Energy when a Trainer lock makes Center unplayable',()=>{
+ const o=obs();
+ o.self.active.damage=70;
+ o.self.bench[0].damage=40;
+ o.trainerBlocked=true;
+ const active={type:'attach_energy',payload:{handIndex:0,slot:-1}};
+ const center={type:'play_trainer',payload:{handIndex:1}};
+ assert.notEqual(AI.score(active,o,cfg,{}),-1000,
+  'an impossible Center must not reserve the turn attachment');
+ assert.deepEqual(AI.centerSafeActions(o,cfg,{},[active,center]),[active,center],
+  'the decision audit must not hide legal Energy opportunities');
+ const actions=AI.candidates(o,cfg,{trainers:0,powers:0,powerKeys:new Set(),stadium:false});
+ assert.ok(actions.some(a=>a.type==='attach_energy'&&a.payload.slot===-1));
+ assert.equal(actions.some(a=>a.type==='play_trainer'),false,
+  'Apex should not spend its search budget probing blocked Trainers');
+});
+
+test('Apex observation recognizes Trainer lock expiry and enabled Hay Fever',()=>{
+ const {CATALOG}=require('../headless_duel');
+ const game={format:'online-preview',phase:'game',turn:1,round:6,turnSerial:9,
+  over:false,setupReady:[true,true],message:[],coinFlips:[],
+  players:[
+   {name:'Opponent',active:unit(HITMONCHAN,0,[W]),bench:[],
+    hand:[],deck:[],prizes:[],discard:[]},
+   {name:'Apex',active:unit(BLASTOISE,70,[W]),bench:[unit(LAPRAS,40)],
+    hand:[W,CENTER],deck:[],prizes:[],discard:[]}
+  ]};
+ assert.equal(AI.observation(game,1).trainerBlocked,false);
+ game.players[1].trainerLockedUntil=10;
+ assert.equal(AI.observation(game,1).trainerBlocked,true);
+ game.players[1].trainerLockedUntil=9;
+ assert.equal(AI.observation(game,1).trainerBlocked,false,
+  'an expired attack-based Trainer lock must not persist');
+ const vileplume=[...CATALOG.values()].find(c=>c.name==='Dark Vileplume'&&
+  c.abilities?.some(a=>a.name==='Hay Fever'));
+ assert.ok(vileplume,'fixture requires the real Hay Fever card');
+ game.players[0].bench=[unit(vileplume.id,0)];
+ assert.equal(AI.observation(game,1).trainerBlocked,true,
+  'Hay Fever on either side blocks all Trainers');
+ game.players[0].bench[0].status='Asleep';
+ assert.equal(AI.observation(game,1).trainerBlocked,false,
+  'a disabled Hay Fever must not suppress a playable Center');
+});
