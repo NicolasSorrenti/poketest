@@ -537,11 +537,22 @@ test('Apex does not force a doomed Active attachment before a ready attack',()=>
  const o=exposedActiveHorizonBoard();
  // The Bench is temporarily attachment-blocked. The Active can use Jab now,
  // but another Fighting Energy cannot unlock Special Punch before the KO.
+ // Hitmonchan has a two-Energy retreat cost: mark retreat already used so
+ // this fixture actually tests a stranded attachment, not a legal escape.
  o.self.bench[0].energyAttachBlockSerial=o.turnSerial+1;
+ o.self.retreated=true;
  const activeEnergy={type:'attach_energy',payload:{handIndex:0,slot:-1}};
  assert.deepEqual(AI.energyPreparationActions(o,cfg,[attack,activeEnergy]),
   [attack,activeEnergy],
   'preserve the legal attack instead of forcing a stranded attachment');
+});
+test('Apex preserves Energy preparation when it enables a legal retreat',()=>{
+ const o=exposedActiveHorizonBoard();
+ o.self.bench[0].energyAttachBlockSerial=o.turnSerial+1;
+ const activeEnergy={type:'attach_energy',payload:{handIndex:0,slot:-1}};
+ assert.deepEqual(AI.energyPreparationActions(o,cfg,[attack,activeEnergy]),
+  [activeEnergy],
+  'the second Fighting Energy pays Hitmonchan retreat and is not stranded');
 });
 test('Apex still prepares an Active Energy when the opposing KO is unavailable',()=>{
  const o=exposedActiveHorizonBoard();
