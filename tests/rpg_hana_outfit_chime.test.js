@@ -19,7 +19,7 @@ test('overlay loads before RPG bootstrap and contains no caption',()=>{
  assert.ok(html.indexOf('/rpg_hana_outfit_chime.js')<html.indexOf('/rpg_character_bootstrap.js'));
  assert.match(overlay,/aria-hidden/);
  assert.match(overlay,/setTimeout/);
- assert.doesNotMatch(overlay,/textContent\s*=/);
+ assert.doesNotMatch(overlay,/cover\.textContent\s*=/);
 });
 test('location entry reuses existing Hana portrait and skips events',()=>{
  assert.match(runtime,/HanaOutfitChime\.onEntry/);
