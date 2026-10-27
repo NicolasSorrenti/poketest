@@ -2,6 +2,7 @@
 const test=require('node:test');
 const assert=require('node:assert/strict');
 const {audit,parse}=require('../scripts/apex-turn-audit');
+const {CATALOG}=require('../headless_duel');
 const attach=(side,turn,damage,slot=-1,centerInHandBefore=null)=>({side,turnSerial:turn,cardId:'base1-102',
  targetDamageBefore:damage,centerInHandBefore,command:{type:'attach_energy',payload:{slot}}});
 const center=(side,turn,damagedSlots=[-1])=>({side,turnSerial:turn,cardId:'base1-85',
@@ -94,6 +95,34 @@ test('board-neutral search and deck Trainers preserve pre-Center Energy evidence
   assert.deepEqual(audit([attach(1,8,40),trainer,center(1,8,[])]),[],
    name+' must not cause a warning when Center heals no attachment target');
  }
+});
+test('Erika draw choices preserve only genuine pre-Center Energy mistakes',()=>{
+ // The production Erika resolver draws 0–3 cards for each player. Its
+ // play_trainer and subsequent choose commands never alter Pokémon state.
+ const erikaId=[...CATALOG].find(([,c])=>c.name==='Erika'&&c.supertype==='Trainer')?.[0];
+ assert.ok(erikaId,'Erika must resolve to a real Trainer card');
+ const erika={side:1,turnSerial:8,cardId:erikaId,
+  command:{type:'play_trainer',payload:{handIndex:0}}};
+ const choose={side:1,turnSerial:8,
+  command:{type:'choose',payload:{decisionId:'erika-draw',selected:['count:1']}}};
+ const steps=[erika,choose,choose];
+ assert.equal(audit([attach(1,8,40,-1,true),...steps,center(1,8)]).length,1,
+  'Erika and her draw prompts must not hide an existing Center opportunity');
+ assert.deepEqual(audit([attach(1,8,40,-1,false),...steps,center(1,8)]),[],
+  'Center drawn after attachment was not playable beforehand');
+ assert.deepEqual(audit([attach(1,8,40,-1,true),...steps,center(1,8,[])]),[],
+  'Center must still heal the attachment target to count');
+ // An unrelated choice is not assumed to be board-neutral.
+ assert.deepEqual(audit([attach(1,8,40,-1,true),choose,center(1,8)]),[]);
+});
+test('board-changing Trainer choices still clear stale attachment evidence',()=>{
+ const sabrinaId=[...CATALOG].find(([,c])=>c.name==='Sabrina'&&c.supertype==='Trainer')?.[0];
+ assert.ok(sabrinaId,'Sabrina must resolve to a real Trainer card');
+ const sabrina={side:1,turnSerial:8,cardId:sabrinaId,
+  command:{type:'play_trainer',payload:{handIndex:0}}};
+ const choose={side:1,turnSerial:8,command:{type:'choose',payload:{selected:['slot:0']}}};
+ assert.deepEqual(audit([attach(1,8,40,-1,true),sabrina,choose,center(1,8)]),[],
+  'Sabrina can move attached Energy, so earlier slot evidence is stale');
 });
 test('healing Trainers still invalidate stale attachment evidence',()=>{
  const heal={side:1,turnSerial:8,cardId:'gym2-103',
