@@ -2,8 +2,8 @@
 const test=require('node:test');
 const assert=require('node:assert/strict');
 const {audit,parse}=require('../scripts/apex-turn-audit');
-const attach=(side,turn,damage,slot=-1)=>({side,turnSerial:turn,cardId:'base1-102',
- targetDamageBefore:damage,command:{type:'attach_energy',payload:{slot}}});
+const attach=(side,turn,damage,slot=-1,centerInHandBefore=null)=>({side,turnSerial:turn,cardId:'base1-102',
+ targetDamageBefore:damage,centerInHandBefore,command:{type:'attach_energy',payload:{slot}}});
 const center=(side,turn,damagedSlots=[-1])=>({side,turnSerial:turn,cardId:'base1-85',
  centerDamagedSlotsBefore:damagedSlots,
  command:{type:'play_trainer',payload:{handIndex:0}}});
@@ -44,7 +44,7 @@ test('preserves wasted-Energy evidence through draw-only Trainers',()=>{
  for(const cardId of ['base1-91','base1-88']){
   const draw={side:1,turnSerial:8,cardId,
    command:{type:'play_trainer',payload:{handIndex:0}}};
-  const result=audit([attach(1,8,40),draw,center(1,8)]);
+  const result=audit([attach(1,8,40,-1,true),draw,center(1,8)]);
   assert.equal(result.length,1,cardId+' cannot heal or reposition the attachment target');
   assert.equal(result[0].attachmentIndex,0);
   assert.deepEqual(audit([attach(1,8,40),draw,center(1,8,[])]),[],
@@ -57,10 +57,24 @@ test('preserves attachment evidence through additional draw-only Trainers',()=>{
  for(const cardId of ['gym1-105','neo4-105']){
   const draw={side:1,turnSerial:8,cardId,
    command:{type:'play_trainer',payload:{handIndex:0}}};
-  assert.equal(audit([attach(1,8,40),draw,center(1,8)]).length,1,
+  assert.equal(audit([attach(1,8,40,-1,true),draw,center(1,8)]).length,1,
    cardId+' must not erase a valid Center sequencing warning');
   assert.deepEqual(audit([attach(1,8,40),draw,center(1,8,[])]),[],
    'pre-Center damage evidence is still required');
+ }
+});
+test('draw Trainers do not invent a Center-before-Energy option that did not exist',()=>{
+ // The CPU cannot play a Center before attachment if Bill/Oak/Mail/Blaine
+ // only draws that Center afterward. Missing hand evidence is conservative.
+ for(const cardId of ['base1-91','base1-88','gym1-105','neo4-105']){
+  const draw={side:1,turnSerial:8,cardId,
+   command:{type:'play_trainer',payload:{handIndex:0}}};
+  assert.deepEqual(audit([attach(1,8,40,-1,false),draw,center(1,8)]),[],
+   cardId+' can introduce a previously unavailable Center');
+  assert.deepEqual(audit([attach(1,8,40),draw,center(1,8)]),[],
+   cardId+' must not accuse without a pre-draw hand snapshot');
+  assert.equal(audit([draw,attach(1,8,40,-1,true),center(1,8)]).length,1,
+   'a Center drawn before attachment restores the sequencing warning');
  }
 });
 test('board-neutral search and deck Trainers preserve pre-Center Energy evidence',()=>{
