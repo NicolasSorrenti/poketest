@@ -61,7 +61,13 @@ for(const format of historical){
  assert.equal(r.ok,true,r.error);
  assert.deepEqual(g.players[0].prizes,['base1-94','base1-93']);
  assert.deepEqual(g.players[0].prizeFaceUp,[true,false]);
- assert.equal(g.players[1].active?.id,'base1-52','Only surviving Benched Pokémon auto-promotes');
+ assert.equal(g.players[1].active?.id,'base1-52','Only surviving Benched Pokémon auto-promotes: '+JSON.stringify({
+  pendingDecision:g.pendingDecision?.kind,
+  pendingAction:g.pendingAction?.kind,
+  pendingPrizeClaims:g.pendingPrizeClaims,
+  bench:g.players[1].bench.map(u=>({id:u.id,damage:u.damage})),
+  over:g.over,winner:g.winner,turn:g.turn
+ }));
  assert.equal(g.turn,1,'Turn advances only after all Prize claims and promotions');
 }
 // A Prize-race victory must be awarded after the final selection, even when
