@@ -71,7 +71,8 @@
  function vnCandidates(npcId,kind){
   if(npcId==='elio'){
    const name=['play_card','evolve','power','ko_scored'].includes(kind)?'happy':
-    ['hurt','big_hit','weakness_hit','status_hit'].includes(kind)?'surprised':null;
+    ['hurt','big_hit','weakness_hit'].includes(kind)?'surprised':
+    ['status_hit','ko_taken'].includes(kind)?'concerned':null;
    return name?['/rpg-assets/characters/elio/expression-portraits/'+name+'.png',PORTRAITS.elio]:[PORTRAITS.elio];
   }
   // Keep Alma in canonical cafe workwear; legacy guest art and suit candidates conflict.
@@ -593,4 +594,5 @@
  }
  return {createDirector,makeExperience,assetFor,MAX_REACTIONS,priorityFor,durationFor,VOICES};
 });
+
 

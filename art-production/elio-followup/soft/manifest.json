@@ -1,0 +1,121 @@
+{
+  "tool": "built-in image_gen.imagegen",
+  "canonical_source": "/workspace/scratch/dc054acd6888/elio-refresh/happy/reference.png",
+  "attempt_count": 1,
+  "rejects": [],
+  "assessment": "Accepted: subtle tender closed-mouth smile and relaxed brows; canonical adult identity, brown hair, earrings, star jacket, pendant, notebook, strap, pose and framing visually consistent. Minor non-face redraws. SFW fully clothed. Genuine alpha transparency; generated alpha maximum 254 (near opaque), preserved unchanged. One generation; no rejects; no Git mutations.",
+  "files": [
+    {
+      "path": "/workspace/scratch/dc054acd6888/elio-next/soft/assessment.txt",
+      "sha256": "1caf15d95e362f596057ae2cb74b81792dcaf4476a5725608c3edd8bbb24fd15",
+      "bytes": 368
+    },
+    {
+      "path": "/workspace/scratch/dc054acd6888/elio-next/soft/attempts/attempt-01.png",
+      "sha256": "283384855ee731cefc8663667e47515305977eba3a94bba8e010a9f044d509da",
+      "bytes": 2101409,
+      "dimensions": [
+        1024,
+        1536
+      ],
+      "mode": "RGBA",
+      "alpha": {
+        "min": 0,
+        "max": 254,
+        "transparent_pixels": 611736,
+        "partial_pixels": 961128,
+        "opaque_pixels": 0
+      }
+    },
+    {
+      "path": "/workspace/scratch/dc054acd6888/elio-next/soft/originals/reference.png",
+      "sha256": "2902f1df48ed43dbbaad5b6c24b8a90ae44fe9e22ff841225e39ccdeee8bb348",
+      "bytes": 2184026,
+      "dimensions": [
+        1024,
+        1536
+      ],
+      "mode": "RGBA",
+      "alpha": {
+        "min": 0,
+        "max": 254,
+        "transparent_pixels": 612022,
+        "partial_pixels": 960842,
+        "opaque_pixels": 0
+      }
+    },
+    {
+      "path": "/workspace/scratch/dc054acd6888/elio-next/soft/prompt.txt",
+      "sha256": "a3beffb199a23158388c38ee986754b4b7e28a1c49689b1f33d861a820aa2542",
+      "bytes": 757
+    },
+    {
+      "path": "/workspace/scratch/dc054acd6888/elio-next/soft/soft.png",
+      "sha256": "283384855ee731cefc8663667e47515305977eba3a94bba8e010a9f044d509da",
+      "bytes": 2101409,
+      "dimensions": [
+        1024,
+        1536
+      ],
+      "mode": "RGBA",
+      "alpha": {
+        "min": 0,
+        "max": 254,
+        "transparent_pixels": 611736,
+        "partial_pixels": 961128,
+        "opaque_pixels": 0
+      }
+    },
+    {
+      "path": "/workspace/scratch/dc054acd6888/elio-next/soft/thumbnails/attempt-01-256x384.png",
+      "sha256": "94d9b2e7abe15cd1dc82e4ed3fa28d2249f067d4f99cbcba27e00fcaf657991a",
+      "bytes": 148760,
+      "dimensions": [
+        256,
+        384
+      ],
+      "mode": "RGBA",
+      "alpha": {
+        "min": 0,
+        "max": 255,
+        "transparent_pixels": 37328,
+        "partial_pixels": 60241,
+        "opaque_pixels": 735
+      }
+    },
+    {
+      "path": "/workspace/scratch/dc054acd6888/elio-next/soft/thumbnails/reference-256x384.png",
+      "sha256": "215d5b94825928064d2b60f6a039c8c225976c108b09ea25c1f14412d5cfd295",
+      "bytes": 147923,
+      "dimensions": [
+        256,
+        384
+      ],
+      "mode": "RGBA",
+      "alpha": {
+        "min": 0,
+        "max": 255,
+        "transparent_pixels": 37492,
+        "partial_pixels": 60083,
+        "opaque_pixels": 729
+      }
+    },
+    {
+      "path": "/workspace/scratch/dc054acd6888/elio-next/soft/thumbnails/soft-256x384.png",
+      "sha256": "94d9b2e7abe15cd1dc82e4ed3fa28d2249f067d4f99cbcba27e00fcaf657991a",
+      "bytes": 148760,
+      "dimensions": [
+        256,
+        384
+      ],
+      "mode": "RGBA",
+      "alpha": {
+        "min": 0,
+        "max": 255,
+        "transparent_pixels": 37328,
+        "partial_pixels": 60241,
+        "opaque_pixels": 735
+      }
+    }
+  ]
+}

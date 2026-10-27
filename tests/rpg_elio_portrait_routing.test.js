@@ -29,16 +29,16 @@ const reactions=battle.module.exports;
 const paths=(...args)=>Array.from(reactions.assetCandidates(...args));
 
 test('scene uses only approved Elio expressions and canonical neutral',()=>{
- for(const [emotion,name] of [['happy','happy'],['smile','happy'],['surprised','surprised']]){
+ for(const [emotion,name] of [['happy','happy'],['smile','happy'],['surprised','surprised'],['soft','soft'],['vulnerable','soft'],['concerned','concerned'],['worried','concerned'],['irritated','concerned']]){
   assert.deepEqual(Array.from(scene.portraitPaths('elio',emotion)),[portrait(name),neutral]);
  }
- for(const emotion of ['neutral','worried','soft','concerned','vulnerable','irritated','determined','angry','unknown']){
+ for(const emotion of ['neutral','determined','angry','unknown']){
   assert.deepEqual(Array.from(scene.portraitPaths('elio',emotion)),[neutral],emotion);
  }
  assert.equal(scene.scenePortraitSource('elio'),neutral);
 });
 test('scene missing expression falls back to canonical neutral',()=>{
- for(const name of ['happy','surprised']){
+ for(const name of ['happy','surprised','soft','concerned']){
   failedScenePortraits.clear();
   assert.equal(scene.scenePortraitSource('elio',name),portrait(name));
   failedScenePortraits.add(portrait(name));
@@ -53,10 +53,10 @@ test('battle routes approved expressions without legacy or female fallback candi
  for(const kind of ['play_card','evolve','power','ko_scored']){
   assert.deepEqual(paths(manifest,'elio',kind),[portrait('happy'),neutral]);
  }
- for(const kind of ['hurt','big_hit','weakness_hit','status_hit']){
+ for(const kind of ['hurt','big_hit','weakness_hit']){
   assert.deepEqual(paths(manifest,'elio',kind),[portrait('surprised'),neutral]);
  }
- for(const kind of ['default','attack','ko_taken','worried','soft','unknown']){
+ for(const kind of ['default','attack','worried','soft','unknown']){
   assert.deepEqual(paths(manifest,'elio',kind),[neutral],kind);
  }
 });
@@ -86,3 +86,6 @@ test('PNG and WebP expressions receive expression framing; attack retains wide f
  vm.runInContext(sceneSource.slice(stageStart,stageEnd),scene);
  for(const emotion of ["happy","surprised","neutral"]){const expected=Array.from(scene.portraitPaths("elio",emotion));assert.deepEqual(Array.from(scene.personaCStageCandidates("elio",emotion,expected)),expected);}
  });
+
+
+test("battle concern uses reviewed portrait",()=>{for(const kind of ["status_hit","ko_taken"])assert.deepEqual(paths({},"elio",kind),[portrait("concerned"),neutral]);});
