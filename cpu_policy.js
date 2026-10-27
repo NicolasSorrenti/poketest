@@ -767,30 +767,30 @@ function energyHorizonBonus(action,o,cfg){
 // facing a likely knockout before its next attack. A useful Bench investment
 // preserves tempo, but never override an attack unlocked now or an attachment
 // that enables retreat. No opponent hand or future draw is inspected.
-function doomedActiveAttachmentPenalty(o,energyId,cfg){
- if(cfg.level<7||o.phase!=='game'||!o.self.active||!o.opponent.active||
-    o.self.energyUsed||!o.self.bench?.length)return 0;
+// A forced attachment is not productive when the Active is about to be KO'd,
+// gains no attack this turn, and cannot escape using that Energy. Keep this
+// independent of Bench availability: holding the Energy is also an option.
+function strandedActiveEnergy(o,energyId){
  const active=o.self.active,enemy=o.opponent.active,energy=card(energyId);
- if(!isEnergy(energy)||['Asleep','Paralyzed'].includes(enemy.status))return 0;
- const incoming=(enemy.effectiveAttacks||card(enemy.id)?.attacks||[]);
- // A printed knockout is not a threat when its attack is publicly locked
- // (Amnesia, Gym cooldown or once-per-turn restriction). Apply the same
- // visible attack-legality check used by opponent-response planning.
+ if(!active||!enemy||!isEnergy(energy)||['Asleep','Paralyzed'].includes(enemy.status))return false;
+ const incoming=enemy.effectiveAttacks||card(enemy.id)?.attacks||[];
+ // Only publicly usable opposing attacks count (Amnesia, cooldown, once-use).
  const fromEnemy={...o,self:o.opponent,opponent:o.self};
- const threatened=incoming.some((a,i)=>
-  eligibleAttack(fromEnemy,enemy,a,i)&&
-  knockoutChance(a,enemy,active)>=.75);
- if(!threatened)return 0;
+ if(!incoming.some((a,i)=>eligibleAttack(fromEnemy,enemy,a,i)&&
+    knockoutChance(a,enemy,active)>=.75))return false;
  const after={...active,energies:[...(active.energies||[]),energyId]};
- // Preserve attachments only when they increase an attack actually available this turn.
  if(projectedAttackValue(after,enemy,o.turnSerial)>
-    projectedAttackValue(active,enemy,o.turnSerial))return 0;
+    projectedAttackValue(active,enemy,o.turnSerial))return false;
  const retreat=card(active.id)?.retreatCost||[];
- // An Energy that covers retreat cost is not an escape route when the
- // Pokémon cannot retreat this turn (status or already-retreated limit).
  if(!o.self.retreated&&!['Asleep','Paralyzed'].includes(active.status)&&
     retreat.length&&!canPayEnergy(retreat,energyPool(active))&&
-    canPayEnergy(retreat,energyPool(after)))return 0;
+    canPayEnergy(retreat,energyPool(after)))return false;
+ return true;
+}
+function doomedActiveAttachmentPenalty(o,energyId,cfg){
+ if(cfg.level<7||o.phase!=='game'||!o.self.active||!o.opponent.active||
+    o.self.energyUsed||!o.self.bench?.length||!strandedActiveEnergy(o,energyId))return 0;
+ const energy=card(energyId);
  const usefulBench=o.self.bench.some(unit=>
   !(unit.energyAttachBlockSerial>o.turnSerial)&&
   legalAttachment({card:energy,unit,round:o.round,cardName:card(unit.id)?.name||''})&&
@@ -1150,8 +1150,16 @@ function energyPreparationActions(o,cfg,actions){
  // Attacking ends the turn. Use a legal, productive Energy attachment first,
  // unless an already-affordable attack guarantees the final knockout.
  if(cfg.level!==8||o.self.energyUsed)return actions;
- const useful=actions.some(a=>a.type==='attach_energy'&&
-  energyValue(slotUnit(o.self,a.payload.slot),o.self.hand[a.payload.handIndex])>12);
+ const canAttackNow=actions.some(a=>a.type==='attack');
+ const useful=actions.some(a=>{
+  if(a.type!=='attach_energy'||energyValue(slotUnit(o.self,a.payload.slot),
+    o.self.hand[a.payload.handIndex])<=12)return false;
+  // Do not suppress an already-legal attack just to spend the only Energy on
+  // an Active that will be KO'd before that Energy helps. A legal Bench
+  // attachment or immediate attack upgrade still gets prepared first.
+  return !(canAttackNow&&a.payload.slot===-1&&
+   strandedActiveEnergy(o,o.self.hand[a.payload.handIndex]));
+ });
  if(!useful)return actions;
  const gameWinningKo=(o.self.prizeCount<=1||o.opponent.bench.length===0)&&
   actions.some(a=>{
