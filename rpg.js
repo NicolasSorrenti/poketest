@@ -2365,7 +2365,7 @@ function render(){
     !!state.activeSliceOfLife||!!state.activeSituation||!!state.activeStory||
     !!state.activeEncounter||!!state.activeArc||!!state.activeSideQuest||
     !!state.pendingDuel;
-   window.NeoOutfitChime?.onEntry({characters:snapshots,blocked,sceneId:activeOutfitSceneId});
+   if(typeof NeoOutfitChime!=='undefined')NeoOutfitChime.onEntry({characters:snapshots,blocked,sceneId:activeOutfitSceneId});
   },900);
  }
  renderJourney();
