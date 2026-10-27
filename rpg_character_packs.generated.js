@@ -3,493 +3,6 @@
 (function(root,factory){const api=factory();if(typeof module==='object'&&module.exports)module.exports=api;if(root)root.NeoRpgCharacterPacks=api;})(typeof window!=='undefined'?window:null,function(){
 const packs=[
  {
- "id": "daisy",
- "cast": {
-  "name": "Daisy",
-  "age": 20,
-  "deck": "water_blast",
-  "style": "Water tempo · patient setup and daring reversals",
-  "intro": "Oh, you're the new challenger? You were staring at the wrong side of the card, cariño. The interesting part is what I do next. I'm Daisy.",
-  "repeat": "There you are. Are we playing cards, trading rumors, or pretending we didn't plan to run into each other?",
-  "flirt": "If that's your opening move, I'm curious what you've been saving for the late game.",
-  "duelWin": "Okay, that was good. I was trying not to look impressed. Clearly failed.",
-  "duelLose": "That grin? Keep it. I earned this one.",
-  "talk": [
-   "A sheer skirt and a secret strategy have something in common: everyone thinks they've seen the whole thing.",
-   "I like the café after sunset. The windows make everyone look like the main character in a music video.",
-   "No, I don't dress for duels. I dress for myself. Winning just matches the outfit.",
-   "My tattoos? The lotus is about growing through things. The three stars are for people who saw me before I knew how.",
-   "People hear a joke and think you aren't serious. Let them. Then show them the score.",
-   "When I want to disappear, it's oversized hoodie, baggy trousers and headphones. Total incognito mode.",
-   "There's this half-second before someone draws the last Prize where I can hear the whole room go quiet.",
-   "I can admit I was wrong. I just prefer to do it with a dramatic entrance.",
-   "If I look confident, it means I decided not to wait for permission.",
-   "My glasses aren't a disguise. They just make it easier to stare at a tiny card and pretend I'm studying."
-  ],
-  "hangouts": [
-   "Daisy holds two translucent skirt layers against the window and asks which moves better when she walks.",
-   "You browse the arcade together. Daisy critiques the neon lighting with alarming precision.",
-   "At the café, Daisy draws a flower on your napkin and explains why she likes things that grow crooked.",
-   "You test a new deck at the card shop while Daisy makes outrageous predictions and keeps an honest score.",
-   "The two of you walk through the park after a summer rain; Daisy trades jokes for a rare quiet moment.",
-   "Daisy tries on an enormous hoodie for a low-key day and laughs when you almost don't recognize her."
-  ],
-  "portrait": "/rpg-assets/characters/daisy/portraits/primary.png"
- },
- "looks": {
-  "silhouette": "Adult Argentine woman, 20 years old, 167 cm, feminine and curvy with natural proportions, defined waist and soft hips. Long dark hair with straight bangs and half-up ponytail.",
-  "palette": "Near-black hair, warm olive skin, deep brown eyes, vivid raspberry lipstick, black lace, burgundy translucent mesh, pink highlights and silver jewelry.",
-  "hair": "Long glossy near-black hair, neat full fringe, usually half-up ponytail, loose lengths reaching waist.",
-  "eyes": "Large expressive almond-shaped warm dark-brown eyes, crisp cat-eye black liner, dark upper lashes, delicate lower lashes and softly arched brows.",
-  "details": "Small nostril hoop, silver ear hoops; detailed floral and cartoon cat tattoos along arms and shoulders, three small stars near upper chest, crucial central lotus/flower tattoo between breasts with delicate stem continuing down the sternum, additional ornamental under-bust tattoo.",
-  "expressions": "Teasing half-lidded look, knowing smirk, open genuine smile, playful wink, sudden wide-eyed surprise, flustered sidelong glance, focused competitive stare and guarded tenderness.",
-  "outfits": [
-   "Signature: burgundy sheer long-sleeved top over opaque bralette, layered black translucent mini skirt over secure shorts/lining, black boots.",
-   "Evening: black lace transparent long-sleeved top over opaque black underlayer with matching lined sheer skirt and ankle boots.",
-   "Summer: thin translucent blouse with opaque underpinning, light flowing sheer skirt over visible lining, optional sunglasses.",
-   "Only when sporty or hiding: dramatically oversized baggy hoodie and very loose trousers; never fitted sporty/cargo pants in routine outfits."
-  ],
-  "renderNotes": "Approved Neo Campus polished modern anime/JRPG cel shading, mature adult face consistent with image references. Daisy always uses sheer/translucent tops with opaque underlayers and usually lined translucent skirts; sporty exception is deliberately huge baggy clothes. Preserve brown eye shape, straight bangs, central flower sternum tattoo, three stars, arm sleeves, piercings. Transparent portrait and cut-in PNG with no background; event CGs landscape scene background. No wardrobe cargo pants."
- },
- "schedule": [
-  [
-   "cafe",
-   "shop",
-   "arcade"
-  ],
-  [
-   "home",
-   "shop",
-   "cafe"
-  ],
-  [
-   "cafe",
-   "center",
-   "arcade"
-  ],
-  [
-   "home",
-   "shop",
-   "park"
-  ],
-  [
-   "cafe",
-   "shop",
-   "cafe"
-  ],
-  [
-   "shop",
-   "center",
-   "arcade"
-  ],
-  [
-   "home",
-   "park",
-   "cafe"
-  ]
- ],
- "arrivalDay": 9,
- "events": [
-  {
-   "id": "daisy_route_1",
-   "npc": "daisy",
-   "title": "The Trouble With First Impressions",
-   "start": 9,
-   "end": 25,
-   "place": "shop",
-   "slot": 1,
-   "minBond": 0,
-   "prerequisite": null,
-   "participants": [],
-   "lines": [
-    {
-     "speaker": "daisy",
-     "text": "That's my table. You're welcome to share it, unless you're going to shuffle like a lawn mower."
-    },
-    {
-     "speaker": "Protagonist",
-     "text": "I was about to say the same about your deck sleeves."
-    },
-    {
-     "speaker": "daisy",
-     "text": "Oh, so you do have a personality. Good. I was worried I'd have to supply both sides of the conversation."
-    },
-    {
-     "speaker": "Protagonist",
-     "text": "You always test new people like this?"
-    },
-    {
-     "speaker": "daisy",
-     "text": "Only the ones who look like they might actually surprise me. One game. No spectators. Deal?"
-    },
-    {
-     "speaker": "Protagonist",
-     "text": "And if I win?"
-    },
-    {
-     "speaker": "daisy",
-     "text": "Then you get to choose our rematch location. If I win, you stop pretending you're not curious."
-    }
-   ],
-   "choices": [
-    {
-     "label": "Accept the match without bargaining",
-     "reply": "No hesitation. I like that. Now don't complain when I make you work for it.",
-     "kind": "honest",
-     "flag": "daisy_first_match",
-     "delta": {
-      "affection": 1,
-      "respect": 2,
-      "trust": 1
-     }
-    },
-    {
-     "label": "Ask what she gets out of testing strangers",
-     "reply": "Someone who can lose gracefully and win without being cruel. Your answer just earned you a point.",
-     "kind": "support",
-     "flag": "daisy_first_truth",
-     "delta": {
-      "trust": 2,
-      "respect": 2
-     }
-    },
-    {
-     "label": "Say you'd have come over even without the challenge",
-     "reply": "Bold answer. I was hoping you'd say it, but don't let that distract you from your opening hand.",
-     "kind": "flirt",
-     "flag": "daisy_first_flirt",
-     "delta": {
-      "affection": 2,
-      "attraction": 2
-     }
-    }
-   ]
-  },
-  {
-   "id": "daisy_route_2",
-   "npc": "daisy",
-   "title": "Layers",
-   "start": 28,
-   "end": 43,
-   "place": "cafe",
-   "slot": 2,
-   "minBond": 2,
-   "prerequisite": "daisy_route_1",
-   "participants": [],
-   "lines": [
-    {
-     "speaker": "daisy",
-     "text": "I brought two sketches, and before you ask, they aren't new deck boxes."
-    },
-    {
-     "speaker": "Protagonist",
-     "text": "You asked me here to judge outfits?"
-    },
-    {
-     "speaker": "daisy",
-     "text": "I asked you here because you'll tell me if something doesn't work. Most people just say 'pretty' and stop looking."
-    },
-    {
-     "speaker": "Protagonist",
-     "text": "The burgundy fabric is almost transparent."
-    },
-    {
-     "speaker": "daisy",
-     "text": "That's why it has a lining. There's a difference between showing your style and leaving everything to chance."
-    },
-    {
-     "speaker": "daisy",
-     "text": "Here—hold this edge up to the window. See how the color changes?"
-    },
-    {
-     "speaker": "Protagonist",
-     "text": "I see why you wanted a second pair of eyes."
-    },
-    {
-     "speaker": "daisy",
-     "text": "And maybe I wanted an excuse to see you without a card table between us. Don't get a big head."
-    }
-   ],
-   "choices": [
-    {
-     "label": "Point out the way the lining makes the color warmer",
-     "reply": "You actually looked. That's worth more than a hundred automatic compliments.",
-     "kind": "support",
-     "flag": "daisy_layers_detail",
-     "delta": {
-      "trust": 2,
-      "respect": 2
-     }
-    },
-    {
-     "label": "Admit you're not an expert but offer to help test the fabric",
-     "reply": "Perfect. Honest and useful. A dangerous combination.",
-     "kind": "honest",
-     "flag": "daisy_layers_help",
-     "delta": {
-      "affection": 2,
-      "trust": 2
-     }
-    },
-    {
-     "label": "Tell her the clothes are great, but she steals the scene",
-     "reply": "Careful. Keep saying things like that and I'll start thinking you mean them.",
-     "kind": "flirt",
-     "flag": "daisy_layers_spark",
-     "delta": {
-      "affection": 2,
-      "attraction": 2
-     }
-    }
-   ]
-  },
-  {
-   "id": "daisy_route_3",
-   "npc": "daisy",
-   "title": "The Girl Behind the Glasses",
-   "start": 46,
-   "end": 62,
-   "place": "arcade",
-   "slot": 2,
-   "minBond": 3,
-   "prerequisite": "daisy_route_2",
-   "participants": [],
-   "lines": [
-    {
-     "speaker": "daisy",
-     "text": "Don't laugh. This hoodie could fit two of me. That's the point."
-    },
-    {
-     "speaker": "Protagonist",
-     "text": "I almost didn't recognize you."
-    },
-    {
-     "speaker": "daisy",
-     "text": "Exactly. Sometimes I like being a person nobody notices."
-    },
-    {
-     "speaker": "Protagonist",
-     "text": "Something happened?"
-    },
-    {
-     "speaker": "daisy",
-     "text": "A stranger photographed me without asking and posted it around town. Everyone had a theory about who I was. Nobody thought to ask."
-    },
-    {
-     "speaker": "Protagonist",
-     "text": "That sounds exhausting."
-    },
-    {
-     "speaker": "daisy",
-     "text": "I can dress boldly and still want boundaries. Both can be true."
-    },
-    {
-     "speaker": "Protagonist",
-     "text": "Do you want me to do something?"
-    },
-    {
-     "speaker": "daisy",
-     "text": "Just stay here a minute. And maybe beat me at this game so I can complain about something normal."
-    }
-   ],
-   "choices": [
-    {
-     "label": "Let her decide whether to report the photo",
-     "reply": "Thank you. I needed a choice that was mine for a change.",
-     "kind": "support",
-     "flag": "daisy_hoodie_control",
-     "delta": {
-      "trust": 3,
-      "affection": 1
-     }
-    },
-    {
-     "label": "Ask what would make her feel comfortable tonight",
-     "reply": "This. Not having to perform. Maybe one more round.",
-     "kind": "honest",
-     "flag": "daisy_hoodie_listen",
-     "delta": {
-      "trust": 2,
-      "respect": 2
-     }
-    },
-    {
-     "label": "Challenge her to the arcade machine, no questions asked",
-     "reply": "There you are. My favorite kind of distraction: one that actually understands the assignment.",
-     "kind": "flirt",
-     "flag": "daisy_hoodie_game",
-     "delta": {
-      "affection": 2,
-      "attraction": 1,
-      "trust": 1
-     }
-    }
-   ]
-  },
-  {
-   "id": "daisy_route_4",
-   "npc": "daisy",
-   "title": "A Flower That Kept Growing",
-   "start": 65,
-   "end": 82,
-   "place": "park",
-   "slot": 2,
-   "minBond": 4,
-   "prerequisite": "daisy_route_3",
-   "participants": [],
-   "lines": [
-    {
-     "speaker": "daisy",
-     "text": "Do you remember asking me about the flower tattoo?"
-    },
-    {
-     "speaker": "Protagonist",
-     "text": "The one in the middle of your chest?"
-    },
-    {
-     "speaker": "daisy",
-     "text": "Yeah. I got it after a year when I thought nothing would feel steady again. It's a lotus—messy roots, beautiful bloom. Very dramatic. Very me."
-    },
-    {
-     "speaker": "Protagonist",
-     "text": "And the stars?"
-    },
-    {
-     "speaker": "daisy",
-     "text": "People who stayed when I was hard to be around. I don't give everyone that story."
-    },
-    {
-     "speaker": "Protagonist",
-     "text": "Why tell me now?"
-    },
-    {
-     "speaker": "daisy",
-     "text": "Because you stopped trying to guess who I am from what I wear. You kept showing up for the actual person."
-    },
-    {
-     "speaker": "Protagonist",
-     "text": "I'm glad you told me."
-    },
-    {
-     "speaker": "daisy",
-     "text": "So am I. I was going to make a joke to escape the moment. I think I'll stay in it a little longer."
-    }
-   ],
-   "choices": [
-    {
-     "label": "Tell her she never owes you an explanation",
-     "reply": "Good. Then I can tell you things because I want to, not because I have to.",
-     "kind": "support",
-     "flag": "daisy_lotus_trust",
-     "delta": {
-      "trust": 3,
-      "affection": 1
-     }
-    },
-    {
-     "label": "Share a time you had to start over too",
-     "reply": "That sounded difficult to say. Thank you for trusting me with it.",
-     "kind": "honest",
-     "flag": "daisy_lotus_mutual",
-     "delta": {
-      "trust": 2,
-      "respect": 1,
-      "affection": 2
-     }
-    },
-    {
-     "label": "Ask whether you can hold her hand",
-     "reply": "Yes. Just... don't turn it into a victory pose, okay?",
-     "kind": "flirt",
-     "flag": "daisy_lotus_hand",
-     "delta": {
-      "affection": 2,
-      "trust": 1,
-      "attraction": 2
-     }
-    }
-   ]
-  }
- ],
- "mandatoryEvents": [],
- "art": {
-  "schemaVersion": 1,
-  "characterId": "daisy",
-  "portrait": "/rpg-assets/characters/daisy/portraits/primary.png",
-  "expressions": {
-   "neutral": "/rpg-assets/characters/daisy/expression-portraits/neutral.png",
-   "happy": "/rpg-assets/characters/daisy/expression-portraits/happy.png",
-   "flirty": "/rpg-assets/characters/daisy/expression-portraits/flirty.png",
-   "surprised": "/rpg-assets/characters/daisy/expression-portraits/surprised.png",
-   "concerned": "/rpg-assets/characters/daisy/expression-portraits/concerned.png",
-   "angry": "/rpg-assets/characters/daisy/expression-portraits/angry.png",
-   "embarrassed": "/rpg-assets/characters/daisy/expression-portraits/embarrassed.png",
-   "determined": "/rpg-assets/characters/daisy/expression-portraits/determined.png"
-  },
-  "outfits": {
-   "default": "signature",
-   "variants": {
-    "signature": {
-     "portrait": "/rpg-assets/characters/daisy/portraits/primary.png"
-    },
-    "evening": {
-     "portrait": "/rpg-assets/characters/daisy/outfits/evening/neutral.png"
-    },
-    "sporty": {
-     "portrait": "/rpg-assets/characters/daisy/outfits/sporty/neutral.png"
-    }
-   },
-   "rules": [
-    {
-     "outfit": "evening",
-     "locations": [
-      "cafe"
-     ],
-     "slots": [
-      2
-     ]
-    },
-    {
-     "outfit": "sporty",
-     "locations": [
-      "arcade"
-     ],
-     "slots": [
-      2
-     ],
-     "startDay": 46,
-     "endDay": 62
-    }
-   ],
-   "sceneOverrides": {
-    "daisy_route_3": "sporty"
-   }
-  },
-  "eventImages": [
-   {
-    "sceneId": "daisy_route_1",
-    "path": "/rpg-assets/events/cg/season01/daisy_route_1.png",
-    "prompt": "Daisy at a card shop table with the newcomer, burgundy mesh top with opaque underlayer and lined sheer black skirt, nose hoop, accurate sleeve tattoos and center lotus sternum tattoo; playful over-the-shoulder close-up across scattered cards, energetic cinematic anime 16:9, bottom dialogue-safe composition."
-   },
-   {
-    "sceneId": "daisy_route_2",
-    "path": "/rpg-assets/events/cg/season01/daisy_route_2.png",
-    "prompt": "Daisy at a sunset café window comparing sheer burgundy and black skirt fabrics with the protagonist; warm backlit translucent fabrics over opaque linings, concentrated eyes and near-touching hands, elegant intimate close-up and full-scene version, tattoo accuracy, SFW JRPG CG 16:9."
-   },
-   {
-    "sceneId": "daisy_route_3",
-    "path": "/rpg-assets/events/cg/season01/daisy_route_3.png",
-    "prompt": "Daisy in a giant oversized charcoal hoodie and extremely loose trousers at a neon arcade, glasses slightly lowered, candid expression between bravado and relief as protagonist sits beside her; intimate waist-up cut-in within landscape CG, no posing for camera, 16:9."
-   },
-   {
-    "sceneId": "daisy_route_4",
-    "path": "/rpg-assets/events/cg/season01/daisy_route_4.png",
-    "prompt": "Night park scene. Daisy wearing burgundy sheer long-sleeved top and lined black translucent skirt, hair gently moving, softly lit chest lotus/flower tattoo and three little stars visible; quiet vulnerable near-handholding moment with protagonist, cinematic close-up, 16:9 anime VN."
-   }
-  ]
- }
-},
- {
   "id": "barb",
   "cast": {
    "name": "Barb",
@@ -2364,6 +1877,493 @@ const packs=[
     "vulnerable": "/rpg-assets/characters/barb/expression-portraits/soft.png",
     "irritated": "/rpg-assets/characters/barb/expression-portraits/concerned.png"
    }
+  }
+ },
+ {
+  "id": "daisy",
+  "cast": {
+   "name": "Daisy",
+   "age": 20,
+   "deck": "water_blast",
+   "style": "Water tempo · patient setup and daring reversals",
+   "intro": "Oh, you're the new challenger? You were staring at the wrong side of the card, cariño. The interesting part is what I do next. I'm Daisy.",
+   "repeat": "There you are. Are we playing cards, trading rumors, or pretending we didn't plan to run into each other?",
+   "flirt": "If that's your opening move, I'm curious what you've been saving for the late game.",
+   "duelWin": "Okay, that was good. I was trying not to look impressed. Clearly failed.",
+   "duelLose": "That grin? Keep it. I earned this one.",
+   "talk": [
+    "A sheer skirt and a secret strategy have something in common: everyone thinks they've seen the whole thing.",
+    "I like the café after sunset. The windows make everyone look like the main character in a music video.",
+    "No, I don't dress for duels. I dress for myself. Winning just matches the outfit.",
+    "My tattoos? The lotus is about growing through things. The three stars are for people who saw me before I knew how.",
+    "People hear a joke and think you aren't serious. Let them. Then show them the score.",
+    "When I want to disappear, it's oversized hoodie, baggy trousers and headphones. Total incognito mode.",
+    "There's this half-second before someone draws the last Prize where I can hear the whole room go quiet.",
+    "I can admit I was wrong. I just prefer to do it with a dramatic entrance.",
+    "If I look confident, it means I decided not to wait for permission.",
+    "My glasses aren't a disguise. They just make it easier to stare at a tiny card and pretend I'm studying."
+   ],
+   "hangouts": [
+    "Daisy holds two translucent skirt layers against the window and asks which moves better when she walks.",
+    "You browse the arcade together. Daisy critiques the neon lighting with alarming precision.",
+    "At the café, Daisy draws a flower on your napkin and explains why she likes things that grow crooked.",
+    "You test a new deck at the card shop while Daisy makes outrageous predictions and keeps an honest score.",
+    "The two of you walk through the park after a summer rain; Daisy trades jokes for a rare quiet moment.",
+    "Daisy tries on an enormous hoodie for a low-key day and laughs when you almost don't recognize her."
+   ],
+   "portrait": "/rpg-assets/characters/daisy/portraits/primary.png"
+  },
+  "looks": {
+   "silhouette": "Adult Argentine woman, 20 years old, 167 cm, feminine and curvy with natural proportions, defined waist and soft hips. Long dark hair with straight bangs and half-up ponytail.",
+   "palette": "Near-black hair, warm olive skin, deep brown eyes, vivid raspberry lipstick, black lace, burgundy translucent mesh, pink highlights and silver jewelry.",
+   "hair": "Long glossy near-black hair, neat full fringe, usually half-up ponytail, loose lengths reaching waist.",
+   "eyes": "Large expressive almond-shaped warm dark-brown eyes, crisp cat-eye black liner, dark upper lashes, delicate lower lashes and softly arched brows.",
+   "details": "Small nostril hoop, silver ear hoops; detailed floral and cartoon cat tattoos along arms and shoulders, three small stars near upper chest, crucial central lotus/flower tattoo between breasts with delicate stem continuing down the sternum, additional ornamental under-bust tattoo.",
+   "expressions": "Teasing half-lidded look, knowing smirk, open genuine smile, playful wink, sudden wide-eyed surprise, flustered sidelong glance, focused competitive stare and guarded tenderness.",
+   "outfits": [
+    "Signature: burgundy sheer long-sleeved top over opaque bralette, layered black translucent mini skirt over secure shorts/lining, black boots.",
+    "Evening: black lace transparent long-sleeved top over opaque black underlayer with matching lined sheer skirt and ankle boots.",
+    "Summer: thin translucent blouse with opaque underpinning, light flowing sheer skirt over visible lining, optional sunglasses.",
+    "Only when sporty or hiding: dramatically oversized baggy hoodie and very loose trousers; never fitted sporty/cargo pants in routine outfits."
+   ],
+   "renderNotes": "Approved Neo Campus polished modern anime/JRPG cel shading, mature adult face consistent with image references. Daisy always uses sheer/translucent tops with opaque underlayers and usually lined translucent skirts; sporty exception is deliberately huge baggy clothes. Preserve brown eye shape, straight bangs, central flower sternum tattoo, three stars, arm sleeves, piercings. Transparent portrait and cut-in PNG with no background; event CGs landscape scene background. No wardrobe cargo pants."
+  },
+  "schedule": [
+   [
+    "cafe",
+    "shop",
+    "arcade"
+   ],
+   [
+    "home",
+    "shop",
+    "cafe"
+   ],
+   [
+    "cafe",
+    "center",
+    "arcade"
+   ],
+   [
+    "home",
+    "shop",
+    "park"
+   ],
+   [
+    "cafe",
+    "shop",
+    "cafe"
+   ],
+   [
+    "shop",
+    "center",
+    "arcade"
+   ],
+   [
+    "home",
+    "park",
+    "cafe"
+   ]
+  ],
+  "arrivalDay": 9,
+  "events": [
+   {
+    "id": "daisy_route_1",
+    "npc": "daisy",
+    "title": "The Trouble With First Impressions",
+    "start": 9,
+    "end": 25,
+    "place": "shop",
+    "slot": 1,
+    "minBond": 0,
+    "prerequisite": null,
+    "participants": [],
+    "lines": [
+     {
+      "speaker": "daisy",
+      "text": "That's my table. You're welcome to share it, unless you're going to shuffle like a lawn mower."
+     },
+     {
+      "speaker": "Protagonist",
+      "text": "I was about to say the same about your deck sleeves."
+     },
+     {
+      "speaker": "daisy",
+      "text": "Oh, so you do have a personality. Good. I was worried I'd have to supply both sides of the conversation."
+     },
+     {
+      "speaker": "Protagonist",
+      "text": "You always test new people like this?"
+     },
+     {
+      "speaker": "daisy",
+      "text": "Only the ones who look like they might actually surprise me. One game. No spectators. Deal?"
+     },
+     {
+      "speaker": "Protagonist",
+      "text": "And if I win?"
+     },
+     {
+      "speaker": "daisy",
+      "text": "Then you get to choose our rematch location. If I win, you stop pretending you're not curious."
+     }
+    ],
+    "choices": [
+     {
+      "label": "Accept the match without bargaining",
+      "reply": "No hesitation. I like that. Now don't complain when I make you work for it.",
+      "kind": "honest",
+      "flag": "daisy_first_match",
+      "delta": {
+       "affection": 1,
+       "respect": 2,
+       "trust": 1
+      }
+     },
+     {
+      "label": "Ask what she gets out of testing strangers",
+      "reply": "Someone who can lose gracefully and win without being cruel. Your answer just earned you a point.",
+      "kind": "support",
+      "flag": "daisy_first_truth",
+      "delta": {
+       "trust": 2,
+       "respect": 2
+      }
+     },
+     {
+      "label": "Say you'd have come over even without the challenge",
+      "reply": "Bold answer. I was hoping you'd say it, but don't let that distract you from your opening hand.",
+      "kind": "flirt",
+      "flag": "daisy_first_flirt",
+      "delta": {
+       "affection": 2,
+       "attraction": 2
+      }
+     }
+    ]
+   },
+   {
+    "id": "daisy_route_2",
+    "npc": "daisy",
+    "title": "Layers",
+    "start": 28,
+    "end": 43,
+    "place": "cafe",
+    "slot": 2,
+    "minBond": 2,
+    "prerequisite": "daisy_route_1",
+    "participants": [],
+    "lines": [
+     {
+      "speaker": "daisy",
+      "text": "I brought two sketches, and before you ask, they aren't new deck boxes."
+     },
+     {
+      "speaker": "Protagonist",
+      "text": "You asked me here to judge outfits?"
+     },
+     {
+      "speaker": "daisy",
+      "text": "I asked you here because you'll tell me if something doesn't work. Most people just say 'pretty' and stop looking."
+     },
+     {
+      "speaker": "Protagonist",
+      "text": "The burgundy fabric is almost transparent."
+     },
+     {
+      "speaker": "daisy",
+      "text": "That's why it has a lining. There's a difference between showing your style and leaving everything to chance."
+     },
+     {
+      "speaker": "daisy",
+      "text": "Here—hold this edge up to the window. See how the color changes?"
+     },
+     {
+      "speaker": "Protagonist",
+      "text": "I see why you wanted a second pair of eyes."
+     },
+     {
+      "speaker": "daisy",
+      "text": "And maybe I wanted an excuse to see you without a card table between us. Don't get a big head."
+     }
+    ],
+    "choices": [
+     {
+      "label": "Point out the way the lining makes the color warmer",
+      "reply": "You actually looked. That's worth more than a hundred automatic compliments.",
+      "kind": "support",
+      "flag": "daisy_layers_detail",
+      "delta": {
+       "trust": 2,
+       "respect": 2
+      }
+     },
+     {
+      "label": "Admit you're not an expert but offer to help test the fabric",
+      "reply": "Perfect. Honest and useful. A dangerous combination.",
+      "kind": "honest",
+      "flag": "daisy_layers_help",
+      "delta": {
+       "affection": 2,
+       "trust": 2
+      }
+     },
+     {
+      "label": "Tell her the clothes are great, but she steals the scene",
+      "reply": "Careful. Keep saying things like that and I'll start thinking you mean them.",
+      "kind": "flirt",
+      "flag": "daisy_layers_spark",
+      "delta": {
+       "affection": 2,
+       "attraction": 2
+      }
+     }
+    ]
+   },
+   {
+    "id": "daisy_route_3",
+    "npc": "daisy",
+    "title": "The Girl Behind the Glasses",
+    "start": 46,
+    "end": 62,
+    "place": "arcade",
+    "slot": 2,
+    "minBond": 3,
+    "prerequisite": "daisy_route_2",
+    "participants": [],
+    "lines": [
+     {
+      "speaker": "daisy",
+      "text": "Don't laugh. This hoodie could fit two of me. That's the point."
+     },
+     {
+      "speaker": "Protagonist",
+      "text": "I almost didn't recognize you."
+     },
+     {
+      "speaker": "daisy",
+      "text": "Exactly. Sometimes I like being a person nobody notices."
+     },
+     {
+      "speaker": "Protagonist",
+      "text": "Something happened?"
+     },
+     {
+      "speaker": "daisy",
+      "text": "A stranger photographed me without asking and posted it around town. Everyone had a theory about who I was. Nobody thought to ask."
+     },
+     {
+      "speaker": "Protagonist",
+      "text": "That sounds exhausting."
+     },
+     {
+      "speaker": "daisy",
+      "text": "I can dress boldly and still want boundaries. Both can be true."
+     },
+     {
+      "speaker": "Protagonist",
+      "text": "Do you want me to do something?"
+     },
+     {
+      "speaker": "daisy",
+      "text": "Just stay here a minute. And maybe beat me at this game so I can complain about something normal."
+     }
+    ],
+    "choices": [
+     {
+      "label": "Let her decide whether to report the photo",
+      "reply": "Thank you. I needed a choice that was mine for a change.",
+      "kind": "support",
+      "flag": "daisy_hoodie_control",
+      "delta": {
+       "trust": 3,
+       "affection": 1
+      }
+     },
+     {
+      "label": "Ask what would make her feel comfortable tonight",
+      "reply": "This. Not having to perform. Maybe one more round.",
+      "kind": "honest",
+      "flag": "daisy_hoodie_listen",
+      "delta": {
+       "trust": 2,
+       "respect": 2
+      }
+     },
+     {
+      "label": "Challenge her to the arcade machine, no questions asked",
+      "reply": "There you are. My favorite kind of distraction: one that actually understands the assignment.",
+      "kind": "flirt",
+      "flag": "daisy_hoodie_game",
+      "delta": {
+       "affection": 2,
+       "attraction": 1,
+       "trust": 1
+      }
+     }
+    ]
+   },
+   {
+    "id": "daisy_route_4",
+    "npc": "daisy",
+    "title": "A Flower That Kept Growing",
+    "start": 65,
+    "end": 82,
+    "place": "park",
+    "slot": 2,
+    "minBond": 4,
+    "prerequisite": "daisy_route_3",
+    "participants": [],
+    "lines": [
+     {
+      "speaker": "daisy",
+      "text": "Do you remember asking me about the flower tattoo?"
+     },
+     {
+      "speaker": "Protagonist",
+      "text": "The one in the middle of your chest?"
+     },
+     {
+      "speaker": "daisy",
+      "text": "Yeah. I got it after a year when I thought nothing would feel steady again. It's a lotus—messy roots, beautiful bloom. Very dramatic. Very me."
+     },
+     {
+      "speaker": "Protagonist",
+      "text": "And the stars?"
+     },
+     {
+      "speaker": "daisy",
+      "text": "People who stayed when I was hard to be around. I don't give everyone that story."
+     },
+     {
+      "speaker": "Protagonist",
+      "text": "Why tell me now?"
+     },
+     {
+      "speaker": "daisy",
+      "text": "Because you stopped trying to guess who I am from what I wear. You kept showing up for the actual person."
+     },
+     {
+      "speaker": "Protagonist",
+      "text": "I'm glad you told me."
+     },
+     {
+      "speaker": "daisy",
+      "text": "So am I. I was going to make a joke to escape the moment. I think I'll stay in it a little longer."
+     }
+    ],
+    "choices": [
+     {
+      "label": "Tell her she never owes you an explanation",
+      "reply": "Good. Then I can tell you things because I want to, not because I have to.",
+      "kind": "support",
+      "flag": "daisy_lotus_trust",
+      "delta": {
+       "trust": 3,
+       "affection": 1
+      }
+     },
+     {
+      "label": "Share a time you had to start over too",
+      "reply": "That sounded difficult to say. Thank you for trusting me with it.",
+      "kind": "honest",
+      "flag": "daisy_lotus_mutual",
+      "delta": {
+       "trust": 2,
+       "respect": 1,
+       "affection": 2
+      }
+     },
+     {
+      "label": "Ask whether you can hold her hand",
+      "reply": "Yes. Just... don't turn it into a victory pose, okay?",
+      "kind": "flirt",
+      "flag": "daisy_lotus_hand",
+      "delta": {
+       "affection": 2,
+       "trust": 1,
+       "attraction": 2
+      }
+     }
+    ]
+   }
+  ],
+  "mandatoryEvents": [],
+  "art": {
+   "schemaVersion": 1,
+   "characterId": "daisy",
+   "portrait": "/rpg-assets/characters/daisy/portraits/primary.png",
+   "expressions": {
+    "neutral": "/rpg-assets/characters/daisy/expression-portraits/neutral.png",
+    "happy": "/rpg-assets/characters/daisy/expression-portraits/happy.png",
+    "flirty": "/rpg-assets/characters/daisy/expression-portraits/flirty.png",
+    "surprised": "/rpg-assets/characters/daisy/expression-portraits/surprised.png",
+    "concerned": "/rpg-assets/characters/daisy/expression-portraits/concerned.png",
+    "angry": "/rpg-assets/characters/daisy/expression-portraits/angry.png",
+    "embarrassed": "/rpg-assets/characters/daisy/expression-portraits/embarrassed.png",
+    "determined": "/rpg-assets/characters/daisy/expression-portraits/determined.png"
+   },
+   "outfits": {
+    "default": "signature",
+    "variants": {
+     "signature": {
+      "portrait": "/rpg-assets/characters/daisy/portraits/primary.png"
+     },
+     "evening": {
+      "portrait": "/rpg-assets/characters/daisy/outfits/evening/neutral.png"
+     },
+     "sporty": {
+      "portrait": "/rpg-assets/characters/daisy/outfits/sporty/neutral.png"
+     }
+    },
+    "rules": [
+     {
+      "outfit": "evening",
+      "locations": [
+       "cafe"
+      ],
+      "slots": [
+       2
+      ]
+     },
+     {
+      "outfit": "sporty",
+      "locations": [
+       "arcade"
+      ],
+      "slots": [
+       2
+      ],
+      "startDay": 46,
+      "endDay": 62
+     }
+    ],
+    "sceneOverrides": {
+     "daisy_route_3": "sporty"
+    }
+   },
+   "eventImages": [
+    {
+     "sceneId": "daisy_route_1",
+     "path": "/rpg-assets/events/cg/season01/daisy_route_1.png",
+     "prompt": "Daisy at a card shop table with the newcomer, burgundy mesh top with opaque underlayer and lined sheer black skirt, nose hoop, accurate sleeve tattoos and center lotus sternum tattoo; playful over-the-shoulder close-up across scattered cards, energetic cinematic anime 16:9, bottom dialogue-safe composition."
+    },
+    {
+     "sceneId": "daisy_route_2",
+     "path": "/rpg-assets/events/cg/season01/daisy_route_2.png",
+     "prompt": "Daisy at a sunset café window comparing sheer burgundy and black skirt fabrics with the protagonist; warm backlit translucent fabrics over opaque linings, concentrated eyes and near-touching hands, elegant intimate close-up and full-scene version, tattoo accuracy, SFW JRPG CG 16:9."
+    },
+    {
+     "sceneId": "daisy_route_3",
+     "path": "/rpg-assets/events/cg/season01/daisy_route_3.png",
+     "prompt": "Daisy in a giant oversized charcoal hoodie and extremely loose trousers at a neon arcade, glasses slightly lowered, candid expression between bravado and relief as protagonist sits beside her; intimate waist-up cut-in within landscape CG, no posing for camera, 16:9."
+    },
+    {
+     "sceneId": "daisy_route_4",
+     "path": "/rpg-assets/events/cg/season01/daisy_route_4.png",
+     "prompt": "Night park scene. Daisy wearing burgundy sheer long-sleeved top and lined black translucent skirt, hair gently moving, softly lit chest lotus/flower tattoo and three little stars visible; quiet vulnerable near-handholding moment with protagonist, cinematic close-up, 16:9 anime VN."
+    }
+   ]
   }
  },
  {
