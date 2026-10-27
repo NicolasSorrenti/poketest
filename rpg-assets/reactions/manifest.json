@@ -196,6 +196,10 @@
     "laca": {
       "default": "/rpg-assets/characters/laca/expression-portraits/neutral.webp",
       "attack": "/rpg-assets/characters/laca/expression-portraits/neutral.webp"
+    },
+    "daisy": {
+      "default": "/rpg-assets/characters/daisy/portraits/primary.png",
+      "attack": "/rpg-assets/reactions/daisy/attack.png"
     }
   }
 }

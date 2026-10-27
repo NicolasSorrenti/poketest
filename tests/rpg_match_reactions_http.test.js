@@ -35,9 +35,23 @@ const {server}=require('../server');
    assert.ok(body.length>100,path+' must have nonempty content');
   }
 
-  // Barb's match art must be both registered and available to the browser.
+  // Daisy's overworld portraits and attack art must be registered and served.
   const reactionManifestResponse=await fetch(origin+'/rpg-assets/reactions/manifest.json');
   const reactionManifest=await reactionManifestResponse.json();
+  assert.ok(reactionManifest.characters.daisy,'Daisy must be registered for RPG reactions');
+  const daisyArt=JSON.parse(require('node:fs').readFileSync(require('node:path').join(__dirname,'../characters/daisy/art_manifest.json'),'utf8'));
+  const daisyPortraits=[daisyArt.portrait,...Object.values(daisyArt.expressions)];
+  for(const url of [...daisyPortraits,reactionManifest.characters.daisy.attack]){
+   const response=await fetch(origin+url,{method:'HEAD'});
+   assert.equal(response.status,200,'Daisy artwork missing: '+url);
+   assert.match(response.headers.get('content-type')||'',/^image\//,url+' must be served as an image');
+  }
+  const attackResponse=await fetch(origin+reactionManifest.characters.daisy.attack);
+  const attackBytes=Buffer.from(await attackResponse.arrayBuffer());
+  assert.equal(attackBytes.toString('ascii',1,4),'PNG','Daisy attack cut-in must be PNG');
+  assert.equal(attackBytes[25],6,'Daisy attack cut-in must retain an RGBA alpha channel');
+
+  // Barb's match art must be both registered and available to the browser.
   assert.ok(reactionManifest.characters.barb,'Barb must be registered for RPG reactions');
   for(const url of new Set(Object.values(reactionManifest.characters.barb))){
    const response=await fetch(origin+url,{method:'HEAD'});
