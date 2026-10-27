@@ -974,6 +974,17 @@ function score(a,o,cfg,used){
  if(type==='retreat'){
   const to=p.bench[v.slot],before=p.active;
   const gain=setupValue(to)-setupValue(before);
+  // Apex must not abandon a favorable defensive matchup for an uncharged
+  // replacement. Compare real, currently payable attacks against BOTH slots:
+  // printed HP and theoretical moves alone do not justify a retreat.
+  const currentIncoming=cfg.level===8?strongestUsableOpponentAttack(o,before):0;
+  const replacementIncoming=cfg.level===8?strongestUsableOpponentAttack(o,to):0;
+  const currentPressure=cfg.level===8?projectedAttackValue(before,q.active,o.turnSerial):0;
+  const replacementPressure=cfg.level===8?projectedAttackValue(to,q.active,o.turnSerial):0;
+  const safeMatchupLoss=cfg.level===8&&currentIncoming===0&&
+   replacementIncoming>0&&replacementPressure<=currentPressure;
+  const unreadySwap=cfg.level===8&&replacementPressure===0&&
+   currentPressure>0&&currentIncoming<hpRemaining(before);
   // Expert profiles recognize when an incoming attack is likely to KO their
   // Active, but do not sacrifice an immediate winning attack to flee.
   const oldDamage=strongestAffordableAttack(before,q.active);
@@ -996,7 +1007,8 @@ function score(a,o,cfg,used){
   const foresight=cfg.level>=3?rescue-
    (lethalOwn?300:0)+(newDamage-oldDamage)*1.05-
    (newDamage===0&&oldDamage>0?70:0)-(oldDamage>0?oldDamage*.25:0):0;
-  return (before.status?180:45)+(gain>0?Math.min(30,gain):0)+
+  return (safeMatchupLoss?-320:0)+(unreadySwap?-190:0)+
+   (before.status?180:45)+(gain>0?Math.min(30,gain):0)+
    ((hpRemaining(before)<30)&&alternativeSurvives?23:0)*style.survival-
    (before.energies?.length||0)*18+foresight;
  }
