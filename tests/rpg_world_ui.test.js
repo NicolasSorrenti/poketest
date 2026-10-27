@@ -118,9 +118,10 @@ test('RPG boots at home with four life statistics and location activities',()=>{
 test('radar free travel points to a character who is really there',()=>{
  const r=launch(),radar=r.elements.townRadar.children.find(x=>x.className==='radar-person');
  assert.ok(radar);
- const name=radar.children[0].textContent;
+ const name=radar.querySelector('strong')?.textContent;
+ assert.ok(name,'Radar entry must identify the visible trainer even when an avatar precedes the label');
  radar.onclick();
- assert.ok(r.elements.people.children.some(x=>x.children[1].children[0].textContent===name));
+ assert.ok(r.elements.people.children.some(x=>x.querySelector('strong')?.textContent===name));
  assert.equal(r.state().slot,0);
 });
 test('location activity advances a single period and saves preparation',()=>{
