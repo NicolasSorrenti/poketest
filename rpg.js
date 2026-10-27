@@ -1846,7 +1846,7 @@ function openCalendar(){
  $('calendarDialog').showModal();
 }
 function makeAvatar(id,size=''){
- const img=document.createElement('img'),paths=portraitPaths(id,'neutral');
+ const img=document.createElement('img'),paths=size==='stage'?stagePortraitPaths(id,'neutral'):portraitPaths(id,'neutral');
  img.src=paths.find(src=>!failedScenePortraits.has(src))||cast[id].portrait||'/rpg-assets/'+id+'.png';
  img.alt=cast[id].name;img.loading='lazy';
  img.onerror=()=>{
@@ -2045,15 +2045,32 @@ function personaCStageCandidates(id,emotion,normal){
  }
  return [...new Set([...picks,...normal])];
 }
+// Daily overworld-only alternate portraits. Stable for the entire in-game day.
+const DAILY_STAGE_ALTERNATES={
+ akari:Array.from({length:5},(_,i)=>'/rpg-assets/characters/akari/portraits/special-day-'+(i+1)+'.png'),
+ barb:Array.from({length:10},(_,i)=>'/rpg-assets/characters/barb/portraits/special-day-'+(i+1)+'.png')
+};
+function dailyStagePortrait(id,day){
+ const files=DAILY_STAGE_ALTERNATES[id],d=Number(day);
+ if(!files||!Number.isInteger(d)||d<1)return null;
+ const salt=id==='akari'?0x51a3:0x9b27;
+ let h=(Math.imul(d^salt,2246822519)^0x85ebca6b)>>>0;
+ h^=h>>>16;h=Math.imul(h,3266489917)>>>0;h^=h>>>13;
+ return h%10<3?files[Math.floor(h/10)%files.length]:null;
+}
 function stagePortraitPaths(id,expression,sceneId){
- return personaCStageCandidates(id,expression,portraitPaths(id,expression,sceneId));
+ const normal=personaCStageCandidates(id,expression,portraitPaths(id,expression,sceneId));
+ const alternate=dailyStagePortrait(id,state.day);
+ return alternate?[alternate,...normal.filter(path=>path!==alternate)]:normal;
 }
 function scenePortraitSource(id,expression,sceneId=activeOutfitSceneId){
  const paths=stagePortraitPaths(id,expression,sceneId);
  return paths.find(src=>!failedScenePortraits.has(src))||paths[paths.length-1]||cast[id].portrait||'/rpg-assets/'+id+'.png';
 }
 function applyPersonaCStageCrop(img,id){
- const crop=PERSONA_C_CROPS[id];
+ // Alternate source images use their own framing; canonical crops are too tight.
+ const alternate=/\/portraits\/special-day-\d+\.png(?:\?|$)/.test(img.getAttribute('src')||'');
+ const crop=alternate?(id==='barb'?[.10,0,.80,.60]:[.07,0,.86,.62]):PERSONA_C_CROPS[id];
  if(!crop)return;
  const [x,y,w,h]=crop;
  // The stage frame clips the original image; no binary assets are altered.
@@ -2092,7 +2109,7 @@ function renderRpgCast(ids,locked,shown,portraitId,context={}){
    button.className='rpg-cast-member is-entering';
    button.dataset.initials=cast[id].name.split(' ').map(part=>part[0]).join('').slice(0,2).toUpperCase();
    const stageFrame=document.createElement('div');stageFrame.className='rpg-stage-persona-frame';
-   stageFrame.append(makeAvatar(id));button.append(stageFrame);
+   stageFrame.append(makeAvatar(id,'stage'));button.append(stageFrame);
    const name=document.createElement('span');name.textContent=cast[id].name.split(' ')[0];button.append(name);
    button.onclick=()=>selectPerson(id);
    button.addEventListener('animationend',event=>{if(event.target===button)button.classList.remove('is-entering');});
@@ -2298,7 +2315,7 @@ function render(){
  if(portraitRoot.dataset.npc!==nextPortrait||portraitRoot.dataset.artSrc!==nextArt){
   portraitRoot.dataset.npc=nextPortrait;portraitRoot.dataset.artSrc=nextArt;
   portraitRoot.replaceChildren();
-  if(nextPortrait)portraitRoot.append(makeAvatar(nextPortrait));
+  if(nextPortrait)portraitRoot.append(makeAvatar(nextPortrait,'stage'));
   else delete portraitRoot.dataset.rpgSafeId;
  }
  if(nextPortrait)window.NeoRpgDiscreetAvatars?.set?.(portraitRoot,nextPortrait,'neutral',cast[nextPortrait].name);
