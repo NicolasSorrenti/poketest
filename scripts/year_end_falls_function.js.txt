@@ -1,0 +1,35 @@
+// Day 91-only workshop blooper reel. Invoked from RPG render after the 90-day campaign.
+let yearEndFallReelShown=false;
+function maybeShowYearEndFallReel(){
+ if(yearEndFallReelShown||state.day<=90||state.pendingDuel||state.activeStory||
+ state.mandatoryEventState?.active||state.activeSliceOfLife||state.activeSituation||
+ state.activeEncounter||state.activeArc||state.activeSideQuest)return;
+ yearEndFallReelShown=true;
+ const entries=[['Barb','barb'],['Hana','hana'],['Laca','laca'],['Marina','marina']];
+ let index=0;
+ const panel=document.createElement('div');
+ panel.id='neoYearEndFalls';panel.setAttribute('role','dialog');panel.setAttribute('aria-modal','true');
+ panel.setAttribute('aria-label','Year-end workshop bloopers');
+ panel.style.cssText='position:fixed;inset:0;z-index:2147480000;background:rgba(12,9,25,.94);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:16px;color:white';
+ const title=document.createElement('h2');title.textContent='Year-End Bloopers · Barb’s Workshop';
+ title.style.cssText='margin:0;font:600 22px sans-serif;text-align:center';
+ const img=document.createElement('img');img.style.cssText='width:min(100%,1100px);max-height:76vh;object-fit:contain;border-radius:12px';
+ const controls=document.createElement('div');controls.style.cssText='display:flex;gap:14px;align-items:center;font:16px sans-serif';
+ const label=document.createElement('span');
+ const prev=document.createElement('button');prev.textContent='← Previous';
+ const next=document.createElement('button');next.textContent='Next →';
+ const close=document.createElement('button');close.textContent='Close';
+ function show(){
+  const [name,key]=entries[index];
+  label.textContent=name+' · '+(index+1)+' / '+entries.length;
+  img.alt=name+' slipping in the workshop';
+  img.src='/rpg-assets/events/cg/season01/year_end_fall_'+key+'.webp';
+  prev.disabled=index===0;next.textContent=index===entries.length-1?'Finish':'Next →';
+ }
+ function dismiss(){document.removeEventListener('keydown',onKey);panel.remove();}
+ function advance(){if(index===entries.length-1)dismiss();else{index++;show();}}
+ function onKey(e){if(e.key==='Escape')dismiss();else if(e.key==='ArrowRight')advance();else if(e.key==='ArrowLeft'&&index>0){index--;show();}}
+ prev.onclick=()=>{if(index>0){index--;show();}};next.onclick=advance;close.onclick=dismiss;
+ controls.append(prev,label,next,close);panel.append(title,img,controls);document.body.append(panel);
+ document.addEventListener('keydown',onKey);show();close.focus();
+}
