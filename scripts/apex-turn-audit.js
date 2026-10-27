@@ -17,17 +17,25 @@ function audit(commands){
  for(const [key,actions] of byTurn){
   const attachments=[];
   for(const [i,entry] of actions.entries()){
-   if(entry.command.type==='attach_energy')attachments.push({index:i,entry});
-   if(entry.command.type==='play_trainer'&&CATALOG.get(entry.cardId)?.name==='Pokémon Center'){
+   const type=entry.command.type;
+   const isCenter=type==='play_trainer'&&CATALOG.get(entry.cardId)?.name==='Pokémon Center';
+   if(type==='attach_energy')attachments.push({index:i,entry});
+   if(isCenter){
+    // Damage at attachment time alone does not prove Center discarded it:
+    // the Pokémon may have been healed before Center was played.
+    const damaged=entry.centerDamagedSlotsBefore;
     for(const attached of attachments){
-     // Only attachments to Pokémon actually healed by Center are wasted.
-     // The action trace records target damage before the attachment.
-     if(attached.entry.targetDamageBefore>0)
+     if(attached.entry.targetDamageBefore>0&&Array.isArray(damaged)&&
+      damaged.includes(attached.entry.command.payload?.slot))
       violations.push({turn:key,index:i,type:'energy-before-pokemon-center',
        attachmentIndex:attached.index,cardId:attached.entry.cardId});
     }
-    // Center discards the Energy it affects. A later Center in this turn
-    // cannot discard that same attachment a second time.
+    // Center consumes eligible attachments; never count them twice.
+    attachments.length=0;
+   }else if(!['attach_energy','bench'].includes(type)){
+    // Trainer effects, powers and position changes may heal or move a
+    // Pokémon. Without a stable unit identity, do not accuse the CPU
+    // based on a stale slot/damage snapshot.
     attachments.length=0;
    }
   }
