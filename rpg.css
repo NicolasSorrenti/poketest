@@ -510,3 +510,27 @@
  .stage-planner{margin:9px 0 12px;padding:11px}
  .stage-planner .daily-planner{grid-template-columns:minmax(0,1fr)}
 }
+
+
+/* Keep the conversation panel below the location artwork. */
+.stage-panel #scene .portrait{bottom:0}
+.stage-panel #scene .rpg-scene-cast{bottom:0}
+.stage-panel #dialogue{
+ position:relative;inset:auto;z-index:auto;min-height:0;max-height:none;
+ margin:12px 0 0;overflow:visible;
+}
+.stage-panel #playerChoicePrompt:not([hidden]){
+ position:relative;inset:auto;z-index:auto;display:block;
+ margin-top:14px;pointer-events:auto;
+}
+.stage-panel #playerChoicePanel{
+ width:100%;max-height:none;overflow:visible;padding:12px 0 0;
+ border:0;border-top:1px solid #6c5265;border-radius:0;
+ background:none;box-shadow:none;backdrop-filter:none;animation:none;
+}
+@media(max-width:700px){
+ .stage-panel #scene .portrait{bottom:0}
+ .stage-panel #dialogue{margin:10px 0 0;padding:13px 12px;max-height:none}
+ .stage-panel #playerChoicePrompt:not([hidden]){margin-top:10px}
+ .stage-panel #playerChoicePanel{padding-top:10px}
+}
