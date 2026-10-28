@@ -117,7 +117,10 @@
     script.onerror=()=>reject(Error('RPG script failed: '+src));
     document.body.appendChild(script);
   });
-  await Promise.all(scripts.slice(0,-1).map(loadScript));
+  // Each module may depend on globals established by an earlier script.
+  // Await execution in declared order; parallel script insertion can race
+  // module initialization and fail the required startup dependency checks.
+  for(const src of scripts.slice(0,-1)) await loadScript(src);
   const dependencies={
     NeoRpgRelationships:'apply',NeoRpgEncounterDirector:'select',
     NeoRpgAkariBarbFitting:'event',NeoRpgCrossCharacterEvents:'events',NeoRpgSliceOfLife:'byId',
