@@ -7,12 +7,29 @@ const sets=fs.readdirSync(path.join(__dirname,'cards')).filter(f=>f.endsWith('.j
 const cards=sets.flatMap(f=>require('./cards/'+f));
 const lookup=new Map(cards.map(c=>[c.id,c]));
 assert.equal(cards.length,1123);
+// Imported catalogue evolvesFrom fields omit Dark/Light or Gym ownership on
+// some evolved printings. Check the legal printed parent, not the raw field.
+const owners=["Blaine's ","Erika's ","Misty's ","Brock's ","Lt. Surge's ","Sabrina's ","Koga's ","Giovanni's ","Rocket's "];
+function printedParent(card){
+ const owner=owners.find(prefix=>card.name.startsWith(prefix));
+ if(owner)return card.evolvesFrom.startsWith(owner)?card.evolvesFrom:owner+card.evolvesFrom;
+ const themed=/^(Dark |Light )/.exec(card.name)?.[1];
+ if(themed&&(card.subtypes||[]).includes('Stage 2'))
+  return card.evolvesFrom.startsWith(themed)?card.evolvesFrom:themed+card.evolvesFrom;
+ return card.evolvesFrom;
+}
 let basic=0,energy=0,attack=0,evolutions=0;
 for(const card of cards){
  if(core.isBasicPokemon(card)){basic++;assert.equal(card.supertype,'Pokémon');}
  if(core.isEnergy(card)){energy++;assert.ok(!core.isBasicPokemon(card),card.id);}
  for(const a of card.attacks||[]){attack++;assert.ok(Array.isArray(a.cost),card.id+': '+a.name);}
- if(card.evolvesFrom){evolutions++; assert.equal(core.canEvolve(card,{name:card.evolvesFrom}),!['Blaine\'s ','Erika\'s ','Misty\'s ','Brock\'s ','Lt. Surge\'s ','Sabrina\'s ','Koga\'s ','Giovanni\'s ','Rocket\'s '].some(p=>card.name.startsWith(p)&&!card.evolvesFrom.startsWith(p)));}
+ if(card.evolvesFrom){
+  evolutions++;
+  const parent=printedParent(card);
+  assert.equal(core.canEvolve(card,{name:parent}),true,`${card.id}: ${card.name} must evolve from ${parent}`);
+  if(parent!==card.evolvesFrom)
+   assert.equal(core.canEvolve(card,{name:card.evolvesFrom}),false,`${card.id}: ${card.name} must reject unthemed parent ${card.evolvesFrom}`);
+ }
 }
 assert.ok(basic>100 && energy>=30 && attack===1479 && evolutions>200);
 const simple=(name,type)=>({id:name,name,supertype:type,subtypes:type==='Pokémon'?['Basic']:[]});
