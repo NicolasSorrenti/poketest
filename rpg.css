@@ -615,3 +615,22 @@ dialog.cg-lightbox{position:fixed;inset:0;width:100vw;max-width:none;height:100d
  .stage-panel > #dialogue .choice-list{gap:6px}
  .stage-panel > #dialogue .choice{padding:8px 12px}
 }
+
+/* Keep location artwork dimensions stable as conversations and choices change. */
+.stage-panel #scene,
+.stage-panel:has(> #dialogue:not([hidden])) #scene{
+ height:clamp(540px,65dvh,780px);
+ min-height:540px;
+ max-height:780px;
+}
+@media(max-width:700px){
+ .stage-panel #scene,
+ .stage-panel:has(> #dialogue:not([hidden])) #scene{
+  height:clamp(360px,95vw,480px);
+  min-height:360px;
+  max-height:480px;
+  flex:none;
+ }
+ .stage-panel #scene .rpg-scene-cast{top:24%;bottom:0}
+ .stage-panel #scene .portrait{bottom:0}
+}
