@@ -30,7 +30,11 @@ function boot(saved=new Map(),sessions=new Map()){
  const fetch=async()=>({ok:true,json:async()=>({decks:[{id:'blackout',name:'Blackout'},{id:'brushfire',name:'Brushfire'}]})});
  const location={search:'',origin:'http://localhost:8000',reload(){}};
  vm.runInNewContext(script,{window,document,localStorage,sessionStorage,fetch,location,confirm:()=>true,console,queueMicrotask,URLSearchParams,Image:Element,NodeFilter:{SHOW_TEXT:4}},{filename:'rpg.js'});
- if(fresh)ids.starterChoices.children[0].onclick();
+ if(fresh){
+  assert.ok(ids.starterChoices?.children?.length>0,
+   'New campaign must show starter options despite the introductory narrator line');
+  ids.starterChoices.children[0].onclick();
+ }
  return {ids,listeners,saved,sessions,location,read:()=>JSON.parse(saved.get(KEY)),send:payload=>listeners.message({origin:location.origin,source:ids.battle.contentWindow,data:payload})};
 }
 function label(x){return [x.textContent,...x.children.map(label)].filter(Boolean).join(' ');}
