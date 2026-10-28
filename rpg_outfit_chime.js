@@ -49,7 +49,8 @@ const NeoOutfitChime=(()=>{
  }
  async function onEntry({characters=[],firstMeetings=[],blocked=false,sceneId=null}={}){
   if(blocked||sceneId)return;
-  // Never let optional crop metadata delay or suppress the actual reveal.\n  const data=await Promise.race([load(),new Promise(resolve=>setTimeout(()=>resolve(null),350))]);
+  // Never let optional crop metadata delay or suppress the actual reveal.
+  const data=await Promise.race([load(),new Promise(resolve=>setTimeout(()=>resolve(null),350))]);
   // Preserve baseline for only actually encountered characters.
   const outfit=[];
   const isSpecialPortrait=portrait=>/\/(?:overworld-variants|portraits\/special-day-\d+|outfits\/[^/]+)\//.test(portrait);
