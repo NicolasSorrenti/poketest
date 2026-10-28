@@ -677,7 +677,12 @@ function act(action){
  if(mandatoryAction(type,id))return;
  if(conversationInProgress()){
   const currentChoice=(scene.choices||[]).some(([,candidate])=>candidate===action);
-  if(!currentChoice&&!['chatNext','memoryChoice','close','dismissDialogue'].includes(type))return;
+  // A confirmed event invitation delegates to its existing action handler.
+  // Permit only the matching validated handoff, not arbitrary actions during dialogue.
+  const invitation=scene.invitation;
+  const confirmedAppointment=type==='attend'&&invitation?.kind==='appointment'&&String(invitation.id)===String(id)
+    &&(scene.choices||[]).some(([,candidate])=>candidate==='eventInvite:appointment:'+id);
+  if(!currentChoice&&!confirmedAppointment&&!['chatNext','memoryChoice','close','dismissDialogue'].includes(type))return;
  }
  // Suppress unrelated actions while a surprise is underway.
  if(state.activeSliceOfLife){
