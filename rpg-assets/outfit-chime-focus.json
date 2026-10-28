@@ -46,72 +46,72 @@
       "portraitPattern": "/rpg-assets/characters/barb/portraits/special-day-{n}.png",
       "variants": {
         "special-day-1.png": {
-          "top": 0.29,
-          "bottom": 0.43,
-          "notes": "Close horizontal crop from just below the pendant to just above the belly",
+          "top": 0.2,
+          "bottom": 0.38,
+          "notes": "Bodice and upper-abdomen crop matching the marked area",
           "left": 0.24,
           "right": 0.78
         },
         "special-day-2.png": {
-          "top": 0.29,
-          "bottom": 0.43,
-          "notes": "Close horizontal crop from just below the pendant to just above the belly",
+          "top": 0.2,
+          "bottom": 0.38,
+          "notes": "Bodice and upper-abdomen crop matching the marked area",
           "left": 0.24,
           "right": 0.78
         },
         "special-day-3.png": {
-          "top": 0.29,
-          "bottom": 0.43,
-          "notes": "Close horizontal crop from just below the pendant to just above the belly",
+          "top": 0.2,
+          "bottom": 0.38,
+          "notes": "Bodice and upper-abdomen crop matching the marked area",
           "left": 0.24,
           "right": 0.78
         },
         "special-day-4.png": {
-          "top": 0.29,
-          "bottom": 0.43,
-          "notes": "Close horizontal crop from just below the pendant to just above the belly",
+          "top": 0.2,
+          "bottom": 0.38,
+          "notes": "Bodice and upper-abdomen crop matching the marked area",
           "left": 0.24,
           "right": 0.78
         },
         "special-day-5.png": {
-          "top": 0.29,
-          "bottom": 0.43,
-          "notes": "Close horizontal crop from just below the pendant to just above the belly",
+          "top": 0.2,
+          "bottom": 0.38,
+          "notes": "Bodice and upper-abdomen crop matching the marked area",
           "left": 0.24,
           "right": 0.78
         },
         "special-day-6.png": {
-          "top": 0.29,
-          "bottom": 0.43,
-          "notes": "Close horizontal crop from just below the pendant to just above the belly",
+          "top": 0.2,
+          "bottom": 0.38,
+          "notes": "Bodice and upper-abdomen crop matching the marked area",
           "left": 0.24,
           "right": 0.78
         },
         "special-day-7.png": {
-          "top": 0.29,
-          "bottom": 0.43,
-          "notes": "Close horizontal crop from just below the pendant to just above the belly",
+          "top": 0.2,
+          "bottom": 0.38,
+          "notes": "Bodice and upper-abdomen crop matching the marked area",
           "left": 0.24,
           "right": 0.78
         },
         "special-day-8.png": {
-          "top": 0.29,
-          "bottom": 0.43,
-          "notes": "Close horizontal crop from just below the pendant to just above the belly",
+          "top": 0.2,
+          "bottom": 0.38,
+          "notes": "Bodice and upper-abdomen crop matching the marked area",
           "left": 0.24,
           "right": 0.78
         },
         "special-day-9.png": {
-          "top": 0.29,
-          "bottom": 0.43,
-          "notes": "Close horizontal crop from just below the pendant to just above the belly",
+          "top": 0.2,
+          "bottom": 0.38,
+          "notes": "Bodice and upper-abdomen crop matching the marked area",
           "left": 0.24,
           "right": 0.78
         },
         "special-day-10.png": {
-          "top": 0.29,
-          "bottom": 0.43,
-          "notes": "Close horizontal crop from just below the pendant to just above the belly",
+          "top": 0.2,
+          "bottom": 0.38,
+          "notes": "Bodice and upper-abdomen crop matching the marked area",
           "left": 0.24,
           "right": 0.78
         }
