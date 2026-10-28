@@ -1,0 +1,183 @@
+{
+  "version": 1,
+  "coordinateSystem": "normalized-image",
+  "description": "Prepared upper-bodice crops for the existing outfit chime artwork. This file is not loaded by the runtime; copy selected entries into outfit-chime-focus.json when ready to activate.",
+  "characters": {
+    "akari": {
+      "portraitPattern": "/rpg-assets/characters/akari/portraits/special-day-{n}.png",
+      "variants": {
+        "special-day-1.png": {
+          "left": 0.22,
+          "right": 0.82,
+          "top": 0.36,
+          "bottom": 0.62,
+          "notes": "Tight upper bodice crop; based on the approved Akari day 5 test framing."
+        },
+        "special-day-2.png": {
+          "left": 0.22,
+          "right": 0.82,
+          "top": 0.36,
+          "bottom": 0.62,
+          "notes": "Tight upper bodice crop; based on the approved Akari day 5 test framing."
+        },
+        "special-day-3.png": {
+          "left": 0.22,
+          "right": 0.82,
+          "top": 0.36,
+          "bottom": 0.62,
+          "notes": "Tight upper bodice crop; based on the approved Akari day 5 test framing."
+        },
+        "special-day-4.png": {
+          "left": 0.22,
+          "right": 0.82,
+          "top": 0.36,
+          "bottom": 0.62,
+          "notes": "Tight upper bodice crop; based on the approved Akari day 5 test framing."
+        },
+        "special-day-5.png": {
+          "left": 0.22,
+          "right": 0.82,
+          "top": 0.36,
+          "bottom": 0.62,
+          "notes": "Tight upper bodice crop; based on the approved Akari day 5 test framing."
+        }
+      }
+    },
+    "barb": {
+      "portraitPattern": "/rpg-assets/characters/barb/portraits/special-day-{n}.png",
+      "variants": {
+        "special-day-1.png": {
+          "left": 0.24,
+          "right": 0.78,
+          "top": 0.2,
+          "bottom": 0.38,
+          "notes": "Upper bodice crop only; excludes the lower outfit focus used previously."
+        },
+        "special-day-2.png": {
+          "left": 0.24,
+          "right": 0.78,
+          "top": 0.2,
+          "bottom": 0.38,
+          "notes": "Upper bodice crop only; excludes the lower outfit focus used previously."
+        },
+        "special-day-3.png": {
+          "left": 0.24,
+          "right": 0.78,
+          "top": 0.2,
+          "bottom": 0.38,
+          "notes": "Upper bodice crop only; excludes the lower outfit focus used previously."
+        },
+        "special-day-4.png": {
+          "left": 0.24,
+          "right": 0.78,
+          "top": 0.2,
+          "bottom": 0.38,
+          "notes": "Upper bodice crop only; excludes the lower outfit focus used previously."
+        },
+        "special-day-5.png": {
+          "left": 0.24,
+          "right": 0.78,
+          "top": 0.2,
+          "bottom": 0.38,
+          "notes": "Upper bodice crop only; excludes the lower outfit focus used previously."
+        },
+        "special-day-6.png": {
+          "left": 0.24,
+          "right": 0.78,
+          "top": 0.2,
+          "bottom": 0.38,
+          "notes": "Upper bodice crop only; excludes the lower outfit focus used previously."
+        },
+        "special-day-7.png": {
+          "left": 0.24,
+          "right": 0.78,
+          "top": 0.2,
+          "bottom": 0.38,
+          "notes": "Upper bodice crop only; excludes the lower outfit focus used previously."
+        },
+        "special-day-8.png": {
+          "left": 0.24,
+          "right": 0.78,
+          "top": 0.2,
+          "bottom": 0.38,
+          "notes": "Upper bodice crop only; excludes the lower outfit focus used previously."
+        },
+        "special-day-9.png": {
+          "left": 0.24,
+          "right": 0.78,
+          "top": 0.2,
+          "bottom": 0.38,
+          "notes": "Upper bodice crop only; excludes the lower outfit focus used previously."
+        },
+        "special-day-10.png": {
+          "left": 0.24,
+          "right": 0.78,
+          "top": 0.2,
+          "bottom": 0.38,
+          "notes": "Upper bodice crop only; excludes the lower outfit focus used previously."
+        }
+      }
+    },
+    "hana": {
+      "portraitPattern": "/rpg-assets/characters/hana/overworld-variants/{filename}",
+      "variants": {
+        "01_original_white_lace_denim.png": {
+          "left": 0.2,
+          "right": 0.84,
+          "top": 0.36,
+          "bottom": 0.56,
+          "notes": "Tight top and bodice crop only; skirt and lower-body crops intentionally omitted."
+        },
+        "02_gray_blouse_denim.png": {
+          "left": 0.2,
+          "right": 0.84,
+          "top": 0.36,
+          "bottom": 0.56,
+          "notes": "Tight top and bodice crop only; skirt and lower-body crops intentionally omitted."
+        },
+        "03_gray_ruched_top_denim.png": {
+          "left": 0.2,
+          "right": 0.84,
+          "top": 0.36,
+          "bottom": 0.56,
+          "notes": "Tight top and bodice crop only; skirt and lower-body crops intentionally omitted."
+        },
+        "04_white_top_mini_skirt.png": {
+          "left": 0.2,
+          "right": 0.84,
+          "top": 0.36,
+          "bottom": 0.56,
+          "notes": "Tight top and bodice crop only; skirt and lower-body crops intentionally omitted."
+        },
+        "05_white_top_pleated_skirt.png": {
+          "left": 0.2,
+          "right": 0.84,
+          "top": 0.36,
+          "bottom": 0.56,
+          "notes": "Tight top and bodice crop only; skirt and lower-body crops intentionally omitted."
+        },
+        "06_pink_lace_white_top_denim.png": {
+          "left": 0.2,
+          "right": 0.84,
+          "top": 0.36,
+          "bottom": 0.56,
+          "notes": "Tight top and bodice crop only; skirt and lower-body crops intentionally omitted."
+        },
+        "07_gray_lace_white_top_denim.png": {
+          "left": 0.2,
+          "right": 0.84,
+          "top": 0.36,
+          "bottom": 0.56,
+          "notes": "Tight top and bodice crop only; skirt and lower-body crops intentionally omitted."
+        },
+        "08_ribbon_top_denim.png": {
+          "left": 0.2,
+          "right": 0.84,
+          "top": 0.36,
+          "bottom": 0.56,
+          "notes": "Tight top and bodice crop only; skirt and lower-body crops intentionally omitted."
+        }
+      }
+    }
+  }
+}
