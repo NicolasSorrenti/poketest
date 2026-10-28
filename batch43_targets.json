@@ -326,7 +326,7 @@
   {
     "id": "neo1-34",
     "attack": "Discharge",
-    "text": "Discard all Energy cards attached to Flaaffy in order to use this attack. Flip a number of coins equal to the number of Energy cards you discarded. This attack does 30 damage times the number of heads.",
+    "text": "Discard all Lightning Energy cards attached to Flaaffy in order to use this attack. Flip a number of coins equal to the number of Lightning Energy cards you discarded. This attack does 30 damage times the number of heads.",
     "index": 163
   },
   {
