@@ -1188,11 +1188,15 @@ function energyPreparationActions(o,cfg,actions){
    strandedActiveEnergy(o,o.self.hand[a.payload.handIndex]));
  });
  if(!useful)return actions;
+ // A Confused attacker must first pass its mandatory 50% coin flip.
+ // A printed guaranteed KO is not a guaranteed game win in that state.
+ const confusionChance=o.self.active?.status==='Confused'?.5:1;
  const gameWinningKo=(o.self.prizeCount<=1||o.opponent.bench.length===0)&&
   actions.some(a=>{
    if(a.type!=='attack')return false;
    const attacks=o.self.active?.effectiveAttacks||card(o.self.active?.id)?.attacks||[];
-   return knockoutChance(attacks[a.payload.attackIndex],o.self.active,o.opponent.active)>=.999;
+   return knockoutChance(attacks[a.payload.attackIndex],o.self.active,o.opponent.active)*
+    confusionChance>=.999;
   });
  return gameWinningKo?actions:actions.filter(a=>a.type!=='attack');
 }
