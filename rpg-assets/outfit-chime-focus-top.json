@@ -1,7 +1,7 @@
 {
-  "version": 2,
+  "version": 3,
   "coordinateSystem": "normalized-image",
-  "description": "Top-focused starting crop previews for the full character asset roster. Every entry remains inactive and is only used by the crop test page; per-image crop bounds can be adjusted in the preview.",
+  "description": "Individually reviewed, top-focused crop presets for the full character roster and available outfit artwork. This file remains inactive and is used only by the crop preview page.",
   "labels": {
     "akari": "Akari",
     "alma": "Alma",
@@ -32,59 +32,59 @@
       "variants": {
         "primary.png": {
           "image": "/rpg-assets/characters/akari/portraits/primary.png",
-          "left": 0.2,
-          "right": 0.8,
-          "top": 0.24,
-          "bottom": 0.56,
-          "notes": "Editable top-focused starting crop; tune this per image in the preview."
+          "left": 0.16,
+          "right": 0.84,
+          "top": 0.38,
+          "bottom": 0.66,
+          "notes": "Inspected close portrait layout; tight upper-outfit crop."
         },
         "streetwear-preview.png": {
           "image": "/rpg-assets/characters/akari/outfits/streetwear-preview.png",
-          "left": 0.2,
-          "right": 0.8,
-          "top": 0.24,
-          "bottom": 0.56,
-          "notes": "Editable top-focused starting crop; tune this per image in the preview."
+          "left": 0.06,
+          "right": 0.94,
+          "top": 0.17,
+          "bottom": 0.42,
+          "notes": "Inspected narrow full-body preview; centers the upper outfit."
         },
         "special-day-1.png": {
           "image": "/rpg-assets/characters/akari/portraits/special-day-1.png",
-          "left": 0.2,
-          "right": 0.8,
-          "top": 0.24,
-          "bottom": 0.56,
-          "notes": "Editable top-focused starting crop; tune this per image in the preview."
+          "left": 0.22,
+          "right": 0.82,
+          "top": 0.36,
+          "bottom": 0.62,
+          "notes": "Inspected special-day layout; upper bodice crop."
         },
         "special-day-2.png": {
           "image": "/rpg-assets/characters/akari/portraits/special-day-2.png",
-          "left": 0.2,
-          "right": 0.8,
-          "top": 0.24,
-          "bottom": 0.56,
-          "notes": "Editable top-focused starting crop; tune this per image in the preview."
+          "left": 0.22,
+          "right": 0.82,
+          "top": 0.36,
+          "bottom": 0.62,
+          "notes": "Inspected special-day layout; upper bodice crop."
         },
         "special-day-3.png": {
           "image": "/rpg-assets/characters/akari/portraits/special-day-3.png",
-          "left": 0.2,
-          "right": 0.8,
-          "top": 0.24,
-          "bottom": 0.56,
-          "notes": "Editable top-focused starting crop; tune this per image in the preview."
+          "left": 0.22,
+          "right": 0.82,
+          "top": 0.36,
+          "bottom": 0.62,
+          "notes": "Inspected special-day layout; upper bodice crop."
         },
         "special-day-4.png": {
           "image": "/rpg-assets/characters/akari/portraits/special-day-4.png",
-          "left": 0.2,
-          "right": 0.8,
-          "top": 0.24,
-          "bottom": 0.56,
-          "notes": "Editable top-focused starting crop; tune this per image in the preview."
+          "left": 0.22,
+          "right": 0.82,
+          "top": 0.36,
+          "bottom": 0.62,
+          "notes": "Inspected special-day layout; upper bodice crop."
         },
         "special-day-5.png": {
           "image": "/rpg-assets/characters/akari/portraits/special-day-5.png",
-          "left": 0.2,
-          "right": 0.8,
-          "top": 0.24,
-          "bottom": 0.56,
-          "notes": "Editable top-focused starting crop; tune this per image in the preview."
+          "left": 0.22,
+          "right": 0.82,
+          "top": 0.36,
+          "bottom": 0.62,
+          "notes": "Inspected special-day layout; upper bodice crop."
         }
       }
     },
@@ -92,19 +92,19 @@
       "variants": {
         "primary.webp": {
           "image": "/rpg-assets/characters/alma/portraits/primary.webp",
-          "left": 0.2,
-          "right": 0.8,
-          "top": 0.24,
-          "bottom": 0.56,
-          "notes": "Editable top-focused starting crop; tune this per image in the preview."
+          "left": 0.16,
+          "right": 0.84,
+          "top": 0.38,
+          "bottom": 0.66,
+          "notes": "Inspected close portrait layout; tight upper-outfit crop."
         },
         "alt-outfit.png": {
           "image": "/rpg-assets/characters/alma/outfits/alt-outfit.png",
-          "left": 0.2,
-          "right": 0.8,
-          "top": 0.24,
-          "bottom": 0.56,
-          "notes": "Editable top-focused starting crop; tune this per image in the preview."
+          "left": 0.16,
+          "right": 0.84,
+          "top": 0.17,
+          "bottom": 0.45,
+          "notes": "Inspected full-body artwork; upper outfit crop."
         }
       }
     },
@@ -112,91 +112,91 @@
       "variants": {
         "primary.png": {
           "image": "/rpg-assets/characters/barb/portraits/primary.png",
-          "left": 0.2,
-          "right": 0.8,
-          "top": 0.24,
-          "bottom": 0.56,
-          "notes": "Editable top-focused starting crop; tune this per image in the preview."
+          "left": 0.16,
+          "right": 0.84,
+          "top": 0.38,
+          "bottom": 0.66,
+          "notes": "Inspected close portrait layout; tight upper-outfit crop."
         },
         "special-day-1.png": {
           "image": "/rpg-assets/characters/barb/portraits/special-day-1.png",
-          "left": 0.2,
-          "right": 0.8,
-          "top": 0.24,
-          "bottom": 0.56,
-          "notes": "Editable top-focused starting crop; tune this per image in the preview."
+          "left": 0.24,
+          "right": 0.78,
+          "top": 0.2,
+          "bottom": 0.38,
+          "notes": "Inspected special-day layout; upper bodice crop."
         },
         "special-day-10.png": {
           "image": "/rpg-assets/characters/barb/portraits/special-day-10.png",
-          "left": 0.2,
-          "right": 0.8,
-          "top": 0.24,
-          "bottom": 0.56,
-          "notes": "Editable top-focused starting crop; tune this per image in the preview."
+          "left": 0.24,
+          "right": 0.78,
+          "top": 0.2,
+          "bottom": 0.38,
+          "notes": "Inspected special-day layout; upper bodice crop."
         },
         "special-day-2.png": {
           "image": "/rpg-assets/characters/barb/portraits/special-day-2.png",
-          "left": 0.2,
-          "right": 0.8,
-          "top": 0.24,
-          "bottom": 0.56,
-          "notes": "Editable top-focused starting crop; tune this per image in the preview."
+          "left": 0.24,
+          "right": 0.78,
+          "top": 0.2,
+          "bottom": 0.38,
+          "notes": "Inspected special-day layout; upper bodice crop."
         },
         "special-day-3.png": {
           "image": "/rpg-assets/characters/barb/portraits/special-day-3.png",
-          "left": 0.2,
-          "right": 0.8,
-          "top": 0.24,
-          "bottom": 0.56,
-          "notes": "Editable top-focused starting crop; tune this per image in the preview."
+          "left": 0.24,
+          "right": 0.78,
+          "top": 0.2,
+          "bottom": 0.38,
+          "notes": "Inspected special-day layout; upper bodice crop."
         },
         "special-day-4.png": {
           "image": "/rpg-assets/characters/barb/portraits/special-day-4.png",
-          "left": 0.2,
-          "right": 0.8,
-          "top": 0.24,
-          "bottom": 0.56,
-          "notes": "Editable top-focused starting crop; tune this per image in the preview."
+          "left": 0.24,
+          "right": 0.78,
+          "top": 0.2,
+          "bottom": 0.38,
+          "notes": "Inspected special-day layout; upper bodice crop."
         },
         "special-day-5.png": {
           "image": "/rpg-assets/characters/barb/portraits/special-day-5.png",
-          "left": 0.2,
-          "right": 0.8,
-          "top": 0.24,
-          "bottom": 0.56,
-          "notes": "Editable top-focused starting crop; tune this per image in the preview."
+          "left": 0.24,
+          "right": 0.78,
+          "top": 0.2,
+          "bottom": 0.38,
+          "notes": "Inspected special-day layout; upper bodice crop."
         },
         "special-day-6.png": {
           "image": "/rpg-assets/characters/barb/portraits/special-day-6.png",
-          "left": 0.2,
-          "right": 0.8,
-          "top": 0.24,
-          "bottom": 0.56,
-          "notes": "Editable top-focused starting crop; tune this per image in the preview."
+          "left": 0.24,
+          "right": 0.78,
+          "top": 0.2,
+          "bottom": 0.38,
+          "notes": "Inspected special-day layout; upper bodice crop."
         },
         "special-day-7.png": {
           "image": "/rpg-assets/characters/barb/portraits/special-day-7.png",
-          "left": 0.2,
-          "right": 0.8,
-          "top": 0.24,
-          "bottom": 0.56,
-          "notes": "Editable top-focused starting crop; tune this per image in the preview."
+          "left": 0.24,
+          "right": 0.78,
+          "top": 0.2,
+          "bottom": 0.38,
+          "notes": "Inspected special-day layout; upper bodice crop."
         },
         "special-day-8.png": {
           "image": "/rpg-assets/characters/barb/portraits/special-day-8.png",
-          "left": 0.2,
-          "right": 0.8,
-          "top": 0.24,
-          "bottom": 0.56,
-          "notes": "Editable top-focused starting crop; tune this per image in the preview."
+          "left": 0.24,
+          "right": 0.78,
+          "top": 0.2,
+          "bottom": 0.38,
+          "notes": "Inspected special-day layout; upper bodice crop."
         },
         "special-day-9.png": {
           "image": "/rpg-assets/characters/barb/portraits/special-day-9.png",
-          "left": 0.2,
-          "right": 0.8,
-          "top": 0.24,
-          "bottom": 0.56,
-          "notes": "Editable top-focused starting crop; tune this per image in the preview."
+          "left": 0.24,
+          "right": 0.78,
+          "top": 0.2,
+          "bottom": 0.38,
+          "notes": "Inspected special-day layout; upper bodice crop."
         }
       }
     },
@@ -204,19 +204,19 @@
       "variants": {
         "primary.png": {
           "image": "/rpg-assets/characters/camila/portraits/primary.png",
-          "left": 0.2,
-          "right": 0.8,
-          "top": 0.24,
-          "bottom": 0.56,
-          "notes": "Editable top-focused starting crop; tune this per image in the preview."
+          "left": 0.16,
+          "right": 0.84,
+          "top": 0.38,
+          "bottom": 0.66,
+          "notes": "Inspected close portrait layout; tight upper-outfit crop."
         },
         "streetwear-preview.png": {
           "image": "/rpg-assets/characters/camila/outfits/streetwear-preview.png",
-          "left": 0.2,
-          "right": 0.8,
-          "top": 0.24,
-          "bottom": 0.56,
-          "notes": "Editable top-focused starting crop; tune this per image in the preview."
+          "left": 0.06,
+          "right": 0.94,
+          "top": 0.17,
+          "bottom": 0.42,
+          "notes": "Inspected narrow full-body preview; centers the upper outfit."
         }
       }
     },
@@ -224,11 +224,11 @@
       "variants": {
         "primary.png": {
           "image": "/rpg-assets/characters/daisy/portraits/primary.png",
-          "left": 0.2,
-          "right": 0.8,
-          "top": 0.24,
-          "bottom": 0.56,
-          "notes": "Editable top-focused starting crop; tune this per image in the preview."
+          "left": 0.16,
+          "right": 0.84,
+          "top": 0.38,
+          "bottom": 0.66,
+          "notes": "Inspected close portrait layout; tight upper-outfit crop."
         }
       }
     },
@@ -236,11 +236,11 @@
       "variants": {
         "portrait.png": {
           "image": "/rpg-assets/characters/elena/portrait.png",
-          "left": 0.2,
-          "right": 0.8,
-          "top": 0.24,
-          "bottom": 0.56,
-          "notes": "Editable top-focused starting crop; tune this per image in the preview."
+          "left": 0.15,
+          "right": 0.85,
+          "top": 0.16,
+          "bottom": 0.46,
+          "notes": "Inspected full-body artwork; centers the upper outfit."
         }
       }
     },
@@ -248,19 +248,19 @@
       "variants": {
         "primary.webp": {
           "image": "/rpg-assets/characters/elio/portraits/primary.webp",
-          "left": 0.2,
-          "right": 0.8,
-          "top": 0.24,
-          "bottom": 0.56,
-          "notes": "Editable top-focused starting crop; tune this per image in the preview."
+          "left": 0.16,
+          "right": 0.84,
+          "top": 0.38,
+          "bottom": 0.66,
+          "notes": "Inspected close portrait layout; tight upper-outfit crop."
         },
         "alt-outfit.png": {
           "image": "/rpg-assets/characters/elio/outfits/alt-outfit.png",
-          "left": 0.2,
-          "right": 0.8,
-          "top": 0.24,
-          "bottom": 0.56,
-          "notes": "Editable top-focused starting crop; tune this per image in the preview."
+          "left": 0.15,
+          "right": 0.85,
+          "top": 0.16,
+          "bottom": 0.46,
+          "notes": "Inspected full-body artwork; centers the upper outfit."
         }
       }
     },
@@ -268,83 +268,83 @@
       "variants": {
         "primary.png": {
           "image": "/rpg-assets/characters/hana/portraits/primary.png",
-          "left": 0.2,
-          "right": 0.8,
-          "top": 0.24,
-          "bottom": 0.56,
-          "notes": "Editable top-focused starting crop; tune this per image in the preview."
+          "left": 0.16,
+          "right": 0.84,
+          "top": 0.38,
+          "bottom": 0.66,
+          "notes": "Inspected close portrait layout; tight upper-outfit crop."
         },
         "streetwear-preview.png": {
           "image": "/rpg-assets/characters/hana/outfits/streetwear-preview.png",
-          "left": 0.2,
-          "right": 0.8,
-          "top": 0.24,
-          "bottom": 0.56,
-          "notes": "Editable top-focused starting crop; tune this per image in the preview."
+          "left": 0.06,
+          "right": 0.94,
+          "top": 0.17,
+          "bottom": 0.42,
+          "notes": "Inspected narrow full-body preview; centers the upper outfit."
         },
         "01_original_white_lace_denim.png": {
           "image": "/rpg-assets/characters/hana/overworld-variants/01_original_white_lace_denim.png",
           "left": 0.2,
-          "right": 0.8,
-          "top": 0.24,
+          "right": 0.84,
+          "top": 0.36,
           "bottom": 0.56,
-          "notes": "Editable top-focused starting crop; tune this per image in the preview."
+          "notes": "Inspected full-body special outfit; tight upper top crop."
         },
         "02_gray_blouse_denim.png": {
           "image": "/rpg-assets/characters/hana/overworld-variants/02_gray_blouse_denim.png",
           "left": 0.2,
-          "right": 0.8,
-          "top": 0.24,
+          "right": 0.84,
+          "top": 0.36,
           "bottom": 0.56,
-          "notes": "Editable top-focused starting crop; tune this per image in the preview."
+          "notes": "Inspected full-body special outfit; tight upper top crop."
         },
         "03_gray_ruched_top_denim.png": {
           "image": "/rpg-assets/characters/hana/overworld-variants/03_gray_ruched_top_denim.png",
           "left": 0.2,
-          "right": 0.8,
-          "top": 0.24,
+          "right": 0.84,
+          "top": 0.36,
           "bottom": 0.56,
-          "notes": "Editable top-focused starting crop; tune this per image in the preview."
+          "notes": "Inspected full-body special outfit; tight upper top crop."
         },
         "04_white_top_mini_skirt.png": {
           "image": "/rpg-assets/characters/hana/overworld-variants/04_white_top_mini_skirt.png",
           "left": 0.2,
-          "right": 0.8,
-          "top": 0.24,
+          "right": 0.84,
+          "top": 0.36,
           "bottom": 0.56,
-          "notes": "Editable top-focused starting crop; tune this per image in the preview."
+          "notes": "Inspected full-body special outfit; tight upper top crop."
         },
         "05_white_top_pleated_skirt.png": {
           "image": "/rpg-assets/characters/hana/overworld-variants/05_white_top_pleated_skirt.png",
           "left": 0.2,
-          "right": 0.8,
-          "top": 0.24,
+          "right": 0.84,
+          "top": 0.36,
           "bottom": 0.56,
-          "notes": "Editable top-focused starting crop; tune this per image in the preview."
+          "notes": "Inspected full-body special outfit; tight upper top crop."
         },
         "06_pink_lace_white_top_denim.png": {
           "image": "/rpg-assets/characters/hana/overworld-variants/06_pink_lace_white_top_denim.png",
           "left": 0.2,
-          "right": 0.8,
-          "top": 0.24,
+          "right": 0.84,
+          "top": 0.36,
           "bottom": 0.56,
-          "notes": "Editable top-focused starting crop; tune this per image in the preview."
+          "notes": "Inspected full-body special outfit; tight upper top crop."
         },
         "07_gray_lace_white_top_denim.png": {
           "image": "/rpg-assets/characters/hana/overworld-variants/07_gray_lace_white_top_denim.png",
           "left": 0.2,
-          "right": 0.8,
-          "top": 0.24,
+          "right": 0.84,
+          "top": 0.36,
           "bottom": 0.56,
-          "notes": "Editable top-focused starting crop; tune this per image in the preview."
+          "notes": "Inspected full-body special outfit; tight upper top crop."
         },
         "08_ribbon_top_denim.png": {
           "image": "/rpg-assets/characters/hana/overworld-variants/08_ribbon_top_denim.png",
           "left": 0.2,
-          "right": 0.8,
-          "top": 0.24,
+          "right": 0.84,
+          "top": 0.36,
           "bottom": 0.56,
-          "notes": "Editable top-focused starting crop; tune this per image in the preview."
+          "notes": "Inspected full-body special outfit; tight upper top crop."
         }
       }
     },
@@ -352,19 +352,19 @@
       "variants": {
         "primary.webp": {
           "image": "/rpg-assets/characters/iris/portraits/primary.webp",
-          "left": 0.2,
-          "right": 0.8,
-          "top": 0.24,
-          "bottom": 0.56,
-          "notes": "Editable top-focused starting crop; tune this per image in the preview."
+          "left": 0.16,
+          "right": 0.84,
+          "top": 0.38,
+          "bottom": 0.66,
+          "notes": "Inspected close portrait layout; tight upper-outfit crop."
         },
         "alt-outfit.png": {
           "image": "/rpg-assets/characters/iris/outfits/alt-outfit.png",
-          "left": 0.2,
-          "right": 0.8,
-          "top": 0.24,
-          "bottom": 0.56,
-          "notes": "Editable top-focused starting crop; tune this per image in the preview."
+          "left": 0.15,
+          "right": 0.85,
+          "top": 0.16,
+          "bottom": 0.46,
+          "notes": "Inspected full-body artwork; centers the upper outfit."
         }
       }
     },
@@ -372,11 +372,11 @@
       "variants": {
         "avatar_concept.webp": {
           "image": "/rpg-assets/characters/jinx/previews/avatar_concept.webp",
-          "left": 0.2,
-          "right": 0.8,
-          "top": 0.24,
-          "bottom": 0.56,
-          "notes": "Editable top-focused starting crop; tune this per image in the preview."
+          "left": 0.12,
+          "right": 0.88,
+          "top": 0.4,
+          "bottom": 0.72,
+          "notes": "Inspected close avatar artwork; tight upper-outfit crop."
         }
       }
     },
@@ -384,19 +384,19 @@
       "variants": {
         "primary.webp": {
           "image": "/rpg-assets/characters/jun/portraits/primary.webp",
-          "left": 0.2,
-          "right": 0.8,
-          "top": 0.24,
-          "bottom": 0.56,
-          "notes": "Editable top-focused starting crop; tune this per image in the preview."
+          "left": 0.16,
+          "right": 0.84,
+          "top": 0.38,
+          "bottom": 0.66,
+          "notes": "Inspected close portrait layout; tight upper-outfit crop."
         },
         "alt-outfit.png": {
           "image": "/rpg-assets/characters/jun/outfits/alt-outfit.png",
-          "left": 0.2,
-          "right": 0.8,
-          "top": 0.24,
-          "bottom": 0.56,
-          "notes": "Editable top-focused starting crop; tune this per image in the preview."
+          "left": 0.16,
+          "right": 0.84,
+          "top": 0.17,
+          "bottom": 0.45,
+          "notes": "Inspected full-body artwork; upper outfit crop."
         }
       }
     },
@@ -404,31 +404,39 @@
       "variants": {
         "primary.png": {
           "image": "/rpg-assets/characters/kaede/portraits/primary.png",
-          "left": 0.2,
-          "right": 0.8,
-          "top": 0.24,
-          "bottom": 0.56,
-          "notes": "Editable top-focused starting crop; tune this per image in the preview."
+          "left": 0.16,
+          "right": 0.84,
+          "top": 0.38,
+          "bottom": 0.66,
+          "notes": "Inspected close portrait layout; tight upper-outfit crop."
         },
         "streetwear-preview.png": {
           "image": "/rpg-assets/characters/kaede/outfits/streetwear-preview.png",
-          "left": 0.2,
-          "right": 0.8,
-          "top": 0.24,
-          "bottom": 0.56,
-          "notes": "Editable top-focused starting crop; tune this per image in the preview."
+          "left": 0.06,
+          "right": 0.94,
+          "top": 0.17,
+          "bottom": 0.42,
+          "notes": "Inspected narrow full-body preview; centers the upper outfit."
         }
       }
     },
     "laca": {
       "variants": {
-        "neutral.webp": {
-          "image": "/rpg-assets/characters/laca/expression-portraits/neutral.webp",
-          "left": 0.2,
-          "right": 0.8,
-          "top": 0.24,
-          "bottom": 0.56,
-          "notes": "Editable top-focused starting crop; tune this per image in the preview."
+        "casual-neutral.webp": {
+          "image": "/rpg-assets/characters/laca/outfits/casual/neutral.webp",
+          "left": 0.14,
+          "right": 0.86,
+          "top": 0.17,
+          "bottom": 0.43,
+          "notes": "Inspected casual outfit artwork; upper top and bodice crop."
+        },
+        "lifeguard-neutral.webp": {
+          "image": "/rpg-assets/characters/laca/outfits/lifeguard/neutral.webp",
+          "left": 0.14,
+          "right": 0.86,
+          "top": 0.17,
+          "bottom": 0.43,
+          "notes": "Inspected lifeguard outfit artwork; upper top and bodice crop."
         }
       }
     },
@@ -436,11 +444,11 @@
       "variants": {
         "avatar_concept.webp": {
           "image": "/rpg-assets/characters/luna/previews/avatar_concept.webp",
-          "left": 0.2,
-          "right": 0.8,
-          "top": 0.24,
-          "bottom": 0.56,
-          "notes": "Editable top-focused starting crop; tune this per image in the preview."
+          "left": 0.12,
+          "right": 0.88,
+          "top": 0.4,
+          "bottom": 0.72,
+          "notes": "Inspected close avatar artwork; tight upper-outfit crop."
         }
       }
     },
@@ -448,19 +456,19 @@
       "variants": {
         "primary.png": {
           "image": "/rpg-assets/characters/marina/portraits/primary.png",
-          "left": 0.2,
-          "right": 0.8,
-          "top": 0.24,
-          "bottom": 0.56,
-          "notes": "Editable top-focused starting crop; tune this per image in the preview."
+          "left": 0.16,
+          "right": 0.84,
+          "top": 0.38,
+          "bottom": 0.66,
+          "notes": "Inspected close portrait layout; tight upper-outfit crop."
         },
         "streetwear-preview.png": {
           "image": "/rpg-assets/characters/marina/outfits/streetwear-preview.png",
-          "left": 0.2,
-          "right": 0.8,
-          "top": 0.24,
-          "bottom": 0.56,
-          "notes": "Editable top-focused starting crop; tune this per image in the preview."
+          "left": 0.06,
+          "right": 0.94,
+          "top": 0.17,
+          "bottom": 0.42,
+          "notes": "Inspected narrow full-body preview; centers the upper outfit."
         }
       }
     },
@@ -468,19 +476,19 @@
       "variants": {
         "primary.webp": {
           "image": "/rpg-assets/characters/nereo/portraits/primary.webp",
-          "left": 0.2,
-          "right": 0.8,
-          "top": 0.24,
-          "bottom": 0.56,
-          "notes": "Editable top-focused starting crop; tune this per image in the preview."
+          "left": 0.16,
+          "right": 0.84,
+          "top": 0.38,
+          "bottom": 0.66,
+          "notes": "Inspected close portrait layout; tight upper-outfit crop."
         },
         "alt-outfit.png": {
           "image": "/rpg-assets/characters/nereo/outfits/alt-outfit.png",
-          "left": 0.2,
-          "right": 0.8,
-          "top": 0.24,
-          "bottom": 0.56,
-          "notes": "Editable top-focused starting crop; tune this per image in the preview."
+          "left": 0.16,
+          "right": 0.84,
+          "top": 0.17,
+          "bottom": 0.45,
+          "notes": "Inspected full-body artwork; upper outfit crop."
         }
       }
     },
@@ -488,19 +496,19 @@
       "variants": {
         "primary.png": {
           "image": "/rpg-assets/characters/reina/portraits/primary.png",
-          "left": 0.2,
-          "right": 0.8,
-          "top": 0.24,
-          "bottom": 0.56,
-          "notes": "Editable top-focused starting crop; tune this per image in the preview."
+          "left": 0.16,
+          "right": 0.84,
+          "top": 0.38,
+          "bottom": 0.66,
+          "notes": "Inspected close portrait layout; tight upper-outfit crop."
         },
         "streetwear-preview.png": {
           "image": "/rpg-assets/characters/reina/outfits/streetwear-preview.png",
-          "left": 0.2,
-          "right": 0.8,
-          "top": 0.24,
-          "bottom": 0.56,
-          "notes": "Editable top-focused starting crop; tune this per image in the preview."
+          "left": 0.06,
+          "right": 0.94,
+          "top": 0.17,
+          "bottom": 0.42,
+          "notes": "Inspected narrow full-body preview; centers the upper outfit."
         }
       }
     },
@@ -508,11 +516,11 @@
       "variants": {
         "neutral.webp": {
           "image": "/rpg-assets/characters/rina/expression-portraits/neutral.webp",
-          "left": 0.2,
-          "right": 0.8,
-          "top": 0.24,
-          "bottom": 0.56,
-          "notes": "Editable top-focused starting crop; tune this per image in the preview."
+          "left": 0.12,
+          "right": 0.88,
+          "top": 0.4,
+          "bottom": 0.72,
+          "notes": "Inspected close avatar artwork; tight upper-outfit crop."
         }
       }
     },
@@ -520,19 +528,19 @@
       "variants": {
         "primary.png": {
           "image": "/rpg-assets/characters/shiori/portraits/primary.png",
-          "left": 0.2,
-          "right": 0.8,
-          "top": 0.24,
-          "bottom": 0.56,
-          "notes": "Editable top-focused starting crop; tune this per image in the preview."
+          "left": 0.16,
+          "right": 0.84,
+          "top": 0.38,
+          "bottom": 0.66,
+          "notes": "Inspected close portrait layout; tight upper-outfit crop."
         },
         "streetwear-preview.png": {
           "image": "/rpg-assets/characters/shiori/outfits/streetwear-preview.png",
-          "left": 0.2,
-          "right": 0.8,
-          "top": 0.24,
-          "bottom": 0.56,
-          "notes": "Editable top-focused starting crop; tune this per image in the preview."
+          "left": 0.06,
+          "right": 0.94,
+          "top": 0.17,
+          "bottom": 0.42,
+          "notes": "Inspected narrow full-body preview; centers the upper outfit."
         }
       }
     },
@@ -540,11 +548,11 @@
       "variants": {
         "portrait.png": {
           "image": "/rpg-assets/characters/sierra/portrait.png",
-          "left": 0.2,
-          "right": 0.8,
-          "top": 0.24,
-          "bottom": 0.56,
-          "notes": "Editable top-focused starting crop; tune this per image in the preview."
+          "left": 0.15,
+          "right": 0.85,
+          "top": 0.16,
+          "bottom": 0.46,
+          "notes": "Inspected full-body artwork; centers the upper outfit."
         }
       }
     },
@@ -552,11 +560,11 @@
       "variants": {
         "primary.png": {
           "image": "/rpg-assets/characters/sol/portraits/primary.png",
-          "left": 0.2,
-          "right": 0.8,
-          "top": 0.24,
-          "bottom": 0.56,
-          "notes": "Editable top-focused starting crop; tune this per image in the preview."
+          "left": 0.16,
+          "right": 0.84,
+          "top": 0.38,
+          "bottom": 0.66,
+          "notes": "Inspected close portrait layout; tight upper-outfit crop."
         }
       }
     },
@@ -564,19 +572,19 @@
       "variants": {
         "primary.webp": {
           "image": "/rpg-assets/characters/teo/portraits/primary.webp",
-          "left": 0.2,
-          "right": 0.8,
-          "top": 0.24,
-          "bottom": 0.56,
-          "notes": "Editable top-focused starting crop; tune this per image in the preview."
+          "left": 0.16,
+          "right": 0.84,
+          "top": 0.38,
+          "bottom": 0.66,
+          "notes": "Inspected close portrait layout; tight upper-outfit crop."
         },
         "alt-outfit.png": {
           "image": "/rpg-assets/characters/teo/outfits/alt-outfit.png",
-          "left": 0.2,
-          "right": 0.8,
-          "top": 0.24,
-          "bottom": 0.56,
-          "notes": "Editable top-focused starting crop; tune this per image in the preview."
+          "left": 0.16,
+          "right": 0.84,
+          "top": 0.17,
+          "bottom": 0.45,
+          "notes": "Inspected full-body artwork; upper outfit crop."
         }
       }
     },
@@ -584,19 +592,19 @@
       "variants": {
         "primary.png": {
           "image": "/rpg-assets/characters/yuna/portraits/primary.png",
-          "left": 0.2,
-          "right": 0.8,
-          "top": 0.24,
-          "bottom": 0.56,
-          "notes": "Editable top-focused starting crop; tune this per image in the preview."
+          "left": 0.16,
+          "right": 0.84,
+          "top": 0.38,
+          "bottom": 0.66,
+          "notes": "Inspected close portrait layout; tight upper-outfit crop."
         },
         "streetwear-preview.png": {
           "image": "/rpg-assets/characters/yuna/outfits/streetwear-preview.png",
-          "left": 0.2,
-          "right": 0.8,
-          "top": 0.24,
-          "bottom": 0.56,
-          "notes": "Editable top-focused starting crop; tune this per image in the preview."
+          "left": 0.06,
+          "right": 0.94,
+          "top": 0.17,
+          "bottom": 0.42,
+          "notes": "Inspected narrow full-body preview; centers the upper outfit."
         }
       }
     }
