@@ -2,7 +2,6 @@
 const NeoOutfitChime=(()=>{
  const focusUrl='/rpg-assets/outfit-chime-focus.json';
  let focusPromise=null,visible=null,timer=null;
- const lastSeen=new Map();
  const load=()=>focusPromise||(focusPromise=fetch(focusUrl).then(r=>r.ok?r.json():null).catch(()=>null));
  function cancel(){if(timer)clearTimeout(timer);timer=null;visible?.remove();visible=null;}
  async function display(portrait,focus,duration=3000){
@@ -46,19 +45,16 @@ const NeoOutfitChime=(()=>{
   const outfit=[];
   for(const {id,portrait} of characters){
    if(!id||!portrait)continue;
-   const previous=lastSeen.get(id);
-   lastSeen.set(id,portrait);
    const name=portrait.split('/').pop();
    const focus=data?.characters?.[id]?.variants?.[name];
-   if(focus&&portrait.includes('/'+id+'/')&&previous!==portrait)outfit.push({id,portrait,focus});
+   if(focus&&portrait.includes('/'+id+'/'))outfit.push({id,portrait,focus});
   }
-  const newIds=new Set(firstMeetings.map(x=>x.id));
+  const outfitIds=new Set(outfit.map(item=>item.id));
+  // Every place entry gets the special-look reveal, even when the same outfit
+  // was already shown at another location or this is the character's first meeting.
+  for(const item of outfit)await display(item.portrait,item.focus,3000);
   for(const item of firstMeetings){
-   if(item?.portrait)await display(item.portrait,{top:.06,bottom:.53},3000);
-  }
-  for(const item of outfit){
-   // An introduction and outfit reveal must not both play for one NPC on arrival.
-   if(!newIds.has(item.id))await display(item.portrait,item.focus,3000);
+   if(item?.portrait&&!outfitIds.has(item.id))await display(item.portrait,{top:.06,bottom:.53},3000);
   }
  }
  return {onEntry,cancel,firstMeeting:({portrait})=>display(portrait,{top:.06,bottom:.53},3000)};
