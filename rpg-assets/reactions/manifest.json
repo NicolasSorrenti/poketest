@@ -196,6 +196,20 @@
     "laca": {
       "default": "/rpg-assets/characters/laca/expression-portraits/neutral.webp",
       "attack": "/rpg-assets/characters/laca/expression-portraits/neutral.webp"
+    },
+    "daisy": {
+      "default": "/rpg-assets/characters/daisy/expression-portraits/neutral.png",
+      "attack": "/rpg-assets/characters/daisy/expression-portraits/determined.png",
+      "play_card": "/rpg-assets/characters/daisy/expression-portraits/happy.png",
+      "evolve": "/rpg-assets/characters/daisy/expression-portraits/happy.png",
+      "power": "/rpg-assets/characters/daisy/expression-portraits/determined.png",
+      "hurt": "/rpg-assets/characters/daisy/expression-portraits/surprised.png",
+      "big_hit": "/rpg-assets/characters/daisy/expression-portraits/surprised.png",
+      "weakness_hit": "/rpg-assets/characters/daisy/expression-portraits/surprised.png",
+      "status_hit": "/rpg-assets/characters/daisy/expression-portraits/angry.png",
+      "ko_taken": "/rpg-assets/characters/daisy/expression-portraits/concerned.png",
+      "ko_scored": "/rpg-assets/characters/daisy/expression-portraits/happy.png",
+      "match_cutin": "/rpg-assets/characters/daisy/portraits/primary.png"
     }
   }
 }
