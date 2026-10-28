@@ -1713,7 +1713,11 @@ function renderGallery(){
    const entries=all.filter(e=>e.character===id),earned=entries.filter(e=>e.unlocked);
    const btn=document.createElement('button');btn.type='button';btn.className='cg-character-card';
    const avatar=document.createElement('div');avatar.className='cg-character-avatar';
-   // Character portraits are ordinary public overworld assets; no hidden CG is fetched.
+   // Use the same canonical portrait and broken-image fallback as the RPG roster.
+   const face=makeAvatar(id);
+   face.alt=cast[id]?.name||id;
+   face.loading='lazy';
+   avatar.append(face);
    const name=document.createElement('strong');name.textContent=cast[id]?.name||id;
    const stat=document.createElement('small');stat.textContent=earned.length+' / '+entries.length+' memories unlocked';
    btn.append(avatar,name,stat);
