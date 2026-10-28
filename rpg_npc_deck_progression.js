@@ -39,7 +39,7 @@ function tierForOpponent(state,npc){
  if(typeof npc!=='string'||!/^[a-z][a-z0-9_]*$/.test(npc))return calendar;
  const chapter=number=>['route','guest','bond'].some(kind=>completed(state?.storyDone,npc+'_'+kind+'_'+number));
  const rivalry=npc==='reina'&&state?.arcFlags;
- if(Number.isInteger(day)&&day>=45&&(chapter(3)||(rivalry&&completed(rivalry,'reina_rival_2'))))return 3;
+ if(Number.isInteger(day)&&day>=45&&(chapter(3)||(rivalry&&completed(rivalry,'reina_rival_2'))))return Math.max(calendar,3);
  if(Number.isInteger(day)&&day>=18&&(chapter(1)||(rivalry&&completed(rivalry,'reina_rival_1'))))return Math.max(calendar,2);
  return calendar;
 }
