@@ -41,3 +41,10 @@ Create a separate Render Web Service from this repository and select `feature/dr
 4. Toggle guides and recenter.
 5. Resize/orient the device, repeat with eight demo characters.
 6. Verify the production RPG URL remains unchanged.
+
+## Pixel Palace illustrated v1
+The HTML now automatically tries to load `/rpg-assets/locations/arcade/overworld-map.webp` and falls back to the original schematic until that binary asset is uploaded. The prepared clean environment art file is named `overworld-map.webp` and is 1550 x 1120 pixels. On GitHub, upload it to **this experimental branch only** at `rpg-assets/locations/arcade/overworld-map.webp`. The Render preview auto-deploys from branch commits.
+
+The prototype includes seven independently clickable developer hotspots: west arcade cabinets, north retro machines, prizes, claw machines, tournament tables, lounge and drinks. The **Guides** toggle hides/shows activity-zone labels and the **Center** control recenters the camera. Hotspots are intentionally demonstration-only; no RPG actions or save logic are modified.
+
+The proposed art is closely aligned with the blueprint composition, but exact background hotspot matching should be validated visually after upload, since image generation does not preserve geometry perfectly.
