@@ -584,3 +584,11 @@ dialog.cg-lightbox{position:fixed;inset:0;width:100vw;max-width:none;height:100d
  .stage-panel > #rpgActionDock{margin:10px 0 0;padding:12px}
  .stage-panel > #rpgActionDock .rpg-dock-tabs{flex-wrap:wrap}
 }
+
+/* The detached action dock must not inherit the old centered overlay transform or animation. */
+.layout > .stage-panel{grid-column:1 / -1;width:100%;max-width:none;min-width:0}
+.stage-panel > #rpgActionDock{
+ transform:none;animation:none;left:auto;right:auto;bottom:auto;
+ width:100%;max-width:none;margin:12px 0 0;
+}
+@media(max-width:700px){.stage-panel > #rpgActionDock{width:100%;margin:10px 0 0}}
