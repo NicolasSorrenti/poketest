@@ -650,8 +650,11 @@ function prizeRaceBonus(action,o,cfg){
   // An actual knockout that takes our final Prize or eliminates their last
   // Pokémon must dominate speculative development, retreat or Trainer play.
   const victory=urgent?550*ko:0;
-  const theirWin=enemy.prizeCount===1&&
-   strongestAffordableAttack(enemy.active,own.active)>=hpRemaining(own.active);
+  // A printed lethal attack is not a next-turn loss when the opponent
+  // cannot declare it (Sleep, Paralysis, Amnesia or Gym cooldown), or when
+  // Confusion/attack flips make the knockout unreliable. Only public state
+  // is inspected; this is the same conservative threat test used elsewhere.
+  const theirWin=enemy.prizeCount===1&&likelyOpponentKnockout(o,own.active);
   // Even without winning outright, trading Prizes before a likely loss helps.
   const trade=(!urgent&&theirWin?100*ko:0)+(!urgent?45*ko:0);
   return (victory+trade)*cfg.style.damage;
