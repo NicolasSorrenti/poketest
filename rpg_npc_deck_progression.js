@@ -27,6 +27,18 @@ sierra:{signature:'base1-7',trainers:['base1-84','base1-93','base1-71','base1-74
  daisy:{signature:'base2-61',trainers:['base1-77','base1-88','base1-71','base1-74']}
 });
 const DEFAULT=Object.freeze({trainers:['base1-91','base1-88','base1-71','base1-74']});
+// Strategy metadata used by the dynamic 60-card campaign recipes.
+// Each character keeps a distinct plan while later tiers add consistency.
+const STRATEGIES=Object.freeze({
+ hana:'teamwork setup and efficient Wigglytuff pressure', reina:'fast Fighting haymaker pressure', shiori:'Grass evolution control and damage management',
+ yuna:'high-variance Lightning/Psychic tempo', akari:'denial, hand disruption and slow advantage', camila:'Dark control with status and lock pieces',
+ marina:'Water setup into a heavy evolution finisher', kaede:'Dark disruption with poison and efficient attackers', jun:'Fossil control and resource denial',
+ teo:'fast Fire tempo and prize racing', iris:'adaptive Water/Fire midrange', elio:'careful Fossil basics and defensive setup', alma:'slow lock control with resource exhaustion',
+ nereo:'patient Water control and recovery', barb:'creative Psychic/Lightning tempo', laca:'aggressive Water evolution tempo', daisy:'Water reversal and late-game burst',
+ rina:'Grass beatdown with reliable evolution setup', sol:'Fire/Water surprise tempo', jinx:'pure Lightning aggression', luna:'gentle Water tempo control',
+ elena:'calculated Jungle control', sierra:'Fighting disruption and denial'
+});
+
 const FODDER=Object.freeze(['Potion','Super Potion','Pokédex','Defender','Full Heal','Maintenance','Revive','Pokémon Flute']);
 // Seven campaign tiers: a new deck package every 15 in-game days.
 const tierForDay=day=>Number.isInteger(day)&&day>=91?7:Number.isInteger(day)&&day>=76?6:Number.isInteger(day)&&day>=61?5:Number.isInteger(day)&&day>=46?4:Number.isInteger(day)&&day>=31?3:Number.isInteger(day)&&day>=16?2:1;
@@ -218,6 +230,6 @@ function upgrade(args){
  if(args.tier===1||!BALANCED_SWAPS[args.npc])return out;
  return applyBalancedSwaps(out,BALANCED_SWAPS[args.npc],args.catalog);
 }
-const api=Object.freeze({PROFILES,tierForDay,tierForOpponent,variantForDuel,varyDeck,upgrade,baselineUpgrade,eligible,count});
+const api=Object.freeze({PROFILES,STRATEGIES,tierForDay,tierForOpponent,variantForDuel,varyDeck,upgrade,baselineUpgrade,eligible,count});
 if(typeof module==='object'&&module.exports)module.exports=api;
 if(typeof window!=='undefined')window.NeoRpgNpcDeckProgression=api;
