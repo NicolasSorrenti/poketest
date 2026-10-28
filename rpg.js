@@ -2387,8 +2387,7 @@ async function finishOverworldArrival(destination){
  try{
   hanaEncounterKey='entry:'+ ++hanaEncounterSerial;
   const present=currentPeople();
-  const characters=present.filter(id=>Object.hasOwn(SPECIAL_LOOKS,id))
-   .map(id=>({id,portrait:scenePortraitSource(id,'neutral',null)}));
+  const characters=present.map(id=>({id,portrait:scenePortraitSource(id,'neutral',null)}));
   const firstMeetings=present.filter(id=>!state['met_'+id]&&!state.overworldIntroductions?.[id]&&!(id==='reina'&&state.metReina))
    .map(id=>({id,portrait:scenePortraitSource(id,'neutral',null)}));
   if(typeof NeoOutfitChime!=='undefined'){
