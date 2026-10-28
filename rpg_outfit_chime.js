@@ -6,7 +6,7 @@ const NeoOutfitChime=(()=>{
  function addMotion(){
   if(document.getElementById('neoOutfitChimeMotion'))return;
   const style=document.createElement('style');style.id='neoOutfitChimeMotion';
-  style.textContent='@keyframes neoOutfitChimeFade{from{opacity:0}to{opacity:1}}@keyframes neoOutfitChimePop{0%{opacity:0;transform:scale(.78) translateY(18px)}70%{opacity:1;transform:scale(1.035) translateY(-2px)}100%{opacity:1;transform:scale(1) translateY(0)}}@media(prefers-reduced-motion:reduce){.neo-outfit-chime,.neo-outfit-chime-panel{animation:none!important}}';
+  style.textContent='@keyframes neoOutfitChimeFade{from{opacity:0}to{opacity:1}}@keyframes neoOutfitChimePop{0%{opacity:0;transform:scale(.78) translateY(18px)}70%{opacity:1;transform:scale(1.035) translateY(-2px)}100%{opacity:1;transform:scale(1) translateY(0)}}@media(max-width:620px){.neo-outfit-chime-group{flex-direction:column!important;gap:10px!important;max-height:94dvh}.neo-outfit-chime-card{max-height:39dvh}}@media(prefers-reduced-motion:reduce){.neo-outfit-chime,.neo-outfit-chime-panel{animation:none!important}}';
   document.head.append(style);
  }
  function cancel(){if(timer)clearTimeout(timer);timer=null;visible?.remove();visible=null;}
@@ -62,7 +62,55 @@ const NeoOutfitChime=(()=>{
   const metrics=positionCropImage(img,viewport,crop);
   return {image:img,crop,metrics,panel,viewport};
  }
+ async function displayTogether(items,duration=3000){
+  cancel();
+  addMotion();
+  const loaded=(await Promise.all(items.slice(0,2).map(async item=>{
+   const img=await loadPortrait(item.portrait);
+   return img?{...item,img}:null;
+  }))).filter(Boolean);
+  if(!loaded.length)return;
+  const screen=document.createElement('div');
+  screen.className='neo-outfit-chime';
+  screen.setAttribute('aria-hidden','true');
+  screen.style.cssText='position:fixed;inset:0;z-index:2147481000;display:grid;place-items:center;background:#060a1bd9;pointer-events:auto;animation:neoOutfitChimeFade .22s ease-out both;';
+  const group=document.createElement('div');
+  group.className='neo-outfit-chime-panel neo-outfit-chime-group';
+  group.style.cssText='display:flex;flex-direction:row;justify-content:center;align-items:center;gap:14px;width:min(94vw,960px);max-height:92vh;animation:neoOutfitChimePop .52s cubic-bezier(.2,.8,.2,1) both;';
+  for(const item of loaded){
+   const crop=cropBounds(item.focus,item.img);
+   const card=document.createElement('div');
+   card.className='neo-outfit-chime-card';
+   card.style.cssText='position:relative;box-sizing:border-box;flex:0 1 auto;overflow:hidden;border:2px solid #fad59dd9;border-radius:16px;background:#111;box-shadow:0 14px 55px #000c;aspect-ratio:'+crop.ratio+';';
+   const mobile=matchMedia('(max-width:620px)').matches;
+   const maxWidth=mobile?window.innerWidth*.9:Math.min(window.innerWidth*.44,560);
+   card.style.width=Math.min(maxWidth,window.innerHeight*(mobile?.37:.42)*crop.ratio)+'px';
+   const img=item.img;
+   img.style.cssText='position:absolute;max-width:none;';
+   const viewport=document.createElement('div');
+   viewport.style.cssText='position:absolute;inset:0;overflow:hidden;';
+   viewport.append(img);
+   card.append(viewport,makeBadge());
+   group.append(card);
+   fitCropWindow(card,viewport,crop);
+   positionCropImage(img,viewport,crop);
+  }
+  screen.append(group);
+  document.body.append(screen);
+  visible=screen;
+  await new Promise(resolve=>{
+   let done=false;
+   const finish=()=>{if(done)return;done=true;clearTimeout(timer);timer=null;screen.remove();if(visible===screen)visible=null;resolve();};
+   timer=setTimeout(finish,duration);
+   screen.addEventListener('click',finish,{once:true});
+  });
+ }
  async function display(portrait,focus,duration=3000){
+  if(Array.isArray(portrait)){
+   const items=portrait.map(item=>typeof item==='string'?{portrait:item,focus:null}:item).filter(item=>item?.portrait).slice(0,2);
+   if(items.length>1)return displayTogether(items,duration);
+   if(items.length===1){portrait=items[0].portrait;focus=items[0].focus??focus;}
+  }
   if(!portrait||typeof document==='undefined')return;
   cancel();
   addMotion();
@@ -104,20 +152,32 @@ const NeoOutfitChime=(()=>{
   for(const {id,portrait} of characters){
    if(!id||!portrait||!portrait.includes('/'+id+'/'))continue;
    const name=portrait.split('/').pop().split('?')[0];
-   const focus=data?.characters?.[id]?.variants?.[name];
-   // Focus metadata controls framing only. A valid special outfit always gets a reveal.
-   const barbBodiceFocus=id==='barb'&&isSpecialPortrait(portrait)?{top:.20,bottom:.38,left:.24,right:.78}:null;
-   if(focus||barbBodiceFocus||isSpecialPortrait(portrait))outfit.push({id,portrait,focus:focus||barbBodiceFocus||{top:.06,bottom:.53}});
+   const characterData=data?.characters?.[id]||{};
+   const focus=characterData.variants?.[name];
+   const isOutfit=isSpecialPortrait(portrait);
+   const pairNames=characterData.chimePairs?.[name];
+   const pairConfigured=Array.isArray(pairNames)&&pairNames.length>1;
+   if(!focus&&!isOutfit&&!pairConfigured)continue;
+   const pairFiles=pairConfigured?pairNames.slice(0,2):[name];
+   const images=pairFiles.map(file=>{
+    const source=String(file);
+    const pairPortrait=/^(?:https?:)?\/\//i.test(source)||source.startsWith('/')?source:portrait.slice(0,portrait.lastIndexOf('/')+1)+source;
+    const pairName=pairPortrait.split('/').pop().split('?')[0];
+    const pairFocus=characterData.variants?.[pairName];
+    const barbBodiceFocus=id==='barb'&&isSpecialPortrait(pairPortrait)?{top:.20,bottom:.38,left:.24,right:.78}:null;
+    return {portrait:pairPortrait,focus:pairFocus||barbBodiceFocus||{top:.06,bottom:.53}};
+   });
+   outfit.push({id,images});
   }
   const outfitIds=new Set(outfit.map(item=>item.id));
   // Every place entry gets the special-look reveal, even when the same outfit
   // was already shown at another location or this is the character's first meeting.
-  for(const item of outfit)await display(item.portrait,item.focus,3000);
+  for(const item of outfit)await display(item.images.length>1?item.images:item.images[0].portrait,item.images[0].focus,3000);
   for(const item of firstMeetings){
    if(item?.portrait&&!outfitIds.has(item.id))await display(item.portrait,{top:.06,bottom:.53},3000);
   }
  }
- const api=Object.freeze({onEntry,cancel,renderPreview,firstMeeting:({portrait})=>display(portrait,{top:.06,bottom:.53},3000)});
+ const api=Object.freeze({onEntry,cancel,renderPreview,displayTogether,firstMeeting:({portrait})=>display(portrait,{top:.06,bottom:.53},3000)});
  if(typeof window!=='undefined')window.NeoOutfitChime=api;
  return api;
 })();
