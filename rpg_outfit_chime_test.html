@@ -23,8 +23,8 @@
 <div class="row"><label for="right">Right edge</label><input id="rightN" type="number" min="12" max="100" step="1"></div><input id="right" type="range" min="12" max="100" step="1">
 <div class="row"><label for="top">Top edge</label><input id="topN" type="number" min="0" max="80" step="1"></div><input id="top" type="range" min="0" max="80" step="1">
 <div class="row"><label for="bottom">Bottom edge</label><input id="bottomN" type="number" min="12" max="100" step="1"></div><input id="bottom" type="range" min="12" max="100" step="1">
-<div class="buttons"><button id="apply" class="primary" type="button">Apply crop</button><button id="reset" type="button">Reset to preset</button></div>
-<p class="fine">Bounds are percentages of the original image. Slider changes are only for preview and are not saved.</p>
+<div class="buttons"><button id="apply" class="primary" type="button">Apply crop</button><button id="save" type="button">Save crop</button><button id="reset" type="button">Reset to preset</button></div><div class="buttons"><button id="exportAll" class="primary" type="button">Export all crops</button></div>
+<p class="fine">Adjust a crop, click <strong>Save crop</strong>, then use <strong>Export all crops</strong> to download the complete JSON file.</p>
 <div id="status" aria-live="polite"><strong>Preview checks</strong><div id="checks"></div></div>
 </section>
 <section class="card preview-wrap">
@@ -41,7 +41,10 @@
  const $=id=>document.getElementById(id),checks=$('checks');
  const data=await fetch('/rpg-assets/outfit-chime-focus-top.json?preview=1').then(r=>{if(!r.ok)throw Error('Preset file could not be loaded');return r.json()});
  let generation=0;
+ const storageKey='neo-campus-outfit-crop-edits-v1';
  const labels=data.labels||{};
+ const saved=JSON.parse(localStorage.getItem(storageKey)||'{}');
+ for(const [key,value] of Object.entries(saved)){const [id,name]=key.split('::');if(data.characters[id]?.variants[name])Object.assign(data.characters[id].variants[name],value);}
  for(const id of Object.keys(data.characters)){const o=document.createElement('option');o.value=id;o.textContent=labels[id]||id;$('character').append(o);}
  function selected(){return data.characters[$('character').value]}
  function current(){return selected().variants[$('variant').value]}
@@ -72,10 +75,15 @@
   for(const name of Object.keys(variants)){const o=document.createElement('option');o.value=name;o.textContent=name;$('variant').append(o);}
   $('variant').value=Object.keys(variants)[0];loadPreset();
  }
+ function cropKey(){return $('character').value+'::'+$('variant').value;}
+ function saveCurrent(){const f=focus(),key=cropKey();Object.assign(current(),f);saved[key]=f;localStorage.setItem(storageKey,JSON.stringify(saved));$('status').querySelector('.fine')?.remove();const note=document.createElement('div');note.className='fine';note.textContent='Saved locally for this browser.';$('status').append(note);render();}
+ function exportAll(){const out=JSON.parse(JSON.stringify(data));for(const [key,value] of Object.entries(saved)){const [id,name]=key.split('::');if(out.characters[id]?.variants[name])Object.assign(out.characters[id].variants[name],value);}const blob=new Blob([JSON.stringify(out,null,2)+'\\n'],{type:'application/json'});const url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='outfit-chime-focus-top-export.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);}
  function loadPreset(){setValues(current());render();}
  $('character').addEventListener('change',populateVariants);
  $('variant').addEventListener('change',loadPreset);
  $('apply').addEventListener('click',render);
+ $('save').addEventListener('click',saveCurrent);
+ $('exportAll').addEventListener('click',exportAll);
  $('reset').addEventListener('click',loadPreset);
  populateVariants();
 })().catch(error=>{const c=document.getElementById('checks');c.textContent='Preview setup failed: '+error.message;});
