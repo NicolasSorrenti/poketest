@@ -179,7 +179,7 @@ const NeoOutfitChime=(()=>{
    if(item?.portrait&&!outfitIds.has(item.id))await display(item.portrait,firstMeetingFocus(item.id),durationMs);
   }
  }
- const api=Object.freeze({onEntry,cancel,renderPreview,displayTogether,firstMeeting:({portrait,id})=>display(portrait,firstMeetingFocus(id),1500)});
+ const api=Object.freeze({onEntry,cancel,renderPreview,displayTogether,display,firstMeeting:({portrait,id})=>display(portrait,firstMeetingFocus(id),1500)});
  if(typeof window!=='undefined')window.NeoOutfitChime=api;
  return api;
 })();
