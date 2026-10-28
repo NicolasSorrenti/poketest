@@ -225,11 +225,15 @@ function varyDeck(cards,npc,variant,catalog){
  }
  return out;
 }
+function recipeFor({npc,tier,original,catalog}){
+ if(!Number.isInteger(tier)||tier<1||tier>7)throw Error('Invalid NPC deck tier');
+ return upgrade({npc,tier,original,catalog});
+}
 function upgrade(args){
  const out=baselineUpgrade(args);
  if(args.tier===1||!BALANCED_SWAPS[args.npc])return out;
  return applyBalancedSwaps(out,BALANCED_SWAPS[args.npc],args.catalog);
 }
-const api=Object.freeze({PROFILES,STRATEGIES,tierForDay,tierForOpponent,variantForDuel,varyDeck,upgrade,baselineUpgrade,eligible,count});
+const api=Object.freeze({PROFILES,STRATEGIES,recipeFor,tierForDay,tierForOpponent,variantForDuel,varyDeck,upgrade,baselineUpgrade,eligible,count});
 if(typeof module==='object'&&module.exports)module.exports=api;
 if(typeof window!=='undefined')window.NeoRpgNpcDeckProgression=api;
