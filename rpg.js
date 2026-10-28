@@ -460,7 +460,6 @@ function selectPerson(id,{skipInvitation=false}={}){
    });
   return;
  }
- markSpecialLookSeen(id);
  if(id==='hana'&&!(hanaEncounterKey||'').startsWith('entry:'))hanaEncounterKey='talk:'+ ++hanaEncounterSerial;
  const today=state.day+':'+id,fresh=!state.talked[today];
  state['met_'+id]=true;
@@ -2128,8 +2127,7 @@ const DAILY_STAGE_ALTERNATES={
  akari:Array.from({length:5},(_,i)=>'/rpg-assets/characters/akari/portraits/special-day-'+(i+1)+'.png'),
  barb:Array.from({length:10},(_,i)=>'/rpg-assets/characters/barb/portraits/special-day-'+(i+1)+'.png')
 };
-// Special looks roll once per character per day. The pity counter advances only
-// for days on which the player did not SEE the special outfit, even if it was rolled.
+// Special looks roll once per character per day; their appearance is not consumed by viewing.
 const SPECIAL_LOOKS={
  ...DAILY_STAGE_ALTERNATES,
  hana:HANA_OVERWORLD_VARIANTS
@@ -2144,20 +2142,13 @@ function specialLookRecord(id,day=state.day){
  const chance=Math.min(1,.10+.05*missed);
  const active=Math.random()<chance;
  const portrait=active?files[Math.floor(Math.random()*files.length)]:null;
- const record={day,portrait,active,seen:false,missed:missed+1,chance};
+ const record={day,portrait,active,missed:missed+1,chance};
  root[id]=record;
  persist();
  return record;
 }
 function dailyStagePortrait(id,day){
  return specialLookRecord(id,day)?.portrait||null;
-}
-function markSpecialLookSeen(id){
- const record=specialLookRecord(id);
- if(!record?.active||record.seen)return;
- record.seen=true;
- record.missed=0;
- persist();
 }
 function stagePortraitPaths(id,expression,sceneId){
  const alternate=dailyStagePortrait(id,state.day);
@@ -2404,7 +2395,6 @@ async function finishOverworldArrival(destination){
    await NeoOutfitChime.onEntry({characters,firstMeetings});
   }
   if(state.location!==destination)return;
-  for(const {id} of characters)markSpecialLookSeen(id);
   if(firstMeetings.length){
    state.overworldIntroductions=state.overworldIntroductions||{};
    for(const {id} of firstMeetings)state.overworldIntroductions[id]=true;
@@ -2501,11 +2491,6 @@ function render(){
  const sideQuest=state.activeSideQuest?SIDE.byId(state.activeSideQuest.id):null,sideOwner=sideQuest?.stages[state.sideQuests[state.activeSideQuest?.id]?.step]?.npc;
   const portraitId=mandatoryPortrait||showingSlice?.npc||showingSituation?.npc||showingStory?.npc||showingEncounter?.npc||(showingArc?'reina':null)||sideOwner||state.selected,portraitRoot=$('portrait');
  activeOutfitSceneId=showingMandatory?.id||showingSlice?.id||showingSituation?.id||showingStory?.id||showingEncounter?.id||showingArc?.id||sideQuest?.id||null;
- // Being present in a rendered ordinary location counts as having been seen.
- // Do not count hidden/blocked cinematic or combat appearances.
- if(!activeOutfitSceneId&&!timeSequence.blocked&&!state.pendingDuel){
-  for(const id of currentPeople())if(Object.hasOwn(SPECIAL_LOOKS,id))markSpecialLookSeen(id);
- }
  const nextPortrait=portraitId&&cast[portraitId]?portraitId:'';
  const nextArt=nextPortrait?scenePortraitSource(nextPortrait,'neutral'):'';
  if(portraitRoot.dataset.npc!==nextPortrait||portraitRoot.dataset.artSrc!==nextArt){
