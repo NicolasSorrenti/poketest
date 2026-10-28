@@ -1072,7 +1072,12 @@
 
  // Daisy's authored random events have their own JSON source.
  const DAISY_EVENTS=typeof module==='object'&&module.exports?require('./characters/daisy/extra_events.json'):window.NeoRpgCharacterPacks?.byId?.('daisy')?.events||[];
- for(const event of (Array.isArray(DAISY_EVENTS)?DAISY_EVENTS:DAISY_EVENTS.events||[]).filter(e=>e.id.startsWith('daisy_random_')&&e.image))catalog.push({character:'daisy',id:event.id,category:'social',trigger:'slice',place:event.place,minAffection:event.minAffection||0,startDay:event.start,slot:event.slot,title:event.title,hint:'Encounter this approved Daisy slice-of-life event.',scene:event.art.scene,composition:event.art.composition,outfit:event.art.outfit,expression:event.art.expression,environment:event.art.environment,mood:event.art.mood,fanservice:0,path:event.image,thumb:event.image,dialogueSafe:'Lower fifth clear for dialogue UI',sliceId:event.id,randomForced:true});
+ // Some server-authorized Daisy events include an image but no art brief.
+ // Use safe descriptive metadata instead of aborting gallery initialization.
+ for(const event of (Array.isArray(DAISY_EVENTS)?DAISY_EVENTS:DAISY_EVENTS.events||[]).filter(e=>typeof e?.id==='string'&&e.id.startsWith('daisy_random_')&&e.image)){
+  const art=event.art||{};
+  catalog.push({character:'daisy',id:event.id,category:'social',trigger:'slice',place:event.place||null,minAffection:event.minAffection||0,startDay:event.start||1,slot:event.slot??null,title:event.title||'Daisy memory',hint:'Encounter this approved Daisy slice-of-life event.',scene:art.scene||event.title||'Daisy slice-of-life event',composition:art.composition||'Approved event illustration.',outfit:art.outfit||'Daisy approved outfit.',expression:art.expression||'Natural expression.',environment:art.environment||event.place||'Neo Harbor',mood:art.mood||'slice-of-life',fanservice:0,path:event.image,thumb:event.image,dialogueSafe:'Lower fifth clear for dialogue UI',sliceId:event.id,randomForced:true});
+ }
  // Ambience CGs are separate from scheduled stories and relationship chapters.
  const SLICE=typeof module==='object'&&module.exports?require('./rpg_slice_of_life'):window.NeoRpgSliceOfLife;
  for(const moment of SLICE?.scenes||[])catalog.push({
