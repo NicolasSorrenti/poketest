@@ -53,7 +53,7 @@ const NeoOutfitChime=(()=>{
   const data=await Promise.race([load(),new Promise(resolve=>setTimeout(()=>resolve(null),350))]);
   // Preserve baseline for only actually encountered characters.
   const outfit=[];
-  const isSpecialPortrait=portrait=>/\/(?:overworld-variants|portraits\/special-day-\d+|outfits\/[^/]+)\//.test(portrait);
+  const isSpecialPortrait=portrait=>/\/(?:overworld-variants\/|portraits\/special-day-\d+\.(?:png|webp|jpe?g)|outfits\/[^/]+\/)/i.test(portrait);
   for(const {id,portrait} of characters){
    if(!id||!portrait||!portrait.includes('/'+id+'/'))continue;
    const name=portrait.split('/').pop().split('?')[0];
