@@ -1,6 +1,6 @@
 // Blocking, data-driven overworld close-ups. Never creates replacement artwork.
 const NeoOutfitChime=(()=>{
- const focusUrl='/rpg-assets/outfit-chime-focus.json?v=20261028-akari-day5-tight-crop-1';
+ const focusUrl='/rpg-assets/outfit-chime-focus.json?v=20261028-akari-day5-tight-crop-2';
  let focusPromise=null,visible=null,timer=null;
  const load=()=>focusPromise||(focusPromise=new Promise(resolve=>{const timeout=setTimeout(()=>resolve(null),1500);fetch(focusUrl,{cache:'force-cache'}).then(r=>r.ok?r.json():null).catch(()=>null).then(data=>{clearTimeout(timeout);resolve(data);});}));
  load();
