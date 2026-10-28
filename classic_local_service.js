@@ -46,7 +46,7 @@ class ClassicLocalService {
   if(seed!==undefined&&(!Number.isSafeInteger(seed)||seed<0||seed>0xffffffff))throw Error('Invalid seed');
   if(prizeCount!==undefined&&prizeCount!==4&&prizeCount!==6)throw Error('Prize count must be 4 or 6');
   if(typeof advancedTactics!=='boolean')throw Error('advancedTactics must be a boolean');
-  if(!Number.isInteger(npcDeckTier)||npcDeckTier<1||npcDeckTier>3)throw Error('Invalid RPG NPC deck tier');
+  if(!Number.isInteger(npcDeckTier)||npcDeckTier<1||npcDeckTier>7)throw Error('Invalid RPG NPC deck tier');
   if(!Number.isInteger(npcDeckVariant)||npcDeckVariant<0||npcDeckVariant>2)throw Error('Invalid NPC deck variant');
   if(npcDeckTier>1&&(typeof npcDeckId!=='string'||!/^[a-z][a-z0-9_]*$/.test(npcDeckId)))throw Error('RPG NPC identity required for deck progression');
   // RPG duels supply npcDeckId for deck progression, including Act I. Reuse
