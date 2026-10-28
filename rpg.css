@@ -570,3 +570,9 @@ dialog.cg-lightbox{position:fixed;inset:0;width:100vw;max-width:none;height:100d
   min-height:250px;
  }
 }
+
+/* Character gallery headshots; crop the existing canonical character portrait. */
+.cg-character-card .cg-character-avatar{width:100px;height:100px;border-radius:50%;position:relative;overflow:hidden;display:flex;justify-content:center;align-items:flex-start;background:radial-gradient(circle at 50% 40%,#61719b,#232c4a)}
+.cg-character-card .cg-character-avatar>img{width:100%;height:100%;display:block;object-fit:cover;object-position:center 17%;transform:scale(1.32);transform-origin:center 28%}
+.cg-character-card .cg-character-avatar .avatar-fallback{position:absolute;inset:0;display:grid;place-items:center;font-weight:800;font-size:26px;color:#fff}
+.cg-character-card:focus-visible,.cg-category-tab:focus-visible{outline:3px solid #d7b5ff;outline-offset:2px}
