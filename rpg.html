@@ -55,7 +55,7 @@
       <details class="rpg-more-menu" id="rpgMoreMenu">
         <summary class="toolbar-btn" aria-label="More RPG tools">⋯ MORE</summary>
         <div class="rpg-more-content" aria-label="More RPG tools">
-          <button id="galleryBtn" class="toolbar-btn" type="button">▧ CG GALLERY</button>
+          <button id="galleryBtn" class="toolbar-btn" type="button">▧ ART GALLERY</button>
           <a href="/rpg_card_library.html?from=rpg" class="toolbar-btn">▤ CARD LIBRARY</a>
           <a href="/mat_generator.html" target="_blank" rel="noopener" class="toolbar-btn">▧ PLAYMAT STUDIO</a>
           <details class="rpg-audio-settings">
@@ -248,9 +248,9 @@
  <div id="communityConnections" class="community-connections" aria-label="Emerging character friendships and rivalries"></div>
 </dialog>
 
-<dialog id="galleryDialog" class="modal cg-dialog" aria-label="Unlocked event CG gallery">
- <div class="modal-heading"><h2>▧ Neo Harbor Memories</h2><button id="galleryClose" type="button">✕ Close</button></div>
- <p class="cg-intro">Discover personal moments by playing the RPG. Illustrations appear only after their art assets are installed.</p>
+<dialog id="galleryDialog" class="modal cg-dialog" aria-label="Character art gallery">
+ <div class="modal-heading"><h2>▧ Character Gallery</h2><button id="galleryClose" type="button">✕ Close</button></div>
+ <p class="cg-intro">Explore each character’s artwork. Locked memories remain hidden until you encounter them in the story.</p><div id="galleryCharacterPage" class="cg-character-page"></div><section id="galleryAlbumPage" hidden><button type="button" id="galleryBack" class="cg-gallery-back">← All characters</button><h3 id="galleryCharacterTitle"></h3>
  <div class="cg-filters">
   <label for="galleryCharacter">Character</label><select id="galleryCharacter">
     <option value="">All characters</option>
@@ -265,7 +265,7 @@
  <p id="galleryCount" class="cg-count" aria-live="polite"></p>
  <div id="galleryProgress" class="cg-progress" aria-label="Gallery completion by character and scene type"></div>
  <div id="galleryGrid" class="cg-grid"></div>
- <div id="galleryPreview" class="cg-preview" aria-live="polite"></div>
+ <div id="galleryPreview" class="cg-preview" aria-live="polite"></div></section>
 </dialog>
 
 <dialog id="preDuelDialog" class="modal preduel-dialog" aria-label="Before the duel" aria-modal="true">
