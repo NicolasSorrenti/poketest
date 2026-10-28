@@ -154,6 +154,27 @@ test('Apex Energy horizon restores attacks after Amnesia and Gym cooldown expire
  }
 });
 
+test('Apex does not forecast Energy damage from a permanently spent Gym attack',()=>{
+ // The reducer records once-used Gym attack indices on the Active. Unlike
+ // Amnesia and temporary cooldowns, these do not expire with turnSerial.
+ // DCE would fund Hitmonchan's second attack next turn, but that attack is
+ // marked unavailable. The projection must not spend Energy for a phantom KO.
+ const dce=futureEnergyBoard(FIGHT,'base1-96',[FIGHT]);
+ const noEnergy=futureEnergyBoard(FIGHT,'base1-91',[FIGHT]);
+ for(const o of [dce,noEnergy]){
+  o.turnSerial=11;
+  o.self.active.gymAttackOnce=[1];
+ }
+ assert.equal(AI.energyHorizonBonus(attachActive,dce,cfg),
+  AI.energyHorizonBonus(attachActive,noEnergy,cfg),
+  'a once-used attack must stay unavailable in next-turn Energy forecasts');
+ // Control: without the permanent lock, a legal future DCE is useful.
+ delete dce.self.active.gymAttackOnce;
+ delete noEnergy.self.active.gymAttackOnce;
+ assert.ok(AI.energyHorizonBonus(attachActive,dce,cfg)>
+  AI.energyHorizonBonus(attachActive,noEnergy,cfg));
+});
+
 test('Apex forecasts next-turn Energy through expiring, but not persistent, attack locks',()=>{
  // Hitmonchan can fund Special Punch with Fighting now and DCE next turn.
  // A temporary lock expiring by serial 13 should not erase that forecast.
