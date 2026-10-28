@@ -19,10 +19,10 @@
         "portrait": "/rpg-assets/characters/daisy/portraits/primary.png"
       },
       "evening": {
-        "portrait": "/rpg-assets/characters/daisy/outfits/evening/neutral.png"
+        "portrait": "/rpg-assets/characters/daisy/portraits/primary.png"
       },
       "sporty": {
-        "portrait": "/rpg-assets/characters/daisy/outfits/sporty/neutral.png"
+        "portrait": "/rpg-assets/characters/daisy/portraits/primary.png"
       }
     },
     "rules": [
