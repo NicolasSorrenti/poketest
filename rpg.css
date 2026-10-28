@@ -634,3 +634,14 @@ dialog.cg-lightbox{position:fixed;inset:0;width:100vw;max-width:none;height:100d
  .stage-panel #scene .rpg-scene-cast{top:24%;bottom:0}
  .stage-panel #scene .portrait{bottom:0}
 }
+
+/* Hidden choice overlays must never capture input after boosters or other modals. */
+#playerChoicePrompt[hidden],#playerChoicePanel[hidden],
+#dialogue[hidden],#rpgActionDock[hidden],#packDialog:not([open]){
+ display:none!important;pointer-events:none!important;
+}
+#packDialog[open]{pointer-events:auto}
+#packDialog[open] .pack-reveal-actions,
+#packDialog[open] .pack-reveal-actions button{
+ position:relative;pointer-events:auto;
+}
