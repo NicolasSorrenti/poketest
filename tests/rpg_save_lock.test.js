@@ -80,7 +80,9 @@ test('a pending duel locks navigation and the deck, restores after refresh, and 
  assert.equal(app.read().results.length,1);
  assert.equal(app.read().pendingDuel,null);
  assert.equal(app.ids.deckPicker.disabled,true,'Preset switcher remains locked during RPG collection progression');
- assert.equal(app.ids.deckCollection.children.find(x=>x.textContent.includes('Build / edit your deck')).disabled,false,'The collection workshop becomes available again');
+ assert.equal(app.ids.deckCollection.children.find(x=>x.textContent.includes('Build / edit your deck')).disabled,true,'Result narration still locks the workshop');
+ click(app.ids.choices,'Continue');
+ assert.equal(app.ids.deckCollection.children.find(x=>x.textContent.includes('Build / edit your deck')).disabled,false,'Workshop unlocks after acknowledging the result');
  assert.equal(sessions.has(BRIDGE.sessionKey(pending.id)),false,'Finished token is released');
  assert.equal(app.read().slot,1);
  assert.equal(app.read().relationships.marina.duels,1);
