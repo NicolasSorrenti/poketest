@@ -5242,6 +5242,6 @@
  }
 ]);
  const pendingArt=events.map(e=>({id:e.id,path:e.image,participants:e.participants,title:e.title,brief:e.art.scene,composition:e.art.composition,status:'PENDING_CG'}));
- function validate(){const issues=[],ids=new Set();for(const e of events){if(ids.has(e.id))issues.push('Duplicate '+e.id);ids.add(e.id);if(e.participants.length<2||e.participants[0]!==e.npc||e.lines.length<5||!e.choices?.length||!e.image.endsWith(e.id+'.webp'))issues.push('Invalid '+e.id);if(e.prerequisite&&!ids.has(e.prerequisite)&&!events.some(x=>x.id===e.prerequisite))issues.push('Unknown prerequisite '+e.id);}return issues;}
+ function validate(){const issues=[],ids=new Set();for(const e of events){if(ids.has(e.id))issues.push('Duplicate '+e.id);ids.add(e.id);if(e.participants.length<2||e.participants[0]!==e.npc||e.lines.length<5||!e.choices?.length||!(e.image.endsWith(e.id+'.webp')||(e.cgSequence?.length&&e.image.endsWith(e.cgSequence[0]+'.webp'))))issues.push('Invalid '+e.id);if(e.prerequisite&&!ids.has(e.prerequisite)&&!events.some(x=>x.id===e.prerequisite))issues.push('Unknown prerequisite '+e.id);}return issues;}
  return Object.freeze({events,pendingArt,validate});
 });
