@@ -22,9 +22,9 @@ const PROFILES=Object.freeze({
  luna:{trainers:['base1-77','base1-88','base1-71','base1-74']},
  elena:{trainers:['base1-77','base1-91','base1-71','base1-74']},
 sierra:{trainers:['base1-84','base1-93','base1-71','base1-74']},
- barb:{trainers:['base1-77','base1-71','base1-88','base1-74']},
- laca:{trainers:['base1-77','base1-71','base1-88','base1-74']},
- daisy:{trainers:['base1-77','base1-88','base1-71','base1-74']}
+ barb:{signature:'base2-5',trainers:['base1-77','base1-71','base1-88','base1-74']},
+ laca:{signature:'base2-12',trainers:['base1-77','base1-71','base1-88','base1-74']},
+ daisy:{signature:'base2-61',trainers:['base1-77','base1-88','base1-71','base1-74']}
 });
 const DEFAULT=Object.freeze({trainers:['base1-91','base1-88','base1-71','base1-74']});
 const FODDER=Object.freeze(['Potion','Super Potion','Pokédex','Defender','Full Heal','Maintenance','Revive','Pokémon Flute']);
@@ -112,12 +112,27 @@ function focusCamila(cards,tier,catalog){
  }
  return cards;
 }
+function shapeSignature(out,profile,catalog){
+ const id=profile.signature;
+ if(!id||!catalog.has(id)||!out.includes(id))return out;
+ const card=catalog.get(id);
+ let copies=out.filter(x=>x===id).length;
+ // Give shared retail recipes a clear character lead by consolidating
+ // existing Pokémon from that same recipe around the signature line.
+ while(copies<4){
+  const at=out.findIndex(x=>x!==id&&catalog.get(x)?.supertype==='Pokémon'&&catalog.get(x)?.types?.some(t=>card.types?.includes(t)));
+  if(at<0)break;
+  out[at]=id;copies++;
+ }
+ return out;
+}
 function baselineUpgrade({npc,tier,original,catalog}){
  if(!Array.isArray(original)||original.length!==60)throw Error('NPC progression requires a valid 60-card theme deck');
  if(!Number.isInteger(tier)||tier<1||tier>7)throw Error('Invalid NPC deck tier');
  if(!(catalog instanceof Map))throw Error('NPC progression requires the authoritative card catalogue');
  const out=[...original];
  const profile=PROFILES[npc]||DEFAULT;
+ shapeSignature(out,profile,catalog);
  function insert(id,kind){
   const card=catalog.get(id);if(!card)return false;
   if(!isBasicEnergy(card)&&cardNameCount(out,card.name,catalog)>=4)return false;
