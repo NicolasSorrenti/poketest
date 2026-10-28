@@ -1613,6 +1613,64 @@ function syncSceneCG(){
  });
 }
 // The album is a full-page character-first experience; unearned art never gets a URL.
+
+const ART_TYPES=[{id:'cg',label:'CGs'},{id:'expressions',label:'Expressions'},{id:'battle',label:'Battle art'},{id:'outfits',label:'Outfits'}];
+const artEntries=new Map();
+const artSeen=state.artSeen&&typeof state.artSeen==='object'?state.artSeen:(state.artSeen={});
+function artKey(path){return String(path||'').split('?')[0];}
+function buildArtEntries(){
+ const register=(id,type,label,path)=>{
+  if(typeof path!=='string'||!/^\\/rpg-assets\\/[\\w./-]+\\.(?:png|webp|jpg|jpeg)$/i.test(path)||path.includes('..'))return;
+  const key=artKey(path);
+  if(!artEntries.has(key))artEntries.set(key,{id,type,label,path:key,unlocked:!!artSeen[key],title:label,viewed:!!artSeen[key]});
+ };
+ for(const [id,art] of Object.entries(window.NeoRpgCharacterPacks?.looks||{})){
+  for(const [emotion,path] of Object.entries(art.expressions||{}))register(id,'expressions',emotion,path);
+  if(art.portrait)register(id,'expressions','Portrait',art.portrait);
+  for(const [outfit,variant] of Object.entries(art.outfits?.variants||{})){
+   register(id,'outfits',outfit,variant.portrait);
+   for(const [emotion,path] of Object.entries(variant.expressions||{}))register(id,'outfits',outfit+' · '+emotion,path);
+  }
+ }
+ // Include only artwork actually used in play; never infer an unlock from file existence.
+ for(const path of Object.keys(artSeen)){
+  const match=path.match(/^\\/rpg-assets\\/(?:characters|reactions)\\/([a-z0-9_-]+)\\//i);
+  if(!match||!cast[match[1]])continue;
+  const id=match[1],type=/\\/(?:reaction|reactions|cutins|attack|battle)\\//i.test(path)||path.startsWith('/rpg-assets/reactions/')?'battle':/\\/outfits\\//.test(path)?'outfits':'expressions';
+  register(id,type,path.split('/').at(-1).replace(/\\.[^.]+$/,''),path);
+ }
+}
+function recordArtImage(img){
+ if(img.closest?.('#galleryDialog,.cg-lightbox,.cg-fullscreen-viewer'))return;
+ const path=artKey(img.currentSrc||img.src);
+ if(!path.startsWith('/rpg-assets/')&&!path.includes('/rpg-assets/'))return;
+ const normalized=path.includes('/rpg-assets/')?path.slice(path.indexOf('/rpg-assets/')):path;
+ if(!/\\.(png|webp|jpg|jpeg)$/i.test(normalized))return;
+ if(!normalized.startsWith('/rpg-assets/characters/')&&!normalized.startsWith('/rpg-assets/reactions/'))return;
+ if(!artSeen[normalized]){
+  artSeen[normalized]={day:state.day,slot:state.slot};
+  buildArtEntries();persist();
+ }
+}
+function attachArtworkTracker(doc){
+ if(!doc||doc.__neoGalleryTracking)return;
+ doc.__neoGalleryTracking=true;
+ doc.addEventListener('load',e=>{if(e.target?.tagName==='IMG')recordArtImage(e.target);},true);
+}
+attachArtworkTracker(document);
+$('battle')?.addEventListener('load',()=>{
+ try{attachArtworkTracker($('battle').contentDocument);}catch{ /* cross-origin iframe is not accessible */ }
+});
+buildArtEntries();
+function showOtherArt(entry){
+ if(!artSeen[entry.path])return;
+ if(!galleryViewer){galleryOpenViewer({unlocked:true,title:'Artwork',id:'',character:entry.id,path:entry.path,thumb:entry.path});return;}
+ const stage=galleryViewer.querySelector('.cg-lightbox-stage');stage.replaceChildren();
+ const image=document.createElement('img');image.src=entry.path;image.alt=entry.title;
+ image.onerror=()=>{stage.textContent='Artwork file unavailable.';};
+ stage.append(image);galleryViewer.querySelector('.cg-lightbox-title').textContent=entry.title;
+ if(!galleryViewer.open)galleryViewer.showModal();
+}
 let galleryCharacterPage='',galleryViewer=null;
 function galleryOpenViewer(entry){
  if(!entry.unlocked)return;
@@ -1648,7 +1706,7 @@ function renderGallery(){
  characterPage.hidden=!!galleryCharacterPage;albumPage.hidden=!galleryCharacterPage;
  if(!galleryCharacterPage){
   const ids=[...select.options].map(x=>x.value).filter(Boolean);
-  const all=CG.gallery(state);
+  buildArtEntries();const all=[...CG.gallery(state),...artEntries.values()].map(e=>({...e,character:e.character||e.id}));
   $('galleryCount').textContent='Choose a character to explore their memories.';
   for(const id of ids){
    const entries=all.filter(e=>e.character===id),earned=entries.filter(e=>e.unlocked);
@@ -1658,42 +1716,42 @@ function renderGallery(){
    const name=document.createElement('strong');name.textContent=cast[id]?.name||id;
    const stat=document.createElement('small');stat.textContent=earned.length+' / '+entries.length+' memories unlocked';
    btn.append(avatar,name,stat);
-   btn.onclick=()=>{galleryCharacterPage=id;select.value=id;category.value='';renderGallery();};
+   btn.onclick=()=>{galleryCharacterPage=id;select.value=id;category.value='cg';renderGallery();};
    characterPage.append(btn);
   }
   return;
  }
  select.value=galleryCharacterPage;
  $('galleryCharacterTitle').textContent=cast[galleryCharacterPage]?.name||galleryCharacterPage;
- const all=CG.gallery(state,{character:galleryCharacterPage,category:category.value});
+ buildArtEntries();const type=category.value;const all=type==='cg'||!type?CG.gallery(state,{character:galleryCharacterPage}):[...artEntries.values()].filter(e=>e.id===galleryCharacterPage&&e.type===type).map(e=>({...e,character:e.id,thumb:e.path}));
  const visible=$('galleryUnseen').checked?all.filter(e=>e.unlocked&&!e.viewed):all;
  const earned=all.filter(e=>e.unlocked).length;
  $('galleryCount').textContent=earned+' / '+all.length+' unlocked · '+visible.length+' shown';
- const categories=[{id:'',label:'All CGs'},...CG.categories.map(id=>({id,label:({profile:'First encounters',pre_duel:'Pre-duel',social:'Social',special:'Special moments'})[id]||id}))];
+ const categories=ART_TYPES;
  for(const cat of categories){
   const btn=document.createElement('button');btn.type='button';btn.className='cg-category-tab'+(category.value===cat.id?' selected':'');
   btn.textContent=cat.label;btn.setAttribute('aria-pressed',String(category.value===cat.id));
   btn.onclick=()=>{category.value=cat.id;renderGallery();};progress.append(btn);
  }
- const notice=document.createElement('p');notice.className='cg-other-art-notice';
- notice.textContent='Expressions, battle reactions, and outfits will appear here once their first-seen unlock tracking is connected. Hidden files are never treated as discovered.';
- progress.append(notice);
+
  for(const entry of visible){
   const tile=document.createElement('button');tile.type='button';tile.className='cg-tile'+(entry.unlocked?' unlocked':' locked');
   tile.disabled=!entry.unlocked;
   const thumb=document.createElement('div');thumb.className='cg-thumb';
   if(entry.unlocked){
    const img=document.createElement('img');img.alt='';img.hidden=true;thumb.append(img);
-   loadCGArt(img,entry,true,kind=>{img.classList.toggle('is-fallback',kind!=='event');});
+   if(entry.type)img.src=entry.path;
+   else loadCGArt(img,entry,true,kind=>{img.classList.toggle('is-fallback',kind!=='event');});
+   if(entry.type)img.onload=()=>{img.hidden=false;};
   }else{const mystery=document.createElement('span');mystery.textContent='🔒';thumb.append(mystery);}
   const title=document.createElement('strong');title.textContent=entry.title;
   const note=document.createElement('small');note.textContent=entry.unlocked?(entry.viewed?'Viewed':'New · tap to view'):'Locked · '+entry.hint;
-  tile.append(thumb,title,note);tile.onclick=()=>galleryOpenViewer(entry);root.append(tile);
+  tile.append(thumb,title,note);tile.onclick=()=>entry.type?showOtherArt(entry):galleryOpenViewer(entry);root.append(tile);
  }
 }
 function openGallery(){
  galleryCharacterPage='';$('galleryUnseen').checked=false;
- populateGalleryCharacters();renderGallery();$('galleryDialog').showModal();
+ populateGalleryCharacters();$('galleryCategory').value='cg';renderGallery();$('galleryDialog').showModal();
 }
 function openCommunityBoard(){
  const table=$('communityStandings'),news=$('communityNews'),connections=$('communityConnections');
@@ -2802,7 +2860,7 @@ document.addEventListener('pointerdown',event=>{
  if(moreMenu?.open&&!moreMenu.contains(event.target))moreMenu.open=false;
 });
 $('galleryClose').onclick=()=>$('galleryDialog').close();
-$('galleryBack').onclick=()=>{galleryCharacterPage='';$('galleryCharacter').value='';$('galleryCategory').value='';renderGallery();};
+$('galleryBack').onclick=()=>{galleryCharacterPage='';$('galleryCharacter').value='';$('galleryCategory').value='cg';renderGallery();};
 $('galleryCharacter').onchange=()=>{galleryCharacterPage=$('galleryCharacter').value;renderGallery();};$('galleryCategory').onchange=renderGallery;$('galleryUnseen').onchange=renderGallery;
 $('preDuelBack').onclick=cancelPreparedDuel;
 $('preDuelNext').onclick=advancePreparedDuel;
