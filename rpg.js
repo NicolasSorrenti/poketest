@@ -494,6 +494,21 @@ function planSharedActivity(id){
  const hint='I have some time free. What do you feel like doing together?';
  tutorialEvent('social');return say(cast[id].name,hint,choices);
 }
+
+async function glanceAt(id){
+ if(!cast[id]||!currentPeople().includes(id)||typeof window==='undefined')return;
+ const portrait=scenePortraitSource(id,'neutral',activeOutfitSceneId);
+ const name=portrait.split('/').pop().split('?')[0];
+ let focus=null,duration=1500;
+ try{
+  const response=await fetch('/rpg-assets/outfit-chime-focus.json?v=20261028-glance-at');
+  const data=response.ok?await response.json():null;
+  focus=data?.characters?.[id]?.variants?.[name]||null;
+  duration=Math.max(0,Number(data?.durationMs)||1500);
+ }catch(_error){}
+ const fallback={top:.06,bottom:.53,left:0,right:1};
+ if(window.NeoOutfitChime?.display)await window.NeoOutfitChime.display(portrait,focus||fallback,duration);
+}
 function showEncounter(){
  const a=state.activeEncounter,e=a&&WORLD.byEncounter(a.id);
  if(!e)return null;
@@ -2708,6 +2723,7 @@ function render(){
   characterActions.replaceChildren();
   if(selected){
    const display=cast[selected].name.split(' ')[0],buttons=[
+    ['◉ Glance at',()=>glanceAt(selected),'View '+cast[selected].name+' up close'],
     ['☏ Talk',()=>selectPerson(selected),'Talk to '+cast[selected].name],
     ['⚔ Duel',()=>startDuel(selected),'Challenge '+cast[selected].name+' to a duel']
    ];
