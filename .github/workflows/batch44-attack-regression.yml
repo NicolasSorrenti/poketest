@@ -1,0 +1,32 @@
+name: Batch 44 Attack Regression
+on:
+  pull_request:
+    paths:
+      - 'engine.js'
+      - 'cards/**'
+      - 'batch44_targets.json'
+      - 'test_attack_batch_v044.js'
+      - 'test_attack_batch_v044_outcomes.js'
+      - '.github/workflows/batch44-attack-regression.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'engine.js'
+      - 'cards/**'
+      - 'batch44_targets.json'
+      - 'test_attack_batch_v044.js'
+      - 'test_attack_batch_v044_outcomes.js'
+      - '.github/workflows/batch44-attack-regression.yml'
+jobs:
+  batch44:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify all Batch 44 attack registry keys and executions
+        run: node test_attack_batch_v044.js
+      - name: Verify historical attack outcomes and typed Energy discard
+        run: node test_attack_batch_v044_outcomes.js
