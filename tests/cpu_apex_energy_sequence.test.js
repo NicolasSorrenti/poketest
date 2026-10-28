@@ -137,6 +137,37 @@ test('Apex future Energy horizon still rewards legal multi-turn setup',()=>{
   AI.energyHorizonBonus(attachActive,noEnergy,cfg));
 });
 
+test('Apex values an attachment that attacks next turn after Paralysis clears',()=>{
+ // The active cannot attack now, but Paralysis wears off at the end of this
+ // turn. A Fighting attachment will enable Hitmonchan's Jab next turn.
+ const fighting=futureEnergyBoard(FIGHT,'base1-91',[]);
+ const fire=futureEnergyBoard('base1-98','base1-91',[]);
+ for(const o of [fighting,fire]){
+  o.turnSerial=11;
+  o.self.active.status='Paralyzed';
+ }
+ assert.ok(AI.energyHorizonBonus(attachActive,fighting,cfg)>
+  AI.energyHorizonBonus(attachActive,fire,cfg),
+  'guaranteed Paralysis recovery should reward a legal next-turn Jab');
+ // Sleep is not guaranteed to clear, so do not assume a free wake-up.
+ fighting.self.active.status='Asleep';
+ fire.self.active.status='Asleep';
+ assert.equal(AI.energyHorizonBonus(attachActive,fighting,cfg),
+  AI.energyHorizonBonus(attachActive,fire,cfg));
+});
+
+test('Apex forecasts a two-Energy sequence through Paralysis recovery',()=>{
+ const dce=futureEnergyBoard(FIGHT,'base1-96',[FIGHT]);
+ const noEnergy=futureEnergyBoard(FIGHT,'base1-91',[FIGHT]);
+ for(const o of [dce,noEnergy]){
+  o.turnSerial=11;
+  o.self.active.status='Paralyzed';
+ }
+ assert.ok(AI.energyHorizonBonus(attachActive,dce,cfg)>
+  AI.energyHorizonBonus(attachActive,noEnergy,cfg),
+  'future legal DCE must be valued after guaranteed Paralysis recovery');
+});
+
 
 test('Apex Energy horizon restores attacks after Amnesia and Gym cooldown expire',()=>{
  const baseline=futureEnergyBoard(FIGHT,'base1-96',[FIGHT]);
