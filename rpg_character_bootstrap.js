@@ -33,7 +33,7 @@
  "/rpg_cross_character_events.js?v=20261026-crossovers",
  "/rpg_daisy_event_additions.js?v=1",
  "/rpg_slice_of_life.js",
- "/rpg_cg_gallery.js",
+ "/rpg_cg_gallery.js?v=20261028-art-fallback-2",
  "/rpg_cg_scene.js?v=20261026-in-scene",
  "/rpg_daily_planner.js",
  "/rpg_social_activities.js",
@@ -62,7 +62,7 @@
  "/rpg_status.js?v=4",
  "/rpg_cloud_save.js?v=2",
  "/rpg_outfits.js?v=1",
- "/rpg.js?v=20261028-character-gallery-1"
+ "/rpg.js?v=20261028-character-gallery-2"
 ];
   function registry(packs){
     const cast={},looks={},schedules={},arrivals={},events=[],mandatoryEvents=[];
