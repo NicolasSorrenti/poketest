@@ -6,6 +6,7 @@ on:
       - 'cpu_decision_audit.js'
       - 'benchmark_cpu.js'
       - 'tests/cpu_decision_audit.test.js'
+      - 'tests/cpu_apex_confusion_ko_tempo.test.js'
       - '.github/workflows/apex-energy-audit.yml'
 jobs:
   audit:
@@ -16,5 +17,5 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - run: node --test tests/cpu_decision_audit.test.js
+      - run: node --test tests/cpu_decision_audit.test.js tests/cpu_apex_confusion_ko_tempo.test.js
       - run: node benchmark_cpu.js --pairs 1 --max-turns 35 --left-level 8 --right-level 8
