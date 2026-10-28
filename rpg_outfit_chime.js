@@ -6,7 +6,7 @@ const NeoOutfitChime=(()=>{
  function addMotion(){
   if(document.getElementById('neoOutfitChimeMotion'))return;
   const style=document.createElement('style');style.id='neoOutfitChimeMotion';
-  style.textContent='@keyframes neoOutfitChimeFade{from{opacity:0}to{opacity:1}}@keyframes neoOutfitChimePop{0%{opacity:0;transform:scale(.78) translateY(18px)}70%{opacity:1;transform:scale(1.035) translateY(-2px)}100%{opacity:1;transform:scale(1) translateY(0)}}@media(max-width:620px){.neo-outfit-chime-group{flex-direction:column!important;gap:10px!important;max-height:94dvh}.neo-outfit-chime-card{max-height:39dvh}}@media(prefers-reduced-motion:reduce){.neo-outfit-chime,.neo-outfit-chime-panel{animation:none!important}}';
+  style.textContent='@keyframes neoOutfitChimeFade{from{opacity:0}to{opacity:1}}@keyframes neoOutfitChimeEnter{from{opacity:0;transform:translateX(110%) skewX(-9deg)}to{opacity:1;transform:translateX(0) skewX(0)}}@keyframes neoOutfitChimeExit{from{opacity:1;transform:translateX(0) skewX(0)}to{opacity:0;transform:translateX(110%) skewX(-9deg)}}@media(max-width:620px){.neo-outfit-chime-group{flex-direction:column!important;gap:10px!important;max-height:94dvh}.neo-outfit-chime-card{max-height:39dvh}}@media(prefers-reduced-motion:reduce){.neo-outfit-chime,.neo-outfit-chime-panel{animation:none!important}}';
   document.head.append(style);
  }
  function cancel(){if(timer)clearTimeout(timer);timer=null;visible?.remove();visible=null;}
@@ -41,12 +41,7 @@ const NeoOutfitChime=(()=>{
    img.src=portrait;
   });
  }
- function makeBadge(text='✦ SPECIAL OUTFIT ✦'){
-  const badge=document.createElement('div');badge.textContent=text;
-  badge.style.cssText='position:absolute;z-index:1;top:12px;left:50%;transform:translateX(-50%);padding:9px 16px;border:1px solid #fad59d;border-radius:999px;background:#211727eF;color:#ffe2af;font:700 13px/1.2 system-ui,sans-serif;letter-spacing:.12em;white-space:nowrap;box-shadow:0 4px 18px #0009;';
-  return badge;
- }
- async function renderPreview({container,portrait,focus,label='✦ SPECIAL OUTFIT ✦'}={}){
+ async function renderPreview({container,portrait,focus}={}){
   if(!container||!portrait)throw Error('Preview needs a container and portrait URL');
   const img=await loadPortrait(portrait);
   if(!img)throw Error('Portrait failed to load: '+portrait);
@@ -56,11 +51,24 @@ const NeoOutfitChime=(()=>{
   img.style.cssText='position:absolute;max-width:none;';
   const viewport=document.createElement('div');viewport.style.cssText='position:absolute;inset:0;overflow:hidden;';
   viewport.append(img);
-  if(label)panel.append(viewport,makeBadge(label));else panel.append(viewport);
+  panel.append(viewport);
   container.replaceChildren(panel);
   fitCropWindow(panel,viewport,crop);
   const metrics=positionCropImage(img,viewport,crop);
   return {image:img,crop,metrics,panel,viewport};
+ }
+ function slideOutAfter(screen,movingNode,duration){
+  return new Promise(resolve=>{
+   let done=false;
+   const finish=()=>{if(done)return;done=true;clearTimeout(timer);timer=null;screen.remove();if(visible===screen)visible=null;resolve();};
+   const leave=()=>{
+    if(done)return;
+    movingNode.style.animation='neoOutfitChimeExit .44s cubic-bezier(.65,.03,.23,.97) both';
+    timer=setTimeout(finish,440);
+   };
+   timer=setTimeout(leave,duration+440);
+   screen.addEventListener('click',finish,{once:true});
+  });
  }
  async function displayTogether(items,duration=3000){
   cancel();
@@ -76,7 +84,7 @@ const NeoOutfitChime=(()=>{
   screen.style.cssText='position:fixed;inset:0;z-index:2147481000;display:grid;place-items:center;background:#060a1bd9;pointer-events:auto;animation:neoOutfitChimeFade .22s ease-out both;';
   const group=document.createElement('div');
   group.className='neo-outfit-chime-panel neo-outfit-chime-group';
-  group.style.cssText='display:flex;flex-direction:row;justify-content:center;align-items:center;gap:14px;width:min(94vw,960px);max-height:92vh;animation:neoOutfitChimePop .52s cubic-bezier(.2,.8,.2,1) both;';
+  group.style.cssText='display:flex;flex-direction:row;justify-content:center;align-items:center;gap:14px;width:min(94vw,960px);max-height:92vh;animation:neoOutfitChimeEnter .44s cubic-bezier(.65,.03,.23,.97) both;';
   for(const item of loaded){
    const crop=cropBounds(item.focus,item.img);
    const card=document.createElement('div');
@@ -90,7 +98,7 @@ const NeoOutfitChime=(()=>{
    const viewport=document.createElement('div');
    viewport.style.cssText='position:absolute;inset:0;overflow:hidden;';
    viewport.append(img);
-   card.append(viewport,makeBadge());
+   card.append(viewport);
    group.append(card);
    fitCropWindow(card,viewport,crop);
    positionCropImage(img,viewport,crop);
@@ -98,12 +106,7 @@ const NeoOutfitChime=(()=>{
   screen.append(group);
   document.body.append(screen);
   visible=screen;
-  await new Promise(resolve=>{
-   let done=false;
-   const finish=()=>{if(done)return;done=true;clearTimeout(timer);timer=null;screen.remove();if(visible===screen)visible=null;resolve();};
-   timer=setTimeout(finish,duration);
-   screen.addEventListener('click',finish,{once:true});
-  });
+  await slideOutAfter(screen,group,duration);
  }
  async function display(portrait,focus,duration=3000){
   if(Array.isArray(portrait)){
@@ -122,25 +125,18 @@ const NeoOutfitChime=(()=>{
   screen.setAttribute('aria-hidden','true');
   screen.style.cssText='position:fixed;inset:0;z-index:2147481000;display:grid;place-items:center;background:#060a1bd9;pointer-events:auto;animation:neoOutfitChimeFade .22s ease-out both;';
   const panel=document.createElement('div');
-  panel.className='neo-outfit-chime-panel';panel.style.cssText='position:relative;overflow:hidden;border:2px solid #fad59dd9;border-radius:16px;background:#111;box-shadow:0 14px 55px #000c;animation:neoOutfitChimePop .52s cubic-bezier(.2,.8,.2,1) both;';
+  panel.className='neo-outfit-chime-panel';panel.style.cssText='position:relative;overflow:hidden;border:2px solid #fad59dd9;border-radius:16px;background:#111;box-shadow:0 14px 55px #000c;animation:neoOutfitChimeEnter .44s cubic-bezier(.65,.03,.23,.97) both;';
   panel.style.width='min(90vw,560px,'+(58*crop.ratio)+'vh)';
   panel.style.aspectRatio=String(crop.ratio);
   // Size and position the source in pixels relative to the measured crop window.
   // Percent heights use a different reference box than percent widths, so using
   // pixels here keeps normalized source bounds exact across mobile aspect ratios.
   img.style.cssText='position:absolute;max-width:none;';
-  const badge=makeBadge();
   const viewport=document.createElement('div');viewport.style.cssText='position:absolute;inset:0;overflow:hidden;';
-  viewport.append(img);panel.append(viewport,badge);screen.append(panel);document.body.append(screen);visible=screen;
+  viewport.append(img);panel.append(viewport);screen.append(panel);document.body.append(screen);visible=screen;
   fitCropWindow(panel,viewport,crop);
   positionCropImage(img,viewport,crop);
-  await new Promise(resolve=>{
-   let done=false;
-   const finish=()=>{if(done)return;done=true;clearTimeout(timer);timer=null;screen.remove();if(visible===screen)visible=null;resolve();};
-   timer=setTimeout(finish,duration);
-   // Chime blocks game input, but is not a trap if someone explicitly taps to skip.
-   screen.addEventListener('click',finish,{once:true});
-  });
+  await slideOutAfter(screen,panel,duration);
  }
  async function onEntry({characters=[],firstMeetings=[],blocked=false,sceneId=null}={}){
   if(blocked||sceneId)return;
