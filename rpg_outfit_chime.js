@@ -1,6 +1,6 @@
 // Blocking, data-driven overworld close-ups. Never creates replacement artwork.
 const NeoOutfitChime=(()=>{
- const focusUrl='/rpg-assets/outfit-chime-focus.json?v=20261028-akari-top-focus-1';
+ const focusUrl='/rpg-assets/outfit-chime-focus.json?v=20261028-hana-framing-short-chime-1';
  let focusPromise=null,visible=null,timer=null;
  const load=()=>focusPromise||(focusPromise=fetch(focusUrl,{cache:'force-cache'}).then(r=>r.ok?r.json():null).catch(()=>null));
  function addMotion(){
@@ -70,7 +70,7 @@ const NeoOutfitChime=(()=>{
    screen.addEventListener('click',finish,{once:true});
   });
  }
- async function displayTogether(items,duration=3000){
+ async function displayTogether(items,duration=1500){
   cancel();
   addMotion();
   const loaded=(await Promise.all(items.slice(0,2).map(async item=>{
@@ -108,7 +108,7 @@ const NeoOutfitChime=(()=>{
   visible=screen;
   await slideOutAfter(screen,group,duration);
  }
- async function display(portrait,focus,duration=3000){
+ async function display(portrait,focus,duration=1500){
   if(Array.isArray(portrait)){
    const items=portrait.map(item=>typeof item==='string'?{portrait:item,focus:null}:item).filter(item=>item?.portrait).slice(0,2);
    if(items.length>1)return displayTogether(items,duration);
@@ -142,6 +142,7 @@ const NeoOutfitChime=(()=>{
   if(blocked||sceneId)return;
   // Never let optional crop metadata delay or suppress the actual reveal.
   const data=await Promise.race([load(),new Promise(resolve=>setTimeout(()=>resolve(null),350))]);
+  const durationMs=Math.max(0,Number(data?.durationMs)||1500);
   // Preserve baseline for only actually encountered characters.
   const outfit=[];
   const isSpecialPortrait=portrait=>/\/(?:overworld-variants\/|portraits\/special-day-\d+\.(?:png|webp|jpe?g)|outfits\/[^/]+\/)/i.test(portrait);
@@ -151,6 +152,8 @@ const NeoOutfitChime=(()=>{
    const characterData=data?.characters?.[id]||{};
    const focus=characterData.variants?.[name];
    const isOutfit=isSpecialPortrait(portrait);
+   // Laca's casual and lifeguard looks are everyday outfits, not special-look reveals.
+   if(id==='laca'&&/\/outfits\/(?:casual|lifeguard)\//i.test(portrait))continue;
    const pairNames=characterData.chimePairs?.[name];
    const pairConfigured=Array.isArray(pairNames)&&pairNames.length>1;
    if(!focus&&!isOutfit&&!pairConfigured)continue;
@@ -168,12 +171,12 @@ const NeoOutfitChime=(()=>{
   const outfitIds=new Set(outfit.map(item=>item.id));
   // Every place entry gets the special-look reveal, even when the same outfit
   // was already shown at another location or this is the character's first meeting.
-  for(const item of outfit)await display(item.images.length>1?item.images:item.images[0].portrait,item.images[0].focus,3000);
+  for(const item of outfit)await display(item.images.length>1?item.images:item.images[0].portrait,item.images[0].focus,durationMs);
   for(const item of firstMeetings){
-   if(item?.portrait&&!outfitIds.has(item.id))await display(item.portrait,{top:.06,bottom:.53},3000);
+   if(item?.portrait&&!outfitIds.has(item.id))await display(item.portrait,{top:.06,bottom:.53},durationMs);
   }
  }
- const api=Object.freeze({onEntry,cancel,renderPreview,displayTogether,firstMeeting:({portrait})=>display(portrait,{top:.06,bottom:.53},3000)});
+ const api=Object.freeze({onEntry,cancel,renderPreview,displayTogether,firstMeeting:({portrait})=>display(portrait,{top:.06,bottom:.53},1500)});
  if(typeof window!=='undefined')window.NeoOutfitChime=api;
  return api;
 })();
