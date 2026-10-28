@@ -534,3 +534,26 @@
  .stage-panel #playerChoicePrompt:not([hidden]){margin-top:10px}
  .stage-panel #playerChoicePanel{padding-top:10px}
 }
+
+
+/* Character-first gallery replaces the small CG modal. */
+dialog.cg-dialog{position:fixed;inset:0;width:100vw;max-width:none;height:100dvh;max-height:none;margin:0;border:0;border-radius:0;overflow:auto;background:#101627;color:#f5f2ff;padding:clamp(16px,3vw,40px);box-sizing:border-box}
+.cg-dialog .modal-heading{position:sticky;top:-16px;z-index:3;background:#101627;padding:8px 0 16px}
+.cg-character-page{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:16px}
+.cg-character-card{min-height:150px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;background:#1c2540;border:1px solid #45516c;border-radius:16px;padding:18px;color:white;cursor:pointer}
+.cg-character-card strong{font-size:1.2rem}.cg-character-card small{opacity:.8}.cg-character-avatar{width:64px;height:64px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#766a9a,#2b395c);border:2px solid #8c82ba}
+.cg-dialog #galleryAlbumPage[hidden],.cg-dialog #galleryCharacterPage[hidden]{display:none!important}
+.cg-dialog .cg-filters{display:none}
+.cg-dialog .cg-progress{display:flex;flex-wrap:wrap;gap:8px;margin:18px 0}
+.cg-category-tab{background:#283453;border:1px solid #51628c;border-radius:999px;padding:10px 16px}
+.cg-category-tab.selected{background:#8564b8;border-color:#bf9bed}
+.cg-gallery-back{margin:8px 0 12px}
+.cg-other-art-notice{width:100%;font-size:.85rem;color:#b6bacf}
+.cg-dialog .cg-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:16px}
+.cg-dialog .cg-tile{min-width:0}
+dialog.cg-lightbox{position:fixed;inset:0;width:100vw;max-width:none;height:100dvh;max-height:none;margin:0;padding:0;border:0;background:#080b12;color:white;overflow:hidden}
+.cg-lightbox-toolbar{height:56px;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:8px 20px;background:#171b2a}
+.cg-lightbox-stage{height:calc(100dvh - 56px);display:flex;align-items:center;justify-content:center;padding:12px;box-sizing:border-box}
+.cg-lightbox-stage img{max-width:100%;max-height:100%;object-fit:contain}
+.cg-lightbox-stage img[hidden]{display:none}
+@media(max-width:600px){.cg-character-page{grid-template-columns:repeat(2,minmax(0,1fr))}.cg-dialog .cg-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
