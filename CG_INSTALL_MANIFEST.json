@@ -1,0 +1,76 @@
+{
+  "files": [
+    {
+      "path": "rpg-assets/events/cg/season01/daisy_barb_camila_wrong_size.webp",
+      "sha256": "5f7ab9336b3282e6d000ff387357f9931bb8c1a3ee7e2502737ea82114a17d4f"
+    },
+    {
+      "path": "rpg-assets/events/cg/season01/daisy_barb_camila_wrong_size_02.webp",
+      "sha256": "f18e9fa88b961ea09fb851026dd567c55c85d19a6937d6e8b81137269dda3a96"
+    },
+    {
+      "path": "rpg-assets/events/cg/season01/daisy_barb_camila_wrong_size_03.webp",
+      "sha256": "c8daefe6ad268c5033c325ac7553b69fb66518ea9ef2e15bb54320ffab51b045"
+    },
+    {
+      "path": "rpg-assets/events/cg/season01/daisy_barb_temporary_tattoo.webp",
+      "sha256": "0ac0758f2b21fd3f16666cfe70fab35d0da71bf9e3b646823670f386ab02c9e0"
+    },
+    {
+      "path": "rpg-assets/events/cg/season01/daisy_laca_photo_booth_01.webp",
+      "sha256": "5706e1835f41bfa7edfea07ce45e0e302bb17d1466c9a86367f00f5d79430926"
+    },
+    {
+      "path": "rpg-assets/events/cg/season01/daisy_laca_photo_booth_02.webp",
+      "sha256": "517c539c86ab81af79d5b1c961148c65c2f1b8561ca655ef40d0360bf03c77ca"
+    },
+    {
+      "path": "rpg-assets/events/cg/season01/daisy_hana_makeover_01.webp",
+      "sha256": "6dac2defd75173e09a004b06f7554dfd7542f5ba0b6f4a896663993455729af2"
+    },
+    {
+      "path": "rpg-assets/events/cg/season01/daisy_hana_makeover_02.webp",
+      "sha256": "aebee1db64cfd2ecb4ec06c5b52dbaab79d684a9c70bb76fb598d3d159dd997b"
+    },
+    {
+      "path": "rpg-assets/events/cg/season01/daisy_laca_windy_boardwalk.webp",
+      "sha256": "edcc439cafcb95b0ec3b14c92e927df8ef2448bd151cb8affb7b66e8869ba225"
+    },
+    {
+      "path": "rpg-assets/events/cg/season01/daisy_marina_splash_01.webp",
+      "sha256": "bb6eddd5ce8cf5adf2a6f95de3b0a36e6afa2def0dbf724f8e2aa885b3efb2d7"
+    },
+    {
+      "path": "rpg-assets/events/cg/season01/daisy_marina_splash_02.webp",
+      "sha256": "c709fb7296b853cc2519e23529aac85d60b8050ddb23bd592d195e92498b48a2"
+    },
+    {
+      "path": "rpg-assets/events/cg/season01/daisy_barb_ribbons_01.webp",
+      "sha256": "4e498bc45b9dab5071b340819706743fcc1a00220451537e25e776639200a6e1"
+    },
+    {
+      "path": "rpg-assets/events/cg/season01/daisy_barb_ribbons_02.webp",
+      "sha256": "ffbcf5a2059fdcdd5aaeb1689bfc07629524f14ab15de460aef1f218a49b798b"
+    },
+    {
+      "path": "rpg-assets/events/cg/season01/daisy_barb_ribbons_03.webp",
+      "sha256": "5788f7b65af197b8bf721c20613654b5e73b14206403d4c0a31df84f047396f2"
+    },
+    {
+      "path": "rpg-assets/events/cg/season01/daisy_barb_ribbons_04.webp",
+      "sha256": "729ea6625e7c07fd8dcaab270bc0f8350ed5198cfbc0a3e28ea817facffbe745"
+    },
+    {
+      "path": "rpg-assets/events/cg/season01/daisy_barb_ribbons_05.webp",
+      "sha256": "a3e0e3dcad981b21f5b5f55924fa864bcd7c662705a9e2d9a3cd47fd97d84bc1"
+    },
+    {
+      "path": "rpg-assets/events/cg/season01/daisy_yuna_card_theft.webp",
+      "sha256": "4ab346a246c51f67ad829a9aefb11350b3dad99f629ffede50cb60d252b144a4"
+    },
+    {
+      "path": "rpg-assets/events/cg/season01/daisy_camila_coffee_spill.webp",
+      "sha256": "abb8dfd874f157cd4b5f04fe6b692504d034ff6ab85c7fd1d575fa86640c5369"
+    }
+  ]
+}

@@ -1,14 +1,10 @@
-# Barb — final consolidated Neo Campus pack
+Neo Campus Daisy CG image-only upload package
 
-Extract into repository root, preserving paths. Contains characters/barb (Character Pack files and pack-local assets), and rpg-assets/characters/barb (publish-ready images).
+Code pushed to main in commit 62573e0c80d3963d083d52c771909d75f0cf2247.
+All 18 CGs are already placed at rpg-assets/events/cg/season01.
+Extract over repository root; stage only the rpg-assets directory and commit images to main.
+Do not upload the ZIP itself to the repo.
 
-All five story CGs are included with 1920×1080 images and 640×360 gallery thumbs. CG5 is the exact image provided by the user, resized for in-game use. Character portraits, expressions and chibi included.
-
-Install/check:
-```sh
-npm run characters:validate
-npm run characters:build
-npm run test:rpg
-```
-
-Art_manifest scene paths match the packed images. HOWEVER: Story #4 describes a public showcase whereas the approved illustration depicts a private bedroom/studio design reveal; story #5 may also need dialogue tweaks to fit the rooftop confession. Update the story and test it before shipping. CGI images are not necessarily auto-wired to the game's gallery; confirm the CG event binder. The cut-in preview is NOT a clean transparent asset and remains review-only. No deploy/commit is claimed.
+Existing wrong-size event: 3 WebP CGs. New eight Daisy crossover events: 15 WebP CGs.
+All scenes are data-driven and CG gallery should register each stage.
+The code has not been browser-tested with these remote files yet; after deployment test each event and gallery unlock.
