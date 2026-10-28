@@ -117,7 +117,6 @@ function baselineUpgrade({npc,tier,original,catalog}){
  if(!Number.isInteger(tier)||tier<1||tier>7)throw Error('Invalid NPC deck tier');
  if(!(catalog instanceof Map))throw Error('NPC progression requires the authoritative card catalogue');
  const out=[...original];
- if(tier===1)return out;
  const profile=PROFILES[npc]||DEFAULT;
  function insert(id,kind){
   const card=catalog.get(id);if(!card)return false;
