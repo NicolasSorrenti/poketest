@@ -447,19 +447,6 @@ function ordinaryTalk(id,character,{first=false,present=[]}={}){
 function selectPerson(id,{skipInvitation=false}={}){
  if(state.activeSliceOfLife||state.activeSituation||state.activeStory||state.activeSideQuest||state.activeEncounter||state.activeArc||state.pendingDuel||!cast[id]||!currentPeople().includes(id))return;
  const c=cast[id],first=!state['met_'+id]&&!((id==='reina')&&state.metReina);
- // The very first personal introduction gets a portrait close-up once.
- if(first&&!state.overworldIntroductions?.[id]&&typeof NeoOutfitChime!=='undefined'){
-  const introductionPortrait=scenePortraitSource(id,'neutral',null);
-  // Hold dialogue, CG and event processing until the introduction is dismissed.
-  void Promise.resolve(NeoOutfitChime.firstMeeting({id,portrait:introductionPortrait}))
-   .catch(error=>console.warn('Introduction chime skipped:',error))
-   .then(()=>{
-    state.overworldIntroductions=state.overworldIntroductions||{};
-    state.overworldIntroductions[id]=true;persist();
-    if(currentPeople().includes(id))selectPerson(id,{skipInvitation});
-   });
-  return;
- }
  if(id==='hana'&&!(hanaEncounterKey||'').startsWith('entry:'))hanaEncounterKey='talk:'+ ++hanaEncounterSerial;
  const today=state.day+':'+id,fresh=!state.talked[today];
  state['met_'+id]=true;
@@ -2429,8 +2416,7 @@ function render(){
     // The wipe callback is primary; this fallback recovers if a mobile browser
     // drops its animation/timer callback during tab suspension.
     setTimeout(()=>{
-     if(pendingOverworldArrival===destination&&!arrivalGate&&!timeSequence.blocked&&
-        !state.mandatoryEventState?.active&&!window.NeoRpgTimeTransitions?.active){
+     if(pendingOverworldArrival===destination&&!arrivalGate&&!window.NeoRpgTimeTransitions?.active){
       pendingOverworldArrival=null;
       void finishOverworldArrival(destination);
      }
@@ -2763,8 +2749,7 @@ function render(){
  if($('deckPicker')?.options.length)$('deckPicker').value=state.playerDeck;
  // If another transition or mandatory scene owned the screen, resume the arrival
  // chime once it settles instead of silently losing this place entry.
- if(pendingOverworldArrival&&!arrivalGate&&!timeSequence.blocked&&
-    !state.mandatoryEventState?.active&&!window.NeoRpgTimeTransitions?.active){
+ if(pendingOverworldArrival&&!arrivalGate&&!window.NeoRpgTimeTransitions?.active){
   const destination=pendingOverworldArrival;
   pendingOverworldArrival=null;
   void finishOverworldArrival(destination);
