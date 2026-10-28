@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#111224">
-<title>Barb Outfit Chime Crop Test</title>
+<title>Akari Outfit Chime Crop Test</title>
 <style>
 :root{color-scheme:dark;--ink:#f8eff0;--muted:#a9a5bf;--panel:#171a2e;--line:#474963;--pink:#e682b2;--gold:#f3cc8d;--ok:#85e1b3;--bad:#ff8d98}
 *{box-sizing:border-box}
@@ -37,11 +37,11 @@ a{color:#f6bad4}
 </head>
 <body>
 <main>
-<h1>Barb outfit chime crop test</h1>
-<p>Standalone QA page. It uses the same renderer as the live chime. The automatic checks run every time this page opens; slider changes rerun the crop geometry check.</p>
+<h1>Akari outfit chime crop test</h1>
+<p>Standalone QA page. It uses the same renderer as the live chime. This preview uses the live chime renderer and Akari outfit images. Choose special day 5 to verify the new marked crop.</p>
 <div class="layout">
 <section class="card" aria-label="Crop controls">
-<label for="variant">Barb outfit image</label>
+<label for="variant">Akari outfit image</label>
 <select id="variant"></select>
 <div class="row"><label for="left">Left edge</label><input id="leftN" type="number" min="0" max="100" step="1"></div><input id="left" type="range" min="0" max="80" step="1">
 <div class="row"><label for="right">Right edge</label><input id="rightN" type="number" min="12" max="100" step="1"></div><input id="right" type="range" min="12" max="100" step="1">
@@ -54,20 +54,20 @@ a{color:#f6bad4}
 <section class="card preview-wrap">
 <div id="preview" aria-label="Actual crop preview"></div>
 <h2 class="source-title">Original image with crop bounds</h2>
-<div id="sourceStage"><img id="sourceImage" alt="Selected full Barb special outfit portrait"><div id="cropMark"></div></div>
+<div id="sourceStage"><img id="sourceImage" alt="Selected full Akari special outfit portrait"><div id="cropMark"></div></div>
 <p class="fine">The gold box marks the source pixels used in the crop above.</p>
 </section>
 </div>
 </main>
-<script src="/rpg_outfit_chime.js?v=20261028-hana-marked-first-meeting-crop-3"></script>
+<script src="/rpg_outfit_chime.js?v=20261028-akari-day5-tight-crop-1"></script>
 <script>
 (function(){
- const count=10,marked={left:24,right:78,top:20,bottom:38};
+ const count=5,marked={left:14,right:89,top:52,bottom:100};
  const $=id=>document.getElementById(id),checks=$('checks');
  let currentUrl='',renderGeneration=0;
- for(let n=1;n<=count;n++){const o=document.createElement('option');o.value=String(n);o.textContent='Special outfit '+n;$('variant').append(o);}
- $('variant').value='1';
- function url(){return '/rpg-assets/characters/barb/portraits/special-day-'+$('variant').value+'.png';}
+ for(let n=1;n<=count;n++){const o=document.createElement('option');o.value=String(n);o.textContent='Special outfit '+n; $('variant').append(o);}
+ $('variant').value='5';
+ function url(){return '/rpg-assets/characters/akari/portraits/special-day-'+$('variant').value+'.png';}
  function addCheck(label,ok,detail){const row=document.createElement('div');row.className='check '+(ok?'pass':'fail');row.textContent=(ok?'PASS — ':'FAIL — ')+label+(detail?' · '+detail:'');checks.append(row);}
  function setValues(v){for(const k of ['left','right','top','bottom']){ $(k).value=String(v[k]);$(k+'N').value=String(v[k]); } updateMark();}
  function focus(){return {left:Number($('left').value)/100,right:Number($('right').value)/100,top:Number($('top').value)/100,bottom:Number($('bottom').value)/100};}
@@ -97,14 +97,14 @@ a{color:#f6bad4}
  }
  async function checkAllImages(){
   const results=await Promise.all(Array.from({length:count},(_,i)=>{
-   const p='/rpg-assets/characters/barb/portraits/special-day-'+(i+1)+'.png';
+   const p='/rpg-assets/characters/akari/portraits/special-day-'+(i+1)+'.png';
    return fetch(p,{method:'HEAD',cache:'no-store'}).then(r=>({n:i+1,ok:r.ok,status:r.status})).catch(()=>({n:i+1,ok:false,status:'network error'}));
   }));
   for(const r of results)addCheck('Outfit image '+r.n+' is reachable',r.ok,'HTTP '+r.status);
  }
  $('apply').addEventListener('click',render);
  $('reset').addEventListener('click',()=>{setValues(marked);render();});
- $('variant').addEventListener('change',render);
+ $('variant').addEventListener('change',()=>{setValues($('variant').value==='5'?marked:{left:14,right:89,top:30,bottom:58});render();});
  setValues(marked);
  render().then(checkAllImages);
 })();
