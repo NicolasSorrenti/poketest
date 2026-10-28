@@ -198,6 +198,19 @@ function strongestUsableOpponentAttack(o,defender){
   canPayEnergy(attack.cost||[],energyPool(enemy))?
    Math.max(best,estimatedDamage(attack,enemy,defender)):best,0);
 }
+// A printed KO is not a likely KO when the opponent must first pass
+// Confusion or an attack-specific coin flip. Use the same conservative
+// 75% threshold as Apex's stranded-Energy analysis.
+function likelyOpponentKnockout(o,defender){
+ const enemy=o.opponent.active;
+ if(!enemy||!defender||['Asleep','Paralyzed'].includes(enemy.status))return false;
+ const fromEnemy={...o,self:o.opponent,opponent:o.self};
+ const confusionChance=enemy.status==='Confused'?.5:1;
+ return (enemy.effectiveAttacks||card(enemy.id)?.attacks||[]).some((attack,index)=>
+  eligibleAttack(fromEnemy,enemy,attack,index)&&
+  canPayEnergy(attack.cost||[],energyPool(enemy))&&
+  knockoutChance(attack,enemy,defender)*confusionChance>=.75);
+}
 function hpRemaining(u){return Math.max(0,(Number(card(u?.id)?.hp)||60)-(u?.damage||0));}
 function setupValue(unit){
  const c=card(unit?.id);
@@ -615,9 +628,7 @@ function prematureEvolutionPenalty(o,slot,evolutionId,cfg){
    projectedAttackValue(before,enemy,o.turnSerial)))return 0;
  // Important survival and tactical exceptions outweigh waiting.
  if(slot===-1){
-  const incoming=strongestUsableOpponentAttack(o,before);
-  const safer=strongestUsableOpponentAttack(o,after);
-  if(incoming>=hpRemaining(before)&&safer<hpRemaining(after))return 0;
+  if(likelyOpponentKnockout(o,before)&&!likelyOpponentKnockout(o,after))return 0;
   if(['Asleep','Paralyzed'].includes(before.status))return 0;
  }
  // Do not pretend to know a future forced discard or opponent's hand.
@@ -751,11 +762,10 @@ function energyHorizonBonus(action,o,cfg){
  // For Apex, only a currently legal public attack makes our Active exposed.
  // Amnesia and Gym locks must not cause speculative Bench Energy urgency.
  // Keep the previous affordable-attack estimate for lower difficulty tiers.
- const activeThreat=cfg.level===8?
-  strongestUsableOpponentAttack(o,p.active):
-  (!['Asleep','Paralyzed'].includes(q.active.status)?
-   strongestAffordableAttack(q.active,p.active):0);
- const activeExposed=!!p.active&&activeThreat>=hpRemaining(p.active);
+ const activeExposed=!!p.active&&(cfg.level===8?
+  likelyOpponentKnockout(o,p.active):
+  !['Asleep','Paralyzed'].includes(q.active.status)&&
+  strongestAffordableAttack(q.active,p.active)>=hpRemaining(p.active));
  // A Bench attacker is useful as a replacement when the Active is visibly
  // exposed. Otherwise minimize speculative Energy sunk on remote Bench.
  const activeBias=v.slot===-1?35:activeExposed?22:-34;
@@ -1020,7 +1030,8 @@ function score(a,o,cfg,used){
    strongestAffordableAttack(q.active,before);
   const counterTo=cfg.level===8?strongestUsableOpponentAttack(o,to):
    strongestAffordableAttack(q.active,to);
-  const threatened=counter>=hpRemaining(before)&&counter>0;
+  const threatened=cfg.level===8?likelyOpponentKnockout(o,before):
+   counter>=hpRemaining(before)&&counter>0;
   const alternativeSurvives=counterTo<hpRemaining(to);
   // A defensive swap is useful only when it *actually* shelters the Active
   // from a visible affordable knockout. Avoid abandoning a ready attacker for
