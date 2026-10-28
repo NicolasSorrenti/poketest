@@ -31,7 +31,8 @@ function audit(commands){
     'Mail from Bill','Erika',"Misty's Wrath"].includes(trainerName);
    const preservesBoard=['Bill','Professor Oak',"Blaine's Last Resort",
     'Mail from Bill','Erika',"Misty's Wrath",'Energy Search','Pokémon Trader',
-    'Nightly Garbage Run','Pokédex'].includes(trainerName);
+    'Nightly Garbage Run','Pokédex','Energy Retrieval',
+    'Super Energy Retrieval'].includes(trainerName);
    // Erika draws for both players, but never changes Pokémon or Energy.
    // Keep the evidence through her (and other neutral Trainers') prompts.
    if(type==='play_trainer')neutralTrainerChoices=preservesBoard;
