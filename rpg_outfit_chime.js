@@ -1,6 +1,6 @@
 // Blocking, data-driven overworld close-ups. Never creates replacement artwork.
 const NeoOutfitChime=(()=>{
- const focusUrl='/rpg-assets/outfit-chime-focus.json?v=20261028-outfit-framing-12';
+ const focusUrl='/rpg-assets/outfit-chime-focus.json?v=20261028-barb-pair-1';
  let focusPromise=null,visible=null,timer=null;
  const load=()=>focusPromise||(focusPromise=fetch(focusUrl,{cache:'force-cache'}).then(r=>r.ok?r.json():null).catch(()=>null));
  function addMotion(){
