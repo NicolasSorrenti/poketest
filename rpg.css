@@ -592,3 +592,26 @@ dialog.cg-lightbox{position:fixed;inset:0;width:100vw;max-width:none;height:100d
  width:100%;max-width:none;margin:12px 0 0;
 }
 @media(max-width:700px){.stage-panel > #rpgActionDock{width:100%;margin:10px 0 0}}
+
+/* Desktop VN layout: retain a generous illustration stage when dialogue is open. */
+@media(min-width:701px){
+ .stage-panel:has(> #dialogue:not([hidden])) #scene{
+  height:clamp(540px,70dvh,800px);
+  min-height:540px;
+ }
+ .stage-panel #scene .rpg-scene-cast{
+  top:clamp(125px,21%,200px);
+  bottom:0;
+ }
+ .stage-panel #scene .rpg-cast-member{
+  height:100%;
+ }
+ .stage-panel > #dialogue:not([hidden]){
+  width:100%;box-sizing:border-box;margin:10px 0 0;
+  padding:12px 18px;min-height:0;max-height:none;
+ }
+ .stage-panel > #dialogue .dialogue-title #speaker{font-size:21px}
+ .stage-panel > #dialogue p{margin:7px 0 9px;line-height:1.45;min-height:0}
+ .stage-panel > #dialogue .choice-list{gap:6px}
+ .stage-panel > #dialogue .choice{padding:8px 12px}
+}
