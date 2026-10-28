@@ -21,11 +21,15 @@ const PROFILES=Object.freeze({
  jinx:{trainers:['base1-79','base1-84','base1-71','base1-74']},
  luna:{trainers:['base1-77','base1-88','base1-71','base1-74']},
  elena:{trainers:['base1-77','base1-91','base1-71','base1-74']},
- sierra:{trainers:['base1-84','base1-93','base1-71','base1-74']}
+sierra:{trainers:['base1-84','base1-93','base1-71','base1-74']},
+ barb:{trainers:['base1-77','base1-71','base1-88','base1-74']},
+ laca:{trainers:['base1-77','base1-71','base1-88','base1-74']},
+ daisy:{trainers:['base1-77','base1-88','base1-71','base1-74']}
 });
 const DEFAULT=Object.freeze({trainers:['base1-91','base1-88','base1-71','base1-74']});
 const FODDER=Object.freeze(['Potion','Super Potion','Pokédex','Defender','Full Heal','Maintenance','Revive','Pokémon Flute']);
-const tierForDay=day=>Number.isInteger(day)&&day>=61?3:Number.isInteger(day)&&day>=31?2:1;
+// Seven campaign tiers: a new deck package every 15 in-game days.
+const tierForDay=day=>Number.isInteger(day)&&day>=91?7:Number.isInteger(day)&&day>=76?6:Number.isInteger(day)&&day>=61?5:Number.isInteger(day)&&day>=46?4:Number.isInteger(day)&&day>=31?3:Number.isInteger(day)&&day>=16?2:1;
 // The calendar remains a floor. Optional, completed character chapters can move
 // that character's own deck ahead, not every opponent or the player's deck.
 const completed=(records,id)=>!!records&&typeof records==='object'&&!Array.isArray(records)
@@ -110,7 +114,7 @@ function focusCamila(cards,tier,catalog){
 }
 function baselineUpgrade({npc,tier,original,catalog}){
  if(!Array.isArray(original)||original.length!==60)throw Error('NPC progression requires a valid 60-card theme deck');
- if(!Number.isInteger(tier)||tier<1||tier>3)throw Error('Invalid NPC deck tier');
+ if(!Number.isInteger(tier)||tier<1||tier>7)throw Error('Invalid NPC deck tier');
  if(!(catalog instanceof Map))throw Error('NPC progression requires the authoritative card catalogue');
  const out=[...original];
  if(tier===1)return out;
@@ -130,12 +134,19 @@ function baselineUpgrade({npc,tier,original,catalog}){
  // Reinforce actual evolution lines rather than only adding powerful Trainers.
  // Rocket lab's three core lines already contain compatible Basics.
  for(const id of profile.supports||[])insert(id,'ace');
- if(tier===3){
-  // Act III: a second signature copy plus stronger search/disruption.
+ if(tier>=3){
+  // Tier 3: a second signature copy plus stronger search/disruption.
   ace=bestAce(out,catalog,profile.ace);
   if(ace)insert(ace,'ace');
   for(const id of profile.trainers.slice(2,4))insert(id,'trainer');
  }
+ // Tiers 4-7 keep improving the same archetype every 15 days. Replacing
+ // weak situational Trainers makes later matches more consistent without
+ // changing the character's Pokémon identity or energy requirements.
+ if(tier>=4)for(const id of profile.trainers)insert(id,'trainer');
+ if(tier>=5){ ace=bestAce(out,catalog,profile.ace); if(ace)insert(ace,'ace'); }
+ if(tier>=6)for(const id of [...profile.trainers].reverse())insert(id,'trainer');
+ if(tier>=7){ ace=bestAce(out,catalog,profile.ace); if(ace)insert(ace,'ace'); }
  if(npc==='camila')focusCamila(out,tier,catalog);
  // A pair of Double Colorless Energy remains useful for retreat/neutral
  // attacks; any additional copies are less useful than the colored Grass/
