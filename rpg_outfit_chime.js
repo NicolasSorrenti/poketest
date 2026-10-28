@@ -1,6 +1,6 @@
 // Blocking, data-driven overworld close-ups. Never creates replacement artwork.
 const NeoOutfitChime=(()=>{
- const focusUrl='/rpg-assets/outfit-chime-focus.json?v=20261028-outfit-framing-4';
+ const focusUrl='/rpg-assets/outfit-chime-focus.json?v=20261028-outfit-framing-5';
  let focusPromise=null,visible=null,timer=null;
  const load=()=>focusPromise||(focusPromise=fetch(focusUrl,{cache:'force-cache'}).then(r=>r.ok?r.json():null).catch(()=>null));
  function addMotion(){
@@ -38,7 +38,11 @@ const NeoOutfitChime=(()=>{
   panel.className='neo-outfit-chime-panel';panel.style.cssText='position:relative;overflow:hidden;border:2px solid #fad59dd9;border-radius:16px;background:#111;box-shadow:0 14px 55px #000c;animation:neoOutfitChimePop .52s cubic-bezier(.2,.8,.2,1) both;';
   panel.style.width='min(90vw,560px,'+(58*ratio)+'vh)';
   panel.style.aspectRatio=String(ratio);
-  img.style.cssText='position:absolute;max-width:none;left:'+(-left/cropWidth*100)+'%;width:'+(100/cropWidth)+'%;height:auto;top:'+(-top/cropHeight*100)+'%;';
+  // Scale from the viewport width using the source image's intrinsic aspect ratio.
+  // This keeps normalized source coordinates aligned on portrait images.
+  const scale=100/cropWidth;
+  const renderedHeight=img.naturalHeight/img.naturalWidth*scale;
+  img.style.cssText='position:absolute;max-width:none;left:'+(-left*scale)+'%;top:'+(-top*renderedHeight)+'%;width:'+scale+'%;height:'+renderedHeight+'%;';
   const badge=document.createElement('div');badge.textContent='✦ SPECIAL OUTFIT ✦';
   badge.style.cssText='position:absolute;z-index:1;top:12px;left:50%;transform:translateX(-50%);padding:9px 16px;border:1px solid #fad59d;border-radius:999px;background:#211727eF;color:#ffe2af;font:700 13px/1.2 system-ui,sans-serif;letter-spacing:.12em;white-space:nowrap;box-shadow:0 4px 18px #0009;';
   const viewport=document.createElement('div');viewport.style.cssText='position:absolute;inset:0;overflow:hidden;';
