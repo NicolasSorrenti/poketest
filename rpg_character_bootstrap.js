@@ -34,7 +34,6 @@
  "/rpg_daisy_event_additions.js?v=1",
  "/rpg_slice_of_life.js",
  "/rpg_cg_gallery.js?v=20261028-art-fallback-2",
- "/rpg_art_manifest.js?v=1",
  "/rpg_cg_scene.js?v=20261026-in-scene",
  "/rpg_daily_planner.js",
  "/rpg_social_activities.js",
@@ -130,5 +129,11 @@
       throw Error('Missing RPG dependency '+globalName+'.'+method+' before RPG startup');
     }
   }
+  // Artwork inventory is optional: a stale Render deploy or missing static file
+  // must never prevent the campaign from starting.
+  window.NeoRpgArtManifest=[];
+  await loadScript('/rpg_art_manifest.js?v=2').catch(error=>{
+    console.warn('Optional RPG art inventory unavailable; continuing without additional gallery entries',error);
+  });
   await loadScript(scripts.at(-1));
 })().catch(error=>{window.NeoRpgErrorReport?.capture(error,{source:'startup',action:'load RPG scripts'});console.error('RPG startup failed',error);});
