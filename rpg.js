@@ -410,7 +410,7 @@ function travelTo(placeId,{intro=true}={}){
  if(!places[placeId]||controlsLocked()||state.location===placeId)return false;
  const firstVisit=!state.visitedLocations[placeId];
  state.visitedLocations[placeId]=true;
- state.location=placeId;state.selected=null;
+ state.location=placeId;state.selected=null;pendingOverworldArrival=placeId;
  // Entry surprises must wait until travel and any outfit/introduction chime finish.
  pendingEntrySurprise=!firstVisit&&placeId!=='home';
  if(firstVisit&&intro)say('Narrator',places[placeId][1]);
