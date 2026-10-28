@@ -2425,7 +2425,18 @@ function render(){
     if(pendingOverworldArrival===destination)pendingOverworldArrival=null;
     void finishOverworldArrival(destination);
    }});
-   if(transition)return;
+   if(transition){
+    // The wipe callback is primary; this fallback recovers if a mobile browser
+    // drops its animation/timer callback during tab suspension.
+    setTimeout(()=>{
+     if(pendingOverworldArrival===destination&&!arrivalGate&&!timeSequence.blocked&&
+        !state.mandatoryEventState?.active&&!window.NeoRpgTimeTransitions?.active){
+      pendingOverworldArrival=null;
+      void finishOverworldArrival(destination);
+     }
+    },1400);
+    return;
+   }
   }
  }
  window.NeoRpgAudio?.setScene?.(state.location,state.slot);
