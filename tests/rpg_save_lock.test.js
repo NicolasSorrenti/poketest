@@ -29,7 +29,13 @@ function boot(saved=new Map(),sessions=new Map()){
  const fetch=async()=>({ok:true,json:async()=>({decks:[{id:'blackout',name:'Blackout'},{id:'brushfire',name:'Brushfire'}]})});
  const location={search:'',origin:'http://localhost:8000',reload(){}};
  vm.runInNewContext(script,{window,document,localStorage,sessionStorage,fetch,location,confirm:()=>true,console,queueMicrotask,URLSearchParams,Image:Element,NodeFilter:{SHOW_TEXT:4}},{filename:'rpg.js'});
- if(fresh)ids.starterChoices.children[0].onclick();
+ if(fresh){
+  assert.ok(ids.starterChoices?.children?.length,'Fresh campaign offers starter choices');
+  ids.starterChoices.children[0].onclick();
+  const next=ids.choices?.children?.find(button=>button.textContent.includes('Continue'));
+  assert.ok(next,'Starter confirmation must be acknowledged before travel');
+  next.onclick();
+ }
  return {ids,listeners,saved,sessions,location,read:()=>JSON.parse(saved.get(KEY)),send:payload=>listeners.message({origin:location.origin,source:ids.battle.contentWindow,data:payload})};
 }
 function label(x){return [x.textContent,...x.children.map(label)].filter(Boolean).join(' ');}
@@ -40,6 +46,7 @@ test('town radar travel survives refresh, including after an NPC meeting',()=>{
  assert.equal(app.read().location,'home');
  assert.ok(app.ids.townRadar.children.some(x=>label(x).includes('Marina Aoki')),'Marina is active on day one in the morning');
  click(app.ids.townRadar,'Marina Aoki');
+ click(app.ids.choices,'Continue'); // First visit narration blocks other actions until acknowledged.
  assert.equal(app.read().location,'park','Radar destination is saved');
  app=boot(saved);
  assert.equal(app.read().location,'park','Radar route must remain after reload');
@@ -50,6 +57,7 @@ test('town radar travel survives refresh, including after an NPC meeting',()=>{
 test('a pending duel locks navigation and the deck, restores after refresh, and unlocks after the reward',async()=>{
  const saved=new Map(),sessions=new Map();let app=boot(saved,sessions);
  click(app.ids.townRadar,'Marina Aoki');
+ click(app.ids.choices,'Continue'); // First visit narration blocks other actions until acknowledged.
  click(app.ids.people,'Marina Aoki');
  click(app.ids.characterActions,'Duel');
  assert.equal(app.ids.battle.src,'about:blank');
