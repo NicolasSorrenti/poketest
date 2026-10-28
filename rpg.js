@@ -1612,21 +1612,26 @@ function syncSceneCG(){
   if(cgSceneRelease){const release=cgSceneRelease;cgSceneRelease=null;release();}
  });
 }
-function showGalleryDetail(entry){
- const root=$('galleryPreview');root.replaceChildren();
- const title=document.createElement('h3');title.textContent=entry.title;
- const text=document.createElement('p');text.textContent=(cast[entry.character]?.name||entry.character)+' · '+entry.category.replace('_',' ')+' · '+entry.hint;
- const image=document.createElement('img');image.alt=entry.title;image.hidden=true;
- const frame=document.createElement('div');frame.className='cg-art-frame';frame.append(image);
- const placeholder=document.createElement('p');placeholder.className='cg-pending';placeholder.hidden=true;
- placeholder.textContent='Illustration not installed yet. This memory is unlocked, but no character artwork is currently available.';
- root.append(title,text,frame,placeholder);
- loadCGArt(image,entry,false,kind=>{
-  frame.classList.toggle('is-fallback',kind!=='event');
-  placeholder.hidden=true;
-  CG.markViewed(state,entry.id);persist();renderGallery();
- },()=>{frame.hidden=true;placeholder.hidden=false;});
- window.NeoRpgDiscreetAvatars?.set?.(root,entry.character,'neutral',cast[entry.character]?.name||entry.character);
+// The album is a full-page character-first experience; unearned art never gets a URL.
+let galleryCharacterPage='',galleryViewer=null;
+function galleryOpenViewer(entry){
+ if(!entry.unlocked)return;
+ if(!galleryViewer){
+  galleryViewer=document.createElement('dialog');galleryViewer.className='cg-lightbox';
+  galleryViewer.setAttribute('aria-label','Full-screen unlocked artwork');
+  galleryViewer.innerHTML='<div class="cg-lightbox-toolbar"><span class="cg-lightbox-title"></span><button type="button" class="cg-lightbox-close" aria-label="Close full-screen image">✕ Close</button></div><div class="cg-lightbox-stage"></div>';
+  galleryViewer.querySelector('.cg-lightbox-close').onclick=()=>galleryViewer.close();
+  galleryViewer.addEventListener('click',e=>{if(e.target===galleryViewer)galleryViewer.close();});
+  document.body.append(galleryViewer);
+ }
+ const stage=galleryViewer.querySelector('.cg-lightbox-stage');stage.replaceChildren();
+ galleryViewer.querySelector('.cg-lightbox-title').textContent=entry.title;
+ const image=document.createElement('img');image.alt=entry.title;image.hidden=true;stage.append(image);
+ const pending=document.createElement('p');pending.className='cg-pending';pending.textContent='Artwork not installed yet.';pending.hidden=true;stage.append(pending);
+ galleryViewer.showModal();
+ loadCGArt(image,entry,false,()=>{
+  pending.hidden=true;CG.markViewed(state,entry.id);persist();renderGallery();
+ },()=>{pending.hidden=false;});
 }
 function populateGalleryCharacters(){
  const select=$('galleryCharacter'),previous=select.value;
@@ -1637,42 +1642,59 @@ function populateGalleryCharacters(){
  select.value=ids.includes(previous)?previous:'';
 }
 function renderGallery(){
- const root=$('galleryGrid');root.replaceChildren();
- const all=CG.gallery(state,{character:$('galleryCharacter').value,category:$('galleryCategory').value});
+ const root=$('galleryGrid'),progress=$('galleryProgress');root.replaceChildren();progress.replaceChildren();
+ const select=$('galleryCharacter'),category=$('galleryCategory');
+ const characterPage=$('galleryCharacterPage'),albumPage=$('galleryAlbumPage');
+ characterPage.hidden=!!galleryCharacterPage;albumPage.hidden=!galleryCharacterPage;
+ if(!galleryCharacterPage){
+  const ids=[...select.options].map(x=>x.value).filter(Boolean);
+  const all=CG.gallery(state);
+  $('galleryCount').textContent='Choose a character to explore their memories.';
+  for(const id of ids){
+   const entries=all.filter(e=>e.character===id),earned=entries.filter(e=>e.unlocked);
+   const btn=document.createElement('button');btn.type='button';btn.className='cg-character-card';
+   const avatar=document.createElement('div');avatar.className='cg-character-avatar';
+   // Character portraits are ordinary public overworld assets; no hidden CG is fetched.
+   const name=document.createElement('strong');name.textContent=cast[id]?.name||id;
+   const stat=document.createElement('small');stat.textContent=earned.length+' / '+entries.length+' memories unlocked';
+   btn.append(avatar,name,stat);
+   btn.onclick=()=>{galleryCharacterPage=id;select.value=id;category.value='';renderGallery();};
+   characterPage.append(btn);
+  }
+  return;
+ }
+ select.value=galleryCharacterPage;
+ $('galleryCharacterTitle').textContent=cast[galleryCharacterPage]?.name||galleryCharacterPage;
+ const all=CG.gallery(state,{character:galleryCharacterPage,category:category.value});
  const visible=$('galleryUnseen').checked?all.filter(e=>e.unlocked&&!e.viewed):all;
- const unlocked=all.filter(e=>e.unlocked).length;
- const summary=JOURNEY.gallerySummary(state,CG),newCount=summary.unlocked-summary.viewed;
- $('galleryCount').textContent=unlocked+' / '+all.length+' in this filter · '+summary.unlocked+'/'+summary.total+
-  ' overall ('+summary.percent+'%) · '+newCount+' earned but not yet viewed · '+visible.length+' shown';
- const progress=$('galleryProgress');progress.replaceChildren();
- for(const [id,stat] of Object.entries(summary.byCategory)){
-  const item=document.createElement('span');item.className='cg-progress-chip';
-  item.textContent=stat.label+': '+stat.unlocked+'/'+stat.total;progress.append(item);
+ const earned=all.filter(e=>e.unlocked).length;
+ $('galleryCount').textContent=earned+' / '+all.length+' unlocked · '+visible.length+' shown';
+ const categories=[{id:'',label:'All CGs'},...CG.categories.map(id=>({id,label:({profile:'First encounters',pre_duel:'Pre-duel',social:'Social',special:'Special moments'})[id]||id}))];
+ for(const cat of categories){
+  const btn=document.createElement('button');btn.type='button';btn.className='cg-category-tab'+(category.value===cat.id?' selected':'');
+  btn.textContent=cat.label;btn.setAttribute('aria-pressed',String(category.value===cat.id));
+  btn.onclick=()=>{category.value=cat.id;renderGallery();};progress.append(btn);
  }
- for(const [id,stat] of Object.entries(summary.byCharacter)){
-  const name=document.createElement('span');name.className='cg-character-progress';
-  name.textContent=(cast[id]?.name||id)+': '+stat.unlocked+'/'+stat.total;progress.append(name);
- }
+ const notice=document.createElement('p');notice.className='cg-other-art-notice';
+ notice.textContent='Expressions, battle reactions, and outfits will appear here once their first-seen unlock tracking is connected. Hidden files are never treated as discovered.';
+ progress.append(notice);
  for(const entry of visible){
-  const tile=document.createElement('button');tile.className='cg-tile'+(entry.unlocked?' unlocked':' locked');tile.disabled=!entry.unlocked;
+  const tile=document.createElement('button');tile.type='button';tile.className='cg-tile'+(entry.unlocked?' unlocked':' locked');
+  tile.disabled=!entry.unlocked;
   const thumb=document.createElement('div');thumb.className='cg-thumb';
   if(entry.unlocked){
-   const img=document.createElement('img');img.alt='';
-   img.hidden=true;thumb.append(img);
+   const img=document.createElement('img');img.alt='';img.hidden=true;thumb.append(img);
    loadCGArt(img,entry,true,kind=>{img.classList.toggle('is-fallback',kind!=='event');});
-   window.NeoRpgDiscreetAvatars?.set?.(thumb,entry.character,'neutral',cast[entry.character]?.name||entry.character);
-  }else{
-   const mystery=document.createElement('span');mystery.textContent='?';thumb.append(mystery);
-  }
+  }else{const mystery=document.createElement('span');mystery.textContent='🔒';thumb.append(mystery);}
   const title=document.createElement('strong');title.textContent=entry.title;
-  const note=document.createElement('small');note.textContent=(cast[entry.character]?.name||entry.character)+' · '+(entry.unlocked?'View memory':'Locked · '+entry.hint);
-  tile.append(thumb,title,note);tile.onclick=()=>showGalleryDetail(entry);root.append(tile);
+  const note=document.createElement('small');note.textContent=entry.unlocked?(entry.viewed?'Viewed':'New · tap to view'):'Locked · '+entry.hint;
+  tile.append(thumb,title,note);tile.onclick=()=>galleryOpenViewer(entry);root.append(tile);
  }
 }
 function openGallery(){
- $('galleryPreview').replaceChildren();populateGalleryCharacters();renderGallery();$('galleryDialog').showModal();
+ galleryCharacterPage='';$('galleryUnseen').checked=false;
+ populateGalleryCharacters();renderGallery();$('galleryDialog').showModal();
 }
-
 function openCommunityBoard(){
  const table=$('communityStandings'),news=$('communityNews'),connections=$('communityConnections');
  table.replaceChildren();news.replaceChildren();connections.replaceChildren();
@@ -2780,7 +2802,8 @@ document.addEventListener('pointerdown',event=>{
  if(moreMenu?.open&&!moreMenu.contains(event.target))moreMenu.open=false;
 });
 $('galleryClose').onclick=()=>$('galleryDialog').close();
-$('galleryCharacter').onchange=renderGallery;$('galleryCategory').onchange=renderGallery;$('galleryUnseen').onchange=renderGallery;
+$('galleryBack').onclick=()=>{galleryCharacterPage='';$('galleryCharacter').value='';$('galleryCategory').value='';renderGallery();};
+$('galleryCharacter').onchange=()=>{galleryCharacterPage=$('galleryCharacter').value;renderGallery();};$('galleryCategory').onchange=renderGallery;$('galleryUnseen').onchange=renderGallery;
 $('preDuelBack').onclick=cancelPreparedDuel;
 $('preDuelNext').onclick=advancePreparedDuel;
 $('preDuelStart').onclick=launchPreparedDuel;
