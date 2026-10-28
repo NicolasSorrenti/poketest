@@ -71,6 +71,7 @@ test('new game, free travel, NPC challenge, duel result, reload and second duel'
  assert.equal(s.results.length,2);assert.equal(s.day,2);assert.equal(s.slot,0);
  assert.equal(s.points,4);assert.equal(s.credits,100);
  app.ids.dismissReceipt.onclick();assert.equal(app.read().lastDuelReceipt,null);
+ click(app.ids.choices,'Continue'); // Acknowledge the result narration before navigating home.
  app.ids.quickHome.onclick();assert.equal(app.read().location,'home');
  click(app.ids.activities,'Sleep until morning');assert.equal(app.read().day,3);
 });
