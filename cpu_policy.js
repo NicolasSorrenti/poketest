@@ -642,12 +642,19 @@ function prizeRaceBonus(action,o,cfg){
  if(action.type==='attack'){
   const moves=own.active.effectiveAttacks||card(own.active.id)?.attacks||[];
   const attack=moves[action.payload.attackIndex];if(!attack)return 0;
-  const ko=knockoutChance(attack,own.active,enemy.active);
+  // Confusion requires a separate heads flip before any attack resolves.
+  // Discount Prize-race urgency just as knockout tempo does; otherwise Apex
+  // still treats a speculative final Prize as guaranteed in this scorer.
+  const confusionChance=own.active.status==='Confused'?.5:1;
+  const ko=knockoutChance(attack,own.active,enemy.active)*confusionChance;
   // An actual knockout that takes our final Prize or eliminates their last
   // Pokémon must dominate speculative development, retreat or Trainer play.
   const victory=urgent?550*ko:0;
-  const theirWin=enemy.prizeCount===1&&
-   strongestAffordableAttack(enemy.active,own.active)>=hpRemaining(own.active);
+  // A printed lethal attack is not a next-turn loss when the opponent
+  // cannot declare it (Sleep, Paralysis, Amnesia or Gym cooldown), or when
+  // Confusion/attack flips make the knockout unreliable. Only public state
+  // is inspected; this is the same conservative threat test used elsewhere.
+  const theirWin=enemy.prizeCount===1&&likelyOpponentKnockout(o,own.active);
   // Even without winning outright, trading Prizes before a likely loss helps.
   const trade=(!urgent&&theirWin?100*ko:0)+(!urgent?45*ko:0);
   return (victory+trade)*cfg.style.damage;
@@ -702,7 +709,10 @@ function knockoutTempoBonus(a,o,cfg){
  const p=o.self,q=o.opponent;
  const atk=(p.active.effectiveAttacks||card(p.active.id)?.attacks||[])[a.payload.attackIndex];
  if(!atk)return 0;
- const chance=knockoutChance(atk,p.active,q.active);
+ // A Confused attacker must pass its own coin flip before the printed
+ // attack can resolve. This is independent of any attack-specific flips.
+ const confusionChance=p.active.status==='Confused'?.5:1;
+ const chance=knockoutChance(atk,p.active,q.active)*confusionChance;
  if(!chance)return 0;
  const lastPrize=p.prizeCount===1,lastOpponent=q.bench.length===0;
  if(lastPrize||lastOpponent)return 550*chance;
