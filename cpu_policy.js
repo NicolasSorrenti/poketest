@@ -702,7 +702,10 @@ function knockoutTempoBonus(a,o,cfg){
  const p=o.self,q=o.opponent;
  const atk=(p.active.effectiveAttacks||card(p.active.id)?.attacks||[])[a.payload.attackIndex];
  if(!atk)return 0;
- const chance=knockoutChance(atk,p.active,q.active);
+ // A Confused attacker must pass its own coin flip before the printed
+ // attack can resolve. This is independent of any attack-specific flips.
+ const confusionChance=p.active.status==='Confused'?.5:1;
+ const chance=knockoutChance(atk,p.active,q.active)*confusionChance;
  if(!chance)return 0;
  const lastPrize=p.prizeCount===1,lastOpponent=q.bench.length===0;
  if(lastPrize||lastOpponent)return 550*chance;
