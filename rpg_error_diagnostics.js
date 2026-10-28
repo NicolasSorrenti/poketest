@@ -57,7 +57,7 @@
   // Resource load failure: no JS Error object, but it can still break scene progression.
   if(event.target&&event.target!==root){
    const tag=event.target.tagName;
-   if(tag==='SCRIPT')capture(new Error('Required RPG script could not load'),{source:'script-load',action:'load script',filename:event.target.src?.split('?')[0]||''});
+   if(tag==='SCRIPT'&&!event.target.hasAttribute('data-optional-script'))capture(new Error('Required RPG script could not load'),{source:'script-load',action:'load script',filename:event.target.src?.split('?')[0]||''});
    return;
   }
   capture(event.error||new Error(event.message||'Uncaught script error'),{source:'uncaught',action:'runtime',filename:event.filename,line:event.lineno,column:event.colno});
