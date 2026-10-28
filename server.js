@@ -305,7 +305,7 @@ const server=http.createServer(async (req,res)=>{
  if(pathname==='/rpg_character_bootstrap.js')publicScripts.add('rpg_character_bootstrap.js');
  if(pathname==='/rpg_art_manifest.js')publicScripts.add('rpg_art_manifest.js');
  if(pathname==='/rpg_outfit_chime.js')publicScripts.add('rpg_outfit_chime.js');
- if(pathname==='/rpg-assets/outfit-chime-focus.json'||pathname==='/rpg-assets/characters/hana/overworld-variants/chime-focus.json'){
+ if(pathname==='/rpg-assets/outfit-chime-focus.json'||pathname==='/rpg-assets/outfit-chime-focus-top.json'||pathname==='/rpg-assets/characters/hana/overworld-variants/chime-focus.json'){
   const target=path.resolve(root,'.'+pathname);
   fs.stat(target,(err,stat)=>{
    if(err||!stat.isFile()){res.writeHead(404).end('Not found');return;}
