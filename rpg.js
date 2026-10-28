@@ -2421,7 +2421,8 @@ async function finishOverworldArrival(destination){
 function render(){
  // Detect actual location changes after the first render; navigation remains free.
  const previousLocation=lastRenderedLocation;
- las if(previousLocation&&previousLocation!==state.location){
+ lastRenderedLocation=state.location;
+ if(previousLocation&&previousLocation!==state.location){
   window.NeoRpgAudio?.play?.('travel');
   window.NeoRpgInterface?.onLocationChange?.();
   const destination=state.location;
@@ -2435,10 +2436,6 @@ function render(){
     if(pendingOverworldArrival===destination)pendingOverworldArrival=null;
     void finishOverworldArrival(destination);
    }});
-   if(transition)return;
-  }
- }
-;
    if(transition)return;
   }
  }
