@@ -1021,6 +1021,8 @@ function showPackReveal(){
   button.onclick=reveal;cards.push(reveal);target.append(button);
  }
  $('packRevealAll').onclick=()=>{cards.forEach(show=>show(true));window.NeoRpgAudio?.play?.('flip');};
+ $('packContinue').type='button';
+ $('packRevealAll').type='button';
  $('packContinue').onclick=()=>{
   pack.opened=true;
   const queued=state.deckJourney?.pendingPacks?.shift()||null;
