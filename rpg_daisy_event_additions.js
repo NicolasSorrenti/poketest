@@ -886,11 +886,13 @@ cross.push({
     "daisy_laca_sleepover_01",
     "daisy_laca_sleepover_02",
     "daisy_laca_sleepover_03",
-    "daisy_laca_sleepover_04"
+    "daisy_laca_sleepover_04",
+    "daisy_laca_sleepover_05"
   ],
   "cgSwitchSteps": [
     0,
     7,
+    9,
     11,
     13
   ],
@@ -979,8 +981,8 @@ cross.push({
     }
   ],
   "art": {
-    "scene": "Rainy night card game ends with Daisy and Laca asleep in a comfortable hug. Four approved scene images.",
-    "composition": "Four sequential wide 16:9 CGs: overhead card game, cuddled sleep, alternate embrace angle, last cozy close view.",
+    "scene": "Rainy night card game ends with Daisy and Laca asleep in a comfortable hug. Five approved scene images.",
+    "composition": "Five sequential wide 16:9 CGs: overhead card game, cuddled sleep, alternate embrace angle, last cozy close view.",
     "outfit": "Daisy black hair, correct tattoos, burgundy long mesh sleeves with opaque sleepwear; Laca black camisole and plaid pajama pants.",
     "expression": "Natural sleepy smiles and tender closed-eye expressions",
     "environment": "home",
