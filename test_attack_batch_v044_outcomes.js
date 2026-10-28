@@ -38,6 +38,22 @@ x=scenario(121,{heads:false});assert(x.attack());assert.equal(x.state('engine.me
 x=scenario(97);assert(x.attack());assert.equal(x.state('engine.foe.active.damage'),0,'Zzzap ignores those without Powers');
 x=scenario(96,{energies:['Fire','Water','Lightning']});assert(x.attack());assert.equal(x.state('engine.me.active.energies.length'),0,'Elemental Blast discards all three types');
 x=scenario(96,{energies:['Fire','Fire','Fire'],setup:'engine.me.active.energies=["basic-Fire","basic-Fire","basic-Fire"]'});assert.equal(x.attack(),false,'Elemental Blast requires all three original types');assert.equal(x.state('engine.me.active.energies.length'),3);
+// Dark Houndoom's printed Dark Fire effect discards Darkness Energy only.
+x=scenario(181,{energies:['Fire','Water']});
+assert(x.attack());
+assert.equal(x.state('engine.foe.active.damage'),30,'Dark Fire without Darkness Energy only deals base damage');
+assert.equal(x.state('engine.me.active.energies.length'),2,'Dark Fire without Darkness Energy must not discard other types');
+assert.equal(x.state('engine.me.discard.length'),2,'Dark Fire without Darkness Energy leaves discard unchanged');
+x=scenario(181,{energies:['Fire','Water','Darkness']});
+assert(x.attack());
+assert.equal(x.state('engine.foe.active.damage'),60,'Dark Fire gets the bonus with attached Darkness Energy');
+assert.equal(x.state('JSON.stringify(engine.me.active.energies)'),JSON.stringify(['basic-Fire','basic-Water']),'Dark Fire preserves non-Darkness Energy');
+assert.equal(x.state('engine.me.discard.at(-1)'),'basic-Darkness','Dark Fire discards Darkness rather than Fire or Water');
+x=scenario(181,{energies:['Darkness','Fire','Darkness']});
+assert(x.attack());
+assert.equal(x.state('engine.me.active.energies.filter(id=>id==="basic-Darkness").length'),1,'Dark Fire discards exactly one Darkness Energy');
+assert.equal(x.state('engine.me.active.energies.includes("basic-Fire")'),true,'Dark Fire retains Fire Energy');
+
 x=scenario(227,{heads:true});assert(x.attack());assert.equal(x.state('engine.foe.active.damage'),40);assert.equal(x.state('engine.foe.bench[0].damage'),10);
 x=scenario(227,{heads:false});assert(x.attack());assert.equal(x.state('engine.foe.active.damage'),30);assert.equal(x.state('engine.me.active.damage'),20);
 x=scenario(230,{heads:true});assert(x.attack());assert.equal(x.state('engine.foe.active.status'),'Paralyzed');
