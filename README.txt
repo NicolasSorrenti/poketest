@@ -1,1 +1,1 @@
-Neo Campus Discreet Mode asset paths. Extract at repository ROOT (not inside rpg-assets). 12 named characters. Other generated candidates require identity approval before assigning. PR #109 must be merged separately.
+Extract to poketest root. Code on main; images not yet uploaded.
