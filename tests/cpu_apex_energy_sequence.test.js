@@ -794,3 +794,34 @@ test('Apex saves a playable evolution before a small-hand Professor Oak reset',(
  withoutOak.self.hand=['base1-34','base1-91'];
  assert.ok(AI.score(evo,o,cfg,{})>AI.score(evo,withoutOak,cfg,{})+200);
 });
+
+// A Confused opponent must win a coin flip before its printed KO can resolve.
+// Apex's Energy horizon, rescue evolution, and retreat should all use the
+// same conservative likely-KO threshold as its stranded-Active evaluation.
+test('Apex does not rush Bench Energy for a merely 50% Confused KO',()=>{
+ const ready=threatenedActiveEnergyBoard();
+ const confused=structuredClone(ready);
+ confused.opponent.active.status='Confused';
+ const unarmed=structuredClone(ready);
+ unarmed.opponent.active.energies=[];
+ assert.equal(AI.energyHorizonBonus(attach,confused,cfg),
+  AI.energyHorizonBonus(attach,unarmed,cfg));
+ assert.ok(AI.energyHorizonBonus(attach,ready,cfg)>
+  AI.energyHorizonBonus(attach,confused,cfg));
+});
+test('Apex does not panic retreat from a Confused 50% KO',()=>{
+ const ready=retreatLockBoard();
+ const confused=structuredClone(ready);
+ confused.opponent.active.status='Confused';
+ assert.ok(AI.score(retreatToBench,ready,cfg,{})>
+  AI.score(retreatToBench,confused,cfg,{}));
+});
+test('Apex delays an unready rescue evolution when the KO requires a Confusion flip',()=>{
+ const ready=evolutionRefuelBoard('base1-91');
+ ready.self.active.damage=40; // Machop has 10 HP left; Machoke would have 40.
+ ready.opponent.active={id:HITMONCHAN,energies:[FIGHT],damage:0,status:null};
+ const confused=structuredClone(ready);
+ confused.opponent.active.status='Confused';
+ assert.equal(AI.prematureEvolutionPenalty(ready,-1,'base1-34',cfg),0);
+ assert.ok(AI.prematureEvolutionPenalty(confused,-1,'base1-34',cfg)>0);
+});
