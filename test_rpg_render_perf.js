@@ -67,7 +67,12 @@ assert.match(game,/if\(portraitRoot\.dataset\.npc!==nextPortrait\|\|portraitRoot
 assert.match(game,/const selected=button\.dataset\.tab===rpgLocalTab/,'selected tab updates on same button');
 assert.match(html,/src="\/rpg_character_bootstrap\.js(?:\?v=[^"]+)?"/,'RPG loads scripts through the authorized bootstrap');
 const bootstrap=fs.readFileSync('rpg_character_bootstrap.js','utf8');
-assert.ok(bootstrap.includes('"/rpg_render_perf.js"'),'render performance helper is in the bootstrap dependency list');
-assert.ok(bootstrap.indexOf('"/rpg_render_perf.js"')<bootstrap.indexOf('"/rpg.js"'),'render helper is loaded before RPG entrypoint');
+const scriptsBlock=bootstrap.match(/const scripts=\[([\s\S]*?)\];/);
+assert.ok(scriptsBlock,'bootstrap defines the ordered RPG dependency list');
+const scriptPaths=[...scriptsBlock[1].matchAll(/"([^"]+\.js(?:\?[^"]*)?)"/g)].map(([,src])=>src);
+const helperIndex=scriptPaths.findIndex(src=>/^\/rpg_render_perf\.js(?:\?|$)/.test(src));
+const entrypointIndex=scriptPaths.findIndex(src=>/^\/rpg\.js(?:\?|$)/.test(src));
+assert.ok(helperIndex>=0,'render performance helper is in the bootstrap dependency list');
+assert.ok(entrypointIndex>helperIndex,'render helper loads before the RPG entrypoint, including cache-versioned URLs');
 
 console.log('RPG keyed rendering: focus, scroll, live callbacks, reorder, remove, duplicate keys and runtime integration passed.');

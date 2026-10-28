@@ -1816,7 +1816,7 @@ const packs=[
     {
      "sceneId": "barb_random_cg_04",
      "path": "/rpg-assets/characters/barb/events/barb_random_cg_04_accidental_model_v2.webp",
-     "prompt": "Approved CG for Barb optional everyday encounter: The Accidental Model. Keep the existing artwork unchanged; adult 21-year-old Barb with copper-red hair and alt punk aesthetic."
+     "prompt": "New generated CG for Barb’s optional event “The Accidental Model”: adult 21-year-old Barb with copper-red hair, hazel-green eyes, septum ring, butterfly pendant and left-shoulder rose tattoo, in a fully clothed punk-cute outfit. A playful accidental fashion photo after she safely trips on a camera cable in a studio; bashful surprise, warm editorial lighting, wide 16:9, dialogue space at bottom. Preserve the prior approved CG as a separate asset."
     },
     {
      "sceneId": "barb_random_cg_05",
@@ -1980,6 +1980,10 @@ const packs=[
     "participants": [],
     "lines": [
      {
+      "speaker": "Narrator",
+      "text": "At the card shop table, Daisy has already laid out a deck and is waiting for you to take the seat across from her."
+     },
+     {
       "speaker": "daisy",
       "text": "That's my table. You're welcome to share it, unless you're going to shuffle like a lawn mower."
      },
@@ -2040,7 +2044,8 @@ const packs=[
        "attraction": 2
       }
      }
-    ]
+    ],
+    "image": "/rpg-assets/events/cg/season01/daisy_route_1.png"
    },
    {
     "id": "daisy_route_2",
@@ -2054,6 +2059,10 @@ const packs=[
     "prerequisite": "daisy_route_1",
     "participants": [],
     "lines": [
+     {
+      "speaker": "Narrator",
+      "text": "At the café window, Daisy holds two fabric sketches up to the daylight so you can compare their layers and color."
+     },
      {
       "speaker": "daisy",
       "text": "I brought two sketches, and before you ask, they aren't new deck boxes."
@@ -2118,7 +2127,8 @@ const packs=[
        "attraction": 2
       }
      }
-    ]
+    ],
+    "image": "/rpg-assets/events/cg/season01/daisy_route_2.png"
    },
    {
     "id": "daisy_route_3",
@@ -2201,7 +2211,8 @@ const packs=[
        "trust": 1
       }
      }
-    ]
+    ],
+    "image": "/rpg-assets/events/cg/season01/daisy_route_3.png"
    },
    {
     "id": "daisy_route_4",
@@ -2215,6 +2226,10 @@ const packs=[
     "prerequisite": "daisy_route_3",
     "participants": [],
     "lines": [
+     {
+      "speaker": "Narrator",
+      "text": "In the quiet park at dusk, Daisy sits beside you and turns the conversation toward the lotus tattoo she chose for herself."
+     },
      {
       "speaker": "daisy",
       "text": "Do you remember asking me about the flower tattoo?"
@@ -2285,7 +2300,8 @@ const packs=[
        "attraction": 2
       }
      }
-    ]
+    ],
+    "image": "/rpg-assets/events/cg/season01/daisy_route_4.png"
    }
   ],
   "mandatoryEvents": [],
@@ -2346,22 +2362,22 @@ const packs=[
     {
      "sceneId": "daisy_route_1",
      "path": "/rpg-assets/events/cg/season01/daisy_route_1.png",
-     "prompt": "Daisy at a card shop table with the newcomer, burgundy mesh top with opaque underlayer and lined sheer black skirt, nose hoop, accurate sleeve tattoos and center lotus sternum tattoo; playful over-the-shoulder close-up across scattered cards, energetic cinematic anime 16:9, bottom dialogue-safe composition."
+     "prompt": "Daisy at a card shop table with the newcomer, burgundy mesh top with opaque underlayer and lined sheer black skirt, nose hoop, accurate sleeve tattoos and center lotus sternum tattoo; playful over-the-shoulder close-up across scattered cards, energetic cinematic anime 16:9, bottom dialogue-safe composition. Approved art is installed; use the exact image path as the authoritative scene reference."
     },
     {
      "sceneId": "daisy_route_2",
      "path": "/rpg-assets/events/cg/season01/daisy_route_2.png",
-     "prompt": "Daisy at a sunset café window comparing sheer burgundy and black skirt fabrics with the protagonist; warm backlit translucent fabrics over opaque linings, concentrated eyes and near-touching hands, elegant intimate close-up and full-scene version, tattoo accuracy, SFW JRPG CG 16:9."
+     "prompt": "Daisy at a sunset café window comparing sheer burgundy and black skirt fabrics with the protagonist; warm backlit translucent fabrics over opaque linings, concentrated eyes and near-touching hands, elegant intimate close-up and full-scene version, tattoo accuracy, SFW JRPG CG 16:9. Approved art is installed; use the exact image path as the authoritative scene reference."
     },
     {
      "sceneId": "daisy_route_3",
      "path": "/rpg-assets/events/cg/season01/daisy_route_3.png",
-     "prompt": "Daisy in a giant oversized charcoal hoodie and extremely loose trousers at a neon arcade, glasses slightly lowered, candid expression between bravado and relief as protagonist sits beside her; intimate waist-up cut-in within landscape CG, no posing for camera, 16:9."
+     "prompt": "Daisy in a giant oversized charcoal hoodie and extremely loose trousers at a neon arcade, glasses slightly lowered, candid expression between bravado and relief as protagonist sits beside her; intimate waist-up cut-in within landscape CG, no posing for camera, 16:9. Approved art is installed; use the exact image path as the authoritative scene reference."
     },
     {
      "sceneId": "daisy_route_4",
      "path": "/rpg-assets/events/cg/season01/daisy_route_4.png",
-     "prompt": "Night park scene. Daisy wearing burgundy sheer long-sleeved top and lined black translucent skirt, hair gently moving, softly lit chest lotus/flower tattoo and three little stars visible; quiet vulnerable near-handholding moment with protagonist, cinematic close-up, 16:9 anime VN."
+     "prompt": "Night park scene. Daisy wearing burgundy sheer long-sleeved top and lined black translucent skirt, hair gently moving, softly lit chest lotus/flower tattoo and three little stars visible; quiet vulnerable near-handholding moment with protagonist, cinematic close-up, 16:9 anime VN. Approved art is installed; use the exact image path as the authoritative scene reference."
     }
    ]
   }

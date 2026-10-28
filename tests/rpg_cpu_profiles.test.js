@@ -22,6 +22,17 @@ test('every named RPG opponent has a legal character-specific CPU profile',()=>{
  assert.ok(ids.size>=20,'Expected the full campaign and guest cast');
 });
 
+test('Daisy retains a Water setup personality at RPG Champion skill',()=>{
+ const p=profileForNpc('daisy');
+ assert.equal(p.personality,'setup');
+ assert.match(NPC_PROFILES.daisy.reason,/Water/);
+ const service=new ClassicLocalService();
+ const duel=service.create(forRpgDuel({deck:'blackout',opponent:'brushfire',npcDeckId:'daisy',seed:178}));
+ assert.equal(duel.cpu.level,RPG_CPU_LEVEL);
+ assert.equal(duel.cpu.personality,'setup');
+ assert.equal(duel.cpu.advancedTactics,true);
+});
+
 test('new guest profiles keep their style while RPG difficulty is forced to Champion',()=>{
  const service=new ClassicLocalService();
  for(const [id,personality] of [['barb','tactical'],['elena','tactical'],['jinx','aggressive'],['laca','risk_taking'],['luna','defensive'],['rina','setup'],['sierra','tactical'],['sol','risk_taking']]){
