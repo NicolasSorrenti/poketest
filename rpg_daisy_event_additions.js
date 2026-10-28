@@ -127,6 +127,743 @@ cross.push({
     "fanservice": 0
   }
 });
+// Approved additional Daisy CG sequences; image files uploaded separately.
+cross.push(...[
+ {
+  "id": "daisy_barb_temporary_tattoo",
+  "npc": "daisy",
+  "participants": [
+   "daisy",
+   "barb"
+  ],
+  "encounterType": "slice",
+  "trigger": "talk",
+  "place": "shop",
+  "slot": 1,
+  "start": 15,
+  "end": 90,
+  "minAffection": 0,
+  "title": "The Tattoo Artist's Mistake",
+  "artPending": false,
+  "image": "/rpg-assets/events/cg/season01/daisy_barb_temporary_tattoo.webp",
+  "lines": [
+   {
+    "speaker": "Narrator",
+    "text": "Barb invites Daisy to test temporary tattoo transfers on a design sheet."
+   },
+   {
+    "speaker": "Narrator",
+    "text": "Daisy discovers a tiny pink cartoon face stuck to her cheek."
+   },
+   {
+    "speaker": "daisy",
+    "text": "Barb. Why is there a sticker on my FACE?"
+   },
+   {
+    "speaker": "barb",
+    "text": "Because it likes you!"
+   },
+   {
+    "speaker": "daisy",
+    "text": "You said it would come off immediately."
+   },
+   {
+    "speaker": "barb",
+    "text": "It will. After I finish laughing."
+   },
+   {
+    "speaker": "daisy",
+    "text": "I am never volunteering as your model again."
+   }
+  ],
+  "choices": [
+   {
+    "label": "Join the laughter",
+    "reply": "Daisy smiles and promises not to forget the moment.",
+    "kind": "playful",
+    "flag": "daisy_barb_temporary_tattoo_playful",
+    "delta": {
+     "affection": 1,
+     "respect": 1
+    }
+   },
+   {
+    "label": "Help everyone recover",
+    "reply": "Daisy appreciates your practical support.",
+    "kind": "support",
+    "flag": "daisy_barb_temporary_tattoo_support",
+    "delta": {
+     "affection": 1,
+     "trust": 1
+    }
+   }
+  ],
+  "art": {
+   "scene": "The Tattoo Artist's Mistake — approved Neo Campus illustrated crossover.",
+   "composition": "16:9 cinematic CG with lower dialogue-safe area. Multiple images switch during the same encounter.",
+   "outfit": "Use canon Daisy and partner character sheets; keep translucent burgundy sleeves and her identifying tattoos where shown.",
+   "expression": "Playful situational expressions",
+   "environment": "shop",
+   "mood": "comedic slice of life",
+   "fanservice": 0
+  }
+ },
+ {
+  "id": "daisy_laca_photo_booth",
+  "npc": "daisy",
+  "participants": [
+   "daisy",
+   "laca"
+  ],
+  "encounterType": "slice",
+  "trigger": "talk",
+  "place": "arcade",
+  "slot": 2,
+  "start": 15,
+  "end": 90,
+  "minAffection": 0,
+  "title": "The Photo Booth Disaster",
+  "artPending": false,
+  "image": "/rpg-assets/events/cg/season01/daisy_laca_photo_booth_01.webp",
+  "cgSequence": [
+   "daisy_laca_photo_booth_01",
+   "daisy_laca_photo_booth_02"
+  ],
+  "cgSwitchSteps": [
+   0,
+   5
+  ],
+  "lines": [
+   {
+    "speaker": "Narrator",
+    "text": "Daisy and Laca squeeze into the arcade photo booth."
+   },
+   {
+    "speaker": "daisy",
+    "text": "I've perfected my camera face. Watch and learn."
+   },
+   {
+    "speaker": "Narrator",
+    "text": "The flash fires while both are still adjusting their positions."
+   },
+   {
+    "speaker": "laca",
+    "text": "Oh, those pictures are INCREDIBLE!"
+   },
+   {
+    "speaker": "daisy",
+    "text": "Do not you dare show anyone those!"
+   },
+   {
+    "speaker": "Narrator",
+    "text": "They inspect the printed strip together, laughing at each disastrous frame."
+   },
+   {
+    "speaker": "laca",
+    "text": "One for your room and one for mine!"
+   },
+   {
+    "speaker": "daisy",
+    "text": "...Fine. Give me the cutest one."
+   }
+  ],
+  "choices": [
+   {
+    "label": "Join the laughter",
+    "reply": "Daisy smiles and promises not to forget the moment.",
+    "kind": "playful",
+    "flag": "daisy_laca_photo_booth_playful",
+    "delta": {
+     "affection": 1,
+     "respect": 1
+    }
+   },
+   {
+    "label": "Help everyone recover",
+    "reply": "Daisy appreciates your practical support.",
+    "kind": "support",
+    "flag": "daisy_laca_photo_booth_support",
+    "delta": {
+     "affection": 1,
+     "trust": 1
+    }
+   }
+  ],
+  "art": {
+   "scene": "The Photo Booth Disaster — approved Neo Campus illustrated crossover.",
+   "composition": "16:9 cinematic CG with lower dialogue-safe area. Multiple images switch during the same encounter.",
+   "outfit": "Use canon Daisy and partner character sheets; keep translucent burgundy sleeves and her identifying tattoos where shown.",
+   "expression": "Playful situational expressions",
+   "environment": "arcade",
+   "mood": "comedic slice of life",
+   "fanservice": 0
+  }
+ },
+ {
+  "id": "daisy_hana_makeover",
+  "npc": "daisy",
+  "participants": [
+   "daisy",
+   "hana"
+  ],
+  "encounterType": "slice",
+  "trigger": "talk",
+  "place": "shop",
+  "slot": 2,
+  "start": 15,
+  "end": 90,
+  "minAffection": 0,
+  "title": "The Midnight Makeover",
+  "artPending": false,
+  "image": "/rpg-assets/events/cg/season01/daisy_hana_makeover_01.webp",
+  "cgSequence": [
+   "daisy_hana_makeover_01",
+   "daisy_hana_makeover_02"
+  ],
+  "cgSwitchSteps": [
+   0,
+   5
+  ],
+  "lines": [
+   {
+    "speaker": "Narrator",
+    "text": "Hana arrives at Barb's workshop with an entire bag of hair accessories."
+   },
+   {
+    "speaker": "hana",
+    "text": "Please let me try a softer look on you, Daisy!"
+   },
+   {
+    "speaker": "daisy",
+    "text": "Why do you need eight clips?"
+   },
+   {
+    "speaker": "Narrator",
+    "text": "Hana works carefully while Daisy pretends not to enjoy the pampering."
+   },
+   {
+    "speaker": "hana",
+    "text": "Okay. Ready for the mirror?"
+   },
+   {
+    "speaker": "Narrator",
+    "text": "Daisy turns to the illuminated vanity mirror and pauses."
+   },
+   {
+    "speaker": "daisy",
+    "text": "...Oh. That's actually really good."
+   },
+   {
+    "speaker": "hana",
+    "text": "I KNEW IT!"
+   },
+   {
+    "speaker": "daisy",
+    "text": "Do not tell Barb I said that."
+   }
+  ],
+  "choices": [
+   {
+    "label": "Join the laughter",
+    "reply": "Daisy smiles and promises not to forget the moment.",
+    "kind": "playful",
+    "flag": "daisy_hana_makeover_playful",
+    "delta": {
+     "affection": 1,
+     "respect": 1
+    }
+   },
+   {
+    "label": "Help everyone recover",
+    "reply": "Daisy appreciates your practical support.",
+    "kind": "support",
+    "flag": "daisy_hana_makeover_support",
+    "delta": {
+     "affection": 1,
+     "trust": 1
+    }
+   }
+  ],
+  "art": {
+   "scene": "The Midnight Makeover — approved Neo Campus illustrated crossover.",
+   "composition": "16:9 cinematic CG with lower dialogue-safe area. Multiple images switch during the same encounter.",
+   "outfit": "Use canon Daisy and partner character sheets; keep translucent burgundy sleeves and her identifying tattoos where shown.",
+   "expression": "Playful situational expressions",
+   "environment": "shop",
+   "mood": "comedic slice of life",
+   "fanservice": 0
+  }
+ },
+ {
+  "id": "daisy_laca_windy_boardwalk",
+  "npc": "daisy",
+  "participants": [
+   "daisy",
+   "laca"
+  ],
+  "encounterType": "slice",
+  "trigger": "talk",
+  "place": "park",
+  "slot": 1,
+  "start": 15,
+  "end": 90,
+  "minAffection": 0,
+  "title": "The Wind Has Other Plans",
+  "artPending": false,
+  "image": "/rpg-assets/events/cg/season01/daisy_laca_windy_boardwalk.webp",
+  "lines": [
+   {
+    "speaker": "Narrator",
+    "text": "A sudden seaside gust snatches Daisy's loose fashion sketches from her bag."
+   },
+   {
+    "speaker": "daisy",
+    "text": "MY DESIGNS!"
+   },
+   {
+    "speaker": "Narrator",
+    "text": "Laca runs behind her, laughing while trying to catch a flying page."
+   },
+   {
+    "speaker": "laca",
+    "text": "I thought you said they were windproof!"
+   },
+   {
+    "speaker": "daisy",
+    "text": "THE CLOTHES, LACA! NOT THE PAPER!"
+   },
+   {
+    "speaker": "Narrator",
+    "text": "One last sketch drifts toward the ocean."
+   },
+   {
+    "speaker": "laca",
+    "text": "I got it! I got it! ...No, I don't."
+   },
+   {
+    "speaker": "Narrator",
+    "text": "Daisy finally bursts into laughter too."
+   }
+  ],
+  "choices": [
+   {
+    "label": "Join the laughter",
+    "reply": "Daisy smiles and promises not to forget the moment.",
+    "kind": "playful",
+    "flag": "daisy_laca_windy_boardwalk_playful",
+    "delta": {
+     "affection": 1,
+     "respect": 1
+    }
+   },
+   {
+    "label": "Help everyone recover",
+    "reply": "Daisy appreciates your practical support.",
+    "kind": "support",
+    "flag": "daisy_laca_windy_boardwalk_support",
+    "delta": {
+     "affection": 1,
+     "trust": 1
+    }
+   }
+  ],
+  "art": {
+   "scene": "The Wind Has Other Plans — approved Neo Campus illustrated crossover.",
+   "composition": "16:9 cinematic CG with lower dialogue-safe area. Multiple images switch during the same encounter.",
+   "outfit": "Use canon Daisy and partner character sheets; keep translucent burgundy sleeves and her identifying tattoos where shown.",
+   "expression": "Playful situational expressions",
+   "environment": "park",
+   "mood": "comedic slice of life",
+   "fanservice": 0
+  }
+ },
+ {
+  "id": "daisy_marina_splash",
+  "npc": "daisy",
+  "participants": [
+   "daisy",
+   "marina"
+  ],
+  "encounterType": "slice",
+  "trigger": "talk",
+  "place": "pool",
+  "slot": 1,
+  "start": 15,
+  "end": 90,
+  "minAffection": 0,
+  "title": "The Unexpected Splash",
+  "artPending": false,
+  "image": "/rpg-assets/events/cg/season01/daisy_marina_splash_01.webp",
+  "cgSequence": [
+   "daisy_marina_splash_01",
+   "daisy_marina_splash_02"
+  ],
+  "cgSwitchSteps": [
+   0,
+   7
+  ],
+  "lines": [
+   {
+    "speaker": "Narrator",
+    "text": "Daisy arrives at the pool determined to keep her hair dry."
+   },
+   {
+    "speaker": "marina",
+    "text": "You said you wanted to cool off!"
+   },
+   {
+    "speaker": "Narrator",
+    "text": "Marina accidentally sends a huge splash toward Daisy."
+   },
+   {
+    "speaker": "daisy",
+    "text": "MARINA! MY HAIR!"
+   },
+   {
+    "speaker": "marina",
+    "text": "You can get me back if you want."
+   },
+   {
+    "speaker": "Narrator",
+    "text": "Daisy spots an oversized water blaster by the pool steps."
+   },
+   {
+    "speaker": "daisy",
+    "text": "Oh, absolutely. I've got an idea."
+   },
+   {
+    "speaker": "Narrator",
+    "text": "Daisy takes aim while Marina relaxes on an inflatable."
+   },
+   {
+    "speaker": "marina",
+    "text": "You're being suspiciously nice."
+   },
+   {
+    "speaker": "daisy",
+    "text": "Me? Never."
+   }
+  ],
+  "choices": [
+   {
+    "label": "Join the laughter",
+    "reply": "Daisy smiles and promises not to forget the moment.",
+    "kind": "playful",
+    "flag": "daisy_marina_splash_playful",
+    "delta": {
+     "affection": 1,
+     "respect": 1
+    }
+   },
+   {
+    "label": "Help everyone recover",
+    "reply": "Daisy appreciates your practical support.",
+    "kind": "support",
+    "flag": "daisy_marina_splash_support",
+    "delta": {
+     "affection": 1,
+     "trust": 1
+    }
+   }
+  ],
+  "art": {
+   "scene": "The Unexpected Splash — approved Neo Campus illustrated crossover.",
+   "composition": "16:9 cinematic CG with lower dialogue-safe area. Multiple images switch during the same encounter.",
+   "outfit": "Use canon Daisy and partner character sheets; keep translucent burgundy sleeves and her identifying tattoos where shown.",
+   "expression": "Playful situational expressions",
+   "environment": "pool",
+   "mood": "comedic slice of life",
+   "fanservice": 0
+  }
+ },
+ {
+  "id": "daisy_barb_ribbons",
+  "npc": "daisy",
+  "participants": [
+   "daisy",
+   "barb"
+  ],
+  "encounterType": "slice",
+  "trigger": "talk",
+  "place": "shop",
+  "slot": 1,
+  "start": 15,
+  "end": 90,
+  "minAffection": 0,
+  "title": "The Changing Room Mix-Up",
+  "artPending": false,
+  "image": "/rpg-assets/events/cg/season01/daisy_barb_ribbons_01.webp",
+  "cgSequence": [
+   "daisy_barb_ribbons_01",
+   "daisy_barb_ribbons_02",
+   "daisy_barb_ribbons_03",
+   "daisy_barb_ribbons_04",
+   "daisy_barb_ribbons_05"
+  ],
+  "cgSwitchSteps": [
+   0,
+   3,
+   5,
+   8,
+   12
+  ],
+  "lines": [
+   {
+    "speaker": "Narrator",
+    "text": "Barb hands Daisy what appears to be an endless collection of decorative ribbons."
+   },
+   {
+    "speaker": "daisy",
+    "text": "How many ribbons does one outfit actually need?"
+   },
+   {
+    "speaker": "Narrator",
+    "text": "Daisy ends up tangled on the fitting bench while Barb struggles not to laugh."
+   },
+   {
+    "speaker": "barb",
+    "text": "Stop moving! I think I found the knot."
+   },
+   {
+    "speaker": "Narrator",
+    "text": "Barb tries to free Daisy and catches herself in the ribbons."
+   },
+   {
+    "speaker": "daisy",
+    "text": "Now we're BOTH stuck!"
+   },
+   {
+    "speaker": "Narrator",
+    "text": "The two laugh while attempting to untie the next loop."
+   },
+   {
+    "speaker": "barb",
+    "text": "Almost. Just let me get closer so I can see it."
+   },
+   {
+    "speaker": "Narrator",
+    "text": "Daisy suddenly notices how close their faces are."
+   },
+   {
+    "speaker": "daisy",
+    "text": "You're very close right now, Barb."
+   },
+   {
+    "speaker": "barb",
+    "text": "Need me to move?"
+   },
+   {
+    "speaker": "daisy",
+    "text": "I DIDN'T SAY THAT!"
+   },
+   {
+    "speaker": "Narrator",
+    "text": "Barb finally loosens the knot, and the pair collapse into laughter."
+   },
+   {
+    "speaker": "barb",
+    "text": "I am not charging you for alterations today."
+   },
+   {
+    "speaker": "daisy",
+    "text": "Good. I am charging you for emotional damage!"
+   }
+  ],
+  "choices": [
+   {
+    "label": "Join the laughter",
+    "reply": "Daisy smiles and promises not to forget the moment.",
+    "kind": "playful",
+    "flag": "daisy_barb_ribbons_playful",
+    "delta": {
+     "affection": 1,
+     "respect": 1
+    }
+   },
+   {
+    "label": "Help everyone recover",
+    "reply": "Daisy appreciates your practical support.",
+    "kind": "support",
+    "flag": "daisy_barb_ribbons_support",
+    "delta": {
+     "affection": 1,
+     "trust": 1
+    }
+   }
+  ],
+  "art": {
+   "scene": "The Changing Room Mix-Up — approved Neo Campus illustrated crossover.",
+   "composition": "16:9 cinematic CG with lower dialogue-safe area. Multiple images switch during the same encounter.",
+   "outfit": "Use canon Daisy and partner character sheets; keep translucent burgundy sleeves and her identifying tattoos where shown.",
+   "expression": "Playful situational expressions",
+   "environment": "shop",
+   "mood": "comedic slice of life",
+   "fanservice": 0
+  }
+ },
+ {
+  "id": "daisy_yuna_card_theft",
+  "npc": "daisy",
+  "participants": [
+   "daisy",
+   "yuna"
+  ],
+  "encounterType": "slice",
+  "trigger": "talk",
+  "place": "shop",
+  "slot": 1,
+  "start": 15,
+  "end": 90,
+  "minAffection": 0,
+  "title": "The Great Deck Theft",
+  "artPending": false,
+  "image": "/rpg-assets/events/cg/season01/daisy_yuna_card_theft.webp",
+  "lines": [
+   {
+    "speaker": "Narrator",
+    "text": "Daisy is helping Yuna sort a pile of valuable cards."
+   },
+   {
+    "speaker": "Narrator",
+    "text": "Yuna's mischievous partner snatches a card and hops onto the display."
+   },
+   {
+    "speaker": "daisy",
+    "text": "YUNA! YOUR PARTNER STOLE MY CARD!"
+   },
+   {
+    "speaker": "yuna",
+    "text": "He likes you!"
+   },
+   {
+    "speaker": "daisy",
+    "text": "THAT'S A FIRST EDITION!"
+   },
+   {
+    "speaker": "Narrator",
+    "text": "Yuna dissolves into laughter as Daisy negotiates with the tiny thief."
+   },
+   {
+    "speaker": "daisy",
+    "text": "Listen. We can work something out."
+   }
+  ],
+  "choices": [
+   {
+    "label": "Join the laughter",
+    "reply": "Daisy smiles and promises not to forget the moment.",
+    "kind": "playful",
+    "flag": "daisy_yuna_card_theft_playful",
+    "delta": {
+     "affection": 1,
+     "respect": 1
+    }
+   },
+   {
+    "label": "Help everyone recover",
+    "reply": "Daisy appreciates your practical support.",
+    "kind": "support",
+    "flag": "daisy_yuna_card_theft_support",
+    "delta": {
+     "affection": 1,
+     "trust": 1
+    }
+   }
+  ],
+  "art": {
+   "scene": "The Great Deck Theft — approved Neo Campus illustrated crossover.",
+   "composition": "16:9 cinematic CG with lower dialogue-safe area. Multiple images switch during the same encounter.",
+   "outfit": "Use canon Daisy and partner character sheets; keep translucent burgundy sleeves and her identifying tattoos where shown.",
+   "expression": "Playful situational expressions",
+   "environment": "shop",
+   "mood": "comedic slice of life",
+   "fanservice": 0
+  }
+ },
+ {
+  "id": "daisy_camila_coffee_spill",
+  "npc": "daisy",
+  "participants": [
+   "daisy",
+   "camila"
+  ],
+  "encounterType": "slice",
+  "trigger": "talk",
+  "place": "cafe",
+  "slot": 2,
+  "start": 15,
+  "end": 90,
+  "minAffection": 0,
+  "title": "The Worst Possible Timing",
+  "artPending": false,
+  "image": "/rpg-assets/events/cg/season01/daisy_camila_coffee_spill.webp",
+  "lines": [
+   {
+    "speaker": "Narrator",
+    "text": "Camila calmly advises Daisy on building a resilient deck."
+   },
+   {
+    "speaker": "camila",
+    "text": "The secret is staying calm under pressure."
+   },
+   {
+    "speaker": "Narrator",
+    "text": "An iced coffee tips toward Daisy's meticulously annotated deck notebook."
+   },
+   {
+    "speaker": "camila",
+    "text": "OH NO!"
+   },
+   {
+    "speaker": "daisy",
+    "text": "CAMILA! THAT'S MY DECK LIST!"
+   },
+   {
+    "speaker": "camila",
+    "text": "I'M STAYING CALM!"
+   },
+   {
+    "speaker": "daisy",
+    "text": "YOU'RE SCREAMING!"
+   },
+   {
+    "speaker": "Narrator",
+    "text": "They rescue the surviving pages and promise to rewrite the rest together."
+   }
+  ],
+  "choices": [
+   {
+    "label": "Join the laughter",
+    "reply": "Daisy smiles and promises not to forget the moment.",
+    "kind": "playful",
+    "flag": "daisy_camila_coffee_spill_playful",
+    "delta": {
+     "affection": 1,
+     "respect": 1
+    }
+   },
+   {
+    "label": "Help everyone recover",
+    "reply": "Daisy appreciates your practical support.",
+    "kind": "support",
+    "flag": "daisy_camila_coffee_spill_support",
+    "delta": {
+     "affection": 1,
+     "trust": 1
+    }
+   }
+  ],
+  "art": {
+   "scene": "The Worst Possible Timing — approved Neo Campus illustrated crossover.",
+   "composition": "16:9 cinematic CG with lower dialogue-safe area. Multiple images switch during the same encounter.",
+   "outfit": "Use canon Daisy and partner character sheets; keep translucent burgundy sleeves and her identifying tattoos where shown.",
+   "expression": "Playful situational expressions",
+   "environment": "cafe",
+   "mood": "comedic slice of life",
+   "fanservice": 0
+  }
+ }
+]);
 const pack=root.NeoRpgCharacterPacks?.byId?.('daisy');
 if(pack){for(const e of solo){const existing=pack.events.find(x=>x.id===e.id);if(existing)Object.assign(existing,e);else pack.events.push(e);
  if(!pack.art.eventImages.some(x=>x.sceneId===e.id))pack.art.eventImages.push({sceneId:e.id,path:'/rpg-assets/events/cg/slice-life/'+e.id+'.png',prompt:e.lines[0].text+' Cinematic 16:9 scene with Daisy, canonical facial features, costumes and tattoos. Leave lower fifth clear. Artwork pending.'});}}
