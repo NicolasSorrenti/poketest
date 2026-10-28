@@ -43,11 +43,13 @@ const NeoOutfitChime=(()=>{
   const data=await load();
   // Preserve baseline for only actually encountered characters.
   const outfit=[];
+  const isSpecialPortrait=portrait=>/\\/(?:overworld-variants|portraits\\/special-day-\\d+|outfits\\/[^/]+)\\//.test(portrait);
   for(const {id,portrait} of characters){
-   if(!id||!portrait)continue;
-   const name=portrait.split('/').pop();
+   if(!id||!portrait||!portrait.includes('/'+id+'/'))continue;
+   const name=portrait.split('/').pop().split('?')[0];
    const focus=data?.characters?.[id]?.variants?.[name];
-   if(focus&&portrait.includes('/'+id+'/'))outfit.push({id,portrait,focus});
+   // Focus metadata controls framing only. A valid special outfit always gets a reveal.
+   if(focus||isSpecialPortrait(portrait))outfit.push({id,portrait,focus:focus||{top:.06,bottom:.53}});
   }
   const outfitIds=new Set(outfit.map(item=>item.id));
   // Every place entry gets the special-look reveal, even when the same outfit
