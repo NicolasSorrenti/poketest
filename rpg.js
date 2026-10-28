@@ -1624,6 +1624,7 @@ function buildArtEntries(){
   const key=artKey(path);
   artEntries.set(key,{id,type,label,path:key,unlocked:!!artSeen[key],title:label,viewed:!!artSeen[key]});
  };
+ for(const item of window.NeoRpgArtManifest||[])if(cast[item.id])register(item.id,item.type,item.title,item.path);
  for(const [id,art] of Object.entries(window.NeoRpgCharacterPacks?.looks||{})){
   for(const [emotion,path] of Object.entries(art.expressions||{}))register(id,'expressions',emotion,path);
   if(art.portrait)register(id,'expressions','Portrait',art.portrait);
@@ -1740,12 +1741,11 @@ function renderGallery(){
   const thumb=document.createElement('div');thumb.className='cg-thumb';
   if(entry.unlocked){
    const img=document.createElement('img');img.alt='';img.hidden=true;thumb.append(img);
-   if(entry.type)img.src=entry.path;
-   else loadCGArt(img,entry,true,kind=>{img.classList.toggle('is-fallback',kind!=='event');});
-   if(entry.type)img.onload=()=>{img.hidden=false;};
+   if(entry.type){img.onload=()=>{img.hidden=false;};img.onerror=()=>{img.hidden=true;thumb.textContent='Artwork unavailable';};img.src=entry.path;}
+   else loadCGArt(img,entry,true,kind=>{img.classList.toggle('is-fallback',kind!=='event');},()=>{thumb.textContent='Artwork unavailable';});
   }else{const mystery=document.createElement('span');mystery.textContent='🔒';thumb.append(mystery);}
-  const title=document.createElement('strong');title.textContent=entry.title;
-  const note=document.createElement('small');note.textContent=entry.unlocked?(entry.viewed?'Viewed':'New · tap to view'):'Locked · '+entry.hint;
+  const title=document.createElement('strong');title.textContent=entry.unlocked?entry.title:'???';
+  const note=document.createElement('small');note.textContent=entry.unlocked?(entry.viewed?'Viewed':'New · tap to view'):'Locked · discover in the story';
   tile.append(thumb,title,note);tile.onclick=()=>entry.type?showOtherArt(entry):galleryOpenViewer(entry);root.append(tile);
  }
 }
