@@ -59,14 +59,14 @@ a{color:#f6bad4}
 </section>
 </div>
 </main>
-<script src="/rpg_outfit_chime.js?v=20261028-outfit-every-entry-16"></script>
+<script src="/rpg_outfit_chime.js?v=20261028-outfit-every-entry-17"></script>
 <script>
 (function(){
- const count=10,marked={left:24,right:78,top:29,bottom:43};
+ const count=10,marked={left:24,right:78,top:20,bottom:38};
  const $=id=>document.getElementById(id),checks=$('checks');
  let currentUrl='';
  for(let n=1;n<=count;n++){const o=document.createElement('option');o.value=String(n);o.textContent='Special outfit '+n;$('variant').append(o);}
- $('variant').value='8';
+ $('variant').value='1';
  function url(){return '/rpg-assets/characters/barb/portraits/special-day-'+$('variant').value+'.png';}
  function addCheck(label,ok,detail){const row=document.createElement('div');row.className='check '+(ok?'pass':'fail');row.textContent=(ok?'PASS — ':'FAIL — ')+label+(detail?' · '+detail:'');checks.append(row);}
  function setValues(v){for(const k of ['left','right','top','bottom']){ $(k).value=String(v[k]);$(k+'N').value=String(v[k]); } updateMark();}
