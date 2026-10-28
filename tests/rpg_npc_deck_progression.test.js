@@ -15,7 +15,7 @@ const MAIN=Object.freeze({
 });
 const rank=ids=>Object.fromEntries([...new Set(ids)].map(id=>[id,ids.filter(x=>x===id).length]));
 test('NPC decks advance exactly on act boundaries',()=>{
- for(const [day,tier] of [[1,1],[30,1],[31,2],[60,2],[61,3],[90,3],[91,3]])
+ for(const [day,tier] of [[1,1],[15,1],[16,2],[30,2],[31,3],[45,3],[46,4],[60,4],[61,5],[75,5],[76,6],[90,6],[91,7]])
   assert.equal(NPC.tierForDay(day),tier,'Day '+day);
  assert.equal(NPC.tierForDay(undefined),1);
 });
@@ -68,7 +68,7 @@ test('Classic RPG uses upgraded CPU deck without changing default single matches
  const playerEdited=service.create({deck:'brushfire',opponent:'blackout',customOpponentDeck:[...original],
   npcDeckId:'reina',npcDeckTier:3,seed:93});
  assert.equal(playerEdited.cpu.deckTier,null,'player-edited partner deck takes priority');
- assert.throws(()=>service.create({deck:'brushfire',opponent:'blackout',npcDeckTier:4}),/tier/);
+ assert.throws(()=>service.create({deck:'brushfire',opponent:'blackout',npcDeckTier:8}),/tier/);
  assert.throws(()=>service.create({deck:'brushfire',opponent:'blackout',npcDeckTier:3}),/identity/);
  assert.equal(PARTNER.count(original)['base1-7']>0,true);
 });
