@@ -1,0 +1,74 @@
+[
+  {
+    "path": "rpg-assets/events/cg/season01/daisy_reina_card_heist_01.webp",
+    "event": "The Midnight Card Heist",
+    "description": "Alarm triggered / surveillance view",
+    "status": "not yet wired",
+    "source": "wide_angle_high_detail_anime_style_scene_in_a_pok.png"
+  },
+  {
+    "path": "rpg-assets/events/cg/season01/daisy_reina_card_heist_02.webp",
+    "event": "The Midnight Card Heist",
+    "description": "Flashlight low-angle payoff",
+    "status": "not yet wired",
+    "source": "a_dramatic_dynamic_low_angle_anime_cinematic_ill.png"
+  },
+  {
+    "path": "rpg-assets/events/cg/season01/daisy_rina_karaoke_01.webp",
+    "event": "The Great Karaoke Betrayal",
+    "description": "Daisy struggling with the song",
+    "status": "not yet wired",
+    "source": "a_vibrant_highly_detailed_anime_style_dynamic_ka.png"
+  },
+  {
+    "path": "rpg-assets/events/cg/season01/daisy_rina_karaoke_02.webp",
+    "event": "The Great Karaoke Betrayal",
+    "description": "Duet with Rina",
+    "status": "not yet wired",
+    "source": "wide_vivid_anime_style_illustration_of_a_neon_lit.png"
+  },
+  {
+    "path": "rpg-assets/events/cg/season01/daisy_akari_arcade_01.webp",
+    "event": "The Great Arcade Rivalry",
+    "description": "Front arcade angle",
+    "status": "not yet wired",
+    "source": "a_vibrant_detailed_cinematic_anime_style_illustr.png"
+  },
+  {
+    "path": "rpg-assets/events/cg/season01/daisy_akari_arcade_02.webp",
+    "event": "The Great Arcade Rivalry",
+    "description": "Rear arcade angle",
+    "status": "not yet wired",
+    "source": "a_vibrant_detailed_anime_style_illustration_of_an.png"
+  },
+  {
+    "path": "rpg-assets/events/cg/season01/daisy_laca_sleepover_01.webp",
+    "event": "The Unexpected Sleepover",
+    "description": "Approved sleepover sequence",
+    "status": "wired in main"
+  },
+  {
+    "path": "rpg-assets/events/cg/season01/daisy_laca_sleepover_02.webp",
+    "event": "The Unexpected Sleepover",
+    "description": "Approved sleepover sequence",
+    "status": "wired in main"
+  },
+  {
+    "path": "rpg-assets/events/cg/season01/daisy_laca_sleepover_03.webp",
+    "event": "The Unexpected Sleepover",
+    "description": "Approved sleepover sequence",
+    "status": "wired in main"
+  },
+  {
+    "path": "rpg-assets/events/cg/season01/daisy_laca_sleepover_04.webp",
+    "event": "The Unexpected Sleepover",
+    "description": "Approved sleepover sequence",
+    "status": "wired in main"
+  },
+  {
+    "path": "rpg-assets/events/cg/season01/daisy_laca_sleepover_05.webp",
+    "event": "The Unexpected Sleepover",
+    "description": "Approved sleepover sequence",
+    "status": "wired in main"
+  }
+]

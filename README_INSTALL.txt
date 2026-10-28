@@ -1,6 +1,13 @@
-Extract the ZIP into the root of the poketest repository, preserving rpg-assets/... paths.
-Story CGs laca_route_1 through laca_route_4 use the exact paths declared by characters/laca/art_manifest.json.
-IMPORTANT: laca_route_5 is not included: a matching sunset confession CG was not found among the available generated images.
-The two slice-life images are included as optional assets but need event/trigger registration in code before they will appear.
-All images are 1920x1080 WebP plus 480x270 WebP thumbnails; source aspect ratio preserved against a blurred backdrop.
-No game code was modified or committed.
+NEO CAMPUS — Daisy CGs since last integrated pack (October 28, 2026)
+
+Contains 11 approved CGs not in the previous Neo_Campus_Daisy_CGs_Integrated_2026-10-28.zip:
+- Reina / Midnight Card Heist: 2 images
+- Rina / Karaoke Betrayal: 2 images
+- Akari / Great Arcade Rivalry: 2 images
+- Laca / Unexpected Sleepover: 5 images
+
+Extract this archive at the poketest repository root, preserving rpg-assets/ paths. Commit and push WebP files separately.
+
+IMPORTANT: Sleepover's 5 image paths are already registered in main. The Reina, Rina, and Akari CG paths are reserved proposals; the corresponding playable events and gallery entries are NOT YET wired. Uploading those 6 files alone will not cause them to appear in-game.
+
+No duplicates from the preceding integrated ZIP are included.
