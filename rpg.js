@@ -2390,9 +2390,9 @@ async function finishOverworldArrival(destination){
   const characters=present.map(id=>({id,portrait:scenePortraitSource(id,'neutral',null)}));
   const firstMeetings=present.filter(id=>!state['met_'+id]&&!state.overworldIntroductions?.[id]&&!(id==='reina'&&state.metReina))
    .map(id=>({id,portrait:scenePortraitSource(id,'neutral',null)}));
-  if(typeof NeoOutfitChime!=='undefined'){
-   await NeoOutfitChime.onEntry({characters,firstMeetings});
-  }
+  const outfitChime=window.NeoOutfitChime;
+  if(typeof outfitChime?.onEntry==='function')await outfitChime.onEntry({characters,firstMeetings});
+  else console.error('Outfit chime module missing at overworld arrival');
   if(state.location!==destination)return;
   if(firstMeetings.length){
    state.overworldIntroductions=state.overworldIntroductions||{};
