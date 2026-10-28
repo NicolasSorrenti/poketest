@@ -54,6 +54,19 @@ assert(x.attack());
 assert.equal(x.state('engine.me.active.energies.filter(id=>id==="basic-Darkness").length'),1,'Dark Fire discards exactly one Darkness Energy');
 assert.equal(x.state('engine.me.active.energies.includes("basic-Fire")'),true,'Dark Fire retains Fire Energy');
 
+// Exercise real historical Special Energy cards, not only synthetic basic-Darkness fixtures.
+// Rainbow provides flexible Energy but is not a card named Darkness Energy.
+x=scenario(181,{energies:['Fire','Darkness'],setup:'engine.me.active.energies=["basic-Fire","neo1-104"]'});
+assert(x.attack());
+assert.equal(x.state('engine.foe.active.damage'),60,'Neo Genesis Darkness Energy activates Dark Fire');
+assert.equal(x.state('engine.me.discard.at(-1)'),'neo1-104','Dark Fire discards the actual Special Darkness Energy card');
+assert.equal(x.state('JSON.stringify(engine.me.active.energies)'),JSON.stringify(['basic-Fire']),'Dark Fire keeps its Fire Energy');
+x=scenario(181,{energies:['Fire','Water'],setup:'engine.me.active.energies=["basic-Fire","base5-80"]'});
+assert(x.attack());
+assert.equal(x.state('engine.foe.active.damage'),30,'Rainbow Energy is not a Darkness Energy card');
+assert.equal(x.state('engine.me.active.energies.includes("base5-80")'),true,'Dark Fire must not discard Rainbow Energy');
+
+
 x=scenario(227,{heads:true});assert(x.attack());assert.equal(x.state('engine.foe.active.damage'),40);assert.equal(x.state('engine.foe.bench[0].damage'),10);
 x=scenario(227,{heads:false});assert(x.attack());assert.equal(x.state('engine.foe.active.damage'),30);assert.equal(x.state('engine.me.active.damage'),20);
 x=scenario(230,{heads:true});assert(x.attack());assert.equal(x.state('engine.foe.active.status'),'Paralyzed');
