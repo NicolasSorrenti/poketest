@@ -15,6 +15,19 @@ x=test(200,['Grass','Grass'],{tails:false});assert(x.go());assert.equal(x.check(
 x=test(200,['Grass','Grass'],{tails:true});assert(x.go());assert.equal(x.check('engine.foe.active.damage'),10,'Fury Cutter: 0 heads = 10');
 x=test(315,['Water','Water','Water','Water','Water','Water']);assert(x.go());assert.equal(x.check('engine.foe.active.damage'),40,'Ink Blast max +20');
 x=test(44,['Lightning','Lightning','Lightning']);assert(x.go());assert.equal(x.check('engine.foe.active.damage'),90);assert.equal(x.check('engine.me.active.energies.length'),0);assert.equal(x.check('engine.me.discard.length'),6);
+
+// Neo Genesis Flaaffy Discharge consumes only Lightning Energy, never other attached types.
+// Damage counts discarded Lightning cards, not the total attached Energy count.
+x=test(163,['Lightning','Lightning','Water','Fire']);
+assert(x.go());
+assert.equal(x.check('engine.foe.active.damage'),60,'Flaaffy Discharge flips only for Lightning Energy discarded');
+assert.deepEqual(Array.from(x.check('engine.me.active.energies')),['ex-Water','ex-Fire'],'Flaaffy keeps non-Lightning Energy');
+assert.equal(x.check('engine.me.discard.filter(id=>id==="ex-Lightning").length'),2,'Exactly two Lightning Energy are discarded');
+x=test(163,['Lightning','Water','Water']);
+assert(x.go());
+assert.equal(x.check('engine.foe.active.damage'),30,'One Lightning Energy produces only one damage coin');
+assert.equal(x.check('engine.me.active.energies.length'),2,'Both Water Energy remain attached');
+
 x=test(64,['Fire','Fire','Fire','Fire','Water']);assert(x.go());assert.equal(x.check('engine.me.active.energies.length'),2);assert.equal(x.check('engine.me.discard.length'),6);
 x=test(64,['Fire','Fire','Water'],{setup:'engine.me.active.energies.push("ex-Water")',noAutofill:true});assert.equal(x.go(),false,'Firestorm rejects non-Fire substitution');assert.equal(x.check('engine.me.active.energies.length'),4);
 x=test(73,['Lightning','Lightning','Water','Water']);assert(x.go());assert.equal(x.check('engine.foe.active.status'),'Paralyzed');assert.equal(x.check('engine.me.active.damage'),0);
