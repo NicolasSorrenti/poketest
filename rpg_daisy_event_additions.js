@@ -864,6 +864,130 @@ cross.push(...[
   }
  }
 ]);
+// Four approved sleepover CGs, in chronological event order.
+cross.push({
+  "id": "daisy_laca_sleepover",
+  "npc": "daisy",
+  "participants": [
+    "daisy",
+    "laca"
+  ],
+  "encounterType": "slice",
+  "trigger": "talk",
+  "place": "home",
+  "slot": 2,
+  "start": 25,
+  "end": 90,
+  "minAffection": 0,
+  "title": "The Unexpected Sleepover",
+  "artPending": false,
+  "image": "/rpg-assets/events/cg/season01/daisy_laca_sleepover_01.webp",
+  "cgSequence": [
+    "daisy_laca_sleepover_01",
+    "daisy_laca_sleepover_02",
+    "daisy_laca_sleepover_03",
+    "daisy_laca_sleepover_04"
+  ],
+  "cgSwitchSteps": [
+    0,
+    7,
+    11,
+    13
+  ],
+  "lines": [
+    {
+      "speaker": "Narrator",
+      "text": "Rain rattles the window while Daisy and Laca arrange their decks across a warm blanket."
+    },
+    {
+      "speaker": "laca",
+      "text": "It's two in the morning, Daisy."
+    },
+    {
+      "speaker": "daisy",
+      "text": "And?"
+    },
+    {
+      "speaker": "laca",
+      "text": "You've been studying my hand for five minutes."
+    },
+    {
+      "speaker": "daisy",
+      "text": "That's how I know you're planning something."
+    },
+    {
+      "speaker": "laca",
+      "text": "I have two Energy cards. Also, you're getting sleepy."
+    },
+    {
+      "speaker": "Narrator",
+      "text": "Their last match ends with a sleepy laugh. Neither bothers to clear away the cards."
+    },
+    {
+      "speaker": "daisy",
+      "text": "One more game?"
+    },
+    {
+      "speaker": "laca",
+      "text": "You can challenge me tomorrow. Come here."
+    },
+    {
+      "speaker": "Narrator",
+      "text": "Laca nestles against Daisy's shoulder beneath the quilt as the rain softens outside."
+    },
+    {
+      "speaker": "daisy",
+      "text": "...Okay. Five minutes."
+    },
+    {
+      "speaker": "Narrator",
+      "text": "Daisy gently hugs her closer, and the two drift off beside the unfinished game."
+    },
+    {
+      "speaker": "Narrator",
+      "text": "The bedside lamp dims; Daisy's hand rests protectively in Laca's hair."
+    },
+    {
+      "speaker": "Narrator",
+      "text": "From the other side of the bed, the last few cards and the sleeping plush are visible. Neither girl stirs."
+    },
+    {
+      "speaker": "Narrator",
+      "text": "At last the rain quiets. Still embracing, they sleep peacefully until morning."
+    }
+  ],
+  "choices": [
+    {
+      "label": "Let them rest",
+      "reply": "You quietly close the door, leaving Daisy and Laca asleep beside their cards.",
+      "kind": "support",
+      "flag": "daisy_laca_sleepover_rest",
+      "delta": {
+        "affection": 1,
+        "trust": 1
+      }
+    },
+    {
+      "label": "Leave a blanket nearby",
+      "reply": "A spare blanket keeps the room cozy until morning.",
+      "kind": "support",
+      "flag": "daisy_laca_sleepover_blanket",
+      "delta": {
+        "affection": 1,
+        "respect": 1
+      }
+    }
+  ],
+  "art": {
+    "scene": "Rainy night card game ends with Daisy and Laca asleep in a comfortable hug. Four approved scene images.",
+    "composition": "Four sequential wide 16:9 CGs: overhead card game, cuddled sleep, alternate embrace angle, last cozy close view.",
+    "outfit": "Daisy black hair, correct tattoos, burgundy long mesh sleeves with opaque sleepwear; Laca black camisole and plaid pajama pants.",
+    "expression": "Natural sleepy smiles and tender closed-eye expressions",
+    "environment": "home",
+    "mood": "cozy affectionate slice of life",
+    "fanservice": 0
+  }
+});
 const pack=root.NeoRpgCharacterPacks?.byId?.('daisy');
 if(pack){for(const e of solo){const existing=pack.events.find(x=>x.id===e.id);if(existing)Object.assign(existing,e);else pack.events.push(e);
  if(!pack.art.eventImages.some(x=>x.sceneId===e.id))pack.art.eventImages.push({sceneId:e.id,path:'/rpg-assets/events/cg/slice-life/'+e.id+'.png',prompt:e.lines[0].text+' Cinematic 16:9 scene with Daisy, canonical facial features, costumes and tattoos. Leave lower fifth clear. Artwork pending.'});}}
