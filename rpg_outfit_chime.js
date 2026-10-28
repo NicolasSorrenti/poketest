@@ -1,6 +1,6 @@
 // Blocking, data-driven overworld close-ups. Never creates replacement artwork.
 const NeoOutfitChime=(()=>{
- const focusUrl='/rpg-assets/outfit-chime-focus.json?v=20261028-outfit-framing-10';
+ const focusUrl='/rpg-assets/outfit-chime-focus.json?v=20261028-outfit-framing-11';
  let focusPromise=null,visible=null,timer=null;
  const load=()=>focusPromise||(focusPromise=fetch(focusUrl,{cache:'force-cache'}).then(r=>r.ok?r.json():null).catch(()=>null));
  function addMotion(){
@@ -17,6 +17,11 @@ const NeoOutfitChime=(()=>{
   const bottom=Math.max(top+.12,Math.min(1,Number(focus?.bottom??.51)));
   const cropWidth=right-left,cropHeight=bottom-top;
   return {left,right,top,bottom,cropWidth,cropHeight,ratio:(img.naturalWidth*cropWidth)/(img.naturalHeight*cropHeight)};
+ }
+ function fitCropWindow(panel,viewport,crop){
+  panel.style.boxSizing='border-box';
+  const borderY=(parseFloat(getComputedStyle(panel).borderTopWidth)||0)+(parseFloat(getComputedStyle(panel).borderBottomWidth)||0);
+  panel.style.height=(viewport.clientWidth/crop.ratio+borderY)+'px';
  }
  function positionCropImage(img,viewport,crop){
   const viewportWidth=viewport.clientWidth;
@@ -53,6 +58,7 @@ const NeoOutfitChime=(()=>{
   viewport.append(img);
   if(label)panel.append(viewport,makeBadge(label));else panel.append(viewport);
   container.replaceChildren(panel);
+  fitCropWindow(panel,viewport,crop);
   const metrics=positionCropImage(img,viewport,crop);
   return {image:img,crop,metrics,panel,viewport};
  }
@@ -78,6 +84,7 @@ const NeoOutfitChime=(()=>{
   const badge=makeBadge();
   const viewport=document.createElement('div');viewport.style.cssText='position:absolute;inset:0;overflow:hidden;';
   viewport.append(img);panel.append(viewport,badge);screen.append(panel);document.body.append(screen);visible=screen;
+  fitCropWindow(panel,viewport,crop);
   positionCropImage(img,viewport,crop);
   await new Promise(resolve=>{
    let done=false;
