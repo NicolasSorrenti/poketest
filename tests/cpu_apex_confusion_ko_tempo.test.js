@@ -36,3 +36,24 @@ test('Apex ordinary knockout tempo also discounts Confusion without changing low
  assert.equal(AI.knockoutTempoBonus(attack,confused,cfg),62.5);
  assert.equal(AI.knockoutTempoBonus(attack,confused,AI.configuration({side:1,level:3})),0);
 });
+
+test('Apex Prize-race victory bonus discounts the mandatory Confusion flip',()=>{
+ for(const [prizes,opponentBench] of [[1,true],[3,false]]){
+  const normal=board(null,prizes),confused=board('Confused',prizes);
+  if(!opponentBench){
+   normal.opponent.bench=[];
+   confused.opponent.bench=[];
+  }
+  const expected=550*cfg.style.damage;
+  assert.equal(AI.prizeRaceBonus(attack,normal,cfg),expected);
+  assert.equal(AI.prizeRaceBonus(attack,confused,cfg),expected/2,
+   'a printed knockout is not a guaranteed game win when Confused');
+ }
+});
+
+test('Apex Prize-race trade bonus discounts Confusion without affecting lower tiers',()=>{
+ const normal=board(null,3),confused=board('Confused',3);
+ assert.equal(AI.prizeRaceBonus(attack,normal,cfg),45*cfg.style.damage);
+ assert.equal(AI.prizeRaceBonus(attack,confused,cfg),22.5*cfg.style.damage);
+ assert.equal(AI.prizeRaceBonus(attack,confused,AI.configuration({side:1,level:3})),0);
+});
