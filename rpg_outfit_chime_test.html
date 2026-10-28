@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#111224">
+<title>Barb Outfit Chime Crop Test</title>
+<style>
+:root{color-scheme:dark;--ink:#f8eff0;--muted:#a9a5bf;--panel:#171a2e;--line:#474963;--pink:#e682b2;--gold:#f3cc8d;--ok:#85e1b3;--bad:#ff8d98}
+*{box-sizing:border-box}
+body{margin:0;background:#0b1020;color:var(--ink);font:16px/1.45 system-ui,sans-serif;padding:20px}
+main{max-width:1080px;margin:0 auto}
+h1{font-size:clamp(1.5rem,4vw,2.25rem);margin:0 0 6px}
+p{color:var(--muted);margin:6px 0 18px}
+.layout{display:grid;grid-template-columns:minmax(260px,340px) minmax(0,1fr);gap:18px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:16px}
+label{display:block;margin:14px 0 5px;font-weight:650}
+select,input[type=number],button{font:inherit;color:var(--ink);background:#23263d;border:1px solid #666983;border-radius:9px;padding:9px}
+select,input[type=number]{width:100%}
+input[type=range]{width:100%;accent-color:var(--pink)}
+.row{display:grid;grid-template-columns:1fr 76px;gap:8px;align-items:center}
+.buttons{display:flex;gap:8px;margin-top:16px}
+button{cursor:pointer}button.primary{background:#a74270;border-color:#f09ac1;font-weight:750}
+.preview-wrap{min-width:0}
+#preview{display:grid;place-items:center;min-height:300px;padding:8px;background:#0a0e1a;border:1px solid var(--line);border-radius:14px}
+#preview .neo-outfit-chime-panel{max-width:100%}
+#status{margin-top:12px;padding:12px;border-radius:12px;background:#0c1120;border:1px solid var(--line)}
+.check{display:flex;gap:8px;align-items:flex-start;margin:4px 0}.pass{color:var(--ok)}.fail{color:var(--bad)}.wait{color:var(--gold)}
+.source-title{margin:18px 0 8px}
+#sourceStage{position:relative;width:min(100%,260px);aspect-ratio:2/3;margin:auto;background:white;border-radius:12px;overflow:hidden}
+#sourceImage{width:100%;height:100%;object-fit:contain;display:block}
+#cropMark{position:absolute;border:3px solid #ffc400;background:#ffc40022;box-shadow:0 0 0 999px #0005;pointer-events:none}
+.fine{font-size:.86rem;color:var(--muted)}
+a{color:#f6bad4}
+@media(max-width:760px){body{padding:12px}.layout{grid-template-columns:1fr}.preview-wrap{order:-1}#preview{min-height:240px}}
+</style>
+</head>
+<body>
+<main>
+<h1>Barb outfit chime crop test</h1>
+<p>Standalone QA page. It uses the same renderer as the live chime. The automatic checks run every time this page opens; slider changes rerun the crop geometry check.</p>
+<div class="layout">
+<section class="card" aria-label="Crop controls">
+<label for="variant">Barb outfit image</label>
+<select id="variant"></select>
+<div class="row"><label for="left">Left edge</label><input id="leftN" type="number" min="0" max="100" step="1"></div><input id="left" type="range" min="0" max="80" step="1">
+<div class="row"><label for="right">Right edge</label><input id="rightN" type="number" min="12" max="100" step="1"></div><input id="right" type="range" min="12" max="100" step="1">
+<div class="row"><label for="top">Top edge</label><input id="topN" type="number" min="0" max="80" step="1"></div><input id="top" type="range" min="0" max="80" step="1">
+<div class="row"><label for="bottom">Bottom edge</label><input id="bottomN" type="number" min="12" max="100" step="1"></div><input id="bottom" type="range" min="12" max="100" step="1">
+<div class="buttons"><button id="apply" class="primary" type="button">Apply crop</button><button id="reset" type="button">Reset to marked area</button></div>
+<p class="fine">Bounds are percentages of the original image. These controls change only this test page; they do not modify the game or save settings.</p>
+<div id="status" aria-live="polite"><strong>Automatic checks</strong><div id="checks"></div></div>
+</section>
+<section class="card preview-wrap">
+<div id="preview" aria-label="Actual crop preview"></div>
+<h2 class="source-title">Original image with crop bounds</h2>
+<div id="sourceStage"><img id="sourceImage" alt="Selected full Barb special outfit portrait"><div id="cropMark"></div></div>
+<p class="fine">The gold box marks the source pixels used in the crop above.</p>
+</section>
+</div>
+</main>
+<script src="/rpg_outfit_chime.js?v=20261028-outfit-every-entry-17"></script>
+<script>
+(function(){
+ const count=10,marked={left:24,right:78,top:20,bottom:38};
+ const $=id=>document.getElementById(id),checks=$('checks');
+ let currentUrl='',renderGeneration=0;
+ for(let n=1;n<=count;n++){const o=document.createElement('option');o.value=String(n);o.textContent='Special outfit '+n;$('variant').append(o);}
+ $('variant').value='1';
+ function url(){return '/rpg-assets/characters/barb/portraits/special-day-'+$('variant').value+'.png';}
+ function addCheck(label,ok,detail){const row=document.createElement('div');row.className='check '+(ok?'pass':'fail');row.textContent=(ok?'PASS — ':'FAIL — ')+label+(detail?' · '+detail:'');checks.append(row);}
+ function setValues(v){for(const k of ['left','right','top','bottom']){ $(k).value=String(v[k]);$(k+'N').value=String(v[k]); } updateMark();}
+ function focus(){return {left:Number($('left').value)/100,right:Number($('right').value)/100,top:Number($('top').value)/100,bottom:Number($('bottom').value)/100};}
+ function updateMark(){const f=focus();const m=$('cropMark');m.style.left=(100*f.left)+'%';m.style.top=(100*f.top)+'%';m.style.width=(100*(f.right-f.left))+'%';m.style.height=(100*(f.bottom-f.top))+'%';}
+ function bind(k){$(k).addEventListener('input',()=>{$(k+'N').value=$(k).value;updateMark();});$(k+'N').addEventListener('input',()=>{$(k).value=$(k+'N').value;updateMark();});}
+ ['left','right','top','bottom'].forEach(bind);
+ async function render(){
+  const portrait=url();currentUrl=portrait;const generation=++renderGeneration;
+  $('sourceImage').src=portrait;
+  $('sourceImage').onload=()=>{$('sourceStage').style.aspectRatio=$('sourceImage').naturalWidth+'/'+$('sourceImage').naturalHeight;updateMark();};
+  checks.replaceChildren();
+  if(!window.NeoOutfitChime||typeof window.NeoOutfitChime.renderPreview!=='function'){
+   addCheck('Shared live crop renderer is available',false,'renderer script/API did not load');return;
+  }
+  try{
+   const result=await window.NeoOutfitChime.renderPreview({container:$('preview'),portrait:portrait,focus:focus()});
+   if(currentUrl!==portrait||generation!==renderGeneration)return;
+   const b=result.crop,m=result.metrics;
+   const within=b.left>=0&&b.top>=0&&b.right<=1&&b.bottom<=1&&b.cropWidth>0&&b.cropHeight>0;
+   addCheck('Crop bounds are valid',within,'L '+Math.round(b.left*100)+'%, R '+Math.round(b.right*100)+'%, T '+Math.round(b.top*100)+'%, B '+Math.round(b.bottom*100)+'%');
+   addCheck('Portrait loaded at full resolution',result.image.naturalWidth>0&&result.image.naturalHeight>0,result.image.naturalWidth+' × '+result.image.naturalHeight);
+   const widthExact=Math.abs(m.mappedWidth-m.viewportWidth)<1;
+   const heightExact=Math.abs(m.mappedHeight-m.viewportHeight)<1;
+   addCheck('Crop fills preview width exactly',widthExact,Math.round(m.mappedWidth)+' / '+Math.round(m.viewportWidth)+' px');
+   addCheck('Crop fills preview height exactly',heightExact,Math.round(m.mappedHeight)+' / '+Math.round(m.viewportHeight)+' px');
+  }catch(e){addCheck('Preview rendered',false,e.message);}
+ }
+ async function checkAllImages(){
+  const results=await Promise.all(Array.from({length:count},(_,i)=>{
+   const p='/rpg-assets/characters/barb/portraits/special-day-'+(i+1)+'.png';
+   return fetch(p,{method:'HEAD',cache:'no-store'}).then(r=>({n:i+1,ok:r.ok,status:r.status})).catch(()=>({n:i+1,ok:false,status:'network error'}));
+  }));
+  for(const r of results)addCheck('Outfit image '+r.n+' is reachable',r.ok,'HTTP '+r.status);
+ }
+ $('apply').addEventListener('click',render);
+ $('reset').addEventListener('click',()=>{setValues(marked);render();});
+ $('variant').addEventListener('change',render);
+ setValues(marked);
+ render().then(checkAllImages);
+})();
+</script>
+</body>
+</html>

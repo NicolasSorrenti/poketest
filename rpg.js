@@ -410,7 +410,7 @@ function travelTo(placeId,{intro=true}={}){
  if(!places[placeId]||controlsLocked()||state.location===placeId)return false;
  const firstVisit=!state.visitedLocations[placeId];
  state.visitedLocations[placeId]=true;
- state.location=placeId;state.selected=null;
+ state.location=placeId;state.selected=null;pendingOverworldArrival=placeId;
  // Entry surprises must wait until travel and any outfit/introduction chime finish.
  pendingEntrySurprise=!firstVisit&&placeId!=='home';
  if(firstVisit&&intro)say('Narrator',places[placeId][1]);
@@ -447,20 +447,6 @@ function ordinaryTalk(id,character,{first=false,present=[]}={}){
 function selectPerson(id,{skipInvitation=false}={}){
  if(state.activeSliceOfLife||state.activeSituation||state.activeStory||state.activeSideQuest||state.activeEncounter||state.activeArc||state.pendingDuel||!cast[id]||!currentPeople().includes(id))return;
  const c=cast[id],first=!state['met_'+id]&&!((id==='reina')&&state.metReina);
- // The very first personal introduction gets a portrait close-up once.
- if(first&&!state.overworldIntroductions?.[id]&&typeof NeoOutfitChime!=='undefined'){
-  const introductionPortrait=scenePortraitSource(id,'neutral',null);
-  // Hold dialogue, CG and event processing until the introduction is dismissed.
-  void Promise.resolve(NeoOutfitChime.firstMeeting({id,portrait:introductionPortrait}))
-   .catch(error=>console.warn('Introduction chime skipped:',error))
-   .then(()=>{
-    state.overworldIntroductions=state.overworldIntroductions||{};
-    state.overworldIntroductions[id]=true;persist();
-    if(currentPeople().includes(id))selectPerson(id,{skipInvitation});
-   });
-  return;
- }
- markSpecialLookSeen(id);
  if(id==='hana'&&!(hanaEncounterKey||'').startsWith('entry:'))hanaEncounterKey='talk:'+ ++hanaEncounterSerial;
  const today=state.day+':'+id,fresh=!state.talked[today];
  state['met_'+id]=true;
@@ -2128,8 +2114,7 @@ const DAILY_STAGE_ALTERNATES={
  akari:Array.from({length:5},(_,i)=>'/rpg-assets/characters/akari/portraits/special-day-'+(i+1)+'.png'),
  barb:Array.from({length:10},(_,i)=>'/rpg-assets/characters/barb/portraits/special-day-'+(i+1)+'.png')
 };
-// Special looks roll once per character per day. The pity counter advances only
-// for days on which the player did not SEE the special outfit, even if it was rolled.
+// Special looks roll once per character per day; their appearance is not consumed by viewing.
 const SPECIAL_LOOKS={
  ...DAILY_STAGE_ALTERNATES,
  hana:HANA_OVERWORLD_VARIANTS
@@ -2144,20 +2129,13 @@ function specialLookRecord(id,day=state.day){
  const chance=Math.min(1,.10+.05*missed);
  const active=Math.random()<chance;
  const portrait=active?files[Math.floor(Math.random()*files.length)]:null;
- const record={day,portrait,active,seen:false,missed:missed+1,chance};
+ const record={day,portrait,active,missed:missed+1,chance};
  root[id]=record;
  persist();
  return record;
 }
 function dailyStagePortrait(id,day){
  return specialLookRecord(id,day)?.portrait||null;
-}
-function markSpecialLookSeen(id){
- const record=specialLookRecord(id);
- if(!record?.active||record.seen)return;
- record.seen=true;
- record.missed=0;
- persist();
 }
 function stagePortraitPaths(id,expression,sceneId){
  const alternate=dailyStagePortrait(id,state.day);
@@ -2388,6 +2366,7 @@ function maybeShowYearEndFallReel(){
  document.addEventListener('keydown',onKey,true);show();close.focus();
 }
 let pendingEntrySurprise=false;
+let pendingOverworldArrival=null;
 let arrivalGate=false;
 async function finishOverworldArrival(destination){
  if(state.location!==destination)return;
@@ -2395,15 +2374,13 @@ async function finishOverworldArrival(destination){
  try{
   hanaEncounterKey='entry:'+ ++hanaEncounterSerial;
   const present=currentPeople();
-  const characters=present.filter(id=>Object.hasOwn(SPECIAL_LOOKS,id))
-   .map(id=>({id,portrait:scenePortraitSource(id,'neutral',null)}));
+  const characters=present.map(id=>({id,portrait:scenePortraitSource(id,'neutral',null)}));
   const firstMeetings=present.filter(id=>!state['met_'+id]&&!state.overworldIntroductions?.[id]&&!(id==='reina'&&state.metReina))
    .map(id=>({id,portrait:scenePortraitSource(id,'neutral',null)}));
-  if(typeof NeoOutfitChime!=='undefined'){
-   await NeoOutfitChime.onEntry({characters,firstMeetings});
-  }
+  const outfitChime=window.NeoOutfitChime;
+  if(typeof outfitChime?.onEntry==='function')await outfitChime.onEntry({characters,firstMeetings});
+  else console.error('Outfit chime module missing at overworld arrival');
   if(state.location!==destination)return;
-  for(const {id} of characters)markSpecialLookSeen(id);
   if(firstMeetings.length){
    state.overworldIntroductions=state.overworldIntroductions||{};
    for(const {id} of firstMeetings)state.overworldIntroductions[id]=true;
@@ -2424,20 +2401,34 @@ function render(){
  if(previousLocation&&previousLocation!==state.location){
   window.NeoRpgAudio?.play?.('travel');
   window.NeoRpgInterface?.onLocationChange?.();
+  const destination=state.location;
+  pendingOverworldArrival=destination;
   // Stop the RPG render/event pipeline until the travel wipe and chimes finish.
   if(!timeSequence.blocked&&!state.mandatoryEventState?.active){
-   const destination=state.location;
    const transition=window.NeoRpgTimeTransitions?.presentTravel?.({
     from:places[previousLocation]?.[0]||previousLocation,
     to:places[destination]?.[0]||destination
-   },{onDismiss:()=>{void finishOverworldArrival(destination);}});
-   if(transition)return;
+   },{onDismiss:()=>{
+    if(pendingOverworldArrival===destination)pendingOverworldArrival=null;
+    void finishOverworldArrival(destination);
+   }});
+   if(transition){
+    // The wipe callback is primary; this fallback recovers if a mobile browser
+    // drops its animation/timer callback during tab suspension.
+    setTimeout(()=>{
+     if(pendingOverworldArrival===destination&&!arrivalGate&&!window.NeoRpgTimeTransitions?.active){
+      pendingOverworldArrival=null;
+      void finishOverworldArrival(destination);
+     }
+    },1400);
+    return;
+   }
   }
  }
  window.NeoRpgAudio?.setScene?.(state.location,state.slot);
  ensureRpgLayout();
  window.NeoRpgInterface?.init?.();
- if(!arrivalGate)maybeStartMandatory();
+ if(!arrivalGate&&!pendingOverworldArrival)maybeStartMandatory();
  renderJourney();
  renderCollection();
  const ended=state.day>90,locked=timeSequence.blocked||!!state.activeSliceOfLife||!!state.mandatoryEventState?.active||!!state.activeSituation||!!state.activeStory||!!state.activeEncounter||!!state.activeArc||!!state.activeSideQuest||!!state.pendingDuel;
@@ -2496,11 +2487,6 @@ function render(){
  const sideQuest=state.activeSideQuest?SIDE.byId(state.activeSideQuest.id):null,sideOwner=sideQuest?.stages[state.sideQuests[state.activeSideQuest?.id]?.step]?.npc;
   const portraitId=mandatoryPortrait||showingSlice?.npc||showingSituation?.npc||showingStory?.npc||showingEncounter?.npc||(showingArc?'reina':null)||sideOwner||state.selected,portraitRoot=$('portrait');
  activeOutfitSceneId=showingMandatory?.id||showingSlice?.id||showingSituation?.id||showingStory?.id||showingEncounter?.id||showingArc?.id||sideQuest?.id||null;
- // Being present in a rendered ordinary location counts as having been seen.
- // Do not count hidden/blocked cinematic or combat appearances.
- if(!activeOutfitSceneId&&!timeSequence.blocked&&!state.pendingDuel){
-  for(const id of currentPeople())if(Object.hasOwn(SPECIAL_LOOKS,id))markSpecialLookSeen(id);
- }
  const nextPortrait=portraitId&&cast[portraitId]?portraitId:'';
  const nextArt=nextPortrait?scenePortraitSource(nextPortrait,'neutral'):'';
  if(portraitRoot.dataset.npc!==nextPortrait||portraitRoot.dataset.artSrc!==nextArt){
@@ -2761,6 +2747,13 @@ function render(){
  queueMicrotask(maybeShowYearEndFallReel);
  $('deckPicker').disabled=locked||ended||!!state.deckJourney;
  if($('deckPicker')?.options.length)$('deckPicker').value=state.playerDeck;
+ // If another transition or mandatory scene owned the screen, resume the arrival
+ // chime once it settles instead of silently losing this place entry.
+ if(pendingOverworldArrival&&!arrivalGate&&!window.NeoRpgTimeTransitions?.active){
+  const destination=pendingOverworldArrival;
+  pendingOverworldArrival=null;
+  void finishOverworldArrival(destination);
+ }
 }
 
 $('deckStudioBtn').onclick=()=>{if(!controlsLocked()&&state.deckJourney?.starter){persist();location.assign('/rpg_deck_studio.html');}};

@@ -14,8 +14,10 @@ const DAYS=Object.freeze([45,60,80]);
 const STYLES=Object.freeze(['mixed','evolution','toolkit']);
 const STARTERS=Object.freeze(['ember_garden','tidal_circuit']);
 const NPCLIST=Object.freeze(['reina','yuna','camila']);
-const PRODUCTION=Object.freeze({reina:'fair-rival',yuna:'electabuzz-pair',camila:'rocket-hybrid'});
-const variantsFor=(npc,selection)=>selection==='production'?['baseline',PRODUCTION[npc]]:VARIANTS[npc];
+// The authored deck progression is now the production source, so production
+// mode reports that single recipe. Experimental swaps remain under --selection all.
+const PRODUCTION=Object.freeze({reina:'baseline',yuna:'baseline',camila:'baseline'});
+const variantsFor=(npc,selection)=>selection==='production'?['baseline']:VARIANTS[npc];
 function npcCpu(npc,options){
  if(options.npcProfile==='character'){
   const profile=NPC_PROFILES[npc]||{level:3,personality:'balanced'};

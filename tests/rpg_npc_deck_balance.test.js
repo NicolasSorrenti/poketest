@@ -30,7 +30,7 @@ test('benchmarks use existing legal NPC deck tiers rather than altered card rule
    const progressed=NPC.upgrade({npc,tier,original,catalog:CATALOG});
    assert.equal(progressed.length,60);
    assert.equal(validateDeck(progressed,CATALOG).valid,true,npc+' tier '+tier);
-   if(tier===1)assert.deepEqual(progressed,original);
+   if(tier===1)assert.deepEqual(progressed,NPC.STARTING_RECIPES[npc],'tier 1 uses the authored RPG recipe, not the retail source');
   }
  }
 });

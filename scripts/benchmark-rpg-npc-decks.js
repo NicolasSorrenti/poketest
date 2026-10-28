@@ -13,12 +13,14 @@ const MATCHUPS=Object.freeze({
  hana:'power_reserve',reina:'blackout',shiori:'overgrowth',yuna:'zap',
  akari:'gym_new_voltage',camila:'rocket_lab',marina:'water_blast',
  kaede:'rocket_lab',jun:'fossil_lab',teo:'hotfoot',
- iris:'cold_fusion',elio:'bodyguard',alma:'lockdown',nereo:'cold_fusion'
+ iris:'cold_fusion',elio:'bodyguard',alma:'lockdown',nereo:'cold_fusion',
+ barb:'zap',laca:'water_blast',daisy:'water_blast',rina:'overgrowth',
+ sol:'hotfoot',jinx:'zap',luna:'water_blast',elena:'overgrowth',sierra:'blackout'
 });
 const STAGES=Object.freeze([
  {id:'early',day:15,tier:1,shopPacks:0,miniPacks:2},
- {id:'mid',day:42,tier:2,shopPacks:12,miniPacks:8},
- {id:'late',day:80,tier:3,shopPacks:36,miniPacks:16}
+ {id:'mid',day:42,tier:3,shopPacks:12,miniPacks:8},
+ {id:'late',day:80,tier:6,shopPacks:36,miniPacks:16}
 ]);
 const INITIAL=['ember_garden','tidal_circuit','mind_and_muscle'];
 // Only deterministic, economy-obtainable cards can be added to player decks.

@@ -1,6 +1,6 @@
 'use strict';
-// EXPERIMENT ONLY. No production NPC recipe is changed by this module.
-// Candidate substitutions preserve 60-card size and all printed card behavior.
+// Experiment-only substitutions layered on the authored RPG recipes.
+// Production always uses the deterministic recipe in rpg_npc_deck_progression.
 const NPC=require('../rpg_npc_deck_progression');
 const VARIANTS=Object.freeze({
  reina:['baseline','soft-ace','soft-disruption','measured-hybrid','gentle-denial','fair-rival','no-lock'],
@@ -9,42 +9,32 @@ const VARIANTS=Object.freeze({
 });
 function candidate({npc,tier,original,catalog,variant='baseline'}){
  if(!VARIANTS[npc]?.includes(variant))throw Error('Unknown candidate '+npc+'/'+variant);
- const base=NPC.baselineUpgrade({npc,tier,original,catalog}),cards=[...base];
+ const cards=[...NPC.recipeFor({npc,tier,original,catalog})];
  if(tier===1||variant==='baseline')return cards;
  function swap(from,to,n=1){
-  if(!catalog.has(from)||!catalog.has(to))throw Error('Unknown printed Pokémon card '+from+' / '+to);
+  if(!catalog.has(from)||!catalog.has(to))throw Error('Unknown printed card '+from+' / '+to);
   for(let i=0;i<n;i++){
-   const index=cards.indexOf(from);
-   if(index<0)throw Error('Candidate '+npc+'/'+variant+' lacks '+from);
-   const name=catalog.get(to).name;
-   if(catalog.get(to).supertype!=='Energy'&&cards.filter(id=>catalog.get(id)?.name===name).length>=4)throw Error('Candidate exceeds four '+name);
+   const index=cards.indexOf(from);if(index<0)throw Error('Candidate '+npc+'/'+variant+' lacks '+from);
+   const next=catalog.get(to),name=next.name;
+   if(next.supertype!=='Energy'&&cards.filter(id=>catalog.get(id)?.name===name).length>=4)throw Error('Candidate exceeds four '+name);
    cards[index]=to;
   }
  }
  if(npc==='reina'){
-  if(variant==='soft-ace'||variant==='measured-hybrid')swap('base1-7','base1-56'); // Hitmonchan -> Onix
-  if(variant==='soft-disruption'){
-   swap('base1-92','base1-95'); // Energy Removal -> Switch
-   swap('base1-79','base1-94'); // Super Energy Removal -> Potion
-  }
-  if(variant==='measured-hybrid')swap('base1-92','base1-95');
-  if(['gentle-denial','fair-rival','no-lock'].includes(variant)){
-   if(variant!=='no-lock')swap('base1-7','base1-56'); // Retain at least one Hitmonchan.
-   swap('base1-92','base1-95'); // Replace one denial card with retreat counterplay.
-   swap('base1-92','base1-94'); // Replace another with healing.
-   if(variant==='fair-rival'||variant==='no-lock')
-    swap('base1-79','base1-80'); // Super Removal -> Defender, not more raw damage.
-  }
+  if(['soft-ace','measured-hybrid'].includes(variant))swap('base1-7','base3-7');
+  if(['soft-disruption','measured-hybrid','gentle-denial','fair-rival','no-lock'].includes(variant))swap('base1-92','base1-95');
+  if(variant==='soft-disruption')swap('base1-79','base1-94');
+  if(variant==='measured-hybrid')swap('base1-84','base1-82');
+  if(variant==='gentle-denial')swap('base1-84','base1-82');
+  if(variant==='fair-rival')swap('base1-79','base1-89');
+  if(variant==='no-lock')swap('base1-79','base1-95');
  }else if(npc==='yuna'){
-  if(variant==='electabuzz-pair'||variant==='electabuzz-trio'||variant==='psychic-lightning')
-   swap('base1-58','base1-20',2); // Pikachu -> Electabuzz, Lightning cost remains payable
-  if(variant==='electabuzz-trio')swap('base1-53','base1-20'); // Magnemite -> third Electabuzz
-  if(variant==='psychic-lightning')swap('base1-53','base1-31'); // Magnemite -> third Jynx
+  if(variant==='electabuzz-pair'||variant==='electabuzz-trio')swap('neo1-12','base1-20',2);
+  if(variant==='psychic-lightning')swap('neo1-12','base1-31',2);
  }else if(npc==='camila'){
-  if(variant==='muk-tempo'||variant==='rocket-hybrid')swap('base5-25','base5-41'); // Gyarados -> Muk
-  if(variant==='weezing-tempo')swap('base5-25','base5-31',2); // Gyarados -> Weezing
-  if(variant==='rocket-hybrid')swap('base5-25','base5-31'); // one of each
-  swap('base1-102','base1-99',2); // Water -> Grass: 7+ basic Energy remain
+  if(variant==='muk-tempo')swap('base5-73','base1-79');
+  if(variant==='weezing-tempo')swap('base1-84','base5-78');
+  if(variant==='rocket-hybrid'){swap('base1-84','base5-16');swap('base1-84','base1-79');}
  }
  return cards;
 }
