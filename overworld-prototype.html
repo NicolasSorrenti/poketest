@@ -13,6 +13,7 @@
 #dialog{position:absolute;z-index:5;bottom:12px;left:12px;right:12px;max-width:520px;margin:auto;background:#151629f7;border:1px solid #f3a2ca;border-radius:17px;padding:17px;box-shadow:0 25px 70px #000c}#dialog[hidden]{display:none}#dialog .dialog-head{display:flex;gap:14px;align-items:center}#dialog img{width:92px;height:116px;object-fit:contain}#dialog h2{margin:0 0 5px}#dialog .actions{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-top:12px}#dialog button.primary{background:#a14879}#dialog p{color:#d6bacb}#legend{position:absolute;top:98px;right:13px;max-width:250px;border:1px solid #d395ae;border-radius:12px;background:#111329ed;padding:12px;font-size:12px;line-height:1.5}#legend[hidden]{display:none}
 #legend p{margin:7px 0}#legend code{color:#ffc9e0}#hint{position:absolute;top:100px;left:12px;max-width:220px;border-radius:10px;padding:8px 11px;background:#17162bcf;color:#ead2df;font-size:12px;pointer-events:none}
 body.hide-guides #mapArt .guide{display:none}body.hide-guides #legend{display:none}
+.hotspot{position:absolute;transform:translate(-50%,-50%);width:110px;height:73px;border:2px dashed #ffd47c;border-radius:18px;background:#34233b88;color:white;font-size:12px;font-weight:850;display:grid;place-items:center;text-align:center;z-index:1;cursor:pointer}.hotspot span{background:#16152dd9;padding:4px 7px;border-radius:7px}.hotspot:hover{background:#85527b88}body.hide-guides .hotspot{border-color:transparent;background:transparent;color:transparent}body.hide-guides .hotspot span{opacity:0}body.hide-guides .hotspot:hover span,body.hide-guides .hotspot:focus-visible span{opacity:1;color:white}
 @media(min-width:900px){#bottom{left:50%;transform:translateX(-50%);width:min(620px,calc(100% - 24px))}#dialog{bottom:140px}.title strong{font-size:28px}}
 @media(max-width:420px){#hud{top:8px}.title{padding:9px 11px}.title strong{font-size:19px}.tools button{padding:8px}.edge{width:46px;height:46px}#hint{top:85px}.anchor{width:70px}}
 </style></head><body>
@@ -43,7 +44,7 @@ body.hide-guides #mapArt .guide{display:none}body.hide-guides #legend{display:no
 <script>
 'use strict';
 /* ART HANDOFF: replace this with the approved 1550x1120 (or matching aspect ratio) background asset. */
-const BACKGROUND_URL = ''; // e.g. '/rpg-assets/locations/arcade/overworld-map.webp'
+const BACKGROUND_URL = '/rpg-assets/locations/arcade/overworld-map.webp'; // e.g. '/rpg-assets/locations/arcade/overworld-map.webp'
 /* Pixel coordinates on the unscaled master artwork: 4 central positions, extra anchors around the edges.
    These are temporary compositional references, NOT fixed character assignments. */
 const SPOTS=[
@@ -62,10 +63,20 @@ const PEOPLE=[
  {id:'rina',name:'Rina',spot:'E3',icon:'💬'},
  {id:'daisy',name:'Daisy',spot:'E4',icon:'🎮'}
 ];
+/* Image-space target centers; editable independently of people and visual art. */
+const HOTSPOTS=[
+ {id:'arcade-west',name:'Arcade machines',x:175,y:380,w:150,h:120},
+ {id:'arcade-north',name:'Retro machines',x:330,y:165,w:160,h:120},
+ {id:'prizes',name:'Prize machines',x:1190,y:180,w:140,h:120},
+ {id:'claw',name:'Claw machines',x:1370,y:450,w:110,h:180},
+ {id:'tournament',name:'Tournament tables',x:760,y:740,w:280,h:130},
+ {id:'lounge',name:'Lounge',x:360,y:920,w:210,h:95},
+ {id:'refreshments',name:'Drinks',x:1370,y:860,w:100,h:120}
+];
 const byId=id=>document.getElementById(id), camera=byId('camera'),world=byId('world'),edges=byId('edges'),dialog=byId('dialog');
 const W=1550,H=1120;let zoom=1,ox=0,oy=0,drag=null,ignoreClick=false;
 const url=id=>'/rpg-assets/characters/'+id+'/portraits/primary.png';
-if(BACKGROUND_URL){const img=document.createElement('img');img.src=BACKGROUND_URL;img.alt='';img.style.cssText='position:absolute;inset:0;width:100%;height:100%;object-fit:fill;pointer-events:none';byId('mapArt').replaceWith(img)}
+if(BACKGROUND_URL){const img=document.createElement('img');img.src=BACKGROUND_URL;img.alt='';img.style.cssText='position:absolute;inset:0;width:100%;height:100%;object-fit:fill;pointer-events:none';img.onload=()=>{byId('mapArt')?.replaceWith(img);document.body.classList.add('art-loaded')};img.onerror=()=>{console.info('Waiting for approved artwork at '+BACKGROUND_URL+'; showing layout reference instead')};}
 function spot(p){return SPOTS.find(s=>s.id===p.spot)}
 function bound(){const w=camera.clientWidth,h=camera.clientHeight;ox=Math.min(0,Math.max(w-W*zoom,ox));oy=Math.min(0,Math.max(h-H*zoom,oy));if(W*zoom<w)ox=(w-W*zoom)/2;if(H*zoom<h)oy=(h-H*zoom)/2}
 function paint(){bound();world.style.transform='translate('+ox+'px,'+oy+'px) scale('+zoom+')';edges.replaceChildren();
@@ -87,6 +98,7 @@ function interact(p){if(ignoreClick)return;byId('dialogName').textContent=p.name
 for(const p of PEOPLE){const s=spot(p),b=document.createElement('button');b.className='anchor';b.style.left=s.x+'px';b.style.top=s.y+'px';b.title='Interact with '+p.name;
 const i=document.createElement('img');i.src=url(p.id);i.alt='';i.onerror=()=>b.classList.add('missing');const f=document.createElement('span');f.className='fallback';f.textContent=p.name[0];
 const symbol=document.createElement('span');symbol.className='symbol';symbol.textContent=p.icon;const name=document.createElement('span');name.className='name';name.textContent=p.name;b.append(symbol,i,f,name);b.onclick=()=>interact(p);world.appendChild(b)}
+for(const h of HOTSPOTS){const b=document.createElement('button');b.className='hotspot';b.style.left=h.x+'px';b.style.top=h.y+'px';b.style.width=h.w+'px';b.style.height=h.h+'px';b.title=h.name;b.setAttribute('aria-label','Explore '+h.name);const t=document.createElement('span');t.textContent=h.name;b.appendChild(t);b.onclick=()=>{if(ignoreClick)return;alert(h.name+' activity hotspot (preview). In the integrated RPG this will open the corresponding activity or tournament.')};world.appendChild(b)}
 camera.addEventListener('pointerdown',e=>{if(e.button!==0||e.target.closest('button'))return;drag={id:e.pointerId,x:e.clientX,y:e.clientY,ox,oy,moved:false};camera.setPointerCapture(e.pointerId);camera.classList.add('dragging')});
 camera.addEventListener('pointermove',e=>{if(!drag||e.pointerId!==drag.id)return;const dx=e.clientX-drag.x,dy=e.clientY-drag.y;if(Math.hypot(dx,dy)>7)drag.moved=true;ox=drag.ox+dx;oy=drag.oy+dy;paint()});
 function endDrag(e){if(!drag||e.pointerId!==drag.id)return;ignoreClick=drag.moved;drag=null;camera.classList.remove('dragging');if(ignoreClick)setTimeout(()=>ignoreClick=false,70)}
