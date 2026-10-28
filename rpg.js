@@ -1642,7 +1642,7 @@ function populateGalleryCharacters(){
  select.value=ids.includes(previous)?previous:'';
 }
 function renderGallery(){
- const root=$('galleryGrid'),progress=$('galleryProgress');root.replaceChildren();progress.replaceChildren();
+ const root=$('galleryGrid'),progress=$('galleryProgress');root.replaceChildren();progress.replaceChildren();$('galleryCharacterPage').replaceChildren();
  const select=$('galleryCharacter'),category=$('galleryCategory');
  const characterPage=$('galleryCharacterPage'),albumPage=$('galleryAlbumPage');
  characterPage.hidden=!!galleryCharacterPage;albumPage.hidden=!galleryCharacterPage;
