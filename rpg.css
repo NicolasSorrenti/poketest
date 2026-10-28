@@ -557,3 +557,16 @@ dialog.cg-lightbox{position:fixed;inset:0;width:100vw;max-width:none;height:100d
 .cg-lightbox-stage img{max-width:100%;max-height:100%;object-fit:contain}
 .cg-lightbox-stage img[hidden]{display:none}
 @media(max-width:600px){.cg-character-page{grid-template-columns:repeat(2,minmax(0,1fr))}.cg-dialog .cg-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+
+
+/* Leave room for the separate dialogue panel so its Continue control stays in view. */
+.stage-panel:has(> #dialogue:not([hidden])) #scene{
+ height:clamp(320px,calc(100vh - 515px),640px);
+ min-height:320px;
+}
+@media(max-width:700px){
+ .stage-panel:has(> #dialogue:not([hidden])) #scene{
+  height:clamp(250px,70vw,400px);
+  min-height:250px;
+ }
+}
