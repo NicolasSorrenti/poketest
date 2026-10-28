@@ -137,6 +137,50 @@ test('Apex future Energy horizon still rewards legal multi-turn setup',()=>{
   AI.energyHorizonBonus(attachActive,noEnergy,cfg));
 });
 
+
+test('Apex Energy horizon restores attacks after Amnesia and Gym cooldown expire',()=>{
+ const baseline=futureEnergyBoard(FIGHT,'base1-96',[FIGHT]);
+ baseline.turnSerial=11;
+ const expected=AI.energyHorizonBonus(attachActive,baseline,cfg);
+ for(const lock of [
+  {amnesia:{index:0,expires:10}},
+  {gymAttackCooldown:{index:0,expires:10}},
+  {gymAttackCooldown:{index:null,expires:10}}
+ ]){
+  const expired=structuredClone(baseline);
+  Object.assign(expired.self.active,lock);
+  assert.equal(AI.energyHorizonBonus(attachActive,expired,cfg),expected,
+   'expired public attack restrictions must not distort attachment value');
+ }
+});
+
+test('Apex forecasts next-turn Energy through expiring, but not persistent, attack locks',()=>{
+ // Hitmonchan can fund Special Punch with Fighting now and DCE next turn.
+ // A temporary lock expiring by serial 13 should not erase that forecast.
+ for(const lock of [
+  {amnesia:{index:1,expires:13}},
+  {gymAttackCooldown:{index:1,expires:13}},
+  {gymAttackCooldown:{index:null,expires:13}}
+ ]){
+  const dce=futureEnergyBoard(FIGHT,'base1-96',[FIGHT]);
+  const noEnergy=futureEnergyBoard(FIGHT,'base1-91',[FIGHT]);
+  for(const o of [dce,noEnergy]){
+   o.turnSerial=11;
+   Object.assign(o.self.active,structuredClone(lock));
+  }
+  assert.ok(AI.energyHorizonBonus(attachActive,dce,cfg)>
+   AI.energyHorizonBonus(attachActive,noEnergy,cfg),
+   'an attack unlocked next turn must reward legal two-turn setup');
+  for(const o of [dce,noEnergy]){
+   if(o.self.active.amnesia)o.self.active.amnesia.expires=14;
+   if(o.self.active.gymAttackCooldown)o.self.active.gymAttackCooldown.expires=14;
+  }
+  assert.equal(AI.energyHorizonBonus(attachActive,dce,cfg),
+   AI.energyHorizonBonus(attachActive,noEnergy,cfg),
+   'an attack still locked next turn must not earn phantom setup value');
+ }
+});
+
 function evolutionRefuelBoard(energyId,energyUsed=false){
  const o=board();
  o.phase='game';
