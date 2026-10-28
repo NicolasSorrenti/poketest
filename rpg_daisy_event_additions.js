@@ -1306,6 +1306,245 @@ cross.push(...[
     }
   }
 ]);
+// Approved Barb/Meowth and Hana rain scenes; assets shipped separately.
+cross.push(...[
+  {
+    "id": "daisy_barb_meowth_fashion",
+    "participants": [
+      "daisy",
+      "barb"
+    ],
+    "title": "The Unexpected Fashion Critic",
+    "place": "shop",
+    "slot": 1,
+    "start": 20,
+    "cgSwitchSteps": [
+      0,
+      7
+    ],
+    "lines": [
+      {
+        "speaker": "Narrator",
+        "text": "Daisy helps Barb photograph new outfits at her workshop."
+      },
+      {
+        "speaker": "barb",
+        "text": "The ribbons need to look effortless. Nothing can go wrong today."
+      },
+      {
+        "speaker": "Narrator",
+        "text": "A mischievous Meowth darts inside and steals the bright pink ribbon."
+      },
+      {
+        "speaker": "daisy",
+        "text": "Barb, I think your new model is escaping."
+      },
+      {
+        "speaker": "barb",
+        "text": "THAT'S NOT A MODEL!"
+      },
+      {
+        "speaker": "daisy",
+        "text": "It has excellent taste in accessories."
+      },
+      {
+        "speaker": "Narrator",
+        "text": "The chase ends with Meowth curled up, fast asleep, in Daisy's lap."
+      },
+      {
+        "speaker": "barb",
+        "text": "Don't move. I need a picture of this."
+      },
+      {
+        "speaker": "daisy",
+        "text": "You'd better send me a copy."
+      },
+      {
+        "speaker": "barb",
+        "text": "Of course. You're my two favorite models now."
+      },
+      {
+        "speaker": "Narrator",
+        "text": "Barb snaps the photograph, and Daisy gently strokes the sleeping Pokémon's fur."
+      }
+    ],
+    "npc": "daisy",
+    "encounterType": "slice",
+    "trigger": "talk",
+    "end": 90,
+    "minAffection": 0,
+    "artPending": false,
+    "image": "/rpg-assets/events/cg/season01/daisy_barb_meowth_fashion_01.webp",
+    "cgSequence": [
+      "daisy_barb_meowth_fashion_01",
+      "daisy_barb_meowth_fashion_02"
+    ],
+    "choices": [
+      {
+        "label": "Let them enjoy the moment",
+        "reply": "Daisy quietly smiles.",
+        "kind": "support",
+        "flag": "daisy_barb_meowth_fashion_quiet",
+        "delta": {
+          "affection": 1,
+          "trust": 1
+        }
+      },
+      {
+        "label": "Share a small joke",
+        "reply": "Daisy chuckles warmly.",
+        "kind": "playful",
+        "flag": "daisy_barb_meowth_fashion_joke",
+        "delta": {
+          "affection": 1,
+          "respect": 1
+        }
+      }
+    ],
+    "art": {
+      "scene": "The Unexpected Fashion Critic — approved artwork sequence",
+      "composition": "Sequential cinematic 16:9 images with dialogue between transitions.",
+      "outfit": "Keep original Daisy facial design, black hair, chest lotus tattoo, burgundy translucent sleeves with opaque underlayer; other cast canon.",
+      "expression": "Natural friendly expressions, relaxed and soft",
+      "environment": "shop",
+      "mood": "cozy slice of life",
+      "fanservice": 0
+    }
+  },
+  {
+    "id": "daisy_hana_rainy_shop",
+    "participants": [
+      "daisy",
+      "hana"
+    ],
+    "title": "Just Five More Minutes",
+    "place": "shop",
+    "slot": 2,
+    "start": 25,
+    "cgSwitchSteps": [
+      0,
+      5,
+      9,
+      12,
+      14
+    ],
+    "lines": [
+      {
+        "speaker": "Narrator",
+        "text": "Rain drums on the card-shop windows as Hana and Daisy finish sorting their decks."
+      },
+      {
+        "speaker": "hana",
+        "text": "I should really start closing up."
+      },
+      {
+        "speaker": "daisy",
+        "text": "You've said that three times."
+      },
+      {
+        "speaker": "hana",
+        "text": "Just five more minutes?"
+      },
+      {
+        "speaker": "daisy",
+        "text": "As many as you need, sweetheart."
+      },
+      {
+        "speaker": "Narrator",
+        "text": "Hana grows sleepy in the little seating nook by the counter. Daisy watches the rain with her."
+      },
+      {
+        "speaker": "hana",
+        "text": "It's so warm here. I don't even need my jacket."
+      },
+      {
+        "speaker": "daisy",
+        "text": "Then take it off and get comfortable. I can keep an eye on the shop."
+      },
+      {
+        "speaker": "Narrator",
+        "text": "Hana leans toward Daisy, nearly sliding out of the chair; Daisy steadies her gently."
+      },
+      {
+        "speaker": "daisy",
+        "text": "Careful, sleepyhead."
+      },
+      {
+        "speaker": "hana",
+        "text": "I didn't mean to drift off!"
+      },
+      {
+        "speaker": "daisy",
+        "text": "It's okay. I've got you."
+      },
+      {
+        "speaker": "Narrator",
+        "text": "Hana curls up more comfortably alongside Daisy as the storm grows louder outside."
+      },
+      {
+        "speaker": "hana",
+        "text": "You really are warm."
+      },
+      {
+        "speaker": "Narrator",
+        "text": "From above, the two rest together on the shop's armchair with their cards on the table."
+      },
+      {
+        "speaker": "daisy",
+        "text": "You can stay here until the rain passes."
+      },
+      {
+        "speaker": "Narrator",
+        "text": "The card shop settles into a peaceful silence as Hana finally relaxes."
+      }
+    ],
+    "npc": "daisy",
+    "encounterType": "slice",
+    "trigger": "talk",
+    "end": 90,
+    "minAffection": 0,
+    "artPending": false,
+    "image": "/rpg-assets/events/cg/season01/daisy_hana_rainy_shop_01.webp",
+    "cgSequence": [
+      "daisy_hana_rainy_shop_01",
+      "daisy_hana_rainy_shop_02",
+      "daisy_hana_rainy_shop_03",
+      "daisy_hana_rainy_shop_04",
+      "daisy_hana_rainy_shop_05"
+    ],
+    "choices": [
+      {
+        "label": "Let them enjoy the moment",
+        "reply": "Daisy quietly smiles.",
+        "kind": "support",
+        "flag": "daisy_hana_rainy_shop_quiet",
+        "delta": {
+          "affection": 1,
+          "trust": 1
+        }
+      },
+      {
+        "label": "Share a small joke",
+        "reply": "Daisy chuckles warmly.",
+        "kind": "playful",
+        "flag": "daisy_hana_rainy_shop_joke",
+        "delta": {
+          "affection": 1,
+          "respect": 1
+        }
+      }
+    ],
+    "art": {
+      "scene": "Just Five More Minutes — approved artwork sequence",
+      "composition": "Sequential cinematic 16:9 images with dialogue between transitions.",
+      "outfit": "Keep original Daisy facial design, black hair, chest lotus tattoo, burgundy translucent sleeves with opaque underlayer; other cast canon.",
+      "expression": "Natural friendly expressions, relaxed and soft",
+      "environment": "shop",
+      "mood": "cozy slice of life",
+      "fanservice": 0
+    }
+  }
+]);
 const pack=root.NeoRpgCharacterPacks?.byId?.('daisy');
 if(pack){for(const e of solo){const existing=pack.events.find(x=>x.id===e.id);if(existing)Object.assign(existing,e);else pack.events.push(e);
  if(!pack.art.eventImages.some(x=>x.sceneId===e.id))pack.art.eventImages.push({sceneId:e.id,path:'/rpg-assets/events/cg/slice-life/'+e.id+'.png',prompt:e.lines[0].text+' Cinematic 16:9 scene with Daisy, canonical facial features, costumes and tattoos. Leave lower fifth clear. Artwork pending.'});}}
