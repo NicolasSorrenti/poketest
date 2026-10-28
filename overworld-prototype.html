@@ -14,6 +14,7 @@
 #legend p{margin:7px 0}#legend code{color:#ffc9e0}#hint{position:absolute;top:100px;left:12px;max-width:220px;border-radius:10px;padding:8px 11px;background:#17162bcf;color:#ead2df;font-size:12px;pointer-events:none}
 body.hide-guides #mapArt .guide{display:none}body.hide-guides #legend{display:none}
 .hotspot{position:absolute;transform:translate(-50%,-50%);width:110px;height:73px;border:2px dashed #ffd47c;border-radius:18px;background:#34233b88;color:white;font-size:12px;font-weight:850;display:grid;place-items:center;text-align:center;z-index:1;cursor:pointer}.hotspot span{background:#16152dd9;padding:4px 7px;border-radius:7px}.hotspot:hover{background:#85527b88}body.hide-guides .hotspot{border-color:transparent;background:transparent;color:transparent}body.hide-guides .hotspot span{opacity:0}body.hide-guides .hotspot:hover span,body.hide-guides .hotspot:focus-visible span{opacity:1;color:white}
+.anchor.activity-pose{width:134px;height:218px}.anchor.activity-pose img{width:124px;height:181px}.anchor.activity-pose .name{font-size:10px}.anchor.activity-pose .symbol{font-size:11px}
 @media(min-width:900px){#bottom{left:50%;transform:translateX(-50%);width:min(620px,calc(100% - 24px))}#dialog{bottom:140px}.title strong{font-size:28px}}
 @media(max-width:420px){#hud{top:8px}.title{padding:9px 11px}.title strong{font-size:19px}.tools button{padding:8px}.edge{width:46px;height:46px}#hint{top:85px}.anchor{width:70px}}
 </style></head><body>
@@ -77,7 +78,7 @@ const POSE_TEST=new URLSearchParams(location.search).has('reina-test');
 if(POSE_TEST){
  PEOPLE.length=0;
  PEOPLE.push({id:'reina',name:'Reina · Standing',spot:'P1',icon:'💬',asset:'/rpg-assets/characters/reina/overworld/standing.png'},
- {id:'reina',name:'Reina · Arcade',spot:'E1',icon:'🎮',asset:'/rpg-assets/characters/reina/overworld/arcade-back.png'});
+ {id:'reina',name:'Reina · Arcade',spot:'E1',x:230,y:425,icon:'🎮',activityPose:true,asset:'/rpg-assets/characters/reina/overworld/arcade-playing-character.png',fallbackAsset:'/rpg-assets/characters/reina/overworld/arcade-back.png'});
  document.title='Pixel Palace — Reina two-pose test';
 }
 const byId=id=>document.getElementById(id), camera=byId('camera'),world=byId('world'),edges=byId('edges'),dialog=byId('dialog');
@@ -89,7 +90,7 @@ function spot(p){return SPOTS.find(s=>s.id===p.spot)}
 function bound(){const w=camera.clientWidth,h=camera.clientHeight;ox=Math.min(0,Math.max(w-W*zoom,ox));oy=Math.min(0,Math.max(h-H*zoom,oy));if(W*zoom<w)ox=(w-W*zoom)/2;if(H*zoom<h)oy=(h-H*zoom)/2}
 function paint(){bound();world.style.transform='translate('+ox+'px,'+oy+'px) scale('+zoom+')';edges.replaceChildren();
  const rect=camera.getBoundingClientRect(),padding=29,topSafe=95,bottomSafe=145;
- for(const p of PEOPLE){const s=spot(p),x=ox+s.x*zoom,y=oy+(s.y-80)*zoom;
+ for(const p of PEOPLE){const s=spot(p),x=ox+(p.x??s.x)*zoom,y=oy+((p.y??s.y)-80)*zoom;
  if(x>=0&&x<=rect.width&&y>=topSafe&&y<=rect.height-bottomSafe)continue;
  const cx=rect.width/2,cy=rect.height/2,dx=x-cx,dy=y-cy;
  const t=Math.min(Math.abs((dx||.0001)/(rect.width/2-padding)),Math.abs((dy||.0001)/(rect.height/2-topSafe)));
@@ -100,14 +101,14 @@ function paint(){bound();world.style.transform='translate('+ox+'px,'+oy+'px) sca
  const i=document.createElement('img');i.src=spriteUrl(p);i.alt=p.name;i.onerror=()=>{i.style.display='none';b.textContent=p.name[0]};
  const a=document.createElement('b');a.textContent=Math.abs(dx)>Math.abs(dy)?(dx>0?'›':'‹'):(dy>0?'⌄':'⌃');b.append(i,a);b.onclick=()=>focus(p);edges.appendChild(b)
  }}
-function focus(p){const s=spot(p);ox=camera.clientWidth/2-s.x*zoom;oy=camera.clientHeight/2-(s.y-50)*zoom;paint()}
+function focus(p){const s=spot(p);ox=camera.clientWidth/2-(p.x??s.x)*zoom;oy=camera.clientHeight/2-((p.y??s.y)-50)*zoom;paint()}
 function center(){zoom=Math.max(camera.clientWidth/850,camera.clientHeight/700);zoom=Math.min(1.05,Math.max(.58,zoom));ox=camera.clientWidth/2-780*zoom;oy=camera.clientHeight/2-515*zoom;paint()}
 function interact(p){if(ignoreClick)return;byId('dialogName').textContent=p.name;byId('dialogImg').src=spriteUrl(p);byId('dialogImg').onerror=()=>{byId('dialogImg').onerror=null;byId('dialogImg').src=url(p.id)};byId('dialogImg').alt=p.name;dialog.hidden=false}
-for(const p of PEOPLE){const s=spot(p),b=document.createElement('button');b.className='anchor';b.style.left=s.x+'px';b.style.top=s.y+'px';b.title='Interact with '+p.name;
-const i=document.createElement('img');i.src=spriteUrl(p);i.alt='';i.onerror=()=>{if(p.asset&&i.src.indexOf('/portraits/primary.png')<0){i.src=url(p.id)}else b.classList.add('missing')};const f=document.createElement('span');f.className='fallback';f.textContent=p.name[0];
+for(const p of PEOPLE){const s=spot(p),b=document.createElement('button');b.className='anchor';b.style.left=(p.x??s.x)+'px';b.style.top=(p.y??s.y)+'px';if(p.activityPose)b.classList.add('activity-pose');b.title='Interact with '+p.name;
+const i=document.createElement('img');i.src=spriteUrl(p);i.alt='';i.onerror=()=>{if(p.fallbackAsset&&!i.src.endsWith(p.fallbackAsset)){i.src=p.fallbackAsset}else if(i.src.indexOf('/portraits/primary.png')<0){i.src=url(p.id)}else b.classList.add('missing')};const f=document.createElement('span');f.className='fallback';f.textContent=p.name[0];
 const symbol=document.createElement('span');symbol.className='symbol';symbol.textContent=p.icon;const name=document.createElement('span');name.className='name';name.textContent=p.name;b.append(symbol,i,f,name);b.onclick=()=>interact(p);world.appendChild(b)}
 for(const h of HOTSPOTS){const b=document.createElement('button');b.className='hotspot';b.style.left=h.x+'px';b.style.top=h.y+'px';b.style.width=h.w+'px';b.style.height=h.h+'px';b.title=h.name;b.setAttribute('aria-label','Explore '+h.name);const t=document.createElement('span');t.textContent=h.name;b.appendChild(t);b.onclick=()=>{if(ignoreClick)return;alert(h.name+' activity hotspot (preview). In the integrated RPG this will open the corresponding activity or tournament.')};world.appendChild(b)}
-if(POSE_TEST){const note=document.createElement('div');note.style.cssText='position:absolute;top:105px;left:12px;z-index:4;background:#16142bdf;color:#fff;padding:9px 11px;border:1px solid #ed9ac2;border-radius:9px;font:12px system-ui';note.textContent='TWO-POSE TEST · Standing: P1 / Playing: E1 · Artwork falls back to portrait until sprite PNGs are uploaded';byId('shell').appendChild(note)}
+if(POSE_TEST){document.body.classList.add('hide-guides');byId('guides').setAttribute('aria-pressed','false');byId('legend').hidden=true;byId('hint').hidden=true}
 camera.addEventListener('pointerdown',e=>{if(e.button!==0||e.target.closest('button'))return;drag={id:e.pointerId,x:e.clientX,y:e.clientY,ox,oy,moved:false};camera.setPointerCapture(e.pointerId);camera.classList.add('dragging')});
 camera.addEventListener('pointermove',e=>{if(!drag||e.pointerId!==drag.id)return;const dx=e.clientX-drag.x,dy=e.clientY-drag.y;if(Math.hypot(dx,dy)>7)drag.moved=true;ox=drag.ox+dx;oy=drag.oy+dy;paint()});
 function endDrag(e){if(!drag||e.pointerId!==drag.id)return;ignoreClick=drag.moved;drag=null;camera.classList.remove('dragging');if(ignoreClick)setTimeout(()=>ignoreClick=false,70)}
