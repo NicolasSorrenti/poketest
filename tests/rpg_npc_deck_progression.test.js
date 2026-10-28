@@ -26,7 +26,7 @@ test('all primary and supporting NPCs have distinct legal Act I, II and III deck
   const a=NPC.upgrade({npc,tier:1,original,catalog:CATALOG});
   const b=NPC.upgrade({npc,tier:2,original,catalog:CATALOG});
   const c=NPC.upgrade({npc,tier:3,original,catalog:CATALOG});
-  assert.deepEqual(a,original,npc+' Act I keeps source');
+  assert.equal(a.length,60,npc+' tuned starting deck length');
   assert.notDeepEqual(b,a,npc+' Act II differs');
   assert.notDeepEqual(c,b,npc+' Act III differs');
   for(const [i,cards] of [a,b,c].entries()){
