@@ -135,6 +135,28 @@ test("Misty's Wrath keeps only genuine pre-Center attachment warnings",()=>{
  assert.deepEqual(audit([attach(1,8,40,-1,true),...steps,center(1,8,[])]),[],
   'Center must actually heal the attached Pokémon');
 });
+test('Energy Retrieval choices do not hide a wasted attachment before Center',()=>{
+ // Both Retrieval cards only exchange cards among hand and discard in the
+ // authoritative classic_trainer_core resolver. They cannot heal, move or
+ // remove Energy from an in-play Pokemon.
+ for(const name of ['Energy Retrieval','Super Energy Retrieval']){
+  const cardId=[...CATALOG].find(([,c])=>c.name===name&&c.supertype==='Trainer')?.[0];
+  assert.ok(cardId,name+' must exist in the supported catalog');
+  const retrieval={side:1,turnSerial:8,cardId,
+   command:{type:'play_trainer',payload:{handIndex:0}}};
+  const choose={side:1,turnSerial:8,
+   command:{type:'choose',payload:{selected:['discard:0']}}};
+  const actions=[retrieval,choose,choose];
+  const wasted=audit([attach(1,8,40,-1,true),...actions,center(1,8)]);
+  assert.equal(wasted.length,1,name+' must preserve the prior attachment');
+  assert.equal(wasted[0].attachmentIndex,0);
+  assert.deepEqual(audit([attach(1,8,40,-1,true),...actions,center(1,8,[])]),[],
+   name+' must not report a target that Center did not heal');
+  assert.deepEqual(audit([attach(1,8,40,-1,true),...actions,
+   {side:1,turnSerial:8,command:{type:'retreat',payload:{slot:0}}},center(1,8)]),[],
+   'a later board change invalidates the saved target snapshot');
+ }
+});
 test('board-changing Trainer choices still clear stale attachment evidence',()=>{
  const sabrinaId=[...CATALOG].find(([,c])=>c.name==='Sabrina'&&c.supertype==='Trainer')?.[0];
  assert.ok(sabrinaId,'Sabrina must resolve to a real Trainer card');
