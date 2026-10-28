@@ -29,7 +29,8 @@
 <div class="actions">
 <button id="process" disabled>Remove background</button>
 <button id="download" disabled>Download transparent PNG</button>
-<button id="batch" disabled>Process all and download</button>
+<button id="batch" disabled>Process selected files and download</button>
+<button id="gameSet">Process Hana, Barb & Akari outfit images (23)</button>
 </div>
 <div id="status" class="status" role="status" aria-live="polite"></div>
 </section>
@@ -116,6 +117,26 @@ $('batch').addEventListener('click',async function(){
  catch(error){say('Batch stopped: '+error.message,true)}
  finally{processing=false;$('batch').disabled=files.length===0;$('process').disabled=files.length===0}
 });
+
+const GAME_ASSETS=[];
+for(let i=1;i<=5;i++)GAME_ASSETS.push({name:'Akari/special-day-'+i+'-transparent.png',url:'/rpg-assets/characters/akari/portraits/special-day-'+i+'.png'});
+for(let i=1;i<=10;i++)GAME_ASSETS.push({name:'Barb/special-day-'+i+'-transparent.png',url:'/rpg-assets/characters/barb/portraits/special-day-'+i+'.png'});
+['01_original_white_lace_denim.png','02_gray_blouse_denim.png','03_gray_ruched_top_denim.png','04_white_top_mini_skirt.png','05_white_top_pleated_skirt.png','06_pink_lace_white_top_denim.png','07_gray_lace_white_top_denim.png','08_ribbon_top_denim.png'].forEach(function(name){GAME_ASSETS.push({name:'Hana/overworld-variants/'+name.replace(/\.png$/,'-transparent.png'),url:'/rpg-assets/characters/hana/overworld-variants/'+name})});
+function crc32(bytes){let c=0xffffffff;for(let i=0;i<bytes.length;i++){c^=bytes[i];for(let j=0;j<8;j++)c=(c&1)?(c>>>1)^0xedb88320:c>>>1}return(c^0xffffffff)>>>0}
+function zipStore(entries){
+ const enc=new TextEncoder(),local=[],central=[];let offset=0,centralBytes=0;
+ entries.forEach(function(entry){const name=enc.encode(entry.name),data=entry.data,crc=crc32(data),lh=new Uint8Array(30+name.length),lv=new DataView(lh.buffer);lv.setUint32(0,0x04034b50,true);lv.setUint16(4,20,true);lv.setUint16(6,0,true);lv.setUint16(8,0,true);lv.setUint16(10,0,true);lv.setUint16(12,0,true);lv.setUint32(14,crc,true);lv.setUint32(18,data.length,true);lv.setUint32(22,data.length,true);lv.setUint16(26,name.length,true);lv.setUint16(28,0,true);lh.set(name,30);local.push(lh,data);
+ const ch=new Uint8Array(46+name.length),cv=new DataView(ch.buffer);cv.setUint32(0,0x02014b50,true);cv.setUint16(4,20,true);cv.setUint16(6,20,true);cv.setUint16(8,0,true);cv.setUint16(10,0,true);cv.setUint16(12,0,true);cv.setUint16(14,0,true);cv.setUint32(16,crc,true);cv.setUint32(20,data.length,true);cv.setUint32(24,data.length,true);cv.setUint16(28,name.length,true);cv.setUint16(30,0,true);cv.setUint16(32,0,true);cv.setUint16(34,0,true);cv.setUint16(36,0,true);cv.setUint32(38,0,true);cv.setUint32(42,offset,true);ch.set(name,46);central.push(ch);centralBytes+=ch.length;offset+=lh.length+data.length});
+ const centralOffset=offset,end=new Uint8Array(22),ev=new DataView(end.buffer);ev.setUint32(0,0x06054b50,true);ev.setUint16(4,0,true);ev.setUint16(6,0,true);ev.setUint16(8,entries.length,true);ev.setUint16(10,entries.length,true);ev.setUint32(12,centralBytes,true);ev.setUint32(16,centralOffset,true);ev.setUint16(20,0,true);return new Blob([...local,...central,end],{type:'application/zip'})
+}
+async function blobFromCanvas(canvas){return new Promise(function(resolve,reject){canvas.toBlob(function(blob){blob?resolve(blob):reject(Error('PNG export failed'))},'image/png')})}
+$('gameSet').addEventListener('click',async function(){
+ const button=$('gameSet');if(processing)return;processing=true;button.disabled=true;$('process').disabled=true;$('batch').disabled=true;
+ try{const outputs=[];for(let i=0;i<GAME_ASSETS.length;i++){const asset=GAME_ASSETS[i];say('Processing outfit image '+(i+1)+' of '+GAME_ASSETS.length+' · '+asset.name);const response=await fetch(asset.url,{cache:'no-store'});if(!response.ok)throw Error(asset.url+' returned HTTP '+response.status);const source=URL.createObjectURL(await response.blob());try{const img=await new Promise(function(resolve,reject){const image=new Image();image.onload=function(){resolve(image)};image.onerror=function(){reject(Error('Image decode failed: '+asset.name))};image.src=source});const canvas=processCanvas(img),blob=await blobFromCanvas(canvas);outputs.push({name:asset.name,data:new Uint8Array(await blob.arrayBuffer())})}finally{URL.revokeObjectURL(source)}}say('Packing '+outputs.length+' transparent PNGs into one ZIP…');saveBlob(zipStore(outputs),'hana-barb-akari-transparent-outfits.zip');say('Finished · ZIP downloaded with '+outputs.length+' new transparent PNGs. Original game images were not changed.')}
+ catch(error){say('Character batch stopped: '+error.message,true)}
+ finally{processing=false;button.disabled=false;$('process').disabled=files.length===0;$('batch').disabled=files.length===0}
+});
+
 controlsEnabled(false);
 })();
 </script>
