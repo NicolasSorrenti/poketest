@@ -57,3 +57,36 @@ test('Apex Prize-race trade bonus discounts Confusion without affecting lower ti
  assert.equal(AI.prizeRaceBonus(attack,confused,cfg),22.5*cfg.style.damage);
  assert.equal(AI.prizeRaceBonus(attack,confused,AI.configuration({side:1,level:3})),0);
 });
+
+test('Apex Prize-race counter-KO urgency requires a usable, reliable opponent attack',()=>{
+ const state=board(null,3);
+ // Both Hitmonchan can Jab for a knockout at 10 HP remaining.
+ // Only the opponent's *next-turn* knockout threat should add the 100-point
+ // trade urgency when they have one Prize left.
+ state.self.active.damage=60;
+ state.opponent.active={id:'base1-7',energies:['base1-97'],damage:60,status:null};
+ state.opponent.prizeCount=1;
+ state.turnSerial=4;
+ assert.equal(AI.prizeRaceBonus(attack,state,cfg),145*cfg.style.damage,
+  'a ready, reliable opposing Jab creates genuine Prize-race urgency');
+ for(const status of ['Asleep','Paralyzed','Confused']){
+  state.opponent.active.status=status;
+  assert.equal(AI.prizeRaceBonus(attack,state,cfg),45*cfg.style.damage,
+   status+' does not represent a reliable next-turn counter-knockout');
+ }
+ state.opponent.active.status=null;
+ state.opponent.active.energies=[];
+ assert.equal(AI.prizeRaceBonus(attack,state,cfg),45*cfg.style.damage,
+  'an unaffordable opponent attack is not a next-turn counter-knockout');
+ state.opponent.active.energies=['base1-97'];
+ state.opponent.active.amnesia={index:0,expires:6};
+ assert.equal(AI.prizeRaceBonus(attack,state,cfg),45*cfg.style.damage,
+  'a publicly Amnesia-locked attack is not an available counter-knockout');
+ state.opponent.active.amnesia=null;
+ state.opponent.active.gymAttackCooldown={index:0,expires:6};
+ assert.equal(AI.prizeRaceBonus(attack,state,cfg),45*cfg.style.damage,
+  'a publicly cooled-down Gym attack is not an available counter-knockout');
+ state.opponent.active.gymAttackCooldown=null;
+ assert.equal(AI.prizeRaceBonus(attack,state,cfg),145*cfg.style.damage,
+  'urgency returns when the restriction is gone');
+});
