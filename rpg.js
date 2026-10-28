@@ -508,7 +508,7 @@ async function glanceAt(id){
   const active=activeResponse.ok?await activeResponse.json():null;
   const top=topResponse.ok?await topResponse.json():null;
   const activeEntry=active?.characters?.[id]?.variants?.[currentName]||null;
-  const isSpecial=/special-day-\\d+\\.|\\/overworld-variants\\//i.test(portrait);
+  const isSpecial=/special-day-\d+\.|\/overworld-variants\//i.test(portrait);
   if(activeEntry){focus=activeEntry;}
   // Normal glances use the exact exported source path and crop preset.
   // Special looks stay on the active stage image and active special crop.
