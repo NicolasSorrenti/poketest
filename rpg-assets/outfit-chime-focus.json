@@ -95,9 +95,9 @@
           "right": 0.78
         },
         "special-day-8.png": {
-          "top": 0.34,
+          "top": 0.2,
           "bottom": 0.56,
-          "notes": "Crop from lower belly through the outfit hem; shown paired with Barb special-day-8 and special-day-10",
+          "notes": "Single-image crop from the bodice through the lower belly to the shorts hem",
           "left": 0.24,
           "right": 0.78
         },
@@ -109,22 +109,12 @@
           "right": 0.78
         },
         "special-day-10.png": {
-          "top": 0.34,
+          "top": 0.2,
           "bottom": 0.56,
-          "notes": "Crop from lower belly through the outfit hem; shown paired with Barb special-day-8 and special-day-10",
+          "notes": "Single-image crop from the bodice through the lower belly to the shorts hem",
           "left": 0.24,
           "right": 0.78
         }
-      },
-      "chimePairs": {
-        "special-day-8.png": [
-          "special-day-10.png",
-          "special-day-8.png"
-        ],
-        "special-day-10.png": [
-          "special-day-10.png",
-          "special-day-8.png"
-        ]
       }
     },
     "hana": {
