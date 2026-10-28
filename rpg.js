@@ -497,14 +497,28 @@ function planSharedActivity(id){
 
 async function glanceAt(id){
  if(!cast[id]||!currentPeople().includes(id)||typeof window==='undefined')return;
- const portrait=scenePortraitSource(id,'neutral',activeOutfitSceneId);
- const name=portrait.split('/').pop().split('?')[0];
+ let portrait=scenePortraitSource(id,'neutral',activeOutfitSceneId);
+ const currentName=portrait.split('/').pop().split('?')[0];
  let focus=null,duration=1500;
  try{
-  const response=await fetch('/rpg-assets/outfit-chime-focus.json?v=20261028-glance-at');
-  const data=response.ok?await response.json():null;
-  focus=data?.characters?.[id]?.variants?.[name]||null;
-  duration=Math.max(0,Number(data?.durationMs)||1500);
+  const [activeResponse,topResponse]=await Promise.all([
+   fetch('/rpg-assets/outfit-chime-focus.json?v=20261028-glance-at'),
+   fetch('/rpg-assets/outfit-chime-focus-top.json?v=20261028-glance-at')
+  ]);
+  const active=activeResponse.ok?await activeResponse.json():null;
+  const top=topResponse.ok?await topResponse.json():null;
+  const activeEntry=active?.characters?.[id]?.variants?.[currentName]||null;
+  const isSpecial=/special-day-\\d+\\.|\\/overworld-variants\\//i.test(portrait);
+  if(activeEntry){focus=activeEntry;}
+  // Normal glances use the exact exported source path and crop preset.
+  // Special looks stay on the active stage image and active special crop.
+  if(!isSpecial){
+   const variants=top?.characters?.[id]?.variants||{};
+   const primaryName=Object.keys(variants).find(name=>/^primary\\.(?:png|webp|jpe?g)$/i.test(name));
+   const exported=primaryName?variants[primaryName]:null;
+   if(exported?.image){portrait=exported.image;focus=exported;}
+  }
+  duration=Math.max(0,Number(active?.durationMs)||1500);
  }catch(_error){}
  const fallback={top:.06,bottom:.53,left:0,right:1};
  if(window.NeoOutfitChime?.display)await window.NeoOutfitChime.display(portrait,focus||fallback,duration);
