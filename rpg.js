@@ -1620,9 +1620,9 @@ const artSeen=state.artSeen&&typeof state.artSeen==='object'?state.artSeen:(stat
 function artKey(path){return String(path||'').split('?')[0];}
 function buildArtEntries(){
  const register=(id,type,label,path)=>{
-  if(typeof path!=='string'||!/^\\/rpg-assets\\/[\\w./-]+\\.(?:png|webp|jpg|jpeg)$/i.test(path)||path.includes('..'))return;
+  if(typeof path!=='string'||!/^\/rpg-assets\/[\w./-]+\.(?:png|webp|jpg|jpeg)$/i.test(path)||path.includes('..'))return;
   const key=artKey(path);
-  if(!artEntries.has(key))artEntries.set(key,{id,type,label,path:key,unlocked:!!artSeen[key],title:label,viewed:!!artSeen[key]});
+  artEntries.set(key,{id,type,label,path:key,unlocked:!!artSeen[key],title:label,viewed:!!artSeen[key]});
  };
  for(const [id,art] of Object.entries(window.NeoRpgCharacterPacks?.looks||{})){
   for(const [emotion,path] of Object.entries(art.expressions||{}))register(id,'expressions',emotion,path);
@@ -1634,10 +1634,10 @@ function buildArtEntries(){
  }
  // Include only artwork actually used in play; never infer an unlock from file existence.
  for(const path of Object.keys(artSeen)){
-  const match=path.match(/^\\/rpg-assets\\/(?:characters|reactions)\\/([a-z0-9_-]+)\\//i);
+  const match=path.match(/^\/rpg-assets\/(?:characters|reactions)\/([a-z0-9_-]+)\//i);
   if(!match||!cast[match[1]])continue;
-  const id=match[1],type=/\\/(?:reaction|reactions|cutins|attack|battle)\\//i.test(path)||path.startsWith('/rpg-assets/reactions/')?'battle':/\\/outfits\\//.test(path)?'outfits':'expressions';
-  register(id,type,path.split('/').at(-1).replace(/\\.[^.]+$/,''),path);
+  const id=match[1],type=/\/(?:reaction|reactions|cutins|attack|battle)\//i.test(path)||path.startsWith('/rpg-assets/reactions/')?'battle':/\/outfits\//.test(path)?'outfits':'expressions';
+  register(id,type,path.split('/').at(-1).replace(/\.[^.]+$/,''),path);
  }
 }
 function recordArtImage(img){
@@ -1645,7 +1645,7 @@ function recordArtImage(img){
  const path=artKey(img.currentSrc||img.src);
  if(!path.startsWith('/rpg-assets/')&&!path.includes('/rpg-assets/'))return;
  const normalized=path.includes('/rpg-assets/')?path.slice(path.indexOf('/rpg-assets/')):path;
- if(!/\\.(png|webp|jpg|jpeg)$/i.test(normalized))return;
+ if(!/\.(png|webp|jpg|jpeg)$/i.test(normalized))return;
  if(!normalized.startsWith('/rpg-assets/characters/')&&!normalized.startsWith('/rpg-assets/reactions/'))return;
  if(!artSeen[normalized]){
   artSeen[normalized]={day:state.day,slot:state.slot};
@@ -1664,7 +1664,7 @@ $('battle')?.addEventListener('load',()=>{
 buildArtEntries();
 function showOtherArt(entry){
  if(!artSeen[entry.path])return;
- if(!galleryViewer){galleryOpenViewer({unlocked:true,title:'Artwork',id:'',character:entry.id,path:entry.path,thumb:entry.path});return;}
+ if(!galleryViewer){galleryOpenViewer({unlocked:true,title:entry.title,id:'',character:entry.id,path:entry.path,thumb:entry.path});return;}
  const stage=galleryViewer.querySelector('.cg-lightbox-stage');stage.replaceChildren();
  const image=document.createElement('img');image.src=entry.path;image.alt=entry.title;
  image.onerror=()=>{stage.textContent='Artwork file unavailable.';};
