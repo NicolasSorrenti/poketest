@@ -185,6 +185,32 @@ function damageAfterAttachment(unit,energyId,defender){
  return attacks.reduce((best,a)=>canPayEnergy(a.cost||[],pool)?
   Math.max(best,estimatedDamage(a,unit,defender)):best,0);
 }
+// A public opponent attack can be paid for but temporarily unusable (Sleep,
+// Paralysis, Amnesia or a Gym attack cooldown). Do not flee from an attack
+// that cannot be declared on the visible board. This is not a future oracle.
+function strongestUsableOpponentAttack(o,defender){
+ const enemy=o.opponent.active;
+ if(!enemy||!defender)return 0;
+ const fromEnemy={...o,self:o.opponent,opponent:o.self};
+ const moves=enemy.effectiveAttacks||card(enemy.id)?.attacks||[];
+ return moves.reduce((best,attack,index)=>
+  eligibleAttack(fromEnemy,enemy,attack,index)&&
+  canPayEnergy(attack.cost||[],energyPool(enemy))?
+   Math.max(best,estimatedDamage(attack,enemy,defender)):best,0);
+}
+// A printed KO is not a likely KO when the opponent must first pass
+// Confusion or an attack-specific coin flip. Use the same conservative
+// 75% threshold as Apex's stranded-Energy analysis.
+function likelyOpponentKnockout(o,defender){
+ const enemy=o.opponent.active;
+ if(!enemy||!defender||['Asleep','Paralyzed'].includes(enemy.status))return false;
+ const fromEnemy={...o,self:o.opponent,opponent:o.self};
+ const confusionChance=enemy.status==='Confused'?.5:1;
+ return (enemy.effectiveAttacks||card(enemy.id)?.attacks||[]).some((attack,index)=>
+  eligibleAttack(fromEnemy,enemy,attack,index)&&
+  canPayEnergy(attack.cost||[],energyPool(enemy))&&
+  knockoutChance(attack,enemy,defender)*confusionChance>=.75);
+}
 function hpRemaining(u){return Math.max(0,(Number(card(u?.id)?.hp)||60)-(u?.damage||0));}
 function setupValue(unit){
  const c=card(unit?.id);
@@ -532,8 +558,22 @@ function evolutionTempoPenalty(o,slot,evolutionId,cfg){
  const before=o.self.active,nextCard=card(evolutionId);
  if(!before||!nextCard)return 0;
  const after={...before,id:evolutionId};
+ // Evolution replaces copied Active attacks; retain legacy behavior for
+ // lower levels while correcting Apex's hypothetical promoted form.
+ if(cfg.level===8)delete after.effectiveAttacks;
  const current=strongestAffordableAttack(before,o.opponent.active);
  if(current<=0)return 0;
+ // An evolution must not trade away a certain match-winning attack, even
+ // when its extra HP would otherwise make the Active safer. The normal
+ // refuel exception below is not worth spending Energy before a free win.
+ // Evaluate only revealed attacks and attached Energy; never future draws.
+ if(cfg.level===8&&(o.self.prizeCount===1||o.opponent.bench.length===0)&&
+    !['Asleep','Paralyzed','Confused'].includes(before.status)){
+  const certainKO=u=>(u.effectiveAttacks||card(u.id)?.attacks||[]).some((a,i)=>
+   eligibleAttack(o,u,a,i)&&canPayEnergy(a.cost||[],energyPool(u))&&
+   knockoutChance(a,u,o.opponent.active)>=.999);
+  if(certainKO(before)&&!certainKO(after))return 550;
+ }
  const promoted=strongestAffordableAttack(after,o.opponent.active);
  if(promoted>=current)return 0;
  // If one legal Energy attachment can restore a useful attack this turn,
@@ -556,6 +596,45 @@ function evolutionTempoPenalty(o,slot,evolutionId,cfg){
 }
 // Conservative one-ply opponent response and visible Prize-race incentives.
 // No reducer rollouts, opponent concealed hand, unknown future Energy or RNG.
+// Apex may hold an evolution when it gains no immediate combat or survival
+// benefit. Preserve future evolution options instead of promoting by default.
+function prematureEvolutionPenalty(o,slot,evolutionId,cfg){
+ if(cfg.level!==8||o.phase!=='game'||!o.opponent.active)return 0;
+ const before=slotUnit(o.self,slot),next=card(evolutionId);
+ if(!before||!next)return 0;
+ // Evolution replaces the previous attack list; never project inherited moves.
+ const after={...before,id:evolutionId};
+ delete after.effectiveAttacks;
+ const moves=next.attacks||[];
+ const pool=energyPool(after);
+ const enemy=o.opponent.active;
+ const ready=moves.some((a,i)=>canPayEnergy(a.cost||[],pool)&&
+  (slot!==-1||eligibleAttack(o,after,a,i)));
+ const relevantEnergy=(o.self.hand||[]).filter(id=>isEnergy(card(id))&&
+  legalAttachment({card:card(id),unit:after,round:o.round+1,
+   cardName:next.name||''}));
+ const nextTurnReady=moves.some(a=>relevantEnergy.some(id=>
+  canPayEnergy(a.cost||[],[...pool,...energyPool({energies:[id]})])));
+ // Waiting is generally better than evolving an uncharged Pokémon several
+ // turns too early. Evolve once the new attacker can attack now or needs only
+ // the next Energy attachment already visible in our own hand.
+ if(ready||nextTurnReady)return 0;
+ // Preserve a playable evolution before an imminent Professor Oak hand reset,
+ // but never give up a currently stronger Active attack merely to save a card.
+ const oakPending=(o.self.hand||[]).some(id=>card(id)?.name==='Professor Oak')&&
+  o.self.hand.length<=4&&(o.self.deckCount??0)>2;
+ if(oakPending&&(slot!==-1||
+   projectedAttackValue(after,enemy,o.turnSerial)>=
+   projectedAttackValue(before,enemy,o.turnSerial)))return 0;
+ // Important survival and tactical exceptions outweigh waiting.
+ if(slot===-1){
+  if(likelyOpponentKnockout(o,before)&&!likelyOpponentKnockout(o,after))return 0;
+  if(['Asleep','Paralyzed'].includes(before.status))return 0;
+ }
+ // Do not pretend to know a future forced discard or opponent's hand.
+ // Trainer-driven hand disposal is evaluated separately when actually usable.
+ return 255;
+}
 function prizeRaceBonus(action,o,cfg){
  if(!cfg.prizeRace||cfg.level<4||o.phase!=='game'||!o.self.active||!o.opponent.active)return 0;
  const own=o.self,enemy=o.opponent;
@@ -675,12 +754,22 @@ function energyHorizonBonus(action,o,cfg){
  // Reward immediate Energy unlocks, but value two-card lines only insofar as
  // they are possible with cards that are ALREADY visible in our own hand.
  const expected=Math.max(0,changed-before)*1.15+Math.max(0,direct)*.35;
- const enemyReady=!['Asleep','Paralyzed'].includes(q.active.status)&&
-  strongestAffordableAttack(q.active,u)>=hpRemaining(u);
+ // A doomed Active should not earn speculative next-turn attack value.
+ if(v.slot===-1&&doomedActiveAttachmentPenalty(o,attachedId,cfg)>0)return 0;
+ // Bench replacement urgency depends on the exposed Active, not the Bench
+ // target of this attachment. Comparing against u made a fragile Bench look
+ // urgent while ignoring an Active that was about to be knocked out.
+ // For Apex, only a currently legal public attack makes our Active exposed.
+ // Amnesia and Gym locks must not cause speculative Bench Energy urgency.
+ // Keep the previous affordable-attack estimate for lower difficulty tiers.
+ const activeExposed=!!p.active&&(cfg.level===8?
+  likelyOpponentKnockout(o,p.active):
+  !['Asleep','Paralyzed'].includes(q.active.status)&&
+  strongestAffordableAttack(q.active,p.active)>=hpRemaining(p.active));
  // A Bench attacker is useful as a replacement when the Active is visibly
  // exposed. Otherwise minimize speculative Energy sunk on remote Bench.
- const activeBias=v.slot===-1?35:enemyReady?22:-34;
- const weakDefense=enemyReady&&v.slot===-1&&p.bench.length>0?-30:0;
+ const activeBias=v.slot===-1?35:activeExposed?22:-34;
+ const weakDefense=activeExposed&&v.slot===-1&&p.bench.length>0?-30:0;
  const surplus=direct===0&&changed-before<=1?-35:0;
  return Math.max(-85,Math.min(160,expected+activeBias+weakDefense+surplus))*cfg.style.setup;
 }
@@ -688,24 +777,34 @@ function energyHorizonBonus(action,o,cfg){
 // facing a likely knockout before its next attack. A useful Bench investment
 // preserves tempo, but never override an attack unlocked now or an attachment
 // that enables retreat. No opponent hand or future draw is inspected.
+// A forced attachment is not productive when the Active is about to be KO'd,
+// gains no attack this turn, and cannot escape using that Energy. Keep this
+// independent of Bench availability: holding the Energy is also an option.
+function strandedActiveEnergy(o,energyId){
+ const active=o.self.active,enemy=o.opponent.active,energy=card(energyId);
+ if(!active||!enemy||!isEnergy(energy)||['Asleep','Paralyzed'].includes(enemy.status))return false;
+ const incoming=enemy.effectiveAttacks||card(enemy.id)?.attacks||[];
+ // Only publicly usable opposing attacks count (Amnesia, cooldown, once-use).
+ const fromEnemy={...o,self:o.opponent,opponent:o.self};
+ // A Confused attacker must win its mandatory coin flip before any attack
+ // resolves. Even a printed certain KO is only a 50% threat, below this
+ // conservative 75% doomed-Active threshold (no future RNG is inspected).
+ const confusionChance=enemy.status==='Confused'?.5:1;
+ if(!incoming.some((a,i)=>eligibleAttack(fromEnemy,enemy,a,i)&&
+    knockoutChance(a,enemy,active)*confusionChance>=.75))return false;
+ const after={...active,energies:[...(active.energies||[]),energyId]};
+ if(projectedAttackValue(after,enemy,o.turnSerial)>
+    projectedAttackValue(active,enemy,o.turnSerial))return false;
+ const retreat=card(active.id)?.retreatCost||[];
+ if(!o.self.retreated&&!['Asleep','Paralyzed'].includes(active.status)&&
+    retreat.length&&!canPayEnergy(retreat,energyPool(active))&&
+    canPayEnergy(retreat,energyPool(after)))return false;
+ return true;
+}
 function doomedActiveAttachmentPenalty(o,energyId,cfg){
  if(cfg.level<7||o.phase!=='game'||!o.self.active||!o.opponent.active||
-    o.self.energyUsed||!o.self.bench?.length)return 0;
- const active=o.self.active,enemy=o.opponent.active,energy=card(energyId);
- if(!isEnergy(energy)||['Asleep','Paralyzed'].includes(enemy.status))return 0;
- const incoming=(enemy.effectiveAttacks||card(enemy.id)?.attacks||[]);
- const threatened=incoming.some(a=>canPayEnergy(a.cost||[],energyPool(enemy))&&
-  knockoutChance(a,enemy,active)>=.75);
- if(!threatened)return 0;
- const after={...active,energies:[...(active.energies||[]),energyId]};
- // If this attachment enables an attack now, it may earn a Prize or trade
- // damage before the opponent's next turn: do not classify it as wasted.
- const attacks=active.effectiveAttacks||card(active.id)?.attacks||[];
- if(!['Asleep','Paralyzed'].includes(active.status)&&
-    attacks.some(a=>canPayEnergy(a.cost||[],energyPool(after))))return 0;
- const retreat=card(active.id)?.retreatCost||[];
- if(retreat.length&&!canPayEnergy(retreat,energyPool(active))&&
-    canPayEnergy(retreat,energyPool(after)))return 0;
+    o.self.energyUsed||!o.self.bench?.length||!strandedActiveEnergy(o,energyId))return 0;
+ const energy=card(energyId);
  const usefulBench=o.self.bench.some(unit=>
   !(unit.energyAttachBlockSerial>o.turnSerial)&&
   legalAttachment({card:energy,unit,round:o.round,cardName:card(unit.id)?.name||''})&&
@@ -811,7 +910,8 @@ function score(a,o,cfg,used){
  if(type==='evolve'){
   const target=slotUnit(p,v.slot),after=card(p.hand[v.handIndex]);
   return 165*style.setup+(Number(after?.hp)||0)*.35+((v.slot===-1)?15:0)-
-   (target?.damage||0)*.1-evolutionTempoPenalty(o,v.slot,p.hand[v.handIndex],cfg);
+   (target?.damage||0)*.1-evolutionTempoPenalty(o,v.slot,p.hand[v.handIndex],cfg)-
+   prematureEvolutionPenalty(o,v.slot,p.hand[v.handIndex],cfg);
  }
  if(type==='attach_energy'){
   const unit=slotUnit(p,v.slot),value=energyValue(unit,p.hand[v.handIndex]);
@@ -910,14 +1010,28 @@ function score(a,o,cfg,used){
  if(type==='retreat'){
   const to=p.bench[v.slot],before=p.active;
   const gain=setupValue(to)-setupValue(before);
+  // Apex must not abandon a favorable defensive matchup for an uncharged
+  // replacement. Compare real, currently payable attacks against BOTH slots:
+  // printed HP and theoretical moves alone do not justify a retreat.
+  const currentIncoming=cfg.level===8?strongestUsableOpponentAttack(o,before):0;
+  const replacementIncoming=cfg.level===8?strongestUsableOpponentAttack(o,to):0;
+  const currentPressure=cfg.level===8?projectedAttackValue(before,q.active,o.turnSerial):0;
+  const replacementPressure=cfg.level===8?projectedAttackValue(to,q.active,o.turnSerial):0;
+  const safeMatchupLoss=cfg.level===8&&currentIncoming===0&&
+   replacementIncoming>0&&replacementPressure<=currentPressure;
+  const unreadySwap=cfg.level===8&&replacementPressure===0&&
+   currentPressure>0&&currentIncoming<hpRemaining(before);
   // Expert profiles recognize when an incoming attack is likely to KO their
   // Active, but do not sacrifice an immediate winning attack to flee.
   const oldDamage=strongestAffordableAttack(before,q.active);
   const newDamage=strongestAffordableAttack(to,q.active);
   const lethalOwn=oldDamage>=hpRemaining(q.active)&&hpRemaining(q.active)>0;
-  const counter=strongestAffordableAttack(q.active,before);
-  const counterTo=strongestAffordableAttack(q.active,to);
-  const threatened=counter>=hpRemaining(before)&&counter>0;
+  const counter=cfg.level===8?strongestUsableOpponentAttack(o,before):
+   strongestAffordableAttack(q.active,before);
+  const counterTo=cfg.level===8?strongestUsableOpponentAttack(o,to):
+   strongestAffordableAttack(q.active,to);
+  const threatened=cfg.level===8?likelyOpponentKnockout(o,before):
+   counter>=hpRemaining(before)&&counter>0;
   const alternativeSurvives=counterTo<hpRemaining(to);
   // A defensive swap is useful only when it *actually* shelters the Active
   // from a visible affordable knockout. Avoid abandoning a ready attacker for
@@ -925,12 +1039,25 @@ function score(a,o,cfg,used){
   // Avoid perpetual KO-avoidance: fleeing costs Energy and concedes tempo.
   // A slightly threatened attacker should still trade damage if it can score
   // Prizes. Champion values the *quality* of a safe replacement over panic.
+  // A switch to an attacker without a usable attack is typically a tempo
+  // loss, not a rescue. Keep a sacrificial Active in place when it buys time
+  // to charge a better Bench Pokémon; do not repeatedly promote an unready
+  // replacement merely to preserve the Active's remaining HP.
+  const apexUnready=cfg.level===8&&replacementPressure===0;
+  const usableActive=cfg.level===8&&currentPressure>0;
+  const noMeaningfulRescue=cfg.level===8&&(!threatened||!alternativeSurvives);
+  const sacrificeTempo=apexUnready&&noMeaningfulRescue?220:
+   apexUnready&&usableActive?175:0;
+  const attackTempo=cfg.level===8&&usableActive&&replacementPressure<=currentPressure?
+   120:0;
   const rescue=threatened&&alternativeSurvives?(cfg.level>=4?65:100)*style.survival:
    threatened&&!alternativeSurvives?-45:0;
   const foresight=cfg.level>=3?rescue-
    (lethalOwn?300:0)+(newDamage-oldDamage)*1.05-
    (newDamage===0&&oldDamage>0?70:0)-(oldDamage>0?oldDamage*.25:0):0;
-  return (before.status?180:45)+(gain>0?Math.min(30,gain):0)+
+  return -sacrificeTempo-attackTempo+
+   (safeMatchupLoss?-320:0)+(unreadySwap?-190:0)+
+   (before.status?180:45)+(gain>0?Math.min(30,gain):0)+
    ((hpRemaining(before)<30)&&alternativeSurvives?23:0)*style.survival-
    (before.energies?.length||0)*18+foresight;
  }
@@ -1038,8 +1165,16 @@ function energyPreparationActions(o,cfg,actions){
  // Attacking ends the turn. Use a legal, productive Energy attachment first,
  // unless an already-affordable attack guarantees the final knockout.
  if(cfg.level!==8||o.self.energyUsed)return actions;
- const useful=actions.some(a=>a.type==='attach_energy'&&
-  energyValue(slotUnit(o.self,a.payload.slot),o.self.hand[a.payload.handIndex])>12);
+ const canAttackNow=actions.some(a=>a.type==='attack');
+ const useful=actions.some(a=>{
+  if(a.type!=='attach_energy'||energyValue(slotUnit(o.self,a.payload.slot),
+    o.self.hand[a.payload.handIndex])<=12)return false;
+  // Do not suppress an already-legal attack just to spend the only Energy on
+  // an Active that will be KO'd before that Energy helps. A legal Bench
+  // attachment or immediate attack upgrade still gets prepared first.
+  return !(canAttackNow&&a.payload.slot===-1&&
+   strandedActiveEnergy(o,o.self.hand[a.payload.handIndex]));
+ });
  if(!useful)return actions;
  const gameWinningKo=(o.self.prizeCount<=1||o.opponent.bench.length===0)&&
   actions.some(a=>{
@@ -1126,7 +1261,22 @@ function driveSide(initial,{side=1,level=3,personality='balanced',seed=1,plannin
   const attachmentOpportunity=auditOptions.some(candidate=>
    energyValue(slotUnit(auditObs.self,candidate.payload.slot),
     auditObs.self.hand[candidate.payload.handIndex])>12);
-  commands.push({side,turnSerial:beforeTurn,
+  const handCardId=['play_trainer','attach_energy','bench','evolve'].includes(a.type)?
+   game.players[side]?.hand?.[a.payload?.handIndex]:null;
+  const target=a.type==='attach_energy'?
+   (a.payload.slot===-1?game.players[side]?.active:game.players[side]?.bench?.[a.payload.slot]):null;
+  // Center only discards Energy from Pokémon still damaged when it resolves.
+  // Record the public pre-action slots rather than assuming earlier damage persists.
+  const centerDamagedSlotsBefore=a.type==='play_trainer'&&
+   CATALOG.get(handCardId)?.name==='Pokémon Center'?
+   [-1,...game.players[side].bench.map((_,index)=>index)].filter(slot=>
+    (slot===-1?game.players[side].active:game.players[side].bench[slot])?.damage>0):null;
+  // A draw Trainer may introduce Center after the attachment. Record whether
+  // the acting player could have played Center before spending that Energy.
+  const centerInHandBefore=a.type==='attach_energy'?
+   game.players[side]?.hand?.some(id=>CATALOG.get(id)?.name==='Pokémon Center')===true:null;
+  commands.push({side,turnSerial:beforeTurn,cardId:handCardId||null,
+   targetDamageBefore:target?.damage??null,centerDamagedSlotsBefore,centerInHandBefore,
    // Resolved outcome, never a hypothetical result of a simulated attack.
    wonGame:!!next.game.over&&next.game.winner===side,
    attachmentOpportunity,energyUsedBefore:auditObs.self.energyUsed,
