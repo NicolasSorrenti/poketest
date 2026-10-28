@@ -68,5 +68,7 @@ const NeoOutfitChime=(()=>{
    if(item?.portrait&&!outfitIds.has(item.id))await display(item.portrait,{top:.06,bottom:.53},3000);
   }
  }
- return {onEntry,cancel,firstMeeting:({portrait})=>display(portrait,{top:.06,bottom:.53},3000)};
+ const api=Object.freeze({onEntry,cancel,firstMeeting:({portrait})=>display(portrait,{top:.06,bottom:.53},3000)});
+ if(typeof window!=='undefined')window.NeoOutfitChime=api;
+ return api;
 })();
