@@ -14,8 +14,11 @@ const NeoOutfitChime=(()=>{
   if(!portrait||typeof document==='undefined')return;
   cancel();
   addMotion();
+  const left=Math.max(0,Math.min(.8,Number(focus?.left??0)));
+  const right=Math.max(left+.12,Math.min(1,Number(focus?.right??1)));
   const top=Math.max(0,Math.min(.8,Number(focus?.top??.06)));
   const bottom=Math.max(top+.12,Math.min(1,Number(focus?.bottom??.51)));
+  const cropWidth=right-left,cropHeight=bottom-top;
   const img=new Image();
   img.alt='';img.decoding='async';img.draggable=false;
   // Load before displaying; failures must not strand the game.
@@ -26,7 +29,7 @@ const NeoOutfitChime=(()=>{
    img.src=portrait;
   });
   if(!loaded)return;
-  const ratio=img.naturalWidth/(img.naturalHeight*(bottom-top));
+  const ratio=(img.naturalWidth*cropWidth)/(img.naturalHeight*cropHeight);
   const screen=document.createElement('div');
   screen.className='neo-outfit-chime';
   screen.setAttribute('aria-hidden','true');
@@ -35,7 +38,7 @@ const NeoOutfitChime=(()=>{
   panel.className='neo-outfit-chime-panel';panel.style.cssText='position:relative;overflow:hidden;border:2px solid #fad59dd9;border-radius:16px;background:#111;box-shadow:0 14px 55px #000c;animation:neoOutfitChimePop .52s cubic-bezier(.2,.8,.2,1) both;';
   panel.style.width='min(90vw,560px,'+(58*ratio)+'vh)';
   panel.style.aspectRatio=String(ratio);
-  img.style.cssText='position:absolute;max-width:none;left:0;width:100%;height:auto;top:'+(-top/(bottom-top)*100)+'%;';
+  img.style.cssText='position:absolute;max-width:none;left:'+(-left/cropWidth*100)+'%;width:'+(100/cropWidth)+'%;height:auto;top:'+(-top/cropHeight*100)+'%;';
   const badge=document.createElement('div');badge.textContent='✦ SPECIAL OUTFIT ✦';
   badge.style.cssText='position:absolute;z-index:1;top:12px;left:50%;transform:translateX(-50%);padding:9px 16px;border:1px solid #fad59d;border-radius:999px;background:#211727eF;color:#ffe2af;font:700 13px/1.2 system-ui,sans-serif;letter-spacing:.12em;white-space:nowrap;box-shadow:0 4px 18px #0009;';
   panel.append(img,badge);screen.append(panel);document.body.append(screen);visible=screen;
