@@ -69,6 +69,19 @@
    status_hit:'angry',ko_taken:'sad',ko_scored:'happy'}
  };
  function vnCandidates(npcId,kind){
+  // Daisy's reviewed battle expressions are PNGs, not the established WebP sheets.
+  if(npcId==='daisy'){
+   const names={
+    attack:['determined','happy','neutral'],play_card:['happy','neutral'],
+    evolve:['happy','determined'],power:['determined','happy'],
+    hurt:['surprised','concerned'],big_hit:['surprised','concerned'],
+    weakness_hit:['surprised','concerned'],status_hit:['angry','concerned'],
+    ko_taken:['concerned','surprised'],ko_scored:['happy','determined']
+   };
+   return [...new Set([...(names[kind]||['neutral']),'neutral'])].map(name=>
+    '/rpg-assets/characters/daisy/expression-portraits/'+name+'.png');
+  }
+
   if(npcId==='elio'){
    const name=['play_card','evolve','power','ko_scored'].includes(kind)?'happy':
     ['hurt','big_hit','weakness_hit'].includes(kind)?'surprised':
