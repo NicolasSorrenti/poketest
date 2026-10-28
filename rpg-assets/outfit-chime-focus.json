@@ -34,11 +34,11 @@
           "right": 0.89
         },
         "special-day-5.png": {
-          "top": 0.52,
-          "bottom": 1,
-          "notes": "Tight bodice crop matching the user marked area",
-          "left": 0.14,
-          "right": 0.89
+          "top": 0.36,
+          "bottom": 0.62,
+          "notes": "Tight bodice crop matching the marked area",
+          "left": 0.22,
+          "right": 0.82
         }
       }
     },
