@@ -990,6 +990,322 @@ cross.push({
     "fanservice": 0
   }
 });
+// Approved Reina, Rina and Akari two-CG encounters; images uploaded independently.
+cross.push(...[
+  {
+    "id": "daisy_reina_card_heist",
+    "npc": "daisy",
+    "participants": [
+      "daisy",
+      "reina"
+    ],
+    "encounterType": "slice",
+    "trigger": "talk",
+    "place": "shop",
+    "slot": 2,
+    "start": 28,
+    "end": 90,
+    "minAffection": 0,
+    "title": "The Midnight Card Heist",
+    "artPending": false,
+    "image": "/rpg-assets/events/cg/season01/daisy_reina_card_heist_01.webp",
+    "cgSequence": [
+      "daisy_reina_card_heist_01",
+      "daisy_reina_card_heist_02"
+    ],
+    "cgSwitchSteps": [
+      0,
+      7
+    ],
+    "lines": [
+      {
+        "speaker": "Narrator",
+        "text": "After closing, Reina asks Daisy to help clean the rare-card display."
+      },
+      {
+        "speaker": "reina",
+        "text": "These old cases are sensitive. Please don't touch the alarm sensor."
+      },
+      {
+        "speaker": "daisy",
+        "text": "Me? I'm the picture of careful."
+      },
+      {
+        "speaker": "Narrator",
+        "text": "Daisy reaches for a dusty corner with her cleaning cloth. An alarm immediately erupts."
+      },
+      {
+        "speaker": "reina",
+        "text": "Daisy! What did you touch?"
+      },
+      {
+        "speaker": "daisy",
+        "text": "Technically? Nothing."
+      },
+      {
+        "speaker": "reina",
+        "text": "Then why is the alarm going off?"
+      },
+      {
+        "speaker": "Narrator",
+        "text": "Reina rushes to the security keypad. Daisy offers to hold the flashlight."
+      },
+      {
+        "speaker": "daisy",
+        "text": "Here. Better light helps, right?"
+      },
+      {
+        "speaker": "reina",
+        "text": "Not in my eyes! Daisy, point it at the PANEL!"
+      },
+      {
+        "speaker": "daisy",
+        "text": "Oops. Sorry! I'm nervous!"
+      },
+      {
+        "speaker": "Narrator",
+        "text": "Reina finally silences the alarm. Both women exchange an exhausted look, then laugh."
+      }
+    ],
+    "choices": [
+      {
+        "label": "Enjoy the moment",
+        "reply": "Daisy laughs and gives her friend an appreciative smile.",
+        "kind": "playful",
+        "flag": "daisy_reina_card_heist_playful",
+        "delta": {
+          "affection": 1,
+          "respect": 1
+        }
+      },
+      {
+        "label": "Offer to help",
+        "reply": "Daisy appreciates your support.",
+        "kind": "support",
+        "flag": "daisy_reina_card_heist_help",
+        "delta": {
+          "affection": 1,
+          "trust": 1
+        }
+      }
+    ],
+    "art": {
+      "scene": "The Midnight Card Heist — approved two-stage Daisy crossover",
+      "composition": "Two wide 16:9 CGs displayed sequentially with dialogue between, lower fifth dialogue-safe.",
+      "outfit": "Approved canonical outfits, especially Daisy's translucent burgundy long-sleeve mesh shirt and tattoos.",
+      "expression": "Natural comic reactions and expressive but restrained faces",
+      "environment": "shop",
+      "mood": "playful",
+      "fanservice": 0
+    }
+  },
+  {
+    "id": "daisy_rina_karaoke",
+    "npc": "daisy",
+    "participants": [
+      "daisy",
+      "rina"
+    ],
+    "encounterType": "slice",
+    "trigger": "talk",
+    "place": "arcade",
+    "slot": 2,
+    "start": 25,
+    "end": 90,
+    "minAffection": 0,
+    "title": "The Great Karaoke Betrayal",
+    "artPending": false,
+    "image": "/rpg-assets/events/cg/season01/daisy_rina_karaoke_01.webp",
+    "cgSequence": [
+      "daisy_rina_karaoke_01",
+      "daisy_rina_karaoke_02"
+    ],
+    "cgSwitchSteps": [
+      0,
+      6
+    ],
+    "lines": [
+      {
+        "speaker": "Narrator",
+        "text": "Rina invites Daisy to a private karaoke booth after an evening in the arcade."
+      },
+      {
+        "speaker": "rina",
+        "text": "Just one easy song. Promise!"
+      },
+      {
+        "speaker": "daisy",
+        "text": "I know every word. You're about to be impressed."
+      },
+      {
+        "speaker": "Narrator",
+        "text": "The backing track launches into an absurdly fast chorus."
+      },
+      {
+        "speaker": "daisy",
+        "text": "Rina! You said this song was easy!"
+      },
+      {
+        "speaker": "rina",
+        "text": "It is! Just keep up!"
+      },
+      {
+        "speaker": "Narrator",
+        "text": "Rina grabs a second microphone and joins Daisy for the chorus."
+      },
+      {
+        "speaker": "daisy",
+        "text": "I can't even read that fast!"
+      },
+      {
+        "speaker": "rina",
+        "text": "Then sing louder!"
+      },
+      {
+        "speaker": "Narrator",
+        "text": "They finish the duet in fits of laughter and collapse onto the couch."
+      }
+    ],
+    "choices": [
+      {
+        "label": "Enjoy the moment",
+        "reply": "Daisy laughs and gives her friend an appreciative smile.",
+        "kind": "playful",
+        "flag": "daisy_rina_karaoke_playful",
+        "delta": {
+          "affection": 1,
+          "respect": 1
+        }
+      },
+      {
+        "label": "Offer to help",
+        "reply": "Daisy appreciates your support.",
+        "kind": "support",
+        "flag": "daisy_rina_karaoke_help",
+        "delta": {
+          "affection": 1,
+          "trust": 1
+        }
+      }
+    ],
+    "art": {
+      "scene": "The Great Karaoke Betrayal — approved two-stage Daisy crossover",
+      "composition": "Two wide 16:9 CGs displayed sequentially with dialogue between, lower fifth dialogue-safe.",
+      "outfit": "Approved canonical outfits, especially Daisy's translucent burgundy long-sleeve mesh shirt and tattoos.",
+      "expression": "Natural comic reactions and expressive but restrained faces",
+      "environment": "arcade",
+      "mood": "playful",
+      "fanservice": 0
+    }
+  },
+  {
+    "id": "daisy_akari_arcade",
+    "npc": "daisy",
+    "participants": [
+      "daisy",
+      "akari"
+    ],
+    "encounterType": "slice",
+    "trigger": "talk",
+    "place": "arcade",
+    "slot": 1,
+    "start": 20,
+    "end": 90,
+    "minAffection": 0,
+    "title": "The Great Arcade Rivalry",
+    "artPending": false,
+    "image": "/rpg-assets/events/cg/season01/daisy_akari_arcade_01.webp",
+    "cgSequence": [
+      "daisy_akari_arcade_01",
+      "daisy_akari_arcade_02"
+    ],
+    "cgSwitchSteps": [
+      0,
+      6
+    ],
+    "lines": [
+      {
+        "speaker": "Narrator",
+        "text": "Daisy challenges Akari to one more rhythm-game match."
+      },
+      {
+        "speaker": "daisy",
+        "text": "I've got this round. No excuses."
+      },
+      {
+        "speaker": "akari",
+        "text": "Okay. Ready?"
+      },
+      {
+        "speaker": "Narrator",
+        "text": "The notes fly by, but Akari barely seems to break a sweat."
+      },
+      {
+        "speaker": "daisy",
+        "text": "How are you doing that?"
+      },
+      {
+        "speaker": "akari",
+        "text": "Practice."
+      },
+      {
+        "speaker": "Narrator",
+        "text": "From behind the arcade cabinet, the final scores reveal Akari's perfect combo and Daisy's respectable but distant second place."
+      },
+      {
+        "speaker": "daisy",
+        "text": "That's not an answer!"
+      },
+      {
+        "speaker": "akari",
+        "text": "It's literally the answer."
+      },
+      {
+        "speaker": "daisy",
+        "text": "Rematch?"
+      },
+      {
+        "speaker": "akari",
+        "text": "You said that three games ago."
+      },
+      {
+        "speaker": "Narrator",
+        "text": "Daisy smiles despite herself and queues up another round."
+      }
+    ],
+    "choices": [
+      {
+        "label": "Enjoy the moment",
+        "reply": "Daisy laughs and gives her friend an appreciative smile.",
+        "kind": "playful",
+        "flag": "daisy_akari_arcade_playful",
+        "delta": {
+          "affection": 1,
+          "respect": 1
+        }
+      },
+      {
+        "label": "Offer to help",
+        "reply": "Daisy appreciates your support.",
+        "kind": "support",
+        "flag": "daisy_akari_arcade_help",
+        "delta": {
+          "affection": 1,
+          "trust": 1
+        }
+      }
+    ],
+    "art": {
+      "scene": "The Great Arcade Rivalry — approved two-stage Daisy crossover",
+      "composition": "Two wide 16:9 CGs displayed sequentially with dialogue between, lower fifth dialogue-safe.",
+      "outfit": "Approved canonical outfits, especially Daisy's translucent burgundy long-sleeve mesh shirt and tattoos.",
+      "expression": "Natural comic reactions and expressive but restrained faces",
+      "environment": "arcade",
+      "mood": "playful",
+      "fanservice": 0
+    }
+  }
+]);
 const pack=root.NeoRpgCharacterPacks?.byId?.('daisy');
 if(pack){for(const e of solo){const existing=pack.events.find(x=>x.id===e.id);if(existing)Object.assign(existing,e);else pack.events.push(e);
  if(!pack.art.eventImages.some(x=>x.sceneId===e.id))pack.art.eventImages.push({sceneId:e.id,path:'/rpg-assets/events/cg/slice-life/'+e.id+'.png',prompt:e.lines[0].text+' Cinematic 16:9 scene with Daisy, canonical facial features, costumes and tattoos. Leave lower fifth clear. Artwork pending.'});}}
