@@ -108,9 +108,10 @@
   // Browser downloads in parallel but run in insertion order (async=false).
   // Validate dependencies BEFORE launching rpg.js: a module can throw while
   // evaluating, yet its script still fires onload, leaving its global undefined.
-  const loadScript=src=>new Promise((resolve,reject)=>{
+  const loadScript=(src,optional=false)=>new Promise((resolve,reject)=>{
     const script=document.createElement('script');
     script.async=false;
+    if(optional)script.dataset.optionalScript='true';
     script.src=src;
     script.onload=resolve;
     script.onerror=()=>reject(Error('RPG script failed: '+src));
@@ -132,7 +133,7 @@
   // Artwork inventory is optional: a stale Render deploy or missing static file
   // must never prevent the campaign from starting.
   window.NeoRpgArtManifest=[];
-  await loadScript('/rpg_art_manifest.js?v=2').catch(error=>{
+  await loadScript('/rpg_art_manifest.js?v=3',true).catch(error=>{
     console.warn('Optional RPG art inventory unavailable; continuing without additional gallery entries',error);
   });
   await loadScript(scripts.at(-1));
