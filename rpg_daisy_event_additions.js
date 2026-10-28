@@ -21,9 +21,9 @@ cross.push({
   "minAffection": 0,
   "prerequisite": null,
   "title": "The Perfectly Wrong Size",
-  "image": "/rpg-assets/events/cg/season01/daisy_barb_camila_wrong_size_01.webp",
+  "image": "/rpg-assets/events/cg/season01/daisy_barb_camila_wrong_size.webp",
   "cgSequence": [
-    "daisy_barb_camila_wrong_size_01",
+    "daisy_barb_camila_wrong_size",
     "daisy_barb_camila_wrong_size_02",
     "daisy_barb_camila_wrong_size_03"
   ],
