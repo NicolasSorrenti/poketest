@@ -46,74 +46,74 @@
       "portraitPattern": "/rpg-assets/characters/barb/portraits/special-day-{n}.png",
       "variants": {
         "special-day-1.png": {
-          "top": 0.19,
+          "top": 0.29,
           "bottom": 0.43,
-          "notes": "Close crop centered on the bodice; excludes the skirt",
-          "left": 0.28,
-          "right": 0.76
+          "notes": "Close crop from just below the pendant to just above the belly",
+          "left": 0.32,
+          "right": 0.7
         },
         "special-day-2.png": {
-          "top": 0.19,
+          "top": 0.29,
           "bottom": 0.43,
-          "notes": "Close crop centered on the bodice; excludes the skirt",
-          "left": 0.28,
-          "right": 0.76
+          "notes": "Close crop from just below the pendant to just above the belly",
+          "left": 0.32,
+          "right": 0.7
         },
         "special-day-3.png": {
-          "top": 0.19,
+          "top": 0.29,
           "bottom": 0.43,
-          "notes": "Close crop centered on the bodice; excludes the skirt",
-          "left": 0.28,
-          "right": 0.76
+          "notes": "Close crop from just below the pendant to just above the belly",
+          "left": 0.32,
+          "right": 0.7
         },
         "special-day-4.png": {
-          "top": 0.19,
+          "top": 0.29,
           "bottom": 0.43,
-          "notes": "Close crop centered on the bodice; excludes the skirt",
-          "left": 0.28,
-          "right": 0.76
+          "notes": "Close crop from just below the pendant to just above the belly",
+          "left": 0.32,
+          "right": 0.7
         },
         "special-day-5.png": {
-          "top": 0.19,
+          "top": 0.29,
           "bottom": 0.43,
-          "notes": "Close crop centered on the bodice; excludes the skirt",
-          "left": 0.28,
-          "right": 0.76
+          "notes": "Close crop from just below the pendant to just above the belly",
+          "left": 0.32,
+          "right": 0.7
         },
         "special-day-6.png": {
-          "top": 0.19,
+          "top": 0.29,
           "bottom": 0.43,
-          "notes": "Close crop centered on the bodice; excludes the skirt",
-          "left": 0.28,
-          "right": 0.76
+          "notes": "Close crop from just below the pendant to just above the belly",
+          "left": 0.32,
+          "right": 0.7
         },
         "special-day-7.png": {
-          "top": 0.19,
+          "top": 0.29,
           "bottom": 0.43,
-          "notes": "Close crop centered on the bodice; excludes the skirt",
-          "left": 0.28,
-          "right": 0.76
+          "notes": "Close crop from just below the pendant to just above the belly",
+          "left": 0.32,
+          "right": 0.7
         },
         "special-day-8.png": {
-          "top": 0.19,
+          "top": 0.29,
           "bottom": 0.43,
-          "notes": "Close crop centered on the bodice; excludes the skirt",
-          "left": 0.28,
-          "right": 0.76
+          "notes": "Close crop from just below the pendant to just above the belly",
+          "left": 0.32,
+          "right": 0.7
         },
         "special-day-9.png": {
-          "top": 0.19,
+          "top": 0.29,
           "bottom": 0.43,
-          "notes": "Close crop centered on the bodice; excludes the skirt",
-          "left": 0.28,
-          "right": 0.76
+          "notes": "Close crop from just below the pendant to just above the belly",
+          "left": 0.32,
+          "right": 0.7
         },
         "special-day-10.png": {
-          "top": 0.19,
+          "top": 0.29,
           "bottom": 0.43,
-          "notes": "Close crop centered on the bodice; excludes the skirt",
-          "left": 0.28,
-          "right": 0.76
+          "notes": "Close crop from just below the pendant to just above the belly",
+          "left": 0.32,
+          "right": 0.7
         }
       }
     },
