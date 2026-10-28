@@ -1,6 +1,6 @@
 // Blocking, data-driven overworld close-ups. Never creates replacement artwork.
 const NeoOutfitChime=(()=>{
- const focusUrl='/rpg-assets/outfit-chime-focus.json?v=20261028-outfit-framing-3';
+ const focusUrl='/rpg-assets/outfit-chime-focus.json?v=20261028-outfit-framing-4';
  let focusPromise=null,visible=null,timer=null;
  const load=()=>focusPromise||(focusPromise=fetch(focusUrl,{cache:'force-cache'}).then(r=>r.ok?r.json():null).catch(()=>null));
  function addMotion(){
@@ -41,7 +41,8 @@ const NeoOutfitChime=(()=>{
   img.style.cssText='position:absolute;max-width:none;left:'+(-left/cropWidth*100)+'%;width:'+(100/cropWidth)+'%;height:auto;top:'+(-top/cropHeight*100)+'%;';
   const badge=document.createElement('div');badge.textContent='✦ SPECIAL OUTFIT ✦';
   badge.style.cssText='position:absolute;z-index:1;top:12px;left:50%;transform:translateX(-50%);padding:9px 16px;border:1px solid #fad59d;border-radius:999px;background:#211727eF;color:#ffe2af;font:700 13px/1.2 system-ui,sans-serif;letter-spacing:.12em;white-space:nowrap;box-shadow:0 4px 18px #0009;';
-  panel.append(img,badge);screen.append(panel);document.body.append(screen);visible=screen;
+  const viewport=document.createElement('div');viewport.style.cssText='position:absolute;inset:0;overflow:hidden;';
+  viewport.append(img);panel.append(viewport,badge);screen.append(panel);document.body.append(screen);visible=screen;
   await new Promise(resolve=>{
    let done=false;
    const finish=()=>{if(done)return;done=true;clearTimeout(timer);timer=null;screen.remove();if(visible===screen)visible=null;resolve();};
