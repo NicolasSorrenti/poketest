@@ -2,7 +2,8 @@
 const NeoOutfitChime=(()=>{
  const focusUrl='/rpg-assets/outfit-chime-focus.json?v=20261028-hana-framing-short-chime-1';
  let focusPromise=null,visible=null,timer=null;
- const load=()=>focusPromise||(focusPromise=fetch(focusUrl,{cache:'force-cache'}).then(r=>r.ok?r.json():null).catch(()=>null));
+ const load=()=>focusPromise||(focusPromise=new Promise(resolve=>{const timeout=setTimeout(()=>resolve(null),1500);fetch(focusUrl,{cache:'force-cache'}).then(r=>r.ok?r.json():null).catch(()=>null).then(data=>{clearTimeout(timeout);resolve(data);});}));
+ load();
  function addMotion(){
   if(document.getElementById('neoOutfitChimeMotion'))return;
   const style=document.createElement('style');style.id='neoOutfitChimeMotion';
@@ -141,7 +142,7 @@ const NeoOutfitChime=(()=>{
  async function onEntry({characters=[],firstMeetings=[],blocked=false,sceneId=null}={}){
   if(blocked||sceneId)return;
   // Never let optional crop metadata delay or suppress the actual reveal.
-  const data=await Promise.race([load(),new Promise(resolve=>setTimeout(()=>resolve(null),350))]);
+  const data=await load();
   const durationMs=Math.max(0,Number(data?.durationMs)||1500);
   // Preserve baseline for only actually encountered characters.
   const outfit=[];
@@ -150,7 +151,8 @@ const NeoOutfitChime=(()=>{
    if(!id||!portrait||!portrait.includes('/'+id+'/'))continue;
    const name=portrait.split('/').pop().split('?')[0];
    const characterData=data?.characters?.[id]||{};
-   const focus=characterData.variants?.[name];
+   const hanaFallback=/^(?:0[1-3]|0[6-8])_.*\.png$/i.test(name)?{top:.31,bottom:.52,left:.14,right:.86}:/^0[45]_.*\.png$/i.test(name)?{top:.49,bottom:.74,left:.14,right:.86}:null;
+   const focus=characterData.variants?.[name]||(id==='hana'?hanaFallback:null);
    const isOutfit=isSpecialPortrait(portrait);
    // Laca's casual and lifeguard looks are everyday outfits, not special-look reveals.
    if(id==='laca'&&/\/outfits\/(?:casual|lifeguard)\//i.test(portrait))continue;
@@ -162,7 +164,7 @@ const NeoOutfitChime=(()=>{
     const source=String(file);
     const pairPortrait=/^(?:https?:)?\/\//i.test(source)||source.startsWith('/')?source:portrait.slice(0,portrait.lastIndexOf('/')+1)+source;
     const pairName=pairPortrait.split('/').pop().split('?')[0];
-    const pairFocus=characterData.variants?.[pairName];
+    const pairFocus=characterData.variants?.[pairName]||(id==='hana'&&(/^(?:0[1-3]|0[6-8])_.*\.png$/i.test(pairName)?{top:.31,bottom:.52,left:.14,right:.86}:/^0[45]_.*\.png$/i.test(pairName)?{top:.49,bottom:.74,left:.14,right:.86}:null));
     const barbBodiceFocus=id==='barb'&&isSpecialPortrait(pairPortrait)?{top:.20,bottom:.38,left:.24,right:.78}:null;
     return {portrait:pairPortrait,focus:pairFocus||barbBodiceFocus||{top:.06,bottom:.53}};
    });
