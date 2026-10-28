@@ -41,11 +41,11 @@
  const $=id=>document.getElementById(id),checks=$('checks');
  const data=await fetch('/rpg-assets/outfit-chime-focus-top.json?preview=1').then(r=>{if(!r.ok)throw Error('Preset file could not be loaded');return r.json()});
  let generation=0;
- const labels={akari:'Akari',barb:'Barb',hana:'Hana'};
+ const labels=data.labels||{};
  for(const id of Object.keys(data.characters)){const o=document.createElement('option');o.value=id;o.textContent=labels[id]||id;$('character').append(o);}
  function selected(){return data.characters[$('character').value]}
  function current(){return selected().variants[$('variant').value]}
- function path(){const id=$('character').value,name=$('variant').value;return id==='hana'?'/rpg-assets/characters/hana/overworld-variants/'+name:'/rpg-assets/characters/'+id+'/portraits/'+name}
+ function path(){return current().image||('/rpg-assets/characters/'+$('character').value+'/portraits/'+$('variant').value)}
  function addCheck(label,ok,detail){const row=document.createElement('div');row.className='check '+(ok?'pass':'fail');row.textContent=(ok?'PASS — ':'FAIL — ')+label+(detail?' · '+detail:'');checks.append(row);}
  function setValues(f){for(const k of ['left','right','top','bottom']){$(k).value=String(Math.round(f[k]*100));$(k+'N').value=String(Math.round(f[k]*100));}updateMark();}
  function focus(){return {left:Number($('left').value)/100,right:Number($('right').value)/100,top:Number($('top').value)/100,bottom:Number($('bottom').value)/100};}
