@@ -199,7 +199,7 @@
     },
     "daisy": {
       "default": "/rpg-assets/characters/daisy/expression-portraits/neutral.png",
-      "attack": "/rpg-assets/characters/daisy/expression-portraits/determined.png",
+      "attack": "/rpg-assets/characters/daisy/attack-cutins/attack.png",
       "play_card": "/rpg-assets/characters/daisy/expression-portraits/happy.png",
       "evolve": "/rpg-assets/characters/daisy/expression-portraits/happy.png",
       "power": "/rpg-assets/characters/daisy/expression-portraits/determined.png",
