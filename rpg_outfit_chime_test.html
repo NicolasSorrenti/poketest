@@ -64,7 +64,7 @@ a{color:#f6bad4}
 (function(){
  const count=10,marked={left:24,right:78,top:20,bottom:38};
  const $=id=>document.getElementById(id),checks=$('checks');
- let currentUrl='';
+ let currentUrl='',renderGeneration=0;
  for(let n=1;n<=count;n++){const o=document.createElement('option');o.value=String(n);o.textContent='Special outfit '+n;$('variant').append(o);}
  $('variant').value='1';
  function url(){return '/rpg-assets/characters/barb/portraits/special-day-'+$('variant').value+'.png';}
@@ -75,7 +75,7 @@ a{color:#f6bad4}
  function bind(k){$(k).addEventListener('input',()=>{$(k+'N').value=$(k).value;updateMark();});$(k+'N').addEventListener('input',()=>{$(k).value=$(k+'N').value;updateMark();});}
  ['left','right','top','bottom'].forEach(bind);
  async function render(){
-  const portrait=url();currentUrl=portrait;
+  const portrait=url();currentUrl=portrait;const generation=++renderGeneration;
   $('sourceImage').src=portrait;
   $('sourceImage').onload=()=>{$('sourceStage').style.aspectRatio=$('sourceImage').naturalWidth+'/'+$('sourceImage').naturalHeight;updateMark();};
   checks.replaceChildren();
@@ -84,7 +84,7 @@ a{color:#f6bad4}
   }
   try{
    const result=await window.NeoOutfitChime.renderPreview({container:$('preview'),portrait:portrait,focus:focus()});
-   if(currentUrl!==portrait)return;
+   if(currentUrl!==portrait||generation!==renderGeneration)return;
    const b=result.crop,m=result.metrics;
    const within=b.left>=0&&b.top>=0&&b.right<=1&&b.bottom<=1&&b.cropWidth>0&&b.cropHeight>0;
    addCheck('Crop bounds are valid',within,'L '+Math.round(b.left*100)+'%, R '+Math.round(b.right*100)+'%, T '+Math.round(b.top*100)+'%, B '+Math.round(b.bottom*100)+'%');
