@@ -1091,6 +1091,9 @@ function projectedAttackValue(active,defender,turnSerial=0){
  for(let i=0;i<attacks.length;i++){
   const attack=attacks[i];
   if(!ATTACK.compile(attack)||!canPayEnergy(attack.cost||[],pool))continue;
+  // Single-use Gym attacks remain unavailable after their first use, even
+  // when another Energy attachment would otherwise pay their printed cost.
+  if(active.gymAttackOnce?.includes(i))continue;
   if(active.amnesia?.index===i&&active.amnesia.expires>turnSerial)continue;
   if(active.gymAttackCooldown?.expires>turnSerial&&
     (active.gymAttackCooldown.index===null||active.gymAttackCooldown.index===i))continue;
