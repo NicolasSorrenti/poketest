@@ -34,6 +34,10 @@ function boot(saved=new Map(),sessions=new Map()){
   assert.ok(ids.starterChoices?.children?.length>0,
    'New campaign must show starter options despite the introductory narrator line');
   ids.starterChoices.children[0].onclick();
+  // The starter confirmation is now a real dialogue: acknowledge it before travel.
+  const next=ids.choices?.children?.find(button=>button.textContent.includes('Continue'));
+  assert.ok(next,'Starter confirmation must offer a Continue control');
+  next.onclick();
  }
  return {ids,listeners,saved,sessions,location,read:()=>JSON.parse(saved.get(KEY)),send:payload=>listeners.message({origin:location.origin,source:ids.battle.contentWindow,data:payload})};
 }
@@ -44,6 +48,7 @@ test('new game, free travel, NPC challenge, duel result, reload and second duel'
  assert.equal(s.day,1);assert.equal(s.slot,0);assert.equal(s.location,'home');
  assert.match(app.ids.whereLabel.textContent,/HOME/);
  click(app.ids.places,'Pixel Palace');s=app.read();assert.equal(s.location,'arcade');assert.equal(s.slot,0);
+ click(app.ids.choices,'Continue'); // Acknowledge the first-visit narration before resting.
  app.ids.quickNext.onclick();s=app.read();assert.equal(s.slot,1);
  assert.ok(app.ids.people.children.some(x=>label(x).includes('Yuna Hoshino')));
  click(app.ids.people,'Yuna Hoshino');
