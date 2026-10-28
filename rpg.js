@@ -2062,7 +2062,7 @@ function ensureRpgLayout(){
  const castRoot=document.createElement('div');castRoot.id='rpgSceneCast';castRoot.className='rpg-scene-cast';castRoot.setAttribute('aria-label','Characters at this location');
  sceneRoot.append(castRoot);
  const dock=document.createElement('section');dock.id='rpgActionDock';dock.className='rpg-action-dock';
- dock.setAttribute('aria-label','Things to do here');sceneRoot.append(dock);
+ dock.setAttribute('aria-label','Things to do here');sceneRoot.after(dock);
 }
 function refreshRpgPanels(){
  if(typeof document.querySelector!=='function')return;
