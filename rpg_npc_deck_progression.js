@@ -2,20 +2,20 @@
 // Game-economy RPG-only NPC recipes. Classic/online/cube decks remain unchanged.
 // Every upgrade keeps the character's original themed deck as the starting point.
 const PROFILES=Object.freeze({
- hana:{ace:'base2-5',trainers:['base1-77','base1-71','base1-88','base1-74']}, // Kangaskhan / setup
- reina:{ace:'base1-7',trainers:['base1-84','base1-71','base1-93','base1-74']}, // Hitmonchan / tempo
- shiori:{ace:'base1-17',trainers:['base1-88','base1-77','base1-71','base1-74']}, // Beedrill / evolution
- yuna:{ace:'base1-10',trainers:['base1-84','base1-74','base1-71','base1-88']}, // Mewtwo / surprises
+ hana:{signature:'base2-5',ace:'base2-5',trainers:['base1-77','base1-71','base1-88','base1-74']}, // Kangaskhan / setup
+ reina:{signature:'base1-7',ace:'base1-7',trainers:['base1-84','base1-71','base1-93','base1-74']}, // Hitmonchan / tempo
+ shiori:{signature:'base1-17',ace:'base1-17',trainers:['base1-88','base1-77','base1-71','base1-74']}, // Beedrill / evolution
+ yuna:{signature:'base1-10',ace:'base1-10',trainers:['base1-84','base1-74','base1-71','base1-88']}, // Mewtwo / surprises
  akari:{trainers:['base1-79','base1-71','base1-74','base1-92']}, // disruption
- camila:{ace:'base5-25',trimDoubleColorless:true,minBasicEnergy:14,trainers:['base1-71','base1-88','base1-77','base1-76']}, // Dark Vileplume control / Gyarados
- marina:{ace:'base2-12',trainers:['base1-77','base1-71','base1-88','base1-74']}, // Vaporeon
- kaede:{ace:'base5-31',supports:['base5-41','base5-25'],trimDoubleColorless:true,minBasicEnergy:14,trainers:['base1-79','base1-75','base1-71','base1-74']}, // Dark Weezing / Muk / Gyarados
- jun:{ace:'base3-21',trainers:['base1-71','base1-79','base1-88','base1-74']},
- teo:{ace:'neo1-7',trainers:['base1-84','base1-88','base1-71','base1-74']},
- iris:{ace:'neo1-8',trainers:['base1-77','base1-71','base1-88','base1-74']},
- elio:{ace:'base3-13',trainers:['base1-91','base1-71','base1-88','base1-77']},
- alma:{ace:'base3-10',trainers:['base1-79','base1-71','base1-88','base1-74']},
- nereo:{ace:'neo1-8',trainers:['base1-77','base1-88','base1-71','base1-74']},
+ camila:{signature:'base5-25',ace:'base5-25',trimDoubleColorless:true,minBasicEnergy:14,trainers:['base1-71','base1-88','base1-77','base1-76']}, // Dark Vileplume control / Gyarados
+ marina:{signature:'base2-12',ace:'base2-12',trainers:['base1-77','base1-71','base1-88','base1-74']}, // Vaporeon
+ kaede:{signature:'base5-31',ace:'base5-31',supports:['base5-41','base5-25'],trimDoubleColorless:true,minBasicEnergy:14,trainers:['base1-79','base1-75','base1-71','base1-74']}, // Dark Weezing / Muk / Gyarados
+ jun:{signature:'base3-21',ace:'base3-21',trainers:['base1-71','base1-79','base1-88','base1-74']},
+ teo:{signature:'neo1-7',ace:'neo1-7',trainers:['base1-84','base1-88','base1-71','base1-74']},
+ iris:{signature:'neo1-8',ace:'neo1-8',trainers:['base1-77','base1-71','base1-88','base1-74']},
+ elio:{signature:'base3-13',ace:'base3-13',trainers:['base1-91','base1-71','base1-88','base1-77']},
+ alma:{signature:'base3-10',ace:'base3-10',trainers:['base1-79','base1-71','base1-88','base1-74']},
+ nereo:{signature:'neo1-8',ace:'neo1-8',trainers:['base1-77','base1-88','base1-71','base1-74']},
  rina:{trainers:['base1-84','base1-91','base1-71','base1-74']},
  sol:{trainers:['base1-77','base1-91','base1-71','base1-88']},
  jinx:{trainers:['base1-79','base1-84','base1-71','base1-74']},
