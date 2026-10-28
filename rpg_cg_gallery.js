@@ -1121,12 +1121,8 @@
   };
   if(thumbnail)add(entry.thumb,'event');
   add(entry.path,'event');
-  // The actual CG always wins; a neutral labeled placeholder displays only while it is missing.
-  if(entry.artPending)add('/rpg-assets/events/cg/crossover_pending.svg','event'); // A missing thumbnail must not hide an installed full-size CG.
-  if(matchCutins.has(npc))add('/rpg-assets/characters/'+npc+'/cutins/match-cutin.webp','cutin');
-  else add(alternativeCutins[npc],'cutin');
-  if(attackFallbacks.has(npc))add('/rpg-assets/reactions/'+npc+'/attack.png','cutin');
-  add(portraitFallbacks[npc]||'/rpg-assets/characters/'+npc+'/vn-expressions/neutral.webp','portrait');
+  // Never substitute a reaction or portrait for a missing event CG.
+  // The gallery uses the full image if its thumbnail does not exist.
   return items;
  }
  const categories=Object.freeze(['profile','pre_duel','social','special']);
