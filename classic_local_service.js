@@ -75,10 +75,10 @@ class ClassicLocalService {
   const playerCards=deckCards(deck);
   // The player-edited partner recipe always wins over the automatic act upgrade.
   let cpuCards=customOpponentDeck?[...customOpponentDeck]:deckCards(opponent);
-  if(!customOpponentDeck&&npcDeckTier>1){
-   cpuCards=NPC_DECKS.upgrade({npc:npcDeckId,tier:npcDeckTier,original:cpuCards,catalog:CATALOG});
+  if(!customOpponentDeck&&typeof npcDeckId==='string'&&NPC_DECKS.PROFILES[npcDeckId]){
+   cpuCards=NPC_DECKS.recipeFor({npc:npcDeckId,tier:npcDeckTier,original:cpuCards,catalog:CATALOG});
    const legality=validateDeck(cpuCards,CATALOG);
-   if(!legality.valid)throw Error('Invalid progressed NPC deck: '+legality.errors[0]);
+   if(!legality.valid)throw Error('Invalid authored RPG NPC deck: '+legality.errors[0]);
   }
   if(!customOpponentDeck&&typeof npcDeckId==='string'&&npcDeckVariant>0){
    cpuCards=NPC_DECKS.varyDeck(cpuCards,npcDeckId,npcDeckVariant,CATALOG);

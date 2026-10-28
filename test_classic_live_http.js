@@ -12,7 +12,7 @@ const {server}=require('./server');
   for(const path of ['/','/classic_live.html','/classic_live.js','/classic_live.css']){
    const r=await req(path);assert.equal(r.status,200,path);assert.ok(r.body.length>300,path);
   }
-  let r=await req('/api/classic/decks');assert.equal(r.status,200);assert.equal(r.body.decks.length,33);
+  let r=await req('/api/classic/decks');assert.equal(r.status,200);assert.equal(r.body.decks.length,require('./classic_local_service').deckOptions().length);
   r=await req('/api/classic/create',{method:'POST',body:{deck:'blackout',opponent:'brushfire',seed:1}});
   assert.equal(r.status,200,JSON.stringify(r.body));const token=r.body.token;
   assert.equal(r.body.view.players[1].hand,undefined);
@@ -40,6 +40,6 @@ const {server}=require('./server');
   r=await req('/api/classic/action',{method:'POST',token,body:{revision:before,command:{type:'end_turn'}}});
   assert.equal(r.status,200,JSON.stringify(r.body));assert.ok(r.body.revision>before);assert.equal(r.body.view.turn,0,'CPU turn resolved automatically');
   assert.deepEqual(r.body.counts,[60,60]);
-  console.log('PASS HTTP authoritative Classic: real page, 33 deck presets, secret token, setup, CPU turn, stale and invalid command rejection, origin protection, card conservation');
+  console.log(`PASS HTTP authoritative Classic: real page, ${require('./classic_local_service').deckOptions().length} deck presets, secret token, setup, CPU turn, stale and invalid command rejection, origin protection, card conservation`);
  }finally{server.close();}
 })().catch(e=>{console.error(e);process.exitCode=1;server.close();});

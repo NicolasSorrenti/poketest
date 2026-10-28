@@ -1,239 +1,137 @@
 'use strict';
-// Game-economy RPG-only NPC recipes. Classic/online/cube decks remain unchanged.
-// Every upgrade keeps the character's original themed deck as the starting point.
+// Authored, historical-card RPG NPC recipes. These seven campaign tiers are
+// built from private recipes; retail theme decks are never used as templates.
+// Recipe entries list card IDs, so building a deck is deterministic and does
+// not depend on catalog iteration order or mutate shared deck arrays.
 const PROFILES=Object.freeze({
- hana:{signature:'base2-5',ace:'base2-5',trainers:['base1-77','base1-71','base1-88','base1-74']}, // Kangaskhan / setup
- reina:{signature:'base1-7',ace:'base1-7',trainers:['base1-84','base1-71','base1-93','base1-74']}, // Hitmonchan / tempo
- shiori:{signature:'base1-17',ace:'base1-17',trainers:['base1-88','base1-77','base1-71','base1-74']}, // Beedrill / evolution
- yuna:{signature:'base1-10',ace:'base1-10',trainers:['base1-84','base1-74','base1-71','base1-88']}, // Mewtwo / surprises
- akari:{trainers:['base1-79','base1-71','base1-74','base1-92']}, // disruption
- camila:{signature:'base5-25',ace:'base5-25',trimDoubleColorless:true,minBasicEnergy:14,trainers:['base1-71','base1-88','base1-77','base1-76']}, // Dark Vileplume control / Gyarados
- marina:{signature:'base2-12',ace:'base2-12',trainers:['base1-77','base1-71','base1-88','base1-74']}, // Vaporeon
- kaede:{signature:'base5-31',ace:'base5-31',supports:['base5-41','base5-25'],trimDoubleColorless:true,minBasicEnergy:14,trainers:['base1-79','base1-75','base1-71','base1-74']}, // Dark Weezing / Muk / Gyarados
- jun:{signature:'base3-21',ace:'base3-21',trainers:['base1-71','base1-79','base1-88','base1-74']},
- teo:{signature:'neo1-7',ace:'neo1-7',trainers:['base1-84','base1-88','base1-71','base1-74']},
- iris:{signature:'neo1-8',ace:'neo1-8',trainers:['base1-77','base1-71','base1-88','base1-74']},
- elio:{signature:'base3-13',ace:'base3-13',trainers:['base1-91','base1-71','base1-88','base1-77']},
- alma:{signature:'base3-10',ace:'base3-10',trainers:['base1-79','base1-71','base1-88','base1-74']},
- nereo:{signature:'neo1-8',ace:'neo1-8',trainers:['base1-77','base1-88','base1-71','base1-74']},
- rina:{signature:'base1-17',trainers:['base1-84','base1-91','base1-71','base1-74']},
- sol:{signature:'base1-12',trainers:['base1-77','base1-91','base1-71','base1-88']},
- jinx:{signature:'base1-10',trainers:['base1-79','base1-84','base1-71','base1-74']},
- luna:{signature:'base2-12',trainers:['base1-77','base1-88','base1-71','base1-74']},
- elena:{signature:'base2-5',trainers:['base1-77','base1-91','base1-71','base1-74']},
-sierra:{signature:'base1-7',trainers:['base1-84','base1-93','base1-71','base1-74']},
- barb:{signature:'base2-5',trainers:['base1-77','base1-71','base1-88','base1-74']},
- laca:{signature:'base2-12',trainers:['base1-77','base1-71','base1-88','base1-74']},
- daisy:{signature:'base2-61',trainers:['base1-77','base1-88','base1-71','base1-74']}
-});
-const DEFAULT=Object.freeze({trainers:['base1-91','base1-88','base1-71','base1-74']});
-// Strategy metadata used by the dynamic 60-card campaign recipes.
-// Each character keeps a distinct plan while later tiers add consistency.
-const STRATEGIES=Object.freeze({
- hana:'teamwork setup and efficient Wigglytuff pressure', reina:'fast Fighting haymaker pressure', shiori:'Grass evolution control and damage management',
- yuna:'high-variance Lightning/Psychic tempo', akari:'denial, hand disruption and slow advantage', camila:'Dark control with status and lock pieces',
- marina:'Water setup into a heavy evolution finisher', kaede:'Dark disruption with poison and efficient attackers', jun:'Fossil control and resource denial',
- teo:'fast Fire tempo and prize racing', iris:'adaptive Water/Fire midrange', elio:'careful Fossil basics and defensive setup', alma:'slow lock control with resource exhaustion',
- nereo:'patient Water control and recovery', barb:'creative Psychic/Lightning tempo', laca:'aggressive Water evolution tempo', daisy:'Water reversal and late-game burst',
- rina:'Grass beatdown with reliable evolution setup', sol:'Fire/Water surprise tempo', jinx:'pure Lightning aggression', luna:'gentle Water tempo control',
- elena:'calculated Jungle control', sierra:'Fighting disruption and denial'
+ hana:{pokemon:['base2-54','base2-54','base2-54','base2-54','base2-16','base2-16','base2-5','base2-5','base2-5','base1-5','base1-5','base1-3','base1-3','base1-57','base1-57','base1-57','base1-22','base1-22'],energy:[['base1-101',10],['base1-96',4],['base5-17',4]],signatureTrainers:['base1-86','base1-94'],bench:['base1-3','base1-57','base1-22'],midline:'base2-16',ace:'base2-16',finisher:'base2-1',disruption:['base1-89','base1-95'],tier6Support:'base1-89',strategy:'Colorless teamwork, sturdy setup, and Wigglytuff pressure'},
+ reina:{pokemon:['base1-7','base1-7','base1-7','base1-7','base3-7','base3-7','base2-55','base2-55','base2-55','base2-55','base2-43','base2-43','base2-43','neo2-3','neo2-3','neo2-3','neo1-43','neo1-43'],energy:[['base1-97',18]],signatureTrainers:['base1-84','base1-92'],bench:['neo1-43','neo1-43','base2-55'],midline:'base2-43',ace:'neo2-3',finisher:'base3-7',disruption:['base1-79','base1-79'],tier6Support:'base1-74',strategy:'Fast Fighting pressure, efficient attackers, and energy denial'},
+ shiori:{pokemon:['base1-69','base1-69','base1-69','base1-69','base1-33','base1-33','base1-33','base1-17','base1-17','base2-10','base2-10','base2-10','base2-59','base2-59','base2-59','base2-41','base2-41','base2-41'],energy:[['base1-99',18]],signatureTrainers:['base1-76','base1-85'],bench:['base2-59','base2-41','base2-41'],midline:'base1-17',ace:'base1-17',finisher:'base2-10',disruption:['base1-89','base1-94'],tier6Support:'base1-77',strategy:'Grass evolution control, spread pressure, and damage management'},
+ yuna:{pokemon:['base5-55','base5-55','base5-55','base5-55','base2-4','base2-4','base2-4','gym2-15','gym2-15','gym2-15','gym2-15','neo1-12','neo1-12','neo1-12','base1-10','base1-10','base1-10','base1-10'],energy:[['base1-100',11],['base1-101',7]],signatureTrainers:['base1-91','base1-84'],bench:['neo1-12','neo1-12','base5-55'],midline:'base2-4',ace:'base1-16',finisher:'gym2-14',disruption:['base1-92','base5-16'],tier6Support:'base1-74',strategy:'High-variance Lightning/Psychic tempo with Jolteon, Pichu, and surprise power'},
+ akari:{pokemon:['neo1-73','neo1-73','neo1-73','neo1-73','base3-43','base3-43','base3-43','base1-49','base1-49','base1-49','base1-49','base3-8','base3-8','base3-8','base1-31','base1-31','base1-31','base1-31'],energy:[['base1-101',18]],signatureTrainers:['base1-75','gym1-118'],bench:['base1-31','base1-31','base1-49'],midline:'base3-43',ace:'base3-8',finisher:'base5-12',disruption:['base1-73','base5-16'],tier6Support:'base1-74',strategy:'Hand disruption, Psychic denial, and slow advantage'},
+ camila:{pokemon:['base5-63','base5-63','base5-63','base5-63','base5-36','base5-36','base5-36','base5-30','base5-30','base5-70','base5-70','base5-70','base5-70','base5-24','base5-24','base5-24','base5-48','base5-48'],energy:[['base1-99',18]],signatureTrainers:['base5-73','base5-78'],bench:['base5-48','base5-70','base5-70'],midline:'base5-36',ace:'base5-30',finisher:'base5-30',disruption:['base5-16','base1-79'],tier6Support:'base5-77',strategy:'Dark Vileplume control with poison pressure and a secondary Golbat line'},
+ marina:{pokemon:['base2-51','base2-51','base2-51','base2-51','base2-12','base2-12','base2-12','base1-41','base1-41','base1-41','base1-41','base1-25','base1-25','base1-25','base1-65','base1-65','base1-64','base1-64'],energy:[['base1-102',18]],signatureTrainers:['base1-81','base1-94'],bench:['base1-41','base1-65','base1-41'],midline:'base2-12',ace:'base1-25',finisher:'base1-64',disruption:['base1-89','neo1-98'],tier6Support:'base1-77',strategy:'Water setup into resilient evolutions and a heavy Vaporeon finish'},
+ kaede:{pokemon:['base5-58','base5-58','base5-58','base5-58','base5-31','base5-31','base5-31','base5-57','base5-57','base5-57','base5-57','base5-41','base5-41','base5-41','base5-69','base5-69','base5-34','base5-34'],energy:[['base1-99',11],['base1-100',7]],signatureTrainers:['base5-16','base5-78'],bench:['base5-69','base5-58','base5-58'],midline:'base5-31',ace:'base5-41',finisher:'base5-34',disruption:['base1-79','base5-16'],tier6Support:'base5-73',strategy:'Dark Weezing and Muk disruption with poison and efficient attackers'},
+ jun:{pokemon:['neo1-77','neo1-77','neo1-77','neo1-77','base3-52','base3-52','base3-52','base3-52','base3-40','base3-40','base3-40','base3-50','base3-50','base3-50','base3-9','base3-9','base3-1','base3-1'],energy:[['base1-102',10],['base1-97',8]],signatureTrainers:['base3-62','base3-62'],bench:['neo1-77','neo1-77','base3-50'],midline:'base3-40',ace:'base3-9',finisher:'base3-1',disruption:['base1-92','base1-79'],tier6Support:'base1-77',strategy:'Fossil control with Aerodactyl tempo and layered ancient evolutions'},
+ teo:{pokemon:['neo1-56','neo1-56','neo1-56','neo1-56','neo1-46','neo1-46','neo1-46','neo1-17','neo1-17','base1-28','base1-28','base1-28','base1-23','base1-23','base1-60','base1-60','base1-36','base1-36'],energy:[['base1-98',18]],signatureTrainers:['gym2-124','base1-84'],bench:['base1-60','base1-60','base1-36'],midline:'neo1-46',ace:'neo1-17',finisher:'base1-23',disruption:['base1-84','base1-92'],tier6Support:'base1-74',strategy:'Fast Fire tempo, early prize racing, and escalating evolution pressure'},
+ iris:{pokemon:['base3-53','base3-53','base3-53','base3-53','base3-35','base3-35','base3-35','gym1-65','gym1-65','gym1-65','gym1-65','gym2-21','gym2-21','gym2-21','gym1-32','gym1-32','gym1-10','gym1-10'],energy:[['base1-102',10],['base1-98',8]],signatureTrainers:['gym1-114','gym2-124'],bench:['gym1-65','gym1-65','gym1-65'],midline:'base3-35',ace:'gym2-21',finisher:'gym1-10',disruption:['base1-92','base1-89'],tier6Support:'base1-77',strategy:'Adaptive Water/Fire midrange with flexible stage-one threats'},
+ elio:{pokemon:['base1-56','base1-56','base1-56','base1-56','neo1-15','neo1-15','neo1-15','base1-53','base1-53','base1-53','base1-53','base1-9','base1-9','base1-9','neo1-13','neo1-13','neo1-13','neo1-13'],energy:[['base1-97',8],['base1-100',10]],signatureTrainers:['base1-80','neo1-86'],bench:['neo1-13','neo1-13','neo1-13'],midline:'base1-9',ace:'neo1-15',finisher:'base1-20',disruption:['base1-80','base1-89'],tier6Support:'base1-74',strategy:'Fossil-like defensive basics, Metal resilience, and patient board setup'},
+ alma:{pokemon:['base1-43','base1-43','base1-43','base1-43','base1-32','base1-32','base1-32','base1-1','base1-1','base2-52','base2-52','base2-52','base2-52','base2-35','base2-35','base2-35','base3-3','base3-3'],energy:[['base1-101',15],['base1-99',3]],signatureTrainers:['base1-85','base1-94'],bench:['base3-3','base3-3','base2-52'],midline:'base1-32',ace:'base1-1',finisher:'base2-35',disruption:['base1-79','base1-90'],tier6Support:'base1-74',strategy:'Alakazam damage control, resource exhaustion, and slow lock pressure'},
+ nereo:{pokemon:['neo1-62','neo1-62','neo1-62','neo1-62','neo1-48','neo1-48','neo1-48','neo1-8','neo1-8','neo1-82','neo1-82','neo1-82','base3-54','base3-54','neo1-64','neo1-64','neo1-64','neo1-64'],energy:[['base1-102',18]],signatureTrainers:['neo1-103','base1-81'],bench:['neo1-64','neo1-64','neo1-64'],midline:'neo1-48',ace:'neo1-8',finisher:'base3-32',disruption:['neo1-98','base1-89'],tier6Support:'base1-77',strategy:'Patient Water control, recovery, and layered Kingdra pressure'},
+ barb:{pokemon:['neo1-67','neo1-67','neo1-67','neo1-67','neo1-52','neo1-52','neo1-52','neo1-55','neo1-55','neo1-55','neo1-55','neo1-38','neo1-38','neo1-38','neo1-58','neo1-58','neo1-72','neo1-72'],energy:[['base1-101',9],['base1-100',9]],signatureTrainers:['neo1-91','neo1-88'],bench:['neo1-72','neo1-72','neo1-58'],midline:'neo1-52',ace:'neo1-38',finisher:'base1-20',disruption:['neo1-98','base1-92'],tier6Support:'base1-74',strategy:'Creative Psychic/Lightning tempo with Xatu tricks and Lanturn pivots'},
+ laca:{pokemon:['neo1-80','neo1-80','neo1-80','neo1-80','neo1-31','neo1-31','neo1-31','neo1-4','neo1-4','neo1-66','neo1-66','neo1-66','neo1-2','neo1-2','neo2-37','neo2-37','neo2-37','neo2-37'],energy:[['base1-102',18]],signatureTrainers:['base1-84','neo1-85'],bench:['neo2-37','neo2-37','neo2-37'],midline:'neo1-31',ace:'neo1-4',finisher:'neo1-2',disruption:['base1-92','base1-79'],tier6Support:'base1-77',strategy:'Aggressive Water evolution tempo with Feraligatr and Marill pressure'},
+ daisy:{pokemon:['base5-47','base5-47','base5-47','base5-47','base1-6','base1-6','base1-6','base3-10','base3-2','base3-2','base3-2','base3-10','base3-10','base3-10','neo3-49','neo3-49','neo3-49','neo3-49'],energy:[['base1-102',18]],signatureTrainers:['base1-78','base1-94'],bench:['neo3-49','neo3-49','neo3-49'],midline:'base1-6',ace:'base3-2',finisher:'base5-25',disruption:['base1-89','neo1-98'],tier6Support:'base1-74',strategy:'Water reversal, comeback tools, and a late Gyarados burst'},
+ rina:{pokemon:['base4-67','base4-67','base4-67','base4-67','base4-44','base4-44','base4-44','base4-18','base4-18','gym1-13','gym1-13','gym1-13','base2-9','base2-9','base2-9','base1-66','base1-66','base1-66'],energy:[['base1-99',18]],signatureTrainers:['base1-84','base1-81'],bench:['base1-66','base1-66','gym1-13'],midline:'base4-44',ace:'base4-18',finisher:'base4-18',disruption:['base1-92','base1-89'],tier6Support:'base1-77',strategy:'Grass beatdown built around Venusaur, sturdy basics, and sustained pressure'},
+ sol:{pokemon:['gym1-1','gym1-1','gym1-1','gym1-63','gym1-63','gym1-63','gym1-63','gym2-33','gym2-33','gym2-33','base3-51','base3-51','base3-51','base3-51','base3-38','base3-38','neo1-23','neo1-23'],energy:[['base1-98',10],['base1-102',8]],signatureTrainers:['gym2-124','base1-95'],bench:['neo1-23','neo1-23','gym1-63'],midline:'gym2-33',ace:'base3-38',finisher:'gym1-1',disruption:['base1-92','base1-79'],tier6Support:'base1-74',strategy:'Fire/Water surprise tempo, switching between fast attackers and pressure'},
+ jinx:{pokemon:['neo1-65','neo1-65','neo1-65','neo1-65','neo1-34','neo1-34','neo1-34','neo1-1','neo1-1','base1-58','base1-58','base1-58','base1-14','base1-14','neo1-22','neo1-22','neo1-22','neo1-22'],energy:[['base1-100',18]],signatureTrainers:['base1-84','base1-93'],bench:['base1-58','base1-58','neo1-22'],midline:'neo1-34',ace:'neo1-1',finisher:'base1-14',disruption:['base1-92','base1-79'],tier6Support:'base1-74',strategy:'Pure Lightning aggression with fast Raichu and Ampharos pressure'},
+ luna:{pokemon:['base1-59','base1-59','base1-59','base1-59','base1-38','base1-38','base1-38','neo2-8','neo2-8','base2-53','base2-53','base2-53','base2-53','base2-46','base2-46','base2-46','base1-27','base1-27'],energy:[['base1-102',18]],signatureTrainers:['base1-94','neo1-87'],bench:['base1-27','base2-53','base2-53'],midline:'base1-38',ace:'neo2-8',finisher:'base2-46',disruption:['base1-92','neo1-98'],tier6Support:'base1-77',strategy:'Gentle Water tempo control with Politoed, Suicune, and patient pivots'},
+ elena:{pokemon:['base2-63','base2-63','base2-63','base2-63','base2-13','base2-13','base2-13','gym1-75','gym1-75','gym1-75','gym1-75','gym1-48','gym1-48','gym1-26','gym1-26','gym1-79','gym1-79','gym1-79'],energy:[['base1-99',18]],signatureTrainers:['gym1-109','gym1-103'],bench:['gym1-79','gym1-75','gym1-75'],midline:'base2-13',ace:'gym1-26',finisher:'gym1-26',disruption:['gym1-110','base1-89'],tier6Support:'base1-74',strategy:'Jungle control through status, Venomoth, and a Victreebel evolution line'},
+ sierra:{pokemon:['base5-59','base5-59','base5-59','base5-59','base5-40','base5-40','base5-40','base5-27','base5-27','base5-52','base5-52','base5-52','base5-52','base5-23','base5-23','base5-23','base1-62','base1-62'],energy:[['base1-97',18]],signatureTrainers:['base1-79','base1-93'],bench:['base1-62','base1-62','base5-52'],midline:'base5-40',ace:'base5-27',finisher:'base5-23',disruption:['base1-79','base5-16'],tier6Support:'base1-74',strategy:'Fighting disruption built around Dark Machamp, Dark Dugtrio, and energy denial'}
 });
 
-const FODDER=Object.freeze(['Potion','Super Potion','Pokédex','Defender','Full Heal','Maintenance','Revive','Pokémon Flute']);
-// Seven campaign tiers: a new deck package every 15 in-game days.
-const tierForDay=day=>Number.isInteger(day)&&day>=91?7:Number.isInteger(day)&&day>=76?6:Number.isInteger(day)&&day>=61?5:Number.isInteger(day)&&day>=46?4:Number.isInteger(day)&&day>=31?3:Number.isInteger(day)&&day>=16?2:1;
-// The calendar remains a floor. Optional, completed character chapters can move
-// that character's own deck ahead, not every opponent or the player's deck.
-const completed=(records,id)=>!!records&&typeof records==='object'&&!Array.isArray(records)
- &&Object.prototype.hasOwnProperty.call(records,id)&&!!records[id];
+const STRATEGIES=Object.freeze(Object.fromEntries(Object.entries(PROFILES).map(([id,p])=>[id,p.strategy])));
+const NAMES=Object.freeze(Object.keys(PROFILES));
+const BASE_TRAINERS=Object.freeze([
+ 'base1-91','base1-91','base1-91','base1-88','base1-88','base1-71',
+ 'base1-77','base1-77','base1-93','base1-93','base1-95',
+ 'base1-92','base1-92','base1-84','base1-84','base1-94','base1-94',
+ 'base1-90','base1-89','base1-81','base1-79','base1-79'
+]);
+const STARTING_RECIPES=Object.freeze(Object.fromEntries(NAMES.map(id=>[id,Object.freeze([
+ ...PROFILES[id].pokemon,...BASE_TRAINERS,...PROFILES[id].signatureTrainers,
+ ...PROFILES[id].energy.flatMap(([energy,n])=>Array(n).fill(energy))
+])])));
+const DAYS=Object.freeze([1,16,31,46,61,76,91]);
+const FODDER=Object.freeze(['Potion','Super Potion','Pokédex','Defender','Full Heal','Maintenance','Revive','Pokémon Flute','Poké Ball']);
+const count=(cards,id)=>cards.filter(card=>card===id).length;
+const cardNameCount=(cards,name,catalog)=>cards.filter(id=>catalog.get(id)?.name===name).length;
+function tierForDay(day){return Number.isInteger(day)&&day>=91?7:Number.isInteger(day)&&day>=76?6:Number.isInteger(day)&&day>=61?5:Number.isInteger(day)&&day>=46?4:Number.isInteger(day)&&day>=31?3:Number.isInteger(day)&&day>=16?2:1;}
+const completed=(records,id)=>!!records&&typeof records==='object'&&!Array.isArray(records)&&Object.prototype.hasOwnProperty.call(records,id)&&!!records[id];
 function tierForOpponent(state,npc){
- const day=state?.day,calendar=tierForDay(day);
- if(typeof npc!=='string'||!/^[a-z][a-z0-9_]*$/.test(npc))return calendar;
- const chapter=number=>['route','guest','bond'].some(kind=>completed(state?.storyDone,npc+'_'+kind+'_'+number));
+ const calendar=tierForDay(state?.day);if(!PROFILES[npc])return calendar;
+ const chapter=n=>['route','guest','bond'].some(kind=>completed(state?.storyDone,npc+'_'+kind+'_'+n));
  const rivalry=npc==='reina'&&state?.arcFlags;
- if(Number.isInteger(day)&&day>=45&&(chapter(3)||(rivalry&&completed(rivalry,'reina_rival_2'))))return Math.max(calendar,3);
- if(Number.isInteger(day)&&day>=18&&(chapter(1)||(rivalry&&completed(rivalry,'reina_rival_1'))))return Math.max(calendar,2);
+ if(Number.isInteger(state?.day)&&state.day>=45&&(chapter(3)||(rivalry&&completed(rivalry,'reina_rival_2'))))return Math.max(calendar,3);
+ if(Number.isInteger(state?.day)&&state.day>=18&&(chapter(1)||(rivalry&&completed(rivalry,'reina_rival_1'))))return Math.max(calendar,2);
  return calendar;
 }
-const count=(cards,id)=>cards.filter(c=>c===id).length;
-const isBasicEnergy=card=>card?.supertype==='Energy'&&/^(Fire|Grass|Water|Lightning|Fighting|Psychic) Energy$/.test(card.name||'');
-const cardNameCount=(cards,name,catalog)=>cards.filter(id=>catalog.get(id)?.name===name).length;
-function eligible(cardId,cards,catalog){
- const card=catalog.get(cardId);
- if(!card||card.supertype!=='Pokémon'||cardNameCount(cards,card.name,catalog)>=4)return false;
- if(!card.evolvesFrom)return true;
- // Prevent adding an evolution when its prerequisite isn't already in the recipe.
- return cards.some(id=>catalog.get(id)?.name===card.evolvesFrom);
-}
-function bestAce(cards,catalog,preferred){
- if(preferred&&cards.includes(preferred)&&eligible(preferred,cards,catalog))return preferred;
- const unique=[...new Set(cards)].filter(id=>eligible(id,cards,catalog));
- unique.sort((a,b)=>{
-  const card=id=>catalog.get(id);
-  const score=id=>((card(id).subtypes||[]).includes('Stage 2')?100:0)+
-   ((card(id).subtypes||[]).includes('Stage 1')?40:0)+(Number(card(id).hp)||0);
-  return score(b)-score(a)||a.localeCompare(b);
+function evolutionPrerequisite(card,catalog,cards){
+ if(!card?.evolvesFrom)return true;
+ const parent=card.evolvesFrom;
+ return cards.some(id=>{
+  const found=catalog.get(id)?.name;
+  return found===parent||found?.endsWith(' '+parent)||parent.endsWith(' '+found)
+   ||(parent.startsWith('Dark ')&&found==='Dark '+parent.slice(5))
+   ||(found?.startsWith('Dark ')&&found.slice(5)===parent);
  });
- return unique[0]||null;
 }
-function cutFor(cards,added,catalog,kind,{trimDoubleColorless=false,minBasicEnergy=12}={}){
- const picks=[];
- // Replace situational Trainers before lowering the deck's attack-ready Energy.
- // This also applies to new signature copies, which previously always cut
- // colored Energy even when the deck still carried several weak Potions.
- if(kind==='trainer'||kind==='ace')for(const name of FODDER){
-  for(let i=0;i<cards.length;i++)if(catalog.get(cards[i])?.name===name)picks.push(i);
+function insertRecipeCard(cards,id,catalog){
+ const card=catalog.get(id);if(!card)throw Error('Unknown historical RPG card '+id);
+ if(card.supertype==='Pokémon'){
+  if(cardNameCount(cards,card.name,catalog)>=4)throw Error('RPG recipe exceeds four-copy limit for '+card.name);
+  if(!evolutionPrerequisite(card,catalog,cards))throw Error('RPG recipe has no evolution prerequisite for '+card.name);
  }
- // Rocket's main attacks require two or three specifically colored Energy.
- // Two Double Colorless cards remain available for retreat/Colorless attacks,
- // but excess copies are a safer cut than Grass/Water in this archetype.
- if(trimDoubleColorless){
-  const excess=cards.filter(id=>id==='base1-96').length-2;
-  if(excess>0){
-   let addedSpecial=0;
-   for(let i=0;i<cards.length&&addedSpecial<excess;i++)
-    if(cards[i]==='base1-96'){picks.push(i);addedSpecial++;}
-  }
- }
- const energyTotal=cards.filter(id=>isBasicEnergy(catalog.get(id))).length;
- // Retain at least twelve Basic Energy (additional Double Colorless cards are untouched).
- if(energyTotal>minBasicEnergy){
-  const colors=[...new Set(cards.filter(id=>isBasicEnergy(catalog.get(id))))];
-  colors.sort((a,b)=>count(cards,b)-count(cards,a)||a.localeCompare(b));
-  for(const id of colors)for(let i=0;i<cards.length;i++)if(cards[i]===id)picks.push(i);
- }
- return picks.find(i=>cards[i]!==added)??-1;
+ cards.push(id);
 }
-// Rebuild Camila's later-season Rocket lab into the Dark Vileplume control
-// archetype promised by her character profile. Every exchange is one-for-one;
-// only the campaign NPC copy changes, not the shared lab or any retail deck.
-const CAMILA_FOCUS=Object.freeze({
- refined:[['base5-70','base5-63'],['base5-70','base5-63'],['base5-70','base5-36'],
-  ['base5-24','base5-36'],['base5-24','base5-30']],
- expert:[['base5-66','base5-63'],['base5-66','base5-36'],
-  ['base5-51','base5-30'],['base5-51','base5-58']]
-});
-function focusCamila(cards,tier,catalog){
- const changes=[...CAMILA_FOCUS.refined,...(tier===3?CAMILA_FOCUS.expert:[])];
- const needed={};
- for(const [from] of changes)needed[from]=(needed[from]||0)+1;
- if(!Object.entries(needed).every(([id,n])=>count(cards,id)>=n))return cards;
- for(const [from,to] of changes){
-  if(!catalog.has(to))throw Error('Missing historical Dark Vileplume recipe card '+to);
-  cards[cards.indexOf(from)]=to;
- }
+function removeExact(cards,id){const i=cards.indexOf(id);if(i<0)throw Error('RPG recipe upgrade cannot replace missing '+id);cards.splice(i,1);}
+function replaceMany(cards,from,to,n,catalog){for(let i=0;i<n;i++){removeExact(cards,from);insertRecipeCard(cards,to,catalog);}}
+function addPokemonUpgrade(cards,id,benchId,catalog){
+ const card=catalog.get(id);if(!card)throw Error('Unknown historical RPG finisher '+id);
+ if(!evolutionPrerequisite(card,catalog,cards))throw Error('RPG upgrade strands '+card.name);
+ if(cardNameCount(cards,card.name,catalog)>=4)throw Error('RPG upgrade exceeds four-copy limit for '+card.name);
+ removeExact(cards,benchId);cards.push(id);
+}
+function buildAuthoredRecipe(npc,tier,catalog){
+ if(!Number.isInteger(tier)||tier<1||tier>7)throw Error('Invalid NPC deck tier');
+ const profile=PROFILES[npc];if(!profile)return null;
+ if(!(catalog instanceof Map))throw Error('NPC progression requires the authoritative card catalogue');
+ const cards=[...STARTING_RECIPES[npc]];
+ // Day 16: replace weak healing with reliable deck access.
+ if(tier>=2)replaceMany(cards,'base1-94','base1-71',2,catalog);
+ // Day 31: improve the chosen evolution plan and support Stage 2 lines.
+ if(tier>=3){replaceMany(cards,'base1-77','base1-76',2,catalog);addPokemonUpgrade(cards,profile.midline,profile.bench[0],catalog);}
+ // Day 46: add dependable energy access for the deck's colors.
+ if(tier>=4){replaceMany(cards,'base1-90','base3-59',1,catalog);replaceMany(cards,'base1-84','base3-59',1,catalog);}
+ // Day 61: add character-specific disruption or recovery.
+ if(tier>=5){removeExact(cards,'base1-89');removeExact(cards,'base1-84');for(const id of profile.disruption)insertRecipeCard(cards,id,catalog);}
+ // Day 76: strengthen the main line and turn energy search into premium access.
+ if(tier>=6){replaceMany(cards,'base3-59','base1-71',1,catalog);replaceMany(cards,'base3-59',profile.tier6Support,1,catalog);addPokemonUpgrade(cards,profile.ace,profile.bench[1],catalog);}
+ // Day 91: add the character's signature finisher.
+ if(tier>=7)addPokemonUpgrade(cards,profile.finisher,profile.bench[2],catalog);
+ if(cards.length!==60)throw Error(npc+' tier '+tier+' recipe has '+cards.length+' cards');
  return cards;
 }
-function shapeSignature(out,profile,catalog){
- const id=profile.signature;
- if(!id||!catalog.has(id)||!out.includes(id))return out;
- const card=catalog.get(id);
- let copies=out.filter(x=>x===id).length;
- // Give shared retail recipes a clear character lead by consolidating
- // existing Pokémon from that same recipe around the signature line.
- while(copies<4){
-  const at=out.findIndex(x=>x!==id&&catalog.get(x)?.supertype==='Pokémon'&&catalog.get(x)?.types?.some(t=>card.types?.includes(t)));
-  if(at<0)break;
-  out[at]=id;copies++;
- }
- return out;
-}
 function baselineUpgrade({npc,tier,original,catalog}){
+ const authored=buildAuthoredRecipe(npc,tier,catalog);if(authored)return authored;
  if(!Array.isArray(original)||original.length!==60)throw Error('NPC progression requires a valid 60-card theme deck');
- if(!Number.isInteger(tier)||tier<1||tier>7)throw Error('Invalid NPC deck tier');
- if(!(catalog instanceof Map))throw Error('NPC progression requires the authoritative card catalogue');
- const out=[...original];
- const profile=PROFILES[npc]||DEFAULT;
- shapeSignature(out,profile,catalog);
- function insert(id,kind){
-  const card=catalog.get(id);if(!card)return false;
-  if(!isBasicEnergy(card)&&cardNameCount(out,card.name,catalog)>=4)return false;
-  if(kind==='ace'&&!eligible(id,out,catalog))return false;
-  const i=cutFor(out,id,catalog,kind,profile);
-  if(i<0)return false;
-  out[i]=id;return true;
- }
- // Act II: improve the signature threat and add two ways to find or support it.
- let ace=bestAce(out,catalog,profile.ace);
- if(ace)insert(ace,'ace');
- for(const id of profile.trainers.slice(0,2))insert(id,'trainer');
- // Reinforce actual evolution lines rather than only adding powerful Trainers.
- // Rocket lab's three core lines already contain compatible Basics.
- for(const id of profile.supports||[])insert(id,'ace');
- if(tier>=3){
-  // Tier 3: a second signature copy plus stronger search/disruption.
-  ace=bestAce(out,catalog,profile.ace);
-  if(ace)insert(ace,'ace');
-  for(const id of profile.trainers.slice(2,4))insert(id,'trainer');
- }
- // Tiers 4-7 keep improving the same archetype every 15 days. Replacing
- // weak situational Trainers makes later matches more consistent without
- // changing the character's Pokémon identity or energy requirements.
- if(tier>=4)for(const id of profile.trainers)insert(id,'trainer');
- if(tier>=5){ ace=bestAce(out,catalog,profile.ace); if(ace)insert(ace,'ace'); }
- if(tier>=6)for(const id of [...profile.trainers].reverse())insert(id,'trainer');
- if(tier>=7){ ace=bestAce(out,catalog,profile.ace); if(ace)insert(ace,'ace'); }
- if(npc==='camila')focusCamila(out,tier,catalog);
- // A pair of Double Colorless Energy remains useful for retreat/neutral
- // attacks; any additional copies are less useful than the colored Grass/
- // Water Energy that powers this specific Rocket archetype's attacks.
- if(profile.trimDoubleColorless&&count(original,'base1-99')>0&&count(original,'base1-102')>0){
-  let extra=Math.max(0,count(out,'base1-96')-2);
-  for(let i=0;i<extra;i++){
-   const at=out.indexOf('base1-96');
-   if(at<0)break;
-   out[at]=i%2===0?'base1-99':'base1-102';
-  }
- }
- return out;
+ return [...original];
 }
-// Keep original tier recipes as a reproducible control group. The live RPG
-// applies only per-character changes evaluated in mirrored CPU duels.
-const BALANCED_SWAPS=Object.freeze({
- reina:[['base1-7','base1-56'],['base1-92','base1-95'],['base1-92','base1-94'],
-  ['base1-79','base1-80']],
- yuna:[['base1-58','base1-20'],['base1-58','base1-20']],
- camila:[['base5-25','base5-41'],['base5-25','base5-31'],
-  ['base1-102','base1-99'],['base1-102','base1-99']]
-});
-function applyBalancedSwaps(out,swaps,catalog){
- for(const [from,to] of swaps){
-  const position=out.indexOf(from),next=catalog.get(to);
-  if(position<0||!next)throw Error('Invalid tuned NPC recipe '+from+' / '+to);
-  if(next.supertype!=='Energy'&&cardNameCount(out,next.name,catalog)>=4)
-   throw Error('Tuned NPC deck exceeds printed copy limit for '+next.name);
-  out[position]=to;
- }
- return out;
-}
-function variantForDuel(id){
- let h=2166136261;for(const ch of String(id||''))h=Math.imul(h^ch.charCodeAt(0),16777619)>>>0;
- return h%3;
-}
+function recipeFor(args){return baselineUpgrade(args);}
+function upgrade(args){return baselineUpgrade(args);}
+function variantForDuel(id){let h=2166136261;for(const ch of String(id||''))h=Math.imul(h^ch.charCodeAt(0),16777619)>>>0;return h%3;}
 function varyDeck(cards,npc,variant,catalog){
  if(!Number.isInteger(variant)||variant<0||variant>2)throw Error('Invalid NPC deck variant');
  const out=[...cards];if(!variant)return out;
- const profile=PROFILES[npc]||DEFAULT;
- const candidates=variant===1?[...profile.trainers].reverse():[...profile.trainers];
- const extras=variant===1?['base1-91','base1-88','base1-74']:['base1-77','base1-79','base1-71'];
- let changes=0;
+ const profile=PROFILES[npc]||PROFILES.hana,candidates=variant===1?[...profile.signatureTrainers].reverse():[...profile.signatureTrainers];
+ const fallback=['base1-91','base1-88','base1-93','base1-92'];let changes=0;
  for(let i=0;i<out.length&&changes<(variant===1?4:6);i++){
-  const current=catalog.get(out[i]);
-  if(current?.supertype!=='Trainer'||!FODDER.includes(current.name))continue;
-  const replacement=[...candidates,...extras].find(id=>id!==out[i]&&catalog.get(id)?.supertype==='Trainer'&&cardNameCount(out,catalog.get(id).name,catalog)<4);
+  const current=catalog.get(out[i]);if(current?.supertype!=='Trainer'||!FODDER.includes(current.name))continue;
+  const replacement=[...candidates,...fallback].find(id=>id!==out[i]&&catalog.get(id)?.supertype==='Trainer'&&cardNameCount(out,catalog.get(id).name,catalog)<4);
   if(replacement){out[i]=replacement;changes++;}
  }
  return out;
 }
-function recipeFor({npc,tier,original,catalog}){
- if(!Number.isInteger(tier)||tier<1||tier>7)throw Error('Invalid NPC deck tier');
- return upgrade({npc,tier,original,catalog});
+function validateRecipe(cards,catalog){
+ if(!Array.isArray(cards)||cards.length!==60)return {valid:false,errors:['Deck must contain exactly 60 cards']};
+ const errors=[];
+ for(const id of cards)if(!catalog.has(id))errors.push('Unknown card '+id);
+ const copies={};for(const id of cards){const c=catalog.get(id);if(c&&c.supertype!=='Energy'){copies[c.name]=(copies[c.name]||0)+1;if(copies[c.name]>4)errors.push('More than four copies of '+c.name);}}
+ const pokemon=cards.map(id=>catalog.get(id)).filter(c=>c?.supertype==='Pokémon');
+ const basics=pokemon.filter(c=>(c.subtypes||[]).some(x=>x==='Basic'||x==='Baby'));
+ if(!basics.length)errors.push('Deck must contain a Basic Pokémon');
+ for(const c of pokemon)if(c.evolvesFrom&&!pokemon.some(p=>p.name===c.evolvesFrom)&&!cards.some(id=>catalog.get(id)?.name===c.evolvesFrom))errors.push('No prerequisite for '+c.name);
+ return {valid:errors.length===0,errors};
 }
-function upgrade(args){
- const out=baselineUpgrade(args);
- if(args.tier===1||!BALANCED_SWAPS[args.npc])return out;
- return applyBalancedSwaps(out,BALANCED_SWAPS[args.npc],args.catalog);
-}
-const api=Object.freeze({PROFILES,STRATEGIES,recipeFor,tierForDay,tierForOpponent,variantForDuel,varyDeck,upgrade,baselineUpgrade,eligible,count});
+const api=Object.freeze({PROFILES,STRATEGIES,NAMES,STARTING_RECIPES,DAYS,recipeFor,tierForDay,tierForOpponent,variantForDuel,varyDeck,upgrade,baselineUpgrade,buildAuthoredRecipe,validateRecipe,count});
 if(typeof module==='object'&&module.exports)module.exports=api;
 if(typeof window!=='undefined')window.NeoRpgNpcDeckProgression=api;

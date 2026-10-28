@@ -10,7 +10,7 @@ const LAB=require('./classic_live_decks').LAB;
 let checks=0,starts=0,actions=0;
 assert.equal(RETAIL.entries.length,16);
 assert.equal(RETAIL.entries.filter(e=>e.gym).length,8);
-assert.equal(deckOptions().length,33);
+assert.equal(deckOptions().length,50);
 assert.equal(RETAIL.gymIds.length,107);
 assert.equal(new Set(RETAIL.gymIds).size,RETAIL.gymIds.length);
 for(const row of RETAIL.entries){
