@@ -68,6 +68,8 @@ assert.match(game,/const selected=button\.dataset\.tab===rpgLocalTab/,'selected 
 assert.match(html,/src="\/rpg_character_bootstrap\.js(?:\?v=[^"]+)?"/,'RPG loads scripts through the authorized bootstrap');
 const bootstrap=fs.readFileSync('rpg_character_bootstrap.js','utf8');
 assert.ok(bootstrap.includes('"/rpg_render_perf.js"'),'render performance helper is in the bootstrap dependency list');
-assert.ok(bootstrap.indexOf('"/rpg_render_perf.js"')<bootstrap.indexOf('"/rpg.js"'),'render helper is loaded before RPG entrypoint');
+const entrypoint=/"\/rpg\.js(?:\?[^"]*)?"/.exec(bootstrap);
+assert.ok(entrypoint,'RPG entrypoint must appear in the bootstrap script list');
+assert.ok(bootstrap.indexOf('"/rpg_render_perf.js"')<entrypoint.index,'render helper is loaded before RPG entrypoint');
 
 console.log('RPG keyed rendering: focus, scroll, live callbacks, reorder, remove, duplicate keys and runtime integration passed.');

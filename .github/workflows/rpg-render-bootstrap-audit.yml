@@ -1,0 +1,31 @@
+name: RPG Render Bootstrap Audit
+
+on:
+  pull_request:
+    paths:
+      - 'test_rpg_render_perf.js'
+      - 'rpg_character_bootstrap.js'
+      - 'rpg_render_perf.js'
+      - 'rpg.js'
+      - 'rpg.html'
+      - '.github/workflows/rpg-render-bootstrap-audit.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'test_rpg_render_perf.js'
+      - 'rpg_character_bootstrap.js'
+      - 'rpg_render_perf.js'
+      - 'rpg.js'
+      - 'rpg.html'
+      - '.github/workflows/rpg-render-bootstrap-audit.yml'
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: node test_rpg_render_perf.js
