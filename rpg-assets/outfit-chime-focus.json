@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "durationMs": 3000,
+  "durationMs": 1500,
   "characters": {
     "akari": {
       "portraitPattern": "/rpg-assets/characters/akari/portraits/special-day-{n}.png",
@@ -120,25 +120,25 @@
     "hana": {
       "variants": {
         "01_original_white_lace_denim.png": {
-          "top": 0.28,
-          "bottom": 0.53,
+          "top": 0.31,
+          "bottom": 0.52,
           "left": 0.14,
           "right": 0.86,
-          "notes": "Top-focused crop around the outfit bodice and upper abdomen"
+          "notes": "Close crop centered on the bodice and upper chest, matching the marked area"
         },
         "02_gray_blouse_denim.png": {
-          "top": 0.28,
-          "bottom": 0.53,
+          "top": 0.31,
+          "bottom": 0.52,
           "left": 0.14,
           "right": 0.86,
-          "notes": "Top-focused crop around the outfit bodice and upper abdomen"
+          "notes": "Close crop centered on the bodice and upper chest, matching the marked area"
         },
         "03_gray_ruched_top_denim.png": {
-          "top": 0.28,
-          "bottom": 0.53,
+          "top": 0.31,
+          "bottom": 0.52,
           "left": 0.14,
           "right": 0.86,
-          "notes": "Top-focused crop around the outfit bodice and upper abdomen"
+          "notes": "Close crop centered on the bodice and upper chest, matching the marked area"
         },
         "04_white_top_mini_skirt.png": {
           "top": 0.49,
@@ -155,25 +155,25 @@
           "notes": "Crop from the belly to about 20 source pixels below the crotch area"
         },
         "06_pink_lace_white_top_denim.png": {
-          "top": 0.28,
-          "bottom": 0.53,
+          "top": 0.31,
+          "bottom": 0.52,
           "left": 0.14,
           "right": 0.86,
-          "notes": "Top-focused crop around the outfit bodice and upper abdomen"
+          "notes": "Close crop centered on the bodice and upper chest, matching the marked area"
         },
         "07_gray_lace_white_top_denim.png": {
-          "top": 0.28,
-          "bottom": 0.53,
+          "top": 0.31,
+          "bottom": 0.52,
           "left": 0.14,
           "right": 0.86,
-          "notes": "Top-focused crop around the outfit bodice and upper abdomen"
+          "notes": "Close crop centered on the bodice and upper chest, matching the marked area"
         },
         "08_ribbon_top_denim.png": {
-          "top": 0.28,
-          "bottom": 0.53,
+          "top": 0.31,
+          "bottom": 0.52,
           "left": 0.14,
           "right": 0.86,
-          "notes": "Top-focused crop around the outfit bodice and upper abdomen"
+          "notes": "Close crop centered on the bodice and upper chest, matching the marked area"
         }
       }
     }
