@@ -21,6 +21,16 @@ test('Apex retains a guaranteed winning knockout instead of forcing attachment',
  const actions=AI.energyPreparationActions(o,cfg,[attack,attach]);
  assert.deepEqual(actions,[attack,attach]);
 });
+test('Apex prepares Energy before a Confused final-prize attack',()=>{
+ // Jab would win on printed damage, but Confusion requires an independent
+ // heads flip before the attack resolves. The KO is not guaranteed.
+ const o=board();o.self.prizeCount=1;o.opponent.bench=[];o.opponent.active.damage=10;
+ o.self.active.status='Confused';
+ assert.deepEqual(AI.energyPreparationActions(o,cfg,[attack,attach]),[attach]);
+ // The ordinary, non-Confused guaranteed KO still takes priority.
+ o.self.active.status=null;
+ assert.deepEqual(AI.energyPreparationActions(o,cfg,[attack,attach]),[attack,attach]);
+});
 test('Apex does not force attachment when Energy was already used',()=>{
  const o=board();o.self.energyUsed=true;
  assert.deepEqual(AI.energyPreparationActions(o,cfg,[attack,attach]),[attack,attach]);
