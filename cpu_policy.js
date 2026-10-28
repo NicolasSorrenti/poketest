@@ -642,7 +642,11 @@ function prizeRaceBonus(action,o,cfg){
  if(action.type==='attack'){
   const moves=own.active.effectiveAttacks||card(own.active.id)?.attacks||[];
   const attack=moves[action.payload.attackIndex];if(!attack)return 0;
-  const ko=knockoutChance(attack,own.active,enemy.active);
+  // Confusion requires a separate heads flip before any attack resolves.
+  // Discount Prize-race urgency just as knockout tempo does; otherwise Apex
+  // still treats a speculative final Prize as guaranteed in this scorer.
+  const confusionChance=own.active.status==='Confused'?.5:1;
+  const ko=knockoutChance(attack,own.active,enemy.active)*confusionChance;
   // An actual knockout that takes our final Prize or eliminates their last
   // Pokémon must dominate speculative development, retreat or Trainer play.
   const victory=urgent?550*ko:0;
