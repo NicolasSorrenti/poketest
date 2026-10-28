@@ -675,6 +675,10 @@ function safeAct(action){
 function act(action){
  const [type,id,part]=action.split(':');
  if(mandatoryAction(type,id))return;
+ if(conversationInProgress()){
+  const currentChoice=(scene.choices||[]).some(([,candidate])=>candidate===action);
+  if(!currentChoice&&!['chatNext','memoryChoice','close','dismissDialogue'].includes(type))return;
+ }
  // Suppress unrelated actions while a surprise is underway.
  if(state.activeSliceOfLife){
   if(type==='sliceChoice'&&SLICE.choose(state,Number(id))){persist();render();return;}
@@ -1033,7 +1037,11 @@ function showPackReveal(){
 }
 
 const labelCard=id=>cardNames.get(id)||id.replace('base1-','Base #');
-function controlsLocked(){return timeSequence.blocked||state.day>90||!!state.activeSliceOfLife||!!state.mandatoryEventState?.active||!!state.pendingDuel||!!state.activeSituation||!!state.activeStory||!!state.activeSideQuest||!!state.activeArc||!!state.activeEncounter;}
+function conversationInProgress(){
+ if(state.activeSliceOfLife||state.mandatoryEventState?.active||state.pendingDuel||state.activeSituation||state.activeStory||state.activeSideQuest||state.activeArc||state.activeEncounter)return false;
+ return !!(scene?.dialogue?.length||scene?.line||scene?.choices?.length);
+}
+function controlsLocked(){return timeSequence.blocked||state.day>90||conversationInProgress()||!!state.activeSliceOfLife||!!state.mandatoryEventState?.active||!!state.pendingDuel||!!state.activeSituation||!!state.activeStory||!!state.activeSideQuest||!!state.activeArc||!!state.activeEncounter;}
 function showStarterChoice(){
  if(controlsLocked())return;
  const root=$('starterChoices');root.replaceChildren();
@@ -2735,7 +2743,7 @@ function render(){
  $('journal').replaceChildren();const stats=document.createElement('p');stats.className='stats';stats.textContent='🏆 '+state.points+' circuit points   ·   ◈ '+state.credits+' credits';$('journal').append(stats);
  for(const e of eventCards.filter(e=>e.day>=state.day).slice(0,2)){const p=document.createElement('p');p.textContent='DAY '+e.day+' · '+e.title+' ('+periods[e.slot]+')';$('journal').append(p)}
  for(const note of state.journal.slice(0,3)){const p=document.createElement('p');p.textContent='• '+note;$('journal').append(p)}
- $('notice').textContent=state.mandatoryEventState?.active?'Incoming story — finish this moment to continue.':state.activeSituation?'Unexpected encounter in progress — finish the scene to continue.':state.activeSideQuest?'Side quest in progress — finish the scene to continue.':state.activeStory?'Story in progress: complete this scene to continue.':state.activeArc?'A private rivalry chapter is in progress.':state.activeEncounter?'Local encounter in progress — make your decision.':state.pendingDuel?'Your duel is in progress.':'Travel & talk are free · ⏳ actions advance time';
+ $('notice').textContent=conversationInProgress()?'Finish the conversation before traveling or starting another activity.':state.mandatoryEventState?.active?'Incoming story — finish this moment to continue.':state.activeSituation?'Unexpected encounter in progress — finish the scene to continue.':state.activeSideQuest?'Side quest in progress — finish the scene to continue.':state.activeStory?'Story in progress: complete this scene to continue.':state.activeArc?'A private rivalry chapter is in progress.':state.activeEncounter?'Local encounter in progress — make your decision.':state.pendingDuel?'Your duel is in progress.':'Travel & talk are free · ⏳ actions advance time';
  simplifyRpgLabels();
  refreshRpgPanels();
  renderRpgActions(locked,shown);
