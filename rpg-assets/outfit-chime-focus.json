@@ -6,37 +6,37 @@
       "portraitPattern": "/rpg-assets/characters/akari/portraits/special-day-{n}.png",
       "variants": {
         "special-day-1.png": {
-          "top": 0.22,
-          "bottom": 0.78,
-          "notes": "Tight crop around the changed blouse, cardigan and skirt",
+          "top": 0.3,
+          "bottom": 0.58,
+          "notes": "Top-focused crop around the blouse and cardigan",
           "left": 0.14,
           "right": 0.89
         },
         "special-day-2.png": {
-          "top": 0.22,
-          "bottom": 0.78,
-          "notes": "Tight crop around the changed blouse, cardigan and skirt",
+          "top": 0.3,
+          "bottom": 0.58,
+          "notes": "Top-focused crop around the blouse and cardigan",
           "left": 0.14,
           "right": 0.89
         },
         "special-day-3.png": {
-          "top": 0.22,
-          "bottom": 0.78,
-          "notes": "Tight crop around the changed blouse, cardigan and skirt",
+          "top": 0.3,
+          "bottom": 0.58,
+          "notes": "Top-focused crop around the blouse and cardigan",
           "left": 0.14,
           "right": 0.89
         },
         "special-day-4.png": {
-          "top": 0.22,
-          "bottom": 0.78,
-          "notes": "Tight crop around the changed blouse, cardigan and skirt",
+          "top": 0.3,
+          "bottom": 0.58,
+          "notes": "Top-focused crop around the blouse and cardigan",
           "left": 0.14,
           "right": 0.89
         },
         "special-day-5.png": {
-          "top": 0.22,
-          "bottom": 0.78,
-          "notes": "Tight crop around the changed blouse, cardigan and skirt",
+          "top": 0.3,
+          "bottom": 0.84,
+          "notes": "Crop from the blouse through the bottom of the skirt",
           "left": 0.14,
           "right": 0.89
         }
