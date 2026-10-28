@@ -1,6 +1,6 @@
 // Blocking, data-driven overworld close-ups. Never creates replacement artwork.
 const NeoOutfitChime=(()=>{
- const focusUrl='/rpg-assets/outfit-chime-focus.json?v=20261028-outfit-framing-9';
+ const focusUrl='/rpg-assets/outfit-chime-focus.json?v=20261028-outfit-framing-10';
  let focusPromise=null,visible=null,timer=null;
  const load=()=>focusPromise||(focusPromise=fetch(focusUrl,{cache:'force-cache'}).then(r=>r.ok?r.json():null).catch(()=>null));
  function addMotion(){
@@ -99,7 +99,7 @@ const NeoOutfitChime=(()=>{
    const name=portrait.split('/').pop().split('?')[0];
    const focus=data?.characters?.[id]?.variants?.[name];
    // Focus metadata controls framing only. A valid special outfit always gets a reveal.
-   const barbBodiceFocus=id==='barb'&&isSpecialPortrait(portrait)?{top:.30,bottom:.63,left:.24,right:.78}:null;
+   const barbBodiceFocus=id==='barb'&&isSpecialPortrait(portrait)?{top:.29,bottom:.43,left:.24,right:.78}:null;
    if(focus||barbBodiceFocus||isSpecialPortrait(portrait))outfit.push({id,portrait,focus:focus||barbBodiceFocus||{top:.06,bottom:.53}});
   }
   const outfitIds=new Set(outfit.map(item=>item.id));
