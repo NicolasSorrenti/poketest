@@ -822,6 +822,8 @@ test('Apex delays an unready rescue evolution when the KO requires a Confusion f
  ready.opponent.active={id:HITMONCHAN,energies:[FIGHT],damage:0,status:null};
  const confused=structuredClone(ready);
  confused.opponent.active.status='Confused';
- assert.equal(AI.prematureEvolutionPenalty(ready,-1,'base1-34',cfg),0);
- assert.ok(AI.prematureEvolutionPenalty(confused,-1,'base1-34',cfg)>0);
+ // Exercise the public action scorer: prematureEvolutionPenalty is internal.
+ assert.ok(AI.score(evolveActive,ready,cfg,{})>
+  AI.score(evolveActive,confused,cfg,{})+200,
+  'a guaranteed rescue should beat a speculative Confusion-flip rescue');
 });
