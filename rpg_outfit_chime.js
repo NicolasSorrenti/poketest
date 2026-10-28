@@ -4,6 +4,7 @@ const NeoOutfitChime=(()=>{
  let focusPromise=null,visible=null,timer=null;
  const load=()=>focusPromise||(focusPromise=new Promise(resolve=>{const timeout=setTimeout(()=>resolve(null),1500);fetch(focusUrl,{cache:'force-cache'}).then(r=>r.ok?r.json():null).catch(()=>null).then(data=>{clearTimeout(timeout);resolve(data);});}));
  load();
+ function firstMeetingFocus(id){return id==='hana'?{top:.31,bottom:.53,left:.20,right:.90}:{top:.06,bottom:.53};}
  function addMotion(){
   if(document.getElementById('neoOutfitChimeMotion'))return;
   const style=document.createElement('style');style.id='neoOutfitChimeMotion';
@@ -175,10 +176,10 @@ const NeoOutfitChime=(()=>{
   // was already shown at another location or this is the character's first meeting.
   for(const item of outfit)await display(item.images.length>1?item.images:item.images[0].portrait,item.images[0].focus,durationMs);
   for(const item of firstMeetings){
-   if(item?.portrait&&!outfitIds.has(item.id))await display(item.portrait,{top:.06,bottom:.53},durationMs);
+   if(item?.portrait&&!outfitIds.has(item.id))await display(item.portrait,firstMeetingFocus(item.id),durationMs);
   }
  }
- const api=Object.freeze({onEntry,cancel,renderPreview,displayTogether,firstMeeting:({portrait})=>display(portrait,{top:.06,bottom:.53},1500)});
+ const api=Object.freeze({onEntry,cancel,renderPreview,displayTogether,firstMeeting:({portrait,id})=>display(portrait,firstMeetingFocus(id),1500)});
  if(typeof window!=='undefined')window.NeoOutfitChime=api;
  return api;
 })();
