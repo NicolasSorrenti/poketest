@@ -2388,6 +2388,7 @@ function maybeShowYearEndFallReel(){
  document.addEventListener('keydown',onKey,true);show();close.focus();
 }
 let pendingEntrySurprise=false;
+let pendingOverworldArrival=null;
 let arrivalGate=false;
 async function finishOverworldArrival(destination){
  if(state.location!==destination)return;
@@ -2420,24 +2421,31 @@ async function finishOverworldArrival(destination){
 function render(){
  // Detect actual location changes after the first render; navigation remains free.
  const previousLocation=lastRenderedLocation;
- lastRenderedLocation=state.location;
- if(previousLocation&&previousLocation!==state.location){
+ las if(previousLocation&&previousLocation!==state.location){
   window.NeoRpgAudio?.play?.('travel');
   window.NeoRpgInterface?.onLocationChange?.();
+  const destination=state.location;
+  pendingOverworldArrival=destination;
   // Stop the RPG render/event pipeline until the travel wipe and chimes finish.
   if(!timeSequence.blocked&&!state.mandatoryEventState?.active){
-   const destination=state.location;
    const transition=window.NeoRpgTimeTransitions?.presentTravel?.({
     from:places[previousLocation]?.[0]||previousLocation,
     to:places[destination]?.[0]||destination
-   },{onDismiss:()=>{void finishOverworldArrival(destination);}});
+   },{onDismiss:()=>{
+    if(pendingOverworldArrival===destination)pendingOverworldArrival=null;
+    void finishOverworldArrival(destination);
+   }});
+   if(transition)return;
+  }
+ }
+;
    if(transition)return;
   }
  }
  window.NeoRpgAudio?.setScene?.(state.location,state.slot);
  ensureRpgLayout();
  window.NeoRpgInterface?.init?.();
- if(!arrivalGate)maybeStartMandatory();
+ if(!arrivalGate&&!pendingOverworldArrival)maybeStartMandatory();
  renderJourney();
  renderCollection();
  const ended=state.day>90,locked=timeSequence.blocked||!!state.activeSliceOfLife||!!state.mandatoryEventState?.active||!!state.activeSituation||!!state.activeStory||!!state.activeEncounter||!!state.activeArc||!!state.activeSideQuest||!!state.pendingDuel;
@@ -2761,6 +2769,14 @@ function render(){
  queueMicrotask(maybeShowYearEndFallReel);
  $('deckPicker').disabled=locked||ended||!!state.deckJourney;
  if($('deckPicker')?.options.length)$('deckPicker').value=state.playerDeck;
+ // If another transition or mandatory scene owned the screen, resume the arrival
+ // chime once it settles instead of silently losing this place entry.
+ if(pendingOverworldArrival&&!arrivalGate&&!timeSequence.blocked&&
+    !state.mandatoryEventState?.active&&!window.NeoRpgTimeTransitions?.active){
+  const destination=pendingOverworldArrival;
+  pendingOverworldArrival=null;
+  void finishOverworldArrival(destination);
+ }
 }
 
 $('deckStudioBtn').onclick=()=>{if(!controlsLocked()&&state.deckJourney?.starter){persist();location.assign('/rpg_deck_studio.html');}};
