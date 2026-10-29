@@ -69,3 +69,17 @@ test('missing CG files release the scene and restore normal portraits',()=>{
  assert.equal(active.has('has-story-cg'),false);
  assert.equal(image.hidden,true);
 });
+
+test('authored three-CG sequence changes precisely at each scripted step',()=>{
+ const multi=[{id:'scene_1'},{id:'scene_2'},{id:'scene_3'}];
+ const storyboard={byId:id=>id==='triple'?{
+  id,cgSequence:multi.map(e=>e.id),cgSwitchSteps:[0,2,6]
+ }:null};
+ const state={activeSliceOfLife:{id:'triple',step:0}};
+ for(const [step,expected] of [[0,'scene_1'],[1,'scene_1'],[2,'scene_2'],[5,'scene_2'],[6,'scene_3'],[8,'scene_3']]){
+  state.activeSliceOfLife.step=step;
+  assert.equal(CG_SCENE.select(state,multi,storyboard,{}).entry.id,expected);
+ }
+ state.activeSliceOfLife=null;
+ assert.equal(CG_SCENE.select(state,multi,storyboard,{}),null);
+});
