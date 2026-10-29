@@ -62,7 +62,7 @@
  "/rpg_status.js?v=4",
  "/rpg_cloud_save.js?v=2",
  "/rpg_outfits.js?v=1",
- "/rpg.js?v=20261029-gallery-discovery-viewed-3"
+ "/rpg.js?v=20261029-gallery-discovery-viewed-4"
 ];
   function registry(packs){
     const cast={},looks={},schedules={},arrivals={},events=[],mandatoryEvents=[];
