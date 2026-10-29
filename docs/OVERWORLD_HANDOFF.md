@@ -116,3 +116,9 @@ The shop concept was generated from the canonical `shop-day.webp` panorama and t
 - Overworld-only injected CSS removes old scene backdrop/header, keeps the map visible behind portraits, CGs, dialogue, response choices and selected-character actions. Mobile panel sizing included.
 - Original `/rpg.html` is not modified. `/rpg-overworld.html` cache query bumped for the integration script.
 - Syntax validated; gameplay and layout still need deployment/browser QA, especially story completion, multiple CGs, discreet-mode chibi presentation, pre-duel screens and rewards.
+
+## 2026-10-29 — dialogue, choices and CG lifecycle
+- Dedicated overworld controller observes changes to the native `#line`, `#speaker`, `#choices`, `#characterActions`, and `#rpgSceneCG` DOM nodes to show and hide its VN dock without copying narrative state.
+- Idle placeholder `The town is waiting.` does not keep the conversation panel open after a completed dialogue.
+- After NPC interaction, an activity, travel, and battle return, UI synchronizes to native state. Native modal CG / reward dialogs remain controlled by the RPG engine.
+- GitHub `main` commit `334f41f1`; JS syntax passed. Browser end-to-end verification remains required, especially mandatory dialogues, CG modal sequences, and post-duel rewards.
