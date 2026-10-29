@@ -318,19 +318,22 @@
     sceneArea?.append(scenePeople);
     let lastPortraitSignature='';
     const portraitWindow=window.NeoRpgSceneCast?.createSpeakerWindow?.();
-    function syncPortraits(hasCG){
+    let interactionFocus=null;
+    function syncPortraits(hasCG,idleFocus=null){
       const cast=bridge()?.scenePortraits?.();
-      const participants=cast?.conversation&&!hasCG?
+      const selectedPortrait=idleFocus?bridge()?.portrait?.(idleFocus):null;
+      const participants=selectedPortrait?[selectedPortrait]:cast?.conversation&&!hasCG?
         (portraitWindow?.update(cast.participants||[],cast.focused)||
          (cast.participants||[]).slice(0,2)):[];
+      const focused=selectedPortrait?.id||cast?.focused;
       if(hasCG)portraitWindow?.reset();
-      const signature=JSON.stringify([cast?.focused,participants]);
+      const signature=JSON.stringify([focused,participants]);
       if(signature===lastPortraitSignature)return;
       lastPortraitSignature=signature;
       scenePeople.replaceChildren();
       for(const participant of participants){
         const person=document.createElement('div');
-        person.className='neo-ow-person'+(participant.id===cast.focused?' is-speaking':' is-listening');
+        person.className='neo-ow-person'+(participant.id===focused?' is-speaking':' is-listening');
         const image=document.createElement('img');image.alt=participant.name;
         // A missing portrait must never display a different character's face.
         // The original game's avatar loader already resolves outfit-specific art.
@@ -380,6 +383,75 @@
       #neoOverworldOverlay.neo-ow-activity-open #neoOverworldMenu{display:none!important}
     `;
     document.head.append(storyLayout);
+    const dialogueStyle=document.createElement('style');
+    dialogueStyle.textContent=`
+      /* A stable two-line PC / three-line mobile speech window, independent
+         of the author's sentence length or currently offered choices. */
+      #neoOverworldStoryDock #dialogue{
+        box-sizing:border-box!important;height:150px!important;min-height:150px!important;
+        max-height:150px!important;flex:0 0 150px!important;
+        padding:13px 18px 40px!important;overflow:visible!important;
+      }
+      #neoOverworldStoryDock #dialogue #line{
+        font-size:16px!important;line-height:1.45!important;
+        height:calc(2 * 1.45em)!important;min-height:0!important;
+        max-height:calc(2 * 1.45em)!important;overflow:hidden!important;
+        max-width:none!important;width:100%!important;margin:8px 0 0!important;
+        white-space:pre-line!important;overflow-wrap:anywhere!important;
+      }
+      #neoOverworldStoryDock #neoOverworldPageContinue:not([hidden]){
+        position:absolute;right:14px;bottom:9px;display:block;
+        border:1px solid #b88eb9;border-radius:8px;background:#513451;
+        color:white;padding:6px 13px;font:700 14px system-ui;cursor:pointer;
+        z-index:10;
+      }
+      #neoOverworldOverlay.neo-ow-paging #neoOverworldStoryDock #choices,
+      #neoOverworldOverlay.neo-ow-paging #neoOverworldStoryDock #playerChoicePrompt{display:none!important}
+      #neoOverworldStoryDock #dialogue > #choices:not(:empty){
+        position:absolute!important;bottom:7px!important;left:16px!important;
+        right:80px!important;max-height:34dvh!important;overflow-y:auto!important;
+        margin:0!important;z-index:9!important;
+      }
+      #neoOverworldStoryDock #dialogue > #choices:has(>button:nth-child(2)){
+        left:10px!important;right:10px!important;
+        bottom:calc(100% + 7px)!important;
+        padding:10px!important;border-radius:12px;background:#211b34fa;
+        border:1px solid #b48bb7;
+      }
+      #neoOverworldStoryDock #playerChoicePrompt:not([hidden]){
+        position:absolute!important;inset:auto 0 calc(100% + 7px)!important;
+        z-index:11!important;max-height:42dvh!important;display:block!important;
+      }
+      #neoOverworldStoryDock #playerChoicePanel{max-height:42dvh!important;overflow:auto!important}
+      #neoOverworldOverlay:not(.neo-ow-idle-interaction) #neoOverworldStoryDock #neoOverworldActionTray,
+      #neoOverworldOverlay:not(.neo-ow-idle-interaction) #neoOverworldStoryDock #characterActions{display:none!important}
+      #neoOverworldOverlay.neo-ow-idle-interaction #neoOverworldStoryDock #dialogue,
+      #neoOverworldOverlay.neo-ow-idle-interaction #neoOverworldStoryDock #neoOverworldActionTray{display:none!important}
+      #neoOverworldOverlay.neo-ow-idle-interaction #neoOverworldStoryDock #characterActions:not([hidden]){
+        display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr));
+        gap:8px!important;margin:8px 0 0!important;padding:10px!important;
+        background:#1a1831f0!important;border:1px solid #a77da9!important;border-radius:12px;
+        max-height:35dvh;overflow-y:auto!important;
+      }
+      #neoOverworldOverlay.neo-ow-idle-interaction #neoOverworldStoryDock #characterActions button{
+        min-width:0!important;min-height:43px!important;
+        border-radius:9px!important;white-space:normal!important;
+      }
+      @media(max-width:700px){
+        #neoOverworldStoryDock #dialogue{
+          height:176px!important;min-height:176px!important;max-height:176px!important;
+          flex:0 0 176px!important;padding:12px 12px 38px!important;
+        }
+        #neoOverworldStoryDock #dialogue #line{
+          font-size:15px!important;line-height:1.45!important;
+          height:calc(3 * 1.45em)!important;max-height:calc(3 * 1.45em)!important;
+        }
+        #neoOverworldOverlay.neo-ow-idle-interaction #neoOverworldStoryDock #characterActions:not([hidden]){
+          grid-template-columns:repeat(2,minmax(0,1fr));
+        }
+      }
+    `;
+    document.head.append(dialogueStyle);
     let storyDock=null;
     let lastSceneKey='';
     let suspendedForDuel=false;
@@ -391,11 +463,16 @@
         storyDock.setAttribute('aria-label','RPG conversation and story');
         Object.assign(storyDock.style,{position:'absolute',zIndex:'4',bottom:'12px',left:'max(8px,env(safe-area-inset-left))',right:'max(8px,env(safe-area-inset-right))',maxHeight:'min(72vh,680px)',overflow:'auto',border:'2px solid #b58cc7',borderRadius:'14px',background:'#181329',boxShadow:'0 10px 45px #000c'});
         const back=document.createElement('button');back.type='button';back.textContent='← Back to map';back.style.cssText='position:sticky;top:0;z-index:5;display:block;width:100%;padding:11px;border:0;background:#352548;color:white;font:700 14px system-ui;cursor:pointer';
-        back.onclick=()=>{if(bridge()?.snapshot()?.locked){showNotice('Finish the current conversation or event first.');return;}hideStory();};storyDock.append(back);
+        back.onclick=()=>{
+          if(bridge()?.snapshot()?.locked){showNotice('Finish the current conversation or event first.');return;}
+          interactionFocus=null;bridge()?.clearInteraction?.();hideStory();queueStorySync();
+        };storyDock.append(back);
       }
       overlay.append(storyDock);storyDock.append(stage);
       stage.style.cssText='display:block;position:relative;width:100%;max-width:none;height:auto;min-height:0;overflow:visible;margin:0;padding:8px';
-      storyDock.hidden=false;actionTray.classList.remove('expanded');actionToggle.textContent='✦ Actions';actionToggle.setAttribute('aria-expanded','false');lockMapForStory(true);return true;
+      storyDock.hidden=false;
+      actionTray.classList.remove('expanded');actionToggle.textContent='✦ Actions';
+      actionToggle.setAttribute('aria-expanded','false');lockMapForStory(true);return true;
     }
     function hideStory(){
       if(!stageHome||!stage)return;
@@ -418,19 +495,26 @@
       const cg=document.getElementById('rpgSceneCG');
       const hasCG=!!cg&&!cg.hidden&&!!cg.getAttribute('src')&&
         cg.closest('#scene')?.classList.contains('has-story-cg');
-      // Arrival animations are not conversations. A scheduled event is, even
-      // when its first render occurs before the arrival gate is released.
+      // Never retain a tap-focus across travel, mandatory scenes or disappearance.
+      if(interactionFocus&&(!data.people.includes(interactionFocus)||data.selected!==interactionFocus)){
+        interactionFocus=null;
+      }
       const arrivalOnly=!!data.arriving&&!data.eventActive;
-      const needsStory=!!(data.storyActive&&!arrivalOnly||hasCG&&!arrivalOnly);
+      const idleFocus=!data.storyActive&&!data.arriving&&!hasCG&&
+        interactionFocus===data.selected?interactionFocus:null;
+      const needsStory=!!((data.storyActive&&!arrivalOnly)||(hasCG&&!arrivalOnly)||idleFocus);
       overlay.classList.toggle('neo-ow-arriving',!!data.arriving&&!needsStory);
+      overlay.classList.toggle('neo-ow-idle-interaction',!!idleFocus);
       if(needsStory){
         if(!storyDock||storyDock.hidden)showStory();
         else lockMapForStory(true);
-        syncPortraits(hasCG);
+        syncPortraits(hasCG,idleFocus);
+        syncDialoguePages(idleFocus);
       }else{
         if(storyDock&&!storyDock.hidden)hideStory();
         else if(data.arriving)lockMapForStory(true);
         else lockMapForStory(false);
+        resetDialoguePages();
         if(!data.storyActive)portraitWindow?.reset();
       }
       // The RPG render event is authoritative for both ordinary talks and
@@ -466,6 +550,7 @@
       note.hidden=true;
     }
     function dismiss(){
+      interactionFocus=null;
       closeSheet();hideMenu();hideEvents();hideDeck();suspendedForDuel=false;hideStory();
       // Only an explicit return to the classic interface restores its stage.
       if(stage&&stageHome&&stage.parentNode===storyDock){
@@ -498,9 +583,12 @@
         if(message.id==='activities'||message.id==='events'){hideMenu();if(message.id==='activities')showActivities(bridge()?.activities()||[]);else showEvents();return;}
       }
       if(message.kind==='person'){
-        // Dismiss first: native conversations can open modal prompts immediately.
+        // Capture the explicitly tapped NPC before the native engine renders.
+        interactionFocus=message.id;
         if(!showStory())dismiss();
-        if(!bridge()?.interact(message.id)){hideStory();showNotice('Character interaction is not currently available.');}else queueStorySync();
+        if(!bridge()?.interact(message.id)){
+          interactionFocus=null;hideStory();showNotice('Character interaction is not currently available.');
+        }else queueStorySync();
       }else if(message.kind==='hotspot'){
         const activities=bridge()?.activities()||[];
         showActivities(activities);
