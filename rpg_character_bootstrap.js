@@ -78,8 +78,14 @@
     let token=cached?.access_token||'';
     // Refresh stale sessions through the same Supabase identity provider as cloud saves.
     if(cached?.refresh_token && (!token||!Number.isFinite(Number(cached.expires_at))||Number(cached.expires_at)<=Date.now()+60000)){
-      const config=await (await fetch('/api/rpg-cloud/config',{cache:'no-store'})).json();
-      if(config.enabled){
+      // On Cloudflare Pages the authenticated /api routes may not exist.
+      // Treat missing configuration as static hosting, not a fatal startup error.
+      let config=null;
+      try {
+        const response=await fetch('/api/rpg-cloud/config',{cache:'no-store'});
+        if(response.ok&&response.headers.get('content-type')?.includes('application/json'))config=await response.json();
+      }catch(error){console.warn('Cloud API config unavailable; checking public roster',error);}
+      if(config?.enabled){
         const response=await fetch(config.url+'/auth/v1/token?grant_type=refresh_token',{
           method:'POST',headers:{'apikey':config.key,'Content-Type':'application/json'},
           body:JSON.stringify({refresh_token:cached.refresh_token})
@@ -89,13 +95,31 @@
           token=refreshed.access_token;
           const data={...cached,...refreshed,expires_at:Date.now()+Math.max(0,Number(refreshed.expires_in||3600)-60)*1000};
           localStorage.setItem('neoRpgCloudSessionV1',JSON.stringify(data));
-        } else token='';
+        }else token='';
       }
     }
     const headers=token?{Authorization:'Bearer '+token}:{};
-    const response=await fetch('/api/rpg/character-packs',{headers,cache:'no-store'});
-    if(!response.ok)throw Error('Character roster unavailable');
-    const data=await response.json();
+    // Prefer server-verified entitlements when an API backend exists.
+    // Static Cloudflare Pages has no /api/rpg/character-packs route: the build
+    // publishes an explicitly filtered public roster, never the private packs.
+    let data=null;
+    try {
+      const response=await fetch('/api/rpg/character-packs',{headers,cache:'no-store'});
+      if(response.ok&&response.headers.get('content-type')?.includes('application/json')){
+        data=await response.json();
+      }else if(response.status!==404&&response.status!==405){
+        throw Error('Character roster request failed (HTTP '+response.status+')');
+      }
+    }catch(error){
+      if(!/Failed to fetch|NetworkError|fetch failed/i.test(String(error)))throw error;
+      console.warn('Character roster API unreachable; checking filtered static roster',error);
+    }
+    if(!data){
+      const response=await fetch('/rpg-character-packs.public.json',{cache:'no-store'});
+      if(!response.ok||!response.headers.get('content-type')?.includes('application/json'))throw Error('Character roster unavailable (public file HTTP '+response.status+')');
+      data=await response.json();
+    }
+    if(!Array.isArray(data?.packs)||!data.packs.length)throw Error('Character roster unavailable (invalid public registry)');
     window.NeoRpgCharacterPacks=registry(data.packs||[]);
     window.NeoRpgExclusiveRosterLoaded=true;
   } catch(error) {
