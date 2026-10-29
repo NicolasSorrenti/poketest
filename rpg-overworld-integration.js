@@ -485,6 +485,61 @@
       sceneArea?.classList.remove('neo-ow-participants');
       if(!overlay.hidden)refresh();
     }
+    // Paginate *only presentation text*: the RPG and its scripted CG/choice
+    // step remain unchanged until the final page is acknowledged.
+    const lineElement=document.getElementById('line');
+    const dialogueElement=document.getElementById('dialogue');
+    const pageContinue=document.createElement('button');
+    pageContinue.id='neoOverworldPageContinue';pageContinue.type='button';
+    pageContinue.hidden=true;pageContinue.textContent='Continue ›';
+    pageContinue.setAttribute('aria-label','Continue reading dialogue');
+    dialogueElement?.append(pageContinue);
+    let pageKey='',pageIndex=0;
+    function resetDialoguePages(){
+      pageKey='';pageIndex=0;pageContinue.hidden=true;
+      overlay.classList.remove('neo-ow-paging');
+    }
+    function syncDialoguePages(idleFocus){
+      if(!lineElement||!dialogueElement||idleFocus){resetDialoguePages();return;}
+      const original=bridge()?.dialogueText?.()||'';
+      const speaker=document.getElementById('speaker')?.textContent||'';
+      const key=speaker+'\u0000'+original;
+      if(key!==pageKey){pageKey=key;pageIndex=0;}
+      const style=window.getComputedStyle(lineElement);
+      const canvas=document.createElement('canvas');
+      const ctx=canvas.getContext('2d');
+      const family=style.fontFamily||'sans-serif';
+      const size=style.fontSize||'16px';
+      const weight=style.fontWeight||'400';
+      const spacing=parseFloat(style.letterSpacing)||0;
+      if(ctx)ctx.font=weight+' '+size+' '+family;
+      const measure=text=>(ctx?ctx.measureText(text).width:text.length*8)+spacing*Array.from(text).length;
+      const width=Math.max(80,Math.floor(lineElement.getBoundingClientRect().width||dialogueElement.clientWidth-40)-6);
+      const maxLines=window.innerWidth<=700?3:2;
+      const pages=window.NeoOverworldTextPages?.split?.(original,width,maxLines,measure)||[original];
+      pageIndex=Math.min(pageIndex,pages.length-1);
+      const display=pages[pageIndex]||'';
+      if(lineElement.textContent!==display)lineElement.textContent=display;
+      const hasMore=pageIndex<pages.length-1;
+      pageContinue.hidden=!hasMore;
+      pageContinue.setAttribute('aria-label','Continue reading dialogue, page '+(pageIndex+1)+' of '+pages.length);
+      overlay.classList.toggle('neo-ow-paging',hasMore);
+    }
+    pageContinue.onclick=()=>{
+      if(pageContinue.hidden||!storyDock||storyDock.hidden)return;
+      pageIndex++;syncDialoguePages(false);
+    };
+    // The original RPG listens for Space to advance story steps. Consume it
+    // while a long sentence still has unread pages.
+    document.addEventListener('keydown',event=>{
+      if(pageContinue.hidden||overlay.hidden||event.target===pageContinue)return;
+      if(event.key===' '||event.key==='Enter'){
+        if(event.target instanceof HTMLElement&&event.target.closest('input,textarea,select'))return;
+        event.preventDefault();event.stopImmediatePropagation();pageContinue.click();
+      }
+    },true);
+    window.addEventListener('resize',()=>{if(!overlay.hidden&&storyDock&&!storyDock.hidden)queueStorySync();});
+    document.fonts?.ready?.then(()=>{if(!overlay.hidden)queueStorySync();});
     // Observe native story rendering rather than guessing when a conversation ends.
     // A single stage remains authoritative; the map only changes presentation.
     let storySyncQueued=false;
