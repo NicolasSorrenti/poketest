@@ -304,6 +304,7 @@ const server=http.createServer(async (req,res)=>{
  publicScripts.add('overworld/manifest.js');
  publicScripts.add('overworld/prototype.js');
  publicScripts.add('rpg-overworld-integration.js');
+ publicScripts.add('rpg_overworld_text_pages.js');
  if(pathname==='/rpg_character_packs.generated.js'){res.writeHead(404).end('Not found');return;}
  if(pathname==='/rpg_character_bootstrap.js')publicScripts.add('rpg_character_bootstrap.js');
  if(pathname==='/rpg_art_manifest.js')publicScripts.add('rpg_art_manifest.js');

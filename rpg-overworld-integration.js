@@ -318,19 +318,22 @@
     sceneArea?.append(scenePeople);
     let lastPortraitSignature='';
     const portraitWindow=window.NeoRpgSceneCast?.createSpeakerWindow?.();
-    function syncPortraits(hasCG){
+    let interactionFocus=null;
+    function syncPortraits(hasCG,idleFocus=null){
       const cast=bridge()?.scenePortraits?.();
-      const participants=cast?.conversation&&!hasCG?
+      const selectedPortrait=idleFocus?bridge()?.portrait?.(idleFocus):null;
+      const participants=selectedPortrait?[selectedPortrait]:cast?.conversation&&!hasCG?
         (portraitWindow?.update(cast.participants||[],cast.focused)||
          (cast.participants||[]).slice(0,2)):[];
+      const focused=selectedPortrait?.id||cast?.focused;
       if(hasCG)portraitWindow?.reset();
-      const signature=JSON.stringify([cast?.focused,participants]);
+      const signature=JSON.stringify([focused,participants]);
       if(signature===lastPortraitSignature)return;
       lastPortraitSignature=signature;
       scenePeople.replaceChildren();
       for(const participant of participants){
         const person=document.createElement('div');
-        person.className='neo-ow-person'+(participant.id===cast.focused?' is-speaking':' is-listening');
+        person.className='neo-ow-person'+(participant.id===focused?' is-speaking':' is-listening');
         const image=document.createElement('img');image.alt=participant.name;
         // A missing portrait must never display a different character's face.
         // The original game's avatar loader already resolves outfit-specific art.
@@ -380,6 +383,170 @@
       #neoOverworldOverlay.neo-ow-activity-open #neoOverworldMenu{display:none!important}
     `;
     document.head.append(storyLayout);
+    const dialogueStyle=document.createElement('style');
+    dialogueStyle.textContent=`
+      /* A stable two-line PC / three-line mobile speech window, independent
+         of the author's sentence length or currently offered choices. */
+      #neoOverworldStoryDock #dialogue{
+        box-sizing:border-box!important;height:150px!important;min-height:150px!important;
+        max-height:150px!important;flex:0 0 150px!important;
+        padding:13px 18px 40px!important;overflow:visible!important;
+      }
+      #neoOverworldStoryDock #dialogue #line{
+        font-size:16px!important;line-height:1.45!important;
+        height:2.9em!important;min-height:0!important;
+        max-height:2.9em!important;overflow:hidden!important;
+        max-width:none!important;width:100%!important;margin:8px 0 0!important;
+        white-space:pre-line!important;overflow-wrap:anywhere!important;
+      }
+      #neoOverworldStoryDock #neoOverworldPageContinue:not([hidden]){
+        position:absolute;right:14px;bottom:9px;display:block;
+        border:1px solid #b88eb9;border-radius:8px;background:#513451;
+        color:white;padding:6px 13px;font:700 14px system-ui;cursor:pointer;
+        z-index:10;
+      }
+      #neoOverworldOverlay.neo-ow-paging #neoOverworldStoryDock #choices,
+      #neoOverworldOverlay.neo-ow-paging #neoOverworldStoryDock #playerChoicePrompt{display:none!important}
+      #neoOverworldStoryDock #dialogue > #choices:not(:empty){
+        position:absolute!important;bottom:7px!important;left:16px!important;
+        right:80px!important;max-height:34dvh!important;overflow-y:auto!important;
+        margin:0!important;z-index:9!important;
+      }
+      #neoOverworldStoryDock #dialogue > #choices:has(>button:nth-child(2)){
+        left:10px!important;right:10px!important;
+        bottom:calc(100% + 7px)!important;
+        padding:10px!important;border-radius:12px;background:#211b34fa;
+        border:1px solid #b48bb7;
+      }
+      #neoOverworldStoryDock #playerChoicePrompt:not([hidden]){
+        position:absolute!important;inset:auto 0 calc(100% + 7px)!important;
+        z-index:11!important;max-height:42dvh!important;display:block!important;
+      }
+      #neoOverworldStoryDock #playerChoicePanel{max-height:42dvh!important;overflow:auto!important}
+      #neoOverworldOverlay:not(.neo-ow-idle-interaction) #neoOverworldStoryDock #neoOverworldActionTray,
+      #neoOverworldOverlay:not(.neo-ow-idle-interaction) #neoOverworldStoryDock #characterActions{display:none!important}
+      #neoOverworldOverlay.neo-ow-idle-interaction #neoOverworldStoryDock #dialogue,
+      #neoOverworldOverlay.neo-ow-idle-interaction #neoOverworldStoryDock #neoOverworldActionTray{display:none!important}
+      #neoOverworldOverlay.neo-ow-idle-interaction #neoOverworldStoryDock #characterActions:not([hidden]){
+        display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr));
+        gap:8px!important;margin:8px 0 0!important;padding:10px!important;
+        background:#1a1831f0!important;border:1px solid #a77da9!important;border-radius:12px;
+        max-height:35dvh;overflow-y:auto!important;
+      }
+      #neoOverworldOverlay.neo-ow-idle-interaction #neoOverworldStoryDock #characterActions button{
+        min-width:0!important;min-height:43px!important;
+        border-radius:9px!important;white-space:normal!important;
+      }
+      @media(max-width:700px){
+        #neoOverworldStoryDock #dialogue{
+          height:176px!important;min-height:176px!important;max-height:176px!important;
+          flex:0 0 176px!important;padding:12px 12px 38px!important;
+        }
+        #neoOverworldStoryDock #dialogue #line{
+          font-size:15px!important;line-height:1.45!important;
+          height:4.35em!important;max-height:4.35em!important;
+        }
+        #neoOverworldOverlay.neo-ow-idle-interaction #neoOverworldStoryDock #characterActions:not([hidden]){
+          grid-template-columns:repeat(2,minmax(0,1fr));
+        }
+      }
+    `;
+    document.head.append(dialogueStyle);
+
+    // Choice buttons stay native. Move their existing DOM into a foreground
+    // panel so a response never stretches the fixed-height dialogue box.
+    const nativePrompt=document.getElementById('playerChoicePrompt');
+    const nativePromptHome=nativePrompt?.parentNode;
+    const nativePromptNext=nativePrompt?.nextSibling||null;
+    const nativePromptPanel=document.getElementById('playerChoicePanel');
+    const choiceList=document.getElementById('choices');
+    const genericChoicePanel=document.createElement('section');
+    genericChoicePanel.id='neoOverworldGenericChoices';
+    genericChoicePanel.hidden=true;
+    genericChoicePanel.setAttribute('aria-label','Response choices');
+    const genericChoiceInner=document.createElement('div');
+    genericChoiceInner.className='neo-ow-choice-inner';
+    const genericChoiceHeading=document.createElement('div');
+    genericChoiceHeading.className='neo-ow-choice-head';
+    const genericTitle=document.createElement('strong');
+    genericTitle.textContent='YOUR RESPONSE';
+    genericChoiceHeading.append(genericTitle);
+    genericChoiceInner.append(genericChoiceHeading);
+    genericChoicePanel.append(genericChoiceInner);
+    const showChoicesButton=document.createElement('button');
+    showChoicesButton.type='button';
+    showChoicesButton.id='neoOverworldShowChoices';
+    showChoicesButton.textContent='☷ Show choices';
+    showChoicesButton.hidden=true;
+    showChoicesButton.setAttribute('aria-controls','playerChoicePrompt neoOverworldGenericChoices');
+    const hideChoicesButton=document.createElement('button');
+    hideChoicesButton.type='button';
+    hideChoicesButton.className='neo-ow-hide-choices';
+    hideChoicesButton.textContent='✕ Hide choices';
+    const hideGenericChoicesButton=hideChoicesButton.cloneNode(true);
+    nativePromptPanel?.prepend(hideChoicesButton);
+    genericChoiceHeading.append(hideGenericChoicesButton);
+    overlay.append(genericChoicePanel,showChoicesButton);
+    let lastChoiceKey='',choicesCollapsed=false;
+    function attachChoicePanels(){
+      if(nativePrompt&&nativePrompt.parentNode!==overlay)overlay.append(nativePrompt);
+      hideChoicesButton.hidden=false;
+    }
+    function restoreChoicePanels(){
+      if(choiceList?.parentNode===genericChoiceInner)document.getElementById('dialogue')?.append(choiceList);
+      if(nativePrompt&&nativePromptHome&&nativePrompt.parentNode===overlay){
+        if(nativePromptNext?.parentNode===nativePromptHome)nativePromptHome.insertBefore(nativePrompt,nativePromptNext);
+        else nativePromptHome.append(nativePrompt);
+      }
+      hideChoicesButton.hidden=true;
+      genericChoicePanel.hidden=true;
+      showChoicesButton.hidden=true;
+    }
+    function setChoicesCollapsed(collapsed){
+      choicesCollapsed=!!collapsed;
+      overlay.classList.toggle('neo-ow-choices-collapsed',choicesCollapsed);
+      showChoicesButton.hidden=!choicesCollapsed||overlay.classList.contains('neo-ow-paging');
+      showChoicesButton.setAttribute('aria-expanded',String(!choicesCollapsed));
+      if(choicesCollapsed)showChoicesButton.focus({preventScroll:true});
+    }
+    hideChoicesButton.onclick=()=>setChoicesCollapsed(true);
+    hideGenericChoicesButton.onclick=()=>setChoicesCollapsed(true);
+    showChoicesButton.onclick=()=>{
+      setChoicesCollapsed(false);
+      const activePanel=(!nativePrompt?.hidden&&nativePrompt)||genericChoicePanel;
+      activePanel?.querySelector('#choices button:not(:disabled)')?.focus?.({preventScroll:true});
+    };
+    function syncChoicePresentation(idleFocus){
+      const nativeActive=!!nativePrompt&&!nativePrompt.hidden;
+      const count=choiceList?.querySelectorAll('button')?.length||0;
+      const genericActive=!nativeActive&&count>1&&!idleFocus;
+      const active=(nativeActive||genericActive)&&!idleFocus;
+      const paging=overlay.classList.contains('neo-ow-paging');
+      if(!active){
+        overlay.classList.remove('neo-ow-has-choices','neo-ow-choices-collapsed');
+        genericChoicePanel.hidden=true;showChoicesButton.hidden=true;
+        if(choiceList?.parentNode===genericChoiceInner)document.getElementById('dialogue')?.append(choiceList);
+        lastChoiceKey='';choicesCollapsed=false;
+        return;
+      }
+      attachChoicePanels();
+      if(genericActive){
+        if(choiceList.parentNode!==genericChoiceInner)genericChoiceInner.append(choiceList);
+        genericChoicePanel.hidden=false;
+      }else genericChoicePanel.hidden=true;
+      const key=String(bridge()?.dialogueText?.()||'')+'\u0000'+
+        String(document.getElementById('speaker')?.textContent||'')+'\u0000'+
+        Array.from(choiceList.querySelectorAll('button'),b=>b.textContent).join('\u0000');
+      if(key!==lastChoiceKey){lastChoiceKey=key;choicesCollapsed=false;}
+      overlay.classList.add('neo-ow-has-choices');
+      overlay.classList.toggle('neo-ow-choices-collapsed',choicesCollapsed);
+      overlay.classList.toggle('neo-ow-two-speakers',scenePeople.children.length>1);
+      showChoicesButton.hidden=!choicesCollapsed||paging;
+    }
+    const choiceLayout=document.createElement('style');
+    choiceLayout.textContent="\n#neoOverworldOverlay #playerChoicePrompt[hidden],#neoOverworldOverlay #neoOverworldGenericChoices[hidden],\n#neoOverworldOverlay #neoOverworldShowChoices[hidden]{display:none!important}\n#neoOverworldOverlay #playerChoicePrompt:not([hidden]),#neoOverworldOverlay #neoOverworldGenericChoices:not([hidden]){\n  position:absolute!important;z-index:9!important;inset:auto!important;top:43%!important;\n  left:50%!important;right:auto!important;transform:translate(-50%,-50%)!important;\n  width:min(520px,calc(100vw - 28px))!important;max-width:none!important;\n  max-height:min(46dvh,440px)!important;display:block!important;box-sizing:border-box!important;\n  overflow-y:auto!important;overscroll-behavior:contain!important;margin:0!important;\n  padding:0!important;pointer-events:auto!important;filter:drop-shadow(0 14px 30px #000a)\n}\n#neoOverworldOverlay #playerChoicePanel,#neoOverworldOverlay #neoOverworldGenericChoices .neo-ow-choice-inner{\n  position:relative!important;display:flex!important;flex-direction:column!important;\n  width:100%!important;max-width:none!important;max-height:none!important;\n  padding:14px!important;margin:0!important;box-sizing:border-box!important;\n  background:#211b35f4!important;border:1px solid #cb9ccc!important;\n  border-radius:13px!important;box-shadow:0 16px 34px #0009!important;\n  gap:9px!important;pointer-events:auto!important;animation:none!important\n}\n#neoOverworldOverlay .neo-ow-hide-choices{\n  align-self:flex-end!important;order:-1;cursor:pointer;padding:7px 10px!important;\n  min-height:34px;border:1px solid #ad8bb8;border-radius:8px;color:#fff;background:#513858;\n  font:700 12px system-ui\n}\n#neoOverworldOverlay #playerChoicePanel #choices,#neoOverworldOverlay #neoOverworldGenericChoices #choices{\n  position:static!important;inset:auto!important;display:grid!important;grid-template-columns:1fr!important;\n  gap:8px!important;width:100%!important;max-height:none!important;\n  margin:0!important;padding:0!important;overflow:visible!important;\n  border:0!important;background:transparent!important\n}\n#neoOverworldOverlay #playerChoicePanel #choices button,#neoOverworldOverlay #neoOverworldGenericChoices #choices button{\n  width:100%!important;min-height:43px!important;text-align:left!important;\n  white-space:normal!important;line-height:1.3!important\n}\n#neoOverworldOverlay .neo-ow-choice-head{display:flex;align-items:center;justify-content:space-between;gap:10px}\n#neoOverworldOverlay #neoOverworldShowChoices:not([hidden]){\n  position:absolute;z-index:10;bottom:calc(150px + 18px);right:max(16px,env(safe-area-inset-right));\n  border:1px solid #da9ed3;border-radius:9px;padding:9px 14px;color:#fff;background:#533558e8;\n  box-shadow:0 8px 24px #0009;cursor:pointer;font:700 13px system-ui\n}\n#neoOverworldOverlay.neo-ow-choices-collapsed #playerChoicePrompt,\n#neoOverworldOverlay.neo-ow-choices-collapsed #neoOverworldGenericChoices,\n#neoOverworldOverlay.neo-ow-paging #playerChoicePrompt,\n#neoOverworldOverlay.neo-ow-paging #neoOverworldGenericChoices{display:none!important}\n#neoOverworldOverlay.neo-ow-idle-interaction #playerChoicePrompt,\n#neoOverworldOverlay.neo-ow-idle-interaction #neoOverworldGenericChoices,\n#neoOverworldOverlay.neo-ow-idle-interaction #neoOverworldShowChoices{display:none!important}\n@media(min-width:1100px){\n#neoOverworldOverlay:not(.neo-ow-two-speakers):not(.neo-ow-showing-cg) #playerChoicePrompt:not([hidden]),\n#neoOverworldOverlay:not(.neo-ow-two-speakers):not(.neo-ow-showing-cg) #neoOverworldGenericChoices:not([hidden]){\n  left:auto!important;right:2.5vw!important;top:43%!important;\n  transform:translateY(-50%)!important;width:min(370px,28vw)!important\n}}\n@media(max-width:700px){\n#neoOverworldOverlay #playerChoicePrompt:not([hidden]),#neoOverworldOverlay #neoOverworldGenericChoices:not([hidden]){\n  top:41%!important;max-height:43dvh!important;width:calc(100vw - 20px)!important\n}\n#neoOverworldOverlay #playerChoicePanel,#neoOverworldOverlay #neoOverworldGenericChoices .neo-ow-choice-inner{padding:10px!important}\n#neoOverworldOverlay #neoOverworldShowChoices:not([hidden]){\n  bottom:calc(176px + max(12px,env(safe-area-inset-bottom)));right:10px\n}}\n";
+    document.head.append(choiceLayout);
+    attachChoicePanels();
     let storyDock=null;
     let lastSceneKey='';
     let suspendedForDuel=false;
@@ -391,11 +558,16 @@
         storyDock.setAttribute('aria-label','RPG conversation and story');
         Object.assign(storyDock.style,{position:'absolute',zIndex:'4',bottom:'12px',left:'max(8px,env(safe-area-inset-left))',right:'max(8px,env(safe-area-inset-right))',maxHeight:'min(72vh,680px)',overflow:'auto',border:'2px solid #b58cc7',borderRadius:'14px',background:'#181329',boxShadow:'0 10px 45px #000c'});
         const back=document.createElement('button');back.type='button';back.textContent='← Back to map';back.style.cssText='position:sticky;top:0;z-index:5;display:block;width:100%;padding:11px;border:0;background:#352548;color:white;font:700 14px system-ui;cursor:pointer';
-        back.onclick=()=>{if(bridge()?.snapshot()?.locked){showNotice('Finish the current conversation or event first.');return;}hideStory();};storyDock.append(back);
+        back.onclick=()=>{
+          if(bridge()?.snapshot()?.locked){showNotice('Finish the current conversation or event first.');return;}
+          interactionFocus=null;bridge()?.clearInteraction?.();hideStory();queueStorySync();
+        };storyDock.append(back);
       }
       overlay.append(storyDock);storyDock.append(stage);
       stage.style.cssText='display:block;position:relative;width:100%;max-width:none;height:auto;min-height:0;overflow:visible;margin:0;padding:8px';
-      storyDock.hidden=false;actionTray.classList.remove('expanded');actionToggle.textContent='✦ Actions';actionToggle.setAttribute('aria-expanded','false');lockMapForStory(true);return true;
+      storyDock.hidden=false;
+      actionTray.classList.remove('expanded');actionToggle.textContent='✦ Actions';
+      actionToggle.setAttribute('aria-expanded','false');lockMapForStory(true);return true;
     }
     function hideStory(){
       if(!stageHome||!stage)return;
@@ -408,6 +580,61 @@
       sceneArea?.classList.remove('neo-ow-participants');
       if(!overlay.hidden)refresh();
     }
+    // Paginate *only presentation text*: the RPG and its scripted CG/choice
+    // step remain unchanged until the final page is acknowledged.
+    const lineElement=document.getElementById('line');
+    const dialogueElement=document.getElementById('dialogue');
+    const pageContinue=document.createElement('button');
+    pageContinue.id='neoOverworldPageContinue';pageContinue.type='button';
+    pageContinue.hidden=true;pageContinue.textContent='Continue ›';
+    pageContinue.setAttribute('aria-label','Continue reading dialogue');
+    dialogueElement?.append(pageContinue);
+    let pageKey='',pageIndex=0;
+    function resetDialoguePages(){
+      pageKey='';pageIndex=0;pageContinue.hidden=true;
+      overlay.classList.remove('neo-ow-paging');
+    }
+    function syncDialoguePages(idleFocus){
+      if(!lineElement||!dialogueElement||idleFocus){resetDialoguePages();return;}
+      const original=bridge()?.dialogueText?.()||'';
+      const speaker=document.getElementById('speaker')?.textContent||'';
+      const key=speaker+'\u0000'+original;
+      if(key!==pageKey){pageKey=key;pageIndex=0;}
+      const style=window.getComputedStyle(lineElement);
+      const canvas=document.createElement('canvas');
+      const ctx=canvas.getContext('2d');
+      const family=style.fontFamily||'sans-serif';
+      const size=style.fontSize||'16px';
+      const weight=style.fontWeight||'400';
+      const spacing=parseFloat(style.letterSpacing)||0;
+      if(ctx)ctx.font=weight+' '+size+' '+family;
+      const measure=text=>(ctx?ctx.measureText(text).width:text.length*8)+spacing*Array.from(text).length;
+      const width=Math.max(80,Math.floor(lineElement.getBoundingClientRect().width||dialogueElement.clientWidth-40)-6);
+      const maxLines=window.innerWidth<=700?3:2;
+      const pages=window.NeoOverworldTextPages?.split?.(original,width,maxLines,measure)||[original];
+      pageIndex=Math.min(pageIndex,pages.length-1);
+      const display=pages[pageIndex]||'';
+      if(lineElement.textContent!==display)lineElement.textContent=display;
+      const hasMore=pageIndex<pages.length-1;
+      pageContinue.hidden=!hasMore;
+      pageContinue.setAttribute('aria-label','Continue reading dialogue, page '+(pageIndex+1)+' of '+pages.length);
+      overlay.classList.toggle('neo-ow-paging',hasMore);
+    }
+    pageContinue.onclick=()=>{
+      if(pageContinue.hidden||!storyDock||storyDock.hidden)return;
+      pageIndex++;syncDialoguePages(false);
+    };
+    // The original RPG listens for Space to advance story steps. Consume it
+    // while a long sentence still has unread pages.
+    document.addEventListener('keydown',event=>{
+      if(pageContinue.hidden||overlay.hidden||event.target===pageContinue)return;
+      if(event.key===' '||event.key==='Enter'){
+        if(event.target instanceof HTMLElement&&event.target.closest('input,textarea,select'))return;
+        event.preventDefault();event.stopImmediatePropagation();pageContinue.click();
+      }
+    },true);
+    window.addEventListener('resize',()=>{if(!overlay.hidden&&storyDock&&!storyDock.hidden)queueStorySync();});
+    document.fonts?.ready?.then(()=>{if(!overlay.hidden)queueStorySync();});
     // Observe native story rendering rather than guessing when a conversation ends.
     // A single stage remains authoritative; the map only changes presentation.
     let storySyncQueued=false;
@@ -418,19 +645,30 @@
       const cg=document.getElementById('rpgSceneCG');
       const hasCG=!!cg&&!cg.hidden&&!!cg.getAttribute('src')&&
         cg.closest('#scene')?.classList.contains('has-story-cg');
-      // Arrival animations are not conversations. A scheduled event is, even
-      // when its first render occurs before the arrival gate is released.
+      // Never retain a tap-focus across travel, mandatory scenes or disappearance.
+      if(interactionFocus&&(!data.people.includes(interactionFocus)||data.selected!==interactionFocus)){
+        interactionFocus=null;
+      }
       const arrivalOnly=!!data.arriving&&!data.eventActive;
-      const needsStory=!!(data.storyActive&&!arrivalOnly||hasCG&&!arrivalOnly);
+      const idleFocus=!data.storyActive&&!data.arriving&&!hasCG&&
+        interactionFocus===data.selected?interactionFocus:null;
+      const needsStory=!!((data.storyActive&&!arrivalOnly)||(hasCG&&!arrivalOnly)||idleFocus);
       overlay.classList.toggle('neo-ow-arriving',!!data.arriving&&!needsStory);
+      overlay.classList.toggle('neo-ow-idle-interaction',!!idleFocus);
       if(needsStory){
         if(!storyDock||storyDock.hidden)showStory();
         else lockMapForStory(true);
-        syncPortraits(hasCG);
+        syncPortraits(hasCG,idleFocus);
+        syncDialoguePages(idleFocus);
+        overlay.classList.toggle('neo-ow-showing-cg',hasCG);
+        syncChoicePresentation(idleFocus);
       }else{
         if(storyDock&&!storyDock.hidden)hideStory();
         else if(data.arriving)lockMapForStory(true);
         else lockMapForStory(false);
+        resetDialoguePages();
+        syncChoicePresentation(true);
+        overlay.classList.remove('neo-ow-showing-cg','neo-ow-two-speakers');
         if(!data.storyActive)portraitWindow?.reset();
       }
       // The RPG render event is authoritative for both ordinary talks and
@@ -466,6 +704,8 @@
       note.hidden=true;
     }
     function dismiss(){
+      interactionFocus=null;
+      restoreChoicePanels();
       closeSheet();hideMenu();hideEvents();hideDeck();suspendedForDuel=false;hideStory();
       // Only an explicit return to the classic interface restores its stage.
       if(stage&&stageHome&&stage.parentNode===storyDock){
@@ -477,7 +717,7 @@
       overlay.classList.remove('neo-ow-activity-open');
       overlay.hidden=true;overlay.style.display='none';frame.src='about:blank';open.focus();
     }
-    open.addEventListener('click',()=>{refresh();overlay.hidden=false;overlay.style.display='flex';queueStorySync();});
+    open.addEventListener('click',()=>{attachChoicePanels();refresh();overlay.hidden=false;overlay.style.display='flex';queueStorySync();});
     document.getElementById('rpgDiscreetToggle')?.addEventListener('click',()=>{if(!overlay.hidden)refresh();});
     function performTravel(target){
       const data=snapshot();if(!data)return;
@@ -498,9 +738,12 @@
         if(message.id==='activities'||message.id==='events'){hideMenu();if(message.id==='activities')showActivities(bridge()?.activities()||[]);else showEvents();return;}
       }
       if(message.kind==='person'){
-        // Dismiss first: native conversations can open modal prompts immediately.
+        // Capture the explicitly tapped NPC before the native engine renders.
+        interactionFocus=message.id;
         if(!showStory())dismiss();
-        if(!bridge()?.interact(message.id)){hideStory();showNotice('Character interaction is not currently available.');}else queueStorySync();
+        if(!bridge()?.interact(message.id)){
+          interactionFocus=null;hideStory();showNotice('Character interaction is not currently available.');
+        }else queueStorySync();
       }else if(message.kind==='hotspot'){
         const activities=bridge()?.activities()||[];
         showActivities(activities);
@@ -541,7 +784,11 @@
         cancel.style.cssText='display:block;margin-top:14px;width:100%;padding:11px;border-radius:9px;background:#38284a;color:white;border:1px solid #9a7da5';
         cancel.onclick=closeActivities;panel.append(cancel);overlay.append(backdrop,panel);
     }
-    document.addEventListener('keydown',event=>{if(event.key!=='Escape'||overlay.hidden)return;if(!storyShield.hidden){event.preventDefault();return;}if(overlay.classList.contains('neo-ow-activity-open')){event.preventDefault();overlay.querySelectorAll('[data-overworld-activity-panel],[data-overworld-activity-backdrop]').forEach(el=>el.remove());overlay.classList.remove('neo-ow-activity-open');return;}if(expandedSheet){event.preventDefault();closeSheet();return;}if(!deckPanel.hidden){hideDeck();return;}if(!eventPanel.hidden){hideEvents();return;}if(!menu.hidden){hideMenu();return;}if(!bridge()?.snapshot()?.locked)dismiss();});
+    document.addEventListener('keydown',event=>{if(event.key!=='Escape'||overlay.hidden)return;
+      if(overlay.classList.contains('neo-ow-has-choices')&&!overlay.classList.contains('neo-ow-choices-collapsed')&&!overlay.classList.contains('neo-ow-paging')){
+        event.preventDefault();setChoicesCollapsed(true);syncChoicePresentation(false);return;
+      }
+      if(!storyShield.hidden){event.preventDefault();return;}if(overlay.classList.contains('neo-ow-activity-open')){event.preventDefault();overlay.querySelectorAll('[data-overworld-activity-panel],[data-overworld-activity-backdrop]').forEach(el=>el.remove());overlay.classList.remove('neo-ow-activity-open');return;}if(expandedSheet){event.preventDefault();closeSheet();return;}if(!deckPanel.hidden){hideDeck();return;}if(!eventPanel.hidden){hideEvents();return;}if(!menu.hidden){hideMenu();return;}if(!bridge()?.snapshot()?.locked)dismiss();});
     // Battles run in the original full-screen duel layer. Resume the map as soon as
     // its battle layer closes, without restarting the campaign or changing saves.
     const duel=document.getElementById('duel');

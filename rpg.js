@@ -419,10 +419,14 @@ function travelTo(placeId,{intro=true}={}){
  return true;
 }
 let overworldScenePortraits={participants:[],focused:null,conversation:false};
+let overworldRenderedDialogue='';
 // Optional overworld adapter: the existing campaign remains authoritative.
 window.NeoRpgOverworldBridge=Object.freeze({
  scenePortraits(){return overworldScenePortraits;},
- snapshot(){return {location:state.location,day:state.day,slot:state.slot,locked:overworldControlsLocked(),arriving:arrivalGate||!!pendingOverworldArrival||!!window.NeoRpgTimeTransitions?.active,storyActive:overworldStoryActive(),eventActive:!!(state.mandatoryEventState?.active||state.activeSliceOfLife||state.activeSituation||state.activeStory||state.activeSideQuest||state.activeArc||state.activeEncounter),people:currentPeople().filter(id=>!!cast[id]),places:Object.entries(places).map(([id,p])=>({id,name:p[0]}))};},
+ dialogueText(){return overworldRenderedDialogue;},
+ portrait(id){return cast[id]?{id,name:cast[id].name,src:scenePortraitSource(id,'neutral',null)}:null;},
+ clearInteraction(){if(overworldControlsLocked())return false;state.selected=null;persist();render();return true;},
+ snapshot(){return {location:state.location,day:state.day,slot:state.slot,selected:state.selected&&currentPeople().includes(state.selected)?state.selected:null,locked:overworldControlsLocked(),arriving:arrivalGate||!!pendingOverworldArrival||!!window.NeoRpgTimeTransitions?.active,storyActive:overworldStoryActive(),eventActive:!!(state.mandatoryEventState?.active||state.activeSliceOfLife||state.activeSituation||state.activeStory||state.activeSideQuest||state.activeArc||state.activeEncounter),people:currentPeople().filter(id=>!!cast[id]),places:Object.entries(places).map(([id,p])=>({id,name:p[0]}))};},
  travel(placeId){if(overworldControlsLocked())return false;return travelTo(placeId);},
  interact(id){if(overworldControlsLocked()||!cast[id]||!currentPeople().includes(id))return false;selectPerson(id);return true;},
  activities(){return WORLD.activitiesAt(state).map(a=>({id:a.id,title:a.title,disabled:overworldControlsLocked()||!!a.disabledReason}));},
@@ -2682,6 +2686,7 @@ function render(){
  $('homeBanner').hidden=state.location!=='home'||!!portraitId;
  $('homeBanner').textContent='YOUR APARTMENT  ·  DAY '+state.day+'  ·  '+periods[state.slot]+' — Prepare your deck, review your plans or rest.';
  let shown=showingMandatory?renderMandatory():showingSlice?renderSliceOfLife():showingSituation?showSituation():showingStory?renderStory():showingEncounter?showEncounter():showingArc?showArc():state.activeSideQuest?showSideQuest():scene;
+ overworldRenderedDialogue=String(shown?.line||'');
  // Narration is visually distinguished by italics, without an unnecessary speaker label.
  const isNarration=shown?.speaker==='Narrator';
  $('speaker').textContent=isNarration?'':(shown?.speaker||'');
