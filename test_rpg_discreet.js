@@ -16,7 +16,7 @@ function setup(pathname,search='',initial='0',withButton=true){
  const handlers={};
  const attributes={};
  const button=withButton?{
-  textContent:'',title:'',
+  textContent:'',title:'',dataset:{},
   addEventListener(type,fn){handlers[type]=fn;},
   setAttribute(name,value){attributes[name]=value;}
  }:null;
@@ -26,7 +26,8 @@ function setup(pathname,search='',initial='0',withButton=true){
   addEventListener:(event,listener)=>{events[event]=listener;}
  };
  const doc={documentElement:root,getElementById:id=>id==='rpgDiscreetToggle'?button:null};
- vm.runInNewContext(source,{window:win,document:doc,URLSearchParams});
+ // Model the browser's DOM observer without running asynchronous callbacks.
+ vm.runInNewContext(source,{window:win,document:doc,URLSearchParams,MutationObserver:class{observe(){}}});
  events.DOMContentLoaded?.();
  return {root,button,attributes,handlers,events,values};
 }
