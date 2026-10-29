@@ -19,6 +19,8 @@ const block = server.match(/const publicScripts=new Set\(\[([\s\S]*?)\]\);/);
 if (!block) throw new Error('Could not find the publicScripts allowlist in server.js.');
 const publicScripts = new Set([...block[1].matchAll(/['"]([^'"]+\.js)['"]/g)].map(m => m[1]));
 for (const match of server.matchAll(/publicScripts\.add\(['"]([^'"]+\.js)['"]\)/g)) publicScripts.add(match[1]);
+// Also collect the server's exact-path RPG script allowlist.
+for (const match of server.matchAll(/pathname===['"]\/([^'"]+\.js)['"]/g)) publicScripts.add(match[1]);
 publicScripts.delete('rpg_character_packs.generated.js');
 
 const htmlPages = new Set([
