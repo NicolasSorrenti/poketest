@@ -13,9 +13,40 @@
   });
   if(params.has('rpg-integration'))document.body.classList.add('neo-overworld-embedded');
   const shopTest=params.has('shop-test'),requestedScene=params.get('scene'),sceneId=config[requestedScene]?.image?requestedScene:(shopTest?'shop':'arcade'),map=config[sceneId];
-  byId('mapArt').src=map.image;byId('mapArt').alt=map.title;byId('world').style.width=map.width+'px';byId('world').style.height=map.height+'px';
+  // Prefer installed art under a predictable canonical location path.
+  // The repo may still contain only a blueprint; never display a broken map.
+  const mapArt=byId('mapArt');
+  const canonicalBase='/rpg-assets/locations/'+map.id+'/overworld-map';
+  const candidates=map.blueprint?
+    [canonicalBase+'.webp',canonicalBase+'.png',canonicalBase+'.jpg',map.image]:
+    [map.image];
+  let candidateIndex=0;
+  function setMapSource(index){
+    candidateIndex=index;
+    mapArt.src=candidates[index];
+  }
+  function setMapStatus(source){
+    const footer=document.querySelector('#bottom p');
+    if(!footer)return;
+    const fallback=source===map.image&&!!map.blueprint;
+    footer.textContent=fallback?'Temporary spatial blueprint · Final artwork not installed yet.':
+      (map.blueprint?'Installed location artwork · RPG schedule active':'Location artwork · RPG schedule active');
+    document.body.classList.toggle('neo-overworld-blueprint',fallback);
+  }
+  mapArt.addEventListener('load',()=>setMapStatus(candidates[candidateIndex]));
+  mapArt.addEventListener('error',()=>{
+    if(candidateIndex+1<candidates.length)setMapSource(candidateIndex+1);
+    else{
+      const footer=document.querySelector('#bottom p');
+      if(footer)footer.textContent='Location map image missing. Check the published GitHub asset paths.';
+      document.body.classList.add('neo-overworld-missing-map');
+    }
+  });
+  mapArt.alt=map.title;
+  setMapSource(0);
+  byId('world').style.width=map.width+'px';byId('world').style.height=map.height+'px';
   document.querySelector('.title strong').textContent=map.title;
-  if(map.blueprint)document.querySelector('#bottom p').textContent='Temporary spatial blueprint · Final artwork not installed yet.';else if(shopTest)document.querySelector('#bottom p').textContent='Illustration candidate · placement under review.';
+  if(shopTest)document.querySelector('#bottom p').textContent='Illustration candidate · placement under review.';
   const placements=poseTest ? [
     {id:'reina',anchor:'P1',pose:'standing',foot:{x:665,y:465},previewKey:'standing'},
     {id:'reina',anchor:'E1',pose:'arcade',foot:{x:245,y:430},previewKey:'arcade'}
