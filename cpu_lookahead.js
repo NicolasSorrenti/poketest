@@ -32,7 +32,13 @@ function publicCounterplay(o,helpers,ourTarget=o.self.active,enemy=o.opponent,ap
  // resolve. Apex uses its 50% reliability for counterplay; lower tiers keep
  // their established evaluation until separately benchmarked.
  const reliability=apex&&enemy.active.status==='Confused'?.5:1;
- const activeDamage=disabled?0:strongestAffordableAttack(enemy.active,ourTarget,enemy.bench.length);
+ // Apex must use the same public attack-eligibility rules as its retreat
+ // evaluator. Printed Energy alone cannot make an Amnesia/Gym-locked attack
+ // a guaranteed KO; projectedAttackValue already excludes those attacks.
+ const usable=apex&&enemy===o.opponent&&typeof helpers.strongestUsableOpponentAttack==='function';
+ const activeDamage=disabled?0:usable?
+  helpers.strongestUsableOpponentAttack(o,ourTarget):
+  strongestAffordableAttack(enemy.active,ourTarget,enemy.bench.length);
  const activeImpact=disabled?0:projectedAttackValue(enemy.active,ourTarget,o.turnSerial,enemy.bench.length)*reliability;
  const benchDamage=enemy.bench.reduce((best,u)=>Math.max(best,strongestAffordableAttack(u,ourTarget,Math.max(0,enemy.bench.length-1))),0);
  const benchImpact=enemy.bench.reduce((best,u)=>Math.max(best,projectedAttackValue(u,ourTarget,o.turnSerial,Math.max(0,enemy.bench.length-1))),0);
