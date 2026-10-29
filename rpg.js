@@ -418,8 +418,10 @@ function travelTo(placeId,{intro=true}={}){
  tutorialEvent('travel');
  return true;
 }
+let overworldScenePortraits={participants:[],focused:null,conversation:false};
 // Optional overworld adapter: the existing campaign remains authoritative.
 window.NeoRpgOverworldBridge=Object.freeze({
+ scenePortraits(){return overworldScenePortraits;},
  snapshot(){return {location:state.location,day:state.day,slot:state.slot,locked:overworldControlsLocked(),arriving:arrivalGate||!!pendingOverworldArrival||!!window.NeoRpgTimeTransitions?.active,people:currentPeople().filter(id=>!!cast[id]),places:Object.entries(places).map(([id,p])=>({id,name:p[0]}))};},
  travel(placeId){if(overworldControlsLocked())return false;return travelTo(placeId);},
  interact(id){if(overworldControlsLocked()||!cast[id]||!currentPeople().includes(id))return false;selectPerson(id);return true;},
@@ -2320,12 +2322,21 @@ function dialogueExpression(line){
  return 'neutral';
 }
 function renderRpgCast(ids,locked,shown,portraitId,context={}){
- if(typeof document.querySelector!=='function')return;
- const root=$('rpgSceneCast');if(!root)return;
- // Only participants in the actual dialogue are onstage. Location attendance
- // still controls the map, people list and available activities.
+ // Scene composition is shared with the separate overworld, even when the
+ // classic RPG scene-cast container is absent in that HTML document.
  const composition=SCENE_CAST.select({cast,present:ids,portraitId,shown,...context});
  const {focused,participants}=composition;
+ overworldScenePortraits={
+  conversation:composition.conversation,
+  focused,
+  participants:composition.conversation?participants.slice(0,4).map(id=>({
+   id,name:cast[id].name,src:scenePortraitSource(id,
+    id===focused?(window.NeoRpgCharacterMotion?.emotion?.(shown?.expression,dialogueExpression(shown?.line))||dialogueExpression(shown?.line)):'neutral',
+    context.sceneId)
+  })):[]
+ };
+ if(typeof document.querySelector!=='function')return;
+ const root=$('rpgSceneCast');if(!root)return;
  if(state.location==='home'||!participants.length){root.hidden=true;root.replaceChildren();return;}
  root.hidden=false;
  // Narrator and player lines should not dim every NPC in the location.
