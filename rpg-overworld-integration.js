@@ -179,6 +179,35 @@
       #neoOverworldOverlay:has(#neoOverworldStoryDock:not([hidden])) #neoOverworldBottom{visibility:hidden}
       #neoOverworldStoryDock #scene .home-banner{display:none!important}
     `;
+    // Keep the original RPG's interaction buttons wired to their native handlers,
+    // but reveal them only when the player deliberately opens Actions.
+    const actionTray=document.createElement('div');
+    actionTray.id='neoOverworldActionTray';
+    const actionToggle=document.createElement('button');
+    actionToggle.type='button';actionToggle.id='neoOverworldActionToggle';
+    actionToggle.textContent='✦ Actions';actionToggle.setAttribute('aria-expanded','false');
+    actionToggle.style.cssText='padding:8px 16px;border:1px solid #bd8fbc;border-radius:10px;background:#352944;color:white;cursor:pointer';
+    actionTray.append(actionToggle);
+    actionToggle.onclick=()=>{
+      const active=actionTray.classList.toggle('expanded');
+      actionToggle.setAttribute('aria-expanded',String(active));
+      actionToggle.textContent=active?'✕ Hide actions':'✦ Actions';
+    };
+    const actionStyle=document.createElement('style');
+    actionStyle.textContent=`
+      #neoOverworldStoryDock #neoOverworldActionTray{display:none;padding:6px 8px;background:#18162ce8;border-radius:10px}
+      #neoOverworldStoryDock #neoOverworldActionTray:has(+ #characterActions:not([hidden])){display:block}
+      #neoOverworldStoryDock #characterActions:not([hidden]){display:none!important}
+      #neoOverworldStoryDock #neoOverworldActionTray.expanded + #characterActions:not([hidden]){display:flex!important}
+      #neoOverworldStoryDock #rpgSceneCG:not([hidden]){z-index:2!important}
+      #neoOverworldStoryDock #scene:has(#rpgSceneCG:not([hidden])) #portrait{visibility:hidden!important;position:absolute!important}
+      #neoOverworldStoryDock #portrait{transition:opacity .18s ease,filter .18s ease}
+      #neoOverworldStoryDock #dialogue .dialogue-title{display:flex;align-items:center;gap:12px}
+      #neoOverworldStoryDock #dialogue #speaker:not([hidden]){color:#f4b5dc;font-weight:800}
+    `;
+    document.head.append(actionStyle);
+    const characterActions=document.getElementById('characterActions');
+    characterActions?.parentNode?.insertBefore(actionTray,characterActions);
     let storyDock=null;
     let lastSceneKey='';
     let suspendedForDuel=false;
@@ -194,7 +223,7 @@
       }
       overlay.append(storyDock);storyDock.append(stage);
       stage.style.cssText='display:block;position:relative;width:100%;max-width:none;height:auto;min-height:0;overflow:visible;margin:0;padding:8px';
-      storyDock.hidden=false;lockMapForStory(true);return true;
+      storyDock.hidden=false;actionTray.classList.remove('expanded');actionToggle.textContent='✦ Actions';actionToggle.setAttribute('aria-expanded','false');lockMapForStory(true);return true;
     }
     function hideStory(){
       if(!stageHome||!stage)return;
