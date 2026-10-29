@@ -2344,6 +2344,14 @@ function renderRpgCast(ids,locked,shown,portraitId,context={}){
  };
  if(typeof document.querySelector!=='function')return;
  const root=$('rpgSceneCast');if(!root)return;
+ // The dedicated overworld has its own two-portrait scene renderer.
+ // Never construct the legacy scene-cast portraits behind it: doing so
+ // duplicated characters and needlessly loaded their full-size images.
+ if(window.NeoRpgOverworldStandalone){
+  root.hidden=true;
+  if(root.childNodes.length)root.replaceChildren();
+  return;
+ }
  if(state.location==='home'||!participants.length){root.hidden=true;root.replaceChildren();return;}
  root.hidden=false;
  // Narrator and player lines should not dim every NPC in the location.
