@@ -42,3 +42,15 @@ test('hotspots have unique IDs and stay on the image',()=>{
     assert.ok(h.x>0&&h.x<=arcade.width&&h.y>0&&h.y<=arcade.height&&h.w>0&&h.h>0,h.id);
   }
 });
+test('the production server serves both overworld scripts and art previews',async()=>{
+  const {server}=require('../server');
+  await new Promise(resolve=>server.listen(0,'127.0.0.1',resolve));
+  try{
+    const base='http://127.0.0.1:'+server.address().port;
+    for(const asset of ['/overworld-prototype.html?shop-test=1','/overworld/manifest.js','/overworld/prototype.js','/art-production/overworld-candidates/shop-map-v1.png','/art-production/overworld-candidates/yuna-standing-v1.png','/art-production/overworld-candidates/barb-standing-v1.png']){
+      const response=await fetch(base+asset);
+      assert.equal(response.status,200,asset);
+      assert.ok((await response.arrayBuffer()).byteLength>0,asset);
+    }
+  }finally{await new Promise(resolve=>server.close(resolve));}
+});
