@@ -3,14 +3,14 @@
   const config=window.NeoOverworld, byId=id=>document.getElementById(id);
   const camera=byId('camera'), world=byId('world'), edges=byId('edges'), dialog=byId('dialog');
   const params=new URLSearchParams(location.search), poseTest=params.has('reina-test'), dev=params.has('dev');
-  const shopTest=params.has('shop-test'),map=shopTest?config.shop:config.arcade;
+  const shopTest=params.has('shop-test'),requestedScene=params.get('scene'),sceneId=config[requestedScene]?.image?requestedScene:(shopTest?'shop':'arcade'),map=config[sceneId];
   byId('mapArt').src=map.image;byId('mapArt').alt=map.title;byId('world').style.width=map.width+'px';byId('world').style.height=map.height+'px';
   document.querySelector('.title strong').textContent=map.title;
-  if(shopTest)document.querySelector('#bottom p').textContent='Illustration candidate · placement under review.';
+  if(map.blueprint)document.querySelector('#bottom p').textContent='Temporary spatial blueprint · Final artwork not installed yet.';else if(shopTest)document.querySelector('#bottom p').textContent='Illustration candidate · placement under review.';
   const placements=poseTest ? [
     {id:'reina',anchor:'P1',pose:'standing',foot:{x:665,y:465},previewKey:'standing'},
     {id:'reina',anchor:'E1',pose:'arcade',foot:{x:245,y:430},previewKey:'arcade'}
-  ] : shopTest ? config.shopPreview : params.has('art-test') ? config.artPreview : params.has('cast-test') ? config.preview : config.preview.filter(p=>p.id==='reina');
+  ] : map.blueprint ? [{id:'reina',anchor:'P1',pose:'standing'},{id:'yuna',anchor:'P2',pose:'standing'},{id:'barb',anchor:'P3',pose:'standing'}] : shopTest ? config.shopPreview : params.has('art-test') ? config.artPreview : params.has('cast-test') ? config.preview : config.preview.filter(p=>p.id==='reina');
   if(dev){byId('guides').hidden=false;}
   let zoom=1,ox=0,oy=0,drag=null,ignoreClick=false,toastTimer;
   const clamp=(v,a,b)=>Math.min(b,Math.max(a,v));
@@ -31,7 +31,7 @@
     }
   }
   function focus(p){const pt=point(p);ox=camera.clientWidth/2-pt.x*zoom;oy=camera.clientHeight/2-(pt.y-60)*zoom;world.style.transition='transform .3s ease-out';paint();setTimeout(()=>world.style.transition='',320);}
-  function center(){zoom=clamp(Math.max(camera.clientWidth/map.initial.viewWidth,camera.clientHeight/map.initial.viewHeight),.52,1.05);const initialReina=placements.find(p=>p.id==='reina'&&p.pose==='arcade');const target=(poseTest||(!shopTest&&!params.has('art-test')&&!params.has('cast-test')))&&initialReina?point(initialReina):map.initial;ox=camera.clientWidth/2-target.x*zoom;oy=camera.clientHeight/2-(target.y-55)*zoom;paint();}
+  function center(){zoom=clamp(Math.max(camera.clientWidth/map.initial.viewWidth,camera.clientHeight/map.initial.viewHeight),.52,1.05);const initialReina=map.id==='arcade'?placements.find(p=>p.id==='reina'&&p.pose==='arcade'):null;const target=(poseTest||(!shopTest&&!params.has('art-test')&&!params.has('cast-test')))&&initialReina?point(initialReina):map.initial;ox=camera.clientWidth/2-target.x*zoom;oy=camera.clientHeight/2-(target.y-55)*zoom;paint();}
   function toast(message){const t=byId('toast');t.textContent=message;t.hidden=false;clearTimeout(toastTimer);toastTimer=setTimeout(()=>t.hidden=true,3500);}
   function openPerson(p){if(ignoreClick)return;byId('dialogName').textContent=person(p).name+(p.previewKey?' · '+p.previewKey:'');const img=byId('dialogImg');img.src=face(p);img.alt=person(p).name;img.onerror=()=>img.hidden=true;img.hidden=false;dialog.hidden=false;byId('close').focus();}
   for(const p of placements){const pt=point(p),art=pose(p),b=document.createElement('button');b.className='anchor';b.style.left=pt.x+'px';b.style.top=pt.y+'px';b.dataset.character=p.id;b.dataset.pose=p.pose||'standing';b.dataset.foot=`${pt.x}, ${pt.y}`;b.title=`Interact with ${person(p).name}`;b.setAttribute('aria-label',b.title);
