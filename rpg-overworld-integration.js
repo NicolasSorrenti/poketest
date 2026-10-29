@@ -61,7 +61,7 @@
       if(bridge()?.snapshot()?.locked||!storyShield.hidden){showNotice('Finish the current scene before opening another panel.');return;}
       if(expandedSheet===kind){closeSheet();return;}
       hideMenu();hideEvents();
-      overlay.querySelectorAll('[data-overworld-activity-panel]').forEach(el=>el.remove());
+      overlay.querySelectorAll('[data-overworld-activity-panel],[data-overworld-activity-backdrop]').forEach(el=>el.remove());
       overlay.classList.remove('neo-ow-activity-open');
       closeSheet();expandedSheet=kind;
       sheetHeading.textContent=kind==='travel'?'Choose a destination':'Your next opportunities';
@@ -261,7 +261,7 @@
       bottom.style.pointerEvents=locked?'none':'auto';
       if(locked){
         closeSheet();hideMenu();hideEvents();
-        overlay.querySelectorAll('[data-overworld-activity-panel]').forEach(el=>el.remove());
+        overlay.querySelectorAll('[data-overworld-activity-panel],[data-overworld-activity-backdrop]').forEach(el=>el.remove());
         overlay.classList.remove('neo-ow-activity-open');
       }
     }
@@ -473,7 +473,7 @@
         else stageHome.append(stage);
         stage.removeAttribute('style');
       }
-      overlay.querySelectorAll('[data-overworld-activity-panel]').forEach(el=>el.remove());
+      overlay.querySelectorAll('[data-overworld-activity-panel],[data-overworld-activity-backdrop]').forEach(el=>el.remove());
       overlay.classList.remove('neo-ow-activity-open');
       overlay.hidden=true;overlay.style.display='none';frame.src='about:blank';open.focus();
     }
@@ -510,7 +510,11 @@
         closeSheet();hideMenu();hideEvents();
         const eligible=activities.filter(a=>!a.disabled);
         if(!eligible.length){showNotice('No activities are available right now.');return;}
-        overlay.querySelectorAll('[data-overworld-activity-panel]').forEach(el=>el.remove());
+        overlay.querySelectorAll('[data-overworld-activity-panel],[data-overworld-activity-backdrop]').forEach(el=>el.remove());
+        const backdrop=document.createElement('button');
+        backdrop.type='button';backdrop.dataset.overworldActivityBackdrop='true';
+        backdrop.setAttribute('aria-label','Close activities');
+        backdrop.style.cssText='position:absolute;z-index:11;inset:0;border:0;background:#080618ad;cursor:default';
         const panel=document.createElement('section');panel.dataset.overworldActivityPanel='true';
         panel.setAttribute('role','dialog');panel.setAttribute('aria-modal','true');
         panel.setAttribute('aria-label','Current RPG activities');
@@ -525,7 +529,8 @@
         });
         overlay.classList.add('neo-ow-activity-open');
         const head=document.createElement('div');head.textContent='Choose a current RPG activity';panel.append(head);
-        function closeActivities(){panel.remove();overlay.classList.remove('neo-ow-activity-open');}
+        function closeActivities(){panel.remove();backdrop.remove();overlay.classList.remove('neo-ow-activity-open');}
+        backdrop.onclick=closeActivities;
         for(const a of eligible){const button=document.createElement('button');button.textContent=a.title;button.type='button';Object.assign(button.style,{display:'block',marginTop:'8px',padding:'10px',width:'100%',background:'#403051',color:'white',borderRadius:'8px'});button.onclick=()=>{
           closeActivities();
           if(!showStory())dismiss();
@@ -534,9 +539,9 @@
         };panel.append(button);}
         const cancel=document.createElement('button');cancel.textContent='✕ Close activities';cancel.type='button';
         cancel.style.cssText='display:block;margin-top:14px;width:100%;padding:11px;border-radius:9px;background:#38284a;color:white;border:1px solid #9a7da5';
-        cancel.onclick=closeActivities;panel.append(cancel);overlay.append(panel);
+        cancel.onclick=closeActivities;panel.append(cancel);overlay.append(backdrop,panel);
     }
-    document.addEventListener('keydown',event=>{if(event.key!=='Escape'||overlay.hidden)return;if(!storyShield.hidden){event.preventDefault();return;}if(overlay.classList.contains('neo-ow-activity-open')){event.preventDefault();overlay.querySelectorAll('[data-overworld-activity-panel]').forEach(el=>el.remove());overlay.classList.remove('neo-ow-activity-open');return;}if(expandedSheet){event.preventDefault();closeSheet();return;}if(!deckPanel.hidden){hideDeck();return;}if(!eventPanel.hidden){hideEvents();return;}if(!menu.hidden){hideMenu();return;}if(!bridge()?.snapshot()?.locked)dismiss();});
+    document.addEventListener('keydown',event=>{if(event.key!=='Escape'||overlay.hidden)return;if(!storyShield.hidden){event.preventDefault();return;}if(overlay.classList.contains('neo-ow-activity-open')){event.preventDefault();overlay.querySelectorAll('[data-overworld-activity-panel],[data-overworld-activity-backdrop]').forEach(el=>el.remove());overlay.classList.remove('neo-ow-activity-open');return;}if(expandedSheet){event.preventDefault();closeSheet();return;}if(!deckPanel.hidden){hideDeck();return;}if(!eventPanel.hidden){hideEvents();return;}if(!menu.hidden){hideMenu();return;}if(!bridge()?.snapshot()?.locked)dismiss();});
     // Battles run in the original full-screen duel layer. Resume the map as soon as
     // its battle layer closes, without restarting the campaign or changing saves.
     const duel=document.getElementById('duel');
