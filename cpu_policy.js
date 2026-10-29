@@ -1202,11 +1202,15 @@ function energyPreparationActions(o,cfg,actions){
    strandedActiveEnergy(o,o.self.hand[a.payload.handIndex]));
  });
  if(!useful)return actions;
+ // Confusion adds a mandatory coin flip before a printed attack resolves.
+ // A nominally lethal attack therefore cannot guarantee the final Prize.
+ const confusionChance=o.self.active?.status==='Confused'?.5:1;
  const gameWinningKo=(o.self.prizeCount<=1||o.opponent.bench.length===0)&&
   actions.some(a=>{
    if(a.type!=='attack')return false;
    const attacks=o.self.active?.effectiveAttacks||card(o.self.active?.id)?.attacks||[];
-   return knockoutChance(attacks[a.payload.attackIndex],o.self.active,o.opponent.active,o.self.bench.length)>=.999;
+   return knockoutChance(attacks[a.payload.attackIndex],o.self.active,o.opponent.active,o.self.bench.length)*
+    confusionChance>=.999;
   });
  return gameWinningKo?actions:actions.filter(a=>a.type!=='attack');
 }
