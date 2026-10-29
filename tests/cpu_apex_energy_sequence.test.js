@@ -137,6 +137,35 @@ test('Apex future Energy horizon still rewards legal multi-turn setup',()=>{
   AI.energyHorizonBonus(attachActive,noEnergy,cfg));
 });
 
+test('Apex values Energy that unlocks an attack after Paralysis clears',()=>{
+ const fighting=futureEnergyBoard(FIGHT,'base1-91',[]);
+ const fire=futureEnergyBoard('base1-98','base1-91',[]);
+ for(const o of [fighting,fire]){
+  o.turnSerial=11;
+  o.self.active.status='Paralyzed';
+ }
+ assert.ok(AI.energyHorizonBonus(attachActive,fighting,cfg)>
+  AI.energyHorizonBonus(attachActive,fire,cfg),
+  'a legal Fighting attachment must earn next-turn Jab value after guaranteed recovery');
+ // Sleep is not guaranteed to end, so do not predict a free wake-up.
+ fighting.self.active.status='Asleep';
+ fire.self.active.status='Asleep';
+ assert.equal(AI.energyHorizonBonus(attachActive,fighting,cfg),
+  AI.energyHorizonBonus(attachActive,fire,cfg));
+});
+
+test('Apex forecasts a two-attachment attack after Paralysis recovery',()=>{
+ const dce=futureEnergyBoard(FIGHT,'base1-96',[FIGHT]);
+ const noEnergy=futureEnergyBoard(FIGHT,'base1-91',[FIGHT]);
+ for(const o of [dce,noEnergy]){
+  o.turnSerial=11;
+  o.self.active.status='Paralyzed';
+ }
+ assert.ok(AI.energyHorizonBonus(attachActive,dce,cfg)>
+  AI.energyHorizonBonus(attachActive,noEnergy,cfg),
+  'next-turn Double Colorless must retain its value after Paralysis clears');
+});
+
 test('Apex Energy horizon ignores already-expired Amnesia and Gym locks',()=>{
  const baseline=futureEnergyBoard(FIGHT,'base1-96',[FIGHT]);
  baseline.turnSerial=11;
