@@ -96,3 +96,10 @@ The shop concept was generated from the canonical `shop-day.webp` panorama and t
 - The iframe preview posts `neo-overworld-action` messages for person and hotspot clicks; parent adapter validates same-origin and frame source before invoking the RPG bridge.
 - Sprite-unregistered scheduled NPCs are now retained in the integrated map and shown with a fallback character marker (`8013df75`). This means missing character art does not hide in-game NPCs.
 - Still needs a live deployed desktop/mobile playthrough. Current Render status was behind latest `main` as of this edit; do not equate GitHub commit with deployment.
+
+## 2026-10-29 — native screen handoff fix
+- Map overlay dismisses before native NPC interaction and activity execution, preventing native dialogue / time confirmations from appearing behind it.
+- Successful travel dismisses the map immediately because first-visit or mandatory event narration can start during travel.
+- Stale activity choice panels are removed on dismiss or before opening another panel.
+- Cache-busting script version updated in rpg.html. JavaScript parse checks passed for main bridge/adapter/prototype.
+- **Not yet browser tested or deployed** as of this edit; avoid calling integration production-verified.
