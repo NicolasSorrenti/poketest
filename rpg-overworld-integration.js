@@ -394,8 +394,8 @@
       }
       #neoOverworldStoryDock #dialogue #line{
         font-size:16px!important;line-height:1.45!important;
-        height:calc(2 * 1.45em)!important;min-height:0!important;
-        max-height:calc(2 * 1.45em)!important;overflow:hidden!important;
+        height:2.9em!important;min-height:0!important;
+        max-height:2.9em!important;overflow:hidden!important;
         max-width:none!important;width:100%!important;margin:8px 0 0!important;
         white-space:pre-line!important;overflow-wrap:anywhere!important;
       }
@@ -444,7 +444,7 @@
         }
         #neoOverworldStoryDock #dialogue #line{
           font-size:15px!important;line-height:1.45!important;
-          height:calc(3 * 1.45em)!important;max-height:calc(3 * 1.45em)!important;
+          height:4.35em!important;max-height:4.35em!important;
         }
         #neoOverworldOverlay.neo-ow-idle-interaction #neoOverworldStoryDock #characterActions:not([hidden]){
           grid-template-columns:repeat(2,minmax(0,1fr));
