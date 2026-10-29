@@ -24,6 +24,7 @@
    if(token==='\n'){flush();continue;}
    if(measure(token)<=limit){insert(token);continue;}
    // Extremely long unbroken words/URLs must never overflow or disappear.
+   if(line)flush();
    for(const char of Array.from(token)){
     if(line&&measure(line+char)>limit)flush();
     line+=char;
