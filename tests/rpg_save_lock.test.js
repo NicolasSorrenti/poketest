@@ -22,13 +22,13 @@ function boot(saved=new Map(),sessions=new Map()){
  const window={NeoRpgNarrativePack:PACK,NeoRpgSideQuests:SIDE,NeoHarborStory:STORY,NeoRpgSchedules:SCHEDULES,NeoRpgWorld:WORLD,NeoRpgRivalArc:ARC,NeoRpgTournaments:TOURNAMENTS,NeoRpgCompetitiveLoop:COMPETE,NeoRpgReactivity:REACT,NeoRpgCommunity:COMMUNITY,NeoRpgConsequences:CONSEQ,NeoRpgRelationships:RELATIONSHIPS,NeoRpgTimeCoordinator:TIME,NeoRpgTournamentPresentation:TOURNAMENT_PRESENTATION,NeoRpgEpilogue:EPILOGUE,NeoRpgAppointments:APPOINTMENTS,NeoRpgIntentions:INTENTIONS,NeoRpgCGGallery:CG,NeoRpgDailyPlanner:PLANNER,NeoRpgSocialActivities:SOCIAL,NeoRpgPlannedDates:DATES,NeoRpgPreDuel:PRE,NeoRpgCollection:COLLECTION,NeoRpgSeasonJourney:JOURNEY,NeoRpgSituations:SITUATIONS,NeoRpgDuelBridge:BRIDGE,NeoRpgDialogue:DIALOGUE,NeoRpgBondRewards:BONDS,NeoRpgPartnerDecks:PARTNER,NeoRpgConversations:VN,NeoRpgDialogueMemory:MEMORY,
   NeoRpgRenderPerf:{reconcileKeyed(parent,entries,create,refresh){
    parent.replaceChildren(...entries.map((entry,index)=>{const node=create(entry);refresh(node,entry,index);return node;}));
-  }},addEventListener(type,fn){listeners[type]=fn;}};
+  }},addEventListener(type,fn){listeners[type]=fn;},dispatchEvent(event){listeners[event.type]?.(event);return true;}};
  const fresh=!saved.has(KEY);
  const localStorage={getItem:k=>saved.has(k)?saved.get(k):null,setItem:(k,v)=>saved.set(k,v)};
  const sessionStorage={getItem:k=>sessions.get(k)||null,setItem:(k,v)=>sessions.set(k,v),removeItem:k=>sessions.delete(k)};
  const fetch=async()=>({ok:true,json:async()=>({decks:[{id:'blackout',name:'Blackout'},{id:'brushfire',name:'Brushfire'}]})});
  const location={search:'',origin:'http://localhost:8000',reload(){}};
- vm.runInNewContext(script,{window,document,localStorage,sessionStorage,fetch,location,confirm:()=>true,console,queueMicrotask,URLSearchParams,Image:Element,NodeFilter:{SHOW_TEXT:4}},{filename:'rpg.js'});
+ vm.runInNewContext(script,{window,document,localStorage,sessionStorage,fetch,location,confirm:()=>true,console,queueMicrotask,URLSearchParams,Event:class{constructor(type){this.type=type;}},Image:Element,NodeFilter:{SHOW_TEXT:4}},{filename:'rpg.js'});
  if(fresh)ids.starterChoices.children[0].onclick();
  return {ids,listeners,saved,sessions,location,read:()=>JSON.parse(saved.get(KEY)),send:payload=>listeners.message({origin:location.origin,source:ids.battle.contentWindow,data:payload})};
 }
