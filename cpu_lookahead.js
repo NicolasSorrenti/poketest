@@ -28,10 +28,10 @@ function publicCounterplay(o,helpers,ourTarget=o.self.active,enemy=o.opponent){
  const health=hpRemaining(ourTarget);
  if(health<=0)return {expected:0,koChance:0,benchThreat:0};
  const disabled=['Asleep','Paralyzed'].includes(enemy.active.status);
- const activeDamage=disabled?0:strongestAffordableAttack(enemy.active,ourTarget);
- const activeImpact=disabled?0:projectedAttackValue(enemy.active,ourTarget,o.turnSerial);
- const benchDamage=enemy.bench.reduce((best,u)=>Math.max(best,strongestAffordableAttack(u,ourTarget)),0);
- const benchImpact=enemy.bench.reduce((best,u)=>Math.max(best,projectedAttackValue(u,ourTarget,o.turnSerial)),0);
+ const activeDamage=disabled?0:strongestAffordableAttack(enemy.active,ourTarget,enemy.bench.length);
+ const activeImpact=disabled?0:projectedAttackValue(enemy.active,ourTarget,o.turnSerial,enemy.bench.length);
+ const benchDamage=enemy.bench.reduce((best,u)=>Math.max(best,strongestAffordableAttack(u,ourTarget,Math.max(0,enemy.bench.length-1))),0);
+ const benchImpact=enemy.bench.reduce((best,u)=>Math.max(best,projectedAttackValue(u,ourTarget,o.turnSerial,Math.max(0,enemy.bench.length-1))),0);
  const benchThreat=0.18*Math.max(0,benchImpact-activeImpact);
  const koChance=activeDamage>=health&&activeDamage>0?1:0;
  return {expected:activeImpact+benchThreat,koChance,benchThreat};
@@ -49,12 +49,12 @@ function evaluateTurn(o,cfg,helpers){
  const ownPrizes=Number(own.prizeCount||0),enemyPrizes=Number(enemy.prizeCount||0);
  const enemyHasBackup=enemy.bench.length>0;
  const benchCounter=enemy.bench.reduce((best,u)=>
-  Math.max(best,projectedAttackValue(u,own.active,o.turnSerial)),0);
+  Math.max(best,projectedAttackValue(u,own.active,o.turnSerial,Math.max(0,enemy.bench.length-1))),0);
  let attacks=0;
  for(const action of actions){
   const atk=(own.active.effectiveAttacks||card(own.active.id)?.attacks||[])[action.payload.attackIndex];
   if(!atk)continue;
-  const ko=knockoutChance(atk,own.active,enemy.active);
+  const ko=knockoutChance(atk,own.active,enemy.active,own.bench.length);
   const isWin=ownPrizes===1||!enemyHasBackup;
   // A KO removes their Active. Once promoted, only known Benched Pokémon
   // have an immediate Energy-powered response; don't assume hidden draws.
@@ -82,7 +82,7 @@ function evaluateTurn(o,cfg,helpers){
  const overcommitPenalty=excess*12;
  const backups=benchCount===0?-80:benchCount===1?20:benchCount===2?28:32;
  const readyBench=own.bench.reduce((best,u)=>
-  Math.max(best,strongestAffordableAttack(u,enemy.active)),0);
+  Math.max(best,strongestAffordableAttack(u,enemy.active,Math.max(0,own.bench.length-1))),0);
  const position=backups+clamp(readyBench,0,90)*0.28;
  // A failed search still has a meaningful value: passing safely with a backup.
  const risk=counter.koChance*(enemyPrizes===1?155:95)*(benchCount?0.55:1);

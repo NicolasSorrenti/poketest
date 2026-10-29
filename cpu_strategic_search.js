@@ -19,7 +19,7 @@ const MAX_REPLY_WEIGHT=0.32; // unknown next Energy is a possibility, never a fa
 // The opponent may attach ONE Energy on its upcoming turn, but we do not know
 // whether it has that Energy. Use printed costs as a hypothetical and discount
 // the resulting extra threat. Never use actual hidden cards or shuffled order.
-function oneEnergyThreat(attacker,target,helpers,turnSerial=0){
+function oneEnergyThreat(attacker,target,helpers,turnSerial=0,benchCount=null){
  if(!attacker||!target||['Asleep','Paralyzed'].includes(attacker.status))return 0;
  const {card,energyPool,canPayEnergy,estimatedDamage,hpRemaining}=helpers;
  const attacks=attacker.effectiveAttacks||card(attacker.id)?.attacks||[];
@@ -34,7 +34,7 @@ function oneEnergyThreat(attacker,target,helpers,turnSerial=0){
   if(attacker.gymAttackCooldown?.expires>turnSerial&&
     (attacker.gymAttackCooldown.index===null||attacker.gymAttackCooldown.index===i))continue;
   if(attacker.gymAttackOnce?.includes(i))continue;
-  const raw=estimatedDamage(atk,attacker,target);
+  const raw=estimatedDamage(atk,attacker,target,benchCount);
   const value=Math.min(Math.max(raw,0),hp)*1.05+(raw>=hp?110:0);
   if(canPayEnergy(cost,owned)){current=Math.max(current,value);continue;}
   const colors=[...new Set([...cost.filter(t=>t!=='Colorless'),'Colorless'])];
@@ -57,13 +57,16 @@ function counterplayExposure(o,helpers){
  const hp=hpRemaining(own.active),endGameRisk=enemy.prizeCount===1||own.bench.length===0;
  if(hp<=0)return 0;
  const riskMultiplier=endGameRisk?155:92;
- const ready=attacker=>attacker&&!['Asleep','Paralyzed'].includes(attacker.status)?
-  projectedAttackValue(attacker,own.active,o.turnSerial):0;
- const uncertain=attacker=>MAX_REPLY_WEIGHT*oneEnergyThreat(
-  attacker,own.active,helpers,o.turnSerial);
- const activeReady=ready(enemy.active),activeExtra=uncertain(enemy.active);
- const benchReady=enemy.bench.reduce((v,u)=>Math.max(v,ready(u)),0);
- const benchFuture=enemy.bench.reduce((v,u)=>Math.max(v,ready(u)+uncertain(u)),0);
+ const ready=(attacker,benchCount)=>attacker&&!['Asleep','Paralyzed'].includes(attacker.status)?
+  projectedAttackValue(attacker,own.active,o.turnSerial,benchCount):0;
+ const uncertain=(attacker,benchCount)=>MAX_REPLY_WEIGHT*oneEnergyThreat(
+  attacker,own.active,helpers,o.turnSerial,benchCount);
+ const activeReady=ready(enemy.active,enemy.bench.length),
+  activeExtra=uncertain(enemy.active,enemy.bench.length);
+ const promotedBenchCount=Math.max(0,enemy.bench.length-1);
+ const benchReady=enemy.bench.reduce((v,u)=>Math.max(v,ready(u,promotedBenchCount)),0);
+ const benchFuture=enemy.bench.reduce((v,u)=>Math.max(v,
+  ready(u,promotedBenchCount)+uncertain(u,promotedBenchCount)),0);
  const attacks=candidates(o,{side:o.turn,level:8,skill:{trainers:10,bench:4}},{
   trainers:0,powers:0,powerKeys:new Set(),stadium:false
  }).filter(a=>a.type==='attack');
@@ -77,7 +80,7 @@ function counterplayExposure(o,helpers){
    const atk=(own.active.effectiveAttacks||card(own.active.id)?.attacks||[])
     [a.payload.attackIndex];
    if(!atk)continue;
-   const ko=knockoutChance(atk,own.active,enemy.active);
+   const ko=knockoutChance(atk,own.active,enemy.active,own.bench.length);
    const winOnKO=own.prizeCount===1||!enemy.bench.length;
    const incoming=(1-ko)*switched+
     (winOnKO?0:ko*bench);
