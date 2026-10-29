@@ -25,6 +25,8 @@
     const stageHome=stage?.parentNode;
     const stageNext=stage?.nextSibling||null;
     let storyDock=null;
+    let lastSceneKey='';
+    let suspendedForDuel=false;
     function showStory(){
       if(!stage||!stageHome)return false;
       if(!storyDock){
@@ -33,7 +35,7 @@
         storyDock.setAttribute('aria-label','RPG conversation and story');
         Object.assign(storyDock.style,{position:'absolute',zIndex:'4',bottom:'12px',left:'max(8px,env(safe-area-inset-left))',right:'max(8px,env(safe-area-inset-right))',maxHeight:'min(72vh,680px)',overflow:'auto',border:'2px solid #b58cc7',borderRadius:'14px',background:'#181329',boxShadow:'0 10px 45px #000c'});
         const back=document.createElement('button');back.type='button';back.textContent='← Back to map';back.style.cssText='position:sticky;top:0;z-index:5;display:block;width:100%;padding:11px;border:0;background:#352548;color:white;font:700 14px system-ui;cursor:pointer';
-        back.onclick=hideStory;storyDock.append(back);
+        back.onclick=()=>{if(bridge()?.snapshot()?.locked){note.textContent='Finish the current conversation or event first.';return;}hideStory();};storyDock.append(back);
       }
       overlay.append(storyDock);storyDock.append(stage);
       stage.style.cssText='display:block;position:relative;width:100%;max-width:none;height:auto;min-height:0;overflow:visible;margin:0;padding:8px';
@@ -54,12 +56,13 @@
       for(const p of data.places){const option=document.createElement('option');option.value=p.id;option.textContent=p.name;placeSelect.append(option);}
       placeSelect.value=data.location;travel.disabled=data.locked;
       const people=data.people.join(',');
-      frame.src='/overworld-prototype.html?scene='+encodeURIComponent(data.location)+'&cast='+encodeURIComponent(people)+'&rpg-integration=1&chibi='+(document.documentElement.dataset.rpgDiscreet==='on'?'1':'0');
+      const nextSrc='/overworld-prototype.html?scene='+encodeURIComponent(data.location)+'&cast='+encodeURIComponent(people)+'&rpg-integration=1&chibi='+(document.documentElement.dataset.rpgDiscreet==='on'?'1':'0');
+      if(frame.getAttribute('src')!==nextSrc)frame.src=nextSrc;
       note.textContent=data.locked?'Travel disabled during an active conversation, event or duel.':'Day '+data.day+' · '+['Morning','Afternoon','Evening'][data.slot]+' · RPG schedules active · Preview NPC interaction only';
     }
-    function dismiss(){hideStory();overlay.querySelectorAll('[data-overworld-activity-panel]').forEach(el=>el.remove());overlay.hidden=true;overlay.style.display='none';frame.src='about:blank';open.focus();}
+    function dismiss(){suspendedForDuel=false;hideStory();overlay.querySelectorAll('[data-overworld-activity-panel]').forEach(el=>el.remove());overlay.hidden=true;overlay.style.display='none';frame.src='about:blank';open.focus();}
     open.addEventListener('click',()=>{refresh();overlay.hidden=false;overlay.style.display='flex';close.focus();});
-    close.addEventListener('click',dismiss);
+    close.addEventListener('click',()=>{if(bridge()?.snapshot()?.locked){note.textContent='Finish the active story or duel before leaving the overworld.';return;}dismiss();});
     document.getElementById('rpgDiscreetToggle')?.addEventListener('click',()=>{if(!overlay.hidden)refresh();});
     travel.addEventListener('click',()=>{
       const target=placeSelect.value;const data=snapshot();if(!data)return;
@@ -99,7 +102,24 @@
         const cancel=document.createElement('button');cancel.textContent='Cancel';cancel.onclick=()=>panel.remove();panel.append(cancel);overlay.append(panel);
       }
     });
-    document.addEventListener('keydown',event=>{if(event.key==='Escape'&&!overlay.hidden)dismiss();});
+    document.addEventListener('keydown',event=>{if(event.key==='Escape'&&!overlay.hidden&&!bridge()?.snapshot()?.locked)dismiss();});
+    // Battles run in the original full-screen duel layer. Resume the map as soon as
+    // its battle layer closes, without restarting the campaign or changing saves.
+    const duel=document.getElementById('duel');
+    if(duel){
+      const syncDuel=()=>{
+        if(!overlay.hidden&&!duel.hidden){
+          suspendedForDuel=true;
+          overlay.style.display='none';
+        }else if(suspendedForDuel&&duel.hidden){
+          suspendedForDuel=false;
+          overlay.style.display='flex';
+          refresh();
+          if(bridge()?.snapshot()?.locked)showStory();else hideStory();
+        }
+      };
+      new MutationObserver(syncDuel).observe(duel,{attributes:true,attributeFilter:['hidden']});
+    }
     if(window.NeoRpgOverworldStandalone)setTimeout(()=>{if(bridge()&&overlay.hidden)open.click();},0);
   }
   window.addEventListener('neo-rpg-overworld-bridge-ready',mount);
