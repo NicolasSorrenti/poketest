@@ -418,6 +418,12 @@ function travelTo(placeId,{intro=true}={}){
  tutorialEvent('travel');
  return true;
 }
+// Optional overworld adapter: the existing campaign remains authoritative.
+window.NeoRpgOverworldBridge=Object.freeze({
+ snapshot(){return {location:state.location,day:state.day,slot:state.slot,locked:controlsLocked(),people:currentPeople().filter(id=>!!cast[id]),places:Object.entries(places).map(([id,p])=>({id,name:p[0]}))};},
+ travel(placeId){return travelTo(placeId);},
+});
+window.dispatchEvent(new Event('neo-rpg-overworld-bridge-ready'));
 function publicAppointments(place){return [...APPOINTMENTS.overrides(state),...STORY.available(state,place),...SIDE.appointments(state),...(SLICE?.scheduleOverrides?.(state)||[])];}
 function currentPeople(){if(state.day>90)return [];const regular=SCHEDULES.peopleAt(state.day,state.slot,state.location,publicAppointments(state.location));
 for(const e of eligibleStories())if(!regular.includes(e.npc))regular.push(e.npc);
