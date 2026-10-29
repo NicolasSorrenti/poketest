@@ -105,7 +105,7 @@
     const img=document.createElement('img');img.className='sprite';img.alt='';if(chibiMode){loadChibi(img,p.id);b.style.setProperty('--sprite-height','130px');}else if(art){img.src=art.src;b.style.setProperty('--sprite-height',art.height+'px');}else{b.classList.add('missing');b.style.setProperty('--sprite-height','130px');}
     if(!chibiMode)img.onerror=()=>{b.classList.add('missing');toast('Artwork not loading: '+person(p).name+' · '+(p.pose||'standing'));};const fallback=document.createElement('span');fallback.className='fallback';fallback.textContent=person(p).name[0];const name=document.createElement('span');name.className='name';name.textContent=person(p).name;b.append(img,fallback,name);b.onclick=()=>openPerson(p);world.appendChild(b);
   }
-  for(const h of map.hotspots){const b=document.createElement('button');b.className='hotspot';Object.assign(b.style,{left:h.x+'px',top:h.y+'px',width:h.w+'px',height:h.h+'px'});b.setAttribute('aria-label','Explore '+h.label);b.title=h.label;const label=document.createElement('span');label.textContent=h.label;b.append(label);b.onclick=()=>{if(ignoreClick)return;if(params.has('rpg-integration')&&window.parent!==window){window.parent.postMessage({type:'neo-overworld-action',kind:'hotspot',id:h.id},location.origin);return;}toast(h.label+' · activity connection pending')};world.appendChild(b);}
+  for(const h of map.hotspots){const b=document.createElement('button');b.className='hotspot';Object.assign(b.style,{left:clamp(h.x,0,map.width-24)+'px',top:clamp(h.y,0,map.height-24)+'px',width:Math.max(24,Math.min(h.w,map.width-clamp(h.x,0,map.width-24)))+'px',height:Math.max(24,Math.min(h.h,map.height-clamp(h.y,0,map.height-24)))+'px'});b.setAttribute('aria-label','Explore '+h.label);b.title=h.label;const label=document.createElement('span');label.textContent=h.label;b.append(label);b.onclick=()=>{if(ignoreClick)return;if(params.has('rpg-integration')&&window.parent!==window){window.parent.postMessage({type:'neo-overworld-action',kind:'hotspot',id:h.id},location.origin);return;}toast(h.label+' · activity connection pending')};world.appendChild(b);}
   camera.addEventListener('pointerdown',e=>{if(e.button!==0||e.target.closest('button')||!dialog.hidden)return;drag={id:e.pointerId,x:e.clientX,y:e.clientY,ox,oy,moved:false};camera.setPointerCapture(e.pointerId);camera.classList.add('dragging')});
   camera.addEventListener('pointermove',e=>{if(!drag||e.pointerId!==drag.id)return;const dx=e.clientX-drag.x,dy=e.clientY-drag.y;if(Math.hypot(dx,dy)>7)drag.moved=true;ox=drag.ox+dx;oy=drag.oy+dy;paint()});
   function endDrag(e){if(!drag||e.pointerId!==drag.id)return;ignoreClick=drag.moved;drag=null;camera.classList.remove('dragging');if(ignoreClick)setTimeout(()=>ignoreClick=false,80);}
@@ -141,8 +141,8 @@
       let held=null;
       el.addEventListener('pointerdown',e=>{if(e.button!==0)return;e.preventDefault();e.stopPropagation();held={id:e.pointerId,x:e.clientX,y:e.clientY,point:{...point}};el.setPointerCapture(e.pointerId)});
       el.addEventListener('pointermove',e=>{if(!held||e.pointerId!==held.id)return;
-        const x=Math.round(clamp(held.point.x+(e.clientX-held.x)/zoom,0,map.width));
-        const y=Math.round(clamp(held.point.y+(e.clientY-held.y)/zoom,0,map.height));
+        const x=Math.round(clamp(held.point.x+(e.clientX-held.x)/zoom,0,map.width-(el.classList.contains('hotspot')?point.w:0)));
+        const y=Math.round(clamp(held.point.y+(e.clientY-held.y)/zoom,0,map.height-(el.classList.contains('hotspot')?point.h:0)));
         update(x,y);paint();
       });
       const finish=e=>{if(!held||e.pointerId!==held.id)return;held=null;persist()};
