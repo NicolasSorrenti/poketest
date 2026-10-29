@@ -21,6 +21,22 @@ test('Apex retains a guaranteed winning knockout instead of forcing attachment',
  const actions=AI.energyPreparationActions(o,cfg,[attack,attach]);
  assert.deepEqual(actions,[attack,attach]);
 });
+test('Apex prepares useful Energy before a Confused final-Prize attack',()=>{
+ const o=board();o.self.prizeCount=1;o.opponent.bench=[];o.opponent.active.damage=10;
+ o.self.active.status='Confused';
+ assert.deepEqual(AI.energyPreparationActions(o,cfg,[attack,attach]),[attach]);
+ // Without Confusion, the printed lethal attack really is guaranteed.
+ o.self.active.status=null;
+ assert.deepEqual(AI.energyPreparationActions(o,cfg,[attack,attach]),[attack,attach]);
+ // Level 7 keeps its established decision ordering.
+ o.self.active.status='Confused';
+ assert.deepEqual(AI.energyPreparationActions(o,AI.configuration({side:1,level:7}),[attack,attach]),[attack,attach]);
+});
+test('Apex does not treat a Confused last-opponent KO as certain',()=>{
+ const o=board();o.self.prizeCount=3;o.opponent.bench=[];o.opponent.active.damage=10;
+ o.self.active.status='Confused';
+ assert.deepEqual(AI.energyPreparationActions(o,cfg,[attack,attach]),[attach]);
+});
 test('Apex does not force attachment when Energy was already used',()=>{
  const o=board();o.self.energyUsed=true;
  assert.deepEqual(AI.energyPreparationActions(o,cfg,[attack,attach]),[attack,attach]);
