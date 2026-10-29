@@ -506,6 +506,73 @@
       }
     `;
     document.head.append(idleLayout);
+    // Final idle-only overrides intentionally follow the legacy RPG styles.
+    // Hide exploration UI entirely while focusing a character, eliminate blue
+    // panels, and force a single vertical action list as in the supplied mockup.
+    const mockupPolish=document.createElement('style');
+    mockupPolish.textContent=`
+      #neoOverworldOverlay.neo-ow-idle-interaction #neoOverworldBottom,
+      #neoOverworldOverlay.neo-ow-idle-interaction #neoOverworldSheet,
+      #neoOverworldOverlay.neo-ow-idle-interaction #neoOverworldMenu,
+      #neoOverworldOverlay.neo-ow-idle-interaction #neoOverworldSheetBackdrop{
+        display:none!important;visibility:hidden!important;pointer-events:none!important;
+      }
+      #neoOverworldOverlay.neo-ow-idle-interaction #neoOverworldStoryDock{
+        background:transparent!important;border:0!important;box-shadow:none!important;
+        overflow:visible!important;
+      }
+      #neoOverworldOverlay.neo-ow-idle-interaction #neoOverworldStoryDock>button:first-child{
+        display:none!important;
+      }
+      #neoOverworldOverlay.neo-ow-idle-interaction #neoOverworldStoryDock .stage-panel{
+        background:transparent!important;border:0!important;box-shadow:none!important;
+        overflow:visible!important;min-height:0!important;
+      }
+      #neoOverworldOverlay.neo-ow-idle-interaction #neoOverworldStoryDock .stage-panel > :not(#scene):not(#characterActions):not(#neoOverworldInteractionCaption):not(#neoOverworldInteractionBack){
+        display:none!important;
+      }
+      #neoOverworldOverlay.neo-ow-idle-interaction #neoOverworldStoryDock #scene{
+        background:transparent!important;border:0!important;box-shadow:none!important;
+      }
+      #neoOverworldOverlay.neo-ow-idle-interaction #neoOverworldStoryDock #characterActions:not([hidden]){
+        display:flex!important;flex-direction:column!important;flex-wrap:nowrap!important;
+        grid-template-columns:none!important;grid-template-rows:none!important;
+        justify-content:center!important;align-items:stretch!important;gap:5px!important;
+        padding:0!important;margin:0!important;background:transparent!important;
+        border:0!important;box-shadow:none!important;width:100%!important;
+      }
+      #neoOverworldOverlay.neo-ow-idle-interaction #neoOverworldStoryDock #characterActions:not([hidden]) > button{
+        display:block!important;flex:0 0 auto!important;grid-column:auto!important;
+        width:100%!important;min-width:0!important;max-width:none!important;
+        min-height:42px!important;padding:9px 15px!important;
+        border-radius:8px!important;border:1px solid #a28eab!important;
+        background:linear-gradient(110deg,#29253ed9,#171627d9)!important;
+        color:#fff!important;box-shadow:0 3px 12px #0006!important;
+        font:700 13px system-ui!important;text-align:left!important;
+        white-space:normal!important;
+      }
+      #neoOverworldOverlay.neo-ow-idle-interaction #neoOverworldStoryDock #characterActions:not([hidden]) > button:first-child{
+        background:linear-gradient(105deg,#d45187ee,#a12e66ee)!important;
+        border-color:#f2a5ca!important;
+      }
+      #neoOverworldOverlay.neo-ow-idle-interaction #neoOverworldStoryDock #neoOverworldInteractionCaption{
+        background:linear-gradient(90deg,#151222e0,#1512227a)!important;
+        border:0!important;border-left:3px solid #e88cb7!important;
+        border-radius:7px!important;box-shadow:none!important;
+      }
+      #neoOverworldOverlay.neo-ow-idle-interaction #neoOverworldStoryDock #neoOverworldInteractionBack{
+        background:#201a33dd!important;border:1px solid #9b83a8!important;
+        text-align:left!important;padding-left:15px!important;min-height:42px!important;
+      }
+      @media(max-width:650px){
+        #neoOverworldOverlay.neo-ow-idle-interaction #neoOverworldStoryDock{
+          width:calc(100vw - 12px)!important;max-height:82dvh!important;
+          overflow-y:auto!important;
+        }
+      }
+    `;
+    document.head.append(mockupPolish);
+
     const dialogueStyle=document.createElement('style');
     dialogueStyle.textContent=`
       /* A stable two-line PC / three-line mobile speech window, independent
