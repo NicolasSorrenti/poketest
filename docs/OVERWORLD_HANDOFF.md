@@ -51,3 +51,22 @@ Updated: 2026-10-28 (Buenos Aires). Source of truth for the Pixel Palace prototy
 - `node --test tests/overworld_preview.test.js`: 3 passed; `tests/rpg_bootstrap_dependency.test.js` and `tests/rpg_public_scripts.test.js`: 5 passed; `npm run build`: passed.
 - Local HTTP served prototype, manifest, JavaScript, CSS, map, Reina pose and unchanged RPG HTML with status 200.
 - Browser rendering and touch/drag behavior have **not** been verified: local Playwright browser download failed. Visual alignment and full RPG playthrough require a live preview and device testing.
+
+## Art candidate round (not approved, 2026-10-28 Buenos Aires)
+
+Three newly generated candidates are stored only under `art-production/overworld-candidates/` and are shown only with explicit preview query parameters. They are **not** canonical game assets:
+
+| Candidate | Path | Review URL after deployment | Review focus |
+| --- | --- | --- | --- |
+| Yuna standing | `yuna-standing-v1.png` | `/overworld-prototype.html?art-test=1` | Confirm outfit, scale, fishnet black patch artifacts, silhouette and alpha edge. |
+| Barb standing | `barb-standing-v1.png` | `/overworld-prototype.html?art-test=1` | Confirm 161 cm relative height, outfit, tattoo, hat, face and alpha edge. |
+| Lucky Draw shop | `shop-map-v1.png` | `/overworld-prototype.html?shop-test=1` | Confirm store identity, warm daylight, open floor and furniture placement. |
+
+The shop concept was generated from the canonical `shop-day.webp` panorama and the approved Pixel Palace camera/style reference. Actual output is **1475 × 1066**, preserving the 1550:1120 blueprint ratio; the preview uses native dimensions. `shop-blueprint.json` holds proposed spatial zones and anchors. The manifest's candidate shop anchors/hotspots were recalibrated against the generated image, but they are provisional until mobile/desktop inspection.
+
+**Generation prompts for review/reproduction:**
+- Yuna: canonical `streetwear-preview.png` and `portraits/primary.png` as identity references; full-body relaxed three-quarter standing pose, exact blue twin tails, yellow bows, headphones, yellow/blue jacket, black top/shorts, one fishnet leg, gloves and sneakers; isolated transparent cutout without furniture or text. The first render had dark stocking marks; the candidate is the refinement, but residual dark patches still need review.
+- Barb: `barb_character_bible.webp` and `portraits/primary.png` as identity references; adult 161 cm petite figure in the default black cap, lace-up top, pleated skirt, bow stockings, boots, shoulder bag, jewelry and left-arm floral tattoo; relaxed three-quarter standing, transparent character-only cutout.
+- Shop: `shop-day.webp` for Lucky Draw identity, approved `arcade/overworld-map.webp` for continuous camera perspective; rear/left card shelves, rear-right sales counter, upper-right windows, open central floor for four characters, lower-center card tables, lower-left lounge; no people, UI, markers or illegible signage.
+
+**Design conversation request:** Review the three candidate images side by side in their preview routes. Approve or identify specific corrections to (1) Yuna's stocking/accessories and transparency edge, (2) Barb's relative scale and default outfit, and (3) the Lucky Draw furniture layout and shop identity. Approved versions can then move to canonical `rpg-assets/characters/<id>/overworld/standing.png` and `rpg-assets/locations/shop/overworld-map.webp`; do not promote these candidates automatically.
