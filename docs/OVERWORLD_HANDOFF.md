@@ -110,3 +110,9 @@ The shop concept was generated from the canonical `shop-day.webp` panorama and t
 - Back/close buttons respect active story locks.
 - The existing full-screen `#duel` layer temporarily suppresses the map overlay; a `MutationObserver` restores the overworld when the battle ends, then refreshes its schedule and displays active story if present.
 - Changes committed through `cea5d1ad`. JavaScript syntax checked; **no browser gameplay verification yet**. Test duel→rewards→map and mandatory events during travel.
+
+## 2026-10-29 — map-based VN layout
+- Standalone Overworld RPG reuses live `.stage-panel` inside `#neoOverworldStoryDock` instead of copying conversation state.
+- Overworld-only injected CSS removes old scene backdrop/header, keeps the map visible behind portraits, CGs, dialogue, response choices and selected-character actions. Mobile panel sizing included.
+- Original `/rpg.html` is not modified. `/rpg-overworld.html` cache query bumped for the integration script.
+- Syntax validated; gameplay and layout still need deployment/browser QA, especially story completion, multiple CGs, discreet-mode chibi presentation, pre-duel screens and rewards.
