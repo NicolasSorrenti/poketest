@@ -6,10 +6,10 @@
  const isRpgDuel=/\/classic_live\.html$/.test(path)
   &&new URLSearchParams(window.location.search).get('rpg')==='1';
  if(!isRpg&&!isRpgDuel)return;
- const key='neoHarborRpgDiscreetV1';
+ const key=isOverworld?'neoHarborOverworldChibiModeV1':'neoHarborRpgDiscreetV1';
  const root=document.documentElement;
  function fromStorage(){
-  try{return window.localStorage.getItem(key)==='1';}catch{return false;}
+  try{const saved=window.localStorage.getItem(key);return saved===null?isOverworld:saved==='1';}catch{return isOverworld;}
  }
  function refreshButton(){
   const button=document.getElementById('rpgDiscreetToggle');
