@@ -1677,17 +1677,19 @@ function buildArtEntries(){
   register(id,type,path.split('/').at(-1).replace(/\.[^.]+$/,''),path);
  }
 }
+function recordArtPath(path){
+ const normalized=String(path||'').split('?')[0].replace(/^https?:\/\/[^/]+/,'');
+ if(!/^\/rpg-assets\/(?:characters|reactions)\/[^?#]+\.(?:png|webp|jpe?g)$/i.test(normalized))return;
+ if(!artSeen[normalized]){artSeen[normalized]={day:state.day,slot:state.slot};buildArtEntries();persist();}
+}
+window.NeoRpgRecordArt=recordArtPath;
+window.addEventListener('message',event=>{if(event.origin===location.origin&&event.source===$('battle')?.contentWindow&&event.data?.type==='neo-rpg-art-seen')recordArtPath(event.data.path);});
+window.addEventListener('neo-rpg-art-seen',event=>recordArtPath(event.detail?.path));
 function recordArtImage(img){
  if(img.closest?.('#galleryDialog,.cg-lightbox,.cg-fullscreen-viewer'))return;
  const path=artKey(img.currentSrc||img.src);
  if(!path.startsWith('/rpg-assets/')&&!path.includes('/rpg-assets/'))return;
- const normalized=path.includes('/rpg-assets/')?path.slice(path.indexOf('/rpg-assets/')):path;
- if(!/\.(png|webp|jpg|jpeg)$/i.test(normalized))return;
- if(!normalized.startsWith('/rpg-assets/characters/')&&!normalized.startsWith('/rpg-assets/reactions/'))return;
- if(!artSeen[normalized]){
-  artSeen[normalized]={day:state.day,slot:state.slot};
-  buildArtEntries();persist();
- }
+ recordArtPath(path);
 }
 function attachArtworkTracker(doc){
  if(!doc||doc.__neoGalleryTracking)return;
