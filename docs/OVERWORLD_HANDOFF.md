@@ -137,3 +137,15 @@ The shop concept was generated from the canonical `shop-day.webp` panorama and t
 - The expanded sheet collapses on selecting a destination, starting a story/dialogue, closing via Escape/close/outside tap, or opening the game menu/another panel. CG and dialogue overlays hide all bottom navigation as before.
 - Integrated `/overworld-prototype.html?rpg-integration=1` now hides its redundant preview location header/footer; standalone prototype keeps them.
 - Desktop/mobile CSS supports a scrollable panel and safe-area insets. Latest code commits `0c48789`, `abcb421`, `f1fd9a4`, `7f96215`; **browser end-to-end verification remains outstanding**.
+
+## 2026-10-29 — Mobile dialogue/arrival regression corrections
+
+User screenshot (Riverside Park, Day 32 Evening) established four defects: duplicate Reina portraits, undersized VN bust artwork, original RPG interaction panel appearing after dialogue, and mandatory/entry-event dialogue not taking precedence over exploration controls.
+
+- `rpg-overworld-integration.js` now **hides the native `#portrait`** while the overworld's character-only speaker layer renders. Each portrait fills about **40vw**, maximum **two**, so a pair occupies roughly 80vw.
+- The UI uses `NeoRpgSceneCast.createSpeakerWindow()`: when a third (or later) participant speaks, the least-recently-speaking of the two visible portraits is replaced; all scripted participants are eligible, not just the first four.
+- `hideStory()` no longer reparents the live `.stage-panel` back to the classic RPG after each conversation. The existing stage remains mounted in the *hidden* overworld dock between scenes. Only explicit `dismiss()` restores the original stage.
+- The overworld bridge now exposes explicit `storyActive`/`eventActive`. On each real RPG `render()` (including the early-return travel transition path), it dispatches `neo-rpg-overworld-render`. The adapter listens and prioritizes forced events, dialogues and CGs ahead of the map UI. **Character action buttons alone never keep a story panel open.**
+- In arrival-only transitions the map controls are hidden/blocked; scripted entry events show the native scene even while the arrival gate is settling. Regular map controls return after the scene is done.
+- `tests/rpg_scene_cast.test.js` includes two-person/third-speaker/narrator/fifth-speaker rotation regression cases; JavaScript syntax and manual in-memory speaker-window simulations passed. **Real browser playthrough remains to be verified** on mobile for forced arrivals, CGs, and transition back to the map.
+- Original `/rpg.html` stays separate; render behavior is notified only on the standalone overworld route.
