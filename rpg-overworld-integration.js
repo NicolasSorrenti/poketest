@@ -534,6 +534,9 @@
       #neoOverworldOverlay.neo-ow-idle-interaction #neoOverworldStoryDock #scene{
         background:transparent!important;border:0!important;box-shadow:none!important;
       }
+      #neoOverworldOverlay.neo-ow-idle-interaction #neoOverworldStoryDock #scene::after{
+        display:none!important;background:none!important;
+      }
       #neoOverworldOverlay.neo-ow-idle-interaction #neoOverworldStoryDock #characterActions:not([hidden]){
         display:flex!important;flex-direction:column!important;flex-wrap:nowrap!important;
         grid-template-columns:none!important;grid-template-rows:none!important;
@@ -638,16 +641,6 @@
       #neoOverworldOverlay:not(.neo-ow-idle-interaction) #neoOverworldStoryDock #characterActions{display:none!important}
       #neoOverworldOverlay.neo-ow-idle-interaction #neoOverworldStoryDock #dialogue,
       #neoOverworldOverlay.neo-ow-idle-interaction #neoOverworldStoryDock #neoOverworldActionTray{display:none!important}
-      #neoOverworldOverlay.neo-ow-idle-interaction #neoOverworldStoryDock #characterActions:not([hidden]){
-        display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr));
-        gap:8px!important;margin:8px 0 0!important;padding:10px!important;
-        background:#1a1831f0!important;border:1px solid #a77da9!important;border-radius:12px;
-        max-height:35dvh;overflow-y:auto!important;
-      }
-      #neoOverworldOverlay.neo-ow-idle-interaction #neoOverworldStoryDock #characterActions button{
-        min-width:0!important;min-height:43px!important;
-        border-radius:9px!important;white-space:normal!important;
-      }
       @media(max-width:700px){
         #neoOverworldStoryDock #dialogue{
           height:176px!important;min-height:176px!important;max-height:176px!important;
@@ -656,9 +649,6 @@
         #neoOverworldStoryDock #dialogue #line{
           font-size:15px!important;line-height:1.45!important;
           height:4.35em!important;max-height:4.35em!important;
-        }
-        #neoOverworldOverlay.neo-ow-idle-interaction #neoOverworldStoryDock #characterActions:not([hidden]){
-          grid-template-columns:repeat(2,minmax(0,1fr));
         }
       }
     `;
