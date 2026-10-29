@@ -21,6 +21,22 @@ test('Apex retains a guaranteed winning knockout instead of forcing attachment',
  const actions=AI.energyPreparationActions(o,cfg,[attack,attach]);
  assert.deepEqual(actions,[attack,attach]);
 });
+test('Apex prepares useful Energy before a Confused final-Prize attack',()=>{
+ const o=board();o.self.prizeCount=1;o.opponent.bench=[];o.opponent.active.damage=10;
+ o.self.active.status='Confused';
+ assert.deepEqual(AI.energyPreparationActions(o,cfg,[attack,attach]),[attach]);
+ // Without Confusion, the printed lethal attack really is guaranteed.
+ o.self.active.status=null;
+ assert.deepEqual(AI.energyPreparationActions(o,cfg,[attack,attach]),[attack,attach]);
+ // Level 7 keeps its established decision ordering.
+ o.self.active.status='Confused';
+ assert.deepEqual(AI.energyPreparationActions(o,AI.configuration({side:1,level:7}),[attack,attach]),[attack,attach]);
+});
+test('Apex does not treat a Confused last-opponent KO as certain',()=>{
+ const o=board();o.self.prizeCount=3;o.opponent.bench=[];o.opponent.active.damage=10;
+ o.self.active.status='Confused';
+ assert.deepEqual(AI.energyPreparationActions(o,cfg,[attack,attach]),[attach]);
+});
 test('Apex does not force attachment when Energy was already used',()=>{
  const o=board();o.self.energyUsed=true;
  assert.deepEqual(AI.energyPreparationActions(o,cfg,[attack,attach]),[attack,attach]);
@@ -135,6 +151,35 @@ test('Apex future Energy horizon still rewards legal multi-turn setup',()=>{
  const noEnergy=futureEnergyBoard(FIGHT,'base1-91',[FIGHT]);
  assert.ok(AI.energyHorizonBonus(attachActive,dce,cfg)>
   AI.energyHorizonBonus(attachActive,noEnergy,cfg));
+});
+
+test('Apex values Energy that unlocks an attack after Paralysis clears',()=>{
+ const fighting=futureEnergyBoard(FIGHT,'base1-91',[]);
+ const fire=futureEnergyBoard('base1-98','base1-91',[]);
+ for(const o of [fighting,fire]){
+  o.turnSerial=11;
+  o.self.active.status='Paralyzed';
+ }
+ assert.ok(AI.energyHorizonBonus(attachActive,fighting,cfg)>
+  AI.energyHorizonBonus(attachActive,fire,cfg),
+  'a legal Fighting attachment must earn next-turn Jab value after guaranteed recovery');
+ // Sleep is not guaranteed to end, so do not predict a free wake-up.
+ fighting.self.active.status='Asleep';
+ fire.self.active.status='Asleep';
+ assert.equal(AI.energyHorizonBonus(attachActive,fighting,cfg),
+  AI.energyHorizonBonus(attachActive,fire,cfg));
+});
+
+test('Apex forecasts a two-attachment attack after Paralysis recovery',()=>{
+ const dce=futureEnergyBoard(FIGHT,'base1-96',[FIGHT]);
+ const noEnergy=futureEnergyBoard(FIGHT,'base1-91',[FIGHT]);
+ for(const o of [dce,noEnergy]){
+  o.turnSerial=11;
+  o.self.active.status='Paralyzed';
+ }
+ assert.ok(AI.energyHorizonBonus(attachActive,dce,cfg)>
+  AI.energyHorizonBonus(attachActive,noEnergy,cfg),
+  'next-turn Double Colorless must retain its value after Paralysis clears');
 });
 
 test('Apex Energy horizon ignores already-expired Amnesia and Gym locks',()=>{

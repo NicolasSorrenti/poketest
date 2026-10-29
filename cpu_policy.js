@@ -739,8 +739,13 @@ function horizonAttackValue(unit,defender,hand,remaining=1,futureRound=0,turnSer
  if(!unit||!defender)return 0;
  const immediate=projectedAttackValue(unit,defender,turnSerial,benchCount);
  if(remaining===0)return immediate;
+ // Paralysis expires at the end of the affected turn; unlike Sleep, recovery
+ // is guaranteed by our next turn. Do not treat it as a permanent attack lock.
+ const nextTurnUnit=unit.status==='Paralyzed'?{...unit,status:null}:unit;
+ const recovered=unit.status==='Paralyzed'?
+  projectedAttackValue(nextTurnUnit,defender,turnSerial+2,benchCount)*.48:0;
  const seen=new Set();
- let best=immediate;
+ let best=Math.max(immediate,recovered);
  for(const id of hand){
   const energy=card(id);
   // Forecast only Energy the attacker can legally receive next turn.
@@ -748,7 +753,7 @@ function horizonAttackValue(unit,defender,hand,remaining=1,futureRound=0,turnSer
   if(seen.has(id)||!isEnergy(energy)||!legalAttachment({card:energy,unit,
    round:futureRound,cardName:card(unit.id)?.name||''}))continue;
   seen.add(id);
-  const after={...unit,energies:[...(unit.energies||[]),id]};
+  const after={...nextTurnUnit,energies:[...(unit.energies||[]),id]};
   // A card requires another turn's Energy attachment. Discount those future
   // outcomes to avoid preferring a speculative combination to today's KO.
   // Next attachment is on our next turn, after the opponent's turn.
@@ -1202,11 +1207,15 @@ function energyPreparationActions(o,cfg,actions){
    strandedActiveEnergy(o,o.self.hand[a.payload.handIndex]));
  });
  if(!useful)return actions;
+ // Confusion requires a coin flip before a printed attack resolves, so a
+ // nominally lethal attack is not a guaranteed final-Prize knockout.
+ const confusionChance=o.self.active?.status==='Confused'?.5:1;
  const gameWinningKo=(o.self.prizeCount<=1||o.opponent.bench.length===0)&&
   actions.some(a=>{
    if(a.type!=='attack')return false;
    const attacks=o.self.active?.effectiveAttacks||card(o.self.active?.id)?.attacks||[];
-   return knockoutChance(attacks[a.payload.attackIndex],o.self.active,o.opponent.active,o.self.bench.length)>=.999;
+   return knockoutChance(attacks[a.payload.attackIndex],o.self.active,o.opponent.active,o.self.bench.length)*
+    confusionChance>=.999;
   });
  return gameWinningKo?actions:actions.filter(a=>a.type!=='attack');
 }

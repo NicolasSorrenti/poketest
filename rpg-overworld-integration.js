@@ -339,8 +339,8 @@
         // The original game's avatar loader already resolves outfit-specific art.
         if(participant.src)image.src=participant.src;
         image.onerror=()=>{image.hidden=true;person.classList.add('neo-ow-portrait-missing');};
-        const name=document.createElement('span');name.textContent=participant.name;
-        person.append(image,name);scenePeople.append(person);
+        // Dialogue speaker names belong to #dialogue #speaker, never below portraits.
+        person.append(image);scenePeople.append(person);
       }
       scenePeople.hidden=!participants.length;
       sceneArea?.classList.toggle('neo-ow-participants',!!participants.length);
@@ -383,6 +383,35 @@
       #neoOverworldOverlay.neo-ow-activity-open #neoOverworldMenu{display:none!important}
     `;
     document.head.append(storyLayout);
+    const portraitPlacement=document.createElement('style');
+    portraitPlacement.textContent=`
+      /* Keep portraits flush with the speech box; the nameplate lives in its header. */
+      #neoOverworldStoryDock .stage-panel{gap:0!important;padding:0!important}
+      #neoOverworldStoryDock #scene{
+        margin:0!important;padding:0!important;border:0!important;
+        border-radius:0!important;overflow:hidden!important;
+        display:flex!important;align-items:flex-end!important;
+      }
+      #neoOverworldStoryDock #neoOverworldScenePeople:not([hidden]){
+        align-items:flex-end!important;margin:0!important;padding:0!important;
+        flex-shrink:0!important;
+      }
+      #neoOverworldStoryDock #neoOverworldScenePeople .neo-ow-person{
+        justify-content:flex-end!important;align-items:center!important;
+        padding:0!important;margin:0!important;
+      }
+      #neoOverworldStoryDock #neoOverworldScenePeople .neo-ow-person img{
+        height:100%!important;max-height:100%!important;
+        object-position:center bottom!important;margin:0!important;
+      }
+      #neoOverworldStoryDock #neoOverworldScenePeople .neo-ow-person span{display:none!important}
+      #neoOverworldStoryDock #dialogue{margin:0!important;border-radius:12px!important}
+      #neoOverworldStoryDock #dialogue .dialogue-title{position:relative!important}
+      #neoOverworldStoryDock #dialogue #speaker:not([hidden]){
+        display:inline-block!important;font-weight:800!important;
+      }
+    `;
+    document.head.append(portraitPlacement);
     const dialogueStyle=document.createElement('style');
     dialogueStyle.textContent=`
       /* A stable two-line PC / three-line mobile speech window, independent

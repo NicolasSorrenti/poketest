@@ -13,6 +13,21 @@ on:
       - 'tests/cpu_apex_public_bench_projection.test.js'
       - 'tests/cpu_apex_wigglytuff_wave.test.js'
       - '.github/workflows/apex-energy-audit.yml'
+  push:
+    branches:
+      - main
+    paths:
+      - 'cpu_policy.js'
+      - 'cpu_lookahead.js'
+      - 'cpu_strategic_search.js'
+      - 'cpu_decision_audit.js'
+      - 'benchmark_cpu.js'
+      - 'tests/cpu_decision_audit.test.js'
+      - 'tests/cpu_apex_confusion_ko_tempo.test.js'
+      - 'tests/cpu_apex_energy_sequence.test.js'
+      - 'tests/cpu_apex_public_bench_projection.test.js'
+      - 'tests/cpu_apex_wigglytuff_wave.test.js'
+      - '.github/workflows/apex-energy-audit.yml'
 jobs:
   audit:
     runs-on: ubuntu-latest
