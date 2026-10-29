@@ -37,10 +37,11 @@
   hana:['#624151','#f6a5bc'],kaede:['#35354d','#b9a6e6'],marina:['#28465a','#90cfde']
  };
  const cache=new Map();
+ const isOverworld=()=>win?.location?.pathname==='/rpg-overworld.html';
  const chibiCandidates=id=>['/rpg-assets/characters/'+id+'/discreet/neutral.webp','/rpg-assets/characters/'+id+'/discreet/neutral.png','/rpg-assets/characters/'+id+'/chibi/front.png'];
  function probeChibi(id){
-  if(!CHIBI_IDS.has(id)||!win?.Image)return Promise.resolve(null);
-  const paths=chibiCandidates(id);
+  if(!win?.Image)return Promise.resolve(null);
+  const paths=[...chibiCandidates(id),'/rpg-assets/characters/reina/chibi/front.png'];
   return new Promise(resolve=>{
    const next=i=>{if(i>=paths.length){resolve(null);return;}
     const img=new win.Image();img.onload=()=>resolve(paths[i]);img.onerror=()=>next(i+1);img.src=paths[i];};next(0);
@@ -85,8 +86,8 @@
  function loadPortrait(id){
   if(cache.has(id))return cache.get(id);
   const src=url(id);
-  if(CHIBI_IDS.has(id)){
-   const promise=probeChibi(id).then(found=>found||loadHeadshot(id));
+  if(CHIBI_IDS.has(id)||isOverworld()){
+   const promise=probeChibi(id).then(found=>found||(isOverworld()?null:loadHeadshot(id)));
    cache.set(id,promise);return promise;
   }
   return loadHeadshot(id);
