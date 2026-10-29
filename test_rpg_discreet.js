@@ -34,6 +34,7 @@ function setup(pathname,search='',initial='0',withButton=true){
 
 let page=setup('/rpg.html');
 assert.equal(page.root.dataset.rpgDiscreet,'off');
+assert.equal(page.button.dataset.rpgDiscreetBound,'1','RPG toggle is bound once on load');
 assert.equal(page.attributes['aria-pressed'],'false');
 page.handlers.click();
 assert.equal(page.root.dataset.rpgDiscreet,'on');
