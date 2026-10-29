@@ -205,3 +205,10 @@ User screenshot (Riverside Park, Day 32 Evening) established four defects: dupli
 - The existing `overworld/prototype.css` and `overworld/prototype.js` scripts have fresh cache versions on `overworld-prototype.html`; gameplay hotspots still dispatch the native RPG activity flow.
 - Map loader and placement QA regression checks: **7/7 passed** in an isolated JS harness. Screenshot/visual proof of physically appropriate landmark placement remains outstanding because the GitHub connector did not return usable binary image bytes; **do not claim pixel-perfect park/café anchors**.
 - Next precise review: inspect the installed Park and Café images in a visual browser/placement tool, drag landmarks to their real depicted positions, export layout JSON and commit the coordinates after approval. The user is using Cloudflare, **not Render**; do not check or refer to Render as deployment status.
+
+## 2026-10-29 — All seven map interaction controls unified
+
+- Scope: `arcade`, `shop`, `home`, `park`, `cafe`, `center`, and `library`. All now use a consistent compact 56×56 landmark interaction marker in normal exploration, including previously excluded Pixel Palace. This avoids enormous invisible click regions overlapping character interaction targets.
+- Rectangles are clamped to their map image boundaries at runtime; the layout editor still displays and lets a designer reposition/resize the underlying full rectangles. Existing character anchors and image assets were not changed, as requested.
+- Eight focused checks for map references, editor isolation, landmark UI and all seven scenes passed in the isolated test harness. Full visual QA of real furniture and walkway placement remains for later; don't describe existing generic positions as visually verified.
+- Deployed-site QA must be performed on Cloudflare Pages, not Render. This turn commits source and tests but does not claim a completed production deployment.
