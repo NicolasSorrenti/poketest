@@ -64,3 +64,26 @@ test('unique first-name speaker labels in authored scripts still receive focus',
  assert.equal(scene.focused,'reina');
  assert.deepEqual(scene.participants,['hana','reina']);
 });
+
+test('overworld keeps exactly two portraits and replaces the least recent speaker',()=>{
+ const window=CAST.createSpeakerWindow();
+ const participants=['hana','reina','yuna','akari'].map(id=>({id,name:cast[id].name}));
+ const displayed=speaker=>window.update(participants,speaker).map(p=>p.id);
+ assert.deepEqual(displayed('hana'),['hana','reina']);
+ assert.deepEqual(displayed('reina'),['hana','reina']);
+ // Yuna replaces Hana, who spoke before Reina, while Reina remains visible.
+ assert.deepEqual(displayed('yuna'),['yuna','reina']);
+ // Hana's next line replaces Reina (the older speaker), not Yuna.
+ assert.deepEqual(displayed('hana'),['yuna','hana']);
+ assert.deepEqual(displayed('akari'),['akari','hana']);
+});
+test('two-speaker portraits reset after a completed scene or when the event cast changes',()=>{
+ const window=CAST.createSpeakerWindow();
+ const people=[{id:'hana'},{id:'reina'},{id:'yuna'}];
+ window.update(people,'hana');window.update(people,'reina');
+ assert.deepEqual(window.update(people,'yuna').map(p=>p.id),['yuna','reina']);
+ assert.deepEqual(window.update([],null),[]);
+ assert.deepEqual(window.update([{id:'hana'}],'hana').map(p=>p.id),['hana']);
+ window.reset();
+ assert.deepEqual(window.update([{id:'reina'}],'reina').map(p=>p.id),['reina']);
+});
