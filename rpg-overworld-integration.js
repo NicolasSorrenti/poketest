@@ -19,6 +19,34 @@
     const note=document.createElement('small');note.setAttribute('role','status');note.style.padding='6px 12px';note.style.background='#211a37';note.textContent='RPG time, schedules and story locks remain authoritative.';
     const frame=document.createElement('iframe');frame.title='Current Neo Campus location';Object.assign(frame.style,{flex:'1',minHeight:'0',width:'100%',border:'0'});
     toolbar.append(title,placeSelect,travel,close);overlay.append(toolbar,note,frame);document.body.append(overlay);
+    // Reparent the live RPG stage rather than cloning dialogue/CG/choice handlers.
+    // Every existing event listener and rendered state stays attached to the same nodes.
+    const stage=document.querySelector('.stage-panel');
+    const stageHome=stage?.parentNode;
+    const stageNext=stage?.nextSibling||null;
+    let storyDock=null;
+    function showStory(){
+      if(!stage||!stageHome)return false;
+      if(!storyDock){
+        storyDock=document.createElement('section');
+        storyDock.id='neoOverworldStoryDock';
+        storyDock.setAttribute('aria-label','RPG conversation and story');
+        Object.assign(storyDock.style,{position:'absolute',zIndex:'4',bottom:'12px',left:'max(8px,env(safe-area-inset-left))',right:'max(8px,env(safe-area-inset-right))',maxHeight:'min(72vh,680px)',overflow:'auto',border:'2px solid #b58cc7',borderRadius:'14px',background:'#181329',boxShadow:'0 10px 45px #000c'});
+        const back=document.createElement('button');back.type='button';back.textContent='← Back to map';back.style.cssText='position:sticky;top:0;z-index:5;display:block;width:100%;padding:11px;border:0;background:#352548;color:white;font:700 14px system-ui;cursor:pointer';
+        back.onclick=hideStory;storyDock.append(back);
+      }
+      overlay.append(storyDock);storyDock.append(stage);
+      stage.style.cssText='display:block;position:relative;width:100%;max-width:none;height:auto;min-height:0;overflow:visible;margin:0;padding:8px';
+      storyDock.hidden=false;return true;
+    }
+    function hideStory(){
+      if(!stageHome||!stage)return;
+      if(stageNext&&stageNext.parentNode===stageHome)stageHome.insertBefore(stage,stageNext);
+      else stageHome.append(stage);
+      stage.removeAttribute('style');
+      if(storyDock){storyDock.hidden=true;storyDock.remove();}
+      if(!overlay.hidden)refresh();
+    }
     function snapshot(){return bridge()?.snapshot();}
     function refresh(){
       const data=snapshot();if(!data)return;
@@ -29,7 +57,7 @@
       frame.src='/overworld-prototype.html?scene='+encodeURIComponent(data.location)+'&cast='+encodeURIComponent(people)+'&rpg-integration=1&chibi='+(document.documentElement.dataset.rpgDiscreet==='on'?'1':'0');
       note.textContent=data.locked?'Travel disabled during an active conversation, event or duel.':'Day '+data.day+' · '+['Morning','Afternoon','Evening'][data.slot]+' · RPG schedules active · Preview NPC interaction only';
     }
-    function dismiss(){overlay.querySelectorAll('[data-overworld-activity-panel]').forEach(el=>el.remove());overlay.hidden=true;overlay.style.display='none';frame.src='about:blank';open.focus();}
+    function dismiss(){hideStory();overlay.querySelectorAll('[data-overworld-activity-panel]').forEach(el=>el.remove());overlay.hidden=true;overlay.style.display='none';frame.src='about:blank';open.focus();}
     open.addEventListener('click',()=>{refresh();overlay.hidden=false;overlay.style.display='flex';close.focus();});
     close.addEventListener('click',dismiss);
     document.getElementById('rpgDiscreetToggle')?.addEventListener('click',()=>{if(!overlay.hidden)refresh();});
@@ -39,7 +67,8 @@
       // Native travel may start a mandatory event or first-visit dialogue.
       // Never leave the map overlay covering that conversation.
       if(!bridge().travel(target)){note.textContent='Travel is unavailable during the current story or activity.';refresh();return;}
-      dismiss();
+      hideStory();
+      refresh();
     });
     window.addEventListener('message',event=>{
       if(event.origin!==location.origin||event.source!==frame.contentWindow||overlay.hidden)return;
@@ -55,8 +84,8 @@
       }
       if(message.kind==='person'){
         // Dismiss first: native conversations can open modal prompts immediately.
-        dismiss();
-        if(!bridge()?.interact(message.id))document.getElementById('notice').textContent='Character interaction is not currently available.';
+        if(!showStory())dismiss();
+        if(!bridge()?.interact(message.id)){hideStory();note.textContent='Character interaction is not currently available.';}
       }else if(message.kind==='hotspot'){
         const activities=bridge()?.activities()||[];
         const eligible=activities.filter(a=>!a.disabled);
@@ -64,7 +93,7 @@
         overlay.querySelectorAll('[data-overworld-activity-panel]').forEach(el=>el.remove());
         const panel=document.createElement('div');panel.dataset.overworldActivityPanel='true';Object.assign(panel.style,{position:'absolute',bottom:'68px',left:'12px',right:'12px',padding:'12px',maxHeight:'45vh',overflow:'auto',background:'#211a37',border:'1px solid #9775a3',borderRadius:'12px',zIndex:'2'});
         const head=document.createElement('div');head.textContent='Choose a current RPG activity';panel.append(head);
-        for(const a of eligible){const button=document.createElement('button');button.textContent=a.title;button.type='button';Object.assign(button.style,{display:'block',marginTop:'8px',padding:'10px',width:'100%',background:'#403051',color:'white',borderRadius:'8px'});button.onclick=()=>{panel.remove();dismiss();if(!bridge()?.activity(a.id))document.getElementById('notice').textContent='Activity no longer available.';};panel.append(button);}
+        for(const a of eligible){const button=document.createElement('button');button.textContent=a.title;button.type='button';Object.assign(button.style,{display:'block',marginTop:'8px',padding:'10px',width:'100%',background:'#403051',color:'white',borderRadius:'8px'});button.onclick=()=>{panel.remove();if(!showStory())dismiss();if(!bridge()?.activity(a.id)){hideStory();note.textContent='Activity no longer available.';}};panel.append(button);}
         const cancel=document.createElement('button');cancel.textContent='Cancel';cancel.onclick=()=>panel.remove();panel.append(cancel);overlay.append(panel);
       }
     });
