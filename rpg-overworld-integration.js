@@ -41,6 +41,15 @@
     window.addEventListener('message',event=>{
       if(event.origin!==location.origin||event.source!==frame.contentWindow||overlay.hidden)return;
       const message=event.data;if(message?.type!=='neo-overworld-action')return;
+      if(message.kind==='navigation'){
+        const targets={status:'statusBtn',deck:'deckStudioBtn',activities:'townActivities',events:'storyEvents'};
+        const target=document.getElementById(targets[message.id]);
+        dismiss();
+        if(!target)return;
+        if(message.id==='status'||message.id==='deck')target.click();
+        else target.scrollIntoView({behavior:'smooth',block:'center'});
+        return;
+      }
       if(message.kind==='person'){
         if(bridge()?.interact(message.id))dismiss();
         else note.textContent='Character interaction is not currently available.';
