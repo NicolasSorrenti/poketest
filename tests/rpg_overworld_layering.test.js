@@ -40,7 +40,7 @@ test('Activities opens above bottom navigation and blocks interaction behind it'
  assert.match(ui,/backdrop\.onclick=closeActivities/);
 });
 test('both overworld entrypoints refresh their separately cached presentation files',()=>{
- assert.match(page,/rpg-overworld-integration\.js\?v=20261029-portrait-flush-2/);
+ assert.match(page,/rpg-overworld-integration\.js\?v=20261029-character-side-actions-1/);
  const proto=fs.readFileSync(path.join(root,'overworld-prototype.html'),'utf8');
  assert.match(proto,/prototype\.css\?v=story-map-layer-20261029/);
  assert.match(proto,/prototype\.js\?v=story-map-layer-20261029/);
