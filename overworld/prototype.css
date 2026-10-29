@@ -12,3 +12,10 @@
 body.neo-overworld-embedded #hud .title,
 body.neo-overworld-embedded #bottom{display:none!important}
 body.neo-overworld-embedded #hud{justify-content:flex-end}
+
+/* VN mode keeps environmental art only; the parent RPG renders conversation portraits.
+   In particular this suppresses the background headshots that looked like duplicate NPCs. */
+body.neo-overworld-embedded.neo-overworld-dialogue .anchor,
+body.neo-overworld-embedded.neo-overworld-dialogue .edge,
+body.neo-overworld-embedded.neo-overworld-dialogue .hotspot,
+body.neo-overworld-embedded.neo-overworld-dialogue #edges{display:none!important}
