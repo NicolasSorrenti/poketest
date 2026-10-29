@@ -1,6 +1,19 @@
 # Apex CPU decision-quality roadmap
 
-Status: **in progress**. Scope: Level 8 (Apex) first; do not silently change lower difficulty tiers or the authoritative battle reducer.
+Status: **in progress**. Phase 1 merged into `main` via [PR #198](https://github.com/NicolasSorrenti/poketest/pull/198). Scope: Level 8 (Apex) first; do not silently change lower difficulty tiers or the authoritative battle reducer.
+
+## Verified progress — 2026-10-29
+
+- [x] Phase 1: [PR #198](https://github.com/NicolasSorrenti/poketest/pull/198), merge commit [6726270](https://github.com/NicolasSorrenti/poketest/commit/6726270826c36716148f7cf4fbf1e714ba82215a).
+- [x] Compiled `bench-count` damage is used for Do the Wave and other matching attacks; public Bench counts reach Energy, KO, counterplay, and strategic search calculations.
+- [x] Promoted Benched attackers are evaluated with one fewer Benched Pokémon.
+- [x] Six new deterministic regressions plus the existing Wigglytuff test are in dedicated CPU CI and `npm test`.
+- [x] Focused Apex Energy Decision Audit: **101/101 tests passed**. CPU AI regression, Apex Strategic Challenge, and other focused checks passed on the reviewed functional head.
+- [x] Benchmark comparison retained **66/95** decisive general wins and **30/56** decisive late-campaign RPG wins against Level 7 (same fixed-seed outcomes as the reviewed baseline; not proof of broader strength improvement).
+- [ ] Full legal CPU-turn Wigglytuff test and status-aware tactical scoring (Phase 2/3).
+- [ ] Recheck extensive benchmark jobs once completed; some were still running when Phase 1 merged.
+- [ ] Separate pre-existing CI blockers: RPG flow `children` undefined, Reina discreet-avatar expectation, stale generated character pack, and artwork-manifest count mismatch.
+
 
 ## Baseline and motivation
 
