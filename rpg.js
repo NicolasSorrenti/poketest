@@ -420,7 +420,7 @@ function travelTo(placeId,{intro=true}={}){
 }
 // Optional overworld adapter: the existing campaign remains authoritative.
 window.NeoRpgOverworldBridge=Object.freeze({
- snapshot(){return {location:state.location,day:state.day,slot:state.slot,locked:overworldControlsLocked(),people:currentPeople().filter(id=>!!cast[id]),places:Object.entries(places).map(([id,p])=>({id,name:p[0]}))};},
+ snapshot(){return {location:state.location,day:state.day,slot:state.slot,locked:overworldControlsLocked(),arriving:arrivalGate||!!pendingOverworldArrival||!!window.NeoRpgTimeTransitions?.active,people:currentPeople().filter(id=>!!cast[id]),places:Object.entries(places).map(([id,p])=>({id,name:p[0]}))};},
  travel(placeId){if(overworldControlsLocked())return false;return travelTo(placeId);},
  interact(id){if(overworldControlsLocked()||!cast[id]||!currentPeople().includes(id))return false;selectPerson(id);return true;},
  activities(){return WORLD.activitiesAt(state).map(a=>({id:a.id,title:a.title,disabled:overworldControlsLocked()||!!a.disabledReason}));},
