@@ -16,6 +16,8 @@
  };
  const PACK=typeof module==='object'&&module.exports?require('./rpg_narrative_pack'):window.NeoRpgNarrativePack;
  const BONDC=typeof module==='object'&&module.exports?require('./rpg_bond_chapters'):window.NeoRpgBondChapters;
+ const CHARPACKS=typeof module==='object'&&module.exports?require('./rpg_character_packs.generated'):window.NeoRpgCharacterPacks;
+ const EXTRA=typeof module==='object'&&module.exports?require('./rpg_route_expansions'):window.NeoRpgRouteExpansions;
  const VN=typeof module==='object'&&module.exports?require('./rpg_conversations'):window.NeoRpgConversations;
  const SCENES=typeof module==='object'&&module.exports?require('./rpg_legacy_scenes'):window.NeoRpgLegacyScenes;
  const E=[];
@@ -222,7 +224,7 @@
  }
  // Keep the original four-scene heroine routes stable for existing saves.
  // Add optional guest and crossover episodes without renumbering those routes.
- E.push(...PACK.events,...BONDC.events);
+ E.push(...(CHARPACKS?.events||[]),...PACK.events,...BONDC.events,...(EXTRA?.events||[]));
  const ID=new Map(E.map(e=>[e.id,e]));
  function normalize(state){
   if(!state.storyDone||typeof state.storyDone!=='object')state.storyDone={};
