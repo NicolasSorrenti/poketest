@@ -43,6 +43,8 @@
       const line=raw&&raw.length>8?raw.slice(0,145):'Explore town, talk to someone, or check your activities.';
       const label=bottom.querySelector('#neoOverworldNextText');if(label&&label.textContent!==line)label.textContent=line;
     }
+    const planner=document.getElementById('dailyPlanner');
+    if(planner)new MutationObserver(()=>{if(!overlay.hidden)refreshNext();}).observe(planner,{childList:true,subtree:true,characterData:true});
     const navStyle=document.createElement('style');
     navStyle.textContent=`
       #neoOverworldOverlay{--ow-bottom:164px}
@@ -116,6 +118,23 @@
         #neoOverworldStoryDock{left:8px!important;right:8px!important;width:auto!important;max-height:72dvh!important}
         #neoOverworldStoryDock #scene{min-height:120px!important;max-height:24dvh!important}
         #neoOverworldStoryDock #portrait,#neoOverworldStoryDock #portrait img,#neoOverworldStoryDock #rpgSceneCG{max-height:23dvh!important}
+      }
+    `;
+    visualStyle.textContent+=`
+      /* VN overlay: wide translucent dialogue panel with artwork floating above it. */
+      #neoOverworldStoryDock{left:50%!important;transform:translateX(-50%)!important;right:auto!important;width:min(980px,calc(100vw - 24px))!important;max-height:86dvh!important;background:transparent!important;border:0!important;box-shadow:none!important;overflow-y:auto!important}
+      #neoOverworldStoryDock>.stage-panel{padding:0!important;background:transparent!important;gap:0!important}
+      #neoOverworldStoryDock #scene{min-height:0!important;height:auto!important;max-height:43dvh!important;background:transparent!important;pointer-events:none}
+      #neoOverworldStoryDock #portrait{height:auto!important;max-height:40dvh!important;display:flex!important;align-items:flex-end;justify-content:center}
+      #neoOverworldStoryDock #portrait img{max-height:40dvh!important;width:auto!important;object-fit:contain!important;filter:drop-shadow(0 8px 20px #0009)}
+      #neoOverworldStoryDock #rpgSceneCG:not([hidden]){max-height:40dvh!important}
+      #neoOverworldStoryDock #dialogue{background:#16152bf0!important;border:1px solid #ae82b9!important;border-radius:14px!important;padding:16px!important;box-shadow:0 12px 32px #0009!important;color:white!important}
+      #neoOverworldStoryDock #characterActions:not([hidden]){padding:9px;background:#19172fe8;border-radius:12px}
+      #neoOverworldStoryDock>button{background:#302644d9!important;border:1px solid #b68aaf!important;border-radius:9px!important;position:sticky!important;top:0!important;width:auto!important;margin-left:auto!important}
+      @media(max-width:650px){
+        #neoOverworldStoryDock{width:calc(100vw - 14px)!important;max-height:82dvh!important}
+        #neoOverworldStoryDock #scene,#neoOverworldStoryDock #portrait,#neoOverworldStoryDock #portrait img,#neoOverworldStoryDock #rpgSceneCG{max-height:33dvh!important}
+        #neoOverworldStoryDock #dialogue{padding:11px!important}
       }
     `;
     document.head.append(visualStyle);
