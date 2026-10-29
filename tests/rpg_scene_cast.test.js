@@ -95,3 +95,15 @@ test('an unseen participant is replaced before a character who just spoke',()=>{
  assert.deepEqual(window.update(p,'reina').map(x=>x.id),['hana','reina']);
  assert.deepEqual(window.update(p,'yuna').map(x=>x.id),['yuna','reina']);
 });
+
+test('a fifth scripted participant can still enter the two-portrait window',()=>{
+ const window=CAST.createSpeakerWindow();
+ const participants=['hana','reina','yuna','akari','sol'].map(id=>({id}));
+ window.update(participants,'hana');
+ window.update(participants,'reina');
+ window.update(participants,'yuna');
+ const visible=window.update(participants,'sol').map(p=>p.id);
+ assert.equal(visible.length,2);
+ assert.ok(visible.includes('sol'));
+ assert.ok(visible.includes('yuna'));
+});
