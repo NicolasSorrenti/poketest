@@ -62,6 +62,7 @@
       if(expandedSheet===kind){closeSheet();return;}
       hideMenu();hideEvents();
       overlay.querySelectorAll('[data-overworld-activity-panel]').forEach(el=>el.remove());
+      overlay.classList.remove('neo-ow-activity-open');
       closeSheet();expandedSheet=kind;
       sheetHeading.textContent=kind==='travel'?'Choose a destination':'Your next opportunities';
       if(kind==='next'){
@@ -248,6 +249,9 @@
     overlay.append(storyShield);
     function lockMapForStory(locked){
       storyShield.hidden=!locked;
+      // Keep the place art but suppress background NPC sprites and edge portraits
+      // throughout VN dialogue/CGs. The iframe can reload when schedules change.
+      frame.contentWindow?.postMessage({type:'neo-overworld-story-visibility',hidden:!!locked},location.origin);
       frame.style.pointerEvents=locked?'none':'auto';
       toolbar.style.pointerEvents=locked?'none':'auto';
       menuButton.disabled=locked;
@@ -255,12 +259,23 @@
       travelToggle.disabled=locked;
       if(locked)closeSheet();
       bottom.style.pointerEvents=locked?'none':'auto';
-      if(locked){closeSheet();hideMenu();hideEvents();}
+      if(locked){
+        closeSheet();hideMenu();hideEvents();
+        overlay.querySelectorAll('[data-overworld-activity-panel]').forEach(el=>el.remove());
+        overlay.classList.remove('neo-ow-activity-open');
+      }
     }
+    frame.addEventListener('load',()=>{
+      frame.contentWindow?.postMessage({type:'neo-overworld-story-visibility',hidden:!storyShield.hidden},location.origin);
+    });
     visualStyle.textContent+=`
       #neoOverworldStoryDock{z-index:5!important;pointer-events:auto}
       #neoOverworldStoryDock .stage-panel{max-width:none!important;width:100%!important}
       #neoOverworldStoryDock #scene{display:flex!important;align-items:flex-end!important;justify-content:center!important}
+      /* The engine creates its own legacy scene cast; the overworld owns all VN portraits. */
+      #neoOverworldStoryDock #rpgSceneCast,
+      #neoOverworldStoryDock .rpg-scene-cast,
+      #neoOverworldStoryDock #portrait{display:none!important}
       #neoOverworldStoryDock #portrait{max-width:100%!important;width:100%!important;min-height:0!important}
       #neoOverworldStoryDock #dialogue{width:100%!important}
       #neoOverworldStoryDock #characterActions{margin-top:8px!important}
@@ -359,6 +374,11 @@
         #neoOverworldStoryDock #rpgSceneCG:not([hidden]){max-height:48dvh!important}
       }
     `;
+    storyLayout.textContent+=`
+      #neoOverworldOverlay.neo-ow-activity-open #neoOverworldBottom{visibility:hidden!important;pointer-events:none!important}
+      #neoOverworldOverlay.neo-ow-activity-open #neoOverworldSheetBackdrop{display:none!important}
+      #neoOverworldOverlay.neo-ow-activity-open #neoOverworldMenu{display:none!important}
+    `;
     document.head.append(storyLayout);
     let storyDock=null;
     let lastSceneKey='';
@@ -379,11 +399,8 @@
     }
     function hideStory(){
       if(!stageHome||!stage)return;
-      if(stageNext&&stageNext.parentNode===stageHome)stageHome.insertBefore(stage,stageNext);
-      else stageHome.append(stage);
-      stage.removeAttribute('style');
-      // Keep the live stage inside the (hidden) overworld dock between scenes.
-      // Moving it back into the original RPG is what leaked a second interface.
+      // Never reparent stage back to the classic layout between conversations.
+      // Only explicit dismiss() restores it after hiding the overworld overlay.
       if(storyDock)storyDock.hidden=true;
       lockMapForStory(false);
       portraitWindow?.reset();lastPortraitSignature='';
@@ -457,6 +474,7 @@
         stage.removeAttribute('style');
       }
       overlay.querySelectorAll('[data-overworld-activity-panel]').forEach(el=>el.remove());
+      overlay.classList.remove('neo-ow-activity-open');
       overlay.hidden=true;overlay.style.display='none';frame.src='about:blank';open.focus();
     }
     open.addEventListener('click',()=>{refresh();overlay.hidden=false;overlay.style.display='flex';queueStorySync();});
@@ -492,10 +510,30 @@
         const eligible=activities.filter(a=>!a.disabled);
         if(!eligible.length){showNotice('No activities are available right now.');return;}
         overlay.querySelectorAll('[data-overworld-activity-panel]').forEach(el=>el.remove());
-        const panel=document.createElement('div');panel.dataset.overworldActivityPanel='true';Object.assign(panel.style,{position:'absolute',bottom:'68px',left:'12px',right:'12px',padding:'12px',maxHeight:'45vh',overflow:'auto',background:'#211a37',border:'1px solid #9775a3',borderRadius:'12px',zIndex:'2'});
+        const panel=document.createElement('section');panel.dataset.overworldActivityPanel='true';
+        panel.setAttribute('role','dialog');panel.setAttribute('aria-modal','true');
+        panel.setAttribute('aria-label','Current RPG activities');
+        Object.assign(panel.style,{
+          position:'absolute',zIndex:'12',top:'max(76px,env(safe-area-inset-top))',
+          bottom:'max(15px,env(safe-area-inset-bottom))',
+          left:'max(10px,env(safe-area-inset-left))',right:'max(10px,env(safe-area-inset-right))',
+          width:'min(580px,calc(100vw - 20px))',margin:'0 auto',
+          padding:'16px',overflowY:'auto',overscrollBehavior:'contain',
+          background:'#211a37f9',border:'1px solid #c79dc9',borderRadius:'15px',
+          boxShadow:'0 18px 65px #000e'
+        });
+        overlay.classList.add('neo-ow-activity-open');
         const head=document.createElement('div');head.textContent='Choose a current RPG activity';panel.append(head);
-        for(const a of eligible){const button=document.createElement('button');button.textContent=a.title;button.type='button';Object.assign(button.style,{display:'block',marginTop:'8px',padding:'10px',width:'100%',background:'#403051',color:'white',borderRadius:'8px'});button.onclick=()=>{panel.remove();if(!showStory())dismiss();if(!bridge()?.activity(a.id)){hideStory();showNotice('Activity no longer available.');}else queueStorySync();};panel.append(button);}
-        const cancel=document.createElement('button');cancel.textContent='Cancel';cancel.onclick=()=>panel.remove();panel.append(cancel);overlay.append(panel);
+        function closeActivities(){panel.remove();overlay.classList.remove('neo-ow-activity-open');}
+        for(const a of eligible){const button=document.createElement('button');button.textContent=a.title;button.type='button';Object.assign(button.style,{display:'block',marginTop:'8px',padding:'10px',width:'100%',background:'#403051',color:'white',borderRadius:'8px'});button.onclick=()=>{
+          closeActivities();
+          if(!showStory())dismiss();
+          if(!bridge()?.activity(a.id)){hideStory();showNotice('Activity no longer available.');}
+          else queueStorySync();
+        };panel.append(button);}
+        const cancel=document.createElement('button');cancel.textContent='✕ Close activities';cancel.type='button';
+        cancel.style.cssText='display:block;margin-top:14px;width:100%;padding:11px;border-radius:9px;background:#38284a;color:white;border:1px solid #9a7da5';
+        cancel.onclick=closeActivities;panel.append(cancel);overlay.append(panel);
     }
     document.addEventListener('keydown',event=>{if(event.key!=='Escape'||overlay.hidden)return;if(!storyShield.hidden){event.preventDefault();return;}if(expandedSheet){event.preventDefault();closeSheet();return;}if(!deckPanel.hidden){hideDeck();return;}if(!eventPanel.hidden){hideEvents();return;}if(!menu.hidden){hideMenu();return;}if(!bridge()?.snapshot()?.locked)dismiss();});
     // Battles run in the original full-screen duel layer. Resume the map as soon as
