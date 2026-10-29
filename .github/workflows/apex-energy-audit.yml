@@ -8,6 +8,7 @@ on:
       - 'cpu_decision_audit.js'
       - 'benchmark_cpu.js'
       - 'tests/cpu_decision_audit.test.js'
+      - 'tests/cpu_deep_levels.test.js'
       - 'tests/cpu_apex_confusion_ko_tempo.test.js'
       - 'tests/cpu_apex_confused_counterplay.test.js'
       - 'tests/cpu_apex_energy_sequence.test.js'
@@ -28,6 +29,7 @@ on:
       - 'cpu_decision_audit.js'
       - 'benchmark_cpu.js'
       - 'tests/cpu_decision_audit.test.js'
+      - 'tests/cpu_deep_levels.test.js'
       - 'tests/cpu_apex_confusion_ko_tempo.test.js'
       - 'tests/cpu_apex_confused_counterplay.test.js'
       - 'tests/cpu_apex_energy_sequence.test.js'
@@ -47,5 +49,5 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - run: node --test tests/cpu_decision_audit.test.js tests/cpu_apex_confusion_ko_tempo.test.js tests/cpu_apex_confused_counterplay.test.js tests/cpu_apex_energy_sequence.test.js tests/cpu_apex_computer_search_energy.test.js tests/cpu_apex_rain_dance.test.js tests/cpu_apex_resource_choices.test.js tests/cpu_pokemon_center_order.test.js tests/cpu_apex_public_bench_projection.test.js tests/cpu_apex_wigglytuff_wave.test.js
+      - run: node --test tests/cpu_decision_audit.test.js tests/cpu_deep_levels.test.js tests/cpu_apex_confusion_ko_tempo.test.js tests/cpu_apex_confused_counterplay.test.js tests/cpu_apex_energy_sequence.test.js tests/cpu_apex_computer_search_energy.test.js tests/cpu_apex_rain_dance.test.js tests/cpu_apex_resource_choices.test.js tests/cpu_pokemon_center_order.test.js tests/cpu_apex_public_bench_projection.test.js tests/cpu_apex_wigglytuff_wave.test.js
       - run: node benchmark_cpu.js --pairs 1 --max-turns 35 --left-level 8 --right-level 8
