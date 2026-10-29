@@ -150,6 +150,35 @@
       }
     `;
     document.head.append(visualStyle);
+    // Capture input above the iframe while VN dialogue is on-screen.
+    // Keeping the map visible is safe; pointer, wheel and touch never reach it.
+    const storyShield=document.createElement('div');
+    storyShield.id='neoOverworldStoryShield';
+    storyShield.hidden=true;
+    storyShield.setAttribute('aria-hidden','true');
+    storyShield.style.cssText='position:absolute;inset:0;z-index:3;background:#08071360;touch-action:none;pointer-events:auto';
+    overlay.append(storyShield);
+    function lockMapForStory(locked){
+      storyShield.hidden=!locked;
+      frame.style.pointerEvents=locked?'none':'auto';
+      toolbar.style.pointerEvents=locked?'none':'auto';
+      menuButton.disabled=locked;
+      placeSelect.disabled=locked;
+      travel.disabled=locked;
+      close.disabled=locked;
+      bottom.style.pointerEvents=locked?'none':'auto';
+      if(locked){hideMenu();hideEvents();}
+    }
+    visualStyle.textContent+=`
+      #neoOverworldStoryDock{z-index:5!important;pointer-events:auto}
+      #neoOverworldStoryDock .stage-panel{max-width:none!important;width:100%!important}
+      #neoOverworldStoryDock #scene{display:flex!important;align-items:flex-end!important;justify-content:center!important}
+      #neoOverworldStoryDock #portrait{max-width:100%!important;width:100%!important;min-height:0!important}
+      #neoOverworldStoryDock #dialogue{width:100%!important}
+      #neoOverworldStoryDock #characterActions{margin-top:8px!important}
+      #neoOverworldOverlay:has(#neoOverworldStoryDock:not([hidden])) #neoOverworldBottom{visibility:hidden}
+      #neoOverworldStoryDock #scene .home-banner{display:none!important}
+    `;
     let storyDock=null;
     let lastSceneKey='';
     let suspendedForDuel=false;
@@ -165,14 +194,14 @@
       }
       overlay.append(storyDock);storyDock.append(stage);
       stage.style.cssText='display:block;position:relative;width:100%;max-width:none;height:auto;min-height:0;overflow:visible;margin:0;padding:8px';
-      storyDock.hidden=false;return true;
+      storyDock.hidden=false;lockMapForStory(true);return true;
     }
     function hideStory(){
       if(!stageHome||!stage)return;
       if(stageNext&&stageNext.parentNode===stageHome)stageHome.insertBefore(stage,stageNext);
       else stageHome.append(stage);
       stage.removeAttribute('style');
-      if(storyDock){storyDock.hidden=true;storyDock.remove();}
+      if(storyDock){storyDock.hidden=true;storyDock.remove();}lockMapForStory(false);
       if(!overlay.hidden)refresh();
     }
     // Observe native story rendering rather than guessing when a conversation ends.
@@ -192,6 +221,7 @@
       const needsStory=!!((data.locked&&!data.arriving)||(line&&line!=='The town is waiting.')||hasChoices||hasActions||hasCG);
       if(needsStory){
         if(!storyDock||storyDock.hidden)showStory();
+        else lockMapForStory(true);
       }else if(storyDock&&!storyDock.hidden){
         hideStory();
       }
@@ -210,7 +240,7 @@
       const data=snapshot();if(!data)return;
       placeSelect.replaceChildren();
       for(const p of data.places){const option=document.createElement('option');option.value=p.id;option.textContent=p.name;placeSelect.append(option);}
-      placeSelect.value=data.location;travel.disabled=data.locked;
+      placeSelect.value=data.location;travel.disabled=data.locked||!storyShield.hidden;
       const people=data.people.join(',');
       const nextSrc='/overworld-prototype.html?scene='+encodeURIComponent(data.location)+'&cast='+encodeURIComponent(people)+'&rpg-integration=1&chibi='+(document.documentElement.dataset.rpgDiscreet==='on'?'1':'0');
       if(frame.getAttribute('src')!==nextSrc)frame.src=nextSrc;
@@ -257,7 +287,7 @@
         for(const a of eligible){const button=document.createElement('button');button.textContent=a.title;button.type='button';Object.assign(button.style,{display:'block',marginTop:'8px',padding:'10px',width:'100%',background:'#403051',color:'white',borderRadius:'8px'});button.onclick=()=>{panel.remove();if(!showStory())dismiss();if(!bridge()?.activity(a.id)){hideStory();note.textContent='Activity no longer available.';}else queueStorySync();};panel.append(button);}
         const cancel=document.createElement('button');cancel.textContent='Cancel';cancel.onclick=()=>panel.remove();panel.append(cancel);overlay.append(panel);
     }
-    document.addEventListener('keydown',event=>{if(event.key!=='Escape'||overlay.hidden)return;if(!deckPanel.hidden){hideDeck();return;}if(!eventPanel.hidden){hideEvents();return;}if(!menu.hidden){hideMenu();return;}if(!bridge()?.snapshot()?.locked)dismiss();});
+    document.addEventListener('keydown',event=>{if(event.key!=='Escape'||overlay.hidden)return;if(!storyShield.hidden){event.preventDefault();return;}if(!deckPanel.hidden){hideDeck();return;}if(!eventPanel.hidden){hideEvents();return;}if(!menu.hidden){hideMenu();return;}if(!bridge()?.snapshot()?.locked)dismiss();});
     // Battles run in the original full-screen duel layer. Resume the map as soon as
     // its battle layer closes, without restarting the campaign or changing saves.
     const duel=document.getElementById('duel');
