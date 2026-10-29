@@ -412,6 +412,100 @@
       }
     `;
     document.head.append(portraitPlacement);
+
+    // Character interaction layout follows the portrait-left / actions-right
+    // visual reference; ordinary story dialogue is unaffected.
+    const idleStage=sceneArea?.closest('.stage-panel');
+    const idleCaption=document.createElement('div');
+    idleCaption.id='neoOverworldInteractionCaption';
+    idleCaption.setAttribute('aria-live','polite');
+    const idleName=document.createElement('strong');
+    const idleHint=document.createElement('span');
+    idleHint.textContent='Choose how you would like to spend time together.';
+    idleCaption.append(idleName,idleHint);
+    const idleBack=document.createElement('button');
+    idleBack.type='button';idleBack.id='neoOverworldInteractionBack';
+    idleBack.textContent='↶ Back';
+    idleBack.onclick=()=>{
+      if(bridge()?.snapshot()?.locked)return;
+      interactionFocus=null;bridge()?.clearInteraction?.();
+      hideStory();queueStorySync();
+    };
+    idleStage?.append(idleCaption,idleBack);
+    const idleLayout=document.createElement('style');
+    idleLayout.textContent=`
+      #neoOverworldInteractionCaption,#neoOverworldInteractionBack{display:none!important}
+      #neoOverworldOverlay.neo-ow-idle-interaction #neoOverworldStoryDock{
+        width:min(850px,calc(100vw - 24px))!important;left:50%!important;right:auto!important;
+        transform:translateX(-50%)!important;max-height:min(78dvh,750px)!important;
+        overflow-y:auto!important;background:#16132ce8!important;
+      }
+      #neoOverworldOverlay.neo-ow-idle-interaction #neoOverworldStoryDock .stage-panel{
+        display:grid!important;grid-template-columns:minmax(0,1.25fr) minmax(190px,.7fr)!important;
+        grid-template-rows:minmax(220px,1fr) auto!important;align-items:stretch!important;
+        gap:0 12px!important;padding:12px!important;background:transparent!important;
+      }
+      #neoOverworldOverlay.neo-ow-idle-interaction #neoOverworldStoryDock #scene{
+        grid-column:1!important;grid-row:1!important;min-height:240px!important;
+        height:min(48dvh,440px)!important;max-height:none!important;
+        display:flex!important;align-items:flex-end!important;justify-content:center!important;
+        overflow:hidden!important;background:transparent!important;
+      }
+      #neoOverworldOverlay.neo-ow-idle-interaction #neoOverworldStoryDock #neoOverworldScenePeople:not([hidden]){
+        height:100%!important;max-height:100%!important;width:100%!important;justify-content:center!important;
+      }
+      #neoOverworldOverlay.neo-ow-idle-interaction #neoOverworldStoryDock .neo-ow-person{
+        flex:0 1 100%!important;width:100%!important;max-width:100%!important;
+        height:100%!important;max-height:100%!important;
+      }
+      #neoOverworldOverlay.neo-ow-idle-interaction #neoOverworldStoryDock .neo-ow-person img{
+        height:100%!important;max-height:100%!important;object-fit:contain!important;
+        object-position:center bottom!important;
+      }
+      #neoOverworldOverlay.neo-ow-idle-interaction #neoOverworldStoryDock #characterActions:not([hidden]){
+        grid-column:2!important;grid-row:1!important;align-self:center!important;
+        display:flex!important;flex-direction:column!important;gap:7px!important;
+        padding:0!important;margin:0!important;max-height:none!important;
+        overflow:visible!important;background:transparent!important;border:0!important;
+      }
+      #neoOverworldOverlay.neo-ow-idle-interaction #neoOverworldStoryDock #characterActions button{
+        width:100%!important;min-height:45px!important;text-align:left!important;
+        padding:10px 14px!important;white-space:normal!important;
+        border:1px solid #a18ab4!important;background:#29243f!important;
+      }
+      #neoOverworldOverlay.neo-ow-idle-interaction #neoOverworldStoryDock #characterActions button:hover,
+      #neoOverworldOverlay.neo-ow-idle-interaction #neoOverworldStoryDock #characterActions button:focus-visible{
+        background:#ae447d!important;border-color:#efbadc!important;
+      }
+      #neoOverworldOverlay.neo-ow-idle-interaction #neoOverworldInteractionCaption{
+        grid-column:1!important;grid-row:2!important;display:flex!important;flex-direction:column;
+        gap:5px;padding:12px!important;border:1px solid #a382b4;border-radius:10px;
+        background:#1c1830e8;color:#f7eefa;font:14px system-ui;
+      }
+      #neoOverworldInteractionCaption strong{color:#ffc3e5;font-size:16px}
+      #neoOverworldOverlay.neo-ow-idle-interaction #neoOverworldInteractionBack{
+        grid-column:2!important;grid-row:2!important;display:block!important;
+        width:100%!important;min-height:43px!important;align-self:stretch!important;
+        color:#fff;background:#302942;border:1px solid #a18ab4;
+        border-radius:9px;cursor:pointer;font:700 14px system-ui;
+      }
+      #neoOverworldOverlay.neo-ow-idle-interaction #neoOverworldStoryDock .stage-planner,
+      #neoOverworldOverlay.neo-ow-idle-interaction #neoOverworldStoryDock .scene-foot{display:none!important}
+      @media(max-width:650px){
+        #neoOverworldOverlay.neo-ow-idle-interaction #neoOverworldStoryDock .stage-panel{
+          grid-template-columns:minmax(0,1fr) minmax(145px,.75fr)!important;
+          grid-template-rows:minmax(180px,1fr) auto!important;gap:0 8px!important;padding:8px!important;
+        }
+        #neoOverworldOverlay.neo-ow-idle-interaction #neoOverworldStoryDock #scene{
+          min-height:190px!important;height:min(42dvh,330px)!important;
+        }
+        #neoOverworldOverlay.neo-ow-idle-interaction #neoOverworldStoryDock #characterActions button{
+          padding:8px!important;font-size:12px!important;min-height:40px!important;
+        }
+        #neoOverworldInteractionCaption{font-size:12px!important}
+      }
+    `;
+    document.head.append(idleLayout);
     const dialogueStyle=document.createElement('style');
     dialogueStyle.textContent=`
       /* A stable two-line PC / three-line mobile speech window, independent
@@ -684,6 +778,7 @@
       const needsStory=!!((data.storyActive&&!arrivalOnly)||(hasCG&&!arrivalOnly)||idleFocus);
       overlay.classList.toggle('neo-ow-arriving',!!data.arriving&&!needsStory);
       overlay.classList.toggle('neo-ow-idle-interaction',!!idleFocus);
+      if(idleFocus)idleName.textContent=bridge()?.portrait?.(idleFocus)?.name||idleFocus;
       if(needsStory){
         if(!storyDock||storyDock.hidden)showStory();
         else lockMapForStory(true);
