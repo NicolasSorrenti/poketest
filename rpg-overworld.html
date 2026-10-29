@@ -1,0 +1,350 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#111224">
+<title>Neo Campus — Overworld RPG</title>
+<script>try{if(JSON.parse(localStorage.getItem('neoRpgCloudSessionV1')||'null')?.user?.id)document.documentElement.classList.add('rpg-cloud-loading');}catch{}</script>
+<script src="/rpg_error_diagnostics.js?v=20261028-optional-2"></script>
+<script src="/rpg_discreet.js"></script>
+<script src="/rpg_discreet_avatars.js?v=2"></script>
+<link rel="stylesheet" href="/rpg.css?v=20261028-pack-continue-hitbox">
+<link rel="stylesheet" href="/rpg_cloud_save.css?v=2">
+<link rel="stylesheet" href="/rpg_time_transitions.css">
+<link rel="stylesheet" href="/rpg_ui_motion.css">
+<link rel="stylesheet" href="/rpg_character_motion.css">
+<link rel="stylesheet" href="/rpg_victory_presentation.css">
+<link rel="stylesheet" href="/rpg_tournament_presentation.css">
+<link rel="stylesheet" href="/rpg_audio.css">
+<link rel="stylesheet" href="/rpg_discreet.css?v=2">
+<link rel="stylesheet" href="/rpg_status.css?v=3">
+<link rel="stylesheet" href="/rpg_cg_viewer.css?v=1">
+
+</head>
+<body>
+<div id="rpgCloudBoot" role="status" aria-live="polite"><span class="rpg-cloud-boot-spinner" aria-hidden="true"></span><strong>Loading cloud campaign…</strong><span>Checking your saved progress before entering Neo Harbor.</span></div>
+<div id="app">
+  <header class="topbar">
+    <div class="brand">
+      <div class="brand-top">NEO <em>HARBOR</em></div>
+      <div class="brand-sub">THE POKÉMON TCG SEASON · A STORY IN 90 DAYS</div>
+    </div>
+    <section class="season-widget" aria-label="Campaign progress">
+      <div class="season-line"><span id="chapterLabel">CHAPTER I · NEW FACES</span><span id="weekdayLabel">MON · WEEK 1</span></div>
+      <div class="season-progress"><span id="campaignFill"></span></div>
+      <small>YOUR 90-DAY CHAMPIONSHIP SEASON</small>
+    </section>
+    <section class="clock" aria-label="Game date and time">
+      <div class="date-line"><b id="day">DAY 01 / 90</b><span id="period">MORNING</span></div>
+      <div class="time-track" id="timeTrack"></div>
+      <small id="timeHint">Next: Afternoon · ⏳</small>
+    </section>
+    <button id="save" class="save-btn" type="button" title="Save your campaign">▣ SAVE</button>
+  </header>
+
+  <div class="utilitybar">
+    <div class="utility-left"><span class="live-dot"></span><span>NEO HARBOR · TOWN EXPLORATION</span><span class="utility-sep">/</span><span id="notice" aria-live="polite">Travel & talk are free · ⏳ actions advance time</span></div>
+    <div class="utility-actions">
+      <button id="statusBtn" class="toolbar-btn status-launch" type="button" aria-haspopup="dialog" aria-controls="statusDialog">♥ STATUS</button>
+      <button id="rpgDiscreetToggle" class="toolbar-btn" type="button" aria-pressed="false" title="Hide character and event illustrations">◇ DISCREET OFF</button>
+      <button id="rpgMapToggle" class="toolbar-btn rpg-nav-toggle" type="button" aria-controls="rpgMapPanel" aria-expanded="false" aria-label="Open town map">☷ MAP</button>
+      <button id="rpgInfoToggle" class="toolbar-btn rpg-nav-toggle" type="button" aria-controls="rpgInfoPanel" aria-expanded="false" aria-label="Open story and progress panels">✧ INFO</button>
+      <button id="deckStudioBtn" class="toolbar-btn" type="button">▣ DECK STUDIO</button>
+      <button id="calendarBtn" class="toolbar-btn" type="button">▦ CALENDAR</button>
+      <details class="rpg-more-menu" id="rpgMoreMenu">
+        <summary class="toolbar-btn" aria-label="More RPG tools">⋯ MORE</summary>
+        <div class="rpg-more-content" aria-label="More RPG tools">
+          <button id="galleryBtn" class="toolbar-btn" type="button">▧ ART GALLERY</button>
+          <a href="/rpg_card_library.html?from=rpg" class="toolbar-btn">▤ CARD LIBRARY</a>
+          <a href="/mat_generator.html" target="_blank" rel="noopener" class="toolbar-btn">▧ PLAYMAT STUDIO</a>
+          <details class="rpg-audio-settings">
+        <summary id="rpgSoundLabel" aria-label="Sound settings">♫ SOUND</summary>
+        <div class="rpg-audio-menu" aria-label="Audio preferences">
+          <button id="rpgSoundToggle" type="button" aria-pressed="true">SFX ON</button>
+          <label for="rpgSoundVolume">VOLUME
+            <input id="rpgSoundVolume" type="range" min="0" max="100" step="5" value="35" aria-label="Sound effects volume">
+          </label>
+          <label class="rpg-audio-ambience" for="rpgAmbienceToggle">
+            <input id="rpgAmbienceToggle" type="checkbox"> AMBIENCE
+          </label>
+          <small>Audio starts when you interact. Ambience is optional.</small>
+        </div>
+      </details>
+        </div>
+      </details>
+      <button id="quickHome" class="toolbar-btn" type="button">⌂ GO HOME</button>
+      <button id="quickNext" class="time-advance" type="button">▶ NEXT PERIOD · ⏳</button>
+    </div>
+  </div>
+
+  <section class="duel-receipt" id="duelReceipt" role="status" aria-live="polite" hidden>
+    <span class="receipt-icon" aria-hidden="true">★</span>
+    <div class="receipt-copy"><strong id="receiptTitle"></strong><p id="receiptDetails"></p></div>
+    <button id="dismissReceipt" type="button">Continue exploring →</button>
+  </section>
+
+  <button id="rpgDrawerBackdrop" class="rpg-drawer-backdrop" type="button" aria-label="Close navigation panel" hidden></button>
+  <main class="layout">
+    <aside id="rpgMapPanel" class="locations-panel" aria-label="Town map" aria-hidden="true">
+      <div class="rpg-drawer-header"><strong>☷ TOWN MAP</strong><button type="button" class="rpg-drawer-close" aria-label="Close town map">✕</button></div>
+      <div class="panel-label">NEIGHBORHOODS</div>
+      <h2>Explore the town</h2>
+      <p>Choose where to go. Traveling does not consume time.</p>
+      <nav id="places" aria-label="Town locations"></nav>
+      <div class="legend">
+        <strong>HOW TIME WORKS</strong>
+        <div><span>→</span> Travel and short chats <b>FREE</b></div>
+        <div><span>⏳</span> Hangouts and duels <b>1 PERIOD</b></div>
+        <div><span>☾</span> After evening comes <b>NEW DAY</b></div>
+      </div>
+    </aside>
+
+    <section class="stage-panel">
+      <div id="scene" class="scene">
+        <div class="scene-head">
+          <span id="whereLabel" class="here-label">⌂ YOU ARE HOME</span>
+          <strong id="placeTitle">Your Apartment</strong>
+          <span id="placeDetail">Your base during the championship season.</span>
+        </div>
+        <div class="home-banner" id="homeBanner">YOUR APARTMENT — Prepare, plan or rest.</div>
+        <div class="rpg-discreet-stage" aria-hidden="true"><span class="rpg-discreet-stage__symbol">N/H</span><span class="rpg-discreet-stage__subtitle">STORY · TACTICS · CONNECTIONS</span></div>
+        <img id="rpgSceneCG" class="rpg-scene-cg" alt="" aria-label="Scene illustration" hidden>
+        <div id="portrait" class="portrait" aria-label="Character illustration"></div>
+      </div>
+      <div id="dialogue" class="dialogue" aria-live="polite">
+        <div class="dialogue-title"><span id="speaker">Narrator</span><span class="vn-label">NEO HARBOR / STORY</span></div>
+        <p id="line"></p>
+        <div id="choices" class="choice-list"></div>
+        <div id="playerChoicePrompt" class="player-choice-prompt" hidden aria-label="Choose your response">
+          <div id="playerChoicePanel" class="player-choice-panel">
+            <span class="player-choice-eyebrow">YOUR RESPONSE</span>
+            <strong>What will you say?</strong>
+          </div>
+        </div>
+      </div>
+      <div id="characterActions" class="character-actions" aria-label="Selected character actions" hidden></div>
+      <section class="side-section planner-section stage-planner" aria-label="What next?">
+        <div class="sidebar-title"><span>✦ WHAT NEXT?</span><small>LIVE DAILY GUIDE</small></div>
+        <div id="dailyPlanner" class="daily-planner" aria-label="Contextual suggestions for this game period" aria-live="polite"></div>
+      </section>
+      <div class="scene-foot">
+        <span>LOCATION SCENE · INTERACTIVE VISUAL NOVEL</span>
+        <span>Press SPACE to advance story dialogue</span>
+      </div>
+      <div class="campaign-complete" id="endSeason" hidden></div>
+    </section>
+
+    <aside id="rpgInfoPanel" class="sidebar" aria-label="Story and progress" aria-hidden="true">
+      <div class="rpg-drawer-header"><strong>✧ TOWN INFO</strong><button type="button" class="rpg-drawer-close" aria-label="Close town information">✕</button></div>
+      <section class="side-section journey-section">
+        <div class="sidebar-title"><span>✦ YOUR 90-DAY JOURNEY</span><small>CAMPAIGN PROGRESS</small></div>
+        <div id="journeyProgress" class="journey-progress" aria-live="polite"></div>
+      </section>
+      <section class="side-section intention-section">
+        <div class="sidebar-title"><span>✧ TODAY'S PRIORITY</span><small>PERSONA-STYLE DAILY FOCUS</small></div>
+        <div id="dailyIntention" class="daily-intention" aria-label="Optional daily priority"></div>
+      </section>
+      <section class="side-section">
+        <div class="sidebar-title"><span>AROUND TOWN NOW</span><small>FREE TRAVEL</small></div>
+        <div id="townRadar" class="town-radar" aria-label="Other available trainers and where to find them"></div>
+      </section>
+      <section class="side-section">
+        <div class="sidebar-title"><span>◷ UPCOMING PLANS</span><small>MEET-UPS · ⏳ 1 PERIOD</small></div>
+        <div id="appointments" class="appointments-panel" aria-label="Upcoming scheduled social meet-ups"></div>
+      </section>
+      <section class="side-section">
+        <div class="sidebar-title"><span>WHO'S HERE</span><small>AVAILABLE NOW</small></div>
+        <div id="people" class="people-list"></div>
+      </section>
+      <section class="side-section story-section">
+        <div class="sidebar-title"><span>✦ STORY OPPORTUNITIES</span><small>TIME-SENSITIVE</small></div>
+        <div id="storyEvents" class="event-list"></div>
+      </section>
+      <section class="side-section situation-section">
+        <div class="sidebar-title"><span>✧ UNEXPECTED MOMENTS</span><small>OPTIONAL · ONE-TIME</small></div>
+        <div id="situationEvents" class="event-list" aria-label="Situational character encounters"></div>
+      </section>
+      <section class="side-section world-section">
+        <div class="sidebar-title"><span>◈ TOWN LIFE</span><small>YOUR PROGRESS</small></div>
+        <div id="lifeStats" class="life-stats" aria-label="Focus, reputation, insight and duel preparation"></div>
+        <div class="sidebar-subtitle">LOCAL ACTIVITIES <small>⏳ 1 PERIOD</small></div>
+        <div id="townActivities" class="activity-list"></div>
+      </section>
+      <section class="side-section quest-section">
+        <div class="sidebar-title"><span>◆ SIDE QUESTS</span><small>OPTIONAL TOWN STORIES</small></div>
+        <div id="sideQuestEvents" class="event-list"></div>
+        <div id="sideQuestJournal" class="quest-journal" aria-label="Side quest progress"></div>
+      </section>
+      <section class="side-section encounter-section">
+        <div class="sidebar-title"><span>✧ LOCAL ENCOUNTERS</span><small>DISCOVERABLE</small></div>
+        <div id="townEncounters" class="event-list"></div>
+      </section>
+      <section class="side-section">
+        <div class="sidebar-title"><span>🏆 TOURNAMENT BRACKETS</span><small>REAL MATCH RESULTS</small></div>
+        <div id="bracketProgress" class="bracket-progress"></div>
+      </section>
+      <section class="side-section">
+        <div class="sidebar-title"><span>⚔ LOCAL CIRCUIT</span><small>DAILY TRAINING · SATURDAY LOCALS</small></div>
+        <div id="competitiveEvents" class="activity-list" aria-label="Recurring competitive opportunities"></div>
+      </section>
+      <section class="side-section">
+        <div class="sidebar-title"><span>YOUR DAY</span><small>⏳ = USES TIME</small></div>
+        <div id="activities" class="activity-list"></div>
+      </section>
+      <section class="side-section">
+        <div class="sidebar-title"><span>YOUR DECK</span><small>CHOOSE FOR NEXT DUEL</small></div>
+        <label class="decklabel" for="deckPicker">ACTIVE 60-CARD DECK</label>
+        <select id="deckPicker"></select>
+        <div id="deckCollection" class="deck-collection" aria-live="polite"></div>
+      </section>
+      <section class="side-section">
+        <div class="sidebar-title"><span>SEASON JOURNAL</span><small>NO SPOILERS</small></div>
+        <div id="journal"></div>
+      </section>
+    </aside>
+  </main>
+  <footer>NEO HARBOR · 90 DAYS TO MAKE YOUR MARK <span>CHARACTERS HAVE THEIR OWN LIVES · CHOICES MATTER</span></footer>
+</div>
+
+<div id="timeFlash" class="time-flash" role="status" aria-live="polite"></div>
+<aside id="gameplayTutorial" class="gameplay-tutorial" aria-live="polite" hidden>
+ <small id="tutorialProgress">GAMEPLAY TIP</small>
+ <strong id="tutorialTitle"></strong>
+ <p id="tutorialText"></p>
+ <button id="tutorialDismiss" type="button">Got it</button>
+</aside>
+
+<dialog id="statusDialog" class="rpg-status-dialog" aria-label="Player and relationships status">
+  <div class="status-header">
+    <div><small class="status-eyebrow">NEO HARBOR · PLAYER RECORD</small><h2>♥ Your Season Status</h2><p>Progress, personal connections and the people you've met.</p></div>
+    <button id="statusClose" class="status-close" type="button">✕ CLOSE</button>
+  </div>
+  <div id="statusOverview" class="status-overview" aria-label="Player progression"></div>
+  <p id="statusTutorialHelp" class="tutorial-inline" hidden></p>
+  <label class="status-tutorial-option"><input id="statusTutorialToggle" type="checkbox"> Stop gameplay tutorials for this season</label>
+  <div class="status-main">
+    <section class="status-people" aria-label="Known characters">
+      <div class="status-section-head"><h3>Connections</h3><small id="statusCount"></small></div>
+      <div id="statusCharacters" class="status-characters"></div>
+    </section>
+    <section id="statusDetail" class="status-detail" aria-live="polite" aria-label="Selected character relationship"></section>
+  </div>
+</dialog>
+<dialog id="calendarDialog" class="modal">
+ <div class="modal-heading"><h2>▦ Your Calendar</h2><button id="calendarClose" type="button">✕ Close</button></div>
+ <p>Appointments and known events, without revealing undiscovered character stories.</p>
+ <div id="calendarEntries"></div>
+</dialog>
+
+<dialog id="communityDialog" class="modal community-dialog" aria-label="Neo Harbor community board">
+ <div class="modal-heading"><h2>▦ Neo Harbor Community Board</h2><button id="communityClose" type="button">✕ Close</button></div>
+ <p>Off-screen club practice and everyday encounters continue while you pursue your own story. These are community results, not official tournament matches.</p>
+ <h3>Club standings</h3>
+ <div id="communityStandings" class="community-standings" aria-label="NPC club standings"></div>
+ <h3>Recent happenings</h3>
+ <div id="communityNews" class="community-news" aria-label="NPC club news"></div>
+ <h3>Connections</h3>
+ <div id="communityConnections" class="community-connections" aria-label="Emerging character friendships and rivalries"></div>
+</dialog>
+
+<dialog id="galleryDialog" class="modal cg-dialog" aria-label="Character art gallery">
+ <div class="modal-heading"><h2>▧ Character Gallery</h2><button id="galleryClose" type="button">✕ Close</button></div>
+ <p class="cg-intro">Explore each character’s artwork. Locked memories remain hidden until you encounter them in the story.</p><div id="galleryCharacterPage" class="cg-character-page"></div><section id="galleryAlbumPage" hidden><button type="button" id="galleryBack" class="cg-gallery-back">← All characters</button><h3 id="galleryCharacterTitle"></h3>
+ <div class="cg-filters">
+  <label for="galleryCharacter">Character</label><select id="galleryCharacter">
+    <option value="">All characters</option>
+   </select>
+  <label for="galleryCategory">Artwork type</label><select id="galleryCategory">
+   <option value="cg">CGs</option><option value="expressions">Expressions</option>
+   <option value="battle">Battle art</option><option value="outfits">Outfits</option>
+  </select>
+ </div>
+ <label class="cg-unseen-label" for="galleryUnseen"><input type="checkbox" id="galleryUnseen" /> Only new memories I haven't viewed</label>
+ <p id="galleryCount" class="cg-count" aria-live="polite"></p>
+ <div id="galleryProgress" class="cg-progress" aria-label="Gallery completion by character and scene type"></div>
+ <div id="galleryGrid" class="cg-grid"></div>
+ <div id="galleryPreview" class="cg-preview" aria-live="polite"></div></section>
+</dialog>
+
+<dialog id="preDuelDialog" class="modal preduel-dialog" aria-label="Before the duel" aria-modal="true">
+ <div class="preduel-top">
+  <span class="preduel-eyebrow">✧ NEO HARBOR · BEFORE THE DUEL</span>
+  <span id="preDuelContext" class="preduel-context"></span>
+ </div>
+ <div id="preDuelArt" class="preduel-art" aria-live="polite"></div>
+ <div class="preduel-body">
+  <div class="preduel-nameplate"><strong id="preDuelOpponent"></strong><span id="preDuelDeck"></span></div>
+  <div class="preduel-dialogue" role="status" aria-live="polite"><strong id="preDuelSpeaker"></strong><p id="preDuelLine"></p></div>
+  <p id="preDuelTutorial" class="tutorial-inline" hidden></p>
+  <div class="preduel-actions">
+   <button id="preDuelBack" type="button">← Back to RPG · No duel</button>
+   <button id="preDuelSkip" type="button">Skip scene · Start Duel</button>
+   <button id="preDuelNext" type="button">Continue story ›</button>
+   <button id="preDuelStart" type="button" hidden>Start Duel ›</button>
+  </div>
+ </div>
+</dialog>
+<dialog id="starterDialog" class="modal deck-starter-dialog" aria-label="Choose your RPG starter deck">
+ <h2>Choose your first 60-card deck</h2>
+ <p>Three modest mixed-type teams. Earn cards, buy training packs, and improve your list across the 90-day season. Your choice is permanent for this run.</p>
+ <div id="starterChoices" class="starter-choices"></div>
+</dialog>
+<dialog id="boosterShopDialog" class="modal booster-shop-dialog" aria-label="The Lucky Draw booster shop">
+ <div class="modal-heading"><div><small>THE LUCKY DRAW · NEO HARBOR</small><h2>Booster Shop</h2></div><button id="boosterShopClose" type="button">✕ Close</button></div>
+ <p>Ten random cards per pack · At least one rare and one Basic Energy. Unlock expansions through the season, relationships, and tournaments.</p>
+ <a class="booster-library-link" href="/rpg_card_library.html?from=rpg">▤ Browse the Card Library · See which packs contain each card →</a>
+ <p id="boosterTutorial" class="tutorial-inline" hidden></p>
+ <div class="booster-shop-balance" id="boosterShopBalance" aria-live="polite"></div>
+ <div class="booster-shop-grid" id="boosterShopGrid" aria-label="Available and locked booster packs"></div>
+ <p id="boosterShopStatus" class="booster-shop-status" aria-live="polite"></p>
+</dialog>
+<dialog id="victoryDialog" class="victory-dialog" aria-label="Duel results" aria-modal="true">
+ <div class="victory-stage">
+  <div class="victory-copy">
+   <span class="victory-overline">✦ NEO HARBOR · DUEL RESULT</span>
+   <strong id="victoryOutcome" class="victory-title">VICTORY!</strong>
+   <span id="victorySubtitle" class="victory-subtitle">ONE STEP CLOSER TO THE CHAMPIONSHIP</span>
+   <span id="victoryOpponent" class="victory-opponent">VS RIVAL</span>
+  </div>
+  <div id="victoryPortrait" class="victory-portrait" aria-label="Opponent portrait"></div>
+ </div>
+ <div class="victory-footer">
+  <div id="victoryStats" class="victory-stats" aria-label="Duel rewards"></div>
+  <button id="victoryContinue" class="victory-continue" type="button">CONTINUE ADVENTURE →</button>
+ </div>
+</dialog>
+<dialog id="packDialog" class="modal pack-reveal-dialog" aria-label="Open your card reward booster" aria-modal="true">
+ <div class="pack-reveal-intro">
+  <div class="pack-giver"><div id="packGiver" class="pack-giver-image"></div></div>
+  <div class="pack-reveal-header"><div><small id="packEyebrow">✦ NEO HARBOR · CARD REWARDS</small><h2 id="packTitle">Booster Pack</h2><p id="packDescription">Ten cards, including a rare and an Energy. Tap to reveal them.</p></div></div>
+ </div>
+ <div id="packCards" class="pack-reveal-cards" aria-label="Ten new cards"></div>
+ <div class="pack-reveal-actions"><button id="packRevealAll" type="button">Reveal all ten</button><button id="packContinue" type="button">Continue adventure →</button></div>
+</dialog>
+<dialog id="deckEditDialog" class="modal deck-workshop-dialog" aria-label="Build your RPG deck">
+ <div class="modal-heading"><h2>◆ Deck Workshop</h2><button id="deckEditClose" type="button">✕ Close</button></div>
+ <p id="deckEditStats" aria-live="polite"></p>
+ <div class="deck-workshop-controls">
+  <label>Replace from deck<select id="deckRemove"></select></label>
+  <label>With owned card<select id="deckAdd"></select></label>
+ </div>
+ <div class="deck-workshop-buttons">
+  <button id="deckSwap" type="button">Swap one card · free</button>
+  <button id="deckSave" type="button">Save 60-card deck</button>
+  <button id="deckDiscard" type="button">Discard draft</button>
+ </div>
+ <p id="deckEditError" role="status"></p>
+ <div id="deckList" class="deck-workshop-list"></div>
+</dialog>
+<div id="duel" hidden>
+ <iframe id="battle" title="Neo Campus TCG Duel"></iframe>
+</div>
+
+<script src="/rpg_cg_viewer.js?v=1" defer></script>
+<script src="/rpg_outfit_chime.js?v=20261029-art-discovery-1"></script>
+<script>window.NeoRpgOverworldStandalone=true;</script>
+<script src="/rpg-overworld-integration.js?v=20261029-native-prompts-3"></script>
+<script src="/rpg_character_bootstrap.js?v=20261029-gallery-discovery-viewed-3"></script>
+</body>
+</html>
