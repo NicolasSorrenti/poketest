@@ -19,13 +19,21 @@ test('blueprint remains safe fallback if all installed map formats fail',()=>{
  assert.match(code,/candidateIndex\+1<candidates\.length/);
  assert.match(code,/setMapSource\(candidateIndex\+1\)/);
  assert.match(code,/neo-overworld-missing-map/);
- assert.match(manifest,/home-blueprint\.svg/);
+ assert.match(code,/map\.image\]/);
 });
-test('existing approved Pixel Palace and shop art stay authoritative',()=>{
+test('Pixel Palace preserved and all six user-uploaded location maps selected',()=>{
  assert.match(manifest,/rpg-assets\/locations\/arcade\/overworld-map\.webp/);
- assert.match(manifest,/art-production\/overworld-candidates\/shop-map-v1\.png/);
+ for(const loc of ['home','park','cafe','center','library','shop'])assert.ok(manifest.includes('/rpg-assets/locations/'+loc+'/overworld-map-candidate-20261029.webp'));
  assert.match(code,/map\.blueprint\?[\s\S]*?\[map\.image\]/);
 });
 test('the embedded map HTML references the fixed loader',()=>{
- assert.match(page,/overworld\/prototype\.js\?v=installed-map-detection-20261029/);
+ assert.match(page,/overworld\/prototype\.js\?v=map-placement-editor-20261029/);
+});
+
+test('explicit development mode exports revised anchors and hotspots without touching RPG state',()=>{
+ assert.match(code,/const layoutDev=dev&&!params.has\('rpg-integration'\)/);
+ assert.match(code,/function draggable\(el,point,update\)/);
+ assert.match(code,/localStorage.setItem\(layoutKey,JSON.stringify\(layout\)\)/);
+ assert.match(code,/navigator.clipboard.writeText\(json\)/);
+ assert.match(code,/Math.max\(24,Math.min\(h.w,map.width/);
 });
