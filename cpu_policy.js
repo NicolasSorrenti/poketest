@@ -739,8 +739,13 @@ function horizonAttackValue(unit,defender,hand,remaining=1,futureRound=0,turnSer
  if(!unit||!defender)return 0;
  const immediate=projectedAttackValue(unit,defender,turnSerial,benchCount);
  if(remaining===0)return immediate;
+ // Paralysis expires at the end of the affected turn; unlike Sleep, recovery
+ // is guaranteed by our next turn. Do not treat it as a permanent attack lock.
+ const nextTurnUnit=unit.status==='Paralyzed'?{...unit,status:null}:unit;
+ const recovered=unit.status==='Paralyzed'?
+  projectedAttackValue(nextTurnUnit,defender,turnSerial+2,benchCount)*.48:0;
  const seen=new Set();
- let best=immediate;
+ let best=Math.max(immediate,recovered);
  for(const id of hand){
   const energy=card(id);
   // Forecast only Energy the attacker can legally receive next turn.
@@ -748,7 +753,7 @@ function horizonAttackValue(unit,defender,hand,remaining=1,futureRound=0,turnSer
   if(seen.has(id)||!isEnergy(energy)||!legalAttachment({card:energy,unit,
    round:futureRound,cardName:card(unit.id)?.name||''}))continue;
   seen.add(id);
-  const after={...unit,energies:[...(unit.energies||[]),id]};
+  const after={...nextTurnUnit,energies:[...(unit.energies||[]),id]};
   // A card requires another turn's Energy attachment. Discount those future
   // outcomes to avoid preferring a speculative combination to today's KO.
   // Next attachment is on our next turn, after the opponent's turn.
