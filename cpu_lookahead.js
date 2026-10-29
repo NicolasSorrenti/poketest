@@ -22,18 +22,22 @@ function reserveValue(id,card){
 // Model the strongest currently affordable reply by the visible opposing
 // Active. A ready opposing Benched attacker is a *discounted* switch threat:
 // do not invent a Gust, free retreat, or hidden Energy attachment.
-function publicCounterplay(o,helpers,ourTarget=o.self.active,enemy=o.opponent){
+function publicCounterplay(o,helpers,ourTarget=o.self.active,enemy=o.opponent,apex=false){
  if(!ourTarget||!enemy?.active)return {expected:0,koChance:0,benchThreat:0};
  const {projectedAttackValue,hpRemaining,strongestAffordableAttack}=helpers;
  const health=hpRemaining(ourTarget);
  if(health<=0)return {expected:0,koChance:0,benchThreat:0};
  const disabled=['Asleep','Paralyzed'].includes(enemy.active.status);
+ // Confusion requires a separate heads flip before any printed attack can
+ // resolve. Apex uses its 50% reliability for counterplay; lower tiers keep
+ // their established evaluation until separately benchmarked.
+ const reliability=apex&&enemy.active.status==='Confused'?.5:1;
  const activeDamage=disabled?0:strongestAffordableAttack(enemy.active,ourTarget,enemy.bench.length);
- const activeImpact=disabled?0:projectedAttackValue(enemy.active,ourTarget,o.turnSerial,enemy.bench.length);
+ const activeImpact=disabled?0:projectedAttackValue(enemy.active,ourTarget,o.turnSerial,enemy.bench.length)*reliability;
  const benchDamage=enemy.bench.reduce((best,u)=>Math.max(best,strongestAffordableAttack(u,ourTarget,Math.max(0,enemy.bench.length-1))),0);
  const benchImpact=enemy.bench.reduce((best,u)=>Math.max(best,projectedAttackValue(u,ourTarget,o.turnSerial,Math.max(0,enemy.bench.length-1))),0);
  const benchThreat=0.18*Math.max(0,benchImpact-activeImpact);
- const koChance=activeDamage>=health&&activeDamage>0?1:0;
+ const koChance=activeDamage>=health&&activeDamage>0?reliability:0;
  return {expected:activeImpact+benchThreat,koChance,benchThreat};
 }
 // Scores a realistic end-of-turn decision point. We estimate an affordable
@@ -44,7 +48,7 @@ function evaluateTurn(o,cfg,helpers){
  const {candidates,score,attackBonus,hpRemaining,card,strongestAffordableAttack,projectedAttackValue,knockoutChance}=helpers;
  const used={trainers:0,powers:0,powerKeys:new Set(),stadium:false};
  const actions=candidates(o,cfg,used).filter(a=>a.type==='attack');
- const counter=publicCounterplay(o,helpers),enemy=o.opponent,own=o.self;
+ const counter=publicCounterplay(o,helpers,o.self.active,o.opponent,cfg.level===8),enemy=o.opponent,own=o.self;
  const benchCount=own.bench.length,ourHp=hpRemaining(own.active);
  const ownPrizes=Number(own.prizeCount||0),enemyPrizes=Number(enemy.prizeCount||0);
  const enemyHasBackup=enemy.bench.length>0;
