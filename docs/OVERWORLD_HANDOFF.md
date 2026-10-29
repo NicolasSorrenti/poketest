@@ -103,3 +103,10 @@ The shop concept was generated from the canonical `shop-day.webp` panorama and t
 - Stale activity choice panels are removed on dismiss or before opening another panel.
 - Cache-busting script version updated in rpg.html. JavaScript parse checks passed for main bridge/adapter/prototype.
 - **Not yet browser tested or deployed** as of this edit; avoid calling integration production-verified.
+
+## 2026-10-29 — battle-return and story-dock stability
+- The separate Overworld RPG now embeds the original `.stage-panel` in a map story dock, reusing native dialogue, choices and scene CG rendering.
+- Map iframe only reloads when scene, cast roster, or chibi toggle actually changes.
+- Back/close buttons respect active story locks.
+- The existing full-screen `#duel` layer temporarily suppresses the map overlay; a `MutationObserver` restores the overworld when the battle ends, then refreshes its schedule and displays active story if present.
+- Changes committed through `cea5d1ad`. JavaScript syntax checked; **no browser gameplay verification yet**. Test duel→rewards→map and mandatory events during travel.
