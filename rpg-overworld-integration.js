@@ -189,7 +189,7 @@
       const hasChoices=!!choices?.querySelector('button');
       const hasActions=!!actions&&!actions.hidden&&!!actions.querySelector('button');
       const hasCG=!!cg&&!cg.hidden&&!!cg.getAttribute('src');
-      const needsStory=!!(data.locked||(line&&line!=='The town is waiting.')||hasChoices||hasActions||hasCG);
+      const needsStory=!!((data.locked&&!data.arriving)||(line&&line!=='The town is waiting.')||hasChoices||hasActions||hasCG);
       if(needsStory){
         if(!storyDock||storyDock.hidden)showStory();
       }else if(storyDock&&!storyDock.hidden){
