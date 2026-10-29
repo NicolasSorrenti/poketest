@@ -90,3 +90,9 @@ The shop concept was generated from the canonical `shop-day.webp` panorama and t
 - Same-origin + iframe-window checks protect message handling. Native travel remains the only source of campaign state changes.
 - Syntax checked via JS parser for `rpg.js`, `rpg-overworld-integration.js`, `overworld/prototype.js`. Browser gameplay and deploy have not been verified.
 - TODO: responsive browser QA, test dialogue and duel locks; later align zone-to-activity relevance and NPC sprite placements.
+
+## 2026-10-29 — Phase 2 NPC and hotspot interactions
+- The current RPG bridge implements `interact(id)`, `activities()` and `activity(id)` using the original `selectPerson`, `WORLD.activitiesAt` and `performActivity` pathways.
+- The iframe preview posts `neo-overworld-action` messages for person and hotspot clicks; parent adapter validates same-origin and frame source before invoking the RPG bridge.
+- Sprite-unregistered scheduled NPCs are now retained in the integrated map and shown with a fallback character marker (`8013df75`). This means missing character art does not hide in-game NPCs.
+- Still needs a live deployed desktop/mobile playthrough. Current Render status was behind latest `main` as of this edit; do not equate GitHub commit with deployment.
