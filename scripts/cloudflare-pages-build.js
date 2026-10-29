@@ -87,6 +87,15 @@ for (const script of publicScripts) {
 walk('rpg-assets');
 walk('overworld');
 
+const generatedPacks = require(path.join(root, 'rpg_character_packs.generated.js'));
+const characterAccess = require(path.join(root, 'rpg_character_access.js'));
+const publicRosterJson = JSON.stringify({
+  packs: characterAccess.filterPacks(generatedPacks.packs, '')
+});
+fs.writeFileSync(path.join(out, 'rpg-character-packs.public.json'), publicRosterJson);
+copied++;
+bytes += Buffer.byteLength(publicRosterJson);
+
 fs.writeFileSync(path.join(out, '_redirects'), '/ /play.html 302\n');
 const files = [];
 function countFiles(directory) {
