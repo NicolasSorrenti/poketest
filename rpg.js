@@ -1661,9 +1661,11 @@ const artEntries=new Map();
 const artSeen=state.artSeen&&typeof state.artSeen==='object'?state.artSeen:(state.artSeen={});
 function artKey(path){return String(path||'').split('?')[0];}
 function buildArtEntries(){
+ artEntries.clear();
  const register=(id,type,label,path)=>{
   if(typeof path!=='string'||!/^\/rpg-assets\/[\w./-]+\.(?:png|webp|jpg|jpeg)$/i.test(path)||path.includes('..'))return;
   const key=artKey(path);
+  if(artEntries.has(key))return;
   artEntries.set(key,{id,type,label,path:key,unlocked:!!artSeen[key],title:label,viewed:!!artSeen[key]});
  };
  for(const item of window.NeoRpgArtManifest||[])if(cast[item.id])register(item.id,item.type,item.title,item.path);
@@ -1679,7 +1681,7 @@ function buildArtEntries(){
  for(const path of Object.keys(artSeen)){
   const match=path.match(/^\/rpg-assets\/(?:characters|reactions)\/([a-z0-9_-]+)\//i);
   if(!match||!cast[match[1]])continue;
-  const id=match[1],type=/\/(?:reaction|reactions|cutins|attack|battle)\//i.test(path)||path.startsWith('/rpg-assets/reactions/')?'battle':/\/outfits\//.test(path)?'outfits':'expressions';
+  const id=match[1],known=(window.NeoRpgArtManifest||[]).find(item=>item.path===path),type=known?.type||(path.startsWith('/rpg-assets/reactions/')||/\/(?:reaction|reactions|cutins|attack|battle)\//i.test(path)?'battle':/\/(?:outfits|overworld-variants)\/|\/special-day-\d+\./i.test(path)?'outfits':'expressions');
   register(id,type,path.split('/').at(-1).replace(/\.[^.]+$/,''),path);
  }
 }
