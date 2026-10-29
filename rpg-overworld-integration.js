@@ -68,6 +68,7 @@
       }
     });
     document.addEventListener('keydown',event=>{if(event.key==='Escape'&&!overlay.hidden)dismiss();});
+    if(window.NeoRpgOverworldStandalone)setTimeout(()=>{if(bridge()&&overlay.hidden)open.click();},0);
   }
   window.addEventListener('neo-rpg-overworld-bridge-ready',mount);
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',mount);else mount();
