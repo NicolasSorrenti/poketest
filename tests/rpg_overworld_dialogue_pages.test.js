@@ -54,7 +54,7 @@ test('the dedicated Overworld keeps the clicked character until Back to map',()=
 });
 test('only the Overworld page loads the dialog pager; static server serves it',()=>{
  assert.match(page,/rpg_overworld_text_pages\.js\?v=20261029-measured-pages-v1/);
- assert.match(page,/rpg-overworld-integration\.js\?v=20261029-portrait-flush-2/);
+ assert.match(page,/rpg-overworld-integration\.js\?v=20261029-character-side-actions-1/);
  assert.match(server,/publicScripts\.add\('rpg_overworld_text_pages\.js'\)/);
  const original=fs.readFileSync(path.join(root,'rpg.html'),'utf8');
  assert.doesNotMatch(original,/rpg_overworld_text_pages\.js/);
