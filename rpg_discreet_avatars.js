@@ -41,7 +41,7 @@
  const chibiCandidates=id=>['/rpg-assets/characters/'+id+'/discreet/neutral.webp','/rpg-assets/characters/'+id+'/discreet/neutral.png','/rpg-assets/characters/'+id+'/chibi/front.png'];
  function probeChibi(id){
   if(!win?.Image)return Promise.resolve(null);
-  const paths=[...chibiCandidates(id),'/rpg-assets/characters/reina/chibi/front.png'];
+  const paths=isOverworld()?[...chibiCandidates(id),'/rpg-assets/characters/reina/chibi/front.png']:chibiCandidates(id);
   return new Promise(resolve=>{
    const next=i=>{if(i>=paths.length){resolve(null);return;}
     const img=new win.Image();img.onload=()=>resolve(paths[i]);img.onerror=()=>next(i+1);img.src=paths[i];};next(0);
