@@ -416,15 +416,15 @@ function candidates(o,cfg,used){
  options.push(command('end_turn'));
  return options;
 }
-function energyDenialValue(unit,defender,isActive){
+function energyDenialValue(unit,defender,isActive,benchCount=null){
  if(!unit||!unit.energies?.length)return -100;
- const before=strongestAffordableAttack(unit,defender);
+ const before=strongestAffordableAttack(unit,defender,benchCount);
  const future=(unit.effectiveAttacks||card(unit.id)?.attacks||[]).reduce((max,a)=>
   Math.max(max,(a.cost||[]).length),0);
  let denied=0;
  for(let i=0;i<unit.energies.length;i++){
   const after={...unit,energies:unit.energies.filter((_,j)=>j!==i)};
-  const remaining=strongestAffordableAttack(after,defender);
+  const remaining=strongestAffordableAttack(after,defender,benchCount);
   denied=Math.max(denied,Math.max(0,before-remaining)+
    ((before>=hpRemaining(defender)&&remaining<hpRemaining(defender))?100:0));
  }
@@ -432,11 +432,11 @@ function energyDenialValue(unit,defender,isActive){
  const potential=Math.min(15,future*4);
  return (isActive?1.3:.7)*(denied+ready+potential)+(isActive?32:0);
 }
-function energyRemovalChoiceValue(unit,defender,energyIndex,enemy){
+function energyRemovalChoiceValue(unit,defender,energyIndex,enemy,benchCount=null){
  if(!unit||!unit.energies?.[energyIndex])return 0;
- const before=strongestAffordableAttack(unit,defender);
+ const before=strongestAffordableAttack(unit,defender,benchCount);
  const after={...unit,energies:unit.energies.filter((_,i)=>i!==energyIndex)};
- const remaining=strongestAffordableAttack(after,defender);
+ const remaining=strongestAffordableAttack(after,defender,benchCount);
  const denied=Math.max(0,before-remaining);
  const removed=energyPool({energies:[unit.energies[energyIndex]]}).length;
  const preventedKO=before>=hpRemaining(defender)&&remaining<hpRemaining(defender);
@@ -446,10 +446,10 @@ function energyRemovalChoiceValue(unit,defender,energyIndex,enemy){
 // Apex: Rain Dance is a free, repeatable Water Energy attachment, not a
 // generic 85-point Power. The target valuation uses only our visible hand,
 // public cards, and presently affordable attacks; it never samples deck draws.
-function rainDanceTargetValue(unit,waterId,enemy){
+function rainDanceTargetValue(unit,waterId,enemy,benchCount=null){
  if(!unit||!enemy||!waterId)return -100;
- const before=strongestAffordableAttack(unit,enemy);
- const after=damageAfterAttachment(unit,waterId,enemy);
+ const before=strongestAffordableAttack(unit,enemy,benchCount);
+ const after=damageAfterAttachment(unit,waterId,enemy,benchCount);
  const increase=Math.max(0,after-before);
  const ko=before<hpRemaining(enemy)&&after>=hpRemaining(enemy)&&after>0;
  const prep=Math.max(0,energyValue(unit,waterId));
@@ -465,7 +465,7 @@ function rainDanceOpportunity(o){
  return Math.max(-100,...slots(o.self).map(slot=>{
   const unit=slotUnit(o.self,slot);
   return card(unit?.id)?.types?.includes('Water')?
-   rainDanceTargetValue(unit,waterId,o.opponent.active):-100;
+   rainDanceTargetValue(unit,waterId,o.opponent.active,o.self.bench.length):-100;
  }));
 }
 function choiceValue(option,decision,o,cfg){
@@ -477,18 +477,20 @@ function choiceValue(option,decision,o,cfg){
    /^Choose Water Pokémon to attach Energy$/i.test(ctx)){
   const unit=slotUnit(o.self,Number(id.slice(5)));
   const energy=o.self.hand.find(cardId=>card(cardId)?.name==='Water Energy');
-  return rainDanceTargetValue(unit,energy,o.opponent.active);
+  return rainDanceTargetValue(unit,energy,o.opponent.active,o.self.bench.length);
  }
  if(/^prize:/.test(id))return 1;
  if(/^n:\d+$/.test(id)&&cfg?.level>=3){
   const index=Number(id.slice(2));
   if(/^Choose opposing Energy to discard$/i.test(ctx)&&o.pendingTrainerTarget!==null){
    const unit=slotUnit(o.opponent,o.pendingTrainerTarget);
-   return energyRemovalChoiceValue(unit,o.self.active,index,true);
+   return energyRemovalChoiceValue(unit,o.self.active,index,true,
+     o.opponent.bench.length);
   }
   if(/^Discard one of your attached Energy$/i.test(ctx)&&o.pendingTrainerSource!==null){
    const unit=slotUnit(o.self,o.pendingTrainerSource);
-   return energyRemovalChoiceValue(unit,o.opponent.active,index,false);
+   return energyRemovalChoiceValue(unit,o.opponent.active,index,false,
+     o.self.bench.length);
   }
  }
  if(/^count:/.test(id))return /draw/i.test(ctx)?Number(id.slice(6))*20:0;
@@ -498,10 +500,12 @@ function choiceValue(option,decision,o,cfg){
   const target=slotUnit(own?o.self:o.opponent,n);
   if(!target)return 0;
   if(cfg?.level>=3&&/^slot:/.test(id)&&/^Choose opposing Pokémon$/i.test(ctx))
-   return energyDenialValue(target,o.self.active,n===-1);
+   return energyDenialValue(target,o.self.active,n===-1,
+     n===-1?o.opponent.bench.length:Math.max(0,o.opponent.bench.length-1));
   if(/promot|retreat|switch.*your/i.test(ctx)){
-   const damage=strongestAffordableAttack(target,o.opponent.active);
-   const incoming=strongestAffordableAttack(o.opponent.active,target);
+   const damage=strongestAffordableAttack(target,o.opponent.active,
+     Math.max(0,o.self.bench.length-1));
+   const incoming=strongestAffordableAttack(o.opponent.active,target,o.opponent.bench.length);
    const survives=hpRemaining(target)>incoming;
    // Pick a ready attacker that can survive the public opposing Active, not
    // whichever Bench Pokémon appears largest or needs imaginary Fighting Energy.
@@ -510,7 +514,7 @@ function choiceValue(option,decision,o,cfg){
     (survives?32:-65);
   }
   if(/damage|attack|gust|opposing|opponent/i.test(ctx)){
-   const damage=strongestAffordableAttack(o.self.active,target);
+   const damage=strongestAffordableAttack(o.self.active,target,o.self.bench.length);
    const lethal=damage>=hpRemaining(target)&&hpRemaining(target)>0;
    return 100-hpRemaining(target)+damage*.8+(lethal?225:0);
   }
