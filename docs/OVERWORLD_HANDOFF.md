@@ -70,3 +70,7 @@ The shop concept was generated from the canonical `shop-day.webp` panorama and t
 - Shop: `shop-day.webp` for Lucky Draw identity, approved `arcade/overworld-map.webp` for continuous camera perspective; rear/left card shelves, rear-right sales counter, upper-right windows, open central floor for four characters, lower-center card tables, lower-left lounge; no people, UI, markers or illegible signage.
 
 **Design conversation request:** Review the three candidate images side by side in their preview routes. Approve or identify specific corrections to (1) Yuna's stocking/accessories and transparency edge, (2) Barb's relative scale and default outfit, and (3) the Lucky Draw furniture layout and shop identity. Approved versions can then move to canonical `rpg-assets/characters/<id>/overworld/standing.png` and `rpg-assets/locations/shop/overworld-map.webp`; do not promote these candidates automatically.
+
+## Identity conflict to resolve before Jinx art
+
+`rpg-assets/characters/jinx/reference/jinx_character_sheet_01.png` shows dark purple hair with magenta accents. `rpg-assets/characters/jinx/neutral.png` shows white hair with pink accents and a different outfit. Ask the design conversation which hair and outfit are current canon for the overworld standing sprite. Do not generate or register Jinx until that is settled.
