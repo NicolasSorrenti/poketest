@@ -175,6 +175,36 @@
       if(storyDock){storyDock.hidden=true;storyDock.remove();}
       if(!overlay.hidden)refresh();
     }
+    // Observe native story rendering rather than guessing when a conversation ends.
+    // A single stage remains authoritative; the map only changes presentation.
+    let storySyncQueued=false;
+    function syncStory(){
+      if(overlay.hidden||suspendedForDuel)return;
+      const data=snapshot();
+      if(!data)return;
+      const line=document.getElementById('line')?.textContent?.trim();
+      const choices=document.getElementById('choices');
+      const actions=document.getElementById('characterActions');
+      const cg=document.getElementById('rpgSceneCG');
+      const hasChoices=!!choices?.querySelector('button');
+      const hasActions=!!actions&&!actions.hidden&&!!actions.querySelector('button');
+      const hasCG=!!cg&&!cg.hidden&&!!cg.getAttribute('src');
+      const needsStory=!!(data.locked||line||hasChoices||hasActions||hasCG);
+      if(needsStory){
+        if(!storyDock||storyDock.hidden)showStory();
+      }else if(storyDock&&!storyDock.hidden){
+        hideStory();
+      }
+    }
+    function queueStorySync(){
+      if(storySyncQueued)return;
+      storySyncQueued=true;
+      queueMicrotask(()=>{storySyncQueued=false;syncStory();});
+    }
+    for(const id of ['line','choices','characterActions','rpgSceneCG','speaker']){
+      const el=document.getElementById(id);
+      if(el)new MutationObserver(queueStorySync).observe(el,{childList:true,subtree:true,characterData:true,attributes:true,attributeFilter:['hidden','src']});
+    }
     function snapshot(){return bridge()?.snapshot();}
     function refresh(){
       const data=snapshot();if(!data)return;
@@ -188,7 +218,7 @@
       note.textContent=data.locked?'Travel disabled during an active conversation, event or duel.':'Day '+data.day+' · '+['Morning','Afternoon','Evening'][data.slot]+' · RPG schedules active · Preview NPC interaction only';
     }
     function dismiss(){hideMenu();hideEvents();hideDeck();suspendedForDuel=false;hideStory();overlay.querySelectorAll('[data-overworld-activity-panel]').forEach(el=>el.remove());overlay.hidden=true;overlay.style.display='none';frame.src='about:blank';open.focus();}
-    open.addEventListener('click',()=>{refresh();overlay.hidden=false;overlay.style.display='flex';close.focus();});
+    open.addEventListener('click',()=>{refresh();overlay.hidden=false;overlay.style.display='flex';queueStorySync();close.focus();});
     close.addEventListener('click',()=>{if(bridge()?.snapshot()?.locked){note.textContent='Finish the active story or duel before leaving the overworld.';return;}dismiss();});
     document.getElementById('rpgDiscreetToggle')?.addEventListener('click',()=>{if(!overlay.hidden)refresh();});
     travel.addEventListener('click',()=>{
@@ -199,8 +229,7 @@
       if(!bridge().travel(target)){note.textContent='Travel is unavailable during the current story or activity.';refresh();return;}
       refresh();
       // First-visit and scheduled entry conversations stay in the map's story dock.
-      if(bridge()?.snapshot()?.locked)showStory();
-      else hideStory();
+      queueStorySync();
     });
     window.addEventListener('message',event=>{
       if(event.origin!==location.origin||event.source!==frame.contentWindow||overlay.hidden)return;
@@ -213,7 +242,7 @@
       if(message.kind==='person'){
         // Dismiss first: native conversations can open modal prompts immediately.
         if(!showStory())dismiss();
-        if(!bridge()?.interact(message.id)){hideStory();note.textContent='Character interaction is not currently available.';}
+        if(!bridge()?.interact(message.id)){hideStory();note.textContent='Character interaction is not currently available.';}else queueStorySync();
       }else if(message.kind==='hotspot'){
         const activities=bridge()?.activities()||[];
         showActivities(activities);
@@ -225,7 +254,7 @@
         overlay.querySelectorAll('[data-overworld-activity-panel]').forEach(el=>el.remove());
         const panel=document.createElement('div');panel.dataset.overworldActivityPanel='true';Object.assign(panel.style,{position:'absolute',bottom:'68px',left:'12px',right:'12px',padding:'12px',maxHeight:'45vh',overflow:'auto',background:'#211a37',border:'1px solid #9775a3',borderRadius:'12px',zIndex:'2'});
         const head=document.createElement('div');head.textContent='Choose a current RPG activity';panel.append(head);
-        for(const a of eligible){const button=document.createElement('button');button.textContent=a.title;button.type='button';Object.assign(button.style,{display:'block',marginTop:'8px',padding:'10px',width:'100%',background:'#403051',color:'white',borderRadius:'8px'});button.onclick=()=>{panel.remove();if(!showStory())dismiss();if(!bridge()?.activity(a.id)){hideStory();note.textContent='Activity no longer available.';}};panel.append(button);}
+        for(const a of eligible){const button=document.createElement('button');button.textContent=a.title;button.type='button';Object.assign(button.style,{display:'block',marginTop:'8px',padding:'10px',width:'100%',background:'#403051',color:'white',borderRadius:'8px'});button.onclick=()=>{panel.remove();if(!showStory())dismiss();if(!bridge()?.activity(a.id)){hideStory();note.textContent='Activity no longer available.';}else queueStorySync();};panel.append(button);}
         const cancel=document.createElement('button');cancel.textContent='Cancel';cancel.onclick=()=>panel.remove();panel.append(cancel);overlay.append(panel);
     }
     document.addEventListener('keydown',event=>{if(event.key!=='Escape'||overlay.hidden)return;if(!deckPanel.hidden){hideDeck();return;}if(!eventPanel.hidden){hideEvents();return;}if(!menu.hidden){hideMenu();return;}if(!bridge()?.snapshot()?.locked)dismiss();});
@@ -241,7 +270,7 @@
           suspendedForDuel=false;
           overlay.style.display='flex';
           refresh();
-          if(bridge()?.snapshot()?.locked)showStory();else hideStory();
+          queueStorySync();
         }
       };
       new MutationObserver(syncDuel).observe(duel,{attributes:true,attributeFilter:['hidden']});
