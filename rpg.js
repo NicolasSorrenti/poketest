@@ -2336,7 +2336,7 @@ function renderRpgCast(ids,locked,shown,portraitId,context={}){
  overworldScenePortraits={
   conversation:composition.conversation,
   focused,
-  participants:composition.conversation?participants.slice(0,4).map(id=>({
+  participants:composition.conversation?participants.map(id=>({
    id,name:cast[id].name,src:scenePortraitSource(id,
     id===focused?(window.NeoRpgCharacterMotion?.emotion?.(shown?.expression,dialogueExpression(shown?.line))||dialogueExpression(shown?.line)):'neutral',
     context.sceneId)
