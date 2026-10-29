@@ -67,8 +67,10 @@
       // Native travel may start a mandatory event or first-visit dialogue.
       // Never leave the map overlay covering that conversation.
       if(!bridge().travel(target)){note.textContent='Travel is unavailable during the current story or activity.';refresh();return;}
-      hideStory();
       refresh();
+      // First-visit and scheduled entry conversations stay in the map's story dock.
+      if(bridge()?.snapshot()?.locked)showStory();
+      else hideStory();
     });
     window.addEventListener('message',event=>{
       if(event.origin!==location.origin||event.source!==frame.contentWindow||overlay.hidden)return;
