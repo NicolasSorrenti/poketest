@@ -121,8 +121,9 @@
     const desc=document.createElement('p');desc.style.margin='0';desc.textContent='Drag the blue foot markers or dashed hotspot zones to align them with the painting. Changes are local until exported.';
     const exportBtn=document.createElement('button');exportBtn.type='button';exportBtn.textContent='Copy layout JSON';
     const resetBtn=document.createElement('button');resetBtn.type='button';resetBtn.textContent='Clear saved adjustments';
+    const exportHint=document.createElement('small');exportHint.textContent='Blue circles: NPC foot placement · orange corners: resize hotspots';
     const status=document.createElement('small');status.setAttribute('role','status');status.textContent='No game data is changed.';
-    panel.append(heading,desc,exportBtn,resetBtn,status);document.body.append(panel);
+    panel.append(heading,desc,exportHint,exportBtn,resetBtn,status);document.body.append(panel);
     const anchorLayer=document.createElement('div');anchorLayer.id='neoLayoutAnchors';anchorLayer.style.cssText='position:absolute;inset:0;pointer-events:none';world.append(anchorLayer);
     const markerStyle=document.createElement('style');markerStyle.textContent=`
       body.neo-overworld-layout-editor #neoLayoutAnchors .neo-layout-anchor{pointer-events:auto;position:absolute;translate:-50% -100%;width:29px;height:29px;display:grid;place-items:center;background:#193b82dd;color:#fff;border:2px solid #b9ddff;border-radius:50%;font:700 10px system-ui;cursor:grab;touch-action:none;z-index:14}
@@ -155,7 +156,32 @@
       draggable(marker,pt,(x,y)=>{map.anchors[id].x=x;map.anchors[id].y=y;position();
         world.querySelectorAll('.anchor').forEach(sprite=>{const p=placements.find(t=>t.id===sprite.dataset.character&&t.anchor===id);if(p&&!p.foot){sprite.style.left=x+'px';sprite.style.top=y+'px'}})});
     }
-    for(const h of map.hotspots){const el=[...world.querySelectorAll('.hotspot')].find(x=>x.title===h.label);if(!el)continue;draggable(el,h,(x,y)=>{h.x=x;h.y=y;el.style.left=x+'px';el.style.top=y+'px'});}
+    // Top-left drag handles move zones; corner handles resize without modifying
+    // the original image. Keep changes in map pixels for reproducible exports.
+    for(const h of map.hotspots){
+      const el=[...world.querySelectorAll('.hotspot')].find(x=>x.title===h.label);
+      if(!el)continue;
+      draggable(el,h,(x,y)=>{h.x=x;h.y=y;el.style.left=x+'px';el.style.top=y+'px'});
+      const grip=document.createElement('span');
+      grip.className='neo-layout-resize';grip.title='Resize '+h.label;
+      grip.setAttribute('aria-label','Resize '+h.label);
+      grip.style.cssText='position:absolute;right:0;bottom:0;width:23px;height:23px;background:#ffcf82;border:2px solid #3b274e;border-radius:6px;cursor:nwse-resize;touch-action:none;z-index:30';
+      el.append(grip);
+      let held=null;
+      grip.addEventListener('pointerdown',e=>{
+        e.preventDefault();e.stopPropagation();held={id:e.pointerId,x:e.clientX,y:e.clientY,w:h.w,h:h.h};
+        grip.setPointerCapture(e.pointerId);
+      });
+      grip.addEventListener('pointermove',e=>{
+        if(!held||held.id!==e.pointerId)return;
+        h.w=Math.round(clamp(held.w+(e.clientX-held.x)/zoom,32,map.width-h.x));
+        h.h=Math.round(clamp(held.h+(e.clientY-held.y)/zoom,32,map.height-h.y));
+        el.style.width=h.w+'px';el.style.height=h.h+'px';
+      });
+      const finish=e=>{if(!held||held.id!==e.pointerId)return;held=null;persist()};
+      grip.addEventListener('pointerup',finish);
+      grip.addEventListener('pointercancel',finish);
+    }
     exportBtn.onclick=async()=>{
       const json=JSON.stringify(persist(),null,2);
       try{await navigator.clipboard.writeText(json);status.textContent='Copied! Paste layout JSON in the Neo Campus conversation.'}
