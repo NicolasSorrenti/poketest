@@ -1661,7 +1661,8 @@ function syncSceneCG(){
 
 const ART_TYPES=[{id:'cg',label:'CGs'},{id:'expressions',label:'Expressions'},{id:'battle',label:'Battle art'},{id:'outfits',label:'Outfits'}];
 const artEntries=new Map();
-const artSeen=state.artSeen&&typeof state.artSeen==='object'?state.artSeen:(state.artSeen={});
+const artSeen=state.artSeen&&typeof state.artSeen==='object'&&!Array.isArray(state.artSeen)?state.artSeen:(state.artSeen={});
+const artViewed=state.artViewed&&typeof state.artViewed==='object'&&!Array.isArray(state.artViewed)?state.artViewed:(state.artViewed={});
 function artKey(path){return String(path||'').split('?')[0];}
 function buildArtEntries(){
  artEntries.clear();
@@ -1669,7 +1670,7 @@ function buildArtEntries(){
   if(typeof path!=='string'||!/^\/rpg-assets\/[\w./-]+\.(?:png|webp|jpg|jpeg)$/i.test(path)||path.includes('..'))return;
   const key=artKey(path);
   if(artEntries.has(key))return;
-  artEntries.set(key,{id,type,label,path:key,unlocked:!!artSeen[key],title:label,viewed:!!artSeen[key]});
+  artEntries.set(key,{id,type,label,path:key,unlocked:!!artSeen[key],title:label,viewed:!!artViewed[key]});
  };
  for(const item of window.NeoRpgArtManifest||[])if(cast[item.id])register(item.id,item.type,item.title,item.path);
  for(const [id,art] of Object.entries(window.NeoRpgCharacterPacks?.looks||{})){
@@ -1714,6 +1715,7 @@ $('battle')?.addEventListener('load',()=>{
 buildArtEntries();
 function showOtherArt(entry){
  if(!artSeen[entry.path])return;
+ if(!artViewed[entry.path]){artViewed[entry.path]=true;persist();renderGallery();}
  if(!galleryViewer){galleryOpenViewer({unlocked:true,title:entry.title,id:'',character:entry.id,path:entry.path,thumb:entry.path});return;}
  const stage=galleryViewer.querySelector('.cg-lightbox-stage');stage.replaceChildren();
  const image=document.createElement('img');image.src=entry.path;image.alt=entry.title;
@@ -1743,7 +1745,7 @@ function galleryOpenViewer(entry){
 }
 function populateGalleryCharacters(){
  const select=$('galleryCharacter'),previous=select.value;
- const ids=[...new Set(CG.catalog.map(entry=>entry.character))].filter(id=>!!cast[id]);
+ const ids=[...new Set([...Object.keys(cast),...CG.catalog.map(entry=>entry.character)])].filter(id=>!!cast[id]);
  ids.sort((a,b)=>cast[a].name.localeCompare(cast[b].name));
  const everyone=document.createElement('option');everyone.value='';everyone.textContent='All characters';select.replaceChildren(everyone);
  for(const id of ids){const option=document.createElement('option');option.value=id;option.textContent=cast[id].name;select.append(option);}
@@ -1779,6 +1781,7 @@ function renderGallery(){
  $('galleryCharacterTitle').textContent=cast[galleryCharacterPage]?.name||galleryCharacterPage;
  buildArtEntries();const type=category.value;const all=type==='cg'||!type?CG.gallery(state,{character:galleryCharacterPage}):[...artEntries.values()].filter(e=>e.id===galleryCharacterPage&&e.type===type).map(e=>({...e,character:e.id,thumb:e.path}));
  const visible=$('galleryUnseen').checked?all.filter(e=>e.unlocked&&!e.viewed):all;
+ if(!visible.length){const empty=document.createElement('p');empty.className='cg-gallery-empty';empty.textContent=all.length?'No artwork matches this filter. Try turning off “Only new”.':'No artwork cataloged in this category yet.';root.append(empty);}
  const earned=all.filter(e=>e.unlocked).length;
  $('galleryCount').textContent=earned+' / '+all.length+' unlocked · '+visible.length+' shown';
  const categories=ART_TYPES;
