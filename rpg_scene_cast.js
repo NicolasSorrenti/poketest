@@ -35,5 +35,33 @@
    ...(speakers.length?[]:[portraitId])].filter(id=>!!cast[id]))];
   return {conversation:true,focused,participants};
  }
- return Object.freeze({speakerId,select});
+ // Reusable two-person VN portrait window. A newly speaking third person
+ // takes the slot of the least-recently-speaking visible person; the other
+ // speaker stays on screen. This is independent of everyone attending a map.
+ function createSpeakerWindow(){
+  let visible=[],recency=new Map(),tick=0;
+  function reset(){visible=[];recency=new Map();tick=0;}
+  function update(participants,focused){
+   const choices=[...new Set((participants||[]).filter(p=>p&&typeof p.id==='string').map(p=>p.id))];
+   visible=visible.filter(id=>choices.includes(id));
+   for(const id of [...recency.keys()])if(!choices.includes(id))recency.delete(id);
+   if(!choices.length){reset();return [];}
+   const speaker=choices.includes(focused)?focused:null;
+   if(speaker&&!visible.includes(speaker)){
+    if(visible.length===2){
+     // Least recent speaker is replaced, rather than shifting both portraits.
+     const victim=recency.get(visible[0])<=recency.get(visible[1])?0:1;
+     visible[victim]=speaker;
+    }else visible.push(speaker);
+   }
+   if(speaker)recency.set(speaker,++tick);
+   for(const id of choices){
+    if(visible.length>=2)break;
+    if(!visible.includes(id))visible.push(id);
+   }
+   return visible.map(id=>participants.find(p=>p.id===id));
+  }
+  return Object.freeze({update,reset});
+ }
+ return Object.freeze({speakerId,select,createSpeakerWindow});
 });
