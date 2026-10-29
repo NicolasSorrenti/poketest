@@ -2277,8 +2277,7 @@ const packs=[
        "attraction": 2
       }
      }
-    ],
-    "chapter": 2
+    ]
    },
    {
     "id": "daisy_route_4",
