@@ -53,7 +53,7 @@ test('optional art inventory retries only twice and retains existing query param
 test('both RPG entrypoints load the refreshed bootstrap and do not change game state on retry',()=>{
  for(const page of ['rpg.html','rpg-overworld.html']){
   const html=fs.readFileSync(path.join(__dirname,'..',page),'utf8');
-  assert.match(html,/rpg_character_bootstrap\.js\?v=20261029-script-retry-1/);
+  assert.match(html,/rpg_character_bootstrap\.js\?v=20261029-vn-arrival-fix-2/);
  }
  assert.ok(bootstrap.includes('button.onclick=()=>location.reload()'));
  assert.ok(!bootstrap.includes('localStorage.clear()'));
