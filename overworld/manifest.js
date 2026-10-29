@@ -44,7 +44,7 @@ window.NeoOverworld = Object.freeze({
   },
   /* Preview placements only. The RPG's schedule is authoritative once integration is enabled. */
   preview: [
-    {id:'reina',anchor:'E1',pose:'arcade',foot:{x:339,y:287}},
+    {id:'reina',anchor:'E1',pose:'arcade',foot:{x:245,y:430}},
     {id:'yuna',anchor:'P2'}, {id:'barb',anchor:'P3'}, {id:'jinx',anchor:'P4'},
     {id:'laca',anchor:'E3'}, {id:'hana',anchor:'E2'}, {id:'rina',anchor:'E5'}, {id:'daisy',anchor:'E4'}
   ],
