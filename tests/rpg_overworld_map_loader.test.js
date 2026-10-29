@@ -77,3 +77,25 @@ test('all seven production locations use identical small visible landmark tap ta
  assert.match(code,/Object.assign\(h,rect\)/);
  assert.match(code,/width:'56px',height:'56px'/);
 });
+
+test('six artwork-aligned hotspot layouts are bounded with known interactable IDs',()=>{
+ const vm=require('node:vm');const ctx={window:{}};vm.runInNewContext(manifest,ctx);
+ const expected={
+  home:['desk','bed','wardrobe','window'],
+  park:['waterfront','benches','flyer-board','garden'],
+  cafe:['counter','strategy-tables','window-seats','coffee-station'],
+  center:['tournament','duel','registration','practice'],
+  library:['study','books','reading','archives'],
+  shop:['shelves','counter','tables','lounge']
+ };
+ for(const [id,hotspotIds] of Object.entries(expected)){
+  const m=ctx.window.NeoOverworld[id];
+  assert.equal(m.width,1550,id+' image width');
+  assert.equal(m.height,1120,id+' image height');
+  assert.deepEqual(Array.from(m.hotspots,h=>h.id),hotspotIds,id+' action ID compatibility');
+  for(const h of m.hotspots)assert.ok(h.x>=0&&h.y>=0&&h.w>=40&&h.h>=40&&h.x+h.w<=m.width&&h.y+h.h<=m.height,id+' invalid region '+h.id);
+ }
+ const home=ctx.window.NeoOverworld.home.hotspots;
+ assert.ok(home.find(h=>h.id==='bed').x<home.find(h=>h.id==='desk').x,'home bed left of desk on artwork');
+ assert.ok(ctx.window.NeoOverworld.park.hotspots.find(h=>h.id==='flyer-board').y>650,'park noticeboard on lower path');
+});
