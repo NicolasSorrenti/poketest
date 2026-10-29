@@ -7,3 +7,8 @@
 #bottom{position:absolute;bottom:max(env(safe-area-inset-bottom),8px);left:9px;right:9px;border:1px solid #ac779e;border-radius:13px;background:#111329e9;padding:7px;box-shadow:0 8px 27px #000a}.bottom-row{display:flex;gap:5px}#bottom button{flex:1;min-width:0;padding:9px 3px;font-weight:700;font-size:12px}#bottom p{margin:7px 4px 1px;color:#e8cddc;font-size:11px}
 #dialog{position:absolute;z-index:5;bottom:110px;left:12px;right:12px;max-width:460px;margin:auto;background:#151629f7;border:1px solid #f3a2ca;border-radius:17px;padding:17px;box-shadow:0 25px 70px #000c}#dialog[hidden],#toast[hidden]{display:none}#dialog .dialog-head{display:flex;gap:14px;align-items:center}#dialog img{width:74px;height:90px;object-fit:contain}#dialog h2{margin:0 0 5px}#dialog p{color:#d6bacb;font-size:13px}#dialog button{margin-top:12px}#toast{position:absolute;left:50%;top:75px;transform:translateX(-50%);width:max-content;max-width:80%;padding:9px 13px;border-radius:9px;background:#181629ec}
 @media(min-width:900px){#bottom{left:50%;transform:translateX(-50%);width:min(610px,calc(100% - 24px))}.title strong{font-size:22px}}@media(max-width:420px){.edge{width:44px;height:44px}.title{padding:7px 9px}.title strong{font-size:16px}.tools button{padding:7px}}
+
+/* The standalone overworld owns navigation; suppress duplicate preview HUD/footer inside its embedded map. */
+body.neo-overworld-embedded #hud .title,
+body.neo-overworld-embedded #bottom{display:none!important}
+body.neo-overworld-embedded #hud{justify-content:flex-end}
