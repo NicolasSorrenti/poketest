@@ -3,6 +3,7 @@
   const config=window.NeoOverworld, byId=id=>document.getElementById(id);
   const camera=byId('camera'), world=byId('world'), edges=byId('edges'), dialog=byId('dialog');
   const params=new URLSearchParams(location.search), poseTest=params.has('reina-test'), dev=params.has('dev');
+  if(params.has('rpg-integration'))document.body.classList.add('neo-overworld-embedded');
   const shopTest=params.has('shop-test'),requestedScene=params.get('scene'),sceneId=config[requestedScene]?.image?requestedScene:(shopTest?'shop':'arcade'),map=config[sceneId];
   byId('mapArt').src=map.image;byId('mapArt').alt=map.title;byId('world').style.width=map.width+'px';byId('world').style.height=map.height+'px';
   document.querySelector('.title strong').textContent=map.title;
