@@ -222,8 +222,8 @@
    choice.reply=revision.choices[index].reply;
   });
  }
- // Keep the original four-scene heroine routes stable for existing saves.
- // Add optional guest and crossover episodes without renumbering those routes.
+ // Keep existing route IDs stable for existing saves.
+ // Add pack routes and bridge episodes without renumbering prior scenes.
  E.push(...(CHARPACKS?.events||[]),...PACK.events,...BONDC.events,...(EXTRA?.events||[]));
  const ID=new Map(E.map(e=>[e.id,e]));
  function normalize(state){
