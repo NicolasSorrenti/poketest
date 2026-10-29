@@ -50,7 +50,7 @@
    if(speaker&&!visible.includes(speaker)){
     if(visible.length===2){
      // Least recent speaker is replaced, rather than shifting both portraits.
-     const victim=recency.get(visible[0])<=recency.get(visible[1])?0:1;
+     const victim=(recency.get(visible[0])??-1)<=(recency.get(visible[1])??-1)?0:1;
      visible[victim]=speaker;
     }else visible.push(speaker);
    }
