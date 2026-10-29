@@ -87,3 +87,11 @@ test('two-speaker portraits reset after a completed scene or when the event cast
  window.reset();
  assert.deepEqual(window.update([{id:'reina'}],'reina').map(p=>p.id),['reina']);
 });
+
+test('an unseen participant is replaced before a character who just spoke',()=>{
+ const window=CAST.createSpeakerWindow();
+ const p=[{id:'hana'},{id:'reina'},{id:'yuna'}];
+ assert.deepEqual(window.update(p,null).map(x=>x.id),['hana','reina']);
+ assert.deepEqual(window.update(p,'reina').map(x=>x.id),['hana','reina']);
+ assert.deepEqual(window.update(p,'yuna').map(x=>x.id),['yuna','reina']);
+});
