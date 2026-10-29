@@ -9,7 +9,7 @@
   if(shopTest)document.querySelector('#bottom p').textContent='Illustration candidate · placement under review.';
   const placements=poseTest ? [
     {id:'reina',anchor:'P1',pose:'standing',foot:{x:665,y:465},previewKey:'standing'},
-    {id:'reina',anchor:'E1',pose:'arcade',foot:{x:339,y:287},previewKey:'arcade'}
+    {id:'reina',anchor:'E1',pose:'arcade',foot:{x:245,y:430},previewKey:'arcade'}
   ] : shopTest ? config.shopPreview : params.has('art-test') ? config.artPreview : params.has('cast-test') ? config.preview : config.preview.filter(p=>p.id==='reina');
   if(dev){byId('guides').hidden=false;}
   let zoom=1,ox=0,oy=0,drag=null,ignoreClick=false,toastTimer;
