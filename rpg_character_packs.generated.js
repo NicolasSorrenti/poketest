@@ -2288,7 +2288,7 @@ const packs=[
     "place": "park",
     "slot": 2,
     "minBond": 4,
-    "prerequisite": "daisy_route_3",
+    "prerequisite": "daisy_route_bridge_4",
     "participants": [],
     "lines": [
      {
