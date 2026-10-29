@@ -38,6 +38,22 @@
       if(!bridge().travel(target)){note.textContent='Travel is unavailable during the current story or activity.';refresh();return;}
       refresh();
     });
+    window.addEventListener('message',event=>{
+      if(event.origin!==location.origin||event.source!==frame.contentWindow||overlay.hidden)return;
+      const message=event.data;if(message?.type!=='neo-overworld-action')return;
+      if(message.kind==='person'){
+        if(bridge()?.interact(message.id))dismiss();
+        else note.textContent='Character interaction is not currently available.';
+      }else if(message.kind==='hotspot'){
+        const activities=bridge()?.activities()||[];
+        const eligible=activities.filter(a=>!a.disabled);
+        if(!eligible.length){note.textContent='No activities are available right now.';return;}
+        const panel=document.createElement('div');Object.assign(panel.style,{position:'absolute',bottom:'68px',left:'12px',right:'12px',padding:'12px',maxHeight:'45vh',overflow:'auto',background:'#211a37',border:'1px solid #9775a3',borderRadius:'12px',zIndex:'2'});
+        const head=document.createElement('div');head.textContent='Choose a current RPG activity';panel.append(head);
+        for(const a of eligible){const button=document.createElement('button');button.textContent=a.title;button.type='button';Object.assign(button.style,{display:'block',marginTop:'8px',padding:'10px',width:'100%',background:'#403051',color:'white',borderRadius:'8px'});button.onclick=()=>{panel.remove();if(bridge()?.activity(a.id))dismiss();else note.textContent='Activity no longer available.';};panel.append(button);}
+        const cancel=document.createElement('button');cancel.textContent='Cancel';cancel.onclick=()=>panel.remove();panel.append(cancel);overlay.append(panel);
+      }
+    });
     document.addEventListener('keydown',event=>{if(event.key==='Escape'&&!overlay.hidden)dismiss();});
   }
   window.addEventListener('neo-rpg-overworld-bridge-ready',mount);
