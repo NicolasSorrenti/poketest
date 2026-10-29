@@ -208,6 +208,39 @@
     document.head.append(actionStyle);
     const characterActions=document.getElementById('characterActions');
     characterActions?.parentNode?.insertBefore(actionTray,characterActions);
+    const scenePeople=document.createElement('div');scenePeople.id='neoOverworldScenePeople';
+    const sceneArea=document.getElementById('scene');
+    sceneArea?.append(scenePeople);
+    let lastPortraitSignature='';
+    function syncPortraits(hasCG){
+      const cast=bridge()?.scenePortraits?.();
+      const participants=cast?.conversation&&!hasCG?cast.participants||[]:[];
+      const signature=JSON.stringify([cast?.focused,participants]);
+      if(signature===lastPortraitSignature)return;
+      lastPortraitSignature=signature;
+      scenePeople.replaceChildren();
+      for(const participant of participants){
+        const person=document.createElement('div');
+        person.className='neo-ow-person'+(participant.id===cast.focused?' is-speaking':' is-listening');
+        const image=document.createElement('img');image.alt=participant.name;
+        image.src=participant.src||'/rpg-assets/characters/reina/chibi/front.png';
+        image.onerror=()=>{if(!image.src.endsWith('/reina/chibi/front.png'))image.src='/rpg-assets/characters/reina/chibi/front.png';};
+        const name=document.createElement('span');name.textContent=participant.name;
+        person.append(image,name);scenePeople.append(person);
+      }
+      scenePeople.hidden=!participants.length;
+      sceneArea?.classList.toggle('neo-ow-participants',!!participants.length);
+    }
+    visualStyle.textContent+=`
+      #neoOverworldStoryDock #scene.neo-ow-participants #portrait{display:none!important}
+      #neoOverworldStoryDock #neoOverworldScenePeople{display:flex;align-items:flex-end;justify-content:center;gap:clamp(3px,2vw,20px);width:100%;max-height:39dvh;overflow:hidden}
+      #neoOverworldStoryDock #neoOverworldScenePeople[hidden]{display:none!important}
+      #neoOverworldStoryDock .neo-ow-person{display:flex;flex:1 1 0;min-width:0;max-width:260px;max-height:38dvh;align-items:center;flex-direction:column;justify-content:flex-end;transition:opacity .2s,filter .2s,transform .2s}
+      #neoOverworldStoryDock .neo-ow-person img{object-fit:contain;object-position:center bottom;width:100%;max-height:34dvh;min-height:0;filter:drop-shadow(0 6px 12px #0009)}
+      #neoOverworldStoryDock .neo-ow-person span{background:#16132acc;border:1px solid #b88dbe;border-radius:7px;padding:3px 8px;font:600 12px system-ui}
+      #neoOverworldStoryDock .neo-ow-person.is-listening{opacity:.57;filter:brightness(.7);transform:scale(.95)}
+      @media(max-width:650px){#neoOverworldStoryDock #neoOverworldScenePeople{max-height:31dvh}#neoOverworldStoryDock .neo-ow-person img{max-height:26dvh}}
+    `;
     let storyDock=null;
     let lastSceneKey='';
     let suspendedForDuel=false;
@@ -230,7 +263,7 @@
       if(stageNext&&stageNext.parentNode===stageHome)stageHome.insertBefore(stage,stageNext);
       else stageHome.append(stage);
       stage.removeAttribute('style');
-      if(storyDock){storyDock.hidden=true;storyDock.remove();}lockMapForStory(false);
+      if(storyDock){storyDock.hidden=true;storyDock.remove();}lockMapForStory(false);lastPortraitSignature='';
       if(!overlay.hidden)refresh();
     }
     // Observe native story rendering rather than guessing when a conversation ends.
@@ -247,6 +280,7 @@
       const hasChoices=!!choices?.querySelector('button');
       const hasActions=!!actions&&!actions.hidden&&!!actions.querySelector('button');
       const hasCG=!!cg&&!cg.hidden&&!!cg.getAttribute('src');
+      syncPortraits(hasCG);
       const needsStory=!!((data.locked&&!data.arriving)||(line&&line!=='The town is waiting.')||hasChoices||hasActions||hasCG);
       if(needsStory){
         if(!storyDock||storyDock.hidden)showStory();
