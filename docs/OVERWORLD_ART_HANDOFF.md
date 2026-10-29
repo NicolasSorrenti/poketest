@@ -15,7 +15,7 @@ Updated: 2026-10-29. This file coordinates the scheduled art-generation task and
 | Order | Location ID | Name | Existing map source | Art direction / QA focus | Status |
 | --- | --- | --- | --- | --- | --- |
 | 0 | `arcade` | Pixel Palace | `rpg-assets/locations/arcade/overworld-map.webp` | **Reference / final**, preserve | Approved |
-| 1 | `home` | Your Apartment | `overworld/maps/home-blueprint.svg` | Warm cozy personal room, bed, deck/journal desk, wardrobe, open center, nighttime/window lighting option | Blueprint; needs original render |
+| 1 | `home` | Your Apartment | `overworld/maps/home-blueprint.svg` | Warm cozy personal room, bed, deck/journal desk, wardrobe, open center, nighttime/window lighting option | Conversation image candidate generated, NOT in GitHub or approved; needs layout review |
 | 2 | `park` | Riverside Park | `overworld/maps/park-blueprint.svg` | Open riverside walkways, benches, flowering garden, flyer board, appropriate foot paths | Blueprint; needs original render |
 | 3 | `cafe` | The Rest Stop | `overworld/maps/cafe-blueprint.svg` | Cozy café, counter, tables, window seats, free floor for character positions | Blueprint; needs original render |
 | 4 | `center` | Community Center | `overworld/maps/center-blueprint.svg` | Duel/tournament tables, registration, open gathering floor | Blueprint; needs original render |
@@ -56,3 +56,10 @@ Location coordinates are defined in `overworld/manifest.js`; the initial bluepri
 - [ ] Barb standing candidate review or revised sprite
 - [ ] Jinx canonical hair identity confirmation, then sprite
 - [ ] Remaining cast with individual approved reference checks
+
+
+## Apartment candidate produced in the art conversation
+
+- The user and assistant generated an original nighttime apartment image, local conversation filename `estudio_nocturno_con_cartas_y_plantas.png`, **1475 × 1066 RGB**, on 2026-10-29. It exists as a conversation artifact, **not in this repository**; do not treat it as an approved canonical asset.
+- The candidate depicts bed, TCG desk, wardrobe, plants, window lounge and open central floor, in a neon-lit warm-purple JRPG environment. Before adoption compare it side-by-side with `overworld/maps/home-blueprint.svg`, confirm object placement versus manifest hotspots/anchors and resize/export to the canonical map geometry if approved.
+- **Next automatic generation target while the apartment awaits review: `park` / Riverside Park.** Use `overworld/maps/park-blueprint.svg` for exact spatial reference and Pixel Palace's approved background for perspective/lighting/quality. Do not mix portrait images into the background.
