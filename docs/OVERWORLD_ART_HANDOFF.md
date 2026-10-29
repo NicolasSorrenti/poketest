@@ -181,3 +181,12 @@ Location coordinates are defined in `overworld/manifest.js`; the initial bluepri
 - **Generation QA failure:** two render attempts reproduced Akari instead of Shiori. Both were rejected; no Shiori PNG was approved, installed or pushed. Do not reuse these wrong-identity images as Shiori.
 - **New GitHub deliverable:** [Shiori identity-locked generation and QA brief](../art-production/overworld-candidates/shiori/SHIORI_OVERWORLD_PRODUCTION_BRIEF.md). It includes verified visual references, precise one-pose prompt, alpha/foot-scale checks and candidate path. Use actual Shiori portrait + outfit as direct image-generation inputs before trying again.
 - **No changes:** `overworld/manifest.js`, approved Pixel Palace, existing sprites, RPG behavior, original `rpg.html` and environment images.
+
+
+## 2026-10-29 — Camila two-pose PNG extraction (conversation deliverable only)
+
+- **Latest user artwork request completed locally:** split the user-supplied Camila two-pose transparent composite `imagen(20261029-202908).png` (1536×1024 RGBA) into independent PNGs. Deliverables: `Neo_Campus_Camila_front_transparent.png` (869×1024 RGBA) and `Neo_Campus_Camila_back_transparent.png` (710×1024 RGBA), bundled as `Neo_Campus_Camila_2_Transparent_Poses.zip` with a short README. A preview confirms that each cutout contains only its own pose.
+- **Extraction method:** an alpha-aware smooth seam through transparent pixels between the silhouettes (seam alpha ≤2) prevented either pose from bleeding into the other. Small disconnected background specks were removed; original antialiased character edges were retained.
+- **Verified canonical identity references:** [Camila primary portrait](../rpg-assets/characters/camila/portraits/primary.png) and [streetwear outfit](../rpg-assets/characters/camila/outfits/streetwear-preview.png). These extracted artworks retain Camila's caramel hair, green eyes, magenta coat and black/gold outfit.
+- **Important scope:** the source composite itself is cut off at the thighs, so these are **separate CG-style cutouts, not full-body overworld sprites**. Do not register them as `standing` or `back` in `overworld/manifest.js`. The PNG/ZIP files are local conversation artifacts only, **not uploaded to GitHub**.
+- **Next:** continue character artwork in the active design conversation. Keep the current six uploaded location maps, approved Pixel Palace, Reina sprite assets, original RPG and `rpg.html` unchanged. Any eventual full-body Camila overworld sprites require head-to-shoes generation and transparent-foot alignment QA.
