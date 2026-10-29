@@ -13,6 +13,21 @@
   });
   if(params.has('rpg-integration'))document.body.classList.add('neo-overworld-embedded');
   const shopTest=params.has('shop-test'),requestedScene=params.get('scene'),sceneId=config[requestedScene]?.image?requestedScene:(shopTest?'shop':'arcade'),map=config[sceneId];
+  // Map-placement QA mode is explicit (?dev=1), never enabled during RPG play.
+  // Copies layout data so artist adjustments never mutate shared engine state.
+  const layoutDev=dev&&!params.has('rpg-integration');
+  const layoutKey='neo-campus-overworld-placement-'+sceneId+'-v1';
+  const savedLayout=layoutDev?(()=>{try{return JSON.parse(localStorage.getItem(layoutKey)||'null')}catch{return null}})():null;
+  if(layoutDev&&savedLayout){
+    for(const [id,pt] of Object.entries(savedLayout.anchors||{})){
+      if(map.anchors[id]&&Number.isFinite(pt.x)&&Number.isFinite(pt.y))map.anchors[id]={x:pt.x,y:pt.y};
+    }
+    for(const hotspot of map.hotspots){
+      const saved=savedLayout.hotspots?.[hotspot.id];
+      if(saved&&['x','y','w','h'].every(k=>Number.isFinite(saved[k])))Object.assign(hotspot,saved);
+    }
+  }
+
   // Prefer installed art under a predictable canonical location path.
   // The repo may still contain only a blueprint; never display a broken map.
   const mapArt=byId('mapArt');
@@ -98,6 +113,56 @@
   camera.addEventListener('wheel',e=>{if(!e.ctrlKey||!dialog.hidden)return;e.preventDefault();const old=zoom,z=clamp(zoom*(e.deltaY<0?1.08:.92),.48,1.7),r=camera.getBoundingClientRect(),x=e.clientX-r.left,y=e.clientY-r.top;ox=x-(x-ox)*z/old;oy=y-(y-oy)*z/old;zoom=z;paint()},{passive:false});
   byId('reset').onclick=center;byId('guides').onclick=()=>{document.body.classList.toggle('show-guides');byId('guides').setAttribute('aria-pressed',String(document.body.classList.contains('show-guides')))};
   byId('close').onclick=()=>{dialog.hidden=true};for(const id of ['activities','events','deck','status'])byId(id).onclick=()=>{if(params.has('rpg-integration')&&window.parent!==window){window.parent.postMessage({type:'neo-overworld-action',kind:'navigation',id},location.origin);return;}toast(id+' opens in the existing RPG; this map is a placement preview');};
+  if(layoutDev){
+    document.body.classList.add('neo-overworld-layout-editor','show-guides');
+    const panel=document.createElement('aside');panel.id='neoLayoutEditor';
+    panel.style.cssText='position:fixed;z-index:25;top:85px;right:12px;width:min(330px,calc(100vw - 24px));padding:12px;background:#18152eeb;border:1px solid #d6a6d9;color:white;border-radius:12px;display:grid;gap:7px;font:13px system-ui';
+    const heading=document.createElement('strong');heading.textContent='Placement editor · '+map.title;
+    const desc=document.createElement('p');desc.style.margin='0';desc.textContent='Drag the blue foot markers or dashed hotspot zones to align them with the painting. Changes are local until exported.';
+    const exportBtn=document.createElement('button');exportBtn.type='button';exportBtn.textContent='Copy layout JSON';
+    const resetBtn=document.createElement('button');resetBtn.type='button';resetBtn.textContent='Clear saved adjustments';
+    const status=document.createElement('small');status.setAttribute('role','status');status.textContent='No game data is changed.';
+    panel.append(heading,desc,exportBtn,resetBtn,status);document.body.append(panel);
+    const anchorLayer=document.createElement('div');anchorLayer.id='neoLayoutAnchors';anchorLayer.style.cssText='position:absolute;inset:0;pointer-events:none';world.append(anchorLayer);
+    const markerStyle=document.createElement('style');markerStyle.textContent=`
+      body.neo-overworld-layout-editor #neoLayoutAnchors .neo-layout-anchor{pointer-events:auto;position:absolute;translate:-50% -100%;width:29px;height:29px;display:grid;place-items:center;background:#193b82dd;color:#fff;border:2px solid #b9ddff;border-radius:50%;font:700 10px system-ui;cursor:grab;touch-action:none;z-index:14}
+      body.neo-overworld-layout-editor .hotspot{outline:2px dashed #eeaf55!important;touch-action:none;cursor:move!important}
+      body.neo-overworld-layout-editor .anchor{pointer-events:none!important}
+      body.neo-overworld-layout-editor #neoLayoutEditor button{border:1px solid #9b7cbd;background:#473659;color:white;border-radius:7px;padding:8px;cursor:pointer}
+    `;document.head.append(markerStyle);
+    const persist=()=>{
+      const anchors=Object.fromEntries(Object.entries(map.anchors).map(([id,p])=>[id,{x:Math.round(p.x),y:Math.round(p.y)}]));
+      const hotspots=Object.fromEntries(map.hotspots.map(h=>[h.id,{x:Math.round(h.x),y:Math.round(h.y),w:Math.round(h.w),h:Math.round(h.h)}]));
+      const layout={location:sceneId,width:map.width,height:map.height,anchors,hotspots};
+      localStorage.setItem(layoutKey,JSON.stringify(layout));status.textContent='Saved locally · Copy layout JSON to share changes';
+      return layout;
+    };
+    function draggable(el,point,update){
+      let held=null;
+      el.addEventListener('pointerdown',e=>{if(e.button!==0)return;e.preventDefault();e.stopPropagation();held={id:e.pointerId,x:e.clientX,y:e.clientY,point:{...point}};el.setPointerCapture(e.pointerId)});
+      el.addEventListener('pointermove',e=>{if(!held||e.pointerId!==held.id)return;
+        const x=Math.round(clamp(held.point.x+(e.clientX-held.x)/zoom,0,map.width));
+        const y=Math.round(clamp(held.point.y+(e.clientY-held.y)/zoom,0,map.height));
+        update(x,y);paint();
+      });
+      const finish=e=>{if(!held||e.pointerId!==held.id)return;held=null;persist()};
+      el.addEventListener('pointerup',finish);el.addEventListener('pointercancel',finish);
+    }
+    for(const [id,pt] of Object.entries(map.anchors)){
+      const marker=document.createElement('button');marker.type='button';marker.className='neo-layout-anchor';marker.textContent=id;marker.title=id+' · NPC foot position';
+      const position=()=>{marker.style.left=map.anchors[id].x+'px';marker.style.top=map.anchors[id].y+'px'};
+      position();anchorLayer.append(marker);
+      draggable(marker,pt,(x,y)=>{map.anchors[id].x=x;map.anchors[id].y=y;position();
+        world.querySelectorAll('.anchor').forEach(sprite=>{const p=placements.find(t=>t.id===sprite.dataset.character&&t.anchor===id);if(p&&!p.foot){sprite.style.left=x+'px';sprite.style.top=y+'px'}})});
+    }
+    for(const h of map.hotspots){const el=[...world.querySelectorAll('.hotspot')].find(x=>x.title===h.label);if(!el)continue;draggable(el,h,(x,y)=>{h.x=x;h.y=y;el.style.left=x+'px';el.style.top=y+'px'});}
+    exportBtn.onclick=async()=>{
+      const json=JSON.stringify(persist(),null,2);
+      try{await navigator.clipboard.writeText(json);status.textContent='Copied! Paste layout JSON in the Neo Campus conversation.'}
+      catch{status.textContent='Clipboard unavailable. Layout JSON logged to developer console.';console.info('Neo Campus map placement',json)}
+    };
+    resetBtn.onclick=()=>{localStorage.removeItem(layoutKey);location.reload()};
+  }
   addEventListener('resize',center);center();
   window.__overworldPreview={map,placements,center,focus};
 })();
