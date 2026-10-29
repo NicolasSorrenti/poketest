@@ -114,18 +114,6 @@
    choice('Make space without asking where she came from','That is a better welcome than most places manage.','support','kaede_welcome'),
    choice('Ask what would make her want to stay','A reason to return that is not just another challenge.','honest','kaede_reason'),
    choice('Tell her the room improved when she arrived','Do not make me responsible for the atmosphere already.','flirt','kaede_arrival')
-  ]),
-  scene('daisy_route_bridge_4','daisy','A Name on the Door',54,64,'cafe',1,4,'daisy_route_3',[
-   {speaker:'daisy',text:'I found a quiet corner in the café where nobody asks for a photo or a performance.'},
-   {speaker:'Protagonist',text:'And you brought me there.'},
-   {speaker:'daisy',text:'You have learned the difference between looking at me and actually paying attention.'},
-   {speaker:'Protagonist',text:'That sounds like a difficult lesson.'},
-   {speaker:'daisy',text:'It was. I used to think being noticed was the same as being known.'},
-   {speaker:'Protagonist',text:'You do not have to be “on” with me.'}
-  ],[
-   choice('Ask what she wants people to know about her','That I choose my own image. The rest is earned, not assumed.','support','daisy_known'),
-   choice('Tell her you respect the person behind the presentation','Good. Then keep talking to me like I am a person, not a story you invented.','honest','daisy_person'),
-   choice('Say you like the version of her that surprises you','Careful. That sounds like you are getting to know me on purpose.','flirt','daisy_surprise')
   ])
  ];
  return Object.freeze({events});
