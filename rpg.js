@@ -422,6 +422,9 @@ function travelTo(placeId,{intro=true}={}){
 window.NeoRpgOverworldBridge=Object.freeze({
  snapshot(){return {location:state.location,day:state.day,slot:state.slot,locked:controlsLocked(),people:currentPeople().filter(id=>!!cast[id]),places:Object.entries(places).map(([id,p])=>({id,name:p[0]}))};},
  travel(placeId){return travelTo(placeId);},
+ interact(id){if(controlsLocked()||!cast[id]||!currentPeople().includes(id))return false;selectPerson(id);return true;},
+ activities(){return WORLD.activitiesAt(state).map(a=>({id:a.id,title:a.title,disabled:controlsLocked()||!!a.disabledReason}));},
+ activity(id){if(controlsLocked()||!WORLD.activitiesAt(state).some(a=>a.id===id&&!a.disabledReason))return false;performActivity(id);return true;},
 });
 window.dispatchEvent(new Event('neo-rpg-overworld-bridge-ready'));
 function publicAppointments(place){return [...APPOINTMENTS.overrides(state),...STORY.available(state,place),...SIDE.appointments(state),...(SLICE?.scheduleOverrides?.(state)||[])];}
