@@ -19,3 +19,31 @@ body.neo-overworld-embedded.neo-overworld-dialogue .anchor,
 body.neo-overworld-embedded.neo-overworld-dialogue .edge,
 body.neo-overworld-embedded.neo-overworld-dialogue .hotspot,
 body.neo-overworld-embedded.neo-overworld-dialogue #edges{display:none!important}
+
+/* Uploaded maps: compact, visible, accessible landmark interaction pins.
+   Large transparent 500px regions accidentally captured unrelated taps. */
+body:not(.neo-overworld-layout-editor) .hotspot.neo-hotspot-pin{
+  transform:translate(-50%,-50%);display:grid;place-items:center;
+  width:56px;height:56px;min-width:56px;min-height:56px;
+  border:2px solid #ffd59d;border-radius:50%;background:#2a184fe8;
+  box-shadow:0 0 0 4px #110d2788,0 7px 22px #09071ab9;
+  color:#fff;cursor:pointer;z-index:1;touch-action:manipulation;
+}
+body:not(.neo-overworld-layout-editor) .hotspot.neo-hotspot-pin::before{
+  content:'✦';font:900 25px system-ui;line-height:1;
+}
+body:not(.neo-overworld-layout-editor) .hotspot.neo-hotspot-pin span{
+  display:none;position:absolute;left:50%;bottom:calc(100% + 7px);
+  transform:translateX(-50%);white-space:nowrap;max-width:220px;
+  border:1px solid #ddb5f0;background:#17122beF;padding:5px 9px;
+  border-radius:8px;font:700 13px system-ui;color:#fff;pointer-events:none;
+}
+body:not(.neo-overworld-layout-editor) .hotspot.neo-hotspot-pin:hover,
+body:not(.neo-overworld-layout-editor) .hotspot.neo-hotspot-pin:focus-visible{
+  border-color:#fff;outline:2px solid #ffd59d;outline-offset:2px;
+}
+body:not(.neo-overworld-layout-editor) .hotspot.neo-hotspot-pin:hover span,
+body:not(.neo-overworld-layout-editor) .hotspot.neo-hotspot-pin:focus-visible span,
+body.show-guides:not(.neo-overworld-layout-editor) .hotspot.neo-hotspot-pin span{
+  display:block;
+}
