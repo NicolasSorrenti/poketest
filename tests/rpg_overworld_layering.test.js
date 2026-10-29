@@ -33,7 +33,7 @@ test('embedded location background stays visible but NPC sprites and edge portra
 });
 test('Activities opens above bottom navigation and blocks interaction behind it',()=>{
  assert.match(ui,/zIndex:'12'/);
- assert.match(ui,/zIndex:11/);
+ assert.match(ui,/z-index:11/);
  assert.match(ui,/data-overworld-activity-backdrop/);
  assert.match(ui,/neo-ow-activity-open #neoOverworldBottom\{visibility:hidden!important/);
  assert.match(ui,/if\(overlay\.classList\.contains\('neo-ow-activity-open'\)\|\|!storyShield\.hidden\)return/);
