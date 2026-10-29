@@ -23,5 +23,5 @@ test('normal dialogue remains separate and mobile preserves side menu',()=>{
  assert.match(ui,/#neoOverworldOverlay\.neo-ow-idle-interaction #neoOverworldStoryDock #dialogue/);
  assert.match(ui,/@media\(max-width:650px\)/);
  assert.match(ui,/grid-template-columns:minmax\(0,1fr\) minmax\(145px,\.75fr\)/);
- assert.match(html,/rpg-overworld-integration\.js\?v=20261029-character-side-actions-1/);
+ assert.match(html,/rpg-overworld-integration\.js\?v=20261029-character-mockup-polish-2/);
 });
