@@ -161,7 +161,8 @@ const reactionKinds=['default','attack','play_card','evolve','power','hurt','big
 for(const id of castIds){
  for(const kind of reactionKinds){
   const chosen=reactions.assetFor(installedManifest,id,kind);
-  assert.ok(chosen.startsWith('/rpg-assets/characters/'+id+'/')||chosen.startsWith('/rpg-assets/reactions/'+id+'/'),id+' '+kind+' must use that NPC\'s own artwork');
+  assert.ok(chosen.startsWith('/rpg-assets/characters/'+id+'/')||chosen.startsWith('/rpg-assets/reactions/'+id+'/')||chosen.startsWith('/rpg-assets/'+id+'.'),
+   id+' '+kind+' must use that NPC\'s own artwork (including installed legacy root-level portraits)');
   assert.ok(fs.existsSync(path.join(__dirname,'..',chosen.slice(1))),id+' '+kind+': selected VN expression is missing');
  }
 }
