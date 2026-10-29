@@ -181,6 +181,26 @@ test('Apex forecasts future Energy through expiring, not persistent, attack lock
  }
 });
 
+
+test('Apex does not plan a next-turn KO with a permanently spent Gym attack',()=>{
+ // Gym once-use indices survive turn changes. A second Energy attachment
+ // cannot unlock an attack already consumed earlier in the duel.
+ const dce=futureEnergyBoard(FIGHT,'base1-96',[FIGHT]);
+ const bill=futureEnergyBoard(FIGHT,'base1-91',[FIGHT]);
+ for(const o of [dce,bill]){
+  o.turnSerial=11;
+  o.self.active.gymAttackOnce=[1]; // Hitmonchan Special Punch
+ }
+ assert.equal(AI.energyHorizonBonus(attachActive,dce,cfg),
+  AI.energyHorizonBonus(attachActive,bill,cfg),
+  'a permanently used attack must not earn speculative Energy value');
+ // Control: the same two-turn Energy sequence is valuable without the lock.
+ delete dce.self.active.gymAttackOnce;
+ delete bill.self.active.gymAttackOnce;
+ assert.ok(AI.energyHorizonBonus(attachActive,dce,cfg)>
+  AI.energyHorizonBonus(attachActive,bill,cfg));
+});
+
 function evolutionRefuelBoard(energyId,energyUsed=false){
  const o=board();
  o.phase='game';

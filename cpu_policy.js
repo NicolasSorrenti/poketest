@@ -1101,6 +1101,9 @@ function projectedAttackValue(active,defender,turnSerial=0){
  for(let i=0;i<attacks.length;i++){
   const attack=attacks[i];
   if(!ATTACK.compile(attack)||!canPayEnergy(attack.cost||[],pool))continue;
+  // A once-used Gym attack is permanently unavailable; unlike cooldowns,
+  // advancing the forecast turn cannot make this attack legal again.
+  if(active.gymAttackOnce?.includes(i))continue;
   if(active.amnesia?.index===i&&active.amnesia.expires>turnSerial)continue;
   if(active.gymAttackCooldown?.expires>turnSerial&&
     (active.gymAttackCooldown.index===null||active.gymAttackCooldown.index===i))continue;
