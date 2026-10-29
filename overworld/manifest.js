@@ -18,13 +18,24 @@ window.NeoOverworld = Object.freeze({
       {id:'refreshments', label:'Drinks', x:1500,y:810,w:90,h:265}
     ]
   },
+  shop: {
+    id:'shop', title:'The Lucky Draw · art candidate', image:'/art-production/overworld-candidates/shop-map-v1.png',
+    width:1475, height:1066, initial:{x:738,y:450,viewWidth:850,viewHeight:700},
+    anchors:{P1:{x:600,y:455},P2:{x:860,y:460},P3:{x:625,y:540},P4:{x:870,y:540}},
+    hotspots:[
+      {id:'shelves',label:'Card shelves',x:220,y:200,w:400,h:275},
+      {id:'counter',label:'Booster counter',x:860,y:250,w:490,h:170},
+      {id:'tables',label:'Play tables',x:800,y:690,w:670,h:270},
+      {id:'lounge',label:'Trade lounge',x:190,y:635,w:365,h:215}
+    ]
+  },
   characters: {
     reina: {name:'Reina', face:'/rpg-assets/ui/avatars/reina.webp', poses: {
       standing: {src:'/rpg-assets/characters/reina/overworld/standing.png', height:155, facing:'front'},
       arcade: {src:'/rpg-assets/characters/reina/overworld/arcade-playing-character.png', height:152, facing:'back', handOffset:{x:22,y:-95}}
     }},
-    yuna: {name:'Yuna', face:'/rpg-assets/characters/yuna/portraits/primary.png'},
-    barb: {name:'Barb', face:'/rpg-assets/characters/barb/portraits/primary.png'},
+    yuna: {name:'Yuna', face:'/rpg-assets/characters/yuna/portraits/primary.png', poses:{standing:{src:'/art-production/overworld-candidates/yuna-standing-v1.png',height:155,facing:'front',status:'candidate'}}},
+    barb: {name:'Barb', face:'/rpg-assets/characters/barb/portraits/primary.png', poses:{standing:{src:'/art-production/overworld-candidates/barb-standing-v1.png',height:150,facing:'front',status:'candidate'}}},
     jinx: {name:'Jinx', face:'/rpg-assets/jinx.png'},
     hana: {name:'Hana', face:'/rpg-assets/characters/hana/portraits/primary.png'},
     laca: {name:'Laca', face:'/rpg-assets/characters/laca/neutral.webp'},
@@ -36,5 +47,14 @@ window.NeoOverworld = Object.freeze({
     {id:'reina',anchor:'E1',pose:'arcade',foot:{x:339,y:287}},
     {id:'yuna',anchor:'P2'}, {id:'barb',anchor:'P3'}, {id:'jinx',anchor:'P4'},
     {id:'laca',anchor:'E3'}, {id:'hana',anchor:'E2'}, {id:'rina',anchor:'E5'}, {id:'daisy',anchor:'E4'}
+  ],
+  artPreview: [
+    {id:'reina',anchor:'P1',pose:'standing'},
+    {id:'yuna',anchor:'P2',pose:'standing'},
+    {id:'barb',anchor:'P3',pose:'standing'}
+  ],
+  shopPreview: [
+    {id:'yuna',anchor:'P1',pose:'standing'},
+    {id:'barb',anchor:'P2',pose:'standing'}
   ]
 });

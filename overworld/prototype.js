@@ -1,12 +1,16 @@
 'use strict';
 (() => {
-  const config=window.NeoOverworld, map=config.arcade, byId=id=>document.getElementById(id);
+  const config=window.NeoOverworld, byId=id=>document.getElementById(id);
   const camera=byId('camera'), world=byId('world'), edges=byId('edges'), dialog=byId('dialog');
   const params=new URLSearchParams(location.search), poseTest=params.has('reina-test'), dev=params.has('dev');
+  const shopTest=params.has('shop-test'),map=shopTest?config.shop:config.arcade;
+  byId('mapArt').src=map.image;byId('mapArt').alt=map.title;byId('world').style.width=map.width+'px';byId('world').style.height=map.height+'px';
+  document.querySelector('.title strong').textContent=map.title;
+  if(shopTest)document.querySelector('#bottom p').textContent='Illustration candidate · placement under review.';
   const placements=poseTest ? [
     {id:'reina',anchor:'P1',pose:'standing',foot:{x:665,y:465},previewKey:'standing'},
     {id:'reina',anchor:'E1',pose:'arcade',foot:{x:339,y:287},previewKey:'arcade'}
-  ] : params.has('cast-test') ? config.preview : config.preview.filter(p=>p.id==='reina');
+  ] : shopTest ? config.shopPreview : params.has('art-test') ? config.artPreview : params.has('cast-test') ? config.preview : config.preview.filter(p=>p.id==='reina');
   if(dev){byId('guides').hidden=false;}
   let zoom=1,ox=0,oy=0,drag=null,ignoreClick=false,toastTimer;
   const clamp=(v,a,b)=>Math.min(b,Math.max(a,v));

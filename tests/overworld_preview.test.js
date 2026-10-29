@@ -7,13 +7,23 @@ const path=require('node:path');
 const root=path.join(__dirname,'..');
 const context={window:{}};
 vm.runInNewContext(fs.readFileSync(path.join(root,'overworld/manifest.js'),'utf8'),context);
-const {arcade,characters,preview}=context.window.NeoOverworld;
+const {arcade,shop,characters,preview,artPreview,shopPreview}=context.window.NeoOverworld;
 test('preview uses the canonical continuous Pixel Palace background and valid asset paths',()=>{
   assert.equal(arcade.id,'arcade');
   assert.deepEqual([arcade.width,arcade.height],[1550,1120]);
   for(const asset of [arcade.image,...Object.values(characters).flatMap(c=>[c.face,...Object.values(c.poses||{}).map(p=>p.src)])]){
     assert.ok(fs.existsSync(path.join(root,asset.slice(1))),asset);
   }
+});
+test('shop art preview uses its actual image aspect and valid candidate sprites',()=>{
+  assert.ok(fs.existsSync(path.join(root,shop.image.slice(1))));
+  assert.equal(shop.id,'shop');
+  assert.deepEqual([shop.width,shop.height],[1475,1066]);
+  for(const group of [artPreview,shopPreview])for(const p of group){
+    assert.ok(characters[p.id].poses[p.pose]);
+    assert.ok(shop.anchors[p.anchor]||arcade.anchors[p.anchor]);
+  }
+  assert.equal(shopPreview.length,2);
 });
 test('all normal preview characters have one placement with valid foot coordinates',()=>{
   assert.equal(new Set(preview.map(p=>p.id)).size,preview.length);

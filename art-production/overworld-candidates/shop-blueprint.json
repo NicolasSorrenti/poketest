@@ -1,0 +1,18 @@
+{
+  "locationId": "shop",
+  "name": "The Lucky Draw",
+  "status": "concept blueprint; coordinates must be recalibrated against approved artwork",
+  "canvas": {"width": 1550, "height": 1120},
+  "perspective": "elevated three-quarter, continuous single-room environment",
+  "zones": [
+    {"id":"shelves","rect":[50,90,550,300],"description":"back and left walls of booster displays and card accessories"},
+    {"id":"counter","rect":[700,160,550,210],"description":"clerk sales counter across the rear-right wall"},
+    {"id":"windows","rect":[1290,70,210,330],"description":"daylight windows at upper right"},
+    {"id":"open-floor","rect":[470,370,650,350],"description":"unobstructed floor for the first four character anchors"},
+    {"id":"play-tables","rect":[470,760,650,270],"description":"two card play tables at lower center"},
+    {"id":"lounge","rect":[70,730,330,250],"description":"compact reading and trade seating"}
+  ],
+  "characterFeet": {"P1":[625,500],"P2":[840,510],"P3":[630,690],"P4":[880,700],"counterWorker":[1080,435],"tables":[750,1010],"shelves":[300,530]},
+  "hotspots": {"boosterCounter":[1040,300,320,140],"cardShelves":[280,240,410,220],"playTables":[790,890,500,250],"tradeLounge":[235,840,330,220]},
+  "constraints": ["environment only", "no baked characters", "no UI", "no fake anchor markers", "check actual art before using these coordinates"]
+}
