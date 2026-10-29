@@ -107,10 +107,13 @@
   }
   for(const h of map.hotspots){const b=document.createElement('button');b.className='hotspot';b.dataset.hotspotId=h.id;
     const rect={x:clamp(h.x,0,map.width-24),y:clamp(h.y,0,map.height-24),w:Math.max(24,Math.min(h.w,map.width-clamp(h.x,0,map.width-24))),h:Math.max(24,Math.min(h.h,map.height-clamp(h.y,0,map.height-24)))};
+    // Normalize legacy zones to image bounds before placing or editing them.
+    // Earlier Pixel Palace rectangles extended beyond the source canvas.
+    Object.assign(h,rect);
     // On published maps, an explicit small tap target is safer than a huge
     // invisible rectangle covering benches, NPCs, or unrelated objects.
     // The development editor still uses the full adjustable hotspot region.
-    const pin=map.artworkStatus==='uploaded'&&!layoutDev;
+    const pin=!layoutDev; // Consistent, non-obscuring landmarks across all seven locations, including Pixel Palace.
     if(pin){b.classList.add('neo-hotspot-pin');Object.assign(b.style,{left:clamp(rect.x+rect.w/2,30,map.width-30)+'px',top:clamp(rect.y+rect.h/2,30,map.height-30)+'px',width:'56px',height:'56px'});}
     else Object.assign(b.style,{left:rect.x+'px',top:rect.y+'px',width:rect.w+'px',height:rect.h+'px'});
     b.setAttribute('aria-label','Explore '+h.label);b.title=h.label;const label=document.createElement('span');label.textContent=h.label;b.append(label);b.onclick=()=>{if(ignoreClick)return;if(params.has('rpg-integration')&&window.parent!==window){window.parent.postMessage({type:'neo-overworld-action',kind:'hotspot',id:h.id},location.origin);return;}toast(h.label+' · activity connection pending')};world.appendChild(b);}
