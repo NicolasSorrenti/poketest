@@ -27,7 +27,7 @@ test('Pixel Palace preserved and all six user-uploaded location maps selected',(
  assert.match(code,/map\.blueprint\?[\s\S]*?\[map\.image\]/);
 });
 test('the embedded map HTML references the fixed loader',()=>{
- assert.match(page,/overworld\/prototype\.js\?v=map-placement-editor-20261029/);
+ assert.match(page,/overworld\/prototype\.js\?v=map-placement-resize-20261029/);
 });
 
 test('explicit development mode exports revised anchors and hotspots without touching RPG state',()=>{
@@ -36,4 +36,18 @@ test('explicit development mode exports revised anchors and hotspots without tou
  assert.match(code,/localStorage.setItem\(layoutKey,JSON.stringify\(layout\)\)/);
  assert.match(code,/navigator.clipboard.writeText\(json\)/);
  assert.match(code,/Math.max\(24,Math.min\(h.w,map.width/);
+});
+
+test('Park and Cafe interactive hotspot IDs are descriptive and remain inside map width',()=>{
+ const vm=require('node:vm');
+ const ctx={window:{}};vm.runInNewContext(manifest,ctx);
+ for(const location of ['park','cafe']){
+  const m=ctx.window.NeoOverworld[location];
+  for(const h of m.hotspots){
+   assert.ok(!['a','b','c','d'].includes(h.id),'placeholder hotspot '+h.id);
+   assert.ok(h.x>=0&&h.y>=0&&h.x+h.w<=m.width&&h.y+h.h<=m.height,location+' out-of-bounds '+h.label);
+  }
+ }
+ assert.match(code,/neo-layout-resize/);
+ assert.match(code,/Math\.round\(clamp\(held\.w/);
 });
