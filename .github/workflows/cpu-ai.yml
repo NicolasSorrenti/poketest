@@ -6,6 +6,10 @@ on:
   pull_request:
     paths:
       - 'cpu_policy.js'
+      - 'cpu_lookahead.js'
+      - 'cpu_strategic_search.js'
+      - 'tests/cpu_apex_public_bench_projection.test.js'
+      - 'tests/cpu_apex_wigglytuff_wave.test.js'
       - 'classic_bot.js'
       - 'classic_local_service.js'
       - 'test_cpu_policy.js'
@@ -22,6 +26,7 @@ jobs:
           node-version: '22'
       - run: node --check cpu_policy.js
       - run: node test_cpu_policy.js
+      - run: node --test tests/cpu_apex_public_bench_projection.test.js tests/cpu_apex_wigglytuff_wave.test.js
       - run: node test_classic_live_service.js
       - run: node benchmark_cpu.js --pairs 50 --max-turns 60 --left-level 5 --right-level 1
       - run: node benchmark_cpu.js --pairs 25 --max-turns 60 --left-level 5 --right-level 1 --left-deck brushfire --right-deck blackout
