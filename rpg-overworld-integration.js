@@ -302,9 +302,13 @@
     const sceneArea=document.getElementById('scene');
     sceneArea?.append(scenePeople);
     let lastPortraitSignature='';
+    const portraitWindow=window.NeoRpgSceneCast?.createSpeakerWindow?.();
     function syncPortraits(hasCG){
       const cast=bridge()?.scenePortraits?.();
-      const participants=cast?.conversation&&!hasCG?cast.participants||[]:[];
+      const participants=cast?.conversation&&!hasCG?
+        (portraitWindow?.update(cast.participants||[],cast.focused)||
+         (cast.participants||[]).slice(0,2)):[];
+      if(hasCG)portraitWindow?.reset();
       const signature=JSON.stringify([cast?.focused,participants]);
       if(signature===lastPortraitSignature)return;
       lastPortraitSignature=signature;
@@ -313,8 +317,10 @@
         const person=document.createElement('div');
         person.className='neo-ow-person'+(participant.id===cast.focused?' is-speaking':' is-listening');
         const image=document.createElement('img');image.alt=participant.name;
-        image.src=participant.src||'/rpg-assets/characters/reina/chibi/front.png';
-        image.onerror=()=>{if(!image.src.endsWith('/reina/chibi/front.png'))image.src='/rpg-assets/characters/reina/chibi/front.png';};
+        // A missing portrait must never display a different character's face.
+        // The original game's avatar loader already resolves outfit-specific art.
+        if(participant.src)image.src=participant.src;
+        image.onerror=()=>{image.hidden=true;person.classList.add('neo-ow-portrait-missing');};
         const name=document.createElement('span');name.textContent=participant.name;
         person.append(image,name);scenePeople.append(person);
       }
@@ -331,6 +337,29 @@
       #neoOverworldStoryDock .neo-ow-person.is-listening{opacity:.57;filter:brightness(.7);transform:scale(.95)}
       @media(max-width:650px){#neoOverworldStoryDock #neoOverworldScenePeople{max-height:31dvh}#neoOverworldStoryDock .neo-ow-person img{max-height:26dvh}}
     `;
+    const storyLayout=document.createElement('style');
+    storyLayout.textContent=`
+      #neoOverworldOverlay.neo-ow-arriving #neoOverworldBottom{display:none!important}
+      #neoOverworldStoryDock{width:calc(100vw - 20px)!important;max-width:1520px!important;max-height:90dvh!important;overflow-y:auto!important}
+      #neoOverworldStoryDock #scene{min-height:0!important;max-height:54dvh!important;width:100%!important}
+      #neoOverworldStoryDock #portrait{display:none!important}
+      #neoOverworldStoryDock #neoOverworldScenePeople:not([hidden]){display:flex!important;align-items:flex-end!important;justify-content:center!important;gap:clamp(4px,2vw,22px)!important;width:100%!important;height:min(50dvh,660px)!important;max-height:50dvh!important;overflow:hidden!important}
+      #neoOverworldStoryDock #neoOverworldScenePeople .neo-ow-person{flex:0 0 40vw!important;width:40vw!important;max-width:40vw!important;height:100%!important;max-height:none!important;overflow:hidden!important}
+      #neoOverworldStoryDock #neoOverworldScenePeople .neo-ow-person img{display:block;object-fit:contain!important;object-position:center bottom!important;max-width:100%!important;width:100%!important;height:calc(100% - 29px)!important;max-height:none!important}
+      #neoOverworldStoryDock #neoOverworldScenePeople .neo-ow-person img[hidden]{display:none!important}
+      #neoOverworldStoryDock #neoOverworldScenePeople .neo-ow-person span{flex:none}
+      #neoOverworldStoryDock #scene:has(#rpgSceneCG:not([hidden])) #neoOverworldScenePeople{display:none!important}
+      #neoOverworldStoryDock #rpgSceneCG:not([hidden]){max-height:53dvh!important;object-fit:contain!important}
+      #neoOverworldStoryDock>button:first-child{position:absolute!important;right:2px!important;top:2px!important;z-index:8!important;width:auto!important;padding:7px 11px!important;font-size:12px!important}
+      #neoOverworldStoryDock #dialogue{z-index:5!important;position:relative!important}
+      @media(max-width:650px){
+        #neoOverworldStoryDock{width:calc(100vw - 10px)!important;max-height:92dvh!important;bottom:max(5px,env(safe-area-inset-bottom))!important}
+        #neoOverworldStoryDock #scene{max-height:51dvh!important}
+        #neoOverworldStoryDock #neoOverworldScenePeople:not([hidden]){height:45dvh!important;max-height:45dvh!important}
+        #neoOverworldStoryDock #rpgSceneCG:not([hidden]){max-height:48dvh!important}
+      }
+    `;
+    document.head.append(storyLayout);
     let storyDock=null;
     let lastSceneKey='';
     let suspendedForDuel=false;
@@ -353,7 +382,13 @@
       if(stageNext&&stageNext.parentNode===stageHome)stageHome.insertBefore(stage,stageNext);
       else stageHome.append(stage);
       stage.removeAttribute('style');
-      if(storyDock){storyDock.hidden=true;storyDock.remove();}lockMapForStory(false);lastPortraitSignature='';
+      // Keep the live stage inside the (hidden) overworld dock between scenes.
+      // Moving it back into the original RPG is what leaked a second interface.
+      if(storyDock)storyDock.hidden=true;
+      lockMapForStory(false);
+      portraitWindow?.reset();lastPortraitSignature='';
+      scenePeople.replaceChildren();scenePeople.hidden=true;
+      sceneArea?.classList.remove('neo-ow-participants');
       if(!overlay.hidden)refresh();
     }
     // Observe native story rendering rather than guessing when a conversation ends.
@@ -363,27 +398,39 @@
       if(overlay.hidden||suspendedForDuel)return;
       const data=snapshot();
       if(!data)return;
-      const line=document.getElementById('line')?.textContent?.trim();
-      const choices=document.getElementById('choices');
-      const actions=document.getElementById('characterActions');
       const cg=document.getElementById('rpgSceneCG');
-      const hasChoices=!!choices?.querySelector('button');
-      const hasActions=!!actions&&!actions.hidden&&!!actions.querySelector('button');
-      const hasCG=!!cg&&!cg.hidden&&!!cg.getAttribute('src')&&cg.closest('#scene')?.classList.contains('has-story-cg');
-      syncPortraits(hasCG);
-      const needsStory=!!((data.locked&&!data.arriving)||(line&&line!=='The town is waiting.')||hasChoices||hasActions||hasCG);
+      const hasCG=!!cg&&!cg.hidden&&!!cg.getAttribute('src')&&
+        cg.closest('#scene')?.classList.contains('has-story-cg');
+      // Arrival animations are not conversations. A scheduled event is, even
+      // when its first render occurs before the arrival gate is released.
+      const arrivalOnly=!!data.arriving&&!data.eventActive;
+      const needsStory=!!(data.storyActive&&!arrivalOnly||hasCG&&!arrivalOnly);
+      overlay.classList.toggle('neo-ow-arriving',!!data.arriving&&!needsStory);
       if(needsStory){
         if(!storyDock||storyDock.hidden)showStory();
         else lockMapForStory(true);
-      }else if(storyDock&&!storyDock.hidden){
-        hideStory();
+        syncPortraits(hasCG);
+      }else{
+        if(storyDock&&!storyDock.hidden)hideStory();
+        else if(data.arriving)lockMapForStory(true);
+        else lockMapForStory(false);
+        if(!data.storyActive)portraitWindow?.reset();
       }
+      // The RPG render event is authoritative for both ordinary talks and
+      // forced events; keeping the navigation synchronized prevents UI leaks.
+      next.disabled=!!data.locked;
+      travelToggle.disabled=!!data.locked;
     }
     function queueStorySync(){
       if(storySyncQueued)return;
       storySyncQueued=true;
       queueMicrotask(()=>{storySyncQueued=false;syncStory();});
     }
+    window.addEventListener('neo-rpg-overworld-render',()=>{
+      if(overlay.hidden||suspendedForDuel)return;
+      refresh();
+      queueStorySync();
+    });
     for(const id of ['line','choices','characterActions','rpgSceneCG','speaker']){
       const el=document.getElementById(id);
       if(el)new MutationObserver(queueStorySync).observe(el,{childList:true,subtree:true,characterData:true,attributes:true,attributeFilter:['hidden','src']});
@@ -401,7 +448,17 @@
       if(frame.getAttribute('src')!==nextSrc)frame.src=nextSrc;
       note.hidden=true;
     }
-    function dismiss(){closeSheet();hideMenu();hideEvents();hideDeck();suspendedForDuel=false;hideStory();overlay.querySelectorAll('[data-overworld-activity-panel]').forEach(el=>el.remove());overlay.hidden=true;overlay.style.display='none';frame.src='about:blank';open.focus();}
+    function dismiss(){
+      closeSheet();hideMenu();hideEvents();hideDeck();suspendedForDuel=false;hideStory();
+      // Only an explicit return to the classic interface restores its stage.
+      if(stage&&stageHome&&stage.parentNode===storyDock){
+        if(stageNext&&stageNext.parentNode===stageHome)stageHome.insertBefore(stage,stageNext);
+        else stageHome.append(stage);
+        stage.removeAttribute('style');
+      }
+      overlay.querySelectorAll('[data-overworld-activity-panel]').forEach(el=>el.remove());
+      overlay.hidden=true;overlay.style.display='none';frame.src='about:blank';open.focus();
+    }
     open.addEventListener('click',()=>{refresh();overlay.hidden=false;overlay.style.display='flex';queueStorySync();});
     document.getElementById('rpgDiscreetToggle')?.addEventListener('click',()=>{if(!overlay.hidden)refresh();});
     function performTravel(target){
