@@ -225,6 +225,24 @@
  // Keep existing route IDs stable for existing saves.
  // Add pack routes and bridge episodes without renumbering prior scenes.
  E.push(...(CHARPACKS?.events||[]),...PACK.events,...BONDC.events,...(EXTRA?.events||[]));
+ // The new bridge scenes are mandatory for new campaigns. Existing final-route
+ // IDs remain unchanged, and normalize() below backfills bridge completion for
+ // saves that already passed the old four-scene structure.
+ const bridgePrerequisites={
+  hana_route_4:'hana_route_bridge_4',
+  reina_route_4:'reina_route_bridge_4',
+  shiori_route_4:'shiori_route_bridge_4',
+  yuna_route_4:'yuna_route_bridge_4',
+  akari_route_4:'akari_route_bridge_4',
+  camila_route_4:'camila_route_bridge_4',
+  marina_route_4:'marina_route_bridge_4',
+  kaede_route_1:'kaede_route_early_1',
+  daisy_route_4:'daisy_route_bridge_4'
+ };
+ for(const [eventId,prerequisite] of Object.entries(bridgePrerequisites)){
+  const event=E.find(item=>item.id===eventId);
+  if(event)event.prerequisite=prerequisite;
+ }
  const ID=new Map(E.map(e=>[e.id,e]));
  function normalize(state){
   if(!state.storyDone||typeof state.storyDone!=='object')state.storyDone={};
@@ -232,6 +250,16 @@
   if(!state.relationships||typeof state.relationships!=='object')state.relationships={};
   if(!('partner' in state))state.partner=null;
   if(!state.storyFlags||typeof state.storyFlags!=='object'||Array.isArray(state.storyFlags))state.storyFlags={};
+  // Older saves may already be beyond a bridge window or have completed the
+  // old final event. Mark only that bridge as legacy-completed; do not award
+  // new relationship points retroactively.
+  const migrationDay=Number.isInteger(s.day)?Math.max(1,Math.min(90,s.day)):1;
+  for(const [eventId,prerequisite] of Object.entries(bridgePrerequisites)){
+   const bridge=ID.get(prerequisite);
+   if(bridge&&!s.storyDone[prerequisite]&&(s.storyDone[eventId]||migrationDay>bridge.end)){
+    s.storyDone[prerequisite]={choice:0,day:migrationDay,legacy:true};
+   }
+  }
   for(const e of E)if(!state.relationships[e.npc])state.relationships[e.npc]={affection:0,trust:0,attraction:0,respect:0,duels:0};
   // Earlier builds saved the five guests' openly romantic second finale
   // options without a partner, because those options used kind:'flirt'.
