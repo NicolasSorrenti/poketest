@@ -31,7 +31,7 @@ test('every RPG character has five main relationship events',()=>{
  };
  for(const [npc,idPattern] of Object.entries(expected)){
   const events=story.events.filter(e=>e.npc===npc&&idPattern.test(e.id));
-  assert.equal(events.length,5,\`\${npc} should have five main events, found \${events.length}\`);
+  assert.equal(events.length,5,npc+' should have five main events, found '+events.length);
  }
 });
 
@@ -46,10 +46,10 @@ test('new bridge scenes have valid prerequisites and windows',()=>{
  const ids=new Set(story.events.map(e=>e.id));
  for(const id of bridgeIds){
   const event=story.byId(id);
-  assert.ok(event,\`missing \${id}\`);
-  assert.ok(event.prerequisite===null||ids.has(event.prerequisite),\`\${id} has an invalid prerequisite\`);
-  assert.ok(event.start>=1&&event.end<=90&&event.start<=event.end,\`\${id} has an invalid campaign window\`);
-  assert.ok(event.lines.length>=4,\`\${id} needs authored dialogue\`);
-  assert.ok(event.choices.length>=2,\`\${id} needs player choices\`);
+  assert.ok(event,'missing '+id);
+  assert.ok(event.prerequisite===null||ids.has(event.prerequisite),id+' has an invalid prerequisite');
+  assert.ok(event.start>=1&&event.end<=90&&event.start<=event.end,id+' has an invalid campaign window');
+  assert.ok(event.lines.length>=4,id+' needs authored dialogue');
+  assert.ok(event.choices.length>=2,id+' needs player choices');
  }
 });
