@@ -82,3 +82,11 @@ The shop concept was generated from the canonical `shop-day.webp` panorama and t
 - Scope limit: NPC and hotspot clicks still use preview behavior; they are not yet wired to the main story or action system.
 - Deployment QA: confirm button appears, open/close overlay, correct current location and NPCs, travel updates RPG and remains disabled in ongoing story/duels, desktop/mobile navigation, no interference with cloud save.
 - Next: bridge character click to native dialogue/battle buttons and hotspots to original activity controller, preserving event locks. Final art and sprite path cleanup remain separate.
+
+## 2026-10-29 — native action wiring (phase 2)
+- Map character clicks now post a same-origin message to the RPG and invoke `selectPerson(id)` through `NeoRpgOverworldBridge.interact`, checking active locks and current scheduled roster.
+- Map hotspots list currently eligible native `WORLD.activitiesAt(state)` entries and run the existing `performActivity(id)` (including native time confirmation and rewards). They are currently generic per-scene activity selectors, not individually assigned to spatial furniture.
+- Overworld footer Activities/Events/Deck/Status now links to corresponding native RPG controls/sections.
+- Same-origin + iframe-window checks protect message handling. Native travel remains the only source of campaign state changes.
+- Syntax checked via JS parser for `rpg.js`, `rpg-overworld-integration.js`, `overworld/prototype.js`. Browser gameplay and deploy have not been verified.
+- TODO: responsive browser QA, test dialogue and duel locks; later align zone-to-activity relevance and NPC sprite placements.
