@@ -2664,13 +2664,21 @@ function render(){
  activeOutfitSceneId=showingMandatory?.id||showingSlice?.id||showingSituation?.id||showingStory?.id||showingEncounter?.id||showingArc?.id||sideQuest?.id||null;
  const nextPortrait=portraitId&&cast[portraitId]?portraitId:'';
  const nextArt=nextPortrait?scenePortraitSource(nextPortrait,'neutral'):'';
- if(portraitRoot.dataset.npc!==nextPortrait||portraitRoot.dataset.artSrc!==nextArt){
-  portraitRoot.dataset.npc=nextPortrait;portraitRoot.dataset.artSrc=nextArt;
-  portraitRoot.replaceChildren();
-  if(nextPortrait)portraitRoot.append(makeAvatar(nextPortrait,'stage'));
-  else delete portraitRoot.dataset.rpgSafeId;
+ if(window.NeoRpgOverworldStandalone){
+  // The overworld displays only its own live speaker portraits. Avoid fetching
+  // a second unused classic stage portrait behind the conversation.
+  portraitRoot.dataset.npc='';
+  portraitRoot.dataset.artSrc='';
+  if(portraitRoot.childNodes.length)portraitRoot.replaceChildren();
+ }else{
+  if(portraitRoot.dataset.npc!==nextPortrait||portraitRoot.dataset.artSrc!==nextArt){
+   portraitRoot.dataset.npc=nextPortrait;portraitRoot.dataset.artSrc=nextArt;
+   portraitRoot.replaceChildren();
+   if(nextPortrait)portraitRoot.append(makeAvatar(nextPortrait,'stage'));
+   else delete portraitRoot.dataset.rpgSafeId;
+  }
+  if(nextPortrait)window.NeoRpgDiscreetAvatars?.set?.(portraitRoot,nextPortrait,'neutral',cast[nextPortrait].name);
  }
- if(nextPortrait)window.NeoRpgDiscreetAvatars?.set?.(portraitRoot,nextPortrait,'neutral',cast[nextPortrait].name);
  $('homeBanner').hidden=state.location!=='home'||!!portraitId;
  $('homeBanner').textContent='YOUR APARTMENT  ·  DAY '+state.day+'  ·  '+periods[state.slot]+' — Prepare your deck, review your plans or rest.';
  let shown=showingMandatory?renderMandatory():showingSlice?renderSliceOfLife():showingSituation?showSituation():showingStory?renderStory():showingEncounter?showEncounter():showingArc?showArc():state.activeSideQuest?showSideQuest():scene;
