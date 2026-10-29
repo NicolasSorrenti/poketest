@@ -127,3 +127,13 @@ The shop concept was generated from the canonical `shop-day.webp` panorama and t
 - Audited the shared overworld bridge and presentation adapter. Identified that travel arrival/first-meeting chime-ins were not counted as an interaction lock, allowing premature NPC clicks or activity starts.
 - Bridge `snapshot().locked`, `travel`, `interact`, and `activity` now guard `arrivalGate`, `pendingOverworldArrival` and active travel transitions. `snapshot().arriving` distinguishes arrival animation from actual story dialogue so the new dialogue panel does not open just because an arrival is playing.
 - Updated JS cache versions and syntax-checked changed files. **Full end-to-end browser journey is still unverified**, especially CG→duel→pack rewards→overworld. No claim of deployed/live QA.
+
+## 2026-10-29 — approved compact travel and What's next navigation
+
+- Overworld main header now shows the **current location** and **Day / Morning-Afternoon-Evening**, plus the hamburger menu; removed the always-present top travel dropdown and button.
+- The bottom row above Activities / Events / Deck / Status contains only two equal-width compact triggers: **What's next?** and **Travel**. Both are collapsed by default, and only one expands at once.
+- Travel opens a scrollable illustrated destination grid based on `NeoRpgOverworldBridge.snapshot().places`. The active location is marked and disabled; travel requests continue through the existing RPG bridge, retaining state/arrival guards.
+- What's next reuses the live `#dailyPlanner` DOM with its existing action handlers. When the panel closes, the original planner element is restored to its home in the RPG stage (no duplicate planner state).
+- The expanded sheet collapses on selecting a destination, starting a story/dialogue, closing via Escape/close/outside tap, or opening the game menu/another panel. CG and dialogue overlays hide all bottom navigation as before.
+- Integrated `/overworld-prototype.html?rpg-integration=1` now hides its redundant preview location header/footer; standalone prototype keeps them.
+- Desktop/mobile CSS supports a scrollable panel and safe-area insets. Latest code commits `0c48789`, `abcb421`, `f1fd9a4`, `7f96215`; **browser end-to-end verification remains outstanding**.
