@@ -1715,11 +1715,12 @@ $('battle')?.addEventListener('load',()=>{
 buildArtEntries();
 function showOtherArt(entry){
  if(!artSeen[entry.path])return;
- if(!artViewed[entry.path]){artViewed[entry.path]=true;persist();renderGallery();}
- if(!galleryViewer){galleryOpenViewer({unlocked:true,title:entry.title,id:'',character:entry.id,path:entry.path,thumb:entry.path});return;}
+ if(!galleryViewer){galleryOpenViewer({...entry,unlocked:true,character:entry.id,thumb:entry.path});return;}
  const stage=galleryViewer.querySelector('.cg-lightbox-stage');stage.replaceChildren();
- const image=document.createElement('img');image.src=entry.path;image.alt=entry.title;
+ const image=document.createElement('img');image.alt=entry.title;
+ image.onload=()=>{if(!artViewed[entry.path]){artViewed[entry.path]=true;persist();renderGallery();}};
  image.onerror=()=>{stage.textContent='Artwork file unavailable.';};
+ image.src=entry.path;
  stage.append(image);galleryViewer.querySelector('.cg-lightbox-title').textContent=entry.title;
  if(!galleryViewer.open)galleryViewer.showModal();
 }
@@ -1740,7 +1741,7 @@ function galleryOpenViewer(entry){
  const pending=document.createElement('p');pending.className='cg-pending';pending.textContent='Artwork not installed yet.';pending.hidden=true;stage.append(pending);
  galleryViewer.showModal();
  loadCGArt(image,entry,false,()=>{
-  pending.hidden=true;CG.markViewed(state,entry.id);persist();renderGallery();
+  pending.hidden=true;if(entry.type)artViewed[entry.path]=true;else CG.markViewed(state,entry.id);persist();renderGallery();
  },()=>{pending.hidden=false;});
 }
 function populateGalleryCharacters(){
