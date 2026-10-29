@@ -54,10 +54,26 @@ test('Park and Cafe interactive hotspot IDs are descriptive and remain inside ma
 
 test('Uploaded environment artwork has explicit tap markers instead of oversized invisible regions',()=>{
  const css=fs.readFileSync(path.join(root,'overworld/prototype.css'),'utf8');
- assert.match(code,/map\.artworkStatus==='uploaded'&&!layoutDev/);
+ assert.match(code,/const pin=!layoutDev/);
  assert.match(code,/b\.classList\.add\('neo-hotspot-pin'\)/);
  assert.match(code,/width:'56px',height:'56px'/);
  assert.match(css,/\.hotspot\.neo-hotspot-pin/);
  assert.match(css,/touch-action:manipulation/);
  assert.match(css,/neo-overworld-layout-editor/);
+});
+
+test('all seven production locations use identical small visible landmark tap targets',()=>{
+ const vm=require('node:vm');const context={window:{}};vm.runInNewContext(manifest,context);
+ for(const loc of ['arcade','shop','home','park','cafe','center','library']){
+  const map=context.window.NeoOverworld[loc];
+  assert.ok(map&&map.image&&map.hotspots.length>0,loc+' missing playable hotspots');
+  const ids=new Set();
+  for(const h of map.hotspots){
+   assert.ok(!ids.has(h.id),loc+' duplicate hotspot '+h.id);ids.add(h.id);
+   assert.ok(h.w>0&&h.h>0,loc+' invalid hotspot dimensions');
+  }
+ }
+ assert.match(code,/const pin=!layoutDev/);
+ assert.match(code,/Object.assign\(h,rect\)/);
+ assert.match(code,/width:'56px',height:'56px'/);
 });
