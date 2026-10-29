@@ -438,7 +438,7 @@
       #neoOverworldOverlay.neo-ow-idle-interaction #neoOverworldStoryDock{
         width:min(850px,calc(100vw - 24px))!important;left:50%!important;right:auto!important;
         transform:translateX(-50%)!important;max-height:min(78dvh,750px)!important;
-        overflow-y:auto!important;background:#16132ce8!important;
+        overflow-y:auto!important;background:transparent!important;border:0!important;box-shadow:none!important;
       }
       #neoOverworldOverlay.neo-ow-idle-interaction #neoOverworldStoryDock .stage-panel{
         display:grid!important;grid-template-columns:minmax(0,1.25fr) minmax(190px,.7fr)!important;
@@ -447,7 +447,7 @@
       }
       #neoOverworldOverlay.neo-ow-idle-interaction #neoOverworldStoryDock #scene{
         grid-column:1!important;grid-row:1!important;min-height:240px!important;
-        height:min(48dvh,440px)!important;max-height:none!important;
+        height:min(70dvh,440px)!important;max-height:none!important;
         display:flex!important;align-items:flex-end!important;justify-content:center!important;
         overflow:hidden!important;background:transparent!important;
       }
@@ -475,7 +475,7 @@
       }
       #neoOverworldOverlay.neo-ow-idle-interaction #neoOverworldStoryDock #characterActions button:hover,
       #neoOverworldOverlay.neo-ow-idle-interaction #neoOverworldStoryDock #characterActions button:focus-visible{
-        background:#ae447d!important;border-color:#efbadc!important;
+        background:#2869b8!important;border-color:#b8dcff!important;
       }
       #neoOverworldOverlay.neo-ow-idle-interaction #neoOverworldInteractionCaption{
         grid-column:1!important;grid-row:2!important;display:flex!important;flex-direction:column;
@@ -552,8 +552,8 @@
         white-space:normal!important;
       }
       #neoOverworldOverlay.neo-ow-idle-interaction #neoOverworldStoryDock #characterActions:not([hidden]) > button:first-child{
-        background:linear-gradient(105deg,#d45187ee,#a12e66ee)!important;
-        border-color:#f2a5ca!important;
+        background:linear-gradient(105deg,#3989e8f2,#1e5bb6f2)!important;
+        border-color:#acd2ff!important;
       }
       #neoOverworldOverlay.neo-ow-idle-interaction #neoOverworldStoryDock #neoOverworldInteractionCaption{
         background:linear-gradient(90deg,#151222e0,#1512227a)!important;
@@ -572,6 +572,27 @@
       }
     `;
     document.head.append(mockupPolish);
+
+    // Keep the character at the same on-screen scale in interaction and dialogue
+    // views. Dialogue remains a full-width strip below the scene.
+    const sharedSceneScale=document.createElement('style');
+    sharedSceneScale.textContent=`
+      #neoOverworldStoryDock #scene:not(:has(#rpgSceneCG:not([hidden]))){
+        height:min(70dvh,440px)!important;min-height:min(70dvh,440px)!important;
+        max-height:min(70dvh,440px)!important;
+      }
+      #neoOverworldStoryDock #neoOverworldScenePeople:not([hidden]){
+        height:100%!important;max-height:100%!important;
+      }
+      #neoOverworldStoryDock #neoOverworldScenePeople .neo-ow-person{
+        height:100%!important;max-height:100%!important;
+      }
+      #neoOverworldStoryDock #neoOverworldScenePeople .neo-ow-person img{
+        height:100%!important;max-height:100%!important;object-fit:contain!important;
+        object-position:center bottom!important;
+      }
+    `;
+    document.head.append(sharedSceneScale);
 
     const dialogueStyle=document.createElement('style');
     dialogueStyle.textContent=`
