@@ -491,6 +491,7 @@
     window.addEventListener('message',event=>{
       if(event.origin!==location.origin||event.source!==frame.contentWindow||overlay.hidden)return;
       const message=event.data;if(message?.type!=='neo-overworld-action')return;
+      if(overlay.classList.contains('neo-ow-activity-open')||!storyShield.hidden)return;
       if(message.kind==='navigation'){
         if(message.id==='deck'){showDeck();return;}
         if(message.id==='status'){document.getElementById('statusBtn')?.click();return;}
@@ -506,7 +507,7 @@
       }
     });
     function showActivities(activities){
-        closeSheet();
+        closeSheet();hideMenu();hideEvents();
         const eligible=activities.filter(a=>!a.disabled);
         if(!eligible.length){showNotice('No activities are available right now.');return;}
         overlay.querySelectorAll('[data-overworld-activity-panel]').forEach(el=>el.remove());
@@ -535,7 +536,7 @@
         cancel.style.cssText='display:block;margin-top:14px;width:100%;padding:11px;border-radius:9px;background:#38284a;color:white;border:1px solid #9a7da5';
         cancel.onclick=closeActivities;panel.append(cancel);overlay.append(panel);
     }
-    document.addEventListener('keydown',event=>{if(event.key!=='Escape'||overlay.hidden)return;if(!storyShield.hidden){event.preventDefault();return;}if(expandedSheet){event.preventDefault();closeSheet();return;}if(!deckPanel.hidden){hideDeck();return;}if(!eventPanel.hidden){hideEvents();return;}if(!menu.hidden){hideMenu();return;}if(!bridge()?.snapshot()?.locked)dismiss();});
+    document.addEventListener('keydown',event=>{if(event.key!=='Escape'||overlay.hidden)return;if(!storyShield.hidden){event.preventDefault();return;}if(overlay.classList.contains('neo-ow-activity-open')){event.preventDefault();overlay.querySelectorAll('[data-overworld-activity-panel]').forEach(el=>el.remove());overlay.classList.remove('neo-ow-activity-open');return;}if(expandedSheet){event.preventDefault();closeSheet();return;}if(!deckPanel.hidden){hideDeck();return;}if(!eventPanel.hidden){hideEvents();return;}if(!menu.hidden){hideMenu();return;}if(!bridge()?.snapshot()?.locked)dismiss();});
     // Battles run in the original full-screen duel layer. Resume the map as soon as
     // its battle layer closes, without restarting the campaign or changing saves.
     const duel=document.getElementById('duel');
