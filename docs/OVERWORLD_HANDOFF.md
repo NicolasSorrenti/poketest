@@ -149,3 +149,12 @@ User screenshot (Riverside Park, Day 32 Evening) established four defects: dupli
 - In arrival-only transitions the map controls are hidden/blocked; scripted entry events show the native scene even while the arrival gate is settling. Regular map controls return after the scene is done.
 - `tests/rpg_scene_cast.test.js` includes two-person/third-speaker/narrator/fifth-speaker rotation regression cases; JavaScript syntax and manual in-memory speaker-window simulations passed. **Real browser playthrough remains to be verified** on mobile for forced arrivals, CGs, and transition back to the map.
 - Original `/rpg.html` stays separate; render behavior is notified only on the standalone overworld route.
+
+## 2026-10-29 — Overworld duplicate portrait and Activities stacking regression fixes
+
+- **Cause of duplicated character artwork:** the standalone RPG was still building native `#portrait` and dynamically generated `#rpgSceneCast` even after the overworld introduced its own two-character VN portrait layer. For `NeoRpgOverworldStandalone`, `rpg.js` now skips creation of both legacy visual portrait collections while still calculating canonical scene participants for the new renderer.
+- **Cause of the old UI reappearing:** `hideStory()` still reparented the live native `.stage-panel` into the old page layout. It now keeps that stage in the hidden overworld dock; explicit `dismiss()` alone restores it.
+- **Map sprites during VN:** the parent overworld adapter sends a same-origin `neo-overworld-story-visibility` message to the embedded map, including on iframe reload. Its CSS hides the map NPCs, edge portraits and hotspots (not the environmental background) during an active dialogue or CG.
+- **Activities modal:** an old activity panel had `z-index:2` underneath the new bottom navigation (`z-index:4`). It now opens as a foreground dialog (`z-index:12`) with a full-screen backdrop (`z-index:11`), prevents interaction with the map behind, hides the bottom bar, supports tap-outside, Close and Escape.
+- **Regression tests:** `tests/rpg_overworld_layering.test.js` has five checks for stage parenting, legacy portrait suppression, embedded map visibility, activity layering and cache refresh. All five executed successfully in an isolated JavaScript test harness; full live mobile/browser validation remains needed.
+- **UI work committed to main:** `50959239`, `9df1aa70`, `03b70c5a`, `ed9fb7e0`, `f4cad4f5` plus asset version bumps and regression tests. Original `/rpg.html` presentation is preserved by the standalone-only condition.
