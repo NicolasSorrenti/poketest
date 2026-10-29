@@ -1239,7 +1239,8 @@ function chooseAction(game,raw={},memo={}){
  // made mid-level players less competent than beginners. Beginner is allowed
  // to overlook the best move; Champion deterministically chooses its best.
  const helpers={
-  observation,candidates,score,projectedAttackValue,hpRemaining,card,strongestAffordableAttack,knockoutChance,
+  observation,candidates,score,projectedAttackValue,hpRemaining,card,strongestAffordableAttack,
+  strongestUsableOpponentAttack,knockoutChance,
   energyPool,canPayEnergy,estimatedDamage,
   attackBonus:(action,board,config)=>planningBonus(action,board,config)+prizeRaceBonus(action,board,config)+
    knockoutTempoBonus(action,board,config)+opponentResponseBonus(action,board,config)+energyHorizonBonus(action,board,config)
@@ -1328,4 +1329,4 @@ function driveSide(initial,{side=1,level=3,personality='balanced',seed=1,plannin
 }
 function driveBot(game,limit=200,config={}){return driveSide(game,{...config,side:1,limit});}
 function propose(game,config={}){return chooseAction(game,{...config,side:1});}
-module.exports={SKILLS,CALIBRATED_SKILLS,PERSONALITIES,configuration,observation,trainerOpportunity,candidates,score,estimatedDamage,strongestAffordableAttack,projectedAttackValue,knockoutChance,planningBonus,evolutionTempoPenalty,prizeRaceBonus,knockoutTempoBonus,opponentResponseBonus,energyHorizonBonus,energyPreparationActions,centerSafeActions,chooseAction,driveSide,driveBot,propose};
+module.exports={SKILLS,CALIBRATED_SKILLS,PERSONALITIES,configuration,observation,trainerOpportunity,candidates,score,estimatedDamage,strongestAffordableAttack,strongestUsableOpponentAttack,projectedAttackValue,knockoutChance,planningBonus,evolutionTempoPenalty,prizeRaceBonus,knockoutTempoBonus,opponentResponseBonus,energyHorizonBonus,energyPreparationActions,centerSafeActions,chooseAction,driveSide,driveBot,propose};
