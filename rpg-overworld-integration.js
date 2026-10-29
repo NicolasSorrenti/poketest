@@ -34,7 +34,19 @@
       quick.append(b);
     }
     quickButton('Activities','🎮',()=>showActivities(bridge()?.activities()||[]));
-    quickButton('Events','▦',()=>{const b=document.getElementById('calendarBtn');b?.click();});
+    const eventList=document.getElementById('storyEvents');
+    const eventHome=eventList?.parentNode;
+    const eventNext=eventList?.nextSibling||null;
+    const eventPanel=document.createElement('section');eventPanel.id='neoOverworldEvents';eventPanel.hidden=true;
+    eventPanel.style.cssText='position:absolute;z-index:7;left:50%;top:12%;transform:translateX(-50%);width:min(620px,94vw);max-height:75dvh;overflow:auto;background:#19172cf5;border:1px solid #b58cc7;border-radius:14px;padding:15px;box-shadow:0 18px 55px #000c';
+    const eventHead=document.createElement('div');eventHead.style.cssText='display:flex;justify-content:space-between;align-items:center;gap:10px';
+    const eventTitle=document.createElement('strong');eventTitle.textContent='▦ EVENTS';
+    const eventClose=document.createElement('button');eventClose.type='button';eventClose.textContent='✕ Close';eventClose.style.cssText='padding:8px;background:#453153;color:white;border:1px solid #a98bb6;border-radius:8px';
+    eventHead.append(eventTitle,eventClose);eventPanel.append(eventHead);overlay.append(eventPanel);
+    function hideEvents(){if(eventHome&&eventList){if(eventNext&&eventNext.parentNode===eventHome)eventHome.insertBefore(eventList,eventNext);else eventHome.append(eventList);}eventPanel.hidden=true;}
+    eventClose.onclick=hideEvents;
+    function showEvents(){if(!eventList){note.textContent='Events are not available yet.';return;}hideMenu();eventPanel.append(eventList);eventPanel.hidden=false;}
+    quickButton('Events','▦',showEvents);
     quickButton('Deck','▤',()=>showDeck());
     quickButton('Status','♥',()=>document.getElementById('statusBtn')?.click());
     next.onclick=()=>{if(bridge()?.snapshot()?.locked)return;const b=document.getElementById('rpgInfoToggle');b?.click();};
@@ -175,7 +187,7 @@
       refreshNext();
       note.textContent=data.locked?'Travel disabled during an active conversation, event or duel.':'Day '+data.day+' · '+['Morning','Afternoon','Evening'][data.slot]+' · RPG schedules active · Preview NPC interaction only';
     }
-    function dismiss(){hideMenu();hideDeck();suspendedForDuel=false;hideStory();overlay.querySelectorAll('[data-overworld-activity-panel]').forEach(el=>el.remove());overlay.hidden=true;overlay.style.display='none';frame.src='about:blank';open.focus();}
+    function dismiss(){hideMenu();hideEvents();hideDeck();suspendedForDuel=false;hideStory();overlay.querySelectorAll('[data-overworld-activity-panel]').forEach(el=>el.remove());overlay.hidden=true;overlay.style.display='none';frame.src='about:blank';open.focus();}
     open.addEventListener('click',()=>{refresh();overlay.hidden=false;overlay.style.display='flex';close.focus();});
     close.addEventListener('click',()=>{if(bridge()?.snapshot()?.locked){note.textContent='Finish the active story or duel before leaving the overworld.';return;}dismiss();});
     document.getElementById('rpgDiscreetToggle')?.addEventListener('click',()=>{if(!overlay.hidden)refresh();});
@@ -196,7 +208,7 @@
       if(message.kind==='navigation'){
         if(message.id==='deck'){showDeck();return;}
         if(message.id==='status'){document.getElementById('statusBtn')?.click();return;}
-        if(message.id==='activities'||message.id==='events'){hideMenu();const available=bridge()?.activities()||[];if(message.id==='activities'){showActivities(available);return;}note.textContent='Story events remain accessible through character dialogue and travel.';return;}
+        if(message.id==='activities'||message.id==='events'){hideMenu();if(message.id==='activities')showActivities(bridge()?.activities()||[]);else showEvents();return;}
       }
       if(message.kind==='person'){
         // Dismiss first: native conversations can open modal prompts immediately.
@@ -216,7 +228,7 @@
         for(const a of eligible){const button=document.createElement('button');button.textContent=a.title;button.type='button';Object.assign(button.style,{display:'block',marginTop:'8px',padding:'10px',width:'100%',background:'#403051',color:'white',borderRadius:'8px'});button.onclick=()=>{panel.remove();if(!showStory())dismiss();if(!bridge()?.activity(a.id)){hideStory();note.textContent='Activity no longer available.';}};panel.append(button);}
         const cancel=document.createElement('button');cancel.textContent='Cancel';cancel.onclick=()=>panel.remove();panel.append(cancel);overlay.append(panel);
     }
-    document.addEventListener('keydown',event=>{if(event.key!=='Escape'||overlay.hidden)return;if(!deckPanel.hidden){hideDeck();return;}if(!menu.hidden){hideMenu();return;}if(!bridge()?.snapshot()?.locked)dismiss();});
+    document.addEventListener('keydown',event=>{if(event.key!=='Escape'||overlay.hidden)return;if(!deckPanel.hidden){hideDeck();return;}if(!eventPanel.hidden){hideEvents();return;}if(!menu.hidden){hideMenu();return;}if(!bridge()?.snapshot()?.locked)dismiss();});
     // Battles run in the original full-screen duel layer. Resume the map as soon as
     // its battle layer closes, without restarting the campaign or changing saves.
     const duel=document.getElementById('duel');
