@@ -47,6 +47,7 @@ const NeoOutfitChime=(()=>{
   if(!container||!portrait)throw Error('Preview needs a container and portrait URL');
   const img=await loadPortrait(portrait);
   if(!img)throw Error('Portrait failed to load: '+portrait);
+  window.dispatchEvent(new CustomEvent('neo-rpg-art-seen',{detail:{path:portrait}}));
   const crop=cropBounds(focus,img),panel=document.createElement('div');
   panel.className='neo-outfit-chime-panel';
   panel.style.cssText='position:relative;overflow:hidden;border:2px solid #fad59dd9;border-radius:16px;background:#fff;box-shadow:0 14px 35px #0006;width:100%;aspect-ratio:'+crop.ratio+';';
@@ -80,6 +81,7 @@ const NeoOutfitChime=(()=>{
    return img?{...item,img}:null;
   }))).filter(Boolean);
   if(!loaded.length)return;
+  for(const item of loaded)window.dispatchEvent(new CustomEvent('neo-rpg-art-seen',{detail:{path:item.portrait}}));
   const screen=document.createElement('div');
   screen.className='neo-outfit-chime';
   screen.setAttribute('aria-hidden','true');
