@@ -25,3 +25,13 @@ test('normal dialogue remains separate and mobile preserves side menu',()=>{
  assert.match(ui,/grid-template-columns:minmax\(0,1fr\) minmax\(145px,\.75fr\)/);
  assert.match(html,/rpg-overworld-integration\.js\?v=20261029-character-mockup-polish-2/);
 });
+
+test('character focus hides Explore panel and strips blue backgrounds while forcing one-column actions',()=>{
+ assert.match(ui,/neoOverworldOverlay\.neo-ow-idle-interaction #neoOverworldBottom/);
+ assert.match(ui,/neoOverworldOverlay\.neo-ow-idle-interaction #neoOverworldSheet/);
+ assert.match(ui,/stage-panel > :not\(#scene\):not\(#characterActions\):not\(#neoOverworldInteractionCaption\):not\(#neoOverworldInteractionBack\)/);
+ assert.match(ui,/grid-template-columns:none!important;grid-template-rows:none!important/);
+ assert.match(ui,/flex-direction:column!important;flex-wrap:nowrap!important/);
+ assert.match(ui,/background:transparent!important;border:0!important;box-shadow:none!important/);
+ assert.match(ui,/characterActions:not\(\[hidden\]\) > button:first-child/);
+});
