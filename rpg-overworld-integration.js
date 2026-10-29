@@ -21,6 +21,46 @@
     const menuButton=document.createElement('button');menuButton.type='button';menuButton.textContent='☰ MENU';menuButton.setAttribute('aria-expanded','false');
     Object.assign(menuButton.style,{padding:'8px 12px',borderRadius:'8px',border:'1px solid #9775a3',background:'#403051',color:'#fff',cursor:'pointer'});
     toolbar.append(title,menuButton,placeSelect,travel,close);overlay.append(toolbar,note,frame);document.body.append(overlay);
+    // Persistent mockup-style bottom navigation; the map stays interactive above it.
+    const bottom=document.createElement('nav');bottom.id='neoOverworldBottom';bottom.setAttribute('aria-label','Overworld quick actions');
+    const quick=document.createElement('div');quick.className='neo-ow-quick';
+    const next=document.createElement('button');next.type='button';next.className='neo-ow-next';next.innerHTML='<strong>What\'s next?</strong><span id="neoOverworldNextText">Explore town and meet the locals.</span><b aria-hidden="true">›</b>';
+    bottom.append(quick,next);overlay.append(bottom);
+    function quickButton(label,icon,action){
+      const b=document.createElement('button');b.type='button';b.className='neo-ow-action';
+      const symbol=document.createElement('span');symbol.className='neo-ow-symbol';symbol.textContent=icon;
+      const name=document.createElement('span');name.textContent=label;b.append(symbol,name);
+      b.onclick=()=>{if(bridge()?.snapshot()?.locked){note.textContent='Finish the current conversation or event first.';return;}action();};
+      quick.append(b);
+    }
+    quickButton('Activities','🎮',()=>showActivities(bridge()?.activities()||[]));
+    quickButton('Events','▦',()=>{const b=document.getElementById('calendarBtn');b?.click();});
+    quickButton('Deck','▤',()=>showDeck());
+    quickButton('Status','♥',()=>document.getElementById('statusBtn')?.click());
+    next.onclick=()=>{if(bridge()?.snapshot()?.locked)return;const b=document.getElementById('rpgInfoToggle');b?.click();};
+    function refreshNext(){
+      const raw=document.getElementById('dailyPlanner')?.innerText?.replace(/\\s+/g,' ').trim();
+      const line=raw&&raw.length>8?raw.slice(0,145):'Explore town, talk to someone, or check your activities.';
+      const label=bottom.querySelector('#neoOverworldNextText');if(label&&label.textContent!==line)label.textContent=line;
+    }
+    const navStyle=document.createElement('style');
+    navStyle.textContent=`
+      #neoOverworldOverlay{--ow-bottom:164px}
+      #neoOverworldBottom{position:absolute;z-index:3;bottom:0;left:0;right:0;padding:10px max(10px,env(safe-area-inset-left)) max(10px,env(safe-area-inset-bottom));background:linear-gradient(0deg,#14132dfb 75%,#14132de6);border-top:1px solid #b78ca778;display:flex;flex-direction:column;gap:8px;color:#fff}
+      #neoOverworldBottom .neo-ow-quick{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:7px}
+      #neoOverworldBottom .neo-ow-action{border:1px solid #9b819f;background:#23223b;color:white;border-radius:11px;padding:9px 3px;display:flex;flex-direction:column;align-items:center;gap:3px;font:600 12px system-ui;cursor:pointer;min-height:60px}
+      #neoOverworldBottom .neo-ow-symbol{font-size:21px;line-height:26px}
+      #neoOverworldBottom .neo-ow-next{border:1px solid #a779a4;color:#fff;background:#262037;border-radius:9px;padding:8px 36px 8px 13px;display:flex;flex-direction:column;gap:3px;text-align:left;position:relative;cursor:pointer}
+      #neoOverworldBottom .neo-ow-next strong{font-size:15px}
+      #neoOverworldBottom .neo-ow-next span{font-size:12px;opacity:.85;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:100%}
+      #neoOverworldBottom .neo-ow-next b{position:absolute;right:14px;top:30%;font-size:26px;font-weight:400}
+      #neoOverworldOverlay:has(#neoOverworldStoryDock:not([hidden])) #neoOverworldBottom{display:none}
+      #neoOverworldStoryDock{bottom:max(10px,env(safe-area-inset-bottom))!important}
+      #neoOverworldOverlay>iframe{padding-bottom:0}
+      @media(min-width:720px){#neoOverworldBottom{left:50%;right:auto;transform:translateX(-50%);width:min(560px,94vw);border:1px solid #ad7baf;border-radius:16px 16px 0 0}}
+      @media(max-width:520px){#neoOverworldOverlay .neo-ow-action{min-height:56px;padding:7px 2px}#neoOverworldBottom{padding-bottom:max(8px,env(safe-area-inset-bottom))}}
+    `;
+    document.head.append(navStyle);
     const menu=document.createElement('section');menu.id='neoOverworldMenu';menu.hidden=true;menu.setAttribute('aria-label','Overworld game menu');
     Object.assign(menu.style,{position:'absolute',zIndex:'6',top:'62px',right:'8px',width:'min(360px,calc(100vw - 16px))',maxHeight:'calc(100dvh - 85px)',overflowY:'auto',background:'#201930',border:'1px solid #af85c4',borderRadius:'14px',padding:'14px',boxShadow:'0 18px 50px #000c'});
     const menuTitle=document.createElement('h2');menuTitle.textContent='NEO CAMPUS · MENU';menuTitle.style.cssText='font:700 17px system-ui;margin:0 0 12px';menu.append(menuTitle);overlay.append(menu);
@@ -113,6 +153,7 @@
       const people=data.people.join(',');
       const nextSrc='/overworld-prototype.html?scene='+encodeURIComponent(data.location)+'&cast='+encodeURIComponent(people)+'&rpg-integration=1&chibi='+(document.documentElement.dataset.rpgDiscreet==='on'?'1':'0');
       if(frame.getAttribute('src')!==nextSrc)frame.src=nextSrc;
+      refreshNext();
       note.textContent=data.locked?'Travel disabled during an active conversation, event or duel.':'Day '+data.day+' · '+['Morning','Afternoon','Evening'][data.slot]+' · RPG schedules active · Preview NPC interaction only';
     }
     function dismiss(){hideMenu();hideDeck();suspendedForDuel=false;hideStory();overlay.querySelectorAll('[data-overworld-activity-panel]').forEach(el=>el.remove());overlay.hidden=true;overlay.style.display='none';frame.src='about:blank';open.focus();}
