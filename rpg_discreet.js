@@ -28,11 +28,17 @@
  }
  // Set the root attribute before page content renders to avoid a flash of art.
  apply(fromStorage(),false);
- window.addEventListener('DOMContentLoaded',()=>{
+ function bindButton(){
   const button=document.getElementById('rpgDiscreetToggle');
-  if(button)button.addEventListener('click',()=>apply(root.dataset.rpgDiscreet!=='on',true));
+  if(!button||button.dataset.rpgDiscreetBound==='1')return;
+  button.dataset.rpgDiscreetBound='1';
+  button.addEventListener('click',()=>apply(root.dataset.rpgDiscreet!=='on',true));
   refreshButton();
- });
+ }
+ // The RPG duel toolbar can reveal or insert this control after initial page load.
+ if(document.readyState==='loading')window.addEventListener('DOMContentLoaded',bindButton,{once:true});
+ else bindButton();
+ new MutationObserver(bindButton).observe(document.documentElement,{childList:true,subtree:true});
  window.addEventListener('storage',event=>{
   if(event.key===key)apply(event.newValue==='1',false);
  });
