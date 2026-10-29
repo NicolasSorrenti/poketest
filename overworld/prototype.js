@@ -3,6 +3,14 @@
   const config=window.NeoOverworld, byId=id=>document.getElementById(id);
   const camera=byId('camera'), world=byId('world'), edges=byId('edges'), dialog=byId('dialog');
   const params=new URLSearchParams(location.search), poseTest=params.has('reina-test'), dev=params.has('dev');
+  // When the parent RPG shows VN dialogue, preserve the location as a backdrop
+  // but remove map NPC portraits, edge indicators and hotspots from the scene.
+  // This message is only trusted from the same-origin parent of integrated mode.
+  window.addEventListener('message',event=>{
+    if(event.origin!==location.origin||event.source!==window.parent||!params.has('rpg-integration'))return;
+    if(event.data?.type!=='neo-overworld-story-visibility')return;
+    document.body.classList.toggle('neo-overworld-dialogue',event.data.hidden===true);
+  });
   if(params.has('rpg-integration'))document.body.classList.add('neo-overworld-embedded');
   const shopTest=params.has('shop-test'),requestedScene=params.get('scene'),sceneId=config[requestedScene]?.image?requestedScene:(shopTest?'shop':'arcade'),map=config[sceneId];
   byId('mapArt').src=map.image;byId('mapArt').alt=map.title;byId('world').style.width=map.width+'px';byId('world').style.height=map.height+'px';
