@@ -452,6 +452,101 @@
       }
     `;
     document.head.append(dialogueStyle);
+
+    // Choice buttons stay native. Move their existing DOM into a foreground
+    // panel so a response never stretches the fixed-height dialogue box.
+    const nativePrompt=document.getElementById('playerChoicePrompt');
+    const nativePromptHome=nativePrompt?.parentNode;
+    const nativePromptNext=nativePrompt?.nextSibling||null;
+    const nativePromptPanel=document.getElementById('playerChoicePanel');
+    const choiceList=document.getElementById('choices');
+    const genericChoicePanel=document.createElement('section');
+    genericChoicePanel.id='neoOverworldGenericChoices';
+    genericChoicePanel.hidden=true;
+    genericChoicePanel.setAttribute('aria-label','Response choices');
+    const genericChoiceInner=document.createElement('div');
+    genericChoiceInner.className='neo-ow-choice-inner';
+    const genericChoiceHeading=document.createElement('div');
+    genericChoiceHeading.className='neo-ow-choice-head';
+    const genericTitle=document.createElement('strong');
+    genericTitle.textContent='YOUR RESPONSE';
+    genericChoiceHeading.append(genericTitle);
+    genericChoiceInner.append(genericChoiceHeading);
+    genericChoicePanel.append(genericChoiceInner);
+    const showChoicesButton=document.createElement('button');
+    showChoicesButton.type='button';
+    showChoicesButton.id='neoOverworldShowChoices';
+    showChoicesButton.textContent='☷ Show choices';
+    showChoicesButton.hidden=true;
+    showChoicesButton.setAttribute('aria-controls','playerChoicePrompt neoOverworldGenericChoices');
+    const hideChoicesButton=document.createElement('button');
+    hideChoicesButton.type='button';
+    hideChoicesButton.className='neo-ow-hide-choices';
+    hideChoicesButton.textContent='✕ Hide choices';
+    const hideGenericChoicesButton=hideChoicesButton.cloneNode(true);
+    nativePromptPanel?.prepend(hideChoicesButton);
+    genericChoiceHeading.append(hideGenericChoicesButton);
+    overlay.append(genericChoicePanel,showChoicesButton);
+    let lastChoiceKey='',choicesCollapsed=false;
+    function attachChoicePanels(){
+      if(nativePrompt&&nativePrompt.parentNode!==overlay)overlay.append(nativePrompt);
+      hideChoicesButton.hidden=false;
+    }
+    function restoreChoicePanels(){
+      if(choiceList?.parentNode===genericChoiceInner)document.getElementById('dialogue')?.append(choiceList);
+      if(nativePrompt&&nativePromptHome&&nativePrompt.parentNode===overlay){
+        if(nativePromptNext?.parentNode===nativePromptHome)nativePromptHome.insertBefore(nativePrompt,nativePromptNext);
+        else nativePromptHome.append(nativePrompt);
+      }
+      hideChoicesButton.hidden=true;
+      genericChoicePanel.hidden=true;
+      showChoicesButton.hidden=true;
+    }
+    function setChoicesCollapsed(collapsed){
+      choicesCollapsed=!!collapsed;
+      overlay.classList.toggle('neo-ow-choices-collapsed',choicesCollapsed);
+      showChoicesButton.hidden=!choicesCollapsed||overlay.classList.contains('neo-ow-paging');
+      showChoicesButton.setAttribute('aria-expanded',String(!choicesCollapsed));
+      if(choicesCollapsed)showChoicesButton.focus({preventScroll:true});
+    }
+    hideChoicesButton.onclick=()=>setChoicesCollapsed(true);
+    hideGenericChoicesButton.onclick=()=>setChoicesCollapsed(true);
+    showChoicesButton.onclick=()=>{
+      setChoicesCollapsed(false);
+      const activePanel=(!nativePrompt?.hidden&&nativePrompt)||genericChoicePanel;
+      activePanel?.querySelector('#choices button:not(:disabled)')?.focus?.({preventScroll:true});
+    };
+    function syncChoicePresentation(idleFocus){
+      const nativeActive=!!nativePrompt&&!nativePrompt.hidden;
+      const count=choiceList?.querySelectorAll('button')?.length||0;
+      const genericActive=!nativeActive&&count>1&&!idleFocus;
+      const active=(nativeActive||genericActive)&&!idleFocus;
+      const paging=overlay.classList.contains('neo-ow-paging');
+      if(!active){
+        overlay.classList.remove('neo-ow-has-choices','neo-ow-choices-collapsed');
+        genericChoicePanel.hidden=true;showChoicesButton.hidden=true;
+        if(choiceList?.parentNode===genericChoiceInner)document.getElementById('dialogue')?.append(choiceList);
+        lastChoiceKey='';choicesCollapsed=false;
+        return;
+      }
+      attachChoicePanels();
+      if(genericActive){
+        if(choiceList.parentNode!==genericChoiceInner)genericChoiceInner.append(choiceList);
+        genericChoicePanel.hidden=false;
+      }else genericChoicePanel.hidden=true;
+      const key=String(bridge()?.dialogueText?.()||'')+'\u0000'+
+        String(document.getElementById('speaker')?.textContent||'')+'\u0000'+
+        Array.from(choiceList.querySelectorAll('button'),b=>b.textContent).join('\u0000');
+      if(key!==lastChoiceKey){lastChoiceKey=key;choicesCollapsed=false;}
+      overlay.classList.add('neo-ow-has-choices');
+      overlay.classList.toggle('neo-ow-choices-collapsed',choicesCollapsed);
+      overlay.classList.toggle('neo-ow-two-speakers',scenePeople.children.length>1);
+      showChoicesButton.hidden=!choicesCollapsed||paging;
+    }
+    const choiceLayout=document.createElement('style');
+    choiceLayout.textContent="\n#neoOverworldOverlay #playerChoicePrompt[hidden],#neoOverworldOverlay #neoOverworldGenericChoices[hidden],\n#neoOverworldOverlay #neoOverworldShowChoices[hidden]{display:none!important}\n#neoOverworldOverlay #playerChoicePrompt:not([hidden]),#neoOverworldOverlay #neoOverworldGenericChoices:not([hidden]){\n  position:absolute!important;z-index:9!important;inset:auto!important;top:43%!important;\n  left:50%!important;right:auto!important;transform:translate(-50%,-50%)!important;\n  width:min(520px,calc(100vw - 28px))!important;max-width:none!important;\n  max-height:min(46dvh,440px)!important;display:block!important;box-sizing:border-box!important;\n  overflow-y:auto!important;overscroll-behavior:contain!important;margin:0!important;\n  padding:0!important;pointer-events:auto!important;filter:drop-shadow(0 14px 30px #000a)\n}\n#neoOverworldOverlay #playerChoicePanel,#neoOverworldOverlay #neoOverworldGenericChoices .neo-ow-choice-inner{\n  position:relative!important;display:flex!important;flex-direction:column!important;\n  width:100%!important;max-width:none!important;max-height:none!important;\n  padding:14px!important;margin:0!important;box-sizing:border-box!important;\n  background:#211b35f4!important;border:1px solid #cb9ccc!important;\n  border-radius:13px!important;box-shadow:0 16px 34px #0009!important;\n  gap:9px!important;pointer-events:auto!important;animation:none!important\n}\n#neoOverworldOverlay .neo-ow-hide-choices{\n  align-self:flex-end!important;order:-1;cursor:pointer;padding:7px 10px!important;\n  min-height:34px;border:1px solid #ad8bb8;border-radius:8px;color:#fff;background:#513858;\n  font:700 12px system-ui\n}\n#neoOverworldOverlay #playerChoicePanel #choices,#neoOverworldOverlay #neoOverworldGenericChoices #choices{\n  position:static!important;inset:auto!important;display:grid!important;grid-template-columns:1fr!important;\n  gap:8px!important;width:100%!important;max-height:none!important;\n  margin:0!important;padding:0!important;overflow:visible!important;\n  border:0!important;background:transparent!important\n}\n#neoOverworldOverlay #playerChoicePanel #choices button,#neoOverworldOverlay #neoOverworldGenericChoices #choices button{\n  width:100%!important;min-height:43px!important;text-align:left!important;\n  white-space:normal!important;line-height:1.3!important\n}\n#neoOverworldOverlay .neo-ow-choice-head{display:flex;align-items:center;justify-content:space-between;gap:10px}\n#neoOverworldOverlay #neoOverworldShowChoices:not([hidden]){\n  position:absolute;z-index:10;bottom:calc(150px + 18px);right:max(16px,env(safe-area-inset-right));\n  border:1px solid #da9ed3;border-radius:9px;padding:9px 14px;color:#fff;background:#533558e8;\n  box-shadow:0 8px 24px #0009;cursor:pointer;font:700 13px system-ui\n}\n#neoOverworldOverlay.neo-ow-choices-collapsed #playerChoicePrompt,\n#neoOverworldOverlay.neo-ow-choices-collapsed #neoOverworldGenericChoices,\n#neoOverworldOverlay.neo-ow-paging #playerChoicePrompt,\n#neoOverworldOverlay.neo-ow-paging #neoOverworldGenericChoices{display:none!important}\n#neoOverworldOverlay.neo-ow-idle-interaction #playerChoicePrompt,\n#neoOverworldOverlay.neo-ow-idle-interaction #neoOverworldGenericChoices,\n#neoOverworldOverlay.neo-ow-idle-interaction #neoOverworldShowChoices{display:none!important}\n@media(min-width:1100px){\n#neoOverworldOverlay:not(.neo-ow-two-speakers):not(.neo-ow-showing-cg) #playerChoicePrompt:not([hidden]),\n#neoOverworldOverlay:not(.neo-ow-two-speakers):not(.neo-ow-showing-cg) #neoOverworldGenericChoices:not([hidden]){\n  left:auto!important;right:2.5vw!important;top:43%!important;\n  transform:translateY(-50%)!important;width:min(370px,28vw)!important\n}}\n@media(max-width:700px){\n#neoOverworldOverlay #playerChoicePrompt:not([hidden]),#neoOverworldOverlay #neoOverworldGenericChoices:not([hidden]){\n  top:41%!important;max-height:43dvh!important;width:calc(100vw - 20px)!important\n}\n#neoOverworldOverlay #playerChoicePanel,#neoOverworldOverlay #neoOverworldGenericChoices .neo-ow-choice-inner{padding:10px!important}\n#neoOverworldOverlay #neoOverworldShowChoices:not([hidden]){\n  bottom:calc(176px + max(12px,env(safe-area-inset-bottom)));right:10px\n}}\n";
+    document.head.append(choiceLayout);
+    attachChoicePanels();
     let storyDock=null;
     let lastSceneKey='';
     let suspendedForDuel=false;
@@ -565,11 +660,15 @@
         else lockMapForStory(true);
         syncPortraits(hasCG,idleFocus);
         syncDialoguePages(idleFocus);
+        overlay.classList.toggle('neo-ow-showing-cg',hasCG);
+        syncChoicePresentation(idleFocus);
       }else{
         if(storyDock&&!storyDock.hidden)hideStory();
         else if(data.arriving)lockMapForStory(true);
         else lockMapForStory(false);
         resetDialoguePages();
+        syncChoicePresentation(true);
+        overlay.classList.remove('neo-ow-showing-cg','neo-ow-two-speakers');
         if(!data.storyActive)portraitWindow?.reset();
       }
       // The RPG render event is authoritative for both ordinary talks and
@@ -606,6 +705,7 @@
     }
     function dismiss(){
       interactionFocus=null;
+      restoreChoicePanels();
       closeSheet();hideMenu();hideEvents();hideDeck();suspendedForDuel=false;hideStory();
       // Only an explicit return to the classic interface restores its stage.
       if(stage&&stageHome&&stage.parentNode===storyDock){
@@ -617,7 +717,7 @@
       overlay.classList.remove('neo-ow-activity-open');
       overlay.hidden=true;overlay.style.display='none';frame.src='about:blank';open.focus();
     }
-    open.addEventListener('click',()=>{refresh();overlay.hidden=false;overlay.style.display='flex';queueStorySync();});
+    open.addEventListener('click',()=>{attachChoicePanels();refresh();overlay.hidden=false;overlay.style.display='flex';queueStorySync();});
     document.getElementById('rpgDiscreetToggle')?.addEventListener('click',()=>{if(!overlay.hidden)refresh();});
     function performTravel(target){
       const data=snapshot();if(!data)return;
@@ -684,7 +784,11 @@
         cancel.style.cssText='display:block;margin-top:14px;width:100%;padding:11px;border-radius:9px;background:#38284a;color:white;border:1px solid #9a7da5';
         cancel.onclick=closeActivities;panel.append(cancel);overlay.append(backdrop,panel);
     }
-    document.addEventListener('keydown',event=>{if(event.key!=='Escape'||overlay.hidden)return;if(!storyShield.hidden){event.preventDefault();return;}if(overlay.classList.contains('neo-ow-activity-open')){event.preventDefault();overlay.querySelectorAll('[data-overworld-activity-panel],[data-overworld-activity-backdrop]').forEach(el=>el.remove());overlay.classList.remove('neo-ow-activity-open');return;}if(expandedSheet){event.preventDefault();closeSheet();return;}if(!deckPanel.hidden){hideDeck();return;}if(!eventPanel.hidden){hideEvents();return;}if(!menu.hidden){hideMenu();return;}if(!bridge()?.snapshot()?.locked)dismiss();});
+    document.addEventListener('keydown',event=>{if(event.key!=='Escape'||overlay.hidden)return;
+      if(overlay.classList.contains('neo-ow-has-choices')&&!overlay.classList.contains('neo-ow-choices-collapsed')&&!overlay.classList.contains('neo-ow-paging')){
+        event.preventDefault();setChoicesCollapsed(true);syncChoicePresentation(false);return;
+      }
+      if(!storyShield.hidden){event.preventDefault();return;}if(overlay.classList.contains('neo-ow-activity-open')){event.preventDefault();overlay.querySelectorAll('[data-overworld-activity-panel],[data-overworld-activity-backdrop]').forEach(el=>el.remove());overlay.classList.remove('neo-ow-activity-open');return;}if(expandedSheet){event.preventDefault();closeSheet();return;}if(!deckPanel.hidden){hideDeck();return;}if(!eventPanel.hidden){hideEvents();return;}if(!menu.hidden){hideMenu();return;}if(!bridge()?.snapshot()?.locked)dismiss();});
     // Battles run in the original full-screen duel layer. Resume the map as soon as
     // its battle layer closes, without restarting the campaign or changing saves.
     const duel=document.getElementById('duel');
