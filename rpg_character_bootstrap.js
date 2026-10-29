@@ -54,7 +54,7 @@
  "/rpg_render_perf.js",
  "/rpg_ui_motion.js",
  "/rpg_character_motion.js",
- "/rpg_scene_cast.js?v=1",
+ "/rpg_scene_cast.js?v=two-voice-window-20261029",
  "/rpg_event_invites.js?v=1",
  "/rpg_victory_presentation.js",
  "/rpg_tournament_presentation.js",
@@ -62,7 +62,7 @@
  "/rpg_status.js?v=4",
  "/rpg_cloud_save.js?v=2",
  "/rpg_outfits.js?v=1",
- "/rpg.js?v=20261029-overworld-scene-people-1"
+ "/rpg.js?v=overworld-event-render-20261029"
 ];
   function registry(packs){
     const cast={},looks={},schedules={},arrivals={},events=[],mandatoryEvents=[];
