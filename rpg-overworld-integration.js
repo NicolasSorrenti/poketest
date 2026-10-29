@@ -200,6 +200,8 @@
       #neoOverworldStoryDock #characterActions:not([hidden]){display:none!important}
       #neoOverworldStoryDock #neoOverworldActionTray.expanded + #characterActions:not([hidden]){display:flex!important}
       #neoOverworldStoryDock #rpgSceneCG:not([hidden]){z-index:2!important}
+      #neoOverworldStoryDock #scene:has(#rpgSceneCG:not([hidden])) #neoOverworldScenePeople{display:none!important}
+      #neoOverworldStoryDock #scene:has(#rpgSceneCG:not([hidden])) #portrait{display:none!important}
       #neoOverworldStoryDock #scene:has(#rpgSceneCG:not([hidden])) #portrait{visibility:hidden!important;position:absolute!important}
       #neoOverworldStoryDock #portrait{transition:opacity .18s ease,filter .18s ease}
       #neoOverworldStoryDock #dialogue .dialogue-title{display:flex;align-items:center;gap:12px}
@@ -279,7 +281,7 @@
       const cg=document.getElementById('rpgSceneCG');
       const hasChoices=!!choices?.querySelector('button');
       const hasActions=!!actions&&!actions.hidden&&!!actions.querySelector('button');
-      const hasCG=!!cg&&!cg.hidden&&!!cg.getAttribute('src');
+      const hasCG=!!cg&&!cg.hidden&&!!cg.getAttribute('src')&&cg.closest('#scene')?.classList.contains('has-story-cg');
       syncPortraits(hasCG);
       const needsStory=!!((data.locked&&!data.arriving)||(line&&line!=='The town is waiting.')||hasChoices||hasActions||hasCG);
       if(needsStory){
