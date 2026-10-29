@@ -212,3 +212,15 @@ User screenshot (Riverside Park, Day 32 Evening) established four defects: dupli
 - Rectangles are clamped to their map image boundaries at runtime; the layout editor still displays and lets a designer reposition/resize the underlying full rectangles. Existing character anchors and image assets were not changed, as requested.
 - Eight focused checks for map references, editor isolation, landmark UI and all seven scenes passed in the isolated test harness. Full visual QA of real furniture and walkway placement remains for later; don't describe existing generic positions as visually verified.
 - Deployed-site QA must be performed on Cloudflare Pages, not Render. This turn commits source and tests but does not claim a completed production deployment.
+
+## 2026-10-29 — Visual hotspot alignment against uploaded six-map ZIP
+
+- The user supplied `Neo_Campus_Overworld_Maps_20261029(1).zip` containing six original 1550×1120 WebP artworks for `home`, `park`, `cafe`, `center`, `library`, and `shop`. Visually inspected a montage of all six, then aligned the four existing interaction regions per location to their visible objects and paths.
+- **Home:** desk at upper-center, bed at upper-left, wardrobe near desk, window/personal corner at lower-left; prior blueprint swapped these and is no longer used for hotspot placement.
+- **Park:** waterfront at upper-left, benches/terraces upper-right, noticeboard lower-left, garden lower/right.
+- **Café:** main counter top-center, tables mid-left, window seating upper-left, coffee station on right.
+- **Community Center:** tournament stage at top-center, duel tables across upper-mid hall, registration counter lower-left, practice tables right side.
+- **Library:** study tables right, bookshelves upper-left, reading lounge left/middle, archives/research counter upper-right.
+- **Shop:** shelves left, booster counter upper-center, play tables on right, trade lounge upper-right.
+- Shop canvas size corrected from the stale 1475×1066 approximation to its actual 1550×1120 file dimensions. Kept existing location IDs, hotspot IDs, all NPC anchors, and all uploaded pixels intact. The standalone map preview invalidates its manifest cache.
+- Nine focused regression checks passed, including hotspot bounds, dimensions, preserved interaction IDs, and artwork-specific sanity assertions. These are first-pass visual layout coordinates derived from actual images; follow-up review in the Cloudflare browser can tune exact pin placement, but no character positioning is included here.
