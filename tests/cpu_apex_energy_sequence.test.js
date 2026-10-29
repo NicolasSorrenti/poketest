@@ -137,6 +137,50 @@ test('Apex future Energy horizon still rewards legal multi-turn setup',()=>{
   AI.energyHorizonBonus(attachActive,noEnergy,cfg));
 });
 
+test('Apex Energy horizon ignores already-expired Amnesia and Gym locks',()=>{
+ const baseline=futureEnergyBoard(FIGHT,'base1-96',[FIGHT]);
+ baseline.turnSerial=11;
+ const expected=AI.energyHorizonBonus(attachActive,baseline,cfg);
+ assert.ok(expected>0,'control attachment must have positive setup value');
+ for(const lock of [
+  {amnesia:{index:0,expires:10}},
+  {gymAttackCooldown:{index:0,expires:10}},
+  {gymAttackCooldown:{index:null,expires:10}}
+ ]){
+  const expired=structuredClone(baseline);
+  Object.assign(expired.self.active,lock);
+  assert.equal(AI.energyHorizonBonus(attachActive,expired,cfg),expected,
+   'expired public attack restrictions must not distort attachment value');
+ }
+});
+
+test('Apex forecasts future Energy through expiring, not persistent, attack locks',()=>{
+ // Hitmonchan has Fighting Energy; this turn's Fighting and next turn's
+ // Double Colorless can fund Special Punch at turnSerial 13.
+ for(const lock of [
+  {amnesia:{index:1,expires:13}},
+  {gymAttackCooldown:{index:1,expires:13}},
+  {gymAttackCooldown:{index:null,expires:13}}
+ ]){
+  const dce=futureEnergyBoard(FIGHT,'base1-96',[FIGHT]);
+  const bill=futureEnergyBoard(FIGHT,'base1-91',[FIGHT]);
+  for(const o of [dce,bill]){
+   o.turnSerial=11;
+   Object.assign(o.self.active,structuredClone(lock));
+  }
+  assert.ok(AI.energyHorizonBonus(attachActive,dce,cfg)>
+   AI.energyHorizonBonus(attachActive,bill,cfg),
+   'a lock expired by the next own turn should reward legal setup');
+  for(const o of [dce,bill]){
+   if(o.self.active.amnesia)o.self.active.amnesia.expires=14;
+   if(o.self.active.gymAttackCooldown)o.self.active.gymAttackCooldown.expires=14;
+  }
+  assert.equal(AI.energyHorizonBonus(attachActive,dce,cfg),
+   AI.energyHorizonBonus(attachActive,bill,cfg),
+   'an attack still locked next turn must not receive speculative value');
+ }
+});
+
 function evolutionRefuelBoard(energyId,energyUsed=false){
  const o=board();
  o.phase='game';
