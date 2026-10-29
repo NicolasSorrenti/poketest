@@ -18,7 +18,40 @@
     for(const b of [travel,close])Object.assign(b.style,{padding:'8px 12px',borderRadius:'8px',border:'1px solid #9775a3',background:'#403051',color:'#fff',cursor:'pointer'});
     const note=document.createElement('small');note.setAttribute('role','status');note.style.padding='6px 12px';note.style.background='#211a37';note.textContent='RPG time, schedules and story locks remain authoritative.';
     const frame=document.createElement('iframe');frame.title='Current Neo Campus location';Object.assign(frame.style,{flex:'1',minHeight:'0',width:'100%',border:'0'});
-    toolbar.append(title,placeSelect,travel,close);overlay.append(toolbar,note,frame);document.body.append(overlay);
+    const menuButton=document.createElement('button');menuButton.type='button';menuButton.textContent='☰ MENU';menuButton.setAttribute('aria-expanded','false');
+    Object.assign(menuButton.style,{padding:'8px 12px',borderRadius:'8px',border:'1px solid #9775a3',background:'#403051',color:'#fff',cursor:'pointer'});
+    toolbar.append(title,menuButton,placeSelect,travel,close);overlay.append(toolbar,note,frame);document.body.append(overlay);
+    const menu=document.createElement('section');menu.id='neoOverworldMenu';menu.hidden=true;menu.setAttribute('aria-label','Overworld game menu');
+    Object.assign(menu.style,{position:'absolute',zIndex:'6',top:'62px',right:'8px',width:'min(360px,calc(100vw - 16px))',maxHeight:'calc(100dvh - 85px)',overflowY:'auto',background:'#201930',border:'1px solid #af85c4',borderRadius:'14px',padding:'14px',boxShadow:'0 18px 50px #000c'});
+    const menuTitle=document.createElement('h2');menuTitle.textContent='NEO CAMPUS · MENU';menuTitle.style.cssText='font:700 17px system-ui;margin:0 0 12px';menu.append(menuTitle);overlay.append(menu);
+    const deckPanel=document.createElement('section');deckPanel.hidden=true;deckPanel.id='neoOverworldDeckPanel';deckPanel.setAttribute('aria-label','Deck Studio');
+    Object.assign(deckPanel.style,{position:'absolute',inset:'0',zIndex:'8',background:'#101021',display:'none',flexDirection:'column'});
+    const deckBar=document.createElement('div');deckBar.style.cssText='padding:10px;background:#2a203c;display:flex;justify-content:space-between;align-items:center;gap:10px';
+    const deckHeading=document.createElement('strong');deckHeading.textContent='▣ DECK STUDIO';
+    const deckClose=document.createElement('button');deckClose.type='button';deckClose.textContent='✕ Back to overworld';deckClose.style.cssText='padding:9px;color:white;background:#50395e;border:1px solid #b58cc7;border-radius:9px;cursor:pointer';
+    deckBar.append(deckHeading,deckClose);
+    const deckFrame=document.createElement('iframe');deckFrame.title='Neo Campus Deck Studio';deckFrame.style.cssText='width:100%;border:0;flex:1;min-height:0';
+    deckPanel.append(deckBar,deckFrame);overlay.append(deckPanel);
+    const showDeck=()=>{hideMenu();deckPanel.hidden=false;deckPanel.style.display='flex';deckFrame.src='/rpg_deck_studio.html';};
+    const hideDeck=()=>{deckPanel.hidden=true;deckPanel.style.display='none';deckFrame.src='about:blank';};
+    deckClose.onclick=hideDeck;
+    function hideMenu(){menu.hidden=true;menuButton.setAttribute('aria-expanded','false');}
+    menuButton.onclick=()=>{menu.hidden=!menu.hidden;menuButton.setAttribute('aria-expanded',String(!menu.hidden));};
+    const menuItems=[
+      ['▣ Deck Studio',showDeck],
+      ['▧ CG Gallery',()=>document.getElementById('galleryBtn')?.click()],
+      ['♥ Status & Relationships',()=>document.getElementById('statusBtn')?.click()],
+      ['▦ Calendar',()=>document.getElementById('calendarBtn')?.click()],
+      ['✧ Save Game',()=>document.getElementById('save')?.click()],
+      ['◇ Discreet / Chibi Mode',()=>{document.getElementById('rpgDiscreetToggle')?.click();refresh();}],
+      ['☷ Town Map',()=>{hideMenu();placeSelect.focus();}]
+    ];
+    for(const [label,action] of menuItems){
+      const button=document.createElement('button');button.type='button';button.textContent=label;
+      button.style.cssText='display:block;text-align:left;width:100%;padding:13px 11px;margin:5px 0;border:1px solid #735881;border-radius:9px;background:#322743;color:white;font:600 14px system-ui;cursor:pointer';
+      button.onclick=()=>{hideMenu();action();};menu.append(button);
+    }
+
     // Reparent the live RPG stage rather than cloning dialogue/CG/choice handlers.
     // Every existing event listener and rendered state stays attached to the same nodes.
     const stage=document.querySelector('.stage-panel');
@@ -82,7 +115,7 @@
       if(frame.getAttribute('src')!==nextSrc)frame.src=nextSrc;
       note.textContent=data.locked?'Travel disabled during an active conversation, event or duel.':'Day '+data.day+' · '+['Morning','Afternoon','Evening'][data.slot]+' · RPG schedules active · Preview NPC interaction only';
     }
-    function dismiss(){suspendedForDuel=false;hideStory();overlay.querySelectorAll('[data-overworld-activity-panel]').forEach(el=>el.remove());overlay.hidden=true;overlay.style.display='none';frame.src='about:blank';open.focus();}
+    function dismiss(){hideMenu();hideDeck();suspendedForDuel=false;hideStory();overlay.querySelectorAll('[data-overworld-activity-panel]').forEach(el=>el.remove());overlay.hidden=true;overlay.style.display='none';frame.src='about:blank';open.focus();}
     open.addEventListener('click',()=>{refresh();overlay.hidden=false;overlay.style.display='flex';close.focus();});
     close.addEventListener('click',()=>{if(bridge()?.snapshot()?.locked){note.textContent='Finish the active story or duel before leaving the overworld.';return;}dismiss();});
     document.getElementById('rpgDiscreetToggle')?.addEventListener('click',()=>{if(!overlay.hidden)refresh();});
@@ -101,13 +134,9 @@
       if(event.origin!==location.origin||event.source!==frame.contentWindow||overlay.hidden)return;
       const message=event.data;if(message?.type!=='neo-overworld-action')return;
       if(message.kind==='navigation'){
-        const targets={status:'statusBtn',deck:'deckStudioBtn',activities:'townActivities',events:'storyEvents'};
-        const target=document.getElementById(targets[message.id]);
-        dismiss();
-        if(!target)return;
-        if(message.id==='status'||message.id==='deck')target.click();
-        else target.scrollIntoView({behavior:'smooth',block:'center'});
-        return;
+        if(message.id==='deck'){showDeck();return;}
+        if(message.id==='status'){document.getElementById('statusBtn')?.click();return;}
+        if(message.id==='activities'||message.id==='events'){hideMenu();const available=bridge()?.activities()||[];if(message.id==='activities'){showActivities(available);return;}note.textContent='Story events remain accessible through character dialogue and travel.';return;}
       }
       if(message.kind==='person'){
         // Dismiss first: native conversations can open modal prompts immediately.
@@ -115,6 +144,10 @@
         if(!bridge()?.interact(message.id)){hideStory();note.textContent='Character interaction is not currently available.';}
       }else if(message.kind==='hotspot'){
         const activities=bridge()?.activities()||[];
+        showActivities(activities);
+      }
+    });
+    function showActivities(activities){
         const eligible=activities.filter(a=>!a.disabled);
         if(!eligible.length){note.textContent='No activities are available right now.';return;}
         overlay.querySelectorAll('[data-overworld-activity-panel]').forEach(el=>el.remove());
@@ -122,8 +155,7 @@
         const head=document.createElement('div');head.textContent='Choose a current RPG activity';panel.append(head);
         for(const a of eligible){const button=document.createElement('button');button.textContent=a.title;button.type='button';Object.assign(button.style,{display:'block',marginTop:'8px',padding:'10px',width:'100%',background:'#403051',color:'white',borderRadius:'8px'});button.onclick=()=>{panel.remove();if(!showStory())dismiss();if(!bridge()?.activity(a.id)){hideStory();note.textContent='Activity no longer available.';}};panel.append(button);}
         const cancel=document.createElement('button');cancel.textContent='Cancel';cancel.onclick=()=>panel.remove();panel.append(cancel);overlay.append(panel);
-      }
-    });
+    }
     document.addEventListener('keydown',event=>{if(event.key==='Escape'&&!overlay.hidden&&!bridge()?.snapshot()?.locked)dismiss();});
     // Battles run in the original full-screen duel layer. Resume the map as soon as
     // its battle layer closes, without restarting the campaign or changing saves.
