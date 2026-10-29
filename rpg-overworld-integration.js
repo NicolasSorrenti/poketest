@@ -32,6 +32,7 @@
     function dismiss(){overlay.querySelectorAll('[data-overworld-activity-panel]').forEach(el=>el.remove());overlay.hidden=true;overlay.style.display='none';frame.src='about:blank';open.focus();}
     open.addEventListener('click',()=>{refresh();overlay.hidden=false;overlay.style.display='flex';close.focus();});
     close.addEventListener('click',dismiss);
+    document.getElementById('rpgDiscreetToggle')?.addEventListener('click',()=>{if(!overlay.hidden)refresh();});
     travel.addEventListener('click',()=>{
       const target=placeSelect.value;const data=snapshot();if(!data)return;
       if(target===data.location){note.textContent='You are already here.';return;}
