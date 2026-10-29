@@ -135,8 +135,8 @@ function estimatedDamage(attack,attacker,defender,benchCount=null){
  else if(program?.kind==='coin-bonus')amount=program.base+program.bonus*.5;
  else if(program?.kind==='coin-recoil-bonus')amount=program.base+program.bonus*.5;
  else if(raw.endsWith('x'))amount*=1;
- // Wigglytuff's Do the Wave scales with the attacking player's public Bench.
- // A flat '+8' estimate makes Apex prefer Lullaby over a guaranteed knockout.
+ // Compiled bench-count effects (including Do the Wave) scale with the
+ // attacker's public Bench, never the defender's Bench or an invented future Bench.
  else if(program?.kind==='bench-count'&&Number.isInteger(benchCount)&&benchCount>=0)
     amount=program.base+program.factor*benchCount;
  else if(raw.endsWith('+'))amount+=8;
