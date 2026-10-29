@@ -27,7 +27,7 @@ test('Pixel Palace preserved and all six user-uploaded location maps selected',(
  assert.match(code,/map\.blueprint\?[\s\S]*?\[map\.image\]/);
 });
 test('the embedded map HTML references the fixed loader',()=>{
- assert.match(page,/overworld\/prototype\.js\?v=map-placement-resize-20261029/);
+ assert.match(page,/overworld\/prototype\.js\?v=landmark-pins-20261029/);
 });
 
 test('explicit development mode exports revised anchors and hotspots without touching RPG state',()=>{
@@ -50,4 +50,14 @@ test('Park and Cafe interactive hotspot IDs are descriptive and remain inside ma
  }
  assert.match(code,/neo-layout-resize/);
  assert.match(code,/Math\.round\(clamp\(held\.w/);
+});
+
+test('Uploaded environment artwork has explicit tap markers instead of oversized invisible regions',()=>{
+ const css=fs.readFileSync(path.join(root,'overworld/prototype.css'),'utf8');
+ assert.match(code,/map\.artworkStatus==='uploaded'&&!layoutDev/);
+ assert.match(code,/b\.classList\.add\('neo-hotspot-pin'\)/);
+ assert.match(code,/width:'56px',height:'56px'/);
+ assert.match(css,/\.hotspot\.neo-hotspot-pin/);
+ assert.match(css,/touch-action:manipulation/);
+ assert.match(css,/neo-overworld-layout-editor/);
 });
