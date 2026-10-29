@@ -27,7 +27,7 @@ test('Pixel Palace preserved and all six user-uploaded location maps selected',(
  assert.match(code,/map\.blueprint\?[\s\S]*?\[map\.image\]/);
 });
 test('the embedded map HTML references the fixed loader',()=>{
- assert.match(page,/overworld\/prototype\.js\?v=landmark-pins-20261029/);
+ assert.match(page,/overworld\/prototype\.js\?v=all-seven-locations-20261029/);
 });
 
 test('explicit development mode exports revised anchors and hotspots without touching RPG state',()=>{
