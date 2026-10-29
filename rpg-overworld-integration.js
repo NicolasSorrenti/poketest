@@ -26,7 +26,7 @@
       for(const p of data.places){const option=document.createElement('option');option.value=p.id;option.textContent=p.name;placeSelect.append(option);}
       placeSelect.value=data.location;travel.disabled=data.locked;
       const people=data.people.join(',');
-      frame.src='/overworld-prototype.html?scene='+encodeURIComponent(data.location)+'&cast='+encodeURIComponent(people)+'&rpg-integration=1';
+      frame.src='/overworld-prototype.html?scene='+encodeURIComponent(data.location)+'&cast='+encodeURIComponent(people)+'&rpg-integration=1&chibi='+(document.documentElement.dataset.rpgDiscreet==='on'?'1':'0');
       note.textContent=data.locked?'Travel disabled during an active conversation, event or duel.':'Day '+data.day+' · '+['Morning','Afternoon','Evening'][data.slot]+' · RPG schedules active · Preview NPC interaction only';
     }
     function dismiss(){overlay.querySelectorAll('[data-overworld-activity-panel]').forEach(el=>el.remove());overlay.hidden=true;overlay.style.display='none';frame.src='about:blank';open.focus();}
