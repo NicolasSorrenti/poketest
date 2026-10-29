@@ -118,7 +118,7 @@ function energyValue(pokemon,energyId){
  }
  return value-(pokemon.energies||[]).length*9;
 }
-function estimatedDamage(attack,attacker,defender){
+function estimatedDamage(attack,attacker,defender,benchCount=null){
  if(!attack||!defender)return 0;
  const raw=String(attack.damage||'0');
  let amount=parseInt(raw,10)||0;
@@ -135,6 +135,9 @@ function estimatedDamage(attack,attacker,defender){
  else if(program?.kind==='coin-bonus')amount=program.base+program.bonus*.5;
  else if(program?.kind==='coin-recoil-bonus')amount=program.base+program.bonus*.5;
  else if(raw.endsWith('x'))amount*=1;
+ // Wigglytuff's Do the Wave scales with the attacking player's public Bench.
+ // A flat '+8' estimate makes Apex prefer Lullaby over a guaranteed knockout.
+ else if(attack.name==='Do the Wave'&&benchCount!==null)amount=10+10*benchCount;
  else if(raw.endsWith('+'))amount+=8;
  else if(raw.endsWith('-'))amount=Math.max(0,amount-10);
  const aType=(card(attacker?.id)?.types||[])[0],target=card(defender.id);
@@ -149,7 +152,7 @@ function damageAfterType(amount,attacker,defender){
  if(type&&target?.resistances?.some(w=>w.type===type))value=Math.max(0,value-30);
  return value;
 }
-function knockoutChance(attack,attacker,defender){
+function knockoutChance(attack,attacker,defender,benchCount=null){
  if(!attack||!attacker||!defender)return 0;
  const hp=hpRemaining(defender);
  if(hp<=0)return 0;
@@ -167,7 +170,7 @@ function knockoutChance(attack,attacker,defender){
   }
   return prob.reduce((v,p,k)=>v+(kill(k*program.each)?p:0),0);
  }
- const expected=estimatedDamage(attack,attacker,defender);
+ const expected=estimatedDamage(attack,attacker,defender,benchCount);
  const coin=/flip (?:a |one |\\d+ )?coins?|heads|tails/i.test(attack.text||'');
  return expected>=hp?(coin&&program?.kind!=='coin-status'?.5:1):0;
 }
@@ -947,13 +950,13 @@ function score(a,o,cfg,used){
  }
  if(type==='attack'){
   const attack=(p.active.effectiveAttacks||card(p.active.id)?.attacks||[])[v.attackIndex];
-  const damage=estimatedDamage(attack,p.active,q.active),hp=hpRemaining(q.active);
+  const damage=estimatedDamage(attack,p.active,q.active,p.bench.length),hp=hpRemaining(q.active);
   const uncertain=/flip (?:a |one |\\d+ )?coins?|heads|tails/i.test(attack?.text||'');
   // Expected damage has already accounted for coin outcomes. Applying another
   // 55% multiplier here previously double-discounted random attacks. Higher
   // levels instead compute the actual KO probability for known coin families.
   const lethal=damage>=hp&&hp>0;
-  const koChance=cfg.level>=3?knockoutChance(attack,p.active,q.active):(lethal?1:0);
+  const koChance=cfg.level>=3?knockoutChance(attack,p.active,q.active,p.bench.length):(lethal?1:0);
   const riskPreference=uncertain?style.risk*40:0;
   const direct=damage*style.damage;
   const statusValue=/Poison|Paraly|Sleep|Confus/i.test(attack?.text||'')?16:0;
