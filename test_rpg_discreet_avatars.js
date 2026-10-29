@@ -20,7 +20,12 @@ const live=fs.readFileSync(path.join(__dirname,'classic_live.html'),'utf8');
   drawImage(...args){draws.push(args);}
  };
  class SourceImage{
-  set src(src){this._src=src;requests.push(src);this.naturalWidth=256;this.naturalHeight=256;this.onload();}
+  set src(src){
+   this._src=src;requests.push(src);this.naturalWidth=256;this.naturalHeight=256;
+   // Browser images fail when their local asset does not exist.
+   if(src.startsWith('/rpg-assets/')&&fs.existsSync(path.join(__dirname,src.slice(1))))this.onload?.();
+   else this.onerror?.();
+  }
   get src(){return this._src;}
  }
  const document={
@@ -68,15 +73,18 @@ const live=fs.readFileSync(path.join(__dirname,'classic_live.html'),'utf8');
  await Promise.resolve();
  await Promise.resolve();
  assert.equal(box.children.length,1);
- assert.equal(requests.length,1);
- assert.equal(requests[0],api.url('reina'));
- assert.equal(box.children[0].src,'data:image/webp;base64,AAAA');
+ assert.deepEqual(requests,[
+  '/rpg-assets/characters/reina/discreet/neutral.webp',
+  '/rpg-assets/characters/reina/discreet/neutral.png',
+  '/rpg-assets/characters/reina/chibi/front.png'
+ ],'Missing discreet portraits fall back to installed Reina chibi');
+ assert.equal(box.children[0].src,'/rpg-assets/characters/reina/chibi/front.png');
  assert.equal(box.children[0].hidden,false);
- assert.equal(draws.length,1,'One canvas head crop is drawn');
- assert.ok(draws[0][3]<256,'Canvas must not show the whole source artwork');
+ assert.equal(box.dataset.rpgSafeKind,'chibi');
+ assert.equal(draws.length,0,'Installed chibis bypass the canvas head crop');
  api.set(box,'reina','happy','Reina Kurogane');
  assert.equal(box.children.length,1,'Keep the same headshot image between emotions');
- assert.equal(requests.length,1,'One local image request per character');
+ assert.equal(requests.length,3,'Emotion changes reuse the cached chibi');
  box.children[0].onerror();
  assert.equal(box.children[0].hidden,true,'Broken headshot fails closed, never showing full art');
 
@@ -86,7 +94,7 @@ const live=fs.readFileSync(path.join(__dirname,'classic_live.html'),'utf8');
  await Promise.resolve();
  assert.equal(yunaBox.dataset.rpgSafeKind,'chibi');
  assert.equal(yunaBox.children[0].src,'/rpg-assets/characters/yuna/discreet/neutral.webp');
- assert.equal(draws.length,1,'Chibi must bypass the head-only canvas crop');
+ assert.equal(draws.length,0,'Chibi must bypass the head-only canvas crop');
  assert.match(css,/\[data-rpg-safe-kind="chibi"\]/);
  assert.match(css,/\.rpg-safe-avatar\[hidden\]/);
  assert.match(css,/\.npc-reaction-portrait img:not\(\.rpg-safe-avatar\)/);
