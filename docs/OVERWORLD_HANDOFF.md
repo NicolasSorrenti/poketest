@@ -122,3 +122,8 @@ The shop concept was generated from the canonical `shop-day.webp` panorama and t
 - Idle placeholder `The town is waiting.` does not keep the conversation panel open after a completed dialogue.
 - After NPC interaction, an activity, travel, and battle return, UI synchronizes to native state. Native modal CG / reward dialogs remain controlled by the RPG engine.
 - GitHub `main` commit `334f41f1`; JS syntax passed. Browser end-to-end verification remains required, especially mandatory dialogues, CG modal sequences, and post-duel rewards.
+
+## 2026-10-29 — Reina full-journey audit, arrival interaction guard
+- Audited the shared overworld bridge and presentation adapter. Identified that travel arrival/first-meeting chime-ins were not counted as an interaction lock, allowing premature NPC clicks or activity starts.
+- Bridge `snapshot().locked`, `travel`, `interact`, and `activity` now guard `arrivalGate`, `pendingOverworldArrival` and active travel transitions. `snapshot().arriving` distinguishes arrival animation from actual story dialogue so the new dialogue panel does not open just because an arrival is playing.
+- Updated JS cache versions and syntax-checked changed files. **Full end-to-end browser journey is still unverified**, especially CG→duel→pack rewards→overworld. No claim of deployed/live QA.
