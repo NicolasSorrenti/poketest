@@ -11,6 +11,13 @@
     {id:'reina',anchor:'P1',pose:'standing',foot:{x:665,y:465},previewKey:'standing'},
     {id:'reina',anchor:'E1',pose:'arcade',foot:{x:245,y:430},previewKey:'arcade'}
   ] : map.blueprint ? [{id:'reina',anchor:'P1',pose:'standing'},{id:'yuna',anchor:'P2',pose:'standing'},{id:'barb',anchor:'P3',pose:'standing'}] : shopTest ? config.shopPreview : params.has('art-test') ? config.artPreview : params.has('cast-test') ? config.preview : config.preview.filter(p=>p.id==='reina');
+  // Integrated mode displays only NPCs currently scheduled here by the RPG.
+  // Reuse stable anchor slots and do not invent story encounters.
+  if(params.has('rpg-integration')){
+    const castIds=(params.get('cast')||'').split(',').filter(id=>Object.prototype.hasOwnProperty.call(config.characters,id));
+    placements.splice(0,placements.length,...castIds.slice(0,8).map((id,i)=>({id,anchor:['P1','P2','P3','P4','E1','E2','E3','E4'][i],pose:'standing'})));
+    const subtitle=document.querySelector('.title small');if(subtitle)subtitle.textContent='Live RPG schedule · placement preview';
+  }
   if(dev){byId('guides').hidden=false;}
   let zoom=1,ox=0,oy=0,drag=null,ignoreClick=false,toastTimer;
   const clamp=(v,a,b)=>Math.min(b,Math.max(a,v));
