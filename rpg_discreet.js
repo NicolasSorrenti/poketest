@@ -2,7 +2,8 @@
 /* Client-only presentation preference: never store this in a campaign save. */
 (function(){
  const path=window.location.pathname;
- const isRpg=/\/(?:rpg|rpg\.html)$/.test(path);
+ const isOverworld=/\/rpg-overworld\.html$/.test(path);
+ const isRpg=/\/(?:rpg|rpg\.html)$/.test(path)||isOverworld;
  const isRpgDuel=/\/classic_live\.html$/.test(path)
   &&new URLSearchParams(window.location.search).get('rpg')==='1';
  if(!isRpg&&!isRpgDuel)return;
