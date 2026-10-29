@@ -29,14 +29,16 @@
       frame.src='/overworld-prototype.html?scene='+encodeURIComponent(data.location)+'&cast='+encodeURIComponent(people)+'&rpg-integration=1';
       note.textContent=data.locked?'Travel disabled during an active conversation, event or duel.':'Day '+data.day+' · '+['Morning','Afternoon','Evening'][data.slot]+' · RPG schedules active · Preview NPC interaction only';
     }
-    function dismiss(){overlay.hidden=true;overlay.style.display='none';frame.src='about:blank';open.focus();}
+    function dismiss(){overlay.querySelectorAll('[data-overworld-activity-panel]').forEach(el=>el.remove());overlay.hidden=true;overlay.style.display='none';frame.src='about:blank';open.focus();}
     open.addEventListener('click',()=>{refresh();overlay.hidden=false;overlay.style.display='flex';close.focus();});
     close.addEventListener('click',dismiss);
     travel.addEventListener('click',()=>{
       const target=placeSelect.value;const data=snapshot();if(!data)return;
       if(target===data.location){note.textContent='You are already here.';return;}
+      // Native travel may start a mandatory event or first-visit dialogue.
+      // Never leave the map overlay covering that conversation.
       if(!bridge().travel(target)){note.textContent='Travel is unavailable during the current story or activity.';refresh();return;}
-      refresh();
+      dismiss();
     });
     window.addEventListener('message',event=>{
       if(event.origin!==location.origin||event.source!==frame.contentWindow||overlay.hidden)return;
@@ -51,15 +53,17 @@
         return;
       }
       if(message.kind==='person'){
-        if(bridge()?.interact(message.id))dismiss();
-        else note.textContent='Character interaction is not currently available.';
+        // Dismiss first: native conversations can open modal prompts immediately.
+        dismiss();
+        if(!bridge()?.interact(message.id))document.getElementById('notice').textContent='Character interaction is not currently available.';
       }else if(message.kind==='hotspot'){
         const activities=bridge()?.activities()||[];
         const eligible=activities.filter(a=>!a.disabled);
         if(!eligible.length){note.textContent='No activities are available right now.';return;}
-        const panel=document.createElement('div');Object.assign(panel.style,{position:'absolute',bottom:'68px',left:'12px',right:'12px',padding:'12px',maxHeight:'45vh',overflow:'auto',background:'#211a37',border:'1px solid #9775a3',borderRadius:'12px',zIndex:'2'});
+        overlay.querySelectorAll('[data-overworld-activity-panel]').forEach(el=>el.remove());
+        const panel=document.createElement('div');panel.dataset.overworldActivityPanel='true';Object.assign(panel.style,{position:'absolute',bottom:'68px',left:'12px',right:'12px',padding:'12px',maxHeight:'45vh',overflow:'auto',background:'#211a37',border:'1px solid #9775a3',borderRadius:'12px',zIndex:'2'});
         const head=document.createElement('div');head.textContent='Choose a current RPG activity';panel.append(head);
-        for(const a of eligible){const button=document.createElement('button');button.textContent=a.title;button.type='button';Object.assign(button.style,{display:'block',marginTop:'8px',padding:'10px',width:'100%',background:'#403051',color:'white',borderRadius:'8px'});button.onclick=()=>{panel.remove();if(bridge()?.activity(a.id))dismiss();else note.textContent='Activity no longer available.';};panel.append(button);}
+        for(const a of eligible){const button=document.createElement('button');button.textContent=a.title;button.type='button';Object.assign(button.style,{display:'block',marginTop:'8px',padding:'10px',width:'100%',background:'#403051',color:'white',borderRadius:'8px'});button.onclick=()=>{panel.remove();dismiss();if(!bridge()?.activity(a.id))document.getElementById('notice').textContent='Activity no longer available.';};panel.append(button);}
         const cancel=document.createElement('button');cancel.textContent='Cancel';cancel.onclick=()=>panel.remove();panel.append(cancel);overlay.append(panel);
       }
     });
