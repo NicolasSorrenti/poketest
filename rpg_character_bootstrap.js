@@ -108,15 +108,36 @@
   // Browser downloads in parallel but run in insertion order (async=false).
   // Validate dependencies BEFORE launching rpg.js: a module can throw while
   // evaluating, yet its script still fires onload, leaving its global undefined.
-  const loadScript=(src,optional=false)=>new Promise((resolve,reject)=>{
-    const script=document.createElement('script');
-    script.async=false;
-    if(optional)script.dataset.optionalScript='true';
-    script.src=src;
-    script.onload=resolve;
-    script.onerror=()=>reject(Error('RPG script failed: '+src));
-    document.body.appendChild(script);
-  });
+  // Render restarts and intermittent mobile connections can fail a single
+  // script request. Retry that dependency (not the entire campaign) in order.
+  // A failed <script> did not execute, so removing it and retrying is safe.
+  const wait=ms=>new Promise(resolve=>setTimeout(resolve,ms));
+  async function loadScript(src,optional=false){
+    const maxAttempts=optional?2:4;
+    for(let attempt=1;attempt<=maxAttempts;attempt++){
+      try{
+        await new Promise((resolve,reject)=>{
+          const script=document.createElement('script');
+          script.async=false;
+          if(optional)script.dataset.optionalScript='true';
+          // Retry requests must bypass any cached transient 404/503 response.
+          script.src=attempt===1?src:src+(src.includes('?')?'&':'?')+'retry='+attempt+'-'+Date.now();
+          script.onload=()=>{script.onload=null;script.onerror=null;resolve();};
+          script.onerror=()=>{
+            script.onload=null;script.onerror=null;
+            script.remove();
+            reject(new Error('RPG script failed: '+src));
+          };
+          document.body.appendChild(script);
+        });
+        return;
+      }catch(error){
+        if(attempt===maxAttempts)throw new Error('RPG script failed after '+maxAttempts+' attempts: '+src,{cause:error});
+        console.warn('Retrying RPG script after a loading error',src,'attempt',attempt);
+        await wait(350*attempt);
+      }
+    }
+  }
   // Each module may depend on globals established by an earlier script.
   // Await execution in declared order; parallel script insertion can race
   // module initialization and fail the required startup dependency checks.
@@ -140,4 +161,22 @@
     console.warn('Optional RPG art inventory unavailable; continuing without additional gallery entries',error);
   });
   await loadScript(scripts.at(-1));
-})().catch(error=>{window.NeoRpgErrorReport?.capture(error,{source:'startup',action:'load RPG scripts'});console.error('RPG startup failed',error);});
+})().catch(error=>{
+  window.NeoRpgErrorReport?.capture(error,{source:'startup',action:'load RPG scripts'});
+  console.error('RPG startup failed',error);
+  // A recoverable loading problem should not leave the player at a dead screen.
+  // Reloading never clears the cloud/local save.
+  if(document.getElementById('rpgScriptRetry'))return;
+  const notice=document.createElement('div');
+  notice.id='rpgScriptRetry';
+  notice.setAttribute('role','alert');
+  notice.style.cssText='position:fixed;z-index:2147483647;inset:auto 12px max(12px,env(safe-area-inset-bottom)) 12px;max-width:540px;margin:auto;border:1px solid #bc8aad;border-radius:14px;padding:16px;background:#17152a;color:white;box-shadow:0 12px 40px #0009;font:14px system-ui';
+  const message=document.createElement('p');
+  message.textContent='Neo Campus could not download a required game script. Your save is safe. Check your connection and try again.';
+  const button=document.createElement('button');
+  button.type='button';button.textContent='Retry loading Neo Campus';
+  button.style.cssText='padding:10px 16px;border-radius:9px;border:1px solid #bf8fc3;background:#553763;color:white;font:700 14px system-ui';
+  button.onclick=()=>location.reload();
+  notice.append(message,button);
+  document.body.appendChild(notice);
+});
