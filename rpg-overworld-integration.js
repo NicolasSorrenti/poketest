@@ -24,6 +24,28 @@
     const stage=document.querySelector('.stage-panel');
     const stageHome=stage?.parentNode;
     const stageNext=stage?.nextSibling||null;
+    // Overworld-only presentation: scene portraits and CGs above the map;
+    // original dialogue and choice DOM stays live, without its old room backdrop.
+    const visualStyle=document.createElement('style');
+    visualStyle.textContent=`
+      #neoOverworldStoryDock{width:min(760px,calc(100vw - 16px));max-height:76dvh!important;right:auto!important;bottom:max(8px,env(safe-area-inset-bottom))!important;overscroll-behavior:contain}
+      #neoOverworldStoryDock .stage-panel{background:#171326!important;border:0!important;box-shadow:none!important;display:flex!important;flex-direction:column!important;gap:0!important}
+      #neoOverworldStoryDock #scene{background:none!important;background-image:none!important;min-height:clamp(140px,27dvh,290px)!important;max-height:32dvh!important;height:auto!important;position:relative!important;border:0!important}
+      #neoOverworldStoryDock #scene .scene-head,#neoOverworldStoryDock #homeBanner,#neoOverworldStoryDock .rpg-discreet-stage{display:none!important}
+      #neoOverworldStoryDock #portrait{position:relative!important;inset:auto!important;margin:auto!important;max-height:30dvh!important;height:100%!important;overflow:hidden!important}
+      #neoOverworldStoryDock #portrait img{max-height:30dvh!important;object-fit:contain!important;object-position:center bottom!important}
+      #neoOverworldStoryDock #rpgSceneCG:not([hidden]){display:block!important;position:relative!important;max-height:30dvh!important;width:100%!important;object-fit:contain!important}
+      #neoOverworldStoryDock #dialogue{position:relative!important;margin:0!important;width:100%!important;max-width:none!important;min-height:110px!important;overflow:visible!important}
+      #neoOverworldStoryDock #choices{max-height:32dvh;overflow-y:auto;overscroll-behavior:contain}
+      #neoOverworldStoryDock .stage-planner,#neoOverworldStoryDock .scene-foot{display:none!important}
+      #neoOverworldStoryDock #characterActions:not([hidden]){display:flex!important;flex-wrap:wrap!important}
+      @media(max-width:650px){
+        #neoOverworldStoryDock{left:8px!important;right:8px!important;width:auto!important;max-height:72dvh!important}
+        #neoOverworldStoryDock #scene{min-height:120px!important;max-height:24dvh!important}
+        #neoOverworldStoryDock #portrait,#neoOverworldStoryDock #portrait img,#neoOverworldStoryDock #rpgSceneCG{max-height:23dvh!important}
+      }
+    `;
+    document.head.append(visualStyle);
     let storyDock=null;
     let lastSceneKey='';
     let suspendedForDuel=false;
