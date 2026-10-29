@@ -74,3 +74,11 @@ The shop concept was generated from the canonical `shop-day.webp` panorama and t
 ## Identity conflict to resolve before Jinx art
 
 `rpg-assets/characters/jinx/reference/jinx_character_sheet_01.png` shows dark purple hair with magenta accents. `rpg-assets/characters/jinx/neutral.png` shows white hair with pink accents and a different outfit. Ask the design conversation which hair and outfit are current canon for the overworld standing sprite. Do not generate or register Jinx until that is settled.
+
+## 2026-10-29 — RPG overworld phase 1
+- `rpg.js`: `NeoRpgOverworldBridge.snapshot()` exposes current location, date/slot and scheduled NPCs; `travel(id)` reuses the guarded native `travelTo` function.
+- `rpg-overworld-integration.js`: opt-in **OVERWORLD** toolbar button; same-page map overlay and native location travel dropdown. Existing RPG UI is retained.
+- `rpg.html` loads optional adapter; `overworld/prototype.js` supports `?rpg-integration=1&cast=<ids>` for schedule-aligned NPC preview.
+- Scope limit: NPC and hotspot clicks still use preview behavior; they are not yet wired to the main story or action system.
+- Deployment QA: confirm button appears, open/close overlay, correct current location and NPCs, travel updates RPG and remains disabled in ongoing story/duels, desktop/mobile navigation, no interference with cloud save.
+- Next: bridge character click to native dialogue/battle buttons and hotspots to original activity controller, preserving event locks. Final art and sprite path cleanup remain separate.
