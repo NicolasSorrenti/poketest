@@ -62,7 +62,7 @@
  "/rpg_status.js?v=4",
  "/rpg_cloud_save.js?v=2",
  "/rpg_outfits.js?v=1",
- "/rpg.js?v=20261029-art-discovery-1"
+ "/rpg.js?v=20261029-gallery-outfits-2"
 ];
   function registry(packs){
     const cast={},looks={},schedules={},arrivals={},events=[],mandatoryEvents=[];
@@ -136,7 +136,7 @@
   // Artwork inventory is optional: a stale Render deploy or missing static file
   // must never prevent the campaign from starting.
   window.NeoRpgArtManifest=[];
-  await loadScript('/rpg_art_manifest.js?v=3',true).catch(error=>{
+  await loadScript('/rpg_art_manifest.js?v=20261029-outfit-catalog-2',true).catch(error=>{
     console.warn('Optional RPG art inventory unavailable; continuing without additional gallery entries',error);
   });
   await loadScript(scripts.at(-1));
