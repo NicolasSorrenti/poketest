@@ -14,7 +14,7 @@
   // Integrated mode displays only NPCs currently scheduled here by the RPG.
   // Reuse stable anchor slots and do not invent story encounters.
   if(params.has('rpg-integration')){
-    const castIds=(params.get('cast')||'').split(',').filter(id=>Object.prototype.hasOwnProperty.call(config.characters,id));
+    const castIds=(params.get('cast')||'').split(',').filter(id=>/^[a-z][a-z0-9_-]{0,35}$/.test(id));
     placements.splice(0,placements.length,...castIds.slice(0,8).map((id,i)=>({id,anchor:['P1','P2','P3','P4','E1','E2','E3','E4'][i],pose:'standing'})));
     const subtitle=document.querySelector('.title small');if(subtitle)subtitle.textContent='Live RPG schedule · placement preview';
   }
@@ -22,9 +22,9 @@
   let zoom=1,ox=0,oy=0,drag=null,ignoreClick=false,toastTimer;
   const clamp=(v,a,b)=>Math.min(b,Math.max(a,v));
   const point=p=>p.foot||map.anchors[p.anchor];
-  const person=p=>config.characters[p.id];
+  const person=p=>config.characters[p.id]||{name:p.id.replace(/(^|[_-])([a-z])/g,(_,sep,letter)=>' '+letter.toUpperCase()).trim(),face:'',poses:{}};
   const pose=p=>person(p).poses?.[p.pose||'standing'];
-  const face=p=>person(p).face;
+  const face=p=>person(p).face||'';
   function bound(){const w=camera.clientWidth,h=camera.clientHeight;ox=map.width*zoom>w?clamp(ox,w-map.width*zoom,0):(w-map.width*zoom)/2;oy=map.height*zoom>h?clamp(oy,h-map.height*zoom,0):(h-map.height*zoom)/2;}
   function paint(){bound();world.style.transform=`translate(${ox}px,${oy}px) scale(${zoom})`;edges.replaceChildren();
     const w=camera.clientWidth,h=camera.clientHeight,margin=28,top=80,bottom=110;
