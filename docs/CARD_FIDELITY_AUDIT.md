@@ -37,4 +37,10 @@ The [per-card and per-effect ledger](CARD_FIDELITY_LEDGER.json) tracks all 1,123
 | Blastoise (base1-2) | Hydro Pump bonus and cap with Water and non-Water Energy | test_card_fidelity_base_batch01.js | Partial; other interactions not certified |
 | Hitmonchan (base1-7) | Jab and Special Punch damage, weakness, resistance, and typed cost | test_card_fidelity_base_batch01.js | Partial; other interactions not certified |
 
+| Chansey (base1-3) | Scrunch heads/tails against Bubblebeam, including paralysis; Double-edge damage | test_card_fidelity_base_batch02.js | Partial; independent print/ruling review and other interactions pending |
+| Charizard (base1-4) | Fire Spin cost and mixed Energy choice; Energy Burn conversion, expiry and status restrictions | test_card_fidelity_base_batch02.js | Partial; independent print/ruling review and other interactions pending |
+| Gyarados (base1-6) | Dragon Rage and Bubblebeam damage, costs and coin outcomes | test_card_fidelity_base_batch02.js | Partial; independent print/ruling review and other interactions pending |
+
+These scenarios use the TCGdex-sourced catalogue text. Printed card images and applicable historical rulings still need independent review. Tests exercise the shared reducer in Classic, Neo, online-preview, and 40-card Cube configurations; they do not establish client or network integration.
+
 The full card-by-card fidelity review is **not complete**. Do not count the other cards or untested branches of the cards above as verified. Existing Classic execution probing covers 427 attack records in a manufactured scenario; it checks execution, not correctness or all possible choices.
