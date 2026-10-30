@@ -424,8 +424,17 @@
         // this exact art actually loads. Fallback art and discreet portraits
         // keep their own presentation.
         image.addEventListener('load',()=>{
-          person.classList.toggle('neo-ow-dialogue-front-master',
-            participant.id==='camila'&&image.currentSrc.includes('/rpg-assets/characters/camila/overworld/standing-front.png'));
+          const otherApprovedMasters={
+            iris:'/rpg-assets/characters/iris/dialogue/neutral.png',
+            alma:'/rpg-assets/characters/alma/overworld/standing-front.png',
+            barb:'/rpg-assets/characters/barb/portraits/primary.png',
+            elena:'/rpg-assets/characters/elena/overworld/standing-portfolio.png'
+          };
+          const source=image.currentSrc||image.src||'';
+          const isApprovedMaster=participant.id==='camila'
+            ?source.includes('/rpg-assets/characters/camila/overworld/standing-front.png')
+            :!!otherApprovedMasters[participant.id]&&source.includes(otherApprovedMasters[participant.id]);
+          person.classList.toggle('neo-ow-dialogue-front-master',isApprovedMaster);
         });
         // A missing portrait must never display a different character's face.
         // The original game's avatar loader already resolves outfit-specific art.
