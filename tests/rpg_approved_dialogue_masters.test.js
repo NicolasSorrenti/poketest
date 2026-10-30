@@ -11,7 +11,8 @@ const images={
  iris:'rpg-assets/characters/iris/dialogue/neutral.png',
  alma:'rpg-assets/characters/alma/overworld/standing-front.png',
  barb:'rpg-assets/characters/barb/portraits/primary.png',
- elena:'rpg-assets/characters/elena/overworld/standing-portfolio.png'
+ elena:'rpg-assets/characters/elena/overworld/standing-portfolio.png',
+ jun:'rpg-assets/characters/jun/standing-front.png'
 };
 test('approved masters are existing binary files; Iris copy is unmodified',()=>{
  for(const [id,p] of Object.entries(images)){
@@ -35,4 +36,12 @@ test('standalone crop is active only when image actually loads the approved file
  assert.match(world,/person\.classList\.toggle\('neo-ow-dialogue-front-master',isApprovedMaster\)/);
  assert.match(world,/person\.classList\.remove\('neo-ow-dialogue-front-master'\)/);
  assert.match(world,/#neoOverworldStoryDock #scene:has\(#rpgSceneCG:not\(\[hidden\]\)\) #neoOverworldScenePeople\{display:none!important\}/);
+});
+
+test('Jun uses the exact existing overworld file for neutral dialogue',()=>{
+ const approved='rpg-assets/characters/jun/standing-front.png';
+ assert.ok(fs.existsSync(path.join(root,approved)),'Jun full-body image must exist');
+ assert.ok(rpg.includes("jun:'/rpg-assets/characters/jun/standing-front.png'"));
+ assert.ok(world.includes('/'+approved));
+ assert.ok(rpg.includes("return expression==='neutral'?APPROVED_DIALOGUE_MASTERS[id]||null:null;"));
 });
