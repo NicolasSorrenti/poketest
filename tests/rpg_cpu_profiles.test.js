@@ -8,6 +8,9 @@ const PACK=require('../rpg_character_packs.generated');
 const SIDE=require('../rpg_side_quests');
 const {ClassicLocalService}=require('../classic_local_service');
 const {forRpgDuel,upgradeRpgSession,RPG_CPU_LEVEL}=require('../rpg_cpu_config');
+const NPC_DECKS=require('../rpg_npc_deck_progression');
+const FORMAT=require('../classic_format');
+const {CATALOG}=require('../headless_duel');
 
 test('every named RPG opponent has a legal character-specific CPU profile',()=>{
  const core=['hana','reina','shiori','yuna','akari','camila','marina','kaede'];
@@ -46,4 +49,20 @@ test('restored RPG duels upgrade their NPC personality without reducing skill',(
  const unknown={npc:'not_in_cast',cpuConfig:old};
  upgradeRpgSession(unknown);
  assert.equal(unknown.cpuConfig,old,'Unknown opponents retain their valid current configuration');
+});
+
+test('Jicy keeps a cute, legal curated Neo deck at every tier and variant',()=>{
+ for(let tier=1;tier<=7;tier++){
+  const recipe=NPC_DECKS.recipeFor({npc:'jicy',tier,catalog:CATALOG});
+  for(let variant=0;variant<=2;variant++){
+   const deck=NPC_DECKS.varyDeck(recipe,'jicy',variant,CATALOG);
+   const legal=FORMAT.validateDeck(deck,CATALOG,{neo:true});
+   assert.equal(legal.valid,true,'Jicy tier '+tier+' variant '+variant+': '+legal.errors.join('; '));
+   assert.equal(deck.includes('neo3-5'),false,'Unreviewed Delibird must not enter the Neo preview');
+   if(tier===1&&variant===0){
+    assert.equal(deck.filter(id=>id==='neo4-31').length,2,'Chansey keeps the sturdy Colorless role');
+    assert.equal(deck.filter(id=>id==='neo4-44').length,2,'Jigglypuff keeps the cute defensive role');
+   }
+  }
+ }
 });
