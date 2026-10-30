@@ -1332,6 +1332,8 @@ function performAction(g,side,cmd){
   if(program.kind==='coin-heal-one'&&u.damage===0)fail('No damage to heal');
   if(program.kind==='drag-off'&&!f.bench.length)fail('Drag Off requires an opposing Benched Pokémon');
   if(program.kind==='enemy-energy-removal'&&f.active.energies.length>1){
+   const energyIds=f.active.energies;
+   if(new Set(energyIds).size===1){resolveAttack(g,side,index,undefined,undefined,{enemyEnergyIndex:0});return;}
    g.nextDecisionId++;g.pendingDecision=makeDecision({id:`enemyenergy:${g.nextDecisionId}`,actor:side,kind:'energy-discard',label:`${a.name}: choose Defending Pokémon Energy`,options:f.active.energies.map((id,i)=>({id:`energy:${i}`,label:card(g,id).name})),min:1,max:1});
    g.pendingAction={kind:'attack_enemy_energy',side,attackIndex:index};return;
   }
@@ -1349,12 +1351,14 @@ function performAction(g,side,cmd){
    if(program.subject!==c.name&&program.subject!=='this Pokémon')fail('Energy cost subject does not match attacker');
    const eligible=u.energies.map((id,i)=>({id:card(g,id),i})).filter(o=>!program.onlyType||attachedEnergyMatchesType(g,u.energies[o.i],program.onlyType)).map(o=>o.i);
    if(eligible.length<quantity)fail('Insufficient Energy to discard for attack');
-   if(eligible.length>quantity){
+   const sameEligibleCard=new Set(eligible.map(i=>u.energies[i])).size===1;
+   if(eligible.length>quantity&&!sameEligibleCard){
     g.nextDecisionId++;
     g.pendingDecision=makeDecision({id:`attackcost:${g.nextDecisionId}`,actor:side,kind:'energy-discard',label:`${a.name}: discard ${quantity} Energy card(s)`,options:eligible.map(i=>({id:`energy:${i}`,label:card(g,u.energies[i]).name})),min:quantity,max:quantity});
     g.pendingAction={kind:'attack_energy',side,attackIndex:index};return;
    }
-   resolveAttack(g,side,index,undefined,eligible);return;
+   log(g,`${c.name} discarded ${quantity} ${card(g,u.energies[eligible[0]]).name}${quantity===1?'':' cards'} to use ${a.name}.`);
+   resolveAttack(g,side,index,undefined,eligible.slice(0,quantity));return;
   }
   if(['bench-target','switch-attacker','switch-self','target-any','target-any-coin','drag-off'].includes(program.kind)){
    const owner=program.kind==='switch-self'?p:f;
@@ -2211,7 +2215,7 @@ function resolveAttack(g,side,index,chosenBench,energyPicks,extra={}){
   if(isClassicRules(g))CLASSIC_POWERS.benched(g,side,entrant,classicHelpers());
  }
  if(roll.healAllSelf)u.damage=0;
- if(roll.discardEnemyEnergy&&f.active.energies.length&&!f.active.attachedTrainers.some(t=>card(g,t.id).name==="Brock's Protection")){const k=extra.neo92EnemyEnergy??extra.enemyEnergyIndex??0;f.discard.push(f.active.energies.splice(k,1)[0]);}
+ if(roll.discardEnemyEnergy&&f.active.energies.length&&!f.active.attachedTrainers.some(t=>card(g,t.id).name==="Brock's Protection")){const k=extra.neo92EnemyEnergy??extra.enemyEnergyIndex??0;const discarded=f.active.energies.splice(k,1)[0];f.discard.push(discarded);log(g,`${c.name} discarded ${card(g,discarded).name} from ${card(g,f.active.id).name}.`);}
  if(roll.callFamily!==undefined){
   if(extra.familyIndex!==undefined){const k=extra.familyIndex;p.bench.push(unit(p.deck.splice(k,1)[0],g.round));}
   p.deck=shuffle(g,p.deck);
