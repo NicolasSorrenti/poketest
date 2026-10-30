@@ -42,7 +42,7 @@
  const chibiCandidates=id=>['/rpg-assets/characters/'+id+'/chibi/front.png','/rpg-assets/characters/'+id+'/discreet/neutral.webp','/rpg-assets/characters/'+id+'/discreet/neutral.png'];
  function probeChibi(id){
   if(!win?.Image)return Promise.resolve(null);
-  const paths=isOverworld()?[...chibiCandidates(id),'/rpg-assets/characters/reina/chibi/front.png']:chibiCandidates(id);
+  const paths=[...chibiCandidates(id),...(id==='reina'?[]:chibiCandidates('reina'))];
   return new Promise(resolve=>{
    const next=i=>{if(i>=paths.length){resolve(null);return;}
     const img=new win.Image();img.onload=()=>resolve(paths[i]);img.onerror=()=>next(i+1);img.src=paths[i];};next(0);
@@ -87,8 +87,8 @@
  function loadPortrait(id){
   if(cache.has(id))return cache.get(id);
   const src=url(id);
-  if(CHIBI_IDS.has(id)||isOverworld()){
-   const promise=probeChibi(id).then(found=>found||(isOverworld()?null:loadHeadshot(id)));
+  if(true){
+   const promise=probeChibi(id);
    cache.set(id,promise);return promise;
   }
   return loadHeadshot(id);
@@ -136,13 +136,13 @@
    node.append(img);
   }
   // Reuse the same portrait for every emotion to keep character identity stable.
-  if(img.dataset.safeSrc===id)return;
+  if(img.dataset.safeSrc===id && img.src)return;
   img.dataset.safeSrc=id;
   img.hidden=true;
   loadPortrait(id).then(data=>{
    if(img.dataset.safeSrc!==id||node.dataset?.rpgSafeId!==id)return;
    if(data){img.src=data;img.hidden=false;node.dataset.rpgSafeKind=data.startsWith('/rpg-assets/characters/')&&(/\/discreet\/|\/chibi\//).test(data)?'chibi':'headshot';}
-   else img.hidden=true; // Monogram fallback; never leak the original full art.
+   else img.hidden=true; // Never leak the original artwork.
   });
  }
  function set(node,id,mood='neutral',name=''){
@@ -153,9 +153,41 @@
   node.dataset.rpgSafeInitials=initials(name||id);
   render(node);
  }
+ function scanCharacterImages(){
+  // Cover dynamically inserted character art even when a new UI forgot to call set().
+  for(const img of win.document.querySelectorAll('img[src],img[data-src]')){
+   if(img.classList.contains('rpg-safe-avatar')||img.closest('[data-rpg-chibi-skip]'))continue;
+   const src=img.getAttribute('src')||img.getAttribute('data-src')||'';
+   const match=src.match(/(?:\\/rpg-assets)?\\/characters\\/([a-z][a-z0-9_]{0,39})\\//i)
+     ||src.match(/\\/ui\\/avatars\\/([a-z][a-z0-9_]{0,39})\\./i);
+   if(!match)continue;
+   const id=validId(match[1]);
+   if(!id)continue;
+   // Use the image wrapper only if it has no existing character identity.
+   const parent=img.parentElement;
+   if(!parent||parent.tagName==='PICTURE')continue;
+   if(!parent.dataset.rpgSafeId)set(parent,id,'neutral',id);
+   parent.dataset.rpgAutoChibi='1';
+   img.dataset.rpgOriginalArt='1';
+  }
+ }
  function refresh(){
+  scanCharacterImages();
   if(!isActive())return;
   for(const node of win.document.querySelectorAll('[data-rpg-safe-id]'))render(node);
  }
+ if(win?.document){
+  let pending=false;
+  const schedule=()=>{if(pending)return;pending=true;queueMicrotask(()=>{pending=false;refresh();});};
+  const start=()=>{
+   refresh();
+   new MutationObserver(records=>{
+    if(records.some(r=>r.type==='childList'||(r.type==='attributes'&&r.attributeName==='src'&&r.target.classList?.contains('rpg-safe-avatar')===false)))schedule();
+   }).observe(win.document.body||win.document.documentElement,{childList:true,subtree:true,attributes:true,attributeFilter:['src']});
+  };
+  if(win.document.readyState==='loading')win.document.addEventListener('DOMContentLoaded',start,{once:true});
+  else start();
+ }
+
  return {url,emotion,set,refresh,initials,cropBox};
 });
