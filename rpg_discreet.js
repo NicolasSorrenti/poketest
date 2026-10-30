@@ -4,7 +4,7 @@
  const path=window.location.pathname;
  const isOverworld=/\/rpg-overworld(?:\.html)?\/?$/.test(path);
  const isRpg=/\/(?:rpg|rpg\.html)$/.test(path)||isOverworld;
- const isRpgDuel=/\/classic_live\.html$/.test(path)
+ const isRpgDuel=/\/classic_live(?:\.html)?\/?$/.test(path)
   &&new URLSearchParams(window.location.search).get('rpg')==='1';
  if(!isRpg&&!isRpgDuel)return;
  const overworldKey='neoHarborOverworldChibiModeV1';
