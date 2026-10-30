@@ -1166,6 +1166,99 @@
       ],
       "artPending": false,
       "image": "/rpg-assets/characters/jicy/events/jicy_random_arcade_hum.webp"
+    },
+    {
+      "id": "jicy_random_missing_piece",
+      "npc": "jicy",
+      "title": "The Missing Piece",
+      "start": 8,
+      "end": 90,
+      "place": "shop",
+      "slot": 0,
+      "minBond": 0,
+      "prerequisite": null,
+      "participants": [],
+      "encounterType": "slice",
+      "trigger": "entry",
+      "randomForced": true,
+      "chancePercent": 20,
+      "lines": [
+        {
+          "speaker": "Narrator",
+          "text": "A trading card skids across the shop floor and stops near Jicy's shoes. She recognizes it at once."
+        },
+        {
+          "speaker": "jicy",
+          "text": "Oh! That's the one I need for my deck!"
+        },
+        {
+          "speaker": "Narrator",
+          "text": "Before it can slide under the display, Jicy reaches down and catches it in one quick, fluid motion. She barely bends her knees, balancing easily as she picks it up."
+        },
+        {
+          "speaker": "Protagonist",
+          "text": "That was quick. You're really flexible."
+        },
+        {
+          "speaker": "jicy",
+          "text": "I stretch a lot! And I have been looking for this card everywhere."
+        },
+        {
+          "speaker": "Narrator",
+          "text": "She checks the corners, then beams at the card as if she'd found a missing puzzle piece."
+        },
+        {
+          "speaker": "jicy",
+          "text": "It fits the deck perfectly. I can't wait to try the new combination!"
+        },
+        {
+          "speaker": "Protagonist",
+          "text": "You'll have to show me how it works sometime."
+        },
+        {
+          "speaker": "jicy",
+          "text": "Definitely! Thank you for being excited with me."
+        }
+      ],
+      "choices": [
+        {
+          "label": "Ask what the card adds to her deck",
+          "reply": "Jicy launches into an enthusiastic explanation of the combination she has been planning, delighted to share it with you.",
+          "kind": "honest",
+          "flag": "jicy_random_missing_piece_deck",
+          "delta": {
+            "affection": 1,
+            "trust": 1,
+            "respect": 1,
+            "attraction": 0
+          }
+        },
+        {
+          "label": "Tell her you're impressed by how smoothly she moved",
+          "reply": "Jicy blushes and rocks from side to side. “I just didn't want it to get scuffed. But... thank you!”",
+          "kind": "support",
+          "flag": "jicy_random_missing_piece_agile",
+          "delta": {
+            "affection": 1,
+            "trust": 1,
+            "respect": 0,
+            "attraction": 0
+          }
+        },
+        {
+          "label": "Offer to test the new deck with her",
+          "reply": "She gives a delighted little hop. “I'd love that. I'll bring it next time!”",
+          "kind": "flirt",
+          "flag": "jicy_random_missing_piece_test",
+          "delta": {
+            "affection": 1,
+            "trust": 1,
+            "respect": 0,
+            "attraction": 1
+          }
+        }
+      ],
+      "artPending": false
     }
   ]
 }
