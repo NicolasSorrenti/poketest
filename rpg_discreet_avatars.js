@@ -158,8 +158,8 @@
   for(const img of win.document.querySelectorAll('img[src],img[data-src]')){
    if(img.classList.contains('rpg-safe-avatar')||img.closest('[data-rpg-chibi-skip]'))continue;
    const src=img.getAttribute('src')||img.getAttribute('data-src')||'';
-   const match=src.match(/(?:\\/rpg-assets)?\\/characters\\/([a-z][a-z0-9_]{0,39})\\//i)
-     ||src.match(/\\/ui\\/avatars\\/([a-z][a-z0-9_]{0,39})\\./i);
+   const match=src.match(/(?:\/rpg-assets)?\/characters\/([a-z][a-z0-9_]{0,39})\//i)
+     ||src.match(/\/ui\/avatars\/([a-z][a-z0-9_]{0,39})\./i);
    if(!match)continue;
    const id=validId(match[1]);
    if(!id)continue;
