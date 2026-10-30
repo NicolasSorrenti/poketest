@@ -108,6 +108,10 @@
       const response=await fetch('/api/rpg/character-packs',{headers,cache:'no-store'});
       if(response.ok&&response.headers.get('content-type')?.includes('application/json')){
         data=await response.json();
+      }else if(response.ok&&!response.headers.get('content-type')?.includes('application/json')){
+        // Static Pages can return its HTML fallback with HTTP 200 for an
+        // unimplemented API route. Use the filtered public JSON instead.
+        console.warn('Character roster API returned non-JSON; using public roster');
       }else if(response.status!==404&&response.status!==405){
         throw Error('Character roster request failed (HTTP '+response.status+')');
       }
