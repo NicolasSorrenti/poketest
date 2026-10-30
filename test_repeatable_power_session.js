@@ -25,4 +25,19 @@ function pick(g,id){let d=g.pendingDecision;assert.ok(d);act(g,'choose',{decisio
 {
  const g=setup('base1-1');g.players[0].active.damage=10;act(g,'use_power',{slot:-1});pick(g,'slot:-1');pick(g,'slot:0');assert.equal(g.pendingDecision,null,'legacy non-repeat activation must finish');
 }
+{
+ // A transfer cannot knock out its recipient. With no legal recipient, the
+ // repeated session ends without creating an impossible mandatory prompt.
+ const g=setup('base1-1');g.players[0].active.damage=10;
+ g.players[0].bench[0].damage=30; // Base Rattata has 30 HP.
+ act(g,'use_power',{slot:-1,repeat:true});assert.equal(g.pendingDecision,null);
+ assert.equal(g.players[0].active.damage,10);
+}
+{
+ // Selecting Finish before any transfer is a no-op.
+ const g=setup('base1-15');g.players[0].active.energies=['base1-99'];
+ act(g,'use_power',{slot:-1,repeat:true});
+ let d=g.pendingDecision;act(g,'choose',{decisionId:d.id,decline:true});
+ assert.equal(g.pendingDecision,null);assert.deepEqual(g.players[0].active.energies,['base1-99']);
+}
 console.log('PASS repeatable Damage Swap and Energy Trans sessions');
