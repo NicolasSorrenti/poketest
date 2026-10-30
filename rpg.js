@@ -428,7 +428,7 @@ window.NeoRpgOverworldBridge=Object.freeze({
   if(!cast[id])return null;
   const src=scenePortraitSource(id,'neutral',null);
   return {id,name:cast[id].name,src,
-   ...(id==='camila'?{srcs:stagePortraitPaths(id,'neutral',null)}:{})};
+   ...((id==='camila'||APPROVED_DIALOGUE_MASTERS[id])?{srcs:stagePortraitPaths(id,'neutral',null)}:{})};
  },
  clearInteraction(){if(overworldControlsLocked())return false;state.selected=null;persist();render();return true;},
  snapshot(){return {location:state.location,day:state.day,slot:state.slot,selected:state.selected&&currentPeople().includes(state.selected)?state.selected:null,locked:overworldControlsLocked(),arriving:arrivalGate||!!pendingOverworldArrival||!!window.NeoRpgTimeTransitions?.active,storyActive:overworldStoryActive(),eventActive:!!(state.mandatoryEventState?.active||state.activeSliceOfLife||state.activeSituation||state.activeStory||state.activeSideQuest||state.activeArc||state.activeEncounter),people:currentPeople().filter(id=>!!cast[id]),places:Object.entries(places).map(([id,p])=>({id,name:p[0]}))};},
@@ -2336,6 +2336,18 @@ function portraitPaths(id,expression='neutral',sceneId=activeOutfitSceneId){
 // Keep Camila's approved full-body overworld source intact. The dialogue viewport
 // may show just her upper body without introducing another art file.
 const CAMILA_DIALOGUE_MASTER='/rpg-assets/characters/camila/overworld/standing-front.png';
+// Full-body dialogue masters already approved by the player; no images modified.
+// Preserve expression, location outfit, and day-locked special variants.
+const APPROVED_DIALOGUE_MASTERS=Object.freeze({
+ iris:'/rpg-assets/characters/iris/dialogue/neutral.png',
+ alma:'/rpg-assets/characters/alma/overworld/standing-front.png',
+ barb:'/rpg-assets/characters/barb/portraits/primary.png',
+ elena:'/rpg-assets/characters/elena/overworld/standing-portfolio.png'
+});
+function dialogueMasterSource(id,expression){
+ return expression==='neutral'?APPROVED_DIALOGUE_MASTERS[id]||null:null;
+}
+
 const PERSONA_C_CROPS={
  akari:[.028,0,.943,.597],alma:[.075,0,.868,.55],barb:[.296,0,.429,.363],
  camila:[.072,0,.894,.566],elena:[.225,0,.56,.355],elio:[.177,0,.673,.426],
@@ -2418,7 +2430,8 @@ function stagePortraitPaths(id,expression,sceneId){
  const normal=personaCStageCandidates(id,expression,portraitPaths(id,expression,sceneId));
  // Prefer the approved standing art for Camila's dialogue only. Keep every
  // expression-specific file as fallback if the full-body image cannot load.
- const dialogue=id==='camila'?[CAMILA_DIALOGUE_MASTER,...normal.filter(path=>path!==CAMILA_DIALOGUE_MASTER)]:normal;
+ const master=dialogueMasterSource(id,expression)||(id==='camila'?CAMILA_DIALOGUE_MASTER:null);
+ const dialogue=master?[master,...normal.filter(path=>path!==master)]:normal;
  return alternate?[alternate,...dialogue.filter(path=>path!==alternate)]:dialogue;
 }
 function scenePortraitSource(id,expression,sceneId=activeOutfitSceneId){
@@ -2431,9 +2444,10 @@ function applyPersonaCStageCrop(img,id){
  const alternate=/\/portraits\/special-day-\d+\.png(?:\?|$)/.test(src);
  const hanaVariant=id==='hana'&&src.includes('/overworld-variants/');
  const camilaMaster=id==='camila'&&src.includes(CAMILA_DIALOGUE_MASTER);
- // The front full-body source has a taller silhouette than Camila's old bust.
- // Show the head and torso into the top of the waist; never crop source pixels.
- const crop=camilaMaster?[.05,0,.90,.46]:alternate?(id==='barb'?[.10,0,.80,.60]:[.07,0,.86,.62]):hanaVariant?[.07,0,.86,.62]:PERSONA_C_CROPS[id];
+ const approvedMaster=APPROVED_DIALOGUE_MASTERS[id]&&src.includes(APPROVED_DIALOGUE_MASTERS[id]);
+ // Show the head and torso down to the top of the waist without changing
+ // any original full-body pixels. Special-day and expression art keeps its crop.
+ const crop=camilaMaster?[.05,0,.90,.46]:approvedMaster?[.06,0,.88,.47]:alternate?(id==='barb'?[.10,0,.80,.60]:[.07,0,.86,.62]):hanaVariant?[.07,0,.86,.62]:PERSONA_C_CROPS[id];
  if(!crop)return;
  const [x,y,w,h]=crop;
  // The stage frame clips the original image; no binary assets are altered.
@@ -2471,7 +2485,7 @@ function renderRpgCast(ids,locked,shown,portraitId,context={}){
    }
    // Allow Camila's new master to gracefully fall back to existing dialogue
    // expressions if its asset fails to load in the standalone overworld.
-   const sources=srcs?.length?srcs:(id==='camila'?stagePortraitPaths(id,expression,context.sceneId):null);
+   const sources=srcs?.length?srcs:((id==='camila'||APPROVED_DIALOGUE_MASTERS[id])?stagePortraitPaths(id,expression,context.sceneId):null);
    return {id,name:cast[id].name,src,...(sources?.length?{srcs:[src,...sources.filter(path=>path!==src)]}:{})};
   }):[]
  };
