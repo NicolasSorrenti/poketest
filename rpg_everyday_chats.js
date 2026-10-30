@@ -630,9 +630,9 @@
    "I know. It's an unusual experiment in accepting things as they are."
   ],
   [
-   "I tried folding a paper crane.",
-   "How'd that turn out?",
-   "It looks like a napkin trying very hard to become a bird."
+   "I let someone else choose the route for our afternoon walk.",
+   "Did you secretly check the map?",
+   "Twice. Then I put my phone away and asked what they liked about that street."
   ],
   [
    "I got on a bus without checking where it went.",
@@ -1736,11 +1736,11 @@
    "I remember being furious when the tide came in. I still remember the castle."
   ],
   [
-   "I asked a neighbor to teach me how to sew.",
-   "Did you manage a decent stitch?",
-   "I made a handkerchief with a crooked border.",
-   "Will you make another?",
-   "Absolutely. I rather enjoyed making something imperfect."
+   "I missed a turn during a practice match and almost asked to rewind it.",
+   "Did you?",
+   "No. I played from the mistake and found a completely different line.",
+   "Was that difficult?",
+   "Uncomfortable, yes. But I learned more than I would have from a perfect rehearsal."
   ],
   [
    "I spent Sunday reading in a public garden.",
@@ -1870,9 +1870,11 @@
    "Absolutely. It still tastes good. Just bring a knife."
   ],
   [
-   "I found a little music box in a thrift shop.",
-   "What does it play?",
-   "A song I used to hear as a kid. I didn't realize I remembered it."
+   "I dared the arcade owner to let me choose the victory music for one evening.",
+   "Did they agree?",
+   "Only if I could beat the house record first. I did, by one point.",
+   "And the victory music?",
+   "I played the most dramatic trumpet fanfare I could find. Everyone started bowing after their matches."
   ],
   [
    "There was an old comedy playing at the little cinema.",
@@ -2475,9 +2477,11 @@
    "The one I made up when I connected the wrong stars."
   ],
   [
-   "My neighbor's kid made me a friendship bracelet.",
-   "Are you wearing it?",
-   "Of course. The knots are impossible to undo anyway."
+   "I offered to help set up the neighborhood's outdoor movie night.",
+   "What did they put you in charge of?",
+   "The projector. It cut out right at the dramatic reveal.",
+   "How did everyone take that?",
+   "I stood in front of the sheet and acted out the ending. They applauded the projector when it came back."
   ],
   [
    "My herb garden has been taken over.",
@@ -2520,9 +2524,11 @@
    "A smiling whale in a crown. I left it for the next person."
   ],
   [
-   "I tried making soap at a workshop.",
-   "Was it difficult?",
-   "Mine looks like a potato. A very fragrant potato."
+   "I agreed to introduce the performers at the community concert.",
+   "You volunteered for the microphone?",
+   "I did. Then I realized I hadn't asked how to pronounce anyone's name.",
+   "What happened?",
+   "I found every performer backstage and practiced with them. By showtime they were teasing me about my notes."
   ],
   [
    "I went to a puppet show with my friend's little sister.",
@@ -2628,11 +2634,11 @@
    "No. But I remember laughing so hard I couldn't hold the blanket."
   ],
   [
-   "I tried making embroidered patches.",
-   "How'd the first one turn out?",
-   "It's meant to be a flower. Looks more like a fried egg.",
-   "Will you redo it?",
-   "Nah, I like this one. It's got personality."
+   "I called out a swimmer for racing through the shallow end.",
+   "Did they listen?",
+   "They told me they were training for a competition.",
+   "And you?",
+   "Told them confidence doesn't make the pool deeper. They slowed down."
   ],
   [
    "Che, you have to try the lemon tart from the new bakery.",
@@ -3100,9 +3106,11 @@
    "She did, then decorated the patch with little embroidered stars."
   ],
   [
-   "I found a little take-a-book shelf near the station.",
-   "Did you take one?",
-   "Yes. Left two books in return. One had a note inside recommending chapter four."
+   "I volunteered to help sort the tournament's lost-property box.",
+   "Did anything surprise you?",
+   "Three identical umbrellas, a single roller skate, and a trophy nobody claims to have won.",
+   "What did you do with the trophy?",
+   "Put it on the desk with a note: 'Please explain yourself.' I'm hoping the owner has a good story."
   ],
   [
    "I went for a walk and stumbled onto a parade.",
