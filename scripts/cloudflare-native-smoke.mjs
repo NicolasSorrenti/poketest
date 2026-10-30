@@ -33,4 +33,23 @@ const duel=await call('/api/classic/create',{method:'POST',body:{deck:'blackout'
 if(!duel.token||duel.revision!==0)throw Error('Classic duel not created');
 const ongoing=await call('/api/classic/state',{headers:{'X-Duel-Token':duel.token}});
 if(ongoing.revision!==0||!ongoing.view)throw Error('Classic game state not persisted');
-console.log('PASS: Cloudflare Cube draft, Cube pick/state, decks, card pool and Classic duel persisted to D1');
+const duelHeaders={'X-Duel-Token':duel.token};
+const catalog=new Map(pool.cards.map(c=>[c.id,c]));
+const basic=duel.view.players[0].hand.findIndex(id=>{
+ const c=catalog.get(id);return c?.supertype==='Pokémon'&&(c.subtypes||[]).some(s=>s==='Basic'||s==='Baby');
+});
+if(basic<0)throw Error('Opening hand missing basic Pokemon');
+let played=await call('/api/classic/action',{
+ method:'POST',headers:duelHeaders,
+ body:{revision:duel.revision,command:{type:'setup_select',payload:{handIndex:basic}}}
+});
+if(played.revision!==1)throw Error('Classic setup action not persisted');
+let checkpoint=await call('/api/classic/state',{headers:duelHeaders});
+if(checkpoint.revision!==1)throw Error('Classic action lost across requests');
+played=await call('/api/classic/action',{
+ method:'POST',headers:duelHeaders,
+ body:{revision:played.revision,command:{type:'setup_confirm'}}
+});
+if(!played.view?.phase)throw Error('Classic setup confirmation did not finish');
+
+console.log('PASS: Cloudflare Cube pick/state, catalog, Classic duel setup/actions and D1 persistence');
