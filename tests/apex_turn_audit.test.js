@@ -208,4 +208,8 @@ test('Energy audit runs for authoritative duel and Trainer-rule changes on PRs a
  }
  assert.match(workflow,/node --test [^\n]*tests\/rpg_cpu_profiles\.test\.js/,
   'Energy audit must execute the NPC roster/personality regression');
+ for(const deck of ['rain_dance','venusaur']){
+  assert.ok(workflow.includes('node scripts/apex-turn-audit.js --deck '+deck+' --pairs 1 --max-turns 70'),
+   deck+' must receive real reducer turn auditing');
+ }
 });
