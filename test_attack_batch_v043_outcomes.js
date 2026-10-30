@@ -15,6 +15,19 @@ x=test(200,['Grass','Grass'],{tails:false});assert(x.go());assert.equal(x.check(
 x=test(200,['Grass','Grass'],{tails:true});assert(x.go());assert.equal(x.check('engine.foe.active.damage'),10,'Fury Cutter: 0 heads = 10');
 x=test(315,['Water','Water','Water','Water','Water','Water']);assert(x.go());assert.equal(x.check('engine.foe.active.damage'),40,'Ink Blast max +20');
 x=test(44,['Lightning','Lightning','Lightning']);assert(x.go());assert.equal(x.check('engine.foe.active.damage'),90);assert.equal(x.check('engine.me.active.energies.length'),0);assert.equal(x.check('engine.me.discard.length'),6);
+
+// Neo Genesis Flaaffy's printed Discharge consumes ALL attached Energy types.
+// The catalogue must preserve the printed text; mixed Energy count toward damage.
+x=test(163,['Lightning','Lightning','Water','Fire']);
+assert(x.go());
+assert.equal(x.check('engine.foe.active.damage'),120,'Flaaffy Discharge flips for all four Energy cards');
+assert.equal(x.check('engine.me.active.energies.length'),0,'Flaaffy discards all attached Energy, not only Lightning');
+assert.equal(x.check('engine.me.discard.length'),7,'All four Energy cards enter the discard pile');
+x=test(163,['Lightning','Water','Water']);
+assert(x.go());
+assert.equal(x.check('engine.foe.active.damage'),90,'Both Water Energy count toward Discharge damage');
+assert.equal(x.check('engine.me.active.energies.length'),0,'No Energy remains attached after Discharge');
+
 x=test(64,['Fire','Fire','Fire','Fire','Water']);assert(x.go());assert.equal(x.check('engine.me.active.energies.length'),2);assert.equal(x.check('engine.me.discard.length'),6);
 x=test(64,['Fire','Fire','Water'],{setup:'engine.me.active.energies.push("ex-Water")',noAutofill:true});assert.equal(x.go(),false,'Firestorm rejects non-Fire substitution');assert.equal(x.check('engine.me.active.energies.length'),4);
 x=test(73,['Lightning','Lightning','Water','Water']);assert(x.go());assert.equal(x.check('engine.foe.active.status'),'Paralyzed');assert.equal(x.check('engine.me.active.damage'),0);
