@@ -303,7 +303,11 @@
      "kind": "attack",
      "index": 1,
      "name": "Fire Blast",
-     "status": "unreviewed"
+     "status": "partial",
+     "evidence": [
+      "test_typed_energy_discard_audit.js: Fire Blast auto-discards among identical Fire Energy cards; Basic Fire versus Rainbow Energy remains selectable and a non-Fire card is preserved. Lure is unreviewed.",
+      "https://github.com/PokemonTCG/pokemon-tcg-data/blob/master/cards/en/base1.json"
+     ]
     }
    ]
   },
@@ -17648,7 +17652,11 @@
      "kind": "attack",
      "index": 1,
      "name": "Burning Flame",
-     "status": "unreviewed"
+     "status": "partial",
+     "evidence": [
+      "test_typed_energy_discard_audit.js: Burning Flame's heads count, 30+20 damage per heads, required Fire discard count, automatic equivalent-card discard and notification across seven seeds.",
+      "https://www.tcgcollector.com/cards/4559/flareon-neo-destiny-46-105"
+     ]
     }
    ]
   },
@@ -18630,7 +18638,11 @@
      "kind": "attack",
      "index": 1,
      "name": "Psyburst",
-     "status": "unreviewed"
+     "status": "partial",
+     "evidence": [
+      "test_typed_energy_discard_audit.js: Psyburst auto-discards one of four identical Fire Energy cards, preserves ineligible Energy and logs the discard. Reflect Shield remains unreviewed.",
+      "https://www.tcgcollector.com/cards/4927/mewtwo-neo-destiny-109-105"
+     ]
     }
    ]
   },
