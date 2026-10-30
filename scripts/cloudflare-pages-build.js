@@ -27,7 +27,7 @@ const htmlPages = new Set([
   'classic_live.html', 'cube.html', 'cube_room.html', 'deck_builder.html',
   'mat_generator.html', 'online.html', 'play.html', 'rpg-overworld.html',
   'rpg.html', 'rpg_card_library.html', 'rpg_deck_studio.html',
-  'overworld-prototype.html', 'overworld-placement-studio.html'
+  'overworld-prototype.html', 'overworld-placement-studio.html', 'rpg_outfit_chime_test.html'
 ]);
 const staticExt = new Set(['.css', '.png', '.jpg', '.jpeg', '.svg', '.webp']);
 const excludedAssetSegments = new Set(['references', 'rejected-artwork', 'expression-sheets']);
@@ -35,7 +35,8 @@ const explicitJson = new Set([
   'rpg-assets/reactions/manifest.json',
   'rpg-assets/outfit-chime-focus.json',
   'rpg-assets/outfit-chime-focus-top.json',
-  'rpg-assets/characters/hana/overworld-variants/chime-focus.json'
+  'rpg-assets/characters/hana/overworld-variants/chime-focus.json',
+  'rpg-assets/outfit-chime-overworld-candidates.json'
 ]);
 let copied = 0;
 let bytes = 0;
