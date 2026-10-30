@@ -298,7 +298,11 @@
      "kind": "attack",
      "index": 0,
      "name": "Lure",
-     "status": "unreviewed"
+     "status": "partial",
+     "evidence": [
+      "test_card_fidelity_ninetales_lure.js: two-Colorless cost, no-Bench no-op, one-target automatic switch, multiple-target choice ownership, and Special Condition clearing across Classic, Neo, online-preview and 40-card Cube.",
+      "https://github.com/PokemonTCG/pokemon-tcg-data/blob/master/cards/en/base1.json"
+     ]
     },
     {
      "kind": "attack",
