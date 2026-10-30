@@ -32,7 +32,7 @@ for(const file of ['online','classic_live']){
  const html=fs.readFileSync(__dirname+'/'+file+'.html','utf8');const js=fs.readFileSync(__dirname+'/'+file+'.js','utf8');
  assert.match(html,/id="prizeRail"/,file+' Prize rail');
  assert.match(html,/class="active-with-attacks"/,file+' attacks next to active');
- assert.match(html,/src="duel_quick_ui\.js"/,file+' shared component');
+ assert.match(html,/src="duel_quick_ui\.js(?:\?v=[^"]+)?"/,file+' shared component');
  assert.match(html,/id="cardPreview"/,file+' card magnifier');
  assert.match(html,/id="energyLimitToast"/,file+' brief Energy warning target');
  assert.doesNotMatch(html,/id="energyStatus"/,file+' no Energy status badge');
