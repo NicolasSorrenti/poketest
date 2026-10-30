@@ -7,10 +7,16 @@
  const isRpgDuel=/\/classic_live\.html$/.test(path)
   &&new URLSearchParams(window.location.search).get('rpg')==='1';
  if(!isRpg&&!isRpgDuel)return;
- const key=isOverworld?'neoHarborOverworldChibiModeV1':'neoHarborRpgDiscreetV1';
+ const overworldKey='neoHarborOverworldChibiModeV1';
+ const rpgKey='neoHarborRpgDiscreetV1';
  const root=document.documentElement;
  function fromStorage(){
-  try{const saved=window.localStorage.getItem(key);return saved===null?isOverworld:saved==='1';}catch{return isOverworld;}
+  try{
+   // The overworld chibi switch and RPG battle switch are one preference.
+   // Prefer the overworld value so an existing chibi selection carries into duels.
+   const saved=window.localStorage.getItem(overworldKey)??window.localStorage.getItem(rpgKey);
+   return saved===null?isOverworld:saved==='1';
+  }catch{return isOverworld;}
  }
  function refreshButton(){
   const button=document.getElementById('rpgDiscreetToggle');
@@ -22,7 +28,7 @@
  }
  function apply(value,save){
   root.dataset.rpgDiscreet=value?'on':'off';
-  if(save){try{window.localStorage.setItem(key,value?'1':'0');}catch{/* Private browsing can block storage. */}}
+  if(save){try{const stored=value?'1':'0';window.localStorage.setItem(overworldKey,stored);window.localStorage.setItem(rpgKey,stored);}catch{/* Private browsing can block storage. */}}
   refreshButton();
   window.NeoRpgDiscreetAvatars?.refresh?.();
  }
@@ -47,6 +53,6 @@
  else bindButton();
  new MutationObserver(bindButton).observe(document.documentElement,{childList:true,subtree:true});
  window.addEventListener('storage',event=>{
-  if(event.key===key)apply(event.newValue==='1',false);
+  if(event.key===overworldKey||event.key===rpgKey)apply(fromStorage(),false);
  });
 })();
