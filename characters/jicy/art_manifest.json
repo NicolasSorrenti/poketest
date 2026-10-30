@@ -35,8 +35,24 @@
     },
     {
       "sceneId": "jicy_random_high_score",
-      "path": "/rpg-assets/characters/jicy/events/jicy_random_high_score.webp",
-      "prompt": "Cinematic 16:9 Neo Harbor visual-novel CG for One More Try. Jicy and the protagonist sharing this small everyday moment; preserve her approved adult design, blonde high ponytail and canonical pink sleeveless suit. Friendly, wholesome, slice-of-life composition; no other named characters, no dialogue text, lower fifth clear for UI dialogue. Keep the moment about the activity and their connection, not the outfit."
+      "path": "/rpg-assets/characters/jicy/events/jicy_one_more_try_stumble.webp",
+      "prompt": "Cinematic Neo Harbor arcade CG for Jicy's accidental stumble in One More Try. Preserve the established adult Jicy design and exact hot-pink sleeveless zip-front combat suit with charcoal under-bust band and wide armholes. Keep her expression embarrassed and concerned as she catches herself beside the player. Sweet, candid moment; no text.",
+      "sequence": [
+        {
+          "order": 1,
+          "lineIndex": 5,
+          "path": "/rpg-assets/characters/jicy/events/jicy_one_more_try_stumble.webp",
+          "moment": "Jicy accidentally stumbles forward and braces herself beside the player, immediately checking if they are okay.",
+          "prompt": "Player point of view, medium-wide framing. Jicy has just caught herself with both hands braced beside the player. Her expression is startled and apologetic. Preserve her canonical pink sleeveless suit and keep the moment candid."
+        },
+        {
+          "order": 2,
+          "lineIndex": 8,
+          "path": "/rpg-assets/characters/jicy/events/jicy_one_more_try_reassurance.webp",
+          "moment": "Seeing the player's reassuring smile, Jicy relaxes and lets herself stay close.",
+          "prompt": "A slightly closer continuation of the same player point of view. Jicy's shoulders relax as she realizes the player is okay; she remains close with a shy, relieved expression. Preserve the exact canonical pink sleeveless suit and arcade setting."
+        }
+      ]
     },
     {
       "sceneId": "jicy_random_card_art",
