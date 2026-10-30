@@ -265,7 +265,7 @@
       const knownPose=!!config.characters?.[id]?.poses?.[requestedPose];
       return {id,pose:knownPose?requestedPose:chooseLocationPose(id),poseLocked:knownPose};
     }).filter(Boolean);
-    placements.splice(0,placements.length,...castEntries.slice(0,8).map(({id,pose,poseLocked},i)=>{const anchor=['P1','P2','P3','P4','E1','E2','E3','E4'][i],saved=savedMapRecords.find(item=>item.character===id),custom=saved&&fromSavedPlacement(saved,anchor);return custom?{...custom,pose:poseLocked?pose:(custom.pose||pose)}:{id,anchor,pose}}));
+    placements.splice(0,placements.length,...castEntries.slice(0,8).map(({id,pose,poseLocked},i)=>{const anchor=['P1','P2','P3','P4','E1','E2','E3','E4'][i],saved=savedMapRecords.find(item=>item.character===id),custom=saved&&fromSavedPlacement(saved,anchor),customArt=custom&&config.characters?.[id]?.poses?.[custom.pose],customPoseAllowed=!(id==='laca'&&!poseLocked&&customArt?.outfit==='lifeguard');return custom?{...custom,pose:poseLocked?pose:(customPoseAllowed?(custom.pose||pose):pose)}:{id,anchor,pose}}));
     const subtitle=document.querySelector('.title small');if(subtitle)subtitle.textContent='Live RPG schedule · placement preview';
   }
   if(dev){byId('guides').hidden=false;}
