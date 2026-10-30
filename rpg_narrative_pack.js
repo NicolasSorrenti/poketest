@@ -74,7 +74,7 @@
    ['Offer to talk to the player with him','I hope they\'ll talk to me. Can you help me find out when they\'re next at the club?','support','jun_reach_out'],
    ['Tell him a fair ruling still needs an explanation','You\'re right. I should have said why I made the call, not just quoted a rule.','honest','jun_explain']
   ]),
-  S('jun_guest_2','jun','The Table Nobody Books',37,52,'center',0,2,'jun_guest_1',[["jun","The beginner table is empty again. I even straightened the chairs."],["Protagonist","Did anyone sign up?"],["Narrator","Two untouched starter decks sit beside a handwritten 'Anyone welcome' sign."],["jun","Three people came over, looked at the sign, and walked away."],["Protagonist","Want me to sit down first?"],["jun","Please. And if someone makes a mistake, let them finish their turn before we jump in."]],[
+  S('jun_guest_2','jun','The Table Nobody Books',37,52,'center',0,2,'jun_guest_1',[["jun","The beginner table is empty again. I even straightened the chairs."],["Protagonist","The sign says anyone is welcome, but the chairs are facing the judges' desk. Could that be putting them off?"],["Narrator","Two untouched starter decks sit beside a handwritten 'Anyone welcome' sign."],["jun","Three people stopped there and left. I might have set up an examination room instead of a beginner table."],["Protagonist","Want me to sit down first?"],["jun","Please. And if someone makes a mistake, let them finish their turn before we jump in."]],[
    ['Volunteer to lose gracefully to a beginner','Sit opposite me. I\'ll play the first game badly so you don\'t have to.','support','jun_demo'],
    ['Suggest he let beginners teach the rules back','They get to explain the turn back to me? Good. I might learn something too.','honest','jun_learn']
   ]),
