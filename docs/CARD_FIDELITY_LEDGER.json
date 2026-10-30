@@ -6822,7 +6822,10 @@
      "kind": "attack",
      "index": 0,
      "name": "Drag Off",
-     "status": "unreviewed"
+     "status": "partial",
+     "evidence": [
+      "test_classic_complex_attacks.js: Drag Off auto-targets the sole opposing Bench Pokémon before damage; active/bench switch and 20 damage checked."
+     ]
     },
     {
      "kind": "attack",
