@@ -134,6 +134,7 @@
  const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
  let modalDecisionId=null,lastFieldDecisionId=null;
  let token=null,current=null,selectedHand=null,targetMode=null,busy=false,decisionSelection=new Set();
+ let actionQueue=[],actionQueueRunning=false,actionQueueWake=null;
  let playbackEpoch=0;
  let handVisible=true,powersOpen=false,logOpen=false,lastCoinSeq=null,coinQueue=[],coinTimer=null,lastKoMessage="";
  const command=(type,payload={})=>({type,payload});
@@ -178,7 +179,7 @@
  const fieldDecision=()=>{const d=current?.view?.pendingDecision;if(!d||d.actor!==0)return null;
   return window.NeoBattleDecisionUI.resolveTargets(d,current.view,0,card);
  };
- function chooseFieldOption(id){const d=current?.view?.pendingDecision;if(!d||d.actor!==0||!fieldDecision()?.some(x=>x.id===id)||busy)return;
+ function chooseFieldOption(id){const d=current?.view?.pendingDecision;if(!d||d.actor!==0||!fieldDecision()?.some(x=>x.id===id))return;
   if(d.max===1){send(command('choose',{decisionId:d.id,selected:[id]}));return;}
   if(decisionSelection.has(id))decisionSelection.delete(id);else if(decisionSelection.size<d.max)decisionSelection.add(id);
   render();
@@ -191,6 +192,18 @@
  const CPU_ACTION_PAUSE_MS=1800,CPU_ATTACK_PAUSE_MS=2400,RPG_ATTACK_PAUSE_MS=3300;
  const lastEventSeq=actions=>(Array.isArray(actions)?actions:[]).reduce(
   (max,event)=>Number.isSafeInteger(event?.seq)?Math.max(max,event.seq):max,0);
+ async function waitForActionQueueOr(promise){
+  if(actionQueue.length)return true;
+  let wake;
+  const queued=new Promise(resolve=>{wake=()=>resolve(true);actionQueueWake=wake;});
+  const finished=Promise.resolve(promise).then(()=>false,()=>false);
+  const interrupted=await Promise.race([finished,queued]);
+  if(actionQueueWake===wake)actionQueueWake=null;
+  return interrupted||actionQueue.length>0;
+ }
+ function skipPlaybackTo(result){
+  current=result;reactions?.reset();opponentActivity.clear();combat.reset();render();
+ }
  async function playCpuPlayback(result,epoch){
   const snapshots=Array.isArray(result.cpuPlayback)?result.cpuPlayback:[];
   // These are chronological public snapshots from the authoritative server,
@@ -203,36 +216,62 @@
    previousSeq=lastEventSeq(frame.activity);
    current=frame===result?result:{...result,...frame};
    render();
-   // Keep CPU playback and the victory transition behind image preparation.
-   // Presentation duration begins only after the NPC cut-in is visible.
+   // Continue the command queue as soon as the player queues another move.
    if(rpgMode&&reactions?.active){
-    await reactions.whenShown();
+    if(await waitForActionQueueOr(reactions.whenShown())){skipPlaybackTo(result);return true;}
     if(epoch!==playbackEpoch)return false;
    }
    if(frame!==result){
-    // RPG attacks must hold until the illustrated NPC cut-in has completed.
-    // Other modes still receive a readable attack animation, but no NPC art.
     const duration=cpuAttacked?(rpgMode?RPG_ATTACK_PAUSE_MS:CPU_ATTACK_PAUSE_MS):CPU_ACTION_PAUSE_MS;
-    await new Promise(resolve=>setTimeout(resolve,duration));
+    if(await waitForActionQueueOr(new Promise(resolve=>setTimeout(resolve,duration)))){skipPlaybackTo(result);return true;}
    }
   }
   return true;
  }
- async function send(action){if(!current||busy)return;busy=true;clearError();
-  const epoch=playbackEpoch;
+ function send(action){
+  if(!current)return;
+  actionQueue.push({action,epoch:playbackEpoch});
+  clearError();
+  if(actionQueueWake){const wake=actionQueueWake;actionQueueWake=null;wake();}
+  void drainActionQueue();
+ }
+ async function drainActionQueue(){
+  if(actionQueueRunning)return;
+  actionQueueRunning=true;
   try{
-   const result=await api('action',{method:'POST',body:JSON.stringify({revision:current.revision,command:action})});
-   if(epoch!==playbackEpoch)return;
-   const beforePrizes=current?.view?.players?.map(p=>p.prizeCount);
-   preview.hide();selectedHand=null;targetMode=null;decisionSelection.clear();
-   if(!await playCpuPlayback(result,epoch))return;
-   checkCloudCheckpoint(result);
-   // Let a final knockout reaction appear before returning to the RPG map.
-   const prizes=current.view.players;
-   const finalKo=rpgMode&&current.view.over&&beforePrizes&&prizes.some((p,i)=>typeof beforePrizes[i]==='number'&&p.prizeCount<beforePrizes[i]);
-   if(finalKo)setTimeout(notifyRpg,3000);else notifyRpg();
-  }catch(e){if(epoch===playbackEpoch)fail(e);}
-  finally{if(epoch===playbackEpoch){busy=false;render();}}
+   while(actionQueue.length){
+    const queued=actionQueue.shift(),epoch=queued.epoch;
+    if(epoch!==playbackEpoch||!current)continue;
+    const beforePrizes=current?.view?.players?.map(p=>p.prizeCount);
+    try{
+     // Requests stay ordered in the background so each command uses the latest
+     // server revision. The player can keep interacting while this runs.
+     const result=await api('action',{method:'POST',body:JSON.stringify({revision:current.revision,command:queued.action})});
+     if(epoch!==playbackEpoch)continue;
+     preview.hide();selectedHand=null;targetMode=null;decisionSelection.clear();
+     if(actionQueue.length)skipPlaybackTo(result);
+     else if(!await playCpuPlayback(result,epoch))continue;
+     checkCloudCheckpoint(result);
+     if(result.cloudSaved===false&&/^Cloud checkpoint pending:/i.test(result.cloudError||'')){
+      fail(new Error('Battle action was accepted, but cloud sync failed: '+result.cloudError));
+     }
+     const finalKo=rpgMode&&result.view?.over&&beforePrizes&&result.view.players.some((p,i)=>typeof beforePrizes[i]==='number'&&p.prizeCount<beforePrizes[i]);
+     if(finalKo)setTimeout(notifyRpg,3000);else notifyRpg();
+    }catch(error){
+     if(epoch===playbackEpoch){
+      actionQueue.length=0;
+      fail(error);
+      // A timed-out request may have committed on the server. Read its state
+      // before allowing another command, so the next revision is authoritative.
+      try{const latest=await api('state');if(epoch===playbackEpoch){current=latest;render();}}
+      catch{ /* Preserve the original action error for the player. */ }
+     }
+    }
+   }
+  }finally{
+   actionQueueRunning=false;
+   if(actionQueue.length)void drainActionQueue();
+  }
  }
  async function start(){if(cubeRoomCode||cubeSoloMode)return false;if(busy)return;busy=true;$('startupError').textContent='';try{
   const partnerCards=rpgMode&&rpgDuelId?sessionStorage.getItem('neoRpgNpcDeck:'+rpgDuelId):null;
@@ -259,7 +298,7 @@
  function setLogOpen(open){logOpen=!!open;$('logDrawer').classList.toggle('hidden',!logOpen);$('logToggle').setAttribute('aria-expanded',String(logOpen));}
   function renderHandFan(ids){shared.renderHandFan({root:$('handFan'),ids,visible:handVisible,phase:current.view.phase,selectedHand,targetMode,makeCard:handCard,getCard:card,viewportWidth:window.innerWidth});}
   function pendingPrizeChoice(){const d=current?.view?.pendingDecision;return d?.kind==='prize-card'&&d.actor===0?d:null;}
- function choosePrize(id){const d=pendingPrizeChoice();if(!d||busy||!d.options?.some(o=>o.id===id))return;send(command('choose',{decisionId:d.id,selected:[id]}));}
+ function choosePrize(id){const d=pendingPrizeChoice();if(!d||!d.options?.some(o=>o.id===id))return;send(command('choose',{decisionId:d.id,selected:[id]}));}
  function renderFaceUpPrizes(){shared.renderFaceUpPrizes({rail:$('prizeRail'),view:current?.view,me:0,getCard:card});}
   function renderPrizes(){shared.renderPrizeRail({rail:$('prizeRail'),decision:pendingPrizeChoice(),busy,button:btn,choose:choosePrize});}
   function renderPrizeFallback(){shared.renderPrizeFallback({container:$('prizeChoicePanel'),decision:pendingPrizeChoice(),busy,button:btn,choose:choosePrize});}
@@ -291,7 +330,7 @@
   // Cube sessions belong to an authoritative tournament. Never open the
   // Single Match deck lobby or create a new untracked duel from here.
   if(cubeRoomCode||cubeSoloMode){location.assign(cubeRoomCode?'/cube_room.html?room='+encodeURIComponent(cubeRoomCode):'/cube.html');return;}
-  npcChat?.reset();toggleNpcChat(false);playbackEpoch++;busy=false;clearChoiceUi();opponentActivity.clear();combat.reset();reactions?.reset();feedback.reset();preview.hide();token=null;current=null;selectedHand=null;targetMode=null;handVisible=true;powersOpen=false;logOpen=false;setLogOpen(false);document.body.classList.remove('duel-active','cpu-match');sessionStorage.removeItem(rpgKey);setHandVisible(true);render();}
+  npcChat?.reset();toggleNpcChat(false);playbackEpoch++;actionQueue.length=0;busy=false;clearChoiceUi();opponentActivity.clear();combat.reset();reactions?.reset();feedback.reset();preview.hide();token=null;current=null;selectedHand=null;targetMode=null;handVisible=true;powersOpen=false;logOpen=false;setLogOpen(false);document.body.classList.remove('duel-active','cpu-match');sessionStorage.removeItem(rpgKey);setHandVisible(true);render();}
  function setTarget(type,payload,title,benchOnly=false){preview.hide();targetMode={type,payload,title,benchOnly};render();}
  function cancelTarget(){targetMode=null;selectedHand=null;preview.hide();render();}
  function pokemonNode(u,side,slot){
@@ -469,22 +508,22 @@
   shared.renderStadium({mine:$('myStadium'),theirs:$('enemyStadium'),stadium:v.stadium,me:0,getCard:card,picture,onInspect:id=>preview.inspect(id),onHover:(element,id)=>preview.attach(element,id)});
   renderHandFan(you.hand);$('hand').textContent='';you.hand.forEach((id,i)=>$('hand').append(handCard(id,i,v.phase==='setup')));
   renderHandActions();$('attacks').textContent='';$('powers').textContent='';
-  const attackEnabled=v.phase==='game'&&!v.over&&yourTurn&&!v.pendingDecision&&!busy;
+  const attackEnabled=v.phase==='game'&&!v.over&&yourTurn&&!v.pendingDecision;
   shared.renderAttacks({root:$('attacks'),unit:you.active,view:v,me:0,getCard:card,enabled:attackEnabled,button:btn,onAttack:index=>send(command('attack',{attackIndex:index})),attackReason:presentation.attackReason});
   $('mobileAttacksToggle').disabled=!you.active||v.over||v.phase!=='game';
   if(v.phase==='game'&&!v.over&&yourTurn&&!v.pendingDecision&&you.active){
    [you.active,...you.bench].forEach((u,i)=>{if(u?.secretPlanFaceDown){$('powers').append(btn(`🎴 Reveal Secret Plan (${i===0?'Active':'Bench '+i})`,()=>send(command('reveal_secret',{slot:i-1}))));return;}const c=card(u.id);(c.abilities||[]).forEach(a=>{if(a.name)$('powers').append(btn(`✦ ${a.name} (${i===0?'Active':'Bench '+i})`,()=>send(command('use_power',{slot:i-1,repeat:['Damage Swap','Energy Trans'].includes(a.name)}))));});});
   }
-  const actionsDisabled=busy||!yourTurn||v.phase!=='game'||!!v.pendingDecision||v.over;
+  const actionsDisabled=!yourTurn||v.phase!=='game'||!!v.pendingDecision||v.over;
   $('retreatBtn').disabled=actionsDisabled||!you.bench.length;
   $('retreatBtn').title=actionsDisabled?'Retreat on your turn after resolving any choices.':!you.bench.length?'You need a Benched Pokémon to retreat.':'Choose a Benched Pokémon to replace your Active Pokémon.';
-  $('undoBtn').disabled=busy||!current.undo?.available;
+  $('undoBtn').disabled=!current.undo?.available;
   $('undoBtn').title=current.undo?.available?'Undo '+current.undo.label:'Available only before random actions, drawing cards, or turn changes';
   const openingSetup=v.phase==='setup'&&!v.over;
   const bonus=v.mulliganBonus;
   $('endBtn').textContent=openingSetup?(bonus?(bonus.side===0&&bonus.drawn!==null?'✓ Start duel':'Choose bonus cards'):(you.active?'✓ Confirm setup':'Choose Active first')):'End turn →';
   $('endBtn').title=openingSetup?(bonus?'Resolve the mulligan bonus, then finish setup.':'Choose your Active Pokémon, optionally add up to five Benched Pokémon, then confirm to begin.'):'End your turn';
-  $('endBtn').disabled=openingSetup?(bonus?(busy||bonus.side!==0||bonus.drawn===null):(busy||!you.active||!!v.pendingDecision)):actionsDisabled;
+  $('endBtn').disabled=openingSetup?(bonus?(bonus.side!==0||bonus.drawn===null):(!you.active||!!v.pendingDecision)):actionsDisabled;
   $('concedeBtn').disabled=v.over||v.phase!=='game'||!yourTurn;
   $('history').textContent='';(v.messages||[]).forEach(x=>{const li=document.createElement('li');li.textContent=x;$('history').append(li);});
   renderDecisions();combat.update(current);reactions?.update(current);renderCPULog(v);
@@ -547,7 +586,7 @@
  $('closePile').addEventListener('click',()=>$('pileModal').classList.add('hidden'));$('pileModal').addEventListener('click',e=>{if(e.target===$('pileModal'))$('pileModal').classList.add('hidden');});
  $('undoBtn').addEventListener('click',()=>send(command('undo')));
  $('endBtn').addEventListener('click',()=>{
-  if(!current||busy)return;
+  if(!current)return;
   if(current.view.phase==='setup'){
    const bonus=current.view.mulliganBonus;
    if(bonus){if(bonus.side===0&&bonus.drawn!==null)send(command('setup_bonus_done'));}
@@ -556,6 +595,6 @@
  });
  $('retreatBtn').addEventListener('click',()=>setTarget('retreat',{},'Choose Benched replacement',true));
  $('concedeBtn').addEventListener('click',()=>{if(confirm('Concede this duel?'))send(command('concede'));});
- document.addEventListener('keydown',e=>{if(e.key==='Escape'){const d=current?.view?.pendingDecision;if(d?.cancelable&&!busy){e.preventDefault();send(command('cancel_choice',{decisionId:d.id}));return;}if(targetMode){e.preventDefault();cancelTarget();}else if(powersOpen)setPowersOpen(false);else if(logOpen)setLogOpen(false);else $('pileModal').classList.add('hidden');}});
+ document.addEventListener('keydown',e=>{if(e.key==='Escape'){const d=current?.view?.pendingDecision;if(d?.cancelable){e.preventDefault();send(command('cancel_choice',{decisionId:d.id}));return;}if(targetMode){e.preventDefault();cancelTarget();}else if(powersOpen)setPowersOpen(false);else if(logOpen)setLogOpen(false);else $('pileModal').classList.add('hidden');}});
  init();
 })();
