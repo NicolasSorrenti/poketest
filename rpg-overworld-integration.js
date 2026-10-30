@@ -360,9 +360,10 @@
     const portraitWindow=window.NeoRpgSceneCast?.createSpeakerWindow?.();
     let interactionFocus=null;
     const poseTriggersById=new Map();
-    let poseTriggerBusy=false,poseTriggerAwaitingDialogue=false;
+    let poseTriggerBusy=false,poseTriggerAwaitingDialogue=false,poseTriggerRetryTimer=null;
     function queuePoseTriggers(message){
       const data=bridge()?.snapshot();if(!data||message.scene!==data.location)return;
+      poseTriggersById.clear();
       for(const item of Array.isArray(message.triggers)?message.triggers:[]){
         if(!/^[a-z][a-z0-9_-]{0,35}$/.test(item?.id||'')||!data.people.includes(item.id))continue;
         let url;try{url=new URL(item.src,location.href)}catch{continue}
@@ -373,6 +374,7 @@
         if(seen)continue;
         poseTriggersById.set(item.id,{id:item.id,pose,src:url.pathname+url.search,scene:data.location,key});
       }
+      syncPoseTriggerQueue();
     }
     async function playPoseTrigger(item){
       if(poseTriggerBusy||poseTriggerAwaitingDialogue||overlay.hidden||suspendedForDuel)return false;
@@ -383,12 +385,13 @@
         try{sessionStorage.setItem(item.key,'1')}catch{}
         if(window.NeoOutfitChime?.display)await window.NeoOutfitChime.display(item.src,{top:0,bottom:1,left:0,right:1},1450);
         const current=bridge()?.snapshot();
-        if(!current||current.location!==item.scene||!current.people.includes(item.id))return false;
+        if(!current||current.location!==item.scene||!current.people.includes(item.id)){try{sessionStorage.removeItem(item.key)}catch{}poseTriggersById.delete(item.id);return false}
         if(current.locked){try{sessionStorage.removeItem(item.key)}catch{}return false}
         interactionFocus=item.id;
         if(!showStory()||!bridge()?.poseTriggerDialogue?.(item.id,item.src)){
           interactionFocus=null;hideStory();showNotice('This pose could not start its dialogue.');
           try{sessionStorage.removeItem(item.key)}catch{}
+          poseTriggersById.delete(item.id);
           return false;
         }
         poseTriggersById.delete(item.id);
@@ -398,11 +401,33 @@
       }catch(error){
         console.warn('Overworld pose trigger failed:',error);
         try{sessionStorage.removeItem(item.key)}catch{}
+        poseTriggersById.delete(item.id);
         return false;
-      }finally{poseTriggerBusy=false}
+      }finally{
+        poseTriggerBusy=false;
+        syncPoseTriggerQueue();
+      }
     }
     function syncPoseTriggerQueue(){
-      if(poseTriggerAwaitingDialogue&&!bridge()?.snapshot()?.locked)poseTriggerAwaitingDialogue=false;
+      const data=bridge()?.snapshot();
+      if(poseTriggerAwaitingDialogue){
+        if(data?.locked)return;
+        poseTriggerAwaitingDialogue=false;
+      }
+      if(poseTriggerBusy||overlay.hidden||suspendedForDuel)return;
+      if(data?.locked){
+        if(poseTriggersById.size&&!poseTriggerRetryTimer){
+          poseTriggerRetryTimer=setTimeout(()=>{poseTriggerRetryTimer=null;syncPoseTriggerQueue()},300);
+        }
+        return;
+      }
+      const item=[...poseTriggersById.values()].find(entry=>
+        entry.scene===data?.location&&data?.people.includes(entry.id));
+      if(!item||poseTriggerRetryTimer)return;
+      poseTriggerRetryTimer=setTimeout(()=>{
+        poseTriggerRetryTimer=null;
+        void playPoseTrigger(item).then(started=>{if(!started)syncPoseTriggerQueue()});
+      },120);
     }
     function syncPortraits(hasCG,idleFocus=null){
       const cast=bridge()?.scenePortraits?.();
@@ -1073,7 +1098,7 @@
       overlay.classList.remove('neo-ow-activity-open');
       overlay.hidden=true;overlay.style.display='none';frame.src='about:blank';open.focus();
     }
-    open.addEventListener('click',()=>{attachChoicePanels();refresh();overlay.hidden=false;overlay.style.display='flex';queueStorySync();syncDuel();});
+    open.addEventListener('click',()=>{attachChoicePanels();refresh();overlay.hidden=false;overlay.style.display='flex';queueStorySync();syncPoseTriggerQueue();syncDuel();});
     document.getElementById('rpgDiscreetToggle')?.addEventListener('click',()=>{syncChibiButton();syncChibiMode();});
     function performTravel(target){
       const data=snapshot();if(!data)return;
