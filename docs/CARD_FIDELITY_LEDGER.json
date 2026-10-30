@@ -246,13 +246,22 @@
      "kind": "attack",
      "index": 0,
      "name": "Psychic",
-     "status": "unreviewed"
+     "status": "partial",
+     "evidence": [
+      "test_card_fidelity_mewtwo.js: Psychic counts attached Energy cards (a Double Colorless Energy is one card); attack cost verified in Classic, Neo, online-preview and 40-card Cube configurations.",
+      "https://github.com/PokemonTCG/pokemon-tcg-data/blob/master/cards/en/base1.json"
+     ]
     },
     {
      "kind": "attack",
      "index": 1,
      "name": "Barrier",
-     "status": "unreviewed"
+     "status": "partial",
+     "evidence": [
+      "test_card_fidelity_mewtwo.js: Barrier's Psychic Energy discard, automatic resolution for identical Basic Psychic Energy, retained choice when Psychic and Rainbow Energy are both eligible, and prevention of damage/paralysis on the opponent's next turn; Classic, Neo, online-preview and 40-card Cube configurations.",
+      "https://github.com/PokemonTCG/pokemon-tcg-data/blob/master/cards/en/base1.json",
+      "Catalog transcription discrepancy remains: local TCGdex and Bulbapedia text omit “Psychic” from Barrier's extra discard, while PokémonTCG card data and card database listings specify Psychic Energy; physical scan comparison and historical ruling review remain pending."
+     ]
     }
    ]
   },
