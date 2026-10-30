@@ -1,6 +1,6 @@
 {
   "source_repo": "NicolasSorrenti/poketest",
-  "date": "2026-10-29",
+  "date": "2026-10-30",
   "type": "path inventory only; does not change the runtime manifest",
   "characters": {
     "yuna": [
@@ -228,6 +228,151 @@
       {
         "pose": "arcade-playing-back",
         "path": "/rpg-assets/characters/kaede/overworld/arcade-playing-back.png",
+        "notes": ""
+      }
+    ],
+    "alma": [
+      {
+        "pose": "over-shoulder-back",
+        "path": "/rpg-assets/characters/alma/overworld/over-shoulder-back.png",
+        "notes": ""
+      },
+      {
+        "pose": "serving-tray",
+        "path": "/rpg-assets/characters/alma/overworld/serving-tray.png",
+        "notes": ""
+      },
+      {
+        "pose": "standing-front",
+        "path": "/rpg-assets/characters/alma/overworld/standing-front.png",
+        "notes": ""
+      },
+      {
+        "pose": "placing-coffee-cup",
+        "path": "/rpg-assets/characters/alma/overworld/placing-coffee-cup.png",
+        "notes": ""
+      }
+    ],
+    "elena": [
+      {
+        "pose": "over-shoulder-documents",
+        "path": "/rpg-assets/characters/elena/overworld/over-shoulder-documents.png",
+        "notes": ""
+      },
+      {
+        "pose": "seated-reviewing-documents",
+        "path": "/rpg-assets/characters/elena/overworld/seated-reviewing-documents.png",
+        "notes": ""
+      },
+      {
+        "pose": "standing-portfolio",
+        "path": "/rpg-assets/characters/elena/overworld/standing-portfolio.png",
+        "notes": ""
+      }
+    ],
+    "elio": [
+      {
+        "pose": "standing-front",
+        "path": "/rpg-assets/characters/elio/standing-front.png",
+        "notes": ""
+      }
+    ],
+    "iris": [
+      {
+        "pose": "crouching",
+        "path": "/rpg-assets/characters/iris/overworld/crouching.png",
+        "notes": ""
+      },
+      {
+        "pose": "over-shoulder-back",
+        "path": "/rpg-assets/characters/iris/overworld/over-shoulder-back.png",
+        "notes": ""
+      },
+      {
+        "pose": "standing-front",
+        "path": "/rpg-assets/characters/iris/overworld/standing-front.png",
+        "notes": ""
+      }
+    ],
+    "jun": [
+      {
+        "pose": "standing-front",
+        "path": "/rpg-assets/characters/jun/standing-front.png",
+        "notes": ""
+      }
+    ],
+    "luna": [
+      {
+        "pose": "looking-back",
+        "path": "/rpg-assets/characters/luna/overworld/looking-back.png",
+        "notes": ""
+      },
+      {
+        "pose": "seated",
+        "path": "/rpg-assets/characters/luna/overworld/seated.png",
+        "notes": ""
+      },
+      {
+        "pose": "standing-front",
+        "path": "/rpg-assets/characters/luna/overworld/standing-front.png",
+        "notes": ""
+      }
+    ],
+    "nereo": [
+      {
+        "pose": "standing-front",
+        "path": "/rpg-assets/characters/nereo/standing-front.png",
+        "notes": ""
+      }
+    ],
+    "sierra": [
+      {
+        "pose": "looking-back",
+        "path": "/rpg-assets/characters/sierra/overworld/looking-back.png",
+        "notes": ""
+      },
+      {
+        "pose": "seated-relaxed",
+        "path": "/rpg-assets/characters/sierra/overworld/seated-relaxed.png",
+        "notes": ""
+      },
+      {
+        "pose": "standing-wink",
+        "path": "/rpg-assets/characters/sierra/overworld/standing-wink.png",
+        "notes": ""
+      }
+    ],
+    "sol": [
+      {
+        "pose": "crouching",
+        "path": "/rpg-assets/characters/sol/crouching.png",
+        "notes": ""
+      },
+      {
+        "pose": "looking-back",
+        "path": "/rpg-assets/characters/sol/looking-back.png",
+        "notes": ""
+      },
+      {
+        "pose": "standing-front",
+        "path": "/rpg-assets/characters/sol/standing-front.png",
+        "notes": ""
+      }
+    ],
+    "teo": [
+      {
+        "pose": "looking-back",
+        "path": "/rpg-assets/characters/teo/overworld/looking-back.png",
+        "notes": ""
+      },
+      {
+        "pose": "serving-tray",
+        "path": "/rpg-assets/characters/teo/overworld/serving-tray.png",
+        "notes": ""
+      },
+      {
+        "pose": "standing-front",
+        "path": "/rpg-assets/characters/teo/overworld/standing-front.png",
         "notes": ""
       }
     ]
