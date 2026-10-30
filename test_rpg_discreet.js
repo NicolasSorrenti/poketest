@@ -46,8 +46,21 @@ assert.equal(page.values.get('neoHarborRpgDiscreetV1'),'0');
 
 page=setup('/rpg.html','','1');
 assert.equal(page.root.dataset.rpgDiscreet,'on','mode persists after reloading');
+// A real cross-tab storage event fires after the receiving tab's localStorage
+// has already changed. Model that browser behavior before dispatching the event.
+page.values.set('neoHarborRpgDiscreetV1','0');
 page.events.storage({key:'neoHarborRpgDiscreetV1',newValue:'0'});
-assert.equal(page.root.dataset.rpgDiscreet,'off','mode syncs with another tab');
+assert.equal(page.root.dataset.rpgDiscreet,'off','legacy preference syncs with another tab');
+// The overworld chibi preference is authoritative when both keys exist.
+page.values.set('neoHarborOverworldChibiModeV1','1');
+page.events.storage({key:'neoHarborOverworldChibiModeV1',newValue:'1'});
+assert.equal(page.root.dataset.rpgDiscreet,'on','overworld chibi mode syncs into RPG');
+page.values.set('neoHarborRpgDiscreetV1','0');
+page.events.storage({key:'neoHarborRpgDiscreetV1',newValue:'0'});
+assert.equal(page.root.dataset.rpgDiscreet,'on','legacy key does not override overworld preference');
+page.values.set('neoHarborOverworldChibiModeV1','0');
+page.events.storage({key:'neoHarborOverworldChibiModeV1',newValue:'0'});
+assert.equal(page.root.dataset.rpgDiscreet,'off','overworld switch turning off syncs into RPG');
 
 const duelPage=setup('/classic_live.html','?rpg=1','1',false);
 assert.equal(duelPage.root.dataset.rpgDiscreet,'on','RPG battle iframe inherits setting');
