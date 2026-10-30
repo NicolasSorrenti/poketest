@@ -2343,7 +2343,8 @@ const APPROVED_DIALOGUE_MASTERS=Object.freeze({
  alma:'/rpg-assets/characters/alma/overworld/standing-front.png',
  barb:'/rpg-assets/characters/barb/portraits/primary.png',
  elena:'/rpg-assets/characters/elena/overworld/standing-portfolio.png',
- jun:'/rpg-assets/characters/jun/standing-front.png'
+ jun:'/rpg-assets/characters/jun/standing-front.png',
+ teo:'/rpg-assets/characters/teo/dialogue/neutral.png'
 });
 function dialogueMasterSource(id,expression){
  return expression==='neutral'?APPROVED_DIALOGUE_MASTERS[id]||null:null;

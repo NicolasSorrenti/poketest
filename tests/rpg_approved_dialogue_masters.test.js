@@ -12,7 +12,8 @@ const images={
  alma:'rpg-assets/characters/alma/overworld/standing-front.png',
  barb:'rpg-assets/characters/barb/portraits/primary.png',
  elena:'rpg-assets/characters/elena/overworld/standing-portfolio.png',
- jun:'rpg-assets/characters/jun/standing-front.png'
+ jun:'rpg-assets/characters/jun/standing-front.png',
+ teo:'rpg-assets/characters/teo/dialogue/neutral.png'
 };
 test('approved masters are existing binary files; Iris copy is unmodified',()=>{
  for(const [id,p] of Object.entries(images)){
@@ -43,5 +44,16 @@ test('Jun uses the exact existing overworld file for neutral dialogue',()=>{
  assert.ok(fs.existsSync(path.join(root,approved)),'Jun full-body image must exist');
  assert.ok(rpg.includes("jun:'/rpg-assets/characters/jun/standing-front.png'"));
  assert.ok(world.includes('/'+approved));
+ assert.ok(rpg.includes("return expression==='neutral'?APPROVED_DIALOGUE_MASTERS[id]||null:null;"));
+});
+
+test('Teo dialogue master is a byte-identical copy of the existing front pose',()=>{
+ const original='rpg-assets/characters/teo/overworld/standing-front.png';
+ const copy='rpg-assets/characters/teo/dialogue/neutral.png';
+ assert.deepEqual(fs.readFileSync(path.join(root,copy)),
+                  fs.readFileSync(path.join(root,original)));
+ assert.ok(rpg.includes("teo:'/rpg-assets/characters/teo/dialogue/neutral.png'"));
+ assert.ok(world.includes('/'+copy));
+ // Keep fallback to original expression portraits for non-neutral emotions.
  assert.ok(rpg.includes("return expression==='neutral'?APPROVED_DIALOGUE_MASTERS[id]||null:null;"));
 });
