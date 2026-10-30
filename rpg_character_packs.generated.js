@@ -429,7 +429,7 @@ const packs=[
      },
      {
       "speaker": "barb",
-      "text": "Terribly. I keep measuring clouds for card sleeves."
+      "text": "I made it two hours without measuring anything. Then I caught myself sketching the shape of your smile in the margin."
      },
      {
       "speaker": "Protagonist",
@@ -441,7 +441,7 @@ const packs=[
      },
      {
       "speaker": "barb",
-      "text": "I can keep making room for my work. I think I might want to make room for someone, too. No pressure for either of us."
+      "text": "I cleared a whole page for whatever comes next. If you're in it, I want it to be because we choose each other—not because I left a blank box labeled 'later'."
      }
     ],
     "choices": [
@@ -2142,7 +2142,7 @@ const packs=[
      },
      {
       "speaker": "daisy",
-      "text": "Exactly. Sometimes I like being a person nobody notices."
+      "text": "Exactly. Everyone expects me to deliver a punch line or a perfect entrance. Today I wanted to lose a game anonymously and get terrible vending-machine coffee."
      },
      {
       "speaker": "Protagonist",
@@ -2249,7 +2249,7 @@ const packs=[
      },
      {
       "speaker": "daisy",
-      "text": "So am I. I was going to make a joke to escape the moment. I think I'll stay in it a little longer."
+      "text": "So am I. I'm usually the first person to turn something serious into a joke. You can have one sincere answer today. Ask me something that matters."
      }
     ],
     "choices": [
@@ -2542,7 +2542,7 @@ const packs=[
     "lines": [
      {
       "speaker": "elena",
-      "text": "I adjusted my evening review to include this. Do not make me regret the exception."
+      "text": "I moved a meeting to tomorrow and turned off my work phone. That is not an invitation to make fun of my calendar."
      },
      {
       "speaker": "Protagonist",
@@ -2808,7 +2808,7 @@ const packs=[
      },
      {
       "speaker": "elena",
-      "text": "Would you like to see me again next week? No appointment required."
+      "text": "Next Thursday I intend to leave the office at six and walk here without checking the time. Would you like to join me—not as an appointment, but because we'd enjoy it?"
      }
     ],
     "choices": [
@@ -4093,7 +4093,7 @@ const packs=[
      },
      {
       "speaker": "jinx",
-      "text": "At least own it. Most of the regulars here fold the second I raise an eyebrow."
+      "text": "At least own it. I changed my opening after our last game. Most people only notice when I change my expression."
      },
      {
       "speaker": "Protagonist",
@@ -4351,7 +4351,7 @@ const packs=[
      },
      {
       "speaker": "jinx",
-      "text": "So tell me what you want. No scoreboard, no audience."
+      "text": "I have a rematch plan, but it can wait. This time I want to hear an answer that isn't about cards. Are you staying?"
      }
     ],
     "choices": [
@@ -5101,7 +5101,7 @@ const packs=[
      },
      {
       "speaker": "laca",
-      "text": "I had an idea for a joke. Then I thought about telling it to you, and somehow I got nervous. Ridiculous, right?"
+      "text": "I was going to turn this into another stupid bet, but I don't want to win a bet. I want to know if you feel what I feel."
      },
      {
       "speaker": "Protagonist",
@@ -5133,7 +5133,7 @@ const packs=[
      },
      {
       "speaker": "laca",
-      "text": "So I'm going to try something wild: saying I care about you without pretending it's a punch line."
+      "text": "I can pull a stranger out of rough water without hesitating. Apparently saying I care about you takes more courage. There. I said it."
      }
     ],
     "choices": [
