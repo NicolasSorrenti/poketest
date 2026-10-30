@@ -59,7 +59,8 @@ function fakeDOM(reduced=false){
  assert.match(first.className,/neo-timefx--afternoon/);
  assert.equal(first.attributes.role,'status');
  assert.equal(first.attributes['aria-live'],'polite');
- assert.equal(first.style.values['--neo-timefx-duration'],'680ms');
+ assert.equal(first.style.values['--neo-timefx-duration'],'2200ms',
+  'Period transition stays readable at the configured production duration');
  assert.equal(env.timers.size,1);
  env.presenter.present({beforeDay:1,beforeSlot:2,afterDay:2,afterSlot:0});
  assert.equal(first.removed,true,'new transitions must replace old overlays');
