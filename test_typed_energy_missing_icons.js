@@ -56,7 +56,7 @@ for(const [id,kind] of [['base5-4','continuous-fireball'],['base5-21','continuou
   const heads=g.coinFlips.slice(-flipCount).filter(x=>x.result==='heads').length;
   const discarded=kind==='continuous-fireball'?heads:Number(heads>0);
   const damage=kind==='continuous-fireball'?50*heads:kind==='fireball'?(heads?70:0):(heads?50:30);
-  if(damage>=Number(CATALOG.get('base1-3').hp))assert.equal(g.players[1].active,null,id+' should knock out the defending Pokémon');
+  if(damage>=Number(CATALOG.get('base1-3').hp)){assert.equal(g.players[1].active.id,'base1-44',id+' should knock out the defending Pokémon and promote its Bench');assert.ok(g.players[1].discard.includes('base1-3'),id+' knocked-out Defending Pokémon should enter the discard pile');}
   else assert.equal(g.players[1].active.damage,damage,id+' damage did not match coin result');
   assert.equal(g.players[0].discard.filter(cardId=>cardId===F).length,discarded,id+' discarded wrong number of Fire Energy cards');
   if(discarded)assert.ok(g.message.some(line=>line.includes('discarded')&&line.includes('Fire Energy')),id+' must notify about discarded Energy');
