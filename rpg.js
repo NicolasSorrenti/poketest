@@ -563,8 +563,13 @@ async function glanceAt(id){
    // Arrival chimes never read this file, so entering a location keeps its normal framing.
    const overworldVariants=Object.values(overworld?.characters?.[id]?.variants||{});
    const exact=overworldVariants.find(entry=>String(entry?.image||'').replace(/[?].*$/,'')===String(portrait).replace(/[?].*$/,''));
-   if(exact){focus=exact;}
-   else{
+   const exportedOverworld=exact||overworldVariants[0]||null;
+   if(exportedOverworld?.image){
+    // The deliberate glance always presents the prepared overworld crop.
+    // If the current stage portrait is not itself an overworld pose, use the
+    // first prepared pose for that character as the preview source.
+    portrait=exportedOverworld.image;focus=exportedOverworld;
+   }else{
     const variants=top?.characters?.[id]?.variants||{};
     const primaryName=Object.keys(variants).find(name=>/^primary\\.(?:png|webp|jpe?g)$/i.test(name));
     const exported=primaryName?variants[primaryName]:null;
