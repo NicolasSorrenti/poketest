@@ -315,7 +315,7 @@
     document.head.append(actionStyle);
     const characterActions=document.getElementById('characterActions');
     characterActions?.parentNode?.insertBefore(actionTray,characterActions);
-    const scenePeople=document.createElement('div');scenePeople.id='neoOverworldScenePeople';scenePeople.classList.add('neo-ow-standard-portraits');
+    const scenePeople=document.createElement('div');scenePeople.id='neoOverworldScenePeople';
     const sceneArea=document.getElementById('scene');
     sceneArea?.append(scenePeople);
     let lastPortraitSignature='';
@@ -328,6 +328,10 @@
         (portraitWindow?.update(cast.participants||[],cast.focused)||
          (cast.participants||[]).slice(0,2)):[];
       const focused=selectedPortrait?.id||cast?.focused;
+      // Roll out the approved square dialogue crop to Marina and Laca first.
+      // Other characters retain their existing framing until visual QA.
+      scenePeople.classList.toggle('neo-ow-standard-portraits',
+        !!participants.length&&participants.every(person=>person.id==='marina'||person.id==='laca'));
       if(hasCG)portraitWindow?.reset();
       const signature=JSON.stringify([focused,participants]);
       if(signature===lastPortraitSignature)return;
