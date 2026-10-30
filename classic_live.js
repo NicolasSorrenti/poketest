@@ -4,6 +4,7 @@
 (()=>{
  const $=id=>document.getElementById(id);
  function settleBoot(error){
+  if(rpgMode&&rpgDuelId)window.parent.postMessage({type:error?'neo-rpg-duel-error':'neo-rpg-duel-ready',duelId:rpgDuelId,error:error?String(error.message||error).slice(0,240):undefined},location.origin);
   const loading=$('duelLoading');
   if(error){
    $('duelLoadingTitle').textContent='Unable to open the duel';
