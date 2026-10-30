@@ -1171,7 +1171,7 @@ const packs=[
      },
      {
       "speaker": "barb",
-      "text": "Every dessert deserves a mood board. Now open up before I eat the evidence."
+      "text": "I spent so long taking photos that I forgot to enjoy it. Your verdict first; I promise not to argue with your taste this time."
      },
      {
       "speaker": "Protagonist",
@@ -1256,7 +1256,7 @@ const packs=[
      },
      {
       "speaker": "barb",
-      "text": "Only that I am glad you came by. The workshop is less noisy when I do not have to explain every unfinished thing."
+      "text": "I'm glad you're here. Every sketch on that desk has somebody else's opinion attached. With you, I can leave a thought unfinished without defending it."
      },
      {
       "speaker": "Protagonist",
@@ -1365,7 +1365,7 @@ const packs=[
      },
      {
       "speaker": "barb",
-      "text": "Accurate. One more try, and then I will show you the song I keep pretending I wrote."
+      "text": "Not harsh, constructive! Play that chord again. I want you to hear the bit I made up, even if it isn't perfect yet."
      }
     ],
     "choices": [
