@@ -31,7 +31,7 @@ let n=0;
 }
 {
  const g=game('base5-40','base1-11',[energy.Fighting,energy.Fighting,energy.Grass],{theirBench:['base1-44']});
- attack(g,0);assert.equal(g.pendingAction?.kind,'attack_target');choice(g,0,['bench:0']);
+ attack(g,0);assert.equal(g.pendingDecision,null,'Drag Off should auto-select the only opposing Benched Pokémon');
  assert.equal(g.players[1].active.id,'base1-44');assert.equal(g.players[1].bench[0].id,'base1-11');
  assert.equal(g.players[1].active.damage,20);n++;
 }
