@@ -5,95 +5,159 @@
   const params=new URLSearchParams(location.search), poseTest=params.has('reina-test'), dev=params.has('dev');
 
   if(params.has('sprite-gallery')){
-    const spriteCharacterIds=['yuna','hana','laca','rina','akari','shiori','camila','marina','kaede'];
-    const locationOptions=[['arcade','Pixel Palace'],['shop','The Lucky Draw'],['home','Home'],['park','Riverside Park'],['cafe','The Rest Stop'],['center','Community Center'],['library','Library']];
-    const entries=spriteCharacterIds.flatMap(id=>{
-      const character=config.characters?.[id];
-      return Object.entries(character?.poses||{}).map(([poseKey,art])=>({id,name:character.name,poseKey,art}));
-    }).filter(entry=>entry.art?.src);
-    const storageKey='neoOverworldSpritePlacementSuggestionsV1';
-    let suggestions={};try{suggestions=JSON.parse(localStorage.getItem(storageKey)||'{}')||{}}catch{}
+    const mapIds=Object.keys(config).filter(id=>id!=='characters'&&config[id]?.image&&config[id]?.width&&config[id]?.height);
+    const characterIds=Object.keys(config.characters||{});
+    const storageKey='neoOverworldPlacementEditorV1';
+    const clone=value=>JSON.parse(JSON.stringify(value));
+    let saved={version:1,maps:{}};
+    try{saved=JSON.parse(localStorage.getItem(storageKey)||'null')||saved}catch{}
+    const draft=clone(saved), state={map:mapIds.includes(params.get('map'))?params.get('map'):(mapIds.includes('arcade')?'arcade':mapIds[0]),selected:null};
     document.getElementById('shell')?.setAttribute('hidden','');
-    document.body.classList.add('neo-sprite-gallery-open');
+    document.body.classList.add('neo-placement-editor-open');
     const style=document.createElement('style');
-    style.textContent=`
-      body.neo-sprite-gallery-open{margin:0;background:#100f1c;color:#f7eefb;font:15px system-ui,sans-serif}
-      #neoSpriteGallery{position:fixed;inset:0;z-index:100;background:radial-gradient(ellipse at top,#29213a,#100f1c 65%);overflow:auto;padding:clamp(14px,3vw,34px);box-sizing:border-box}
-      #neoSpriteGallery .top{max-width:1500px;margin:0 auto 22px;display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap}
-      #neoSpriteGallery h1{font-size:clamp(24px,4vw,38px);margin:0 0 6px}
-      #neoSpriteGallery p{margin:0;color:#d9cce2}
-      #neoSpriteGallery .tools{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
-      #neoSpriteGallery button,#neoSpriteGallery select{font:inherit;color:#fff;background:#30253f;border:1px solid #a87da9;border-radius:9px;padding:9px 12px}
-      #neoSpriteGallery a{color:#f5d4ff}
-      #neoSpriteGallery .section{max-width:1500px;margin:28px auto}
-      #neoSpriteGallery h2{font-size:22px;margin:0 0 12px;border-bottom:1px solid #755f7c;padding-bottom:7px}
-      #neoSpriteGallery .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:12px}
-      #neoSpriteGallery .card{background:#1c1927;border:1px solid #5c4b66;border-radius:12px;padding:10px;display:flex;flex-direction:column;gap:8px;min-width:0}
-      #neoSpriteGallery .art{height:242px;display:grid;place-items:center;border:1px solid #51465b;border-radius:8px;background-color:#272332;background-image:linear-gradient(45deg,#383344 25%,transparent 25%),linear-gradient(-45deg,#383344 25%,transparent 25%),linear-gradient(45deg,transparent 75%,#383344 75%),linear-gradient(-45deg,transparent 75%,#383344 75%);background-size:18px 18px;background-position:0 0,0 9px,9px -9px,-9px 0;overflow:hidden}
-      #neoSpriteGallery .art img{max-height:230px;max-width:100%;object-fit:contain}
-      #neoSpriteGallery .pose{font-weight:700}
-      #neoSpriteGallery code{font-size:11px;color:#d2bfd9;overflow-wrap:anywhere}
-      #neoSpriteGallery .card select{width:100%;font-size:13px}
-      #neoSpriteGallery .note{max-width:1500px;margin:0 auto 20px;color:#e2cde9}
-      #neoSpriteGallery .status{max-width:1500px;margin:10px auto;color:#ffe5a9;white-space:pre-wrap}
-      @media(max-width:560px){#neoSpriteGallery .grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}#neoSpriteGallery .card{padding:7px}#neoSpriteGallery .art{height:205px}#neoSpriteGallery .art img{max-height:194px}}
-    `;
+    style.textContent=[
+      'body.neo-placement-editor-open{margin:0;background:#100f1c;color:#f7eefb;font:14px system-ui,sans-serif}',
+      '#neoPlacementEditor{position:fixed;inset:0;z-index:100;background:#12101b;display:grid;grid-template-rows:auto 1fr;overflow:hidden}',
+      '#neoPlacementEditor *{box-sizing:border-box}',
+      '#neoPlacementEditor button,#neoPlacementEditor select,#neoPlacementEditor input{font:inherit;color:#fff;background:#2b2339;border:1px solid #8c709d;border-radius:8px;padding:8px}',
+      '#neoPlacementEditor button{cursor:pointer}#neoPlacementEditor button:hover{background:#453355}',
+      '#neoPlacementEditor .head{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 16px;background:#1b1728;border-bottom:1px solid #675276}',
+      '#neoPlacementEditor h1{font-size:18px;margin:0}#neoPlacementEditor .head p{margin:3px 0 0;color:#c9bbd4;font-size:12px}',
+      '#neoPlacementEditor .actions{display:flex;gap:7px;align-items:center;flex-wrap:wrap}',
+      '#neoPlacementEditor .layout{min-height:0;display:grid;grid-template-columns:minmax(250px,330px) 1fr}',
+      '#neoPlacementEditor .side{min-height:0;overflow:auto;border-right:1px solid #53445f;padding:12px}',
+      '#neoPlacementEditor .side h2{font-size:14px;margin:0 0 8px}',
+      '#neoPlacementEditor .hint{color:#c9bbd4;font-size:12px;line-height:1.45;margin:6px 0 12px}',
+      '#neoPlacementEditor .filter{width:100%;margin:0 0 10px}',
+      '#neoPlacementEditor .tray{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}',
+      '#neoPlacementEditor .pose{border:1px solid #53445f;background:#211c2b;border-radius:9px;padding:6px;cursor:grab;min-width:0}',
+      '#neoPlacementEditor .pose:active{cursor:grabbing}#neoPlacementEditor .pose img{width:100%;height:125px;object-fit:contain;background:#2b2734;border-radius:5px}',
+      '#neoPlacementEditor .pose strong{display:block;font-size:11px;overflow-wrap:anywhere}#neoPlacementEditor .pose small{color:#c9bbd4;font-size:10px}',
+      '#neoPlacementEditor .work{min-width:0;min-height:0;display:grid;grid-template-rows:auto 1fr auto;gap:8px;padding:10px}',
+      '#neoPlacementEditor .bar{display:flex;align-items:center;gap:8px;flex-wrap:wrap}',
+      '#neoPlacementEditor .bar label{display:flex;align-items:center;gap:6px;color:#ddd}',
+      '#neoPlacementEditor .stageWrap{min-height:0;display:grid;place-items:center;overflow:auto;background:#09080e;border:1px solid #4d4059;border-radius:10px;padding:8px}',
+      '#neoPlacementEditor .stage{position:relative;overflow:hidden;max-width:100%;max-height:100%;background:#211c2b;touch-action:none;user-select:none}',
+      '#neoPlacementEditor .stage>img.bg{position:absolute;inset:0;width:100%;height:100%;object-fit:fill;pointer-events:none}',
+      '#neoPlacementEditor .stage .placed{position:absolute;transform:translate(-50%,-100%);object-fit:contain;object-position:center bottom;cursor:move;touch-action:none;filter:drop-shadow(0 2px 2px #0008)}',
+      '#neoPlacementEditor .stage .placed.selected{outline:2px solid #75b7ff;outline-offset:2px}',
+      '#neoPlacementEditor .stage .dropHint{position:absolute;inset:0;display:grid;place-items:center;color:#fff9;text-shadow:0 1px 5px #000;pointer-events:none;font-size:16px}',
+      '#neoPlacementEditor .status{font-size:12px;color:#d9cce2;min-height:18px}',
+      '@media(max-width:760px){#neoPlacementEditor{grid-template-rows:auto 1fr}#neoPlacementEditor .head{align-items:flex-start;flex-direction:column;padding:8px}#neoPlacementEditor .layout{grid-template-columns:1fr;grid-template-rows:minmax(145px,28vh) 1fr}#neoPlacementEditor .side{border-right:0;border-bottom:1px solid #53445f;padding:8px}#neoPlacementEditor .side h2,#neoPlacementEditor .hint{display:none}#neoPlacementEditor .tray{display:flex;overflow-x:auto}#neoPlacementEditor .pose{flex:0 0 108px}#neoPlacementEditor .pose img{height:85px}#neoPlacementEditor .work{padding:6px;gap:5px}#neoPlacementEditor .stageWrap{padding:3px}}'
+    ].join('');
     document.head.append(style);
-    const gallery=document.createElement('main');gallery.id='neoSpriteGallery';
-    const top=document.createElement('header');top.className='top';
-    const titleWrap=document.createElement('div');
-    const title=document.createElement('h1');title.textContent='Overworld sprite gallery';
-    const sub=document.createElement('p');sub.textContent=entries.length+' sprite poses · 9 characters';
-    titleWrap.append(title,sub);
-    const tools=document.createElement('div');tools.className='tools';
-    const back=document.createElement('a');back.href='overworld-prototype.html?cast-test=1';back.textContent='← Back to map preview';
-    const exportButton=document.createElement('button');exportButton.type='button';exportButton.textContent='Download map suggestions';
-    const clearButton=document.createElement('button');clearButton.type='button';clearButton.textContent='Clear suggestions';
-    tools.append(back,exportButton,clearButton);top.append(titleWrap,tools);
-    const note=document.createElement('p');note.className='note';note.textContent='Choose a suggested map for each pose you want placed. Suggestions stay in this browser; download the JSON to send them to me. This does not move characters in the game by itself.';
-    const status=document.createElement('p');status.className='status';status.setAttribute('role','status');status.setAttribute('aria-live','polite');
-    const filter=document.createElement('select');filter.setAttribute('aria-label','Filter sprites by character');
-    filter.add(new Option('All characters','all'));
-    for(const id of spriteCharacterIds)filter.add(new Option(config.characters[id].name,id));
-    const filterWrap=document.createElement('div');filterWrap.className='tools';filterWrap.style.maxWidth='1500px';filterWrap.style.margin='0 auto 14px';filterWrap.append(filter);
-    const sections=document.createElement('div');
-    function saveSuggestion(key,value){if(value)suggestions[key]=value;else delete suggestions[key];localStorage.setItem(storageKey,JSON.stringify(suggestions));}
-    function renderGallery(){
-      sections.replaceChildren();
-      for(const id of spriteCharacterIds){
-        if(filter.value!=='all'&&filter.value!==id)continue;
-        const group=entries.filter(entry=>entry.id===id);
-        const section=document.createElement('section');section.className='section';
-        const heading=document.createElement('h2');heading.textContent=config.characters[id].name+' · '+group.length+' poses';section.append(heading);
-        const grid=document.createElement('div');grid.className='grid';
-        for(const entry of group){
-          const card=document.createElement('article');card.className='card';
-          const artBox=document.createElement('div');artBox.className='art';
-          const img=document.createElement('img');img.loading='lazy';img.src=entry.art.src;img.alt=config.characters[id].name+' · '+entry.poseKey;
-          img.onerror=()=>{img.hidden=true;artBox.textContent='Image failed to load';};
-          artBox.append(img);
-          const poseName=document.createElement('div');poseName.className='pose';poseName.textContent=entry.poseKey.replace(/([A-Z])/g,' $1').replace(/[-_]/g,' ').trim();
-          const path=document.createElement('code');path.textContent=decodeURIComponent(entry.art.src).replace(/^\//,'');
-          const mapSelect=document.createElement('select');mapSelect.setAttribute('aria-label','Suggested map for '+config.characters[id].name+' '+entry.poseKey);
-          mapSelect.add(new Option('Suggest a map…',''));
-          for(const [mapId,mapName] of locationOptions)mapSelect.add(new Option(mapName,mapId));
-          const key=id+':'+entry.poseKey;mapSelect.value=suggestions[key]||'';
-          mapSelect.onchange=()=>{saveSuggestion(key,mapSelect.value);status.textContent='Saved '+Object.keys(suggestions).length+' map suggestion(s) in this browser.';};
-          card.append(artBox,poseName,path,mapSelect);grid.append(card);
+    const root=document.createElement('main');root.id='neoPlacementEditor';
+    const header=document.createElement('header');header.className='head';
+    const heading=document.createElement('div');heading.innerHTML='<h1>Overworld placement editor</h1><p>Drag poses onto each map, move them, resize them, save, then download the placement file.</p>';
+    const actions=document.createElement('div');actions.className='actions';
+    const back=document.createElement('a');back.href='overworld-prototype.html?cast-test=1';back.textContent='← Map preview';back.style.color='#e9d9f3';
+    const saveBtn=document.createElement('button');saveBtn.textContent='Save';
+    const downloadBtn=document.createElement('button');downloadBtn.textContent='Download placements';
+    const clearMapBtn=document.createElement('button');clearMapBtn.textContent='Clear this map';
+    actions.append(back,saveBtn,downloadBtn,clearMapBtn);header.append(heading,actions);
+    const layout=document.createElement('div');layout.className='layout';
+    const side=document.createElement('aside');side.className='side';
+    const trayTitle=document.createElement('h2');trayTitle.textContent='Character poses';
+    const hint=document.createElement('p');hint.className='hint';hint.textContent='Drag a pose from this list onto the map. Drag placed characters to move them. Select one to adjust its height. Coordinates are saved relative to the full map image.';
+    const characterFilter=document.createElement('select');characterFilter.className='filter';
+    characterFilter.add(new Option('All characters','all'));
+    characterIds.forEach(id=>characterFilter.add(new Option(config.characters[id].name,id)));
+    const tray=document.createElement('div');tray.className='tray';side.append(trayTitle,hint,characterFilter,tray);
+    const work=document.createElement('section');work.className='work';
+    const bar=document.createElement('div');bar.className='bar';
+    const mapSelect=document.createElement('select');mapSelect.setAttribute('aria-label','Map');
+    mapIds.forEach(id=>mapSelect.add(new Option(config[id].title||id,id)));
+    mapSelect.value=state.map;
+    const mapLabel=document.createElement('label');mapLabel.append('Map ',mapSelect);
+    const sizeLabel=document.createElement('label');sizeLabel.append('Selected pose height ');
+    const sizeRange=document.createElement('input');sizeRange.type='range';sizeRange.min='45';sizeRange.max='300';sizeRange.step='1';sizeRange.value='155';sizeRange.setAttribute('aria-label','Selected pose height');
+    const sizeValue=document.createElement('span');sizeValue.textContent='155';
+    sizeLabel.append(sizeRange,sizeValue,' map units');
+    const removeBtn=document.createElement('button');removeBtn.textContent='Remove selected';
+    bar.append(mapLabel,sizeLabel,removeBtn);
+    const stageWrap=document.createElement('div');stageWrap.className='stageWrap';
+    const stage=document.createElement('div');stage.className='stage';stage.setAttribute('aria-label','Map placement canvas');
+    stageWrap.append(stage);
+    const status=document.createElement('div');status.className='status';status.setAttribute('role','status');status.setAttribute('aria-live','polite');
+    work.append(bar,stageWrap,status);layout.append(side,work);root.append(header,layout);document.body.append(root);
+    function listForMap(){draft.maps[state.map] ||= [];return draft.maps[state.map]}
+    function persist(message){localStorage.setItem(storageKey,JSON.stringify(draft));status.textContent=message||'Saved in this browser.'}
+    function renderTray(){
+      tray.replaceChildren();
+      const only=characterFilter.value;
+      for(const characterId of characterIds){
+        if(only!=='all'&&only!==characterId)continue;
+        const character=config.characters[characterId];
+        for(const [poseKey,pose] of Object.entries(character.poses||{})){
+          if(!pose.src)continue;
+          const card=document.createElement('div');card.className='pose';card.draggable=true;
+          card.dataset.character=characterId;card.dataset.pose=poseKey;
+          const img=document.createElement('img');img.src=pose.src;img.alt=character.name+' '+poseKey;img.loading='lazy';
+          const name=document.createElement('strong');name.textContent=character.name+' · '+poseKey;
+          const details=document.createElement('small');details.textContent=(pose.outfit?pose.outfit+' · ':'')+(pose.status||'');
+          card.append(img,name,details);
+          card.addEventListener('dragstart',event=>{event.dataTransfer.setData('application/x-neo-pose',JSON.stringify({character:characterId,pose:poseKey}));event.dataTransfer.effectAllowed='copy';});
+          card.addEventListener('click',()=>{addPose(characterId,poseKey,config[state.map].width/2,config[state.map].height*0.86);});
+          tray.append(card);
         }
-        section.append(grid);sections.append(section);
       }
     }
-    filter.onchange=renderGallery;
-    exportButton.onclick=()=>{
-      const selected=Object.entries(suggestions).map(([key,mapId])=>{const [character,pose]=key.split(':');return {character,pose,map:mapId,src:config.characters[character].poses[pose].src};});
-      if(!selected.length){status.textContent='Choose at least one map suggestion first.';return;}
-      const blob=new Blob([JSON.stringify({suggestions:selected},null,2)],{type:'application/json'});
-      const url=URL.createObjectURL(blob),link=document.createElement('a');link.href=url;link.download='overworld-sprite-map-suggestions.json';link.click();URL.revokeObjectURL(url);
-      status.textContent='Downloaded '+selected.length+' map suggestion(s).';
+    function drawStage(){
+      const map=config[state.map],rect=stageWrap.getBoundingClientRect();
+      const maxW=Math.max(120,rect.width-20),maxH=Math.max(120,rect.height-20);
+      const ratio=Math.min(maxW/map.width,maxH/map.height);
+      stage.style.width=Math.round(map.width*ratio)+'px';stage.style.height=Math.round(map.height*ratio)+'px';
+      stage.replaceChildren();
+      const bg=document.createElement('img');bg.className='bg';bg.src=map.image;bg.alt=map.title;stage.append(bg);
+      const list=listForMap();
+      list.forEach((item,index)=>{
+        const img=document.createElement('img');img.className='placed'+(state.selected===item.id?' selected':'');
+        img.src=item.src;img.alt=config.characters[item.character]?.name+' '+item.pose;img.draggable=false;
+        img.style.left=(item.x/map.width*100)+'%';img.style.top=(item.y/map.height*100)+'%';
+        img.style.height=(item.height/map.height*100)+'%';img.dataset.id=item.id;
+        img.addEventListener('pointerdown',event=>{
+          event.preventDefault();event.stopPropagation();state.selected=item.id;sizeRange.value=String(item.height);sizeValue.textContent=String(item.height);
+          stage.querySelectorAll('.placed').forEach(node=>node.classList.toggle('selected',node.dataset.id===item.id));
+          const image=event.currentTarget;image.setPointerCapture(event.pointerId);
+          const move=e=>{const r=stage.getBoundingClientRect(),current=listForMap().find(x=>x.id===item.id);if(!current)return;current.x=Math.max(0,Math.min(map.width,(e.clientX-r.left)/r.width*map.width));current.y=Math.max(0,Math.min(map.height,(e.clientY-r.top)/r.height*map.height));image.style.left=(current.x/map.width*100)+'%';image.style.top=(current.y/map.height*100)+'%';};
+          const up=()=>{image.removeEventListener('pointermove',move);image.removeEventListener('pointerup',up);persist('Moved pose. Save or download when the map is ready.')};
+          image.addEventListener('pointermove',move);image.addEventListener('pointerup',up,{once:true});
+        });
+        stage.append(img);
+      });
+      if(!list.length){const msg=document.createElement('div');msg.className='dropHint';msg.textContent='Drag a character pose here';stage.append(msg)}
+    }
+    function addPose(character,poseKey,x,y){
+      const art=config.characters[character]?.poses?.[poseKey];if(!art)return;
+      const item={id:'pose-'+Date.now().toString(36)+'-'+Math.random().toString(36).slice(2,7),character,pose:poseKey,src:art.src,x:Math.round(x),y:Math.round(y),height:art.height||155,facing:art.facing||'front',outfit:art.outfit||null};
+      listForMap().push(item);state.selected=item.id;sizeRange.value=String(item.height);sizeValue.textContent=String(item.height);drawStage();persist('Added '+config.characters[character].name+' to '+(config[state.map].title||state.map)+'. Drag to position it.');
+    }
+    stage.addEventListener('dragover',event=>{event.preventDefault();event.dataTransfer.dropEffect='copy'});
+    stage.addEventListener('drop',event=>{
+      event.preventDefault();let pose;try{pose=JSON.parse(event.dataTransfer.getData('application/x-neo-pose'))}catch{return}
+      const rect=stage.getBoundingClientRect(),map=config[state.map];
+      addPose(pose.character,pose.pose,(event.clientX-rect.left)/rect.width*map.width,(event.clientY-rect.top)/rect.height*map.height);
+    });
+    stage.addEventListener('pointerdown',event=>{if(event.target===stage){state.selected=null;drawStage()}});
+    sizeRange.addEventListener('input',()=>{const item=listForMap().find(x=>x.id===state.selected);if(!item)return;item.height=Number(sizeRange.value);sizeValue.textContent=sizeRange.value;drawStage()});
+    sizeRange.addEventListener('change',()=>persist('Pose size saved in this browser.'));
+    removeBtn.onclick=()=>{const list=listForMap(),index=list.findIndex(x=>x.id===state.selected);if(index<0)return;list.splice(index,1);state.selected=null;drawStage();persist('Removed selected pose.')};
+    mapSelect.onchange=()=>{state.map=mapSelect.value;state.selected=null;drawStage();status.textContent='Editing '+(config[state.map].title||state.map)+'.'};
+    characterFilter.onchange=renderTray;
+    saveBtn.onclick=()=>persist('Saved all map placements in this browser.');
+    clearMapBtn.onclick=()=>{draft.maps[state.map]=[];state.selected=null;drawStage();persist('Cleared placements for this map.')};
+    downloadBtn.onclick=()=>{
+      const maps={};
+      for(const [mapId,items] of Object.entries(draft.maps||{})){
+        maps[mapId]={mapSize:{width:config[mapId]?.width,height:config[mapId]?.height},placements:items.map(({id,...item})=>item)};
+      }
+      const output={schemaVersion:1,generatedAt:new Date().toISOString(),coordinateUnits:'map image pixels; x is character foot center and y is character foot baseline',maps};
+      const blob=new Blob([JSON.stringify(output,null,2)],{type:'application/json'}),url=URL.createObjectURL(blob),a=document.createElement('a');
+      a.href=url;a.download='neo-campus-overworld-placements.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
+      status.textContent='Downloaded placements for '+Object.keys(maps).length+' map(s).';
     };
-    clearButton.onclick=()=>{suggestions={};localStorage.removeItem(storageKey);renderGallery();status.textContent='Cleared saved map suggestions.';};
-    gallery.append(top,note,filterWrap,status,sections);document.body.append(gallery);renderGallery();
+    addEventListener('resize',drawStage);
+    renderTray();drawStage();status.textContent='Loaded saved placements. Drag a pose onto the map to start.';
     return;
   }
   // When the parent RPG shows VN dialogue, preserve the location as a backdrop
