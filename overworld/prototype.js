@@ -69,8 +69,13 @@
   // Integrated mode displays only NPCs currently scheduled here by the RPG.
   // Reuse stable anchor slots and do not invent story encounters.
   if(params.has('rpg-integration')){
-    const castIds=(params.get('cast')||'').split(',').filter(id=>/^[a-z][a-z0-9_-]{0,35}$/.test(id));
-    placements.splice(0,placements.length,...castIds.slice(0,8).map((id,i)=>({id,anchor:['P1','P2','P3','P4','E1','E2','E3','E4'][i],pose:'standing'})));
+    const castEntries=(params.get('cast')||'').split(',').map(entry=>{
+      const [id,requestedPose]=entry.split(':');
+      if(!/^[a-z][a-z0-9_-]{0,35}$/.test(id||''))return null;
+      const knownPose=!!config.characters?.[id]?.poses?.[requestedPose];
+      return {id,pose:knownPose?requestedPose:'standing'};
+    }).filter(Boolean);
+    placements.splice(0,placements.length,...castEntries.slice(0,8).map(({id,pose},i)=>({id,anchor:['P1','P2','P3','P4','E1','E2','E3','E4'][i],pose})));
     const subtitle=document.querySelector('.title small');if(subtitle)subtitle.textContent='Live RPG schedule · placement preview';
   }
   if(dev){byId('guides').hidden=false;}
