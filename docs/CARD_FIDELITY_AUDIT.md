@@ -43,4 +43,6 @@ The [per-card and per-effect ledger](CARD_FIDELITY_LEDGER.json) tracks all 1,123
 
 These scenarios use the TCGdex-sourced catalogue text. Printed card images and applicable historical rulings still need independent review. Tests exercise the shared reducer in Classic, Neo, online-preview, and 40-card Cube configurations; they do not establish client or network integration.
 
+| Clefairy (base1-5) | Metronome copying Fire Spin, waived discard and Energy cost rejection | test_card_fidelity_clefairy.js | Partial; other copied effects and print/ruling review pending |
+
 The full card-by-card fidelity review is **not complete**. Do not count the other cards or untested branches of the cards above as verified. Existing Classic execution probing covers 427 attack records in a manufactured scenario; it checks execution, not correctness or all possible choices.
