@@ -463,10 +463,15 @@
         object-position:center bottom!important;
       }
       #neoOverworldOverlay.neo-ow-idle-interaction #neoOverworldStoryDock #characterActions:not([hidden]){
-        grid-column:2!important;grid-row:1!important;align-self:center!important;
+        position:relative!important;top:auto!important;left:auto!important;right:auto!important;bottom:auto!important;
+        grid-column:2!important;grid-row:1!important;align-self:center!important;width:100%!important;max-width:none!important;
         display:flex!important;flex-direction:column!important;gap:7px!important;
         padding:0!important;margin:0!important;max-height:none!important;
         overflow:visible!important;background:transparent!important;border:0!important;
+      }
+      #neoOverworldOverlay.neo-ow-idle-interaction #neoOverworldStoryDock #characterActions.choice-menu{
+        padding:14px!important;background:#171426ed!important;border:1px solid #b77ca6!important;
+        border-radius:13px!important;box-shadow:0 14px 36px #0009!important;
       }
       #neoOverworldOverlay.neo-ow-idle-interaction #neoOverworldStoryDock #characterActions button{
         width:100%!important;min-height:45px!important;text-align:left!important;
@@ -851,8 +856,9 @@
         interactionFocus=null;
       }
       const arrivalOnly=!!data.arriving&&!data.eventActive;
-      const idleFocus=!data.storyActive&&!data.arriving&&!hasCG&&
-        interactionFocus===data.selected?interactionFocus:null;
+      const characterChoiceMenu=document.body.classList.contains('rpg-character-choice-menu');
+      const idleFocus=!data.arriving&&!hasCG&&interactionFocus===data.selected&&
+        (!data.storyActive||characterChoiceMenu)?interactionFocus:null;
       const needsStory=!!((data.storyActive&&!arrivalOnly)||(hasCG&&!arrivalOnly)||idleFocus);
       overlay.classList.toggle('neo-ow-arriving',!!data.arriving&&!needsStory);
       overlay.classList.toggle('neo-ow-idle-interaction',!!idleFocus);
