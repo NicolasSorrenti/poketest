@@ -29,7 +29,7 @@ function pick(g,id){let d=g.pendingDecision;assert.ok(d);act(g,'choose',{decisio
  // A transfer cannot knock out its recipient. With no legal recipient, the
  // repeated session ends without creating an impossible mandatory prompt.
  const g=setup('base1-1');g.players[0].active.damage=10;
- g.players[0].bench[0].damage=30; // Base Rattata has 30 HP.
+ g.players[0].bench[0].damage=30; // Base Bulbasaur has 40 HP.
  act(g,'use_power',{slot:-1,repeat:true});assert.equal(g.pendingDecision,null);
  assert.equal(g.players[0].active.damage,10);
 }
