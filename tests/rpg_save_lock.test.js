@@ -2,7 +2,7 @@
 const test=require('node:test'),assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm');
 const PACK=require('../rpg_narrative_pack'),SIDE=require('../rpg_side_quests'),STORY=require('../rpg_story'),SCHEDULES=require('../rpg_schedules'),WORLD=require('../rpg_world'),ARC=require('../rpg_rival_arc'),TOURNAMENTS=require('../rpg_tournaments'),EPILOGUE=require('../rpg_epilogue'),APPOINTMENTS=require('../rpg_appointments'),INTENTIONS=require('../rpg_intentions'),CG=require('../rpg_cg_gallery'),PLANNER=require('../rpg_daily_planner'),SOCIAL=require('../rpg_social_activities'),DATES=require('../rpg_planned_dates'),PRE=require('../rpg_preduel'),COLLECTION=require('../rpg_collection'),JOURNEY=require('../rpg_season_journey'),SITUATIONS=require('../rpg_situations'),BRIDGE=require('../rpg_duel_bridge');
 const DIALOGUE=require('../rpg_dialogue'),BONDS=require('../rpg_bond_rewards'),PARTNER=require('../rpg_partner_decks'),VN=require('../rpg_conversations'),MEMORY=require('../rpg_dialogue_memory');
-const COMPETE=require('../rpg_competitive_loop'),REACT=require('../rpg_reactivity'),COMMUNITY=require('../rpg_community'),CONSEQ=require('../rpg_consequences'),TOURNAMENT_PRESENTATION=require('../rpg_tournament_presentation'),RELATIONSHIPS=require('../rpg_relationships'),TIME=require('../rpg_time_coordinator');
+const COMPETE=require('../rpg_competitive_loop'),REACT=require('../rpg_reactivity'),COMMUNITY=require('../rpg_community'),CONSEQ=require('../rpg_consequences'),TOURNAMENT_PRESENTATION=require('../rpg_tournament_presentation'),RELATIONSHIPS=require('../rpg_relationships'),TIME=require('../rpg_time_coordinator'),SCENE_CAST=require('../rpg_scene_cast');
 const script=fs.readFileSync('rpg.js','utf8');
 const KEY='neoHarborRpgV1';
 class Element{
@@ -19,16 +19,16 @@ class Element{
 function boot(saved=new Map(),sessions=new Map()){
  const ids={},listeners={},document={body:new Element('body'),getElementById(id){return ids[id]??(ids[id]=new Element(id==='deckPicker'?'select':id==='battle'?'iframe':'div'));},createElement(tag){return new Element(tag);},createTextNode(value){return {nodeType:3,textContent:String(value),nodeValue:String(value),children:[]};},createTreeWalker(){return {nextNode(){return false;}};},addEventListener(type,fn){listeners[type]=fn;}};
  ids.battle=new Element('iframe');ids.battle.contentWindow={};
- const window={NeoRpgNarrativePack:PACK,NeoRpgSideQuests:SIDE,NeoHarborStory:STORY,NeoRpgSchedules:SCHEDULES,NeoRpgWorld:WORLD,NeoRpgRivalArc:ARC,NeoRpgTournaments:TOURNAMENTS,NeoRpgCompetitiveLoop:COMPETE,NeoRpgReactivity:REACT,NeoRpgCommunity:COMMUNITY,NeoRpgConsequences:CONSEQ,NeoRpgRelationships:RELATIONSHIPS,NeoRpgTimeCoordinator:TIME,NeoRpgTournamentPresentation:TOURNAMENT_PRESENTATION,NeoRpgEpilogue:EPILOGUE,NeoRpgAppointments:APPOINTMENTS,NeoRpgIntentions:INTENTIONS,NeoRpgCGGallery:CG,NeoRpgDailyPlanner:PLANNER,NeoRpgSocialActivities:SOCIAL,NeoRpgPlannedDates:DATES,NeoRpgPreDuel:PRE,NeoRpgCollection:COLLECTION,NeoRpgSeasonJourney:JOURNEY,NeoRpgSituations:SITUATIONS,NeoRpgDuelBridge:BRIDGE,NeoRpgDialogue:DIALOGUE,NeoRpgBondRewards:BONDS,NeoRpgPartnerDecks:PARTNER,NeoRpgConversations:VN,NeoRpgDialogueMemory:MEMORY,
+ const window={NeoRpgNarrativePack:PACK,NeoRpgSideQuests:SIDE,NeoHarborStory:STORY,NeoRpgSchedules:SCHEDULES,NeoRpgWorld:WORLD,NeoRpgRivalArc:ARC,NeoRpgTournaments:TOURNAMENTS,NeoRpgCompetitiveLoop:COMPETE,NeoRpgReactivity:REACT,NeoRpgCommunity:COMMUNITY,NeoRpgConsequences:CONSEQ,NeoRpgRelationships:RELATIONSHIPS,NeoRpgTimeCoordinator:TIME,NeoRpgSceneCast:SCENE_CAST,NeoRpgTournamentPresentation:TOURNAMENT_PRESENTATION,NeoRpgEpilogue:EPILOGUE,NeoRpgAppointments:APPOINTMENTS,NeoRpgIntentions:INTENTIONS,NeoRpgCGGallery:CG,NeoRpgDailyPlanner:PLANNER,NeoRpgSocialActivities:SOCIAL,NeoRpgPlannedDates:DATES,NeoRpgPreDuel:PRE,NeoRpgCollection:COLLECTION,NeoRpgSeasonJourney:JOURNEY,NeoRpgSituations:SITUATIONS,NeoRpgDuelBridge:BRIDGE,NeoRpgDialogue:DIALOGUE,NeoRpgBondRewards:BONDS,NeoRpgPartnerDecks:PARTNER,NeoRpgConversations:VN,NeoRpgDialogueMemory:MEMORY,
   NeoRpgRenderPerf:{reconcileKeyed(parent,entries,create,refresh){
    parent.replaceChildren(...entries.map((entry,index)=>{const node=create(entry);refresh(node,entry,index);return node;}));
-  }},addEventListener(type,fn){listeners[type]=fn;}};
+  }},addEventListener(type,fn){listeners[type]=fn;},dispatchEvent(event){listeners[event.type]?.(event);return true;}};
  const fresh=!saved.has(KEY);
  const localStorage={getItem:k=>saved.has(k)?saved.get(k):null,setItem:(k,v)=>saved.set(k,v)};
  const sessionStorage={getItem:k=>sessions.get(k)||null,setItem:(k,v)=>sessions.set(k,v),removeItem:k=>sessions.delete(k)};
  const fetch=async()=>({ok:true,json:async()=>({decks:[{id:'blackout',name:'Blackout'},{id:'brushfire',name:'Brushfire'}]})});
  const location={search:'',origin:'http://localhost:8000',reload(){}};
- vm.runInNewContext(script,{window,document,localStorage,sessionStorage,fetch,location,confirm:()=>true,console,queueMicrotask,URLSearchParams,Image:Element,NodeFilter:{SHOW_TEXT:4}},{filename:'rpg.js'});
+ vm.runInNewContext(script,{window,document,localStorage,sessionStorage,fetch,location,confirm:()=>true,console,queueMicrotask,URLSearchParams,Event:class{constructor(type){this.type=type;}},Image:Element,NodeFilter:{SHOW_TEXT:4}},{filename:'rpg.js'});
  if(fresh)ids.starterChoices.children[0].onclick();
  return {ids,listeners,saved,sessions,location,read:()=>JSON.parse(saved.get(KEY)),send:payload=>listeners.message({origin:location.origin,source:ids.battle.contentWindow,data:payload})};
 }
