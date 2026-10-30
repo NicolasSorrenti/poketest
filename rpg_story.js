@@ -253,11 +253,11 @@
   // Older saves may already be beyond a bridge window or have completed the
   // old final event. Mark only that bridge as legacy-completed; do not award
   // new relationship points retroactively.
-  const migrationDay=Number.isInteger(s.day)?Math.max(1,Math.min(90,s.day)):1;
+  const migrationDay=Number.isInteger(state.day)?Math.max(1,Math.min(90,state.day)):1;
   for(const [eventId,prerequisite] of Object.entries(bridgePrerequisites)){
    const bridge=ID.get(prerequisite);
-   if(bridge&&!s.storyDone[prerequisite]&&(s.storyDone[eventId]||migrationDay>bridge.end)){
-    s.storyDone[prerequisite]={choice:0,day:migrationDay,legacy:true};
+   if(bridge&&!state.storyDone[prerequisite]&&(state.storyDone[eventId]||migrationDay>bridge.end)){
+    state.storyDone[prerequisite]={choice:0,day:migrationDay,legacy:true};
    }
   }
   for(const e of E)if(!state.relationships[e.npc])state.relationships[e.npc]={affection:0,trust:0,attraction:0,respect:0,duels:0};
