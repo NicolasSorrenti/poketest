@@ -369,7 +369,7 @@ function prompt(g,plan,helpers){
   }
  }
  // Neo Genesis theme-deck Trainers (curated card pool only).
- if(name==='Moo-Moo Milk'&&!chosen(d,'healTarget'))return single('healTarget',side,own(u=>u.damage>0),'Choose Pokémon to heal');
+ if(name==='Moo-Moo Milk'&&!chosen(d,'healTarget'))return single('healTarget',side,own(),'Choose Pokémon to heal');
  if(name==='Pokémon March'){
   for(const actor of [1-side,side]){
    const key=`march${actor}`,owner=g.players[actor],eligible=options(zone(owner.deck,isBasicPokemon),'deck');
