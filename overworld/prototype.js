@@ -175,8 +175,10 @@
   // This message is only trusted from the same-origin parent of integrated mode.
   window.addEventListener('message',event=>{
     if(event.origin!==location.origin||event.source!==window.parent||!params.has('rpg-integration'))return;
-    if(event.data?.type!=='neo-overworld-story-visibility')return;
-    document.body.classList.toggle('neo-overworld-dialogue',event.data.hidden===true);
+    if(event.data?.type==='neo-overworld-chibi-mode'){setChibiMode(event.data.enabled===true);return}
+    if(event.data?.type==='neo-overworld-story-visibility'){
+      document.body.classList.toggle('neo-overworld-dialogue',event.data.hidden===true);
+    }
   });
   if(params.has('rpg-integration'))document.body.classList.add('neo-overworld-embedded');
   const shopTest=params.has('shop-test'),requestedScene=params.get('scene'),sceneId=config[requestedScene]?.image?requestedScene:(shopTest?'shop':'arcade'),map=config[sceneId];
@@ -280,7 +282,19 @@
   const person=p=>config.characters[p.id]||{name:p.id.replace(/(^|[_-])([a-z])/g,(_,sep,letter)=>' '+letter.toUpperCase()).trim(),face:'',poses:{}};
   const pose=p=>{const art=person(p).poses?.[p.pose||'standing'];return art&&Number.isFinite(p.height)?{...art,height:p.height}:art};
   const face=p=>person(p).face||'';
-  const chibiMode=params.has('rpg-integration')&&params.get('chibi')==='1';
+  let chibiMode=params.has('rpg-integration')&&params.get('chibi')==='1';
+  const placementSpriteNodes=[];
+  function setChibiMode(enabled){
+    if(chibiMode===enabled)return;
+    chibiMode=enabled;
+    for(const {p,img,button} of placementSpriteNodes){
+      const art=pose(p);
+      if(enabled){button.classList.remove('missing');loadChibi(img,p.id);button.style.setProperty('--sprite-height','130px');}
+      else if(art){img.onerror=()=>{button.classList.add('missing');toast('Artwork not loading: '+person(p).name+' · '+(p.pose||'standing'));};img.src=art.src;button.style.setProperty('--sprite-height',(p.height||art.height)+'px');}
+      else{img.onerror=null;img.removeAttribute('src');button.classList.add('missing');button.style.setProperty('--sprite-height','130px');}
+    }
+    paint();
+  }
   const reinaChibi='/rpg-assets/characters/reina/chibi/front.png';
   const chibiPaths=id=>['/rpg-assets/characters/'+id+'/discreet/neutral.webp','/rpg-assets/characters/'+id+'/discreet/neutral.png','/rpg-assets/characters/'+id+'/chibi/front.png',reinaChibi];
   function loadChibi(img,id){const paths=chibiPaths(id);let index=0;const next=()=>{if(index>=paths.length){img.onerror=null;img.removeAttribute('src');return;}img.src=paths[index++];};img.onerror=next;next();}
@@ -306,7 +320,7 @@
   function openPerson(p){if(ignoreClick)return;if(params.has('rpg-integration')&&window.parent!==window){window.parent.postMessage({type:'neo-overworld-action',kind:'person',id:p.id},location.origin);return;}byId('dialogName').textContent=person(p).name+(p.previewKey?' · '+p.previewKey:'');const img=byId('dialogImg');img.src=face(p);img.alt=person(p).name;img.onerror=()=>img.hidden=true;img.hidden=false;dialog.hidden=false;byId('close').focus();}
   for(const p of placements){const pt=point(p),art=pose(p),b=document.createElement('button');b.className='anchor';b.style.left=pt.x+'px';b.style.top=pt.y+'px';b.dataset.character=p.id;b.dataset.pose=p.pose||'standing';b.dataset.foot=`${pt.x}, ${pt.y}`;b.title=`Interact with ${person(p).name}`;b.setAttribute('aria-label',b.title);
     const img=document.createElement('img');img.className='sprite';img.alt='';if(p.flipped)img.style.transform='scaleX(-1)';if(chibiMode){loadChibi(img,p.id);b.style.setProperty('--sprite-height','130px');}else if(art){img.src=art.src;b.style.setProperty('--sprite-height',(p.height||art.height)+'px');}else{b.classList.add('missing');b.style.setProperty('--sprite-height','130px');}
-    if(!chibiMode)img.onerror=()=>{b.classList.add('missing');toast('Artwork not loading: '+person(p).name+' · '+(p.pose||'standing'));};const fallback=document.createElement('span');fallback.className='fallback';fallback.textContent=person(p).name[0];const name=document.createElement('span');name.className='name';name.textContent=person(p).name;b.append(img,fallback,name);b.onclick=()=>openPerson(p);world.appendChild(b);
+    if(!chibiMode)img.onerror=()=>{b.classList.add('missing');toast('Artwork not loading: '+person(p).name+' · '+(p.pose||'standing'));};placementSpriteNodes.push({p,img,button:b});const fallback=document.createElement('span');fallback.className='fallback';fallback.textContent=person(p).name[0];const name=document.createElement('span');name.className='name';name.textContent=person(p).name;b.append(img,fallback,name);b.onclick=()=>openPerson(p);world.appendChild(b);
   }
   if(params.has('rpg-integration')&&window.parent!==window){
     const triggers=placements.filter(p=>p.triggerDialogue).map(p=>({id:p.id,pose:p.pose,src:pose(p)?.src||''})).filter(item=>item.src);
