@@ -1367,7 +1367,7 @@ function cancelPreparedDuel(){
  $('battle').src='about:blank';
  persist();render();
 }
-let battleRecoveryTimer=null;
+let battleRecoveryTimer=null,battleReadyDuelId=null;
 function ensureBattleRecovery(){
  let panel=$('battleRecovery');
  if(panel)return panel;
@@ -1384,12 +1384,12 @@ function scheduleBattleRecovery(){
  clearTimeout(battleRecoveryTimer);
  const pending=state.pendingDuel;if(!pending||PRE.isReady(pending))return;
  const started=Number(pending.startedAt)||Date.now();
- const delay=Math.max(0,12000-(Date.now()-started));
- battleRecoveryTimer=setTimeout(()=>{if(state.pendingDuel?.id===pending.id)ensureBattleRecovery().hidden=false;},delay);
+ const delay=Math.max(0,30000-(Date.now()-started));
+ battleRecoveryTimer=setTimeout(()=>{if(state.pendingDuel?.id===pending.id&&battleReadyDuelId!==pending.id)ensureBattleRecovery().hidden=false;},delay);
 }
 function retryPendingBattle(){
  const pending=state.pendingDuel;if(!pending||PRE.isReady(pending))return;
- pending.startedAt=Date.now();persist();ensureBattleRecovery().hidden=true;
+ battleReadyDuelId=null;pending.startedAt=Date.now();persist();ensureBattleRecovery().hidden=true;
  if(pending.deckCards)sessionStorage.setItem('neoRpgDeck:'+pending.id,JSON.stringify(pending.deckCards));
  if(pending.customOpponentDeck)sessionStorage.setItem('neoRpgNpcDeck:'+pending.id,JSON.stringify(pending.customOpponentDeck));
  $('duel').hidden=false;window.NeoRpgAudio?.setPaused?.(true);
@@ -1411,7 +1411,7 @@ function abandonPendingBattle(){
 function launchPreparedDuel(){
  const pending=state.pendingDuel;
  if(!PRE.launch(pending))return;
- pending.startedAt=Date.now();
+ battleReadyDuelId=null;pending.startedAt=Date.now();
  recordCG('before_duel',pending.npc);
  persist();
  if($('preDuelDialog').open)$('preDuelDialog').close();
@@ -1455,10 +1455,10 @@ function startDuel(id,exhibition=null,arcEpisode=null,tournament=null,sideQuest=
 }
 window.addEventListener('message',ev=>{
  const duel=state.pendingDuel;
- if(ev.data?.type==='neo-rpg-duel-ready'){
-  if(duel&&!PRE.isReady(duel)&&ev.origin===location.origin&&ev.source===$('battle').contentWindow&&ev.data.duelId===duel.id){
-   clearTimeout(battleRecoveryTimer);const panel=$('battleRecovery');if(panel)panel.hidden=true;
-  }
+ if((ev.data?.type==='neo-rpg-duel-ready'||ev.data?.type==='neo-rpg-duel-error')&&duel&&!PRE.isReady(duel)&&ev.origin===location.origin&&ev.source===$('battle').contentWindow&&ev.data.duelId===duel.id){
+  clearTimeout(battleRecoveryTimer);
+  if(ev.data.type==='neo-rpg-duel-ready'){battleReadyDuelId=duel.id;const panel=$('battleRecovery');if(panel)panel.hidden=true;}
+  else{battleReadyDuelId=null;ensureBattleRecovery().hidden=false;}
   return;
  }
  if(ev.data?.type==='neo-rpg-playmat-selected'){
@@ -1507,7 +1507,7 @@ window.addEventListener('message',ev=>{
   story:!!(duel.eventKey||duel.arcEpisode||duel.sideQuestId||duel.bondChallenge)
  });
  if(awarded)log('Won a '+awarded.length+'-card '+(awarded.length===10?'championship booster':'mini booster')+': '+awarded.map(labelCard).join(', ')+'.');
- state.lastDuelReceipt=receipt;state.pendingDuel=null;
+ state.lastDuelReceipt=receipt;state.pendingDuel=null;battleReadyDuelId=null;
  sessionStorage.removeItem(BRIDGE.sessionKey(duel.id));
  sessionStorage.removeItem('neoRpgDeck:'+duel.id);
   sessionStorage.removeItem('neoRpgNpcDeck:'+duel.id);
