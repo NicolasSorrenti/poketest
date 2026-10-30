@@ -2801,6 +2801,7 @@ function render(){
  const characterActions=$('characterActions');
  if(characterActions){
   const menuMode=shown?.presentation==='character-menu';
+  document.body.classList.toggle('rpg-character-choice-menu',menuMode);
   const menuId=menuMode?shown.menuCharacter:null;
   const selected=menuMode?(menuId&&people.includes(menuId)?menuId:null):(state.selected&&people.includes(state.selected)&&!locked?state.selected:null);
   characterActions.classList.toggle('choice-menu',menuMode);
