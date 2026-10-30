@@ -1,0 +1,17 @@
+name: Item Finder fidelity
+on:
+  pull_request:
+    paths: ['classic_trainer_core.js', 'headless_duel.js', 'test_item_finder_paid_trainer.js', '.github/workflows/item-finder-fidelity.yml']
+  push:
+    branches: [main]
+    paths: ['classic_trainer_core.js', 'headless_duel.js', 'test_item_finder_paid_trainer.js', '.github/workflows/item-finder-fidelity.yml']
+jobs:
+  trainer-fidelity:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - run: node test_item_finder_paid_trainer.js
+      - run: node test_classic_trainer_power_migration.js

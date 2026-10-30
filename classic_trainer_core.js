@@ -527,7 +527,14 @@ function prompt(g,plan,helpers){
  }
  if(name==='Pokémon Trader'&&!chosen(d,'trade'))return single('trade',side,hchoices(pokemon),'Choose Pokémon from hand to trade');
  if(name==='Computer Search'&&!chosen(d,'find'))return single('find',side,deck(),'Search your deck for any card');
- if(name==='Item Finder'&&!chosen(d,'recover'))return single('recover',side,disc(p,c=>c.supertype==='Trainer'),'Choose Trainer from discard');
+ if(name==='Item Finder'&&!chosen(d,'recover')){
+  const existing=disc(p,c=>c.supertype==='Trainer');
+  // Costs are staged until commit; make the selected Trainer cost cards
+  // available as if they had already been discarded.
+  const paid=nums(d,'cost').flatMap(i=>get(p.hand[i]).supertype==='Trainer'?
+   [{id:'paid:'+i,label:get(p.hand[i]).name,cardId:p.hand[i]}]:[]);
+  return single('recover',side,[...existing,...paid],'Choose Trainer from discard');
+ }
  if(name==='Pokémon Trader'&&!chosen(d,'find'))return single('find',side,deck(pokemon),'Choose Pokémon from deck');
  if(name==='Energy Retrieval'&&!chosen(d,'recover')){const a=disc(p,basicEnergy);if(!a.length)throw Error('No Basic Energy in discard');return multi('recover',side,a,1,Math.min(2,a.length),'Recover 1 or 2 Basic Energy');}
  if(name==='Energy Search'&&!chosen(d,'find'))return single('find',side,deck(basicEnergy),'Choose Basic Energy');
@@ -986,7 +993,17 @@ function commit(g,plan,h){
   case 'Computer Search':case 'Energy Search':case "The Boss's Way":case 'Poké Ball':
    if(chosen(d,'find')&&d.find.length){const [id]=take(p.deck,[pick('find')]);p.hand.push(id);}p.deck=h.shuffle(g,p.deck);break;
   case 'Pokémon Trader':{const i=pick('trade'),handOffset=i>plan.handIndex?i-1:i;const [offered]=take(p.hand,[handOffset]);const [found]=take(p.deck,[pick('find')]);p.hand.push(found);p.deck=h.shuffle(g,[...p.deck,offered]);break;}
-  case 'Item Finder':p.hand.push(...extract(p,'recover'));break;
+  case 'Item Finder':{
+   const selection=d.recover[0];
+   if(selection.startsWith('paid:')){
+    const handIndex=pick('recover'),cost=picks('cost').sort((a,b)=>a-b),position=cost.indexOf(handIndex);
+    if(position<0)throw Error('Item Finder selection was not discarded as a cost');
+    const index=p.discard.length-cost.length+position;
+    if(get(p.discard[index]).supertype!=='Trainer')throw Error('Item Finder must recover a Trainer');
+    p.hand.push(...take(p.discard,[index]));
+   }else p.hand.push(...extract(p,'recover'));
+   break;
+  }
   case 'Energy Retrieval':p.hand.push(...extract(p,'recover'));break;
   case 'Nightly Garbage Run':p.deck=h.shuffle(g,[...p.deck,...extract(p,'recover')]);break;
   case 'Recycle':if(chosen(d,'recover')&&d.recover.length)p.deck.push(...extract(p,'recover'));break;
