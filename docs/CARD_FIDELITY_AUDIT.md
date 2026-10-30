@@ -83,4 +83,9 @@ These scenarios use the TCGdex-sourced catalogue text. Printed card images and a
 
 Regression verification: `node test_card_fidelity_venusaur.js` passes 48 scenarios. Base Set was exercised in Classic, Neo, online-preview 60-card and online-preview 40-card reducer configurations; Base Set 2 was exercised in online-preview 60-card and 40-card configurations. The test does not certify browser/UI or network integration.
 
+| Zapdos (base1-16) | Thunder heads/tails damage and recoil/self-KO Prize flow; Thunderbolt four-Lightning cost, 100 damage and all-Energy discard | test_card_fidelity_zapdos.js; text compared with [Limitless](https://limitlesstcg.com/cards/BS/16) and [Serebii](https://www.serebii.net/card/base/016.shtml); [official errata PDF](https://www.pokemon.com/static-assets/content-assets/cms2/pdf/trading-card-game/tcg_errata.pdf) searched, no Zapdos entry | Partial; historical rulings and client/network interactions pending |
+| Zapdos (base4-20) | Base Set 2 text compared; same Thunder/Thunderbolt scenarios as Base Set | test_card_fidelity_zapdos.js; [Limitless](https://limitlesstcg.com/cards/BS2/20), [Serebii](https://www.serebii.net/card/baseset2/020.shtml); official errata PDF searched, no Zapdos entry | Partial; historical rulings and client/network interactions pending |
+
+Regression verification: `node test_card_fidelity_zapdos.js` passes 30 scenarios. Base Set was exercised in Classic, Neo, online-preview 60-card and online-preview 40-card reducer configurations; Base Set 2 was exercised in online-preview 60-card and 40-card configurations. The test does not certify browser/UI or network integration.
+
 The full card-by-card fidelity review is **not complete**. Do not count the other cards or untested branches of the cards above as verified. Existing Classic execution probing covers 427 attack records in a manufactured scenario; it checks execution, not correctness or all possible choices.
