@@ -20,9 +20,35 @@
     const note=document.createElement('div');note.id='neoOverworldNotice';note.hidden=true;note.setAttribute('role','status');note.setAttribute('aria-live','polite');
     const showNotice=message=>{note.textContent=message;note.hidden=false;};
     const frame=document.createElement('iframe');frame.title='Current Neo Campus location';Object.assign(frame.style,{flex:'1',minHeight:'0',width:'100%',border:'0'});
+    const headerActions=document.createElement('div');headerActions.className='neo-ow-header-actions';
+    const cloudButton=document.createElement('button');cloudButton.type='button';cloudButton.className='neo-ow-menu-button neo-ow-cloud-button';cloudButton.textContent='☁ SIGN IN';cloudButton.title='Open cloud save account';cloudButton.setAttribute('aria-label','Open cloud save account');
+    const chibiButton=document.createElement('button');chibiButton.type='button';chibiButton.className='neo-ow-menu-button neo-ow-chibi-button';chibiButton.setAttribute('aria-pressed','false');chibiButton.title='Toggle character chibi mode';
     const menuButton=document.createElement('button');menuButton.type='button';menuButton.textContent='☰ MENU';menuButton.setAttribute('aria-expanded','false');
     menuButton.className='neo-ow-menu-button';
-    toolbar.append(title,menuButton);overlay.append(toolbar,frame,note);document.body.append(overlay);
+    const syncChibiButton=()=>{
+      const enabled=document.documentElement.dataset.rpgDiscreet==='on';
+      chibiButton.textContent=enabled?'◈ CHIBI ON':'◇ CHIBI OFF';
+      chibiButton.setAttribute('aria-pressed',String(enabled));
+    };
+    const syncCloudButton=()=>{
+      const native=document.getElementById('cloudSaveButton');
+      cloudButton.textContent=native?.textContent?.trim()||'☁ SIGN IN';
+    };
+    const syncChibiMode=()=>{
+      frame.contentWindow?.postMessage({type:'neo-overworld-chibi-mode',enabled:document.documentElement.dataset.rpgDiscreet==='on'},location.origin);
+    };
+    chibiButton.onclick=()=>document.getElementById('rpgDiscreetToggle')?.click();
+    cloudButton.onclick=()=>document.getElementById('cloudSaveButton')?.click();
+    headerActions.append(cloudButton,chibiButton,menuButton);
+    toolbar.append(title,headerActions);overlay.append(toolbar,frame,note);document.body.append(overlay);
+    frame.addEventListener('load',syncChibiMode);
+    syncChibiButton();syncCloudButton();
+    const chibiPreferenceObserver=new MutationObserver(syncChibiButton);
+    chibiPreferenceObserver.observe(document.documentElement,{attributes:true,attributeFilter:['data-rpg-discreet']});
+    const nativeChibiToggle=document.getElementById('rpgDiscreetToggle');
+    nativeChibiToggle?.addEventListener('click',()=>{syncChibiButton();syncChibiMode();});
+    const nativeCloudButton=document.getElementById('cloudSaveButton');
+    if(nativeCloudButton)new MutationObserver(syncCloudButton).observe(nativeCloudButton,{childList:true,characterData:true,subtree:true});
     // Both compact controls are equal-width; only the chosen sheet expands.
     const bottom=document.createElement('nav');bottom.id='neoOverworldBottom';bottom.setAttribute('aria-label','Overworld quick actions');
     const sheetBackdrop=document.createElement('button');sheetBackdrop.type='button';sheetBackdrop.id='neoOverworldSheetBackdrop';
@@ -126,7 +152,10 @@
       #neoOverworldOverlay .neo-ow-place{display:flex;flex-direction:column;gap:3px}
       #neoOverworldOverlay .neo-ow-place strong{font-size:17px;line-height:1.1}
       #neoOverworldOverlay .neo-ow-place small{font-size:12px;color:#e6c8ef}
-      #neoOverworldOverlay .neo-ow-menu-button{padding:10px 13px;border:1px solid #b38bb8;border-radius:10px;background:#322643;color:#fff;cursor:pointer}
+      #neoOverworldOverlay .neo-ow-header-actions{display:flex;align-items:center;gap:7px;flex:none}
+      #neoOverworldOverlay .neo-ow-menu-button{padding:10px 11px;border:1px solid #b38bb8;border-radius:10px;background:#322643;color:#fff;cursor:pointer;white-space:nowrap}
+      #neoOverworldOverlay .neo-ow-chibi-button[aria-pressed="true"]{background:#41516a;border-color:#b8d2ff}
+      @media(max-width:500px){#neoOverworldOverlay .neo-ow-header-actions{gap:4px}#neoOverworldOverlay .neo-ow-menu-button{padding:8px 6px;font-size:11px}#neoOverworldOverlay .neo-ow-place strong{font-size:14px}}
       #neoOverworldNotice:not([hidden]){position:absolute;z-index:7;top:70px;left:50%;transform:translateX(-50%);max-width:min(460px,90vw);padding:9px 14px;border:1px solid #b38bb8;border-radius:10px;background:#291e3df2;color:#fff;font:13px system-ui;box-shadow:0 12px 28px #0007;pointer-events:none}
       #neoOverworldSheetBackdrop:not([hidden]){position:absolute;inset:58px 0 0;z-index:3;background:#07051555;border:0;cursor:default}
       #neoOverworldBottom{position:absolute;z-index:4;bottom:0;left:0;right:0;padding:9px max(10px,env(safe-area-inset-left)) max(10px,env(safe-area-inset-bottom));background:linear-gradient(0deg,#14132dfb 75%,#14132de6);border-top:1px solid #b78ca778;display:flex;flex-direction:column;gap:8px;color:#fff}
@@ -989,7 +1018,7 @@
       overlay.hidden=true;overlay.style.display='none';frame.src='about:blank';open.focus();
     }
     open.addEventListener('click',()=>{attachChoicePanels();refresh();overlay.hidden=false;overlay.style.display='flex';queueStorySync();});
-    document.getElementById('rpgDiscreetToggle')?.addEventListener('click',()=>{if(!overlay.hidden)refresh();});
+    document.getElementById('rpgDiscreetToggle')?.addEventListener('click',()=>{syncChibiButton();syncChibiMode();});
     function performTravel(target){
       const data=snapshot();if(!data)return;
       if(data.locked){showNotice('Travel is unavailable during the current scene.');closeSheet();return;}
