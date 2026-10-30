@@ -315,7 +315,7 @@
     document.head.append(actionStyle);
     const characterActions=document.getElementById('characterActions');
     characterActions?.parentNode?.insertBefore(actionTray,characterActions);
-    const scenePeople=document.createElement('div');scenePeople.id='neoOverworldScenePeople';
+    const scenePeople=document.createElement('div');scenePeople.id='neoOverworldScenePeople';scenePeople.classList.add('neo-ow-standard-portraits');
     const sceneArea=document.getElementById('scene');
     sceneArea?.append(scenePeople);
     let lastPortraitSignature='';
@@ -336,6 +336,7 @@
       for(const participant of participants){
         const person=document.createElement('div');
         person.className='neo-ow-person'+(participant.id===focused?' is-speaking':' is-listening');
+        person.dataset.npc=participant.id;
         const image=document.createElement('img');image.alt=participant.name;
         // A missing portrait must never display a different character's face.
         // The original game's avatar loader already resolves outfit-specific art.
@@ -414,6 +415,61 @@
       }
     `;
     document.head.append(portraitPlacement);
+    // Fixed square dialogue crops are deliberately scoped to the standalone overworld.
+    // All source artwork, outfit selection, emotions, CGs, and legacy RPG screens stay intact.
+    // Keep this after portraitPlacement: older rules use !important.
+    const dialoguePortraitStandard=document.createElement('style');
+    dialoguePortraitStandard.id='neoOverworldDialoguePortraitStandard';
+    dialoguePortraitStandard.textContent=`
+      #neoOverworldStoryDock #neoOverworldScenePeople.neo-ow-standard-portraits{
+        --neo-dialogue-portrait-size:clamp(220px,39dvh,390px);
+        height:var(--neo-dialogue-portrait-size)!important;
+        max-height:var(--neo-dialogue-portrait-size)!important;
+        width:100%!important;min-height:0!important;
+        align-items:flex-end!important;justify-content:center!important;
+        gap:clamp(6px,1.8vw,24px)!important;overflow:hidden!important;
+      }
+      #neoOverworldStoryDock #neoOverworldScenePeople.neo-ow-standard-portraits .neo-ow-person{
+        width:var(--neo-dialogue-portrait-size)!important;
+        max-width:var(--neo-dialogue-portrait-size)!important;
+        flex:0 1 var(--neo-dialogue-portrait-size)!important;
+        height:var(--neo-dialogue-portrait-size)!important;
+        max-height:var(--neo-dialogue-portrait-size)!important;
+        overflow:hidden!important;position:relative!important;
+        justify-content:flex-end!important;
+        align-items:center!important;
+      }
+      #neoOverworldStoryDock #neoOverworldScenePeople.neo-ow-standard-portraits .neo-ow-person img{
+        display:block!important;width:100%!important;height:100%!important;
+        max-width:none!important;max-height:none!important;
+        object-fit:cover!important;
+        object-position:var(--neo-dialogue-portrait-x,50%) var(--neo-dialogue-portrait-y,0%)!important;
+        transform:scale(var(--neo-dialogue-portrait-zoom,1));
+        transform-origin:center top;
+        margin:0!important;
+      }
+      /* Calibrate the tall full-body Laca neutral against Marina's approved
+         close-up bust crop. Both now use identical square portrait windows. */
+      #neoOverworldStoryDock #neoOverworldScenePeople.neo-ow-standard-portraits .neo-ow-person[data-npc="laca"]{
+        --neo-dialogue-portrait-zoom:1.22;
+      }
+      @media(max-width:650px){
+        #neoOverworldStoryDock #neoOverworldScenePeople.neo-ow-standard-portraits{
+          --neo-dialogue-portrait-size:min(74vw,37dvh);
+        }
+        #neoOverworldStoryDock #neoOverworldScenePeople.neo-ow-standard-portraits:has(.neo-ow-person:nth-child(2)){
+          --neo-dialogue-portrait-size:min(46vw,35dvh);
+          gap:4px!important;
+        }
+      }
+      @media(prefers-reduced-motion:reduce){
+        #neoOverworldStoryDock #neoOverworldScenePeople.neo-ow-standard-portraits .neo-ow-person img{
+          transition:none!important;
+        }
+      }
+    `;
+    document.head.append(dialoguePortraitStandard);
+
 
     // Character interaction layout follows the portrait-left / actions-right
     // visual reference; ordinary story dialogue is unaffected.
