@@ -19,6 +19,8 @@ const out = path.resolve(getArg('--out', 'rpg-assets/outfit-chime-overworld-cand
 const imageExt = /\.(png|jpe?g|webp)$/i;
 const labels = {};
 const characters = {};
+const overridesPath = path.resolve(getArg('--overrides', 'tools/overworld-chime-crop-overrides.json'));
+const overrides = fs.existsSync(overridesPath) ? JSON.parse(fs.readFileSync(overridesPath, 'utf8')) : {};
 
 function walk(dir, files = []) {
   for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
@@ -51,7 +53,7 @@ for (const file of walk(root)) {
   if (!/(^|\/)overworld(?:-variants)?$/i.test(variantDir) &&
       !/(^|\/)overworld\//i.test(variantDir)) continue;
   const name = rel.at(-1);
-  const f = focusFor(name);
+  const f = { ...focusFor(name), ...(overrides[id]?.[name] || {}) };
   const image = '/' + path.relative(process.cwd(), file).split(path.sep).join('/');
   labels[id] ||= id[0].toUpperCase() + id.slice(1);
   characters[id] ||= { variants: {} };
