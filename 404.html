@@ -15,7 +15,7 @@ main{max-width:520px}a{color:#80e3f0}p{color:#bdccdd;line-height:1.6}
   // Only browser page navigations redirect; missing API endpoints and
   // asset requests must remain 404s for clients to diagnose correctly.
   const path=location.pathname;
-  if(path==='/api'||path.startsWith('/api/')||path.startsWith('/cloudflare-api/')||/\.[a-z0-9]{1,12}$/i.test(path))return;
+  if(path==='/api'||path.startsWith('/api/')||path.startsWith('/cloudflare-api/')||(/\.[a-z0-9]{1,12}$/i.test(path)&&!/\.html?$/i.test(path)))return;
   location.replace('/play.html');
 })();
 </script>
