@@ -204,6 +204,8 @@
     // original dialogue and choice DOM stays live, without its old room backdrop.
     const visualStyle=document.createElement('style');
     visualStyle.textContent=`
+      /* Time wipes are appended to the page body; keep them above this full-screen overlay. */
+      #neoOverworldOverlay:not([hidden]) ~ .neo-timefx{z-index:10000!important}
       #neoOverworldStoryDock{width:min(760px,calc(100vw - 16px));max-height:76dvh!important;right:auto!important;bottom:max(8px,env(safe-area-inset-bottom))!important;overscroll-behavior:contain}
       #neoOverworldStoryDock .stage-panel{background:#171326!important;border:0!important;box-shadow:none!important;display:flex!important;flex-direction:column!important;gap:0!important}
       #neoOverworldStoryDock #scene{background:none!important;background-image:none!important;min-height:clamp(140px,27dvh,290px)!important;max-height:32dvh!important;height:auto!important;position:relative!important;border:0!important}
