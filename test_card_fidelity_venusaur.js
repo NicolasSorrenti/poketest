@@ -35,6 +35,9 @@ for(const v of variants)for(const [format,size] of v.formats){
  // A single eligible Grass Energy needs no energy-card picker; another Energy
  // type on that source is not eligible for Energy Trans.
  {const g=game(format,size,v.id);g.players[0].bench[0].energies=[grass,'base1-100'];act(g,0,'use_power',{slot:-1,repeat:true});pick(g,0,'slot:0');assert.equal(g.pendingDecision.kind,'target');pick(g,0,'slot:-1');assert.deepEqual(g.players[0].bench[0].energies,['base1-100']);assert.deepEqual(g.players[0].active.energies,[grass]);act(g,0,'choose',{decisionId:g.pendingDecision.id,decline:true});scenarios++;}
+ // Two Base Set printings of Basic Grass Energy have the same transfer
+ // outcome, so no Energy-card prompt is needed; Rainbow Energy is not eligible.
+ {const g=game(format,size,v.id);g.players[0].bench[0].energies=[grass,'base4-127','base5-17'];act(g,0,'use_power',{slot:-1,repeat:true});pick(g,0,'slot:0');assert.equal(g.pendingDecision.kind,'target');pick(g,0,'slot:-1');assert.deepEqual(g.players[0].bench[0].energies,['base4-127','base5-17']);assert.deepEqual(g.players[0].active.energies,[grass]);act(g,0,'choose',{decisionId:g.pendingDecision.id,decline:true});scenarios++;}
  // Energy Trans cannot attach to the same Pokémon it came from and cannot be
  // activated after Venusaur becomes Asleep, Confused, or Paralyzed.
  {const g=game(format,size,v.id);g.players[0].active.energies=[grass];g.players[0].bench[0].energies=[grass];act(g,0,'use_power',{slot:-1,repeat:true});pick(g,0,'slot:-1');assert.ok(!g.pendingDecision.options.some(x=>x.id==='slot:-1'));reject(g,0,'choose',{decisionId:g.pendingDecision.id,selected:['slot:-1']});}
