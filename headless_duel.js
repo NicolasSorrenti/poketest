@@ -887,6 +887,8 @@ function performAction(g,side,cmd){
   }
   if(pending.kind==='attack_energy'){
    const indices=answer.selected.map(x=>Number(x.slice(7)));
+   const attacker=g.players[pending.side].active,source=effectiveCard(g,attacker),attack=source.attacks[pending.attackIndex];
+   log(g,`${source.name} discarded ${indices.map(i=>card(g,attacker.energies[i]).name).join(', ')} to use ${attack.name}.`);
    resolveAttack(g,pending.side,pending.attackIndex,undefined,indices);
    return;
   }
