@@ -58,13 +58,13 @@ check('Venusaur Energy Trans moves its own Grass Energy and can be repeated',()=
  assert.ok(g.pendingDecision.options.some(o=>o.id==='slot:0'),'Benched Pokémon must be a legal Energy recipient');
  assert.ok(!g.pendingDecision.options.some(o=>o.id==='slot:-1'),'Energy cannot move onto its original Pokémon');
  answer(g,['slot:0']);
- assert.deepEqual(p.active.energies,['base1-99','base1-102']);
- assert.deepEqual(p.bench[0].energies,['base1-99']);
+ assert.deepEqual(g.players[0].active.energies,['base1-99','base1-102']);
+ assert.deepEqual(g.players[0].bench[0].energies,['base1-99']);
  ok(g,0,'use_power',{slot:-1});answer(g,['slot:1']);answer(g,['index:0']);answer(g,['slot:-1']);
- assert.deepEqual(p.active.energies,['base1-99','base1-102','base1-99']);
- assert.deepEqual(p.bench[1].energies,[]);
- assert.equal(p.energyUsed,false,'Energy Trans must not consume the turn attachment');
- p.active.status='Paralyzed';bad(g,0,'use_power',{slot:-1},/disabled/);
+ assert.deepEqual(g.players[0].active.energies,['base1-99','base1-102','base1-99']);
+ assert.deepEqual(g.players[0].bench[1].energies,[]);
+ assert.equal(g.players[0].energyUsed,false,'Energy Trans must not consume the turn attachment');
+ g.players[0].active.status='Paralyzed';bad(g,0,'use_power',{slot:-1},/disabled/);
 });
 check('Venusaur Energy Trans requires a second Pokémon to receive Energy',()=>{
  const g=ready();g.players[0].active=unit('base1-15',['base1-99']);g.players[0].bench=[];
