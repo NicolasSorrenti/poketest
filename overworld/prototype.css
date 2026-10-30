@@ -47,3 +47,6 @@ body:not(.neo-overworld-layout-editor) .hotspot.neo-hotspot-pin:focus-visible sp
 body.show-guides:not(.neo-overworld-layout-editor) .hotspot.neo-hotspot-pin span{
   display:block;
 }
+
+/* On desktop, keep the map framed at roughly 90% of the available width. */
+@media(min-width:900px){#shell{width:90vw;margin-inline:auto}}

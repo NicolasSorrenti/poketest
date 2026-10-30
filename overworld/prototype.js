@@ -247,6 +247,9 @@
   const chibiPaths=id=>['/rpg-assets/characters/'+id+'/discreet/neutral.webp','/rpg-assets/characters/'+id+'/discreet/neutral.png','/rpg-assets/characters/'+id+'/chibi/front.png',reinaChibi];
   function loadChibi(img,id){const paths=chibiPaths(id);let index=0;const next=()=>{if(index>=paths.length){img.onerror=null;img.removeAttribute('src');return;}img.src=paths[index++];};img.onerror=next;next();}
 
+  // Do not let the map shrink below the scale needed to cover the camera in both dimensions.
+  // The larger ratio avoids empty bars along either axis at the minimum zoom.
+  const minZoom=()=>Math.max(camera.clientWidth/map.width,camera.clientHeight/map.height);
   function bound(){const w=camera.clientWidth,h=camera.clientHeight;ox=map.width*zoom>w?clamp(ox,w-map.width*zoom,0):(w-map.width*zoom)/2;oy=map.height*zoom>h?clamp(oy,h-map.height*zoom,0):(h-map.height*zoom)/2;}
   function paint(){bound();world.style.transform=`translate(${ox}px,${oy}px) scale(${zoom})`;edges.replaceChildren();
     const w=camera.clientWidth,h=camera.clientHeight,margin=28,top=80,bottom=110;
@@ -260,7 +263,7 @@
     }
   }
   function focus(p){const pt=point(p);ox=camera.clientWidth/2-pt.x*zoom;oy=camera.clientHeight/2-(pt.y-60)*zoom;world.style.transition='transform .3s ease-out';paint();setTimeout(()=>world.style.transition='',320);}
-  function center(){zoom=clamp(Math.max(camera.clientWidth/map.initial.viewWidth,camera.clientHeight/map.initial.viewHeight),.52,1.05);const initialReina=map.id==='arcade'?placements.find(p=>p.id==='reina'&&p.pose==='arcade'):null;const target=(poseTest||(!shopTest&&!params.has('art-test')&&!params.has('cast-test')))&&initialReina?point(initialReina):map.initial;ox=camera.clientWidth/2-target.x*zoom;oy=camera.clientHeight/2-(target.y-55)*zoom;paint();}
+  function center(){zoom=Math.max(minZoom(),clamp(Math.max(camera.clientWidth/map.initial.viewWidth,camera.clientHeight/map.initial.viewHeight),.52,1.05));const initialReina=map.id==='arcade'?placements.find(p=>p.id==='reina'&&p.pose==='arcade'):null;const target=(poseTest||(!shopTest&&!params.has('art-test')&&!params.has('cast-test')))&&initialReina?point(initialReina):map.initial;ox=camera.clientWidth/2-target.x*zoom;oy=camera.clientHeight/2-(target.y-55)*zoom;paint();}
   function toast(message){const t=byId('toast');t.textContent=message;t.hidden=false;clearTimeout(toastTimer);toastTimer=setTimeout(()=>t.hidden=true,3500);}
   function openPerson(p){if(ignoreClick)return;if(params.has('rpg-integration')&&window.parent!==window){window.parent.postMessage({type:'neo-overworld-action',kind:'person',id:p.id},location.origin);return;}byId('dialogName').textContent=person(p).name+(p.previewKey?' · '+p.previewKey:'');const img=byId('dialogImg');img.src=face(p);img.alt=person(p).name;img.onerror=()=>img.hidden=true;img.hidden=false;dialog.hidden=false;byId('close').focus();}
   for(const p of placements){const pt=point(p),art=pose(p),b=document.createElement('button');b.className='anchor';b.style.left=pt.x+'px';b.style.top=pt.y+'px';b.dataset.character=p.id;b.dataset.pose=p.pose||'standing';b.dataset.foot=`${pt.x}, ${pt.y}`;b.title=`Interact with ${person(p).name}`;b.setAttribute('aria-label',b.title);
@@ -283,7 +286,7 @@
   camera.addEventListener('pointermove',e=>{if(!drag||e.pointerId!==drag.id)return;const dx=e.clientX-drag.x,dy=e.clientY-drag.y;if(Math.hypot(dx,dy)>7)drag.moved=true;ox=drag.ox+dx;oy=drag.oy+dy;paint()});
   function endDrag(e){if(!drag||e.pointerId!==drag.id)return;ignoreClick=drag.moved;drag=null;camera.classList.remove('dragging');if(ignoreClick)setTimeout(()=>ignoreClick=false,80);}
   camera.addEventListener('pointerup',endDrag);camera.addEventListener('pointercancel',endDrag);
-  camera.addEventListener('wheel',e=>{if(!e.ctrlKey||!dialog.hidden)return;e.preventDefault();const old=zoom,z=clamp(zoom*(e.deltaY<0?1.08:.92),.48,3.4),r=camera.getBoundingClientRect(),x=e.clientX-r.left,y=e.clientY-r.top;ox=x-(x-ox)*z/old;oy=y-(y-oy)*z/old;zoom=z;paint()},{passive:false});
+  camera.addEventListener('wheel',e=>{if(!e.ctrlKey||!dialog.hidden)return;e.preventDefault();const old=zoom,minimum=minZoom(),maximum=Math.max(3.4,minimum),z=clamp(zoom*(e.deltaY<0?1.08:.92),minimum,maximum),r=camera.getBoundingClientRect(),x=e.clientX-r.left,y=e.clientY-r.top;ox=x-(x-ox)*z/old;oy=y-(y-oy)*z/old;zoom=z;paint()},{passive:false});
   byId('reset').onclick=center;byId('guides').onclick=()=>{document.body.classList.toggle('show-guides');byId('guides').setAttribute('aria-pressed',String(document.body.classList.contains('show-guides')))};
   byId('close').onclick=()=>{dialog.hidden=true};for(const id of ['activities','events','deck','status'])byId(id).onclick=()=>{if(params.has('rpg-integration')&&window.parent!==window){window.parent.postMessage({type:'neo-overworld-action',kind:'navigation',id},location.origin);return;}toast(id+' opens in the existing RPG; this map is a placement preview');};
   if(layoutDev){
