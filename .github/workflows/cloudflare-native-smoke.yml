@@ -1,0 +1,17 @@
+name: Cloudflare native Cube/Classic smoke
+on:
+  push:
+    branches:
+      - 'fix/cloudflare-native-cube-classic-*'
+  workflow_dispatch:
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 9
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify Cloudflare Pages preview APIs
+        run: node scripts/cloudflare-native-smoke.mjs
