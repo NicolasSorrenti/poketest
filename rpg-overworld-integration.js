@@ -321,6 +321,49 @@
     let lastPortraitSignature='';
     const portraitWindow=window.NeoRpgSceneCast?.createSpeakerWindow?.();
     let interactionFocus=null;
+    const poseTriggerQueue=[],poseTriggerQueued=new Set();
+    let poseTriggerBusy=false,poseTriggerAwaitingDialogue=false;
+    function queuePoseTriggers(message){
+      const data=bridge()?.snapshot();if(!data||message.scene!==data.location)return;
+      for(const item of Array.isArray(message.triggers)?message.triggers:[]){
+        if(!/^[a-z][a-z0-9_-]{0,35}$/.test(item?.id||'')||!data.people.includes(item.id))continue;
+        let url;try{url=new URL(item.src,location.href)}catch{continue}
+        if(url.origin!==location.origin||!url.pathname.startsWith('/rpg-assets/characters/'))continue;
+        const pose=String(item.pose||'standing');
+        const key=['neoOverworldPoseTriggerV1',data.location,data.day,data.slot,item.id,pose].join(':');
+        let seen=false;try{seen=sessionStorage.getItem(key)==='1'}catch{}
+        if(seen||poseTriggerQueued.has(key))continue;
+        try{sessionStorage.setItem(key,'1')}catch{}
+        poseTriggerQueued.add(key);
+        poseTriggerQueue.push({id:item.id,pose,src:url.pathname+url.search,scene:data.location,key});
+      }
+      processPoseTriggerQueue();
+    }
+    async function processPoseTriggerQueue(){
+      if(poseTriggerBusy||poseTriggerAwaitingDialogue||overlay.hidden||suspendedForDuel||!poseTriggerQueue.length)return;
+      const data=bridge()?.snapshot();if(!data||data.locked)return;
+      const item=poseTriggerQueue.shift();
+      if(data.location!==item.scene||!data.people.includes(item.id)){poseTriggerQueued.delete(item.key);return processPoseTriggerQueue()}
+      poseTriggerBusy=true;
+      try{
+        if(window.NeoOutfitChime?.display)await window.NeoOutfitChime.display(item.src,{top:0,bottom:1,left:0,right:1},1450);
+        const current=bridge()?.snapshot();
+        if(!current||current.location!==item.scene||!current.people.includes(item.id))return;
+        if(current.locked){poseTriggerQueue.unshift(item);return}
+        interactionFocus=item.id;
+        if(!showStory()||!bridge()?.poseTriggerDialogue?.(item.id,item.src)){
+          interactionFocus=null;hideStory();showNotice('This pose could not start its dialogue.');
+          poseTriggerQueued.delete(item.key);return;
+        }
+        poseTriggerAwaitingDialogue=true;
+        queueStorySync();
+      }catch(error){console.warn('Overworld pose trigger failed:',error);poseTriggerQueued.delete(item.key)}
+      finally{poseTriggerBusy=false}
+    }
+    function syncPoseTriggerQueue(){
+      if(poseTriggerAwaitingDialogue&&!bridge()?.snapshot()?.locked)poseTriggerAwaitingDialogue=false;
+      if(!poseTriggerAwaitingDialogue)queueMicrotask(processPoseTriggerQueue);
+    }
     function syncPortraits(hasCG,idleFocus=null){
       const cast=bridge()?.scenePortraits?.();
       const selectedPortrait=idleFocus?bridge()?.portrait?.(idleFocus):null;
@@ -340,7 +383,12 @@
         // A missing portrait must never display a different character's face.
         // The original game's avatar loader already resolves outfit-specific art.
         if(participant.src)image.src=participant.src;
-        image.onerror=()=>{image.hidden=true;person.classList.add('neo-ow-portrait-missing');};
+        let usedPoseFallback=false;
+        image.onerror=()=>{
+          const fallback=bridge()?.poseIntroFallback?.(participant.id);
+          if(fallback&&!usedPoseFallback){usedPoseFallback=true;image.hidden=false;image.src=fallback;return}
+          image.hidden=true;person.classList.add('neo-ow-portrait-missing');
+        };
         // Dialogue speaker names belong to #dialogue #speaker, never below portraits.
         person.append(image);
         // Mark the in-scene portrait too, so Discreet Mode can replace it live.
@@ -898,6 +946,7 @@
       if(overlay.hidden||suspendedForDuel)return;
       refresh();
       queueStorySync();
+      syncPoseTriggerQueue();
     });
     for(const id of ['line','choices','characterActions','rpgSceneCG','speaker']){
       const el=document.getElementById(id);
@@ -947,7 +996,9 @@
     }
     window.addEventListener('message',event=>{
       if(event.origin!==location.origin||event.source!==frame.contentWindow||overlay.hidden)return;
-      const message=event.data;if(message?.type!=='neo-overworld-action')return;
+      const message=event.data;
+      if(message?.type==='neo-overworld-pose-triggers'){queuePoseTriggers(message);return}
+      if(message?.type!=='neo-overworld-action')return;
       if(overlay.classList.contains('neo-ow-activity-open')||!storyShield.hidden)return;
       if(message.kind==='navigation'){
         if(message.id==='deck'){showDeck();return;}
