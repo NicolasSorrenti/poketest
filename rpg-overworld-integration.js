@@ -1026,7 +1026,7 @@
       overlay.classList.remove('neo-ow-activity-open');
       overlay.hidden=true;overlay.style.display='none';frame.src='about:blank';open.focus();
     }
-    open.addEventListener('click',()=>{attachChoicePanels();refresh();overlay.hidden=false;overlay.style.display='flex';queueStorySync();});
+    open.addEventListener('click',()=>{attachChoicePanels();refresh();overlay.hidden=false;overlay.style.display='flex';queueStorySync();syncDuel();});
     document.getElementById('rpgDiscreetToggle')?.addEventListener('click',()=>{syncChibiButton();syncChibiMode();});
     function performTravel(target){
       const data=snapshot();if(!data)return;
