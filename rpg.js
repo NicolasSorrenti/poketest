@@ -2370,11 +2370,18 @@ function renderRpgCast(ids,locked,shown,portraitId,context={}){
  overworldScenePortraits={
   conversation:composition.conversation,
   focused,
-  participants:composition.conversation?participants.map(id=>({
-   id,name:cast[id].name,src:scenePortraitSource(id,
-    id===focused?(window.NeoRpgCharacterMotion?.emotion?.(shown?.expression,dialogueExpression(shown?.line))||dialogueExpression(shown?.line)):'neutral',
-    context.sceneId)
-  })):[]
+  participants:composition.conversation?participants.map(id=>{
+   const expression=id===focused?
+    (window.NeoRpgCharacterMotion?.emotion?.(shown?.expression,dialogueExpression(shown?.line))||dialogueExpression(shown?.line)):'neutral';
+   let src=scenePortraitSource(id,expression,context.sceneId),srcs=null;
+   if(id===focused&&scene?.poseTrigger&&state.overworldPoseIntro?.id===id){
+    const neutral=stagePortraitPaths(id,'neutral',context.sceneId);
+    srcs=stagePortraitPaths(id,'vulnerable',context.sceneId).filter(path=>!neutral.includes(path)&&!failedScenePortraits.has(path));
+    if(srcs.length)src=srcs[0];
+    else src=state.overworldPoseIntro.src;
+   }
+   return {id,name:cast[id].name,src,...(srcs?.length?{srcs}:{})};
+  }):[]
  };
  if(typeof document.querySelector!=='function')return;
  const root=$('rpgSceneCast');if(!root)return;
