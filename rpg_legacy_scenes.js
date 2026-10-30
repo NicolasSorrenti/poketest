@@ -90,10 +90,10 @@
    lines:[
     ['Narrator','A few players crowd around the results sheet. Someone makes a joke about Reina getting lucky. Her pen stops halfway across the page.'],
     ['reina','Funny. They weren’t calling it luck when I lost last week.'],
-    ['Protagonist','You going to say something?'],
-    ['reina','No.'],
+    ['Protagonist','I could ask them whether they saw your turn-two setup.'],
+    ['reina','Don’t. If they missed it once, explaining it won’t make them better opponents.'],
     ['Narrator','She folds the list into a neat square and drops it in her deck box.'],
-    ['reina','I’ve got a better answer. Want to help me test it?']
+    ['reina','I changed two cards after last week’s loss. Bring the list that beat me; I want to know if I learned anything.']
    ],
    choices:[
     ['Test her revised deck','Fine. First to three wins. No excuses either way.'],
@@ -167,10 +167,10 @@
    lines:[
     ['Narrator','The community center doors are propped open. Shiori stops a few steps short as a cheer erupts inside.'],
     ['shiori','They changed the tables around.'],
-    ['Protagonist','The games seem the same.'],
-    ['shiori','No. The far wall used to have a clock.'],
+    ['Protagonist','That wall has a children’s tournament poster now. What was there before?'],
+    ['shiori','A clock. I used to watch its hands instead of the matches when I was afraid to play.'],
     ['Narrator','She looks toward the wall, now covered with a children’s tournament poster.'],
-    ['shiori','Come inside with me? Just until the first round finishes.']
+    ['shiori','I want to see one of those kids finish a game without looking at the time. Come inside with me?']
    ],
    choices:[
     ['Go in beside her','Thank you. We can start by finding an empty chair.'],
