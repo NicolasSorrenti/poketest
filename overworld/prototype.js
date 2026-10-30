@@ -242,7 +242,7 @@
     const poses=config.characters[id].poses||{},requested=String(item.pose||'standing'),poseKey=poses[requested]?requested:'standing';
     const x=Math.min(map.width,Math.max(0,Number(item.x))),y=Math.min(map.height,Math.max(0,Number(item.y)));
     const height=Math.min(340,Math.max(45,Number(item.height)||poses[poseKey]?.height||150));
-    return {id,anchor,pose:poseKey,foot:{x,y},height,flipped:!!item.flipped};
+    return {id,anchor,pose:poseKey,foot:{x,y},height,flipped:!!item.flipped,triggerDialogue:item.triggerDialogue===true};
   }
   if(!params.has('rpg-integration')&&savedMapRecords.length&&!poseTest&&!params.has('art-test')){
     const placed=savedMapRecords.map(item=>fromSavedPlacement(item)).filter(Boolean);
@@ -307,6 +307,10 @@
   for(const p of placements){const pt=point(p),art=pose(p),b=document.createElement('button');b.className='anchor';b.style.left=pt.x+'px';b.style.top=pt.y+'px';b.dataset.character=p.id;b.dataset.pose=p.pose||'standing';b.dataset.foot=`${pt.x}, ${pt.y}`;b.title=`Interact with ${person(p).name}`;b.setAttribute('aria-label',b.title);
     const img=document.createElement('img');img.className='sprite';img.alt='';if(p.flipped)img.style.transform='scaleX(-1)';if(chibiMode){loadChibi(img,p.id);b.style.setProperty('--sprite-height','130px');}else if(art){img.src=art.src;b.style.setProperty('--sprite-height',(p.height||art.height)+'px');}else{b.classList.add('missing');b.style.setProperty('--sprite-height','130px');}
     if(!chibiMode)img.onerror=()=>{b.classList.add('missing');toast('Artwork not loading: '+person(p).name+' · '+(p.pose||'standing'));};const fallback=document.createElement('span');fallback.className='fallback';fallback.textContent=person(p).name[0];const name=document.createElement('span');name.className='name';name.textContent=person(p).name;b.append(img,fallback,name);b.onclick=()=>openPerson(p);world.appendChild(b);
+  }
+  if(params.has('rpg-integration')&&window.parent!==window){
+    const triggers=placements.filter(p=>p.triggerDialogue).map(p=>({id:p.id,pose:p.pose,src:pose(p)?.src||''})).filter(item=>item.src);
+    if(triggers.length)window.parent.postMessage({type:'neo-overworld-pose-triggers',scene:sceneId,triggers},location.origin);
   }
   for(const h of map.hotspots){const b=document.createElement('button');b.className='hotspot';b.dataset.hotspotId=h.id;
     const rect={x:clamp(h.x,0,map.width-24),y:clamp(h.y,0,map.height-24),w:Math.max(24,Math.min(h.w,map.width-clamp(h.x,0,map.width-24))),h:Math.max(24,Math.min(h.h,map.height-clamp(h.y,0,map.height-24)))};
