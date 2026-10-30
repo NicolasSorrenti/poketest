@@ -535,7 +535,7 @@
         }
       ],
       "image": "/rpg-assets/characters/jicy/events/jicy_random_bookmark.webp",
-      "artPending": true
+      "artPending": false
     },
     {
       "id": "jicy_random_high_score",
@@ -815,7 +815,7 @@
         }
       ],
       "image": "/rpg-assets/characters/jicy/events/jicy_random_clouds.webp",
-      "artPending": true
+      "artPending": false
     },
     {
       "id": "jicy_random_small_win",
@@ -889,7 +889,7 @@
         }
       ],
       "image": "/rpg-assets/characters/jicy/events/jicy_random_small_win.webp",
-      "artPending": true
+      "artPending": false
     },
     {
       "id": "jicy_random_tournament_day",

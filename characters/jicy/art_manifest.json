@@ -47,7 +47,7 @@
     {
       "sceneId": "jicy_random_bookmark",
       "path": "/rpg-assets/characters/jicy/events/jicy_random_bookmark.webp",
-      "prompt": "Cinematic 16:9 Neo Harbor visual-novel CG for A Bookmark for Later. Jicy and the protagonist sharing this small everyday moment; preserve her approved adult design, blonde high ponytail and canonical pink sleeveless suit. Friendly, wholesome, slice-of-life composition; no other named characters, no dialogue text, lower fifth clear for UI dialogue. Keep the moment about the activity and their connection, not the outfit."
+      "prompt": "Warm library CG: Jicy shyly offers the player a handmade bookmark beside an open book. Preserve her adult face, high blonde ponytail and exact canonical hot-pink sleeveless combat suit. Soft daylight, friendly everyday moment."
     },
     {
       "sceneId": "jicy_random_high_score",
@@ -92,12 +92,12 @@
     {
       "sceneId": "jicy_random_clouds",
       "path": "/rpg-assets/characters/jicy/events/jicy_random_clouds.webp",
-      "prompt": "Cinematic 16:9 Neo Harbor visual-novel CG for Cloud Shapes. Jicy and the protagonist sharing this small everyday moment; preserve her approved adult design, blonde high ponytail and canonical pink sleeveless suit. Friendly, wholesome, slice-of-life composition; no other named characters, no dialogue text, lower fifth clear for UI dialogue. Keep the moment about the activity and their connection, not the outfit."
+      "prompt": "Riverside Park CG: Jicy sits with the player on a bench and points out a playful cloud shape, looking up with a gentle smile. Preserve her adult face, high blonde ponytail and exact canonical hot-pink sleeveless combat suit. Bright calm afternoon, no camera-facing pose."
     },
     {
       "sceneId": "jicy_random_small_win",
       "path": "/rpg-assets/characters/jicy/events/jicy_random_small_win.webp",
-      "prompt": "Cinematic 16:9 Neo Harbor visual-novel CG for A Small Win. Jicy and the protagonist sharing this small everyday moment; preserve her approved adult design, blonde high ponytail and canonical pink sleeveless suit. Friendly, wholesome, slice-of-life composition; no other named characters, no dialogue text, lower fifth clear for UI dialogue. Keep the moment about the activity and their connection, not the outfit."
+      "prompt": "Card shop CG: Jicy has found the card she searched for all week. She shares it with the player with a joyful little hop, holding the card and her notes. Preserve her adult face, high blonde ponytail and exact canonical hot-pink sleeveless combat suit. Cozy shop lighting, candid celebration."
     },
     {
       "sceneId": "jicy_random_tournament_day",

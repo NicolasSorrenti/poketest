@@ -121,7 +121,6 @@
   getCard:id=>cards.get(id)||null
  }):null;
  function notifyRpg(){if(rpgMode&&rpgDuelId&&current?.view?.over&&(current.winner===null||current.winner===0||current.winner===1))window.parent.postMessage(window.NeoRpgDuelBridge.message(rpgDuelId,current.winner),location.origin);}
- function notifyRpgReady(){if(rpgMode&&rpgDuelId&&window.parent!==window)window.parent.postMessage({type:'neo-rpg-duel-ready',duelId:rpgDuelId},location.origin);}
  const quick=window.NeoDuelUI;
  const ux=window.NeoExperienceUI;
  const presentation=window.NeoBattlePresentation;
@@ -534,7 +533,6 @@
     if(cubeRoomCode&&!current)throw Error('This Cube match has expired. Return to the tournament to reopen it.');
    notifyRpg();
    render();
-   notifyRpgReady();
    settleBoot();
   }catch(e){$('startupError').textContent=e.message||String(e);settleBoot(e);}
  }

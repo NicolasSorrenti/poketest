@@ -1505,12 +1505,6 @@ function startDuel(id,exhibition=null,arcEpisode=null,tournament=null,sideQuest=
 }
 window.addEventListener('message',ev=>{
  const duel=state.pendingDuel;
- if(ev.data?.type==='neo-rpg-duel-ready'){
-  if(duel&&!PRE.isReady(duel)&&ev.origin===location.origin&&ev.source===$('battle').contentWindow&&ev.data.duelId===duel.id){
-   clearTimeout(battleRecoveryTimer);const panel=$('battleRecovery');if(panel)panel.hidden=true;
-  }
-  return;
- }
  if(ev.data?.type==='neo-rpg-playmat-selected'){
   if(!window.NeoRpgDuelBridge.acceptsPlaymat(ev,location.origin,$('battle').contentWindow,duel))return;
   const allowed=window.NeoDuelPlaymats.available(window.NeoDuelPlaymats.gifted(state)).map(m=>m.id);
