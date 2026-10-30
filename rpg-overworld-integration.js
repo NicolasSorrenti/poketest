@@ -330,7 +330,7 @@
         let url;try{url=new URL(item.src,location.href)}catch{continue}
         if(url.origin!==location.origin||!url.pathname.startsWith('/rpg-assets/characters/'))continue;
         const pose=String(item.pose||'standing');
-        const key=['neoOverworldPoseTriggerV1',data.location,data.day,data.slot,item.id,pose].join(':');
+        const key=['neoOverworldPoseTriggerV2',data.location,data.day,data.slot,item.id,pose].join(':');
         let seen=false;try{seen=sessionStorage.getItem(key)==='1'}catch{}
         if(seen)continue;
         poseTriggersById.set(item.id,{id:item.id,pose,src:url.pathname+url.search,scene:data.location,key});
