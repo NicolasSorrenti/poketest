@@ -3,7 +3,7 @@
 import {
  ClassicLocalService, deckOptions, RpgDuelCheckpoint,
  forRpgDuel, upgradeRpgSession, checkpointFor,
- database, json, errorResponse, verifyOrigin, readBody, loadInto, storeNew, getSession, putSession
+ database, staticCatalog, json, errorResponse, verifyOrigin, readBody, loadInto, storeNew, getSession, putSession
 } from '../../_lib/neo-game-state.js';
 
 async function recoverSession(db,session) {
@@ -25,8 +25,8 @@ export async function onRequest({request,env}) {
   const url=new URL(request.url);
   const action=url.pathname.slice('/api/classic/'.length);
   const classic=new ClassicLocalService();
-  if(request.method==='GET'&&action==='decks')return json({decks:deckOptions()});
-  if(request.method==='GET'&&action==='card-pool')return json({cards:classic.cardPool()});
+  if(request.method==='GET'&&action==='decks')return staticCatalog(request,env,'classic-decks.json');
+  if(request.method==='GET'&&action==='card-pool')return staticCatalog(request,env,'classic-card-pool.json');
   if(request.method==='GET'&&action==='decklist')return json({cards:classic.decklist(url.searchParams.get('id'))});
   const db=await database(env);
   const checkpoint=checkpointFor(env);
