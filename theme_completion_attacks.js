@@ -3,7 +3,14 @@
 // theme decks. These are executable programs (not plain-damage fallbacks).
 const {list:retail,entries:retailEntries}=require('./retail_theme_decks');
 const {list:destiny,entries:destinyEntries}=require('./neo_destiny_decks');
-const catalog=new Map(['gym1','gym2','neo1','neo2','neo3','neo4'].flatMap(set=>require('./cards/'+set+'.json')).map(c=>[c.id,c]));
+const catalog=new Map([
+ ...require('./cards/gym1.json'),
+ ...require('./cards/gym2.json'),
+ ...require('./cards/neo1.json'),
+ ...require('./cards/neo2.json'),
+ ...require('./cards/neo3.json'),
+ ...require('./cards/neo4.json')
+].map(c=>[c.id,c]));
 const mapping={
  'gym1-66|Call for Friend':'call-brock','gym1-53|Rapids':'rapids',
  'gym1-54|Call for Friend':'call-misty','gym1-57|Crystal Beam':'crystal-beam',

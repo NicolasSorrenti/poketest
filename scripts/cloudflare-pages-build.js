@@ -122,6 +122,22 @@ fs.writeFileSync(path.join(out, 'rpg-cloud-config.json'), cloudConfigJson);
 copied++;
 bytes += Buffer.byteLength(cloudConfigJson);
 
+// Generate read-only game API catalogs at build time. Computing Cube preset
+// membership on every edge request exceeds Workers Free's CPU budget.
+const generatedApi = path.join(out, 'cloudflare-api');
+fs.mkdirSync(generatedApi, { recursive: true });
+const { listPresetSummaries } = require(path.join(root,'cube_presets.js'));
+const { ClassicLocalService, deckOptions } = require(path.join(root,'classic_local_service.js'));
+for (const [name, data] of [
+  ['cube-presets.json', {presets:listPresetSummaries()}],
+  ['classic-decks.json', {decks:deckOptions()}],
+  ['classic-card-pool.json', {cards:new ClassicLocalService().cardPool()}]
+]) {
+  const text = JSON.stringify(data);
+  fs.writeFileSync(path.join(generatedApi,name),text);
+  copied++; bytes += Buffer.byteLength(text);
+}
+
 fs.writeFileSync(path.join(out, '_redirects'), '/ /play.html 302\n');
 const files = [];
 function countFiles(directory) {

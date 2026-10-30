@@ -17,7 +17,20 @@ const protectedEnergy=u=>Boolean(u?.attachedTrainers?.some(t=>t.id==='gym2-101')
 const isBaby=(g,u)=>['neo-theme','online-preview'].includes(g.format)&&u&&!u.secretPlanFaceDown&&['Elekid','Magby','Tyrogue','Igglybuff','Cleffa','Pichu','Smoochum'].includes(CATALOG.get(u.id)?.name);
 
 const SET_NAMES=['base1','base2','base3','base4','base5','gym1','gym2','neo1','neo2','neo3','neo4','basep'];
-function historicalCards(){return SET_NAMES.flatMap(s=>require('./cards/'+s+'.json'));}
+function historicalCards(){return [
+ ...require('./cards/base1.json'),
+ ...require('./cards/base2.json'),
+ ...require('./cards/base3.json'),
+ ...require('./cards/base4.json'),
+ ...require('./cards/base5.json'),
+ ...require('./cards/gym1.json'),
+ ...require('./cards/gym2.json'),
+ ...require('./cards/neo1.json'),
+ ...require('./cards/neo2.json'),
+ ...require('./cards/neo3.json'),
+ ...require('./cards/neo4.json'),
+ ...require('./cards/basep.json')
+];}
 const CATALOG=new Map(historicalCards().map(c=>[c.id,c]));
 const SECRET_BASIC=Object.freeze({id:'secret-plan-facedown',name:'Face-down Pokémon',supertype:'Pokémon',subtypes:['Basic'],types:['Colorless'],hp:'10',attacks:[],abilities:[],retreatCost:[],weaknesses:[],resistances:[]});
 function fail(message){throw Error(message);}
