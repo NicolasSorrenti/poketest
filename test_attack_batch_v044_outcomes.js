@@ -38,6 +38,32 @@ x=scenario(121,{heads:false});assert(x.attack());assert.equal(x.state('engine.me
 x=scenario(97);assert(x.attack());assert.equal(x.state('engine.foe.active.damage'),0,'Zzzap ignores those without Powers');
 x=scenario(96,{energies:['Fire','Water','Lightning']});assert(x.attack());assert.equal(x.state('engine.me.active.energies.length'),0,'Elemental Blast discards all three types');
 x=scenario(96,{energies:['Fire','Fire','Fire'],setup:'engine.me.active.energies=["basic-Fire","basic-Fire","basic-Fire"]'});assert.equal(x.attack(),false,'Elemental Blast requires all three original types');assert.equal(x.state('engine.me.active.energies.length'),3);
+// Dark Fire may discard only an actual Darkness Energy card, never an arbitrary attachment.
+x=scenario(181,{energies:['Fire','Water']});
+assert(x.attack());
+assert.equal(x.state('engine.foe.active.damage'),30,'without Darkness, Dark Fire deals only base damage');
+assert.equal(x.state('JSON.stringify(engine.me.active.energies)'),JSON.stringify(['basic-Fire','basic-Water']),'non-Darkness attachments stay in play');
+assert.equal(x.state('engine.me.discard.length'),2,'without Darkness, nothing is discarded');
+x=scenario(181,{energies:['Fire','Water','Darkness']});
+assert(x.attack());
+assert.equal(x.state('engine.foe.active.damage'),60,'Dark Fire gains its bonus with Darkness Energy');
+assert.equal(x.state('JSON.stringify(engine.me.active.energies)'),JSON.stringify(['basic-Fire','basic-Water']),'only Darkness is discarded');
+assert.equal(x.state('engine.me.discard.at(-1)'),'basic-Darkness');
+x=scenario(181,{energies:['Darkness','Fire','Darkness']});
+assert(x.attack());
+assert.equal(x.state('engine.me.active.energies.filter(id=>id==="basic-Darkness").length'),1,'exactly one Darkness Energy discarded');
+assert.equal(x.state('engine.me.active.energies.includes("basic-Fire")'),true,'Fire Energy remains attached');
+// The real Neo Genesis Special Darkness Energy counts; Rainbow Energy does not.
+x=scenario(181,{energies:['Fire','Darkness'],setup:'engine.me.active.energies=["basic-Fire","neo1-104"]'});
+assert(x.attack());
+assert.equal(x.state('engine.foe.active.damage'),60);
+assert.equal(x.state('engine.me.discard.at(-1)'),'neo1-104');
+assert.equal(x.state('JSON.stringify(engine.me.active.energies)'),JSON.stringify(['basic-Fire']));
+x=scenario(181,{energies:['Fire','Water'],setup:'engine.me.active.energies=["basic-Fire","base5-80"]'});
+assert(x.attack());
+assert.equal(x.state('engine.foe.active.damage'),30,'Rainbow Energy is not a Darkness Energy card');
+assert.equal(x.state('engine.me.active.energies.includes("base5-80")'),true);
+
 x=scenario(227,{heads:true});assert(x.attack());assert.equal(x.state('engine.foe.active.damage'),40);assert.equal(x.state('engine.foe.bench[0].damage'),10);
 x=scenario(227,{heads:false});assert(x.attack());assert.equal(x.state('engine.foe.active.damage'),30);assert.equal(x.state('engine.me.active.damage'),20);
 x=scenario(230,{heads:true});assert(x.attack());assert.equal(x.state('engine.foe.active.status'),'Paralyzed');
