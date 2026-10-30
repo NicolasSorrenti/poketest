@@ -1002,6 +1002,168 @@
         }
       ],
       "artPending": false
+    },
+    {
+      "id": "jicy_random_unsent_message",
+      "npc": "jicy",
+      "title": "The Message She Almost Sent",
+      "start": 8,
+      "end": 90,
+      "place": "cafe",
+      "slot": 0,
+      "minBond": 2,
+      "prerequisite": null,
+      "participants": [],
+      "encounterType": "slice",
+      "trigger": "entry",
+      "randomForced": true,
+      "chancePercent": 20,
+      "lines": [
+        {
+          "speaker": "Narrator",
+          "text": "Jicy is looking at her phone over a cup of tea. When she notices you, she turns the screen off a little too quickly, then gives you a sheepish smile."
+        },
+        {
+          "speaker": "jicy",
+          "text": "I was trying to write a message and somehow made it sound like a formal invitation to a committee meeting."
+        },
+        {
+          "speaker": "Protagonist",
+          "text": "What were you trying to ask?"
+        },
+        {
+          "speaker": "jicy",
+          "text": "If you'd like to hang out sometime. Nothing complicated. I just kept rewriting it because I wanted it to sound casual."
+        },
+        {
+          "speaker": "Narrator",
+          "text": "She rocks gently from side to side, then sets her phone down and meets your eyes."
+        },
+        {
+          "speaker": "Protagonist",
+          "text": "You could just ask me now."
+        },
+        {
+          "speaker": "jicy",
+          "text": "Would you like to spend some time together this week? We can figure out what to do later."
+        }
+      ],
+      "choices": [
+        {
+          "label": "Say you'd like that",
+          "reply": "Jicy's smile brightens. “Great. I'll try not to write you a calendar invitation about it.”",
+          "kind": "support",
+          "flag": "jicy_random_unsent_yes",
+          "delta": {
+            "affection": 1,
+            "trust": 1,
+            "respect": 0,
+            "attraction": 1
+          }
+        },
+        {
+          "label": "Suggest picking a day together over tea",
+          "reply": "“That sounds nice,” Jicy says, relaxing as the plan becomes something you can make together.",
+          "kind": "honest",
+          "flag": "jicy_random_unsent_plan",
+          "delta": {
+            "affection": 1,
+            "trust": 2,
+            "respect": 0,
+            "attraction": 0
+          }
+        },
+        {
+          "label": "Tease her gently about the committee meeting",
+          "reply": "Jicy laughs and hides her smile behind her cup. “I knew I should've asked you to proofread it.”",
+          "kind": "flirt",
+          "flag": "jicy_random_unsent_tease",
+          "delta": {
+            "affection": 1,
+            "trust": 0,
+            "respect": 0,
+            "attraction": 1
+          }
+        }
+      ],
+      "artPending": false
+    },
+    {
+      "id": "jicy_random_arcade_hum",
+      "npc": "jicy",
+      "title": "A Tune Between Games",
+      "start": 8,
+      "end": 90,
+      "place": "arcade",
+      "slot": 0,
+      "minBond": 0,
+      "prerequisite": null,
+      "participants": [],
+      "encounterType": "slice",
+      "trigger": "entry",
+      "randomForced": true,
+      "chancePercent": 20,
+      "lines": [
+        {
+          "speaker": "Narrator",
+          "text": "Jicy is waiting for a game to open, quietly humming a cheerful tune. She stops when she notices you and gives you a friendly wave."
+        },
+        {
+          "speaker": "Protagonist",
+          "text": "That sounded familiar. Do you know where it's from?"
+        },
+        {
+          "speaker": "jicy",
+          "text": "I have no idea. It just got stuck in my head while I was walking over."
+        },
+        {
+          "speaker": "Narrator",
+          "text": "She sways lightly to the rhythm, then taps her fingers against her palm as if trying to remember the next part."
+        },
+        {
+          "speaker": "jicy",
+          "text": "Do you know it? Maybe we can solve the mystery before we pick a game."
+        }
+      ],
+      "choices": [
+        {
+          "label": "Hum the next few notes you think come next",
+          "reply": "Jicy joins in, delighted. The melody changes twice, but neither of you can agree which version is right.",
+          "kind": "support",
+          "flag": "jicy_random_arcade_hum_join",
+          "delta": {
+            "affection": 1,
+            "trust": 1,
+            "respect": 0,
+            "attraction": 0
+          }
+        },
+        {
+          "label": "Make up a silly ending together",
+          "reply": "Jicy laughs at the improvised finale. “That's the official ending now. I don't make the rules.”",
+          "kind": "honest",
+          "flag": "jicy_random_arcade_hum_silly",
+          "delta": {
+            "affection": 1,
+            "trust": 0,
+            "respect": 1,
+            "attraction": 0
+          }
+        },
+        {
+          "label": "Tell her the tune suits her",
+          "reply": "Jicy blushes, then gives a tiny happy hop. “I'll take that as a very nice review.”",
+          "kind": "flirt",
+          "flag": "jicy_random_arcade_hum_compliment",
+          "delta": {
+            "affection": 1,
+            "trust": 0,
+            "respect": 0,
+            "attraction": 1
+          }
+        }
+      ],
+      "artPending": false
     }
   ]
 }
