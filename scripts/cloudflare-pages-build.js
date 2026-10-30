@@ -102,7 +102,7 @@ const publicRosterJson = JSON.stringify({
 fs.writeFileSync(path.join(out, 'rpg-character-packs.public.json'), publicRosterJson);
 copied++;
 bytes += Buffer.byteLength(publicRosterJson);
-const cloudUrl = String(process.env.SUPABASE_URL || '').replace(/\\/+$/, '');
+const cloudUrl = String(process.env.SUPABASE_URL || '').replace(/\/+$/, '');
 const cloudKey = String(process.env.SUPABASE_PUBLISHABLE_KEY || process.env.SUPABASE_ANON_KEY || '').trim();
 let cloudConfig = { enabled: false };
 try {
