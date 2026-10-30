@@ -545,22 +545,31 @@ async function glanceAt(id){
  const currentName=portrait.split('/').pop().split('?')[0];
  let focus=null,duration=1500;
  try{
-  const [activeResponse,topResponse]=await Promise.all([
-   fetch('/rpg-assets/outfit-chime-focus.json?v=20261028-glance-at'),
-   fetch('/rpg-assets/outfit-chime-focus-top.json?v=20261028-glance-at')
+  const [activeResponse,topResponse,overworldResponse]=await Promise.all([
+   fetch('/rpg-assets/outfit-chime-focus.json?v=20261030-glance-overworld-1'),
+   fetch('/rpg-assets/outfit-chime-focus-top.json?v=20261030-glance-overworld-1'),
+   fetch('/rpg-assets/outfit-chime-overworld-candidates.json?v=20261030-glance-overworld-1')
   ]);
   const active=activeResponse.ok?await activeResponse.json():null;
   const top=topResponse.ok?await topResponse.json():null;
+  const overworld=overworldResponse.ok?await overworldResponse.json():null;
   const activeEntry=active?.characters?.[id]?.variants?.[currentName]||null;
   const isSpecial=/special-day-\d+\.|\/overworld-variants\//i.test(portrait);
   if(activeEntry){focus=activeEntry;}
   // Normal glances use the exact exported source path and crop preset.
   // Special looks stay on the active stage image and active special crop.
   if(!isSpecial){
-   const variants=top?.characters?.[id]?.variants||{};
-   const primaryName=Object.keys(variants).find(name=>/^primary\\.(?:png|webp|jpe?g)$/i.test(name));
-   const exported=primaryName?variants[primaryName]:null;
-   if(exported?.image){portrait=exported.image;focus=exported;}
+   // A deliberate “Glance at” uses the image-specific overworld crop preset.
+   // Arrival chimes never read this file, so entering a location keeps its normal framing.
+   const overworldVariants=Object.values(overworld?.characters?.[id]?.variants||{});
+   const exact=overworldVariants.find(entry=>String(entry?.image||'').replace(/[?].*$/,'')===String(portrait).replace(/[?].*$/,''));
+   if(exact){focus=exact;}
+   else{
+    const variants=top?.characters?.[id]?.variants||{};
+    const primaryName=Object.keys(variants).find(name=>/^primary\\.(?:png|webp|jpe?g)$/i.test(name));
+    const exported=primaryName?variants[primaryName]:null;
+    if(exported?.image){portrait=exported.image;focus=exported;}
+   }
   }
   duration=Math.max(0,Number(active?.durationMs)||1500);
  }catch(_error){}
