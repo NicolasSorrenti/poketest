@@ -246,13 +246,23 @@
      "kind": "attack",
      "index": 0,
      "name": "Psychic",
-     "status": "unreviewed"
+     "status": "partial",
+     "evidence": [
+      "test_card_fidelity_mewtwo.js: Psychic counts attached Energy cards (a Double Colorless Energy is one card); attack cost verified in Classic, Neo, online-preview and 40-card Cube configurations.",
+      "https://github.com/PokemonTCG/pokemon-tcg-data/blob/master/cards/en/base1.json"
+     ]
     },
     {
      "kind": "attack",
      "index": 1,
      "name": "Barrier",
-     "status": "unreviewed"
+     "status": "partial",
+     "evidence": [
+      "test_card_fidelity_mewtwo.js: Barrier's Psychic Energy discard, automatic resolution for identical Basic Psychic Energy, retained choice when Psychic and Rainbow Energy are both eligible, and prevention of damage/paralysis on the opponent's next turn; Classic, Neo, online-preview and 40-card Cube configurations.",
+      "https://github.com/PokemonTCG/pokemon-tcg-data/blob/master/cards/en/base1.json",
+      "Catalog transcription discrepancy remains: local TCGdex and Bulbapedia text omit “Psychic” from Barrier's extra discard, while PokémonTCG card data and card database listings specify Psychic Energy; physical scan comparison and historical ruling review remain pending.",
+      "Basic Psychic Energy reprints with different set IDs auto-resolve as functionally identical; Rainbow Energy remains a distinct, selectable outcome."
+     ]
     }
    ]
   },
@@ -288,13 +298,21 @@
      "kind": "attack",
      "index": 0,
      "name": "Lure",
-     "status": "unreviewed"
+     "status": "partial",
+     "evidence": [
+      "test_card_fidelity_ninetales_lure.js: two-Colorless cost, no-Bench no-op, one-target automatic switch, multiple-target choice ownership, and Special Condition clearing across Classic, Neo, online-preview and 40-card Cube.",
+      "https://github.com/PokemonTCG/pokemon-tcg-data/blob/master/cards/en/base1.json"
+     ]
     },
     {
      "kind": "attack",
      "index": 1,
      "name": "Fire Blast",
-     "status": "unreviewed"
+     "status": "partial",
+     "evidence": [
+      "test_typed_energy_discard_audit.js: Fire Blast auto-discards among identical Fire Energy cards; Basic Fire versus Rainbow Energy remains selectable and a non-Fire card is preserved. Lure is unreviewed.",
+      "https://github.com/PokemonTCG/pokemon-tcg-data/blob/master/cards/en/base1.json"
+     ]
     }
    ]
   },
@@ -497,7 +515,10 @@
      "kind": "attack",
      "index": 0,
      "name": "Flamethrower",
-     "status": "unreviewed"
+     "status": "partial",
+     "evidence": [
+      "test_flamethrower_typed_discard.js: typed Fire requirement, automatic discard among equivalent Basic Fire cards, Rainbow-vs-Basic choice, rejection of Grass without mutation, damage, notification, and private decision ownership."
+     ]
     },
     {
      "kind": "attack",
@@ -522,7 +543,10 @@
      "kind": "attack",
      "index": 1,
      "name": "Flamethrower",
-     "status": "unreviewed"
+     "status": "partial",
+     "evidence": [
+      "test_flamethrower_typed_discard.js: typed Fire requirement, automatic discard among equivalent Basic Fire cards, Rainbow-vs-Basic choice, rejection of Grass without mutation, damage, notification, and private decision ownership."
+     ]
     }
    ]
   },
@@ -738,7 +762,10 @@
      "kind": "attack",
      "index": 1,
      "name": "Flamethrower",
-     "status": "unreviewed"
+     "status": "partial",
+     "evidence": [
+      "test_flamethrower_typed_discard.js: typed Fire requirement, automatic discard among equivalent Basic Fire cards, Rainbow-vs-Basic choice, rejection of Grass without mutation, damage, notification, and private decision ownership."
+     ]
     }
    ]
   },
@@ -904,7 +931,11 @@
      "kind": "attack",
      "index": 1,
      "name": "Ember",
-     "status": "unreviewed"
+     "status": "partial",
+     "evidence": [
+      "test_typed_energy_discard_audit.js: typed Fire discard auto-resolves identical Fire Energy and preserves non-Fire Energy.",
+      "test_typed_energy_discard_audit.js / test_typed_energy_missing_icons.js"
+     ]
     }
    ]
   },
@@ -1688,7 +1719,10 @@
      "kind": "attack",
      "index": 1,
      "name": "Flamethrower",
-     "status": "unreviewed"
+     "status": "partial",
+     "evidence": [
+      "test_flamethrower_typed_discard.js: typed Fire requirement, automatic discard among equivalent Basic Fire cards, Rainbow-vs-Basic choice, rejection of Grass without mutation, damage, notification, and private decision ownership."
+     ]
     }
    ]
   },
@@ -1992,7 +2026,10 @@
      "kind": "attack",
      "index": 1,
      "name": "Flamethrower",
-     "status": "unreviewed"
+     "status": "partial",
+     "evidence": [
+      "test_flamethrower_typed_discard.js: typed Fire requirement, automatic discard among equivalent Basic Fire cards, Rainbow-vs-Basic choice, rejection of Grass without mutation, damage, notification, and private decision ownership."
+     ]
     }
    ]
   },
@@ -4153,7 +4190,11 @@
      "kind": "attack",
      "index": 1,
      "name": "Fire Blast",
-     "status": "unreviewed"
+     "status": "partial",
+     "evidence": [
+      "test_typed_energy_discard_audit.js: identical Fire Energy auto-discard.",
+      "test_typed_energy_discard_audit.js / test_typed_energy_missing_icons.js"
+     ]
     }
    ]
   },
@@ -4527,7 +4568,10 @@
      "kind": "attack",
      "index": 0,
      "name": "Flamethrower",
-     "status": "unreviewed"
+     "status": "partial",
+     "evidence": [
+      "test_flamethrower_typed_discard.js: typed Fire requirement, automatic discard among equivalent Basic Fire cards, Rainbow-vs-Basic choice, rejection of Grass without mutation, damage, notification, and private decision ownership."
+     ]
     },
     {
      "kind": "attack",
@@ -4571,7 +4615,10 @@
      "kind": "attack",
      "index": 1,
      "name": "Flamethrower",
-     "status": "unreviewed"
+     "status": "partial",
+     "evidence": [
+      "test_flamethrower_typed_discard.js: typed Fire requirement, automatic discard among equivalent Basic Fire cards, Rainbow-vs-Basic choice, rejection of Grass without mutation, damage, notification, and private decision ownership."
+     ]
     }
    ]
   },
@@ -4863,7 +4910,10 @@
      "kind": "attack",
      "index": 1,
      "name": "Flamethrower",
-     "status": "unreviewed"
+     "status": "partial",
+     "evidence": [
+      "test_flamethrower_typed_discard.js: typed Fire requirement, automatic discard among equivalent Basic Fire cards, Rainbow-vs-Basic choice, rejection of Grass without mutation, damage, notification, and private decision ownership."
+     ]
     }
    ]
   },
@@ -5181,7 +5231,11 @@
      "kind": "attack",
      "index": 1,
      "name": "Ember",
-     "status": "unreviewed"
+     "status": "partial",
+     "evidence": [
+      "test_typed_energy_discard_audit.js: typed Fire discard auto-resolves identical Fire Energy and preserves non-Fire Energy.",
+      "test_typed_energy_discard_audit.js / test_typed_energy_missing_icons.js"
+     ]
     }
    ]
   },
@@ -6098,7 +6152,11 @@
      "kind": "attack",
      "index": 1,
      "name": "Continuous Fireball",
-     "status": "unreviewed"
+     "status": "partial",
+     "evidence": [
+      "test_typed_energy_missing_icons.js: seeded coin outcomes, damage, head-count discard, equivalent Energy auto-resolution and discard notification; knockout/Prize promotion branch covered.",
+      "test_typed_energy_discard_audit.js / test_typed_energy_missing_icons.js"
+     ]
     }
    ]
   },
@@ -6397,7 +6455,11 @@
      "kind": "attack",
      "index": 1,
      "name": "Continuous Fireball",
-     "status": "unreviewed"
+     "status": "partial",
+     "evidence": [
+      "test_typed_energy_missing_icons.js: seeded coin outcomes, damage, head-count discard, equivalent Energy auto-resolution and discard notification; knockout/Prize promotion branch covered.",
+      "test_typed_energy_discard_audit.js / test_typed_energy_missing_icons.js"
+     ]
     }
    ]
   },
@@ -6606,7 +6668,11 @@
      "kind": "attack",
      "index": 1,
      "name": "Fireball",
-     "status": "unreviewed"
+     "status": "partial",
+     "evidence": [
+      "test_typed_energy_missing_icons.js: tails/heads behavior, automatic equivalent discard, Rainbow-vs-Basic Fire choice, rejection of ineligible Grass and discard notification.",
+      "test_typed_energy_discard_audit.js / test_typed_energy_missing_icons.js"
+     ]
     }
    ]
   },
@@ -6663,7 +6729,11 @@
      "kind": "attack",
      "index": 1,
      "name": "Playing with Fire",
-     "status": "unreviewed"
+     "status": "partial",
+     "evidence": [
+      "test_typed_energy_missing_icons.js: seeded coin outcomes, damage, automatic equivalent Fire discard and discard notification.",
+      "test_typed_energy_discard_audit.js / test_typed_energy_missing_icons.js"
+     ]
     }
    ]
   },
@@ -6752,7 +6822,10 @@
      "kind": "attack",
      "index": 0,
      "name": "Drag Off",
-     "status": "unreviewed"
+     "status": "partial",
+     "evidence": [
+      "test_classic_complex_attacks.js: Drag Off auto-targets the sole opposing Bench Pokémon before damage; active/bench switch and 20 damage checked."
+     ]
     },
     {
      "kind": "attack",
@@ -7196,7 +7269,11 @@
      "kind": "attack",
      "index": 0,
      "name": "Ember",
-     "status": "unreviewed"
+     "status": "partial",
+     "evidence": [
+      "test_typed_energy_discard_audit.js: typed Fire discard auto-resolves identical Fire Energy and preserves non-Fire Energy.",
+      "test_typed_energy_discard_audit.js / test_typed_energy_missing_icons.js"
+     ]
     }
    ]
   },
@@ -12846,7 +12923,11 @@
      "kind": "attack",
      "index": 0,
      "name": "Flame Wheel",
-     "status": "unreviewed"
+     "status": "partial",
+     "evidence": [
+      "test_typed_energy_missing_icons.js: three-Fire requirement, automatic discard among equivalent Basic Fire cards, and non-Fire preservation.",
+      "test_typed_energy_discard_audit.js / test_typed_energy_missing_icons.js"
+     ]
     },
     {
      "kind": "power",
@@ -13346,7 +13427,11 @@
      "kind": "attack",
      "index": 0,
      "name": "Ember",
-     "status": "unreviewed"
+     "status": "partial",
+     "evidence": [
+      "test_typed_energy_discard_audit.js: typed Fire discard auto-resolves identical Fire Energy and preserves non-Fire Energy.",
+      "test_typed_energy_discard_audit.js / test_typed_energy_missing_icons.js"
+     ]
     },
     {
      "kind": "attack",
@@ -14403,7 +14488,10 @@
      "kind": "attack",
      "index": 1,
      "name": "Flamethrower",
-     "status": "unreviewed"
+     "status": "partial",
+     "evidence": [
+      "test_flamethrower_typed_discard.js: typed Fire requirement, automatic discard among equivalent Basic Fire cards, Rainbow-vs-Basic choice, rejection of Grass without mutation, damage, notification, and private decision ownership."
+     ]
     }
    ]
   },
@@ -14752,7 +14840,10 @@
      "kind": "attack",
      "index": 1,
      "name": "Flamethrower",
-     "status": "unreviewed"
+     "status": "partial",
+     "evidence": [
+      "test_flamethrower_typed_discard.js: typed Fire requirement, automatic discard among equivalent Basic Fire cards, Rainbow-vs-Basic choice, rejection of Grass without mutation, damage, notification, and private decision ownership."
+     ]
     }
    ]
   },
@@ -15719,7 +15810,11 @@
      "kind": "attack",
      "index": 0,
      "name": "Searing Flames",
-     "status": "unreviewed"
+     "status": "partial",
+     "evidence": [
+      "test_typed_energy_missing_icons.js: requires and auto-discards two Fire Energy from equivalent candidates while preserving non-Fire Energy.",
+      "test_typed_energy_discard_audit.js / test_typed_energy_missing_icons.js"
+     ]
     },
     {
      "kind": "power",
@@ -17639,7 +17734,11 @@
      "kind": "attack",
      "index": 1,
      "name": "Burning Flame",
-     "status": "unreviewed"
+     "status": "partial",
+     "evidence": [
+      "test_typed_energy_discard_audit.js: Burning Flame's heads count, 30+20 damage per heads, required Fire discard count, automatic equivalent-card discard and notification across seven seeds.",
+      "https://www.tcgcollector.com/cards/4559/flareon-neo-destiny-46-105"
+     ]
     }
    ]
   },
@@ -17715,7 +17814,11 @@
      "kind": "attack",
      "index": 1,
      "name": "Fire Blast",
-     "status": "unreviewed"
+     "status": "partial",
+     "evidence": [
+      "test_typed_energy_discard_audit.js: typed Fire discard auto-resolves identical Fire Energy and preserves non-Fire Energy.",
+      "test_typed_energy_discard_audit.js / test_typed_energy_missing_icons.js"
+     ]
     }
    ]
   },
@@ -18397,7 +18500,11 @@
      "kind": "attack",
      "index": 0,
      "name": "Ember",
-     "status": "unreviewed"
+     "status": "partial",
+     "evidence": [
+      "test_typed_energy_discard_audit.js: typed Fire discard auto-resolves identical Fire Energy and preserves non-Fire Energy.",
+      "test_typed_energy_discard_audit.js / test_typed_energy_missing_icons.js"
+     ]
     }
    ]
   },
@@ -18621,7 +18728,11 @@
      "kind": "attack",
      "index": 1,
      "name": "Psyburst",
-     "status": "unreviewed"
+     "status": "partial",
+     "evidence": [
+      "test_typed_energy_discard_audit.js: Psyburst auto-discards one of four identical Fire Energy cards, preserves ineligible Energy and logs the discard. Reflect Shield remains unreviewed.",
+      "https://www.tcgcollector.com/cards/4927/mewtwo-neo-destiny-109-105"
+     ]
     }
    ]
   },

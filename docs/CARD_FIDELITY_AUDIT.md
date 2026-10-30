@@ -50,5 +50,28 @@ These scenarios use the TCGdex-sourced catalogue text. Printed card images and a
 | Machamp (base1-8) | Seismic Toss cost and Strikes Back knockout timing/status restrictions | test_card_fidelity_machamp.js | Partial; independent print/ruling review and remaining interactions pending |
 
 | Magneton (base1-9) | Thunder Wave coin/status outcomes and cost; Selfdestruct Active, Bench and recoil damage, weakness/resistance note, cost and knockout | test_card_fidelity_magneton.js | Partial; independent print/ruling review and other interactions pending |
+| Mewtwo (base1-10) | Psychic counts attached Energy cards (not units); Barrier's Psychic Energy discard, equivalent-choice auto-resolution, Rainbow Energy choice, and prevention of damage/paralysis on the next turn | test_card_fidelity_mewtwo.js | Partial; PokémonTCG card data says Psychic Energy where the imported catalogue and Bulbapedia transcription say Energy; scan/ruling check and other interactions pending |
+| Ninetales (base1-12) | Lure cost, no-Bench case, single-target auto-switch, choice ownership with multiple targets and status clearing; Fire Blast equivalent/meaningful Energy choices | test_card_fidelity_ninetales_lure.js; test_typed_energy_discard_audit.js | Partial; remaining attack interactions pending |
+| Light Flareon (neo4-46) | Burning Flame heads, damage, mandatory Fire discard count, equivalent-choice auto-resolution and discard notification | test_typed_energy_discard_audit.js | Partial; other interactions and print/ruling review pending |
+| Shining Mewtwo (neo4-109) | Psyburst automatic Fire Energy discard among identical cards, preservation of other Energy and discard notification | test_typed_energy_discard_audit.js | Partial; Reflect Shield and other interactions pending |
+| Charmander (base1-46) | Ember's typed Fire discard auto-resolves identical Energy | test_typed_energy_discard_audit.js | Partial; other attack and interactions pending |
+| Ninetales (base4-13) | Fire Blast auto-discards equivalent Basic Fire reprints; Rainbow Energy remains selectable | test_typed_energy_discard_audit.js | Partial; Lure and other interactions pending |
+| Charmander (base4-69) | Ember's typed Fire discard auto-resolves identical Energy | test_typed_energy_discard_audit.js | Partial; other attack and interactions pending |
+| Ponyta (base5-64) | Ember's typed Fire discard auto-resolves identical Energy | test_typed_energy_discard_audit.js | Partial; other interactions pending |
+| Quilava (neo1-46) | Ember's typed Fire discard auto-resolves identical Energy | test_typed_energy_discard_audit.js | Partial; Fire Wind and other interactions pending |
+| Light Ninetales (neo4-50) | Fire Blast auto-discards equivalent Fire Energy | test_typed_energy_discard_audit.js | Partial; Guiding Flame and other interactions pending |
+| Vulpix (neo4-91) | Ember's typed Fire discard auto-resolves identical Energy | test_typed_energy_discard_audit.js | Partial; other interactions pending |
+| Entei (neo3-6) | Searing Flames requires two Fire Energy cards; identical choices auto-resolve | test_typed_energy_missing_icons.js | Partial; other interactions pending |
+| Dark Charizard (base5-4, base5-21) | Continuous Fireball coin outcomes, damage, head-count discard, knockout/Prize flow and equivalent Energy auto-resolution | test_typed_energy_missing_icons.js | Partial; other interactions pending |
+| Dark Charmeleon (base5-32) | Fireball tails/heads behavior, equivalent discard auto-resolution and Rainbow Energy choice | test_typed_energy_missing_icons.js | Partial; other interactions pending |
+| Dark Flareon (base5-35) | Playing with Fire coin outcomes, damage and equivalent Fire discard | test_typed_energy_missing_icons.js | Partial; other interactions pending |
+| Typhlosion (neo1-18) | Flame Wheel's three-Fire requirement and equivalent discard auto-resolution | test_typed_energy_missing_icons.js | Partial; bench damage and other interactions pending |
+| Arcanine (base1-23, base4-33) | Flamethrower typed Fire cost, equivalent-choice auto-discard, Rainbow choice and rejection of Grass | test_flamethrower_typed_discard.js | Partial; other attacks and interactions pending |
+| Charmeleon (base1-24, base4-35) | Flamethrower typed Fire cost, equivalent-choice auto-discard, Rainbow choice and rejection of Grass | test_flamethrower_typed_discard.js | Partial; Slash and other interactions pending |
+| Magmar (base1-36, base4-51) | Flamethrower typed Fire cost, equivalent-choice auto-discard, Rainbow choice and rejection of Grass | test_flamethrower_typed_discard.js | Partial; Fire Punch and other interactions pending |
+| Flareon (base2-3, base2-19) | Flamethrower typed Fire cost, equivalent-choice auto-discard, Rainbow choice and rejection of Grass | test_flamethrower_typed_discard.js | Partial; Quick Attack and other interactions pending |
+| Houndoom (neo2-4, neo2-23) | Flamethrower typed Fire cost, equivalent-choice auto-discard, Rainbow choice and rejection of Grass | test_flamethrower_typed_discard.js | Partial; Crunch and other interactions pending |
+| Dark Machoke (base5-40) | Drag Off auto-selects its sole legal Bench target before damage and switches it Active | test_classic_complex_attacks.js | Partial; multi-target and other interactions pending |
+
 
 The full card-by-card fidelity review is **not complete**. Do not count the other cards or untested branches of the cards above as verified. Existing Classic execution probing covers 427 attack records in a manufactured scenario; it checks execution, not correctness or all possible choices.

@@ -273,7 +273,18 @@ function planFinalAttack(g,side,attackIndex,program,plan={side,attackIndex,data:
  const energyOptions=(type=null)=>u.energies.flatMap((id,i)=>!type||attachedEnergyMatchesType(g,id,type)?[{id:`energy:${i}`,label:`${i+1}: ${card(g,id).name}`}]:[]);
  const benchOptions=(owner)=>owner.bench.map((x,i)=>({id:`bench:${i}`,label:publicName(g,x)}));
  const finish=()=>resolveAttack(g,side,attackIndex, data.target, data.energyPicks,{...data,finalApproved:true});
- if(['barrier','destiny-bond','third-eye','scavenge'].includes(kind)&&!data.energyPicks){
+ if(kind==='barrier'&&!data.energyPicks){
+  const psychicEnergy=energyOptions('Psychic');
+  if(!psychicEnergy.length)fail('Barrier requires a Psychic Energy card to discard');
+  const kinds=new Set(psychicEnergy.map(option=>card(g,u.energies[Number(option.id.slice(7))]).name));
+  if(kinds.size>1){
+   finalChoice(g,plan,'pay-energy',side,psychicEnergy,{label:'Barrier: choose a Psychic Energy card to discard'});return;
+  }
+  // Barrier's printed cost only permits Psychic Energy. Identical legal cards
+  // have the same outcome, so select one instead of showing a redundant picker.
+  data.energyPicks=[Number(psychicEnergy[0].id.slice(7))];
+ }
+ if(['destiny-bond','third-eye','scavenge'].includes(kind)&&!data.energyPicks){
   if(!u.energies.length)fail('An attached Energy is required for this attack');
   finalChoice(g,plan,'pay-energy',side,energyOptions(),{label:`${a.name}: choose an Energy to discard`});return;
  }
@@ -337,8 +348,12 @@ function planFinalAttack(g,side,attackIndex,program,plan={side,attackIndex,data:
   data.preRoll=ATTACK.resolve(program,()=>next(g,2)===1,{selfEnergy:kind==='continuous-fireball'?fire:u.energies.length});
  }
  if(['continuous-fireball','fireball','playing-with-fire'].includes(kind)&&data.preRoll.discardHeadCount>0&&!data.energyPicks){
-  const qty=data.preRoll.discardHeadCount;
-  finalChoice(g,plan,'pay-energy',side,energyOptions('Fire'),{min:qty,max:qty,label:`${a.name}: discard ${qty} Fire Energy card(s)`});return;
+  const qty=data.preRoll.discardHeadCount,eligible=energyOptions('Fire');
+  if(eligible.length>=qty&&new Set(eligible.map(option=>card(g,u.energies[Number(option.id.slice(7))]).name)).size===1){
+   data.energyPicks=eligible.slice(0,qty).map(option=>Number(option.id.slice(7)));
+  }else{
+   finalChoice(g,plan,'pay-energy',side,eligible,{min:qty,max:qty,label:`${a.name}: discard ${qty} Fire Energy card(s)`});return;
+  }
  }
  if(kind==='fascinate'){
   if(!f.bench.length)fail('Fascinate requires an opposing Benched Pokémon');
@@ -872,6 +887,8 @@ function performAction(g,side,cmd){
   }
   if(pending.kind==='attack_energy'){
    const indices=answer.selected.map(x=>Number(x.slice(7)));
+   const attacker=g.players[pending.side].active,source=effectiveCard(g,attacker),attack=source.attacks[pending.attackIndex];
+   log(g,`${source.name} discarded ${indices.map(i=>card(g,attacker.energies[i]).name).join(', ')} to use ${attack.name}.`);
    resolveAttack(g,pending.side,pending.attackIndex,undefined,indices);
    return;
   }
@@ -1351,7 +1368,7 @@ function performAction(g,side,cmd){
    if(program.subject!==c.name&&program.subject!=='this Pokémon')fail('Energy cost subject does not match attacker');
    const eligible=u.energies.map((id,i)=>({id:card(g,id),i})).filter(o=>!program.onlyType||attachedEnergyMatchesType(g,u.energies[o.i],program.onlyType)).map(o=>o.i);
    if(eligible.length<quantity)fail('Insufficient Energy to discard for attack');
-   const sameEligibleCard=new Set(eligible.map(i=>u.energies[i])).size===1;
+   const sameEligibleCard=new Set(eligible.map(i=>card(g,u.energies[i]).name)).size===1;
    if(eligible.length>quantity&&!sameEligibleCard){
     g.nextDecisionId++;
     g.pendingDecision=makeDecision({id:`attackcost:${g.nextDecisionId}`,actor:side,kind:'energy-discard',label:`${a.name}: discard ${quantity} Energy card(s)`,options:eligible.map(i=>({id:`energy:${i}`,label:card(g,u.energies[i]).name})),min:quantity,max:quantity});
@@ -1366,7 +1383,8 @@ function performAction(g,side,cmd){
     g.nextDecisionId++;g.pendingDecision=makeDecision({id:`attack:${g.nextDecisionId}`,actor:side,kind:'pokemon-target',label:`${a.name}: choose a target`,options:[{id:'bench:-1',label:`Active: ${publicName(g,f.active)}`},...f.bench.map((x,i)=>({id:`bench:${i}`,label:publicName(g,x)}))],min:1,max:1});
     g.pendingAction={kind:'attack_target',side,attackIndex:index};return;
    }
-   if(owner.bench.length){
+   if(owner.bench.length===1){resolveAttack(g,side,index,0);return;}
+   if(owner.bench.length>1){
     g.nextDecisionId++;
     g.pendingDecision=makeDecision({id:`attack:${g.nextDecisionId}`,actor:side,kind:'pokemon-target',label:`${a.name}: choose Pokémon`,options:owner.bench.map((x,i)=>({id:`bench:${i}`,label:publicName(g,x)})),min:1,max:1});
     g.pendingAction={kind:'attack_target',side,attackIndex:index};return;
@@ -1452,7 +1470,7 @@ function resolveAttack(g,side,index,chosenBench,energyPicks,extra={}){
  if(FINAL_KINDS.has(program.kind)){
   if(['barrier','destiny-bond','scavenge','third-eye'].includes(program.kind)||['continuous-fireball','fireball','playing-with-fire'].includes(program.kind)&&extra.preRoll?.discardHeadCount){
    const quantity=['continuous-fireball','fireball','playing-with-fire'].includes(program.kind)?extra.preRoll.discardHeadCount:1;
-   if(!Array.isArray(energyPicks)||energyPicks.length!==quantity||new Set(energyPicks).size!==quantity||energyPicks.some(i=>!Number.isInteger(i)||i<0||i>=u.energies.length||['continuous-fireball','fireball','playing-with-fire'].includes(program.kind)&&!attachedEnergyMatchesType(g,u.energies[i],'Fire')))fail('Invalid final attack Energy selection');
+   if(!Array.isArray(energyPicks)||energyPicks.length!==quantity||new Set(energyPicks).size!==quantity||energyPicks.some(i=>!Number.isInteger(i)||i<0||i>=u.energies.length||['continuous-fireball','fireball','playing-with-fire'].includes(program.kind)&&!attachedEnergyMatchesType(g,u.energies[i],'Fire')||program.kind==='barrier'&&!attachedEnergyMatchesType(g,u.energies[i],'Psychic')))fail('Invalid final attack Energy selection');
   }
   if(program.kind==='fascinate'&&!f.bench.length)fail('Fascinate requires an opponent Bench');
   if(program.kind==='amnesia'||program.kind==='copy-attack'){
@@ -1505,7 +1523,8 @@ function resolveAttack(g,side,index,chosenBench,energyPicks,extra={}){
  const usesChoice=['bench-target','switch-attacker','switch-self','target-any','target-any-coin','drag-off'].includes(program.kind);
  if(usesChoice){const owner=program.kind==='switch-self'?p:f;
   if(['target-any','target-any-coin'].includes(program.kind)){if(!Number.isInteger(chosenBench)||chosenBench< -1||chosenBench>=f.bench.length)fail('Invalid opponent target');}
-  else{if(owner.bench.length&&(!Number.isInteger(chosenBench)||chosenBench<0||chosenBench>=owner.bench.length))fail('Missing or invalid attack target');
+  else{if(owner.bench.length>1&&(!Number.isInteger(chosenBench)||chosenBench<0||chosenBench>=owner.bench.length))fail('Missing or invalid attack target');
+   if(owner.bench.length===1&&chosenBench!==undefined&&chosenBench!==0)fail('Invalid sole attack target');
    if(!owner.bench.length&&chosenBench!==undefined)fail('No valid attack target');}
  }
  // Historical Confusion: failed roll prevents ALL attack effects.
@@ -1526,7 +1545,9 @@ function resolveAttack(g,side,index,chosenBench,energyPicks,extra={}){
   for(const i of [...picks].sort((a,b)=>b-a))p.discard.push(u.energies.splice(i,1)[0]);
  }
  if(!extra.gymCharityApproved&&!extra.gymESPResuming&&FINAL_KINDS.has(program.kind)&&program.kind!=='flame-pillar'&&Array.isArray(energyPicks)){
-  for(const i of [...energyPicks].sort((a,b)=>b-a))p.discard.push(u.energies.splice(i,1)[0]);
+  const discarded=[];
+  for(const i of [...energyPicks].sort((a,b)=>b-a)){const id=u.energies.splice(i,1)[0];p.discard.push(id);discarded.unshift(id);}
+  if(discarded.length)log(g,`${c.name} discarded ${discarded.map(id=>card(g,id).name).join(', ')} to use ${a.name}.`);
  }
  if(program.kind==='drag-off'&&!jawClampLocks(g,1-side)){
   const prior=f.active;f.active=f.bench.splice(chosenBench,1,prior)[0];
@@ -1646,6 +1667,13 @@ function resolveAttack(g,side,index,chosenBench,energyPicks,extra={}){
    label=kind==='elemental-blast'?'Elemental Blast: discard one Fire, one Water and one Lightning Energy':
     kind==='burning-flame'?`Burning Flame: discard ${max} Fire Energy`:
     kind==='psyburst'?'Psyburst: discard 1 Fire Energy':`Choose ${max} Energy card(s) to discard`;
+  }
+  if(!extra.neo48Answered&&['flame-wheel','flamethrower','burning-flame','psyburst'].includes(kind)&&max>0&&pickables.length>=max&&
+     new Set(pickables.map(option=>card(g,u.energies[Number(option.id.slice(7))]).name)).size===1){
+   // A mandatory discard from identical eligible Energy cards has one
+   // outcome. Resolve it without prompting; mixed Energy choices stay interactive.
+   extra.neo48Choices=pickables.slice(0,max).map(option=>option.id);
+   extra.neo48Answered=true;
   }
   if(!extra.neo48Answered&&pickables.length&&max>0){
    g.nextDecisionId++;g.pendingDecision=makeDecision({id:`neo48:${g.nextDecisionId}`,actor,kind:'neo-attack-choice',label,options:pickables,min,max,optional:min===0});
@@ -2096,8 +2124,11 @@ function resolveAttack(g,side,index,chosenBench,energyPicks,extra={}){
  if(roll.neo48Freeze)f.active.attackLock={expires:g.turnSerial+2,targetId:u.id};
  if(roll.neo48Slime)u.neo48SlimeUntil=g.turnSerial+2;
  if(roll.neo48Crunch)f.active.neo48CrunchUntil=g.turnSerial+3;
- if(roll.neo48EnergyDiscard){const chosen=extra.neo48Choices?.filter(x=>x.startsWith('energy:')).map(x=>Number(x.slice(7)))||[];for(const i of chosen.sort((a,b)=>b-a))p.discard.push(u.energies.splice(i,1)[0]);}
- if(roll.neo48DiscardColors){const chosen=extra.neo48Choices.filter(x=>x.startsWith('energy:')).map(x=>Number(x.slice(7)));for(const i of chosen.sort((a,b)=>b-a))p.discard.push(u.energies.splice(i,1)[0]);}
+ if(roll.neo48EnergyDiscard||roll.neo48DiscardColors){
+  const chosen=(extra.neo48Choices||[]).filter(x=>x.startsWith('energy:')).map(x=>Number(x.slice(7))).sort((a,b)=>b-a),discarded=[];
+  for(const i of chosen){const id=u.energies.splice(i,1)[0];if(id){p.discard.push(id);discarded.unshift(id);}}
+  if(discarded.length)log(g,`${c.name} discarded ${discarded.map(id=>card(g,id).name).join(', ')} to use ${a.name}.`);
+ }
  if(roll.neo48DiscardAllLightning){for(let i=u.energies.length-1;i>=0;i--)if(attachedEnergyMatchesType(g,u.energies[i],'Lightning'))p.discard.push(u.energies.splice(i,1)[0]);}
  if(roll.neo48Growth){for(const i of (extra.neo48Choices||[]).filter(x=>x.startsWith('hand:')).map(x=>Number(x.slice(5))).sort((a,b)=>b-a))u.energies.push(p.hand.splice(i,1)[0]);}
  if(roll.neo48CollectFire){for(const i of (extra.neo48Choices||[]).filter(x=>x.startsWith('discard:')).map(x=>Number(x.slice(8))).sort((a,b)=>b-a))u.energies.push(p.discard.splice(i,1)[0]);}
