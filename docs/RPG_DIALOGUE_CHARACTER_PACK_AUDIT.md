@@ -30,3 +30,16 @@ For every source `characters/*/stories.json` event (including random CGs and cro
 ### Future dialogue design rules
 
 Prefer concrete decisions over generic reassurance; make character dialogue reflect specific ambitions, competencies and relationships. Rotate between collaborative action, disagreement, humor, earned tenderness, rivalry and quiet reflection. Avoid repeating the same motif, such as creative insecurity, uncomfortable affection, mysterious audience, or an invitation to spend time together, unless it serves distinct characters differently. Preserve event CG and timing assumptions.
+
+## Second pack batch — 2026-10-30
+
+Reviewed the full five-route arcs of Rina, Sierra, Luna and Sol (20 route events); revised **7 lines in 4 events** while retaining stable choices, flags, speaker order and CG references:
+
+- Rina `rina_route_4`: distinguishes musical vulnerability from simply saving another encore for the player; she now asks for a genuine opinion.
+- Sierra `sierra_route_5`: replaces another career-calendar clash with the agent actually watching Sierra play and supporting the match.
+- Luna `luna_route_2`: shifts the recurring "help me with supplies" beat toward designing an accessible beginner table and agency.
+- Sol `sol_route_5`: moves from a vague performance metaphor to a direct relationship invitation.
+
+Source commits: `688111f`, `706dfbe`, `bb4bc61`, `5934e59`. Generated character-pack sync: `0e7dae8`.
+
+**Coverage:** 20 route events examined; four revised. Remaining random/side/crossover scenes in these packs need separate editorial review. JSON and compiled text checks are not a replacement for a full generated-build/test run.
