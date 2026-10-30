@@ -417,12 +417,20 @@
         const person=document.createElement('div');
         person.className='neo-ow-person'+(participant.id===focused?' is-speaking':' is-listening');
         const image=document.createElement('img');image.alt=participant.name;
+        // Apply the full-body source's top-to-waist dialogue crop only when
+        // this exact art actually loads. Fallback art and discreet portraits
+        // keep their own presentation.
+        image.addEventListener('load',()=>{
+          person.classList.toggle('neo-ow-dialogue-front-master',
+            participant.id==='camila'&&image.currentSrc.includes('/rpg-assets/characters/camila/overworld/standing-front.png'));
+        });
         // A missing portrait must never display a different character's face.
         // The original game's avatar loader already resolves outfit-specific art.
         if(participant.src)image.src=participant.src;
         const portraitSources=Array.isArray(participant.srcs)?participant.srcs:[participant.src].filter(Boolean);
         let portraitSourceIndex=1,usedPoseFallback=false;
         image.onerror=()=>{
+          person.classList.remove('neo-ow-dialogue-front-master');
           const next=portraitSources[portraitSourceIndex++];
           if(next){image.hidden=false;image.src=next;return}
           const fallback=bridge()?.poseIntroFallback?.(participant.id);
@@ -505,6 +513,34 @@
       }
     `;
     document.head.append(portraitPlacement);
+    // Neutral dialogue master artwork is full-height in the repository; only
+    // Camila's text portrait receives this narrower top-anchored viewport.
+    // Keep the full-body file available to overworld poses and art galleries.
+    const camilaDialogueFrame=document.createElement('style');
+    camilaDialogueFrame.id='neoOverworldCamilaDialogueFrame';
+    camilaDialogueFrame.textContent=`
+      #neoOverworldStoryDock #neoOverworldScenePeople .neo-ow-person.neo-ow-dialogue-front-master{
+        flex:0 1 min(44dvh,38vw)!important;
+        width:min(44dvh,38vw)!important;
+        max-width:min(44dvh,38vw)!important;
+        overflow:hidden!important;
+      }
+      #neoOverworldStoryDock #neoOverworldScenePeople .neo-ow-person.neo-ow-dialogue-front-master img{
+        width:100%!important;height:100%!important;
+        max-width:none!important;max-height:none!important;
+        object-fit:cover!important;object-position:center top!important;
+        transform:scale(1.4);transform-origin:center top;
+      }
+      @media(max-width:650px){
+        #neoOverworldStoryDock #neoOverworldScenePeople .neo-ow-person.neo-ow-dialogue-front-master{
+          flex-basis:min(40dvh,60vw)!important;
+          width:min(40dvh,60vw)!important;
+          max-width:min(40dvh,60vw)!important;
+        }
+      }
+    `;
+    document.head.append(camilaDialogueFrame);
+
 
     // Character interaction layout follows the portrait-left / actions-right
     // visual reference; ordinary story dialogue is unaffected.
