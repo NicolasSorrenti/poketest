@@ -5,7 +5,20 @@ const {makeDecision}=require('./decision_core');
 const STATUS=require('./special_conditions_core');
 const {isBasicPokemon,isEnergy}=require('./core_rules');
 const SETS=['base1','base2','base3','base4','base5','gym1','gym2','neo1','neo2','neo3','neo4','basep'];
-const CARDS=new Map(SETS.flatMap(s=>require('./cards/'+s+'.json')).map(c=>[c.id,c]));
+const CARDS=new Map([
+ ...require('./cards/base1.json'),
+ ...require('./cards/base2.json'),
+ ...require('./cards/base3.json'),
+ ...require('./cards/base4.json'),
+ ...require('./cards/base5.json'),
+ ...require('./cards/gym1.json'),
+ ...require('./cards/gym2.json'),
+ ...require('./cards/neo1.json'),
+ ...require('./cards/neo2.json'),
+ ...require('./cards/neo3.json'),
+ ...require('./cards/neo4.json'),
+ ...require('./cards/basep.json')
+].map(c=>[c.id,c]));
 const card=id=>{const c=CARDS.get(id);if(!c)throw Error('Unknown Classic card '+id);return c;};
 const own=p=>[p.active,...p.bench].filter(Boolean);
 const pokemon=(p,slot)=>slot===-1?p.active:p.bench[slot];
