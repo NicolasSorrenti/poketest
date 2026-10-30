@@ -4527,7 +4527,7 @@ const packs=[
      },
      {
       "speaker": "jinx",
-      "text": "Fine. But I'm ordering chocolate cake on principle."
+      "text": "Fine. I'll sit in the booth. Put the cake on my tab—and tell me which regular keeps winning from that corner."
      }
     ],
     "choices": [
@@ -5414,7 +5414,7 @@ const packs=[
      },
      {
       "speaker": "sol",
-      "text": "Hey! I'll make the invitations. You keep everyone from swimming with their decks."
+      "text": "I'll check the lifeguard rota and mark the safe tables. You can make the invitations as loud as you want—as long as the rules are readable."
      }
     ],
     "choices": [
@@ -7933,7 +7933,7 @@ const packs=[
      },
      {
       "speaker": "sol",
-      "text": "Deal. Just don't ask me to fix the machine. It already hates me."
+      "text": "Deal. I'll put a little wet-shoes sign by the entrance too. Consider it my first useful decoration of the day."
      },
      {
       "speaker": "alma",
