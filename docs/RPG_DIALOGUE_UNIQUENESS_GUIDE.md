@@ -104,7 +104,12 @@ Store this in an editorial inventory or script comments; **do not alter the runt
 7. Test **implementation** after changes: preserve IDs, speaker names, event timing, counts, 3/5-line constraints where enforced, artwork hooks, flags and reward effects; run existing `validate()` exports and RPG tests.
 8. Record decisions in an **accepted overlap** list (shared locations/common concepts are fine) to avoid repeatedly flagging intentional motifs.
 
-## Recommended edit backlog (do not auto-apply)
+## Implementation history
+
+- **2026-10-30 — commit `d00ff585809596ab83aa0fe7c139887c5482105c`:** Replaced seven everyday-chat scenes in `rpg_everyday_chats.js`: Sol's bracelet and soap scenes, Jinx's music box, Iris's book exchange, Elena's sewing lesson, Akari's origami joke, and Laca's embroidery joke. The replacement premises center on outdoor cinema, arcade showmanship, tournament lost property, adaptive TCG play, concert emceeing, relinquishing control, and lifeguard judgment respectively. Static checks confirmed 22 NPC pools × 23 chats and valid 3/5-line scene shapes. No story routes were edited.
+- **Remaining:** Nereo's bracelet, Rina's music box, Alma's free book corner and Barb's sewing anecdote remain as deliberate retained counterparts. Re-audit the later route/event files separately.
+
+## Recommended edit backlog (original audit priorities; see implementation history above)
 
 **P0:** Rewrite one of Nereo/Sol's bracelet conversations; replace a whole premise, not surface words.
 
