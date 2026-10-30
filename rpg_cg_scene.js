@@ -46,6 +46,8 @@
    if(requestedId===null&&!visibleId)return;
    ++serial;requestedId=null;visibleId=null;
    stage.classList.remove('has-story-cg');
+   delete stage.dataset.rpgSafeId;
+   stage.querySelector?.('.rpg-safe-avatar')?.remove();
    image.hidden=true;if(image?.style)image.style.opacity='1';
    image.removeAttribute?.('src');
   }
@@ -67,6 +69,7 @@
      image.hidden=false;
      stage.classList.add('has-story-cg');if(image?.style)image.style.opacity='1';}
      visibleId=entry.id;
+     if(entry.character&&typeof window!=='undefined')window.NeoRpgDiscreetAvatars?.set?.(stage,entry.character,'neutral',entry.character);
      seen.add(entry.id);
      onShown?.(entry);
     };

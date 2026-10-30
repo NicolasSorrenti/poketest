@@ -536,7 +536,8 @@
    const candidates=assetCandidates(manifest,npcId,reaction.imageKey,outfit);
    function show(readyPath){
     if(ticket!==generation||!active)return;
-    if(readyPath&&typeof window!=='undefined'){
+    const chibiMode=media?.document?.documentElement?.dataset?.rpgDiscreet==='on';
+    if(readyPath&&typeof window!=='undefined'&&!chibiMode){
      try{window.parent?.postMessage({type:'neo-rpg-art-seen',path:readyPath},window.location.origin);}catch{}
     }
     const card=doc.createElement('div');

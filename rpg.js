@@ -1739,6 +1739,7 @@ function showOtherArt(entry){
  if(!artSeen[entry.path])return;
  if(!galleryViewer){galleryOpenViewer({...entry,unlocked:true,character:entry.id,thumb:entry.path});return;}
  const stage=galleryViewer.querySelector('.cg-lightbox-stage');stage.replaceChildren();
+ if(entry.id)window.NeoRpgDiscreetAvatars?.set?.(stage,entry.id,'neutral',entry.id);
  const image=document.createElement('img');image.alt=entry.title;
  image.onload=()=>{if(!artViewed[entry.path]){artViewed[entry.path]=true;persist();renderGallery();}};
  image.onerror=()=>{stage.textContent='Artwork file unavailable.';};
@@ -1758,6 +1759,7 @@ function galleryOpenViewer(entry){
   document.body.append(galleryViewer);
  }
  const stage=galleryViewer.querySelector('.cg-lightbox-stage');stage.replaceChildren();
+ if(entry.character)window.NeoRpgDiscreetAvatars?.set?.(stage,entry.character,'neutral',entry.character);
  galleryViewer.querySelector('.cg-lightbox-title').textContent=entry.title;
  const image=document.createElement('img');image.alt=entry.title;image.hidden=true;stage.append(image);
  const pending=document.createElement('p');pending.className='cg-pending';pending.textContent='Artwork not installed yet.';pending.hidden=true;stage.append(pending);
@@ -1816,8 +1818,10 @@ function renderGallery(){
 
  for(const entry of visible){
   const tile=document.createElement('button');tile.type='button';tile.className='cg-tile'+(entry.unlocked?' unlocked':' locked');
+  tile.dataset.character=entry.character||'';
   tile.disabled=!entry.unlocked;
   const thumb=document.createElement('div');thumb.className='cg-thumb';
+  if(entry.character)window.NeoRpgDiscreetAvatars?.set?.(thumb,entry.character,'neutral',entry.character);
   if(entry.unlocked){
    const img=document.createElement('img');img.alt='';img.hidden=true;thumb.append(img);
    if(entry.type){img.onload=()=>{img.hidden=false;};img.onerror=()=>{img.hidden=true;thumb.textContent='Artwork unavailable';};img.src=entry.path;}

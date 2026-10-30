@@ -20,6 +20,8 @@
   const tiles=items();if(!tiles.length)return;
   index=(i+tiles.length)%tiles.length;
   const tile=tiles[index];tile.click();
+  const character=tile.dataset.character;
+  if(character)window.NeoRpgDiscreetAvatars?.set?.(canvas,character,'neutral',character);
   const source=preview.querySelector('.cg-art-frame img');
   const title=tile.querySelector('strong')?.textContent||'Memory';
   $('cgViewerTitle').textContent=title;$('cgViewerPosition').textContent=(index+1)+' / '+tiles.length;
