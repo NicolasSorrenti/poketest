@@ -222,7 +222,7 @@
       ['✧ Save Game',()=>document.getElementById('save')?.click()],
       ['◇ Discreet / Chibi Mode',()=>{toggleChibiPreference();refresh();}],
       ['⌾ Travel',()=>openSheet('travel')],
-      ['← Original RPG',()=>{if(!bridge()?.snapshot()?.locked)dismiss();else showNotice('Finish the current scene first.');}]
+      ['← Original RPG',()=>dismiss()]
     ];
     for(const [label,action] of menuItems){
       const button=document.createElement('button');button.type='button';button.textContent=label;
@@ -290,14 +290,17 @@
       // throughout VN dialogue/CGs. The iframe can reload when schedules change.
       frame.contentWindow?.postMessage({type:'neo-overworld-story-visibility',hidden:!!locked},location.origin);
       frame.style.pointerEvents=locked?'none':'auto';
-      toolbar.style.pointerEvents=locked?'none':'auto';
-      menuButton.disabled=locked;
+      // Keep the UI switcher available during story locks. Returning to the
+      // original interface only changes presentation; it does not advance or
+      // resolve the active event.
+      toolbar.style.pointerEvents='auto';
+      menuButton.disabled=false;
       next.disabled=locked;
       travelToggle.disabled=locked;
       if(locked)closeSheet();
       bottom.style.pointerEvents=locked?'none':'auto';
       if(locked){
-        closeSheet();hideMenu();hideEvents();
+        closeSheet();hideEvents();
         overlay.querySelectorAll('[data-overworld-activity-panel],[data-overworld-activity-backdrop]').forEach(el=>el.remove());
         overlay.classList.remove('neo-ow-activity-open');
       }
