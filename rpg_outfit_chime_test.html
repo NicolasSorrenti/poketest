@@ -40,6 +40,13 @@
 (async function(){
  const $=id=>document.getElementById(id),checks=$('checks');
  const data=await fetch('/rpg-assets/outfit-chime-focus-top.json?preview=1').then(r=>{if(!r.ok)throw Error('Preset file could not be loaded');return r.json()});
+ const candidates=await fetch('/rpg-assets/outfit-chime-overworld-candidates.json?preview=1').then(r=>{if(!r.ok)throw Error('Overworld candidate file could not be loaded');return r.json()});
+ for(const [id,entry] of Object.entries(candidates.characters||{})){
+   data.characters[id] ||= {variants:{}};
+   for(const [name,variant] of Object.entries(entry.variants||{})){
+     if(!data.characters[id].variants[name]) data.characters[id].variants[name]=variant;
+   }
+ }
  let generation=0;
  const storageKey='neo-campus-outfit-crop-edits-v1';
  const labels=data.labels||{};
