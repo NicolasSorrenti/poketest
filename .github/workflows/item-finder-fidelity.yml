@@ -1,10 +1,10 @@
 name: Item Finder fidelity
 on:
   pull_request:
-    paths: ['classic_trainer_core.js', 'headless_duel.js', 'test_item_finder_paid_trainer.js', '.github/workflows/item-finder-fidelity.yml']
+    paths: ['classic_trainer_core.js', 'headless_duel.js', 'test_item_finder_paid_trainer.js', 'test_old_rod_fidelity.js', '.github/workflows/item-finder-fidelity.yml']
   push:
     branches: [main]
-    paths: ['classic_trainer_core.js', 'headless_duel.js', 'test_item_finder_paid_trainer.js', '.github/workflows/item-finder-fidelity.yml']
+    paths: ['classic_trainer_core.js', 'headless_duel.js', 'test_item_finder_paid_trainer.js', 'test_old_rod_fidelity.js', '.github/workflows/item-finder-fidelity.yml']
 jobs:
   trainer-fidelity:
     runs-on: ubuntu-latest
