@@ -1383,7 +1383,8 @@ function performAction(g,side,cmd){
     g.nextDecisionId++;g.pendingDecision=makeDecision({id:`attack:${g.nextDecisionId}`,actor:side,kind:'pokemon-target',label:`${a.name}: choose a target`,options:[{id:'bench:-1',label:`Active: ${publicName(g,f.active)}`},...f.bench.map((x,i)=>({id:`bench:${i}`,label:publicName(g,x)}))],min:1,max:1});
     g.pendingAction={kind:'attack_target',side,attackIndex:index};return;
    }
-   if(owner.bench.length){
+   if(owner.bench.length===1){resolveAttack(g,side,index,0);return;}
+   if(owner.bench.length>1){
     g.nextDecisionId++;
     g.pendingDecision=makeDecision({id:`attack:${g.nextDecisionId}`,actor:side,kind:'pokemon-target',label:`${a.name}: choose Pokémon`,options:owner.bench.map((x,i)=>({id:`bench:${i}`,label:publicName(g,x)})),min:1,max:1});
     g.pendingAction={kind:'attack_target',side,attackIndex:index};return;
@@ -1522,7 +1523,8 @@ function resolveAttack(g,side,index,chosenBench,energyPicks,extra={}){
  const usesChoice=['bench-target','switch-attacker','switch-self','target-any','target-any-coin','drag-off'].includes(program.kind);
  if(usesChoice){const owner=program.kind==='switch-self'?p:f;
   if(['target-any','target-any-coin'].includes(program.kind)){if(!Number.isInteger(chosenBench)||chosenBench< -1||chosenBench>=f.bench.length)fail('Invalid opponent target');}
-  else{if(owner.bench.length&&(!Number.isInteger(chosenBench)||chosenBench<0||chosenBench>=owner.bench.length))fail('Missing or invalid attack target');
+  else{if(owner.bench.length>1&&(!Number.isInteger(chosenBench)||chosenBench<0||chosenBench>=owner.bench.length))fail('Missing or invalid attack target');
+   if(owner.bench.length===1&&chosenBench!==undefined&&chosenBench!==0)fail('Invalid sole attack target');
    if(!owner.bench.length&&chosenBench!==undefined)fail('No valid attack target');}
  }
  // Historical Confusion: failed roll prevents ALL attack effects.
