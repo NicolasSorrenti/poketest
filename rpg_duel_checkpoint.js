@@ -4,7 +4,7 @@
 // and the public API key. RLS ensures a player cannot access another account.
 // Never include private hands/decks in the classic HTTP response.
 class RpgDuelCheckpoint {
- constructor({fetchImpl=globalThis.fetch,settings=()=>process.env}={}){
+ constructor({fetchImpl=(...args)=>globalThis.fetch(...args),settings=()=>process.env}={}){
   this.fetch=fetchImpl;this.settings=settings;
  }
  config(){
