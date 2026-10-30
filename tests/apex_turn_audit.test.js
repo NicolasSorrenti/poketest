@@ -188,3 +188,18 @@ test('validates audit settings',()=>{
  assert.equal(parse(['--deck','rain_dance','--pairs','1']).pairs,1);
  assert.throws(()=>parse(['--deck','invalid']),/Invalid audit settings/);
 });
+
+test('Energy audit runs for authoritative duel and Trainer-rule changes on PRs and main',()=>{
+ const fs=require('node:fs');
+ const path=require('node:path');
+ const workflow=fs.readFileSync(path.join(__dirname,'..','.github','workflows','apex-energy-audit.yml'),'utf8');
+ const sections=workflow.split(/^  (pull_request|push):\s*$/m);
+ assert.equal(sections.length,5,'workflow must have pull_request and push triggers');
+ for(const section of [sections[2],sections[4]]){
+  const paths=section.split(/^    paths:\s*$/m)[1]?.split(/^jobs:\s*$/m)[0]||'';
+  for(const source of ['headless_duel.js','classic_trainer_core.js',
+   'classic_power_core.js','core_rules.js','attack_effects_core.js']){
+   assert.ok(paths.includes("- '"+source+"'"),source+' must trigger the Energy audit');
+  }
+ }
+});
