@@ -348,8 +348,12 @@ function planFinalAttack(g,side,attackIndex,program,plan={side,attackIndex,data:
   data.preRoll=ATTACK.resolve(program,()=>next(g,2)===1,{selfEnergy:kind==='continuous-fireball'?fire:u.energies.length});
  }
  if(['continuous-fireball','fireball','playing-with-fire'].includes(kind)&&data.preRoll.discardHeadCount>0&&!data.energyPicks){
-  const qty=data.preRoll.discardHeadCount;
-  finalChoice(g,plan,'pay-energy',side,energyOptions('Fire'),{min:qty,max:qty,label:`${a.name}: discard ${qty} Fire Energy card(s)`});return;
+  const qty=data.preRoll.discardHeadCount,eligible=energyOptions('Fire');
+  if(eligible.length>=qty&&new Set(eligible.map(option=>u.energies[Number(option.id.slice(7))])).size===1){
+   data.energyPicks=eligible.slice(0,qty).map(option=>Number(option.id.slice(7)));
+  }else{
+   finalChoice(g,plan,'pay-energy',side,eligible,{min:qty,max:qty,label:`${a.name}: discard ${qty} Fire Energy card(s)`});return;
+  }
  }
  if(kind==='fascinate'){
   if(!f.bench.length)fail('Fascinate requires an opposing Benched Pokémon');
@@ -1537,7 +1541,9 @@ function resolveAttack(g,side,index,chosenBench,energyPicks,extra={}){
   for(const i of [...picks].sort((a,b)=>b-a))p.discard.push(u.energies.splice(i,1)[0]);
  }
  if(!extra.gymCharityApproved&&!extra.gymESPResuming&&FINAL_KINDS.has(program.kind)&&program.kind!=='flame-pillar'&&Array.isArray(energyPicks)){
-  for(const i of [...energyPicks].sort((a,b)=>b-a))p.discard.push(u.energies.splice(i,1)[0]);
+  const discarded=[];
+  for(const i of [...energyPicks].sort((a,b)=>b-a)){const id=u.energies.splice(i,1)[0];p.discard.push(id);discarded.unshift(id);}
+  if(discarded.length)log(g,`${c.name} discarded ${discarded.map(id=>card(g,id).name).join(', ')} to use ${a.name}.`);
  }
  if(program.kind==='drag-off'&&!jawClampLocks(g,1-side)){
   const prior=f.active;f.active=f.bench.splice(chosenBench,1,prior)[0];
