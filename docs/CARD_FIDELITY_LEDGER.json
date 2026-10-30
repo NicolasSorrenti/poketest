@@ -382,13 +382,23 @@
      "kind": "attack",
      "index": 0,
      "name": "Solarbeam",
-     "status": "unreviewed"
+     "status": "partial",
+     "evidence": [
+      "test_card_fidelity_venusaur.js",
+      "Card text compared across TCGdex, Serebii, and Limitless; official Pokémon errata PDF searched with no Venusaur entry."
+     ],
+     "scope": "Solarbeam 60 damage and four-Grass typed cost accepted/rejected in reducer configurations: Classic for base1-15, Neo, online-preview 60-card and online-preview 40-card; base4-18 online-preview 60-card and 40-card. Historical rulings and client/network integration pending."
     },
     {
      "kind": "power",
      "index": 0,
      "name": "Energy Trans",
-     "status": "unreviewed"
+     "status": "partial",
+     "evidence": [
+      "test_card_fidelity_venusaur.js",
+      "Card text compared across TCGdex, Serebii, and Limitless; official Pokémon errata PDF searched with no Venusaur entry."
+     ],
+     "scope": "Repeated Energy Trans transfers in one turn and explicit Finish; same-Pokémon source/target exclusion; disabled while Venusaur is Asleep, Confused or Paralyzed; equivalent Basic Grass Energy reprints auto-resolve, non-Grass Energy including Rainbow Energy is ineligible; reducer configurations: Classic for base1-15, Neo, online-preview 60-card and online-preview 40-card; base4-18 online-preview 60-card and 40-card. Historical rulings and client/network integration pending."
     }
    ]
   },
@@ -4321,13 +4331,23 @@
      "kind": "attack",
      "index": 0,
      "name": "Solarbeam",
-     "status": "unreviewed"
+     "status": "partial",
+     "evidence": [
+      "test_card_fidelity_venusaur.js",
+      "Card text compared across TCGdex, Serebii, and Limitless; official Pokémon errata PDF searched with no Venusaur entry."
+     ],
+     "scope": "Solarbeam 60 damage and four-Grass typed cost accepted/rejected in reducer configurations: Classic for base1-15, Neo, online-preview 60-card and online-preview 40-card; base4-18 online-preview 60-card and 40-card. Historical rulings and client/network integration pending."
     },
     {
      "kind": "power",
      "index": 0,
      "name": "Energy Trans",
-     "status": "unreviewed"
+     "status": "partial",
+     "evidence": [
+      "test_card_fidelity_venusaur.js",
+      "Card text compared across TCGdex, Serebii, and Limitless; official Pokémon errata PDF searched with no Venusaur entry."
+     ],
+     "scope": "Repeated Energy Trans transfers in one turn and explicit Finish; same-Pokémon source/target exclusion; disabled while Venusaur is Asleep, Confused or Paralyzed; equivalent Basic Grass Energy reprints auto-resolve, non-Grass Energy including Rainbow Energy is ineligible; reducer configurations: Classic for base1-15, Neo, online-preview 60-card and online-preview 40-card; base4-18 online-preview 60-card and 40-card. Historical rulings and client/network integration pending."
     }
    ]
   },
