@@ -88,6 +88,11 @@ for (const script of publicScripts) {
 }
 walk('rpg-assets');
 walk('overworld');
+// The placement editor uses this art-production candidate as the Lucky Draw map.
+const placementEditorAssets = ['art-production/overworld-candidates/shop-map-v1.png'];
+for (const asset of placementEditorAssets) {
+  if (fs.existsSync(path.join(root, asset))) copyFile(asset);
+}
 
 const generatedPacks = require(path.join(root, 'rpg_character_packs.generated.js'));
 const characterAccess = require(path.join(root, 'rpg_character_access.js'));
