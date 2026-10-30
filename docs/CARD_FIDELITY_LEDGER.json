@@ -352,13 +352,24 @@
      "kind": "attack",
      "index": 0,
      "name": "Agility",
-     "status": "unreviewed"
+     "status": "partial",
+     "evidence": [
+      "test_card_fidelity_raichu.js",
+      "https://limitlesstcg.com/cards/BS/14"
+     ],
+     "scope": "Base Set wording: Lightning cost, heads prevents attack damage/effects during the opponent's next turn, tails gives no protection, and protection expires after one opposing turn. Scenarios in Classic, Neo, online-preview and 40-card Cube; historical rulings beyond the official errata index and other interactions pending."
     },
     {
      "kind": "attack",
      "index": 1,
      "name": "Thunder",
-     "status": "unreviewed"
+     "status": "partial",
+     "evidence": [
+      "test_card_fidelity_raichu.js",
+      "https://limitlesstcg.com/cards/BS/14",
+      "https://www.pokemon.com/static-assets/content-assets/cms2/pdf/trading-card-game/tcg_errata.pdf"
+     ],
+     "scope": "Base Set wording: Lightning cost, 60 damage on both coin outcomes, tails-only 30 self-damage without weakness multiplier, self-KO Prize flow and atomic rejection of insufficient Lightning. Scenarios in Classic, Neo, online-preview and 40-card Cube; historical rulings beyond the official errata index and other interactions pending."
     }
    ]
   },
@@ -4261,13 +4272,24 @@
      "kind": "attack",
      "index": 0,
      "name": "Agility",
-     "status": "unreviewed"
+     "status": "partial",
+     "evidence": [
+      "test_card_fidelity_raichu.js",
+      "https://limitlesstcg.com/cards/BS2/16"
+     ],
+     "scope": "Base Set 2 wording: Lightning cost, heads prevents attack damage/effects during the opponent's next turn, tails gives no protection, and protection expires after one opposing turn. Scenarios in Neo, online-preview and 40-card Cube; historical rulings beyond the official errata index and other interactions pending."
     },
     {
      "kind": "attack",
      "index": 1,
      "name": "Thunder",
-     "status": "unreviewed"
+     "status": "partial",
+     "evidence": [
+      "test_card_fidelity_raichu.js",
+      "https://limitlesstcg.com/cards/BS2/16",
+      "https://www.pokemon.com/static-assets/content-assets/cms2/pdf/trading-card-game/tcg_errata.pdf"
+     ],
+     "scope": "Base Set 2 wording: Lightning cost, 60 damage on both coin outcomes, tails-only 30 self-damage without weakness multiplier, self-KO Prize flow and atomic rejection of insufficient Lightning. Scenarios in Neo, online-preview and 40-card Cube; historical rulings beyond the official errata index and other interactions pending."
     }
    ]
   },
