@@ -424,7 +424,12 @@ let overworldRenderedDialogue='';
 window.NeoRpgOverworldBridge=Object.freeze({
  scenePortraits(){return overworldScenePortraits;},
  dialogueText(){return overworldRenderedDialogue;},
- portrait(id){return cast[id]?{id,name:cast[id].name,src:scenePortraitSource(id,'neutral',null)}:null;},
+ portrait(id){
+  if(!cast[id])return null;
+  const src=scenePortraitSource(id,'neutral',null);
+  return {id,name:cast[id].name,src,
+   ...(id==='camila'?{srcs:stagePortraitPaths(id,'neutral',null)}:{})};
+ },
  clearInteraction(){if(overworldControlsLocked())return false;state.selected=null;persist();render();return true;},
  snapshot(){return {location:state.location,day:state.day,slot:state.slot,selected:state.selected&&currentPeople().includes(state.selected)?state.selected:null,locked:overworldControlsLocked(),arriving:arrivalGate||!!pendingOverworldArrival||!!window.NeoRpgTimeTransitions?.active,storyActive:overworldStoryActive(),eventActive:!!(state.mandatoryEventState?.active||state.activeSliceOfLife||state.activeSituation||state.activeStory||state.activeSideQuest||state.activeArc||state.activeEncounter),people:currentPeople().filter(id=>!!cast[id]),places:Object.entries(places).map(([id,p])=>({id,name:p[0]}))};},
  travel(placeId){if(overworldControlsLocked())return false;return travelTo(placeId);},
@@ -2403,7 +2408,10 @@ function renderRpgCast(ids,locked,shown,portraitId,context={}){
     if(srcs.length)src=srcs[0];
     else src=state.overworldPoseIntro.src;
    }
-   return {id,name:cast[id].name,src,...(srcs?.length?{srcs}:{})};
+   // Allow Camila's new master to gracefully fall back to existing dialogue
+   // expressions if its asset fails to load in the standalone overworld.
+   const sources=srcs?.length?srcs:(id==='camila'?stagePortraitPaths(id,expression,context.sceneId):null);
+   return {id,name:cast[id].name,src,...(sources?.length?{srcs:[src,...sources.filter(path=>path!==src)]}:{})};
   }):[]
  };
  if(typeof document.querySelector!=='function')return;
