@@ -34,8 +34,11 @@ export async function onRequest({request,env}) {
   if(request.method==='POST'&&action==='create'){
    const params=await readBody(request);
    if(!params.rpgDuelId){
-    const created=classic.create(params);
-    await storeNew(db,'classic',classic,created.token);
+    let created;
+    try { created=classic.create(params); }
+    catch(error) { throw new Error('Classic duel creation: '+error.message,{cause:error}); }
+    try { await storeNew(db,'classic',classic,created.token); }
+    catch(error) { throw new Error('Classic duel session storage: '+error.message,{cause:error}); }
     return json(created);
    }
    if(!checkpoint.validId(params.rpgDuelId))throw Error('Invalid RPG duel ID');
