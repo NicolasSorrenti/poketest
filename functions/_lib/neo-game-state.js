@@ -1,3 +1,4 @@
+import './node-bridge.js';
 // Cloudflare-native session storage for the original Classic and Cube engines.
 // D1 is authoritative: never rely on Worker isolate globals for game state.
 import classicPackage from '../../classic_local_service.js';
