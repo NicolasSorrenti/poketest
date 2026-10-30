@@ -37,7 +37,13 @@
     const syncChibiMode=()=>{
       frame.contentWindow?.postMessage({type:'neo-overworld-chibi-mode',enabled:document.documentElement.dataset.rpgDiscreet==='on'},location.origin);
     };
-    chibiButton.onclick=()=>document.getElementById('rpgDiscreetToggle')?.click();
+    const toggleChibiPreference=()=>{
+      const preference=window.NeoRpgDiscreet;
+      if(preference?.toggle)preference.toggle();
+      else document.getElementById('rpgDiscreetToggle')?.click();
+      syncChibiButton();syncChibiMode();
+    };
+    chibiButton.onclick=toggleChibiPreference;
     cloudButton.onclick=()=>document.getElementById('cloudSaveButton')?.click();
     headerActions.append(cloudButton,chibiButton,menuButton);
     toolbar.append(title,headerActions);overlay.append(toolbar,frame,note);document.body.append(overlay);
@@ -214,7 +220,7 @@
       ['♥ Status & Relationships',()=>document.getElementById('statusBtn')?.click()],
       ['▦ Calendar',()=>document.getElementById('calendarBtn')?.click()],
       ['✧ Save Game',()=>document.getElementById('save')?.click()],
-      ['◇ Discreet / Chibi Mode',()=>{document.getElementById('rpgDiscreetToggle')?.click();refresh();}],
+      ['◇ Discreet / Chibi Mode',()=>{toggleChibiPreference();refresh();}],
       ['⌾ Travel',()=>openSheet('travel')],
       ['← Original RPG',()=>{if(!bridge()?.snapshot()?.locked)dismiss();else showNotice('Finish the current scene first.');}]
     ];
