@@ -31,7 +31,7 @@
     ['Protagonist','What happened to the list?'],
     ['hana','I wanted to enter the doubles event. Then I remembered who usually covers the shop that night.'],
     ['Narrator','She turns the receipt over. A team name is written on the other side, decorated with tiny stars.'],
-    ['hana','It’s a silly name anyway. Go on, laugh.']
+    ['hana','I already sent in the entry form. I think I want to try this even if I have to find someone else to cover the counter.']
    ],
    choices:[
     ['Offer to practice as a team','You’d do that? All right. But I’m keeping the ridiculous team name.'],
@@ -61,7 +61,7 @@
     ['Protagonist','The cup still says “Good luck.”'],
     ['hana','They ordered too many. I told them we could use them next season.'],
     ['Narrator','She takes a sip, then studies the second cup for a moment before handing it over.'],
-    ['hana','Will you still come by when the brackets are gone?']
+    ['hana','I put my name on the next doubles signup sheet instead of volunteering to run it. Will you come see me actually play?']
    ],
    choices:[
     ['Ask her out after the season','Yes. Somewhere I don’t have to carry a cash box.'],
@@ -123,7 +123,7 @@
     ['Protagonist','You could take a break.'],
     ['reina','You say that like you’ve never seen me on a day off.'],
     ['Narrator','She nudges a pebble down the path, then falls into step beside you.'],
-    ['reina','Well? Are we doing this again next season? You and me.']
+    ['reina','I signed up for the next circuit before the results were posted. I want you across the table again, not in the stands. Deal?']
    ],
    choices:[
     ['Ask her to be more than a rival','I thought you’d never say it. Don’t get smug.'],
@@ -185,7 +185,7 @@
     ['Protagonist','What are we celebrating?'],
     ['shiori','No occasion. That was rather the point.'],
     ['Narrator','She cuts an uneven slice, looks at it, and lets out a quiet laugh.'],
-    ['shiori','Would you come with me next time? Wherever “next time” turns out to be.']
+    ['shiori','I bought two tickets to next month’s exhibition. I was hoping you would come; if you cannot, I will still go. That is new for me.']
    ],
    choices:[
     ['Tell her you would like to date','I hoped you might say that. Here, take the larger slice.'],
@@ -217,7 +217,7 @@
     ['Protagonist','Why didn’t you make it?'],
     ['yuna','Because a misplay got more laughs. Pretty stupid, huh?'],
     ['Narrator','She pushes a chair out with her foot. The overhead game music keeps cycling through the same cheerful tune.'],
-    ['yuna','Sit down. I’ll show you the version that actually wins.']
+    ['yuna','Sit down. I’ll show you the version that wins. Tomorrow I’m playing it in front of everyone, whether they laugh or not.']
    ],
    choices:[
     ['Stay to see the serious version','Fair warning: the good version has fewer explosions.'],
@@ -247,7 +247,7 @@
     ['Protagonist','You heading home?'],
     ['yuna','Eventually. There’s something I want to ask before the music comes back tomorrow.'],
     ['Narrator','She opens her mouth, then closes it. For once, the silence lasts longer than the joke.'],
-    ['yuna','Would you still come by if I ran out of stupid ideas?']
+    ['yuna','I entered the next cup with the serious list. No gimmick name, no entrance music. Would you still cheer for me if I won quietly?']
    ],
    choices:[
     ['Ask her on a date','I have one very sensible idea for Saturday. Don’t tell anyone.'],
