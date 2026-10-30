@@ -1142,9 +1142,21 @@ function conversationInProgress(){
  if(state.activeSliceOfLife||state.mandatoryEventState?.active||state.pendingDuel||state.activeSituation||state.activeStory||state.activeSideQuest||state.activeArc||state.activeEncounter)return false;
  return !!(scene?.dialogue?.length||scene?.line||scene?.choices?.length);
 }
-function controlsLocked(){return timeSequence.blocked||state.day>90||conversationInProgress()||!!state.activeSliceOfLife||!!state.mandatoryEventState?.active||!!state.pendingDuel||!!state.activeSituation||!!state.activeStory||!!state.activeSideQuest||!!state.activeArc||!!state.activeEncounter;}
+function controlsLocked({allowStarterIntro=false}={}){
+ // The opening narrator line is displayed before the player has a deck.
+ // It must not suppress the mandatory starter picker, but every other
+ // dialogue and scripted lock still protects navigation and interactions.
+ const initialStarterNarration=allowStarterIntro&&state.scene===null&&
+  state.day===1&&state.slot===0&&state.location==='home'&&
+  !!state.deckJourney&&!state.deckJourney.starter;
+ return timeSequence.blocked||state.day>90||
+  (conversationInProgress()&&!initialStarterNarration)||
+  !!state.activeSliceOfLife||!!state.mandatoryEventState?.active||
+  !!state.pendingDuel||!!state.activeSituation||!!state.activeStory||
+  !!state.activeSideQuest||!!state.activeArc||!!state.activeEncounter;
+}
 function showStarterChoice(){
- if(controlsLocked())return;
+ if(controlsLocked({allowStarterIntro:true}))return;
  const root=$('starterChoices');root.replaceChildren();
  for(const starter of COLLECT.starters){
   const button=document.createElement('button');button.className='starter-choice';
@@ -1152,7 +1164,7 @@ function showStarterChoice(){
   const detail=document.createElement('small');detail.textContent=starter.description+' · 60 cards · 20 Pokémon / 16 Trainers / 24 Energy';
   button.append(heading,detail);
   button.onclick=()=>{
-   if(controlsLocked())return;
+   if(controlsLocked({allowStarterIntro:true}))return;
    try{COLLECT.choose(state,starter.id);log('Chose '+starter.name+' as your first deck.');persist();
     if($('starterDialog').open)$('starterDialog').close();
     say('Narrator','Your '+starter.name+' deck is ready. The Lucky Draw has two free welcome mini packs waiting for you—choose from three different types. Later packs unlock as you explore; old ones are still worth opening.');
