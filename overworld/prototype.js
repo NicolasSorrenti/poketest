@@ -116,9 +116,9 @@
         img.style.left=(item.x/map.width*100)+'%';img.style.top=(item.y/map.height*100)+'%';
         img.style.height=(item.height/map.height*100)+'%';img.dataset.id=item.id;
         img.addEventListener('pointerdown',event=>{
-          event.preventDefault();event.stopPropagation();state.selected=item.id;sizeRange.value=String(item.height);sizeValue.textContent=String(item.height);drawStage();
-          const image=stage.querySelector('.placed.selected');if(!image)return;
-          image.setPointerCapture(event.pointerId);
+          event.preventDefault();event.stopPropagation();state.selected=item.id;sizeRange.value=String(item.height);sizeValue.textContent=String(item.height);
+          stage.querySelectorAll('.placed').forEach(node=>node.classList.toggle('selected',node.dataset.id===item.id));
+          const image=event.currentTarget;image.setPointerCapture(event.pointerId);
           const move=e=>{const r=stage.getBoundingClientRect(),current=listForMap().find(x=>x.id===item.id);if(!current)return;current.x=Math.max(0,Math.min(map.width,(e.clientX-r.left)/r.width*map.width));current.y=Math.max(0,Math.min(map.height,(e.clientY-r.top)/r.height*map.height));image.style.left=(current.x/map.width*100)+'%';image.style.top=(current.y/map.height*100)+'%';};
           const up=()=>{image.removeEventListener('pointermove',move);image.removeEventListener('pointerup',up);persist('Moved pose. Save or download when the map is ready.')};
           image.addEventListener('pointermove',move);image.addEventListener('pointerup',up,{once:true});
