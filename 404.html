@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Neo Campus TCG — Page not found</title>
+<style>
+:root{font-family:Inter,system-ui,Arial,sans-serif;color:#eef6ff;background:#101b2d}
+body{min-height:100vh;margin:0;display:grid;place-items:center;text-align:center;padding:24px}
+main{max-width:520px}a{color:#80e3f0}p{color:#bdccdd;line-height:1.6}
+</style>
+<script>
+(function(){
+  // Only browser page navigations redirect; missing API endpoints and
+  // asset requests must remain 404s for clients to diagnose correctly.
+  const path=location.pathname;
+  if(path==='/api'||path.startsWith('/api/')||path.startsWith('/cloudflare-api/')||/\.[a-z0-9]{1,12}$/i.test(path))return;
+  location.replace('/play.html');
+})();
+</script>
+</head>
+<body><main>
+<h1>Page not found</h1>
+<p>This address isn't available in Neo Campus.</p>
+<p><a href="/play.html">Return to game modes</a></p>
+</main></body>
+</html>
