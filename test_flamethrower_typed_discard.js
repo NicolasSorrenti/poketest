@@ -10,10 +10,10 @@ const fire='base1-98',grass='base1-99';
 const prints=['base1-23','base1-24','base1-36','base2-3','base2-19',
  'base4-33','base4-35','base4-51','neo2-4','neo2-23'];
 const unit=id=>({id,under:[],energies:[],attachedTrainers:[],damage:0,status:null,poison:false,playedTurn:0});
-function match(id){
+function match(id,energies=[fire,fire,grass,grass]){
  const g=createGame({decks:[list('base1:Brushfire'),list('base1:Brushfire')],format:'online-preview',seed:21});
  g.phase='game';g.round=4;g.turnSerial=10;g.turn=0;g.over=false;
- g.players[0].active={...unit(id),energies:[fire,fire,grass,grass]};
+ g.players[0].active={...unit(id),energies:[...energies]};
  g.players[1].active=unit('base1-3');
  g.players.forEach(p=>{p.bench=[unit('base1-58')];p.hand=[];p.discard=[];p.prizes=Array(6).fill('base1-91');p.deck=Array(15).fill(grass)});
  return g;
@@ -33,20 +33,26 @@ for(const id of prints){
  const g=match(id);
  const started=action(g,0,'attack',{attackIndex});
  assert.equal(started.ok,true,id+': '+started.error);
- const decision=g.pendingDecision;
- assert.ok(decision,id+' must prompt when more than one Fire Energy is attached');
- assert.deepEqual(decision.options.map(o=>o.id),['energy:0','energy:1'],id+' must only offer Fire Energy');
- assert.deepEqual(publicView(g,0).pendingDecision.options.map(o=>o.id),['energy:0','energy:1']);
- assert.equal(publicView(g,1).pendingDecision.options,undefined,'opponent must not see private choices');
- const unchanged=JSON.stringify(g);
- const refused=action(g,0,'choose',{decisionId:decision.id,selected:['energy:2']});
- assert.equal(refused.ok,false,id+' let Grass Energy pay Flamethrower');
- assert.equal(JSON.stringify(g),unchanged,id+' invalid cost mutated game');
- const chosen=action(g,0,'choose',{decisionId:decision.id,selected:['energy:1']});
- assert.equal(chosen.ok,true,id+': '+chosen.error);
+ assert.equal(g.pendingDecision,null,id+' should auto-discard identical Fire Energy cards');
  assert.equal(g.players[0].discard.at(-1),fire,id+' discarded a non-Fire Energy');
  assert.deepEqual(g.players[0].active.energies,[fire,grass,grass]);
  assert.equal(g.players[1].active.damage,Number.parseInt(attack.damage,10),id+' attack damage changed');
+ assert.ok(g.message.some(line=>line.includes('discarded')&&line.includes('Fire Energy')),id+' should report the discard');
  assert.equal(g.pendingDecision,null,id+' left a dangling decision');
 }
-console.log('PASS: all ten historical Flamethrower printings restrict discard to Fire Energy, reject Grass atomically and resolve normally');
+// Meaningfully different Fire sources preserve the picker and its private ownership.
+for(const id of ['base1-23','neo2-4']){
+ const card=CATALOG.get(id),attackIndex=card.attacks.findIndex(a=>a.name==='Flamethrower');
+ const g=match(id,[fire,'base5-17',grass,grass]);g.players[0].active.damage=10;
+ const started=action(g,0,'attack',{attackIndex});assert.equal(started.ok,true,id+': '+started.error);
+ const decision=g.pendingDecision;assert.ok(decision,id+' must preserve Basic Fire versus Rainbow choice');
+ assert.deepEqual(decision.options.map(o=>o.id),['energy:0','energy:1']);
+ assert.deepEqual(publicView(g,0).pendingDecision.options.map(o=>o.id),['energy:0','energy:1']);
+ assert.equal(publicView(g,1).pendingDecision.options,undefined,'opponent must not see private choices');
+ const unchanged=JSON.stringify(g),refused=action(g,0,'choose',{decisionId:decision.id,selected:['energy:2']});
+ assert.equal(refused.ok,false,id+' let Grass Energy pay Flamethrower');assert.equal(JSON.stringify(g),unchanged);
+ const chosen=action(g,0,'choose',{decisionId:decision.id,selected:['energy:1']});
+ assert.equal(chosen.ok,true,id+': '+chosen.error);assert.equal(g.players[0].discard.at(-1),'base5-17');
+ assert.ok(g.message.some(line=>line.includes('discarded')&&line.includes('Rainbow Energy')));
+}
+console.log('PASS: all ten historical Flamethrower printings auto-resolve identical Fire and preserve distinct Fire choices, reject Grass atomically and log discards');
