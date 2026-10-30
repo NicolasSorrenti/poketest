@@ -1,0 +1,874 @@
+{
+  "version": 1,
+  "coordinateSystem": "normalized-image",
+  "source": "rpg-assets/characters/**/overworld*",
+  "rule": "Names containing back use rear-only focus; all others use frontal focus with pose adjustments.",
+  "labels": {
+    "akari": "Akari",
+    "alma": "Alma",
+    "barb": "Barb",
+    "camila": "Camila",
+    "daisy": "Daisy",
+    "elena": "Elena",
+    "elio": "Elio",
+    "hana": "Hana",
+    "iris": "Iris",
+    "jinx": "Jinx",
+    "jun": "Jun",
+    "kaede": "Kaede",
+    "laca": "Laca",
+    "luna": "Luna",
+    "marina": "Marina",
+    "nereo": "Nereo",
+    "reina": "Reina",
+    "rina": "Rina",
+    "shiori": "Shiori",
+    "sierra": "Sierra",
+    "sol": "Sol",
+    "teo": "Teo",
+    "yuna": "Yuna"
+  },
+  "characters": {
+    "akari": {
+      "variants": {
+        "clipboard-writing.png": {
+          "image": "/rpg-assets/characters/akari/overworld/clipboard-writing.png",
+          "left": 0.12,
+          "right": 0.88,
+          "top": 0.22,
+          "bottom": 0.58,
+          "focusMode": "front",
+          "notes": "Auto-generated overworld candidate; review in the crop tester."
+        },
+        "fashion-sketch.png": {
+          "image": "/rpg-assets/characters/akari/overworld/fashion-sketch.png",
+          "left": 0.12,
+          "right": 0.88,
+          "top": 0.22,
+          "bottom": 0.58,
+          "focusMode": "front",
+          "notes": "Auto-generated overworld candidate; review in the crop tester."
+        },
+        "fours front.png": {
+          "image": "/rpg-assets/characters/akari/overworld/fours front.png",
+          "left": 0.12,
+          "right": 0.88,
+          "top": 0.22,
+          "bottom": 0.58,
+          "focusMode": "front",
+          "notes": "Auto-generated overworld candidate; review in the crop tester."
+        },
+        "fours.png": {
+          "image": "/rpg-assets/characters/akari/overworld/fours.png",
+          "left": 0.12,
+          "right": 0.88,
+          "top": 0.22,
+          "bottom": 0.58,
+          "focusMode": "front",
+          "notes": "Auto-generated overworld candidate; review in the crop tester."
+        },
+        "over-shoulder-bag.png": {
+          "image": "/rpg-assets/characters/akari/overworld/over-shoulder-bag.png",
+          "left": 0.14,
+          "right": 0.86,
+          "top": 0.22,
+          "bottom": 0.58,
+          "focusMode": "three-quarter",
+          "notes": "Auto-generated overworld candidate; review in the crop tester."
+        },
+        "over-shoulder-cardigan.png": {
+          "image": "/rpg-assets/characters/akari/overworld/over-shoulder-cardigan.png",
+          "left": 0.14,
+          "right": 0.86,
+          "top": 0.22,
+          "bottom": 0.58,
+          "focusMode": "three-quarter",
+          "notes": "Auto-generated overworld candidate; review in the crop tester."
+        },
+        "presenting-designs.png": {
+          "image": "/rpg-assets/characters/akari/overworld/presenting-designs.png",
+          "left": 0.12,
+          "right": 0.88,
+          "top": 0.22,
+          "bottom": 0.58,
+          "focusMode": "front",
+          "notes": "Auto-generated overworld candidate; review in the crop tester."
+        },
+        "seated-clipboard.png": {
+          "image": "/rpg-assets/characters/akari/overworld/seated-clipboard.png",
+          "left": 0.12,
+          "right": 0.88,
+          "top": 0.25,
+          "bottom": 0.68,
+          "focusMode": "front-lower",
+          "notes": "Auto-generated overworld candidate; review in the crop tester."
+        },
+        "seated-coffee-laptop.png": {
+          "image": "/rpg-assets/characters/akari/overworld/seated-coffee-laptop.png",
+          "left": 0.12,
+          "right": 0.88,
+          "top": 0.25,
+          "bottom": 0.68,
+          "focusMode": "front-lower",
+          "notes": "Auto-generated overworld candidate; review in the crop tester."
+        },
+        "standing-clipboard.png": {
+          "image": "/rpg-assets/characters/akari/overworld/standing-clipboard.png",
+          "left": 0.12,
+          "right": 0.88,
+          "top": 0.22,
+          "bottom": 0.58,
+          "focusMode": "front",
+          "notes": "Auto-generated overworld candidate; review in the crop tester."
+        }
+      }
+    },
+    "alma": {
+      "variants": {
+        "over-shoulder-back.png": {
+          "image": "/rpg-assets/characters/alma/overworld/over-shoulder-back.png",
+          "left": 0.16,
+          "right": 0.84,
+          "top": 0.24,
+          "bottom": 0.62,
+          "focusMode": "rear",
+          "notes": "Auto-generated overworld candidate; review in the crop tester."
+        },
+        "serving-tray.png": {
+          "image": "/rpg-assets/characters/alma/overworld/serving-tray.png",
+          "left": 0.12,
+          "right": 0.88,
+          "top": 0.22,
+          "bottom": 0.58,
+          "focusMode": "front",
+          "notes": "Auto-generated overworld candidate; review in the crop tester."
+        },
+        "standing-front.png": {
+          "image": "/rpg-assets/characters/alma/overworld/standing-front.png",
+          "left": 0.12,
+          "right": 0.88,
+          "top": 0.22,
+          "bottom": 0.58,
+          "focusMode": "front",
+          "notes": "Auto-generated overworld candidate; review in the crop tester."
+        }
+      }
+    },
+    "barb": {
+      "variants": {
+        "back-view.png": {
+          "image": "/rpg-assets/characters/barb/overworld/back-view.png",
+          "left": 0.16,
+          "right": 0.84,
+          "top": 0.24,
+          "bottom": 0.62,
+          "focusMode": "rear",
+          "notes": "Auto-generated overworld candidate; review in the crop tester."
+        },
+        "chatting.png": {
+          "image": "/rpg-assets/characters/barb/overworld/chatting.png",
+          "left": 0.12,
+          "right": 0.88,
+          "top": 0.22,
+          "bottom": 0.58,
+          "focusMode": "front",
+          "notes": "Auto-generated overworld candidate; review in the crop tester."
+        },
+        "lounge.png": {
+          "image": "/rpg-assets/characters/barb/overworld/lounge.png",
+          "left": 0.12,
+          "right": 0.88,
+          "top": 0.22,
+          "bottom": 0.58,
+          "focusMode": "front",
+          "notes": "Auto-generated overworld candidate; review in the crop tester."
+        },
+        "walking.png": {
+          "image": "/rpg-assets/characters/barb/overworld/walking.png",
+          "left": 0.12,
+          "right": 0.88,
+          "top": 0.22,
+          "bottom": 0.58,
+          "focusMode": "front",
+          "notes": "Auto-generated overworld candidate; review in the crop tester."
+        }
+      }
+    },
+    "camila": {
+      "variants": {
+        "standing-back.png": {
+          "image": "/rpg-assets/characters/camila/overworld/standing-back.png",
+          "left": 0.16,
+          "right": 0.84,
+          "top": 0.24,
+          "bottom": 0.62,
+          "focusMode": "rear",
+          "notes": "Auto-generated overworld candidate; review in the crop tester."
+        },
+        "standing-front.png": {
+          "image": "/rpg-assets/characters/camila/overworld/standing-front.png",
+          "left": 0.12,
+          "right": 0.88,
+          "top": 0.22,
+          "bottom": 0.58,
+          "focusMode": "front",
+          "notes": "Auto-generated overworld candidate; review in the crop tester."
+        }
+      }
+    },
+    "daisy": {
+      "variants": {
+        "back-view.png": {
+          "image": "/rpg-assets/characters/daisy/overworld/back-view.png",
+          "left": 0.16,
+          "right": 0.84,
+          "top": 0.24,
+          "bottom": 0.62,
+          "focusMode": "rear",
+          "notes": "Auto-generated overworld candidate; review in the crop tester."
+        },
+        "idle.png": {
+          "image": "/rpg-assets/characters/daisy/overworld/idle.png",
+          "left": 0.12,
+          "right": 0.88,
+          "top": 0.22,
+          "bottom": 0.58,
+          "focusMode": "front",
+          "notes": "Auto-generated overworld candidate; review in the crop tester."
+        },
+        "kneeing.png": {
+          "image": "/rpg-assets/characters/daisy/overworld/kneeing.png",
+          "left": 0.12,
+          "right": 0.88,
+          "top": 0.22,
+          "bottom": 0.58,
+          "focusMode": "front",
+          "notes": "Auto-generated overworld candidate; review in the crop tester."
+        },
+        "walking.png": {
+          "image": "/rpg-assets/characters/daisy/overworld/walking.png",
+          "left": 0.12,
+          "right": 0.88,
+          "top": 0.22,
+          "bottom": 0.58,
+          "focusMode": "front",
+          "notes": "Auto-generated overworld candidate; review in the crop tester."
+        }
+      }
+    },
+    "elena": {
+      "variants": {
+        "over-shoulder-documents.png": {
+          "image": "/rpg-assets/characters/elena/overworld/over-shoulder-documents.png",
+          "left": 0.14,
+          "right": 0.86,
+          "top": 0.22,
+          "bottom": 0.58,
+          "focusMode": "three-quarter",
+          "notes": "Auto-generated overworld candidate; review in the crop tester."
+        },
+        "seated-reviewing-documents.png": {
+          "image": "/rpg-assets/characters/elena/overworld/seated-reviewing-documents.png",
+          "left": 0.12,
+          "right": 0.88,
+          "top": 0.25,
+          "bottom": 0.68,
+          "focusMode": "front-lower",
+          "notes": "Auto-generated overworld candidate; review in the crop tester."
+        },
+        "standing-portfolio.png": {
+          "image": "/rpg-assets/characters/elena/overworld/standing-portfolio.png",
+          "left": 0.12,
+          "right": 0.88,
+          "top": 0.22,
+          "bottom": 0.58,
+          "focusMode": "front",
+          "notes": "Auto-generated overworld candidate; review in the crop tester."
+        }
+      }
+    },
+    "hana": {
+      "variants": {
+        "01_original_white_lace_denim.png": {
+          "image": "/rpg-assets/characters/hana/overworld-variants/01_original_white_lace_denim.png",
+          "left": 0.12,
+          "right": 0.88,
+          "top": 0.22,
+          "bottom": 0.58,
+          "focusMode": "front",
+          "notes": "Auto-generated overworld candidate; review in the crop tester."
+        },
+        "02_gray_blouse_denim.png": {
+          "image": "/rpg-assets/characters/hana/overworld-variants/02_gray_blouse_denim.png",
+          "left": 0.12,
+          "right": 0.88,
+          "top": 0.22,
+          "bottom": 0.58,
+          "focusMode": "front",
+          "notes": "Auto-generated overworld candidate; review in the crop tester."
+        },
+        "03_gray_ruched_top_denim.png": {
+          "image": "/rpg-assets/characters/hana/overworld-variants/03_gray_ruched_top_denim.png",
+          "left": 0.12,
+          "right": 0.88,
+          "top": 0.22,
+          "bottom": 0.58,
+          "focusMode": "front",
+          "notes": "Auto-generated overworld candidate; review in the crop tester."
+        },
+        "04_white_top_mini_skirt.png": {
+          "image": "/rpg-assets/characters/hana/overworld-variants/04_white_top_mini_skirt.png",
+          "left": 0.12,
+          "right": 0.88,
+          "top": 0.22,
+          "bottom": 0.58,
+          "focusMode": "front",
+          "notes": "Auto-generated overworld candidate; review in the crop tester."
+        },
+        "05_white_top_pleated_skirt.png": {
+          "image": "/rpg-assets/characters/hana/overworld-variants/05_white_top_pleated_skirt.png",
+          "left": 0.12,
+          "right": 0.88,
+          "top": 0.22,
+          "bottom": 0.58,
+          "focusMode": "front",
+          "notes": "Auto-generated overworld candidate; review in the crop tester."
+        },
+        "06_pink_lace_white_top_denim.png": {
+          "image": "/rpg-assets/characters/hana/overworld-variants/06_pink_lace_white_top_denim.png",
+          "left": 0.12,
+          "right": 0.88,
+          "top": 0.22,
+          "bottom": 0.58,
+          "focusMode": "front",
+          "notes": "Auto-generated overworld candidate; review in the crop tester."
+        },
+        "07_gray_lace_white_top_denim.png": {
+          "image": "/rpg-assets/characters/hana/overworld-variants/07_gray_lace_white_top_denim.png",
+          "left": 0.12,
+          "right": 0.88,
+          "top": 0.22,
+          "bottom": 0.58,
+          "focusMode": "front",
+          "notes": "Auto-generated overworld candidate; review in the crop tester."
+        },
+        "08_ribbon_top_denim.png": {
+          "image": "/rpg-assets/characters/hana/overworld-variants/08_ribbon_top_denim.png",
+          "left": 0.12,
+          "right": 0.88,
+          "top": 0.22,
+          "bottom": 0.58,
+          "focusMode": "front",
+          "notes": "Auto-generated overworld candidate; review in the crop tester."
+        },
+        "kneeling-bag.png": {
+          "image": "/rpg-assets/characters/hana/overworld/kneeling-bag.png",
+          "left": 0.12,
+          "right": 0.88,
+          "top": 0.25,
+          "bottom": 0.68,
+          "focusMode": "front-lower",
+          "notes": "Auto-generated overworld candidate; review in the crop tester."
+        },
+        "phone-standing.png": {
+          "image": "/rpg-assets/characters/hana/overworld/phone-standing.png",
+          "left": 0.12,
+          "right": 0.88,
+          "top": 0.22,
+          "bottom": 0.58,
+          "focusMode": "front",
+          "notes": "Auto-generated overworld candidate; review in the crop tester."
+        },
+        "standing-back.png": {
+          "image": "/rpg-assets/characters/hana/overworld/standing-back.png",
+          "left": 0.16,
+          "right": 0.84,
+          "top": 0.24,
+          "bottom": 0.62,
+          "focusMode": "rear",
+          "notes": "Auto-generated overworld candidate; review in the crop tester."
+        }
+      }
+    },
+    "iris": {
+      "variants": {
+        "crouching.png": {
+          "image": "/rpg-assets/characters/iris/overworld/crouching.png",
+          "left": 0.12,
+          "right": 0.88,
+          "top": 0.25,
+          "bottom": 0.68,
+          "focusMode": "front-lower",
+          "notes": "Auto-generated overworld candidate; review in the crop tester."
+        },
+        "over-shoulder-back.png": {
+          "image": "/rpg-assets/characters/iris/overworld/over-shoulder-back.png",
+          "left": 0.16,
+          "right": 0.84,
+          "top": 0.24,
+          "bottom": 0.62,
+          "focusMode": "rear",
+          "notes": "Auto-generated overworld candidate; review in the crop tester."
+        },
+        "standing-front.png": {
+          "image": "/rpg-assets/characters/iris/overworld/standing-front.png",
+          "left": 0.12,
+          "right": 0.88,
+          "top": 0.22,
+          "bottom": 0.58,
+          "focusMode": "front",
+          "notes": "Auto-generated overworld candidate; review in the crop tester."
+        }
+      }
+    },
+    "jinx": {
+      "variants": {
+        "back-view.png": {
+          "image": "/rpg-assets/characters/jinx/overworld/back-view.png",
+          "left": 0.16,
+          "right": 0.84,
+          "top": 0.24,
+          "bottom": 0.62,
+          "focusMode": "rear",
+          "notes": "Auto-generated overworld candidate; review in the crop tester."
+        },
+        "crouching.png": {
+          "image": "/rpg-assets/characters/jinx/overworld/crouching.png",
+          "left": 0.12,
+          "right": 0.88,
+          "top": 0.25,
+          "bottom": 0.68,
+          "focusMode": "front-lower",
+          "notes": "Auto-generated overworld candidate; review in the crop tester."
+        },
+        "idle.png": {
+          "image": "/rpg-assets/characters/jinx/overworld/idle.png",
+          "left": 0.12,
+          "right": 0.88,
+          "top": 0.22,
+          "bottom": 0.58,
+          "focusMode": "front",
+          "notes": "Auto-generated overworld candidate; review in the crop tester."
+        },
+        "walking.png": {
+          "image": "/rpg-assets/characters/jinx/overworld/walking.png",
+          "left": 0.12,
+          "right": 0.88,
+          "top": 0.22,
+          "bottom": 0.58,
+          "focusMode": "front",
+          "notes": "Auto-generated overworld candidate; review in the crop tester."
+        }
+      }
+    },
+    "kaede": {
+      "variants": {
+        "arcade-playing-back.png": {
+          "image": "/rpg-assets/characters/kaede/overworld/arcade-playing-back.png",
+          "left": 0.16,
+          "right": 0.84,
+          "top": 0.24,
+          "bottom": 0.62,
+          "focusMode": "rear",
+          "notes": "Auto-generated overworld candidate; review in the crop tester."
+        },
+        "arcade-playing-front.png": {
+          "image": "/rpg-assets/characters/kaede/overworld/arcade-playing-front.png",
+          "left": 0.12,
+          "right": 0.88,
+          "top": 0.22,
+          "bottom": 0.58,
+          "focusMode": "front",
+          "notes": "Auto-generated overworld candidate; review in the crop tester."
+        },
+        "crouching-relaxed.png": {
+          "image": "/rpg-assets/characters/kaede/overworld/crouching-relaxed.png",
+          "left": 0.12,
+          "right": 0.88,
+          "top": 0.25,
+          "bottom": 0.68,
+          "focusMode": "front-lower",
+          "notes": "Auto-generated overworld candidate; review in the crop tester."
+        },
+        "looking-back.png": {
+          "image": "/rpg-assets/characters/kaede/overworld/looking-back.png",
+          "left": 0.16,
+          "right": 0.84,
+          "top": 0.24,
+          "bottom": 0.62,
+          "focusMode": "rear",
+          "notes": "Auto-generated overworld candidate; review in the crop tester."
+        },
+        "standing-front.png": {
+          "image": "/rpg-assets/characters/kaede/overworld/standing-front.png",
+          "left": 0.12,
+          "right": 0.88,
+          "top": 0.22,
+          "bottom": 0.58,
+          "focusMode": "front",
+          "notes": "Auto-generated overworld candidate; review in the crop tester."
+        }
+      }
+    },
+    "laca": {
+      "variants": {
+        "crouching.png": {
+          "image": "/rpg-assets/characters/laca/overworld/casual/crouching.png",
+          "left": 0.12,
+          "right": 0.88,
+          "top": 0.25,
+          "bottom": 0.68,
+          "focusMode": "front-lower",
+          "notes": "Auto-generated overworld candidate; review in the crop tester."
+        },
+        "reaching-out.png": {
+          "image": "/rpg-assets/characters/laca/overworld/casual/reaching-out.png",
+          "left": 0.12,
+          "right": 0.88,
+          "top": 0.22,
+          "bottom": 0.58,
+          "focusMode": "front",
+          "notes": "Auto-generated overworld candidate; review in the crop tester."
+        },
+        "walking-back.png": {
+          "image": "/rpg-assets/characters/laca/overworld/casual/walking-back.png",
+          "left": 0.16,
+          "right": 0.84,
+          "top": 0.24,
+          "bottom": 0.62,
+          "focusMode": "rear",
+          "notes": "Auto-generated overworld candidate; review in the crop tester."
+        },
+        "back-rescue-buoy.png": {
+          "image": "/rpg-assets/characters/laca/overworld/lifeguard/back-rescue-buoy.png",
+          "left": 0.16,
+          "right": 0.84,
+          "top": 0.24,
+          "bottom": 0.62,
+          "focusMode": "rear",
+          "notes": "Auto-generated overworld candidate; review in the crop tester."
+        },
+        "front-leaning.png": {
+          "image": "/rpg-assets/characters/laca/overworld/lifeguard/front-leaning.png",
+          "left": 0.12,
+          "right": 0.88,
+          "top": 0.22,
+          "bottom": 0.58,
+          "focusMode": "front",
+          "notes": "Auto-generated overworld candidate; review in the crop tester."
+        },
+        "kneeling-lookout.png": {
+          "image": "/rpg-assets/characters/laca/overworld/lifeguard/kneeling-lookout.png",
+          "left": 0.12,
+          "right": 0.88,
+          "top": 0.25,
+          "bottom": 0.68,
+          "focusMode": "front-lower",
+          "notes": "Auto-generated overworld candidate; review in the crop tester."
+        }
+      }
+    },
+    "luna": {
+      "variants": {
+        "looking-back.png": {
+          "image": "/rpg-assets/characters/luna/overworld/looking-back.png",
+          "left": 0.16,
+          "right": 0.84,
+          "top": 0.24,
+          "bottom": 0.62,
+          "focusMode": "rear",
+          "notes": "Auto-generated overworld candidate; review in the crop tester."
+        },
+        "seated.png": {
+          "image": "/rpg-assets/characters/luna/overworld/seated.png",
+          "left": 0.12,
+          "right": 0.88,
+          "top": 0.25,
+          "bottom": 0.68,
+          "focusMode": "front-lower",
+          "notes": "Auto-generated overworld candidate; review in the crop tester."
+        },
+        "standing-front.png": {
+          "image": "/rpg-assets/characters/luna/overworld/standing-front.png",
+          "left": 0.12,
+          "right": 0.88,
+          "top": 0.22,
+          "bottom": 0.58,
+          "focusMode": "front",
+          "notes": "Auto-generated overworld candidate; review in the crop tester."
+        }
+      }
+    },
+    "marina": {
+      "variants": {
+        "looking-back.png": {
+          "image": "/rpg-assets/characters/marina/overworld/looking-back.png",
+          "left": 0.16,
+          "right": 0.84,
+          "top": 0.24,
+          "bottom": 0.62,
+          "focusMode": "rear",
+          "notes": "Auto-generated overworld candidate; review in the crop tester."
+        },
+        "seated-relaxing.png": {
+          "image": "/rpg-assets/characters/marina/overworld/seated-relaxing.png",
+          "left": 0.12,
+          "right": 0.88,
+          "top": 0.25,
+          "bottom": 0.68,
+          "focusMode": "front-lower",
+          "notes": "Auto-generated overworld candidate; review in the crop tester."
+        },
+        "standing-front.png": {
+          "image": "/rpg-assets/characters/marina/overworld/standing-front.png",
+          "left": 0.12,
+          "right": 0.88,
+          "top": 0.22,
+          "bottom": 0.58,
+          "focusMode": "front",
+          "notes": "Auto-generated overworld candidate; review in the crop tester."
+        }
+      }
+    },
+    "reina": {
+      "variants": {
+        "arcade-back.png": {
+          "image": "/rpg-assets/characters/reina/overworld/arcade-back.png",
+          "left": 0.16,
+          "right": 0.84,
+          "top": 0.24,
+          "bottom": 0.62,
+          "focusMode": "rear",
+          "notes": "Auto-generated overworld candidate; review in the crop tester."
+        },
+        "arcade-playing-character.png": {
+          "image": "/rpg-assets/characters/reina/overworld/arcade-playing-character.png",
+          "left": 0.12,
+          "right": 0.88,
+          "top": 0.22,
+          "bottom": 0.58,
+          "focusMode": "front",
+          "notes": "Auto-generated overworld candidate; review in the crop tester."
+        },
+        "standing.png": {
+          "image": "/rpg-assets/characters/reina/overworld/standing.png",
+          "left": 0.12,
+          "right": 0.88,
+          "top": 0.22,
+          "bottom": 0.58,
+          "focusMode": "front",
+          "notes": "Auto-generated overworld candidate; review in the crop tester."
+        }
+      }
+    },
+    "rina": {
+      "variants": {
+        "alternate-card-pose.png": {
+          "image": "/rpg-assets/characters/rina/overworld/alternate-card-pose.png",
+          "left": 0.12,
+          "right": 0.88,
+          "top": 0.22,
+          "bottom": 0.58,
+          "focusMode": "front",
+          "notes": "Auto-generated overworld candidate; review in the crop tester."
+        },
+        "alternate-idol-pose.png": {
+          "image": "/rpg-assets/characters/rina/overworld/alternate-idol-pose.png",
+          "left": 0.12,
+          "right": 0.88,
+          "top": 0.22,
+          "bottom": 0.58,
+          "focusMode": "front",
+          "notes": "Auto-generated overworld candidate; review in the crop tester."
+        },
+        "over-shoulder.png": {
+          "image": "/rpg-assets/characters/rina/overworld/over-shoulder.png",
+          "left": 0.14,
+          "right": 0.86,
+          "top": 0.22,
+          "bottom": 0.58,
+          "focusMode": "three-quarter",
+          "notes": "Auto-generated overworld candidate; review in the crop tester."
+        },
+        "reaching-idol.png": {
+          "image": "/rpg-assets/characters/rina/overworld/reaching-idol.png",
+          "left": 0.12,
+          "right": 0.88,
+          "top": 0.22,
+          "bottom": 0.58,
+          "focusMode": "front",
+          "notes": "Auto-generated overworld candidate; review in the crop tester."
+        },
+        "seated-cards.png": {
+          "image": "/rpg-assets/characters/rina/overworld/seated-cards.png",
+          "left": 0.12,
+          "right": 0.88,
+          "top": 0.25,
+          "bottom": 0.68,
+          "focusMode": "front-lower",
+          "notes": "Auto-generated overworld candidate; review in the crop tester."
+        }
+      }
+    },
+    "shiori": {
+      "variants": {
+        "over-shoulder.png": {
+          "image": "/rpg-assets/characters/shiori/overworld/over-shoulder.png",
+          "left": 0.14,
+          "right": 0.86,
+          "top": 0.22,
+          "bottom": 0.58,
+          "focusMode": "three-quarter",
+          "notes": "Auto-generated overworld candidate; review in the crop tester."
+        },
+        "reaching-book-back.png": {
+          "image": "/rpg-assets/characters/shiori/overworld/reaching-book-back.png",
+          "left": 0.16,
+          "right": 0.84,
+          "top": 0.24,
+          "bottom": 0.62,
+          "focusMode": "rear",
+          "notes": "Auto-generated overworld candidate; review in the crop tester."
+        },
+        "reaching-book-front.png": {
+          "image": "/rpg-assets/characters/shiori/overworld/reaching-book-front.png",
+          "left": 0.12,
+          "right": 0.88,
+          "top": 0.22,
+          "bottom": 0.58,
+          "focusMode": "front",
+          "notes": "Auto-generated overworld candidate; review in the crop tester."
+        },
+        "standing-book.png": {
+          "image": "/rpg-assets/characters/shiori/overworld/standing-book.png",
+          "left": 0.12,
+          "right": 0.88,
+          "top": 0.22,
+          "bottom": 0.58,
+          "focusMode": "front",
+          "notes": "Auto-generated overworld candidate; review in the crop tester."
+        }
+      }
+    },
+    "sierra": {
+      "variants": {
+        "looking-back.png": {
+          "image": "/rpg-assets/characters/sierra/overworld/looking-back.png",
+          "left": 0.16,
+          "right": 0.84,
+          "top": 0.24,
+          "bottom": 0.62,
+          "focusMode": "rear",
+          "notes": "Auto-generated overworld candidate; review in the crop tester."
+        },
+        "seated-relaxed.png": {
+          "image": "/rpg-assets/characters/sierra/overworld/seated-relaxed.png",
+          "left": 0.12,
+          "right": 0.88,
+          "top": 0.25,
+          "bottom": 0.68,
+          "focusMode": "front-lower",
+          "notes": "Auto-generated overworld candidate; review in the crop tester."
+        },
+        "standing-wink.png": {
+          "image": "/rpg-assets/characters/sierra/overworld/standing-wink.png",
+          "left": 0.12,
+          "right": 0.88,
+          "top": 0.22,
+          "bottom": 0.58,
+          "focusMode": "front",
+          "notes": "Auto-generated overworld candidate; review in the crop tester."
+        }
+      }
+    },
+    "teo": {
+      "variants": {
+        "looking-back.png": {
+          "image": "/rpg-assets/characters/teo/overworld/looking-back.png",
+          "left": 0.16,
+          "right": 0.84,
+          "top": 0.24,
+          "bottom": 0.62,
+          "focusMode": "rear",
+          "notes": "Auto-generated overworld candidate; review in the crop tester."
+        },
+        "serving-tray.png": {
+          "image": "/rpg-assets/characters/teo/overworld/serving-tray.png",
+          "left": 0.12,
+          "right": 0.88,
+          "top": 0.22,
+          "bottom": 0.58,
+          "focusMode": "front",
+          "notes": "Auto-generated overworld candidate; review in the crop tester."
+        },
+        "standing-front.png": {
+          "image": "/rpg-assets/characters/teo/overworld/standing-front.png",
+          "left": 0.12,
+          "right": 0.88,
+          "top": 0.22,
+          "bottom": 0.58,
+          "focusMode": "front",
+          "notes": "Auto-generated overworld candidate; review in the crop tester."
+        }
+      }
+    },
+    "yuna": {
+      "variants": {
+        "back-three-quarter.png": {
+          "image": "/rpg-assets/characters/yuna/overworld/back-three-quarter.png",
+          "left": 0.16,
+          "right": 0.84,
+          "top": 0.24,
+          "bottom": 0.62,
+          "focusMode": "rear",
+          "notes": "Auto-generated overworld candidate; review in the crop tester."
+        },
+        "crouching-cards.png": {
+          "image": "/rpg-assets/characters/yuna/overworld/crouching-cards.png",
+          "left": 0.12,
+          "right": 0.88,
+          "top": 0.25,
+          "bottom": 0.68,
+          "focusMode": "front-lower",
+          "notes": "Auto-generated overworld candidate; review in the crop tester."
+        },
+        "gamer-idle.png": {
+          "image": "/rpg-assets/characters/yuna/overworld/gamer-idle.png",
+          "left": 0.12,
+          "right": 0.88,
+          "top": 0.22,
+          "bottom": 0.58,
+          "focusMode": "front",
+          "notes": "Auto-generated overworld candidate; review in the crop tester."
+        },
+        "headphones.png": {
+          "image": "/rpg-assets/characters/yuna/overworld/headphones.png",
+          "left": 0.12,
+          "right": 0.88,
+          "top": 0.22,
+          "bottom": 0.58,
+          "focusMode": "front",
+          "notes": "Auto-generated overworld candidate; review in the crop tester."
+        },
+        "seated-cards.png": {
+          "image": "/rpg-assets/characters/yuna/overworld/seated-cards.png",
+          "left": 0.12,
+          "right": 0.88,
+          "top": 0.25,
+          "bottom": 0.68,
+          "focusMode": "front-lower",
+          "notes": "Auto-generated overworld candidate; review in the crop tester."
+        },
+        "side-pose.png": {
+          "image": "/rpg-assets/characters/yuna/overworld/side-pose.png",
+          "left": 0.12,
+          "right": 0.88,
+          "top": 0.22,
+          "bottom": 0.58,
+          "focusMode": "front",
+          "notes": "Auto-generated overworld candidate; review in the crop tester."
+        }
+      }
+    }
+  }
+}
