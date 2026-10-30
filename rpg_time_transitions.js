@@ -9,7 +9,7 @@
   const PERIODS=['MORNING','AFTERNOON','EVENING'];
   const WEEKDAYS=['MONDAY','TUESDAY','WEDNESDAY','THURSDAY','FRIDAY','SATURDAY','SUNDAY'];
   const MOTTO=['A FRESH START','THE TOWN COMES ALIVE','THE CITY LIGHTS UP'];
-  const DURATIONS={period:680,day:1080,sleep:1120,season:1350};
+  const DURATIONS={period:2200,day:2600,sleep:2600,season:3000};
   const number=(n)=>Number.isInteger(n)?n:null;
   const weekday=(day)=>WEEKDAYS[(day-1)%7];
   function plan(change){
@@ -120,7 +120,7 @@
       element.addEventListener('click',dismiss);
       doc.addEventListener?.('keydown',onKey,true);
       doc.body.append(element);
-      const timer=setTimer(dismiss,(reduced?140:result.durationMs)+100);
+      const timer=setTimer(dismiss,(reduced?1200:result.durationMs)+100);
       current={element,timer,onKey,finishAnimation,plan:result,onDismiss:options.onDismiss};
       return result;
     }
