@@ -822,6 +822,118 @@
       ],
       "image": "/rpg-assets/characters/jicy/events/jicy_random_small_win.webp",
       "artPending": true
+    },
+    {
+      "id": "jicy_random_tournament_day",
+      "npc": "jicy",
+      "title": "A Day at the Tournament",
+      "start": 8,
+      "end": 90,
+      "place": "tournament",
+      "slot": 1,
+      "minBond": 0,
+      "prerequisite": null,
+      "participants": [],
+      "encounterType": "slice",
+      "trigger": "entry",
+      "randomForced": true,
+      "chancePercent": 24,
+      "lines": [
+        {
+          "speaker": "Narrator",
+          "text": "The tournament hall is already buzzing when you arrive with Jicy. She turns toward you with a delighted smile, eager to take it all in."
+        },
+        {
+          "speaker": "jicy",
+          "text": "There are so many tables! I want to see every match. Come on, let's look around!"
+        },
+        {
+          "speaker": "Narrator",
+          "text": "Jicy turns to take in the rows of players and cards, glancing back at you as if to make sure you are sharing the view."
+        },
+        {
+          "speaker": "jicy",
+          "text": "That table has a close game, and that one looks exciting too! How are we supposed to choose?"
+        },
+        {
+          "speaker": "Narrator",
+          "text": "She plants her feet in an exaggeratedly wide stance and points toward the crowd with both arms, practically vibrating with enthusiasm."
+        },
+        {
+          "speaker": "Protagonist",
+          "text": "You look like you're about to race to all the tables at once."
+        },
+        {
+          "speaker": "jicy",
+          "text": "Maybe I am! I just don't want to miss anything. Oh—there's an open seat. Want to watch me play?"
+        },
+        {
+          "speaker": "Narrator",
+          "text": "When a seat opens, Jicy settles across from another tournament player and lays out her deck, still smiling at the busy room."
+        },
+        {
+          "speaker": "jicy",
+          "text": "A friendly match is the perfect way to enjoy the tournament. Ready?"
+        },
+        {
+          "speaker": "Protagonist",
+          "text": "Absolutely. Good luck!"
+        },
+        {
+          "speaker": "jicy",
+          "text": "Thanks! I'm going to have fun either way."
+        }
+      ],
+      "choices": [
+        {
+          "label": "Cheer her on through the match",
+          "reply": "Jicy glances up with a bright grin, then turns back to her cards, energized by your support.",
+          "kind": "support",
+          "flag": "jicy_tournament_cheer",
+          "delta": {
+            "affection": 1,
+            "trust": 1,
+            "respect": 1,
+            "attraction": 0
+          }
+        },
+        {
+          "label": "Ask her to explain her favorite play afterward",
+          "reply": "“Deal!” Jicy says. She is already collecting a few ideas she can't wait to share with you.",
+          "kind": "honest",
+          "flag": "jicy_tournament_play",
+          "delta": {
+            "affection": 1,
+            "trust": 1,
+            "respect": 1,
+            "attraction": 0
+          }
+        }
+      ],
+      "image": "/rpg-assets/characters/jicy/events/jicy_tournament_front.webp",
+      "imageSequence": [
+        {
+          "order": 1,
+          "lineIndex": 0,
+          "path": "/rpg-assets/characters/jicy/events/jicy_tournament_front.webp"
+        },
+        {
+          "order": 2,
+          "lineIndex": 2,
+          "path": "/rpg-assets/characters/jicy/events/jicy_tournament_back.webp"
+        },
+        {
+          "order": 3,
+          "lineIndex": 4,
+          "path": "/rpg-assets/characters/jicy/events/jicy_tournament_ready_pose.webp"
+        },
+        {
+          "order": 4,
+          "lineIndex": 7,
+          "path": "/rpg-assets/characters/jicy/events/jicy_tournament_match.webp"
+        }
+      ],
+      "artPending": false
     }
   ]
 }

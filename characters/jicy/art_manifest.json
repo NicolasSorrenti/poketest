@@ -52,6 +52,39 @@
       "sceneId": "jicy_random_small_win",
       "path": "/rpg-assets/characters/jicy/events/jicy_random_small_win.webp",
       "prompt": "Cinematic 16:9 Neo Harbor visual-novel CG for A Small Win. Jicy and the protagonist sharing this small everyday moment; preserve her approved adult design, blonde high ponytail and canonical pink sleeveless suit. Friendly, wholesome, slice-of-life composition; no other named characters, no dialogue text, lower fifth clear for UI dialogue. Keep the moment about the activity and their connection, not the outfit."
+    },
+    {
+      "sceneId": "jicy_random_tournament_day",
+      "sequence": [
+        {
+          "order": 1,
+          "lineIndex": 0,
+          "path": "/rpg-assets/characters/jicy/events/jicy_tournament_front.webp",
+          "moment": "Jicy welcomes the player into the lively tournament hall.",
+          "prompt": "Use approved Jicy design. Jicy welcomes the player into the lively tournament hall. Preserve her adult proportions, blonde high ponytail, and canonical sleeveless pink suit."
+        },
+        {
+          "order": 2,
+          "lineIndex": 2,
+          "path": "/rpg-assets/characters/jicy/events/jicy_tournament_back.webp",
+          "moment": "Over-the-shoulder view as she takes in the crowd and tables.",
+          "prompt": "Use approved Jicy design. Over-the-shoulder view as she takes in the crowd and tables. Preserve her adult proportions, blonde high ponytail, and canonical sleeveless pink suit."
+        },
+        {
+          "order": 3,
+          "lineIndex": 4,
+          "path": "/rpg-assets/characters/jicy/events/jicy_tournament_ready_pose.webp",
+          "moment": "Her excitement spills into a playful, wide, double-pointing stance.",
+          "prompt": "Use approved Jicy design. Her excitement spills into a playful, wide, double-pointing stance. Preserve her adult proportions, blonde high ponytail, and canonical sleeveless pink suit."
+        },
+        {
+          "order": 4,
+          "lineIndex": 7,
+          "path": "/rpg-assets/characters/jicy/events/jicy_tournament_match.webp",
+          "moment": "Jicy sits down for a friendly match against a tournament opponent.",
+          "prompt": "Use approved Jicy design. Jicy sits down for a friendly match against a tournament opponent. Preserve her adult proportions, blonde high ponytail, and canonical sleeveless pink suit."
+        }
+      ]
     }
   ]
 }
