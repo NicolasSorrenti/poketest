@@ -117,7 +117,11 @@
      "kind": "attack",
      "index": 1,
      "name": "Metronome",
-     "status": "unreviewed"
+     "status": "partial",
+     "evidence": [
+      "test_card_fidelity_clefairy.js"
+     ],
+     "scope": "Copies Fire Spin for 100 damage without paying its additional Energy discard; rejects Metronome with insufficient Energy; attacker chooses copied attack. Shared reducer in Classic, Neo, online-preview and 40-card Cube; independent print and historical ruling review pending."
     }
    ]
   },
