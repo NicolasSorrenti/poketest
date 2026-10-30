@@ -428,6 +428,19 @@ window.NeoRpgOverworldBridge=Object.freeze({
  clearInteraction(){if(overworldControlsLocked())return false;state.selected=null;persist();render();return true;},
  snapshot(){return {location:state.location,day:state.day,slot:state.slot,selected:state.selected&&currentPeople().includes(state.selected)?state.selected:null,locked:overworldControlsLocked(),arriving:arrivalGate||!!pendingOverworldArrival||!!window.NeoRpgTimeTransitions?.active,storyActive:overworldStoryActive(),eventActive:!!(state.mandatoryEventState?.active||state.activeSliceOfLife||state.activeSituation||state.activeStory||state.activeSideQuest||state.activeArc||state.activeEncounter),people:currentPeople().filter(id=>!!cast[id]),places:Object.entries(places).map(([id,p])=>({id,name:p[0]}))};},
  travel(placeId){if(overworldControlsLocked())return false;return travelTo(placeId);},
+ poseTriggerDialogue(id,src){
+  if(overworldControlsLocked()||!cast[id]||!currentPeople().includes(id)||
+     typeof src!=='string'||!src.startsWith('/rpg-assets/characters/'))return false;
+  state.selected=id;
+  state.overworldPoseIntro={id,src,location:state.location,day:state.day,slot:state.slot};
+  scene={speaker:cast[id].name,line:'Uh, sorry… Give me a minute…',
+   choices:[['Continue ›','poseTriggerContinue:'+id]],poseTrigger:true};
+  state.scene=scene;persist();render();return true;
+ },
+ poseIntroFallback(id){
+  const intro=state.overworldPoseIntro;
+  return intro?.id===id&&intro.location===state.location?intro.src:null;
+ },
  interact(id){if(overworldControlsLocked()||!cast[id]||!currentPeople().includes(id))return false;selectPerson(id);return true;},
  activities(){return WORLD.activitiesAt(state).map(a=>({id:a.id,title:a.title,disabled:overworldControlsLocked()||!!a.disabledReason}));},
  activity(id){if(overworldControlsLocked()||!WORLD.activitiesAt(state).some(a=>a.id===id&&!a.disabledReason))return false;performActivity(id);return true;},
@@ -750,6 +763,13 @@ function act(action){
   if(type==='sliceNext')return nextSliceOfLife();return;
  }
  if(type==='chatNext')return advanceConversation();
+ if(type==='poseTriggerContinue'){
+  const intro=state.overworldPoseIntro;
+  if(!intro||intro.id!==id||!currentPeople().includes(id))return;
+  state.overworldPoseIntro=null;
+  selectPerson(id);
+  return;
+ }
   if(type==='memoryChoice'){
    const topic=MEM?.threads[id]?.topic;
    if(!topic||id!==state.selected||scene.memoryOfferId!=='memory:'+id+':'+topic+':intro'||
