@@ -158,3 +158,6 @@
 .duel-utility-toolbar #rpgDiscreetToggle[hidden]{display:none!important}
 .duel-utility-toolbar #rpgDiscreetToggle{white-space:nowrap;min-width:max-content}
 :root[data-rpg-discreet="on"] .duel-utility-toolbar #rpgDiscreetToggle{background:#224e60;border-color:#8cbacc;color:#e9f9ff}
+
+/* Keep the discreet avatar in battle chat at the same compact size as the original portrait. */
+:root[data-rpg-discreet="on"] .rpg-dialogue-message>.rpg-safe-avatar{position:relative!important;inset:auto!important;flex:0 0 38px!important;width:38px!important;height:38px!important;min-width:38px!important;min-height:38px!important;max-width:38px!important;max-height:38px!important;object-fit:cover!important;border-radius:7px!important;background:#102538;box-shadow:none!important}
