@@ -219,13 +219,21 @@
      "kind": "attack",
      "index": 0,
      "name": "Thunder Wave",
-     "status": "unreviewed"
+     "status": "partial",
+     "evidence": [
+      "test_card_fidelity_magneton.js"
+     ],
+     "scope": "30 damage and heads/tails Paralysis outcomes; reject a missing Lightning requirement. Classic, Neo, online-preview and 40-card Cube reducer scenarios; independent print/ruling review pending."
     },
     {
      "kind": "attack",
      "index": 1,
      "name": "Selfdestruct",
-     "status": "unreviewed"
+     "status": "partial",
+     "evidence": [
+      "test_card_fidelity_magneton.js"
+     ],
+     "scope": "Four-Energy cost, Active damage, 20 damage to each Bench without Lightning resistance reduction, 80 self-damage and resulting knockout/prize flow. Classic, Neo, online-preview and 40-card Cube reducer scenarios; independent print/ruling review pending."
     }
    ]
   },

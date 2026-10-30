@@ -1,10 +1,10 @@
 name: Base card fidelity
 on:
   pull_request:
-    paths: ['headless_duel.js', 'attack_effects_core.js', 'classic_attack_extensions.js', 'test_card_fidelity_base_batch01.js', 'test_card_fidelity_base_batch02.js', 'test_card_fidelity_clefairy.js', 'test_card_fidelity_nidoking.js', 'test_card_fidelity_machamp.js', 'test_attack_energy_choice_usability.js', '.github/workflows/base-card-fidelity.yml']
+    paths: ['headless_duel.js', 'attack_effects_core.js', 'classic_attack_extensions.js', 'test_card_fidelity_base_batch01.js', 'test_card_fidelity_base_batch02.js', 'test_card_fidelity_clefairy.js', 'test_card_fidelity_nidoking.js', 'test_card_fidelity_machamp.js', 'test_attack_energy_choice_usability.js', 'test_card_fidelity_magneton.js', '.github/workflows/base-card-fidelity.yml']
   push:
     branches: [main]
-    paths: ['headless_duel.js', 'attack_effects_core.js', 'classic_attack_extensions.js', 'test_card_fidelity_base_batch01.js', 'test_card_fidelity_base_batch02.js', 'test_card_fidelity_clefairy.js', 'test_card_fidelity_nidoking.js', 'test_card_fidelity_machamp.js', 'test_attack_energy_choice_usability.js', '.github/workflows/base-card-fidelity.yml']
+    paths: ['headless_duel.js', 'attack_effects_core.js', 'classic_attack_extensions.js', 'test_card_fidelity_base_batch01.js', 'test_card_fidelity_base_batch02.js', 'test_card_fidelity_clefairy.js', 'test_card_fidelity_nidoking.js', 'test_card_fidelity_machamp.js', 'test_attack_energy_choice_usability.js', 'test_card_fidelity_magneton.js', '.github/workflows/base-card-fidelity.yml']
 jobs:
   base-card-fidelity:
     runs-on: ubuntu-latest
@@ -19,4 +19,5 @@ jobs:
       - run: node test_card_fidelity_nidoking.js
       - run: node test_card_fidelity_machamp.js
       - run: node test_attack_energy_choice_usability.js
+      - run: node test_card_fidelity_magneton.js
       - run: node test_classic_complex_attacks.js
