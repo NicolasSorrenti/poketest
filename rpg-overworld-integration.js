@@ -851,7 +851,8 @@
     attachChoicePanels();
     let storyDock=null;
     let lastSceneKey='';
-    let suspendedForDuel=false;\n    let syncDuel=()=>{};
+    let suspendedForDuel=false;
+    let syncDuel=()=>{};
     function showStory(){
       if(!stage||!stageHome)return false;
       if(!storyDock){
@@ -1117,7 +1118,8 @@
           queueStorySync();
         }
       };
-      new MutationObserver(syncDuel).observe(duel,{attributes:true,attributeFilter:['hidden']});\n      syncDuel();
+      new MutationObserver(syncDuel).observe(duel,{attributes:true,attributeFilter:['hidden']});
+      syncDuel();
     }
     if(window.NeoRpgOverworldStandalone)setTimeout(()=>{if(bridge()&&overlay.hidden)open.click();},0);
   }
