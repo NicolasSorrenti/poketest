@@ -1,0 +1,57 @@
+{
+  "schemaVersion": 1,
+  "characterId": "jicy",
+  "portrait": "/rpg-assets/characters/jicy/portrait.webp",
+  "eventImages": [
+    {
+      "sceneId": "jicy_route_1",
+      "path": "/rpg-assets/characters/jicy/events/jicy_route_1.webp",
+      "prompt": "Cinematic 16:9 Neo Harbor visual-novel CG for The Card That Almost Got Away. Jicy and the protagonist in the scene described by the event; preserve Jicy's approved adult design, blonde high ponytail and clean sleeveless pink suit. Warm, character-led composition, natural expressions, no other named characters, no dialogue text, lower fifth clear for UI dialogue. Do not make the suit or public reactions to it the subject."
+    },
+    {
+      "sceneId": "jicy_route_2",
+      "path": "/rpg-assets/characters/jicy/events/jicy_route_2.webp",
+      "prompt": "Cinematic 16:9 Neo Harbor visual-novel CG for A Table for Two. Jicy and the protagonist in the scene described by the event; preserve Jicy's approved adult design, blonde high ponytail and clean sleeveless pink suit. Warm, character-led composition, natural expressions, no other named characters, no dialogue text, lower fifth clear for UI dialogue. Do not make the suit or public reactions to it the subject."
+    },
+    {
+      "sceneId": "jicy_route_3",
+      "path": "/rpg-assets/characters/jicy/events/jicy_route_3.webp",
+      "prompt": "Cinematic 16:9 Neo Harbor visual-novel CG for The Quiet Between Pages. Jicy and the protagonist in the scene described by the event; preserve Jicy's approved adult design, blonde high ponytail and clean sleeveless pink suit. Warm, character-led composition, natural expressions, no other named characters, no dialogue text, lower fifth clear for UI dialogue. Do not make the suit or public reactions to it the subject."
+    },
+    {
+      "sceneId": "jicy_route_4",
+      "path": "/rpg-assets/characters/jicy/events/jicy_route_4.webp",
+      "prompt": "Cinematic 16:9 Neo Harbor visual-novel CG for A Little More Courage. Jicy and the protagonist in the scene described by the event; preserve Jicy's approved adult design, blonde high ponytail and clean sleeveless pink suit. Warm, character-led composition, natural expressions, no other named characters, no dialogue text, lower fifth clear for UI dialogue. Do not make the suit or public reactions to it the subject."
+    },
+    {
+      "sceneId": "jicy_route_5",
+      "path": "/rpg-assets/characters/jicy/events/jicy_route_5.webp",
+      "prompt": "Cinematic 16:9 Neo Harbor visual-novel CG for The Words She Practiced. Jicy and the protagonist in the scene described by the event; preserve Jicy's approved adult design, blonde high ponytail and clean sleeveless pink suit. Warm, character-led composition, natural expressions, no other named characters, no dialogue text, lower fifth clear for UI dialogue. Do not make the suit or public reactions to it the subject."
+    },
+    {
+      "sceneId": "jicy_random_bookmark",
+      "path": "/rpg-assets/characters/jicy/events/jicy_random_bookmark.webp",
+      "prompt": "Cinematic 16:9 Neo Harbor visual-novel CG for A Bookmark for Later. Jicy and the protagonist sharing this small everyday moment; preserve her approved adult design, blonde high ponytail and canonical pink sleeveless suit. Friendly, wholesome, slice-of-life composition; no other named characters, no dialogue text, lower fifth clear for UI dialogue. Keep the moment about the activity and their connection, not the outfit."
+    },
+    {
+      "sceneId": "jicy_random_high_score",
+      "path": "/rpg-assets/characters/jicy/events/jicy_random_high_score.webp",
+      "prompt": "Cinematic 16:9 Neo Harbor visual-novel CG for One More Try. Jicy and the protagonist sharing this small everyday moment; preserve her approved adult design, blonde high ponytail and canonical pink sleeveless suit. Friendly, wholesome, slice-of-life composition; no other named characters, no dialogue text, lower fifth clear for UI dialogue. Keep the moment about the activity and their connection, not the outfit."
+    },
+    {
+      "sceneId": "jicy_random_card_art",
+      "path": "/rpg-assets/characters/jicy/events/jicy_random_card_art.webp",
+      "prompt": "Cinematic 16:9 Neo Harbor visual-novel CG for The Picture in the Corner. Jicy and the protagonist sharing this small everyday moment; preserve her approved adult design, blonde high ponytail and canonical pink sleeveless suit. Friendly, wholesome, slice-of-life composition; no other named characters, no dialogue text, lower fifth clear for UI dialogue. Keep the moment about the activity and their connection, not the outfit."
+    },
+    {
+      "sceneId": "jicy_random_clouds",
+      "path": "/rpg-assets/characters/jicy/events/jicy_random_clouds.webp",
+      "prompt": "Cinematic 16:9 Neo Harbor visual-novel CG for Cloud Shapes. Jicy and the protagonist sharing this small everyday moment; preserve her approved adult design, blonde high ponytail and canonical pink sleeveless suit. Friendly, wholesome, slice-of-life composition; no other named characters, no dialogue text, lower fifth clear for UI dialogue. Keep the moment about the activity and their connection, not the outfit."
+    },
+    {
+      "sceneId": "jicy_random_small_win",
+      "path": "/rpg-assets/characters/jicy/events/jicy_random_small_win.webp",
+      "prompt": "Cinematic 16:9 Neo Harbor visual-novel CG for A Small Win. Jicy and the protagonist sharing this small everyday moment; preserve her approved adult design, blonde high ponytail and canonical pink sleeveless suit. Friendly, wholesome, slice-of-life composition; no other named characters, no dialogue text, lower fifth clear for UI dialogue. Keep the moment about the activity and their connection, not the outfit."
+    }
+  ]
+}

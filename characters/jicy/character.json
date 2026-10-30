@@ -1,0 +1,83 @@
+{
+  "schemaVersion": 1,
+  "id": "jicy",
+  "name": "Jicy",
+  "age": 22,
+  "role": "romance",
+  "deck": "zap",
+  "style": "Zap! · Base Set · quick, upbeat tempo",
+  "dialogue": {
+    "intro": "Hi! I'm Jicy. Do you need help finding anything? I know the card shop pretty well. ...I mean, not that you look lost! I just like helping.",
+    "repeat": "There you are! I was hoping we'd get to talk today. Do you need anything? Or we could just spend a little time together. Either is nice.",
+    "flirt": "Oh! I—thank you. That's really sweet. I had a reply ready, but it seems to have run away.",
+    "duelWin": "That was so much fun! You read my last turn perfectly. Will you show me how you saw it coming?",
+    "duelLose": "I won! Sorry, was that too excited? I get happy when we play together.",
+    "talk": [
+      "I like being useful, but I'm trying to remember that people can enjoy my company even when I don't have a task to do.",
+      "When I'm nervous, I sway a little. When I get excited, my feet seem to forget they're supposed to stay still.",
+      "I keep a list of small things people mention so I can remember what makes their day easier. Is that strange? I hope it's the good kind of strange.",
+      "Reading together is nice. We don't have to fill every quiet moment with words.",
+      "I practiced asking you to hang out. The sentence was only six words long, and I still practiced it three times."
+    ],
+    "hangouts": [
+      "You and Jicy spend a quiet afternoon comparing favorite cards and making up stories for the art.",
+      "Jicy asks you to help her choose a book, then gets so interested in the first page that you read together.",
+      "You and Jicy challenge each other to a friendly arcade high-score run. She celebrates every close call.",
+      "Jicy brings a deck to the café and suggests a relaxed game with no stakes except choosing the next snack.",
+      "You take an easy walk through the park. Jicy points out clouds that look like Pokémon and laughs at her own guesses."
+    ]
+  },
+  "appearance": {
+    "silhouette": "Unambiguously adult, compact stature with the approved shorter leg-to-torso ratio; keep her narrow waist and established chest and hip proportions unchanged. Preserve the approved face and body model.",
+    "palette": "Bright hot pink and charcoal, warm blonde hair, fair warm skin, rose-pink eyes.",
+    "hair": "Very straight blonde hair in a slim, very high ponytail centered near the crown. Keep the main side-swept fringe flowing to image-right, with one separate, slightly wider but fine straight lock sweeping toward image-left and ending around her lower lip. No loose face-framing side strands.",
+    "eyes": "Large, rounded rose-pink eyes with long lashes and slightly fuller brows; preserve her adult facial proportions and fuller lips.",
+    "details": "One small pink trading-card deckbox at her hip. No headphones, no robotic or futuristic accessories.",
+    "expressions": "Warm open smile, shy blush, attentive listening, happy laugh, focused concentration, and a brave but nervous confession.",
+    "outfits": [
+      "Canonical clean sleeveless hot-pink combat suit with a high zip collar, broad charcoal under-bust band, widened arm openings, high-cut mobility construction, fitted pink leg coverings, black thigh bands, practical pink-and-black combat boots, and one small hip deckbox."
+    ],
+    "renderNotes": "Use the approved compact body proportions and clean, mobility-focused sleeveless pink suit. Keep seams and tactical details minimal. Jicy is an adult and her design should remain consistent across portraits and CGs. Do not add a jacket, headphones, extra straps, heavy armor, or futuristic equipment."
+  },
+  "arrivalDay": 8,
+  "schedule": [
+    [
+      "shop",
+      "shop",
+      "cafe"
+    ],
+    [
+      "home",
+      "library",
+      "cafe"
+    ],
+    [
+      "shop",
+      "arcade",
+      "park"
+    ],
+    [
+      "home",
+      "cafe",
+      "shop"
+    ],
+    [
+      "shop",
+      "arcade",
+      "cafe"
+    ],
+    [
+      "shop",
+      "library",
+      "park"
+    ],
+    [
+      "home",
+      "park",
+      "cafe"
+    ]
+  ],
+  "stories": "stories.json",
+  "artManifest": "art_manifest.json",
+  "bible": "bible.md"
+}

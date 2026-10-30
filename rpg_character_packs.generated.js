@@ -2950,6 +2950,966 @@ const packs=[
   }
  },
  {
+  "id": "jicy",
+  "cast": {
+   "name": "Jicy",
+   "age": 22,
+   "deck": "zap",
+   "style": "Zap! · Base Set · quick, upbeat tempo",
+   "intro": "Hi! I'm Jicy. Do you need help finding anything? I know the card shop pretty well. ...I mean, not that you look lost! I just like helping.",
+   "repeat": "There you are! I was hoping we'd get to talk today. Do you need anything? Or we could just spend a little time together. Either is nice.",
+   "flirt": "Oh! I—thank you. That's really sweet. I had a reply ready, but it seems to have run away.",
+   "duelWin": "That was so much fun! You read my last turn perfectly. Will you show me how you saw it coming?",
+   "duelLose": "I won! Sorry, was that too excited? I get happy when we play together.",
+   "talk": [
+    "I like being useful, but I'm trying to remember that people can enjoy my company even when I don't have a task to do.",
+    "When I'm nervous, I sway a little. When I get excited, my feet seem to forget they're supposed to stay still.",
+    "I keep a list of small things people mention so I can remember what makes their day easier. Is that strange? I hope it's the good kind of strange.",
+    "Reading together is nice. We don't have to fill every quiet moment with words.",
+    "I practiced asking you to hang out. The sentence was only six words long, and I still practiced it three times."
+   ],
+   "hangouts": [
+    "You and Jicy spend a quiet afternoon comparing favorite cards and making up stories for the art.",
+    "Jicy asks you to help her choose a book, then gets so interested in the first page that you read together.",
+    "You and Jicy challenge each other to a friendly arcade high-score run. She celebrates every close call.",
+    "Jicy brings a deck to the café and suggests a relaxed game with no stakes except choosing the next snack.",
+    "You take an easy walk through the park. Jicy points out clouds that look like Pokémon and laughs at her own guesses."
+   ],
+   "portrait": "/rpg-assets/characters/jicy/portrait.webp"
+  },
+  "looks": {
+   "silhouette": "Unambiguously adult, compact stature with the approved shorter leg-to-torso ratio; keep her narrow waist and established chest and hip proportions unchanged. Preserve the approved face and body model.",
+   "palette": "Bright hot pink and charcoal, warm blonde hair, fair warm skin, rose-pink eyes.",
+   "hair": "Very straight blonde hair in a slim, very high ponytail centered near the crown. Keep the main side-swept fringe flowing to image-right, with one separate, slightly wider but fine straight lock sweeping toward image-left and ending around her lower lip. No loose face-framing side strands.",
+   "eyes": "Large, rounded rose-pink eyes with long lashes and slightly fuller brows; preserve her adult facial proportions and fuller lips.",
+   "details": "One small pink trading-card deckbox at her hip. No headphones, no robotic or futuristic accessories.",
+   "expressions": "Warm open smile, shy blush, attentive listening, happy laugh, focused concentration, and a brave but nervous confession.",
+   "outfits": [
+    "Canonical clean sleeveless hot-pink combat suit with a high zip collar, broad charcoal under-bust band, widened arm openings, high-cut mobility construction, fitted pink leg coverings, black thigh bands, practical pink-and-black combat boots, and one small hip deckbox."
+   ],
+   "renderNotes": "Use the approved compact body proportions and clean, mobility-focused sleeveless pink suit. Keep seams and tactical details minimal. Jicy is an adult and her design should remain consistent across portraits and CGs. Do not add a jacket, headphones, extra straps, heavy armor, or futuristic equipment."
+  },
+  "schedule": [
+   [
+    "shop",
+    "shop",
+    "cafe"
+   ],
+   [
+    "home",
+    "library",
+    "cafe"
+   ],
+   [
+    "shop",
+    "arcade",
+    "park"
+   ],
+   [
+    "home",
+    "cafe",
+    "shop"
+   ],
+   [
+    "shop",
+    "arcade",
+    "cafe"
+   ],
+   [
+    "shop",
+    "library",
+    "park"
+   ],
+   [
+    "home",
+    "park",
+    "cafe"
+   ]
+  ],
+  "arrivalDay": 8,
+  "events": [
+   {
+    "id": "jicy_route_1",
+    "npc": "jicy",
+    "chapter": 1,
+    "title": "The Card That Almost Got Away",
+    "start": 8,
+    "end": 20,
+    "place": "shop",
+    "slot": 1,
+    "minBond": 0,
+    "prerequisite": null,
+    "participants": [],
+    "lines": [
+     {
+      "speaker": "Narrator",
+      "text": "A card slips from the counter just as you step into the shop. Jicy catches it before it reaches the floor, then turns toward you with a bright, welcoming smile."
+     },
+     {
+      "speaker": "jicy",
+      "text": "There! No bent corners. Are you looking for something in particular? I can help, if you'd like."
+     },
+     {
+      "speaker": "Protagonist",
+      "text": "I'm still figuring out which deck to start with. I don't want to get in anyone's way."
+     },
+     {
+      "speaker": "jicy",
+      "text": "You wouldn't. I can show you a few beginner-friendly options. I'm Jicy, by the way. I should probably introduce myself before I start giving directions."
+     },
+     {
+      "speaker": "Narrator",
+      "text": "As she talks, Jicy rocks gently from side to side. A second card tips from the counter and she makes a quick little hop to catch it. Her fitted suit follows the motion with a small bounce at her chest and hips; you notice for a moment, then meet her eyes again."
+     },
+     {
+      "speaker": "Protagonist",
+      "text": "You have quick reflexes. Thanks for making this easier."
+     },
+     {
+      "speaker": "jicy",
+      "text": "I like helping! I mean, I really do. And... I'm glad you came in today."
+     },
+     {
+      "speaker": "Narrator",
+      "text": "Your smile leaves Jicy quiet for a beat. Color rises in her cheeks, and she quickly points you toward the decks before she can lose her nerve completely."
+     }
+    ],
+    "choices": [
+     {
+      "label": "Ask her to help you compare the starter decks",
+      "reply": "Jicy brightens at once. She takes her time explaining each option and seems pleased that you trust her advice.",
+      "kind": "support",
+      "flag": "jicy_first_deck_help",
+      "delta": {
+       "affection": 2,
+       "trust": 2,
+       "respect": 0,
+       "attraction": 0
+      }
+     },
+     {
+      "label": "Tell her that her enthusiasm is contagious",
+      "reply": "Jicy sways, then gives a tiny excited hop. “That's a very nice thing to say. I might remember it all week.”",
+      "kind": "honest",
+      "flag": "jicy_first_enthusiasm",
+      "delta": {
+       "affection": 2,
+       "trust": 1,
+       "respect": 1,
+       "attraction": 0
+      }
+     },
+     {
+      "label": "Say you were glad to meet her, too",
+      "reply": "Jicy blushes and tries to answer smoothly. “Me too. I mean—yes. I'm glad too.”",
+      "kind": "flirt",
+      "flag": "jicy_first_flirt",
+      "delta": {
+       "affection": 2,
+       "trust": 0,
+       "respect": 0,
+       "attraction": 2
+      }
+     }
+    ],
+    "image": "/rpg-assets/characters/jicy/events/jicy_route_1.webp",
+    "artPending": true
+   },
+   {
+    "id": "jicy_route_2",
+    "npc": "jicy",
+    "chapter": 1,
+    "title": "A Table for Two",
+    "start": 22,
+    "end": 38,
+    "place": "cafe",
+    "slot": 1,
+    "minBond": 2,
+    "prerequisite": "jicy_route_1",
+    "participants": [],
+    "lines": [
+     {
+      "speaker": "Narrator",
+      "text": "Jicy has saved a quiet table and brought a few deck ideas she thought you might enjoy. She looks pleased when you join her, then immediately begins to worry that she planned too much."
+     },
+     {
+      "speaker": "jicy",
+      "text": "I brought a couple of possible lists. You don't have to use any of them! I just remembered what you said you liked."
+     },
+     {
+      "speaker": "Protagonist",
+      "text": "You remembered that already? That's thoughtful."
+     },
+     {
+      "speaker": "jicy",
+      "text": "I remember little things when they matter to me. Sorry. That sounded more intense than I meant."
+     },
+     {
+      "speaker": "Narrator",
+      "text": "She rocks softly from side to side while you compare cards. When you praise one of her suggestions, she gives a quick, delighted hop in her seat and laughs at herself."
+     },
+     {
+      "speaker": "Protagonist",
+      "text": "I think this combination feels like me."
+     },
+     {
+      "speaker": "jicy",
+      "text": "It does! And I like hearing you talk about the cards you love. Would you want to do this again sometime? We could talk about cards, or about anything else."
+     },
+     {
+      "speaker": "Protagonist",
+      "text": "I'd like that."
+     },
+     {
+      "speaker": "jicy",
+      "text": "Good. I was hoping you'd say yes. I mean, I hoped you'd have a nice afternoon either way."
+     }
+    ],
+    "choices": [
+     {
+      "label": "Ask her to make this a regular deck-building afternoon",
+      "reply": "Jicy smiles so broadly that she has to look down at the cards for a second. “I'd love that.”",
+      "kind": "support",
+      "flag": "jicy_table_regular",
+      "delta": {
+       "affection": 2,
+       "trust": 2,
+       "respect": 0,
+       "attraction": 0
+      }
+     },
+     {
+      "label": "Thank her for remembering what you like",
+      "reply": "“Of course,” Jicy says, then admits she has been trying not to make it obvious how much she enjoys your company.",
+      "kind": "honest",
+      "flag": "jicy_table_thanks",
+      "delta": {
+       "affection": 2,
+       "trust": 2,
+       "respect": 1,
+       "attraction": 0
+      }
+     },
+     {
+      "label": "Call it a date, if she wants it to be",
+      "reply": "Jicy's eyes widen. She takes one tiny hop, then answers with a shy smile: “I would like that. A lot.”",
+      "kind": "flirt",
+      "flag": "jicy_table_date",
+      "delta": {
+       "affection": 2,
+       "trust": 1,
+       "respect": 0,
+       "attraction": 2
+      }
+     }
+    ],
+    "image": "/rpg-assets/characters/jicy/events/jicy_route_2.webp",
+    "artPending": true
+   },
+   {
+    "id": "jicy_route_3",
+    "npc": "jicy",
+    "chapter": 2,
+    "title": "The Quiet Between Pages",
+    "start": 40,
+    "end": 56,
+    "place": "library",
+    "slot": 1,
+    "minBond": 3,
+    "prerequisite": "jicy_route_2",
+    "participants": [],
+    "lines": [
+     {
+      "speaker": "Narrator",
+      "text": "Jicy finds you in the library with a book open beside her. She has chosen a seat with room for both of you and a stack of trading-card histories to share."
+     },
+     {
+      "speaker": "jicy",
+      "text": "I thought we could read for a while. You don't have to talk if you don't feel like it."
+     },
+     {
+      "speaker": "Protagonist",
+      "text": "You don't mind sitting quietly together?"
+     },
+     {
+      "speaker": "jicy",
+      "text": "Not at all. I like being with you, even when nothing special is happening."
+     },
+     {
+      "speaker": "Narrator",
+      "text": "Jicy sways gently while she reads, occasionally looking up as if she has something to say. She starts a sentence twice, then settles for a small smile."
+     },
+     {
+      "speaker": "Protagonist",
+      "text": "You can tell me. You don't have to make it perfect."
+     },
+     {
+      "speaker": "jicy",
+      "text": "I get nervous when I care about how a conversation goes. Sometimes my feet start moving before I've decided what to say."
+     },
+     {
+      "speaker": "Protagonist",
+      "text": "I like hearing what you want to say, even if it comes out a little messy."
+     },
+     {
+      "speaker": "jicy",
+      "text": "Thank you. I like your company. I wanted to say that without turning it into an offer to do something for you."
+     }
+    ],
+    "choices": [
+     {
+      "label": "Tell her you enjoy quiet time with her, too",
+      "reply": "Jicy's shoulders relax. She returns to the page, still smiling whenever she thinks you aren't looking.",
+      "kind": "support",
+      "flag": "jicy_pages_quiet",
+      "delta": {
+       "affection": 2,
+       "trust": 2,
+       "respect": 1,
+       "attraction": 0
+      }
+     },
+     {
+      "label": "Ask what she wants to do when she isn't helping someone",
+      "reply": "Jicy thinks carefully, then says she'd like to keep reading beside you. It feels like a real answer.",
+      "kind": "honest",
+      "flag": "jicy_pages_wants",
+      "delta": {
+       "affection": 1,
+       "trust": 2,
+       "respect": 2,
+       "attraction": 0
+      }
+     },
+     {
+      "label": "Tell her you like being someone she chooses to spend time with",
+      "reply": "Jicy blushes and gives one tiny hop. “I do choose it. I just need to get used to saying that out loud.”",
+      "kind": "flirt",
+      "flag": "jicy_pages_flirt",
+      "delta": {
+       "affection": 2,
+       "trust": 1,
+       "respect": 0,
+       "attraction": 2
+      }
+     }
+    ],
+    "image": "/rpg-assets/characters/jicy/events/jicy_route_3.webp",
+    "artPending": true
+   },
+   {
+    "id": "jicy_route_4",
+    "npc": "jicy",
+    "chapter": 2,
+    "title": "A Little More Courage",
+    "start": 58,
+    "end": 74,
+    "place": "park",
+    "slot": 1,
+    "minBond": 4,
+    "prerequisite": "jicy_route_3",
+    "participants": [],
+    "lines": [
+     {
+      "speaker": "Narrator",
+      "text": "Jicy invites you to the park to test a few new card ideas. A light breeze scatters several cards across the bench before either of you can set up."
+     },
+     {
+      "speaker": "jicy",
+      "text": "Oh! I'll get them. Sorry, I can be a little too eager."
+     },
+     {
+      "speaker": "Narrator",
+      "text": "She makes two quick, springy hops and gathers the cards before they can slide away. When she comes back, she is grinning and just a little out of breath."
+     },
+     {
+      "speaker": "Protagonist",
+      "text": "You move quickly when you get excited."
+     },
+     {
+      "speaker": "jicy",
+      "text": "I know. I sway when I'm trying to stay still, then I jump when I forget to stay still. It's a little silly."
+     },
+     {
+      "speaker": "Protagonist",
+      "text": "It makes you easy to read—in a good way."
+     },
+     {
+      "speaker": "jicy",
+      "text": "I was going to tell you that I look forward to seeing you. I do. Every time."
+     },
+     {
+      "speaker": "Narrator",
+      "text": "Jicy sways once, takes a small breath, and looks directly at you instead of down at the cards."
+     },
+     {
+      "speaker": "jicy",
+      "text": "I'm not ready to explain everything I feel yet. But I'm trying to be braver about letting you know that I care."
+     }
+    ],
+    "choices": [
+     {
+      "label": "Tell her she can take her time",
+      "reply": "Jicy nods, visibly relieved. “Thank you. I want to be honest with you, not rush myself.”",
+      "kind": "honest",
+      "flag": "jicy_courage_time",
+      "delta": {
+       "affection": 1,
+       "trust": 2,
+       "respect": 2,
+       "attraction": 0
+      }
+     },
+     {
+      "label": "Say you look forward to seeing her, too",
+      "reply": "She makes a happy little hop, then laughs and reaches for the cards. “Okay. I can be brave for another minute.”",
+      "kind": "support",
+      "flag": "jicy_courage_mutual",
+      "delta": {
+       "affection": 2,
+       "trust": 2,
+       "respect": 0,
+       "attraction": 1
+      }
+     },
+     {
+      "label": "Ask if she'd like to plan an afternoon just for the two of you",
+      "reply": "Jicy's smile turns shy but certain. “Yes. I would really like that.”",
+      "kind": "flirt",
+      "flag": "jicy_courage_invite",
+      "delta": {
+       "affection": 2,
+       "trust": 1,
+       "respect": 0,
+       "attraction": 2
+      }
+     }
+    ],
+    "image": "/rpg-assets/characters/jicy/events/jicy_route_4.webp",
+    "artPending": true
+   },
+   {
+    "id": "jicy_route_5",
+    "npc": "jicy",
+    "chapter": 3,
+    "title": "The Words She Practiced",
+    "start": 76,
+    "end": 89,
+    "place": "cafe",
+    "slot": 2,
+    "minBond": 5,
+    "prerequisite": "jicy_route_4",
+    "participants": [],
+    "lines": [
+     {
+      "speaker": "Narrator",
+      "text": "Jicy asks you to meet at the café after the evening rush. She has a note folded in her hand, though she keeps checking whether she can say the words without it."
+     },
+     {
+      "speaker": "jicy",
+      "text": "I wrote down what I wanted to tell you. Then I tried to memorize it. Then I decided I should just talk to you."
+     },
+     {
+      "speaker": "Protagonist",
+      "text": "You don't need a perfect speech. I'm listening."
+     },
+     {
+      "speaker": "jicy",
+      "text": "The first time I saw you, I wanted to keep talking to you. I thought you were kind, and I got this silly little flutter whenever you smiled at me."
+     },
+     {
+      "speaker": "jicy",
+      "text": "I kept finding reasons to help because it gave me a chance to be near you. I know I don't have to earn someone's time by being useful. I just... really like you."
+     },
+     {
+      "speaker": "Narrator",
+      "text": "Her hands tremble around the note. She rocks once from side to side, makes a tiny hop, and finally meets your eyes."
+     },
+     {
+      "speaker": "jicy",
+      "text": "Would you like to go on a date with me? If you don't feel the same, I still want us to be kind to each other."
+     },
+     {
+      "speaker": "Protagonist",
+      "text": "That took courage. Thank you for telling me."
+     }
+    ],
+    "choices": [
+     {
+      "label": "Tell her you like her, too, and accept the date",
+      "reply": "Jicy lets out a relieved laugh, then makes a delighted hop. “Okay. A real date. I can do that. I think I can.”",
+      "kind": "commit",
+      "flag": "jicy_final_romance",
+      "delta": {
+       "affection": 2,
+       "trust": 2,
+       "respect": 1,
+       "attraction": 3
+      }
+     },
+     {
+      "label": "Tell her you care about her and want to take things slowly",
+      "reply": "Jicy smiles with a little more confidence. “Slow is good. We can keep choosing this one step at a time.”",
+      "kind": "commit",
+      "flag": "jicy_final_slow_romance",
+      "delta": {
+       "affection": 2,
+       "trust": 2,
+       "respect": 1,
+       "attraction": 2
+      }
+     },
+     {
+      "label": "Tell her you value her deeply as a friend",
+      "reply": "Jicy looks a little shy, but her smile stays warm. “Thank you for being honest. I still want to be your friend.”",
+      "kind": "friend",
+      "flag": "jicy_final_friendship",
+      "delta": {
+       "affection": 2,
+       "trust": 2,
+       "respect": 1,
+       "attraction": 0
+      }
+     }
+    ],
+    "image": "/rpg-assets/characters/jicy/events/jicy_route_5.webp",
+    "artPending": true
+   },
+   {
+    "id": "jicy_random_bookmark",
+    "npc": "jicy",
+    "title": "A Bookmark for Later",
+    "start": 8,
+    "end": 90,
+    "place": "library",
+    "slot": 0,
+    "minBond": 0,
+    "prerequisite": null,
+    "participants": [],
+    "encounterType": "slice",
+    "trigger": "entry",
+    "randomForced": true,
+    "chancePercent": 24,
+    "lines": [
+     {
+      "speaker": "Narrator",
+      "text": "Jicy is choosing between two books when she spots you in the library. She smiles and holds up a small paper bookmark."
+     },
+     {
+      "speaker": "jicy",
+      "text": "Do you have a favorite kind of story? I keep meaning to read more outside my usual picks."
+     },
+     {
+      "speaker": "Protagonist",
+      "text": "Something with an adventure and a satisfying ending."
+     },
+     {
+      "speaker": "jicy",
+      "text": "That sounds lovely. I like knowing the characters make it somewhere safe."
+     },
+     {
+      "speaker": "Narrator",
+      "text": "She rocks gently from side to side while she thinks, then offers you the bookmark with a hopeful smile."
+     },
+     {
+      "speaker": "Protagonist",
+      "text": "Are you sure I can keep it?"
+     },
+     {
+      "speaker": "jicy",
+      "text": "Yes. Then when you find a good ending, you can tell me about it."
+     }
+    ],
+    "choices": [
+     {
+      "label": "Promise to tell her what you think of the book",
+      "reply": "Jicy smiles. “I'll look forward to the review. No pressure to finish it quickly.”",
+      "kind": "support",
+      "flag": "jicy_random_bookmark_promise",
+      "delta": {
+       "affection": 1,
+       "trust": 1,
+       "respect": 0,
+       "attraction": 0
+      }
+     },
+     {
+      "label": "Ask her to read the first chapter with you",
+      "reply": "She gives a tiny hop and pulls up a chair. “I was hoping you'd say that.”",
+      "kind": "flirt",
+      "flag": "jicy_random_bookmark_read",
+      "delta": {
+       "affection": 1,
+       "trust": 1,
+       "respect": 0,
+       "attraction": 1
+      }
+     }
+    ],
+    "image": "/rpg-assets/characters/jicy/events/jicy_random_bookmark.webp",
+    "artPending": true
+   },
+   {
+    "id": "jicy_random_high_score",
+    "npc": "jicy",
+    "title": "One More Try",
+    "start": 8,
+    "end": 90,
+    "place": "arcade",
+    "slot": 1,
+    "minBond": 0,
+    "prerequisite": null,
+    "participants": [],
+    "encounterType": "slice",
+    "trigger": "entry",
+    "randomForced": true,
+    "chancePercent": 24,
+    "lines": [
+     {
+      "speaker": "Narrator",
+      "text": "Jicy stands in front of an arcade game, watching the score counter with intense concentration."
+     },
+     {
+      "speaker": "Protagonist",
+      "text": "Are you trying to beat your own record?"
+     },
+     {
+      "speaker": "jicy",
+      "text": "I was! Then I thought it might be more fun if we took turns."
+     },
+     {
+      "speaker": "Narrator",
+      "text": "She makes a quick hop as the game starts, then laughs at herself and settles into a focused stance."
+     },
+     {
+      "speaker": "Protagonist",
+      "text": "You almost jumped before the first note."
+     },
+     {
+      "speaker": "jicy",
+      "text": "I get excited. I can't help it. Your turn—I'll cheer for you."
+     },
+     {
+      "speaker": "Protagonist",
+      "text": "Even if I beat your score?"
+     },
+     {
+      "speaker": "jicy",
+      "text": "Especially if you beat my score. I like seeing you happy."
+     }
+    ],
+    "choices": [
+     {
+      "label": "Challenge her to a friendly rematch",
+      "reply": "Jicy grins. “Rematch accepted. Winner gets to pick the next game.”",
+      "kind": "playful",
+      "flag": "jicy_random_arcade_rematch",
+      "delta": {
+       "affection": 1,
+       "trust": 0,
+       "respect": 1,
+       "attraction": 0
+      }
+     },
+     {
+      "label": "Let her keep the high score and celebrate together",
+      "reply": "She laughs and offers you the next turn anyway. “We can both have a good day.”",
+      "kind": "support",
+      "flag": "jicy_random_arcade_celebrate",
+      "delta": {
+       "affection": 1,
+       "trust": 1,
+       "respect": 0,
+       "attraction": 0
+      }
+     }
+    ],
+    "image": "/rpg-assets/characters/jicy/events/jicy_random_high_score.webp",
+    "artPending": true
+   },
+   {
+    "id": "jicy_random_card_art",
+    "npc": "jicy",
+    "title": "The Picture in the Corner",
+    "start": 8,
+    "end": 90,
+    "place": "cafe",
+    "slot": 2,
+    "minBond": 0,
+    "prerequisite": null,
+    "participants": [],
+    "encounterType": "slice",
+    "trigger": "entry",
+    "randomForced": true,
+    "chancePercent": 24,
+    "lines": [
+     {
+      "speaker": "Narrator",
+      "text": "Jicy has a trading card on the café table, studying its illustration between sips of tea."
+     },
+     {
+      "speaker": "jicy",
+      "text": "I know this card isn't rare, but I love the tiny details in the background."
+     },
+     {
+      "speaker": "Protagonist",
+      "text": "The artist hid a little symbol near the tree."
+     },
+     {
+      "speaker": "jicy",
+      "text": "I never noticed that! You found it so quickly."
+     },
+     {
+      "speaker": "Protagonist",
+      "text": "What else do you see?"
+     },
+     {
+      "speaker": "jicy",
+      "text": "A whole story, I think. Maybe the character is on the way home."
+     },
+     {
+      "speaker": "Narrator",
+      "text": "Jicy smiles at the card, then at you. For once, she doesn't rush to fill the quiet."
+     }
+    ],
+    "choices": [
+     {
+      "label": "Invent the next part of the card's story together",
+      "reply": "Jicy adds a happy ending and asks if you can continue it another day.",
+      "kind": "support",
+      "flag": "jicy_random_card_story",
+      "delta": {
+       "affection": 1,
+       "trust": 1,
+       "respect": 0,
+       "attraction": 0
+      }
+     },
+     {
+      "label": "Tell her you like seeing what she notices",
+      "reply": "She blushes, then gently nudges the card toward you. “I like sharing it with you.”",
+      "kind": "flirt",
+      "flag": "jicy_random_card_notice",
+      "delta": {
+       "affection": 1,
+       "trust": 0,
+       "respect": 0,
+       "attraction": 1
+      }
+     }
+    ],
+    "image": "/rpg-assets/characters/jicy/events/jicy_random_card_art.webp",
+    "artPending": true
+   },
+   {
+    "id": "jicy_random_clouds",
+    "npc": "jicy",
+    "title": "Cloud Shapes",
+    "start": 8,
+    "end": 90,
+    "place": "park",
+    "slot": 2,
+    "minBond": 0,
+    "prerequisite": null,
+    "participants": [],
+    "encounterType": "slice",
+    "trigger": "entry",
+    "randomForced": true,
+    "chancePercent": 24,
+    "lines": [
+     {
+      "speaker": "Narrator",
+      "text": "Jicy is sitting on a park bench, looking up at the clouds. She makes room for you with a warm smile."
+     },
+     {
+      "speaker": "jicy",
+      "text": "That one looks like a tiny dragon. Or maybe a very surprised dog."
+     },
+     {
+      "speaker": "Protagonist",
+      "text": "I can see both now."
+     },
+     {
+      "speaker": "jicy",
+      "text": "Good. I was worried my imagination was doing all the work."
+     },
+     {
+      "speaker": "Narrator",
+      "text": "She sways slowly as the two of you trade guesses, then gives a tiny hop when you spot a new shape."
+     },
+     {
+      "speaker": "Protagonist",
+      "text": "You make even sitting still look energetic."
+     },
+     {
+      "speaker": "jicy",
+      "text": "I think I like sitting still more when I'm with you."
+     }
+    ],
+    "choices": [
+     {
+      "label": "Stay until the clouds change",
+      "reply": "Jicy leans back and smiles. “That sounds like a perfect plan.”",
+      "kind": "support",
+      "flag": "jicy_random_clouds_stay",
+      "delta": {
+       "affection": 1,
+       "trust": 1,
+       "respect": 0,
+       "attraction": 0
+      }
+     },
+     {
+      "label": "Ask her to save the best cloud for your next walk",
+      "reply": "She gives you a hopeful smile. “I'd really like there to be a next walk.”",
+      "kind": "flirt",
+      "flag": "jicy_random_clouds_next",
+      "delta": {
+       "affection": 1,
+       "trust": 1,
+       "respect": 0,
+       "attraction": 1
+      }
+     }
+    ],
+    "image": "/rpg-assets/characters/jicy/events/jicy_random_clouds.webp",
+    "artPending": true
+   },
+   {
+    "id": "jicy_random_small_win",
+    "npc": "jicy",
+    "title": "A Small Win",
+    "start": 8,
+    "end": 90,
+    "place": "shop",
+    "slot": 2,
+    "minBond": 0,
+    "prerequisite": null,
+    "participants": [],
+    "encounterType": "slice",
+    "trigger": "entry",
+    "randomForced": true,
+    "chancePercent": 24,
+    "lines": [
+     {
+      "speaker": "Narrator",
+      "text": "Jicy is organizing a few cards at the shop counter. When she sees you, she gently sets them aside and waves."
+     },
+     {
+      "speaker": "jicy",
+      "text": "I finally found the card I was looking for. It was right here, under my notes."
+     },
+     {
+      "speaker": "Protagonist",
+      "text": "So the search is over?"
+     },
+     {
+      "speaker": "jicy",
+      "text": "Yes! I know it's a tiny thing, but I've been looking for it all week."
+     },
+     {
+      "speaker": "Narrator",
+      "text": "She does a quick, happy hop, then laughs at her own celebration."
+     },
+     {
+      "speaker": "Protagonist",
+      "text": "Small wins still count."
+     },
+     {
+      "speaker": "jicy",
+      "text": "They count more when you get to tell someone who understands."
+     }
+    ],
+    "choices": [
+     {
+      "label": "Celebrate with her",
+      "reply": "Jicy beams. “Thank you for treating my tiny victory like it matters.”",
+      "kind": "support",
+      "flag": "jicy_random_small_win_celebrate",
+      "delta": {
+       "affection": 1,
+       "trust": 1,
+       "respect": 0,
+       "attraction": 0
+      }
+     },
+     {
+      "label": "Ask her to tell you the story behind the card",
+      "reply": "She tells you every detail, delighted that you want to hear it.",
+      "kind": "honest",
+      "flag": "jicy_random_small_win_story",
+      "delta": {
+       "affection": 1,
+       "trust": 1,
+       "respect": 1,
+       "attraction": 0
+      }
+     }
+    ],
+    "image": "/rpg-assets/characters/jicy/events/jicy_random_small_win.webp",
+    "artPending": true
+   }
+  ],
+  "mandatoryEvents": [],
+  "art": {
+   "schemaVersion": 1,
+   "characterId": "jicy",
+   "portrait": "/rpg-assets/characters/jicy/portrait.webp",
+   "eventImages": [
+    {
+     "sceneId": "jicy_route_1",
+     "path": "/rpg-assets/characters/jicy/events/jicy_route_1.webp",
+     "prompt": "Cinematic 16:9 Neo Harbor visual-novel CG for The Card That Almost Got Away. Jicy and the protagonist in the scene described by the event; preserve Jicy's approved adult design, blonde high ponytail and clean sleeveless pink suit. Warm, character-led composition, natural expressions, no other named characters, no dialogue text, lower fifth clear for UI dialogue. Do not make the suit or public reactions to it the subject."
+    },
+    {
+     "sceneId": "jicy_route_2",
+     "path": "/rpg-assets/characters/jicy/events/jicy_route_2.webp",
+     "prompt": "Cinematic 16:9 Neo Harbor visual-novel CG for A Table for Two. Jicy and the protagonist in the scene described by the event; preserve Jicy's approved adult design, blonde high ponytail and clean sleeveless pink suit. Warm, character-led composition, natural expressions, no other named characters, no dialogue text, lower fifth clear for UI dialogue. Do not make the suit or public reactions to it the subject."
+    },
+    {
+     "sceneId": "jicy_route_3",
+     "path": "/rpg-assets/characters/jicy/events/jicy_route_3.webp",
+     "prompt": "Cinematic 16:9 Neo Harbor visual-novel CG for The Quiet Between Pages. Jicy and the protagonist in the scene described by the event; preserve Jicy's approved adult design, blonde high ponytail and clean sleeveless pink suit. Warm, character-led composition, natural expressions, no other named characters, no dialogue text, lower fifth clear for UI dialogue. Do not make the suit or public reactions to it the subject."
+    },
+    {
+     "sceneId": "jicy_route_4",
+     "path": "/rpg-assets/characters/jicy/events/jicy_route_4.webp",
+     "prompt": "Cinematic 16:9 Neo Harbor visual-novel CG for A Little More Courage. Jicy and the protagonist in the scene described by the event; preserve Jicy's approved adult design, blonde high ponytail and clean sleeveless pink suit. Warm, character-led composition, natural expressions, no other named characters, no dialogue text, lower fifth clear for UI dialogue. Do not make the suit or public reactions to it the subject."
+    },
+    {
+     "sceneId": "jicy_route_5",
+     "path": "/rpg-assets/characters/jicy/events/jicy_route_5.webp",
+     "prompt": "Cinematic 16:9 Neo Harbor visual-novel CG for The Words She Practiced. Jicy and the protagonist in the scene described by the event; preserve Jicy's approved adult design, blonde high ponytail and clean sleeveless pink suit. Warm, character-led composition, natural expressions, no other named characters, no dialogue text, lower fifth clear for UI dialogue. Do not make the suit or public reactions to it the subject."
+    },
+    {
+     "sceneId": "jicy_random_bookmark",
+     "path": "/rpg-assets/characters/jicy/events/jicy_random_bookmark.webp",
+     "prompt": "Cinematic 16:9 Neo Harbor visual-novel CG for A Bookmark for Later. Jicy and the protagonist sharing this small everyday moment; preserve her approved adult design, blonde high ponytail and canonical pink sleeveless suit. Friendly, wholesome, slice-of-life composition; no other named characters, no dialogue text, lower fifth clear for UI dialogue. Keep the moment about the activity and their connection, not the outfit."
+    },
+    {
+     "sceneId": "jicy_random_high_score",
+     "path": "/rpg-assets/characters/jicy/events/jicy_random_high_score.webp",
+     "prompt": "Cinematic 16:9 Neo Harbor visual-novel CG for One More Try. Jicy and the protagonist sharing this small everyday moment; preserve her approved adult design, blonde high ponytail and canonical pink sleeveless suit. Friendly, wholesome, slice-of-life composition; no other named characters, no dialogue text, lower fifth clear for UI dialogue. Keep the moment about the activity and their connection, not the outfit."
+    },
+    {
+     "sceneId": "jicy_random_card_art",
+     "path": "/rpg-assets/characters/jicy/events/jicy_random_card_art.webp",
+     "prompt": "Cinematic 16:9 Neo Harbor visual-novel CG for The Picture in the Corner. Jicy and the protagonist sharing this small everyday moment; preserve her approved adult design, blonde high ponytail and canonical pink sleeveless suit. Friendly, wholesome, slice-of-life composition; no other named characters, no dialogue text, lower fifth clear for UI dialogue. Keep the moment about the activity and their connection, not the outfit."
+    },
+    {
+     "sceneId": "jicy_random_clouds",
+     "path": "/rpg-assets/characters/jicy/events/jicy_random_clouds.webp",
+     "prompt": "Cinematic 16:9 Neo Harbor visual-novel CG for Cloud Shapes. Jicy and the protagonist sharing this small everyday moment; preserve her approved adult design, blonde high ponytail and canonical pink sleeveless suit. Friendly, wholesome, slice-of-life composition; no other named characters, no dialogue text, lower fifth clear for UI dialogue. Keep the moment about the activity and their connection, not the outfit."
+    },
+    {
+     "sceneId": "jicy_random_small_win",
+     "path": "/rpg-assets/characters/jicy/events/jicy_random_small_win.webp",
+     "prompt": "Cinematic 16:9 Neo Harbor visual-novel CG for A Small Win. Jicy and the protagonist sharing this small everyday moment; preserve her approved adult design, blonde high ponytail and canonical pink sleeveless suit. Friendly, wholesome, slice-of-life composition; no other named characters, no dialogue text, lower fifth clear for UI dialogue. Keep the moment about the activity and their connection, not the outfit."
+    }
+   ]
+  }
+ },
+ {
   "id": "jinx",
   "cast": {
    "name": "Jinx Rivera",
