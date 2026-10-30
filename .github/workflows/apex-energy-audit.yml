@@ -3,6 +3,7 @@ on:
   pull_request:
     paths:
       - 'cpu_policy.js'
+      - 'cpu_profiles.js'
       - 'headless_duel.js'
       - 'classic_trainer_core.js'
       - 'classic_power_core.js'
@@ -38,6 +39,7 @@ on:
       - main
     paths:
       - 'cpu_policy.js'
+      - 'cpu_profiles.js'
       - 'headless_duel.js'
       - 'classic_trainer_core.js'
       - 'classic_power_core.js'
