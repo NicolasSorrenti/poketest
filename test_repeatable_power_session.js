@@ -17,9 +17,9 @@ function pick(g,id){let d=g.pendingDecision;assert.ok(d);act(g,'choose',{decisio
 }
 {
  const g=setup('base1-15');g.players[0].active.energies=['base1-99','base1-99'];
- act(g,'use_power',{slot:-1,repeat:true});pick(g,'slot:-1');pick(g,'index:0');pick(g,'slot:0');
+ act(g,'use_power',{slot:-1,repeat:true});pick(g,'slot:-1');pick(g,'slot:0');
  assert.equal(g.players[0].bench[0].energies.length,1);assert.equal(g.pendingDecision.kind,'source');
- pick(g,'slot:-1');pick(g,'index:0');pick(g,'slot:0');assert.equal(g.players[0].bench[0].energies.length,2);
+ pick(g,'slot:-1');pick(g,'slot:0');assert.equal(g.players[0].bench[0].energies.length,2);
  let d=g.pendingDecision;act(g,'choose',{decisionId:d.id,decline:true});assert.equal(g.pendingDecision,null);
 }
 {

@@ -135,7 +135,11 @@ function powerPlan(g,plan,h){
    if(plan.repeat&&name==='Energy Trans'&&!sources.length)return;
    if(choose('source',sources,plan.repeat&&name==='Energy Trans'?'Energy Trans: choose source or Finish':'Choose source Pokémon',plan.repeat&&name==='Energy Trans'?{min:0,max:1,optional:true}:{}))return;
    if(plan.repeat&&name==='Energy Trans'&&!selected(plan,'source').length)return;
-   if(choose('energy',indices(pokemonAt('source').energies,c=>c.name===(name==='Gather Fire'?'Fire Energy':'Grass Energy')),'Choose Energy to move'))return;
+   if(!have(plan,'energy')){
+    const items=indices(pokemonAt('source').energies,c=>c.name===(name==='Gather Fire'?'Fire Energy':'Grass Energy'));
+    if(items.length&&items.every(o=>basicEnergy(card(o.cardId))&&card(o.cardId).name===card(items[0].cardId).name))d.energy=[items[0].id];
+    else if(choose('energy',items,'Choose Energy to move'))return;
+   }
    if(name==='Energy Trans'&&choose('target',slotList(p,x=>x!==pokemonAt('source')),'Choose receiving Pokémon'))return;
   }
  }
