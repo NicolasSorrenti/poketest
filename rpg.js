@@ -1366,9 +1366,51 @@ function cancelPreparedDuel(){
  $('battle').src='about:blank';
  persist();render();
 }
+let battleRecoveryTimer=null;
+function ensureBattleRecovery(){
+ let panel=$('battleRecovery');
+ if(panel)return panel;
+ panel=document.createElement('section');panel.id='battleRecovery';panel.hidden=true;
+ panel.setAttribute('role','status');panel.setAttribute('aria-live','polite');
+ panel.style.cssText='position:fixed;z-index:100;left:50%;bottom:20px;transform:translateX(-50%);width:min(560px,calc(100vw - 24px));padding:16px;border:1px solid #c59bd1;border-radius:14px;background:#17152af2;color:#fff;box-shadow:0 10px 40px #000b;text-align:center';
+ const message=document.createElement('p');message.textContent='The duel has not responded. You can retry loading it or return to your campaign.';
+ message.style.margin='0 0 12px';
+ const retry=document.createElement('button');retry.type='button';retry.textContent='Retry duel';retry.style.margin='4px';retry.onclick=retryPendingBattle;
+ const abandon=document.createElement('button');abandon.type='button';abandon.textContent='Return to campaign';abandon.style.margin='4px';abandon.onclick=abandonPendingBattle;
+ panel.append(message,retry,abandon);document.body.append(panel);return panel;
+}
+function scheduleBattleRecovery(){
+ clearTimeout(battleRecoveryTimer);
+ const pending=state.pendingDuel;if(!pending||PRE.isReady(pending))return;
+ const started=Number(pending.startedAt)||Date.now();
+ const delay=Math.max(0,12000-(Date.now()-started));
+ battleRecoveryTimer=setTimeout(()=>{if(state.pendingDuel?.id===pending.id)ensureBattleRecovery().hidden=false;},delay);
+}
+function retryPendingBattle(){
+ const pending=state.pendingDuel;if(!pending||PRE.isReady(pending))return;
+ pending.startedAt=Date.now();persist();ensureBattleRecovery().hidden=true;
+ if(pending.deckCards)sessionStorage.setItem('neoRpgDeck:'+pending.id,JSON.stringify(pending.deckCards));
+ if(pending.customOpponentDeck)sessionStorage.setItem('neoRpgNpcDeck:'+pending.id,JSON.stringify(pending.customOpponentDeck));
+ $('duel').hidden=false;window.NeoRpgAudio?.setPaused?.(true);
+ $('battle').src='about:blank';requestAnimationFrame(()=>{$('battle').src=duelUrl(pending);});
+ scheduleBattleRecovery();
+}
+function abandonPendingBattle(){
+ const pending=state.pendingDuel;if(!pending||PRE.isReady(pending))return;
+ if(!confirm('Return to your campaign and abandon this unfinished duel?'))return;
+ clearTimeout(battleRecoveryTimer);
+ if(pending.tournamentId)TOURNAMENTS.cancel(state,pending);
+ if(pending.arcEpisode)state.activeArc={id:pending.arcEpisode,phase:'choice',index:ARC.linesFor(state,pending.arcEpisode).length,choice:null};
+ state.pendingDuel=null;
+ sessionStorage.removeItem(BRIDGE.sessionKey(pending.id));
+ sessionStorage.removeItem('neoRpgDeck:'+pending.id);sessionStorage.removeItem('neoRpgNpcDeck:'+pending.id);
+ ensureBattleRecovery().hidden=true;$('duel').hidden=true;$('battle').src='about:blank';
+ window.NeoRpgAudio?.setPaused?.(false);persist();render();
+}
 function launchPreparedDuel(){
  const pending=state.pendingDuel;
  if(!PRE.launch(pending))return;
+ pending.startedAt=Date.now();
  recordCG('before_duel',pending.npc);
  persist();
  if($('preDuelDialog').open)$('preDuelDialog').close();
@@ -1378,6 +1420,7 @@ function launchPreparedDuel(){
  if(pending.deckCards)sessionStorage.setItem('neoRpgDeck:'+pending.id,JSON.stringify(pending.deckCards));
  if(pending.customOpponentDeck)sessionStorage.setItem('neoRpgNpcDeck:'+pending.id,JSON.stringify(pending.customOpponentDeck));
  $('battle').src=duelUrl(pending);
+ scheduleBattleRecovery();
  // Only important circuit matches get the fast, nonblocking versus intro.
  const presentation=window.NeoRpgTournamentPresentation;
  if(presentation?.matchModel)presentation.show(presentation.matchModel(pending,{cast,cups:TOURNAMENTS.cups}));
@@ -3001,7 +3044,9 @@ persist();render();initDecks();loadCardNames();if(state.deckJourney&&!state.deck
  }else{
   $('duel').hidden=false;
   window.NeoRpgAudio?.setPaused?.(true);
+  if(!Number(state.pendingDuel.startedAt)){state.pendingDuel.startedAt=Date.now();persist();}
   $('battle').src=duelUrl(state.pendingDuel);
+  scheduleBattleRecovery();
  }
 }
  window.NeoRpgCloudSave?.mount({
