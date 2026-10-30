@@ -82,8 +82,9 @@
       // Treat missing configuration as static hosting, not a fatal startup error.
       let config=null;
       try {
-        const response=await fetch('/api/rpg-cloud/config',{cache:'no-store'});
-        if(response.ok&&response.headers.get('content-type')?.includes('application/json'))config=await response.json();
+        let response=await fetch('/api/rpg-cloud/config',{cache:'no-store'}).catch(()=>null);
+        if(response?.ok&&response.headers.get('content-type')?.includes('application/json'))config=await response.json();
+        if(!config?.enabled){response=await fetch('/rpg-cloud-config.json',{cache:'no-store'}).catch(()=>null);if(response?.ok&&response.headers.get('content-type')?.includes('application/json'))config=await response.json();}
       }catch(error){console.warn('Cloud API config unavailable; checking public roster',error);}
       if(config?.enabled){
         const response=await fetch(config.url+'/auth/v1/token?grant_type=refresh_token',{
