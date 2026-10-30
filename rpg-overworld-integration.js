@@ -383,8 +383,11 @@
         // A missing portrait must never display a different character's face.
         // The original game's avatar loader already resolves outfit-specific art.
         if(participant.src)image.src=participant.src;
-        let usedPoseFallback=false;
+        const portraitSources=Array.isArray(participant.srcs)?participant.srcs:[participant.src].filter(Boolean);
+        let portraitSourceIndex=1,usedPoseFallback=false;
         image.onerror=()=>{
+          const next=portraitSources[portraitSourceIndex++];
+          if(next){image.hidden=false;image.src=next;return}
           const fallback=bridge()?.poseIntroFallback?.(participant.id);
           if(fallback&&!usedPoseFallback){usedPoseFallback=true;image.hidden=false;image.src=fallback;return}
           image.hidden=true;person.classList.add('neo-ow-portrait-missing');
