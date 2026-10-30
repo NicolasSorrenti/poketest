@@ -15,7 +15,7 @@
  "/rpg_dialogue_memory.js",
  "/rpg_conversations.js",
  "/rpg_legacy_scenes.js",
- "/rpg_story.js",
+ "/rpg_story.js?v=story-migration-statefix-20261030",
  "/rpg_schedules.js",
  "/rpg_world.js",
  "/rpg_rival_arc.js",
