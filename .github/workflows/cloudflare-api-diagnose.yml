@@ -1,0 +1,20 @@
+name: Cloudflare preview HTTP diagnostics
+on:
+  push:
+    branches: ['fix/cloudflare-native-cube-classic-*']
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - name: Probe deployed immutable preview
+        run: |
+          set +e
+          for url in \
+            https://abaaef9d.poketest-cloudflare-test.pages.dev/api/cube/presets \
+            https://abaaef9d.poketest-cloudflare-test.pages.dev/api/classic/decks \
+            https://fix-cloudflare-native-cube-classic-20261030.poketest-cloudflare-test.pages.dev/api/cube/presets; do
+            echo "PROBE $url"
+            curl --max-time 20 -L -sS -i "$url" | head -c 1000
+            echo
+          done
