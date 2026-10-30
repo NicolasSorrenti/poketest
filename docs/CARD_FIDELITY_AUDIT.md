@@ -71,6 +71,7 @@ These scenarios use the TCGdex-sourced catalogue text. Printed card images and a
 | Magmar (base1-36, base4-51) | Flamethrower typed Fire cost, equivalent-choice auto-discard, Rainbow choice and rejection of Grass | test_flamethrower_typed_discard.js | Partial; Fire Punch and other interactions pending |
 | Flareon (base2-3, base2-19) | Flamethrower typed Fire cost, equivalent-choice auto-discard, Rainbow choice and rejection of Grass | test_flamethrower_typed_discard.js | Partial; Quick Attack and other interactions pending |
 | Houndoom (neo2-4, neo2-23) | Flamethrower typed Fire cost, equivalent-choice auto-discard, Rainbow choice and rejection of Grass | test_flamethrower_typed_discard.js | Partial; Crunch and other interactions pending |
+| Dark Machoke (base5-40) | Drag Off auto-selects its sole legal Bench target before damage and switches it Active | test_classic_complex_attacks.js | Partial; multi-target and other interactions pending |
 
 
 The full card-by-card fidelity review is **not complete**. Do not count the other cards or untested branches of the cards above as verified. Existing Classic execution probing covers 427 attack records in a manufactured scenario; it checks execution, not correctness or all possible choices.
