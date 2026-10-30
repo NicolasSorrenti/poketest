@@ -119,7 +119,12 @@ function powerPlan(g,plan,h){
   }else{
    if(name==='Energy Trans'&&own(p).length<2)throw Error('Energy Trans requires another Pokémon in play');
    if(choose('source',slotList(p,x=>(name==='Energy Trans'||x!==u)&&x.energies.some(id=>card(id).name===(name==='Gather Fire'?'Fire Energy':'Grass Energy'))),'Choose source Pokémon'))return;
-   if(choose('energy',indices(pokemonAt('source').energies,c=>c.name===(name==='Gather Fire'?'Fire Energy':'Grass Energy')),'Choose Energy to move'))return;
+   if(!have(plan,'energy')){
+    const items=indices(pokemonAt('source').energies,c=>c.name===(name==='Gather Fire'?'Fire Energy':'Grass Energy'));
+    // Basic Energy of the same type is interchangeable across printings.
+    if(items.length&&items.every(o=>basicEnergy(card(o.cardId))&&card(o.cardId).name===card(items[0].cardId).name))d.energy=[items[0].id];
+    else if(choose('energy',items,'Choose Energy to move'))return;
+   }
    if(name==='Energy Trans'&&choose('target',slotList(p,x=>x!==pokemonAt('source')),'Choose receiving Pokémon'))return;
   }
  }
