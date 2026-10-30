@@ -51,6 +51,13 @@ x=scenario('neo1-46','Fire Wind');assert(x.attack(0));assert.equal(R('engine.foe
 x=scenario('neo1-46','Fire Wind',{heads:false});assert(x.attack(0));assert.equal(R('engine.foe.bench[0].damage'),0);
 x=scenario('neo2-37','Recover',{energies:['Water','Fire'],setup:'engine.me.active.damage=60'});assert(x.attack());assert.equal(R('engine.me.active.damage'),0);assert.equal(R('engine.me.active.energies.length'),1);assert.equal(R('engine.me.discard.length'),3);
 x=scenario('neo3-6','Searing Flames',{energies:['Fire','Fire','Fire']});assert(x.attack());assert.equal(R('engine.foe.active.damage'),60);assert.equal(R('engine.me.active.energies.length'),1);
+x=scenario('neo3-6','Searing Flames',{energies:['Fire','Fire','Fire','Water','Lightning']});
+assert(x.attack());assert.equal(R('engine.foe.active.damage'),60,'Searing Flames still deals 60 damage');
+assert.equal(R('engine.me.active.energies.join(",")'),'test-Fire,test-Water,test-Lightning','Only two Fire Energy are discarded');
+assert.equal(R('engine.me.discard.slice(-2).join(",")'),'test-Fire,test-Fire','Discard pile receives Fire, not Water or Lightning');
+x=scenario('neo3-6','Searing Flames',{energies:['Water','Fire','Lightning','Fire','Fire']});
+assert(x.attack());assert.equal(R('engine.foe.active.damage'),60);
+assert.equal(R('engine.me.active.energies.join(",")'),'test-Water,test-Lightning,test-Fire','Non-Fire Energy survives interleaved attachments');
 x=scenario('neo3-17','Mega Flame',{heads:false,energies:['Fire','Fire','Fire']});assert(x.attack());assert.equal(R('engine.foe.active.damage'),50);assert.equal(R('engine.me.active.energies.length'),1);
 x=scenario('neo3-17','Mega Flame',{heads:true,energies:['Fire','Fire','Fire']});assert(x.attack());assert.equal(R('engine.me.active.energies.length'),3);
 x=scenario('neo1-24','Mean Look');assert(x.attack());assert.equal(R('engine.foe.active.persistentRetreatSourceId'),'neo1-24');R('engine.turn=1');assert.equal(R('engine.retreat(0)'),false,'Mean Look blocks retreat while source Active');

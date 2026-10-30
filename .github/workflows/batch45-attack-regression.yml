@@ -1,0 +1,28 @@
+name: Batch 45 Attack Regression
+on:
+  pull_request:
+    paths:
+      - 'engine.js'
+      - 'cards/**'
+      - 'batch45_targets.json'
+      - 'test_attack_batch_v045.js'
+      - '.github/workflows/batch45-attack-regression.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'engine.js'
+      - 'cards/**'
+      - 'batch45_targets.json'
+      - 'test_attack_batch_v045.js'
+      - '.github/workflows/batch45-attack-regression.yml'
+jobs:
+  batch45:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify all Batch 45 registry keys and attack outcomes
+        run: node test_attack_batch_v045.js
