@@ -45,6 +45,7 @@ for(const [id,name] of fireSingles){
  assert.equal(g.players[0].discard.at(-1),F,id+' discarded wrong type');
  assert.equal(g.players[0].active.energies.filter(x=>x===F).length,3,id+' must discard exactly one Fire Energy');
  assert.equal(g.players[0].active.energies.includes(G),true,id+' must preserve ineligible Energy');
+ assert.ok(g.message.some(line=>line.includes('discarded')&&line.includes('Fire Energy')),id+' must report its Energy discard');
 }
 {
  // Rainbow supplies Fire but has a different outcome from Basic Fire, so retain a meaningful choice.
@@ -90,20 +91,17 @@ for(const [id,name] of fireSingles){
  const a=CATALOG.get('neo4-46').attacks.find(a=>a.name==='Burning Flame');
  assert.match(a.text,/discard a Fire Energy card/i);
  assert.equal(ATTACK.compile(a)?.kind,'neo48:burning-flame');
- let got=false;
  for(const seed of [0,1,2,3,4,0x80000000,0xffffffff]){
   const g=game('neo4-46',[F,F,G]);
   g.rngState=seed;
   const d=attack(g,'Burning Flame');
-  if(!d)continue;
-  got=true;
-  assert.equal(d.options.every(o=>o.label==='Fire Energy'),true);
-  invalid(g,['energy:2']);
-  const r=doAction(g,'choose',{decisionId:d.id,selected:d.options.slice(0,d.min).map(o=>o.id)});
-  assert.equal(r.ok,true,r.error);
-  assert.equal(g.players[0].discard.every(id=>id===F),true);
+  assert.equal(d,null,'Burning Flame should auto-discard equivalent Fire Energy on heads');
+  const heads=g.coinFlips.slice(-2).filter(x=>x.result==='heads').length;
+  assert.equal(g.players[1].active.damage,30+heads*20);
+  assert.equal(g.players[0].active.energies.filter(id=>id===F).length,2-heads);
+  assert.equal(g.players[0].discard.filter(id=>id===F).length,heads);
+  if(heads)assert.ok(g.message.some(line=>line.includes('discarded')&&line.includes('Fire Energy')));
  }
- assert.ok(got,'Burning Flame must expose a Fire-only prompt on heads');
 }
 {
  // Fire Spin differs: it explicitly allows ANY Energy. Preserve that behavior.
