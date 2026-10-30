@@ -29,7 +29,9 @@ function boot(saved=new Map(),sessions=new Map()){
  const sessionStorage={getItem:k=>sessions.get(k)||null,setItem:(k,v)=>sessions.set(k,v),removeItem:k=>sessions.delete(k)};
  const fetch=async()=>({ok:true,json:async()=>({decks:[{id:'blackout',name:'Blackout'},{id:'brushfire',name:'Brushfire'}]})});
  const location={search:'',origin:'http://localhost:8000',reload(){}};
- vm.runInNewContext(script,{window,document,localStorage,sessionStorage,fetch,location,confirm:()=>true,console,queueMicrotask,URLSearchParams,Event:class{constructor(type){this.type=type;}},Image:Element,NodeFilter:{SHOW_TEXT:4}},{filename:'rpg.js'});
+ // Keep browser recovery timers inert in this deterministic headless save-lock fixture.
+ const setTimeout=()=>1,clearTimeout=()=>{};
+ vm.runInNewContext(script,{window,document,localStorage,sessionStorage,fetch,location,confirm:()=>true,console,queueMicrotask,URLSearchParams,Event:class{constructor(type){this.type=type;}},Image:Element,NodeFilter:{SHOW_TEXT:4},setTimeout,clearTimeout},{filename:'rpg.js'});
  if(fresh){
   assert.ok(ids.starterChoices?.children?.length>0,
    'Fresh campaign must render starter choices');
