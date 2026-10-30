@@ -1350,7 +1350,8 @@ function performAction(g,side,cmd){
   if(program.kind==='drag-off'&&!f.bench.length)fail('Drag Off requires an opposing Benched Pokémon');
   if(program.kind==='enemy-energy-removal'&&f.active.energies.length>1){
    const energyIds=f.active.energies;
-   if(new Set(energyIds).size===1){resolveAttack(g,side,index,undefined,undefined,{enemyEnergyIndex:0});return;}
+   // Reprints have distinct catalog IDs but can still be one equivalent choice.
+   if(new Set(energyIds.map(id=>card(g,id).name)).size===1){resolveAttack(g,side,index,undefined,undefined,{enemyEnergyIndex:0});return;}
    g.nextDecisionId++;g.pendingDecision=makeDecision({id:`enemyenergy:${g.nextDecisionId}`,actor:side,kind:'energy-discard',label:`${a.name}: choose Defending Pokémon Energy`,options:f.active.energies.map((id,i)=>({id:`energy:${i}`,label:card(g,id).name})),min:1,max:1});
    g.pendingAction={kind:'attack_enemy_energy',side,attackIndex:index};return;
   }
