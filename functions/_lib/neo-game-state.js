@@ -22,7 +22,7 @@ export const json = (value, status = 200) => Response.json(value, {
 });
 export function errorResponse(error) {
  const message = String(error?.message || error || 'Unknown game error');
- const status = /missing.*token|unauthorized|session|token|sign in|login|credentials/i.test(message) ? 401 :
+ const status = /database is not configured|storage limit/i.test(message)?503:/missing.*token|unauthorized|session|token|sign in|login|credentials/i.test(message) ? 401 :
   /stale|revision|conflict/i.test(message) ? 409 : /expired|not found/i.test(message) ? 404 : 400;
  return json({error:message},status);
 }
@@ -55,7 +55,7 @@ export async function getSession(db,kind,token) {
  return {snapshot,storedRevision:row.revision};
 }
 export async function putSession(db,kind,token,snapshot,storedRevision=null) {
- if(!snapshot||typeof snapshot!=='object'||snapshot.token!==token||
+ if(!snapshot||typeof snapshot!=='object'||(snapshot.token!==undefined&&snapshot.token!==token)||
     !Number.isSafeInteger(snapshot.revision)) throw Error('Invalid session snapshot');
  const serialized=JSON.stringify(snapshot), now=Date.now();
  if(serialized.length>1800000) throw Error('Session exceeds storage limit');
