@@ -1197,11 +1197,11 @@
         },
         {
           "speaker": "Protagonist",
-          "text": "That was quick. You're really flexible."
+          "text": "That was quick. You're really in great shape."
         },
         {
           "speaker": "jicy",
-          "text": "I stretch a lot! And I have been looking for this card everywhere."
+          "text": "Thanks! I like staying active."
         },
         {
           "speaker": "Narrator",
@@ -1258,7 +1258,8 @@
           }
         }
       ],
-      "artPending": false
+      "artPending": false,
+      "image": "/rpg-assets/characters/jicy/events/jicy_random_missing_piece.webp"
     }
   ]
 }
