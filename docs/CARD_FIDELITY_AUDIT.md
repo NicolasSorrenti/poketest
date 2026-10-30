@@ -50,5 +50,7 @@ These scenarios use the TCGdex-sourced catalogue text. Printed card images and a
 | Machamp (base1-8) | Seismic Toss cost and Strikes Back knockout timing/status restrictions | test_card_fidelity_machamp.js | Partial; independent print/ruling review and remaining interactions pending |
 
 | Magneton (base1-9) | Thunder Wave coin/status outcomes and cost; Selfdestruct Active, Bench and recoil damage, weakness/resistance note, cost and knockout | test_card_fidelity_magneton.js | Partial; independent print/ruling review and other interactions pending |
+| Mewtwo (base1-10) | Psychic counts attached Energy cards (not units); Barrier's Psychic Energy discard, equivalent-choice auto-resolution, Rainbow Energy choice, and prevention of damage/paralysis on the next turn | test_card_fidelity_mewtwo.js | Partial; PokémonTCG card data says Psychic Energy where the imported catalogue and Bulbapedia transcription say Energy; scan/ruling check and other interactions pending |
+
 
 The full card-by-card fidelity review is **not complete**. Do not count the other cards or untested branches of the cards above as verified. Existing Classic execution probing covers 427 attack records in a manufactured scenario; it checks execution, not correctness or all possible choices.
