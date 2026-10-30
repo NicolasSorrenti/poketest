@@ -234,14 +234,35 @@
   finally{if(epoch===playbackEpoch){busy=false;render();}}
  }
  async function start(){if(cubeRoomCode||cubeSoloMode)return false;if(busy)return;busy=true;$('startupError').textContent='';try{
-  const partnerCards=rpgMode&&rpgDuelId?sessionStorage.getItem('neoRpgNpcDeck:'+rpgDuelId):null;
+  let pendingDecks=null;
+  if(rpgMode&&rpgDuelId){
+   try{pendingDecks=window.parent?.NeoRpgOverworldBridge?.pendingDuelDecks?.(rpgDuelId)||null;}catch{}
+  }
+  const readCampaignDeck=(key,slot)=>{
+   let raw=rpgDuelId?sessionStorage.getItem(key+ rpgDuelId):null;
+   let parsed=null;try{parsed=raw?JSON.parse(raw):null}catch{}
+   if(Array.isArray(parsed)&&parsed.length===60)return raw;
+   const fallback=pendingDecks?.[slot];
+   if(Array.isArray(fallback)&&fallback.length===60){raw=JSON.stringify(fallback);sessionStorage.setItem(key+rpgDuelId,raw);return raw;}
+   return raw;
+  };
+  let partnerCards=rpgMode&&rpgDuelId?readCampaignDeck('neoRpgNpcDeck:','opponentDeck'):null;
+  const playerDeckRaw=rpgMode&&rpgDuelId?readCampaignDeck('neoRpgDeck:','playerDeck'):null;
+  if(rpgMode&&$('deck').value==='custom'){
+   let cards=null;try{cards=playerDeckRaw?JSON.parse(playerDeckRaw):null}catch{}
+   if(!Array.isArray(cards)||cards.length!==60)throw Error('Your campaign deck could not be recovered. Return to the overworld and retry the duel.');
+  }
+  if(partnerCards){let cards=null;try{cards=JSON.parse(partnerCards)}catch{}if(!Array.isArray(cards)||cards.length!==60)partnerCards=null;}
   const response=await api('create',{method:'POST',body:JSON.stringify({
    deck:$('deck').value,opponent:$('opponent').value,
     ...(!rpgMode&&!cubeRoomCode?{difficulty:Number($('cpuDifficulty').value),advancedTactics:Number($('cpuDifficulty').value)>=6}:{}),
    ...(rpgMode&&rpgDuelId?{rpgDuelId,npcDeckId:rpgNpc,npcDeckTier:Number(rpgParams.get('npcTier'))||1,npcDeckVariant:Number(rpgParams.get('npcVariant'))||0,prizeCount:Number(rpgParams.get('prizes'))===6?6:4}:{}),
-   ...($('deck').value==='custom'?{customDeck:JSON.parse(rpgMode?sessionStorage.getItem('neoRpgDeck:'+rpgDuelId)||'null':localStorage.getItem('neoCampusCustomGymDeck')||'null')}:{}),
+   ...($('deck').value==='custom'?{customDeck:JSON.parse(rpgMode?playerDeckRaw||'null':localStorage.getItem('neoCampusCustomGymDeck')||'null')}:{}),
    ...(partnerCards?{customOpponentDeck:JSON.parse(partnerCards)}:{})
   })});
+  const players=response?.view?.players;
+  if(rpgMode&&(!Array.isArray(players)||players.length!==2||players.some(p=>!Number.isFinite(p.deckCount)||p.deckCount<0||!Number.isFinite(p.handCount)||!Number.isFinite(p.prizeCount)||p.deckCount+p.handCount+p.prizeCount<=0)))
+   throw Error('The duel opened without both decks. Your campaign is intact; return to the overworld and retry.');
   feedback.reset();opponentActivity.clear();combat.reset();reactions?.reset();npcChat?.reset();token=response.token;sessionStorage.setItem(rpgKey,token);current=response;
   checkCloudCheckpoint(response);
   selectedHand=null;targetMode=null;decisionSelection.clear();handVisible=true;powersOpen=false;logOpen=false;lastCoinSeq=null;lastKoMessage="";setHandVisible(true);render();
