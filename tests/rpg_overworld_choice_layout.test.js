@@ -50,5 +50,5 @@ test('Escape hides choices and native events retain input state',()=>{
  assert.match(ui,/event\.preventDefault\(\);setChoicesCollapsed\(true\)/);
  assert.match(ui,/syncChoicePresentation\(idleFocus\)/);
  assert.match(ui,/attachChoicePanels\(\);refresh\(\);overlay\.hidden=false/);
- assert.match(html,/rpg-overworld-integration\.js\?v=20261029-portrait-flush-2/);
+ assert.match(html,/rpg-overworld-integration\.js\?v=20261029-character-mockup-polish-2/);
 });

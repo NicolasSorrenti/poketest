@@ -181,3 +181,46 @@ User screenshot (Riverside Park, Day 32 Evening) established four defects: dupli
 - `overworld/prototype.js` now probes `/rpg-assets/locations/<scene-id>/overworld-map.webp`, `.png`, `.jpg` for blueprint scenes and falls back to the original SVG if none exist. The app therefore picks up the conventional files once actually committed to main and deployed. Pixel Palace and shop remain unchanged; dimensions/anchors remain in `overworld/manifest.js` (1550×1120 for the five blueprints). A missing asset never leaves an empty map silently.
 - New regression tests: `tests/rpg_overworld_map_loader.test.js`: 4/4 checks passed. **No missing background artwork was manufactured or promoted**, because the files are absent from main and many candidates still have failed placement QA. Browser validation is still required.
 - To add a map: put a verified 1550×1120 final image under `rpg-assets/locations/home/overworld-map.webp` (similarly `park`, `cafe`, `center`, `library`); commit the binary to main and deploy. Check each scene's hotspot/foot anchors before treating the art as final.
+
+## 2026-10-29 — six user-uploaded maps installed + interactive placement QA
+
+- The user pushed six background images to GitHub main at `rpg-assets/locations/{home,park,cafe,center,library,shop}/overworld-map-candidate-20261029.webp`. **These are now the exact images mapped by `overworld/manifest.js`**, replacing the five blueprint paths and previous shop v1 candidate; Pixel Palace remains unchanged.
+- The previous automatic loader only probed `overworld-map.webp/png/jpg`, which could never find the actual suffixed filenames. The explicit manifest image path fixes this without renaming or rewriting approved artwork.
+- All existing NPC anchors, camera framing and hotspot coordinates remain the **initial placement baseline**. Do not claim pixel-level clearance calibration without reviewing these specific uploaded paintings. The prior art handoff contains warnings about some conceptual placements; this integration is meant for player preview and visual review first.
+- Added layout QA mode: `/overworld-prototype.html?scene=home&dev=1` (replace `home` with `park`, `cafe`, `center`, `library`, `shop`). It overlays draggable NPC foot anchor markers and hotspot rectangles; data persists only in local browser storage, and **Copy layout JSON** exports all coordinates for a reviewed permanent map update. `Clear saved adjustments` resets the local draft. Embedded RPG gameplay ignores editor overrides.
+- Hotspot hitboxes are bounded to the image canvas even when legacy blueprint positions fall outside its visible extents. The finished six-map layout will require checking each scene for walkable floor and real furniture/service landmarks. Copying the editor JSON is preferred to guessing geometry from filenames.
+- `tests/rpg_overworld_map_loader.test.js`: 5 focused checks pass for all six image paths, preserved Pixel Palace, runtime map selection and isolated development editor. Full browser QA and Render deployment remain outstanding.
+
+## 2026-10-29 — Next maps: Riverside Park and Rest Stop placement groundwork
+
+- Park and Café both had legacy blueprint hotspot IDs `a,b,c,d` and right-side bounding boxes ending at x=1740 on 1550-wide maps. The manifest now uses stable semantic IDs: Park `waterfront`, `benches`, `flyer-board`, `garden`; Café `counter`, `strategy-tables`, `window-seats`, `coffee-station`. Each zone now fits inside the map. User-uploaded images and all NPC anchors remain unchanged.
+- The `?dev=1` map layout editor now has an orange bottom-right resize handle per hotspot, in addition to dragging hotspots and blue NPC foot markers. Width/height are clamped to the image, locally saved, and included in `Copy layout JSON`. These are QA tools, not changes to historical campaign logic.
+- Structural checks passed: all eight Park/Café hotspots have meaningful IDs and fit within their image bounds; JavaScript syntax and asset cache versions valid. Fine-grained placement against the painted furniture, clear NPC sprite envelopes, and walkable regions **have not been verified visually** and must not be described as finalized. Advance in order Park → Café → Center → Library → Home, with images in `rpg-assets/locations/<id>/overworld-map-candidate-20261029.webp`.
+- Deployment source is **Cloudflare Pages**, not Render. Original `rpg.html` and Pixel Palace untouched.
+
+## 2026-10-29 — Next maps: Park/Café landmark interaction pass
+
+- Existing six uploaded backgrounds remain selected in the manifest; Park and Café now use descriptive, bounded hotspot IDs. **No background painting or reviewed sprite coordinate was overwritten.**
+- All six uploaded scenes now show compact, visible 56-pixel landmark action pins rather than using the prior enormous invisible clickable hotspot regions. This reduces unrelated touches over scenery and NPCs while preserving full-size editable hotspot rectangles in `?scene=park&dev=1` and other placement previews.
+- The existing `overworld/prototype.css` and `overworld/prototype.js` scripts have fresh cache versions on `overworld-prototype.html`; gameplay hotspots still dispatch the native RPG activity flow.
+- Map loader and placement QA regression checks: **7/7 passed** in an isolated JS harness. Screenshot/visual proof of physically appropriate landmark placement remains outstanding because the GitHub connector did not return usable binary image bytes; **do not claim pixel-perfect park/café anchors**.
+- Next precise review: inspect the installed Park and Café images in a visual browser/placement tool, drag landmarks to their real depicted positions, export layout JSON and commit the coordinates after approval. The user is using Cloudflare, **not Render**; do not check or refer to Render as deployment status.
+
+## 2026-10-29 — All seven map interaction controls unified
+
+- Scope: `arcade`, `shop`, `home`, `park`, `cafe`, `center`, and `library`. All now use a consistent compact 56×56 landmark interaction marker in normal exploration, including previously excluded Pixel Palace. This avoids enormous invisible click regions overlapping character interaction targets.
+- Rectangles are clamped to their map image boundaries at runtime; the layout editor still displays and lets a designer reposition/resize the underlying full rectangles. Existing character anchors and image assets were not changed, as requested.
+- Eight focused checks for map references, editor isolation, landmark UI and all seven scenes passed in the isolated test harness. Full visual QA of real furniture and walkway placement remains for later; don't describe existing generic positions as visually verified.
+- Deployed-site QA must be performed on Cloudflare Pages, not Render. This turn commits source and tests but does not claim a completed production deployment.
+
+## 2026-10-29 — Visual hotspot alignment against uploaded six-map ZIP
+
+- The user supplied `Neo_Campus_Overworld_Maps_20261029(1).zip` containing six original 1550×1120 WebP artworks for `home`, `park`, `cafe`, `center`, `library`, and `shop`. Visually inspected a montage of all six, then aligned the four existing interaction regions per location to their visible objects and paths.
+- **Home:** desk at upper-center, bed at upper-left, wardrobe near desk, window/personal corner at lower-left; prior blueprint swapped these and is no longer used for hotspot placement.
+- **Park:** waterfront at upper-left, benches/terraces upper-right, noticeboard lower-left, garden lower/right.
+- **Café:** main counter top-center, tables mid-left, window seating upper-left, coffee station on right.
+- **Community Center:** tournament stage at top-center, duel tables across upper-mid hall, registration counter lower-left, practice tables right side.
+- **Library:** study tables right, bookshelves upper-left, reading lounge left/middle, archives/research counter upper-right.
+- **Shop:** shelves left, booster counter upper-center, play tables on right, trade lounge upper-right.
+- Shop canvas size corrected from the stale 1475×1066 approximation to its actual 1550×1120 file dimensions. Kept existing location IDs, hotspot IDs, all NPC anchors, and all uploaded pixels intact. The standalone map preview invalidates its manifest cache.
+- Nine focused regression checks passed, including hotspot bounds, dimensions, preserved interaction IDs, and artwork-specific sanity assertions. These are first-pass visual layout coordinates derived from actual images; follow-up review in the Cloudflare browser can tune exact pin placement, but no character positioning is included here.

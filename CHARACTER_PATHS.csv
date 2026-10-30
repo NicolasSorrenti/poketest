@@ -1,0 +1,16 @@
+character,pose,proposed_or_existing_repo_path,status,logical_height_px,notes
+Reina,standing,rpg-assets/characters/reina/overworld/standing.png,approved / GitHub,155,Not included: repository binary unavailable locally
+Reina,arcade-playing,rpg-assets/characters/reina/overworld/arcade-playing-character.png,approved / GitHub,152,Not included: repository binary unavailable locally
+Yuna,standing,art-production/overworld-candidates/yuna-standing-v1.png,candidate / GitHub,155,Not included: repository binary unavailable locally
+Barb,standing,art-production/overworld-candidates/barb-standing-v1.png,candidate / GitHub,150,Not included: repository binary unavailable locally
+Jinx,standing,rpg-assets/characters/jinx/overworld/standing.png,not registered,,Identity reference conflict; no validated sprite
+Hana,back-walking,rpg-assets/characters/hana/overworld/back-walking.png,planned only,,Earlier generation rejected; not verified
+Hana,card-browsing,rpg-assets/characters/hana/overworld/card-browsing.png,planned only,,Earlier generation rejected; not verified
+Hana,kneeling-shoelace,rpg-assets/characters/hana/overworld/kneeling-shoelace.png,planned only,,Earlier generation rejected; not verified
+Laca,standing,rpg-assets/characters/laca/overworld/standing.png,not registered,,No verified overworld PNG
+Daisy,standing,rpg-assets/characters/daisy/overworld/standing.png,not registered,,No verified overworld PNG
+Rina,three poses,rpg-assets/characters/rina/overworld/,conversation-only / unverified,,Previously generated in another chat; unavailable to package
+Akari,four poses,rpg-assets/characters/akari/overworld/,conversation-only / unverified,,Previously generated in another chat; unavailable to package
+Shiori,standing,rpg-assets/characters/shiori/overworld/standing.png,rejected / not registered,,Wrong identity in earlier renders
+Camila,front cutout,rpg-assets/characters/camila/overworld-candidates/front-cutout.png,included / conversation only,,"Thigh-cropped, not a usable full-body overworld sprite"
+Camila,back cutout,rpg-assets/characters/camila/overworld-candidates/back-cutout.png,included / conversation only,,"Thigh-cropped, not a usable full-body overworld sprite"

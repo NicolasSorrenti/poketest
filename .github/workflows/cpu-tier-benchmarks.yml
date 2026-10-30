@@ -13,11 +13,14 @@ on:
 jobs:
   compare:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    # Level 8's 400-game classic benchmark alone takes about 18 minutes.
+    # Keep both full benchmark samples but give each its own job budget.
+    timeout-minutes: 30
     strategy:
       fail-fast: false
       matrix:
         level: [6, 7, 8]
+        benchmark: [classic, rpg]
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -26,6 +29,8 @@ jobs:
       - name: Validate policy and experimental levels
         run: node --test tests/cpu_deep_levels.test.js
       - name: Paired and mirrored matches against RPG Champion
+        if: matrix.benchmark == 'classic'
         run: node scripts/benchmark-cpu-advanced.js --level ${{ matrix.level }} --pairs 25 --max-turns 120 --fixtures 8
       - name: Late-campaign tier 3 NPC deck mirrors
+        if: matrix.benchmark == 'rpg'
         run: node scripts/benchmark-cpu-rpg-advanced.js --level ${{ matrix.level }} --pairs 12 --max-turns 110

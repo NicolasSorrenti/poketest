@@ -1,10 +1,10 @@
-NEO CAMPUS ENVIRONMENT ART BUNDLE — 2026-10-29
+NEO CAMPUS — CHARACTER ART INVENTORY (2026-10-29)
 
-Extract this ZIP into repository root, preserving paths.
-Then run: python install_map_paths.py
-This updates only image paths in overworld/manifest.js; it does NOT adjust anchors, hotspots, gameplay or original rpg.html.
-Assets are named candidate to avoid overwriting approved images.
-WARNING: Character positions are NOT validated. Image dimensions are 1550x1120 but existing manifest map dimensions may differ (especially shop). Verify in-game before committing manifest changes.
-To revert: git restore overworld/manifest.js
+This is a PARTIAL archive, not a complete collection of all characters generated in other conversations. Only the two Camila PNGs were accessible as local files in this session. Both are cropped at the thighs and must NOT be used as full-body overworld sprites.
 
-Home: cozy studio revision; Park: approved visual direction v6; Cafe: v1; Center: 13-table tournament hall; Library: revised atrium; Shop: Lucky Draw candidate.
+The CSV lists existing manifest paths, proposed integration destinations, and status. A proposed path does not mean a file exists. The currently registered characters in overworld/manifest.js are Reina (approved), Yuna (candidate), Barb (candidate), and faces-only entries for Jinx, Hana, Laca, Daisy, Rina.
+
+To integrate a validated full-body sprite: put its RGBA PNG at the specified character's overworld/ path, inspect alpha and foot position at 155px logical scale, then register poses.standing.src in overworld/manifest.js. Do not automatically wire the Camila cutouts.
+
+Source of truth: https://github.com/NicolasSorrenti/poketest/blob/main/overworld/manifest.js
+Art handoff: https://github.com/NicolasSorrenti/poketest/blob/main/docs/OVERWORLD_ART_HANDOFF.md

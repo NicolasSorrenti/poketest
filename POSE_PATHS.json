@@ -1,0 +1,235 @@
+{
+  "source_repo": "NicolasSorrenti/poketest",
+  "date": "2026-10-29",
+  "type": "path inventory only; does not change the runtime manifest",
+  "characters": {
+    "yuna": [
+      {
+        "pose": "back-three-quarter",
+        "path": "/rpg-assets/characters/yuna/overworld/back-three-quarter.png",
+        "notes": ""
+      },
+      {
+        "pose": "side-pose",
+        "path": "/rpg-assets/characters/yuna/overworld/side-pose.png",
+        "notes": ""
+      },
+      {
+        "pose": "headphones",
+        "path": "/rpg-assets/characters/yuna/overworld/headphones.png",
+        "notes": ""
+      },
+      {
+        "pose": "gamer-idle",
+        "path": "/rpg-assets/characters/yuna/overworld/gamer-idle.png",
+        "notes": ""
+      },
+      {
+        "pose": "crouching-cards",
+        "path": "/rpg-assets/characters/yuna/overworld/crouching-cards.png",
+        "notes": ""
+      },
+      {
+        "pose": "seated-cards",
+        "path": "/rpg-assets/characters/yuna/overworld/seated-cards.png",
+        "notes": ""
+      }
+    ],
+    "hana": [
+      {
+        "pose": "standing-back",
+        "path": "/rpg-assets/characters/hana/overworld/standing-back.png",
+        "notes": ""
+      },
+      {
+        "pose": "phone-standing",
+        "path": "/rpg-assets/characters/hana/overworld/phone-standing.png",
+        "notes": ""
+      },
+      {
+        "pose": "kneeling-bag",
+        "path": "/rpg-assets/characters/hana/overworld/kneeling-bag.png",
+        "notes": ""
+      }
+    ],
+    "laca": [
+      {
+        "pose": "walking-back",
+        "path": "/rpg-assets/characters/laca/overworld/casual/walking-back.png",
+        "notes": ""
+      },
+      {
+        "pose": "reaching-out",
+        "path": "/rpg-assets/characters/laca/overworld/casual/reaching-out.png",
+        "notes": ""
+      },
+      {
+        "pose": "crouching",
+        "path": "/rpg-assets/characters/laca/overworld/casual/crouching.png",
+        "notes": ""
+      },
+      {
+        "pose": "front-leaning",
+        "path": "/rpg-assets/characters/laca/overworld/lifeguard/front-leaning.png",
+        "notes": ""
+      },
+      {
+        "pose": "back-rescue-buoy",
+        "path": "/rpg-assets/characters/laca/overworld/lifeguard/back-rescue-buoy.png",
+        "notes": ""
+      },
+      {
+        "pose": "kneeling-lookout",
+        "path": "/rpg-assets/characters/laca/overworld/lifeguard/kneeling-lookout.png",
+        "notes": ""
+      }
+    ],
+    "rina": [
+      {
+        "pose": "reaching-idol",
+        "path": "/rpg-assets/characters/rina/overworld/reaching-idol.png",
+        "notes": "Source pose has a cropped leg in original render"
+      },
+      {
+        "pose": "over-shoulder",
+        "path": "/rpg-assets/characters/rina/overworld/over-shoulder.png",
+        "notes": ""
+      },
+      {
+        "pose": "seated-cards",
+        "path": "/rpg-assets/characters/rina/overworld/seated-cards.png",
+        "notes": ""
+      },
+      {
+        "pose": "alternate-card-pose",
+        "path": "/rpg-assets/characters/rina/overworld/alternate-card-pose.png",
+        "notes": "Alternate/candidate pose"
+      },
+      {
+        "pose": "alternate-idol-pose",
+        "path": "/rpg-assets/characters/rina/overworld/alternate-idol-pose.png",
+        "notes": "Alternate/candidate pose"
+      }
+    ],
+    "akari": [
+      {
+        "pose": "over-shoulder-cardigan",
+        "path": "/rpg-assets/characters/akari/overworld/over-shoulder-cardigan.png",
+        "notes": ""
+      },
+      {
+        "pose": "clipboard-writing",
+        "path": "/rpg-assets/characters/akari/overworld/clipboard-writing.png",
+        "notes": ""
+      },
+      {
+        "pose": "seated-clipboard",
+        "path": "/rpg-assets/characters/akari/overworld/seated-clipboard.png",
+        "notes": ""
+      },
+      {
+        "pose": "fashion-sketch",
+        "path": "/rpg-assets/characters/akari/overworld/fashion-sketch.png",
+        "notes": ""
+      },
+      {
+        "pose": "standing-clipboard",
+        "path": "/rpg-assets/characters/akari/overworld/standing-clipboard.png",
+        "notes": ""
+      },
+      {
+        "pose": "over-shoulder-bag",
+        "path": "/rpg-assets/characters/akari/overworld/over-shoulder-bag.png",
+        "notes": ""
+      },
+      {
+        "pose": "presenting-designs",
+        "path": "/rpg-assets/characters/akari/overworld/presenting-designs.png",
+        "notes": ""
+      },
+      {
+        "pose": "seated-coffee-laptop",
+        "path": "/rpg-assets/characters/akari/overworld/seated-coffee-laptop.png",
+        "notes": ""
+      }
+    ],
+    "shiori": [
+      {
+        "pose": "over-shoulder",
+        "path": "/rpg-assets/characters/shiori/overworld/over-shoulder.png",
+        "notes": ""
+      },
+      {
+        "pose": "standing-book",
+        "path": "/rpg-assets/characters/shiori/overworld/standing-book.png",
+        "notes": ""
+      },
+      {
+        "pose": "reaching-book-front",
+        "path": "/rpg-assets/characters/shiori/overworld/reaching-book-front.png",
+        "notes": ""
+      },
+      {
+        "pose": "reaching-book-back",
+        "path": "/rpg-assets/characters/shiori/overworld/reaching-book-back.png",
+        "notes": "Background algorithmically removed; fine lavender hair edges need manual QA; book cropped by original"
+      }
+    ],
+    "camila": [
+      {
+        "pose": "standing-front",
+        "path": "/rpg-assets/characters/camila/overworld/standing-front.png",
+        "notes": ""
+      },
+      {
+        "pose": "standing-back",
+        "path": "/rpg-assets/characters/camila/overworld/standing-back.png",
+        "notes": ""
+      }
+    ],
+    "marina": [
+      {
+        "pose": "standing-front",
+        "path": "/rpg-assets/characters/marina/overworld/standing-front.png",
+        "notes": ""
+      },
+      {
+        "pose": "looking-back",
+        "path": "/rpg-assets/characters/marina/overworld/looking-back.png",
+        "notes": ""
+      },
+      {
+        "pose": "seated-relaxing",
+        "path": "/rpg-assets/characters/marina/overworld/seated-relaxing.png",
+        "notes": ""
+      }
+    ],
+    "kaede": [
+      {
+        "pose": "standing-front",
+        "path": "/rpg-assets/characters/kaede/overworld/standing-front.png",
+        "notes": ""
+      },
+      {
+        "pose": "looking-back",
+        "path": "/rpg-assets/characters/kaede/overworld/looking-back.png",
+        "notes": ""
+      },
+      {
+        "pose": "crouching-relaxed",
+        "path": "/rpg-assets/characters/kaede/overworld/crouching-relaxed.png",
+        "notes": ""
+      },
+      {
+        "pose": "arcade-playing-front",
+        "path": "/rpg-assets/characters/kaede/overworld/arcade-playing-front.png",
+        "notes": ""
+      },
+      {
+        "pose": "arcade-playing-back",
+        "path": "/rpg-assets/characters/kaede/overworld/arcade-playing-back.png",
+        "notes": ""
+      }
+    ]
+  }
+}
