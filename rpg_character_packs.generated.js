@@ -502,7 +502,7 @@ const packs=[
     "lines": [
      {
       "speaker": "barb",
-      "text": "Okay. Before you say anything: this zipper and I are having a private disagreement."
+      "text": "This zipper catches exactly where the new lining meets the seam. Good thing I tested it before sending the jacket to its owner."
      },
      {
       "speaker": "Protagonist",
@@ -685,7 +685,7 @@ const packs=[
     "lines": [
      {
       "speaker": "barb",
-      "text": "Do not call for help. I am not stuck."
+      "text": "I trusted the mannequin's measurements. The fitting test has officially proven that mannequins don't bend their elbows."
      },
      {
       "speaker": "Protagonist",
@@ -964,7 +964,7 @@ const packs=[
     "lines": [
      {
       "speaker": "barb",
-      "text": "I have invented a new type of outfit."
+      "text": "I accidentally stitched the sample to the fabric still under my machine. I need a plan that doesn't sacrifice the finished hem."
      },
      {
       "speaker": "Protagonist",
@@ -1147,7 +1147,7 @@ const packs=[
     "lines": [
      {
       "speaker": "barb",
-      "text": "I have a very serious diplomatic proposal."
+      "text": "I spent so long photographing this cake that I missed the best part: eating it with someone. Want the first bite?"
      },
      {
       "speaker": "Protagonist",
@@ -1272,7 +1272,7 @@ const packs=[
      },
      {
       "speaker": "barb",
-      "text": "Perfect. Five minutes. Then we can argue about whether the pink stitching is too much."
+      "text": "Five minutes, no fixing anything. Tomorrow I might show you the design I keep putting off because it's just for me."
      }
     ],
     "choices": [
