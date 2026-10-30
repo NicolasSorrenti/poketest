@@ -243,6 +243,19 @@
     const placed=savedMapRecords.map(item=>fromSavedPlacement(item)).filter(Boolean);
     if(placed.length)placements.splice(0,placements.length,...placed);
   }
+  function chooseLocationPose(id){
+    const poses=config.characters?.[id]?.poses||{};
+    let options=Object.entries(poses).filter(([,art])=>art?.src);
+    // Lifeguard art is selected explicitly by the schedule while Laca is on duty.
+    if(id==='laca')options=options.filter(([key,art])=>art.outfit!=='lifeguard'&&!key.toLowerCase().includes('lifeguard'));
+    const unique=[],seen=new Set();
+    for(const [key,art] of options){if(seen.has(art.src))continue;seen.add(art.src);unique.push(key);}
+    if(!unique.length)return 'standing';
+    // Keep one choice per character and location so it stays stable while the screen renders.
+    const seed=sceneId+':'+id;let hash=2166136261;
+    for(let i=0;i<seed.length;i++)hash=Math.imul(hash^seed.charCodeAt(i),16777619);
+    return unique[(hash>>>0)%unique.length];
+  }
   // Integrated mode displays only NPCs currently scheduled here by the RPG.
   // Reuse stable anchor slots and do not invent story encounters.
   if(params.has('rpg-integration')){
@@ -250,9 +263,9 @@
       const [id,requestedPose]=entry.split(':');
       if(!/^[a-z][a-z0-9_-]{0,35}$/.test(id||''))return null;
       const knownPose=!!config.characters?.[id]?.poses?.[requestedPose];
-      return {id,pose:knownPose?requestedPose:'standing'};
+      return {id,pose:knownPose?requestedPose:chooseLocationPose(id),poseLocked:knownPose};
     }).filter(Boolean);
-    placements.splice(0,placements.length,...castEntries.slice(0,8).map(({id,pose},i)=>{const anchor=['P1','P2','P3','P4','E1','E2','E3','E4'][i],saved=savedMapRecords.find(item=>item.character===id),custom=saved&&fromSavedPlacement(saved,anchor);return custom?{...custom,pose:custom.pose||pose}:{id,anchor,pose}}));
+    placements.splice(0,placements.length,...castEntries.slice(0,8).map(({id,pose,poseLocked},i)=>{const anchor=['P1','P2','P3','P4','E1','E2','E3','E4'][i],saved=savedMapRecords.find(item=>item.character===id),custom=saved&&fromSavedPlacement(saved,anchor);return custom?{...custom,pose:poseLocked?pose:(custom.pose||pose)}:{id,anchor,pose}}));
     const subtitle=document.querySelector('.title small');if(subtitle)subtitle.textContent='Live RPG schedule · placement preview';
   }
   if(dev){byId('guides').hidden=false;}
