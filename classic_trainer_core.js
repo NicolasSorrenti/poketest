@@ -33,7 +33,20 @@ function canCancel(g,actor){
 // Chaos Gym cannot pass attached Trainers to the other player (WotC ruling).
 const ATTACH_ONLY=new Set(['PlusPower','Defender','Berry','Counterattack Claws','Charity',"Brock's Protection","Koga's Ninja Trick","Sabrina's ESP",'Mysterious Fossil','Clefairy Doll']);
 const SETS=['base1','base2','base3','base4','base5','gym1','gym2','neo1','neo2','neo3','neo4','basep'];
-const CATALOG=new Map(SETS.flatMap(s=>require('./cards/'+s+'.json')).map(c=>[c.id,c]));
+const CATALOG=new Map([
+ ...require('./cards/base1.json'),
+ ...require('./cards/base2.json'),
+ ...require('./cards/base3.json'),
+ ...require('./cards/base4.json'),
+ ...require('./cards/base5.json'),
+ ...require('./cards/gym1.json'),
+ ...require('./cards/gym2.json'),
+ ...require('./cards/neo1.json'),
+ ...require('./cards/neo2.json'),
+ ...require('./cards/neo3.json'),
+ ...require('./cards/neo4.json'),
+ ...require('./cards/basep.json')
+].map(c=>[c.id,c]));
 const get=id=>{const c=CATALOG.get(id);if(!c)throw Error('Unknown Classic card: '+id);return c;};
 const fossilEvolution=c=>c.evolvesFrom==='Mysterious Fossil'||(['Omanyte','Kabuto','Aerodactyl'].includes(c.name)&&c.subtypes?.includes('Stage 1'));
 const basicEnergy=c=>/^(Grass|Fire|Water|Lightning|Psychic|Fighting) Energy$/.test(c.name)&&isEnergy(c);
