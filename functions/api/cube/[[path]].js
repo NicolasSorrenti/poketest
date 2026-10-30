@@ -2,7 +2,7 @@
 // Uses the same original CubeService and ClassicLocalService as the Node server.
 import {
  CubeService, ClassicLocalService, listPresetSummaries,
- database, json, errorResponse, verifyOrigin, readBody, storeNew, loadInto, putSession
+ database, staticCatalog, json, errorResponse, verifyOrigin, readBody, storeNew, loadInto, putSession
 } from '../../_lib/neo-game-state.js';
 
 export async function onRequest({request,env}) {
@@ -10,7 +10,7 @@ export async function onRequest({request,env}) {
   verifyOrigin(request);
   const url=new URL(request.url);
   const action=url.pathname.split('/').pop();
-  if(action==='presets'&&request.method==='GET')return json({presets:listPresetSummaries()});
+  if(action==='presets'&&request.method==='GET')return staticCatalog(request,env,'cube-presets.json');
   const db=await database(env);
   const cube=new CubeService();
   const classic=new ClassicLocalService();
