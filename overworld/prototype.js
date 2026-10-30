@@ -235,8 +235,8 @@
     const id=String(item?.character||'');
     if(!config.characters?.[id]||!Number.isFinite(Number(item.x))||!Number.isFinite(Number(item.y)))return null;
     const poses=config.characters[id].poses||{},requested=String(item.pose||'standing'),poseKey=poses[requested]?requested:'standing';
-    const x=clamp(Number(item.x),0,map.width),y=clamp(Number(item.y),0,map.height);
-    const height=clamp(Number(item.height)||poses[poseKey]?.height||150,45,340);
+    const x=Math.min(map.width,Math.max(0,Number(item.x))),y=Math.min(map.height,Math.max(0,Number(item.y)));
+    const height=Math.min(340,Math.max(45,Number(item.height)||poses[poseKey]?.height||150));
     return {id,anchor,pose:poseKey,foot:{x,y},height,flipped:!!item.flipped};
   }
   if(!params.has('rpg-integration')&&savedMapRecords.length&&!poseTest&&!params.has('art-test')){
