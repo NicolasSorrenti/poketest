@@ -184,6 +184,14 @@
   const shopTest=params.has('shop-test'),requestedScene=params.get('scene'),sceneId=config[requestedScene]?.image?requestedScene:(shopTest?'shop':'arcade'),map=config[sceneId];
   let cloudPlacementState=null;
   if(window.NeoOverworldPlacements)cloudPlacementState=await window.NeoOverworldPlacements.load().catch(error=>{console.warn('Cloud placements unavailable; using built-in map layout',error);return null});
+  const poseTriggerKey=(id,pose)=>String(id||'')+'|'+String(pose||'standing');
+  const enabledPoseTriggers=new Set();
+  if(Array.isArray(cloudPlacementState?.placements?.poseTriggers)){
+    for(const entry of cloudPlacementState.placements.poseTriggers)if(entry?.character&&entry?.pose)enabledPoseTriggers.add(poseTriggerKey(entry.character,entry.pose));
+  }else{
+    for(const mapEntries of Object.values(cloudPlacementState?.placements?.maps||{}))
+      for(const entry of Array.isArray(mapEntries)?mapEntries:[])if(entry?.triggerDialogue===true)enabledPoseTriggers.add(poseTriggerKey(entry.character,entry.pose));
+  }
   // Map-placement QA mode is explicit (?dev=1), never enabled during RPG play.
   // Copies layout data so artist adjustments never mutate shared engine state.
   const layoutDev=dev&&!params.has('rpg-integration');
@@ -244,7 +252,7 @@
     const poses=config.characters[id].poses||{},requested=String(item.pose||'standing'),poseKey=poses[requested]?requested:'standing';
     const x=Math.min(map.width,Math.max(0,Number(item.x))),y=Math.min(map.height,Math.max(0,Number(item.y)));
     const height=Math.min(340,Math.max(45,Number(item.height)||poses[poseKey]?.height||150));
-    return {id,anchor,pose:poseKey,foot:{x,y},height,flipped:!!item.flipped,triggerDialogue:item.triggerDialogue===true};
+    return {id,anchor,pose:poseKey,foot:{x,y},height,flipped:!!item.flipped,triggerDialogue:enabledPoseTriggers.has(poseTriggerKey(id,poseKey))};
   }
   if(!params.has('rpg-integration')&&savedMapRecords.length&&!poseTest&&!params.has('art-test')){
     const placed=savedMapRecords.map(item=>fromSavedPlacement(item)).filter(Boolean);
@@ -278,8 +286,10 @@
       const customPoseAllowed=!(id==='laca'&&!poseLocked&&customArt?.outfit==='lifeguard');
       // Saved placements control position/scale. Keep a selected pose only when
       // it intentionally carries a pose-trigger event; otherwise use this visit's roll.
-      const selectedPose=poseLocked?pose:(custom?.triggerDialogue&&customPoseAllowed?(custom.pose||pose):pose);
-      return custom?{...custom,pose:selectedPose,triggerDialogue:custom.triggerDialogue===true&&selectedPose===custom.pose}:{id,anchor,pose};
+      const customPoseTriggers=custom&&enabledPoseTriggers.has(poseTriggerKey(id,custom.pose));
+      const selectedPose=poseLocked?pose:(customPoseTriggers&&customPoseAllowed?(custom.pose||pose):pose);
+      const triggerDialogue=enabledPoseTriggers.has(poseTriggerKey(id,selectedPose));
+      return custom?{...custom,pose:selectedPose,triggerDialogue}:{id,anchor,pose,triggerDialogue};
     }));
     const subtitle=document.querySelector('.title small');if(subtitle)subtitle.textContent='Live RPG schedule · placement preview';
   }
