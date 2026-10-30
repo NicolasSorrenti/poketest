@@ -8,6 +8,13 @@ function act(g,side,type,payload){let r=applyCommand(g,side,{type,payload});asse
 function reject(g,side,type,payload){let before=structuredClone(g),r=applyCommand(g,side,{type,payload});assert.equal(r.ok,false);assert.deepEqual(g,before);}
 function choose(g,side,selected){act(g,side,'choose',{decisionId:g.pendingDecision.id,selected});}
 for(const [format,size] of [['classic',60],['neo-theme',60],['online-preview',60],['online-preview',40]]){
+ // Sing's attack flip and subsequent sleep recovery flip are distinct.
+ for(const [seed,expected,flips] of [[0,null,['tails']],[50000,'Asleep',['heads','tails']]]){
+  const sg=game(format,size);sg.players[0].active=unit('base1-5',['base1-99']);sg.players[1].active=unit('base1-3',['base1-99','base1-99']);sg.rngState=seed;
+  act(sg,0,'attack',{attackIndex:0});assert.deepEqual(sg.coinFlips.map(x=>x.result),flips);assert.equal(sg.players[1].active.status,expected);assert.equal(sg.players[1].active.damage,0);
+  if(expected)reject(sg,1,'attack',{attackIndex:0});
+ }
+ {const sg=game(format,size);sg.players[0].active=unit('base1-5');reject(sg,0,'attack',{attackIndex:0});}
  const g=game(format,size);g.players[0].active=unit('base1-5',Array(3).fill('base1-99'));g.players[1].active=unit('base1-4');
  act(g,0,'attack',{attackIndex:1});assert.equal(g.pendingDecision.actor,0);choose(g,0,['attack:0']);
  assert.equal(g.players[1].active.damage,100);assert.deepEqual(g.players[0].active.energies,Array(3).fill('base1-99'));assert.equal(g.players[0].discard.length,0);

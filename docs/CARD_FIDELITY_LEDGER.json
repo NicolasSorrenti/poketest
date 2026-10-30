@@ -111,7 +111,11 @@
      "kind": "attack",
      "index": 0,
      "name": "Sing",
-     "status": "unreviewed"
+     "status": "partial",
+     "evidence": [
+      "test_card_fidelity_clefairy.js"
+     ],
+     "scope": "Tails leaves defender unaffected; heads followed by tails recovery leaves defender Asleep and unable to attack; no damage and insufficient Energy rejected. Shared reducer in Classic, Neo, online-preview and 40-card Cube; print and historical ruling review pending."
     },
     {
      "kind": "attack",
