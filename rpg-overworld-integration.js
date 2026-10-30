@@ -342,7 +342,10 @@
         if(participant.src)image.src=participant.src;
         image.onerror=()=>{image.hidden=true;person.classList.add('neo-ow-portrait-missing');};
         // Dialogue speaker names belong to #dialogue #speaker, never below portraits.
-        person.append(image);scenePeople.append(person);
+        person.append(image);
+        // Mark the in-scene portrait too, so Discreet Mode can replace it live.
+        window.NeoRpgDiscreetAvatars?.set?.(person,participant.id,'neutral',participant.name);
+        scenePeople.append(person);
       }
       scenePeople.hidden=!participants.length;
       sceneArea?.classList.toggle('neo-ow-participants',!!participants.length);
