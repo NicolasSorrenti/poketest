@@ -182,3 +182,7 @@
 :root[data-rpg-discreet="on"] #cgViewerCanvas[data-rpg-safe-id] > .rpg-safe-avatar{
  position:absolute;inset:0;margin:auto;width:100%;height:100%;object-fit:contain!important
 }
+
+/* New UI: immediately swap any discovered character illustration for its chibi. */
+:root[data-rpg-discreet="on"] [data-rpg-auto-chibi="1"] > img[data-rpg-original-art="1"]{display:none!important}
+:root[data-rpg-discreet="on"] [data-rpg-auto-chibi="1"] > .rpg-safe-avatar:not([hidden]){display:block!important;object-fit:contain!important;max-width:100%;max-height:100%}
