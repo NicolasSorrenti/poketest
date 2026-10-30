@@ -13,6 +13,8 @@
 :root[data-rpg-discreet="on"] #cgMomentArt img:not(.rpg-safe-avatar),
 :root[data-rpg-discreet="on"] #galleryGrid .cg-thumb img:not(.rpg-safe-avatar),
 :root[data-rpg-discreet="on"] #galleryPreview img:not(.rpg-safe-avatar),
+:root[data-rpg-discreet="on"] #neoOverworldScenePeople .neo-ow-person>img:not(.rpg-safe-avatar){display:none!important}
+:root[data-rpg-discreet="on"] #neoOverworldScenePeople .neo-ow-person>.rpg-safe-avatar{display:block!important;object-fit:contain!important;object-position:center bottom!important;width:100%;height:min(34dvh,520px);background:transparent;filter:drop-shadow(0 6px 12px #0009)}
 :root[data-rpg-discreet="on"] .neo-tournament-versus__portrait img:not(.rpg-safe-avatar),
 :root[data-rpg-discreet="on"] .npc-reaction-portrait img:not(.rpg-safe-avatar) {display:none!important}
 :root[data-rpg-discreet="on"] .rpg-scene-cast{align-items:center;justify-content:center;gap:clamp(6px,1.5vw,20px)}
