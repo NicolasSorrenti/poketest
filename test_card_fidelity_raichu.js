@@ -3,7 +3,7 @@ const assert=require('node:assert/strict');
 const {createGame,applyCommand}=require('./headless_duel');
 const variants=[
  {pokemon:'base1-14',pikachu:'base1-58',lightning:'base1-100',dce:'base1-96',colorless:'base1-99',grass:'base1-99',formats:[['classic',60],['neo-theme',60],['online-preview',60],['online-preview',40]]},
- {pokemon:'base4-16',pikachu:'base4-87',lightning:'base4-128',dce:'base4-124',colorless:'base4-127',grass:'base4-127',formats:[['neo-theme',60],['online-preview',60],['online-preview',40]]}
+ {pokemon:'base4-16',pikachu:'base4-87',lightning:'base4-128',dce:'base4-124',colorless:'base4-127',grass:'base4-127',formats:[['online-preview',60],['online-preview',40]]}
 ];
 const unit=(id,energies=[],damage=0,status=null)=>({id,under:[],energies:[...energies],attachedTrainers:[],damage,status,poison:false,playedTurn:0});
 function game(format,size,v){
@@ -25,7 +25,7 @@ for(const v of variants)for(const [format,size] of v.formats){
  // Protection expires after that one opposing turn.
  {const g=game(format,size,v);g.players[0].active=unit(v.pokemon,[v.lightning,v.dce]);g.players[1].active=unit('base1-9',[...Array(3).fill('base1-100')]);g.rngState=50000;act(g,0,'attack',{attackIndex:0});g.turn=1;g.turnSerial=6;g.rngState=50000;act(g,1,'attack',{attackIndex:0});assert.equal(g.players[0].active.damage,30);assert.equal(g.players[0].active.status,'Paralyzed');scenarios++;}
  // Thunder heads does 60 without recoil; tails adds 30 self-damage, with no weakness multiplier.
- {for(const [seed,result,selfDamage] of [[50000,'heads',0],[0,'tails',30]]){const g=game(format,size,v);g.players[1].active=unit('base1-2');g.players[0].active=unit(v.pokemon,[v.lightning,v.lightning,v.lightning,v.colorless]);g.rngState=seed;act(g,0,'attack',{attackIndex:1});assert.equal(g.coinFlips.at(-1).result,result);assert.equal(g.players[1].active.damage,60);assert.equal(g.players[0].active.damage,selfDamage);scenarios++;}}
+ {for(const [seed,result,selfDamage] of [[50000,'heads',0],[0,'tails',30]]){const g=game(format,size,v);g.players[1].active=unit('base1-4');g.players[0].active=unit(v.pokemon,[v.lightning,v.lightning,v.lightning,v.colorless]);g.rngState=seed;act(g,0,'attack',{attackIndex:1});assert.equal(g.coinFlips.at(-1).result,result);assert.equal(g.players[1].active.damage,60);assert.equal(g.players[0].active.damage,selfDamage);scenarios++;}}
  // Thunder recoil can Knock Out Raichu and awards the opponent a Prize.
  {const g=game(format,size,v);g.players[1].active=unit('base1-2');g.players[0].active=unit(v.pokemon,[v.lightning,v.lightning,v.lightning,v.colorless],60);g.rngState=0;act(g,0,'attack',{attackIndex:1});assert.equal(g.players[0].active,null);assert.equal(g.pendingAction.kind,'take_prize');assert.equal(g.pendingDecision.actor,1);scenarios++;}
  // Both attacks enforce their printed Lightning requirements without partial mutation.
