@@ -1,12 +1,10 @@
 #!/usr/bin/env node
 /**
- * Generate candidate top-focused overworld chime crops.
+ * Generate candidate overworld chime crops without touching live special-outfit presets.
  *
  * Usage:
  *   node tools/generate-overworld-chime-crops.mjs
  *   node tools/generate-overworld-chime-crops.mjs --root rpg-assets/characters --out rpg-assets/outfit-chime-overworld-candidates.json
- *
- * This only creates candidates. It never edits outfit-chime-focus.json.
  */
 import fs from 'node:fs';
 import path from 'node:path';
@@ -33,8 +31,8 @@ function walk(dir, files = []) {
 
 function focusFor(name) {
   const n = name.toLowerCase();
-  // "back" is deliberately rear-only. Do not blend it with a frontal crop.
-  if (/\\bback\\b|back[-_]/i.test(n)) {
+  // A "back" filename is rear-only. Never mix it with a frontal crop.
+  if (/\bback\b|back[-_]/i.test(n)) {
     return { left: 0.16, right: 0.84, top: 0.24, bottom: 0.62, mode: 'rear' };
   }
   if (/over[-_]?shoulder|looking[-_]?back|three[-_]?quarter/i.test(n)) {
@@ -50,7 +48,8 @@ for (const file of walk(root)) {
   const rel = path.relative(root, file).split(path.sep);
   const id = rel[0];
   const variantDir = rel.slice(1, -1).join('/');
-  if (!/(^|\\/)overworld(?:-variants)?$/i.test(variantDir) && !/(^|\\/)overworld\\//i.test(variantDir)) continue;
+  if (!/(^|\/)overworld(?:-variants)?$/i.test(variantDir) &&
+      !/(^|\/)overworld\//i.test(variantDir)) continue;
   const name = rel.at(-1);
   const f = focusFor(name);
   const image = '/' + path.relative(process.cwd(), file).split(path.sep).join('/');
@@ -76,5 +75,5 @@ const result = {
   characters
 };
 fs.mkdirSync(path.dirname(out), { recursive: true });
-fs.writeFileSync(out, JSON.stringify(result, null, 2) + '\\n');
+fs.writeFileSync(out, JSON.stringify(result, null, 2) + '\n');
 console.log('Generated', Object.values(characters).reduce((n, c) => n + Object.keys(c.variants).length, 0), 'candidates at', out);
