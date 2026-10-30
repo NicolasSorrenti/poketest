@@ -428,7 +428,8 @@
             iris:'/rpg-assets/characters/iris/dialogue/neutral.png',
             alma:'/rpg-assets/characters/alma/overworld/standing-front.png',
             barb:'/rpg-assets/characters/barb/portraits/primary.png',
-            elena:'/rpg-assets/characters/elena/overworld/standing-portfolio.png'
+            elena:'/rpg-assets/characters/elena/overworld/standing-portfolio.png',
+            jun:'/rpg-assets/characters/jun/standing-front.png'
           };
           const source=image.currentSrc||image.src||'';
           const isApprovedMaster=participant.id==='camila'
