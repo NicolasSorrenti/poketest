@@ -43,3 +43,16 @@ Reviewed the full five-route arcs of Rina, Sierra, Luna and Sol (20 route events
 Source commits: `688111f`, `706dfbe`, `bb4bc61`, `5934e59`. Generated character-pack sync: `0e7dae8`.
 
 **Coverage:** 20 route events examined; four revised. Remaining random/side/crossover scenes in these packs need separate editorial review. JSON and compiled text checks are not a replacement for a full generated-build/test run.
+
+## Crossover editorial batch — 2026-10-30
+
+Four dialogue lines were revised across four character-pack crossover scenes without changing event IDs, lines, speakers, choices, effects, progression or artwork references.
+
+- `jinx_marina_cross_1`: Jinx acknowledges Marina's practical observation and contributes her own teasing gesture rather than repeating a complaint about the long route.
+- `jinx_alma_cross_1`: Jinx relates the café seating compromise to watching tournament results instead of a generic approval of the view.
+- `laca_marina_cross_1`: The ending reveals mutual history and skills instead of another childhood-object anecdote.
+- `sol_marina_cross_1`: Sol takes a concrete planning step, asking where the alternative event can operate without blocking paths.
+
+Source commits: `b87a48e`, `529d283`, `7aea3ae`. Compiled-pack sync: `c6da7f7`.
+
+Other crossovers and especially Barb's extensive bonus and random-CG events still need a comprehensive editorial pass. These changes are source/compiled text updates, not evidence of a complete test run.
