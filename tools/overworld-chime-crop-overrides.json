@@ -1,1 +1,635 @@
-{}
+{
+  "akari": {
+    "clipboard-writing.png": {
+      "left": 0.18,
+      "right": 0.82,
+      "top": 0.18,
+      "bottom": 0.44,
+      "mode": "front-top"
+    },
+    "fashion-sketch.png": {
+      "left": 0.18,
+      "right": 0.82,
+      "top": 0.18,
+      "bottom": 0.44,
+      "mode": "front-top"
+    },
+    "fours front.png": {
+      "left": 0.18,
+      "right": 0.82,
+      "top": 0.18,
+      "bottom": 0.44,
+      "mode": "front-top"
+    },
+    "fours.png": {
+      "left": 0.18,
+      "right": 0.82,
+      "top": 0.18,
+      "bottom": 0.44,
+      "mode": "front-top"
+    },
+    "over-shoulder-bag.png": {
+      "left": 0.18,
+      "right": 0.82,
+      "top": 0.18,
+      "bottom": 0.44,
+      "mode": "front-top"
+    },
+    "over-shoulder-cardigan.png": {
+      "left": 0.18,
+      "right": 0.82,
+      "top": 0.18,
+      "bottom": 0.44,
+      "mode": "front-top"
+    },
+    "presenting-designs.png": {
+      "left": 0.18,
+      "right": 0.82,
+      "top": 0.18,
+      "bottom": 0.44,
+      "mode": "front-top"
+    },
+    "seated-clipboard.png": {
+      "left": 0.18,
+      "right": 0.82,
+      "top": 0.18,
+      "bottom": 0.44,
+      "mode": "front-top"
+    },
+    "seated-coffee-laptop.png": {
+      "left": 0.18,
+      "right": 0.82,
+      "top": 0.18,
+      "bottom": 0.44,
+      "mode": "front-top"
+    },
+    "standing-clipboard.png": {
+      "left": 0.18,
+      "right": 0.82,
+      "top": 0.18,
+      "bottom": 0.44,
+      "mode": "front-top"
+    }
+  },
+  "alma": {
+    "over-shoulder-back.png": {
+      "left": 0.16,
+      "right": 0.84,
+      "top": 0.16,
+      "bottom": 0.5,
+      "mode": "rear"
+    },
+    "serving-tray.png": {
+      "left": 0.18,
+      "right": 0.82,
+      "top": 0.18,
+      "bottom": 0.44,
+      "mode": "front-top"
+    },
+    "standing-front.png": {
+      "left": 0.18,
+      "right": 0.82,
+      "top": 0.18,
+      "bottom": 0.44,
+      "mode": "front-top"
+    }
+  },
+  "barb": {
+    "back-view.png": {
+      "left": 0.16,
+      "right": 0.84,
+      "top": 0.16,
+      "bottom": 0.5,
+      "mode": "rear"
+    },
+    "chatting.png": {
+      "left": 0.18,
+      "right": 0.82,
+      "top": 0.18,
+      "bottom": 0.44,
+      "mode": "front-top"
+    },
+    "lounge.png": {
+      "left": 0.18,
+      "right": 0.82,
+      "top": 0.18,
+      "bottom": 0.44,
+      "mode": "front-top"
+    },
+    "walking.png": {
+      "left": 0.18,
+      "right": 0.82,
+      "top": 0.18,
+      "bottom": 0.44,
+      "mode": "front-top"
+    }
+  },
+  "camila": {
+    "standing-back.png": {
+      "left": 0.16,
+      "right": 0.84,
+      "top": 0.16,
+      "bottom": 0.5,
+      "mode": "rear"
+    },
+    "standing-front.png": {
+      "left": 0.18,
+      "right": 0.82,
+      "top": 0.18,
+      "bottom": 0.44,
+      "mode": "front-top"
+    }
+  },
+  "daisy": {
+    "back-view.png": {
+      "left": 0.16,
+      "right": 0.84,
+      "top": 0.16,
+      "bottom": 0.5,
+      "mode": "rear"
+    },
+    "idle.png": {
+      "left": 0.18,
+      "right": 0.82,
+      "top": 0.18,
+      "bottom": 0.44,
+      "mode": "front-top"
+    },
+    "kneeing.png": {
+      "left": 0.18,
+      "right": 0.82,
+      "top": 0.18,
+      "bottom": 0.44,
+      "mode": "front-top"
+    },
+    "walking.png": {
+      "left": 0.18,
+      "right": 0.82,
+      "top": 0.18,
+      "bottom": 0.44,
+      "mode": "front-top"
+    }
+  },
+  "elena": {
+    "over-shoulder-documents.png": {
+      "left": 0.18,
+      "right": 0.82,
+      "top": 0.18,
+      "bottom": 0.44,
+      "mode": "front-top"
+    },
+    "seated-reviewing-documents.png": {
+      "left": 0.18,
+      "right": 0.82,
+      "top": 0.18,
+      "bottom": 0.44,
+      "mode": "front-top"
+    },
+    "standing-portfolio.png": {
+      "left": 0.18,
+      "right": 0.82,
+      "top": 0.18,
+      "bottom": 0.44,
+      "mode": "front-top"
+    }
+  },
+  "hana": {
+    "01_original_white_lace_denim.png": {
+      "left": 0.18,
+      "right": 0.82,
+      "top": 0.18,
+      "bottom": 0.44,
+      "mode": "front-top"
+    },
+    "02_gray_blouse_denim.png": {
+      "left": 0.18,
+      "right": 0.82,
+      "top": 0.18,
+      "bottom": 0.44,
+      "mode": "front-top"
+    },
+    "03_gray_ruched_top_denim.png": {
+      "left": 0.18,
+      "right": 0.82,
+      "top": 0.18,
+      "bottom": 0.44,
+      "mode": "front-top"
+    },
+    "04_white_top_mini_skirt.png": {
+      "left": 0.18,
+      "right": 0.82,
+      "top": 0.18,
+      "bottom": 0.44,
+      "mode": "front-top"
+    },
+    "05_white_top_pleated_skirt.png": {
+      "left": 0.18,
+      "right": 0.82,
+      "top": 0.18,
+      "bottom": 0.44,
+      "mode": "front-top"
+    },
+    "06_pink_lace_white_top_denim.png": {
+      "left": 0.18,
+      "right": 0.82,
+      "top": 0.18,
+      "bottom": 0.44,
+      "mode": "front-top"
+    },
+    "07_gray_lace_white_top_denim.png": {
+      "left": 0.18,
+      "right": 0.82,
+      "top": 0.18,
+      "bottom": 0.44,
+      "mode": "front-top"
+    },
+    "08_ribbon_top_denim.png": {
+      "left": 0.18,
+      "right": 0.82,
+      "top": 0.18,
+      "bottom": 0.44,
+      "mode": "front-top"
+    },
+    "kneeling-bag.png": {
+      "left": 0.18,
+      "right": 0.82,
+      "top": 0.18,
+      "bottom": 0.44,
+      "mode": "front-top"
+    },
+    "phone-standing.png": {
+      "left": 0.18,
+      "right": 0.82,
+      "top": 0.18,
+      "bottom": 0.44,
+      "mode": "front-top"
+    },
+    "standing-back.png": {
+      "left": 0.16,
+      "right": 0.84,
+      "top": 0.16,
+      "bottom": 0.5,
+      "mode": "rear"
+    }
+  },
+  "iris": {
+    "crouching.png": {
+      "left": 0.18,
+      "right": 0.82,
+      "top": 0.18,
+      "bottom": 0.44,
+      "mode": "front-top"
+    },
+    "over-shoulder-back.png": {
+      "left": 0.16,
+      "right": 0.84,
+      "top": 0.16,
+      "bottom": 0.5,
+      "mode": "rear"
+    },
+    "standing-front.png": {
+      "left": 0.18,
+      "right": 0.82,
+      "top": 0.18,
+      "bottom": 0.44,
+      "mode": "front-top"
+    }
+  },
+  "jinx": {
+    "back-view.png": {
+      "left": 0.16,
+      "right": 0.84,
+      "top": 0.16,
+      "bottom": 0.5,
+      "mode": "rear"
+    },
+    "crouching.png": {
+      "left": 0.18,
+      "right": 0.82,
+      "top": 0.18,
+      "bottom": 0.44,
+      "mode": "front-top"
+    },
+    "idle.png": {
+      "left": 0.18,
+      "right": 0.82,
+      "top": 0.18,
+      "bottom": 0.44,
+      "mode": "front-top"
+    },
+    "walking.png": {
+      "left": 0.18,
+      "right": 0.82,
+      "top": 0.18,
+      "bottom": 0.44,
+      "mode": "front-top"
+    }
+  },
+  "kaede": {
+    "arcade-playing-back.png": {
+      "left": 0.16,
+      "right": 0.84,
+      "top": 0.16,
+      "bottom": 0.5,
+      "mode": "rear"
+    },
+    "arcade-playing-front.png": {
+      "left": 0.18,
+      "right": 0.82,
+      "top": 0.18,
+      "bottom": 0.44,
+      "mode": "front-top"
+    },
+    "crouching-relaxed.png": {
+      "left": 0.18,
+      "right": 0.82,
+      "top": 0.18,
+      "bottom": 0.44,
+      "mode": "front-top"
+    },
+    "looking-back.png": {
+      "left": 0.16,
+      "right": 0.84,
+      "top": 0.16,
+      "bottom": 0.5,
+      "mode": "rear"
+    },
+    "standing-front.png": {
+      "left": 0.18,
+      "right": 0.82,
+      "top": 0.18,
+      "bottom": 0.44,
+      "mode": "front-top"
+    }
+  },
+  "laca": {
+    "crouching.png": {
+      "left": 0.18,
+      "right": 0.82,
+      "top": 0.18,
+      "bottom": 0.44,
+      "mode": "front-top"
+    },
+    "reaching-out.png": {
+      "left": 0.18,
+      "right": 0.82,
+      "top": 0.18,
+      "bottom": 0.44,
+      "mode": "front-top"
+    },
+    "walking-back.png": {
+      "left": 0.16,
+      "right": 0.84,
+      "top": 0.16,
+      "bottom": 0.5,
+      "mode": "rear"
+    },
+    "back-rescue-buoy.png": {
+      "left": 0.16,
+      "right": 0.84,
+      "top": 0.16,
+      "bottom": 0.5,
+      "mode": "rear"
+    },
+    "front-leaning.png": {
+      "left": 0.18,
+      "right": 0.82,
+      "top": 0.18,
+      "bottom": 0.44,
+      "mode": "front-top"
+    },
+    "kneeling-lookout.png": {
+      "left": 0.18,
+      "right": 0.82,
+      "top": 0.18,
+      "bottom": 0.44,
+      "mode": "front-top"
+    }
+  },
+  "luna": {
+    "looking-back.png": {
+      "left": 0.16,
+      "right": 0.84,
+      "top": 0.16,
+      "bottom": 0.5,
+      "mode": "rear"
+    },
+    "seated.png": {
+      "left": 0.18,
+      "right": 0.82,
+      "top": 0.18,
+      "bottom": 0.44,
+      "mode": "front-top"
+    },
+    "standing-front.png": {
+      "left": 0.18,
+      "right": 0.82,
+      "top": 0.18,
+      "bottom": 0.44,
+      "mode": "front-top"
+    }
+  },
+  "marina": {
+    "looking-back.png": {
+      "left": 0.16,
+      "right": 0.84,
+      "top": 0.16,
+      "bottom": 0.5,
+      "mode": "rear"
+    },
+    "seated-relaxing.png": {
+      "left": 0.18,
+      "right": 0.82,
+      "top": 0.18,
+      "bottom": 0.44,
+      "mode": "front-top"
+    },
+    "standing-front.png": {
+      "left": 0.18,
+      "right": 0.82,
+      "top": 0.18,
+      "bottom": 0.44,
+      "mode": "front-top"
+    }
+  },
+  "reina": {
+    "arcade-back.png": {
+      "left": 0.16,
+      "right": 0.84,
+      "top": 0.16,
+      "bottom": 0.5,
+      "mode": "rear"
+    },
+    "arcade-playing-character.png": {
+      "left": 0.18,
+      "right": 0.82,
+      "top": 0.18,
+      "bottom": 0.44,
+      "mode": "front-top"
+    },
+    "standing.png": {
+      "left": 0.18,
+      "right": 0.82,
+      "top": 0.18,
+      "bottom": 0.44,
+      "mode": "front-top"
+    }
+  },
+  "rina": {
+    "alternate-card-pose.png": {
+      "left": 0.18,
+      "right": 0.82,
+      "top": 0.18,
+      "bottom": 0.44,
+      "mode": "front-top"
+    },
+    "alternate-idol-pose.png": {
+      "left": 0.18,
+      "right": 0.82,
+      "top": 0.18,
+      "bottom": 0.44,
+      "mode": "front-top"
+    },
+    "over-shoulder.png": {
+      "left": 0.18,
+      "right": 0.82,
+      "top": 0.18,
+      "bottom": 0.44,
+      "mode": "front-top"
+    },
+    "reaching-idol.png": {
+      "left": 0.18,
+      "right": 0.82,
+      "top": 0.18,
+      "bottom": 0.44,
+      "mode": "front-top"
+    },
+    "seated-cards.png": {
+      "left": 0.18,
+      "right": 0.82,
+      "top": 0.18,
+      "bottom": 0.44,
+      "mode": "front-top"
+    }
+  },
+  "shiori": {
+    "over-shoulder.png": {
+      "left": 0.18,
+      "right": 0.82,
+      "top": 0.18,
+      "bottom": 0.44,
+      "mode": "front-top"
+    },
+    "reaching-book-back.png": {
+      "left": 0.16,
+      "right": 0.84,
+      "top": 0.16,
+      "bottom": 0.5,
+      "mode": "rear"
+    },
+    "reaching-book-front.png": {
+      "left": 0.18,
+      "right": 0.82,
+      "top": 0.18,
+      "bottom": 0.44,
+      "mode": "front-top"
+    },
+    "standing-book.png": {
+      "left": 0.18,
+      "right": 0.82,
+      "top": 0.18,
+      "bottom": 0.44,
+      "mode": "front-top"
+    }
+  },
+  "sierra": {
+    "looking-back.png": {
+      "left": 0.16,
+      "right": 0.84,
+      "top": 0.16,
+      "bottom": 0.5,
+      "mode": "rear"
+    },
+    "seated-relaxed.png": {
+      "left": 0.18,
+      "right": 0.82,
+      "top": 0.18,
+      "bottom": 0.44,
+      "mode": "front-top"
+    },
+    "standing-wink.png": {
+      "left": 0.18,
+      "right": 0.82,
+      "top": 0.18,
+      "bottom": 0.44,
+      "mode": "front-top"
+    }
+  },
+  "teo": {
+    "looking-back.png": {
+      "left": 0.16,
+      "right": 0.84,
+      "top": 0.16,
+      "bottom": 0.5,
+      "mode": "rear"
+    },
+    "serving-tray.png": {
+      "left": 0.18,
+      "right": 0.82,
+      "top": 0.18,
+      "bottom": 0.44,
+      "mode": "front-top"
+    },
+    "standing-front.png": {
+      "left": 0.18,
+      "right": 0.82,
+      "top": 0.18,
+      "bottom": 0.44,
+      "mode": "front-top"
+    }
+  },
+  "yuna": {
+    "back-three-quarter.png": {
+      "left": 0.16,
+      "right": 0.84,
+      "top": 0.16,
+      "bottom": 0.5,
+      "mode": "rear"
+    },
+    "crouching-cards.png": {
+      "left": 0.18,
+      "right": 0.82,
+      "top": 0.18,
+      "bottom": 0.44,
+      "mode": "front-top"
+    },
+    "gamer-idle.png": {
+      "left": 0.18,
+      "right": 0.82,
+      "top": 0.18,
+      "bottom": 0.44,
+      "mode": "front-top"
+    },
+    "headphones.png": {
+      "left": 0.18,
+      "right": 0.82,
+      "top": 0.18,
+      "bottom": 0.44,
+      "mode": "front-top"
+    },
+    "seated-cards.png": {
+      "left": 0.18,
+      "right": 0.82,
+      "top": 0.18,
+      "bottom": 0.44,
+      "mode": "front-top"
+    },
+    "side-pose.png": {
+      "left": 0.18,
+      "right": 0.82,
+      "top": 0.18,
+      "bottom": 0.44,
+      "mode": "front-top"
+    }
+  }
+}
