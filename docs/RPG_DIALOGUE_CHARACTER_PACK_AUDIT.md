@@ -56,3 +56,9 @@ Four dialogue lines were revised across four character-pack crossover scenes wit
 Source commits: `b87a48e`, `529d283`, `7aea3ae`. Compiled-pack sync: `c6da7f7`.
 
 Other crossovers and especially Barb's extensive bonus and random-CG events still need a comprehensive editorial pass. These changes are source/compiled text updates, not evidence of a complete test run.
+
+## Barb bonus scene follow-up — 2026-10-30
+
+Revised three dialogue beats in `barb_bonus_strawberry`, `barb_bonus_bedroom`, and `barb_bonus_guitar` to make them less reliant on design jokes, defensiveness, and generic mistakes. Source commit `1582ce2`; generated sync `9772567`.
+
+Post-edit static checks: all 39 events across Barb, Jinx, Laca, and Sol retain nonempty IDs, lines and choices, and all source dialogue texts appear in the generated character pack. This does not establish a successful local build, test run, or browser playthrough. Other crossover/CG events remain unreviewed.
