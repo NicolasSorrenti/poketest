@@ -644,14 +644,26 @@
       "artPending": false,
       "imageSequence": [
         {
-          "order": 3,
+          "order": 1,
           "lineIndex": 5,
+          "path": "/rpg-assets/characters/jicy/events/jicy_one_more_try_stumble.webp",
+          "moment": "Jicy accidentally stumbles forward and braces herself beside the player, immediately checking if they are okay."
+        },
+        {
+          "order": 2,
+          "lineIndex": 6,
           "path": "/rpg-assets/characters/jicy/events/jicy_one_more_try_over_player.webp",
           "moment": "The stumble turns into a close, sweet moment as Jicy lands above the player."
         },
         {
-          "order": 4,
+          "order": 3,
           "lineIndex": 8,
+          "path": "/rpg-assets/characters/jicy/events/jicy_one_more_try_reassurance.webp",
+          "moment": "Seeing the player's reassuring smile, Jicy relaxes and lets herself stay close."
+        },
+        {
+          "order": 4,
+          "lineIndex": 9,
           "path": "/rpg-assets/characters/jicy/events/jicy_one_more_try_safe_close.webp",
           "moment": "Jicy sees the player's gentle smile and realizes she feels safe staying close."
         }

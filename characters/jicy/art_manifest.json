@@ -63,21 +63,21 @@
         },
         {
           "order": 2,
+          "lineIndex": 6,
+          "path": "/rpg-assets/characters/jicy/events/jicy_one_more_try_over_player.webp",
+          "moment": "The stumble turns into a close, sweet moment as Jicy lands above the player.",
+          "prompt": "Use the accepted player-POV arcade fall CG, preserving Jicy's exact combat suit."
+        },
+        {
+          "order": 3,
           "lineIndex": 8,
           "path": "/rpg-assets/characters/jicy/events/jicy_one_more_try_reassurance.webp",
           "moment": "Seeing the player's reassuring smile, Jicy relaxes and lets herself stay close.",
           "prompt": "A slightly closer continuation of the same player point of view. Jicy's shoulders relax as she realizes the player is okay; she remains close with a shy, relieved expression. Preserve the exact canonical pink sleeveless suit and arcade setting."
         },
         {
-          "order": 3,
-          "lineIndex": 5,
-          "path": "/rpg-assets/characters/jicy/events/jicy_one_more_try_over_player.webp",
-          "moment": "The stumble turns into a close, sweet moment as Jicy lands above the player.",
-          "prompt": "Use the accepted player-POV arcade fall CG, preserving Jicy's exact combat suit."
-        },
-        {
           "order": 4,
-          "lineIndex": 8,
+          "lineIndex": 9,
           "path": "/rpg-assets/characters/jicy/events/jicy_one_more_try_safe_close.webp",
           "moment": "Jicy sees the player's gentle smile and realizes she feels safe staying close.",
           "prompt": "Use the accepted relaxed arcade CG with the wide armholes and canonical suit."
