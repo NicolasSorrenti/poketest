@@ -338,6 +338,10 @@
         person.className='neo-ow-person'+(participant.id===focused?' is-speaking':' is-listening');
         person.dataset.npc=participant.id;
         const image=document.createElement('img');image.alt=participant.name;
+        image.addEventListener('load',()=>{
+          // Tall neutral art and short expression busts must not share zoom.
+          person.classList.toggle('neo-ow-tall-source',image.naturalHeight>image.naturalWidth*1.38);
+        });
         // A missing portrait must never display a different character's face.
         // The original game's avatar loader already resolves outfit-specific art.
         if(participant.src)image.src=participant.src;
@@ -450,7 +454,7 @@
       }
       /* Calibrate the tall full-body Laca neutral against Marina's approved
          close-up bust crop. Both now use identical square portrait windows. */
-      #neoOverworldStoryDock #neoOverworldScenePeople.neo-ow-standard-portraits .neo-ow-person[data-npc="laca"]{
+      #neoOverworldStoryDock #neoOverworldScenePeople.neo-ow-standard-portraits .neo-ow-person[data-npc="laca"].neo-ow-tall-source{
         --neo-dialogue-portrait-zoom:1.22;
       }
       @media(max-width:650px){
