@@ -62,7 +62,7 @@
  "/rpg_status.js?v=4",
  "/rpg_cloud_save.js?v=2",
  "/rpg_outfits.js?v=1",
- "/rpg.js?v=overworld-no-double-portraits-20261029"
+ "/rpg.js?v=character-choice-menu-20261030"
 ];
   function registry(packs){
     const cast={},looks={},schedules={},arrivals={},events=[],mandatoryEvents=[];
