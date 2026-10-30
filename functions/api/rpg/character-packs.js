@@ -16,11 +16,11 @@ export async function onRequestGet({request,env}){
     if(!/^Bearer [A-Za-z0-9_.-]{10,4096}$/.test(authorization))return reply({error:'Invalid authorization'},401);
     const url=String(env.SUPABASE_URL||'').replace(/\/$/,'');
     const key=env.SUPABASE_PUBLISHABLE_KEY||env.SUPABASE_ANON_KEY||'';
-    if(!/^https:\/\/[^/]+\.supabase\.co$/.test(url)||!key)return reply({error:'Authentication configuration unavailable',code:'AUTH_CONFIG'},503);
+    if(!/^https:\/\/[^/]+\.supabase\.co$/.test(url)||!key)return reply({packs:access.filterPacks(all,''),authStatus:'unavailable',code:'AUTH_CONFIG'});
     let response;
     try{
       response=await fetch(url+'/auth/v1/user',{headers:{apikey:key,Authorization:authorization},redirect:'error'});
-    }catch(error){console.error('Supabase user lookup failed',error);return reply({error:'Supabase identity service unreachable',code:'AUTH_UPSTREAM'},503);}
+    }catch(error){console.error('Supabase user lookup failed',error);return reply({packs:access.filterPacks(all,''),authStatus:'unavailable',code:'AUTH_UPSTREAM'});}
     if(!response.ok)return reply({error:'Invalid or expired login'},401);
     const user=await response.json().catch(()=>null);
     if(!user||typeof user.id!=='string')return reply({error:'Invalid login'},401);
