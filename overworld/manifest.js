@@ -105,6 +105,61 @@ window.NeoOverworld = Object.freeze({
       arcadePlayingFront:{src:'/rpg-assets/characters/kaede/overworld/arcade-playing-front.png',height:155,facing:'front'},
       arcadePlayingBack:{src:'/rpg-assets/characters/kaede/overworld/arcade-playing-back.png',height:155,facing:'back'}
     }},
+    alma: {name:'Alma',face:'/rpg-assets/characters/alma/portraits/primary.webp',poses:{
+      standing:{src:'/rpg-assets/characters/alma/overworld/standing-front.png',height:155,facing:'front'},
+      standingFront:{src:'/rpg-assets/characters/alma/overworld/standing-front.png',height:155,facing:'front'},
+      overShoulderBack:{src:'/rpg-assets/characters/alma/overworld/over-shoulder-back.png',height:155,facing:'back'},
+      servingTray:{src:'/rpg-assets/characters/alma/overworld/serving-tray.png',height:150,facing:'front'},
+      placingCoffeeCup:{src:'/rpg-assets/characters/alma/overworld/placing-coffee-cup.png',height:145,facing:'front'}
+    }},
+    elena: {name:'Elena',face:'/rpg-assets/characters/elena/portrait.png',poses:{
+      standing:{src:'/rpg-assets/characters/elena/overworld/standing-portfolio.png',height:155,facing:'front'},
+      standingPortfolio:{src:'/rpg-assets/characters/elena/overworld/standing-portfolio.png',height:155,facing:'front'},
+      overShoulderDocuments:{src:'/rpg-assets/characters/elena/overworld/over-shoulder-documents.png',height:155,facing:'back'},
+      seatedReviewingDocuments:{src:'/rpg-assets/characters/elena/overworld/seated-reviewing-documents.png',height:138,facing:'front'}
+    }},
+    elio: {name:'Elio',face:'/rpg-assets/elio.png',poses:{
+      standing:{src:'/rpg-assets/characters/elio/standing-front.png',height:155,facing:'front'},
+      standingFront:{src:'/rpg-assets/characters/elio/standing-front.png',height:155,facing:'front'}
+    }},
+    iris: {name:'Iris',face:'/rpg-assets/characters/iris/portraits/primary.webp',poses:{
+      standing:{src:'/rpg-assets/characters/iris/overworld/standing-front.png',height:155,facing:'front'},
+      standingFront:{src:'/rpg-assets/characters/iris/overworld/standing-front.png',height:155,facing:'front'},
+      overShoulderBack:{src:'/rpg-assets/characters/iris/overworld/over-shoulder-back.png',height:155,facing:'back'},
+      crouching:{src:'/rpg-assets/characters/iris/overworld/crouching.png',height:142,facing:'front'}
+    }},
+    jun: {name:'Jun',face:'/rpg-assets/characters/jun/portraits/primary.webp',poses:{
+      standing:{src:'/rpg-assets/characters/jun/standing-front.png',height:155,facing:'front'},
+      standingFront:{src:'/rpg-assets/characters/jun/standing-front.png',height:155,facing:'front'}
+    }},
+    luna: {name:'Luna',face:'/rpg-assets/characters/luna/neutral.webp',poses:{
+      standing:{src:'/rpg-assets/characters/luna/overworld/standing-front.png',height:155,facing:'front'},
+      standingFront:{src:'/rpg-assets/characters/luna/overworld/standing-front.png',height:155,facing:'front'},
+      lookingBack:{src:'/rpg-assets/characters/luna/overworld/looking-back.png',height:155,facing:'back'},
+      seated:{src:'/rpg-assets/characters/luna/overworld/seated.png',height:138,facing:'front'}
+    }},
+    nereo: {name:'Nereo',face:'/rpg-assets/characters/nereo/portraits/primary.webp',poses:{
+      standing:{src:'/rpg-assets/characters/nereo/standing-front.png',height:155,facing:'front'},
+      standingFront:{src:'/rpg-assets/characters/nereo/standing-front.png',height:155,facing:'front'}
+    }},
+    sierra: {name:'Sierra',face:'/rpg-assets/characters/sierra/portrait.png',poses:{
+      standing:{src:'/rpg-assets/characters/sierra/overworld/standing-wink.png',height:155,facing:'front'},
+      standingWink:{src:'/rpg-assets/characters/sierra/overworld/standing-wink.png',height:155,facing:'front'},
+      lookingBack:{src:'/rpg-assets/characters/sierra/overworld/looking-back.png',height:155,facing:'back'},
+      seatedRelaxed:{src:'/rpg-assets/characters/sierra/overworld/seated-relaxed.png',height:138,facing:'front'}
+    }},
+    sol: {name:'Sol',face:'/rpg-assets/characters/sol/portraits/primary.png',poses:{
+      standing:{src:'/rpg-assets/characters/sol/standing-front.png',height:155,facing:'front'},
+      standingFront:{src:'/rpg-assets/characters/sol/standing-front.png',height:155,facing:'front'},
+      lookingBack:{src:'/rpg-assets/characters/sol/looking-back.png',height:155,facing:'back'},
+      crouching:{src:'/rpg-assets/characters/sol/crouching.png',height:145,facing:'front'}
+    }},
+    teo: {name:'Teo',face:'/rpg-assets/characters/teo/portraits/primary.webp',poses:{
+      standing:{src:'/rpg-assets/characters/teo/overworld/standing-front.png',height:155,facing:'front'},
+      standingFront:{src:'/rpg-assets/characters/teo/overworld/standing-front.png',height:155,facing:'front'},
+      lookingBack:{src:'/rpg-assets/characters/teo/overworld/looking-back.png',height:155,facing:'back'},
+      servingTray:{src:'/rpg-assets/characters/teo/overworld/serving-tray.png',height:150,facing:'front'}
+    }},
     barb: {name:'Barb', face:'/rpg-assets/characters/barb/portraits/primary.png', poses:{standing:{src:'/art-production/overworld-candidates/barb-standing-v1.png',height:150,facing:'front',status:'candidate'}}},
     jinx: {name:'Jinx', face:'/rpg-assets/jinx.png'},
     daisy: {name:'Daisy', face:'/rpg-assets/characters/daisy/portraits/primary.png'}
