@@ -27,7 +27,7 @@ const htmlPages = new Set([
   'classic_live.html', 'cube.html', 'cube_room.html', 'deck_builder.html',
   'mat_generator.html', 'online.html', 'play.html', 'rpg-overworld.html',
   'rpg.html', 'rpg_card_library.html', 'rpg_deck_studio.html',
-  'overworld-prototype.html'
+  'overworld-prototype.html', 'overworld-placement-studio.html'
 ]);
 const staticExt = new Set(['.css', '.png', '.jpg', '.jpeg', '.svg', '.webp']);
 const excludedAssetSegments = new Set(['references', 'rejected-artwork', 'expression-sheets']);
@@ -102,6 +102,24 @@ const publicRosterJson = JSON.stringify({
 fs.writeFileSync(path.join(out, 'rpg-character-packs.public.json'), publicRosterJson);
 copied++;
 bytes += Buffer.byteLength(publicRosterJson);
+const cloudUrl = String(process.env.SUPABASE_URL || '').replace(/\\/+$/, '');
+const cloudKey = String(process.env.SUPABASE_PUBLISHABLE_KEY || process.env.SUPABASE_ANON_KEY || '').trim();
+let cloudConfig = { enabled: false };
+try {
+  const origin = new URL(cloudUrl);
+  let publicKey = cloudKey.startsWith('sb_publishable_');
+  if (!publicKey && cloudKey.split('.').length === 3) {
+    const payload = JSON.parse(Buffer.from(cloudKey.split('.')[1], 'base64url').toString('utf8'));
+    publicKey = payload.role === 'anon';
+  }
+  if (origin.protocol === 'https:' && origin.hostname.endsWith('.supabase.co') && publicKey) {
+    cloudConfig = { enabled: true, url: cloudUrl, key: cloudKey };
+  }
+} catch { /* Leave static cloud sync disabled unless the public config is valid. */ }
+const cloudConfigJson = JSON.stringify(cloudConfig);
+fs.writeFileSync(path.join(out, 'rpg-cloud-config.json'), cloudConfigJson);
+copied++;
+bytes += Buffer.byteLength(cloudConfigJson);
 
 fs.writeFileSync(path.join(out, '_redirects'), '/ /play.html 302\n');
 const files = [];
