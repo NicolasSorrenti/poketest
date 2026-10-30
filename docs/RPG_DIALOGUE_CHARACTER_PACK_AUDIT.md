@@ -62,3 +62,15 @@ Other crossovers and especially Barb's extensive bonus and random-CG events stil
 Revised three dialogue beats in `barb_bonus_strawberry`, `barb_bonus_bedroom`, and `barb_bonus_guitar` to make them less reliant on design jokes, defensiveness, and generic mistakes. Source commit `1582ce2`; generated sync `9772567`.
 
 Post-edit static checks: all 39 events across Barb, Jinx, Laca, and Sol retain nonempty IDs, lines and choices, and all source dialogue texts appear in the generated character pack. This does not establish a successful local build, test run, or browser playthrough. Other crossover/CG events remain unreviewed.
+
+## Barb special/CG event duplication review — 2026-10-30
+
+Reviewed all 13 non-route events in Barb's 18-event story pack. Identified repeated scene openings built on elaborate denials, mock negotiations and another outfit malfunction. Five scene openings/endings were made more action-specific while preserving scene IDs, count, choice semantics and CG references:
+
+- `barb_random_cg_01`: faulty zipper as a prototype test with customer stakes
+- `barb_random_cg_03`: mannequin-mobility mismatch rather than generic denial of a problem
+- `barb_random_cg_06`: concrete sewing issue and decision instead of another grandiose invention opener
+- `barb_bonus_strawberry`: genuine shared dessert rather than another mock diplomatic agreement
+- `barb_bonus_bedroom`: time off leads to a personal design decision instead of another stitching argument
+
+Source commit `2567e11`; compiled text sync `0b43852`. Static validation: all 18 source events have dialogue and choices; every source dialogue line appears in compiled character pack. Generator rebuild and game tests were not run. Review other packs' additional CG and crossover events next.
