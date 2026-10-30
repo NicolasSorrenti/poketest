@@ -192,13 +192,21 @@
      "kind": "attack",
      "index": 0,
      "name": "Seismic Toss",
-     "status": "unreviewed"
+     "status": "partial",
+     "evidence": [
+      "test_card_fidelity_machamp.js"
+     ],
+     "scope": "Typed attack cost rejection; attacks resolve in tested Machamp scenarios."
     },
     {
      "kind": "power",
      "index": 0,
      "name": "Strikes Back",
-     "status": "unreviewed"
+     "status": "partial",
+     "evidence": [
+      "test_card_fidelity_machamp.js"
+     ],
+     "scope": "Retaliation when Machamp takes damage even if Knocked Out; suppressed by Asleep, Confused and Paralyzed; surviving Machamp retaliation. Classic reducer; print and historical ruling review pending."
     }
    ]
   },
