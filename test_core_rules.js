@@ -12,7 +12,15 @@ for(const card of cards){
  if(core.isBasicPokemon(card)){basic++;assert.equal(card.supertype,'Pokémon');}
  if(core.isEnergy(card)){energy++;assert.ok(!core.isBasicPokemon(card),card.id);}
  for(const a of card.attacks||[]){attack++;assert.ok(Array.isArray(a.cost),card.id+': '+a.name);}
- if(card.evolvesFrom){evolutions++; assert.equal(core.canEvolve(card,{name:card.evolvesFrom}),!['Blaine\'s ','Erika\'s ','Misty\'s ','Brock\'s ','Lt. Surge\'s ','Sabrina\'s ','Koga\'s ','Giovanni\'s ','Rocket\'s '].some(p=>card.name.startsWith(p)&&!card.evolvesFrom.startsWith(p)));}
+ if(card.evolvesFrom){
+  evolutions++;
+  const gymOwner=["Blaine's ","Erika's ","Misty's ","Brock's ","Lt. Surge's ","Sabrina's ","Koga's ","Giovanni's ","Rocket's "]
+   .find(prefix=>card.name.startsWith(prefix)&&!card.evolvesFrom.startsWith(prefix));
+  const themed=/^(Dark |Light )/.exec(card.name)?.[1];
+  const requiresThemedStage1=Boolean(themed&&(card.subtypes||[]).includes('Stage 2')&&!card.evolvesFrom.startsWith(themed));
+  assert.equal(core.canEvolve(card,{name:card.evolvesFrom}),!gymOwner&&!requiresThemedStage1,
+   card.id+': '+card.name+' must respect its printed evolution family');
+ }
 }
 assert.ok(basic>100 && energy>=30 && attack===1479 && evolutions>200);
 const simple=(name,type)=>({id:name,name,supertype:type,subtypes:type==='Pokémon'?['Basic']:[]});
