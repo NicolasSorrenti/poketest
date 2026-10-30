@@ -284,9 +284,14 @@
   let confirmed=null;
   try{confirmed=takeEmailConfirmation();}catch(error){label(errorText(error));}
   try{
-   const response=await fetch('/api/rpg-cloud/config',{cache:'no-store'});
-   config=await response.json();
-   if(!response.ok||!config.enabled){
+   let response=await fetch('/api/rpg-cloud/config',{cache:'no-store'}).catch(()=>null);
+   config=null;
+   if(response?.ok){try{config=await response.json()}catch{}}
+   if(!config?.enabled){
+    response=await fetch('/rpg-cloud-config.json',{cache:'no-store'}).catch(()=>null);
+    if(response?.ok){try{config=await response.json()}catch{}}
+   }
+   if(!config?.enabled){
     stateLabel('Cloud saves are not connected yet. Your local save is working.');return;
    }
    if(confirmed)await completeEmailConfirmation(confirmed);
