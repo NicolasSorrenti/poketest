@@ -728,7 +728,11 @@ function knockoutTempoBonus(a,o,cfg){
  // backup first, except when this KO wins outright.
  if(!p.bench.length&&p.hand.some(id=>isBasicPokemon(card(id))))return 0;
  // Don't spend a turn in endless preparation when a certain Prize is available.
- const vulnerability=!['Asleep','Paralyzed'].includes(q.active.status)&&
+ // Apex must not award a higher attack-tempo bonus for an imaginary
+ // counter-KO. Confusion, attack flips, Amnesia and Gym locks all affect
+ // whether the opponent can actually take the next Prize.
+ const vulnerability=cfg.level===8?likelyOpponentKnockout(o,p.active):
+  !['Asleep','Paralyzed'].includes(q.active.status)&&
   strongestAffordableAttack(q.active,p.active,q.bench.length)>=hpRemaining(p.active);
  return chance*(vulnerability?230:125);
 }
