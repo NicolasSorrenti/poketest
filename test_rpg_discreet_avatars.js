@@ -12,7 +12,7 @@ const html=fs.readFileSync(path.join(__dirname,'rpg.html'),'utf8');
 const live=fs.readFileSync(path.join(__dirname,'classic_live.html'),'utf8');
 
 (async()=>{
- const made=[],nodes=[],requests=[],draws=[];
+ const made=[],nodes=[],requests=[],draws=[],observations=[];
  const root={dataset:{rpgDiscreet:'off'}};
  const ctx={
   createLinearGradient(){return {addColorStop(){}};},
@@ -37,10 +37,14 @@ const live=fs.readFileSync(path.join(__dirname,'classic_live.html'),'utf8');
    made.push(image);
    return image;
   },
-  querySelectorAll:()=>nodes
+  querySelectorAll:selector=>selector==='[data-rpg-safe-id]'?nodes:[]
  };
  const win={document,Image:SourceImage};
- vm.runInNewContext(source,{window:win,Promise});
+ // The real browser supplies MutationObserver. Record registration without
+ // synthesizing DOM mutations unrelated to this avatar behavior test.
+ class MutationObserver{observe(target,options){observations.push({target,options});}}
+ vm.runInNewContext(source,{window:win,Promise,MutationObserver});
+ assert.equal(observations.length,1,'Dynamic character images must be observed');
  const api=win.NeoRpgDiscreetAvatars;
  assert.ok(api,'Browser exports the local anime headshot API');
  const ids=['akari','alma','camila','elio','hana','iris','jun','kaede',
@@ -74,17 +78,15 @@ const live=fs.readFileSync(path.join(__dirname,'classic_live.html'),'utf8');
  await Promise.resolve();
  assert.equal(box.children.length,1);
  assert.deepEqual(requests,[
-  '/rpg-assets/characters/reina/discreet/neutral.webp',
-  '/rpg-assets/characters/reina/discreet/neutral.png',
   '/rpg-assets/characters/reina/chibi/front.png'
- ],'Missing discreet portraits fall back to installed Reina chibi');
+ ],'The installed Reina chibi is preferred before missing portrait variants');
  assert.equal(box.children[0].src,'/rpg-assets/characters/reina/chibi/front.png');
  assert.equal(box.children[0].hidden,false);
  assert.equal(box.dataset.rpgSafeKind,'chibi');
  assert.equal(draws.length,0,'Installed chibis bypass the canvas head crop');
  api.set(box,'reina','happy','Reina Kurogane');
  assert.equal(box.children.length,1,'Keep the same headshot image between emotions');
- assert.equal(requests.length,3,'Emotion changes reuse the cached chibi');
+ assert.equal(requests.length,1,'Emotion changes reuse the cached chibi');
  box.children[0].onerror();
  assert.equal(box.children[0].hidden,true,'Broken headshot fails closed, never showing full art');
 
@@ -93,7 +95,8 @@ const live=fs.readFileSync(path.join(__dirname,'classic_live.html'),'utf8');
  await Promise.resolve();
  await Promise.resolve();
  assert.equal(yunaBox.dataset.rpgSafeKind,'chibi');
- assert.equal(yunaBox.children[0].src,'/rpg-assets/characters/yuna/discreet/neutral.webp');
+ assert.equal(yunaBox.children[0].src,'/rpg-assets/characters/yuna/chibi/front.png',
+  'Prefer the installed Yuna chibi over the portrait-only discreet variant');
  assert.equal(draws.length,0,'Chibi must bypass the head-only canvas crop');
  assert.match(css,/\[data-rpg-safe-kind="chibi"\]/);
  assert.match(css,/\.rpg-safe-avatar\[hidden\]/);
