@@ -41,12 +41,22 @@ for(const [id,name] of fireSingles){
  assert.ok(program,id+' attack cannot compile');
  if(id==='neo4-50')assert.equal(program.onlyType,'Fire','Compiler must preserve typed Fire Energy: '+JSON.stringify(program));
  const g=game(id),d=attack(g,name);
- assert.ok(d,id+' should let player choose between multiple attached Fire cards');
- assert.deepEqual(d.options.map(o=>o.id),['energy:0','energy:1','energy:2','energy:3'],id+' offered wrong Energy');
- invalid(g,['energy:4']);
- const r=doAction(g,'choose',{decisionId:d.id,selected:['energy:1']});
- assert.equal(r.ok,true,id+': '+r.error);
+ assert.equal(d,null,id+' should auto-discard when all eligible Fire Energy cards are identical');
  assert.equal(g.players[0].discard.at(-1),F,id+' discarded wrong type');
+ assert.equal(g.players[0].active.energies.filter(x=>x===F).length,3,id+' must discard exactly one Fire Energy');
+ assert.equal(g.players[0].active.energies.includes(G),true,id+' must preserve ineligible Energy');
+}
+{
+ // Rainbow supplies Fire but has a different outcome from Basic Fire, so retain a meaningful choice.
+ const g=game('base1-12',[F,F,F,F,'base5-17',G]);
+ g.players[0].active.damage=10; // Rainbow Energy's attachment damage is already accounted for.
+ const d=attack(g,'Fire Blast');
+ assert.ok(d,'Ninetales must allow a choice between Basic Fire and Rainbow Energy');
+ assert.deepEqual(d.options.map(o=>o.id),['energy:0','energy:1','energy:2','energy:3','energy:4']);
+ invalid(g,['energy:5']);
+ const r=doAction(g,'choose',{decisionId:d.id,selected:['energy:4']});
+ assert.equal(r.ok,true,r.error);
+ assert.equal(g.players[0].discard.at(-1),'base5-17');
 }
 {
  const g=game('neo1-9',[F,W,L,G]);
