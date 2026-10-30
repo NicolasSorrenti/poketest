@@ -705,3 +705,8 @@ dialog.cg-lightbox{position:fixed;inset:0;width:100vw;max-width:none;height:100d
  .character-actions.choice-menu .character-action-btn{min-height:39px;padding:8px 9px;font-size:12px}
  .rpg-character-choice-menu .portrait{width:72%;right:-5%;bottom:150px}
 }
+
+/* Keep cloud account access beside Save in the RPG top bar. */
+.rpg-topbar-actions{display:flex;align-items:center;justify-self:end;gap:9px}
+.rpg-topbar-actions .cloud-save-button,.rpg-topbar-actions .save-btn{white-space:nowrap}
+@media(max-width:700px){.rpg-topbar-actions{position:absolute;right:14px;top:14px;gap:6px}.rpg-topbar-actions .save-btn{position:static;padding:10px 11px}.rpg-topbar-actions .cloud-save-button{font-size:10px;padding:9px 6px}.brand{padding-right:170px}}

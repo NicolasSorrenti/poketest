@@ -258,8 +258,13 @@
  }
  function ui(){
   if(!adapter.showButton)return;
-  button=document.createElement('button');button.type='button';button.id='cloudSaveButton';button.className='toolbar-btn cloud-save-button';button.textContent=localStorage.getItem(SESSION_KEY)?'☁ CLOUD':'☁ SIGN IN';button.title='Cloud save account';button.onclick=show;
-  const actions=document.querySelector('.utility-actions');if(actions)actions.prepend(button);else document.querySelector('header')?.append(button);
+  button=document.getElementById('cloudSaveButton');
+  if(!button){
+   button=document.createElement('button');button.type='button';button.id='cloudSaveButton';button.className='toolbar-btn cloud-save-button';
+   const actions=document.querySelector('.utility-actions');
+   if(actions)actions.prepend(button);else document.querySelector('header')?.append(button);
+  }
+  button.textContent=localStorage.getItem(SESSION_KEY)?'☁ CLOUD':'☁ SIGN IN';button.title='Cloud save account';button.onclick=show;
   dialog=document.createElement('dialog');dialog.className='cloud-save-dialog';dialog.id='cloudSaveDialog';
   dialog.innerHTML='<div class="cloud-dialog-head"><h2>☁ Cloud Save</h2><button type="button" id="cloudClose" aria-label="Close">✕</button></div>'+
    '<p id="cloudMessage" role="status" aria-live="polite">Sign in to load your cloud campaign and sync progress automatically.</p>'+
