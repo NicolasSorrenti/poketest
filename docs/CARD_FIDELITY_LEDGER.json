@@ -255,7 +255,11 @@
      "kind": "attack",
      "index": 1,
      "name": "Toxic",
-     "status": "unreviewed"
+     "status": "partial",
+     "evidence": [
+      "test_card_fidelity_nidoking.js"
+     ],
+     "scope": "Attack damage and replacement of ordinary poison; 20 damage at two consecutive checkups and correct log, typed cost rejection. Classic, Neo, online-preview and 40-card Cube reducer; independent printed-card and historical ruling review pending."
     }
    ]
   },

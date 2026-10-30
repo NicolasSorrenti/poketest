@@ -2648,7 +2648,7 @@ function finishTurn(g){
   if(!u)continue;
   const outcome=STATUS.checkup(u,()=>next(g,2)===1,side===g.turn);
   u.damage+=outcome.poisonDamage;
-  if(outcome.poisonDamage)log(g,`${card(g,u.id).name} takes 10 Poison damage.`);
+  if(outcome.poisonDamage)log(g,`${card(g,u.id).name} takes ${outcome.poisonDamage} Poison damage.`);
   if(outcome.woke)log(g,`${card(g,u.id).name} woke up.`);
  }
  // Miracle Energy is discarded at the end of its owner's turn, even if Benched.

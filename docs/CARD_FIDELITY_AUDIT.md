@@ -45,4 +45,6 @@ These scenarios use the TCGdex-sourced catalogue text. Printed card images and a
 
 | Clefairy (base1-5) | Sing heads/tails and Sleep recovery; Metronome copying Fire Spin, waived discard and Energy cost rejection | test_card_fidelity_clefairy.js | Partial; other copied effects and print/ruling review pending |
 
+| Nidoking (base1-11) | Toxic replaces ordinary poison, deals 20 at consecutive checkups and logs the actual damage | test_card_fidelity_nidoking.js | Partial; other interactions and independent print/ruling review pending |
+
 The full card-by-card fidelity review is **not complete**. Do not count the other cards or untested branches of the cards above as verified. Existing Classic execution probing covers 427 attack records in a manufactured scenario; it checks execution, not correctness or all possible choices.
