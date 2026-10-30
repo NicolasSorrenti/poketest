@@ -260,7 +260,8 @@
      "evidence": [
       "test_card_fidelity_mewtwo.js: Barrier's Psychic Energy discard, automatic resolution for identical Basic Psychic Energy, retained choice when Psychic and Rainbow Energy are both eligible, and prevention of damage/paralysis on the opponent's next turn; Classic, Neo, online-preview and 40-card Cube configurations.",
       "https://github.com/PokemonTCG/pokemon-tcg-data/blob/master/cards/en/base1.json",
-      "Catalog transcription discrepancy remains: local TCGdex and Bulbapedia text omit “Psychic” from Barrier's extra discard, while PokémonTCG card data and card database listings specify Psychic Energy; physical scan comparison and historical ruling review remain pending."
+      "Catalog transcription discrepancy remains: local TCGdex and Bulbapedia text omit “Psychic” from Barrier's extra discard, while PokémonTCG card data and card database listings specify Psychic Energy; physical scan comparison and historical ruling review remain pending.",
+      "Basic Psychic Energy reprints with different set IDs auto-resolve as functionally identical; Rainbow Energy remains a distinct, selectable outcome."
      ]
     }
    ]
@@ -917,7 +918,11 @@
      "kind": "attack",
      "index": 1,
      "name": "Ember",
-     "status": "unreviewed"
+     "status": "partial",
+     "evidence": [
+      "test_typed_energy_discard_audit.js: typed Fire discard auto-resolves identical Fire Energy and preserves non-Fire Energy.",
+      "test_typed_energy_discard_audit.js / test_typed_energy_missing_icons.js"
+     ]
     }
    ]
   },
@@ -4166,7 +4171,11 @@
      "kind": "attack",
      "index": 1,
      "name": "Fire Blast",
-     "status": "unreviewed"
+     "status": "partial",
+     "evidence": [
+      "test_typed_energy_discard_audit.js: identical Fire Energy auto-discard.",
+      "test_typed_energy_discard_audit.js / test_typed_energy_missing_icons.js"
+     ]
     }
    ]
   },
@@ -5194,7 +5203,11 @@
      "kind": "attack",
      "index": 1,
      "name": "Ember",
-     "status": "unreviewed"
+     "status": "partial",
+     "evidence": [
+      "test_typed_energy_discard_audit.js: typed Fire discard auto-resolves identical Fire Energy and preserves non-Fire Energy.",
+      "test_typed_energy_discard_audit.js / test_typed_energy_missing_icons.js"
+     ]
     }
    ]
   },
@@ -6111,7 +6124,11 @@
      "kind": "attack",
      "index": 1,
      "name": "Continuous Fireball",
-     "status": "unreviewed"
+     "status": "partial",
+     "evidence": [
+      "test_typed_energy_missing_icons.js: seeded coin outcomes, damage, head-count discard, equivalent Energy auto-resolution and discard notification; knockout/Prize promotion branch covered.",
+      "test_typed_energy_discard_audit.js / test_typed_energy_missing_icons.js"
+     ]
     }
    ]
   },
@@ -6410,7 +6427,11 @@
      "kind": "attack",
      "index": 1,
      "name": "Continuous Fireball",
-     "status": "unreviewed"
+     "status": "partial",
+     "evidence": [
+      "test_typed_energy_missing_icons.js: seeded coin outcomes, damage, head-count discard, equivalent Energy auto-resolution and discard notification; knockout/Prize promotion branch covered.",
+      "test_typed_energy_discard_audit.js / test_typed_energy_missing_icons.js"
+     ]
     }
    ]
   },
@@ -6619,7 +6640,11 @@
      "kind": "attack",
      "index": 1,
      "name": "Fireball",
-     "status": "unreviewed"
+     "status": "partial",
+     "evidence": [
+      "test_typed_energy_missing_icons.js: tails/heads behavior, automatic equivalent discard, Rainbow-vs-Basic Fire choice, rejection of ineligible Grass and discard notification.",
+      "test_typed_energy_discard_audit.js / test_typed_energy_missing_icons.js"
+     ]
     }
    ]
   },
@@ -6676,7 +6701,11 @@
      "kind": "attack",
      "index": 1,
      "name": "Playing with Fire",
-     "status": "unreviewed"
+     "status": "partial",
+     "evidence": [
+      "test_typed_energy_missing_icons.js: seeded coin outcomes, damage, automatic equivalent Fire discard and discard notification.",
+      "test_typed_energy_discard_audit.js / test_typed_energy_missing_icons.js"
+     ]
     }
    ]
   },
@@ -7209,7 +7238,11 @@
      "kind": "attack",
      "index": 0,
      "name": "Ember",
-     "status": "unreviewed"
+     "status": "partial",
+     "evidence": [
+      "test_typed_energy_discard_audit.js: typed Fire discard auto-resolves identical Fire Energy and preserves non-Fire Energy.",
+      "test_typed_energy_discard_audit.js / test_typed_energy_missing_icons.js"
+     ]
     }
    ]
   },
@@ -12859,7 +12892,11 @@
      "kind": "attack",
      "index": 0,
      "name": "Flame Wheel",
-     "status": "unreviewed"
+     "status": "partial",
+     "evidence": [
+      "test_typed_energy_missing_icons.js: three-Fire requirement, automatic discard among equivalent Basic Fire cards, and non-Fire preservation.",
+      "test_typed_energy_discard_audit.js / test_typed_energy_missing_icons.js"
+     ]
     },
     {
      "kind": "power",
@@ -13359,7 +13396,11 @@
      "kind": "attack",
      "index": 0,
      "name": "Ember",
-     "status": "unreviewed"
+     "status": "partial",
+     "evidence": [
+      "test_typed_energy_discard_audit.js: typed Fire discard auto-resolves identical Fire Energy and preserves non-Fire Energy.",
+      "test_typed_energy_discard_audit.js / test_typed_energy_missing_icons.js"
+     ]
     },
     {
      "kind": "attack",
@@ -15732,7 +15773,11 @@
      "kind": "attack",
      "index": 0,
      "name": "Searing Flames",
-     "status": "unreviewed"
+     "status": "partial",
+     "evidence": [
+      "test_typed_energy_missing_icons.js: requires and auto-discards two Fire Energy from equivalent candidates while preserving non-Fire Energy.",
+      "test_typed_energy_discard_audit.js / test_typed_energy_missing_icons.js"
+     ]
     },
     {
      "kind": "power",
@@ -17732,7 +17777,11 @@
      "kind": "attack",
      "index": 1,
      "name": "Fire Blast",
-     "status": "unreviewed"
+     "status": "partial",
+     "evidence": [
+      "test_typed_energy_discard_audit.js: typed Fire discard auto-resolves identical Fire Energy and preserves non-Fire Energy.",
+      "test_typed_energy_discard_audit.js / test_typed_energy_missing_icons.js"
+     ]
     }
    ]
   },
@@ -18414,7 +18463,11 @@
      "kind": "attack",
      "index": 0,
      "name": "Ember",
-     "status": "unreviewed"
+     "status": "partial",
+     "evidence": [
+      "test_typed_energy_discard_audit.js: typed Fire discard auto-resolves identical Fire Energy and preserves non-Fire Energy.",
+      "test_typed_energy_discard_audit.js / test_typed_energy_missing_icons.js"
+     ]
     }
    ]
   },
