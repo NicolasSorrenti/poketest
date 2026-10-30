@@ -1,131 +1,119 @@
-# Neo Campus — all recoverable overworld character artwork
-This archive groups the character artwork available in this ChatGPT session. **The 42 PNGs in `rpg-assets/characters/<id>/overworld/` are individual sprite images.** The 33 assets in `art-production/overworld-source-archive/` are original sheets, earlier variations or raw sources. They are **not** intended for direct loading by the RPG.
-## How to install
-Extract the ZIP at the **root** of the `NicolasSorrenti/poketest` repository, preserving folders. Existing approved artwork has not been overwritten here. No GitHub changes were performed. **Caution:** These file paths are consistent with the project's asset convention, but the RPG still needs pose/scene registration in `overworld/manifest.js` or its runtime renderer to display most of them; merely unzipping is not enough to make every character appear. The existing Reina, Barb and Jinx assets are untouched.
-## QA and known limitations
-- Individual images in `rpg-assets/...` have RGBA channels and were cropped close to the visible artwork.   The grouped compositions are stored separately and never inside a character's active sprite path.
-- Some hair-edge transparency and unusually large poses should be checked at actual in-game scale.   In particular, `shiori/reaching-book-back.png` was extracted from a user-supplied checkerboard-background correction   and retains possible fine-hair extraction artifacts; its original is archived.
-- Rina's `reaching-idol.png` includes a leg cropped in the original generated sheet; no missing anatomy was fabricated.
-- Some new sprites were generated with fairly front-facing anatomy; slight overhead/three-quarter art QA remains useful.
-- Raw source sheets may contain multiple characters, overlapping silhouettes, gradient backgrounds or rejected outfit/identity variants.   Do **not** import `art-production/overworld-source-archive` files as sprites.
-- This includes all recoverable, identifiable images from the working container; previously displayed images that were   not retained as separate files cannot be recovered or represented as verified PNGs.   In particular, an earlier Camila bending-to-book standalone is not recoverable as a separate source here.
-- Characters described as already completed elsewhere (Barb, Reina, Jinx, Daisy) are not duplicated from the repo.   No canonical reference/attack cut-in images from the user-provided character library ZIP are duplicated.
+# NEO CAMPUS — master overworld character sprites
 
-## Game sprite paths
+Release date: 2026-10-30
+**Sprites:** 67 separate transparent RGBA PNGs, across 19 character folders.
 
-### Yuna — 6 PNGs
-- `rpg-assets/characters/yuna/overworld/back-three-quarter.png` (986x1525)
-- `rpg-assets/characters/yuna/overworld/side-pose.png` (955x1519)
-- `rpg-assets/characters/yuna/overworld/headphones.png` (982x1530)
-- `rpg-assets/characters/yuna/overworld/gamer-idle.png` (1013x1522)
-- `rpg-assets/characters/yuna/overworld/crouching-cards.png` (1024x1482)
-- `rpg-assets/characters/yuna/overworld/seated-cards.png` (1024x1533)
+## Install
+Extract into the ROOT of `NicolasSorrenti/poketest` so the `rpg-assets/` directory lands in the existing `rpg-assets/` folder.
+All individual game sprites follow `rpg-assets/characters/<id>/overworld/<pose>.png`.
+Sprites are provided as files only: the game will not automatically show every new pose until it is registered in its pose configuration / map placement system.
+No code, runtime manifest, maps, RPG HTML, or existing GitHub content was modified.
+Unzip carefully if any same-name files already exist; this release does not overwrite anything inside GitHub automatically.
 
-### Hana — 3 PNGs
-- `rpg-assets/characters/hana/overworld/standing-back.png` (440x980)
-- `rpg-assets/characters/hana/overworld/phone-standing.png` (499x996)
-- `rpg-assets/characters/hana/overworld/kneeling-bag.png` (484x745)
+## Pose counts
+- akari: 8 PNGs
+- alma: 4 PNGs
+- camila: 2 PNGs
+- elena: 3 PNGs
+- elio: 1 PNGs
+- hana: 3 PNGs
+- iris: 3 PNGs
+- jun: 1 PNGs
+- kaede: 5 PNGs
+- laca: 6 PNGs
+- luna: 3 PNGs
+- marina: 3 PNGs
+- nereo: 1 PNGs
+- rina: 5 PNGs
+- shiori: 4 PNGs
+- sierra: 3 PNGs
+- sol: 3 PNGs
+- teo: 3 PNGs
+- yuna: 6 PNGs
 
-### Laca — 6 PNGs
-- `rpg-assets/characters/laca/overworld/casual/walking-back.png` (612x1523)
-- `rpg-assets/characters/laca/overworld/casual/reaching-out.png` (650x1503)
-- `rpg-assets/characters/laca/overworld/casual/crouching.png` (1020x1526)
-- `rpg-assets/characters/laca/overworld/lifeguard/front-leaning.png` (641x1526)
-- `rpg-assets/characters/laca/overworld/lifeguard/back-rescue-buoy.png` (578x1526)
-- `rpg-assets/characters/laca/overworld/lifeguard/kneeling-lookout.png` (916x1499)
+## Already-approved existing character sprites outside this ZIP
+Barb, Reina, Jinx and Daisy were previously described as completed/approved in the repository or other chat deliveries. Their assets were deliberately not invented or recopied from unrelated references.
 
-### Rina — 5 PNGs
-- `rpg-assets/characters/rina/overworld/reaching-idol.png` (571x1010) — Source pose has a cropped leg in original render
-- `rpg-assets/characters/rina/overworld/over-shoulder.png` (418x1003)
-- `rpg-assets/characters/rina/overworld/seated-cards.png` (597x785)
-- `rpg-assets/characters/rina/overworld/alternate-card-pose.png` (891x1535) — Alternate/candidate pose
-- `rpg-assets/characters/rina/overworld/alternate-idol-pose.png` (940x1526) — Alternate/candidate pose
+## Known QA notes
+- Rina `reaching-idol.png`: one leg was cropped by the original render.
+- Shiori `reaching-book-back.png`: original book partly cropped; complex hair mask warrants inspection.
+- Luna: back pose updated using the later full-length revision. The newly revised seated pose reaches the original source image edge; verify the right shoe and hanging hem at runtime scale.
+- Other silhouettes may have very thin, semi-transparent edges; verify on a checkered game background.
+- Seated/activity poses include props in the PNG (such as the chair or tray), as depicted; do not layer onto conflicting furniture without visual QA.
+- No per-map scale/anchor calibration is supplied here; preserve the manifest and use the in-game placement tool.
 
-### Akari — 8 PNGs
-- `rpg-assets/characters/akari/overworld/over-shoulder-cardigan.png` (513x1535)
-- `rpg-assets/characters/akari/overworld/clipboard-writing.png` (560x1527)
-- `rpg-assets/characters/akari/overworld/seated-clipboard.png` (916x1507)
-- `rpg-assets/characters/akari/overworld/fashion-sketch.png` (420x999)
-- `rpg-assets/characters/akari/overworld/standing-clipboard.png` (557x1503)
-- `rpg-assets/characters/akari/overworld/over-shoulder-bag.png` (506x1516)
-- `rpg-assets/characters/akari/overworld/presenting-designs.png` (693x1530)
-- `rpg-assets/characters/akari/overworld/seated-coffee-laptop.png` (945x1529)
+## Archive contents
+- `rpg-assets/characters/`: 67 PNG character sprite files in game-style paths.
+- `SPRITE_INVENTORY.csv` / `SPRITE_INVENTORY.json`: exact path, dimensions, checksum, source, QA.
+- `SHA256SUMS.txt`: per-sprite checksums.
+- `PREVIEW_CHARACTERS.jpg`: one representative pose for each included character.
+- The COMPLETE artwork ZIP additionally has `art-production/overworld-source-archive/`: original sheets/renders, not to be used by the RPG directly.
 
-### Shiori — 4 PNGs
-- `rpg-assets/characters/shiori/overworld/over-shoulder.png` (839x1443)
-- `rpg-assets/characters/shiori/overworld/standing-book.png` (881x1530)
-- `rpg-assets/characters/shiori/overworld/reaching-book-front.png` (1020x1530)
-- `rpg-assets/characters/shiori/overworld/reaching-book-back.png` (832x1148) — Background algorithmically removed; fine lavender hair edges need manual QA; book cropped by original
-
-### Camila — 2 PNGs
-- `rpg-assets/characters/camila/overworld/standing-front.png` (572x1526)
-- `rpg-assets/characters/camila/overworld/standing-back.png` (533x1535)
-
-### Marina — 3 PNGs
-- `rpg-assets/characters/marina/overworld/standing-front.png` (728x1533)
-- `rpg-assets/characters/marina/overworld/looking-back.png` (847x1535)
-- `rpg-assets/characters/marina/overworld/seated-relaxing.png` (1024x1536)
-
-### Kaede — 5 PNGs
-- `rpg-assets/characters/kaede/overworld/standing-front.png` (708x1532)
-- `rpg-assets/characters/kaede/overworld/looking-back.png` (651x1523)
-- `rpg-assets/characters/kaede/overworld/crouching-relaxed.png` (1018x1536)
-- `rpg-assets/characters/kaede/overworld/arcade-playing-front.png` (765x1536)
-- `rpg-assets/characters/kaede/overworld/arcade-playing-back.png` (666x1493)
-
-## Source-only archive paths
-
-### akari
-- `art-production/overworld-source-archive/original-combined-sheets/akari/a_clean_high_resolution_anime_illustration_collag.png`
-- `art-production/overworld-source-archive/original-combined-sheets/akari/a_clean_high_resolution_anime_illustration_sheet.png`
-- `art-production/overworld-source-archive/original-combined-sheets/akari/anime_character_pose_sheet_in_lavender_and_plaid.png`
-- `art-production/overworld-source-archive/original-combined-sheets/akari/four_poses_of_a_stylish_anime_woman.png`
-- `art-production/overworld-source-archive/original-combined-sheets/akari/imagen(20261029-185118).png`
-- `art-production/overworld-source-archive/original-combined-sheets/akari/wide_clean_png_like_composite_illustration_on_a_t.png`
-
-### backup-random-npc
-- `art-production/overworld-source-archive/original-combined-sheets/backup-random-npc/a_clean_high_resolution_character_sheet_sprite.png`
-- `art-production/overworld-source-archive/original-combined-sheets/backup-random-npc/a_clean_high_resolution_transparent_background_c.png`
-- `art-production/overworld-source-archive/original-combined-sheets/backup-random-npc/a_clean_png_transparent_background_character_sheet.png`
-- `art-production/overworld-source-archive/original-combined-sheets/backup-random-npc/a_clean_transparent_background_png_style_character.png`
-- `art-production/overworld-source-archive/original-combined-sheets/backup-random-npc/a_clean_transparent_background_sprite_character_sh.png`
-- `art-production/overworld-source-archive/original-combined-sheets/backup-random-npc/wide_clean_png_illustration_sheet_on_a_transparent.png`
-
-### camila
-- `art-production/overworld-source-archive/original-combined-sheets/camila/a_clean_high_resolution_character_illustration_st.png`
-- `art-production/overworld-source-archive/original-combined-sheets/camila/a_clean_transparent_background_illustration_png_s.png`
-- `art-production/overworld-source-archive/original-combined-sheets/camila/imagen(20261029-202908).png`
-- `art-production/overworld-source-archive/original-combined-sheets/camila/overall_scene_a_clean_high_resolution_anime_styl.png`
-
-### hana
-- `art-production/overworld-source-archive/original-combined-sheets/hana/a_clean_high_resolution_character_sprite_sheet_on.png`
-
-### kaede
-- `art-production/overworld-source-archive/alternates-and-unprocessed/kaede/imagegen.png`
-
-### laca
-- `art-production/overworld-source-archive/alternates-and-unprocessed/laca/a_clean_cutout_illustration_on_a_transparent_backg.png`
-- `art-production/overworld-source-archive/alternates-and-unprocessed/laca/a_clean_high_quality_anime_manga_style_illustra.png`
-- `art-production/overworld-source-archive/alternates-and-unprocessed/laca/a_clean_high_quality_anime_style_illustration_ren.png`
-- `art-production/overworld-source-archive/alternates-and-unprocessed/laca/a_clean_high_quality_anime_style_illustration_wit.png`
-- `art-production/overworld-source-archive/alternates-and-unprocessed/laca/a_clean_png_style_illustration_on_a_transparent_ba.png`
-- `art-production/overworld-source-archive/alternates-and-unprocessed/laca/a_clean_png_transparent_background_anime_style_ill.png`
-- `art-production/overworld-source-archive/alternates-and-unprocessed/laca/a_clean_png_transparent_background_illustration_n.png`
-- `art-production/overworld-source-archive/alternates-and-unprocessed/laca/full_body_anime_style_character_illustration_on_a.png`
-- `art-production/overworld-source-archive/alternates-and-unprocessed/laca/full_body_illustration_on_a_transparent_background.png`
-- `art-production/overworld-source-archive/alternates-and-unprocessed/laca/high_resolution_anime_style_illustration_single_c.png`
-- `art-production/overworld-source-archive/original-combined-sheets/laca/a_clean_composite_sheet_of_anime_style_character_r.png`
-- `art-production/overworld-source-archive/original-combined-sheets/laca/a_clean_studio_like_composite_illustration_on_a_t.png`
-
-### rina
-- `art-production/overworld-source-archive/original-combined-sheets/rina/wide_transparent_background_png_style_illustration.png`
-
-### shiori
-- `art-production/overworld-source-archive/alternates-and-unprocessed/shiori/a_highly_detailed_anime_style_illustration_full_b.png`
-- `art-production/overworld-source-archive/alternates-and-unprocessed/shiori/imagen(20261029-201428).png`
-
-## Other files
-- `ASSET_INVENTORY.csv` — all files and status/QA notes
-- `POSE_PATHS.json` — character-to-sprite mapping for future integration
-- `SHA256SUMS.txt` — checksum list
-- `PREVIEW_ALL_CHARACTERS.jpg` — overview of the 42 individual sprites
+## Full path inventory
+- `rpg-assets/characters/akari/overworld/clipboard-writing.png` (560×1527)
+- `rpg-assets/characters/akari/overworld/fashion-sketch.png` (420×999)
+- `rpg-assets/characters/akari/overworld/over-shoulder-bag.png` (506×1516)
+- `rpg-assets/characters/akari/overworld/over-shoulder-cardigan.png` (513×1535)
+- `rpg-assets/characters/akari/overworld/presenting-designs.png` (693×1530)
+- `rpg-assets/characters/akari/overworld/seated-clipboard.png` (916×1507)
+- `rpg-assets/characters/akari/overworld/seated-coffee-laptop.png` (945×1529)
+- `rpg-assets/characters/akari/overworld/standing-clipboard.png` (557×1503)
+- `rpg-assets/characters/alma/overworld/over-shoulder-back.png` (294×822)
+- `rpg-assets/characters/alma/overworld/serving-tray.png` (434×822)
+- `rpg-assets/characters/alma/overworld/standing-front.png` (352×822)
+- `rpg-assets/characters/alma/placing-coffee-cup.png` (973×1526)
+- `rpg-assets/characters/camila/overworld/standing-back.png` (533×1535)
+- `rpg-assets/characters/camila/overworld/standing-front.png` (572×1526)
+- `rpg-assets/characters/elena/overworld/over-shoulder-documents.png` (528×822)
+- `rpg-assets/characters/elena/overworld/seated-reviewing-documents.png` (698×802)
+- `rpg-assets/characters/elena/overworld/standing-portfolio.png` (612×822)
+- `rpg-assets/characters/elio/standing-front.png` (798×1533)
+- `rpg-assets/characters/hana/overworld/kneeling-bag.png` (484×745)
+- `rpg-assets/characters/hana/overworld/phone-standing.png` (499×996)
+- `rpg-assets/characters/hana/overworld/standing-back.png` (440×980)
+- `rpg-assets/characters/iris/overworld/crouching.png` (458×793)
+- `rpg-assets/characters/iris/overworld/over-shoulder-back.png` (359×842)
+- `rpg-assets/characters/iris/overworld/standing-front.png` (419×842)
+- `rpg-assets/characters/jun/standing-front.png` (638×1531)
+- `rpg-assets/characters/kaede/overworld/arcade-playing-back.png` (666×1493)
+- `rpg-assets/characters/kaede/overworld/arcade-playing-front.png` (765×1536)
+- `rpg-assets/characters/kaede/overworld/crouching-relaxed.png` (1018×1536)
+- `rpg-assets/characters/kaede/overworld/looking-back.png` (651×1523)
+- `rpg-assets/characters/kaede/overworld/standing-front.png` (708×1532)
+- `rpg-assets/characters/laca/overworld/casual/crouching.png` (1020×1526)
+- `rpg-assets/characters/laca/overworld/casual/reaching-out.png` (650×1503)
+- `rpg-assets/characters/laca/overworld/casual/walking-back.png` (612×1523)
+- `rpg-assets/characters/laca/overworld/lifeguard/back-rescue-buoy.png` (578×1526)
+- `rpg-assets/characters/laca/overworld/lifeguard/front-leaning.png` (641×1526)
+- `rpg-assets/characters/laca/overworld/lifeguard/kneeling-lookout.png` (916×1499)
+- `rpg-assets/characters/luna/overworld/looking-back.png` (469×822) — Replaced earlier cut-off leg pose with later full-length rear 3/4 revision.
+- `rpg-assets/characters/luna/overworld/seated.png` (650×738) — Latest user-approved seated render reaches the right/bottom canvas edge; inspect right boot/trim before final in-game use.
+- `rpg-assets/characters/luna/overworld/standing-front.png` (620×822)
+- `rpg-assets/characters/marina/overworld/looking-back.png` (847×1535)
+- `rpg-assets/characters/marina/overworld/seated-relaxing.png` (1024×1536)
+- `rpg-assets/characters/marina/overworld/standing-front.png` (728×1533)
+- `rpg-assets/characters/nereo/standing-front.png` (601×1448)
+- `rpg-assets/characters/rina/overworld/alternate-card-pose.png` (891×1535)
+- `rpg-assets/characters/rina/overworld/alternate-idol-pose.png` (940×1526)
+- `rpg-assets/characters/rina/overworld/over-shoulder.png` (418×1003)
+- `rpg-assets/characters/rina/overworld/reaching-idol.png` (571×1010) — Original illustration crops a leg. Retained as historical pose; requires art fix.
+- `rpg-assets/characters/rina/overworld/seated-cards.png` (597×785)
+- `rpg-assets/characters/shiori/overworld/over-shoulder.png` (839×1443)
+- `rpg-assets/characters/shiori/overworld/reaching-book-back.png` (832×1148) — Original book was cropped; fine hair-edge extraction requires QA.
+- `rpg-assets/characters/shiori/overworld/reaching-book-front.png` (1020×1530)
+- `rpg-assets/characters/shiori/overworld/standing-book.png` (881×1530)
+- `rpg-assets/characters/sierra/overworld/looking-back.png` (512×822)
+- `rpg-assets/characters/sierra/overworld/seated-relaxed.png` (654×736)
+- `rpg-assets/characters/sierra/overworld/standing-wink.png` (497×822)
+- `rpg-assets/characters/sol/crouching.png` (1086×1445)
+- `rpg-assets/characters/sol/looking-back.png` (925×1448)
+- `rpg-assets/characters/sol/standing-front.png` (845×1447)
+- `rpg-assets/characters/teo/overworld/looking-back.png` (351×1010)
+- `rpg-assets/characters/teo/overworld/serving-tray.png` (469×1015)
+- `rpg-assets/characters/teo/overworld/standing-front.png` (389×1015)
+- `rpg-assets/characters/yuna/overworld/back-three-quarter.png` (986×1525)
+- `rpg-assets/characters/yuna/overworld/crouching-cards.png` (1024×1482)
+- `rpg-assets/characters/yuna/overworld/gamer-idle.png` (1013×1522)
+- `rpg-assets/characters/yuna/overworld/headphones.png` (982×1530)
+- `rpg-assets/characters/yuna/overworld/seated-cards.png` (1024×1533)
+- `rpg-assets/characters/yuna/overworld/side-pose.png` (955×1519)
