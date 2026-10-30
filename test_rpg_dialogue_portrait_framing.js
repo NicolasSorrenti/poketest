@@ -7,7 +7,8 @@ const path = require('node:path');
 const source = fs.readFileSync(path.join(__dirname, 'rpg-overworld-integration.js'), 'utf8');
 // Syntax test without executing browser-side code.
 assert.doesNotThrow(() => new vm.Script(source, {filename: 'rpg-overworld-integration.js'}));
-assert.match(source, /scenePeople\.classList\.add\('neo-ow-standard-portraits'\)/);
+assert.match(source, /scenePeople\.classList\.toggle\('neo-ow-standard-portraits'/);
+assert.match(source, /participants\.every\(person=>person\.id==='marina'\|\|person\.id==='laca'\)/);
 assert.match(source, /person\.dataset\.npc=participant\.id/);
 assert.match(source, /image\.naturalHeight>image\.naturalWidth\*1\.38/);
 const ruleStart = source.indexOf("dialoguePortraitStandard.id='neoOverworldDialoguePortraitStandard'");
