@@ -908,7 +908,11 @@
       dayLabel.textContent='Day '+data.day+' · '+(['Morning','Afternoon','Evening'][data.slot]||'');
       next.disabled=data.locked;travelToggle.disabled=data.locked;
       if(data.locked)closeSheet();
-      const people=data.people.join(',');
+      const people=data.people.map(id=>{
+        // Match Laca's canonical outfit rules: lifeguard uniform on duty at Riverside Park.
+        const onLifeguardShift=id==='laca'&&data.location==='park'&&(data.slot===0||data.slot===1);
+        return onLifeguardShift?'laca:lifeguardFrontLeaning':id;
+      }).join(',');
       const nextSrc='/overworld-prototype.html?scene='+encodeURIComponent(data.location)+'&cast='+encodeURIComponent(people)+'&rpg-integration=1&chibi='+(document.documentElement.dataset.rpgDiscreet==='on'?'1':'0');
       if(frame.getAttribute('src')!==nextSrc)frame.src=nextSrc;
       note.hidden=true;
