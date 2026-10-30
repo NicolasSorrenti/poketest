@@ -424,7 +424,12 @@ let overworldRenderedDialogue='';
 window.NeoRpgOverworldBridge=Object.freeze({
  scenePortraits(){return overworldScenePortraits;},
  dialogueText(){return overworldRenderedDialogue;},
- portrait(id){return cast[id]?{id,name:cast[id].name,src:scenePortraitSource(id,'neutral',null)}:null;},
+ portrait(id){
+  if(!cast[id])return null;
+  const src=scenePortraitSource(id,'neutral',null);
+  return {id,name:cast[id].name,src,
+   ...(id==='camila'?{srcs:stagePortraitPaths(id,'neutral',null)}:{})};
+ },
  clearInteraction(){if(overworldControlsLocked())return false;state.selected=null;persist();render();return true;},
  snapshot(){return {location:state.location,day:state.day,slot:state.slot,selected:state.selected&&currentPeople().includes(state.selected)?state.selected:null,locked:overworldControlsLocked(),arriving:arrivalGate||!!pendingOverworldArrival||!!window.NeoRpgTimeTransitions?.active,storyActive:overworldStoryActive(),eventActive:!!(state.mandatoryEventState?.active||state.activeSliceOfLife||state.activeSituation||state.activeStory||state.activeSideQuest||state.activeArc||state.activeEncounter),people:currentPeople().filter(id=>!!cast[id]),places:Object.entries(places).map(([id,p])=>({id,name:p[0]}))};},
  travel(placeId){if(overworldControlsLocked())return false;return travelTo(placeId);},
@@ -2328,6 +2333,9 @@ function portraitPaths(id,expression='neutral',sceneId=activeOutfitSceneId){
 }
 // Persona C bust framing approved by the player. Only the RPG stage uses it.
 // Original art, event CGs and booster portraits remain untouched.
+// Keep Camila's approved full-body overworld source intact. The dialogue viewport
+// may show just her upper body without introducing another art file.
+const CAMILA_DIALOGUE_MASTER='/rpg-assets/characters/camila/overworld/standing-front.png';
 const PERSONA_C_CROPS={
  akari:[.028,0,.943,.597],alma:[.075,0,.868,.55],barb:[.296,0,.429,.363],
  camila:[.072,0,.894,.566],elena:[.225,0,.56,.355],elio:[.177,0,.673,.426],
@@ -2408,7 +2416,10 @@ function stagePortraitPaths(id,expression,sceneId){
  // An active special look remains the character's normal portrait all day,
  // regardless of expression. Dedicated CG/cut-in/battle graphics use other paths.
  const normal=personaCStageCandidates(id,expression,portraitPaths(id,expression,sceneId));
- return alternate?[alternate,...normal.filter(path=>path!==alternate)]:normal;
+ // Prefer the approved standing art for Camila's dialogue only. Keep every
+ // expression-specific file as fallback if the full-body image cannot load.
+ const dialogue=id==='camila'?[CAMILA_DIALOGUE_MASTER,...normal.filter(path=>path!==CAMILA_DIALOGUE_MASTER)]:normal;
+ return alternate?[alternate,...dialogue.filter(path=>path!==alternate)]:dialogue;
 }
 function scenePortraitSource(id,expression,sceneId=activeOutfitSceneId){
  const paths=stagePortraitPaths(id,expression,sceneId);
@@ -2419,7 +2430,10 @@ function applyPersonaCStageCrop(img,id){
  const src=img.getAttribute('src')||'';
  const alternate=/\/portraits\/special-day-\d+\.png(?:\?|$)/.test(src);
  const hanaVariant=id==='hana'&&src.includes('/overworld-variants/');
- const crop=alternate?(id==='barb'?[.10,0,.80,.60]:[.07,0,.86,.62]):hanaVariant?[.07,0,.86,.62]:PERSONA_C_CROPS[id];
+ const camilaMaster=id==='camila'&&src.includes(CAMILA_DIALOGUE_MASTER);
+ // The front full-body source has a taller silhouette than Camila's old bust.
+ // Show the head and torso into the top of the waist; never crop source pixels.
+ const crop=camilaMaster?[.05,0,.90,.46]:alternate?(id==='barb'?[.10,0,.80,.60]:[.07,0,.86,.62]):hanaVariant?[.07,0,.86,.62]:PERSONA_C_CROPS[id];
  if(!crop)return;
  const [x,y,w,h]=crop;
  // The stage frame clips the original image; no binary assets are altered.
@@ -2455,7 +2469,10 @@ function renderRpgCast(ids,locked,shown,portraitId,context={}){
     if(srcs.length)src=srcs[0];
     else src=state.overworldPoseIntro.src;
    }
-   return {id,name:cast[id].name,src,...(srcs?.length?{srcs}:{})};
+   // Allow Camila's new master to gracefully fall back to existing dialogue
+   // expressions if its asset fails to load in the standalone overworld.
+   const sources=srcs?.length?srcs:(id==='camila'?stagePortraitPaths(id,expression,context.sceneId):null);
+   return {id,name:cast[id].name,src,...(sources?.length?{srcs:[src,...sources.filter(path=>path!==src)]}:{})};
   }):[]
  };
  if(typeof document.querySelector!=='function')return;
