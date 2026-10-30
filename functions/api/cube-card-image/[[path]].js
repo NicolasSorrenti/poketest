@@ -1,3 +1,4 @@
+import '../../_lib/node-bridge.js';
 // Cloudflare-native card artwork proxy. Upstream hosts come exclusively from
 // the vetted historical catalog; player input cannot choose an arbitrary URL.
 import imagePackage from '../../../cube_card_images.js';
