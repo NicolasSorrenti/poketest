@@ -11,7 +11,7 @@ const rank=ids=>Object.fromEntries([...new Set(ids)].map(id=>[id,ids.filter(x=>x
 const pokemon=ids=>ids.filter(id=>CATALOG.get(id)?.supertype==='Pokémon');
 
 test('the 23 authored starting recipes are distinct, deterministic, and independent from retail decks',()=>{
- assert.equal(NPC.NAMES.length,23);
+ assert.equal(NPC.NAMES.length,24);
  const sourceDecks=Object.fromEntries(['power_reserve','blackout','overgrowth','zap','gym_new_voltage','rocket_lab','water_blast','fossil_lab','hotfoot','cold_fusion','bodyguard','lockdown'].map(id=>[id,service.decklist(id)]));
  const packages=[];
  for(const npc of NPC.NAMES){
@@ -65,7 +65,8 @@ test('all seven tiers add a strategy upgrade at each campaign milestone',()=>{
 test('the named character themes remain explicit in the authored Pokemon cores',()=>{
  const expected={
   barb:['neo1-52','neo1-38'],laca:['neo1-4'],daisy:['base1-6','base5-47'],rina:['base4-18'],
-  sol:['gym1-1','gym2-33'],jinx:['neo1-1'],luna:['neo2-8'],elena:['base2-13','gym1-26'],sierra:['base5-27','base5-23']
+  sol:['gym1-1','gym2-33'],jinx:['neo1-1'],luna:['neo2-8'],elena:['base2-13','gym1-26'],sierra:['base5-27','base5-23'],
+  jicy:['neo2-65','neo2-15','neo1-74','neo1-37','neo1-41','neo3-5']
  };
  for(const [npc,ids] of Object.entries(expected))for(const id of ids)
   assert.ok(NPC.STARTING_RECIPES[npc].includes(id),npc+' must retain signature card '+id);
@@ -78,6 +79,7 @@ test('the named character themes remain explicit in the authored Pokemon cores',
  assert.match(NPC.STRATEGIES.luna,/Water tempo control/);
  assert.match(NPC.STRATEGIES.elena,/Jungle control/);
  assert.match(NPC.STRATEGIES.sierra,/Fighting disruption/);
+ assert.match(NPC.STRATEGIES.jicy,/Cute Colorless bruisers/);
 });
 
 test('NPC deck tiers advance on the requested days and story chapters only affect that NPC',()=>{
