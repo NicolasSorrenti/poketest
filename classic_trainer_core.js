@@ -382,7 +382,7 @@ function prompt(g,plan,helpers){
  if(name==='Super Rod'&&!chosen(d,'coin'))d.coin=[helpers.flip(g)?'heads':'tails'];
  if(name==='Super Rod'&&!chosen(d,'rodCard')){
   const evolved=d.coin[0]==='heads';const eligible=disc(p,c=>evolved?(c.subtypes||[]).some(s=>s==='Stage 1'||s==='Stage 2'):isBasicPokemon(c));
-  if(eligible.length)return single('rodCard',side,eligible,`Super Rod: choose ${evolved?'Evolution':'Basic Pokémon'}`,true);
+  if(eligible.length)return single('rodCard',side,eligible,`Super Rod: choose ${evolved?'Evolution':'Basic Pokémon'}`);
   d.rodCard=[];
  }
  // Lt. Surge's Treaty: the opponent decides which of the two outcomes.
