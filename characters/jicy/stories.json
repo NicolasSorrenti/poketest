@@ -447,7 +447,7 @@
         }
       ],
       "image": "/rpg-assets/characters/jicy/events/jicy_route_5.webp",
-      "artPending": true
+      "artPending": false
     },
     {
       "id": "jicy_random_bookmark",

@@ -1,7 +1,7 @@
 {
-  "pack": "Neo Campus RPG - 20 canon-derived transparent attack cut-ins",
-  "version": "2026-10-20-complete",
-  "characterCount": 20,
+  "pack": "Neo Campus RPG - 21 character attack cut-ins",
+  "version": "2026-10-30-jicy-added",
+  "characterCount": 21,
   "canvas": [
     1280,
     720
@@ -26,10 +26,11 @@
     "iris",
     "elio",
     "alma",
-    "nereo"
+    "nereo",
+    "jicy"
   ],
-  "source": "same 20 root canon portraits in this archive; no newly generated faces",
-  "note": "Reaction attack cut-ins contain composited motion streaks and approved character art, on transparent PNG canvases.",
+  "source": "Canon character cut-ins plus Jicy's approved flying-kick attack art.",
+  "note": "Transparent attack cut-ins for combat presentation.",
   "files": {
     "hana": {
       "path": "rpg-assets/reactions/hana/attack.png",
@@ -130,6 +131,11 @@
       "path": "rpg-assets/reactions/nereo/attack.png",
       "sha256": "be139e86d2e3b68a265f6f94fd4bb3163d236ea6e0a6869f3cb6fac5361692bf",
       "bytes": 708693
+    },
+    "jicy": {
+      "path": "rpg-assets/reactions/jicy/attack.webp",
+      "sha256": "e4bc2962c4610a755429c4e772dfad3c419d88a8934b1fafde5a1d79c760a43b",
+      "bytes": 361470
     }
   }
 }
