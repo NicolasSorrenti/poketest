@@ -26,6 +26,13 @@
   refreshButton();
   window.NeoRpgDiscreetAvatars?.refresh?.();
  }
+ // Expose one authoritative control so overlays can toggle the preference without
+ // depending on a synthetic click reaching the original toolbar button.
+ window.NeoRpgDiscreet={
+  set(value){apply(Boolean(value),true);return root.dataset.rpgDiscreet==='on';},
+  toggle(){apply(root.dataset.rpgDiscreet!=='on',true);return root.dataset.rpgDiscreet==='on';},
+  isEnabled(){return root.dataset.rpgDiscreet==='on';}
+ };
  // Set the root attribute before page content renders to avoid a flash of art.
  apply(fromStorage(),false);
  function bindButton(){
