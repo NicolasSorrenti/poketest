@@ -56,19 +56,19 @@
 }
 .neo-timefx__skip:hover,.neo-timefx__skip:focus-visible{background:var(--fx-accent);color:#161321;outline:2px solid #fff}
 @keyframes neo-time-slide{
- 0%{transform:translateX(-105%) skewX(-7deg)}
- 24%,67%{transform:translateX(0) skewX(0)}
+ 0%,18%{transform:translateX(-105%) skewX(-7deg)}
+ 32%,78%{transform:translateX(0) skewX(0)}
  100%{transform:translateX(105%) skewX(7deg)}
 }
 @keyframes neo-time-calendar{
- 0%{transform:translateY(-105%) skewY(-2deg)}
- 22%,70%{transform:translateY(0) skewY(0)}
+ 0%,18%{transform:translateY(-105%) skewY(-2deg)}
+ 32%,78%{transform:translateY(0) skewY(0)}
  100%{transform:translateY(105%) skewY(2deg)}
 }
 @keyframes neo-time-title{
- 0%,16%{opacity:0;transform:translateY(26px) scale(.96)}
- 33%,68%{opacity:1;transform:translateY(0) scale(1)}
- 90%,100%{opacity:0;transform:translateY(-12px) scale(1.02)}
+ 0%,24%{opacity:0;transform:translateY(26px) scale(.96)}
+ 35%,78%{opacity:1;transform:translateY(0) scale(1)}
+ 94%,100%{opacity:0;transform:translateY(-12px) scale(1.02)}
 }
 @keyframes neo-time-shapes{
  0%{transform:translateX(-30%) skewX(-16deg)}
