@@ -852,6 +852,7 @@
     let storyDock=null;
     let lastSceneKey='';
     let suspendedForDuel=false;
+    let syncDuel=()=>{};
     function showStory(){
       if(!stage||!stageHome)return false;
       if(!storyDock){
@@ -1106,7 +1107,7 @@
     // its battle layer closes, without restarting the campaign or changing saves.
     const duel=document.getElementById('duel');
     if(duel){
-      const syncDuel=()=>{
+      syncDuel=()=>{
         if(!overlay.hidden&&!duel.hidden){
           suspendedForDuel=true;
           overlay.style.display='none';
@@ -1118,6 +1119,7 @@
         }
       };
       new MutationObserver(syncDuel).observe(duel,{attributes:true,attributeFilter:['hidden']});
+      syncDuel();
     }
     if(window.NeoRpgOverworldStandalone)setTimeout(()=>{if(bridge()&&overlay.hidden)open.click();},0);
   }
