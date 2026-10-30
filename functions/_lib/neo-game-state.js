@@ -79,3 +79,14 @@ export async function loadInto(db,kind,service,token) {
  return stored;
 }
 export const checkpointFor = env => new RpgDuelCheckpoint({settings:()=>env});
+
+export async function staticCatalog(request,env,name) {
+ const asset=new URL('/cloudflare-api/'+name,request.url);
+ const response=await env.ASSETS.fetch(new Request(asset,{method:'GET'}));
+ if(!response.ok)throw Error('Built game catalog unavailable: '+name);
+ return new Response(response.body,{status:200,headers:{
+  'Content-Type':'application/json; charset=utf-8',
+  'Cache-Control':'public, max-age=120',
+  'X-Content-Type-Options':'nosniff'
+ }});
+}
