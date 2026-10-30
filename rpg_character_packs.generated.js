@@ -4431,7 +4431,7 @@ const packs=[
      },
      {
       "speaker": "jinx",
-      "text": "The long way round? You'd really choose the long way?"
+      "text": "You spotted the loose plank before I did. Fine, lead the way—but I'm buying the tea for the inspection."
      },
      {
       "speaker": "marina",
@@ -4519,7 +4519,7 @@ const packs=[
      },
      {
       "speaker": "jinx",
-      "text": "The one with an actual view? Finally, a reasonable suggestion."
+      "text": "The one where I can see the tournament board? Fine. I can heckle the results from a proper chair."
      },
      {
       "speaker": "alma",
@@ -5335,7 +5335,7 @@ const packs=[
      },
      {
       "speaker": "laca",
-      "text": "We've got a whole childhood of blackmail material. Want to hear about the plastic Squirtle?"
+      "text": "She taught me when to stop racing and pay attention to the current. I taught her how to trash-talk a deck list. Fair trade, right?"
      }
     ],
     "choices": [
@@ -8013,7 +8013,7 @@ const packs=[
      },
      {
       "speaker": "sol",
-      "text": "Dry-land targets? With the balloons? I can sell that."
+      "text": "A dry-land accuracy contest, then. I'll ask the crew where we can set up without blocking the path."
      },
      {
       "speaker": "Protagonist",
