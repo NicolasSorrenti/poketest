@@ -321,7 +321,7 @@
     let lastPortraitSignature='';
     const portraitWindow=window.NeoRpgSceneCast?.createSpeakerWindow?.();
     let interactionFocus=null;
-    const poseTriggerQueue=[],poseTriggerQueued=new Set();
+    const poseTriggersById=new Map();
     let poseTriggerBusy=false,poseTriggerAwaitingDialogue=false;
     function queuePoseTriggers(message){
       const data=bridge()?.snapshot();if(!data||message.scene!==data.location)return;
@@ -332,37 +332,39 @@
         const pose=String(item.pose||'standing');
         const key=['neoOverworldPoseTriggerV1',data.location,data.day,data.slot,item.id,pose].join(':');
         let seen=false;try{seen=sessionStorage.getItem(key)==='1'}catch{}
-        if(seen||poseTriggerQueued.has(key))continue;
-        try{sessionStorage.setItem(key,'1')}catch{}
-        poseTriggerQueued.add(key);
-        poseTriggerQueue.push({id:item.id,pose,src:url.pathname+url.search,scene:data.location,key});
+        if(seen)continue;
+        poseTriggersById.set(item.id,{id:item.id,pose,src:url.pathname+url.search,scene:data.location,key});
       }
-      processPoseTriggerQueue();
     }
-    async function processPoseTriggerQueue(){
-      if(poseTriggerBusy||poseTriggerAwaitingDialogue||overlay.hidden||suspendedForDuel||!poseTriggerQueue.length)return;
-      const data=bridge()?.snapshot();if(!data||data.locked)return;
-      const item=poseTriggerQueue.shift();
-      if(data.location!==item.scene||!data.people.includes(item.id)){poseTriggerQueued.delete(item.key);return processPoseTriggerQueue()}
+    async function playPoseTrigger(item){
+      if(poseTriggerBusy||poseTriggerAwaitingDialogue||overlay.hidden||suspendedForDuel)return false;
+      const data=bridge()?.snapshot();
+      if(!data||data.locked||data.location!==item.scene||!data.people.includes(item.id))return false;
       poseTriggerBusy=true;
       try{
+        try{sessionStorage.setItem(item.key,'1')}catch{}
         if(window.NeoOutfitChime?.display)await window.NeoOutfitChime.display(item.src,{top:0,bottom:1,left:0,right:1},1450);
         const current=bridge()?.snapshot();
-        if(!current||current.location!==item.scene||!current.people.includes(item.id))return;
-        if(current.locked){poseTriggerQueue.unshift(item);return}
+        if(!current||current.location!==item.scene||!current.people.includes(item.id))return false;
+        if(current.locked){try{sessionStorage.removeItem(item.key)}catch{}return false}
         interactionFocus=item.id;
         if(!showStory()||!bridge()?.poseTriggerDialogue?.(item.id,item.src)){
           interactionFocus=null;hideStory();showNotice('This pose could not start its dialogue.');
-          poseTriggerQueued.delete(item.key);return;
+          try{sessionStorage.removeItem(item.key)}catch{}
+          return false;
         }
+        poseTriggersById.delete(item.id);
         poseTriggerAwaitingDialogue=true;
         queueStorySync();
-      }catch(error){console.warn('Overworld pose trigger failed:',error);poseTriggerQueued.delete(item.key)}
-      finally{poseTriggerBusy=false}
+        return true;
+      }catch(error){
+        console.warn('Overworld pose trigger failed:',error);
+        try{sessionStorage.removeItem(item.key)}catch{}
+        return false;
+      }finally{poseTriggerBusy=false}
     }
     function syncPoseTriggerQueue(){
       if(poseTriggerAwaitingDialogue&&!bridge()?.snapshot()?.locked)poseTriggerAwaitingDialogue=false;
-      if(!poseTriggerAwaitingDialogue)queueMicrotask(processPoseTriggerQueue);
     }
     function syncPortraits(hasCG,idleFocus=null){
       const cast=bridge()?.scenePortraits?.();
@@ -1009,6 +1011,8 @@
         if(message.id==='activities'||message.id==='events'){hideMenu();if(message.id==='activities')showActivities(bridge()?.activities()||[]);else showEvents();return;}
       }
       if(message.kind==='person'){
+        const poseTrigger=poseTriggersById.get(message.id);
+        if(poseTrigger){void playPoseTrigger(poseTrigger);return}
         // Capture the explicitly tapped NPC before the native engine renders.
         interactionFocus=message.id;
         if(!showStory())dismiss();
