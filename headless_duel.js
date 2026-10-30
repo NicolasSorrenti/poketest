@@ -276,7 +276,7 @@ function planFinalAttack(g,side,attackIndex,program,plan={side,attackIndex,data:
  if(kind==='barrier'&&!data.energyPicks){
   const psychicEnergy=energyOptions('Psychic');
   if(!psychicEnergy.length)fail('Barrier requires a Psychic Energy card to discard');
-  const kinds=new Set(psychicEnergy.map(option=>u.energies[Number(option.id.slice(7))]));
+  const kinds=new Set(psychicEnergy.map(option=>card(g,u.energies[Number(option.id.slice(7))]).name));
   if(kinds.size>1){
    finalChoice(g,plan,'pay-energy',side,psychicEnergy,{label:'Barrier: choose a Psychic Energy card to discard'});return;
   }
@@ -349,7 +349,7 @@ function planFinalAttack(g,side,attackIndex,program,plan={side,attackIndex,data:
  }
  if(['continuous-fireball','fireball','playing-with-fire'].includes(kind)&&data.preRoll.discardHeadCount>0&&!data.energyPicks){
   const qty=data.preRoll.discardHeadCount,eligible=energyOptions('Fire');
-  if(eligible.length>=qty&&new Set(eligible.map(option=>u.energies[Number(option.id.slice(7))])).size===1){
+  if(eligible.length>=qty&&new Set(eligible.map(option=>card(g,u.energies[Number(option.id.slice(7))]).name)).size===1){
    data.energyPicks=eligible.slice(0,qty).map(option=>Number(option.id.slice(7)));
   }else{
    finalChoice(g,plan,'pay-energy',side,eligible,{min:qty,max:qty,label:`${a.name}: discard ${qty} Fire Energy card(s)`});return;
@@ -1366,7 +1366,7 @@ function performAction(g,side,cmd){
    if(program.subject!==c.name&&program.subject!=='this Pokémon')fail('Energy cost subject does not match attacker');
    const eligible=u.energies.map((id,i)=>({id:card(g,id),i})).filter(o=>!program.onlyType||attachedEnergyMatchesType(g,u.energies[o.i],program.onlyType)).map(o=>o.i);
    if(eligible.length<quantity)fail('Insufficient Energy to discard for attack');
-   const sameEligibleCard=new Set(eligible.map(i=>u.energies[i])).size===1;
+   const sameEligibleCard=new Set(eligible.map(i=>card(g,u.energies[i]).name)).size===1;
    if(eligible.length>quantity&&!sameEligibleCard){
     g.nextDecisionId++;
     g.pendingDecision=makeDecision({id:`attackcost:${g.nextDecisionId}`,actor:side,kind:'energy-discard',label:`${a.name}: discard ${quantity} Energy card(s)`,options:eligible.map(i=>({id:`energy:${i}`,label:card(g,u.energies[i]).name})),min:quantity,max:quantity});
@@ -1665,7 +1665,7 @@ function resolveAttack(g,side,index,chosenBench,energyPicks,extra={}){
     kind==='psyburst'?'Psyburst: discard 1 Fire Energy':`Choose ${max} Energy card(s) to discard`;
   }
   if(!extra.neo48Answered&&['flame-wheel','flamethrower','burning-flame','psyburst'].includes(kind)&&max>0&&pickables.length>=max&&
-     new Set(pickables.map(option=>u.energies[Number(option.id.slice(7))])).size===1){
+     new Set(pickables.map(option=>card(g,u.energies[Number(option.id.slice(7))]).name)).size===1){
    // A mandatory discard from identical eligible Energy cards has one
    // outcome. Resolve it without prompting; mixed Energy choices stay interactive.
    extra.neo48Choices=pickables.slice(0,max).map(option=>option.id);
