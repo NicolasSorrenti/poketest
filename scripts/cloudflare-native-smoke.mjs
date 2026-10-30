@@ -1,6 +1,6 @@
 // End-to-end HTTP smoke test for Cloudflare-native Cube and Classic APIs.
 // Run against an isolated preview deployment; it creates temporary D1 sessions.
-const base=process.env.PAGES_URL||'https://fix-cloudflare-native-cube-classic-20261030.poketest-cloudflare-test.pages.dev';
+const base=process.env.PAGES_URL||'https://c3a8c0a8.poketest-cloudflare-test.pages.dev';
 const sleep=ms=>new Promise(r=>setTimeout(r,ms));
 async function call(path,{method='GET',body,headers={}}={}){
  const res=await fetch(base+path,{method,headers:{...(body?{'Content-Type':'application/json'}:{}),...headers},body:body?JSON.stringify(body):undefined});
