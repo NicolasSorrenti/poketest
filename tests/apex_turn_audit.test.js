@@ -197,11 +197,15 @@ test('Energy audit runs for authoritative duel and Trainer-rule changes on PRs a
  assert.equal(sections.length,5,'workflow must have pull_request and push triggers');
  for(const section of [sections[2],sections[4]]){
   const paths=section.split(/^    paths:\s*$/m)[1]?.split(/^jobs:\s*$/m)[0]||'';
-  for(const source of ['cpu_profiles.js','headless_duel.js','classic_trainer_core.js',
+  for(const source of ['cpu_profiles.js','rpg_cpu_config.js','rpg_character_packs.generated.js',
+   'rpg_side_quests.js','rpg_npc_deck_progression.js','tests/rpg_cpu_profiles.test.js',
+   'headless_duel.js','classic_trainer_core.js',
    'classic_power_core.js','core_rules.js','attack_effects_core.js',
    'decision_core.js','duel_protocol.js','special_conditions_core.js',
    'neo_berry_rules.js','classic_format.js','cards/**']){
    assert.ok(paths.includes("- '"+source+"'"),source+' must trigger the Energy audit');
   }
  }
+ assert.match(workflow,/node --test [^\n]*tests\/rpg_cpu_profiles\.test\.js/,
+  'Energy audit must execute the NPC roster/personality regression');
 });
