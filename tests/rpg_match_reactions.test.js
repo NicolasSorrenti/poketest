@@ -69,7 +69,11 @@ assert.equal(reactions.assetFor({},'sierra','attack'),'/rpg-assets/characters/si
 assert.equal(reactions.assetFor({},'rina','attack'),'/rpg-assets/characters/rina/expression-portraits/neutral.webp','Use Rina installed expression portraits');
 assert.equal(reactions.assetFor({},'reina','attack'),'/rpg-assets/characters/reina/expression-portraits/happy.webp');
 const installedManifest=JSON.parse(fs.readFileSync(path.join(__dirname,'../rpg-assets/reactions/manifest.json'),'utf8'));
-assert.equal(Object.keys(installedManifest.characters).length,21,'NPC artwork manifest must load for the whole cast');
+const requiredManifestIds=[...new Set([...castIds,'laca','daisy'])];
+for(const id of requiredManifestIds){
+ assert.ok(Object.hasOwn(installedManifest.characters,id),
+  'NPC artwork manifest must include '+id+' (and may include future cast additions)');
+}
 assert.equal(reactions.assetFor(installedManifest,'reina','default'),'/rpg-assets/characters/reina/expression-portraits/neutral.webp','Reina uses her VN neutral portrait');
 assert.equal(reactions.assetFor(installedManifest,'rina','default'),'/rpg-assets/characters/rina/expression-portraits/neutral.webp','Rina uses her VN portrait');
 assert.equal(reactions.assetFor(installedManifest,'reina','attack'),'/rpg-assets/reactions/reina/attack.png','Attack uses the widescreen manifest art first');
@@ -157,7 +161,8 @@ const reactionKinds=['default','attack','play_card','evolve','power','hurt','big
 for(const id of castIds){
  for(const kind of reactionKinds){
   const chosen=reactions.assetFor(installedManifest,id,kind);
-  assert.ok(chosen.startsWith('/rpg-assets/characters/'+id+'/')||chosen.startsWith('/rpg-assets/reactions/'+id+'/'),id+' '+kind+' must use that NPC\'s own artwork');
+  assert.ok(chosen.startsWith('/rpg-assets/characters/'+id+'/')||chosen.startsWith('/rpg-assets/reactions/'+id+'/')||chosen.startsWith('/rpg-assets/'+id+'.'),
+   id+' '+kind+' must use that NPC\'s own artwork (including installed legacy root-level portraits)');
   assert.ok(fs.existsSync(path.join(__dirname,'..',chosen.slice(1))),id+' '+kind+': selected VN expression is missing');
  }
 }
