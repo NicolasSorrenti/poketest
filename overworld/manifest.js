@@ -160,9 +160,27 @@ window.NeoOverworld = Object.freeze({
       lookingBack:{src:'/rpg-assets/characters/teo/overworld/looking-back.png',height:155,facing:'back'},
       servingTray:{src:'/rpg-assets/characters/teo/overworld/serving-tray.png',height:150,facing:'front'}
     }},
-    barb: {name:'Barb', face:'/rpg-assets/characters/barb/portraits/primary.png', poses:{standing:{src:'/art-production/overworld-candidates/barb-standing-v1.png',height:150,facing:'front',status:'candidate'}}},
-    jinx: {name:'Jinx', face:'/rpg-assets/jinx.png'},
-    daisy: {name:'Daisy', face:'/rpg-assets/characters/daisy/portraits/primary.png'}
+    barb: {name:'Barb', face:'/rpg-assets/characters/barb/portraits/primary.png', poses:{
+      standing:{src:'/rpg-assets/characters/barb/overworld/walking.png',height:150,facing:'front'},
+      walking:{src:'/rpg-assets/characters/barb/overworld/walking.png',height:150,facing:'front'},
+      chatting:{src:'/rpg-assets/characters/barb/overworld/chatting.png',height:150,facing:'front'},
+      lounge:{src:'/rpg-assets/characters/barb/overworld/lounge.png',height:145,facing:'front'},
+      backView:{src:'/rpg-assets/characters/barb/overworld/back-view.png',height:150,facing:'back'}
+    }},
+    jinx: {name:'Jinx', face:'/rpg-assets/jinx.png', poses:{
+      standing:{src:'/rpg-assets/characters/jinx/overworld/idle.png',height:150,facing:'front'},
+      idle:{src:'/rpg-assets/characters/jinx/overworld/idle.png',height:150,facing:'front'},
+      walking:{src:'/rpg-assets/characters/jinx/overworld/walking.png',height:150,facing:'front'},
+      crouching:{src:'/rpg-assets/characters/jinx/overworld/crouching.png',height:150,facing:'front'},
+      backView:{src:'/rpg-assets/characters/jinx/overworld/back-view.png',height:150,facing:'back'}
+    }},
+    daisy: {name:'Daisy', face:'/rpg-assets/characters/daisy/portraits/primary.png', poses:{
+      standing:{src:'/rpg-assets/characters/daisy/overworld/idle.png',height:150,facing:'front'},
+      idle:{src:'/rpg-assets/characters/daisy/overworld/idle.png',height:150,facing:'front'},
+      walking:{src:'/rpg-assets/characters/daisy/overworld/walking.png',height:150,facing:'front'},
+      kneeling:{src:'/rpg-assets/characters/daisy/overworld/kneeing.png',height:150,facing:'front'},
+      backView:{src:'/rpg-assets/characters/daisy/overworld/back-view.png',height:150,facing:'back'}
+    }}
   },
   /* Preview placements only. The RPG's schedule is authoritative once integration is enabled. */
   preview: [
