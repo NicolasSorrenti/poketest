@@ -13,7 +13,8 @@ const images={
  barb:'rpg-assets/characters/barb/portraits/primary.png',
  elena:'rpg-assets/characters/elena/overworld/standing-portfolio.png',
  jun:'rpg-assets/characters/jun/standing-front.png',
- teo:'rpg-assets/characters/teo/dialogue/neutral.png'
+ teo:'rpg-assets/characters/teo/dialogue/neutral.png',
+ nereo:'rpg-assets/characters/nereo/dialogue/neutral.png'
 };
 test('approved masters are existing binary files; Iris copy is unmodified',()=>{
  for(const [id,p] of Object.entries(images)){
@@ -56,4 +57,12 @@ test('Teo dialogue master is a byte-identical copy of the existing front pose',(
  assert.ok(world.includes('/'+copy));
  // Keep fallback to original expression portraits for non-neutral emotions.
  assert.ok(rpg.includes("return expression==='neutral'?APPROVED_DIALOGUE_MASTERS[id]||null:null;"));
+});
+
+test('Nereo dialogue master preserves original front pose bytes',()=>{
+ const original='rpg-assets/characters/nereo/standing-front.png';
+ const copy='rpg-assets/characters/nereo/dialogue/neutral.png';
+ assert.deepEqual(fs.readFileSync(path.join(root,copy)),fs.readFileSync(path.join(root,original)));
+ assert.ok(rpg.includes("nereo:'/rpg-assets/characters/nereo/dialogue/neutral.png'"));
+ assert.ok(world.includes('/'+copy));
 });
