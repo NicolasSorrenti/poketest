@@ -161,7 +161,7 @@
 
 
 /* Chibi mode replaces character artwork in battles and CG views. */
-:root[data-rpg-discreet="on"] .npc-reaction-portrait:has(.rpg-safe-avatar:not([hidden]))>img:not(.rpg-safe-avatar),
+:root[data-rpg-discreet="on"] .npc-reaction-portrait[data-rpg-safe-id] > img:not(.rpg-safe-avatar),
 :root[data-rpg-discreet="on"] .cg-thumb[data-rpg-safe-id] > img:not(.rpg-safe-avatar),
 :root[data-rpg-discreet="on"] .cg-lightbox-stage[data-rpg-safe-id] > img:not(.rpg-safe-avatar),
 :root[data-rpg-discreet="on"] #cgViewerCanvas[data-rpg-safe-id] > img:not(.rpg-safe-avatar),

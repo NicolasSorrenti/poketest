@@ -544,11 +544,11 @@
     const baseClass='npc-reaction-card npc-reaction-'+reaction.kind+(isClutch(reaction.kind)?' is-finisher':'');
     card.className=baseClass;
     const portrait=doc.createElement('div');portrait.className='npc-reaction-portrait';
-    if(readyPath){
+    if(readyPath&&!chibiMode){
      const img=doc.createElement('img');img.alt='';img.src=readyPath;
      card.className=baseClass+artClass(readyPath);
      portrait.append(img);
-    }else if(typeof media?.Image!=='function'&&candidates.length){
+    }else if(!chibiMode&&typeof media?.Image!=='function'&&candidates.length){
      // Node/test callers without an Image loader retain the older DOM fallback.
      const img=doc.createElement('img');img.alt='';
      let index=0;
