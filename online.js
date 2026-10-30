@@ -588,7 +588,7 @@
     const hint=document.createElement('small');hint.textContent=d.max===1?'Tap an outlined Pokémon to choose.':`Tap ${d.min}–${d.max} outlined Pokémon · ${decisionSelection.size} selected`;
     text.append(heading,hint);bar.append(text);
     if(d.max>1){bar.append(btn('Confirm selection',()=>send(command('choose',{decisionId:d.id,selected:[...decisionSelection]})),'primary',decisionSelection.size<d.min||decisionSelection.size>d.max));}
-    if(d.optional)bar.append(btn('Decline',()=>send(command('choose',{decisionId:d.id,decline:true})),'secondary'));
+    if(d.optional)bar.append(btn(/^(Damage Swap|Energy Trans): choose source or Finish$/.test(d.label)?'Finish Pokémon Power':'Decline',()=>send(command('choose',{decisionId:d.id,decline:true})),'secondary'));
     if(d.cancelable)bar.append(btn('↶ Cancel card',()=>send(command('cancel_choice',{decisionId:d.id})),'secondary'));
     return;
    }
@@ -616,7 +616,7 @@
     choices.append(row);
    });opts.append(choices);
    acts.append(btn('Confirm selection',()=>send(command('choose',{decisionId:d.id,selected:[...decisionSelection]})),'primary',decisionSelection.size<d.min||decisionSelection.size>d.max));
-   if(d.optional)acts.append(btn('Decline',()=>send(command('choose',{decisionId:d.id,decline:true}))));
+   if(d.optional)acts.append(btn(/^(Damage Swap|Energy Trans): choose source or Finish$/.test(d.label)?'Finish Pokémon Power':'Decline',()=>send(command('choose',{decisionId:d.id,decline:true}))));
    if(d.cancelable)acts.append(btn('↶ Cancel card (Esc)',()=>send(command('cancel_choice',{decisionId:d.id})),'secondary'));
   }else if(d){title.textContent='Opponent is choosing';description.textContent='Waiting for the other player to resolve their choice.';}
   else if(v.over){title.textContent='DUEL COMPLETE';description.textContent=watching()?(current.winner===null?'Draw!':`${current.players[current.winner]?.name||'A player'} won.`):current.winner===side()?'You won!':current.winner===1-side()?'Your friend won.':'A draw!';acts.append(btn('Leave finished duel',newDuel,'primary'));}
@@ -669,7 +669,7 @@
   shared.renderAttacks({root:$('attacks'),unit:you.active,view:v,me:side(),getCard:card,enabled:attackEnabled,button:btn,onAttack:index=>send(command('attack',{attackIndex:index})),attackReason:presentation.attackReason});
   $('mobileAttacksToggle').disabled=!you.active||v.over||v.phase!=='game';
   if(v.phase==='game'&&!v.over&&yourTurn&&!v.pendingDecision&&you.active){
-   [you.active,...you.bench].forEach((u,i)=>{if(u?.secretPlanFaceDown){$('powers').append(btn(`🎴 Reveal Secret Plan (${i===0?'Active':'Bench '+i})`,()=>send(command('reveal_secret',{slot:i-1}))));return;}const c=card(u.id);(c.abilities||[]).forEach(a=>{if(a.name)$('powers').append(btn(`✦ ${a.name} (${i===0?'Active':'Bench '+i})`,()=>send(command('use_power',{slot:i-1}))));});});
+   [you.active,...you.bench].forEach((u,i)=>{if(u?.secretPlanFaceDown){$('powers').append(btn(`🎴 Reveal Secret Plan (${i===0?'Active':'Bench '+i})`,()=>send(command('reveal_secret',{slot:i-1}))));return;}const c=card(u.id);(c.abilities||[]).forEach(a=>{if(a.name)$('powers').append(btn(`✦ ${a.name} (${i===0?'Active':'Bench '+i})`,()=>send(command('use_power',{slot:i-1,repeat:['Damage Swap','Energy Trans'].includes(a.name)}))));});});
   }
   const actionsDisabled=watching()||!yourTurn||v.phase!=='game'||!!v.pendingDecision||v.over;
   $('retreatBtn').disabled=actionsDisabled||!you.bench.length;

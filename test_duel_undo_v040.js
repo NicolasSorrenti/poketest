@@ -55,6 +55,7 @@ function ensureEnergy(p){
  const act=(type,payload={})=>s=service.action(token,{type,payload},s.revision);
  act('setup_select',{handIndex:findBasic(s.view.players[0])});
  act('setup_confirm');
+ if(s.view.mulliganBonus?.side===0)act('setup_bonus_draw',{count:0});
  assert.equal(s.view.phase,'game');
  const session=service.session(token),index=ensureEnergy(session.game.players[0]);
  const initial=structuredClone(session.game.players[0]);
@@ -88,6 +89,10 @@ function ensureEnergy(p){
  for(const [side,token] of [[0,p1.token],[1,p2.token]]){
   call(token,'setup_select',{handIndex:findBasic(state(token).view.players[side])});
   call(token,'setup_confirm');
+ }
+ if(room.game.mulliganBonus){
+  const bonus=room.game.mulliganBonus;
+  call([p1.token,p2.token][bonus.side],'setup_bonus_draw',{count:0});
  }
  assert.equal(room.game.phase,'game');
  const side=room.game.turn,owner=[p1.token,p2.token][side],other=[p1.token,p2.token][1-side];

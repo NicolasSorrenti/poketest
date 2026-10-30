@@ -131,10 +131,12 @@ function powerPlan(g,plan,h){
    if(choose('target',slotList(p,x=>card(x.id).types.includes('Water')),'Choose Water Pokémon to attach Energy'))return;
   }else{
    if(name==='Energy Trans'&&own(p).length<2)throw Error('Energy Trans requires another Pokémon in play');
-   if(choose('source',slotList(p,x=>(name==='Energy Trans'||x!==u)&&x.energies.some(id=>card(id).name===(name==='Gather Fire'?'Fire Energy':'Grass Energy'))),'Choose source Pokémon'))return;
+   const sources=slotList(p,x=>(name==='Energy Trans'||x!==u)&&x.energies.some(id=>card(id).name===(name==='Gather Fire'?'Fire Energy':'Grass Energy')));
+   if(plan.repeat&&name==='Energy Trans'&&!sources.length)return;
+   if(choose('source',sources,plan.repeat&&name==='Energy Trans'?'Energy Trans: choose source or Finish':'Choose source Pokémon',plan.repeat&&name==='Energy Trans'?{min:0,max:1,optional:true}:{}))return;
+   if(plan.repeat&&name==='Energy Trans'&&!selected(plan,'source').length)return;
    if(!have(plan,'energy')){
     const items=indices(pokemonAt('source').energies,c=>c.name===(name==='Gather Fire'?'Fire Energy':'Grass Energy'));
-    // Basic Energy of the same type is interchangeable across printings.
     if(items.length&&items.every(o=>basicEnergy(card(o.cardId))&&card(o.cardId).name===card(items[0].cardId).name))d.energy=[items[0].id];
     else if(choose('energy',items,'Choose Energy to move'))return;
    }
@@ -143,7 +145,10 @@ function powerPlan(g,plan,h){
  }
  if(['Damage Swap','Curse','Strange Behavior'].includes(name)){
   const owner=name==='Curse'?f:p;
-  if(choose('source',slotList(owner,x=>x.damage>=10&& (name!=='Strange Behavior'||x!==u)),'Choose source of damage'))return;
+  const sources=slotList(owner,x=>x.damage>=10&&(name!=='Strange Behavior'||x!==u)&&(!plan.repeat||name!=='Damage Swap'||own(p).some(y=>y!==x&&y.damage+10<Number(card(y.id).hp))));
+  if(plan.repeat&&name==='Damage Swap'&&!sources.length)return;
+  if(choose('source',sources,plan.repeat&&name==='Damage Swap'?'Damage Swap: choose source or Finish':'Choose source of damage',plan.repeat&&name==='Damage Swap'?{min:0,max:1,optional:true}:{}))return;
+  if(plan.repeat&&name==='Damage Swap'&&!selected(plan,'source').length)return;
   if(name==='Strange Behavior'){}else if(choose('target',slotList(owner,x=>x!==pokemonAt('source',owner)&&(name==='Curse'||x.damage+10<Number(card(x.id).hp))),'Choose recipient of damage'))return;
  }
 
@@ -457,6 +462,7 @@ function doPower(g,plan,h){
   default:throw Error(`Unported Power ${name}`);
  }
  h.log(g,`${p.name} activated ${name}.`);
+ if(plan.repeat&&['Energy Trans','Damage Swap'].includes(name))return powerPlan(g,{...plan,data:{},await:null},h);
 }
 const ONCE=new Set(['Fragrance Trap','Soak Up','Natural Healing','Playful Punch','Emerge','Gather Fire','Heal','Step In','Curse','Shift','Evolutionary Light','Matter Exchange','Pollen Stench','Long Distance Hypnosis','Trickery','Peek','Revive Fossil','Revive Friends','Fire Recharge','Glaring Gaze','[Search]','[Tell]','[Laugh]','Solar Power','Observe','Special Delivery','[Find]','[Help]','[Join]','[Bear]','[Yield]','Cunning','Gaze','Submerge']);
 const ACTIVATED=new Set(['Shapeshift','Fragrance Trap','Soak Up','Natural Healing','Playful Punch','Emerge','Energy Charge','Rain Dance','Energy Trans','Gather Fire','Energy Burn','Damage Swap','Curse','Strange Behavior','Heal','Step In','Cowardice','Evolutionary Light','Matter Exchange','Pollen Stench','Long Distance Hypnosis','Trickery','Shift','Peek','Buzzap','Revive Fossil','Revive Friends','Downpour','Fire Recharge','Glaring Gaze','[Search]','[Tell]','[Laugh]','Solar Power','Observe','Special Delivery','[Find]','[Help]','[Join]','[Bear]','[Yield]','Cunning','Gaze','Submerge']);
@@ -467,7 +473,7 @@ function begin(g,side,payload,h){
  const slot=payload.slot;if(!Number.isInteger(slot))throw Error('Power requires a Pokémon slot');const u=pokemon(g.players[side],slot);if(!u)throw Error('Missing Pokémon');
  const available=powerNames(u),index=payload.powerIndex??0,name=available[index];if(!name||!ACTIVATED.has(name))throw Error('No migrated activated Power at this slot');
  if(!enabled(g,u,name))throw Error('Power disabled by status or suppression');
- return powerPlan(g,{side,slot,unitId:u.id,name,data:{},source:'activated'},h);
+ return powerPlan(g,{side,slot,unitId:u.id,name,data:{},source:'activated',repeat:payload.repeat===true&&['Energy Trans','Damage Swap'].includes(name)},h);
 }
 function attached(g,side,slot,energyId,h){
  const u=pokemon(g.players[side],slot);if(!u||!enabled(g,u,'Energy Evolution'))return;

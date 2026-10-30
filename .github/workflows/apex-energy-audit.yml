@@ -3,6 +3,23 @@ on:
   pull_request:
     paths:
       - 'cpu_policy.js'
+      - 'cpu_profiles.js'
+      - 'rpg_cpu_config.js'
+      - 'rpg_character_packs.generated.js'
+      - 'rpg_side_quests.js'
+      - 'rpg_npc_deck_progression.js'
+      - 'tests/rpg_cpu_profiles.test.js'
+      - 'headless_duel.js'
+      - 'classic_trainer_core.js'
+      - 'classic_power_core.js'
+      - 'core_rules.js'
+      - 'attack_effects_core.js'
+      - 'decision_core.js'
+      - 'duel_protocol.js'
+      - 'special_conditions_core.js'
+      - 'neo_berry_rules.js'
+      - 'classic_format.js'
+      - 'cards/**'
       - 'cpu_lookahead.js'
       - 'cpu_strategic_search.js'
       - 'cpu_decision_audit.js'
@@ -27,6 +44,23 @@ on:
       - main
     paths:
       - 'cpu_policy.js'
+      - 'cpu_profiles.js'
+      - 'rpg_cpu_config.js'
+      - 'rpg_character_packs.generated.js'
+      - 'rpg_side_quests.js'
+      - 'rpg_npc_deck_progression.js'
+      - 'tests/rpg_cpu_profiles.test.js'
+      - 'headless_duel.js'
+      - 'classic_trainer_core.js'
+      - 'classic_power_core.js'
+      - 'core_rules.js'
+      - 'attack_effects_core.js'
+      - 'decision_core.js'
+      - 'duel_protocol.js'
+      - 'special_conditions_core.js'
+      - 'neo_berry_rules.js'
+      - 'classic_format.js'
+      - 'cards/**'
       - 'cpu_lookahead.js'
       - 'cpu_strategic_search.js'
       - 'cpu_decision_audit.js'
@@ -55,7 +89,9 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - run: node --test tests/cpu_decision_audit.test.js tests/cpu_deep_levels.test.js tests/cpu_apex_confusion_ko_tempo.test.js tests/cpu_apex_confused_counterplay.test.js tests/cpu_apex_energy_sequence.test.js tests/cpu_apex_computer_search_energy.test.js tests/cpu_apex_rain_dance.test.js tests/cpu_apex_resource_choices.test.js tests/cpu_pokemon_center_order.test.js tests/apex_turn_audit.test.js tests/cpu_apex_public_bench_projection.test.js tests/cpu_apex_wigglytuff_wave.test.js
+      - run: node --test tests/rpg_cpu_profiles.test.js tests/cpu_decision_audit.test.js tests/cpu_deep_levels.test.js tests/cpu_apex_confusion_ko_tempo.test.js tests/cpu_apex_confused_counterplay.test.js tests/cpu_apex_energy_sequence.test.js tests/cpu_apex_computer_search_energy.test.js tests/cpu_apex_rain_dance.test.js tests/cpu_apex_resource_choices.test.js tests/cpu_pokemon_center_order.test.js tests/apex_turn_audit.test.js tests/cpu_apex_public_bench_projection.test.js tests/cpu_apex_wigglytuff_wave.test.js
       # Exercise real reducer turns, not only the audit function's unit fixtures.
       - run: node scripts/apex-turn-audit.js --deck rain_dance --pairs 1 --max-turns 70
+      # Energy Trans changes attachment placement and needs its own real-turn coverage.
+      - run: node scripts/apex-turn-audit.js --deck venusaur --pairs 1 --max-turns 70
       - run: node benchmark_cpu.js --pairs 1 --max-turns 35 --left-level 8 --right-level 8
