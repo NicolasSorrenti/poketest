@@ -30,7 +30,14 @@ function boot(saved=new Map(),sessions=new Map()){
  const fetch=async()=>({ok:true,json:async()=>({decks:[{id:'blackout',name:'Blackout'},{id:'brushfire',name:'Brushfire'}]})});
  const location={search:'',origin:'http://localhost:8000',reload(){}};
  vm.runInNewContext(script,{window,document,localStorage,sessionStorage,fetch,location,confirm:()=>true,console,queueMicrotask,URLSearchParams,Event:class{constructor(type){this.type=type;}},Image:Element,NodeFilter:{SHOW_TEXT:4}},{filename:'rpg.js'});
- if(fresh)ids.starterChoices.children[0].onclick();
+ if(fresh){
+  assert.ok(ids.starterChoices?.children?.length>0,
+   'Fresh campaign must render starter choices');
+  ids.starterChoices.children[0].onclick();
+  const next=ids.choices?.children?.find(button=>button.textContent.includes('Continue'));
+  assert.ok(next,'Starter confirmation must be acknowledged before travel');
+  next.onclick();
+ }
  return {ids,listeners,saved,sessions,location,read:()=>JSON.parse(saved.get(KEY)),send:payload=>listeners.message({origin:location.origin,source:ids.battle.contentWindow,data:payload})};
 }
 function label(x){return [x.textContent,...x.children.map(label)].filter(Boolean).join(' ');}
@@ -41,6 +48,7 @@ test('town radar travel survives refresh, including after an NPC meeting',()=>{
  assert.equal(app.read().location,'home');
  assert.ok(app.ids.townRadar.children.some(x=>label(x).includes('Marina Aoki')),'Marina is active on day one in the morning');
  click(app.ids.townRadar,'Marina Aoki');
+ click(app.ids.choices,'Continue'); // Finish first-visit narration.
  assert.equal(app.read().location,'park','Radar destination is saved');
  app=boot(saved);
  assert.equal(app.read().location,'park','Radar route must remain after reload');
@@ -51,6 +59,7 @@ test('town radar travel survives refresh, including after an NPC meeting',()=>{
 test('a pending duel locks navigation and the deck, restores after refresh, and unlocks after the reward',async()=>{
  const saved=new Map(),sessions=new Map();let app=boot(saved,sessions);
  click(app.ids.townRadar,'Marina Aoki');
+ click(app.ids.choices,'Continue'); // Finish first-visit narration.
  click(app.ids.people,'Marina Aoki');
  click(app.ids.characterActions,'Duel');
  assert.equal(app.ids.battle.src,'about:blank');
@@ -73,7 +82,11 @@ test('a pending duel locks navigation and the deck, restores after refresh, and 
  assert.equal(app.read().results.length,1);
  assert.equal(app.read().pendingDuel,null);
  assert.equal(app.ids.deckPicker.disabled,true,'Preset switcher remains locked during RPG collection progression');
- assert.equal(app.ids.deckCollection.children.find(x=>x.textContent.includes('Build / edit your deck')).disabled,false,'The collection workshop becomes available again');
+ assert.equal(app.ids.deckCollection.children.find(x=>x.textContent.includes('Build / edit your deck')).disabled,true,
+  'Result narration keeps the workshop locked');
+ click(app.ids.choices,'Continue');
+ assert.equal(app.ids.deckCollection.children.find(x=>x.textContent.includes('Build / edit your deck')).disabled,false,
+  'Workshop unlocks after acknowledging the result');
  assert.equal(sessions.has(BRIDGE.sessionKey(pending.id)),false,'Finished token is released');
  assert.equal(app.read().slot,1);
  assert.equal(app.read().relationships.marina.duels,1);

@@ -31,7 +31,14 @@ function boot(saved=new Map(),sessions=new Map()){
  const fetch=async()=>({ok:true,json:async()=>({decks:[{id:'blackout',name:'Blackout'},{id:'brushfire',name:'Brushfire'}]})});
  const location={search:'',origin:'http://localhost:8000',reload(){}};
  vm.runInNewContext(script,{window,document,localStorage,sessionStorage,fetch,location,confirm:()=>true,console,queueMicrotask,URLSearchParams,Event:class{constructor(type){this.type=type;}},Image:Element,NodeFilter:{SHOW_TEXT:4}},{filename:'rpg.js'});
- if(fresh)ids.starterChoices.children[0].onclick();
+ if(fresh){
+  assert.ok(ids.starterChoices?.children?.length>0,
+   'New campaign must offer a starter despite introductory narration');
+  ids.starterChoices.children[0].onclick();
+  const next=ids.choices?.children?.find(button=>button.textContent.includes('Continue'));
+  assert.ok(next,'Starter confirmation must offer Continue before travel');
+  next.onclick();
+ }
  return {ids,listeners,saved,sessions,location,read:()=>JSON.parse(saved.get(KEY)),send:payload=>listeners.message({origin:location.origin,source:ids.battle.contentWindow,data:payload})};
 }
 function label(x){return [x.textContent,...x.children.map(label)].filter(Boolean).join(' ');}
@@ -41,6 +48,7 @@ test('new game, free travel, NPC challenge, duel result, reload and second duel'
  assert.equal(s.day,1);assert.equal(s.slot,0);assert.equal(s.location,'home');
  assert.match(app.ids.whereLabel.textContent,/HOME/);
  click(app.ids.places,'Pixel Palace');s=app.read();assert.equal(s.location,'arcade');assert.equal(s.slot,0);
+ click(app.ids.choices,'Continue'); // Acknowledge the first-visit narration.
  app.ids.quickNext.onclick();s=app.read();assert.equal(s.slot,1);
  assert.ok(app.ids.people.children.some(x=>label(x).includes('Yuna Hoshino')));
  click(app.ids.people,'Yuna Hoshino');
@@ -63,6 +71,7 @@ test('new game, free travel, NPC challenge, duel result, reload and second duel'
  assert.equal(s.results.length,2);assert.equal(s.day,2);assert.equal(s.slot,0);
  assert.equal(s.points,4);assert.equal(s.credits,100);
  app.ids.dismissReceipt.onclick();assert.equal(app.read().lastDuelReceipt,null);
+ click(app.ids.choices,'Continue'); // Finish the result narration before traveling.
  app.ids.quickHome.onclick();assert.equal(app.read().location,'home');
  click(app.ids.activities,'Sleep until morning');assert.equal(app.read().day,3);
 });
