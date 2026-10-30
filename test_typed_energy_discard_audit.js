@@ -60,6 +60,13 @@ for(const [id,name] of fireSingles){
  assert.equal(g.players[0].discard.at(-1),'base5-17');
 }
 {
+ const g=game('base1-12',[F,'base4-126',F,F,G]);
+ const d=attack(g,'Fire Blast');
+ assert.equal(d,null,'Basic Fire Energy reprints are equivalent discard choices');
+ assert.equal(g.players[0].discard.at(-1),F);
+ assert.equal(g.players[0].active.energies.includes('base4-126'),true);
+}
+{
  const g=game('neo1-9',[F,W,L,G]);
  const a=CATALOG.get('neo1-9').attacks[0];
  assert.match(a.text,/Fire Energy card, a Water Energy card, and a Lightning Energy card/);
