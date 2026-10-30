@@ -24,7 +24,7 @@ function boot(saved=new Map(),sessions=new Map()){
  const window={NeoRpgNarrativePack:PACK,NeoRpgSideQuests:SIDE,NeoHarborStory:STORY,NeoRpgSchedules:SCHEDULES,NeoRpgWorld:WORLD,NeoRpgRivalArc:ARC,NeoRpgTournaments:TOURNAMENTS,NeoRpgCompetitiveLoop:COMPETE,NeoRpgReactivity:REACT,NeoRpgCommunity:COMMUNITY,NeoRpgConsequences:CONSEQ,NeoRpgTournamentPresentation:TOURNAMENT_PRESENTATION,NeoRpgEpilogue:EPILOGUE,NeoRpgAppointments:APPOINTMENTS,NeoRpgIntentions:INTENTIONS,NeoRpgCGGallery:CG,NeoRpgDailyPlanner:PLANNER,NeoRpgSocialActivities:SOCIAL,NeoRpgPlannedDates:DATES,NeoRpgPreDuel:PRE,NeoRpgCollection:COLLECTION,NeoRpgSeasonJourney:JOURNEY,NeoRpgSituations:SITUATIONS,NeoRpgDuelBridge:BRIDGE,NeoRpgSceneCast:SCENE_CAST,NeoRpgTimeCoordinator:Time,NeoRpgRelationships:Relationships,NeoRpgDialogue:DIALOGUE,NeoRpgBondRewards:BONDS,NeoRpgPartnerDecks:PARTNER,NeoRpgConversations:VN,
   NeoRpgRenderPerf:{reconcileKeyed(parent,entries,create,refresh){
    parent.replaceChildren(...entries.map((entry,index)=>{const node=create(entry);refresh(node,entry,index);return node;}));
-  }},addEventListener(type,fn){listeners[type]=fn;},dispatchEvent(event){listeners[event.type]?.(event);return true;}};
+  }},addEventListener(type,fn){const prev=listeners[type];listeners[type]=prev?(event=>{prev(event);fn(event);}):fn;},dispatchEvent(event){listeners[event.type]?.(event);return true;}};
  const fresh=!saved.has(KEY);
  const localStorage={getItem:k=>saved.has(k)?saved.get(k):null,setItem:(k,v)=>saved.set(k,v)};
  const sessionStorage={getItem:k=>sessions.get(k)||null,setItem:(k,v)=>sessions.set(k,v),removeItem:k=>sessions.delete(k)};
