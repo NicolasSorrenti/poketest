@@ -501,7 +501,7 @@ function options(id){return VN.choices(state,id);}
 function plannedDateSlots(id){
  const times=APPOINTMENTS.proposed(state,id,SCHEDULES);
  const choices=times.map((time,i)=>['Day '+time.day+' · '+periods[time.slot]+' · '+places[time.place][0]+' · choose activity','dateSlot:'+id+':'+i]);
- choices.push(['Back to conversation · free','back:'+id]);
+ choices.push(['← Back to character actions','back:'+id]);
  return choices;
 }
 function sharedActivityChoices(id){
@@ -512,12 +512,18 @@ function sharedActivityChoices(id){
    'socialDo:'+id+':'+a.id
  ]),['Back to conversation · free','back:'+id]];
 }
+function sayCharacterChoiceMenu(id,heading,description,choices){
+ if(!cast[id]||!currentPeople().includes(id))return;
+ state.selected=id;
+ scene={speaker:cast[id].name,line:'',choices,presentation:'character-menu',menuCharacter:id,menuHeading:heading,menuDescription:description};
+ state.scene=scene;persist();render();
+}
 function planSharedActivity(id){
  if(!cast[id]||!currentPeople().includes(id))return;
  const choices=sharedActivityChoices(id);
  if(!choices.length)return say(cast[id].name,'We could plan something another time.',options(id));
- const hint='I have some time free. What do you feel like doing together?';
- tutorialEvent('social');return say(cast[id].name,hint,choices);
+ tutorialEvent('social');
+ return sayCharacterChoiceMenu(id,'SPEND TIME','Choose a shared activity with '+cast[id].name+'.',choices);
 }
 
 async function glanceAt(id){
@@ -832,8 +838,8 @@ function act(action){
   if(!cast[id]||!currentPeople().includes(id))return;
   const choices=plannedDateSlots(id);
   if(choices.length>1)tutorialEvent('appointments');
-  return say(cast[id].name,choices.length===1?'I cannot commit to another meeting yet.':'Let us choose a day and plan what to do together.',
-    choices.length===1?options(id):choices);
+  if(choices.length===1)return say(cast[id].name,'I cannot commit to another meeting yet.',options(id));
+  return sayCharacterChoiceMenu(id,'MAKE PLANS','Choose a day and plan an activity with '+cast[id].name+'.',choices);
  }
  if(type==='dateSlot'){
   if(!cast[id]||!currentPeople().includes(id))return;
@@ -844,7 +850,7 @@ function act(action){
    'dateActivity:'+id+':'+part+':'+a.id
   ]);
   choices.push(['Choose another day · free','dateInvite:'+id]);
-  return say(cast[id].name,'What should we do at '+places[target.place][0]+'?',choices);
+  return sayCharacterChoiceMenu(id,'MAKE PLANS','Choose an activity for '+periods[target.slot].toLowerCase()+' at '+places[target.place][0]+'.',choices);
  }
  if(type==='dateActivity'){
   if(!cast[id]||!currentPeople().includes(id))return;
@@ -858,7 +864,7 @@ function act(action){
    'dateBook:'+id+':'+index+':'+activityId+':'+t.id
   ]);
   choices.push(['Choose another activity · free','dateSlot:'+id+':'+index]);
-  return say(cast[id].name,'How would you like to spend this time together?',choices);
+  return sayCharacterChoiceMenu(id,'MAKE PLANS','Choose how to spend your time at '+places[target.place][0]+'.',choices);
  }
  if(type==='dateBook'){
   if(!cast[id]||!currentPeople().includes(id))return;
@@ -887,7 +893,7 @@ function act(action){
    say(cast[id].name,outcome.line);
    showCGMoment(memories[0]);return;
   }catch(err){
-   return say(cast[id].name,err.message,sharedActivityChoices(id));
+   return sayCharacterChoiceMenu(id,'SPEND TIME',err.message,sharedActivityChoices(id));
   }
  }
  if(type==='intention'){
@@ -901,7 +907,7 @@ function act(action){
  if(type==='townActivity')return performActivity(id);
  if(type==='calendar')return openCalendar();
  if(type==='plans')return say('Planner','Your booked meet-ups appear under UPCOMING PLANS. Travel there at the agreed time; the appointment itself uses one period.');
- if(type==='back'&&cast[id])return say(cast[id].name,'Where were we?',options(id));
+ if(type==='back'&&cast[id]){scene={speaker:'Narrator',line:'',choices:[]};state.scene=scene;state.selected=id;persist();render();return;}
  if(type==='invite'){
   if(!cast[id]||!currentPeople().includes(id))return;
   const dates=APPOINTMENTS.proposed(state,id,SCHEDULES);
@@ -2441,6 +2447,8 @@ function simplifyRpgLabels(){
 function renderRpgActions(locked,shown){
  if(typeof document.querySelector!=='function')return;
  const dock=$('rpgActionDock');if(!dock)return;
+ const menuMode=shown?.presentation==='character-menu';
+ if(menuMode){$('dialogue').hidden=true;dock.hidden=true;return;}
  const hasDialogue=locked||((shown?.choices?.length||0)>0)||!!(shown?.line);
  $('dialogue').hidden=!hasDialogue;
  dock.hidden=hasDialogue;
@@ -2792,10 +2800,34 @@ function render(){
  });
  const characterActions=$('characterActions');
  if(characterActions){
-  const selected=state.selected&&people.includes(state.selected)&&!locked?state.selected:null;
+  const menuMode=shown?.presentation==='character-menu';
+  const menuId=menuMode?shown.menuCharacter:null;
+  const selected=menuMode?(menuId&&people.includes(menuId)?menuId:null):(state.selected&&people.includes(state.selected)&&!locked?state.selected:null);
+  characterActions.classList.toggle('choice-menu',menuMode);
   characterActions.hidden=!selected;
   characterActions.replaceChildren();
-  if(selected){
+  if(menuMode&&selected){
+   const eyebrow=document.createElement('span');eyebrow.className='character-menu-eyebrow';eyebrow.textContent=shown.menuHeading||'CHOOSE AN OPTION';
+   const heading=document.createElement('strong');heading.className='character-menu-title';heading.textContent=cast[selected].name;
+   const description=document.createElement('p');description.className='character-menu-description';description.textContent=shown.menuDescription||'Choose an option.';
+   const list=document.createElement('div');list.className='character-menu-options';
+   characterActions.append(eyebrow,heading,description,list);
+   for(const [label,action] of shown.choices||[]){
+    const button=document.createElement('button');button.type='button';button.className='character-action-btn';button.textContent=label;button.onclick=()=>safeAct(action);
+    if(action.startsWith('socialDo:')){
+     const [,npc,activityId]=action.split(':');
+     const choice=SOCIAL.options(state,npc,currentPeople(),cast).find(x=>x.id===activityId);
+     button.disabled=!choice||!!choice.disabledReason;if(button.disabled)button.title=choice?.disabledReason||'This activity is not available.';
+    }
+    if(action.startsWith('dateBook:')){
+     const [,npc,index,activityId,tone]=action.split(':');
+     const target=APPOINTMENTS.proposed(state,npc,SCHEDULES)[Number(index)];
+     const choice=target?DATES.choices(state,npc,target.place,activityId,SOCIAL,cast).find(x=>x.id===tone):null;
+     button.disabled=!choice||!!choice.disabledReason;if(button.disabled)button.title=choice?.disabledReason||'That meeting option is no longer available.';
+    }
+    list.append(button);
+   }
+  }else if(selected){
    const display=cast[selected].name.split(' ')[0],buttons=[
     ['◉ Glance at',()=>glanceAt(selected),'View '+cast[selected].name+' up close'],
     ['☏ Talk',()=>selectPerson(selected),'Talk to '+cast[selected].name],
