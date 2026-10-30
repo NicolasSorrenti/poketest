@@ -31,6 +31,6 @@ Goal: review every in-scope card's printed effect, relevant historical rulings, 
 
 | Super Rod (neo1-103) | Coin flip with an eligible card; recovery is mandatory | test_super_rod_fidelity.js | Fixed and merged in PR #238; other interactions not yet certified |
 
-| Moo-Moo Milk (neo1-101) | Target eligibility for damaged and undamaged Pokémon | test_moo_moo_milk_fidelity.js | Fix in this branch; coin outcomes and other interactions not yet certified |
+| Moo-Moo Milk (neo1-101) | Target eligibility for damaged and undamaged Pokémon | test_moo_moo_milk_fidelity.js | Fixed and merged in PR #239; coin outcomes and other interactions not yet certified |
 
 The full card-by-card fidelity review is **not complete**. Do not count the other cards or untested branches of the cards above as verified. Existing Classic execution probing covers 427 attack records in a manufactured scenario; it checks execution, not correctness or all possible choices.
