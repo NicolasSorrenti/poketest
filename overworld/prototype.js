@@ -45,6 +45,7 @@
       '#neoPlacementEditor .stage>img.bg{position:absolute;inset:0;width:100%;height:100%;object-fit:fill;pointer-events:none}',
       '#neoPlacementEditor .stage .placed{position:absolute;transform:translate(-50%,-100%);object-fit:contain;object-position:center bottom;cursor:move;touch-action:none;filter:drop-shadow(0 2px 2px #0008)}',
       '#neoPlacementEditor .stage .placed.selected{outline:2px solid #75b7ff;outline-offset:2px}',
+      '#neoPlacementEditor .stage .placed.dimmed{opacity:.5}',
       '#neoPlacementEditor .stage .dropHint{position:absolute;inset:0;display:grid;place-items:center;color:#fff9;text-shadow:0 1px 5px #000;pointer-events:none;font-size:16px}',
       '#neoPlacementEditor .status{font-size:12px;color:#d9cce2;min-height:18px}',
       '@media(max-width:760px){#neoPlacementEditor{grid-template-rows:auto 1fr}#neoPlacementEditor .head{align-items:flex-start;flex-direction:column;padding:8px}#neoPlacementEditor .layout{grid-template-columns:1fr;grid-template-rows:minmax(145px,28vh) 1fr}#neoPlacementEditor .side{border-right:0;border-bottom:1px solid #53445f;padding:8px}#neoPlacementEditor .side h2,#neoPlacementEditor .hint{display:none}#neoPlacementEditor .tray{display:flex;overflow-x:auto}#neoPlacementEditor .pose{flex:0 0 108px}#neoPlacementEditor .pose img{height:85px}#neoPlacementEditor .work{padding:6px;gap:5px}#neoPlacementEditor .stageWrap{padding:3px}}'
@@ -77,8 +78,10 @@
     const sizeRange=document.createElement('input');sizeRange.type='range';sizeRange.min='45';sizeRange.max='300';sizeRange.step='1';sizeRange.value='155';sizeRange.setAttribute('aria-label','Selected pose height');
     const sizeValue=document.createElement('span');sizeValue.textContent='155';
     sizeLabel.append(sizeRange,sizeValue,' map units');
+    const showOthersToggle=document.createElement('input');showOthersToggle.type='checkbox';showOthersToggle.setAttribute('aria-label','Show other poses at 50% opacity');
+    const showOthersLabel=document.createElement('label');showOthersLabel.append(showOthersToggle,document.createTextNode('Show other poses at 50%'));
     const removeBtn=document.createElement('button');removeBtn.textContent='Remove selected';
-    bar.append(mapLabel,sizeLabel,removeBtn);
+    bar.append(mapLabel,sizeLabel,showOthersLabel,removeBtn);
     const stageWrap=document.createElement('div');stageWrap.className='stageWrap';
     const stage=document.createElement('div');stage.className='stage';stage.setAttribute('aria-label','Map placement canvas');
     stageWrap.append(stage);
@@ -116,13 +119,14 @@
       const bg=document.createElement('img');bg.className='bg';bg.src=map.image;bg.alt=map.title;stage.append(bg);
       const list=listForMap();
       list.forEach((item,index)=>{
-        const img=document.createElement('img');img.className='placed'+(state.selected===item.id?' selected':'');
+        const isSelected=state.selected===item.id;
+        const img=document.createElement('img');img.className='placed'+(isSelected?' selected':'')+(showOthersToggle.checked&&!isSelected?' dimmed':'');
         img.src=item.src;img.alt=config.characters[item.character]?.name+' '+item.pose;img.draggable=false;
         img.style.left=(item.x/map.width*100)+'%';img.style.top=(item.y/map.height*100)+'%';
         img.style.height=(item.height/map.height*100)+'%';img.dataset.id=item.id;
         img.addEventListener('pointerdown',event=>{
           event.preventDefault();event.stopPropagation();state.selected=item.id;sizeRange.value=String(item.height);sizeValue.textContent=String(item.height);
-          stage.querySelectorAll('.placed').forEach(node=>node.classList.toggle('selected',node.dataset.id===item.id));
+          stage.querySelectorAll('.placed').forEach(node=>{const selected=node.dataset.id===item.id;node.classList.toggle('selected',selected);node.classList.toggle('dimmed',showOthersToggle.checked&&!selected)});
           const image=event.currentTarget;image.setPointerCapture(event.pointerId);
           const move=e=>{const r=stage.getBoundingClientRect(),current=listForMap().find(x=>x.id===item.id);if(!current)return;current.x=Math.max(0,Math.min(map.width,(e.clientX-r.left)/r.width*map.width));current.y=Math.max(0,Math.min(map.height,(e.clientY-r.top)/r.height*map.height));image.style.left=(current.x/map.width*100)+'%';image.style.top=(current.y/map.height*100)+'%';};
           const up=()=>{image.removeEventListener('pointermove',move);image.removeEventListener('pointerup',up);persist('Moved pose. Save or download when the map is ready.')};
@@ -149,6 +153,7 @@
     removeBtn.onclick=()=>{const list=listForMap(),index=list.findIndex(x=>x.id===state.selected);if(index<0)return;list.splice(index,1);state.selected=null;drawStage();persist('Removed selected pose.')};
     mapSelect.onchange=()=>{state.map=mapSelect.value;state.selected=null;drawStage();status.textContent='Editing '+(config[state.map].title||state.map)+'.'};
     characterFilter.onchange=renderTray;
+    showOthersToggle.onchange=drawStage;
     saveBtn.onclick=async()=>{persist('Saved in this browser.');if(!placementCloud){status.textContent='Cloud placement service is unavailable.';return}saveBtn.disabled=true;status.textContent='Saving placements to the game…';try{const result=await placementCloud.save(cloudPayload(),cloudRevision);cloudRevision=result.revision;status.textContent='Saved '+Object.keys(draft.maps).length+' map(s) to the game.'}catch(error){status.textContent='Cloud save failed: '+error.message}finally{saveBtn.disabled=false}};
     clearMapBtn.onclick=()=>{draft.maps[state.map]=[];state.selected=null;drawStage();persist('Cleared placements for this map.')};
     downloadBtn.onclick=()=>{
