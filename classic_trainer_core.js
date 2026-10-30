@@ -31,13 +31,19 @@ function canCancel(g,actor){
  return plan.cancelBaseline===cancelFingerprint(g);
 }
 // Chaos Gym cannot pass attached Trainers to the other player (WotC ruling).
-const ATTACH_ONLY=new Set(['PlusPower','Defender','Berry','Counterattack Claws','Charity',"Brock's Protection","Koga's Ninja Trick","Sabrina's ESP",'Mysterious Fossil','Clefairy Doll']);
+const ATTACH_ONLY=new Set(['PlusPower','Defender','Berry','Counterattack Claws','Focus Band','EXP.ALL','Gold Berry','Miracle Berry','Balloon Berry','Magnifier','Charity',"Brock's Protection","Koga's Ninja Trick","Sabrina's ESP",'Mysterious Fossil','Clefairy Doll']);
+// These cards stay in play or attach to a Pokémon and cannot be copied.
+const COPY_FORBIDDEN=new Set([...ATTACH_ONLY,'Focus Band','EXP.ALL','Gold Berry','Miracle Berry','Balloon Berry','Magnifier',"Sabrina's Psychic Control"]);
 const SETS=['base1','base2','base3','base4','base5','gym1','gym2','neo1','neo2','neo3','neo4','basep'];
 const CATALOG=new Map(SETS.flatMap(s=>require('./cards/'+s+'.json')).map(c=>[c.id,c]));
 const get=id=>{const c=CATALOG.get(id);if(!c)throw Error('Unknown Classic card: '+id);return c;};
 const fossilEvolution=c=>c.evolvesFrom==='Mysterious Fossil'||(['Omanyte','Kabuto','Aerodactyl'].includes(c.name)&&c.subtypes?.includes('Stage 1'));
 const basicEnergy=c=>/^(Grass|Fire|Water|Lightning|Psychic|Fighting) Energy$/.test(c.name)&&isEnergy(c);
 const pokemon=c=>c.supertype==='Pokémon';
+function identicalBasicEnergy(items){
+ return items.length>0&&items.every(o=>o.cardId&&basicEnergy(get(o.cardId))&&get(o.cardId).name===get(items[0].cardId).name);
+}
+
 const all=p=>[p.active,...p.bench].filter(Boolean);
 const publicName=u=>u?.secretPlanFaceDown?'Face-down Pokémon':get(u.id).name;
 const slot=(p,n)=>n===-1?p.active:p.bench[n];
@@ -131,7 +137,7 @@ function prompt(g,plan,helpers){
   if(!chosen(d,'coin'))d.coin=helpers.flip(g)?['heads']:['tails'];
   if(d.coin[0]==='heads'&&!chosen(d,'copy')){
    const entries=disc(f,c=>c.supertype==='Trainer'&&SUPPORTED.has(c.name)&&!
-    (c.subtypes||[]).includes('Stadium')&&!['PlusPower','Defender','Berry','Counterattack Claws',"Sabrina's Psychic Control",'Charity','Mysterious Fossil','Clefairy Doll'].includes(c.name));
+    (c.subtypes||[]).some(t=>t==='Stadium'||t==='Pokémon Tool')&&!COPY_FORBIDDEN.has(c.name));
    if(entries.length)return single('copy',side,entries,"Choose opponent's discarded Trainer to copy",true);
    d.copy=[];
   }
@@ -524,14 +530,17 @@ function prompt(g,plan,helpers){
  if(name==='Energy Removal'&&!chosen(d,'target'))return single('target',side,enemy(u=>u.energies.length>0&&!u.attachedTrainers.some(t=>get(t.id).name==="Brock's Protection")),'Choose opposing Pokémon');
  if(name==='Super Energy Removal'){
   if(!chosen(d,'source'))return single('source',side,own(u=>u.energies.length>0),'Choose your Pokémon to pay Energy');
-  if(!chosen(d,'ownEnergy'))return single('ownEnergy',side,options(zone(slot(p,nums(d,'source')[0]).energies)),'Discard one of your attached Energy');
+  if(!chosen(d,'ownEnergy')){const items=options(zone(slot(p,nums(d,'source')[0]).energies));if(identicalBasicEnergy(items))d.ownEnergy=[items[0].id];else return single('ownEnergy',side,items,'Discard one of your attached Energy');}
   if(!chosen(d,'target'))return single('target',side,enemy(u=>u.energies.length>0&&!u.attachedTrainers.some(t=>get(t.id).name==="Brock's Protection")),'Choose opponent Pokémon');
  }
  if(['Energy Removal','Super Energy Removal'].includes(name)&&chosen(d,'target')&&!chosen(d,'enemyEnergy')){
   const u=slot(f,nums(d,'target')[0]),max=name==='Super Energy Removal'?Math.min(2,u.energies.length):1;
-  return multi('enemyEnergy',side,options(zone(u.energies)),name==='Super Energy Removal'?1:1,max,'Choose opposing Energy to discard');
+  const items=options(zone(u.energies));
+  // Super Energy Removal permits one OR two: keep the amount choice when both are available.
+  if(max===1&&identicalBasicEnergy(items))d.enemyEnergy=[items[0].id];
+  else return multi('enemyEnergy',side,items,1,max,'Choose opposing Energy to discard');
  }
- if(name==='Super Potion'&&chosen(d,'target')&&!chosen(d,'ownEnergy'))return single('ownEnergy',side,options(zone(slot(p,nums(d,'target')[0]).energies)),'Discard one attached Energy');
+ if(name==='Super Potion'&&chosen(d,'target')&&!chosen(d,'ownEnergy')){const items=options(zone(slot(p,nums(d,'target')[0]).energies));if(identicalBasicEnergy(items))d.ownEnergy=[items[0].id];else return single('ownEnergy',side,items,'Discard one attached Energy');}
  if(name==='Nightly Garbage Run'&&!chosen(d,'recover')){const a=disc(p,c=>pokemon(c)||basicEnergy(c));if(!a.length)throw Error('No eligible cards');return multi('recover',side,a,1,Math.min(3,a.length),'Choose up to 3 cards');}
  if(name==='Mr. Fuji'&&!chosen(d,'target'))return single('target',side,options(p.bench.map((u,i)=>({i,label:publicName(u)})),'bench'),'Choose a Benched Pokémon');
  if(name==='Pokémon Flute'&&!chosen(d,'recover'))return single('recover',side,disc(f,isBasicPokemon),'Choose opponent Basic Pokémon');
@@ -756,8 +765,7 @@ function commit(g,plan,h){
     const copiedId=f.discard[pick('copy')];
     if(!copiedId)throw Error('Stale Psychic Control target');
     const copied=get(copiedId);
-    if(copied.supertype!=='Trainer'||!SUPPORTED.has(copied.name)||copied.subtypes?.includes('Stadium')||
-       ['PlusPower','Defender','Berry','Counterattack Claws',"Sabrina's Psychic Control",'Charity','Mysterious Fossil','Clefairy Doll'].includes(copied.name))throw Error('Illegal Psychic Control target');
+    if(copied.supertype!=='Trainer'||!SUPPORTED.has(copied.name)||copied.subtypes?.some(t=>t==='Stadium'||t==='Pokémon Tool')||COPY_FORBIDDEN.has(copied.name))throw Error('Illegal Psychic Control target');
     // Virtual play: no extra card enters hand, discard, deck, or Bench.
     prompt(g,{side:plan.side,handIndex:p.hand.length,cardId:copiedId,proxy:true,data:{}},h);
    }
