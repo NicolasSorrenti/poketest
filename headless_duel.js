@@ -1658,6 +1658,13 @@ function resolveAttack(g,side,index,chosenBench,energyPicks,extra={}){
     kind==='burning-flame'?`Burning Flame: discard ${max} Fire Energy`:
     kind==='psyburst'?'Psyburst: discard 1 Fire Energy':`Choose ${max} Energy card(s) to discard`;
   }
+  if(!extra.neo48Answered&&['flame-wheel','flamethrower','burning-flame','psyburst'].includes(kind)&&max>0&&pickables.length>=max&&
+     new Set(pickables.map(option=>u.energies[Number(option.id.slice(7))])).size===1){
+   // A mandatory discard from identical eligible Energy cards has one
+   // outcome. Resolve it without prompting; mixed Energy choices stay interactive.
+   extra.neo48Choices=pickables.slice(0,max).map(option=>option.id);
+   extra.neo48Answered=true;
+  }
   if(!extra.neo48Answered&&pickables.length&&max>0){
    g.nextDecisionId++;g.pendingDecision=makeDecision({id:`neo48:${g.nextDecisionId}`,actor,kind:'neo-attack-choice',label,options:pickables,min,max,optional:min===0});
    g.pendingAction={kind:'neo48_select',side,attackIndex:index,roll,extra};return;
@@ -2107,8 +2114,11 @@ function resolveAttack(g,side,index,chosenBench,energyPicks,extra={}){
  if(roll.neo48Freeze)f.active.attackLock={expires:g.turnSerial+2,targetId:u.id};
  if(roll.neo48Slime)u.neo48SlimeUntil=g.turnSerial+2;
  if(roll.neo48Crunch)f.active.neo48CrunchUntil=g.turnSerial+3;
- if(roll.neo48EnergyDiscard){const chosen=extra.neo48Choices?.filter(x=>x.startsWith('energy:')).map(x=>Number(x.slice(7)))||[];for(const i of chosen.sort((a,b)=>b-a))p.discard.push(u.energies.splice(i,1)[0]);}
- if(roll.neo48DiscardColors){const chosen=extra.neo48Choices.filter(x=>x.startsWith('energy:')).map(x=>Number(x.slice(7)));for(const i of chosen.sort((a,b)=>b-a))p.discard.push(u.energies.splice(i,1)[0]);}
+ if(roll.neo48EnergyDiscard||roll.neo48DiscardColors){
+  const chosen=(extra.neo48Choices||[]).filter(x=>x.startsWith('energy:')).map(x=>Number(x.slice(7))).sort((a,b)=>b-a),discarded=[];
+  for(const i of chosen){const id=u.energies.splice(i,1)[0];if(id){p.discard.push(id);discarded.unshift(id);}}
+  if(discarded.length)log(g,`${c.name} discarded ${discarded.map(id=>card(g,id).name).join(', ')} to use ${a.name}.`);
+ }
  if(roll.neo48DiscardAllLightning){for(let i=u.energies.length-1;i>=0;i--)if(attachedEnergyMatchesType(g,u.energies[i],'Lightning'))p.discard.push(u.energies.splice(i,1)[0]);}
  if(roll.neo48Growth){for(const i of (extra.neo48Choices||[]).filter(x=>x.startsWith('hand:')).map(x=>Number(x.slice(5))).sort((a,b)=>b-a))u.energies.push(p.hand.splice(i,1)[0]);}
  if(roll.neo48CollectFire){for(const i of (extra.neo48Choices||[]).filter(x=>x.startsWith('discard:')).map(x=>Number(x.slice(8))).sort((a,b)=>b-a))u.energies.push(p.discard.splice(i,1)[0]);}
