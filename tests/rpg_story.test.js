@@ -4,10 +4,10 @@ const assert=require('node:assert/strict');
 const STORY=require('../rpg_story');
 const heroes=['hana','reina','shiori','yuna','akari','camila','marina','kaede'];
 const sample=()=>STORY.normalize({day:1,slot:0,location:'home',storyDone:{},storyMissed:{},relationships:{},partner:null});
-test('authored event graph is valid and every adult route has four scenes',()=>{
+test('authored event graph is valid and every adult route has five scenes',()=>{
  assert.deepEqual(STORY.validate(),[]);
  assert.ok(STORY.events.length>=56,'guest packs may extend the original 56 campaign events');
- for(const id of heroes)assert.equal(STORY.events.filter(e=>e.id.startsWith(id+'_route_')).length,4);
+ for(const id of heroes)assert.equal(STORY.events.filter(e=>e.id.startsWith(id+'_route_')).length,5);
 });
 test('first encounters can begin and choices award relationships exactly once',()=>{
  const st=sample(),first=STORY.events.find(e=>e.npc==='reina');

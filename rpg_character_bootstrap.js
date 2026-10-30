@@ -8,6 +8,7 @@
  "/rpg_relationships.js",
  "/rpg_side_quests.js",
  "/rpg_bond_chapters.js",
+ "/rpg_route_expansions.js",
  "/rpg_everyday_chats.js",
  "/rpg_character_chats.js",
  "/rpg_group_chats.js",
