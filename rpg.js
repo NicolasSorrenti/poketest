@@ -2342,7 +2342,8 @@ const APPROVED_DIALOGUE_MASTERS=Object.freeze({
  iris:'/rpg-assets/characters/iris/dialogue/neutral.png',
  alma:'/rpg-assets/characters/alma/overworld/standing-front.png',
  barb:'/rpg-assets/characters/barb/portraits/primary.png',
- elena:'/rpg-assets/characters/elena/overworld/standing-portfolio.png'
+ elena:'/rpg-assets/characters/elena/overworld/standing-portfolio.png',
+ jun:'/rpg-assets/characters/jun/standing-front.png'
 });
 function dialogueMasterSource(id,expression){
  return expression==='neutral'?APPROVED_DIALOGUE_MASTERS[id]||null:null;
@@ -2428,8 +2429,8 @@ function stagePortraitPaths(id,expression,sceneId){
  // An active special look remains the character's normal portrait all day,
  // regardless of expression. Dedicated CG/cut-in/battle graphics use other paths.
  const normal=personaCStageCandidates(id,expression,portraitPaths(id,expression,sceneId));
- // Prefer the approved standing art for Camila's dialogue only. Keep every
- // expression-specific file as fallback if the full-body image cannot load.
+ // Prefer approved full-body standing art in neutral dialogue scenes, while
+ // preserving every original expression as a fallback if the master fails.
  const master=dialogueMasterSource(id,expression)||(id==='camila'?CAMILA_DIALOGUE_MASTER:null);
  const dialogue=master?[master,...normal.filter(path=>path!==master)]:normal;
  return alternate?[alternate,...dialogue.filter(path=>path!==alternate)]:dialogue;
