@@ -9,6 +9,7 @@ The game uses **existing, approved full-body images** and crops only in its RPG 
 | Barb | `rpg-assets/characters/barb/portraits/primary.png` | Original expressions and priority `special-day-*.png` looks |
 | Elena | `rpg-assets/characters/elena/overworld/standing-portfolio.png` | Original expressions |
 | Jun | `rpg-assets/characters/jun/standing-front.png` (existing Jun root art) | Original expression portraits |
+| Teo | `rpg-assets/characters/teo/dialogue/neutral.png` (byte-identical copy of `overworld/standing-front.png`) | Original expression portraits |
 
 Jun's source is the already-committed front standing PNG in his character folder, not a newly generated picture or a copy.
 
