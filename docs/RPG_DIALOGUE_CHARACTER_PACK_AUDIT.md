@@ -74,3 +74,13 @@ Reviewed all 13 non-route events in Barb's 18-event story pack. Identified repea
 - `barb_bonus_bedroom`: time off leads to a personal design decision instead of another stitching argument
 
 Source commit `2567e11`; compiled text sync `0b43852`. Static validation: all 18 source events have dialogue and choices; every source dialogue line appears in compiled character pack. Generator rebuild and game tests were not run. Review other packs' additional CG and crossover events next.
+
+## Crossover continuation — 2026-10-30
+
+Reviewed remaining source crossover sequences in the Laca, Sol, and Jinx story packs; updated three event lines to prevent generic acquiescence and repeat safety/comedy endings:
+
+- `laca_sol_cross_1`: Laca explicitly owns rota/table safety while Sol handles invitations, setting a concrete division of labor.
+- `sol_alma_cross_1`: Sol takes responsibility for wet-shoes signage instead of delivering another self-deprecating appliance joke.
+- `jinx_alma_cross_1`: Jinx's ending joins playful defiance to interest in the café's game-table regulars.
+
+Source commits: `65107d7`, `d690f94`, `02dbd0e`. Generated pack sync: `fc49455`. Static integrity check covered 21 events in these three packs and all their dialogue texts against the compiled file, with 0 failures. Full generator execution, suite and browser checks not completed. Other event systems remain outside this batch.
