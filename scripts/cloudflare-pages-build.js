@@ -87,6 +87,22 @@ for (const script of publicScripts) {
   const source = path.join(root, script);
   if (fs.existsSync(source) && fs.statSync(source).isFile()) copyFile(script);
 }
+// Client-side Classic duels, RPG Deck Studio, and card library fetch
+// /cards/<set>.json directly. These are public historical catalog assets,
+// not server-only game state. Keep the full set list in the deployed package.
+walk('cards');
+for (const set of ['base1','base2','base3','base4','base5','gym1','gym2','neo1','neo2','neo3','neo4','basep']) {
+  const filename = path.join(out, 'cards', set + '.json');
+  if (!fs.existsSync(filename)) throw new Error('Missing Cloudflare client card catalog: ' + set);
+  let cards;
+  try { cards = JSON.parse(fs.readFileSync(filename, 'utf8')); }
+  catch (error) { throw new Error('Invalid Cloudflare client card catalog: ' + set + ': ' + error.message); }
+  if (!Array.isArray(cards) || cards.length === 0 ||
+      cards.some(card => !card || typeof card.id !== 'string' ||
+        !card.id.startsWith(set + '-'))) {
+    throw new Error('Incomplete Cloudflare client card catalog: ' + set);
+  }
+}
 walk('rpg-assets');
 walk('overworld');
 // The placement editor uses this art-production candidate as the Lucky Draw map.
