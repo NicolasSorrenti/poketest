@@ -354,7 +354,7 @@ function prompt(g,plan,helpers){
   if(!chosen(d,'oldCard')){
    const bothHeads=d.rodFlips.every(Boolean),bothTails=d.rodFlips.every(x=>!x);
    const items=bothHeads?disc(p,c=>c.supertype==='Pokémon'):bothTails?disc(p,c=>c.supertype==='Trainer'):[];
-   if(items.length)return single('oldCard',side,items,'Old Rod: recover a card from discard',true);
+   if(items.length)return single('oldCard',side,items,'Old Rod: recover a card from discard');
    d.oldCard=[];
   }
  }
@@ -369,7 +369,7 @@ function prompt(g,plan,helpers){
   }
  }
  // Neo Genesis theme-deck Trainers (curated card pool only).
- if(name==='Moo-Moo Milk'&&!chosen(d,'healTarget'))return single('healTarget',side,own(u=>u.damage>0),'Choose Pokémon to heal');
+ if(name==='Moo-Moo Milk'&&!chosen(d,'healTarget'))return single('healTarget',side,own(),'Choose Pokémon to heal');
  if(name==='Pokémon March'){
   for(const actor of [1-side,side]){
    const key=`march${actor}`,owner=g.players[actor],eligible=options(zone(owner.deck,isBasicPokemon),'deck');
@@ -382,7 +382,7 @@ function prompt(g,plan,helpers){
  if(name==='Super Rod'&&!chosen(d,'coin'))d.coin=[helpers.flip(g)?'heads':'tails'];
  if(name==='Super Rod'&&!chosen(d,'rodCard')){
   const evolved=d.coin[0]==='heads';const eligible=disc(p,c=>evolved?(c.subtypes||[]).some(s=>s==='Stage 1'||s==='Stage 2'):isBasicPokemon(c));
-  if(eligible.length)return single('rodCard',side,eligible,`Super Rod: choose ${evolved?'Evolution':'Basic Pokémon'}`,true);
+  if(eligible.length)return single('rodCard',side,eligible,`Super Rod: choose ${evolved?'Evolution':'Basic Pokémon'}`);
   d.rodCard=[];
  }
  // Lt. Surge's Treaty: the opponent decides which of the two outcomes.
