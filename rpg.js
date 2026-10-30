@@ -425,7 +425,6 @@ window.NeoRpgOverworldBridge=Object.freeze({
  scenePortraits(){return overworldScenePortraits;},
  dialogueText(){return overworldRenderedDialogue;},
  portrait(id){return cast[id]?{id,name:cast[id].name,src:scenePortraitSource(id,'neutral',null)}:null;},
- pendingDuelDecks(id){const duel=state.pendingDuel;if(!duel||duel.id!==id)return null;return {playerDeck:Array.isArray(duel.deckCards)?[...duel.deckCards]:null,opponentDeck:Array.isArray(duel.customOpponentDeck)?[...duel.customOpponentDeck]:null};},
  clearInteraction(){if(overworldControlsLocked())return false;state.selected=null;persist();render();return true;},
  snapshot(){return {location:state.location,day:state.day,slot:state.slot,selected:state.selected&&currentPeople().includes(state.selected)?state.selected:null,locked:overworldControlsLocked(),arriving:arrivalGate||!!pendingOverworldArrival||!!window.NeoRpgTimeTransitions?.active,storyActive:overworldStoryActive(),eventActive:!!(state.mandatoryEventState?.active||state.activeSliceOfLife||state.activeSituation||state.activeStory||state.activeSideQuest||state.activeArc||state.activeEncounter),people:currentPeople().filter(id=>!!cast[id]),places:Object.entries(places).map(([id,p])=>({id,name:p[0]}))};},
  travel(placeId){if(overworldControlsLocked())return false;return travelTo(placeId);},

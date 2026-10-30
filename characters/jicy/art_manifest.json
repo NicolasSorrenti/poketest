@@ -6,27 +6,43 @@
     {
       "sceneId": "jicy_route_1",
       "path": "/rpg-assets/characters/jicy/events/jicy_route_1.webp",
-      "prompt": "Cinematic 16:9 Neo Harbor visual-novel CG for The Card That Almost Got Away. Jicy and the protagonist in the scene described by the event; preserve Jicy's approved adult design, blonde high ponytail and clean sleeveless pink suit. Warm, character-led composition, natural expressions, no other named characters, no dialogue text, lower fifth clear for UI dialogue. Do not make the suit or public reactions to it the subject."
+      "prompt": "Warm shop introduction CG: Jicy shyly offers the player a card after catching one that slipped from the counter. Preserve her approved adult blonde design and canonical sleeveless pink suit."
     },
     {
       "sceneId": "jicy_route_2",
       "path": "/rpg-assets/characters/jicy/events/jicy_route_2.webp",
-      "prompt": "Cinematic 16:9 Neo Harbor visual-novel CG for A Table for Two. Jicy and the protagonist in the scene described by the event; preserve Jicy's approved adult design, blonde high ponytail and clean sleeveless pink suit. Warm, character-led composition, natural expressions, no other named characters, no dialogue text, lower fifth clear for UI dialogue. Do not make the suit or public reactions to it the subject."
+      "prompt": "Cafe deck-building CG: Jicy shares deck lists with the player at a quiet table, smiling as they compare cards. Preserve her approved adult blonde design and canonical sleeveless pink suit."
     },
     {
       "sceneId": "jicy_route_3",
       "path": "/rpg-assets/characters/jicy/events/jicy_route_3.webp",
-      "prompt": "Cinematic 16:9 Neo Harbor visual-novel CG for The Quiet Between Pages. Jicy and the protagonist in the scene described by the event; preserve Jicy's approved adult design, blonde high ponytail and clean sleeveless pink suit. Warm, character-led composition, natural expressions, no other named characters, no dialogue text, lower fifth clear for UI dialogue. Do not make the suit or public reactions to it the subject."
+      "prompt": "Quiet reading CG: Jicy reads beside the player with a book open in a cozy, book-lined room. Preserve her approved adult blonde design and canonical sleeveless pink suit."
     },
     {
       "sceneId": "jicy_route_4",
       "path": "/rpg-assets/characters/jicy/events/jicy_route_4.webp",
-      "prompt": "Cinematic 16:9 Neo Harbor visual-novel CG for A Little More Courage. Jicy and the protagonist in the scene described by the event; preserve Jicy's approved adult design, blonde high ponytail and clean sleeveless pink suit. Warm, character-led composition, natural expressions, no other named characters, no dialogue text, lower fifth clear for UI dialogue. Do not make the suit or public reactions to it the subject."
+      "prompt": "Park CG: a breeze scatters cards and Jicy springs up to gather them, delighted and a little breathless. Preserve her approved adult blonde design and canonical sleeveless pink suit."
     },
     {
       "sceneId": "jicy_route_5",
-      "path": "/rpg-assets/characters/jicy/events/jicy_route_5.webp",
-      "prompt": "Cinematic visual-novel CG for The Words She Practiced: Jicy sits at a warmly lit cafe table at sunset, holding the letter she has finally gathered the courage to give the protagonist. She is adult, tender, bashful and relieved. Preserve the approved blonde high ponytail and canonical pink sleeveless combat suit with its charcoal under-bust band and exact armholes; zipper partly open as in the accepted reference, with no added underlayer. Warm window lights, medium framing, no text."
+      "path": "/rpg-assets/characters/jicy/events/jicy_route_5_opening.webp",
+      "prompt": "Confession at the cafe after the evening rush: Jicy holds the note she practiced with, then speaks from the heart. Preserve the accepted partly unzipped sleeveless pink suit and exact armhole design.",
+      "sequence": [
+        {
+          "order": 1,
+          "lineIndex": 0,
+          "path": "/rpg-assets/characters/jicy/events/jicy_route_5_opening.webp",
+          "moment": "Jicy arrives with her folded note and begins the conversation.",
+          "prompt": "Use the approved cafe confession image and canonical Jicy design."
+        },
+        {
+          "order": 2,
+          "lineIndex": 5,
+          "path": "/rpg-assets/characters/jicy/events/jicy_route_5_confession.webp",
+          "moment": "She steadies herself, admits how she feels, and finally meets the player's eyes.",
+          "prompt": "Use the accepted more emotionally open confession CG; preserve the approved suit design."
+        }
+      ]
     },
     {
       "sceneId": "jicy_random_bookmark",
@@ -51,13 +67,27 @@
           "path": "/rpg-assets/characters/jicy/events/jicy_one_more_try_reassurance.webp",
           "moment": "Seeing the player's reassuring smile, Jicy relaxes and lets herself stay close.",
           "prompt": "A slightly closer continuation of the same player point of view. Jicy's shoulders relax as she realizes the player is okay; she remains close with a shy, relieved expression. Preserve the exact canonical pink sleeveless suit and arcade setting."
+        },
+        {
+          "order": 3,
+          "lineIndex": 5,
+          "path": "/rpg-assets/characters/jicy/events/jicy_one_more_try_over_player.webp",
+          "moment": "The stumble turns into a close, sweet moment as Jicy lands above the player.",
+          "prompt": "Use the accepted player-POV arcade fall CG, preserving Jicy's exact combat suit."
+        },
+        {
+          "order": 4,
+          "lineIndex": 8,
+          "path": "/rpg-assets/characters/jicy/events/jicy_one_more_try_safe_close.webp",
+          "moment": "Jicy sees the player's gentle smile and realizes she feels safe staying close.",
+          "prompt": "Use the accepted relaxed arcade CG with the wide armholes and canonical suit."
         }
       ]
     },
     {
       "sceneId": "jicy_random_card_art",
       "path": "/rpg-assets/characters/jicy/events/jicy_random_card_art.webp",
-      "prompt": "Cinematic 16:9 Neo Harbor visual-novel CG for The Picture in the Corner. Jicy and the protagonist sharing this small everyday moment; preserve her approved adult design, blonde high ponytail and canonical pink sleeveless suit. Friendly, wholesome, slice-of-life composition; no other named characters, no dialogue text, lower fifth clear for UI dialogue. Keep the moment about the activity and their connection, not the outfit."
+      "prompt": "Cafe card-art moment: Jicy holds up a favorite card and points out a small detail in its illustration while sharing the table with the player. Preserve the approved adult Jicy design and canonical pink suit."
     },
     {
       "sceneId": "jicy_random_clouds",
