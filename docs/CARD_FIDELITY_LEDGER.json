@@ -511,7 +511,10 @@
      "kind": "attack",
      "index": 0,
      "name": "Flamethrower",
-     "status": "unreviewed"
+     "status": "partial",
+     "evidence": [
+      "test_flamethrower_typed_discard.js: typed Fire requirement, automatic discard among equivalent Basic Fire cards, Rainbow-vs-Basic choice, rejection of Grass without mutation, damage, notification, and private decision ownership."
+     ]
     },
     {
      "kind": "attack",
@@ -536,7 +539,10 @@
      "kind": "attack",
      "index": 1,
      "name": "Flamethrower",
-     "status": "unreviewed"
+     "status": "partial",
+     "evidence": [
+      "test_flamethrower_typed_discard.js: typed Fire requirement, automatic discard among equivalent Basic Fire cards, Rainbow-vs-Basic choice, rejection of Grass without mutation, damage, notification, and private decision ownership."
+     ]
     }
    ]
   },
@@ -752,7 +758,10 @@
      "kind": "attack",
      "index": 1,
      "name": "Flamethrower",
-     "status": "unreviewed"
+     "status": "partial",
+     "evidence": [
+      "test_flamethrower_typed_discard.js: typed Fire requirement, automatic discard among equivalent Basic Fire cards, Rainbow-vs-Basic choice, rejection of Grass without mutation, damage, notification, and private decision ownership."
+     ]
     }
    ]
   },
@@ -1706,7 +1715,10 @@
      "kind": "attack",
      "index": 1,
      "name": "Flamethrower",
-     "status": "unreviewed"
+     "status": "partial",
+     "evidence": [
+      "test_flamethrower_typed_discard.js: typed Fire requirement, automatic discard among equivalent Basic Fire cards, Rainbow-vs-Basic choice, rejection of Grass without mutation, damage, notification, and private decision ownership."
+     ]
     }
    ]
   },
@@ -2010,7 +2022,10 @@
      "kind": "attack",
      "index": 1,
      "name": "Flamethrower",
-     "status": "unreviewed"
+     "status": "partial",
+     "evidence": [
+      "test_flamethrower_typed_discard.js: typed Fire requirement, automatic discard among equivalent Basic Fire cards, Rainbow-vs-Basic choice, rejection of Grass without mutation, damage, notification, and private decision ownership."
+     ]
     }
    ]
   },
@@ -4549,7 +4564,10 @@
      "kind": "attack",
      "index": 0,
      "name": "Flamethrower",
-     "status": "unreviewed"
+     "status": "partial",
+     "evidence": [
+      "test_flamethrower_typed_discard.js: typed Fire requirement, automatic discard among equivalent Basic Fire cards, Rainbow-vs-Basic choice, rejection of Grass without mutation, damage, notification, and private decision ownership."
+     ]
     },
     {
      "kind": "attack",
@@ -4593,7 +4611,10 @@
      "kind": "attack",
      "index": 1,
      "name": "Flamethrower",
-     "status": "unreviewed"
+     "status": "partial",
+     "evidence": [
+      "test_flamethrower_typed_discard.js: typed Fire requirement, automatic discard among equivalent Basic Fire cards, Rainbow-vs-Basic choice, rejection of Grass without mutation, damage, notification, and private decision ownership."
+     ]
     }
    ]
   },
@@ -4885,7 +4906,10 @@
      "kind": "attack",
      "index": 1,
      "name": "Flamethrower",
-     "status": "unreviewed"
+     "status": "partial",
+     "evidence": [
+      "test_flamethrower_typed_discard.js: typed Fire requirement, automatic discard among equivalent Basic Fire cards, Rainbow-vs-Basic choice, rejection of Grass without mutation, damage, notification, and private decision ownership."
+     ]
     }
    ]
   },
@@ -14457,7 +14481,10 @@
      "kind": "attack",
      "index": 1,
      "name": "Flamethrower",
-     "status": "unreviewed"
+     "status": "partial",
+     "evidence": [
+      "test_flamethrower_typed_discard.js: typed Fire requirement, automatic discard among equivalent Basic Fire cards, Rainbow-vs-Basic choice, rejection of Grass without mutation, damage, notification, and private decision ownership."
+     ]
     }
    ]
   },
@@ -14806,7 +14833,10 @@
      "kind": "attack",
      "index": 1,
      "name": "Flamethrower",
-     "status": "unreviewed"
+     "status": "partial",
+     "evidence": [
+      "test_flamethrower_typed_discard.js: typed Fire requirement, automatic discard among equivalent Basic Fire cards, Rainbow-vs-Basic choice, rejection of Grass without mutation, damage, notification, and private decision ownership."
+     ]
     }
    ]
   },
