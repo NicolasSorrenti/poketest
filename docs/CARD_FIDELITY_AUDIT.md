@@ -51,6 +51,9 @@ These scenarios use the TCGdex-sourced catalogue text. Printed card images and a
 
 | Magneton (base1-9) | Thunder Wave coin/status outcomes and cost; Selfdestruct Active, Bench and recoil damage, weakness/resistance note, cost and knockout | test_card_fidelity_magneton.js | Partial; independent print/ruling review and other interactions pending |
 | Mewtwo (base1-10) | Psychic counts attached Energy cards (not units); Barrier's Psychic Energy discard, equivalent-choice auto-resolution, Rainbow Energy choice, and prevention of damage/paralysis on the next turn | test_card_fidelity_mewtwo.js | Partial; PokémonTCG card data says Psychic Energy where the imported catalogue and Bulbapedia transcription say Energy; scan/ruling check and other interactions pending |
+| Ninetales (base1-12) | Fire Blast auto-discards identical Fire cards; preserves choice between Basic Fire and Rainbow Energy | test_typed_energy_discard_audit.js | Partial; Lure and other Fire Blast interactions pending |
+| Light Flareon (neo4-46) | Burning Flame heads, damage, mandatory Fire discard count, equivalent-choice auto-resolution and discard notification | test_typed_energy_discard_audit.js | Partial; other interactions and print/ruling review pending |
+| Shining Mewtwo (neo4-109) | Psyburst automatic Fire Energy discard among identical cards, preservation of other Energy and discard notification | test_typed_energy_discard_audit.js | Partial; Reflect Shield and other interactions pending |
 
 
 The full card-by-card fidelity review is **not complete**. Do not count the other cards or untested branches of the cards above as verified. Existing Classic execution probing covers 427 attack records in a manufactured scenario; it checks execution, not correctness or all possible choices.
