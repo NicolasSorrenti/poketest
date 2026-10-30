@@ -66,6 +66,11 @@ These scenarios use the TCGdex-sourced catalogue text. Printed card images and a
 | Dark Charmeleon (base5-32) | Fireball tails/heads behavior, equivalent discard auto-resolution and Rainbow Energy choice | test_typed_energy_missing_icons.js | Partial; other interactions pending |
 | Dark Flareon (base5-35) | Playing with Fire coin outcomes, damage and equivalent Fire discard | test_typed_energy_missing_icons.js | Partial; other interactions pending |
 | Typhlosion (neo1-18) | Flame Wheel's three-Fire requirement and equivalent discard auto-resolution | test_typed_energy_missing_icons.js | Partial; bench damage and other interactions pending |
+| Arcanine (base1-23, base4-33) | Flamethrower typed Fire cost, equivalent-choice auto-discard, Rainbow choice and rejection of Grass | test_flamethrower_typed_discard.js | Partial; other attacks and interactions pending |
+| Charmeleon (base1-24, base4-35) | Flamethrower typed Fire cost, equivalent-choice auto-discard, Rainbow choice and rejection of Grass | test_flamethrower_typed_discard.js | Partial; Slash and other interactions pending |
+| Magmar (base1-36, base4-51) | Flamethrower typed Fire cost, equivalent-choice auto-discard, Rainbow choice and rejection of Grass | test_flamethrower_typed_discard.js | Partial; Fire Punch and other interactions pending |
+| Flareon (base2-3, base2-19) | Flamethrower typed Fire cost, equivalent-choice auto-discard, Rainbow choice and rejection of Grass | test_flamethrower_typed_discard.js | Partial; Quick Attack and other interactions pending |
+| Houndoom (neo2-4, neo2-23) | Flamethrower typed Fire cost, equivalent-choice auto-discard, Rainbow choice and rejection of Grass | test_flamethrower_typed_discard.js | Partial; Crunch and other interactions pending |
 
 
 The full card-by-card fidelity review is **not complete**. Do not count the other cards or untested branches of the cards above as verified. Existing Classic execution probing covers 427 attack records in a manufactured scenario; it checks execution, not correctness or all possible choices.
