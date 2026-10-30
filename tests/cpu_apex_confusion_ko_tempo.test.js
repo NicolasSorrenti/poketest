@@ -90,3 +90,39 @@ test('Apex Prize-race counter-KO urgency requires a usable, reliable opponent at
  assert.equal(AI.prizeRaceBonus(attack,state,cfg),145*cfg.style.damage,
   'urgency returns when the restriction is gone');
 });
+
+test('Apex ordinary knockout tempo counts only a usable, likely opponent counter-KO',()=>{
+ const state=board(null,3);
+ // Both Hitmonchan can Jab for a KO, but neither side is taking the
+ // final Prize. A genuinely ready reply increases attack urgency.
+ state.self.active.damage=60;
+ state.opponent.active={id:'base1-7',energies:['base1-97'],damage:60,status:null};
+ state.turnSerial=4;
+ assert.equal(AI.knockoutTempoBonus(attack,state,cfg),230,
+  'a certain, legal opposing Jab is a genuine counter-KO');
+ for(const status of ['Confused','Asleep','Paralyzed']){
+  state.opponent.active.status=status;
+  assert.equal(AI.knockoutTempoBonus(attack,state,cfg),125,
+   status+' must not count as a likely counter-KO');
+ }
+ state.opponent.active.status=null;
+ for(const lock of [
+  {amnesia:{index:0,expires:6}},
+  {gymAttackCooldown:{index:0,expires:6}},
+  {gymAttackOnce:[0]}
+ ]){
+  Object.assign(state.opponent.active,lock);
+  assert.equal(AI.knockoutTempoBonus(attack,state,cfg),125,
+   'a publicly locked Jab must not raise attack urgency');
+  delete state.opponent.active.amnesia;
+  delete state.opponent.active.gymAttackCooldown;
+  delete state.opponent.active.gymAttackOnce;
+ }
+ state.opponent.active.amnesia={index:0,expires:4};
+ assert.equal(AI.knockoutTempoBonus(attack,state,cfg),230,
+  'an expired attack restriction must restore counter-KO urgency');
+ delete state.opponent.active.amnesia;
+ state.opponent.active.status='Confused';
+ assert.equal(AI.knockoutTempoBonus(attack,state,AI.configuration({side:1,level:7})),230,
+  'Level 7 retains its existing threat calibration');
+});
