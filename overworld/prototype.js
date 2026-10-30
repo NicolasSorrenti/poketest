@@ -3,6 +3,99 @@
   const config=window.NeoOverworld, byId=id=>document.getElementById(id);
   const camera=byId('camera'), world=byId('world'), edges=byId('edges'), dialog=byId('dialog');
   const params=new URLSearchParams(location.search), poseTest=params.has('reina-test'), dev=params.has('dev');
+
+  if(params.has('sprite-gallery')){
+    const spriteCharacterIds=['yuna','hana','laca','rina','akari','shiori','camila','marina','kaede'];
+    const locationOptions=[['arcade','Pixel Palace'],['shop','The Lucky Draw'],['home','Home'],['park','Riverside Park'],['cafe','The Rest Stop'],['center','Community Center'],['library','Library']];
+    const entries=spriteCharacterIds.flatMap(id=>{
+      const character=config.characters?.[id];
+      return Object.entries(character?.poses||{}).map(([poseKey,art])=>({id,name:character.name,poseKey,art}));
+    }).filter(entry=>entry.art?.src);
+    const storageKey='neoOverworldSpritePlacementSuggestionsV1';
+    let suggestions={};try{suggestions=JSON.parse(localStorage.getItem(storageKey)||'{}')||{}}catch{}
+    document.getElementById('shell')?.setAttribute('hidden','');
+    document.body.classList.add('neo-sprite-gallery-open');
+    const style=document.createElement('style');
+    style.textContent=`
+      body.neo-sprite-gallery-open{margin:0;background:#100f1c;color:#f7eefb;font:15px system-ui,sans-serif}
+      #neoSpriteGallery{position:fixed;inset:0;z-index:100;background:radial-gradient(ellipse at top,#29213a,#100f1c 65%);overflow:auto;padding:clamp(14px,3vw,34px);box-sizing:border-box}
+      #neoSpriteGallery .top{max-width:1500px;margin:0 auto 22px;display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap}
+      #neoSpriteGallery h1{font-size:clamp(24px,4vw,38px);margin:0 0 6px}
+      #neoSpriteGallery p{margin:0;color:#d9cce2}
+      #neoSpriteGallery .tools{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+      #neoSpriteGallery button,#neoSpriteGallery select{font:inherit;color:#fff;background:#30253f;border:1px solid #a87da9;border-radius:9px;padding:9px 12px}
+      #neoSpriteGallery a{color:#f5d4ff}
+      #neoSpriteGallery .section{max-width:1500px;margin:28px auto}
+      #neoSpriteGallery h2{font-size:22px;margin:0 0 12px;border-bottom:1px solid #755f7c;padding-bottom:7px}
+      #neoSpriteGallery .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:12px}
+      #neoSpriteGallery .card{background:#1c1927;border:1px solid #5c4b66;border-radius:12px;padding:10px;display:flex;flex-direction:column;gap:8px;min-width:0}
+      #neoSpriteGallery .art{height:242px;display:grid;place-items:center;border:1px solid #51465b;border-radius:8px;background-color:#272332;background-image:linear-gradient(45deg,#383344 25%,transparent 25%),linear-gradient(-45deg,#383344 25%,transparent 25%),linear-gradient(45deg,transparent 75%,#383344 75%),linear-gradient(-45deg,transparent 75%,#383344 75%);background-size:18px 18px;background-position:0 0,0 9px,9px -9px,-9px 0;overflow:hidden}
+      #neoSpriteGallery .art img{max-height:230px;max-width:100%;object-fit:contain}
+      #neoSpriteGallery .pose{font-weight:700}
+      #neoSpriteGallery code{font-size:11px;color:#d2bfd9;overflow-wrap:anywhere}
+      #neoSpriteGallery .card select{width:100%;font-size:13px}
+      #neoSpriteGallery .note{max-width:1500px;margin:0 auto 20px;color:#e2cde9}
+      #neoSpriteGallery .status{max-width:1500px;margin:10px auto;color:#ffe5a9;white-space:pre-wrap}
+      @media(max-width:560px){#neoSpriteGallery .grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}#neoSpriteGallery .card{padding:7px}#neoSpriteGallery .art{height:205px}#neoSpriteGallery .art img{max-height:194px}}
+    `;
+    document.head.append(style);
+    const gallery=document.createElement('main');gallery.id='neoSpriteGallery';
+    const top=document.createElement('header');top.className='top';
+    const titleWrap=document.createElement('div');
+    const title=document.createElement('h1');title.textContent='Overworld sprite gallery';
+    const sub=document.createElement('p');sub.textContent=entries.length+' sprite poses · 9 characters';
+    titleWrap.append(title,sub);
+    const tools=document.createElement('div');tools.className='tools';
+    const back=document.createElement('a');back.href='overworld-prototype.html?cast-test=1';back.textContent='← Back to map preview';
+    const exportButton=document.createElement('button');exportButton.type='button';exportButton.textContent='Download map suggestions';
+    const clearButton=document.createElement('button');clearButton.type='button';clearButton.textContent='Clear suggestions';
+    tools.append(back,exportButton,clearButton);top.append(titleWrap,tools);
+    const note=document.createElement('p');note.className='note';note.textContent='Choose a suggested map for each pose you want placed. Suggestions stay in this browser; download the JSON to send them to me. This does not move characters in the game by itself.';
+    const status=document.createElement('p');status.className='status';status.setAttribute('role','status');status.setAttribute('aria-live','polite');
+    const filter=document.createElement('select');filter.setAttribute('aria-label','Filter sprites by character');
+    filter.add(new Option('All characters','all'));
+    for(const id of spriteCharacterIds)filter.add(new Option(config.characters[id].name,id));
+    const filterWrap=document.createElement('div');filterWrap.className='tools';filterWrap.style.maxWidth='1500px';filterWrap.style.margin='0 auto 14px';filterWrap.append(filter);
+    const sections=document.createElement('div');
+    function saveSuggestion(key,value){if(value)suggestions[key]=value;else delete suggestions[key];localStorage.setItem(storageKey,JSON.stringify(suggestions));}
+    function renderGallery(){
+      sections.replaceChildren();
+      for(const id of spriteCharacterIds){
+        if(filter.value!=='all'&&filter.value!==id)continue;
+        const group=entries.filter(entry=>entry.id===id);
+        const section=document.createElement('section');section.className='section';
+        const heading=document.createElement('h2');heading.textContent=config.characters[id].name+' · '+group.length+' poses';section.append(heading);
+        const grid=document.createElement('div');grid.className='grid';
+        for(const entry of group){
+          const card=document.createElement('article');card.className='card';
+          const artBox=document.createElement('div');artBox.className='art';
+          const img=document.createElement('img');img.loading='lazy';img.src=entry.art.src;img.alt=config.characters[id].name+' · '+entry.poseKey;
+          img.onerror=()=>{img.hidden=true;artBox.textContent='Image failed to load';};
+          artBox.append(img);
+          const poseName=document.createElement('div');poseName.className='pose';poseName.textContent=entry.poseKey.replace(/([A-Z])/g,' $1').replace(/[-_]/g,' ').trim();
+          const path=document.createElement('code');path.textContent=decodeURIComponent(entry.art.src).replace(/^\//,'');
+          const mapSelect=document.createElement('select');mapSelect.setAttribute('aria-label','Suggested map for '+config.characters[id].name+' '+entry.poseKey);
+          mapSelect.add(new Option('Suggest a map…',''));
+          for(const [mapId,mapName] of locationOptions)mapSelect.add(new Option(mapName,mapId));
+          const key=id+':'+entry.poseKey;mapSelect.value=suggestions[key]||'';
+          mapSelect.onchange=()=>{saveSuggestion(key,mapSelect.value);status.textContent='Saved '+Object.keys(suggestions).length+' map suggestion(s) in this browser.';};
+          card.append(artBox,poseName,path,mapSelect);grid.append(card);
+        }
+        section.append(grid);sections.append(section);
+      }
+    }
+    filter.onchange=renderGallery;
+    exportButton.onclick=()=>{
+      const selected=Object.entries(suggestions).map(([key,mapId])=>{const [character,pose]=key.split(':');return {character,pose,map:mapId,src:config.characters[character].poses[pose].src};});
+      if(!selected.length){status.textContent='Choose at least one map suggestion first.';return;}
+      const blob=new Blob([JSON.stringify({suggestions:selected},null,2)],{type:'application/json'});
+      const url=URL.createObjectURL(blob),link=document.createElement('a');link.href=url;link.download='overworld-sprite-map-suggestions.json';link.click();URL.revokeObjectURL(url);
+      status.textContent='Downloaded '+selected.length+' map suggestion(s).';
+    };
+    clearButton.onclick=()=>{suggestions={};localStorage.removeItem(storageKey);renderGallery();status.textContent='Cleared saved map suggestions.';};
+    gallery.append(top,note,filterWrap,status,sections);document.body.append(gallery);renderGallery();
+    return;
+  }
   // When the parent RPG shows VN dialogue, preserve the location as a backdrop
   // but remove map NPC portraits, edge indicators and hotspots from the scene.
   // This message is only trusted from the same-origin parent of integrated mode.
