@@ -5748,11 +5748,11 @@ const packs=[
      },
      {
       "speaker": "luna",
-      "text": "Trying to. This shelf and my sweater are both conspiring against me today."
+      "text": "I volunteered to run the beginner table, but the sleeves are up there and no one bothered to ask how I wanted the room set up."
      },
      {
       "speaker": "luna",
-      "text": "I'm asking them to move the supplies lower next time. This is ridiculous."
+      "text": "Tomorrow I'm bringing a floor plan. Nobody should have to ask for permission just to reach the supplies."
      }
     ],
     "choices": [
@@ -6485,7 +6485,7 @@ const packs=[
     "lines": [
      {
       "speaker": "rina",
-      "text": "I finished early today. No encore for the crowd… but I saved one for you."
+      "text": "I turned the encore into an acoustic rehearsal. No lights, no band, just a song I haven't dared to play for anyone."
      },
      {
       "speaker": "Protagonist",
@@ -6505,7 +6505,7 @@ const packs=[
      },
      {
       "speaker": "rina",
-      "text": "You’re the first person I’ve wanted to share both with."
+      "text": "I usually know when people are applauding the performance. With you, I'd rather hear what you actually thought."
      }
     ],
     "choices": [
@@ -7156,7 +7156,7 @@ const packs=[
     "lines": [
      {
       "speaker": "sierra",
-      "text": "I turned down an extra campaign this weekend. The cup's on Saturday."
+      "text": "My agent came to watch a practice game. She said I looked more alive losing here than smiling through the last photo shoot."
      },
      {
       "speaker": "Protagonist",
@@ -7164,7 +7164,7 @@ const packs=[
      },
      {
       "speaker": "sierra",
-      "text": "Big enough for me. The agent wasn't happy, but I gave her the dates weeks ago."
+      "text": "Big enough for me. I showed her the opening I keep misplaying; she offered to hold the stopwatch."
      },
      {
       "speaker": "Protagonist",
@@ -7845,7 +7845,7 @@ const packs=[
      },
      {
       "speaker": "sol",
-      "text": "So... what are we when the music stops?"
+      "text": "I know what I'd call tonight: my favorite plan yet. But I want to hear what you want us to be, without making the answer into a game."
      }
     ],
     "choices": [
