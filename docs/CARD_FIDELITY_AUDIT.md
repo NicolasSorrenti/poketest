@@ -74,4 +74,6 @@ These scenarios use the TCGdex-sourced catalogue text. Printed card images and a
 | Dark Machoke (base5-40) | Drag Off auto-selects its sole legal Bench target before damage and switches it Active | test_classic_complex_attacks.js | Partial; multi-target and other interactions pending |
 
 
+| Poliwrath (base1-13, base4-15) | Base Set and Base Set 2 wording variants for Water Gun's typed cost, surplus Water damage and cap; Whirlpool damage/no-Energy case, equivalent Grass reprints, attacker choice for Basic Grass vs Recycle Energy and Recycle return | test_card_fidelity_poliwrath.js; card text compared with TCGdex, Bulbapedia, Limitless, and Pokéos | Partial; historical rulings and remaining interactions pending |
+
 The full card-by-card fidelity review is **not complete**. Do not count the other cards or untested branches of the cards above as verified. Existing Classic execution probing covers 427 attack records in a manufactured scenario; it checks execution, not correctness or all possible choices.

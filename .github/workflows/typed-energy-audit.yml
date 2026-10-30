@@ -11,6 +11,7 @@ on:
       - 'neo_attack_batch_v092.js'
       - 'test_typed_energy_discard_audit.js'
       - 'test_typed_energy_missing_icons.js'
+      - 'test_card_fidelity_poliwrath.js'
       - '.github/workflows/typed-energy-audit.yml'
   pull_request:
     paths:
@@ -22,6 +23,7 @@ on:
       - 'neo_attack_batch_v092.js'
       - 'test_typed_energy_discard_audit.js'
       - 'test_typed_energy_missing_icons.js'
+      - 'test_card_fidelity_poliwrath.js'
       - '.github/workflows/typed-energy-audit.yml'
 jobs:
   typed-costs:
@@ -40,3 +42,5 @@ jobs:
         run: node test_flamethrower_typed_discard.js
       - name: Regression for Neo conditional Energy scripts
         run: node test_neo_batch_v048.js
+      - name: Verify Poliwrath Water Gun and Whirlpool fidelity
+        run: node test_card_fidelity_poliwrath.js
