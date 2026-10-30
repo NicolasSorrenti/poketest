@@ -273,7 +273,18 @@ function planFinalAttack(g,side,attackIndex,program,plan={side,attackIndex,data:
  const energyOptions=(type=null)=>u.energies.flatMap((id,i)=>!type||attachedEnergyMatchesType(g,id,type)?[{id:`energy:${i}`,label:`${i+1}: ${card(g,id).name}`}]:[]);
  const benchOptions=(owner)=>owner.bench.map((x,i)=>({id:`bench:${i}`,label:publicName(g,x)}));
  const finish=()=>resolveAttack(g,side,attackIndex, data.target, data.energyPicks,{...data,finalApproved:true});
- if(['barrier','destiny-bond','third-eye','scavenge'].includes(kind)&&!data.energyPicks){
+ if(kind==='barrier'&&!data.energyPicks){
+  const psychicEnergy=energyOptions('Psychic');
+  if(!psychicEnergy.length)fail('Barrier requires a Psychic Energy card to discard');
+  const kinds=new Set(psychicEnergy.map(option=>u.energies[Number(option.id.slice(7))]));
+  if(kinds.size>1){
+   finalChoice(g,plan,'pay-energy',side,psychicEnergy,{label:'Barrier: choose a Psychic Energy card to discard'});return;
+  }
+  // Barrier's printed cost only permits Psychic Energy. Identical legal cards
+  // have the same outcome, so select one instead of showing a redundant picker.
+  data.energyPicks=[Number(psychicEnergy[0].id.slice(7))];
+ }
+ if(['destiny-bond','third-eye','scavenge'].includes(kind)&&!data.energyPicks){
   if(!u.energies.length)fail('An attached Energy is required for this attack');
   finalChoice(g,plan,'pay-energy',side,energyOptions(),{label:`${a.name}: choose an Energy to discard`});return;
  }
@@ -1452,7 +1463,7 @@ function resolveAttack(g,side,index,chosenBench,energyPicks,extra={}){
  if(FINAL_KINDS.has(program.kind)){
   if(['barrier','destiny-bond','scavenge','third-eye'].includes(program.kind)||['continuous-fireball','fireball','playing-with-fire'].includes(program.kind)&&extra.preRoll?.discardHeadCount){
    const quantity=['continuous-fireball','fireball','playing-with-fire'].includes(program.kind)?extra.preRoll.discardHeadCount:1;
-   if(!Array.isArray(energyPicks)||energyPicks.length!==quantity||new Set(energyPicks).size!==quantity||energyPicks.some(i=>!Number.isInteger(i)||i<0||i>=u.energies.length||['continuous-fireball','fireball','playing-with-fire'].includes(program.kind)&&!attachedEnergyMatchesType(g,u.energies[i],'Fire')))fail('Invalid final attack Energy selection');
+   if(!Array.isArray(energyPicks)||energyPicks.length!==quantity||new Set(energyPicks).size!==quantity||energyPicks.some(i=>!Number.isInteger(i)||i<0||i>=u.energies.length||['continuous-fireball','fireball','playing-with-fire'].includes(program.kind)&&!attachedEnergyMatchesType(g,u.energies[i],'Fire')||program.kind==='barrier'&&!attachedEnergyMatchesType(g,u.energies[i],'Psychic')))fail('Invalid final attack Energy selection');
   }
   if(program.kind==='fascinate'&&!f.bench.length)fail('Fascinate requires an opponent Bench');
   if(program.kind==='amnesia'||program.kind==='copy-attack'){
