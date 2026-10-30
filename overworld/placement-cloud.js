@@ -43,15 +43,15 @@
     if(authDialog)return authDialog;
     authDialog=document.createElement('dialog');
     authDialog.style.cssText='width:min(420px,calc(100vw - 28px));border:1px solid #a67bb0;border-radius:14px;background:#1d1930;color:#fff;padding:20px;font:14px system-ui;box-shadow:0 18px 55px #000b';
-    authDialog.innerHTML='<form method="dialog" style="display:flex;justify-content:space-between;align-items:center"><strong style="font-size:18px">Save overworld positions</strong><button value="cancel" aria-label="Close">✕</button></form><p id="owAuthMessage">Sign in with your cloud save account to save this map for the game.</p><label style="display:grid;gap:5px;margin:10px 0">Email<input id="owAuthEmail" type="email" autocomplete="email" required style="padding:10px;border-radius:8px"></label><label style="display:grid;gap:5px;margin:10px 0">Password<input id="owAuthPassword" type="password" autocomplete="current-password" required style="padding:10px;border-radius:8px"></label><div style="display:flex;gap:8px"><button id="owAuthSignIn" type="button">Sign in</button><button id="owAuthSignUp" type="button">Create account</button></div>';
+    authDialog.innerHTML='<form method="dialog" style="display:flex;justify-content:space-between;align-items:center"><strong style="font-size:18px">Save overworld positions</strong><button value="cancel" aria-label="Close">✕</button></form><p id="owAuthMessage">Sign in with your cloud save account to save this map for the game.</p><label style="display:grid;gap:5px;margin:10px 0">Email<input id="owAuthEmail" type="email" autocomplete="email" required style="padding:10px;border-radius:8px"></label><label style="display:grid;gap:5px;margin:10px 0">Password<input id="owAuthPassword" type="password" autocomplete="current-password" required style="padding:10px;border-radius:8px"></label><div style="display:flex;gap:8px"><button id="owAuthSignIn" type="button">Sign in</button></div>';
     document.body.append(authDialog);
-    const signIn=async mode=>{
+    const signIn=async()=>{
       const message=authDialog.querySelector('#owAuthMessage');
       const email=authDialog.querySelector('#owAuthEmail').value.trim(),password=authDialog.querySelector('#owAuthPassword').value;
       if(!email||!password){message.textContent='Enter your email and password.';return}
       const buttons=authDialog.querySelectorAll('button');buttons.forEach(b=>b.disabled=true);
       try{
-        const data=await authRequest(mode==='signup'?'/signup':'/token?grant_type=password',{email,password});
+        const data=await authRequest('/token?grant_type=password',{email,password});
         if(!data.access_token){message.textContent='Check your email to confirm the account, then sign in.';return}
         const c=await getConfig(),userResponse=await fetch(c.url+'/auth/v1/user',{headers:{apikey:c.key,Authorization:'Bearer '+data.access_token}});
         const user=await userResponse.json().catch(()=>null);
@@ -62,8 +62,7 @@
       }catch(error){message.textContent=String(error.message||error)}
       finally{buttons.forEach(b=>b.disabled=false)}
     };
-    authDialog.querySelector('#owAuthSignIn').onclick=()=>signIn('signin');
-    authDialog.querySelector('#owAuthSignUp').onclick=()=>signIn('signup');
+    authDialog.querySelector('#owAuthSignIn').onclick=()=>signIn();
     return authDialog;
   }
   async function requireSession(){
