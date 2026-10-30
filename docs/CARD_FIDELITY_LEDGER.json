@@ -411,13 +411,23 @@
      "kind": "attack",
      "index": 0,
      "name": "Thunder",
-     "status": "unreviewed"
+     "status": "partial",
+     "evidence": [
+      "test_card_fidelity_zapdos.js",
+      "Attack text compared with Limitless and Serebii; official Pokémon errata PDF searched with no Zapdos entry."
+     ],
+     "scope": "Heads/tails damage and tails recoil; self-KO Prize sequence; attack cost and damage in Classic for base1-16, Neo, online-preview 60-card and online-preview 40-card reducer configurations; base4-20 online-preview 60-card and 40-card. Historical rulings and client/network interactions pending."
     },
     {
      "kind": "attack",
      "index": 1,
      "name": "Thunderbolt",
-     "status": "unreviewed"
+     "status": "partial",
+     "evidence": [
+      "test_card_fidelity_zapdos.js",
+      "Attack text compared with Limitless and Serebii; official Pokémon errata PDF searched with no Zapdos entry."
+     ],
+     "scope": "Four-Lightning typed cost; 100 damage; discard all attached Energy without a card-choice prompt, including extra non-Lightning Energy; reject three Lightning plus Double Colorless; Classic for base1-16, Neo, online-preview 60-card and online-preview 40-card reducer configurations; base4-20 online-preview 60-card and 40-card. Historical rulings and client/network interactions pending."
     }
    ]
   },
@@ -4379,13 +4389,23 @@
      "kind": "attack",
      "index": 0,
      "name": "Thunder",
-     "status": "unreviewed"
+     "status": "partial",
+     "evidence": [
+      "test_card_fidelity_zapdos.js",
+      "Attack text compared with Limitless and Serebii; official Pokémon errata PDF searched with no Zapdos entry."
+     ],
+     "scope": "Heads/tails damage and tails recoil; self-KO Prize sequence; attack cost and damage in Classic for base1-16, Neo, online-preview 60-card and online-preview 40-card reducer configurations; base4-20 online-preview 60-card and 40-card. Historical rulings and client/network interactions pending."
     },
     {
      "kind": "attack",
      "index": 1,
      "name": "Thunderbolt",
-     "status": "unreviewed"
+     "status": "partial",
+     "evidence": [
+      "test_card_fidelity_zapdos.js",
+      "Attack text compared with Limitless and Serebii; official Pokémon errata PDF searched with no Zapdos entry."
+     ],
+     "scope": "Four-Lightning typed cost; 100 damage; discard all attached Energy without a card-choice prompt, including extra non-Lightning Energy; reject three Lightning plus Double Colorless; Classic for base1-16, Neo, online-preview 60-card and online-preview 40-card reducer configurations; base4-20 online-preview 60-card and 40-card. Historical rulings and client/network interactions pending."
     }
    ]
   },
