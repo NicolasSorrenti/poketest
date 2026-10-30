@@ -354,7 +354,7 @@ function prompt(g,plan,helpers){
   if(!chosen(d,'oldCard')){
    const bothHeads=d.rodFlips.every(Boolean),bothTails=d.rodFlips.every(x=>!x);
    const items=bothHeads?disc(p,c=>c.supertype==='Pokémon'):bothTails?disc(p,c=>c.supertype==='Trainer'):[];
-   if(items.length)return single('oldCard',side,items,'Old Rod: recover a card from discard',true);
+   if(items.length)return single('oldCard',side,items,'Old Rod: recover a card from discard');
    d.oldCard=[];
   }
  }
