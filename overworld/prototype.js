@@ -1,5 +1,5 @@
 'use strict';
-(() => {
+(async () => {
   const config=window.NeoOverworld, byId=id=>document.getElementById(id);
   const camera=byId('camera'), world=byId('world'), edges=byId('edges'), dialog=byId('dialog');
   const params=new URLSearchParams(location.search), poseTest=params.has('reina-test'), dev=params.has('dev');
@@ -9,9 +9,13 @@
     const characterIds=Object.keys(config.characters||{});
     const storageKey='neoOverworldPlacementEditorV1';
     const clone=value=>JSON.parse(JSON.stringify(value));
-    let saved={version:1,maps:{}};
+    let saved={version:1,maps:{}},cloudRevision=1;
     try{saved=JSON.parse(localStorage.getItem(storageKey)||'null')||saved}catch{}
+    const placementCloud=window.NeoOverworldPlacements;
+    const cloudState=await placementCloud?.load().catch(error=>{console.warn('Cloud placements unavailable',error);return null});
+    if(cloudState?.placements?.maps){saved={...saved,maps:{...(saved.maps||{}),...cloudState.placements.maps}};cloudRevision=cloudState.revision||1;}
     const draft=clone(saved), state={map:mapIds.includes(params.get('map'))?params.get('map'):(mapIds.includes('arcade')?'arcade':mapIds[0]),selected:null};
+    for(const [mapId,items] of Object.entries(draft.maps||{}))if(Array.isArray(items))draft.maps[mapId]=items.map(item=>{const art=config.characters?.[item.character]?.poses?.[item.pose];return {...item,id:item.id||('pose-'+Math.random().toString(36).slice(2)),src:item.src||art?.src||'',height:item.height||art?.height||155,facing:item.facing||art?.facing||'front',outfit:item.outfit||art?.outfit||null}});
     document.getElementById('shell')?.setAttribute('hidden','');
     document.body.classList.add('neo-placement-editor-open');
     const style=document.createElement('style');
@@ -48,7 +52,7 @@
     document.head.append(style);
     const root=document.createElement('main');root.id='neoPlacementEditor';
     const header=document.createElement('header');header.className='head';
-    const heading=document.createElement('div');heading.innerHTML='<h1>Overworld placement editor</h1><p>Drag poses onto each map, move them, resize them, save, then download the placement file.</p>';
+    const heading=document.createElement('div');heading.innerHTML='<h1>Overworld placement editor</h1><p>Drag poses onto maps, move and resize them, then save directly to the game.</p>';
     const actions=document.createElement('div');actions.className='actions';
     const back=document.createElement('a');back.href='overworld-prototype.html?cast-test=1';back.textContent='← Map preview';back.style.color='#e9d9f3';
     const saveBtn=document.createElement('button');saveBtn.textContent='Save';
@@ -82,6 +86,7 @@
     work.append(bar,stageWrap,status);layout.append(side,work);root.append(header,layout);document.body.append(root);
     function listForMap(){draft.maps[state.map] ||= [];return draft.maps[state.map]}
     function persist(message){localStorage.setItem(storageKey,JSON.stringify(draft));status.textContent=message||'Saved in this browser.'}
+    function cloudPayload(){const maps={};for(const [mapId,items] of Object.entries(draft.maps||{}))maps[mapId]=(items||[]).map(({character,pose,x,y,height,flipped})=>({character,pose,x,y,height,flipped:!!flipped}));return {schemaVersion:1,maps}}
     function renderTray(){
       tray.replaceChildren();
       const only=characterFilter.value;
@@ -144,7 +149,7 @@
     removeBtn.onclick=()=>{const list=listForMap(),index=list.findIndex(x=>x.id===state.selected);if(index<0)return;list.splice(index,1);state.selected=null;drawStage();persist('Removed selected pose.')};
     mapSelect.onchange=()=>{state.map=mapSelect.value;state.selected=null;drawStage();status.textContent='Editing '+(config[state.map].title||state.map)+'.'};
     characterFilter.onchange=renderTray;
-    saveBtn.onclick=()=>persist('Saved all map placements in this browser.');
+    saveBtn.onclick=async()=>{persist('Saved in this browser.');if(!placementCloud){status.textContent='Cloud placement service is unavailable.';return}saveBtn.disabled=true;status.textContent='Saving placements to the game…';try{const result=await placementCloud.save(cloudPayload(),cloudRevision);cloudRevision=result.revision;status.textContent='Saved '+Object.keys(draft.maps).length+' map(s) to the game.'}catch(error){status.textContent='Cloud save failed: '+error.message}finally{saveBtn.disabled=false}};
     clearMapBtn.onclick=()=>{draft.maps[state.map]=[];state.selected=null;drawStage();persist('Cleared placements for this map.')};
     downloadBtn.onclick=()=>{
       const maps={};
@@ -157,7 +162,7 @@
       status.textContent='Downloaded placements for '+Object.keys(maps).length+' map(s).';
     };
     addEventListener('resize',drawStage);
-    renderTray();drawStage();status.textContent='Loaded saved placements. Drag a pose onto the map to start.';
+    renderTray();drawStage();status.textContent=cloudState?'Loaded placements from the game.':'Loaded local placements. Drag a pose onto the map to start.';
     return;
   }
   // When the parent RPG shows VN dialogue, preserve the location as a backdrop
@@ -170,6 +175,8 @@
   });
   if(params.has('rpg-integration'))document.body.classList.add('neo-overworld-embedded');
   const shopTest=params.has('shop-test'),requestedScene=params.get('scene'),sceneId=config[requestedScene]?.image?requestedScene:(shopTest?'shop':'arcade'),map=config[sceneId];
+  let cloudPlacementState=null;
+  if(window.NeoOverworldPlacements)cloudPlacementState=await window.NeoOverworldPlacements.load().catch(error=>{console.warn('Cloud placements unavailable; using built-in map layout',error);return null});
   // Map-placement QA mode is explicit (?dev=1), never enabled during RPG play.
   // Copies layout data so artist adjustments never mutate shared engine state.
   const layoutDev=dev&&!params.has('rpg-integration');
@@ -223,6 +230,19 @@
     {id:'reina',anchor:'P1',pose:'standing',foot:{x:665,y:465},previewKey:'standing'},
     {id:'reina',anchor:'E1',pose:'arcade',foot:{x:245,y:430},previewKey:'arcade'}
   ] : map.blueprint ? [{id:'reina',anchor:'P1',pose:'standing'},{id:'yuna',anchor:'P2',pose:'standing'},{id:'barb',anchor:'P3',pose:'standing'}] : shopTest ? config.shopPreview : params.has('art-test') ? config.artPreview : params.has('cast-test') ? config.preview : config.preview.filter(p=>p.id==='reina');
+  const savedMapRecords=Array.isArray(cloudPlacementState?.placements?.maps?.[sceneId])?cloudPlacementState.placements.maps[sceneId]:[];
+  function fromSavedPlacement(item,anchor){
+    const id=String(item?.character||'');
+    if(!config.characters?.[id]||!Number.isFinite(Number(item.x))||!Number.isFinite(Number(item.y)))return null;
+    const poses=config.characters[id].poses||{},requested=String(item.pose||'standing'),poseKey=poses[requested]?requested:'standing';
+    const x=clamp(Number(item.x),0,map.width),y=clamp(Number(item.y),0,map.height);
+    const height=clamp(Number(item.height)||poses[poseKey]?.height||150,45,340);
+    return {id,anchor,pose:poseKey,foot:{x,y},height,flipped:!!item.flipped};
+  }
+  if(!params.has('rpg-integration')&&savedMapRecords.length&&!poseTest&&!params.has('art-test')){
+    const placed=savedMapRecords.map(item=>fromSavedPlacement(item)).filter(Boolean);
+    if(placed.length)placements.splice(0,placements.length,...placed);
+  }
   // Integrated mode displays only NPCs currently scheduled here by the RPG.
   // Reuse stable anchor slots and do not invent story encounters.
   if(params.has('rpg-integration')){
@@ -232,7 +252,7 @@
       const knownPose=!!config.characters?.[id]?.poses?.[requestedPose];
       return {id,pose:knownPose?requestedPose:'standing'};
     }).filter(Boolean);
-    placements.splice(0,placements.length,...castEntries.slice(0,8).map(({id,pose},i)=>({id,anchor:['P1','P2','P3','P4','E1','E2','E3','E4'][i],pose})));
+    placements.splice(0,placements.length,...castEntries.slice(0,8).map(({id,pose},i)=>{const anchor=['P1','P2','P3','P4','E1','E2','E3','E4'][i],saved=savedMapRecords.find(item=>item.character===id),custom=saved&&fromSavedPlacement(saved,anchor);return custom?{...custom,pose:custom.pose||pose}:{id,anchor,pose}}));
     const subtitle=document.querySelector('.title small');if(subtitle)subtitle.textContent='Live RPG schedule · placement preview';
   }
   if(dev){byId('guides').hidden=false;}
@@ -240,7 +260,7 @@
   const clamp=(v,a,b)=>Math.min(b,Math.max(a,v));
   const point=p=>p.foot||map.anchors[p.anchor];
   const person=p=>config.characters[p.id]||{name:p.id.replace(/(^|[_-])([a-z])/g,(_,sep,letter)=>' '+letter.toUpperCase()).trim(),face:'',poses:{}};
-  const pose=p=>person(p).poses?.[p.pose||'standing'];
+  const pose=p=>{const art=person(p).poses?.[p.pose||'standing'];return art&&Number.isFinite(p.height)?{...art,height:p.height}:art};
   const face=p=>person(p).face||'';
   const chibiMode=params.has('rpg-integration')&&params.get('chibi')==='1';
   const reinaChibi='/rpg-assets/characters/reina/chibi/front.png';
@@ -267,7 +287,7 @@
   function toast(message){const t=byId('toast');t.textContent=message;t.hidden=false;clearTimeout(toastTimer);toastTimer=setTimeout(()=>t.hidden=true,3500);}
   function openPerson(p){if(ignoreClick)return;if(params.has('rpg-integration')&&window.parent!==window){window.parent.postMessage({type:'neo-overworld-action',kind:'person',id:p.id},location.origin);return;}byId('dialogName').textContent=person(p).name+(p.previewKey?' · '+p.previewKey:'');const img=byId('dialogImg');img.src=face(p);img.alt=person(p).name;img.onerror=()=>img.hidden=true;img.hidden=false;dialog.hidden=false;byId('close').focus();}
   for(const p of placements){const pt=point(p),art=pose(p),b=document.createElement('button');b.className='anchor';b.style.left=pt.x+'px';b.style.top=pt.y+'px';b.dataset.character=p.id;b.dataset.pose=p.pose||'standing';b.dataset.foot=`${pt.x}, ${pt.y}`;b.title=`Interact with ${person(p).name}`;b.setAttribute('aria-label',b.title);
-    const img=document.createElement('img');img.className='sprite';img.alt='';if(chibiMode){loadChibi(img,p.id);b.style.setProperty('--sprite-height','130px');}else if(art){img.src=art.src;b.style.setProperty('--sprite-height',art.height+'px');}else{b.classList.add('missing');b.style.setProperty('--sprite-height','130px');}
+    const img=document.createElement('img');img.className='sprite';img.alt='';if(p.flipped)img.style.transform='scaleX(-1)';if(chibiMode){loadChibi(img,p.id);b.style.setProperty('--sprite-height','130px');}else if(art){img.src=art.src;b.style.setProperty('--sprite-height',(p.height||art.height)+'px');}else{b.classList.add('missing');b.style.setProperty('--sprite-height','130px');}
     if(!chibiMode)img.onerror=()=>{b.classList.add('missing');toast('Artwork not loading: '+person(p).name+' · '+(p.pose||'standing'));};const fallback=document.createElement('span');fallback.className='fallback';fallback.textContent=person(p).name[0];const name=document.createElement('span');name.className='name';name.textContent=person(p).name;b.append(img,fallback,name);b.onclick=()=>openPerson(p);world.appendChild(b);
   }
   for(const h of map.hotspots){const b=document.createElement('button');b.className='hotspot';b.dataset.hotspotId=h.id;
