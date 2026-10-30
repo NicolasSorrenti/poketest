@@ -16,7 +16,7 @@ function setup(pathname,search='',initial='0',withButton=true){
  const handlers={};
  const attributes={};
  const button=withButton?{
-  textContent:'',title:'',
+  textContent:'',title:'',dataset:{},
   addEventListener(type,fn){handlers[type]=fn;},
   setAttribute(name,value){attributes[name]=value;}
  }:null;
@@ -26,13 +26,15 @@ function setup(pathname,search='',initial='0',withButton=true){
   addEventListener:(event,listener)=>{events[event]=listener;}
  };
  const doc={documentElement:root,getElementById:id=>id==='rpgDiscreetToggle'?button:null};
- vm.runInNewContext(source,{window:win,document:doc,URLSearchParams});
+ // The actual browser supplies MutationObserver; do not trigger asynchronous DOM callbacks in this unit test.
+ vm.runInNewContext(source,{window:win,document:doc,URLSearchParams,MutationObserver:class{observe(){}}});
  events.DOMContentLoaded?.();
  return {root,button,attributes,handlers,events,values};
 }
 
 let page=setup('/rpg.html');
 assert.equal(page.root.dataset.rpgDiscreet,'off');
+assert.equal(page.button.dataset.rpgDiscreetBound,'1','RPG toggle is bound once on load');
 assert.equal(page.attributes['aria-pressed'],'false');
 page.handlers.click();
 assert.equal(page.root.dataset.rpgDiscreet,'on');
