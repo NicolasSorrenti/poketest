@@ -645,3 +645,33 @@ dialog.cg-lightbox{position:fixed;inset:0;width:100vw;max-width:none;height:100d
 #packDialog[open] .pack-reveal-actions button{
  position:relative;pointer-events:auto;
 }
+
+
+/* Activity and date choices reuse the character-action component beside the portrait. */
+.stage-panel{position:relative}
+.character-actions.choice-menu{
+ position:absolute;z-index:6;top:120px;left:20px;width:min(43%,470px);max-height:calc(100% - 145px);
+ overflow:auto;display:flex;flex-direction:column;align-items:stretch;justify-content:flex-start;gap:8px;
+ padding:16px;background:linear-gradient(145deg,#171426f2,#241a31ed);border:1px solid #b77ca6;
+ border-radius:13px;box-shadow:0 14px 36px #000b;text-align:left
+}
+.character-actions.choice-menu[hidden]{display:none!important}
+.character-menu-eyebrow{font:800 11px 'Barlow Condensed',sans-serif;letter-spacing:1.6px;color:#f5a9c4}
+.character-menu-title{font:900 22px 'Barlow Condensed',sans-serif;color:#fff0f5}
+.character-menu-description{margin:0 0 3px;color:#dfd2e5;font-size:13px;line-height:1.45}
+.character-menu-options{display:flex;flex-direction:column;gap:7px;min-height:0}
+.character-actions.choice-menu .character-action-btn{
+ width:100%;min-width:0;min-height:44px;justify-content:flex-start;text-align:left;padding:10px 13px;
+ color:#fff;background:#282238;border-color:#8f7199;border-radius:9px;line-height:1.35
+}
+.character-actions.choice-menu .character-action-btn:hover:not(:disabled),
+.character-actions.choice-menu .character-action-btn:focus-visible{background:#49304f;border-color:#edb0cf}
+.character-actions.choice-menu .character-action-btn:disabled{opacity:.55;cursor:not-allowed}
+.rpg-character-choice-menu .portrait{width:58%;right:0;bottom:140px}
+@media(max-width:700px){
+ .character-actions.choice-menu{top:94px;left:9px;width:min(61%,390px);max-height:calc(100% - 110px);padding:10px;gap:6px}
+ .character-menu-title{font-size:19px}
+ .character-menu-description{font-size:11px}
+ .character-actions.choice-menu .character-action-btn{min-height:39px;padding:8px 9px;font-size:12px}
+ .rpg-character-choice-menu .portrait{width:72%;right:-5%;bottom:150px}
+}
