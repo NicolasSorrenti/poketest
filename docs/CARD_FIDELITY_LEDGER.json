@@ -325,13 +325,21 @@
      "kind": "attack",
      "index": 0,
      "name": "Water Gun",
-     "status": "unreviewed"
+     "status": "partial",
+     "evidence": [
+      "test_card_fidelity_poliwrath.js"
+     ],
+     "scope": "Compare the exact Base Set text; verify the two-Water cost, surplus Water damage, 20-damage bonus cap, exclusion of non-Water surplus and rejection of an invalid typed cost. Shared reducer scenarios in Classic, Neo, online-preview and 40-card Cube; historical ruling and interaction review pending."
     },
     {
      "kind": "attack",
      "index": 1,
      "name": "Whirlpool",
-     "status": "unreviewed"
+     "status": "partial",
+     "evidence": [
+      "test_card_fidelity_poliwrath.js"
+     ],
+     "scope": "Compare the Base Set text; verify 40 damage with no opposing Energy, automatic discard of a sole card and equivalent Grass reprints, attacker-owned choice when Recycle Energy is a distinct outcome, and Recycle Energy returning to its owner's hand. Shared reducer scenarios in Classic, Neo, online-preview and 40-card Cube; historical ruling and remaining interaction review pending."
     }
    ]
   },
