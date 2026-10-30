@@ -75,5 +75,7 @@ These scenarios use the TCGdex-sourced catalogue text. Printed card images and a
 
 
 | Poliwrath (base1-13, base4-15) | Base Set and Base Set 2 wording variants for Water Gun's typed cost, surplus Water damage and cap; Whirlpool damage/no-Energy case, equivalent Grass reprints, attacker choice for Basic Grass vs Recycle Energy and Recycle return | test_card_fidelity_poliwrath.js; card text compared with TCGdex, Bulbapedia, Limitless, and Pokéos | Partial; historical rulings and remaining interactions pending |
+| Raichu (base1-14) | Agility heads/tails, full attack protection timing and expiry; Thunder heads/tails, self-damage, self-KO and Prize flow | test_card_fidelity_raichu.js; printed text compared with Limitless/Bulbapedia; official errata index checked with no Raichu entry | Partial; broader historical rulings and other interactions pending |
+| Raichu (base4-16) | Base Set 2 Agility/Thunder wording, protection timing, coin outcomes, recoil, self-KO and Prize flow | test_card_fidelity_raichu.js; Base Set 2 text compared with Limitless; official errata index checked with no Raichu entry | Partial; broader historical rulings and other interactions pending |
 
 The full card-by-card fidelity review is **not complete**. Do not count the other cards or untested branches of the cards above as verified. Existing Classic execution probing covers 427 attack records in a manufactured scenario; it checks execution, not correctness or all possible choices.
