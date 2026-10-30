@@ -1086,7 +1086,8 @@
           }
         }
       ],
-      "artPending": false
+      "artPending": false,
+      "image": "/rpg-assets/characters/jicy/events/jicy_random_unsent_message.webp"
     },
     {
       "id": "jicy_random_arcade_hum",
@@ -1163,7 +1164,8 @@
           }
         }
       ],
-      "artPending": false
+      "artPending": false,
+      "image": "/rpg-assets/characters/jicy/events/jicy_random_arcade_hum.webp"
     }
   ]
 }

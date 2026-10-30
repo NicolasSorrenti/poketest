@@ -131,6 +131,16 @@
           "prompt": "Use approved Jicy design. Jicy sits down for a friendly match against a tournament opponent. Preserve her adult proportions, blonde high ponytail, and canonical sleeveless pink suit."
         }
       ]
+    },
+    {
+      "sceneId": "jicy_random_unsent_message",
+      "path": "/rpg-assets/characters/jicy/events/jicy_random_unsent_message.webp",
+      "prompt": "Cafe CG: Jicy shyly shows the player the unsent invitation message on her phone. Preserve her adult blonde design and exact canonical sleeveless hot-pink combat suit, charcoal under-bust band, and armhole shape. 3/4 front angle, bashful expression."
+    },
+    {
+      "sceneId": "jicy_random_arcade_hum",
+      "path": "/rpg-assets/characters/jicy/events/jicy_random_arcade_hum.webp",
+      "prompt": "Arcade CG: Jicy hums a tune, then laughs when she notices the player. Preserve her adult blonde design and exact canonical sleeveless hot-pink combat suit, charcoal under-bust band, and armhole shape. Side/rear 3/4 angle, cheerful expression."
     }
   ]
 }
