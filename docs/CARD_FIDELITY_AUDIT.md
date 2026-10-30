@@ -47,4 +47,6 @@ These scenarios use the TCGdex-sourced catalogue text. Printed card images and a
 
 | Nidoking (base1-11) | Toxic replaces ordinary poison, deals 20 at consecutive checkups and logs the actual damage | test_card_fidelity_nidoking.js | Partial; other interactions and independent print/ruling review pending |
 
+| Machamp (base1-8) | Seismic Toss cost and Strikes Back knockout timing/status restrictions | test_card_fidelity_machamp.js | Partial; independent print/ruling review and remaining interactions pending |
+
 The full card-by-card fidelity review is **not complete**. Do not count the other cards or untested branches of the cards above as verified. Existing Classic execution probing covers 427 attack records in a manufactured scenario; it checks execution, not correctness or all possible choices.
