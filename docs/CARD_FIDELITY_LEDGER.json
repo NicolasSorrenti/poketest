@@ -57,13 +57,21 @@
      "kind": "attack",
      "index": 0,
      "name": "Scrunch",
-     "status": "unreviewed"
+     "status": "partial",
+     "evidence": [
+      "test_card_fidelity_base_batch02.js"
+     ],
+     "scope": "Heads/tails damage prevention and surviving Bubblebeam paralysis during opponent's next turn; Classic, Neo, online-preview and 40-card Cube reducer scenarios. Catalogue text compared; independent printed-card and historical ruling review pending."
     },
     {
      "kind": "attack",
      "index": 1,
      "name": "Double-edge",
-     "status": "unreviewed"
+     "status": "partial",
+     "evidence": [
+      "test_card_fidelity_base_batch02.js"
+     ],
+     "scope": "80 damage to each Active with no weakness or resistance; Classic, Neo, online-preview and 40-card Cube reducer scenarios. Catalogue text compared; independent printed-card and historical ruling review pending."
     }
    ]
   },
@@ -76,13 +84,21 @@
      "kind": "attack",
      "index": 0,
      "name": "Fire Spin",
-     "status": "unreviewed"
+     "status": "partial",
+     "evidence": [
+      "test_card_fidelity_base_batch02.js"
+     ],
+     "scope": "Four Fire requirement; attacker chooses two attached cards and mixed Fire/Grass discard after Energy Burn; Classic, Neo, online-preview and 40-card Cube reducer scenarios. Catalogue text compared; independent printed-card and historical ruling review pending."
     },
     {
      "kind": "power",
      "index": 0,
      "name": "Energy Burn",
-     "status": "unreviewed"
+     "status": "partial",
+     "evidence": [
+      "test_card_fidelity_base_batch02.js"
+     ],
+     "scope": "Converts Grass to Fire for Fire Spin, expires after attack, rejects activation while Asleep, Confused or Paralyzed; Classic, Neo, online-preview and 40-card Cube reducer scenarios. Catalogue text compared; independent printed-card and historical ruling review pending."
     }
    ]
   },
@@ -114,13 +130,21 @@
      "kind": "attack",
      "index": 0,
      "name": "Dragon Rage",
-     "status": "unreviewed"
+     "status": "partial",
+     "evidence": [
+      "test_card_fidelity_base_batch02.js"
+     ],
+     "scope": "50 damage and Water cost with an unmodified target; Classic, Neo, online-preview and 40-card Cube reducer scenarios. Catalogue text compared; independent printed-card and historical ruling review pending."
     },
     {
      "kind": "attack",
      "index": 1,
      "name": "Bubblebeam",
-     "status": "unreviewed"
+     "status": "partial",
+     "evidence": [
+      "test_card_fidelity_base_batch02.js"
+     ],
+     "scope": "40 damage, four-Water requirement, heads/tails paralysis outcomes; Classic, Neo, online-preview and 40-card Cube reducer scenarios. Catalogue text compared; independent printed-card and historical ruling review pending."
     }
    ]
   },
