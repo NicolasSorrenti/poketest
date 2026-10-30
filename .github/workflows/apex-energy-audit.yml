@@ -3,6 +3,11 @@ on:
   pull_request:
     paths:
       - 'cpu_policy.js'
+      - 'headless_duel.js'
+      - 'classic_trainer_core.js'
+      - 'classic_power_core.js'
+      - 'core_rules.js'
+      - 'attack_effects_core.js'
       - 'cpu_lookahead.js'
       - 'cpu_strategic_search.js'
       - 'cpu_decision_audit.js'
@@ -27,6 +32,11 @@ on:
       - main
     paths:
       - 'cpu_policy.js'
+      - 'headless_duel.js'
+      - 'classic_trainer_core.js'
+      - 'classic_power_core.js'
+      - 'core_rules.js'
+      - 'attack_effects_core.js'
       - 'cpu_lookahead.js'
       - 'cpu_strategic_search.js'
       - 'cpu_decision_audit.js'
