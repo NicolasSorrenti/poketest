@@ -49,13 +49,15 @@ for(const [id,kind] of [['base5-4','continuous-fireball'],['base5-21','continuou
  assert.equal(ATTACK.compile(a)?.kind,kind);
  for(const seed of [0x80000000,0xffffffff,0x70000000,0x90000000,0xffff0000,0x75000000,0x12345678,0x87654321,0,1,2]){
   const g=game(id,[F,F,F,G],seed);
-  const d=attack(g,name);
+  let d=attack(g,name);
+  if(d?.kind==='prize-card'){valid(g,['prize:0']);d=g.pendingDecision;}
   assert.equal(d,null,id+' should auto-discard identical Fire Energy cards');
   const flipCount=kind==='continuous-fireball'?3:1;
   const heads=g.coinFlips.slice(-flipCount).filter(x=>x.result==='heads').length;
   const discarded=kind==='continuous-fireball'?heads:Number(heads>0);
   const damage=kind==='continuous-fireball'?50*heads:kind==='fireball'?(heads?70:0):(heads?50:30);
-  assert.equal(g.players[1].active.damage,damage,id+' damage did not match coin result');
+  if(damage>=Number(CATALOG.get('base1-3').hp))assert.equal(g.players[1].active,null,id+' should knock out the defending Pokémon');
+  else assert.equal(g.players[1].active.damage,damage,id+' damage did not match coin result');
   assert.equal(g.players[0].discard.filter(cardId=>cardId===F).length,discarded,id+' discarded wrong number of Fire Energy cards');
   if(discarded)assert.ok(g.message.some(line=>line.includes('discarded')&&line.includes('Fire Energy')),id+' must notify about discarded Energy');
  }
