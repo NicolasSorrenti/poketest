@@ -54,6 +54,18 @@ These scenarios use the TCGdex-sourced catalogue text. Printed card images and a
 | Ninetales (base1-12) | Fire Blast auto-discards identical Fire cards; preserves choice between Basic Fire and Rainbow Energy | test_typed_energy_discard_audit.js | Partial; Lure and other Fire Blast interactions pending |
 | Light Flareon (neo4-46) | Burning Flame heads, damage, mandatory Fire discard count, equivalent-choice auto-resolution and discard notification | test_typed_energy_discard_audit.js | Partial; other interactions and print/ruling review pending |
 | Shining Mewtwo (neo4-109) | Psyburst automatic Fire Energy discard among identical cards, preservation of other Energy and discard notification | test_typed_energy_discard_audit.js | Partial; Reflect Shield and other interactions pending |
+| Charmander (base1-46) | Ember's typed Fire discard auto-resolves identical Energy | test_typed_energy_discard_audit.js | Partial; other attack and interactions pending |
+| Ninetales (base4-13) | Fire Blast auto-discards equivalent Basic Fire reprints; Rainbow Energy remains selectable | test_typed_energy_discard_audit.js | Partial; Lure and other interactions pending |
+| Charmander (base4-69) | Ember's typed Fire discard auto-resolves identical Energy | test_typed_energy_discard_audit.js | Partial; other attack and interactions pending |
+| Ponyta (base5-64) | Ember's typed Fire discard auto-resolves identical Energy | test_typed_energy_discard_audit.js | Partial; other interactions pending |
+| Quilava (neo1-46) | Ember's typed Fire discard auto-resolves identical Energy | test_typed_energy_discard_audit.js | Partial; Fire Wind and other interactions pending |
+| Light Ninetales (neo4-50) | Fire Blast auto-discards equivalent Fire Energy | test_typed_energy_discard_audit.js | Partial; Guiding Flame and other interactions pending |
+| Vulpix (neo4-91) | Ember's typed Fire discard auto-resolves identical Energy | test_typed_energy_discard_audit.js | Partial; other interactions pending |
+| Entei (neo3-6) | Searing Flames requires two Fire Energy cards; identical choices auto-resolve | test_typed_energy_missing_icons.js | Partial; other interactions pending |
+| Dark Charizard (base5-4, base5-21) | Continuous Fireball coin outcomes, damage, head-count discard, knockout/Prize flow and equivalent Energy auto-resolution | test_typed_energy_missing_icons.js | Partial; other interactions pending |
+| Dark Charmeleon (base5-32) | Fireball tails/heads behavior, equivalent discard auto-resolution and Rainbow Energy choice | test_typed_energy_missing_icons.js | Partial; other interactions pending |
+| Dark Flareon (base5-35) | Playing with Fire coin outcomes, damage and equivalent Fire discard | test_typed_energy_missing_icons.js | Partial; other interactions pending |
+| Typhlosion (neo1-18) | Flame Wheel's three-Fire requirement and equivalent discard auto-resolution | test_typed_energy_missing_icons.js | Partial; bench damage and other interactions pending |
 
 
 The full card-by-card fidelity review is **not complete**. Do not count the other cards or untested branches of the cards above as verified. Existing Classic execution probing covers 427 attack records in a manufactured scenario; it checks execution, not correctness or all possible choices.
