@@ -379,7 +379,10 @@ function candidates(o,cfg,used){
    // Exclude Energy placements that the authoritative reducer rejects.
    // Otherwise the Apex attack-ordering guard may suppress a legal attack
    // in favor of a completely impossible attachment.
+   // Rainbow Energy immediately places one damage counter on its host.
+   // Apex must not offer a self-KO as an Energy development action.
    if(target&&!(target.energyAttachBlockSerial>o.turnSerial)&&
+      !(cfg.level===8&&c.name==='Rainbow Energy'&&hpRemaining(target)<=10)&&
       legalAttachment({card:c,unit:target,round:o.round,energyUsed:p.energyUsed,
        cardName:card(target.id)?.name||''}))
     options.push(command('attach_energy',{handIndex:i,slot}));
