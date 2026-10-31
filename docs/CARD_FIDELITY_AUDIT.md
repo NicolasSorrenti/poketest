@@ -287,3 +287,12 @@ The regression compares Base Set and Base Set 2 printings and exercises Classic,
 | Stun Spore (base1-54, base4-81) | Two-Grass cost, fixed 20 damage, both coin outcomes, heads applies Paralysis and replaces Confusion | Same test; same print references; [official errata index](https://play.pokemon.com/en-ca/resources/documents/tcg-errata/) has no Metapod entry | Partial |
 
 The regression compares the two printings in Classic, Neo-theme, and online-preview 60/40. It verifies Stiffen's shield through exactly one opponent turn, damage prevention on heads versus tails, and that the printed non-damage attack effect still applies while shielded. Stun Spore's 20 damage occurs on both results; heads Paralyzes and replaces Confusion. Invalid typed costs leave state unchanged. Poison checkup under Stiffen, evolution, additional attack interactions, and browser/network behavior remain unchecked.
+
+
+## Nidoran♂ (Base Set #55 and Base Set 2 #83)
+
+| Effect | Scope checked | Evidence | Status |
+| --- | --- | --- | --- |
+| Horn Hazard (base1-55, base4-83) | One Grass cost; 30 damage on heads, no damage on tails; Energy retained; invalid payments rejected atomically | `test_card_fidelity_nidoran_male.js` (30 reducer scenarios); [Serebii Base #55](https://www.serebii.net/card/base/055.shtml); [Bulbapedia Base #55/#83](https://bulbapedia.bulbagarden.net/wiki/Nidoran%E2%99%82_%28Base_Set_55%29); [official errata index](https://play.pokemon.com/en-ca/resources/documents/tcg-errata/) | Partial; other interactions remain unreviewed |
+
+The test compares the two printings and runs Classic, Neo-theme, and online-preview 60/40 configurations. It exercises both coin outcomes, verifies tails does nothing while the attack still resolves, checks the Grass requirement and retained Energy, and confirms Colorless-only or missing payment is rejected without mutation. Official errata search found no Nidoran♂ entry. Other damage modifiers and browser/network behavior remain unchecked.
