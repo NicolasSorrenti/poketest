@@ -1721,7 +1721,12 @@
      "kind": "attack",
      "index": 0,
      "name": "Tackle",
-     "status": "unreviewed"
+     "status": "partial",
+     "evidence": [
+      "test_card_fidelity_voltorb.js: 42 reducer scenarios across Classic, Neo-theme, online-preview 60-card and 40-card configurations; both printings, Colorless payment from basic Energy and Double Colorless, Lightning Resistance clamp to zero against Sandshrew, Fighting Weakness and Defender ordering, and underpayment rejection.",
+      "Printed text/cost and 40 HP/Lightning type/Fighting Weakness/no Resistance/one-Colorless Retreat checked against Serebii Base #67 and Base Set 2 #98; Base #67 also checked against TCGdex. No Voltorb-specific historical ruling or erratum found in searched sources."
+     ],
+     "scope": "Tackle: one Colorless, 10 damage, accepts a basic Energy or Double Colorless; tested attacking into Lightning Resistance and receiving Fighting Weakness with Defender after Weakness. Other interactions, retreat and client/network integration remain unreviewed."
     }
    ]
   },
@@ -6598,7 +6603,12 @@
      "kind": "attack",
      "index": 0,
      "name": "Tackle",
-     "status": "unreviewed"
+     "status": "partial",
+     "evidence": [
+      "test_card_fidelity_voltorb.js: 42 reducer scenarios across Classic, Neo-theme, online-preview 60-card and 40-card configurations; both printings, Colorless payment from basic Energy and Double Colorless, Lightning Resistance clamp to zero against Sandshrew, Fighting Weakness and Defender ordering, and underpayment rejection.",
+      "Printed text/cost and 40 HP/Lightning type/Fighting Weakness/no Resistance/one-Colorless Retreat checked against Serebii Base #67 and Base Set 2 #98; Base #67 also checked against TCGdex. No Voltorb-specific historical ruling or erratum found in searched sources."
+     ],
+     "scope": "Tackle: one Colorless, 10 damage, accepts a basic Energy or Double Colorless; tested attacking into Lightning Resistance and receiving Fighting Weakness with Defender after Weakness. Other interactions, retreat and client/network integration remain unreviewed."
     }
    ]
   },
