@@ -1136,7 +1136,11 @@
      "kind": "attack",
      "index": 0,
      "name": "Psyshock",
-     "status": "unreviewed"
+     "status": "partial",
+     "evidence": [
+      "test_card_fidelity_abra.js: Psychic-only payment, atomic rejection of Water, heads/tails Paralysis, 10 damage, Psychic Weakness, and Base/Base Set 2 parity across six formats.",
+      "Printed Psyshock cost/text compared with TCGplayer, Limitless, and Serebii listings; official Pokémon TCG errata PDF searched, no Abra match. Base Set data discrepancy corrected in cards/base1.json."
+     ]
     }
    ]
   },
@@ -5657,7 +5661,11 @@
      "kind": "attack",
      "index": 0,
      "name": "Psyshock",
-     "status": "unreviewed"
+     "status": "partial",
+     "evidence": [
+      "test_card_fidelity_abra.js: Psychic-only payment, atomic rejection of Water, heads/tails Paralysis, 10 damage, Psychic Weakness, and Base/Base Set 2 parity across six formats.",
+      "Printed Psyshock cost/text compared with TCGplayer, Limitless, and Serebii listings; official Pokémon TCG errata PDF searched, no Abra match. Base Set data discrepancy corrected in cards/base1.json."
+     ]
     }
    ]
   },
