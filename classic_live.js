@@ -425,7 +425,7 @@
     const hint=document.createElement('small');hint.textContent=d.max===1?'Tap an outlined Pokémon to choose.':`Tap ${d.min}–${d.max} outlined Pokémon · ${decisionSelection.size} selected`;
     text.append(heading,hint);bar.append(text);
     if(d.max>1){bar.append(btn('Confirm selection',()=>send(command('choose',{decisionId:d.id,selected:[...decisionSelection]})),'primary',decisionSelection.size<d.min||decisionSelection.size>d.max));}
-    if(d.optional)bar.append(btn(/^(Damage Swap|Energy Trans): choose source or Finish$/.test(d.label)?'Finish Pokémon Power':'Decline',()=>send(command('choose',{decisionId:d.id,decline:true})),'secondary'));
+    if(d.optional)bar.append(btn(/^(Damage Swap|Energy Trans): choose source or Finish$|^Rain Dance: choose Water Pokémon or Finish$/.test(d.label)?'Finish Pokémon Power':'Decline',()=>send(command('choose',{decisionId:d.id,decline:true})),'secondary'));
     if(d.cancelable)bar.append(btn('↶ Cancel card',()=>send(command('cancel_choice',{decisionId:d.id})),'secondary'));
     return;
    }
@@ -512,7 +512,7 @@
   shared.renderAttacks({root:$('attacks'),unit:you.active,view:v,me:0,getCard:card,enabled:attackEnabled,button:btn,onAttack:index=>send(command('attack',{attackIndex:index})),attackReason:presentation.attackReason});
   $('mobileAttacksToggle').disabled=!you.active||v.over||v.phase!=='game';
   if(v.phase==='game'&&!v.over&&yourTurn&&!v.pendingDecision&&you.active){
-   [you.active,...you.bench].forEach((u,i)=>{if(u?.secretPlanFaceDown){$('powers').append(btn(`🎴 Reveal Secret Plan (${i===0?'Active':'Bench '+i})`,()=>send(command('reveal_secret',{slot:i-1}))));return;}const c=card(u.id);(c.abilities||[]).forEach(a=>{if(a.name)$('powers').append(btn(`✦ ${a.name} (${i===0?'Active':'Bench '+i})`,()=>send(command('use_power',{slot:i-1,repeat:['Damage Swap','Energy Trans'].includes(a.name)}))));});});
+   [you.active,...you.bench].forEach((u,i)=>{if(u?.secretPlanFaceDown){$('powers').append(btn(`🎴 Reveal Secret Plan (${i===0?'Active':'Bench '+i})`,()=>send(command('reveal_secret',{slot:i-1}))));return;}const c=card(u.id);(c.abilities||[]).forEach(a=>{if(a.name)$('powers').append(btn(`✦ ${a.name} (${i===0?'Active':'Bench '+i})`,()=>send(command('use_power',{slot:i-1,repeat:['Damage Swap','Energy Trans','Rain Dance'].includes(a.name)}))));});});
   }
   const actionsDisabled=!yourTurn||v.phase!=='game'||!!v.pendingDecision||v.over;
   $('retreatBtn').disabled=actionsDisabled||!you.bench.length;
