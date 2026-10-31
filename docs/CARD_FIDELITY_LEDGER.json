@@ -1551,13 +1551,23 @@
      "kind": "attack",
      "index": 0,
      "name": "Smash Kick",
-     "status": "unreviewed"
+     "status": "partial",
+     "evidence": [
+      "test_card_fidelity_ponyta.js",
+      "Printed stats and attacks compared with Serebii Base #60, Bulbapedia, and Limitless; official Pokémon TCG errata index searched, no Ponyta entry."
+     ],
+     "scope": "Smash Kick's two-Colorless payment (including Double Colorless Energy), fixed 20 damage with surplus Energy, Fire-type Weakness application, and Defender ordering; 41 total reducer scenarios for both attacks across Classic, Neo-theme and online-preview 60/40-card configurations. Browser/network and remaining interactions unreviewed."
     },
     {
      "kind": "attack",
      "index": 1,
      "name": "Flame Tail",
-     "status": "unreviewed"
+     "status": "partial",
+     "evidence": [
+      "test_card_fidelity_ponyta.js",
+      "Printed stats and attacks compared with Serebii Base #60, Bulbapedia, and Limitless; official Pokémon TCG errata index searched, no Ponyta entry."
+     ],
+     "scope": "Flame Tail's two-Fire payment, rejection of wrong or insufficient Energy, fixed 30 damage with surplus Energy, Fire-type Weakness application, and Defender ordering; 41 total reducer scenarios for both attacks across Classic, Neo-theme and online-preview 60/40-card configurations. Browser/network and remaining interactions unreviewed."
     }
    ]
   },
