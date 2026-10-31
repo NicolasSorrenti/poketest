@@ -38,3 +38,19 @@ test('Apex keeps nonlethal Rainbow Energy attachments and lower-level behavior',
  assert.ok(lower.some(([i,s])=>i===0&&s===-1),
   'the change is intentionally scoped to Apex');
 });
+
+test('tactical combo projection cannot score a Rainbow self-KO as an attack setup',()=>{
+ const cfg=AI.configuration({side:1,level:8,planning:true});
+ for(const rainbow of rainbows){
+  const makeObservation=damage=>({
+   phase:'game',turn:1,round:5,turnSerial:9,
+   self:{active:unit('base1-52',damage),bench:[],hand:[rainbow],energyUsed:false},
+   opponent:{active:unit('base1-52',0),bench:[]}
+  });
+  const attach={type:'attach_energy',payload:{handIndex:0,slot:-1}};
+  assert.equal(AI.planningBonus(attach,makeObservation(40),cfg),0,
+   rainbow+' must not gain projected attack value by knocking out its host');
+  assert.ok(AI.planningBonus(attach,makeObservation(39),cfg)>0,
+   rainbow+' should still receive a legitimate nonlethal one-Energy attack projection');
+ }
+});
