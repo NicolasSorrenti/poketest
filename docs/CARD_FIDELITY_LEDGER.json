@@ -1979,7 +1979,12 @@
       "effects": [
         {
           "kind": "trainer",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "test_card_fidelity_pokemon_center.js: six reducer scenarios across Base Classic and Base Set 2 online-preview; forced global healing of damaged Active/Bench Pokémon, Energy discard only from affected Pokémon, preservation of Energies on undamaged Pokémon, opponent isolation, damaged Pokémon with no Energy, no chooser, and Recycle Energy returning to hand.",
+            "Printed text compared across Base #85 and Base Set 2 #114 using Serebii and TCGdex catalogue records; WotC Nintendo Player's Guide card entry checked. Current official errata PDF search found no Pokémon Center erratum. Other status/ability and client/network interactions remain unreviewed."
+          ],
+          "scope": "Six reducer scenarios: both printings; every damaged own Active/Bench Pokémon is healed without choice, all attached Energy from affected units is removed, undamaged own and all opposing Pokémon keep damage/Energy, damaged Pokémon with no Energy is still healed, and a discarded Recycle Energy returns to hand under its own text. Partial only."
         }
       ]
     },
@@ -6877,7 +6882,12 @@
       "effects": [
         {
           "kind": "trainer",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "test_card_fidelity_pokemon_center.js: six reducer scenarios across Base Classic and Base Set 2 online-preview; forced global healing of damaged Active/Bench Pokémon, Energy discard only from affected Pokémon, preservation of Energies on undamaged Pokémon, opponent isolation, damaged Pokémon with no Energy, no chooser, and Recycle Energy returning to hand.",
+            "Printed text compared across Base #85 and Base Set 2 #114 using Serebii and TCGdex catalogue records; WotC Nintendo Player's Guide card entry checked. Current official errata PDF search found no Pokémon Center erratum. Other status/ability and client/network interactions remain unreviewed."
+          ],
+          "scope": "Six reducer scenarios: both printings; every damaged own Active/Bench Pokémon is healed without choice, all attached Energy from affected units is removed, undamaged own and all opposing Pokémon keep damage/Energy, damaged Pokémon with no Energy is still healed, and a discarded Recycle Energy returns to hand under its own text. Partial only."
         }
       ]
     },
