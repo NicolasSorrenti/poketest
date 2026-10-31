@@ -18,7 +18,8 @@ const images={
  nereo:'rpg-assets/characters/nereo/dialogue/neutral.png',
  elio:'rpg-assets/characters/elio/dialogue/neutral.png',
  shiori:'rpg-assets/characters/shiori/dialogue/neutral.png',
- marina:'rpg-assets/characters/marina/dialogue/neutral.png'
+ marina:'rpg-assets/characters/marina/dialogue/neutral.png',
+ kaede:'rpg-assets/characters/kaede/dialogue/neutral.png'
 };
 test('approved masters are existing binary files; Iris copy is unmodified',()=>{
  for(const [id,p] of Object.entries(images)){
@@ -98,5 +99,18 @@ test('Marina approved dialogue PNG retains its exact uploaded bytes and registra
  assert.equal(bytes.readUInt32BE(16),1024);
  assert.equal(bytes.readUInt32BE(20),1536);
  assert.ok(rpg.includes("marina:'/rpg-assets/characters/marina/dialogue/neutral.png'"));
+ assert.ok(world.includes('/'+approved));
+});
+
+
+test('Kaede approved dialogue image is the exact transparent PNG uploaded by the creator',()=>{
+ const approved='rpg-assets/characters/kaede/dialogue/neutral.png';
+ const bytes=fs.readFileSync(path.join(root,approved));
+ assert.equal(crypto.createHash('sha256').update(bytes).digest('hex'),
+  '79eb36864a8a3cfd61b6cedf30d08f87d241ade59933827e2d470fac4b9726b1');
+ assert.deepEqual([...bytes.subarray(0,8)],[137,80,78,71,13,10,26,10]);
+ assert.equal(bytes.readUInt32BE(16),1086);
+ assert.equal(bytes.readUInt32BE(20),1448);
+ assert.ok(rpg.includes("kaede:'/rpg-assets/characters/kaede/dialogue/neutral.png'"));
  assert.ok(world.includes('/'+approved));
 });

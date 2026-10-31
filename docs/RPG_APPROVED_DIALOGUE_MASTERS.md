@@ -13,7 +13,10 @@ The game uses **existing, approved full-body images** and crops only in its RPG 
 | Nereo | `rpg-assets/characters/nereo/dialogue/neutral.png` (byte-identical copy of `standing-front.png` in Nereo's root folder) | Original expression portraits |
 | Elio | `rpg-assets/characters/elio/dialogue/neutral.png` (byte-identical copy of Elio's `standing-front.png`) | Original expression portraits |
 | Shiori | `rpg-assets/characters/shiori/dialogue/neutral.png` (byte-identical reuse of `overworld/standing-book.png`) | Original expression portraits |
+| Kaede | `rpg-assets/characters/kaede/dialogue/neutral.png` (creator-approved front-facing transparent PNG, original bytes preserved) | Original expression portraits |
 | Marina | `rpg-assets/characters/marina/dialogue/neutral.png` (creator-approved transparent full-body art with ripped denim mini shorts; original uploaded PNG bytes unchanged) | Original expression portraits |
+
+Kaede's dialogue artwork was integrated using the previously creator-approved front-facing transparent PNG, with the original PNG bytes and alpha preserved; the existing route registered in PR #299 now resolves to this file. 
 
 Jun's source is the already-committed front standing PNG in his character folder, not a newly generated picture or a copy.
 
@@ -23,6 +26,6 @@ The source selection is in `rpg.js`; the viewport rule for the standalone overwo
 
 **Visual QA still required:** inspect desktop and mobile conversations for each character, verify waist crop height and expression transitions; test Barb's special-day art and Discreet Mode. Do not presume code crop replaces transparent source artwork.
 
-**Not yet integrated:** Hana/Rina/Kaede/Yuna/Akari/Laca/Daisy/Jinx/etc approved images created in chat that do not have an identified, verified repository asset. Do not substitute images or overwrite their approved originals.
+**Not yet integrated:** Hana/Rina/Yuna/Akari/Laca/Daisy/Jinx/etc approved images created in chat that do not have an identified, verified repository asset. Do not substitute images or overwrite their approved originals.
 
 Historical PR #216 applied square crop assumptions to Marina/Laca before the master-image direction was agreed; it should be superseded, not merged unmodified.
