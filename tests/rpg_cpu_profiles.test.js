@@ -32,6 +32,8 @@ test('new guest profiles keep their style while RPG difficulty is forced to Cham
  }
 });
 
+// Lyla's current NPC deck still contains Neo printings outside the curated
+// preview; test her CPU profile on restore without constructing an illegal duel.
 test('restored RPG duels upgrade their NPC personality without reducing skill',()=>{
  const old=configuration({level:RPG_CPU_LEVEL,personality:'balanced',
   prizeRace:true,knockoutTempo:true,opponentResponse:true});
@@ -43,6 +45,10 @@ test('restored RPG duels upgrade their NPC personality without reducing skill',(
  assert.equal(restored.cpuConfig.prizeRace,true);
  assert.equal(restored.cpuConfig.opponentResponse,true);
  assert.equal(upgradeRpgSession(restored),restored,'Repeated upgrades are idempotent');
+ const lyla={npc:'lyla',cpuConfig:old};
+ upgradeRpgSession(lyla);
+ assert.equal(lyla.cpuConfig.level,RPG_CPU_LEVEL);
+ assert.equal(lyla.cpuConfig.personality,'tactical','Lyla restores her own strategic profile');
  const unknown={npc:'not_in_cast',cpuConfig:old};
  upgradeRpgSession(unknown);
  assert.equal(unknown.cpuConfig,old,'Unknown opponents retain their valid current configuration');
