@@ -384,6 +384,7 @@ function candidates(o,cfg,used){
    // Otherwise the Apex attack-ordering guard may suppress a legal attack
    // in favor of a completely impossible attachment.
    if(target&&!(target.energyAttachBlockSerial>o.turnSerial)&&
+      !(cfg.level===8&&c.name==='Rainbow Energy'&&hpRemaining(target)<=10)&&
       legalAttachment({card:c,unit:target,round:o.round,energyUsed:p.energyUsed,
        cardName:card(target.id)?.name||''}))
     options.push(command('attach_energy',{handIndex:i,slot}));
@@ -1172,7 +1173,10 @@ function projectedPrep(board,action,round,turnSerial){
   if(next.energyUsed||!u||!isEnergy(c)||u.energyAttachBlockSerial>turnSerial||
     !legalAttachment({card:c,unit:u,round,energyUsed:next.energyUsed,
      cardName:card(u.id)?.name||''}))return null;
+  // A lethal Rainbow attachment cannot contribute to a tactical line.
+  if(c.name==='Rainbow Energy'&&hpRemaining(u)<=10)return null;
   u.energies=[...(u.energies||[]),id];
+  if(c.name==='Rainbow Energy')u.damage=(u.damage||0)+10;
   next.energyUsed=true;
  }else if(type==='evolve'){
   if(!u||!canEvolve(c,card(u.id))||u.playedTurn>=round)return null;
