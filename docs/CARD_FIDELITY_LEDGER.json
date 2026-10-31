@@ -1674,7 +1674,12 @@
      "kind": "attack",
      "index": 0,
      "name": "Slap",
-     "status": "unreviewed"
+     "status": "partial",
+     "evidence": [
+      "test_card_fidelity_staryu.js: 32 reducer scenarios across Classic, Neo-theme, online-preview 60-card and 40-card setups; both printings, typed Water payment, Slap damage, Lightning weakness on target, Defender applied after Weakness, and Rainbow Energy providing Water in Neo/online formats.",
+      "Printed card text/cost and 40 HP/Water type/Lightning weakness/one-Colorless retreat compared with Serebii Base #65 and Base Set 2 #95; TCGdex Base #65 text and stats also compared. No special attack effect; broad client/network integration remains unchecked."
+     ],
+     "scope": "Slap: one Water Energy, 20 damage, weakness and Defender ordering; Colorless-only underpayment rejected. Other interactions, status/retreat scenarios and client/network integration remain unreviewed."
     }
    ]
   },
@@ -6517,7 +6522,12 @@
      "kind": "attack",
      "index": 0,
      "name": "Slap",
-     "status": "unreviewed"
+     "status": "partial",
+     "evidence": [
+      "test_card_fidelity_staryu.js: 32 reducer scenarios across Classic, Neo-theme, online-preview 60-card and 40-card setups; both printings, typed Water payment, Slap damage, Lightning weakness on target, Defender applied after Weakness, and Rainbow Energy providing Water in Neo/online formats.",
+      "Printed card text/cost and 40 HP/Water type/Lightning weakness/one-Colorless retreat compared with Serebii Base #65 and Base Set 2 #95; TCGdex Base #65 text and stats also compared. No special attack effect; broad client/network integration remains unchecked."
+     ],
+     "scope": "Slap: one Water Energy, 20 damage, weakness and Defender ordering; Colorless-only underpayment rejected. Other interactions, status/retreat scenarios and client/network integration remain unreviewed."
     }
    ]
   },
