@@ -3,6 +3,7 @@
 // Do not trust localStorage email: the server verifies the bearer with Supabase.
 (async function(){
   const scripts=[
+ "/overworld/manifest.js?v=global-pose-triggers-20261030-1",
  "/rpg_sol_character.js",
  "/rpg_narrative_pack.js",
  "/rpg_relationships.js",
@@ -63,7 +64,8 @@
  "/rpg_status.js?v=4",
  "/rpg_cloud_save.js?v=cloud-login-visible-20261030",
  "/rpg_outfits.js?v=1",
- "/rpg.js?v=dialogue-special-outfit-priority-20261031"
+ "/rpg_phone_messages.js?v=phone-selfie-chat-20261031-1",
+ "/rpg.js?v=phone-selfie-chat-20261031-1"
 ];
   function registry(packs){
     const cast={},looks={},schedules={},arrivals={},events=[],mandatoryEvents=[];
