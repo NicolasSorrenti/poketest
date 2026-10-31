@@ -936,3 +936,30 @@ test('Apex delays an unready rescue evolution when the KO requires a Confusion f
   AI.score(evolveActive,confused,cfg,{})+200,
   'a guaranteed rescue should beat a speculative Confusion-flip rescue');
 });
+
+function rainbowFutureBoard(futureEnergy,damage){
+ const o=futureEnergyBoard(FIGHT,futureEnergy,[]);
+ // Diglett has 30 HP. Fighting now powers Dig; a second Fighting symbol
+ // next turn would power Mud Slap, but Rainbow inflicts 10 on attachment.
+ o.self.active={id:'base1-47',energies:[],damage,status:null,playedTurn:1};
+ o.opponent.active={id:HITMONCHAN,energies:[],damage:0,status:null};
+ return o;
+}
+test('Apex future Energy horizon never rewards a Rainbow self-KO',()=>{
+ for(const rainbow of ['base5-17','base5-80']){
+  const lethal=rainbowFutureBoard(rainbow,20); // exactly 10 HP left
+  const noEnergy=rainbowFutureBoard('base1-91',20); // Bill
+  assert.equal(AI.energyHorizonBonus(attachActive,lethal,cfg),
+   AI.energyHorizonBonus(attachActive,noEnergy,cfg),
+   rainbow+' cannot power a next-turn attack after knocking out Diglett');
+ }
+});
+test('Apex future Energy horizon preserves safe Rainbow setup',()=>{
+ for(const rainbow of ['base5-17','base5-80']){
+  const safe=rainbowFutureBoard(rainbow,19); // 11 HP left
+  const noEnergy=rainbowFutureBoard('base1-91',19);
+  assert.ok(AI.energyHorizonBonus(attachActive,safe,cfg)>
+   AI.energyHorizonBonus(attachActive,noEnergy,cfg),
+   rainbow+' must still unlock a legal second-turn Mud Slap');
+ }
+});
