@@ -832,13 +832,23 @@
      "kind": "attack",
      "index": 0,
      "name": "Recover",
-     "status": "unreviewed"
+     "status": "partial",
+     "evidence": [
+      "test_card_fidelity_kadabra.js",
+      "Kadabra printed text compared with Bulbapedia, Serebii, Limitless and TCGCollector; no historical erratum found in the official Pokémon errata index."
+     ],
+     "scope": "Recover: Psychic Energy-only additional discard, mandatory discard with no damage, full healing, automatic choice for same-name Basic Psychic reprints, distinct Rainbow Energy choice, and rejection when the typed attack cost is unpaid. Super Psy: typed Psychic/Colorless cost, damage, Psychic Weakness knockout and Psychic Resistance. 66 reducer scenarios: Base Set in Classic, Neo-theme, online-preview 60-card and online-preview 40-card; Base Set 2 in online-preview 60-card and 40-card. Browser and network integration pending."
     },
     {
      "kind": "attack",
      "index": 1,
      "name": "Super Psy",
-     "status": "unreviewed"
+     "status": "partial",
+     "evidence": [
+      "test_card_fidelity_kadabra.js",
+      "Kadabra printed text compared with Bulbapedia, Serebii, Limitless and TCGCollector; no historical erratum found in the official Pokémon errata index."
+     ],
+     "scope": "Recover: Psychic Energy-only additional discard, mandatory discard with no damage, full healing, automatic choice for same-name Basic Psychic reprints, distinct Rainbow Energy choice, and rejection when the typed attack cost is unpaid. Super Psy: typed Psychic/Colorless cost, damage, Psychic Weakness knockout and Psychic Resistance. 66 reducer scenarios: Base Set in Classic, Neo-theme, online-preview 60-card and online-preview 40-card; Base Set 2 in online-preview 60-card and 40-card. Browser and network integration pending."
     }
    ]
   },
@@ -5113,13 +5123,23 @@
      "kind": "attack",
      "index": 0,
      "name": "Recover",
-     "status": "unreviewed"
+     "status": "partial",
+     "evidence": [
+      "test_card_fidelity_kadabra.js",
+      "Kadabra printed text compared with Bulbapedia, Serebii, Limitless and TCGCollector; no historical erratum found in the official Pokémon errata index."
+     ],
+     "scope": "Recover: Psychic Energy-only additional discard, mandatory discard with no damage, full healing, automatic choice for same-name Basic Psychic reprints, distinct Rainbow Energy choice, and rejection when the typed attack cost is unpaid. Super Psy: typed Psychic/Colorless cost, damage, Psychic Weakness knockout and Psychic Resistance. 66 reducer scenarios: Base Set in Classic, Neo-theme, online-preview 60-card and online-preview 40-card; Base Set 2 in online-preview 60-card and 40-card. Browser and network integration pending."
     },
     {
      "kind": "attack",
      "index": 1,
      "name": "Super Psy",
-     "status": "unreviewed"
+     "status": "partial",
+     "evidence": [
+      "test_card_fidelity_kadabra.js",
+      "Kadabra printed text compared with Bulbapedia, Serebii, Limitless and TCGCollector; no historical erratum found in the official Pokémon errata index."
+     ],
+     "scope": "Recover: Psychic Energy-only additional discard, mandatory discard with no damage, full healing, automatic choice for same-name Basic Psychic reprints, distinct Rainbow Energy choice, and rejection when the typed attack cost is unpaid. Super Psy: typed Psychic/Colorless cost, damage, Psychic Weakness knockout and Psychic Resistance. 66 reducer scenarios: Base Set in Classic, Neo-theme, online-preview 60-card and online-preview 40-card; Base Set 2 in online-preview 60-card and 40-card. Browser and network integration pending."
     }
    ]
   },
