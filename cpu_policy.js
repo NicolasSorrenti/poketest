@@ -1026,6 +1026,19 @@ function score(a,o,cfg,used){
   const riskPreference=uncertain?style.risk*40:0;
   const direct=damage*style.damage;
   const statusValue=/Poison|Paraly|Sleep|Confus/i.test(attack?.text||'')?16:0;
+  // A retreat-lock such as Murkrow's Mean Look does not stack. Once the
+  // defending Pokemon is already unable to retreat, repeating the zero-damage
+  // move forfeits an entire attack. Prefer a payable damaging attack instead.
+  const retreatLock=/can(?:not|'t) retreat/i.test(attack?.text||'');
+  const damagingAlternative=(p.active.effectiveAttacks||card(p.active.id)?.attacks||[])
+   .some((other,index)=>index!==v.attackIndex&&
+    eligibleAttack(o,p.active,other,index)&&
+    estimatedDamage(other,p.active,q.active,p.bench.length)>0);
+  const repeatedLock=retreatLock&&damage===0&&damagingAlternative&&
+   (q.active?.retreatLocked||q.active?.cannotRetreat||q.active?.meanLook||
+    q.active?.retreatLock||q.active?.retreatBlocked);
+  const idleLockPenalty=retreatLock&&damage===0&&damagingAlternative?
+   (repeatedLock?420:185):0;
   const fixedCost=/Discard.*Energy attached to/i.test(attack?.text||'')?30:0;
   const program=ATTACK.compile(attack);
   const selfDamage=['recoil','coin-recoil','coin-recoil-bonus'].includes(program?.kind)?
@@ -1036,7 +1049,7 @@ function score(a,o,cfg,used){
   // abandoning the only Active to self-KO can outright lose the match.
   const selfLoss=cfg.level>=4?selfKnockout*
    (p.bench.length===0?240:100)*(1-koChance*.8)*style.survival:0;
-  return 150+direct*.9+135*koChance+riskPreference+statusValue-fixedCost-selfLoss;
+  return 150+direct*.9+135*koChance+riskPreference+statusValue-fixedCost-selfLoss-idleLockPenalty;
  }
  if(type==='play_trainer'){
   const name=card(p.hand[v.handIndex])?.name||'';
