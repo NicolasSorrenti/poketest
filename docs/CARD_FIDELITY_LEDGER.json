@@ -1204,7 +1204,12 @@
      "kind": "attack",
      "index": 0,
      "name": "Scratch",
-     "status": "unreviewed"
+     "status": "partial",
+     "scope": "Scratch: one Colorless cost payable with any one Energy, including one Double Colorless Energy; fixed 10 damage even when the payment supplies two Colorless units; no coin or player choice; Charmander's Fire type applies Fire Weakness to damage despite the attack's Colorless cost; Base Set and Base Set 2; Classic, Neo-theme, online-preview 60-card and online-preview 40-card reducer configurations.",
+     "evidence": [
+      "`test_card_fidelity_charmander_scratch.js`: 42 reducer scenarios across Base Set in Classic, Neo-theme, online-preview 60-card and 40-card modes, and Base Set 2 in online-preview 60-card and 40-card modes. Covers Base/BS2 text and cost parity, payment with Grass, Fire and Double Colorless Energy, fixed damage, Fire Weakness on a Grass target, and rejection without Energy.",
+      "Base Set and Base Set 2 text/cost compared with Limitless and Serebii listings. The official Pokémon TCG rulebook says Weakness is checked against the attacking Pokémon's type; the current official errata index was searched with no Charmander entry. Ember remains separately partial; other interactions and client/network integration are pending."
+     ]
     },
     {
      "kind": "attack",
@@ -5781,7 +5786,12 @@
      "kind": "attack",
      "index": 0,
      "name": "Scratch",
-     "status": "unreviewed"
+     "status": "partial",
+     "scope": "Scratch: one Colorless cost payable with any one Energy, including one Double Colorless Energy; fixed 10 damage even when the payment supplies two Colorless units; no coin or player choice; Charmander's Fire type applies Fire Weakness to damage despite the attack's Colorless cost; Base Set and Base Set 2; Classic, Neo-theme, online-preview 60-card and online-preview 40-card reducer configurations.",
+     "evidence": [
+      "`test_card_fidelity_charmander_scratch.js`: 42 reducer scenarios across Base Set in Classic, Neo-theme, online-preview 60-card and 40-card modes, and Base Set 2 in online-preview 60-card and 40-card modes. Covers Base/BS2 text and cost parity, payment with Grass, Fire and Double Colorless Energy, fixed damage, Fire Weakness on a Grass target, and rejection without Energy.",
+      "Base Set and Base Set 2 text/cost compared with Limitless and Serebii listings. The official Pokémon TCG rulebook says Weakness is checked against the attacking Pokémon's type; the current official errata index was searched with no Charmander entry. Ember remains separately partial; other interactions and client/network integration are pending."
+     ]
     },
     {
      "kind": "attack",
