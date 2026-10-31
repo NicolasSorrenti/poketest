@@ -480,6 +480,15 @@
               ?(source.includes('/rpg-assets/characters/laca/overworld/casual/reaching-out.png')||source.includes('/rpg-assets/characters/laca/overworld/lifeguard/front-leaning.png'))
               :!!otherApprovedMasters[participant.id]&&source.includes(otherApprovedMasters[participant.id]);
           person.classList.toggle('neo-ow-dialogue-front-master',isApprovedMaster);
+          // Full-body art needs the tight head-to-chest crop; a face-only
+          // expression asset needs less zoom. No image bytes are modified.
+          const fullBody=isApprovedMaster||
+            /\/(?:overworld|overworld-variants)\//.test(source)||
+            /\/standing-front\.png(?:[?#]|$)/.test(source)||
+            /\/portraits\/special-day-\d+\.png(?:[?#]|$)/.test(source);
+          const alreadyCropped=/\/(?:expression-portraits|expression-faces|vn-expressions)\//.test(source);
+          person.style.setProperty('--neo-ow-dialogue-bust-height',
+            fullBody?'278%':alreadyCropped?'165%':'190%');
         });
         // A missing portrait must never display a different character's face.
         // The original game's avatar loader already resolves outfit-specific art.
@@ -570,35 +579,6 @@
       }
     `;
     document.head.append(portraitPlacement);
-    // Neutral dialogue master artwork is full-height in the repository; only
-    // Camila's text portrait receives this narrower top-anchored viewport.
-    // Keep the full-body file available to overworld poses and art galleries.
-    const camilaDialogueFrame=document.createElement('style');
-    camilaDialogueFrame.id='neoOverworldCamilaDialogueFrame';
-    camilaDialogueFrame.textContent=`
-      #neoOverworldStoryDock #neoOverworldScenePeople .neo-ow-person.neo-ow-dialogue-front-master{
-        flex:0 1 min(44dvh,38vw)!important;
-        width:min(44dvh,38vw)!important;
-        max-width:min(44dvh,38vw)!important;
-        overflow:hidden!important;
-      }
-      #neoOverworldStoryDock #neoOverworldScenePeople .neo-ow-person.neo-ow-dialogue-front-master img{
-        width:100%!important;height:100%!important;
-        max-width:none!important;max-height:none!important;
-        object-fit:cover!important;object-position:center top!important;
-        transform:scale(1.4);transform-origin:center top;
-      }
-      @media(max-width:650px){
-        #neoOverworldStoryDock #neoOverworldScenePeople .neo-ow-person.neo-ow-dialogue-front-master{
-          flex-basis:min(40dvh,60vw)!important;
-          width:min(40dvh,60vw)!important;
-          max-width:min(40dvh,60vw)!important;
-        }
-      }
-    `;
-    document.head.append(camilaDialogueFrame);
-
-
     // Character interaction layout follows the portrait-left / actions-right
     // visual reference; ordinary story dialogue is unaffected.
     const idleStage=sceneArea?.closest('.stage-panel');
@@ -787,6 +767,29 @@
       }
     `;
     document.head.append(sharedSceneScale);
+    // Applied after idle interactions and shared-scene rules so they cannot
+    // overwrite the source-preserving dialogue bust crop.
+    const dialogueBustCropStyle=document.createElement('style');
+    dialogueBustCropStyle.id='neoOverworldDialogueBustCrop';
+    dialogueBustCropStyle.textContent=`
+      #neoOverworldOverlay #neoOverworldStoryDock #neoOverworldScenePeople .neo-ow-person{
+        position:relative!important;overflow:hidden!important;
+      }
+      #neoOverworldOverlay #neoOverworldStoryDock #neoOverworldScenePeople .neo-ow-person>img:not(.rpg-safe-avatar){
+        position:absolute!important;left:0!important;top:0!important;
+        display:block!important;width:100%!important;
+        height:var(--neo-ow-dialogue-bust-height,278%)!important;
+        max-width:none!important;max-height:none!important;
+        object-fit:cover!important;object-position:center top!important;
+        transform:none!important;margin:0!important;
+      }
+      #neoOverworldOverlay #neoOverworldStoryDock #neoOverworldScenePeople .neo-ow-person>img[hidden]{display:none!important}
+      /* Discreet Mode chibis are separate overlays and remain uncropped. */
+      :root[data-rpg-discreet="on"] #neoOverworldOverlay #neoOverworldStoryDock #neoOverworldScenePeople .neo-ow-person>.rpg-safe-avatar{
+        position:relative!important;height:100%!important;object-fit:contain!important;
+      }
+    `;
+    document.head.append(dialogueBustCropStyle);
 
     const dialogueStyle=document.createElement('style');
     dialogueStyle.textContent=`
