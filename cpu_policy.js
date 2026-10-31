@@ -1231,6 +1231,11 @@ function projectedPrep(board,action,round,turnSerial){
   if(c.name==='Rainbow Energy'&&hpRemaining(u)<=10)return null;
   u.energies=[...(u.energies||[]),id];
   if(c.name==='Rainbow Energy')u.damage=(u.damage||0)+10;
+  // Match the reducer: Full Heal Energy immediately clears all conditions,
+  // potentially unlocking a sleeping or paralyzed attack in this turn's plan.
+  if(c.name==='Full Heal Energy'){
+   u.status=null;u.poison=false;delete u.poisonDamage;
+  }
   next.energyUsed=true;
  }else if(type==='evolve'){
   if(!u||!canEvolve(c,card(u.id))||u.playedTurn>=round)return null;
