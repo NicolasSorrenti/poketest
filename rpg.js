@@ -427,8 +427,10 @@ window.NeoRpgOverworldBridge=Object.freeze({
  portrait(id){
   if(!cast[id])return null;
   const src=scenePortraitSource(id,'neutral',null);
+  // Supply fallbacks for every active costume, not just approved neutral art.
+  const options=stagePortraitPaths(id,'neutral',null);
   return {id,name:cast[id].name,src,
-   ...((id==='camila'||APPROVED_DIALOGUE_MASTERS[id])?{srcs:stagePortraitPaths(id,'neutral',null)}:{})};
+   srcs:[src,...options.filter(path=>path!==src)]};
  },
  clearInteraction(){if(overworldControlsLocked())return false;state.selected=null;persist();render();return true;},
  snapshot(){return {location:state.location,day:state.day,slot:state.slot,selected:state.selected&&currentPeople().includes(state.selected)?state.selected:null,locked:overworldControlsLocked(),arriving:arrivalGate||!!pendingOverworldArrival||!!window.NeoRpgTimeTransitions?.active,storyActive:overworldStoryActive(),eventActive:!!(state.mandatoryEventState?.active||state.activeSliceOfLife||state.activeSituation||state.activeStory||state.activeSideQuest||state.activeArc||state.activeEncounter),people:currentPeople().filter(id=>!!cast[id]),places:Object.entries(places).map(([id,p])=>({id,name:p[0]}))};},
@@ -2457,16 +2459,38 @@ function specialLookRecord(id,day=state.day){
 function dailyStagePortrait(id,day){
  return specialLookRecord(id,day)?.portrait||null;
 }
+// A scheduled or scene-specific outfit outranks generic dialogue art.
+// Restrict priority to a *different* active variant: the default master remains
+// approved art whenever no special costume is being worn.
+function sceneOutfitPortraitPaths(id,expression,sceneId=activeOutfitSceneId){
+ const art=cast[id]?.outfitArt||cast[id]?.art||window.NeoRpgCharacterPacks?.byId?.(id)?.art||null;
+ const selected=OUTFITS?.select?.(art?.outfits,{
+  location:state.location,slot:state.slot,day:state.day,sceneId
+ });
+ if(!selected||selected.key===art?.outfits?.default)return [];
+ const paths=[];
+ // Laca's active lifeguard look uses the matching full-body front pose.
+ if(id==='laca'&&selected.key==='lifeguard')
+  paths.push(LACA_OVERWORLD_DIALOGUE_DEFAULTS.lifeguard);
+ const expressionPath=selected.variant?.expressions?.[expression];
+ // Do not replace a named outfit with a generic expression of other clothes.
+ if(expressionPath?.includes('/outfits/'+selected.key+'/'))paths.push(expressionPath);
+ paths.push(selected.variant?.portrait);
+ return [...new Set(paths.filter(path=>OUTFITS.safeImage(path)))];
+}
 function stagePortraitPaths(id,expression,sceneId){
  const alternate=dailyStagePortrait(id,state.day);
- // An active special look remains the character's normal portrait all day,
- // regardless of expression. Dedicated CG/cut-in/battle graphics use other paths.
+ // Display priority:
+ // 1. Active daily special look (Barb/Akari/Hana), unchanged for the whole day.
+ // 2. Current scheduled or scene-specific costume (e.g. Laca lifeguard).
+ // 3. Creator-approved neutral art / regular overworld default.
+ // 4. Original expressions and standard fallbacks.
+ const outfit=sceneOutfitPortraitPaths(id,expression,sceneId);
  const normal=personaCStageCandidates(id,expression,portraitPaths(id,expression,sceneId));
- // Prefer approved full-body standing art in neutral dialogue scenes, while
- // preserving every original expression as a fallback if the master fails.
  const master=dialogueMasterSource(id,expression)||defaultOverworldDialogueSource(id,expression,normal)||(id==='camila'?CAMILA_DIALOGUE_MASTER:null);
  const dialogue=master?[master,...normal.filter(path=>path!==master)]:normal;
- return alternate?[alternate,...dialogue.filter(path=>path!==alternate)]:dialogue;
+ const candidates=[...new Set([...outfit,...dialogue])];
+ return alternate?[alternate,...candidates.filter(path=>path!==alternate)]:candidates;
 }
 function scenePortraitSource(id,expression,sceneId=activeOutfitSceneId){
  const paths=stagePortraitPaths(id,expression,sceneId);
@@ -2511,15 +2535,18 @@ function renderRpgCast(ids,locked,shown,portraitId,context={}){
    const expression=id===focused?
     (window.NeoRpgCharacterMotion?.emotion?.(shown?.expression,dialogueExpression(shown?.line))||dialogueExpression(shown?.line)):'neutral';
    let src=scenePortraitSource(id,expression,context.sceneId),srcs=null;
-   if(id===focused&&scene?.poseTrigger&&state.overworldPoseIntro?.id===id){
+   // A pose intro may change the expression, but never strip a special outfit.
+   const outfitActive=!!dailyStagePortrait(id,state.day)||
+    sceneOutfitPortraitPaths(id,expression,context.sceneId).length>0;
+   if(id===focused&&scene?.poseTrigger&&state.overworldPoseIntro?.id===id&&!outfitActive){
     const neutral=stagePortraitPaths(id,'neutral',context.sceneId);
     srcs=stagePortraitPaths(id,'vulnerable',context.sceneId).filter(path=>!neutral.includes(path)&&!failedScenePortraits.has(path));
     if(srcs.length)src=srcs[0];
     else src=state.overworldPoseIntro.src;
    }
-   // Allow Camila's new master to gracefully fall back to existing dialogue
-   // expressions if its asset fails to load in the standalone overworld.
-   const sources=srcs?.length?srcs:((id==='camila'||APPROVED_DIALOGUE_MASTERS[id]||OVERWORLD_DIALOGUE_DEFAULTS[id]||id==='laca')?stagePortraitPaths(id,expression,context.sceneId):null);
+   // Always supply the current costume's alternatives before older portrait
+   // fallbacks; a failed PNG should not strand the conversation without art.
+   const sources=srcs?.length?srcs:stagePortraitPaths(id,expression,context.sceneId);
    return {id,name:cast[id].name,src,...(sources?.length?{srcs:[src,...sources.filter(path=>path!==src)]}:{})};
   }):[]
  };
