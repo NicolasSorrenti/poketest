@@ -1,5 +1,12 @@
 {
   "schemaVersion": 1,
   "characterId": "lyla",
-  "portrait": "/rpg-assets/characters/lyla/overworld/front.png"
+  "portrait": "/rpg-assets/characters/lyla/overworld/front.png",
+  "overworld": {
+    "standing": "/rpg-assets/characters/lyla/overworld/front.png",
+    "seatedCards": "/rpg-assets/characters/lyla/overworld/cards-seated.png",
+    "backView": "/rpg-assets/characters/lyla/overworld/back-view.png",
+    "arcade": "/rpg-assets/characters/lyla/overworld/arcade.png"
+  },
+  "attack": "/rpg-assets/characters/lyla/attack.png"
 }

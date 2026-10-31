@@ -30,6 +30,12 @@ window.NeoOverworld = Object.freeze({
   center: { id:'center', title:'Community Center', image:'/rpg-assets/locations/center/overworld-map-candidate-20261029.webp', artworkStatus:'uploaded', width:1550,height:1120,initial:{x:775,y:545,viewWidth:850,viewHeight:700},anchors:{P1:{x:665,y:420},P2:{x:850,y:420},P3:{x:660,y:730},P4:{x:840,y:730},E1:{x:600,y:520},E2:{x:975,y:520},E3:{x:680,y:900},E4:{x:895,y:900}},hotspots:[{id:'tournament',label:'Tournament hall',x:505,y:100,w:570,h:160},{id:'duel',label:'Duel tables',x:295,y:250,w:980,h:370},{id:'registration',label:'Registration',x:140,y:720,w:340,h:230},{id:'practice',label:'Practice area',x:1000,y:600,w:285,h:200}] },
   library: { id:'library', title:'Library', image:'/rpg-assets/locations/library/overworld-map-candidate-20261029.webp', artworkStatus:'uploaded', width:1550,height:1120,initial:{x:775,y:545,viewWidth:850,viewHeight:700},anchors:{P1:{x:667,y:470},P2:{x:880,y:475},P3:{x:665,y:760},P4:{x:882,y:770},E1:{x:365,y:495},E2:{x:1160,y:500},E3:{x:365,y:944},E4:{x:1170,y:945}},hotspots:[{id:'study',label:'Study tables',x:995,y:280,w:355,h:330},{id:'books',label:'Bookshelves',x:110,y:100,w:380,h:220},{id:'reading',label:'Quiet reading',x:200,y:310,w:255,h:260},{id:'archives',label:'Archives and research',x:1040,y:90,w:340,h:175}] },
   characters: {
+    lyla: {name:'Lyla', face:'/rpg-assets/characters/lyla/overworld/front.png', poses:{
+      standing:{src:'/rpg-assets/characters/lyla/overworld/front.png',height:140,facing:'front'},
+      seatedCards:{src:'/rpg-assets/characters/lyla/overworld/cards-seated.png',height:110,facing:'front'},
+      backView:{src:'/rpg-assets/characters/lyla/overworld/back-view.png',height:140,facing:'back'},
+      arcade:{src:'/rpg-assets/characters/lyla/overworld/arcade.png',height:140,facing:'back'}
+    }},
     jicy: {name:'Jicy', face:'/rpg-assets/characters/jicy/portraits/primary.webp', poses:{
       standing:{src:'/rpg-assets/characters/jicy/overworld/standing.webp',height:150,facing:'front'},
       greeting:{src:'/rpg-assets/characters/jicy/overworld/standing.webp',height:150,facing:'front'},
