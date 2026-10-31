@@ -12,6 +12,7 @@ The game uses **existing, approved full-body images** and crops only in its RPG 
 | Teo | `rpg-assets/characters/teo/dialogue/neutral.png` (byte-identical copy of `overworld/standing-front.png`) | Original expression portraits |
 | Nereo | `rpg-assets/characters/nereo/dialogue/neutral.png` (byte-identical copy of `standing-front.png` in Nereo's root folder) | Original expression portraits |
 | Elio | `rpg-assets/characters/elio/dialogue/neutral.png` (byte-identical copy of Elio's `standing-front.png`) | Original expression portraits |
+| Shiori | `rpg-assets/characters/shiori/dialogue/neutral.png` (byte-identical reuse of `overworld/standing-book.png`) | Original expression portraits |
 
 Jun's source is the already-committed front standing PNG in his character folder, not a newly generated picture or a copy.
 
@@ -21,6 +22,6 @@ The source selection is in `rpg.js`; the viewport rule for the standalone overwo
 
 **Visual QA still required:** inspect desktop and mobile conversations for each character, verify waist crop height and expression transitions; test Barb's special-day art and Discreet Mode. Do not presume code crop replaces transparent source artwork.
 
-**Not yet integrated:** Marina/Hana/Rina/Kaede/Shiori/Yuna/Akari/Laca/Daisy/Jinx/etc approved images created in chat that do not have an identified, verified repository asset. Do not substitute images or overwrite their approved originals.
+**Not yet integrated:** Marina/Hana/Rina/Kaede/Yuna/Akari/Laca/Daisy/Jinx/etc approved images created in chat that do not have an identified, verified repository asset. Do not substitute images or overwrite their approved originals.
 
 Historical PR #216 applied square crop assumptions to Marina/Laca before the master-image direction was agreed; it should be superseded, not merged unmodified.
