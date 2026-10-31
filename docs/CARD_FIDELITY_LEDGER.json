@@ -1232,13 +1232,23 @@
      "kind": "attack",
      "index": 0,
      "name": "Dig",
-     "status": "unreviewed"
+     "status": "partial",
+     "scope": "Dig: one Fighting Energy, fixed 10 damage, no extra printed effect or coin, and rejection of Colorless-only payment. Mud Slap: two Fighting Energy and fixed 30 damage. Both Base Set and Base Set 2; Classic, Neo-theme, online-preview 60-card and online-preview 40-card reducer configurations. Tested interactions: Fighting damage against Pikachu's Fighting Weakness; Diglett's Lightning Resistance and Grass Weakness; Base Set/Base Set 2 attack text/cost parity.",
+     "evidence": [
+      "`test_card_fidelity_diglett.js`: 54 reducer scenarios across Base Set in Classic, Neo-theme, online-preview 60-card and 40-card modes, and Base Set 2 in online-preview 60-card and 40-card modes. Covers both attacks' printed text, typed costs and fixed damage; Colorless underpayment and one-Fighting underpayment rejection; matchup Weakness/Resistance; no coin or player-choice prompts; and print parity.",
+      "Base Set and Base Set 2 card data compared with [Limitless Base](https://limitlesstcg.com/cards/BS/47), [Limitless Base Set 2](https://limitlesstcg.com/cards/BS2/71), [Serebii Base](https://www.serebii.net/card/base/047.shtml) and [Serebii Base Set 2](https://www.serebii.net/card/baseset2/071.shtml). The official Pokémon TCG errata PDF was searched with no Diglett entry. Bulbapedia records a rotated Dig Energy-symbol variant on some early copies; the normalized Fighting cost is unchanged. Other interactions and client/network integration remain pending."
+     ]
     },
     {
      "kind": "attack",
      "index": 1,
      "name": "Mud Slap",
-     "status": "unreviewed"
+     "status": "partial",
+     "scope": "Dig: one Fighting Energy, fixed 10 damage, no extra printed effect or coin, and rejection of Colorless-only payment. Mud Slap: two Fighting Energy and fixed 30 damage. Both Base Set and Base Set 2; Classic, Neo-theme, online-preview 60-card and online-preview 40-card reducer configurations. Tested interactions: Fighting damage against Pikachu's Fighting Weakness; Diglett's Lightning Resistance and Grass Weakness; Base Set/Base Set 2 attack text/cost parity.",
+     "evidence": [
+      "`test_card_fidelity_diglett.js`: 54 reducer scenarios across Base Set in Classic, Neo-theme, online-preview 60-card and 40-card modes, and Base Set 2 in online-preview 60-card and 40-card modes. Covers both attacks' printed text, typed costs and fixed damage; Colorless underpayment and one-Fighting underpayment rejection; matchup Weakness/Resistance; no coin or player-choice prompts; and print parity.",
+      "Base Set and Base Set 2 card data compared with [Limitless Base](https://limitlesstcg.com/cards/BS/47), [Limitless Base Set 2](https://limitlesstcg.com/cards/BS2/71), [Serebii Base](https://www.serebii.net/card/base/047.shtml) and [Serebii Base Set 2](https://www.serebii.net/card/baseset2/071.shtml). The official Pokémon TCG errata PDF was searched with no Diglett entry. Bulbapedia records a rotated Dig Energy-symbol variant on some early copies; the normalized Fighting cost is unchanged. Other interactions and client/network integration remain pending."
+     ]
     }
    ]
   },
@@ -5833,13 +5843,23 @@
      "kind": "attack",
      "index": 0,
      "name": "Dig",
-     "status": "unreviewed"
+     "status": "partial",
+     "scope": "Dig: one Fighting Energy, fixed 10 damage, no extra printed effect or coin, and rejection of Colorless-only payment. Mud Slap: two Fighting Energy and fixed 30 damage. Both Base Set and Base Set 2; Classic, Neo-theme, online-preview 60-card and online-preview 40-card reducer configurations. Tested interactions: Fighting damage against Pikachu's Fighting Weakness; Diglett's Lightning Resistance and Grass Weakness; Base Set/Base Set 2 attack text/cost parity.",
+     "evidence": [
+      "`test_card_fidelity_diglett.js`: 54 reducer scenarios across Base Set in Classic, Neo-theme, online-preview 60-card and 40-card modes, and Base Set 2 in online-preview 60-card and 40-card modes. Covers both attacks' printed text, typed costs and fixed damage; Colorless underpayment and one-Fighting underpayment rejection; matchup Weakness/Resistance; no coin or player-choice prompts; and print parity.",
+      "Base Set and Base Set 2 card data compared with [Limitless Base](https://limitlesstcg.com/cards/BS/47), [Limitless Base Set 2](https://limitlesstcg.com/cards/BS2/71), [Serebii Base](https://www.serebii.net/card/base/047.shtml) and [Serebii Base Set 2](https://www.serebii.net/card/baseset2/071.shtml). The official Pokémon TCG errata PDF was searched with no Diglett entry. Bulbapedia records a rotated Dig Energy-symbol variant on some early copies; the normalized Fighting cost is unchanged. Other interactions and client/network integration remain pending."
+     ]
     },
     {
      "kind": "attack",
      "index": 1,
      "name": "Mud Slap",
-     "status": "unreviewed"
+     "status": "partial",
+     "scope": "Dig: one Fighting Energy, fixed 10 damage, no extra printed effect or coin, and rejection of Colorless-only payment. Mud Slap: two Fighting Energy and fixed 30 damage. Both Base Set and Base Set 2; Classic, Neo-theme, online-preview 60-card and online-preview 40-card reducer configurations. Tested interactions: Fighting damage against Pikachu's Fighting Weakness; Diglett's Lightning Resistance and Grass Weakness; Base Set/Base Set 2 attack text/cost parity.",
+     "evidence": [
+      "`test_card_fidelity_diglett.js`: 54 reducer scenarios across Base Set in Classic, Neo-theme, online-preview 60-card and 40-card modes, and Base Set 2 in online-preview 60-card and 40-card modes. Covers both attacks' printed text, typed costs and fixed damage; Colorless underpayment and one-Fighting underpayment rejection; matchup Weakness/Resistance; no coin or player-choice prompts; and print parity.",
+      "Base Set and Base Set 2 card data compared with [Limitless Base](https://limitlesstcg.com/cards/BS/47), [Limitless Base Set 2](https://limitlesstcg.com/cards/BS2/71), [Serebii Base](https://www.serebii.net/card/base/047.shtml) and [Serebii Base Set 2](https://www.serebii.net/card/baseset2/071.shtml). The official Pokémon TCG errata PDF was searched with no Diglett entry. Bulbapedia records a rotated Dig Energy-symbol variant on some early copies; the normalized Fighting cost is unchanged. Other interactions and client/network integration remain pending."
+     ]
     }
    ]
   },
