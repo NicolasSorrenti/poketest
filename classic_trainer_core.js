@@ -31,9 +31,9 @@ function canCancel(g,actor){
  return plan.cancelBaseline===cancelFingerprint(g);
 }
 // Chaos Gym cannot pass attached Trainers to the other player (WotC ruling).
-const ATTACH_ONLY=new Set(['PlusPower','Defender','Berry','Counterattack Claws','Focus Band','EXP.ALL','Gold Berry','Miracle Berry','Balloon Berry','Magnifier','Charity',"Brock's Protection","Koga's Ninja Trick","Sabrina's ESP",'Mysterious Fossil','Clefairy Doll']);
+const ATTACH_ONLY=new Set(['PlusPower','Defender','Berry','Counterattack Claws','Focus Band','EXP.ALL','Gold Berry','Miracle Berry','Balloon Berry','Magnifier','Charity',"Brock's Protection","Koga's Ninja Trick","Sabrina's ESP",'Mysterious Fossil']);
 // These cards stay in play or attach to a Pokémon and cannot be copied.
-const COPY_FORBIDDEN=new Set([...ATTACH_ONLY,'Focus Band','EXP.ALL','Gold Berry','Miracle Berry','Balloon Berry','Magnifier',"Sabrina's Psychic Control"]);
+const COPY_FORBIDDEN=new Set([...ATTACH_ONLY,'Clefairy Doll','Focus Band','EXP.ALL','Gold Berry','Miracle Berry','Balloon Berry','Magnifier',"Sabrina's Psychic Control"]);
 const SETS=['base1','base2','base3','base4','base5','gym1','gym2','neo1','neo2','neo3','neo4','basep'];
 const CATALOG=new Map([
  ...require('./cards/base1.json'),
@@ -88,6 +88,7 @@ function cannotSwitch(g,side){
 function prompt(g,plan,helpers){
  const side=plan.side,p=g.players[side],f=g.players[1-side],d=plan.data,name=get(plan.cardId).name;
  if(!plan.proxy)held(p,plan.cardId,plan.handIndex);
+ if(name==='Clefairy Doll'&&p.bench.length>=5)throw Error('Clefairy Doll requires a free Bench slot');
  // Additional Gym Trainer effects; all hidden-card choices belong to their owner.
  if(name==="Lt. Surge's Secret Plan"&&!chosen(d,'hidden')){
   if(p.bench.length>=5)throw Error('Bench full for Secret Plan');
@@ -646,6 +647,22 @@ function commit(g,plan,h){
    if(guess===actual)h.draw(g,plan.side,2);
    break;
   }
+  case 'Clefairy Doll':{
+   if(plan.proxy){
+    const owner=g.players[plan.ownerSide];const index=owner?.discard.indexOf(plan.cardId);
+    if(index<0)throw Error('Redirected Clefairy Doll left its owner’s discard pile');
+    owner.discard.splice(index,1);
+   }else{
+    const index=p.discard.lastIndexOf(plan.cardId);
+    if(index<0)throw Error('Clefairy Doll was not discarded from its Trainer play');
+    p.discard.splice(index,1);
+   }
+   const doll=h.unit(plan.cardId,g.round);doll.cardOwnerSide=plan.proxy?plan.ownerSide:plan.side;p.bench.push(doll);
+   if(g.stadium&&get(g.stadium.id).name==="Rocket's Minefield Gym"&&!h.flip(g)){
+    doll.damage+=20;h.log(g,"Rocket's Minefield Gym deals 20 damage to Clefairy Doll.");h.knockOuts(g,'direct');
+   }
+   break;
+  }
   case 'New Pokédex':{
    const count=Math.min(5,p.deck.length),base=p.deck.length-count;
    const chosenIndices=Array.from({length:count},(_,i)=>pick('newDex'+i));
@@ -674,7 +691,9 @@ function commit(g,plan,h){
     const index=pick('ssuTarget'),u=slot(p,index);
     if(!u)throw Error('Super Scoop Up target is missing');
     if(index===-1)p.active=null;else p.bench.splice(index,1);
-    p.hand.push(u.id,...u.under,...u.energies,...u.attachedTrainers.map(t=>t.id),...(u.gymShapeshiftCard?[u.gymShapeshiftCard]:[]));
+    const cardOwner=g.players[Number.isInteger(u.cardOwnerSide)?u.cardOwnerSide:plan.side];
+    if(get(u.id).name==='Clefairy Doll')cardOwner.hand.push(u.id);else p.hand.push(u.id);
+    p.hand.push(...u.under,...u.energies,...u.attachedTrainers.map(t=>t.id),...(u.gymShapeshiftCard?[u.gymShapeshiftCard]:[]));
     if(index===-1){
      if(!p.bench.length){g.over=true;g.winner=1-plan.side;}
      else{g.pendingPromotions=[plan.side];g.promotionAfter='trainer';h.finishPromotions(g);}
@@ -1036,9 +1055,11 @@ function commit(g,plan,h){
   case 'Rocket\'s Sneak Attack':if(d.oppHand.length){const [id]=take(f.hand,[pick('oppHand')]);f.deck=h.shuffle(g,[...f.deck,id]);}break;
   case 'Pokémon Flute':f.bench.push(h.unit(extract(f,'recover')[0],g.round));break;
   case 'Revive':{const u=h.unit(extract(p,'recover')[0],g.round);u.damage=Math.floor(Number(get(u.id).hp)/20)*10;p.bench.push(u);break;}
-  case 'Mr. Fuji':{const [u]=p.bench.splice(pick('target'),1);p.deck=h.shuffle(g,[...p.deck,u.id,...u.under,...u.energies,...u.attachedTrainers.map(x=>x.id)]);break;}
+  case 'Mr. Fuji':{const [u]=p.bench.splice(pick('target'),1);const cardOwner=g.players[Number.isInteger(u.cardOwnerSide)?u.cardOwnerSide:plan.side];if(get(u.id).name==='Clefairy Doll'&&cardOwner!==p){cardOwner.deck=h.shuffle(g,[...cardOwner.deck,u.id]);p.deck=h.shuffle(g,[...p.deck,...u.under,...u.energies,...u.attachedTrainers.map(x=>x.id)]);}else p.deck=h.shuffle(g,[...p.deck,u.id,...u.under,...u.energies,...u.attachedTrainers.map(x=>x.id)]);break;}
   case 'Scoop Up':{const idx=pick('target'),u=idx===-1?p.active:p.bench[idx];if(idx===-1){p.active=null;}else p.bench.splice(idx,1);
-   p.hand.push(u.under.length?u.under[u.under.length-1]:u.id);p.discard.push(...[u.id,...u.under.slice(0,-1),...u.energies,...u.attachedTrainers.map(x=>x.id)].filter(x=>x!== (u.under.length?u.under[u.under.length-1]:u.id)));
+   const returned=u.under.length?u.under[u.under.length-1]:u.id,cardOwner=g.players[Number.isInteger(u.cardOwnerSide)?u.cardOwnerSide:plan.side];
+   if(get(returned).name==='Clefairy Doll')cardOwner.hand.push(returned);else p.hand.push(returned);
+   p.discard.push(...[u.id,...u.under.slice(0,-1),...u.energies,...u.attachedTrainers.map(x=>x.id)].filter(x=>x!==returned));
    if(idx===-1){if(!p.bench.length){g.over=true;g.winner=1-plan.side;}else {g.pendingPromotions=[plan.side];g.promotionAfter='direct';h.finishPromotions(g);}}break;
   }
   case 'Devolution Spray':{const u=slot(p,pick('target'));const stage=pick('stage');const cards=[u.id,...u.under];const remaining=cards.filter(id=>get(id).subtypes?.includes('Basic')||(stage===2&&get(id).subtypes?.includes('Stage 1')));
@@ -1059,21 +1080,21 @@ function commit(g,plan,h){
  if(g.tickleEndsTurn){delete g.tickleEndsTurn;h.finishTurn(g);}
 }
 const pFor=(g,side)=>g.players[side];
-function start(g,side,handIndex,h){const p=g.players[side],c=get(p.hand[handIndex]);if(c.supertype!=='Trainer')throw Error('Not a Trainer');if(!SUPPORTED.has(c.name))throw Error('Unported Trainer '+c.name);
+function start(g,side,handIndex,h){const p=g.players[side],c=get(p.hand[handIndex]);if(c.supertype!=='Trainer'&&c.name!=='Clefairy Doll')throw Error('Not a Trainer');if(!SUPPORTED.has(c.name))throw Error('Unported Trainer '+c.name);
  if(c.name==='Mail from Bill'&&p.hand.length>=5)throw Error('Mail from Bill requires at most 4 cards in hand (including itself)');
  const plan={side,handIndex,cardId:c.id,data:{},cancelBaseline:cancelFingerprint(g)};return prompt(g,plan,h);
 }
-function startProxy(g,side,cardId,h){
+function startProxy(g,side,cardId,h,ownerSide=side){
  if(g.players[side].trainerLockedUntil>g.turnSerial)throw Error('Redirected Trainer use blocked this turn');
- const c=get(cardId);if(c.supertype!=='Trainer'||c.subtypes?.includes('Stadium')||ATTACH_ONLY.has(c.name)||!SUPPORTED.has(c.name))throw Error('Unsupported redirected Trainer');
- return prompt(g,{side,handIndex:g.players[side].hand.length,cardId,proxy:true,data:{}},h);
+ const c=get(cardId);if((c.supertype!=='Trainer'&&c.name!=='Clefairy Doll')||c.subtypes?.includes('Stadium')||ATTACH_ONLY.has(c.name)||!SUPPORTED.has(c.name))throw Error('Unsupported redirected Trainer');
+ return prompt(g,{side,handIndex:g.players[side].hand.length,cardId,proxy:true,ownerSide,data:{}},h);
 }
 function answer(g,plan,response,h){
  if(!plan||!plan.await)throw Error('Trainer choice is missing');
  const data={...plan.data,[plan.await]:response.decline?[]:[...response.selected]};
  return prompt(g,{...plan,data,await:null},h);
 }
-const SUPPORTED=new Set(['Ecogym','Card-Flip Game','New Pokédex','Energy Amplifier',"Thought Wave Machine (Rocket's Secret Machine)",'Balloon Berry','Super Scoop Up','Magnifier','Gold Berry','Miracle Berry','Focus Band','EXP.ALL','Sprout Tower','Healing Field','Broken Ground Gym','Radio Tower','Lucky Stadium','Mary','PokéGear','Super Energy Retrieval','Time Capsule','Pokémon Personality Test',"Impostor Professor Oak's Invention",'Arcade Game','Energy Charge','Ruin Wall','Old Rod',"Team Rocket's Evil Deeds",'Energy Ark','Fossil Egg','Hyper Devolution Spray','Double Gust',"Bill's Teleporter",'Professor Elm','Moo-Moo Milk','Pokémon March','Super Rod','Bill','Professor Oak','Impostor Professor Oak',"Imposter Oak's Revenge",'Lass','Maintenance','Computer Search','Energy Search',"The Boss's Way",'Poké Ball','Pokémon Trader','Item Finder','Energy Retrieval','Nightly Garbage Run','Recycle','Pokédex','Gambler','Digger','Full Heal','Potion','Super Potion','Pokémon Center','Switch','Gust of Wind','Energy Removal','Super Energy Removal','Defender','PlusPower','Goop Gas Attack','Here Comes Team Rocket!',"Rocket's Sneak Attack",'Pokémon Flute','Revive','Mr. Fuji','Scoop Up','Devolution Spray','Pokémon Breeder','Challenge!','Sleep!',
+const SUPPORTED=new Set(['Clefairy Doll','Ecogym','Card-Flip Game','New Pokédex','Energy Amplifier',"Thought Wave Machine (Rocket's Secret Machine)",'Balloon Berry','Super Scoop Up','Magnifier','Gold Berry','Miracle Berry','Focus Band','EXP.ALL','Sprout Tower','Healing Field','Broken Ground Gym','Radio Tower','Lucky Stadium','Mary','PokéGear','Super Energy Retrieval','Time Capsule','Pokémon Personality Test',"Impostor Professor Oak's Invention",'Arcade Game','Energy Charge','Ruin Wall','Old Rod',"Team Rocket's Evil Deeds",'Energy Ark','Fossil Egg','Hyper Devolution Spray','Double Gust',"Bill's Teleporter",'Professor Elm','Moo-Moo Milk','Pokémon March','Super Rod','Bill','Professor Oak','Impostor Professor Oak',"Imposter Oak's Revenge",'Lass','Maintenance','Computer Search','Energy Search',"The Boss's Way",'Poké Ball','Pokémon Trader','Item Finder','Energy Retrieval','Nightly Garbage Run','Recycle','Pokédex','Gambler','Digger','Full Heal','Potion','Super Potion','Pokémon Center','Switch','Gust of Wind','Energy Removal','Super Energy Removal','Defender','PlusPower','Goop Gas Attack','Here Comes Team Rocket!',"Rocket's Sneak Attack",'Pokémon Flute','Revive','Mr. Fuji','Scoop Up','Devolution Spray','Pokémon Breeder','Challenge!','Sleep!',
  'Brock',"Brock's Training Method",'Misty','Lt. Surge','Secret Mission','Erika',"Erika's Perfume",'Koga','Sabrina',"Sabrina's Gaze",'Blaine',"Blaine's Gamble",'Fervor','Max Revive','Giovanni','Warp Point',
  "Blaine's Last Resort","Erika's Kindness",'Good Manners','Master Ball',"Giovanni's Last Resort","Misty's Tears","Erika's Maids","The Rocket's Trap","Rocket's Secret Experiment",
  'No Removal Gym',"The Rocket's Training Gym",'Resistance Gym',"Rocket's Minefield Gym",'Transparent Walls',
