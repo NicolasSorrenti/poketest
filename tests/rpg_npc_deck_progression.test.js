@@ -10,8 +10,8 @@ const service=new ClassicLocalService();
 const rank=ids=>Object.fromEntries([...new Set(ids)].map(id=>[id,ids.filter(x=>x===id).length]));
 const pokemon=ids=>ids.filter(id=>CATALOG.get(id)?.supertype==='Pokémon');
 
-test('the 23 authored starting recipes are distinct, deterministic, and independent from retail decks',()=>{
- assert.equal(NPC.NAMES.length,24);
+test('the 25 authored starting recipes are distinct, deterministic, and independent from retail decks',()=>{
+ assert.equal(NPC.NAMES.length,25);
  const sourceDecks=Object.fromEntries(['power_reserve','blackout','overgrowth','zap','gym_new_voltage','rocket_lab','water_blast','fossil_lab','hotfoot','cold_fusion','bodyguard','lockdown'].map(id=>[id,service.decklist(id)]));
  const packages=[];
  for(const npc of NPC.NAMES){
