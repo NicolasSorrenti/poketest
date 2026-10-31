@@ -26,6 +26,7 @@ jobs:
       - run: node test_card_fidelity_pokemon_flute.js
       - run: node test_card_fidelity_pokedex.js
       - run: node test_card_fidelity_professor_oak.js
+      - run: node test_card_fidelity_bill.js
       - run: node test_card_fidelity_revive.js
       - run: node test_card_fidelity_base_batch01.js
       - run: node test_card_fidelity_base_batch02.js
