@@ -101,7 +101,12 @@
       let src=pending.src||fallbackImage?.(pending.character)||'';
       if(!src){frame.textContent='Photo unavailable';return;}
       const img=make('img');img.src=src;img.alt='Photo from '+name;img.loading='eager';
-      img.onerror=()=>{img.remove();frame.textContent='The photo could not be loaded.';};
+      let triedFallback=false;
+      img.onerror=()=>{
+        const fallback=fallbackImage?.(pending.character);
+        if(!triedFallback&&fallback&&fallback!==img.src){triedFallback=true;img.src=fallback;return;}
+        img.remove();frame.textContent='The photo could not be loaded.';
+      };
       frame.append(img);
     }
     function button(label,handler,cls='rpg-phone-choice'){
