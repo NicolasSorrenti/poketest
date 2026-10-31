@@ -40,7 +40,7 @@ for(const {format,size} of configs){
  // Multiple promotion options belong to the Doll owner; an Active Doll with
  // no replacement and a non-Doll Pokémon cannot use this action.
  {const g=game(format,size);g.players[0].active=unit('base1-70');g.players[0].bench=[unit('base1-58'),unit('base1-44')];act(g,0,'discard_clefairy_doll',{slot:-1});assert.equal(g.pendingDecision.actor,0);assert.equal(g.pendingDecision.options.length,2);scenarios++;}
- {const g=game(format,size);g.players[0].active=unit('base1-70');reject(g,0,'discard_clefairy_doll',{slot:-1});g.players[0].active=unit('base1-3');reject(g,0,'discard_clefairy_doll',{slot:-1});scenarios++;}
+ {const g=game(format,size);g.players[0].active=unit('base1-70');act(g,0,'discard_clefairy_doll',{slot:-1});assert.equal(g.over,true);assert.equal(g.winner,1);assert.ok(g.players[0].discard.includes('base1-70'));const other=game(format,size);reject(other,0,'discard_clefairy_doll',{slot:-1});scenarios++;}
  if(format==='classic'){
   // Zone identity matters: Clefairy Doll is Trainer in discard, so Old Rod
   // recovers it only on the both-tails Trainer result, never both-heads.

@@ -1096,11 +1096,10 @@ function performAction(g,side,cmd){
  if(type==='discard_clefairy_doll'){
   const slot=requireInt(v.slot,'slot'),doll=safeSlot(p,slot);
   if(card(g,doll.id).name!=='Clefairy Doll')fail('Only Clefairy Doll can be discarded this way');
-  if(slot===-1&&!p.bench.length)fail('Cannot discard your only Pokémon');
   if(slot===-1)p.active=null;else p.bench.splice(slot,1);
   discardUnit(g,side,doll);
   log(g,`${p.name} discarded Clefairy Doll.`);
-  if(slot===-1){g.pendingPromotions=[side];g.promotionAfter='trainer';finishPromotions(g);}
+  if(slot===-1){if(!p.bench.length){g.over=true;g.winner=1-side;log(g,`${p.name} has no Pokémon remaining.`);return;}g.pendingPromotions=[side];g.promotionAfter='trainer';finishPromotions(g);}
   return;
  }
  if(type==='retreat'){
