@@ -564,7 +564,11 @@ function prompt(g,plan,helpers){
  if(name==='Recycle'&&!chosen(d,'recover')&&helpers.flip(g))return single('recover',side,disc(p),'Put a card from discard on your deck',true);
  if(name==='Gust of Wind'&&cannotSwitch(g,1-side))d.target=[];
  if(name==='Switch'&&cannotSwitch(g,side))d.target=[];
- if(name==='Gust of Wind'&&!chosen(d,'target'))return single('target',side,options(f.bench.map((u,i)=>({i,label:publicName(u)})),'bench'),'Choose opponent replacement');
+ if(name==='Gust of Wind'&&!chosen(d,'target')){
+  const targetsForGust=options(f.bench.map((u,i)=>({i,label:publicName(u)})),'bench');
+  if(targetsForGust.length===1)d.target=[targetsForGust[0].id];
+  else return single('target',side,targetsForGust,'Choose opponent replacement');
+ }
  if(name==='Switch'&&!chosen(d,'target'))return single('target',side,options(p.bench.map((u,i)=>({i,label:publicName(u)})),'bench'),'Choose your replacement');
  if(['Potion','Super Potion','Scoop Up','Devolution Spray','Defender','Pokémon Center'].includes(name)&&!chosen(d,'target')&&name!=='Pokémon Center'){
   const targetsForEffect=own(u=>name==='Potion'?u.damage>0:name==='Super Potion'?u.damage>0&&u.energies.length>0:name==='Devolution Spray'?u.under.length>0:true);
