@@ -54,16 +54,16 @@ const discardCases=[
 for(const {format,size} of configs)for(const sandshrew of ['base1-62','base4-91'])for(const entry of discardCases){
  const g=game(format,size),defender=unit(entry.id,entry.energies);
  if(entry.trainer)g.players[1].discard.push(entry.trainer);
- sandshrewTurn(g,sandshrew,defender);g.rngState=rngStateFor(false);
+ sandshrewTurn(g,sandshrew,defender);const handBefore=g.players[1].hand.length;g.rngState=rngStateFor(false);
  const attackIndex=CATALOG.get(entry.id).attacks.findIndex(a=>a.name===entry.name);
  act(g,1,'attack',{attackIndex});
- assert.equal(g.players[1].discard.filter(id=>id===entry.discard).length,1,entry.name+' pays before Sand-attack '+JSON.stringify({turn:g.turn,activeEnergies:g.players[1].active.energies,discard:g.players[1].discard,pendingDecision:g.pendingDecision,pendingAction:g.pendingAction,coinFlips:g.coinFlips,message:g.message.slice(0,8)}));
+ assert.equal(g.players[1].discard.filter(id=>id===entry.discard).length,1,entry.name+' pays before Sand-attack');
  assert.equal(g.players[1].active.energies.length,entry.energies.length-1,entry.name+' pays exactly once');
  assert.equal(g.pendingDecision,null,entry.name+' stops before follow-up choices when prevented');
  assert.equal(g.turn,0,entry.name+' prevention failure ends the turn');
  if(entry.trainer)assert.ok(g.players[1].discard.includes(entry.trainer),'Scavenge does not recover after prevention');
  if(entry.blockedEffect)assert.equal(g.players[1].active[entry.blockedEffect],undefined,entry.name+' effect is not applied when prevented');
- if(entry.name==='Third Eye')assert.equal(g.players[1].hand.length,0,'Third Eye draws nothing after prevention');
+ if(entry.name==='Third Eye')assert.equal(g.players[1].hand.length,handBefore,'Third Eye adds no cards after prevention');
  scenarios++;
 }
 // Scavenge/Third Eye still give the attacker a real choice when Energy cards
