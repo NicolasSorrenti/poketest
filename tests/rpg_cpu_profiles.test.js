@@ -24,7 +24,7 @@ test('every named RPG opponent has a legal character-specific CPU profile',()=>{
 
 test('new guest profiles keep their style while RPG difficulty is forced to Champion',()=>{
  const service=new ClassicLocalService();
- for(const [id,personality] of [['barb','tactical'],['daisy','setup'],['lyla','tactical'],['jicy','aggressive'],['elena','tactical'],['jinx','aggressive'],['laca','risk_taking'],['luna','defensive'],['rina','setup'],['sierra','tactical'],['sol','risk_taking']]){
+ for(const [id,personality] of [['barb','tactical'],['daisy','setup'],['jicy','aggressive'],['elena','tactical'],['jinx','aggressive'],['laca','risk_taking'],['luna','defensive'],['rina','setup'],['sierra','tactical'],['sol','risk_taking']]){
   const duel=service.create(forRpgDuel({deck:'blackout',opponent:'brushfire',npcDeckId:id,seed:178}));
   assert.equal(duel.cpu.level,RPG_CPU_LEVEL,id);
   assert.equal(duel.cpu.personality,personality,id);
@@ -32,6 +32,8 @@ test('new guest profiles keep their style while RPG difficulty is forced to Cham
  }
 });
 
+// Lyla's current NPC deck still contains Neo printings outside the curated
+// preview; test her CPU profile on restore without constructing an illegal duel.
 test('restored RPG duels upgrade their NPC personality without reducing skill',()=>{
  const old=configuration({level:RPG_CPU_LEVEL,personality:'balanced',
   prizeRace:true,knockoutTempo:true,opponentResponse:true});
