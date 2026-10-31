@@ -621,7 +621,10 @@
      "kind": "attack",
      "index": 0,
      "name": "Slash",
-     "status": "unreviewed"
+     "status": "partial",
+     "evidence": [
+      "test_card_fidelity_charmeleon_slash.js: exact three-Colorless printed cost, 30 flat damage, Base/Base Set 2 wording parity; Double Colorless with typed Energy payment, multiple Energy units, atomic underpayment rejection, Fire Weakness and damage prevention without a choice. Base Set Classic."
+     ]
     },
     {
      "kind": "attack",
@@ -4777,7 +4780,10 @@
      "kind": "attack",
      "index": 0,
      "name": "Slash",
-     "status": "unreviewed"
+     "status": "partial",
+     "evidence": [
+      "test_card_fidelity_charmeleon_slash.js: exact three-Colorless printed cost, 30 flat damage, Base/Base Set 2 wording parity; Double Colorless with typed Energy payment, multiple Energy units, atomic underpayment rejection, Fire Weakness and damage prevention without a choice. Base Set 2 online-preview."
+     ]
     },
     {
      "kind": "attack",
