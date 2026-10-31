@@ -211,7 +211,7 @@ function applyCondition(g,u,status){
   delete u.gymShapeshiftCard;
  }
 }
-function classicHelpers(){return {flip:g=>next(g,2)===1,random:randomRaw,shuffle,draw,log,unit,clearBenchEffects,knockOuts,finishPromotions,finishTurn,calculateDamage,applyCondition,onPlay:(g,side,slot)=>CLASSIC_POWERS.played(g,side,slot,classicHelpers())};}
+function classicHelpers(){return {flip:g=>next(g,2)===1,random:randomRaw,shuffle,draw,log,unit,clearBenchEffects,knockOuts,awardKnockoutPrize,promptPrize,completeKnockouts,finishPromotions,finishTurn,calculateDamage,applyCondition,onPlay:(g,side,slot)=>CLASSIC_POWERS.played(g,side,slot,classicHelpers())};}
 function retreatCost(g,side,u){
  const owner=g.players[side],enemy=g.players[1-side];
  const base=(effectiveCard(g,u).retreatCost||[]).length;

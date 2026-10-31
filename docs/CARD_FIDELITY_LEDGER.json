@@ -558,13 +558,13 @@
      "kind": "attack",
      "index": 0,
      "name": "Electric Shock",
-     "status": "unreviewed"
+     "status": "partial"
     },
     {
      "kind": "power",
      "index": 0,
      "name": "Buzzap",
-     "status": "unreviewed"
+     "status": "partial"
     }
    ]
   },
@@ -4578,13 +4578,13 @@
      "kind": "attack",
      "index": 0,
      "name": "Electric Shock",
-     "status": "unreviewed"
+     "status": "partial"
     },
     {
      "kind": "power",
      "index": 0,
      "name": "Buzzap",
-     "status": "unreviewed"
+     "status": "partial"
     }
    ]
   },
