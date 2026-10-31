@@ -803,7 +803,12 @@ function energyHorizonBonus(action,o,cfg){
  // Rainbow Energy damages its host immediately, including in two-turn forecasts.
  const rainbowDamage=card(attachedId)?.name==='Rainbow Energy'?10:0;
  if(rainbowDamage>=hpRemaining(u))return 0;
+ // Match the reducer: Full Heal Energy cures Special Conditions on
+ // attachment, so a sleeping/paralyzed Active can attack immediately.
+ // Forecasting the Energy without its cure undervalues this legal line.
+ const fullHeal=card(attachedId)?.name==='Full Heal Energy';
  const after={...u,damage:(u.damage||0)+rainbowDamage,
+  ...(fullHeal?{status:null}:{}),
   energies:[...(u.energies||[]),attachedId]};
  const futureHand=p.hand.filter((_,i)=>i!==v.handIndex);
  const futureRound=(Number(o.round)||0)+1;

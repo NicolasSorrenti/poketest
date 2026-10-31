@@ -200,6 +200,28 @@ test('Apex values Energy that unlocks an attack after Paralysis clears',()=>{
   AI.energyHorizonBonus(attachActive,fire,cfg));
 });
 
+test('Apex Energy horizon values Full Heal Energy cure on attachment',()=>{
+ // The reducer clears Sleep and Paralysis immediately on Full Heal Energy.
+ // Both cards below provide one Colorless Energy; only Full Heal permits
+ // Hitmonchan's already-funded Jab this turn.
+ for(const status of ['Asleep','Paralyzed']){
+  const fullHeal=futureEnergyBoard('base5-81','base1-91',[FIGHT]);
+  const potion=futureEnergyBoard('base5-82','base1-91',[FIGHT]);
+  for(const o of [fullHeal,potion]){
+   o.turnSerial=11;
+   o.self.active.status=status;
+  }
+  assert.ok(AI.energyHorizonBonus(attachActive,fullHeal,cfg)>
+   AI.energyHorizonBonus(attachActive,potion,cfg),
+   `Full Heal must unlock an immediate attack while ${status}`);
+  fullHeal.self.active.status=null;
+  potion.self.active.status=null;
+  assert.equal(AI.energyHorizonBonus(attachActive,fullHeal,cfg),
+   AI.energyHorizonBonus(attachActive,potion,cfg),
+   'healthy Pokémon must not receive a phantom status-cure bonus');
+ }
+});
+
 test('Apex forecasts a two-attachment attack after Paralysis recovery',()=>{
  const dce=futureEnergyBoard(FIGHT,'base1-96',[FIGHT]);
  const noEnergy=futureEnergyBoard(FIGHT,'base1-91',[FIGHT]);
