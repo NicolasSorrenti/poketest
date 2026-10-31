@@ -764,13 +764,29 @@
      "kind": "attack",
      "index": 0,
      "name": "Vine Whip",
-     "status": "unreviewed"
+     "status": "partial",
+     "evidence": [
+      "test_card_fidelity_ivysaur_attacks.js",
+      "https://limitlesstcg.com/cards/BS/30",
+      "https://limitlesstcg.com/cards/BS2/44",
+      "https://bulbapedia.bulbagarden.net/wiki/Ivysaur_%28Base_Set_30%29",
+      "https://www.judgeball.com/files/archives/tcg-rulebooks/en/WOTCE1.pdf"
+     ],
+     "scope": "Compared Base Set and Base Set 2 attack text/costs with Limitless and Bulbapedia, and checked the 2002 WotC rulebook. Vine Whip requires Grass plus two Colorless units, accepts Grass+DCE, rejects underpayment and DCE without Grass, and deals 30. Poisonpowder requires three Grass, deals 20 and applies Poison; the attacker's immediate end-turn Checkup adds 10 (30 total). Applying Poison again replaces existing stronger Toxic Poison with standard 10 instead of stacking, as the historical rulebook specifies. Fire-type Growlithe Flare doubles against Ivysaur's Fire Weakness. Base Set in Classic; Base Set 2 in online-preview 60-card and 40-card/four-Prize setup. No discrepancy found in tested scope; other card interactions and browser/network behavior pending."
     },
     {
      "kind": "attack",
      "index": 1,
      "name": "Poisonpowder",
-     "status": "unreviewed"
+     "status": "partial",
+     "evidence": [
+      "test_card_fidelity_ivysaur_attacks.js",
+      "https://limitlesstcg.com/cards/BS/30",
+      "https://limitlesstcg.com/cards/BS2/44",
+      "https://bulbapedia.bulbagarden.net/wiki/Ivysaur_%28Base_Set_30%29",
+      "https://www.judgeball.com/files/archives/tcg-rulebooks/en/WOTCE1.pdf"
+     ],
+     "scope": "Compared Base Set and Base Set 2 attack text/costs with Limitless and Bulbapedia, and checked the 2002 WotC rulebook. Vine Whip requires Grass plus two Colorless units, accepts Grass+DCE, rejects underpayment and DCE without Grass, and deals 30. Poisonpowder requires three Grass, deals 20 and applies Poison; the attacker's immediate end-turn Checkup adds 10 (30 total). Applying Poison again replaces existing stronger Toxic Poison with standard 10 instead of stacking, as the historical rulebook specifies. Fire-type Growlithe Flare doubles against Ivysaur's Fire Weakness. Base Set in Classic; Base Set 2 in online-preview 60-card and 40-card/four-Prize setup. No discrepancy found in tested scope; other card interactions and browser/network behavior pending."
     }
    ]
   },
@@ -5015,13 +5031,29 @@
      "kind": "attack",
      "index": 0,
      "name": "Vine Whip",
-     "status": "unreviewed"
+     "status": "partial",
+     "evidence": [
+      "test_card_fidelity_ivysaur_attacks.js",
+      "https://limitlesstcg.com/cards/BS/30",
+      "https://limitlesstcg.com/cards/BS2/44",
+      "https://bulbapedia.bulbagarden.net/wiki/Ivysaur_%28Base_Set_30%29",
+      "https://www.judgeball.com/files/archives/tcg-rulebooks/en/WOTCE1.pdf"
+     ],
+     "scope": "Compared Base Set and Base Set 2 attack text/costs with Limitless and Bulbapedia, and checked the 2002 WotC rulebook. Vine Whip requires Grass plus two Colorless units, accepts Grass+DCE, rejects underpayment and DCE without Grass, and deals 30. Poisonpowder requires three Grass, deals 20 and applies Poison; the attacker's immediate end-turn Checkup adds 10 (30 total). Applying Poison again replaces existing stronger Toxic Poison with standard 10 instead of stacking, as the historical rulebook specifies. Fire-type Growlithe Flare doubles against Ivysaur's Fire Weakness. Base Set in Classic; Base Set 2 in online-preview 60-card and 40-card/four-Prize setup. No discrepancy found in tested scope; other card interactions and browser/network behavior pending."
     },
     {
      "kind": "attack",
      "index": 1,
      "name": "Poisonpowder",
-     "status": "unreviewed"
+     "status": "partial",
+     "evidence": [
+      "test_card_fidelity_ivysaur_attacks.js",
+      "https://limitlesstcg.com/cards/BS/30",
+      "https://limitlesstcg.com/cards/BS2/44",
+      "https://bulbapedia.bulbagarden.net/wiki/Ivysaur_%28Base_Set_30%29",
+      "https://www.judgeball.com/files/archives/tcg-rulebooks/en/WOTCE1.pdf"
+     ],
+     "scope": "Compared Base Set and Base Set 2 attack text/costs with Limitless and Bulbapedia, and checked the 2002 WotC rulebook. Vine Whip requires Grass plus two Colorless units, accepts Grass+DCE, rejects underpayment and DCE without Grass, and deals 30. Poisonpowder requires three Grass, deals 20 and applies Poison; the attacker's immediate end-turn Checkup adds 10 (30 total). Applying Poison again replaces existing stronger Toxic Poison with standard 10 instead of stacking, as the historical rulebook specifies. Fire-type Growlithe Flare doubles against Ivysaur's Fire Weakness. Base Set in Classic; Base Set 2 in online-preview 60-card and 40-card/four-Prize setup. No discrepancy found in tested scope; other card interactions and browser/network behavior pending."
     }
    ]
   },
