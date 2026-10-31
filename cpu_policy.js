@@ -959,7 +959,19 @@ function score(a,o,cfg,used){
   const ko=after>=hpRemaining(q.active)&&before<hpRemaining(q.active);
   const future=(improvement*(cfg.level===2?.50:.85)+(ko?(cfg.level===2?30:65):0))*style.damage;
   const saturation=before>0&&improvement===0?(cfg.level===2?14:35):0;
-  return 110+value*style.setup+(v.slot===-1?18:0)+future-saturation-
+  // Potion Energy heals one damage counter on attachment. Reward real healing
+  // modestly, and give Apex a larger survival incentive only when that heal
+  // turns a publicly likely opponent knockout into a non-knockout. The latter
+  // uses the same legal-attack/coin-risk guard as other Apex rescue decisions.
+  // No future draw, hidden card or lower difficulty behavior is consulted.
+  const potionHeal=cfg.level===8&&card(p.hand[v.handIndex])?.name==='Potion Energy'&&
+   (unit?.damage||0)>0;
+  const healed=potionHeal?{...unit,damage:Math.max(0,unit.damage-10)}:null;
+  const preventsKo=healed&&v.slot===-1&&likelyOpponentKnockout(o,unit)&&
+   !likelyOpponentKnockout(o,healed);
+  const healingValue=healed?(Math.min(10,unit.damage)*1.6+(preventsKo?120:0))*
+   style.survival:0;
+  return 110+value*style.setup+(v.slot===-1?18:0)+future-saturation+healingValue-
    (v.slot===-1?doomedActiveAttachmentPenalty(o,p.hand[v.handIndex],cfg):0);
  }
  if(type==='attack'){
