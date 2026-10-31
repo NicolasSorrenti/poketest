@@ -1091,7 +1091,12 @@
      "kind": "attack",
      "index": 0,
      "name": "Headbutt",
-     "status": "unreviewed"
+     "status": "partial",
+     "evidence": [
+      "test_card_fidelity_seel.js",
+      "Base Set and Base Set 2 text, cost and typing compared with Serebii Base and Limitless Base/Base Set 2; official Pokémon errata PDF searched, no Seel entry."
+     ],
+     "scope": "Headbutt: exact Water cost and fixed 10 damage, consumes the attack turn without opening a choice, rejects Double Colorless-only and Fire-only payment atomically; Water damage doubles against Arcanine's Weakness; incoming Pikachu Lightning damage doubles against Seel's Weakness. Base and Base Set 2 printing parity checked. 36 reducer scenarios across Base Set Classic, Neo-theme, online-preview 60-card and 40-card, and Base Set 2 online-preview 60-card and 40-card. No discrepancy found in this scope; other card interactions and browser/network integration remain pending."
     }
    ]
   },
@@ -5561,7 +5566,12 @@
      "kind": "attack",
      "index": 0,
      "name": "Headbutt",
-     "status": "unreviewed"
+     "status": "partial",
+     "evidence": [
+      "test_card_fidelity_seel.js",
+      "Base Set and Base Set 2 text, cost and typing compared with Serebii Base and Limitless Base/Base Set 2; official Pokémon errata PDF searched, no Seel entry."
+     ],
+     "scope": "Headbutt: exact Water cost and fixed 10 damage, consumes the attack turn without opening a choice, rejects Double Colorless-only and Fire-only payment atomically; Water damage doubles against Arcanine's Weakness; incoming Pikachu Lightning damage doubles against Seel's Weakness. Base and Base Set 2 printing parity checked. 36 reducer scenarios across Base Set Classic, Neo-theme, online-preview 60-card and 40-card, and Base Set 2 online-preview 60-card and 40-card. No discrepancy found in this scope; other card interactions and browser/network integration remain pending."
     }
    ]
   },
