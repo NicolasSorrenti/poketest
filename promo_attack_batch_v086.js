@@ -4,6 +4,8 @@
 const cards=require('./cards/basep.json');
 const defs=Object.freeze({
  'basep-2|Light Screen':'light-screen',
+ 'basep-46|Lightning Rod':'lightning-rod',
+ 'basep-46|Lightning Bolt':'lightning-bolt',
  'basep-4|Recharge':'recharge',
  'basep-7|First Aid':'first-aid',
  'basep-8|Psywave':'psywave',
@@ -42,6 +44,8 @@ function resolve(program,flip,ctx={}){
  const coin=()=>{const heads=Boolean(flip());r.flips.push(heads);return heads;};
  switch(kind){
   case 'light-screen':r.shield={half:true};break;
+  case 'lightning-rod':r.lightningRodMarker=true;break;
+  case 'lightning-bolt':r.lightningBoltMarkerDamage=20;break;
   case 'first-aid':r.healSelf=10;break;
   case 'psywave':r.damage=10*(ctx.enemyEnergy||0);break;
   case '3d-attack':case 'fury-swipes':case 'leaf-slice':{
