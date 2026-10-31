@@ -342,9 +342,10 @@
      "name": "Water Gun",
      "status": "partial",
      "evidence": [
-      "test_card_fidelity_poliwrath.js"
+      "test_card_fidelity_poliwrath.js",
+      "test_card_fidelity_poliwrath.js: 87 reducer scenarios check Rainbow Energy as Water for Water Gun bonus damage and for paying required Water/Colorless cost units; WotC Aug. 2000 chat log Q41 confirms Rainbow counts as Water for Water-specific damage."
      ],
-     "scope": "Base Set wording: two-Water cost, surplus Water damage, 20-damage bonus cap, exclusion of non-Water surplus and rejection of an invalid typed cost. Shared reducer scenarios in Classic, Neo, online-preview and 40-card Cube; historical ruling and interaction review pending."
+     "scope": "Base Set wording: two-Water cost, surplus Water damage, 20-damage bonus cap, exclusion of non-Water surplus and rejection of an invalid typed cost. Shared reducer scenarios in Classic, Neo, online-preview and 40-card Cube; historical ruling and interaction review pending. Rainbow Energy payment and surplus counting checked; other special-Energy interactions and remaining rules are unreviewed."
     },
     {
      "kind": "attack",
@@ -1531,7 +1532,13 @@
      "kind": "attack",
      "index": 0,
      "name": "Water Gun",
-     "status": "unreviewed"
+     "status": "partial",
+     "evidence": [
+      "test_card_fidelity_poliwag.js: 91 reducer scenarios compare Base Set #59 and Base Set 2 #88 in Classic, Neo-theme, and online-preview 60/40.",
+      "Card wording cross-checked against Serebii Base #59 and #88, Bulbapedia's Base/Base Set 2 print record, and the Base Set 2 scan transcription on T206 Cards. The official Pokémon TCG errata index was searched; no Poliwag/Water Gun entry was found.",
+      "Rainbow Energy interaction checked against the Aug. 2000 WotC chat log Q41: Rainbow Energy counts as Water when calculating a Water-specific damage effect."
+     ],
+     "scope": "Corrected Base #59 and Base Set 2 #88 Water Gun printed text; 1-Water typed cost; only surplus Water-providing Energy counts; 10 damage per surplus Water card with a +20 cap; Double Colorless, Fire, and Grass do not boost; Rainbow Energy can pay the Water cost and contributes as attached Water; Grass Weakness doubles damage; stats/retreat and no-choice resolution. Tested in Classic for Base #59 and Neo-theme/online-preview 60/40 for both printings. Other interactions and client/network behavior remain unchecked."
     }
    ]
   },
@@ -4636,9 +4643,10 @@
      "name": "Water Gun",
      "status": "partial",
      "evidence": [
-      "test_card_fidelity_poliwrath.js"
+      "test_card_fidelity_poliwrath.js",
+      "test_card_fidelity_poliwrath.js: 87 reducer scenarios check Rainbow Energy as Water for Water Gun bonus damage and for paying required Water/Colorless cost units; WotC Aug. 2000 chat log Q41 confirms Rainbow counts as Water for Water-specific damage."
      ],
-     "scope": "Base Set 2 wording variant: two-Water cost, surplus Water-only bonus, 20-damage cap and rejection of an invalid typed cost. Shared reducer scenarios in Neo, online-preview and 40-card Cube; applicable historical ruling and remaining interaction review pending."
+     "scope": "Base Set 2 wording variant: two-Water cost, surplus Water-only bonus, 20-damage cap and rejection of an invalid typed cost. Shared reducer scenarios in Neo, online-preview and 40-card Cube; applicable historical ruling and remaining interaction review pending. Rainbow Energy payment and surplus counting checked; other special-Energy interactions and remaining rules are unreviewed."
     },
     {
      "kind": "attack",
@@ -6316,7 +6324,13 @@
      "kind": "attack",
      "index": 0,
      "name": "Water Gun",
-     "status": "unreviewed"
+     "status": "partial",
+     "evidence": [
+      "test_card_fidelity_poliwag.js: 91 reducer scenarios compare Base Set #59 and Base Set 2 #88 in Classic, Neo-theme, and online-preview 60/40.",
+      "Card wording cross-checked against Serebii Base #59 and #88, Bulbapedia's Base/Base Set 2 print record, and the Base Set 2 scan transcription on T206 Cards. The official Pokémon TCG errata index was searched; no Poliwag/Water Gun entry was found.",
+      "Rainbow Energy interaction checked against the Aug. 2000 WotC chat log Q41: Rainbow Energy counts as Water when calculating a Water-specific damage effect."
+     ],
+     "scope": "Corrected Base #59 and Base Set 2 #88 Water Gun printed text; 1-Water typed cost; only surplus Water-providing Energy counts; 10 damage per surplus Water card with a +20 cap; Double Colorless, Fire, and Grass do not boost; Rainbow Energy can pay the Water cost and contributes as attached Water; Grass Weakness doubles damage; stats/retreat and no-choice resolution. Tested in Classic for Base #59 and Neo-theme/online-preview 60/40 for both printings. Other interactions and client/network behavior remain unchecked."
     }
    ]
   },

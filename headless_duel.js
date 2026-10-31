@@ -106,11 +106,17 @@ function exactAttackSubject(program,c){
 function extraAttackEnergy(g,unit,attack,type){
  const required=attack.cost||[], cards=unit.energies.map(id=>card(g,id));
  if(type==='Water'){
-  const water=cards.filter(x=>x.name==='Water Energy').length;
+  // Rainbow and Miracle Energy provide Water while attached and count as
+  // Water Energy for printed bonus damage. Count only Water-providing cards;
+  // cover any Colorless cost with non-Water Energy units first.
+  const water=unit.energies.filter(id=>attachedEnergyMatchesType(g,id,'Water')).length;
   const waterRequired=required.filter(x=>x==='Water').length;
-  const others=cards.reduce((n,x)=>n+(x.name==='Double Colorless Energy'?2:x.name==='Water Energy'?0:1),0);
+  const otherUnits=unit.energies.reduce((n,id)=>{
+   const x=card(g,id);
+   return n+(x.name==='Double Colorless Energy'?2:attachedEnergyMatchesType(g,id,'Water')?0:1);
+  },0);
   const colorless=required.filter(x=>x==='Colorless').length;
-  return Math.max(0,water-waterRequired-Math.max(0,colorless-others));
+  return Math.max(0,water-waterRequired-Math.max(0,colorless-otherUnits));
  }
  return Math.max(0,cards.length-required.length);
 }
