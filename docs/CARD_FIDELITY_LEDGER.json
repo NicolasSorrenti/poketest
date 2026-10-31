@@ -1109,13 +1109,21 @@
      "kind": "attack",
      "index": 0,
      "name": "Withdraw",
-     "status": "unreviewed"
+     "status": "partial",
+     "evidence": [
+      "test_card_fidelity_wartortle.js: cost, attack output, Withdraw coin shield timing/effect scope, Weakness and Base Set 2 parity; see audited scope in docs/CARD_FIDELITY_AUDIT.md.",
+      "Printed attacks compared with Serebii Base #42 and Base Set 2 #63; official Pokémon TCG errata PDF searched, no Wartortle match."
+     ]
     },
     {
      "kind": "attack",
      "index": 1,
      "name": "Bite",
-     "status": "unreviewed"
+     "status": "partial",
+     "evidence": [
+      "test_card_fidelity_wartortle.js: cost, attack output, Withdraw coin shield timing/effect scope, Weakness and Base Set 2 parity; see audited scope in docs/CARD_FIDELITY_AUDIT.md.",
+      "Printed attacks compared with Serebii Base #42 and Base Set 2 #63; official Pokémon TCG errata PDF searched, no Wartortle match."
+     ]
     }
    ]
   },
@@ -5603,13 +5611,21 @@
      "kind": "attack",
      "index": 0,
      "name": "Withdraw",
-     "status": "unreviewed"
+     "status": "partial",
+     "evidence": [
+      "test_card_fidelity_wartortle.js: cost, attack output, Withdraw coin shield timing/effect scope, Weakness and Base Set 2 parity; see audited scope in docs/CARD_FIDELITY_AUDIT.md.",
+      "Printed attacks compared with Serebii Base #42 and Base Set 2 #63; official Pokémon TCG errata PDF searched, no Wartortle match."
+     ]
     },
     {
      "kind": "attack",
      "index": 1,
      "name": "Bite",
-     "status": "unreviewed"
+     "status": "partial",
+     "evidence": [
+      "test_card_fidelity_wartortle.js: cost, attack output, Withdraw coin shield timing/effect scope, Weakness and Base Set 2 parity; see audited scope in docs/CARD_FIDELITY_AUDIT.md.",
+      "Printed attacks compared with Serebii Base #42 and Base Set 2 #63; official Pokémon TCG errata PDF searched, no Wartortle match."
+     ]
     }
    ]
   },
