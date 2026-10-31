@@ -799,13 +799,27 @@
      "kind": "attack",
      "index": 0,
      "name": "Doubleslap",
-     "status": "unreviewed"
+     "status": "partial",
+     "evidence": [
+      "test_card_fidelity_jynx_attacks.js",
+      "https://limitlesstcg.com/cards/BS/31",
+      "https://limitlesstcg.com/cards/BS2/45",
+      "https://bulbapedia.bulbagarden.net/wiki/Jynx_%28Base_Set%29"
+     ],
+     "scope": "Compared Base Set and Base Set 2 printed costs, damage, text, Weakness and Resistance with Limitless and Bulbapedia. Doubleslap's one-Psychic cost and all four ordered two-coin outcomes were tested: 0/10/20 base damage, with no choice prompt. Meditate requires two Psychic plus one Colorless: two Psychic+DCE succeeds; Psychic+DCE and two Psychic reject atomically. It adds 10 per existing Defending Pokémon damage counter (tested at 0, 2, 3); 1 counter against Psychic-weak Machamp produces 60 attack damage before its existing counter. Base Set in Classic; Base Set 2 in online-preview 60-card and 40-card/four-Prize setup. No discrepancy found in this scope; client/network and wider interactions pending."
     },
     {
      "kind": "attack",
      "index": 1,
      "name": "Meditate",
-     "status": "unreviewed"
+     "status": "partial",
+     "evidence": [
+      "test_card_fidelity_jynx_attacks.js",
+      "https://limitlesstcg.com/cards/BS/31",
+      "https://limitlesstcg.com/cards/BS2/45",
+      "https://bulbapedia.bulbagarden.net/wiki/Jynx_%28Base_Set%29"
+     ],
+     "scope": "Compared Base Set and Base Set 2 printed costs, damage, text, Weakness and Resistance with Limitless and Bulbapedia. Doubleslap's one-Psychic cost and all four ordered two-coin outcomes were tested: 0/10/20 base damage, with no choice prompt. Meditate requires two Psychic plus one Colorless: two Psychic+DCE succeeds; Psychic+DCE and two Psychic reject atomically. It adds 10 per existing Defending Pokémon damage counter (tested at 0, 2, 3); 1 counter against Psychic-weak Machamp produces 60 attack damage before its existing counter. Base Set in Classic; Base Set 2 in online-preview 60-card and 40-card/four-Prize setup. No discrepancy found in this scope; client/network and wider interactions pending."
     }
    ]
   },
@@ -5066,13 +5080,27 @@
      "kind": "attack",
      "index": 0,
      "name": "Doubleslap",
-     "status": "unreviewed"
+     "status": "partial",
+     "evidence": [
+      "test_card_fidelity_jynx_attacks.js",
+      "https://limitlesstcg.com/cards/BS/31",
+      "https://limitlesstcg.com/cards/BS2/45",
+      "https://bulbapedia.bulbagarden.net/wiki/Jynx_%28Base_Set%29"
+     ],
+     "scope": "Compared Base Set and Base Set 2 printed costs, damage, text, Weakness and Resistance with Limitless and Bulbapedia. Doubleslap's one-Psychic cost and all four ordered two-coin outcomes were tested: 0/10/20 base damage, with no choice prompt. Meditate requires two Psychic plus one Colorless: two Psychic+DCE succeeds; Psychic+DCE and two Psychic reject atomically. It adds 10 per existing Defending Pokémon damage counter (tested at 0, 2, 3); 1 counter against Psychic-weak Machamp produces 60 attack damage before its existing counter. Base Set in Classic; Base Set 2 in online-preview 60-card and 40-card/four-Prize setup. No discrepancy found in this scope; client/network and wider interactions pending."
     },
     {
      "kind": "attack",
      "index": 1,
      "name": "Meditate",
-     "status": "unreviewed"
+     "status": "partial",
+     "evidence": [
+      "test_card_fidelity_jynx_attacks.js",
+      "https://limitlesstcg.com/cards/BS/31",
+      "https://limitlesstcg.com/cards/BS2/45",
+      "https://bulbapedia.bulbagarden.net/wiki/Jynx_%28Base_Set%29"
+     ],
+     "scope": "Compared Base Set and Base Set 2 printed costs, damage, text, Weakness and Resistance with Limitless and Bulbapedia. Doubleslap's one-Psychic cost and all four ordered two-coin outcomes were tested: 0/10/20 base damage, with no choice prompt. Meditate requires two Psychic plus one Colorless: two Psychic+DCE succeeds; Psychic+DCE and two Psychic reject atomically. It adds 10 per existing Defending Pokémon damage counter (tested at 0, 2, 3); 1 counter against Psychic-weak Machamp produces 60 attack damage before its existing counter. Base Set in Classic; Base Set 2 in online-preview 60-card and 40-card/four-Prize setup. No discrepancy found in this scope; client/network and wider interactions pending."
     }
    ]
   },
