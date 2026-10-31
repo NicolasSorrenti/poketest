@@ -30,7 +30,7 @@ check('Impostor Professor Oak is repeatable four times in one WotC-era turn and 
   assert.equal(me.discard.filter(id=>id===OAK).length,i);
   assert.notEqual(g.rngState,rng,'Each play shuffles the opponent deck');rng=g.rngState;
  }
- assert.deepEqual(me.hand,['base1-98'],'The acting player keeps the other hand card');
+ assert.deepEqual(player(g,0).hand,['base1-98'],'The acting player keeps the other hand card');
  const view=publicView(g,0);
  assert.equal(view.players[1].hand,undefined,'The acting player must not see the opponent hand');
  assert.equal(JSON.stringify(view).includes('base1-46'),false,'The protocol must hide identities drawn into the opponent hand');
