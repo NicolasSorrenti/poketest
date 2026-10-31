@@ -2011,7 +2011,12 @@
       "effects": [
         {
           "kind": "trainer",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "test_card_fidelity_pokedex.js: six reducer/protocol scenarios across Classic and online-preview; Base and Base Set 2 text parity, selected top cards remain private from opponent, actor-controlled arrangement order, fewer-than-five and empty-deck behavior.",
+            "Printed wording checked against Serebii, Pokéos, and TCGdex card records. Historical rulings, interaction with immediate draw/search effects, client rendering/network behavior beyond publicView, remain unreviewed."
+          ],
+          "scope": "Pokédex #87/#115: look at and rearrange up to five own deck cards; actor sees option faces while opponent's projected decision reveals no card options; selected order sets deck top correctly; short deck and empty deck resolve. Six reducer/protocol scenarios; partial."
         }
       ]
     },
@@ -6903,7 +6908,12 @@
       "effects": [
         {
           "kind": "trainer",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "test_card_fidelity_pokedex.js: six reducer/protocol scenarios across Classic and online-preview; Base and Base Set 2 text parity, selected top cards remain private from opponent, actor-controlled arrangement order, fewer-than-five and empty-deck behavior.",
+            "Printed wording checked against Serebii, Pokéos, and TCGdex card records. Historical rulings, interaction with immediate draw/search effects, client rendering/network behavior beyond publicView, remain unreviewed."
+          ],
+          "scope": "Pokédex #87/#115: look at and rearrange up to five own deck cards; actor sees option faces while opponent's projected decision reveals no card options; selected order sets deck top correctly; short deck and empty deck resolve. Six reducer/protocol scenarios; partial."
         }
       ]
     },
