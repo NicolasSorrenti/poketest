@@ -163,3 +163,55 @@ test('interactive and dialogue portraits crop only the viewport from head to che
  assert.ok(!world.includes('neoOverworldCamilaDialogueFrame'));
  assert.ok(world.includes("fullBody?'278%':alreadyCropped?'165%':'190%'"));
 });
+
+
+test('special costumes outrank neutral dialogue masters in both conversations and interactions',()=>{
+ const packs=require('../rpg_character_packs.generated.js');
+ const outfits=require('../rpg_outfits.js');
+ const start=rpg.indexOf('function sceneOutfitPortraitPaths(');
+ const end=rpg.indexOf('function scenePortraitSource(',start);
+ assert.ok(start>=0&&end>start,'outfit selection functions must exist');
+ const state={location:'park',slot:0,day:1};
+ const specials={
+  barb:'/rpg-assets/characters/barb/portraits/special-day-8.png',
+  akari:'/rpg-assets/characters/akari/portraits/special-day-2.png',
+  hana:'/rpg-assets/characters/hana/overworld-variants/05_white_top_pleated_skirt.png'
+ };
+ const context={
+  cast:packs.cast,window:{NeoRpgCharacterPacks:packs},OUTFITS:outfits,state,
+  activeOutfitSceneId:null,
+  LACA_OVERWORLD_DIALOGUE_DEFAULTS:{
+   casual:'/rpg-assets/characters/laca/overworld/casual/reaching-out.png',
+   lifeguard:'/rpg-assets/characters/laca/overworld/lifeguard/front-leaning.png'
+  },
+  dailyStagePortrait:id=>specials[id]||null,
+  personaCStageCandidates:(id,mood,normal)=>['/expression/'+id+'/'+mood+'.webp',...normal],
+  portraitPaths:(id,mood)=>['/legacy/'+id+'/'+mood+'.png'],
+  dialogueMasterSource:(id,mood)=>mood==='neutral'?'/approved/'+id+'.png':null,
+  defaultOverworldDialogueSource:(id,mood)=>mood==='neutral'?'/default/'+id+'.png':null,
+  CAMILA_DIALOGUE_MASTER:'/camila.png'
+ };
+ const selector=vm.runInNewContext(rpg.slice(start,end)+'\n({stagePortraitPaths})',context).stagePortraitPaths;
+ const first=(id,mood,location,slot,sceneId=null)=>{
+  state.location=location;state.slot=slot;
+  return selector(id,mood,sceneId)[0];
+ };
+ assert.equal(first('barb','neutral','shop',1),specials.barb);
+ assert.equal(first('barb','happy','shop',1),specials.barb);
+ assert.equal(first('akari','vulnerable','arcade',1),specials.akari);
+ assert.equal(first('hana','happy','cafe',2),specials.hana);
+ const lifeguard=context.LACA_OVERWORLD_DIALOGUE_DEFAULTS.lifeguard;
+ assert.equal(first('laca','neutral','park',0),lifeguard);
+ assert.equal(first('laca','happy','park',1),lifeguard);
+ assert.equal(first('laca','neutral','cafe',2,'laca_route_3'),lifeguard);
+ assert.equal(first('laca','neutral','cafe',2),'/approved/laca.png');
+ assert.equal(first('daisy','neutral','cafe',2),'/rpg-assets/characters/daisy/outfits/evening/neutral.png');
+ assert.equal(first('daisy','happy','arcade',2,'daisy_route_3'),'/rpg-assets/characters/daisy/outfits/sporty/neutral.png');
+ assert.equal(first('daisy','neutral','shop',1),'/approved/daisy.png');
+ assert.equal(first('yuna','neutral','cafe',2),'/approved/yuna.png');
+ assert.equal(first('yuna','happy','cafe',2),'/expression/yuna/happy.webp');
+ assert.ok(rpg.includes('&&state.overworldPoseIntro?.id===id&&!outfitActive'),
+  'pose trigger must not silently replace an active special outfit');
+ assert.ok(rpg.includes('srcs:[src,...options.filter(path=>path!==src)]'),
+  'overworld interaction must preserve costume-specific fallback sources');
+});
