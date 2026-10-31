@@ -1839,7 +1839,7 @@ function resolveAttack(g,side,index,chosenBench,energyPicks,extra={}){
   // its printed text. The substituted attack uses the copier's own type.
   roll=ATTACK.resolve(copiedProgram,()=>next(g,2)===1,coreContext);
  }
- if(program.kind==='mirror-move'){const impact=u.lastAttackImpact;roll={damage:impact.damage||0,status:impact.status||null,flips:[],ignoreWR:true};}
+ if(program.kind==='mirror-move'){const impact=u.lastAttackImpact;roll={damage:impact.damage||0,status:impact.status||null,poison:Boolean(impact.poison),poisonDamage:impact.poisonDamage||0,flips:[],ignoreWR:true};}
 
  // Dark Gengar Pull In replaces the defender BEFORE damage and Sleep.
  if(program.kind==='neo92:pull-in'&&extra.neo92PullIndex!==null&&extra.neo92PullIndex!==undefined){
@@ -1920,7 +1920,7 @@ function resolveAttack(g,side,index,chosenBench,energyPicks,extra={}){
   if(!roll.ignoreDefendingEffects&&CLASSIC_POWERS.enabled(g,f.active,'Invisible Wall')&&dmg>=30)dmg=0;
   if(!roll.ignoreDefendingEffects&&CLASSIC_POWERS.enabled(g,f.active,'Kabuto Armor'))dmg=Math.floor(dmg/20)*10;
   if(!roll.ignoreDefendingEffects&&CLASSIC_POWERS.enabled(g,f.active,'Shell Armor'))dmg=Math.max(0,dmg-10);
-  if(!roll.ignoreDefendingEffects&&CLASSIC_POWERS.enabled(g,f.active,'Transparency')&&next(g,2)===1){dmg=0;roll.status=null;roll.statuses=null;roll.poisonDamage=0;roll.discardEnemyEnergy=0;roll.noRetreat=false;roll.attackPenalty=false;roll.attackLock=false;}
+  if(!roll.ignoreDefendingEffects&&CLASSIC_POWERS.enabled(g,f.active,'Transparency')&&next(g,2)===1){dmg=0;roll.status=null;roll.statuses=null;roll.poison=false;roll.poisonDamage=0;roll.discardEnemyEnergy=0;roll.noRetreat=false;roll.attackPenalty=false;roll.attackLock=false;}
   const defenders=roll.ignoreDefendingEffects?0:f.active.attachedTrainers.filter(t=>card(g,t.id).name==='Defender'&&t.expires>g.turnSerial).length;
   dmg=Math.max(0,dmg-defenders*20);
   const powers=u.attachedTrainers.filter(t=>card(g,t.id).name==='PlusPower'&&t.expires>g.turnSerial).length;
@@ -1970,7 +1970,7 @@ function resolveAttack(g,side,index,chosenBench,energyPicks,extra={}){
   return;
  }
  if(extra.fleeBenchIndex!==undefined&&(!Number.isInteger(extra.fleeBenchIndex)||!f.bench[extra.fleeBenchIndex]))fail('Invalid Flee replacement');
- const priorDefender=f.active,priorDefDamage=f.active.damage,priorDefStatus=f.active.status;
+ const priorDefender=f.active,priorDefDamage=f.active.damage,priorDefStatus=f.active.status,priorDefPoison=f.active.poison,priorDefPoisonDamage=f.active.poisonDamage;
  if(isClassicRules(g)&&f.active.gymShadowImages){
   if(next(g,2)===0){dmg=0;log(g,`Shadow Images prevented attack damage to ${card(g,f.active.id).name}.`);}
   else if(dmg>0)delete f.active.gymShadowImages;
@@ -1992,7 +1992,7 @@ function resolveAttack(g,side,index,chosenBench,energyPicks,extra={}){
   const fleeing=f.active;
   f.active=f.bench.splice(extra.fleeBenchIndex,1,fleeing)[0];
   STATUS.clearConditions(fleeing);clearBenchEffects(fleeing);
-  roll={...roll,status:null,statuses:null,poisonDamage:0,discardEnemyEnergy:0,
+  roll={...roll,status:null,statuses:null,poison:false,poisonDamage:0,discardEnemyEnergy:0,
    noRetreat:false,attackLock:false,attackPenalty:false,screech:false,
    bounceDefender:false,returnDefenderToDeck:false,forceSwitch:null};
   log(g,`${card(g,fleeing.id).name} used Flee and switched to ${card(g,f.active.id).name}.`);
@@ -2013,7 +2013,7 @@ function resolveAttack(g,side,index,chosenBench,energyPicks,extra={}){
   if(CLASSIC_POWERS.enabled(g,f.active,'Restless Sleep')&&priorDefStatus==='Asleep')u.damage+=20;
  }
 
- if(!shield?.allEffects||roll.ignoreDefendingEffects){if(roll.status)applyCondition(g,f.active,roll.status);if(roll.statuses)for(const status of roll.statuses)applyCondition(g,f.active,status);}
+ if(!shield?.allEffects||roll.ignoreDefendingEffects){if(roll.status)applyCondition(g,f.active,roll.status);if(roll.statuses)for(const status of roll.statuses)applyCondition(g,f.active,status);if(roll.poison)applyCondition(g,f.active,'Poisoned');}
  const benchProtected=owner=>owner.transparentWallsUntil>g.turnSerial||Boolean(owner.themeBenchShield?.expires>g.turnSerial&&owner.active?.id===owner.themeBenchShield.sourceId);
  const hitBench=(owner,target,damage)=>{if(target&&!benchProtected(owner)){
   const victim=g.players.indexOf(owner),protectedByUnown=
@@ -2367,7 +2367,7 @@ function resolveAttack(g,side,index,chosenBench,energyPicks,extra={}){
  }
  // Track damage/status on a Pokémon so Mirror Move can reproduce what the
  // opponent's attack actually did, rather than its printed base damage.
- if(priorDefender&&(dmg>0||priorDefender.status!==priorDefStatus))priorDefender.lastAttackImpact={serial:g.turnSerial,damage:priorDefender.damage-priorDefDamage,status:priorDefender.status!==priorDefStatus?priorDefender.status:null};
+ if(priorDefender&&(dmg>0||priorDefender.status!==priorDefStatus||priorDefender.poison!==priorDefPoison||priorDefender.poisonDamage!==priorDefPoisonDamage))priorDefender.lastAttackImpact={serial:g.turnSerial,damage:priorDefender.damage-priorDefDamage,status:priorDefender.status!==priorDefStatus?priorDefender.status:null,poison:!priorDefPoison&&priorDefender.poison,poisonDamage:priorDefender.poison&&priorDefender.poisonDamage!==priorDefPoisonDamage?priorDefender.poisonDamage||0:0};
  if(f.active&&hasActiveEffect(f.active,'mirrorShell',g)&&dmg>0){
   u.damage+=calculateDamage(card(g,f.active.id),c,dmg,u);
   log(g,`${card(g,f.active.id).name} reflected ${dmg} attack damage.`);
