@@ -91,6 +91,7 @@ function prompt(g,plan,helpers){
  if(!plan.proxy)held(p,plan.cardId,plan.handIndex);
  if(name==='Clefairy Doll'&&p.bench.length>=5)throw Error('Clefairy Doll requires a free Bench slot');
  if(name==='Pokémon Flute'&&f.bench.length>=(g.stadium&&get(g.stadium.id).name==='Narrow Gym'?4:5))throw Error('Pokémon Flute cannot be played with a full opposing Bench');
+ if(name==='Revive'&&p.bench.length>=(g.stadium&&get(g.stadium.id).name==='Narrow Gym'?4:5))throw Error('Revive cannot be played with a full Bench');
  // Additional Gym Trainer effects; all hidden-card choices belong to their owner.
  if(name==="Lt. Surge's Secret Plan"&&!chosen(d,'hidden')){
   if(p.bench.length>=5)throw Error('Bench full for Secret Plan');
