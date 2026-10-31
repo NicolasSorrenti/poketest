@@ -605,7 +605,10 @@
      "kind": "attack",
      "index": 1,
      "name": "Take Down",
-     "status": "unreviewed"
+     "status": "partial",
+     "evidence": [
+      "test_card_fidelity_arcanine_take_down.js: exact printed cost/text and compiled recoil parameters; legal Fire/Fire/Double Colorless payment; missing-Fire atomic rejection; 80 target damage and 30 self-damage; Weakness observable behind damage reduction; recoil persists when target damage is prevented. Base Set Classic also tests simultaneous Active Knock Outs, both Prize choices, both promotions, and Machamp Strikes Back when the defending Machamp is Knocked Out."
+     ]
     }
    ]
   },
@@ -4739,7 +4742,10 @@
      "kind": "attack",
      "index": 1,
      "name": "Take Down",
-     "status": "unreviewed"
+     "status": "partial",
+     "evidence": [
+      "test_card_fidelity_arcanine_take_down.js: exact printed cost/text and compiled recoil parameters; legal Fire/Fire/Double Colorless payment; missing-Fire atomic rejection; 80 target damage and 30 self-damage; Weakness observable behind damage reduction; recoil persists when target damage is prevented. Base Set 2 is exercised in online-preview."
+     ]
     }
    ]
   },
