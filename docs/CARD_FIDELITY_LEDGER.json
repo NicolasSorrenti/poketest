@@ -1645,13 +1645,23 @@
      "kind": "attack",
      "index": 0,
      "name": "Recover",
-     "status": "unreviewed"
+     "status": "partial",
+     "evidence": [
+      "test_card_fidelity_starmie.js: 50 reducer scenarios across Classic, Neo-theme, online-preview 60-card and 40-card setups; tests both printings, Recover's Water-only discard against attached Fighting Energy, distinct basic Water/Rainbow Energy choice, all-counter healing, Star Freeze cost/damage/paralysis coin results.",
+      "Printed text cross-checked against Serebii Base #64 and Base Set 2 #94, and Limitless Base #64/Base Set 2 #94; TCGdex/Bulbapedia transcriptions omit the Water qualifier, which this card-data correction restores. No Starmie-specific historical ruling located in searched sources."
+     ],
+     "scope": "Water-only attached Energy discard cost and removal of all Starmie's damage counters; broader evolution/status interactions, historical rulings, other modifiers, and client/network behavior remain unreviewed."
     },
     {
      "kind": "attack",
      "index": 1,
      "name": "Star Freeze",
-     "status": "unreviewed"
+     "status": "partial",
+     "evidence": [
+      "test_card_fidelity_starmie.js: 50 reducer scenarios across Classic, Neo-theme, online-preview 60-card and 40-card setups; tests both printings, Recover's Water-only discard against attached Fighting Energy, distinct basic Water/Rainbow Energy choice, all-counter healing, Star Freeze cost/damage/paralysis coin results.",
+      "Printed text cross-checked against Serebii Base #64 and Base Set 2 #94, and Limitless Base #64/Base Set 2 #94; TCGdex/Bulbapedia transcriptions omit the Water qualifier, which this card-data correction restores. No Starmie-specific historical ruling located in searched sources."
+     ],
+     "scope": "Water + two Colorless cost, 20 damage and heads-only paralysis; broader evolution/status interactions, historical rulings, other modifiers, and client/network behavior remain unreviewed."
     }
    ]
   },
@@ -6478,13 +6488,23 @@
      "kind": "attack",
      "index": 0,
      "name": "Recover",
-     "status": "unreviewed"
+     "status": "partial",
+     "evidence": [
+      "test_card_fidelity_starmie.js: 50 reducer scenarios across Classic, Neo-theme, online-preview 60-card and 40-card setups; tests both printings, Recover's Water-only discard against attached Fighting Energy, distinct basic Water/Rainbow Energy choice, all-counter healing, Star Freeze cost/damage/paralysis coin results.",
+      "Printed text cross-checked against Serebii Base #64 and Base Set 2 #94, and Limitless Base #64/Base Set 2 #94; TCGdex/Bulbapedia transcriptions omit the Water qualifier, which this card-data correction restores. No Starmie-specific historical ruling located in searched sources."
+     ],
+     "scope": "Water-only attached Energy discard cost and removal of all Starmie's damage counters; broader evolution/status interactions, historical rulings, other modifiers, and client/network behavior remain unreviewed."
     },
     {
      "kind": "attack",
      "index": 1,
      "name": "Star Freeze",
-     "status": "unreviewed"
+     "status": "partial",
+     "evidence": [
+      "test_card_fidelity_starmie.js: 50 reducer scenarios across Classic, Neo-theme, online-preview 60-card and 40-card setups; tests both printings, Recover's Water-only discard against attached Fighting Energy, distinct basic Water/Rainbow Energy choice, all-counter healing, Star Freeze cost/damage/paralysis coin results.",
+      "Printed text cross-checked against Serebii Base #64 and Base Set 2 #94, and Limitless Base #64/Base Set 2 #94; TCGdex/Bulbapedia transcriptions omit the Water qualifier, which this card-data correction restores. No Starmie-specific historical ruling located in searched sources."
+     ],
+     "scope": "Water + two Colorless cost, 20 damage and heads-only paralysis; broader evolution/status interactions, historical rulings, other modifiers, and client/network behavior remain unreviewed."
     }
    ]
   },
