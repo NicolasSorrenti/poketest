@@ -975,13 +975,23 @@
      "kind": "attack",
      "index": 0,
      "name": "Double Kick",
-     "status": "unreviewed"
+     "status": "partial",
+     "evidence": [
+      "test_card_fidelity_nidorino.js",
+      "Attack text, costs and reprint match checked against Serebii Base, Serebii Base Set 2, Bulbapedia and TCGplayer; official Pokémon errata index checked for Nidorino."
+     ],
+     "scope": "Double Kick: {G}{C}{C} cost, compiler kind/2 flips/30 damage per head, all 0/1/2-head outcomes, no coin-choice prompt, KO/Prize flow, Grass Weakness doubling and colorless-only underpayment rejection. Horn Drill: {G}{G}{C}{C} cost, fixed 50 damage with no coin or choice effect, and rejection when the second Grass symbol is missing. 54 reducer scenarios across Base Set Classic, Neo-theme, online-preview 60-card and 40-card; Base Set 2 online-preview 60-card and 40-card. Browser/network integration and other interactions pending."
     },
     {
      "kind": "attack",
      "index": 1,
      "name": "Horn Drill",
-     "status": "unreviewed"
+     "status": "partial",
+     "evidence": [
+      "test_card_fidelity_nidorino.js",
+      "Attack text, costs and reprint match checked against Serebii Base, Serebii Base Set 2, Bulbapedia and TCGplayer; official Pokémon errata index checked for Nidorino."
+     ],
+     "scope": "Double Kick: {G}{C}{C} cost, compiler kind/2 flips/30 damage per head, all 0/1/2-head outcomes, no coin-choice prompt, KO/Prize flow, Grass Weakness doubling and colorless-only underpayment rejection. Horn Drill: {G}{G}{C}{C} cost, fixed 50 damage with no coin or choice effect, and rejection when the second Grass symbol is missing. 54 reducer scenarios across Base Set Classic, Neo-theme, online-preview 60-card and 40-card; Base Set 2 online-preview 60-card and 40-card. Browser/network integration and other interactions pending."
     }
    ]
   },
@@ -5358,13 +5368,23 @@
      "kind": "attack",
      "index": 0,
      "name": "Double Kick",
-     "status": "unreviewed"
+     "status": "partial",
+     "evidence": [
+      "test_card_fidelity_nidorino.js",
+      "Attack text, costs and reprint match checked against Serebii Base, Serebii Base Set 2, Bulbapedia and TCGplayer; official Pokémon errata index checked for Nidorino."
+     ],
+     "scope": "Double Kick: {G}{C}{C} cost, compiler kind/2 flips/30 damage per head, all 0/1/2-head outcomes, no coin-choice prompt, KO/Prize flow, Grass Weakness doubling and colorless-only underpayment rejection. Horn Drill: {G}{G}{C}{C} cost, fixed 50 damage with no coin or choice effect, and rejection when the second Grass symbol is missing. 54 reducer scenarios across Base Set Classic, Neo-theme, online-preview 60-card and 40-card; Base Set 2 online-preview 60-card and 40-card. Browser/network integration and other interactions pending."
     },
     {
      "kind": "attack",
      "index": 1,
      "name": "Horn Drill",
-     "status": "unreviewed"
+     "status": "partial",
+     "evidence": [
+      "test_card_fidelity_nidorino.js",
+      "Attack text, costs and reprint match checked against Serebii Base, Serebii Base Set 2, Bulbapedia and TCGplayer; official Pokémon errata index checked for Nidorino."
+     ],
+     "scope": "Double Kick: {G}{C}{C} cost, compiler kind/2 flips/30 damage per head, all 0/1/2-head outcomes, no coin-choice prompt, KO/Prize flow, Grass Weakness doubling and colorless-only underpayment rejection. Horn Drill: {G}{G}{C}{C} cost, fixed 50 damage with no coin or choice effect, and rejection when the second Grass symbol is missing. 54 reducer scenarios across Base Set Classic, Neo-theme, online-preview 60-card and 40-card; Base Set 2 online-preview 60-card and 40-card. Browser/network integration and other interactions pending."
     }
    ]
   },
