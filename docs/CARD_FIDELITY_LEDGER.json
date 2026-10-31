@@ -1359,7 +1359,12 @@
      "kind": "attack",
      "index": 0,
      "name": "Low Kick",
-     "status": "unreviewed"
+     "status": "partial",
+     "evidence": [
+      "test_card_fidelity_machop.js: 36 reducer scenarios compare Base Set #52 and Base Set 2 #78 across Classic, Neo-theme and online-preview 60/40. Checks printed fields, fixed 20 damage, Fighting cost and atomic rejection, no Double Colorless damage bonus, Psychic Weakness, and Fighting Resistance.",
+      "Machop Low Kick text and Base printing checked against Serebii #52; Base Set 2 reprint checked against Bulbapedia #78. Official errata index has no Machop entry. Wider interactions and full client/network behavior remain unreviewed."
+     ],
+     "scope": "Low Kick: printed fields; one Fighting Energy cost; fixed 20 damage; DCE alone is rejected atomically; extra DCE does not boost damage; Fighting Weakness doubles and Fighting Resistance reduces damage to zero. Other card interactions and browser/network behavior remain unreviewed."
     }
    ]
   },
@@ -1372,13 +1377,23 @@
      "kind": "attack",
      "index": 0,
      "name": "Thunder Wave",
-     "status": "unreviewed"
+     "status": "partial",
+     "evidence": [
+      "test_card_fidelity_magnemite.js: 54 reducer scenarios compare Base Set #53 and Base Set 2 #79 across Classic, Neo-theme and online-preview 60/40. Thunder Wave tests cost, both coin outcomes, condition replacement, paralysis lock and recovery. Selfdestruct tests typed cost, Active Weakness/Resistance, Bench damage ignoring Weakness/Resistance, recoil self-KO and no-Bench behavior.",
+      "Thunder Wave and Selfdestruct text checked against Bulbapedia Base #53 and Serebii #53; Base Set 2 reprint cross-checked with the card catalogue. The official errata index has no Magnemite entry. Historical modifier timing checked against WotC Advanced Rulebook v8; full browser/network and wider interactions remain unreviewed."
+     ],
+     "scope": "Thunder Wave: printed fields; one Lightning cost and atomic rejection of DCE-only payment; fixed 10 damage on heads/tails; heads applies Paralysis and replaces Confusion; the opponent cannot attack while Paralyzed and the condition expires after that turn. Other interactions remain unreviewed."
     },
     {
      "kind": "attack",
      "index": 1,
      "name": "Selfdestruct",
-     "status": "unreviewed"
+     "status": "partial",
+     "evidence": [
+      "test_card_fidelity_magnemite.js: 54 reducer scenarios compare Base Set #53 and Base Set 2 #79 across Classic, Neo-theme and online-preview 60/40. Thunder Wave tests cost, both coin outcomes, condition replacement, paralysis lock and recovery. Selfdestruct tests typed cost, Active Weakness/Resistance, Bench damage ignoring Weakness/Resistance, recoil self-KO and no-Bench behavior.",
+      "Thunder Wave and Selfdestruct text checked against Bulbapedia Base #53 and Serebii #53; Base Set 2 reprint cross-checked with the card catalogue. The official errata index has no Magnemite entry. Historical modifier timing checked against WotC Advanced Rulebook v8; full browser/network and wider interactions remain unreviewed."
+     ],
+     "scope": "Selfdestruct: two-symbol Lightning/Colorless cost and atomic rejection of DCE-only payment; 40 Active damage with Weakness/Resistance; 10 to each Pokémon on both Benches without Weakness/Resistance; 40 recoil KOs 40-HP Magnemite and discards attached Energy; no-Bench case. Other interactions remain unreviewed."
     }
    ]
   },
@@ -6037,7 +6052,12 @@
      "kind": "attack",
      "index": 0,
      "name": "Low Kick",
-     "status": "unreviewed"
+     "status": "partial",
+     "evidence": [
+      "test_card_fidelity_machop.js: 36 reducer scenarios compare Base Set #52 and Base Set 2 #78 across Classic, Neo-theme and online-preview 60/40. Checks printed fields, fixed 20 damage, Fighting cost and atomic rejection, no Double Colorless damage bonus, Psychic Weakness, and Fighting Resistance.",
+      "Machop Low Kick text and Base printing checked against Serebii #52; Base Set 2 reprint checked against Bulbapedia #78. Official errata index has no Machop entry. Wider interactions and full client/network behavior remain unreviewed."
+     ],
+     "scope": "Low Kick: printed fields; one Fighting Energy cost; fixed 20 damage; DCE alone is rejected atomically; extra DCE does not boost damage; Fighting Weakness doubles and Fighting Resistance reduces damage to zero. Other card interactions and browser/network behavior remain unreviewed."
     }
    ]
   },
@@ -6050,13 +6070,23 @@
      "kind": "attack",
      "index": 0,
      "name": "Thunder Wave",
-     "status": "unreviewed"
+     "status": "partial",
+     "evidence": [
+      "test_card_fidelity_magnemite.js: 54 reducer scenarios compare Base Set #53 and Base Set 2 #79 across Classic, Neo-theme and online-preview 60/40. Thunder Wave tests cost, both coin outcomes, condition replacement, paralysis lock and recovery. Selfdestruct tests typed cost, Active Weakness/Resistance, Bench damage ignoring Weakness/Resistance, recoil self-KO and no-Bench behavior.",
+      "Thunder Wave and Selfdestruct text checked against Bulbapedia Base #53 and Serebii #53; Base Set 2 reprint cross-checked with the card catalogue. The official errata index has no Magnemite entry. Historical modifier timing checked against WotC Advanced Rulebook v8; full browser/network and wider interactions remain unreviewed."
+     ],
+     "scope": "Thunder Wave: printed fields; one Lightning cost and atomic rejection of DCE-only payment; fixed 10 damage on heads/tails; heads applies Paralysis and replaces Confusion; the opponent cannot attack while Paralyzed and the condition expires after that turn. Other interactions remain unreviewed."
     },
     {
      "kind": "attack",
      "index": 1,
      "name": "Selfdestruct",
-     "status": "unreviewed"
+     "status": "partial",
+     "evidence": [
+      "test_card_fidelity_magnemite.js: 54 reducer scenarios compare Base Set #53 and Base Set 2 #79 across Classic, Neo-theme and online-preview 60/40. Thunder Wave tests cost, both coin outcomes, condition replacement, paralysis lock and recovery. Selfdestruct tests typed cost, Active Weakness/Resistance, Bench damage ignoring Weakness/Resistance, recoil self-KO and no-Bench behavior.",
+      "Thunder Wave and Selfdestruct text checked against Bulbapedia Base #53 and Serebii #53; Base Set 2 reprint cross-checked with the card catalogue. The official errata index has no Magnemite entry. Historical modifier timing checked against WotC Advanced Rulebook v8; full browser/network and wider interactions remain unreviewed."
+     ],
+     "scope": "Selfdestruct: two-symbol Lightning/Colorless cost and atomic rejection of DCE-only payment; 40 Active damage with Weakness/Resistance; 10 to each Pokémon on both Benches without Weakness/Resistance; 40 recoil KOs 40-HP Magnemite and discards attached Energy; no-Bench case. Other interactions remain unreviewed."
     }
    ]
   },

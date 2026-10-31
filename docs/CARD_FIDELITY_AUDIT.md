@@ -259,3 +259,21 @@ The Base and Base Set 2 Hydro Pump wordings express the same damage rule: three 
 | Foul Gas | Grass ×2 cost, fixed 10 damage, heads Poisoned/tails Confused; Psychic Weakness and status timing | `test_card_fidelity_koffing.js` (36 reducer scenarios in Classic, Neo-theme, and online-preview 60/40); [Serebii Base #51](https://www.serebii.net/card/base/051.shtml); [Bulbapedia Base #51](https://bulbapedia.bulbagarden.net/wiki/Koffing_%28Base_Set_51%29); [WotC Advanced Rulebook v8](https://www.judgeball.com/files/archives/tcg-rulebooks/en/WOTCE1.pdf); [official errata index](https://play.pokemon.com/en-ca/resources/documents/tcg-errata/) | Partial; all listed reducer cases pass; other effect interactions and full browser/network play remain unreviewed |
 
 The regression checks both coin branches, Poison checkup damage, Confusion replacing Asleep, and Confusion's following attack coin result. It also rejects non-Grass payment without state changes, verifies that a Colorless Energy unit with two Colorless symbols does not satisfy Grass, confirms it remains attached when paying the opposing Pokémon's one-Colorless follow-up attack, and checks Psychic Weakness. The official errata index was searched for Koffing and has no matching entry. This does not certify other interactions or UI/network integration.
+
+
+## Machop (Base Set #52 and Base Set 2 #78)
+
+| Effect | Scope checked | Evidence | Status |
+| --- | --- | --- | --- |
+| Low Kick (base1-52, base4-78) | Fighting ×1 cost, fixed 20 damage, Psychic Weakness on Machop, Fighting Weakness on target, Fighting Resistance floor at zero, no DCE-only payment or damage bonus | `test_card_fidelity_machop.js` (36 reducer scenarios); [Serebii Base #52](https://www.serebii.net/card/base/052.shtml); [Bulbapedia Base Set 2 #78](https://bulbapedia.bulbagarden.net/wiki/Machop_%28Base_Set_2_78%29); [official errata index](https://play.pokemon.com/en-ca/resources/documents/tcg-errata/) | Partial; exact tested scope above only |
+
+The test compares the two printings and exercises Classic, Neo-theme, and online-preview 60/40 reducers. It checks the printed Fighting cost, fixed 20 damage, DCE not satisfying the typed cost or increasing damage, and damage modification against Fighting-weak Chansey and Fighting-resistant Beedrill. Official errata search found no Machop entry. Evolution, status, other modifier interactions, and browser/network play remain unchecked.
+
+## Magnemite (Base Set #53 and Base Set 2 #79)
+
+| Effect | Scope checked | Evidence | Status |
+| --- | --- | --- | --- |
+| Thunder Wave (base1-53, base4-79) | Lightning cost, fixed 10, both coin outcomes, condition replacement, Paralysis lock and expiration | `test_card_fidelity_magnemite.js` (54 reducer scenarios); [Bulbapedia Base #53](https://bulbapedia.bulbagarden.net/wiki/Magnemite_%28Base_Set%29); [official errata index](https://play.pokemon.com/en-ca/resources/documents/tcg-errata/) | Partial |
+| Selfdestruct (base1-53, base4-79) | Lightning + Colorless cost, 40 Active damage, 10 to both Benches ignoring Weakness/Resistance, 40 self-damage and KO, Active Weakness/Resistance, no-Bench case | Same test; [Serebii Base #53](https://www.serebii.net/card/base/053.shtml); [WotC Advanced Rulebook v8](https://www.judgeball.com/files/archives/tcg-rulebooks/en/WOTCE1.pdf) | Partial |
+
+The regression compares Base Set and Base Set 2 printings and exercises Classic, Neo-theme, and online-preview 60/40 reducer configurations. It checks both Thunder Wave flips, replacement of Confusion by Paralysis, denial of the opponent's attack during the paralysis turn and expiration at checkup. Selfdestruct scenarios verify Bench Weakness/Resistance is ignored while Active Weakness/Resistance applies, the 40 recoil KOs 40-HP Magnemite, attached Energy reaches the discard, and the attack still works without Benched Pokémon. The official errata index has no Magnemite entry. Wider board interactions and browser/network play remain unchecked.
