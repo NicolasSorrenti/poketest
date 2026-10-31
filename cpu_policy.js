@@ -1294,8 +1294,10 @@ function energyPreparationActions(o,cfg,actions){
   // Do not suppress an already-legal attack just to spend the only Energy on
   // an Active that will be KO'd before that Energy helps. A legal Bench
   // attachment or immediate attack upgrade still gets prepared first.
-  return !(canAttackNow&&a.payload.slot===-1&&
-   strandedActiveEnergy(o,o.self.hand[a.payload.handIndex]));
+  // The cure improves this turn's attack reliability even if the Active
+  // would be knocked out next turn; do not treat it as stranded Energy.
+  return confusionCure||!(canAttackNow&&a.payload.slot===-1&&
+   strandedActiveEnergy(o,energyId));
  });
  if(!useful)return actions;
  // Confusion requires a coin flip before a printed attack resolves, so a
