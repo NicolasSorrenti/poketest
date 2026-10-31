@@ -2059,7 +2059,12 @@
       "effects": [
         {
           "kind": "trainer",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "test_card_fidelity_super_potion.js: ten reducer scenarios across both printings; forced one-target auto-resolution; identical Double Colorless Energy auto-discard; distinct Energy remains actor-selectable; full four-counter healing and removal of all counters when fewer are present.",
+            "Print wording compared across Base #90 and Base Set 2 #117; WotC historical rulings say Energy must be discarded from the same Pokémon being healed and the effect removes exactly four counters unless fewer are present. Other Energy interactions and browser/network behavior remain unchecked."
+          ],
+          "scope": "Super Potion Base #90 and Base Set 2 #117: eligible target must be damaged and have Energy; automatically selects the only eligible Pokémon; automatically discards duplicate identical Energy cards, but preserves player choice among distinct Energy; removes exactly four damage counters unless fewer exist; pays from the healed Pokémon. Ten reducer scenarios across Classic and online-preview; partial only."
         }
       ]
     },
@@ -6950,7 +6955,12 @@
       "effects": [
         {
           "kind": "trainer",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "test_card_fidelity_super_potion.js: ten reducer scenarios across both printings; forced one-target auto-resolution; identical Double Colorless Energy auto-discard; distinct Energy remains actor-selectable; full four-counter healing and removal of all counters when fewer are present.",
+            "Print wording compared across Base #90 and Base Set 2 #117; WotC historical rulings say Energy must be discarded from the same Pokémon being healed and the effect removes exactly four counters unless fewer are present. Other Energy interactions and browser/network behavior remain unchecked."
+          ],
+          "scope": "Super Potion Base #90 and Base Set 2 #117: eligible target must be damaged and have Energy; automatically selects the only eligible Pokémon; automatically discards duplicate identical Energy cards, but preserves player choice among distinct Energy; removes exactly four damage counters unless fewer exist; pays from the healed Pokémon. Ten reducer scenarios across Classic and online-preview; partial only."
         }
       ]
     },
