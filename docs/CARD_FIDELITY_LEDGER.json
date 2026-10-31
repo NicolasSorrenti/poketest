@@ -1903,7 +1903,12 @@
       "effects": [
         {
           "kind": "trainer",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Base and Base Set 2 text reviewed for the cost of discarding one attached Energy, the opposing target, and the optional one-or-two Energy discard.",
+            "Choice handling now auto-selects a unique eligible source/target and equivalent forced Energy choices. It preserves the meaningful one-versus-two discard choice whenever two opposing Energy cards are available. No new regression test added; other interactions/client integration unchecked."
+          ],
+          "scope": "Super Energy Removal: printed own-Energy cost, opposing target and up-to-two discard text/source resolver reviewed; unique source/target and forced/equivalent Energy choice auto-resolve; one-versus-two choice retained when available. Partial code review only; no new scenario regression."
         }
       ]
     },
@@ -2059,7 +2064,12 @@
       "effects": [
         {
           "kind": "trainer",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Printed wording compared across Base #90 and Base Set 2 #117; archived WotC Q&A confirms Energy must come from the Pokémon being healed; historical WotC errata compilation confirms exactly four counters are removed when possible, otherwise all remaining counters.",
+            "Code review: heal/payment remain on the same eligible Pokémon; sole eligible target and identical attached Energy copies now auto-resolve, while distinct Energy cards remain selectable. No scenario regression added; other interactions and client/network behavior remain unchecked."
+          ],
+          "scope": "Super Potion Base #90 and Base Set 2 #117: printed wording parity, cost ownership and four-counter healing rule reviewed; code change auto-selects the sole eligible damaged Pokémon with Energy and auto-discards identical Energy copies, preserving choice among distinct Energy. Partial manual/code review only; no added regression test."
         }
       ]
     },
@@ -2081,7 +2091,12 @@
       "effects": [
         {
           "kind": "trainer",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Printed wording checked against Base and Base Set 2 catalog sources. Source review of the Classic resolver confirms the target must be an opposing Pokémon with Energy not blocked by Brock's Protection, then one attached Energy is discarded.",
+            "Choice handling now auto-selects only when the eligible opposing target is unique and the Energy outcome is forced (one card, identical printed card copies, or identical basic Energy type). Distinct targets/Energy remain selectable. No new regression test added; other interactions/client integration unchecked."
+          ],
+          "scope": "Energy Removal: printed target and discard text/source resolver reviewed; unique eligible opposing Pokémon and forced/equivalent single Energy choice auto-resolve; distinct target/Energy choices remain selectable. Partial code review only; no new scenario regression."
         }
       ]
     },
@@ -6826,7 +6841,12 @@
       "effects": [
         {
           "kind": "trainer",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Base and Base Set 2 text reviewed for the cost of discarding one attached Energy, the opposing target, and the optional one-or-two Energy discard.",
+            "Choice handling now auto-selects a unique eligible source/target and equivalent forced Energy choices. It preserves the meaningful one-versus-two discard choice whenever two opposing Energy cards are available. No new regression test added; other interactions/client integration unchecked."
+          ],
+          "scope": "Super Energy Removal: printed own-Energy cost, opposing target and up-to-two discard text/source resolver reviewed; unique source/target and forced/equivalent Energy choice auto-resolve; one-versus-two choice retained when available. Partial code review only; no new scenario regression."
         }
       ]
     },
@@ -6950,7 +6970,12 @@
       "effects": [
         {
           "kind": "trainer",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Printed wording compared across Base #90 and Base Set 2 #117; archived WotC Q&A confirms Energy must come from the Pokémon being healed; historical WotC errata compilation confirms exactly four counters are removed when possible, otherwise all remaining counters.",
+            "Code review: heal/payment remain on the same eligible Pokémon; sole eligible target and identical attached Energy copies now auto-resolve, while distinct Energy cards remain selectable. No scenario regression added; other interactions and client/network behavior remain unchecked."
+          ],
+          "scope": "Super Potion Base #90 and Base Set 2 #117: printed wording parity, cost ownership and four-counter healing rule reviewed; code change auto-selects the sole eligible damaged Pokémon with Energy and auto-discards identical Energy copies, preserving choice among distinct Energy. Partial manual/code review only; no added regression test."
         }
       ]
     },
@@ -6972,7 +6997,12 @@
       "effects": [
         {
           "kind": "trainer",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Printed wording checked against Base and Base Set 2 catalog sources. Source review of the Classic resolver confirms the target must be an opposing Pokémon with Energy not blocked by Brock's Protection, then one attached Energy is discarded.",
+            "Choice handling now auto-selects only when the eligible opposing target is unique and the Energy outcome is forced (one card, identical printed card copies, or identical basic Energy type). Distinct targets/Energy remain selectable. No new regression test added; other interactions/client integration unchecked."
+          ],
+          "scope": "Energy Removal: printed target and discard text/source resolver reviewed; unique eligible opposing Pokémon and forced/equivalent single Energy choice auto-resolve; distinct target/Energy choices remain selectable. Partial code review only; no new scenario regression."
         }
       ]
     },

@@ -32,3 +32,34 @@ test('Computer Search recognizes future-turn Energy setup after attachment was u
  const o=observation(true);
  assert.ok(value(o,0)>value(o,1));
 });
+
+test('Computer Search does not choose Rainbow to knock out its own Active',()=>{
+ const hp=Number(CATALOG.get('base1-2')?.hp);
+ assert.ok(hp>10);
+ const o=observation();
+ o.self.active.damage=hp-10;
+ o.decision.options=[
+  {id:'deck:0',label:'Rainbow Energy'},
+  {id:'deck:1',label:'Water Energy'},
+  {id:'deck:2',label:'Squirtle'}
+ ];
+ const rainbow=value(o,0),water=value(o,1),basic=value(o,2);
+ assert.ok(rainbow<basic,'lethal Rainbow must rank below a safe Basic search');
+ assert.ok(water>rainbow,'safe Water must outrank lethal Rainbow');
+});
+
+test('Computer Search preserves nonlethal Rainbow and safe Bench setup',()=>{
+ const hp=Number(CATALOG.get('base1-2')?.hp);
+ const o=observation();
+ o.decision.options=[
+  {id:'deck:0',label:'Rainbow Energy'},
+  {id:'deck:1',label:'Water Energy'},
+  {id:'deck:2',label:'Squirtle'}
+ ];
+ o.self.active.damage=hp-11;
+ assert.ok(value(o,0)>value(o,2),'Rainbow with 11 HP remaining still develops the Active');
+ o.self.active.damage=hp-10;
+ o.self.bench=[{id:'base1-52',energies:[],damage:0}];
+ assert.ok(value(o,0)>value(o,2),'Rainbow remains useful for a safe Bench attacker');
+ assert.ok(value(o,0)<value(o,1),'safe Bench setup must not masquerade as an immediate Active attack');
+});

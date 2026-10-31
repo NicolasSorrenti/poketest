@@ -937,6 +937,54 @@ test('Apex delays an unready rescue evolution when the KO requires a Confusion f
   'a guaranteed rescue should beat a speculative Confusion-flip rescue');
 });
 
+function rainbowFutureBoard(futureEnergy,damage){
+ const o=futureEnergyBoard(FIGHT,futureEnergy,[]);
+ // Diglett has 30 HP. Fighting now powers Dig; a second Fighting symbol
+ // next turn would power Mud Slap, but Rainbow inflicts 10 on attachment.
+ o.self.active={id:'base1-47',energies:[],damage,status:null,playedTurn:1};
+ o.opponent.active={id:HITMONCHAN,energies:[],damage:0,status:null};
+ return o;
+}
+test('Apex future Energy horizon never rewards a Rainbow self-KO',()=>{
+ for(const rainbow of ['base5-17','base5-80']){
+  const lethal=rainbowFutureBoard(rainbow,20); // exactly 10 HP left
+  const noEnergy=rainbowFutureBoard('base1-91',20); // Bill
+  assert.equal(AI.energyHorizonBonus(attachActive,lethal,cfg),
+   AI.energyHorizonBonus(attachActive,noEnergy,cfg),
+   rainbow+' cannot power a next-turn attack after knocking out Diglett');
+ }
+});
+test('Apex future Energy horizon preserves safe Rainbow setup',()=>{
+ for(const rainbow of ['base5-17','base5-80']){
+  const safe=rainbowFutureBoard(rainbow,19); // 11 HP left
+  const noEnergy=rainbowFutureBoard('base1-91',19);
+  assert.ok(AI.energyHorizonBonus(attachActive,safe,cfg)>
+   AI.energyHorizonBonus(attachActive,noEnergy,cfg),
+   rainbow+' must still unlock a legal second-turn Mud Slap');
+ }
+});
+
+test('Apex counts current Rainbow damage before projecting another Rainbow next turn',()=>{
+ const rainbows=['base5-17','base5-80'];
+ for(const current of rainbows)for(const future of rainbows){
+  const board=futureEnergyBoard(current,future,[]);
+  // Diglett has 30 HP: the first Rainbow leaves 10 HP, so the second
+  // Rainbow would KO it before the projected two-Energy Mud Slap.
+  board.self.active={id:'base1-47',energies:[],damage:10,status:null,playedTurn:1};
+  board.opponent.active={id:HITMONCHAN,energies:[],damage:0,status:null};
+  const noSecond=structuredClone(board);
+  noSecond.self.hand[1]='base1-91'; // Bill cannot provide a second Energy.
+  assert.ok(AI.energyHorizonBonus(attachActive,board,cfg)<=
+   AI.energyHorizonBonus(attachActive,noSecond,cfg),
+   current+' followed by '+future+' must not reward a future self-KO');
+  const safe=structuredClone(board),safeControl=structuredClone(noSecond);
+  safe.self.active.damage=9; // Both Rainbow damage counters leave 1 HP.
+  safeControl.self.active.damage=9;
+  assert.ok(AI.energyHorizonBonus(attachActive,safe,cfg)>
+   AI.energyHorizonBonus(attachActive,safeControl,cfg),
+   current+' followed by '+future+' must preserve a surviving attack line');
+ }
+});
 
 test('Apex only spends PlusPower for an attack it can legally declare',()=>{
  const action={type:'play_trainer',payload:{handIndex:0}};

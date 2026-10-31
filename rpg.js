@@ -450,8 +450,8 @@ window.NeoRpgOverworldBridge=Object.freeze({
   return intro?.id===id&&intro.location===state.location?intro.src:null;
  },
  interact(id){if(overworldControlsLocked()||!cast[id]||!currentPeople().includes(id))return false;selectPerson(id);return true;},
- activities(){return WORLD.activitiesAt(state).map(a=>({id:a.id,title:a.title,disabled:overworldControlsLocked()||!!a.disabledReason}));},
- activity(id){if(overworldControlsLocked()||!WORLD.activitiesAt(state).some(a=>a.id===id&&!a.disabledReason))return false;performActivity(id);return true;},
+ activities(){const items=WORLD.activitiesAt(state).map(a=>({id:a.id,title:a.title,disabled:overworldControlsLocked()||!!a.disabledReason}));if(state.location==='shop'&&state.deckJourney?.starter)items.unshift({id:'boosterShop',title:'Browse booster packs · The Lucky Draw',disabled:overworldControlsLocked()||state.day>90});return items;},
+ activity(id){if(id==='boosterShop'){if(overworldControlsLocked()||state.day>90||state.location!=='shop'||!state.deckJourney?.starter)return false;openBoosterShop();return true;}if(overworldControlsLocked()||!WORLD.activitiesAt(state).some(a=>a.id===id&&!a.disabledReason))return false;performActivity(id);return true;},
 });
 function overworldStoryActive(){
  return !!(state.mandatoryEventState?.active||state.activeSliceOfLife||state.activeSituation||
@@ -3058,6 +3058,8 @@ function render(){
     const button=document.createElement('button');
     button.type='button';button.className='character-action-btn';
     button.textContent=label;button.title=title;button.onclick=action;
+    // Stable action ID lets the mobile layout hide Scout without changing PC.
+    button.dataset.characterAction=label.includes('Scout')?'scout':label.includes('Glance at')?'glance':label.includes('Deck')?'deck':'other';
     characterActions.append(button);
    }
   }

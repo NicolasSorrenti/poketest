@@ -31,3 +31,27 @@ test('Apex discounts a vulnerable Onix bench against a ready Venusaur',()=>{
  const squirtle=AI.score({type:'bench',payload:{handIndex:1}},x,cfg,{});
  assert.ok(Number.isFinite(onix)&&Number.isFinite(squirtle));
 });
+
+test('Apex only proposes Computer Search when two other hand cards can pay',()=>{
+ const used={trainers:0,powers:0,powerKeys:new Set(),stadium:false};
+ const proposed=(hand,deckCount=30)=>{
+  const x=o();x.self.hand=hand;x.self.deckCount=deckCount;
+  return AI.candidates(x,cfg,used).some(a=>a.type==='play_trainer'&&hand[a.payload.handIndex]===SEARCH);
+ };
+ assert.equal(proposed([SEARCH,W]),false,'one other card cannot pay the mandatory two-card cost');
+ assert.equal(proposed([SEARCH,W,PLUS]),true,'two other cards and a nonempty deck permit search');
+ assert.equal(proposed([SEARCH,W,PLUS],0),false,'an empty deck has no search target');
+});
+
+test('Apex Item Finder can recover a Trainer paid from hand but never proposes an unpayable play',()=>{
+ const FINDER='base1-74',BILL='base1-91';
+ const used={trainers:0,powers:0,powerKeys:new Set(),stadium:false};
+ const proposed=(hand,discard=[])=>{
+  const x=o();x.self.hand=hand;x.self.discard=discard;
+  return AI.candidates(x,cfg,used).some(a=>a.type==='play_trainer'&&hand[a.payload.handIndex]===FINDER);
+ };
+ assert.equal(proposed([FINDER,W,W]),false,'no Trainer exists to recover');
+ assert.equal(proposed([FINDER,BILL,W]),true,'Bill paid as a cost becomes a legal recovery target');
+ assert.equal(proposed([FINDER,W],[BILL]),false,'a discard target does not waive the two-card cost');
+ assert.equal(proposed([FINDER,W,W],[BILL]),true,'a previously discarded Trainer can be recovered');
+});

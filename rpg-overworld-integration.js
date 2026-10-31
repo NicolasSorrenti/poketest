@@ -941,6 +941,140 @@
     const choiceLayout=document.createElement('style');
     choiceLayout.textContent="\n#neoOverworldOverlay #playerChoicePrompt[hidden],#neoOverworldOverlay #neoOverworldGenericChoices[hidden],\n#neoOverworldOverlay #neoOverworldShowChoices[hidden]{display:none!important}\n#neoOverworldOverlay #playerChoicePrompt:not([hidden]),#neoOverworldOverlay #neoOverworldGenericChoices:not([hidden]){\n  position:absolute!important;z-index:9!important;inset:auto!important;top:43%!important;\n  left:50%!important;right:auto!important;transform:translate(-50%,-50%)!important;\n  width:min(520px,calc(100vw - 28px))!important;max-width:none!important;\n  max-height:min(46dvh,440px)!important;display:block!important;box-sizing:border-box!important;\n  overflow-y:auto!important;overscroll-behavior:contain!important;margin:0!important;\n  padding:0!important;pointer-events:auto!important;filter:drop-shadow(0 14px 30px #000a)\n}\n#neoOverworldOverlay #playerChoicePanel,#neoOverworldOverlay #neoOverworldGenericChoices .neo-ow-choice-inner{\n  position:relative!important;display:flex!important;flex-direction:column!important;\n  width:100%!important;max-width:none!important;max-height:none!important;\n  padding:14px!important;margin:0!important;box-sizing:border-box!important;\n  background:#211b35f4!important;border:1px solid #cb9ccc!important;\n  border-radius:13px!important;box-shadow:0 16px 34px #0009!important;\n  gap:9px!important;pointer-events:auto!important;animation:none!important\n}\n#neoOverworldOverlay .neo-ow-hide-choices{\n  align-self:flex-end!important;order:-1;cursor:pointer;padding:7px 10px!important;\n  min-height:34px;border:1px solid #ad8bb8;border-radius:8px;color:#fff;background:#513858;\n  font:700 12px system-ui\n}\n#neoOverworldOverlay #playerChoicePanel #choices,#neoOverworldOverlay #neoOverworldGenericChoices #choices{\n  position:static!important;inset:auto!important;display:grid!important;grid-template-columns:1fr!important;\n  gap:8px!important;width:100%!important;max-height:none!important;\n  margin:0!important;padding:0!important;overflow:visible!important;\n  border:0!important;background:transparent!important\n}\n#neoOverworldOverlay #playerChoicePanel #choices button,#neoOverworldOverlay #neoOverworldGenericChoices #choices button{\n  width:100%!important;min-height:43px!important;text-align:left!important;\n  white-space:normal!important;line-height:1.3!important\n}\n#neoOverworldOverlay .neo-ow-choice-head{display:flex;align-items:center;justify-content:space-between;gap:10px}\n#neoOverworldOverlay #neoOverworldShowChoices:not([hidden]){\n  position:absolute;z-index:10;bottom:calc(150px + 18px);right:max(16px,env(safe-area-inset-right));\n  border:1px solid #da9ed3;border-radius:9px;padding:9px 14px;color:#fff;background:#533558e8;\n  box-shadow:0 8px 24px #0009;cursor:pointer;font:700 13px system-ui\n}\n#neoOverworldOverlay.neo-ow-choices-collapsed #playerChoicePrompt,\n#neoOverworldOverlay.neo-ow-choices-collapsed #neoOverworldGenericChoices,\n#neoOverworldOverlay.neo-ow-paging #playerChoicePrompt,\n#neoOverworldOverlay.neo-ow-paging #neoOverworldGenericChoices{display:none!important}\n#neoOverworldOverlay.neo-ow-idle-interaction #playerChoicePrompt,\n#neoOverworldOverlay.neo-ow-idle-interaction #neoOverworldGenericChoices,\n#neoOverworldOverlay.neo-ow-idle-interaction #neoOverworldShowChoices{display:none!important}\n@media(min-width:1100px){\n#neoOverworldOverlay:not(.neo-ow-two-speakers):not(.neo-ow-showing-cg) #playerChoicePrompt:not([hidden]),\n#neoOverworldOverlay:not(.neo-ow-two-speakers):not(.neo-ow-showing-cg) #neoOverworldGenericChoices:not([hidden]){\n  left:auto!important;right:2.5vw!important;top:43%!important;\n  transform:translateY(-50%)!important;width:min(370px,28vw)!important\n}}\n@media(max-width:700px){\n#neoOverworldOverlay #playerChoicePrompt:not([hidden]),#neoOverworldOverlay #neoOverworldGenericChoices:not([hidden]){\n  top:41%!important;max-height:43dvh!important;width:calc(100vw - 20px)!important\n}\n#neoOverworldOverlay #playerChoicePanel,#neoOverworldOverlay #neoOverworldGenericChoices .neo-ow-choice-inner{padding:10px!important}\n#neoOverworldOverlay #neoOverworldShowChoices:not([hidden]){\n  bottom:calc(176px + max(12px,env(safe-area-inset-bottom)));right:10px\n}}\n";
     document.head.append(choiceLayout);
+    // Mobile-only: full-width character, then two action columns and caption.
+    // Desktop interaction and story dialogue styles remain unchanged.
+    const mobileInteractionGrid=document.createElement('style');
+    mobileInteractionGrid.id='neoOverworldMobileInteractionGrid';
+    mobileInteractionGrid.textContent=`
+@media(max-width:650px){
+ #neoOverworldOverlay.neo-ow-idle-interaction #neoOverworldStoryDock{
+  box-sizing:border-box!important;left:6px!important;right:6px!important;
+  width:calc(100vw - 12px)!important;transform:none!important;
+  bottom:max(8px,env(safe-area-inset-bottom))!important;
+  max-height:calc(100dvh - 100px - env(safe-area-inset-bottom))!important;
+  overflow-x:hidden!important;overflow-y:auto!important;overscroll-behavior:contain!important;
+ }
+ #neoOverworldOverlay.neo-ow-idle-interaction #neoOverworldStoryDock .stage-panel{
+  box-sizing:border-box!important;display:grid!important;
+  grid-template-columns:minmax(0,1fr)!important;
+  grid-template-rows:minmax(190px,36dvh) auto auto auto!important;
+  gap:0!important;padding:0!important;width:100%!important;min-width:0!important;
+  overflow:visible!important;
+ }
+ #neoOverworldOverlay.neo-ow-idle-interaction #neoOverworldStoryDock #scene{
+  box-sizing:border-box!important;grid-column:1!important;grid-row:1!important;
+  width:100%!important;min-width:0!important;max-width:100%!important;
+  height:36dvh!important;min-height:190px!important;max-height:36dvh!important;
+  margin:0!important;padding:0!important;
+  overflow:hidden!important;display:flex!important;justify-content:center!important;align-items:flex-start!important;
+ }
+ #neoOverworldOverlay.neo-ow-idle-interaction #neoOverworldStoryDock #neoOverworldScenePeople:not([hidden]){
+  position:relative!important;inset:auto!important;transform:none!important;
+  display:flex!important;justify-content:center!important;align-items:flex-start!important;
+  width:100%!important;max-width:100%!important;height:100%!important;
+  margin:0!important;padding:0!important;overflow:hidden!important;
+ }
+ #neoOverworldOverlay.neo-ow-idle-interaction #neoOverworldStoryDock .neo-ow-person{
+  position:relative!important;left:auto!important;right:auto!important;
+  margin:0 auto!important;transform:none!important;flex:0 0 100%!important;
+  width:100%!important;min-width:0!important;max-width:100%!important;
+  height:100%!important;max-height:100%!important;overflow:hidden!important;
+ }
+ #neoOverworldOverlay.neo-ow-idle-interaction #neoOverworldStoryDock .neo-ow-person>img:not(.rpg-safe-avatar){
+  position:absolute!important;left:0!important;right:0!important;top:0!important;
+  width:100%!important;height:var(--neo-ow-dialogue-bust-height,278%)!important;
+  max-width:none!important;max-height:none!important;transform:none!important;
+  object-fit:cover!important;object-position:center top!important;
+ }
+ #neoOverworldOverlay.neo-ow-idle-interaction #neoOverworldStoryDock #characterActions:not([hidden]){
+  box-sizing:border-box!important;grid-column:1!important;grid-row:2!important;
+  display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;
+  grid-auto-rows:minmax(46px,auto)!important;align-items:stretch!important;
+  justify-items:stretch!important;gap:7px!important;
+  margin-top:0!important;
+  position:relative!important;inset:auto!important;transform:none!important;
+  width:100%!important;min-width:0!important;max-width:100%!important;
+  max-height:none!important;overflow:visible!important;
+  padding:0!important;margin:0!important;background:transparent!important;
+  border:0!important;box-shadow:none!important;
+ }
+ #neoOverworldOverlay.neo-ow-idle-interaction #neoOverworldStoryDock #characterActions:not([hidden])>button{
+  box-sizing:border-box!important;display:flex!important;
+  align-items:center!important;justify-content:flex-start!important;
+  grid-column:auto!important;width:100%!important;min-width:0!important;
+  max-width:100%!important;min-height:46px!important;
+  padding:9px 10px!important;font-size:13px!important;line-height:1.25!important;
+  text-align:left!important;white-space:normal!important;overflow-wrap:anywhere!important;
+ }
+ #neoOverworldOverlay.neo-ow-idle-interaction #neoOverworldStoryDock #neoOverworldInteractionCaption{
+  grid-column:1!important;grid-row:3!important;min-width:0!important;
+  padding:9px 12px!important;font-size:12px!important;
+ }
+ #neoOverworldOverlay.neo-ow-idle-interaction #neoOverworldStoryDock #characterActions>button[data-character-action="scout"]{
+  display:none!important;
+ }
+ #neoOverworldOverlay.neo-ow-idle-interaction #neoOverworldStoryDock #characterActions>button[data-character-action="glance"]{
+  background:#29243b!important;color:#fff!important;
+  border:1px solid #9b819f!important;box-shadow:none!important;
+ }
+ #neoOverworldOverlay.neo-ow-idle-interaction #neoOverworldStoryDock #characterActions>button[data-character-action="deck"]{
+  order:6!important;
+ }
+ #neoOverworldOverlay.neo-ow-idle-interaction #neoOverworldStoryDock #characterActions #neoOverworldInteractionBack{
+  box-sizing:border-box!important;display:flex!important;grid-column:auto!important;
+  grid-row:auto!important;order:7!important;align-items:center!important;justify-content:flex-start!important;
+  width:100%!important;min-width:0!important;max-width:100%!important;
+  min-height:46px!important;padding:9px 10px!important;
+  text-align:left!important;font-size:13px!important;
+ }
+}`;
+    document.head.append(mobileInteractionGrid);
+    // Mobile character submenus (Make plans, Spend time, etc.): the portrait
+    // stays full-width; the subtitle joins the character's name and the choice
+    // buttons occupy two equal columns. Desktop retains its original layout.
+    const mobileSubmenuGrid=document.createElement('style');
+    mobileSubmenuGrid.id='neoOverworldMobileSubmenuGrid';
+    mobileSubmenuGrid.textContent=`
+      @media(max-width:650px){
+        #neoOverworldOverlay.neo-ow-idle-interaction #neoOverworldStoryDock .stage-panel:has(#characterActions.choice-menu){
+          grid-template-rows:minmax(190px,36dvh) auto auto!important;
+        }
+        #neoOverworldOverlay.neo-ow-idle-interaction #neoOverworldStoryDock #characterActions.choice-menu:not([hidden]){
+          grid-column:1!important;grid-row:3!important;
+          display:block!important;padding:0!important;margin:0!important;
+          background:transparent!important;border:0!important;box-shadow:none!important;
+        }
+        #neoOverworldOverlay.neo-ow-idle-interaction #neoOverworldStoryDock #characterActions.choice-menu>.character-menu-eyebrow,
+        #neoOverworldOverlay.neo-ow-idle-interaction #neoOverworldStoryDock #characterActions.choice-menu>.character-menu-title,
+        #neoOverworldOverlay.neo-ow-idle-interaction #neoOverworldStoryDock #characterActions.choice-menu>.character-menu-description{
+          display:none!important;
+        }
+        #neoOverworldOverlay.neo-ow-idle-interaction #neoOverworldStoryDock #characterActions.choice-menu .character-menu-options{
+          display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;
+          gap:7px!important;width:100%!important;min-width:0!important;
+          margin:0!important;padding:0!important;
+        }
+        #neoOverworldOverlay.neo-ow-idle-interaction #neoOverworldStoryDock #characterActions.choice-menu .character-menu-options>button{
+          box-sizing:border-box!important;width:100%!important;min-width:0!important;
+          min-height:52px!important;padding:9px 10px!important;
+          white-space:normal!important;overflow-wrap:anywhere!important;
+          font-size:12px!important;line-height:1.3!important;
+        }
+        #neoOverworldOverlay.neo-ow-idle-interaction #neoOverworldStoryDock #neoOverworldInteractionCaption.neo-ow-submenu-caption{
+          grid-column:1!important;grid-row:2!important;
+          margin:0!important;padding:10px 12px!important;
+        }
+        #neoOverworldOverlay.neo-ow-idle-interaction #neoOverworldInteractionCaption.neo-ow-submenu-caption::before{
+          content:attr(data-menu-heading);display:block;
+          font:700 11px system-ui;letter-spacing:.12em;color:#f5afcd;
+          text-transform:uppercase;order:-1;
+        }
+        #neoOverworldOverlay.neo-ow-idle-interaction #neoOverworldStoryDock #characterActions.choice-menu #neoOverworldInteractionBack{
+          display:none!important;
+        }
+      }
+    `;
+    document.head.append(mobileSubmenuGrid);
     attachChoicePanels();
     let storyDock=null;
     let lastSceneKey='';
@@ -1052,7 +1186,23 @@
       const needsStory=!!((data.storyActive&&!arrivalOnly)||(hasCG&&!arrivalOnly)||idleFocus);
       overlay.classList.toggle('neo-ow-arriving',!!data.arriving&&!needsStory);
       overlay.classList.toggle('neo-ow-idle-interaction',!!idleFocus);
-      if(idleFocus)idleName.textContent=bridge()?.portrait?.(idleFocus)?.name||idleFocus;
+      if(idleFocus){
+        idleName.textContent=bridge()?.portrait?.(idleFocus)?.name||idleFocus;
+        // Reuse the existing caption beneath the portrait for submenu text.
+        // Do not clone or move choice handlers: only the presentation changes.
+        const menu=characterChoiceMenu?document.getElementById('characterActions'):null;
+        const menuHeading=menu?.querySelector('.character-menu-eyebrow')?.textContent?.trim();
+        const menuDescription=menu?.querySelector('.character-menu-description')?.textContent?.trim();
+        idleHint.textContent=menuDescription||'Choose how you would like to spend time together.';
+        idleCaption.dataset.menuHeading=menuHeading||'';
+        idleCaption.classList.toggle('neo-ow-submenu-caption',!!menu);
+      }
+      // Mobile: Back is the final action, paired with Deck in the two-column
+      // grid. On desktop, return it to its original separate stage position.
+      const actionsForBack=document.getElementById('characterActions');
+      const mobileBack=window.matchMedia('(max-width:650px)').matches;
+      const backParent=mobileBack&&idleFocus?actionsForBack:idleStage;
+      if(backParent&&idleBack.parentElement!==backParent)backParent.append(idleBack);
       if(needsStory){
         if(!storyDock||storyDock.hidden)showStory();
         else lockMapForStory(true);

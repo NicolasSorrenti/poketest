@@ -27,6 +27,7 @@ const NPC_PROFILES=Object.freeze({
  sol:Object.freeze({level:3,personality:'risk_taking',reason:'unpredictable Fire and Water tempo plays'}),
  barb:Object.freeze({level:4,personality:'tactical',reason:'playful Psychic and Lightning resource tempo'}),
  daisy:Object.freeze({level:3,personality:'setup',reason:'patient Water tempo and setup for daring reversals'}),
+ lyla:Object.freeze({level:4,personality:'tactical',reason:'quiet Umbreon bench pressure and controlled Darkness Energy disruption'}),
  jicy:Object.freeze({level:3,personality:'aggressive',reason:'quick Lightning tempo and upbeat pressure with her Zap! deck'})
 });
 function profileForNpc(npc){

@@ -7690,6 +7690,307 @@ const packs=[
       }
      }
     ]
+   },
+   {
+    "id": "lyla_studio_black",
+    "npc": "lyla",
+    "title": "After the Last Take",
+    "start": 24,
+    "end": 90,
+    "place": "center",
+    "slot": 1,
+    "minBond": 1,
+    "prerequisite": null,
+    "participants": [],
+    "encounterType": "slice",
+    "trigger": "talk",
+    "lines": [
+     {
+      "speaker": "Narrator",
+      "text": "Lyla leans over the studio table in a black velvet editorial dress, looking back toward the camera."
+     },
+     {
+      "speaker": "lyla",
+      "text": "The photographer says that's the last shot. That's what he said twenty minutes ago."
+     },
+     {
+      "speaker": "Protagonist",
+      "text": "You can leave the studio whenever the contract says we're done. The picture doesn't get to decide."
+     },
+     {
+      "speaker": "lyla",
+      "text": "Ask whether she wants a break"
+     }
+    ],
+    "choices": [
+     {
+      "label": "You noticed. Yeah. Five minutes would be good.",
+      "reply": "Tell her the photograph feels like her",
+      "kind": "support",
+      "flag": "lyla_studio_black_support",
+      "delta": {
+       "affection": 2,
+       "trust": 2,
+       "respect": 0,
+       "attraction": 0
+      }
+     },
+     {
+      "label": "Maybe. I wasn't trying to please anyone in that one.",
+      "kind": "honest",
+      "flag": "lyla_studio_black_honest",
+      "delta": {
+       "affection": 1,
+       "trust": 2,
+       "respect": 2,
+       "attraction": 0
+      }
+     }
+    ]
+   },
+   {
+    "id": "lyla_studio_portrait",
+    "npc": "lyla",
+    "title": "The Contact Sheet",
+    "start": 29,
+    "end": 90,
+    "place": "center",
+    "slot": 1,
+    "minBond": 2,
+    "prerequisite": null,
+    "participants": [],
+    "encounterType": "slice",
+    "trigger": "talk",
+    "lines": [
+     {
+      "speaker": "Narrator",
+      "text": "The next setup is a close portrait in soft studio light. Lyla studies the camera with her usual half-lidded expression."
+     },
+     {
+      "speaker": "lyla",
+      "text": "They want a dreamy look. Apparently that means thinking about absolutely nothing."
+     },
+     {
+      "speaker": "Protagonist",
+      "text": "You look like you're thinking about your next card purchase."
+     },
+     {
+      "speaker": "lyla",
+      "text": "Correct. That's my most natural expression."
+     }
+    ],
+    "choices": [
+     {
+      "label": "Ask which shot she would choose",
+      "reply": "The one where I look like myself, not their idea of me.",
+      "kind": "support",
+      "flag": "lyla_studio_portrait_support",
+      "delta": {
+       "affection": 2,
+       "trust": 2,
+       "respect": 0,
+       "attraction": 0
+      }
+     },
+     {
+      "label": "Offer to review the contact sheet with her",
+      "reply": "Good. Tell me if they retouch my face into somebody else.",
+      "kind": "honest",
+      "flag": "lyla_studio_portrait_honest",
+      "delta": {
+       "affection": 1,
+       "trust": 2,
+       "respect": 2,
+       "attraction": 0
+      }
+     }
+    ]
+   },
+   {
+    "id": "lyla_studio_styling",
+    "npc": "lyla",
+    "title": "The Outfit Between Outfits",
+    "start": 34,
+    "end": 90,
+    "place": "center",
+    "slot": 1,
+    "minBond": 2,
+    "prerequisite": null,
+    "participants": [],
+    "encounterType": "slice",
+    "trigger": "talk",
+    "lines": [
+     {
+      "speaker": "Narrator",
+      "text": "A stylist brings a coordinated pale outfit for the third setup. Lyla checks the styling and the photographer's reference images before stepping into the lights."
+     },
+     {
+      "speaker": "lyla",
+      "text": "They've pinned everything twice. I just want the outfit to fit properly."
+     },
+     {
+      "speaker": "Protagonist",
+      "text": "The brief said editorial. You should get to decide what feels comfortable."
+     },
+     {
+      "speaker": "lyla",
+      "text": "Exactly. I'm a model, not a mannequin."
+     }
+    ],
+    "choices": [
+     {
+      "label": "Ask whether she approves the styling",
+      "reply": "After one adjustment. I'm keeping the jacket where I want it.",
+      "kind": "support",
+      "flag": "lyla_studio_styling_support",
+      "delta": {
+       "affection": 2,
+       "trust": 2,
+       "respect": 0,
+       "attraction": 0
+      }
+     },
+     {
+      "label": "Ask if the campaign pays well",
+      "reply": "Enough to pay my bills and maybe buy that Umbreon.",
+      "kind": "honest",
+      "flag": "lyla_studio_styling_honest",
+      "delta": {
+       "affection": 1,
+       "trust": 2,
+       "respect": 2,
+       "attraction": 0
+      }
+     }
+    ]
+   },
+   {
+    "id": "lyla_studio_floor",
+    "npc": "lyla",
+    "title": "One Frame for Herself",
+    "start": 39,
+    "end": 90,
+    "place": "center",
+    "slot": 1,
+    "minBond": 2,
+    "prerequisite": null,
+    "participants": [],
+    "encounterType": "slice",
+    "trigger": "talk",
+    "lines": [
+     {
+      "speaker": "Narrator",
+      "text": "After the final setup, Lyla sits on the studio floor in her styled outfit and sneakers. The lights are still warm, but the crew is packing away the equipment."
+     },
+     {
+      "speaker": "lyla",
+      "text": "Don't tell them I'm still here. They'll invent another shot."
+     },
+     {
+      "speaker": "Protagonist",
+      "text": "I thought you liked how the photos turned out."
+     },
+     {
+      "speaker": "lyla",
+      "text": "I do. I also like the part when I can stop posing."
+     }
+    ],
+    "choices": [
+     {
+      "label": "Offer to stay while she chooses her favorite photo",
+      "reply": "You can stay. Just don't pick the one where they told me to smile.",
+      "kind": "support",
+      "flag": "lyla_studio_floor_support",
+      "delta": {
+       "affection": 2,
+       "trust": 2,
+       "respect": 0,
+       "attraction": 0
+      }
+     },
+     {
+      "label": "Suggest a card match after the shoot",
+      "reply": "Now that's a reason to get up. Give me two minutes.",
+      "kind": "honest",
+      "flag": "lyla_studio_floor_honest",
+      "delta": {
+       "affection": 1,
+       "trust": 2,
+       "respect": 2,
+       "attraction": 0
+      }
+     }
+    ]
+   },
+   {
+    "id": "lyla_studio_afterhours",
+    "npc": "lyla",
+    "title": "The Last Light",
+    "start": 30,
+    "end": 90,
+    "place": "center",
+    "slot": 2,
+    "minBond": 1,
+    "prerequisite": null,
+    "participants": [],
+    "encounterType": "slice",
+    "trigger": "talk",
+    "lines": [
+     {
+      "speaker": "Narrator",
+      "text": "The studio is almost empty. In the last warm light of the day, Lyla sits on a black stool wearing a loose white shirt and heavy boots. The laptop beside her shows a grid of contact sheets."
+     },
+     {
+      "speaker": "Protagonist",
+      "text": "Still working? I thought the shoot ended an hour ago."
+     },
+     {
+      "speaker": "lyla",
+      "text": "The camera stopped. The choosing didn't. They want the picture where I look most approachable."
+     },
+     {
+      "speaker": "Protagonist",
+      "text": "Which one would you choose?"
+     },
+     {
+      "speaker": "lyla",
+      "text": "The one where I look comfortable. I was waiting for them to stop telling me how to sit."
+     },
+     {
+      "speaker": "Narrator",
+      "text": "She turns the laptop so you can compare the polished selects with a quieter, unplanned frame. Her eyes settle on the latter."
+     },
+     {
+      "speaker": "lyla",
+      "text": "I don't hate modeling. I just want the final photo to feel like I was there, not like someone invented me."
+     }
+    ],
+    "choices": [
+     {
+      "label": "Let Lyla choose the image that feels right",
+      "reply": "Thanks. I think I already knew. I just wanted someone to ask me what I thought.",
+      "kind": "support",
+      "flag": "lyla_last_light_choice",
+      "delta": {
+       "affection": 2,
+       "trust": 2,
+       "respect": 0,
+       "attraction": 0
+      }
+     },
+     {
+      "label": "Ask what she wants to do after the studio closes",
+      "reply": "Cards. Dinner. Preferably both, in that order. You can come if you want.",
+      "kind": "honest",
+      "flag": "lyla_last_light_cards",
+      "delta": {
+       "affection": 1,
+       "trust": 2,
+       "respect": 2,
+       "attraction": 0
+      }
+     }
+    ]
    }
   ],
   "mandatoryEvents": [
@@ -7912,7 +8213,41 @@ const packs=[
   "art": {
    "schemaVersion": 1,
    "characterId": "lyla",
-   "portrait": "/rpg-assets/characters/lyla/overworld/front.png"
+   "portrait": "/rpg-assets/characters/lyla/overworld/front.png",
+   "overworld": {
+    "standing": "/rpg-assets/characters/lyla/overworld/front.png",
+    "seatedCards": "/rpg-assets/characters/lyla/overworld/cards-seated.png",
+    "backView": "/rpg-assets/characters/lyla/overworld/back-view.png",
+    "arcade": "/rpg-assets/characters/lyla/overworld/arcade.png"
+   },
+   "attack": "/rpg-assets/characters/lyla/attack.png",
+   "eventImages": [
+    {
+     "sceneId": "lyla_studio_black",
+     "path": "/rpg-assets/characters/lyla/events/lyla_studio_01.png",
+     "prompt": "Approved original Lyla studio CG 1: Lyla leans over the studio table in a black velvet editorial dress, looking back toward the camera. Preserve the user-supplied PNG exactly; adult character, professional editorial setting."
+    },
+    {
+     "sceneId": "lyla_studio_portrait",
+     "path": "/rpg-assets/characters/lyla/events/lyla_studio_02.png",
+     "prompt": "Approved original Lyla studio CG 2: The next setup is a close portrait in soft studio light. Lyla studies the camera with her usual half-lidded expression. Preserve the user-supplied PNG exactly; adult character, professional editorial setting."
+    },
+    {
+     "sceneId": "lyla_studio_styling",
+     "path": "/rpg-assets/characters/lyla/events/lyla_studio_03.png",
+     "prompt": "Approved original Lyla studio CG 3: A stylist brings a coordinated pale outfit for the third setup. Lyla checks the styling and the photographer's reference images before stepping into the lights. Preserve the user-supplied PNG exactly; adult character, professional editorial setting."
+    },
+    {
+     "sceneId": "lyla_studio_floor",
+     "path": "/rpg-assets/characters/lyla/events/lyla_studio_04.png",
+     "prompt": "Approved original Lyla studio CG 4: After the final setup, Lyla sits on the studio floor in her styled outfit and sneakers. The lights are still warm, but the crew is packing away the equipment. Preserve the user-supplied PNG exactly; adult character, professional editorial setting."
+    },
+    {
+     "sceneId": "lyla_studio_afterhours",
+     "path": "/rpg-assets/characters/lyla/events/lyla_studio_05.png",
+     "prompt": "User-approved original Lyla CG: adult pale-blonde model sitting on a black studio stool, loose white shirt over black underlayer, heavy black boots, warm sunset photography lights, contact sheets on nearby laptop. Preserve supplied PNG unchanged."
+    }
+   ]
   }
  },
  {

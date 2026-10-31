@@ -309,10 +309,14 @@ function trainerOpportunity(o,name,cfg){
  if(name==='Switch')return p.bench.length>0;
  if(name==='Gust of Wind')return q.bench.length>0;
  if(name==='Pokémon Center')return own.some(u=>u.damage>=10);
- // Item Finder requires a Trainer already in discard before its two-card cost.
- // Playing it without a target strands a mandatory choice on the genuine reducer.
- if(name==='Item Finder')return (p.discard||[]).some(id=>card(id)?.supertype==='Trainer');
- if(name==='Computer Search')return p.deckCount>0;
+ // Both searches require two OTHER cards to pay their mandatory cost.
+ // Item Finder may recover a Trainer discarded as payment, even when the
+ // discard pile has no Trainers yet. Count the Item Finder being played as
+ // one of the hand's Trainers; another must be available to pay the cost.
+ if(name==='Item Finder')return p.hand.length>=3&&(
+  (p.discard||[]).some(id=>card(id)?.supertype==='Trainer')||
+  p.hand.filter(id=>card(id)?.supertype==='Trainer').length>=2);
+ if(name==='Computer Search')return p.hand.length>=3&&p.deckCount>0;
  if(name==='Bill')return p.deckCount>(cfg.level>=4?2:0);
  if(name==='Professor Oak')return p.deckCount>(cfg.level>=4?7:0);
  return true;
@@ -380,6 +384,7 @@ function candidates(o,cfg,used){
    // Otherwise the Apex attack-ordering guard may suppress a legal attack
    // in favor of a completely impossible attachment.
    if(target&&!(target.energyAttachBlockSerial>o.turnSerial)&&
+      !(cfg.level===8&&c.name==='Rainbow Energy'&&hpRemaining(target)<=10)&&
       legalAttachment({card:c,unit:target,round:o.round,energyUsed:p.energyUsed,
        cardName:card(target.id)?.name||''}))
     options.push(command('attach_energy',{handIndex:i,slot}));
@@ -529,6 +534,16 @@ function choiceValue(option,decision,o,cfg){
   const candidate=candidateId?card(candidateId):null;
   if(candidate&&isEnergy(candidate)&&o.self.active){
    const active=o.self.active;
+   // Computer Search is choosing an Energy, not attaching it yet. Do not
+   // reward a Rainbow Energy as an immediate attack unlock when its 10 damage
+   // would knock out the Active before it can attack. A surviving Bench target
+   // can still make Rainbow a useful search result.
+   if(candidate.name==='Rainbow Energy'&&hpRemaining(active)<=10){
+    const benchProgress=Math.max(0,...(o.self.bench||[]).filter(unit=>
+     hpRemaining(unit)>10&&legalAttachment({card:candidate,unit,round:o.round,
+      cardName:card(unit.id)?.name||''})).map(unit=>energyValue(unit,candidateId)));
+    return benchProgress>12?55+Math.min(110,benchProgress*1.5):-200;
+   }
    // Search results must be attachable to the intended attacker. In
    // particular, Miracle Energy cannot power an ordinary Pokémon.
    const attachable=legalAttachment({card:candidate,unit:active,round:o.round,
@@ -756,8 +771,14 @@ function horizonAttackValue(unit,defender,hand,remaining=1,futureRound=0,turnSer
   // Miracle Energy must not create imaginary two-turn attack lines.
   if(seen.has(id)||!isEnergy(energy)||!legalAttachment({card:energy,unit,
    round:futureRound,cardName:card(unit.id)?.name||''}))continue;
+  // Rainbow Energy deals 10 damage when attached. A forecast that knocks
+  // out its own attacker cannot unlock a next-turn attack. Nonlethal damage
+  // still matters for counter-based attacks such as Flail.
+  const rainbowDamage=energy.name==='Rainbow Energy'?10:0;
+  if(rainbowDamage>=hpRemaining(unit))continue;
   seen.add(id);
-  const after={...nextTurnUnit,energies:[...(unit.energies||[]),id]};
+  const after={...nextTurnUnit,damage:(nextTurnUnit.damage||0)+rainbowDamage,
+   energies:[...(unit.energies||[]),id]};
   // A card requires another turn's Energy attachment. Discount those future
   // outcomes to avoid preferring a speculative combination to today's KO.
   // Next attachment is on our next turn, after the opponent's turn.
@@ -774,7 +795,11 @@ function energyHorizonBonus(action,o,cfg){
  if(!u||!q.active)return 0;
  const attachedId=p.hand[v.handIndex];
  if(!isEnergy(card(attachedId)))return 0;
- const after={...u,energies:[...(u.energies||[]),attachedId]};
+ // Rainbow Energy damages its host immediately, including in two-turn forecasts.
+ const rainbowDamage=card(attachedId)?.name==='Rainbow Energy'?10:0;
+ if(rainbowDamage>=hpRemaining(u))return 0;
+ const after={...u,damage:(u.damage||0)+rainbowDamage,
+  energies:[...(u.energies||[]),attachedId]};
  const futureHand=p.hand.filter((_,i)=>i!==v.handIndex);
  const futureRound=(Number(o.round)||0)+1;
  // Defaulting to serial zero makes expired public locks look active.
@@ -1161,7 +1186,10 @@ function projectedPrep(board,action,round,turnSerial){
   if(next.energyUsed||!u||!isEnergy(c)||u.energyAttachBlockSerial>turnSerial||
     !legalAttachment({card:c,unit:u,round,energyUsed:next.energyUsed,
      cardName:card(u.id)?.name||''}))return null;
+  // A lethal Rainbow attachment cannot contribute to a tactical line.
+  if(c.name==='Rainbow Energy'&&hpRemaining(u)<=10)return null;
   u.energies=[...(u.energies||[]),id];
+  if(c.name==='Rainbow Energy')u.damage=(u.damage||0)+10;
   next.energyUsed=true;
  }else if(type==='evolve'){
   if(!u||!canEvolve(c,card(u.id))||u.playedTurn>=round)return null;
