@@ -566,7 +566,11 @@ function prompt(g,plan,helpers){
  if(name==='Switch'&&cannotSwitch(g,side))d.target=[];
  if(name==='Gust of Wind'&&!chosen(d,'target'))return single('target',side,options(f.bench.map((u,i)=>({i,label:publicName(u)})),'bench'),'Choose opponent replacement');
  if(name==='Switch'&&!chosen(d,'target'))return single('target',side,options(p.bench.map((u,i)=>({i,label:publicName(u)})),'bench'),'Choose your replacement');
- if(['Potion','Super Potion','Scoop Up','Devolution Spray','Defender','Pokémon Center'].includes(name)&&!chosen(d,'target')&&name!=='Pokémon Center'){\n  const targetsForEffect=own(u=>name==='Potion'?u.damage>0:name==='Super Potion'?u.damage>0&&u.energies.length>0:name==='Devolution Spray'?u.under.length>0:true);\n  if(name==='Super Potion'&&targetsForEffect.length===1)d.target=[targetsForEffect[0].id];\n  else return single('target',side,targetsForEffect,'Choose one of your Pokémon');\n }
+ if(['Potion','Super Potion','Scoop Up','Devolution Spray','Defender','Pokémon Center'].includes(name)&&!chosen(d,'target')&&name!=='Pokémon Center'){
+  const targetsForEffect=own(u=>name==='Potion'?u.damage>0:name==='Super Potion'?u.damage>0&&u.energies.length>0:name==='Devolution Spray'?u.under.length>0:true);
+  if(name==='Super Potion'&&targetsForEffect.length===1)d.target=[targetsForEffect[0].id];
+  else return single('target',side,targetsForEffect,'Choose one of your Pokémon');
+ }
  if(name==='Energy Removal'&&!chosen(d,'target'))return single('target',side,enemy(u=>u.energies.length>0&&!u.attachedTrainers.some(t=>get(t.id).name==="Brock's Protection")),'Choose opposing Pokémon');
  if(name==='Super Energy Removal'){
   if(!chosen(d,'source'))return single('source',side,own(u=>u.energies.length>0),'Choose your Pokémon to pay Energy');
