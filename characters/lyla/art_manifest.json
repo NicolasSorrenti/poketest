@@ -29,6 +29,11 @@
       "sceneId": "lyla_studio_floor",
       "path": "/rpg-assets/characters/lyla/events/lyla_studio_04.png",
       "prompt": "Approved original Lyla studio CG 4: After the final setup, Lyla sits on the studio floor in her styled outfit and sneakers. The lights are still warm, but the crew is packing away the equipment. Preserve the user-supplied PNG exactly; adult character, professional editorial setting."
+    },
+    {
+      "sceneId": "lyla_studio_afterhours",
+      "path": "/rpg-assets/characters/lyla/events/lyla_studio_05.png",
+      "prompt": "User-approved original Lyla CG: adult pale-blonde model sitting on a black studio stool, loose white shirt over black underlayer, heavy black boots, warm sunset photography lights, contact sheets on nearby laptop. Preserve supplied PNG unchanged."
     }
   ]
 }

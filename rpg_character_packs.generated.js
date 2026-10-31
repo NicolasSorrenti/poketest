@@ -7921,6 +7921,76 @@ const packs=[
       }
      }
     ]
+   },
+   {
+    "id": "lyla_studio_afterhours",
+    "npc": "lyla",
+    "title": "The Last Light",
+    "start": 30,
+    "end": 90,
+    "place": "center",
+    "slot": 2,
+    "minBond": 1,
+    "prerequisite": null,
+    "participants": [],
+    "encounterType": "slice",
+    "trigger": "talk",
+    "lines": [
+     {
+      "speaker": "Narrator",
+      "text": "The studio is almost empty. In the last warm light of the day, Lyla sits on a black stool wearing a loose white shirt and heavy boots. The laptop beside her shows a grid of contact sheets."
+     },
+     {
+      "speaker": "Protagonist",
+      "text": "Still working? I thought the shoot ended an hour ago."
+     },
+     {
+      "speaker": "lyla",
+      "text": "The camera stopped. The choosing didn't. They want the picture where I look most approachable."
+     },
+     {
+      "speaker": "Protagonist",
+      "text": "Which one would you choose?"
+     },
+     {
+      "speaker": "lyla",
+      "text": "The one where I look comfortable. I was waiting for them to stop telling me how to sit."
+     },
+     {
+      "speaker": "Narrator",
+      "text": "She turns the laptop so you can compare the polished selects with a quieter, unplanned frame. Her eyes settle on the latter."
+     },
+     {
+      "speaker": "lyla",
+      "text": "I don't hate modeling. I just want the final photo to feel like I was there, not like someone invented me."
+     }
+    ],
+    "choices": [
+     {
+      "label": "Let Lyla choose the image that feels right",
+      "reply": "Thanks. I think I already knew. I just wanted someone to ask me what I thought.",
+      "kind": "support",
+      "flag": "lyla_last_light_choice",
+      "delta": {
+       "affection": 2,
+       "trust": 2,
+       "respect": 0,
+       "attraction": 0
+      }
+     },
+     {
+      "label": "Ask what she wants to do after the studio closes",
+      "reply": "Cards. Dinner. Preferably both, in that order. You can come if you want.",
+      "kind": "honest",
+      "flag": "lyla_last_light_cards",
+      "delta": {
+       "affection": 1,
+       "trust": 2,
+       "respect": 2,
+       "attraction": 0
+      }
+     }
+    ]
    }
   ],
   "mandatoryEvents": [
@@ -8171,6 +8241,11 @@ const packs=[
      "sceneId": "lyla_studio_floor",
      "path": "/rpg-assets/characters/lyla/events/lyla_studio_04.png",
      "prompt": "Approved original Lyla studio CG 4: After the final setup, Lyla sits on the studio floor in her styled outfit and sneakers. The lights are still warm, but the crew is packing away the equipment. Preserve the user-supplied PNG exactly; adult character, professional editorial setting."
+    },
+    {
+     "sceneId": "lyla_studio_afterhours",
+     "path": "/rpg-assets/characters/lyla/events/lyla_studio_05.png",
+     "prompt": "User-approved original Lyla CG: adult pale-blonde model sitting on a black studio stool, loose white shirt over black underlayer, heavy black boots, warm sunset photography lights, contact sheets on nearby laptop. Preserve supplied PNG unchanged."
     }
    ]
   }
