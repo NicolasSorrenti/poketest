@@ -5,6 +5,7 @@ const crypto=require('node:crypto');
 const {createGame,reduce,CATALOG}=require('./headless_duel');
 const {publicView,publicActivity,validateCommand}=require('./duel_protocol');
 const UNDO=require('./duel_undo');
+const RPG_DRAW=require('./rpg_draw_assist');
 const {driveBot,configuration}=require('./classic_bot');
 const {NPC_PROFILES,profileForNpc}=require('./cpu_profiles');
 const NPC_DECKS=require('./rpg_npc_deck_progression');
@@ -89,7 +90,8 @@ class ClassicLocalService {
   const format=[...playerCards,...cpuCards].some(id=>['neo1','neo2','neo3','neo4'].some(set=>id.startsWith(set+'-')))?(expanded?'online-preview':'neo-theme'):expanded?'gym-expanded':RETAIL.meta[deck]?.gym||RETAIL.meta[opponent]?.gym?'gym-theme':[...playerCards,...cpuCards].some(id=>id.startsWith('base4'))?'theme-expanded':'classic';
   let game=createGame({decks:[playerCards,cpuCards],names:['You','Classic CPU'],format,...(prizeCount?{prizeCount}:{}),seed:seed??crypto.randomBytes(4).readUInt32BE(0)});
   game=driveBot(game,200,cpuConfig).game;
-  const token=crypto.randomBytes(24).toString('base64url'),session={game,revision:0,updated:this.now(),token,deck,opponent,cpuConfig,npc:profileId??npcDeckId??null,npcDeckTier:customOpponentDeck?null:npcDeckTier};
+  const token=crypto.randomBytes(24).toString('base64url'),session={game,revision:0,updated:this.now(),token,deck,opponent,cpuConfig,npc:profileId??npcDeckId??null,npcDeckTier:customOpponentDeck?null:npcDeckTier,
+   ...(typeof npcDeckId==='string'?{rpgDrawAssist:{stalled:0,used:false}}:{})};
   this.sessions.set(token,session);return {token,...this.response(session)};
  }
  createCube({humanDeck,cpuDeck,seed,difficulty=3,personality='balanced',name='Cube CPU'}={}){
@@ -120,7 +122,12 @@ class ClassicLocalService {
   if(cmd.type==='undo'){
    s.game=UNDO.undo(s.undoHistory,s.game,0);s.revision++;return this.response(s);
   }
-  const result=reduce(s.game,0,cmd);
+  // Prepare only the next natural CPU draw; the reducer still owns all draws.
+  const eligible=!!s.rpgDrawAssist&&cmd.type==='end_turn'&&s.game.phase==='game'&&s.game.turn===0;
+  const input=eligible?structuredClone(s.game):s.game;
+  const rescue=eligible?{...s.rpgDrawAssist}:null;
+  if(eligible)RPG_DRAW.assist(input,rescue);
+  const result=reduce(input,0,cmd);
   if(!result.ok)throw Error(result.error||'Illegal command');
   // Preserve the single authoritative CPU result, but return safe public
   // snapshots so the browser can display each CPU action in order.
@@ -142,6 +149,10 @@ class ClassicLocalService {
   };
   // Bot failures must never commit partial human or computer actions.
   const {game}=driveBot(result.game,200,cpuTurn?{...s.cpuConfig,onStep:captureResolvedCpuStep}:s.cpuConfig);
+  if(eligible){
+   RPG_DRAW.observe(rescue,result.game,game);
+   s.rpgDrawAssist=rescue;
+  }
   UNDO.record(s.undoHistory,s.game,game,0,cmd);
   s.game=game;s.revision++;
   const response=this.response(s);
