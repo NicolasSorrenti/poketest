@@ -1995,7 +1995,12 @@
       "effects": [
         {
           "kind": "trainer",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "test_card_fidelity_pokemon_flute.js: eight reducer scenarios across Classic and online-preview; full five-Pokémon Bench rejection, Narrow Gym's four-Pokémon capacity, atomic rejection, opponent discard selection owned by the player of Flute, and placement on the opponent's Bench.",
+            "Printed Base #86 text compared with Serebii and TCGdex; official errata PDF searched and no Pokémon Flute entry found. Other interactions, inaccessible/no-Basic discard, and live client/network play remain unreviewed."
+          ],
+          "scope": "Base Set Pokémon Flute; both format paths: rejects play atomically when opponent bench is at five, or four under Narrow Gym; with space, actor chooses one Basic Pokémon from opponent discard and it enters opponent Bench. Eight reducer scenarios. Partial only."
         }
       ]
     },
