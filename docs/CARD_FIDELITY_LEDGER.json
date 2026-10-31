@@ -1453,13 +1453,23 @@
      "kind": "attack",
      "index": 0,
      "name": "Rock Throw",
-     "status": "unreviewed"
+     "status": "partial",
+     "evidence": [
+      "test_card_fidelity_onix.js: 48 reducer scenarios compare Base Set #56 and Base Set 2 #84 across Classic, Neo-theme, and online-preview 60/40. Tests Rock Throw's typed cost/fixed damage; Harden's inclusive 30 threshold after Weakness, above-threshold damage, another attack effect through shield, exact opponent-turn duration, and atomic typed-cost rejection.",
+      "Rock Throw/Harden print text checked against Serebii Base #56 and Bulbapedia Onix Base Set #56 (including Base Set 2 reprint); WotC Advanced Rulebook v8 checked for historical attack damage and Weakness/Resistance order. Official errata index has no Base #56 Harden/Rock Throw correction; its Onix entry concerns the later HS—Unleashed Energy Healer. Poison checkup and wider interactions remain unreviewed."
+     ],
+     "scope": "Rock Throw: printed one-Fighting cost and fixed 10 damage; DCE-only payment rejected atomically. Other interactions remain unreviewed."
     },
     {
      "kind": "attack",
      "index": 1,
      "name": "Harden",
-     "status": "unreviewed"
+     "status": "partial",
+     "evidence": [
+      "test_card_fidelity_onix.js: 48 reducer scenarios compare Base Set #56 and Base Set 2 #84 across Classic, Neo-theme, and online-preview 60/40. Tests Rock Throw's typed cost/fixed damage; Harden's inclusive 30 threshold after Weakness, above-threshold damage, another attack effect through shield, exact opponent-turn duration, and atomic typed-cost rejection.",
+      "Rock Throw/Harden print text checked against Serebii Base #56 and Bulbapedia Onix Base Set #56 (including Base Set 2 reprint); WotC Advanced Rulebook v8 checked for historical attack damage and Weakness/Resistance order. Official errata index has no Base #56 Harden/Rock Throw correction; its Onix entry concerns the later HS—Unleashed Energy Healer. Poison checkup and wider interactions remain unreviewed."
+     ],
+     "scope": "Harden: two-Fighting cost and atomic DCE-only rejection; prevents exactly 30 or less after Weakness/Resistance, permits 40 damage, preserves the attack's Confusion effect through the shield, and expires after one opposing turn. Poison checkup and wider interactions remain unreviewed."
     }
    ]
   },
@@ -6193,13 +6203,23 @@
      "kind": "attack",
      "index": 0,
      "name": "Rock Throw",
-     "status": "unreviewed"
+     "status": "partial",
+     "evidence": [
+      "test_card_fidelity_onix.js: 48 reducer scenarios compare Base Set #56 and Base Set 2 #84 across Classic, Neo-theme, and online-preview 60/40. Tests Rock Throw's typed cost/fixed damage; Harden's inclusive 30 threshold after Weakness, above-threshold damage, another attack effect through shield, exact opponent-turn duration, and atomic typed-cost rejection.",
+      "Rock Throw/Harden print text checked against Serebii Base #56 and Bulbapedia Onix Base Set #56 (including Base Set 2 reprint); WotC Advanced Rulebook v8 checked for historical attack damage and Weakness/Resistance order. Official errata index has no Base #56 Harden/Rock Throw correction; its Onix entry concerns the later HS—Unleashed Energy Healer. Poison checkup and wider interactions remain unreviewed."
+     ],
+     "scope": "Rock Throw: printed one-Fighting cost and fixed 10 damage; DCE-only payment rejected atomically. Other interactions remain unreviewed."
     },
     {
      "kind": "attack",
      "index": 1,
      "name": "Harden",
-     "status": "unreviewed"
+     "status": "partial",
+     "evidence": [
+      "test_card_fidelity_onix.js: 48 reducer scenarios compare Base Set #56 and Base Set 2 #84 across Classic, Neo-theme, and online-preview 60/40. Tests Rock Throw's typed cost/fixed damage; Harden's inclusive 30 threshold after Weakness, above-threshold damage, another attack effect through shield, exact opponent-turn duration, and atomic typed-cost rejection.",
+      "Rock Throw/Harden print text checked against Serebii Base #56 and Bulbapedia Onix Base Set #56 (including Base Set 2 reprint); WotC Advanced Rulebook v8 checked for historical attack damage and Weakness/Resistance order. Official errata index has no Base #56 Harden/Rock Throw correction; its Onix entry concerns the later HS—Unleashed Energy Healer. Poison checkup and wider interactions remain unreviewed."
+     ],
+     "scope": "Harden: two-Fighting cost and atomic DCE-only rejection; prevents exactly 30 or less after Weakness/Resistance, permits 40 damage, preserves the attack's Confusion effect through the shield, and expires after one opposing turn. Poison checkup and wider interactions remain unreviewed."
     }
    ]
   },

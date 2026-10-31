@@ -296,3 +296,13 @@ The regression compares the two printings in Classic, Neo-theme, and online-prev
 | Horn Hazard (base1-55, base4-83) | One Grass cost; 30 damage on heads, no damage on tails; Energy retained; invalid payments rejected atomically | `test_card_fidelity_nidoran_male.js` (30 reducer scenarios); [Serebii Base #55](https://www.serebii.net/card/base/055.shtml); [Bulbapedia Base #55/#83](https://bulbapedia.bulbagarden.net/wiki/Nidoran%E2%99%82_%28Base_Set_55%29); [official errata index](https://play.pokemon.com/en-ca/resources/documents/tcg-errata/) | Partial; other interactions remain unreviewed |
 
 The test compares the two printings and runs Classic, Neo-theme, and online-preview 60/40 configurations. It exercises both coin outcomes, verifies tails does nothing while the attack still resolves, checks the Grass requirement and retained Energy, and confirms Colorless-only or missing payment is rejected without mutation. Official errata search found no Nidoran♂ entry. Other damage modifiers and browser/network behavior remain unchecked.
+
+
+## Onix (Base Set #56 and Base Set 2 #84)
+
+| Effect | Scope checked | Evidence | Status |
+| --- | --- | --- | --- |
+| Rock Throw (base1-56, base4-84) | Fighting ×1 cost; fixed 10; DCE-only payment rejected | `test_card_fidelity_onix.js` (48 reducer scenarios); [Serebii Base #56](https://www.serebii.net/card/base/056.shtml); [Bulbapedia Onix #56](https://bulbapedia.bulbagarden.net/wiki/Onix_%28Base_Set_56%29) | Partial |
+| Harden (base1-56, base4-84) | Two-Fighting cost; inclusive 30-damage shield after Weakness/Resistance; 40 after Grass Weakness passes; other attack effect occurs; one-turn duration | Same test; [WotC Advanced Rulebook v8](https://www.judgeball.com/files/archives/tcg-rulebooks/en/WOTCE1.pdf); [official errata index](https://play.pokemon.com/en-ca/resources/documents/tcg-errata/) contains no Base Onix attack correction | Partial |
+
+The 48 scenarios compare both printings in Classic, Neo-theme, and online-preview 60/40. Harden is checked against damage of exactly 30, damage of 40 after Weakness, and a Koffing attack whose Confusion effect applies while damage is prevented. The next opponent-turn window is tested across two opponent attacks. Poison checkup under Harden, other modifiers, and browser/network behavior remain unchecked.
