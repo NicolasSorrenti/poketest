@@ -1168,7 +1168,12 @@
      "kind": "attack",
      "index": 0,
      "name": "Leech Seed",
-     "status": "unreviewed"
+     "status": "partial",
+     "scope": "Leech Seed: Grass + Grass cost and rejection of Grass + Double Colorless; 20 damage; automatic removal of exactly one 10-damage counter from the attacking Bulbasaur when the attack deals damage (compulsory-healing Wizards-era erratum); no healing if all attack damage is prevented; healing capped at current damage; no optional choice; Base Set and Base Set 2; Classic, Neo-theme, online-preview 60-card, and online-preview 40-card reducer configurations.",
+     "evidence": [
+      "`test_card_fidelity_bulbasaur.js`: 36 reducer scenarios across Base Set in Classic, Neo-theme, online-preview 60-card and 40-card modes, and Base Set 2 in online-preview 60-card and 40-card modes. Covers printed attack text/cost/damage parity, legal Grass payment, rejection of Grass + Double Colorless, automatic one-counter healing, healing cap, no-damage prevention, and no pending player choice.",
+      "Base Set and Base Set 2 text/cost compared with Limitless, Serebii and TCGdex listings. Retro Pokémon TCG's Wizards-era errata list and the TCG ONE WotC errata forum record state that Bulbasaur's Leech Seed healing is compulsory when it deals damage; the catalogue retains the printed optional 'may' text. Remaining interactions and client/network integration are pending."
+     ]
     }
    ]
   },
@@ -5735,7 +5740,12 @@
      "kind": "attack",
      "index": 0,
      "name": "Leech Seed",
-     "status": "unreviewed"
+     "status": "partial",
+     "scope": "Leech Seed: Grass + Grass cost and rejection of Grass + Double Colorless; 20 damage; automatic removal of exactly one 10-damage counter from the attacking Bulbasaur when the attack deals damage (compulsory-healing Wizards-era erratum); no healing if all attack damage is prevented; healing capped at current damage; no optional choice; Base Set and Base Set 2; Classic, Neo-theme, online-preview 60-card, and online-preview 40-card reducer configurations.",
+     "evidence": [
+      "`test_card_fidelity_bulbasaur.js`: 36 reducer scenarios across Base Set in Classic, Neo-theme, online-preview 60-card and 40-card modes, and Base Set 2 in online-preview 60-card and 40-card modes. Covers printed attack text/cost/damage parity, legal Grass payment, rejection of Grass + Double Colorless, automatic one-counter healing, healing cap, no-damage prevention, and no pending player choice.",
+      "Base Set and Base Set 2 text/cost compared with Limitless, Serebii and TCGdex listings. Retro Pokémon TCG's Wizards-era errata list and the TCG ONE WotC errata forum record state that Bulbasaur's Leech Seed healing is compulsory when it deals damage; the catalogue retains the printed optional 'may' text. Remaining interactions and client/network integration are pending."
+     ]
     }
    ]
   },
