@@ -782,7 +782,8 @@ function horizonAttackValue(unit,defender,hand,remaining=1,futureRound=0,turnSer
   if(rainbowDamage>=hpRemaining(unit))continue;
   seen.add(id);
   const after={...nextTurnUnit,damage:(nextTurnUnit.damage||0)+rainbowDamage,
-   energies:[...(unit.energies||[]),id]};
+   // Forecast from the post-expiry Energy pool: Miracle Energy is discarded.
+   energies:[...(nextTurnUnit.energies||[]),id]};
   // A card requires another turn's Energy attachment. Discount those future
   // outcomes to avoid preferring a speculative combination to today's KO.
   // Next attachment is on our next turn, after the opponent's turn.
@@ -1235,6 +1236,15 @@ function projectedPrep(board,action,round,turnSerial){
   if(!u||!canEvolve(c,card(u.id))||u.playedTurn>=round)return null;
   u.id=id;
   u.playedTurn=round;
+  // Match the authoritative evolve reducer: the new stage uses its own
+  // attacks, and evolution removes Asleep/Paralyzed/Confused and Poison.
+  // Keeping either stale field made an otherwise legal evolved attack look
+  // unusable (or falsely retained the Basic's cheaper attack) in the
+  // optional two-step preparation forecast.
+  delete u.effectiveAttacks;
+  u.status=null;
+  u.poison=false;
+  delete u.poisonDamage;
  }else{
   if(!isBasicPokemon(c))return null;
   next.bench.push({id,damage:0,energies:[],status:null,playedTurn:round});
@@ -1279,13 +1289,25 @@ function energyPreparationActions(o,cfg,actions){
  if(cfg.level!==8||o.self.energyUsed)return actions;
  const canAttackNow=actions.some(a=>a.type==='attack');
  const useful=actions.some(a=>{
-  if(a.type!=='attach_energy'||energyValue(slotUnit(o.self,a.payload.slot),
-    o.self.hand[a.payload.handIndex])<=12)return false;
+  if(a.type!=='attach_energy')return false;
+  const target=slotUnit(o.self,a.payload.slot);
+  const energyId=o.self.hand[a.payload.handIndex];
+  // Full Heal Energy cures Confusion on attachment. A fully charged Active
+  // may have zero marginal Energy value, yet curing the 50% attack-failure
+  // risk before declaring a damaging attack is a productive preparation.
+  const confusionCure=a.payload.slot===-1&&target?.status==='Confused'&&
+   card(energyId)?.name==='Full Heal Energy'&&
+   (target.effectiveAttacks||card(target.id)?.attacks||[]).some((attack,index)=>
+    eligibleAttack(o,target,attack,index)&&
+    estimatedDamage(attack,target,o.opponent.active,o.self.bench.length)>0);
+  if(!confusionCure&&energyValue(target,energyId)<=12)return false;
   // Do not suppress an already-legal attack just to spend the only Energy on
   // an Active that will be KO'd before that Energy helps. A legal Bench
   // attachment or immediate attack upgrade still gets prepared first.
-  return !(canAttackNow&&a.payload.slot===-1&&
-   strandedActiveEnergy(o,o.self.hand[a.payload.handIndex]));
+  // The cure improves this turn's attack reliability even if the Active
+  // would be knocked out next turn; do not treat it as stranded Energy.
+  return confusionCure||!(canAttackNow&&a.payload.slot===-1&&
+   strandedActiveEnergy(o,energyId));
  });
  if(!useful)return actions;
  // Confusion requires a coin flip before a printed attack resolves, so a
