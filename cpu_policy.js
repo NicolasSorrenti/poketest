@@ -782,7 +782,9 @@ function horizonAttackValue(unit,defender,hand,remaining=1,futureRound=0,turnSer
   if(rainbowDamage>=hpRemaining(unit))continue;
   seen.add(id);
   const after={...nextTurnUnit,damage:(nextTurnUnit.damage||0)+rainbowDamage,
-   energies:[...(unit.energies||[]),id]};
+   // Rebuild from the post-expiry pool, never from the original unit:
+   // Miracle Energy is discarded at turn end and cannot pay next turn's attack.
+   energies:[...(nextTurnUnit.energies||[]),id]};
   // A card requires another turn's Energy attachment. Discount those future
   // outcomes to avoid preferring a speculative combination to today's KO.
   // Next attachment is on our next turn, after the opponent's turn.
