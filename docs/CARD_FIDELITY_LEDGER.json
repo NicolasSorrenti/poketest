@@ -285,7 +285,12 @@
      "kind": "attack",
      "index": 0,
      "name": "Thrash",
-     "status": "unreviewed"
+     "status": "partial",
+     "evidence": [
+      "`test_card_fidelity_nidoking.js`: Base Set and Base Set 2 text/cost parity; 56 Thrash reducer scenarios across Classic, Neo-theme, online-preview 60-card and 40-card configurations. Covers legal Grass/Double Colorless payment and underpayment rejection, heads 40/tails 30, 10 self-damage on tails, Metal Energy source/recipient double reduction, and self-KO/Prize flow with and without Metal Energy.",
+      "Base and Base Set 2 text/cost compared with Limitless and Serebii listings. Current official errata index searched with no Nidoking entry. TCG ONE's Metal Energy ruling and Retro Pokémon TCG's Base–Neo rules reference confirm double reduction of self-damage for a non-Metal attacker; no Nidoking-specific ruling was located. Other interactions and client/network integration remain pending."
+     ],
+     "scope": "Thrash: printed Grass + 2 Colorless cost (including Grass + Double Colorless), underpayment rejection, heads 40/tails 30, tails self-damage 10, one attached Metal Energy reducing that self-damage to 0 through source and recipient modifiers, no-Metal self-KO/Prize flow versus Metal-protected survival; both Base Set and Base Set 2; Classic, Neo-theme, online-preview 60-card and 40-card reducer configurations."
     },
     {
      "kind": "attack",
@@ -293,9 +298,9 @@
      "name": "Toxic",
      "status": "partial",
      "evidence": [
-      "test_card_fidelity_nidoking.js"
+      "`test_card_fidelity_nidoking.js`: Toxic replaces ordinary Poison with 20 damage at consecutive checkups; tests already-Poisoned targets, checkup logs, and rejection of incorrect typed payment across Classic, Neo-theme, online-preview 60-card and 40-card configurations for Base and Base Set 2."
      ],
-     "scope": "Attack damage and replacement of ordinary poison; 20 damage at two consecutive checkups and correct log, typed cost rejection. Classic, Neo, online-preview and 40-card Cube reducer; independent printed-card and historical ruling review pending."
+     "scope": "Enhanced Poison replacement, already-Poisoned target, consecutive checkups and checkup logs, typed-cost rejection; both printings; reducer scenarios in Classic, Neo-theme, online-preview 60-card and 40-card configurations."
     }
    ]
   },
@@ -4424,13 +4429,22 @@
      "kind": "attack",
      "index": 0,
      "name": "Thrash",
-     "status": "unreviewed"
+     "status": "partial",
+     "evidence": [
+      "`test_card_fidelity_nidoking.js`: Base Set and Base Set 2 text/cost parity; 56 Thrash reducer scenarios across Classic, Neo-theme, online-preview 60-card and 40-card configurations. Covers legal Grass/Double Colorless payment and underpayment rejection, heads 40/tails 30, 10 self-damage on tails, Metal Energy source/recipient double reduction, and self-KO/Prize flow with and without Metal Energy.",
+      "Base and Base Set 2 text/cost compared with Limitless and Serebii listings. Current official errata index searched with no Nidoking entry. TCG ONE's Metal Energy ruling and Retro Pokémon TCG's Base–Neo rules reference confirm double reduction of self-damage for a non-Metal attacker; no Nidoking-specific ruling was located. Other interactions and client/network integration remain pending."
+     ],
+     "scope": "Thrash: printed Grass + 2 Colorless cost (including Grass + Double Colorless), underpayment rejection, heads 40/tails 30, tails self-damage 10, one attached Metal Energy reducing that self-damage to 0 through source and recipient modifiers, no-Metal self-KO/Prize flow versus Metal-protected survival; both Base Set and Base Set 2; Classic, Neo-theme, online-preview 60-card and 40-card reducer configurations."
     },
     {
      "kind": "attack",
      "index": 1,
      "name": "Toxic",
-     "status": "unreviewed"
+     "status": "partial",
+     "evidence": [
+      "`test_card_fidelity_nidoking.js`: Base Set 2 Toxic text/cost parity and the same enhanced Poison, already-Poisoned target, consecutive checkup, and typed-cost rejection scenarios as Base Set across Classic, Neo-theme, online-preview 60-card and 40-card configurations."
+     ],
+     "scope": "Enhanced Poison replacement, already-Poisoned target, consecutive checkups and checkup logs, typed-cost rejection; both printings; reducer scenarios in Classic, Neo-theme, online-preview 60-card and 40-card configurations."
     }
    ]
   },
