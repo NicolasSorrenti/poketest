@@ -2345,7 +2345,8 @@ const APPROVED_DIALOGUE_MASTERS=Object.freeze({
  elena:'/rpg-assets/characters/elena/overworld/standing-portfolio.png',
  jun:'/rpg-assets/characters/jun/standing-front.png',
  teo:'/rpg-assets/characters/teo/dialogue/neutral.png',
- nereo:'/rpg-assets/characters/nereo/dialogue/neutral.png'
+ nereo:'/rpg-assets/characters/nereo/dialogue/neutral.png',
+ elio:'/rpg-assets/characters/elio/dialogue/neutral.png'
 });
 function dialogueMasterSource(id,expression){
  return expression==='neutral'?APPROVED_DIALOGUE_MASTERS[id]||null:null;

@@ -14,7 +14,8 @@ const images={
  elena:'rpg-assets/characters/elena/overworld/standing-portfolio.png',
  jun:'rpg-assets/characters/jun/standing-front.png',
  teo:'rpg-assets/characters/teo/dialogue/neutral.png',
- nereo:'rpg-assets/characters/nereo/dialogue/neutral.png'
+ nereo:'rpg-assets/characters/nereo/dialogue/neutral.png',
+ elio:'rpg-assets/characters/elio/dialogue/neutral.png'
 };
 test('approved masters are existing binary files; Iris copy is unmodified',()=>{
  for(const [id,p] of Object.entries(images)){
@@ -64,5 +65,13 @@ test('Nereo dialogue master preserves original front pose bytes',()=>{
  const copy='rpg-assets/characters/nereo/dialogue/neutral.png';
  assert.deepEqual(fs.readFileSync(path.join(root,copy)),fs.readFileSync(path.join(root,original)));
  assert.ok(rpg.includes("nereo:'/rpg-assets/characters/nereo/dialogue/neutral.png'"));
+ assert.ok(world.includes('/'+copy));
+});
+
+test('Elio dialogue master preserves original front pose bytes',()=>{
+ const original='rpg-assets/characters/elio/standing-front.png';
+ const copy='rpg-assets/characters/elio/dialogue/neutral.png';
+ assert.deepEqual(fs.readFileSync(path.join(root,copy)),fs.readFileSync(path.join(root,original)));
+ assert.ok(rpg.includes("elio:'/rpg-assets/characters/elio/dialogue/neutral.png'"));
  assert.ok(world.includes('/'+copy));
 });

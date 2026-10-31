@@ -11,6 +11,7 @@ The game uses **existing, approved full-body images** and crops only in its RPG 
 | Jun | `rpg-assets/characters/jun/standing-front.png` (existing Jun root art) | Original expression portraits |
 | Teo | `rpg-assets/characters/teo/dialogue/neutral.png` (byte-identical copy of `overworld/standing-front.png`) | Original expression portraits |
 | Nereo | `rpg-assets/characters/nereo/dialogue/neutral.png` (byte-identical copy of `standing-front.png` in Nereo's root folder) | Original expression portraits |
+| Elio | `rpg-assets/characters/elio/dialogue/neutral.png` (byte-identical copy of Elio's `standing-front.png`) | Original expression portraits |
 
 Jun's source is the already-committed front standing PNG in his character folder, not a newly generated picture or a copy.
 
