@@ -271,7 +271,8 @@
       "test_card_fidelity_mewtwo.js: Barrier's Psychic Energy discard, automatic resolution for identical Basic Psychic Energy, retained choice when Psychic and Rainbow Energy are both eligible, and prevention of damage/paralysis on the opponent's next turn; Classic, Neo, online-preview and 40-card Cube configurations.",
       "https://github.com/PokemonTCG/pokemon-tcg-data/blob/master/cards/en/base1.json",
       "Catalog transcription discrepancy remains: local TCGdex and Bulbapedia text omit “Psychic” from Barrier's extra discard, while PokémonTCG card data and card database listings specify Psychic Energy; physical scan comparison and historical ruling review remain pending.",
-      "Basic Psychic Energy reprints with different set IDs auto-resolve as functionally identical; Rainbow Energy remains a distinct, selectable outcome."
+      "Basic Psychic Energy reprints with different set IDs auto-resolve as functionally identical; Rainbow Energy remains a distinct, selectable outcome.",
+      "test_card_fidelity_sandshrew.js: Barrier's attached Energy discard is committed before a tails prevention result; failed attack does not create the all-effects shield."
      ]
     }
    ]
@@ -1329,7 +1330,8 @@
      "evidence": [
       "test_card_fidelity_gastly.js: 60 reducer scenarios across Base Set Classic, Neo-theme, online-preview 60/40 and Base Set 2 online-preview 60/40.",
       "Serebii Base, Bulbapedia Base Set 50, and Limitless Base text/cost listings compared.",
-      "WotC rulings compendium Q78: Poison/burn damage KOs do not activate Destiny Bond. Official errata PDF searched with no Gastly/Destiny Bond entry. Other edge interactions and client/network integration remain unchecked."
+      "WotC rulings compendium Q78: Poison/burn damage KOs do not activate Destiny Bond. Official errata PDF searched with no Gastly/Destiny Bond entry. Other edge interactions and client/network integration remain unchecked.",
+      "test_card_fidelity_sandshrew.js: Psychic discard is committed before a tails prevention result; failed attack does not create Destiny Bond."
      ]
     }
    ]
@@ -1598,7 +1600,12 @@
      "kind": "attack",
      "index": 0,
      "name": "Sand-attack",
-     "status": "unreviewed"
+     "status": "partial",
+     "evidence": [
+      "test_card_fidelity_sandshrew.js: both Sandshrew printings; early Base text variant using “this attack”; Sand-attack tails/heads versus Swift; Barrier, Destiny Bond, Scavenge and Third Eye required Energy discards before the prevention flip; same-name auto-selection; distinct Scavenge/Third Eye Energy choice by attacker; prevention before Confusion. 91 reducer scenarios.",
+      "Printed attack text/cost compared with Serebii Base #62 and Base Set 2 #91. Archived WotC rulings compendium Q20 (discard cost before Smokescreen), Q328 (Smokescreen before Confusion), and Q39 (Sand-attack still checked against Swift). Other card interactions and client/network integration remain pending."
+     ],
+     "scope": "Sand-attack: 10 damage, one Fighting Energy cost, Base/Base Set 2 reprint parity and early 'this attack' wording; tails prevents all of Swift while heads permits Swift; discard costs for Barrier, Destiny Bond, Scavenge and Third Eye commit before the prevention flip; same-name Energy options auto-select and distinct Scavenge/Third Eye options remain the attacker's choice; if prevention succeeds, Confusion is checked with a separate coin. 91 reducer scenarios across Classic, Neo-theme and online-preview 60/40. Other attack costs, effect expiry on retreat/evolution, other modifiers and browser/network play unchecked."
     }
    ]
   },
@@ -4262,7 +4269,11 @@
      "kind": "attack",
      "index": 1,
      "name": "Scavenge",
-     "status": "unreviewed"
+     "status": "partial",
+     "scope": "Under Sand-attack tails, verifies Scavenge's two-Psychic attack cost remains payable before its attached-Energy discard, discard commits before prevention, identical Energy names auto-select, distinct Energy cards remain the attacker's choice, and no Trainer-recovery choice/effect occurs when prevented. Successful Trainer recovery and other interactions remain unreviewed.",
+     "evidence": [
+      "test_card_fidelity_sandshrew.js: Scavenge's discard-before-prevention ordering, equivalent and distinct Energy choice paths, and skipped Trainer recovery when prevention stops the attack across Classic, Neo-theme and online-preview 60/40; partial interaction only."
+     ]
     }
    ]
   },
@@ -6395,7 +6406,12 @@
      "kind": "attack",
      "index": 0,
      "name": "Sand-attack",
-     "status": "unreviewed"
+     "status": "partial",
+     "evidence": [
+      "test_card_fidelity_sandshrew.js: both Sandshrew printings; early Base text variant using “this attack”; Sand-attack tails/heads versus Swift; Barrier, Destiny Bond, Scavenge and Third Eye required Energy discards before the prevention flip; same-name auto-selection; distinct Scavenge/Third Eye Energy choice by attacker; prevention before Confusion. 91 reducer scenarios.",
+      "Printed attack text/cost compared with Serebii Base #62 and Base Set 2 #91. Archived WotC rulings compendium Q20 (discard cost before Smokescreen), Q328 (Smokescreen before Confusion), and Q39 (Sand-attack still checked against Swift). Other card interactions and client/network integration remain pending."
+     ],
+     "scope": "Sand-attack: 10 damage, one Fighting Energy cost, Base/Base Set 2 reprint parity and early 'this attack' wording; tails prevents all of Swift while heads permits Swift; discard costs for Barrier, Destiny Bond, Scavenge and Third Eye commit before the prevention flip; same-name Energy options auto-select and distinct Scavenge/Third Eye options remain the attacker's choice; if prevention succeeds, Confusion is checked with a separate coin. 91 reducer scenarios across Classic, Neo-theme and online-preview 60/40. Other attack costs, effect expiry on retreat/evolution, other modifiers and browser/network play unchecked."
     }
    ]
   },
@@ -7561,7 +7577,11 @@
      "kind": "attack",
      "index": 0,
      "name": "Third Eye",
-     "status": "unreviewed"
+     "status": "partial",
+     "scope": "Under Sand-attack tails, verifies the Psychic attack cost is payable before its attached-Energy discard, discard commits before prevention, identical Energy names auto-select, distinct Energy cards remain the attacker's choice, and no draw occurs when prevented. Successful draw-count choice and other interactions remain unreviewed.",
+     "evidence": [
+      "test_card_fidelity_sandshrew.js: Third Eye discard-before-prevention ordering, same-name auto-selection and distinct Energy choice ownership; a prevented attack opens no draw choice and draws no cards across Classic, Neo-theme and online-preview 60/40; partial interaction only."
+     ]
     },
     {
      "kind": "attack",
