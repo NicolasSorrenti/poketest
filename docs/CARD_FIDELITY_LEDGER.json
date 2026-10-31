@@ -440,13 +440,23 @@
      "kind": "attack",
      "index": 0,
      "name": "Twineedle",
-     "status": "unreviewed"
+     "status": "partial",
+     "evidence": [
+      "test_card_fidelity_beedrill_dragonair.js",
+      "Attack text compared with Limitless and Serebii; Base Set 2 reprints confirmed separately; official Pokémon errata PDF searched with no Beedrill or Dragonair entry."
+     ],
+     "scope": "Two-coin outcomes for 0, 1 and 2 heads; damage, generic Energy cost acceptance and insufficient-cost rejection; Classic for Base Set, Neo, online-preview 60-card and online-preview 40-card reducer configurations; Base Set 2 online-preview 60-card and 40-card. Other interactions, historical rulings, and client/network integration pending."
     },
     {
      "kind": "attack",
      "index": 1,
      "name": "Poison Sting",
-     "status": "unreviewed"
+     "status": "partial",
+     "evidence": [
+      "test_card_fidelity_beedrill_dragonair.js",
+      "Attack text compared with Limitless and Serebii; Base Set 2 reprints confirmed separately; official Pokémon errata PDF searched with no Beedrill or Dragonair entry."
+     ],
+     "scope": "Heads applies Poison and tails does not; 40 attack damage, plus the normal 10 Poison checkup damage observed after the attacker's turn; typed Grass cost; same reducer formats as Beedrill Twineedle. Existing special-condition interactions, historical rulings, and client/network integration pending."
     }
    ]
   },
@@ -459,13 +469,23 @@
      "kind": "attack",
      "index": 0,
      "name": "Slam",
-     "status": "unreviewed"
+     "status": "partial",
+     "evidence": [
+      "test_card_fidelity_beedrill_dragonair.js",
+      "Attack text compared with Limitless and Serebii; Base Set 2 reprints confirmed separately; official Pokémon errata PDF searched with no Beedrill or Dragonair entry."
+     ],
+     "scope": "Two-coin outcomes for 0, 1 and 2 heads; damage, generic Energy cost acceptance and insufficient-cost rejection; Classic for Base Set, Neo, online-preview 60-card and online-preview 40-card reducer configurations; Base Set 2 online-preview 60-card and 40-card. Other interactions, historical rulings, and client/network integration pending."
     },
     {
      "kind": "attack",
      "index": 1,
      "name": "Hyper Beam",
-     "status": "unreviewed"
+     "status": "partial",
+     "evidence": [
+      "test_card_fidelity_beedrill_dragonair.js",
+      "Attack text compared with Limitless and Serebii; Base Set 2 reprints confirmed separately; official Pokémon errata PDF searched with no Beedrill or Dragonair entry."
+     ],
+     "scope": "20 damage with no opposing Energy; automatic discard when attached Energy outcomes are identical; attacker-owned selection among different Energy types; discarded card goes to defender's discard; four-Colorless cost and insufficient-cost rejection; same reducer formats as Dragonair Slam. Status/protection interactions, historical rulings, and client/network integration pending."
     }
    ]
   },
@@ -4418,13 +4438,23 @@
      "kind": "attack",
      "index": 0,
      "name": "Twineedle",
-     "status": "unreviewed"
+     "status": "partial",
+     "evidence": [
+      "test_card_fidelity_beedrill_dragonair.js",
+      "Attack text compared with Limitless and Serebii; Base Set 2 reprints confirmed separately; official Pokémon errata PDF searched with no Beedrill or Dragonair entry."
+     ],
+     "scope": "Two-coin outcomes for 0, 1 and 2 heads; damage, generic Energy cost acceptance and insufficient-cost rejection; Classic for Base Set, Neo, online-preview 60-card and online-preview 40-card reducer configurations; Base Set 2 online-preview 60-card and 40-card. Other interactions, historical rulings, and client/network integration pending."
     },
     {
      "kind": "attack",
      "index": 1,
      "name": "Poison Sting",
-     "status": "unreviewed"
+     "status": "partial",
+     "evidence": [
+      "test_card_fidelity_beedrill_dragonair.js",
+      "Attack text compared with Limitless and Serebii; Base Set 2 reprints confirmed separately; official Pokémon errata PDF searched with no Beedrill or Dragonair entry."
+     ],
+     "scope": "Heads applies Poison and tails does not; 40 attack damage, plus the normal 10 Poison checkup damage observed after the attacker's turn; typed Grass cost; same reducer formats as Beedrill Twineedle. Existing special-condition interactions, historical rulings, and client/network integration pending."
     }
    ]
   },
@@ -4437,13 +4467,23 @@
      "kind": "attack",
      "index": 0,
      "name": "Slam",
-     "status": "unreviewed"
+     "status": "partial",
+     "evidence": [
+      "test_card_fidelity_beedrill_dragonair.js",
+      "Attack text compared with Limitless and Serebii; Base Set 2 reprints confirmed separately; official Pokémon errata PDF searched with no Beedrill or Dragonair entry."
+     ],
+     "scope": "Two-coin outcomes for 0, 1 and 2 heads; damage, generic Energy cost acceptance and insufficient-cost rejection; Classic for Base Set, Neo, online-preview 60-card and online-preview 40-card reducer configurations; Base Set 2 online-preview 60-card and 40-card. Other interactions, historical rulings, and client/network integration pending."
     },
     {
      "kind": "attack",
      "index": 1,
      "name": "Hyper Beam",
-     "status": "unreviewed"
+     "status": "partial",
+     "evidence": [
+      "test_card_fidelity_beedrill_dragonair.js",
+      "Attack text compared with Limitless and Serebii; Base Set 2 reprints confirmed separately; official Pokémon errata PDF searched with no Beedrill or Dragonair entry."
+     ],
+     "scope": "20 damage with no opposing Energy; automatic discard when attached Energy outcomes are identical; attacker-owned selection among different Energy types; discarded card goes to defender's discard; four-Colorless cost and insufficient-cost rejection; same reducer formats as Dragonair Slam. Status/protection interactions, historical rulings, and client/network integration pending."
     }
    ]
   },
