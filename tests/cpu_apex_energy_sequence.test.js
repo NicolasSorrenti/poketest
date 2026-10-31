@@ -1092,3 +1092,34 @@ test('Apex recognizes Potion Energy preventing a public next-turn knockout',()=>
   'existing Level 7 attachment scoring remains unchanged');
 });
 
+
+function evolutionForecastBoard(status=null){
+ const o=board();
+ Object.assign(o,{phase:'game',round:5,turnSerial:11});
+ o.self.active={id:MACHOP,energies:[FIGHT,FIGHT,FIGHT],damage:0,status,playedTurn:2};
+ o.self.bench=[];
+ o.self.hand=['base1-34']; // Machoke: Karate Chop is affordable after evolving.
+ o.self.energyUsed=true;
+ o.opponent.active={id:RATTATA,energies:[],damage:0,status:null};
+ return o;
+}
+test('optional Apex two-step forecast recognizes evolution curing disabling conditions',()=>{
+ const planning={...cfg,planning:true};
+ const evolve={type:'evolve',payload:{handIndex:0,slot:-1}};
+ for(const status of ['Asleep','Paralyzed']){
+  const o=evolutionForecastBoard(status);
+  assert.ok(AI.planningBonus(evolve,o,planning)>0,
+   'evolution should cure '+status+' and unlock Machoke\'s attack');
+ }
+});
+test('optional Apex evolution forecast does not retain Basic effectiveAttacks',()=>{
+ const planning={...cfg,planning:true};
+ const evolve={type:'evolve',payload:{handIndex:0,slot:-1}};
+ const normal=evolutionForecastBoard();
+ const inherited=structuredClone(normal);
+ inherited.self.active.effectiveAttacks=require('../headless_duel').CATALOG.get(MACHOP).attacks;
+ const baseline=AI.planningBonus(evolve,normal,planning);
+ assert.ok(baseline>0,'Machoke should upgrade Machop\'s attack');
+ assert.equal(AI.planningBonus(evolve,inherited,planning),baseline,
+  'evolved Machoke must use its own attack list');
+});
