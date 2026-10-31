@@ -963,3 +963,25 @@ test('Apex future Energy horizon preserves safe Rainbow setup',()=>{
    rainbow+' must still unlock a legal second-turn Mud Slap');
  }
 });
+
+test('Apex counts current Rainbow damage before projecting another Rainbow next turn',()=>{
+ const rainbows=['base5-17','base5-80'];
+ for(const current of rainbows)for(const future of rainbows){
+  const board=futureEnergyBoard(current,future,[]);
+  // Diglett has 30 HP: the first Rainbow leaves 10 HP, so the second
+  // Rainbow would KO it before the projected two-Energy Mud Slap.
+  board.self.active={id:'base1-47',energies:[],damage:10,status:null,playedTurn:1};
+  board.opponent.active={id:HITMONCHAN,energies:[],damage:0,status:null};
+  const noSecond=structuredClone(board);
+  noSecond.self.hand[1]='base1-91'; // Bill cannot provide a second Energy.
+  assert.ok(AI.energyHorizonBonus(attachActive,board,cfg)<=
+   AI.energyHorizonBonus(attachActive,noSecond,cfg),
+   current+' followed by '+future+' must not reward a future self-KO');
+  const safe=structuredClone(board),safeControl=structuredClone(noSecond);
+  safe.self.active.damage=9; // Both Rainbow damage counters leave 1 HP.
+  safeControl.self.active.damage=9;
+  assert.ok(AI.energyHorizonBonus(attachActive,safe,cfg)>
+   AI.energyHorizonBonus(attachActive,safeControl,cfg),
+   current+' followed by '+future+' must preserve a surviving attack line');
+ }
+});
