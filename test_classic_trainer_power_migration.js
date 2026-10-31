@@ -14,9 +14,9 @@ function answer(g,selected){const d=g.pendingDecision;assert.ok(d,'Expected deci
 function runAll(g){let n=0;while(g.pendingDecision){assert.ok(n++<12,'decision loop');answer(g);}return n;}
 let passed=0;
 const check=(name,f)=>{try{f();passed++;}catch(e){e.message=name+': '+e.message;throw e;}};
-check('all 39 distinct Trainer names registered',()=>{
+check('all 40 distinct Trainer names registered',()=>{
  const names=new Set(['base1','base2','base3','base5'].flatMap(s=>require('./cards/'+s+'.json')).filter(c=>c.supertype==='Trainer').map(c=>c.name));
- assert.equal(names.size,39);for(const name of names)assert.ok(SUPPORTED.has(name),`Regression: missing Classic Trainer ${name}`);
+ assert.equal(names.size,40);for(const name of names)assert.ok(SUPPORTED.has(name),`Regression: missing Classic Trainer ${name}`);
  assert.ok(SUPPORTED.size>=names.size,'Future retail Trainers may extend this supported set');
 });
 check('Trainer selection and card consumption',()=>{const g=ready();g.players[0].hand=['base1-71','base1-91','base1-94'];
