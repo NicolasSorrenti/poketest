@@ -20,7 +20,7 @@ check('Stage 1 devolution removes all evolution cards but preserves damage and E
  assert.ok(p().discard.includes('base1-4'));assert.ok(p().discard.includes('base1-24'));assert.ok(p().discard.includes('base1-72'));
 });
 check('Stage 2 choice removes only Stage 2 and retains the Stage 1 stack',()=>{
- const g=game(),p=g.players[0];p().hand=['base1-72'];p().active=unit('base1-4',['base1-24','base1-46']);
+ const g=game(),p=()=>g.players[0];p().hand=['base1-72'];p().active=unit('base1-4',['base1-24','base1-46']);
  act(g,0,'play_trainer',{handIndex:0});answer(g,['slot:-1']);assert.deepEqual(g.pendingDecision.options.map(x=>x.id),['stage:1','stage:2']);answer(g,['stage:2']);finish(g);
  assert.equal(p().active.id,'base1-24');assert.deepEqual(p().active.under,['base1-46']);assert.ok(p().discard.includes('base1-4'));assert.ok(!p().discard.includes('base1-24'));
 });
@@ -29,7 +29,7 @@ check('damage above devolved Stage 1 HP causes ordinary Knock Out, Prize and pro
  spray(g,2);assert.equal(p().active.id,'base1-44');assert.equal(p().bench.length,0);assert.equal(opponent().prizes.length,5);assert.ok(p().discard.includes('base1-4'));assert.ok(p().discard.includes('base1-24'));
 });
 check('WotC-era Devolution Spray allows the devolved Pokémon to re-evolve this turn once',()=>{
- const g=game(),p=g.players[0];p().hand=['base1-72','base1-24','base1-4'];p().active=unit('base1-24',['base1-46'],{playedTurn:g.round});
+ const g=game(),p=()=>g.players[0];p().hand=['base1-72','base1-24','base1-4'];p().active=unit('base1-24',['base1-46'],{playedTurn:g.round});
  spray(g,1);assert.equal(p().active.id,'base1-46');
  act(g,0,'evolve',{handIndex:p().hand.indexOf('base1-24'),slot:-1});assert.equal(p().active.id,'base1-24');assert.deepEqual(p().active.under,['base1-46']);assert.equal(p().active.devolvedTurnSerial,undefined);
  reject(g,0,'evolve',{handIndex:p().hand.indexOf('base1-4'),slot:-1},/Illegal evolution/);
