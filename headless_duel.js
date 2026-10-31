@@ -1599,7 +1599,7 @@ function resolveAttack(g,side,index,chosenBench,energyPicks,extra={}){
   if(!Array.isArray(picks)||picks.length!==3||new Set(picks).size!==3||picks.some(i=>!Number.isInteger(i)||i<0||i>=f.bench.length))fail('Missing legal multi-target choice');
  }
 
- if(!canPayEnergy(a.cost||[],attackPool(g,u)) && !(isClassicRules(g)&&card(g,u.id).name==='Ditto'&&CLASSIC_POWERS.enabled(g,u,'Transform')&&u.energies.reduce((count,id)=>count+(card(g,id).name==='Double Colorless Energy'?2:1),0)>=(a.cost||[]).length))fail('Insufficient attack Energy');
+ if(!extra.finalCostPaid&&!canPayEnergy(a.cost||[],attackPool(g,u)) && !(isClassicRules(g)&&card(g,u.id).name==='Ditto'&&CLASSIC_POWERS.enabled(g,u,'Transform')&&u.energies.reduce((count,id)=>count+(card(g,id).name==='Double Colorless Energy'?2:1),0)>=(a.cost||[]).length))fail('Insufficient attack Energy');
  if((program.kind!=='neo46:plunder'&&f.active.attachedTrainers.some(t=>!['Defender','PlusPower','Berry','Counterattack Claws','Focus Band','EXP.ALL','Gold Berry','Miracle Berry','Balloon Berry','Magnifier',"Brock's Protection","Koga's Ninja Trick","Sabrina's ESP","Charity"].includes(card(g,t.id).name)))||f.active.energies.some(id=>(card(g,id).subtypes||[]).includes('Special')&&!['Double Colorless Energy','Full Heal Energy','Potion Energy','Metal Energy','Darkness Energy','Recycle Energy','Rainbow Energy','Miracle Energy'].includes(card(g,id).name)))fail('Damage or Energy modifiers require effect handlers');
  const usesChoice=['bench-target','switch-attacker','switch-self','target-any','target-any-coin','drag-off','promo86:lightning-rod','promo86:lightning-bolt'].includes(program.kind);
  if(usesChoice){const owner=program.kind==='switch-self'?p:f;
