@@ -12,7 +12,7 @@ const act=(g,side,type,payload={})=>{const r=applyCommand(g,side,{type,payload})
 const reject=(g,side,type,payload={},pattern)=>{const before=structuredClone(g),r=applyCommand(g,side,{type,payload});assert.equal(r.ok,false,`${type} unexpectedly succeeded`);if(pattern)assert.match(r.error,pattern);assert.deepEqual(g,before,'Rejected command changed game state');};
 const answer=(g,selected)=>{const d=g.pendingDecision;assert.ok(d,'Expected a pending choice');act(g,d.actor,'choose',{decisionId:d.id,selected});};
 const finish=(g)=>{let count=0;while(g.pendingDecision){assert.ok(count++<12,'Unexpected choice loop');const d=g.pendingDecision;answer(g,d.options.slice(0,d.min).map(x=>x.id));}};
-function spray(g,stage,target='slot:-1'){act(g,0,'play_trainer',{handIndex:g.players[0].hand.indexOf('base1-72')});answer(g,[target]);if(stage!==null)answer(g,[`stage:${stage}`]);finish(g);}
+function spray(g,stage,target='slot:-1'){act(g,0,'play_trainer',{handIndex:g.players[0].hand.indexOf('base1-72')});answer(g,[target]);if(stage!==null&&g.pendingDecision?.kind==='stage')answer(g,[`stage:${stage}`]);finish(g);}
 let passed=0;const check=(name,fn)=>{try{fn();passed++;}catch(e){e.message=`${name}: ${e.message}`;throw e;}};
 check('Stage 1 devolution removes all evolution cards but preserves damage and Energy while clearing attack effects/status',()=>{
  const g=game(),p=()=>g.players[0];p().hand=['base1-72'];p().active=unit('base1-4',['base1-24','base1-46'],{energies:['base1-98'],damage:20,status:'Asleep',poison:true,poisonDamage:20,noRetreat:{expires:10},attackLock:{expires:10}});
@@ -21,7 +21,7 @@ check('Stage 1 devolution removes all evolution cards but preserves damage and E
 });
 check('Devolution clears attack locks and Special Conditions without removing attached Energy',()=>{
  const g=game(),p=()=>g.players[0];p().hand=['base1-72'];p().active=unit('base1-24',['base1-46'],{energies:['base1-99'],status:'Confused',poison:true,poisonDamage:10,noRetreat:{expires:10},attackLock:{expires:10}});p().active.destinyBond={expires:10};
- spray(g,1);assert.equal(p().active.status,null);assert.equal(p().active.poison,false);assert.equal(p().active.poisonDamage||0,0);assert.equal(p().active.noRetreat,undefined);assert.equal(p().active.attackLock,undefined);assert.equal(p().active.destinyBond,undefined);assert.deepEqual(p().active.energies,['base1-99']);
+ act(g,0,'play_trainer',{handIndex:0});answer(g,['slot:-1']);assert.equal(g.pendingDecision,null,'single legal Stage choice should resolve automatically');finish(g);assert.equal(p().active.status,null);assert.equal(p().active.poison,false);assert.equal(p().active.poisonDamage||0,0);assert.equal(p().active.noRetreat,undefined);assert.equal(p().active.attackLock,undefined);assert.equal(p().active.destinyBond,undefined);assert.deepEqual(p().active.energies,['base1-99']);
 });
 check('Stage 2 choice removes only Stage 2 and retains the Stage 1 stack',()=>{
  const g=game(),p=()=>g.players[0];p().hand=['base1-72'];p().active=unit('base1-4',['base1-24','base1-46']);
