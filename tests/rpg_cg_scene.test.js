@@ -32,7 +32,7 @@ test('story and surprise CGs preview during dialogue and brief memories end with
 });
 test('loading a new image retains the previous frame, then swaps; stale loads cannot restore it',()=>{
  const active=new Set(),loaders=[],image={hidden:true,src:'',alt:'',removeAttribute(){this.src='';}};
- const stage={classList:{add:x=>active.add(x),remove:x=>active.delete(x)}};
+ const stage={dataset:{rpgSafeId:'previous'},classList:{add:x=>active.add(x),remove:x=>active.delete(x)}};
  const dom={createElement:()=>{const el={src:'',onload:null,onerror:null};loaders.push(el);return el;}};
  const presenter=CG_SCENE.create(stage,image,dom);
  let shown=0;
@@ -55,11 +55,12 @@ test('loading a new image retains the previous frame, then swaps; stale loads ca
  assert.equal(shown,2);
  assert.equal(image.hidden,true);
  assert.equal(active.has('has-story-cg'),false);
+ assert.equal(Object.hasOwn(stage.dataset,'rpgSafeId'),false,'clear removes stale safe-avatar metadata');
 });
 test('missing CG files release the scene and restore normal portraits',()=>{
  const active=new Set(),loaders=[];
  const image={hidden:true,src:'',removeAttribute(){}};
- const scene={classList:{add:x=>active.add(x),remove:x=>active.delete(x)}};
+ const scene={dataset:{rpgSafeId:'missing'},classList:{add:x=>active.add(x),remove:x=>active.delete(x)}};
  const presenter=CG_SCENE.create(scene,image,{createElement:()=>{const x={};loaders.push(x);return x;}});
  let missing=0;
  presenter.show(entries[0],[{kind:'event',path:'/not-installed.webp'}],null,()=>missing++);
@@ -68,6 +69,7 @@ test('missing CG files release the scene and restore normal portraits',()=>{
  assert.equal(presenter.visibleId,null);
  assert.equal(active.has('has-story-cg'),false);
  assert.equal(image.hidden,true);
+ assert.equal(Object.hasOwn(scene.dataset,'rpgSafeId'),false,'missing image clears safe-avatar metadata');
 });
 
 test('authored three-CG sequence changes precisely at each scripted step',()=>{
