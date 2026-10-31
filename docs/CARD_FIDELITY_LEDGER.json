@@ -40,9 +40,10 @@
      "name": "Hydro Pump",
      "status": "partial",
      "evidence": [
-      "test_card_fidelity_base_batch01.js"
+      "test_card_fidelity_base_batch01.js: Base Set damage bonus/cap and non-Water Energy.",
+      "test_card_fidelity_blastoise.js: exact Base text, three-Water cost, 0–3 leftover Water Energy, +20 cap, non-Water Energy exclusion; Classic, Neo-theme, online-preview 60/40. Hydro Pump text checked against Serebii; broader interactions and historical rulings pending."
      ],
-     "scope": "damage with 0–3 extra Water and non-Water Energy"
+     "scope": "Base Set Hydro Pump: typed Water cost, 40 base damage, +10 per leftover Water Energy, maximum +20; non-Water Energy does not count"
     },
     {
      "kind": "power",
@@ -4242,7 +4243,12 @@
      "kind": "attack",
      "index": 0,
      "name": "Hydro Pump",
-     "status": "unreviewed"
+     "status": "partial",
+     "evidence": [
+      "test_card_fidelity_blastoise.js: exact Base Set 2 cap wording, three-Water cost, 0–3 leftover Water Energy, +20 cap, non-Water Energy exclusion; online-preview 60/40.",
+      "Base Set 2 text checked against TCGdex. The official errata index lists only the unrelated Diamond & Pearl Blastoise Waterlog entry; broader interactions and historical Hydro Pump rulings pending."
+     ],
+     "scope": "Base Set 2 Hydro Pump: typed Water cost, 40 base damage, +10 per leftover Water Energy, maximum +20; non-Water Energy does not count"
     },
     {
      "kind": "power",
