@@ -760,7 +760,11 @@ function horizonAttackValue(unit,defender,hand,remaining=1,futureRound=0,turnSer
  if(remaining===0)return immediate;
  // Paralysis expires at the end of the affected turn; unlike Sleep, recovery
  // is guaranteed by our next turn. Do not treat it as a permanent attack lock.
- const nextTurnUnit=unit.status==='Paralyzed'?{...unit,status:null}:unit;
+ // Miracle Energy expires at the end of its owner's turn, so do not
+ // carry it into a future attack forecast.
+ const nextTurnUnit={...unit,
+  ...(unit.status==='Paralyzed'?{status:null}:{}),
+  energies:(unit.energies||[]).filter(id=>card(id)?.name!=='Miracle Energy')};
  const recovered=unit.status==='Paralyzed'?
   projectedAttackValue(nextTurnUnit,defender,turnSerial+2,benchCount)*.48:0;
  const seen=new Set();
@@ -769,7 +773,7 @@ function horizonAttackValue(unit,defender,hand,remaining=1,futureRound=0,turnSer
   const energy=card(id);
   // Forecast only Energy the attacker can legally receive next turn.
   // Miracle Energy must not create imaginary two-turn attack lines.
-  if(seen.has(id)||!isEnergy(energy)||!legalAttachment({card:energy,unit,
+  if(seen.has(id)||!isEnergy(energy)||!legalAttachment({card:energy,unit:nextTurnUnit,
    round:futureRound,cardName:card(unit.id)?.name||''}))continue;
   // Rainbow Energy deals 10 damage when attached. A forecast that knocks
   // out its own attacker cannot unlock a next-turn attack. Nonlethal damage
