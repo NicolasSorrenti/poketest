@@ -1,0 +1,93 @@
+{
+  "schemaVersion": 1,
+  "id": "lyla",
+  "name": "Lyla",
+  "age": 20,
+  "role": "romance",
+  "deck": "lockdown",
+  "style": "Silent Runway · Umbreon and Dark Espeon · poised Psychic/Darkness pressure",
+  "dialogue": {
+    "intro": "I'm Lyla. That garment bag isn't for a costume party. I had a shoot. Now I'm shopping for cards.",
+    "repeat": "Oh, you're here. Good. I was choosing between a new card and something responsible.",
+    "flirt": "That's a pretty smooth line. You should know I can look unimpressed for a living.",
+    "duelWin": "You had the winning turn. I saw it. Want to show me how you got there?",
+    "duelLose": "Mm. That's my Umbreon. Quiet, until it isn't.",
+    "talk": [
+      "Modeling pays my bills and gives me a budget for Pokémon cards. I'd rather talk about the second part.",
+      "Being 148 centimeters is useful on a petite shoot. It doesn't make me less of an adult.",
+      "My face and my abs get booked a lot. I treat them like parts of the job, not a personality.",
+      "I like seeing a good photograph of myself. I just wouldn't arrange a whole shoot for fun.",
+      "The stylist calls a smile 'natural' after asking for it fifteen times. That's not how natural works.",
+      "Streetwear, tailored looks, sportswear, catalog work—whatever fits the brief and the contract.",
+      "A good outfit is one that fits me. I'm not obligated to fit somebody else's mannequin.",
+      "Umbreon looks like it could wait all night and still win. That's the energy I want.",
+      "If I'm quiet with you, that usually means I'm comfortable. Please don't fill every second."
+    ],
+    "hangouts": [
+      "You help Lyla review contact sheets; she chooses the candid frame over the perfectly posed one.",
+      "Lyla invites you to a streetwear fitting, then asks for a card duel during the lighting reset.",
+      "You sit with Lyla in the café after a long shoot. She orders dessert before showing you her new cards.",
+      "You accompany Lyla to a park editorial and spend the breaks searching for an elusive Neo card.",
+      "After a sportswear campaign, Lyla swaps into her usual jeans and challenges you to an arcade match.",
+      "Lyla asks you to hold a reflector for a casual lookbook, then thanks you for not directing her poses."
+    ]
+  },
+  "appearance": {
+    "silhouette": "Unambiguously adult woman, age 20, 148 cm tall, exceptionally petite and slender, naturally narrow frame and shoulders, short proportionate legs, subtle bust and defined athletic abdomen. Realistic small-adult proportions, not childlike or tall model proportions.",
+    "palette": "Very light blonde hair, fair skin, blue-gray eyes, white and ink-black accessories, denim blue, subdued lavender accents.",
+    "hair": "Very light blonde, long straight loose hair down to her lower back, layered bangs and two small black hair clips on one side. No tied-back hair.",
+    "eyes": "Subtle, slightly narrow half-lidded blue-gray eyes, mature delicate features, defined lashes, understated lips.",
+    "details": "Black hair clips; butterfly necklace; black shoulder bag with butterfly charm; favorite collectible Eevee and Umbreon cards.",
+    "expressions": "Default sleepy neutral face, dry raised eyebrow, focused card-playing stare, faint amused half-smile, rare genuine open smile reserved for earned story beats.",
+    "outfits": [
+      "signature: sleeveless white cropped cat-graphic top, loose low-rise blue patterned jeans, white chunky sneakers, butterfly necklace and black shoulder bag; no bra straps or added sleeves",
+      "streetwear lookbook: fitted adult-sized oversized hoodies, sleeveless tops, colorful wide-leg trousers and chunky trainers",
+      "fitness editorial: comfortable fitted athletic top, running shorts, trainers, optional zip jacket; professional sporty framing",
+      "fashion editorial: tailored blazer, pleated skirt with sensible underlayer, polished loafers; adult styling",
+      "summer lookbook: breezy dress, coordinated jackets and casual sneakers; playful adult street fashion",
+      "cover shoot: sophisticated tailored suit or bright sleeveless summer set, fully clothed and confidently posed"
+    ],
+    "renderNotes": "Neo Campus adult anime/JRPG visual novel styling. Keep Lyla's established adult age, 148 cm height, slight build, small bust, defined abs and exact pale-blonde/blue-gray eye design consistent. Youthful fashion means streetwear for young adult customers, not childlike styling. Fully clothed SFW fashion editorial scenes. Avoid exaggerated bust, added sleeves to her signature sleeveless shirt, exposed underwear straps, taller proportions, and constant smiling."
+  },
+  "arrivalDay": 8,
+  "schedule": [
+    [
+      "shop",
+      "shop",
+      "cafe"
+    ],
+    [
+      "home",
+      "center",
+      "arcade"
+    ],
+    [
+      "shop",
+      "cafe",
+      "park"
+    ],
+    [
+      "home",
+      "center",
+      "shop"
+    ],
+    [
+      "shop",
+      "park",
+      "cafe"
+    ],
+    [
+      "center",
+      "arcade",
+      "cafe"
+    ],
+    [
+      "home",
+      "park",
+      "shop"
+    ]
+  ],
+  "stories": "stories.json",
+  "artManifest": "art_manifest.json",
+  "bible": "bible.md"
+}

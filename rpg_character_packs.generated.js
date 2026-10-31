@@ -6222,6 +6222,978 @@ const packs=[
   }
  },
  {
+  "id": "lyla",
+  "cast": {
+   "name": "Lyla",
+   "age": 20,
+   "deck": "lockdown",
+   "style": "Silent Runway · Umbreon and Dark Espeon · poised Psychic/Darkness pressure",
+   "intro": "I'm Lyla. That garment bag isn't for a costume party. I had a shoot. Now I'm shopping for cards.",
+   "repeat": "Oh, you're here. Good. I was choosing between a new card and something responsible.",
+   "flirt": "That's a pretty smooth line. You should know I can look unimpressed for a living.",
+   "duelWin": "You had the winning turn. I saw it. Want to show me how you got there?",
+   "duelLose": "Mm. That's my Umbreon. Quiet, until it isn't.",
+   "talk": [
+    "Modeling pays my bills and gives me a budget for Pokémon cards. I'd rather talk about the second part.",
+    "Being 148 centimeters is useful on a petite shoot. It doesn't make me less of an adult.",
+    "My face and my abs get booked a lot. I treat them like parts of the job, not a personality.",
+    "I like seeing a good photograph of myself. I just wouldn't arrange a whole shoot for fun.",
+    "The stylist calls a smile 'natural' after asking for it fifteen times. That's not how natural works.",
+    "Streetwear, tailored looks, sportswear, catalog work—whatever fits the brief and the contract.",
+    "A good outfit is one that fits me. I'm not obligated to fit somebody else's mannequin.",
+    "Umbreon looks like it could wait all night and still win. That's the energy I want.",
+    "If I'm quiet with you, that usually means I'm comfortable. Please don't fill every second."
+   ],
+   "hangouts": [
+    "You help Lyla review contact sheets; she chooses the candid frame over the perfectly posed one.",
+    "Lyla invites you to a streetwear fitting, then asks for a card duel during the lighting reset.",
+    "You sit with Lyla in the café after a long shoot. She orders dessert before showing you her new cards.",
+    "You accompany Lyla to a park editorial and spend the breaks searching for an elusive Neo card.",
+    "After a sportswear campaign, Lyla swaps into her usual jeans and challenges you to an arcade match.",
+    "Lyla asks you to hold a reflector for a casual lookbook, then thanks you for not directing her poses."
+   ],
+   "portrait": "/rpg-assets/characters/lyla/overworld/front.png"
+  },
+  "looks": {
+   "silhouette": "Unambiguously adult woman, age 20, 148 cm tall, exceptionally petite and slender, naturally narrow frame and shoulders, short proportionate legs, subtle bust and defined athletic abdomen. Realistic small-adult proportions, not childlike or tall model proportions.",
+   "palette": "Very light blonde hair, fair skin, blue-gray eyes, white and ink-black accessories, denim blue, subdued lavender accents.",
+   "hair": "Very light blonde, long straight loose hair down to her lower back, layered bangs and two small black hair clips on one side. No tied-back hair.",
+   "eyes": "Subtle, slightly narrow half-lidded blue-gray eyes, mature delicate features, defined lashes, understated lips.",
+   "details": "Black hair clips; butterfly necklace; black shoulder bag with butterfly charm; favorite collectible Eevee and Umbreon cards.",
+   "expressions": "Default sleepy neutral face, dry raised eyebrow, focused card-playing stare, faint amused half-smile, rare genuine open smile reserved for earned story beats.",
+   "outfits": [
+    "signature: sleeveless white cropped cat-graphic top, loose low-rise blue patterned jeans, white chunky sneakers, butterfly necklace and black shoulder bag; no bra straps or added sleeves",
+    "streetwear lookbook: fitted adult-sized oversized hoodies, sleeveless tops, colorful wide-leg trousers and chunky trainers",
+    "fitness editorial: comfortable fitted athletic top, running shorts, trainers, optional zip jacket; professional sporty framing",
+    "fashion editorial: tailored blazer, pleated skirt with sensible underlayer, polished loafers; adult styling",
+    "summer lookbook: breezy dress, coordinated jackets and casual sneakers; playful adult street fashion",
+    "cover shoot: sophisticated tailored suit or bright sleeveless summer set, fully clothed and confidently posed"
+   ],
+   "renderNotes": "Neo Campus adult anime/JRPG visual novel styling. Keep Lyla's established adult age, 148 cm height, slight build, small bust, defined abs and exact pale-blonde/blue-gray eye design consistent. Youthful fashion means streetwear for young adult customers, not childlike styling. Fully clothed SFW fashion editorial scenes. Avoid exaggerated bust, added sleeves to her signature sleeveless shirt, exposed underwear straps, taller proportions, and constant smiling."
+  },
+  "schedule": [
+   [
+    "shop",
+    "shop",
+    "cafe"
+   ],
+   [
+    "home",
+    "center",
+    "arcade"
+   ],
+   [
+    "shop",
+    "cafe",
+    "park"
+   ],
+   [
+    "home",
+    "center",
+    "shop"
+   ],
+   [
+    "shop",
+    "park",
+    "cafe"
+   ],
+   [
+    "center",
+    "arcade",
+    "cafe"
+   ],
+   [
+    "home",
+    "park",
+    "shop"
+   ]
+  ],
+  "arrivalDay": 8,
+  "events": [
+   {
+    "id": "lyla_route_1",
+    "npc": "lyla",
+    "chapter": 1,
+    "title": "The Girl Behind the Contact Sheet",
+    "start": 8,
+    "end": 19,
+    "place": "shop",
+    "slot": 1,
+    "minBond": 0,
+    "prerequisite": null,
+    "participants": [],
+    "lines": [
+     {
+      "speaker": "Narrator",
+      "text": "At the card shop, a very short, pale-blonde woman studies two expensive cards through the glass. A garment bag hangs from her shoulder beside a scuffed deck case."
+     },
+     {
+      "speaker": "Protagonist",
+      "text": "You look like you're choosing between rent and a rare card."
+     },
+     {
+      "speaker": "lyla",
+      "text": "Rent is already paid. That's why I can look at the card."
+     },
+     {
+      "speaker": "Protagonist",
+      "text": "Do I know you? I saw your face on a poster downtown."
+     },
+     {
+      "speaker": "lyla",
+      "text": "Probably. I'm Lyla. I model. It's a job, not a calling."
+     },
+     {
+      "speaker": "lyla",
+      "text": "They keep asking for my face and my abs. Being 148 centimeters helps with some looks. They make clothes fit me, not the other way around."
+     },
+     {
+      "speaker": "Protagonist",
+      "text": "And you like it?"
+     },
+     {
+      "speaker": "lyla",
+      "text": "I like how the photographs turn out. I don't love the hours. I'd rather spend the money on cards."
+     },
+     {
+      "speaker": "Narrator",
+      "text": "She considers you with a nearly unreadable expression, then holds up two Eevee cards like a casting decision."
+     },
+     {
+      "speaker": "lyla",
+      "text": "Which one looks more dangerous? There's a correct answer."
+     }
+    ],
+    "choices": [
+     {
+      "label": "Judge the cards by their playability",
+      "reply": "Good. You're looking at what they do, not just their faces.",
+      "kind": "honest",
+      "flag": "lyla_first_cards",
+      "delta": {
+       "affection": 1,
+       "trust": 2,
+       "respect": 2,
+       "attraction": 0
+      }
+     },
+     {
+      "label": "Offer to help carry her garment bag",
+      "reply": "If you're serious, yes. My arms are done posing for today.",
+      "kind": "support",
+      "flag": "lyla_first_help",
+      "delta": {
+       "affection": 2,
+       "trust": 2,
+       "respect": 0,
+       "attraction": 0
+      }
+     },
+     {
+      "label": "Say the poster didn't capture her best feature",
+      "reply": "Careful. You haven't seen my deck yet.",
+      "kind": "flirt",
+      "flag": "lyla_first_flirt",
+      "delta": {
+       "affection": 2,
+       "trust": 1,
+       "respect": 0,
+       "attraction": 2
+      }
+     }
+    ]
+   },
+   {
+    "id": "lyla_route_2",
+    "npc": "lyla",
+    "chapter": 2,
+    "title": "Lookbook, Take Seven",
+    "start": 20,
+    "end": 32,
+    "place": "cafe",
+    "slot": 1,
+    "minBond": 1,
+    "prerequisite": "lyla_route_1",
+    "participants": [],
+    "lines": [
+     {
+      "speaker": "Narrator",
+      "text": "Lyla texts you a location and a single instruction: 'Bring water.' The cafe's upstairs room has become a temporary studio for an adult streetwear lookbook."
+     },
+     {
+      "speaker": "lyla",
+      "text": "The stylist wants me to look spontaneous. We've done six takes of 'spontaneous'."
+     },
+     {
+      "speaker": "Protagonist",
+      "text": "You seem more comfortable between shots."
+     },
+     {
+      "speaker": "lyla",
+      "text": "Because nobody asks me to perform being interesting while I'm drinking water."
+     },
+     {
+      "speaker": "Narrator",
+      "text": "She cycles through layered hoodies, a sleeveless tank, wide-leg jeans and colorful sneakers. Every outfit has been fitted to her compact proportions; the stylist checks the hem instead of asking her to change her posture."
+     },
+     {
+      "speaker": "lyla",
+      "text": "They book me for petite streetwear. It's useful. Sometimes people forget petite doesn't mean I want to look like a kid."
+     },
+     {
+      "speaker": "Protagonist",
+      "text": "What do you want the pictures to say?"
+     },
+     {
+      "speaker": "lyla",
+      "text": "That I know exactly where I stand. Also that the shoes look good."
+     },
+     {
+      "speaker": "Narrator",
+      "text": "She asks you to hold a reflector—not to direct her body, but to tell her when the light finally looks real."
+     },
+     {
+      "speaker": "lyla",
+      "text": "Tell me when you can recognize me in the photo. Not just the clothes."
+     }
+    ],
+    "choices": [
+     {
+      "label": "Describe the lighting and let Lyla choose the pose",
+      "reply": "Thank you. That's actual feedback, not somebody telling me to smile.",
+      "kind": "support",
+      "flag": "lyla_lookbook_light",
+      "delta": {
+       "affection": 2,
+       "trust": 2,
+       "respect": 0,
+       "attraction": 0
+      }
+     },
+     {
+      "label": "Back her up when the stylist suggests a childish pose",
+      "reply": "I'm twenty. Cute styling is fine; pretending I'm twelve isn't.",
+      "kind": "honest",
+      "flag": "lyla_lookbook_boundaries",
+      "delta": {
+       "affection": 1,
+       "trust": 2,
+       "respect": 2,
+       "attraction": 0
+      }
+     },
+     {
+      "label": "Tell her the camera has trouble keeping up with her",
+      "reply": "You rehearsed that line. ...Not bad.",
+      "kind": "flirt",
+      "flag": "lyla_lookbook_tease",
+      "delta": {
+       "affection": 2,
+       "trust": 1,
+       "respect": 0,
+       "attraction": 2
+      }
+     }
+    ]
+   },
+   {
+    "id": "lyla_route_3",
+    "npc": "lyla",
+    "chapter": 3,
+    "title": "The Contract in Fine Print",
+    "start": 33,
+    "end": 45,
+    "place": "center",
+    "slot": 0,
+    "minBond": 2,
+    "prerequisite": "lyla_route_2",
+    "participants": [],
+    "lines": [
+     {
+      "speaker": "Narrator",
+      "text": "You join Lyla at a studio lobby after a fitness campaign fitting. Her athletic outfit is practical: a fitted training top, running shorts and sneakers. On the tablet, the campaign copy is another matter."
+     },
+     {
+      "speaker": "lyla",
+      "text": "They want to sell 'perfect abs in ten days.' They hired me because my stomach already looks like this. That's not a promise you can put on a poster."
+     },
+     {
+      "speaker": "Protagonist",
+      "text": "So don't sign it."
+     },
+     {
+      "speaker": "lyla",
+      "text": "I need the paycheck. I don't need my face attached to a lie."
+     },
+     {
+      "speaker": "Narrator",
+      "text": "She scratches out a line in the brief and writes an alternative about movement and comfort. A coordinator hesitates over the change."
+     },
+     {
+      "speaker": "lyla",
+      "text": "I don't mind them photographing my body. I mind people pretending it came from a product."
+     },
+     {
+      "speaker": "Protagonist",
+      "text": "What would make the shoot worth doing?"
+     },
+     {
+      "speaker": "lyla",
+      "text": "A truthful caption. Clothes that fit. And enough money for those Neo cards I've been tracking."
+     },
+     {
+      "speaker": "Narrator",
+      "text": "She turns the tablet toward you, asking for a second opinion on her proposed terms."
+     }
+    ],
+    "choices": [
+     {
+      "label": "Help her rewrite the claim clearly",
+      "reply": "It sounds like me. That's what I wanted.",
+      "kind": "honest",
+      "flag": "lyla_contract_truth",
+      "delta": {
+       "affection": 1,
+       "trust": 2,
+       "respect": 2,
+       "attraction": 0
+      }
+     },
+     {
+      "label": "Offer to stay while she negotiates",
+      "reply": "You don't have to speak for me. Just stay. That helps.",
+      "kind": "support",
+      "flag": "lyla_contract_support",
+      "delta": {
+       "affection": 2,
+       "trust": 2,
+       "respect": 0,
+       "attraction": 0
+      }
+     },
+     {
+      "label": "Say her strongest feature is knowing her worth",
+      "reply": "...I like that better than a compliment about my face.",
+      "kind": "flirt",
+      "flag": "lyla_contract_worth",
+      "delta": {
+       "affection": 2,
+       "trust": 1,
+       "respect": 0,
+       "attraction": 2
+      }
+     }
+    ]
+   },
+   {
+    "id": "lyla_route_4",
+    "npc": "lyla",
+    "chapter": 4,
+    "title": "Runway Without an Audience",
+    "start": 46,
+    "end": 58,
+    "place": "arcade",
+    "slot": 2,
+    "minBond": 2,
+    "prerequisite": "lyla_route_3",
+    "participants": [],
+    "lines": [
+     {
+      "speaker": "Narrator",
+      "text": "An evening editorial shoot ends near the arcade. Lyla has swapped a tailored jacket and pleated skirt for her usual cat-print top and baggy jeans. She carries the garment bag like it's twice her height."
+     },
+     {
+      "speaker": "lyla",
+      "text": "Six outfits, nine hours, one photographer calling everything 'effortless.' My feet disagree."
+     },
+     {
+      "speaker": "Protagonist",
+      "text": "You still stopped by the arcade."
+     },
+     {
+      "speaker": "lyla",
+      "text": "I had a good shoot. I wanted a good evening too."
+     },
+     {
+      "speaker": "Narrator",
+      "text": "She chooses the most difficult machine and wins without speaking, then loses the next round while trying to explain an Umbreon combo."
+     },
+     {
+      "speaker": "lyla",
+      "text": "That's embarrassing. In front of my own witness."
+     },
+     {
+      "speaker": "Protagonist",
+      "text": "A rematch?"
+     },
+     {
+      "speaker": "lyla",
+      "text": "No. A match with actual cards. I don't want another camera deciding when I'm impressive."
+     },
+     {
+      "speaker": "Narrator",
+      "text": "For the first time tonight, her expression softens as she opens her deck case. Winning a game seems to interest her far more than winning a casting."
+     }
+    ],
+    "choices": [
+     {
+      "label": "Play a relaxed match and let her talk strategy",
+      "reply": "Finally. A place where the numbers make sense.",
+      "kind": "support",
+      "flag": "lyla_arcade_duel",
+      "delta": {
+       "affection": 2,
+       "trust": 2,
+       "respect": 0,
+       "attraction": 0
+      }
+     },
+     {
+      "label": "Ask which photograph she was proudest of",
+      "reply": "The one where I wasn't trying to look taller. It felt honest.",
+      "kind": "honest",
+      "flag": "lyla_arcade_photo",
+      "delta": {
+       "affection": 1,
+       "trust": 2,
+       "respect": 2,
+       "attraction": 0
+      }
+     },
+     {
+      "label": "Offer a wager: the winner picks the next outing",
+      "reply": "That sounds suspiciously like a date. I'm listening.",
+      "kind": "flirt",
+      "flag": "lyla_arcade_wager",
+      "delta": {
+       "affection": 2,
+       "trust": 1,
+       "respect": 0,
+       "attraction": 2
+      }
+     }
+    ]
+   },
+   {
+    "id": "lyla_route_5",
+    "npc": "lyla",
+    "chapter": 5,
+    "title": "The Smile They Couldn't Direct",
+    "start": 59,
+    "end": 71,
+    "place": "park",
+    "slot": 1,
+    "minBond": 3,
+    "prerequisite": "lyla_route_4",
+    "participants": [],
+    "lines": [
+     {
+      "speaker": "Narrator",
+      "text": "A small outdoor fashion editorial uses soft summer layers, colorful jackets and casual dresses. The photographer has been asking Lyla to smile for twenty minutes. Her expression remains precise and professional."
+     },
+     {
+      "speaker": "Photographer",
+      "text": "Just one real smile, Lyla. Give us something alive."
+     },
+     {
+      "speaker": "lyla",
+      "text": "You can't order one like coffee."
+     },
+     {
+      "speaker": "Narrator",
+      "text": "During a break, an unexpected gust carries the carefully arranged paper backdrop into the bushes. You and Lyla chase it; an assistant's tiny dog steals a ribbon and refuses to surrender."
+     },
+     {
+      "speaker": "Protagonist",
+      "text": "I think the dog has been promoted to creative director."
+     },
+     {
+      "speaker": "lyla",
+      "text": "...He'd do a better job with the call sheet."
+     },
+     {
+      "speaker": "Narrator",
+      "text": "Then she laughs—openly, without checking who is watching. Her whole face changes. The photographer lowers the camera instead of taking the shot."
+     },
+     {
+      "speaker": "lyla",
+      "text": "What? Did I get something on my face?"
+     },
+     {
+      "speaker": "Protagonist",
+      "text": "No. Nothing like that."
+     },
+     {
+      "speaker": "lyla",
+      "text": "Good. Because that one wasn't for the campaign."
+     },
+     {
+      "speaker": "Narrator",
+      "text": "She meets your eyes for a second longer than usual, the trace of a smile still there."
+     }
+    ],
+    "choices": [
+     {
+      "label": "Help retrieve the backdrop without turning her laugh into a performance",
+      "reply": "Thanks for not making a thing of it. I actually had fun.",
+      "kind": "support",
+      "flag": "lyla_real_smile_private",
+      "delta": {
+       "affection": 2,
+       "trust": 2,
+       "respect": 0,
+       "attraction": 0
+      }
+     },
+     {
+      "label": "Tell her she should decide when photographs get taken",
+      "reply": "That's exactly what people forget. You remembered.",
+      "kind": "honest",
+      "flag": "lyla_real_smile_consent",
+      "delta": {
+       "affection": 1,
+       "trust": 2,
+       "respect": 2,
+       "attraction": 0
+      }
+     },
+     {
+      "label": "Admit her genuine laugh caught you off guard",
+      "reply": "Then don't tell the photographer. He'll try to book it.",
+      "kind": "flirt",
+      "flag": "lyla_real_smile_flirt",
+      "delta": {
+       "affection": 2,
+       "trust": 1,
+       "respect": 0,
+       "attraction": 2
+      }
+     }
+    ]
+   },
+   {
+    "id": "lyla_route_6",
+    "npc": "lyla",
+    "chapter": 5,
+    "title": "A Cover of Her Own",
+    "start": 72,
+    "end": 84,
+    "place": "center",
+    "slot": 0,
+    "minBond": 4,
+    "prerequisite": "lyla_route_5",
+    "participants": [],
+    "lines": [
+     {
+      "speaker": "Narrator",
+      "text": "A magazine has offered Lyla a cover. The proposed styling mixes youthful streetwear for adult readers, a tailored suit and a bright sleeveless summer look. This time she has approval over every outfit."
+     },
+     {
+      "speaker": "lyla",
+      "text": "Biggest fee I've had. They also want to call me 'the girl who never smiles.'"
+     },
+     {
+      "speaker": "Protagonist",
+      "text": "Does that bother you?"
+     },
+     {
+      "speaker": "lyla",
+      "text": "It makes me sound like a prop. I smile when something is funny. I just don't do it on command."
+     },
+     {
+      "speaker": "Narrator",
+      "text": "She lays out contact sheets. In one, the small model looks powerful against a vast studio backdrop. In another, she sits cross-legged on the floor after the shoot, sorting Pokémon cards."
+     },
+     {
+      "speaker": "lyla",
+      "text": "The first one gets the cover. The second one is my favorite. That's the person who gets to keep the paycheck."
+     },
+     {
+      "speaker": "Protagonist",
+      "text": "What are you going to do with it?"
+     },
+     {
+      "speaker": "lyla",
+      "text": "Rent. Savings. A card I absolutely cannot justify buying. In that order."
+     },
+     {
+      "speaker": "lyla",
+      "text": "And maybe... dinner with someone who doesn't ask me to be camera-ready."
+     }
+    ],
+    "choices": [
+     {
+      "label": "Support her decision to negotiate the headline",
+      "reply": "They can have the cover. They don't get to invent my personality.",
+      "kind": "honest",
+      "flag": "lyla_cover_headline",
+      "delta": {
+       "affection": 1,
+       "trust": 2,
+       "respect": 2,
+       "attraction": 0
+      }
+     },
+     {
+      "label": "Offer to celebrate after the deadline, no cameras",
+      "reply": "That sounds like the first good appointment on my calendar.",
+      "kind": "support",
+      "flag": "lyla_cover_dinner",
+      "delta": {
+       "affection": 2,
+       "trust": 2,
+       "respect": 0,
+       "attraction": 0
+      }
+     },
+     {
+      "label": "Ask whether the dinner invitation is for you",
+      "reply": "I hoped you'd figure it out without making me say it twice.",
+      "kind": "flirt",
+      "flag": "lyla_cover_date",
+      "delta": {
+       "affection": 2,
+       "trust": 1,
+       "respect": 0,
+       "attraction": 2
+      }
+     }
+    ]
+   },
+   {
+    "id": "lyla_route_7",
+    "npc": "lyla",
+    "chapter": 5,
+    "title": "Outside the Frame",
+    "start": 85,
+    "end": 90,
+    "place": "cafe",
+    "slot": 2,
+    "minBond": 4,
+    "prerequisite": "lyla_route_6",
+    "participants": [],
+    "lines": [
+     {
+      "speaker": "Narrator",
+      "text": "The cover is out. Lyla arrives at a quiet café in her favorite jeans and sleeveless cat top, carrying a small envelope and her deck box."
+     },
+     {
+      "speaker": "lyla",
+      "text": "I signed the new contract. Fewer shoots, better terms. I can afford to say no sometimes."
+     },
+     {
+      "speaker": "Protagonist",
+      "text": "And the envelope?"
+     },
+     {
+      "speaker": "lyla",
+      "text": "The photo they didn't publish. I asked for a print."
+     },
+     {
+      "speaker": "Narrator",
+      "text": "It shows Lyla after the cameras stopped, laughing with a deck of cards in her hands. She turns the photo facedown, a little embarrassed."
+     },
+     {
+      "speaker": "lyla",
+      "text": "I don't hate modeling. I like the pictures. I just want to decide what happens outside them."
+     },
+     {
+      "speaker": "Protagonist",
+      "text": "What do you want now?"
+     },
+     {
+      "speaker": "lyla",
+      "text": "Another match. More cards. People who can sit beside me when nothing interesting is happening."
+     },
+     {
+      "speaker": "lyla",
+      "text": "You, if you want. Not because somebody asked us to look good together."
+     },
+     {
+      "speaker": "Narrator",
+      "text": "A rare, quiet smile reaches her eyes while she waits for your answer."
+     }
+    ],
+    "choices": [
+     {
+      "label": "Tell her you want to see where this goes together",
+      "reply": "Then stay after the café closes. I don't think I'm done talking to you.",
+      "kind": "commit",
+      "flag": "romance",
+      "delta": {
+       "affection": 2,
+       "trust": 2,
+       "respect": 1,
+       "attraction": 2
+      }
+     },
+     {
+      "label": "Promise you'll remain her friend and favorite practice partner",
+      "reply": "Good. No grand speeches. Just show up with your deck.",
+      "kind": "friend",
+      "flag": "friendship",
+      "delta": {
+       "affection": 2,
+       "trust": 2,
+       "respect": 1,
+       "attraction": 0
+      }
+     },
+     {
+      "label": "Say she gets to choose her next chapter",
+      "reply": "I will. And I like that you're in it without trying to write it for me.",
+      "kind": "honest",
+      "flag": "lyla_own_future",
+      "delta": {
+       "affection": 1,
+       "trust": 2,
+       "respect": 2,
+       "attraction": 0
+      }
+     }
+    ]
+   },
+   {
+    "id": "lyla_random_fitting_pins",
+    "npc": "lyla",
+    "title": "A Hem and a Deck Box",
+    "start": 12,
+    "end": 65,
+    "place": "shop",
+    "slot": 1,
+    "minBond": 0,
+    "prerequisite": null,
+    "participants": [],
+    "encounterType": "slice",
+    "trigger": "talk",
+    "lines": [
+     {
+      "speaker": "Narrator",
+      "text": "Lyla is sitting on a low stool with a roll of hem tape and a fashion sample jacket."
+     },
+     {
+      "speaker": "lyla",
+      "text": "They size everything around tall mannequins. I brought tape. Also my deck."
+     },
+     {
+      "speaker": "Protagonist",
+      "text": "Which one is harder to make fit?"
+     },
+     {
+      "speaker": "lyla",
+      "text": "The jacket. The deck actually listens."
+     }
+    ],
+    "choices": [
+     {
+      "label": "Help adjust the sleeve length",
+      "reply": "You're a more useful assistant than half the studio.",
+      "kind": "support",
+      "flag": "lyla_random_hem_help",
+      "delta": {
+       "affection": 2,
+       "trust": 2,
+       "respect": 0,
+       "attraction": 0
+      }
+     },
+     {
+      "label": "Ask why she keeps the original fit notes",
+      "reply": "Because next time I want them to remember I'm the client too.",
+      "kind": "honest",
+      "flag": "lyla_random_fit_notes",
+      "delta": {
+       "affection": 1,
+       "trust": 2,
+       "respect": 2,
+       "attraction": 0
+      }
+     }
+    ]
+   },
+   {
+    "id": "lyla_random_fitness_break",
+    "npc": "lyla",
+    "title": "Between Sets",
+    "start": 28,
+    "end": 75,
+    "place": "park",
+    "slot": 0,
+    "minBond": 0,
+    "prerequisite": null,
+    "participants": [],
+    "encounterType": "slice",
+    "trigger": "talk",
+    "lines": [
+     {
+      "speaker": "Narrator",
+      "text": "After a sportswear shoot, Lyla rests on a bench in a loose jacket and sneakers, eating a sandwich."
+     },
+     {
+      "speaker": "lyla",
+      "text": "They liked how my abs photographed. Then they tried to schedule another shoot over lunch."
+     },
+     {
+      "speaker": "Protagonist",
+      "text": "Did you let them?"
+     },
+     {
+      "speaker": "lyla",
+      "text": "No. My stomach has more important plans right now."
+     }
+    ],
+    "choices": [
+     {
+      "label": "Share lunch and leave work talk behind",
+      "reply": "Excellent. Finally, a break that's actually a break.",
+      "kind": "support",
+      "flag": "lyla_random_lunch",
+      "delta": {
+       "affection": 2,
+       "trust": 2,
+       "respect": 0,
+       "attraction": 0
+      }
+     },
+     {
+      "label": "Agree that a job shouldn't own her schedule",
+      "reply": "The contract covers hours. It doesn't cover my whole life.",
+      "kind": "honest",
+      "flag": "lyla_random_hours",
+      "delta": {
+       "affection": 1,
+       "trust": 2,
+       "respect": 2,
+       "attraction": 0
+      }
+     }
+    ]
+   },
+   {
+    "id": "lyla_random_contact_sheet",
+    "npc": "lyla",
+    "title": "Two Versions of the Same Picture",
+    "start": 38,
+    "end": 88,
+    "place": "cafe",
+    "slot": 2,
+    "minBond": 0,
+    "prerequisite": null,
+    "participants": [],
+    "encounterType": "slice",
+    "trigger": "talk",
+    "lines": [
+     {
+      "speaker": "Narrator",
+      "text": "Lyla shows you a contact sheet: an immaculate editorial pose and a candid photo taken while she was fixing her shoe."
+     },
+     {
+      "speaker": "lyla",
+      "text": "The first one is good for the client. The second feels like me."
+     },
+     {
+      "speaker": "Protagonist",
+      "text": "Which one would you keep?"
+     },
+     {
+      "speaker": "lyla",
+      "text": "You already know. I wanted to hear your answer anyway."
+     }
+    ],
+    "choices": [
+     {
+      "label": "Choose the candid and explain why",
+      "reply": "Yeah. That's the one I kept too.",
+      "kind": "honest",
+      "flag": "lyla_random_candid",
+      "delta": {
+       "affection": 1,
+       "trust": 2,
+       "respect": 2,
+       "attraction": 0
+      }
+     },
+     {
+      "label": "Say both can be valuable in different ways",
+      "reply": "That's a sensible answer. Annoyingly sensible.",
+      "kind": "support",
+      "flag": "lyla_random_both",
+      "delta": {
+       "affection": 2,
+       "trust": 2,
+       "respect": 0,
+       "attraction": 0
+      }
+     }
+    ]
+   },
+   {
+    "id": "lyla_random_rare_card",
+    "npc": "lyla",
+    "title": "The Real Paycheck",
+    "start": 18,
+    "end": 80,
+    "place": "arcade",
+    "slot": 2,
+    "minBond": 0,
+    "prerequisite": null,
+    "participants": [],
+    "encounterType": "slice",
+    "trigger": "entry",
+    "lines": [
+     {
+      "speaker": "Narrator",
+      "text": "Lyla is opening a small card shop parcel beside the arcade machines. She looks more excited than she did on any magazine cover."
+     },
+     {
+      "speaker": "lyla",
+      "text": "The shoot paid. The rent is covered. This is the part I was waiting for."
+     },
+     {
+      "speaker": "Protagonist",
+      "text": "Is that an Umbreon?"
+     },
+     {
+      "speaker": "lyla",
+      "text": "Don't make me say how much it cost. Ask me to duel instead."
+     }
+    ],
+    "choices": [
+     {
+      "label": "Challenge her with your own deck",
+      "reply": "Deal. Winner gets bragging rights, not my card.",
+      "kind": "support",
+      "flag": "lyla_random_challenge",
+      "delta": {
+       "affection": 2,
+       "trust": 2,
+       "respect": 0,
+       "attraction": 0
+      }
+     },
+     {
+      "label": "Ask what makes Umbreon her favorite",
+      "reply": "It can take over a whole game without making a scene. I relate.",
+      "kind": "honest",
+      "flag": "lyla_random_umbreon",
+      "delta": {
+       "affection": 1,
+       "trust": 2,
+       "respect": 2,
+       "attraction": 0
+      }
+     }
+    ]
+   }
+  ],
+  "mandatoryEvents": [],
+  "art": {
+   "schemaVersion": 1,
+   "characterId": "lyla",
+   "portrait": "/rpg-assets/characters/lyla/overworld/front.png"
+  }
+ },
+ {
   "id": "rina",
   "cast": {
    "name": "Rina Hoshino",
