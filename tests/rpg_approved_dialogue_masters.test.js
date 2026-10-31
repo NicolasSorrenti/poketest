@@ -8,6 +8,7 @@ const crypto=require('node:crypto');
 const root=path.join(__dirname,'..');
 const rpg=fs.readFileSync(path.join(root,'rpg.js'),'utf8');
 const world=fs.readFileSync(path.join(root,'rpg-overworld-integration.js'),'utf8');
+const css=fs.readFileSync(path.join(root,'rpg.css'),'utf8');
 const images={
  iris:'rpg-assets/characters/iris/dialogue/neutral.png',
  alma:'rpg-assets/characters/alma/overworld/standing-front.png',
@@ -34,7 +35,7 @@ test('portrait selector only uses masters for neutral expression and keeps day-l
  assert.match(rpg,/return expression==='neutral'\?APPROVED_DIALOGUE_MASTERS\[id\]\|\|null:null;/);
  assert.match(rpg,/return alternate\?\[alternate,\.\.\.dialogue\.filter\(path=>path!==alternate\)\]:dialogue;/);
  assert.match(rpg,/const dialogue=master\?\[master,\.\.\.normal\.filter\(path=>path!==master\)\]:normal;/);
- assert.match(rpg,/approvedMaster\?\[\.06,0,\.88,\.47\]/);
+ assert.ok(rpg.includes("fullBody?'278%':alreadyCropped?'165%':'190%'"));
  assert.match(rpg,/const sources=srcs\?\.length\?srcs:/);
 });
 test('standalone crop is active only when image actually loads the approved file',()=>{
@@ -147,4 +148,18 @@ test('neutral dialogue defaults reuse existing front or idle overworld assets fo
  assert.ok(rpg.includes('return alternate?[alternate,...dialogue.filter(path=>path!==alternate)]:dialogue;'));
  assert.ok(rpg.includes('Object.values(LACA_OVERWORLD_DIALOGUE_DEFAULTS).some(path=>src.includes(path))'));
  assert.ok(world.includes("person.classList.toggle('neo-ow-dialogue-front-master',isApprovedMaster)"));
+});
+
+
+test('interactive and dialogue portraits crop only the viewport from head to chest',()=>{
+ assert.match(css,/aspect-ratio:457 \/ 312/);
+ assert.ok(css.includes('height:var(--rpg-dialogue-bust-height,278%)'));
+ assert.ok(css.includes('object-fit:cover;object-position:center top'));
+ assert.ok(rpg.includes("img.style.setProperty('--rpg-dialogue-bust-height'"));
+ assert.ok(world.includes("person.style.setProperty('--neo-ow-dialogue-bust-height'"));
+ assert.ok(world.includes("height:var(--neo-ow-dialogue-bust-height,278%)!important"));
+ assert.ok(world.includes('.neo-ow-person>img:not(.rpg-safe-avatar)'));
+ assert.ok(world.includes('neoOverworldDialogueBustCrop'));
+ assert.ok(!world.includes('neoOverworldCamilaDialogueFrame'));
+ assert.ok(world.includes("fullBody?'278%':alreadyCropped?'165%':'190%'"));
 });
