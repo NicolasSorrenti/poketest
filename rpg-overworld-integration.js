@@ -458,7 +458,8 @@
             teo:'/rpg-assets/characters/teo/dialogue/neutral.png',
             nereo:'/rpg-assets/characters/nereo/dialogue/neutral.png',
             elio:'/rpg-assets/characters/elio/dialogue/neutral.png',
- kaede:'/rpg-assets/characters/kaede/dialogue/neutral.png'
+ kaede:'/rpg-assets/characters/kaede/dialogue/neutral.png',
+            shiori:'/rpg-assets/characters/shiori/dialogue/neutral.png'
           };
           const source=image.currentSrc||image.src||'';
           const isApprovedMaster=participant.id==='camila'
