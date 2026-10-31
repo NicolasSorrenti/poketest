@@ -52,7 +52,7 @@
  "/rpg_mandatory_events.js",
  "/rpg_season_events.js",
  "/rpg_audio.js",
- "/rpg_time_transitions.js",
+ "/rpg_time_transitions.js?v=rpg-scene-wipe-20261031-1",
  "/rpg_render_perf.js",
  "/rpg_ui_motion.js",
  "/rpg_character_motion.js",
@@ -65,7 +65,7 @@
  "/rpg_cloud_save.js?v=cloud-login-visible-20261030",
  "/rpg_outfits.js?v=1",
  "/rpg_phone_messages.js?v=phone-selfie-chat-20261031-3",
- "/rpg.js?v=lyla-legal-deck-20261031-1"
+ "/rpg.js?v=rpg-scene-wipe-20261031-1"
 ];
   function registry(packs){
     const cast={},looks={},schedules={},arrivals={},events=[],mandatoryEvents=[];
