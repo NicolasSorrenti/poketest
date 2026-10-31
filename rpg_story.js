@@ -224,7 +224,9 @@
  }
  // Keep existing route IDs stable for existing saves.
  // Add pack routes and bridge episodes without renumbering prior scenes.
- E.push(...(CHARPACKS?.events||[]),...PACK.events,...BONDC.events,...(EXTRA?.events||[]));
+ // PACK already registers generated calendar routes and filters ambient slice scenes.
+ // Adding CHARPACKS.events again duplicates routes and breaks story validation.
+ E.push(...PACK.events,...BONDC.events,...(EXTRA?.events||[]));
  // The new bridge scenes are mandatory for new campaigns. Existing final-route
  // IDs remain unchanged, and normalize() below backfills bridge completion for
  // saves that already passed the old four-scene structure.
