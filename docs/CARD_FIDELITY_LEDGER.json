@@ -2027,7 +2027,12 @@
       "effects": [
         {
           "kind": "trainer",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "test_card_fidelity_professor_oak.js: eight reducer/protocol scenarios across Base Classic and Base Set 2 online-preview; both text parity, discards all remaining hand cards, draws in deck order, hand privacy, short-deck draw, empty-deck resolution without immediate loss.",
+            "Printed text compared against Serebii/Limitless Base and Base Set 2 records. WotC rulebook Q&A states effects drawing more cards than remain draw what is available and do not cause a loss; further sequencing interactions and live client/network behavior remain unreviewed."
+          ],
+          "scope": "Professor Oak Base #88 and Base Set 2 #116: after the played Trainer enters discard, discard the remaining hand, draw up to seven in top-card order, preserve opponent hand privacy, and do not cause an immediate loss when fewer than seven/zero cards remain. Eight reducer/protocol scenarios; partial only."
         }
       ]
     },
@@ -6924,7 +6929,12 @@
       "effects": [
         {
           "kind": "trainer",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "test_card_fidelity_professor_oak.js: eight reducer/protocol scenarios across Base Classic and Base Set 2 online-preview; both text parity, discards all remaining hand cards, draws in deck order, hand privacy, short-deck draw, empty-deck resolution without immediate loss.",
+            "Printed text compared against Serebii/Limitless Base and Base Set 2 records. WotC rulebook Q&A states effects drawing more cards than remain draw what is available and do not cause a loss; further sequencing interactions and live client/network behavior remain unreviewed."
+          ],
+          "scope": "Professor Oak Base #88 and Base Set 2 #116: after the played Trainer enters discard, discard the remaining hand, draw up to seven in top-card order, preserve opponent hand privacy, and do not cause an immediate loss when fewer than seven/zero cards remain. Eight reducer/protocol scenarios; partial only."
         }
       ]
     },
