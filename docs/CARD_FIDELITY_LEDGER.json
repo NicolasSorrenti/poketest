@@ -8478,7 +8478,7 @@
       "https://forum.tcgone.net/t/br-porygon-unnumbered-24-electabuzz-wbsp-46-lightning-rod-was-not-removed-wi/17221 (marker removal on evolution; implementation evidence, not official ruling)",
       "https://www.pokemon.com/static-assets/content-assets/cms2/pdf/trading-card-game/tcg_errata.pdf (searched; no Electabuzz entry)"
      ],
-     "scope": "Printed 10 to Defending Active plus 20 to one marked Pokémon; no marker means no extra-target prompt; sole marked target auto-resolves; multiple marked targets prompt the attacker and filter to marked Pokémon; marked Active/Bench damage and Weakness (including Bench); Lightning cost rejection. Resistance, defensive protection interactions, KO/Prize, and network/UI remain untested. Promo attacks tested in unrestricted reducer setup only; the included promos are outside the curated online/Cube card pool."
+     "scope": "Printed 10 to Defending Active plus 20 to one marked Pokémon; no marker means no extra-target prompt; sole marked target auto-resolves; multiple marked targets prompt the attacker and filter to marked Pokémon; marked Active/Bench damage and Weakness (including Bench); Lightning cost rejection; explicit Resistance suppression and marked-Bench Knock Out/Prize flow. Resistance, defensive protection interactions, KO/Prize, and network/UI remain untested. Promo attacks tested in unrestricted reducer setup only; the included promos are outside the curated online/Cube card pool."
     }
    ]
   },
