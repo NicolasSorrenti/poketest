@@ -1136,6 +1136,39 @@
  }
 }`;
     document.head.append(mobileInteractionGrid);
+    // Last-resort phone story sizing: earlier desktop layout rules center the
+    // dock with left:50%/translateX(-50%). A later width:100% alone leaves
+    // its right half outside the viewport. Reset BOTH positioning properties.
+    const mobileStoryDockFix=document.createElement('style');
+    mobileStoryDockFix.id='neoOverworldMobileStoryDockFix';
+    mobileStoryDockFix.textContent=`
+      @media(max-width:650px){
+        #neoOverworldOverlay:not(.neo-ow-idle-interaction) #neoOverworldStoryDock{
+          position:absolute!important;left:0!important;right:0!important;
+          width:100%!important;min-width:0!important;max-width:100vw!important;
+          transform:none!important;margin:0!important;padding:0!important;
+          box-sizing:border-box!important;overflow-x:hidden!important;
+        }
+        #neoOverworldOverlay:not(.neo-ow-idle-interaction) #neoOverworldStoryDock>.stage-panel{
+          display:flex!important;flex-direction:column!important;
+          width:100%!important;min-width:0!important;max-width:100%!important;
+          box-sizing:border-box!important;transform:none!important;
+          margin:0!important;padding:0!important;
+        }
+        #neoOverworldOverlay:not(.neo-ow-idle-interaction) #neoOverworldStoryDock #scene,
+        #neoOverworldOverlay:not(.neo-ow-idle-interaction) #neoOverworldStoryDock #dialogue{
+          box-sizing:border-box!important;min-width:0!important;
+          width:100%!important;max-width:100%!important;
+          left:auto!important;right:auto!important;transform:none!important;
+          margin-left:0!important;margin-right:0!important;
+        }
+        #neoOverworldOverlay:not(.neo-ow-idle-interaction) #neoOverworldStoryDock #dialogue #line{
+          box-sizing:border-box!important;width:100%!important;max-width:100%!important;
+          overflow-wrap:anywhere!important;
+        }
+      }
+    `;
+    document.head.append(mobileStoryDockFix);
     // Mobile character submenus (Make plans, Spend time, etc.): the portrait
     // stays full-width; the subtitle joins the character's name and the choice
     // buttons occupy two equal columns. Desktop retains its original layout.
