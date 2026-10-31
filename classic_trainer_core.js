@@ -566,7 +566,7 @@ function prompt(g,plan,helpers){
  if(name==='Switch'&&cannotSwitch(g,side))d.target=[];
  if(name==='Gust of Wind'&&!chosen(d,'target'))return single('target',side,options(f.bench.map((u,i)=>({i,label:publicName(u)})),'bench'),'Choose opponent replacement');
  if(name==='Switch'&&!chosen(d,'target'))return single('target',side,options(p.bench.map((u,i)=>({i,label:publicName(u)})),'bench'),'Choose your replacement');
- if(['Potion','Super Potion','Scoop Up','Devolution Spray','Defender','Pokémon Center'].includes(name)&&!chosen(d,'target')&&name!=='Pokémon Center')return single('target',side,own(u=>name==='Potion'?u.damage>0:name==='Super Potion'?u.damage>0&&u.energies.length>0:name==='Devolution Spray'?u.under.length>0:true),'Choose one of your Pokémon');
+ if(['Potion','Super Potion','Scoop Up','Devolution Spray','Defender','Pokémon Center'].includes(name)&&!chosen(d,'target')&&name!=='Pokémon Center'){\n  const targetsForEffect=own(u=>name==='Potion'?u.damage>0:name==='Super Potion'?u.damage>0&&u.energies.length>0:name==='Devolution Spray'?u.under.length>0:true);\n  if(name==='Super Potion'&&targetsForEffect.length===1)d.target=[targetsForEffect[0].id];\n  else return single('target',side,targetsForEffect,'Choose one of your Pokémon');\n }
  if(name==='Energy Removal'&&!chosen(d,'target'))return single('target',side,enemy(u=>u.energies.length>0&&!u.attachedTrainers.some(t=>get(t.id).name==="Brock's Protection")),'Choose opposing Pokémon');
  if(name==='Super Energy Removal'){
   if(!chosen(d,'source'))return single('source',side,own(u=>u.energies.length>0),'Choose your Pokémon to pay Energy');
@@ -580,7 +580,7 @@ function prompt(g,plan,helpers){
   if(max===1&&identicalBasicEnergy(items))d.enemyEnergy=[items[0].id];
   else return multi('enemyEnergy',side,items,1,max,'Choose opposing Energy to discard');
  }
- if(name==='Super Potion'&&chosen(d,'target')&&!chosen(d,'ownEnergy')){const items=options(zone(slot(p,nums(d,'target')[0]).energies));if(identicalBasicEnergy(items))d.ownEnergy=[items[0].id];else return single('ownEnergy',side,items,'Discard one attached Energy');}
+ if(name==='Super Potion'&&chosen(d,'target')&&!chosen(d,'ownEnergy')){const items=options(zone(slot(p,nums(d,'target')[0]).energies));if(identicalBasicEnergy(items)||items.length>0&&items.every(o=>o.cardId===items[0].cardId))d.ownEnergy=[items[0].id];else return single('ownEnergy',side,items,'Discard one attached Energy');}
  if(name==='Nightly Garbage Run'&&!chosen(d,'recover')){const a=disc(p,c=>pokemon(c)||basicEnergy(c));if(!a.length)throw Error('No eligible cards');return multi('recover',side,a,1,Math.min(3,a.length),'Choose up to 3 cards');}
  if(name==='Mr. Fuji'&&!chosen(d,'target'))return single('target',side,options(p.bench.map((u,i)=>({i,label:publicName(u)})),'bench'),'Choose a Benched Pokémon');
  if(name==='Pokémon Flute'&&!chosen(d,'recover'))return single('recover',side,disc(f,isBasicPokemon),'Choose opponent Basic Pokémon');
