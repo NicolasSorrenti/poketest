@@ -1406,13 +1406,23 @@
      "kind": "attack",
      "index": 0,
      "name": "Stiffen",
-     "status": "unreviewed"
+     "status": "partial",
+     "evidence": [
+      "test_card_fidelity_metapod.js: 54 reducer scenarios compare Base Set #54 and Base Set 2 #81 across Classic, Neo-theme, and online-preview 60/40; attack cost, coin outcomes, shield damage prevention, other attack effects, shield expiry, status replacement and atomic rejection.",
+      "Card text checked against Serebii Base #54 and Bulbapedia Base Set 2 #81. Historical attack wording checked against WotC Advanced Rulebook v8. Official errata index has no Metapod entry. Poison checkup, evolution, and wider interactions remain unreviewed."
+     ],
+     "scope": "Stiffen: two Colorless symbols paid with Double Colorless; heads prevents all attack damage during the opponent's next turn, tails leaves damage unshielded; non-damage Confusion still applies through the shield; the shield expires after one opposing turn. Poison checkup and wider interactions remain unchecked."
     },
     {
      "kind": "attack",
      "index": 1,
      "name": "Stun Spore",
-     "status": "unreviewed"
+     "status": "partial",
+     "evidence": [
+      "test_card_fidelity_metapod.js: 54 reducer scenarios compare Base Set #54 and Base Set 2 #81 across Classic, Neo-theme, and online-preview 60/40; attack cost, coin outcomes, shield damage prevention, other attack effects, shield expiry, status replacement and atomic rejection.",
+      "Card text checked against Serebii Base #54 and Bulbapedia Base Set 2 #81. Historical attack wording checked against WotC Advanced Rulebook v8. Official errata index has no Metapod entry. Poison checkup, evolution, and wider interactions remain unreviewed."
+     ],
+     "scope": "Stun Spore: two-Grass cost and atomic rejection of DCE-only payment; fixed 20 damage on both coin outcomes; heads applies Paralysis and replaces Confusion while tails preserves the prior condition. Other status/timing and wider interactions remain unchecked."
     }
    ]
   },
@@ -6112,13 +6122,23 @@
      "kind": "attack",
      "index": 0,
      "name": "Stiffen",
-     "status": "unreviewed"
+     "status": "partial",
+     "evidence": [
+      "test_card_fidelity_metapod.js: 54 reducer scenarios compare Base Set #54 and Base Set 2 #81 across Classic, Neo-theme, and online-preview 60/40; attack cost, coin outcomes, shield damage prevention, other attack effects, shield expiry, status replacement and atomic rejection.",
+      "Card text checked against Serebii Base #54 and Bulbapedia Base Set 2 #81. Historical attack wording checked against WotC Advanced Rulebook v8. Official errata index has no Metapod entry. Poison checkup, evolution, and wider interactions remain unreviewed."
+     ],
+     "scope": "Stiffen: two Colorless symbols paid with Double Colorless; heads prevents all attack damage during the opponent's next turn, tails leaves damage unshielded; non-damage Confusion still applies through the shield; the shield expires after one opposing turn. Poison checkup and wider interactions remain unchecked."
     },
     {
      "kind": "attack",
      "index": 1,
      "name": "Stun Spore",
-     "status": "unreviewed"
+     "status": "partial",
+     "evidence": [
+      "test_card_fidelity_metapod.js: 54 reducer scenarios compare Base Set #54 and Base Set 2 #81 across Classic, Neo-theme, and online-preview 60/40; attack cost, coin outcomes, shield damage prevention, other attack effects, shield expiry, status replacement and atomic rejection.",
+      "Card text checked against Serebii Base #54 and Bulbapedia Base Set 2 #81. Historical attack wording checked against WotC Advanced Rulebook v8. Official errata index has no Metapod entry. Poison checkup, evolution, and wider interactions remain unreviewed."
+     ],
+     "scope": "Stun Spore: two-Grass cost and atomic rejection of DCE-only payment; fixed 20 damage on both coin outcomes; heads applies Paralysis and replaces Confusion while tails preserves the prior condition. Other status/timing and wider interactions remain unchecked."
     }
    ]
   },

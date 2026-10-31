@@ -277,3 +277,13 @@ The test compares the two printings and exercises Classic, Neo-theme, and online
 | Selfdestruct (base1-53, base4-79) | Lightning + Colorless cost, 40 Active damage, 10 to both Benches ignoring Weakness/Resistance, 40 self-damage and KO, Active Weakness/Resistance, no-Bench case | Same test; [Serebii Base #53](https://www.serebii.net/card/base/053.shtml); [WotC Advanced Rulebook v8](https://www.judgeball.com/files/archives/tcg-rulebooks/en/WOTCE1.pdf) | Partial |
 
 The regression compares Base Set and Base Set 2 printings and exercises Classic, Neo-theme, and online-preview 60/40 reducer configurations. It checks both Thunder Wave flips, replacement of Confusion by Paralysis, denial of the opponent's attack during the paralysis turn and expiration at checkup. Selfdestruct scenarios verify Bench Weakness/Resistance is ignored while Active Weakness/Resistance applies, the 40 recoil KOs 40-HP Magnemite, attached Energy reaches the discard, and the attack still works without Benched Pokémon. The official errata index has no Magnemite entry. Wider board interactions and browser/network play remain unchecked.
+
+
+## Metapod (Base Set #54 and Base Set 2 #81)
+
+| Effect | Scope checked | Evidence | Status |
+| --- | --- | --- | --- |
+| Stiffen (base1-54, base4-81) | Two-Colorless cost, both coin outcomes, next-opponent-turn damage shield, non-damage Confusion effect through the shield, one-turn expiry | `test_card_fidelity_metapod.js` (54 reducer scenarios); [Serebii Base #54](https://www.serebii.net/card/base/054.shtml); [Bulbapedia Base Set 2 #81](https://bulbapedia.bulbagarden.net/wiki/Metapod_%28Base_Set_2_81%29); [WotC Advanced Rulebook v8](https://www.judgeball.com/files/archives/tcg-rulebooks/en/WOTCE1.pdf) | Partial |
+| Stun Spore (base1-54, base4-81) | Two-Grass cost, fixed 20 damage, both coin outcomes, heads applies Paralysis and replaces Confusion | Same test; same print references; [official errata index](https://play.pokemon.com/en-ca/resources/documents/tcg-errata/) has no Metapod entry | Partial |
+
+The regression compares the two printings in Classic, Neo-theme, and online-preview 60/40. It verifies Stiffen's shield through exactly one opponent turn, damage prevention on heads versus tails, and that the printed non-damage attack effect still applies while shielded. Stun Spore's 20 damage occurs on both results; heads Paralyzes and replaces Confusion. Invalid typed costs leave state unchanged. Poison checkup under Stiffen, evolution, additional attack interactions, and browser/network behavior remain unchecked.
