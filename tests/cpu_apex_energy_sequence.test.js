@@ -222,6 +222,30 @@ test('Apex Energy horizon values Full Heal Energy cure on attachment',()=>{
  }
 });
 
+test('Apex forecasts a future Full Heal Energy cure if Sleep persists',()=>{
+ // The first attachment funds Jab; a Full Heal Energy held for next turn
+ // can wake the attacker before that attack, unlike Potion Energy.
+ const fighting=futureEnergyBoard(FIGHT,'base5-81',[]);
+ const offType=futureEnergyBoard('base1-98','base5-81',[]);
+ const potion=futureEnergyBoard(FIGHT,'base5-82',[]);
+ const potionOffType=futureEnergyBoard('base1-98','base5-82',[]);
+ for(const o of [fighting,offType,potion,potionOffType]){
+  o.turnSerial=11;
+  o.self.active.status='Asleep';
+ }
+ assert.ok(AI.energyHorizonBonus(attachActive,fighting,cfg)>
+  AI.energyHorizonBonus(attachActive,offType,cfg),
+  'future Full Heal must unlock the funded attack even if Sleep persists');
+ assert.equal(AI.energyHorizonBonus(attachActive,potion,cfg),
+  AI.energyHorizonBonus(attachActive,potionOffType,cfg),
+  'future Potion Energy cannot cure Sleep');
+ // Without Sleep, both future Colorless Energy cards have the same value.
+ const healthyHeal=futureEnergyBoard(FIGHT,'base5-81',[]);
+ const healthyPotion=futureEnergyBoard(FIGHT,'base5-82',[]);
+ assert.equal(AI.energyHorizonBonus(attachActive,healthyHeal,cfg),
+  AI.energyHorizonBonus(attachActive,healthyPotion,cfg));
+});
+
 test('Apex forecasts a two-attachment attack after Paralysis recovery',()=>{
  const dce=futureEnergyBoard(FIGHT,'base1-96',[FIGHT]);
  const noEnergy=futureEnergyBoard(FIGHT,'base1-91',[FIGHT]);
