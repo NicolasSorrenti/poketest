@@ -1004,13 +1004,23 @@
      "kind": "attack",
      "index": 0,
      "name": "Amnesia",
-     "status": "unreviewed"
+     "status": "partial",
+     "evidence": [
+      "test_card_fidelity_poliwhirl.js",
+      "Printed text compared with Serebii Base and Base Set 2 plus Bulbapedia; Amnesia bench ruling checked against archived WotC ruling (Apr. 12, 2001, Q269) and WotC rulebook; official errata index searched, no Poliwhirl match."
+     ],
+     "scope": "Amnesia: printed attack choice is owned by attacker; no damage; blocks only selected printed attack for opponent's next turn; attack choice usable after expiry; effect removed when target retreats/returns; attacker/defender turn and pending-choice ownership. Doubleslap: exact printed two-coin text, 0/1/2 heads, Water Weakness and KO/Prize path. Attack costs, one-Water underpayment rejection. Also verifies retreat choice: identical Double Colorless auto-resolves, distinct Basic/DCE choices remain owner-selectable and clear pending state. 78 reducer scenarios across Base Set Classic, Neo-theme, online-preview 60-card and 40-card; Base Set 2 online-preview 60-card and 40-card. Browser/network integration and other interactions pending."
     },
     {
      "kind": "attack",
      "index": 1,
      "name": "Doubleslap",
-     "status": "unreviewed"
+     "status": "partial",
+     "evidence": [
+      "test_card_fidelity_poliwhirl.js",
+      "Printed text compared with Serebii Base and Base Set 2 plus Bulbapedia; Amnesia bench ruling checked against archived WotC ruling (Apr. 12, 2001, Q269) and WotC rulebook; official errata index searched, no Poliwhirl match."
+     ],
+     "scope": "Amnesia: printed attack choice is owned by attacker; no damage; blocks only selected printed attack for opponent's next turn; attack choice usable after expiry; effect removed when target retreats/returns; attacker/defender turn and pending-choice ownership. Doubleslap: exact printed two-coin text, 0/1/2 heads, Water Weakness and KO/Prize path. Attack costs, one-Water underpayment rejection. Also verifies retreat choice: identical Double Colorless auto-resolves, distinct Basic/DCE choices remain owner-selectable and clear pending state. 78 reducer scenarios across Base Set Classic, Neo-theme, online-preview 60-card and 40-card; Base Set 2 online-preview 60-card and 40-card. Browser/network integration and other interactions pending."
     }
    ]
   },
@@ -5435,13 +5445,23 @@
      "kind": "attack",
      "index": 0,
      "name": "Amnesia",
-     "status": "unreviewed"
+     "status": "partial",
+     "evidence": [
+      "test_card_fidelity_poliwhirl.js",
+      "Printed text compared with Serebii Base and Base Set 2 plus Bulbapedia; Amnesia bench ruling checked against archived WotC ruling (Apr. 12, 2001, Q269) and WotC rulebook; official errata index searched, no Poliwhirl match."
+     ],
+     "scope": "Amnesia: printed attack choice is owned by attacker; no damage; blocks only selected printed attack for opponent's next turn; attack choice usable after expiry; effect removed when target retreats/returns; attacker/defender turn and pending-choice ownership. Doubleslap: exact printed two-coin text, 0/1/2 heads, Water Weakness and KO/Prize path. Attack costs, one-Water underpayment rejection. Also verifies retreat choice: identical Double Colorless auto-resolves, distinct Basic/DCE choices remain owner-selectable and clear pending state. 78 reducer scenarios across Base Set Classic, Neo-theme, online-preview 60-card and 40-card; Base Set 2 online-preview 60-card and 40-card. Browser/network integration and other interactions pending."
     },
     {
      "kind": "attack",
      "index": 1,
      "name": "Doubleslap",
-     "status": "unreviewed"
+     "status": "partial",
+     "evidence": [
+      "test_card_fidelity_poliwhirl.js",
+      "Printed text compared with Serebii Base and Base Set 2 plus Bulbapedia; Amnesia bench ruling checked against archived WotC ruling (Apr. 12, 2001, Q269) and WotC rulebook; official errata index searched, no Poliwhirl match."
+     ],
+     "scope": "Amnesia: printed attack choice is owned by attacker; no damage; blocks only selected printed attack for opponent's next turn; attack choice usable after expiry; effect removed when target retreats/returns; attacker/defender turn and pending-choice ownership. Doubleslap: exact printed two-coin text, 0/1/2 heads, Water Weakness and KO/Prize path. Attack costs, one-Water underpayment rejection. Also verifies retreat choice: identical Double Colorless auto-resolves, distinct Basic/DCE choices remain owner-selectable and clear pending state. 78 reducer scenarios across Base Set Classic, Neo-theme, online-preview 60-card and 40-card; Base Set 2 online-preview 60-card and 40-card. Browser/network integration and other interactions pending."
     }
    ]
   },
