@@ -15,7 +15,8 @@ const images={
  jun:'rpg-assets/characters/jun/standing-front.png',
  teo:'rpg-assets/characters/teo/dialogue/neutral.png',
  nereo:'rpg-assets/characters/nereo/dialogue/neutral.png',
- elio:'rpg-assets/characters/elio/dialogue/neutral.png'
+ elio:'rpg-assets/characters/elio/dialogue/neutral.png',
+ shiori:'rpg-assets/characters/shiori/dialogue/neutral.png'
 };
 test('approved masters are existing binary files; Iris copy is unmodified',()=>{
  for(const [id,p] of Object.entries(images)){
@@ -73,5 +74,14 @@ test('Elio dialogue master preserves original front pose bytes',()=>{
  const copy='rpg-assets/characters/elio/dialogue/neutral.png';
  assert.deepEqual(fs.readFileSync(path.join(root,copy)),fs.readFileSync(path.join(root,original)));
  assert.ok(rpg.includes("elio:'/rpg-assets/characters/elio/dialogue/neutral.png'"));
+ assert.ok(world.includes('/'+copy));
+});
+
+
+test('Shiori dialogue master is the unchanged standing-book artwork',()=>{
+ const original='rpg-assets/characters/shiori/overworld/standing-book.png';
+ const copy='rpg-assets/characters/shiori/dialogue/neutral.png';
+ assert.deepEqual(fs.readFileSync(path.join(root,copy)),fs.readFileSync(path.join(root,original)));
+ assert.ok(rpg.includes("shiori:'/rpg-assets/characters/shiori/dialogue/neutral.png'"));
  assert.ok(world.includes('/'+copy));
 });
