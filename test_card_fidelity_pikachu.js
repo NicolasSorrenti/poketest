@@ -42,9 +42,10 @@ for(const c of configs)for(const [format,size] of c.formats){
  // WotC Q4 confirms Defender reduces this self-damage because it is attack
  // damage. The converted Weakness makes 20, then Defender prevents 20.
  {const g=game(format,size);g.players[0].active=unit(c.id,0,['base1-100','base1-98']);g.players[0].active.attachedTrainers=[{id:'base1-80',expires:99}];convertPikachuWeakness(g);setCoin(g,false);act(g,0,'attack',{attackIndex:1});assert.equal(g.players[0].active.damage,0,'Defender reduces converted-Weakness self-damage');assert.equal(g.players[1].active.damage,10);scenarios++;}
- // PlusPower affects damage to the Defending Pokémon only, never Thunder
- // Jolt's separate self-damage.
- {const g=game(format,size);g.players[0].active=unit(c.id,0,['base1-100','base1-98']);g.players[0].active.attachedTrainers=[{id:'base1-84',expires:99}];g.players[1].active=unit('base1-54');setCoin(g,false);act(g,0,'attack',{attackIndex:1});assert.equal(g.players[1].active.damage,40);assert.equal(g.players[0].active.damage,10);scenarios++;}
+ // The WotC-era PlusPower erratum applies the attack bonus to both Active
+ // Pokémon. Thunder Jolt therefore gets +10 on the Defending Pokémon and +10
+ // on its attack recoil to Pikachu.
+ {const g=game(format,size);g.players[0].active=unit(c.id,0,['base1-100','base1-98']);g.players[0].active.attachedTrainers=[{id:'base1-84',expires:99}];g.players[1].active=unit('base1-54');setCoin(g,false);act(g,0,'attack',{attackIndex:1});assert.equal(g.players[1].active.damage,40);assert.equal(g.players[0].active.damage,20);scenarios++;}
  // Recoil can Knock Out Pikachu after its attack. The opponent takes the
  // Prize and Pikachu's owner then promotes their lone Benched Pokémon.
  {const g=game(format,size);g.players[0].active=unit(c.id,30,['base1-100','base1-98']);g.players[0].bench=[unit('base1-52')];g.players[1].active=unit('base1-54');setCoin(g,false);act(g,0,'attack',{attackIndex:1});assert.equal(g.players[0].active,null);assert.equal(g.pendingDecision.actor,1);assert.equal(g.pendingDecision.kind,'prize-card');choose(g,1,['prize:0']);assert.equal(g.players[0].active.id,'base1-52');assert.equal(g.players[0].bench.length,0);assert.equal(g.pendingDecision,null);assert.equal(g.turn,1);scenarios++;}

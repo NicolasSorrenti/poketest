@@ -2003,6 +2003,13 @@ function resolveAttack(g,side,index,chosenBench,energyPicks,extra={}){
   ignoreWeakness:g.stadium&&card(g,g.stadium.id).name==='Cinnabar City Gym'&&c.types?.includes('Water')&&defCard.name.startsWith("Blaine's "),
   resistancePenalty:g.stadium&&card(g,g.stadium.id).name==='Resistance Gym'?10:30
  });
+ // PlusPower modifies the attack after Weakness and Resistance, before
+ // defending Pokémon reductions. Its historical erratum applies the bonus to
+ // damage dealt to either Active Pokémon by the attack.
+ if(isClassicRules(g)&&dmg>0){
+  const plusPowers=u.attachedTrainers.filter(t=>card(g,t.id).name==='PlusPower'&&t.expires>g.turnSerial).length;
+  dmg+=plusPowers*10;
+ }
  // Sprout Tower reduces Colorless Pokémon attack damage after W/R, for both players.
  if(dmg>0&&c.types?.includes('Colorless')&&g.stadium&&card(g,g.stadium.id).name==='Sprout Tower')dmg=Math.max(0,dmg-30);
  if(dmg>0){
@@ -2018,8 +2025,6 @@ function resolveAttack(g,side,index,chosenBench,energyPicks,extra={}){
   if(!roll.ignoreDefendingEffects&&CLASSIC_POWERS.enabled(g,f.active,'Transparency')&&next(g,2)===1){dmg=0;roll.status=null;roll.statuses=null;roll.poisonDamage=0;roll.discardEnemyEnergy=0;roll.noRetreat=false;roll.attackPenalty=false;roll.attackLock=false;}
   const defenders=roll.ignoreDefendingEffects?0:f.active.attachedTrainers.filter(t=>card(g,t.id).name==='Defender'&&t.expires>g.turnSerial).length;
   dmg=Math.max(0,dmg-defenders*20);
-  const powers=u.attachedTrainers.filter(t=>card(g,t.id).name==='PlusPower'&&t.expires>g.turnSerial).length;
-  if(dmg>0)dmg+=powers*10;
   if(CLASSIC_POWERS.enabled(g,u,'Frenzy')&&u.status==='Confused'&&dmg>0)dmg+=30;
  }
  if(dmg>0&&f.active.neo48CrunchUntil>g.turnSerial)dmg+=20;
@@ -2296,6 +2301,10 @@ function resolveAttack(g,side,index,chosenBench,energyPicks,extra={}){
   let selfDamage=roll.selfDamage;
   if(metalOnAttacker&&!isMetalType(g,u))selfDamage=Math.max(0,selfDamage-10*metalOnAttacker);
   selfDamage=calculateDamage(c,effectiveCard(g,u),selfDamage,u);
+  if(isClassicRules(g)&&selfDamage>0){
+   const plusPowers=u.attachedTrainers.filter(t=>card(g,t.id).name==='PlusPower'&&t.expires>g.turnSerial).length;
+   selfDamage+=plusPowers*10;
+  }
   const selfDefenders=u.attachedTrainers.filter(t=>card(g,t.id).name==='Defender'&&t.expires>g.turnSerial).length;
   selfDamage=Math.max(0,selfDamage-selfDefenders*20);
   selfDamage=Math.max(0,selfDamage-10*specialEnergyCount(g,u,'Metal'));
