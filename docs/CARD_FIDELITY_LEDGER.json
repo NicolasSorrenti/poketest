@@ -731,13 +731,27 @@
      "kind": "attack",
      "index": 0,
      "name": "Hypnosis",
-     "status": "unreviewed"
+     "status": "partial",
+     "evidence": [
+      "test_card_fidelity_haunter_sleep.js",
+      "https://limitlesstcg.com/cards/BS/29",
+      "https://limitlesstcg.com/cards/BS2/43",
+      "https://bulbapedia.bulbagarden.net/wiki/Haunter_%28Base_Set%29"
+     ],
+     "scope": "Printed text verified against Limitless Base Set/Base Set 2 and Bulbapedia. Fixed source typo “You can't this attack” to the printed “You can't use this attack unless the Defending Pokémon is Asleep” in both card records and the strict attack compiler. Reducer scenarios verify Hypnosis cost/status/no damage, immediate end-of-turn Sleep checkup and wake on heads, Poison+Sleep coexistence and Poison checkup damage, Dream Eater rejection while awake and for underpaid Psychic cost, and 50 printed damage reduced to 20 by Chansey's Psychic Resistance when the target stays Asleep through both checkups. Base Set in Classic; Base Set 2 in online-preview 60-card and 40-card/four-Prize setup. Historical ruling archive and browser/network behavior remain unreviewed."
     },
     {
      "kind": "attack",
      "index": 1,
      "name": "Dream Eater",
-     "status": "unreviewed"
+     "status": "partial",
+     "evidence": [
+      "test_card_fidelity_haunter_sleep.js",
+      "https://limitlesstcg.com/cards/BS/29",
+      "https://limitlesstcg.com/cards/BS2/43",
+      "https://bulbapedia.bulbagarden.net/wiki/Haunter_%28Base_Set%29"
+     ],
+     "scope": "Printed text verified against Limitless Base Set/Base Set 2 and Bulbapedia. Fixed source typo “You can't this attack” to the printed “You can't use this attack unless the Defending Pokémon is Asleep” in both card records and the strict attack compiler. Reducer scenarios verify Hypnosis cost/status/no damage, immediate end-of-turn Sleep checkup and wake on heads, Poison+Sleep coexistence and Poison checkup damage, Dream Eater rejection while awake and for underpaid Psychic cost, and 50 printed damage reduced to 20 by Chansey's Psychic Resistance when the target stays Asleep through both checkups. Base Set in Classic; Base Set 2 in online-preview 60-card and 40-card/four-Prize setup. Historical ruling archive and browser/network behavior remain unreviewed."
     }
    ]
   },
@@ -4968,13 +4982,27 @@
      "kind": "attack",
      "index": 0,
      "name": "Hypnosis",
-     "status": "unreviewed"
+     "status": "partial",
+     "evidence": [
+      "test_card_fidelity_haunter_sleep.js",
+      "https://limitlesstcg.com/cards/BS/29",
+      "https://limitlesstcg.com/cards/BS2/43",
+      "https://bulbapedia.bulbagarden.net/wiki/Haunter_%28Base_Set%29"
+     ],
+     "scope": "Printed text verified against Limitless Base Set/Base Set 2 and Bulbapedia. Fixed source typo “You can't this attack” to the printed “You can't use this attack unless the Defending Pokémon is Asleep” in both card records and the strict attack compiler. Reducer scenarios verify Hypnosis cost/status/no damage, immediate end-of-turn Sleep checkup and wake on heads, Poison+Sleep coexistence and Poison checkup damage, Dream Eater rejection while awake and for underpaid Psychic cost, and 50 printed damage reduced to 20 by Chansey's Psychic Resistance when the target stays Asleep through both checkups. Base Set in Classic; Base Set 2 in online-preview 60-card and 40-card/four-Prize setup. Historical ruling archive and browser/network behavior remain unreviewed."
     },
     {
      "kind": "attack",
      "index": 1,
      "name": "Dream Eater",
-     "status": "unreviewed"
+     "status": "partial",
+     "evidence": [
+      "test_card_fidelity_haunter_sleep.js",
+      "https://limitlesstcg.com/cards/BS/29",
+      "https://limitlesstcg.com/cards/BS2/43",
+      "https://bulbapedia.bulbagarden.net/wiki/Haunter_%28Base_Set%29"
+     ],
+     "scope": "Printed text verified against Limitless Base Set/Base Set 2 and Bulbapedia. Fixed source typo “You can't this attack” to the printed “You can't use this attack unless the Defending Pokémon is Asleep” in both card records and the strict attack compiler. Reducer scenarios verify Hypnosis cost/status/no damage, immediate end-of-turn Sleep checkup and wake on heads, Poison+Sleep coexistence and Poison checkup damage, Dream Eater rejection while awake and for underpaid Psychic cost, and 50 printed damage reduced to 20 by Chansey's Psychic Resistance when the target stays Asleep through both checkups. Base Set in Classic; Base Set 2 in online-preview 60-card and 40-card/four-Prize setup. Historical ruling archive and browser/network behavior remain unreviewed."
     }
    ]
   },
