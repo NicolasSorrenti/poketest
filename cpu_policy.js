@@ -756,8 +756,14 @@ function horizonAttackValue(unit,defender,hand,remaining=1,futureRound=0,turnSer
   // Miracle Energy must not create imaginary two-turn attack lines.
   if(seen.has(id)||!isEnergy(energy)||!legalAttachment({card:energy,unit,
    round:futureRound,cardName:card(unit.id)?.name||''}))continue;
+  // Rainbow Energy deals 10 damage when attached. A forecast that knocks
+  // out its own attacker cannot unlock a next-turn attack. Nonlethal damage
+  // still matters for counter-based attacks such as Flail.
+  const rainbowDamage=energy.name==='Rainbow Energy'?10:0;
+  if(rainbowDamage>=hpRemaining(unit))continue;
   seen.add(id);
-  const after={...nextTurnUnit,energies:[...(unit.energies||[]),id]};
+  const after={...nextTurnUnit,damage:(nextTurnUnit.damage||0)+rainbowDamage,
+   energies:[...(unit.energies||[]),id]};
   // A card requires another turn's Energy attachment. Discount those future
   // outcomes to avoid preferring a speculative combination to today's KO.
   // Next attachment is on our next turn, after the opponent's turn.
