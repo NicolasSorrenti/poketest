@@ -1029,6 +1029,52 @@
  }
 }`;
     document.head.append(mobileInteractionGrid);
+    // Mobile character submenus (Make plans, Spend time, etc.): the portrait
+    // stays full-width; the subtitle joins the character's name and the choice
+    // buttons occupy two equal columns. Desktop retains its original layout.
+    const mobileSubmenuGrid=document.createElement('style');
+    mobileSubmenuGrid.id='neoOverworldMobileSubmenuGrid';
+    mobileSubmenuGrid.textContent=`
+      @media(max-width:650px){
+        #neoOverworldOverlay.neo-ow-idle-interaction #neoOverworldStoryDock .stage-panel:has(#characterActions.choice-menu){
+          grid-template-rows:minmax(190px,36dvh) auto auto!important;
+        }
+        #neoOverworldOverlay.neo-ow-idle-interaction #neoOverworldStoryDock #characterActions.choice-menu:not([hidden]){
+          grid-column:1!important;grid-row:3!important;
+          display:block!important;padding:0!important;margin:0!important;
+          background:transparent!important;border:0!important;box-shadow:none!important;
+        }
+        #neoOverworldOverlay.neo-ow-idle-interaction #neoOverworldStoryDock #characterActions.choice-menu>.character-menu-eyebrow,
+        #neoOverworldOverlay.neo-ow-idle-interaction #neoOverworldStoryDock #characterActions.choice-menu>.character-menu-title,
+        #neoOverworldOverlay.neo-ow-idle-interaction #neoOverworldStoryDock #characterActions.choice-menu>.character-menu-description{
+          display:none!important;
+        }
+        #neoOverworldOverlay.neo-ow-idle-interaction #neoOverworldStoryDock #characterActions.choice-menu .character-menu-options{
+          display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;
+          gap:7px!important;width:100%!important;min-width:0!important;
+          margin:0!important;padding:0!important;
+        }
+        #neoOverworldOverlay.neo-ow-idle-interaction #neoOverworldStoryDock #characterActions.choice-menu .character-menu-options>button{
+          box-sizing:border-box!important;width:100%!important;min-width:0!important;
+          min-height:52px!important;padding:9px 10px!important;
+          white-space:normal!important;overflow-wrap:anywhere!important;
+          font-size:12px!important;line-height:1.3!important;
+        }
+        #neoOverworldOverlay.neo-ow-idle-interaction #neoOverworldStoryDock #neoOverworldInteractionCaption.neo-ow-submenu-caption{
+          grid-column:1!important;grid-row:2!important;
+          margin:0!important;padding:10px 12px!important;
+        }
+        #neoOverworldOverlay.neo-ow-idle-interaction #neoOverworldInteractionCaption.neo-ow-submenu-caption::before{
+          content:attr(data-menu-heading);display:block;
+          font:700 11px system-ui;letter-spacing:.12em;color:#f5afcd;
+          text-transform:uppercase;order:-1;
+        }
+        #neoOverworldOverlay.neo-ow-idle-interaction #neoOverworldStoryDock #characterActions.choice-menu #neoOverworldInteractionBack{
+          display:none!important;
+        }
+      }
+    `;
+    document.head.append(mobileSubmenuGrid);
     attachChoicePanels();
     let storyDock=null;
     let lastSceneKey='';
@@ -1140,7 +1186,17 @@
       const needsStory=!!((data.storyActive&&!arrivalOnly)||(hasCG&&!arrivalOnly)||idleFocus);
       overlay.classList.toggle('neo-ow-arriving',!!data.arriving&&!needsStory);
       overlay.classList.toggle('neo-ow-idle-interaction',!!idleFocus);
-      if(idleFocus)idleName.textContent=bridge()?.portrait?.(idleFocus)?.name||idleFocus;
+      if(idleFocus){
+        idleName.textContent=bridge()?.portrait?.(idleFocus)?.name||idleFocus;
+        // Reuse the existing caption beneath the portrait for submenu text.
+        // Do not clone or move choice handlers: only the presentation changes.
+        const menu=characterChoiceMenu?document.getElementById('characterActions'):null;
+        const menuHeading=menu?.querySelector('.character-menu-eyebrow')?.textContent?.trim();
+        const menuDescription=menu?.querySelector('.character-menu-description')?.textContent?.trim();
+        idleHint.textContent=menuDescription||'Choose how you would like to spend time together.';
+        idleCaption.dataset.menuHeading=menuHeading||'';
+        idleCaption.classList.toggle('neo-ow-submenu-caption',!!menu);
+      }
       // Mobile: Back is the final action, paired with Deck in the two-column
       // grid. On desktop, return it to its original separate stage position.
       const actionsForBack=document.getElementById('characterActions');
