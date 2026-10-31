@@ -34,4 +34,10 @@ check('WotC-era ruling allows Computer Search with an empty deck after paying it
  const g=game();player(g,0).hand=['base1-71','base1-99','base1-94'];player(g,0).deck=[];
  act(g,0,'play_trainer',{handIndex:0});assert.equal(g.pendingDecision,null,'An empty deck must not strand a mandatory search choice');assert.deepEqual(player(g,0).deck,[]);assert.ok(player(g,0).discard.includes('base1-71'));assert.ok(player(g,0).discard.includes('base1-99'));assert.ok(player(g,0).discard.includes('base1-94'));
 });
+check('Distinct cost candidates remain player-controlled',()=>{
+ const g=game();player(g,0).hand=['base1-71','base1-99','base1-91','base1-94'];player(g,0).deck=['base1-46','base1-27'];
+ act(g,0,'play_trainer',{handIndex:0});assert.equal(g.pendingDecision?.kind,'cost');assert.equal(g.pendingDecision.actor,0);assert.equal(g.pendingDecision.options.length,3);
+ choose(g,0,['n:2','n:3']);assert.equal(g.pendingDecision?.kind,'find');choose(g,0,['deck:0']);
+ assert.ok(player(g,0).discard.includes('base1-91'));assert.ok(player(g,0).discard.includes('base1-94'));assert.ok(!player(g,0).discard.includes('base1-99'));assert.ok(player(g,0).hand.includes('base1-46'));
+});
 console.log(`Computer Search fidelity: ${passed} scenarios passed`);
