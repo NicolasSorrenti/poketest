@@ -41,7 +41,7 @@ test('cross-character catalog has original two-person scenes, meaningful choices
   assert.ok(cg&&cg.artPending&&cg.sliceId===e.id,e.id);
   assert.equal(cg.path,'/rpg-assets/events/cg/season01/'+e.id+'.webp');
   const candidates=CG.artCandidates(cg,false).filter(c=>c.kind==='event').map(c=>c.path);
-  assert.deepEqual(candidates.slice(0,2),[cg.path,'/rpg-assets/events/cg/crossover_pending.svg']);
+  assert.deepEqual(candidates,[cg.path],e.id+' must load only its own CG, not a generic placeholder');
   if(e.prerequisite)assert.ok(ids.has(e.prerequisite),e.id+' has an invalid callback');
  }
 });
@@ -119,6 +119,8 @@ test('Barb designs one individualized bikini-related beachwear concept with each
  const PACK=require('../rpg_character_packs.generated'),NARRATIVE=require('../rpg_narrative_pack'),SIDE=require('../rpg_side_quests');
  const cast=new Set(Object.keys(SCHEDULES.start));cast.delete('barb');
  const plans=CROSS.events.filter(e=>e.beachwear?.stage==='concept');
+ assert.deepEqual([...cast].filter(id=>!plans.some(e=>e.participants[1]===id)).sort(),[],
+  'every scheduled character needs an authored Barb beachwear consultation');
  assert.equal(plans.length,cast.size);
  assert.equal(new Set(plans.map(e=>e.participants[1])).size,cast.size);
  for(const e of plans){
