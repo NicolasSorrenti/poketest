@@ -1341,7 +1341,12 @@
      "kind": "attack",
      "index": 0,
      "name": "Foul Gas",
-     "status": "unreviewed"
+     "status": "partial",
+     "evidence": [
+      "test_card_fidelity_koffing.js: 36 reducer scenarios across Classic, Neo-theme, online-preview 60-card and 40-card configurations. Checks catalog text/HP/type/weakness, Grass cost and rejection, fixed damage and heads Poison/tails Confusion, Poison checkup, status replacement, Confusion attack outcomes, retained Double Colorless, and Psychic Weakness.",
+      "Foul Gas text checked against Serebii and Bulbapedia Base Set #51. Status/attack/Poison timing checked against WotC Advanced Rulebook v8. Official errata index contains no Koffing entry. Broader interactions and full client/network behavior remain unreviewed."
+     ],
+     "scope": "Base Set #51 Foul Gas only: printed card fields; two-Grass cost and atomic rejection; 10 damage and both coin branches; Poison checkup; Confusion replacing Asleep and following attack success/self-damage; Psychic Weakness. Other attacks/interactions and browser/network integration remain unreviewed."
     }
    ]
   },
