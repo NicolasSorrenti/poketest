@@ -1018,11 +1018,11 @@
   border:1px solid #9b819f!important;box-shadow:none!important;
  }
  #neoOverworldOverlay.neo-ow-idle-interaction #neoOverworldStoryDock #characterActions>button[data-character-action="deck"]{
-  order:7!important;
+  order:6!important;
  }
  #neoOverworldOverlay.neo-ow-idle-interaction #neoOverworldStoryDock #characterActions #neoOverworldInteractionBack{
   box-sizing:border-box!important;display:flex!important;grid-column:auto!important;
-  grid-row:auto!important;order:6!important;align-items:center!important;justify-content:flex-start!important;
+  grid-row:auto!important;order:7!important;align-items:center!important;justify-content:flex-start!important;
   width:100%!important;min-width:0!important;max-width:100%!important;
   min-height:46px!important;padding:9px 10px!important;
   text-align:left!important;font-size:13px!important;
