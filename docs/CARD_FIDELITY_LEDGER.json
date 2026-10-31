@@ -498,13 +498,21 @@
      "kind": "attack",
      "index": 0,
      "name": "Slash",
-     "status": "unreviewed"
+     "status": "partial",
+     "evidence": [
+      "test_card_fidelity_dugtrio.js"
+     ],
+     "scope": "Slash: two-Fighting plus one Colorless cost, 40 damage, and insufficient Earthquake-cost rejection"
     },
     {
      "kind": "attack",
      "index": 1,
      "name": "Earthquake",
-     "status": "unreviewed"
+     "status": "partial",
+     "evidence": [
+      "test_card_fidelity_dugtrio.js"
+     ],
+     "scope": "Earthquake: four-Fighting cost; 70 damage with Active Fighting Resistance; 10 to each own Benched Pokémon without applying Fighting Weakness; self-Bench Knock Out, discard, and opponent Prize; no-Bench case"
     }
    ]
   },
@@ -4496,13 +4504,21 @@
      "kind": "attack",
      "index": 0,
      "name": "Slash",
-     "status": "unreviewed"
+     "status": "partial",
+     "evidence": [
+      "test_card_fidelity_dugtrio.js"
+     ],
+     "scope": "Slash: two-Fighting plus one Colorless cost, 40 damage, and insufficient Earthquake-cost rejection"
     },
     {
      "kind": "attack",
      "index": 1,
      "name": "Earthquake",
-     "status": "unreviewed"
+     "status": "partial",
+     "evidence": [
+      "test_card_fidelity_dugtrio.js"
+     ],
+     "scope": "Earthquake: four-Fighting cost; 70 damage with Active Fighting Resistance; 10 to each own Benched Pokémon without applying Fighting Weakness; self-Bench Knock Out, discard, and opponent Prize; no-Bench case"
     }
    ]
   },
