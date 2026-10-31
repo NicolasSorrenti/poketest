@@ -35,6 +35,16 @@ let scenarios=0;
  const g=game();g.players[0].active=unit(rod,[lightning,lightning]);g.players[1].active=unit('base1-3');g.players[1].bench=[unit('base1-7')];g.players[1].bench[0].lightningRodMarker=true;g.players[1].bench[0].weaknessOverride='Lightning';
  act(g,0,'attack',{attackIndex:1});assert.equal(g.pendingDecision,null);assert.equal(g.players[1].active.damage,10);assert.equal(g.players[1].bench[0].damage,40);scenarios++;
 }
+// Lightning Bolt's printed Weakness/Resistance clause also applies to the marked Bench target's Resistance.
+{
+ const g=game();g.players[0].active=unit(rod,[lightning,lightning]);g.players[1].active=unit('base1-3');g.players[1].bench=[unit('base1-7')];g.players[1].bench[0].lightningRodMarker=true;g.players[1].bench[0].resistanceOverride='Lightning';
+ act(g,0,'attack',{attackIndex:1});assert.equal(g.players[1].active.damage,10);assert.equal(g.players[1].bench[0].damage,0);scenarios++;
+}
+// Marked Bench damage participates in the ordinary Knock Out and Prize flow.
+{
+ const g=game();g.players[0].active=unit(rod,[lightning,lightning]);g.players[1].active=unit('base1-3');g.players[1].bench=[unit(pikachu,[],30)];g.players[1].bench[0].lightningRodMarker=true;g.players[1].bench[0].weaknessOverride='Lightning';
+ act(g,0,'attack',{attackIndex:1});assert.equal(g.players[1].bench.length,0);assert.equal(g.players[0].hand.length,1);assert.equal(g.players[0].prizes.length,5);scenarios++;
+}
 // With multiple markers, the attacker sees only marked Pokémon and chooses which receives the bonus.
 {
  const g=game();g.players[0].active=unit(rod,[lightning,lightning]);g.players[1].active=unit('base1-3');g.players[1].bench=[unit('base1-11'),unit('base1-7')];g.players[1].active.lightningRodMarker=true;g.players[1].bench[1].lightningRodMarker=true;
