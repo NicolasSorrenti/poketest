@@ -34,6 +34,10 @@ for(const v of variants){
  // prohibition and a no-Weakness target must not trigger a meaningless prompt.
  {const g=game(v);g.players[0].active=unit('base1-39',[v.fire]);g.players[1].active=unit('base1-16');act(g,0,'attack',{attackIndex:0});assert.equal(g.pendingDecision,null);assert.equal(g.players[1].active.weaknessOverride,undefined);assert.equal(g.turn,1);scenarios++;}
 
+ // The change itself is optional when a Weakness exists; declining it still
+ // completes the attack without modifying the printed Weakness.
+ {const g=game(v);g.players[0].active=unit('base1-39',[v.fire]);g.players[1].active=unit('base1-23');act(g,0,'attack',{attackIndex:0});assert.equal(g.pendingDecision.optional,true);act(g,0,'choose',{decisionId:g.pendingDecision.id,decline:true});assert.equal(g.pendingDecision,null);assert.equal(g.players[1].active.weaknessOverride,undefined);assert.equal(g.turn,1);scenarios++;}
+
  // Conversion 1 belongs to the Defending Pokémon: it persists when the
  // attacker Porygon is benched, changes Weakness for a later attack, and is
  // removed when the modified Defending Pokémon itself leaves the Active Spot.
