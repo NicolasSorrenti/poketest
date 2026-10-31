@@ -1008,9 +1008,12 @@
   grid-column:1!important;grid-row:3!important;min-width:0!important;
   padding:9px 12px!important;font-size:12px!important;
  }
- #neoOverworldOverlay.neo-ow-idle-interaction #neoOverworldStoryDock #neoOverworldInteractionBack{
-  grid-column:1!important;grid-row:4!important;width:100%!important;
-  min-height:44px!important;text-align:center!important;
+ #neoOverworldOverlay.neo-ow-idle-interaction #neoOverworldStoryDock #characterActions #neoOverworldInteractionBack{
+  box-sizing:border-box!important;display:flex!important;grid-column:auto!important;
+  grid-row:auto!important;align-items:center!important;justify-content:flex-start!important;
+  width:100%!important;min-width:0!important;max-width:100%!important;
+  min-height:46px!important;padding:9px 10px!important;
+  text-align:left!important;font-size:13px!important;
  }
 }`;
     document.head.append(mobileInteractionGrid);
@@ -1126,6 +1129,12 @@
       overlay.classList.toggle('neo-ow-arriving',!!data.arriving&&!needsStory);
       overlay.classList.toggle('neo-ow-idle-interaction',!!idleFocus);
       if(idleFocus)idleName.textContent=bridge()?.portrait?.(idleFocus)?.name||idleFocus;
+      // Mobile: Back is the final action, paired with Deck in the two-column
+      // grid. On desktop, return it to its original separate stage position.
+      const actionsForBack=document.getElementById('characterActions');
+      const mobileBack=window.matchMedia('(max-width:650px)').matches;
+      const backParent=mobileBack&&idleFocus?actionsForBack:idleStage;
+      if(backParent&&idleBack.parentElement!==backParent)backParent.append(idleBack);
       if(needsStory){
         if(!storyDock||storyDock.hidden)showStory();
         else lockMapForStory(true);
