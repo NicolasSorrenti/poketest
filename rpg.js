@@ -161,7 +161,7 @@ function timeFlash(change,onDone=()=>{}){
  return true;
 }
 
-function defaults(){return {sideQuests:{},activeSideQuest:null,day:1,slot:0,location:'home',visitedLocations:{home:true},metReina:false,reinaTrust:0,reinaDuels:0,results:[],flags:{intro:false},journal:['The 90-day season begins.'],pendingDuel:null,bonds:{},talked:{},hungOut:{},eventsDone:{},points:0,credits:80,playerDeck:'blackout',selected:null,ended:false,storyDone:{},storyMissed:{},relationships:{},routeOutcomes:{},partner:null,activeStory:null,activeEncounter:null,activeArc:null,arcFlags:{},arcOutcomes:{},activityDone:{},encountersDone:{},focus:75,insight:0,reputation:0,preparation:0,lastDuelReceipt:null,tournaments:{},campaignHistory:[],ngPlus:0,appointments:[],appointmentSeq:0,scene:null,socialHistory:{},situationDone:{},activeSituation:null,sliceOfLifeDone:{},sliceOfLifeLastDay:0,activeSliceOfLife:null,deckJourney:null,competitive:null,npcReactivity:null,community:null,consequences:null,mandatoryEventState:null,playmatGifts:{},playmatSelected:'aurora',gameplayTutorials:{disabled:false,seen:{}}}}
+function defaults(){return {sideQuests:{},activeSideQuest:null,day:1,slot:0,location:'home',visitedLocations:{home:true},metReina:false,reinaTrust:0,reinaDuels:0,results:[],flags:{intro:false},journal:['The 90-day season begins.'],pendingDuel:null,bonds:{},talked:{},hungOut:{},eventsDone:{},points:0,credits:80,playerDeck:'blackout',selected:null,ended:false,storyDone:{},storyMissed:{},relationships:{},routeOutcomes:{},partner:null,activeStory:null,activeEncounter:null,activeArc:null,arcFlags:{},arcOutcomes:{},activityDone:{},encountersDone:{},focus:75,insight:0,reputation:0,preparation:0,lastDuelReceipt:null,tournaments:{},campaignHistory:[],ngPlus:0,appointments:[],appointmentSeq:0,scene:null,socialHistory:{},situationDone:{},activeSituation:null,sliceOfLifeDone:{},sliceOfLifeLastDay:0,activeSliceOfLife:null,deckJourney:null,competitive:null,npcReactivity:null,community:null,phoneMessages:null,consequences:null,mandatoryEventState:null,playmatGifts:{},playmatSelected:'aurora',gameplayTutorials:{disabled:false,seen:{}}}}
 const hadCampaignSave=!!localStorage.getItem(KEY);
 let state;try{state=JSON.parse(localStorage.getItem(KEY))||defaults();if(!Number.isInteger(state.day)||state.day<1||state.day>91)throw Error('Invalid save');}catch{state=defaults()}
 for(const [k,v] of Object.entries(defaults()))if(state[k]===undefined)state[k]=v;
@@ -359,6 +359,7 @@ if(state.day>beforeDay){
   const latest=news.at(-1);
   log('Club news: '+COMMUNITY.describe(latest,cast));
  }
+ phoneMessages?.onDayAdvance(beforeDay);
 }
 const expiredCups=TOURNAMENTS.expire(state);if(expiredCups.length)log('A tournament registration window has closed.');
 const missed=STORY.recordExpiry(state);if(missed.length)log('Some opportunities in town passed while you were busy.');
@@ -2752,6 +2753,16 @@ function maybeShowYearEndFallReel(){
 let pendingEntrySurprise=false;
 let pendingOverworldArrival=null;
 let arrivalGate=false;
+const phoneMessages=window.NeoRpgPhoneMessages?.create({
+ state,cast,manifest:window.NeoOverworld,relationships:REL,persist,render,
+ people:currentPeople,
+ fallbackImage:id=>scenePortraitSource(id,'neutral',null),
+ audio:()=>window.NeoRpgAudio?.play?.('phone'),
+ discreet:()=>window.NeoRpgDiscreet?.isEnabled?.(),
+ avatars:window.NeoRpgDiscreetAvatars,
+ canShow:()=>!controlsLocked()&&!arrivalGate&&!pendingOverworldArrival&&!window.NeoRpgTimeTransitions?.active&&
+  !document.querySelector('dialog[open]:not(#phoneMessageDialog)')
+});
 async function finishOverworldArrival(destination){
  if(state.location!==destination)return;
  arrivalGate=true;
@@ -3174,6 +3185,7 @@ function render(){
   pendingOverworldArrival=null;
   void finishOverworldArrival(destination);
  }
+ phoneMessages?.showIfReady();
  notifyOverworldRendering();
 }
 
