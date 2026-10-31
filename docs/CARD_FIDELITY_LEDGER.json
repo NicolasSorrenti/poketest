@@ -1824,7 +1824,7 @@
           "kind": "trainer",
           "status": "partial",
           "evidence": [
-            "test_card_fidelity_impostor_professor_oak.js: Base/Base Set 2 text parity; four same-turn plays; opponent hand/deck card conservation; hidden-hand protocol projection; draw when fewer than seven cards remain; empty-hand shuffle.",
+            "test_card_fidelity_impostor_professor_oak.js: Base/Base Set 2 text parity; four same-turn plays; opponent hand/deck card conservation; hidden-hand protocol projection; draw when fewer than seven cards remain; empty-hand shuffle. Base card fidelity run 41193423882 passed at code head 98fb52a4.",
             "Archived WotC chat logs Q105: up to four Impostor Professor Oak cards may be played in one turn; Q14 describes interaction with Tickling Machine's face-down set-aside hand, which this test does not cover.",
             "Official Pokémon TCG errata PDF searched for Impostor/Impostor Professor Oak; no matching entry found."
           ],
@@ -6711,7 +6711,7 @@
           "kind": "trainer",
           "status": "partial",
           "evidence": [
-            "test_card_fidelity_impostor_professor_oak.js: Base/Base Set 2 text parity; four same-turn plays; opponent hand/deck card conservation; hidden-hand protocol projection; draw when fewer than seven cards remain; empty-hand shuffle.",
+            "test_card_fidelity_impostor_professor_oak.js: Base/Base Set 2 text parity; four same-turn plays; opponent hand/deck card conservation; hidden-hand protocol projection; draw when fewer than seven cards remain; empty-hand shuffle. Base card fidelity run 41193423882 passed at code head 98fb52a4.",
             "Archived WotC chat logs Q105: up to four Impostor Professor Oak cards may be played in one turn; Q14 describes interaction with Tickling Machine's face-down set-aside hand, which this test does not cover.",
             "Official Pokémon TCG errata PDF searched for Impostor/Impostor Professor Oak; no matching entry found."
           ],
