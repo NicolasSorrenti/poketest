@@ -2347,7 +2347,8 @@ const APPROVED_DIALOGUE_MASTERS=Object.freeze({
  teo:'/rpg-assets/characters/teo/dialogue/neutral.png',
  nereo:'/rpg-assets/characters/nereo/dialogue/neutral.png',
  elio:'/rpg-assets/characters/elio/dialogue/neutral.png',
- kaede:'/rpg-assets/characters/kaede/dialogue/neutral.png'
+ kaede:'/rpg-assets/characters/kaede/dialogue/neutral.png',
+ shiori:'/rpg-assets/characters/shiori/dialogue/neutral.png'
 });
 function dialogueMasterSource(id,expression){
  return expression==='neutral'?APPROVED_DIALOGUE_MASTERS[id]||null:null;
