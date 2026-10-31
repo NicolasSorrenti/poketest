@@ -3,8 +3,8 @@ const assert=require('node:assert/strict');
 const {createGame,applyCommand,CATALOG}=require('./headless_duel');
 
 const variants=[
- {id:'base1-2',water:'base1-102',formats:[['classic',60],['neo-theme',60],['online-preview',60],['online-preview',40]]},
- {id:'base4-2',water:'base4-130',formats:[['online-preview',60],['online-preview',40]]}
+ {id:'base1-2',water:'base1-102',hydroText:"Does 40 damage plus 10 more damage for each attached Water Energy attached to Blastoise but not used to pay for this attack's Energy cost. Extra Water Energy after the 2nd doesn't count.",formats:[['classic',60],['neo-theme',60],['online-preview',60],['online-preview',40]]},
+ {id:'base4-2',water:'base4-130',hydroText:"Does 40 damage plus 10 more damage for each Water Energy attached to Blastoise but not used to pay for this attack's Energy cost. You can't add more than 20 damage in this way.",formats:[['online-preview',60],['online-preview',40]]}
 ];
 const unit=(id,energies=[])=>({id,under:[],energies:[...energies],attachedTrainers:[],damage:0,status:null,poison:false,playedTurn:0});
 function game(format,size,blastoise,water){
@@ -22,7 +22,17 @@ function pick(g,side,id){const d=g.pendingDecision;assert.ok(d,'expected choice'
 let scenarios=0;
 for(const v of variants)for(const [format,size] of v.formats){
  const card=CATALOG.get(v.id);assert.equal(card.abilities[0].name,'Rain Dance');
+ assert.equal(card.attacks[0].name,'Hydro Pump');assert.equal(card.attacks[0].text,v.hydroText);scenarios++;
  assert.equal(card.abilities[0].text,"As often as you like during your turn (before your attack), you may attach 1 Water Energy Card to 1 of your Water Pokémon. (This doesn't use up your 1 Energy card attachment for the turn.) This power can't be used if Blastoise is Asleep, Confused, or Paralyzed.");scenarios++;
+ // The Base Set wording and Base Set 2's explicit cap are equivalent: only
+ // Water Energy left over after paying the three-Water cost adds damage.
+ for(const [attached,expected] of [[3,40],[4,50],[5,60],[6,60]]){
+  const g=game(format,size,v.id,v.water);g.players[0].active=unit(v.id,Array(attached).fill(v.water));g.players[0].bench=[];g.players[1].active=unit('base1-3');
+  act(g,0,'attack',{attackIndex:0});assert.equal(g.players[1].active.damage,expected,`${v.id} Hydro Pump with ${attached} Water Energy`);scenarios++;
+ }
+ {const g=game(format,size,v.id,v.water);g.players[0].active=unit(v.id,[v.water,v.water,v.water,'base1-100']);g.players[0].bench=[];g.players[1].active=unit('base1-3');
+  act(g,0,'attack',{attackIndex:0});assert.equal(g.players[1].active.damage,40,'non-Water Energy does not increase Hydro Pump');scenarios++;}
+ {const g=game(format,size,v.id,v.water);g.players[0].active=unit(v.id,[v.water,v.water,'base1-96']);g.players[0].bench=[];reject(g,0,'attack',{attackIndex:0});scenarios++;}
  // A Benched Blastoise can attach the Water cards repeatedly before attacking.
  // The hand's Base and Base Set 2 Water Energy reprints are equivalent, so
  // there is no Energy picker; different Water recipients remain selectable.
@@ -51,4 +61,4 @@ for(const v of variants)for(const [format,size] of v.formats){
  for(const status of ['Asleep','Confused','Paralyzed']){const g=game(format,size,v.id,v.water);g.players[0].bench[0].status=status;g.players[0].hand=[v.water];reject(g,0,'use_power',{slot:0,repeat:true});scenarios++;}
  {const g=game(format,size,v.id,v.water);g.players[0].hand=[v.water];g.turn=1;reject(g,0,'use_power',{slot:0,repeat:true});scenarios++;}
 }
-console.log(`PASS Blastoise Rain Dance timing, recipients, equivalent Energy, Finish and status (${scenarios} scenarios)`);
+console.log(`PASS Blastoise Hydro Pump damage/cost and Rain Dance timing, recipients, equivalent Energy, Finish and status (${scenarios} scenarios)`);
