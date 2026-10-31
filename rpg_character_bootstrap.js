@@ -65,7 +65,7 @@
  "/rpg_cloud_save.js?v=cloud-login-visible-20261030",
  "/rpg_outfits.js?v=1",
  "/rpg_phone_messages.js?v=phone-selfie-chat-20261031-3",
- "/rpg.js?v=phone-selfie-chat-20261031-3"
+ "/rpg.js?v=overworld-booster-shop-20261031-1"
 ];
   function registry(packs){
     const cast={},looks={},schedules={},arrivals={},events=[],mandatoryEvents=[];
