@@ -11,7 +11,8 @@ const sets=['base1','base2','base3','base4','base5','basep','gym1','gym2','neo1'
 const cards=sets.flatMap(f=>JSON.parse(fs.readFileSync(path.join(root,'cards',f+'.json'))));
 const energies=['Grass','Water','Fire','Lightning','Psychic','Fighting','Metal','Darkness','Colorless'].map(t=>({id:'test-'+t,name:t+' Energy',supertype:'Energy',subtypes:['Basic']}));
 const dummy={id:'dummy46',name:'Practice target',hp:'900',supertype:'Pokémon',subtypes:['Basic'],types:['Colorless'],attacks:[{name:'Tackle',damage:'20',cost:['Colorless'],text:''},{name:'Other Hit',damage:'30',cost:['Colorless'],text:''}],abilities:[]};
-ctx.fixtures=[...cards,...energies,dummy];R('lookup=new Map(fixtures.map(c=>[c.id,c]));render=()=>{};engine.end=()=>{};');
+const rainbow={id:'test-Rainbow',name:'Rainbow Energy',supertype:'Energy',subtypes:['Special']};
+ctx.fixtures=[...cards,...energies,rainbow,dummy];R('lookup=new Map(fixtures.map(c=>[c.id,c]));render=()=>{};engine.end=()=>{};');
 const targets=JSON.parse(fs.readFileSync(root+'/batch46_targets.json'));
 const expected=JSON.parse(fs.readFileSync(root+'/attack_coverage.json'));
 assert(expected.handled>=1360);assert(expected.unsupported.length<=119);
@@ -76,7 +77,19 @@ assert.equal(x.attack(0),false);assert(x.attack(0,1));assert.equal(R('engine.me.
 x=prep('neo1-34','Electric Current',{energyTypes:['Lightning','Lightning','Water']});
 assert.equal(x.attack(0),false);assert(x.attack(0,2));assert.equal(R('engine.me.bench[0].energies[0]'),'test-Water');
 x=prep('neo3-10','Plasma',{setup:'engine.me.discard=["test-Water","test-Fire"]'});assert.equal(x.attack(),false);assert(x.attack(null,1));assert(R('engine.me.active.energies.includes("test-Fire")'));
-x=prep('neo4-46','Warm Up',{setup:'engine.me.deck=["test-Fire","test-Water","test-Lightning"]'});assert.equal(x.attack(1),false);assert(x.attack(1,1));assert.equal(R('engine.me.bench[1].energies[0]'),'test-Water');
+x=prep('neo4-46','Warm Up',{setup:'engine.me.deck=["test-Water","test-Rainbow","test-Fire","test-Lightning"]'});
+assert.equal(x.attack(1),false,'Warm Up must request a Fire Energy choice');
+assert.equal(R('JSON.stringify(deckSearchRequest.options.map(o=>o.id))'),'["test-Fire"]','Only Fire Energy is a legal search result');
+const beforeWarmUp=R('JSON.stringify(engine.players)');
+assert.equal(x.attack(1,0),false,'Warm Up must reject Water Energy');
+assert.equal(x.attack(1,1),false,'Warm Up must reject Rainbow Energy from the deck');
+assert.equal(R('JSON.stringify(engine.players)'),beforeWarmUp,'Invalid choices do not mutate the game');
+assert(x.attack(1,2),'Warm Up attaches Fire Energy');
+assert.equal(R('engine.me.bench[1].energies[0]'),'test-Fire');
+assert.equal(R('engine.me.deck.includes("test-Water") && engine.me.deck.includes("test-Rainbow")'),true);
+x=prep('neo4-46','Warm Up',{setup:'engine.me.deck=["test-Water","test-Rainbow"]'});
+assert(x.attack(1),'Warm Up resolves when no Fire Energy is available');
+assert.equal(R('engine.me.bench[1].energies.length'),0);
 x=prep('neo1-39','Baton Pass',{setup:'engine.me.active.energies=["test-Grass","test-Grass"]'});assert(x.attack(1));assert.equal(R('engine.me.active.energies.length'),2);assert.equal(R('engine.me.bench[1].energies.length'),0);assert.equal(R('engine.me.bench[1].id'),'neo1-39');
 // Attack lock and optional-damage Energy discard.
 x=prep('neo3-38','Terrorize');assert.equal(x.attack(null),false);assert(x.attack(null,1));assert.equal(R('engine.foe.active.attackLocks[0].name'),'Other Hit');
