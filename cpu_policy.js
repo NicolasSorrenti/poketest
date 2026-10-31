@@ -782,6 +782,9 @@ function horizonAttackValue(unit,defender,hand,remaining=1,futureRound=0,turnSer
   if(rainbowDamage>=hpRemaining(unit))continue;
   seen.add(id);
   const after={...nextTurnUnit,damage:(nextTurnUnit.damage||0)+rainbowDamage,
+   // A future Full Heal attachment also cures Sleep before the attack.
+   // Keep this consistent with the immediate attachment and duel reducer.
+   ...(energy.name==='Full Heal Energy'?{status:null,poison:false}:{}),
    // Forecast from the post-expiry Energy pool: Miracle Energy is discarded.
    energies:[...(nextTurnUnit.energies||[]),id]};
   // A card requires another turn's Energy attachment. Discount those future
