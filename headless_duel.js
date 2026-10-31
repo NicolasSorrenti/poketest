@@ -294,7 +294,7 @@ function planFinalAttack(g,side,attackIndex,program,plan={side,attackIndex,data:
  const p=g.players[side],f=g.players[1-side],u=p.active,a=effectiveCard(g,u).attacks[attackIndex],kind=program.kind, data=plan.data;
  const energyOptions=(type=null)=>u.energies.flatMap((id,i)=>!type||attachedEnergyMatchesType(g,id,type)?[{id:`energy:${i}`,label:`${i+1}: ${card(g,id).name}`}]:[]);
  const benchOptions=(owner)=>owner.bench.map((x,i)=>({id:`bench:${i}`,label:publicName(g,x)}));
- const finish=()=>resolveAttack(g,side,attackIndex, data.target, data.energyPicks,{...data,finalApproved:true});
+ const finish=()=>resolveAttack(g,side,attackIndex, data.target, data.costPaid?[]:data.energyPicks,{...data,finalApproved:true,finalCostPaid:Boolean(data.costPaid),attackPenaltyChecked:Boolean(data.attackChecksDone),confusionChecked:Boolean(data.attackChecksDone)});
  if(kind==='barrier'&&!data.energyPicks){
   const psychicEnergy=energyOptions('Psychic');
   if(!psychicEnergy.length)fail('Barrier requires a Psychic Energy card to discard');
@@ -318,13 +318,32 @@ function planFinalAttack(g,side,attackIndex,program,plan={side,attackIndex,data:
   data.energyPicks=[Number(psychicEnergy[0].id.slice(7))];
  }
  if(['third-eye','scavenge'].includes(kind)&&!data.energyPicks){
-  if(!u.energies.length)fail('An attached Energy is required for this attack');
-  finalChoice(g,plan,'pay-energy',side,energyOptions(),{label:`${a.name}: choose an Energy to discard`});return;
+  const choices=energyOptions();
+  if(!choices.length)fail('An attached Energy is required for this attack');
+  const distinct=new Set(choices.map(option=>card(g,u.energies[Number(option.id.slice(7))]).name));
+  if(distinct.size===1)data.energyPicks=[Number(choices[0].id.slice(7))];
+  else {finalChoice(g,plan,'pay-energy',side,choices,{label:`${a.name}: choose an Energy to discard`});return;}
+ }
+ // These attacks discard Energy as a cost. WotC-era rules require paying it
+ // before attack-prevention and Confusion checks; choices that are effects of
+ // the attack (Scavenge recovery / Third Eye draw) happen only if those checks
+ // allow the attack to proceed.
+ if(['barrier','destiny-bond','scavenge','third-eye'].includes(kind)&&!data.costPaid){
+  const picks=data.energyPicks,quantity=1,type=['barrier','destiny-bond'].includes(kind)?'Psychic':null;
+  if(!Array.isArray(picks)||picks.length!==quantity||new Set(picks).size!==quantity||picks.some(i=>!Number.isInteger(i)||i<0||i>=u.energies.length||type&&!attachedEnergyMatchesType(g,u.energies[i],type)))fail('Illegal attack Energy payment');
+  const discarded=[];
+  for(const i of [...picks].sort((x,y)=>y-x)){const id=u.energies.splice(i,1)[0];p.discard.push(id);discarded.unshift(id);}
+  log(g,`${card(g,u.id).name} discarded ${discarded.map(id=>card(g,id).name).join(', ')} to use ${a.name}.`);
+  data.costPaid=true;
+  if(hasActiveEffect(u,'attackPenalty',g)&&next(g,2)===0){log(g,`${card(g,u.id).name}'s attack failed due to ${u.attackPenalty.sourceName||'Sand-attack'}.`);finishTurn(g);return;}
+  if(u.status==='Confused'&&next(g,2)===0){const self=calculateDamage(card(g,u.id),card(g,u.id),20)+(isClassicRules(g)&&CLASSIC_POWERS.enabled(g,u,'Frenzy')?30:0);u.damage+=self;log(g,`${card(g,u.id).name} hurts itself in Confusion for ${self} damage.`);if(!knockOuts(g,'checkup'))finishTurn(g);return;}
+  data.attackChecksDone=true;
  }
  if(kind==='scavenge'&&!Object.hasOwn(data,'discardTrainer')){
   const options=p.discard.flatMap((id,i)=>card(g,id).supertype==='Trainer'?[{id:`discard:${i}`,label:card(g,id).name}]:[]);
   if(!options.length)fail('No Trainer card in discard pile');
-  finalChoice(g,plan,'recover-trainer',side,options,{label:'Choose the Trainer to recover'});return;
+  if(options.length===1)data.discardTrainer=Number(options[0].id.slice(8));
+  else {finalChoice(g,plan,'recover-trainer',side,options,{label:'Choose the Trainer to recover'});return;}
  }
  if(kind==='third-eye'&&!Object.hasOwn(data,'drawCount')){
   finalChoice(g,plan,'draw-count',side,Array.from({length:4},(_,i)=>({id:`count:${i}`,label:`Draw ${i} card${i===1?'':'s'}`})),{label:'Draw up to 3 cards'});return;
@@ -1530,7 +1549,7 @@ function resolveAttack(g,side,index,chosenBench,energyPicks,extra={}){
  if(GYM_LAST.planned(program.kind)&&!extra.gymLastApproved)fail('Complete Gym attack choices first');
  if(FINAL_KINDS.has(program.kind)&&!extra.finalApproved)fail('Complete the historical attack decisions first');
  if(FINAL_KINDS.has(program.kind)){
-  if(['barrier','destiny-bond','scavenge','third-eye'].includes(program.kind)||['continuous-fireball','fireball','playing-with-fire'].includes(program.kind)&&extra.preRoll?.discardHeadCount){
+  if(!extra.finalCostPaid&&(['barrier','destiny-bond','scavenge','third-eye'].includes(program.kind)||['continuous-fireball','fireball','playing-with-fire'].includes(program.kind)&&extra.preRoll?.discardHeadCount)){
    const quantity=['continuous-fireball','fireball','playing-with-fire'].includes(program.kind)?extra.preRoll.discardHeadCount:1;
    if(!Array.isArray(energyPicks)||energyPicks.length!==quantity||new Set(energyPicks).size!==quantity||energyPicks.some(i=>!Number.isInteger(i)||i<0||i>=u.energies.length||['continuous-fireball','fireball','playing-with-fire'].includes(program.kind)&&!attachedEnergyMatchesType(g,u.energies[i],'Fire')||['barrier','destiny-bond'].includes(program.kind)&&!attachedEnergyMatchesType(g,u.energies[i],'Psychic')))fail('Invalid final attack Energy selection');
   }
