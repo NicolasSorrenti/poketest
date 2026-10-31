@@ -861,13 +861,23 @@
      "kind": "attack",
      "index": 0,
      "name": "Stiffen",
-     "status": "unreviewed"
+     "status": "partial",
+     "evidence": [
+      "test_card_fidelity_kakuna.js",
+      "Text compared against Bulbapedia, Serebii and Limitless; WotC 2002 rulebook poison-replacement rule checked."
+     ],
+     "scope": "Stiffen: Colorless cost including Double Colorless payment; heads/tails; shield duration/expiry; incoming attack damage prevention while Poisonpowder status still applies. Poisonpowder: typed Grass payment, heads/tails, 20 damage, first Checkup Poison damage, replacing stronger Poison with standard Poison, Poison coexisting with Confusion, Fire Weakness. 72 reducer scenarios: Base Set in Classic, Neo-theme, online-preview 60-card and 40-card; Base Set 2 in online-preview 60-card and 40-card. Browser/network integration pending."
     },
     {
      "kind": "attack",
      "index": 1,
      "name": "Poisonpowder",
-     "status": "unreviewed"
+     "status": "partial",
+     "evidence": [
+      "test_card_fidelity_kakuna.js",
+      "Text compared against Bulbapedia, Serebii and Limitless; WotC 2002 rulebook poison-replacement rule checked."
+     ],
+     "scope": "Stiffen: Colorless cost including Double Colorless payment; heads/tails; shield duration/expiry; incoming attack damage prevention while Poisonpowder status still applies. Poisonpowder: typed Grass payment, heads/tails, 20 damage, first Checkup Poison damage, replacing stronger Poison with standard Poison, Poison coexisting with Confusion, Fire Weakness. 72 reducer scenarios: Base Set in Classic, Neo-theme, online-preview 60-card and 40-card; Base Set 2 in online-preview 60-card and 40-card. Browser/network integration pending."
     }
    ]
   },
@@ -5152,13 +5162,23 @@
      "kind": "attack",
      "index": 0,
      "name": "Stiffen",
-     "status": "unreviewed"
+     "status": "partial",
+     "evidence": [
+      "test_card_fidelity_kakuna.js",
+      "Text compared against Bulbapedia, Serebii and Limitless; WotC 2002 rulebook poison-replacement rule checked."
+     ],
+     "scope": "Stiffen: Colorless cost including Double Colorless payment; heads/tails; shield duration/expiry; incoming attack damage prevention while Poisonpowder status still applies. Poisonpowder: typed Grass payment, heads/tails, 20 damage, first Checkup Poison damage, replacing stronger Poison with standard Poison, Poison coexisting with Confusion, Fire Weakness. 72 reducer scenarios: Base Set in Classic, Neo-theme, online-preview 60-card and 40-card; Base Set 2 in online-preview 60-card and 40-card. Browser/network integration pending."
     },
     {
      "kind": "attack",
      "index": 1,
      "name": "Poisonpowder",
-     "status": "unreviewed"
+     "status": "partial",
+     "evidence": [
+      "test_card_fidelity_kakuna.js",
+      "Text compared against Bulbapedia, Serebii and Limitless; WotC 2002 rulebook poison-replacement rule checked."
+     ],
+     "scope": "Stiffen: Colorless cost including Double Colorless payment; heads/tails; shield duration/expiry; incoming attack damage prevention while Poisonpowder status still applies. Poisonpowder: typed Grass payment, heads/tails, 20 damage, first Checkup Poison damage, replacing stronger Poison with standard Poison, Poison coexisting with Confusion, Fire Weakness. 72 reducer scenarios: Base Set in Classic, Neo-theme, online-preview 60-card and 40-card; Base Set 2 in online-preview 60-card and 40-card. Browser/network integration pending."
     }
    ]
   },
