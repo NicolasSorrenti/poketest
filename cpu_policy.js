@@ -309,10 +309,14 @@ function trainerOpportunity(o,name,cfg){
  if(name==='Switch')return p.bench.length>0;
  if(name==='Gust of Wind')return q.bench.length>0;
  if(name==='Pokémon Center')return own.some(u=>u.damage>=10);
- // Item Finder requires a Trainer already in discard before its two-card cost.
- // Playing it without a target strands a mandatory choice on the genuine reducer.
- if(name==='Item Finder')return (p.discard||[]).some(id=>card(id)?.supertype==='Trainer');
- if(name==='Computer Search')return p.deckCount>0;
+ // Both searches require two OTHER cards to pay their mandatory cost.
+ // Item Finder may recover a Trainer discarded as payment, even when the
+ // discard pile has no Trainers yet. Count the Item Finder being played as
+ // one of the hand's Trainers; another must be available to pay the cost.
+ if(name==='Item Finder')return p.hand.length>=3&&(
+  (p.discard||[]).some(id=>card(id)?.supertype==='Trainer')||
+  p.hand.filter(id=>card(id)?.supertype==='Trainer').length>=2);
+ if(name==='Computer Search')return p.hand.length>=3&&p.deckCount>0;
  if(name==='Bill')return p.deckCount>(cfg.level>=4?2:0);
  if(name==='Professor Oak')return p.deckCount>(cfg.level>=4?7:0);
  return true;
