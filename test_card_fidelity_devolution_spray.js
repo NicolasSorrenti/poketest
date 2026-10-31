@@ -19,6 +19,10 @@ check('Stage 1 devolution removes all evolution cards but preserves damage and E
  spray(g,1);assert.equal(p().active.id,'base1-46');assert.deepEqual(p().active.under,[]);assert.deepEqual(p().active.energies,['base1-98']);assert.equal(p().active.damage,20);assert.equal(p().active.status,null);assert.equal(p().active.poison,false);assert.equal(p().active.poisonDamage,0);assert.equal(p().active.noRetreat,undefined);assert.equal(p().active.attackLock,undefined);
  assert.ok(p().discard.includes('base1-4'));assert.ok(p().discard.includes('base1-24'));assert.ok(p().discard.includes('base1-72'));
 });
+check('Devolution clears attack locks and Special Conditions without removing attached Energy',()=>{
+ const g=game(),p=()=>g.players[0];p().hand=['base1-72'];p().active=unit('base1-24',['base1-46'],{energies:['base1-99'],status:'Confused',poison:true,poisonDamage:10,noRetreat:{expires:10},attackLock:{expires:10}});p().active.destinyBond={expires:10};
+ spray(g,1);assert.equal(p().active.status,null);assert.equal(p().active.poison,false);assert.equal(p().active.poisonDamage,0);assert.equal(p().active.noRetreat,undefined);assert.equal(p().active.attackLock,undefined);assert.equal(p().active.destinyBond,undefined);assert.deepEqual(p().active.energies,['base1-99']);
+});
 check('Stage 2 choice removes only Stage 2 and retains the Stage 1 stack',()=>{
  const g=game(),p=()=>g.players[0];p().hand=['base1-72'];p().active=unit('base1-4',['base1-24','base1-46']);
  act(g,0,'play_trainer',{handIndex:0});answer(g,['slot:-1']);assert.deepEqual(g.pendingDecision.options.map(x=>x.id),['stage:1','stage:2']);answer(g,['stage:2']);finish(g);
