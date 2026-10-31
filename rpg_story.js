@@ -16,7 +16,6 @@
  };
  const PACK=typeof module==='object'&&module.exports?require('./rpg_narrative_pack'):window.NeoRpgNarrativePack;
  const BONDC=typeof module==='object'&&module.exports?require('./rpg_bond_chapters'):window.NeoRpgBondChapters;
- const CHARPACKS=typeof module==='object'&&module.exports?require('./rpg_character_packs.generated'):window.NeoRpgCharacterPacks;
  const EXTRA=typeof module==='object'&&module.exports?require('./rpg_route_expansions'):window.NeoRpgRouteExpansions;
  const VN=typeof module==='object'&&module.exports?require('./rpg_conversations'):window.NeoRpgConversations;
  const SCENES=typeof module==='object'&&module.exports?require('./rpg_legacy_scenes'):window.NeoRpgLegacyScenes;
@@ -223,8 +222,11 @@
   });
  }
  // Keep existing route IDs stable for existing saves.
- // Add pack routes and bridge episodes without renumbering prior scenes.
- E.push(...(CHARPACKS?.events||[]),...PACK.events,...BONDC.events,...(EXTRA?.events||[]));
+ // PACK already registers the generated character-pack calendar events (and
+ // excludes ambient-only slice encounters). Spreading CHARPACKS.events again
+ // duplicated every generated route and crossover, breaking STORY.validate().
+ // Add pack routes and bridge episodes exactly once without renumbering scenes.
+ E.push(...PACK.events,...BONDC.events,...(EXTRA?.events||[]));
  // The new bridge scenes are mandatory for new campaigns. Existing final-route
  // IDs remain unchanged, and normalize() below backfills bridge completion for
  // saves that already passed the old four-scene structure.
