@@ -9,6 +9,7 @@
  const DEFAULTS=Object.freeze({enabled:true,volume:.35,ambience:false});
  const NOTE=Object.freeze({
   ui:[[510,610,.055,0,'triangle']],
+  phone:[[740,0,.07,0,'sine'],[980,0,.075,.09,'sine'],[740,0,.1,.19,'sine']],
   travel:[[340,510,.105,0,'triangle'],[540,680,.085,.065,'sine']],
   period:[[392,466,.12,0,'triangle'],[587,698,.12,.085,'sine']],
   day:[[330,440,.15,0,'triangle'],[440,660,.17,.12,'sine'],[659,880,.18,.24,'triangle']],
