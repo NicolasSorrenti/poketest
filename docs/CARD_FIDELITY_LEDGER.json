@@ -1692,13 +1692,23 @@
      "kind": "attack",
      "index": 0,
      "name": "Bind",
-     "status": "unreviewed"
+     "status": "partial",
+     "evidence": [
+      "test_card_fidelity_tangela.js: 66 reducer scenarios across Classic, Neo-theme, online-preview 60-card and 40-card setups; both printings, Bind heads/tails, typed costs, Poison damage/checkup, nonstacking Poison, Poison plus Paralysis coexistence, later opponent-turn checkup and Fire Weakness.",
+      "Card text and costs checked against Serebii Base #66 and Base Set 2 #96; Base #66 also cross-checked with TCGdex and Limitless. No Tangela-specific historical ruling/erratum located in the searched sources."
+     ],
+     "scope": "Grass + Colorless cost, fixed 20 damage and paralysis only on heads; Poison on already-Poisoned and Paralyzed targets and the tested opponent-turn checkup are covered. Other damage/status modifiers, evolution/bench timing, and browser/network behavior remain unreviewed."
     },
     {
      "kind": "attack",
      "index": 1,
      "name": "Poisonpowder",
-     "status": "unreviewed"
+     "status": "partial",
+     "evidence": [
+      "test_card_fidelity_tangela.js: 66 reducer scenarios across Classic, Neo-theme, online-preview 60-card and 40-card setups; both printings, Bind heads/tails, typed costs, Poison damage/checkup, nonstacking Poison, Poison plus Paralysis coexistence, later opponent-turn checkup and Fire Weakness.",
+      "Card text and costs checked against Serebii Base #66 and Base Set 2 #96; Base #66 also cross-checked with TCGdex and Limitless. No Tangela-specific historical ruling/erratum located in the searched sources."
+     ],
+     "scope": "three-Grass cost, 20 attack damage, application/coexistence of Poison and its between-turn checkup; Poison on already-Poisoned and Paralyzed targets and the tested opponent-turn checkup are covered. Other damage/status modifiers, evolution/bench timing, and browser/network behavior remain unreviewed."
     }
    ]
   },
@@ -6540,13 +6550,23 @@
      "kind": "attack",
      "index": 0,
      "name": "Bind",
-     "status": "unreviewed"
+     "status": "partial",
+     "evidence": [
+      "test_card_fidelity_tangela.js: 66 reducer scenarios across Classic, Neo-theme, online-preview 60-card and 40-card setups; both printings, Bind heads/tails, typed costs, Poison damage/checkup, nonstacking Poison, Poison plus Paralysis coexistence, later opponent-turn checkup and Fire Weakness.",
+      "Card text and costs checked against Serebii Base #66 and Base Set 2 #96; Base #66 also cross-checked with TCGdex and Limitless. No Tangela-specific historical ruling/erratum located in the searched sources."
+     ],
+     "scope": "Grass + Colorless cost, fixed 20 damage and paralysis only on heads; Poison on already-Poisoned and Paralyzed targets and the tested opponent-turn checkup are covered. Other damage/status modifiers, evolution/bench timing, and browser/network behavior remain unreviewed."
     },
     {
      "kind": "attack",
      "index": 1,
      "name": "Poisonpowder",
-     "status": "unreviewed"
+     "status": "partial",
+     "evidence": [
+      "test_card_fidelity_tangela.js: 66 reducer scenarios across Classic, Neo-theme, online-preview 60-card and 40-card setups; both printings, Bind heads/tails, typed costs, Poison damage/checkup, nonstacking Poison, Poison plus Paralysis coexistence, later opponent-turn checkup and Fire Weakness.",
+      "Card text and costs checked against Serebii Base #66 and Base Set 2 #96; Base #66 also cross-checked with TCGdex and Limitless. No Tangela-specific historical ruling/erratum located in the searched sources."
+     ],
+     "scope": "three-Grass cost, 20 attack damage, application/coexistence of Poison and its between-turn checkup; Poison on already-Poisoned and Paralyzed targets and the tested opponent-turn checkup are covered. Other damage/status modifiers, evolution/bench timing, and browser/network behavior remain unreviewed."
     }
    ]
   },
