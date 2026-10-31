@@ -6239,8 +6239,8 @@ const packs=[
     "My face and my abs get booked a lot. I treat them like parts of the job, not a personality.",
     "I like seeing a good photograph of myself. I just wouldn't arrange a whole shoot for fun.",
     "The stylist calls a smile 'natural' after asking for it fifteen times. That's not how natural works.",
-    "Streetwear, tailored looks, sportswear, catalog work—whatever fits the brief and the contract.",
-    "A good outfit is one that fits me. I'm not obligated to fit somebody else's mannequin.",
+    "At work I'll wear whatever fits the brief. On my days off, picking an outfit sounds like more work, so I just grab my favorite top and jeans.",
+    "I once got to the shop before noticing I'd missed a button. Another morning I forgot my bra. Apparently getting dressed before coffee is a gamble.",
     "Umbreon looks like it could wait all night and still win. That's the energy I want.",
     "If I'm quiet with you, that usually means I'm comfortable. Please don't fill every second."
    ],
