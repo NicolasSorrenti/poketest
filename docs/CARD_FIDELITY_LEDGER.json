@@ -21,7 +21,11 @@
      "kind": "power",
      "index": 0,
      "name": "Damage Swap",
-     "status": "unreviewed"
+     "status": "partial",
+     "evidence": [
+      "test_card_fidelity_alakazam_damage_swap.js: repeated transfers, Finish, exact-one-counter movement, no-KO recipients, own-turn timing and all three printed status locks; 48 reducer scenarios.",
+      "Damage Swap text compared with Serebii and TCGdex Base/Base Set 2 entries. Current official errata PDF has no Base/Base Set 2 Damage Swap erratum. Historical rulings and wider interactions remain unreviewed."
+     ]
     }
    ]
   },
@@ -4216,7 +4220,11 @@
      "kind": "power",
      "index": 0,
      "name": "Damage Swap",
-     "status": "unreviewed"
+     "status": "partial",
+     "evidence": [
+      "test_card_fidelity_alakazam_damage_swap.js: repeated transfers, Finish, exact-one-counter movement, no-KO recipients, own-turn timing and all three printed status locks; 48 reducer scenarios.",
+      "Damage Swap text compared with Serebii and TCGdex Base/Base Set 2 entries. Current official errata PDF has no Base/Base Set 2 Damage Swap erratum. Historical rulings and wider interactions remain unreviewed."
+     ]
     }
    ]
   },
