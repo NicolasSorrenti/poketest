@@ -1155,7 +1155,11 @@ function projectedPrep(board,action,round,turnSerial){
   if(next.energyUsed||!u||!isEnergy(c)||u.energyAttachBlockSerial>turnSerial||
     !legalAttachment({card:c,unit:u,round,energyUsed:next.energyUsed,
      cardName:card(u.id)?.name||''}))return null;
+  // Rainbow deals 10 to its host on attachment. A projected self-KO
+  // must never be valued as a surviving attacker in a tactical combo.
+  if(c.name==='Rainbow Energy'&&hpRemaining(u)<=10)return null;
   u.energies=[...(u.energies||[]),id];
+  if(c.name==='Rainbow Energy')u.damage=(u.damage||0)+10;
   next.energyUsed=true;
  }else if(type==='evolve'){
   if(!u||!canEvolve(c,card(u.id))||u.playedTurn>=round)return null;
