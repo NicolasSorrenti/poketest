@@ -513,7 +513,12 @@ function prompt(g,plan,helpers){
  if(name==='Maintenance'&&!chosen(d,'cost')){
   const candidates=hchoices();
   if(candidates.length<2)throw Error('Maintenance needs two other cards in hand');
-  return multi('cost',side,candidates,2,2,'Maintenance: choose 2 other cards to shuffle into your deck, then draw 1');
+  // If only two cards can be returned, or every legal card is the same
+  // printing, the selected pair cannot change the result. Resolve it directly.
+  if(candidates.length===2||new Set(candidates.map(option=>option.cardId)).size===1){
+   d.cost=candidates.slice(0,2).map(option=>option.id);
+  }else
+   return multi('cost',side,candidates,2,2,'Maintenance: choose 2 other cards to shuffle into your deck, then draw 1');
  }
  const cost2=['Computer Search','Item Finder'];
  if(cost2.includes(name) && !chosen(d,'cost')){
