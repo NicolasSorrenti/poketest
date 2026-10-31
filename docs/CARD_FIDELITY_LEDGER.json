@@ -2061,10 +2061,10 @@
           "kind": "trainer",
           "status": "partial",
           "evidence": [
-            "test_card_fidelity_super_potion.js: ten reducer scenarios across both printings; forced one-target auto-resolution; identical Double Colorless Energy auto-discard; distinct Energy remains actor-selectable; full four-counter healing and removal of all counters when fewer are present.",
-            "Print wording compared across Base #90 and Base Set 2 #117; WotC historical rulings say Energy must be discarded from the same Pokémon being healed and the effect removes exactly four counters unless fewer are present. Other Energy interactions and browser/network behavior remain unchecked."
+            "Printed wording compared across Base #90 and Base Set 2 #117; archived WotC Q&A confirms Energy must come from the Pokémon being healed; historical WotC errata compilation confirms exactly four counters are removed when possible, otherwise all remaining counters.",
+            "Code review: heal/payment remain on the same eligible Pokémon; sole eligible target and identical attached Energy copies now auto-resolve, while distinct Energy cards remain selectable. No scenario regression added; other interactions and client/network behavior remain unchecked."
           ],
-          "scope": "Super Potion Base #90 and Base Set 2 #117: eligible target must be damaged and have Energy; automatically selects the only eligible Pokémon; automatically discards duplicate identical Energy cards, but preserves player choice among distinct Energy; removes exactly four damage counters unless fewer exist; pays from the healed Pokémon. Ten reducer scenarios across Classic and online-preview; partial only."
+          "scope": "Super Potion Base #90 and Base Set 2 #117: printed wording parity, cost ownership and four-counter healing rule reviewed; code change auto-selects the sole eligible damaged Pokémon with Energy and auto-discards identical Energy copies, preserving choice among distinct Energy. Partial manual/code review only; no added regression test."
         }
       ]
     },
@@ -6957,10 +6957,10 @@
           "kind": "trainer",
           "status": "partial",
           "evidence": [
-            "test_card_fidelity_super_potion.js: ten reducer scenarios across both printings; forced one-target auto-resolution; identical Double Colorless Energy auto-discard; distinct Energy remains actor-selectable; full four-counter healing and removal of all counters when fewer are present.",
-            "Print wording compared across Base #90 and Base Set 2 #117; WotC historical rulings say Energy must be discarded from the same Pokémon being healed and the effect removes exactly four counters unless fewer are present. Other Energy interactions and browser/network behavior remain unchecked."
+            "Printed wording compared across Base #90 and Base Set 2 #117; archived WotC Q&A confirms Energy must come from the Pokémon being healed; historical WotC errata compilation confirms exactly four counters are removed when possible, otherwise all remaining counters.",
+            "Code review: heal/payment remain on the same eligible Pokémon; sole eligible target and identical attached Energy copies now auto-resolve, while distinct Energy cards remain selectable. No scenario regression added; other interactions and client/network behavior remain unchecked."
           ],
-          "scope": "Super Potion Base #90 and Base Set 2 #117: eligible target must be damaged and have Energy; automatically selects the only eligible Pokémon; automatically discards duplicate identical Energy cards, but preserves player choice among distinct Energy; removes exactly four damage counters unless fewer exist; pays from the healed Pokémon. Ten reducer scenarios across Classic and online-preview; partial only."
+          "scope": "Super Potion Base #90 and Base Set 2 #117: printed wording parity, cost ownership and four-counter healing rule reviewed; code change auto-selects the sole eligible damaged Pokémon with Energy and auto-discards identical Energy copies, preserving choice among distinct Energy. Partial manual/code review only; no added regression test."
         }
       ]
     },
