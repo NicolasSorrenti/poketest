@@ -1235,6 +1235,15 @@ function projectedPrep(board,action,round,turnSerial){
   if(!u||!canEvolve(c,card(u.id))||u.playedTurn>=round)return null;
   u.id=id;
   u.playedTurn=round;
+  // Match the authoritative evolve reducer: the new stage uses its own
+  // attacks, and evolution removes Asleep/Paralyzed/Confused and Poison.
+  // Keeping either stale field made an otherwise legal evolved attack look
+  // unusable (or falsely retained the Basic's cheaper attack) in the
+  // optional two-step preparation forecast.
+  delete u.effectiveAttacks;
+  u.status=null;
+  u.poison=false;
+  delete u.poisonDamage;
  }else{
   if(!isBasicPokemon(c))return null;
   next.bench.push({id,damage:0,energies:[],status:null,playedTurn:round});
