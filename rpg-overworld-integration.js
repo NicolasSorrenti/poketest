@@ -901,6 +901,59 @@
       }
     `;
     document.head.append(dialogueStyle);
+    // Phone-only finishing pass: keep the speaker centered above a compact,
+    // readable dialogue panel without disturbing the native choice controls.
+    const mobileDialoguePolish=document.createElement('style');
+    mobileDialoguePolish.id='neoOverworldMobileDialoguePolish';
+    mobileDialoguePolish.textContent=`
+      @media(max-width:650px){
+        #neoOverworldOverlay:not(.neo-ow-idle-interaction) #neoOverworldStoryDock{
+          box-sizing:border-box!important;
+          bottom:max(6px,env(safe-area-inset-bottom))!important;
+          max-height:calc(100dvh - 78px - env(safe-area-inset-bottom))!important;
+          overflow-x:hidden!important;overflow-y:auto!important;
+        }
+        #neoOverworldOverlay:not(.neo-ow-idle-interaction) #neoOverworldStoryDock #scene.neo-ow-participants{
+          flex:0 0 auto!important;
+          max-height:min(46dvh,420px)!important;
+          background:transparent!important;
+        }
+        #neoOverworldOverlay:not(.neo-ow-idle-interaction) #neoOverworldStoryDock #neoOverworldScenePeople:not([hidden]){
+          height:min(46dvh,420px)!important;max-height:min(46dvh,420px)!important;
+        }
+        #neoOverworldOverlay:not(.neo-ow-idle-interaction) #neoOverworldStoryDock #dialogue{
+          box-sizing:border-box!important;
+          height:164px!important;min-height:164px!important;
+          max-height:164px!important;flex:0 0 164px!important;
+          padding:12px 14px 43px!important;
+          background:#1b172deF!important;
+          border:1px solid #a878a8!important;
+          border-radius:12px 12px 0 0!important;
+          box-shadow:0 -5px 20px #0005!important;
+        }
+        #neoOverworldOverlay:not(.neo-ow-idle-interaction) #neoOverworldStoryDock #dialogue #speaker:not([hidden]){
+          font-size:17px!important;line-height:1.3!important;
+          color:#ffb6df!important;
+        }
+        #neoOverworldOverlay:not(.neo-ow-idle-interaction) #neoOverworldStoryDock #dialogue #line{
+          font-size:15px!important;line-height:1.42!important;
+          height:4.26em!important;max-height:4.26em!important;
+          margin:9px 0 0!important;
+        }
+        #neoOverworldOverlay:not(.neo-ow-idle-interaction) #neoOverworldStoryDock #neoOverworldPageContinue:not([hidden]){
+          right:12px!important;bottom:8px!important;
+          min-height:34px!important;padding:6px 14px!important;
+          border-radius:9px!important;
+        }
+      }
+      @media(max-width:650px) and (max-height:690px){
+        #neoOverworldOverlay:not(.neo-ow-idle-interaction) #neoOverworldStoryDock #scene.neo-ow-participants,
+        #neoOverworldOverlay:not(.neo-ow-idle-interaction) #neoOverworldStoryDock #neoOverworldScenePeople:not([hidden]){
+          height:35dvh!important;max-height:35dvh!important;
+        }
+      }
+    `;
+    document.head.append(mobileDialoguePolish);
 
     // Choice buttons stay native. Move their existing DOM into a foreground
     // panel so a response never stretches the fixed-height dialogue box.
