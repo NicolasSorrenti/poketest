@@ -1760,6 +1760,8 @@ class Engine{
   if(/^Remove all damage counters from [^.]+\. [^.]+ is now Asleep\.$/i.test(t))return 'restHeal';
   if(/^Whenever an attack does damage to [^(]+\(after applying Weakness and Resistance\) during your opponent's next turn, that attack only does half the damage to [^(]+\(rounded down to the nearest 10\)\. \(Any other effects still happen\.\)$/i.test(t))return 'halfShield';
   if(a.name==='Stretch Kick'&&/opponent.{0,10}Benched Pokémon/i.test(t))return 'stretch';
+  // The two audited Poliwag printings use their exact Batch 43 scripts.
+  if(a.name==='Water Gun'&&batch43Id(a)!==null)return 'batch43';
   if(a.name==='Water Gun'&&/Does 10 damage plus 10 more damage for each Water Energy/i.test(t))return 'watergun';
   if(a.name==='Hydro Pump'&&/Does 40 damage plus 10 more damage for each Water Energy/i.test(t))return 'hydropump';
   // Only accept search/snipe templates whose entire effect is understood.
