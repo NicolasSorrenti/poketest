@@ -149,7 +149,7 @@ function audioForTime(change){
 function timeFlash(change,onDone=()=>{}){
  audioForTime(change);
  // Presentation follows the already-committed RPG time state; it never owns state changes.
- if(window.NeoRpgTimeTransitions?.present)return !!window.NeoRpgTimeTransitions.present(change,{onDismiss:onDone});
+ if(window.NeoRpgTimeTransitions?.present)return !!window.NeoRpgTimeTransitions.present(change,{onCover:()=>{timeTransitionCovered=true;render();},onDismiss:onDone});
  const overlay=document.createElement('div');overlay.className='notice-pop';
  const heading=document.createElement('b');heading.textContent=change.afterDay>90?'Season complete':change.afterDay!==change.beforeDay?'A NEW DAY BEGINS':'TIME PASSES';
  const body=document.createElement('span');body.textContent=change.afterDay>90?'Day 90 has ended.':'Day '+change.afterDay+' · '+periods[change.afterSlot];
@@ -225,6 +225,7 @@ function recordCG(kind,npc,context=null){
 let scene=state.scene&&typeof state.scene.speaker==='string'&&typeof state.scene.line==='string'&&Array.isArray(state.scene.choices)?state.scene:{speaker:'Narrator',line:'Ninety days. One championship. You came to Neo Harbor to win. Everyone else has their own plans.',choices:[]};
 // A single handoff owns calendar wipes, image loading and forced-story eligibility.
 // The state is saved at clock advancement; only presentation waits for acknowledgement.
+let timeTransitionCovered=true;
 const timeSequence=window.NeoRpgTimeTransitions?.createSequence?.({
  canPresent:()=>!scene.line&&!scene.choices?.length,
  present:timeFlash,
@@ -368,7 +369,7 @@ const missedAppointments=APPOINTMENTS.expire(state);
 INTENTIONS.hydrate(state); // Expire yesterday's optional choice before saving the new day.
 for(const plan of missedAppointments)log('You missed your planned meet-up with '+(cast[plan.npc]?.name||'a trainer')+'.');
 queueMandatory();arriveForScheduledPlan();persist();
-if(!suppressTimeFlash){timeSequence.queue({beforeDay,beforeSlot,afterDay:state.day,afterSlot:state.slot,source:transitionSource});timeSequence.flush();}}
+if(!suppressTimeFlash&&timeSequence.queue({beforeDay,beforeSlot,afterDay:state.day,afterSlot:state.slot,source:transitionSource})){timeTransitionCovered=false;timeSequence.flush();}}
 function say(speaker,line,choices=[]){scene={speaker,line,choices};state.scene=scene;persist();render();}
 function sayConversation(lines,afterChoices=[],reactionId=null,invitation=null,memory=null,casual=null){
  if(!Array.isArray(lines)||!lines.length)return;
@@ -2790,6 +2791,9 @@ async function finishOverworldArrival(destination){
  if(state.location===destination)render();
 }
 function render(){
+ // Keep the outgoing DOM intact until the calendar wipe fully covers it; then swap
+ // the scene behind the overlay so the new day is revealed only as the wipe exits.
+ if(timeSequence.blocked&&!timeTransitionCovered)return;
  // Detect actual location changes after the first render; navigation remains free.
  const previousLocation=lastRenderedLocation;
  lastRenderedLocation=state.location;
