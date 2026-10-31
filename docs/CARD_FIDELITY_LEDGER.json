@@ -2112,7 +2112,12 @@
       "effects": [
         {
           "kind": "trainer",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Base and Base Set 2 printed wording compared; both require the Gust player to choose one opposing Benched Pokémon to replace the opponent's Active. Official rulebook switching rule confirms Special Conditions/effects on the outgoing Active clear when it moves to the Bench; no Gust-specific entry found in the official errata index.",
+            "test_card_fidelity_gust_of_wind.js: Base Classic and Base Set 2 online-preview cover sole-target auto-resolution, attacker-owned selection among two targets, switch direction, and clearing Asleep/Poison from the displaced Active."
+          ],
+          "scope": "Gust of Wind Base #93 / Base Set 2 #120: target ownership and effect resolution reviewed; sole eligible Bench target auto-resolves; multiple targets remain attacker-selected; outgoing Active status clears on moving to Bench. Partial: broader Trainer interactions and client/network behavior not checked."
         }
       ]
     },
@@ -7023,7 +7028,12 @@
       "effects": [
         {
           "kind": "trainer",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Base and Base Set 2 printed wording compared; both require the Gust player to choose one opposing Benched Pokémon to replace the opponent's Active. Official rulebook switching rule confirms Special Conditions/effects on the outgoing Active clear when it moves to the Bench; no Gust-specific entry found in the official errata index.",
+            "test_card_fidelity_gust_of_wind.js: Base Classic and Base Set 2 online-preview cover sole-target auto-resolution, attacker-owned selection among two targets, switch direction, and clearing Asleep/Poison from the displaced Active."
+          ],
+          "scope": "Gust of Wind Base #93 / Base Set 2 #120: target ownership and effect resolution reviewed; sole eligible Bench target auto-resolves; multiple targets remain attacker-selected; outgoing Active status clears on moving to Bench. Partial: broader Trainer interactions and client/network behavior not checked."
         }
       ]
     },
