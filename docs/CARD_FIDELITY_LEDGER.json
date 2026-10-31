@@ -1963,7 +1963,12 @@
       "effects": [
         {
           "kind": "trainer",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "test_card_fidelity_pluspower.js: ten reducer scenarios across Base Classic and Base Set 2 online-preview; exact wording parity, PlusPower stacking, Thunderpunch Active recoil from historical erratum, end-of-turn discard/expiry, Lightning Resistance zero-damage gate, and PlusPower-before-Kabuto Armor ordering.",
+            "Printed text compared with Serebii Base #84 and Base Set 2 #113. Historical WotC damage-order chart and erratum transcript checked; official current errata PDF contains no PlusPower entry. Broader attack/prevention/stadium interactions and browser/network behavior remain unreviewed."
+          ],
+          "scope": "Ten reducer scenarios: Base #84 in Classic and Base Set 2 #113 in online-preview; 2-copy stacking on Thunderpunch tails and boosted attacker recoil, single-copy heads, resisted opposing damage remains 0 while recoil is boosted, expiry and discard after attack, and ordering before Kabuto Armor halves the boosted hit. No full card certification."
         }
       ]
     },
@@ -6856,7 +6861,12 @@
       "effects": [
         {
           "kind": "trainer",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "test_card_fidelity_pluspower.js: ten reducer scenarios across Base Classic and Base Set 2 online-preview; exact wording parity, PlusPower stacking, Thunderpunch Active recoil from historical erratum, end-of-turn discard/expiry, Lightning Resistance zero-damage gate, and PlusPower-before-Kabuto Armor ordering.",
+            "Printed text compared with Serebii Base #84 and Base Set 2 #113. Historical WotC damage-order chart and erratum transcript checked; official current errata PDF contains no PlusPower entry. Broader attack/prevention/stadium interactions and browser/network behavior remain unreviewed."
+          ],
+          "scope": "Ten reducer scenarios: Base #84 in Classic and Base Set 2 #113 in online-preview; 2-copy stacking on Thunderpunch tails and boosted attacker recoil, single-copy heads, resisted opposing damage remains 0 while recoil is boosted, expiry and discard after attack, and ordering before Kabuto Armor halves the boosted hit. No full card certification."
         }
       ]
     },
