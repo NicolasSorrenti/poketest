@@ -334,3 +334,12 @@ The WotC rulings establish that attack damage to the attacker is still attack da
 
 The catalogue had generic Energy wording and the phrase “after the end,” which did not match the Water-specific printed text. The Base Set attack adds 10 per unused Water Energy and ignores Water Energy after the second; the Base Set 2 wording caps the bonus at 20. The engine's text parser rejected the Base Set plural “don't count” form, while its Water bonus helper also excluded Rainbow Energy. The catalogue and parser now preserve the two printings' wording, and Water bonus calculation counts attached Energy that provides Water while correctly excluding Double Colorless Energy and other non-Water Energy. The test covers typed payment, cap, Weakness and Rainbow Energy in the listed reducer formats. Rainbow's Water interaction uses WotC's ruling that it counts as Water for Gyarados' Water-specific Final Beam damage. Remaining special Energy, other effects, and browser/network interactions remain unchecked.
 
+
+## Ponyta (Base Set #60)
+
+| Effect | Scope checked | Evidence | Status |
+| --- | --- | --- | --- |
+| Smash Kick | Printed 2-Colorless cost and fixed 20 damage; Double Colorless payment; excess Energy does not change damage; Fire-type attacker's Weakness interaction and Defender reduction order | `test_card_fidelity_ponyta.js` (41 combined reducer scenarios); [Serebii Base #60](https://www.serebii.net/card/base/060.shtml), [Bulbapedia](https://bulbapedia.bulbagarden.net/wiki/Ponyta_%28Base_Set%29), [Limitless](https://limitlesstcg.com/cards/BS/60); official Pokémon TCG errata index searched, no Ponyta entry | Partial; remaining interactions unreviewed |
+| Flame Tail | Printed 2-Fire cost and fixed 30 damage; wrong/insufficient Energy rejection; excess Energy does not change damage; Fire-type attacker's Weakness interaction and Defender reduction order | Same 41-scenario reducer suite and print/errata sources above | Partial; remaining interactions unreviewed |
+
+The print records agree on Ponyta's Base Set stats, attack costs/damage, Water weakness, and one-Colorless retreat. Reducer scenarios cover Classic, Neo-theme, online-preview 60-card, and online-preview 40-card setups. These checks establish attack payment and damage behavior in those reducers only; they do not cover Browser/network play, retreat, status effects, or every damage modifier.
