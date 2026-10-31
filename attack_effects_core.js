@@ -41,7 +41,7 @@
   {kind:'defender-counters',re:/^Does (\d+) damage plus (\d+) more damage for each damage counter on the Defending Pokémon\.$/i},
   {kind:'own-counters',re:/^Does (\d+) damage plus (\d+) more damage for each damage counter on ([A-Za-z' .-]+)\.$/i},
   {kind:'flail-counters',re:/^Does (\d+) damage times number of damage counters on ([A-Za-z' .-]+)\.$/i},
-  {kind:'minus-counters',re:/^Does (\d+) damage minus (\d+) for each damage counter on ([A-Za-z' .-]+)\.$/i},
+  {kind:'minus-counters',re:/^Does (\d+) damage minus (\d+) (?:damage )?for each damage counter on ([A-Za-z' .-]+)\.$/i},
   {kind:'bench-count',re:/^Does (\d+) damage plus (\d+) more damage for each of your Benched Pokémon\.$/i},
   {kind:'coin-status-split',re:/^Flip a coin\. If heads, the Defending Pokémon is now (Poisoned|Asleep|Paralyzed|Confused); if tails, (?:the Defending Pokémon |it )is now (Poisoned|Asleep|Paralyzed|Confused)\.$/i},
   {kind:'coin-recoil-bonus',re:/^Flip a coin\. If heads, this attack does (\d+) damage plus (\d+) more damage; if tails, this attack does \1 damage and ([A-Za-z' .-]+) does (\d+) damage to itself\.$/i},
