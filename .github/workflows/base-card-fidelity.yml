@@ -42,5 +42,5 @@ jobs:
       - run: node test_card_fidelity_kakuna.js
       - run: node test_card_fidelity_machoke_attacks.js
       - run: node test_card_fidelity_magikarp.js
-      - run: node test_card_fidelity_magmar_fire_punch.js', 'test_card_fidelity_magmar_fire_punch.js
+      - run: node test_card_fidelity_magmar_fire_punch.js
       - run: node test_classic_complex_attacks.js
