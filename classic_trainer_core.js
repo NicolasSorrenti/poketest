@@ -569,8 +569,8 @@ function prompt(g,plan,helpers){
  if(name==='Revive'&&!chosen(d,'recover'))return single('recover',side,disc(p,isBasicPokemon),'Choose Basic Pokémon');
  if(name==="Rocket's Sneak Attack"&&!chosen(d,'oppHand')){const a=options(zone(f.hand,c=>c.supertype==='Trainer'),'hand');if(a.length)return single('oppHand',side,a,'Choose opponent Trainer to shuffle away');d.oppHand=[];}
  if(name==='Devolution Spray'&&!chosen(d,'stage')){
-  const u=slot(p,nums(d,'target')[0]),c=get(u.id);const vals=[{i:1,label:'Remove Stage 1 and Stage 2'},{i:2,label:'Remove Stage 2'}].filter(o=>o.i===1||c.subtypes?.includes('Stage 2'));
-  return single('stage',side,options(vals,'stage'),'Choose evolution stage to remove');
+  const u=slot(p,nums(d,'target')[0]),c=get(u.id);const vals=[{i:1,label:'Remove Stage 1 and Stage 2'},{i:2,label:'Remove Stage 2'}].filter(o=>o.i===1||c.subtypes?.includes('Stage 2')),items=options(vals,'stage');
+  if(items.length===1)d.stage=[items[0].id];else return single('stage',side,items,'Choose evolution stage to remove');
  }
  if(name==='Pokémon Breeder'){
   const eligibleBasics=evolved=>{
