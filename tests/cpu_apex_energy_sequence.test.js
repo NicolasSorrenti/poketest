@@ -985,3 +985,17 @@ test('Apex counts current Rainbow damage before projecting another Rainbow next 
    current+' followed by '+future+' must preserve a surviving attack line');
  }
 });
+
+test('Apex does not carry spent Miracle Energy into next-turn attacks',()=>{
+ // Light Wigglytuff can legally attach Miracle Energy, but it is discarded
+ // at the end of this turn. Next turn's Double Colorless alone cannot pay
+ // Body Slam's three-Colorless cost, so it must not earn a phantom bonus.
+ const withDce=futureEnergyBoard('neo4-16','base1-96');
+ const withoutDce=futureEnergyBoard('neo4-16','base1-91'); // Bill
+ for(const o of [withDce,withoutDce]){
+  o.self.active={id:'neo4-54',energies:[],damage:0,status:null};
+ }
+ assert.equal(AI.energyHorizonBonus(attachActive,withDce,cfg),
+  AI.energyHorizonBonus(attachActive,withoutDce,cfg));
+});
+
