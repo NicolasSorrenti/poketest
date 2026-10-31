@@ -2043,7 +2043,12 @@
       "effects": [
         {
           "kind": "trainer",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "test_card_fidelity_revive.js: eight reducer scenarios in Classic and online-preview; full Bench rejection at five, Narrow Gym capacity at four, atomic rejection, actor-owned Basic selection, placement on own Bench, and 50 HP rounding to 20 damage.",
+            "Printed Base #89 text checked against Serebii and TCGdex. No Base Set 2 reprint exists in the catalog. Other HP values, other capacity-changing effects, and live client/network behavior remain unreviewed."
+          ],
+          "scope": "Revive Base #89: rejects play with full own Bench (five normally, four under Narrow Gym); otherwise the player chooses a Basic Pokémon from own discard, places it on own Bench, and adds half its HP as damage rounded down to nearest 10 (tested 50 HP -> 20). Eight reducer scenarios across Classic and online-preview. Partial only."
         }
       ]
     },
