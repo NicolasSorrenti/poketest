@@ -1739,7 +1739,12 @@
      "kind": "attack",
      "index": 0,
      "name": "Confuse Ray",
-     "status": "unreviewed"
+     "status": "partial",
+     "evidence": [
+      "test_card_fidelity_vulpix.js: 88 reducer scenarios across Classic, Neo-theme, online-preview 60-card and 40-card setups; Base/Base Set 2 printings, both coin outcomes, Sleep replacement, Poison coexistence, following-turn Confusion outcomes, WotC-era Weakness on Confusion self-damage, Fire typed costs, Rainbow Energy, and Water Weakness.",
+      "Attack text/cost and card data compared with Serebii Base #68 and Base Set 2 #99 and TCGdex Base #68. 1999–2002 WotC-era rules guide confirms failed Confused attacks self-damage 20 and apply Weakness/Resistance. Initial Vulpix prints have a documented HP-label typography variant, with no gameplay change."
+     ],
+     "scope": "Confuse Ray: two-Fire cost, fixed 10 damage, heads-only Confusion; tested interaction with Sleep, Poison, next-turn attacks and WotC-era self-damage modifiers. Water Weakness, Rainbow Energy payment and typed-cost rejection also covered. Other modifiers, retreat/evolution and client/network behavior remain unreviewed."
     }
    ]
   },
@@ -6621,7 +6626,12 @@
      "kind": "attack",
      "index": 0,
      "name": "Confuse Ray",
-     "status": "unreviewed"
+     "status": "partial",
+     "evidence": [
+      "test_card_fidelity_vulpix.js: 88 reducer scenarios across Classic, Neo-theme, online-preview 60-card and 40-card setups; Base/Base Set 2 printings, both coin outcomes, Sleep replacement, Poison coexistence, following-turn Confusion outcomes, WotC-era Weakness on Confusion self-damage, Fire typed costs, Rainbow Energy, and Water Weakness.",
+      "Attack text/cost and card data compared with Serebii Base #68 and Base Set 2 #99 and TCGdex Base #68. 1999–2002 WotC-era rules guide confirms failed Confused attacks self-damage 20 and apply Weakness/Resistance. Initial Vulpix prints have a documented HP-label typography variant, with no gameplay change."
+     ],
+     "scope": "Confuse Ray: two-Fire cost, fixed 10 damage, heads-only Confusion; tested interaction with Sleep, Poison, next-turn attacks and WotC-era self-damage modifiers. Water Weakness, Rainbow Energy payment and typed-cost rejection also covered. Other modifiers, retreat/evolution and client/network behavior remain unreviewed."
     }
    ]
   },
