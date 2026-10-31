@@ -243,10 +243,14 @@ function powerPlan(g,plan,h){
  }
  if(name==='Cowardice'&&u.playedTurn>=g.round)throw Error('Cowardice cannot be used on the first turn in play');
  if(name==='Buzzap'){
-  const colors=['Grass','Fire','Water','Lightning','Psychic','Fighting'];
+  // This Power creates one Special Energy card, so its type may be any of
+  // the eight types available in the classic card pool.
+  const colors=['Grass','Fire','Water','Lightning','Psychic','Fighting','Darkness','Metal'];
   if(choose('type',colors.map((t,i)=>({id:`type:${i}`,label:t})),'Choose Energy type'))return;
   d.buzzType=colors[selected(plan,'type')[0]];
-  if(choose('target',slotList(p,x=>x!==u),'Choose recipient of Buzzap'))return;
+  const targets=slotList(p,x=>x!==u);
+  if(!have(plan,'target')&&targets.length===1) d.target=[targets[0].id];
+  else if(choose('target',targets,'Choose recipient of Buzzap'))return;
  }
  if(name==='Peek'){
   if(choose('peek', [{id:'peek:0',label:'Your top deck card'},{id:'peek:1',label:'Opponent top deck card'},{id:'peek:2',label:'Opponent random hand card'},{id:'peek:3',label:'Your Prize'},{id:'peek:4',label:'Opponent Prize'}],'Choose private information'))return;
@@ -449,8 +453,12 @@ function doPower(g,plan,h){
    const destination=pokemon(p,s('target'));destination.energies.push(u.id);destination.buzzapTypes ||= {};destination.buzzapTypes[u.id]=d.buzzType;
    if(plan.slot===-1)p.active=null;else p.bench.splice(plan.slot,1);
    p.discard.push(...u.under,...u.energies,...u.attachedTrainers.map(x=>x.id));
-   if(f.prizes.length)f.hand.push(f.prizes.pop());
-   if(plan.slot===-1){if(!p.bench.length){g.over=true;g.winner=1-side;}else{g.pendingPromotions=[side];g.promotionAfter='direct';h.finishPromotions(g);}}break;
+   // Buzzap Knocks Electrode Out: resolve the opponent's Prize choice and
+   // any required promotion with the same flow as every other Knock Out.
+   h.awardKnockoutPrize(g,1-side);
+   if(h.promptPrize(g,'direct'))break;
+   h.completeKnockouts(g,'direct');
+   break;
   }
   case 'Peek':{
    const mode=s('peek');const owner=mode===0||mode===3?p:f;const id=mode<2?owner.deck.at(-1):mode===2?(f.hand.length?f.hand[h.random(g,f.hand.length)]:null):owner.prizes[s('peekPrize')??0];
