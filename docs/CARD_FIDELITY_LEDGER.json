@@ -890,13 +890,23 @@
      "kind": "attack",
      "index": 0,
      "name": "Karate Chop",
-     "status": "unreviewed"
+     "status": "partial",
+     "evidence": [
+      "test_card_fidelity_machoke_attacks.js",
+      "Text compared with Bulbapedia, Serebii Base, Serebii Base Set 2 and Limitless; official errata index checked with no Machoke entry."
+     ],
+     "scope": "Karate Chop: printed damage text and compiler recognition, Fighting/Colorless cost, counter scaling and zero floor, counter reduction before Weakness, rejection of missing typed Fighting/Colorless requirements. Submission: four-unit Fighting/Colorless cost, 60 attack damage, 20 self-damage, defender Weakness/Resistance, self-KO and opponent Prize sequence. 84 reducer scenarios: Base Set Classic, Neo-theme, online-preview 60-card and 40-card; Base Set 2 online-preview 60-card and 40-card. Browser/network integration pending."
     },
     {
      "kind": "attack",
      "index": 1,
      "name": "Submission",
-     "status": "unreviewed"
+     "status": "partial",
+     "evidence": [
+      "test_card_fidelity_machoke_attacks.js",
+      "Text compared with Bulbapedia, Serebii Base, Serebii Base Set 2 and Limitless; official errata index checked with no Machoke entry."
+     ],
+     "scope": "Karate Chop: printed damage text and compiler recognition, Fighting/Colorless cost, counter scaling and zero floor, counter reduction before Weakness, rejection of missing typed Fighting/Colorless requirements. Submission: four-unit Fighting/Colorless cost, 60 attack damage, 20 self-damage, defender Weakness/Resistance, self-KO and opponent Prize sequence. 84 reducer scenarios: Base Set Classic, Neo-theme, online-preview 60-card and 40-card; Base Set 2 online-preview 60-card and 40-card. Browser/network integration pending."
     }
    ]
   },
@@ -5210,13 +5220,23 @@
      "kind": "attack",
      "index": 0,
      "name": "Karate Chop",
-     "status": "unreviewed"
+     "status": "partial",
+     "evidence": [
+      "test_card_fidelity_machoke_attacks.js",
+      "Text compared with Bulbapedia, Serebii Base, Serebii Base Set 2 and Limitless; official errata index checked with no Machoke entry."
+     ],
+     "scope": "Karate Chop: printed damage text and compiler recognition, Fighting/Colorless cost, counter scaling and zero floor, counter reduction before Weakness, rejection of missing typed Fighting/Colorless requirements. Submission: four-unit Fighting/Colorless cost, 60 attack damage, 20 self-damage, defender Weakness/Resistance, self-KO and opponent Prize sequence. 84 reducer scenarios: Base Set Classic, Neo-theme, online-preview 60-card and 40-card; Base Set 2 online-preview 60-card and 40-card. Browser/network integration pending."
     },
     {
      "kind": "attack",
      "index": 1,
      "name": "Submission",
-     "status": "unreviewed"
+     "status": "partial",
+     "evidence": [
+      "test_card_fidelity_machoke_attacks.js",
+      "Text compared with Bulbapedia, Serebii Base, Serebii Base Set 2 and Limitless; official errata index checked with no Machoke entry."
+     ],
+     "scope": "Karate Chop: printed damage text and compiler recognition, Fighting/Colorless cost, counter scaling and zero floor, counter reduction before Weakness, rejection of missing typed Fighting/Colorless requirements. Submission: four-unit Fighting/Colorless cost, 60 attack damage, 20 self-damage, defender Weakness/Resistance, self-KO and opponent Prize sequence. 84 reducer scenarios: Base Set Classic, Neo-theme, online-preview 60-card and 40-card; Base Set 2 online-preview 60-card and 40-card. Browser/network integration pending."
     }
    ]
   },
