@@ -1804,7 +1804,7 @@
           "evidence": [
             "test_card_fidelity_devolution_spray.js: stage selection, status/attack-effect clearing, preservation of damage/Energy, devolution-induced Knock Out/Prize/promotion, same-turn re-evolution once, and atomic rejection without an evolved target."
           ],
-          "scope": "Base Set #72 only. Reducer scenarios pending CI; no Chaos Gym, hidden-information, browser/online-client, or broader Trainer interaction certification."
+          "scope": "Base Set #72 only. Reducer scenarios cover stage selection (including automatic selection of the sole legal Stage), preserved damage/Energy, cleared status and attack effects, devolution-induced Knock Out/Prize/promotion, same-turn re-evolution once, and atomic rejection without an evolved target. Reducer CI pending; no Chaos Gym, hidden-information, browser/online-client, or broader Trainer interaction certification."
         }
       ]
     },
