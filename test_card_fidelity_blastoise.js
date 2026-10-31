@@ -22,7 +22,7 @@ function pick(g,side,id){const d=g.pendingDecision;assert.ok(d,'expected choice'
 let scenarios=0;
 for(const v of variants)for(const [format,size] of v.formats){
  const card=CATALOG.get(v.id);assert.equal(card.abilities[0].name,'Rain Dance');
- assert.match(card.abilities[0].text,/As often as you like during your turn \(before your attack\)/);scenarios++;
+ assert.equal(card.abilities[0].text,"As often as you like during your turn (before your attack), you may attach 1 Water Energy Card to 1 of your Water Pokémon. (This doesn't use up your 1 Energy card attachment for the turn.) This power can't be used if Blastoise is Asleep, Confused, or Paralyzed.");scenarios++;
  // A Benched Blastoise can attach the Water cards repeatedly before attacking.
  // The hand's Base and Base Set 2 Water Energy reprints are equivalent, so
  // there is no Energy picker; different Water recipients remain selectable.
@@ -37,7 +37,11 @@ for(const v of variants)for(const [format,size] of v.formats){
  {const g=game(format,size,v.id,v.water);g.players[0].active=unit('base1-43');g.players[0].bench=[unit(v.id)];g.players[0].hand=[v.water];
   act(g,0,'use_power',{slot:0,repeat:true});act(g,0,'choose',{decisionId:g.pendingDecision.id,decline:true});
   assert.deepEqual(g.players[0].hand,[v.water]);assert.equal(g.pendingDecision,null);
-  act(g,0,'use_power',{slot:0});assert.equal(g.pendingDecision,null);assert.deepEqual(g.players[0].bench[0].energies,[v.water]);assert.equal(g.players[0].energyUsed,false);scenarios++;}
+  act(g,0,'use_power',{slot:0});assert.equal(g.pendingDecision,null);assert.deepEqual(g.players[0].bench[0].energies,[v.water]);assert.equal(g.players[0].energyUsed,false);
+  g.players[0].hand.push(v.water);act(g,0,'attach_energy',{handIndex:0,slot:-1});assert.equal(g.players[0].energyUsed,true);scenarios++;}
+ // An Active Blastoise has the same Power eligibility as a Benched one.
+ {const g=game(format,size,v.id,v.water);g.players[0].active=unit(v.id);g.players[0].bench=[unit('base1-23')];g.players[0].hand=[v.water];
+  act(g,0,'use_power',{slot:-1,repeat:true});assert.deepEqual(g.pendingDecision.options.map(x=>x.id),['slot:-1']);pick(g,0,'slot:-1');assert.equal(g.players[0].active.energies[0],v.water);assert.equal(g.pendingDecision,null);scenarios++;}
  // Rainbow Energy is not Water Energy in hand, and Rain Dance cannot target
  // Fire Pokémon. A forged recipient choice is rejected atomically.
  {const g=game(format,size,v.id,v.water);g.players[0].hand=['base5-17'];act(g,0,'use_power',{slot:0,repeat:true});assert.equal(g.pendingDecision,null);
@@ -45,5 +49,6 @@ for(const v of variants)for(const [format,size] of v.formats){
   reject(g,0,'choose',{decisionId:g.pendingDecision.id,selected:['slot:2']});act(g,0,'choose',{decisionId:g.pendingDecision.id,decline:true});scenarios++;}
  // All three printed status locks apply to Blastoise, including from the Bench.
  for(const status of ['Asleep','Confused','Paralyzed']){const g=game(format,size,v.id,v.water);g.players[0].bench[0].status=status;g.players[0].hand=[v.water];reject(g,0,'use_power',{slot:0,repeat:true});scenarios++;}
+ {const g=game(format,size,v.id,v.water);g.players[0].hand=[v.water];g.turn=1;reject(g,0,'use_power',{slot:0,repeat:true});scenarios++;}
 }
 console.log(`PASS Blastoise Rain Dance timing, recipients, equivalent Energy, Finish and status (${scenarios} scenarios)`);
