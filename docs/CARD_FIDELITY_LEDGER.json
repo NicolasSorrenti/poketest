@@ -50,7 +50,7 @@
      "name": "Rain Dance",
      "status": "partial",
      "evidence": [
-      "test_card_fidelity_blastoise.js: repeat/Finish, Active and Benched use, Water-only Energy and recipient eligibility, equivalent Energy auto-selection, sole-recipient auto-selection, status locks and normal attachment allowance; 42 reducer scenarios across Classic, Neo-theme and online-preview 60/40 where eligible.",
+      "test_card_fidelity_blastoise.js: repeat/Finish, Active and Benched use, Water-only Energy and recipient eligibility, equivalent Energy auto-selection, sole-recipient auto-selection, status locks and normal attachment allowance; 54 reducer scenarios across Classic, Neo-theme and online-preview 60/40 where eligible.",
       "Base and Base Set 2 text checked against Serebii listings. The 2002 Complete Pokemon Card Rulings entry confirms Active/Bench use, repeated use, Water-only attachment and exclusion of Rainbow Energy. Remaining historical interactions, image-level comparison and full browser/network play pending."
      ],
      "scope": "Repeated Rain Dance attachments before attack; Finish; own Active/Bench Water targets; only named Water Energy; auto-select equivalent Water Energy; target selection when multiple Water Pokemon and automatic sole target; rejects Rainbow Energy/Fire recipients; all three status locks; does not consume normal attachment"
@@ -962,7 +962,7 @@
       "test_card_fidelity_magmar_fire_punch.js",
       "Text compared with Serebii Base and Base Set 2, TCGplayer and Limitless; official Pokémon errata index searched."
      ],
-     "scope": "Fire Punch: mandatory discard of one attached Fire Energy after meeting its {R}{R} attack cost; auto-discard when eligible attached cards have equivalent Basic Fire outcomes; attacker-owned choice when Basic Fire and Rainbow Energy outcomes differ; ineligible Grass Energy preserved; underpaid {R}+Double Colorless rejected atomically; Fire Weakness and Prize flow after discard. 42 reducer scenarios: Base Set Classic, Neo-theme, online-preview 60-card and 40-card; Base Set 2 online-preview 60-card and 40-card. Browser/network integration and other interactions pending."
+     "scope": "Fire Punch: mandatory discard of one attached Fire Energy after meeting its {R}{R} attack cost; auto-discard when eligible attached cards have equivalent Basic Fire outcomes; attacker-owned choice when Basic Fire and Rainbow Energy outcomes differ; ineligible Grass Energy preserved; underpaid {R}+Double Colorless rejected atomically; Fire Weakness and Prize flow after discard. 54 reducer scenarios: Base Set Classic, Neo-theme, online-preview 60-card and 40-card; Base Set 2 online-preview 60-card and 40-card. Browser/network integration and other interactions pending."
     },
     {
      "kind": "attack",
@@ -4250,7 +4250,7 @@
      "name": "Rain Dance",
      "status": "partial",
      "evidence": [
-      "test_card_fidelity_blastoise.js: repeat/Finish, Active and Benched use, Water-only Energy and recipient eligibility, equivalent Energy auto-selection, sole-recipient auto-selection, status locks and normal attachment allowance; 42 reducer scenarios across Classic, Neo-theme and online-preview 60/40 where eligible.",
+      "test_card_fidelity_blastoise.js: repeat/Finish, Active and Benched use, Water-only Energy and recipient eligibility, equivalent Energy auto-selection, sole-recipient auto-selection, status locks and normal attachment allowance; 54 reducer scenarios across Classic, Neo-theme and online-preview 60/40 where eligible.",
       "Base and Base Set 2 text checked against Serebii listings. The 2002 Complete Pokemon Card Rulings entry confirms Active/Bench use, repeated use, Water-only attachment and exclusion of Rainbow Energy. Remaining historical interactions, image-level comparison and full browser/network play pending."
      ],
      "scope": "Repeated Rain Dance attachments before attack; Finish; own Active/Bench Water targets; only named Water Energy; auto-select equivalent Water Energy; target selection when multiple Water Pokemon and automatic sole target; rejects Rainbow Energy/Fire recipients; all three status locks; does not consume normal attachment"
@@ -5373,7 +5373,7 @@
       "test_card_fidelity_magmar_fire_punch.js",
       "Text compared with Serebii Base and Base Set 2, TCGplayer and Limitless; official Pokémon errata index searched."
      ],
-     "scope": "Fire Punch: mandatory discard of one attached Fire Energy after meeting its {R}{R} attack cost; auto-discard when eligible attached cards have equivalent Basic Fire outcomes; attacker-owned choice when Basic Fire and Rainbow Energy outcomes differ; ineligible Grass Energy preserved; underpaid {R}+Double Colorless rejected atomically; Fire Weakness and Prize flow after discard. 42 reducer scenarios: Base Set Classic, Neo-theme, online-preview 60-card and 40-card; Base Set 2 online-preview 60-card and 40-card. Browser/network integration and other interactions pending."
+     "scope": "Fire Punch: mandatory discard of one attached Fire Energy after meeting its {R}{R} attack cost; auto-discard when eligible attached cards have equivalent Basic Fire outcomes; attacker-owned choice when Basic Fire and Rainbow Energy outcomes differ; ineligible Grass Energy preserved; underpaid {R}+Double Colorless rejected atomically; Fire Weakness and Prize flow after discard. 54 reducer scenarios: Base Set Classic, Neo-theme, online-preview 60-card and 40-card; Base Set 2 online-preview 60-card and 40-card. Browser/network integration and other interactions pending."
     },
     {
      "kind": "attack",
