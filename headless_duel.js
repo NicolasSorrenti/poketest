@@ -316,11 +316,6 @@ function planFinalAttack(g,side,attackIndex,program,plan={side,attackIndex,data:
   if(cardNames.size===1)data.energyPicks=[Number(options[0].id.slice(7))];
   else{finalChoice(g,plan,'pay-energy',side,options,{label:a.name+': choose an Energy to discard'});return;}
  }
- if(kind==='scavenge'&&!Object.hasOwn(data,'discardTrainer')){
-  const options=p.discard.flatMap((id,i)=>card(g,id).supertype==='Trainer'?[{id:`discard:${i}`,label:card(g,id).name}]:[]);
-  if(!options.length)fail('No Trainer card in discard pile');
-  finalChoice(g,plan,'recover-trainer',side,options,{label:'Choose the Trainer to recover'});return;
- }
  // Mandatory Energy-discard attacks are declared and paid before
  // Sand-attack/Smokescreen prevention; any later effect choices follow the
  // prevention and Confusion checks.
@@ -349,6 +344,11 @@ function planFinalAttack(g,side,attackIndex,program,plan={side,attackIndex,data:
    if(!knockOuts(g,'checkup'))finishTurn(g);return;
   }
   data.confusionChecked=true;
+ }
+ if(kind==='scavenge'&&!Object.hasOwn(data,'discardTrainer')){
+  const options=p.discard.flatMap((id,i)=>card(g,id).supertype==='Trainer'?[{id:`discard:${i}`,label:card(g,id).name}]:[]);
+  if(!options.length)fail('No Trainer card in discard pile');
+  finalChoice(g,plan,'recover-trainer',side,options,{label:'Choose the Trainer to recover'});return;
  }
  if(kind==='third-eye'&&!Object.hasOwn(data,'drawCount')){
   finalChoice(g,plan,'draw-count',side,Array.from({length:4},(_,i)=>({id:`count:${i}`,label:`Draw ${i} card${i===1?'':'s'}`})),{label:'Draw up to 3 cards'});return;
