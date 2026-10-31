@@ -1854,7 +1854,12 @@
       "effects": [
         {
           "kind": "trainer",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "test_card_fidelity_lass.js: matched English text for Base #75 and Base Set 2 #104; both post-play hands exposed to both players; only Trainer cards enter their owner's deck; no-Trainer deck/RNG unchanged; one-sided no-Trainer case; online-preview match feed. Eight local reducer/protocol scenarios passed.",
+            "Archived WotC ruling quoted as Dec. 7, 2000 Q20 says a player with no Trainer cards cannot shuffle for Lass; official TCG errata PDF searched, no English Lass entry found."
+          ],
+          "scope": "Base #75 in Classic and Base Set 2 #104 in online-preview; eight scenarios: text parity, both-player hand reveal, Trainer-only shuffle to each owner's deck, no shuffle/RNG consumption when neither player has Trainers, and no shuffle for a side with no Trainers while the other side does. Chaos Gym/Sabrina's Psychic Control interactions, live client rendering, and network play remain unchecked."
         }
       ]
     },
@@ -6737,7 +6742,12 @@
       "effects": [
         {
           "kind": "trainer",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "test_card_fidelity_lass.js: matched English text for Base #75 and Base Set 2 #104; both post-play hands exposed to both players; only Trainer cards enter their owner's deck; no-Trainer deck/RNG unchanged; one-sided no-Trainer case; online-preview match feed. Eight local reducer/protocol scenarios passed.",
+            "Archived WotC ruling quoted as Dec. 7, 2000 Q20 says a player with no Trainer cards cannot shuffle for Lass; official TCG errata PDF searched, no English Lass entry found."
+          ],
+          "scope": "Base #75 in Classic and Base Set 2 #104 in online-preview; eight scenarios: text parity, both-player hand reveal, Trainer-only shuffle to each owner's deck, no shuffle/RNG consumption when neither player has Trainers, and no shuffle for a side with no Trainers while the other side does. Chaos Gym/Sabrina's Psychic Control interactions, live client rendering, and network play remain unchecked."
         }
       ]
     },
