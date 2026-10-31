@@ -1757,7 +1757,12 @@
      "kind": "attack",
      "index": 0,
      "name": "Poison Sting",
-     "status": "unreviewed"
+     "status": "partial",
+     "evidence": [
+      "test_card_fidelity_weedle.js: 80 reducer scenarios across Classic, Neo-theme, online-preview 60-card and 40-card configurations; Base and Base Set 2 printings, Poison Sting coin outcomes/checkups, Poison/Confusion coexistence, Defender reducing damage to zero while Poison resolves, later Poison checkup, typed Grass costs, Rainbow Energy, and WotC-era Confusion ordering.",
+      "Printed text/cost and card identity checked against Serebii Base #69, TCGplayer and TCGdex/PokéDreams Base Set 2 #100. Serebii's /baseset2/100 page title says Bellsprout despite displaying Weedle's Poison Sting; card number/name cross-checked against other sources. WotC-era Confusion guide (1999–2002) used; Japanese original-rule example is not applied to the English WotC ruleset."
+     ],
+     "scope": "Poison Sting: one Grass, 10 damage, heads Poison and normal checkups; tested Poison coexistence/nonstacking, prevention by Defender, later turn checkup, and Confusion check before the attack's own coin/effect. Other modifiers and client/network behavior remain unreviewed. Separate Neo Discovery Weedle (neo2-70, Spike Stab) remains unreviewed."
     }
    ]
   },
@@ -6644,7 +6649,12 @@
      "kind": "attack",
      "index": 0,
      "name": "Poison Sting",
-     "status": "unreviewed"
+     "status": "partial",
+     "evidence": [
+      "test_card_fidelity_weedle.js: 80 reducer scenarios across Classic, Neo-theme, online-preview 60-card and 40-card configurations; Base and Base Set 2 printings, Poison Sting coin outcomes/checkups, Poison/Confusion coexistence, Defender reducing damage to zero while Poison resolves, later Poison checkup, typed Grass costs, Rainbow Energy, and WotC-era Confusion ordering.",
+      "Printed text/cost and card identity checked against Serebii Base #69, TCGplayer and TCGdex/PokéDreams Base Set 2 #100. Serebii's /baseset2/100 page title says Bellsprout despite displaying Weedle's Poison Sting; card number/name cross-checked against other sources. WotC-era Confusion guide (1999–2002) used; Japanese original-rule example is not applied to the English WotC ruleset."
+     ],
+     "scope": "Poison Sting: one Grass, 10 damage, heads Poison and normal checkups; tested Poison coexistence/nonstacking, prevention by Defender, later turn checkup, and Confusion check before the attack's own coin/effect. Other modifiers and client/network behavior remain unreviewed. Separate Neo Discovery Weedle (neo2-70, Spike Stab) remains unreviewed."
     }
    ]
   },
