@@ -2223,13 +2223,15 @@ function resolveAttack(g,side,index,chosenBench,energyPicks,extra={}){
   for(const i of picks)p.discard.push(u.energies.splice(i,1)[0]);
  }
  if(roll.selfDamage){
-  // Neo-era Metal Energy modifies both sides of self-damage from an attack:
-  // on a non-Metal attacker it reduces damage that Pokémon deals, and on
-  // the attached Pokémon it reduces damage received. Those reductions stack
-  // when the attacker damages itself (WotC-era ruling confirms double
-  // reduction for self-damage from a non-Metal Pokémon).
+  // Attack self-damage is still attack damage. Apply the attacker's modified
+  // Weakness/Resistance and target-side attack reductions such as Defender.
+  // WotC ruled that self-damage can trigger Weakness and Defender reduces it
+  // (Aug. 3, 2000 chat, Q4/Q81).
   let selfDamage=roll.selfDamage;
   if(metalOnAttacker&&!isMetalType(g,u))selfDamage=Math.max(0,selfDamage-10*metalOnAttacker);
+  selfDamage=calculateDamage(c,effectiveCard(g,u),selfDamage,u);
+  const selfDefenders=u.attachedTrainers.filter(t=>card(g,t.id).name==='Defender'&&t.expires>g.turnSerial).length;
+  selfDamage=Math.max(0,selfDamage-selfDefenders*20);
   selfDamage=Math.max(0,selfDamage-10*specialEnergyCount(g,u,'Metal'));
   u.damage+=relaxing?Math.ceil(selfDamage/20)*10:selfDamage;
  }
