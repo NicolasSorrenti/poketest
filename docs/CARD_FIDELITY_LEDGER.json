@@ -714,7 +714,11 @@
      "kind": "attack",
      "index": 0,
      "name": "Flare",
-     "status": "unreviewed"
+     "status": "partial",
+     "evidence": [
+      "test_card_fidelity_growlithe_flare.js"
+     ],
+     "scope": "Compared Base Set and Base Set 2 printed Flare text, 20 damage, Fire plus Colorless cost, Water Weakness, and no Resistance against Limitless card pages and the Base Set card transcription. Reducer cases verify Fire+Water and Fire+Double Colorless payments; reject Fire alone, DCE alone, and non-Fire Energy; Flare deals 40 to a Fire-Weak Venusaur; Water-type Seel Headbutt deals 20 to Growlithe. Base Set tested in Classic; Base Set 2 in online-preview 60-card and 40-card/four-Prize Cube configuration. Official errata index searched with no Growlithe entry. No discrepancy in this scope; browser/network interactions and broader historical ruling research pending."
     }
    ]
   },
@@ -4947,7 +4951,11 @@
      "kind": "attack",
      "index": 0,
      "name": "Flare",
-     "status": "unreviewed"
+     "status": "partial",
+     "evidence": [
+      "test_card_fidelity_growlithe_flare.js"
+     ],
+     "scope": "Compared Base Set and Base Set 2 printed Flare text, 20 damage, Fire plus Colorless cost, Water Weakness, and no Resistance against Limitless card pages and the Base Set card transcription. Reducer cases verify Fire+Water and Fire+Double Colorless payments; reject Fire alone, DCE alone, and non-Fire Energy; Flare deals 40 to a Fire-Weak Venusaur; Water-type Seel Headbutt deals 20 to Growlithe. Base Set tested in Classic; Base Set 2 in online-preview 60-card and 40-card/four-Prize Cube configuration. Official errata index searched with no Growlithe entry. No discrepancy in this scope; browser/network interactions and broader historical ruling research pending."
     }
    ]
   },
