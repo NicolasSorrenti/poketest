@@ -343,3 +343,11 @@ The catalogue had generic Energy wording and the phrase “after the end,” whi
 | Flame Tail | Printed 2-Fire cost and fixed 30 damage; wrong/insufficient Energy rejection; excess Energy does not change damage; Fire-type attacker's Weakness interaction and Defender reduction order | Same 41-scenario reducer suite and print/errata sources above | Partial; remaining interactions unreviewed |
 
 The print records agree on Ponyta's Base Set stats, attack costs/damage, Water weakness, and one-Colorless retreat. Reducer scenarios cover Classic, Neo-theme, online-preview 60-card, and online-preview 40-card setups. These checks establish attack payment and damage behavior in those reducers only; they do not cover Browser/network play, retreat, status effects, or every damage modifier.
+
+## Rattata (Base Set #61 and Base Set 2 #89)
+
+| Effect | Scope checked | Evidence | Status |
+| --- | --- | --- | --- |
+| Bite (base1-61, base4-89) | One-Colorless cost paid by Basic or Double Colorless Energy; fixed 20 damage with surplus Energy; insufficient payment rejection; incoming Fighting Weakness and Psychic Resistance, including Weakness then Defender order | `test_card_fidelity_rattata.js` (50 reducer scenarios); [Serebii Base #61](https://www.serebii.net/card/base/061.shtml) and [Base Set 2 #89](https://www.serebii.net/card/baseset2/089.shtml); [Bulbapedia print record](https://bulbapedia.bulbagarden.net/wiki/Rattata_%28Base_Set_61%29); [Limitless Base #61](https://limitlesstcg.com/cards/BS/61) and [Base Set 2 #89](https://limitlesstcg.com/cards/BS2/89); official Pokémon TCG errata index search found no Rattata entry | Partial; remaining interactions unreviewed |
+
+The two printings match on the tested attack and combat data: 30 HP, Colorless Bite for 20, Fighting Weakness, Psychic Resistance of -30, and no Retreat cost. Reducer coverage spans Classic, Neo-theme, and online-preview 60/40-card setups; browser/network behavior and other interactions remain unchecked.

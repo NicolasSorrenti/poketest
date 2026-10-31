@@ -1580,7 +1580,12 @@
      "kind": "attack",
      "index": 0,
      "name": "Bite",
-     "status": "unreviewed"
+     "status": "partial",
+     "evidence": [
+      "test_card_fidelity_rattata.js",
+      "Printed text compared with Serebii Base #61 and Base Set 2 #89, Bulbapedia and Limitless; official Pokémon TCG errata index searched, no Rattata entry."
+     ],
+     "scope": "Bite's one-Colorless cost, payment by Basic Energy or Double Colorless Energy, fixed 20 damage despite extra Energy, insufficient-cost rejection, plus Rattata's Fighting Weakness and Psychic Resistance interactions. 50 total reducer scenarios cover Base and Base Set 2 printings in Classic, Neo-theme, and online-preview 60/40-card configurations, including Weakness-before-Defender reduction. Browser/network and remaining interactions unreviewed."
     }
    ]
   },
@@ -6353,7 +6358,12 @@
      "kind": "attack",
      "index": 0,
      "name": "Bite",
-     "status": "unreviewed"
+     "status": "partial",
+     "evidence": [
+      "test_card_fidelity_rattata.js",
+      "Printed text compared with Serebii Base #61 and Base Set 2 #89, Bulbapedia and Limitless; official Pokémon TCG errata index searched, no Rattata entry."
+     ],
+     "scope": "Bite's one-Colorless cost, payment by Basic Energy or Double Colorless Energy, fixed 20 damage despite extra Energy, insufficient-cost rejection, plus Rattata's Fighting Weakness and Psychic Resistance interactions. 50 total reducer scenarios cover Base and Base Set 2 printings in Classic, Neo-theme, and online-preview 60/40-card configurations, including Weakness-before-Defender reduction. Browser/network and remaining interactions unreviewed."
     }
    ]
   },
