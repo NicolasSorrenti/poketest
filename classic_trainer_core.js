@@ -517,8 +517,12 @@ function prompt(g,plan,helpers){
  }
  const cost2=['Computer Search','Item Finder'];
  if(cost2.includes(name) && !chosen(d,'cost')){
-  if(hchoices().length<2)throw Error(name+' needs two other cards to discard/return');
-  return multi('cost',side,hchoices(),2,2,'Choose two cards from your hand');
+  const candidates=hchoices();
+  if(candidates.length<2)throw Error(name+' needs two other cards to discard/return');
+  // Computer Search's two-card cost has no decision if there is only one
+  // possible pair, or every candidate is the same card printing.
+  if(name==='Computer Search'&&(candidates.length===2||candidates.every(o=>o.cardId===candidates[0].cardId)))d.cost=candidates.slice(0,2).map(o=>o.id);
+  else return multi('cost',side,candidates,2,2,'Choose two cards from your hand');
  }
  // Validate the destination before requesting payment: an impossible search must not
  // strand the player in a mandatory discard decision.
@@ -528,7 +532,14 @@ function prompt(g,plan,helpers){
   return single('cost',side,hchoices(),'Choose one other card to discard');
  }
  if(name==='Pokémon Trader'&&!chosen(d,'trade'))return single('trade',side,hchoices(pokemon),'Choose Pokémon from hand to trade');
- if(name==='Computer Search'&&!chosen(d,'find'))return single('find',side,deck(),'Search your deck for any card');
+ if(name==='Computer Search'&&!chosen(d,'find')){
+  const candidates=deck();
+  // WotC-era ruling permits Computer Search with an empty deck; in that
+  // case pay the cost, skip the impossible choice, then complete the shuffle.
+  if(!candidates.length)d.find=[];
+  else if(candidates.length===1)d.find=[candidates[0].id];
+  else return single('find',side,candidates,'Search your deck for any card');
+ }
  if(name==='Item Finder'&&!chosen(d,'recover')){
   const existing=disc(p,c=>c.supertype==='Trainer');
   // Costs are staged until commit; make the selected Trainer cost cards

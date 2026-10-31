@@ -1,6 +1,6 @@
 # Card effect fidelity audit
 
-Baseline: main commit a43039009faa93a2febe0204d6d7f75f9c2e2eed (2026-10-31).
+Baseline: main commit 380f67a3b8dcaec02bdcfa2492f89292e70b1db3 (2026-10-31).
 
 Goal: review every in-scope card's printed effect, relevant historical rulings, and actual authoritative reducer behavior. A registered handler, source-code match, or successful smoke run is not proof of correct behavior. Record each individual effect only after checking its costs, choices and ownership, timing, conditions, and observable results; include interactions and test references. Reprints can share evidence only after their text and rules are compared.
 
@@ -436,3 +436,12 @@ Regression verification: `node test_card_fidelity_clefairy_doll.js` passes 50 re
 The WotC-era ruling says Devolution Spray does not count as evolving; it allows re-evolving the same Pokémon in the same turn and confirms attack effects such as Smokescreen and Agility are removed. The scenario test is deliberately scoped to the Base Set printing and authoritative Classic reducer. It does not establish complete Trainer or client fidelity.
 
 Regression verification: `node test_card_fidelity_devolution_spray.js` passes 6 scenarios in Base card fidelity run 41191996000. Cases cover both Stage choices and automatic selection when only Stage 1 is legal, preserved damage/Energy, clearing conditions and attack locks, Knock Out/Prize/promotion after HP reduction, same-turn re-evolution once, and atomic rejection with no evolved target. Other Trainer interactions and browser/network behavior remain unchecked.
+
+
+## Computer Search (Base #71 and Base Set 2 #101)
+
+| Cards | Scope checked | Evidence | Status |
+| --- | --- | --- | --- |
+| Computer Search (`base1-71`, `base4-101`) | Matching printed text across both printings; pay exactly two other cards; automatic payment only when the pair is forced or all candidates are identical; choose any card and shuffle; WotC ruling permitting use with an empty deck; no opponent reveal of searched card through the protocol projection | `test_card_fidelity_computer_search.js`; [Serebii Base #71](https://www.serebii.net/card/base/071.shtml) and [Base Set 2 #101](https://www.serebii.net/card/baseset2/101.shtml); archived [WotC chat logs](https://www.elitefourum.com/t/wotc-chat-logs-from-feb-2000-to-nov-2000-q-a-w-employees/16872/1), Q101, Q107, Q140; official [TCG errata PDF](https://www.pokemon.com/static-assets/content-assets/cms2/pdf/trading-card-game/tcg_errata.pdf) searched, no Computer Search entry found | Partial; seven reducer/protocol scenarios passed in Base card fidelity run 41192884561 at code head e01569cc. Chaos Gym/Sabrina copying and live browser/network integration remain unchecked |
+
+Historical distinction: WotC explicitly answered that Computer Search can be played with no cards in the deck, despite the search producing no card, and that the card found need not be shown to the opponent. The reducer previously opened a mandatory empty search choice and failed after staging the cost. It now resolves the Trainer with the selected two-card cost, no search choice, and the printed shuffle instruction. If only one deck card exists it is selected automatically; distinct cost choices remain player-controlled.
