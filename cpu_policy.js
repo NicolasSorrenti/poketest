@@ -783,7 +783,13 @@ function energyHorizonBonus(action,o,cfg){
  if(!u||!q.active)return 0;
  const attachedId=p.hand[v.handIndex];
  if(!isEnergy(card(attachedId)))return 0;
- const after={...u,energies:[...(u.energies||[]),attachedId]};
+ // The current Rainbow attachment also deals 10 damage. Forecast the
+ // actual surviving host before valuing a second Energy next turn; otherwise
+ // two Rainbows can invent a future attack after a self-knockout.
+ const rainbowDamage=card(attachedId)?.name==='Rainbow Energy'?10:0;
+ if(rainbowDamage>=hpRemaining(u))return 0;
+ const after={...u,damage:(u.damage||0)+rainbowDamage,
+  energies:[...(u.energies||[]),attachedId]};
  const futureHand=p.hand.filter((_,i)=>i!==v.handIndex);
  const futureRound=(Number(o.round)||0)+1;
  // Defaulting to serial zero makes expired public locks look active.
