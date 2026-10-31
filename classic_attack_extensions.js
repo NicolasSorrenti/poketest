@@ -60,7 +60,7 @@ function compile(a){
   return fixed('coin-stomp',Number(m[1]),{bonus:Number(m[2])});
  if(text==='The Defending Pokémon is now Poisoned. It now takes 20 Poison damage instead of 10 after each player\'s turn (even if it was already Poisoned).'&&damage==='20')
   return fixed('toxic',20);
- if(text==="You can't this attack unless the Defending Pokémon is Asleep."&&/^\d+$/.test(damage))return fixed('dream-eater',Number(damage));
+ if(text==="You can't use this attack unless the Defending Pokémon is Asleep."&&/^\d+$/.test(damage))return fixed('dream-eater',Number(damage));
  if((m=/^Discard all Energy cards attached to ([A-Za-z ]+) in order to use this attack\.$/i.exec(text))&&/^\d+$/.test(damage))return fixed('discard-all-self-energy',Number(damage),{subject:m[1]});
  if((m=/^Flip a coin\. If tails, this attack does nothing\. Either way, you can't use this attack again as long as ([A-Za-z' ]+) stays in play \(even putting [A-Za-z' ]+ on the Bench won't let you use it again\.\)$/i.exec(text))&&/^\d+$/.test(damage))return fixed('once-per-unit',Number(damage),{subject:m[1]});
  if(text==="During your next turn, Scyther's Slash attack's base damage is 60 instead of 30."&&damage==='')return fixed('swords-dance',0,{subject:'Scyther'});
