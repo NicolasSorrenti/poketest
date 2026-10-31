@@ -2080,7 +2080,12 @@
       "effects": [
         {
           "kind": "trainer",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Printed text compared for Base #91 and Base Set 2 #118; both say Draw 2 cards. Classic reducer handler calls draw for the player who played Bill with count 2.",
+            "test_card_fidelity_bill.js: verifies exactly two cards are drawn from the player's own deck, Bill goes to discard, opponent zones do not change, and no target/card-choice prompt occurs. Covered Base Classic and Base Set 2 online-preview only."
+          ],
+          "scope": "Bill Base #91 / Base Set 2 #118: two-card draw ownership/count, post-resolution discard and no-choice path verified across Base Classic and Base Set 2 online-preview. Short/empty deck behavior, client/network integration and unrelated interactions remain unverified."
         }
       ]
     },
@@ -6986,7 +6991,12 @@
       "effects": [
         {
           "kind": "trainer",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Printed text compared for Base #91 and Base Set 2 #118; both say Draw 2 cards. Classic reducer handler calls draw for the player who played Bill with count 2.",
+            "test_card_fidelity_bill.js: verifies exactly two cards are drawn from the player's own deck, Bill goes to discard, opponent zones do not change, and no target/card-choice prompt occurs. Covered Base Classic and Base Set 2 online-preview only."
+          ],
+          "scope": "Bill Base #91 / Base Set 2 #118: two-card draw ownership/count, post-resolution discard and no-choice path verified across Base Classic and Base Set 2 online-preview. Short/empty deck behavior, client/network integration and unrelated interactions remain unverified."
         }
       ]
     },
