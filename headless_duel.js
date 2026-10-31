@@ -292,7 +292,18 @@ function planFinalAttack(g,side,attackIndex,program,plan={side,attackIndex,data:
   // have the same outcome, so select one instead of showing a redundant picker.
   data.energyPicks=[Number(psychicEnergy[0].id.slice(7))];
  }
- if(['destiny-bond','third-eye','scavenge'].includes(kind)&&!data.energyPicks){
+ if(kind==='destiny-bond'&&!data.energyPicks){
+  const psychicEnergy=energyOptions('Psychic');
+  if(!psychicEnergy.length)fail('Destiny Bond requires a Psychic Energy card to discard');
+  const kinds=new Set(psychicEnergy.map(option=>card(g,u.energies[Number(option.id.slice(7))]).name));
+  if(kinds.size>1){
+   finalChoice(g,plan,'pay-energy',side,psychicEnergy,{label:'Destiny Bond: choose a Psychic Energy card to discard'});return;
+  }
+  // Identical eligible cards have equivalent results, so resolve the printed
+  // Psychic discard automatically rather than opening a redundant picker.
+  data.energyPicks=[Number(psychicEnergy[0].id.slice(7))];
+ }
+ if(['third-eye','scavenge'].includes(kind)&&!data.energyPicks){
   if(!u.energies.length)fail('An attached Energy is required for this attack');
   finalChoice(g,plan,'pay-energy',side,energyOptions(),{label:`${a.name}: choose an Energy to discard`});return;
  }
@@ -1493,7 +1504,7 @@ function resolveAttack(g,side,index,chosenBench,energyPicks,extra={}){
  if(FINAL_KINDS.has(program.kind)){
   if(['barrier','destiny-bond','scavenge','third-eye'].includes(program.kind)||['continuous-fireball','fireball','playing-with-fire'].includes(program.kind)&&extra.preRoll?.discardHeadCount){
    const quantity=['continuous-fireball','fireball','playing-with-fire'].includes(program.kind)?extra.preRoll.discardHeadCount:1;
-   if(!Array.isArray(energyPicks)||energyPicks.length!==quantity||new Set(energyPicks).size!==quantity||energyPicks.some(i=>!Number.isInteger(i)||i<0||i>=u.energies.length||['continuous-fireball','fireball','playing-with-fire'].includes(program.kind)&&!attachedEnergyMatchesType(g,u.energies[i],'Fire')||program.kind==='barrier'&&!attachedEnergyMatchesType(g,u.energies[i],'Psychic')))fail('Invalid final attack Energy selection');
+   if(!Array.isArray(energyPicks)||energyPicks.length!==quantity||new Set(energyPicks).size!==quantity||energyPicks.some(i=>!Number.isInteger(i)||i<0||i>=u.energies.length||['continuous-fireball','fireball','playing-with-fire'].includes(program.kind)&&!attachedEnergyMatchesType(g,u.energies[i],'Fire')||['barrier','destiny-bond'].includes(program.kind)&&!attachedEnergyMatchesType(g,u.energies[i],'Psychic')))fail('Invalid final attack Energy selection');
   }
   if(program.kind==='fascinate'&&!f.bench.length)fail('Fascinate requires an opponent Bench');
   if(program.kind==='amnesia'||program.kind==='copy-attack'){
