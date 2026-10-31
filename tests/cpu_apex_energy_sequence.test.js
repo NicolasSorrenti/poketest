@@ -1115,7 +1115,9 @@ test('optional Apex two-step forecast recognizes evolution curing disabling cond
 test('optional Apex evolution forecast does not retain Basic effectiveAttacks',()=>{
  const planning={...cfg,planning:true};
  const evolve={type:'evolve',payload:{handIndex:0,slot:-1}};
- const normal=evolutionForecastBoard();
+ // Start with Sleep so evolution must unlock the new stage's attacks.
+ // A healthy Machop can already attack, making its improvement score zero.
+ const normal=evolutionForecastBoard('Asleep');
  const inherited=structuredClone(normal);
  inherited.self.active.effectiveAttacks=require('../headless_duel').CATALOG.get(MACHOP).attacks;
  const baseline=AI.planningBonus(evolve,normal,planning);
