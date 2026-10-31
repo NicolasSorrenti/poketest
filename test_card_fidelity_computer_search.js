@@ -15,7 +15,7 @@ check('Base and Base Set 2 Computer Search printings have matching Trainer text 
 check('Computer Search rejects fewer than two other hand cards atomically',()=>{for(const id of searchIds){const g=game();player(g,0).hand=[id,'base1-99'];player(g,0).deck=['base1-46'];reject(g,0,'play_trainer',{handIndex:0},/two other cards/);}});
 check('Computer Search auto-pays its only cost pair and keeps deck search private to the acting player',()=>{
  const g=game();player(g,0).hand=['base1-71','base1-99','base1-94'];player(g,0).deck=['base1-46','base1-27','base1-94'];const beforeShuffle=g.rngState;
- act(g,0,'play_trainer',{handIndex:0});assert.equal(g.pendingDecision?.kind,'find','Two other cards leave only one cost pair, so do not prompt for cost');assert.equal(g.pendingDecision.actor,0);assert.equal(publicView(g,1).pendingDecision,null);
+ act(g,0,'play_trainer',{handIndex:0});assert.equal(g.pendingDecision?.kind,'find','Two other cards leave only one cost pair, so do not prompt for cost');assert.equal(g.pendingDecision.actor,0);const waiting=publicView(g,1).pendingDecision;assert.equal(waiting.waitingFor,0);assert.equal(waiting.options,undefined);assert.equal(waiting.displayDeck,undefined);
  const ownView=publicView(g,0);assert.ok(ownView.pendingDecision.displayDeck);assert.equal(ownView.pendingDecision.options.length,3);
  const decision=g.pendingDecision;reject(g,1,'choose',{decisionId:decision.id,selected:['deck:1']});
  choose(g,0,['deck:1']);assert.equal(g.pendingDecision,null);assert.ok(player(g,0).hand.includes('base1-27'));assert.equal(player(g,0).deck.length,2);assert.notEqual(g.rngState,beforeShuffle,'Computer Search must shuffle after searching');
