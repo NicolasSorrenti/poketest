@@ -778,6 +778,7 @@ function performAction(g,side,cmd){
   }
   if(pending.kind==='retreat_energy'){
    const picks=answer.selected.map(id=>Number(id.slice(7)));
+   g.pendingDecision=null;g.pendingAction=null;
    finishRetreat(g,pending.side,pending.slot,picks);
    return;
   }
@@ -1071,6 +1072,13 @@ function performAction(g,side,cmd){
   if(total<cost)fail('Insufficient retreat Energy');
   if(u.energies.some(id=>(card(g,id).subtypes||[]).includes('Special')&&!['Double Colorless Energy','Full Heal Energy','Potion Energy','Metal Energy','Darkness Energy','Recycle Energy','Rainbow Energy','Miracle Energy'].includes(card(g,id).name))||u.attachedTrainers.some(t=>!['Berry','Counterattack Claws','Focus Band','EXP.ALL','Gold Berry','Miracle Berry','Balloon Berry','Magnifier',"Brock's Protection","Koga's Ninja Trick","Sabrina's ESP","Charity"].includes(card(g,t.id).name)))fail('Retreat modifiers require an effect handler');
   if(cost&&total>cost&&u.energies.length>1){
+   // When all attached cards are identical, the minimum payment has the same
+   // outcome whichever card is chosen, so resolve that choice automatically.
+   if(u.energies.every(id=>id===u.energies[0])){
+    const units=retreatUnits(g,u,u.energies[0]);
+    const count=Math.ceil(cost/units);
+    finishRetreat(g,side,v.slot,Array.from({length:count},(_,i)=>i));return;
+   }
    g.nextDecisionId++;
    g.pendingDecision=makeDecision({id:`retreat:${g.nextDecisionId}`,actor:side,kind:'energy-discard',label:`Choose Energy cards providing at least ${cost} retreat units`,options:u.energies.map((id,i)=>({id:`energy:${i}`,label:card(g,id).name})),min:1,max:Math.min(cost,u.energies.length)});
    g.pendingAction={kind:'retreat_energy',side,slot:v.slot};return;
