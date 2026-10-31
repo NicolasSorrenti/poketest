@@ -529,6 +529,16 @@ function choiceValue(option,decision,o,cfg){
   const candidate=candidateId?card(candidateId):null;
   if(candidate&&isEnergy(candidate)&&o.self.active){
    const active=o.self.active;
+   // Computer Search is choosing an Energy, not attaching it yet. Do not
+   // reward a Rainbow Energy as an immediate attack unlock when its 10 damage
+   // would knock out the Active before it can attack. A surviving Bench target
+   // can still make Rainbow a useful search result.
+   if(candidate.name==='Rainbow Energy'&&hpRemaining(active)<=10){
+    const benchProgress=Math.max(0,...(o.self.bench||[]).filter(unit=>
+     hpRemaining(unit)>10&&legalAttachment({card:candidate,unit,round:o.round,
+      cardName:card(unit.id)?.name||''})).map(unit=>energyValue(unit,candidateId)));
+    return benchProgress>12?55+Math.min(110,benchProgress*1.5):-200;
+   }
    // Search results must be attachable to the intended attacker. In
    // particular, Miracle Energy cannot power an ordinary Pokémon.
    const attachable=legalAttachment({card:candidate,unit:active,round:o.round,
