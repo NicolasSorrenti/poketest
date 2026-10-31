@@ -1791,11 +1791,11 @@
           "kind": "trainer",
           "status": "partial",
           "evidence": [
-            "test_card_fidelity_computer_search.js: printed Base/Base Set 2 text parity; two-card cost (including forced, identical, and distinct candidates); any-card deck search; empty-deck WotC ruling; shuffle; actor-only private search projection.",
+            "test_card_fidelity_computer_search.js: printed Base/Base Set 2 text parity; two-card cost (including forced, identical, and distinct candidates); any-card deck search; empty-deck WotC ruling; shuffle; actor-only private search projection. Base card fidelity workflow run 41192884561 passed at code head e01569cc.",
             "Archived WotC chat logs Q101 (Computer Search may be played with no cards in deck), Q107/Computer Search FAQ (searched card need not be shown), Q140 (one-card hand cannot pay two other-card cost).",
             "Official Pokémon TCG Errata PDF searched; no Computer Search entry located."
           ],
-          "scope": "Base #71 and Base Set 2 #101; seven Classic reducer/protocol scenarios. Full Chaos Gym/Sabrina copying, browser/network sessions, and other Trainer interactions remain unchecked."
+          "scope": "Base #71 and Base Set 2 #101; seven Classic reducer/protocol scenarios passed in Base card fidelity run 41192884561 at code head e01569cc. Full Chaos Gym/Sabrina copying, browser/network sessions, and other Trainer interactions remain unchecked."
         }
       ]
     },
