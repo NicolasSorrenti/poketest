@@ -988,7 +988,18 @@ function score(a,o,cfg,used){
   const ko=after>=hpRemaining(q.active)&&before<hpRemaining(q.active);
   const future=(improvement*(cfg.level===2?.50:.85)+(ko?(cfg.level===2?30:65):0))*style.damage;
   const saturation=before>0&&improvement===0?(cfg.level===2?14:35):0;
-  return 110+value*style.setup+(v.slot===-1?18:0)+future-saturation-
+  // Full Heal Energy clears conditions as soon as it is attached. A ready
+  // Asleep/Paralyzed Active can then attack this turn, while curing Confusion
+  // removes the mandatory failure coin flip. Only reward a legal, payable
+  // attack after the cure; Bench attachments cannot cure the Active.
+  const curesActive=cfg.level===8&&v.slot===-1&&
+   card(p.hand[v.handIndex])?.name==='Full Heal Energy'&&
+   ['Asleep','Paralyzed','Confused'].includes(unit?.status);
+  const cured=curesActive?{...unit,status:null,
+   energies:[...(unit.energies||[]),p.hand[v.handIndex]]}:null;
+  const cureTempo=cured&&projectedAttackValue(cured,q.active,o.turnSerial,p.bench.length)>0?
+   (unit.status==='Confused'?90:185)*style.damage:0;
+  return 110+value*style.setup+(v.slot===-1?18:0)+future-saturation+cureTempo-
    (v.slot===-1?doomedActiveAttachmentPenalty(o,p.hand[v.handIndex],cfg):0);
  }
  if(type==='attack'){
