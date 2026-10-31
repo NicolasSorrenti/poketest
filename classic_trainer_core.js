@@ -1019,7 +1019,20 @@ function commit(g,plan,h){
   case 'Professor Oak':p.discard.push(...p.hand);p.hand=[];h.draw(g,plan.side,7);break;
   case 'Impostor Professor Oak':f.deck=h.shuffle(g,[...f.deck,...f.hand]);f.hand=[];h.draw(g,1-plan.side,7);break;
   case "Imposter Oak's Revenge":f.deck=h.shuffle(g,[...f.deck,...f.hand]);f.hand=[];h.draw(g,1-plan.side,4);break;
-  case 'Lass':for(const owner of [p,f]){const cards=take(owner.hand,zone(owner.hand,c=>c.supertype==='Trainer').map(x=>x.i));owner.deck=h.shuffle(g,[...owner.deck,...cards]);}break;
+  case 'Lass':{
+   // Both hands are shown before any Trainer is moved. The reveal is public
+   // turn information, so both players receive the same names in the log.
+   const shown=[p,f].map(owner=>`${owner.name}: ${owner.hand.map(id=>get(id).name).join(', ')||'(empty)'}`);
+   h.log(g,`Lass revealed both hands — ${shown.join('; ')}.`);
+   for(const owner of [p,f]){
+    const indices=zone(owner.hand,c=>c.supertype==='Trainer').map(x=>x.i);
+    // WotC ruled that a player with no Trainer cards does not shuffle.
+    if(!indices.length)continue;
+    const cards=take(owner.hand,indices);
+    owner.deck=h.shuffle(g,[...owner.deck,...cards]);
+   }
+   break;
+  }
   case 'Maintenance':p.deck=h.shuffle(g,p.deck);h.draw(g,plan.side);break;
   case 'Computer Search':case 'Energy Search':case "The Boss's Way":case 'Poké Ball':
    if(chosen(d,'find')&&d.find.length){const [id]=take(p.deck,[pick('find')]);p.hand.push(id);}p.deck=h.shuffle(g,p.deck);break;
