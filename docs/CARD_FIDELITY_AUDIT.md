@@ -1,6 +1,6 @@
 # Card effect fidelity audit
 
-Baseline: main commit ea22ef43a248ab723e3302c20465563aec34429e (2026-10-30).
+Baseline: main commit a43039009faa93a2febe0204d6d7f75f9c2e2eed (2026-10-31).
 
 Goal: review every in-scope card's printed effect, relevant historical rulings, and actual authoritative reducer behavior. A registered handler, source-code match, or successful smoke run is not proof of correct behavior. Record each individual effect only after checking its costs, choices and ownership, timing, conditions, and observable results; include interactions and test references. Reprints can share evidence only after their text and rules are compared.
 
@@ -425,3 +425,12 @@ Regression verification: `node test_card_fidelity_weedle.js` passes 80 scenarios
 | Clefairy Doll (`base1-70`) | Trainer identity in hand and during play; cannot start or be benched as an ordinary Basic; enters Bench through Trainer play; printed no-attack/no-retreat/no-status rules; pre-attack optional discard; no Prize on Knock Out; replacement promotion; Chaos Gym redirect/ownership; Rocket’s Minefield Gym coin; Old Rod recovery as a Trainer; Scoop Up return to its owner | `test_card_fidelity_clefairy_doll.js`; [Bulbapedia card text and Trainer classification](https://bulbapedia.bulbagarden.net/wiki/Clefairy_Doll_(TCG)); [Serebii Base #70](https://www.serebii.net/card/base/070.shtml); [2003 WotC ruling compilation](https://www.studocu.com/en-us/document/murphy-high-school-alabama/3d-art/master-rules-document-2/74208328) | Partial; 50 reducer scenarios across Classic, Neo-theme, online-preview 60-card and 40-card configurations, with Classic-only Chaos Gym, Minefield Gym, Old Rod and Scoop Up interactions. Wider Trainer/attack interactions and browser/network UI remain unchecked |
 
 Regression verification: `node test_card_fidelity_clefairy_doll.js` passes 50 reducer scenarios. The card record now uses Trainer identity in hand; its in-play effective form is a 10 HP Basic Pokémon. Tests confirm it cannot be selected as the opening Active or benched via the ordinary Basic command, enters play through Trainer play, and gets both relevant Stadium coin interactions. The WotC ruling compilation says it is a Trainer in hand, a Basic Pokémon in play, and both while being played; it cannot be used at setup, and the Chaos Gym/Rocket’s Minefield Gym triggers apply. The regression checks Chaos Gym heads/tails, opponent reuse with card ownership preserved, Minefield tails damage and no Prize, no-attack/no-retreat/status immunity, standard Knock Out promotion with no Prize, owner-controlled discard before attacking (including losing immediately if the Active Doll is the player's last Pokémon), Old Rod’s heads-Pokémon/tails-Trainer classification, and Scoop Up returning a redirected Doll to its owner. This remains partial; not every Trainer/attack that can target Pokémon in play or client/network rendering has been audited.
+
+
+## Devolution Spray (Base #72)
+
+| Card | Scope checked | Evidence | Status |
+| --- | --- | --- | --- |
+| Devolution Spray (`base1-72`) | Stage 1 versus Stage 2 removal; preserved damage and Energy; removal of Special Conditions and attack effects; Knock Out after devolution lowers maximum HP, including Prize and promotion; WotC-era same-turn re-evolution once; atomic rejection if no evolved Pokémon is in play | `test_card_fidelity_devolution_spray.js`; [Serebii Base #72](https://www.serebii.net/card/base/072.shtml); archived [WotC chat logs](https://www.elitefourum.com/t/wotc-chat-logs-from-feb-2000-to-nov-2000-q-a-w-employees/16872/1), Q7, Q10, Q11, and follow-up Q42 | Partial pending the latest Base card fidelity CI run; Chaos Gym, other Trainer interactions, and browser/network integration remain unchecked |
+
+The WotC-era ruling says Devolution Spray does not count as evolving; it allows re-evolving the same Pokémon in the same turn and confirms attack effects such as Smokescreen and Agility are removed. The scenario test is deliberately scoped to the Base Set printing and authoritative Classic reducer. It does not establish complete Trainer or client fidelity.
