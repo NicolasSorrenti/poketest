@@ -1800,7 +1800,12 @@
       "effects": [
         {
           "kind": "trainer",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "test_card_fidelity_devolution_spray.js (6 scenarios; Base card fidelity run 41191996000 passed)",
+            "Archived WotC chat logs Q7/Q10/Q11/follow-up Q42: same-turn re-evolution and clearing attack effects"
+          ],
+          "scope": "Base Set #72 only. Six Classic reducer scenarios passed in Base card fidelity run 41191996000: Stage 1/Stage 2 distinction and sole-stage auto-selection; retained damage/Energy; cleared status/attack effects; post-devolution Knock Out with Prize/promotion; same-turn re-evolution once; atomic rejection without an evolved target. No Chaos Gym, hidden-information, browser/online-client, or broader Trainer interactions certified."
         }
       ]
     },

@@ -87,6 +87,7 @@ function cannotSwitch(g,side){
 }
 function prompt(g,plan,helpers){
  const side=plan.side,p=g.players[side],f=g.players[1-side],d=plan.data,name=get(plan.cardId).name;
+ if(name==='Devolution Spray'&&![p.active,...p.bench].some(u=>u?.under?.length))throw Error('Devolution Spray requires an evolved Pokémon');
  if(!plan.proxy)held(p,plan.cardId,plan.handIndex);
  if(name==='Clefairy Doll'&&p.bench.length>=5)throw Error('Clefairy Doll requires a free Bench slot');
  // Additional Gym Trainer effects; all hidden-card choices belong to their owner.
@@ -568,8 +569,8 @@ function prompt(g,plan,helpers){
  if(name==='Revive'&&!chosen(d,'recover'))return single('recover',side,disc(p,isBasicPokemon),'Choose Basic Pokémon');
  if(name==="Rocket's Sneak Attack"&&!chosen(d,'oppHand')){const a=options(zone(f.hand,c=>c.supertype==='Trainer'),'hand');if(a.length)return single('oppHand',side,a,'Choose opponent Trainer to shuffle away');d.oppHand=[];}
  if(name==='Devolution Spray'&&!chosen(d,'stage')){
-  const u=slot(p,nums(d,'target')[0]),c=get(u.id);const vals=[{i:1,label:'Remove Stage 1 and Stage 2'},{i:2,label:'Remove Stage 2'}].filter(o=>o.i===1||c.subtypes?.includes('Stage 2'));
-  return single('stage',side,options(vals,'stage'),'Choose evolution stage to remove');
+  const u=slot(p,nums(d,'target')[0]),c=get(u.id);const vals=[{i:1,label:'Remove Stage 1 and Stage 2'},{i:2,label:'Remove Stage 2'}].filter(o=>o.i===1||c.subtypes?.includes('Stage 2')),items=options(vals,'stage');
+  if(items.length===1)d.stage=[items[0].id];else return single('stage',side,items,'Choose evolution stage to remove');
  }
  if(name==='Pokémon Breeder'){
   const eligibleBasics=evolved=>{
@@ -1063,7 +1064,7 @@ function commit(g,plan,h){
    if(idx===-1){if(!p.bench.length){g.over=true;g.winner=1-plan.side;}else {g.pendingPromotions=[plan.side];g.promotionAfter='direct';h.finishPromotions(g);}}break;
   }
   case 'Devolution Spray':{const u=slot(p,pick('target'));const stage=pick('stage');const cards=[u.id,...u.under];const remaining=cards.filter(id=>get(id).subtypes?.includes('Basic')||(stage===2&&get(id).subtypes?.includes('Stage 1')));
-   if(!remaining.length)throw Error('Devolution without a Basic Pokémon');u.id=remaining[0];u.under=remaining.slice(1);p.discard.push(...cards.filter(id=>!remaining.includes(id)));STATUS.clearConditions(u);h.clearBenchEffects(u);break;}
+   if(!remaining.length)throw Error('Devolution without a Basic Pokémon');u.id=remaining[0];u.under=remaining.slice(1);p.discard.push(...cards.filter(id=>!remaining.includes(id)));STATUS.clearConditions(u);h.clearBenchEffects(u);u.devolvedTurnSerial=g.turnSerial;h.knockOuts(g,'trainer');break;}
   case 'Pokémon Breeder':{
    const handIdx=pick('evolution')>plan.handIndex?pick('evolution')-1:pick('evolution'),[id]=p.hand.splice(handIdx,1),u=slot(p,pick('target'));
    u.under.unshift(u.id);u.id=id;u.playedTurn=g.round;STATUS.clearConditions(u);h.clearBenchEffects(u);h.onPlay?.(g,plan.side,pick('target'));break;
