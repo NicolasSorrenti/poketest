@@ -936,3 +936,35 @@ test('Apex delays an unready rescue evolution when the KO requires a Confusion f
   AI.score(evolveActive,confused,cfg,{})+200,
   'a guaranteed rescue should beat a speculative Confusion-flip rescue');
 });
+
+test('Apex recognizes Potion Energy preventing a public next-turn knockout',()=>{
+ // Neo Genesis Potion Energy heals one damage counter when attached.
+ // A 70-HP Hitmonchan at 50 damage is KO'd by a ready 20-damage Rattata;
+ // healing to 40 damage raises its remaining HP from 20 to 30.
+ const potion='base5-82',plain='base5-81'; // Full Heal Energy, same Colorless output
+ const activeAttachment={type:'attach_energy',payload:{handIndex:0,slot:-1}};
+ const scenario=(id,damage,enemyEnergy=[FIGHT])=>{
+  const o=board();
+  Object.assign(o,{phase:'game',turn:1,round:5,turnSerial:11,over:false});
+  o.self.active.damage=damage;
+  o.self.hand=[id];
+  o.opponent.active={id:RATTATA,energies:enemyEnergy,damage:0,status:null};
+  return o;
+ };
+ const saving=AI.score(activeAttachment,scenario(potion,50),cfg,{});
+ const plainSaving=AI.score(activeAttachment,scenario(plain,50),cfg,{});
+ assert.ok(saving>plainSaving+80,
+  'healing that prevents a certain public KO should beat neutral Colorless Energy');
+ const safe=AI.score(activeAttachment,scenario(potion,10,[]),cfg,{});
+ const plainSafe=AI.score(activeAttachment,scenario(plain,10,[]),cfg,{});
+ assert.ok(safe>plainSafe,'damaged hosts should receive a modest real healing bonus');
+ assert.ok(saving-plainSaving>safe-plainSafe+60,
+  'survival swing should matter more than routine ten-damage healing');
+ assert.equal(AI.score(activeAttachment,scenario(potion,0),cfg,{}),
+  AI.score(activeAttachment,scenario(plain,0),cfg,{}),
+  'a healthy host must not receive a phantom healing bonus');
+ const lower=AI.configuration({side:1,level:7});
+ assert.equal(AI.score(activeAttachment,scenario(potion,50),lower,{}),
+  AI.score(activeAttachment,scenario(plain,50),lower,{}),
+  'existing Level 7 attachment scoring remains unchanged');
+});
