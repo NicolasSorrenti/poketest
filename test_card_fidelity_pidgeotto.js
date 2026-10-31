@@ -27,7 +27,7 @@ for(const v of variants){
  {const g=game(v);g.players[0].active=unit(v.id,[v.dce]);g.players[1].active=unit('base1-3');g.players[1].bench=[unit('base1-44')];act(g,0,'attack',{attackIndex:0});assert.equal(g.pendingDecision,null);assert.equal(g.players[1].active.id,'base1-44');assert.equal(g.players[1].bench[0].id,'base1-3');assert.equal(g.players[1].bench[0].damage,20);scenarios++;}
  {const g=game(v);g.players[0].active=unit(v.id,[v.dce]);g.players[1].active=unit('base1-3');act(g,0,'attack',{attackIndex:0});assert.equal(g.pendingDecision,null);assert.equal(g.players[1].active.damage,20);scenarios++;}
  // Mirror Move is unavailable unless Pidgeotto took an attack last turn.
- {const g=game(v);g.players[0].active=unit(v.id,[v.grass,v.grass,v.grass]);reject(g,0,'attack',{attackIndex:1});scenarios++;}
+ {const g=game(v);g.players[0].active=unit(v.id,[v.grass,v.grass,v.grass]);const before=structuredClone(g),r=applyCommand(g,0,{type:'attack',payload:{attackIndex:1}});assert.equal(r.ok,false);assert.match(r.error,/Mirror Move requires a hit on the previous turn/);assert.deepEqual(g,before);scenarios++;}
  // Poison Sting's final result includes Poison. The baseline engine recorded
  // damage but lost the separate poison flag, so Mirror Move failed to repeat it.
  {const g=game(v);g.players[0].active=unit('base1-17',[v.grass,v.grass,v.grass]);g.players[1].active=unit(v.id,[v.grass,v.grass,v.grass]);g.rngState=50000;
