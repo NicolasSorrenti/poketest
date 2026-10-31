@@ -57,6 +57,13 @@ for(const v of variants){
   act(g,0,'choose',{decisionId:g.pendingDecision.id,selected:['prize:0']});
   assert.equal(g.players[0].active.id,'base1-44');assert.equal(g.players[1].active.id,'base1-58');
   assert.equal(g.players[0].prizes.length,5);assert.equal(g.players[1].prizes.length,5);scenarios++;
+
+  // Strikes Back retaliates because Take Down also damaged its defender,
+  // even when that defender is Knocked Out; recoil remains a separate 30.
+  {const g=game(v);g.players[0].active=unit(v.id,[v.fire,v.fire,v.dce]);g.players[1].active=unit('base1-8',[],20);
+   g.players[0].bench=[unit('base1-44')];g.players[1].bench=[unit('base1-58')];
+   act(g,0,'attack',{attackIndex:1});assert.equal(g.players[1].active,null);assert.equal(g.players[0].active.damage,40,'30 Take Down recoil plus 10 Strikes Back');
+   assert.equal(g.pendingDecision?.kind,'prize-card');assert.equal(g.pendingDecision.actor,0);scenarios++;}
  }
 }
 console.log(`PASS Arcanine Take Down: ${scenarios} reducer scenarios`);
