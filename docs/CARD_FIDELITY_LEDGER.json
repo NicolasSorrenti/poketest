@@ -2059,7 +2059,12 @@
       "effects": [
         {
           "kind": "trainer",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Printed wording compared across Base #90 and Base Set 2 #117; archived WotC Q&A confirms Energy must come from the Pokémon being healed; historical WotC errata compilation confirms exactly four counters are removed when possible, otherwise all remaining counters.",
+            "Code review: heal/payment remain on the same eligible Pokémon; sole eligible target and identical attached Energy copies now auto-resolve, while distinct Energy cards remain selectable. No scenario regression added; other interactions and client/network behavior remain unchecked."
+          ],
+          "scope": "Super Potion Base #90 and Base Set 2 #117: printed wording parity, cost ownership and four-counter healing rule reviewed; code change auto-selects the sole eligible damaged Pokémon with Energy and auto-discards identical Energy copies, preserving choice among distinct Energy. Partial manual/code review only; no added regression test."
         }
       ]
     },
@@ -6950,7 +6955,12 @@
       "effects": [
         {
           "kind": "trainer",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Printed wording compared across Base #90 and Base Set 2 #117; archived WotC Q&A confirms Energy must come from the Pokémon being healed; historical WotC errata compilation confirms exactly four counters are removed when possible, otherwise all remaining counters.",
+            "Code review: heal/payment remain on the same eligible Pokémon; sole eligible target and identical attached Energy copies now auto-resolve, while distinct Energy cards remain selectable. No scenario regression added; other interactions and client/network behavior remain unchecked."
+          ],
+          "scope": "Super Potion Base #90 and Base Set 2 #117: printed wording parity, cost ownership and four-counter healing rule reviewed; code change auto-selects the sole eligible damaged Pokémon with Energy and auto-discards identical Energy copies, preserving choice among distinct Energy. Partial manual/code review only; no added regression test."
         }
       ]
     },
