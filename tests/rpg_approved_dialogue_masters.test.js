@@ -4,6 +4,7 @@ const assert=require('node:assert/strict');
 const fs=require('node:fs');
 const path=require('node:path');
 const vm=require('node:vm');
+const crypto=require('node:crypto');
 const root=path.join(__dirname,'..');
 const rpg=fs.readFileSync(path.join(root,'rpg.js'),'utf8');
 const world=fs.readFileSync(path.join(root,'rpg-overworld-integration.js'),'utf8');
@@ -16,7 +17,8 @@ const images={
  teo:'rpg-assets/characters/teo/dialogue/neutral.png',
  nereo:'rpg-assets/characters/nereo/dialogue/neutral.png',
  elio:'rpg-assets/characters/elio/dialogue/neutral.png',
- shiori:'rpg-assets/characters/shiori/dialogue/neutral.png'
+ shiori:'rpg-assets/characters/shiori/dialogue/neutral.png',
+ marina:'rpg-assets/characters/marina/dialogue/neutral.png'
 };
 test('approved masters are existing binary files; Iris copy is unmodified',()=>{
  for(const [id,p] of Object.entries(images)){
@@ -84,4 +86,17 @@ test('Shiori dialogue master is the unchanged standing-book artwork',()=>{
  assert.deepEqual(fs.readFileSync(path.join(root,copy)),fs.readFileSync(path.join(root,original)));
  assert.ok(rpg.includes("shiori:'/rpg-assets/characters/shiori/dialogue/neutral.png'"));
  assert.ok(world.includes('/'+copy));
+});
+
+
+test('Marina approved dialogue PNG retains its exact uploaded bytes and registration',()=>{
+ const approved='rpg-assets/characters/marina/dialogue/neutral.png';
+ const bytes=fs.readFileSync(path.join(root,approved));
+ assert.equal(crypto.createHash('sha256').update(bytes).digest('hex'),
+  '3b9e86991583b765908279503dfa491b035f9bc6d2211bf677e0c2598d24afbf');
+ assert.deepEqual([...bytes.subarray(0,8)],[137,80,78,71,13,10,26,10]);
+ assert.equal(bytes.readUInt32BE(16),1024);
+ assert.equal(bytes.readUInt32BE(20),1536);
+ assert.ok(rpg.includes("marina:'/rpg-assets/characters/marina/dialogue/neutral.png'"));
+ assert.ok(world.includes('/'+approved));
 });
