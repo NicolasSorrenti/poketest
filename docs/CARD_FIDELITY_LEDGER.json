@@ -577,13 +577,13 @@
      "kind": "attack",
      "index": 0,
      "name": "Whirlwind",
-     "status": "unreviewed"
+     "status": "partial"
     },
     {
      "kind": "attack",
      "index": 1,
      "name": "Mirror Move",
-     "status": "unreviewed"
+     "status": "partial"
     }
    ]
   },
@@ -4635,13 +4635,13 @@
      "kind": "attack",
      "index": 0,
      "name": "Whirlwind",
-     "status": "unreviewed"
+     "status": "partial"
     },
     {
      "kind": "attack",
      "index": 1,
      "name": "Mirror Move",
-     "status": "unreviewed"
+     "status": "partial"
     }
    ]
   },
