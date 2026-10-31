@@ -11,6 +11,11 @@ function test(ix,energyNames=[],opts={}){const rec=target.find(x=>x.index===ix);
 // Historical damage formulas and values must be compared to game-state output, not just attack-pattern recognition.
 let x=test(4,['Water']);assert(x.go());assert.equal(x.check('engine.foe.active.damage'),10,'Base Poliwag Water Gun: no bonus with one Energy');
 x=test(4,['Water','Water','Water','Water']);assert(x.go());assert.equal(x.check('engine.foe.active.damage'),30,'Poliwag Water Gun has +20 cap');
+// Water Gun's bonus is typed Water Energy, not generic attached Energy. Both
+// printings must resolve their exact current catalogue text through Batch 43.
+x=test(4,['Water','Fire','Fire','Fire']);assert(x.go());assert.equal(x.check('engine.foe.active.damage'),10,'Base Poliwag ignores extra Fire Energy');
+x=test(19,['Water','Fire','Fire','Fire']);assert(x.go());assert.equal(x.check('engine.foe.active.damage'),10,'Base 2 Poliwag ignores extra Fire Energy');
+x=test(19,['Water','Water','Water','Fire']);assert(x.go());assert.equal(x.check('engine.foe.active.damage'),30,'Base 2 Poliwag caps Water-only bonus at +20');
 x=test(200,['Grass','Grass'],{tails:false});assert(x.go());assert.equal(x.check('engine.foe.active.damage'),90,'Fury Cutter: exactly 4 heads = 90');
 x=test(200,['Grass','Grass'],{tails:true});assert(x.go());assert.equal(x.check('engine.foe.active.damage'),10,'Fury Cutter: 0 heads = 10');
 x=test(315,['Water','Water','Water','Water','Water','Water']);assert(x.go());assert.equal(x.check('engine.foe.active.damage'),40,'Ink Blast max +20');
