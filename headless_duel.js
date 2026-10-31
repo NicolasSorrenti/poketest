@@ -318,6 +318,32 @@ function planFinalAttack(g,side,attackIndex,program,plan={side,attackIndex,data:
   if(!options.length)fail('No Trainer card in discard pile');
   finalChoice(g,plan,'recover-trainer',side,options,{label:'Choose the Trainer to recover'});return;
  }
+ // Mandatory Energy-discard attacks are declared and paid before
+ // Sand-attack/Smokescreen prevention; any later effect choices follow the
+ // prevention and Confusion checks.
+ const paysBeforePrevention=['barrier','destiny-bond','scavenge','third-eye'].includes(kind);
+ if(paysBeforePrevention&&!data.attackPenaltyChecked&&Array.isArray(data.energyPicks)){
+  if(hasActiveEffect(u,'attackLock',g)&&f.active?.id===u.attackLock.targetId)fail('Cannot attack this Pokémon this turn');
+  const picks=data.energyPicks,quantity=1;
+  const type=['barrier','destiny-bond'].includes(kind)?'Psychic':null;
+  if(picks.length!==quantity||new Set(picks).size!==quantity||
+     picks.some(i=>!Number.isInteger(i)||i<0||i>=u.energies.length||type&&!attachedEnergyMatchesType(g,u.energies[i],type)))fail('Illegal attack Energy payment');
+  const discarded=[];
+  for(const i of [...picks].sort((a,b)=>b-a)){const id=u.energies.splice(i,1)[0];p.discard.push(id);discarded.unshift(id);}
+  log(g,card(g,u.id).name+' discarded '+discarded.map(id=>card(g,id).name).join(', ')+' to use '+a.name+'.');
+  data.attackPenaltyPaymentCommitted=true;
+  data.attackPenaltyChecked=true;
+  if(hasActiveEffect(u,'attackPenalty',g)&&next(g,2)===0){
+   log(g,card(g,u.id).name+'\'s attack failed due to '+(u.attackPenalty.sourceName||'Smokescreen')+'.');
+   finishTurn(g);return;
+  }
+  if(u.status==='Confused'&&next(g,2)===0){
+   const self=calculateDamage(card(g,u.id),card(g,u.id),20)+(isClassicRules(g)&&CLASSIC_POWERS.enabled(g,u,'Frenzy')?30:0);
+   u.damage+=self;log(g,card(g,u.id).name+' hurts itself in Confusion for '+self+' damage.');
+   if(!knockOuts(g,'checkup'))finishTurn(g);return;
+  }
+  data.confusionChecked=true;
+ }
  if(kind==='third-eye'&&!Object.hasOwn(data,'drawCount')){
   finalChoice(g,plan,'draw-count',side,Array.from({length:4},(_,i)=>({id:`count:${i}`,label:`Draw ${i} card${i===1?'':'s'}`})),{label:'Draw up to 3 cards'});return;
  }
@@ -1204,11 +1230,18 @@ function performAction(g,side,cmd){
   if(program.kind==='neo47:discharge'&&!u.energies.some(id=>card(g,id).name==='Lightning Energy'))fail('Discharge requires attached Lightning Energy');
   if(program.kind.startsWith('theme:')){themeAttackPlan(g,{side,attackIndex:index,data:{}});return;}
   if(FINAL_KINDS.has(program.kind)){
-   // Historical attack order: Confusion/Smokescreen is checked BEFORE any
-   // attack-specific coin flip or choice about post-flip Energy discards.
-   const plan={side,attackIndex:index,data:{confusionChecked:u.status==='Confused',attackPenaltyChecked:hasActiveEffect(u,'attackPenalty',g)}};
-   if(u.status==='Confused'&&next(g,2)===0){u.damage+=20+(isClassicRules(g)&&CLASSIC_POWERS.enabled(g,u,'Frenzy')?30:0);log(g,`${c.name} hurt itself in Confusion.`);if(!knockOuts(g,'checkup'))finishTurn(g);return;}
-   if(hasActiveEffect(u,'attackPenalty',g)&&next(g,2)===0){log(g,`${c.name}'s attack failed due to Smokescreen.`);finishTurn(g);return;}
+   // WotC Q20: attacks that require an Energy discard pay it before the
+   // prevention flip. planFinalAttack commits that cost before checking
+   // Smokescreen and then Confusion, before asking for any later choices.
+   const paysBeforePrevention=['barrier','destiny-bond','scavenge','third-eye'].includes(program.kind);
+   const plan={side,attackIndex:index,data:{
+    confusionChecked:!paysBeforePrevention&&u.status==='Confused',
+    attackPenaltyChecked:!paysBeforePrevention&&hasActiveEffect(u,'attackPenalty',g)
+   }};
+   if(!paysBeforePrevention){
+    if(hasActiveEffect(u,'attackPenalty',g)&&next(g,2)===0){log(g,`${c.name}'s attack failed due to ${u.attackPenalty.sourceName||'Smokescreen'}.`);finishTurn(g);return;}
+    if(u.status==='Confused'&&next(g,2)===0){u.damage+=20+(isClassicRules(g)&&CLASSIC_POWERS.enabled(g,u,'Frenzy')?30:0);log(g,`${c.name} hurt itself in Confusion.`);if(!knockOuts(g,'checkup'))finishTurn(g);return;}
+   }
    planFinalAttack(g,side,index,program,plan);return;
   }
   if(program.kind==='fling'&&!f.bench.length)fail('Fling requires an opponent Benched Pokémon');
@@ -1508,7 +1541,7 @@ function resolveAttack(g,side,index,chosenBench,energyPicks,extra={}){
  if(GYM_LAST.planned(program.kind)&&!extra.gymLastApproved)fail('Complete Gym attack choices first');
  if(FINAL_KINDS.has(program.kind)&&!extra.finalApproved)fail('Complete the historical attack decisions first');
  if(FINAL_KINDS.has(program.kind)){
-  if(['barrier','destiny-bond','scavenge','third-eye'].includes(program.kind)||['continuous-fireball','fireball','playing-with-fire'].includes(program.kind)&&extra.preRoll?.discardHeadCount){
+  if((!extra.attackPenaltyPaymentCommitted&&['barrier','destiny-bond','scavenge','third-eye'].includes(program.kind))||['continuous-fireball','fireball','playing-with-fire'].includes(program.kind)&&extra.preRoll?.discardHeadCount){
    const quantity=['continuous-fireball','fireball','playing-with-fire'].includes(program.kind)?extra.preRoll.discardHeadCount:1;
    if(!Array.isArray(energyPicks)||energyPicks.length!==quantity||new Set(energyPicks).size!==quantity||energyPicks.some(i=>!Number.isInteger(i)||i<0||i>=u.energies.length||['continuous-fireball','fireball','playing-with-fire'].includes(program.kind)&&!attachedEnergyMatchesType(g,u.energies[i],'Fire')||['barrier','destiny-bond'].includes(program.kind)&&!attachedEnergyMatchesType(g,u.energies[i],'Psychic')))fail('Invalid final attack Energy selection');
   }
@@ -1607,7 +1640,7 @@ function resolveAttack(g,side,index,chosenBench,energyPicks,extra={}){
   if(!Array.isArray(picks)||picks.length!==quantity||new Set(picks).size!==quantity||picks.some(i=>!Number.isInteger(i)||i<0||i>=u.energies.length||program.onlyType&&!attachedEnergyMatchesType(g,u.energies[i],program.onlyType)))fail('Illegal attack Energy payment');
   for(const i of [...picks].sort((a,b)=>b-a))p.discard.push(u.energies.splice(i,1)[0]);
  }
- if(!attackPenaltyPaymentCommitted&&!extra.gymCharityApproved&&!extra.gymESPResuming&&FINAL_KINDS.has(program.kind)&&program.kind!=='flame-pillar'&&Array.isArray(energyPicks)){
+ if(!attackPenaltyPaymentCommitted&&!extra.attackPenaltyPaymentCommitted&&!extra.gymCharityApproved&&!extra.gymESPResuming&&FINAL_KINDS.has(program.kind)&&program.kind!=='flame-pillar'&&Array.isArray(energyPicks)){
   const discarded=[];
   for(const i of [...energyPicks].sort((a,b)=>b-a)){const id=u.energies.splice(i,1)[0];p.discard.push(id);discarded.unshift(id);}
   if(discarded.length)log(g,`${c.name} discarded ${discarded.map(id=>card(g,id).name).join(', ')} to use ${a.name}.`);
