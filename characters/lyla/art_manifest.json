@@ -8,5 +8,27 @@
     "backView": "/rpg-assets/characters/lyla/overworld/back-view.png",
     "arcade": "/rpg-assets/characters/lyla/overworld/arcade.png"
   },
-  "attack": "/rpg-assets/characters/lyla/attack.png"
+  "attack": "/rpg-assets/characters/lyla/attack.png",
+  "eventImages": [
+    {
+      "sceneId": "lyla_studio_black",
+      "path": "/rpg-assets/characters/lyla/events/lyla_studio_01.png",
+      "prompt": "Approved original Lyla studio CG 1: Lyla leans over the studio table in a black velvet editorial dress, looking back toward the camera. Preserve the user-supplied PNG exactly; adult character, professional editorial setting."
+    },
+    {
+      "sceneId": "lyla_studio_portrait",
+      "path": "/rpg-assets/characters/lyla/events/lyla_studio_02.png",
+      "prompt": "Approved original Lyla studio CG 2: The next setup is a close portrait in soft studio light. Lyla studies the camera with her usual half-lidded expression. Preserve the user-supplied PNG exactly; adult character, professional editorial setting."
+    },
+    {
+      "sceneId": "lyla_studio_styling",
+      "path": "/rpg-assets/characters/lyla/events/lyla_studio_03.png",
+      "prompt": "Approved original Lyla studio CG 3: A stylist brings a coordinated pale outfit for the third setup. Lyla checks the styling and the photographer's reference images before stepping into the lights. Preserve the user-supplied PNG exactly; adult character, professional editorial setting."
+    },
+    {
+      "sceneId": "lyla_studio_floor",
+      "path": "/rpg-assets/characters/lyla/events/lyla_studio_04.png",
+      "prompt": "Approved original Lyla studio CG 4: After the final setup, Lyla sits on the studio floor in her styled outfit and sneakers. The lights are still warm, but the crew is packing away the equipment. Preserve the user-supplied PNG exactly; adult character, professional editorial setting."
+    }
+  ]
 }
