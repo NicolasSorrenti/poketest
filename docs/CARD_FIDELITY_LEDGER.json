@@ -1482,7 +1482,11 @@
      "kind": "attack",
      "index": 0,
      "name": "Whirlwind",
-     "status": "unreviewed"
+     "status": "partial",
+     "evidence": [
+      "test_card_fidelity_pidgey.js (42 reducer scenarios); Base Set text and stats compared with Serebii #57 and the Base/Base Set 2 print record on Bulbapedia; Base Set 2 parity cross-checked with Limitless #86; official Pokémon TCG errata index searched, no Pidgey/Pidgeotto entry."
+     ],
+     "scope": "Whirlwind's two-Colorless cost and fixed 10 damage; Double Colorless payment and underpayment rejection; damage on the original Defending Pokémon before the switch; defender-owned choice with two Benched Pokémon; automatic switch with one Benched Pokémon; no-op with an empty Bench; switch clears the old Active's Confusion; Knock Out, Prize, and promotion sequence does not trigger a second switch. Tested in Classic Base, Neo-theme, and online-preview 60/40; other interactions and client/network behavior remain unchecked."
     }
    ]
   },
@@ -6251,7 +6255,11 @@
      "kind": "attack",
      "index": 0,
      "name": "Whirlwind",
-     "status": "unreviewed"
+     "status": "partial",
+     "evidence": [
+      "test_card_fidelity_pidgey.js (42 reducer scenarios); Base Set text and stats compared with Serebii #57 and the Base/Base Set 2 print record on Bulbapedia; Base Set 2 parity cross-checked with Limitless #86; official Pokémon TCG errata index searched, no Pidgey/Pidgeotto entry."
+     ],
+     "scope": "Whirlwind's two-Colorless cost and fixed 10 damage; Double Colorless payment and underpayment rejection; damage on the original Defending Pokémon before the switch; defender-owned choice with two Benched Pokémon; automatic switch with one Benched Pokémon; no-op with an empty Bench; switch clears the old Active's Confusion; Knock Out, Prize, and promotion sequence does not trigger a second switch. Tested in Classic Base, Neo-theme, and online-preview 60/40; other interactions and client/network behavior remain unchecked."
     }
    ]
   },
