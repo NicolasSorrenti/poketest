@@ -1154,3 +1154,28 @@ test('optional Apex evolution forecast does not retain Basic effectiveAttacks',(
  assert.equal(AI.planningBonus(evolve,inherited,planning),baseline,
   'evolved Machoke must use its own attack list');
 });
+
+test('Apex two-step forecast accounts for Full Heal Energy clearing attack-blocking conditions',()=>{
+ const attachActive={type:'attach_energy',payload:{handIndex:0,slot:-1}};
+ const attachBench={type:'attach_energy',payload:{handIndex:0,slot:0}};
+ const make=(energy,status)=>{
+  const o=board();
+  Object.assign(o,{phase:'game',round:5,turnSerial:11});
+  o.self.active.status=status;
+  o.self.active.energies=[FIGHT]; // Hitmonchan's Jab is already funded.
+  o.self.hand=[energy];
+  o.self.energyUsed=false;
+  return o;
+ };
+ const planning={...cfg,planning:true};
+ for(const status of ['Asleep','Paralyzed']){
+  assert.ok(AI.planningBonus(attachActive,make('base5-81',status),planning)>0,
+   'Full Heal Energy should unlock an attack after curing '+status);
+  assert.equal(AI.planningBonus(attachActive,make('base5-82',status),planning),0,
+   'Potion Energy cannot cure '+status);
+  assert.equal(AI.planningBonus(attachBench,make('base5-81',status),planning),0,
+   'curing a Benched Pokemon does not wake the Active');
+ }
+ assert.equal(AI.planningBonus(attachActive,make('base5-81',null),planning),0,
+  'a healthy, already funded Active gets no phantom attack unlock');
+});
