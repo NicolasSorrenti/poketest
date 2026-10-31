@@ -1054,7 +1054,7 @@ function performAction(g,side,cmd){
   if(!canEvolve(c,card(g,u.id))||((u.playedTurn>=g.round)&&!(u.giovanniEvolveUntil>g.turnSerial&&c.name.startsWith("Giovanni's "))))fail('Illegal evolution');
   if((c.abilities||[]).length&&!isClassicRules(g))fail('Evolution has an unported on-play Power');
   if(isClassicRules(g)&&CLASSIC_POWERS.powerInPlay(g,'Prehistoric Power'))fail('Prehistoric Power prevents evolution');
-  u.under.unshift(u.id);u.id=p.hand.splice(v.handIndex,1)[0];u.playedTurn=g.round;STATUS.clearConditions(u);clearBenchEffects(u);delete u.leekSlapUsed;delete u.weaknessOverride;delete u.resistanceOverride;p.turnPlays.push(v.slot);
+  u.under.unshift(u.id);u.id=p.hand.splice(v.handIndex,1)[0];u.playedTurn=g.round;STATUS.clearConditions(u);clearBenchEffects(u);delete u.lightningRodMarker;delete u.leekSlapUsed;delete u.weaknessOverride;delete u.resistanceOverride;p.turnPlays.push(v.slot);
   if(g.stadium&&card(g,g.stadium.id).name==='Viridian City Gym'&&c.name.startsWith("Giovanni's "))u.damage=Math.max(0,u.damage-20);
   log(g,`${p.name} evolved into ${c.name}.`);if(isClassicRules(g))CLASSIC_POWERS.played(g,side,v.slot,classicHelpers());return;
  }
@@ -1378,10 +1378,14 @@ function performAction(g,side,cmd){
    log(g,`${c.name} discarded ${quantity} ${card(g,u.energies[eligible[0]]).name}${quantity===1?'':' cards'} to use ${a.name}.`);
    resolveAttack(g,side,index,undefined,eligible.slice(0,quantity));return;
   }
-  if(['bench-target','switch-attacker','switch-self','target-any','target-any-coin','drag-off'].includes(program.kind)){
+  if(['bench-target','switch-attacker','switch-self','target-any','target-any-coin','drag-off','promo86:lightning-rod','promo86:lightning-bolt'].includes(program.kind)){
    const owner=program.kind==='switch-self'?p:f;
-   if(['target-any','target-any-coin'].includes(program.kind)){
-    g.nextDecisionId++;g.pendingDecision=makeDecision({id:`attack:${g.nextDecisionId}`,actor:side,kind:'pokemon-target',label:`${a.name}: choose a target`,options:[{id:'bench:-1',label:`Active: ${publicName(g,f.active)}`},...f.bench.map((x,i)=>({id:`bench:${i}`,label:publicName(g,x)}))],min:1,max:1});
+   if(['target-any','target-any-coin'].includes(program.kind)||program.kind==='promo86:lightning-rod'||program.kind==='promo86:lightning-bolt'){
+    const options=[{id:'bench:-1',label:`Active: ${publicName(g,f.active)}`},...f.bench.map((x,i)=>({id:`bench:${i}`,label:publicName(g,x)}))];
+    const candidates=program.kind==='promo86:lightning-bolt'?options.filter(o=>{const i=Number(o.id.slice(6));return (i===-1?f.active:f.bench[i])?.lightningRodMarker;}):options;
+    if(!candidates.length){resolveAttack(g,side,index);return;}
+    if(candidates.length===1){resolveAttack(g,side,index,Number(candidates[0].id.slice(6)));return;}
+    g.nextDecisionId++;g.pendingDecision=makeDecision({id:`attack:${g.nextDecisionId}`,actor:side,kind:'pokemon-target',label:`${a.name}: choose a target`,options:program.kind==='promo86:lightning-rod'?options:candidates,min:1,max:1});
     g.pendingAction={kind:'attack_target',side,attackIndex:index};return;
    }
    if(owner.bench.length===1){resolveAttack(g,side,index,0);return;}
@@ -1521,9 +1525,13 @@ function resolveAttack(g,side,index,chosenBench,energyPicks,extra={}){
 
  if(!canPayEnergy(a.cost||[],attackPool(g,u)) && !(isClassicRules(g)&&card(g,u.id).name==='Ditto'&&CLASSIC_POWERS.enabled(g,u,'Transform')&&u.energies.reduce((count,id)=>count+(card(g,id).name==='Double Colorless Energy'?2:1),0)>=(a.cost||[]).length))fail('Insufficient attack Energy');
  if((program.kind!=='neo46:plunder'&&f.active.attachedTrainers.some(t=>!['Defender','PlusPower','Berry','Counterattack Claws','Focus Band','EXP.ALL','Gold Berry','Miracle Berry','Balloon Berry','Magnifier',"Brock's Protection","Koga's Ninja Trick","Sabrina's ESP","Charity"].includes(card(g,t.id).name)))||f.active.energies.some(id=>(card(g,id).subtypes||[]).includes('Special')&&!['Double Colorless Energy','Full Heal Energy','Potion Energy','Metal Energy','Darkness Energy','Recycle Energy','Rainbow Energy','Miracle Energy'].includes(card(g,id).name)))fail('Damage or Energy modifiers require effect handlers');
- const usesChoice=['bench-target','switch-attacker','switch-self','target-any','target-any-coin','drag-off'].includes(program.kind);
+ const usesChoice=['bench-target','switch-attacker','switch-self','target-any','target-any-coin','drag-off','promo86:lightning-rod','promo86:lightning-bolt'].includes(program.kind);
  if(usesChoice){const owner=program.kind==='switch-self'?p:f;
-  if(['target-any','target-any-coin'].includes(program.kind)){if(!Number.isInteger(chosenBench)||chosenBench< -1||chosenBench>=f.bench.length)fail('Invalid opponent target');}
+  if(['target-any','target-any-coin','promo86:lightning-rod','promo86:lightning-bolt'].includes(program.kind)){
+   const valid=program.kind==='promo86:lightning-bolt'?[f.active,...f.bench].flatMap((x,i)=>x?.lightningRodMarker?[i-1]:[]):[-1,...f.bench.map((_,i)=>i)];
+   if(valid.length&&(!Number.isInteger(chosenBench)||!valid.includes(chosenBench)))fail('Invalid opponent target');
+   if(!valid.length&&chosenBench!==undefined)fail('No marked Pokémon to target');
+  }
   else{if(owner.bench.length>1&&(!Number.isInteger(chosenBench)||chosenBench<0||chosenBench>=owner.bench.length))fail('Missing or invalid attack target');
    if(owner.bench.length===1&&chosenBench!==undefined&&chosenBench!==0)fail('Invalid sole attack target');
    if(!owner.bench.length&&chosenBench!==undefined)fail('No valid attack target');}
@@ -1851,7 +1859,19 @@ function resolveAttack(g,side,index,chosenBench,energyPicks,extra={}){
   f.active.attachedTrainers=[];
  }
  const defCard=effectiveCard(g,f.active),shield=hasActiveEffect(f.active,'shield',g)?f.active.shield:null;
- let baseDamage=roll.damage;
+ let baseDamage=roll.damage,lightningBoltBenchTarget=null;
+ if(program.kind==='promo86:lightning-rod'&&Number.isInteger(chosenBench)){
+  const marked=chosenBench===-1?f.active:f.bench[chosenBench];
+  if(!marked)fail('Lightning Rod target is no longer in play');
+  marked.lightningRodMarker=true;
+  log(g,`${publicName(g,marked)} received a Lightning Rod marker.`);
+ }
+ if(program.kind==='promo86:lightning-bolt'&&Number.isInteger(chosenBench)){
+  const marked=chosenBench===-1?f.active:f.bench[chosenBench];
+  if(!marked?.lightningRodMarker)fail('Lightning Bolt target no longer has a marker');
+  if(chosenBench===-1)baseDamage+=roll.lightningBoltMarkerDamage||20;
+  else lightningBoltBenchTarget=marked;
+ }
  // Focus Energy doubles the indicated base attack on the following turn only.
  // Rattata's Quick Attack bonus is NOT doubled; Raticate's recoil IS.
  if(u.gymFocus&&u.gymFocus.expires===g.turnSerial&&a.name===u.gymFocus.attack){
@@ -2007,6 +2027,20 @@ function resolveAttack(g,side,index,chosenBench,energyPicks,extra={}){
    (g.benchGuardQueue ||= []).push({owner:victim,targetIndex:owner.bench.indexOf(target),amount:defended});
   }
  }};
+ // Lightning Bolt's printed 10 applies to the Defending Pokémon; its text
+ // adds 20 to a marked Pokémon. Its explicit Weakness/Resistance instruction
+ // applies to the bonus even when the selected marker is on the Bench.
+ if(lightningBoltBenchTarget&&extra.fleeBenchIndex===undefined){
+  const markedCard=effectiveCard(g,lightningBoltBenchTarget);
+  const bonus=calculateDamage(c,markedCard,roll.lightningBoltMarkerDamage||20,lightningBoltBenchTarget,{
+   ignoreWeakness:g.stadium&&card(g,g.stadium.id).name==='Cinnabar City Gym'&&c.types?.includes('Water')&&markedCard.name.startsWith("Blaine's "),
+   ignoreResistance:u.attachedTrainers.some(t=>card(g,t.id).name==='Magnifier')||(g.stadium&&card(g,g.stadium.id).name==='Pewter City Gym'&&c.name.startsWith("Brock's ")),
+   resistancePenalty:g.stadium&&card(g,g.stadium.id).name==='Resistance Gym'?10:30
+  });
+  const before=lightningBoltBenchTarget.damage;
+  hitBench(f,lightningBoltBenchTarget,bonus);
+  log(g,`Lightning Bolt dealt ${lightningBoltBenchTarget.damage-before} extra damage to ${publicName(g,lightningBoltBenchTarget)}.`);
+ }
  // Neo multi-target attacks resolve through the existing Bench-damage helper
  // so Bench Guard, Relaxing Scent and other general Bench effects are honored.
  if(roll.neo49FireWind&&f.bench.length){const i=Number(extra.neo49Data.enemy[0].slice(6));hitBench(f,f.bench[i],10*roll.neo49FireWind);}
@@ -2077,7 +2111,7 @@ function resolveAttack(g,side,index,chosenBench,energyPicks,extra={}){
   if(kind==='super-removal'&&heads)for(const [si,v] of [[-1,f.active],...f.bench.map((x,i)=>[i,x])])if(d['energy'+si]?.length)f.discard.push(...pull(v.energies,d['energy'+si]));
   if(kind==='overhead-toss'&&!heads&&d.bench?.length)p.bench[indexOf('bench')].damage+=20;
   if(kind==='errand'&&heads){if(d.found?.length)p.hand.push(...pull(p.deck,d.found));p.deck=shuffle(g,p.deck);}
-  if(kind==='lunar-power'&&heads){if(d.evolve?.length){const [_,slot,ix]=d.evolve[0].split(':').map(Number);const target=p.bench[slot],id=p.deck.splice(ix,1)[0];target.under.unshift(target.id);target.id=id;target.playedTurn=g.round;STATUS.clearConditions(target);clearBenchEffects(target);}p.deck=shuffle(g,p.deck);}
+  if(kind==='lunar-power'&&heads){if(d.evolve?.length){const [_,slot,ix]=d.evolve[0].split(':').map(Number);const target=p.bench[slot],id=p.deck.splice(ix,1)[0];target.under.unshift(target.id);target.id=id;target.playedTurn=g.round;STATUS.clearConditions(target);clearBenchEffects(target);delete target.lightningRodMarker;}p.deck=shuffle(g,p.deck);}
   if(kind==='invigorate'){const [_,owner,ix]=d.revive[0].split(':').map(Number),op=g.players[owner],id=op.discard.splice(ix,1)[0],revived=unit(id,g.round);revived.damage=Math.floor(Number(card(g,id).hp)/20)*10;op.bench.push(revived);}
   if(kind==='pranks'&&heads&&d.discard?.length)f.deck.push(...pull(f.discard,d.discard));
   if(kind==='overrun'&&heads&&d.bench?.length)f.bench[indexOf('bench')].damage+=20;
@@ -2202,7 +2236,7 @@ function resolveAttack(g,side,index,chosenBench,energyPicks,extra={}){
   for(const i of [...(extra.discardIndices||[])].sort((a,b)=>b-a))p.hand.push(p.discard.splice(i,1)[0]);
  }
  if(roll.rapidEvolve){
-  if(extra.deckIndex!==undefined){u.under.unshift(u.id);u.id=p.deck.splice(extra.deckIndex,1)[0];u.playedTurn=g.round;STATUS.clearConditions(u);clearBenchEffects(u);delete u.leekSlapUsed;}
+  if(extra.deckIndex!==undefined){u.under.unshift(u.id);u.id=p.deck.splice(extra.deckIndex,1)[0];u.playedTurn=g.round;STATUS.clearConditions(u);clearBenchEffects(u);delete u.lightningRodMarker;delete u.leekSlapUsed;}
   p.deck=shuffle(g,p.deck);
  }
  if(roll.attachEnergyFromDeck){
@@ -2271,7 +2305,7 @@ function resolveAttack(g,side,index,chosenBench,energyPicks,extra={}){
  if(roll.charCounter&&(!shield?.allEffects||roll.ignoreDefendingEffects)&&!f.active.charCounter)f.active.charCounter=true;
  if(roll.discardSelfEnergyOnTails){const e=extra.neoDiscardIndex??0;if(!u.energies[e])fail('Fireworks Energy selection invalid');p.discard.push(u.energies.splice(e,1)[0]);}
  if(roll.energyCycle&&!protectedEnergy(f.active)&&f.active.energies.length&&f.bench.length){f.bench[extra.neoCycleBench].energies.push(f.active.energies.splice(extra.neoCycleEnergy,1)[0]);}
- if(roll.hatch){u.damage=0;if(extra.neoHatchIndex!==undefined&&extra.neoHatchIndex!==null){const evolution=card(g,p.deck[extra.neoHatchIndex]);if(evolution.evolvesFrom!=='Metapod')fail('Invalid Hatch evolution');u.under.unshift(u.id);u.id=p.deck.splice(extra.neoHatchIndex,1)[0];u.playedTurn=g.round;STATUS.clearConditions(u);clearBenchEffects(u);}p.deck=shuffle(g,p.deck);}
+ if(roll.hatch){u.damage=0;if(extra.neoHatchIndex!==undefined&&extra.neoHatchIndex!==null){const evolution=card(g,p.deck[extra.neoHatchIndex]);if(evolution.evolvesFrom!=='Metapod')fail('Invalid Hatch evolution');u.under.unshift(u.id);u.id=p.deck.splice(extra.neoHatchIndex,1)[0];u.playedTurn=g.round;STATUS.clearConditions(u);clearBenchEffects(u);delete u.lightningRodMarker;}p.deck=shuffle(g,p.deck);}
  if(roll.magicDust&&(!shield?.allEffects||roll.ignoreDefendingEffects))applyCondition(g,f.active,extra.neoStatus);
  if(roll.blankPowers)g.powerBlankUntil=g.turnSerial+3; // Sputter lasts through the end of this player's next turn
  if(roll.millSelf)for(let i=0;i<roll.millSelf&&p.deck.length;i++)p.discard.push(p.deck.pop());
