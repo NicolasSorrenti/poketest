@@ -2473,24 +2473,22 @@ function scenePortraitSource(id,expression,sceneId=activeOutfitSceneId){
  return paths.find(src=>!failedScenePortraits.has(src))||paths[paths.length-1]||cast[id].portrait||'/rpg-assets/'+id+'.png';
 }
 function applyPersonaCStageCrop(img,id){
- // Alternate source images use their own framing; canonical crops are too tight.
- const src=img.getAttribute('src')||'';
- const alternate=/\/portraits\/special-day-\d+\.png(?:\?|$)/.test(src);
- const hanaVariant=id==='hana'&&src.includes('/overworld-variants/');
- const camilaMaster=id==='camila'&&src.includes(CAMILA_DIALOGUE_MASTER);
- const approvedMaster=(APPROVED_DIALOGUE_MASTERS[id]&&src.includes(APPROVED_DIALOGUE_MASTERS[id]))||
- (OVERWORLD_DIALOGUE_DEFAULTS[id]&&src.includes(OVERWORLD_DIALOGUE_DEFAULTS[id]))||
- (id==='laca'&&Object.values(LACA_OVERWORLD_DIALOGUE_DEFAULTS).some(path=>src.includes(path)));
- // Show the head and torso down to the top of the waist without changing
- // any original full-body pixels. Special-day and expression art keeps its crop.
- const crop=camilaMaster?[.05,0,.90,.46]:approvedMaster?[.06,0,.88,.47]:alternate?(id==='barb'?[.10,0,.80,.60]:[.07,0,.86,.62]):hanaVariant?[.07,0,.86,.62]:PERSONA_C_CROPS[id];
- if(!crop)return;
- const [x,y,w,h]=crop;
- // The stage frame clips the original image; no binary assets are altered.
- img.style.width=(100/w)+'%';
- img.style.height=(100/h)+'%';
- img.style.left=(-100*x/w)+'%';
- img.style.top=(-100*y/h)+'%';
+ // Crop the UI only: approved artwork and overworld sprites remain intact.
+ // Standing art shows its top ~36%, from hair to the lower chest.
+ const src=img.currentSrc||img.getAttribute('src')||'';
+ const approved=APPROVED_DIALOGUE_MASTERS[id]&&src.includes(APPROVED_DIALOGUE_MASTERS[id]);
+ const defaultPose=OVERWORLD_DIALOGUE_DEFAULTS[id]&&src.includes(OVERWORLD_DIALOGUE_DEFAULTS[id]);
+ const lacaPose=id==='laca'&&Object.values(LACA_OVERWORLD_DIALOGUE_DEFAULTS).some(path=>src.includes(path));
+ const fullBody=approved||defaultPose||lacaPose||
+  (id==='camila'&&src.includes(CAMILA_DIALOGUE_MASTER))||
+  /\/(?:overworld|overworld-variants)\//.test(src)||
+  /\/standing-front\.png(?:[?#]|$)/.test(src)||
+  /\/portraits\/special-day-\d+\.png(?:[?#]|$)/.test(src);
+ const alreadyCropped=/\/(?:expression-portraits|expression-faces|vn-expressions)\//.test(src);
+ img.style.setProperty('--rpg-dialogue-bust-height',
+  fullBody?'278%':alreadyCropped?'165%':'190%');
+ // Old inline size and offsets stretched the original images.
+ for(const prop of ['width','height','left','top'])img.style.removeProperty(prop);
 }
 function dialogueExpression(line){
  const s=String(line||'').toLowerCase();

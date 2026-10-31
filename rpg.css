@@ -481,21 +481,25 @@
 #scene.has-story-cg .player-choice-prompt{z-index:6}
 
 
-/* Approved Persona C bust crop. Cropping occurs exclusively inside each
-   stage member, preserving original high-resolution portrait files. */
+/* Dialogue portrait: keep original files, clip the viewport from hair to
+   the end of the chest, matching the 457:312 Marina reference. */
+.rpg-scene-cast .rpg-cast-member{max-width:min(44vw,400px)}
 .rpg-cast-member .rpg-stage-persona-frame{
  position:relative;display:block;flex:none;overflow:hidden;
- height:calc(100% - 27px);width:auto;max-width:100%;
- aspect-ratio:320 / 405;
+ width:100%;max-width:100%;height:auto;max-height:calc(100% - 27px);
+ aspect-ratio:457 / 312;
 }
-.rpg-cast-member .rpg-stage-persona-frame img{
- position:absolute;display:block;max-width:none;max-height:none;
- object-fit:fill;transform:none;object-position:initial;
+.rpg-cast-member .rpg-stage-persona-frame>img:not(.rpg-safe-avatar){
+ position:absolute;display:block;top:0;left:0;
+ width:100%;height:var(--rpg-dialogue-bust-height,278%);
+ max-width:none;max-height:none;object-fit:cover;object-position:center top;
+ transform:none;
 }
-/* Small-screen stage slots remain centered and don't push the nameplates away. */
 @media(max-width:600px){
- .rpg-cast-member .rpg-stage-persona-frame{height:calc(100% - 23px)}
+ .rpg-cast-member .rpg-stage-persona-frame{max-height:calc(100% - 23px)}
 }
+/* Discreet Mode keeps its own complete chibi image, never a clipped bust. */
+:root[data-rpg-discreet="on"] .rpg-cast-member .rpg-stage-persona-frame{visibility:hidden}
 
 /* Info drawer: title and tabs remain visible in document order without overlap. */
 #rpgInfoPanel .rpg-drawer-header{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:52px}
